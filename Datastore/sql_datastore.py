@@ -1,3 +1,4 @@
+from datetime import datetime
 from pathlib import Path
 from os import PathLike
 from typing import Optional, Union
@@ -9,7 +10,6 @@ import sqlalchemy as sqla
 
 
 VERSION_ID_LENGTH = 64
-DEFAULT_STRING_LENGTH = 256
 
 
 PathType = Union[str, PathLike]
@@ -30,6 +30,13 @@ class Datastore:
         # store version code and initialize (as blank) the corresponding serial code
         self._version_id = version_id
         self._version_serial = None
+
+        # initialize empty dict of registered storable classes
+        self._registered_classes = {}
+
+        # initialize empty dict of storage schema
+        # each record collects SQLAlchemy column and table definitions, queries, etc., for a registered storable class
+        self._schema = {}
 
     def _create_engine(self, db_name: PathType, expect_exists: bool = False):
         """
@@ -71,18 +78,7 @@ class Datastore:
             sqla.Column("version_id", sqla.String(VERSION_ID_LENGTH)),
         )
 
-        self._lambda_CDM_model_table = sqla.Table(
-            "lambda_cdm_models",
-            self._metadata,
-            sqla.Column("serial", sqla.Integer, primary_key=True),
-            sqla.Column("name", sqla.String(DEFAULT_STRING_LENGTH)),
-            sqla.Column("omega_m", sqla.Float(64)),
-            sqla.Column("omega_cc", sqla.Float(64)),
-            sqla.Column("h", sqla.Float(64)),
-            sqla.Column("f_baryon", sqla.Float(64)),
-            sqla.Column("T_CMB", sqla.Float(64)),
-            sqla.Column("Neff", sqla.Float(64)),
-        )
+        self._register_schema()
 
     def create_datastore(self, db_name: PathType):
         """
@@ -91,19 +87,17 @@ class Datastore:
         :param db_name: path to on-disk database
         :return:
         """
-        if self._engine is not None:
-            raise RuntimeError(
-                "create_datastore() called when a storage engine already exists"
-            )
-
+        self._ensure_no_engine()
         self._create_engine(db_name, expect_exists=False)
 
         print("-- creating database tables")
 
+        # generate internal tables
         self._version_table.create(self._engine)
         self._version_serial = self._make_version_serial()
 
-        self._lambda_CDM_model_table.create(self._engine)
+        # generate tables defined by any registered storable classes
+        self._create_storage_tables()
 
     def _make_version_serial(self):
         if self._engine is None:
@@ -135,11 +129,140 @@ class Datastore:
 
         return serial
 
-    def open_datastore(self, db_name: str) -> None:
+    def _ensure_engine(self):
+        if self._engine is None:
+            raise RuntimeError(f"No storage engine has been initialized")
+
+    def _ensure_no_engine(self):
         if self._engine is not None:
-            raise RuntimeError(
-                "open_datastore() called when a database engine already exists"
+            raise RuntimeError(f"A storage engine has already been initialized")
+
+    def open_datastore(self, db_name: str) -> None:
+        self._ensure_no_engine()
+        self._create_engine(db_name, expect_exists=True)
+
+        self._version_serial = self._make_version_serial()
+
+    def register_storable_class(self, ClassObject):
+        class_name = ClassObject.__name__
+
+        if class_name in self._registered_classes:
+            raise RuntimeWarning(
+                f"Duplicate attempt to register storable class '{class_name}'"
             )
 
-        self._create_engine(db_name, expect_exists=True)
-        self._version_serial = self._make_version_serial()
+        self._registered_classes[class_name] = ClassObject
+        print(f"Registered storable class '{class_name}'")
+
+    def _register_schema(self):
+        self._ensure_engine()
+
+        # iterate through all registered classes, querying them for the columns
+        # they need to store their data
+        for cls_name, cls in self._registered_classes.items():
+            if cls_name in self._schema:
+                raise RuntimeWarning(
+                    f"Duplicate attempt to register table for storable class '{cls_name}'"
+                )
+
+            schema = {}
+
+            # query class for a list of columns that it wants to store
+            class_data = cls.generate_columns()
+
+            # generate basic table
+            # all rows get a timestamp, but other metadata can be controlled by the owning class
+
+            serial_col = sqla.Column("serial", sqla.Integer, primary_key=True)
+            timestamp_col = sqla.Column("timestamp", sqla.DateTime())
+            tab = sqla.Table(
+                cls_name,
+                self._metadata,
+                serial_col,
+                timestamp_col,
+            )
+
+            # attach pre-defined columns
+            use_version = class_data.get("version", False)
+            schema["version"] = use_version
+            if use_version:
+                tab.append_column(
+                    sqla.Column(
+                        "version", sqla.Integer, sqla.ForeignKey("versions.serial")
+                    )
+                )
+
+            # append all columns supplied by the class
+            sqla_columns = class_data.get("columns", [])
+            for col in sqla_columns:
+                tab.append_column(col)
+
+            # store in table cache
+            schema["serial"] = serial_col
+            schema["timestamp"] = timestamp_col
+            schema["columns"] = sqla_columns
+            schema["table"] = tab
+
+            # generate and cache lookup query
+            full_query = sqla.select(
+                [serial_col, timestamp_col].append(sqla_columns)
+            ).select_from(tab)
+            schema["full_query"] = full_query
+
+            serial_query = sqla.select(serial_col).select_from(tab)
+            schema["serial_query"] = serial_query
+
+            self._schema[cls_name] = schema
+            print(f"Registered storage schema from storable class '{cls_name}'")
+
+    def _create_storage_tables(self):
+        self._ensure_engine()
+
+        for record in self._schema.values():
+            tab = record["table"]
+            tab.create(self._engine)
+
+    def _ensure_registered_schema(self, cls_name: str):
+        if cls_name not in self._registered_classes:
+            raise RuntimeError(
+                f'No storable class of type "{cls_name}" has been registered'
+            )
+
+    def query(self, item):
+        self._ensure_engine()
+
+        cls_name = type(item).__name__
+        self._ensure_registered_schema(cls_name)
+
+        record = self._schema[cls_name]
+        tab = record["table"]
+
+        query = record["serial_query"]
+        query = item.build_query(tab, query)
+
+        with self._engine.begin() as conn:
+            # pass basic query back to item instance to add .filter() specifications
+
+            result = conn.execute(query)
+            x = result.scalar()
+
+            if x is not None:
+                return x
+
+            data = item.build_payload()
+            data = data | {"timestamp": datetime.now()}
+
+            if record["version"]:
+                data = data | {"version": self._version_id}
+
+            obj = conn.execute(
+                sqla.dialects.sqlite.insert(tab).on_conflict_do_nothing(), data
+            )
+            conn.commit()
+
+            if obj.lastrowid is not None:
+                return obj.lastrowid
+
+        raise RuntimeError(
+            f'Insert error when querying for storable class "{cls_name}"'
+        )

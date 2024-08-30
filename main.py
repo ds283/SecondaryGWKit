@@ -39,6 +39,9 @@ ray.init(address=args.ray_address)
 
 store: Datastore = Datastore.remote("2024.1.1")
 
+# register storable classes
+ray.get(store.register_storable_class.remote(LambdaCDM))
+
 if args.create_database is not None:
     obj = store.create_datastore.remote(args.create_database)
     output = ray.get(obj)
@@ -49,6 +52,4 @@ else:
 # set up LambdaCDM object representing basic Planck2018 cosmology in Mpc units
 units = Mpc_units()
 params = Planck2018()
-cosmology = LambdaCDM(params, units)
-
-print(f"H0 in Mpc units = {cosmology.H0}")
+cosmology = LambdaCDM(store, params, units)
