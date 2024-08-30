@@ -57,3 +57,6 @@ class redshift_array:
     def __iter__(self):
         for z in self._z_array:
             yield z
+
+    def __getitem__(self, key):
+        return self._z_array[key]

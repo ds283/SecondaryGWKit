@@ -64,3 +64,6 @@ class wavenumber_array:
     def __iter__(self):
         for k in self._k_array:
             yield k
+
+    def __getitem__(self, key):
+        return self._k_array[key]
