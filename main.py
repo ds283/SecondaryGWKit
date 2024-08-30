@@ -3,8 +3,11 @@ import sys
 
 import ray
 
+import numpy as np
+
 from Datastore import Datastore
 from Units import Mpc_units
+from CosmologyConcepts import wavenumber, redshift, redshift_array, wavenumber_array
 from CosmologyModels.LambdaCDM import LambdaCDM, Planck2018
 
 parser = argparse.ArgumentParser()
@@ -40,6 +43,8 @@ ray.init(address=args.ray_address)
 store: Datastore = Datastore.remote("2024.1.1")
 
 # register storable classes
+ray.get(store.register_storable_class.remote(redshift))
+ray.get(store.register_storable_class.remote(wavenumber))
 ray.get(store.register_storable_class.remote(LambdaCDM))
 
 if args.create_database is not None:
@@ -53,3 +58,10 @@ else:
 units = Mpc_units()
 params = Planck2018()
 cosmology = LambdaCDM(store, params, units)
+
+# build a set of sample points
+z_sample_set = np.logspace(np.log10(0.1), np.log10(1e6), 5000)
+z_samples = redshift_array(store, z_sample_set)
+
+k_sample_set = np.logspace(np.log10(0.001), np.log10(0.5), 5000)
+k_samples = wavenumber_array(store, k_sample_set, units)

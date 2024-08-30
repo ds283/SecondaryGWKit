@@ -8,7 +8,13 @@ from defaults import DEFAULT_STRING_LENGTH, DEFAULT_FLOAT_PRECISION
 
 class LambdaCDM:
     def __init__(self, store: ActorHandle, params, units):
-        self._store = store
+        """
+        Construct a datastore-backed object representing a simple LambdaCDM cosmology
+        :param store: handle to datastore actor
+        :param params: parameter block for the LambdaCDM model (e.g. Planck2018)
+        :param units: units block (e.g. Mpc-based units)
+        """
+        self._store: ActorHandle = store
 
         self._params = params
         self._units = units
