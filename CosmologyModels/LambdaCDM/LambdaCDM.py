@@ -7,6 +7,7 @@ import sqlalchemy as sqla
 from sqlalchemy import func, and_
 
 from CosmologyModels.base import CosmologyBase
+from Datastore import Datastore, DatastoreObject
 from Units.base import UnitsLike
 from constants import RadiationConstant
 from defaults import DEFAULT_STRING_LENGTH, DEFAULT_FLOAT_PRECISION
@@ -20,7 +21,7 @@ class LambdaCDM(CosmologyBase):
         :param params: parameter block for the LambdaCDM model (e.g. Planck2018)
         :param units: units block (e.g. Mpc-based units)
         """
-        self._store: ActorHandle = store
+        CosmologyBase.__init__(self, store)
 
         self._params = params
         self._units = units
@@ -60,6 +61,10 @@ class LambdaCDM(CosmologyBase):
     @property
     def name(self) -> str:
         return self._name
+
+    @property
+    def units(self) -> UnitsLike:
+        return self._units
 
     @property
     def H0(self) -> float:

@@ -1,7 +1,7 @@
 from datetime import datetime
 from pathlib import Path
 from os import PathLike
-from typing import Optional, Union
+from typing import Optional, Union, Iterable
 
 from ray import remote
 from ray.data import Dataset
@@ -74,7 +74,7 @@ class Datastore:
         self._version_table = sqla.Table(
             "versions",
             self._metadata,
-            sqla.Column("serial", sqla.Integer, primary_key=True),
+            sqla.Column("serial", sqla.Integer, primary_key=True, nullable=False),
             sqla.Column("version_id", sqla.String(VERSION_ID_LENGTH)),
         )
 
@@ -143,16 +143,20 @@ class Datastore:
 
         self._version_serial = self._make_version_serial()
 
-    def register_storable_class(self, ClassObject):
-        class_name = ClassObject.__name__
+    def register_storable_classes(self, ClassObjectList):
+        if not isinstance(ClassObjectList, Iterable):
+            ClassObjectList = {ClassObjectList}
 
-        if class_name in self._registered_classes:
-            raise RuntimeWarning(
-                f"Duplicate attempt to register storable class '{class_name}'"
-            )
+        for ClassObject in ClassObjectList:
+            class_name = ClassObject.__name__
 
-        self._registered_classes[class_name] = ClassObject
-        print(f"Registered storable class '{class_name}'")
+            if class_name in self._registered_classes:
+                raise RuntimeWarning(
+                    f"Duplicate attempt to register storable class '{class_name}'"
+                )
+
+            self._registered_classes[class_name] = ClassObject
+            print(f"Registered storable class '{class_name}'")
 
     def _register_schema(self):
         self._ensure_engine()
@@ -186,11 +190,18 @@ class Datastore:
             use_version = class_data.get("version", False)
             schema["version"] = use_version
             if use_version:
-                tab.append_column(
-                    sqla.Column(
-                        "version", sqla.Integer, sqla.ForeignKey("versions.serial")
-                    )
+                version_col = sqla.Column(
+                    "version", sqla.Integer, sqla.ForeignKey("versions.serial")
                 )
+                tab.append_column(version_col)
+                schema["version_col"] = version_col
+
+            use_stepping = class_data.get("stepping", False)
+            schema["stepping"] = use_stepping
+            if use_stepping:
+                stepping_col = sqla.Column("stepping", sqla.Integer)
+                tab.append_column(stepping_col)
+                schema["stepping_col"] = stepping_col
 
             # append all columns supplied by the class
             sqla_columns = class_data.get("columns", [])
@@ -198,15 +209,20 @@ class Datastore:
                 tab.append_column(col)
 
             # store in table cache
-            schema["serial"] = serial_col
-            schema["timestamp"] = timestamp_col
+            schema["serial_col"] = serial_col
+            schema["timestamp_col"] = timestamp_col
             schema["columns"] = sqla_columns
             schema["table"] = tab
 
             # generate and cache lookup query
-            full_query = sqla.select(
-                [serial_col, timestamp_col].append(sqla_columns)
-            ).select_from(tab)
+            full_columns = [serial_col, timestamp_col]
+            if use_version:
+                full_columns.append(version_col)
+            if use_stepping:
+                full_columns.append(stepping_col)
+            full_columns.extend(sqla_columns)
+
+            full_query = sqla.select(*full_columns).select_from(tab)
             schema["full_query"] = full_query
 
             serial_query = sqla.select(serial_col).select_from(tab)
@@ -228,7 +244,7 @@ class Datastore:
                 f'No storable class of type "{cls_name}" has been registered'
             )
 
-    def query(self, item):
+    def query(self, item, serial_only: bool = True):
         self._ensure_engine()
 
         cls_name = type(item).__name__
@@ -237,31 +253,53 @@ class Datastore:
         record = self._schema[cls_name]
         tab = record["table"]
 
-        query = record["serial_query"]
+        uses_version = record["version"]
+        uses_stepping = record["stepping"]
+
+        if serial_only:
+            query = record["serial_query"]
+        else:
+            query = record["full_query"]
+
+        # filter by supplied stepping, if this class uses that metadata
+        if uses_stepping:
+            query = query.filter(tab.c.stepping >= item.stepping)
         query = item.build_query(tab, query)
 
         with self._engine.begin() as conn:
             # pass basic query back to item instance to add .filter() specifications
 
             result = conn.execute(query)
-            x = result.scalar()
 
-            if x is not None:
-                return x
+            if serial_only:
+                x = result.scalar()
+                if x is not None:
+                    return x
+            else:
+                x = result.one_or_none()
+                if x is not None:
+                    return {"store_id": x.serial, "data": x}
 
             data = item.build_payload()
             data = data | {"timestamp": datetime.now()}
 
-            if record["version"]:
+            if uses_version:
                 data = data | {"version": self._version_id}
+            if uses_stepping:
+                data = data | {"stepping": item.stepping}
 
             obj = conn.execute(
                 sqla.dialects.sqlite.insert(tab).on_conflict_do_nothing(), data
             )
             conn.commit()
 
-            if obj.lastrowid is not None:
-                return obj.lastrowid
+            serial = obj.lastrowid
+            if serial is not None:
+                if serial_only:
+                    return serial
+                else:
+                    data = data | {"serial": serial}
+                    return {"store_id": serial, "data": data}
 
         raise RuntimeError(
             f'Insert error when querying for storable class "{cls_name}"'

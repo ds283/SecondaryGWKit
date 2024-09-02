@@ -4,11 +4,12 @@ import numpy as np
 from ray.actor import ActorHandle
 
 from CosmologyConcepts import redshift_array, wavenumber
+from CosmologyConcepts.wavenumber import wavenumber_exit_time
 from CosmologyModels.base import CosmologyBase
-from utilities import find_horizon_exit_time
+from Datastore import DatastoreObject
 
 
-class MatterTransferFunction:
+class MatterTransferFunction(DatastoreObject):
     """
     Encapsulates a sample of the matter transfer function, labelled by a wavenumber k,
     and sampled over a range of redshifts
@@ -21,7 +22,7 @@ class MatterTransferFunction:
         k: wavenumber,
         z_samples: redshift_array,
     ):
-        self._store: ActorHandle = store
+        DatastoreObject.__init__(self, store)
         self._cosmology: CosmologyBase = cosmology
 
         # cache wavenumber and z-sample array
@@ -56,12 +57,14 @@ class MatterTransferFunction:
         :return: MatterTransferFunction instance
         """
         # find horizon-crossing time for wavenumber z
-        z_init = find_horizon_exit_time(
-            cosmology, k, outside_horizon_efolds=outside_horizon_efolds
-        )
+        z_exit = wavenumber_exit_time(store, k, cosmology)
+
+        # add on any specified number of superhorizon e-folds
+        if outside_horizon_efolds is not None:
+            z_init = z_exit.z_exit + outside_horizon_efolds
 
         print(
-            f"horizon-crossing time for wavenumber k = {k.k_inv_Mpc}/Mpc is z_exit = {z_init}"
+            f"horizon-crossing time +{outside_horizon_efolds} for wavenumber k = {k.k_inv_Mpc}/Mpc is z_exit = {z_init}"
         )
 
         # now we want to sample to transfer function between z_init and z = 0, using the specified

@@ -5,6 +5,7 @@ import ray
 
 import numpy as np
 
+from CosmologyConcepts.wavenumber import wavenumber_exit_time
 from Datastore import Datastore
 from Units import Mpc_units
 from CosmologyConcepts import wavenumber, redshift, redshift_array, wavenumber_array
@@ -44,9 +45,11 @@ ray.init(address=args.ray_address)
 store: Datastore = Datastore.remote("2024.1.1")
 
 # register storable classes
-ray.get(store.register_storable_class.remote(redshift))
-ray.get(store.register_storable_class.remote(wavenumber))
-ray.get(store.register_storable_class.remote(LambdaCDM))
+ray.get(
+    store.register_storable_classes.remote(
+        {redshift, wavenumber, wavenumber_exit_time, LambdaCDM}
+    )
+)
 
 if args.create_database is not None:
     obj = store.create_datastore.remote(args.create_database)

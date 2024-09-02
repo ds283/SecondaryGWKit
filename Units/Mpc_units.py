@@ -3,7 +3,8 @@ from .base import UnitsLike
 
 
 class Mpc_units(UnitsLike):
-    system_name = "Mpc units"
+    def __init__(self):
+        UnitsLike.__init__(self, "Mpc units")
 
     Mpc = 1.0
 

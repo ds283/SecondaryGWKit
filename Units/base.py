@@ -2,10 +2,19 @@ from abc import ABC, abstractmethod
 
 
 class UnitsLike(ABC):
+    def __init__(self, name: str):
+        self._name = name
+        self._name_hash = hash(name)
+
+    def __eq__(self, other):
+        return self._name_hash == other._name_hash
+
+    def __ne__(self, other):
+        return not self.__eq__(other)
+
     @property
-    @abstractmethod
     def system_name(self):
-        raise NotImplementedError
+        return self._name
 
     @property
     @abstractmethod

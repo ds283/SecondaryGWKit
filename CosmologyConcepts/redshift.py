@@ -6,10 +6,11 @@ from ray.actor import ActorHandle
 import sqlalchemy as sqla
 from sqlalchemy import func
 
+from Datastore import DatastoreObject
 from defaults import DEFAULT_FLOAT_PRECISION
 
 
-class redshift:
+class redshift(DatastoreObject):
     def __init__(self, store: ActorHandle, z: float):
         """
         Construct a datastore-backed object representing a redshift,
@@ -17,7 +18,7 @@ class redshift:
         :param store: handle to datastore actor
         :param z: redshift value
         """
-        self._store: ActorHandle = store
+        DatastoreObject.__init__(self, store)
 
         self.z = z
 

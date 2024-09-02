@@ -6,8 +6,21 @@ from CosmologyConcepts import wavenumber
 from CosmologyModels.base import CosmologyBase
 
 
+def check_units(A, B):
+    """
+    Check that objects A and B are defined with the same units.
+    Assumes they both provide a .units property that returns a UnitsLike object
+    :param A:
+    :param B:
+    :return:
+    """
+    if A.units != B.units:
+        raise RuntimeError("Units used for wavenumber k and cosmology are not equal")
+
+
 def find_horizon_exit_time(
-    cosmology: CosmologyBase, k: wavenumber, outside_horizon_efolds: float = 0.0
+    cosmology: CosmologyBase,
+    k: wavenumber,
 ) -> float:
     """
     Compute the redshift of horizon exit for a mode of wavenumber k in the specified cosmology, by solving
@@ -18,8 +31,7 @@ def find_horizon_exit_time(
     :param k:
     :return:
     """
-    if outside_horizon_efolds < 0.0:
-        outside_horizon_efolds = fabs(outside_horizon_efolds)
+    check_units(k, cosmology)
 
     q0 = log(float(k) / cosmology.H0)
 
@@ -30,7 +42,7 @@ def find_horizon_exit_time(
 
     # build event function to terminate when q crosses zero
     def q_zero_event(z, state):
-        q = state[0] + outside_horizon_efolds
+        q = state[0]
         return q
 
     q_zero_event.terminal = True
