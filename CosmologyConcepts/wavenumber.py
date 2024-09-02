@@ -106,7 +106,7 @@ class wavenumber_exit_time(DatastoreObject):
             "version": True,
             "stepping": True,
             "columns": [
-                sqla.Column("k_serial", sqla.Integer, nullable=False),
+                sqla.Column("wavenumber_serial", sqla.Integer, nullable=False),
                 sqla.Column("cosmology_serial", sqla.Integer, nullable=False),
                 sqla.Column("z_exit", sqla.Float(64)),
             ],
@@ -129,7 +129,7 @@ class wavenumber_exit_time(DatastoreObject):
         self._z_exit = find_horizon_exit_time(self.cosmology, self.k)
 
         return {
-            "k_serial": self.k.store_id,
+            "wavenumber_serial": self.k.store_id,
             "cosmology_serial": self.cosmology.store_id,
             "z_exit": self._z_exit,
         }
