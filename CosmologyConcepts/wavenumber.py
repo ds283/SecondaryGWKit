@@ -9,7 +9,7 @@ from sqlalchemy import func, and_
 from CosmologyModels.base import CosmologyBase
 from Datastore import DatastoreObject
 from defaults import DEFAULT_FLOAT_PRECISION
-from utilities import find_horizon_exit_time, check_units
+from utilities import find_horizon_exit_time, check_units, WallclockTimer
 
 
 class wavenumber(DatastoreObject):
@@ -76,7 +76,14 @@ class wavenumber_array:
 
 
 class wavenumber_exit_time(DatastoreObject):
-    def __init__(self, store: ActorHandle, k: wavenumber, cosmology: CosmologyBase):
+    def __init__(
+        self,
+        store: ActorHandle,
+        k: wavenumber,
+        cosmology: CosmologyBase,
+        atol: float = 1e-5,
+        rtol: float = 1e-7,
+    ):
         """
         Construct a datastore-backed object representing the horizon exit time
         for a mode of wavenumber k
@@ -92,10 +99,17 @@ class wavenumber_exit_time(DatastoreObject):
 
         self._z_exit = None
 
+        self._target_atol = atol
+        self._target_rtol = rtol
+
         # request our own unique id from the datastore
         data = ray.get(self._store.query.remote(self, serial_only=False))
+
         self._my_id = data["store_id"]
         self._z_exit = data["data"]["z_exit"]
+
+        self._atol = data["data"]["atol"]
+        self._rtol = data["data"]["rtol"]
 
     @staticmethod
     def generate_columns():
@@ -109,6 +123,9 @@ class wavenumber_exit_time(DatastoreObject):
                 sqla.Column("wavenumber_serial", sqla.Integer, nullable=False),
                 sqla.Column("cosmology_serial", sqla.Integer, nullable=False),
                 sqla.Column("z_exit", sqla.Float(64)),
+                sqla.Column("atol", sqla.Float(64)),
+                sqla.Column("rtol", sqla.Float(64)),
+                sqla.Column("time", sqla.Integer),
             ],
         }
 
@@ -126,14 +143,28 @@ class wavenumber_exit_time(DatastoreObject):
         )
 
     def build_payload(self):
-        self._z_exit = find_horizon_exit_time(self.cosmology, self.k)
+        with WallclockTimer() as timer:
+            self._z_exit = find_horizon_exit_time(
+                self.cosmology, self.k, atol=self._target_atol, rtol=self._target_rtol
+            )
 
         return {
             "wavenumber_serial": self.k.store_id,
             "cosmology_serial": self.cosmology.store_id,
             "z_exit": self._z_exit,
+            "atol": self._target_atol,
+            "rtol": self._target_rtol,
+            "time": timer.elapsed,
         }
 
     @property
     def z_exit(self):
         return self._z_exit
+
+    @property
+    def atol(self):
+        return self._atol
+
+    @property
+    def rtol(self):
+        return self._rtol
