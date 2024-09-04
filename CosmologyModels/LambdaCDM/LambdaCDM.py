@@ -59,6 +59,11 @@ class LambdaCDM(CosmologyBase):
         print(f'LambdaCDM object "{self.name}" constructed with id={self._my_id}')
 
     @property
+    def type_id(self) -> int:
+        # 0 is the unique ID for the LambdaCDM cosmology type
+        return 0
+
+    @property
     def name(self) -> str:
         return self._name
 

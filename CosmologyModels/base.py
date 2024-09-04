@@ -13,6 +13,11 @@ class CosmologyBase(DatastoreObject, ABC):
 
     @property
     @abstractmethod
+    def type_id(self) -> int:
+        raise NotImplementedError
+
+    @property
+    @abstractmethod
     def name(self) -> str:
         raise NotImplementedError
 

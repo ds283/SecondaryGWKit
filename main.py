@@ -5,10 +5,16 @@ import ray
 
 import numpy as np
 
-from CosmologyConcepts.wavenumber import wavenumber_exit_time
 from Datastore import Datastore
 from Units import Mpc_units
-from CosmologyConcepts import wavenumber, redshift, redshift_array, wavenumber_array
+from CosmologyConcepts import (
+    tolerance,
+    wavenumber,
+    redshift,
+    redshift_array,
+    wavenumber_array,
+    wavenumber_exit_time,
+)
 from CosmologyModels.LambdaCDM import LambdaCDM, Planck2018
 from ComputeTargets import MatterTransferFunction
 
@@ -47,7 +53,7 @@ store: Datastore = Datastore.remote("2024.1.1")
 # register storable classes
 ray.get(
     store.register_storable_classes.remote(
-        {redshift, wavenumber, wavenumber_exit_time, LambdaCDM}
+        {tolerance, redshift, wavenumber, wavenumber_exit_time, LambdaCDM}
     )
 )
 

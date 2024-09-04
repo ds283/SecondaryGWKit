@@ -261,14 +261,16 @@ class Datastore:
         else:
             query = record["full_query"]
 
+        # pass basic query back to item instance to add .filter() specifications, or any other adjustments that are needed
+        query = item.build_query(tab, query)
+
         # filter by supplied stepping, if this class uses that metadata
         if uses_stepping:
             query = query.filter(tab.c.stepping >= item.stepping)
-        query = item.build_query(tab, query)
 
         with self._engine.begin() as conn:
-            # pass basic query back to item instance to add .filter() specifications
-
+            # print(f"QUERY: {query}")
+            # print(f"QUERY COLUMNS {query.columns.keys()}")
             result = conn.execute(query)
 
             if serial_only:
@@ -278,9 +280,10 @@ class Datastore:
             else:
                 x = result.one_or_none()
                 if x is not None:
-                    return {"store_id": x.serial, "data": x}
+                    # store _asdict() rather than SQLAlchemy Row object in an attempt to produce simpler payloads for Ray
+                    return {"store_id": x.serial, "data": x._asdict()}
 
-            data = item.build_payload()
+            data = item.build_storage_payload()
             data = data | {"timestamp": datetime.now()}
 
             if uses_version:
@@ -304,3 +307,15 @@ class Datastore:
         raise RuntimeError(
             f'Insert error when querying for storable class "{cls_name}"'
         )
+
+    def table(self, ClassObject) -> sqla.Table:
+        """
+        Obtain the SQLAlchemy table object corresponding to a datastore object
+        """
+        cls_name: str = ClassObject.__name__
+        self._ensure_registered_schema(cls_name)
+
+        record = self._schema[cls_name]
+        tab = record["table"]
+
+        return tab

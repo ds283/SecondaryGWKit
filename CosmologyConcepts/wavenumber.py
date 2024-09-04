@@ -6,6 +6,7 @@ from ray.actor import ActorHandle
 import sqlalchemy as sqla
 from sqlalchemy import func, and_
 
+from CosmologyConcepts.tolerance import tolerance
 from CosmologyModels.base import CosmologyBase
 from Datastore import DatastoreObject
 from defaults import DEFAULT_FLOAT_PRECISION
@@ -18,7 +19,7 @@ class wavenumber(DatastoreObject):
         Construct a datastore-backed object representing a wavenumber, e.g.,
         used to sample a transfer function or power spectrum
         :param store: handle to datastore actor
-        :param k_value: wavenumber, measured in 1/Mpc
+        :param k_inv_Mpc: wavenumber, measured in 1/Mpc
         :param units: units block (e.g. Mpc-based units)
         """
         DatastoreObject.__init__(self, store)
@@ -34,7 +35,7 @@ class wavenumber(DatastoreObject):
 
     def __float__(self):
         """
-        Silently cast to float. Returns dimensionful wavenumber.
+        Cast to float. Returns dimensionful wavenumber.
         :return:
         """
         return self.k
@@ -99,33 +100,57 @@ class wavenumber_exit_time(DatastoreObject):
 
         self._z_exit = None
 
-        self._target_atol = atol
-        self._target_rtol = rtol
+        # obtain and cache handle to
+        self._tolerance_table: sqla.Table = ray.get(store.table.remote(tolerance))
+        self._atol_table = self._tolerance_table.alias("atol_table")
+        self._rtol_table = self._tolerance_table.alias("rtol_table")
+
+        # convert requested tolerances to database ids
+        self._target_atol: tolerance = tolerance(store, tol=atol)
+        self._target_rtol: tolerance = tolerance(store, tol=rtol)
 
         # request our own unique id from the datastore
-        data = ray.get(self._store.query.remote(self, serial_only=False))
+        db_info = ray.get(self._store.query.remote(self, serial_only=False))
 
-        self._my_id = data["store_id"]
-        self._z_exit = data["data"]["z_exit"]
+        self._my_id = db_info["store_id"]
+        row = db_info["data"]
 
-        self._atol = data["data"]["atol"]
-        self._rtol = data["data"]["rtol"]
+        self._z_exit = row["z_exit"]
+        self._atol: tolerance = tolerance(store, log10_tol=row["log10_atol"])
+        self._rtol: tolerance = tolerance(store, log10_tol=row["log10_rtol"])
 
     @staticmethod
     def generate_columns():
-        # not yet setting up foreign key links for k_serial and cosmology_serial
-        # for cosmology_serial, the problem is that we have different providers of the CosmologyBase concept.
-        # It's not yet clear what is the best way to deal with this
+        # Does not set up a foreign key constraint for the cosmology object.
+        # The problem is that this is polymorphic, because we have different implementations of the CosmologyBase concept.
+        # Rather than try to deal with this using SQLAlchemy-level polymorphism, we handle the polymorphism ourselves
+        # and just skip foreign key constraints here
         return {
             "version": True,
             "stepping": True,
             "columns": [
-                sqla.Column("wavenumber_serial", sqla.Integer, nullable=False),
+                sqla.Column(
+                    "wavenumber_serial",
+                    sqla.Integer,
+                    sqla.ForeignKey("wavenumber.serial"),
+                    nullable=False,
+                ),
+                sqla.Column("cosmology_type", sqla.Integer, nullable=False),
                 sqla.Column("cosmology_serial", sqla.Integer, nullable=False),
-                sqla.Column("z_exit", sqla.Float(64)),
-                sqla.Column("atol", sqla.Float(64)),
-                sqla.Column("rtol", sqla.Float(64)),
+                sqla.Column(
+                    "atol_serial",
+                    sqla.Integer,
+                    sqla.ForeignKey("tolerance.serial"),
+                    nullable=False,
+                ),
+                sqla.Column(
+                    "rtol_serial",
+                    sqla.Integer,
+                    sqla.ForeignKey("tolerance.serial"),
+                    nullable=False,
+                ),
                 sqla.Column("time", sqla.Integer),
+                sqla.Column("z_exit", sqla.Float(64)),
             ],
         }
 
@@ -135,36 +160,76 @@ class wavenumber_exit_time(DatastoreObject):
         return 0
 
     def build_query(self, table, query):
-        return query.filter(
-            and_(
-                table.c.k_serial == self.k.store_id,
-                table.c.cosmology_serial == self.cosmology.store_id,
+        # query for an existing record that at least matches the specified tolerances
+        # notice we have to replace the .select_from() specifier that has been pre-populated by the DataStore object
+        # If we just have .select_from(BASE_TABLE), we cannot access any columns from the joined tables (at least using SQLite)
+        # see: https://stackoverflow.com/questions/68137220/getting-columns-of-the-joined-table-using-sqlalchemy-core
+        query = (
+            sqla.select(
+                table.c.serial,
+                table.c.version,
+                table.c.stepping,
+                table.c.timestamp,
+                table.c.wavenumber_serial,
+                table.c.cosmology_type,
+                table.c.cosmology_serial,
+                table.c.atol_serial,
+                table.c.rtol_serial,
+                table.c.time,
+                self._atol_table.c.log10_tol.label("log10_atol"),
+                self._rtol_table.c.log10_tol.label("log10_rtol"),
+                table.c.z_exit,
+            )
+            .select_from(
+                table.join(
+                    self._atol_table, self._atol_table.c.serial == table.c.atol_serial
+                ).join(
+                    self._rtol_table, self._rtol_table.c.serial == table.c.rtol_serial
+                )
+            )
+            .filter(
+                and_(
+                    table.c.wavenumber_serial == self.k.store_id,
+                    table.c.cosmology_type == self.cosmology.type_id,
+                    table.c.cosmology_serial == self.cosmology.store_id,
+                    self._atol_table.c.log10_tol - self._target_atol.log10_tol
+                    <= DEFAULT_FLOAT_PRECISION,
+                    self._rtol_table.c.log10_tol - self._target_rtol.log10_tol
+                    <= DEFAULT_FLOAT_PRECISION,
+                )
             )
         )
+        return query
 
-    def build_payload(self):
+    def build_storage_payload(self):
         with WallclockTimer() as timer:
             self._z_exit = find_horizon_exit_time(
-                self.cosmology, self.k, atol=self._target_atol, rtol=self._target_rtol
+                self.cosmology,
+                self.k,
+                atol=self._target_atol.tol,
+                rtol=self._target_rtol.tol,
             )
 
         return {
             "wavenumber_serial": self.k.store_id,
+            "cosmology_type": self.cosmology.type_id,
             "cosmology_serial": self.cosmology.store_id,
-            "z_exit": self._z_exit,
-            "atol": self._target_atol,
-            "rtol": self._target_rtol,
+            "atol_serial": self._target_atol.store_id,
+            "rtol_serial": self._target_rtol.store_id,
+            "log10_atol": self._target_atol.log10_tol,
+            "log10_rtol": self._target_rtol.log10_tol,
             "time": timer.elapsed,
+            "z_exit": self._z_exit,
         }
 
     @property
-    def z_exit(self):
+    def z_exit(self) -> float:
         return self._z_exit
 
     @property
-    def atol(self):
-        return self._atol
+    def atol(self) -> float:
+        return self._atol.tol
 
     @property
-    def rtol(self):
-        return self._rtol
+    def rtol(self) -> float:
+        return self._rtol.tol

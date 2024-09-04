@@ -9,11 +9,11 @@ from CosmologyModels.base import CosmologyBase
 
 class WallclockTimer:
     def __enter__(self):
-        self.start_time = time.clock()
-        return 1
+        self.start_time = time.perf_counter()
+        return self
 
     def __exit__(self, type, value, traceback):
-        self.end_time = time.clock()
+        self.end_time = time.perf_counter()
         self.elapsed = self.end_time - self.start_time
         return self.elapsed
 
