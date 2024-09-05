@@ -79,6 +79,7 @@ class LambdaCDM(CosmologyBase):
     def generate_columns():
         return {
             "version": False,
+            "timestamp": True,
             "columns": [
                 sqla.Column("name", sqla.String(DEFAULT_STRING_LENGTH)),
                 sqla.Column("omega_m", sqla.Float(64)),

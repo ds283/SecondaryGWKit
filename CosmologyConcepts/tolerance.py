@@ -45,7 +45,7 @@ class tolerance(DatastoreObject):
 
     @staticmethod
     def generate_columns():
-        return {"version": False, "columns": [sqla.Column("log10_tol", sqla.Float(64))]}
+        return {"version": False, "timestamp": True, "columns": [sqla.Column("log10_tol", sqla.Float(64))]}
 
     def build_query(self, table, query):
         return query.filter(

@@ -54,7 +54,7 @@ store: Datastore = Datastore.remote("2024.1.1")
 ray.get(
     store.register_storable_classes.remote(
         {tolerance, redshift, wavenumber, wavenumber_exit_time, LambdaCDM, IntegrationSolver,
-         MatterTransferFunctionIntegration, MatterTransferFunctionValue, MatterTransferFunction}
+         MatterTransferFunctionIntegration, MatterTransferFunctionValue}
     )
 )
 

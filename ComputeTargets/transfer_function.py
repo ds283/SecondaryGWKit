@@ -77,7 +77,7 @@ class MatterTransferFunctionIntegration(DatastoreObject):
                     nullable=False,
                 ),
                 sqla.Column("cosmology_type", sqla.Integer, nullable=False),
-                sqla.Column("ccosmology_serial", sqla.Integer, nullable=False),
+                sqla.Column("cosmology_serial", sqla.Integer, nullable=False),
                 sqla.Column(
                     "atol_serial",
                     sqla.Integer,
@@ -85,7 +85,7 @@ class MatterTransferFunctionIntegration(DatastoreObject):
                     nullable=False,
                 ),
                 sqla.Column(
-                    "atol_serial",
+                    "rtol_serial",
                     sqla.Integer,
                     sqla.ForeignKey("tolerance.serial"),
                     nullable=False,
@@ -93,7 +93,7 @@ class MatterTransferFunctionIntegration(DatastoreObject):
                 sqla.Column(
                     "solver_serial",
                     sqla.Integer,
-                    sqla.ForeignKey("solver.serial"),
+                    sqla.ForeignKey("IntegrationSolver.serial"),
                     nullable=False,
                 ),
                 sqla.Column("time", sqla.Float(64)),
@@ -175,13 +175,13 @@ class MatterTransferFunctionValue(DatastoreObject):
         # query whether this sample value is available in the datastore
         db_info = ray.get(store.query.remote(self, serial_only=False))
 
-        self._my_id = db_info["store_id"]
-        row = db_info["data"]
-
         if db_info is None:
             self._my_id = None
             self._value = None
             return
+
+        self._my_id = db_info["store_id"]
+        row = db_info["data"]
 
         self._value = row["value"]
 
@@ -195,6 +195,10 @@ class MatterTransferFunctionValue(DatastoreObject):
             return None
 
         return self._value
+
+    @property
+    def z(self) -> redshift:
+        return self._z
 
     @staticmethod
     def generate_columns():
@@ -266,10 +270,11 @@ class MatterTransferFunctionValue(DatastoreObject):
         return query
 
 
-class MatterTransferFunction(DatastoreObject):
+class MatterTransferFunction:
     """
     Encapsulates the time-evolution of the matter transfer function, labelled by a wavenumber k,
-    and sampled over a specified range of redshifts
+    and sampled over a specified range of redshifts.
+    Notice this is a broker object, not an object that is itself persisted in the datastore
     """
 
     def __init__(
@@ -279,6 +284,8 @@ class MatterTransferFunction(DatastoreObject):
             k: wavenumber,
             z_init: redshift,
             z_samples: redshift_array,
+            target_atol: float = 1e-5,
+            target_rtol: float = 1e-7,
     ):
         """
         :param store: handle to datastore actor
@@ -297,6 +304,14 @@ class MatterTransferFunction(DatastoreObject):
 
         # query datastore to find out whether the necessary sample values are available,
         # and schedule asynchronous tasks to compute any that are missing.
+        self._sample_values = [MatterTransferFunctionValue(store, cosmology, k, z_init, z, target_atol=target_atol, target_rtol=target_rtol) for z in z_samples]
+
+        self._missing_zs = [val.z for val in self._sample_values if not val.available]
+        print(f"Matter transfer function T(z) for '{cosmology.name}' k={k.k_inv_Mpc}/Mpc has {len(self._missing_zs)} missing z-sample values")
+
+        # schedule an integration to populate any missing values
+        if len(self._missing_zs) > 0:
+            print(f"Scheduling an integration ...")
 
     @classmethod
     def populate_z_samples(
@@ -307,6 +322,8 @@ class MatterTransferFunction(DatastoreObject):
             outside_horizon_efolds: float = 10.0,
             samples_per_log10z: int = 100,
             z_end: float = 0.1,
+            target_atol: float = 1e-5,
+            target_rtol: float = 1e-7,
     ):
         """
         Determine the approximate starting redshift, if we wish to begin the calculation when
@@ -334,7 +351,7 @@ class MatterTransferFunction(DatastoreObject):
             f"horizon-crossing time for wavenumber k = {k.k_inv_Mpc}/Mpc is z_exit = {exit_time.z_exit}"
         )
         print(
-            f"-- using N={outside_horizon_efolds} of superhorizon evolution, initial time is z_init = {z_init}"
+            f"-- using N = {outside_horizon_efolds} e-folds of superhorizon evolution, initial time is z_init = {z_init}"
         )
 
         # now we want to sample to transfer function between z_init and z = 0, using the specified
@@ -355,4 +372,6 @@ class MatterTransferFunction(DatastoreObject):
             k=k,
             z_init=redshift(store, z_init),
             z_samples=z_samples,
+            target_atol=target_atol,
+            target_rtol=target_rtol,
         )

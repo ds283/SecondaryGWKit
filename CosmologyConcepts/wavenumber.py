@@ -42,7 +42,7 @@ class wavenumber(DatastoreObject):
 
     @staticmethod
     def generate_columns():
-        return {"version": False, "columns": [sqla.Column("k_inv_Mpc", sqla.Float(64))]}
+        return {"version": False, "timestamp": True, "columns": [sqla.Column("k_inv_Mpc", sqla.Float(64))]}
 
     def build_query(self, table, query):
         return query.filter(
@@ -128,6 +128,7 @@ class wavenumber_exit_time(DatastoreObject):
         # and just skip foreign key constraints here
         return {
             "version": True,
+            "timestamp": True,
             "stepping": "minimum",
             "columns": [
                 sqla.Column(

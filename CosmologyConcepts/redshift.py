@@ -34,7 +34,7 @@ class redshift(DatastoreObject):
 
     @staticmethod
     def generate_columns():
-        return {"version": False, "columns": [sqla.Column("z", sqla.Float(64))]}
+        return {"version": False, "timestamp": True, "columns": [sqla.Column("z", sqla.Float(64))]}
 
     def build_query(self, table, query):
         return query.filter(func.abs(table.c.z - self.z) < DEFAULT_FLOAT_PRECISION)
