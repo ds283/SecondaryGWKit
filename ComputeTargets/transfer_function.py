@@ -26,15 +26,15 @@ class MatterTransferFunctionIntegration(DatastoreObject):
     """
 
     def __init__(
-            self,
-            store: ActorHandle,
-            cosmology: CosmologyBase,
-            label: str,
-            k: wavenumber,
-            z_samples: redshift_array,
-            z_init: redshift,
-            atol: tolerance,
-            rtol: tolerance,
+        self,
+        store: ActorHandle,
+        cosmology: CosmologyBase,
+        label: str,
+        k: wavenumber,
+        z_samples: redshift_array,
+        z_init: redshift,
+        atol: tolerance,
+        rtol: tolerance,
     ):
         DatastoreObject.__init__(self, store)
         self._cosmology = cosmology
@@ -141,14 +141,14 @@ class MatterTransferFunctionValue(DatastoreObject):
     """
 
     def __init__(
-            self,
-            store: ActorHandle,
-            cosmology: CosmologyBase,
-            k: wavenumber,
-            z_init: redshift,
-            z: redshift,
-            target_atol,
-            target_rtol,
+        self,
+        store: ActorHandle,
+        cosmology: CosmologyBase,
+        k: wavenumber,
+        z_init: redshift,
+        z: redshift,
+        target_atol,
+        target_rtol,
     ):
         DatastoreObject.__init__(self, store)
 
@@ -170,7 +170,9 @@ class MatterTransferFunctionValue(DatastoreObject):
         self._target_rtol: tolerance = target_rtol
 
         # obtain and cache handle to table of integration records
-        self._integration_table: sqla.Table = ray.get(store.table.remote(MatterTransferFunctionIntegration))
+        self._integration_table: sqla.Table = ray.get(
+            store.table.remote(MatterTransferFunctionIntegration)
+        )
         self._solver_table: sqla.Table = ray.get(store.table.remote(IntegrationSolver))
 
         # query whether this sample value is available in the datastore
@@ -224,7 +226,7 @@ class MatterTransferFunctionValue(DatastoreObject):
                 sqla.Column(
                     "value",
                     sqla.Float(64),
-                )
+                ),
             ],
         }
 
@@ -240,17 +242,25 @@ class MatterTransferFunctionValue(DatastoreObject):
                 self._solver_table.c.label.label("solver_label"),
                 self._solver_table.c.stepping.label("solver_stepping"),
                 self._integration_table.c.timestamp,
-                self._integration_table.c.version
+                self._integration_table.c.version,
             )
             .select_from(
                 table.join(
-                    self._integration_table, self._integration_table.c.serial == table.c.integration_serial
-                ).join(
-                    self._solver_table, self._solver_table.c.serial == self._integration_table.c.solver_serial,
-                ).join(
-                    self._atol_table, self._atol_table.c.serial == self._integration_table.c.atol_serial
-                ).join(
-                    self._rtol_table, self._rtol_table.c.serial == self._integration_table.c.rtol_serial
+                    self._integration_table,
+                    self._integration_table.c.serial == table.c.integration_serial,
+                )
+                .join(
+                    self._solver_table,
+                    self._solver_table.c.serial
+                    == self._integration_table.c.solver_serial,
+                )
+                .join(
+                    self._atol_table,
+                    self._atol_table.c.serial == self._integration_table.c.atol_serial,
+                )
+                .join(
+                    self._rtol_table,
+                    self._rtol_table.c.serial == self._integration_table.c.rtol_serial,
                 )
             )
             .filter(
@@ -258,7 +268,8 @@ class MatterTransferFunctionValue(DatastoreObject):
                     table.c.z_serial == self._z.store_id,
                     self._integration_table.c.wavenumber_serial == self._k.store_id,
                     self._integration_table.c.cosmology_type == self._cosmology.type_id,
-                    self._integration_table.c.cosmology_serial == self._cosmology.store_id,
+                    self._integration_table.c.cosmology_serial
+                    == self._cosmology.store_id,
                     self._atol_table.c.log10_tol - self._target_atol.log10_tol
                     <= DEFAULT_FLOAT_PRECISION,
                     self._rtol_table.c.log10_tol - self._target_rtol.log10_tol
@@ -270,6 +281,7 @@ class MatterTransferFunctionValue(DatastoreObject):
         )
         return query
 
+
 class MatterTransferFunction:
     """
     Encapsulates the time-evolution of the matter transfer function, labelled by a wavenumber k,
@@ -278,14 +290,14 @@ class MatterTransferFunction:
     """
 
     def __init__(
-            self,
-            store: ActorHandle,
-            cosmology: CosmologyBase,
-            k: wavenumber,
-            z_init: redshift,
-            z_samples: redshift_array,
-            target_atol: tolerance=None,
-            target_rtol: tolerance=None,
+        self,
+        store: ActorHandle,
+        cosmology: CosmologyBase,
+        k: wavenumber,
+        z_init: redshift,
+        z_samples: redshift_array,
+        target_atol: tolerance = None,
+        target_rtol: tolerance = None,
     ):
         """
         :param store: handle to datastore actor
@@ -312,10 +324,17 @@ class MatterTransferFunction:
 
         # query datastore to find out whether the necessary sample values are available,
         # and schedule asynchronous tasks to compute any that are missing.
-        self._sample_values = [MatterTransferFunctionValue(store, cosmology, k, z_init, z, target_atol, target_rtol) for z in z_samples]
+        self._sample_values = [
+            MatterTransferFunctionValue(
+                store, cosmology, k, z_init, z, target_atol, target_rtol
+            )
+            for z in z_samples
+        ]
 
         self._missing_zs = [val.z for val in self._sample_values if not val.available]
-        print(f"Matter transfer function T(z) for '{cosmology.name}' k={k.k_inv_Mpc}/Mpc has {len(self._missing_zs)} missing z-sample values")
+        print(
+            f"Matter transfer function T(z) for '{cosmology.name}' k={k.k_inv_Mpc}/Mpc has {len(self._missing_zs)} missing z-sample values"
+        )
 
         # schedule an integration to populate any missing values
         if len(self._missing_zs) > 0:
@@ -323,15 +342,15 @@ class MatterTransferFunction:
 
     @classmethod
     def populate_z_samples(
-            cls,
-            store: ActorHandle,
-            cosmology: CosmologyBase,
-            k: wavenumber,
-            outside_horizon_efolds: float = 10.0,
-            samples_per_log10z: int = 100,
-            z_end: float = 0.1,
-            target_atol: tolerance = None,
-            target_rtol: tolerance = None,
+        cls,
+        store: ActorHandle,
+        cosmology: CosmologyBase,
+        k: wavenumber,
+        outside_horizon_efolds: float = 10.0,
+        samples_per_log10z: int = 100,
+        z_end: float = 0.1,
+        target_atol: tolerance = None,
+        target_rtol: tolerance = None,
     ):
         """
         Determine the approximate starting redshift, if we wish to begin the calculation when
