@@ -1,18 +1,97 @@
 from math import log10
 
 import numpy as np
+
+import ray
+import sqlalchemy as sqla
+from sqlalchemy import func, and_
+
 from ray.actor import ActorHandle
 
-from CosmologyConcepts import redshift_array, wavenumber
+from CosmologyConcepts import redshift_array, wavenumber, redshift
 from CosmologyConcepts.wavenumber import wavenumber_exit_time
 from CosmologyModels.base import CosmologyBase
 from Datastore import DatastoreObject
+from defaults import DEFAULT_FLOAT_PRECISION
+
+
+class MatterTransferFunctionValue(DatastoreObject):
+    """
+    Encapsulates a single sampled value of the matter transfer functions, labelled by a wavenumber k
+    and a redshift z, and an initial redshift z_initial (at which the initial condition T(z_init) = 1.0 applies)
+    """
+
+    def __init__(
+        self,
+        store,
+        cosmology,
+        k: wavenumber,
+        z: redshift,
+        z_initial: redshift,
+        atol: float = 1e-5,
+        rtol: float = 1e-7,
+    ):
+        DatastoreObject.__init__(self, store)
+        self._cosmology: CosmologyBase = cosmology
+
+        # cache sample identifiers
+        self._k = k
+        self._z = z
+        self._z_init = z_initial
+
+        # query whether this sample value is available in the datastore
+        self._my_id = ray.get(self._store.query.remote(self))
+
+    @property
+    def available(self):
+        return self._my_id is not None
+
+    @staticmethod
+    def generate_columns():
+        return {
+            "version": True,
+            "stepping": True,
+            "columns": [
+                sqla.Column(
+                    "wavenumber_serial",
+                    sqla.Integer,
+                    sqla.ForeignKey("wavenumber.serial"),
+                    nullable=False,
+                ),
+                sqla.Column(
+                    "z_serial",
+                    sqla.Integer,
+                    sqla.ForeignKey("redshift.serial"),
+                    nullable=False,
+                ),
+                sqla.Column(
+                    "zinit_serial",
+                    sqla.Integer,
+                    sqla.ForeignKey("redshift.serial"),
+                    nullable=False,
+                ),
+                sqla.Column("cosmology_type", sqla.Integer, nullable=False),
+                sqla.Column("cosmology_serial", sqla.Integer, nullable=False),
+                sqla.Column(
+                    "atol_serial",
+                    sqla.Integer,
+                    sqla.ForeignKey("tolerance.serial"),
+                    nullable=False,
+                ),
+                sqla.Column(
+                    "rtol_serial",
+                    sqla.Integer,
+                    sqla.ForeignKey("tolerance.serial"),
+                    nullable=False,
+                ),
+            ],
+        }
 
 
 class MatterTransferFunction(DatastoreObject):
     """
-    Encapsulates a sample of the matter transfer function, labelled by a wavenumber k,
-    and sampled over a range of redshifts
+    Encapsulates the time-evolution of the matter transfer function, labelled by a wavenumber k,
+    and sampled over a specified range of redshifts
     """
 
     def __init__(
@@ -20,14 +99,31 @@ class MatterTransferFunction(DatastoreObject):
         store: ActorHandle,
         cosmology: CosmologyBase,
         k: wavenumber,
+        z_initial: redshift,
         z_samples: redshift_array,
     ):
+        """
+        :param store: handle to datastore actor
+        :param cosmology: cosmology instance
+        :param k: wavenumber object
+        :param z_initial: initial redshift of the matter transfer function
+        :param z_samples: redshift values at which to sample the matter transfer function
+        """
         DatastoreObject.__init__(self, store)
         self._cosmology: CosmologyBase = cosmology
 
         # cache wavenumber and z-sample array
         self._k = k
         self._z_samples = z_samples
+
+        # check that all sample points are later than the specified initial redshift
+        z_init_float = float(z_initial)
+        for z in self._z_samples:
+            z_float = float(z)
+            if z_float > z_init_float:
+                raise RuntimeError(
+                    f"Specified sample redshift z={z_float} exceeds initial redshift z={z_init_float}"
+                )
 
         # query datastore to find out whether the necessary sample values are available,
         # and schedule asynchronous tasks to compute any that are missing.
@@ -79,4 +175,10 @@ class MatterTransferFunction(DatastoreObject):
             f"-- using N = {num_z_samples} redshift sample points to represent transfer function"
         )
 
-        return cls(store, cosmology, k, z_samples)
+        return cls(
+            store,
+            cosmology=cosmology,
+            k=k,
+            z_initial=z_init + DEFAULT_FLOAT_PRECISION,
+            z_samples=z_samples,
+        )
