@@ -1,12 +1,97 @@
 from math import log10
 
 import numpy as np
+import sqlalchemy as sqla
 from ray.actor import ActorHandle
 
-from CosmologyConcepts import redshift_array, wavenumber
+from ComputeTargets import integration_metadata
+from CosmologyConcepts import redshift_array, wavenumber, redshift, tolerance
 from CosmologyConcepts.wavenumber import wavenumber_exit_time
 from CosmologyModels.base import CosmologyBase
 from Datastore import DatastoreObject
+from defaults import DEFAULT_STRING_LENGTH
+
+
+class MatterTransferFunctionIntegration(DatastoreObject):
+    """
+    Encapsulates all sample points produced during a single integration of the
+    matter transfer function, labelled by a wavenumber k, and sampled over
+    a range of redshifts
+    """
+
+    def __init__(
+            self,
+            store: ActorHandle,
+            cosmology: CosmologyBase,
+            label: str,
+            k: wavenumber,
+            z_samples: redshift_array,
+            z_init: redshift,
+            atol: float,
+            rtol: float,
+    ):
+        DatastoreObject.__init__(self, store)
+        self._cosmology = cosmology
+
+        # cache wavenumber and z-sample array
+        self._label = label
+        self._k = k
+        self._z_samples = z_samples
+        self._z_init = z_init
+
+        self._atol = tolerance(store, tol=atol)
+        self._rtol = tolerance(store, tol=rtol)
+
+    @staticmethod
+    def generate_columns():
+        return {
+            "version": True,
+            "stepping": True,
+            "timestamp": True,
+            "columns": [
+                sqla.Column("label", sqla.String(DEFAULT_STRING_LENGTH)),
+                sqla.Column(
+                    "wavenumber_serial",
+                    sqla.Integer,
+                    sqla.ForeignKey("wavenumber.serial"),
+                    nullable=False,
+                ),
+                sqla.Column("cosmology_type", sqla.Integer, nullable=False),
+                sqla.Column("ccosmology_serial", sqla.Integer, nullable=False),
+                sqla.Column(
+                    "atol_serial",
+                    sqla.Integer,
+                    sqla.ForeignKey("tolerance.serial"),
+                    nullable=False,
+                ),
+                sqla.Column(
+                    "atol_serial",
+                    sqla.Integer,
+                    sqla.ForeignKey("tolerance.serial"),
+                    nullable=False
+                ),
+                sqla.Column(
+                    "solver_serial",
+                    sqla.Integer,
+                    sqla.ForeignKey("solver.serial"),
+                    nullable=False
+                ),
+                sqla.Column("time", sqla.Float(64)),
+                sqla.Column("steps", sqla.Integer),
+            ]
+        }
+
+    @property
+    def stepping(self):
+        # stepping 0: initial implementation using solve_ivp
+        return 0
+
+    def build_query(self, table, query):
+        query = (
+            sqla.select
+        )
+
+    @classmethod
 
 
 class MatterTransferFunction(DatastoreObject):

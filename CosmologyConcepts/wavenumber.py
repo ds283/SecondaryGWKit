@@ -49,7 +49,7 @@ class wavenumber(DatastoreObject):
             func.abs(table.c.k_inv_Mpc - self.k_inv_Mpc) < DEFAULT_FLOAT_PRECISION
         )
 
-    def build_payload(self):
+    def build_storage_payload(self):
         return {"k_inv_Mpc": self.k_inv_Mpc}
 
 

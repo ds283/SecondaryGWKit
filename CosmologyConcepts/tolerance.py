@@ -52,5 +52,5 @@ class tolerance(DatastoreObject):
             func.abs(table.c.log10_tol - self.log10_tol) < DEFAULT_FLOAT_PRECISION
         )
 
-    def build_payload(self):
+    def build_storage_payload(self):
         return {"log10_tol": self.log10_tol}

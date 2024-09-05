@@ -103,7 +103,7 @@ class LambdaCDM(CosmologyBase):
             )
         )
 
-    def build_payload(self):
+    def build_storage_payload(self):
         return {
             "name": self.name,
             "omega_m": self.omega_m,

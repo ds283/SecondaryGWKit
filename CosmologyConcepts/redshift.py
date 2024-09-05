@@ -39,7 +39,7 @@ class redshift(DatastoreObject):
     def build_query(self, table, query):
         return query.filter(func.abs(table.c.z - self.z) < DEFAULT_FLOAT_PRECISION)
 
-    def build_payload(self):
+    def build_storage_payload(self):
         return {"z": self.z}
 
 
