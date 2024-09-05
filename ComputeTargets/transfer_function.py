@@ -15,6 +15,7 @@ from CosmologyConcepts.wavenumber import wavenumber_exit_time
 from CosmologyModels.base import CosmologyBase
 from Datastore import DatastoreObject
 from defaults import DEFAULT_STRING_LENGTH, DEFAULT_FLOAT_PRECISION
+from utilities import WallclockTimer
 
 
 class MatterTransferFunctionIntegration(DatastoreObject):
@@ -32,8 +33,8 @@ class MatterTransferFunctionIntegration(DatastoreObject):
             k: wavenumber,
             z_samples: redshift_array,
             z_init: redshift,
-            atol: float,
-            rtol: float,
+            atol: tolerance,
+            rtol: tolerance,
     ):
         DatastoreObject.__init__(self, store)
         self._cosmology = cosmology
@@ -44,8 +45,8 @@ class MatterTransferFunctionIntegration(DatastoreObject):
         self._z_samples = z_samples
         self._z_init = z_init
 
-        self._atol = tolerance(store, tol=atol)
-        self._rtol = tolerance(store, tol=rtol)
+        self._atol: tolerance = atol
+        self._rtol: tolerance = rtol
 
         # build label for our solver/strategy
         self._solver = IntegrationSolver(store, label="solve_ivp+RK45", stepping=0)
@@ -146,8 +147,8 @@ class MatterTransferFunctionValue(DatastoreObject):
             k: wavenumber,
             z_init: redshift,
             z: redshift,
-            target_atol: float = 1e-5,
-            target_rtol: float = 1e-7,
+            target_atol,
+            target_rtol,
     ):
         DatastoreObject.__init__(self, store)
 
@@ -165,8 +166,8 @@ class MatterTransferFunctionValue(DatastoreObject):
         self._rtol_table = self._tolerance_table.alias("rtol_table")
 
         # convert requested tolerances to database ids
-        self._target_atol: tolerance = tolerance(self._store, tol=target_atol)
-        self._target_rtol: tolerance = tolerance(self._store, tol=target_rtol)
+        self._target_atol: tolerance = target_atol
+        self._target_rtol: tolerance = target_rtol
 
         # obtain and cache handle to table of integration records
         self._integration_table: sqla.Table = ray.get(store.table.remote(MatterTransferFunctionIntegration))
@@ -269,7 +270,6 @@ class MatterTransferFunctionValue(DatastoreObject):
         )
         return query
 
-
 class MatterTransferFunction:
     """
     Encapsulates the time-evolution of the matter transfer function, labelled by a wavenumber k,
@@ -284,8 +284,8 @@ class MatterTransferFunction:
             k: wavenumber,
             z_init: redshift,
             z_samples: redshift_array,
-            target_atol: float = 1e-5,
-            target_rtol: float = 1e-7,
+            target_atol: tolerance=None,
+            target_rtol: tolerance=None,
     ):
         """
         :param store: handle to datastore actor
@@ -302,9 +302,17 @@ class MatterTransferFunction:
         self._z_samples = z_samples
         self._z_initial = z_init
 
+        if target_atol is None:
+            target_atol = tolerance(store, tol=1e-5)
+        if target_rtol is None:
+            target_rtol = tolerance(store, tol=1e-7)
+
+        self._target_atol: tolerance = target_atol
+        self._target_rtol: tolerance = target_rtol
+
         # query datastore to find out whether the necessary sample values are available,
         # and schedule asynchronous tasks to compute any that are missing.
-        self._sample_values = [MatterTransferFunctionValue(store, cosmology, k, z_init, z, target_atol=target_atol, target_rtol=target_rtol) for z in z_samples]
+        self._sample_values = [MatterTransferFunctionValue(store, cosmology, k, z_init, z, target_atol, target_rtol) for z in z_samples]
 
         self._missing_zs = [val.z for val in self._sample_values if not val.available]
         print(f"Matter transfer function T(z) for '{cosmology.name}' k={k.k_inv_Mpc}/Mpc has {len(self._missing_zs)} missing z-sample values")
@@ -322,8 +330,8 @@ class MatterTransferFunction:
             outside_horizon_efolds: float = 10.0,
             samples_per_log10z: int = 100,
             z_end: float = 0.1,
-            target_atol: float = 1e-5,
-            target_rtol: float = 1e-7,
+            target_atol: tolerance = None,
+            target_rtol: tolerance = None,
     ):
         """
         Determine the approximate starting redshift, if we wish to begin the calculation when

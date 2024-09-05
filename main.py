@@ -18,6 +18,8 @@ from CosmologyConcepts import (
 from CosmologyModels.LambdaCDM import LambdaCDM, Planck2018
 from ComputeTargets import MatterTransferFunction, IntegrationSolver, MatterTransferFunctionIntegration, MatterTransferFunctionValue
 
+from pyinstrument import Profiler
+
 parser = argparse.ArgumentParser()
 parser.add_argument("--Trad-final", nargs=2, help="specify final radiation temperature")
 parser.add_argument(

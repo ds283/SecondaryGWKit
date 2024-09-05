@@ -82,8 +82,8 @@ class wavenumber_exit_time(DatastoreObject):
         store: ActorHandle,
         k: wavenumber,
         cosmology: CosmologyBase,
-        target_atol: float = 1e-5,
-        target_rtol: float = 1e-7,
+        target_atol: tolerance = None,
+        target_rtol: tolerance = None,
     ):
         """
         Construct a datastore-backed object representing the horizon exit time
@@ -106,9 +106,14 @@ class wavenumber_exit_time(DatastoreObject):
         self._atol_table = self._tolerance_table.alias("atol_table")
         self._rtol_table = self._tolerance_table.alias("rtol_table")
 
-        # convert requested tolerances to database ids
-        self._target_atol: tolerance = tolerance(store, tol=target_atol)
-        self._target_rtol: tolerance = tolerance(store, tol=target_rtol)
+        # cache requested tolerances
+        if target_atol is None:
+            target_atol = tolerance(store, tol=1e-5)
+        if target_rtol is None:
+            target_rtol = tolerance(store, tol=1e-7)
+
+        self._target_atol: tolerance = target_atol
+        self._target_rtol: tolerance = target_rtol
 
         # request our own unique id from the datastore
         db_info = ray.get(self._store.query.remote(self, serial_only=False))
