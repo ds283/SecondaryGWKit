@@ -149,7 +149,7 @@ class wavenumber_exit_time(DatastoreObject):
                     sqla.ForeignKey("tolerance.serial"),
                     nullable=False,
                 ),
-                sqla.Column("time", sqla.Integer),
+                sqla.Column("time", sqla.Float(64)),
                 sqla.Column("z_exit", sqla.Float(64)),
             ],
         }
