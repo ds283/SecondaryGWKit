@@ -16,7 +16,7 @@ from CosmologyConcepts import (
     wavenumber_exit_time,
 )
 from CosmologyModels.LambdaCDM import LambdaCDM, Planck2018
-from ComputeTargets import MatterTransferFunction
+from ComputeTargets import MatterTransferFunction, IntegrationSolver, MatterTransferFunctionIntegration, MatterTransferFunctionValue
 
 parser = argparse.ArgumentParser()
 parser.add_argument("--Trad-final", nargs=2, help="specify final radiation temperature")
@@ -53,7 +53,8 @@ store: Datastore = Datastore.remote("2024.1.1")
 # register storable classes
 ray.get(
     store.register_storable_classes.remote(
-        {tolerance, redshift, wavenumber, wavenumber_exit_time, LambdaCDM}
+        {tolerance, redshift, wavenumber, wavenumber_exit_time, LambdaCDM, IntegrationSolver,
+         MatterTransferFunctionIntegration, MatterTransferFunctionValue, MatterTransferFunction}
     )
 )
 

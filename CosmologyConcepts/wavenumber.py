@@ -4,7 +4,7 @@ import ray
 from ray.actor import ActorHandle
 
 import sqlalchemy as sqla
-from sqlalchemy import func, and_
+from sqlalchemy import func, and_, literal_column
 
 from CosmologyConcepts.tolerance import tolerance
 from CosmologyModels.base import CosmologyBase
@@ -82,8 +82,8 @@ class wavenumber_exit_time(DatastoreObject):
         store: ActorHandle,
         k: wavenumber,
         cosmology: CosmologyBase,
-        atol: float = 1e-5,
-        rtol: float = 1e-7,
+        target_atol: float = 1e-5,
+        target_rtol: float = 1e-7,
     ):
         """
         Construct a datastore-backed object representing the horizon exit time
@@ -100,14 +100,15 @@ class wavenumber_exit_time(DatastoreObject):
 
         self._z_exit = None
 
-        # obtain and cache handle to
+        # obtain and cache handle to table of tolerance values
+        # also, set up aliases for seprate atol and rtol columns
         self._tolerance_table: sqla.Table = ray.get(store.table.remote(tolerance))
         self._atol_table = self._tolerance_table.alias("atol_table")
         self._rtol_table = self._tolerance_table.alias("rtol_table")
 
         # convert requested tolerances to database ids
-        self._target_atol: tolerance = tolerance(store, tol=atol)
-        self._target_rtol: tolerance = tolerance(store, tol=rtol)
+        self._target_atol: tolerance = tolerance(store, tol=target_atol)
+        self._target_rtol: tolerance = tolerance(store, tol=target_rtol)
 
         # request our own unique id from the datastore
         db_info = ray.get(self._store.query.remote(self, serial_only=False))
@@ -127,7 +128,7 @@ class wavenumber_exit_time(DatastoreObject):
         # and just skip foreign key constraints here
         return {
             "version": True,
-            "stepping": True,
+            "stepping": "minimum",
             "columns": [
                 sqla.Column(
                     "wavenumber_serial",
@@ -164,6 +165,8 @@ class wavenumber_exit_time(DatastoreObject):
         # notice we have to replace the .select_from() specifier that has been pre-populated by the DataStore object
         # If we just have .select_from(BASE_TABLE), we cannot access any columns from the joined tables (at least using SQLite)
         # see: https://stackoverflow.com/questions/68137220/getting-columns-of-the-joined-table-using-sqlalchemy-core
+
+        # order by descending values of abs and relative tolerances, so that we get the best computed value we hold
         query = (
             sqla.select(
                 table.c.serial,
@@ -198,6 +201,8 @@ class wavenumber_exit_time(DatastoreObject):
                     <= DEFAULT_FLOAT_PRECISION,
                 )
             )
+            .order_by(self._atol_table.c.log10_tol.desc())
+            .order_by(self._rtol_table.c.log10_tol.desc())
         )
         return query
 

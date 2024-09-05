@@ -1,2 +1,2 @@
 from .integration_metadata import IntegrationSolver
-from .transfer_function import MatterTransferFunction
+from .transfer_function import MatterTransferFunctionIntegration, MatterTransferFunctionValue, MatterTransferFunction

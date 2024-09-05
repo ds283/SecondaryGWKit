@@ -174,21 +174,22 @@ class Datastore:
             # query class for a list of columns that it wants to store
             class_data = cls.generate_columns()
 
+            defer_insert = class_data.get("defer_insert", False)
+            schema["defer_insert"] = defer_insert
+
             # generate basic table
-            # all rows get a timestamp, but other metadata can be controlled by the owning class
+            # metadata can be controlled by the owning class
 
             serial_col = sqla.Column("serial", sqla.Integer, primary_key=True)
-            timestamp_col = sqla.Column("timestamp", sqla.DateTime())
             tab = sqla.Table(
                 cls_name,
                 self._metadata,
                 serial_col,
-                timestamp_col,
             )
 
             # attach pre-defined columns
             use_version = class_data.get("version", False)
-            schema["version"] = use_version
+            schema["use_version"] = use_version
             if use_version:
                 version_col = sqla.Column(
                     "version", sqla.Integer, sqla.ForeignKey("versions.serial")
@@ -196,9 +197,25 @@ class Datastore:
                 tab.append_column(version_col)
                 schema["version_col"] = version_col
 
+            use_timestamp = class_data.get("timestamp", False)
+            schema["use_timestamp"] = use_timestamp
+            if use_timestamp:
+                timestamp_col = sqla.Column("timestamp", sqla.DateTime())
+                tab.append_column(timestamp_col)
+                schema["timestamp_col"] = timestamp_col
+
             use_stepping = class_data.get("stepping", False)
-            schema["stepping"] = use_stepping
-            if use_stepping:
+            if isinstance(use_stepping, str):
+                if use_stepping not in ["minimum", "exact"]:
+                    print(f"Warning: ignored stepping selection '{use_stepping}' when registering storable class '{cls_name}'")
+                    use_stepping = False
+
+            _use_stepping = isinstance(use_stepping, str) or use_stepping is not False
+            _stepping_mode = None if not isinstance(use_stepping, str) else use_stepping
+            schema["use_stepping"] = _use_stepping
+            schema["stepping_mode"] = _stepping_mode
+
+            if _use_stepping:
                 stepping_col = sqla.Column("stepping", sqla.Integer)
                 tab.append_column(stepping_col)
                 schema["stepping_col"] = stepping_col
@@ -210,15 +227,16 @@ class Datastore:
 
             # store in table cache
             schema["serial_col"] = serial_col
-            schema["timestamp_col"] = timestamp_col
             schema["columns"] = sqla_columns
             schema["table"] = tab
 
             # generate and cache lookup query
-            full_columns = [serial_col, timestamp_col]
+            full_columns = [serial_col]
             if use_version:
                 full_columns.append(version_col)
-            if use_stepping:
+            if use_timestamp:
+                full_columns.append(timestamp_col)
+            if _use_stepping:
                 full_columns.append(stepping_col)
             full_columns.extend(sqla_columns)
 
@@ -253,8 +271,10 @@ class Datastore:
         record = self._schema[cls_name]
         tab = record["table"]
 
-        uses_version = record["version"]
-        uses_stepping = record["stepping"]
+        uses_timestamp = record.get("use_timestamp", False)
+        uses_version = record.get("use_version", False)
+        uses_stepping = record.get("use_stepping", False)
+        defer_insert = record.get("defer_insert", False)
 
         if serial_only:
             query = record["serial_query"]
@@ -266,7 +286,12 @@ class Datastore:
 
         # filter by supplied stepping, if this class uses that metadata
         if uses_stepping:
-            query = query.filter(tab.c.stepping >= item.stepping)
+            stepping_mode = record["stepping_mode"]
+            if stepping_mode == "exact":
+                query = query.filter(tab.c.stepping == item.stepping)
+            elif stepping_mode == "minimum":
+                query = query.filter(tab.c.stepping >= item.stepping)
+
 
         with self._engine.begin() as conn:
             # print(f"QUERY: {query}")
@@ -283,11 +308,15 @@ class Datastore:
                     # store _asdict() rather than SQLAlchemy Row object in an attempt to produce simpler payloads for Ray
                     return {"store_id": x.serial, "data": x._asdict()}
 
+            if defer_insert:
+                return None
+
             data = item.build_storage_payload()
-            data = data | {"timestamp": datetime.now()}
 
             if uses_version:
                 data = data | {"version": self._version_id}
+            if uses_timestamp:
+                data = data | {"timestamp": datetime.now()}
             if uses_stepping:
                 data = data | {"stepping": item.stepping}
 
@@ -305,7 +334,7 @@ class Datastore:
                     return {"store_id": serial, "data": data}
 
         raise RuntimeError(
-            f'Insert error when querying for storable class "{cls_name}"'
+            f"Insert error when querying for storable class '{cls_name}'"
         )
 
     def table(self, ClassObject) -> sqla.Table:
