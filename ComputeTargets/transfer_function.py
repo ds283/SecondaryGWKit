@@ -137,7 +137,7 @@ class MatterTransferFunctionIntegration(DatastoreObject):
 class MatterTransferFunctionValue(DatastoreObject):
     """
     Encapsulates a single sampled value of the matter transfer functions, labelled by a wavenumber k
-    and a redshift z, and an initial redshift z_initial (at which the initial condition T(z_init) = 1.0 applies)
+    and a redshift z, and an initial redshift z_init (at which the initial condition T(z_init) = 1.0 applies)
     """
 
     def __init__(
@@ -151,7 +151,6 @@ class MatterTransferFunctionValue(DatastoreObject):
         target_rtol,
     ):
         DatastoreObject.__init__(self, store)
-
         self._cosmology: CosmologyBase = cosmology
 
         # cache parameters and values
