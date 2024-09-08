@@ -4,15 +4,35 @@ from os import PathLike
 from typing import Optional, Union, Iterable
 
 from ray import remote
-from ray.data import Dataset
 
 import sqlalchemy as sqla
 
+from Datastore.SQL.Adapters.LambdaCDM import sqla_LambdaCDM_adapter
+from Datastore.SQL.Adapters.MatterTransferFunction import (
+    sqla_MatterTransferFunctionIntegration_adapter,
+    sqla_MatterTransferFunctionValue_adapter,
+)
+from Datastore.SQL.Adapters.integration_metadata import sqla_IntegrationSolver_adapter
+from Datastore.SQL.Adapters.redshift import sqla_redshift_adapter
+from Datastore.SQL.Adapters.tolerance import sqla_tolerance_adapter
+from Datastore.SQL.Adapters.wavenumber import sqla_wavenumber_adapter
 
 VERSION_ID_LENGTH = 64
 
 
 PathType = Union[str, PathLike]
+
+
+_adapters = {
+    "redshift": sqla_redshift_adapter,
+    "wavenumber": sqla_wavenumber_adapter,
+    "wavenumber_exit_time": sqla_wavenumber_adapter,
+    "tolerance": sqla_tolerance_adapter,
+    "LambdaCDM": sqla_LambdaCDM_adapter,
+    "IntegrationSolver": sqla_IntegrationSolver_adapter,
+    "MatterTransferFunctionIntegration": sqla_MatterTransferFunctionIntegration_adapter,
+    "MatterTransferFunctionValue": sqla_MatterTransferFunctionValue_adapter,
+}
 
 
 @remote
@@ -31,8 +51,9 @@ class Datastore:
         self._version_id = version_id
         self._version_serial = None
 
-        # initialize empty dict of registered storable classes
+        # initialize set of registered storable class adapters
         self._registered_classes = {}
+        self.register_storable_adapters(_adapters.values())
 
         # initialize empty dict of storage schema
         # each record collects SQLAlchemy column and table definitions, queries, etc., for a registered storable class
@@ -143,7 +164,7 @@ class Datastore:
 
         self._version_serial = self._make_version_serial()
 
-    def register_storable_classes(self, ClassObjectList):
+    def register_storable_adapters(self, ClassObjectList):
         if not isinstance(ClassObjectList, Iterable):
             ClassObjectList = {ClassObjectList}
 
@@ -207,7 +228,9 @@ class Datastore:
             use_stepping = class_data.get("stepping", False)
             if isinstance(use_stepping, str):
                 if use_stepping not in ["minimum", "exact"]:
-                    print(f"Warning: ignored stepping selection '{use_stepping}' when registering storable class '{cls_name}'")
+                    print(
+                        f"Warning: ignored stepping selection '{use_stepping}' when registering storable class '{cls_name}'"
+                    )
                     use_stepping = False
 
             _use_stepping = isinstance(use_stepping, str) or use_stepping is not False
@@ -291,7 +314,6 @@ class Datastore:
                 query = query.filter(tab.c.stepping == item.stepping)
             elif stepping_mode == "minimum":
                 query = query.filter(tab.c.stepping >= item.stepping)
-
 
         with self._engine.begin() as conn:
             # print(f"QUERY: {query}")

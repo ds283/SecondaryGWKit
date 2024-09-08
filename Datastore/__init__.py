@@ -1,2 +1,2 @@
-from .sql_datastore import Datastore
+from Datastore.SQL.sqla_impl import Datastore
 from .object import DatastoreObject

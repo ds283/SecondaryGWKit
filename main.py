@@ -16,7 +16,12 @@ from CosmologyConcepts import (
     wavenumber_exit_time,
 )
 from CosmologyModels.LambdaCDM import LambdaCDM, Planck2018
-from ComputeTargets import MatterTransferFunction, IntegrationSolver, MatterTransferFunctionIntegration, MatterTransferFunctionValue
+from ComputeTargets import (
+    MatterTransferFunction,
+    IntegrationSolver,
+    MatterTransferFunctionIntegration,
+    MatterTransferFunctionValue,
+)
 
 from pyinstrument import Profiler
 
@@ -50,15 +55,11 @@ if args.create_database is None and args.database is None:
 # connect to ray cluster on supplied address; defaults to 'auto' meaning a locally running cluster
 ray.init(address=args.ray_address)
 
+# instantiate a Datastore actor: this runs on its own node, and acts as a broker between
+# ourselves and the dataabase.
+# For performance reasons, we want all database activity to run on this node.
+# For one thing, this lets us use transactions efficiently.
 store: Datastore = Datastore.remote("2024.1.1")
-
-# register storable classes
-ray.get(
-    store.register_storable_classes.remote(
-        {tolerance, redshift, wavenumber, wavenumber_exit_time, LambdaCDM, IntegrationSolver,
-         MatterTransferFunctionIntegration, MatterTransferFunctionValue}
-    )
-)
 
 if args.create_database is not None:
     obj = store.create_datastore.remote(args.create_database)
