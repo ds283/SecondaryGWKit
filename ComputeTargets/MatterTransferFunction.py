@@ -1,21 +1,17 @@
 from math import log10, exp
-from typing import Optional
 
 import numpy as np
-
-import ray
-import sqlalchemy as sqla
-from sqlalchemy import func, and_
-
 from ray.actor import ActorHandle
 
-from ComputeTargets import IntegrationSolver
 from CosmologyConcepts import redshift_array, wavenumber, redshift, tolerance
 from CosmologyConcepts.wavenumber import wavenumber_exit_time
 from CosmologyModels.base import CosmologyBase
 from Datastore import DatastoreObject
-from defaults import DEFAULT_STRING_LENGTH, DEFAULT_FLOAT_PRECISION
-from utilities import WallclockTimer
+from defaults import (
+    DEFAULT_ABS_TOLERANCE,
+    DEFAULT_REL_TOLERANCE,
+)
+from utilities import check_units
 
 
 class MatterTransferFunctionIntegration(DatastoreObject):
@@ -27,7 +23,7 @@ class MatterTransferFunctionIntegration(DatastoreObject):
 
     def __init__(
         self,
-        store: ActorHandle,
+        payload,
         cosmology: CosmologyBase,
         label: str,
         k: wavenumber,
@@ -36,120 +32,112 @@ class MatterTransferFunctionIntegration(DatastoreObject):
         atol: tolerance,
         rtol: tolerance,
     ):
-        DatastoreObject.__init__(self, store)
-        self._cosmology = cosmology
+        check_units(k, cosmology)
 
-        # cache wavenumber and z-sample array
-        self._label = label
-        self._k = k
-        self._z_samples = z_samples
-        self._z_init = z_init
+        if payload is None:
+            DatastoreObject.__init__(self, None)
+            self._compute_time = None
+            self._compute_steps = None
+            self._solver = None
 
-        self._atol: tolerance = atol
-        self._rtol: tolerance = rtol
+            self._z_samples = z_samples
+            self._values = None
+        else:
+            DatastoreObject.__init__(self, payload["store_id"])
+            self._compute_time = payload["compute_time"]
+            self._compute_steps = payload["compute_steps"]
+            self._solver = payload["solver"]
 
-        # build label for our solver/strategy
-        self._solver = IntegrationSolver(store, label="solve_ivp+RK45", stepping=0)
+            self._z_samples = payload["z_samples"]
+            self._values = payload["values"]
 
-        # check that all sample points are later than the specified initial redshift
+        # check that all sample points are *later* than the specified initial redshift
         z_init_float = float(z_init)
-        for z in z_samples:
+        for z in self._z_samples:
             z_float = float(z)
             if z_float > z_init_float:
-                raise RuntimeError(
-                    f"Specified sample redshift z={z_float} exceeds initial redshift z={z_init_float}"
+                raise ValueError(
+                    f"Sample redshift z={z_float} exceeds initial redshift z={z_init_float}"
                 )
 
-        # request our own unique id from the datastore
-        self._my_id = ray.get(self._store.query.remote(self))
+        # store parameters
+        self._k = k
+        self._cosmology = cosmology
 
-    def build_storage_payload(self):
-        return {
-            "label": self._label,
-            "wavenumber_serial": self._k.store_id,
-            "cosmology_type": self._cosmology.type_id,
-            "cosmology_serial": self._cosmology.store_id,
-            "atol_serial": self._atol.store_id,
-            "rtol_serial": self._rtol.store_id,
-            "solver_serial": self._solver.store_id,
-        }
+        self.label = label
+        self._z_init = z_init
 
-    @property
-    def store(self):
-        return self._store
+        self._future = None
+
+        self._atol = atol
+        self._rtol = rtol
 
     @property
     def cosmology(self):
         return self._cosmology
 
+    @property
+    def k(self):
+        return self._k
+
+    @property
+    def label(self):
+        return self._label
+
+    @property
+    def z_init(self):
+        return self._z_init
+
+    @property
+    def z_samples(self):
+        return self._z_samples
+
+    @property
+    def compute_time(self) -> float:
+        if self._compute_time is None:
+            raise RuntimeError("compute_time has not yet been populated")
+        return self._compute_time
+
+    @property
+    def compute_steps(self) -> float:
+        if self._compute_time is None:
+            raise RuntimeError("compute_steps has not yet been populated")
+        return self._compute_time
+
+    @property
+    def solver(self) -> float:
+        if self._solver is None:
+            raise RuntimeError("compute_steps has not yet been populated")
+        return self._solver
+
+    @property
+    def values(self) -> float:
+        if self._values is None:
+            raise RuntimeError("values has not yet been populated")
+        return self._values
+
 
 class MatterTransferFunctionValue(DatastoreObject):
     """
-    Encapsulates a single sampled value of the matter transfer functions, labelled by a wavenumber k
-    and a redshift z, and an initial redshift z_init (at which the initial condition T(z_init) = 1.0 applies)
+    Encapsulates a single sampled value of the matter transfer functions.
+    Parameters such as wavenumber k, intiial redshift z_init, etc., are held by the
+    owning MatterTransferFunctionIntegration object
     """
 
-    def __init__(
-        self,
-        store: ActorHandle,
-        cosmology: CosmologyBase,
-        k: wavenumber,
-        z_init: redshift,
-        z: redshift,
-        target_atol,
-        target_rtol,
-    ):
-        DatastoreObject.__init__(self, store)
-        self._cosmology: CosmologyBase = cosmology
+    def __init__(self, store_id: int, z: redshift, value: float):
+        if store_id is None:
+            raise ValueError("Store ID cannot be None")
+        DatastoreObject.__init__(self, store_id)
 
-        # cache parameters and values
-        self._k = k
-        self._z = z
-        self._z_init = z_init
+        self.z = z
+        self.value = value
 
-        # obtain and cache handle to table of tolerance values
-        # also, set up aliases for seprate atol and rtol columns
-        self._tolerance_table: sqla.Table = ray.get(self._store.table.remote(tolerance))
-        self._atol_table = self._tolerance_table.alias("atol_table")
-        self._rtol_table = self._tolerance_table.alias("rtol_table")
-
-        # convert requested tolerances to database ids
-        self._target_atol: tolerance = target_atol
-        self._target_rtol: tolerance = target_rtol
-
-        # obtain and cache handle to table of integration records
-        self._integration_table: sqla.Table = ray.get(
-            store.table.remote(MatterTransferFunctionIntegration)
-        )
-        self._solver_table: sqla.Table = ray.get(store.table.remote(IntegrationSolver))
-
-        # query whether this sample value is available in the datastore
-        db_info = ray.get(store.query.remote(self, serial_only=False))
-
-        if db_info is None:
-            self._my_id = None
-            self._value = None
-            return
-
-        self._my_id = db_info["store_id"]
-        row = db_info["data"]
-
-        self._value = row["value"]
-
-    @property
-    def available(self) -> bool:
-        return self._my_id is not None
-
-    @property
-    def value(self) -> Optional[float]:
-        if self._my_id is None:
-            return None
-
-        return self._value
-
-    @property
-    def z(self) -> redshift:
-        return self._z
+    def __float__(self):
+        """
+        Cast to float. Returns value of the transfer function
+        :return:
+        """
+        return self.value
 
 
 class MatterTransferFunction:
@@ -170,7 +158,7 @@ class MatterTransferFunction:
         target_rtol: tolerance = None,
     ):
         """
-        :param store: handle to datastore actor
+        :param store_id: unique Datastore id. May be None if the object has not yet been fully serialized
         :param cosmology: cosmology instance
         :param k: wavenumber object
         :param z_initial: initial redshift of the matter transfer function
@@ -185,9 +173,9 @@ class MatterTransferFunction:
         self._z_initial = z_init
 
         if target_atol is None:
-            target_atol = tolerance(store, tol=1e-5)
+            target_atol = tolerance(store, tol=DEFAULT_ABS_TOLERANCE)
         if target_rtol is None:
-            target_rtol = tolerance(store, tol=1e-7)
+            target_rtol = tolerance(store, tol=DEFAULT_REL_TOLERANCE)
 
         self._target_atol: tolerance = target_atol
         self._target_rtol: tolerance = target_rtol
@@ -209,66 +197,3 @@ class MatterTransferFunction:
         # schedule an integration to populate any missing values
         if len(self._missing_zs) > 0:
             print(f"Scheduling an integration ...")
-
-    @classmethod
-    def populate_z_samples(
-        cls,
-        store: ActorHandle,
-        cosmology: CosmologyBase,
-        k: wavenumber,
-        outside_horizon_efolds: float = 10.0,
-        samples_per_log10z: int = 100,
-        z_end: float = 0.1,
-        target_atol: tolerance = None,
-        target_rtol: tolerance = None,
-    ):
-        """
-        Determine the approximate starting redshift, if we wish to begin the calculation when
-        the mode k is a fixed number of e-folds outside the horizon, and returns
-        a MatterTransferFunction instance populated with an appropriate z-sample
-        array. The array using a fixed number of sample points per log10 interval of redshift.
-
-        The calculation of the initial redshift assumes that horizon crossing occurs during
-        :param store: handle to datastore actor
-        :param cosmology: cosmology models satisfying the CosmologyBase concept
-        :param k: the wavenumber to sample
-        :param outside_horizon_efolds: number of superhorizon efolds required in the initial condition
-        :param samples_per_log10z: number of points to sample per log10 interval of redshift
-        :return: MatterTransferFunction instance
-        """
-        # find horizon-crossing time for wavenumber z
-        exit_time = wavenumber_exit_time(store, k, cosmology)
-
-        # add on any specified number of superhorizon e-folds
-        # since 1 + z = a0/a, scaling the initial a by exp(-N) scales 1 + z by exp(+N)
-        if outside_horizon_efolds is not None and outside_horizon_efolds > 0.0:
-            z_init = (1.0 + exit_time.z_exit) * exp(outside_horizon_efolds) - 1.0
-
-        print(
-            f"horizon-crossing time for wavenumber k = {k.k_inv_Mpc}/Mpc is z_exit = {exit_time.z_exit}"
-        )
-        print(
-            f"-- using N = {outside_horizon_efolds} e-folds of superhorizon evolution, initial time is z_init = {z_init}"
-        )
-
-        # now we want to sample to transfer function between z_init and z = 0, using the specified
-        # number of redshift sample points
-        num_z_samples = int(round(samples_per_log10z * log10(z_init) + 0.5, 0))
-        z_samples = redshift_array(
-            store,
-            np.logspace(log10(z_init), log10(z_end), num=num_z_samples),
-        )
-
-        print(
-            f"-- using N = {num_z_samples} redshift sample points to represent transfer function"
-        )
-
-        return cls(
-            store,
-            cosmology=cosmology,
-            k=k,
-            z_init=redshift(store, z_init),
-            z_samples=z_samples,
-            target_atol=target_atol,
-            target_rtol=target_rtol,
-        )

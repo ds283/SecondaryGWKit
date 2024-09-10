@@ -1,29 +1,21 @@
 from typing import Iterable
 
-import ray
-from ray.actor import ActorHandle
-
-import sqlalchemy as sqla
-from sqlalchemy import func
-
 from Datastore import DatastoreObject
-from defaults import DEFAULT_FLOAT_PRECISION
 
 
 class redshift(DatastoreObject):
-    def __init__(self, store: ActorHandle, z: float):
+    def __init__(self, store_id: int, z: float):
         """
-        Construct a datastore-backed object representing a redshift,
+        Represents a redshift,
         e.g., used to sample a transfer function or power spectrum
-        :param store: handle to datastore actor
+        :param store_id: unique Datastore id. Should not be None
         :param z: redshift value
         """
-        DatastoreObject.__init__(self, store)
+        if store_id is None:
+            raise ValueError("Store ID cannot be None")
+        DatastoreObject.__init__(self, store_id)
 
         self.z = z
-
-        # request our own unique id from the datastore
-        self._my_id = ray.get(self._store.query.remote(self))
 
     def __float__(self):
         """
@@ -32,21 +24,16 @@ class redshift(DatastoreObject):
         """
         return self.z
 
-    def build_storage_payload(self):
-        return {"z": self.z}
-
 
 class redshift_array:
-    def __init__(self, store: ActorHandle, z_array: Iterable):
+    def __init__(self, z_array: Iterable[redshift]):
         """
         Construct a datastore-backed object representing an array of redshifts
-        :param store: handle to datastore actor
+        :param store_id: unique Datastore id. Should not be None
         :param z_array: array of redshift value
         """
-        self._store: ActorHandle = store
-
-        # build array
-        self._z_array = [redshift(store, z) for z in z_array]
+        # store array
+        self._z_array = z_array
 
     def __iter__(self):
         for z in self._z_array:

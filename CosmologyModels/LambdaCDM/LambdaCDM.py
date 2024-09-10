@@ -1,27 +1,27 @@
+from collections import namedtuple
 from math import sqrt
 
 import ray
-from ray.actor import ActorHandle
-
-import sqlalchemy as sqla
-from sqlalchemy import func, and_
 
 from CosmologyModels.base import CosmologyBase
-from Datastore import Datastore, DatastoreObject
 from Units.base import UnitsLike
 from constants import RadiationConstant
-from defaults import DEFAULT_STRING_LENGTH, DEFAULT_FLOAT_PRECISION
+
+LambdaCDM_params = namedtuple(
+    "LambdaCDM_params",
+    ["name", "omega_cc", "omega_m", "f_baryon", "h", "T_CMB_Kelvin", "Neff"],
+)
 
 
 class LambdaCDM(CosmologyBase):
-    def __init__(self, store: ActorHandle, params, units: UnitsLike):
+    def __init__(self, store_id: int, units: UnitsLike, params):
         """
         Construct a datastore-backed object representing a simple LambdaCDM cosmology
-        :param store: handle to datastore actor
+        :param store_id: unique Datastore id. Should not be None
         :param params: parameter block for the LambdaCDM model (e.g. Planck2018)
         :param units: units block (e.g. Mpc-based units)
         """
-        CosmologyBase.__init__(self, store)
+        CosmologyBase.__init__(self, store_id)
 
         self._params = params
         self._units = units
@@ -53,10 +53,6 @@ class LambdaCDM(CosmologyBase):
         self.rhocc = Omega_factor * self.omega_cc
 
         self.omega_CMB = self.rhoCMB0 / Omega_factor
-
-        # request our own unique id from the datastore
-        self._my_id = ray.get(self._store.query.remote(self))
-        print(f'LambdaCDM object "{self.name}" constructed with id={self._my_id}')
 
     @property
     def type_id(self) -> int:

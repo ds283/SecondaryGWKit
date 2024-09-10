@@ -1,3 +1,5 @@
+from typing import Optional
+
 from ray.actor import ActorHandle
 
 
@@ -6,9 +8,8 @@ class DatastoreObject:
     Represent an object that can be serialized in a datastore
     """
 
-    def __init__(self, store: ActorHandle):
-        self._store = store
-        self._my_id = None
+    def __init__(self, store_id: Optional[int]):
+        self._my_id = store_id
 
     @property
     def store_id(self) -> int:

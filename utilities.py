@@ -1,10 +1,13 @@
 import time
 from math import log, fabs
+from typing import Mapping
 
+import ray
 from scipy.integrate import solve_ivp
 
 from CosmologyConcepts import wavenumber
 from CosmologyModels.base import CosmologyBase
+from defaults import DEFAULT_ABS_TOLERANCE, DEFAULT_REL_TOLERANCE
 
 
 class WallclockTimer:
@@ -30,12 +33,13 @@ def check_units(A, B):
         raise RuntimeError("Units used for wavenumber k and cosmology are not equal")
 
 
+@ray.remote
 def find_horizon_exit_time(
     cosmology: CosmologyBase,
     k: wavenumber,
-    atol: float = 1e-5,
-    rtol: float = 1e-7,
-) -> float:
+    atol: float = DEFAULT_ABS_TOLERANCE,
+    rtol: float = DEFAULT_REL_TOLERANCE,
+) -> Mapping[str, float]:
     """
     Compute the redshift of horizon exit for a mode of wavenumber k in the specified cosmology, by solving
     the equation (k/H) * (1+z) = k/(aH) = 1.
@@ -61,11 +65,17 @@ def find_horizon_exit_time(
 
     q_zero_event.terminal = True
 
-    # solve to find the zero crossing point; we set the upper limit of integration to be 1E12, which should be comfortably above
-    # the redshift of any horizon crossing in which we are interested.
-    sol = solve_ivp(
-        dq_dz, t_span=(0.0, 1e20), y0=[q0], events=q_zero_event, atol=atol, rtol=rtol
-    )
+    with WallclockTimer() as timer:
+        # solve to find the zero crossing point; we set the upper limit of integration to be 1E12, which should be comfortably above
+        # the redshift of any horizon crossing in which we are interested.
+        sol = solve_ivp(
+            dq_dz,
+            t_span=(0.0, 1e20),
+            y0=[q0],
+            events=q_zero_event,
+            atol=atol,
+            rtol=rtol,
+        )
 
     # test whether termination occurred due to the q_zero_event() firing
     if not sol.success:
@@ -89,4 +99,4 @@ def find_horizon_exit_time(
             f"find_horizon_exit_time: more than one horizon-crossing time returned from integration (num={len(event_times)})"
         )
 
-    return event_times[0]
+    return {"compute_time": timer.elapsed, "z_exit": event_times[0]}

@@ -1,14 +1,12 @@
 from abc import ABC, abstractmethod
 
-from ray.actor import ActorHandle
-
 from Datastore import DatastoreObject
 from Units.base import UnitsLike
 
 
 class CosmologyBase(DatastoreObject, ABC):
-    def __init__(self, store: ActorHandle):
-        DatastoreObject.__init__(self, store)
+    def __init__(self, store_id: int):
+        DatastoreObject.__init__(self, store_id)
         # no constructor for ABC
 
     @property

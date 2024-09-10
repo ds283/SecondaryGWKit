@@ -1,21 +1,30 @@
+import functools
 from datetime import datetime
 from pathlib import Path
 from os import PathLike
-from typing import Optional, Union, Iterable
+import asyncio
+from typing import Optional, Union, Iterable, Mapping
 
 from ray import remote
 
 import sqlalchemy as sqla
+from sqlalchemy.ext.asyncio import create_async_engine
 
-from Datastore.SQL.Adapters.LambdaCDM import sqla_LambdaCDM_adapter
-from Datastore.SQL.Adapters.MatterTransferFunction import (
-    sqla_MatterTransferFunctionIntegration_adapter,
-    sqla_MatterTransferFunctionValue_adapter,
+from Datastore.SQL.ObjectFactories.LambdaCDM import sqla_LambdaCDM_factory
+from Datastore.SQL.ObjectFactories.MatterTransferFunction import (
+    sqla_MatterTransferFunctionIntegration_factory,
+    sqla_MatterTransferFunctionValue_factory,
 )
-from Datastore.SQL.Adapters.integration_metadata import sqla_IntegrationSolver_adapter
-from Datastore.SQL.Adapters.redshift import sqla_redshift_adapter
-from Datastore.SQL.Adapters.tolerance import sqla_tolerance_adapter
-from Datastore.SQL.Adapters.wavenumber import sqla_wavenumber_adapter
+from Datastore.SQL.ObjectFactories.base import SQLAFactoryBase
+from Datastore.SQL.ObjectFactories.integration_metadata import (
+    sqla_IntegrationSolver_factory,
+)
+from Datastore.SQL.ObjectFactories.redshift import sqla_redshift_factory
+from Datastore.SQL.ObjectFactories.tolerance import sqla_tolerance_factory
+from Datastore.SQL.ObjectFactories.wavenumber import (
+    sqla_wavenumber_factory,
+    sqla_wavenumber_exit_time_factory,
+)
 
 VERSION_ID_LENGTH = 64
 
@@ -24,15 +33,18 @@ PathType = Union[str, PathLike]
 
 
 _adapters = {
-    "redshift": sqla_redshift_adapter,
-    "wavenumber": sqla_wavenumber_adapter,
-    "wavenumber_exit_time": sqla_wavenumber_adapter,
-    "tolerance": sqla_tolerance_adapter,
-    "LambdaCDM": sqla_LambdaCDM_adapter,
-    "IntegrationSolver": sqla_IntegrationSolver_adapter,
-    "MatterTransferFunctionIntegration": sqla_MatterTransferFunctionIntegration_adapter,
-    "MatterTransferFunctionValue": sqla_MatterTransferFunctionValue_adapter,
+    "redshift": sqla_redshift_factory,
+    "wavenumber": sqla_wavenumber_factory,
+    "wavenumber_exit_time": sqla_wavenumber_exit_time_factory,
+    "tolerance": sqla_tolerance_factory,
+    "LambdaCDM": sqla_LambdaCDM_factory,
+    "IntegrationSolver": sqla_IntegrationSolver_factory,
+    "MatterTransferFunctionIntegration": sqla_MatterTransferFunctionIntegration_factory,
+    "MatterTransferFunctionValue": sqla_MatterTransferFunctionValue_factory,
 }
+
+_FactoryMappingType = Mapping[str, SQLAFactoryBase]
+_TableMappingType = Mapping[str, sqla.Table]
 
 
 @remote
@@ -52,11 +64,12 @@ class Datastore:
         self._version_serial = None
 
         # initialize set of registered storable class adapters
-        self._registered_classes = {}
-        self.register_storable_adapters(_adapters.values())
+        self._factories: _FactoryMappingType = {}
+        self.register_factories(_adapters)
 
         # initialize empty dict of storage schema
-        # each record collects SQLAlchemy column and table definitions, queries, etc., for a registered storable class
+        # each record collects SQLAlchemy column and table definitions, queries, etc., for a registered storable class factories
+        self._tables: _TableMappingType = {}
         self._schema = {}
 
     def _create_engine(self, db_name: PathType, expect_exists: bool = False):
@@ -89,7 +102,9 @@ class Datastore:
         if not db_file.exists():
             db_file.parents[0].mkdir(exist_ok=True, parents=True)
 
-        self._engine = sqla.create_engine(f"sqlite:///{db_name}", future=True)
+        self._engine = create_async_engine(
+            f"sqlite+aiosqlite:///{db_name}", future=True
+        )
         self._metadata = sqla.MetaData()
 
         self._version_table = sqla.Table(
@@ -99,9 +114,9 @@ class Datastore:
             sqla.Column("version_id", sqla.String(VERSION_ID_LENGTH)),
         )
 
-        self._register_schema()
+        self._build_storage_schema()
 
-    def create_datastore(self, db_name: PathType):
+    async def create_datastore(self, db_name: PathType):
         """
         Create and initialize an empty data container. Assumes the container not to be physically present at the specified path
         and will fail with an error if it is
@@ -114,39 +129,58 @@ class Datastore:
         print("-- creating database tables")
 
         # generate internal tables
-        self._version_table.create(self._engine)
-        self._version_serial = self._make_version_serial()
+        async with self._engine.begin() as conn:
+            await conn.run_sync(self._version_table.create)
+            await conn.commit()
+
+        self._version_serial = await self._make_version_serial()
 
         # generate tables defined by any registered storable classes
-        self._create_storage_tables()
+        await self._create_storage_tables()
 
-    def _make_version_serial(self):
+    async def _make_version_serial(self):
+        """
+        Normalize the supplied version label into a database rowid
+        :return:
+        """
         if self._engine is None:
             raise RuntimeError(
                 "No database connection exists in _make_version_serial()"
             )
 
-        with self._engine.begin() as conn:
-            result = conn.execute(
+        async with self._engine.begin() as conn:
+            # query database for serial number corresponding to this version label
+            ref = await conn.execute(
                 sqla.select(self._version_table.c.serial).filter(
                     self._version_table.c.version_id == self._version_id
                 )
             )
 
-            x = result.scalar()
+            serial = ref.scalar()
 
-            if x is not None:
-                return x
+            if serial is not None:
+                return serial
 
-            serial = conn.execute(
-                sqla.select(sqla.func.count()).select_from(self._version_table)
-            ).scalar()
-            conn.execute(
-                sqla.insert(self._version_table),
-                {"serial": serial, "version_id": self._version_id},
+            # no existing serial number was found, so insert a new one
+            ref = await conn.execute(
+                sqla.select(sqla.func.max(self._version_table.c.serial)).select_from(
+                    self._version_table
+                )
             )
 
-            conn.commit()
+            serial = ref.scalar()
+
+            # if .scalar returns an empty result, there are no serial numbers currently in use
+            if serial is None:
+                serial = -1
+
+            # insert a new database row for this version label
+            await conn.execute(
+                sqla.insert(self._version_table),
+                {"serial": serial + 1, "version_id": self._version_id},
+            )
+
+            await conn.commit()
 
         return serial
 
@@ -158,48 +192,54 @@ class Datastore:
         if self._engine is not None:
             raise RuntimeError(f"A storage engine has already been initialized")
 
-    def open_datastore(self, db_name: str) -> None:
+    async def open_datastore(self, db_name: str) -> None:
         self._ensure_no_engine()
         self._create_engine(db_name, expect_exists=True)
 
-        self._version_serial = self._make_version_serial()
+        self._version_serial = await self._make_version_serial()
 
-    def register_storable_adapters(self, ClassObjectList):
-        if not isinstance(ClassObjectList, Iterable):
-            ClassObjectList = {ClassObjectList}
+    def register_factories(self, factories: _FactoryMappingType):
+        """
+        Register a factory for a storable class. Factories are delegates for the SQLAlchemy operations
+        needed to serialize and deserialize storable classes into the Datastore.
+        These are factories, not adapters. They don't wrap the storable classes themselves.
+        This is a deliberate design decision; everything to do with database I/O is supposed to happen
+        on the node running the Datastore actor, for performance reasons.
+        :param factories:
+        :return:
+        """
+        if not isinstance(factories, Mapping):
+            raise RuntimeError("Expecting factory_set to be a mapping instance")
 
-        for ClassObject in ClassObjectList:
-            class_name = ClassObject.__name__
-
-            if class_name in self._registered_classes:
+        for cls_name, factory in factories.items():
+            if cls_name in self._factories:
                 raise RuntimeWarning(
-                    f"Duplicate attempt to register storable class '{class_name}'"
+                    f"Duplicate attempt to register storable class factory '{cls_name}'"
                 )
 
-            self._registered_classes[class_name] = ClassObject
-            print(f"Registered storable class '{class_name}'")
+            self._factories[cls_name] = factory
+            print(f"Registered storable class factory '{cls_name}'")
 
-    def _register_schema(self):
-        self._ensure_engine()
-
-        # iterate through all registered classes, querying them for the columns
-        # they need to store their data
-        for cls_name, cls in self._registered_classes.items():
+    def _build_storage_schema(self):
+        # iterate through all registered storage adapters, querying them for the columns
+        # they need to persist their data
+        for cls_name, factory in self._factories.items():
             if cls_name in self._schema:
                 raise RuntimeWarning(
-                    f"Duplicate attempt to register table for storable class '{cls_name}'"
+                    f"Duplicate registered factory for storable class '{cls_name}'"
                 )
 
-            schema = {}
+            schema = {"name": cls_name}
 
             # query class for a list of columns that it wants to store
-            class_data = cls.generate_columns()
+            table_data = factory.generate_columns()
 
-            defer_insert = class_data.get("defer_insert", False)
+            # extract configuration settings
+            defer_insert = table_data.get("defer_insert", False)
             schema["defer_insert"] = defer_insert
 
-            # generate basic table
-            # metadata can be controlled by the owning class
+            # generate main table for this adapter class
+            # metadata can be controlled by the owning adapter
 
             serial_col = sqla.Column("serial", sqla.Integer, primary_key=True)
             tab = sqla.Table(
@@ -208,8 +248,11 @@ class Datastore:
                 serial_col,
             )
 
+            schema["serial_col"] = serial_col
+            full_columns = [serial_col]
+
             # attach pre-defined columns
-            use_version = class_data.get("version", False)
+            use_version = table_data.get("version", False)
             schema["use_version"] = use_version
             if use_version:
                 version_col = sqla.Column(
@@ -217,156 +260,148 @@ class Datastore:
                 )
                 tab.append_column(version_col)
                 schema["version_col"] = version_col
+                full_columns.append(version_col)
 
-            use_timestamp = class_data.get("timestamp", False)
+            use_timestamp = table_data.get("timestamp", False)
             schema["use_timestamp"] = use_timestamp
             if use_timestamp:
                 timestamp_col = sqla.Column("timestamp", sqla.DateTime())
                 tab.append_column(timestamp_col)
                 schema["timestamp_col"] = timestamp_col
+                full_columns.append(timestamp_col)
 
-            use_stepping = class_data.get("stepping", False)
+            use_stepping = table_data.get("stepping", False)
             if isinstance(use_stepping, str):
                 if use_stepping not in ["minimum", "exact"]:
                     print(
-                        f"Warning: ignored stepping selection '{use_stepping}' when registering storable class '{cls_name}'"
+                        f"Warning: ignored stepping selection '{use_stepping}' when registering storable class factory for '{cls_name}'"
                     )
                     use_stepping = False
 
-            _use_stepping = isinstance(use_stepping, str) or use_stepping is not False
-            _stepping_mode = None if not isinstance(use_stepping, str) else use_stepping
+            _use_stepping = isinstance(use_stepping, str) or use_stepping is True
             schema["use_stepping"] = _use_stepping
-            schema["stepping_mode"] = _stepping_mode
-
             if _use_stepping:
                 stepping_col = sqla.Column("stepping", sqla.Integer)
                 tab.append_column(stepping_col)
                 schema["stepping_col"] = stepping_col
+                full_columns.append(stepping_col)
+
+                _stepping_mode = (
+                    None if not isinstance(use_stepping, str) else use_stepping
+                )
+                schema["stepping_mode"] = _stepping_mode
 
             # append all columns supplied by the class
-            sqla_columns = class_data.get("columns", [])
+            sqla_columns = table_data.get("columns", [])
             for col in sqla_columns:
                 tab.append_column(col)
+            schema["columns"] = sqla_columns
+            full_columns.extend(sqla_columns)
 
             # store in table cache
-            schema["serial_col"] = serial_col
-            schema["columns"] = sqla_columns
             schema["table"] = tab
 
             # generate and cache lookup query
-            full_columns = [serial_col]
-            if use_version:
-                full_columns.append(version_col)
-            if use_timestamp:
-                full_columns.append(timestamp_col)
-            if _use_stepping:
-                full_columns.append(stepping_col)
-            full_columns.extend(sqla_columns)
-
+            # (the idea here is that by caching the query we can make use of SQLAlchemy's internal SQL-compilation caching so that we
+            # do not have to recompile the query every time it is executed)
             full_query = sqla.select(*full_columns).select_from(tab)
             schema["full_query"] = full_query
 
             serial_query = sqla.select(serial_col).select_from(tab)
             schema["serial_query"] = serial_query
 
-            self._schema[cls_name] = schema
-            print(f"Registered storage schema from storable class '{cls_name}'")
+            # build inserter
+            schema["insert"] = functools.partial(self._insert, schema, tab)
 
-    def _create_storage_tables(self):
+            self._schema[cls_name] = schema
+            self._tables[cls_name] = tab
+            print(f"Registered storage schema for storable class adapter '{cls_name}'")
+
+    async def _create_storage_tables(self):
         self._ensure_engine()
 
-        for record in self._schema.values():
-            tab = record["table"]
-            tab.create(self._engine)
+        async with self._engine.begin() as conn:
+            for record in self._schema.values():
+                tab = record["table"]
+                await conn.run_sync(tab.create)
 
     def _ensure_registered_schema(self, cls_name: str):
-        if cls_name not in self._registered_classes:
+        if cls_name not in self._factories:
             raise RuntimeError(
                 f'No storable class of type "{cls_name}" has been registered'
             )
 
-    def query(self, item, serial_only: bool = True):
+    async def object_factory(self, ObjectClass, **kwargs):
         self._ensure_engine()
 
-        cls_name = type(item).__name__
+        if isinstance(ObjectClass, str):
+            cls_name = ObjectClass
+        else:
+            cls_name = ObjectClass.__name__
         self._ensure_registered_schema(cls_name)
 
         record = self._schema[cls_name]
+
         tab = record["table"]
+        full_query = record["full_query"]
+        serial_query = record["serial_query"]
+        inserter = record["insert"]
 
-        uses_timestamp = record.get("use_timestamp", False)
-        uses_version = record.get("use_version", False)
-        uses_stepping = record.get("use_stepping", False)
-        defer_insert = record.get("defer_insert", False)
+        # obtain type of factory class for this storable
+        factory = self._factories[cls_name]
 
-        if serial_only:
-            query = record["serial_query"]
+        if "payload_data" in kwargs:
+            payload_data = kwargs["payload_data"]
+            scalar = False
         else:
-            query = record["full_query"]
+            payload_data = [kwargs]
+            scalar = True
 
-        # pass basic query back to item instance to add .filter() specifications, or any other adjustments that are needed
-        query = item.build_query(tab, query)
+        async with self._engine.begin() as conn:
+            obj_list = [
+                factory.build(
+                    engine=self._engine,
+                    conn=conn,
+                    table=tab,
+                    full_query=full_query,
+                    serial_query=serial_query,
+                    tables=self._tables,
+                    inserter=inserter,
+                    payload=p,
+                )
+                for p in payload_data
+            ]
+            objects = await asyncio.gather(*obj_list)
 
-        # filter by supplied stepping, if this class uses that metadata
+            await conn.commit()
+
+        if scalar:
+            return objects[0]
+
+        return objects
+
+    async def _insert(self, schema, table, conn, payload):
+        uses_timestamp = schema.get("use_timestamp", False)
+        uses_version = schema.get("use_version", False)
+        uses_stepping = schema.get("use_stepping", False)
+
+        if uses_version:
+            payload = payload | {"version": self._version_id}
+        if uses_timestamp:
+            payload = payload | {"timestamp": datetime.now()}
         if uses_stepping:
-            stepping_mode = record["stepping_mode"]
-            if stepping_mode == "exact":
-                query = query.filter(tab.c.stepping == item.stepping)
-            elif stepping_mode == "minimum":
-                query = query.filter(tab.c.stepping >= item.stepping)
+            if "stepping" not in payload:
+                raise KeyError("Expected 'stepping' field in payload")
 
-        with self._engine.begin() as conn:
-            # print(f"QUERY: {query}")
-            # print(f"QUERY COLUMNS {query.columns.keys()}")
-            result = conn.execute(query)
-
-            if serial_only:
-                x = result.scalar()
-                if x is not None:
-                    return x
-            else:
-                x = result.one_or_none()
-                if x is not None:
-                    # store _asdict() rather than SQLAlchemy Row object in an attempt to produce simpler payloads for Ray
-                    return {"store_id": x.serial, "data": x._asdict()}
-
-            if defer_insert:
-                return None
-
-            data = item.build_storage_payload()
-
-            if uses_version:
-                data = data | {"version": self._version_id}
-            if uses_timestamp:
-                data = data | {"timestamp": datetime.now()}
-            if uses_stepping:
-                data = data | {"stepping": item.stepping}
-
-            obj = conn.execute(
-                sqla.dialects.sqlite.insert(tab).on_conflict_do_nothing(), data
-            )
-            conn.commit()
-
-            serial = obj.lastrowid
-            if serial is not None:
-                if serial_only:
-                    return serial
-                else:
-                    data = data | {"serial": serial}
-                    return {"store_id": serial, "data": data}
-
-        raise RuntimeError(
-            f"Insert error when querying for storable class '{cls_name}'"
+        obj = await conn.execute(
+            sqla.dialects.sqlite.insert(table).on_conflict_do_nothing(), payload
         )
 
-    def table(self, ClassObject) -> sqla.Table:
-        """
-        Obtain the SQLAlchemy table object corresponding to a datastore object
-        """
-        cls_name: str = ClassObject.__name__
-        self._ensure_registered_schema(cls_name)
+        serial = obj.lastrowid
+        if serial is not None:
+            return serial
 
-        record = self._schema[cls_name]
-        tab = record["table"]
-
-        return tab
+        cls_name = schema["name"]
+        raise RuntimeError(
+            f"Insert error when creating new entry for storable class '{cls_name}' (payload={payload})"
+        )

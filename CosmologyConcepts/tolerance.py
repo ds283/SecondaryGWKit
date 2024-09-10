@@ -1,24 +1,22 @@
+from math import log10, pow
+
 import ray
 from ray.actor import ActorHandle
 
-from math import log10, pow
-
-import sqlalchemy as sqla
-from sqlalchemy import func
-
 from Datastore import DatastoreObject
-from defaults import DEFAULT_FLOAT_PRECISION
 
 
 class tolerance(DatastoreObject):
-    def __init__(self, store: ActorHandle, **kwargs):
+    def __init__(self, store_id: int, **kwargs):
         """
         Construct a datastore-backed object representing a tolerance (absolute or relative).
         Effectively tokenizes a floating point number to an integer.
-        :param store: handle to datastore actor
+        :param store_id: unique Datastore id. Should not be None
         :param tol: tolerance
         """
-        DatastoreObject.__init__(self, store)
+        if store_id is None:
+            raise ValueError("Store ID cannot be None")
+        DatastoreObject.__init__(self, store_id)
 
         if "log10_tol" in kwargs:
             log10_tol = kwargs["log10_tol"]
@@ -32,9 +30,6 @@ class tolerance(DatastoreObject):
             raise RuntimeError(
                 'Neither "tol" nor "log10_tol" was supplied to tolerance() constructor'
             )
-
-        # request our own unique id from the datastore, unless a store id was provided, in which case we circumvent going out to the database
-        self._my_id = ray.get(self._store.query.remote(self))
 
     def __float__(self):
         """
