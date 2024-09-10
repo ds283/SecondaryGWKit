@@ -44,3 +44,14 @@ class redshift_array:
 
     def as_list(self) -> list[float]:
         return [float(z) for z in self._z_array]
+
+    def max(self) -> redshift:
+        z_max = None
+        z_max_item = None
+
+        for z in self._z_array:
+            if z_max is None or z.z > z_max:
+                z_max = z.z
+                z_max_item = z
+
+        return z_max_item

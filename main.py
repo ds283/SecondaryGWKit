@@ -161,7 +161,7 @@ T_k1_container, T_k2_container, T_k3_container = ray.get(
             atol=atol,
             rtol=rtol,
             z_sample=k1_z_sample,
-            z_init=max(k1_z_sample.as_list()),
+            z_init=k1_z_sample.max(),
         ),
         store.object_factory.remote(
             MatterTransferFunctionContainer,
@@ -170,7 +170,7 @@ T_k1_container, T_k2_container, T_k3_container = ray.get(
             atol=atol,
             rtol=rtol,
             z_sample=k2_z_sample,
-            z_init=max(k2_z_sample.as_list()),
+            z_init=k2_z_sample.max(),
         ),
         store.object_factory.remote(
             MatterTransferFunctionContainer,
@@ -179,7 +179,7 @@ T_k1_container, T_k2_container, T_k3_container = ray.get(
             atol=atol,
             rtol=rtol,
             z_sample=k3_z_sample,
-            z_init=max(k3_z_sample.as_list()),
+            z_init=k3_z_sample.max(),
         ),
     ]
 )

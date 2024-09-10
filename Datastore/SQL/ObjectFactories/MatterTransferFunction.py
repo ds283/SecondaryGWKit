@@ -275,7 +275,7 @@ class sqla_MatterTransferFunctionContainer_factory(SQLAFactoryBase):
         k: wavenumber = payload["k"]
         cosmology: CosmologyBase = payload["cosmology"]
         z_samples: redshift_array = payload["z_sample"]
-        z_init: redshift_array = payload["z_init"]
+        z_init: redshift = payload["z_init"]
 
         atol_table = tables["tolerance"].alias("atol")
         rtol_table = tables["tolerance"].alias("rtol")
