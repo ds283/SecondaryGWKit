@@ -76,7 +76,7 @@ def compute_matter_Tk(
             rtol=rtol,
         )
 
-    # test whether termination occurred due to the q_zero_event() firing
+    # test whether the integration concluded successfully
     if not sol.success:
         raise RuntimeError(
             f'compute_matter_Tk: integration did not terminate successfully ("{sol.message}")'
