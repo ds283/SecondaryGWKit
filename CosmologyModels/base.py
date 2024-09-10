@@ -4,7 +4,7 @@ from Datastore import DatastoreObject
 from Units.base import UnitsLike
 
 
-class CosmologyBase(DatastoreObject, ABC):
+class BaseCosmology(DatastoreObject, ABC):
     def __init__(self, store_id: int):
         DatastoreObject.__init__(self, store_id)
         # no constructor for ABC
@@ -30,9 +30,25 @@ class CosmologyBase(DatastoreObject, ABC):
         raise NotImplementedError
 
     @abstractmethod
+    def rho(self, z: float) -> float:
+        raise NotImplementedError
+
+    @abstractmethod
     def Hubble(self, z: float) -> float:
         raise NotImplementedError
 
     @abstractmethod
     def d_lnH_dz(self, z: float) -> float:
         raise NotImplementedError
+
+    @abstractmethod
+    def w(self, z: float) -> float:
+        raise NotImplementedError
+
+    def epsilon(self, z: float) -> float:
+        """
+        Evaluate the conventional epsilon parameter eps = -dot(H)/H^2
+        :param z: redshift of evaluation
+        :return:
+        """
+        return (1.0 + z) * self.d_lnH_dz(z)

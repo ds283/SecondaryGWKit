@@ -1,13 +1,12 @@
+import asyncio
 import functools
 from datetime import datetime
-from pathlib import Path
 from os import PathLike
-import asyncio
-from typing import Optional, Union, Iterable, Mapping
-
-from ray import remote
+from pathlib import Path
+from typing import Optional, Union, Mapping, Callable
 
 import sqlalchemy as sqla
+from ray import remote
 from sqlalchemy.ext.asyncio import create_async_engine
 
 from Datastore.SQL.ObjectFactories.LambdaCDM import sqla_LambdaCDM_factory
@@ -47,6 +46,7 @@ _adapters = {
 
 _FactoryMappingType = Mapping[str, SQLAFactoryBase]
 _TableMappingType = Mapping[str, sqla.Table]
+_InserterMappingType = Mapping[str, Callable]
 
 
 @remote
@@ -72,6 +72,7 @@ class Datastore:
         # initialize empty dict of storage schema
         # each record collects SQLAlchemy column and table definitions, queries, etc., for a registered storable class factories
         self._tables: _TableMappingType = {}
+        self._inserters: _InserterMappingType = {}
         self._schema = {}
 
     def _create_engine(self, db_name: PathType, expect_exists: bool = False):
@@ -309,10 +310,12 @@ class Datastore:
                 schema["serial_query"] = serial_query
 
                 # build inserter
-                schema["insert"] = functools.partial(self._insert, schema, tab)
+                inserter = functools.partial(self._insert, schema, tab)
+                schema["insert"] = inserter
 
-                # also store table in its own separate cache
+                # also store table and inserter in their own separate cache
                 self._tables[cls_name] = tab
+                self._inserters[cls_name] = inserter
 
                 print(
                     f"Registered storage schema for storable class adapter '{cls_name}' with database table '{tab.name}'"
@@ -371,14 +374,15 @@ class Datastore:
         async with self._engine.begin() as conn:
             obj_list = [
                 factory.build(
+                    payload=p,
                     engine=self._engine,
                     conn=conn,
                     table=tab,
                     full_query=full_query,
                     serial_query=serial_query,
-                    tables=self._tables,
                     inserter=inserter,
-                    payload=p,
+                    tables=self._tables,
+                    inserters=self._inserters,
                 )
                 for p in payload_data
             ]
@@ -393,7 +397,7 @@ class Datastore:
 
     async def _insert(self, schema, table, conn, payload):
         if table is None:
-            raise RuntimeError(f"Attempt to insert into null table (scheme='{schema}'")
+            raise RuntimeError(f"Attempt to insert into null table (scheme='{schema}')")
 
         uses_timestamp = schema.get("use_timestamp", False)
         uses_version = schema.get("use_version", False)

@@ -1,12 +1,12 @@
 import time
-from math import log, fabs
+from math import log
 from typing import Mapping
 
 import ray
 from scipy.integrate import solve_ivp
 
 from CosmologyConcepts import wavenumber
-from CosmologyModels.base import CosmologyBase
+from CosmologyModels.base import BaseCosmology
 from defaults import DEFAULT_ABS_TOLERANCE, DEFAULT_REL_TOLERANCE
 
 
@@ -18,7 +18,11 @@ class WallclockTimer:
     def __exit__(self, type, value, traceback):
         self.end_time = time.perf_counter()
         self.elapsed = self.end_time - self.start_time
-        return self.elapsed
+
+        if type:
+            return None
+
+        return True
 
 
 def check_units(A, B):
@@ -35,7 +39,7 @@ def check_units(A, B):
 
 @ray.remote
 def find_horizon_exit_time(
-    cosmology: CosmologyBase,
+    cosmology: BaseCosmology,
     k: wavenumber,
     atol: float = DEFAULT_ABS_TOLERANCE,
     rtol: float = DEFAULT_REL_TOLERANCE,
@@ -54,7 +58,7 @@ def find_horizon_exit_time(
     q0 = log(float(k) / cosmology.H0)
 
     # RHS of ODE system for dq/dz = f(z)
-    def dq_dz(z, state):
+    def RHS(z, state):
         # q = state[0]
         return [1.0 / (1.0 + z) - cosmology.d_lnH_dz(z)]
 
@@ -69,7 +73,7 @@ def find_horizon_exit_time(
         # solve to find the zero crossing point; we set the upper limit of integration to be 1E12, which should be comfortably above
         # the redshift of any horizon crossing in which we are interested.
         sol = solve_ivp(
-            dq_dz,
+            RHS,
             t_span=(0.0, 1e20),
             y0=[q0],
             events=q_zero_event,

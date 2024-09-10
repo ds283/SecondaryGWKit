@@ -1,12 +1,14 @@
 import argparse
 import sys
-
-import ray
+from datetime import datetime
 
 import numpy as np
+import ray
 
-from Datastore.SQL import Datastore
-from Units import Mpc_units
+from ComputeTargets import (
+    MatterTransferFunctionContainer,
+    MatterTransferFunctionIntegration,
+)
 from CosmologyConcepts import (
     tolerance,
     wavenumber,
@@ -16,20 +18,13 @@ from CosmologyConcepts import (
     wavenumber_exit_time,
 )
 from CosmologyModels.LambdaCDM import LambdaCDM, Planck2018
-from ComputeTargets import (
-    MatterTransferFunction,
-    IntegrationSolver,
-    MatterTransferFunctionIntegration,
-    MatterTransferFunctionValue,
-    MatterTransferFunctionContainer,
-)
-
-from pyinstrument import Profiler
-
+from Datastore.SQL import Datastore
+from Units import Mpc_units
 from defaults import DEFAULT_ABS_TOLERANCE, DEFAULT_REL_TOLERANCE
 
+default_label = "SecondaryGWKit-test"
+
 parser = argparse.ArgumentParser()
-parser.add_argument("--Trad-final", nargs=2, help="specify final radiation temperature")
 parser.add_argument(
     "--create-database",
     default=None,
@@ -45,6 +40,11 @@ parser.add_argument(
     default=True,
     action=argparse.BooleanOptionalAction,
     help="enable/disable computation of work items (use in conjunction with --create-database",
+)
+parser.add_argument(
+    "--job-name",
+    default=default_label,
+    help="specify a label for this job (used to identify integrations and other numerical products)",
 )
 parser.add_argument(
     "--ray-address", default="auto", type=str, help="specify address of Ray cluster"
@@ -137,13 +137,13 @@ k1_exit, k2_exit, k3_exit = ray.get(
 k1_z_array, k2_z_array, k3_z_array = ray.get(
     [
         convert_numbers_to_redshifts(
-            k1_exit.populate_z_samples(outside_horizon_efolds=10.0, z_end=0.1)
+            k1_exit.populate_z_sample(outside_horizon_efolds=10.0, z_end=0.1)
         ),
         convert_numbers_to_redshifts(
-            k2_exit.populate_z_samples(outside_horizon_efolds=10.0, z_end=0.1)
+            k2_exit.populate_z_sample(outside_horizon_efolds=10.0, z_end=0.1)
         ),
         convert_numbers_to_redshifts(
-            k3_exit.populate_z_samples(outside_horizon_efolds=10.0, z_end=0.1)
+            k3_exit.populate_z_sample(outside_horizon_efolds=10.0, z_end=0.1)
         ),
     ]
 )
@@ -152,46 +152,66 @@ k1_z_sample = redshift_array(z_array=k1_z_array)
 k2_z_sample = redshift_array(z_array=k2_z_array)
 k3_z_sample = redshift_array(z_array=k3_z_array)
 
-T_k1_container, T_k2_container, T_k3_container = ray.get(
-    [
-        store.object_factory.remote(
-            MatterTransferFunctionContainer,
-            k=k1,
-            cosmology=LambdaCDM_Planck2018,
-            atol=atol,
-            rtol=rtol,
-            z_sample=k1_z_sample,
-            z_init=k1_z_sample.max(),
-        ),
-        store.object_factory.remote(
-            MatterTransferFunctionContainer,
-            k=k2,
-            cosmology=LambdaCDM_Planck2018,
-            atol=atol,
-            rtol=rtol,
-            z_sample=k2_z_sample,
-            z_init=k2_z_sample.max(),
-        ),
-        store.object_factory.remote(
-            MatterTransferFunctionContainer,
-            k=k3,
-            cosmology=LambdaCDM_Planck2018,
-            atol=atol,
-            rtol=rtol,
-            z_sample=k3_z_sample,
-            z_init=k3_z_sample.max(),
-        ),
-    ]
-)
 
-# Tk1_future = store.object_factory(
-#     MatterTransferFunction, cosmology=LambdaCDM_Planck2018, k=k_samples[0]
-# )
-# Tk2_future = store.object_factory(
-#     MatterTransferFunction, cosmology=LambdaCDM_Planck2018, k=k_samples[1000]
-# )
-# Tk3_future = store.object_factory(
-#     MatterTransferFunction, cosmology=LambdaCDM_Planck2018, k=k_samples[4000]
-# )
-#
-# ray.get([Tk1_future, Tk2_future, Tk3_future])
+def build_Tks():
+    return ray.get(
+        [
+            store.object_factory.remote(
+                MatterTransferFunctionContainer,
+                k=k1,
+                cosmology=LambdaCDM_Planck2018,
+                atol=atol,
+                rtol=rtol,
+                z_sample=k1_z_sample,
+                z_init=k1_z_sample.max,
+            ),
+            store.object_factory.remote(
+                MatterTransferFunctionContainer,
+                k=k2,
+                cosmology=LambdaCDM_Planck2018,
+                atol=atol,
+                rtol=rtol,
+                z_sample=k2_z_sample,
+                z_init=k2_z_sample.max,
+            ),
+            store.object_factory.remote(
+                MatterTransferFunctionContainer,
+                k=k3,
+                cosmology=LambdaCDM_Planck2018,
+                atol=atol,
+                rtol=rtol,
+                z_sample=k3_z_sample,
+                z_init=k3_z_sample.max,
+            ),
+        ]
+    )
+
+
+Tks = build_Tks()
+cycle = 1
+while any(not Tk.available for Tk in Tks):
+    label = f"{args.job_name}-cycle={cycle}-{datetime.now().replace(microsecond=0).isoformat()}"
+    obj_refs = []
+
+    for Tk in Tks:
+        # if this Tk is not available, schedule an integration task to fill in whichever values are missing
+        if not Tk.available:
+            missing_zs = Tk.missing_z_sample
+            obj_refs.append(
+                store.object_factory.remote(
+                    MatterTransferFunctionIntegration,
+                    k=Tk.k,
+                    cosmology=LambdaCDM_Planck2018,
+                    atol=atol,
+                    rtol=rtol,
+                    z_sample=missing_zs,
+                    z_init=Tk.z_init,
+                    label=label,
+                )
+            )
+
+        # wait for integration tasks to complete
+        ray.get(obj_refs)
+
+    Tks = build_Tks()
+    cycle += 1

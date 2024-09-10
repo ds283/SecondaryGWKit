@@ -16,5 +16,9 @@ class IntegrationSolver(DatastoreObject):
         self._stepping = stepping if stepping >= 0 else 0
 
     @property
+    def label(self) -> str:
+        return self._label
+
+    @property
     def stepping(self) -> int:
         return self._stepping

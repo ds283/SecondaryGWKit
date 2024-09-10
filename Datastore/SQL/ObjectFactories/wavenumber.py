@@ -4,8 +4,6 @@ from CosmologyConcepts import wavenumber, wavenumber_exit_time, tolerance
 from Datastore.SQL.ObjectFactories.base import SQLAFactoryBase
 from defaults import (
     DEFAULT_FLOAT_PRECISION,
-    DEFAULT_ABS_TOLERANCE,
-    DEFAULT_REL_TOLERANCE,
 )
 
 
@@ -23,7 +21,15 @@ class sqla_wavenumber_factory(SQLAFactoryBase):
 
     @staticmethod
     async def build(
-        engine, conn, table, full_query, serial_query, tables, inserter, payload
+        payload,
+        engine,
+        conn,
+        table,
+        full_query,
+        serial_query,
+        inserter,
+        tables,
+        inserters,
     ):
         k_inv_Mpc = payload["k_inv_Mpc"]
         units = payload["units"]
@@ -86,7 +92,15 @@ class sqla_wavenumber_exit_time_factory(SQLAFactoryBase):
 
     @staticmethod
     async def build(
-        engine, conn, table, full_query, serial_query, tables, inserter, payload
+        payload,
+        engine,
+        conn,
+        table,
+        full_query,
+        serial_query,
+        inserter,
+        tables,
+        inserters,
     ):
         target_atol = payload["atol"]
         target_rtol = payload["rtol"]
@@ -171,10 +185,10 @@ class sqla_wavenumber_exit_time_factory(SQLAFactoryBase):
             )
 
             # asynchronously compute the horizon-exit time and await the result
-            # (this yields control so that other actor methods can run while the result completes)
+            # (this yields control so that other actor services can run while the result completes)
             data = await obj.compute()
 
-            # read computation result and store in the constructed object
+            # read the result of the computation, and use to populate the constructed object
             res = await obj.store()
             if res is None:
                 raise RuntimeError("compute() did not generate a running future")

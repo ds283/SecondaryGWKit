@@ -42,9 +42,13 @@ class redshift_array:
     def __getitem__(self, key):
         return self._z_array[key]
 
+    def __len__(self):
+        return len(self._z_array)
+
     def as_list(self) -> list[float]:
         return [float(z) for z in self._z_array]
 
+    @property
     def max(self) -> redshift:
         z_max = None
         z_max_item = None
@@ -55,3 +59,15 @@ class redshift_array:
                 z_max_item = z
 
         return z_max_item
+
+    @property
+    def min(self) -> redshift:
+        z_min = None
+        z_min_item = None
+
+        for z in self._z_array:
+            if z_min is None or z.z < z_min:
+                z_min = z.z
+                z_min_item = z
+
+        return z_min_item

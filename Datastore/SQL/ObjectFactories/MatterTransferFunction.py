@@ -1,7 +1,6 @@
 from math import fabs
 
 import sqlalchemy as sqla
-from numpy.lib.function_base import interp
 
 from ComputeTargets import (
     IntegrationSolver,
@@ -10,8 +9,11 @@ from ComputeTargets import (
     MatterTransferFunctionContainer,
 )
 from CosmologyConcepts import tolerance, wavenumber, redshift_array, redshift
-from CosmologyModels.base import CosmologyBase
+from CosmologyModels.base import BaseCosmology
 from Datastore.SQL.ObjectFactories.base import SQLAFactoryBase
+from Datastore.SQL.ObjectFactories.integration_metadata import (
+    sqla_IntegrationSolver_factory,
+)
 from defaults import DEFAULT_STRING_LENGTH, DEFAULT_FLOAT_PRECISION
 
 
@@ -53,7 +55,12 @@ class sqla_MatterTransferFunctionIntegration_factory(SQLAFactoryBase):
                     sqla.ForeignKey("IntegrationSolver.serial"),
                     nullable=False,
                 ),
-                sqla.Column("z_init", sqla.Float(64)),
+                sqla.Column(
+                    "z_init_serial",
+                    sqla.Integer,
+                    sqla.ForeignKey("redshift.serial"),
+                    nullable=False,
+                ),
                 sqla.Column("compute_time", sqla.Float(64)),
                 sqla.Column("compute_steps", sqla.Integer),
             ],
@@ -61,7 +68,15 @@ class sqla_MatterTransferFunctionIntegration_factory(SQLAFactoryBase):
 
     @staticmethod
     async def build(
-        engine, conn, table, full_query, serial_query, tables, inserter, payload
+        payload,
+        engine,
+        conn,
+        table,
+        full_query,
+        serial_query,
+        inserter,
+        tables,
+        inserters,
     ):
         label: str = payload["label"]
 
@@ -69,8 +84,8 @@ class sqla_MatterTransferFunctionIntegration_factory(SQLAFactoryBase):
         target_rtol: tolerance = payload["rtol"]
 
         k: wavenumber = payload["k"]
-        cosmology: CosmologyBase = payload["cosmology"]
-        z_samples: redshift_array = payload["z_samples"]
+        cosmology: BaseCosmology = payload["cosmology"]
+        z_sample: redshift_array = payload["z_sample"]
         z_init: redshift = payload["z_init"]
 
         atol_table = tables["tolerance"].alias("atol")
@@ -78,9 +93,9 @@ class sqla_MatterTransferFunctionIntegration_factory(SQLAFactoryBase):
 
         solver_table = tables["IntegrationSolver"]
 
-        # we treat z_samples as a target rather than a selection criterion;
-        # later, the actual set of z_samples stored with this integration is read in
-        # and used to populate the z_samples field of the constructed object
+        # we treat z_sample as a target rather than a selection criterion;
+        # later, the actual set of z_sample stored with this integration is read in
+        # and used to populate the z_sample field of the constructed object
         ref = await conn.execute(
             sqla.select(
                 table.c.serial,
@@ -94,13 +109,15 @@ class sqla_MatterTransferFunctionIntegration_factory(SQLAFactoryBase):
             )
             .select_from(
                 table.join(solver_table, solver_table.c.serial == table.c.solver_serial)
+                .join(atol_table, atol_table.c.serial == table.c.atol_serial)
+                .join(rtol_table, rtol_table.c.serial == table.c.rtol_serial)
             )
             .filter(
                 table.c.wavenumber_serial == k.store_id,
                 table.c.cosmology_type == cosmology.type_id,
                 table.c.cosmology_serial == cosmology.store_id,
                 table.c.label == label,
-                sqla.func.abs(table.c.z_init - z_init) <= DEFAULT_FLOAT_PRECISION,
+                table.c.z_init_serial == z_init.store_id,
                 table.c.atol_serial == target_atol.store_id,
                 table.c.rtol_serial == target_rtol.store_id,
             )
@@ -158,7 +175,7 @@ class sqla_MatterTransferFunctionIntegration_factory(SQLAFactoryBase):
                     )
                 )
 
-            z_samples = redshift_array(z_samples)
+            z_sample = redshift_array(z_sample)
 
             return MatterTransferFunctionIntegration(
                 payload={
@@ -166,7 +183,7 @@ class sqla_MatterTransferFunctionIntegration_factory(SQLAFactoryBase):
                     "compute_time": compute_time,
                     "compute_steps": compute_steps,
                     "solver": solver,
-                    "z_samples": z_samples,
+                    "z_sample": z_sample,
                     "values": values,
                 },
                 k=k,
@@ -178,13 +195,81 @@ class sqla_MatterTransferFunctionIntegration_factory(SQLAFactoryBase):
         else:
             obj = MatterTransferFunctionIntegration(
                 payload=None,
+                label=label,
                 k=k,
                 cosmology=cosmology,
                 z_init=z_init,
-                z_samples=z_samples,
+                z_sample=z_sample,
                 atol=target_atol,
                 rtol=target_rtol,
             )
+
+            # asynchronously perform the computation and await the result
+            # (this yields control so that other actor services can run while the result completes)
+            data = await obj.compute()
+
+            # read the result of the computation, and use to populate the constructed object
+            res = await obj.store()
+            if res is None:
+                raise RuntimeError("compute() did not generate a running future")
+            if res is False:
+                raise RuntimeError(
+                    "await compute() returned, but the future was not resolved"
+                )
+
+            # first query for the solver ID, which is needed to serialize the main integration record
+            solver_table = tables["IntegrationSolver"]
+            solver_serial_query = sqla.select(solver_table.c.serial)
+            solver_inserter = inserters["IntegrationSolver"]
+
+            solver = await sqla_IntegrationSolver_factory.build(
+                {"label": obj._solver.label, "stepping": obj._solver.stepping},
+                engine,
+                conn,
+                solver_table,
+                None,
+                solver_serial_query,
+                solver_inserter,
+                tables,
+                inserters,
+            )
+            obj._solver._my_id = solver.store_id
+
+            # now serialize the record of the integration
+            store_id = await inserter(
+                conn,
+                {
+                    "label": label,
+                    "wavenumber_serial": k.store_id,
+                    "cosmology_type": cosmology.type_id,
+                    "cosmology_serial": cosmology.store_id,
+                    "atol_serial": target_atol.store_id,
+                    "rtol_serial": target_rtol.store_id,
+                    "solver_serial": solver.store_id,
+                    "z_init_serial": z_init.store_id,
+                    "compute_time": obj.compute_time,
+                    "compute_steps": obj.compute_steps,
+                },
+            )
+
+            # set store_id on behalf of the MatterTransferFunctionIntegration instance
+            obj._my_id = store_id
+
+            # now serialize the sampled output points
+            value_inserter = inserters["MatterTransferFunctionValue"]
+            for value in obj.values:
+                value: MatterTransferFunctionValue
+                value_id = await value_inserter(
+                    conn,
+                    {
+                        "integration_serial": store_id,
+                        "z_serial": value.z_serial,
+                        "value": value.value,
+                    },
+                )
+
+                # set store_id on behalf of the MatterTransferFunctionValue instance
+                value._my_id = value_id
 
             return obj
 
@@ -221,7 +306,15 @@ class sqla_MatterTransferFunctionValue_factory(SQLAFactoryBase):
 
     @staticmethod
     async def build(
-        engine, conn, table, full_query, serial_query, tables, inserter, payload
+        payload,
+        engine,
+        conn,
+        table,
+        full_query,
+        serial_query,
+        inserter,
+        tables,
+        inserters,
     ):
         integration_serial = payload["integration_serial"]
         z = payload["z"]
@@ -267,14 +360,22 @@ class sqla_MatterTransferFunctionContainer_factory(SQLAFactoryBase):
 
     @staticmethod
     async def build(
-        engine, conn, table, full_query, serial_query, tables, inserter, payload
+        payload,
+        engine,
+        conn,
+        table,
+        full_query,
+        serial_query,
+        inserter,
+        tables,
+        inserters,
     ):
         target_atol: tolerance = payload["atol"]
         target_rtol: tolerance = payload["rtol"]
 
         k: wavenumber = payload["k"]
-        cosmology: CosmologyBase = payload["cosmology"]
-        z_samples: redshift_array = payload["z_sample"]
+        cosmology: BaseCosmology = payload["cosmology"]
+        z_sample: redshift_array = payload["z_sample"]
         z_init: redshift = payload["z_init"]
 
         atol_table = tables["tolerance"].alias("atol")
@@ -287,7 +388,7 @@ class sqla_MatterTransferFunctionContainer_factory(SQLAFactoryBase):
         redshift_table = tables["redshift"].alias("redshift")
         solver_table = tables["IntegrationSolver"].alias("solver")
 
-        z_sample_values = z_samples.as_list()
+        z_sample_serials = [z.store_id for z in z_sample]
 
         # query for stored samples of the matter transfer function at the required
         # redshift sample points, belonging to an integration with the right cosmology,
@@ -311,6 +412,8 @@ class sqla_MatterTransferFunctionContainer_factory(SQLAFactoryBase):
                 integration_table.c.solver_serial,
                 solver_table.c.label.label("solver_label"),
                 solver_table.c.stepping.label("solver_stepping"),
+                atol_table.c.log10_tol.label("log10_atol"),
+                rtol_table.c.log10_tol.label("log10_rtol"),
             )
             .select_from(
                 values_table.join(
@@ -335,12 +438,11 @@ class sqla_MatterTransferFunctionContainer_factory(SQLAFactoryBase):
                 )
             )
             .filter(
-                values_table.c.z_serial.in_(z_sample_values),
+                values_table.c.z_serial.in_(z_sample_serials),
                 integration_table.c.wavenumber_serial == k.store_id,
                 integration_table.c.cosmology_type == cosmology.type_id,
                 integration_table.c.cosmology_serial == cosmology.store_id,
-                sqla.func.abs(integration_table.c.z_init - z_init)
-                <= DEFAULT_FLOAT_PRECISION,
+                integration_table.c.z_init_serial == z_init.store_id,
                 atol_table.c.log10_tol - target_atol.log10_tol
                 <= DEFAULT_FLOAT_PRECISION,
                 rtol_table.c.log10_tol - target_rtol.log10_tol
@@ -351,20 +453,20 @@ class sqla_MatterTransferFunctionContainer_factory(SQLAFactoryBase):
 
         value_set = {}
         for row in row_data:
-            z_value = redshift(store_id=row["z_serial"], z=row["z"])
+            z_value = redshift(store_id=row.z_serial, z=row.z)
             value = MatterTransferFunctionValue(
-                store_id=row["serial"], z=z_value, value=row["value"]
+                store_id=row.serial, z=z_value, value=row.value
             )
 
             # embed information about provenance
-            value._integration_serial = row_data.integration_serial
-            value._log10_atol = row_data.log10_atol
-            value._log10_rtol = row_data.log10_rtol
+            value._integration_serial = row.integration_serial
+            value._log10_atol = row.log10_atol
+            value._log10_rtol = row.log10_rtol
             value._atol = pow(10.0, value._log10_atol)
             value._rtol = pow(10.0, value._log10_rtol)
-            value._solver_serial = row_data.solver_serial
-            value._solver_label = row_data.solver_label
-            value._solver_stepping = row_data.solver_stepping
+            value._solver_serial = row.solver_serial
+            value._solver_label = row.solver_label
+            value._solver_stepping = row.solver_stepping
 
             value_set[z_value.store_id] = value
 
@@ -373,7 +475,7 @@ class sqla_MatterTransferFunctionContainer_factory(SQLAFactoryBase):
             cosmology=cosmology,
             k=k,
             z_init=z_init,
-            z_samples=z_samples,
+            z_sample=z_sample,
             target_atol=target_atol,
             target_rtol=target_rtol,
         )

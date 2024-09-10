@@ -27,7 +27,15 @@ class sqla_LambdaCDM_factory(SQLAFactoryBase):
 
     @staticmethod
     async def build(
-        engine, conn, table, full_query, serial_query, tables, inserter, payload
+        payload,
+        engine,
+        conn,
+        table,
+        full_query,
+        serial_query,
+        inserter,
+        tables,
+        inserters,
     ):
         params = payload["params"]
         units = payload["units"]

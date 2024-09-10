@@ -22,7 +22,15 @@ class sqla_IntegrationSolver_factory(SQLAFactoryBase):
 
     @staticmethod
     async def build(
-        engine, conn, table, full_query, serial_query, tables, inserter, payload
+        payload,
+        engine,
+        conn,
+        table,
+        full_query,
+        serial_query,
+        inserter,
+        tables,
+        inserters,
     ):
         label = payload["label"]
         stepping = payload["stepping"]

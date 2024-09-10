@@ -5,7 +5,15 @@ class SQLAFactoryBase(ABC):
     @staticmethod
     @abstractmethod
     async def build(
-        engine, conn, table, full_query, serial_query, tables, inserter, payload
+        payload,
+        engine,
+        conn,
+        table,
+        full_query,
+        serial_query,
+        inserter,
+        tables,
+        inserters,
     ):
         raise NotImplementedError
 

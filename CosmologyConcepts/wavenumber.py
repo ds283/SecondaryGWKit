@@ -1,11 +1,10 @@
 from math import log10, exp
 from typing import Iterable, Optional
 
-import ray
 from numpy import logspace
 
 from CosmologyConcepts.tolerance import tolerance
-from CosmologyModels.base import CosmologyBase
+from CosmologyModels.base import BaseCosmology
 from Datastore import DatastoreObject
 from utilities import find_horizon_exit_time, check_units
 
@@ -55,6 +54,9 @@ class wavenumber_array:
     def __getitem__(self, key):
         return self._k_array[key]
 
+    def __len__(self):
+        return len(self._k_array)
+
     def as_list(self) -> list[float]:
         return [float(k) for k in self._k_array]
 
@@ -64,7 +66,7 @@ class wavenumber_exit_time(DatastoreObject):
         self,
         payload,
         k: wavenumber,
-        cosmology: CosmologyBase,
+        cosmology: BaseCosmology,
         atol: tolerance,
         rtol: tolerance,
     ):
@@ -149,7 +151,7 @@ class wavenumber_exit_time(DatastoreObject):
     def rtol(self) -> float:
         return self._rtol.tol
 
-    def populate_z_samples(
+    def populate_z_sample(
         self,
         outside_horizon_efolds=10.0,
         samples_per_log10z: int = 100,
@@ -169,9 +171,9 @@ class wavenumber_exit_time(DatastoreObject):
 
         # now we want to built a set of sample points for redshifts between z_init and
         # the final point z = z_final, using the specified number of redshift sample points
-        num_z_samples = int(round(samples_per_log10z * log10(z_init) + 0.5, 0))
+        num_z_sample = int(round(samples_per_log10z * log10(z_init) + 0.5, 0))
         print(
-            f"-- using {samples_per_log10z} z-points per log10(z) requires {num_z_samples} samples"
+            f"-- using {samples_per_log10z} z-points per log10(z) requires {num_z_sample} samples"
         )
 
-        return logspace(log10(z_init), log10(z_end), num=num_z_samples)
+        return logspace(log10(z_init), log10(z_end), num=num_z_sample)

@@ -21,7 +21,15 @@ class sqla_tolerance_factory(SQLAFactoryBase):
 
     @staticmethod
     async def build(
-        engine, conn, table, full_query, serial_query, tables, inserter, payload
+        payload,
+        engine,
+        conn,
+        table,
+        full_query,
+        serial_query,
+        inserter,
+        tables,
+        inserters,
     ):
         log10_tol = payload.get("log10_tol", None)
         if log10_tol is None:
