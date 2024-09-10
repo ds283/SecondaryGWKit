@@ -41,3 +41,6 @@ class redshift_array:
 
     def __getitem__(self, key):
         return self._z_array[key]
+
+    def as_list(self) -> list[float]:
+        return [float(z) for z in self._z_array]

@@ -55,6 +55,9 @@ class wavenumber_array:
     def __getitem__(self, key):
         return self._k_array[key]
 
+    def as_list(self) -> list[float]:
+        return [float(k) for k in self._k_array]
+
 
 class wavenumber_exit_time(DatastoreObject):
     def __init__(
@@ -167,4 +170,8 @@ class wavenumber_exit_time(DatastoreObject):
         # now we want to built a set of sample points for redshifts between z_init and
         # the final point z = z_final, using the specified number of redshift sample points
         num_z_samples = int(round(samples_per_log10z * log10(z_init) + 0.5, 0))
+        print(
+            f"-- using {samples_per_log10z} z-points per log10(z) requires {num_z_samples} samples"
+        )
+
         return logspace(log10(z_init), log10(z_end), num=num_z_samples)

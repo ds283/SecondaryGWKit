@@ -14,6 +14,7 @@ from Datastore.SQL.ObjectFactories.LambdaCDM import sqla_LambdaCDM_factory
 from Datastore.SQL.ObjectFactories.MatterTransferFunction import (
     sqla_MatterTransferFunctionIntegration_factory,
     sqla_MatterTransferFunctionValue_factory,
+    sqla_MatterTransferFunctionContainer_factory,
 )
 from Datastore.SQL.ObjectFactories.base import SQLAFactoryBase
 from Datastore.SQL.ObjectFactories.integration_metadata import (
@@ -41,6 +42,7 @@ _adapters = {
     "IntegrationSolver": sqla_IntegrationSolver_factory,
     "MatterTransferFunctionIntegration": sqla_MatterTransferFunctionIntegration_factory,
     "MatterTransferFunctionValue": sqla_MatterTransferFunctionValue_factory,
+    "MatterTransferFunctionContainer": sqla_MatterTransferFunctionContainer_factory,
 }
 
 _FactoryMappingType = Mapping[str, SQLAFactoryBase]
@@ -234,95 +236,104 @@ class Datastore:
             # query class for a list of columns that it wants to store
             table_data = factory.generate_columns()
 
-            # extract configuration settings
-            defer_insert = table_data.get("defer_insert", False)
-            schema["defer_insert"] = defer_insert
-
-            # generate main table for this adapter class
-            # metadata can be controlled by the owning adapter
-
-            serial_col = sqla.Column("serial", sqla.Integer, primary_key=True)
-            tab = sqla.Table(
-                cls_name,
-                self._metadata,
-                serial_col,
-            )
-
-            schema["serial_col"] = serial_col
-            full_columns = [serial_col]
-
-            # attach pre-defined columns
-            use_version = table_data.get("version", False)
-            schema["use_version"] = use_version
-            if use_version:
-                version_col = sqla.Column(
-                    "version", sqla.Integer, sqla.ForeignKey("versions.serial")
+            # does this storage object require its own table?
+            if table_data is not None:
+                # generate main table for this adapter class
+                serial_col = sqla.Column("serial", sqla.Integer, primary_key=True)
+                tab = sqla.Table(
+                    cls_name,
+                    self._metadata,
+                    serial_col,
                 )
-                tab.append_column(version_col)
-                schema["version_col"] = version_col
-                full_columns.append(version_col)
 
-            use_timestamp = table_data.get("timestamp", False)
-            schema["use_timestamp"] = use_timestamp
-            if use_timestamp:
-                timestamp_col = sqla.Column("timestamp", sqla.DateTime())
-                tab.append_column(timestamp_col)
-                schema["timestamp_col"] = timestamp_col
-                full_columns.append(timestamp_col)
+                schema["serial_col"] = serial_col
+                full_columns = [serial_col]
 
-            use_stepping = table_data.get("stepping", False)
-            if isinstance(use_stepping, str):
-                if use_stepping not in ["minimum", "exact"]:
-                    print(
-                        f"Warning: ignored stepping selection '{use_stepping}' when registering storable class factory for '{cls_name}'"
+                # attach pre-defined columns
+                use_version = table_data.get("version", False)
+                schema["use_version"] = use_version
+                if use_version:
+                    version_col = sqla.Column(
+                        "version", sqla.Integer, sqla.ForeignKey("versions.serial")
                     )
-                    use_stepping = False
+                    tab.append_column(version_col)
+                    schema["version_col"] = version_col
+                    full_columns.append(version_col)
 
-            _use_stepping = isinstance(use_stepping, str) or use_stepping is True
-            schema["use_stepping"] = _use_stepping
-            if _use_stepping:
-                stepping_col = sqla.Column("stepping", sqla.Integer)
-                tab.append_column(stepping_col)
-                schema["stepping_col"] = stepping_col
-                full_columns.append(stepping_col)
+                use_timestamp = table_data.get("timestamp", False)
+                schema["use_timestamp"] = use_timestamp
+                if use_timestamp:
+                    timestamp_col = sqla.Column("timestamp", sqla.DateTime())
+                    tab.append_column(timestamp_col)
+                    schema["timestamp_col"] = timestamp_col
+                    full_columns.append(timestamp_col)
 
-                _stepping_mode = (
-                    None if not isinstance(use_stepping, str) else use_stepping
+                use_stepping = table_data.get("stepping", False)
+                if isinstance(use_stepping, str):
+                    if use_stepping not in ["minimum", "exact"]:
+                        print(
+                            f"Warning: ignored stepping selection '{use_stepping}' when registering storable class factory for '{cls_name}'"
+                        )
+                        use_stepping = False
+
+                _use_stepping = isinstance(use_stepping, str) or use_stepping is True
+                schema["use_stepping"] = _use_stepping
+                if _use_stepping:
+                    stepping_col = sqla.Column("stepping", sqla.Integer)
+                    tab.append_column(stepping_col)
+                    schema["stepping_col"] = stepping_col
+                    full_columns.append(stepping_col)
+
+                    _stepping_mode = (
+                        None if not isinstance(use_stepping, str) else use_stepping
+                    )
+                    schema["stepping_mode"] = _stepping_mode
+
+                # append all columns supplied by the class
+                sqla_columns = table_data.get("columns", [])
+                for col in sqla_columns:
+                    tab.append_column(col)
+                schema["columns"] = sqla_columns
+                full_columns.extend(sqla_columns)
+
+                # store in table cache
+                schema["table"] = tab
+
+                # generate and cache lookup query
+                # (the idea here is that by caching the query we can make use of SQLAlchemy's internal SQL-compilation caching so that we
+                # do not have to recompile the query every time it is executed)
+                full_query = sqla.select(*full_columns).select_from(tab)
+                schema["full_query"] = full_query
+
+                serial_query = sqla.select(serial_col).select_from(tab)
+                schema["serial_query"] = serial_query
+
+                # build inserter
+                schema["insert"] = functools.partial(self._insert, schema, tab)
+
+                # also store table in its own separate cache
+                self._tables[cls_name] = tab
+
+                print(
+                    f"Registered storage schema for storable class adapter '{cls_name}' with database table '{tab.name}'"
                 )
-                schema["stepping_mode"] = _stepping_mode
+            else:
+                schema["table"] = None
+                schema["full_query"] = None
+                schema["serial_query"] = None
+                schema["insert"] = None
 
-            # append all columns supplied by the class
-            sqla_columns = table_data.get("columns", [])
-            for col in sqla_columns:
-                tab.append_column(col)
-            schema["columns"] = sqla_columns
-            full_columns.extend(sqla_columns)
-
-            # store in table cache
-            schema["table"] = tab
-
-            # generate and cache lookup query
-            # (the idea here is that by caching the query we can make use of SQLAlchemy's internal SQL-compilation caching so that we
-            # do not have to recompile the query every time it is executed)
-            full_query = sqla.select(*full_columns).select_from(tab)
-            schema["full_query"] = full_query
-
-            serial_query = sqla.select(serial_col).select_from(tab)
-            schema["serial_query"] = serial_query
-
-            # build inserter
-            schema["insert"] = functools.partial(self._insert, schema, tab)
+                print(
+                    f"Registered storage scheme for storable class adapter '{cls_name}' without database table"
+                )
 
             self._schema[cls_name] = schema
-            self._tables[cls_name] = tab
-            print(f"Registered storage schema for storable class adapter '{cls_name}'")
 
     async def _create_storage_tables(self):
         self._ensure_engine()
 
         async with self._engine.begin() as conn:
-            for record in self._schema.values():
-                tab = record["table"]
+            for tab in self._tables.values():
                 await conn.run_sync(tab.create)
 
     def _ensure_registered_schema(self, cls_name: str):
@@ -381,6 +392,9 @@ class Datastore:
         return objects
 
     async def _insert(self, schema, table, conn, payload):
+        if table is None:
+            raise RuntimeError(f"Attempt to insert into null table (scheme='{schema}'")
+
         uses_timestamp = schema.get("use_timestamp", False)
         uses_version = schema.get("use_version", False)
         uses_stepping = schema.get("use_stepping", False)

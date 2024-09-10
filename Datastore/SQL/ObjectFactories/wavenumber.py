@@ -131,22 +131,21 @@ class sqla_wavenumber_exit_time_factory(SQLAFactoryBase):
                     table.c.stepping >= target_stepping,
                 )
             )
-            .order_by(atol_table.c.log10_tol.desc())
-            .order_by(rtol_table.c.log10_tol.desc())
+            .order_by(atol_table.c.log10_tol.desc(), rtol_table.c.log10_tol.desc())
         )
         row_data = ref.one_or_none()
 
         if row_data is not None:
-            store_id = row_data["serial"]
-            z_exit = row_data["z_exit"]
-            compute_time = row_data["compute_time"]
-            stepping = row_data["stepping"]
+            store_id = row_data.serial
+            z_exit = row_data.z_exit
+            compute_time = row_data.compute_time
+            stepping = row_data.stepping
 
             atol = tolerance(
-                store_id=row_data["atol_serial"], log10_tol=row_data["log10_atol"]
+                store_id=row_data.atol_serial, log10_tol=row_data.log10_atol
             )
             rtol = tolerance(
-                store_id=row_data["rtol_serial"], log10_tol=row_data["log10_rtol"]
+                store_id=row_data.rtol_serial, log10_tol=row_data.log10_rtol
             )
 
             return wavenumber_exit_time(

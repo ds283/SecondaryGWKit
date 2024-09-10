@@ -140,7 +140,7 @@ class MatterTransferFunctionValue(DatastoreObject):
         return self.value
 
 
-class MatterTransferFunction:
+class MatterTransferFunctionContainer:
     """
     Encapsulates the time-evolution of the matter transfer function, labelled by a wavenumber k,
     and sampled over a specified range of redshifts.
@@ -149,13 +149,13 @@ class MatterTransferFunction:
 
     def __init__(
         self,
-        store: ActorHandle,
+        payload,
         cosmology: CosmologyBase,
         k: wavenumber,
         z_init: redshift,
         z_samples: redshift_array,
-        target_atol: tolerance = None,
-        target_rtol: tolerance = None,
+        target_atol: tolerance,
+        target_rtol: tolerance,
     ):
         """
         :param store_id: unique Datastore id. May be None if the object has not yet been fully serialized
@@ -164,32 +164,26 @@ class MatterTransferFunction:
         :param z_initial: initial redshift of the matter transfer function
         :param z_samples: redshift values at which to sample the matter transfer function
         """
-        DatastoreObject.__init__(self, store)
         self._cosmology: CosmologyBase = cosmology
 
         # cache wavenumber and z-sample array
         self._k = k
         self._z_samples = z_samples
-        self._z_initial = z_init
+        self._z_init = z_init
 
-        if target_atol is None:
-            target_atol = tolerance(store, tol=DEFAULT_ABS_TOLERANCE)
-        if target_rtol is None:
-            target_rtol = tolerance(store, tol=DEFAULT_REL_TOLERANCE)
+        self._target_atol = target_atol
+        self._target_rtol = target_rtol
 
-        self._target_atol: tolerance = target_atol
-        self._target_rtol: tolerance = target_rtol
+        if payload is None:
+            self._values = {}
+        else:
+            self._values = payload["values"]
 
-        # query datastore to find out whether the necessary sample values are available,
-        # and schedule asynchronous tasks to compute any that are missing.
-        self._sample_values = [
-            MatterTransferFunctionValue(
-                store, cosmology, k, z_init, z, target_atol, target_rtol
-            )
-            for z in z_samples
-        ]
+        # determine if any values are missing from the sample
+        self._missing_zs = set(z.store_id for z in z_samples).difference(
+            self._values.keys()
+        )
 
-        self._missing_zs = [val.z for val in self._sample_values if not val.available]
         print(
             f"Matter transfer function T(z) for '{cosmology.name}' k={k.k_inv_Mpc}/Mpc has {len(self._missing_zs)} missing z-sample values"
         )

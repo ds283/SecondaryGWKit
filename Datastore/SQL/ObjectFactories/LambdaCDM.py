@@ -72,7 +72,7 @@ class sqla_LambdaCDM_factory(SQLAFactoryBase):
                 },
             )
         else:
-            store_id = row_data["serial"]
+            store_id = row_data.serial
 
         return LambdaCDM(
             store_id=store_id,

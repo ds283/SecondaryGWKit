@@ -21,6 +21,7 @@ from ComputeTargets import (
     IntegrationSolver,
     MatterTransferFunctionIntegration,
     MatterTransferFunctionValue,
+    MatterTransferFunctionContainer,
 )
 
 from pyinstrument import Profiler
@@ -150,6 +151,38 @@ k1_z_array, k2_z_array, k3_z_array = ray.get(
 k1_z_sample = redshift_array(z_array=k1_z_array)
 k2_z_sample = redshift_array(z_array=k2_z_array)
 k3_z_sample = redshift_array(z_array=k3_z_array)
+
+T_k1_container, T_k2_container, T_k3_container = ray.get(
+    [
+        store.object_factory.remote(
+            MatterTransferFunctionContainer,
+            k=k1,
+            cosmology=LambdaCDM_Planck2018,
+            atol=atol,
+            rtol=rtol,
+            z_sample=k1_z_sample,
+            z_init=max(k1_z_sample.as_list()),
+        ),
+        store.object_factory.remote(
+            MatterTransferFunctionContainer,
+            k=k2,
+            cosmology=LambdaCDM_Planck2018,
+            atol=atol,
+            rtol=rtol,
+            z_sample=k2_z_sample,
+            z_init=max(k2_z_sample.as_list()),
+        ),
+        store.object_factory.remote(
+            MatterTransferFunctionContainer,
+            k=k3,
+            cosmology=LambdaCDM_Planck2018,
+            atol=atol,
+            rtol=rtol,
+            z_sample=k3_z_sample,
+            z_init=max(k3_z_sample.as_list()),
+        ),
+    ]
+)
 
 # Tk1_future = store.object_factory(
 #     MatterTransferFunction, cosmology=LambdaCDM_Planck2018, k=k_samples[0]
