@@ -1,4 +1,3 @@
-import asyncio
 import functools
 from datetime import datetime
 from os import PathLike
@@ -7,7 +6,6 @@ from typing import Optional, Union, Mapping, Callable
 
 import sqlalchemy as sqla
 from ray import remote
-from sqlalchemy.ext.asyncio import create_async_engine
 
 from Datastore.SQL.ObjectFactories.LambdaCDM import sqla_LambdaCDM_factory
 from Datastore.SQL.ObjectFactories.MatterTransferFunction import (
@@ -75,7 +73,9 @@ class Datastore:
         self._inserters: _InserterMappingType = {}
         self._schema = {}
 
-    def _create_engine(self, db_name: PathType, expect_exists: bool = False):
+    def _create_engine(
+        self, db_name: PathType, expect_exists: bool = False, timeout=None
+    ):
         """
         Create and initialize an SQLAlchemy engine corresponding to the name data container, but does not physically initialize the
         container. Use create_datastore() for this purpose if needed.
@@ -105,8 +105,12 @@ class Datastore:
         if not db_file.exists():
             db_file.parents[0].mkdir(exist_ok=True, parents=True)
 
-        self._engine = create_async_engine(
-            f"sqlite+aiosqlite:///{db_name}", future=True
+        connect_args = {}
+        if timeout is not None:
+            connect_args["timeout"] = timeout
+
+        self._engine = sqla.create_engine(
+            f"sqlite:///{db_name}", future=True, connect_args=connect_args
         )
         self._metadata = sqla.MetaData()
 
@@ -119,7 +123,7 @@ class Datastore:
 
         self._build_storage_schema()
 
-    async def create_datastore(self, db_name: PathType):
+    def create_datastore(self, db_name: PathType, timeout=None):
         """
         Create and initialize an empty data container. Assumes the container not to be physically present at the specified path
         and will fail with an error if it is
@@ -127,63 +131,53 @@ class Datastore:
         :return:
         """
         self._ensure_no_engine()
-        self._create_engine(db_name, expect_exists=False)
+        self._create_engine(db_name, expect_exists=False, timeout=timeout)
 
         print("-- creating database tables")
 
         # generate internal tables
-        async with self._engine.begin() as conn:
-            await conn.run_sync(self._version_table.create)
-            await conn.commit()
-
-        self._version_serial = await self._make_version_serial()
+        self._version_table.create(self._engine)
+        self._version_serial = self._make_version_serial()
 
         # generate tables defined by any registered storable classes
-        await self._create_storage_tables()
+        self._create_storage_tables()
 
-    async def _make_version_serial(self):
+    def _make_version_serial(self):
         """
         Normalize the supplied version label into a database rowid
         :return:
         """
-        if self._engine is None:
-            raise RuntimeError(
-                "No database connection exists in _make_version_serial()"
-            )
+        self._ensure_engine()
 
-        async with self._engine.begin() as conn:
+        with self._engine.begin() as conn:
             # query database for serial number corresponding to this version label
-            ref = await conn.execute(
+            serial = conn.execute(
                 sqla.select(self._version_table.c.serial).filter(
                     self._version_table.c.version_id == self._version_id
                 )
-            )
-
-            serial = ref.scalar()
+            ).scalar()
 
             if serial is not None:
                 return serial
 
             # no existing serial number was found, so insert a new one
-            ref = await conn.execute(
+            serial = conn.execute(
                 sqla.select(sqla.func.max(self._version_table.c.serial)).select_from(
                     self._version_table
                 )
-            )
-
-            serial = ref.scalar()
+            ).scalar()
 
             # if .scalar returns an empty result, there are no serial numbers currently in use
             if serial is None:
                 serial = -1
 
             # insert a new database row for this version label
-            await conn.execute(
+            conn.execute(
                 sqla.insert(self._version_table),
                 {"serial": serial + 1, "version_id": self._version_id},
             )
 
-            await conn.commit()
+            conn.commit()
 
         return serial
 
@@ -195,11 +189,11 @@ class Datastore:
         if self._engine is not None:
             raise RuntimeError(f"A storage engine has already been initialized")
 
-    async def open_datastore(self, db_name: str) -> None:
+    def open_datastore(self, db_name: str, timeout=None) -> None:
         self._ensure_no_engine()
-        self._create_engine(db_name, expect_exists=True)
+        self._create_engine(db_name, expect_exists=True, timeout=timeout)
 
-        self._version_serial = await self._make_version_serial()
+        self._version_serial = self._make_version_serial()
 
     def register_factories(self, factories: _FactoryMappingType):
         """
@@ -248,7 +242,6 @@ class Datastore:
                 )
 
                 schema["serial_col"] = serial_col
-                full_columns = [serial_col]
 
                 # attach pre-defined columns
                 use_version = table_data.get("version", False)
@@ -259,7 +252,6 @@ class Datastore:
                     )
                     tab.append_column(version_col)
                     schema["version_col"] = version_col
-                    full_columns.append(version_col)
 
                 use_timestamp = table_data.get("timestamp", False)
                 schema["use_timestamp"] = use_timestamp
@@ -267,7 +259,6 @@ class Datastore:
                     timestamp_col = sqla.Column("timestamp", sqla.DateTime())
                     tab.append_column(timestamp_col)
                     schema["timestamp_col"] = timestamp_col
-                    full_columns.append(timestamp_col)
 
                 use_stepping = table_data.get("stepping", False)
                 if isinstance(use_stepping, str):
@@ -283,7 +274,6 @@ class Datastore:
                     stepping_col = sqla.Column("stepping", sqla.Integer)
                     tab.append_column(stepping_col)
                     schema["stepping_col"] = stepping_col
-                    full_columns.append(stepping_col)
 
                     _stepping_mode = (
                         None if not isinstance(use_stepping, str) else use_stepping
@@ -295,19 +285,9 @@ class Datastore:
                 for col in sqla_columns:
                     tab.append_column(col)
                 schema["columns"] = sqla_columns
-                full_columns.extend(sqla_columns)
 
                 # store in table cache
                 schema["table"] = tab
-
-                # generate and cache lookup query
-                # (the idea here is that by caching the query we can make use of SQLAlchemy's internal SQL-compilation caching so that we
-                # do not have to recompile the query every time it is executed)
-                full_query = sqla.select(*full_columns).select_from(tab)
-                schema["full_query"] = full_query
-
-                serial_query = sqla.select(serial_col).select_from(tab)
-                schema["serial_query"] = serial_query
 
                 # build inserter
                 inserter = functools.partial(self._insert, schema, tab)
@@ -322,8 +302,6 @@ class Datastore:
                 )
             else:
                 schema["table"] = None
-                schema["full_query"] = None
-                schema["serial_query"] = None
                 schema["insert"] = None
 
                 print(
@@ -332,12 +310,11 @@ class Datastore:
 
             self._schema[cls_name] = schema
 
-    async def _create_storage_tables(self):
+    def _create_storage_tables(self):
         self._ensure_engine()
 
-        async with self._engine.begin() as conn:
-            for tab in self._tables.values():
-                await conn.run_sync(tab.create)
+        for tab in self._tables.values():
+            tab.create(self._engine)
 
     def _ensure_registered_schema(self, cls_name: str):
         if cls_name not in self._factories:
@@ -345,7 +322,7 @@ class Datastore:
                 f'No storable class of type "{cls_name}" has been registered'
             )
 
-    async def object_factory(self, ObjectClass, **kwargs):
+    def object_get(self, ObjectClass, **kwargs):
         self._ensure_engine()
 
         if isinstance(ObjectClass, str):
@@ -357,8 +334,6 @@ class Datastore:
         record = self._schema[cls_name]
 
         tab = record["table"]
-        full_query = record["full_query"]
-        serial_query = record["serial_query"]
         inserter = record["insert"]
 
         # obtain type of factory class for this storable
@@ -371,31 +346,46 @@ class Datastore:
             payload_data = [kwargs]
             scalar = True
 
-        async with self._engine.begin() as conn:
-            obj_list = [
-                factory.build(
-                    payload=p,
-                    engine=self._engine,
-                    conn=conn,
-                    table=tab,
-                    full_query=full_query,
-                    serial_query=serial_query,
-                    inserter=inserter,
-                    tables=self._tables,
-                    inserters=self._inserters,
-                )
-                for p in payload_data
-            ]
-            objects = await asyncio.gather(*obj_list)
-
-            await conn.commit()
+        objects = [
+            factory.build(
+                payload=p,
+                engine=self._engine,
+                table=tab,
+                inserter=inserter,
+                tables=self._tables,
+                inserters=self._inserters,
+            )
+            for p in payload_data
+        ]
 
         if scalar:
             return objects[0]
 
         return objects
 
-    async def _insert(self, schema, table, conn, payload):
+    def object_store(self, obj):
+        self._ensure_engine()
+
+        cls_name = type(obj).__name__
+        self._ensure_registered_schema(cls_name)
+
+        record = self._schema[cls_name]
+
+        tab = record["table"]
+        inserter = record["insert"]
+
+        factory = self._factories[cls_name]
+
+        return factory.store(
+            obj,
+            engine=self._engine,
+            table=tab,
+            inserter=inserter,
+            tables=self._tables,
+            inserters=self._inserters,
+        )
+
+    def _insert(self, schema, table, conn, payload):
         if table is None:
             raise RuntimeError(f"Attempt to insert into null table (scheme='{schema}')")
 
@@ -411,7 +401,7 @@ class Datastore:
             if "stepping" not in payload:
                 raise KeyError("Expected 'stepping' field in payload")
 
-        obj = await conn.execute(
+        obj = conn.execute(
             sqla.dialects.sqlite.insert(table).on_conflict_do_nothing(), payload
         )
 

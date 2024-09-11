@@ -1,7 +1,5 @@
 from typing import Optional
 
-from ray.actor import ActorHandle
-
 
 class DatastoreObject:
     """
@@ -17,3 +15,7 @@ class DatastoreObject:
             raise RuntimeError("Attempt to read datastore id before it has been set")
 
         return self._my_id
+
+    @property
+    def available(self) -> bool:
+        return self._my_id is not None

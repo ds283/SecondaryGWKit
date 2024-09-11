@@ -20,31 +20,24 @@ class sqla_wavenumber_factory(SQLAFactoryBase):
         }
 
     @staticmethod
-    async def build(
-        payload,
-        engine,
-        conn,
-        table,
-        full_query,
-        serial_query,
-        inserter,
-        tables,
-        inserters,
-    ):
+    def build(payload, engine, table, inserter, tables, inserters):
         k_inv_Mpc = payload["k_inv_Mpc"]
         units = payload["units"]
 
         # query for this wavenumber in the datastore
-        ref = await conn.execute(
-            serial_query.filter(
-                sqla.func.abs(table.c.k_inv_Mpc - k_inv_Mpc) < DEFAULT_FLOAT_PRECISION
-            )
-        )
-        store_id = ref.scalar()
+        with engine.begin() as conn:
+            store_id = conn.execute(
+                sqla.select(table.c.serial).filter(
+                    sqla.func.abs(table.c.k_inv_Mpc - k_inv_Mpc)
+                    < DEFAULT_FLOAT_PRECISION
+                )
+            ).scalar()
 
         # if not present, create a new id using the provided inserter
         if store_id is None:
-            store_id = await inserter(conn, {"k_inv_Mpc": k_inv_Mpc})
+            with engine.begin() as conn:
+                store_id = inserter(conn, {"k_inv_Mpc": k_inv_Mpc})
+                conn.commit()
 
         # return constructed object
         return wavenumber(store_id=store_id, k_inv_Mpc=k_inv_Mpc, units=units)
@@ -91,17 +84,7 @@ class sqla_wavenumber_exit_time_factory(SQLAFactoryBase):
         }
 
     @staticmethod
-    async def build(
-        payload,
-        engine,
-        conn,
-        table,
-        full_query,
-        serial_query,
-        inserter,
-        tables,
-        inserters,
-    ):
+    def build(payload, engine, table, inserter, tables, inserters):
         target_atol = payload["atol"]
         target_rtol = payload["rtol"]
 
@@ -117,37 +100,37 @@ class sqla_wavenumber_exit_time_factory(SQLAFactoryBase):
         atol_table = tables["tolerance"].alias("atol")
         rtol_table = tables["tolerance"].alias("rtol")
 
-        ref = await conn.execute(
-            sqla.select(
-                table.c.serial,
-                table.c.stepping,
-                table.c.atol_serial,
-                table.c.rtol_serial,
-                table.c.compute_time,
-                atol_table.c.log10_tol.label("log10_atol"),
-                rtol_table.c.log10_tol.label("log10_rtol"),
-                table.c.z_exit,
-            )
-            .select_from(
-                table.join(atol_table, atol_table.c.serial == table.c.atol_serial).join(
-                    rtol_table, rtol_table.c.serial == table.c.rtol_serial
+        with engine.begin() as conn:
+            row_data = conn.execute(
+                sqla.select(
+                    table.c.serial,
+                    table.c.stepping,
+                    table.c.atol_serial,
+                    table.c.rtol_serial,
+                    table.c.compute_time,
+                    atol_table.c.log10_tol.label("log10_atol"),
+                    rtol_table.c.log10_tol.label("log10_rtol"),
+                    table.c.z_exit,
                 )
-            )
-            .filter(
-                sqla.and_(
-                    table.c.wavenumber_serial == k.store_id,
-                    table.c.cosmology_type == cosmology.type_id,
-                    table.c.cosmology_serial == cosmology.store_id,
-                    atol_table.c.log10_tol - target_atol.log10_tol
-                    <= DEFAULT_FLOAT_PRECISION,
-                    rtol_table.c.log10_tol - target_rtol.log10_tol
-                    <= DEFAULT_FLOAT_PRECISION,
-                    table.c.stepping >= target_stepping,
+                .select_from(
+                    table.join(
+                        atol_table, atol_table.c.serial == table.c.atol_serial
+                    ).join(rtol_table, rtol_table.c.serial == table.c.rtol_serial)
                 )
-            )
-            .order_by(atol_table.c.log10_tol.desc(), rtol_table.c.log10_tol.desc())
-        )
-        row_data = ref.one_or_none()
+                .filter(
+                    sqla.and_(
+                        table.c.wavenumber_serial == k.store_id,
+                        table.c.cosmology_type == cosmology.type_id,
+                        table.c.cosmology_serial == cosmology.store_id,
+                        atol_table.c.log10_tol - target_atol.log10_tol
+                        <= DEFAULT_FLOAT_PRECISION,
+                        rtol_table.c.log10_tol - target_rtol.log10_tol
+                        <= DEFAULT_FLOAT_PRECISION,
+                        table.c.stepping >= target_stepping,
+                    )
+                )
+                .order_by(atol_table.c.log10_tol.desc(), rtol_table.c.log10_tol.desc())
+            ).one_or_none()
 
         if row_data is not None:
             store_id = row_data.serial
@@ -175,44 +158,42 @@ class sqla_wavenumber_exit_time_factory(SQLAFactoryBase):
                 rtol=rtol,
             )
 
-        else:
-            obj = wavenumber_exit_time(
-                payload=None,
-                k=k,
-                cosmology=cosmology,
-                atol=target_atol,
-                rtol=target_rtol,
-            )
+        # build and return an unpopulated object
+        return wavenumber_exit_time(
+            payload=None,
+            k=k,
+            cosmology=cosmology,
+            atol=target_atol,
+            rtol=target_rtol,
+        )
 
-            # asynchronously compute the horizon-exit time and await the result
-            # (this yields control so that other actor services can run while the result completes)
-            data = await obj.compute()
-
-            # read the result of the computation, and use to populate the constructed object
-            res = await obj.store()
-            if res is None:
-                raise RuntimeError("compute() did not generate a running future")
-            if res is False:
-                raise RuntimeError(
-                    "await compute() returned, but the future was not resolved"
-                )
-
+    @staticmethod
+    def store(
+        obj: wavenumber_exit_time,
+        engine,
+        table,
+        inserter,
+        tables,
+        inserters,
+    ):
+        with engine.begin() as conn:
             # now serialize the computed value in the database
-            store_id = await inserter(
+            store_id = inserter(
                 conn,
                 {
                     "stepping": obj.stepping,
-                    "wavenumber_serial": k.store_id,
-                    "cosmology_type": cosmology.type_id,
-                    "cosmology_serial": cosmology.store_id,
-                    "atol_serial": target_atol.store_id,
-                    "rtol_serial": target_rtol.store_id,
+                    "wavenumber_serial": obj.k.store_id,
+                    "cosmology_type": obj.cosmology.type_id,
+                    "cosmology_serial": obj.cosmology.store_id,
+                    "atol_serial": obj._atol.store_id,
+                    "rtol_serial": obj._rtol.store_id,
                     "compute_time": obj.compute_time,
                     "z_exit": obj.z_exit,
                 },
             )
+            conn.commit()
 
-            # set store_id on behalf of constructed object
-            obj._my_id = store_id
+        # set store_id on behalf of constructed object
+        obj._my_id = store_id
 
-            return obj
+        return obj

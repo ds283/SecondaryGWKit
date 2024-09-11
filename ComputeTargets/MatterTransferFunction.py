@@ -163,7 +163,7 @@ class MatterTransferFunctionIntegration(DatastoreObject):
         self._label = label
         self._z_init = z_init
 
-        self._future = None
+        self._compute_ref = None
 
         self._atol = atol
         self._rtol = rtol
@@ -215,7 +215,7 @@ class MatterTransferFunctionIntegration(DatastoreObject):
     def compute(self):
         if self._values is not None:
             raise RuntimeError("values have already been computed")
-        self._future = compute_matter_Tk.remote(
+        self._compute_ref = compute_matter_Tk.remote(
             self.cosmology,
             self.k,
             self.z_sample,
@@ -223,14 +223,24 @@ class MatterTransferFunctionIntegration(DatastoreObject):
             atol=self._atol.tol,
             rtol=self._rtol.tol,
         )
-        return self._future
+        return self._compute_ref
 
-    async def store(self) -> Optional[bool]:
-        if self._future is None:
+    def store(self) -> Optional[bool]:
+        if self._compute_ref is None:
+            raise RuntimeError(
+                "MatterTransferFunctionIntegration: store() called, but no compute() is in progress"
+            )
+
+        # check whether the computation has actually resolved
+        resolved, unresolved = ray.wait([self._compute_ref], timeout=0)
+
+        # if not, return None
+        if len(resolved) == 0:
             return None
 
-        data = await self._future
-        self._future = None
+        # retrieve result and populate ourselves
+        data = ray.get(self._compute_ref)
+        self._compute_ref = None
 
         self._compute_time = data["compute_time"]
         self._compute_steps = data["compute_steps"]

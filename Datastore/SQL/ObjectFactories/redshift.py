@@ -18,28 +18,22 @@ class sqla_redshift_factory(SQLAFactoryBase):
         }
 
     @staticmethod
-    async def build(
-        payload,
-        engine,
-        conn,
-        table,
-        full_query,
-        serial_query,
-        inserter,
-        tables,
-        inserters,
-    ):
+    def build(payload, engine, table, inserter, tables, inserters):
         z = payload["z"]
 
         # query for this redshift in the datastore
-        ref = await conn.execute(
-            serial_query.filter(sqla.func.abs(table.c.z - z) < DEFAULT_FLOAT_PRECISION)
-        )
-        store_id = ref.scalar()
+        with engine.begin() as conn:
+            store_id = conn.execute(
+                sqla.select(table.c.serial).filter(
+                    sqla.func.abs(table.c.z - z) < DEFAULT_FLOAT_PRECISION
+                )
+            ).scalar()
 
         # if not present, create a new id using the provided inserter
         if store_id is None:
-            store_id = await inserter(conn, {"z": z})
+            with engine.begin() as conn:
+                store_id = inserter(conn, {"z": z})
+                conn.commit()
 
         # return constructed object
         return redshift(store_id=store_id, z=z)

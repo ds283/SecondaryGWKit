@@ -1,6 +1,7 @@
 from math import log10, exp
 from typing import Iterable, Optional
 
+import ray
 from numpy import logspace
 
 from CosmologyConcepts.tolerance import tolerance
@@ -96,7 +97,7 @@ class wavenumber_exit_time(DatastoreObject):
         self.k = k
         self.cosmology = cosmology
 
-        self._future = None
+        self._compute_ref = None
 
         self._atol = atol
         self._rtol = rtol
@@ -104,20 +105,30 @@ class wavenumber_exit_time(DatastoreObject):
     def compute(self):
         if self._z_exit is not None:
             raise RuntimeError("z_exit has already been computed")
-        self._future = find_horizon_exit_time.remote(
+        self._compute_ref = find_horizon_exit_time.remote(
             self.cosmology,
             self.k,
             atol=self._atol.tol,
             rtol=self._rtol.tol,
         )
-        return self._future
+        return self._compute_ref
 
-    async def store(self) -> Optional[bool]:
-        if self._future is None:
+    def store(self) -> Optional[bool]:
+        if self._compute_ref is None:
+            raise RuntimeError(
+                "wavenumber_exit_time: store() called, but no compute() is in progress"
+            )
+
+        # check whether the computation has actually resolved
+        resolved, unresolved = ray.wait([self._compute_ref], timeout=0)
+
+        # if not, return None
+        if len(resolved) == 0:
             return None
 
-        data = await self._future
-        self._future = None
+        # retrieve result and populate ourselves
+        data = ray.get(self._compute_ref)
+        self._compute_ref = None
 
         self._z_exit = data["z_exit"]
         self._compute_time = data["compute_time"]

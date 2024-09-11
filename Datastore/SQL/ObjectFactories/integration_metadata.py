@@ -21,31 +21,23 @@ class sqla_IntegrationSolver_factory(SQLAFactoryBase):
         }
 
     @staticmethod
-    async def build(
-        payload,
-        engine,
-        conn,
-        table,
-        full_query,
-        serial_query,
-        inserter,
-        tables,
-        inserters,
-    ):
+    def build(payload, engine, table, inserter, tables, inserters):
         label = payload["label"]
         stepping = payload["stepping"]
         if stepping < 0:
             stepping = 0
 
-        ref = await conn.execute(
-            serial_query.filter(
-                sqla.and_(table.c.label == label, table.c.stepping >= stepping)
-            )
-        )
-        store_id = ref.scalar()
+        with engine.begin() as conn:
+            store_id = conn.execute(
+                sqla.select(table.c.serial).filter(
+                    sqla.and_(table.c.label == label, table.c.stepping >= stepping)
+                )
+            ).scalar()
 
         if store_id is None:
-            store_id = await inserter(conn, {"label": label, "stepping": stepping})
+            with engine.begin() as conn:
+                store_id = inserter(conn, {"label": label, "stepping": stepping})
+                conn.commit()
 
         # return constructed object
         return IntegrationSolver(store_id=store_id, label=label, stepping=stepping)
