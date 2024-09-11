@@ -20,24 +20,20 @@ class sqla_wavenumber_factory(SQLAFactoryBase):
         }
 
     @staticmethod
-    def build(payload, engine, table, inserter, tables, inserters):
+    def build(payload, conn, table, inserter, tables, inserters):
         k_inv_Mpc = payload["k_inv_Mpc"]
         units = payload["units"]
 
         # query for this wavenumber in the datastore
-        with engine.begin() as conn:
-            store_id = conn.execute(
-                sqla.select(table.c.serial).filter(
-                    sqla.func.abs(table.c.k_inv_Mpc - k_inv_Mpc)
-                    < DEFAULT_FLOAT_PRECISION
-                )
-            ).scalar()
+        store_id = conn.execute(
+            sqla.select(table.c.serial).filter(
+                sqla.func.abs(table.c.k_inv_Mpc - k_inv_Mpc) < DEFAULT_FLOAT_PRECISION
+            )
+        ).scalar()
 
         # if not present, create a new id using the provided inserter
         if store_id is None:
-            with engine.begin() as conn:
-                store_id = inserter(conn, {"k_inv_Mpc": k_inv_Mpc})
-                conn.commit()
+            store_id = inserter(conn, {"k_inv_Mpc": k_inv_Mpc})
 
         # return constructed object
         return wavenumber(store_id=store_id, k_inv_Mpc=k_inv_Mpc, units=units)
@@ -84,7 +80,7 @@ class sqla_wavenumber_exit_time_factory(SQLAFactoryBase):
         }
 
     @staticmethod
-    def build(payload, engine, table, inserter, tables, inserters):
+    def build(payload, conn, table, inserter, tables, inserters):
         target_atol = payload["atol"]
         target_rtol = payload["rtol"]
 
@@ -100,98 +96,91 @@ class sqla_wavenumber_exit_time_factory(SQLAFactoryBase):
         atol_table = tables["tolerance"].alias("atol")
         rtol_table = tables["tolerance"].alias("rtol")
 
-        with engine.begin() as conn:
-            row_data = conn.execute(
-                sqla.select(
-                    table.c.serial,
-                    table.c.stepping,
-                    table.c.atol_serial,
-                    table.c.rtol_serial,
-                    table.c.compute_time,
-                    atol_table.c.log10_tol.label("log10_atol"),
-                    rtol_table.c.log10_tol.label("log10_rtol"),
-                    table.c.z_exit,
-                )
-                .select_from(
-                    table.join(
-                        atol_table, atol_table.c.serial == table.c.atol_serial
-                    ).join(rtol_table, rtol_table.c.serial == table.c.rtol_serial)
-                )
-                .filter(
-                    sqla.and_(
-                        table.c.wavenumber_serial == k.store_id,
-                        table.c.cosmology_type == cosmology.type_id,
-                        table.c.cosmology_serial == cosmology.store_id,
-                        atol_table.c.log10_tol - target_atol.log10_tol
-                        <= DEFAULT_FLOAT_PRECISION,
-                        rtol_table.c.log10_tol - target_rtol.log10_tol
-                        <= DEFAULT_FLOAT_PRECISION,
-                        table.c.stepping >= target_stepping,
-                    )
-                )
-                .order_by(atol_table.c.log10_tol.desc(), rtol_table.c.log10_tol.desc())
-            ).one_or_none()
-
-        if row_data is not None:
-            store_id = row_data.serial
-            z_exit = row_data.z_exit
-            compute_time = row_data.compute_time
-            stepping = row_data.stepping
-
-            atol = tolerance(
-                store_id=row_data.atol_serial, log10_tol=row_data.log10_atol
+        row_data = conn.execute(
+            sqla.select(
+                table.c.serial,
+                table.c.stepping,
+                table.c.atol_serial,
+                table.c.rtol_serial,
+                table.c.compute_time,
+                atol_table.c.log10_tol.label("log10_atol"),
+                rtol_table.c.log10_tol.label("log10_rtol"),
+                table.c.z_exit,
             )
-            rtol = tolerance(
-                store_id=row_data.rtol_serial, log10_tol=row_data.log10_rtol
+            .select_from(
+                table.join(atol_table, atol_table.c.serial == table.c.atol_serial).join(
+                    rtol_table, rtol_table.c.serial == table.c.rtol_serial
+                )
             )
+            .filter(
+                sqla.and_(
+                    table.c.wavenumber_serial == k.store_id,
+                    table.c.cosmology_type == cosmology.type_id,
+                    table.c.cosmology_serial == cosmology.store_id,
+                    atol_table.c.log10_tol - target_atol.log10_tol
+                    <= DEFAULT_FLOAT_PRECISION,
+                    rtol_table.c.log10_tol - target_rtol.log10_tol
+                    <= DEFAULT_FLOAT_PRECISION,
+                    table.c.stepping >= target_stepping,
+                )
+            )
+            .order_by(atol_table.c.log10_tol.desc(), rtol_table.c.log10_tol.desc())
+        ).one_or_none()
 
+        if row_data is None:
+            # build and return an unpopulated object
             return wavenumber_exit_time(
-                payload={
-                    "store_id": store_id,
-                    "z_exit": z_exit,
-                    "compute_time": compute_time,
-                    "stepping": stepping,
-                },
+                payload=None,
                 k=k,
                 cosmology=cosmology,
-                atol=atol,
-                rtol=rtol,
+                atol=target_atol,
+                rtol=target_rtol,
             )
 
-        # build and return an unpopulated object
+        store_id = row_data.serial
+        z_exit = row_data.z_exit
+        compute_time = row_data.compute_time
+        stepping = row_data.stepping
+
+        atol = tolerance(store_id=row_data.atol_serial, log10_tol=row_data.log10_atol)
+        rtol = tolerance(store_id=row_data.rtol_serial, log10_tol=row_data.log10_rtol)
+
         return wavenumber_exit_time(
-            payload=None,
+            payload={
+                "store_id": store_id,
+                "z_exit": z_exit,
+                "compute_time": compute_time,
+                "stepping": stepping,
+            },
             k=k,
             cosmology=cosmology,
-            atol=target_atol,
-            rtol=target_rtol,
+            atol=atol,
+            rtol=rtol,
         )
 
     @staticmethod
     def store(
         obj: wavenumber_exit_time,
-        engine,
+        conn,
         table,
         inserter,
         tables,
         inserters,
     ):
-        with engine.begin() as conn:
-            # now serialize the computed value in the database
-            store_id = inserter(
-                conn,
-                {
-                    "stepping": obj.stepping,
-                    "wavenumber_serial": obj.k.store_id,
-                    "cosmology_type": obj.cosmology.type_id,
-                    "cosmology_serial": obj.cosmology.store_id,
-                    "atol_serial": obj._atol.store_id,
-                    "rtol_serial": obj._rtol.store_id,
-                    "compute_time": obj.compute_time,
-                    "z_exit": obj.z_exit,
-                },
-            )
-            conn.commit()
+        # now serialize the computed value in the database
+        store_id = inserter(
+            conn,
+            {
+                "stepping": obj.stepping,
+                "wavenumber_serial": obj.k.store_id,
+                "cosmology_type": obj.cosmology.type_id,
+                "cosmology_serial": obj.cosmology.store_id,
+                "atol_serial": obj._atol.store_id,
+                "rtol_serial": obj._rtol.store_id,
+                "compute_time": obj.compute_time,
+                "z_exit": obj.z_exit,
+            },
+        )
 
         # set store_id on behalf of constructed object
         obj._my_id = store_id

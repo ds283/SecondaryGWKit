@@ -23,6 +23,7 @@ from Datastore.SQL.ObjectFactories.wavenumber import (
     sqla_wavenumber_factory,
     sqla_wavenumber_exit_time_factory,
 )
+from utilities import WallclockTimer
 
 VERSION_ID_LENGTH = 64
 
@@ -323,67 +324,113 @@ class Datastore:
             )
 
     def object_get(self, ObjectClass, **kwargs):
-        self._ensure_engine()
+        with WallclockTimer() as timer:
+            self._ensure_engine()
 
-        if isinstance(ObjectClass, str):
-            cls_name = ObjectClass
-        else:
-            cls_name = ObjectClass.__name__
-        self._ensure_registered_schema(cls_name)
+            if isinstance(ObjectClass, str):
+                cls_name = ObjectClass
+            else:
+                cls_name = ObjectClass.__name__
+            self._ensure_registered_schema(cls_name)
 
-        record = self._schema[cls_name]
+            # print(
+            #     f'** Datastore.object_get() starting for object of class "{cls_name}"'
+            # )
 
-        tab = record["table"]
-        inserter = record["insert"]
+            record = self._schema[cls_name]
 
-        # obtain type of factory class for this storable
-        factory = self._factories[cls_name]
+            tab = record["table"]
+            inserter = record["insert"]
 
-        if "payload_data" in kwargs:
-            payload_data = kwargs["payload_data"]
-            scalar = False
-        else:
-            payload_data = [kwargs]
-            scalar = True
+            # obtain type of factory class for this storable
+            factory = self._factories[cls_name]
 
-        objects = [
-            factory.build(
-                payload=p,
-                engine=self._engine,
-                table=tab,
-                inserter=inserter,
-                tables=self._tables,
-                inserters=self._inserters,
-            )
-            for p in payload_data
-        ]
+            if "payload_data" in kwargs:
+                payload_data = kwargs["payload_data"]
+                scalar = False
+                # print(f"**   payload size = {len(payload_data)} items")
+            else:
+                payload_data = [kwargs]
+                scalar = True
+
+            with self._engine.begin() as conn:
+                objects = [
+                    factory.build(
+                        payload=p,
+                        conn=conn,
+                        table=tab,
+                        inserter=inserter,
+                        tables=self._tables,
+                        inserters=self._inserters,
+                    )
+                    for p in payload_data
+                ]
+                conn.commit()
+
+        # print(
+        #     f'** Datastore.object_get() finished in time {timer.elapsed} sec for object of class "{cls_name}"'
+        # )
 
         if scalar:
             return objects[0]
 
         return objects
 
-    def object_store(self, obj):
-        self._ensure_engine()
+    def object_store(self, objects):
+        with WallclockTimer() as timer:
+            self._ensure_engine()
 
-        cls_name = type(obj).__name__
-        self._ensure_registered_schema(cls_name)
+            # print(f"** Datastore.object_store() starting")
 
-        record = self._schema[cls_name]
+            if isinstance(objects, list) or isinstance(objects, tuple):
+                payload_data = objects
+                scalar = False
+                # print(f" **   payload size = {len(objects)} items")
+            else:
+                payload_data = [objects]
+                scalar = True
 
-        tab = record["table"]
-        inserter = record["insert"]
+            output_objects = []
+            with self._engine.begin() as conn:
+                for obj in payload_data:
+                    cls_name = type(objects).__name__
+                    self._ensure_registered_schema(cls_name)
 
-        factory = self._factories[cls_name]
+                    with WallclockTimer() as store_timer:
+                        # print(f'**   starting store for object of type "{cls_name}"')
 
-        return factory.store(
-            obj,
-            engine=self._engine,
-            table=tab,
-            inserter=inserter,
-            tables=self._tables,
-            inserters=self._inserters,
-        )
+                        record = self._schema[cls_name]
+
+                        tab = record["table"]
+                        inserter = record["insert"]
+
+                        factory = self._factories[cls_name]
+
+                        output_objects.append(
+                            factory.store(
+                                objects,
+                                conn=conn,
+                                table=tab,
+                                inserter=inserter,
+                                tables=self._tables,
+                                inserters=self._inserters,
+                            )
+                        )
+
+                    # print(
+                    #     f'**   finished store for object of type "{cls_name}" in time {store_timer.elapsed} sec'
+                    # )
+
+                conn.commit()
+
+        # print(
+        #     f'** Datastore.object_store() finished in time {timer.elapsed} sec for object of class "{cls_name}"'
+        # )
+
+        if scalar:
+            return output_objects[0]
+
+        return output_objects
 
     def _insert(self, schema, table, conn, payload):
         if table is None:

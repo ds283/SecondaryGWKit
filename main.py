@@ -105,6 +105,7 @@ def convert_to_redshifts(z_sample_set):
 
 
 # build array of k-sample points
+print("-- building array of k-sample wavenumbers")
 k_array = ray.get(
     convert_to_wavenumbers(np.logspace(np.log10(0.001), np.log10(0.5), 500))
 )
@@ -112,6 +113,7 @@ k_sample = wavenumber_array(k_array=k_array)
 
 
 # build absolute and relative tolerances
+print("-- building tolerance objects")
 atol, rtol = ray.get(
     [
         store.object_get.remote(tolerance, tol=DEFAULT_ABS_TOLERANCE),
@@ -123,6 +125,7 @@ atol, rtol = ray.get(
 # (in principle this is a quick operation so we do not mind blocking on ray.get() while
 # the exit time objects are constructed; if any calculations are outstanding, we just get back
 # empty objects)
+print("-- populating array of k-exit objects")
 k_exit_times = ray.get(
     [
         store.object_get.remote(
@@ -144,6 +147,7 @@ exit_time_store_lookup = {}
 
 # determine whether any exit time objects require computation;
 # if so, initiate the corresponding compute tasks and store the ObjectRefs in a queue
+print("-- queueing tasks to compute horizon exit times")
 for i, obj in enumerate(k_exit_times):
     if obj.available:
         continue
@@ -155,6 +159,7 @@ for i, obj in enumerate(k_exit_times):
 # while compute tasks are still being processed, initiate store tasks
 # to make efficient use of the Datastore actor
 # Each store task produces another ObjectRef that needs to be held in a second queue
+print("--   waiting for horizon exit tasks to complete")
 while len(exit_time_work_refs) > 0:
     done_ref, exit_time_work_refs = ray.wait(exit_time_work_refs, num_returns=1)
     if len(done_ref) > 0:
@@ -168,6 +173,7 @@ while len(exit_time_work_refs) > 0:
 # while store tasks are still being processed, collect the populated stored
 # objects (which are now complete with a store_id field) and replace them in
 # the k_exit_times array
+print("--   waiting for horizon exit storage requests to complete")
 while len(exit_time_store_refs) > 0:
     done_ref, exit_time_store_refs = ray.wait(exit_time_store_refs, num_returns=1)
     if len(done_ref) > 0:
@@ -181,16 +187,18 @@ while len(exit_time_store_refs) > 0:
 
 # build a set of z-sample points for each k-mode
 # These run from 10 e-folds before horizon exit, up to the final redshift z_end
+print("-- populating array of z-sample times for each k-mode")
 z_sample_values = ray.get(
     [
         convert_to_redshifts(
-            k_exit.populate_z_sample(outside_horizon_efolds=10.0, z_end=0.1)
+            k_exit.populate_z_sample(outside_horizon_efolds=10.0, z_end=0.5)
         )
         for k_exit in k_exit_times
     ]
 )
 
 # finally, wrap all of these lists into redshift_array containers
+print("-- converting z-sample times to redshift arrays")
 z_sample = [redshift_array(z_array=zs) for zs in z_sample_values]
 
 
@@ -215,6 +223,7 @@ def build_Tks():
     )
 
 
+print("-- querying matter transfer function values")
 Tks = build_Tks()
 cycle = 1
 
@@ -230,6 +239,7 @@ while any(not Tk.available for Tk in Tks):
     Tk_store_refs = []
     Tk_store_lookup = []
 
+    print("-- scheduling work to populate missing matter transfer function values")
     for i, Tk in enumerate(Tks):
         if not Tk.available:
             obj = ray.get(
@@ -249,6 +259,7 @@ while any(not Tk.available for Tk in Tks):
             Tk_work_refs.append(ref)
             Tk_work_lookup[ref.hex] = obj
 
+    print("--   waiting to matter transfer function integrations to complete")
     while len(Tk_work_refs) > 0:
         done_ref, Tk_work_refs = ray.wait(Tk_work_refs, num_returns=1)
         if len(done_ref) > 0:

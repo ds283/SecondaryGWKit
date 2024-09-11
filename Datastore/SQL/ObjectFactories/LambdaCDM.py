@@ -26,7 +26,7 @@ class sqla_LambdaCDM_factory(SQLAFactoryBase):
         }
 
     @staticmethod
-    def build(payload, engine, table, inserter, tables, inserters):
+    def build(payload, conn, table, inserter, tables, inserters):
         params = payload["params"]
         units = payload["units"]
 
@@ -38,40 +38,36 @@ class sqla_LambdaCDM_factory(SQLAFactoryBase):
         T_CMB_Kelvin = params.T_CMB_Kelvin
         Neff = params.Neff
 
-        with engine.begin() as conn:
-            store_id = conn.execute(
-                sqla.select(table.c.serial).filter(
-                    sqla.and_(
-                        sqla.func.abs(table.c.omega_m - omega_m)
-                        < DEFAULT_FLOAT_PRECISION,
-                        sqla.func.abs(table.c.omega_cc - omega_cc)
-                        < DEFAULT_FLOAT_PRECISION,
-                        sqla.func.abs(table.c.h - h) < DEFAULT_FLOAT_PRECISION,
-                        sqla.func.abs(table.c.f_baryon - f_baryon)
-                        < DEFAULT_FLOAT_PRECISION,
-                        sqla.func.abs(table.c.T_CMB_Kelvin - T_CMB_Kelvin)
-                        < DEFAULT_FLOAT_PRECISION,
-                        sqla.func.abs(table.c.Neff - Neff) < DEFAULT_FLOAT_PRECISION,
-                    )
+        store_id = conn.execute(
+            sqla.select(table.c.serial).filter(
+                sqla.and_(
+                    sqla.func.abs(table.c.omega_m - omega_m) < DEFAULT_FLOAT_PRECISION,
+                    sqla.func.abs(table.c.omega_cc - omega_cc)
+                    < DEFAULT_FLOAT_PRECISION,
+                    sqla.func.abs(table.c.h - h) < DEFAULT_FLOAT_PRECISION,
+                    sqla.func.abs(table.c.f_baryon - f_baryon)
+                    < DEFAULT_FLOAT_PRECISION,
+                    sqla.func.abs(table.c.T_CMB_Kelvin - T_CMB_Kelvin)
+                    < DEFAULT_FLOAT_PRECISION,
+                    sqla.func.abs(table.c.Neff - Neff) < DEFAULT_FLOAT_PRECISION,
                 )
-            ).scalar()
+            )
+        ).scalar()
 
         # if not present, create a new id using the provided inserter
         if store_id is None:
-            with engine.begin() as conn:
-                store_id = inserter(
-                    conn,
-                    {
-                        "name": name,
-                        "omega_m": omega_m,
-                        "omega_cc": omega_cc,
-                        "h": h,
-                        "f_baryon": f_baryon,
-                        "T_CMB_Kelvin": T_CMB_Kelvin,
-                        "Neff": Neff,
-                    },
-                )
-                conn.commit()
+            store_id = inserter(
+                conn,
+                {
+                    "name": name,
+                    "omega_m": omega_m,
+                    "omega_cc": omega_cc,
+                    "h": h,
+                    "f_baryon": f_baryon,
+                    "T_CMB_Kelvin": T_CMB_Kelvin,
+                    "Neff": Neff,
+                },
+            )
 
         return LambdaCDM(
             store_id=store_id,

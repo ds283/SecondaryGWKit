@@ -20,7 +20,7 @@ class sqla_tolerance_factory(SQLAFactoryBase):
         }
 
     @staticmethod
-    def build(payload, engine, table, inserter, tables, inserters):
+    def build(payload, conn, table, inserter, tables, inserters):
         log10_tol = payload.get("log10_tol", None)
         if log10_tol is None:
             tol = payload.get("tol", None)
@@ -28,17 +28,13 @@ class sqla_tolerance_factory(SQLAFactoryBase):
                 raise KeyError("Missing expected arguments 'log10_tol' or 'tol")
             log10_tol = log10(tol)
 
-        with engine.begin() as conn:
-            store_id = conn.execute(
-                sqla.select(table.c.serial).filter(
-                    sqla.func.abs(table.c.log10_tol - log10_tol)
-                    < DEFAULT_FLOAT_PRECISION
-                )
-            ).scalar()
+        store_id = conn.execute(
+            sqla.select(table.c.serial).filter(
+                sqla.func.abs(table.c.log10_tol - log10_tol) < DEFAULT_FLOAT_PRECISION
+            )
+        ).scalar()
 
         if store_id is None:
-            with engine.begin() as conn:
-                store_id = inserter(conn, {"log10_tol": log10_tol})
-                conn.commit()
+            store_id = inserter(conn, {"log10_tol": log10_tol})
 
         return tolerance(store_id=store_id, log10_tol=log10_tol)
