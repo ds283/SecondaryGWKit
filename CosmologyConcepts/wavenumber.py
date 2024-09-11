@@ -173,18 +173,8 @@ class wavenumber_exit_time(DatastoreObject):
         else:
             z_init = self._z_exit
 
-        print(
-            f"horizon-crossing time for wavenumber k = {self.k.k_inv_Mpc}/Mpc is z_exit = {self.z_exit}"
-        )
-        print(
-            f"-- using N = {outside_horizon_efolds} e-folds of superhorizon evolution, initial time is z_init = {z_init}"
-        )
-
         # now we want to built a set of sample points for redshifts between z_init and
         # the final point z = z_final, using the specified number of redshift sample points
         num_z_sample = int(round(samples_per_log10z * log10(z_init) + 0.5, 0))
-        print(
-            f"-- using {samples_per_log10z} z-points per log10(z) requires {num_z_sample} samples"
-        )
 
         return logspace(log10(z_init), log10(z_end), num=num_z_sample)
