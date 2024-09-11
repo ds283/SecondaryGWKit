@@ -1,120 +1,23 @@
-from math import fabs
-from typing import Optional, Mapping, List
+from typing import Optional, List
 
 import ray
-from scipy.integrate import solve_ivp
 
-from CosmologyConcepts import redshift_array, wavenumber, redshift, tolerance
+from CosmologyConcepts import wavenumber, redshift, redshift_array, tolerance
 from CosmologyModels.base import BaseCosmology
 from Datastore import DatastoreObject
-from defaults import DEFAULT_ABS_TOLERANCE, DEFAULT_REL_TOLERANCE
-from utilities import check_units, WallclockTimer
+from utilities import check_units
 from .integration_metadata import IntegrationSolver
 
 
-@ray.remote
-def compute_matter_Tk(
-    cosmology: BaseCosmology,
-    k: wavenumber,
-    z_sample: redshift_array,
-    z_init: redshift,
-    atol: float = DEFAULT_ABS_TOLERANCE,
-    rtol: float = DEFAULT_REL_TOLERANCE,
-) -> Mapping[str, float]:
-    check_units(k, cosmology)
-
-    # dimensionful value of wavenumber; should be measured in the same units used by the cosmology (see below)
-    k_float = k.k
-    z_min = float(z_sample.min)
-
-    # RHS of ODE system for computing transfer function T_k(z) for gravitational potential Phi(z)
-    # We normalize to 1.0 at high redshift, so the initial condition needs to be Phi* (the primordial
-    # value of the Newtonian potential) rather than \zeta* (the primordial value of the curvature
-    # perturbation on uniform energy hypersurfaces)
-    #
-    # State layout:
-    #   state[0] = energy density rho(z)
-    #   state[0] = T(z)
-    #   state[1] = dT/dz = T' = "T prime"
-    def RHS(z, state) -> float:
-        """
-        k must be measured using the same units used for H(z) in the cosmology
-        """
-        rho, T, T_prime = state
-
-        H = cosmology.Hubble(z)
-        w = cosmology.w(z)
-        eps = cosmology.epsilon(z)
-
-        one_plus_z = 1.0 + z
-        one_plus_z_2 = one_plus_z * one_plus_z
-
-        drho_dz = 3.0 * ((1.0 + w) / one_plus_z) * rho
-        dT_dz = T_prime
-
-        k_over_H = k_float / H
-        k_over_H_2 = k_over_H * k_over_H
-
-        dTprime_dz = (
-            -(eps - 3.0 * (1.0 + w)) * T_prime / one_plus_z
-            - (3.0 * (1.0 + w) - 2 * eps) * T / one_plus_z_2
-            - w * k_over_H_2 * T
-        )
-
-        return [drho_dz, dT_dz, dTprime_dz]
-
-    with WallclockTimer() as timer:
-        # use initial values T(z) = 1, dT/dz = 0 at z = z_init
-        initial_state = [cosmology.rho(z_init.z), 1.0, 0.0]
-        sol = solve_ivp(
-            RHS,
-            method="RK45",
-            t_span=(z_init.z, z_min),
-            y0=initial_state,
-            t_eval=z_sample.as_list(),
-            atol=atol,
-            rtol=rtol,
-        )
-
-    # test whether the integration concluded successfully
-    if not sol.success:
-        raise RuntimeError(
-            f'compute_matter_Tk: integration did not terminate successfully ("{sol.message}")'
-        )
-
-    sampled_z = sol.t
-    sampled_values = sol.y
-    sampled_T = sampled_values[1]
-
-    expected_values = len(z_sample)
-    returned_values = sampled_z.size
-
-    if returned_values != expected_values:
-        raise RuntimeError(
-            f"compute_matter_Tk: solve_ivp returned {returned_values} samples, but expected {expected_values}"
-        )
-
-    for i in range(returned_values):
-        diff = sampled_z[i] - z_sample[i].z
-        if fabs(diff) > DEFAULT_ABS_TOLERANCE:
-            raise RuntimeError(
-                f"compute_matter_Tk: solve_ivp returned sample points that differ from those requested (difference={diff} at i={i})"
-            )
-
-    return {
-        "compute_time": timer.elapsed,
-        "compute_steps": int(sol.nfev),
-        "values": sampled_T,
-        "solver_label": "scipy+solve_ivp+RK45",
-        "solver_stepping": 0,
-    }
-
-
-class MatterTransferFunctionIntegration(DatastoreObject):
+class TensorGreenFunctionIntegration(DatastoreObject):
     """
     Encapsulates all sample points produced during a single integration of the
-    matter transfer function, labelled by a wavenumber k, and sampled over
-    a range of redshifts
+    tensor Green's function, labelled by a wavenumber k, and two redshifts:
+    the source redshift, and the response redshift.
+    A single integration fixes the source redshift and determines the Green function
+    as a function of the response redshift.
+    However, once these have been computed and cached, we can obtain the result as
+    a function of the source redshift if we wish
     """
 
     def __init__(
@@ -123,8 +26,8 @@ class MatterTransferFunctionIntegration(DatastoreObject):
         cosmology: BaseCosmology,
         label: str,
         k: wavenumber,
+        z_source: redshift,
         z_sample: redshift_array,
-        z_init: redshift,
         atol: tolerance,
         rtol: tolerance,
     ):
@@ -147,13 +50,13 @@ class MatterTransferFunctionIntegration(DatastoreObject):
             self._z_sample = z_sample
             self._values = payload["values"]
 
-        # check that all sample points are *later* than the specified initial redshift
-        z_init_float = float(z_init)
+        # check that all sample points are *later* than the specified source redshift
+        z_init_float = float(z_source)
         for z in self._z_sample:
             z_float = float(z)
             if z_float > z_init_float:
                 raise ValueError(
-                    f"Redshift sample point z={z_float} exceeds initial redshift z={z_init_float}"
+                    f"Redshift sample point z={z_float} exceeds source redshift z={z_init_float}"
                 )
 
         # store parameters
@@ -161,7 +64,7 @@ class MatterTransferFunctionIntegration(DatastoreObject):
         self._cosmology = cosmology
 
         self._label = label
-        self._z_init = z_init
+        self._z_source = z_source
 
         self._compute_ref = None
 
@@ -181,8 +84,8 @@ class MatterTransferFunctionIntegration(DatastoreObject):
         return self._label
 
     @property
-    def z_init(self):
-        return self._z_init
+    def z_source(self):
+        return self._z_source
 
     @property
     def z_sample(self):
@@ -215,11 +118,11 @@ class MatterTransferFunctionIntegration(DatastoreObject):
     def compute(self):
         if self._values is not None:
             raise RuntimeError("values have already been computed")
-        self._compute_ref = compute_matter_Tk.remote(
+        self._compute_ref = compute_tensor_Green.remote(
             self.cosmology,
             self.k,
+            self.z_source,
             self.z_sample,
-            self.z_init,
             atol=self._atol.tol,
             rtol=self._rtol.tol,
         )
@@ -249,9 +152,9 @@ class MatterTransferFunctionIntegration(DatastoreObject):
         self._values = []
 
         for i in range(len(values)):
-            # create new MatterTransferFunctionValue object
+            # create new TensorGreenFunctionValue object
             self._values.append(
-                MatterTransferFunctionValue(None, self._z_sample[i], values[i])
+                TensorGreenFunctionValue(None, self._z_sample[i], values[i])
             )
 
         self._solver = IntegrationSolver(
@@ -261,11 +164,11 @@ class MatterTransferFunctionIntegration(DatastoreObject):
         return True
 
 
-class MatterTransferFunctionValue(DatastoreObject):
+class TensorGreenFunctionValue(DatastoreObject):
     """
-    Encapsulates a single sampled value of the matter transfer functions.
-    Parameters such as wavenumber k, intiial redshift z_init, etc., are held by the
-    owning MatterTransferFunctionIntegration object
+    Encapsulates a single sampled value of the tensor Green's transfer functions.
+    Parameters such as wavenumber k, source redshift z_source, etc., are held by the
+    owning TensorGreenFunctionIntegration object
     """
 
     def __init__(self, store_id: int, z: redshift, value: float):
@@ -294,11 +197,11 @@ class MatterTransferFunctionValue(DatastoreObject):
         return self._value
 
 
-class MatterTransferFunctionContainer:
+class TensorGreenFunctionContainer:
     """
-    Encapsulates the time-evolution of the matter transfer function, labelled by a wavenumber k,
-    sampled over a specified range of redshifts.
-    Notice this is a container object, not an object that is itself persisted in the datastore.
+    Encapsulates the time-evolution of the tensor Green's function with *response redshift*,
+    labelled by a wavenumber k, sampled over a specified range of redshifts.
+    Notice this is a broker object, not an object that is itself persisted in the datastore
     """
 
     def __init__(
@@ -306,7 +209,7 @@ class MatterTransferFunctionContainer:
         payload,
         cosmology: BaseCosmology,
         k: wavenumber,
-        z_init: redshift,
+        z_source: redshift,
         z_sample: redshift_array,
         target_atol: tolerance,
         target_rtol: tolerance,
@@ -314,7 +217,7 @@ class MatterTransferFunctionContainer:
         """
         :param cosmology: cosmology instance
         :param k: wavenumber object
-        :param z_init: initial redshift of the matter transfer function
+        :param z_source: initial redshift of the Green's function
         :param z_sample: redshift values at which to sample the matter transfer function
         """
         self._cosmology: BaseCosmology = cosmology
@@ -322,7 +225,7 @@ class MatterTransferFunctionContainer:
         # cache wavenumber and z-sample array
         self._k = k
         self._z_sample = z_sample
-        self._z_init = z_init
+        self._z_source = z_source
 
         self._target_atol = target_atol
         self._target_rtol = target_rtol
@@ -343,7 +246,7 @@ class MatterTransferFunctionContainer:
         num_missing = len(self._missing_zs)
         if num_missing > 0:
             print(
-                f"Matter transfer function T(z) for '{cosmology.name}' k={k.k_inv_Mpc}/Mpc has {num_missing} missing z-sample values"
+                f"Tensor Green's function G^\chi_k(z, z_i) for '{cosmology.name}' k={k.k_inv_Mpc}/Mpc has {num_missing} missing z-sample values"
             )
 
     @property
@@ -351,8 +254,8 @@ class MatterTransferFunctionContainer:
         return self._k
 
     @property
-    def z_init(self) -> redshift:
-        return self._z_init
+    def z_source(self) -> redshift:
+        return self._z_source
 
     @property
     def available(self) -> bool:

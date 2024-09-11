@@ -3,21 +3,18 @@ from math import fabs
 import sqlalchemy as sqla
 
 from ComputeTargets import (
-    IntegrationSolver,
-    MatterTransferFunctionIntegration,
-    MatterTransferFunctionValue,
-    MatterTransferFunctionContainer,
+    TensorGreenFunctionIntegration,
+    TensorGreenFunctionValue,
+    TensorGreenFunctionContainer,
 )
 from CosmologyConcepts import tolerance, wavenumber, redshift_array, redshift
 from CosmologyModels.base import BaseCosmology
 from Datastore.SQL.ObjectFactories.base import SQLAFactoryBase
-from Datastore.SQL.ObjectFactories.integration_metadata import (
-    sqla_IntegrationSolver_factory,
-)
-from defaults import DEFAULT_STRING_LENGTH, DEFAULT_FLOAT_PRECISION
+from defaults import DEFAULT_FLOAT_PRECISION, DEFAULT_STRING_LENGTH
+from .integration_metadata import IntegrationSolver, sqla_IntegrationSolver_factory
 
 
-class sqla_MatterTransferFunctionIntegration_factory(SQLAFactoryBase):
+class sqla_TensorGreenFunctionIntegration_factory(SQLAFactoryBase):
     def __init__(self):
         pass
 
@@ -56,7 +53,7 @@ class sqla_MatterTransferFunctionIntegration_factory(SQLAFactoryBase):
                     nullable=False,
                 ),
                 sqla.Column(
-                    "z_init_serial",
+                    "z_source_serial",
                     sqla.Integer,
                     sqla.ForeignKey("redshift.serial"),
                     nullable=False,
@@ -76,7 +73,7 @@ class sqla_MatterTransferFunctionIntegration_factory(SQLAFactoryBase):
         k: wavenumber = payload["k"]
         cosmology: BaseCosmology = payload["cosmology"]
         z_sample: redshift_array = payload["z_sample"]
-        z_init: redshift = payload["z_init"]
+        z_source: redshift = payload["z_source"]
 
         atol_table = tables["tolerance"].alias("atol")
         rtol_table = tables["tolerance"].alias("rtol")
@@ -107,7 +104,7 @@ class sqla_MatterTransferFunctionIntegration_factory(SQLAFactoryBase):
                 table.c.cosmology_type == cosmology.type_id,
                 table.c.cosmology_serial == cosmology.store_id,
                 table.c.label == label,
-                table.c.z_init_serial == z_init.store_id,
+                table.c.z_source_serial == z_source.store_id,
                 table.c.atol_serial == target_atol.store_id,
                 table.c.rtol_serial == target_rtol.store_id,
             )
@@ -115,12 +112,12 @@ class sqla_MatterTransferFunctionIntegration_factory(SQLAFactoryBase):
 
         if row_data is None:
             # build and return an unpopulated object
-            return MatterTransferFunctionIntegration(
+            return TensorGreenFunctionIntegration(
                 payload=None,
                 label=label,
                 k=k,
                 cosmology=cosmology,
-                z_init=z_init,
+                z_source=z_source,
                 z_sample=z_sample,
                 atol=target_atol,
                 rtol=target_rtol,
@@ -142,7 +139,7 @@ class sqla_MatterTransferFunctionIntegration_factory(SQLAFactoryBase):
         rtol = tolerance(store_id=row_data.rtol_serial, log10_tol=row_data.log10_rtol)
 
         # read out sample values associated with this integration
-        value_table = tables["MatterTransferFunctionValue"]
+        value_table = tables["TensorGreenFunctionValue"]
         redshift_table = tables["redshift"]
 
         sample_rows = conn.execute(
@@ -168,14 +165,14 @@ class sqla_MatterTransferFunctionIntegration_factory(SQLAFactoryBase):
             z_value = redshift(store_id=row["z_serial"], z=row["z"])
             z_points.append(z_value)
             values.append(
-                MatterTransferFunctionValue(
+                TensorGreenFunctionValue(
                     store_id=row["store_id"], z=z_value, value=row["value"]
                 )
             )
 
         z_sample = redshift_array(z_sample)
 
-        return MatterTransferFunctionIntegration(
+        return TensorGreenFunctionIntegration(
             payload={
                 "store_id": store_id,
                 "compute_time": compute_time,
@@ -185,7 +182,7 @@ class sqla_MatterTransferFunctionIntegration_factory(SQLAFactoryBase):
             },
             k=k,
             cosmology=cosmology,
-            z_init=z_init,
+            z_source=z_source,
             z_sample=z_sample,
             atol=atol,
             rtol=rtol,
@@ -193,7 +190,7 @@ class sqla_MatterTransferFunctionIntegration_factory(SQLAFactoryBase):
 
     @staticmethod
     def store(
-        obj: MatterTransferFunctionIntegration,
+        obj: TensorGreenFunctionIntegration,
         conn,
         table,
         inserter,
@@ -228,19 +225,19 @@ class sqla_MatterTransferFunctionIntegration_factory(SQLAFactoryBase):
                 "atol_serial": obj._atol.store_id,
                 "rtol_serial": obj._rtol.store_id,
                 "solver_serial": solver.store_id,
-                "z_init_serial": obj.z_init.store_id,
+                "z_source_serial": obj.z_source.store_id,
                 "compute_time": obj.compute_time,
                 "compute_steps": obj.compute_steps,
             },
         )
 
-        # set store_id on behalf of the MatterTransferFunctionIntegration instance
+        # set store_id on behalf of the TensorGreenFunctionIntegration instance
         obj._my_id = store_id
 
         # now serialize the sampled output points
-        value_inserter = inserters["MatterTransferFunctionValue"]
+        value_inserter = inserters["TensorGreenFunctionValue"]
         for value in obj.values:
-            value: MatterTransferFunctionValue
+            value: TensorGreenFunctionValue
             value_id = value_inserter(
                 conn,
                 {
@@ -250,13 +247,13 @@ class sqla_MatterTransferFunctionIntegration_factory(SQLAFactoryBase):
                 },
             )
 
-            # set store_id on behalf of the MatterTransferFunctionValue instance
+            # set store_id on behalf of the TensorGreenFunctionValue instance
             value._my_id = value_id
 
         return obj
 
 
-class sqla_MatterTransferFunctionValue_factory(SQLAFactoryBase):
+class sqla_TensorGreenFunctionValue_factory(SQLAFactoryBase):
     def __init__(self):
         pass
 
@@ -270,7 +267,7 @@ class sqla_MatterTransferFunctionValue_factory(SQLAFactoryBase):
                 sqla.Column(
                     "integration_serial",
                     sqla.Integer,
-                    sqla.ForeignKey("MatterTransferFunctionIntegration.serial"),
+                    sqla.ForeignKey("TensorGreenFunctionIntegration.serial"),
                     nullable=False,
                 ),
                 sqla.Column(
@@ -318,10 +315,10 @@ class sqla_MatterTransferFunctionValue_factory(SQLAFactoryBase):
                     f"Stored value (integration={integration_serial}, z={z.store_id}) = {value} differs from target value = {target_value}"
                 )
 
-        return MatterTransferFunctionValue(store_id=store_id, z=z, value=value)
+        return TensorGreenFunctionValue(store_id=store_id, z=z, value=value)
 
 
-class sqla_MatterTransferFunctionContainer_factory(SQLAFactoryBase):
+class sqla_TensorGreenFunctionContainer_factory(SQLAFactoryBase):
     def __init__(self):
         pass
 
@@ -337,13 +334,13 @@ class sqla_MatterTransferFunctionContainer_factory(SQLAFactoryBase):
         k: wavenumber = payload["k"]
         cosmology: BaseCosmology = payload["cosmology"]
         z_sample: redshift_array = payload["z_sample"]
-        z_init: redshift = payload["z_init"]
+        z_source: redshift = payload["z_source"]
 
         atol_table = tables["tolerance"].alias("atol")
         rtol_table = tables["tolerance"].alias("rtol")
 
-        values_table = tables["MatterTransferFunctionValue"].alias("value")
-        integration_table = tables["MatterTransferFunctionIntegration"].alias(
+        values_table = tables["TensorGreenFunctionValue"].alias("value")
+        integration_table = tables["TensorGreenFunctionIntegration"].alias(
             "integration"
         )
         redshift_table = tables["redshift"].alias("redshift")
@@ -351,9 +348,9 @@ class sqla_MatterTransferFunctionContainer_factory(SQLAFactoryBase):
 
         z_sample_serials = [z.store_id for z in z_sample]
 
-        # query for stored samples of the matter transfer function at the required
-        # redshift sample points, belonging to an integration with the right cosmology,
-        # k-value, and toleranecs.
+        # query for stored samples of the tensor Green's function at the required
+        # response redshift samples, belonging to an integration with the right cosmology,
+        # source redshift, k-value, and tolerances.
         # We group values by their z serial number and then order by log10 of each tolerance.
         # Then we pick the first value from each group. This gets us the value computed using
         # the best tolerance, no matter which integration it came from, so it is possible
@@ -403,7 +400,7 @@ class sqla_MatterTransferFunctionContainer_factory(SQLAFactoryBase):
                 integration_table.c.wavenumber_serial == k.store_id,
                 integration_table.c.cosmology_type == cosmology.type_id,
                 integration_table.c.cosmology_serial == cosmology.store_id,
-                integration_table.c.z_init_serial == z_init.store_id,
+                integration_table.c.z_source_serial == z_source.store_id,
                 atol_table.c.log10_tol - target_atol.log10_tol
                 <= DEFAULT_FLOAT_PRECISION,
                 rtol_table.c.log10_tol - target_rtol.log10_tol
@@ -415,7 +412,7 @@ class sqla_MatterTransferFunctionContainer_factory(SQLAFactoryBase):
         value_set = {}
         for row in row_data:
             z_value = redshift(store_id=row.z_serial, z=row.z)
-            value = MatterTransferFunctionValue(
+            value = TensorGreenFunctionValue(
                 store_id=row.serial, z=z_value, value=row.value
             )
 
@@ -431,11 +428,11 @@ class sqla_MatterTransferFunctionContainer_factory(SQLAFactoryBase):
 
             value_set[z_value.store_id] = value
 
-        obj = MatterTransferFunctionContainer(
+        obj = TensorGreenFunctionContainer(
             payload={"values": value_set},
             cosmology=cosmology,
             k=k,
-            z_init=z_init,
+            z_source=z_source,
             z_sample=z_sample,
             target_atol=target_atol,
             target_rtol=target_rtol,

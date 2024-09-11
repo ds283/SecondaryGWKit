@@ -13,6 +13,10 @@ from Datastore.SQL.ObjectFactories.MatterTransferFunction import (
     sqla_MatterTransferFunctionValue_factory,
     sqla_MatterTransferFunctionContainer_factory,
 )
+from Datastore.SQL.ObjectFactories.TensorGreenFunction import (
+    sqla_TensorGreenFunctionIntegration_factory,
+    sqla_TensorGreenFunctionValue_factory,
+)
 from Datastore.SQL.ObjectFactories.base import SQLAFactoryBase
 from Datastore.SQL.ObjectFactories.integration_metadata import (
     sqla_IntegrationSolver_factory,
@@ -41,6 +45,9 @@ _adapters = {
     "MatterTransferFunctionIntegration": sqla_MatterTransferFunctionIntegration_factory,
     "MatterTransferFunctionValue": sqla_MatterTransferFunctionValue_factory,
     "MatterTransferFunctionContainer": sqla_MatterTransferFunctionContainer_factory,
+    "TensorGreenFunctionIntegration": sqla_TensorGreenFunctionIntegration_factory,
+    "TensorGreenFunctionValue": sqla_TensorGreenFunctionValue_factory,
+    "TensorGreenFunctionContainer": sqla_MatterTransferFunctionContainer_factory,
 }
 
 _FactoryMappingType = Mapping[str, SQLAFactoryBase]
