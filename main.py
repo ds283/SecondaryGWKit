@@ -107,7 +107,7 @@ def convert_to_redshifts(z_sample_set):
 # build array of k-sample points
 print("-- building array of k-sample wavenumbers")
 k_array = ray.get(
-    convert_to_wavenumbers(np.logspace(np.log10(0.001), np.log10(0.5), 500))
+    convert_to_wavenumbers(np.logspace(np.log10(0.001), np.log10(1.0), 500))
 )
 k_sample = wavenumber_array(k_array=k_array)
 
