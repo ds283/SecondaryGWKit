@@ -175,6 +175,8 @@ class wavenumber_exit_time(DatastoreObject):
 
         # now we want to built a set of sample points for redshifts between z_init and
         # the final point z = z_final, using the specified number of redshift sample points
-        num_z_sample = int(round(samples_per_log10z * log10(z_init) + 0.5, 0))
+        num_z_sample = int(
+            round(samples_per_log10z * (log10(z_init) - log10(z_end)) + 0.5, 0)
+        )
 
         return logspace(log10(z_init), log10(z_end), num=num_z_sample)
