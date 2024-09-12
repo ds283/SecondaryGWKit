@@ -1,6 +1,7 @@
 import argparse
 import sys
 from datetime import datetime
+from math import log10
 
 import numpy as np
 import ray
@@ -9,6 +10,8 @@ from ray import ObjectRef
 from ComputeTargets import (
     MatterTransferFunctionContainer,
     MatterTransferFunctionIntegration,
+    TensorGreenFunctionContainer,
+    TensorGreenFunctionIntegration,
 )
 from CosmologyConcepts import (
     tolerance,
@@ -188,7 +191,7 @@ while len(exit_time_store_refs) > 0:
 # build a set of z-sample points for each k-mode
 # These run from 10 e-folds before horizon exit, up to the final redshift z_end
 print("-- populating array of z-sample times for each k-mode")
-z_sample_values = ray.get(
+Tk_z_sample_values = ray.get(
     [
         convert_to_redshifts(
             k_exit.populate_z_sample(outside_horizon_efolds=10.0, z_end=0.5)
@@ -199,7 +202,7 @@ z_sample_values = ray.get(
 
 # finally, wrap all of these lists into redshift_array containers
 print("-- converting z-sample times to redshift arrays")
-z_sample = [redshift_array(z_array=zs) for zs in z_sample_values]
+Tk_z_sample = [redshift_array(z_array=zs) for zs in Tk_z_sample_values]
 
 
 ## STEP 3
@@ -215,8 +218,8 @@ def build_Tks():
                 cosmology=LambdaCDM_Planck2018,
                 atol=atol,
                 rtol=rtol,
-                z_sample=z_sample[i],
-                z_init=z_sample[i].max,
+                z_sample=Tk_z_sample[i],
+                z_init=Tk_z_sample[i].max,
             )
             for i in range(len(k_sample))
         ]
@@ -231,35 +234,38 @@ cycle = 1
 while any(not Tk.available for Tk in Tks):
     # schedule integrations to populate any z-sample points that are not already held in the container
 
-    label = f"{args.job_name}-cycle={cycle}-{datetime.now().replace(microsecond=0).isoformat()}"
-
     Tk_work_refs = []
     Tk_work_lookup = {}
 
     Tk_store_refs = []
-    Tk_store_lookup = []
 
-    print("-- scheduling work to populate missing matter transfer function values")
-    for i, Tk in enumerate(Tks):
-        if not Tk.available:
-            obj = ray.get(
-                store.object_get.remote(
-                    MatterTransferFunctionIntegration,
-                    k=Tk.k,
-                    cosmology=LambdaCDM_Planck2018,
-                    atol=atol,
-                    rtol=rtol,
-                    z_sample=Tk.missing_z_sample,
-                    z_init=Tk.z_init,
-                    label=label,
-                )
+    print(
+        "-- scheduling work to populate missing matter transfer function values (cycle={cycle})"
+    )
+    for Tk in Tks:
+        if Tk.available:
+            continue
+
+        # ray.get() will block here, but returning the empty MatterTransferFunctionIntegration object
+        # from the datastore should be fast (in future could also possibly manage this queue asynchronously)
+        obj = ray.get(
+            store.object_get.remote(
+                MatterTransferFunctionIntegration,
+                k=Tk.k,
+                cosmology=LambdaCDM_Planck2018,
+                atol=atol,
+                rtol=rtol,
+                z_sample=Tk.missing_z_sample,
+                z_init=Tk.z_init,
+                label=f"{args.job_name}-Tk-k{Tk.k.k_inv_Mpc:.3g}-cycle={cycle}-{datetime.now().replace(microsecond=0).isoformat()}",
             )
-            ref: ObjectRef = obj.compute()
+        )
+        ref: ObjectRef = obj.compute()
 
-            Tk_work_refs.append(ref)
-            Tk_work_lookup[ref.hex] = obj
+        Tk_work_refs.append(ref)
+        Tk_work_lookup[ref.hex] = obj
 
-    print("--   waiting to matter transfer function integrations to complete")
+    print("--   waiting for matter transfer function integrations to complete")
     while len(Tk_work_refs) > 0:
         done_ref, Tk_work_refs = ray.wait(Tk_work_refs, num_returns=1)
         if len(done_ref) > 0:
@@ -273,4 +279,120 @@ while any(not Tk.available for Tk in Tks):
         done_ref, Tk_store_refs = ray.wait(Tk_store_refs, num_returns=1)
 
     Tks = build_Tks()
+    cycle += 1
+
+
+## STEP 4
+## BUILD A GRID OF SOURCE/RESPONSE REDSHIFT SAMPLE REDSHIFTS
+print(
+    "-- building grid of z_source/z_response sample times for Green's function calculation"
+)
+
+G_LATEST_RESPONSE_Z = 0.5
+
+G_z_sample_values = {}
+for k_exit in k_exit_times:
+    k_exit: wavenumber_exit_time
+
+    k = k_exit.k
+
+    source_redshifts = k_exit.populate_z_sample(
+        outside_horizon_efolds=10.0, z_end=G_LATEST_RESPONSE_Z
+    )
+
+    response_refs = []
+
+    for source_z in source_redshifts:
+        num_response_sample = int(
+            round(60 * (log10(source_z) - log10(G_LATEST_RESPONSE_Z)) + 0.5, 0)
+        )
+        response_redshifts = np.logspace(
+            log10(source_z), log10(G_LATEST_RESPONSE_Z), num_response_sample
+        )
+        response_refs.append(convert_to_redshifts(response_redshifts))
+
+    response_z_lists = ray.get(response_refs)
+    response_z_arrays = [redshift_array(z_array=z_list) for z_list in response_z_lists]
+    G_z_sample_values[k.store_id] = response_z_arrays
+
+
+## STEP 5
+##
+
+
+def build_Gks():
+    ref_list = []
+    for k in k_sample:
+        k: wavenumber
+
+        response_z_arrays = G_z_sample_values[k.store_id]
+        for response_z_array in response_z_arrays:
+            ref_list.append(
+                store.object_get.remote(
+                    TensorGreenFunctionContainer,
+                    k=k,
+                    cosmology=LambdaCDM_Planck2018,
+                    atol=atol,
+                    rtol=rtol,
+                    z_source=response_z_array.max,
+                    z_sample=response_z_array,
+                )
+            )
+
+    return ray.get(ref_list)
+
+
+print("-- querying tensor Green's function values")
+Gks = build_Gks()
+cycle = 1
+
+
+while any(not Gk.available for Gk in Gks):
+    label = f"{args.job_name}-Gk-cycle-{cycle}-{datetime.now().replace(microsecond=0).isoformat()}"
+
+    Gk_work_refs = []
+    Gk_work_lookup = {}
+
+    Gk_store_refs = []
+
+    print(
+        "-- scheduling work to populate missing tensor Green's function values (cycle={cycle})"
+    )
+    for Gk in Gks:
+        if Gk.available:
+            continue
+
+        # ray.get() will block here, but returning the empty TensorGreenFunctionIntegration object
+        # from the datastore should be fast (in future could also possibly manage this queue asynchronously)
+        obj = ray.get(
+            store.object_get.remote(
+                TensorGreenFunctionIntegration,
+                k=Gk.k,
+                cosmology=LambdaCDM_Planck2018,
+                atol=atol,
+                rtol=rtol,
+                z_source=Gk.z_source,
+                z_sample=Gk.missing_z_sample,
+                label=f"{args.job_name}-Gk-k{Gk.k.k_inv_Mpc:.3g}-sourcez{Gk.z_source.z:.5g}-cycle-{cycle}-{datetime.now().replace(microsecond=0).isoformat()}",
+            )
+        )
+        ref: ObjectRef = obj.compute()
+
+        Gk_work_refs.append(ref)
+        Gk_work_lookup[ref.hex] = object
+
+    print("--   waiting for tensor Green's function integrations to complete")
+    while len(Gk_work_refs) > 0:
+        done_ref, Gk_work_refs = ray.wait(Gk_work_refs, num_returns=1)
+        if len(done_ref) > 0:
+            obj = Gk_work_lookup[done_ref[0].hex]
+            obj.store()
+
+            ref: ObjectRef = store.object_store.remote(obj)
+            Gk_store_refs.append(ref)
+
+    while len(Gk_store_refs) > 0:
+        done_ref, Gk_store_refs = ray.wait(Gk_store_refs, num_returns=1)
+
+    Gks = build_Gks()
     cycle += 1

@@ -1,12 +1,113 @@
+from math import fabs
 from typing import Optional, List
 
 import ray
+from scipy.integrate import solve_ivp
 
 from CosmologyConcepts import wavenumber, redshift, redshift_array, tolerance
 from CosmologyModels.base import BaseCosmology
 from Datastore import DatastoreObject
-from utilities import check_units
+from defaults import DEFAULT_ABS_TOLERANCE, DEFAULT_REL_TOLERANCE
+from utilities import check_units, WallclockTimer
 from .integration_metadata import IntegrationSolver
+
+
+@ray.remote
+def compute_tensor_Green(
+    cosmology: BaseCosmology,
+    k: wavenumber,
+    z_source: redshift,
+    z_sample: redshift_array,
+    atol: float = DEFAULT_ABS_TOLERANCE,
+    rtol: float = DEFAULT_REL_TOLERANCE,
+) -> dict:
+    check_units(k, cosmology)
+
+    # obtain dimensionful value of wavenumber; this should be measured in the same units used by the cosmology
+    # (see below)
+    k_float = k.k
+    z_min = float(z_sample.min)
+
+    # RHS of ODE system
+    #
+    # State layout:
+    #   state[0] = energy density rho(z)
+    #   state[0] = G_k(z, z')
+    #   state[1] = Gprime_k(z, z')
+    def RHS(z, state) -> float:
+        """
+        k *must* be measured using the same units used for H(z) in the cosmology
+        """
+        rho, G, Gprime = state
+
+        H = cosmology.Hubble(z)
+        w = cosmology.w(z)
+        eps = cosmology.epsilon(z)
+
+        one_plus_z = 1.0 + z
+        one_plus_z_2 = one_plus_z * one_plus_z
+
+        drho_dz = 3.0 * ((1.0 + w) / one_plus_z) * rho
+        dG_dz = Gprime
+
+        k_over_H = k_float / H
+        k_over_H_2 = k_over_H * k_over_H
+
+        dGprime_dz = -eps * Gprime - (k_over_H_2 - (2.0 - eps) / one_plus_z_2) * G
+
+        return [drho_dz, dG_dz, dGprime_dz]
+
+    with WallclockTimer() as timer:
+        # initial conditions should be
+        #   G(z', z') = 0
+        #   Gprime(z' z') = -1/(a0 H(z'))
+        # however we would rather not have a delicate initial condition for Gprime, so we
+        # instead solve with the boundary conditions Gprime = -1 and rescale afterwards
+        initial_state = [cosmology.rho(z_source.z), 0.0, -1.0]
+        sol = solve_ivp(
+            RHS,
+            method="RK45",
+            t_span=(z_source.z, z_min),
+            y0=initial_state,
+            t_eval=z_sample.as_list(),
+            atol=atol,
+            rtol=rtol,
+        )
+
+    # test whether the integration concluded successfully
+    if not sol.success:
+        raise RuntimeError(
+            f'compute_tensor_Green: integration did not terminate successfully ("{sol.message}")'
+        )
+
+    sampled_z = sol.t
+    sampled_values = sol.y
+    sampled_G = sampled_values[1]
+
+    expected_values = len(z_sample)
+    returned_values = sampled_z.size
+
+    if returned_values != expected_values:
+        raise RuntimeError(
+            f"compute_tensor_Green: solve_ivp returned {returned_values} samples, but expected {expected_values}"
+        )
+
+    for i in range(returned_values):
+        diff = sampled_z[i] - z_sample[i].z
+        if fabs(diff) > DEFAULT_ABS_TOLERANCE:
+            raise RuntimeError(
+                f"compute_tensor_Green: solve_ivp returned sample points that differ from those requested (difference={diff} at i={i})"
+            )
+
+    print(f"compute_steps = {sol.nfev}")
+
+    return {
+        "compute_time": timer.elapsed,
+        "compute_steps": int(sol.nfev),
+        "values": sampled_G,
+        "solver_label": "scipy+solve_ivp+RK45",
+        "solver_stepping": 0,
+    }
 
 
 class TensorGreenFunctionIntegration(DatastoreObject):

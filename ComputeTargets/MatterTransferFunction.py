@@ -1,5 +1,5 @@
 from math import fabs
-from typing import Optional, Mapping, List
+from typing import Optional, List
 
 import ray
 from scipy.integrate import solve_ivp
@@ -20,10 +20,11 @@ def compute_matter_Tk(
     z_init: redshift,
     atol: float = DEFAULT_ABS_TOLERANCE,
     rtol: float = DEFAULT_REL_TOLERANCE,
-) -> Mapping[str, float]:
+) -> dict:
     check_units(k, cosmology)
 
-    # dimensionful value of wavenumber; should be measured in the same units used by the cosmology (see below)
+    # obtain dimensionful value of wavenumber; this should be measured in the same units used by the cosmology
+    # (see below)
     k_float = k.k
     z_min = float(z_sample.min)
 
@@ -38,9 +39,9 @@ def compute_matter_Tk(
     #   state[1] = dT/dz = T' = "T prime"
     def RHS(z, state) -> float:
         """
-        k must be measured using the same units used for H(z) in the cosmology
+        k *must* be measured using the same units used for H(z) in the cosmology
         """
-        rho, T, T_prime = state
+        rho, T, Tprime = state
 
         H = cosmology.Hubble(z)
         w = cosmology.w(z)
@@ -50,13 +51,13 @@ def compute_matter_Tk(
         one_plus_z_2 = one_plus_z * one_plus_z
 
         drho_dz = 3.0 * ((1.0 + w) / one_plus_z) * rho
-        dT_dz = T_prime
+        dT_dz = Tprime
 
         k_over_H = k_float / H
         k_over_H_2 = k_over_H * k_over_H
 
         dTprime_dz = (
-            -(eps - 3.0 * (1.0 + w)) * T_prime / one_plus_z
+            -(eps - 3.0 * (1.0 + w)) * Tprime / one_plus_z
             - (3.0 * (1.0 + w) - 2 * eps) * T / one_plus_z_2
             - w * k_over_H_2 * T
         )
@@ -100,6 +101,8 @@ def compute_matter_Tk(
             raise RuntimeError(
                 f"compute_matter_Tk: solve_ivp returned sample points that differ from those requested (difference={diff} at i={i})"
             )
+
+    print(f"compute_steps = {sol.nfev}")
 
     return {
         "compute_time": timer.elapsed,
