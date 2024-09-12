@@ -99,8 +99,6 @@ def compute_tensor_Green(
                 f"compute_tensor_Green: solve_ivp returned sample points that differ from those requested (difference={diff} at i={i})"
             )
 
-    print(f"compute_steps = {sol.nfev}")
-
     return {
         "compute_time": timer.elapsed,
         "compute_steps": int(sol.nfev),

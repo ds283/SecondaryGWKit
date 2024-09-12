@@ -102,8 +102,6 @@ def compute_matter_Tk(
                 f"compute_matter_Tk: solve_ivp returned sample points that differ from those requested (difference={diff} at i={i})"
             )
 
-    print(f"compute_steps = {sol.nfev}")
-
     return {
         "compute_time": timer.elapsed,
         "compute_steps": int(sol.nfev),
@@ -346,8 +344,21 @@ class MatterTransferFunctionContainer:
         num_missing = len(self._missing_zs)
         if num_missing > 0:
             print(
-                f"Matter transfer function T(z) for '{cosmology.name}' k={k.k_inv_Mpc}/Mpc has {num_missing} missing z-sample values"
+                f"Matter transfer function T(z) for '{cosmology.name}' k={k.k_inv_Mpc}/Mpc has {num_missing} missing z-sample values (k serial={k.store_id})"
             )
+            # print(f"-- {len(self._z_sample)} z-sample values specified")
+            # print(f"-- {len(self._values)} values supplied from datastore")
+            # print(
+            #     f"-- {len(self._missing_z_serials)} missing z serial numbers identified"
+            # )
+            # print(
+            #     f"-- {len(self._missing_zs)} missing redshifts constructed in redshift array"
+            # )
+            # print(f"--   SERIAL NUMBERS")
+            # count = 0
+            # for z in self._missing_zs:
+            #     print(f"--     {count}. z = {z.z}, serial = {z.store_id}")
+            #     count += 1
 
     @property
     def k(self) -> wavenumber:
