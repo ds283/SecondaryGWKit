@@ -25,6 +25,7 @@ from CosmologyModels.LambdaCDM import LambdaCDM, Planck2018
 from Datastore.SQL import Datastore
 from Units import Mpc_units
 from defaults import DEFAULT_ABS_TOLERANCE, DEFAULT_REL_TOLERANCE
+from utilities import WallclockTimer
 
 default_label = "SecondaryGWKit-test"
 default_timeout = 60
@@ -72,7 +73,7 @@ ray.init(address=args.ray_address)
 # ourselves and the dataabase.
 # For performance reasons, we want all database activity to run on this node.
 # For one thing, this lets us use transactions efficiently.
-store: Datastore = Datastore.remote("2024.1.1")
+store: Datastore = Datastore.options(max_concurrency=10).remote("2024.1.1")
 
 if args.create_database is not None:
     ray.get(
@@ -266,6 +267,9 @@ while any(not Tk.available for Tk in Tks):
         Tk_work_lookup[ref.hex] = obj
 
     print("--   waiting for matter transfer function integrations to complete")
+    total_done = 0
+    batch_done = 0
+    queue_size = len(Tk_work_refs)
     while len(Tk_work_refs) > 0:
         done_ref, Tk_work_refs = ray.wait(Tk_work_refs, num_returns=1)
         if len(done_ref) > 0:
@@ -275,8 +279,27 @@ while any(not Tk.available for Tk in Tks):
             ref: ObjectRef = store.object_store.remote(obj)
             Tk_store_refs.append(ref)
 
+            batch_size = len(done_ref)
+            total_done += batch_size
+            batch_done += batch_size
+            if batch_done >= 20:
+                print(
+                    f"--   {total_done}/{queue_size} = {100.0*float(total_done)/float(queue_size):.2f}% integrations complete, {len(Tk_work_refs)} still queued"
+                )
+                batch_done = 0
+
+    total_done = 0
+    queue_size = len(Tk_store_refs)
     while len(Tk_store_refs) > 0:
-        done_ref, Tk_store_refs = ray.wait(Tk_store_refs, num_returns=1)
+        num_remaining = len(Tk_store_refs)
+        done_ref, Tk_store_refs = ray.wait(
+            Tk_store_refs, num_returns=min(20, num_remaining)
+        )
+
+        total_done += len(done_ref)
+        print(
+            f"--    {total_done}/{queue_size} = {100.0*float(total_done)/float(queue_size):.2f}% stores complete, {len(Tk_store_refs)} still queued"
+        )
 
     Tks = build_Tks()
     cycle += 1
@@ -291,29 +314,57 @@ print(
 G_LATEST_RESPONSE_Z = 0.5
 
 G_z_sample_values = {}
+counter = 1
+todo = len(k_exit_times)
 for k_exit in k_exit_times:
     k_exit: wavenumber_exit_time
 
     k = k_exit.k
 
-    source_redshifts = k_exit.populate_z_sample(
-        outside_horizon_efolds=10.0, z_end=G_LATEST_RESPONSE_Z
+    with WallclockTimer() as timer:
+        source_redshifts = k_exit.populate_z_sample(
+            outside_horizon_efolds=10.0, z_end=G_LATEST_RESPONSE_Z
+        )
+
+        print(
+            f"** constructing redshift arrays for k = {k.k_inv_Mpc:.3g}/Mpc ({counter}/{todo} = {100.0*float(counter)/float(todo):.2f}%)"
+        )
+
+        response_refs = []
+
+        for source_z in source_redshifts:
+            num_response_sample = int(
+                round(60 * (log10(source_z) - log10(G_LATEST_RESPONSE_Z)) + 0.5, 0)
+            )
+            response_redshifts = np.logspace(
+                log10(source_z), log10(G_LATEST_RESPONSE_Z), num_response_sample
+            )
+            response_refs.append(convert_to_redshifts(response_redshifts))
+
+        waiting = response_refs
+        total_done = 0
+        queue_size = len(waiting)
+        while True:
+            still_waiting = len(waiting)
+            done, waiting = ray.wait(waiting, num_returns=min(20, still_waiting))
+            total_done += len(done)
+            print(
+                f"... {total_done}/{queue_size} = {100.0*float(total_done)/float(queue_size):.2f}% redshift array lookups complete, {len(waiting)} still queued"
+            )
+            if len(waiting) == 0:
+                break
+
+        response_z_lists = ray.get(response_refs)
+        response_z_arrays = [
+            redshift_array(z_array=z_list) for z_list in response_z_lists
+        ]
+        G_z_sample_values[k.store_id] = response_z_arrays
+
+        counter += 1
+
+    print(
+        f"**    redshift arrays for k = {k.k_inv_Mpc:.3g}/Mpc constructed in time {timer.elapsed:.3g} sec"
     )
-
-    response_refs = []
-
-    for source_z in source_redshifts:
-        num_response_sample = int(
-            round(60 * (log10(source_z) - log10(G_LATEST_RESPONSE_Z)) + 0.5, 0)
-        )
-        response_redshifts = np.logspace(
-            log10(source_z), log10(G_LATEST_RESPONSE_Z), num_response_sample
-        )
-        response_refs.append(convert_to_redshifts(response_redshifts))
-
-    response_z_lists = ray.get(response_refs)
-    response_z_arrays = [redshift_array(z_array=z_list) for z_list in response_z_lists]
-    G_z_sample_values[k.store_id] = response_z_arrays
 
 
 ## STEP 5
@@ -382,6 +433,9 @@ while any(not Gk.available for Gk in Gks):
         Gk_work_lookup[ref.hex] = object
 
     print("--   waiting for tensor Green's function integrations to complete")
+    total_done = 0
+    batch_done = 0
+    queue_size = len(Gk_work_refs)
     while len(Gk_work_refs) > 0:
         done_ref, Gk_work_refs = ray.wait(Gk_work_refs, num_returns=1)
         if len(done_ref) > 0:
@@ -391,8 +445,27 @@ while any(not Gk.available for Gk in Gks):
             ref: ObjectRef = store.object_store.remote(obj)
             Gk_store_refs.append(ref)
 
+            batch_size = len(done_ref)
+            total_done += batch_size
+            batch_done += batch_size
+            if batch_done >= 20:
+                print(
+                    f"--   {total_done}/{queue_size} = {100.0*float(total_done)/float(queue_size):.2f}% integrations complete, {len(Gk_work_refs)} still queued"
+                )
+                batch_done = 0
+
+    total_done = 0
+    queue_size = len(Gk_store_refs)
     while len(Gk_store_refs) > 0:
-        done_ref, Gk_store_refs = ray.wait(Gk_store_refs, num_returns=1)
+        num_remaining = len(Gk_store_refs)
+        done_ref, Gk_store_refs = ray.wait(
+            Gk_store_refs, num_returns=min(20, num_remaining)
+        )
+
+        total_done += len(done_ref)
+        print(
+            f"--    {total_done}/{queue_size} = {100.0*float(total_done)/float(queue_size):.2f}% stores complete, {len(Gk_store_refs)} still queued"
+        )
 
     Gks = build_Gks()
     cycle += 1

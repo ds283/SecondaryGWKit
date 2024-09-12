@@ -16,6 +16,7 @@ from Datastore.SQL.ObjectFactories.MatterTransferFunction import (
 from Datastore.SQL.ObjectFactories.TensorGreenFunction import (
     sqla_TensorGreenFunctionIntegration_factory,
     sqla_TensorGreenFunctionValue_factory,
+    sqla_TensorGreenFunctionContainer_factory,
 )
 from Datastore.SQL.ObjectFactories.base import SQLAFactoryBase
 from Datastore.SQL.ObjectFactories.integration_metadata import (
@@ -47,7 +48,7 @@ _adapters = {
     "MatterTransferFunctionContainer": sqla_MatterTransferFunctionContainer_factory,
     "TensorGreenFunctionIntegration": sqla_TensorGreenFunctionIntegration_factory,
     "TensorGreenFunctionValue": sqla_TensorGreenFunctionValue_factory,
-    "TensorGreenFunctionContainer": sqla_MatterTransferFunctionContainer_factory,
+    "TensorGreenFunctionContainer": sqla_TensorGreenFunctionContainer_factory,
 }
 
 _FactoryMappingType = Mapping[str, SQLAFactoryBase]
@@ -118,7 +119,9 @@ class Datastore:
             connect_args["timeout"] = timeout
 
         self._engine = sqla.create_engine(
-            f"sqlite:///{db_name}", future=True, connect_args=connect_args
+            f"sqlite:///{db_name}",
+            future=True,
+            connect_args=connect_args,
         )
         self._metadata = sqla.MetaData()
 
@@ -340,10 +343,6 @@ class Datastore:
                 cls_name = ObjectClass.__name__
             self._ensure_registered_schema(cls_name)
 
-            # print(
-            #     f'** Datastore.object_get() starting for object of class "{cls_name}"'
-            # )
-
             record = self._schema[cls_name]
 
             tab = record["table"]
@@ -355,10 +354,19 @@ class Datastore:
             if "payload_data" in kwargs:
                 payload_data = kwargs["payload_data"]
                 scalar = False
-                # print(f"**   payload size = {len(payload_data)} items")
+
+                payload_size = len(payload_data)
+                # print(
+                #     f'** Datastore.object_get() starting for object group of class "{cls_name}"'
+                # )
+                # print(f"**   payload size = {payload_size} items")
             else:
                 payload_data = [kwargs]
                 scalar = True
+
+                # print(
+                #     f'** Datastore.object_get() starting for scalar query of class "{cls_name}"'
+                # )
 
             with self._engine.begin() as conn:
                 objects = [
@@ -374,9 +382,14 @@ class Datastore:
                 ]
                 conn.commit()
 
-        # print(
-        #     f'** Datastore.object_get() finished in time {timer.elapsed} sec for object of class "{cls_name}"'
-        # )
+        # if scalar:
+        #     print(
+        #         f'** Datastore.object_get() finished in time {timer.elapsed:.3g} sec for scalar query of class "{cls_name}"'
+        #     )
+        # else:
+        #     print(
+        #         f'** Datastore.object_get() finsihed in time {timer.elapsed:.3g} sec for size={payload_size} object group of class "{cls_name}" = {float(timer.elapsed)/payload_size:.3g} sec per item'
+        #     )
 
         if scalar:
             return objects[0]
@@ -425,13 +438,13 @@ class Datastore:
                         )
 
                     # print(
-                    #     f'**   finished store for object of type "{cls_name}" in time {store_timer.elapsed} sec'
+                    #     f'**   finished store for object of type "{cls_name}" in time {store_timer.elapsed:.3g} sec'
                     # )
 
                 conn.commit()
 
         # print(
-        #     f'** Datastore.object_store() finished in time {timer.elapsed} sec for object of class "{cls_name}"'
+        #     f'** Datastore.object_store() finished in time {timer.elapsed:.3g} sec'
         # )
 
         if scalar:
