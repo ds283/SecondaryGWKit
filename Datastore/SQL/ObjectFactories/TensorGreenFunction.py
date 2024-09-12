@@ -6,12 +6,13 @@ from ComputeTargets import (
     TensorGreenFunctionIntegration,
     TensorGreenFunctionValue,
     TensorGreenFunctionContainer,
+    IntegrationSolver,
 )
 from CosmologyConcepts import tolerance, wavenumber, redshift_array, redshift
 from CosmologyModels.base import BaseCosmology
 from Datastore.SQL.ObjectFactories.base import SQLAFactoryBase
 from defaults import DEFAULT_FLOAT_PRECISION, DEFAULT_STRING_LENGTH
-from .integration_metadata import IntegrationSolver, sqla_IntegrationSolver_factory
+from .integration_metadata import sqla_IntegrationSolver_factory
 
 
 class sqla_TensorGreenFunctionIntegration_factory(SQLAFactoryBase):
