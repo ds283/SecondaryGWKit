@@ -63,7 +63,7 @@ def compute_tensor_Green(
         #   Gprime(z' z') = -1/(a0 H(z'))
         # however we would rather not have a delicate initial condition for Gprime, so we
         # instead solve with the boundary conditions Gprime = -1 and rescale afterwards
-        initial_state = [cosmology.rho(z_source.z), 0.0, -1.0]
+        initial_state = [cosmology.rho(z_source.z), 0.0, 1.0]
         sol = solve_ivp(
             RHS,
             method="RK45",
