@@ -1,7 +1,6 @@
 import argparse
 import sys
 from datetime import datetime
-from math import log10
 
 import numpy as np
 import ray
@@ -11,7 +10,6 @@ from ComputeTargets import (
     MatterTransferFunctionContainer,
     MatterTransferFunctionIntegration,
     TensorGreenFunctionContainer,
-    TensorGreenFunctionIntegration,
 )
 from CosmologyConcepts import (
     tolerance,
@@ -182,7 +180,7 @@ while len(exit_time_work_refs) > 0:
         batch_done += batch_size
         if batch_done >= 20:
             print(
-                f"--   {total_done}/{queue_size} = {100.0 * float(total_done) / float(queue_size):.2f}% horizn exit computations complete, {len(exit_time_work_refs)} still queued"
+                f"--   {total_done}/{queue_size} = {100.0 * float(total_done) / float(queue_size):.2f}% horizon exit computations complete, {len(exit_time_work_refs)} still queued"
             )
             batch_done = 0
 
@@ -204,7 +202,7 @@ while len(exit_time_store_refs) > 0:
         batch_done += batch_size
         if batch_done >= 20:
             print(
-                f"--    {total_done}/{queue_size} = {100.0*float(total_done)/float(queue_size):.2f}% stores complete, {len(Gk_store_refs)} still queued"
+                f"--    {total_done}/{queue_size} = {100.0*float(total_done)/float(queue_size):.2f}% stores complete, {len(exit_time_store_refs)} still queued"
             )
             batch_done = 0
 
