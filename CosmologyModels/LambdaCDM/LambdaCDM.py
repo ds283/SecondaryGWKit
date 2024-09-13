@@ -124,7 +124,7 @@ class LambdaCDM(BaseCosmology):
         one_plus_z_4 = one_plus_z_2 * one_plus_z_2
 
         # discard w_matter contribution to the numerator, which is proportional to zero
-        numerator = w_rad * self.omega_CMB * one_plus_z_4
+        numerator = w_rad * self.omega_CMB * one_plus_z_4 - self.omega_cc
         denominator = (
             self.omega_m * one_plus_z_3 + self.omega_CMB * one_plus_z_4 + self.omega_cc
         )
