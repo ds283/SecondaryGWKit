@@ -64,7 +64,6 @@ class LambdaCDM(BaseCosmology):
 
         matter_radiation_equality = self.omega_m / self.omega_r - 1.0
 
-        print(f'** CONSTRUCTED LCDM COSMOLOGY "{self._name}"')
         print(f"     Omega_m = {self.omega_m:.4g}")
         print(f"     Omega_cc = {self.omega_cc:.4g}")
         print(f"     Omega_r = {self.omega_r:.4g}")
