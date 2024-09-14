@@ -1,5 +1,5 @@
 from collections import namedtuple
-from math import sqrt
+from math import sqrt, pow
 
 from CosmologyModels.base import BaseCosmology
 from Units.base import UnitsLike
@@ -47,11 +47,29 @@ class LambdaCDM(BaseCosmology):
 
         Omega_factor = 3.0 * self.H0sq * self.Mpsq
 
-        self.rhom0 = Omega_factor * self.omega_m
-        self.rhoCMB0 = RadiationConstant * T_CMB_4
-        self.rhocc = Omega_factor * self.omega_cc
+        self.rho_m0 = Omega_factor * self.omega_m
+        self.rho_r0 = (
+            RadiationConstant
+            * (2.0 + (7.0 / 4.0) * self.Neff * pow(4.0 / 11.0, 4.0 / 3.0))
+            * T_CMB_4
+        )
+        self.rho_cc = Omega_factor * self.omega_cc
 
-        self.omega_CMB = self.rhoCMB0 / Omega_factor
+        self.omega_r = self.rho_r0 / Omega_factor
+
+        rho_today = self.rho(0)
+        gram = units.Kilogram / 1000.0
+        gram_per_m3 = gram / (units.Metre * units.Metre * units.Metre)
+        rho_today_gram_m3 = rho_today / gram_per_m3
+
+        matter_radiation_equality = self.omega_m / self.omega_r - 1.0
+
+        print(f'** CONSTRUCTED LCDM COSMOLOGY "{self._name}"')
+        print(f"     Omega_m = {self.omega_m:.4g}")
+        print(f"     Omega_cc = {self.omega_cc:.4g}")
+        print(f"     Omega_r = {self.omega_r:.4g}")
+        print(f"     present-day energy density = {rho_today_gram_m3:.4g} g/m^3")
+        print(f"     matter-radiation equality at z = {matter_radiation_equality:.4g}")
 
     @property
     def type_id(self) -> int:
@@ -77,10 +95,10 @@ class LambdaCDM(BaseCosmology):
         one_plus_z_3 = one_plus_z_2 * one_plus_z
         one_plus_z_4 = one_plus_z_2 * one_plus_z_2
 
-        rhom = self.rhom0 * one_plus_z_3
-        rhoCMB = self.rhoCMB0 * one_plus_z_4
+        rho_m = self.rho_m0 * one_plus_z_3
+        rho_r = self.rho_r0 * one_plus_z_4
 
-        return rhom + rhoCMB + self.rhocc
+        return rho_m + rho_r + self.rho_cc
 
     def Hubble(self, z: float) -> float:
         """
@@ -105,11 +123,11 @@ class LambdaCDM(BaseCosmology):
         one_plus_z_4 = one_plus_z_2 * one_plus_z_2
 
         numerator = (
-            9.0 * self.omega_m * one_plus_z_2 + 12.0 * self.omega_CMB * one_plus_z_3
+            9.0 * self.omega_m * one_plus_z_2 + 12.0 * self.omega_r * one_plus_z_3
         )
         denominator = (
             6.0 * self.omega_m * one_plus_z_3
-            + 6.0 * self.omega_CMB * one_plus_z_4
+            + 6.0 * self.omega_r * one_plus_z_4
             + 6.0 * self.omega_cc
         )
 
@@ -124,9 +142,9 @@ class LambdaCDM(BaseCosmology):
         one_plus_z_4 = one_plus_z_2 * one_plus_z_2
 
         # discard w_matter contribution to the numerator, which is proportional to zero
-        numerator = w_rad * self.omega_CMB * one_plus_z_4 - self.omega_cc
+        numerator = w_rad * self.omega_r * one_plus_z_4 - self.omega_cc
         denominator = (
-            self.omega_m * one_plus_z_3 + self.omega_CMB * one_plus_z_4 + self.omega_cc
+            self.omega_m * one_plus_z_3 + self.omega_r * one_plus_z_4 + self.omega_cc
         )
 
         return numerator / denominator
