@@ -53,7 +53,9 @@ def compute_tensor_Green(
         k_over_H = k_float / H
         k_over_H_2 = k_over_H * k_over_H
 
-        dGprime_dz = -eps * Gprime - (k_over_H_2 - (2.0 - eps) / one_plus_z_2) * G
+        dGprime_dz = (
+            -(eps / one_plus_z) * Gprime - (k_over_H_2 + (eps - 2.0) / one_plus_z_2) * G
+        )
 
         return [drho_dz, dG_dz, dGprime_dz]
 
