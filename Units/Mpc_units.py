@@ -1,4 +1,5 @@
 from math import pi, sqrt
+
 from .base import UnitsLike
 
 
@@ -17,7 +18,7 @@ class Mpc_units(UnitsLike):
     Metre = Mpc / 3.08567758e22
     Kilometre = 1000 * Metre
 
-    sqrt_NewtonG = 1.616255 - 35 * Metre
+    sqrt_NewtonG = 1.616255e-35 * Metre
 
     Kilogram = 1.0 / (2.176434e-8 * sqrt_NewtonG)
     Second = sqrt_NewtonG / 5.391247e-44
