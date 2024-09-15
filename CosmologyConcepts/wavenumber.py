@@ -165,7 +165,7 @@ class wavenumber_exit_time(DatastoreObject):
     def populate_z_sample(
         self,
         outside_horizon_efolds=10.0,
-        samples_per_log10z: int = 30,
+        samples_per_log10z: int = 50,
         z_end: float = 0.1,
     ):
         if outside_horizon_efolds is not None and outside_horizon_efolds > 0.0:
