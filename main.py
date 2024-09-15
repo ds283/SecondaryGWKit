@@ -1,6 +1,7 @@
 import argparse
 import sys
 from datetime import datetime
+from math import log10
 
 import numpy as np
 import ray
@@ -10,6 +11,7 @@ from ComputeTargets import (
     MatterTransferFunctionContainer,
     MatterTransferFunctionIntegration,
     TensorGreenFunctionContainer,
+    TensorGreenFunctionIntegration,
 )
 from CosmologyConcepts import (
     tolerance,
@@ -109,7 +111,7 @@ def convert_to_redshifts(z_sample_set):
 # build array of k-sample points
 print("-- building array of k-sample wavenumbers")
 k_array = ray.get(
-    convert_to_wavenumbers(np.logspace(np.log10(0.001), np.log10(1.0), 10))
+    convert_to_wavenumbers(np.logspace(np.log10(0.001), np.log10(1.0), 500))
 )
 k_sample = wavenumber_array(k_array=k_array)
 
@@ -217,7 +219,7 @@ print("-- populating array of z-sample times for each k-mode")
 with WallclockTimer() as timer:
     Tk_z_sample_refs = [
         convert_to_redshifts(
-            k_exit.populate_z_sample(outside_horizon_efolds=10.0, z_end=0.5)
+            k_exit.populate_z_sample(outside_horizon_efolds=10.0, z_end=10.0)
         )
         for k_exit in k_exit_times
     ]
@@ -349,7 +351,7 @@ print(
     "-- building grid of z_source/z_response sample times for Green's function calculation"
 )
 
-G_LATEST_RESPONSE_Z = 0.5
+G_LATEST_RESPONSE_Z = 10.0
 
 G_z_sample_values = {}
 counter = 1
@@ -405,7 +407,6 @@ for k_exit in k_exit_times:
         f"**    redshift arrays for k = {k.k_inv_Mpc:.3g}/Mpc constructed in time {timer.elapsed:.3g} sec"
     )
 
-
 ## STEP 5
 ##
 
@@ -441,7 +442,6 @@ def build_Gks():
 print("-- querying tensor Green's function values")
 Gks = build_Gks()
 cycle = 1
-
 
 while any(not Gk.available for Gk in Gks):
     label = f"{args.job_name}-Gk-cycle-{cycle}-{datetime.now().replace(microsecond=0).isoformat()}"
