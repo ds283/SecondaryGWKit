@@ -6,7 +6,7 @@ import ray
 from scipy.integrate import solve_ivp
 
 from CosmologyConcepts import wavenumber
-from CosmologyModels.base import BaseCosmology
+from CosmologyModels import BaseCosmology
 from defaults import DEFAULT_ABS_TOLERANCE, DEFAULT_REL_TOLERANCE
 
 

@@ -2,8 +2,8 @@ from math import log10
 
 import sqlalchemy as sqla
 
-from CosmologyConcepts import tolerance
 from Datastore.SQL.ObjectFactories.base import SQLAFactoryBase
+from MetadataConcepts import tolerance
 from defaults import DEFAULT_FLOAT_PRECISION
 
 

@@ -14,7 +14,6 @@ from ComputeTargets import (
     TensorGreenFunctionIntegration,
 )
 from CosmologyConcepts import (
-    tolerance,
     wavenumber,
     redshift,
     redshift_array,
@@ -23,6 +22,7 @@ from CosmologyConcepts import (
 )
 from CosmologyModels.LambdaCDM import LambdaCDM, Planck2018
 from Datastore.SQL import Datastore
+from MetadataConcepts import tolerance
 from Units import Mpc_units
 from defaults import DEFAULT_ABS_TOLERANCE, DEFAULT_REL_TOLERANCE
 from utilities import WallclockTimer

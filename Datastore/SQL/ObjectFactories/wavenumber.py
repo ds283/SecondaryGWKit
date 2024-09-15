@@ -1,7 +1,8 @@
 import sqlalchemy as sqla
 
-from CosmologyConcepts import wavenumber, wavenumber_exit_time, tolerance
+from CosmologyConcepts import wavenumber, wavenumber_exit_time
 from Datastore.SQL.ObjectFactories.base import SQLAFactoryBase
+from MetadataConcepts import tolerance
 from defaults import (
     DEFAULT_FLOAT_PRECISION,
 )

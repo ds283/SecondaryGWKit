@@ -8,12 +8,13 @@ from ComputeTargets import (
     MatterTransferFunctionValue,
     MatterTransferFunctionContainer,
 )
-from CosmologyConcepts import tolerance, wavenumber, redshift_array, redshift
-from CosmologyModels.base import BaseCosmology
+from CosmologyConcepts import wavenumber, redshift_array, redshift
+from CosmologyModels import BaseCosmology
 from Datastore.SQL.ObjectFactories.base import SQLAFactoryBase
 from Datastore.SQL.ObjectFactories.integration_metadata import (
     sqla_IntegrationSolver_factory,
 )
+from MetadataConcepts import tolerance
 from defaults import DEFAULT_STRING_LENGTH, DEFAULT_FLOAT_PRECISION
 
 

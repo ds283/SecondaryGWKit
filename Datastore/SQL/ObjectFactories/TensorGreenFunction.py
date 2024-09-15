@@ -8,9 +8,10 @@ from ComputeTargets import (
     TensorGreenFunctionContainer,
     IntegrationSolver,
 )
-from CosmologyConcepts import tolerance, wavenumber, redshift_array, redshift
-from CosmologyModels.base import BaseCosmology
+from CosmologyConcepts import wavenumber, redshift_array, redshift
+from CosmologyModels import BaseCosmology
 from Datastore.SQL.ObjectFactories.base import SQLAFactoryBase
+from MetadataConcepts import tolerance
 from defaults import DEFAULT_FLOAT_PRECISION, DEFAULT_STRING_LENGTH
 from .integration_metadata import sqla_IntegrationSolver_factory
 

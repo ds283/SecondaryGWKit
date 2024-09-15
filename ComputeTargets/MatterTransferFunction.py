@@ -4,9 +4,10 @@ from typing import Optional, List
 import ray
 from scipy.integrate import solve_ivp
 
-from CosmologyConcepts import redshift_array, wavenumber, redshift, tolerance
-from CosmologyModels.base import BaseCosmology
+from CosmologyConcepts import redshift_array, wavenumber, redshift
+from CosmologyModels import BaseCosmology
 from Datastore import DatastoreObject
+from MetadataConcepts import tolerance
 from defaults import DEFAULT_ABS_TOLERANCE, DEFAULT_REL_TOLERANCE
 from utilities import check_units, WallclockTimer
 from .integration_metadata import IntegrationSolver

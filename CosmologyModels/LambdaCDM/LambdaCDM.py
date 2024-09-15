@@ -1,7 +1,7 @@
 from collections import namedtuple
 from math import sqrt, pow
 
-from CosmologyModels.base import BaseCosmology
+from CosmologyModels import BaseCosmology
 from Units.base import UnitsLike
 from constants import RadiationConstant
 

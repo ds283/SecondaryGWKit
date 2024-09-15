@@ -4,9 +4,9 @@ from typing import Iterable, Optional
 import ray
 from numpy import logspace
 
-from CosmologyConcepts.tolerance import tolerance
-from CosmologyModels.base import BaseCosmology
+from CosmologyModels import BaseCosmology
 from Datastore import DatastoreObject
+from MetadataConcepts import tolerance
 from utilities import find_horizon_exit_time, check_units
 
 
