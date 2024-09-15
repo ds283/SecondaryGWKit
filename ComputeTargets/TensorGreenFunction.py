@@ -199,10 +199,10 @@ class TensorGreenFunctionIntegration(DatastoreObject):
         return self._compute_time
 
     @property
-    def compute_steps(self) -> float:
+    def compute_steps(self) -> int:
         if self._compute_time is None:
             raise RuntimeError("compute_steps has not yet been populated")
-        return self._compute_time
+        return self._compute_steps
 
     @property
     def solver(self) -> float:
