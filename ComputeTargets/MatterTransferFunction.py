@@ -58,7 +58,7 @@ def compute_matter_Tk(
 
         dTprime_dz = (
             -(eps - 3.0 * (1.0 + w)) * Tprime / one_plus_z
-            - (3.0 * (1.0 + w) - 2 * eps) * T / one_plus_z_2
+            - (3.0 * (1.0 + w) - 2.0 * eps) * T / one_plus_z_2
             - w * k_over_H_2 * T
         )
 
