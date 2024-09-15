@@ -79,7 +79,7 @@ def compute_tensor_Green(
     # test whether the integration concluded successfully
     if not sol.success:
         raise RuntimeError(
-            f'compute_tensor_Green: integration did not terminate successfully ("{sol.message}")'
+            f'compute_tensor_Green: integration did not terminate successfully (k={k.k_inv_Mpc}/Mpc, z_source={z_source.z}, error at z={sol.t[-1]}, "{sol.message}")'
         )
 
     sampled_z = sol.t
