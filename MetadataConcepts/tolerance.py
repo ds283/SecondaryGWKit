@@ -34,6 +34,3 @@ class tolerance(DatastoreObject):
         :return:
         """
         return self.tol
-
-    def build_storage_payload(self):
-        return {"log10_tol": self.log10_tol}

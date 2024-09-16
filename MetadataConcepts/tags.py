@@ -21,6 +21,3 @@ class tag(DatastoreObject):
 
     def __str__(self):
         return self._label
-
-    def build_storage_payload(self):
-        return {"label": self._label}
