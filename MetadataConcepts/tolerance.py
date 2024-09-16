@@ -1,8 +1,5 @@
 from math import log10, pow
 
-import ray
-from ray.actor import ActorHandle
-
 from Datastore import DatastoreObject
 
 

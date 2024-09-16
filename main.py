@@ -22,7 +22,7 @@ from CosmologyConcepts import (
 )
 from CosmologyModels.LambdaCDM import LambdaCDM, Planck2018
 from Datastore.SQL import Datastore
-from MetadataConcepts import tolerance
+from MetadataConcepts import tolerance, tag
 from Units import Mpc_units
 from defaults import DEFAULT_ABS_TOLERANCE, DEFAULT_REL_TOLERANCE
 from utilities import WallclockTimer
@@ -124,6 +124,16 @@ atol, rtol = ray.get(
         store.object_get.remote(tolerance, tol=DEFAULT_REL_TOLERANCE),
     ]
 )
+
+# build tags and other labels
+print("-- building database tags")
+Tk_production_tag, Gk_production_tag = ray.get(
+    [
+        store.object_get.remote(tag, label="TkOneLoopDensity"),
+        store.object_get.remote(tag, label="GkOneLoopDensity"),
+    ]
+)
+
 
 # for each k mode we sample, determine its horizon exit point
 # (in principle this is a quick operation so we do not mind blocking on ray.get() while

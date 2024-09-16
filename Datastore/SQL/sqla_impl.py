@@ -23,6 +23,7 @@ from Datastore.SQL.ObjectFactories.integration_metadata import (
     sqla_IntegrationSolver_factory,
 )
 from Datastore.SQL.ObjectFactories.redshift import sqla_redshift_factory
+from Datastore.SQL.ObjectFactories.tags import sqla_tag_factory
 from Datastore.SQL.ObjectFactories.tolerance import sqla_tolerance_factory
 from Datastore.SQL.ObjectFactories.wavenumber import (
     sqla_wavenumber_factory,
@@ -37,6 +38,7 @@ PathType = Union[str, PathLike]
 
 
 _adapters = {
+    "tag": sqla_tag_factory,
     "redshift": sqla_redshift_factory,
     "wavenumber": sqla_wavenumber_factory,
     "wavenumber_exit_time": sqla_wavenumber_exit_time_factory,
