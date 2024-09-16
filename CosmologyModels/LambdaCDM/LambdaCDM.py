@@ -48,9 +48,17 @@ class LambdaCDM(BaseCosmology):
         Omega_factor = 3.0 * self.H0sq * self.Mpsq
 
         self.rho_m0 = Omega_factor * self.omega_m
+        # dof calculation = 1 x RadiationConstant to get energy density for a single bosonic polarization
+        #   2 polarizations of the photon
+        #   N_eff effective neutrino species (the Standard Model value is 3.046, accounting for small QED effects,
+        #   neutrinos not being completely decoupled during electron-positron annihilation (so they carry away some entropy)
+        #   and a few other misc small effects)
+        #   2 polarizations of each fermion, plus fermions contribution like 7/8 of a boson
+        #   famous factor of (11/4)^(1/3) to account for reheating of the photons during electron-positron
+        #   annihilation
         self.rho_r0 = (
             RadiationConstant
-            * (2.0 + (7.0 / 4.0) * self.Neff * pow(4.0 / 11.0, 4.0 / 3.0))
+            * (2.0 + 2.0 * (7.0 / 8.0) * self.Neff * pow(4.0 / 11.0, 4.0 / 3.0))
             * T_CMB_4
         )
         self.rho_cc = Omega_factor * self.omega_cc
