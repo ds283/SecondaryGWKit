@@ -7,7 +7,7 @@ from scipy.integrate import solve_ivp
 from CosmologyConcepts import redshift_array, wavenumber, redshift
 from CosmologyModels import BaseCosmology
 from Datastore import DatastoreObject
-from MetadataConcepts import tolerance
+from MetadataConcepts import tolerance, store_tag
 from defaults import DEFAULT_ABS_TOLERANCE, DEFAULT_REL_TOLERANCE
 from utilities import check_units, WallclockTimer
 from .integration_metadata import IntegrationSolver
@@ -123,12 +123,13 @@ class MatterTransferFunctionIntegration(DatastoreObject):
         self,
         payload,
         cosmology: BaseCosmology,
-        label: str,
         k: wavenumber,
         z_sample: redshift_array,
         z_init: redshift,
         atol: tolerance,
         rtol: tolerance,
+        label: Optional[str] = None,
+        tags: Optional[List[store_tag]] = None,
     ):
         check_units(k, cosmology)
 
@@ -159,10 +160,12 @@ class MatterTransferFunctionIntegration(DatastoreObject):
                 )
 
         # store parameters
-        self._k = k
+        self._label = label
+        self._tags = tags if tags is not None else []
+
         self._cosmology = cosmology
 
-        self._label = label
+        self._k = k
         self._z_init = z_init
 
         self._compute_ref = None
@@ -171,23 +174,27 @@ class MatterTransferFunctionIntegration(DatastoreObject):
         self._rtol = rtol
 
     @property
-    def cosmology(self):
+    def cosmology(self) -> BaseCosmology:
         return self._cosmology
 
     @property
-    def k(self):
+    def k(self) -> wavenumber:
         return self._k
 
     @property
-    def label(self):
+    def label(self) -> str:
         return self._label
 
     @property
-    def z_init(self):
+    def tags(self) -> List[store_tag]:
+        return self._tags
+
+    @property
+    def z_init(self) -> redshift:
         return self._z_init
 
     @property
-    def z_sample(self):
+    def z_sample(self) -> redshift_array:
         return self._z_sample
 
     @property
@@ -214,9 +221,14 @@ class MatterTransferFunctionIntegration(DatastoreObject):
             raise RuntimeError("values has not yet been populated")
         return self._values
 
-    def compute(self):
+    def compute(self, label: Optional[str] = None):
         if self._values is not None:
             raise RuntimeError("values have already been computed")
+
+        # replace label if specified
+        if label is not None:
+            self._label = label
+
         self._compute_ref = compute_matter_Tk.remote(
             self.cosmology,
             self.k,
@@ -288,91 +300,5 @@ class MatterTransferFunctionValue(DatastoreObject):
         return self._z
 
     @property
-    def z_serial(self) -> int:
-        return self._z.store_id
-
-    @property
     def value(self) -> float:
         return self._value
-
-
-class MatterTransferFunctionContainer:
-    """
-    Encapsulates the time-evolution of the matter transfer function, labelled by a wavenumber k,
-    sampled over a specified range of redshifts.
-    Notice this is a container object, not an object that is itself persisted in the datastore.
-    """
-
-    def __init__(
-        self,
-        payload,
-        cosmology: BaseCosmology,
-        k: wavenumber,
-        z_init: redshift,
-        z_sample: redshift_array,
-        target_atol: tolerance,
-        target_rtol: tolerance,
-    ):
-        """
-        :param cosmology: cosmology instance
-        :param k: wavenumber object
-        :param z_init: initial redshift of the matter transfer function
-        :param z_sample: redshift values at which to sample the matter transfer function
-        """
-        self._cosmology: BaseCosmology = cosmology
-
-        # cache wavenumber and z-sample array
-        self._k = k
-        self._z_sample = z_sample
-        self._z_init = z_init
-
-        self._target_atol = target_atol
-        self._target_rtol = target_rtol
-
-        if payload is None:
-            self._values = {}
-        else:
-            self._values = payload["values"]
-
-        # determine if any values are missing from the sample
-        self._missing_z_serials = set(z.store_id for z in z_sample).difference(
-            self._values.keys()
-        )
-        self._missing_zs = redshift_array(
-            z_array=[z for z in self._z_sample if z.store_id in self._missing_z_serials]
-        )
-
-        num_missing = len(self._missing_zs)
-        if num_missing > 0:
-            print(
-                f"Matter transfer function T(z) for '{cosmology.name}' k={k.k_inv_Mpc}/Mpc has {num_missing} missing z-sample values (k serial={k.store_id})"
-            )
-            # print(f"-- {len(self._z_sample)} z-sample values specified")
-            # print(f"-- {len(self._values)} values supplied from datastore")
-            # print(
-            #     f"-- {len(self._missing_z_serials)} missing z serial numbers identified"
-            # )
-            # print(
-            #     f"-- {len(self._missing_zs)} missing redshifts constructed in redshift array"
-            # )
-            # print(f"--   SERIAL NUMBERS")
-            # count = 0
-            # for z in self._missing_zs:
-            #     print(f"--     {count}. z = {z.z}, serial = {z.store_id}")
-            #     count += 1
-
-    @property
-    def k(self) -> wavenumber:
-        return self._k
-
-    @property
-    def z_init(self) -> redshift:
-        return self._z_init
-
-    @property
-    def available(self) -> bool:
-        return len(self._missing_zs) == 0
-
-    @property
-    def missing_z_sample(self) -> redshift_array:
-        return self._missing_zs

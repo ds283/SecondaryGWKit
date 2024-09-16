@@ -1,7 +1,7 @@
 from Datastore import DatastoreObject
 
 
-class tag(DatastoreObject):
+class store_tag(DatastoreObject):
     def __init__(self, store_id: int, label: str):
         """
         Construct a Datastore-backed object that is used to tag other objects held in the Datastore.

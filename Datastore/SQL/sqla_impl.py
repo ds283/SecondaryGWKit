@@ -11,19 +11,18 @@ from Datastore.SQL.ObjectFactories.LambdaCDM import sqla_LambdaCDM_factory
 from Datastore.SQL.ObjectFactories.MatterTransferFunction import (
     sqla_MatterTransferFunctionIntegration_factory,
     sqla_MatterTransferFunctionValue_factory,
-    sqla_MatterTransferFunctionContainer_factory,
+    sqla_MatterTransferFunctionTagAssociation_factory,
 )
 from Datastore.SQL.ObjectFactories.TensorGreenFunction import (
     sqla_TensorGreenFunctionIntegration_factory,
     sqla_TensorGreenFunctionValue_factory,
-    sqla_TensorGreenFunctionContainer_factory,
+    sqla_TensorGreenFunctionTagAssociation_factory,
 )
 from Datastore.SQL.ObjectFactories.base import SQLAFactoryBase
 from Datastore.SQL.ObjectFactories.integration_metadata import (
     sqla_IntegrationSolver_factory,
 )
-from Datastore.SQL.ObjectFactories.redshift import sqla_redshift_factory
-from Datastore.SQL.ObjectFactories.tags import sqla_tag_factory
+from Datastore.SQL.ObjectFactories.store_tag import sqla_store_tag_factory
 from Datastore.SQL.ObjectFactories.tolerance import sqla_tolerance_factory
 from Datastore.SQL.ObjectFactories.wavenumber import (
     sqla_wavenumber_factory,
@@ -38,19 +37,18 @@ PathType = Union[str, PathLike]
 
 
 _adapters = {
-    "tag": sqla_tag_factory,
-    "redshift": sqla_redshift_factory,
+    "store_tag": sqla_store_tag_factory,
     "wavenumber": sqla_wavenumber_factory,
     "wavenumber_exit_time": sqla_wavenumber_exit_time_factory,
     "tolerance": sqla_tolerance_factory,
     "LambdaCDM": sqla_LambdaCDM_factory,
     "IntegrationSolver": sqla_IntegrationSolver_factory,
     "MatterTransferFunctionIntegration": sqla_MatterTransferFunctionIntegration_factory,
+    "MatterTransferFunctionIntegration_tags": sqla_MatterTransferFunctionTagAssociation_factory,
     "MatterTransferFunctionValue": sqla_MatterTransferFunctionValue_factory,
-    "MatterTransferFunctionContainer": sqla_MatterTransferFunctionContainer_factory,
     "TensorGreenFunctionIntegration": sqla_TensorGreenFunctionIntegration_factory,
+    "TensorGreenFunctionIntegration_tags": sqla_TensorGreenFunctionTagAssociation_factory,
     "TensorGreenFunctionValue": sqla_TensorGreenFunctionValue_factory,
-    "TensorGreenFunctionContainer": sqla_TensorGreenFunctionContainer_factory,
 }
 
 _FactoryMappingType = Mapping[str, SQLAFactoryBase]
@@ -247,14 +245,17 @@ class Datastore:
             # does this storage object require its own table?
             if table_data is not None:
                 # generate main table for this adapter class
-                serial_col = sqla.Column("serial", sqla.Integer, primary_key=True)
                 tab = sqla.Table(
                     cls_name,
                     self._metadata,
-                    serial_col,
                 )
 
-                schema["serial_col"] = serial_col
+                use_serial = table_data.get("serial", True)
+                schema["use_serial"] = use_serial
+                if use_serial:
+                    serial_col = sqla.Column("serial", sqla.Integer, primary_key=True)
+                    tab.append_column(serial_col)
+                    schema["serial_col"] = serial_col
 
                 # attach pre-defined columns
                 use_version = table_data.get("version", False)
@@ -343,8 +344,8 @@ class Datastore:
                 cls_name = ObjectClass
             else:
                 cls_name = ObjectClass.__name__
-            self._ensure_registered_schema(cls_name)
 
+            self._ensure_registered_schema(cls_name)
             record = self._schema[cls_name]
 
             tab = record["table"]
@@ -415,12 +416,13 @@ class Datastore:
             output_objects = []
             with self._engine.begin() as conn:
                 for obj in payload_data:
-                    cls_name = type(objects).__name__
+                    cls_name = type(obj).__name__
                     self._ensure_registered_schema(cls_name)
 
                     with WallclockTimer() as store_timer:
                         # print(f'**   starting store for object of type "{cls_name}"')
 
+                        self._ensure_registered_schema(cls_name)
                         record = self._schema[cls_name]
 
                         tab = record["table"]
@@ -445,9 +447,7 @@ class Datastore:
 
                 conn.commit()
 
-        # print(
-        #     f'** Datastore.object_store() finished in time {timer.elapsed:.3g} sec'
-        # )
+        # print(f"** Datastore.object_store() finished in time {timer.elapsed:.3g} sec")
 
         if scalar:
             return output_objects[0]
@@ -458,6 +458,7 @@ class Datastore:
         if table is None:
             raise RuntimeError(f"Attempt to insert into null table (scheme='{schema}')")
 
+        uses_serial = schema.get("use_serial", True)
         uses_timestamp = schema.get("use_timestamp", False)
         uses_version = schema.get("use_version", False)
         uses_stepping = schema.get("use_stepping", False)
@@ -475,10 +476,11 @@ class Datastore:
         )
 
         serial = obj.lastrowid
-        if serial is not None:
-            return serial
+        if serial is None:
+            cls_name = schema["name"]
+            raise RuntimeError(
+                f"Insert error when creating new entry for storable class '{cls_name}' (payload={payload})"
+            )
 
-        cls_name = schema["name"]
-        raise RuntimeError(
-            f"Insert error when creating new entry for storable class '{cls_name}' (payload={payload})"
-        )
+        if uses_serial:
+            return serial

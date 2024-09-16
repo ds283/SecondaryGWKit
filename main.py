@@ -8,21 +8,19 @@ import ray
 from ray import ObjectRef
 
 from ComputeTargets import (
-    MatterTransferFunctionContainer,
     MatterTransferFunctionIntegration,
-    TensorGreenFunctionContainer,
     TensorGreenFunctionIntegration,
 )
 from CosmologyConcepts import (
     wavenumber,
     redshift,
-    redshift_array,
     wavenumber_array,
     wavenumber_exit_time,
+    redshift_array,
 )
 from CosmologyModels.LambdaCDM import LambdaCDM, Planck2018
 from Datastore.SQL import Datastore
-from MetadataConcepts import tolerance, tag
+from MetadataConcepts import tolerance, store_tag
 from Units import Mpc_units
 from defaults import DEFAULT_ABS_TOLERANCE, DEFAULT_REL_TOLERANCE
 from utilities import WallclockTimer
@@ -98,10 +96,7 @@ def convert_to_wavenumbers(k_sample_set):
 
 
 def convert_to_redshifts(z_sample_set):
-    return store.object_get.remote(
-        redshift,
-        payload_data=[{"z": z} for z in z_sample_set],
-    )
+    return [redshift(z=z) for z in z_sample_set]
 
 
 ## STEP 1
@@ -129,8 +124,8 @@ atol, rtol = ray.get(
 print("-- building database tags")
 Tk_production_tag, Gk_production_tag = ray.get(
     [
-        store.object_get.remote(tag, label="TkOneLoopDensity"),
-        store.object_get.remote(tag, label="GkOneLoopDensity"),
+        store.object_get.remote(store_tag, label="TkOneLoopDensity"),
+        store.object_get.remote(store_tag, label="GkOneLoopDensity"),
     ]
 )
 
@@ -173,10 +168,10 @@ for i, obj in enumerate(k_exit_times):
 # while compute tasks are still being processed, initiate store tasks
 # to make efficient use of the Datastore actor
 # Each store task produces another ObjectRef that needs to be held in a second queue
-print("--   waiting for horizon exit tasks to complete")
 total_done = 0
 batch_done = 0
 queue_size = len(exit_time_work_refs)
+print(f"--   waiting for {queue_size} horizon exit tasks to complete")
 while len(exit_time_work_refs) > 0:
     done_ref, exit_time_work_refs = ray.wait(exit_time_work_refs, num_returns=1)
     if len(done_ref) > 0:
@@ -199,10 +194,10 @@ while len(exit_time_work_refs) > 0:
 # while store tasks are still being processed, collect the populated stored
 # objects (which are now complete with a store_id field) and replace them in
 # the k_exit_times array
-print("--   waiting for horizon exit storage requests to complete")
 total_done = 0
 batch_done = 0
 queue_size = len(exit_time_store_refs)
+print(f"--   waiting for {queue_size} horizon exit storage requests to complete")
 while len(exit_time_store_refs) > 0:
     done_ref, exit_time_store_refs = ray.wait(exit_time_store_refs, num_returns=1)
     if len(done_ref) > 0:
@@ -227,234 +222,154 @@ while len(exit_time_store_refs) > 0:
 # These run from 10 e-folds before horizon exit, up to the final redshift z_end
 print("-- populating array of z-sample times for each k-mode")
 with WallclockTimer() as timer:
-    Tk_z_sample_refs = [
-        convert_to_redshifts(
-            k_exit.populate_z_sample(outside_horizon_efolds=10.0, z_end=10.0)
-        )
+    Tk_z_sample = [
+        k_exit.populate_z_sample(outside_horizon_efolds=10.0, z_end=10.0)
         for k_exit in k_exit_times
     ]
-
-    waiting = Tk_z_sample_refs
-    total_done = 0
-    queue_size = len(waiting)
-    while len(waiting) > 0:
-        still_waiting = len(waiting)
-        done, waiting = ray.wait(waiting, num_returns=min(20, still_waiting))
-        total_done += len(done)
-        print(
-            f"... {total_done}/{queue_size} = {100.0 * float(total_done) / float(queue_size):.2f}% redshift sample array lookups complete, {len(waiting)} still queued"
-        )
-        if len(waiting) == 0:
-            break
-
-    Tk_z_sample_values = ray.get(Tk_z_sample_refs)
-
-    # finally, wrap all of these lists into redshift_array containers
-    print("--   converting z-sample times to redshift arrays")
-    Tk_z_sample = [redshift_array(z_array=zs) for zs in Tk_z_sample_values]
-
 print(f"--   redshift sample arrays constructed in time {timer.elapsed:.3g}sec")
 
 
 ## STEP 3
 ## USING THESE Z-SAMPLE MESHES, COMPUTE THE TRANSFER FUNCTION FOR EACH K-MODE
 
-
-def build_Tks():
-    return ray.get(
-        [
-            store.object_get.remote(
-                MatterTransferFunctionContainer,
-                k=k_sample[i],
-                cosmology=LambdaCDM_Planck2018,
-                atol=atol,
-                rtol=rtol,
-                z_sample=Tk_z_sample[i],
-                z_init=Tk_z_sample[i].max,
-            )
-            for i in range(len(k_sample))
-        ]
-    )
-
-
 print("-- querying matter transfer function values")
-Tks = build_Tks()
-cycle = 1
+Tks = ray.get(
+    [
+        store.object_get.remote(
+            MatterTransferFunctionIntegration,
+            k=k_sample[i],
+            cosmology=LambdaCDM_Planck2018,
+            atol=atol,
+            rtol=rtol,
+            z_sample=Tk_z_sample[i],
+            z_init=Tk_z_sample[i].max,
+            tags=[Tk_production_tag],
+        )
+        for i in range(len(k_sample))
+    ]
+)
 
 
-while any(not Tk.available for Tk in Tks):
-    # schedule integrations to populate any z-sample points that are not already held in the container
+Tk_work_refs = []
+Tk_work_lookup = {}
 
-    Tk_work_refs = []
-    Tk_work_lookup = {}
+Tk_store_refs = []
 
-    Tk_store_refs = []
+print(f"-- scheduling work to populate missing matter transfer function values")
+for Tk in Tks:
+    if Tk.available:
+        continue
 
-    print(
-        f"-- scheduling work to populate missing matter transfer function values (cycle={cycle})"
+    ref: ObjectRef = Tk.compute(
+        label=f"{args.job_name}-Tk-k{Tk.k.k_inv_Mpc:.3g}-{datetime.now().replace(microsecond=0).isoformat()}"
     )
-    for Tk in Tks:
-        if Tk.available:
-            continue
 
-        # ray.get() will block here, but returning the empty MatterTransferFunctionIntegration object
-        # from the datastore should be fast (in future could also possibly manage this queue asynchronously)
-        obj = ray.get(
-            store.object_get.remote(
-                MatterTransferFunctionIntegration,
-                k=Tk.k,
-                cosmology=LambdaCDM_Planck2018,
-                atol=atol,
-                rtol=rtol,
-                z_sample=Tk.missing_z_sample,
-                z_init=Tk.z_init,
-                label=f"{args.job_name}-Tk-k{Tk.k.k_inv_Mpc:.3g}-cycle={cycle}-{datetime.now().replace(microsecond=0).isoformat()}",
+    Tk_work_refs.append(ref)
+    Tk_work_lookup[ref.hex] = Tk
+
+total_done = 0
+batch_done = 0
+queue_size = len(Tk_work_refs)
+print(
+    f"--   waiting for {queue_size} matter transfer function integrations to complete"
+)
+while len(Tk_work_refs) > 0:
+    done_ref, Tk_work_refs = ray.wait(Tk_work_refs, num_returns=1)
+    if len(done_ref) > 0:
+        Tk = Tk_work_lookup[done_ref[0].hex]
+        Tk.store()
+
+        ref: ObjectRef = store.object_store.remote(Tk)
+        Tk_store_refs.append(ref)
+
+        batch_size = len(done_ref)
+        total_done += batch_size
+        batch_done += batch_size
+        if batch_done >= 20:
+            print(
+                f"--   {total_done}/{queue_size} = {100.0*float(total_done)/float(queue_size):.2f}% integrations complete, {len(Tk_work_refs)} still queued"
             )
-        )
-        ref: ObjectRef = obj.compute()
+            batch_done = 0
 
-        Tk_work_refs.append(ref)
-        Tk_work_lookup[ref.hex] = obj
+total_done = 0
+queue_size = len(Tk_store_refs)
+print(
+    f"--   waiting for {queue_size} matter transfer function storage requests to complete"
+)
+while len(Tk_store_refs) > 0:
+    num_remaining = len(Tk_store_refs)
+    done_ref, Tk_store_refs = ray.wait(
+        Tk_store_refs, num_returns=min(20, num_remaining)
+    )
 
-    print("--   waiting for matter transfer function integrations to complete")
-    total_done = 0
-    batch_done = 0
-    queue_size = len(Tk_work_refs)
-    while len(Tk_work_refs) > 0:
-        done_ref, Tk_work_refs = ray.wait(Tk_work_refs, num_returns=1)
-        if len(done_ref) > 0:
-            obj = Tk_work_lookup[done_ref[0].hex]
-            obj.store()
-
-            ref: ObjectRef = store.object_store.remote(obj)
-            Tk_store_refs.append(ref)
-
-            batch_size = len(done_ref)
-            total_done += batch_size
-            batch_done += batch_size
-            if batch_done >= 20:
-                print(
-                    f"--   {total_done}/{queue_size} = {100.0*float(total_done)/float(queue_size):.2f}% integrations complete, {len(Tk_work_refs)} still queued"
-                )
-                batch_done = 0
-
-    total_done = 0
-    queue_size = len(Tk_store_refs)
-    while len(Tk_store_refs) > 0:
-        num_remaining = len(Tk_store_refs)
-        done_ref, Tk_store_refs = ray.wait(
-            Tk_store_refs, num_returns=min(20, num_remaining)
-        )
-
-        total_done += len(done_ref)
-        print(
-            f"--    {total_done}/{queue_size} = {100.0*float(total_done)/float(queue_size):.2f}% stores complete, {len(Tk_store_refs)} still queued"
-        )
-
-    Tks = build_Tks()
-    cycle += 1
+    total_done += len(done_ref)
+    print(
+        f"--    {total_done}/{queue_size} = {100.0*float(total_done)/float(queue_size):.2f}% stores complete, {len(Tk_store_refs)} still queued"
+    )
 
 
 ## STEP 4
 ## BUILD A GRID OF SOURCE/RESPONSE REDSHIFT SAMPLE REDSHIFTS
+
+print("-- QUERYING TENSOR GREEN'S FUNCTION VALUES")
+
 print(
     "-- building grid of z_source/z_response sample times for Green's function calculation"
 )
 
-G_LATEST_RESPONSE_Z = 10.0
+G_LATEST_RESPONSE_Z = 0.5
 
-G_z_sample_values = {}
-counter = 1
 todo = len(k_exit_times)
-for k_exit in k_exit_times:
+
+for counter, k_exit in enumerate(k_exit_times):
     k_exit: wavenumber_exit_time
 
     k = k_exit.k
 
+    Gk_ref_list = []
+    z_response_arrays = []
+
     with WallclockTimer() as timer:
-        source_redshifts = k_exit.populate_z_sample(
+        source_zs = k_exit.populate_z_sample(
             outside_horizon_efolds=10.0, z_end=G_LATEST_RESPONSE_Z
         )
 
         print(
-            f"** constructing redshift arrays for k = {k.k_inv_Mpc:.3g}/Mpc ({counter}/{todo} = {100.0*float(counter)/float(todo):.2f}%)"
+            f"** constructing source/response redshift arrays for k = {k.k_inv_Mpc:.3g}/Mpc ({counter}/{todo} = {100.0*float(counter)/float(todo):.2f}%)"
         )
 
-        response_refs = []
-
-        for source_z in source_redshifts:
+        for z_source in source_zs:
             num_response_sample = int(
-                round(60 * (log10(source_z) - log10(G_LATEST_RESPONSE_Z)) + 0.5, 0)
+                round(60 * (log10(z_source) - log10(G_LATEST_RESPONSE_Z)) + 0.5, 0)
             )
             if num_response_sample > 1:
                 response_redshifts = np.logspace(
-                    log10(source_z), log10(G_LATEST_RESPONSE_Z), num_response_sample
+                    log10(z_source), log10(G_LATEST_RESPONSE_Z), num_response_sample
                 )
-                response_refs.append(convert_to_redshifts(response_redshifts))
+                z_response_array = redshift_array(
+                    z_array=convert_to_redshifts(response_redshifts)
+                )
+                z_response_arrays.append(z_response_array)
 
-        waiting = response_refs
-        total_done = 0
-        queue_size = len(waiting)
-        while len(waiting) > 0:
-            still_waiting = len(waiting)
-            done, waiting = ray.wait(waiting, num_returns=min(20, still_waiting))
-            total_done += len(done)
-            print(
-                f"... {total_done}/{queue_size} = {100.0*float(total_done)/float(queue_size):.2f}% redshift array lookups complete, {len(waiting)} still queued"
-            )
-            if len(waiting) == 0:
-                break
-
-        response_z_lists = ray.get(response_refs)
-        response_z_arrays = [
-            redshift_array(z_array=z_list) for z_list in response_z_lists
-        ]
-        G_z_sample_values[k.store_id] = response_z_arrays
-
-        counter += 1
+                # query for an integration with this z sample list
+                Gk_ref_list.append(
+                    store.object_get.remote(
+                        TensorGreenFunctionIntegration,
+                        k=k,
+                        cosmology=LambdaCDM_Planck2018,
+                        atol=atol,
+                        rtol=rtol,
+                        z_source=z_source,
+                        z_sample=z_response_array,
+                        tags=[Gk_production_tag],
+                    )
+                )
 
     print(
-        f"**    redshift arrays for k = {k.k_inv_Mpc:.3g}/Mpc constructed in time {timer.elapsed:.3g} sec"
+        f"**    {len(z_response_arrays)} source/response redshift arrays for k = {k.k_inv_Mpc:.3g}/Mpc constructed in time {timer.elapsed:.3g} sec"
     )
 
-## STEP 5
-##
-
-
-def build_Gks():
-    ref_list = []
-    for k in k_sample:
-        k: wavenumber
-
-        response_z_arrays = G_z_sample_values[k.store_id]
-        for response_z_array in response_z_arrays:
-            z_source = response_z_array.max
-            if z_source is None:
-                raise RuntimeError(
-                    "z_source is None (wavenumber k={k.k_inv_Mpc:.3g}/Mpc)"
-                )
-
-            ref_list.append(
-                store.object_get.remote(
-                    TensorGreenFunctionContainer,
-                    k=k,
-                    cosmology=LambdaCDM_Planck2018,
-                    atol=atol,
-                    rtol=rtol,
-                    z_source=z_source,
-                    z_sample=response_z_array,
-                )
-            )
-
-    return ray.get(ref_list)
-
-
-print("-- querying tensor Green's function values")
-Gks = build_Gks()
-cycle = 1
-
-while any(not Gk.available for Gk in Gks):
-    label = f"{args.job_name}-Gk-cycle-{cycle}-{datetime.now().replace(microsecond=0).isoformat()}"
+    Gks = ray.get(Gk_ref_list)
 
     Gk_work_refs = []
     Gk_work_lookup = {}
@@ -462,56 +377,48 @@ while any(not Gk.available for Gk in Gks):
     Gk_store_refs = []
 
     print(
-        f"-- scheduling work to populate missing tensor Green's function values (cycle={cycle})"
+        f"-- scheduling work to populate missing tensor Green's function values for k = {k.k_inv_Mpc:.3g}/Mpc"
     )
     for Gk in Gks:
         if Gk.available:
             continue
 
-        # ray.get() will block here, but returning the empty TensorGreenFunctionIntegration object
-        # from the datastore should be fast (in future could also possibly manage this queue asynchronously)
-        obj = ray.get(
-            store.object_get.remote(
-                TensorGreenFunctionIntegration,
-                k=Gk.k,
-                cosmology=LambdaCDM_Planck2018,
-                atol=atol,
-                rtol=rtol,
-                z_source=Gk.z_source,
-                z_sample=Gk.missing_z_sample,
-                label=f"{args.job_name}-Gk-k{Gk.k.k_inv_Mpc:.3g}-sourcez{Gk.z_source.z:.5g}-cycle-{cycle}-{datetime.now().replace(microsecond=0).isoformat()}",
-            )
+        ref: ObjectRef = Gk.compute(
+            label=f"{args.job_name}-Gk-k{Gk.k.k_inv_Mpc:.3g}-sourcez{Gk.z_source.z:.5g}-{datetime.now().replace(microsecond=0).isoformat()}"
         )
-        ref: ObjectRef = obj.compute()
 
         Gk_work_refs.append(ref)
-        Gk_work_lookup[ref.hex] = obj
+        Gk_work_lookup[ref.hex] = Gk
 
-    print("--   waiting for tensor Green's function integrations to complete")
     total_done = 0
     batch_done = 0
     queue_size = len(Gk_work_refs)
+    print(
+        f"--   waiting for {queue_size} tensor Green's function integrations to complete for k = {k.k_inv_Mpc:.3g}/Mpc"
+    )
     while len(Gk_work_refs) > 0:
         done_ref, Gk_work_refs = ray.wait(Gk_work_refs, num_returns=1)
         if len(done_ref) > 0:
-            obj = Gk_work_lookup[done_ref[0].hex]
-            obj.store()
+            Gk = Gk_work_lookup[done_ref[0].hex]
+            Gk.store()
 
-            ref: ObjectRef = store.object_store.remote(obj)
+            ref: ObjectRef = store.object_store.remote(Gk)
             Gk_store_refs.append(ref)
 
             batch_size = len(done_ref)
             total_done += batch_size
             batch_done += batch_size
             if batch_done >= 20:
-                print(
-                    f"--   {total_done}/{queue_size} = {100.0*float(total_done)/float(queue_size):.2f}% integrations complete, {len(Gk_work_refs)} still queued"
-                )
+                # print(
+                #     f"--   {total_done}/{queue_size} = {100.0 * float(total_done) / float(queue_size):.2f}% integrations complete, {len(Gk_work_refs)} still queued"
+                # )
                 batch_done = 0
 
-    print("--   waiting for tensor Green's function storage requests to complete")
     total_done = 0
     queue_size = len(Gk_store_refs)
+    print(
+        f"--   waiting for {queue_size} tensor Green's function storage requests to complete"
+    )
     while len(Gk_store_refs) > 0:
         num_remaining = len(Gk_store_refs)
         done_ref, Gk_store_refs = ray.wait(
@@ -519,9 +426,6 @@ while any(not Gk.available for Gk in Gks):
         )
 
         total_done += len(done_ref)
-        print(
-            f"--    {total_done}/{queue_size} = {100.0*float(total_done)/float(queue_size):.2f}% stores complete, {len(Gk_store_refs)} still queued"
-        )
-
-    Gks = build_Gks()
-    cycle += 1
+        # print(
+        #     f"--    {total_done}/{queue_size} = {100.0 * float(total_done) / float(queue_size):.2f}% stores complete, {len(Gk_store_refs)} still queued"
+        # )

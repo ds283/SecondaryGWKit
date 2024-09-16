@@ -1,11 +1,11 @@
 import sqlalchemy as sqla
 
 from Datastore.SQL.ObjectFactories.base import SQLAFactoryBase
-from MetadataConcepts import tag
+from MetadataConcepts import store_tag
 from defaults import DEFAULT_STRING_LENGTH
 
 
-class sqla_tag_factory(SQLAFactoryBase):
+class sqla_store_tag_factory(SQLAFactoryBase):
     def __init__(self):
         pass
 
@@ -28,4 +28,4 @@ class sqla_tag_factory(SQLAFactoryBase):
         if store_id is None:
             store_id = inserter(conn, {"label": label})
 
-        return tag(store_id=store_id, label=label)
+        return store_tag(store_id=store_id, label=label)

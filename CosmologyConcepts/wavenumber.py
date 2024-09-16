@@ -4,6 +4,7 @@ from typing import Iterable, Optional
 import ray
 from numpy import logspace
 
+from CosmologyConcepts import redshift_array, redshift
 from CosmologyModels import BaseCosmology
 from Datastore import DatastoreObject
 from MetadataConcepts import tolerance
@@ -167,7 +168,7 @@ class wavenumber_exit_time(DatastoreObject):
         outside_horizon_efolds=10.0,
         samples_per_log10z: int = 50,
         z_end: float = 0.1,
-    ):
+    ) -> redshift_array:
         if outside_horizon_efolds is not None and outside_horizon_efolds > 0.0:
             z_init = (1.0 + self._z_exit) * exp(outside_horizon_efolds) - 1.0
         else:
@@ -179,4 +180,5 @@ class wavenumber_exit_time(DatastoreObject):
             round(samples_per_log10z * (log10(z_init) - log10(z_end)) + 0.5, 0)
         )
 
-        return logspace(log10(z_init), log10(z_end), num=num_z_sample)
+        z_values = logspace(log10(z_init), log10(z_end), num=num_z_sample)
+        return redshift_array(z_array=[redshift(z=z) for z in z_values])
