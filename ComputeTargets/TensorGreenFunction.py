@@ -42,7 +42,7 @@ def compute_tensor_Green(
         rho, G, Gprime = state
 
         H = cosmology.Hubble(z)
-        w = cosmology.w(z)
+        w = cosmology.wBackground(z)
         eps = cosmology.epsilon(z)
 
         one_plus_z = 1.0 + z

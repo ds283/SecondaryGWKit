@@ -142,7 +142,7 @@ class LambdaCDM(BaseCosmology):
 
         return numerator / denominator
 
-    def w(self, z: float) -> float:
+    def wBackground(self, z: float) -> float:
         w_rad = 1.0 / 3.0
 
         one_plus_z = 1.0 + z
@@ -155,5 +155,19 @@ class LambdaCDM(BaseCosmology):
         denominator = (
             self.omega_m * one_plus_z_3 + self.omega_r * one_plus_z_4 + self.omega_cc
         )
+
+        return numerator / denominator
+
+    def wPerturbations(self, z: float) -> float:
+        w_rad = 1.0 / 3.0
+
+        one_plus_z = 1.0 + z
+        one_plus_z_2 = one_plus_z * one_plus_z
+        one_plus_z_3 = one_plus_z_2 * one_plus_z
+        one_plus_z_4 = one_plus_z_2 * one_plus_z_2
+
+        # discard w_matter contribution to the numerator, which is proportional to zero
+        numerator = w_rad * self.omega_r * one_plus_z_4
+        denominator = self.omega_m * one_plus_z_3 + self.omega_r * one_plus_z_4
 
         return numerator / denominator

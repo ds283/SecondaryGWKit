@@ -45,22 +45,23 @@ def compute_matter_Tk(
         rho, T, Tprime = state
 
         H = cosmology.Hubble(z)
-        w = cosmology.w(z)
+        wBackground = cosmology.wBackground(z)
+        wPerturbations = cosmology.wPerturbations(z)
         eps = cosmology.epsilon(z)
 
         one_plus_z = 1.0 + z
         one_plus_z_2 = one_plus_z * one_plus_z
 
-        drho_dz = 3.0 * ((1.0 + w) / one_plus_z) * rho
+        drho_dz = 3.0 * ((1.0 + wBackground) / one_plus_z) * rho
         dT_dz = Tprime
 
         k_over_H = k_float / H
         k_over_H_2 = k_over_H * k_over_H
 
         dTprime_dz = (
-            -(eps - 3.0 * (1.0 + w)) * Tprime / one_plus_z
-            - (3.0 * (1.0 + w) - 2.0 * eps) * T / one_plus_z_2
-            - w * k_over_H_2 * T
+            -(eps - 3.0 * (1.0 + wPerturbations)) * Tprime / one_plus_z
+            - (3.0 * (1.0 + wPerturbations) - 2.0 * eps) * T / one_plus_z_2
+            - wPerturbations * k_over_H_2 * T
         )
 
         return [drho_dz, dT_dz, dTprime_dz]

@@ -42,7 +42,11 @@ class BaseCosmology(DatastoreObject, ABC):
         raise NotImplementedError
 
     @abstractmethod
-    def w(self, z: float) -> float:
+    def wBackground(self, z: float) -> float:
+        raise NotImplementedError
+
+    @abstractmethod
+    def wPerturbations(self, z: float) -> float:
         raise NotImplementedError
 
     def epsilon(self, z: float) -> float:
