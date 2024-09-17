@@ -1,9 +1,50 @@
 import time
+from math import fmod
 from typing import Iterable
 
 import ray
 from ray import ObjectRef
 from ray.actor import ActorHandle
+
+SECONDS_PER_MINUTE = 60
+SECONDS_PER_HOUR = 60 * SECONDS_PER_MINUTE
+SECONDS_PER_DAY = 24 * SECONDS_PER_HOUR
+
+
+def _format_time(interval: float) -> str:
+    interval = float(interval)
+    str = ""
+
+    if interval > SECONDS_PER_DAY:
+        days = int(fmod(interval, SECONDS_PER_DAY))
+        interval = interval - float(days * SECONDS_PER_DAY)
+        if len(str) > 0:
+            str = str + f" {days}d"
+        else:
+            str = f"{days}d"
+
+    if interval > SECONDS_PER_HOUR:
+        hours = int(fmod(interval, SECONDS_PER_HOUR))
+        interval = interval - float(hours * SECONDS_PER_HOUR)
+        if len(str) > 0:
+            str = str + f" {hours}h"
+        else:
+            str = f"{hours}h"
+
+    if interval > SECONDS_PER_MINUTE:
+        minutes = int(fmod(interval, SECONDS_PER_MINUTE))
+        interval = interval - float(minutes * SECONDS_PER_MINUTE)
+        if len(str) > 0:
+            str = str + f" {minutes}m"
+        else:
+            str = f"{minutes}m"
+
+    if len(str) > 0:
+        str = str + f" {interval:.3g}s"
+    else:
+        str = f"{interval:.3g}s"
+
+    return str
 
 
 class RayWorkQueue:
@@ -53,8 +94,9 @@ class RayWorkQueue:
         self._start_time = time.perf_counter()
         self._last_notify_time = self._start_time
 
+        self._title = title
         if title is not None:
-            print(f"\n** {title}\n")
+            print(f"\n** {title}")
 
     def run(self):
         while len(self._inflight) > 0 or len(self._todo) > 0:
@@ -181,7 +223,7 @@ class RayWorkQueue:
                             / float(num_items_remain)
                         )
                     print(
-                        f"-- {total_elapsed:.3g} s elapsed: {len(self._todo)} work items remaining = {percent_complete:.2f}% complete"
+                        f"-- {_format_time(total_elapsed)}: {len(self._todo)} work items remaining = {percent_complete:.2f}% complete"
                     )
                     print(
                         f"   inflight details: {self._num_lookup_queue} lookup, {self._num_compute_queue} compute, {self._num_store_queue} store"
@@ -189,3 +231,7 @@ class RayWorkQueue:
 
                     self._batch = 0
                     self._last_notify_time = time.perf_counter()
+
+        if self._title is not None:
+            self.total_time = time.perf_counter() - self._start_time
+            print(f"-- all work items complete in time {_format_time(self.total_time)}")
