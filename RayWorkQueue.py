@@ -222,7 +222,7 @@ class RayWorkQueue:
                         percent_complete = (
                             100.0
                             * float(self._num_total_items - num_items_remain)
-                            / float(num_items_remain)
+                            / float(self._num_total_items)
                         )
                     print(
                         f"-- {_format_time(total_elapsed)}: {len(self._todo)} work items remaining = {percent_complete:.2f}% complete"
