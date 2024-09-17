@@ -117,8 +117,9 @@ class sqla_MatterTransferFunctionIntegration_factory(SQLAFactoryBase):
                     nullable=False,
                 ),
                 sqla.Column(
-                    "z_init",
-                    sqla.Float(64),
+                    "z_init_serial",
+                    sqla.Integer,
+                    sqla.ForeignKey("redshift.serial"),
                     nullable=False,
                 ),
                 sqla.Column("compute_time", sqla.Float(64)),
@@ -168,7 +169,7 @@ class sqla_MatterTransferFunctionIntegration_factory(SQLAFactoryBase):
                 table.c.wavenumber_serial == k.store_id,
                 table.c.cosmology_type == cosmology.type_id,
                 table.c.cosmology_serial == cosmology.store_id,
-                sqla.func.abs(table.c.z_init - z_init.z) < DEFAULT_FLOAT_PRECISION,
+                table.c.z_init_serial == z_init.store_id,
                 table.c.atol_serial == atol.store_id,
                 table.c.rtol_serial == rtol.store_id,
             )
@@ -219,21 +220,29 @@ class sqla_MatterTransferFunctionIntegration_factory(SQLAFactoryBase):
 
         # read out sample values associated with this integration
         value_table = tables["MatterTransferFunctionValue"]
+        redshift_table = tables["redshift"]
 
         sample_rows = conn.execute(
             sqla.select(
                 value_table.c.serial,
-                value_table.c.z,
+                value_table.c.z_serial,
+                redshift_table.c.z,
                 value_table.c.value,
             )
+            .select_from(
+                value_table.join(
+                    redshift_table,
+                    redshift_table.c.serial == value_table.c.z_serial,
+                )
+            )
             .filter(value_table.c.integration_serial == store_id)
-            .order_by(value_table.c.z)
+            .order_by(redshift_table.c.z)
         )
 
         z_points = []
         values = []
         for row in sample_rows:
-            z_value = redshift(z=row.z)
+            z_value = redshift(store_id=row.z_serial, z=row.z)
             z_points.append(z_value)
             values.append(
                 MatterTransferFunctionValue(
@@ -298,7 +307,7 @@ class sqla_MatterTransferFunctionIntegration_factory(SQLAFactoryBase):
                 "atol_serial": obj._atol.store_id,
                 "rtol_serial": obj._rtol.store_id,
                 "solver_serial": solver.store_id,
-                "z_init": obj.z_init.z,
+                "z_init_serial": obj.z_init.store_id,
                 "compute_time": obj.compute_time,
                 "compute_steps": obj.compute_steps,
             },
@@ -322,7 +331,7 @@ class sqla_MatterTransferFunctionIntegration_factory(SQLAFactoryBase):
                 conn,
                 {
                     "integration_serial": store_id,
-                    "z": value.z.z,
+                    "z_serial": value.z.store_id,
                     "value": value.value,
                 },
             )
@@ -351,8 +360,9 @@ class sqla_MatterTransferFunctionValue_factory(SQLAFactoryBase):
                     nullable=False,
                 ),
                 sqla.Column(
-                    "z",
-                    sqla.Float(64),
+                    "z_serial",
+                    sqla.Integer,
+                    sqla.ForeignKey("redshift.serial"),
                     nullable=False,
                 ),
                 sqla.Column(
@@ -372,7 +382,7 @@ class sqla_MatterTransferFunctionValue_factory(SQLAFactoryBase):
         row_data = conn.execute(
             sqla.select(table.c.serial, table.c.value).filter(
                 table.c.integration_serial == integration_serial,
-                sqla.func.abs(table.c.z - z.z) < DEFAULT_FLOAT_PRECISION,
+                table.c.z_serial == z.store_id,
             )
         ).one_or_none()
 
@@ -381,7 +391,7 @@ class sqla_MatterTransferFunctionValue_factory(SQLAFactoryBase):
                 conn,
                 {
                     "integration_serial": integration_serial,
-                    "z": z.z,
+                    "z_serial": z.store_id,
                     "value": target_value,
                 },
             )

@@ -1,14 +1,20 @@
-from typing import Iterable
+from typing import Iterable, Self
+
+from Datastore import DatastoreObject
 
 
-class redshift:
-    def __init__(self, z: float):
+class redshift(DatastoreObject):
+    def __init__(self, store_id: int, z: float):
         """
         Represents a redshift,
         e.g., used to sample a transfer function or power spectrum
         :param store_id: unique Datastore id. Should not be None
         :param z: redshift value
         """
+        if store_id is None:
+            raise ValueError("Store ID cannot be None")
+        DatastoreObject.__init__(self, store_id)
+
         self.z = z
 
     def __float__(self):
@@ -65,3 +71,12 @@ class redshift_array:
                 z_min_item = z
 
         return z_min_item
+
+    def truncate(self, max_z) -> Self:
+        if isinstance(max_z, redshift):
+            max_z_value = max_z.z
+        else:
+            max_z_value = float(max_z)
+
+        new_z_array = [z for z in self._z_array if z.z <= max_z_value]
+        return redshift_array(z_array=new_z_array)

@@ -1,7 +1,7 @@
 import argparse
 import sys
 from datetime import datetime
-from math import log10
+from math import exp
 
 import numpy as np
 import ray
@@ -92,6 +92,9 @@ LambdaCDM_Planck2018 = ray.get(
 )
 
 
+## UTILITY FUNCTIONS
+
+
 def convert_to_wavenumbers(k_sample_set):
     return store.object_get.remote(
         wavenumber,
@@ -100,22 +103,15 @@ def convert_to_wavenumbers(k_sample_set):
 
 
 def convert_to_redshifts(z_sample_set):
-    return [redshift(z=z) for z in z_sample_set]
+    return store.object_get.remote(
+        redshift, payload_data=[{"z": z} for z in z_sample_set]
+    )
 
 
-## STEP 1
-## BUILD SAMPLE OF K-WAVENUMBERS AND OBTAIN THEIR CORRESPONDING HORIZON EXIT TIMES
-
-# build array of k-sample points
-print("-- building array of k-sample wavenumbers")
-k_array = ray.get(
-    convert_to_wavenumbers(np.logspace(np.log10(0.001), np.log10(1.0), 500))
-)
-k_sample = wavenumber_array(k_array=k_array)
+## DATASTORE OBJECTS
 
 
 # build absolute and relative tolerances
-print("-- building tolerance objects")
 atol, rtol = ray.get(
     [
         store.object_get.remote(tolerance, tol=DEFAULT_ABS_TOLERANCE),
@@ -123,14 +119,16 @@ atol, rtol = ray.get(
     ]
 )
 
-# build tags and other labels
-print("-- building database tags")
-Tk_production_tag, Gk_production_tag = ray.get(
-    [
-        store.object_get.remote(store_tag, label="TkOneLoopDensity"),
-        store.object_get.remote(store_tag, label="GkOneLoopDensity"),
-    ]
+
+## STEP 1
+## BUILD SAMPLE OF K-WAVENUMBERS AND OBTAIN THEIR CORRESPONDING HORIZON EXIT TIMES
+
+# build array of k-sample points
+print("\n** BUILDING ARRAY OF WAVENUMBERS AT WHICH TO SAMPLE")
+k_array = ray.get(
+    convert_to_wavenumbers(np.logspace(np.log10(0.001), np.log10(1.0), 500))
 )
+k_sample = wavenumber_array(k_array=k_array)
 
 
 def create_k_exit_work(k: wavenumber):
@@ -156,20 +154,73 @@ k_exit_times = k_exit_queue.results
 
 
 ## STEP 2
+## BUILD A UNIVERSAL GRID OF Z-VALUES AT WHICH TO SAMPLE
+print("\n** BUILDING ARRAY OF Z-VALUES AT WHICH TO SAMPLE")
+k_exit_earliest: wavenumber_exit_time = k_exit_times[-1]
+
+# build a log-spaced universal grid of wavenumbers
+LATEST_Z = 0.1
+OUTSIDE_HORIZON_EFOLDS = 10.0
+SAMPLES_PER_LOG10_Z = 150
+
+universal_z_grid = k_exit_earliest.populate_z_sample(
+    outside_horizon_efolds=OUTSIDE_HORIZON_EFOLDS,
+    samples_per_log10z=SAMPLES_PER_LOG10_Z,
+    z_end=LATEST_Z,
+)
+
+# embed this universal redshift list into the database
+z_array = ray.get(convert_to_redshifts(universal_z_grid))
+z_sample = redshift_array(z_array=z_array)
+
+
+# build tags and other labels
+(
+    TkProductionTag,
+    GkProductionTag,
+    GlobalZGridTag,
+    OutsideHorizonEfoldsTag,
+    LargestZTag,
+    SamplesPerLog10ZTag,
+) = ray.get(
+    [
+        store.object_get.remote(store_tag, label="TkOneLoopDensity"),
+        store.object_get.remote(store_tag, label="GkOneLoopDensity"),
+        store.object_get.remote(store_tag, label=f"GlobalRedshiftGrid_{len(z_sample)}"),
+        store.object_get.remote(
+            store_tag, label=f"OutsideHorizonEfolds_{OUTSIDE_HORIZON_EFOLDS:.2f}"
+        ),
+        store.object_get.remote(
+            store_tag, label=f"LargestRedshift_{z_sample.max.z:.5g}"
+        ),
+        store.object_get.remote(
+            store_tag, label=f"SamplesPerLog10Z_{SAMPLES_PER_LOG10_Z}"
+        ),
+    ]
+)
+
+
+## STEP 2
 ## COMPUTE MATTER TRANSFER FUNCTIONS
 
 
 def create_Tk_work(k_exit: wavenumber_exit_time):
-    z_sample = k_exit.populate_z_sample(outside_horizon_efolds=10.0, z_end=0.5)
+    my_sample = z_sample.truncate(exp(OUTSIDE_HORIZON_EFOLDS) * k_exit.z_exit)
     return store.object_get.remote(
         MatterTransferFunctionIntegration,
         k=k_exit.k,
         cosmology=LambdaCDM_Planck2018,
         atol=atol,
         rtol=rtol,
-        z_sample=z_sample,
-        z_init=z_sample.max,
-        tags=[Tk_production_tag],
+        z_sample=my_sample,
+        z_init=my_sample.max,
+        tags=[
+            TkProductionTag,
+            GlobalZGridTag,
+            OutsideHorizonEfoldsTag,
+            LargestZTag,
+            SamplesPerLog10ZTag,
+        ],
     )
 
 
@@ -196,21 +247,13 @@ G_LATEST_RESPONSE_Z = 0.5
 
 
 def create_Gk_work(k_exit: wavenumber_exit_time):
-    source_zs = k_exit.populate_z_sample(
-        outside_horizon_efolds=10.0, z_end=G_LATEST_RESPONSE_Z
-    )
+    source_zs = z_sample.truncate(exp(OUTSIDE_HORIZON_EFOLDS) * k_exit.z_exit)
 
     work_refs = []
 
     for source_z in source_zs:
-        num_sample = int(
-            round(60 * (log10(source_z.z) - log10(G_LATEST_RESPONSE_Z)) + 0.5, 0)
-        )
-        if num_sample >= 3:
-            response_zs = np.logspace(
-                log10(source_z.z), log10(G_LATEST_RESPONSE_Z), num_sample
-            )
-            response_array = redshift_array(z_array=convert_to_redshifts(response_zs))
+        response_zs = z_sample.truncate(source_z)
+        if len(response_zs) >= 3:
 
             work_refs.append(
                 store.object_get.remote(
@@ -220,8 +263,14 @@ def create_Gk_work(k_exit: wavenumber_exit_time):
                     atol=atol,
                     rtol=rtol,
                     z_source=source_z,
-                    z_sample=response_array,
-                    tags=[Gk_production_tag],
+                    z_sample=response_zs,
+                    tags=[
+                        GkProductionTag,
+                        GlobalZGridTag,
+                        OutsideHorizonEfoldsTag,
+                        LargestZTag,
+                        SamplesPerLog10ZTag,
+                    ],
                 )
             )
 

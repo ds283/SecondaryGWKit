@@ -22,6 +22,7 @@ from Datastore.SQL.ObjectFactories.base import SQLAFactoryBase
 from Datastore.SQL.ObjectFactories.integration_metadata import (
     sqla_IntegrationSolver_factory,
 )
+from Datastore.SQL.ObjectFactories.redshift import sqla_redshift_factory
 from Datastore.SQL.ObjectFactories.store_tag import sqla_store_tag_factory
 from Datastore.SQL.ObjectFactories.tolerance import sqla_tolerance_factory
 from Datastore.SQL.ObjectFactories.wavenumber import (
@@ -38,6 +39,7 @@ PathType = Union[str, PathLike]
 
 _adapters = {
     "store_tag": sqla_store_tag_factory,
+    "redshift": sqla_redshift_factory,
     "wavenumber": sqla_wavenumber_factory,
     "wavenumber_exit_time": sqla_wavenumber_exit_time_factory,
     "tolerance": sqla_tolerance_factory,
@@ -391,7 +393,7 @@ class Datastore:
         #     )
         # else:
         #     print(
-        #         f'** Datastore.object_get() finsihed in time {timer.elapsed:.3g} sec for size={payload_size} object group of class "{cls_name}" = {float(timer.elapsed)/payload_size:.3g} sec per item'
+        #         f'** Datastore.object_get() finished in time {timer.elapsed:.3g} sec for size={payload_size} object group of class "{cls_name}" = {float(timer.elapsed)/payload_size:.3g} sec per item'
         #     )
 
         if scalar:
