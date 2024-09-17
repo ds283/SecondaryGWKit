@@ -1,5 +1,4 @@
 import time
-from math import fmod
 from typing import Iterable
 
 import ray
@@ -12,28 +11,31 @@ SECONDS_PER_DAY = 24 * SECONDS_PER_HOUR
 
 
 def _format_time(interval: float) -> str:
-    interval = float(interval)
+    int_interval = int(interval)
     str = ""
 
-    if interval > SECONDS_PER_DAY:
-        days = int(fmod(interval, SECONDS_PER_DAY))
-        interval = interval - float(days * SECONDS_PER_DAY)
+    if int_interval > SECONDS_PER_DAY:
+        days = int_interval // SECONDS_PER_DAY
+        int_interval = int_interval - days * SECONDS_PER_DAY
+        interval = interval - days * SECONDS_PER_DAY
         if len(str) > 0:
             str = str + f" {days}d"
         else:
             str = f"{days}d"
 
-    if interval > SECONDS_PER_HOUR:
-        hours = int(fmod(interval, SECONDS_PER_HOUR))
-        interval = interval - float(hours * SECONDS_PER_HOUR)
+    if int_interval > SECONDS_PER_HOUR:
+        hours = int_interval // SECONDS_PER_HOUR
+        int_interval = int_interval - hours * SECONDS_PER_HOUR
+        interval = interval - hours * SECONDS_PER_HOUR
         if len(str) > 0:
             str = str + f" {hours}h"
         else:
             str = f"{hours}h"
 
-    if interval > SECONDS_PER_MINUTE:
-        minutes = int(fmod(interval, SECONDS_PER_MINUTE))
-        interval = interval - float(minutes * SECONDS_PER_MINUTE)
+    if int_interval > SECONDS_PER_MINUTE:
+        minutes = int_interval // SECONDS_PER_MINUTE
+        int_interval = int_interval - minutes * SECONDS_PER_MINUTE
+        interval = interval - minutes * SECONDS_PER_MINUTE
         if len(str) > 0:
             str = str + f" {minutes}m"
         else:
