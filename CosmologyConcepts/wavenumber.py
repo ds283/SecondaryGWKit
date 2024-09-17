@@ -35,7 +35,7 @@ class wavenumber(DatastoreObject):
         Cast to float. Returns dimensionful wavenumber.
         :return:
         """
-        return self.k
+        return float(self.k)
 
 
 class wavenumber_array:

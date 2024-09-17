@@ -16,7 +16,7 @@ class redshift:
         Cast to float. Returns numerical value.
         :return:
         """
-        return self.z
+        return float(self.z)
 
 
 class redshift_array:
