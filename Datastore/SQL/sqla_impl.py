@@ -486,3 +486,44 @@ class Datastore:
 
         if uses_serial:
             return serial
+
+    def object_validate(self, objects):
+        with WallclockTimer() as timer:
+            self._ensure_engine()
+
+            if isinstance(objects, list) or isinstance(objects, tuple):
+                payload_data = objects
+                scalar = False
+            else:
+                payload_data = [objects]
+                scalar = True
+
+            output_flags = []
+            with self._engine.begin() as conn:
+                for obj in payload_data:
+                    cls_name = type(obj).__name__
+                    self._ensure_registered_schema(cls_name)
+
+                    with WallclockTimer() as store_timer:
+                        self._ensure_registered_schema(cls_name)
+                        record = self._schema[cls_name]
+
+                        tab = record["table"]
+
+                        factory = self._factories[cls_name]
+
+                        output_flags.append(
+                            factory.validate(
+                                objects,
+                                conn=conn,
+                                table=tab,
+                                tables=self._tables,
+                            )
+                        )
+
+                conn.commit()
+
+        if scalar:
+            return output_flags[0]
+
+        return output_flags

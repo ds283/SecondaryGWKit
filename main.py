@@ -227,11 +227,15 @@ def create_Tk_work(k_exit: wavenumber_exit_time):
 def create_Tk_work_label(Tk: MatterTransferFunctionIntegration):
     return f"{args.job_name}-Tk-k{Tk.k.k_inv_Mpc:.3g}-{datetime.now().replace(microsecond=0).isoformat()}"
 
+def validate_Tk_exit_work(Tk: MatterTransferFunctionIntegration):
+    return store.object_validate.remote(Tk)
+
 
 Tk_queue = RayWorkQueue(
     store,
     k_exit_times,
     create_Tk_work,
+    validation_maker=validate_Tk_exit_work,
     label_maker=create_Tk_work_label,
     title="CALCULATE MATTER TRANSFER FUNCTIONS",
     store_results=True,

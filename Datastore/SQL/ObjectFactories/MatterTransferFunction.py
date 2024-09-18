@@ -135,6 +135,7 @@ class sqla_MatterTransferFunctionIntegration_factory(SQLAFactoryBase):
                 ),
                 sqla.Column("compute_time", sqla.Float(64)),
                 sqla.Column("compute_steps", sqla.Integer),
+                sqla.Column("validated", sqla.Boolean, default=False, nullable=False),
             ],
         }
 
@@ -307,7 +308,8 @@ class sqla_MatterTransferFunctionIntegration_factory(SQLAFactoryBase):
         # datastore
         obj._solver = solver.store_id
 
-        # now serialize the record of the integration
+        # now serialize the record of the integration; on the store step, we clear the validated flag.
+        # Validation should happen in a separate step *after* the store transaction has completed.
         store_id = inserter(
             conn,
             {
@@ -323,6 +325,7 @@ class sqla_MatterTransferFunctionIntegration_factory(SQLAFactoryBase):
                 "z_samples": len(obj.z_sample),
                 "compute_time": obj.compute_time,
                 "compute_steps": obj.compute_steps,
+                "validated": False,
             },
         )
 
@@ -353,6 +356,47 @@ class sqla_MatterTransferFunctionIntegration_factory(SQLAFactoryBase):
             value._my_id = value_id
 
         return obj
+
+    @staticmethod
+    def validate(
+            obj: MatterTransferFunctionIntegration,
+            conn,
+            table,
+            tables,
+    ):
+        # query the row in MatterTransferFunctionIntegration corresponding to this object
+        if not obj.available:
+            raise RuntimeError("Attempt to validate a datastore object that has not yet been serialized")
+
+        expected_samples = conn.execute(
+            sqla.select(
+                table.c.z_samples
+            )
+            .filter(
+                table.c.serial == obj.store_id
+            )
+        ).scalar()
+
+        value_table = tables["MatterTransferFunctionValue"]
+        num_samples = conn.execute(
+            sqla.select(
+                sqla.func.count(value_table.c.serial)
+            )
+            .filter(
+                value_table.c.integration_serial == obj.store_id
+            )
+        ).scalar()
+
+        # check if we counted as many rows as we expected
+        validated: bool = (num_samples == expected_samples)
+
+        conn.execute(
+            sqla.update(table)
+            .where(table.c.serial == obj.store_id)
+            .values(validated=validated)
+        )
+
+        return validated
 
 
 class sqla_MatterTransferFunctionValue_factory(SQLAFactoryBase):

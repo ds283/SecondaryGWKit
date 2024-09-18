@@ -133,6 +133,7 @@ class sqla_TensorGreenFunctionIntegration_factory(SQLAFactoryBase):
                 ),
                 sqla.Column("compute_time", sqla.Float(64)),
                 sqla.Column("compute_steps", sqla.Integer),
+                sqla.Column("validated", sqla.Boolean, default=False, nullable=False),
             ],
         }
 
@@ -324,6 +325,7 @@ class sqla_TensorGreenFunctionIntegration_factory(SQLAFactoryBase):
                 "z_samples": len(obj.z_sample),
                 "compute_time": obj.compute_time,
                 "compute_steps": obj.compute_steps,
+                "validated": False,
             },
         )
 
@@ -354,6 +356,48 @@ class sqla_TensorGreenFunctionIntegration_factory(SQLAFactoryBase):
             value._my_id = value_id
 
         return obj
+
+    @staticmethod
+    def validate(
+            obj: TensorGreenFunctionIntegration,
+            conn,
+            table,
+            tables,
+    ):
+        # query the row in MatterTransferFunctionIntegration corresponding to this object
+        if not object.available:
+            raise RuntimeError("Attempt to validate a datastore object that has not yet been serialized")
+
+        expected_samples = conn.execute(
+            sqla.select(
+                table.c.z_samples
+            )
+            .filter(
+                table.c.serial == obj.serial
+            )
+        ).scalar()
+
+        value_table = tables["MatterTransferFunctionValue"]
+        num_samples = conn.execute(
+            sqla.select(
+                value_table.c.serial
+            )
+            .filter(
+                value_table.c.integration_serial == obj.store_id
+            )
+            .count()
+        ).scalar()
+
+        # check if we counted as many rows as we expected
+        validated: bool = (num_samples == expected_samples)
+
+        conn.execute(
+            sqla.update(table)
+            .where(table.c.serial == obj.store_id)
+            .values(validated=validated)
+        )
+
+        return validated
 
 
 class sqla_TensorGreenFunctionValue_factory(SQLAFactoryBase):

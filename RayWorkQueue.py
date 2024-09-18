@@ -56,6 +56,7 @@ class RayWorkQueue:
         task_list,
         task_maker,
         label_maker=None,
+        validation_maker=None,
         create_batch_size: int = 5,
         process_batch_size: int = 1,
         max_task_queue: int = 1000,
@@ -71,6 +72,7 @@ class RayWorkQueue:
         self._num_total_items = len(task_list)
         self._task_maker = task_maker
         self._label_maker = label_maker
+        self._validation_maker = validation_maker
 
         self._create_batch_size = create_batch_size
         self._process_batch_size = process_batch_size
@@ -90,6 +92,7 @@ class RayWorkQueue:
         self._num_lookup_queue = 0
         self._num_compute_queue = 0
         self._num_store_queue = 0
+        self._num_validation_queue = 0
 
         self._batch = 0
 
@@ -167,7 +170,7 @@ class RayWorkQueue:
 
                     # add this compute task to the work queue
                     self._inflight[compute_task.hex] = compute_task
-                    self._data[compute_task.hex] = ("compute", obj)
+                    self._data[compute_task.hex] = ("compute", (payload, obj))
 
                     # remove the original 'lookup' task from the work queue
                     self._inflight.pop(ref.hex, None)
@@ -177,16 +180,17 @@ class RayWorkQueue:
                     self._num_lookup_queue = max(self._num_lookup_queue - 1, 0)
 
                 elif type == "compute":
-                    # payload is the object that has finished computation; we want it to store the result
-                    # of the computation internally, and then ubmit a store request to the Datastore service.
+                    # payload contains an index into the result set and (our local copy of) the object that has finished computation;
+                    # we want it to store the result of the computation internally, and then submit a store request to the Datastore service.
                     # the results will then be serialized into the database
-                    payload.store()
+                    idx, obj = payload
+                    obj.store()
 
-                    store_task: ObjectRef = self._store.object_store.remote(payload)
+                    store_task: ObjectRef = self._store.object_store.remote(obj)
 
                     # add this store task to the work queue
                     self._inflight[store_task.hex] = store_task
-                    self._data[store_task.hex] = ("store", None)
+                    self._data[store_task.hex] = ("store", payload)
 
                     # remove the original 'compute' task from the work queue
                     self._inflight.pop(ref.hex, None)
@@ -196,14 +200,52 @@ class RayWorkQueue:
                     self._num_compute_queue = max(self._num_compute_queue - 1, 0)
 
                 elif type == "store":
-                    # nothing requires doing here; just remove the store task from the work queue
+                    # payload contains an index into the result set and (again, our local copy of) the object that has been freshly
+                    # serialized into the datastore. We should not expect it to have its store_id available.
+                    # The result of the store operation is a mutated object that has this field (and corresponding
+                    # fields for any objects it contains) set, so we should replace our local copy with it
+                    idx, obj = payload
+                    replacement_obj = ray.get(ref)
+
+                    # replacement object should now satisfy the available attribute
+                    if not replacement_obj.available:
+                        raise RuntimeError("Object returned from store service does not satisfy the available property")
+
+                    if self._store_results:
+                        self.results[idx] = replacement_obj
+
+                    # determine whether this work queue has a validation step
+                    if self._validation_maker is not None:
+                        validation_task: ObjectRef = self._validation_maker(replacement_obj)
+
+                        self._inflight[validation_task.hex] = validation_task
+                        self._data[validation_task.hex] = ("validate", (idx, replacement_obj))
+
+                        self._num_validation_queue += 1
+
+                    # remove the original 'store' task from the work queue
                     self._inflight.pop(ref.hex, None)
                     self._data.pop(ref.hex, None)
 
                     self._num_store_queue = max(self._num_store_queue - 1, 0)
 
+                elif type == "validate":
+                    # payload contains an index into the result set and (still, our local copy of) the object that has been freshly
+                    # validated
+                    # At this stage, however, there is not much to do, except to forget the validation task and update the queue length
+                    idx, obj = payload
+
+                    result = ray.get(ref)
+                    if result is not True:
+                        print(f'!! WARNING: {type(obj)} object with store_id={obj.store_id} did not validate after being emplaced in the datastore')
+
+                    self._inflight.pop(ref.hex, None)
+                    self._data.pop(ref.hex, None)
+
+                    self._num_validation_queue = max(self._num_validation_queue - 1, 0)
+
                 else:
-                    raise RuntimeError(f'Unexpeccted work queue item type "{type}"')
+                    raise RuntimeError(f'Unexpected work queue item type "{type}"')
 
                 self._batch += 1
 
@@ -227,9 +269,14 @@ class RayWorkQueue:
                     print(
                         f"-- {_format_time(total_elapsed)}: {len(self._todo)} work items remaining = {percent_complete:.2f}% complete"
                     )
-                    print(
-                        f"   inflight details: {self._num_lookup_queue} lookup, {self._num_compute_queue} compute, {self._num_store_queue} store"
-                    )
+                    if self._validation_maker is not None:
+                        print(
+                            f"   inflight items: {self._num_lookup_queue} lookup, {self._num_compute_queue} compute, {self._num_store_queue} store, {self._num_validation_queue} validation"
+                        )
+                    else:
+                        print(
+                            f"   inflight items: {self._num_lookup_queue} lookup, {self._num_compute_queue} compute, {self._num_store_queue} store"
+                        )
 
                     self._batch = 0
                     self._last_notify_time = time.perf_counter()
