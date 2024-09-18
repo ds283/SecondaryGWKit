@@ -2,10 +2,11 @@ import functools
 from datetime import datetime
 from os import PathLike
 from pathlib import Path
-from typing import Optional, Union, Mapping, Callable
+from typing import Union, Mapping, Callable
 
 import sqlalchemy as sqla
 from ray import remote
+from sqlalchemy.exc import IntegrityError
 
 from Datastore.SQL.ObjectFactories.LambdaCDM import sqla_LambdaCDM_factory
 from Datastore.SQL.ObjectFactories.MatterTransferFunction import (
@@ -25,10 +26,13 @@ from Datastore.SQL.ObjectFactories.integration_metadata import (
 from Datastore.SQL.ObjectFactories.redshift import sqla_redshift_factory
 from Datastore.SQL.ObjectFactories.store_tag import sqla_store_tag_factory
 from Datastore.SQL.ObjectFactories.tolerance import sqla_tolerance_factory
+from Datastore.SQL.ObjectFactories.version import sqla_version_factory
 from Datastore.SQL.ObjectFactories.wavenumber import (
     sqla_wavenumber_factory,
     sqla_wavenumber_exit_time_factory,
 )
+from MetadataConcepts import version
+from defaults import DEFAULT_STRING_LENGTH
 from utilities import WallclockTimer
 
 VERSION_ID_LENGTH = 64
@@ -37,7 +41,8 @@ VERSION_ID_LENGTH = 64
 PathType = Union[str, PathLike]
 
 
-_adapters = {
+_factories = {
+    "version": sqla_version_factory,
     "store_tag": sqla_store_tag_factory,
     "redshift": sqla_redshift_factory,
     "wavenumber": sqla_wavenumber_factory,
@@ -58,25 +63,151 @@ _TableMappingType = Mapping[str, sqla.Table]
 _InserterMappingType = Mapping[str, Callable]
 
 
+class ShardedPool:
+    """
+    ShardedPool manages a pool of datastore actors that cooperate to
+    manage a sharded SQL database
+    """
+
+    def __init__(self, version_id: str, db_name: PathType, timeout=None, shards=10):
+        """
+        Initialize a pool of datastore actors
+        :param version_id:
+        """
+        self._version_id = version_id
+
+        self._db_name = db_name
+        self._timeout = timeout
+        self._shards = shards
+
+        # resolve concerts the supplied db_name to an absolute path, resolving symlinks if necessary
+        # this database file will be taken to be the primary database
+        self._primary_file = Path(db_name).resolve()
+
+        self._shard_db_files = {}
+
+        # if primary file is absent, all shard databases should be likewise absent
+        if self._primary_file.is_dir():
+            raise RuntimeError(
+                f'Specified database file "{str(self._db_file)}" is a directory'
+            )
+        if not self._primary_file.exists():
+            # ensure parent directories also exist
+            self._primary_file.parents[0].mkdir(exist_ok=True, parents=True)
+
+            stem = self._primary_file.stem
+            for i in range(shards):
+                shard_stem = f"{stem}-shard{i:04d}"
+                shard_file = self._primary_file.with_stem(shard_stem)
+
+                if shard_file.exists():
+                    raise RuntimeError(
+                        f'Primary database is missing, but shard "{str(shard_file)}" already exists'
+                    )
+
+                self._shard_db_files[i] = shard_file
+
+            self._create_engine()
+            self._write_shard_data()
+
+            print(
+                f'>> Created sharded datastore "{str(self._primary_file)}" with {self._shards} shards'
+            )
+
+        # otherwise, if primary exists, try to read in shard configuration from it.
+        # Then, all shard databases must be present
+        else:
+            self._create_engine()
+            self._read_shard_data()
+
+            num_shards = len(self._shard_db_files)
+            print(
+                f'>> Opened existing sharded datastore "{str(self._primary_file)}" with {num_shards} shards'
+            )
+
+            if num_shards != self._shards:
+                print(
+                    f"!! WARNING: number of shards read from database (={num_shards}) does not match specified number of shards (={self._shards})"
+                )
+
+        # create actor pool of datastores, one for each shard
+        self._shards = {
+            i: Datastore.remote(db_file, timeout=self._timeout)
+            for i, db_file in self._shard_db_files.items()
+        }
+
+    def _create_engine(self):
+        connect_args = {}
+        if self._timeout is not None:
+            connect_args["timeout"] = self._timeout
+
+        self._engine = sqla.create_engine(
+            f"sqlite:///{self._db_name}",
+            future=True,
+            connect_args=connect_args,
+        )
+        self._metadata = sqla.MetaData()
+
+        self._shard_table = sqla.Table(
+            "shards",
+            self._metadata,
+            sqla.Column("serial", sqla.Integer, primary_key=True, nullable=False),
+            sqla.Column("filename", sqla.String(DEFAULT_STRING_LENGTH), nullable=False),
+        )
+
+    def _write_shard_data(self):
+        self._shard_table.create(self._engine)
+
+        with self._engine.begin() as conn:
+            values = [
+                {"serial": i, "filename": str(db_name)}
+                for i, db_name in enumerate(self._shard_db_files)
+            ]
+
+            conn.execute(sqla.dialects.sqlite.insert(self._shard_table), values)
+
+            conn.commit()
+
+    def _read_shard_data(self):
+        with self._engine.begin() as conn:
+            rows = conn.execute(
+                sqla.select(
+                    self._shard_table.c.serial,
+                    self._shard_table.c.filename,
+                )
+            )
+
+            for row in rows:
+                serial = row.serial
+                filename = Path(row.filename)
+
+                if serial in self._shard_db_files:
+                    raise RuntimeError(
+                        f'Shard #{serial} already exists (database file="{str(filename)}", existing file="{str(self._shard_db_files[serial])}")'
+                    )
+
+                self._shard_db_files[row.serial] = Path(row.filename)
+
+
 @remote
 class Datastore:
-    def __init__(self, version_id: str):
+    def __init__(
+        self,
+        version_label: str,
+        db_name: PathType,
+        version_serial: int = None,
+        timeout: int = None,
+    ):
         """
         Initialize an SQL datastore object
         :param version_id: version identifier used to tag results written in to the store
         """
-
-        # initialize SQLAlchemy objects
-        self._engine: Optional[sqla.Engine] = None
-        self._metadata: sqla.Metadata = None
-
-        # store version code and initialize (as blank) the corresponding serial code
-        self._version_id = version_id
-        self._version_serial = None
+        self._timeout = timeout
+        self._db_file = Path(db_name).resolve()
 
         # initialize set of registered storable class adapters
         self._factories: _FactoryMappingType = {}
-        self.register_factories(_adapters)
+        self.register_factories(_factories)
 
         # initialize empty dict of storage schema
         # each record collects SQLAlchemy column and table definitions, queries, etc., for a registered storable class factories
@@ -84,129 +215,51 @@ class Datastore:
         self._inserters: _InserterMappingType = {}
         self._schema = {}
 
-    def _create_engine(
-        self, db_name: PathType, expect_exists: bool = False, timeout=None
-    ):
+        if self._db_file.is_dir():
+            raise RuntimeError(
+                f'Specified database file "{str(self._db_file)}" is a directory'
+            )
+        elif not self._db_file.exists():
+            # create parent directories if they do not already exist
+            self._db_file.parents[0].mkdir(exist_ok=True, parents=True)
+            self._create_engine()
+
+            # generate tables defined by any registered storable classes
+            self._build_storage_schema()
+            self._create_storage_tables()
+        else:
+            self._create_engine()
+            self._build_storage_schema()
+
+        # convert version label to a version object
+        # if a serial is specified, we are probably running as a replica, and we need to ensure that the specified
+        # serial number is honoured in order to ensure integrity across multiple shards
+        version_payload = {"label": version_label}
+        if version_serial is not None:
+            version_payload["serial"] = version_serial
+
+        self._version = self.object_get(version, **version_payload)
+
+        if version_serial is not None and self._version.store_id != version_serial:
+            raise IntegrityError(
+                f"Serial number of version label (={self._version.store_id}) does not match specified value (={version_serial})"
+            )
+
+    def _create_engine(self):
         """
-        Create and initialize an SQLAlchemy engine corresponding to the name data container, but does not physically initialize the
-        container. Use create_datastore() for this purpose if needed.
-        :param db_name: path to on-disk database
-        :param expect_exists: should we expect the database to already exist? Ensures its content is not overwritten.
+        Create and initialize an SQLAlchemy engine corresponding to the name data container,
         :return:
         """
-        db_file = Path(db_name).resolve()
-
-        if not expect_exists and db_file.exists():
-            raise RuntimeError(
-                "Specified database cache {path} already exists".format(path=db_name)
-            )
-
-        if expect_exists and not db_file.exists():
-            raise RuntimeError(
-                "Specified database cache {path} does not exist; please create using "
-                "--create-database".format(path=db_name)
-            )
-
-        if db_file.is_dir():
-            raise RuntimeError(
-                "Specified database cache {path} is a directory".format(path=db_name)
-            )
-
-        # if file does not exist, ensure its parent directories exist
-        if not db_file.exists():
-            db_file.parents[0].mkdir(exist_ok=True, parents=True)
-
         connect_args = {}
-        if timeout is not None:
-            connect_args["timeout"] = timeout
+        if self._timeout is not None:
+            connect_args["timeout"] = self._timeout
 
         self._engine = sqla.create_engine(
-            f"sqlite:///{db_name}",
+            f"sqlite:///{self._db_file}",
             future=True,
             connect_args=connect_args,
         )
         self._metadata = sqla.MetaData()
-
-        self._version_table = sqla.Table(
-            "versions",
-            self._metadata,
-            sqla.Column("serial", sqla.Integer, primary_key=True, nullable=False),
-            sqla.Column("version_id", sqla.String(VERSION_ID_LENGTH)),
-        )
-
-        self._build_storage_schema()
-
-    def create_datastore(self, db_name: PathType, timeout=None) -> None:
-        """
-        Create and initialize an empty data container. Assumes the container not to be physically present at the specified path
-        and will fail with an error if it is
-        :param db_name: path to on-disk database
-        :return:
-        """
-        self._ensure_no_engine()
-        self._create_engine(db_name, expect_exists=False, timeout=timeout)
-
-        print("-- creating database tables")
-
-        # generate internal tables
-        self._version_table.create(self._engine)
-        self._version_serial = self._make_version_serial()
-
-        # generate tables defined by any registered storable classes
-        self._create_storage_tables()
-
-    def open_datastore(self, db_name: str, timeout=None) -> None:
-        self._ensure_no_engine()
-        self._create_engine(db_name, expect_exists=True, timeout=timeout)
-
-        self._version_serial = self._make_version_serial()
-
-    def _make_version_serial(self):
-        """
-        Normalize the supplied version label into a database rowid
-        :return:
-        """
-        self._ensure_engine()
-
-        with self._engine.begin() as conn:
-            # query database for serial number corresponding to this version label
-            serial = conn.execute(
-                sqla.select(self._version_table.c.serial).filter(
-                    self._version_table.c.version_id == self._version_id
-                )
-            ).scalar()
-
-            if serial is not None:
-                return serial
-
-            # no existing serial number was found, so insert a new one
-            serial = conn.execute(
-                sqla.select(sqla.func.max(self._version_table.c.serial)).select_from(
-                    self._version_table
-                )
-            ).scalar()
-
-            # if .scalar returns an empty result, there are no serial numbers currently in use
-            if serial is None:
-                serial = -1
-
-            # insert a new database row for this version label
-            conn.execute(
-                sqla.insert(self._version_table),
-                {"serial": serial + 1, "version_id": self._version_id},
-            )
-
-            conn.commit()
-
-        return serial
-
-    def _ensure_engine(self):
-        if self._engine is None:
-            raise RuntimeError(f"No storage engine has been initialized")
-
-    def _ensure_no_engine(self):
-        if self._engine is not None:
-            raise RuntimeError(f"A storage engine has already been initialized")
 
     def register_factories(self, factories: _FactoryMappingType):
         """
@@ -264,7 +317,7 @@ class Datastore:
                 schema["use_version"] = use_version
                 if use_version:
                     version_col = sqla.Column(
-                        "version", sqla.Integer, sqla.ForeignKey("versions.serial")
+                        "version", sqla.Integer, sqla.ForeignKey("version.serial")
                     )
                     tab.append_column(version_col)
                     schema["version_col"] = version_col
@@ -321,14 +374,12 @@ class Datastore:
                 schema["insert"] = None
 
                 print(
-                    f"Registered storage scheme for storable class adapter '{cls_name}' without database table"
+                    f"Registered storage schema for storable class adapter '{cls_name}' without database table"
                 )
 
             self._schema[cls_name] = schema
 
     def _create_storage_tables(self):
-        self._ensure_engine()
-
         for tab in self._tables.values():
             tab.create(self._engine)
 
@@ -340,8 +391,6 @@ class Datastore:
 
     def object_get(self, ObjectClass, **kwargs):
         with WallclockTimer() as timer:
-            self._ensure_engine()
-
             if isinstance(ObjectClass, str):
                 cls_name = ObjectClass
             else:
@@ -403,8 +452,6 @@ class Datastore:
 
     def object_store(self, objects):
         with WallclockTimer() as timer:
-            self._ensure_engine()
-
             # print(f"** Datastore.object_store() starting")
 
             if isinstance(objects, list) or isinstance(objects, tuple):
@@ -458,7 +505,7 @@ class Datastore:
 
     def _insert(self, schema, table, conn, payload):
         if table is None:
-            raise RuntimeError(f"Attempt to insert into null table (scheme='{schema}')")
+            raise RuntimeError(f"Attempt to insert into null table (schema='{schema}')")
 
         uses_serial = schema.get("use_serial", True)
         uses_timestamp = schema.get("use_timestamp", False)
@@ -466,7 +513,7 @@ class Datastore:
         uses_stepping = schema.get("use_stepping", False)
 
         if uses_version:
-            payload = payload | {"version": self._version_id}
+            payload = payload | {"version": self._version.store_id}
         if uses_timestamp:
             payload = payload | {"timestamp": datetime.now()}
         if uses_stepping:
@@ -489,8 +536,6 @@ class Datastore:
 
     def object_validate(self, objects):
         with WallclockTimer() as timer:
-            self._ensure_engine()
-
             if isinstance(objects, list) or isinstance(objects, tuple):
                 payload_data = objects
                 scalar = False

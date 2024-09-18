@@ -29,11 +29,6 @@ default_timeout = 60
 
 parser = argparse.ArgumentParser()
 parser.add_argument(
-    "--create-database",
-    default=None,
-    help="create a database cache in the specified file",
-)
-parser.add_argument(
     "--database",
     default=None,
     help="read/write work items using the specified database cache",
@@ -64,7 +59,7 @@ parser.add_argument(
 )
 args = parser.parse_args()
 
-if args.create_database is None and args.database is None:
+if args.database is None:
     parser.print_help()
     sys.exit()
 
@@ -75,14 +70,9 @@ ray.init(address=args.ray_address)
 # ourselves and the dataabase.
 # For performance reasons, we want all database activity to run on this node.
 # For one thing, this lets us use transactions efficiently.
-store: Datastore = Datastore.remote("2024.1.1")
-
-if args.create_database is not None:
-    ray.get(
-        store.create_datastore.remote(args.create_database, timeout=args.db_timeout)
-    )
-else:
-    ray.get(store.open_datastore.remote(args.database, timeout=args.db_timeout))
+store: Datastore = Datastore.remote(
+    version_label="2024.1.1", db_name=args.database, timeout=args.db_timeout
+)
 
 # set up LambdaCDM object representing a basic Planck2018 cosmology in Mpc units
 units = Mpc_units()
