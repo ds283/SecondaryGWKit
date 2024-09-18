@@ -136,7 +136,7 @@ class Datastore:
 
         self._build_storage_schema()
 
-    def create_datastore(self, db_name: PathType, timeout=None):
+    def create_datastore(self, db_name: PathType, timeout=None) -> None:
         """
         Create and initialize an empty data container. Assumes the container not to be physically present at the specified path
         and will fail with an error if it is
@@ -154,6 +154,12 @@ class Datastore:
 
         # generate tables defined by any registered storable classes
         self._create_storage_tables()
+
+    def open_datastore(self, db_name: str, timeout=None) -> None:
+        self._ensure_no_engine()
+        self._create_engine(db_name, expect_exists=True, timeout=timeout)
+
+        self._version_serial = self._make_version_serial()
 
     def _make_version_serial(self):
         """
@@ -201,12 +207,6 @@ class Datastore:
     def _ensure_no_engine(self):
         if self._engine is not None:
             raise RuntimeError(f"A storage engine has already been initialized")
-
-    def open_datastore(self, db_name: str, timeout=None) -> None:
-        self._ensure_no_engine()
-        self._create_engine(db_name, expect_exists=True, timeout=timeout)
-
-        self._version_serial = self._make_version_serial()
 
     def register_factories(self, factories: _FactoryMappingType):
         """
