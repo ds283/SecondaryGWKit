@@ -227,7 +227,8 @@ def create_Tk_work(k_exit: wavenumber_exit_time):
 def create_Tk_work_label(Tk: MatterTransferFunctionIntegration):
     return f"{args.job_name}-Tk-k{Tk.k.k_inv_Mpc:.3g}-{datetime.now().replace(microsecond=0).isoformat()}"
 
-def validate_Tk_exit_work(Tk: MatterTransferFunctionIntegration):
+
+def validate_Tk_work(Tk: MatterTransferFunctionIntegration):
     return store.object_validate.remote(Tk)
 
 
@@ -235,7 +236,7 @@ Tk_queue = RayWorkQueue(
     store,
     k_exit_times,
     create_Tk_work,
-    validation_maker=validate_Tk_exit_work,
+    validation_maker=validate_Tk_work,
     label_maker=create_Tk_work_label,
     title="CALCULATE MATTER TRANSFER FUNCTIONS",
     store_results=True,
@@ -285,10 +286,15 @@ def create_Gk_exit_work_label(Gk: TensorGreenFunctionIntegration):
     return f"{args.job_name}-Gk-k{Gk.k.k_inv_Mpc:.3g}-sourcez{Gk.z_source.z:.5g}-{datetime.now().replace(microsecond=0).isoformat()}"
 
 
+def validate_Gk_work(Gk: TensorGreenFunctionIntegration):
+    return store.object_validate.remote(Gk)
+
+
 Gk_queue = RayWorkQueue(
     store,
     k_exit_times,
     create_Gk_work,
+    validation_maker=validate_Gk_work,
     label_maker=create_Gk_exit_work_label,
     title="CALCULATE TENSOR GREEN FUNCTIONS",
     notify_batch_size=1000,

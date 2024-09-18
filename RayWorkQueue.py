@@ -157,6 +157,12 @@ class RayWorkQueue:
                         # Later, it will be mutated in-place by the compute/store tasks
                         self.results[payload] = obj
 
+                    # remove the original 'lookup' task from the work queue
+                    self._inflight.pop(ref.hex, None)
+                    self._data.pop(ref.hex, None)
+
+                    self._num_lookup_queue = max(self._num_lookup_queue - 1, 0)
+
                     if obj.available:
                         # nothing to do, object is already constructed
                         continue
@@ -172,12 +178,7 @@ class RayWorkQueue:
                     self._inflight[compute_task.hex] = compute_task
                     self._data[compute_task.hex] = ("compute", (payload, obj))
 
-                    # remove the original 'lookup' task from the work queue
-                    self._inflight.pop(ref.hex, None)
-                    self._data.pop(ref.hex, None)
-
                     self._num_compute_queue += 1
-                    self._num_lookup_queue = max(self._num_lookup_queue - 1, 0)
 
                 elif type == "compute":
                     # payload contains an index into the result set and (our local copy of) the object that has finished computation;
@@ -209,17 +210,24 @@ class RayWorkQueue:
 
                     # replacement object should now satisfy the available attribute
                     if not replacement_obj.available:
-                        raise RuntimeError("Object returned from store service does not satisfy the available property")
+                        raise RuntimeError(
+                            "Object returned from store service does not satisfy the available property"
+                        )
 
                     if self._store_results:
                         self.results[idx] = replacement_obj
 
                     # determine whether this work queue has a validation step
                     if self._validation_maker is not None:
-                        validation_task: ObjectRef = self._validation_maker(replacement_obj)
+                        validation_task: ObjectRef = self._validation_maker(
+                            replacement_obj
+                        )
 
                         self._inflight[validation_task.hex] = validation_task
-                        self._data[validation_task.hex] = ("validate", (idx, replacement_obj))
+                        self._data[validation_task.hex] = (
+                            "validate",
+                            (idx, replacement_obj),
+                        )
 
                         self._num_validation_queue += 1
 
@@ -237,7 +245,9 @@ class RayWorkQueue:
 
                     result = ray.get(ref)
                     if result is not True:
-                        print(f'!! WARNING: {type(obj)} object with store_id={obj.store_id} did not validate after being emplaced in the datastore')
+                        print(
+                            f"!! WARNING: {type(obj)} object with store_id={obj.store_id} did not validate after being emplaced in the datastore"
+                        )
 
                     self._inflight.pop(ref.hex, None)
                     self._data.pop(ref.hex, None)

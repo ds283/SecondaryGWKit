@@ -161,7 +161,9 @@ class sqla_MatterTransferFunctionIntegration_factory(SQLAFactoryBase):
 
         # we treat z_sample as a target rather than a selection criterion
         # later, the actual set of z_sample stored with this integration is read in
-        # and us9ed to populate the z_sample field of the constructed object
+        # and used to populate the z_sample field of the constructed object
+
+        # note that we query only for validated data
         query = (
             sqla.select(
                 table.c.serial,
@@ -169,6 +171,7 @@ class sqla_MatterTransferFunctionIntegration_factory(SQLAFactoryBase):
                 table.c.compute_steps,
                 table.c.solver_serial,
                 table.c.label,
+                table.c.z_samples,
                 solver_table.c.label.label("solver_label"),
                 solver_table.c.stepping.label("solver_stepping"),
             )
@@ -178,6 +181,7 @@ class sqla_MatterTransferFunctionIntegration_factory(SQLAFactoryBase):
                 .join(rtol_table, rtol_table.c.serial == table.c.rtol_serial)
             )
             .filter(
+                table.c.validated == True,
                 table.c.wavenumber_serial == k.store_id,
                 table.c.cosmology_type == cosmology.type_id,
                 table.c.cosmology_serial == cosmology.store_id,
@@ -223,6 +227,7 @@ class sqla_MatterTransferFunctionIntegration_factory(SQLAFactoryBase):
         compute_steps = row_data.compute_steps
         solver_label = row_data.solver_label
         solver_stepping = row_data.solver_stepping
+        num_expected_samples = row_data.z_samples
 
         solver = IntegrationSolver(
             store_id=row_data.solver_serial,
@@ -263,6 +268,10 @@ class sqla_MatterTransferFunctionIntegration_factory(SQLAFactoryBase):
             )
 
         z_sample = redshift_array(z_sample)
+        if len(z_sample) != num_expected_samples:
+            raise RuntimeError(
+                f'Fewer z-samples than expected were recovered from the validated transfer function "{store_label}"'
+            )
 
         return MatterTransferFunctionIntegration(
             payload={
@@ -359,36 +368,34 @@ class sqla_MatterTransferFunctionIntegration_factory(SQLAFactoryBase):
 
     @staticmethod
     def validate(
-            obj: MatterTransferFunctionIntegration,
-            conn,
-            table,
-            tables,
+        obj: MatterTransferFunctionIntegration,
+        conn,
+        table,
+        tables,
     ):
         # query the row in MatterTransferFunctionIntegration corresponding to this object
         if not obj.available:
-            raise RuntimeError("Attempt to validate a datastore object that has not yet been serialized")
+            raise RuntimeError(
+                "Attempt to validate a datastore object that has not yet been serialized"
+            )
 
         expected_samples = conn.execute(
-            sqla.select(
-                table.c.z_samples
-            )
-            .filter(
-                table.c.serial == obj.store_id
-            )
+            sqla.select(table.c.z_samples).filter(table.c.serial == obj.store_id)
         ).scalar()
 
         value_table = tables["MatterTransferFunctionValue"]
         num_samples = conn.execute(
-            sqla.select(
-                sqla.func.count(value_table.c.serial)
-            )
-            .filter(
+            sqla.select(sqla.func.count(value_table.c.serial)).filter(
                 value_table.c.integration_serial == obj.store_id
             )
         ).scalar()
 
         # check if we counted as many rows as we expected
-        validated: bool = (num_samples == expected_samples)
+        validated: bool = num_samples == expected_samples
+        if not validated:
+            print(
+                f'!! WARNING: matter transfer function "{obj.label}" did not validate after serialization'
+            )
 
         conn.execute(
             sqla.update(table)

@@ -1,5 +1,6 @@
 import time
 from math import log
+from traceback import print_tb
 from typing import Mapping
 
 import ray
@@ -19,10 +20,9 @@ class WallclockTimer:
         self.end_time = time.perf_counter()
         self.elapsed = self.end_time - self.start_time
 
-        if type:
-            return None
-
-        return True
+        if type is not None:
+            print(f"type={type}, value={value}")
+            print_tb(traceback)
 
 
 def check_units(A, B):
