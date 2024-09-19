@@ -152,7 +152,7 @@ def compute_tensor_Green(
             )
 
     return {
-        "compute_time": supervisor.elapsed,
+        "compute_time": supervisor.integration_time,
         "compute_steps": int(sol.nfev),
         "RHS_evaluations": supervisor.RHS_evaluations,
         "mean_RHS_time": supervisor.mean_RHS_time,
