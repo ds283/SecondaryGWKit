@@ -70,6 +70,11 @@ class RayWorkQueue:
         self._pool = pool
 
         self._todo = [x for x in task_list]
+
+        # we will pop items from the end of the list, so we need to reverse it to get the items
+        # in the right order
+        self._todo.reverse()
+
         self._num_total_items = len(task_list)
         self._task_maker = task_maker
         self._label_maker = label_maker
@@ -114,6 +119,7 @@ class RayWorkQueue:
                 while count < self._create_batch_size and len(self._todo) > 0:
                     # consume more tasks from the task queue and schedule their work
 
+                    # pop gets the item from the end of the list
                     item = self._todo.pop()
                     ref_data = self._task_maker(item)
 
