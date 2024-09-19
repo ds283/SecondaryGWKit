@@ -134,6 +134,11 @@ class MatterTransferFunctionIntegration(DatastoreObject):
     ):
         check_units(k.k, cosmology)
 
+        if z_init.z < 10.0 * k.z_exit:
+            raise RuntimeError(
+                f"Initial time z_init={z_init.z:.5g} is not sufficiently before horizon exit for k={k.k.k_inv_Mpc:.5g}/Mpc (z_exit={k.z_exit:.5g})"
+            )
+
         if payload is None:
             DatastoreObject.__init__(self, None)
             self._compute_time = None
@@ -234,10 +239,10 @@ class MatterTransferFunctionIntegration(DatastoreObject):
         if label is not None:
             self._label = label
 
-        print("@@ BEGINNING T(k) COMPUTATION")
-        print(
-            f"     k = {self.k.k_inv_Mpc}/Mpc, z_init = {self.z_init.z}, z_sample(max) = {self.z_sample.max.z}, z_sample(min) = {self.z_sample.min.z}"
-        )
+        # print("@@ BEGINNING T(k) COMPUTATION")
+        # print(
+        #     f"     k = {self.k.k_inv_Mpc}/Mpc, z_exit = {self.z_exit}, z_init = {self.z_init.z}, z_sample(max) = {self.z_sample.max.z}, z_sample(min) = {self.z_sample.min.z}"
+        # )
 
         self._compute_ref = compute_matter_Tk.remote(
             self.cosmology,
