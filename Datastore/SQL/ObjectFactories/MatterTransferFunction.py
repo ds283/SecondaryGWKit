@@ -135,6 +135,10 @@ class sqla_MatterTransferFunctionIntegration_factory(SQLAFactoryBase):
                 ),
                 sqla.Column("compute_time", sqla.Float(64)),
                 sqla.Column("compute_steps", sqla.Integer),
+                sqla.Column("RHS_evaluations", sqla.Integer),
+                sqla.Column("mean_RHS_time", sqla.Float(64)),
+                sqla.Column("max_RHS_time", sqla.Float(64)),
+                sqla.Column("min_RHS_time", sqla.Float(64)),
                 sqla.Column("validated", sqla.Boolean, default=False, nullable=False),
             ],
         }
@@ -171,6 +175,10 @@ class sqla_MatterTransferFunctionIntegration_factory(SQLAFactoryBase):
                 table.c.serial,
                 table.c.compute_time,
                 table.c.compute_steps,
+                table.c.RHS_evaluations,
+                table.c.mean_RHS_time,
+                table.c.max_RHS_time,
+                table.c.min_RHS_time,
                 table.c.solver_serial,
                 table.c.label,
                 table.c.z_samples,
@@ -226,8 +234,14 @@ class sqla_MatterTransferFunctionIntegration_factory(SQLAFactoryBase):
 
         store_id = row_data.serial
         store_label = row_data.label
+
         compute_time = row_data.compute_time
         compute_steps = row_data.compute_steps
+        RHS_evaluations = row_data.RHS_evaluations
+        mean_RHS_time = row_data.mean_RHS_time
+        max_RHS_time = row_data.max_RHS_time
+        min_RHS_time = row_data.min_RHS_time
+
         solver_label = row_data.solver_label
         solver_stepping = row_data.solver_stepping
         num_expected_samples = row_data.z_samples
@@ -281,6 +295,10 @@ class sqla_MatterTransferFunctionIntegration_factory(SQLAFactoryBase):
                 "store_id": store_id,
                 "compute_time": compute_time,
                 "compute_steps": compute_steps,
+                "RHS_evaluations": RHS_evaluations,
+                "mean_RHS_time": mean_RHS_time,
+                "max_RHS_time": max_RHS_time,
+                "min_RHS_time": min_RHS_time,
                 "solver": solver,
                 "values": values,
             },
@@ -320,6 +338,10 @@ class sqla_MatterTransferFunctionIntegration_factory(SQLAFactoryBase):
                 "z_samples": len(obj.z_sample),
                 "compute_time": obj.compute_time,
                 "compute_steps": obj.compute_steps,
+                "RHS_evaluations": obj.RHS_evaluations,
+                "mean_RHS_time": obj.mean_RHS_time,
+                "max_RHS_time": obj.max_RHS_time,
+                "min_RHS_time": obj.min_RHS_time,
                 "validated": False,
             },
         )

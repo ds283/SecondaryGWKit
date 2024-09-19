@@ -9,8 +9,49 @@ from CosmologyModels import BaseCosmology
 from Datastore import DatastoreObject
 from MetadataConcepts import tolerance, store_tag
 from defaults import DEFAULT_ABS_TOLERANCE, DEFAULT_REL_TOLERANCE
-from utilities import check_units, WallclockTimer
+from utilities import check_units, WallclockTimer, format_time
 from .integration_metadata import IntegrationSolver
+from .integration_supervisor import IntegrationSupervisor, DEFAULT_UPDATE_INTERVAL, RHS_timer
+
+
+class TensorGreenFunctionSupervisor(IntegrationSupervisor):
+    def __init__(self, k: wavenumber, z_source: redshift, z_final: redshift, notify_interval: int= DEFAULT_UPDATE_INTERVAL):
+        super().__init__(notify_interval)
+
+        self._k: wavenumber = k
+        self._z_source: float = z_source.z
+        self._z_final: float = z_final.z
+
+        self._z_range: float = self._z_source - self._z_final
+
+        self._last_z: float = self._z_source
+
+    def __enter__(self):
+        super().__enter__()
+        return self
+
+    def __exit__(self, exc_type, exc_val, exc_tb):
+        super().__exit__(exc_type, exc_val, exc_tb)
+
+    def message(self, current_z, msg):
+        current_time = time.time()
+        since_last_notify = current_time - self._last_notify
+        since_start = current_time - self._start_time
+
+        update_number = self.report_notify()
+
+        z_complete = self._z_init - current_z
+        z_remain = self._z_range - z_complete
+        percent_remain = 100.0 * (z_remain / self._z_range)
+        print(f"** STATUS UPDATE #{update_number}: Integration for Gr(k) for k = {self._k.k_inv_Mpc:.5g}/Mpc (store_id={self._k.store_id}) has been running for {format_time(since_start)} ({format_time(since_last_notify)} since last notification)")
+        print(f"|    current z={current_z:.5g} (source z={self._z_source:.5g}, target z={self._z_final:.5g}, z complete={z_complete:.5g}, z remain={z_remain:.5g}, {percent_remain:.3g}% remains)")
+        if self._last_z is not None:
+            z_delta = self._last_z - current_z
+            print(f"|    redshift advance since last update: Delta z = {z_delta:.5g}")
+        print(f"|    {self.RHS_evaluations} RHS evaluations, mean {self.mean_RHS_time:.5g}s per evaluation, min RHS time = {self.min_RHS_time:.5g}s, max RHS time = {self.max_RHS_time:.5g}s")
+        print(f"|    {msg}")
+
+        self._last_z = current_z
 
 
 @ray.remote
@@ -29,38 +70,45 @@ def compute_tensor_Green(
     k_float = k.k
     z_min = float(z_sample.min)
 
+    Hsource = cosmology.Hubble(z_source.z)
+
     # RHS of ODE system
     #
     # State layout:
     #   state[0] = energy density rho(z)
     #   state[0] = G_k(z, z')
     #   state[1] = Gprime_k(z, z')
-    def RHS(z, state) -> float:
+    def RHS(z, state, supervisor) -> float:
         """
         k *must* be measured using the same units used for H(z) in the cosmology
         """
-        rho, G, Gprime = state
+        with RHS_timer(supervisor):
+            rho, G, Gprime = state
 
-        H = cosmology.Hubble(z)
-        w = cosmology.wBackground(z)
-        eps = cosmology.epsilon(z)
+            if supervisor.notify_available:
+                supervisor.message(z, f"current state: rho = {rho:.5g}, Gr(k) = {G:.5g}, dGr(k)/dz = {Gprime:.5g}")
+                supervisor.reset_notify_time()
 
-        one_plus_z = 1.0 + z
-        one_plus_z_2 = one_plus_z * one_plus_z
+            H = cosmology.Hubble(z)
+            w = cosmology.wBackground(z)
+            eps = cosmology.epsilon(z)
 
-        drho_dz = 3.0 * ((1.0 + w) / one_plus_z) * rho
-        dG_dz = Gprime
+            one_plus_z = 1.0 + z
+            one_plus_z_2 = one_plus_z * one_plus_z
 
-        k_over_H = k_float / H
-        k_over_H_2 = k_over_H * k_over_H
+            drho_dz = 3.0 * ((1.0 + w) / one_plus_z) * rho
+            dG_dz = Gprime
 
-        dGprime_dz = (
-            -(eps / one_plus_z) * Gprime - (k_over_H_2 + (eps - 2.0) / one_plus_z_2) * G
-        )
+            k_over_H = k_float / H
+            k_over_H_2 = k_over_H * k_over_H
+
+            dGprime_dz = (
+                -(eps / one_plus_z) * Gprime - (k_over_H_2 + (eps - 2.0) / one_plus_z_2) * G
+            )
 
         return [drho_dz, dG_dz, dGprime_dz]
 
-    with WallclockTimer() as timer:
+    with TensorGreenFunctionSupervisor(k, z_source, z_sample.min) as supervisor:
         # initial conditions should be
         #   G(z', z') = 0
         #   Gprime(z' z') = -1/(a0 H(z'))
@@ -69,12 +117,13 @@ def compute_tensor_Green(
         initial_state = [cosmology.rho(z_source.z), 0.0, 1.0]
         sol = solve_ivp(
             RHS,
-            method="RK45",
+            method="Radau",
             t_span=(z_source.z, z_min),
             y0=initial_state,
             t_eval=z_sample.as_list(),
             atol=atol,
             rtol=rtol,
+            args=(supervisor,)
         )
 
     # test whether the integration concluded successfully
@@ -85,7 +134,7 @@ def compute_tensor_Green(
 
     sampled_z = sol.t
     sampled_values = sol.y
-    sampled_G = sampled_values[1]
+    sampled_G = sampled_values[1] / Hsource
 
     expected_values = len(z_sample)
     returned_values = sampled_z.size
@@ -103,10 +152,14 @@ def compute_tensor_Green(
             )
 
     return {
-        "compute_time": timer.elapsed,
+        "compute_time": supervisor.elapsed,
         "compute_steps": int(sol.nfev),
+        "RHS_evaluations": supervisor.RHS_evaluations,
+        "mean_RHS_time": supervisor.mean_RHS_time,
+        "max_RHS_time": supervisor.max_RHS_time,
+        "min_RHS_time": supervisor.min_RHS_time,
         "values": sampled_G,
-        "solver_label": "solve_ivp+DOP853-stepping0",
+        "solver_label": "solve_ivp+Radau-stepping0",
     }
 
 
@@ -141,6 +194,11 @@ class TensorGreenFunctionIntegration(DatastoreObject):
             DatastoreObject.__init__(self, None)
             self._compute_time = None
             self._compute_steps = None
+            self._RHS_evaluations = None
+            self._mean_RHS_time = None
+            self._max_RHS_time = None
+            self._min_RHS_time = None
+
             self._solver = None
 
             self._z_sample = z_sample
@@ -149,6 +207,11 @@ class TensorGreenFunctionIntegration(DatastoreObject):
             DatastoreObject.__init__(self, payload["store_id"])
             self._compute_time = payload["compute_time"]
             self._compute_steps = payload["compute_steps"]
+            self._RHS_evaluations = payload["RHS_evaluations"]
+            self._mean_RHS_time = payload["mean_RHS_time"]
+            self._max_RHS_time = payload["max_RHS_time"]
+            self._min_RHS_time = payload["min_RHS_time"]
+
             self._solver = payload["solver"]
 
             self._z_sample = z_sample
@@ -218,6 +281,30 @@ class TensorGreenFunctionIntegration(DatastoreObject):
         return self._compute_steps
 
     @property
+    def mean_RHS_time(self) -> int:
+        if self._mean_RHS_time is None:
+            raise RuntimeError("mean_RHS_time has not yet been populated")
+        return self._mean_RHS_time
+
+    @property
+    def max_RHS_time(self) -> int:
+        if self._max_RHS_time is None:
+            raise RuntimeError("max_RHS_time has not yet been populated")
+        return self._max_RHS_time
+
+    @property
+    def min_RHS_time(self) -> int:
+        if self._min_RHS_time is None:
+            raise RuntimeError("min_RHS_time has not yet been populated")
+        return self._min_RHS_time
+
+    @property
+    def RHS_evaluations(self) -> int:
+        if self._RHS_evaluations is None:
+            raise RuntimeError("RHS_evaluations has not yet been populated")
+        return self._RHS_evaluations
+
+    @property
     def solver(self) -> IntegrationSolver:
         if self._solver is None:
             raise RuntimeError("solver has not yet been populated")
@@ -266,6 +353,10 @@ class TensorGreenFunctionIntegration(DatastoreObject):
 
         self._compute_time = data["compute_time"]
         self._compute_steps = data["compute_steps"]
+        self._RHS_evaluations = data["RHS_evaluations"]
+        self._mean_RHS_time = data["mean_RHS_time"]
+        self._max_RHS_time = data["max_RHS_time"]
+        self._min_RHS_time = data["min_RHS_time"]
 
         values = data["values"]
         self._values = []

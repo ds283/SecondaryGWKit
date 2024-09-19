@@ -1,7 +1,6 @@
 from math import fabs
 from typing import Optional, List
 import time
-from traceback import print_tb
 
 import ray
 from scipy.integrate import solve_ivp
@@ -11,82 +10,13 @@ from CosmologyModels import BaseCosmology
 from Datastore import DatastoreObject
 from MetadataConcepts import tolerance, store_tag
 from defaults import DEFAULT_ABS_TOLERANCE, DEFAULT_REL_TOLERANCE
-from utilities import check_units, WallclockTimer, format_time
+from utilities import check_units, format_time
 from .integration_metadata import IntegrationSolver
-
-
-DEFAULT_UPDATE_INTERVAL = 1*60
-
-
-class IntegrationSupervisor:
-    def __init__(self, notify_interval: int=DEFAULT_UPDATE_INTERVAL):
-        self._notify_interval: int = notify_interval
-
-        self._RHS_time: float = 0
-        self._RHS_evaluations: int = 0
-
-        self._min_RHS_time: float = None
-        self._max_RHS_time: float = None
-
-        self._num_notifications = 0
-
-    def __enter__(self):
-        self._start_time = time.time()
-        self._last_notify = self._start_time
-
-        self._integration_start = time.perf_counter()
-
-    def __exit__(self, exc_type, exc_val, exc_tb):
-        self._integration_end = time.perf_counter()
-        self.integration_time = self._integration_end - self._integration_start
-
-        if exc_type is not None:
-            print(f"type={exc_type}, value={exc_val}")
-            print_tb(exc_tb)
-
-    @property
-    def notify_available(self) -> bool:
-        return time.time() - self._last_notify > self._notify_interval
-
-    def report_notify(self) -> int:
-        self._num_notifications += 1
-        return self._num_notifications
-
-    def reset_notify_time(self):
-        self._last_notify = time.time()
-
-    def notify_new_RHS_time(self, RHS_time):
-        self._RHS_time = self._RHS_time + RHS_time
-        self._RHS_evaluations += 1
-
-        if self._min_RHS_time is None or RHS_time < self._min_RHS_time:
-            self._min_RHS_time = RHS_time
-
-        if self._max_RHS_time is None or RHS_time > self._max_RHS_time:
-            self._max_RHS_time = RHS_time
-
-    @property
-    def mean_RHS_time(self) -> float:
-        if self._RHS_evaluations == 0:
-            return None
-
-        return self._RHS_time/self._RHS_evaluations
-
-    @property
-    def min_RHS_time(self) -> float:
-        return self._min_RHS_time
-
-    @property
-    def max_RHS_time(self) -> float:
-        return self._max_RHS_time
-
-    @property
-    def RHS_evaluations(self) -> int:
-        return self._RHS_evaluations
+from .integration_supervisor import DEFAULT_UPDATE_INTERVAL, IntegrationSupervisor, RHS_timer
 
 
 class MatterTransferFunctionSupervisor(IntegrationSupervisor):
-    def __init__(self, k: wavenumber, z_init: redshift, z_final: redshift, notify_interval: int=DEFAULT_UPDATE_INTERVAL):
+    def __init__(self, k: wavenumber, z_init: redshift, z_final: redshift, notify_interval: int= DEFAULT_UPDATE_INTERVAL):
         super().__init__(notify_interval)
 
         self._k: wavenumber = k
@@ -124,24 +54,6 @@ class MatterTransferFunctionSupervisor(IntegrationSupervisor):
 
         self._last_z = current_z
 
-class _RHS_timer:
-    def __init__(self, supervisor: IntegrationSupervisor):
-        self._supervisor = supervisor
-
-    def __enter__(self):
-        self._start_time = time.perf_counter()
-        return self
-
-    def __exit__(self, exc_type, exc_val, exc_tb):
-        self._end_time = time.perf_counter()
-        self._elapsed = self._end_time - self._start_time
-
-        self._supervisor.notify_new_RHS_time(self._elapsed)
-
-        if exc_type is not None:
-            print(f"type={exc_type}, value={exc_val}")
-            print_tb(exc_tb)
-
 
 @ray.remote
 def compute_matter_Tk(
@@ -172,7 +84,7 @@ def compute_matter_Tk(
         """
         k *must* be measured using the same units used for H(z) in the cosmology
         """
-        with _RHS_timer(supervisor):
+        with RHS_timer(supervisor):
             rho, T, Tprime = state
 
             if supervisor.notify_available:
@@ -206,7 +118,7 @@ def compute_matter_Tk(
         initial_state = [cosmology.rho(z_init.z), 1.0, 0.0]
         sol = solve_ivp(
             RHS,
-            method="DOP853",
+            method="Radau",
             t_span=(z_init.z, z_min),
             y0=initial_state,
             t_eval=z_sample.as_list(),
@@ -248,7 +160,7 @@ def compute_matter_Tk(
         "max_RHS_time": supervisor.max_RHS_time,
         "min_RHS_time": supervisor.min_RHS_time,
         "values": sampled_T,
-        "solver_label": "solve_ivp+DOP853-stepping0",
+        "solver_label": "solve_ivp+Radau-stepping0",
     }
 
 
@@ -284,6 +196,11 @@ class MatterTransferFunctionIntegration(DatastoreObject):
             DatastoreObject.__init__(self, None)
             self._compute_time = None
             self._compute_steps = None
+            self._RHS_evaluations = None
+            self._mean_RHS_time = None
+            self._max_RHS_time = None
+            self._min_RHS_time = None
+
             self._solver = None
 
             self._z_sample = z_sample
@@ -292,6 +209,11 @@ class MatterTransferFunctionIntegration(DatastoreObject):
             DatastoreObject.__init__(self, payload["store_id"])
             self._compute_time = payload["compute_time"]
             self._compute_steps = payload["compute_steps"]
+            self._RHS_evaluations = payload["RHS_evaluations"]
+            self._mean_RHS_time = payload["mean_RHS_time"]
+            self._max_RHS_time = payload["max_RHS_time"]
+            self._min_RHS_time = payload["min_RHS_time"]
+
             self._solver = payload["solver"]
 
             self._z_sample = z_sample
@@ -361,6 +283,30 @@ class MatterTransferFunctionIntegration(DatastoreObject):
         return self._compute_steps
 
     @property
+    def mean_RHS_time(self) -> int:
+        if self._mean_RHS_time is None:
+            raise RuntimeError("mean_RHS_time has not yet been populated")
+        return self._mean_RHS_time
+
+    @property
+    def max_RHS_time(self) -> int:
+        if self._max_RHS_time is None:
+            raise RuntimeError("max_RHS_time has not yet been populated")
+        return self._max_RHS_time
+
+    @property
+    def min_RHS_time(self) -> int:
+        if self._min_RHS_time is None:
+            raise RuntimeError("min_RHS_time has not yet been populated")
+        return self._min_RHS_time
+
+    @property
+    def RHS_evaluations(self) -> int:
+        if self._RHS_evaluations is None:
+            raise RuntimeError("RHS_evaluations has not yet been populated")
+        return self._RHS_evaluations
+
+    @property
     def solver(self) -> IntegrationSolver:
         if self._solver is None:
             raise RuntimeError("solver has not yet been populated")
@@ -414,6 +360,10 @@ class MatterTransferFunctionIntegration(DatastoreObject):
 
         self._compute_time = data["compute_time"]
         self._compute_steps = data["compute_steps"]
+        self._RHS_evaluations = data["RHS_evaluations"]
+        self._mean_RHS_time = data["mean_RHS_time"]
+        self._max_RHS_time = data["max_RHS_time"]
+        self._min_RHS_time = data["min_RHS_time"]
 
         values = data["values"]
         self._values = []
