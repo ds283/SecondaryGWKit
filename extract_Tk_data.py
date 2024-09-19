@@ -221,8 +221,11 @@ metadata_path = base_path / "metadata"
 time_series_data = dataset.dataset(
     time_series_path, format="csv", schema=time_series_schema
 )
+time_series_sorted = time_series_data.sort_by(
+    [("k_inv_Mpc", "ascending"), ("z", "descending")]
+)
 dataset.write_dataset(
-    time_series_data,
+    time_series_sorted,
     base_dir=base_path,
     basename_template="time-series-{i}.csv",
     format="csv",
