@@ -22,7 +22,7 @@ class IntegrationSupervisor:
     def __init__(self, notify_interval: int=DEFAULT_UPDATE_INTERVAL):
         self._notify_interval: int = notify_interval
 
-        self._RHS_times: float = 0
+        self._RHS_time: float = 0
         self._RHS_evaluations: int = 0
 
         self._min_RHS_time: float = None
@@ -56,7 +56,7 @@ class IntegrationSupervisor:
         self._last_notify = time.time()
 
     def notify_new_RHS_time(self, RHS_time):
-        self._RHS_time = self._RHS_times + RHS_time
+        self._RHS_time = self._RHS_time + RHS_time
         self._RHS_evaluations += 1
 
         if self._min_RHS_time is None or RHS_time < self._min_RHS_time:
@@ -70,7 +70,7 @@ class IntegrationSupervisor:
         if self._RHS_evaluations == 0:
             return None
 
-        return self._RHS_times/self._RHS_evaluations
+        return self._RHS_time/self._RHS_evaluations
 
     @property
     def min_RHS_time(self) -> float:
@@ -115,7 +115,7 @@ class MatterTransferFunctionSupervisor(IntegrationSupervisor):
         z_remain = self._z_range - z_complete
         percent_remain = 100.0 * (z_remain / self._z_range)
         print(f"** STATUS UPDATE #{update_number}: Integration for T(k) for k = {self._k.k_inv_Mpc:.5g}/Mpc (store_id={self._k.store_id}) has been running for {format_time(since_start)} ({format_time(since_last_notify)} since last notification)")
-        print(f"|    current z={current_z:.5g} (initial z={self._z_init:.5g}, target z={self._z_final:.5g}, z complete={z_complete:.5g}, z remain={z_remain:.5g}, {percent_remain:.2f}% remains)")
+        print(f"|    current z={current_z:.5g} (initial z={self._z_init:.5g}, target z={self._z_final:.5g}, z complete={z_complete:.5g}, z remain={z_remain:.5g}, {percent_remain:.3g}% remains)")
         if self._last_z is not None:
             z_delta = self._last_z - current_z
             print(f"|    redshift advance since last update: Delta z = {z_delta:.5g}")
