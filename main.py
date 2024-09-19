@@ -112,7 +112,7 @@ atol, rtol = ray.get(
 # build array of k-sample points
 print("\n** BUILDING ARRAY OF WAVENUMBERS AT WHICH TO SAMPLE")
 k_array = ray.get(
-    convert_to_wavenumbers(np.logspace(np.log10(0.001), np.log10(1.0), 500))
+    convert_to_wavenumbers(np.logspace(np.log10(0.1), np.log10(5e7), 500))
 )
 k_sample = wavenumber_array(k_array=k_array)
 
@@ -143,10 +143,14 @@ k_exit_times = k_exit_queue.results
 ## BUILD A UNIVERSAL GRID OF Z-VALUES AT WHICH TO SAMPLE
 print("\n** BUILDING ARRAY OF Z-VALUES AT WHICH TO SAMPLE")
 k_exit_earliest: wavenumber_exit_time = k_exit_times[-1]
+print(
+    f"     >> earliest horizon exit time is {k_exit_earliest.k.k_inv_Mpc:.5g}/Mpc with z_exit={k_exit_earliest.z_exit:.5g}"
+)
+
 
 # build a log-spaced universal grid of wavenumbers
 LATEST_Z = 0.1
-OUTSIDE_HORIZON_EFOLDS = 10.0
+OUTSIDE_HORIZON_EFOLDS = 3.5
 SAMPLES_PER_LOG10_Z = 150
 
 universal_z_grid = k_exit_earliest.populate_z_sample(
@@ -190,7 +194,7 @@ def create_Tk_work(k_exit: wavenumber_exit_time):
     my_sample = z_sample.truncate(exp(OUTSIDE_HORIZON_EFOLDS) * k_exit.z_exit)
     return pool.object_get(
         MatterTransferFunctionIntegration,
-        k=k_exit.k,
+        k=k_exit,
         cosmology=LambdaCDM_Planck2018,
         atol=atol,
         rtol=rtol,
@@ -245,7 +249,7 @@ def create_Gk_work(k_exit: wavenumber_exit_time):
             work_refs.append(
                 pool.object_get(
                     TensorGreenFunctionIntegration,
-                    k=k_exit.k,
+                    k=k_exit,
                     cosmology=LambdaCDM_Planck2018,
                     atol=atol,
                     rtol=rtol,
