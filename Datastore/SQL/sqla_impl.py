@@ -1,13 +1,15 @@
 import functools
+import random
 from datetime import datetime
 from os import PathLike
 from pathlib import Path
 from typing import Union, Mapping, Callable
 
+import ray
 import sqlalchemy as sqla
-from ray import remote
 from sqlalchemy.exc import IntegrityError
 
+from CosmologyConcepts import wavenumber
 from Datastore.SQL.ObjectFactories.LambdaCDM import sqla_LambdaCDM_factory
 from Datastore.SQL.ObjectFactories.MatterTransferFunction import (
     sqla_MatterTransferFunctionIntegration_factory,
@@ -58,6 +60,24 @@ _factories = {
     "TensorGreenFunctionValue": sqla_TensorGreenFunctionValue_factory,
 }
 
+_replicate_tables = [
+    "version",
+    "store_tag",
+    "redshift",
+    "wavenumber",
+    "tolerance",
+    "LambdaCDM",
+    "IntegrationSolver",
+]
+
+_shard_tables = {
+    "wavenumber_exit_time": "k",
+    "MatterTransferFunctionIntegration": "k",
+    "MatterTransferFunctionValue": "k",
+    "TensorGreenFunctionIntegration": "k",
+    "TensorGreenFunctionValue": "k",
+}
+
 _FactoryMappingType = Mapping[str, SQLAFactoryBase]
 _TableMappingType = Mapping[str, sqla.Table]
 _InserterMappingType = Mapping[str, Callable]
@@ -69,22 +89,23 @@ class ShardedPool:
     manage a sharded SQL database
     """
 
-    def __init__(self, version_id: str, db_name: PathType, timeout=None, shards=10):
+    def __init__(self, version_label: str, db_name: PathType, timeout=None, shards=10):
         """
         Initialize a pool of datastore actors
-        :param version_id:
+        :param version_label:
         """
-        self._version_id = version_id
+        self._version_label = version_label
 
         self._db_name = db_name
         self._timeout = timeout
-        self._shards = shards
+        self._shards = max(shards, 1)
 
         # resolve concerts the supplied db_name to an absolute path, resolving symlinks if necessary
         # this database file will be taken to be the primary database
         self._primary_file = Path(db_name).resolve()
 
         self._shard_db_files = {}
+        self._wavenumber_keys = {}
 
         # if primary file is absent, all shard databases should be likewise absent
         if self._primary_file.is_dir():
@@ -96,7 +117,7 @@ class ShardedPool:
             self._primary_file.parents[0].mkdir(exist_ok=True, parents=True)
 
             stem = self._primary_file.stem
-            for i in range(shards):
+            for i in range(self._shards):
                 shard_stem = f"{stem}-shard{i:04d}"
                 shard_file = self._primary_file.with_stem(shard_stem)
 
@@ -125,15 +146,41 @@ class ShardedPool:
                 f'>> Opened existing sharded datastore "{str(self._primary_file)}" with {num_shards} shards'
             )
 
+            if num_shards == 0:
+                raise RuntimeError(
+                    "No shard records were read from the sharded datastore"
+                )
             if num_shards != self._shards:
                 print(
                     f"!! WARNING: number of shards read from database (={num_shards}) does not match specified number of shards (={self._shards})"
                 )
 
         # create actor pool of datastores, one for each shard
+        # we read the version serial number from the first shard that we create
+        shard_ids = list(self._shard_db_files.keys())
+        shard0_key = shard_ids.pop()
+        shard0_file = self._shard_db_files[shard0_key]
+
+        # create the first shard datastore
+        shard0_store = Datastore.options(name=f"shard{shard0_key:04d}-store").remote(
+            version_label=version_label, db_name=shard0_file, timeout=self._timeout
+        )
+        self._shards = {shard0_key: shard0_store}
+
+        # get the version label from this store
+        self._version = ray.get(
+            shard0_store.object_get.remote(version, label=version_label)
+        )
+
+        # populate the remaining pool of shard stores
         self._shards = {
-            i: Datastore.remote(db_file, timeout=self._timeout)
-            for i, db_file in self._shard_db_files.items()
+            key: Datastore.options(name=f"shard{key:04d}-store").remote(
+                version_label=version_label,
+                version_serial=self._version.store_id,
+                db_name=self._shard_db_files[key],
+                timeout=self._timeout,
+            )
+            for key in shard_ids
         }
 
     def _create_engine(self):
@@ -148,23 +195,37 @@ class ShardedPool:
         )
         self._metadata = sqla.MetaData()
 
-        self._shard_table = sqla.Table(
+        self._shard_file_table = sqla.Table(
             "shards",
             self._metadata,
             sqla.Column("serial", sqla.Integer, primary_key=True, nullable=False),
             sqla.Column("filename", sqla.String(DEFAULT_STRING_LENGTH), nullable=False),
         )
+        self._shard_key_table = sqla.Table(
+            "shard_keys",
+            self._metadata,
+            sqla.Column(
+                "wavenumber_serial", sqla.Integer, primary_key=True, nullable=False
+            ),
+            sqla.Column(
+                "shard_id",
+                sqla.Integer,
+                sqla.ForeignKey("shards.serial"),
+                nullable=False,
+            ),
+        )
 
     def _write_shard_data(self):
-        self._shard_table.create(self._engine)
+        self._shard_file_table.create(self._engine)
+        self._shard_key_table.create(self._engine)
 
         with self._engine.begin() as conn:
             values = [
-                {"serial": i, "filename": str(db_name)}
-                for i, db_name in enumerate(self._shard_db_files)
+                {"serial": key, "filename": str(db_name)}
+                for key, db_name in self._shard_db_files.items()
             ]
 
-            conn.execute(sqla.dialects.sqlite.insert(self._shard_table), values)
+            conn.execute(sqla.dialects.sqlite.insert(self._shard_file_table), values)
 
             conn.commit()
 
@@ -172,8 +233,8 @@ class ShardedPool:
         with self._engine.begin() as conn:
             rows = conn.execute(
                 sqla.select(
-                    self._shard_table.c.serial,
-                    self._shard_table.c.filename,
+                    self._shard_file_table.c.serial,
+                    self._shard_file_table.c.filename,
                 )
             )
 
@@ -188,8 +249,220 @@ class ShardedPool:
 
                 self._shard_db_files[row.serial] = Path(row.filename)
 
+            keys = conn.execute(
+                sqla.select(
+                    self._shard_key_table.c.wavenumber_serial,
+                    self._shard_key_table.c.shard_id,
+                )
+            )
 
-@remote
+            for key in keys:
+                self._wavenumber_keys[key.wavenumber_serial] = key.shard_id
+
+    def object_get(self, ObjectClass, **kwargs):
+        if isinstance(ObjectClass, str):
+            cls_name = ObjectClass
+        else:
+            cls_name = ObjectClass.__name__
+
+        # pick a shard id at random to be the "controlling" shard
+        shard_ids = list(self._shards.keys())
+        i = random.randrange(len(shard_ids))
+
+        # swap this entry with the last element, then pop it
+        shard_ids[i], shard_ids[-1] = shard_ids[-1], shard_ids[i]
+        shard_key = shard_ids.pop()
+
+        if cls_name in _replicate_tables:
+            # for replicated tables, we should query/insert into *one* datastore, and then enforce
+            # that all other datastores get the same store_id
+            ref = self._shards[shard_key].object_get.remote(cls_name, **kwargs)
+            objects = ray.get(ref)
+
+            if "payload_data" in kwargs:
+                payload_data = kwargs["payload_data"]
+
+                if len(payload_data) != len(objects):
+                    raise RuntimeError(
+                        f"object_get() data returned from initial datastore (shared={shard_key}) has a different length (length={len(objects)}) to payload data (length={len(payload_data)})"
+                    )
+
+                # add explicit serial specifier
+                for i in range(len(payload_data)):
+                    payload_data[i]["serial"] = objects[i].store_id
+
+                # queue work items to replicate each object in all other shards
+                work_refs = [
+                    self._shards[key].object_get.remote(
+                        cls_name, payload_data=payload_data
+                    )
+                    for key in shard_ids
+                ]
+            else:
+                # this was a scalar get
+                work_refs = [
+                    self._shards[key].object_get.remote(
+                        cls_name, serial=objects.store_id, **kwargs
+                    )
+                    for key in shard_ids
+                ]
+
+            # test whether this query was for a shard key, and, if so, assign any shard keys
+            # that are missing
+            if cls_name == "wavenumber":
+                self._assign_shard_keys(objects)
+
+            # wait for insertions to complete
+            ray.get(work_refs)
+            return ref
+
+        if cls_name in _shard_tables.keys():
+            # for sharded tables, we should query/insert into only the appropriate shard
+            shard_key_field = _shard_tables[cls_name]
+
+            # determine which shard is the host for this item
+            if "payload_data" in kwargs:
+                payload_data = kwargs["payload_data"]
+
+                work_refs = []
+                for item in payload_data:
+                    k = item[shard_key_field]
+                    shard_id = self._wavenumber_keys[k.store_id]
+
+                    work_refs.append(
+                        self._shards[shard_id].object_get.remote(cls_name, **item)
+                    )
+                    return work_refs
+                # TODO: consider consolidating all objects for the same shard into a list, for efficiency
+            else:
+                k = kwargs[shard_key_field]
+                shard_id = self._wavenumber_keys[k.store_id]
+
+                return self._shards[shard_id].object_get.remote(cls_name, **kwargs)
+
+        raise RuntimeError(
+            f'Unable to dispatch object_get() for item of type "{cls_name}"'
+        )
+
+    def object_store(self, objects):
+        # we only expect to call object_store on sharded objects
+        if isinstance(objects, list) or isinstance(objects, tuple):
+            payload_data = objects
+            scalar = False
+        else:
+            payload_data = [objects]
+            scalar = True
+
+        work_refs = []
+        for item in payload_data:
+            cls_name = type(item).__name__
+
+            if cls_name not in _shard_tables.keys():
+                raise RuntimeError(
+                    f'Unable to dispatch object_store() for item of type "{cls_name}"'
+                )
+
+            if not hasattr(item, "k"):
+                raise RuntimeError(
+                    f'Unable to determine shard, because object of type "{cls_name}" has no "k" attribute'
+                )
+
+            k = item.k
+            shard_id = self._wavenumber_keys[k.store_id]
+
+            work_refs.append(self._shards[shard_id].object_store.remote(item))
+            # TODO: consider consolidating all objects for the same shard into a list, for efficiency
+
+        if scalar:
+            return work_refs[0]
+
+        return work_refs
+
+    def object_validate(self, objects):
+        # we only expect to call object_store on sharded objects
+        if isinstance(objects, list) or isinstance(objects, tuple):
+            payload_data = objects
+            scalar = False
+        else:
+            payload_data = [objects]
+            scalar = True
+
+        work_refs = []
+        for item in payload_data:
+            cls_name = type(item).__name__
+
+            if cls_name not in _shard_tables.keys():
+                raise RuntimeError(
+                    f'Unable to dispatch object_store() for item of type "{cls_name}"'
+                )
+
+            if not hasattr(item, "k"):
+                raise RuntimeError(
+                    f'Unable to determine shard, because object of type "{cls_name}" has no "k" attribute'
+                )
+
+            k = item.k
+            shard_id = self._wavenumber_keys[k.store_id]
+
+            work_refs.append(self._shards[shard_id].object_validate.remote(item))
+            # TODO: consider consolidating all objects for the same shard into a list, for efficiency
+
+        if scalar:
+            return work_refs[0]
+
+        return work_refs
+
+    def _assign_shard_keys(self, obj):
+        if isinstance(obj, list):
+            data = obj
+        else:
+            data = [obj]
+
+        # assign any shard keys that we can, without going out to the dataabase
+        # (because this is bound to be slower)
+        missing_keys = []
+        for item in data:
+            if not isinstance(item, wavenumber):
+                raise RuntimeError("shard keys should be of type wavenumber")
+
+            if item.store_id not in self._wavenumber_keys:
+                missing_keys.append(item)
+
+        # if no work to do, return
+        if len(missing_keys) == 0:
+            return
+
+        # otherwise, we have to populate keys
+        # try to load balance by working out which shard has fewest wavenumbers
+        loads = {key: 0 for key in self._shards.keys()}
+        for shard in self._wavenumber_keys.values():
+            loads[shard] = loads[shard] + 1
+
+        with self._engine.begin() as conn:
+            for item in missing_keys:
+                # find which shard has the current minimum load
+                if len(loads) > 0:
+                    new_shard = min(loads, key=loads.get)
+                else:
+                    new_shard = list(self._shards.keys()).pop()
+
+                # insert a new record for this key
+                conn.execute(
+                    sqla.dialects.sqlite.insert(self._shard_key_table),
+                    {"wavenumber_id": item.store_id, "shard_id": new_shard},
+                )
+
+                self._wavenumber_keys[item.store_id] = new_shard
+                loads[new_shard] = loads[new_shard] + 1
+
+                print(
+                    f">> assigned shard #{new_shard} to wavenumber object #{item.store_id} (k={item.k_inv_Mpc}/Mpc)"
+                )
+
+            conn.commit()
+
+
+@ray.remote
 class Datastore:
     def __init__(
         self,
@@ -281,7 +554,7 @@ class Datastore:
                 )
 
             self._factories[cls_name] = factory
-            print(f"Registered storable class factory '{cls_name}'")
+            # print(f"Registered storable class factory '{cls_name}'")
 
     def _build_storage_schema(self):
         # iterate through all registered storage adapters, querying them for the columns
@@ -366,16 +639,16 @@ class Datastore:
                 self._tables[cls_name] = tab
                 self._inserters[cls_name] = inserter
 
-                print(
-                    f"Registered storage schema for storable class adapter '{cls_name}' with database table '{tab.name}'"
-                )
+                # print(
+                #     f"Registered storage schema for storable class adapter '{cls_name}' with database table '{tab.name}'"
+                # )
             else:
                 schema["table"] = None
                 schema["insert"] = None
 
-                print(
-                    f"Registered storage schema for storable class adapter '{cls_name}' without database table"
-                )
+                # print(
+                #     f"Registered storage schema for storable class adapter '{cls_name}' without database table"
+                # )
 
             self._schema[cls_name] = schema
 

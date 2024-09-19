@@ -3,7 +3,8 @@ from typing import Iterable
 
 import ray
 from ray import ObjectRef
-from ray.actor import ActorHandle
+
+from Datastore.SQL.sqla_impl import ShardedPool
 
 SECONDS_PER_MINUTE = 60
 SECONDS_PER_HOUR = 60 * SECONDS_PER_MINUTE
@@ -52,7 +53,7 @@ def _format_time(interval: float) -> str:
 class RayWorkQueue:
     def __init__(
         self,
-        store: ActorHandle,
+        pool: ShardedPool,
         task_list,
         task_maker,
         label_maker=None,
@@ -66,7 +67,7 @@ class RayWorkQueue:
         title: str = None,
         store_results: bool = False,
     ):
-        self._store = store
+        self._pool = pool
 
         self._todo = [x for x in task_list]
         self._num_total_items = len(task_list)
@@ -113,7 +114,7 @@ class RayWorkQueue:
                 while count < self._create_batch_size and len(self._todo) > 0:
                     # consume more tasks from the task queue and schedule their work
 
-                    item = self._todo.pop(0)
+                    item = self._todo.pop()
                     ref_data = self._task_maker(item)
 
                     if isinstance(ref_data, Iterable):
@@ -187,7 +188,7 @@ class RayWorkQueue:
                     idx, obj = payload
                     obj.store()
 
-                    store_task: ObjectRef = self._store.object_store.remote(obj)
+                    store_task: ObjectRef = self._pool.object_store(obj)
 
                     # add this store task to the work queue
                     self._inflight[store_task.hex] = store_task

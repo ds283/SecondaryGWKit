@@ -18,7 +18,7 @@ from CosmologyConcepts import (
     redshift_array,
 )
 from CosmologyModels.LambdaCDM import LambdaCDM, Planck2018
-from Datastore.SQL import Datastore
+from Datastore.SQL.sqla_impl import ShardedPool
 from MetadataConcepts import tolerance, store_tag
 from RayWorkQueue import RayWorkQueue
 from Units import Mpc_units
@@ -70,32 +70,28 @@ ray.init(address=args.ray_address)
 # ourselves and the dataabase.
 # For performance reasons, we want all database activity to run on this node.
 # For one thing, this lets us use transactions efficiently.
-store: Datastore = Datastore.remote(
-    version_label="2024.1.1", db_name=args.database, timeout=args.db_timeout
+pool: ShardedPool = ShardedPool(
+    version_label="2024.1.1", db_name=args.database, timeout=args.db_timeout, shards=20
 )
 
 # set up LambdaCDM object representing a basic Planck2018 cosmology in Mpc units
 units = Mpc_units()
 params = Planck2018()
-LambdaCDM_Planck2018 = ray.get(
-    store.object_get.remote(LambdaCDM, params=params, units=units)
-)
+LambdaCDM_Planck2018 = ray.get(pool.object_get(LambdaCDM, params=params, units=units))
 
 
 ## UTILITY FUNCTIONS
 
 
 def convert_to_wavenumbers(k_sample_set):
-    return store.object_get.remote(
+    return pool.object_get(
         wavenumber,
         payload_data=[{"k_inv_Mpc": k, "units": units} for k in k_sample_set],
     )
 
 
 def convert_to_redshifts(z_sample_set):
-    return store.object_get.remote(
-        redshift, payload_data=[{"z": z} for z in z_sample_set]
-    )
+    return pool.object_get(redshift, payload_data=[{"z": z} for z in z_sample_set])
 
 
 ## DATASTORE OBJECTS
@@ -104,8 +100,8 @@ def convert_to_redshifts(z_sample_set):
 # build absolute and relative tolerances
 atol, rtol = ray.get(
     [
-        store.object_get.remote(tolerance, tol=DEFAULT_ABS_TOLERANCE),
-        store.object_get.remote(tolerance, tol=DEFAULT_REL_TOLERANCE),
+        pool.object_get(tolerance, tol=DEFAULT_ABS_TOLERANCE),
+        pool.object_get(tolerance, tol=DEFAULT_REL_TOLERANCE),
     ]
 )
 
@@ -122,7 +118,7 @@ k_sample = wavenumber_array(k_array=k_array)
 
 
 def create_k_exit_work(k: wavenumber):
-    return store.object_get.remote(
+    return pool.object_get(
         wavenumber_exit_time,
         k=k,
         cosmology=LambdaCDM_Planck2018,
@@ -133,7 +129,7 @@ def create_k_exit_work(k: wavenumber):
 
 # for each k mode we sample, determine its horizon exit point
 k_exit_queue = RayWorkQueue(
-    store,
+    pool,
     k_sample,
     create_k_exit_work,
     title="CALCULATE HORIZON EXIT TIMES",
@@ -174,18 +170,14 @@ z_sample = redshift_array(z_array=z_array)
     SamplesPerLog10ZTag,
 ) = ray.get(
     [
-        store.object_get.remote(store_tag, label="TkOneLoopDensity"),
-        store.object_get.remote(store_tag, label="GkOneLoopDensity"),
-        store.object_get.remote(store_tag, label=f"GlobalRedshiftGrid_{len(z_sample)}"),
-        store.object_get.remote(
+        pool.object_get(store_tag, label="TkOneLoopDensity"),
+        pool.object_get(store_tag, label="GkOneLoopDensity"),
+        pool.object_get(store_tag, label=f"GlobalRedshiftGrid_{len(z_sample)}"),
+        pool.object_get(
             store_tag, label=f"OutsideHorizonEfolds_{OUTSIDE_HORIZON_EFOLDS:.2f}"
         ),
-        store.object_get.remote(
-            store_tag, label=f"LargestRedshift_{z_sample.max.z:.5g}"
-        ),
-        store.object_get.remote(
-            store_tag, label=f"SamplesPerLog10Z_{SAMPLES_PER_LOG10_Z}"
-        ),
+        pool.object_get(store_tag, label=f"LargestRedshift_{z_sample.max.z:.5g}"),
+        pool.object_get(store_tag, label=f"SamplesPerLog10Z_{SAMPLES_PER_LOG10_Z}"),
     ]
 )
 
@@ -196,7 +188,7 @@ z_sample = redshift_array(z_array=z_array)
 
 def create_Tk_work(k_exit: wavenumber_exit_time):
     my_sample = z_sample.truncate(exp(OUTSIDE_HORIZON_EFOLDS) * k_exit.z_exit)
-    return store.object_get.remote(
+    return pool.object_get(
         MatterTransferFunctionIntegration,
         k=k_exit.k,
         cosmology=LambdaCDM_Planck2018,
@@ -219,11 +211,11 @@ def create_Tk_work_label(Tk: MatterTransferFunctionIntegration):
 
 
 def validate_Tk_work(Tk: MatterTransferFunctionIntegration):
-    return store.object_validate.remote(Tk)
+    return pool.object_validate(Tk)
 
 
 Tk_queue = RayWorkQueue(
-    store,
+    pool,
     k_exit_times,
     create_Tk_work,
     validation_maker=validate_Tk_work,
@@ -251,7 +243,7 @@ def create_Gk_work(k_exit: wavenumber_exit_time):
         if len(response_zs) >= 3:
 
             work_refs.append(
-                store.object_get.remote(
+                pool.object_get(
                     TensorGreenFunctionIntegration,
                     k=k_exit.k,
                     cosmology=LambdaCDM_Planck2018,
@@ -277,11 +269,11 @@ def create_Gk_exit_work_label(Gk: TensorGreenFunctionIntegration):
 
 
 def validate_Gk_work(Gk: TensorGreenFunctionIntegration):
-    return store.object_validate.remote(Gk)
+    return pool.object_validate(Gk)
 
 
 Gk_queue = RayWorkQueue(
-    store,
+    pool,
     k_exit_times,
     create_Gk_work,
     validation_maker=validate_Gk_work,

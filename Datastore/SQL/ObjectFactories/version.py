@@ -19,7 +19,6 @@ class sqla_version_factory(SQLAFactoryBase):
 
     @staticmethod
     def build(payload, conn, table, inserter, tables, inserters):
-        print(payload)
         label = payload["label"]
 
         store_id = conn.execute(
