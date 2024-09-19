@@ -10,7 +10,10 @@ from utilities import format_time
 
 
 def _default_compute_maker(obj, label=None) -> ObjectRef:
-    return obj.compute(label=label)
+    if label is not None:
+        return obj.compute(label=label)
+
+    return obj.compute()
 
 
 def _default_store_maker(obj, pool) -> ObjectRef:
@@ -158,7 +161,11 @@ class RayWorkQueue:
                         continue
 
                     # otherwise, schedule a compute tasks
-                    label: str = self._label_maker(payload)
+                    label: str = (
+                        self._label_maker(obj)
+                        if self._label_maker is not None
+                        else None
+                    )
                     compute_task: ObjectRef = self._compute_maker(obj, label)
 
                     # add this compute task to the work queue
