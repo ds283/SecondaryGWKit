@@ -1,30 +1,36 @@
 -- extract matter transfer function T(k) for all k and z
-SELECT vs.serial             AS serial,
-       vs.integration_serial AS integration_serial,
-       ig.wavenumber_serial  AS k_serial,
-       ks.k_inv_Mpc          AS k_inv_Mpc,
-       vs.z_serial           AS z_serial,
-       rs.z                  AS z,
-       vs.value              AS value
+SELECT vs.serial                 AS serial,
+       vs.integration_serial     AS integration_serial,
+       kes.wavenumber_serial     AS k_serial,
+       ig.wavenumber_exit_serial AS k_exit_serial,
+       ks.k_inv_Mpc              AS k_inv_Mpc,
+       kes.z_exit                AS z_exit,
+       vs.z_serial               AS z_serial,
+       rs.z                      AS z,
+       vs.value                  AS value
 FROM MatterTransferFunctionValue vs
          INNER JOIN MatterTransferFunctionIntegration ig ON ig.serial = vs.integration_serial
-         INNER JOIN wavenumber ks ON ks.serial = ig.wavenumber_serial
+         INNER JOIN wavenumber_exit_time kes ON kes.serial = ig.wavenumber_exit_serial
+         INNER JOIN wavenumber ks ON ks.serial = kes.wavenumber_serial
          INNER JOIN redshift rs ON rs.serial = vs.z_serial
 ORDER BY z DESC, ks.k_inv_Mpc;
 
 -- extract Green's function Gr(k) for all k and z
-SELECT vs.serial             AS serial,
-       vs.integration_serial AS integration_serial,
-       ig.wavenumber_serial  AS k_serial,
-       ks.k_inv_Mpc          AS k_inv_MPc,
-       vs.z_serial           AS z_response_serial,
-       rs.z                  AS z_response,
-       ig.z_source_serial    AS z_source_serial,
-       ss.z                  AS z_source,
-       vs.value              AS value
+SELECT vs.serial                 AS serial,
+       vs.integration_serial     AS integration_serial,
+       kes.wavenumber_serial     AS k_serial,
+       ig.wavenumber_exit_serial AS k_exit_serial,
+       ks.k_inv_Mpc              AS k_inv_MPc,
+       kes.z_exit                AS z_exit,
+       vs.z_serial               AS z_response_serial,
+       rs.z                      AS z_response,
+       ig.z_source_serial        AS z_source_serial,
+       ss.z                      AS z_source,
+       vs.value                  AS value
 FROM TensorGreenFunctionValue vs
          INNER JOIN TensorGreenFunctionIntegration ig ON ig.serial = vs.integration_serial
-         INNER JOIN wavenumber ks ON ks.serial = ig.wavenumber_serial
+         INNER JOIN wavenumber_exit_time kes ON kes.serial = ig.wavenumber_exit_serial
+         INNER JOIN wavenumber ks ON ks.serial = kes.wavenumber_serial
          INNER JOIN redshift rs ON rs.serial = vs.z_serial
          INNER JOIN redshift ss ON ss.serial = ig.z_source_serial
 ORDER BY z_source DESC, z_response DESC;
