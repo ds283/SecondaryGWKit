@@ -9,7 +9,7 @@ import ray
 import sqlalchemy as sqla
 from sqlalchemy.exc import IntegrityError
 
-from CosmologyConcepts import wavenumber
+from CosmologyConcepts import wavenumber, wavenumber_exit_time
 from Datastore.SQL.ObjectFactories.LambdaCDM import sqla_LambdaCDM_factory
 from Datastore.SQL.ObjectFactories.MatterTransferFunction import (
     sqla_MatterTransferFunctionIntegration_factory,
@@ -173,15 +173,17 @@ class ShardedPool:
         )
 
         # populate the remaining pool of shard stores
-        self._shards = {
-            key: Datastore.options(name=f"shard{key:04d}-store").remote(
-                version_label=version_label,
-                version_serial=self._version.store_id,
-                db_name=self._shard_db_files[key],
-                timeout=self._timeout,
-            )
-            for key in shard_ids
-        }
+        self._shards.update(
+            {
+                key: Datastore.options(name=f"shard{key:04d}-store").remote(
+                    version_label=version_label,
+                    version_serial=self._version.store_id,
+                    db_name=self._shard_db_files[key],
+                    timeout=self._timeout,
+                )
+                for key in shard_ids
+            }
+        )
 
     def _create_engine(self):
         connect_args = {}
@@ -226,7 +228,6 @@ class ShardedPool:
             ]
 
             conn.execute(sqla.dialects.sqlite.insert(self._shard_file_table), values)
-
             conn.commit()
 
     def _read_shard_data(self):
@@ -320,14 +321,14 @@ class ShardedPool:
             # for sharded tables, we should query/insert into only the appropriate shard
             shard_key_field = _shard_tables[cls_name]
 
-            # determine which shard is the host for this item
+            # determine which shard contains this item
             if "payload_data" in kwargs:
                 payload_data = kwargs["payload_data"]
 
                 work_refs = []
                 for item in payload_data:
                     k = item[shard_key_field]
-                    shard_id = self._wavenumber_keys[k.store_id]
+                    shard_id = self._wavenumber_keys[self._get_k_store_id(k)]
 
                     work_refs.append(
                         self._shards[shard_id].object_get.remote(cls_name, **item)
@@ -336,7 +337,7 @@ class ShardedPool:
                 # TODO: consider consolidating all objects for the same shard into a list, for efficiency
             else:
                 k = kwargs[shard_key_field]
-                shard_id = self._wavenumber_keys[k.store_id]
+                shard_id = self._wavenumber_keys[self._get_k_store_id(k)]
 
                 return self._shards[shard_id].object_get.remote(cls_name, **kwargs)
 
@@ -368,7 +369,7 @@ class ShardedPool:
                 )
 
             k = item.k
-            shard_id = self._wavenumber_keys[k.store_id]
+            shard_id = self._wavenumber_keys[self._get_k_store_id(k)]
 
             work_refs.append(self._shards[shard_id].object_store.remote(item))
             # TODO: consider consolidating all objects for the same shard into a list, for efficiency
@@ -402,7 +403,7 @@ class ShardedPool:
                 )
 
             k = item.k
-            shard_id = self._wavenumber_keys[k.store_id]
+            shard_id = self._wavenumber_keys[self._get_k_store_id(k)]
 
             work_refs.append(self._shards[shard_id].object_validate.remote(item))
             # TODO: consider consolidating all objects for the same shard into a list, for efficiency
@@ -411,6 +412,17 @@ class ShardedPool:
             return work_refs[0]
 
         return work_refs
+
+    def _get_k_store_id(self, obj):
+        if isinstance(obj, wavenumber):
+            return obj.store_id
+
+        if isinstance(obj, wavenumber_exit_time):
+            return obj.k.store_id
+
+        raise RuntimeError(
+            f'Could not determine shard index k for obejct of type "{type(obj)}"'
+        )
 
     def _assign_shard_keys(self, obj):
         if isinstance(obj, list):
