@@ -1,53 +1,12 @@
 import time
 from typing import Iterable
+from datetime import datetime
 
 import ray
 from ray import ObjectRef
 
 from Datastore.SQL.sqla_impl import ShardedPool
-
-SECONDS_PER_MINUTE = 60
-SECONDS_PER_HOUR = 60 * SECONDS_PER_MINUTE
-SECONDS_PER_DAY = 24 * SECONDS_PER_HOUR
-
-
-def _format_time(interval: float) -> str:
-    int_interval = int(interval)
-    str = ""
-
-    if int_interval > SECONDS_PER_DAY:
-        days = int_interval // SECONDS_PER_DAY
-        int_interval = int_interval - days * SECONDS_PER_DAY
-        interval = interval - days * SECONDS_PER_DAY
-        if len(str) > 0:
-            str = str + f" {days}d"
-        else:
-            str = f"{days}d"
-
-    if int_interval > SECONDS_PER_HOUR:
-        hours = int_interval // SECONDS_PER_HOUR
-        int_interval = int_interval - hours * SECONDS_PER_HOUR
-        interval = interval - hours * SECONDS_PER_HOUR
-        if len(str) > 0:
-            str = str + f" {hours}h"
-        else:
-            str = f"{hours}h"
-
-    if int_interval > SECONDS_PER_MINUTE:
-        minutes = int_interval // SECONDS_PER_MINUTE
-        int_interval = int_interval - minutes * SECONDS_PER_MINUTE
-        interval = interval - minutes * SECONDS_PER_MINUTE
-        if len(str) > 0:
-            str = str + f" {minutes}m"
-        else:
-            str = f"{minutes}m"
-
-    if len(str) > 0:
-        str = str + f" {interval:.3g}s"
-    else:
-        str = f"{interval:.3g}s"
-
-    return str
+from utilities import format_time
 
 
 class RayWorkQueue:
@@ -283,16 +242,25 @@ class RayWorkQueue:
                             * float(self._num_total_items - num_items_remain)
                             / float(self._num_total_items)
                         )
-                    print(
-                        f"-- {_format_time(total_elapsed)}: {len(self._todo)} work items remaining = {percent_complete:.2f}% complete"
-                    )
-                    if self._validation_maker is not None:
+
+                    now = datetime.now()
+
+                    if percent_complete > 99.99:
                         print(
-                            f"   inflight items: {self._num_lookup_queue} lookup, {self._num_compute_queue} compute, {self._num_store_queue} store, {self._num_validation_queue} validation"
+                            f"   -- {now:%Y-%m-%d %H:%M:%S%z} ({format_time(total_elapsed)} running): {len(self._todo)} work items remaining = {percent_complete:.2f}% complete (may be waiting for compute/store/validate tasks to finish)"
                         )
                     else:
                         print(
-                            f"   inflight items: {self._num_lookup_queue} lookup, {self._num_compute_queue} compute, {self._num_store_queue} store"
+                            f"   -- {now:%Y-%m-%d %H:%M:%S%z} ({format_time(total_elapsed)} running): {len(self._todo)} work items remaining = {percent_complete:.2f}% complete"
+                        )
+
+                    if self._validation_maker is not None:
+                        print(
+                            f"      inflight items: {self._num_lookup_queue} lookup, {self._num_compute_queue} compute, {self._num_store_queue} store, {self._num_validation_queue} validation"
+                        )
+                    else:
+                        print(
+                            f"      inflight items: {self._num_lookup_queue} lookup, {self._num_compute_queue} compute, {self._num_store_queue} store"
                         )
 
                     self._batch = 0
@@ -300,4 +268,4 @@ class RayWorkQueue:
 
         if self._title is not None:
             self.total_time = time.perf_counter() - self._start_time
-            print(f"-- all work items complete in time {_format_time(self.total_time)}")
+            print(f"   -- all work items complete in time {format_time(self.total_time)}")
