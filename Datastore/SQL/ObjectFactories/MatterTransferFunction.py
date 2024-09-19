@@ -9,7 +9,7 @@ from ComputeTargets import (
     MatterTransferFunctionIntegration,
     MatterTransferFunctionValue,
 )
-from CosmologyConcepts import wavenumber, redshift_array, redshift
+from CosmologyConcepts import redshift_array, redshift, wavenumber_exit_time
 from CosmologyModels import BaseCosmology
 from Datastore.SQL.ObjectFactories.base import SQLAFactoryBase
 from Datastore.SQL.ObjectFactories.integration_metadata import (
@@ -91,9 +91,9 @@ class sqla_MatterTransferFunctionIntegration_factory(SQLAFactoryBase):
             "columns": [
                 sqla.Column("label", sqla.String(DEFAULT_STRING_LENGTH)),
                 sqla.Column(
-                    "wavenumber_serial",
+                    "wavenumber_exit_serial",
                     sqla.Integer,
-                    sqla.ForeignKey("wavenumber.serial"),
+                    sqla.ForeignKey("wavenumber_exit_time.serial"),
                     nullable=False,
                 ),
                 sqla.Column("cosmology_type", sqla.Integer, nullable=False),
@@ -147,7 +147,7 @@ class sqla_MatterTransferFunctionIntegration_factory(SQLAFactoryBase):
         atol: tolerance = payload["atol"]
         rtol: tolerance = payload["rtol"]
 
-        k: wavenumber = payload["k"]
+        k_exit: wavenumber_exit_time = payload["k"]
         cosmology: BaseCosmology = payload["cosmology"]
         z_sample: redshift_array = payload["z_sample"]
         z_init: redshift = payload["z_init"]
@@ -182,7 +182,7 @@ class sqla_MatterTransferFunctionIntegration_factory(SQLAFactoryBase):
             )
             .filter(
                 table.c.validated == True,
-                table.c.wavenumber_serial == k.store_id,
+                table.c.wavenumber_exit_serial == k_exit.store_id,
                 table.c.cosmology_type == cosmology.type_id,
                 table.c.cosmology_serial == cosmology.store_id,
                 table.c.z_init_serial == z_init.store_id,
@@ -213,7 +213,7 @@ class sqla_MatterTransferFunctionIntegration_factory(SQLAFactoryBase):
                 payload=None,
                 cosmology=cosmology,
                 label=label,
-                k=k,
+                k=k_exit,
                 z_sample=z_sample,
                 z_init=z_init,
                 atol=atol,
@@ -323,7 +323,7 @@ class sqla_MatterTransferFunctionIntegration_factory(SQLAFactoryBase):
             conn,
             {
                 "label": obj.label,
-                "wavenumber_serial": obj.k.store_id,
+                "wavenumber_exit_serial": obj._k_exit.store_id,
                 "cosmology_type": obj.cosmology.type_id,
                 "cosmology_serial": obj.cosmology.store_id,
                 "atol_serial": obj._atol.store_id,

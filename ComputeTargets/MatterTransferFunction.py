@@ -4,7 +4,7 @@ from typing import Optional, List
 import ray
 from scipy.integrate import solve_ivp
 
-from CosmologyConcepts import redshift_array, wavenumber, redshift
+from CosmologyConcepts import redshift_array, wavenumber, redshift, wavenumber_exit_time
 from CosmologyModels import BaseCosmology
 from Datastore import DatastoreObject
 from MetadataConcepts import tolerance, store_tag
@@ -124,7 +124,7 @@ class MatterTransferFunctionIntegration(DatastoreObject):
         self,
         payload,
         cosmology: BaseCosmology,
-        k: wavenumber,
+        k: wavenumber_exit_time,
         z_sample: redshift_array,
         z_init: redshift,
         atol: tolerance,
@@ -132,7 +132,7 @@ class MatterTransferFunctionIntegration(DatastoreObject):
         label: Optional[str] = None,
         tags: Optional[List[store_tag]] = None,
     ):
-        check_units(k, cosmology)
+        check_units(k.k, cosmology)
 
         if payload is None:
             DatastoreObject.__init__(self, None)
@@ -166,7 +166,7 @@ class MatterTransferFunctionIntegration(DatastoreObject):
 
         self._cosmology = cosmology
 
-        self._k = k
+        self._k_exit = k
         self._z_init = z_init
 
         self._compute_ref = None
@@ -180,7 +180,11 @@ class MatterTransferFunctionIntegration(DatastoreObject):
 
     @property
     def k(self) -> wavenumber:
-        return self._k
+        return self._k_exit.k
+
+    @property
+    def z_exit(self) -> float:
+        return self._k_exit.z_exit
 
     @property
     def label(self) -> str:
@@ -229,6 +233,11 @@ class MatterTransferFunctionIntegration(DatastoreObject):
         # replace label if specified
         if label is not None:
             self._label = label
+
+        print("@@ BEGINNING T(k) COMPUTATION")
+        print(
+            f"     k = {self.k.k_inv_Mpc}/Mpc, z_init = {self.z_init.z}, z_sample(max) = {self.z_sample.max.z}, z_sample(min) = {self.z_sample.min.z}"
+        )
 
         self._compute_ref = compute_matter_Tk.remote(
             self.cosmology,

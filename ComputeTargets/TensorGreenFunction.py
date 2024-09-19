@@ -4,7 +4,7 @@ from typing import Optional, List
 import ray
 from scipy.integrate import solve_ivp
 
-from CosmologyConcepts import wavenumber, redshift, redshift_array
+from CosmologyConcepts import wavenumber, redshift, redshift_array, wavenumber_exit_time
 from CosmologyModels import BaseCosmology
 from Datastore import DatastoreObject
 from MetadataConcepts import tolerance, store_tag
@@ -126,7 +126,7 @@ class TensorGreenFunctionIntegration(DatastoreObject):
         self,
         payload,
         cosmology: BaseCosmology,
-        k: wavenumber,
+        k: wavenumber_exit_time,
         z_source: redshift,
         z_sample: redshift_array,
         atol: tolerance,
@@ -134,7 +134,7 @@ class TensorGreenFunctionIntegration(DatastoreObject):
         label: Optional[str] = None,
         tags: Optional[List[store_tag]] = None,
     ):
-        check_units(k, cosmology)
+        check_units(k.k, cosmology)
 
         if payload is None:
             DatastoreObject.__init__(self, None)
@@ -168,7 +168,7 @@ class TensorGreenFunctionIntegration(DatastoreObject):
 
         self._cosmology = cosmology
 
-        self._k = k
+        self._k_exit = k
         self._z_source = z_source
 
         self._compute_ref = None
@@ -181,11 +181,15 @@ class TensorGreenFunctionIntegration(DatastoreObject):
         return self._cosmology
 
     @property
-    def k(self):
-        return self._k
+    def k(self) -> wavenumber:
+        return self._k_exit.k
 
     @property
-    def label(self):
+    def z_exit(self) -> float:
+        return self._k_exit.z_exit
+
+    @property
+    def label(self) -> str:
         return self._label
 
     @property

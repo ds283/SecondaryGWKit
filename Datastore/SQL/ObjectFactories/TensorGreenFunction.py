@@ -9,7 +9,7 @@ from ComputeTargets import (
     TensorGreenFunctionValue,
     IntegrationSolver,
 )
-from CosmologyConcepts import wavenumber, redshift_array, redshift
+from CosmologyConcepts import redshift_array, redshift, wavenumber_exit_time
 from CosmologyModels import BaseCosmology
 from Datastore.SQL.ObjectFactories.base import SQLAFactoryBase
 from MetadataConcepts import tolerance, store_tag
@@ -89,9 +89,9 @@ class sqla_TensorGreenFunctionIntegration_factory(SQLAFactoryBase):
             "columns": [
                 sqla.Column("label", sqla.String(DEFAULT_STRING_LENGTH)),
                 sqla.Column(
-                    "wavenumber_serial",
+                    "wavenumber_exit_serial",
                     sqla.Integer,
-                    sqla.ForeignKey("wavenumber.serial"),
+                    sqla.ForeignKey("wavenumber_exit_time.serial"),
                     nullable=False,
                 ),
                 sqla.Column("cosmology_type", sqla.Integer, nullable=False),
@@ -145,7 +145,7 @@ class sqla_TensorGreenFunctionIntegration_factory(SQLAFactoryBase):
         atol: tolerance = payload["atol"]
         rtol: tolerance = payload["rtol"]
 
-        k: wavenumber = payload["k"]
+        k_exit: wavenumber_exit_time = payload["k"]
         cosmology: BaseCosmology = payload["cosmology"]
         z_sample: redshift_array = payload["z_sample"]
         z_source: redshift = payload["z_source"]
@@ -182,7 +182,7 @@ class sqla_TensorGreenFunctionIntegration_factory(SQLAFactoryBase):
             )
             .filter(
                 table.c.validated == True,
-                table.c.wavenumber_serial == k.store_id,
+                table.c.wavenumber_exit_serial == k_exit.store_id,
                 table.c.cosmology_type == cosmology.type_id,
                 table.c.cosmology_serial == cosmology.store_id,
                 table.c.label == label,
@@ -213,7 +213,7 @@ class sqla_TensorGreenFunctionIntegration_factory(SQLAFactoryBase):
             return TensorGreenFunctionIntegration(
                 payload=None,
                 label=label,
-                k=k,
+                k=k_exit,
                 cosmology=cosmology,
                 z_source=z_source,
                 z_sample=z_sample,
@@ -284,7 +284,7 @@ class sqla_TensorGreenFunctionIntegration_factory(SQLAFactoryBase):
                 "solver": solver,
                 "values": values,
             },
-            k=k,
+            k=k_exit,
             cosmology=cosmology,
             label=store_label,
             z_source=z_source,
@@ -325,7 +325,7 @@ class sqla_TensorGreenFunctionIntegration_factory(SQLAFactoryBase):
             conn,
             {
                 "label": obj.label,
-                "wavenumber_serial": obj.k.store_id,
+                "wavenumber_exit_serial": obj._k_exit.store_id,
                 "cosmology_type": obj.cosmology.type_id,
                 "cosmology_serial": obj.cosmology.store_id,
                 "atol_serial": obj._atol.store_id,
