@@ -206,7 +206,7 @@ def compute_matter_Tk(
         initial_state = [cosmology.rho(z_init.z), 1.0, 0.0]
         sol = solve_ivp(
             RHS,
-            method="RK45",
+            method="DOP853",
             t_span=(z_init.z, z_min),
             y0=initial_state,
             t_eval=z_sample.as_list(),
@@ -248,8 +248,7 @@ def compute_matter_Tk(
         "max_RHS_time": supervisor.max_RHS_time,
         "min_RHS_time": supervisor.min_RHS_time,
         "values": sampled_T,
-        "solver_label": "scipy+solve_ivp+RK45",
-        "solver_stepping": 0,
+        "solver_label": "solve_ivp+DOP853-stepping0",
     }
 
 
@@ -263,6 +262,7 @@ class MatterTransferFunctionIntegration(DatastoreObject):
     def __init__(
         self,
         payload,
+        solver_labels: dict,
         cosmology: BaseCosmology,
         k: wavenumber_exit_time,
         z_sample: redshift_array,
@@ -273,6 +273,7 @@ class MatterTransferFunctionIntegration(DatastoreObject):
         tags: Optional[List[store_tag]] = None,
     ):
         check_units(k.k, cosmology)
+        self._solver_labels = solver_labels
 
         if z_init.z < 10.0 * k.z_exit:
             raise RuntimeError(
@@ -360,9 +361,9 @@ class MatterTransferFunctionIntegration(DatastoreObject):
         return self._compute_steps
 
     @property
-    def solver(self) -> float:
+    def solver(self) -> IntegrationSolver:
         if self._solver is None:
-            raise RuntimeError("compute_steps has not yet been populated")
+            raise RuntimeError("solver has not yet been populated")
         return self._solver
 
     @property
@@ -423,9 +424,7 @@ class MatterTransferFunctionIntegration(DatastoreObject):
                 MatterTransferFunctionValue(None, self._z_sample[i], values[i])
             )
 
-        self._solver = IntegrationSolver(
-            store_id=None, label=data["solver_label"], stepping=data["solver_stepping"]
-        )
+        self._solver = self._solver_labels[data["solver_label"]]
 
         return True
 

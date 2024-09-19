@@ -142,6 +142,8 @@ class sqla_TensorGreenFunctionIntegration_factory(SQLAFactoryBase):
         label: Optional[str] = payload.get("label", None)
         tags: List[store_tag] = payload.get("tags", [])
 
+        solver_labels = payload["solver_labels"]
+
         atol: tolerance = payload["atol"]
         rtol: tolerance = payload["rtol"]
 
@@ -212,6 +214,7 @@ class sqla_TensorGreenFunctionIntegration_factory(SQLAFactoryBase):
             # build and return an unpopulated object
             return TensorGreenFunctionIntegration(
                 payload=None,
+                solver_labels=solver_labels,
                 label=label,
                 k=k_exit,
                 cosmology=cosmology,
@@ -303,24 +306,6 @@ class sqla_TensorGreenFunctionIntegration_factory(SQLAFactoryBase):
         tables,
         inserters,
     ):
-        # first query for the solver ID, which is needed to serialize the main integration record
-        solver_table = tables["IntegrationSolver"]
-        solver_inserter = inserters["IntegrationSolver"]
-
-        solver = sqla_IntegrationSolver_factory.build(
-            {"label": obj._solver.label, "stepping": obj._solver.stepping},
-            conn,
-            solver_table,
-            solver_inserter,
-            tables,
-            inserters,
-        )
-
-        # replace the store_id in our IntegrationSolver instance with the version obtained from the
-        # datastore
-        obj._solver = solver.store_id
-
-        # now serialize the record of the integration
         store_id = inserter(
             conn,
             {
@@ -330,7 +315,7 @@ class sqla_TensorGreenFunctionIntegration_factory(SQLAFactoryBase):
                 "cosmology_serial": obj.cosmology.store_id,
                 "atol_serial": obj._atol.store_id,
                 "rtol_serial": obj._rtol.store_id,
-                "solver_serial": solver.store_id,
+                "solver_serial": obj.solver.store_id,
                 "z_source_serial": obj.z_source.store_id,
                 "z_min_serial": obj.z_sample.min.store_id,
                 "z_samples": len(obj.z_sample),

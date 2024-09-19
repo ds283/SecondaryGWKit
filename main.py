@@ -8,7 +8,7 @@ import ray
 
 from ComputeTargets import (
     MatterTransferFunctionIntegration,
-    TensorGreenFunctionIntegration,
+    TensorGreenFunctionIntegration, IntegrationSolver,
 )
 from CosmologyConcepts import (
     wavenumber,
@@ -101,6 +101,27 @@ atol, rtol = ray.get(
 )
 
 
+# build stepper labels; we have to query these up-front from the pool in order to be
+# certain that they get the same serial number in each database shard.
+# So we can no longer construct these on-the-fly in the integration classes, as used to be done
+solve_ivp_RK45, solve_ivp_DOP852, solve_ivp_Radau, solve_ivp_BDF, solve_icp_LSODA = ray.get(
+    [
+        pool.object_get(IntegrationSolver, label="solve_ivp+RK45", stepping=0),
+        pool.object_get(IntegrationSolver, label="solve_ivp+DOP853", stepping=0),
+        pool.object_get(IntegrationSolver, label="solve_ivp+Radau", stepping=0),
+        pool.object_get(IntegrationSolver, label="solve_ivp+BDF", stepping=0),
+        pool.object_get(IntegrationSolver, label="solve_ivp+LSODA", stepping=0),
+    ]
+)
+solvers = {
+    "solve_ivp+RK45-stepping0": solve_ivp_RK45,
+    "solve_ivp+DOP853-stepping0": solve_ivp_DOP852,
+    "solve_ivp+Radau-stepping0": solve_ivp_Radau,
+    "solve_ivp+BDF-stepping0": solve_ivp_BDF,
+    "solve_ivp+LSODA-stepping0": solve_icp_LSODA,
+}
+
+
 ## STEP 1
 ## BUILD SAMPLE OF K-WAVENUMBERS AND OBTAIN THEIR CORRESPONDING HORIZON EXIT TIMES
 
@@ -189,12 +210,13 @@ def create_Tk_work(k_exit: wavenumber_exit_time):
     my_sample = z_sample.truncate(exp(OUTSIDE_HORIZON_EFOLDS) * k_exit.z_exit)
     return pool.object_get(
         MatterTransferFunctionIntegration,
-        k=k_exit,
+        solver_labels=solvers,
         cosmology=LambdaCDM_Planck2018,
-        atol=atol,
-        rtol=rtol,
+        k=k_exit,
         z_sample=my_sample,
         z_init=my_sample.max,
+        atol=atol,
+        rtol=rtol,
         tags=[
             TkProductionTag,
             GlobalZGridTag,
@@ -244,12 +266,13 @@ def create_Gk_work(k_exit: wavenumber_exit_time):
             work_refs.append(
                 pool.object_get(
                     TensorGreenFunctionIntegration,
-                    k=k_exit,
+                    solver_labels=solvers,
                     cosmology=LambdaCDM_Planck2018,
-                    atol=atol,
-                    rtol=rtol,
+                    k=k_exit,
                     z_source=source_z,
                     z_sample=response_zs,
+                    atol=atol,
+                    rtol=rtol,
                     tags=[
                         GkProductionTag,
                         GlobalZGridTag,

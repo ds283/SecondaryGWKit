@@ -106,8 +106,7 @@ def compute_tensor_Green(
         "compute_time": timer.elapsed,
         "compute_steps": int(sol.nfev),
         "values": sampled_G,
-        "solver_label": "scipy+solve_ivp+RK45",
-        "solver_stepping": 0,
+        "solver_label": "solve_ivp+DOP853-stepping0",
     }
 
 
@@ -125,6 +124,7 @@ class TensorGreenFunctionIntegration(DatastoreObject):
     def __init__(
         self,
         payload,
+        solver_labels: dict,
         cosmology: BaseCosmology,
         k: wavenumber_exit_time,
         z_source: redshift,
@@ -135,6 +135,7 @@ class TensorGreenFunctionIntegration(DatastoreObject):
         tags: Optional[List[store_tag]] = None,
     ):
         check_units(k.k, cosmology)
+        self._solver_labels = solver_labels
 
         if payload is None:
             DatastoreObject.__init__(self, None)
@@ -217,9 +218,9 @@ class TensorGreenFunctionIntegration(DatastoreObject):
         return self._compute_steps
 
     @property
-    def solver(self) -> float:
+    def solver(self) -> IntegrationSolver:
         if self._solver is None:
-            raise RuntimeError("compute_steps has not yet been populated")
+            raise RuntimeError("solver has not yet been populated")
         return self._solver
 
     @property
@@ -275,9 +276,7 @@ class TensorGreenFunctionIntegration(DatastoreObject):
                 TensorGreenFunctionValue(None, self._z_sample[i], values[i])
             )
 
-        self._solver = IntegrationSolver(
-            store_id=None, label=data["solver_label"], stepping=data["solver_stepping"]
-        )
+        self._solver = self._solver_labels[data["solver_label"]]
 
         return True
 
