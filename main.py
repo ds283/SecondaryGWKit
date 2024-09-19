@@ -143,7 +143,7 @@ k_array = ray.get(
 k_sample = wavenumber_array(k_array=k_array)
 
 
-def create_k_exit_work(k: wavenumber):
+def build_k_exit_work(k: wavenumber):
     return pool.object_get(
         wavenumber_exit_time,
         k=k,
@@ -157,7 +157,7 @@ def create_k_exit_work(k: wavenumber):
 k_exit_queue = RayWorkQueue(
     pool,
     k_sample,
-    task_maker=create_k_exit_work,
+    task_builder=build_k_exit_work,
     title="CALCULATE HORIZON EXIT TIMES",
     store_results=True,
 )
@@ -216,7 +216,7 @@ z_sample = redshift_array(z_array=z_array)
 ## COMPUTE MATTER TRANSFER FUNCTIONS
 
 
-def create_Tk_work(k_exit: wavenumber_exit_time):
+def build_Tk_work(k_exit: wavenumber_exit_time):
     my_sample = z_sample.truncate(exp(OUTSIDE_HORIZON_EFOLDS) * k_exit.z_exit)
     return pool.object_get(
         MatterTransferFunctionIntegration,
@@ -237,7 +237,7 @@ def create_Tk_work(k_exit: wavenumber_exit_time):
     )
 
 
-def create_Tk_work_label(Tk: MatterTransferFunctionIntegration):
+def build_Tk_work_label(Tk: MatterTransferFunctionIntegration):
     return f"{args.job_name}-Tk-k{Tk.k.k_inv_Mpc:.3g}-{datetime.now().replace(microsecond=0).isoformat()}"
 
 
@@ -248,9 +248,9 @@ def validate_Tk_work(Tk: MatterTransferFunctionIntegration):
 Tk_queue = RayWorkQueue(
     pool,
     k_exit_times,
-    task_maker=create_Tk_work,
-    validation_maker=validate_Tk_work,
-    label_maker=create_Tk_work_label,
+    task_builder=build_Tk_work,
+    validation_handler=validate_Tk_work,
+    label_builder=build_Tk_work_label,
     title="CALCULATE MATTER TRANSFER FUNCTIONS",
     store_results=True,
 )
@@ -264,7 +264,10 @@ Tks = Tk_queue.results
 G_LATEST_RESPONSE_Z = 0.5
 
 
-def create_Gk_work(k_exit: wavenumber_exit_time):
+def build_Gk_work(k_exit: wavenumber_exit_time):
+    if not k_exit.available:
+        raise RuntimeError(f"k_exit object (store_id={k_exit.store_id}) is not ready")
+
     source_zs = z_sample.truncate(exp(OUTSIDE_HORIZON_EFOLDS) * k_exit.z_exit)
 
     work_refs = []
@@ -295,7 +298,7 @@ def create_Gk_work(k_exit: wavenumber_exit_time):
     return work_refs
 
 
-def create_Gk_exit_work_label(Gk: TensorGreenFunctionIntegration):
+def build_Gk_exit_work_label(Gk: TensorGreenFunctionIntegration):
     return f"{args.job_name}-Gk-k{Gk.k.k_inv_Mpc:.3g}-sourcez{Gk.z_source.z:.5g}-{datetime.now().replace(microsecond=0).isoformat()}"
 
 
@@ -306,13 +309,10 @@ def validate_Gk_work(Gk: TensorGreenFunctionIntegration):
 Gk_queue = RayWorkQueue(
     pool,
     k_exit_times,
-    task_maker=create_Gk_work,
-    validation_maker=validate_Gk_work,
-    label_maker=create_Gk_exit_work_label,
+    task_builder=build_Gk_work,
+    validation_handler=validate_Gk_work,
+    label_builder=build_Gk_exit_work_label,
     title="CALCULATE TENSOR GREEN FUNCTIONS",
-    notify_batch_size=1000,
-    notify_time_interval=5 * 60,
-    notify_min_time_interval=30,
     store_results=False,
 )
 Gk_queue.run()

@@ -17,15 +17,15 @@ DEFAULT_NOTIFY_TIME_INTERVAL = 5 * 60
 DEFAULT_NOTIFY_MIN_INTERVAL = 30
 
 
-def _default_compute_maker(obj, label=None) -> ObjectRef:
+def _default_compute_handler(obj, label=None) -> ObjectRef:
     if label is not None:
         return obj.compute(label=label)
 
     return obj.compute()
 
 
-def _default_store_maker(obj, pool) -> ObjectRef:
-    return pool.object_stre(obj)
+def _default_store_handler(obj, pool) -> ObjectRef:
+    return pool.object_store(obj)
 
 
 class RayWorkQueue:
@@ -33,11 +33,12 @@ class RayWorkQueue:
         self,
         pool: ShardedPool,
         task_list,
-        task_maker,
-        compute_maker=_default_compute_maker,
-        store_maker=_default_store_maker,
-        validation_maker=None,
-        label_maker=None,
+        task_builder,
+        compute_handler=_default_compute_handler,
+        store_handler=_default_store_handler,
+        available_handler=None,
+        validation_handler=None,
+        label_builder=None,
         create_batch_size: int = DEFAULT_CREATE_BATCH_SIZE,
         process_batch_size: int = DEFAULT_PROCESS_BATCH_SIZE,
         max_task_queue: int = DEFAULT_MAX_TASK_QUEUE,
@@ -47,12 +48,12 @@ class RayWorkQueue:
         title: str = None,
         store_results: bool = False,
     ):
-        if compute_maker is not None and store_maker is None:
+        if compute_handler is not None and store_handler is None:
             raise RuntimeError(
                 "If a compute maker is supplied, a store maker must also be supplied to serialize the result of the computation"
             )
 
-        if compute_maker is None and store_maker is not None:
+        if compute_handler is None and store_handler is not None:
             raise RuntimeWarning(
                 "No compute maker was supplied, but a store maker was provided. This will have no effect because there will be no compute results to store"
             )
@@ -67,12 +68,13 @@ class RayWorkQueue:
 
         self._num_total_items = len(task_list)
 
-        self._task_maker = task_maker
-        self._compute_maker = compute_maker
-        self._store_maker = store_maker
-        self._validation_maker = validation_maker
+        self._task_builder = task_builder
+        self._compute_handler = compute_handler
+        self._store_handler = store_handler
+        self._available_handler = available_handler
+        self._validation_handler = validation_handler
 
-        self._label_maker = label_maker
+        self._label_builder = label_builder
 
         self._create_batch_size = create_batch_size
         self._process_batch_size = process_batch_size
@@ -92,7 +94,14 @@ class RayWorkQueue:
         self._num_lookup_queue = 0
         self._num_compute_queue = 0
         self._num_store_queue = 0
+        self._num_available_queue = 0
         self._num_validation_queue = 0
+
+        self._num_lookup_complete = 0
+        self._num_compute_complete = 0
+        self._num_store_complete = 0
+        self._num_available_complete = 0
+        self._num_validation_complete = 0
 
         self._batch = 0
 
@@ -115,17 +124,19 @@ class RayWorkQueue:
 
                     # pop gets the item from the end of the list
                     item = self._todo.pop()
-                    ref_data = self._task_maker(item)
+                    ref_data = self._task_builder(item)
 
                     if isinstance(ref_data, Iterable):
                         if self._store_results:
                             raise RuntimeError(
-                                "store_results=True is not compatible with returning multiple work items from a task maker"
+                                "store_results=True is not compatible with returning multiple work items from a task builder"
                             )
 
                         for ref in ref_data:
                             self._inflight[ref.hex] = ref
                             self._data[ref.hex] = ("lookup", None)
+
+                        self._num_lookup_queue += len(ref_data)
 
                     else:
                         ref = ref_data
@@ -136,6 +147,8 @@ class RayWorkQueue:
                             self._current_idx += 1
                         else:
                             self._data[ref.hex] = ("lookup", None)
+
+                        self._num_lookup_queue += 1
 
                     count += 1
 
@@ -163,24 +176,35 @@ class RayWorkQueue:
                     self._data.pop(ref.hex, None)
 
                     self._num_lookup_queue = max(self._num_lookup_queue - 1, 0)
+                    self._num_lookup_complete += 1
 
-                    if obj.available or self._compute_maker is None:
-                        # nothing to do, object is already constructed
-                        continue
+                    if obj.available:
+                        # check whether an availability handler exists
+                        if self._available_handler is not None:
+                            available_task: ObjectRef = self._available_handler(obj)
 
-                    # otherwise, schedule a compute tasks
-                    label: str = (
-                        self._label_maker(obj)
-                        if self._label_maker is not None
-                        else None
-                    )
-                    compute_task: ObjectRef = self._compute_maker(obj, label)
+                            # add this task to the work qeue
+                            self._inflight[available_task.hex] = available_task
+                            self._data[available_task.hex] = ("available", obj)
 
-                    # add this compute task to the work queue
-                    self._inflight[compute_task.hex] = compute_task
-                    self._data[compute_task.hex] = ("compute", (payload, obj))
+                            self._num_available_queue += 1
 
-                    self._num_compute_queue += 1
+                    else:
+                        # check whether a compute handler exists
+                        if self._compute_handler is not None:
+                            # otherwise, schedule a compute tasks
+                            label: str = (
+                                self._label_builder(obj)
+                                if self._label_builder is not None
+                                else None
+                            )
+                            compute_task: ObjectRef = self._compute_handler(obj, label)
+
+                            # add this compute task to the work queue
+                            self._inflight[compute_task.hex] = compute_task
+                            self._data[compute_task.hex] = ("compute", (payload, obj))
+
+                            self._num_compute_queue += 1
 
                 elif type == "compute":
                     # payload contains an index into the result set and (our local copy of) the object that has finished computation;
@@ -189,18 +213,21 @@ class RayWorkQueue:
                     idx, obj = payload
                     obj.store()
 
-                    store_task: ObjectRef = self._pool.object_store(obj)
-
-                    # add this store task to the work queue
-                    self._inflight[store_task.hex] = store_task
-                    self._data[store_task.hex] = ("store", payload)
-
                     # remove the original 'compute' task from the work queue
                     self._inflight.pop(ref.hex, None)
                     self._data.pop(ref.hex, None)
 
-                    self._num_store_queue += 1
                     self._num_compute_queue = max(self._num_compute_queue - 1, 0)
+                    self._num_compute_complete += 1
+
+                    if self._store_handler is not None:
+                        store_task: ObjectRef = self._store_handler(obj, self._pool)
+
+                        # add this store task to the work queue
+                        self._inflight[store_task.hex] = store_task
+                        self._data[store_task.hex] = ("store", payload)
+
+                        self._num_store_queue += 1
 
                 elif type == "store":
                     # payload contains an index into the result set and (again, our local copy of) the object that has been freshly
@@ -219,9 +246,16 @@ class RayWorkQueue:
                     if self._store_results:
                         self.results[idx] = replacement_obj
 
+                    # remove the original 'store' task from the work queue
+                    self._inflight.pop(ref.hex, None)
+                    self._data.pop(ref.hex, None)
+
+                    self._num_store_queue = max(self._num_store_queue - 1, 0)
+                    self._num_store_complete += 1
+
                     # determine whether this work queue has a validation step
-                    if self._validation_maker is not None:
-                        validation_task: ObjectRef = self._validation_maker(
+                    if self._validation_handler is not None:
+                        validation_task: ObjectRef = self._validation_handler(
                             replacement_obj
                         )
 
@@ -232,12 +266,6 @@ class RayWorkQueue:
                         )
 
                         self._num_validation_queue += 1
-
-                    # remove the original 'store' task from the work queue
-                    self._inflight.pop(ref.hex, None)
-                    self._data.pop(ref.hex, None)
-
-                    self._num_store_queue = max(self._num_store_queue - 1, 0)
 
                 elif type == "validate":
                     # payload contains an index into the result set and (still, our local copy of) the object that has been freshly
@@ -255,6 +283,15 @@ class RayWorkQueue:
                     self._data.pop(ref.hex, None)
 
                     self._num_validation_queue = max(self._num_validation_queue - 1, 0)
+                    self._num_validation_complete += 1
+
+                elif type == "available":
+                    # payload is the constructed object, but there is nothing to do
+                    self._inflight.pop(ref.hex, None)
+                    self._data.pop(ref.hex, None)
+
+                    self._num_available_queue = max(self._num_available_queue - 1, 0)
+                    self._num_available_complete += 1
 
                 else:
                     raise RuntimeError(f'Unexpected work queue item type "{type}"')
@@ -280,24 +317,31 @@ class RayWorkQueue:
                         )
 
                     now = datetime.now()
-
+                    msg = f"   -- {now:%Y-%m-%d %H:%M:%S%z} ({format_time(total_elapsed)} running): {len(self._todo)} work items remaining = {percent_complete:.2f}% complete"
                     if percent_complete > 99.99:
-                        print(
-                            f"   -- {now:%Y-%m-%d %H:%M:%S%z} ({format_time(total_elapsed)} running): {len(self._todo)} work items remaining = {percent_complete:.2f}% complete (may be waiting for compute/store/validate tasks to finish)"
-                        )
-                    else:
-                        print(
-                            f"   -- {now:%Y-%m-%d %H:%M:%S%z} ({format_time(total_elapsed)} running): {len(self._todo)} work items remaining = {percent_complete:.2f}% complete"
-                        )
+                        msg += " (may be waiting for compute/store/validate tasks to finish)"
+                    print(msg)
 
-                    if self._validation_maker is not None:
-                        print(
-                            f"      inflight items: {self._num_lookup_queue} lookup, {self._num_compute_queue} compute, {self._num_store_queue} store, {self._num_validation_queue} validation"
-                        )
-                    else:
-                        print(
-                            f"      inflight items: {self._num_lookup_queue} lookup, {self._num_compute_queue} compute, {self._num_store_queue} store"
-                        )
+                    msg = f"      inflight items: {self._num_lookup_queue} lookup"
+                    if self._compute_handler is not None:
+                        msg += f", {self._num_compute_queue} compute"
+                    if self._store_handler is not None:
+                        msg += f", {self._num_store_queue} store"
+                    if self._available_handler is not None:
+                        msg += f", {self._num_available_queue} available"
+                    if self._validation_handler is not None:
+                        msg += f", {self._num_validation_queue} validation"
+
+                    msg += f" | completed items: {self._num_lookup_complete} lookup"
+                    if self._compute_handler is not None:
+                        msg += f", {self._num_compute_complete} compute"
+                    if self._store_handler is not None:
+                        msg += f", {self._num_store_complete} store"
+                    if self._available_handler is not None:
+                        msg += f", {self._num_available_complete} available"
+                    if self._validation_handler is not None:
+                        msg += f", {self._num_validation_complete} validation"
+                    print(msg)
 
                     self._batch = 0
                     self._last_notify_time = time.perf_counter()

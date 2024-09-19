@@ -717,7 +717,7 @@ class Datastore:
                 payload_data = kwargs["payload_data"]
                 scalar = False
 
-                payload_size = len(payload_data)
+                # payload_size = len(payload_data)
                 # print(
                 #     f'** Datastore.object_get() starting for object group of class "{cls_name}"'
                 # )

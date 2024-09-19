@@ -1,5 +1,6 @@
 import argparse
 import sys
+from math import exp
 from pathlib import Path
 
 import pyarrow as pa
@@ -8,11 +9,12 @@ from pyarrow import dataset
 from pyarrow.csv import CSVWriter
 
 from ComputeTargets import (
-    MatterTransferFunctionIntegration,
+    TensorGreenFunctionIntegration,
 )
 from CosmologyConcepts import (
     wavenumber,
     wavenumber_exit_time,
+    redshift_array,
 )
 from CosmologyModels.LambdaCDM import Planck2018, LambdaCDM
 from Datastore.SQL.sqla_impl import ShardedPool
@@ -71,6 +73,8 @@ atol, rtol = ray.get(
 )
 
 k_array = ray.get(pool.read_wavenumber_table(units=units))
+z_array = ray.get(pool.read_redshift_table())
+z_sample = redshift_array(z_array=z_array)
 
 
 def create_k_exit_work(k: wavenumber):
@@ -101,11 +105,11 @@ time_series_schema = pa.schema(
         ("k_serial", pa.int32()),
         ("k_exit_serial", pa.int32()),
         ("k_inv_Mpc", pa.float64()),
-        ("z_init_serial", pa.int32()),
-        ("z_init", pa.float64()),
         ("z_exit", pa.float64()),
-        ("z_serial", pa.int32()),
-        ("z", pa.float64()),
+        ("z_source_serial", pa.int32()),
+        ("z_source", pa.float64()),
+        ("z_response_serial", pa.int32()),
+        ("z_response", pa.float64()),
         ("value", pa.float64()),
     ]
 )
@@ -115,9 +119,9 @@ metadata_schema = pa.schema(
         ("k_serial", pa.int32()),
         ("k_exit_serial", pa.int32()),
         ("k_inv_Mpc", pa.float64()),
-        ("z_init_serial", pa.int32()),
-        ("z_init", pa.float64()),
         ("z_exit", pa.float64()),
+        ("z_source_serial", pa.int32()),
+        ("z_source", pa.float64()),
         ("compute_time", pa.float64()),
         ("compute_steps", pa.int32()),
         ("RHS_evaluations", pa.int32()),
@@ -129,92 +133,72 @@ metadata_schema = pa.schema(
 
 
 @ray.remote
-def write_CSV_content(Tk: MatterTransferFunctionIntegration):
-    time_series_path = Path(
-        f"Tk-csv/time-series/storeid{Tk.store_id}-kid{Tk.k.store_id}.csv"
+def write_CSV_content(Gk: TensorGreenFunctionIntegration):
+    path = Path(
+        f"Gk-csv/time-series/storeid{Gk.store_id}-kid{Gk.k.store_id}-zsource{Gk.z_source.store_id}.csv"
     ).resolve()
-    time_series_path.parents[0].mkdir(exist_ok=True, parents=True)
+    path.parents[0].mkdir(exist_ok=True, parents=True)
 
-    with CSVWriter(time_series_path, schema=time_series_schema) as writer:
+    with CSVWriter(path, schema=time_series_schema) as writer:
         time_series_rows = [
             {
-                "k_serial": Tk.k.store_id,
-                "k_exit_serial": Tk._k_exit.store_id,
-                "k_inv_Mpc": Tk.k.k_inv_Mpc,
-                "z_init_serial": Tk.z_init.store_id,
-                "z_init": Tk.z_init.z,
-                "z_exit": Tk.z_exit,
-                "z_serial": value.z.store_id,
-                "z": value.z.z,
+                "k_serial": Gk.k.store_id,
+                "k_exit_serial": Gk._k_exit.store_id,
+                "k_inv_Mpc": Gk.k.k_inv_Mpc,
+                "z_exit": Gk.z_exit,
+                "z_source_serial": Gk.z_source.store_id,
+                "z_source": Gk.z_source.z,
+                "z_response_serial": value.z.store_id,
+                "z_response": value.z.z,
                 "value": value.value,
             }
-            for value in Tk.values
+            for value in Gk.values
         ]
         batch = pa.RecordBatch.from_pylist(time_series_rows, schema=time_series_schema)
         writer.write(batch)
 
-    metadata_path = Path(
-        f"Tk-csv/metadata/storeid{Tk.store_id}-kid{Tk.k.store_id}.csv"
-    ).resolve()
-    metadata_path.parents[0].mkdir(exist_ok=True, parents=True)
 
-    with CSVWriter(metadata_path, schema=metadata_schema) as writer:
-        metadata_rows = [
-            {
-                "integration_serial": Tk.store_id,
-                "k_serial": Tk.k.store_id,
-                "k_exit_serial": Tk._k_exit.store_id,
-                "k_inv_Mpc": Tk.k.k_inv_Mpc,
-                "z_init_serial": Tk.z_init.store_id,
-                "z_init": Tk.z_init.z,
-                "z_exit": Tk.z_exit,
-                "compute_time": Tk.compute_time,
-                "compute_steps": Tk.compute_steps,
-                "RHS_evaluations": Tk.RHS_evaluations,
-                "mean_RHS_time": Tk.mean_RHS_time,
-                "min_RHS_time": Tk.min_RHS_time,
-                "max_RHS_time": Tk.max_RHS_time,
-            }
-        ]
-        batch = pa.RecordBatch.from_pylist(metadata_rows, schema=metadata_schema)
-        writer.write(batch)
-
-
-def build_Tk_work(k_exit: wavenumber_exit_time):
+def build_Gk_work(k_exit: wavenumber_exit_time):
     if not k_exit.available:
         raise RuntimeError(f"k_exit object (store_id={k_exit.store_id}) is not ready")
+    source_zs = z_sample.truncate(exp(OUTSIDE_HORIZON_EFOLDS) * k_exit.z_exit)
 
-    return pool.object_get(
-        MatterTransferFunctionIntegration,
-        solver_labels=[],
-        cosmology=LambdaCDM_Planck2018,
-        k=k_exit,
-        z_sample=None,
-        z_init=None,  # will query for any sample time
-        atol=atol,
-        rtol=rtol,
-    )
+    return [
+        pool.object_get(
+            TensorGreenFunctionIntegration,
+            solver_labels=[],
+            cosmology=LambdaCDM_Planck2018,
+            k=k_exit,
+            z_sample=None,
+            z_source=source_z,
+            atol=atol,
+            rtol=rtol,
+        )
+        for source_z in source_zs
+    ]
 
 
-def Tk_available_map(Tk: MatterTransferFunctionIntegration):
-    return write_CSV_content.remote(Tk)
+def Gk_available_map(Gk: TensorGreenFunctionIntegration):
+    return write_CSV_content.remote(Gk)
 
 
 build_csv_queue = RayWorkQueue(
     pool,
     k_exit_times,
-    task_builder=build_Tk_work,
-    available_handler=Tk_available_map,
+    task_builder=build_Gk_work,
+    available_handler=Gk_available_map,
     compute_handler=None,
     store_handler=None,
     store_results=False,
-    title="EXTRACT MATTER TRANSFER FUNCTION DATA",
+    title="EXTRACT TENSOR GREEN FUNCTION DATA",
+    notify_time_interval=60,
+    notify_batch_size=5,
 )
 build_csv_queue.run()
 
 
 # use PyArrow to ingest all created CSV files into a dataaset, and then re-emit them as a single consolidated CSV
-base_path = Path("Tk-csv").resolve()
+base_path = Path("Gk-csv").resolve()
 time_series_path = base_path / "time-series"
 metadata_path = base_path / "metadata"
 
@@ -230,12 +214,21 @@ dataset.write_dataset(
     existing_data_behavior="overwrite_or_ignore",
 )
 
-metadata_data = dataset.dataset(metadata_path, format="csv", schema=metadata_schema)
-dataset.write_dataset(
-    metadata_data,
-    base_dir=base_path,
-    basename_template="metadata-{i}.csv",
-    format="csv",
-    schema=metadata_schema,
-    existing_data_behavior="overwrite_or_ignore",
-)
+
+# metadata_rows.append(
+#     {
+#         "integration_serial": obj.store_id,
+#         "k_serial": obj.k.store_id,
+#         "k_exit_serial": obj._k_exit.store_id,
+#         "k_inv_Mpc": obj.k.k_inv_Mpc,
+#         "z_exit": obj.z_exit,
+#         "z_source_serial": obj.z_source.store_id,
+#         "z_source": obj.z_source.z,
+#         "compute_time": obj.compute_time,
+#         "compute_steps": obj.compute_steps,
+#         "RHS_evaluations": obj.RHS_evaluations,
+#         "mean_RHS_time": obj.mean_RHS_time,
+#         "min_RHS_time": obj.min_RHS_time,
+#         "max_RHS_time": obj.max_RHS_time,
+#     }
+# )

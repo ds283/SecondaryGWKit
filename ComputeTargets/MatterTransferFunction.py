@@ -239,7 +239,7 @@ class MatterTransferFunctionIntegration(DatastoreObject):
             self._values = payload["values"]
 
         # check that all sample points are *later* than the specified initial redshift
-        if z_init is not None:
+        if z_init is not None and self._z_sample is not None:
             z_init_float = float(z_init)
             for z in self._z_sample:
                 z_float = float(z)

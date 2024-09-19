@@ -238,13 +238,14 @@ class TensorGreenFunctionIntegration(DatastoreObject):
             self._values = payload["values"]
 
         # check that all sample points are *later* than the specified source redshift
-        z_init_float = float(z_source)
-        for z in self._z_sample:
-            z_float = float(z)
-            if z_float > z_init_float:
-                raise ValueError(
-                    f"Redshift sample point z={z_float} exceeds source redshift z={z_init_float}"
-                )
+        if z_source is not None and self._z_sample is not None:
+            z_init_float = float(z_source)
+            for z in self._z_sample:
+                z_float = float(z)
+                if z_float > z_init_float:
+                    raise ValueError(
+                        f"Redshift sample point z={z_float} exceeds source redshift z={z_init_float}"
+                    )
 
         # store parameters
         self._label = label
