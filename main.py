@@ -24,8 +24,9 @@ from RayWorkQueue import RayWorkQueue
 from Units import Mpc_units
 from defaults import DEFAULT_ABS_TOLERANCE, DEFAULT_REL_TOLERANCE
 
-default_label = "SecondaryGWKit-test"
-default_timeout = 60
+DEFAULT_LABEL = "SecondaryGWKit-test"
+DEFAULT_TIMEOUT = 60
+DEFAULT_SHARDS = 20
 
 parser = argparse.ArgumentParser()
 parser.add_argument(
@@ -34,24 +35,18 @@ parser.add_argument(
     help="read/write work items using the specified database cache",
 )
 parser.add_argument(
-    "--compute",
-    default=True,
-    action=argparse.BooleanOptionalAction,
-    help="enable/disable computation of work items (use in conjunction with --create-database",
-)
-parser.add_argument(
     "--job-name",
-    default=default_label,
+    default=DEFAULT_LABEL,
     help="specify a label for this job (used to identify integrations and other numerical products)",
 )
 parser.add_argument(
-    "--db-actors",
-    default=5,
-    help="specify number of Ray actors used to provide database services",
+    "--shards",
+    default=DEFAULT_SHARDS,
+    help="specify number of shards to be used when creating a new datastore",
 )
 parser.add_argument(
     "--db-timeout",
-    default=default_timeout,
+    default=DEFAULT_TIMEOUT,
     help="specify connection timeout for database layer",
 )
 parser.add_argument(
@@ -71,7 +66,7 @@ ray.init(address=args.ray_address)
 # For performance reasons, we want all database activity to run on this node.
 # For one thing, this lets us use transactions efficiently.
 pool: ShardedPool = ShardedPool(
-    version_label="2024.1.1", db_name=args.database, timeout=args.db_timeout, shards=20
+    version_label="2024.1.1", db_name=args.database, timeout=args.db_timeout, shards=args.shards
 )
 
 # set up LambdaCDM object representing a basic Planck2018 cosmology in Mpc units
@@ -144,7 +139,7 @@ k_exit_times = k_exit_queue.results
 print("\n** BUILDING ARRAY OF Z-VALUES AT WHICH TO SAMPLE")
 k_exit_earliest: wavenumber_exit_time = k_exit_times[-1]
 print(
-    f"     >> earliest horizon exit time is {k_exit_earliest.k.k_inv_Mpc:.5g}/Mpc with z_exit={k_exit_earliest.z_exit:.5g}"
+    f"   @@ earliest horizon exit time is {k_exit_earliest.k.k_inv_Mpc:.5g}/Mpc with z_exit={k_exit_earliest.z_exit:.5g}"
 )
 
 
