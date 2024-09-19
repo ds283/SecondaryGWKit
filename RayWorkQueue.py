@@ -8,6 +8,14 @@ from ray import ObjectRef
 from Datastore.SQL.sqla_impl import ShardedPool
 from utilities import format_time
 
+DEFAULT_CREATE_BATCH_SIZE = 5
+DEFAULT_PROCESS_BATCH_SIZE = 1
+
+DEFAULT_MAX_TASK_QUEUE = 2000
+DEFAULT_NOTIFY_BATCH_SIZE = 500
+DEFAULT_NOTIFY_TIME_INTERVAL = 5 * 60
+DEFAULT_NOTIFY_MIN_INTERVAL = 30
+
 
 def _default_compute_maker(obj, label=None) -> ObjectRef:
     if label is not None:
@@ -30,12 +38,12 @@ class RayWorkQueue:
         store_maker=_default_store_maker,
         validation_maker=None,
         label_maker=None,
-        create_batch_size: int = 5,
-        process_batch_size: int = 1,
-        max_task_queue: int = 1000,
-        notify_batch_size: int = 50,
-        notify_time_interval: int = 180,
-        notify_min_time_interval: int = 5,
+        create_batch_size: int = DEFAULT_CREATE_BATCH_SIZE,
+        process_batch_size: int = DEFAULT_PROCESS_BATCH_SIZE,
+        max_task_queue: int = DEFAULT_MAX_TASK_QUEUE,
+        notify_batch_size: int = DEFAULT_NOTIFY_BATCH_SIZE,
+        notify_time_interval: int = DEFAULT_NOTIFY_TIME_INTERVAL,
+        notify_min_time_interval: int = DEFAULT_NOTIFY_MIN_INTERVAL,
         title: str = None,
         store_results: bool = False,
     ):
