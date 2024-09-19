@@ -455,9 +455,9 @@ class ShardedPool:
                 self._wavenumber_keys[item.store_id] = new_shard
                 loads[new_shard] = loads[new_shard] + 1
 
-                print(
-                    f">> assigned shard #{new_shard} to wavenumber object #{item.store_id} (k={item.k_inv_Mpc}/Mpc)"
-                )
+                # print(
+                #     f">> assigned shard #{new_shard} to wavenumber object #{item.store_id} (k={item.k_inv_Mpc}/Mpc)"
+                # )
 
             conn.commit()
 
