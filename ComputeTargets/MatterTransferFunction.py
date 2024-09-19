@@ -1,5 +1,7 @@
 from math import fabs
 from typing import Optional, List
+import time
+from traceback import print_tb
 
 import ray
 from scipy.integrate import solve_ivp
@@ -9,8 +11,136 @@ from CosmologyModels import BaseCosmology
 from Datastore import DatastoreObject
 from MetadataConcepts import tolerance, store_tag
 from defaults import DEFAULT_ABS_TOLERANCE, DEFAULT_REL_TOLERANCE
-from utilities import check_units, WallclockTimer
+from utilities import check_units, WallclockTimer, format_time
 from .integration_metadata import IntegrationSolver
+
+
+DEFAULT_UPDATE_INTERVAL = 1*60
+
+
+class IntegrationSupervisor:
+    def __init__(self, notify_interval: int=DEFAULT_UPDATE_INTERVAL):
+        self._notify_interval: int = notify_interval
+
+        self._RHS_times: float = 0
+        self._RHS_evaluations: int = 0
+
+        self._min_RHS_time: float = None
+        self._max_RHS_time: float = None
+
+        self._num_notifications = 0
+
+    def __enter__(self):
+        self._start_time = time.time()
+        self._last_notify = self._start_time
+
+        self._integration_start = time.perf_counter()
+
+    def __exit__(self, exc_type, exc_val, exc_tb):
+        self._integration_end = time.perf_counter()
+        self.integration_time = self._integration_end - self._integration_start
+
+        if exc_type is not None:
+            print(f"type={exc_type}, value={exc_val}")
+            print_tb(exc_tb)
+
+    @property
+    def notify_available(self) -> bool:
+        return time.time() - self._last_notify > self._notify_interval
+
+    def report_notify(self) -> int:
+        self._num_notifications += 1
+        return self._num_notifications
+
+    def reset_notify_time(self):
+        self._last_notify = time.time()
+
+    def notify_new_RHS_time(self, RHS_time):
+        self._RHS_time = self._RHS_times + RHS_time
+        self._RHS_evaluations += 1
+
+        if self._min_RHS_time is None or RHS_time < self._min_RHS_time:
+            self._min_RHS_time = RHS_time
+
+        if self._max_RHS_time is None or RHS_time > self._max_RHS_time:
+            self._max_RHS_time = RHS_time
+
+    @property
+    def mean_RHS_time(self) -> float:
+        if self._RHS_evaluations == 0:
+            return None
+
+        return self._RHS_times/self._RHS_evaluations
+
+    @property
+    def min_RHS_time(self) -> float:
+        return self._min_RHS_time
+
+    @property
+    def max_RHS_time(self) -> float:
+        return self._max_RHS_time
+
+    @property
+    def RHS_evaluations(self) -> int:
+        return self._RHS_evaluations
+
+
+class MatterTransferFunctionSupervisor(IntegrationSupervisor):
+    def __init__(self, k: wavenumber, z_init: redshift, z_final: redshift, notify_interval: int=DEFAULT_UPDATE_INTERVAL):
+        super().__init__(notify_interval)
+
+        self._k: wavenumber = k
+        self._z_init: float = z_init.z
+        self._z_final: float = z_final.z
+
+        self._z_range: float = self._z_init - self._z_final
+
+        self._last_z: float = self._z_init
+
+    def __enter__(self):
+        super().__enter__()
+        return self
+
+    def __exit__(self, exc_type, exc_val, exc_tb):
+        super().__exit__(exc_type, exc_val, exc_tb)
+
+    def message(self, current_z, msg):
+        current_time = time.time()
+        since_last_notify = current_time - self._last_notify
+        since_start = current_time - self._start_time
+
+        update_number = self.report_notify()
+
+        z_complete = self._z_init - current_z
+        z_remain = self._z_range - z_complete
+        percent_remain = 100.0 * (z_remain / self._z_range)
+        print(f"** STATUS UPDATE #{update_number}: Integration for T(k) for k = {self._k.k_inv_Mpc:.5g}/Mpc (store_id={self._k.store_id}) has been running for {format_time(since_start)} ({format_time(since_last_notify)} since last notification)")
+        print(f"|    current z={current_z:.5g} (initial z={self._z_init:.5g}, target z={self._z_final:.5g}, z complete={z_complete:.5g}, z remain={z_remain:.5g}, {percent_remain:.2f}% remains)")
+        if self._last_z is not None:
+            z_delta = self._last_z - current_z
+            print(f"|    redshift advance since last update: Delta z = {z_delta:.5g}")
+        print(f"|    {self.RHS_evaluations} RHS evaluations, mean {self.mean_RHS_time:.5g}s per evaluation, min RHS time = {self.min_RHS_time:.5g}s, max RHS time = {self.max_RHS_time:.5g}s")
+        print(f"|    {msg}")
+
+        self._last_z = current_z
+
+class _RHS_timer:
+    def __init__(self, supervisor: IntegrationSupervisor):
+        self._supervisor = supervisor
+
+    def __enter__(self):
+        self._start_time = time.perf_counter()
+        return self
+
+    def __exit__(self, exc_type, exc_val, exc_tb):
+        self._end_time = time.perf_counter()
+        self._elapsed = self._end_time - self._start_time
+
+        self._supervisor.notify_new_RHS_time(self._elapsed)
+
+        if exc_type is not None:
+            print(f"type={exc_type}, value={exc_val}")
+            print_tb(exc_tb)
 
 
 @ray.remote
@@ -38,35 +168,40 @@ def compute_matter_Tk(
     #   state[0] = energy density rho(z)
     #   state[0] = T(z)
     #   state[1] = dT/dz = T' = "T prime"
-    def RHS(z, state) -> float:
+    def RHS(z, state, supervisor: MatterTransferFunctionSupervisor) -> float:
         """
         k *must* be measured using the same units used for H(z) in the cosmology
         """
-        rho, T, Tprime = state
+        with _RHS_timer(supervisor):
+            rho, T, Tprime = state
 
-        H = cosmology.Hubble(z)
-        wBackground = cosmology.wBackground(z)
-        wPerturbations = cosmology.wPerturbations(z)
-        eps = cosmology.epsilon(z)
+            if supervisor.notify_available:
+                supervisor.message(z, f"current state: rho = {rho:.5g}, T(k) = {T:.5g}, dT(k)/dz = {Tprime:.5g}")
+                supervisor.reset_notify_time()
 
-        one_plus_z = 1.0 + z
-        one_plus_z_2 = one_plus_z * one_plus_z
+            H = cosmology.Hubble(z)
+            wBackground = cosmology.wBackground(z)
+            wPerturbations = cosmology.wPerturbations(z)
+            eps = cosmology.epsilon(z)
 
-        drho_dz = 3.0 * ((1.0 + wBackground) / one_plus_z) * rho
-        dT_dz = Tprime
+            one_plus_z = 1.0 + z
+            one_plus_z_2 = one_plus_z * one_plus_z
 
-        k_over_H = k_float / H
-        k_over_H_2 = k_over_H * k_over_H
+            drho_dz = 3.0 * ((1.0 + wBackground) / one_plus_z) * rho
+            dT_dz = Tprime
 
-        dTprime_dz = (
-            -(eps - 3.0 * (1.0 + wPerturbations)) * Tprime / one_plus_z
-            - (3.0 * (1.0 + wPerturbations) - 2.0 * eps) * T / one_plus_z_2
-            - wPerturbations * k_over_H_2 * T
-        )
+            k_over_H = k_float / H
+            k_over_H_2 = k_over_H * k_over_H
+
+            dTprime_dz = (
+                -(eps - 3.0 * (1.0 + wPerturbations)) * Tprime / one_plus_z
+                - (3.0 * (1.0 + wPerturbations) - 2.0 * eps) * T / one_plus_z_2
+                - wPerturbations * k_over_H_2 * T
+            )
 
         return [drho_dz, dT_dz, dTprime_dz]
 
-    with WallclockTimer() as timer:
+    with MatterTransferFunctionSupervisor(k, z_init, z_sample.min) as supervisor:
         # use initial values T(z) = 1, dT/dz = 0 at z = z_init
         initial_state = [cosmology.rho(z_init.z), 1.0, 0.0]
         sol = solve_ivp(
@@ -77,6 +212,7 @@ def compute_matter_Tk(
             t_eval=z_sample.as_list(),
             atol=atol,
             rtol=rtol,
+            args=(supervisor,)
         )
 
     # test whether the integration concluded successfully
@@ -105,8 +241,12 @@ def compute_matter_Tk(
             )
 
     return {
-        "compute_time": timer.elapsed,
+        "compute_time": supervisor.integration_time,
         "compute_steps": int(sol.nfev),
+        "RHS_evaluations": supervisor.RHS_evaluations,
+        "mean_RHS_time": supervisor.mean_RHS_time,
+        "max_RHS_time": supervisor.max_RHS_time,
+        "min_RHS_time": supervisor.min_RHS_time,
         "values": sampled_T,
         "solver_label": "scipy+solve_ivp+RK45",
         "solver_stepping": 0,
