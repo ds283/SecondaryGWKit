@@ -34,6 +34,7 @@ from Datastore.SQL.ObjectFactories.wavenumber import (
     sqla_wavenumber_exit_time_factory,
 )
 from MetadataConcepts import version
+from Units.base import UnitsLike
 from defaults import DEFAULT_STRING_LENGTH
 from utilities import WallclockTimer
 
@@ -473,6 +474,28 @@ class ShardedPool:
 
             conn.commit()
 
+    def read_wavenumber_table(self, units: UnitsLike):
+        # we only need to read the wavenumber table from a single shard, so pick one at random
+        shard_ids = list(self._shards.keys())
+        i = random.randrange(len(shard_ids))
+
+        # swap this entry with the last element, then pop it
+        shard_ids[i], shard_ids[-1] = shard_ids[-1], shard_ids[i]
+        shard_key = shard_ids.pop()
+
+        return self._shards[shard_key].read_wavenumber_table.remote(units=units)
+
+    def read_redshift_table(self):
+        # we only need to read the redshift table from a single shard, so pick one at random
+        shard_ids = list(self._shards.keys())
+        i = random.randrange(len(shard_ids))
+
+        # swap this entry with the last element, then pop it
+        shard_ids[i], shard_ids[-1] = shard_ids[-1], shard_ids[i]
+        shard_key = shard_ids.pop()
+
+        return self._shards[shard_key].read_redshift_table.remote()
+
 
 @ray.remote
 class Datastore:
@@ -857,3 +880,27 @@ class Datastore:
             return output_flags[0]
 
         return output_flags
+
+    def read_wavenumber_table(self, units):
+        self._ensure_registered_schema("wavenumber")
+        record = self._schema["wavenumber"]
+
+        tab = record["table"]
+        factory = self._factories["wavenumber"]
+
+        with self._engine.begin() as conn:
+            objects = factory.read_table(conn, tab, units)
+
+        return objects
+
+    def read_redshift_table(self):
+        self._ensure_registered_schema("redshift")
+        record = self._schema["redshift"]
+
+        tab = record["table"]
+        factory = self._factories["redshift"]
+
+        with self._engine.begin() as conn:
+            objects = factory.read_table(conn, tab)
+
+        return objects

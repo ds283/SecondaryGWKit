@@ -1,6 +1,6 @@
+import time
 from math import fabs
 from typing import Optional, List
-import time
 
 import ray
 from scipy.integrate import solve_ivp
@@ -12,11 +12,21 @@ from MetadataConcepts import tolerance, store_tag
 from defaults import DEFAULT_ABS_TOLERANCE, DEFAULT_REL_TOLERANCE
 from utilities import check_units, format_time
 from .integration_metadata import IntegrationSolver
-from .integration_supervisor import DEFAULT_UPDATE_INTERVAL, IntegrationSupervisor, RHS_timer
+from .integration_supervisor import (
+    DEFAULT_UPDATE_INTERVAL,
+    IntegrationSupervisor,
+    RHS_timer,
+)
 
 
 class MatterTransferFunctionSupervisor(IntegrationSupervisor):
-    def __init__(self, k: wavenumber, z_init: redshift, z_final: redshift, notify_interval: int= DEFAULT_UPDATE_INTERVAL):
+    def __init__(
+        self,
+        k: wavenumber,
+        z_init: redshift,
+        z_final: redshift,
+        notify_interval: int = DEFAULT_UPDATE_INTERVAL,
+    ):
         super().__init__(notify_interval)
 
         self._k: wavenumber = k
@@ -44,12 +54,18 @@ class MatterTransferFunctionSupervisor(IntegrationSupervisor):
         z_complete = self._z_init - current_z
         z_remain = self._z_range - z_complete
         percent_remain = 100.0 * (z_remain / self._z_range)
-        print(f"** STATUS UPDATE #{update_number}: Integration for T(k) for k = {self._k.k_inv_Mpc:.5g}/Mpc (store_id={self._k.store_id}) has been running for {format_time(since_start)} ({format_time(since_last_notify)} since last notification)")
-        print(f"|    current z={current_z:.5g} (initial z={self._z_init:.5g}, target z={self._z_final:.5g}, z complete={z_complete:.5g}, z remain={z_remain:.5g}, {percent_remain:.3g}% remains)")
+        print(
+            f"** STATUS UPDATE #{update_number}: Integration for T(k) for k = {self._k.k_inv_Mpc:.5g}/Mpc (store_id={self._k.store_id}) has been running for {format_time(since_start)} ({format_time(since_last_notify)} since last notification)"
+        )
+        print(
+            f"|    current z={current_z:.5g} (initial z={self._z_init:.5g}, target z={self._z_final:.5g}, z complete={z_complete:.5g}, z remain={z_remain:.5g}, {percent_remain:.3g}% remains)"
+        )
         if self._last_z is not None:
             z_delta = self._last_z - current_z
             print(f"|    redshift advance since last update: Delta z = {z_delta:.5g}")
-        print(f"|    {self.RHS_evaluations} RHS evaluations, mean {self.mean_RHS_time:.5g}s per evaluation, min RHS time = {self.min_RHS_time:.5g}s, max RHS time = {self.max_RHS_time:.5g}s")
+        print(
+            f"|    {self.RHS_evaluations} RHS evaluations, mean {self.mean_RHS_time:.5g}s per evaluation, min RHS time = {self.min_RHS_time:.5g}s, max RHS time = {self.max_RHS_time:.5g}s"
+        )
         print(f"|    {msg}")
 
         self._last_z = current_z
@@ -88,7 +104,10 @@ def compute_matter_Tk(
             rho, T, Tprime = state
 
             if supervisor.notify_available:
-                supervisor.message(z, f"current state: rho = {rho:.5g}, T(k) = {T:.5g}, dT(k)/dz = {Tprime:.5g}")
+                supervisor.message(
+                    z,
+                    f"current state: rho = {rho:.5g}, T(k) = {T:.5g}, dT(k)/dz = {Tprime:.5g}",
+                )
                 supervisor.reset_notify_time()
 
             H = cosmology.Hubble(z)
@@ -124,7 +143,7 @@ def compute_matter_Tk(
             t_eval=z_sample.as_list(),
             atol=atol,
             rtol=rtol,
-            args=(supervisor,)
+            args=(supervisor,),
         )
 
     # test whether the integration concluded successfully
@@ -177,10 +196,10 @@ class MatterTransferFunctionIntegration(DatastoreObject):
         solver_labels: dict,
         cosmology: BaseCosmology,
         k: wavenumber_exit_time,
-        z_sample: redshift_array,
-        z_init: redshift,
         atol: tolerance,
         rtol: tolerance,
+        z_sample: Optional[redshift_array] = None,
+        z_init: Optional[redshift] = None,
         label: Optional[str] = None,
         tags: Optional[List[store_tag]] = None,
     ):
@@ -220,13 +239,14 @@ class MatterTransferFunctionIntegration(DatastoreObject):
             self._values = payload["values"]
 
         # check that all sample points are *later* than the specified initial redshift
-        z_init_float = float(z_init)
-        for z in self._z_sample:
-            z_float = float(z)
-            if z_float > z_init_float:
-                raise ValueError(
-                    f"Redshift sample point z={z_float} exceeds initial redshift z={z_init_float}"
-                )
+        if z_init is not None:
+            z_init_float = float(z_init)
+            for z in self._z_sample:
+                z_float = float(z)
+                if z_float > z_init_float:
+                    raise ValueError(
+                        f"Redshift sample point z={z_float} exceeds initial redshift z={z_init_float}"
+                    )
 
         # store parameters
         self._label = label
@@ -321,6 +341,11 @@ class MatterTransferFunctionIntegration(DatastoreObject):
     def compute(self, label: Optional[str] = None):
         if self._values is not None:
             raise RuntimeError("values have already been computed")
+
+        if self._z_init is None or self._z_sample is None:
+            raise RuntimeError(
+                "Object has not been configured correctly for a concrete calculation (z_init or z_sample is missing). It can only represent a query."
+            )
 
         # replace label if specified
         if label is not None:

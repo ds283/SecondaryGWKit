@@ -14,7 +14,6 @@ from CosmologyModels import BaseCosmology
 from Datastore.SQL.ObjectFactories.base import SQLAFactoryBase
 from MetadataConcepts import tolerance, store_tag
 from defaults import DEFAULT_FLOAT_PRECISION, DEFAULT_STRING_LENGTH
-from .integration_metadata import sqla_IntegrationSolver_factory
 
 
 class sqla_TensorGreenFunctionTagAssociation_factory(SQLAFactoryBase):
@@ -158,10 +157,9 @@ class sqla_TensorGreenFunctionIntegration_factory(SQLAFactoryBase):
 
         atol_table = tables["tolerance"].alias("atol")
         rtol_table = tables["tolerance"].alias("rtol")
-
         solver_table = tables["IntegrationSolver"]
-
         tag_table = tables["TensorGreenFunctionIntegration_tags"]
+        redshift_table = tables["redshift"]
 
         # we treat z_sample as a target rather than a selection criterion;
         # later, the actual set of z_sample stored with this integration is read in
@@ -179,6 +177,8 @@ class sqla_TensorGreenFunctionIntegration_factory(SQLAFactoryBase):
                 table.c.min_RHS_time,
                 table.c.solver_serial,
                 table.c.label,
+                table.c.z_source_serial,
+                redshift_table.c.z.label("z_source"),
                 table.c.z_samples,
                 solver_table.c.label.label("solver_label"),
                 solver_table.c.stepping.label("solver_stepping"),
@@ -189,17 +189,24 @@ class sqla_TensorGreenFunctionIntegration_factory(SQLAFactoryBase):
                 table.join(solver_table, solver_table.c.serial == table.c.solver_serial)
                 .join(atol_table, atol_table.c.serial == table.c.atol_serial)
                 .join(rtol_table, rtol_table.c.serial == table.c.rtol_serial)
+                .join(
+                    redshift_table, redshift_table.c.serial == table.c.z_source_serial
+                )
             )
             .filter(
                 table.c.validated == True,
                 table.c.wavenumber_exit_serial == k_exit.store_id,
                 table.c.cosmology_type == cosmology.type_id,
                 table.c.cosmology_serial == cosmology.store_id,
-                table.c.z_source_serial == z_source.store_id,
                 table.c.atol_serial == atol.store_id,
                 table.c.rtol_serial == rtol.store_id,
             )
         )
+
+        if z_source is not None:
+            query = query.filter(
+                table.c.z_source_serial == z_source.store_id,
+            )
 
         # require that the integration we search for has the specified list of tags
         count = 0
@@ -225,10 +232,10 @@ class sqla_TensorGreenFunctionIntegration_factory(SQLAFactoryBase):
                 label=label,
                 k=k_exit,
                 cosmology=cosmology,
-                z_source=z_source,
-                z_sample=z_sample,
                 atol=atol,
                 rtol=rtol,
+                z_source=z_source,
+                z_sample=z_sample,
                 tags=tags,
             )
 
@@ -246,6 +253,9 @@ class sqla_TensorGreenFunctionIntegration_factory(SQLAFactoryBase):
         solver_stepping = row_data.solver_stepping
         num_expected_samples = row_data.z_samples
 
+        z_source_serial = row_data.z_source_serial
+        z_source_value = row_data.z_source
+
         solver = IntegrationSolver(
             store_id=row_data.solver_serial,
             label=solver_label,
@@ -254,7 +264,6 @@ class sqla_TensorGreenFunctionIntegration_factory(SQLAFactoryBase):
 
         # read out sample values associated with this integration
         value_table = tables["TensorGreenFunctionValue"]
-        redshift_table = tables["redshift"]
 
         sample_rows = conn.execute(
             sqla.select(
@@ -283,14 +292,13 @@ class sqla_TensorGreenFunctionIntegration_factory(SQLAFactoryBase):
                     store_id=row.serial, z=z_value, value=row.value
                 )
             )
+        imported_z_sample = redshift_array(z_points)
 
-        z_sample = redshift_array(z_sample)
-
-        z_sample = redshift_array(z_sample)
-        if len(z_sample) != num_expected_samples:
-            raise RuntimeError(
-                f'Fewer z-samples than expected were recovered from the validated tensor Green function "{store_label}"'
-            )
+        if num_expected_samples is not None:
+            if len(imported_z_sample) != num_expected_samples:
+                raise RuntimeError(
+                    f'Fewer z-samples than expected were recovered from the validated tensor Green function "{store_label}"'
+                )
 
         return TensorGreenFunctionIntegration(
             payload={
@@ -308,10 +316,10 @@ class sqla_TensorGreenFunctionIntegration_factory(SQLAFactoryBase):
             k=k_exit,
             cosmology=cosmology,
             label=store_label,
-            z_source=z_source,
-            z_sample=z_sample,
             atol=atol,
             rtol=rtol,
+            z_source=redshift(store_id=z_source_serial, z=z_source_value),
+            z_sample=imported_z_sample,
             tags=tags,
         )
 

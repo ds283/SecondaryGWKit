@@ -34,3 +34,15 @@ class sqla_redshift_factory(SQLAFactoryBase):
 
         # return constructed object
         return redshift(store_id=store_id, z=z)
+
+    @staticmethod
+    def read_table(conn, table):
+        # query for all redshift records in the table
+        rows = conn.execute(
+            sqla.select(
+                table.c.serial,
+                table.c.z,
+            ).order_by(table.c.z)
+        )
+
+        return [redshift(store_id=row.serial, z=row.z) for row in rows]

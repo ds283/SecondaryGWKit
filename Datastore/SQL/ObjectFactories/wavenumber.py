@@ -3,6 +3,7 @@ import sqlalchemy as sqla
 from CosmologyConcepts import wavenumber, wavenumber_exit_time
 from Datastore.SQL.ObjectFactories.base import SQLAFactoryBase
 from MetadataConcepts import tolerance
+from Units.base import UnitsLike
 from defaults import (
     DEFAULT_FLOAT_PRECISION,
 )
@@ -22,8 +23,8 @@ class sqla_wavenumber_factory(SQLAFactoryBase):
 
     @staticmethod
     def build(payload, conn, table, inserter, tables, inserters):
-        k_inv_Mpc = payload["k_inv_Mpc"]
-        units = payload["units"]
+        k_inv_Mpc: float = payload["k_inv_Mpc"]
+        units: UnitsLike = payload["units"]
 
         # query for this wavenumber in the datastore
         store_id = conn.execute(
@@ -38,6 +39,21 @@ class sqla_wavenumber_factory(SQLAFactoryBase):
 
         # return constructed object
         return wavenumber(store_id=store_id, k_inv_Mpc=k_inv_Mpc, units=units)
+
+    @staticmethod
+    def read_table(conn, table, units: UnitsLike):
+        # query for all wavenumber records in the table
+        rows = conn.execute(
+            sqla.select(
+                table.c.serial,
+                table.c.k_inv_Mpc,
+            ).order_by(table.c.k_inv_Mpc)
+        )
+
+        return [
+            wavenumber(store_id=row.serial, k_inv_Mpc=row.k_inv_Mpc, units=units)
+            for row in rows
+        ]
 
 
 class sqla_wavenumber_exit_time_factory(SQLAFactoryBase):

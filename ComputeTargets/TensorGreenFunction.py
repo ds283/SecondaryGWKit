@@ -9,13 +9,23 @@ from CosmologyModels import BaseCosmology
 from Datastore import DatastoreObject
 from MetadataConcepts import tolerance, store_tag
 from defaults import DEFAULT_ABS_TOLERANCE, DEFAULT_REL_TOLERANCE
-from utilities import check_units, WallclockTimer, format_time
+from utilities import check_units, format_time
 from .integration_metadata import IntegrationSolver
-from .integration_supervisor import IntegrationSupervisor, DEFAULT_UPDATE_INTERVAL, RHS_timer
+from .integration_supervisor import (
+    IntegrationSupervisor,
+    DEFAULT_UPDATE_INTERVAL,
+    RHS_timer,
+)
 
 
 class TensorGreenFunctionSupervisor(IntegrationSupervisor):
-    def __init__(self, k: wavenumber, z_source: redshift, z_final: redshift, notify_interval: int= DEFAULT_UPDATE_INTERVAL):
+    def __init__(
+        self,
+        k: wavenumber,
+        z_source: redshift,
+        z_final: redshift,
+        notify_interval: int = DEFAULT_UPDATE_INTERVAL,
+    ):
         super().__init__(notify_interval)
 
         self._k: wavenumber = k
@@ -43,12 +53,18 @@ class TensorGreenFunctionSupervisor(IntegrationSupervisor):
         z_complete = self._z_init - current_z
         z_remain = self._z_range - z_complete
         percent_remain = 100.0 * (z_remain / self._z_range)
-        print(f"** STATUS UPDATE #{update_number}: Integration for Gr(k) for k = {self._k.k_inv_Mpc:.5g}/Mpc (store_id={self._k.store_id}) has been running for {format_time(since_start)} ({format_time(since_last_notify)} since last notification)")
-        print(f"|    current z={current_z:.5g} (source z={self._z_source:.5g}, target z={self._z_final:.5g}, z complete={z_complete:.5g}, z remain={z_remain:.5g}, {percent_remain:.3g}% remains)")
+        print(
+            f"** STATUS UPDATE #{update_number}: Integration for Gr(k) for k = {self._k.k_inv_Mpc:.5g}/Mpc (store_id={self._k.store_id}) has been running for {format_time(since_start)} ({format_time(since_last_notify)} since last notification)"
+        )
+        print(
+            f"|    current z={current_z:.5g} (source z={self._z_source:.5g}, target z={self._z_final:.5g}, z complete={z_complete:.5g}, z remain={z_remain:.5g}, {percent_remain:.3g}% remains)"
+        )
         if self._last_z is not None:
             z_delta = self._last_z - current_z
             print(f"|    redshift advance since last update: Delta z = {z_delta:.5g}")
-        print(f"|    {self.RHS_evaluations} RHS evaluations, mean {self.mean_RHS_time:.5g}s per evaluation, min RHS time = {self.min_RHS_time:.5g}s, max RHS time = {self.max_RHS_time:.5g}s")
+        print(
+            f"|    {self.RHS_evaluations} RHS evaluations, mean {self.mean_RHS_time:.5g}s per evaluation, min RHS time = {self.min_RHS_time:.5g}s, max RHS time = {self.max_RHS_time:.5g}s"
+        )
         print(f"|    {msg}")
 
         self._last_z = current_z
@@ -86,7 +102,10 @@ def compute_tensor_Green(
             rho, G, Gprime = state
 
             if supervisor.notify_available:
-                supervisor.message(z, f"current state: rho = {rho:.5g}, Gr(k) = {G:.5g}, dGr(k)/dz = {Gprime:.5g}")
+                supervisor.message(
+                    z,
+                    f"current state: rho = {rho:.5g}, Gr(k) = {G:.5g}, dGr(k)/dz = {Gprime:.5g}",
+                )
                 supervisor.reset_notify_time()
 
             H = cosmology.Hubble(z)
@@ -103,7 +122,8 @@ def compute_tensor_Green(
             k_over_H_2 = k_over_H * k_over_H
 
             dGprime_dz = (
-                -(eps / one_plus_z) * Gprime - (k_over_H_2 + (eps - 2.0) / one_plus_z_2) * G
+                -(eps / one_plus_z) * Gprime
+                - (k_over_H_2 + (eps - 2.0) / one_plus_z_2) * G
             )
 
         return [drho_dz, dG_dz, dGprime_dz]
@@ -123,7 +143,7 @@ def compute_tensor_Green(
             t_eval=z_sample.as_list(),
             atol=atol,
             rtol=rtol,
-            args=(supervisor,)
+            args=(supervisor,),
         )
 
     # test whether the integration concluded successfully
@@ -180,10 +200,10 @@ class TensorGreenFunctionIntegration(DatastoreObject):
         solver_labels: dict,
         cosmology: BaseCosmology,
         k: wavenumber_exit_time,
-        z_source: redshift,
-        z_sample: redshift_array,
         atol: tolerance,
         rtol: tolerance,
+        z_source: Optional[redshift] = None,
+        z_sample: Optional[redshift_array] = None,
         label: Optional[str] = None,
         tags: Optional[List[store_tag]] = None,
     ):
@@ -319,6 +339,11 @@ class TensorGreenFunctionIntegration(DatastoreObject):
     def compute(self, label: Optional[str] = None):
         if self._values is not None:
             raise RuntimeError("values have already been computed")
+
+        if self._z_source is None or self._z_sample is None:
+            raise RuntimeError(
+                "Object has not been configured correctly for a concrete calculation (z_source or z_sample is missing). It can only represent a query."
+            )
 
         # replace label if specified
         if label is not None:

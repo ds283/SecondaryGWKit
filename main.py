@@ -8,7 +8,8 @@ import ray
 
 from ComputeTargets import (
     MatterTransferFunctionIntegration,
-    TensorGreenFunctionIntegration, IntegrationSolver,
+    TensorGreenFunctionIntegration,
+    IntegrationSolver,
 )
 from CosmologyConcepts import (
     wavenumber,
@@ -66,7 +67,10 @@ ray.init(address=args.ray_address)
 # For performance reasons, we want all database activity to run on this node.
 # For one thing, this lets us use transactions efficiently.
 pool: ShardedPool = ShardedPool(
-    version_label="2024.1.1", db_name=args.database, timeout=args.db_timeout, shards=args.shards
+    version_label="2024.1.1",
+    db_name=args.database,
+    timeout=args.db_timeout,
+    shards=args.shards,
 )
 
 # set up LambdaCDM object representing a basic Planck2018 cosmology in Mpc units
@@ -104,7 +108,13 @@ atol, rtol = ray.get(
 # build stepper labels; we have to query these up-front from the pool in order to be
 # certain that they get the same serial number in each database shard.
 # So we can no longer construct these on-the-fly in the integration classes, as used to be done
-solve_ivp_RK45, solve_ivp_DOP852, solve_ivp_Radau, solve_ivp_BDF, solve_icp_LSODA = ray.get(
+(
+    solve_ivp_RK45,
+    solve_ivp_DOP852,
+    solve_ivp_Radau,
+    solve_ivp_BDF,
+    solve_icp_LSODA,
+) = ray.get(
     [
         pool.object_get(IntegrationSolver, label="solve_ivp+RK45", stepping=0),
         pool.object_get(IntegrationSolver, label="solve_ivp+DOP853", stepping=0),
@@ -147,7 +157,7 @@ def create_k_exit_work(k: wavenumber):
 k_exit_queue = RayWorkQueue(
     pool,
     k_sample,
-    create_k_exit_work,
+    task_maker=create_k_exit_work,
     title="CALCULATE HORIZON EXIT TIMES",
     store_results=True,
 )
@@ -238,7 +248,7 @@ def validate_Tk_work(Tk: MatterTransferFunctionIntegration):
 Tk_queue = RayWorkQueue(
     pool,
     k_exit_times,
-    create_Tk_work,
+    task_maker=create_Tk_work,
     validation_maker=validate_Tk_work,
     label_maker=create_Tk_work_label,
     title="CALCULATE MATTER TRANSFER FUNCTIONS",
@@ -262,7 +272,6 @@ def create_Gk_work(k_exit: wavenumber_exit_time):
     for source_z in source_zs:
         response_zs = z_sample.truncate(source_z)
         if len(response_zs) >= 3:
-
             work_refs.append(
                 pool.object_get(
                     TensorGreenFunctionIntegration,
@@ -297,7 +306,7 @@ def validate_Gk_work(Gk: TensorGreenFunctionIntegration):
 Gk_queue = RayWorkQueue(
     pool,
     k_exit_times,
-    create_Gk_work,
+    task_maker=create_Gk_work,
     validation_maker=validate_Gk_work,
     label_maker=create_Gk_exit_work_label,
     title="CALCULATE TENSOR GREEN FUNCTIONS",

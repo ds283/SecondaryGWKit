@@ -1,6 +1,6 @@
 import time
-from typing import Iterable
 from datetime import datetime
+from typing import Iterable
 
 import ray
 from ray import ObjectRef
@@ -9,14 +9,24 @@ from Datastore.SQL.sqla_impl import ShardedPool
 from utilities import format_time
 
 
+def _default_compute_maker(obj, label=None) -> ObjectRef:
+    return obj.compute(label=label)
+
+
+def _default_store_maker(obj, pool) -> ObjectRef:
+    return pool.object_stre(obj)
+
+
 class RayWorkQueue:
     def __init__(
         self,
         pool: ShardedPool,
         task_list,
         task_maker,
-        label_maker=None,
+        compute_maker=_default_compute_maker,
+        store_maker=_default_store_maker,
         validation_maker=None,
+        label_maker=None,
         create_batch_size: int = 5,
         process_batch_size: int = 1,
         max_task_queue: int = 1000,
@@ -26,6 +36,16 @@ class RayWorkQueue:
         title: str = None,
         store_results: bool = False,
     ):
+        if compute_maker is not None and store_maker is None:
+            raise RuntimeError(
+                "If a compute maker is supplied, a store maker must also be supplied to serialize the result of the computation"
+            )
+
+        if compute_maker is None and store_maker is not None:
+            raise RuntimeWarning(
+                "No compute maker was supplied, but a store maker was provided. This will have no effect because there will be no compute results to store"
+            )
+
         self._pool = pool
 
         self._todo = [x for x in task_list]
@@ -35,9 +55,13 @@ class RayWorkQueue:
         self._todo.reverse()
 
         self._num_total_items = len(task_list)
+
         self._task_maker = task_maker
-        self._label_maker = label_maker
+        self._compute_maker = compute_maker
+        self._store_maker = store_maker
         self._validation_maker = validation_maker
+
+        self._label_maker = label_maker
 
         self._create_batch_size = create_batch_size
         self._process_batch_size = process_batch_size
@@ -129,16 +153,13 @@ class RayWorkQueue:
 
                     self._num_lookup_queue = max(self._num_lookup_queue - 1, 0)
 
-                    if obj.available:
+                    if obj.available or self._compute_maker is None:
                         # nothing to do, object is already constructed
                         continue
 
                     # otherwise, schedule a compute tasks
-                    compute_task: ObjectRef = (
-                        obj.compute(self._label_maker(obj))
-                        if self._label_maker is not None
-                        else obj.compute()
-                    )
+                    label: str = self._label_maker(payload)
+                    compute_task: ObjectRef = self._compute_maker(obj, label)
 
                     # add this compute task to the work queue
                     self._inflight[compute_task.hex] = compute_task
@@ -268,4 +289,6 @@ class RayWorkQueue:
 
         if self._title is not None:
             self.total_time = time.perf_counter() - self._start_time
-            print(f"   -- all work items complete in time {format_time(self.total_time)}")
+            print(
+                f"   -- all work items complete in time {format_time(self.total_time)}"
+            )
