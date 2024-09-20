@@ -133,8 +133,6 @@ def compute_tensor_Green(
     k_float = k.k
     z_min = float(z_sample.min)
 
-    Hsource = cosmology.Hubble(z_source.z)
-
     # RHS of ODE system
     #
     # State layout:
@@ -210,7 +208,7 @@ def compute_tensor_Green(
 
     sampled_z = sol.t
     sampled_values = sol.y
-    sampled_G = sampled_values[1] / Hsource
+    sampled_G = sampled_values[1]
 
     expected_values = len(z_sample)
     returned_values = sampled_z.size
