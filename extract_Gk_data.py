@@ -116,6 +116,9 @@ metadata_schema = pa.schema(
         ("mean_RHS_time", pa.float64()),
         ("min_RHS_time", pa.float64()),
         ("max_RHS_time", pa.float64()),
+        ("has_unresolved_osc", pa.bool_()),
+        ("unresolved_z", pa.float64()),
+        ("unresolved_efolds_subh", pa.float64()),
     ]
 )
 
@@ -143,6 +146,9 @@ def write_metadata_content(Gk: TensorGreenFunctionIntegration):
                 "mean_RHS_time": Gk.mean_RHS_time,
                 "min_RHS_time": Gk.min_RHS_time,
                 "max_RHS_time": Gk.max_RHS_time,
+                "has_unresolved_osc": Gk.has_unresolved_osc,
+                "unresolved_z": Gk.unresolved_z,
+                "unresolved_efolds_subh": Gk.unresolved_efolds_subh,
             }
         ]
         batch = pa.RecordBatch.from_pylist(metadata_rows, schema=metadata_schema)

@@ -125,6 +125,9 @@ metadata_schema = pa.schema(
         ("mean_RHS_time", pa.float64()),
         ("min_RHS_time", pa.float64()),
         ("max_RHS_time", pa.float64()),
+        ("has_unresolved_osc", pa.bool_()),
+        ("unresolved_z", pa.float64()),
+        ("unresolved_efolds_subh", pa.float64()),
     ]
 )
 
@@ -175,6 +178,9 @@ def write_CSV_content(Tk: MatterTransferFunctionIntegration):
                 "mean_RHS_time": Tk.mean_RHS_time,
                 "min_RHS_time": Tk.min_RHS_time,
                 "max_RHS_time": Tk.max_RHS_time,
+                "has_unresolved_osc": Tk.has_unresolved_osc,
+                "unresolved_z": Tk.unresolved_z,
+                "unresolved_efolds_subh": Tk.unresolved_efolds_subh,
             }
         ]
         batch = pa.RecordBatch.from_pylist(metadata_rows, schema=metadata_schema)
