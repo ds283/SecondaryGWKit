@@ -75,20 +75,25 @@ class sqla_wavenumber_exit_time_factory(SQLAFactoryBase):
                     "wavenumber_serial",
                     sqla.Integer,
                     sqla.ForeignKey("wavenumber.serial"),
+                    index=True,
                     nullable=False,
                 ),
-                sqla.Column("cosmology_type", sqla.Integer, nullable=False),
-                sqla.Column("cosmology_serial", sqla.Integer, nullable=False),
+                sqla.Column("cosmology_type", sqla.Integer, index=True, nullable=False),
+                sqla.Column(
+                    "cosmology_serial", sqla.Integer, index=True, nullable=False
+                ),
                 sqla.Column(
                     "atol_serial",
                     sqla.Integer,
                     sqla.ForeignKey("tolerance.serial"),
+                    index=True,
                     nullable=False,
                 ),
                 sqla.Column(
                     "rtol_serial",
                     sqla.Integer,
                     sqla.ForeignKey("tolerance.serial"),
+                    index=True,
                     nullable=False,
                 ),
                 sqla.Column("compute_time", sqla.Float(64)),

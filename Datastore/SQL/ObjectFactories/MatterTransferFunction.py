@@ -91,38 +91,46 @@ class sqla_MatterTransferFunctionIntegration_factory(SQLAFactoryBase):
                     "wavenumber_exit_serial",
                     sqla.Integer,
                     sqla.ForeignKey("wavenumber_exit_time.serial"),
+                    index=True,
                     nullable=False,
                 ),
-                sqla.Column("cosmology_type", sqla.Integer, nullable=False),
-                sqla.Column("cosmology_serial", sqla.Integer, nullable=False),
+                sqla.Column("cosmology_type", sqla.Integer, index=True, nullable=False),
+                sqla.Column(
+                    "cosmology_serial", sqla.Integer, index=True, nullable=False
+                ),
                 sqla.Column(
                     "atol_serial",
                     sqla.Integer,
                     sqla.ForeignKey("tolerance.serial"),
+                    index=True,
                     nullable=False,
                 ),
                 sqla.Column(
                     "rtol_serial",
                     sqla.Integer,
                     sqla.ForeignKey("tolerance.serial"),
+                    index=True,
                     nullable=False,
                 ),
                 sqla.Column(
                     "solver_serial",
                     sqla.Integer,
                     sqla.ForeignKey("IntegrationSolver.serial"),
+                    index=True,
                     nullable=False,
                 ),
                 sqla.Column(
                     "z_init_serial",
                     sqla.Integer,
                     sqla.ForeignKey("redshift.serial"),
+                    index=True,
                     nullable=False,
                 ),
                 sqla.Column(
                     "z_min_serial",
                     sqla.Integer,
                     sqla.ForeignKey("redshift.serial"),
+                    index=True,
                     nullable=False,
                 ),
                 sqla.Column(
