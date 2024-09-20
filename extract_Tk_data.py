@@ -39,6 +39,9 @@ parser.add_argument(
 parser.add_argument(
     "--ray-address", default="auto", type=str, help="specify address of Ray cluster"
 )
+parser.add_argument(
+    "--output", default="Gk-csv", type=str, help="specify folder for output files"
+)
 args = parser.parse_args()
 
 if args.database is None:
@@ -107,7 +110,8 @@ time_series_schema = pa.schema(
         ("z_exit", pa.float64()),
         ("z_serial", pa.int32()),
         ("z", pa.float64()),
-        ("value", pa.float64()),
+        ("T", pa.float64()),
+        ("Tprime", pa.float64()),
     ]
 )
 metadata_schema = pa.schema(
@@ -128,15 +132,17 @@ metadata_schema = pa.schema(
         ("has_unresolved_osc", pa.bool_()),
         ("unresolved_z", pa.float64()),
         ("unresolved_efolds_subh", pa.float64()),
+        ("init_efolds_suph", pa.float64()),
     ]
 )
 
 
 @ray.remote
 def write_CSV_content(Tk: MatterTransferFunctionIntegration):
-    time_series_path = Path(
-        f"Tk-csv/time-series/storeid{Tk.store_id}-kid{Tk.k.store_id}.csv"
-    ).resolve()
+    base_path = Path(args.output).resolve()
+    time_series_path = (
+        base_path / f"time-series/storeid{Tk.store_id}-kid{Tk.k.store_id}.csv"
+    )
     time_series_path.parents[0].mkdir(exist_ok=True, parents=True)
 
     with CSVWriter(time_series_path, schema=time_series_schema) as writer:
@@ -150,16 +156,15 @@ def write_CSV_content(Tk: MatterTransferFunctionIntegration):
                 "z_exit": Tk.z_exit,
                 "z_serial": value.z.store_id,
                 "z": value.z.z,
-                "value": value.value,
+                "T": value.T,
+                "Tprime": value.Tprime,
             }
             for value in Tk.values
         ]
         batch = pa.RecordBatch.from_pylist(time_series_rows, schema=time_series_schema)
         writer.write(batch)
 
-    metadata_path = Path(
-        f"Tk-csv/metadata/storeid{Tk.store_id}-kid{Tk.k.store_id}.csv"
-    ).resolve()
+    metadata_path = base_path / f"metadata/storeid{Tk.store_id}-kid{Tk.k.store_id}.csv"
     metadata_path.parents[0].mkdir(exist_ok=True, parents=True)
 
     with CSVWriter(metadata_path, schema=metadata_schema) as writer:
@@ -181,6 +186,7 @@ def write_CSV_content(Tk: MatterTransferFunctionIntegration):
                 "has_unresolved_osc": Tk.has_unresolved_osc,
                 "unresolved_z": Tk.unresolved_z,
                 "unresolved_efolds_subh": Tk.unresolved_efolds_subh,
+                "init_efolds_suph": Tk.init_efolds_suph,
             }
         ]
         batch = pa.RecordBatch.from_pylist(metadata_rows, schema=metadata_schema)
@@ -221,7 +227,7 @@ build_csv_queue.run()
 
 
 # use PyArrow to ingest all created CSV files into a dataaset, and then re-emit them as a single consolidated CSV
-base_path = Path("Tk-csv").resolve()
+base_path = Path(args.output).resolve()
 time_series_path = base_path / "time-series"
 metadata_path = base_path / "metadata"
 

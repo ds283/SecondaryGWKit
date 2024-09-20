@@ -41,6 +41,9 @@ parser.add_argument(
 parser.add_argument(
     "--ray-address", default="auto", type=str, help="specify address of Ray cluster"
 )
+parser.add_argument(
+    "--output", default="Gk-csv", type=str, help="specify folder for output files"
+)
 args = parser.parse_args()
 
 if args.database is None:
@@ -119,15 +122,18 @@ metadata_schema = pa.schema(
         ("has_unresolved_osc", pa.bool_()),
         ("unresolved_z", pa.float64()),
         ("unresolved_efolds_subh", pa.float64()),
+        ("init_efolds_suph", pa.float64()),
     ]
 )
 
 
 @ray.remote
 def write_metadata_content(Gk: TensorGreenFunctionIntegration):
-    path = Path(
-        f"Gk-csv/metadata/storeid{Gk.store_id}-kid{Gk.k.store_id}-zsource{Gk.z_source.store_id}.csv"
-    ).resolve()
+    base_path = Path(args.output).resolve()
+    path = (
+        base_path
+        / f"metadata/storeid{Gk.store_id}-kid{Gk.k.store_id}-zsource{Gk.z_source.store_id}.csv"
+    )
     path.parents[0].mkdir(exist_ok=True, parents=True)
 
     with CSVWriter(path, schema=metadata_schema) as writer:
@@ -149,6 +155,7 @@ def write_metadata_content(Gk: TensorGreenFunctionIntegration):
                 "has_unresolved_osc": Gk.has_unresolved_osc,
                 "unresolved_z": Gk.unresolved_z,
                 "unresolved_efolds_subh": Gk.unresolved_efolds_subh,
+                "init_efolds_suph": Gk.init_efolds_suph,
             }
         ]
         batch = pa.RecordBatch.from_pylist(metadata_rows, schema=metadata_schema)
@@ -191,7 +198,7 @@ build_metadata_queue = RayWorkQueue(
 build_metadata_queue.run()
 
 # use PyArrow to ingest all created CSV files into a dataaset, and then re-emit them as a single consolidated CSV
-base_path = Path("Gk-csv").resolve()
+base_path = Path(args.output).resolve()
 metadata_path = base_path / "metadata"
 
 metadata_data = dataset.dataset(metadata_path, format="csv", schema=metadata_schema)
@@ -214,16 +221,19 @@ time_series_schema = pa.schema(
         ("z_source", pa.float64()),
         ("z_response_serial", pa.int32()),
         ("z_response", pa.float64()),
-        ("value", pa.float64()),
+        ("G", pa.float64()),
+        ("Gprime", pa.float64()),
     ]
 )
 
 
 @ray.remote
 def write_time_series_content(Gk: TensorGreenFunctionIntegration):
-    path = Path(
-        f"Gk-csv/time-series/storeid{Gk.store_id}-kid{Gk.k.store_id}-zsource{Gk.z_source.store_id}.csv"
-    ).resolve()
+    base_path = Path(args.output).resolve()
+    path = (
+        base_path
+        / f"time-series/storeid{Gk.store_id}-kid{Gk.k.store_id}-zsource{Gk.z_source.store_id}.csv"
+    )
     path.parents[0].mkdir(exist_ok=True, parents=True)
 
     with CSVWriter(path, schema=time_series_schema) as writer:
@@ -237,7 +247,8 @@ def write_time_series_content(Gk: TensorGreenFunctionIntegration):
                 "z_source": Gk.z_source.z,
                 "z_response_serial": value.z.store_id,
                 "z_response": value.z.z,
-                "value": value.value,
+                "G": value.G,
+                "Gprime": value.Gprime,
             }
             for value in Gk.values
         ]
