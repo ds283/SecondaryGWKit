@@ -145,6 +145,9 @@ class sqla_TensorGreenFunctionIntegration_factory(SQLAFactoryBase):
                 sqla.Column("mean_RHS_time", sqla.Float(64)),
                 sqla.Column("max_RHS_time", sqla.Float(64)),
                 sqla.Column("min_RHS_time", sqla.Float(64)),
+                sqla.Column("has_unresolved_osc", sqla.Boolean),
+                sqla.Column("unresolved_z", sqla.Float(64)),
+                sqla.Column("unresolved_efolds_subh", sqla.Float(64)),
                 sqla.Column("validated", sqla.Boolean, default=False, nullable=False),
             ],
         }
@@ -155,6 +158,7 @@ class sqla_TensorGreenFunctionIntegration_factory(SQLAFactoryBase):
         tags: List[store_tag] = payload.get("tags", [])
 
         solver_labels = payload["solver_labels"]
+        delta_logz = payload.get("delta_logz", None)
 
         atol: tolerance = payload["atol"]
         rtol: tolerance = payload["rtol"]
@@ -184,6 +188,9 @@ class sqla_TensorGreenFunctionIntegration_factory(SQLAFactoryBase):
                 table.c.mean_RHS_time,
                 table.c.max_RHS_time,
                 table.c.min_RHS_time,
+                table.c.has_unresolved_osc,
+                table.c.unresolved_z,
+                table.c.unresolved_efolds_subh,
                 table.c.solver_serial,
                 table.c.label,
                 table.c.z_source_serial,
@@ -246,6 +253,7 @@ class sqla_TensorGreenFunctionIntegration_factory(SQLAFactoryBase):
                 z_source=z_source,
                 z_sample=z_sample,
                 tags=tags,
+                delta_logz=delta_logz,
             )
 
         store_id = row_data.serial
@@ -257,6 +265,10 @@ class sqla_TensorGreenFunctionIntegration_factory(SQLAFactoryBase):
         mean_RHS_time = row_data.mean_RHS_time
         max_RHS_time = row_data.max_RHS_time
         min_RHS_time = row_data.min_RHS_time
+
+        has_unresolved_osc = row_data.has_unresolved_osc
+        unresolved_z = row_data.unresolved_z
+        unresolved_efolds_subh = row_data.unresolved_efolds_subh
 
         solver_label = row_data.solver_label
         solver_stepping = row_data.solver_stepping
@@ -318,6 +330,9 @@ class sqla_TensorGreenFunctionIntegration_factory(SQLAFactoryBase):
                 "mean_RHS_time": mean_RHS_time,
                 "max_RHS_time": max_RHS_time,
                 "min_RHS_time": min_RHS_time,
+                "has_unresolved_osc": has_unresolved_osc,
+                "unresolved_z": unresolved_z,
+                "unresolved_efolds_subh": unresolved_efolds_subh,
                 "solver": solver,
                 "values": values,
             },
@@ -330,6 +345,7 @@ class sqla_TensorGreenFunctionIntegration_factory(SQLAFactoryBase):
             z_source=redshift(store_id=z_source_serial, z=z_source_value),
             z_sample=imported_z_sample,
             tags=tags,
+            delta_logz=delta_logz,
         )
 
     @staticmethod
@@ -360,6 +376,9 @@ class sqla_TensorGreenFunctionIntegration_factory(SQLAFactoryBase):
                 "mean_RHS_time": obj.mean_RHS_time,
                 "max_RHS_time": obj.max_RHS_time,
                 "min_RHS_time": obj.min_RHS_time,
+                "has_unresolved_osc": obj.has_unresolved_osc,
+                "unresolved_z": obj.unresolved_z,
+                "unresolved_efolds_subh": obj.unresolved_efolds_subh,
                 "validated": False,
             },
         )

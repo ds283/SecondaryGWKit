@@ -236,6 +236,7 @@ def build_Tk_work(k_exit: wavenumber_exit_time):
             LargestZTag,
             SamplesPerLog10ZTag,
         ],
+        delta_logz=1.0 / 150.0,
     )
 
 
@@ -294,6 +295,7 @@ def build_Gk_work(k_exit: wavenumber_exit_time):
                         LargestZTag,
                         SamplesPerLog10ZTag,
                     ],
+                    delta_logz=1.0 / 150.0,
                 )
             )
 

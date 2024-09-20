@@ -1,5 +1,5 @@
 import time
-from math import fabs
+from math import fabs, pi, log
 from typing import Optional, List
 
 import ray
@@ -26,6 +26,7 @@ class MatterTransferFunctionSupervisor(IntegrationSupervisor):
         z_init: redshift,
         z_final: redshift,
         notify_interval: int = DEFAULT_UPDATE_INTERVAL,
+        delta_logz: Optional[float] = None,
     ):
         super().__init__(notify_interval)
 
@@ -36,6 +37,11 @@ class MatterTransferFunctionSupervisor(IntegrationSupervisor):
         self._z_range: float = self._z_init - self._z_final
 
         self._last_z: float = self._z_init
+
+        self._has_unresolved_osc: bool = False
+        self._delta_logz: float = delta_logz
+        self._unresolved_osc_z: Optional[float] = None
+        self._unresolved_osc_efolds_subh: Optional[float] = None
 
     def __enter__(self):
         super().__enter__()
@@ -70,6 +76,47 @@ class MatterTransferFunctionSupervisor(IntegrationSupervisor):
 
         self._last_z = current_z
 
+    def report_wavelength(self, z: float, wavelength: float, efolds_subh: float):
+        if self._has_unresolved_osc:
+            return
+
+        if self._delta_logz is None:
+            return
+
+        grid_spacing = (1.0 + z) * self._delta_logz
+
+        if wavelength < grid_spacing:
+            print(
+                f"!! WARNING: Integration for T_k(z) for k = {self._k.k_inv_Mpc:.5g}/Mpc (store_id={self._k.store_id}) may have developed unresolved oscillations"
+            )
+            print(
+                f"|    current z={z:.5g}, e-folds inside horizon={efolds_subh:.3g} | approximate wavelength Delta z = {wavelength:.5g}, approximate grid spacing at this z = {grid_spacing:.5g}"
+            )
+            self._has_unresolved_osc = True
+            self._unresolved_osc_z = z
+            self._unresolved_osc_efolds_subh = efolds_subh
+
+    @property
+    def has_unresolved_osc(self):
+        if self._delta_logz is None:
+            return None
+
+        return self._has_unresolved_osc
+
+    @property
+    def unresolved_z(self):
+        if self._has_unresolved_osc is False or self._delta_logz is None:
+            return None
+
+        return self._unresolved_osc_z
+
+    @property
+    def unresolved_efolds_subh(self):
+        if self._has_unresolved_osc is False or self._delta_logz is None:
+            return None
+
+        return self._unresolved_osc_efolds_subh
+
 
 @ray.remote
 def compute_matter_Tk(
@@ -79,6 +126,7 @@ def compute_matter_Tk(
     z_init: redshift,
     atol: float = DEFAULT_ABS_TOLERANCE,
     rtol: float = DEFAULT_REL_TOLERANCE,
+    delta_logz: Optional[float] = None,
 ) -> dict:
     check_units(k, cosmology)
 
@@ -130,9 +178,18 @@ def compute_matter_Tk(
                 - wPerturbations * k_over_H_2 * T
             )
 
+            # try to detect how many oscillations will fit into the log-z grid
+            # spacing
+            # If the grid spacing is smaller than the oscillation wavelength, then
+            # evidently we cannot resolve the oscillations
+            wavelength = 2.0 * pi / k_over_H
+            supervisor.report_wavelength(z, wavelength, -log(wavelength))
+
         return [drho_dz, dT_dz, dTprime_dz]
 
-    with MatterTransferFunctionSupervisor(k, z_init, z_sample.min) as supervisor:
+    with MatterTransferFunctionSupervisor(
+        k, z_init, z_sample.min, delta_logz=delta_logz
+    ) as supervisor:
         # use initial values T(z) = 1, dT/dz = 0 at z = z_init
         initial_state = [cosmology.rho(z_init.z), 1.0, 0.0]
         sol = solve_ivp(
@@ -180,6 +237,9 @@ def compute_matter_Tk(
         "min_RHS_time": supervisor.min_RHS_time,
         "values": sampled_T,
         "solver_label": "solve_ivp+Radau-stepping0",
+        "has_unresolved_osc": supervisor.has_unresolved_osc,
+        "unresolved_z": supervisor.unresolved_z,
+        "unresolved_efolds_subh": supervisor.unresolved_efolds_subh,
     }
 
 
@@ -202,9 +262,12 @@ class MatterTransferFunctionIntegration(DatastoreObject):
         z_init: Optional[redshift] = None,
         label: Optional[str] = None,
         tags: Optional[List[store_tag]] = None,
+        delta_logz: Optional[float] = None,
     ):
         check_units(k.k, cosmology)
+
         self._solver_labels = solver_labels
+        self._delta_logz = delta_logz
 
         if z_init.z < 10.0 * k.z_exit:
             raise RuntimeError(
@@ -220,6 +283,10 @@ class MatterTransferFunctionIntegration(DatastoreObject):
             self._max_RHS_time = None
             self._min_RHS_time = None
 
+            self._has_unresolved_osc = None
+            self._unresolved_z = None
+            self._unresolved_efolds_subh = None
+
             self._solver = None
 
             self._z_sample = z_sample
@@ -232,6 +299,10 @@ class MatterTransferFunctionIntegration(DatastoreObject):
             self._mean_RHS_time = payload["mean_RHS_time"]
             self._max_RHS_time = payload["max_RHS_time"]
             self._min_RHS_time = payload["min_RHS_time"]
+
+            self._has_unresolved_osc = payload["has_unresolved_osc"]
+            self._unresolved_z = payload["unresolved_z"]
+            self._unresolved_efolds_subh = payload["unresolved_efolds_subh"]
 
             self._solver = payload["solver"]
 
@@ -327,6 +398,26 @@ class MatterTransferFunctionIntegration(DatastoreObject):
         return self._RHS_evaluations
 
     @property
+    def has_unresolved_osc(self) -> bool:
+        if self._has_unresolved_osc is None:
+            raise RuntimeError("has_unresolved_osc has not yet been populated")
+        return self._has_unresolved_osc
+
+    @property
+    def unresolved_z(self) -> float:
+        if self._has_unresolved_osc is None:
+            raise RuntimeError("has_unresolved_osc has not yet been populated")
+
+        return self._unresolved_z
+
+    @property
+    def unresolved_efolds_subh(self) -> float:
+        if self._has_unresolved_osc is None:
+            raise RuntimeError("has_unresolved_osc has not yet been populated")
+
+        return self._unresolved_efolds_subh
+
+    @property
     def solver(self) -> IntegrationSolver:
         if self._solver is None:
             raise RuntimeError("solver has not yet been populated")
@@ -363,6 +454,7 @@ class MatterTransferFunctionIntegration(DatastoreObject):
             self.z_init,
             atol=self._atol.tol,
             rtol=self._rtol.tol,
+            delta_logz=self._delta_logz,
         )
         return self._compute_ref
 
@@ -389,6 +481,10 @@ class MatterTransferFunctionIntegration(DatastoreObject):
         self._mean_RHS_time = data["mean_RHS_time"]
         self._max_RHS_time = data["max_RHS_time"]
         self._min_RHS_time = data["min_RHS_time"]
+
+        self._has_unresolved_osc = data["has_unresolved_osc"]
+        self._unresolved_z = data["unresolved_z"]
+        self._unresolved_efolds_subh = data["unresolved_efolds_subh"]
 
         values = data["values"]
         self._values = []

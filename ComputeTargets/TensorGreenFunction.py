@@ -1,4 +1,4 @@
-from math import fabs
+from math import fabs, pi, log
 from typing import Optional, List
 
 import ray
@@ -25,6 +25,7 @@ class TensorGreenFunctionSupervisor(IntegrationSupervisor):
         z_source: redshift,
         z_final: redshift,
         notify_interval: int = DEFAULT_UPDATE_INTERVAL,
+        delta_logz: Optional[float] = None,
     ):
         super().__init__(notify_interval)
 
@@ -35,6 +36,11 @@ class TensorGreenFunctionSupervisor(IntegrationSupervisor):
         self._z_range: float = self._z_source - self._z_final
 
         self._last_z: float = self._z_source
+
+        self._has_unresolved_osc: bool = False
+        self._delta_logz: float = delta_logz
+        self._unresolved_osc_z: Optional[float] = None
+        self._unresolved_osc_efolds_subh: Optional[float] = None
 
     def __enter__(self):
         super().__enter__()
@@ -69,6 +75,46 @@ class TensorGreenFunctionSupervisor(IntegrationSupervisor):
 
         self._last_z = current_z
 
+    def report_wavelength(self, z: float, wavelength: float, efolds_subh: float):
+        if self._has_unresolved_osc:
+            return
+
+        if self._delta_logz is None:
+            return
+
+        grid_spacing = (1.0 + z) * self._delta_logz
+        if wavelength < grid_spacing:
+            print(
+                f"!! WARNING: Integration for Gr_k(z, z') for k = {self._k.k_inv_Mpc:.5g}/Mpc (store_id={self._k.store_id}) may have developed unresolved oscillations"
+            )
+            print(
+                f"|    current z={z:.5g}, e-folds inside horizon={efolds_subh:.3g} | approximate wavelength Delta z = {wavelength:.5g}, approximate grid spacing at this z = {grid_spacing:.5g}"
+            )
+            self._has_unresolved_osc = True
+            self._unresolved_osc_z = z
+            self._unresolved_osc_efolds_subh = efolds_subh
+
+    @property
+    def has_unresolved_osc(self):
+        if self._delta_logz is None:
+            return None
+
+        return self._has_unresolved_osc
+
+    @property
+    def unresolved_z(self):
+        if self._has_unresolved_osc is False or self._delta_logz is None:
+            return None
+
+        return self._unresolved_osc_z
+
+    @property
+    def unresolved_efolds_subh(self):
+        if self._has_unresolved_osc is False or self._delta_logz is None:
+            return None
+
+        return self._unresolved_osc_efolds_subh
+
 
 @ray.remote
 def compute_tensor_Green(
@@ -78,6 +124,7 @@ def compute_tensor_Green(
     z_sample: redshift_array,
     atol: float = DEFAULT_ABS_TOLERANCE,
     rtol: float = DEFAULT_REL_TOLERANCE,
+    delta_logz: Optional[float] = None,
 ) -> dict:
     check_units(k, cosmology)
 
@@ -126,9 +173,18 @@ def compute_tensor_Green(
                 - (k_over_H_2 + (eps - 2.0) / one_plus_z_2) * G
             )
 
+            # try to detect how many oscillations will fit into the log-z grid
+            # spacing
+            # If the grid spacing is smaller than the oscillation wavelength, then
+            # evidently we cannot resolve the oscillations
+            wavelength = 2.0 * pi / k_over_H
+            supervisor.report_wavelength(z, wavelength, -log(wavelength))
+
         return [drho_dz, dG_dz, dGprime_dz]
 
-    with TensorGreenFunctionSupervisor(k, z_source, z_sample.min) as supervisor:
+    with TensorGreenFunctionSupervisor(
+        k, z_source, z_sample.min, delta_logz=delta_logz
+    ) as supervisor:
         # initial conditions should be
         #   G(z', z') = 0
         #   Gprime(z' z') = -1/(a0 H(z'))
@@ -180,6 +236,9 @@ def compute_tensor_Green(
         "min_RHS_time": supervisor.min_RHS_time,
         "values": sampled_G,
         "solver_label": "solve_ivp+Radau-stepping0",
+        "has_unresolved_osc": supervisor.has_unresolved_osc,
+        "unresolved_z": supervisor.unresolved_z,
+        "unresolved_efolds_subh": supervisor.unresolved_efolds_subh,
     }
 
 
@@ -206,9 +265,12 @@ class TensorGreenFunctionIntegration(DatastoreObject):
         z_sample: Optional[redshift_array] = None,
         label: Optional[str] = None,
         tags: Optional[List[store_tag]] = None,
+        delta_logz: Optional[float] = None,
     ):
         check_units(k.k, cosmology)
+
         self._solver_labels = solver_labels
+        self._delta_logz = delta_logz
 
         if payload is None:
             DatastoreObject.__init__(self, None)
@@ -218,6 +280,10 @@ class TensorGreenFunctionIntegration(DatastoreObject):
             self._mean_RHS_time = None
             self._max_RHS_time = None
             self._min_RHS_time = None
+
+            self._has_unresolved_osc = None
+            self._unresolved_z = None
+            self._unresolved_efolds_subh = None
 
             self._solver = None
 
@@ -231,6 +297,10 @@ class TensorGreenFunctionIntegration(DatastoreObject):
             self._mean_RHS_time = payload["mean_RHS_time"]
             self._max_RHS_time = payload["max_RHS_time"]
             self._min_RHS_time = payload["min_RHS_time"]
+
+            self._has_unresolved_osc = payload["has_unresolved_osc"]
+            self._unresolved_z = payload["unresolved_z"]
+            self._unresolved_efolds_subh = payload["unresolved_efolds_subh"]
 
             self._solver = payload["solver"]
 
@@ -326,6 +396,26 @@ class TensorGreenFunctionIntegration(DatastoreObject):
         return self._RHS_evaluations
 
     @property
+    def has_unresolved_osc(self) -> bool:
+        if self._has_unresolved_osc is None:
+            raise RuntimeError("has_unresolved_osc has not yet been populated")
+        return self._has_unresolved_osc
+
+    @property
+    def unresolved_z(self) -> float:
+        if self._has_unresolved_osc is None:
+            raise RuntimeError("has_unresolved_osc has not yet been populated")
+
+        return self._unresolved_z
+
+    @property
+    def unresolved_efolds_subh(self) -> float:
+        if self._has_unresolved_osc is None:
+            raise RuntimeError("has_unresolved_osc has not yet been populated")
+
+        return self._unresolved_efolds_subh
+
+    @property
     def solver(self) -> IntegrationSolver:
         if self._solver is None:
             raise RuntimeError("solver has not yet been populated")
@@ -357,6 +447,7 @@ class TensorGreenFunctionIntegration(DatastoreObject):
             self.z_sample,
             atol=self._atol.tol,
             rtol=self._rtol.tol,
+            delta_logz=self._delta_logz,
         )
         return self._compute_ref
 
@@ -383,6 +474,10 @@ class TensorGreenFunctionIntegration(DatastoreObject):
         self._mean_RHS_time = data["mean_RHS_time"]
         self._max_RHS_time = data["max_RHS_time"]
         self._min_RHS_time = data["min_RHS_time"]
+
+        self._has_unresolved_osc = data["has_unresolved_osc"]
+        self._unresolved_z = data["unresolved_z"]
+        self._unresolved_efolds_subh = data["unresolved_efolds_subh"]
 
         values = data["values"]
         self._values = []
