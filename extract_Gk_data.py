@@ -283,7 +283,11 @@ time_series_data = dataset.dataset(
     time_series_path, format="csv", schema=time_series_schema
 )
 time_series_sorted = time_series_data.sort_by(
-    [("k_inv_Mpc", "asc"), ("z_source", "desc"), ("z_response", "desc")]
+    [
+        ("k_inv_Mpc", "ascending"),
+        ("z_source", "descending"),
+        ("z_response", "descending"),
+    ]
 )
 dataset.write_dataset(
     time_series_sorted,
