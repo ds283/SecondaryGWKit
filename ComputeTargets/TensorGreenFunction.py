@@ -1,4 +1,4 @@
-from math import fabs, pi, log
+from math import fabs, pi, log, sqrt
 from typing import Optional, List
 
 import ray
@@ -166,17 +166,17 @@ def compute_tensor_Green(
             k_over_H = k_float / H
             k_over_H_2 = k_over_H * k_over_H
 
-            dGprime_dz = (
-                -(eps / one_plus_z) * Gprime
-                - (k_over_H_2 + (eps - 2.0) / one_plus_z_2) * G
-            )
+            omega_eff_sq = k_over_H_2 + (eps - 2.0) / one_plus_z_2
+
+            dGprime_dz = -(eps / one_plus_z) * Gprime - omega_eff_sq * G
 
             # try to detect how many oscillations will fit into the log-z grid
             # spacing
             # If the grid spacing is smaller than the oscillation wavelength, then
             # evidently we cannot resolve the oscillations
-            wavelength = 2.0 * pi / k_over_H
-            supervisor.report_wavelength(z, wavelength, -log(wavelength))
+            if omega_eff_sq > 0.0:
+                wavelength = 2.0 * pi / sqrt(omega_eff_sq)
+                supervisor.report_wavelength(z, wavelength, log((1.0 + z) * k_over_H))
 
         return [drho_dz, dG_dz, dGprime_dz]
 
@@ -283,6 +283,8 @@ class TensorGreenFunctionIntegration(DatastoreObject):
             self._unresolved_z = None
             self._unresolved_efolds_subh = None
 
+            self._init_efolds_suph = None
+
             self._solver = None
 
             self._z_sample = z_sample
@@ -299,6 +301,8 @@ class TensorGreenFunctionIntegration(DatastoreObject):
             self._has_unresolved_osc = payload["has_unresolved_osc"]
             self._unresolved_z = payload["unresolved_z"]
             self._unresolved_efolds_subh = payload["unresolved_efolds_subh"]
+
+            self._init_efolds_suph = payload["init_efolds_suph"]
 
             self._solver = payload["solver"]
 
@@ -414,6 +418,13 @@ class TensorGreenFunctionIntegration(DatastoreObject):
         return self._unresolved_efolds_subh
 
     @property
+    def init_efolds_suph(self) -> float:
+        if self._init_efolds_suph is None:
+            raise RuntimeError("init_efolds_suph has not yet been populated")
+
+        return self._init_efolds_suph
+
+    @property
     def solver(self) -> IntegrationSolver:
         if self._solver is None:
             raise RuntimeError("solver has not yet been populated")
@@ -476,6 +487,11 @@ class TensorGreenFunctionIntegration(DatastoreObject):
         self._has_unresolved_osc = data["has_unresolved_osc"]
         self._unresolved_z = data["unresolved_z"]
         self._unresolved_efolds_subh = data["unresolved_efolds_subh"]
+
+        Hsource = self.cosmology.Hubble(self.z_source.z)
+        k_over_aH = (1.0 + self.z_source.z) * self.k.k / Hsource
+        wavelength = 2.0 * pi / k_over_aH
+        self._init_efolds_suph = log(wavelength)
 
         values = data["values"]
         self._values = []

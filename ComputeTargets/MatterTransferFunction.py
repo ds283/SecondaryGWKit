@@ -1,5 +1,5 @@
 import time
-from math import fabs, pi, log
+from math import fabs, pi, log, sqrt
 from typing import Optional, List
 
 import ray
@@ -172,18 +172,22 @@ def compute_matter_Tk(
             k_over_H = k_float / H
             k_over_H_2 = k_over_H * k_over_H
 
+            omega_eff_sq = (
+                3.0 * (1.0 + wPerturbations) - 2.0 * eps
+            ) / one_plus_z_2 + wPerturbations * k_over_H_2
+
             dTprime_dz = (
                 -(eps - 3.0 * (1.0 + wPerturbations)) * Tprime / one_plus_z
-                - (3.0 * (1.0 + wPerturbations) - 2.0 * eps) * T / one_plus_z_2
-                - wPerturbations * k_over_H_2 * T
+                - omega_eff_sq * T
             )
 
             # try to detect how many oscillations will fit into the log-z grid
             # spacing
             # If the grid spacing is smaller than the oscillation wavelength, then
             # evidently we cannot resolve the oscillations
-            wavelength = 2.0 * pi / k_over_H
-            supervisor.report_wavelength(z, wavelength, -log(wavelength))
+            if omega_eff_sq > 0.0:
+                wavelength = 2.0 * pi / sqrt(omega_eff_sq)
+                supervisor.report_wavelength(z, wavelength, log((1.0 + z) * k_over_H))
 
         return [drho_dz, dT_dz, dTprime_dz]
 
@@ -287,6 +291,8 @@ class MatterTransferFunctionIntegration(DatastoreObject):
             self._unresolved_z = None
             self._unresolved_efolds_subh = None
 
+            self._init_efolds_suph = None
+
             self._solver = None
 
             self._z_sample = z_sample
@@ -303,6 +309,8 @@ class MatterTransferFunctionIntegration(DatastoreObject):
             self._has_unresolved_osc = payload["has_unresolved_osc"]
             self._unresolved_z = payload["unresolved_z"]
             self._unresolved_efolds_subh = payload["unresolved_efolds_subh"]
+
+            self._init_efolds_suph = payload["init_efolds_suph"]
 
             self._solver = payload["solver"]
 
@@ -418,6 +426,13 @@ class MatterTransferFunctionIntegration(DatastoreObject):
         return self._unresolved_efolds_subh
 
     @property
+    def init_efolds_suph(self) -> float:
+        if self._init_efolds_suph is None:
+            raise RuntimeError("init_efolds_suph has not yet been populated")
+
+        return self._init_efolds_suph
+
+    @property
     def solver(self) -> IntegrationSolver:
         if self._solver is None:
             raise RuntimeError("solver has not yet been populated")
@@ -442,10 +457,18 @@ class MatterTransferFunctionIntegration(DatastoreObject):
         if label is not None:
             self._label = label
 
-        # print("@@ BEGINNING T(k) COMPUTATION")
-        # print(
-        #     f"     k = {self.k.k_inv_Mpc}/Mpc, z_exit = {self.z_exit}, z_init = {self.z_init.z}, z_sample(max) = {self.z_sample.max.z}, z_sample(min) = {self.z_sample.min.z}"
-        # )
+        Hinit = self.cosmology.Hubble(self.z_init.z)
+        k_over_aH = (1.0 + self.z_init.z) * self.k.k / Hinit
+        wavelength = 2.0 * pi / k_over_aH
+        efolds_suph = log(wavelength)
+        if efolds_suph < 1:
+            print("!! T(k) COMPUTATION BEGINNING TOO CLOSE TO HORIZON SCALE")
+            print(
+                f"|    k = {self.k.k_inv_Mpc}/Mpc, z_exit = {self.z_exit}, z_init = {self.z_init.z}, z_sample(max) = {self.z_sample.max.z}, z_sample(min) = {self.z_sample.min.z}"
+            )
+            print(
+                f"|    k/aH = {k_over_aH:.5g}, wavelength 2pi(H/k) = {wavelength:.5g}, e-folds outside horizon = {log(wavelength)}, log(z_init/z_exit) = {log(self.z_init.z/self.z_exit)}"
+            )
 
         self._compute_ref = compute_matter_Tk.remote(
             self.cosmology,
@@ -485,6 +508,11 @@ class MatterTransferFunctionIntegration(DatastoreObject):
         self._has_unresolved_osc = data["has_unresolved_osc"]
         self._unresolved_z = data["unresolved_z"]
         self._unresolved_efolds_subh = data["unresolved_efolds_subh"]
+
+        Hinit = self.cosmology.Hubble(self.z_init.z)
+        k_over_aH = (1.0 + self.z_init.z) * self.k.k / Hinit
+        wavelength = 2.0 * pi / k_over_aH
+        self._init_efolds_suph = log(wavelength)
 
         values = data["values"]
         self._values = []

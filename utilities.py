@@ -1,5 +1,5 @@
 import time
-from math import log
+from math import log, fabs
 from traceback import print_tb
 from typing import Mapping
 
@@ -37,6 +37,9 @@ def check_units(A, B):
         raise RuntimeError("Units used for wavenumber k and cosmology are not equal")
 
 
+DEFAULT_HEXIT_TOLERANCE = 1e-2
+
+
 @ray.remote
 def find_horizon_exit_time(
     cosmology: BaseCosmology,
@@ -55,6 +58,8 @@ def find_horizon_exit_time(
     """
     check_units(k, cosmology)
 
+    # set initial conditions for q = ln(k/aH)
+    # the normalization a0 is absorbed into k/a0 = k_phys.
     q0 = log(float(k) / cosmology.H0)
 
     # RHS of ODE system for dq/dz = f(z)
@@ -102,6 +107,18 @@ def find_horizon_exit_time(
         raise RuntimeError(
             f"find_horizon_exit_time: more than one horizon-crossing time returned from integration (num={len(event_times)})"
         )
+
+    z_exit = event_times[0]
+    H_exit = cosmology.Hubble(z_exit)
+    k_over_aH = (1.0 + z_exit) * float(k) / H_exit
+    q_exit = log(k_over_aH)
+
+    if fabs(q_exit) > DEFAULT_HEXIT_TOLERANCE:
+        print("!! INCONSISTENT DETERMINATION OF HORIZON-CROSSING TIME")
+        print(
+            f"|    k = {k.k_inv_Mpc:.5g}/Mpc, estimated z_exit = {z_exit:.5g}, k/(aH)_exit = {k_over_aH:.5g}, q_exit = {q_exit:.5g}"
+        )
+        raise RuntimeError("Inconsistent determination of horizon-crossing time")
 
     return {"compute_time": timer.elapsed, "z_exit": event_times[0]}
 

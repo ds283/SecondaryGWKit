@@ -148,6 +148,7 @@ class sqla_TensorGreenFunctionIntegration_factory(SQLAFactoryBase):
                 sqla.Column("has_unresolved_osc", sqla.Boolean),
                 sqla.Column("unresolved_z", sqla.Float(64)),
                 sqla.Column("unresolved_efolds_subh", sqla.Float(64)),
+                sqla.Column("init_efolds_suph", sqla.Float(64)),
                 sqla.Column("validated", sqla.Boolean, default=False, nullable=False),
             ],
         }
@@ -191,6 +192,7 @@ class sqla_TensorGreenFunctionIntegration_factory(SQLAFactoryBase):
                 table.c.has_unresolved_osc,
                 table.c.unresolved_z,
                 table.c.unresolved_efolds_subh,
+                table.c.init_efolds_suph,
                 table.c.solver_serial,
                 table.c.label,
                 table.c.z_source_serial,
@@ -270,6 +272,8 @@ class sqla_TensorGreenFunctionIntegration_factory(SQLAFactoryBase):
         unresolved_z = row_data.unresolved_z
         unresolved_efolds_subh = row_data.unresolved_efolds_subh
 
+        init_efolds_suph = row_data.init_efolds_suph
+
         solver_label = row_data.solver_label
         solver_stepping = row_data.solver_stepping
         num_expected_samples = row_data.z_samples
@@ -333,6 +337,7 @@ class sqla_TensorGreenFunctionIntegration_factory(SQLAFactoryBase):
                 "has_unresolved_osc": has_unresolved_osc,
                 "unresolved_z": unresolved_z,
                 "unresolved_efolds_subh": unresolved_efolds_subh,
+                "init_efolds_suph": init_efolds_suph,
                 "solver": solver,
                 "values": values,
             },
@@ -379,6 +384,7 @@ class sqla_TensorGreenFunctionIntegration_factory(SQLAFactoryBase):
                 "has_unresolved_osc": obj.has_unresolved_osc,
                 "unresolved_z": obj.unresolved_z,
                 "unresolved_efolds_subh": obj.unresolved_efolds_subh,
+                "init_efolds_suph": obj.init_efolds_suph,
                 "validated": False,
             },
         )
