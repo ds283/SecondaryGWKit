@@ -57,7 +57,7 @@ class TensorGreenFunctionSupervisor(IntegrationSupervisor):
 
         update_number = self.report_notify()
 
-        z_complete = self._z_init - current_z
+        z_complete = self._z_source - current_z
         z_remain = self._z_range - z_complete
         percent_remain = 100.0 * (z_remain / self._z_range)
         print(
