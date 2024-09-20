@@ -210,6 +210,7 @@ def compute_tensor_Green(
     sampled_z = sol.t
     sampled_values = sol.y
     sampled_G = sampled_values[1]
+    sampled_Gprime = sampled_values[2]
 
     expected_values = len(z_sample)
     returned_values = sampled_z.size
@@ -233,7 +234,8 @@ def compute_tensor_Green(
         "mean_RHS_time": supervisor.mean_RHS_time,
         "max_RHS_time": supervisor.max_RHS_time,
         "min_RHS_time": supervisor.min_RHS_time,
-        "values": sampled_G,
+        "G_sample": sampled_G,
+        "Gprime_sample": sampled_Gprime,
         "solver_label": "solve_ivp+Radau-stepping0",
         "has_unresolved_osc": supervisor.has_unresolved_osc,
         "unresolved_z": supervisor.unresolved_z,
@@ -494,13 +496,16 @@ class TensorGreenFunctionIntegration(DatastoreObject):
         wavelength = 2.0 * pi / k_over_aH
         self._init_efolds_suph = log(wavelength)
 
-        values = data["values"]
+        G_sample = data["G_sample"]
+        Gprime_sample = data["Gprime_sample"]
         self._values = []
 
-        for i in range(len(values)):
+        for i in range(len(G_sample)):
             # create new TensorGreenFunctionValue object
             self._values.append(
-                TensorGreenFunctionValue(None, self._z_sample[i], values[i])
+                TensorGreenFunctionValue(
+                    None, self._z_sample[i], G_sample[i], Gprime_sample[i]
+                )
             )
 
         self._solver = self._solver_labels[data["solver_label"]]
@@ -515,11 +520,12 @@ class TensorGreenFunctionValue(DatastoreObject):
     owning TensorGreenFunctionIntegration object
     """
 
-    def __init__(self, store_id: int, z: redshift, value: float):
+    def __init__(self, store_id: int, z: redshift, G: float, Gprime: float):
         DatastoreObject.__init__(self, store_id)
 
         self._z = z
-        self._value = value
+        self._G = G
+        self._Gprime = Gprime
 
     def __float__(self):
         """
@@ -533,5 +539,9 @@ class TensorGreenFunctionValue(DatastoreObject):
         return self._z
 
     @property
-    def value(self) -> float:
-        return self._value
+    def G(self) -> float:
+        return self._G
+
+    @property
+    def Gprime(self) -> float:
+        return self._Gprime

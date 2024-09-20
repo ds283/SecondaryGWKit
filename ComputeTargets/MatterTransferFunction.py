@@ -216,6 +216,7 @@ def compute_matter_Tk(
     sampled_z = sol.t
     sampled_values = sol.y
     sampled_T = sampled_values[1]
+    sampled_Tprime = sampled_values[2]
 
     expected_values = len(z_sample)
     returned_values = sampled_z.size
@@ -239,7 +240,8 @@ def compute_matter_Tk(
         "mean_RHS_time": supervisor.mean_RHS_time,
         "max_RHS_time": supervisor.max_RHS_time,
         "min_RHS_time": supervisor.min_RHS_time,
-        "values": sampled_T,
+        "T_sample": sampled_T,
+        "Tprime_sample": sampled_Tprime,
         "solver_label": "solve_ivp+Radau-stepping0",
         "has_unresolved_osc": supervisor.has_unresolved_osc,
         "unresolved_z": supervisor.unresolved_z,
@@ -514,13 +516,16 @@ class MatterTransferFunctionIntegration(DatastoreObject):
         wavelength = 2.0 * pi / k_over_aH
         self._init_efolds_suph = log(wavelength)
 
-        values = data["values"]
+        T_sample = data["T_sample"]
+        Tprime_sample = data["Tprime_sample"]
         self._values = []
 
-        for i in range(len(values)):
+        for i in range(len(T_sample)):
             # create new MatterTransferFunctionValue object
             self._values.append(
-                MatterTransferFunctionValue(None, self._z_sample[i], values[i])
+                MatterTransferFunctionValue(
+                    None, self._z_sample[i], T_sample[i], Tprime_sample[i]
+                )
             )
 
         self._solver = self._solver_labels[data["solver_label"]]
@@ -535,11 +540,12 @@ class MatterTransferFunctionValue(DatastoreObject):
     owning MatterTransferFunctionIntegration object
     """
 
-    def __init__(self, store_id: int, z: redshift, value: float):
+    def __init__(self, store_id: int, z: redshift, T: float, Tprime: float):
         DatastoreObject.__init__(self, store_id)
 
         self._z = z
-        self._value = value
+        self._T = T
+        self._Tprime = Tprime
 
     def __float__(self):
         """
@@ -553,5 +559,9 @@ class MatterTransferFunctionValue(DatastoreObject):
         return self._z
 
     @property
-    def value(self) -> float:
-        return self._value
+    def T(self) -> float:
+        return self._T
+
+    @property
+    def Tprime(self) -> float:
+        return self._Tprime

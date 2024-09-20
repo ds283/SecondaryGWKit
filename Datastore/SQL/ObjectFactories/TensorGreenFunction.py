@@ -295,7 +295,8 @@ class sqla_TensorGreenFunctionIntegration_factory(SQLAFactoryBase):
                 value_table.c.serial,
                 value_table.c.z_serial,
                 redshift_table.c.z,
-                value_table.c.value,
+                value_table.c.G,
+                value_table.c.Gprime,
             )
             .select_from(
                 value_table.join(
@@ -314,7 +315,7 @@ class sqla_TensorGreenFunctionIntegration_factory(SQLAFactoryBase):
             z_points.append(z_value)
             values.append(
                 TensorGreenFunctionValue(
-                    store_id=row.serial, z=z_value, value=row.value
+                    store_id=row.serial, z=z_value, G=row.G, Gprime=row.Gprime
                 )
             )
         imported_z_sample = redshift_array(z_points)
@@ -408,7 +409,8 @@ class sqla_TensorGreenFunctionIntegration_factory(SQLAFactoryBase):
                 {
                     "integration_serial": store_id,
                     "z_serial": value.z.store_id,
-                    "value": value.value,
+                    "G": value.G,
+                    "Gprime": value.Gprime,
                 },
             )
 
@@ -554,8 +556,14 @@ class sqla_TensorGreenFunctionValue_factory(SQLAFactoryBase):
                     nullable=False,
                 ),
                 sqla.Column(
-                    "value",
+                    "G",
                     sqla.Float(64),
+                    nullable=False,
+                ),
+                sqla.Column(
+                    "Gprime",
+                    sqla.Float(64),
+                    nullable=False,
                 ),
             ],
         }
@@ -564,10 +572,15 @@ class sqla_TensorGreenFunctionValue_factory(SQLAFactoryBase):
     def build(payload, conn, table, inserter, tables, inserters):
         integration_serial = payload["integration_serial"]
         z = payload["z"]
-        target_value = payload["value"]
+        G = payload["G"]
+        Gprime = payload["Gprime"]
 
         row_data = conn.execute(
-            sqla.select(table.c.serial, table.c.value).filter(
+            sqla.select(
+                table.c.serial,
+                table.c.G,
+                table.c.Gprime,
+            ).filter(
                 table.c.integration_serial == integration_serial,
                 table.c.z_serial == z.store_id,
             )
@@ -579,17 +592,21 @@ class sqla_TensorGreenFunctionValue_factory(SQLAFactoryBase):
                 {
                     "integration_serial": integration_serial,
                     "z_serial": z.store_id,
-                    "value": target_value,
+                    "G": G,
+                    "Gprime": Gprime,
                 },
             )
-            value = target_value
         else:
             store_id = row_data.serial
             value = row_data.value
 
-            if fabs(value - target_value) > DEFAULT_FLOAT_PRECISION:
+            if fabs(row_data.G - G) > DEFAULT_FLOAT_PRECISION:
                 raise ValueError(
-                    f"Stored value (integration={integration_serial}, z={z.store_id}) = {value} differs from target value = {target_value}"
+                    f"Stored tensor Green function value (integration={integration_serial}, z={z.store_id}) = {row_data.G} differs from expected value = {G}"
+                )
+            if fabs(row_data.Gprime - Gprime) > DEFAULT_FLOAT_PRECISION:
+                raise ValueError(
+                    f"Stored tensor Green function derivative (integration={integration_serial}, z={z.store_id}) = {row_data.Gprime} differs from expected value = {Gprime}"
                 )
 
-        return TensorGreenFunctionValue(store_id=store_id, z=z, value=value)
+        return TensorGreenFunctionValue(store_id=store_id, z=z, G=G, Gprime=Gprime)
