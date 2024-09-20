@@ -12,7 +12,7 @@ class sqla_tolerance_factory(SQLAFactoryBase):
         pass
 
     @staticmethod
-    def generate_columns():
+    def register():
         return {
             "version": False,
             "timestamp": True,

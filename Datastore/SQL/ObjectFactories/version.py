@@ -10,7 +10,7 @@ class sqla_version_factory(SQLAFactoryBase):
         pass
 
     @staticmethod
-    def generate_columns():
+    def register():
         return {
             "version": False,
             "timestamp": False,

@@ -42,11 +42,13 @@ parser.add_argument(
 )
 parser.add_argument(
     "--shards",
+    type=int,
     default=DEFAULT_SHARDS,
     help="specify number of shards to be used when creating a new datastore",
 )
 parser.add_argument(
     "--db-timeout",
+    type=int,
     default=DEFAULT_TIMEOUT,
     help="specify connection timeout for database layer",
 )

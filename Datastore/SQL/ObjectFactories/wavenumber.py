@@ -14,7 +14,7 @@ class sqla_wavenumber_factory(SQLAFactoryBase):
         pass
 
     @staticmethod
-    def generate_columns():
+    def register():
         return {
             "version": False,
             "timestamp": True,
@@ -61,7 +61,7 @@ class sqla_wavenumber_exit_time_factory(SQLAFactoryBase):
         pass
 
     @staticmethod
-    def generate_columns():
+    def register():
         # Does not set up a foreign key constraint for the cosmology object.
         # The issue is that this is polymorphic, because we have different implementations of the CosmologyBase concept.
         # Rather than try to deal with this using SQLAlchemy-level polymorphism, we handle the polymorphism ourselves

@@ -1,4 +1,5 @@
 from math import fabs
+from operator import or_
 from typing import List, Optional
 
 import sqlalchemy as sqla
@@ -21,7 +22,7 @@ class sqla_MatterTransferFunctionTagAssociation_factory(SQLAFactoryBase):
         pass
 
     @staticmethod
-    def generate_columns():
+    def register():
         return {
             "serial": False,
             "version": False,
@@ -80,11 +81,12 @@ class sqla_MatterTransferFunctionIntegration_factory(SQLAFactoryBase):
         pass
 
     @staticmethod
-    def generate_columns():
+    def register():
         return {
             "version": True,
             "stepping": False,
             "timestamp": True,
+            "validate_on_startup": True,
             "columns": [
                 sqla.Column("label", sqla.String(DEFAULT_STRING_LENGTH)),
                 sqla.Column(
@@ -428,13 +430,85 @@ class sqla_MatterTransferFunctionIntegration_factory(SQLAFactoryBase):
 
         return validated
 
+    @staticmethod
+    def validate_on_startup(conn, table, tables):
+        # query the datastore for any integrations that are not validated
+
+        atol_table = tables["tolerance"].alias("atol")
+        rtol_table = tables["tolerance"].alias("rtol")
+        solver_table = tables["IntegrationSolver"]
+        redshift_table = tables["redshift"]
+        wavenumber_exit_table = tables["wavenumber_exit_time"]
+        wavenumber_table = tables["wavenumber"]
+        value_table = tables["MatterTransferFunctionValue"]
+
+        # bake results into a list so that we can close this query; we are going to want to run
+        # another one as we process the rows from this one
+        not_validated = list(
+            conn.execute(
+                sqla.select(
+                    table.c.serial,
+                    table.c.label,
+                    table.c.z_samples,
+                    wavenumber_table.c.k_inv_Mpc.label("k_inv_Mpc"),
+                    solver_table.c.label.label("solver_label"),
+                    atol_table.c.log10_tol.label("log10_atol"),
+                    rtol_table.c.log10_tol.label("log10_rtol"),
+                    redshift_table.c.z.label("z_init"),
+                )
+                .select_from(
+                    table.join(
+                        solver_table, solver_table.c.serial == table.c.solver_serial
+                    )
+                    .join(atol_table, atol_table.c.serial == table.c.atol_serial)
+                    .join(rtol_table, rtol_table.c.serial == table.c.rtol_serial)
+                    .join(
+                        redshift_table, redshift_table.c.serial == table.c.z_init_serial
+                    )
+                    .join(
+                        wavenumber_exit_table,
+                        wavenumber_exit_table.c.serial
+                        == table.c.wavenumber_exit_serial,
+                    )
+                    .join(
+                        wavenumber_table,
+                        wavenumber_table.c.serial
+                        == wavenumber_exit_table.c.wavenumber_serial,
+                    )
+                )
+                .filter(or_(table.c.validated == False, table.c.validated == None))
+            )
+        )
+
+        if len(not_validated) == 0:
+            return []
+
+        msgs = [
+            ">> Matter transfer function",
+            "     The following unvalidated integrations were detected in the datastore:",
+        ]
+        for integration in not_validated:
+            msgs.append(
+                f'       -- "{integration.label}" (store_id={integration.serial}) for k={integration.k_inv_Mpc:.5g}/Mpc and z_init={integration.z_init:.5g} (log10_atol={integration.log10_atol}, log10_rtol={integration.log10_rtol})'
+            )
+            rows = conn.execute(
+                sqla.select(sqla.func.count(value_table.c.serial)).filter(
+                    value_table.c.integration_serial == integration.serial,
+                )
+            ).scalar()
+            msgs.append(
+                f"          contains {rows} z-sample values expected={integration.z_samples}"
+            )
+
+        return msgs
+
 
 class sqla_MatterTransferFunctionValue_factory(SQLAFactoryBase):
     def __init__(self):
         pass
 
     @staticmethod
-    def generate_columns():
+    def register():
         return {
             "version": False,
             "timestamp": False,

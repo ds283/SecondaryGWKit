@@ -10,7 +10,7 @@ class sqla_IntegrationSolver_factory(SQLAFactoryBase):
         pass
 
     @staticmethod
-    def generate_columns():
+    def register():
         return {
             "version": False,
             "stepping": "minimum",

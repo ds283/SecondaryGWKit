@@ -181,6 +181,7 @@ class ShardedPool:
                     version_serial=self._version.store_id,
                     db_name=self._shard_db_files[key],
                     timeout=self._timeout,
+                    my_name=f"shard{key:04d}-store",
                 )
                 for key in shard_ids
             }
@@ -505,12 +506,15 @@ class Datastore:
         db_name: PathType,
         version_serial: int = None,
         timeout: int = None,
+        my_name: str = None,
     ):
         """
         Initialize an SQL datastore object
         :param version_id: version identifier used to tag results written in to the store
         """
         self._timeout = timeout
+        self._my_name = my_name
+
         self._db_file = Path(db_name).resolve()
 
         # initialize set of registered storable class adapters
@@ -538,6 +542,7 @@ class Datastore:
         else:
             self._create_engine()
             self._build_storage_schema()
+            self._validate_on_startup()
 
         # convert version label to a version object
         # if a serial is specified, we are probably running as a replica, and we need to ensure that the specified
@@ -600,20 +605,25 @@ class Datastore:
                     f"Duplicate registered factory for storable class '{cls_name}'"
                 )
 
-            schema = {"name": cls_name}
-
             # query class for a list of columns that it wants to store
-            table_data = factory.generate_columns()
+            registration_data = factory.register()
+
+            schema = {
+                "name": cls_name,
+                "validate_on_startup": registration_data.get(
+                    "validate_on_startup", False
+                ),
+            }
 
             # does this storage object require its own table?
-            if table_data is not None:
+            if registration_data is not None:
                 # generate main table for this adapter class
                 tab = sqla.Table(
                     cls_name,
                     self._metadata,
                 )
 
-                use_serial = table_data.get("serial", True)
+                use_serial = registration_data.get("serial", True)
                 schema["use_serial"] = use_serial
                 if use_serial:
                     serial_col = sqla.Column("serial", sqla.Integer, primary_key=True)
@@ -621,7 +631,7 @@ class Datastore:
                     schema["serial_col"] = serial_col
 
                 # attach pre-defined columns
-                use_version = table_data.get("version", False)
+                use_version = registration_data.get("version", False)
                 schema["use_version"] = use_version
                 if use_version:
                     version_col = sqla.Column(
@@ -630,14 +640,14 @@ class Datastore:
                     tab.append_column(version_col)
                     schema["version_col"] = version_col
 
-                use_timestamp = table_data.get("timestamp", False)
+                use_timestamp = registration_data.get("timestamp", False)
                 schema["use_timestamp"] = use_timestamp
                 if use_timestamp:
                     timestamp_col = sqla.Column("timestamp", sqla.DateTime())
                     tab.append_column(timestamp_col)
                     schema["timestamp_col"] = timestamp_col
 
-                use_stepping = table_data.get("stepping", False)
+                use_stepping = registration_data.get("stepping", False)
                 if isinstance(use_stepping, str):
                     if use_stepping not in ["minimum", "exact"]:
                         print(
@@ -658,7 +668,7 @@ class Datastore:
                     schema["stepping_mode"] = _stepping_mode
 
                 # append all columns supplied by the class
-                sqla_columns = table_data.get("columns", [])
+                sqla_columns = registration_data.get("columns", [])
                 for col in sqla_columns:
                     tab.append_column(col)
                 schema["columns"] = sqla_columns
@@ -696,6 +706,31 @@ class Datastore:
             raise RuntimeError(
                 f'No storable class of type "{cls_name}" has been registered'
             )
+
+    def _validate_on_startup(self):
+        printed_header = False
+
+        for cls_name, record in self._schema.items():
+            if record["validate_on_startup"]:
+                factory = self._factories[cls_name]
+
+                tab = record["table"]
+
+                with self._engine.begin() as conn:
+                    msgs = factory.validate_on_startup(conn, tab, self._tables)
+
+                if len(msgs) == 0:
+                    continue
+
+                if not printed_header:
+                    if self._my_name is not None:
+                        print(
+                            f'!! INTEGRITY WARNING: datastore "{self._my_name}" (physical file {str(self._db_file)})'
+                        )
+                        printed_header = True
+
+                for line in msgs:
+                    print(line)
 
     def object_get(self, ObjectClass, **kwargs):
         with WallclockTimer() as timer:

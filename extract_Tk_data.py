@@ -33,6 +33,7 @@ parser.add_argument(
 parser.add_argument(
     "--db-timeout",
     default=DEFAULT_TIMEOUT,
+    type=int,
     help="specify connection timeout for database layer",
 )
 parser.add_argument(

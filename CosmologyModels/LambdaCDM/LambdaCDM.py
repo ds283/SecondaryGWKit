@@ -73,12 +73,13 @@ class LambdaCDM(BaseCosmology):
         matter_radiation_equality = self.omega_m / self.omega_r - 1.0
         matter_cc_equality = pow(self.omega_cc / self.omega_m, 1.0 / 3.0) - 1.0
 
-        print(f"     Omega_m = {self.omega_m:.4g}")
-        print(f"     Omega_cc = {self.omega_cc:.4g}")
-        print(f"     Omega_r = {self.omega_r:.4g}")
-        print(f"     present-day energy density = {rho_today_gram_m3:.4g} g/m^3")
-        print(f"     matter-radiation equality at z = {matter_radiation_equality:.4g}")
-        print(f"     matter-Lambda equality at z = {matter_cc_equality:.4g}")
+        print(f'@@ LambdaCDM model "{self._name}')
+        print(f"|  Omega_m = {self.omega_m:.4g}")
+        print(f"|  Omega_cc = {self.omega_cc:.4g}")
+        print(f"|  Omega_r = {self.omega_r:.4g}")
+        print(f"|  present-day energy density = {rho_today_gram_m3:.4g} g/m^3")
+        print(f"|  matter-radiation equality at z = {matter_radiation_equality:.4g}")
+        print(f"|  matter-Lambda equality at z = {matter_cc_equality:.4g}")
 
     @property
     def type_id(self) -> int:
