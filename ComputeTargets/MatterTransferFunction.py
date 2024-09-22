@@ -90,7 +90,7 @@ class MatterTransferFunctionSupervisor(IntegrationSupervisor):
                 f"!! WARNING: Integration for T_k(z) for k = {self._k.k_inv_Mpc:.5g}/Mpc (store_id={self._k.store_id}) may have developed unresolved oscillations"
             )
             print(
-                f"|    current z={z:.5g}, e-folds inside horizon={efolds_subh:.3g} | approximate wavelength Delta z = {wavelength:.5g}, approximate grid spacing at this z = {grid_spacing:.5g}"
+                f"|    current z={z:.5g}, e-folds inside horizon={efolds_subh:.3g} | approximate wavelength Delta z={wavelength:.5g}, approximate grid spacing at this z: {grid_spacing:.5g}"
             )
             self._has_unresolved_osc = True
             self._unresolved_osc_z = z
