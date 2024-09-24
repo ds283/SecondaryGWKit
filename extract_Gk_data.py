@@ -1,6 +1,5 @@
 import argparse
 import sys
-from math import exp
 from pathlib import Path
 
 import pyarrow as pa
@@ -24,7 +23,6 @@ from Units import Mpc_units
 from defaults import DEFAULT_ABS_TOLERANCE, DEFAULT_REL_TOLERANCE
 
 DEFAULT_TIMEOUT = 60
-OUTSIDE_HORIZON_EFOLDS = 3.5
 
 parser = argparse.ArgumentParser()
 parser.add_argument(
@@ -165,7 +163,7 @@ def write_metadata_content(Gk: TensorGreenFunctionIntegration):
 def build_metadata_work(k_exit: wavenumber_exit_time):
     if not k_exit.available:
         raise RuntimeError(f"k_exit object (store_id={k_exit.store_id}) is not ready")
-    source_zs = z_sample.truncate(exp(OUTSIDE_HORIZON_EFOLDS) * k_exit.z_exit)
+    source_zs = z_sample.truncate(k_exit.z_exit_suph_e3)
 
     return [
         pool.object_get(
@@ -262,7 +260,7 @@ def write_time_series_content(Gk: TensorGreenFunctionIntegration):
 def build_time_series_work(k_exit: wavenumber_exit_time):
     if not k_exit.available:
         raise RuntimeError(f"k_exit object (store_id={k_exit.store_id}) is not ready")
-    source_zs = z_sample.truncate(exp(OUTSIDE_HORIZON_EFOLDS) * k_exit.z_exit)
+    source_zs = z_sample.truncate(k_exit.z_exit_suph_e3)
 
     return [
         pool.object_get(

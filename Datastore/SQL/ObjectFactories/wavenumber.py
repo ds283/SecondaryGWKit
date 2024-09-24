@@ -98,6 +98,10 @@ class sqla_wavenumber_exit_time_factory(SQLAFactoryBase):
                 ),
                 sqla.Column("compute_time", sqla.Float(64)),
                 sqla.Column("z_exit", sqla.Float(64)),
+                sqla.Column("z_exit_suph_e3", sqla.Float(64)),
+                sqla.Column("z_exit_suph_e5", sqla.Float(64)),
+                sqla.Column("z_exit_subh_e3", sqla.Float(64)),
+                sqla.Column("z_exit_subh_e5", sqla.Float(64)),
             ],
         }
 
@@ -128,6 +132,10 @@ class sqla_wavenumber_exit_time_factory(SQLAFactoryBase):
                 atol_table.c.log10_tol.label("log10_atol"),
                 rtol_table.c.log10_tol.label("log10_rtol"),
                 table.c.z_exit,
+                table.c.z_exit_suph_e3,
+                table.c.z_exit_suph_e5,
+                table.c.z_exit_subh_e3,
+                table.c.z_exit_subh_e5,
             )
             .select_from(
                 table.join(atol_table, atol_table.c.serial == table.c.atol_serial).join(
@@ -160,9 +168,14 @@ class sqla_wavenumber_exit_time_factory(SQLAFactoryBase):
             )
 
         store_id = row_data.serial
-        z_exit = row_data.z_exit
         compute_time = row_data.compute_time
         stepping = row_data.stepping
+
+        z_exit = row_data.z_exit
+        z_exit_suph_e3 = row_data.z_exit_suph_e3
+        z_exit_suph_e5 = row_data.z_exit_suph_e5
+        z_exit_subh_e3 = row_data.z_exit_subh_e3
+        z_exit_subh_e5 = row_data.z_exit_subh_e5
 
         atol = tolerance(store_id=row_data.atol_serial, log10_tol=row_data.log10_atol)
         rtol = tolerance(store_id=row_data.rtol_serial, log10_tol=row_data.log10_rtol)
@@ -171,6 +184,10 @@ class sqla_wavenumber_exit_time_factory(SQLAFactoryBase):
             payload={
                 "store_id": store_id,
                 "z_exit": z_exit,
+                "z_exit_suph_e3": z_exit_suph_e3,
+                "z_exit_suph_e5": z_exit_suph_e5,
+                "z_exit_subh_e3": z_exit_subh_e3,
+                "z_exit_subh_e5": z_exit_subh_e5,
                 "compute_time": compute_time,
                 "stepping": stepping,
             },
@@ -201,6 +218,10 @@ class sqla_wavenumber_exit_time_factory(SQLAFactoryBase):
                 "rtol_serial": obj._rtol.store_id,
                 "compute_time": obj.compute_time,
                 "z_exit": obj.z_exit,
+                "z_exit_suph_e3": obj.z_exit_suph_e3,
+                "z_exit_suph_e5": obj.z_exit_suph_e5,
+                "z_exit_subh_e3": obj.z_exit_subh_e3,
+                "z_exit_subh_e5": obj.z_exit_subh_e5,
             },
         )
 

@@ -1,8 +1,8 @@
 import time
-from math import fabs, pi, log, sqrt
 from typing import Optional, List
 
 import ray
+from math import fabs, pi, log, sqrt
 from scipy.integrate import solve_ivp
 
 from CosmologyConcepts import redshift_array, wavenumber, redshift, wavenumber_exit_time
@@ -462,14 +462,14 @@ class MatterTransferFunctionIntegration(DatastoreObject):
         Hinit = self.cosmology.Hubble(self.z_init.z)
         k_over_aH = (1.0 + self.z_init.z) * self.k.k / Hinit
         wavelength = 2.0 * pi / k_over_aH
-        efolds_suph = log(wavelength)
+        efolds_suph = -log(k_over_aH)
         if efolds_suph < 1:
             print("!! T(k) COMPUTATION BEGINNING TOO CLOSE TO HORIZON SCALE")
             print(
                 f"|    k = {self.k.k_inv_Mpc}/Mpc, z_exit = {self.z_exit}, z_init = {self.z_init.z}, z_sample(max) = {self.z_sample.max.z}, z_sample(min) = {self.z_sample.min.z}"
             )
             print(
-                f"|    k/aH = {k_over_aH:.5g}, wavelength 2pi(H/k) = {wavelength:.5g}, e-folds outside horizon = {log(wavelength)}, log(z_init/z_exit) = {log(self.z_init.z/self.z_exit)}"
+                f"|    k/aH = {k_over_aH:.5g}, wavelength 2pi(H/k) = {wavelength:.5g}, e-folds outside horizon = {efolds_suph}, log(z_init/z_exit) = {log(self.z_init.z/self.z_exit)}"
             )
 
         self._compute_ref = compute_matter_Tk.remote(
@@ -513,8 +513,7 @@ class MatterTransferFunctionIntegration(DatastoreObject):
 
         Hinit = self.cosmology.Hubble(self.z_init.z)
         k_over_aH = (1.0 + self.z_init.z) * self.k.k / Hinit
-        wavelength = 2.0 * pi / k_over_aH
-        self._init_efolds_suph = log(wavelength)
+        self._init_efolds_suph = -log(k_over_aH)
 
         T_sample = data["T_sample"]
         Tprime_sample = data["Tprime_sample"]

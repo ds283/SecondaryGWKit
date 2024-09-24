@@ -1,8 +1,8 @@
 import time
-from math import fabs, pi, log, sqrt
 from typing import Optional, List
 
 import ray
+from math import fabs, pi, log, sqrt
 from scipy.integrate import solve_ivp
 
 from CosmologyConcepts import wavenumber, redshift, redshift_array, wavenumber_exit_time
@@ -493,8 +493,7 @@ class TensorGreenFunctionIntegration(DatastoreObject):
 
         Hsource = self.cosmology.Hubble(self.z_source.z)
         k_over_aH = (1.0 + self.z_source.z) * self.k.k / Hsource
-        wavelength = 2.0 * pi / k_over_aH
-        self._init_efolds_suph = log(wavelength)
+        self._init_efolds_suph = -log(k_over_aH)
 
         G_sample = data["G_sample"]
         Gprime_sample = data["Gprime_sample"]

@@ -22,7 +22,6 @@ from Units import Mpc_units
 from defaults import DEFAULT_ABS_TOLERANCE, DEFAULT_REL_TOLERANCE
 
 DEFAULT_TIMEOUT = 60
-OUTSIDE_HORIZON_EFOLDS = 3.5
 
 parser = argparse.ArgumentParser()
 parser.add_argument(
