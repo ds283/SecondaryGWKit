@@ -167,16 +167,19 @@ def build_metadata_work(k_exit: wavenumber_exit_time):
         raise RuntimeError(f"k_exit object (store_id={k_exit.store_id}) is not ready")
     source_zs = z_sample.truncate(exp(OUTSIDE_HORIZON_EFOLDS) * k_exit.z_exit)
 
-    return pool.object_get(
-        TensorGreenFunctionIntegration,
-        solver_labels=[],
-        cosmology=LambdaCDM_Planck2018,
-        k=k_exit,
-        z_sample=None,
-        z_source=source_zs.max,
-        atol=atol,
-        rtol=rtol,
-    )
+    return [
+        pool.object_get(
+            TensorGreenFunctionIntegration,
+            solver_labels=[],
+            cosmology=LambdaCDM_Planck2018,
+            k=k_exit,
+            z_sample=None,
+            z_source=source_z,
+            atol=atol,
+            rtol=rtol,
+        )
+        for source_z in source_zs
+    ]
 
 
 def metadata_available_map(Gk: TensorGreenFunctionIntegration):
