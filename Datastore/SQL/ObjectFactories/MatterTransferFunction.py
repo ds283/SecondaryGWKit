@@ -1,8 +1,8 @@
-from math import fabs
 from operator import or_
 from typing import List, Optional
 
 import sqlalchemy as sqla
+from math import fabs
 from sqlalchemy import and_
 
 from ComputeTargets import (
@@ -294,6 +294,7 @@ class sqla_MatterTransferFunctionIntegration_factory(SQLAFactoryBase):
                 redshift_table.c.z,
                 value_table.c.T,
                 value_table.c.Tprime,
+                value_table.c.analytic_T,
             )
             .select_from(
                 value_table.join(
@@ -312,7 +313,11 @@ class sqla_MatterTransferFunctionIntegration_factory(SQLAFactoryBase):
             z_points.append(z_value)
             values.append(
                 MatterTransferFunctionValue(
-                    store_id=row.serial, z=z_value, T=row.T, Tprime=row.Tprime
+                    store_id=row.serial,
+                    z=z_value,
+                    T=row.T,
+                    Tprime=row.Tprime,
+                    analytic_T=row.analytic_T,
                 )
             )
         imported_z_sample = redshift_array(z_points)
@@ -410,6 +415,7 @@ class sqla_MatterTransferFunctionIntegration_factory(SQLAFactoryBase):
                     "z_serial": value.z.store_id,
                     "T": value.T,
                     "Tprime": value.Tprime,
+                    "analytic_T": value.analytic_T,
                 },
             )
 
@@ -559,6 +565,7 @@ class sqla_MatterTransferFunctionValue_factory(SQLAFactoryBase):
                     nullable=False,
                 ),
                 sqla.Column("Tprime", sqla.Float(64), nullable=False),
+                sqla.Column("analytic_T", sqla.Float(64), nullable=True),
             ],
         }
 
@@ -568,12 +575,14 @@ class sqla_MatterTransferFunctionValue_factory(SQLAFactoryBase):
         z = payload["z"]
         T = payload["T"]
         Tprime = payload["Tprime"]
+        analytic_T = payload.get("analytic_T", None)
 
         row_data = conn.execute(
             sqla.select(
                 table.c.serial,
                 table.c.T,
                 table.c.Tprime,
+                table.c.analytic_T,
             ).filter(
                 table.c.integration_serial == integration_serial,
                 table.c.z_serial == z.store_id,
@@ -588,10 +597,12 @@ class sqla_MatterTransferFunctionValue_factory(SQLAFactoryBase):
                     "z_serial": z.store_id,
                     "T": T,
                     "Tprime": Tprime,
+                    "analytic_T": analytic_T,
                 },
             )
         else:
             store_id = row_data.serial
+            analytic_T = row_data.analytic_T
 
             if fabs(row_data.T - T) > DEFAULT_FLOAT_PRECISION:
                 raise ValueError(
@@ -602,4 +613,6 @@ class sqla_MatterTransferFunctionValue_factory(SQLAFactoryBase):
                     f"Stored matter transfer function derivative (integration={integration_serial}, z={z.z}) = {row_data.Tprime} differs from expected value = {Tprime}"
                 )
 
-        return MatterTransferFunctionValue(store_id=store_id, z=z, T=T, Tprime=Tprime)
+        return MatterTransferFunctionValue(
+            store_id=store_id, z=z, T=T, Tprime=Tprime, analytic_T=analytic_T
+        )

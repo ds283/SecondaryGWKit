@@ -2,8 +2,9 @@ import time
 from typing import Optional, List
 
 import ray
-from math import fabs, pi, log, sqrt
+from math import fabs, pi, log, sqrt, pow
 from scipy.integrate import solve_ivp
+from scipy.special import gamma, jv
 
 from CosmologyConcepts import redshift_array, wavenumber, redshift, wavenumber_exit_time
 from CosmologyModels import BaseCosmology
@@ -17,6 +18,19 @@ from .integration_supervisor import (
     IntegrationSupervisor,
     RHS_timer,
 )
+
+
+def analytic_matter_transfer_function(k, w, tau):
+    b = (1.0 - 3.0 * w) / (1.0 + 3.0 * w)
+    cs = sqrt(w)
+    k_cs_tau = k * cs * tau
+
+    A = pow(2.0, 1.5 + b)
+    B = gamma(2.5 + b)
+    C = pow(k_cs_tau, -1.5 - b)
+    D = jv(1.5 + b, k_cs_tau)
+
+    return A * B * C * D
 
 
 class MatterTransferFunctionSupervisor(IntegrationSupervisor):
@@ -142,14 +156,23 @@ def compute_matter_Tk(
     #
     # State layout:
     #   state[0] = energy density rho(z)
-    #   state[0] = T(z)
-    #   state[1] = dT/dz = T' = "T prime"
+    #   state[1] = a_0 tau(z) [tau = conformal time]
+    #   state[2] = T(z)
+    #   state[3] = dT/dz = T' = "T prime"
+    RHO_INDEX = 0
+    A0_TAU_INDEX = 1
+    T_INDEX = 2
+    TPRIME_INDEX = 3
+
     def RHS(z, state, supervisor: MatterTransferFunctionSupervisor) -> float:
         """
         k *must* be measured using the same units used for H(z) in the cosmology
         """
         with RHS_timer(supervisor):
-            rho, T, Tprime = state
+            rho = state[RHO_INDEX]
+            a0_tau = state[A0_TAU_INDEX]
+            T = state[T_INDEX]
+            Tprime = state[TPRIME_INDEX]
 
             if supervisor.notify_available:
                 supervisor.message(
@@ -167,6 +190,7 @@ def compute_matter_Tk(
             one_plus_z_2 = one_plus_z * one_plus_z
 
             drho_dz = 3.0 * ((1.0 + wBackground) / one_plus_z) * rho
+            da0_tau_dz = -1.0 / H
             dT_dz = Tprime
 
             k_over_H = k_float / H
@@ -189,13 +213,18 @@ def compute_matter_Tk(
                 wavelength = 2.0 * pi / sqrt(omega_eff_sq)
                 supervisor.report_wavelength(z, wavelength, log((1.0 + z) * k_over_H))
 
-        return [drho_dz, dT_dz, dTprime_dz]
+        return [drho_dz, da0_tau_dz, dT_dz, dTprime_dz]
 
     with MatterTransferFunctionSupervisor(
         k, z_init, z_sample.min, delta_logz=delta_logz
     ) as supervisor:
         # use initial values T(z) = 1, dT/dz = 0 at z = z_init
-        initial_state = [cosmology.rho(z_init.z), 1.0, 0.0]
+        rho_init = cosmology.rho(z_init.z)
+        tau_init = (
+            sqrt(3.0) * cosmology.units.PlanckMass / sqrt(rho_init) / (1.0 + z_init.z)
+        )
+
+        initial_state = [rho_init, tau_init, 1.0, 0.0]
         sol = solve_ivp(
             RHS,
             method="Radau",
@@ -215,8 +244,9 @@ def compute_matter_Tk(
 
     sampled_z = sol.t
     sampled_values = sol.y
-    sampled_T = sampled_values[1]
-    sampled_Tprime = sampled_values[2]
+    sampled_a0_tau = sampled_values[A0_TAU_INDEX]
+    sampled_T = sampled_values[T_INDEX]
+    sampled_Tprime = sampled_values[TPRIME_INDEX]
 
     expected_values = len(z_sample)
     returned_values = sampled_z.size
@@ -240,6 +270,7 @@ def compute_matter_Tk(
         "mean_RHS_time": supervisor.mean_RHS_time,
         "max_RHS_time": supervisor.max_RHS_time,
         "min_RHS_time": supervisor.min_RHS_time,
+        "a0_tau_sample": sampled_a0_tau,
         "T_sample": sampled_T,
         "Tprime_sample": sampled_Tprime,
         "solver_label": "solve_ivp+Radau-stepping0",
@@ -517,13 +548,21 @@ class MatterTransferFunctionIntegration(DatastoreObject):
 
         T_sample = data["T_sample"]
         Tprime_sample = data["Tprime_sample"]
+        a0_tau_sample = data["a0_tau_sample"]
         self._values = []
 
         for i in range(len(T_sample)):
+            tau = a0_tau_sample[i]
+            analytic_T = analytic_matter_transfer_function(self.k.k, 1.0 / 3.0, tau)
+
             # create new MatterTransferFunctionValue object
             self._values.append(
                 MatterTransferFunctionValue(
-                    None, self._z_sample[i], T_sample[i], Tprime_sample[i]
+                    None,
+                    self._z_sample[i],
+                    T_sample[i],
+                    Tprime_sample[i],
+                    analytic_T=analytic_T,
                 )
             )
 
@@ -539,19 +578,27 @@ class MatterTransferFunctionValue(DatastoreObject):
     owning MatterTransferFunctionIntegration object
     """
 
-    def __init__(self, store_id: int, z: redshift, T: float, Tprime: float):
+    def __init__(
+        self,
+        store_id: int,
+        z: redshift,
+        T: float,
+        Tprime: float,
+        analytic_T: Optional[float] = None,
+    ):
         DatastoreObject.__init__(self, store_id)
 
         self._z = z
         self._T = T
         self._Tprime = Tprime
+        self._analytic_T = analytic_T
 
     def __float__(self):
         """
         Cast to float. Returns value of the transfer function
         :return:
         """
-        return self.value
+        return self.T
 
     @property
     def z(self) -> redshift:
@@ -564,3 +611,7 @@ class MatterTransferFunctionValue(DatastoreObject):
     @property
     def Tprime(self) -> float:
         return self._Tprime
+
+    @property
+    def analytic_T(self) -> Optional[float]:
+        return self._analytic_T

@@ -4,6 +4,7 @@ from typing import Optional, List
 import ray
 from math import fabs, pi, log, sqrt
 from scipy.integrate import solve_ivp
+from scipy.special import jv, yv
 
 from CosmologyConcepts import wavenumber, redshift, redshift_array, wavenumber_exit_time
 from CosmologyModels import BaseCosmology
@@ -17,6 +18,19 @@ from .integration_supervisor import (
     DEFAULT_UPDATE_INTERVAL,
     RHS_timer,
 )
+
+
+def analytic_tensor_Green_function(k, w, tau_source, tau, H_source):
+    b = (1.0 - 3.0 * w) / (1.0 + 3.0 * w)
+    k_tau = k * tau
+    k_tau_source = k * tau_source
+
+    A = H_source * pi / 2.0
+    B = sqrt(tau * tau_source)
+    C = jv(0.5 + b, k_tau_source) * yv(0.5 + b, k_tau)
+    D = jv(0.5 + b, k_tau) * yv(0.5 + b, k_tau_source)
+
+    return A * B * (C - D)
 
 
 class TensorGreenFunctionSupervisor(IntegrationSupervisor):
@@ -138,14 +152,23 @@ def compute_tensor_Green(
     #
     # State layout:
     #   state[0] = energy density rho(z)
+    #   state[1] = a_0 tau [tau = conformal time]
     #   state[0] = G_k(z, z')
     #   state[1] = Gprime_k(z, z')
+    RHO_INDEX = 0
+    A0_TAU_INDEX = 1
+    G_INDEX = 2
+    GPRIME_INDEX = 3
+
     def RHS(z, state, supervisor) -> float:
         """
         k *must* be measured using the same units used for H(z) in the cosmology
         """
         with RHS_timer(supervisor):
-            rho, G, Gprime = state
+            rho = state[RHO_INDEX]
+            a0_tau = state[A0_TAU_INDEX]
+            G = state[G_INDEX]
+            Gprime = state[GPRIME_INDEX]
 
             if supervisor.notify_available:
                 supervisor.message(
@@ -162,6 +185,7 @@ def compute_tensor_Green(
             one_plus_z_2 = one_plus_z * one_plus_z
 
             drho_dz = 3.0 * ((1.0 + w) / one_plus_z) * rho
+            da0_tau_dz = -1.0 / H
             dG_dz = Gprime
 
             k_over_H = k_float / H
@@ -179,7 +203,7 @@ def compute_tensor_Green(
                 wavelength = 2.0 * pi / sqrt(omega_eff_sq)
                 supervisor.report_wavelength(z, wavelength, log((1.0 + z) * k_over_H))
 
-        return [drho_dz, dG_dz, dGprime_dz]
+        return [drho_dz, da0_tau_dz, dG_dz, dGprime_dz]
 
     with TensorGreenFunctionSupervisor(
         k, z_source, z_sample.min, delta_logz=delta_logz
@@ -189,7 +213,12 @@ def compute_tensor_Green(
         #   Gprime(z' z') = -1/(a0 H(z'))
         # however we would rather not have a delicate initial condition for Gprime, so we
         # instead solve with the boundary conditions Gprime = -1 and rescale afterwards
-        initial_state = [cosmology.rho(z_source.z), 0.0, 1.0]
+        rho_init = cosmology.rho(z_source.z)
+        tau_init = (
+            sqrt(3.0) * cosmology.units.PlanckMass / sqrt(rho_init) / (1.0 + z_source.z)
+        )
+
+        initial_state = [rho_init, tau_init, 0.0, 1.0]
         sol = solve_ivp(
             RHS,
             method="Radau",
@@ -209,8 +238,9 @@ def compute_tensor_Green(
 
     sampled_z = sol.t
     sampled_values = sol.y
-    sampled_G = sampled_values[1]
-    sampled_Gprime = sampled_values[2]
+    sampled_a0_tau = sampled_values[A0_TAU_INDEX]
+    sampled_G = sampled_values[G_INDEX]
+    sampled_Gprime = sampled_values[GPRIME_INDEX]
 
     expected_values = len(z_sample)
     returned_values = sampled_z.size
@@ -234,6 +264,7 @@ def compute_tensor_Green(
         "mean_RHS_time": supervisor.mean_RHS_time,
         "max_RHS_time": supervisor.max_RHS_time,
         "min_RHS_time": supervisor.min_RHS_time,
+        "a0_tau_sample": sampled_a0_tau,
         "G_sample": sampled_G,
         "Gprime_sample": sampled_Gprime,
         "solver_label": "solve_ivp+Radau-stepping0",
@@ -497,13 +528,24 @@ class TensorGreenFunctionIntegration(DatastoreObject):
 
         G_sample = data["G_sample"]
         Gprime_sample = data["Gprime_sample"]
+        a0_tau_sample = data["a0_tau_sample"]
         self._values = []
 
+        tau_source = a0_tau_sample[0]
         for i in range(len(G_sample)):
+            tau = a0_tau_sample[i]
+            analytic_G = analytic_tensor_Green_function(
+                self.k.k, 1.9 / 3.0, tau_source, tau, Hsource
+            )
+
             # create new TensorGreenFunctionValue object
             self._values.append(
                 TensorGreenFunctionValue(
-                    None, self._z_sample[i], G_sample[i], Gprime_sample[i]
+                    None,
+                    self._z_sample[i],
+                    G_sample[i],
+                    Gprime_sample[i],
+                    analytic_G=analytic_G,
                 )
             )
 
@@ -519,19 +561,27 @@ class TensorGreenFunctionValue(DatastoreObject):
     owning TensorGreenFunctionIntegration object
     """
 
-    def __init__(self, store_id: int, z: redshift, G: float, Gprime: float):
+    def __init__(
+        self,
+        store_id: int,
+        z: redshift,
+        G: float,
+        Gprime: float,
+        analytic_G: Optional[float] = None,
+    ):
         DatastoreObject.__init__(self, store_id)
 
         self._z = z
         self._G = G
         self._Gprime = Gprime
+        self._analytic_G = analytic_G
 
     def __float__(self):
         """
         Cast to float. Returns value of the transfer function
         :return:
         """
-        return self.value
+        return self.G
 
     @property
     def z(self) -> redshift:
@@ -544,3 +594,7 @@ class TensorGreenFunctionValue(DatastoreObject):
     @property
     def Gprime(self) -> float:
         return self._Gprime
+
+    @property
+    def analytic_G(self) -> Optional[float]:
+        return self._analytic_G

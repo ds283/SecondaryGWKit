@@ -111,6 +111,7 @@ time_series_schema = pa.schema(
         ("z", pa.float64()),
         ("T", pa.float64()),
         ("Tprime", pa.float64()),
+        ("analytic_T", pa.float64()),
     ]
 )
 metadata_schema = pa.schema(
@@ -157,6 +158,7 @@ def write_CSV_content(Tk: MatterTransferFunctionIntegration):
                 "z": value.z.z,
                 "T": value.T,
                 "Tprime": value.Tprime,
+                "analytic_T": value.analytic_T,
             }
             for value in Tk.values
         ]
