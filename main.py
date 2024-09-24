@@ -1,7 +1,6 @@
 import argparse
 import sys
 from datetime import datetime
-from math import exp
 
 import numpy as np
 import ray
@@ -178,11 +177,10 @@ print(
 
 # build a log-spaced universal grid of wavenumbers
 LATEST_Z = 0.1
-OUTSIDE_HORIZON_EFOLDS = 3.5
 SAMPLES_PER_LOG10_Z = 150
 
 universal_z_grid = k_exit_earliest.populate_z_sample(
-    outside_horizon_efolds=OUTSIDE_HORIZON_EFOLDS,
+    outside_horizon_efolds="suph_e3",
     samples_per_log10z=SAMPLES_PER_LOG10_Z,
     z_end=LATEST_Z,
 )
@@ -205,9 +203,7 @@ z_sample = redshift_array(z_array=z_array)
         pool.object_get(store_tag, label="TkOneLoopDensity"),
         pool.object_get(store_tag, label="GkOneLoopDensity"),
         pool.object_get(store_tag, label=f"GlobalRedshiftGrid_{len(z_sample)}"),
-        pool.object_get(
-            store_tag, label=f"OutsideHorizonEfolds_{OUTSIDE_HORIZON_EFOLDS:.2f}"
-        ),
+        pool.object_get(store_tag, label=f"OutsideHorizonEfolds_e3"),
         pool.object_get(store_tag, label=f"LargestRedshift_{z_sample.max.z:.5g}"),
         pool.object_get(store_tag, label=f"SamplesPerLog10Z_{SAMPLES_PER_LOG10_Z}"),
     ]
@@ -219,7 +215,7 @@ z_sample = redshift_array(z_array=z_array)
 
 
 def build_Tk_work(k_exit: wavenumber_exit_time):
-    my_sample = z_sample.truncate(exp(OUTSIDE_HORIZON_EFOLDS) * k_exit.z_exit)
+    my_sample = z_sample.truncate(k_exit.z_exit_suph_e3)
     return pool.object_get(
         MatterTransferFunctionIntegration,
         solver_labels=solvers,
@@ -271,7 +267,7 @@ def build_Gk_work(k_exit: wavenumber_exit_time):
     if not k_exit.available:
         raise RuntimeError(f"k_exit object (store_id={k_exit.store_id}) is not ready")
 
-    source_zs = z_sample.truncate(exp(OUTSIDE_HORIZON_EFOLDS) * k_exit.z_exit)
+    source_zs = z_sample.truncate(k_exit.z_exit_suph_e3)
 
     work_refs = []
 
