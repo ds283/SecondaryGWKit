@@ -17,7 +17,7 @@ from CosmologyConcepts import (
 from CosmologyModels.LambdaCDM import Planck2018, LambdaCDM
 from Datastore.SQL.sqla_impl import ShardedPool
 from MetadataConcepts import tolerance
-from RayWorkQueue import RayWorkQueue
+from RayWorkPool import RayWorkPool
 from Units import Mpc_units
 from defaults import DEFAULT_ABS_TOLERANCE, DEFAULT_REL_TOLERANCE
 
@@ -87,7 +87,7 @@ def create_k_exit_work(k: wavenumber):
 
 
 # query wavenumber_exit_time objects corresponding to these k modes
-k_exit_queue = RayWorkQueue(
+k_exit_queue = RayWorkPool(
     pool,
     k_array,
     task_builder=create_k_exit_work,
@@ -212,7 +212,7 @@ def Tk_available_map(Tk: MatterTransferFunctionIntegration):
     return write_CSV_content.remote(Tk)
 
 
-build_csv_queue = RayWorkQueue(
+build_csv_queue = RayWorkPool(
     pool,
     k_exit_times,
     task_builder=build_Tk_work,

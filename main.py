@@ -20,7 +20,7 @@ from CosmologyConcepts import (
 from CosmologyModels.LambdaCDM import LambdaCDM, Planck2018
 from Datastore.SQL.sqla_impl import ShardedPool
 from MetadataConcepts import tolerance, store_tag
-from RayWorkQueue import RayWorkQueue
+from RayWorkPool import RayWorkPool
 from Units import Mpc_units
 from defaults import DEFAULT_ABS_TOLERANCE, DEFAULT_REL_TOLERANCE
 
@@ -155,7 +155,7 @@ def build_k_exit_work(k: wavenumber):
 
 
 # for each k mode we sample, determine its horizon exit point
-k_exit_queue = RayWorkQueue(
+k_exit_queue = RayWorkPool(
     pool,
     k_sample,
     task_builder=build_k_exit_work,
@@ -244,7 +244,7 @@ def validate_Tk_work(Tk: MatterTransferFunctionIntegration):
     return pool.object_validate(Tk)
 
 
-Tk_queue = RayWorkQueue(
+Tk_queue = RayWorkPool(
     pool,
     k_exit_times,
     task_builder=build_Tk_work,
@@ -306,7 +306,7 @@ def validate_Gk_work(Gk: TensorGreenFunctionIntegration):
     return pool.object_validate(Gk)
 
 
-Gk_queue = RayWorkQueue(
+Gk_queue = RayWorkPool(
     pool,
     k_exit_times,
     task_builder=build_Gk_work,

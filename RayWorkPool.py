@@ -28,7 +28,7 @@ def _default_store_handler(obj, pool) -> ObjectRef:
     return pool.object_store(obj)
 
 
-class RayWorkQueue:
+class RayWorkPool:
     def __init__(
         self,
         pool: ShardedPool,
