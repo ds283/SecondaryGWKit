@@ -25,10 +25,11 @@ def analytic_tensor_Green_function(k, w, tau_source, tau, H_source):
     k_tau = k * tau
     k_tau_source = k * tau_source
 
-    A = H_source * pi / 2.0
+    A = -H_source * pi / 2.0
     B = sqrt(tau * tau_source)
-    C = jv(0.5 + b, k_tau_source) * yv(0.5 + b, k_tau)
-    D = jv(0.5 + b, k_tau) * yv(0.5 + b, k_tau_source)
+    n = 0.5 + b
+    C = jv(n, k_tau_source) * yv(n, k_tau)
+    D = jv(n, k_tau) * yv(n, k_tau_source)
 
     return A * B * (C - D)
 
@@ -535,7 +536,7 @@ class TensorGreenFunctionIntegration(DatastoreObject):
         for i in range(len(G_sample)):
             tau = a0_tau_sample[i]
             analytic_G = analytic_tensor_Green_function(
-                self.k.k, 1.9 / 3.0, tau_source, tau, Hsource
+                self.k.k, 1.0 / 3.0, tau_source, tau, Hsource
             )
 
             # create new TensorGreenFunctionValue object

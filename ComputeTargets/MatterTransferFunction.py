@@ -25,10 +25,11 @@ def analytic_matter_transfer_function(k, w, tau):
     cs = sqrt(w)
     k_cs_tau = k * cs * tau
 
-    A = pow(2.0, 1.5 + b)
+    n1 = 1.5 + b
+    A = pow(2.0, n1)
     B = gamma(2.5 + b)
-    C = pow(k_cs_tau, -1.5 - b)
-    D = jv(1.5 + b, k_cs_tau)
+    C = pow(k_cs_tau, -n1)
+    D = jv(n1, k_cs_tau)
 
     return A * B * C * D
 
