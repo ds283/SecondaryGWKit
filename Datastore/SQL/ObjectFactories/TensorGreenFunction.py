@@ -331,7 +331,7 @@ class sqla_TensorGreenFunctionIntegration_factory(SQLAFactoryBase):
                     f'Fewer z-samples than expected were recovered from the validated tensor Green function "{store_label}"'
                 )
 
-        return TensorGreenFunctionIntegration(
+        obj = TensorGreenFunctionIntegration(
             payload={
                 "store_id": store_id,
                 "compute_time": compute_time,
@@ -358,6 +358,8 @@ class sqla_TensorGreenFunctionIntegration_factory(SQLAFactoryBase):
             tags=tags,
             delta_logz=delta_logz,
         )
+        obj._deserialized = True
+        return obj
 
     @staticmethod
     def store(

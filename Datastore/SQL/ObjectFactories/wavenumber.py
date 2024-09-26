@@ -40,8 +40,15 @@ class sqla_wavenumber_factory(SQLAFactoryBase):
                 insert_data["serial"] = payload["serial"]
             store_id = inserter(conn, insert_data)
 
+            attribute_set = {"_new_insert": True}
+        else:
+            attribute_set = {"_deserialized": True}
+
         # return constructed object
-        return wavenumber(store_id=store_id, k_inv_Mpc=k_inv_Mpc, units=units)
+        obj = wavenumber(store_id=store_id, k_inv_Mpc=k_inv_Mpc, units=units)
+        for key, value in attribute_set.items():
+            setattr(obj, key, value)
+        return obj
 
     @staticmethod
     def read_table(conn, table, units: UnitsLike):
@@ -183,7 +190,7 @@ class sqla_wavenumber_exit_time_factory(SQLAFactoryBase):
         atol = tolerance(store_id=row_data.atol_serial, log10_tol=row_data.log10_atol)
         rtol = tolerance(store_id=row_data.rtol_serial, log10_tol=row_data.log10_rtol)
 
-        return wavenumber_exit_time(
+        obj = wavenumber_exit_time(
             payload={
                 "store_id": store_id,
                 "z_exit": z_exit,
@@ -199,6 +206,8 @@ class sqla_wavenumber_exit_time_factory(SQLAFactoryBase):
             atol=atol,
             rtol=rtol,
         )
+        obj._deserialized = True
+        return obj
 
     @staticmethod
     def store(

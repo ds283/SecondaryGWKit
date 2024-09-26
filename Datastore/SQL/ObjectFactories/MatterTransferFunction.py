@@ -328,7 +328,7 @@ class sqla_MatterTransferFunctionIntegration_factory(SQLAFactoryBase):
                     f'Fewer z-samples than expected were recovered from the validated transfer function "{store_label}"'
                 )
 
-        return MatterTransferFunctionIntegration(
+        obj = MatterTransferFunctionIntegration(
             payload={
                 "store_id": store_id,
                 "compute_time": compute_time,
@@ -355,6 +355,8 @@ class sqla_MatterTransferFunctionIntegration_factory(SQLAFactoryBase):
             tags=tags,
             delta_logz=delta_logz,
         )
+        obj._deserialized = True
+        return obj
 
     @staticmethod
     def store(

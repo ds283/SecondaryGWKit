@@ -39,5 +39,13 @@ class sqla_IntegrationSolver_factory(SQLAFactoryBase):
                 insert_data["serial"] = payload["serial"]
             store_id = inserter(conn, insert_data)
 
+            attribute_set = {"_new_insert": True}
+        else:
+            attribute_set = {"_deserialized": True}
+
         # return constructed object
-        return IntegrationSolver(store_id=store_id, label=label, stepping=stepping)
+        obj = IntegrationSolver(store_id=store_id, label=label, stepping=stepping)
+        for key, value in attribute_set.items():
+            setattr(obj, key, value)
+
+        return obj

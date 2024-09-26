@@ -72,8 +72,16 @@ class sqla_LambdaCDM_factory(SQLAFactoryBase):
                 insert_data,
             )
 
-        return LambdaCDM(
+            attribute_set = {"_new_insert": True}
+        else:
+            attribute_set = {"_deserialized": True}
+
+        obj = LambdaCDM(
             store_id=store_id,
             units=units,
             params=params,
         )
+        for key, value in attribute_set.items():
+            setattr(obj, key, value)
+
+        return obj

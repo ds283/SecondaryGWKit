@@ -862,31 +862,40 @@ class ShardedPool:
                 )
 
             # add explicit serial specifier
+            new_payload = []
             for i in range(len(payload_data)):
-                payload_data[i]["serial"] = objects[i].store_id
+                if not hasattr(objects[i], "_deserialized"):
+                    payload_data[i]["serial"] = objects[i].store_id
+                    new_payload.append(payload_data[i])
 
             # queue work items to replicate each object in all other shards (recall that shard_key has already been popped from shard_ids,
             # so there is no double insertion here)
-            work_refs = [
-                self._shards[key].object_get.remote(cls_name, payload_data=payload_data)
-                for key in shard_ids
-            ]
+            ray.get(
+                [
+                    self._shards[key].object_get.remote(
+                        cls_name, payload_data=new_payload
+                    )
+                    for key in shard_ids
+                ]
+            )
         else:
             # this was a scalar get
-            work_refs = [
-                self._shards[key].object_get.remote(
-                    cls_name, serial=objects.store_id, **kwargs
+            if not hasattr(objects, "_deserialized"):
+                ray.get(
+                    [
+                        self._shards[key].object_get.remote(
+                            cls_name, serial=objects.store_id, **kwargs
+                        )
+                        for key in shard_ids
+                    ]
                 )
-                for key in shard_ids
-            ]
 
         # test whether this query was for a shard key, and, if so, assign any shard keys
         # that are missing
         if cls_name == "wavenumber":
             self._assign_shard_keys(objects)
 
-        # wait for insertions to complete
-        ray.get(work_refs)
+        # return original object (we just discard any copies returned from other shards)
         return ref
 
     def _get_impl_sharded_table(self, cls_name, kwargs):

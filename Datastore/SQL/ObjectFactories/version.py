@@ -31,4 +31,11 @@ class sqla_version_factory(SQLAFactoryBase):
                 insert_data["serial"] = payload["serial"]
             store_id = inserter(conn, insert_data)
 
-        return store_tag(store_id=store_id, label=label)
+            attribute_set = {"_new_insert": True}
+        else:
+            attribute_set = {"_deserialized": True}
+
+        obj = store_tag(store_id=store_id, label=label)
+        for key, value in attribute_set.items():
+            setattr(obj, key, value)
+        return obj

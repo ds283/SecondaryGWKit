@@ -39,4 +39,11 @@ class sqla_tolerance_factory(SQLAFactoryBase):
                 insert_data["serial"] = payload["serial"]
             store_id = inserter(conn, insert_data)
 
-        return tolerance(store_id=store_id, log10_tol=log10_tol)
+            attribute_set = {"_new_insert": True}
+        else:
+            attribute_set = {"_deserialized": True}
+
+        obj = tolerance(store_id=store_id, log10_tol=log10_tol)
+        for key, value in attribute_set.items():
+            setattr(obj, key, value)
+        return obj
