@@ -25,6 +25,13 @@ def analytic_tensor_Green_function(k, w, tau_source, tau, H_source):
     k_tau = k * tau
     k_tau_source = k * tau_source
 
+    # The main numerical calculation obtains G_us(z,z') defined in DS' analytical calculation, which is
+    # for the source -delta(z-z') expressed in redshift.
+    # The analytic result is expressed in terms of conformal time, as G_them(eta, eta') with source
+    # delta(eta-eta').
+    # The delta function transforms with the (absolute value of) the Jacobian of the transformation.
+    # This means we get G_us(z,z') = -H(z') G_them(eta, eta').
+    # The multiplication of -H_source here accounts for this minus sign and the coordinate Jacobian
     A = -H_source * pi / 2.0
     B = sqrt(tau * tau_source)
     n = 0.5 + b
