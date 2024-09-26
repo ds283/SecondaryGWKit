@@ -3,10 +3,11 @@ import random
 from datetime import datetime
 from os import PathLike
 from pathlib import Path
-from typing import Union, Mapping, Callable
+from typing import Union, Mapping, Callable, Optional
 
 import ray
 import sqlalchemy as sqla
+from ray.actor import ActorHandle
 from sqlalchemy.exc import IntegrityError
 
 from CosmologyConcepts import wavenumber, wavenumber_exit_time
@@ -83,6 +84,34 @@ _FactoryMappingType = Mapping[str, SQLAFactoryBase]
 _TableMappingType = Mapping[str, sqla.Table]
 _InserterMappingType = Mapping[str, Callable]
 
+_TableSerialMappingType = Mapping[str, int]
+
+
+@ray.remote
+class StoreIdBroker:
+    def __init__(self):
+        self._tables: _TableSerialMappingType = {}
+
+    def notify_largest_store_ids(self, tables: _TableSerialMappingType):
+        for table, max_serial in tables.items():
+            if table not in self._tables:
+                self._tables[table] = 1
+            else:
+                self._tables[table] = max(max_serial + 1, self._tables[table])
+
+    def next_serial(self, table: str):
+        if table in self._tables:
+            return self._tables[table]
+
+        self._tables[table] = 1
+        return 1
+
+    def increment_serial(self, table: str):
+        if table not in self._tables:
+            raise RuntimeError("increment_serial() called on non-existent table")
+
+        self._tables[table] += 1
+
 
 @ray.remote
 class Datastore:
@@ -93,6 +122,7 @@ class Datastore:
         version_serial: int = None,
         timeout: int = None,
         my_name: str = None,
+        serial_broker: Optional[ActorHandle] = None,
     ):
         """
         Initialize an SQL datastore object
@@ -100,6 +130,7 @@ class Datastore:
         """
         self._timeout = timeout
         self._my_name = my_name
+        self._serial_broker = serial_broker
 
         self._db_file = Path(db_name).resolve()
 
@@ -441,6 +472,29 @@ class Datastore:
         uses_version = schema.get("use_version", False)
         uses_stepping = schema.get("use_stepping", False)
 
+        table_name = schema["name"]
+
+        # remove any "serial" field from the payload, if this table does not use serial numbers
+        increment_serial = False
+        if not uses_serial:
+            if "serial" in payload:
+                del payload["serial"]
+
+        else:
+            # if a serial number has already been provided, then assume we are running as a replica/shard and
+            # have been provided with a correct serial number. Otherwise, obtain one from the broker, if one is in use.
+            # Otherwise, assume the database engine will assign the next available serial
+            # We shouldn't do this with the "version", however, which has to be treated specially
+            if (
+                "serial" not in payload
+                and table_name != "version"
+                and self._serial_broker is not None
+            ):
+                payload["serial"] = ray.get(
+                    self._serial_broker.next_serial.remote(table_name),
+                )
+                increment_serial = True
+
         if uses_version:
             payload = payload | {"version": self._version.store_id}
         if uses_timestamp:
@@ -459,6 +513,10 @@ class Datastore:
             raise RuntimeError(
                 f"Insert error when creating new entry for storable class '{cls_name}' (payload={payload})"
             )
+
+        # update serial number information held by the broker, if needed, and if one is in use
+        if increment_serial:
+            ray.get(self._serial_broker.increment_serial.remote(table_name))
 
         if uses_serial:
             return serial
@@ -545,13 +603,15 @@ class Datastore:
         values = {}
 
         with self._engine.begin() as conn:
-            for table, sqla_table in self._tables:
-                largest_serial = conn.execute(
-                    sqla.select(
-                        sqla.func.max(table.c.serial),
-                    )
-                ).scalar()
-                values[table] = largest_serial
+            for name, schema in self._schema.items():
+                if schema.get("uses_serial", False):
+                    table = schema["table"]
+                    largest_serial = conn.execute(
+                        sqla.select(
+                            sqla.func.max(table.c.serial),
+                        )
+                    ).scalar()
+                    values[name] = largest_serial
 
         return values
 
@@ -579,6 +639,8 @@ class ShardedPool:
 
         self._shard_db_files = {}
         self._wavenumber_keys = {}
+
+        self._broker = StoreIdBroker.options(max_concurrency=5).remote()
 
         # if primary file is absent, all shard databases should be likewise absent
         if self._primary_file.is_dir():
@@ -637,7 +699,11 @@ class ShardedPool:
 
         # create the first shard datastore
         shard0_store = Datastore.options(name=f"shard{shard0_key:04d}-store").remote(
-            version_label=version_label, db_name=shard0_file, timeout=self._timeout
+            version_label=version_label,
+            db_name=shard0_file,
+            timeout=self._timeout,
+            my_name=f"shard{shard0_key:04d}-store",
+            serial_broker=self._broker,
         )
         self._shards = {shard0_key: shard0_store}
 
@@ -655,9 +721,21 @@ class ShardedPool:
                     db_name=self._shard_db_files[key],
                     timeout=self._timeout,
                     my_name=f"shard{key:04d}-store",
+                    serial_broker=self._broker,
                 )
                 for key in shard_ids
             }
+        )
+
+        # query a list of largest serial numbers from each shard, and notify these to the broker actor
+        max_serial_data = ray.get(
+            [shard.read_largest_store_ids.remote() for shard in self._shards.values()]
+        )
+        ray.get(
+            [
+                self._broker.notify_largest_store_ids.remote(payload)
+                for payload in max_serial_data
+            ]
         )
 
     def _create_engine(self):
