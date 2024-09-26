@@ -30,7 +30,10 @@ class sqla_redshift_factory(SQLAFactoryBase):
 
         # if not present, create a new id using the provided inserter
         if store_id is None:
-            store_id = inserter(conn, {"z": z})
+            insert_data = {"z": z}
+            if "serial" in payload:
+                insert_data["serial"] = payload["serial"]
+            store_id = inserter(conn, insert_data)
 
         # return constructed object
         return redshift(store_id=store_id, z=z)

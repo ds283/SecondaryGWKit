@@ -56,17 +56,20 @@ class sqla_LambdaCDM_factory(SQLAFactoryBase):
 
         # if not present, create a new id using the provided inserter
         if store_id is None:
+            insert_data = {
+                "name": name,
+                "omega_m": omega_m,
+                "omega_cc": omega_cc,
+                "h": h,
+                "f_baryon": f_baryon,
+                "T_CMB_Kelvin": T_CMB_Kelvin,
+                "Neff": Neff,
+            }
+            if "serial" in payload:
+                insert_data["serial"] = payload["serial"]
             store_id = inserter(
                 conn,
-                {
-                    "name": name,
-                    "omega_m": omega_m,
-                    "omega_cc": omega_cc,
-                    "h": h,
-                    "f_baryon": f_baryon,
-                    "T_CMB_Kelvin": T_CMB_Kelvin,
-                    "Neff": Neff,
-                },
+                insert_data,
             )
 
         return LambdaCDM(

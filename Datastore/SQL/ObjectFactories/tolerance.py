@@ -1,6 +1,5 @@
-from math import log10
-
 import sqlalchemy as sqla
+from math import log10
 
 from Datastore.SQL.ObjectFactories.base import SQLAFactoryBase
 from MetadataConcepts import tolerance
@@ -35,6 +34,9 @@ class sqla_tolerance_factory(SQLAFactoryBase):
         ).scalar()
 
         if store_id is None:
-            store_id = inserter(conn, {"log10_tol": log10_tol})
+            insert_data = {"log10_tol": log10_tol}
+            if "serial" in payload:
+                insert_data["serial"] = payload["serial"]
+            store_id = inserter(conn, insert_data)
 
         return tolerance(store_id=store_id, log10_tol=log10_tol)

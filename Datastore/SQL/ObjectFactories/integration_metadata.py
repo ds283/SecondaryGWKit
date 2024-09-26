@@ -34,7 +34,10 @@ class sqla_IntegrationSolver_factory(SQLAFactoryBase):
         ).scalar()
 
         if store_id is None:
-            store_id = inserter(conn, {"label": label, "stepping": stepping})
+            insert_data = {"label": label, "stepping": stepping}
+            if "serial" in payload:
+                insert_data["serial"] = payload["serial"]
+            store_id = inserter(conn, insert_data)
 
         # return constructed object
         return IntegrationSolver(store_id=store_id, label=label, stepping=stepping)

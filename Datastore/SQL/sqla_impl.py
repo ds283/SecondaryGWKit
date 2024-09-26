@@ -640,7 +640,7 @@ class ShardedPool:
         self._shard_db_files = {}
         self._wavenumber_keys = {}
 
-        self._broker = StoreIdBroker.options(max_concurrency=5).remote()
+        self._broker = StoreIdBroker.options(name="StoreIdBroker").remote()
 
         # if primary file is absent, all shard databases should be likewise absent
         if self._primary_file.is_dir():
@@ -820,85 +820,90 @@ class ShardedPool:
             cls_name = ObjectClass.__name__
 
         if cls_name in _replicate_tables:
-            # pick a shard id at random to be the "controlling" shard
-            shard_ids = list(self._shards.keys())
-            i = random.randrange(len(shard_ids))
-
-            # swap this entry with the last element, then pop it
-            shard_ids[i], shard_ids[-1] = shard_ids[-1], shard_ids[i]
-            shard_key = shard_ids.pop()
-
-            # for replicated tables, we should query/insert into *one* datastore, and then enforce
-            # that all other datastores get the same store_id; here, there is no need to use our internal
-            # information about the next-allocated store_id, and in fact doing so would make the logic
-            # here much more complicated. So we avoid that.
-            ref = self._shards[shard_key].object_get.remote(cls_name, **kwargs)
-            objects = ray.get(ref)
-
-            if "payload_data" in kwargs:
-                payload_data = kwargs["payload_data"]
-
-                if len(payload_data) != len(objects):
-                    raise RuntimeError(
-                        f"object_get() data returned from initial datastore (shared={shard_key}) has a different length (length={len(objects)}) to payload data (length={len(payload_data)})"
-                    )
-
-                # add explicit serial specifier
-                for i in range(len(payload_data)):
-                    payload_data[i]["serial"] = objects[i].store_id
-
-                # queue work items to replicate each object in all other shards
-                work_refs = [
-                    self._shards[key].object_get.remote(
-                        cls_name, payload_data=payload_data
-                    )
-                    for key in shard_ids
-                ]
-            else:
-                # this was a scalar get
-                work_refs = [
-                    self._shards[key].object_get.remote(
-                        cls_name, serial=objects.store_id, **kwargs
-                    )
-                    for key in shard_ids
-                ]
-
-            # test whether this query was for a shard key, and, if so, assign any shard keys
-            # that are missing
-            if cls_name == "wavenumber":
-                self._assign_shard_keys(objects)
-
-            # wait for insertions to complete
-            ray.get(work_refs)
-            return ref
+            return self._get_impl_replicated_table(cls_name, kwargs)
 
         if cls_name in _shard_tables.keys():
-            # for sharded tables, we should query/insert into only the appropriate shard
-            shard_key_field = _shard_tables[cls_name]
-
-            # determine which shard contains this item
-            if "payload_data" in kwargs:
-                payload_data = kwargs["payload_data"]
-
-                work_refs = []
-                for item in payload_data:
-                    k = item[shard_key_field]
-                    shard_id = self._wavenumber_keys[self._get_k_store_id(k)]
-
-                    work_refs.append(
-                        self._shards[shard_id].object_get.remote(cls_name, **item)
-                    )
-                    return work_refs
-                # TODO: consider consolidating all objects for the same shard into a list, for efficiency
-            else:
-                k = kwargs[shard_key_field]
-                shard_id = self._wavenumber_keys[self._get_k_store_id(k)]
-
-                return self._shards[shard_id].object_get.remote(cls_name, **kwargs)
+            return self._get_impl_sharded_table(cls_name, kwargs)
 
         raise RuntimeError(
             f'Unable to dispatch object_get() for item of type "{cls_name}"'
         )
+
+    def _get_impl_replicated_table(self, cls_name, kwargs):
+        # pick a shard id at random to be the "controlling" shard
+        shard_ids = list(self._shards.keys())
+        i = random.randrange(len(shard_ids))
+
+        # swap this entry with the last element, then pop it
+        shard_ids[i], shard_ids[-1] = shard_ids[-1], shard_ids[i]
+        shard_key = shard_ids.pop()
+
+        # for replicated tables, we should query/insert into *one* datastore, and then enforce
+        # that all other datastores get the same store_id; here, there is no need to use our internal
+        # information about the next-allocated store_id, and in fact doing so would make the logic
+        # here much more complicated. So we avoid that.
+        ref = self._shards[shard_key].object_get.remote(cls_name, **kwargs)
+        objects = ray.get(ref)
+
+        if "payload_data" in kwargs:
+            payload_data = kwargs["payload_data"]
+
+            if len(payload_data) != len(objects):
+                raise RuntimeError(
+                    f"object_get() data returned from selected datastore (shared={shard_key}) has a different length (length={len(objects)}) to payload data (length={len(payload_data)})"
+                )
+
+            # add explicit serial specifier
+            for i in range(len(payload_data)):
+                payload_data[i]["serial"] = objects[i].store_id
+
+            # queue work items to replicate each object in all other shards (recall that shard_key has already been popped from shard_ids,
+            # so there is no double insertion here)
+            work_refs = [
+                self._shards[key].object_get.remote(cls_name, payload_data=payload_data)
+                for key in shard_ids
+            ]
+        else:
+            # this was a scalar get
+            work_refs = [
+                self._shards[key].object_get.remote(
+                    cls_name, serial=objects.store_id, **kwargs
+                )
+                for key in shard_ids
+            ]
+
+        # test whether this query was for a shard key, and, if so, assign any shard keys
+        # that are missing
+        if cls_name == "wavenumber":
+            self._assign_shard_keys(objects)
+
+        # wait for insertions to complete
+        ray.get(work_refs)
+        return ref
+
+    def _get_impl_sharded_table(self, cls_name, kwargs):
+        # for sharded tables, we should query/insert into only the appropriate shard
+        shard_key_field = _shard_tables[cls_name]
+
+        # determine which shard contains this item
+        if "payload_data" in kwargs:
+            payload_data = kwargs["payload_data"]
+
+            work_refs = []
+            for item in payload_data:
+                k = item[shard_key_field]
+                shard_id = self._wavenumber_keys[self._get_k_store_id(k)]
+
+                work_refs.append(
+                    self._shards[shard_id].object_get.remote(cls_name, **item)
+                )
+                return work_refs
+            # TODO: consider consolidating all objects for the same shard into a list, for efficiency
+        else:
+            k = kwargs[shard_key_field]
+            shard_id = self._wavenumber_keys[self._get_k_store_id(k)]
+
+            return self._shards[shard_id].object_get.remote(cls_name, **kwargs)
 
     def object_store(self, objects):
         # we only expect to call object_store on sharded objects
@@ -985,7 +990,7 @@ class ShardedPool:
         else:
             data = [obj]
 
-        # assign any shard keys that we can, without going out to the dataabase
+        # assign any shard keys that we can, without going out to the database
         # (because this is bound to be slower)
         missing_keys = []
         for item in data:

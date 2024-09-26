@@ -26,6 +26,9 @@ class sqla_version_factory(SQLAFactoryBase):
         ).scalar()
 
         if store_id is None:
-            store_id = inserter(conn, {"label": label})
+            insert_data = {"label": label}
+            if "serial" in payload:
+                insert_data["serial"] = payload["serial"]
+            store_id = inserter(conn, insert_data)
 
         return store_tag(store_id=store_id, label=label)

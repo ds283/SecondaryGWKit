@@ -35,7 +35,10 @@ class sqla_wavenumber_factory(SQLAFactoryBase):
 
         # if not present, create a new id using the provided inserter
         if store_id is None:
-            store_id = inserter(conn, {"k_inv_Mpc": k_inv_Mpc})
+            insert_data = {"k_inv_Mpc": k_inv_Mpc}
+            if "serial" in payload:
+                insert_data["serial"] = payload["serial"]
+            store_id = inserter(conn, insert_data)
 
         # return constructed object
         return wavenumber(store_id=store_id, k_inv_Mpc=k_inv_Mpc, units=units)
