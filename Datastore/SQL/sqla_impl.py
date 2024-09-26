@@ -472,7 +472,7 @@ class Datastore:
         uses_version = schema.get("use_version", False)
         uses_stepping = schema.get("use_stepping", False)
 
-        table_name = schema["name"]
+        cls_name = schema["name"]
 
         # remove any "serial" field from the payload, if this table does not use serial numbers
         increment_serial = False
@@ -487,11 +487,11 @@ class Datastore:
             # We shouldn't do this with the "version", however, which has to be treated specially
             if (
                 "serial" not in payload
-                and table_name != "version"
+                and cls_name != "version"
                 and self._serial_broker is not None
             ):
                 payload["serial"] = ray.get(
-                    self._serial_broker.next_serial.remote(table_name),
+                    self._serial_broker.next_serial.remote(cls_name),
                 )
                 increment_serial = True
 
@@ -503,23 +503,31 @@ class Datastore:
             if "stepping" not in payload:
                 raise KeyError("Expected 'stepping' field in payload")
 
-        obj = conn.execute(
-            sqla.dialects.sqlite.insert(table).on_conflict_do_nothing(), payload
-        )
+        obj = conn.execute(sqla.insert(table), payload)
 
-        serial = obj.lastrowid
-        if serial is None:
-            cls_name = schema["name"]
+        reported_serial = obj.lastrowid
+
+        if reported_serial is None:
             raise RuntimeError(
                 f"Insert error when creating new entry for storable class '{cls_name}' (payload={payload})"
             )
 
+        expected_serial = payload.get("serial", None)
+        if (
+            "serial" in payload
+            and expected_serial is not None
+            and reported_serial != expected_serial
+        ):
+            raise RuntimeError(
+                f"Inserted store_id reported from database engine (={reported_serial}) does not agree with supplied store_id (={expected_serial}"
+            )
+
         # update serial number information held by the broker, if needed, and if one is in use
         if increment_serial:
-            ray.get(self._serial_broker.increment_serial.remote(table_name))
+            ray.get(self._serial_broker.increment_serial.remote(cls_name))
 
         if uses_serial:
-            return serial
+            return reported_serial
 
     def object_validate(self, objects):
         with WallclockTimer() as timer:
@@ -780,7 +788,7 @@ class ShardedPool:
                 for key, db_name in self._shard_db_files.items()
             ]
 
-            conn.execute(sqla.dialects.sqlite.insert(self._shard_file_table), values)
+            conn.execute(sqla.insert(self._shard_file_table), values)
             conn.commit()
 
     def _read_shard_data(self):
@@ -1020,7 +1028,7 @@ class ShardedPool:
 
                 # insert a new record for this key
                 conn.execute(
-                    sqla.dialects.sqlite.insert(self._shard_key_table),
+                    sqla.insert(self._shard_key_table),
                     {"wavenumber_id": item.store_id, "shard_id": new_shard},
                 )
 
