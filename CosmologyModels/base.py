@@ -42,6 +42,14 @@ class BaseCosmology(DatastoreObject, ABC):
         raise NotImplementedError
 
     @abstractmethod
+    def d2_lnH_dz2(self, z: float) -> float:
+        raise NotImplementedError
+
+    @abstractmethod
+    def d3_dlnH_dz3(self, z: float) -> float:
+        raise NotImplementedError
+
+    @abstractmethod
     def wBackground(self, z: float) -> float:
         raise NotImplementedError
 
@@ -55,4 +63,23 @@ class BaseCosmology(DatastoreObject, ABC):
         :param z: redshift of evaluation
         :return:
         """
-        return (1.0 + z) * self.d_lnH_dz(z)
+        one_plus_z = 1.0 + z
+        return one_plus_z * self.d_lnH_dz(z)
+
+    def d_epsilon_dz(self, z: float) -> float:
+        """
+        Evaluate the z derivative of the epsilon parameter
+        :param z:
+        :return:
+        """
+        one_plus_z = 1.0 + z
+        return self.d_lnH_dz(z) + one_plus_z * self.d2_lnH_dz2(z)
+
+    def d2_epsilon_dz2(self, z: float) -> float:
+        """
+        Evaluate the 2nd z derivative of the epsilon parameter
+        :param z:
+        :return:
+        """
+        one_plus_z = 1.0 + z
+        return 2.0 * self.d2_lnH_dz2(z) + one_plus_z * self.d3_dlnH_dz3(z)

@@ -161,12 +161,45 @@ def compute_tensor_Green(
     # State layout:
     #   state[0] = energy density rho(z)
     #   state[1] = a_0 tau [tau = conformal time]
-    #   state[0] = G_k(z, z')
-    #   state[1] = Gprime_k(z, z')
+    #   state[2] = G_k(z, z')
+    #   state[3] = Gprime_k(z, z')
     RHO_INDEX = 0
     A0_TAU_INDEX = 1
     G_INDEX = 2
     GPRIME_INDEX = 3
+
+    def WKB_omegaEff_sq(k_over_H_2: float, z):
+        one_plus_z = 1.0 + z
+        one_plus_z_2 = one_plus_z * one_plus_z
+
+        eps = cosmology.epsilon(z)
+        epsPrime = cosmology.d_epsilon_dz(z)
+
+        A = k_over_H_2
+        B = -epsPrime / 2.0 / one_plus_z
+        C = (3.0 * eps / 2.0 - eps * eps / 4.0 - 2.0) / one_plus_z_2
+
+        return A + B + C
+
+    def WKB_d_ln_omegaEffPrime_dz(k_over_H_2: float, z):
+        one_plus_z = 1.0 + z
+        one_plus_z_2 = one_plus_z * one_plus_z
+        one_plus_z_3 = one_plus_z_2 * one_plus_z
+
+        omega_eff_sq = WKB_omegaEff_sq(k_over_H_2, z)
+
+        eps = cosmology.epsilon(z)
+        epsPrime = cosmology.d_epsilon_dz(z)
+        epsPrimePrime = cosmology.d2_epsilon_dz2(z)
+
+        A = -epsPrimePrime / 2.0 / one_plus_z
+        B = (2.0 * epsPrimePrime - eps * epsPrime / 2.0) / one_plus_z_2
+        C = (3.0 * eps - eps * eps / 2.0 - 4.0) / one_plus_z_3
+
+        numerator = A + B + C
+        denominator = 2.0 * omega_eff_sq
+
+        return numerator / denominator
 
     def RHS(z, state, supervisor) -> float:
         """
@@ -199,14 +232,17 @@ def compute_tensor_Green(
             k_over_H = k_float / H
             k_over_H_2 = k_over_H * k_over_H
 
-            omega_eff_sq = k_over_H_2 + (eps - 2.0) / one_plus_z_2
-
-            dGprime_dz = -(eps / one_plus_z) * Gprime - omega_eff_sq * G
+            dGprime_dz = (
+                -(eps / one_plus_z) * Gprime
+                - (k_over_H_2 + (eps - 2.0) / one_plus_z_2) * G
+            )
 
             # try to detect how many oscillations will fit into the log-z grid
             # spacing
             # If the grid spacing is smaller than the oscillation wavelength, then
             # evidently we cannot resolve the oscillations
+            omega_eff_sq = WKB_omegaEff_sq(k_over_H, z)
+
             if omega_eff_sq > 0.0:
                 wavelength = 2.0 * pi / sqrt(omega_eff_sq)
                 supervisor.report_wavelength(z, wavelength, log((1.0 + z) * k_over_H))
@@ -223,7 +259,7 @@ def compute_tensor_Green(
         # instead solve with the boundary conditions Gprime = -1 and rescale afterwards
         rho_init = cosmology.rho(z_source.z)
         tau_init = (
-            sqrt(3.0) * cosmology.units.PlanckMass / sqrt(rho_init) / (1.0 + z_source.z)
+            sqrt(3.0) * cosmology.units.PlanckMass / sqrt(rho_init) * (1.0 + z_source.z)
         )
 
         initial_state = [rho_init, tau_init, 0.0, 1.0]

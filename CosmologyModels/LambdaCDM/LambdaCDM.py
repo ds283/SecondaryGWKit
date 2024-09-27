@@ -1,4 +1,5 @@
 from collections import namedtuple
+
 from math import sqrt, pow
 
 from CosmologyModels import BaseCosmology
@@ -133,15 +134,60 @@ class LambdaCDM(BaseCosmology):
         one_plus_z_4 = one_plus_z_2 * one_plus_z_2
 
         numerator = (
-            9.0 * self.omega_m * one_plus_z_2 + 12.0 * self.omega_r * one_plus_z_3
+            3.0 * self.omega_m * one_plus_z_2 + 4.0 * self.omega_r * one_plus_z_3
         )
-        denominator = (
-            6.0 * self.omega_m * one_plus_z_3
-            + 6.0 * self.omega_r * one_plus_z_4
-            + 6.0 * self.omega_cc
+        denominator = 2.0 * (
+            self.omega_m * one_plus_z_3 + self.omega_r * one_plus_z_4 + self.omega_cc
         )
 
         return numerator / denominator
+
+    def d2_lnH_dz2(self, z: float) -> float:
+        """
+        Evaluate d^2(ln H)/dz^2
+        :param z:
+        :return:
+        """
+        one_plus_z = 1.0 + z
+
+        one_plus_z_2 = one_plus_z * one_plus_z
+        one_plus_z_3 = one_plus_z_2 * one_plus_z
+        one_plus_z_4 = one_plus_z_2 * one_plus_z_2
+
+        numerator = 6.0 * self.omega_m * one_plus_z + 12.0 * self.omega_r * one_plus_z_2
+        denominator = 2.0 * (
+            self.omega_m * one_plus_z_3 + self.omega_r * one_plus_z_4 + self.omega_cc
+        )
+
+        d_lnH_dz = self.d_lnH_dz(z)
+
+        return numerator / denominator - 2.0 * d_lnH_dz * d_lnH_dz
+
+    def d3_lnH_dz3(self, z: float) -> float:
+        """
+        Evaluate d^3(ln H)/dz^3
+        :param z:
+        :return:
+        """
+        one_plus_z = 1.0 + z
+
+        one_plus_z_2 = one_plus_z * one_plus_z
+        one_plus_z_3 = one_plus_z_2 * one_plus_z
+        one_plus_z_4 = one_plus_z_2 * one_plus_z_2
+
+        numerator = 6.0 * self.omega_m + 24.0 * self.omega_r * one_plus_z
+        denominator = 2.0 * (
+            self.omega_m * one_plus_z_3 + self.omega_r * one_plus_z_4 + self.omega_cc
+        )
+
+        d_lnH_dz = self.d_lnH_dz(z)
+        d2_lnH_dz2 = self.d2_lnH_dz2(z)
+
+        return (
+            numerator / denominator
+            - 6.0 * d_lnH_dz * d2_lnH_dz2
+            - 4.0 * d_lnH_dz * d_lnH_dz * d_lnH_dz
+        )
 
     def wBackground(self, z: float) -> float:
         w_rad = 1.0 / 3.0
