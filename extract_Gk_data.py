@@ -225,6 +225,7 @@ time_series_schema = pa.schema(
         ("G", pa.float64()),
         ("Gprime", pa.float64()),
         ("analytic_G", pa.float64()),
+        ("analytic_Gprime", pa.float64()),
     ]
 )
 
@@ -252,6 +253,7 @@ def write_time_series_content(Gk: TensorGreenFunctionIntegration):
                 "G": value.G,
                 "Gprime": value.Gprime,
                 "analytic_G": value.analytic_G,
+                "analytic_Gprime": value.analytic_Gprime,
             }
             for value in Gk.values
         ]
