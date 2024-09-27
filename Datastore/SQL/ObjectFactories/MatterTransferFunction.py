@@ -407,6 +407,9 @@ class sqla_MatterTransferFunctionIntegration_factory(SQLAFactoryBase):
             )
 
         # now serialize the sampled output points
+        # TODO: this is undesirable, because there are two ways a MatterTransferFunctionValue can be serialized:
+        #  directly, or using the logic here as part of a MatterTransferFunctionIntegration. We need to be careful to
+        #  keep the logic in sync. It would be better to have a single serialization point for MatterTransferFunctionValue.
         value_inserter = inserters["MatterTransferFunctionValue"]
         for value in obj.values:
             value: MatterTransferFunctionValue
@@ -418,6 +421,7 @@ class sqla_MatterTransferFunctionIntegration_factory(SQLAFactoryBase):
                     "T": value.T,
                     "Tprime": value.Tprime,
                     "analytic_T": value.analytic_T,
+                    "analytic_Tprime": value.analytic_Tprime,
                 },
             )
 
@@ -568,6 +572,7 @@ class sqla_MatterTransferFunctionValue_factory(SQLAFactoryBase):
                 ),
                 sqla.Column("Tprime", sqla.Float(64), nullable=False),
                 sqla.Column("analytic_T", sqla.Float(64), nullable=True),
+                sqla.Column("analytic_Tprime", sqla.Float(64), nullable=True),
             ],
         }
 
@@ -577,7 +582,9 @@ class sqla_MatterTransferFunctionValue_factory(SQLAFactoryBase):
         z = payload["z"]
         T = payload["T"]
         Tprime = payload["Tprime"]
+
         analytic_T = payload.get("analytic_T", None)
+        analytic_Tprime = payload.get("analytic_Tprime", None)
 
         row_data = conn.execute(
             sqla.select(
@@ -585,6 +592,7 @@ class sqla_MatterTransferFunctionValue_factory(SQLAFactoryBase):
                 table.c.T,
                 table.c.Tprime,
                 table.c.analytic_T,
+                table.c.analytic_Tprime,
             ).filter(
                 table.c.integration_serial == integration_serial,
                 table.c.z_serial == z.store_id,
@@ -600,11 +608,13 @@ class sqla_MatterTransferFunctionValue_factory(SQLAFactoryBase):
                     "T": T,
                     "Tprime": Tprime,
                     "analytic_T": analytic_T,
+                    "analytic_Tprime": analytic_Tprime,
                 },
             )
         else:
             store_id = row_data.serial
             analytic_T = row_data.analytic_T
+            analytic_Tprime = row_data.analytic_Tprime
 
             if fabs(row_data.T - T) > DEFAULT_FLOAT_PRECISION:
                 raise ValueError(
@@ -616,5 +626,10 @@ class sqla_MatterTransferFunctionValue_factory(SQLAFactoryBase):
                 )
 
         return MatterTransferFunctionValue(
-            store_id=store_id, z=z, T=T, Tprime=Tprime, analytic_T=analytic_T
+            store_id=store_id,
+            z=z,
+            T=T,
+            Tprime=Tprime,
+            analytic_T=analytic_T,
+            analytic_Tprime=analytic_Tprime,
         )

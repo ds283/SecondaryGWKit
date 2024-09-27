@@ -46,7 +46,7 @@ class BaseCosmology(DatastoreObject, ABC):
         raise NotImplementedError
 
     @abstractmethod
-    def d3_dlnH_dz3(self, z: float) -> float:
+    def d3_lnH_dz3(self, z: float) -> float:
         raise NotImplementedError
 
     @abstractmethod

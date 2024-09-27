@@ -20,7 +20,7 @@ from .integration_supervisor import (
 )
 
 
-def analytic_matter_transfer_function(k, w, tau):
+def compute_analytic_T(k, w, tau):
     b = (1.0 - 3.0 * w) / (1.0 + 3.0 * w)
     cs = sqrt(w)
     k_cs_tau = k * cs * tau
@@ -32,6 +32,26 @@ def analytic_matter_transfer_function(k, w, tau):
     D = jv(n1, k_cs_tau)
 
     return A * B * C * D
+
+
+def compute_analytic_Tprime(k, w, tau, H):
+    b = (1.0 - 3.0 * w) / (1.0 + 3.0 * w)
+    cs = sqrt(w)
+    k_cs_tau = k * cs * tau
+
+    n0 = 0.5 + b
+    n1 = 1.5 + b
+    n2 = 2.5 + b
+
+    A = pow(2.0, n1)
+    B = gamma(2.5 + b)
+    C = pow(k_cs_tau, -n2)
+    D1 = k_cs_tau * jv(n0, k_cs_tau)
+    D2 = -(3.0 + 2.0 * b) * jv(n1, k_cs_tau)
+    D3 = -k_cs_tau * jv(n2, k_cs_tau)
+    D = D1 + D2 + D3
+
+    return -(1.0 / H) * cs * k * A * B * C * D
 
 
 class MatterTransferFunctionSupervisor(IntegrationSupervisor):
@@ -553,8 +573,11 @@ class MatterTransferFunctionIntegration(DatastoreObject):
         self._values = []
 
         for i in range(len(T_sample)):
+            H = self.cosmology.Hubble(self._z_sample[i].z)
             tau = a0_tau_sample[i]
-            analytic_T = analytic_matter_transfer_function(self.k.k, 1.0 / 3.0, tau)
+
+            analytic_T = compute_analytic_T(self.k.k, 1.0 / 3.0, tau)
+            analytic_Tprime = compute_analytic_Tprime(self.k.k, 1.0 / 3.0, tau, H)
 
             # create new MatterTransferFunctionValue object
             self._values.append(
@@ -564,6 +587,7 @@ class MatterTransferFunctionIntegration(DatastoreObject):
                     T_sample[i],
                     Tprime_sample[i],
                     analytic_T=analytic_T,
+                    analytic_Tprime=analytic_Tprime,
                 )
             )
 
@@ -586,13 +610,16 @@ class MatterTransferFunctionValue(DatastoreObject):
         T: float,
         Tprime: float,
         analytic_T: Optional[float] = None,
+        analytic_Tprime: Optional[float] = None,
     ):
         DatastoreObject.__init__(self, store_id)
 
         self._z = z
         self._T = T
         self._Tprime = Tprime
+
         self._analytic_T = analytic_T
+        self._analytic_Tprime = analytic_Tprime
 
     def __float__(self):
         """
@@ -616,3 +643,7 @@ class MatterTransferFunctionValue(DatastoreObject):
     @property
     def analytic_T(self) -> Optional[float]:
         return self._analytic_T
+
+    @property
+    def analytic_Tprime(self) -> Optional[float]:
+        return self._analytic_Tprime

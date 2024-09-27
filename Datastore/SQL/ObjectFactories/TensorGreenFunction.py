@@ -408,6 +408,9 @@ class sqla_TensorGreenFunctionIntegration_factory(SQLAFactoryBase):
             )
 
         # now serialize the sampled output points
+        # TODO: this is undesirable, because there are two ways a TensorGreenFunctionValue can be serialized:
+        #  directly, or using the logic here as part of a TensorGreenFunctionIntegration. We need to be careful to
+        #  keep the logic in sync. It would be better to have a single serialization point for TensorGreenFunctionValue.
         value_inserter = inserters["TensorGreenFunctionValue"]
         for value in obj.values:
             value: TensorGreenFunctionValue
@@ -419,6 +422,7 @@ class sqla_TensorGreenFunctionIntegration_factory(SQLAFactoryBase):
                     "G": value.G,
                     "Gprime": value.Gprime,
                     "analytic_G": value.analytic_G,
+                    "analytic_Gprime": value.analytic_Gprime,
                 },
             )
 
@@ -563,21 +567,10 @@ class sqla_TensorGreenFunctionValue_factory(SQLAFactoryBase):
                     sqla.ForeignKey("redshift.serial"),
                     nullable=False,
                 ),
-                sqla.Column(
-                    "G",
-                    sqla.Float(64),
-                    nullable=False,
-                ),
-                sqla.Column(
-                    "Gprime",
-                    sqla.Float(64),
-                    nullable=False,
-                ),
-                sqla.Column(
-                    "analytic_G",
-                    sqla.Float(64),
-                    nullable=True,
-                ),
+                sqla.Column("G", sqla.Float(64), nullable=False),
+                sqla.Column("Gprime", sqla.Float(64), nullable=False),
+                sqla.Column("analytic_G", sqla.Float(64), nullable=True),
+                sqla.Column("analytic_Gprime", sqla.Float(64), nullable=True),
             ],
         }
 
@@ -587,7 +580,9 @@ class sqla_TensorGreenFunctionValue_factory(SQLAFactoryBase):
         z = payload["z"]
         G = payload["G"]
         Gprime = payload["Gprime"]
+
         analytic_G = payload.get("analytic_G", None)
+        analytic_Gprime = payload.get("analytic_Gprime", None)
 
         row_data = conn.execute(
             sqla.select(
@@ -610,6 +605,7 @@ class sqla_TensorGreenFunctionValue_factory(SQLAFactoryBase):
                     "G": G,
                     "Gprime": Gprime,
                     "analytic_G": analytic_G,
+                    "analytic_Gprime": analytic_Gprime,
                 },
             )
         else:
@@ -626,5 +622,10 @@ class sqla_TensorGreenFunctionValue_factory(SQLAFactoryBase):
                 )
 
         return TensorGreenFunctionValue(
-            store_id=store_id, z=z, G=G, Gprime=Gprime, analytic_G=analytic_G
+            store_id=store_id,
+            z=z,
+            G=G,
+            Gprime=Gprime,
+            analytic_G=analytic_G,
+            analytic_Gprime=analytic_Gprime,
         )

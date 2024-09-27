@@ -20,7 +20,7 @@ from .integration_supervisor import (
 )
 
 
-def analytic_tensor_Green_function(k, w, tau_source, tau, H_source):
+def compute_analytic_G(k, w, tau_source, tau, H_source):
     b = (1.0 - 3.0 * w) / (1.0 + 3.0 * w)
     k_tau = k * tau
     k_tau_source = k * tau_source
@@ -32,13 +32,32 @@ def analytic_tensor_Green_function(k, w, tau_source, tau, H_source):
     # The delta function transforms with the (absolute value of) the Jacobian of the transformation.
     # This means we get G_us(z,z') = -H(z') G_them(eta, eta').
     # The multiplication of -H_source here accounts for this minus sign and the coordinate Jacobian
+    n0 = 0.5 + b
+
     A = -H_source * pi / 2.0
     B = sqrt(tau * tau_source)
-    n = 0.5 + b
-    C = jv(n, k_tau_source) * yv(n, k_tau)
-    D = jv(n, k_tau) * yv(n, k_tau_source)
+    C = jv(n0, k_tau_source) * yv(n0, k_tau)
+    D = jv(n0, k_tau) * yv(n0, k_tau_source)
 
     return A * B * (C - D)
+
+
+def compute_analytic_Gprime(k, w, tau_source, tau, H_source, H):
+    b = (1.0 - 3.0 * w) / (1.0 + 3.0 * w)
+    k_tau = k * tau
+    k_tau_source = k * tau_source
+
+    n0 = 0.5 + b
+    n1 = 1.5 + b
+
+    A = pi / 2.0 * (H_source / H)
+    B = sqrt(tau_source / tau)
+    C1 = k_tau * jv(n1, k_tau) - (b + 1.0) * jv(n0, k_tau)
+    C2 = yv(n0, k_tau_source)
+    D1 = (b + 1.0) * yv(n0, k_tau) - k_tau * yv(n1, k_tau)
+    D2 = jv(n0, k_tau_source)
+
+    return A * B * (C1 * C2 + D1 * D2)
 
 
 class TensorGreenFunctionSupervisor(IntegrationSupervisor):
@@ -577,9 +596,14 @@ class TensorGreenFunctionIntegration(DatastoreObject):
 
         tau_source = a0_tau_sample[0]
         for i in range(len(G_sample)):
+            H = self._cosmology.Hubble(self._z_sample[i].z)
             tau = a0_tau_sample[i]
-            analytic_G = analytic_tensor_Green_function(
+
+            analytic_G = compute_analytic_G(
                 self.k.k, 1.0 / 3.0, tau_source, tau, Hsource
+            )
+            analytic_Gprime = compute_analytic_Gprime(
+                self.k.k, 1.0 / 3.0, tau_source, tau, Hsource, H
             )
 
             # create new TensorGreenFunctionValue object
@@ -590,6 +614,7 @@ class TensorGreenFunctionIntegration(DatastoreObject):
                     G_sample[i],
                     Gprime_sample[i],
                     analytic_G=analytic_G,
+                    analytic_Gprime=analytic_Gprime,
                 )
             )
 
@@ -612,13 +637,16 @@ class TensorGreenFunctionValue(DatastoreObject):
         G: float,
         Gprime: float,
         analytic_G: Optional[float] = None,
+        analytic_Gprime: Optional[float] = None,
     ):
         DatastoreObject.__init__(self, store_id)
 
         self._z = z
         self._G = G
         self._Gprime = Gprime
+
         self._analytic_G = analytic_G
+        self._analytic_Gprime = analytic_Gprime
 
     def __float__(self):
         """
@@ -642,3 +670,7 @@ class TensorGreenFunctionValue(DatastoreObject):
     @property
     def analytic_G(self) -> Optional[float]:
         return self._analytic_G
+
+    @property
+    def analytic_Gprime(self) -> Optional[float]:
+        return self._analytic_Gprime
