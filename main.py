@@ -1,4 +1,5 @@
 import argparse
+import itertools
 import sys
 from datetime import datetime
 
@@ -10,6 +11,7 @@ from ComputeTargets import (
     TensorGreenFunctionIntegration,
     IntegrationSolver,
 )
+from ComputeTargets.TensorSource import TensorSource
 from CosmologyConcepts import (
     wavenumber,
     redshift,
@@ -244,17 +246,67 @@ def validate_Tk_work(Tk: MatterTransferFunctionIntegration):
     return pool.object_validate(Tk)
 
 
+def post_Tk_work(Tk: MatterTransferFunctionIntegration):
+    return ray.put(Tk)
+
+
 Tk_queue = RayWorkPool(
     pool,
     k_exit_times,
     task_builder=build_Tk_work,
     validation_handler=validate_Tk_work,
+    post_handler=post_Tk_work,
     label_builder=build_Tk_work_label,
     title="CALCULATE MATTER TRANSFER FUNCTIONS",
     store_results=True,
 )
 Tk_queue.run()
 Tks = Tk_queue.results
+
+tensor_source_grid = itertools.combinations_with_replacement(range(len(Tks)), 2)
+
+
+def build_tensor_source_work(grid_idx):
+    idx_i, idx_j = grid_idx
+
+    Tq = tensor_source_grid[idx_i]
+    Tr = tensor_source_grid[idx_j]
+
+    return pool.object_get(
+        TensorSource,
+        cosmology=LambdaCDM_Planck2018,
+        Tq=Tq,
+        Tr=Tr,
+        tags=[
+            TkProductionTag,
+            GlobalZGridTag,
+            OutsideHorizonEfoldsTag,
+            LargestZTag,
+            SamplesPerLog10ZTag,
+        ],
+    )
+
+
+def validate_tensor_source_work(calc: TensorSource):
+    return pool.object_validate(calc)
+
+
+def build_tensor_source_work_label(calc: TensorSource):
+    q = calc.q
+    r = calc.r
+    return f"{args.job_name}-tensor-src-q{q.k_inv_Mpc:.3g}-r{r.k_inv_Mpc:.3g}-{datetime.now().replace(microsecond=0).isoformat()}"
+
+
+TensorSource_queue = RayWorkPool(
+    pool,
+    tensor_source_grid,
+    task_builder=build_tensor_source_work,
+    validation_handler=validate_tensor_source_work,
+    label_builder=build_tensor_source_work_label,
+    title="CALCULATE TENSOR SOURCE TERMS",
+    store_results=False,
+)
+TensorSource_queue.run()
 
 
 ## STEP 3
