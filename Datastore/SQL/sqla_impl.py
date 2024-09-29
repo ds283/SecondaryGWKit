@@ -22,6 +22,11 @@ from Datastore.SQL.ObjectFactories.TensorGreenFunction import (
     sqla_TensorGreenFunctionValue_factory,
     sqla_TensorGreenFunctionTagAssociation_factory,
 )
+from Datastore.SQL.ObjectFactories.TensorSource import (
+    sqla_TensorSource_factory,
+    sqla_TensorSourceTagAssocation_factory,
+    sqla_TensorSourceValue_factory,
+)
 from Datastore.SQL.ObjectFactories.base import SQLAFactoryBase
 from Datastore.SQL.ObjectFactories.integration_metadata import (
     sqla_IntegrationSolver_factory,
@@ -60,6 +65,9 @@ _factories = {
     "TensorGreenFunctionIntegration": sqla_TensorGreenFunctionIntegration_factory,
     "TensorGreenFunctionIntegration_tags": sqla_TensorGreenFunctionTagAssociation_factory,
     "TensorGreenFunctionValue": sqla_TensorGreenFunctionValue_factory,
+    "TensorSource": sqla_TensorSource_factory,
+    "TensorSource_tags": sqla_TensorSourceTagAssocation_factory,
+    "TensorSourceValue": sqla_TensorSourceValue_factory,
 }
 
 _replicate_tables = [

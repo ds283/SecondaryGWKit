@@ -1,6 +1,9 @@
 import time
 from traceback import print_tb
 
+from CosmologyConcepts import redshift_array
+from CosmologyModels import BaseCosmology
+
 
 class WallclockTimer:
     def __enter__(self):
@@ -26,6 +29,35 @@ def check_units(A, B):
     """
     if A.units != B.units:
         raise RuntimeError("Units used for wavenumber k and cosmology are not equal")
+
+
+def check_cosmology(A, B):
+    """
+    Check that object A and B are defined with the same cosmology
+    Assumes that both provide a .cosmology property that returns a BaseCosmology object
+    :param A:
+    :param B:
+    :return:
+    """
+    A_cosmology: BaseCosmology = A.cosmology
+    B_cosmology: BaseCosmology = B.cosmology
+
+    if A_cosmology.store_id != B_cosmology.store_id:
+        raise RuntimeError("Cosmology store_ids are different")
+
+
+def check_zsample(A, B):
+    """
+    Check that the zsample grid used by object A matches the one used by object B
+    :param A:
+    :param B:
+    :return:
+    """
+    sample_A: redshift_array = A.z_sample
+    sample_B: redshift_array = B.z_sample
+
+    if sample_A != sample_B:
+        raise RuntimeError("Sample grids are not compatible")
 
 
 SECONDS_PER_MINUTE = 60

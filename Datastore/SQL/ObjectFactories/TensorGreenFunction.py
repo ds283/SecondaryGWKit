@@ -538,7 +538,7 @@ class sqla_TensorGreenFunctionIntegration_factory(SQLAFactoryBase):
                 )
             ).scalar()
             msgs.append(
-                f"          contains {rows} z-sample values expected={integration.z_samples}"
+                f"          contains {rows} z-sample values | expected={integration.z_samples}"
             )
 
         return msgs

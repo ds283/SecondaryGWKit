@@ -498,6 +498,18 @@ class MatterTransferFunctionIntegration(DatastoreObject):
             raise RuntimeError("values has not yet been populated")
         return self._values
 
+    def __len__(self):
+        if self._values is None:
+            return 0
+
+        return len(self._values)
+
+    def __getitem__(self, idx):
+        if self._values is None:
+            return None
+
+        return self._values[idx]
+
     def compute(self, label: Optional[str] = None):
         if self._values is not None:
             raise RuntimeError("values have already been computed")

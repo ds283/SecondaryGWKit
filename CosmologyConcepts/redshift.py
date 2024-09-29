@@ -1,6 +1,9 @@
 from typing import Iterable, Self
 
+from math import fabs
+
 from Datastore import DatastoreObject
+from defaults import DEFAULT_FLOAT_PRECISION
 
 
 class redshift(DatastoreObject):
@@ -24,6 +27,12 @@ class redshift(DatastoreObject):
         """
         return float(self.z)
 
+    def __eq__(self, other):
+        return not self.__ne__(other)
+
+    def __ne__(self, other):
+        return fabs(self.z - other.z) > DEFAULT_FLOAT_PRECISION
+
 
 class redshift_array:
     def __init__(self, z_array: Iterable[redshift]):
@@ -44,6 +53,18 @@ class redshift_array:
 
     def __len__(self):
         return len(self._z_array)
+
+    def __eq__(self, other):
+        return not self.__ne__(other)
+
+    def __ne__(self, other):
+        if len(self._z_array) != len(other._z_array):
+            return True
+
+        if any(za != zb for za, zb in zip(self._z_array, other._z_array)):
+            return True
+
+        return False
 
     def as_list(self) -> list[float]:
         return [float(z) for z in self._z_array]

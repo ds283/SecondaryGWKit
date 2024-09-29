@@ -38,6 +38,7 @@ class RayWorkPool:
         store_handler=_default_store_handler,
         available_handler=None,
         validation_handler=None,
+        post_handler=None,
         label_builder=None,
         create_batch_size: int = DEFAULT_CREATE_BATCH_SIZE,
         process_batch_size: int = DEFAULT_PROCESS_BATCH_SIZE,
@@ -73,6 +74,7 @@ class RayWorkPool:
         self._store_handler = store_handler
         self._available_handler = available_handler
         self._validation_handler = validation_handler
+        self._post_handler = post_handler
 
         self._label_builder = label_builder
 
@@ -96,12 +98,14 @@ class RayWorkPool:
         self._num_store_queue = 0
         self._num_available_queue = 0
         self._num_validation_queue = 0
+        self._num_post_queue = 0
 
         self._num_lookup_complete = 0
         self._num_compute_complete = 0
         self._num_store_complete = 0
         self._num_available_complete = 0
         self._num_validation_complete = 0
+        self._num_post_complete = 0
 
         self._batch = 0
 
@@ -162,14 +166,16 @@ class RayWorkPool:
                 type, payload = self._data[ref.hex]
 
                 if type == "lookup":
+                    # payload is an index into the result set
+                    # we use this to store the constructed object in the right place.
+                    # Later, it will be mutated in-place by the compute/store tasks
+                    idx = payload
+
                     # result of the lookup should be a computable/storable object
                     obj = ray.get(ref)
 
                     if self._store_results:
-                        # payload is an index into the result set
-                        # we use this to store the constructed object in the right place.
-                        # Later, it will be mutated in-place by the compute/store tasks
-                        self.results[payload] = obj
+                        self.results[idx] = obj
 
                     # remove the original 'lookup' task from the work queue
                     self._inflight.pop(ref.hex, None)
@@ -185,7 +191,7 @@ class RayWorkPool:
 
                             # add this task to the work qeue
                             self._inflight[available_task.hex] = available_task
-                            self._data[available_task.hex] = ("available", obj)
+                            self._data[available_task.hex] = ("available", (idx, obj))
 
                             self._num_available_queue += 1
 
@@ -202,9 +208,28 @@ class RayWorkPool:
 
                             # add this compute task to the work queue
                             self._inflight[compute_task.hex] = compute_task
-                            self._data[compute_task.hex] = ("compute", (payload, obj))
+                            self._data[compute_task.hex] = ("compute", (idx, obj))
 
                             self._num_compute_queue += 1
+
+                elif type == "available":
+                    # payload is a pair of the target index and the constructed object
+                    idx, obj = payload
+
+                    self._inflight.pop(ref.hex, None)
+                    self._data.pop(ref.hex, None)
+
+                    self._num_available_queue = max(self._num_available_queue - 1, 0)
+                    self._num_available_complete += 1
+
+                    if self._post_handler is not None:
+                        post_task: ObjectRef = self._post_handler(obj)
+
+                        # add this post-task to the work queue
+                        self._inflight[post_task.hex] = post_task
+                        self._data[post_task.hex] = ("post", payload)
+
+                        self._num_post_queue += 1
 
                 elif type == "compute":
                     # payload contains an index into the result set and (our local copy of) the object that has finished computation;
@@ -268,9 +293,8 @@ class RayWorkPool:
                         self._num_validation_queue += 1
 
                 elif type == "validate":
-                    # payload contains an index into the result set and (still, our local copy of) the object that has been freshly
-                    # validated
-                    # At this stage, however, there is not much to do, except to forget the validation task and update the queue length
+                    # payload contains an index into the result set and (still, our local copy of)
+                    # the object that has been freshly validated
                     idx, obj = payload
 
                     result = ray.get(ref)
@@ -285,13 +309,27 @@ class RayWorkPool:
                     self._num_validation_queue = max(self._num_validation_queue - 1, 0)
                     self._num_validation_complete += 1
 
-                elif type == "available":
-                    # payload is the constructed object, but there is nothing to do
+                    if self._post_handler is not None:
+                        post_task: ObjectRef = self._post_handler(obj)
+
+                        # add this post-task to the work queue
+                        self._inflight[post_task.hex] = post_task
+                        self._data[post_task.hex] = ("post", payload)
+
+                        self._num_post_queue += 1
+
+                elif type == "post":
+                    idx, obj = payload
+
+                    replacement_obj = ray.get(ref)
+                    if replacement_obj is not None and self._store_results:
+                        self.results[idx] = replacement_obj
+
                     self._inflight.pop(ref.hex, None)
                     self._data.pop(ref.hex, None)
 
-                    self._num_available_queue = max(self._num_available_queue - 1, 0)
-                    self._num_available_complete += 1
+                    self._num_post_queue = max(self._num_post_queue - 1, 0)
+                    self._num_post_complete += 1
 
                 else:
                     raise RuntimeError(f'Unexpected work queue item type "{type}"')
@@ -331,6 +369,8 @@ class RayWorkPool:
                         msg += f", {self._num_available_queue} available"
                     if self._validation_handler is not None:
                         msg += f", {self._num_validation_queue} validation"
+                    if self._post_handler is not None:
+                        msg += f", {self._num_post_queue} post"
 
                     msg += f" | completed items: {self._num_lookup_complete} lookup"
                     if self._compute_handler is not None:
@@ -341,6 +381,9 @@ class RayWorkPool:
                         msg += f", {self._num_available_complete} available"
                     if self._validation_handler is not None:
                         msg += f", {self._num_validation_complete} validation"
+                    if self._post_handler is not None:
+                        msg += f", {self._num_post_complete} post"
+
                     print(msg)
 
                     self._batch = 0
