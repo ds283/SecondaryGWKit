@@ -301,8 +301,8 @@ class TensorSource(DatastoreObject):
                     undiff_part[i],
                     diff_part[i],
                     analytic_source_term=analytic_source_term[i],
-                    analytic_undiff_part=analytic_diff_part[i],
-                    analytic_diff_part=analytic_undiff_part[i],
+                    analytic_undiff_part=analytic_undiff_part[i],
+                    analytic_diff_part=analytic_diff_part[i],
                 )
             )
 

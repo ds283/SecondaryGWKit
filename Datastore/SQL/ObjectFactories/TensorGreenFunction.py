@@ -306,7 +306,7 @@ class sqla_TensorGreenFunctionIntegration_factory(SQLAFactoryBase):
                 )
             )
             .filter(value_table.c.integration_serial == store_id)
-            .order_by(redshift_table.c.z)
+            .order_by(redshift_table.c.z.desc())
         )
 
         z_points = []

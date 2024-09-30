@@ -162,12 +162,20 @@ class sqla_TensorSource_factory(SQLAFactoryBase):
                 value_table.c.z_serial,
                 redshift_table.c.z,
                 value_table.c.source_term,
-                value_table.c.udiff_part,
+                value_table.c.undiff_part,
                 value_table.c.diff_part,
                 value_table.c.analytic_source_term,
                 value_table.c.analytic_undiff_part,
                 value_table.c.analytic_diff_part,
             )
+            .select_from(
+                value_table.join(
+                    redshift_table,
+                    redshift_table.c.serial == value_table.c.z_serial,
+                )
+            )
+            .filter(value_table.c.parent_serial == store_id)
+            .order_by(redshift_table.c.z.desc())
         )
 
         z_points = []
@@ -178,6 +186,7 @@ class sqla_TensorSource_factory(SQLAFactoryBase):
             values.append(
                 TensorSourceValue(
                     store_id=row.serial,
+                    z=z_value,
                     source_term=row.source_term,
                     undiff_part=row.undiff_part,
                     diff_part=row.diff_part,
