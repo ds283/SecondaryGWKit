@@ -29,6 +29,9 @@ from defaults import DEFAULT_ABS_TOLERANCE, DEFAULT_REL_TOLERANCE
 DEFAULT_LABEL = "SecondaryGWKit-test"
 DEFAULT_TIMEOUT = 60
 DEFAULT_SHARDS = 20
+DEFAULT_RAY_ADDRESS = "auto"
+DEFAULT_SAMPLES_PER_LOG10_Z = 150
+DEFAULT_ZEND = 0.1
 
 parser = argparse.ArgumentParser()
 parser.add_argument(
@@ -54,7 +57,22 @@ parser.add_argument(
     help="specify connection timeout for database layer",
 )
 parser.add_argument(
-    "--ray-address", default="auto", type=str, help="specify address of Ray cluster"
+    "--samples-log10z",
+    type=int,
+    default=DEFAULT_SAMPLES_PER_LOG10_Z,
+    help="specify number of z-sample points per log10(z)",
+)
+parser.add_argument(
+    "--zend",
+    type=float,
+    default=DEFAULT_ZEND,
+    help="specify final redshift",
+)
+parser.add_argument(
+    "--ray-address",
+    default=DEFAULT_RAY_ADDRESS,
+    type=str,
+    help="specify address of Ray cluster",
 )
 args = parser.parse_args()
 
@@ -80,6 +98,9 @@ pool: ShardedPool = ShardedPool(
 units = Mpc_units()
 params = Planck2018()
 LambdaCDM_Planck2018 = ray.get(pool.object_get(LambdaCDM, params=params, units=units))
+
+zend = args.zend
+samples_per_log10z = args.samples_log10z
 
 
 ## UTILITY FUNCTIONS
@@ -178,13 +199,11 @@ print(
 
 
 # build a log-spaced universal grid of wavenumbers
-LATEST_Z = 0.1
-SAMPLES_PER_LOG10_Z = 150
 
 universal_z_grid = k_exit_earliest.populate_z_sample(
     outside_horizon_efolds="suph_e3",
-    samples_per_log10z=SAMPLES_PER_LOG10_Z,
-    z_end=LATEST_Z,
+    samples_per_log10z=samples_per_log10z,
+    z_end=zend,
 )
 
 # embed this universal redshift list into the database
@@ -207,7 +226,7 @@ z_sample = redshift_array(z_array=z_array)
         pool.object_get(store_tag, label=f"GlobalRedshiftGrid_{len(z_sample)}"),
         pool.object_get(store_tag, label=f"OutsideHorizonEfolds_e3"),
         pool.object_get(store_tag, label=f"LargestRedshift_{z_sample.max.z:.5g}"),
-        pool.object_get(store_tag, label=f"SamplesPerLog10Z_{SAMPLES_PER_LOG10_Z}"),
+        pool.object_get(store_tag, label=f"SamplesPerLog10Z_{samples_per_log10z}"),
     ]
 )
 
@@ -234,7 +253,7 @@ def build_Tk_work(k_exit: wavenumber_exit_time):
             LargestZTag,
             SamplesPerLog10ZTag,
         ],
-        delta_logz=1.0 / 150.0,
+        delta_logz=1.0 / float(samples_per_log10z),
     )
 
 
@@ -322,7 +341,12 @@ def build_Gk_work(k_exit: wavenumber_exit_time):
     if not k_exit.available:
         raise RuntimeError(f"k_exit object (store_id={k_exit.store_id}) is not ready")
 
-    source_zs = z_sample.truncate(k_exit.z_exit_suph_e3)
+    # find redshift where this k-mode is at least 3 efolds inside the horizon
+    # we won't calculate Green's functions with the source redshift later than this, because
+    # the oscillations become rapid, and we are better switching to a WKB approximation
+    latest_source_z = k_exit.z_exit_subh_e3
+
+    source_zs = z_sample.truncate(k_exit.z_exit_subh_e3, keep="higher")
 
     work_refs = []
 
@@ -346,7 +370,8 @@ def build_Gk_work(k_exit: wavenumber_exit_time):
                         LargestZTag,
                         SamplesPerLog10ZTag,
                     ],
-                    delta_logz=1.0 / 150.0,
+                    delta_logz=1.0 / float(samples_per_log10z),
+                    mode="stop",
                 )
             )
 
@@ -367,7 +392,7 @@ Gk_queue = RayWorkPool(
     task_builder=build_Gk_work,
     validation_handler=validate_Gk_work,
     label_builder=build_Gk_exit_work_label,
-    title="CALCULATE TENSOR GREEN FUNCTIONS",
+    title="CALCULATE NUMERICAL PART OF TENSOR GREEN FUNCTIONS",
     store_results=False,
 )
 Gk_queue.run()

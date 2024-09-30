@@ -149,6 +149,9 @@ class sqla_TensorGreenFunctionIntegration_factory(SQLAFactoryBase):
                 sqla.Column("unresolved_z", sqla.Float(64)),
                 sqla.Column("unresolved_efolds_subh", sqla.Float(64)),
                 sqla.Column("init_efolds_suph", sqla.Float(64)),
+                sqla.Column("stop_efolds_subh", sqla.Float(64)),
+                sqla.Column("stop_G", sqla.Float(64)),
+                sqla.Column("stop_Gprime", sqla.Float(64)),
                 sqla.Column("validated", sqla.Boolean, default=False, nullable=False),
             ],
         }
@@ -168,6 +171,8 @@ class sqla_TensorGreenFunctionIntegration_factory(SQLAFactoryBase):
         cosmology: BaseCosmology = payload["cosmology"]
         z_sample: redshift_array = payload["z_sample"]
         z_source: redshift = payload["z_source"]
+
+        mode: str = payload.get("mode", None)
 
         atol_table = tables["tolerance"].alias("atol")
         rtol_table = tables["tolerance"].alias("rtol")
@@ -193,6 +198,9 @@ class sqla_TensorGreenFunctionIntegration_factory(SQLAFactoryBase):
                 table.c.unresolved_z,
                 table.c.unresolved_efolds_subh,
                 table.c.init_efolds_suph,
+                table.c.stop_efolds_subh,
+                table.c.stop_G,
+                table.c.stop_Gprime,
                 table.c.solver_serial,
                 table.c.label,
                 table.c.z_source_serial,
@@ -256,6 +264,7 @@ class sqla_TensorGreenFunctionIntegration_factory(SQLAFactoryBase):
                 z_sample=z_sample,
                 tags=tags,
                 delta_logz=delta_logz,
+                mode=mode,
             )
 
         store_id = row_data.serial
@@ -273,6 +282,9 @@ class sqla_TensorGreenFunctionIntegration_factory(SQLAFactoryBase):
         unresolved_efolds_subh = row_data.unresolved_efolds_subh
 
         init_efolds_suph = row_data.init_efolds_suph
+        stop_efolds_subh = row_data.stop_efolds_subh
+        stop_G = row_data.stop_G
+        stop_Gprime = row_data.stop_Gprime
 
         solver_label = row_data.solver_label
         solver_stepping = row_data.solver_stepping
@@ -344,6 +356,9 @@ class sqla_TensorGreenFunctionIntegration_factory(SQLAFactoryBase):
                 "unresolved_z": unresolved_z,
                 "unresolved_efolds_subh": unresolved_efolds_subh,
                 "init_efolds_suph": init_efolds_suph,
+                "stop_efolds_subh": stop_efolds_subh,
+                "stop_G": stop_G,
+                "stop_Gprime": stop_Gprime,
                 "solver": solver,
                 "values": values,
             },
@@ -357,6 +372,7 @@ class sqla_TensorGreenFunctionIntegration_factory(SQLAFactoryBase):
             z_sample=imported_z_sample,
             tags=tags,
             delta_logz=delta_logz,
+            # no need to pass the mode argument, which is only needed/relevant for unpopulated TensorGreenFunctionIntegration instances
         )
         obj._deserialized = True
         return obj
@@ -393,6 +409,9 @@ class sqla_TensorGreenFunctionIntegration_factory(SQLAFactoryBase):
                 "unresolved_z": obj.unresolved_z,
                 "unresolved_efolds_subh": obj.unresolved_efolds_subh,
                 "init_efolds_suph": obj.init_efolds_suph,
+                "stop_efolds_subh": obj.stop_efolds_subh,
+                "stop_G": obj.stop_G,
+                "stop_Gprime": obj.stop_Gprime,
                 "validated": False,
             },
         )

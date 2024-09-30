@@ -93,11 +93,28 @@ class redshift_array:
 
         return z_min_item
 
-    def truncate(self, max_z) -> Self:
+    def truncate(self, z_limit, keep: str = "lower") -> Self:
+        if keep == "lower":
+            return self._truncate_lower(z_limit)
+        if keep == "higher":
+            return self._truncate_higher(z_limit)
+
+        raise ValueError(f'Unknown truncation mode "{keep}')
+
+    def _truncate_lower(self, max_z) -> Self:
         if isinstance(max_z, redshift):
             max_z_value = max_z.z
         else:
             max_z_value = float(max_z)
 
         new_z_array = [z for z in self._z_array if z.z <= max_z_value]
+        return redshift_array(z_array=new_z_array)
+
+    def _truncate_higher(self, min_z) -> Self:
+        if isinstance(min_z, redshift):
+            max_z_value = min_z.z
+        else:
+            max_z_value = float(min_z)
+
+        new_z_array = [z for z in self._z_array if z.z >= max_z_value]
         return redshift_array(z_array=new_z_array)

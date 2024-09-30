@@ -10,7 +10,11 @@ from CosmologyConcepts import wavenumber, redshift, redshift_array, wavenumber_e
 from CosmologyModels import BaseCosmology
 from Datastore import DatastoreObject
 from MetadataConcepts import tolerance, store_tag
-from defaults import DEFAULT_ABS_TOLERANCE, DEFAULT_REL_TOLERANCE
+from defaults import (
+    DEFAULT_ABS_TOLERANCE,
+    DEFAULT_REL_TOLERANCE,
+    DEFAULT_FLOAT_PRECISION,
+)
 from utilities import check_units, format_time
 from .integration_metadata import IntegrationSolver
 from .integration_supervisor import (
@@ -158,21 +162,68 @@ class TensorGreenFunctionSupervisor(IntegrationSupervisor):
         return self._unresolved_osc_efolds_subh
 
 
+def WKB_omegaEff_sq(cosmology: BaseCosmology, k: float, z: float):
+    one_plus_z = 1.0 + z
+    one_plus_z_2 = one_plus_z * one_plus_z
+
+    H = cosmology.Hubble(z)
+    eps = cosmology.epsilon(z)
+    epsPrime = cosmology.d_epsilon_dz(z)
+
+    k_over_H = k / H
+    k_over_H_2 = k_over_H * k_over_H
+
+    A = k_over_H_2
+    B = -epsPrime / 2.0 / one_plus_z
+    C = (3.0 * eps / 2.0 - eps * eps / 4.0 - 2.0) / one_plus_z_2
+
+    return A + B + C
+
+
+def WKB_d_ln_omegaEffPrime_dz(cosmology: BaseCosmology, k: float, z: float):
+    one_plus_z = 1.0 + z
+    one_plus_z_2 = one_plus_z * one_plus_z
+    one_plus_z_3 = one_plus_z_2 * one_plus_z
+
+    eps = cosmology.epsilon(z)
+    epsPrime = cosmology.d_epsilon_dz(z)
+    epsPrimePrime = cosmology.d2_epsilon_dz2(z)
+
+    omega_eff_sq = WKB_omegaEff_sq(cosmology, k, z)
+
+    A = -epsPrimePrime / 2.0 / one_plus_z
+    B = (2.0 * epsPrimePrime - eps * epsPrime / 2.0) / one_plus_z_2
+    C = (3.0 * eps - eps * eps / 2.0 - 4.0) / one_plus_z_3
+
+    numerator = A + B + C
+    denominator = 2.0 * omega_eff_sq
+
+    return numerator / denominator
+
+
 @ray.remote
 def compute_tensor_Green(
     cosmology: BaseCosmology,
-    k: wavenumber,
+    k: wavenumber_exit_time,
     z_source: redshift,
     z_sample: redshift_array,
     atol: float = DEFAULT_ABS_TOLERANCE,
     rtol: float = DEFAULT_REL_TOLERANCE,
     delta_logz: Optional[float] = None,
+    mode: str = None,
 ) -> dict:
-    check_units(k, cosmology)
+    k_wavenumber: wavenumber = k.k
+    check_units(k_wavenumber, cosmology)
+
+    if mode is not None and mode not in ["stop"]:
+        raise ValueError(f'Unknown compute mode "{mode}"')
 
     # obtain dimensionful value of wavenumber; this should be measured in the same units used by the cosmology
     # (see below)
-    k_float = k.k
+    k_float = k_wavenumber.k
+    z_subh_e3 = k.z_exit_subh_e3
+    z_subh_e5 = k.z_exit_subh_e5
+
     z_min = float(z_sample.min)
 
     # RHS of ODE system
@@ -187,42 +238,10 @@ def compute_tensor_Green(
     G_INDEX = 2
     GPRIME_INDEX = 3
 
-    def WKB_omegaEff_sq(k_over_H_2: float, z):
-        one_plus_z = 1.0 + z
-        one_plus_z_2 = one_plus_z * one_plus_z
-
-        eps = cosmology.epsilon(z)
-        epsPrime = cosmology.d_epsilon_dz(z)
-
-        A = k_over_H_2
-        B = -epsPrime / 2.0 / one_plus_z
-        C = (3.0 * eps / 2.0 - eps * eps / 4.0 - 2.0) / one_plus_z_2
-
-        return A + B + C
-
-    def WKB_d_ln_omegaEffPrime_dz(k_over_H_2: float, z):
-        one_plus_z = 1.0 + z
-        one_plus_z_2 = one_plus_z * one_plus_z
-        one_plus_z_3 = one_plus_z_2 * one_plus_z
-
-        omega_eff_sq = WKB_omegaEff_sq(k_over_H_2, z)
-
-        eps = cosmology.epsilon(z)
-        epsPrime = cosmology.d_epsilon_dz(z)
-        epsPrimePrime = cosmology.d2_epsilon_dz2(z)
-
-        A = -epsPrimePrime / 2.0 / one_plus_z
-        B = (2.0 * epsPrimePrime - eps * epsPrime / 2.0) / one_plus_z_2
-        C = (3.0 * eps - eps * eps / 2.0 - 4.0) / one_plus_z_3
-
-        numerator = A + B + C
-        denominator = 2.0 * omega_eff_sq
-
-        return numerator / denominator
-
     def RHS(z, state, supervisor) -> float:
         """
-        k *must* be measured using the same units used for H(z) in the cosmology
+        k *must* be measured using the same units used for H(z) in the cosmology, otherwise we will not get
+        correct dimensionless ratios
         """
         with RHS_timer(supervisor):
             rho = state[RHO_INDEX]
@@ -260,7 +279,7 @@ def compute_tensor_Green(
             # spacing
             # If the grid spacing is smaller than the oscillation wavelength, then
             # evidently we cannot resolve the oscillations
-            omega_eff_sq = WKB_omegaEff_sq(k_over_H, z)
+            omega_eff_sq = WKB_omegaEff_sq(cosmology, k_float, z)
 
             if omega_eff_sq > 0.0:
                 wavelength = 2.0 * pi / sqrt(omega_eff_sq)
@@ -269,7 +288,7 @@ def compute_tensor_Green(
         return [drho_dz, da0_tau_dz, dG_dz, dGprime_dz]
 
     with TensorGreenFunctionSupervisor(
-        k, z_source, z_sample.min, delta_logz=delta_logz
+        k_wavenumber, z_source, z_sample.min, delta_logz=delta_logz
     ) as supervisor:
         # initial conditions should be
         #   G(z', z') = 0
@@ -282,12 +301,38 @@ def compute_tensor_Green(
         )
 
         initial_state = [rho_init, tau_init, 0.0, 1.0]
+
+        if mode == "stop":
+
+            # phase_event is designed to record places where G has a local minimum (Gprime goes through zero from negative to positive values)
+            # however, we only want to trigger when we are at least 3 e-folds inside the horizon
+            def phase_event(z, state, supervisor):
+                if z > z_subh_e3:
+                    return 1.0
+
+                Gprime = state[GPRIME_INDEX]
+                return Gprime
+
+            # only trigger when Gprime crosses zero from negative to positive values
+            phase_event.direction = 1.0
+
+            def stop_event(z, state, supervisor):
+                return z - z_subh_e5
+
+            # terminate integration when > 5 e-folds inside the horizon
+            stop_event.terminal = True
+
+            events = [phase_event, stop_event]
+        else:
+            events = None
+
         sol = solve_ivp(
             RHS,
-            method="Radau",
+            method="RK45",
             t_span=(z_source.z, z_min),
             y0=initial_state,
             t_eval=z_sample.as_list(),
+            events=events,
             atol=atol,
             rtol=rtol,
             args=(supervisor,),
@@ -296,7 +341,7 @@ def compute_tensor_Green(
     # test whether the integration concluded successfully
     if not sol.success:
         raise RuntimeError(
-            f'compute_tensor_Green: integration did not terminate successfully (k={k.k_inv_Mpc}/Mpc, z_source={z_source.z}, error at z={sol.t[-1]}, "{sol.message}")'
+            f'compute_tensor_Green: integration did not terminate successfully (k={k_wavenumber.k_inv_Mpc}/Mpc, z_source={z_source.z}, error at z={sol.t[-1]}, "{sol.message}")'
         )
 
     sampled_z = sol.t
@@ -305,14 +350,57 @@ def compute_tensor_Green(
     sampled_G = sampled_values[G_INDEX]
     sampled_Gprime = sampled_values[GPRIME_INDEX]
 
-    expected_values = len(z_sample)
     returned_values = sampled_z.size
+    if mode != "stop":
+        expected_values = len(z_sample)
 
-    if returned_values != expected_values:
-        raise RuntimeError(
-            f"compute_tensor_Green: solve_ivp returned {returned_values} samples, but expected {expected_values}"
-        )
+        if returned_values != expected_values:
+            raise RuntimeError(
+                f"compute_tensor_Green: solve_ivp returned {returned_values} samples, but expected {expected_values}"
+            )
 
+    stop_efolds_subh = None
+    stop_G = None
+    stop_Gprime = None
+
+    DEFAULT_PHASE_MINIMUM_TOLERANCE = 1e-2
+    if mode == "stop":
+        t_events = sol.t_events
+        y_events = sol.y_events
+
+        t_minima = t_events[0]
+        y_minima = y_events[0]
+
+        found_minimum = False
+        tested_minima = 0
+        smallest_abs_Gprime = None
+        first_event = t_minima[0] if len(t_minima) > 0 else None
+        smallest_event = None
+
+        for i in range(len(t_events)):
+            tested_minima += 1
+
+            Gprime = y_minima[i][GPRIME_INDEX]
+            abs_Gprime = fabs(Gprime)
+            if smallest_abs_Gprime is None or abs_Gprime < smallest_abs_Gprime:
+                smallest_abs_Gprime = abs_Gprime
+                smallest_event = t_minima[i]
+            if abs_Gprime > DEFAULT_PHASE_MINIMUM_TOLERANCE:
+                continue
+
+            stop_efolds_subh = t_minima[i]
+            stop_G = y_minima[i][G_INDEX]
+            stop_Gprime = Gprime  # could set to exactly zero, but probably more accurate to use the computed value
+            found_minimum = True
+            break
+
+        if not found_minimum:
+            raise RuntimeError(
+                f'compute_tensor_Green: working in "stop" mode, but could not find a local minimum of G in the search window (tested {tested_minima} candidates, smallest |Gprime|={smallest_abs_Gprime:.5g} @ z={smallest_event:.5g} | first event @ z={first_event:.5g}, window start @ z={z_subh_e3:.5g}, stop @ z={z_subh_e5:.5g})'
+            )
+
+    # validate that the samples of the solution correspond to the z-sample points that we specified.
+    # This really should be true, but there is no harm in being defensive.
     for i in range(returned_values):
         diff = sampled_z[i] - z_sample[i].z
         if fabs(diff) > DEFAULT_ABS_TOLERANCE:
@@ -330,10 +418,13 @@ def compute_tensor_Green(
         "a0_tau_sample": sampled_a0_tau,
         "G_sample": sampled_G,
         "Gprime_sample": sampled_Gprime,
-        "solver_label": "solve_ivp+Radau-stepping0",
+        "solver_label": "solve_ivp+RK45-stepping0",
         "has_unresolved_osc": supervisor.has_unresolved_osc,
         "unresolved_z": supervisor.unresolved_z,
         "unresolved_efolds_subh": supervisor.unresolved_efolds_subh,
+        "stop_efolds_subh": stop_efolds_subh,
+        "stop_G": stop_G,
+        "stop_Gprime": stop_Gprime,
     }
 
 
@@ -361,11 +452,14 @@ class TensorGreenFunctionIntegration(DatastoreObject):
         label: Optional[str] = None,
         tags: Optional[List[store_tag]] = None,
         delta_logz: Optional[float] = None,
+        mode: Optional[str] = None,
     ):
-        check_units(k.k, cosmology)
+        k_wavenumber: wavenumber = k.k
+        check_units(k_wavenumber, cosmology)
 
         self._solver_labels = solver_labels
         self._delta_logz = delta_logz
+        self._mode = mode
 
         self._z_sample = z_sample
         if payload is None:
@@ -382,6 +476,9 @@ class TensorGreenFunctionIntegration(DatastoreObject):
             self._unresolved_efolds_subh = None
 
             self._init_efolds_suph = None
+            self._stop_efolds_subh = None
+            self._stop_G = None
+            self._stop_Gprime = None
 
             self._solver = None
 
@@ -400,10 +497,21 @@ class TensorGreenFunctionIntegration(DatastoreObject):
             self._unresolved_efolds_subh = payload["unresolved_efolds_subh"]
 
             self._init_efolds_suph = payload["init_efolds_suph"]
+            self._stop_efolds_subh = payload["stop_efolds_subh"]
+            self._stop_G = payload["stop_G"]
+            self._stop_Gprime = payload["stop_Gprime"]
 
             self._solver = payload["solver"]
 
             self._values = payload["values"]
+
+        # check that source redshift is not too far inside the horizon for this k-mode
+        if z_source is not None:
+            z_limit = k.z_exit_subh_e3
+            if z_source.z < z_limit - DEFAULT_FLOAT_PRECISION:
+                raise ValueError(
+                    f"Specified source redshift {z_source.z:.5g} is more than 3-efolds inside the horizon for k={k_wavenumber.k_inv_Mpc:.5g}/Mpc"
+                )
 
         # check that all sample points are *later* than the specified source redshift
         if z_source is not None and self._z_sample is not None:
@@ -521,6 +629,27 @@ class TensorGreenFunctionIntegration(DatastoreObject):
         return self._init_efolds_suph
 
     @property
+    def stop_efolds_subh(self) -> float:
+        if self._stop_efolds_subh is None:
+            raise RuntimeError("stop_efolds_subh has not yet been populated")
+
+        return self._stop_efolds_subh
+
+    @property
+    def stop_G(self) -> float:
+        if self._stop_G is None:
+            raise RuntimeError("stop_G has not yet been populated")
+
+        return self._stop_G
+
+    @property
+    def stop_Gprime(self) -> float:
+        if self._stop_Gprime is None:
+            raise RuntimeError("stop_Gprime has not yet been populated")
+
+        return self._stop_Gprime
+
+    @property
     def solver(self) -> IntegrationSolver:
         if self._solver is None:
             raise RuntimeError("solver has not yet been populated")
@@ -547,12 +676,13 @@ class TensorGreenFunctionIntegration(DatastoreObject):
 
         self._compute_ref = compute_tensor_Green.remote(
             self.cosmology,
-            self.k,
+            self._k_exit,
             self.z_source,
             self.z_sample,
             atol=self._atol.tol,
             rtol=self._rtol.tol,
             delta_logz=self._delta_logz,
+            mode=self._mode,
         )
         return self._compute_ref
 
@@ -584,6 +714,10 @@ class TensorGreenFunctionIntegration(DatastoreObject):
         self._unresolved_z = data["unresolved_z"]
         self._unresolved_efolds_subh = data["unresolved_efolds_subh"]
 
+        self._stop_efolds_subh = data.get("stop_efolds_subh", None)
+        self._stop_G = data.get("stop_G", None)
+        self._stop_Gprime = data.get("stop_Gprime", None)
+
         Hsource = self.cosmology.Hubble(self.z_source.z)
         k_over_aH = (1.0 + self.z_source.z) * self.k.k / Hsource
         self._init_efolds_suph = -log(k_over_aH)
@@ -594,6 +728,7 @@ class TensorGreenFunctionIntegration(DatastoreObject):
         self._values = []
 
         tau_source = a0_tau_sample[0]
+        # need to be aware that G_sample may not be as long as self._z_sample, if we are working in "stop" mode
         for i in range(len(G_sample)):
             H = self._cosmology.Hubble(self._z_sample[i].z)
             tau = a0_tau_sample[i]
