@@ -381,7 +381,7 @@ class sqla_MatterTransferFunctionIntegration_factory(SQLAFactoryBase):
                 "solver_serial": obj.solver.store_id,
                 "z_init_serial": obj.z_init.store_id,
                 "z_min_serial": obj.z_sample.min.store_id,
-                "z_samples": len(obj.z_sample),
+                "z_samples": len(obj.values),
                 "compute_time": obj.compute_time,
                 "compute_steps": obj.compute_steps,
                 "RHS_evaluations": obj.RHS_evaluations,
