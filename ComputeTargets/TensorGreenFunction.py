@@ -367,6 +367,7 @@ class TensorGreenFunctionIntegration(DatastoreObject):
         self._solver_labels = solver_labels
         self._delta_logz = delta_logz
 
+        self._z_sample = z_sample
         if payload is None:
             DatastoreObject.__init__(self, None)
             self._compute_time = None
@@ -384,7 +385,6 @@ class TensorGreenFunctionIntegration(DatastoreObject):
 
             self._solver = None
 
-            self._z_sample = z_sample
             self._values = None
         else:
             DatastoreObject.__init__(self, payload["store_id"])
@@ -403,7 +403,6 @@ class TensorGreenFunctionIntegration(DatastoreObject):
 
             self._solver = payload["solver"]
 
-            self._z_sample = z_sample
             self._values = payload["values"]
 
         # check that all sample points are *later* than the specified source redshift

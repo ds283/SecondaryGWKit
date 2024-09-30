@@ -86,6 +86,8 @@ _shard_tables = {
     "MatterTransferFunctionValue": "k",
     "TensorGreenFunctionIntegration": "k",
     "TensorGreenFunctionValue": "k",
+    "TensorSource": "q",
+    "TensorSourceValue": "q",
 }
 
 _FactoryMappingType = Mapping[str, SQLAFactoryBase]
@@ -948,12 +950,13 @@ class ShardedPool:
                     f'Unable to dispatch object_store() for item of type "{cls_name}"'
                 )
 
-            if not hasattr(item, "k"):
+            shard_key_field = _shard_tables[cls_name]
+            if not hasattr(item, shard_key_field):
                 raise RuntimeError(
-                    f'Unable to determine shard, because object of type "{cls_name}" has no "k" attribute'
+                    f'Unable to determine shard, because object of type "{cls_name}" has no "{shard_key_field}" attribute'
                 )
 
-            k = item.k
+            k = getattr(item, shard_key_field)
             shard_id = self._wavenumber_keys[self._get_k_store_id(k)]
 
             work_refs.append(self._shards[shard_id].object_store.remote(item))
@@ -982,12 +985,13 @@ class ShardedPool:
                     f'Unable to dispatch object_store() for item of type "{cls_name}"'
                 )
 
-            if not hasattr(item, "k"):
+            shard_key_field = _shard_tables[cls_name]
+            if not hasattr(item, shard_key_field):
                 raise RuntimeError(
-                    f'Unable to determine shard, because object of type "{cls_name}" has no "k" attribute'
+                    f'Unable to determine shard, because object of type "{cls_name}" has no "{shard_key_field}" attribute'
                 )
 
-            k = item.k
+            k = getattr(item, shard_key_field)
             shard_id = self._wavenumber_keys[self._get_k_store_id(k)]
 
             work_refs.append(self._shards[shard_id].object_validate.remote(item))
@@ -1006,7 +1010,7 @@ class ShardedPool:
             return obj.k.store_id
 
         raise RuntimeError(
-            f'Could not determine shard index k for obejct of type "{type(obj)}"'
+            f'Could not determine shard index k for object of type "{type(obj)}"'
         )
 
     def _assign_shard_keys(self, obj):

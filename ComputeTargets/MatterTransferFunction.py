@@ -332,6 +332,7 @@ class MatterTransferFunctionIntegration(DatastoreObject):
                 f"Initial time z_init={z_init.z:.5g} is not sufficiently before horizon exit for k={k.k.k_inv_Mpc:.5g}/Mpc (z_exit={k.z_exit:.5g})"
             )
 
+        self._z_sample = z_sample
         if payload is None:
             DatastoreObject.__init__(self, None)
             self._compute_time = None
@@ -349,7 +350,6 @@ class MatterTransferFunctionIntegration(DatastoreObject):
 
             self._solver = None
 
-            self._z_sample = z_sample
             self._values = None
         else:
             DatastoreObject.__init__(self, payload["store_id"])
@@ -368,7 +368,6 @@ class MatterTransferFunctionIntegration(DatastoreObject):
 
             self._solver = payload["solver"]
 
-            self._z_sample = z_sample
             self._values = payload["values"]
 
         # check that all sample points are *later* than the specified initial redshift

@@ -1,7 +1,6 @@
 import time
 from traceback import print_tb
 
-from CosmologyConcepts import redshift_array
 from CosmologyModels import BaseCosmology
 
 
@@ -44,20 +43,6 @@ def check_cosmology(A, B):
 
     if A_cosmology.store_id != B_cosmology.store_id:
         raise RuntimeError("Cosmology store_ids are different")
-
-
-def check_zsample(A, B):
-    """
-    Check that the zsample grid used by object A matches the one used by object B
-    :param A:
-    :param B:
-    :return:
-    """
-    sample_A: redshift_array = A.z_sample
-    sample_B: redshift_array = B.z_sample
-
-    if sample_A != sample_B:
-        raise RuntimeError("Sample grids are not compatible")
 
 
 SECONDS_PER_MINUTE = 60

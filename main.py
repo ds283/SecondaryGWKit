@@ -263,18 +263,21 @@ Tk_queue = RayWorkPool(
 Tk_queue.run()
 Tks = Tk_queue.results
 
-tensor_source_grid = itertools.combinations_with_replacement(range(len(Tks)), 2)
+tensor_source_grid = list(itertools.combinations_with_replacement(range(len(Tks)), 2))
 
 
 def build_tensor_source_work(grid_idx):
     idx_i, idx_j = grid_idx
 
-    Tq = tensor_source_grid[idx_i]
-    Tr = tensor_source_grid[idx_j]
+    q = k_sample[idx_i]
+    Tq = Tks[idx_i]
+    Tr = Tks[idx_j]
 
+    # q is not used by the TensorSource constructor, but is accepted because it functions as the shard key
     return pool.object_get(
         TensorSource,
-        cosmology=LambdaCDM_Planck2018,
+        z_sample=z_sample,
+        q=q,
         Tq=Tq,
         Tr=Tr,
         tags=[

@@ -61,13 +61,14 @@ class RayWorkPool:
 
         self._pool = pool
 
+        # bake task_list into an explicit list (for example, so we can count how many items there are!)
         self._todo = [x for x in task_list]
 
         # we will pop items from the end of the list, so we need to reverse it to get the items
         # in the right order
         self._todo.reverse()
 
-        self._num_total_items = len(task_list)
+        self._num_total_items = len(self._todo)
 
         self._task_builder = task_builder
         self._compute_handler = compute_handler
@@ -98,14 +99,12 @@ class RayWorkPool:
         self._num_store_queue = 0
         self._num_available_queue = 0
         self._num_validation_queue = 0
-        self._num_post_queue = 0
 
         self._num_lookup_complete = 0
         self._num_compute_complete = 0
         self._num_store_complete = 0
         self._num_available_complete = 0
         self._num_validation_complete = 0
-        self._num_post_complete = 0
 
         self._batch = 0
 
@@ -189,11 +188,18 @@ class RayWorkPool:
                         if self._available_handler is not None:
                             available_task: ObjectRef = self._available_handler(obj)
 
-                            # add this task to the work qeue
+                            # add this task to the work queue
                             self._inflight[available_task.hex] = available_task
                             self._data[available_task.hex] = ("available", (idx, obj))
 
                             self._num_available_queue += 1
+
+                        # otherwise, this is the exit point for driver flow associated with this task, so apply the
+                        # postprocessing task, if one was supplied
+                        elif self._post_handler is not None:
+                            replacement_obj = self._post_handler(obj)
+                            if replacement_obj is not None and self._store_results:
+                                self.results[idx] = replacement_obj
 
                     else:
                         # check whether a compute handler exists
@@ -222,14 +228,12 @@ class RayWorkPool:
                     self._num_available_queue = max(self._num_available_queue - 1, 0)
                     self._num_available_complete += 1
 
+                    # this is the exit point for driver flow associated with this task, so apply the
+                    # postprocessing task, if one was supplied
                     if self._post_handler is not None:
-                        post_task: ObjectRef = self._post_handler(obj)
-
-                        # add this post-task to the work queue
-                        self._inflight[post_task.hex] = post_task
-                        self._data[post_task.hex] = ("post", payload)
-
-                        self._num_post_queue += 1
+                        replacement_obj = self._post_handler(obj)
+                        if replacement_obj is not None and self._store_results:
+                            self.results[idx] = replacement_obj
 
                 elif type == "compute":
                     # payload contains an index into the result set and (our local copy of) the object that has finished computation;
@@ -245,14 +249,14 @@ class RayWorkPool:
                     self._num_compute_queue = max(self._num_compute_queue - 1, 0)
                     self._num_compute_complete += 1
 
-                    if self._store_handler is not None:
-                        store_task: ObjectRef = self._store_handler(obj, self._pool)
+                    # is a compute handler was supplied, a store handler must have been also
+                    store_task: ObjectRef = self._store_handler(obj, self._pool)
 
-                        # add this store task to the work queue
-                        self._inflight[store_task.hex] = store_task
-                        self._data[store_task.hex] = ("store", payload)
+                    # add this store task to the work queue
+                    self._inflight[store_task.hex] = store_task
+                    self._data[store_task.hex] = ("store", payload)
 
-                        self._num_store_queue += 1
+                    self._num_store_queue += 1
 
                 elif type == "store":
                     # payload contains an index into the result set and (again, our local copy of) the object that has been freshly
@@ -292,6 +296,13 @@ class RayWorkPool:
 
                         self._num_validation_queue += 1
 
+                    # otherwise, this is the exit point for driver flow associated with this task, so apply the
+                    # postprocessing task, if one was supplied
+                    elif self._post_handler is not None:
+                        replacement_obj = self._post_handler(obj)
+                        if replacement_obj is not None and self._store_results:
+                            self.results[idx] = replacement_obj
+
                 elif type == "validate":
                     # payload contains an index into the result set and (still, our local copy of)
                     # the object that has been freshly validated
@@ -309,27 +320,12 @@ class RayWorkPool:
                     self._num_validation_queue = max(self._num_validation_queue - 1, 0)
                     self._num_validation_complete += 1
 
+                    # this is the exit point for driver flow associated with this task, so apply the
+                    # postprocessing task, if one was supplied
                     if self._post_handler is not None:
-                        post_task: ObjectRef = self._post_handler(obj)
-
-                        # add this post-task to the work queue
-                        self._inflight[post_task.hex] = post_task
-                        self._data[post_task.hex] = ("post", payload)
-
-                        self._num_post_queue += 1
-
-                elif type == "post":
-                    idx, obj = payload
-
-                    replacement_obj = ray.get(ref)
-                    if replacement_obj is not None and self._store_results:
-                        self.results[idx] = replacement_obj
-
-                    self._inflight.pop(ref.hex, None)
-                    self._data.pop(ref.hex, None)
-
-                    self._num_post_queue = max(self._num_post_queue - 1, 0)
-                    self._num_post_complete += 1
+                        replacement_obj = self._post_handler(obj)
+                        if replacement_obj is not None and self._store_results:
+                            self.results[idx] = replacement_obj
 
                 else:
                     raise RuntimeError(f'Unexpected work queue item type "{type}"')

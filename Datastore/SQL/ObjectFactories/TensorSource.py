@@ -75,7 +75,7 @@ class sqla_TensorSource_factory(SQLAFactoryBase):
     def register():
         return {
             "version": True,
-            "stepping": True,
+            "stepping": False,
             "timestamp": True,
             "validate_on_startup": True,
             "columns": [
@@ -106,6 +106,8 @@ class sqla_TensorSource_factory(SQLAFactoryBase):
 
     @staticmethod
     def build(payload, conn, table, inserter, tables, inserters):
+        z_sample: redshift_array = payload["z_sample"]
+
         label: Optional[str] = payload.get("label", None)
         tags: List[store_tag] = payload.get("tags", [])
 
@@ -126,7 +128,7 @@ class sqla_TensorSource_factory(SQLAFactoryBase):
             table.c.Tr_serial == Tr.store_id,
         )
 
-        # require that the integration we search for has the specified list of tags
+        # require that the tensor source calculation we search for has the specified list of tags
         count = 0
         for tag in tags:
             tag: store_tag
@@ -135,14 +137,16 @@ class sqla_TensorSource_factory(SQLAFactoryBase):
             query = query.join(
                 tab,
                 and_(
-                    tab.c.integration_serial == table.c.serial,
+                    tab.c.parent_serial == table.c.serial,
                     tab.c.tag_serial == tag.store_id,
                 ),
             )
 
         row_data = conn.execute(query).one_or_none()
         if row_data is None:
-            return TensorSource(payload=None, Tq=Tq, Tr=Tr, label=label, tags=tags)
+            return TensorSource(
+                payload=None, z_sample=z_sample, Tq=Tq, Tr=Tr, label=label, tags=tags
+            )
 
         store_id = row_data.serial
         store_label = row_data.label
@@ -196,6 +200,7 @@ class sqla_TensorSource_factory(SQLAFactoryBase):
                 "compute_time": compute_time,
                 "values": values,
             },
+            z_sample=imported_z_sample,
             Tq=Tq,
             Tr=Tr,
             label=store_label,
@@ -217,8 +222,8 @@ class sqla_TensorSource_factory(SQLAFactoryBase):
             conn,
             {
                 "label": obj.label,
-                "Tq_serial": obj.Tq_store_id,
-                "Tr_serial": obj.Tr_store_id,
+                "Tq_serial": obj.Tq.store_id,
+                "Tr_serial": obj.Tr.store_id,
                 "z_samples": len(obj.z_sample),
                 "compute_time": obj.compute_time,
                 "validated": False,
@@ -314,8 +319,8 @@ class sqla_TensorSource_factory(SQLAFactoryBase):
                     Tr_table.c.serial.label("Tr_serial"),
                 )
                 .select_from(
-                    table.join(Tq_table, Tq_table.c.store_id == table.c.Tq_serial).join(
-                        Tr_table, Tr_table.c.store_id == table.c.Tr_serial
+                    table.join(Tq_table, Tq_table.c.serial == table.c.Tq_serial).join(
+                        Tr_table, Tr_table.c.serial == table.c.Tr_serial
                     )
                 )
                 .filter(or_(table.c.validated == False, table.c.validated == None))

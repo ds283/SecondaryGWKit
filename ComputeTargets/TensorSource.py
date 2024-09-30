@@ -1,7 +1,6 @@
 from typing import Optional, List
 
 import ray
-from ray.types import ObjectRef
 
 from ComputeTargets import (
     MatterTransferFunctionIntegration,
@@ -11,7 +10,7 @@ from CosmologyConcepts import wavenumber, redshift_array, redshift
 from CosmologyModels import BaseCosmology
 from Datastore import DatastoreObject
 from MetadataConcepts import store_tag
-from utilities import check_cosmology, check_zsample, WallclockTimer
+from utilities import check_cosmology, WallclockTimer
 
 
 @ray.remote
@@ -21,7 +20,8 @@ def compute_tensor_source(
     Tq: MatterTransferFunctionIntegration,
     Tr: MatterTransferFunctionIntegration,
 ):
-    check_zsample(Tq, Tr)
+    Tq_zsample = Tq.z_sample
+    Tr_zsample = Tr.z_sample
 
     source_terms = []
     undiff_parts = []
@@ -31,17 +31,62 @@ def compute_tensor_source(
     analytic_undiff_parts = []
     analytic_diff_parts = []
 
+    q_idx = 0
+    r_idx = 0
+
     with WallclockTimer() as timer:
         for i in range(len(z_sample)):
-            Tq_: MatterTransferFunctionValue = Tq[i]
-            Tr_: MatterTransferFunctionValue = Tr[i]
+            missing_q = False
+            missing_r = False
 
-            Tq_value = Tq_.T
-            Tq_prime = Tq_.Tprime
-            Tr_value = Tr_.T
-            Tr_prime = Tr_.Tprime
+            z: redshift = z_sample[i]
+            Tq_z: redshift = Tq_zsample[q_idx]
+            Tr_z: redshift = Tr_zsample[r_idx]
 
-            z = z_sample[i]
+            if Tq_z.store_id != z.store_id:
+                if q_idx > 0:
+                    raise RuntimeError(
+                        f"z_sample[{i}].store_id = {z.store_id}, but this redshift is missing from Tq.z_sample. Current Tq.z_sample[{q_idx}].store_id = {Tq_z.store_id}"
+                    )
+                missing_q = True
+
+            if Tr_z.store_id != z.store_id:
+                if r_idx > 0:
+                    raise RuntimeError(
+                        f"z_sample[{i}].store_id = {z.store_id}, but this redshift is missing from Tr.z_sample. Current Tr.z_sample[{r_idx}].store_id = {Tr_z.store_id}"
+                    )
+                missing_r = True
+
+            if not missing_q:
+                Tq_: MatterTransferFunctionValue = Tq[q_idx]
+
+                Tq_value = Tq_.T
+                Tq_prime = Tq_.Tprime
+                analytic_Tq_value = Tq_.analytic_T
+                analytic_Tq_prime = Tq_.analytic_Tprime
+
+                q_idx += 1
+            else:
+                Tq_value = 1.0
+                Tq_prime = 0.0
+                analytic_Tq_value = 1.0
+                analytic_Tq_prime = 0.0
+
+            if not missing_r:
+                Tr_: MatterTransferFunctionValue = Tr[r_idx]
+
+                Tr_value = Tr_.T
+                Tr_prime = Tr_.Tprime
+                analytic_Tr_value = Tr_.analytic_T
+                analytic_Tr_prime = Tr_.analytic_Tprime
+
+                r_idx += 1
+            else:
+                Tr_value = 1.0
+                Tr_prime = 0.0
+                analytic_Tr_value = 1.0
+                analytic_Tr_prime = 0.0
+
             one_plus_z = 1.0 + z.z
             one_plus_z_2 = one_plus_z * one_plus_z
 
@@ -63,11 +108,6 @@ def compute_tensor_source(
                 )
             )
             source_term = undiff_part + diff_part
-
-            analytic_Tq_value = Tq_.analytic_T
-            analytic_Tq_prime = Tq_.analytic_Tprime
-            analytic_Tr_value = Tr_.analytic_T
-            analytic_Tr_prime = Tr_.analytic_Tprime
 
             if (
                 analytic_Tq_value is not None
@@ -124,44 +164,42 @@ class TensorSource(DatastoreObject):
     def __init__(
         self,
         payload,
-        Tq: ObjectRef,
-        Tr: ObjectRef,
+        z_sample: redshift_array,
+        Tq: MatterTransferFunctionIntegration,
+        Tr: MatterTransferFunctionIntegration,
         label: Optional[str] = None,
         tags: Optional[List[store_tag]] = None,
+        q: Optional[wavenumber] = None,
     ):
-        _Tq: MatterTransferFunctionIntegration = ray.get(Tq)
-        _Tr: MatterTransferFunctionIntegration = ray.get(Tr)
+        # q is not used, but needs to be accepted because it functions as the shard key;
+        # there is a .q attribute, but this is derived from the Tq MatterTransferFunctionIntegration object
 
+        # check compatibility of the ingredients we have been offered
         check_cosmology(Tq, Tr)
-        check_zsample(Tq, Tr)
 
         if not Tq.available:
             raise RuntimeError("Supplied Tq is not available")
         if not Tr.available:
             raise RuntimeError("Supplied Tr is not available")
 
+        self._z_sample = z_sample
         if payload is None:
             DatastoreObject.__init__(self, None)
             self._compute_time = None
 
-            self._z_sample = Tq.z_sample
             self._values = None
         else:
             DatastoreObject.__init__(self, payload["store_id"])
             self._compute_time = payload["compute_time"]
 
-            self._z_sample = Tq.z_sample
             self._values = payload["values"]
 
         # store parameters
         self._label = label
         self._tags = tags if tags is not None else []
 
-        self._Tq_handle = Tq
-        self._Tr_handle = Tr
-
-        self._Tq_store_id = _Tq.store_id
-        self._Tr_store_id = _Tr.store_id
+        self._Tq = Tq
+        self._Tr = Tr
 
         self._cosmology = Tq.cosmology
         self._q_exit = Tq._k_exit
@@ -174,12 +212,12 @@ class TensorSource(DatastoreObject):
         return self._cosmology
 
     @property
-    def Tq_store_id(self) -> MatterTransferFunctionIntegration:
-        return self._Tq_store_id
+    def Tq(self) -> MatterTransferFunctionIntegration:
+        return self._Tq
 
     @property
-    def Tr_store_id(self) -> MatterTransferFunctionIntegration:
-        return self._Tr_store_id
+    def Tr(self) -> MatterTransferFunctionIntegration:
+        return self._Tr
 
     @property
     def q(self) -> wavenumber:
@@ -221,17 +259,16 @@ class TensorSource(DatastoreObject):
         if label is not None:
             self._label = label
 
-        Tq: MatterTransferFunctionIntegration = ray.get(self._Tq_handle)
-        Tr: MatterTransferFunctionIntegration = ray.get(self._Tr_handle)
-
         self._compute_ref = compute_tensor_source.remote(
             self.cosmology,
             self.z_sample,
+            self._Tq,
+            self._Tr,
         )
         return self._compute_ref
 
     def store(self) -> Optional[bool]:
-        if self._compute_time is None:
+        if self._compute_ref is None:
             raise RuntimeError(
                 "TensorSource: store() called, but no compute() is in progress"
             )
@@ -247,7 +284,7 @@ class TensorSource(DatastoreObject):
         self._compute_ref = None
 
         self._compute_time = data["compute_time"]
-        source_term = data["source_sample"]
+        source_term = data["source_term"]
         undiff_part = data["undiff_part"]
         diff_part = data["diff_part"]
         analytic_source_term = data["analytic_source_term"]
