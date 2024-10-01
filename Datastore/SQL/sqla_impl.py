@@ -165,18 +165,22 @@ class ProfileAgent:
         self._profile_table.create(self._engine)
 
     def write_batch(self, batch):
-        with self._engine.begin() as conn:
-            for item in batch:
-                obj = conn.execute(
-                    sqla.insert(self._profile_table),
-                    {
-                        "job_serial": self._job_id,
-                        "method_name": item["method"],
-                        "start_time": item["start_time"],
-                        "elapsed": item["elapsed"],
-                        "metadata": item["metadata"],
-                    },
-                )
+        try:
+            with self._engine.begin() as conn:
+                for item in batch:
+                    obj = conn.execute(
+                        sqla.insert(self._profile_table),
+                        {
+                            "job_serial": self._job_id,
+                            "method": item["method"],
+                            "start_time": item["start_time"],
+                            "elapsed": item["elapsed"],
+                            "metadata": item["metadata"],
+                        },
+                    )
+        except SQLAlchemyError as e:
+            print(f"!! ProfileAgent: insert error, payload = {batch}")
+            raise e
 
 
 class TableSerialPool:
@@ -339,6 +343,9 @@ class ProfileBatcher:
 class ProfileBatchManager:
     def __init__(self, batcher, method: str, metadata: Optional[str] = None):
         self._batcher = batcher
+
+        if method is None:
+            raise RuntimeError("method cannot be None")
 
         self._method = method
         self._metadata = metadata
