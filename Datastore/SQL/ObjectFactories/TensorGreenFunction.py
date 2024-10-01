@@ -153,6 +153,7 @@ class sqla_TensorGreenFunctionIntegration_factory(SQLAFactoryBase):
                 sqla.Column("stop_efolds_subh", sqla.Float(64)),
                 sqla.Column("stop_G", sqla.Float(64)),
                 sqla.Column("stop_Gprime", sqla.Float(64)),
+                sqla.Column("stop_Gprime_over_G", sqla.Float(64)),
                 sqla.Column("validated", sqla.Boolean, default=False, nullable=False),
             ],
         }
@@ -419,6 +420,7 @@ class sqla_TensorGreenFunctionIntegration_factory(SQLAFactoryBase):
                 "stop_efolds_subh": obj.stop_efolds_subh,
                 "stop_G": obj.stop_G,
                 "stop_Gprime": obj.stop_Gprime,
+                "stop_Gprime_over_G": obj.stop_Gprime / obj.stop_G,
                 "validated": False,
             },
         )
