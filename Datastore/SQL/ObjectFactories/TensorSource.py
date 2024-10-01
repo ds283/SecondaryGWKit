@@ -90,8 +90,8 @@ class sqla_TensorSource_factory(SQLAFactoryBase):
                 sqla.Column(
                     "Tr_serial",
                     sqla.Integer,
-                    sqla.ForeignKey("TensorSource.serial"),
-                    index=True,
+                    # sqla.ForeignKey("TensorSource.serial"),
+                    # index=True,
                     nullable=False,
                 ),
                 sqla.Column(
