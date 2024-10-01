@@ -208,6 +208,64 @@ class ProfileAgent:
             raise e
 
 
+class ProfileBatcher:
+    def __init__(
+        self, profile_agent, source_label: str, batch_size: Optional[int] = 100
+    ):
+        self._profile_agent = profile_agent
+        self._source_label = source_label
+
+        self._batch_size = batch_size
+        self._batch = []
+
+    def write(self, method: str, start_time: datetime, elapsed: float, metadata: str):
+        if self._profile_agent is None:
+            return
+
+        self._batch.append(
+            {
+                "source": self._source_label,
+                "method": method,
+                "start_time": start_time,
+                "elapsed": elapsed,
+                "metadata": metadata,
+            }
+        )
+
+        if len(self._batch) > self._batch_size:
+            self._profile_agent.write_batch.remote(self._batch)
+            self._batch = []
+
+
+class ProfileBatchManager:
+    def __init__(self, batcher, method: str, metadata: Optional[str] = None):
+        self._batcher = batcher
+
+        if method is None:
+            raise RuntimeError("method cannot be None")
+
+        self._method = method
+        self._metadata = metadata
+
+        self._start_time = None
+        self._perf_timer_start = None
+
+    def __enter__(self):
+        self.start_time = datetime.now()
+        self.perf_timer_start = time.perf_counter()
+
+        return self
+
+    def __exit__(self, exc_type, exc_val, exc_tb):
+        elapsed = time.perf_counter() - self.perf_timer_start
+        self._batcher.write(
+            method=self._method,
+            start_time=self.start_time,
+            elapsed=elapsed,
+            metadata=self._metadata,
+        )
+
+
 class BrokerPool:
     def __init__(self, table_name: str, broker_name: str, max_serial: int = 0):
         # max_serial tracks the current pool high-water mark
@@ -237,23 +295,40 @@ class BrokerPool:
         # max will raise an exception if provided an empty iterable, so we should catch any error here
         return max(filtered_options)
 
-    def _allocate_lease(self) -> int:
-        # if any serial numbers have been recycled, re-lease one of those
-        if len(self.recycled) > 0:
-            leased_serial = self.recycled.pop()
-            self.leased.add(leased_serial)
-            return leased_serial
-
-        # otherwise, find the first free serial number, and lease that
-        # this is the first number that has not been leased or committed
-        inflight_max = self._current_inflight_max()
-        leased_serial = inflight_max + 1
-
-        self.leased.add(leased_serial)
-        return leased_serial
-
     def lease_serials(self, batch_size: int) -> Set[int]:
-        return set(self._allocate_lease() for _ in range(batch_size))
+        lease_set = set()
+        number_leased = 0
+
+        while number_leased < batch_size:
+            # if there are numbers to be recycled, first re-lease these
+
+            # len(self.recycled) should be O(1), so this does not scale with the number of serials in the recycling pool
+            while len(self.recycled) > 0 and number_leased < batch_size:
+                recyled_lease = self.recycled.pop()
+                lease_set.add(recyled_lease)
+                self.leased.add(recyled_lease)
+                number_leased += 1
+
+            if number_leased >= batch_size:
+                break
+
+            # otherwise, find the first free serial number, and lease that
+            # this is the first number that has not been leased or committed
+            inflight_max = self._current_inflight_max()
+            new_leases = set(
+                inflight_max + 1 + n for n in range(batch_size - number_leased)
+            )
+
+            lease_set.update(new_leases)
+            self.leased.update(new_leases)
+            number_leased += len(new_leases)
+
+        if len(lease_set) != batch_size:
+            raise RuntimeError(
+                f"BrokerPool: unexpected number of serial numbers allocated in lease (requested={batch_size}, allocated={len(lease_set)})"
+            )
+
+        return lease_set
 
     def release_serials(self, serials: Set[int]) -> bool:
         for serial in serials:
@@ -334,64 +409,6 @@ class SerialPoolBroker:
         return self._tables[table].commit_serials(serials)
 
 
-class ProfileBatcher:
-    def __init__(
-        self, profile_agent, source_label: str, batch_size: Optional[int] = 100
-    ):
-        self._profile_agent = profile_agent
-        self._source_label = source_label
-
-        self._batch_size = batch_size
-        self._batch = []
-
-    def write(self, method: str, start_time: datetime, elapsed: float, metadata: str):
-        if self._profile_agent is None:
-            return
-
-        self._batch.append(
-            {
-                "source": self._source_label,
-                "method": method,
-                "start_time": start_time,
-                "elapsed": elapsed,
-                "metadata": metadata,
-            }
-        )
-
-        if len(self._batch) > self._batch_size:
-            self._profile_agent.write_batch.remote(self._batch)
-            self._batch = []
-
-
-class ProfileBatchManager:
-    def __init__(self, batcher, method: str, metadata: Optional[str] = None):
-        self._batcher = batcher
-
-        if method is None:
-            raise RuntimeError("method cannot be None")
-
-        self._method = method
-        self._metadata = metadata
-
-        self._start_time = None
-        self._perf_timer_start = None
-
-    def __enter__(self):
-        self.start_time = datetime.now()
-        self.perf_timer_start = time.perf_counter()
-
-        return self
-
-    def __exit__(self, exc_type, exc_val, exc_tb):
-        elapsed = time.perf_counter() - self.perf_timer_start
-        self._batcher.write(
-            method=self._method,
-            start_time=self.start_time,
-            elapsed=elapsed,
-            metadata=self._metadata,
-        )
-
-
 class ClientPool:
     def __init__(
         self,
@@ -438,7 +455,7 @@ class ClientPool:
         self._leased.add(leased_serial)
         return leased_serial
 
-    def release_serial(self, serial) -> bool:
+    def release_serial(self, serial: int) -> bool:
         if serial not in self._leased:
             print(
                 f'!! ClientPool (table="{self._table}"): attempt to release serial #{serial} for table "{self._table}", but this has not been leased'
@@ -449,7 +466,7 @@ class ClientPool:
         self._pool.add(serial)
         return True
 
-    def commit_serial(self, serial) -> bool:
+    def commit_serial(self, serial: int) -> bool:
         if serial not in self._leased:
             print(
                 f'!! ClientPool (table="{self._table}"): attempt to commit serial #{serial} for table "{self._table}", but this has not been leased'
@@ -460,7 +477,7 @@ class ClientPool:
         self._committed.add(serial)
         return True
 
-    def release(self):
+    def release(self) -> None:
         with ProfileBatchManager(
             self._profiler, "ClientPool.release", self._table
         ) as mgr:
@@ -471,8 +488,13 @@ class ClientPool:
                 ]
             )
 
-            self._pool = set()
-            self._committed = set()
+        self._pool = set()
+        self._committed = set()
+
+
+# default interval at which to sync leased/committed serial numbers with the central broker
+# currently 3 minutes
+DEFAULT_SERIAL_SYNC_INTERVAL = 180
 
 
 class SerialPoolManager:
@@ -480,7 +502,7 @@ class SerialPoolManager:
         self,
         profiler: ProfileBatcher,
         broker: Optional[ActorHandle] = None,
-        default_sync_interval: int = 60,
+        default_sync_interval: int = DEFAULT_SERIAL_SYNC_INTERVAL,
     ):
         self._broker = broker
         self._profiler = profiler
@@ -567,9 +589,15 @@ class SerialLeaseManager:
 
     def commit(self):
         if self._release_on_exit is False:
+            print(
+                "!! SerialLeaseManage: API error, commit() called when no release on exit is required"
+            )
             return
 
         if self.serial is None:
+            print(
+                "!! SerialLeaseManage: API error, commit() called when no active serial number is being managed"
+            )
             self._release_on_exit = False
             return
 
@@ -940,7 +968,7 @@ class Datastore:
         with SerialLeaseManager(
             self._serial_manager,
             cls_name,
-            uses_serial and "serial" not in payload and cls_name != "version",
+            uses_serial and ("serial" not in payload) and (cls_name != "version"),
         ) as mgr:
             commit_serial = False
             if mgr.serial is not None:
@@ -956,6 +984,9 @@ class Datastore:
                     raise KeyError("Expected 'stepping' field in payload")
 
             obj = conn.execute(sqla.insert(table), payload)
+
+            if commit_serial:
+                mgr.commit()
 
             reported_serial = obj.lastrowid
 
@@ -973,9 +1004,6 @@ class Datastore:
                 raise RuntimeError(
                     f"Inserted store_id reported from database engine (={reported_serial}) does not agree with supplied store_id (={expected_serial}"
                 )
-
-            if commit_serial:
-                mgr.commit()
 
         if uses_serial:
             return reported_serial
