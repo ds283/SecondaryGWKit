@@ -94,33 +94,135 @@ _FactoryMappingType = Mapping[str, SQLAFactoryBase]
 _TableMappingType = Mapping[str, sqla.Table]
 _InserterMappingType = Mapping[str, Callable]
 
-_TableSerialMappingType = Mapping[str, int]
+
+class TableSerialPool:
+    def __init__(self, table_name: str, broker_name: str, max_serial: int = 1):
+        self.max_serial = max_serial
+
+        self.leased = set()
+        self.recycled = set()
+        self.committed = set()
+
+        self._table_name = table_name
+        self._broker_name = broker_name
+
+    def notify_largest_store_id(self, max_serial: int) -> bool:
+        if max_serial > self.max_serial:
+            self.max_serial = max_serial
+            return True
+
+        return False
+
+    def _current_inflight_max(self) -> int:
+        leased_max = max(self.leased, default=None)
+        committed_max = max(self.committed, default=None)
+
+        options = [self.max_serial, leased_max, committed_max]
+        filtered_options = [x for x in options if x is not None]
+
+        # max will raise an exception if provided an empty iterable, so we should catch any error here
+        return max(filtered_options)
+
+    def lease_serial(self) -> int:
+        # if any serial numbers have been recycled, re-lease one of those
+        if len(self.recycled) > 0:
+            leased_serial = self.recycled.pop()
+            self.leased.add(leased_serial)
+            return leased_serial
+
+        # otherwise, find the first free serial number, and lease that
+        # this is the first number that has not been leased or committed
+        inflight_max = self._current_inflight_max()
+        leased_serial = inflight_max + 1
+
+        self.leased.add(leased_serial)
+        return leased_serial
+
+    def release_serial(self, serial: int) -> bool:
+        if serial not in self.leased:
+            print(
+                f'TableSerialPool (broker={self._broker_name}): attempt to release serial #{serial} for table "{self._table_name}", but this has not been leased'
+            )
+            return False
+
+        self.leased.remove(serial)
+        self.recycled.add(serial)
+        return self._prune()
+
+    def commit_serial(self, serial: int) -> bool:
+        if serial not in self.leased:
+            print(
+                f'TableSerialPool (broker={self._broker_name}): attempt to commit serial #{serial} for table "{self._table_name}", but this has not been leased'
+            )
+            return False
+
+        self.leased.remove(serial)
+        self.committed.add(serial)
+        return self._prune()
+
+    def _prune(self) -> bool:
+        # if any element of 'committed' is above the current pool high water mark, move the high water mark up to compensate:
+        while self.max_serial + 1 in self.committed:
+            self.max_serial += 1
+            self.committed.remove(self.max_serial)
+
+        # if any element in 'recycled' is above the inflight high water mark (values in leased+committed), move it down
+        inflight_max = self._current_inflight_max()
+
+        self.recycled = set(x for x in self.recycled if x < inflight_max)
+        return True
+
+
+_TableSerialMappingType = Mapping[str, TableSerialPool]
 
 
 @ray.remote
 class StoreIdBroker:
-    def __init__(self):
+    def __init__(self, broker_name: str):
         self._tables: _TableSerialMappingType = {}
+        self._broker_name = broker_name
 
-    def notify_largest_store_ids(self, tables: _TableSerialMappingType):
+    def notify_largest_store_ids(self, tables: Mapping[str, int]) -> None:
         for table, max_serial in tables.items():
             if table not in self._tables:
-                self._tables[table] = 1
+                self._tables[table] = TableSerialPool(
+                    table, self._broker_name, max_serial
+                )
             else:
-                self._tables[table] = max(max_serial + 1, self._tables[table])
+                self._tables[table].notify_largest_store_id(max_serial)
 
-    def next_serial(self, table: str):
+    def lease_serial(self, table: str) -> int:
         if table in self._tables:
-            return self._tables[table]
+            return self._tables[table].lease_serial()
 
-        self._tables[table] = 1
-        return 1
+        self._tables[table] = TableSerialPool(table, self._broker_name, 1)
+        lease = self._tables[table].lease_serial()
+        # print(
+        #     f'>> StoreIdBroker (broker={self._broker_name}): leased serial number #{lease} for table "{table}"'
+        # )
+        return lease
 
-    def increment_serial(self, table: str):
+    def release_serial(self, table: str, serial: int) -> bool:
         if table not in self._tables:
-            raise RuntimeError("increment_serial() called on non-existent table")
+            raise RuntimeError(
+                f'release_serial() called on non-existent table "{table}"'
+            )
 
-        self._tables[table] += 1
+        # print(
+        #     f'>> StoreIdBroker (broker={self._broker_name}): released serial number #{serial} for table "{table}"'
+        # )
+        return self._tables[table].release_serial(serial)
+
+    def commit_serial(self, table: str, serial: int) -> bool:
+        if table not in self._tables:
+            raise RuntimeError(
+                f'commit_serial() called on non-existent table "{table}"'
+            )
+
+        # print(
+        #     f'>> StoreIdBroker (broker={self._broker_name}): committed serial number #{serial} for table "{table}"'
+        # )
+        return self._tables[table].commit_serial(serial)
 
 
 @ray.remote
@@ -482,6 +584,52 @@ class Datastore:
         return output_objects
 
     def _insert(self, schema, table, conn, payload):
+        class SerialLeaseManager:
+            def __init__(self, broker, obtain_lease: bool):
+                self.serial: Optional[int] = None
+                self._release_on_exit: bool = False
+
+                self._broker = broker
+                self._obtain_lease: bool = obtain_lease
+
+            def __enter__(self):
+                if self._obtain_lease and self._broker is not None:
+                    self.serial = ray.get(
+                        self._broker.lease_serial.remote(cls_name),
+                    )
+                    if self.serial is None:
+                        raise RuntimeError(
+                            "SerialLeaseManager: leased serial number is None"
+                        )
+                    self._release_on_exit = True
+
+                return self
+
+            def commit(self):
+                if self._release_on_exit is False:
+                    return
+
+                if self.serial is None:
+                    self._release_on_exit = False
+                    return
+
+                if self._broker is None:
+                    raise RuntimeError(
+                        "SerialLeaseManager: commit() called, but broker is None"
+                    )
+
+                ray.get(self._broker.commit_serial.remote(cls_name, self.serial))
+                self._release_on_exit = False
+
+            def __exit__(self, exc_type, exc_val, exc_tb):
+                if self._release_on_exit:
+                    if self._broker is None:
+                        raise RuntimeError(
+                            "SerialLeaseManager: releasing on exit, but broker is None"
+                        )
+
+                    ray.get(self._broker.release_serial.remote(cls_name, self.serial))
+
         if table is None:
             raise RuntimeError(f"Attempt to insert into null table (schema='{schema}')")
 
@@ -493,56 +641,52 @@ class Datastore:
         cls_name = schema["name"]
 
         # remove any "serial" field from the payload, if this table does not use serial numbers
-        increment_serial = False
         if not uses_serial:
             if "serial" in payload:
                 del payload["serial"]
 
-        else:
-            # if a serial number has already been provided, then assume we are running as a replica/shard and
-            # have been provided with a correct serial number. Otherwise, obtain one from the broker, if one is in use.
-            # Otherwise, assume the database engine will assign the next available serial
-            # We shouldn't do this with the "version", however, which has to be treated specially
-            if (
-                "serial" not in payload
-                and cls_name != "version"
-                and self._serial_broker is not None
-            ):
-                payload["serial"] = ray.get(
-                    self._serial_broker.next_serial.remote(cls_name),
+        # if a serial number has already been provided, then assume we are running as a replica/shard and
+        # have been provided with a correct serial number. Otherwise, obtain one from the broker, if one is in use.
+        # Otherwise, assume the database engine will assign the next available serial
+        # We shouldn't do this with the "version", however, which has to be treated specially
+        with SerialLeaseManager(
+            self._serial_broker,
+            uses_serial and "serial" not in payload and cls_name != "version",
+        ) as serial_manager:
+            commit_serial = False
+            if serial_manager.serial is not None:
+                payload["serial"] = serial_manager.serial
+                commit_serial = True
+
+            if uses_version:
+                payload = payload | {"version": self._version.store_id}
+            if uses_timestamp:
+                payload = payload | {"timestamp": datetime.now()}
+            if uses_stepping:
+                if "stepping" not in payload:
+                    raise KeyError("Expected 'stepping' field in payload")
+
+            obj = conn.execute(sqla.insert(table), payload)
+
+            reported_serial = obj.lastrowid
+
+            if reported_serial is None:
+                raise RuntimeError(
+                    f"Insert error when creating new entry for storable class '{cls_name}' (payload={payload})"
                 )
-                increment_serial = True
 
-        if uses_version:
-            payload = payload | {"version": self._version.store_id}
-        if uses_timestamp:
-            payload = payload | {"timestamp": datetime.now()}
-        if uses_stepping:
-            if "stepping" not in payload:
-                raise KeyError("Expected 'stepping' field in payload")
+            expected_serial = payload.get("serial", None)
+            if (
+                "serial" in payload
+                and expected_serial is not None
+                and reported_serial != expected_serial
+            ):
+                raise RuntimeError(
+                    f"Inserted store_id reported from database engine (={reported_serial}) does not agree with supplied store_id (={expected_serial}"
+                )
 
-        obj = conn.execute(sqla.insert(table), payload)
-
-        reported_serial = obj.lastrowid
-
-        if reported_serial is None:
-            raise RuntimeError(
-                f"Insert error when creating new entry for storable class '{cls_name}' (payload={payload})"
-            )
-
-        expected_serial = payload.get("serial", None)
-        if (
-            "serial" in payload
-            and expected_serial is not None
-            and reported_serial != expected_serial
-        ):
-            raise RuntimeError(
-                f"Inserted store_id reported from database engine (={reported_serial}) does not agree with supplied store_id (={expected_serial}"
-            )
-
-        # update serial number information held by the broker, if needed, and if one is in use
-        if increment_serial:
-            ray.get(self._serial_broker.increment_serial.remote(cls_name))
+            if commit_serial:
+                serial_manager.commit()
 
         if uses_serial:
             return reported_serial
@@ -666,7 +810,9 @@ class ShardedPool:
         self._shard_db_files = {}
         self._wavenumber_keys = {}
 
-        self._broker = StoreIdBroker.options(name="StoreIdBroker").remote()
+        self._broker = StoreIdBroker.options(name="StoreIdBroker").remote(
+            broker_name="StoreIdBroker"
+        )
 
         # if primary file is absent, all shard databases should be likewise absent
         if self._primary_file.is_dir():
