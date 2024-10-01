@@ -154,6 +154,11 @@ class ProfileAgent:
                 index=True,
                 nullable=False,
             ),
+            sqla.Column(
+                "source",
+                sqla.String(DEFAULT_STRING_LENGTH),
+                nullable=False,
+            ),
             sqla.Column("method", sqla.String(DEFAULT_STRING_LENGTH), nullable=False),
             sqla.Column("start_time", sqla.DateTime(), nullable=False),
             sqla.Column("elapsed", sqla.Float(64), nullable=False),
@@ -172,6 +177,7 @@ class ProfileAgent:
                         sqla.insert(self._profile_table),
                         {
                             "job_serial": self._job_id,
+                            "source": item["source"],
                             "method": item["method"],
                             "start_time": item["start_time"],
                             "elapsed": item["elapsed"],
@@ -316,8 +322,11 @@ class StoreIdBroker:
 
 
 class ProfileBatcher:
-    def __init__(self, profile_agent, batch_size: Optional[int] = 100):
+    def __init__(
+        self, profile_agent, source_label: str, batch_size: Optional[int] = 100
+    ):
         self._profile_agent = profile_agent
+        self._source_label = source_label
 
         self._batch_size = batch_size
         self._batch = []
@@ -328,6 +337,7 @@ class ProfileBatcher:
 
         self._batch.append(
             {
+                "source": self._source_label,
                 "method": method,
                 "start_time": start_time,
                 "elapsed": elapsed,
@@ -389,7 +399,9 @@ class Datastore:
         self._my_name = my_name
 
         self._serial_broker = serial_broker
-        self._profile_batcher = ProfileBatcher(profile_agent)
+
+        profile_label = my_name if my_name else "anonymous-Datastore"
+        self._profile_batcher = ProfileBatcher(profile_agent, profile_label)
 
         self._db_file = Path(db_name).resolve()
 
@@ -702,23 +714,27 @@ class Datastore:
 
     def _insert(self, schema, table, conn, payload):
         class SerialLeaseManager:
-            def __init__(self, broker, obtain_lease: bool):
+            def __init__(self, broker, profile_batcher, obtain_lease: bool):
                 self.serial: Optional[int] = None
                 self._release_on_exit: bool = False
 
                 self._broker = broker
+                self._profile_batcher = profile_batcher
                 self._obtain_lease: bool = obtain_lease
 
             def __enter__(self):
                 if self._obtain_lease and self._broker is not None:
-                    self.serial = ray.get(
-                        self._broker.lease_serial.remote(cls_name),
-                    )
-                    if self.serial is None:
-                        raise RuntimeError(
-                            "SerialLeaseManager: leased serial number is None"
+                    with ProfileBatchManager(
+                        self._profile_batcher, "SerialLeaseManager.lease", cls_name
+                    ) as mgr:
+                        self.serial = ray.get(
+                            self._broker.lease_serial.remote(cls_name),
                         )
-                    self._release_on_exit = True
+                        if self.serial is None:
+                            raise RuntimeError(
+                                "SerialLeaseManager: leased serial number is None"
+                            )
+                        self._release_on_exit = True
 
                 return self
 
@@ -735,7 +751,10 @@ class Datastore:
                         "SerialLeaseManager: commit() called, but broker is None"
                     )
 
-                ray.get(self._broker.commit_serial.remote(cls_name, self.serial))
+                with ProfileBatchManager(
+                    self._profile_batcher, "SerialLeaseManager.commit", cls_name
+                ) as mgr:
+                    ray.get(self._broker.commit_serial.remote(cls_name, self.serial))
                 self._release_on_exit = False
 
             def __exit__(self, exc_type, exc_val, exc_tb):
@@ -745,7 +764,12 @@ class Datastore:
                             "SerialLeaseManager: releasing on exit, but broker is None"
                         )
 
-                    ray.get(self._broker.release_serial.remote(cls_name, self.serial))
+                    with ProfileBatchManager(
+                        self._profile_batcher, "SerialLeaseManager.release", cls_name
+                    ) as mgr:
+                        ray.get(
+                            self._broker.release_serial.remote(cls_name, self.serial)
+                        )
 
         if table is None:
             raise RuntimeError(f"Attempt to insert into null table (schema='{schema}')")
@@ -768,6 +792,7 @@ class Datastore:
         # We shouldn't do this with the "version", however, which has to be treated specially
         with SerialLeaseManager(
             self._serial_broker,
+            self._profile_batcher,
             uses_serial and "serial" not in payload and cls_name != "version",
         ) as serial_manager:
             commit_serial = False
