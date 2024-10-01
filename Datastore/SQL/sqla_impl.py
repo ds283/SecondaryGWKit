@@ -97,6 +97,7 @@ _InserterMappingType = Mapping[str, Callable]
 
 class TableSerialPool:
     def __init__(self, table_name: str, broker_name: str, max_serial: int = 1):
+        # max_serial tracks the current pool high-water mark
         self.max_serial = max_serial
 
         self.leased = set()
@@ -161,12 +162,13 @@ class TableSerialPool:
         return self._prune()
 
     def _prune(self) -> bool:
-        # if any element of 'committed' is above the current pool high water mark, move the high water mark up to compensate:
+        # if any element of 'committed' is above the current pool high-water mark, move the high-water mark up to compensate:
         while self.max_serial + 1 in self.committed:
             self.max_serial += 1
             self.committed.remove(self.max_serial)
 
-        # if any element in 'recycled' is above the inflight high water mark (values in leased+committed), move it down
+        # if any elements in 'recycled' are above the inflight high-water mark (values in leased+committed), remove these elements
+        # (there is no need to keep track of them)
         inflight_max = self._current_inflight_max()
 
         self.recycled = set(x for x in self.recycled if x < inflight_max)
