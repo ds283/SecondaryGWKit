@@ -3,6 +3,7 @@ from typing import List, Optional
 import sqlalchemy as sqla
 from math import fabs
 from sqlalchemy import and_, or_
+from sqlalchemy.exc import MultipleResultsFound
 
 from ComputeTargets import (
     TensorGreenFunctionIntegration,
@@ -248,7 +249,13 @@ class sqla_TensorGreenFunctionIntegration_factory(SQLAFactoryBase):
                 ),
             )
 
-        row_data = conn.execute(query).one_or_none()
+        try:
+            row_data = conn.execute(query).one_or_none()
+        except MultipleResultsFound as e:
+            print(
+                f"!! Database error: multiple results found when querying for TensorGreenFunctionIntegration"
+            )
+            raise e
 
         if row_data is None:
             # build and return an unpopulated object
@@ -603,17 +610,23 @@ class sqla_TensorGreenFunctionValue_factory(SQLAFactoryBase):
         analytic_G = payload.get("analytic_G", None)
         analytic_Gprime = payload.get("analytic_Gprime", None)
 
-        row_data = conn.execute(
-            sqla.select(
-                table.c.serial,
-                table.c.G,
-                table.c.Gprime,
-                table.c.analytic_G,
-            ).filter(
-                table.c.integration_serial == integration_serial,
-                table.c.z_serial == z.store_id,
+        try:
+            row_data = conn.execute(
+                sqla.select(
+                    table.c.serial,
+                    table.c.G,
+                    table.c.Gprime,
+                    table.c.analytic_G,
+                ).filter(
+                    table.c.integration_serial == integration_serial,
+                    table.c.z_serial == z.store_id,
+                )
+            ).one_or_none()
+        except MultipleResultsFound as e:
+            print(
+                f"!! Database error: multiple results found when querying for TensorGreenFunctionValue"
             )
-        ).one_or_none()
+            raise e
 
         if row_data is None:
             store_id = inserter(

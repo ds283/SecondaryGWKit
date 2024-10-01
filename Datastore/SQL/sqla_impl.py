@@ -8,7 +8,7 @@ from typing import Union, Mapping, Callable, Optional
 import ray
 import sqlalchemy as sqla
 from ray.actor import ActorHandle
-from sqlalchemy.exc import IntegrityError
+from sqlalchemy.exc import IntegrityError, SQLAlchemyError
 
 from CosmologyConcepts import wavenumber, wavenumber_exit_time
 from Datastore.SQL.ObjectFactories.LambdaCDM import sqla_LambdaCDM_factory
@@ -392,19 +392,27 @@ class Datastore:
                 #     f'** Datastore.object_get() starting for scalar query of class "{cls_name}"'
                 # )
 
-            with self._engine.begin() as conn:
-                objects = [
-                    factory.build(
-                        payload=p,
-                        conn=conn,
-                        table=tab,
-                        inserter=inserter,
-                        tables=self._tables,
-                        inserters=self._inserters,
-                    )
-                    for p in payload_data
-                ]
-                conn.commit()
+            try:
+                with self._engine.begin() as conn:
+                    objects = [
+                        factory.build(
+                            payload=p,
+                            conn=conn,
+                            table=tab,
+                            inserter=inserter,
+                            tables=self._tables,
+                            inserters=self._inserters,
+                        )
+                        for p in payload_data
+                    ]
+                    conn.commit()
+            except SQLAlchemyError as e:
+                print(
+                    f"!! Database error in datastore build() [store={self._my_name}, physical store={self._db_file}]"
+                )
+                print(f"|  payload data = {payload_data}")
+                print(f"|  {e}")
+                raise e
 
         # if scalar:
         #     print(

@@ -4,6 +4,7 @@ from typing import List, Optional
 import sqlalchemy as sqla
 from math import fabs
 from sqlalchemy import and_
+from sqlalchemy.exc import MultipleResultsFound
 
 from ComputeTargets import (
     IntegrationSolver,
@@ -237,7 +238,13 @@ class sqla_MatterTransferFunctionIntegration_factory(SQLAFactoryBase):
                 ),
             )
 
-        row_data = conn.execute(query).one_or_none()
+        try:
+            row_data = conn.execute(query).one_or_none()
+        except MultipleResultsFound as e:
+            print(
+                f"!! Database error: multiple results found when querying for MatterTransferFunctionIntegration"
+            )
+            raise e
 
         if row_data is None:
             # build and return an unpopulated object
@@ -586,18 +593,24 @@ class sqla_MatterTransferFunctionValue_factory(SQLAFactoryBase):
         analytic_T = payload.get("analytic_T", None)
         analytic_Tprime = payload.get("analytic_Tprime", None)
 
-        row_data = conn.execute(
-            sqla.select(
-                table.c.serial,
-                table.c.T,
-                table.c.Tprime,
-                table.c.analytic_T,
-                table.c.analytic_Tprime,
-            ).filter(
-                table.c.integration_serial == integration_serial,
-                table.c.z_serial == z.store_id,
+        try:
+            row_data = conn.execute(
+                sqla.select(
+                    table.c.serial,
+                    table.c.T,
+                    table.c.Tprime,
+                    table.c.analytic_T,
+                    table.c.analytic_Tprime,
+                ).filter(
+                    table.c.integration_serial == integration_serial,
+                    table.c.z_serial == z.store_id,
+                )
+            ).one_or_none()
+        except MultipleResultsFound as e:
+            print(
+                f"!! Database error: multiple results found when querying for MatterTransferFunctionValue"
             )
-        ).one_or_none()
+            raise e
 
         if row_data is None:
             store_id = inserter(

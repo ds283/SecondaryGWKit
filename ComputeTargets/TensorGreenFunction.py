@@ -4,6 +4,7 @@ from typing import Optional, List
 import ray
 from math import fabs, pi, log, sqrt
 from scipy.integrate import solve_ivp
+from scipy.optimize import root_scalar
 from scipy.special import jv, yv
 
 from CosmologyConcepts import wavenumber, redshift, redshift_array, wavenumber_exit_time
@@ -22,6 +23,18 @@ from .integration_supervisor import (
     DEFAULT_UPDATE_INTERVAL,
     RHS_timer,
 )
+
+# RHS of ODE system
+#
+# State layout:
+#   state[0] = energy density rho(z)
+#   state[1] = a_0 tau [tau = conformal time]
+#   state[2] = G_k(z, z')
+#   state[3] = Gprime_k(z, z')
+RHO_INDEX = 0
+A0_TAU_INDEX = 1
+G_INDEX = 2
+GPRIME_INDEX = 3
 
 
 def compute_analytic_G(k, w, tau_source, tau, H_source):
@@ -201,6 +214,57 @@ def WKB_d_ln_omegaEffPrime_dz(cosmology: BaseCosmology, k: float, z: float):
     return numerator / denominator
 
 
+def search_G_minimum(sol, start_z: float, stop_z: float):
+    start_Gprime = sol(start_z)[GPRIME_INDEX]
+    last_Gprime = start_Gprime
+
+    stepsize = -(1e-3) * start_z
+    found_zero = False
+
+    last_z = start_z
+    current_z = start_z + stepsize
+    current_Gprime = None
+    while current_z > stop_z:
+        current_Gprime = sol(current_z)[GPRIME_INDEX]
+
+        # has there been a sign change since the last time we sampled Gprime?
+        if current_Gprime * last_Gprime < 0 and last_Gprime < 0:
+            found_zero = True
+            break
+
+        last_z = current_z
+
+        stepsize = -(1e-3) * current_z
+        current_z += stepsize
+        last_Gprime = current_Gprime
+
+    if not found_zero:
+        raise RuntimeError(
+            f"Did not find zero of Gprime in the search window (start_z={start_z:.5g}, stop_z={stop_z:.5g}), current_z={current_z:.5g}, start Gprime={start_Gprime:.5g}, last Gprime={last_Gprime:.5g}, current Gprime={current_Gprime:.5g}"
+        )
+
+    root = root_scalar(
+        lambda z: sol(z)[GPRIME_INDEX],
+        bracket=(last_z, current_z),
+        xtol=1e-6,
+        rtol=1e-4,
+    )
+
+    if not root.converged:
+        raise RuntimeError(
+            f'root_scalar() did not converge to a solution: z_bracket=({last_z:.5g}, {current_z:.5g}), iterations={root.iterations}, method={root.method}: "{root.flag}"'
+        )
+
+    root_z = root.root
+    sol_root = sol(root_z)
+
+    return {
+        "z": root_z,
+        "G": sol_root[G_INDEX],
+        "Gprime": sol_root[GPRIME_INDEX],
+    }
+
+
 @ray.remote
 def compute_tensor_Green(
     cosmology: BaseCosmology,
@@ -225,18 +289,6 @@ def compute_tensor_Green(
     z_subh_e5 = k.z_exit_subh_e5
 
     z_min = float(z_sample.min)
-
-    # RHS of ODE system
-    #
-    # State layout:
-    #   state[0] = energy density rho(z)
-    #   state[1] = a_0 tau [tau = conformal time]
-    #   state[2] = G_k(z, z')
-    #   state[3] = Gprime_k(z, z')
-    RHO_INDEX = 0
-    A0_TAU_INDEX = 1
-    G_INDEX = 2
-    GPRIME_INDEX = 3
 
     def RHS(z, state, supervisor) -> float:
         """
@@ -303,28 +355,18 @@ def compute_tensor_Green(
         initial_state = [rho_init, tau_init, 0.0, 1.0]
 
         if mode == "stop":
-
-            # phase_event is designed to record places where G has a local minimum (Gprime goes through zero from negative to positive values)
-            # however, we only want to trigger when we are at least 3 e-folds inside the horizon
-            def phase_event(z, state, supervisor):
-                if z > z_subh_e3:
-                    return 1.0
-
-                Gprime = state[GPRIME_INDEX]
-                return Gprime
-
-            # only trigger when Gprime crosses zero from negative to positive values
-            phase_event.direction = 1.0
-
+            # set up an event to terminate the integration when 5 e-folds inside the horizon
             def stop_event(z, state, supervisor):
                 return z - z_subh_e5
 
             # terminate integration when > 5 e-folds inside the horizon
             stop_event.terminal = True
 
-            events = [phase_event, stop_event]
+            events = [stop_event]
+            dense_output = True
         else:
             events = None
+            dense_output = False
 
         sol = solve_ivp(
             RHS,
@@ -333,6 +375,7 @@ def compute_tensor_Green(
             y0=initial_state,
             t_eval=z_sample.as_list(),
             events=events,
+            dense_output=dense_output,
             atol=atol,
             rtol=rtol,
             args=(supervisor,),
@@ -363,41 +406,11 @@ def compute_tensor_Green(
     stop_G = None
     stop_Gprime = None
 
-    DEFAULT_PHASE_MINIMUM_TOLERANCE = 1e-2
     if mode == "stop":
-        t_events = sol.t_events
-        y_events = sol.y_events
-
-        t_minima = t_events[0]
-        y_minima = y_events[0]
-
-        found_minimum = False
-        tested_minima = 0
-        smallest_abs_Gprime = None
-        first_event = t_minima[0] if len(t_minima) > 0 else None
-        smallest_event = None
-
-        for i in range(len(t_events)):
-            tested_minima += 1
-
-            Gprime = y_minima[i][GPRIME_INDEX]
-            abs_Gprime = fabs(Gprime)
-            if smallest_abs_Gprime is None or abs_Gprime < smallest_abs_Gprime:
-                smallest_abs_Gprime = abs_Gprime
-                smallest_event = t_minima[i]
-            if abs_Gprime > DEFAULT_PHASE_MINIMUM_TOLERANCE:
-                continue
-
-            stop_efolds_subh = t_minima[i]
-            stop_G = y_minima[i][G_INDEX]
-            stop_Gprime = Gprime  # could set to exactly zero, but probably more accurate to use the computed value
-            found_minimum = True
-            break
-
-        if not found_minimum:
-            raise RuntimeError(
-                f'compute_tensor_Green: working in "stop" mode, but could not find a local minimum of G in the search window (tested {tested_minima} candidates, smallest |Gprime|={smallest_abs_Gprime:.5g} @ z={smallest_event:.5g} | first event @ z={first_event:.5g}, window start @ z={z_subh_e3:.5g}, stop @ z={z_subh_e5:.5g})'
-            )
+        payload = search_G_minimum(sol.sol, start_z=z_subh_e3, stop_z=z_subh_e5)
+        stop_efolds_subh = payload["z"]
+        stop_G = payload["G"]
+        stop_Gprime = payload["Gprime"]
 
     # validate that the samples of the solution correspond to the z-sample points that we specified.
     # This really should be true, but there is no harm in being defensive.

@@ -3,6 +3,7 @@ from typing import Optional, List
 import sqlalchemy as sqla
 from math import fabs
 from sqlalchemy import and_, or_
+from sqlalchemy.exc import MultipleResultsFound
 
 from ComputeTargets import MatterTransferFunctionIntegration
 from ComputeTargets.TensorSource import TensorSource, TensorSourceValue
@@ -142,7 +143,14 @@ class sqla_TensorSource_factory(SQLAFactoryBase):
                 ),
             )
 
-        row_data = conn.execute(query).one_or_none()
+        try:
+            row_data = conn.execute(query).one_or_none()
+        except MultipleResultsFound as e:
+            print(
+                f"!! Database error: multiple results found when querying for TensorSource (Tq_id={Tq.store_id}, Tr_id={Tr.store_id})"
+            )
+            raise e
+
         if row_data is None:
             return TensorSource(
                 payload=None, z_sample=z_sample, Tq=Tq, Tr=Tr, label=label, tags=tags
@@ -233,7 +241,7 @@ class sqla_TensorSource_factory(SQLAFactoryBase):
                 "label": obj.label,
                 "Tq_serial": obj.Tq.store_id,
                 "Tr_serial": obj.Tr.store_id,
-                "z_samples": len(obj.z_sample),
+                "z_samples": len(obj.values),
                 "compute_time": obj.compute_time,
                 "validated": False,
             },
@@ -404,20 +412,26 @@ class sqla_TensorSourceValue_factory(SQLAFactoryBase):
         analytic_undiff_part = payload.get("analytic_undiff_part", None)
         analytic_diff_part = payload.get("analytic_diff_part", None)
 
-        row_data = conn.execute(
-            sqla.select(
-                table.c.serial,
-                table.c.source_term,
-                table.c.undiff_part,
-                table.c.diff_part,
-                table.c.analytic_source_term,
-                table.c.analytic_undiff_part,
-                table.c.analytic_diff_part,
-            ).filter(
-                table.c.parent_serial == parent_serial,
-                table.c.z_serial == z.store_id,
+        try:
+            row_data = conn.execute(
+                sqla.select(
+                    table.c.serial,
+                    table.c.source_term,
+                    table.c.undiff_part,
+                    table.c.diff_part,
+                    table.c.analytic_source_term,
+                    table.c.analytic_undiff_part,
+                    table.c.analytic_diff_part,
+                ).filter(
+                    table.c.parent_serial == parent_serial,
+                    table.c.z_serial == z.store_id,
+                )
+            ).one_or_none()
+        except MultipleResultsFound as e:
+            print(
+                f"!! Database error: multiple results found when querying for TensorSourceValue"
             )
-        ).one_or_none()
+            raise e
 
         if row_data is None:
             store_id = inserter(

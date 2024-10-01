@@ -1,4 +1,5 @@
 import sqlalchemy as sqla
+from sqlalchemy.exc import MultipleResultsFound
 
 from CosmologyConcepts import wavenumber, wavenumber_exit_time
 from Datastore.SQL.ObjectFactories.base import SQLAFactoryBase
@@ -132,40 +133,46 @@ class sqla_wavenumber_exit_time_factory(SQLAFactoryBase):
         atol_table = tables["tolerance"].alias("atol")
         rtol_table = tables["tolerance"].alias("rtol")
 
-        row_data = conn.execute(
-            sqla.select(
-                table.c.serial,
-                table.c.stepping,
-                table.c.atol_serial,
-                table.c.rtol_serial,
-                table.c.compute_time,
-                atol_table.c.log10_tol.label("log10_atol"),
-                rtol_table.c.log10_tol.label("log10_rtol"),
-                table.c.z_exit,
-                table.c.z_exit_suph_e3,
-                table.c.z_exit_suph_e5,
-                table.c.z_exit_subh_e3,
-                table.c.z_exit_subh_e5,
-            )
-            .select_from(
-                table.join(atol_table, atol_table.c.serial == table.c.atol_serial).join(
-                    rtol_table, rtol_table.c.serial == table.c.rtol_serial
+        try:
+            row_data = conn.execute(
+                sqla.select(
+                    table.c.serial,
+                    table.c.stepping,
+                    table.c.atol_serial,
+                    table.c.rtol_serial,
+                    table.c.compute_time,
+                    atol_table.c.log10_tol.label("log10_atol"),
+                    rtol_table.c.log10_tol.label("log10_rtol"),
+                    table.c.z_exit,
+                    table.c.z_exit_suph_e3,
+                    table.c.z_exit_suph_e5,
+                    table.c.z_exit_subh_e3,
+                    table.c.z_exit_subh_e5,
                 )
-            )
-            .filter(
-                sqla.and_(
-                    table.c.wavenumber_serial == k.store_id,
-                    table.c.cosmology_type == cosmology.type_id,
-                    table.c.cosmology_serial == cosmology.store_id,
-                    atol_table.c.log10_tol - target_atol.log10_tol
-                    <= DEFAULT_FLOAT_PRECISION,
-                    rtol_table.c.log10_tol - target_rtol.log10_tol
-                    <= DEFAULT_FLOAT_PRECISION,
-                    table.c.stepping >= target_stepping,
+                .select_from(
+                    table.join(
+                        atol_table, atol_table.c.serial == table.c.atol_serial
+                    ).join(rtol_table, rtol_table.c.serial == table.c.rtol_serial)
                 )
+                .filter(
+                    sqla.and_(
+                        table.c.wavenumber_serial == k.store_id,
+                        table.c.cosmology_type == cosmology.type_id,
+                        table.c.cosmology_serial == cosmology.store_id,
+                        atol_table.c.log10_tol - target_atol.log10_tol
+                        <= DEFAULT_FLOAT_PRECISION,
+                        rtol_table.c.log10_tol - target_rtol.log10_tol
+                        <= DEFAULT_FLOAT_PRECISION,
+                        table.c.stepping >= target_stepping,
+                    )
+                )
+                .order_by(atol_table.c.log10_tol.desc(), rtol_table.c.log10_tol.desc())
+            ).one_or_none()
+        except MultipleResultsFound as e:
+            print(
+                f"!! Database error: multiple results found when querying for wavenumber_exit_time"
             )
-            .order_by(atol_table.c.log10_tol.desc(), rtol_table.c.log10_tol.desc())
-        ).one_or_none()
+            raise e
 
         if row_data is None:
             # build and return an unpopulated object
