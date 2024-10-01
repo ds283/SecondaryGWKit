@@ -4,7 +4,7 @@ import time
 from datetime import datetime
 from os import PathLike
 from pathlib import Path
-from typing import Union, Mapping, Callable, Optional
+from typing import Union, Mapping, Callable, Optional, Set
 
 import ray
 import sqlalchemy as sqla
@@ -189,7 +189,7 @@ class ProfileAgent:
             raise e
 
 
-class TableSerialPool:
+class BrokerSerialPool:
     def __init__(self, table_name: str, broker_name: str, max_serial: int = 0):
         # max_serial tracks the current pool high-water mark
         self.max_serial = max_serial
@@ -218,7 +218,7 @@ class TableSerialPool:
         # max will raise an exception if provided an empty iterable, so we should catch any error here
         return max(filtered_options)
 
-    def lease_serial(self) -> int:
+    def _allocate_lease(self) -> int:
         # if any serial numbers have been recycled, re-lease one of those
         if len(self.recycled) > 0:
             leased_serial = self.recycled.pop()
@@ -233,26 +233,33 @@ class TableSerialPool:
         self.leased.add(leased_serial)
         return leased_serial
 
-    def release_serial(self, serial: int) -> bool:
-        if serial not in self.leased:
-            print(
-                f'TableSerialPool (broker={self._broker_name}): attempt to release serial #{serial} for table "{self._table_name}", but this has not been leased'
-            )
-            return False
+    def lease_serials(self, batch_size: int) -> Set[int]:
+        return set(self._allocate_lease() for _ in range(batch_size))
 
-        self.leased.remove(serial)
-        self.recycled.add(serial)
+    def release_serials(self, serials: Set[int]) -> bool:
+        for serial in serials:
+            if serial not in self.leased:
+                print(
+                    f'BrokerSerialPool (broker={self._broker_name}): attempt to release serial #{serial} for table "{self._table_name}", but this has not been leased'
+                )
+                return False
+
+            self.leased.remove(serial)
+            self.recycled.add(serial)
+
         return self._prune()
 
-    def commit_serial(self, serial: int) -> bool:
-        if serial not in self.leased:
-            print(
-                f'TableSerialPool (broker={self._broker_name}): attempt to commit serial #{serial} for table "{self._table_name}", but this has not been leased'
-            )
-            return False
+    def commit_serials(self, serials: Set[int]) -> bool:
+        for serial in serials:
+            if serial not in self.leased:
+                print(
+                    f'BrokerSerialPool (broker={self._broker_name}): attempt to commit serial #{serial} for table "{self._table_name}", but this has not been leased'
+                )
+                return False
 
-        self.leased.remove(serial)
-        self.committed.add(serial)
+            self.leased.remove(serial)
+            self.committed.add(serial)
+
         return self._prune()
 
     def _prune(self) -> bool:
@@ -269,56 +276,43 @@ class TableSerialPool:
         return True
 
 
-_TableSerialMappingType = Mapping[str, TableSerialPool]
+_TableSerialMappingType = Mapping[str, BrokerSerialPool]
 
 
 @ray.remote
-class StoreIdBroker:
-    def __init__(self, broker_name: str):
+class SerialPoolBroker:
+    def __init__(self, name: str):
         self._tables: _TableSerialMappingType = {}
-        self._broker_name = broker_name
+        self._my_name = name
 
     def notify_largest_store_ids(self, tables: Mapping[str, int]) -> None:
         for table, max_serial in tables.items():
             if table not in self._tables:
-                self._tables[table] = TableSerialPool(
-                    table, self._broker_name, max_serial
-                )
+                self._tables[table] = BrokerSerialPool(table, self._my_name, max_serial)
             else:
                 self._tables[table].notify_largest_store_id(max_serial)
 
-    def lease_serial(self, table: str) -> int:
+    def lease_serials(self, table: str, batch_size: int) -> Set[int]:
         if table in self._tables:
-            return self._tables[table].lease_serial()
+            return self._tables[table].lease_serials(batch_size)
 
-        self._tables[table] = TableSerialPool(table, self._broker_name)
-        lease = self._tables[table].lease_serial()
-        # print(
-        #     f'>> StoreIdBroker (broker={self._broker_name}): leased serial number #{lease} for table "{table}"'
-        # )
-        return lease
+        self._tables[table] = BrokerSerialPool(table, self._my_name)
+        return self._tables[table].lease_serials(batch_size)
 
-    def release_serial(self, table: str, serial: int) -> bool:
+    def release_serials(self, table: str, serials: Set[int]) -> bool:
         if table not in self._tables:
             raise RuntimeError(
-                f'release_serial() called on non-existent table "{table}"'
+                f'SerialPoolBroker: release_serials() called on non-existent table "{table}"'
             )
 
-        # print(
-        #     f'>> StoreIdBroker (broker={self._broker_name}): released serial number #{serial} for table "{table}"'
-        # )
-        return self._tables[table].release_serial(serial)
+        return self._tables[table].release_serials(serials)
 
-    def commit_serial(self, table: str, serial: int) -> bool:
+    def commit_serials(self, table: str, serials: Set[int]) -> bool:
         if table not in self._tables:
             raise RuntimeError(
-                f'commit_serial() called on non-existent table "{table}"'
+                f'SerialPoolBroker: commit_serials() called on non-existent table "{table}"'
             )
-
-        # print(
-        #     f'>> StoreIdBroker (broker={self._broker_name}): committed serial number #{serial} for table "{table}"'
-        # )
-        return self._tables[table].commit_serial(serial)
+        return self._tables[table].commit_serials(serials)
 
 
 class ProfileBatcher:
@@ -379,6 +373,185 @@ class ProfileBatchManager:
         )
 
 
+class ClientSerialPool:
+    def __init__(
+        self,
+        table: str,
+        profiler: ProfileBatcher,
+        broker: Optional[ActorHandle] = None,
+        default_batch_size: int = 500,
+    ):
+        self._table = table
+        self._broker = broker
+        self._profiler = (profiler,)
+        self._batch_size = default_batch_size
+
+        self._pool = set()
+        self._leased = set()
+        self._committed = set()
+
+    def lease_serial(self) -> int:
+        if len(self._pool) == 0:
+            if len(self._committed) > 0:
+                with ProfileBatchManager(
+                    self._profiler,
+                    "ClientSerialPool.lease_serial|commit_serials",
+                    self._table,
+                ) as mgr:
+                    ray.get(
+                        self._broker.commit_serials.remote(self._table, self._committed)
+                    )
+                    self._committed = set()
+
+            with ProfileBatchManager(
+                self._profiler,
+                "ClientSerialPool.lease_serial|lease_serials",
+                self._table,
+            ) as mgr:
+                self._pool = ray.get(
+                    self._broker.lease_serials.remote(self._table, self._batch_size)
+                )
+
+        leased_serial = self._pool.pop()
+        self._leased.add(leased_serial)
+        return leased_serial
+
+    def release_serial(self, serial) -> bool:
+        if serial not in self._leased:
+            print(
+                f'!! ClientSerialPool (table="{self._table}"): attempt to release serial #{serial} for table "{self._table}", but this has not been leased'
+            )
+            return False
+
+        self._leased.remove(serial)
+        self._pool.add(serial)
+        return True
+
+    def commit_serial(self, serial) -> bool:
+        if serial not in self._leased:
+            print(
+                f'!! ClientSerialPool (table="{self._table}"): attempt to commit serial #{serial} for table "{self._table}", but this has not been leased'
+            )
+            return False
+
+        self._leased.remove(serial)
+        self._committed.add(serial)
+        return True
+
+    def release(self):
+        with ProfileBatchManager(
+            self._profiler, "ClientSerialPool.release", self._table
+        ) as mgr:
+            ray.get(
+                [
+                    self._broker.commit_serials.remote(self._table, self._committed),
+                    self._broker.release_serials.remote(self._table, self._pool),
+                ]
+            )
+
+            self._pool = set()
+            self._committed = set()
+
+
+class SerialPoolManager:
+    def __init__(
+        self,
+        profiler: ProfileBatcher,
+        broker: Optional[ActorHandle] = None,
+        default_sync_interval: int = 60,
+    ):
+        self._broker = broker
+        self._profiler = profiler
+
+        self._tables = {}
+
+        self._sync_interval = default_sync_interval
+        self._last_sync = time.time()
+
+    def lease_serial(self, table: str) -> Optional[int]:
+        if self._broker is None:
+            return None
+
+        if table not in self._tables:
+            self._tables[table] = ClientSerialPool(table, self._profiler, self._broker)
+
+        serial = self._tables[table].lease_serial()
+        self._check_sync()
+        return serial
+
+    def release_serial(self, table: str, serial: Optional[int]) -> bool:
+        if self._broker is None:
+            return True
+
+        if table not in self._tables:
+            raise RuntimeError(
+                f'SerialPoolManager: release_serial() called on non-existent table "{table}"'
+            )
+
+        outcome = self._tables[table].release_serial(serial)
+        self._check_sync()
+        return outcome
+
+    def commit_serial(self, table: str, serial: Optional[int]) -> bool:
+        if self._broker is None:
+            return True
+
+        if table not in self._tables:
+            raise RuntimeError(
+                f'SerialPoolManager: commit_serial() called on non-existent table "{table}"'
+            )
+
+        outcome = self._tables[table].commit_serial(serial)
+        self._check_sync()
+        return outcome
+
+    def _check_sync(self):
+        current_time = time.time()
+        if current_time - self._last_sync > self._sync_interval:
+            for pool in self._tables.values():
+                pool.release()
+
+        self._last_sync = current_time
+
+
+class SerialLeaseManager:
+    def __init__(self, manager: SerialPoolManager, table: str, obtain_lease: bool):
+        self._manager = manager
+        self._table = table
+
+        self.serial: Optional[int] = None
+
+        self._release_on_exit: bool = False
+        self._obtain_lease: bool = obtain_lease
+
+    def __enter__(self):
+        if self._obtain_lease:
+            self.serial = self._manager.lease_serial(self._table)
+
+            if self.serial is None:
+                raise RuntimeError(
+                    f'SerialLeaseManager (table="{self._table}"): leased serial number is None'
+                )
+            self._release_on_exit = True
+
+        return self
+
+    def commit(self):
+        if self._release_on_exit is False:
+            return
+
+        if self.serial is None:
+            self._release_on_exit = False
+            return
+
+        self._manager.commit_serial(self._table, self.serial)
+        self._release_on_exit = False
+
+    def __exit__(self, exc_type, exc_val, exc_tb):
+        if self._release_on_exit:
+            self._manager.release_serial(self._table, self.serial)
+
+
 @ray.remote
 class Datastore:
     def __init__(
@@ -398,10 +571,13 @@ class Datastore:
         self._timeout = timeout
         self._my_name = my_name
 
-        self._serial_broker = serial_broker
-
         profile_label = my_name if my_name else "anonymous-Datastore"
         self._profile_batcher = ProfileBatcher(profile_agent, profile_label)
+
+        self._serial_broker = serial_broker
+        self._serial_manager = SerialPoolManager(
+            profiler=self._profile_batcher, broker=self._serial_broker
+        )
 
         self._db_file = Path(db_name).resolve()
 
@@ -713,64 +889,6 @@ class Datastore:
         return output_objects
 
     def _insert(self, schema, table, conn, payload):
-        class SerialLeaseManager:
-            def __init__(self, broker, profile_batcher, obtain_lease: bool):
-                self.serial: Optional[int] = None
-                self._release_on_exit: bool = False
-
-                self._broker = broker
-                self._profile_batcher = profile_batcher
-                self._obtain_lease: bool = obtain_lease
-
-            def __enter__(self):
-                if self._obtain_lease and self._broker is not None:
-                    with ProfileBatchManager(
-                        self._profile_batcher, "SerialLeaseManager.lease", cls_name
-                    ) as mgr:
-                        self.serial = ray.get(
-                            self._broker.lease_serial.remote(cls_name),
-                        )
-                        if self.serial is None:
-                            raise RuntimeError(
-                                "SerialLeaseManager: leased serial number is None"
-                            )
-                        self._release_on_exit = True
-
-                return self
-
-            def commit(self):
-                if self._release_on_exit is False:
-                    return
-
-                if self.serial is None:
-                    self._release_on_exit = False
-                    return
-
-                if self._broker is None:
-                    raise RuntimeError(
-                        "SerialLeaseManager: commit() called, but broker is None"
-                    )
-
-                with ProfileBatchManager(
-                    self._profile_batcher, "SerialLeaseManager.commit", cls_name
-                ) as mgr:
-                    ray.get(self._broker.commit_serial.remote(cls_name, self.serial))
-                self._release_on_exit = False
-
-            def __exit__(self, exc_type, exc_val, exc_tb):
-                if self._release_on_exit:
-                    if self._broker is None:
-                        raise RuntimeError(
-                            "SerialLeaseManager: releasing on exit, but broker is None"
-                        )
-
-                    with ProfileBatchManager(
-                        self._profile_batcher, "SerialLeaseManager.release", cls_name
-                    ) as mgr:
-                        ray.get(
-                            self._broker.release_serial.remote(cls_name, self.serial)
-                        )
-
         if table is None:
             raise RuntimeError(f"Attempt to insert into null table (schema='{schema}')")
 
@@ -791,13 +909,13 @@ class Datastore:
         # Otherwise, assume the database engine will assign the next available serial
         # We shouldn't do this with the "version", however, which has to be treated specially
         with SerialLeaseManager(
-            self._serial_broker,
-            self._profile_batcher,
+            self._serial_manager,
+            cls_name,
             uses_serial and "serial" not in payload and cls_name != "version",
-        ) as serial_manager:
+        ) as mgr:
             commit_serial = False
-            if serial_manager.serial is not None:
-                payload["serial"] = serial_manager.serial
+            if mgr.serial is not None:
+                payload["serial"] = mgr.serial
                 commit_serial = True
 
             if uses_version:
@@ -828,7 +946,7 @@ class Datastore:
                 )
 
             if commit_serial:
-                serial_manager.commit()
+                mgr.commit()
 
         if uses_serial:
             return reported_serial
@@ -963,8 +1081,8 @@ class ShardedPool:
         self._shard_db_files = {}
         self._wavenumber_keys = {}
 
-        self._broker = StoreIdBroker.options(name="StoreIdBroker").remote(
-            broker_name="StoreIdBroker"
+        self._broker = SerialPoolBroker.options(name="SerialPoolBroker").remote(
+            name="SerialPoolBroker"
         )
 
         if profile_db is not None:
