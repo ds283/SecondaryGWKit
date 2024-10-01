@@ -36,6 +36,7 @@ DEFAULT_ZEND = 0.1
 parser = argparse.ArgumentParser()
 parser.add_argument(
     "--database",
+    type=str,
     default=None,
     help="read/write work items using the specified database cache",
 )
@@ -55,6 +56,12 @@ parser.add_argument(
     type=int,
     default=DEFAULT_TIMEOUT,
     help="specify connection timeout for database layer",
+)
+parser.add_argument(
+    "--profile-db",
+    type=str,
+    default=None,
+    help="write profiling and performance data to the specified database",
 )
 parser.add_argument(
     "--samples-log10z",
@@ -92,6 +99,7 @@ pool: ShardedPool = ShardedPool(
     db_name=args.database,
     timeout=args.db_timeout,
     shards=args.shards,
+    profile_db=args.profile_db,
 )
 
 # set up LambdaCDM object representing a basic Planck2018 cosmology in Mpc units
