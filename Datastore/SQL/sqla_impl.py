@@ -383,7 +383,7 @@ class ClientSerialPool:
     ):
         self._table = table
         self._broker = broker
-        self._profiler = (profiler,)
+        self._profiler = profiler
         self._batch_size = default_batch_size
 
         self._pool = set()
