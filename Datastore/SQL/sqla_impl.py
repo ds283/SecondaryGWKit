@@ -184,7 +184,7 @@ class ProfileAgent:
 
 
 class TableSerialPool:
-    def __init__(self, table_name: str, broker_name: str, max_serial: int = 1):
+    def __init__(self, table_name: str, broker_name: str, max_serial: int = 0):
         # max_serial tracks the current pool high-water mark
         self.max_serial = max_serial
 
@@ -285,7 +285,7 @@ class StoreIdBroker:
         if table in self._tables:
             return self._tables[table].lease_serial()
 
-        self._tables[table] = TableSerialPool(table, self._broker_name, 1)
+        self._tables[table] = TableSerialPool(table, self._broker_name)
         lease = self._tables[table].lease_serial()
         # print(
         #     f'>> StoreIdBroker (broker={self._broker_name}): leased serial number #{lease} for table "{table}"'
