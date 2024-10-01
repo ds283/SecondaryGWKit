@@ -90,6 +90,25 @@ _shard_tables = {
     "TensorSourceValue": "q",
 }
 
+_default_serial_batch_size = {
+    "store_tag": 5,
+    "redshift": 200,
+    "wavenumber": 100,
+    "wavenumber_exit_time": 100,
+    "tolerance": 5,
+    "LambdaCDM": 5,
+    "IntegrationSolver": 6,
+    "MatterTransferFunctionIntegration": 50,
+    "MatterTransferFunctionIntegration_tags": 10,
+    "MatterTransferFunctionValue": 5000,
+    "TensorGreenFunctionIntegration": 50,
+    "TensorGreenFunctionIntegration_tags": 10,
+    "TensorGreenFunctionValue": 5000,
+    "TensorSource": 50,
+    "TensorSource_tags": 10,
+    "TensorSourceValue": 5000,
+}
+
 _FactoryMappingType = Mapping[str, SQLAFactoryBase]
 _TableMappingType = Mapping[str, sqla.Table]
 _InserterMappingType = Mapping[str, Callable]
@@ -189,7 +208,7 @@ class ProfileAgent:
             raise e
 
 
-class BrokerSerialPool:
+class BrokerPool:
     def __init__(self, table_name: str, broker_name: str, max_serial: int = 0):
         # max_serial tracks the current pool high-water mark
         self.max_serial = max_serial
@@ -240,7 +259,7 @@ class BrokerSerialPool:
         for serial in serials:
             if serial not in self.leased:
                 print(
-                    f'BrokerSerialPool (broker={self._broker_name}): attempt to release serial #{serial} for table "{self._table_name}", but this has not been leased'
+                    f'BrokerPool (broker={self._broker_name}): attempt to release serial #{serial} for table "{self._table_name}", but this has not been leased'
                 )
                 return False
 
@@ -253,7 +272,7 @@ class BrokerSerialPool:
         for serial in serials:
             if serial not in self.leased:
                 print(
-                    f'BrokerSerialPool (broker={self._broker_name}): attempt to commit serial #{serial} for table "{self._table_name}", but this has not been leased'
+                    f'BrokerPool (broker={self._broker_name}): attempt to commit serial #{serial} for table "{self._table_name}", but this has not been leased'
                 )
                 return False
 
@@ -276,7 +295,7 @@ class BrokerSerialPool:
         return True
 
 
-_TableSerialMappingType = Mapping[str, BrokerSerialPool]
+_TableSerialMappingType = Mapping[str, BrokerPool]
 
 
 @ray.remote
@@ -288,7 +307,7 @@ class SerialPoolBroker:
     def notify_largest_store_ids(self, tables: Mapping[str, int]) -> None:
         for table, max_serial in tables.items():
             if table not in self._tables:
-                self._tables[table] = BrokerSerialPool(table, self._my_name, max_serial)
+                self._tables[table] = BrokerPool(table, self._my_name, max_serial)
             else:
                 self._tables[table].notify_largest_store_id(max_serial)
 
@@ -296,7 +315,7 @@ class SerialPoolBroker:
         if table in self._tables:
             return self._tables[table].lease_serials(batch_size)
 
-        self._tables[table] = BrokerSerialPool(table, self._my_name)
+        self._tables[table] = BrokerPool(table, self._my_name)
         return self._tables[table].lease_serials(batch_size)
 
     def release_serials(self, table: str, serials: Set[int]) -> bool:
@@ -373,7 +392,7 @@ class ProfileBatchManager:
         )
 
 
-class ClientSerialPool:
+class ClientPool:
     def __init__(
         self,
         table: str,
@@ -395,7 +414,7 @@ class ClientSerialPool:
             if len(self._committed) > 0:
                 with ProfileBatchManager(
                     self._profiler,
-                    "ClientSerialPool.lease_serial|commit_serials",
+                    "ClientPool.lease_serial|commit_serials",
                     self._table,
                 ) as mgr:
                     ray.get(
@@ -405,7 +424,7 @@ class ClientSerialPool:
 
             with ProfileBatchManager(
                 self._profiler,
-                "ClientSerialPool.lease_serial|lease_serials",
+                "ClientPool.lease_serial|lease_serials",
                 self._table,
             ) as mgr:
                 self._pool = ray.get(
@@ -413,13 +432,16 @@ class ClientSerialPool:
                 )
 
         leased_serial = self._pool.pop()
+        if leased_serial is None:
+            raise RuntimeError("ClientPool: leased serial number is None")
+
         self._leased.add(leased_serial)
         return leased_serial
 
     def release_serial(self, serial) -> bool:
         if serial not in self._leased:
             print(
-                f'!! ClientSerialPool (table="{self._table}"): attempt to release serial #{serial} for table "{self._table}", but this has not been leased'
+                f'!! ClientPool (table="{self._table}"): attempt to release serial #{serial} for table "{self._table}", but this has not been leased'
             )
             return False
 
@@ -430,7 +452,7 @@ class ClientSerialPool:
     def commit_serial(self, serial) -> bool:
         if serial not in self._leased:
             print(
-                f'!! ClientSerialPool (table="{self._table}"): attempt to commit serial #{serial} for table "{self._table}", but this has not been leased'
+                f'!! ClientPool (table="{self._table}"): attempt to commit serial #{serial} for table "{self._table}", but this has not been leased'
             )
             return False
 
@@ -440,7 +462,7 @@ class ClientSerialPool:
 
     def release(self):
         with ProfileBatchManager(
-            self._profiler, "ClientSerialPool.release", self._table
+            self._profiler, "ClientPool.release", self._table
         ) as mgr:
             ray.get(
                 [
@@ -473,7 +495,12 @@ class SerialPoolManager:
             return None
 
         if table not in self._tables:
-            self._tables[table] = ClientSerialPool(table, self._profiler, self._broker)
+            self._tables[table] = ClientPool(
+                table,
+                self._profiler,
+                self._broker,
+                default_batch_size=_default_serial_batch_size[table],
+            )
 
         serial = self._tables[table].lease_serial()
         self._check_sync()
@@ -507,9 +534,11 @@ class SerialPoolManager:
 
     def _check_sync(self):
         current_time = time.time()
-        if current_time - self._last_sync > self._sync_interval:
-            for pool in self._tables.values():
-                pool.release()
+        if current_time - self._last_sync < self._sync_interval:
+            return
+
+        for pool in self._tables.values():
+            pool.release()
 
         self._last_sync = current_time
 
