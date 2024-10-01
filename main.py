@@ -352,8 +352,6 @@ def build_Gk_work(k_exit: wavenumber_exit_time):
     # find redshift where this k-mode is at least 3 efolds inside the horizon
     # we won't calculate Green's functions with the source redshift later than this, because
     # the oscillations become rapid, and we are better switching to a WKB approximation
-    latest_source_z = k_exit.z_exit_subh_e3
-
     source_zs = z_sample.truncate(k_exit.z_exit_subh_e3, keep="higher")
 
     work_refs = []
