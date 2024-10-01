@@ -1086,9 +1086,7 @@ class ShardedPool:
         )
 
         if profile_db is not None:
-            label = (
-                f"{self._version_label}-primarydb-{str(db_name)}-shards-{str(shards)}"
-            )
+            label = f"{self._version_label}-primarydb-|{str(db_name)}|-shards-{str(shards)}-{datetime.now().replace(microsecond=0).isoformat()}"
             self._profile_agent = ProfileAgent.options(name="ProfileAgent").remote(
                 db_name=profile_db,
                 timeout=self._timeout,
