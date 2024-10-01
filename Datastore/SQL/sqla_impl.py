@@ -1205,6 +1205,7 @@ class ShardedPool:
                     timeout=self._timeout,
                     my_name=f"shard{key:04d}-store",
                     serial_broker=self._broker,
+                    profile_agent=self._profile_agent,
                 )
                 for key in shard_ids
             }
