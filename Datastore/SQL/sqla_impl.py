@@ -1,5 +1,6 @@
 import functools
 import random
+import time
 from datetime import datetime
 from os import PathLike
 from pathlib import Path
@@ -42,7 +43,6 @@ from Datastore.SQL.ObjectFactories.wavenumber import (
 from MetadataConcepts import version
 from Units.base import UnitsLike
 from defaults import DEFAULT_STRING_LENGTH
-from utilities import WallclockTimer
 
 VERSION_ID_LENGTH = 64
 
@@ -93,6 +93,90 @@ _shard_tables = {
 _FactoryMappingType = Mapping[str, SQLAFactoryBase]
 _TableMappingType = Mapping[str, sqla.Table]
 _InserterMappingType = Mapping[str, Callable]
+
+
+@ray.remote
+class ProfileAgent:
+    def __init__(
+        self, db_name: str, timeout: Optional[int] = None, label: Optional[str] = None
+    ):
+        self._timeout = timeout
+
+        self._db_file = Path(db_name).resolve()
+
+        if self._db_file.is_dir():
+            raise RuntimeError(
+                f'Specified profile agent database file "{str(self._db_file)}" is a directory"'
+            )
+        elif not self._db_file.exists():
+            # create parent directories if they do not already exist
+            self._db_file.parents[0].mkdir(parents=True, exist_ok=True)
+            self._create_engine()
+            self._create_tables()
+        else:
+            self._create_engine()
+
+        if label is not None:
+            self._label = label
+        else:
+            self._label = "job-start-{datetime.now().replace(microsecond=0).isoformat()"
+        with self._engine.begin() as conn:
+            obj = conn.execute(sqla.insert(self._job_table), {"label": self._label})
+
+            self._job_id = obj.lastrowid
+
+    def _create_engine(self):
+        connect_args = {}
+        if self._timeout is not None:
+            connect_args["timeout"] = self._timeout
+
+        self._engine = sqla.create_engine(
+            f"sqlite:///{str(self._db_file)}",
+            future=True,
+            connect_args=connect_args,
+        )
+        self._metadata = sqla.MetaData()
+
+        self._job_table = sqla.Table(
+            "jobs",
+            self._metadata,
+            sqla.Column("serial", sqla.Integer, primary_key=True),
+            sqla.Column("label", sqla.String(DEFAULT_STRING_LENGTH)),
+        )
+        self._profile_table = sqla.Table(
+            "profile_data",
+            self._metadata,
+            sqla.Column("serial", sqla.Integer, primary_key=True),
+            sqla.Column(
+                "job_serial",
+                sqla.Integer,
+                sqla.ForeignKey("jobs.serial"),
+                index=True,
+                nullable=False,
+            ),
+            sqla.Column("method", sqla.String(DEFAULT_STRING_LENGTH), nullable=False),
+            sqla.Column("start_time", sqla.DateTime(), nullable=False),
+            sqla.Column("elapsed", sqla.Float(64), nullable=False),
+            sqla.Column("metadata", sqla.String(DEFAULT_STRING_LENGTH)),
+        )
+
+    def _create_tables(self):
+        self._job_table.create(self._engine)
+        self._profile_table.create(self._engine)
+
+    def write_batch(self, batch):
+        with self._engine.begin() as conn:
+            for item in batch:
+                obj = conn.execute(
+                    sqla.insert(self._profile_table),
+                    {
+                        "job_serial": self._job_id,
+                        "method_name": item["method"],
+                        "start_time": item["start_time"],
+                        "elapsed": item["elapsed"],
+                        "metadata": item["metadata"],
+                    },
+                )
 
 
 class TableSerialPool:
@@ -227,16 +311,68 @@ class StoreIdBroker:
         return self._tables[table].commit_serial(serial)
 
 
+class ProfileBatcher:
+    def __init__(self, profile_agent, batch_size: Optional[int] = 100):
+        self._profile_agent = profile_agent
+
+        self._batch_size = batch_size
+        self._batch = []
+
+    def write(self, method: str, start_time: datetime, elapsed: float, metadata: str):
+        if self._profile_agent is None:
+            return
+
+        self._batch.append(
+            {
+                "method": method,
+                "start_time": start_time,
+                "elapsed": elapsed,
+                "metadata": metadata,
+            }
+        )
+
+        if len(self._batch) > self._batch_size:
+            self._profile_agent.write_batch.remote(self._batch)
+            self._batch = []
+
+
+class ProfileBatchManager:
+    def __init__(self, batcher, method: str, metadata: Optional[str] = None):
+        self._batcher = batcher
+
+        self._method = method
+        self._metadata = metadata
+
+        self._start_time = None
+        self._perf_timer_start = None
+
+    def __enter__(self):
+        self.start_time = datetime.now()
+        self.perf_timer_start = time.perf_counter()
+
+        return self
+
+    def __exit__(self, exc_type, exc_val, exc_tb):
+        elapsed = time.perf_counter() - self.perf_timer_start
+        self._batcher.write(
+            method=self._method,
+            start_time=self.start_time,
+            elapsed=elapsed,
+            metadata=self._metadata,
+        )
+
+
 @ray.remote
 class Datastore:
     def __init__(
         self,
         version_label: str,
         db_name: PathType,
-        version_serial: int = None,
-        timeout: int = None,
-        my_name: str = None,
+        version_serial: Optional[int] = None,
+        timeout: Optional[int] = None,
+        my_name: Optional[str] = None,
         serial_broker: Optional[ActorHandle] = None,
+        profile_agent: Optional[ActorHandle] = None,
     ):
         """
         Initialize an SQL datastore object
@@ -244,7 +380,9 @@ class Datastore:
         """
         self._timeout = timeout
         self._my_name = my_name
+
         self._serial_broker = serial_broker
+        self._profile_batcher = ProfileBatcher(profile_agent)
 
         self._db_file = Path(db_name).resolve()
 
@@ -260,7 +398,7 @@ class Datastore:
 
         if self._db_file.is_dir():
             raise RuntimeError(
-                f'Specified database file "{str(self._db_file)}" is a directory'
+                f'Specified datastore database file "{str(self._db_file)}" is a directory'
             )
         elif not self._db_file.exists():
             # create parent directories if they do not already exist
@@ -464,12 +602,12 @@ class Datastore:
                     print(line)
 
     def object_get(self, ObjectClass, **kwargs):
-        with WallclockTimer() as timer:
-            if isinstance(ObjectClass, str):
-                cls_name = ObjectClass
-            else:
-                cls_name = ObjectClass.__name__
+        if isinstance(ObjectClass, str):
+            cls_name = ObjectClass
+        else:
+            cls_name = ObjectClass.__name__
 
+        with ProfileBatchManager(self._profile_batcher, "object_get", cls_name) as mgr:
             self._ensure_registered_schema(cls_name)
             record = self._schema[cls_name]
 
@@ -482,19 +620,9 @@ class Datastore:
             if "payload_data" in kwargs:
                 payload_data = kwargs["payload_data"]
                 scalar = False
-
-                # payload_size = len(payload_data)
-                # print(
-                #     f'** Datastore.object_get() starting for object group of class "{cls_name}"'
-                # )
-                # print(f"**   payload size = {payload_size} items")
             else:
                 payload_data = [kwargs]
                 scalar = True
-
-                # print(
-                #     f'** Datastore.object_get() starting for scalar query of class "{cls_name}"'
-                # )
 
             try:
                 with self._engine.begin() as conn:
@@ -518,67 +646,47 @@ class Datastore:
                 print(f"|  {e}")
                 raise e
 
-        # if scalar:
-        #     print(
-        #         f'** Datastore.object_get() finished in time {timer.elapsed:.3g} sec for scalar query of class "{cls_name}"'
-        #     )
-        # else:
-        #     print(
-        #         f'** Datastore.object_get() finished in time {timer.elapsed:.3g} sec for size={payload_size} object group of class "{cls_name}" = {float(timer.elapsed)/payload_size:.3g} sec per item'
-        #     )
-
         if scalar:
             return objects[0]
 
         return objects
 
     def object_store(self, objects):
-        with WallclockTimer() as timer:
-            # print(f"** Datastore.object_store() starting")
+        if isinstance(objects, list) or isinstance(objects, tuple):
+            payload_data = objects
+            scalar = False
+            # print(f" **   payload size = {len(objects)} items")
+        else:
+            payload_data = [objects]
+            scalar = True
 
-            if isinstance(objects, list) or isinstance(objects, tuple):
-                payload_data = objects
-                scalar = False
-                # print(f" **   payload size = {len(objects)} items")
-            else:
-                payload_data = [objects]
-                scalar = True
-
-            output_objects = []
-            with self._engine.begin() as conn:
-                for obj in payload_data:
-                    cls_name = type(obj).__name__
+        output_objects = []
+        with self._engine.begin() as conn:
+            for obj in payload_data:
+                cls_name = type(obj).__name__
+                with ProfileBatchManager(
+                    self._profile_batcher, "object_store_item", cls_name
+                ) as mgr:
                     self._ensure_registered_schema(cls_name)
+                    record = self._schema[cls_name]
 
-                    with WallclockTimer() as store_timer:
-                        # print(f'**   starting store for object of type "{cls_name}"')
+                    tab = record["table"]
+                    inserter = record["insert"]
 
-                        self._ensure_registered_schema(cls_name)
-                        record = self._schema[cls_name]
+                    factory = self._factories[cls_name]
 
-                        tab = record["table"]
-                        inserter = record["insert"]
-
-                        factory = self._factories[cls_name]
-
-                        output_objects.append(
-                            factory.store(
-                                objects,
-                                conn=conn,
-                                table=tab,
-                                inserter=inserter,
-                                tables=self._tables,
-                                inserters=self._inserters,
-                            )
+                    output_objects.append(
+                        factory.store(
+                            objects,
+                            conn=conn,
+                            table=tab,
+                            inserter=inserter,
+                            tables=self._tables,
+                            inserters=self._inserters,
                         )
+                    )
 
-                    # print(
-                    #     f'**   finished store for object of type "{cls_name}" in time {store_timer.elapsed:.3g} sec'
-                    # )
-
-                conn.commit()
-
-        # print(f"** Datastore.object_store() finished in time {timer.elapsed:.3g} sec")
+            conn.commit()
 
         if scalar:
             return output_objects[0]
@@ -694,21 +802,20 @@ class Datastore:
             return reported_serial
 
     def object_validate(self, objects):
-        with WallclockTimer() as timer:
-            if isinstance(objects, list) or isinstance(objects, tuple):
-                payload_data = objects
-                scalar = False
-            else:
-                payload_data = [objects]
-                scalar = True
+        if isinstance(objects, list) or isinstance(objects, tuple):
+            payload_data = objects
+            scalar = False
+        else:
+            payload_data = [objects]
+            scalar = True
 
             output_flags = []
             with self._engine.begin() as conn:
                 for obj in payload_data:
                     cls_name = type(obj).__name__
-                    self._ensure_registered_schema(cls_name)
-
-                    with WallclockTimer() as store_timer:
+                    with ProfileBatchManager(
+                        self._profile_batcher, "object_validate_item", cls_name
+                    ) as mgr:
                         self._ensure_registered_schema(cls_name)
                         record = self._schema[cls_name]
 
@@ -738,14 +845,15 @@ class Datastore:
         :param units:
         :return:
         """
-        self._ensure_registered_schema("wavenumber")
-        record = self._schema["wavenumber"]
+        with ProfileBatchManager(self._profile_batcher, "read_wavenumber_table") as mgr:
+            self._ensure_registered_schema("wavenumber")
+            record = self._schema["wavenumber"]
 
-        tab = record["table"]
-        factory = self._factories["wavenumber"]
+            tab = record["table"]
+            factory = self._factories["wavenumber"]
 
-        with self._engine.begin() as conn:
-            objects = factory.read_table(conn, tab, units)
+            with self._engine.begin() as conn:
+                objects = factory.read_table(conn, tab, units)
 
         return objects
 
@@ -754,14 +862,15 @@ class Datastore:
         Read the redshift value table from the database
         :return:
         """
-        self._ensure_registered_schema("redshift")
-        record = self._schema["redshift"]
+        with ProfileBatchManager(self._profile_batcher, "read_redshift_table") as mgr:
+            self._ensure_registered_schema("redshift")
+            record = self._schema["redshift"]
 
-        tab = record["table"]
-        factory = self._factories["redshift"]
+            tab = record["table"]
+            factory = self._factories["redshift"]
 
-        with self._engine.begin() as conn:
-            objects = factory.read_table(conn, tab)
+            with self._engine.begin() as conn:
+                objects = factory.read_table(conn, tab)
 
         return objects
 
@@ -772,20 +881,23 @@ class Datastore:
         to newly serialized objects
         :return:
         """
-        values = {}
+        with ProfileBatchManager(
+            self._profile_batcher, "read_largest_store_ids"
+        ) as mgr:
+            values = {}
 
-        with self._engine.begin() as conn:
-            for name, schema in self._schema.items():
-                if schema.get("uses_serial", False):
-                    table = schema["table"]
-                    largest_serial = conn.execute(
-                        sqla.select(
-                            sqla.func.max(table.c.serial),
-                        )
-                    ).scalar()
-                    values[name] = largest_serial
+            with self._engine.begin() as conn:
+                for name, schema in self._schema.items():
+                    if schema.get("uses_serial", False):
+                        table = schema["table"]
+                        largest_serial = conn.execute(
+                            sqla.select(
+                                sqla.func.max(table.c.serial),
+                            )
+                        ).scalar()
+                        values[name] = largest_serial
 
-        return values
+            return values
 
 
 class ShardedPool:
@@ -794,7 +906,14 @@ class ShardedPool:
     manage a sharded SQL database
     """
 
-    def __init__(self, version_label: str, db_name: PathType, timeout=None, shards=10):
+    def __init__(
+        self,
+        version_label: str,
+        db_name: PathType,
+        timeout=None,
+        shards=10,
+        profile_db: Optional[PathType] = None,
+    ):
         """
         Initialize a pool of datastore actors
         :param version_label:
@@ -815,6 +934,18 @@ class ShardedPool:
         self._broker = StoreIdBroker.options(name="StoreIdBroker").remote(
             broker_name="StoreIdBroker"
         )
+
+        if profile_db is not None:
+            label = (
+                f"{self._version_label}-primarydb-{str(db_name)}-shards-{str(shards)}"
+            )
+            self._profile_agent = ProfileAgent.options(name="ProfileAgent").remote(
+                db_name=profile_db,
+                timeout=self._timeout,
+                label=label,
+            )
+        else:
+            self._profile_agent = None
 
         # if primary file is absent, all shard databases should be likewise absent
         if self._primary_file.is_dir():
@@ -878,6 +1009,7 @@ class ShardedPool:
             timeout=self._timeout,
             my_name=f"shard{shard0_key:04d}-store",
             serial_broker=self._broker,
+            profile_agent=self._profile_agent,
         )
         self._shards = {shard0_key: shard0_store}
 
