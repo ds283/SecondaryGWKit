@@ -5,7 +5,7 @@ from typing import Iterable
 import ray
 from ray import ObjectRef
 
-from Datastore.SQL.sqla_impl import ShardedPool
+from Datastore.SQL.ShardedPool import ShardedPool
 from utilities import format_time
 
 DEFAULT_CREATE_BATCH_SIZE = 5
