@@ -327,9 +327,19 @@ class MatterTransferFunctionIntegration(DatastoreObject):
         self._solver_labels = solver_labels
         self._delta_logz = delta_logz
 
-        if z_init.z < 10.0 * k.z_exit:
-            raise RuntimeError(
-                f"Initial time z_init={z_init.z:.5g} is not sufficiently before horizon exit for k={k.k.k_inv_Mpc:.5g}/Mpc (z_exit={k.z_exit:.5g})"
+        # if initial time is not really compatible with the initial conditions we use, warn the user
+        if z_init is not None and z_init.z < k.z_exit_suph_e3:
+            print(
+                f"!! Warning (MatterTransferFunctionIntegration) k={k.k.k_inv_Mpc}/Mpc, log10_atol={atol.log10_tol}, log10_rtol={rtol.log10_tol}"
+            )
+            print(
+                f"|    Initial redshift z_init={z_init.z:.5g} is later than the 3-efold superhorizon time z_3={k.z_exit_suph_e3:.5g}."
+            )
+            print(
+                f"|    Setting initial conditions at this time may lead to meaningless results, because the initial values T_k(z) = 1, T'_k(z) = 0"
+            )
+            print(
+                f"|    used for the matter transfer function integration apply only on sufficiently superhorizon scales."
             )
 
         self._z_sample = z_sample
