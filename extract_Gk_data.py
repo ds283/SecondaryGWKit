@@ -16,7 +16,7 @@ from CosmologyConcepts import (
     redshift_array,
 )
 from CosmologyModels.LambdaCDM import Planck2018, LambdaCDM
-from Datastore.SQL.sqla_impl import ShardedPool
+from Datastore.SQL.ShardedPool import ShardedPool
 from MetadataConcepts import tolerance
 from RayWorkPool import RayWorkPool
 from Units import Mpc_units
