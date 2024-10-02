@@ -235,7 +235,7 @@ class Datastore:
                 if isinstance(use_stepping, str):
                     if use_stepping not in ["minimum", "exact"]:
                         print(
-                            f"Warning: ignored stepping selection '{use_stepping}' when registering storable class factory for '{cls_name}'"
+                            f"!! Warning: ignored stepping selection '{use_stepping}' when registering storable class factory for '{cls_name}'"
                         )
                         use_stepping = False
 
