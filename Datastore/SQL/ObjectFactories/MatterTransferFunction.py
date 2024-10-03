@@ -302,6 +302,7 @@ class sqla_MatterTransferFunctionIntegration_factory(SQLAFactoryBase):
                 value_table.c.T,
                 value_table.c.Tprime,
                 value_table.c.analytic_T,
+                value_table.c.analytic_Tprime,
             )
             .select_from(
                 value_table.join(
@@ -325,6 +326,7 @@ class sqla_MatterTransferFunctionIntegration_factory(SQLAFactoryBase):
                     T=row.T,
                     Tprime=row.Tprime,
                     analytic_T=row.analytic_T,
+                    analytic_Tprime=row.analytic_Tprime,
                 )
             )
         imported_z_sample = redshift_array(z_points)
