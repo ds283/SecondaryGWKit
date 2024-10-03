@@ -3,7 +3,7 @@ from .MatterTransferFunction import (
     MatterTransferFunctionValue,
 )
 from .TensorGreenFunction import (
-    TensorGreenFunctionIntegration,
-    TensorGreenFunctionValue,
+    GkNumericalIntegration,
+    GkNumericalValue,
 )
 from .integration_metadata import IntegrationSolver

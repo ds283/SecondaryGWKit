@@ -17,14 +17,14 @@ from Datastore.SQL.ObjectFactories.MatterTransferFunction import (
     sqla_MatterTransferFunctionTagAssociation_factory,
 )
 from Datastore.SQL.ObjectFactories.TensorGreenFunction import (
-    sqla_TensorGreenFunctionIntegration_factory,
-    sqla_TensorGreenFunctionValue_factory,
-    sqla_TensorGreenFunctionTagAssociation_factory,
+    sqla_GkNumericalIntegration_factory,
+    sqla_GkNumericalValue_factory,
+    sqla_GkNumericalTagAssociation_factory,
 )
 from Datastore.SQL.ObjectFactories.TensorGreenWKB import (
-    sqla_TensorGreenWKB_factory,
-    sqla_TensorGreenWKBTagAssociation_factory,
-    sqla_TensorGreenWKBValue_factory,
+    sqla_GkWKBIntegration_factory,
+    sqla_GkWKBTagAssociation_factory,
+    sqla_GkWKBValue_factory,
 )
 from Datastore.SQL.ObjectFactories.TensorSource import (
     sqla_TensorSource_factory,
@@ -64,15 +64,15 @@ _factories = {
     "MatterTransferFunctionIntegration": sqla_MatterTransferFunctionIntegration_factory,
     "MatterTransferFunctionIntegration_tags": sqla_MatterTransferFunctionTagAssociation_factory,
     "MatterTransferFunctionValue": sqla_MatterTransferFunctionValue_factory,
-    "TensorGreenFunctionIntegration": sqla_TensorGreenFunctionIntegration_factory,
-    "TensorGreenFunctionIntegration_tags": sqla_TensorGreenFunctionTagAssociation_factory,
-    "TensorGreenFunctionValue": sqla_TensorGreenFunctionValue_factory,
+    "GkNumericalIntegration": sqla_GkNumericalIntegration_factory,
+    "GkNumericalIntegration_tags": sqla_GkNumericalTagAssociation_factory,
+    "TensorGreenFunctionValue": sqla_GkNumericalValue_factory,
     "TensorSource": sqla_TensorSource_factory,
     "TensorSource_tags": sqla_TensorSourceTagAssocation_factory,
     "TensorSourceValue": sqla_TensorSourceValue_factory,
-    "TensorGreenWKB": sqla_TensorGreenWKB_factory,
-    "TensorGreenWKB_tags": sqla_TensorGreenWKBTagAssociation_factory,
-    "TensorGreenWKBValue": sqla_TensorGreenWKBValue_factory,
+    "TensorGreenWKB": sqla_GkWKBIntegration_factory,
+    "TensorGreenWKB_tags": sqla_GkWKBTagAssociation_factory,
+    "TensorGreenWKBValue": sqla_GkWKBValue_factory,
 }
 
 _FactoryMappingType = Mapping[str, SQLAFactoryBase]

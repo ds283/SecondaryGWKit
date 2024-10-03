@@ -1,23 +1,188 @@
+import time
 from typing import Optional, List
 
 import ray
-from math import log
+from math import log, sqrt, fabs
+from scipy.integrate import solve_ivp
 
 from ComputeTargets import IntegrationSolver
 from ComputeTargets.WKB_tensor_Green import WKB_omegaEff_sq
-from ComputeTargets.analytic_tensor_Green import (
+from ComputeTargets.analytic_Gk import (
     compute_analytic_G,
     compute_analytic_Gprime,
+)
+from ComputeTargets.integration_supervisor import (
+    RHS_timer,
+    IntegrationSupervisor,
+    DEFAULT_UPDATE_INTERVAL,
 )
 from CosmologyConcepts import wavenumber_exit_time, redshift, redshift_array, wavenumber
 from CosmologyModels import BaseCosmology
 from Datastore import DatastoreObject
 from MetadataConcepts import tolerance, store_tag
-from defaults import DEFAULT_FLOAT_PRECISION
-from utilities import check_units
+from defaults import (
+    DEFAULT_FLOAT_PRECISION,
+    DEFAULT_ABS_TOLERANCE,
+    DEFAULT_REL_TOLERANCE,
+)
+from utilities import check_units, format_time
+
+A0_TAU_INDEX = 0
+THETA_INDEX = 1
 
 
-class TensorGreenWKB(DatastoreObject):
+class GkWKBSupervisor(IntegrationSupervisor):
+    def __init__(
+        self,
+        k: wavenumber,
+        z_source: redshift,
+        z_final: redshift,
+        notify_interval: int = DEFAULT_UPDATE_INTERVAL,
+    ):
+        super().__init__(notify_interval)
+
+        self._k: wavenumber = k
+        self._z_source: float = z_source.z
+        self._z_final: float = z_final.z
+
+        self._z_range: float = self._z_source - self._z_final
+
+        self._last_z: float = self._z_source
+
+    def __enter__(self):
+        super().__enter__()
+        return self
+
+    def __exit__(self, exc_type, exc_val, exc_tb):
+        super().__exit__(exc_type, exc_val, exc_tb)
+
+    def message(self, current_z, msg):
+        current_time = time.time()
+        since_last_notify = current_time - self._last_notify
+        since_start = current_time - self._start_time
+
+        update_number = self.report_notify()
+
+        z_complete = self._z_source - current_z
+        z_remain = self._z_range - z_complete
+        percent_remain = 100.0 * (z_remain / self._z_range)
+        print(
+            f"** STATUS UPDATE #{update_number}: Integration for WKB Theta_k(z) for k = {self._k.k_inv_Mpc:.5g}/Mpc (store_id={self._k.store_id}) has been running for {format_time(since_start)} ({format_time(since_last_notify)} since last notification)"
+        )
+        print(
+            f"|    current z={current_z:.5g} (source z={self._z_source:.5g}, target z={self._z_final:.5g}, z complete={z_complete:.5g}, z remain={z_remain:.5g}, {percent_remain:.3g}% remains)"
+        )
+        if self._last_z is not None:
+            z_delta = self._last_z - current_z
+            print(f"|    redshift advance since last update: Delta z = {z_delta:.5g}")
+        print(
+            f"|    {self.RHS_evaluations} RHS evaluations, mean {self.mean_RHS_time:.5g}s per evaluation, min RHS time = {self.min_RHS_time:.5g}s, max RHS time = {self.max_RHS_time:.5g}s"
+        )
+        print(f"|    {msg}")
+
+        self._last_z = current_z
+
+
+@ray.remote
+def compute_Gk_WKB(
+    cosmology: BaseCosmology,
+    k: wavenumber_exit_time,
+    z_source: redshift,
+    z_sample: redshift_array,
+    atol: float = DEFAULT_ABS_TOLERANCE,
+    rtol: float = DEFAULT_REL_TOLERANCE,
+) -> dict:
+    k_wavenumber: wavenumber = k.k
+    check_units(k_wavenumber, cosmology)
+
+    k_float = k_wavenumber.k
+
+    z_min = float(z_sample.min)
+
+    def RHS(z, state, supervisor) -> List[float]:
+        with RHS_timer(supervisor) as timer:
+            a0_tau = state[A0_TAU_INDEX]
+            theta = state[THETA_INDEX]
+
+            if supervisor.notify_avalable:
+                supervisor.message(z, f"current state: theta_WKB = {theta:.5g}")
+                supervisor.reset_notify_time()
+
+            omega_eff_sq = WKB_omegaEff_sq(cosmology, k_float, z)
+
+            if omega_eff_sq < 0.0:
+                raise ValueError(
+                    f"omega_WKB^2 cannot be negative during WKB integration (omega_WKB^2={omega_eff_sq:.5g})"
+                )
+
+            omega_eff = sqrt(omega_eff_sq)
+            dtheta_dz = omega_eff
+
+            H = cosmology.Hubble(z)
+            da0_tau_dz = -1.0 / H
+
+            return [da0_tau_dz, dtheta_dz]
+
+    with GkWKBSupervisor(k_wavenumber, z_source, z_sample.min) as supervisor:
+        rho_init = cosmology.rho(z_source.z)
+        tau_init = (
+            sqrt(3.0) * cosmology.units.PlanckMass / sqrt(rho_init) * (1.0 + z_source.z)
+        )
+
+        initial_state = [tau_init, 0.0]
+
+        sol = solve_ivp(
+            RHS,
+            method="RK45",
+            t_span=(z_source.z, z_min),
+            y0=initial_state,
+            t_eval=z_sample.as_list(),
+            atol=atol,
+            rtol=rtol,
+            args=(supervisor,),
+        )
+
+    if not sol.success:
+        raise RuntimeError(
+            f'compute_Gk_WKB: integration did not terminate successfully (k={k_wavenumber.k.k_inv_Mpc}/Mpc, z_source={z_source.z}, error at z={sol.t[-1]}, "{sol.message}")'
+        )
+
+    sampled_z = sol.t
+    sampled_values = sol.y
+    sampled_a0_tau = sampled_values[A0_TAU_INDEX]
+    sampled_theta = sampled_values[THETA_INDEX]
+
+    returned_values = sampled_z.size
+    expected_values = len(z_sample)
+
+    if returned_values != expected_values:
+        raise RuntimeError(
+            f"compute_Gk: solve_ivp returned {returned_values} samples, but expected {expected_values}"
+        )
+
+    # validate that the samples of the solution correspond to the z-sample points that we specified.
+    # This really should be true, but there is no harm in being defensive.
+    for i in range(returned_values):
+        diff = sampled_z[i] - z_sample[i].z
+        if fabs(diff) > DEFAULT_ABS_TOLERANCE:
+            raise RuntimeError(
+                f"compute_Gk_WKB: solve_ivp returned sample points that differ from those requested (difference={diff} at i={i})"
+            )
+
+    return {
+        "compute_time": supervisor.integration_time,
+        "compute_steps": int(sol.nfev),
+        "RHS_evaluations": supervisor.RHS_evaluations,
+        "mean_RHS_time": supervisor.mean_RHS_time,
+        "max_RHS_time": supervisor.max_RHS_time,
+        "min_RHS_time": supervisor.min_RHS_time,
+        "a0_tau_sample": sampled_a0_tau,
+        "theta": sampled_theta,
+        "solver_label": "solve_ivp+RK45-stepping0",
+    }
+
+
+class GkWKBIntegration(DatastoreObject):
     """
     Encapsulates all sample points produced for a calculation of the WKB
     phase associated with the tensor Green's function
@@ -60,6 +225,8 @@ class TensorGreenWKB(DatastoreObject):
 
             self._solver = None
 
+            self._sin_coeff = None
+            self._cos_coeff = None
             self._values = None
 
         else:
@@ -75,6 +242,8 @@ class TensorGreenWKB(DatastoreObject):
 
             self._solver = payload["solver"]
 
+            self._sin_coeff = payload["sin_coeff"]
+            self._cos_coeff = payload["cos_coeff"]
             self._values = payload["values"]
 
         if self._z_sample is not None:
@@ -180,6 +349,20 @@ class TensorGreenWKB(DatastoreObject):
         return self._init_efolds_subh
 
     @property
+    def sin_coeff(self) -> float:
+        if self._sin_coeff is None:
+            raise RuntimeError("sin_coeff has not yet been populated")
+
+        return self._sin_coeff
+
+    @property
+    def cos_coeff(self) -> float:
+        if self._cos_coeff is None:
+            raise RuntimeError("cos_coeff has not yet been populated")
+
+        return self._cos_coeff
+
+    @property
     def solver(self) -> IntegrationSolver:
         if self._solver is None:
             raise RuntimeError("solver has not yet been populated")
@@ -204,7 +387,7 @@ class TensorGreenWKB(DatastoreObject):
         if label is not None:
             self._label = label
 
-        self._compute_ref = compute_tensor_Green_WKB.remote(
+        self._compute_ref = compute_Gk_WKB.remote(
             self.cosmology,
             self._k_exit,
             self.z_source,
@@ -217,7 +400,7 @@ class TensorGreenWKB(DatastoreObject):
     def store(self) -> Optional[bool]:
         if self._compute_ref is None:
             raise RuntimeError(
-                "TensorGreenWKBIntegration: store() called, but no compute() is in progress"
+                "GkWKBIntegration: store() called, but no compute() is in progress"
             )
 
         # check whether the computation has actually resolved
@@ -262,9 +445,9 @@ class TensorGreenWKB(DatastoreObject):
             )
             omega_WKB_sq = WKB_omegaEff_sq(self._cosmology, self.k.k, current_z_float)
 
-            # create new TensorGreenFunctionValue object
+            # create new GkWKBValue object
             self._values.append(
-                TensorGreenWKBValue(
+                GkWKBValue(
                     None,
                     current_z,
                     H,
@@ -280,7 +463,7 @@ class TensorGreenWKB(DatastoreObject):
         return True
 
 
-class TensorGreenWKBValue(DatastoreObject):
+class GkWKBValue(DatastoreObject):
     def __init__(
         self,
         store_id: int,

@@ -17,7 +17,7 @@ from defaults import (
 )
 from utilities import check_units, format_time
 from .WKB_tensor_Green import WKB_omegaEff_sq
-from .analytic_tensor_Green import compute_analytic_G, compute_analytic_Gprime
+from .analytic_Gk import compute_analytic_G, compute_analytic_Gprime
 from .integration_metadata import IntegrationSolver
 from .integration_supervisor import (
     IntegrationSupervisor,
@@ -28,17 +28,15 @@ from .integration_supervisor import (
 # RHS of ODE system
 #
 # State layout:
-#   state[0] = energy density rho(z)
-#   state[1] = a_0 tau [tau = conformal time]
-#   state[2] = G_k(z, z')
-#   state[3] = Gprime_k(z, z')
-RHO_INDEX = 0
-A0_TAU_INDEX = 1
-G_INDEX = 2
-GPRIME_INDEX = 3
+#   state[0] = a_0 tau [tau = conformal time]
+#   state[1] = G_k(z, z')
+#   state[2] = Gprime_k(z, z')
+A0_TAU_INDEX = 0
+G_INDEX = 1
+GPRIME_INDEX = 2
 
 
-class TensorGreenFunctionSupervisor(IntegrationSupervisor):
+class GkSupervisor(IntegrationSupervisor):
     def __init__(
         self,
         k: wavenumber,
@@ -188,7 +186,7 @@ def search_G_minimum(sol, start_z: float, stop_z: float):
 
 
 @ray.remote
-def compute_tensor_Green(
+def compute_Gk(
     cosmology: BaseCosmology,
     k: wavenumber_exit_time,
     z_source: redshift,
@@ -212,13 +210,12 @@ def compute_tensor_Green(
 
     z_min = float(z_sample.min)
 
-    def RHS(z, state, supervisor) -> float:
+    def RHS(z, state, supervisor) -> List[float]:
         """
         k *must* be measured using the same units used for H(z) in the cosmology, otherwise we will not get
         correct dimensionless ratios
         """
-        with RHS_timer(supervisor):
-            rho = state[RHO_INDEX]
+        with RHS_timer(supervisor) as timer:
             a0_tau = state[A0_TAU_INDEX]
             G = state[G_INDEX]
             Gprime = state[GPRIME_INDEX]
@@ -226,18 +223,16 @@ def compute_tensor_Green(
             if supervisor.notify_available:
                 supervisor.message(
                     z,
-                    f"current state: rho = {rho:.5g}, Gr(k) = {G:.5g}, dGr(k)/dz = {Gprime:.5g}",
+                    f"current state: Gr(k) = {G:.5g}, dGr(k)/dz = {Gprime:.5g}",
                 )
                 supervisor.reset_notify_time()
 
             H = cosmology.Hubble(z)
-            w = cosmology.wBackground(z)
             eps = cosmology.epsilon(z)
 
             one_plus_z = 1.0 + z
             one_plus_z_2 = one_plus_z * one_plus_z
 
-            drho_dz = 3.0 * ((1.0 + w) / one_plus_z) * rho
             da0_tau_dz = -1.0 / H
             dG_dz = Gprime
 
@@ -259,9 +254,9 @@ def compute_tensor_Green(
                 wavelength = 2.0 * pi / sqrt(omega_eff_sq)
                 supervisor.report_wavelength(z, wavelength, log((1.0 + z) * k_over_H))
 
-        return [drho_dz, da0_tau_dz, dG_dz, dGprime_dz]
+        return [da0_tau_dz, dG_dz, dGprime_dz]
 
-    with TensorGreenFunctionSupervisor(
+    with GkSupervisor(
         k_wavenumber, z_source, z_sample.min, delta_logz=delta_logz
     ) as supervisor:
         # initial conditions should be
@@ -274,7 +269,7 @@ def compute_tensor_Green(
             sqrt(3.0) * cosmology.units.PlanckMass / sqrt(rho_init) * (1.0 + z_source.z)
         )
 
-        initial_state = [rho_init, tau_init, 0.0, 1.0]
+        initial_state = [tau_init, 0.0, 1.0]
 
         if mode == "stop":
             # set up an event to terminate the integration when 5 e-folds inside the horizon
@@ -306,7 +301,7 @@ def compute_tensor_Green(
     # test whether the integration concluded successfully
     if not sol.success:
         raise RuntimeError(
-            f'compute_tensor_Green: integration did not terminate successfully (k={k_wavenumber.k_inv_Mpc}/Mpc, z_source={z_source.z}, error at z={sol.t[-1]}, "{sol.message}")'
+            f'compute_Gk: integration did not terminate successfully (k={k_wavenumber.k_inv_Mpc}/Mpc, z_source={z_source.z}, error at z={sol.t[-1]}, "{sol.message}")'
         )
 
     sampled_z = sol.t
@@ -321,7 +316,7 @@ def compute_tensor_Green(
 
         if returned_values != expected_values:
             raise RuntimeError(
-                f"compute_tensor_Green: solve_ivp returned {returned_values} samples, but expected {expected_values}"
+                f"compute_Gk: solve_ivp returned {returned_values} samples, but expected {expected_values}"
             )
 
     stop_efolds_subh = None
@@ -340,7 +335,7 @@ def compute_tensor_Green(
         diff = sampled_z[i] - z_sample[i].z
         if fabs(diff) > DEFAULT_ABS_TOLERANCE:
             raise RuntimeError(
-                f"compute_tensor_Green: solve_ivp returned sample points that differ from those requested (difference={diff} at i={i})"
+                f"compute_Gk: solve_ivp returned sample points that differ from those requested (difference={diff} at i={i})"
             )
 
     return {
@@ -363,7 +358,7 @@ def compute_tensor_Green(
     }
 
 
-class TensorGreenFunctionIntegration(DatastoreObject):
+class GkNumericalIntegration(DatastoreObject):
     """
     Encapsulates all sample points produced during a single integration of the
     tensor Green's function, labelled by a wavenumber k, and two redshifts:
@@ -609,7 +604,7 @@ class TensorGreenFunctionIntegration(DatastoreObject):
         if label is not None:
             self._label = label
 
-        self._compute_ref = compute_tensor_Green.remote(
+        self._compute_ref = compute_Gk.remote(
             self.cosmology,
             self._k_exit,
             self.z_source,
@@ -624,7 +619,7 @@ class TensorGreenFunctionIntegration(DatastoreObject):
     def store(self) -> Optional[bool]:
         if self._compute_ref is None:
             raise RuntimeError(
-                "TensorGreenFunctionIntegration: store() called, but no compute() is in progress"
+                "GkNumericalIntegration: store() called, but no compute() is in progress"
             )
 
         # check whether the computation has actually resolved
@@ -678,9 +673,9 @@ class TensorGreenFunctionIntegration(DatastoreObject):
             )
             omega_WKB_sq = WKB_omegaEff_sq(self._cosmology, self.k.k, current_z_float)
 
-            # create new TensorGreenFunctionValue object
+            # create new GkNumericalValue object
             self._values.append(
-                TensorGreenFunctionValue(
+                GkNumericalValue(
                     None,
                     current_z,
                     G_sample[i],
@@ -696,11 +691,11 @@ class TensorGreenFunctionIntegration(DatastoreObject):
         return True
 
 
-class TensorGreenFunctionValue(DatastoreObject):
+class GkNumericalValue(DatastoreObject):
     """
     Encapsulates a single sampled value of the tensor Green's transfer functions.
     Parameters such as wavenumber k, source redshift z_source, etc., are held by the
-    owning TensorGreenFunctionIntegration object
+    owning GkNumericalIntegration object
     """
 
     def __init__(

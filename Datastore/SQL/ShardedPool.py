@@ -28,7 +28,7 @@ _shard_tables = {
     "wavenumber_exit_time": "k",
     "MatterTransferFunctionIntegration": "k",
     "MatterTransferFunctionValue": "k",
-    "TensorGreenFunctionIntegration": "k",
+    "GkNumericalIntegration": "k",
     "TensorGreenFunctionValue": "k",
     "TensorSource": "q",
     "TensorSourceValue": "q",

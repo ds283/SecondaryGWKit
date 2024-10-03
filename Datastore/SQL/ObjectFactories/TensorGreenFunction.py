@@ -6,8 +6,8 @@ from sqlalchemy import and_, or_
 from sqlalchemy.exc import MultipleResultsFound
 
 from ComputeTargets import (
-    TensorGreenFunctionIntegration,
-    TensorGreenFunctionValue,
+    GkNumericalIntegration,
+    GkNumericalValue,
     IntegrationSolver,
 )
 from CosmologyConcepts import redshift_array, redshift, wavenumber_exit_time
@@ -17,7 +17,7 @@ from MetadataConcepts import tolerance, store_tag
 from defaults import DEFAULT_FLOAT_PRECISION, DEFAULT_STRING_LENGTH
 
 
-class sqla_TensorGreenFunctionTagAssociation_factory(SQLAFactoryBase):
+class sqla_GkNumericalTagAssociation_factory(SQLAFactoryBase):
     def __init__(self):
         pass
 
@@ -32,7 +32,7 @@ class sqla_TensorGreenFunctionTagAssociation_factory(SQLAFactoryBase):
                 sqla.Column(
                     "integration_serial",
                     sqla.Integer,
-                    sqla.ForeignKey("TensorGreenFunctionIntegration.serial"),
+                    sqla.ForeignKey("GkNumericalIntegration.serial"),
                     nullable=False,
                     primary_key=True,
                 ),
@@ -51,9 +51,7 @@ class sqla_TensorGreenFunctionTagAssociation_factory(SQLAFactoryBase):
         raise NotImplementedError
 
     @staticmethod
-    def add_tag(
-        conn, inserter, integration: TensorGreenFunctionIntegration, tag: store_tag
-    ):
+    def add_tag(conn, inserter, integration: GkNumericalIntegration, tag: store_tag):
         inserter(
             conn,
             {
@@ -63,9 +61,7 @@ class sqla_TensorGreenFunctionTagAssociation_factory(SQLAFactoryBase):
         )
 
     @staticmethod
-    def remove_tag(
-        conn, table, integration: TensorGreenFunctionIntegration, tag: store_tag
-    ):
+    def remove_tag(conn, table, integration: GkNumericalIntegration, tag: store_tag):
         conn.execute(
             sqla.delete(table).where(
                 and_(
@@ -76,7 +72,7 @@ class sqla_TensorGreenFunctionTagAssociation_factory(SQLAFactoryBase):
         )
 
 
-class sqla_TensorGreenFunctionIntegration_factory(SQLAFactoryBase):
+class sqla_GkNumericalIntegration_factory(SQLAFactoryBase):
     def __init__(self):
         pass
 
@@ -178,7 +174,7 @@ class sqla_TensorGreenFunctionIntegration_factory(SQLAFactoryBase):
         atol_table = tables["tolerance"].alias("atol")
         rtol_table = tables["tolerance"].alias("rtol")
         solver_table = tables["IntegrationSolver"]
-        tag_table = tables["TensorGreenFunctionIntegration_tags"]
+        tag_table = tables["GkNumericalIntegration_tags"]
         redshift_table = tables["redshift"]
 
         # we treat z_sample as a target rather than a selection criterion;
@@ -253,13 +249,13 @@ class sqla_TensorGreenFunctionIntegration_factory(SQLAFactoryBase):
             row_data = conn.execute(query).one_or_none()
         except MultipleResultsFound as e:
             print(
-                f"!! Database error: multiple results found when querying for TensorGreenFunctionIntegration"
+                f"!! Database error: multiple results found when querying for GkNumericalIntegration"
             )
             raise e
 
         if row_data is None:
             # build and return an unpopulated object
-            return TensorGreenFunctionIntegration(
+            return GkNumericalIntegration(
                 payload=None,
                 solver_labels=solver_labels,
                 label=label,
@@ -307,7 +303,7 @@ class sqla_TensorGreenFunctionIntegration_factory(SQLAFactoryBase):
         )
 
         # read out sample values associated with this integration
-        value_table = tables["TensorGreenFunctionValue"]
+        value_table = tables["GkNumericalValue"]
 
         sample_rows = conn.execute(
             sqla.select(
@@ -336,7 +332,7 @@ class sqla_TensorGreenFunctionIntegration_factory(SQLAFactoryBase):
             z_value = redshift(store_id=row.z_serial, z=row.z)
             z_points.append(z_value)
             values.append(
-                TensorGreenFunctionValue(
+                GkNumericalValue(
                     store_id=row.serial,
                     z=z_value,
                     G=row.G,
@@ -354,7 +350,7 @@ class sqla_TensorGreenFunctionIntegration_factory(SQLAFactoryBase):
                     f'Fewer z-samples than expected were recovered from the validated tensor Green function "{store_label}"'
                 )
 
-        obj = TensorGreenFunctionIntegration(
+        obj = GkNumericalIntegration(
             payload={
                 "store_id": store_id,
                 "compute_time": compute_time,
@@ -383,14 +379,14 @@ class sqla_TensorGreenFunctionIntegration_factory(SQLAFactoryBase):
             z_sample=imported_z_sample,
             tags=tags,
             delta_logz=delta_logz,
-            # no need to pass the mode argument, which is only needed/relevant for unpopulated TensorGreenFunctionIntegration instances
+            # no need to pass the mode argument, which is only needed/relevant for unpopulated GkNumericalIntegration instances
         )
         obj._deserialized = True
         return obj
 
     @staticmethod
     def store(
-        obj: TensorGreenFunctionIntegration,
+        obj: GkNumericalIntegration,
         conn,
         table,
         inserter,
@@ -427,23 +423,21 @@ class sqla_TensorGreenFunctionIntegration_factory(SQLAFactoryBase):
             },
         )
 
-        # set store_id on behalf of the TensorGreenFunctionIntegration instance
+        # set store_id on behalf of the GkNumericalIntegration instance
         obj._my_id = store_id
 
         # add any tags that have been specified
-        tag_inserter = inserters["TensorGreenFunctionIntegration_tags"]
+        tag_inserter = inserters["GkNumericalIntegration_tags"]
         for tag in obj.tags:
-            sqla_TensorGreenFunctionTagAssociation_factory.add_tag(
-                conn, tag_inserter, obj, tag
-            )
+            sqla_GkNumericalTagAssociation_factory.add_tag(conn, tag_inserter, obj, tag)
 
         # now serialize the sampled output points
-        # TODO: this is undesirable, because there are two ways a TensorGreenFunctionValue can be serialized:
-        #  directly, or using the logic here as part of a TensorGreenFunctionIntegration. We need to be careful to
-        #  keep the logic in sync. It would be better to have a single serialization point for TensorGreenFunctionValue.
-        value_inserter = inserters["TensorGreenFunctionValue"]
+        # TODO: this is undesirable, because there are two ways a GkNumericalValue can be serialized:
+        #  directly, or using the logic here as part of a GkNumericalIntegration. We need to be careful to
+        #  keep the logic in sync. It would be better to have a single serialization point for GkNumericalValue.
+        value_inserter = inserters["GkNumericalValue"]
         for value in obj.values:
-            value: TensorGreenFunctionValue
+            value: GkNumericalValue
             value_id = value_inserter(
                 conn,
                 {
@@ -457,19 +451,19 @@ class sqla_TensorGreenFunctionIntegration_factory(SQLAFactoryBase):
                 },
             )
 
-            # set store_id on behalf of the TensorGreenFunctionValue instance
+            # set store_id on behalf of the GkNumericalValue instance
             value._my_id = value_id
 
         return obj
 
     @staticmethod
     def validate(
-        obj: TensorGreenFunctionIntegration,
+        obj: GkNumericalIntegration,
         conn,
         table,
         tables,
     ):
-        # query the row in TensorGreenFunctionIntegration corresponding to this object
+        # query the row in GkNumericalIntegration corresponding to this object
         if not obj.available:
             raise RuntimeError(
                 "Attempt to validate a datastore object that has not yet been serialized"
@@ -479,7 +473,7 @@ class sqla_TensorGreenFunctionIntegration_factory(SQLAFactoryBase):
             sqla.select(table.c.z_samples).filter(table.c.serial == obj.store_id)
         ).scalar()
 
-        value_table = tables["TensorGreenFunctionValue"]
+        value_table = tables["GkNumericalValue"]
         num_samples = conn.execute(
             sqla.select(sqla.func.count(value_table.c.serial)).filter(
                 value_table.c.integration_serial == obj.store_id
@@ -511,7 +505,7 @@ class sqla_TensorGreenFunctionIntegration_factory(SQLAFactoryBase):
         redshift_table = tables["redshift"]
         wavenumber_exit_table = tables["wavenumber_exit_time"]
         wavenumber_table = tables["wavenumber"]
-        value_table = tables["TensorGreenFunctionValue"]
+        value_table = tables["GkNumericalValue"]
 
         # bake results into a list so that we can close this query; we are going to want to run
         # another one as we process the rows from this one
@@ -575,7 +569,7 @@ class sqla_TensorGreenFunctionIntegration_factory(SQLAFactoryBase):
         return msgs
 
 
-class sqla_TensorGreenFunctionValue_factory(SQLAFactoryBase):
+class sqla_GkNumericalValue_factory(SQLAFactoryBase):
     def __init__(self):
         pass
 
@@ -589,7 +583,7 @@ class sqla_TensorGreenFunctionValue_factory(SQLAFactoryBase):
                 sqla.Column(
                     "integration_serial",
                     sqla.Integer,
-                    sqla.ForeignKey("TensorGreenFunctionIntegration.serial"),
+                    sqla.ForeignKey("GkNumericalIntegration.serial"),
                     nullable=False,
                 ),
                 sqla.Column(
@@ -634,7 +628,7 @@ class sqla_TensorGreenFunctionValue_factory(SQLAFactoryBase):
             ).one_or_none()
         except MultipleResultsFound as e:
             print(
-                f"!! Database error: multiple results found when querying for TensorGreenFunctionValue"
+                f"!! Database error: multiple results found when querying for GkNumericalValue"
             )
             raise e
 
@@ -666,7 +660,7 @@ class sqla_TensorGreenFunctionValue_factory(SQLAFactoryBase):
                     f"Stored tensor Green function derivative (integration={integration_serial}, z={z.store_id}) = {row_data.Gprime} differs from expected value = {Gprime}"
                 )
 
-        return TensorGreenFunctionValue(
+        return GkNumericalValue(
             store_id=store_id,
             z=z,
             G=G,

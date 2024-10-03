@@ -2,9 +2,8 @@ import time
 from typing import Optional, List
 
 import ray
-from math import fabs, pi, log, sqrt, pow
+from math import fabs, pi, log, sqrt
 from scipy.integrate import solve_ivp
-from scipy.special import gamma, jv
 
 from CosmologyConcepts import redshift_array, wavenumber, redshift, wavenumber_exit_time
 from CosmologyModels import BaseCosmology
@@ -16,46 +15,13 @@ from defaults import (
     DEFAULT_FLOAT_PRECISION,
 )
 from utilities import check_units, format_time
+from .analytic_Tk import compute_analytic_T, compute_analytic_Tprime
 from .integration_metadata import IntegrationSolver
 from .integration_supervisor import (
     DEFAULT_UPDATE_INTERVAL,
     IntegrationSupervisor,
     RHS_timer,
 )
-
-
-def compute_analytic_T(k, w, tau):
-    b = (1.0 - 3.0 * w) / (1.0 + 3.0 * w)
-    cs = sqrt(w)
-    k_cs_tau = k * cs * tau
-
-    n1 = 1.5 + b
-    A = pow(2.0, n1)
-    B = gamma(2.5 + b)
-    C = pow(k_cs_tau, -n1)
-    D = jv(n1, k_cs_tau)
-
-    return A * B * C * D
-
-
-def compute_analytic_Tprime(k, w, tau, H):
-    b = (1.0 - 3.0 * w) / (1.0 + 3.0 * w)
-    cs = sqrt(w)
-    k_cs_tau = k * cs * tau
-
-    n0 = 0.5 + b
-    n1 = 1.5 + b
-    n2 = 2.5 + b
-
-    A = pow(2.0, n1)
-    B = gamma(2.5 + b)
-    C = pow(k_cs_tau, -n2)
-    D1 = k_cs_tau * jv(n0, k_cs_tau)
-    D2 = -(3.0 + 2.0 * b) * jv(n1, k_cs_tau)
-    D3 = -k_cs_tau * jv(n2, k_cs_tau)
-    D = D1 + D2 + D3
-
-    return -(1.0 / H) * cs * k * A * B * C * D
 
 
 class MatterTransferFunctionSupervisor(IntegrationSupervisor):
@@ -158,7 +124,7 @@ class MatterTransferFunctionSupervisor(IntegrationSupervisor):
 
 
 @ray.remote
-def compute_matter_Tk(
+def compute_Tk(
     cosmology: BaseCosmology,
     k: wavenumber,
     z_sample: redshift_array,
@@ -180,21 +146,18 @@ def compute_matter_Tk(
     # perturbation on uniform energy hypersurfaces)
     #
     # State layout:
-    #   state[0] = energy density rho(z)
-    #   state[1] = a_0 tau(z) [tau = conformal time]
-    #   state[2] = T(z)
-    #   state[3] = dT/dz = T' = "T prime"
-    RHO_INDEX = 0
-    A0_TAU_INDEX = 1
-    T_INDEX = 2
-    TPRIME_INDEX = 3
+    #   state[0] = a_0 tau(z) [tau = conformal time]
+    #   state[1] = T(z)
+    #   state[2] = dT/dz = T' = "T prime"
+    A0_TAU_INDEX = 0
+    T_INDEX = 1
+    TPRIME_INDEX = 2
 
-    def RHS(z, state, supervisor: MatterTransferFunctionSupervisor) -> float:
+    def RHS(z, state, supervisor: MatterTransferFunctionSupervisor) -> List[float]:
         """
         k *must* be measured using the same units used for H(z) in the cosmology
         """
-        with RHS_timer(supervisor):
-            rho = state[RHO_INDEX]
+        with RHS_timer(supervisor) as timer:
             a0_tau = state[A0_TAU_INDEX]
             T = state[T_INDEX]
             Tprime = state[TPRIME_INDEX]
@@ -202,19 +165,17 @@ def compute_matter_Tk(
             if supervisor.notify_available:
                 supervisor.message(
                     z,
-                    f"current state: rho = {rho:.5g}, T(k) = {T:.5g}, dT(k)/dz = {Tprime:.5g}",
+                    f"current state: T(k) = {T:.5g}, dT(k)/dz = {Tprime:.5g}",
                 )
                 supervisor.reset_notify_time()
 
             H = cosmology.Hubble(z)
-            wBackground = cosmology.wBackground(z)
             wPerturbations = cosmology.wPerturbations(z)
             eps = cosmology.epsilon(z)
 
             one_plus_z = 1.0 + z
             one_plus_z_2 = one_plus_z * one_plus_z
 
-            drho_dz = 3.0 * ((1.0 + wBackground) / one_plus_z) * rho
             da0_tau_dz = -1.0 / H
             dT_dz = Tprime
 
@@ -238,7 +199,7 @@ def compute_matter_Tk(
                 wavelength = 2.0 * pi / sqrt(omega_eff_sq)
                 supervisor.report_wavelength(z, wavelength, log((1.0 + z) * k_over_H))
 
-        return [drho_dz, da0_tau_dz, dT_dz, dTprime_dz]
+        return [da0_tau_dz, dT_dz, dTprime_dz]
 
     with MatterTransferFunctionSupervisor(
         k, z_init, z_sample.min, delta_logz=delta_logz
@@ -264,7 +225,7 @@ def compute_matter_Tk(
     # test whether the integration concluded successfully
     if not sol.success:
         raise RuntimeError(
-            f'compute_matter_Tk: integration did not terminate successfully (k={k.k_inv_Mpc}/Mpc, z_init={z_init.z}, error at z={sol.t[-1]}, "{sol.message}")'
+            f'compute_Tk: integration did not terminate successfully (k={k.k_inv_Mpc}/Mpc, z_init={z_init.z}, error at z={sol.t[-1]}, "{sol.message}")'
         )
 
     sampled_z = sol.t
@@ -278,14 +239,14 @@ def compute_matter_Tk(
 
     if returned_values != expected_values:
         raise RuntimeError(
-            f"compute_matter_Tk: solve_ivp returned {returned_values} samples, but expected {expected_values}"
+            f"compute_Tk: solve_ivp returned {returned_values} samples, but expected {expected_values}"
         )
 
     for i in range(returned_values):
         diff = sampled_z[i] - z_sample[i].z
         if fabs(diff) > DEFAULT_ABS_TOLERANCE:
             raise RuntimeError(
-                f"compute_matter_Tk: solve_ivp returned sample points that differ from those requested (difference={diff} at i={i})"
+                f"compute_Tk: solve_ivp returned sample points that differ from those requested (difference={diff} at i={i})"
             )
 
     return {
@@ -549,7 +510,7 @@ class MatterTransferFunctionIntegration(DatastoreObject):
                 f"|    k/aH = {k_over_aH:.5g}, wavelength 2pi(H/k) = {wavelength:.5g}, e-folds outside horizon = {efolds_suph}, log(z_init/z_exit) = {log(self.z_init.z/self.z_exit)}"
             )
 
-        self._compute_ref = compute_matter_Tk.remote(
+        self._compute_ref = compute_Tk.remote(
             self.cosmology,
             self.k,
             self.z_sample,

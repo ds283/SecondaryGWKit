@@ -6,7 +6,7 @@ from sqlalchemy import and_, or_
 from sqlalchemy.exc import MultipleResultsFound
 
 from ComputeTargets import IntegrationSolver
-from ComputeTargets.TensorGreenWKB import TensorGreenWKB, TensorGreenWKBValue
+from ComputeTargets.GkWKBIntegration import GkWKBIntegration, GkWKBValue
 from CosmologyConcepts import wavenumber_exit_time, redshift_array, redshift
 from CosmologyModels import BaseCosmology
 from Datastore.SQL.ObjectFactories.base import SQLAFactoryBase
@@ -14,7 +14,7 @@ from MetadataConcepts import store_tag, tolerance
 from defaults import DEFAULT_STRING_LENGTH, DEFAULT_FLOAT_PRECISION
 
 
-class sqla_TensorGreenWKBTagAssociation_factory(SQLAFactoryBase):
+class sqla_GkWKBTagAssociation_factory(SQLAFactoryBase):
     def __init__(self):
         pass
 
@@ -48,7 +48,7 @@ class sqla_TensorGreenWKBTagAssociation_factory(SQLAFactoryBase):
         raise NotImplementedError
 
     @staticmethod
-    def add_tag(conn, inserter, wkb: TensorGreenWKB, tag: store_tag):
+    def add_tag(conn, inserter, wkb: GkWKBIntegration, tag: store_tag):
         inserter(
             conn,
             {
@@ -58,7 +58,7 @@ class sqla_TensorGreenWKBTagAssociation_factory(SQLAFactoryBase):
         )
 
     @staticmethod
-    def remove_tag(conn, table, wkb: TensorGreenWKB, tag: store_tag):
+    def remove_tag(conn, table, wkb: GkWKBIntegration, tag: store_tag):
         conn.execute(
             sqla.delete(table).where(
                 and_(
@@ -69,7 +69,7 @@ class sqla_TensorGreenWKBTagAssociation_factory(SQLAFactoryBase):
         )
 
 
-class sqla_TensorGreenWKB_factory(SQLAFactoryBase):
+class sqla_GkWKBIntegration_factory(SQLAFactoryBase):
     def __init__(self):
         pass
 
@@ -133,6 +133,8 @@ class sqla_TensorGreenWKB_factory(SQLAFactoryBase):
                     sqla.Integer,
                     nullable=False,
                 ),
+                sqla.Column("sin_coeff", sqla.Float(64), nullable=False),
+                sqla.Column("cos_coeff", sqla.Float(64), nullable=False),
                 sqla.Column("compute_time", sqla.Float(64)),
                 sqla.Column("compute_steps", sqla.Integer),
                 sqla.Column("RHS_evaluations", sqla.Integer),
@@ -169,6 +171,8 @@ class sqla_TensorGreenWKB_factory(SQLAFactoryBase):
         query = (
             sqla.select(
                 table.c.serial,
+                table.c.sin_coeff,
+                table.c.cos_coeff,
                 table.c.compute_time,
                 table.c.compute_steps,
                 table.c.RHS_evaluations,
@@ -227,13 +231,13 @@ class sqla_TensorGreenWKB_factory(SQLAFactoryBase):
             row_data = conn.execute(query).one_or_none()
         except MultipleResultsFound as e:
             print(
-                f"!! Database error: multiple results found when querying for TensorGreenFunctionIntegration"
+                f"!! Database error: multiple results found when querying for GkNumericalIntegration"
             )
             raise e
 
         if row_data is None:
             # build and return an unpopulated object
-            return TensorGreenWKB(
+            return GkWKBIntegration(
                 payload=None,
                 solver_labels=solver_labels,
                 label=label,
@@ -248,6 +252,9 @@ class sqla_TensorGreenWKB_factory(SQLAFactoryBase):
 
         store_id = row_data.serial
         store_label = row_data.label
+
+        sin_coeff = row_data.sin_coeff
+        cos_coeff = row_data.cos_coeff
 
         compute_time = row_data.compute_time
         compute_steps = row_data.compute_steps
@@ -272,7 +279,7 @@ class sqla_TensorGreenWKB_factory(SQLAFactoryBase):
         )
 
         # read out sample values associated with this integration
-        value_table = tables["TensorGreenWKBValue"]
+        value_table = tables["GkWKBValue"]
 
         sample_rows = conn.execute(
             sqla.select(
@@ -301,7 +308,7 @@ class sqla_TensorGreenWKB_factory(SQLAFactoryBase):
             z_value = redshift(store_id=row.z_serial, z=row.z)
             z_points.append(z_value)
             values.append(
-                TensorGreenWKBValue(
+                GkWKBValue(
                     store_id=row.serial,
                     z=z_value,
                     H=row.H,
@@ -319,9 +326,11 @@ class sqla_TensorGreenWKB_factory(SQLAFactoryBase):
                     f'Fewer z-samples than expected were recovered from the validated WKB tensor Green function "{store_label}"'
                 )
 
-        obj = TensorGreenWKB(
+        obj = GkWKBIntegration(
             payload={
                 "store_id": store_id,
+                "sin_coeff": sin_coeff,
+                "cos_coeff": cos_coeff,
                 "compute_time": compute_time,
                 "compute_steps": compute_steps,
                 "RHS_evaluations": RHS_evaluations,
@@ -347,7 +356,7 @@ class sqla_TensorGreenWKB_factory(SQLAFactoryBase):
 
     @staticmethod
     def store(
-        obj: TensorGreenWKB,
+        obj: GkWKBIntegration,
         conn,
         table,
         inserter,
@@ -378,23 +387,21 @@ class sqla_TensorGreenWKB_factory(SQLAFactoryBase):
             },
         )
 
-        # set store_id on behalf of the TensorGreenFunctionIntegration instance
+        # set store_id on behalf of the GkNumericalIntegration instance
         obj._my_id = store_id
 
         # add any tags that have been specified
         tag_inserter = inserters["TensorGreenWKB_tags"]
         for tag in obj.tags:
-            sqla_TensorGreenWKBTagAssociation_factory.add_tag(
-                conn, tag_inserter, obj, tag
-            )
+            sqla_GkWKBTagAssociation_factory.add_tag(conn, tag_inserter, obj, tag)
 
         # now serialize the sampled output points
-        # TODO: this is undesirable, because there are two ways a TensorGreenWKBValue can be serialized:
+        # TODO: this is undesirable, because there are two ways a GkWKBValue can be serialized:
         #  directly, or using the logic here as part of a TensorGreenWKB. We need to be careful to
         #  keep the logic in sync. It would be better to have a single serialization point for TensorGreenWKB.
-        value_inserter = inserters["TensorGreenWKBValue"]
+        value_inserter = inserters["GkWKBValue"]
         for value in obj.values:
-            value: TensorGreenWKBValue
+            value: GkWKBValue
             value_id = value_inserter(
                 conn,
                 {
@@ -415,7 +422,7 @@ class sqla_TensorGreenWKB_factory(SQLAFactoryBase):
 
     @staticmethod
     def validate(
-        obj: TensorGreenWKB,
+        obj: GkWKBIntegration,
         conn,
         table,
         tables,
@@ -430,7 +437,7 @@ class sqla_TensorGreenWKB_factory(SQLAFactoryBase):
             sqla.select(table.c.z_samples).filter(table.c.serial == obj.store_id)
         ).scalar()
 
-        value_table = tables["TensorGreenWKBValue"]
+        value_table = tables["GkWKBValue"]
         num_samples = conn.execute(
             sqla.select(sqla.func.count(value_table.c.serial)).filter(
                 value_table.c.integration_serial == obj.store_id
@@ -462,7 +469,7 @@ class sqla_TensorGreenWKB_factory(SQLAFactoryBase):
         redshift_table = tables["redshift"]
         wavenumber_exit_table = tables["wavenumber_exit_time"]
         wavenumber_table = tables["wavenumber"]
-        value_table = tables["TensorGreenWKBValue"]
+        value_table = tables["GkWKBValue"]
 
         # bake results into a list so that we can close this query; we are going to want to run
         # another one as we process the rows from this one
@@ -526,7 +533,7 @@ class sqla_TensorGreenWKB_factory(SQLAFactoryBase):
         return msgs
 
 
-class sqla_TensorGreenWKBValue_factory(SQLAFactoryBase):
+class sqla_GkWKBValue_factory(SQLAFactoryBase):
     def __init__(self):
         pass
 
@@ -585,7 +592,7 @@ class sqla_TensorGreenWKBValue_factory(SQLAFactoryBase):
             ).one_or_none()
         except MultipleResultsFound as e:
             print(
-                f"!! Database error: multiple results found when querying for TensorGreenWKBValue"
+                f"!! Database error: multiple results found when querying for GkWKBValue"
             )
             raise e
 
@@ -617,7 +624,7 @@ class sqla_TensorGreenWKBValue_factory(SQLAFactoryBase):
                     f"Stored WKB tensor Green function phase (WKB store_id={wkb_serial}, z={z.store_id}) = {row_data.theta} differs from expected value = {theta}"
                 )
 
-        return TensorGreenWKBValue(
+        return GkWKBValue(
             store_id=store_id,
             z=z,
             H=H,

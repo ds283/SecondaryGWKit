@@ -8,7 +8,7 @@ import ray
 
 from ComputeTargets import (
     MatterTransferFunctionIntegration,
-    TensorGreenFunctionIntegration,
+    GkNumericalIntegration,
     IntegrationSolver,
 )
 from ComputeTargets.TensorSource import TensorSource
@@ -343,7 +343,7 @@ with ShardedPool(
             if len(response_zs) >= 3:
                 work_refs.append(
                     pool.object_get(
-                        TensorGreenFunctionIntegration,
+                        GkNumericalIntegration,
                         solver_labels=solvers,
                         cosmology=LambdaCDM_Planck2018,
                         k=k_exit,
@@ -365,10 +365,10 @@ with ShardedPool(
 
         return work_refs
 
-    def build_Gk_exit_work_label(Gk: TensorGreenFunctionIntegration):
+    def build_Gk_exit_work_label(Gk: GkNumericalIntegration):
         return f"{args.job_name}-Gk-k{Gk.k.k_inv_Mpc:.3g}-sourcez{Gk.z_source.z:.5g}-{datetime.now().replace(microsecond=0).isoformat()}"
 
-    def validate_Gk_work(Gk: TensorGreenFunctionIntegration):
+    def validate_Gk_work(Gk: GkNumericalIntegration):
         return pool.object_validate(Gk)
 
     Gk_queue = RayWorkPool(

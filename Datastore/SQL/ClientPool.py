@@ -17,15 +17,15 @@ _default_serial_batch_size = {
     "MatterTransferFunctionIntegration": 50,
     "MatterTransferFunctionIntegration_tags": 10,
     "MatterTransferFunctionValue": 5000,
-    "TensorGreenFunctionIntegration": 50,
-    "TensorGreenFunctionIntegration_tags": 10,
-    "TensorGreenFunctionValue": 5000,
+    "GkNumericalIntegration": 50,
+    "GkNumericalIntegration_tags": 10,
+    "GkNumericalValue": 5000,
     "TensorSource": 50,
     "TensorSource_tags": 10,
     "TensorSourceValue": 5000,
-    "TensorGreenWKB": 50,
-    "TensorGreenWKB_tags": 10,
-    "TensorGreenWKBValue": 5000,
+    "GkWKBIntegration": 50,
+    "GkWKB_tags": 10,
+    "GkWKBValue": 5000,
 }
 
 

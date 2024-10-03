@@ -8,7 +8,7 @@ from pyarrow import dataset
 from pyarrow.csv import CSVWriter
 
 from ComputeTargets import (
-    TensorGreenFunctionIntegration,
+    GkNumericalIntegration,
 )
 from CosmologyConcepts import (
     wavenumber,
@@ -152,7 +152,7 @@ with ShardedPool(
     )
 
     @ray.remote
-    def write_CSV_content(Gk: TensorGreenFunctionIntegration):
+    def write_CSV_content(Gk: GkNumericalIntegration):
         base_path = Path(args.output).resolve()
         time_series_path = (
             base_path
@@ -227,7 +227,7 @@ with ShardedPool(
 
         return [
             pool.object_get(
-                TensorGreenFunctionIntegration,
+                GkNumericalIntegration,
                 solver_labels=[],
                 cosmology=LambdaCDM_Planck2018,
                 k=k_exit,
@@ -239,7 +239,7 @@ with ShardedPool(
             for source_z in source_zs
         ]
 
-    def Gk_available_map(Gk: TensorGreenFunctionIntegration):
+    def Gk_available_map(Gk: GkNumericalIntegration):
         return write_CSV_content.remote(Gk)
 
     build_csv_queue = RayWorkPool(
