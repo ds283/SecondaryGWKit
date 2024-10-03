@@ -29,9 +29,11 @@ _shard_tables = {
     "MatterTransferFunctionIntegration": "k",
     "MatterTransferFunctionValue": "k",
     "GkNumericalIntegration": "k",
-    "TensorGreenFunctionValue": "k",
+    "GkNumericalValue": "k",
     "TensorSource": "q",
     "TensorSourceValue": "q",
+    "GkWKBIntegration": "k",
+    "GKWKBValue": "k",
 }
 
 

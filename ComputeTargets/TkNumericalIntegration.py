@@ -24,7 +24,7 @@ from .integration_supervisor import (
 )
 
 
-class MatterTransferFunctionSupervisor(IntegrationSupervisor):
+class TkIntegrationSupervisor(IntegrationSupervisor):
     def __init__(
         self,
         k: wavenumber,
@@ -153,7 +153,7 @@ def compute_Tk(
     T_INDEX = 1
     TPRIME_INDEX = 2
 
-    def RHS(z, state, supervisor: MatterTransferFunctionSupervisor) -> List[float]:
+    def RHS(z, state, supervisor: TkIntegrationSupervisor) -> List[float]:
         """
         k *must* be measured using the same units used for H(z) in the cosmology
         """
@@ -201,7 +201,7 @@ def compute_Tk(
 
         return [da0_tau_dz, dT_dz, dTprime_dz]
 
-    with MatterTransferFunctionSupervisor(
+    with TkIntegrationSupervisor(
         k, z_init, z_sample.min, delta_logz=delta_logz
     ) as supervisor:
         # use initial values T(z) = 1, dT/dz = 0 at z = z_init
@@ -266,7 +266,7 @@ def compute_Tk(
     }
 
 
-class MatterTransferFunctionIntegration(DatastoreObject):
+class TkNumericalIntegration(DatastoreObject):
     """
     Encapsulates all sample points produced during a single integration of the
     matter transfer function, labelled by a wavenumber k, and sampled over
@@ -295,7 +295,7 @@ class MatterTransferFunctionIntegration(DatastoreObject):
         # if initial time is not really compatible with the initial conditions we use, warn the user
         if z_init is not None and z_init.z < k.z_exit_suph_e3 - DEFAULT_FLOAT_PRECISION:
             print(
-                f"!! Warning (MatterTransferFunctionIntegration) k={k.k.k_inv_Mpc}/Mpc, log10_atol={atol.log10_tol}, log10_rtol={rtol.log10_tol}"
+                f"!! Warning (TkNumericalIntegration) k={k.k.k_inv_Mpc}/Mpc, log10_atol={atol.log10_tol}, log10_rtol={rtol.log10_tol}"
             )
             print(
                 f"|    Initial redshift z_init={z_init.z:.5g} is later than the 3-efold superhorizon time z_3={k.z_exit_suph_e3:.5g}."
@@ -524,7 +524,7 @@ class MatterTransferFunctionIntegration(DatastoreObject):
     def store(self) -> Optional[bool]:
         if self._compute_ref is None:
             raise RuntimeError(
-                "MatterTransferFunctionIntegration: store() called, but no compute() is in progress"
+                "TkNumericalIntegration: store() called, but no compute() is in progress"
             )
 
         # check whether the computation has actually resolved
@@ -565,9 +565,9 @@ class MatterTransferFunctionIntegration(DatastoreObject):
             analytic_T = compute_analytic_T(self.k.k, 1.0 / 3.0, tau)
             analytic_Tprime = compute_analytic_Tprime(self.k.k, 1.0 / 3.0, tau, H)
 
-            # create new MatterTransferFunctionValue object
+            # create new TkNumericalValue object
             self._values.append(
-                MatterTransferFunctionValue(
+                TkNumericalValue(
                     None,
                     self._z_sample[i],
                     T_sample[i],
@@ -582,11 +582,11 @@ class MatterTransferFunctionIntegration(DatastoreObject):
         return True
 
 
-class MatterTransferFunctionValue(DatastoreObject):
+class TkNumericalValue(DatastoreObject):
     """
     Encapsulates a single sampled value of the matter transfer functions.
     Parameters such as wavenumber k, initial redshift z_init, etc., are held by the
-    owning MatterTransferFunctionIntegration object
+    owning TkNumericalIntegration object
     """
 
     def __init__(

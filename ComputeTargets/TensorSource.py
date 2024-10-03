@@ -3,8 +3,8 @@ from typing import Optional, List
 import ray
 
 from ComputeTargets import (
-    MatterTransferFunctionIntegration,
-    MatterTransferFunctionValue,
+    TkNumericalIntegration,
+    TkNumericalValue,
 )
 from CosmologyConcepts import wavenumber, redshift_array, redshift
 from CosmologyModels import BaseCosmology
@@ -48,8 +48,8 @@ def source_function(
 def compute_tensor_source(
     cosmology: BaseCosmology,
     z_sample: redshift_array,
-    Tq: MatterTransferFunctionIntegration,
-    Tr: MatterTransferFunctionIntegration,
+    Tq: TkNumericalIntegration,
+    Tr: TkNumericalIntegration,
 ):
     Tq_zsample = Tq.z_sample
     Tr_zsample = Tr.z_sample
@@ -89,7 +89,7 @@ def compute_tensor_source(
                 missing_r = True
 
             if not missing_q:
-                Tq_: MatterTransferFunctionValue = Tq[q_idx]
+                Tq_: TkNumericalValue = Tq[q_idx]
 
                 Tq_value = Tq_.T
                 Tq_prime = Tq_.Tprime
@@ -104,7 +104,7 @@ def compute_tensor_source(
                 analytic_Tq_prime = 0.0
 
             if not missing_r:
-                Tr_: MatterTransferFunctionValue = Tr[r_idx]
+                Tr_: TkNumericalValue = Tr[r_idx]
 
                 Tr_value = Tr_.T
                 Tr_prime = Tr_.Tprime
@@ -161,14 +161,14 @@ class TensorSource(DatastoreObject):
         self,
         payload,
         z_sample: redshift_array,
-        Tq: MatterTransferFunctionIntegration,
-        Tr: MatterTransferFunctionIntegration,
+        Tq: TkNumericalIntegration,
+        Tr: TkNumericalIntegration,
         label: Optional[str] = None,
         tags: Optional[List[store_tag]] = None,
         q: Optional[wavenumber] = None,
     ):
         # q is not used, but needs to be accepted because it functions as the shard key;
-        # there is a .q attribute, but this is derived from the Tq MatterTransferFunctionIntegration object
+        # there is a .q attribute, but this is derived from the Tq TkNumericalIntegration object
 
         # check compatibility of the ingredients we have been offered
         check_cosmology(Tq, Tr)
@@ -208,11 +208,11 @@ class TensorSource(DatastoreObject):
         return self._cosmology
 
     @property
-    def Tq(self) -> MatterTransferFunctionIntegration:
+    def Tq(self) -> TkNumericalIntegration:
         return self._Tq
 
     @property
-    def Tr(self) -> MatterTransferFunctionIntegration:
+    def Tr(self) -> TkNumericalIntegration:
         return self._Tr
 
     @property

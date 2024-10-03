@@ -8,7 +8,7 @@ from pyarrow import dataset
 from pyarrow.csv import CSVWriter
 
 from ComputeTargets import (
-    MatterTransferFunctionIntegration,
+    TkNumericalIntegration,
 )
 from CosmologyConcepts import (
     wavenumber,
@@ -145,7 +145,7 @@ with ShardedPool(
     )
 
     @ray.remote
-    def write_CSV_content(Tk: MatterTransferFunctionIntegration):
+    def write_CSV_content(Tk: TkNumericalIntegration):
         base_path = Path(args.output).resolve()
         time_series_path = (
             base_path / f"time-series/storeid{Tk.store_id}-kid{Tk.k.store_id}.csv"
@@ -212,7 +212,7 @@ with ShardedPool(
             )
 
         return pool.object_get(
-            MatterTransferFunctionIntegration,
+            TkNumericalIntegration,
             solver_labels=[],
             cosmology=LambdaCDM_Planck2018,
             k=k_exit,
@@ -222,7 +222,7 @@ with ShardedPool(
             rtol=rtol,
         )
 
-    def Tk_available_map(Tk: MatterTransferFunctionIntegration):
+    def Tk_available_map(Tk: TkNumericalIntegration):
         return write_CSV_content.remote(Tk)
 
     build_csv_queue = RayWorkPool(

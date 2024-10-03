@@ -8,8 +8,8 @@ from sqlalchemy.exc import MultipleResultsFound
 
 from ComputeTargets import (
     IntegrationSolver,
-    MatterTransferFunctionIntegration,
-    MatterTransferFunctionValue,
+    TkNumericalIntegration,
+    TkNumericalValue,
 )
 from CosmologyConcepts import redshift_array, redshift, wavenumber_exit_time
 from CosmologyModels import BaseCosmology
@@ -18,7 +18,7 @@ from MetadataConcepts import tolerance, store_tag
 from defaults import DEFAULT_STRING_LENGTH, DEFAULT_FLOAT_PRECISION
 
 
-class sqla_MatterTransferFunctionTagAssociation_factory(SQLAFactoryBase):
+class sqla_TkNumericalTagAssociation_factory(SQLAFactoryBase):
     def __init__(self):
         pass
 
@@ -33,7 +33,7 @@ class sqla_MatterTransferFunctionTagAssociation_factory(SQLAFactoryBase):
                 sqla.Column(
                     "integration_serial",
                     sqla.Integer,
-                    sqla.ForeignKey("MatterTransferFunctionIntegration.serial"),
+                    sqla.ForeignKey("TkNumericalIntegration.serial"),
                     nullable=False,
                     primary_key=True,
                 ),
@@ -52,9 +52,7 @@ class sqla_MatterTransferFunctionTagAssociation_factory(SQLAFactoryBase):
         raise NotImplementedError
 
     @staticmethod
-    def add_tag(
-        conn, inserter, integration: MatterTransferFunctionIntegration, tag: store_tag
-    ):
+    def add_tag(conn, inserter, integration: TkNumericalIntegration, tag: store_tag):
         inserter(
             conn,
             {
@@ -64,9 +62,7 @@ class sqla_MatterTransferFunctionTagAssociation_factory(SQLAFactoryBase):
         )
 
     @staticmethod
-    def remove_tag(
-        conn, table, integration: MatterTransferFunctionIntegration, tag: store_tag
-    ):
+    def remove_tag(conn, table, integration: TkNumericalIntegration, tag: store_tag):
         conn.execute(
             sqla.delete(table).where(
                 and_(
@@ -77,7 +73,7 @@ class sqla_MatterTransferFunctionTagAssociation_factory(SQLAFactoryBase):
         )
 
 
-class sqla_MatterTransferFunctionIntegration_factory(SQLAFactoryBase):
+class sqla_TkNumericalIntegration_factory(SQLAFactoryBase):
     def __init__(self):
         pass
 
@@ -242,13 +238,13 @@ class sqla_MatterTransferFunctionIntegration_factory(SQLAFactoryBase):
             row_data = conn.execute(query).one_or_none()
         except MultipleResultsFound as e:
             print(
-                f"!! Database error: multiple results found when querying for MatterTransferFunctionIntegration"
+                f"!! Database error: multiple results found when querying for TkNumericalIntegration"
             )
             raise e
 
         if row_data is None:
             # build and return an unpopulated object
-            return MatterTransferFunctionIntegration(
+            return TkNumericalIntegration(
                 payload=None,
                 solver_labels=solver_labels,
                 cosmology=cosmology,
@@ -292,7 +288,7 @@ class sqla_MatterTransferFunctionIntegration_factory(SQLAFactoryBase):
         )
 
         # read out sample values associated with this integration
-        value_table = tables["MatterTransferFunctionValue"]
+        value_table = tables["TkNumericalValue"]
 
         sample_rows = conn.execute(
             sqla.select(
@@ -320,7 +316,7 @@ class sqla_MatterTransferFunctionIntegration_factory(SQLAFactoryBase):
             z_value = redshift(store_id=row.z_serial, z=row.z)
             z_points.append(z_value)
             values.append(
-                MatterTransferFunctionValue(
+                TkNumericalValue(
                     store_id=row.serial,
                     z=z_value,
                     T=row.T,
@@ -337,7 +333,7 @@ class sqla_MatterTransferFunctionIntegration_factory(SQLAFactoryBase):
                     f'Fewer z-samples than expected were recovered from the validated transfer function "{store_label}"'
                 )
 
-        obj = MatterTransferFunctionIntegration(
+        obj = TkNumericalIntegration(
             payload={
                 "store_id": store_id,
                 "compute_time": compute_time,
@@ -369,7 +365,7 @@ class sqla_MatterTransferFunctionIntegration_factory(SQLAFactoryBase):
 
     @staticmethod
     def store(
-        obj: MatterTransferFunctionIntegration,
+        obj: TkNumericalIntegration,
         conn,
         table,
         inserter,
@@ -405,23 +401,21 @@ class sqla_MatterTransferFunctionIntegration_factory(SQLAFactoryBase):
             },
         )
 
-        # set store_id on behalf of the MatterTransferFunctionIntegration instance
+        # set store_id on behalf of the TkNumericalIntegration instance
         obj._my_id = store_id
 
         # add any tags that have been specified
         tag_inserter = inserters["MatterTransferFunctionIntegration_tags"]
         for tag in obj.tags:
-            sqla_MatterTransferFunctionTagAssociation_factory.add_tag(
-                conn, tag_inserter, obj, tag
-            )
+            sqla_TkNumericalTagAssociation_factory.add_tag(conn, tag_inserter, obj, tag)
 
         # now serialize the sampled output points
-        # TODO: this is undesirable, because there are two ways a MatterTransferFunctionValue can be serialized:
-        #  directly, or using the logic here as part of a MatterTransferFunctionIntegration. We need to be careful to
-        #  keep the logic in sync. It would be better to have a single serialization point for MatterTransferFunctionValue.
-        value_inserter = inserters["MatterTransferFunctionValue"]
+        # TODO: this is undesirable, because there are two ways a TkNumericalValue can be serialized:
+        #  directly, or using the logic here as part of a TkNumericalIntegration. We need to be careful to
+        #  keep the logic in sync. It would be better to have a single serialization point for TkNumericalValue.
+        value_inserter = inserters["TkNumericalValue"]
         for value in obj.values:
-            value: MatterTransferFunctionValue
+            value: TkNumericalValue
             value_id = value_inserter(
                 conn,
                 {
@@ -434,19 +428,19 @@ class sqla_MatterTransferFunctionIntegration_factory(SQLAFactoryBase):
                 },
             )
 
-            # set store_id on behalf of the MatterTransferFunctionValue instance
+            # set store_id on behalf of the TkNumericalValue instance
             value._my_id = value_id
 
         return obj
 
     @staticmethod
     def validate(
-        obj: MatterTransferFunctionIntegration,
+        obj: TkNumericalIntegration,
         conn,
         table,
         tables,
     ):
-        # query the row in MatterTransferFunctionIntegration corresponding to this object
+        # query the row in TkNumericalIntegration corresponding to this object
         if not obj.available:
             raise RuntimeError(
                 "Attempt to validate a datastore object that has not yet been serialized"
@@ -456,7 +450,7 @@ class sqla_MatterTransferFunctionIntegration_factory(SQLAFactoryBase):
             sqla.select(table.c.z_samples).filter(table.c.serial == obj.store_id)
         ).scalar()
 
-        value_table = tables["MatterTransferFunctionValue"]
+        value_table = tables["TkNumericalValue"]
         num_samples = conn.execute(
             sqla.select(sqla.func.count(value_table.c.serial)).filter(
                 value_table.c.integration_serial == obj.store_id
@@ -488,7 +482,7 @@ class sqla_MatterTransferFunctionIntegration_factory(SQLAFactoryBase):
         redshift_table = tables["redshift"]
         wavenumber_exit_table = tables["wavenumber_exit_time"]
         wavenumber_table = tables["wavenumber"]
-        value_table = tables["MatterTransferFunctionValue"]
+        value_table = tables["TkNumericalValue"]
 
         # bake results into a list so that we can close this query; we are going to want to run
         # another one as we process the rows from this one
@@ -551,7 +545,7 @@ class sqla_MatterTransferFunctionIntegration_factory(SQLAFactoryBase):
         return msgs
 
 
-class sqla_MatterTransferFunctionValue_factory(SQLAFactoryBase):
+class sqla_TkNumericalValue_factory(SQLAFactoryBase):
     def __init__(self):
         pass
 
@@ -565,7 +559,7 @@ class sqla_MatterTransferFunctionValue_factory(SQLAFactoryBase):
                 sqla.Column(
                     "integration_serial",
                     sqla.Integer,
-                    sqla.ForeignKey("MatterTransferFunctionIntegration.serial"),
+                    sqla.ForeignKey("TkNumericalIntegration.serial"),
                     nullable=False,
                 ),
                 sqla.Column(
@@ -610,7 +604,7 @@ class sqla_MatterTransferFunctionValue_factory(SQLAFactoryBase):
             ).one_or_none()
         except MultipleResultsFound as e:
             print(
-                f"!! Database error: multiple results found when querying for MatterTransferFunctionValue"
+                f"!! Database error: multiple results found when querying for TkNumericalValue"
             )
             raise e
 
@@ -640,7 +634,7 @@ class sqla_MatterTransferFunctionValue_factory(SQLAFactoryBase):
                     f"Stored matter transfer function derivative (integration={integration_serial}, z={z.z}) = {row_data.Tprime} differs from expected value = {Tprime}"
                 )
 
-        return MatterTransferFunctionValue(
+        return TkNumericalValue(
             store_id=store_id,
             z=z,
             T=T,

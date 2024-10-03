@@ -29,7 +29,7 @@ class sqla_GkWKBTagAssociation_factory(SQLAFactoryBase):
                 sqla.Column(
                     "wkb_serial",
                     sqla.Integer,
-                    sqla.ForeignKey("TensorGreenWKB.serial"),
+                    sqla.ForeignKey("GkWKBIntegration.serial"),
                     nullable=False,
                     primary_key=True,
                 ),
@@ -164,7 +164,7 @@ class sqla_GkWKBIntegration_factory(SQLAFactoryBase):
         atol_table = tables["tolerance"].alias("atol")
         rtol_table = tables["tolerance"].alias("rtol")
         solver_table = tables["IntegrationSolver"]
-        tag_table = tables["TensorGreenWKB_tags"]
+        tag_table = tables["GkWKB_tagstags"]
         redshift_table = tables["redshift"]
 
         # notice that we query only for validated data
@@ -391,14 +391,14 @@ class sqla_GkWKBIntegration_factory(SQLAFactoryBase):
         obj._my_id = store_id
 
         # add any tags that have been specified
-        tag_inserter = inserters["TensorGreenWKB_tags"]
+        tag_inserter = inserters["GkWKB_tagstags"]
         for tag in obj.tags:
             sqla_GkWKBTagAssociation_factory.add_tag(conn, tag_inserter, obj, tag)
 
         # now serialize the sampled output points
         # TODO: this is undesirable, because there are two ways a GkWKBValue can be serialized:
-        #  directly, or using the logic here as part of a TensorGreenWKB. We need to be careful to
-        #  keep the logic in sync. It would be better to have a single serialization point for TensorGreenWKB.
+        #  directly, or using the logic here as part of a GkWKBIntegration. We need to be careful to
+        #  keep the logic in sync. It would be better to have a single serialization point for GkWKBIntegration.
         value_inserter = inserters["GkWKBValue"]
         for value in obj.values:
             value: GkWKBValue
@@ -415,7 +415,7 @@ class sqla_GkWKBIntegration_factory(SQLAFactoryBase):
                 },
             )
 
-            # set store_id on behalf of the TensorGreenFunctionValue instance
+            # set store_id on behalf of the GkNumericalValue instance
             value._my_id = value_id
 
         return obj
@@ -427,7 +427,7 @@ class sqla_GkWKBIntegration_factory(SQLAFactoryBase):
         table,
         tables,
     ):
-        # query the row in TensorGreenWKB corresponding to this object
+        # query the row in GkWKBIntegration corresponding to this object
         if not obj.available:
             raise RuntimeError(
                 "Attempt to validate a datastore object that has not yet been serialized"
@@ -547,7 +547,7 @@ class sqla_GkWKBValue_factory(SQLAFactoryBase):
                 sqla.Column(
                     "wkb_serial",
                     sqla.Integer,
-                    sqla.ForeignKey("TensorGreenWKB.serial"),
+                    sqla.ForeignKey("GkWKBIntegration.serial"),
                     nullable=False,
                 ),
                 sqla.Column(

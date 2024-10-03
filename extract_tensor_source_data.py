@@ -9,7 +9,7 @@ from pyarrow import dataset
 from pyarrow.csv import CSVWriter
 
 from ComputeTargets import (
-    MatterTransferFunctionIntegration,
+    TkNumericalIntegration,
 )
 from ComputeTargets.TensorSource import TensorSource
 from CosmologyConcepts import (
@@ -118,7 +118,7 @@ with ShardedPool(
             )
 
         return pool.object_get(
-            MatterTransferFunctionIntegration,
+            TkNumericalIntegration,
             solver_labels=[],
             cosmology=LambdaCDM_Planck2018,
             k=k_exit,
@@ -206,7 +206,7 @@ with ShardedPool(
 
         return pool.object_get(TensorSource, z_sample=None, q=q, Tq=Tq, Tr=Tr)
 
-    def tensor_source_available_map(Tk: MatterTransferFunctionIntegration):
+    def tensor_source_available_map(Tk: TkNumericalIntegration):
         return write_CSV_content.remote(Tk)
 
     tensor_source_grid = list(

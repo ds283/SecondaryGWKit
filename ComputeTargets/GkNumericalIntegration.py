@@ -36,7 +36,7 @@ G_INDEX = 1
 GPRIME_INDEX = 2
 
 
-class GkSupervisor(IntegrationSupervisor):
+class GkIntegrationSupervisor(IntegrationSupervisor):
     def __init__(
         self,
         k: wavenumber,
@@ -256,7 +256,7 @@ def compute_Gk(
 
         return [da0_tau_dz, dG_dz, dGprime_dz]
 
-    with GkSupervisor(
+    with GkIntegrationSupervisor(
         k_wavenumber, z_source, z_sample.min, delta_logz=delta_logz
     ) as supervisor:
         # initial conditions should be

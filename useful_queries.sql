@@ -27,7 +27,7 @@ SELECT vs.serial                 AS serial,
        ig.z_source_serial        AS z_source_serial,
        ss.z                      AS z_source,
        vs.value                  AS value
-FROM TensorGreenFunctionValue vs
+FROM GkNumericalValue vs
          INNER JOIN GkNumericalIntegration ig ON ig.serial = vs.integration_serial
          INNER JOIN wavenumber_exit_time kes ON kes.serial = ig.wavenumber_exit_serial
          INNER JOIN wavenumber ks ON ks.serial = kes.wavenumber_serial

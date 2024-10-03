@@ -5,7 +5,7 @@ from math import fabs
 from sqlalchemy import and_, or_
 from sqlalchemy.exc import MultipleResultsFound
 
-from ComputeTargets import MatterTransferFunctionIntegration
+from ComputeTargets import TkNumericalIntegration
 from ComputeTargets.TensorSource import TensorSource, TensorSourceValue
 from CosmologyConcepts import redshift, redshift_array
 from Datastore.SQL.ObjectFactories.base import SQLAFactoryBase
@@ -112,8 +112,8 @@ class sqla_TensorSource_factory(SQLAFactoryBase):
         label: Optional[str] = payload.get("label", None)
         tags: List[store_tag] = payload.get("tags", [])
 
-        Tq: MatterTransferFunctionIntegration = payload["Tq"]
-        Tr: MatterTransferFunctionIntegration = payload["Tr"]
+        Tq: TkNumericalIntegration = payload["Tq"]
+        Tr: TkNumericalIntegration = payload["Tr"]
 
         tag_table = tables["TensorSource_tags"]
         redshift_table = tables["redshift"]

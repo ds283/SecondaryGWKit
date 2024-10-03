@@ -10,26 +10,26 @@ from ray.actor import ActorHandle
 from sqlalchemy.exc import IntegrityError, SQLAlchemyError
 
 from Datastore.SQL.ClientPool import SerialPoolManager, SerialLeaseManager
-from Datastore.SQL.ObjectFactories.LambdaCDM import sqla_LambdaCDM_factory
-from Datastore.SQL.ObjectFactories.MatterTransferFunction import (
-    sqla_MatterTransferFunctionIntegration_factory,
-    sqla_MatterTransferFunctionValue_factory,
-    sqla_MatterTransferFunctionTagAssociation_factory,
-)
-from Datastore.SQL.ObjectFactories.TensorGreenFunction import (
+from Datastore.SQL.ObjectFactories.GkNumericalIntegration import (
     sqla_GkNumericalIntegration_factory,
     sqla_GkNumericalValue_factory,
     sqla_GkNumericalTagAssociation_factory,
 )
-from Datastore.SQL.ObjectFactories.TensorGreenWKB import (
+from Datastore.SQL.ObjectFactories.GkWKBIntegration import (
     sqla_GkWKBIntegration_factory,
     sqla_GkWKBTagAssociation_factory,
     sqla_GkWKBValue_factory,
 )
+from Datastore.SQL.ObjectFactories.LambdaCDM import sqla_LambdaCDM_factory
 from Datastore.SQL.ObjectFactories.TensorSource import (
     sqla_TensorSource_factory,
     sqla_TensorSourceTagAssocation_factory,
     sqla_TensorSourceValue_factory,
+)
+from Datastore.SQL.ObjectFactories.TkNumericalIntegration import (
+    sqla_TkNumericalIntegration_factory,
+    sqla_TkNumericalValue_factory,
+    sqla_TkNumericalTagAssociation_factory,
 )
 from Datastore.SQL.ObjectFactories.base import SQLAFactoryBase
 from Datastore.SQL.ObjectFactories.integration_metadata import (
@@ -61,18 +61,18 @@ _factories = {
     "tolerance": sqla_tolerance_factory,
     "LambdaCDM": sqla_LambdaCDM_factory,
     "IntegrationSolver": sqla_IntegrationSolver_factory,
-    "MatterTransferFunctionIntegration": sqla_MatterTransferFunctionIntegration_factory,
-    "MatterTransferFunctionIntegration_tags": sqla_MatterTransferFunctionTagAssociation_factory,
-    "MatterTransferFunctionValue": sqla_MatterTransferFunctionValue_factory,
+    "TkNumericalIntegration": sqla_TkNumericalIntegration_factory,
+    "TkNumerical_tags": sqla_TkNumericalTagAssociation_factory,
+    "TkNumericalValue": sqla_TkNumericalValue_factory,
     "GkNumericalIntegration": sqla_GkNumericalIntegration_factory,
-    "GkNumericalIntegration_tags": sqla_GkNumericalTagAssociation_factory,
-    "TensorGreenFunctionValue": sqla_GkNumericalValue_factory,
+    "GkNumerical_tags": sqla_GkNumericalTagAssociation_factory,
+    "GkNumericalValue": sqla_GkNumericalValue_factory,
     "TensorSource": sqla_TensorSource_factory,
     "TensorSource_tags": sqla_TensorSourceTagAssocation_factory,
     "TensorSourceValue": sqla_TensorSourceValue_factory,
-    "TensorGreenWKB": sqla_GkWKBIntegration_factory,
-    "TensorGreenWKB_tags": sqla_GkWKBTagAssociation_factory,
-    "TensorGreenWKBValue": sqla_GkWKBValue_factory,
+    "GkWKBIntegration": sqla_GkWKBIntegration_factory,
+    "GkWKB_tags": sqla_GkWKBTagAssociation_factory,
+    "GkWKBValue": sqla_GkWKBValue_factory,
 }
 
 _FactoryMappingType = Mapping[str, SQLAFactoryBase]

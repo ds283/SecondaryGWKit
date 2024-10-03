@@ -7,7 +7,7 @@ import numpy as np
 import ray
 
 from ComputeTargets import (
-    MatterTransferFunctionIntegration,
+    TkNumericalIntegration,
     GkNumericalIntegration,
     IntegrationSolver,
 )
@@ -234,7 +234,7 @@ with ShardedPool(
     def build_Tk_work(k_exit: wavenumber_exit_time):
         my_sample = z_sample.truncate(k_exit.z_exit_suph_e5)
         return pool.object_get(
-            MatterTransferFunctionIntegration,
+            TkNumericalIntegration,
             solver_labels=solvers,
             cosmology=LambdaCDM_Planck2018,
             k=k_exit,
@@ -252,13 +252,13 @@ with ShardedPool(
             delta_logz=1.0 / float(samples_per_log10z),
         )
 
-    def build_Tk_work_label(Tk: MatterTransferFunctionIntegration):
+    def build_Tk_work_label(Tk: TkNumericalIntegration):
         return f"{args.job_name}-Tk-k{Tk.k.k_inv_Mpc:.3g}-{datetime.now().replace(microsecond=0).isoformat()}"
 
-    def validate_Tk_work(Tk: MatterTransferFunctionIntegration):
+    def validate_Tk_work(Tk: TkNumericalIntegration):
         return pool.object_validate(Tk)
 
-    def post_Tk_work(Tk: MatterTransferFunctionIntegration):
+    def post_Tk_work(Tk: TkNumericalIntegration):
         return ray.put(Tk)
 
     Tk_queue = RayWorkPool(
