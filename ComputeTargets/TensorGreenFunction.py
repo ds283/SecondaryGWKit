@@ -5,7 +5,6 @@ import ray
 from math import fabs, pi, log, sqrt
 from scipy.integrate import solve_ivp
 from scipy.optimize import root_scalar
-from scipy.special import jv, yv
 
 from CosmologyConcepts import wavenumber, redshift, redshift_array, wavenumber_exit_time
 from CosmologyModels import BaseCosmology
@@ -17,7 +16,8 @@ from defaults import (
     DEFAULT_FLOAT_PRECISION,
 )
 from utilities import check_units, format_time
-from .TensorGreenWKB import WKB_omegaEff_sq
+from .WKB_tensor_Green import WKB_omegaEff_sq
+from .analytic_tensor_Green import compute_analytic_G, compute_analytic_Gprime
 from .integration_metadata import IntegrationSolver
 from .integration_supervisor import (
     IntegrationSupervisor,
@@ -36,46 +36,6 @@ RHO_INDEX = 0
 A0_TAU_INDEX = 1
 G_INDEX = 2
 GPRIME_INDEX = 3
-
-
-def compute_analytic_G(k, w, tau_source, tau, H_source):
-    b = (1.0 - 3.0 * w) / (1.0 + 3.0 * w)
-    k_tau = k * tau
-    k_tau_source = k * tau_source
-
-    # The main numerical calculation obtains G_us(z,z') defined in DS' analytical calculation, which is
-    # for the source -delta(z-z') expressed in redshift.
-    # The analytic result is expressed in terms of conformal time, as G_them(eta, eta') with source
-    # delta(eta-eta').
-    # The delta function transforms with the (absolute value of) the Jacobian of the transformation.
-    # This means we get G_us(z,z') = -H(z') G_them(eta, eta').
-    # The multiplication of -H_source here accounts for this minus sign and the coordinate Jacobian
-    n0 = 0.5 + b
-
-    A = -H_source * pi / 2.0
-    B = sqrt(tau * tau_source)
-    C = jv(n0, k_tau_source) * yv(n0, k_tau)
-    D = jv(n0, k_tau) * yv(n0, k_tau_source)
-
-    return A * B * (C - D)
-
-
-def compute_analytic_Gprime(k, w, tau_source, tau, H_source, H):
-    b = (1.0 - 3.0 * w) / (1.0 + 3.0 * w)
-    k_tau = k * tau
-    k_tau_source = k * tau_source
-
-    n0 = 0.5 + b
-    n1 = 1.5 + b
-
-    A = pi / 2.0 * (H_source / H)
-    B = sqrt(tau_source / tau)
-    C1 = k_tau * jv(n1, k_tau) - (b + 1.0) * jv(n0, k_tau)
-    C2 = yv(n0, k_tau_source)
-    D1 = (b + 1.0) * yv(n0, k_tau) - k_tau * yv(n1, k_tau)
-    D2 = jv(n0, k_tau_source)
-
-    return A * B * (C1 * C2 + D1 * D2)
 
 
 class TensorGreenFunctionSupervisor(IntegrationSupervisor):
@@ -664,7 +624,7 @@ class TensorGreenFunctionIntegration(DatastoreObject):
     def store(self) -> Optional[bool]:
         if self._compute_ref is None:
             raise RuntimeError(
-                "MatterTransferFunctionIntegration: store() called, but no compute() is in progress"
+                "TensorGreenFunctionIntegration: store() called, but no compute() is in progress"
             )
 
         # check whether the computation has actually resolved
@@ -705,7 +665,9 @@ class TensorGreenFunctionIntegration(DatastoreObject):
         tau_source = a0_tau_sample[0]
         # need to be aware that G_sample may not be as long as self._z_sample, if we are working in "stop" mode
         for i in range(len(G_sample)):
-            H = self._cosmology.Hubble(self._z_sample[i].z)
+            current_z = self._z_sample[i]
+            current_z_float = current_z.z
+            H = self._cosmology.Hubble(current_z_float)
             tau = a0_tau_sample[i]
 
             analytic_G = compute_analytic_G(
@@ -714,15 +676,13 @@ class TensorGreenFunctionIntegration(DatastoreObject):
             analytic_Gprime = compute_analytic_Gprime(
                 self.k.k, 1.0 / 3.0, tau_source, tau, Hsource, H
             )
-            omega_WKB_sq = WKB_omegaEff_sq(
-                self._cosmology, self.k.k, self._z_sample[i].z
-            )
+            omega_WKB_sq = WKB_omegaEff_sq(self._cosmology, self.k.k, current_z_float)
 
             # create new TensorGreenFunctionValue object
             self._values.append(
                 TensorGreenFunctionValue(
                     None,
-                    self._z_sample[i],
+                    current_z,
                     G_sample[i],
                     Gprime_sample[i],
                     analytic_G=analytic_G,

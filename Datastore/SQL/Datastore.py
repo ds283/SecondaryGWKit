@@ -21,6 +21,11 @@ from Datastore.SQL.ObjectFactories.TensorGreenFunction import (
     sqla_TensorGreenFunctionValue_factory,
     sqla_TensorGreenFunctionTagAssociation_factory,
 )
+from Datastore.SQL.ObjectFactories.TensorGreenWKB import (
+    sqla_TensorGreenWKB_factory,
+    sqla_TensorGreenWKBTagAssociation_factory,
+    sqla_TensorGreenWKBValue_factory,
+)
 from Datastore.SQL.ObjectFactories.TensorSource import (
     sqla_TensorSource_factory,
     sqla_TensorSourceTagAssocation_factory,
@@ -65,6 +70,9 @@ _factories = {
     "TensorSource": sqla_TensorSource_factory,
     "TensorSource_tags": sqla_TensorSourceTagAssocation_factory,
     "TensorSourceValue": sqla_TensorSourceValue_factory,
+    "TensorGreenWKB": sqla_TensorGreenWKB_factory,
+    "TensorGreenWKB_tags": sqla_TensorGreenWKBTagAssociation_factory,
+    "TensorGreenWKBValue": sqla_TensorGreenWKBValue_factory,
 }
 
 _FactoryMappingType = Mapping[str, SQLAFactoryBase]

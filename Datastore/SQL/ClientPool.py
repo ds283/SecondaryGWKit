@@ -23,6 +23,9 @@ _default_serial_batch_size = {
     "TensorSource": 50,
     "TensorSource_tags": 10,
     "TensorSourceValue": 5000,
+    "TensorGreenWKB": 50,
+    "TensorGreenWKB_tags": 10,
+    "TensorGreenWKBValue": 5000,
 }
 
 
