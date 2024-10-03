@@ -286,8 +286,9 @@ class sqla_GkWKBIntegration_factory(SQLAFactoryBase):
                 value_table.c.serial,
                 value_table.c.z_serial,
                 redshift_table.c.z,
-                value_table.c.H,
+                value_table.c.H_ratio,
                 value_table.c.theta,
+                value_table.c.G_WKB,
                 value_table.c.omega_WKB_sq,
                 value_table.c.analytic_G,
                 value_table.c.analytic_Gprime,
@@ -311,9 +312,10 @@ class sqla_GkWKBIntegration_factory(SQLAFactoryBase):
                 GkWKBValue(
                     store_id=row.serial,
                     z=z_value,
-                    H=row.H,
+                    H_ratio=row.H_ratio,
                     theta=row.theta,
                     omega_WKB_sq=row.omega_WKB_sq,
+                    G_WKB=row.G_WKB,
                     analytic_G=row.analytic_G,
                     analytic_Gprime=row.analytic_Gprime,
                 )
@@ -407,8 +409,9 @@ class sqla_GkWKBIntegration_factory(SQLAFactoryBase):
                 {
                     "wkb_serial": store_id,
                     "z_serial": value.z.store_id,
-                    "H": value.H,
+                    "H_ratio": value.H_ratio,
                     "theta": value.theta,
+                    "G_WKB": value.G_WKB,
                     "omega_WKB_sq": value.omega_WKB_sq,
                     "analytic_G": value.analytic_G,
                     "analytic_Gprime": value.analytic_Gprime,
@@ -556,9 +559,10 @@ class sqla_GkWKBValue_factory(SQLAFactoryBase):
                     sqla.ForeignKey("redshift.serial"),
                     nullable=False,
                 ),
-                sqla.Column("H", sqla.Float(64), nullable=False),
+                sqla.Column("H_ratio", sqla.Float(64), nullable=False),
                 sqla.Column("theta", sqla.Float(64), nullable=False),
                 sqla.Column("omega_WKB_sq", sqla.Float(64), nullable=True),
+                sqla.Column("G_WKB", sqla.Float(64), nullable=True),
                 sqla.Column("analytic_G", sqla.Float(64), nullable=True),
                 sqla.Column("analytic_Gprime", sqla.Float(64), nullable=True),
             ],
@@ -568,10 +572,11 @@ class sqla_GkWKBValue_factory(SQLAFactoryBase):
     def build(payload, conn, table, inserter, tables, inserters):
         wkb_serial = payload["wkb_serial"]
         z = payload["z"]
-        H = payload["H"]
+        H_ratio = payload["H_ratio"]
 
         theta = payload["theta"]
         omega_WKB_sq = payload.get("omega_WKB_sq", None)
+        G_WKB = payload.get("G_WKB", None)
 
         analytic_G = payload.get("analytic_G", None)
         analytic_Gprime = payload.get("analytic_Gprime", None)
@@ -580,9 +585,10 @@ class sqla_GkWKBValue_factory(SQLAFactoryBase):
             row_data = conn.execute(
                 sqla.select(
                     table.c.serial,
-                    table.c.H,
+                    table.c.H_ratio,
                     table.c.theta,
                     table.c.omega_WKB_sq,
+                    table.c.G_WKB,
                     table.c.analytic_G,
                     table.c.analytic_Gprime,
                 ).filter(
@@ -602,9 +608,10 @@ class sqla_GkWKBValue_factory(SQLAFactoryBase):
                 {
                     "wkb_serial": wkb_serial,
                     "z_serial": z.store_id,
-                    "H": H,
+                    "H_ratio": H_ratio,
                     "theta": theta,
                     "omega_WKB_sq": omega_WKB_sq,
+                    "G_WKB": G_WKB,
                     "analytic_G": analytic_G,
                     "analytic_Gprime": analytic_Gprime,
                 },
@@ -612,12 +619,13 @@ class sqla_GkWKBValue_factory(SQLAFactoryBase):
         else:
             store_id = row_data.serial
             omega_WKB_sq = row_data.omega_WKB_sq
+            G_WKB = row_data.G_WKB
             analytic_G = row_data.analytic_G
             analytic_Gprime = row_data.analytic_Gprime
 
-            if fabs(row_data.H - H) > DEFAULT_FLOAT_PRECISION:
+            if fabs(row_data.H_ratio - H_ratio) > DEFAULT_FLOAT_PRECISION:
                 raise ValueError(
-                    f"Stored WKB tensor Green function H ratio (WKB store_id={wkb_serial}, z={z.store_id}) = {row_data.H} differs from expected value = {H}"
+                    f"Stored WKB tensor Green function H_ratio ratio (WKB store_id={wkb_serial}, z={z.store_id}) = {row_data.H_ratio} differs from expected value = {H}"
                 )
             if fabs(row_data.theta - theta) > DEFAULT_FLOAT_PRECISION:
                 raise ValueError(
@@ -627,9 +635,10 @@ class sqla_GkWKBValue_factory(SQLAFactoryBase):
         return GkWKBValue(
             store_id=store_id,
             z=z,
-            H=H,
+            H_ratio=H_ratio,
             theta=theta,
             omega_WKB_sq=omega_WKB_sq,
+            G_WKB=G_WKB,
             analytic_G=analytic_G,
             analytic_Gprime=analytic_Gprime,
         )

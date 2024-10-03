@@ -2,11 +2,12 @@ import time
 from typing import Optional, List
 
 import ray
-from math import log, sqrt, fabs
+from math import log, sqrt, fabs, cos, sin
+from scipy.constants import epsilon_0
 from scipy.integrate import solve_ivp
 
 from ComputeTargets import IntegrationSolver
-from ComputeTargets.WKB_tensor_Green import WKB_omegaEff_sq
+from ComputeTargets.WKB_tensor_Green import WKB_omegaEff_sq, WKB_d_ln_omegaEffPrime_dz
 from ComputeTargets.analytic_Gk import (
     compute_analytic_G,
     compute_analytic_Gprime,
@@ -422,7 +423,9 @@ class GkWKBIntegration(DatastoreObject):
         self._min_RHS_time = data["min_RHS_time"]
 
         Hsource = self.cosmology.Hubble(self.z_source.z)
-        k_over_aH = (1.0 + self.z_source.z) * self.k.k / Hsource
+        epsSource = self.cosmology.eps(self.z_source.z)
+        one_plus_z_source = 1.0 + self.z_source.z
+        k_over_aH = one_plus_z_source * self.k.k / Hsource
         self._init_efolds_suph = -log(k_over_aH)
 
         theta_sample = data["G_sample"]
@@ -430,6 +433,25 @@ class GkWKBIntegration(DatastoreObject):
         self._values = []
 
         tau_source = a0_tau_sample[0]
+        omega_WKB_sq_source = WKB_omegaEff_sq(
+            self._cosmology, self.k.k, self.z_source.z
+        )
+        if omega_WKB_sq_source < 0.0:
+            raise ValueError(
+                f"omega_WKB^2 must be non-negative at the initial time (omega_WKB^2={omega_WKB_sq_source:.5g})"
+            )
+
+        omega_WKB_source = sqrt(omega_WKB_sq_source)
+        self._cos_coeff = omega_WKB_source * self._G_init
+
+        d_ln_omega_WKB = WKB_d_ln_omegaEffPrime_dz(
+            self._cosmology, self.k.k, self.z_source.z
+        )
+        self._sin_coeff = (
+            self._Gprime_init
+            + (self._G_init / 2.0) * (epsSource / one_plus_z_source + d_ln_omega_WKB)
+        ) / omega_WKB_source
+
         # need to be aware that G_sample may not be as long as self._z_sample, if we are working in "stop" mode
         for i in range(len(theta_sample)):
             current_z = self._z_sample[i]
@@ -444,15 +466,28 @@ class GkWKBIntegration(DatastoreObject):
                 self.k.k, 1.0 / 3.0, tau_source, tau, Hsource, H
             )
             omega_WKB_sq = WKB_omegaEff_sq(self._cosmology, self.k.k, current_z_float)
+            if omega_WKB_sq < 0.0:
+                raise ValueError(
+                    f"omega_WKB^2 must be non-negative at the initial time (omega_WKB^2={omega_WKB_sq:.5g})"
+                )
+
+            omega_WKB = sqrt(omega_WKB_sq)
+
+            H_ratio = Hsource / H
+
+            G_WKB = self._cos_coeff / omega_WKB * sqrt(H_ratio) * cos(
+                theta_sample[i]
+            ) + self._sin_coeff / omega_WKB * sqrt(H_ratio) * sin(theta_sample[i])
 
             # create new GkWKBValue object
             self._values.append(
                 GkWKBValue(
                     None,
                     current_z,
-                    H,
+                    Hsource / H,
                     theta_sample[i],
                     omega_WKB_sq=omega_WKB_sq,
+                    G_WKB=G_WKB,
                     analytic_G=analytic_G,
                     analytic_Gprime=analytic_Gprime,
                 )
@@ -468,19 +503,21 @@ class GkWKBValue(DatastoreObject):
         self,
         store_id: int,
         z: redshift,
-        H: float,
+        H_ratio: float,
         theta: float,
         omega_WKB_sq: Optional[float] = None,
+        G_WKB: Optional[float] = None,
         analytic_G: Optional[float] = None,
         analytic_Gprime: Optional[float] = None,
     ):
         DatastoreObject.__init__(self, store_id)
 
         self._z = z
-        self._H = H
+        self._H_ratio = H_ratio
 
         self._theta = theta
         self._omega_WKB_sq = omega_WKB_sq
+        self._G_WKB = G_WKB
 
         self._analytic_G = analytic_G
         self._analytic_Gprime = analytic_Gprime
@@ -497,16 +534,20 @@ class GkWKBValue(DatastoreObject):
         return self._z
 
     @property
-    def omega_WKB_sq(self) -> Optional[float]:
-        return self._omega_WKB_sq
-
-    @property
-    def H(self) -> float:
-        return self._H
+    def H_ratio(self) -> float:
+        return self._H_ratio
 
     @property
     def theta(self) -> float:
         return self._theta
+
+    @property
+    def omega_WKB_sq(self) -> Optional[float]:
+        return self._omega_WKB_sq
+
+    @property
+    def G_WKB(self) -> Optional[float]:
+        return self._G_WKB_sq
 
     @property
     def analytic_G(self) -> Optional[float]:
