@@ -8,8 +8,8 @@ SELECT vs.serial                 AS serial,
        vs.z_serial               AS z_serial,
        rs.z                      AS z,
        vs.value                  AS value
-FROM MatterTransferFunctionValue vs
-         INNER JOIN MatterTransferFunctionIntegration ig ON ig.serial = vs.integration_serial
+FROM TkNumericalValue vs
+         INNER JOIN TkNumericalIntegration ig ON ig.serial = vs.integration_serial
          INNER JOIN wavenumber_exit_time kes ON kes.serial = ig.wavenumber_exit_serial
          INNER JOIN wavenumber ks ON ks.serial = kes.wavenumber_serial
          INNER JOIN redshift rs ON rs.serial = vs.z_serial

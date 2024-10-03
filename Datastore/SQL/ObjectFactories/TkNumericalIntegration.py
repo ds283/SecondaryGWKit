@@ -169,7 +169,7 @@ class sqla_TkNumericalIntegration_factory(SQLAFactoryBase):
 
         atol_table = tables["tolerance"].alias("atol")
         rtol_table = tables["tolerance"].alias("rtol")
-        tag_table = tables["MatterTransferFunctionIntegration_tags"]
+        tag_table = tables["TkNumerical_tags"]
         solver_table = tables["IntegrationSolver"]
         redshift_table = tables["redshift"]
 
@@ -405,7 +405,7 @@ class sqla_TkNumericalIntegration_factory(SQLAFactoryBase):
         obj._my_id = store_id
 
         # add any tags that have been specified
-        tag_inserter = inserters["MatterTransferFunctionIntegration_tags"]
+        tag_inserter = inserters["TkNumerical_tags"]
         for tag in obj.tags:
             sqla_TkNumericalTagAssociation_factory.add_tag(conn, tag_inserter, obj, tag)
 

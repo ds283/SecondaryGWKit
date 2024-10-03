@@ -26,8 +26,8 @@ _replicate_tables = [
 ]
 _shard_tables = {
     "wavenumber_exit_time": "k",
-    "MatterTransferFunctionIntegration": "k",
-    "MatterTransferFunctionValue": "k",
+    "TkNumericalIntegration": "k",
+    "TkNumericalValue": "k",
     "GkNumericalIntegration": "k",
     "GkNumericalValue": "k",
     "TensorSource": "q",

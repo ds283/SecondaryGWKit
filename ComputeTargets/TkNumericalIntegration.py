@@ -210,7 +210,7 @@ def compute_Tk(
             sqrt(3.0) * cosmology.units.PlanckMass / sqrt(rho_init) / (1.0 + z_init.z)
         )
 
-        initial_state = [rho_init, tau_init, 1.0, 0.0]
+        initial_state = [tau_init, 1.0, 0.0]
         sol = solve_ivp(
             RHS,
             method="Radau",

@@ -320,8 +320,8 @@ class sqla_TensorSource_factory(SQLAFactoryBase):
     def validate_on_startup(conn, table, tables):
         # query the datastore for any tensor source computations that are not validated
 
-        Tq_table = tables["MatterTransferFunctionIntegration"].alias("Tq")
-        Tr_table = tables["MatterTransferFunctionIntegration"].alias("Tr")
+        Tq_table = tables["TkNumericalIntegration"].alias("Tq")
+        Tr_table = tables["TkNumericalIntegration"].alias("Tr")
         value_table = tables["TensorSourceValue"]
 
         not_validated = list(
