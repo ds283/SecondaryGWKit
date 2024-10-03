@@ -10,7 +10,11 @@ from CosmologyConcepts import redshift_array, wavenumber, redshift, wavenumber_e
 from CosmologyModels import BaseCosmology
 from Datastore import DatastoreObject
 from MetadataConcepts import tolerance, store_tag
-from defaults import DEFAULT_ABS_TOLERANCE, DEFAULT_REL_TOLERANCE
+from defaults import (
+    DEFAULT_ABS_TOLERANCE,
+    DEFAULT_REL_TOLERANCE,
+    DEFAULT_FLOAT_PRECISION,
+)
 from utilities import check_units, format_time
 from .integration_metadata import IntegrationSolver
 from .integration_supervisor import (
@@ -328,7 +332,7 @@ class MatterTransferFunctionIntegration(DatastoreObject):
         self._delta_logz = delta_logz
 
         # if initial time is not really compatible with the initial conditions we use, warn the user
-        if z_init is not None and z_init.z < k.z_exit_suph_e3:
+        if z_init is not None and z_init.z < k.z_exit_suph_e3 - DEFAULT_FLOAT_PRECISION:
             print(
                 f"!! Warning (MatterTransferFunctionIntegration) k={k.k.k_inv_Mpc}/Mpc, log10_atol={atol.log10_tol}, log10_rtol={rtol.log10_tol}"
             )
