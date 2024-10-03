@@ -13,6 +13,37 @@ from MetadataConcepts import store_tag
 from utilities import check_cosmology, WallclockTimer
 
 
+def source_function(
+    Tq: float, Tr: float, Tq_prime: float, Tr_prime: float, z: float, w: float
+):
+    if Tq is None or Tr is None or Tq_prime is None or Tr_prime is None:
+        return None
+
+    if z is None or w is None:
+        raise ValueError("z and w cannot be None")
+
+    one_plus_z = 1.0 + z
+    one_plus_z_2 = one_plus_z * one_plus_z
+
+    undiff_part = (5.0 + 3.0 * w) / (3.0 * (1.0 + w)) * Tq * Tr
+    diff_part = (
+        2.0
+        / (3.0 * (1.0 + w))
+        * (
+            -one_plus_z * Tq * Tr_prime
+            - one_plus_z * Tr * Tq_prime
+            + one_plus_z_2 * Tq_prime * Tr_prime
+        )
+    )
+    source_term = undiff_part + diff_part
+
+    return {
+        "undiff_part": undiff_part,
+        "diff_part": diff_part,
+        "source_term": source_term,
+    }
+
+
 @ray.remote
 def compute_tensor_source(
     cosmology: BaseCosmology,
@@ -87,62 +118,27 @@ def compute_tensor_source(
                 analytic_Tr_value = 1.0
                 analytic_Tr_prime = 0.0
 
-            one_plus_z = 1.0 + z.z
-            one_plus_z_2 = one_plus_z * one_plus_z
+            wBackground = cosmology.wBackground(z.z)
 
-            wBackgrond = cosmology.wBackground(z.z)
-
-            undiff_part = (
-                (5.0 + 3.0 * wBackgrond)
-                / (3.0 * (1.0 + wBackgrond))
-                * Tq_value
-                * Tr_value
+            numerical = source_function(
+                Tq_value, Tr_value, Tq_prime, Tr_prime, z.z, wBackground
             )
-            diff_part = (
-                2.0
-                / (3.0 * (1.0 + wBackgrond))
-                * (
-                    -one_plus_z * Tq_value * Tr_prime
-                    - one_plus_z * Tr_value * Tq_prime
-                    + one_plus_z_2 * Tq_prime * Tr_prime
-                )
+            analytic = source_function(
+                analytic_Tq_value,
+                analytic_Tr_value,
+                analytic_Tq_prime,
+                analytic_Tr_prime,
+                z.z,
+                wBackground,
             )
-            source_term = undiff_part + diff_part
 
-            if (
-                analytic_Tq_value is not None
-                and analytic_Tq_prime is not None
-                and analytic_Tr_value is not None
-                and analytic_Tr_prime is not None
-            ):
-                analytic_undiff_part = (
-                    (5.0 + 3.0 * wBackgrond)
-                    / (3.0 * (1.0 + wBackgrond))
-                    * analytic_Tq_value
-                    * analytic_Tr_value
-                )
-                analytic_diff_part = (
-                    2.0
-                    / (3.0 * (1.0 + wBackgrond))
-                    * (
-                        -one_plus_z * analytic_Tq_value * analytic_Tr_prime
-                        - one_plus_z * analytic_Tr_value * analytic_Tq_prime
-                        + one_plus_z_2 * analytic_Tq_prime * analytic_Tr_prime
-                    )
-                )
-                analytic_source_term = analytic_undiff_part + analytic_diff_part
-            else:
-                analytic_undiff_part = None
-                analytic_diff_part = None
-                analytic_source_term = None
+            source_terms.append(numerical["source_term"])
+            undiff_parts.append(numerical["undiff_part"])
+            diff_parts.append(numerical["diff_part"])
 
-            source_terms.append(source_term)
-            undiff_parts.append(undiff_part)
-            diff_parts.append(diff_part)
-
-            analytic_source_terms.append(analytic_source_term)
-            analytic_undiff_parts.append(analytic_undiff_part)
-            analytic_diff_parts.append(analytic_diff_part)
+            analytic_source_terms.append(analytic["source_term"])
+            analytic_undiff_parts.append(analytic["undiff_part"])
+            analytic_diff_parts.append(analytic["diff_part"])
 
     return {
         "compute_time": timer.elapsed,
