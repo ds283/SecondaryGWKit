@@ -620,7 +620,7 @@ class MatterTransferFunctionIntegration(DatastoreObject):
 class MatterTransferFunctionValue(DatastoreObject):
     """
     Encapsulates a single sampled value of the matter transfer functions.
-    Parameters such as wavenumber k, intiial redshift z_init, etc., are held by the
+    Parameters such as wavenumber k, initial redshift z_init, etc., are held by the
     owning MatterTransferFunctionIntegration object
     """
 
