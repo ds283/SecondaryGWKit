@@ -178,6 +178,23 @@ class ShardedPool:
             ]
         )
 
+    def __enter__(self):
+        return self
+
+    def __exit__(self, exc_type, exc_val, exc_tb):
+        ray.get(
+            [
+                shard.__exit__.remote(exc_type=None, exc_val=None, exc_tb=None)
+                for shard in self._shards.values()
+            ]
+        )
+
+        if self._profile_agent is not None:
+            ray.get(self._profile_agent.clean_up.remote())
+
+        if self._engine is not None:
+            self._engine.dispose()
+
     def _create_engine(self):
         connect_args = {}
         if self._timeout is not None:

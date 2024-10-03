@@ -103,6 +103,10 @@ class ProfileAgent:
             print(f"!! ProfileAgent: insert error, payload = {batch}")
             raise e
 
+    def clean_up(self) -> None:
+        if self._engine is not None:
+            self._engine.dispose()
+
 
 class ProfileBatcher:
     def __init__(
@@ -129,8 +133,15 @@ class ProfileBatcher:
         )
 
         if len(self._batch) > self._batch_size:
+            self._push_batch()
+
+    def _push_batch(self):
+        if len(self._batch) > 0:
             self._profile_agent.write_batch.remote(self._batch)
             self._batch = []
+
+    def clean_up(self) -> None:
+        self._push_batch()
 
 
 class ProfileBatchManager:

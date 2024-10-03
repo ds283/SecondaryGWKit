@@ -142,6 +142,21 @@ class Datastore:
                 f"Serial number of version label (={self._version.store_id}) does not match specified value (={version_serial})"
             )
 
+    def __enter__(self):
+        return self
+
+    def __exit__(self, exc_type, exc_val, exc_tb):
+        # clean up SQLAlchemy engine if it exists
+        if self._engine is not None:
+            self._engine.dispose()
+
+        # clean up the various services that we use
+        if self._serial_manager is not None:
+            self._serial_manager.clean_up()
+
+        if self._profile_batcher is not None:
+            self._profile_batcher.clean_up()
+
     def _create_engine(self):
         """
         Create and initialize an SQLAlchemy engine corresponding to the name data container,

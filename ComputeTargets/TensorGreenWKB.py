@@ -4,6 +4,7 @@ from CosmologyConcepts import wavenumber_exit_time, redshift, redshift_array, wa
 from CosmologyModels import BaseCosmology
 from Datastore import DatastoreObject
 from MetadataConcepts import tolerance, store_tag
+from defaults import DEFAULT_FLOAT_PRECISION
 from utilities import check_units
 
 
@@ -100,8 +101,39 @@ class TensorGreenWKB(DatastoreObject):
             self._max_RHS_time = payload["max_RHS_time"]
             self._min_RHS_time = payload["min_RHS_time"]
 
-            self._init_efolds_subh = payload["init_efolds_suph"]
+            self._init_efolds_subh = payload["init_efolds_subh"]
 
             self._solver = payload["solver"]
 
             self._values = payload["values"]
+
+        if self._z_sample is not None:
+            z_limit = k.z_exit_subh_e3
+            z_source_float = float(z_source)
+            for z in self._z_sample:
+                # check that each response redshift is not too close to the horizon, or outside it, for this k-mode
+                z_float = float(z)
+                if z_float > z_limit - DEFAULT_FLOAT_PRECISION:
+                    raise ValueError(
+                        f"Specified response redshift z={z_float:.5g} is closer than 3-folds to horizon re-entry for wavenumber k={k_wavenumber:.5g}/Mpc"
+                    )
+
+                # also, check that each response redshift is later than the specified source redshift
+                if z_float > z_source_float:
+                    raise ValueError(
+                        f"Redshift sample point z={z_float:.5g} exceeds source redshift z={z_source_float:.5g}"
+                    )
+
+        # store parameters
+        self._label = label
+        self._tags = tags if tags is not None else []
+
+        self._cosmology = cosmology
+
+        self._k_exit = k
+        self._z_source = z_source
+
+        self._compute_ref = None
+
+        self._atol = atol
+        self._rtol = rtol

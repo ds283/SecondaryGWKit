@@ -108,6 +108,9 @@ class ClientPool:
         self._pool = set()
         self._committed = set()
 
+    def clean_up(self) -> None:
+        self.release()
+
 
 # default interval at which to sync leased/committed serial numbers with the central broker
 # currently 3 minutes
@@ -171,7 +174,7 @@ class SerialPoolManager:
         self._check_sync()
         return outcome
 
-    def _check_sync(self):
+    def _check_sync(self) -> None:
         current_time = time.time()
         if current_time - self._last_sync < self._sync_interval:
             return
@@ -180,6 +183,10 @@ class SerialPoolManager:
             pool.release()
 
         self._last_sync = current_time
+
+    def clean_up(self) -> None:
+        for pool in self._tables.values():
+            pool.clean_up()
 
 
 class SerialLeaseManager:
