@@ -38,6 +38,12 @@ parser.add_argument(
     help="specify connection timeout for database layer",
 )
 parser.add_argument(
+    "--profile-db",
+    type=str,
+    default=None,
+    help="write profiling and performance data to the specified database",
+)
+parser.add_argument(
     "--ray-address", default="auto", type=str, help="specify address of Ray cluster"
 )
 parser.add_argument(
@@ -63,6 +69,7 @@ pool: ShardedPool = ShardedPool(
     version_label="2024.1.1",
     db_name=args.database,
     timeout=args.db_timeout,
+    profile_db=args.profile_db,
 )
 
 # set up LambdaCDM object representing a basic Planck2018 cosmology in Mpc units
