@@ -141,7 +141,6 @@ metadata_schema = pa.schema(
         ("stop_efolds_subh", pa.float64()),
         ("stop_G", pa.float64()),
         ("stop_Gprime", pa.float64()),
-        ("stop_Gprime_over_G", pa.float64()),
     ]
 )
 
@@ -205,7 +204,6 @@ def write_CSV_content(Gk: TensorGreenFunctionIntegration):
                 "stop_efolds_subh": Gk.stop_efolds_subh,
                 "stop_G": Gk.stop_G,
                 "stop_Gprime": Gk.stop_Gprime,
-                "stop_Gprime_over_G": Gk.stop_Gprime / Gk.stop_G,
             }
         ]
         batch = pa.RecordBatch.from_pylist(metadata_rows, schema=metadata_schema)

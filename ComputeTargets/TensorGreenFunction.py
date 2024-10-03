@@ -485,17 +485,17 @@ class TensorGreenFunctionIntegration(DatastoreObject):
             z_limit = k.z_exit_subh_e3
             if z_source.z < z_limit - DEFAULT_FLOAT_PRECISION:
                 raise ValueError(
-                    f"Specified source redshift {z_source.z:.5g} is more than 3-efolds inside the horizon for k={k_wavenumber.k_inv_Mpc:.5g}/Mpc"
+                    f"Specified source redshift z={z_source.z:.5g} is more than 3-efolds inside the horizon for k={k_wavenumber.k_inv_Mpc:.5g}/Mpc"
                 )
 
         # check that all sample points are *later* than the specified source redshift
         if z_source is not None and self._z_sample is not None:
-            z_init_float = float(z_source)
+            z_source_float = float(z_source)
             for z in self._z_sample:
                 z_float = float(z)
-                if z_float > z_init_float:
+                if z_float > z_source_float:
                     raise ValueError(
-                        f"Redshift sample point z={z_float} exceeds source redshift z={z_init_float}"
+                        f"Redshift sample point z={z_float:.5g} exceeds source redshift z={z_source_float:.5g}"
                     )
 
         # store parameters
@@ -714,6 +714,9 @@ class TensorGreenFunctionIntegration(DatastoreObject):
             analytic_Gprime = compute_analytic_Gprime(
                 self.k.k, 1.0 / 3.0, tau_source, tau, Hsource, H
             )
+            omega_WKB_sq = WKB_omegaEff_sq(
+                self._cosmology, self.k.k, self._z_sample[i].z
+            )
 
             # create new TensorGreenFunctionValue object
             self._values.append(
@@ -724,6 +727,7 @@ class TensorGreenFunctionIntegration(DatastoreObject):
                     Gprime_sample[i],
                     analytic_G=analytic_G,
                     analytic_Gprime=analytic_Gprime,
+                    omega_WKB_sq=omega_WKB_sq,
                 )
             )
 
@@ -747,6 +751,7 @@ class TensorGreenFunctionValue(DatastoreObject):
         Gprime: float,
         analytic_G: Optional[float] = None,
         analytic_Gprime: Optional[float] = None,
+        omega_WKB_sq: Optional[float] = None,
     ):
         DatastoreObject.__init__(self, store_id)
 
@@ -756,6 +761,8 @@ class TensorGreenFunctionValue(DatastoreObject):
 
         self._analytic_G = analytic_G
         self._analytic_Gprime = analytic_Gprime
+
+        self._omega_WKB_sq = omega_WKB_sq
 
     def __float__(self):
         """
@@ -783,3 +790,7 @@ class TensorGreenFunctionValue(DatastoreObject):
     @property
     def analytic_Gprime(self) -> Optional[float]:
         return self._analytic_Gprime
+
+    @property
+    def omega_WKB_sq(self) -> Optional[float]:
+        return self._omega_WKB_sq

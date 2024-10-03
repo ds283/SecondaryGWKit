@@ -153,7 +153,6 @@ class sqla_TensorGreenFunctionIntegration_factory(SQLAFactoryBase):
                 sqla.Column("stop_efolds_subh", sqla.Float(64)),
                 sqla.Column("stop_G", sqla.Float(64)),
                 sqla.Column("stop_Gprime", sqla.Float(64)),
-                sqla.Column("stop_Gprime_over_G", sqla.Float(64)),
                 sqla.Column("validated", sqla.Boolean, default=False, nullable=False),
             ],
         }
@@ -420,7 +419,6 @@ class sqla_TensorGreenFunctionIntegration_factory(SQLAFactoryBase):
                 "stop_efolds_subh": obj.stop_efolds_subh,
                 "stop_G": obj.stop_G,
                 "stop_Gprime": obj.stop_Gprime,
-                "stop_Gprime_over_G": obj.stop_Gprime / obj.stop_G,
                 "validated": False,
             },
         )
@@ -451,6 +449,7 @@ class sqla_TensorGreenFunctionIntegration_factory(SQLAFactoryBase):
                     "Gprime": value.Gprime,
                     "analytic_G": value.analytic_G,
                     "analytic_Gprime": value.analytic_Gprime,
+                    "omega_WKB_sq": value.omega_WKB_sq,
                 },
             )
 
@@ -599,6 +598,7 @@ class sqla_TensorGreenFunctionValue_factory(SQLAFactoryBase):
                 sqla.Column("Gprime", sqla.Float(64), nullable=False),
                 sqla.Column("analytic_G", sqla.Float(64), nullable=True),
                 sqla.Column("analytic_Gprime", sqla.Float(64), nullable=True),
+                sqla.Column("omega_WKB_sq", sqla.Float(64), nullable=True),
             ],
         }
 
@@ -611,6 +611,8 @@ class sqla_TensorGreenFunctionValue_factory(SQLAFactoryBase):
 
         analytic_G = payload.get("analytic_G", None)
         analytic_Gprime = payload.get("analytic_Gprime", None)
+
+        omega_WKB_sq = payload.get("omega_WKB_sq", None)
 
         try:
             row_data = conn.execute(
@@ -640,6 +642,7 @@ class sqla_TensorGreenFunctionValue_factory(SQLAFactoryBase):
                     "Gprime": Gprime,
                     "analytic_G": analytic_G,
                     "analytic_Gprime": analytic_Gprime,
+                    "omega_WKB_sq": omega_WKB_sq,
                 },
             )
         else:
@@ -662,4 +665,5 @@ class sqla_TensorGreenFunctionValue_factory(SQLAFactoryBase):
             Gprime=Gprime,
             analytic_G=analytic_G,
             analytic_Gprime=analytic_Gprime,
+            omega_WKB_sq=omega_WKB_sq,
         )
