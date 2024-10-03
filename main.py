@@ -244,7 +244,7 @@ z_sample = redshift_array(z_array=z_array)
 
 
 def build_Tk_work(k_exit: wavenumber_exit_time):
-    my_sample = z_sample.truncate(k_exit.z_exit_suph_e3)
+    my_sample = z_sample.truncate(k_exit.z_exit_suph_e5)
     return pool.object_get(
         MatterTransferFunctionIntegration,
         solver_labels=solvers,
