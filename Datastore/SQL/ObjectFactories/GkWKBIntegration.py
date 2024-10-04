@@ -128,13 +128,12 @@ class sqla_GkWKBIntegration_factory(SQLAFactoryBase):
                     index=True,
                     nullable=False,
                 ),
-                sqla.Column(
-                    "z_samples",
-                    sqla.Integer,
-                    nullable=False,
-                ),
+                sqla.Column("z_samples", sqla.Integer, nullable=False),
+                sqla.Column("z_init", sqla.Float(64), nullable=False),
                 sqla.Column("sin_coeff", sqla.Float(64), nullable=False),
                 sqla.Column("cos_coeff", sqla.Float(64), nullable=False),
+                sqla.Column("G_init", sqla.Float(64), nullable=False),
+                sqla.Column("Gprime_init", sqla.Float(64), nullable=False),
                 sqla.Column("compute_time", sqla.Float(64)),
                 sqla.Column("compute_steps", sqla.Integer),
                 sqla.Column("RHS_evaluations", sqla.Integer),
@@ -159,7 +158,11 @@ class sqla_GkWKBIntegration_factory(SQLAFactoryBase):
         k_exit: wavenumber_exit_time = payload["k"]
         cosmology: BaseCosmology = payload["cosmology"]
         z_sample: redshift_array = payload["z_sample"]
-        z_source: redshift = payload["z_source"]
+        z_source: redshift = payload.get("z_source", None)
+
+        z_init: Optional[float] = payload.get("z_init", None)
+        G_init: Optional[float] = payload.get("G_init", 0.0)
+        Gprime_init: Optional[float] = payload.get("Gprime_init", 1.0)
 
         atol_table = tables["tolerance"].alias("atol")
         rtol_table = tables["tolerance"].alias("rtol")
@@ -185,6 +188,9 @@ class sqla_GkWKBIntegration_factory(SQLAFactoryBase):
                 table.c.z_source_serial,
                 redshift_table.c.z.label("z_source"),
                 table.c.z_samples,
+                table.c.z_init,
+                table.c.G_init,
+                table.c.Gprime_init,
                 solver_table.c.label.label("solver_label"),
                 solver_table.c.stepping.label("solver_stepping"),
                 atol_table.c.log10_tol.label("log10_atol"),
@@ -246,6 +252,9 @@ class sqla_GkWKBIntegration_factory(SQLAFactoryBase):
                 atol=atol,
                 rtol=rtol,
                 z_source=z_source,
+                z_init=z_init,
+                G_init=G_init,
+                Gprime_init=Gprime_init,
                 z_sample=z_sample,
                 tags=tags,
             )
@@ -255,6 +264,10 @@ class sqla_GkWKBIntegration_factory(SQLAFactoryBase):
 
         sin_coeff = row_data.sin_coeff
         cos_coeff = row_data.cos_coeff
+
+        z_init = row_data.z_init
+        G_init = row_data.G_init
+        Gprime_init = row_data.Gprime_init
 
         compute_time = row_data.compute_time
         compute_steps = row_data.compute_steps
@@ -350,6 +363,9 @@ class sqla_GkWKBIntegration_factory(SQLAFactoryBase):
             atol=atol,
             rtol=rtol,
             z_source=redshift(store_id=z_source_serial, z=z_source_value),
+            z_init=z_init,
+            G_init=G_init,
+            Gprime_init=Gprime_init,
             z_sample=imported_z_sample,
             tags=tags,
         )
@@ -378,6 +394,9 @@ class sqla_GkWKBIntegration_factory(SQLAFactoryBase):
                 "z_source_serial": obj.z_source.store_id,
                 "z_min_serial": obj.z_sample.min.store_id,
                 "z_samples": len(obj.values),
+                "z_init": obj.z_init,
+                "G_init": obj.G_init,
+                "Gprime_init": obj.Gprime_init,
                 "compute_time": obj.compute_time,
                 "compute_steps": obj.compute_steps,
                 "RHS_evaluations": obj.RHS_evaluations,

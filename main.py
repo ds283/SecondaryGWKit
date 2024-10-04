@@ -10,6 +10,7 @@ from ComputeTargets import (
     TkNumericalIntegration,
     GkNumericalIntegration,
     IntegrationSolver,
+    GkWKBIntegration,
 )
 from ComputeTargets.TensorSource import TensorSource
 from CosmologyConcepts import (
@@ -24,7 +25,11 @@ from Datastore.SQL.ShardedPool import ShardedPool
 from MetadataConcepts import tolerance, store_tag
 from RayWorkPool import RayWorkPool
 from Units import Mpc_units
-from defaults import DEFAULT_ABS_TOLERANCE, DEFAULT_REL_TOLERANCE
+from defaults import (
+    DEFAULT_ABS_TOLERANCE,
+    DEFAULT_REL_TOLERANCE,
+    DEFAULT_FLOAT_PRECISION,
+)
 
 DEFAULT_LABEL = "SecondaryGWKit-test"
 DEFAULT_TIMEOUT = 60
@@ -321,33 +326,114 @@ with ShardedPool(
     TensorSource_queue.run()
 
     ## STEP 3
-    ## COMPUTE TENOR GREEN'S FUNCTIONS ON A GRID OF SOURCE/RESPONSE REDSHIFT SAMPLES
+    ## COMPUTE TENSOR GREEN'S FUNCTIONS NUMERICALLY FOR RESPONSE TIMES NOT TOO FAR INSIDE THE HORIZON
 
     G_LATEST_RESPONSE_Z = 0.5
 
-    def build_Gk_work(k_exit: wavenumber_exit_time):
+    def build_Gk_numerical_work(k_exit: wavenumber_exit_time):
         if not k_exit.available:
             raise RuntimeError(
                 f"k_exit object (store_id={k_exit.store_id}) is not ready"
             )
 
         # find redshift where this k-mode is at least 3 efolds inside the horizon
-        # we won't calculate Green's functions with the source redshift later than this, because
+        # we won't calculate numerical Green's functions with the response redshift later than this, because
         # the oscillations become rapid, and we are better switching to a WKB approximation
         source_zs = z_sample.truncate(k_exit.z_exit_subh_e3, keep="higher")
 
         work_refs = []
 
         for source_z in source_zs:
-            response_zs = z_sample.truncate(source_z)
-            if len(response_zs) >= 3:
+            response_zs = z_sample.truncate(source_z, keep="lower")
+
+            work_refs.append(
+                pool.object_get(
+                    GkNumericalIntegration,
+                    solver_labels=solvers,
+                    cosmology=LambdaCDM_Planck2018,
+                    k=k_exit,
+                    z_source=source_z,
+                    z_sample=response_zs,
+                    atol=atol,
+                    rtol=rtol,
+                    tags=[
+                        GkProductionTag,
+                        GlobalZGridTag,
+                        OutsideHorizonEfoldsTag,
+                        LargestZTag,
+                        SamplesPerLog10ZTag,
+                    ],
+                    delta_logz=1.0 / float(samples_per_log10z),
+                    mode="stop",
+                )
+            )
+
+        return work_refs
+
+    def build_Gk_numerical_work_label(Gk: GkNumericalIntegration):
+        return f"{args.job_name}-GkNumerical-k{Gk.k.k_inv_Mpc:.3g}-sourcez{Gk.z_source.z:.5g}-{datetime.now().replace(microsecond=0).isoformat()}"
+
+    def validate_Gk_numerical_work(Gk: GkNumericalIntegration):
+        return pool.object_validate(Gk)
+
+    Gk_numerical_queue = RayWorkPool(
+        pool,
+        k_exit_times,
+        task_builder=build_Gk_numerical_work,
+        validation_handler=validate_Gk_numerical_work,
+        label_builder=build_Gk_numerical_work_label,
+        title="CALCULATE NUMERICAL PART OF TENSOR GREEN FUNCTIONS",
+        store_results=False,
+    )
+    Gk_numerical_queue.run()
+
+    ## STEP 4
+    ## COMPUTE TENSOR GREEN'S FUNCTIONS IN THE WKB APPROXIMATION FOR RESPONSE TIMES INSIDE THE HORIZON
+
+    def build_Gk_WKB_work(k_exit: wavenumber_exit_time):
+        if not k_exit.available:
+            raise RuntimeError(
+                f"k_exit object (store_id={k_exit.store_id}) is not ready"
+            )
+
+        # find redshift where this k-mode is at least 3 e-folds inside the horizon
+        # we don't calculate WKB Green's functions with the response redshift earlier than this
+        response_pool = z_sample.truncate(k_exit.k_exit_subh_e3, keep="lower")
+
+        work_refs = []
+
+        for source_z in z_sample:
+            response_zs = response_pool.truncate(source_z, keep="lower")
+
+            # query whether there is a pre-computed GkNumericalIntegration for this source redshift
+            Gk_numerical: GkNumericalIntegration = ray.get(
+                pool.object_get.remote(
+                    GkNumericalIntegration,
+                    solver_labels=solvers,
+                    cosmology=LambdaCDM_Planck2018,
+                    k=k_exit,
+                    z_source=source_z,
+                    z_sample=None,
+                    atol=atol,
+                    rtol=rtol,
+                    tags=[GkProductionTag, GlobalZGridTag, SamplesPerLog10ZTag],
+                )
+            )
+            if Gk_numerical.available:
+                G_init = Gk_numerical.stop_G
+                Gprime_init = Gk_numerical.stop_Gprime
+                z_init = k_exit.z_exit - Gk_numerical.stop_efolds_subh
+
                 work_refs.append(
                     pool.object_get(
-                        GkNumericalIntegration,
+                        GkWKBIntegration,
                         solver_labels=solvers,
                         cosmology=LambdaCDM_Planck2018,
                         k=k_exit,
                         z_source=source_z,
+                        z_init=z_init,
+                        G_init=G_init,
+                        Gprime_init=Gprime_init,
                         z_sample=response_zs,
                         atol=atol,
                         rtol=rtol,
@@ -358,26 +444,68 @@ with ShardedPool(
                             LargestZTag,
                             SamplesPerLog10ZTag,
                         ],
-                        delta_logz=1.0 / float(samples_per_log10z),
-                        mode="stop",
+                    )
+                )
+            else:
+                # no pre-computed initial condition available.
+                # This is OK and expected if the source_z is sufficiently far after horizon re-entry,
+                # but we should warn if a suitable condition does not seem to be satisfied
+                if source_z.z > k_exit.z_exit_subh_e3 + DEFAULT_FLOAT_PRECISION:
+                    print(
+                        f"!! WARNING: no numerically-computed initial conditions appears to be available for k={k_exit.k.k_inv_Mpc:.5g}/Mpc, z_source={source_z.z:.5g}"
+                    )
+                    print(
+                        f"|    This may indicate an edge-effect, or possibly that not all initial conditions are present in the datastore."
+                    )
+
+                if source_z.z >= k_exit.z_exit:
+                    print(
+                        f"!! ERROR: attempt to compute WKB solution for k={k_exit.k.k_inv_Mpc:.5g}/Mpc, z_source={source_z.z:.5g} without a pre-computed initial condition"
+                    )
+                    print(
+                        f"|    For this k-mode, horizon entry occurs at z_entry={k_exit.z_exit:.5g}"
+                    )
+                    raise RuntimeError(
+                        f"Cannot compute WKB solution outside the horizon"
+                    )
+
+                work_refs.append(
+                    pool.object_get(
+                        GkWKBIntegration,
+                        solver_labels=solvers,
+                        cosmology=LambdaCDM_Planck2018,
+                        k=k_exit,
+                        z_source=source_z,
+                        G_init=0.0,
+                        Gprime_init=1.0,
+                        z_sample=response_zs,
+                        atol=atol,
+                        rtol=rtol,
+                        tags=[
+                            GkProductionTag,
+                            GlobalZGridTag,
+                            OutsideHorizonEfoldsTag,
+                            LargestZTag,
+                            SamplesPerLog10ZTag,
+                        ],
                     )
                 )
 
         return work_refs
 
-    def build_Gk_exit_work_label(Gk: GkNumericalIntegration):
-        return f"{args.job_name}-Gk-k{Gk.k.k_inv_Mpc:.3g}-sourcez{Gk.z_source.z:.5g}-{datetime.now().replace(microsecond=0).isoformat()}"
+    def build_Gk_WKB_work_label(Gk: GkWKBIntegration):
+        return f"{args.job_name}-GkWKBl-k{Gk.k.k_inv_Mpc:.3g}-sourcez{Gk.z_source.z:.5g}-zinit{Gk.z_init:.5g}-{datetime.now().replace(microsecond=0).isoformat()}"
 
-    def validate_Gk_work(Gk: GkNumericalIntegration):
+    def validate_Gk_WKB_work(Gk: GkWKBIntegration):
         return pool.object_validate(Gk)
 
-    Gk_queue = RayWorkPool(
+    Gk_WKB_queue = RayWorkPool(
         pool,
         k_exit_times,
-        task_builder=build_Gk_work,
-        validation_handler=validate_Gk_work,
-        label_builder=build_Gk_exit_work_label,
-        title="CALCULATE NUMERICAL PART OF TENSOR GREEN FUNCTIONS",
+        task_builder=build_Gk_WKB_work,
+        validation_handler=validate_Gk_WKB_work,
+        label_builder=build_Gk_WKB_work_label,
+        title="CALCULATE WKB PART OF TENSOR GREEN FUNCTIONS",
         store_results=False,
     )
-    Gk_queue.run()
+    Gk_numerical_queue.run()

@@ -503,7 +503,7 @@ class GkNumericalIntegration(DatastoreObject):
 
     @property
     def compute_steps(self) -> int:
-        if self._compute_time is None:
+        if self._compute_steps is None:
             raise RuntimeError("compute_steps has not yet been populated")
         return self._compute_steps
 

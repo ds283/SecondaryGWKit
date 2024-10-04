@@ -167,7 +167,7 @@ class sqla_GkNumericalIntegration_factory(SQLAFactoryBase):
         k_exit: wavenumber_exit_time = payload["k"]
         cosmology: BaseCosmology = payload["cosmology"]
         z_sample: redshift_array = payload["z_sample"]
-        z_source: redshift = payload["z_source"]
+        z_source: redshift = payload.get("z_source", None)
 
         mode: str = payload.get("mode", None)
 
