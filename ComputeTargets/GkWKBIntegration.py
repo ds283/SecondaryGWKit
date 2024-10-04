@@ -29,6 +29,7 @@ from .integration_supervisor import (
 
 A0_TAU_INDEX = 0
 THETA_INDEX = 1
+EXPECTED_SOL_LENGTH = 2
 
 
 class GkWKBSupervisor(IntegrationSupervisor):
@@ -144,11 +145,15 @@ def compute_Gk_WKB(
 
     if not sol.success:
         raise RuntimeError(
-            f'compute_Gk_WKB: integration did not terminate successfully (k={k_wavenumber.k.k_inv_Mpc}/Mpc, z_init={z_init}, error at z={sol.t[-1]}, "{sol.message}")'
+            f'compute_Gk_WKB: integration did not terminate successfully (k={k_wavenumber.k_inv_Mpc}/Mpc, z_init={z_init}, error at z={sol.t[-1]}, "{sol.message}")'
         )
 
     sampled_z = sol.t
     sampled_values = sol.y
+    if len(sampled_values) != EXPECTED_SOL_LENGTH:
+        raise RuntimeError(
+            f"compute_Gk_WKB: solution does not have expected number of members (expected {EXPECTED_SOL_LENGTH}, found {len(sampled_values)}; k={k_wavenumber.k_inv_Mpc}/Mpc, length of sol.t={len(sampled_z)})"
+        )
     sampled_a0_tau = sampled_values[A0_TAU_INDEX]
     sampled_theta = sampled_values[THETA_INDEX]
 

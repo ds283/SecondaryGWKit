@@ -152,6 +152,7 @@ def compute_Tk(
     A0_TAU_INDEX = 0
     T_INDEX = 1
     TPRIME_INDEX = 2
+    EXPECTED_SOL_LENGTH = 3
 
     def RHS(z, state, supervisor: TkIntegrationSupervisor) -> List[float]:
         """
@@ -230,6 +231,10 @@ def compute_Tk(
 
     sampled_z = sol.t
     sampled_values = sol.y
+    if len(sampled_values) != EXPECTED_SOL_LENGTH:
+        raise RuntimeError(
+            f"compute_Tk: solution does not have expected number of members (expected {EXPECTED_SOL_LENGTH}, found {len(sampled_values)}; k={k.k_inv_Mpc}/Mpc, length of sol.t={len(sampled_z)})"
+        )
     sampled_a0_tau = sampled_values[A0_TAU_INDEX]
     sampled_T = sampled_values[T_INDEX]
     sampled_Tprime = sampled_values[TPRIME_INDEX]
