@@ -34,6 +34,7 @@ from .integration_supervisor import (
 A0_TAU_INDEX = 0
 G_INDEX = 1
 GPRIME_INDEX = 2
+EXPECTED_SOL_LENGTH = 3
 
 
 class GkIntegrationSupervisor(IntegrationSupervisor):
@@ -311,6 +312,10 @@ def compute_Gk(
 
     sampled_z = sol.t
     sampled_values = sol.y
+    if len(sampled_values) != EXPECTED_SOL_LENGTH:
+        raise RuntimeError(
+            f"compute_Gk: solution does not have expected number of members (expected {EXPECTED_SOL_LENGTH}, found {len(sampled_values)}; k={k_wavenumber.k.k_inv_Mpc}/Mpc, length of sol.t={len(sampled_z)})"
+        )
     sampled_a0_tau = sampled_values[A0_TAU_INDEX]
     sampled_G = sampled_values[G_INDEX]
     sampled_Gprime = sampled_values[GPRIME_INDEX]
