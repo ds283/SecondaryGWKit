@@ -82,4 +82,4 @@ class BaseCosmology(DatastoreObject, ABC):
         :return:
         """
         one_plus_z = 1.0 + z
-        return 2.0 * self.d2_lnH_dz2(z) + one_plus_z * self.d3_dlnH_dz3(z)
+        return 2.0 * self.d2_lnH_dz2(z) + one_plus_z * self.d3_lnH_dz3(z)

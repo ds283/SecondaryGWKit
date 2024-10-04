@@ -581,7 +581,7 @@ class Datastore:
 
             with self._engine.begin() as conn:
                 for name, schema in self._schema.items():
-                    if schema.get("uses_serial", False):
+                    if schema.get("use_serial", False):
                         table = schema["table"]
                         largest_serial = conn.execute(
                             sqla.select(

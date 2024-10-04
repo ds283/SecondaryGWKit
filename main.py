@@ -30,7 +30,6 @@ from defaults import (
     DEFAULT_REL_TOLERANCE,
     DEFAULT_FLOAT_PRECISION,
 )
-from utilities import WallclockTimer, format_time
 
 DEFAULT_LABEL = "SecondaryGWKit-test"
 DEFAULT_TIMEOUT = 60
@@ -106,6 +105,7 @@ with ShardedPool(
     timeout=args.db_timeout,
     shards=args.shards,
     profile_db=args.profile_db,
+    job_name=args.job_name,
 ) as pool:
 
     # set up LambdaCDM object representing a basic Planck2018 cosmology in Mpc units
@@ -403,125 +403,115 @@ with ShardedPool(
                 f"k_exit object (store_id={k_exit.store_id}) is not ready"
             )
 
-        with WallclockTimer() as timer:
-            print(
-                f">> Building GKWKB work items for k = {k_exit.k.k_inv_Mpc}/Mpc (store_id={k_exit.store_id})"
-            )
-            # find redshift where this k-mode is at least 3 e-folds inside the horizon
-            # we don't calculate WKB Green's functions with the response redshift earlier than this
-            response_pool = z_sample.truncate(k_exit.z_exit_subh_e3, keep="lower")
+        # find redshift where this k-mode is at least 3 e-folds inside the horizon
+        # we don't calculate WKB Green's functions with the response redshift earlier than this
+        response_pool = z_sample.truncate(k_exit.z_exit_subh_e3, keep="lower")
 
-            request_payload = [
-                {
-                    "solver_labels": solvers,
-                    "cosmology": LambdaCDM_Planck2018,
-                    "k": k_exit,
-                    "z_source": source_z,
-                    "z_sample": None,
-                    "atol": atol,
-                    "rtol": rtol,
-                    "tags": [GkProductionTag, GlobalZGridTag, SamplesPerLog10ZTag],
-                }
-                for source_z in z_sample
-            ]
-            with WallclockTimer() as inner_timer:
-                print(">> Dispatching pool.object_get() request")
-                Gk_data = ray.get(
+        request_payload = [
+            {
+                "solver_labels": solvers,
+                "cosmology": LambdaCDM_Planck2018,
+                "k": k_exit,
+                "z_source": source_z,
+                "z_sample": None,
+                "atol": atol,
+                "rtol": rtol,
+                "tags": [GkProductionTag, GlobalZGridTag, SamplesPerLog10ZTag],
+            }
+            for source_z in z_sample
+        ]
+        print(
+            f">> Building work items for k={k_exit.k.k_inv_Mpc:.5g}/Mpc | len(request_payload) = {len(request_payload)}"
+        )
+        Gk_refs = pool.object_get(GkNumericalIntegration, payload_data=request_payload)
+        Gk_data = ray.get(Gk_refs)
+
+        work_refs = []
+
+        for Gk_numerical, source_z in zip(Gk_data, z_sample):
+            Gk_numerical: GkNumericalIntegration
+            source_z: redshift
+            # query whether there is a pre-computed GkNumericalIntegration for this source redshift.
+            # typically, this will be the case provided the source redshift is sufficiently early
+            if Gk_numerical.available:
+                G_init = Gk_numerical.stop_G
+                Gprime_init = Gk_numerical.stop_Gprime
+                z_init = k_exit.z_exit - Gk_numerical.stop_efolds_subh
+
+                response_zs = response_pool.truncate(z_init, keep="lower")
+
+                work_refs.append(
                     pool.object_get(
-                        GkNumericalIntegration, payload_data=request_payload
+                        GkWKBIntegration,
+                        solver_labels=solvers,
+                        cosmology=LambdaCDM_Planck2018,
+                        k=k_exit,
+                        z_source=source_z,
+                        z_init=z_init,
+                        G_init=G_init,
+                        Gprime_init=Gprime_init,
+                        z_sample=response_zs,
+                        atol=atol,
+                        rtol=rtol,
+                        tags=[
+                            GkProductionTag,
+                            GlobalZGridTag,
+                            OutsideHorizonEfoldsTag,
+                            LargestZTag,
+                            SamplesPerLog10ZTag,
+                        ],
                     )
                 )
-            print(
-                f">> pool.object_get() completed in time {format_time(inner_timer.elapsed)}"
-            )
-
-            work_refs = []
-
-            for Gk_numerical, source_z in zip(Gk_data, z_sample):
-                Gk_numerical: GkNumericalIntegration
-                source_z: redshift
-                # query whether there is a pre-computed GkNumericalIntegration for this source redshift.
-                # typically, this will be the case provided the source redshift is sufficiently early
-                if Gk_numerical.available:
-                    G_init = Gk_numerical.stop_G
-                    Gprime_init = Gk_numerical.stop_Gprime
-                    z_init = k_exit.z_exit - Gk_numerical.stop_efolds_subh
-
-                    response_zs = response_pool.truncate(z_init, keep="lower")
-
-                    work_refs.append(
-                        pool.object_get(
-                            GkWKBIntegration,
-                            solver_labels=solvers,
-                            cosmology=LambdaCDM_Planck2018,
-                            k=k_exit,
-                            z_source=source_z,
-                            z_init=z_init,
-                            G_init=G_init,
-                            Gprime_init=Gprime_init,
-                            z_sample=response_zs,
-                            atol=atol,
-                            rtol=rtol,
-                            tags=[
-                                GkProductionTag,
-                                GlobalZGridTag,
-                                OutsideHorizonEfoldsTag,
-                                LargestZTag,
-                                SamplesPerLog10ZTag,
-                            ],
-                        )
+            else:
+                # no pre-computed initial condition available.
+                # This is OK and expected if the source_z is sufficiently far after horizon re-entry,
+                # but we should warn if a suitable condition does not seem to be satisfied
+                if source_z.z > k_exit.z_exit_subh_e3 + DEFAULT_FLOAT_PRECISION:
+                    print(
+                        f"!! WARNING: no numerically-computed initial conditions ia available for k={k_exit.k.k_inv_Mpc:.5g}/Mpc, z_source={source_z.z:.5g}"
                     )
-                else:
-                    # no pre-computed initial condition available.
-                    # This is OK and expected if the source_z is sufficiently far after horizon re-entry,
-                    # but we should warn if a suitable condition does not seem to be satisfied
-                    if source_z.z > k_exit.z_exit_subh_e3 + DEFAULT_FLOAT_PRECISION:
-                        print(
-                            f"!! WARNING: no numerically-computed initial conditions ia available for k={k_exit.k.k_inv_Mpc:.5g}/Mpc, z_source={source_z.z:.5g}"
-                        )
-                        print(
-                            f"|    This may indicate an edge-effect, or possibly that not all initial conditions are present in the datastore."
-                        )
-
-                    if source_z.z >= k_exit.z_exit:
-                        print(
-                            f"!! ERROR: attempt to compute WKB solution for k={k_exit.k.k_inv_Mpc:.5g}/Mpc, z_source={source_z.z:.5g} without a pre-computed initial condition"
-                        )
-                        print(
-                            f"|    For this k-mode, horizon entry occurs at z_entry={k_exit.z_exit:.5g}"
-                        )
-                        raise RuntimeError(
-                            f"Cannot compute WKB solution outside the horizon"
-                        )
-
-                    response_zs = response_pool.truncate(source_z, keep="lower")
-
-                    work_refs.append(
-                        pool.object_get(
-                            GkWKBIntegration,
-                            solver_labels=solvers,
-                            cosmology=LambdaCDM_Planck2018,
-                            k=k_exit,
-                            z_source=source_z,
-                            G_init=0.0,
-                            Gprime_init=1.0,
-                            z_sample=response_zs,
-                            atol=atol,
-                            rtol=rtol,
-                            tags=[
-                                GkProductionTag,
-                                GlobalZGridTag,
-                                OutsideHorizonEfoldsTag,
-                                LargestZTag,
-                                SamplesPerLog10ZTag,
-                            ],
-                        )
+                    print(
+                        f"|    This may indicate an edge-effect, or possibly that not all initial conditions are present in the datastore."
                     )
+
+                if source_z.z >= k_exit.z_exit:
+                    print(
+                        f"!! ERROR: attempt to compute WKB solution for k={k_exit.k.k_inv_Mpc:.5g}/Mpc, z_source={source_z.z:.5g} without a pre-computed initial condition"
+                    )
+                    print(
+                        f"|    For this k-mode, horizon entry occurs at z_entry={k_exit.z_exit:.5g}"
+                    )
+                    raise RuntimeError(
+                        f"Cannot compute WKB solution outside the horizon"
+                    )
+
+                response_zs = response_pool.truncate(source_z, keep="lower")
+
+                work_refs.append(
+                    pool.object_get(
+                        GkWKBIntegration,
+                        solver_labels=solvers,
+                        cosmology=LambdaCDM_Planck2018,
+                        k=k_exit,
+                        z_source=source_z,
+                        G_init=0.0,
+                        Gprime_init=1.0,
+                        z_sample=response_zs,
+                        atol=atol,
+                        rtol=rtol,
+                        tags=[
+                            GkProductionTag,
+                            GlobalZGridTag,
+                            OutsideHorizonEfoldsTag,
+                            LargestZTag,
+                            SamplesPerLog10ZTag,
+                        ],
+                    )
+                )
 
         print(
-            f">> Completed GkWKB work items for k = {k_exit.k.k_inv_Mpc}/Mpc (store_id={k_exit.store_id}) in time {format_time(timer.elapsed)}"
+            f">> created {len(work_refs)} work items for k={k_exit.k.k_inv_Mpc:.5g}/Mpc, len(z_sample) = {len(z_sample)}"
         )
-
         return work_refs
 
     def build_Gk_WKB_work_label(Gk: GkWKBIntegration):

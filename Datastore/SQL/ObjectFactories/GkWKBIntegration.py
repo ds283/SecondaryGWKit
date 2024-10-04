@@ -312,7 +312,7 @@ class sqla_GkWKBIntegration_factory(SQLAFactoryBase):
                     redshift_table.c.serial == value_table.c.z_serial,
                 )
             )
-            .filter(value_table.c.integration_serial == store_id)
+            .filter(value_table.c.wkb_serial == store_id)
             .order_by(redshift_table.c.z.desc())
         )
 
@@ -397,6 +397,8 @@ class sqla_GkWKBIntegration_factory(SQLAFactoryBase):
                 "z_init": obj.z_init,
                 "G_init": obj.G_init,
                 "Gprime_init": obj.Gprime_init,
+                "sin_coeff": obj.sin_coeff,
+                "cos_coeff": obj.cos_coeff,
                 "compute_time": obj.compute_time,
                 "compute_steps": obj.compute_steps,
                 "RHS_evaluations": obj.RHS_evaluations,
@@ -412,7 +414,7 @@ class sqla_GkWKBIntegration_factory(SQLAFactoryBase):
         obj._my_id = store_id
 
         # add any tags that have been specified
-        tag_inserter = inserters["GkWKB_tagstags"]
+        tag_inserter = inserters["GkWKB_tags"]
         for tag in obj.tags:
             sqla_GkWKBTagAssociation_factory.add_tag(conn, tag_inserter, obj, tag)
 
@@ -462,7 +464,7 @@ class sqla_GkWKBIntegration_factory(SQLAFactoryBase):
         value_table = tables["GkWKBValue"]
         num_samples = conn.execute(
             sqla.select(sqla.func.count(value_table.c.serial)).filter(
-                value_table.c.integration_serial == obj.store_id
+                value_table.c.wkb_serial == obj.store_id
             )
         ).scalar()
 
@@ -545,7 +547,7 @@ class sqla_GkWKBIntegration_factory(SQLAFactoryBase):
             )
             rows = conn.execute(
                 sqla.select(sqla.func.count(value_table.c.serial)).filter(
-                    value_table.c.integration_serial == integration.serial,
+                    value_table.c.wkb_serial == integration.serial,
                 )
             ).scalar()
             msgs.append(
@@ -644,7 +646,7 @@ class sqla_GkWKBValue_factory(SQLAFactoryBase):
 
             if fabs(row_data.H_ratio - H_ratio) > DEFAULT_FLOAT_PRECISION:
                 raise ValueError(
-                    f"Stored WKB tensor Green function H_ratio ratio (WKB store_id={wkb_serial}, z={z.store_id}) = {row_data.H_ratio} differs from expected value = {H}"
+                    f"Stored WKB tensor Green function H_ratio ratio (WKB store_id={wkb_serial}, z={z.store_id}) = {row_data.H_ratio} differs from expected value = {H_ratio}"
                 )
             if fabs(row_data.theta - theta) > DEFAULT_FLOAT_PRECISION:
                 raise ValueError(

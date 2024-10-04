@@ -725,7 +725,7 @@ class GkNumericalValue(DatastoreObject):
 
     def __float__(self):
         """
-        Cast to float. Returns value of the transfer function
+        Cast to float. Returns value of the Green's function
         :return:
         """
         return self.G

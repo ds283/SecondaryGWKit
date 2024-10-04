@@ -6,7 +6,7 @@ import ray
 class BrokerPool:
     def __init__(self, table_name: str, broker_name: str, max_serial: int = 0):
         # max_serial tracks the current pool high-water mark
-        self.max_serial = max_serial
+        self.max_serial = max_serial if max_serial is not None else 0
 
         self.leased = set()
         self.recycled = set()
@@ -16,6 +16,9 @@ class BrokerPool:
         self._broker_name = broker_name
 
     def notify_largest_store_id(self, max_serial: int) -> bool:
+        if max_serial is None:
+            return False
+
         if max_serial > self.max_serial:
             self.max_serial = max_serial
             return True

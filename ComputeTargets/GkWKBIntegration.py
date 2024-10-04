@@ -453,24 +453,23 @@ class GkWKBIntegration(DatastoreObject):
         a0_tau_sample = data["a0_tau_sample"]
         self._values = []
 
-        omega_WKB_sq_init = WKB_omegaEff_sq(self._cosmology, self.k.k, self.z_source.z)
+        omega_WKB_sq_init = WKB_omegaEff_sq(self._cosmology, self.k.k, initial_z)
         if omega_WKB_sq_init < 0.0:
             raise ValueError(
-                f"omega_WKB^2 must be non-negative at the initial time (omega_WKB^2={omega_WKB_sq_init:.5g})"
+                f"omega_WKB^2 must be non-negative at the initial time (k={self._k_exit.k.k_inv_Mpc}/Mpc, z_init={initial_z:.5g}, omega_WKB^2={omega_WKB_sq_init:.5g})"
             )
 
         omega_WKB_init = sqrt(omega_WKB_sq_init)
         self._cos_coeff = omega_WKB_init * self._G_init
 
-        d_ln_omega_WKB = WKB_d_ln_omegaEffPrime_dz(
-            self._cosmology, self.k.k, self.z_source.z
-        )
+        d_ln_omega_WKB = WKB_d_ln_omegaEffPrime_dz(self._cosmology, self.k.k, initial_z)
         self._sin_coeff = (
             self._Gprime_init
             + (self._G_init / 2.0) * (eps_init / one_plus_z_init + d_ln_omega_WKB)
         ) / omega_WKB_init
 
         # estimate tau at the source redshift
+        H_source = self._cosmology.Hubble(self._z_source.z)
         rho_source = self._cosmology.rho(self._z_source.z)
         tau_source = (
             sqrt(3.0)
@@ -487,17 +486,14 @@ class GkWKBIntegration(DatastoreObject):
             tau = a0_tau_sample[i]
 
             analytic_G = compute_analytic_G(
-                self.k.k, 1.0 / 3.0, tau_source, tau, H_init
+                self.k.k, 1.0 / 3.0, tau_source, tau, H_source
             )
             analytic_Gprime = compute_analytic_Gprime(
-                self.k.k, 1.0 / 3.0, tau_source, tau, H_init, H
+                self.k.k, 1.0 / 3.0, tau_source, tau, H_source, H
             )
-            omega_WKB_sq = WKB_omegaEff_sq(self._cosmology, self.k.k, current_z_float)
-            if omega_WKB_sq < 0.0:
-                raise ValueError(
-                    f"omega_WKB^2 must be non-negative at the initial time (omega_WKB^2={omega_WKB_sq:.5g})"
-                )
 
+            # should be safe to assume omega_WKB_sq > 0, since otherwise this would have been picked up during the integration
+            omega_WKB_sq = WKB_omegaEff_sq(self._cosmology, self.k.k, current_z_float)
             omega_WKB = sqrt(omega_WKB_sq)
 
             H_ratio = H_init / H
@@ -551,10 +547,10 @@ class GkWKBValue(DatastoreObject):
 
     def __float__(self):
         """
-        Cast to float. Returns value of the transfer function
+        Cast to float. Returns value of G_k estimated using the WKB approximation
         :return:
         """
-        return self.G
+        return self._G_WKB
 
     @property
     def z(self) -> redshift:
@@ -574,7 +570,7 @@ class GkWKBValue(DatastoreObject):
 
     @property
     def G_WKB(self) -> Optional[float]:
-        return self._G_WKB_sq
+        return self._G_WKB
 
     @property
     def analytic_G(self) -> Optional[float]:

@@ -50,11 +50,13 @@ class ShardedPool:
         timeout=None,
         shards=10,
         profile_db: Optional[PathType] = None,
+        job_name: Optional[str] = None,
     ):
         """
         Initialize a pool of datastore actors
         :param version_label:
         """
+        self._job_name = job_name
         self._version_label = version_label
 
         self._db_name = db_name
@@ -73,7 +75,10 @@ class ShardedPool:
         )
 
         if profile_db is not None:
-            label = f"{self._version_label}-primarydb-|{str(db_name)}|-shards-{str(shards)}-{datetime.now().replace(microsecond=0).isoformat()}"
+            if self._job_name is not None:
+                label = f'{self._version_label}-jobname-"{self._job_name}"-primarydb-"{str(db_name)}"-shards-{str(shards)}-{datetime.now().replace(microsecond=0).isoformat()}'
+            else:
+                label = f'{self._version_label}-primarydb-"{str(db_name)}"-shards-{str(shards)}-{datetime.now().replace(microsecond=0).isoformat()}'
             self._profile_agent = ProfileAgent.options(name="ProfileAgent").remote(
                 db_name=profile_db,
                 timeout=self._timeout,
@@ -304,6 +309,7 @@ class ShardedPool:
         ref = self._shards[shard_key].object_get.remote(cls_name, **kwargs)
         objects = ray.get(ref)
 
+        # was this a vectorized get?
         if "payload_data" in kwargs:
             payload_data = kwargs["payload_data"]
 
@@ -353,7 +359,7 @@ class ShardedPool:
         # for sharded tables, we should query/insert into only the appropriate shard
         shard_key_field = _shard_tables[cls_name]
 
-        # determine which shard contains this item
+        # is this a vectorized get?
         if "payload_data" in kwargs:
             payload_data = kwargs["payload_data"]
 
@@ -365,13 +371,15 @@ class ShardedPool:
                 work_refs.append(
                     self._shards[shard_id].object_get.remote(cls_name, **item)
                 )
-                return work_refs
-            # TODO: consider consolidating all objects for the same shard into a list, for efficiency
-        else:
-            k = kwargs[shard_key_field]
-            shard_id = self._wavenumber_keys[self._get_k_store_id(k)]
 
-            return self._shards[shard_id].object_get.remote(cls_name, **kwargs)
+            return work_refs
+            # TODO: consider consolidating all objects for the same shard into a list, for efficiency
+
+        # otherwise, can assume this is scalar get
+        k = kwargs[shard_key_field]
+        shard_id = self._wavenumber_keys[self._get_k_store_id(k)]
+
+        return self._shards[shard_id].object_get.remote(cls_name, **kwargs)
 
     def object_store(self, objects):
         # we only expect to call object_store on sharded objects

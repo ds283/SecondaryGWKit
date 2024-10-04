@@ -295,7 +295,7 @@ class TkNumericalIntegration(DatastoreObject):
         # if initial time is not really compatible with the initial conditions we use, warn the user
         if z_init is not None and z_init.z < k.z_exit_suph_e3 - DEFAULT_FLOAT_PRECISION:
             print(
-                f"!! Warning (TkNumericalIntegration) k={k.k.k_inv_Mpc}/Mpc, log10_atol={atol.log10_tol}, log10_rtol={rtol.log10_tol}"
+                f"!! Warning (TkNumericalIntegration) k={k.k.k_inv_Mpc:.5g}/Mpc, log10_atol={atol.log10_tol}, log10_rtol={rtol.log10_tol}"
             )
             print(
                 f"|    Initial redshift z_init={z_init.z:.5g} is later than the 3-efold superhorizon time z_3={k.z_exit_suph_e3:.5g}."
