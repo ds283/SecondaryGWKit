@@ -167,7 +167,7 @@ class sqla_GkWKBIntegration_factory(SQLAFactoryBase):
         atol_table = tables["tolerance"].alias("atol")
         rtol_table = tables["tolerance"].alias("rtol")
         solver_table = tables["IntegrationSolver"]
-        tag_table = tables["GkWKB_tagstags"]
+        tag_table = tables["GkWKB_tags"]
         redshift_table = tables["redshift"]
 
         # notice that we query only for validated data

@@ -104,7 +104,7 @@ def compute_Gk_WKB(
             a0_tau = state[A0_TAU_INDEX]
             theta = state[THETA_INDEX]
 
-            if supervisor.notify_avalable:
+            if supervisor.notify_available:
                 supervisor.message(z, f"current state: theta_WKB = {theta:.5g}")
                 supervisor.reset_notify_time()
 
@@ -395,7 +395,7 @@ class GkWKBIntegration(DatastoreObject):
         if self._values is not None:
             raise RuntimeError("values have already been computed")
 
-        if self._z_source is None or self._z_init is None or self._z_sample is None:
+        if self._z_source is None or self._z_sample is None:
             raise RuntimeError(
                 "Object has not been configured correctly for a concrete calculation (z_source or z_sample is missing). It can only represent a query."
             )

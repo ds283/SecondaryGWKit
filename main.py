@@ -30,6 +30,7 @@ from defaults import (
     DEFAULT_REL_TOLERANCE,
     DEFAULT_FLOAT_PRECISION,
 )
+from utilities import WallclockTimer, format_time
 
 DEFAULT_LABEL = "SecondaryGWKit-test"
 DEFAULT_TIMEOUT = 60
@@ -170,7 +171,7 @@ with ShardedPool(
     # build array of k-sample points
     print("\n** BUILDING ARRAY OF WAVENUMBERS AT WHICH TO SAMPLE")
     k_array = ray.get(
-        convert_to_wavenumbers(np.logspace(np.log10(0.1), np.log10(5e7), 50))
+        convert_to_wavenumbers(np.logspace(np.log10(0.1), np.log10(5e7), 10))
     )
     k_sample = wavenumber_array(k_array=k_array)
 
@@ -402,101 +403,111 @@ with ShardedPool(
                 f"k_exit object (store_id={k_exit.store_id}) is not ready"
             )
 
-        # find redshift where this k-mode is at least 3 e-folds inside the horizon
-        # we don't calculate WKB Green's functions with the response redshift earlier than this
-        response_pool = z_sample.truncate(k_exit.z_exit_subh_e3, keep="lower")
-
-        work_refs = []
-
-        for source_z in z_sample:
-            response_zs = response_pool.truncate(source_z, keep="lower")
-
-            # if the source redshift is sufficiently early,
-            # query whether there is a pre-computed GkNumericalIntegration for this source redshift
-            Gk_numerical: GkNumericalIntegration = ray.get(
-                pool.object_get(
-                    GkNumericalIntegration,
-                    solver_labels=solvers,
-                    cosmology=LambdaCDM_Planck2018,
-                    k=k_exit,
-                    z_source=source_z,
-                    z_sample=None,
-                    atol=atol,
-                    rtol=rtol,
-                    tags=[GkProductionTag, GlobalZGridTag, SamplesPerLog10ZTag],
-                )
+        with WallclockTimer() as timer:
+            print(
+                f">> Building GKWKB work items for k = {k_exit.k.k_inv_Mpc}/Mpc (store_id={k_exit.store_id})"
             )
-            if Gk_numerical.available:
-                G_init = Gk_numerical.stop_G
-                Gprime_init = Gk_numerical.stop_Gprime
-                z_init = k_exit.z_exit - Gk_numerical.stop_efolds_subh
+            # find redshift where this k-mode is at least 3 e-folds inside the horizon
+            # we don't calculate WKB Green's functions with the response redshift earlier than this
+            response_pool = z_sample.truncate(k_exit.z_exit_subh_e3, keep="lower")
 
-                work_refs.append(
+            work_refs = []
+
+            for source_z in z_sample:
+                # if the source redshift is sufficiently early,
+                # query whether there is a pre-computed GkNumericalIntegration for this source redshift
+                Gk_numerical: GkNumericalIntegration = ray.get(
                     pool.object_get(
-                        GkWKBIntegration,
+                        GkNumericalIntegration,
                         solver_labels=solvers,
                         cosmology=LambdaCDM_Planck2018,
                         k=k_exit,
                         z_source=source_z,
-                        z_init=z_init,
-                        G_init=G_init,
-                        Gprime_init=Gprime_init,
-                        z_sample=response_zs,
+                        z_sample=None,
                         atol=atol,
                         rtol=rtol,
-                        tags=[
-                            GkProductionTag,
-                            GlobalZGridTag,
-                            OutsideHorizonEfoldsTag,
-                            LargestZTag,
-                            SamplesPerLog10ZTag,
-                        ],
+                        tags=[GkProductionTag, GlobalZGridTag, SamplesPerLog10ZTag],
                     )
                 )
-            else:
-                # no pre-computed initial condition available.
-                # This is OK and expected if the source_z is sufficiently far after horizon re-entry,
-                # but we should warn if a suitable condition does not seem to be satisfied
-                if source_z.z > k_exit.z_exit_subh_e3 + DEFAULT_FLOAT_PRECISION:
-                    print(
-                        f"!! WARNING: no numerically-computed initial conditions ia available for k={k_exit.k.k_inv_Mpc:.5g}/Mpc, z_source={source_z.z:.5g}"
+                if Gk_numerical.available:
+                    G_init = Gk_numerical.stop_G
+                    Gprime_init = Gk_numerical.stop_Gprime
+                    z_init = k_exit.z_exit - Gk_numerical.stop_efolds_subh
+
+                    response_zs = response_pool.truncate(z_init, keep="lower")
+
+                    work_refs.append(
+                        pool.object_get(
+                            GkWKBIntegration,
+                            solver_labels=solvers,
+                            cosmology=LambdaCDM_Planck2018,
+                            k=k_exit,
+                            z_source=source_z,
+                            z_init=z_init,
+                            G_init=G_init,
+                            Gprime_init=Gprime_init,
+                            z_sample=response_zs,
+                            atol=atol,
+                            rtol=rtol,
+                            tags=[
+                                GkProductionTag,
+                                GlobalZGridTag,
+                                OutsideHorizonEfoldsTag,
+                                LargestZTag,
+                                SamplesPerLog10ZTag,
+                            ],
+                        )
                     )
-                    print(
-                        f"|    This may indicate an edge-effect, or possibly that not all initial conditions are present in the datastore."
+                else:
+                    # no pre-computed initial condition available.
+                    # This is OK and expected if the source_z is sufficiently far after horizon re-entry,
+                    # but we should warn if a suitable condition does not seem to be satisfied
+                    if source_z.z > k_exit.z_exit_subh_e3 + DEFAULT_FLOAT_PRECISION:
+                        print(
+                            f"!! WARNING: no numerically-computed initial conditions ia available for k={k_exit.k.k_inv_Mpc:.5g}/Mpc, z_source={source_z.z:.5g}"
+                        )
+                        print(
+                            f"|    This may indicate an edge-effect, or possibly that not all initial conditions are present in the datastore."
+                        )
+
+                    if source_z.z >= k_exit.z_exit:
+                        print(
+                            f"!! ERROR: attempt to compute WKB solution for k={k_exit.k.k_inv_Mpc:.5g}/Mpc, z_source={source_z.z:.5g} without a pre-computed initial condition"
+                        )
+                        print(
+                            f"|    For this k-mode, horizon entry occurs at z_entry={k_exit.z_exit:.5g}"
+                        )
+                        raise RuntimeError(
+                            f"Cannot compute WKB solution outside the horizon"
+                        )
+
+                    response_zs = response_pool.truncate(source_z, keep="lower")
+
+                    work_refs.append(
+                        pool.object_get(
+                            GkWKBIntegration,
+                            solver_labels=solvers,
+                            cosmology=LambdaCDM_Planck2018,
+                            k=k_exit,
+                            z_source=source_z,
+                            G_init=0.0,
+                            Gprime_init=1.0,
+                            z_sample=response_zs,
+                            atol=atol,
+                            rtol=rtol,
+                            tags=[
+                                GkProductionTag,
+                                GlobalZGridTag,
+                                OutsideHorizonEfoldsTag,
+                                LargestZTag,
+                                SamplesPerLog10ZTag,
+                            ],
+                        )
                     )
 
-                if source_z.z >= k_exit.z_exit:
-                    print(
-                        f"!! ERROR: attempt to compute WKB solution for k={k_exit.k.k_inv_Mpc:.5g}/Mpc, z_source={source_z.z:.5g} without a pre-computed initial condition"
-                    )
-                    print(
-                        f"|    For this k-mode, horizon entry occurs at z_entry={k_exit.z_exit:.5g}"
-                    )
-                    raise RuntimeError(
-                        f"Cannot compute WKB solution outside the horizon"
-                    )
-
-                work_refs.append(
-                    pool.object_get(
-                        GkWKBIntegration,
-                        solver_labels=solvers,
-                        cosmology=LambdaCDM_Planck2018,
-                        k=k_exit,
-                        z_source=source_z,
-                        G_init=0.0,
-                        Gprime_init=1.0,
-                        z_sample=response_zs,
-                        atol=atol,
-                        rtol=rtol,
-                        tags=[
-                            GkProductionTag,
-                            GlobalZGridTag,
-                            OutsideHorizonEfoldsTag,
-                            LargestZTag,
-                            SamplesPerLog10ZTag,
-                        ],
-                    )
-                )
+        print(
+            f">> Completed GKWKB work items for k = {k_exit.k.k_inv_Mpc}/Mpc (store_id={k_exit.store_id}) in time {format_time(timer.elapsed)}"
+        )
 
         return work_refs
 
