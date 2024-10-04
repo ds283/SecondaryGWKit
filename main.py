@@ -411,24 +411,37 @@ with ShardedPool(
             # we don't calculate WKB Green's functions with the response redshift earlier than this
             response_pool = z_sample.truncate(k_exit.z_exit_subh_e3, keep="lower")
 
-            work_refs = []
-
-            for source_z in z_sample:
-                # if the source redshift is sufficiently early,
-                # query whether there is a pre-computed GkNumericalIntegration for this source redshift
-                Gk_numerical: GkNumericalIntegration = ray.get(
+            request_payload = [
+                {
+                    "solver_labels": solvers,
+                    "cosmology": LambdaCDM_Planck2018,
+                    "k": k_exit,
+                    "z_source": source_z,
+                    "z_sample": None,
+                    "atol": atol,
+                    "rtol": rtol,
+                    "tags": [GkProductionTag, GlobalZGridTag, SamplesPerLog10ZTag],
+                }
+                for source_z in z_sample
+            ]
+            with WallclockTimer() as inner_timer:
+                print(">> Dispatching pool.object_get() request")
+                Gk_data = ray.get(
                     pool.object_get(
-                        GkNumericalIntegration,
-                        solver_labels=solvers,
-                        cosmology=LambdaCDM_Planck2018,
-                        k=k_exit,
-                        z_source=source_z,
-                        z_sample=None,
-                        atol=atol,
-                        rtol=rtol,
-                        tags=[GkProductionTag, GlobalZGridTag, SamplesPerLog10ZTag],
+                        GkNumericalIntegration, payload_data=request_payload
                     )
                 )
+            print(
+                f">> pool.object_get() completed in time {format_time(inner_timer.elapsed)}"
+            )
+
+            work_refs = []
+
+            for Gk_numerical, source_z in zip(Gk_data, z_sample):
+                Gk_numerical: GkNumericalIntegration
+                source_z: redshift
+                # query whether there is a pre-computed GkNumericalIntegration for this source redshift.
+                # typically, this will be the case provided the source redshift is sufficiently early
                 if Gk_numerical.available:
                     G_init = Gk_numerical.stop_G
                     Gprime_init = Gk_numerical.stop_Gprime
@@ -506,7 +519,7 @@ with ShardedPool(
                     )
 
         print(
-            f">> Completed GKWKB work items for k = {k_exit.k.k_inv_Mpc}/Mpc (store_id={k_exit.store_id}) in time {format_time(timer.elapsed)}"
+            f">> Completed GkWKB work items for k = {k_exit.k.k_inv_Mpc}/Mpc (store_id={k_exit.store_id}) in time {format_time(timer.elapsed)}"
         )
 
         return work_refs

@@ -177,7 +177,7 @@ def compute_Gk_WKB(
         "max_RHS_time": supervisor.max_RHS_time,
         "min_RHS_time": supervisor.min_RHS_time,
         "a0_tau_sample": sampled_a0_tau,
-        "theta": sampled_theta,
+        "theta_sample": sampled_theta,
         "solver_label": "solve_ivp+RK45-stepping0",
     }
 
