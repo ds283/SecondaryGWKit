@@ -245,6 +245,8 @@ with ShardedPool(
     time_series_data = dataset.dataset(
         time_series_path, format="csv", schema=time_series_schema
     )
+    # TODO: sorting turns out to be pointless. PyArrow does not guarantee sort order when writing out a dataset.
+    #  See: https://github.com/apache/arrow/issues/26818, https://github.com/apache/arrow/issues/39030
     time_series_sorted = time_series_data.sort_by(
         [("k_inv_Mpc", "ascending"), ("z", "descending")]
     )
