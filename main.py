@@ -11,8 +11,8 @@ from ComputeTargets import (
     GkNumericalIntegration,
     IntegrationSolver,
     GkWKBIntegration,
+    TensorSource,
 )
-from ComputeTargets.TensorSource import TensorSource
 from CosmologyConcepts import (
     wavenumber,
     redshift,
@@ -196,6 +196,7 @@ with ShardedPool(
 
     ## STEP 2
     ## BUILD A UNIVERSAL GRID OF Z-VALUES AT WHICH TO SAMPLE
+
     print("\n** BUILDING ARRAY OF Z-VALUES AT WHICH TO SAMPLE")
     k_exit_earliest: wavenumber_exit_time = k_exit_times[-1]
     print(
@@ -344,29 +345,34 @@ with ShardedPool(
         work_refs = []
 
         for source_z in source_zs:
-            response_zs = z_sample.truncate(source_z, keep="lower")
-
-            work_refs.append(
-                pool.object_get(
-                    GkNumericalIntegration,
-                    solver_labels=solvers,
-                    cosmology=LambdaCDM_Planck2018,
-                    k=k_exit,
-                    z_source=source_z,
-                    z_sample=response_zs,
-                    atol=atol,
-                    rtol=rtol,
-                    tags=[
-                        GkProductionTag,
-                        GlobalZGridTag,
-                        OutsideHorizonEfoldsTag,
-                        LargestZTag,
-                        SamplesPerLog10ZTag,
-                    ],
-                    delta_logz=1.0 / float(samples_per_log10z),
-                    mode="stop",
-                )
+            # cut down response zs to those that are (1) later than the source, and (2) earlier than the 5-efolds-inside-the-horizon point
+            # (with a 10% tolerance)
+            response_zs = z_sample.truncate(source_z, keep="lower").truncate(
+                0.9 * k_exit.z_exit_subh_e5, keep="higher"
             )
+
+            if len(response_zs) > 1:
+                work_refs.append(
+                    pool.object_get(
+                        GkNumericalIntegration,
+                        solver_labels=solvers,
+                        cosmology=LambdaCDM_Planck2018,
+                        k=k_exit,
+                        z_source=source_z,
+                        z_sample=response_zs,
+                        atol=atol,
+                        rtol=rtol,
+                        tags=[
+                            GkProductionTag,
+                            GlobalZGridTag,
+                            OutsideHorizonEfoldsTag,
+                            LargestZTag,
+                            SamplesPerLog10ZTag,
+                        ],
+                        delta_logz=1.0 / float(samples_per_log10z),
+                        mode="stop",
+                    )
+                )
 
         return work_refs
 
@@ -398,16 +404,17 @@ with ShardedPool(
 
         # find redshift where this k-mode is at least 3 e-folds inside the horizon
         # we don't calculate WKB Green's functions with the response redshift earlier than this
-        response_pool = z_sample.truncate(k_exit.k_exit_subh_e3, keep="lower")
+        response_pool = z_sample.truncate(k_exit.z_exit_subh_e3, keep="lower")
 
         work_refs = []
 
         for source_z in z_sample:
             response_zs = response_pool.truncate(source_z, keep="lower")
 
+            # if the source redshift is sufficiently early,
             # query whether there is a pre-computed GkNumericalIntegration for this source redshift
             Gk_numerical: GkNumericalIntegration = ray.get(
-                pool.object_get.remote(
+                pool.object_get(
                     GkNumericalIntegration,
                     solver_labels=solvers,
                     cosmology=LambdaCDM_Planck2018,
@@ -452,7 +459,7 @@ with ShardedPool(
                 # but we should warn if a suitable condition does not seem to be satisfied
                 if source_z.z > k_exit.z_exit_subh_e3 + DEFAULT_FLOAT_PRECISION:
                     print(
-                        f"!! WARNING: no numerically-computed initial conditions appears to be available for k={k_exit.k.k_inv_Mpc:.5g}/Mpc, z_source={source_z.z:.5g}"
+                        f"!! WARNING: no numerically-computed initial conditions ia available for k={k_exit.k.k_inv_Mpc:.5g}/Mpc, z_source={source_z.z:.5g}"
                     )
                     print(
                         f"|    This may indicate an edge-effect, or possibly that not all initial conditions are present in the datastore."
@@ -508,4 +515,4 @@ with ShardedPool(
         title="CALCULATE WKB PART OF TENSOR GREEN FUNCTIONS",
         store_results=False,
     )
-    Gk_numerical_queue.run()
+    Gk_WKB_queue.run()

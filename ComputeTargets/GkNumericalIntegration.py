@@ -304,6 +304,11 @@ def compute_Gk(
             f'compute_Gk: integration did not terminate successfully (k={k_wavenumber.k_inv_Mpc}/Mpc, z_source={z_source.z}, error at z={sol.t[-1]}, "{sol.message}")'
         )
 
+    if mode == "stop" and sol.status != 1:
+        raise RuntimeError(
+            f'compute_Gk: mode is "{mode}", but solution did not terminate due to an event"'
+        )
+
     sampled_z = sol.t
     sampled_values = sol.y
     sampled_a0_tau = sampled_values[A0_TAU_INDEX]
@@ -434,14 +439,6 @@ class GkNumericalIntegration(DatastoreObject):
             self._solver = payload["solver"]
 
             self._values = payload["values"]
-
-        # check that source redshift is not too far inside the horizon for this k-mode
-        if z_source is not None:
-            z_limit = k.z_exit_subh_e3
-            if z_source.z < z_limit - DEFAULT_FLOAT_PRECISION:
-                raise ValueError(
-                    f"Specified source redshift z={z_source.z:.5g} is more than 3-efolds inside the horizon for k={k_wavenumber.k_inv_Mpc:.5g}/Mpc"
-                )
 
         # check that all sample points are *later* than the specified source redshift
         if z_source is not None and self._z_sample is not None:
@@ -598,6 +595,13 @@ class GkNumericalIntegration(DatastoreObject):
         if self._z_source is None or self._z_sample is None:
             raise RuntimeError(
                 "Object has not been configured correctly for a concrete calculation (z_source or z_sample is missing). It can only represent a query."
+            )
+
+        # check that source redshift is not too far inside the horizon for this k-mode
+        z_limit = self._k_exit.z_exit_subh_e3
+        if self._z_source.z < z_limit - DEFAULT_FLOAT_PRECISION:
+            raise ValueError(
+                f"Specified source redshift z_source={self._z_source.z:.5g} is more than 3-efolds inside the horizon for k={self._k_exit.k.k_inv_Mpc:.5g}/Mpc (horizon re-entry at z_entry={self._k_exit.z_exit:.5g})"
             )
 
         # replace label if specified

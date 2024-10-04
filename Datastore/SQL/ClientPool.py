@@ -18,7 +18,7 @@ _default_serial_batch_size = {
     "TkNumerical_tags": 10,
     "TkNumericalValue": 5000,
     "GkNumericalIntegration": 50,
-    "GkNumericalIntegration_tags": 10,
+    "GkNumerical_tags": 10,
     "GkNumericalValue": 5000,
     "TensorSource": 50,
     "TensorSource_tags": 10,

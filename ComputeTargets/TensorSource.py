@@ -2,7 +2,7 @@ from typing import Optional, List
 
 import ray
 
-from ComputeTargets import (
+from ComputeTargets.TkNumericalIntegration import (
     TkNumericalIntegration,
     TkNumericalValue,
 )

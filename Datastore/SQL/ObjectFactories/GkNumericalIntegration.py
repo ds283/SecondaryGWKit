@@ -174,7 +174,7 @@ class sqla_GkNumericalIntegration_factory(SQLAFactoryBase):
         atol_table = tables["tolerance"].alias("atol")
         rtol_table = tables["tolerance"].alias("rtol")
         solver_table = tables["IntegrationSolver"]
-        tag_table = tables["GkNumericalIntegration_tags"]
+        tag_table = tables["GkNumerical_tags"]
         redshift_table = tables["redshift"]
 
         # we treat z_sample as a target rather than a selection criterion;
@@ -427,7 +427,7 @@ class sqla_GkNumericalIntegration_factory(SQLAFactoryBase):
         obj._my_id = store_id
 
         # add any tags that have been specified
-        tag_inserter = inserters["GkNumericalIntegration_tags"]
+        tag_inserter = inserters["GkNumerical_tags"]
         for tag in obj.tags:
             sqla_GkNumericalTagAssociation_factory.add_tag(conn, tag_inserter, obj, tag)
 
