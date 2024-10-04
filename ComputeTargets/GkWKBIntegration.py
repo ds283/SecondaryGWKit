@@ -443,7 +443,7 @@ class GkWKBIntegration(DatastoreObject):
         initial_z = self._z_init if self._z_init is not None else self._z_source.z
 
         H_init = self.cosmology.Hubble(initial_z)
-        eps_init = self.cosmology.eps(initial_z)
+        eps_init = self.cosmology.epsilon(initial_z)
 
         one_plus_z_init = 1.0 + initial_z
         k_over_aH = one_plus_z_init * self.k.k / H_init
