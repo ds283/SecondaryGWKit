@@ -219,6 +219,11 @@ class sqla_GkWKBIntegration_factory(SQLAFactoryBase):
                 table.c.z_source_serial == z_source.store_id,
             )
 
+        if z_init is not None:
+            query = query.filter(
+                sqla.func.abs(table.c.z_init - z_init) < DEFAULT_FLOAT_PRECISION
+            )
+
         # require that the integration we search for has the specified list of tags
         count = 0
         for tag in tags:
