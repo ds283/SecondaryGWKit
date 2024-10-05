@@ -8,7 +8,7 @@ from pyarrow import dataset
 from pyarrow.csv import CSVWriter
 
 from ComputeTargets import (
-    GkNumericalIntegration,
+    GkWKBIntegration,
 )
 from CosmologyConcepts import (
     wavenumber,
@@ -46,7 +46,7 @@ parser.add_argument(
     "--ray-address", default="auto", type=str, help="specify address of Ray cluster"
 )
 parser.add_argument(
-    "--output", default="Gk-out", type=str, help="specify folder for output files"
+    "--output", default="Gk-WKB-out", type=str, help="specify folder for output files"
 )
 args = parser.parse_args()
 
@@ -66,7 +66,7 @@ with ShardedPool(
     db_name=args.database,
     timeout=args.db_timeout,
     profile_db=args.profile_db,
-    job_name="extract_Gk_data",
+    job_name="extract_GkWKB_data",
 ) as pool:
 
     # set up LambdaCDM object representing a basic Planck2018 cosmology in Mpc units
@@ -120,8 +120,10 @@ with ShardedPool(
             ("z_source", pa.float64()),
             ("z_response_serial", pa.int32()),
             ("z_response", pa.float64()),
-            ("G", pa.float64()),
-            ("Gprime", pa.float64()),
+            ("G_WKB", pa.float64()),
+            ("H_ratio", pa.float64()),
+            ("theta", pa.float64()),
+            ("omega_WKB_sq", pa.float64()),
             ("analytic_G", pa.float64()),
             ("analytic_Gprime", pa.float64()),
         ]
@@ -129,7 +131,7 @@ with ShardedPool(
 
     metadata_schema = pa.schema(
         [
-            ("integration_serial", pa.int32()),
+            ("serial", pa.int32()),
             ("k_serial", pa.int32()),
             ("k_exit_serial", pa.int32()),
             ("k_inv_Mpc", pa.float64()),
@@ -142,18 +144,16 @@ with ShardedPool(
             ("mean_RHS_time", pa.float64()),
             ("min_RHS_time", pa.float64()),
             ("max_RHS_time", pa.float64()),
-            ("has_unresolved_osc", pa.bool_()),
-            ("unresolved_z", pa.float64()),
-            ("unresolved_efolds_subh", pa.float64()),
-            ("init_efolds_suph", pa.float64()),
-            ("stop_efolds_subh", pa.float64()),
-            ("stop_G", pa.float64()),
-            ("stop_Gprime", pa.float64()),
+            ("init_efolds_subh", pa.float64()),
+            ("sin_coeff", pa.float64()),
+            ("cos_coeff", pa.float64()),
+            ("G_init", pa.float64()),
+            ("Gprime_init", pa.float64()),
         ]
     )
 
     @ray.remote
-    def write_CSV_content(Gk: GkNumericalIntegration):
+    def write_CSV_content(Gk: GkWKBIntegration):
         base_path = Path(args.output).resolve()
         time_series_path = (
             base_path
@@ -172,8 +172,10 @@ with ShardedPool(
                     "z_source": Gk.z_source.z,
                     "z_response_serial": value.z.store_id,
                     "z_response": value.z.z,
-                    "G": value.G,
-                    "Gprime": value.Gprime,
+                    "G_WKB": value.G_WKB,
+                    "H_ratio": value.H_ratio,
+                    "theta": value.theta,
+                    "omega_WKB_sq": value.omega_WKB_sq,
                     "analytic_G": value.analytic_G,
                     "analytic_Gprime": value.analytic_Gprime,
                 }
@@ -193,7 +195,7 @@ with ShardedPool(
         with CSVWriter(metadata_path, schema=metadata_schema) as writer:
             metadata_rows = [
                 {
-                    "integration_serial": Gk.store_id,
+                    "serial": Gk.store_id,
                     "k_serial": Gk.k.store_id,
                     "k_exit_serial": Gk._k_exit.store_id,
                     "k_inv_Mpc": Gk.k.k_inv_Mpc,
@@ -206,13 +208,11 @@ with ShardedPool(
                     "mean_RHS_time": Gk.mean_RHS_time,
                     "min_RHS_time": Gk.min_RHS_time,
                     "max_RHS_time": Gk.max_RHS_time,
-                    "has_unresolved_osc": Gk.has_unresolved_osc,
-                    "unresolved_z": Gk.unresolved_z,
-                    "unresolved_efolds_subh": Gk.unresolved_efolds_subh,
-                    "init_efolds_suph": Gk.init_efolds_suph,
-                    "stop_efolds_subh": Gk.stop_efolds_subh,
-                    "stop_G": Gk.stop_G,
-                    "stop_Gprime": Gk.stop_Gprime,
+                    "init_efolds_subh": Gk.init_efolds_subh,
+                    "sin_coeff": Gk.sin_coeff,
+                    "cos_coeff": Gk.cos_coeff,
+                    "G_init": Gk.G_init,
+                    "Gprime_init": Gk.Gprime_init,
                 }
             ]
             batch = pa.RecordBatch.from_pylist(metadata_rows, schema=metadata_schema)
@@ -224,23 +224,22 @@ with ShardedPool(
                 f"k_exit object (store_id={k_exit.store_id}) is not ready"
             )
 
-        source_zs = z_sample.truncate(k_exit.z_exit_subh_e3, keep="higher")
-
         return [
             pool.object_get(
-                GkNumericalIntegration,
+                GkWKBIntegration,
                 solver_labels=[],
                 cosmology=LambdaCDM_Planck2018,
                 k=k_exit,
                 z_sample=None,
                 z_source=source_z,
+                z_init=None,
                 atol=atol,
                 rtol=rtol,
             )
-            for source_z in source_zs
+            for source_z in z_sample
         ]
 
-    def Gk_available_map(Gk: GkNumericalIntegration):
+    def Gk_available_map(Gk: GkWKBIntegration):
         return write_CSV_content.remote(Gk)
 
     build_csv_queue = RayWorkPool(
@@ -251,7 +250,7 @@ with ShardedPool(
         compute_handler=None,
         store_handler=None,
         store_results=False,
-        title="EXTRACT TENSOR GREEN FUNCTION TIME SERIES DATA",
+        title="EXTRACT WKB TENSOR GREEN FUNCTION TIME SERIES DATA",
         notify_time_interval=60,
         notify_batch_size=5,
     )

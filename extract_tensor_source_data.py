@@ -48,7 +48,7 @@ parser.add_argument(
 )
 parser.add_argument(
     "--output",
-    default="tensor-source-csv",
+    default="tensor-source-out",
     type=str,
     help="specify folder for output files",
 )

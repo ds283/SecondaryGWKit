@@ -45,7 +45,7 @@ parser.add_argument(
     "--ray-address", default="auto", type=str, help="specify address of Ray cluster"
 )
 parser.add_argument(
-    "--output", default="Tk-csv", type=str, help="specify folder for output files"
+    "--output", default="Tk-out", type=str, help="specify folder for output files"
 )
 args = parser.parse_args()
 
