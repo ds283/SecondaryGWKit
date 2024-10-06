@@ -141,7 +141,7 @@ class sqla_BackgroundModelFactory(SQLAFactoryBase):
         atol_table = tables["tolerance"].alias("atol")
         rtol_table = tables["tolerance"].alias("rtol")
         solver_table = tables["IntegrationSolver"]
-        tag_table = tables["GkWKB_tags"]
+        tag_table = tables["BackgroundModel_tags"]
         redshift_table = tables["redshift"]
 
         # notice that we query only for validated data
@@ -190,7 +190,7 @@ class sqla_BackgroundModelFactory(SQLAFactoryBase):
             query = query.join(
                 tab,
                 and_(
-                    tab.c.wkb_serial == table.c.serial,
+                    tab.c.model_serial == table.c.serial,
                     tab.c.tag_serial == tag.store_id,
                 ),
             )
