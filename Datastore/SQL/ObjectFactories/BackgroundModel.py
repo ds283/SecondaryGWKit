@@ -272,7 +272,7 @@ class sqla_BackgroundModelFactory(SQLAFactoryBase):
                 BackgroundModelValue(
                     store_id=row.serial,
                     z=z_value,
-                    Hubble=row.H_ratio,
+                    Hubble=row.Hubble,
                     wBackground=row.wBackground,
                     wPerturbations=row.wPerturbations,
                     rho=row.rho,
