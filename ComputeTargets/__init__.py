@@ -1,3 +1,7 @@
+from .BackgroundModel import (
+    BackgroundModel,
+    BackgroundModelValue,
+)
 from .GkNumericalIntegration import (
     GkNumericalIntegration,
     GkNumericalValue,

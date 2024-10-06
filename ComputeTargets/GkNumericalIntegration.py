@@ -664,10 +664,11 @@ class GkNumericalIntegration(DatastoreObject):
         G_sample = data["G_sample"]
         Gprime_sample = data["Gprime_sample"]
         a0_tau_sample = data["a0_tau_sample"]
-        self._values = []
 
         tau_source = a0_tau_sample[0]
+
         # need to be aware that G_sample may not be as long as self._z_sample, if we are working in "stop" mode
+        self._values = []
         for i in range(len(G_sample)):
             current_z = self._z_sample[i]
             current_z_float = current_z.z

@@ -23,6 +23,8 @@ _replicate_tables = [
     "tolerance",
     "LambdaCDM",
     "IntegrationSolver",
+    "BackgroundModel",
+    "BackgroundModelValue",
 ]
 _shard_tables = {
     "wavenumber_exit_time": "k",
@@ -79,6 +81,7 @@ class ShardedPool:
                 label = f'{self._version_label}-jobname-"{self._job_name}"-primarydb-"{str(db_name)}"-shards-{str(shards)}-{datetime.now().replace(microsecond=0).isoformat()}'
             else:
                 label = f'{self._version_label}-primarydb-"{str(db_name)}"-shards-{str(shards)}-{datetime.now().replace(microsecond=0).isoformat()}'
+
             self._profile_agent = ProfileAgent.options(name="ProfileAgent").remote(
                 db_name=profile_db,
                 timeout=self._timeout,
@@ -294,7 +297,10 @@ class ShardedPool:
         )
 
     def _get_impl_replicated_table(self, cls_name, kwargs):
-        # pick a shard id at random to be the "controlling" shard
+        # pick a shard id at random to be the "controlling" shard.
+        # we will push an initial 'get' to this controlling shard.
+        # if a new database object was created by the get, we then have to push a replica
+        # to all the other shards
         shard_ids = list(self._shards.keys())
         i = random.randrange(len(shard_ids))
 
@@ -321,7 +327,13 @@ class ShardedPool:
             # add explicit serial specifier
             new_payload = []
             for i in range(len(payload_data)):
-                if not hasattr(objects[i], "_deserialized"):
+                # if this object has a valid store_id and was not deserialized, push to all the
+                # remaining shards in order to replicate it
+                if (
+                    not hasattr(objects[i], "_my_id")
+                    and objects[i]._my_id is not None
+                    and not hasattr(objects[i], "_deserialized")
+                ):
                     payload_data[i]["serial"] = objects[i].store_id
                     new_payload.append(payload_data[i])
 
@@ -337,7 +349,14 @@ class ShardedPool:
             )
         else:
             # this was a scalar get
-            if not hasattr(objects, "_deserialized"):
+
+            # if this object has a valid store_id and was not deserialized, push to all the
+            # remaining shards in order to replicate it
+            if (
+                hasattr(objects, "_my_id")
+                and objects._my_id is not None
+                and not hasattr(objects, "_deserialized")
+            ):
                 ray.get(
                     [
                         self._shards[key].object_get.remote(
@@ -382,7 +401,6 @@ class ShardedPool:
         return self._shards[shard_id].object_get.remote(cls_name, **kwargs)
 
     def object_store(self, objects):
-        # we only expect to call object_store on sharded objects
         if isinstance(objects, list) or isinstance(objects, tuple):
             payload_data = objects
             scalar = False
@@ -394,27 +412,64 @@ class ShardedPool:
         for item in payload_data:
             cls_name = type(item).__name__
 
-            if cls_name not in _shard_tables.keys():
-                raise RuntimeError(
-                    f'Unable to dispatch object_store() for item of type "{cls_name}"'
-                )
+            if cls_name in _replicate_tables:
+                work_refs.extend(self._store_impl_replicated_table(cls_name, item))
+                continue
 
-            shard_key_field = _shard_tables[cls_name]
-            if not hasattr(item, shard_key_field):
-                raise RuntimeError(
-                    f'Unable to determine shard, because object of type "{cls_name}" has no "{shard_key_field}" attribute'
-                )
+            if cls_name in _shard_tables.keys():
+                work_refs.extend(self._store_impl_sharded_table(cls_name, item))
+                continue
 
-            k = getattr(item, shard_key_field)
-            shard_id = self._wavenumber_keys[self._get_k_store_id(k)]
-
-            work_refs.append(self._shards[shard_id].object_store.remote(item))
-            # TODO: consider consolidating all objects for the same shard into a list, for efficiency
+            raise RuntimeError(
+                f'Unable to dispatch object_get() for item of type "{cls_name}"'
+            )
 
         if scalar:
             return work_refs[0]
 
         return work_refs
+
+    def _store_impl_replicated_table(self, cls_name, item):
+        # pick a shard id at random to be the "controlling" shard
+        # we will push an initial 'store' to this controlling shard.
+        # if a new database object was created by the get, we then have to push a replica
+        # to all the other shards
+        shard_ids = list(self._shards.keys())
+        i = random.randrange(len(shard_ids))
+
+        # swap this entry with the last element, then pop it
+        shard_ids[i], shard_ids[-1] = shard_ids[-1], shard_ids[i]
+        shard_key = shard_ids.pop()
+
+        ref = self._shards[shard_key].object_store.remote(item)
+        object = ray.get(ref)
+
+        # now push the object, complete with its new 'store_id', to all the other shards
+        if not hasattr(object, "_my_id") or object._my_id is None:
+            raise RuntimeError(
+                f'Stored object of type "{cls_name}" was not assigned a store_id field'
+            )
+
+        ray.get([self._shards[key].object_store.remote(object) for key in shard_ids])
+
+        return [ref]
+
+    def _store_impl_sharded_table(self, cls_name, item):
+        # item need only be pushed to a single shard
+        # unlike the replicated case,
+        # we don't have to care about what happens to its store_id
+
+        shard_key_field = _shard_tables[cls_name]
+        if not hasattr(item, shard_key_field):
+            raise RuntimeError(
+                f'Unable to determine shard, because object of type "{cls_name}" has no "{shard_key_field}" attribute'
+            )
+
+        k = getattr(item, shard_key_field)
+        shard_id = self._wavenumber_keys[self._get_k_store_id(k)]
+
+        # TODO: consider consolidating all stores for the same shard into a list, for efficiency
+        return [self._shards[shard_id].object_store.remote(item)]
 
     def object_validate(self, objects):
         # we only expect to call object_store on sharded objects
@@ -429,27 +484,65 @@ class ShardedPool:
         for item in payload_data:
             cls_name = type(item).__name__
 
-            if cls_name not in _shard_tables.keys():
-                raise RuntimeError(
-                    f'Unable to dispatch object_store() for item of type "{cls_name}"'
-                )
+            if cls_name in _replicate_tables:
+                work_refs.extend(self._validate_impl_replicated_table(cls_name, item))
+                continue
 
-            shard_key_field = _shard_tables[cls_name]
-            if not hasattr(item, shard_key_field):
-                raise RuntimeError(
-                    f'Unable to determine shard, because object of type "{cls_name}" has no "{shard_key_field}" attribute'
-                )
+            if cls_name in _shard_tables.keys():
+                work_refs.extend(self._validate_impl_sharded_table(cls_name, item))
+                continue
 
-            k = getattr(item, shard_key_field)
-            shard_id = self._wavenumber_keys[self._get_k_store_id(k)]
-
-            work_refs.append(self._shards[shard_id].object_validate.remote(item))
-            # TODO: consider consolidating all objects for the same shard into a list, for efficiency
+            raise RuntimeError(
+                f'Unable to dispatch object_validate() for item of type "{cls_name}"'
+            )
 
         if scalar:
             return work_refs[0]
 
         return work_refs
+
+    def _validate_impl_replicated_table(self, cls_name, item):
+        # pick a shard id at random to be the "controlling" shard
+        # we will push an initial 'validate' to this controlling shard.
+        shard_ids = list(self._shards.keys())
+        i = random.randrange(len(shard_ids))
+
+        # swap this entry with the last element, then pop it
+        shard_ids[i], shard_ids[-1] = shard_ids[-1], shard_ids[i]
+        shard_key = shard_ids.pop()
+
+        ref = self._shards[shard_key].object_validate.remote(item)
+        outcome = ray.get(ref)
+
+        # if object did not validate, do not push validation requests to remaining shards
+        if outcome is False or outcome is None:
+            return [ref]
+
+        outcomes = ray.get(
+            [self._shards[key].object_validate.remote(item) for key in shard_ids]
+        )
+        if any(oc is not True for oc in outcomes):
+            print(f"!! Validation outcomes did not agree between shards:")
+            print(f"|    outcomes = {outcomes}")
+            raise RuntimeError(
+                f'Object validation produced different outcomes on different shards for replicated object of type "{cls_name}"'
+            )
+
+        return [ref]
+
+    def _validate_impl_sharded_table(self, cls_name, item):
+        # item need only be validated on a single shard
+        shard_key_field = _shard_tables[cls_name]
+        if not hasattr(item, shard_key_field):
+            raise RuntimeError(
+                f'Unable to determine shard, because object of type "{cls_name}" has no "{shard_key_field}" attribute'
+            )
+
+        k = getattr(item, shard_key_field)
+        shard_id = self._wavenumber_keys[self._get_k_store_id(k)]
+
+        # TODO: consider consolidating all validates for the same shard into a list, for efficiency
+        return [self._shards[shard_id].object_validate.remote(item)]
 
     def _get_k_store_id(self, obj):
         if isinstance(obj, wavenumber):

@@ -5,8 +5,11 @@ from math import fabs
 from sqlalchemy import and_, or_
 from sqlalchemy.exc import MultipleResultsFound
 
-from ComputeTargets import IntegrationSolver
-from ComputeTargets.GkWKBIntegration import GkWKBIntegration, GkWKBValue
+from ComputeTargets import (
+    IntegrationSolver,
+    GkWKBIntegration,
+    GkWKBValue,
+)
 from CosmologyConcepts import wavenumber_exit_time, redshift_array, redshift
 from CosmologyModels import BaseCosmology
 from Datastore.SQL.ObjectFactories.base import SQLAFactoryBase
@@ -242,7 +245,7 @@ class sqla_GkWKBIntegration_factory(SQLAFactoryBase):
             row_data = conn.execute(query).one_or_none()
         except MultipleResultsFound as e:
             print(
-                f"!! Database error: multiple results found when querying for GkNumericalIntegration"
+                f"!! Database error: multiple results found when querying for GkWKBIntegration"
             )
             raise e
 
@@ -424,9 +427,6 @@ class sqla_GkWKBIntegration_factory(SQLAFactoryBase):
             sqla_GkWKBTagAssociation_factory.add_tag(conn, tag_inserter, obj, tag)
 
         # now serialize the sampled output points
-        # TODO: this is undesirable, because there are two ways a GkWKBValue can be serialized:
-        #  directly, or using the logic here as part of a GkWKBIntegration. We need to be careful to
-        #  keep the logic in sync. It would be better to have a single serialization point for GkWKBIntegration.
         value_inserter = inserters["GkWKBValue"]
         for value in obj.values:
             value: GkWKBValue

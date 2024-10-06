@@ -5,7 +5,7 @@ DEFAULT_UPDATE_INTERVAL = 5 * 60
 
 
 class IntegrationSupervisor:
-    def __init__(self, notify_interval: int=DEFAULT_UPDATE_INTERVAL):
+    def __init__(self, notify_interval: int = DEFAULT_UPDATE_INTERVAL):
         self._notify_interval: int = notify_interval
 
         self._RHS_time: float = 0
@@ -21,6 +21,7 @@ class IntegrationSupervisor:
         self._last_notify = self._start_time
 
         self._integration_start = time.perf_counter()
+        return self
 
     def __exit__(self, exc_type, exc_val, exc_tb):
         self._integration_end = time.perf_counter()
@@ -56,7 +57,7 @@ class IntegrationSupervisor:
         if self._RHS_evaluations == 0:
             return None
 
-        return self._RHS_time/self._RHS_evaluations
+        return self._RHS_time / self._RHS_evaluations
 
     @property
     def min_RHS_time(self) -> float:

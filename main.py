@@ -12,6 +12,7 @@ from ComputeTargets import (
     IntegrationSolver,
     GkWKBIntegration,
     TensorSource,
+    BackgroundModel,
 )
 from CosmologyConcepts import (
     wavenumber,
@@ -234,6 +235,25 @@ with ShardedPool(
             pool.object_get(store_tag, label=f"SamplesPerLog10Z_{samples_per_log10z}"),
         ]
     )
+
+    ## STEP 1a
+    ## BAKE THE BACKGROUND COSMOLOGY INTO A BACKGROUND MODEL OBJECT
+    model = ray.get(
+        pool.object_get(
+            BackgroundModel,
+            solver_labels=solvers,
+            cosmology=LambdaCDM_Planck2018,
+            z_sample=z_sample,
+            atol=atol,
+            rtol=rtol,
+            tags=[GlobalZGridTag, LargestZTag, SamplesPerLog10ZTag],
+        )
+    )
+    if not model.available:
+        data = ray.get(model.compute(label=LambdaCDM_Planck2018.name))
+        model.store()
+        model = ray.get(pool.object_store(model))
+        outcome = ray.get(pool.object_validate(model))
 
     ## STEP 2
     ## COMPUTE MATTER TRANSFER FUNCTIONS

@@ -410,9 +410,6 @@ class sqla_TkNumericalIntegration_factory(SQLAFactoryBase):
             sqla_TkNumericalTagAssociation_factory.add_tag(conn, tag_inserter, obj, tag)
 
         # now serialize the sampled output points
-        # TODO: this is undesirable, because there are two ways a TkNumericalValue can be serialized:
-        #  directly, or using the logic here as part of a TkNumericalIntegration. We need to be careful to
-        #  keep the logic in sync. It would be better to have a single serialization point for TkNumericalValue.
         value_inserter = inserters["TkNumericalValue"]
         for value in obj.values:
             value: TkNumericalValue

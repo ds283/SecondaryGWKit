@@ -14,6 +14,8 @@ _default_serial_batch_size = {
     "tolerance": 5,
     "LambdaCDM": 5,
     "IntegrationSolver": 6,
+    "BackgroundModel": 5,
+    "BackgroundModelValue": 100,
     "TkNumericalIntegration": 50,
     "TkNumerical_tags": 10,
     "TkNumericalValue": 5000,

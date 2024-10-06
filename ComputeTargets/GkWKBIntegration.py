@@ -145,7 +145,7 @@ def compute_Gk_WKB(
 
     if not sol.success:
         raise RuntimeError(
-            f'compute_Gk_WKB: integration did not terminate successfully (k={k_wavenumber.k_inv_Mpc}/Mpc, z_init={z_init}, error at z={sol.t[-1]}, "{sol.message}")'
+            f'compute_Gk_WKB: integration did not terminate successfully (k={k_wavenumber.k_inv_Mpc:.5g}/Mpc, z_init={z_init:.5g}, error at z={sol.t[-1]:.5g}, "{sol.message}")'
         )
 
     sampled_z = sol.t
@@ -162,7 +162,7 @@ def compute_Gk_WKB(
 
     if returned_values != expected_values:
         raise RuntimeError(
-            f"compute_Gk: solve_ivp returned {returned_values} samples, but expected {expected_values}"
+            f"compute_Gk_WKB: solve_ivp returned {returned_values} samples, but expected {expected_values}"
         )
 
     # validate that the samples of the solution correspond to the z-sample points that we specified.
@@ -456,7 +456,6 @@ class GkWKBIntegration(DatastoreObject):
 
         theta_sample = data["theta_sample"]
         a0_tau_sample = data["a0_tau_sample"]
-        self._values = []
 
         omega_WKB_sq_init = WKB_omegaEff_sq(self._cosmology, self.k.k, initial_z)
         if omega_WKB_sq_init < 0.0:
@@ -483,7 +482,7 @@ class GkWKBIntegration(DatastoreObject):
             * (1.0 + self._z_source.z)
         )
 
-        # need to be aware that G_sample may not be as long as self._z_sample, if we are working in "stop" mode
+        self._values = []
         for i in range(len(theta_sample)):
             current_z = self._z_sample[i]
             current_z_float = current_z.z

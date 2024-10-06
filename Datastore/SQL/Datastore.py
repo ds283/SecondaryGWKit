@@ -10,6 +10,11 @@ from ray.actor import ActorHandle
 from sqlalchemy.exc import IntegrityError, SQLAlchemyError
 
 from Datastore.SQL.ClientPool import SerialPoolManager, SerialLeaseManager
+from Datastore.SQL.ObjectFactories.BackgroundModel import (
+    sqla_BackgroundModelFactory,
+    sqla_BackgroundModelTagAssociation_factory,
+    sqla_BackgroundModelValue_factory,
+)
 from Datastore.SQL.ObjectFactories.GkNumericalIntegration import (
     sqla_GkNumericalIntegration_factory,
     sqla_GkNumericalValue_factory,
@@ -61,6 +66,9 @@ _factories = {
     "tolerance": sqla_tolerance_factory,
     "LambdaCDM": sqla_LambdaCDM_factory,
     "IntegrationSolver": sqla_IntegrationSolver_factory,
+    "BackgroundModel": sqla_BackgroundModelFactory,
+    "BackgroundModel_tags": sqla_BackgroundModelTagAssociation_factory,
+    "BackgroundModelValue": sqla_BackgroundModelValue_factory,
     "TkNumericalIntegration": sqla_TkNumericalIntegration_factory,
     "TkNumerical_tags": sqla_TkNumericalTagAssociation_factory,
     "TkNumericalValue": sqla_TkNumericalValue_factory,
@@ -94,7 +102,6 @@ class Datastore:
     ):
         """
         Initialize an SQL datastore object
-        :param version_id: version identifier used to tag results written in to the store
         """
         self._timeout = timeout
         self._my_name = my_name
@@ -393,7 +400,6 @@ class Datastore:
         if isinstance(objects, list) or isinstance(objects, tuple):
             payload_data = objects
             scalar = False
-            # print(f" **   payload size = {len(objects)} items")
         else:
             payload_data = [objects]
             scalar = True
@@ -415,7 +421,7 @@ class Datastore:
 
                     output_objects.append(
                         factory.store(
-                            objects,
+                            obj,
                             conn=conn,
                             table=tab,
                             inserter=inserter,
@@ -502,30 +508,30 @@ class Datastore:
             payload_data = [objects]
             scalar = True
 
-            output_flags = []
-            with self._engine.begin() as conn:
-                for obj in payload_data:
-                    cls_name = type(obj).__name__
-                    with ProfileBatchManager(
-                        self._profile_batcher, "object_validate_item", cls_name
-                    ) as mgr:
-                        self._ensure_registered_schema(cls_name)
-                        record = self._schema[cls_name]
+        output_flags = []
+        with self._engine.begin() as conn:
+            for obj in payload_data:
+                cls_name = type(obj).__name__
+                with ProfileBatchManager(
+                    self._profile_batcher, "object_validate_item", cls_name
+                ) as mgr:
+                    self._ensure_registered_schema(cls_name)
+                    record = self._schema[cls_name]
 
-                        tab = record["table"]
+                    tab = record["table"]
 
-                        factory = self._factories[cls_name]
+                    factory = self._factories[cls_name]
 
-                        output_flags.append(
-                            factory.validate(
-                                objects,
-                                conn=conn,
-                                table=tab,
-                                tables=self._tables,
-                            )
+                    output_flags.append(
+                        factory.validate(
+                            obj,
+                            conn=conn,
+                            table=tab,
+                            tables=self._tables,
                         )
+                    )
 
-                conn.commit()
+            conn.commit()
 
         if scalar:
             return output_flags[0]
