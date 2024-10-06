@@ -461,13 +461,14 @@ class GkWKBIntegration(DatastoreObject):
             )
 
         omega_WKB_init = sqrt(omega_WKB_sq_init)
-        self._cos_coeff = omega_WKB_init * self._G_init
+        sqrt_omega_WKB_init = sqrt(omega_WKB_init)
+        self._cos_coeff = sqrt_omega_WKB_init * self._G_init
 
         d_ln_omega_WKB = WKB_d_ln_omegaEffPrime_dz(self._model, self.k.k, initial_z)
         self._sin_coeff = (
             self._Gprime_init
             + (self._G_init / 2.0) * (eps_init / one_plus_z_init + d_ln_omega_WKB)
-        ) / omega_WKB_init
+        ) / sqrt_omega_WKB_init
 
         # estimate tau at the source redshift
         H_source = self._model.functions.Hubble(self._z_source.z)
@@ -492,17 +493,18 @@ class GkWKBIntegration(DatastoreObject):
             omega_WKB = sqrt(omega_WKB_sq)
 
             H_ratio = H_init / H
+            norm_factor = sqrt(H_ratio / omega_WKB)
 
-            G_WKB = self._cos_coeff / omega_WKB * sqrt(H_ratio) * cos(
+            G_WKB = self._cos_coeff * norm_factor * cos(
                 theta_sample[i]
-            ) + self._sin_coeff / omega_WKB * sqrt(H_ratio) * sin(theta_sample[i])
+            ) + self._sin_coeff * norm_factor * sin(theta_sample[i])
 
             # create new GkWKBValue object
             self._values.append(
                 GkWKBValue(
                     None,
                     current_z,
-                    H_init / H,
+                    H_ratio,
                     theta_sample[i],
                     omega_WKB_sq=omega_WKB_sq,
                     G_WKB=G_WKB,
