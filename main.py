@@ -419,8 +419,6 @@ with ShardedPool(
     ## COMPUTE TENSOR GREEN'S FUNCTIONS IN THE WKB APPROXIMATION FOR RESPONSE TIMES INSIDE THE HORIZON
 
     def build_Gk_WKB_work(z_source: redshift):
-        work_refs = []
-
         request_payload = [
             {
                 "solver_labels": solvers,
@@ -435,20 +433,19 @@ with ShardedPool(
             for k_exit in k_exit_times
         ]
 
-        print(
-            f">> Building work items for z_source={z_source.z:.5g} | len(request_payload) = {len(request_payload)}"
-        )
-
         Gk_refs = pool.object_get(GkNumericalIntegration, payload_data=request_payload)
         Gk_data = ray.get(Gk_refs)
+
+        response_pool = z_sample.truncate(z_source, keep="lower")
+
+        if len(response_pool) == 0 or response_pool.max.z <= response_pool.min.z:
+            return []
+
+        work_refs = []
 
         for Gk_numerical, k_exit in zip(Gk_data, k_exit_times):
             Gk_numerical: GkNumericalIntegration
             k_exit: wavenumber_exit_time
-
-            # find redshift where this k-mode is at least 3 e-folds inside the horizon
-            # we don't calculate WKB Green's functions with the response redshift earlier than this
-            response_pool = z_sample.truncate(k_exit.z_exit_subh_e3, keep="lower")
 
             # query whether there is a pre-computed GkNumericalIntegration for this source redshift.
             # typically, this will be the case provided the source redshift is sufficiently early
@@ -457,30 +454,34 @@ with ShardedPool(
                 Gprime_init = Gk_numerical.stop_Gprime
                 z_init = k_exit.z_exit - Gk_numerical.stop_efolds_subh
 
-                response_zs = response_pool.truncate(z_init, keep="lower")
+                # find redshift where this k-mode is at least 3 e-folds inside the horizon
+                # we don't calculate WKB Green's functions with the response redshift earlier than this
+                max_response = min(k_exit.z_exit_subh_e3, z_init)
+                response_zs = response_pool.truncate(max_response, keep="lower")
 
-                work_refs.append(
-                    pool.object_get(
-                        GkWKBIntegration,
-                        solver_labels=solvers,
-                        model=model,
-                        k=k_exit,
-                        z_source=z_source,
-                        z_init=z_init,
-                        G_init=G_init,
-                        Gprime_init=Gprime_init,
-                        z_sample=response_zs,
-                        atol=atol,
-                        rtol=rtol,
-                        tags=[
-                            GkProductionTag,
-                            GlobalZGridTag,
-                            OutsideHorizonEfoldsTag,
-                            LargestZTag,
-                            SamplesPerLog10ZTag,
-                        ],
+                if len(response_zs) > 0 and response_zs.max.z > response_zs.min.z:
+                    work_refs.append(
+                        pool.object_get(
+                            GkWKBIntegration,
+                            solver_labels=solvers,
+                            model=model,
+                            k=k_exit,
+                            z_source=z_source,
+                            z_init=z_init,
+                            G_init=G_init,
+                            Gprime_init=Gprime_init,
+                            z_sample=response_zs,
+                            atol=atol,
+                            rtol=rtol,
+                            tags=[
+                                GkProductionTag,
+                                GlobalZGridTag,
+                                OutsideHorizonEfoldsTag,
+                                LargestZTag,
+                                SamplesPerLog10ZTag,
+                            ],
+                        )
                     )
-                )
             else:
                 # no pre-computed initial condition available.
                 # This is OK and expected if the z_source is sufficiently far after horizon re-entry,
@@ -504,8 +505,6 @@ with ShardedPool(
                         f"Cannot compute WKB solution outside the horizon"
                     )
 
-                response_zs = response_pool.truncate(z_source, keep="lower")
-
                 work_refs.append(
                     pool.object_get(
                         GkWKBIntegration,
@@ -515,7 +514,7 @@ with ShardedPool(
                         z_source=z_source,
                         G_init=0.0,
                         Gprime_init=1.0,
-                        z_sample=response_zs,
+                        z_sample=response_pool,
                         atol=atol,
                         rtol=rtol,
                         tags=[
@@ -528,11 +527,10 @@ with ShardedPool(
                     )
                 )
 
-        print(f">> created {len(work_refs)} work items for z_source={z_source.z:.5g}")
         return work_refs
 
     def build_Gk_WKB_work_label(Gk: GkWKBIntegration):
-        return f"{args.job_name}-GkWKBl-k{Gk.k.k_inv_Mpc:.3g}-sourcez{Gk.z_source.z:.5g}-zinit{Gk.z_init:.5g}-{datetime.now().replace(microsecond=0).isoformat()}"
+        return f"{args.job_name}-GkWKB-k{Gk.k.k_inv_Mpc:.3g}-sourcez{Gk.z_source.z:.5g}-zinit{Gk.z_init:.5g}-{datetime.now().replace(microsecond=0).isoformat()}"
 
     def validate_Gk_WKB_work(Gk: GkWKBIntegration):
         return pool.object_validate(Gk)
