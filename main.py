@@ -410,7 +410,7 @@ with ShardedPool(
         label_builder=build_Gk_numerical_work_label,
         title="CALCULATE NUMERICAL PART OF TENSOR GREEN FUNCTIONS",
         store_results=False,
-        create_batch_size=2,
+        create_batch_size=5,
         notify_batch_size=2000,
     )
     Gk_numerical_queue.run()
@@ -545,7 +545,7 @@ with ShardedPool(
         label_builder=build_Gk_WKB_work_label,
         title="CALCULATE WKB PART OF TENSOR GREEN FUNCTIONS",
         store_results=False,
-        create_batch_size=2,
+        create_batch_size=5,
         notify_batch_size=2000,
     )
     Gk_WKB_queue.run()
