@@ -9,6 +9,7 @@ from ComputeTargets import (
     GkNumericalIntegration,
     GkNumericalValue,
     IntegrationSolver,
+    BackgroundModel,
 )
 from CosmologyConcepts import redshift_array, redshift, wavenumber_exit_time
 from Datastore.SQL.ObjectFactories.base import SQLAFactoryBase
