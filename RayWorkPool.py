@@ -115,6 +115,32 @@ class RayWorkPool:
         if title is not None:
             print(f"\n** {title}")
 
+    def _build_queued_status_message(self):
+        msg = f"{self._num_lookup_queue} lookup"
+        if self._compute_handler is not None:
+            msg += f", {self._num_compute_queue} compute"
+        if self._store_handler is not None:
+            msg += f", {self._num_store_queue} store"
+        if self._available_handler is not None:
+            msg += f", {self._num_available_queue} available"
+        if self._validation_handler is not None:
+            msg += f", {self._num_validation_queue} validation"
+
+        return msg
+
+    def _build_completed_status_message(self):
+        msg = f"{self._num_lookup_complete} lookup"
+        if self._compute_handler is not None:
+            msg += f", {self._num_compute_complete} compute"
+        if self._store_handler is not None:
+            msg += f", {self._num_store_complete} store"
+        if self._available_handler is not None:
+            msg += f", {self._num_available_complete} available"
+        if self._validation_handler is not None:
+            msg += f", {self._num_validation_complete} validation"
+
+        return msg
+
     def run(self):
         while len(self._inflight) > 0 or len(self._todo) > 0:
             # if there is space in the task queue, and there are items remaining to queue,
@@ -356,30 +382,10 @@ class RayWorkPool:
                         msg += " (may be waiting for compute/store/validate tasks to finish)"
                     print(msg)
 
-                    msg = f"      inflight items: {self._num_lookup_queue} lookup"
-                    if self._compute_handler is not None:
-                        msg += f", {self._num_compute_queue} compute"
-                    if self._store_handler is not None:
-                        msg += f", {self._num_store_queue} store"
-                    if self._available_handler is not None:
-                        msg += f", {self._num_available_queue} available"
-                    if self._validation_handler is not None:
-                        msg += f", {self._num_validation_queue} validation"
-                    if self._post_handler is not None:
-                        msg += f", {self._num_post_queue} post"
-
-                    msg += f" | completed items: {self._num_lookup_complete} lookup"
-                    if self._compute_handler is not None:
-                        msg += f", {self._num_compute_complete} compute"
-                    if self._store_handler is not None:
-                        msg += f", {self._num_store_complete} store"
-                    if self._available_handler is not None:
-                        msg += f", {self._num_available_complete} available"
-                    if self._validation_handler is not None:
-                        msg += f", {self._num_validation_complete} validation"
-                    if self._post_handler is not None:
-                        msg += f", {self._num_post_complete} post"
-
+                    msg = f"      inflight items: {self._build_queued_status_message()}"
+                    msg += (
+                        f" | completed items: {self._build_completed_status_message()}"
+                    )
                     print(msg)
 
                     self._batch = 0
@@ -388,5 +394,10 @@ class RayWorkPool:
         if self._title is not None:
             self.total_time = time.perf_counter() - self._start_time
             print(
-                f"   -- all work items complete in time {format_time(self.total_time)}"
+                f"   -- ALL WORK ITEMS COMPLETE in time {format_time(self.total_time)}"
             )
+            print(f"      Queue summary: {self._build_completed_status_message()}")
+            if self._num_compute_complete == 0:
+                print(
+                    "      (no compute items were evaluated; all assets were located in the datastore"
+                )
