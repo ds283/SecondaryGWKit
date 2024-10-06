@@ -221,7 +221,7 @@ class sqla_GkNumericalIntegration_factory(SQLAFactoryBase):
             .filter(
                 table.c.validated == True,
                 table.c.wavenumber_exit_serial == k_exit.store_id,
-                table.c.model_serial == mode.store_id,
+                table.c.model_serial == model.store_id,
                 table.c.atol_serial == atol.store_id,
                 table.c.rtol_serial == rtol.store_id,
             )
