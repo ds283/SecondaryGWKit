@@ -330,7 +330,7 @@ class ShardedPool:
                 # if this object has a valid store_id and was not deserialized, push to all the
                 # remaining shards in order to replicate it
                 if (
-                    not hasattr(objects[i], "_my_id")
+                    hasattr(objects[i], "_my_id")
                     and objects[i]._my_id is not None
                     and not hasattr(objects[i], "_deserialized")
                 ):
