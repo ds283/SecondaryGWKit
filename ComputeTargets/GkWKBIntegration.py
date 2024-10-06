@@ -144,7 +144,6 @@ def compute_Gk_WKB(
         raise RuntimeError(
             f"compute_Gk_WKB: solution does not have expected number of members (expected {EXPECTED_SOL_LENGTH}, found {len(sampled_values)}; k={k_wavenumber.k_inv_Mpc}/Mpc, length of sol.t={len(sampled_z)})"
         )
-    sampled_a0_tau = sampled_values[A0_TAU_INDEX]
     sampled_theta = sampled_values[THETA_INDEX]
 
     returned_values = sampled_z.size
@@ -171,7 +170,6 @@ def compute_Gk_WKB(
         "mean_RHS_time": supervisor.mean_RHS_time,
         "max_RHS_time": supervisor.max_RHS_time,
         "min_RHS_time": supervisor.min_RHS_time,
-        "a0_tau_sample": sampled_a0_tau,
         "theta_sample": sampled_theta,
         "solver_label": "solve_ivp+RK45-stepping0",
     }
@@ -445,7 +443,6 @@ class GkWKBIntegration(DatastoreObject):
         self._init_efolds_subh = log(k_over_aH)
 
         theta_sample = data["theta_sample"]
-        a0_tau_sample = data["a0_tau_sample"]
 
         omega_WKB_sq_init = WKB_omegaEff_sq(self._model, self.k.k, initial_z)
         if omega_WKB_sq_init < 0.0:
@@ -471,7 +468,7 @@ class GkWKBIntegration(DatastoreObject):
             current_z = self._z_sample[i]
             current_z_float = current_z.z
             H = self._model.functions.Hubble(current_z_float)
-            tau = a0_tau_sample[i]
+            tau = self._model.functions.tau(current_z_float)
 
             analytic_G = compute_analytic_G(
                 self.k.k, 1.0 / 3.0, tau_source, tau, H_source
