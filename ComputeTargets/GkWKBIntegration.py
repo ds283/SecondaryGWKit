@@ -141,6 +141,16 @@ def compute_Gk_WKB(
     sampled_z = sol.t
     sampled_values = sol.y
     if len(sampled_values) != EXPECTED_SOL_LENGTH:
+        print(
+            f"!! compute_Gk_WKB: solution does not have expected number of members for k={k_wavenumber.k_inv_Mpc:.5g}/Mpc"
+        )
+        print(
+            f"   -- expected {EXPECTED_SOL_LENGTH} members, found {len(sampled_values)}"
+        )
+        print(
+            f"      z_init={z_init:.5g}, z_sample.max={z_sample.max.z:.5g}, z_sample.min={z_sample.min.z:.5g}"
+        )
+        print(f"      sol.success={sol.success}, sol.message={sol.message}")
         raise RuntimeError(
             f"compute_Gk_WKB: solution does not have expected number of members (expected {EXPECTED_SOL_LENGTH}, found {len(sampled_values)}; k={k_wavenumber.k_inv_Mpc}/Mpc, length of sol.t={len(sampled_z)})"
         )
