@@ -250,10 +250,15 @@ with ShardedPool(
         )
     )
     if not model.available:
+        print("\n** CALCULATING BACKGROUND MODEL")
         data = ray.get(model.compute(label=LambdaCDM_Planck2018.name))
         model.store()
         model = ray.get(pool.object_store(model))
         outcome = ray.get(pool.object_validate(model))
+    else:
+        print(
+            f'\n** FOUND EXISTING BACKGROUND MODEL "{model.label}" (store_id={model.store_id})'
+        )
 
     ## STEP 2
     ## COMPUTE MATTER TRANSFER FUNCTIONS
