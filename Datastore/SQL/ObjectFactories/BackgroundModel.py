@@ -367,6 +367,7 @@ class sqla_BackgroundModelFactory(SQLAFactoryBase):
                     "model_serial": store_id,
                     "z_serial": value.z.store_id,
                     "Hubble": value.Hubble,
+                    "rho": value.rho,
                     "wBackground": value.wBackground,
                     "wPerturbations": value.wPerturbations,
                     "tau": value.tau,
@@ -501,6 +502,7 @@ class sqla_BackgroundModelValue_factory(SQLAFactoryBase):
                 sqla.Column("Hubble", sqla.Float(64), nullable=False),
                 sqla.Column("wBackground", sqla.Float(64), nullable=False),
                 sqla.Column("wPerturbations", sqla.Float(64), nullable=False),
+                sqla.Column("rho", sqla.Float(64), nullable=False),
                 sqla.Column("tau", sqla.Float(64), nullable=False),
                 sqla.Column("d_lnH_dz", sqla.Float(64), nullable=False),
                 sqla.Column("d2_lnH_dz2", sqla.Float(64), nullable=True),
@@ -514,6 +516,7 @@ class sqla_BackgroundModelValue_factory(SQLAFactoryBase):
         z = payload["z"]
 
         Hubble = payload["Hubble"]
+        rho = payload["rho"]
         wBackground = payload["wBackground"]
         wPerturbations = payload["wPerturbations"]
         tau = payload["tau"]
@@ -527,6 +530,7 @@ class sqla_BackgroundModelValue_factory(SQLAFactoryBase):
                 sqla.select(
                     table.c.serial,
                     table.c.Hubble,
+                    table.c.rho,
                     table.c.wBackground,
                     table.c.wPerturbations,
                     table.c.tau,
@@ -551,6 +555,7 @@ class sqla_BackgroundModelValue_factory(SQLAFactoryBase):
                     "wkb_serial": model_serial,
                     "z_serial": z.store_id,
                     "Hubble": Hubble,
+                    "rho": rho,
                     "wBackground": wBackground,
                     "wPerturbations": wPerturbations,
                     "tau": tau,
@@ -584,6 +589,7 @@ class sqla_BackgroundModelValue_factory(SQLAFactoryBase):
             store_id=store_id,
             z=z,
             Hubble=Hubble,
+            rho=rho,
             wBackground=wBackground,
             wPerturbations=wPerturbations,
             tau=tau,

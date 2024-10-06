@@ -23,6 +23,7 @@ ModelFunctions = namedtuple(
     [
         "Hubble",
         "epsilon",
+        "d_epsilon_dz",
         "wBackground",
         "wPerturbations",
         "tau",
@@ -307,6 +308,7 @@ class BackgroundModel(DatastoreObject):
         self._functions = ModelFunctions(
             Hubble=self._cosmology.Hubble,
             epsilon=epsilon,
+            d_epsilon_dz=d_epsilon_dz,
             wBackground=self._cosmology.wBackground,
             wPerturbations=self._cosmology.wPerturbations,
             tau=lambda z: tau_spline(log(z)),
