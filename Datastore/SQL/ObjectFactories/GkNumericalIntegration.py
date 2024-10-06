@@ -11,7 +11,6 @@ from ComputeTargets import (
     IntegrationSolver,
 )
 from CosmologyConcepts import redshift_array, redshift, wavenumber_exit_time
-from CosmologyModels import BaseCosmology
 from Datastore.SQL.ObjectFactories.base import SQLAFactoryBase
 from MetadataConcepts import tolerance, store_tag
 from defaults import DEFAULT_FLOAT_PRECISION, DEFAULT_STRING_LENGTH
@@ -92,9 +91,12 @@ class sqla_GkNumericalIntegration_factory(SQLAFactoryBase):
                     index=True,
                     nullable=False,
                 ),
-                sqla.Column("cosmology_type", sqla.Integer, index=True, nullable=False),
                 sqla.Column(
-                    "cosmology_serial", sqla.Integer, index=True, nullable=False
+                    "model_serial",
+                    sqla.Integer,
+                    sqla.ForeignKey("BackgroundModel.serial"),
+                    index=True,
+                    nullable=False,
                 ),
                 sqla.Column(
                     "atol_serial",
@@ -165,7 +167,7 @@ class sqla_GkNumericalIntegration_factory(SQLAFactoryBase):
         rtol: tolerance = payload["rtol"]
 
         k_exit: wavenumber_exit_time = payload["k"]
-        cosmology: BaseCosmology = payload["cosmology"]
+        model: BackgroundModel = payload["model"]
         z_sample: redshift_array = payload["z_sample"]
         z_source: redshift = payload.get("z_source", None)
 
@@ -219,8 +221,7 @@ class sqla_GkNumericalIntegration_factory(SQLAFactoryBase):
             .filter(
                 table.c.validated == True,
                 table.c.wavenumber_exit_serial == k_exit.store_id,
-                table.c.cosmology_type == cosmology.type_id,
-                table.c.cosmology_serial == cosmology.store_id,
+                table.c.model_serial == mode.store_id,
                 table.c.atol_serial == atol.store_id,
                 table.c.rtol_serial == rtol.store_id,
             )
@@ -260,7 +261,7 @@ class sqla_GkNumericalIntegration_factory(SQLAFactoryBase):
                 solver_labels=solver_labels,
                 label=label,
                 k=k_exit,
-                cosmology=cosmology,
+                model=model,
                 atol=atol,
                 rtol=rtol,
                 z_source=z_source,
@@ -371,7 +372,7 @@ class sqla_GkNumericalIntegration_factory(SQLAFactoryBase):
             },
             solver_labels=solver_labels,
             k=k_exit,
-            cosmology=cosmology,
+            model=model,
             label=store_label,
             atol=atol,
             rtol=rtol,
@@ -398,8 +399,7 @@ class sqla_GkNumericalIntegration_factory(SQLAFactoryBase):
             {
                 "label": obj.label,
                 "wavenumber_exit_serial": obj._k_exit.store_id,
-                "cosmology_type": obj.cosmology.type_id,
-                "cosmology_serial": obj.cosmology.store_id,
+                "model_serial": obj.model.store_id,
                 "atol_serial": obj._atol.store_id,
                 "rtol_serial": obj._rtol.store_id,
                 "solver_serial": obj.solver.store_id,

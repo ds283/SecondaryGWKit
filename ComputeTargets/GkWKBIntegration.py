@@ -12,7 +12,6 @@ from ComputeTargets.analytic_Gk import (
 )
 from ComputeTargets.integration_metadata import IntegrationSolver
 from CosmologyConcepts import wavenumber_exit_time, redshift, redshift_array, wavenumber
-from CosmologyModels import BaseCosmology
 from Datastore import DatastoreObject
 from MetadataConcepts import tolerance, store_tag
 from defaults import (
@@ -21,15 +20,15 @@ from defaults import (
     DEFAULT_REL_TOLERANCE,
 )
 from utilities import check_units, format_time
+from . import BackgroundModel
 from .integration_supervisor import (
     RHS_timer,
     IntegrationSupervisor,
     DEFAULT_UPDATE_INTERVAL,
 )
 
-A0_TAU_INDEX = 0
-THETA_INDEX = 1
-EXPECTED_SOL_LENGTH = 2
+THETA_INDEX = 0
+EXPECTED_SOL_LENGTH = 1
 
 
 class GkWKBSupervisor(IntegrationSupervisor):
@@ -86,7 +85,7 @@ class GkWKBSupervisor(IntegrationSupervisor):
 
 @ray.remote
 def compute_Gk_WKB(
-    cosmology: BaseCosmology,
+    model: BackgroundModel,
     k: wavenumber_exit_time,
     z_init: float,
     z_sample: redshift_array,
@@ -94,7 +93,7 @@ def compute_Gk_WKB(
     rtol: float = DEFAULT_REL_TOLERANCE,
 ) -> dict:
     k_wavenumber: wavenumber = k.k
-    check_units(k_wavenumber, cosmology)
+    check_units(k_wavenumber, model.cosmology)
 
     k_float = k_wavenumber.k
 
@@ -102,14 +101,13 @@ def compute_Gk_WKB(
 
     def RHS(z, state, supervisor) -> List[float]:
         with RHS_timer(supervisor) as timer:
-            a0_tau = state[A0_TAU_INDEX]
             theta = state[THETA_INDEX]
 
             if supervisor.notify_available:
                 supervisor.message(z, f"current state: theta_WKB = {theta:.5g}")
                 supervisor.reset_notify_time()
 
-            omega_eff_sq = WKB_omegaEff_sq(cosmology, k_float, z)
+            omega_eff_sq = WKB_omegaEff_sq(model, k_float, z)
 
             if omega_eff_sq < 0.0:
                 raise ValueError(
@@ -119,18 +117,10 @@ def compute_Gk_WKB(
             omega_eff = sqrt(omega_eff_sq)
             dtheta_dz = omega_eff
 
-            H = cosmology.Hubble(z)
-            da0_tau_dz = -1.0 / H
-
-            return [da0_tau_dz, dtheta_dz]
+            return [dtheta_dz]
 
     with GkWKBSupervisor(k_wavenumber, z_init, z_sample.min) as supervisor:
-        rho_init = cosmology.rho(z_init)
-        tau_init = (
-            sqrt(3.0) * cosmology.units.PlanckMass / sqrt(rho_init) * (1.0 + z_init)
-        )
-
-        initial_state = [tau_init, 0.0]
+        initial_state = [0.0]
 
         sol = solve_ivp(
             RHS,
@@ -197,7 +187,7 @@ class GkWKBIntegration(DatastoreObject):
         self,
         payload,
         solver_labels: dict,
-        cosmology: BaseCosmology,
+        model: BackgroundModel,
         k: wavenumber_exit_time,
         atol: tolerance,
         rtol: tolerance,
@@ -210,7 +200,7 @@ class GkWKBIntegration(DatastoreObject):
         tags: Optional[List[store_tag]] = None,
     ):
         k_wavenumber: wavenumber = k.k
-        check_units(k_wavenumber, cosmology)
+        check_units(k_wavenumber, model.cosmology)
 
         self._solver_labels = solver_labels
         self._z_sample = z_sample
@@ -274,7 +264,7 @@ class GkWKBIntegration(DatastoreObject):
         self._label = label
         self._tags = tags if tags is not None else []
 
-        self._cosmology = cosmology
+        self._model = model
 
         self._k_exit = k
         self._z_source = z_source
@@ -285,8 +275,8 @@ class GkWKBIntegration(DatastoreObject):
         self._rtol = rtol
 
     @property
-    def cosmology(self):
-        return self._cosmology
+    def model(self) -> BackgroundModel:
+        return self._model
 
     @property
     def k(self) -> wavenumber:
@@ -412,7 +402,7 @@ class GkWKBIntegration(DatastoreObject):
         initial_z = self._z_init if self._z_init is not None else self._z_source.z
 
         self._compute_ref = compute_Gk_WKB.remote(
-            self.cosmology,
+            self._model,
             self._k_exit,
             initial_z,
             self._z_sample,
@@ -447,8 +437,8 @@ class GkWKBIntegration(DatastoreObject):
 
         initial_z = self._z_init if self._z_init is not None else self._z_source.z
 
-        H_init = self.cosmology.Hubble(initial_z)
-        eps_init = self.cosmology.epsilon(initial_z)
+        H_init = self._model.functions.Hubble(initial_z)
+        eps_init = self._model.functions.epsilon(initial_z)
 
         one_plus_z_init = 1.0 + initial_z
         k_over_aH = one_plus_z_init * self.k.k / H_init
@@ -457,7 +447,7 @@ class GkWKBIntegration(DatastoreObject):
         theta_sample = data["theta_sample"]
         a0_tau_sample = data["a0_tau_sample"]
 
-        omega_WKB_sq_init = WKB_omegaEff_sq(self._cosmology, self.k.k, initial_z)
+        omega_WKB_sq_init = WKB_omegaEff_sq(self._model, self.k.k, initial_z)
         if omega_WKB_sq_init < 0.0:
             raise ValueError(
                 f"omega_WKB^2 must be non-negative at the initial time (k={self._k_exit.k.k_inv_Mpc}/Mpc, z_init={initial_z:.5g}, omega_WKB^2={omega_WKB_sq_init:.5g})"
@@ -466,27 +456,21 @@ class GkWKBIntegration(DatastoreObject):
         omega_WKB_init = sqrt(omega_WKB_sq_init)
         self._cos_coeff = omega_WKB_init * self._G_init
 
-        d_ln_omega_WKB = WKB_d_ln_omegaEffPrime_dz(self._cosmology, self.k.k, initial_z)
+        d_ln_omega_WKB = WKB_d_ln_omegaEffPrime_dz(self._model, self.k.k, initial_z)
         self._sin_coeff = (
             self._Gprime_init
             + (self._G_init / 2.0) * (eps_init / one_plus_z_init + d_ln_omega_WKB)
         ) / omega_WKB_init
 
         # estimate tau at the source redshift
-        H_source = self._cosmology.Hubble(self._z_source.z)
-        rho_source = self._cosmology.rho(self._z_source.z)
-        tau_source = (
-            sqrt(3.0)
-            * self._cosmology.units.PlanckMass
-            / sqrt(rho_source)
-            * (1.0 + self._z_source.z)
-        )
+        H_source = self._model.functions.Hubble(self._z_source.z)
+        tau_source = self._model.functions.tau(self._z_source.z)
 
         self._values = []
         for i in range(len(theta_sample)):
             current_z = self._z_sample[i]
             current_z_float = current_z.z
-            H = self._cosmology.Hubble(current_z_float)
+            H = self._model.functions.Hubble(current_z_float)
             tau = a0_tau_sample[i]
 
             analytic_G = compute_analytic_G(
@@ -497,7 +481,7 @@ class GkWKBIntegration(DatastoreObject):
             )
 
             # should be safe to assume omega_WKB_sq > 0, since otherwise this would have been picked up during the integration
-            omega_WKB_sq = WKB_omegaEff_sq(self._cosmology, self.k.k, current_z_float)
+            omega_WKB_sq = WKB_omegaEff_sq(self._model, self.k.k, current_z_float)
             omega_WKB = sqrt(omega_WKB_sq)
 
             H_ratio = H_init / H

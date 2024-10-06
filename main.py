@@ -263,7 +263,7 @@ with ShardedPool(
         return pool.object_get(
             TkNumericalIntegration,
             solver_labels=solvers,
-            cosmology=LambdaCDM_Planck2018,
+            model=model,
             k=k_exit,
             z_sample=my_sample,
             z_init=my_sample.max,
@@ -377,7 +377,7 @@ with ShardedPool(
                     pool.object_get(
                         GkNumericalIntegration,
                         solver_labels=solvers,
-                        cosmology=LambdaCDM_Planck2018,
+                        model=model,
                         k=k_exit,
                         z_source=source_z,
                         z_sample=response_zs,
@@ -464,7 +464,7 @@ with ShardedPool(
                     pool.object_get(
                         GkWKBIntegration,
                         solver_labels=solvers,
-                        cosmology=LambdaCDM_Planck2018,
+                        model=model,
                         k=k_exit,
                         z_source=source_z,
                         z_init=z_init,
@@ -511,7 +511,7 @@ with ShardedPool(
                     pool.object_get(
                         GkWKBIntegration,
                         solver_labels=solvers,
-                        cosmology=LambdaCDM_Planck2018,
+                        model=model,
                         k=k_exit,
                         z_source=source_z,
                         G_init=0.0,

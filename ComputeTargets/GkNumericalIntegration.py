@@ -7,7 +7,6 @@ from scipy.integrate import solve_ivp
 from scipy.optimize import root_scalar
 
 from CosmologyConcepts import wavenumber, redshift, redshift_array, wavenumber_exit_time
-from CosmologyModels import BaseCosmology
 from Datastore import DatastoreObject
 from MetadataConcepts import tolerance, store_tag
 from defaults import (
@@ -16,6 +15,7 @@ from defaults import (
     DEFAULT_FLOAT_PRECISION,
 )
 from utilities import check_units, format_time
+from . import BackgroundModel
 from .WKB_tensor_Green import WKB_omegaEff_sq
 from .analytic_Gk import compute_analytic_G, compute_analytic_Gprime
 from .integration_metadata import IntegrationSolver
@@ -28,13 +28,11 @@ from .integration_supervisor import (
 # RHS of ODE system
 #
 # State layout:
-#   state[0] = a_0 tau [tau = conformal time]
-#   state[1] = G_k(z, z')
-#   state[2] = Gprime_k(z, z')
-A0_TAU_INDEX = 0
-G_INDEX = 1
-GPRIME_INDEX = 2
-EXPECTED_SOL_LENGTH = 3
+#   state[0] = G_k(z, z')
+#   state[1] = Gprime_k(z, z')
+G_INDEX = 0
+GPRIME_INDEX = 1
+EXPECTED_SOL_LENGTH = 2
 
 
 class GkIntegrationSupervisor(IntegrationSupervisor):
@@ -188,7 +186,7 @@ def search_G_minimum(sol, start_z: float, stop_z: float):
 
 @ray.remote
 def compute_Gk(
-    cosmology: BaseCosmology,
+    model: BackgroundModel,
     k: wavenumber_exit_time,
     z_source: redshift,
     z_sample: redshift_array,
@@ -198,7 +196,7 @@ def compute_Gk(
     mode: str = None,
 ) -> dict:
     k_wavenumber: wavenumber = k.k
-    check_units(k_wavenumber, cosmology)
+    check_units(k_wavenumber, model.cosmology)
 
     if mode is not None and mode not in ["stop"]:
         raise ValueError(f'Unknown compute mode "{mode}"')
@@ -217,7 +215,6 @@ def compute_Gk(
         correct dimensionless ratios
         """
         with RHS_timer(supervisor) as timer:
-            a0_tau = state[A0_TAU_INDEX]
             G = state[G_INDEX]
             Gprime = state[GPRIME_INDEX]
 
@@ -228,13 +225,12 @@ def compute_Gk(
                 )
                 supervisor.reset_notify_time()
 
-            H = cosmology.Hubble(z)
-            eps = cosmology.epsilon(z)
+            H = model.functions.Hubble(z)
+            eps = model.functions.epsilon(z)
 
             one_plus_z = 1.0 + z
             one_plus_z_2 = one_plus_z * one_plus_z
 
-            da0_tau_dz = -1.0 / H
             dG_dz = Gprime
 
             k_over_H = k_float / H
@@ -249,13 +245,13 @@ def compute_Gk(
             # spacing
             # If the grid spacing is smaller than the oscillation wavelength, then
             # evidently we cannot resolve the oscillations
-            omega_eff_sq = WKB_omegaEff_sq(cosmology, k_float, z)
+            omega_eff_sq = WKB_omegaEff_sq(model, k_float, z)
 
             if omega_eff_sq > 0.0:
                 wavelength = 2.0 * pi / sqrt(omega_eff_sq)
                 supervisor.report_wavelength(z, wavelength, log((1.0 + z) * k_over_H))
 
-        return [da0_tau_dz, dG_dz, dGprime_dz]
+        return [dG_dz, dGprime_dz]
 
     with GkIntegrationSupervisor(
         k_wavenumber, z_source, z_sample.min, delta_logz=delta_logz
@@ -265,12 +261,7 @@ def compute_Gk(
         #   Gprime(z' z') = -1/(a0 H(z'))
         # however we would rather not have a delicate initial condition for Gprime, so we
         # instead solve with the boundary conditions Gprime = -1 and rescale afterwards
-        rho_init = cosmology.rho(z_source.z)
-        tau_init = (
-            sqrt(3.0) * cosmology.units.PlanckMass / sqrt(rho_init) * (1.0 + z_source.z)
-        )
-
-        initial_state = [tau_init, 0.0, 1.0]
+        initial_state = [0.0, 1.0]
 
         if mode == "stop":
             # set up an event to terminate the integration when 5 e-folds inside the horizon
@@ -316,7 +307,6 @@ def compute_Gk(
         raise RuntimeError(
             f"compute_Gk: solution does not have expected number of members (expected {EXPECTED_SOL_LENGTH}, found {len(sampled_values)}; k={k_wavenumber.k.k_inv_Mpc}/Mpc, length of sol.t={len(sampled_z)})"
         )
-    sampled_a0_tau = sampled_values[A0_TAU_INDEX]
     sampled_G = sampled_values[G_INDEX]
     sampled_Gprime = sampled_values[GPRIME_INDEX]
 
@@ -355,7 +345,6 @@ def compute_Gk(
         "mean_RHS_time": supervisor.mean_RHS_time,
         "max_RHS_time": supervisor.max_RHS_time,
         "min_RHS_time": supervisor.min_RHS_time,
-        "a0_tau_sample": sampled_a0_tau,
         "G_sample": sampled_G,
         "Gprime_sample": sampled_Gprime,
         "solver_label": "solve_ivp+RK45-stepping0",
@@ -383,7 +372,7 @@ class GkNumericalIntegration(DatastoreObject):
         self,
         payload,
         solver_labels: dict,
-        cosmology: BaseCosmology,
+        model: BackgroundModel,
         k: wavenumber_exit_time,
         atol: tolerance,
         rtol: tolerance,
@@ -395,7 +384,7 @@ class GkNumericalIntegration(DatastoreObject):
         mode: Optional[str] = None,
     ):
         k_wavenumber: wavenumber = k.k
-        check_units(k_wavenumber, cosmology)
+        check_units(k_wavenumber, model.cosmology)
 
         self._solver_labels = solver_labels
         self._delta_logz = delta_logz
@@ -459,7 +448,7 @@ class GkNumericalIntegration(DatastoreObject):
         self._label = label
         self._tags = tags if tags is not None else []
 
-        self._cosmology = cosmology
+        self._model = model
 
         self._k_exit = k
         self._z_source = z_source
@@ -470,8 +459,8 @@ class GkNumericalIntegration(DatastoreObject):
         self._rtol = rtol
 
     @property
-    def cosmology(self):
-        return self._cosmology
+    def model(self) -> BackgroundModel:
+        return self._model
 
     @property
     def k(self) -> wavenumber:
@@ -614,7 +603,7 @@ class GkNumericalIntegration(DatastoreObject):
             self._label = label
 
         self._compute_ref = compute_Gk.remote(
-            self.cosmology,
+            self._model,
             self._k_exit,
             self.z_source,
             self.z_sample,
@@ -657,23 +646,22 @@ class GkNumericalIntegration(DatastoreObject):
         self._stop_G = data.get("stop_G", None)
         self._stop_Gprime = data.get("stop_Gprime", None)
 
-        Hsource = self.cosmology.Hubble(self.z_source.z)
+        Hsource = self._model.functions.Hubble(self.z_source.z)
         k_over_aH = (1.0 + self.z_source.z) * self.k.k / Hsource
         self._init_efolds_suph = -log(k_over_aH)
 
         G_sample = data["G_sample"]
         Gprime_sample = data["Gprime_sample"]
-        a0_tau_sample = data["a0_tau_sample"]
 
-        tau_source = a0_tau_sample[0]
+        tau_source = self._model.functions.tau(self._z_sample[0].z)
 
         # need to be aware that G_sample may not be as long as self._z_sample, if we are working in "stop" mode
         self._values = []
         for i in range(len(G_sample)):
             current_z = self._z_sample[i]
             current_z_float = current_z.z
-            H = self._cosmology.Hubble(current_z_float)
-            tau = a0_tau_sample[i]
+            H = self._model.functions.Hubble(current_z_float)
+            tau = self._model.functions.tau(current_z_float)
 
             analytic_G = compute_analytic_G(
                 self.k.k, 1.0 / 3.0, tau_source, tau, Hsource
@@ -681,7 +669,7 @@ class GkNumericalIntegration(DatastoreObject):
             analytic_Gprime = compute_analytic_Gprime(
                 self.k.k, 1.0 / 3.0, tau_source, tau, Hsource, H
             )
-            omega_WKB_sq = WKB_omegaEff_sq(self._cosmology, self.k.k, current_z_float)
+            omega_WKB_sq = WKB_omegaEff_sq(self._model, self.k.k, current_z_float)
 
             # create new GkNumericalValue object
             self._values.append(

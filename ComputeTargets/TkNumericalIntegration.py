@@ -6,7 +6,6 @@ from math import fabs, pi, log, sqrt
 from scipy.integrate import solve_ivp
 
 from CosmologyConcepts import redshift_array, wavenumber, redshift, wavenumber_exit_time
-from CosmologyModels import BaseCosmology
 from Datastore import DatastoreObject
 from MetadataConcepts import tolerance, store_tag
 from defaults import (
@@ -15,6 +14,7 @@ from defaults import (
     DEFAULT_FLOAT_PRECISION,
 )
 from utilities import check_units, format_time
+from . import BackgroundModel
 from .analytic_Tk import compute_analytic_T, compute_analytic_Tprime
 from .integration_metadata import IntegrationSolver
 from .integration_supervisor import (
@@ -125,7 +125,7 @@ class TkIntegrationSupervisor(IntegrationSupervisor):
 
 @ray.remote
 def compute_Tk(
-    cosmology: BaseCosmology,
+    model: BackgroundModel,
     k: wavenumber,
     z_sample: redshift_array,
     z_init: redshift,
@@ -133,7 +133,7 @@ def compute_Tk(
     rtol: float = DEFAULT_REL_TOLERANCE,
     delta_logz: Optional[float] = None,
 ) -> dict:
-    check_units(k, cosmology)
+    check_units(k, model.cosmology)
 
     # obtain dimensionful value of wavenumber; this should be measured in the same units used by the cosmology
     # (see below)
@@ -149,17 +149,15 @@ def compute_Tk(
     #   state[0] = a_0 tau(z) [tau = conformal time]
     #   state[1] = T(z)
     #   state[2] = dT/dz = T' = "T prime"
-    A0_TAU_INDEX = 0
-    T_INDEX = 1
-    TPRIME_INDEX = 2
-    EXPECTED_SOL_LENGTH = 3
+    T_INDEX = 0
+    TPRIME_INDEX = 1
+    EXPECTED_SOL_LENGTH = 2
 
     def RHS(z, state, supervisor: TkIntegrationSupervisor) -> List[float]:
         """
         k *must* be measured using the same units used for H(z) in the cosmology
         """
         with RHS_timer(supervisor) as timer:
-            a0_tau = state[A0_TAU_INDEX]
             T = state[T_INDEX]
             Tprime = state[TPRIME_INDEX]
 
@@ -170,14 +168,13 @@ def compute_Tk(
                 )
                 supervisor.reset_notify_time()
 
-            H = cosmology.Hubble(z)
-            wPerturbations = cosmology.wPerturbations(z)
-            eps = cosmology.epsilon(z)
+            H = model.functions.Hubble(z)
+            wPerturbations = model.functions.wPerturbations(z)
+            eps = model.functions.epsilon(z)
 
             one_plus_z = 1.0 + z
             one_plus_z_2 = one_plus_z * one_plus_z
 
-            da0_tau_dz = -1.0 / H
             dT_dz = Tprime
 
             k_over_H = k_float / H
@@ -200,18 +197,12 @@ def compute_Tk(
                 wavelength = 2.0 * pi / sqrt(omega_eff_sq)
                 supervisor.report_wavelength(z, wavelength, log((1.0 + z) * k_over_H))
 
-        return [da0_tau_dz, dT_dz, dTprime_dz]
+        return [dT_dz, dTprime_dz]
 
     with TkIntegrationSupervisor(
         k, z_init, z_sample.min, delta_logz=delta_logz
     ) as supervisor:
-        # use initial values T(z) = 1, dT/dz = 0 at z = z_init
-        rho_init = cosmology.rho(z_init.z)
-        tau_init = (
-            sqrt(3.0) * cosmology.units.PlanckMass / sqrt(rho_init) / (1.0 + z_init.z)
-        )
-
-        initial_state = [tau_init, 1.0, 0.0]
+        initial_state = [1.0, 0.0]
         sol = solve_ivp(
             RHS,
             method="Radau",
@@ -235,7 +226,6 @@ def compute_Tk(
         raise RuntimeError(
             f"compute_Tk: solution does not have expected number of members (expected {EXPECTED_SOL_LENGTH}, found {len(sampled_values)}; k={k.k_inv_Mpc}/Mpc, length of sol.t={len(sampled_z)})"
         )
-    sampled_a0_tau = sampled_values[A0_TAU_INDEX]
     sampled_T = sampled_values[T_INDEX]
     sampled_Tprime = sampled_values[TPRIME_INDEX]
 
@@ -261,7 +251,6 @@ def compute_Tk(
         "mean_RHS_time": supervisor.mean_RHS_time,
         "max_RHS_time": supervisor.max_RHS_time,
         "min_RHS_time": supervisor.min_RHS_time,
-        "a0_tau_sample": sampled_a0_tau,
         "T_sample": sampled_T,
         "Tprime_sample": sampled_Tprime,
         "solver_label": "solve_ivp+Radau-stepping0",
@@ -282,7 +271,7 @@ class TkNumericalIntegration(DatastoreObject):
         self,
         payload,
         solver_labels: dict,
-        cosmology: BaseCosmology,
+        model: BackgroundModel,
         k: wavenumber_exit_time,
         atol: tolerance,
         rtol: tolerance,
@@ -292,7 +281,7 @@ class TkNumericalIntegration(DatastoreObject):
         tags: Optional[List[store_tag]] = None,
         delta_logz: Optional[float] = None,
     ):
-        check_units(k.k, cosmology)
+        check_units(k.k, model.cosmology)
 
         self._solver_labels = solver_labels
         self._delta_logz = delta_logz
@@ -364,7 +353,7 @@ class TkNumericalIntegration(DatastoreObject):
         self._label = label
         self._tags = tags if tags is not None else []
 
-        self._cosmology = cosmology
+        self._model = model
 
         self._k_exit = k
         self._z_init = z_init
@@ -375,8 +364,8 @@ class TkNumericalIntegration(DatastoreObject):
         self._rtol = rtol
 
     @property
-    def cosmology(self) -> BaseCosmology:
-        return self._cosmology
+    def model(self) -> BackgroundModel:
+        return self._model
 
     @property
     def k(self) -> wavenumber:
@@ -502,7 +491,7 @@ class TkNumericalIntegration(DatastoreObject):
         if label is not None:
             self._label = label
 
-        Hinit = self.cosmology.Hubble(self.z_init.z)
+        Hinit = self._model.functions.Hubble(self.z_init.z)
         k_over_aH = (1.0 + self.z_init.z) * self.k.k / Hinit
         wavelength = 2.0 * pi / k_over_aH
         efolds_suph = -log(k_over_aH)
@@ -516,7 +505,7 @@ class TkNumericalIntegration(DatastoreObject):
             )
 
         self._compute_ref = compute_Tk.remote(
-            self.cosmology,
+            self._model,
             self.k,
             self.z_sample,
             self.z_init,
@@ -554,18 +543,17 @@ class TkNumericalIntegration(DatastoreObject):
         self._unresolved_z = data["unresolved_z"]
         self._unresolved_efolds_subh = data["unresolved_efolds_subh"]
 
-        Hinit = self.cosmology.Hubble(self.z_init.z)
+        Hinit = self._model.functions.Hubble(self.z_init.z)
         k_over_aH = (1.0 + self.z_init.z) * self.k.k / Hinit
         self._init_efolds_suph = -log(k_over_aH)
 
         T_sample = data["T_sample"]
         Tprime_sample = data["Tprime_sample"]
-        a0_tau_sample = data["a0_tau_sample"]
         self._values = []
 
         for i in range(len(T_sample)):
-            H = self.cosmology.Hubble(self._z_sample[i].z)
-            tau = a0_tau_sample[i]
+            H = self._model.functions.Hubble(self._z_sample[i].z)
+            tau = self._model.functions.tau(self._z_sample[i].z)
 
             analytic_T = compute_analytic_T(self.k.k, 1.0 / 3.0, tau)
             analytic_Tprime = compute_analytic_Tprime(self.k.k, 1.0 / 3.0, tau, H)

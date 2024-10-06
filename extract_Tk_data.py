@@ -9,6 +9,7 @@ from pyarrow.csv import CSVWriter
 
 from ComputeTargets import (
     TkNumericalIntegration,
+    BackgroundModel,
 )
 from CosmologyConcepts import (
     wavenumber,
@@ -84,6 +85,21 @@ with ShardedPool(
     )
 
     k_array = ray.get(pool.read_wavenumber_table(units=units))
+
+    model = ray.get(
+        pool.object_get(
+            BackgroundModel,
+            solver_labels=[],
+            cosmology=LambdaCDM_Planck2018,
+            z_sample=None,
+            atol=atol,
+            rtol=rtol,
+        )
+    )
+    if not model.available:
+        raise RuntimeError(
+            "Could not locate suitable background model instance in the datastore"
+        )
 
     def create_k_exit_work(k: wavenumber):
         return pool.object_get(
@@ -215,7 +231,7 @@ with ShardedPool(
         return pool.object_get(
             TkNumericalIntegration,
             solver_labels=[],
-            cosmology=LambdaCDM_Planck2018,
+            model=model,
             k=k_exit,
             z_sample=None,
             z_init=None,  # will query for any sample time

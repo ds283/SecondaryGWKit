@@ -2,12 +2,12 @@ from typing import Optional, List
 
 import ray
 
+from ComputeTargets import BackgroundModel
 from ComputeTargets.TkNumericalIntegration import (
     TkNumericalIntegration,
     TkNumericalValue,
 )
 from CosmologyConcepts import wavenumber, redshift_array, redshift
-from CosmologyModels import BaseCosmology
 from Datastore import DatastoreObject
 from MetadataConcepts import store_tag
 from utilities import check_cosmology, WallclockTimer
@@ -46,7 +46,7 @@ def source_function(
 
 @ray.remote
 def compute_tensor_source(
-    cosmology: BaseCosmology,
+    model: BackgroundModel,
     z_sample: redshift_array,
     Tq: TkNumericalIntegration,
     Tr: TkNumericalIntegration,
@@ -118,7 +118,7 @@ def compute_tensor_source(
                 analytic_Tr_value = 1.0
                 analytic_Tr_prime = 0.0
 
-            wBackground = cosmology.wBackground(z.z)
+            wBackground = model.functions.wBackground(z.z)
 
             numerical = source_function(
                 Tq_value, Tr_value, Tq_prime, Tr_prime, z.z, wBackground
@@ -171,7 +171,7 @@ class TensorSource(DatastoreObject):
         # there is a .q attribute, but this is derived from the Tq TkNumericalIntegration object
 
         # check compatibility of the ingredients we have been offered
-        check_cosmology(Tq, Tr)
+        check_cosmology(Tq.model, Tr.model)
 
         if not Tq.available:
             raise RuntimeError("Supplied Tq is not available")
@@ -197,15 +197,15 @@ class TensorSource(DatastoreObject):
         self._Tq = Tq
         self._Tr = Tr
 
-        self._cosmology = Tq.cosmology
+        self._model = Tq.model
         self._q_exit = Tq._k_exit
         self._r_exit = Tr._k_exit
 
         self._compute_ref = None
 
     @property
-    def cosmology(self) -> BaseCosmology:
-        return self._cosmology
+    def model(self) -> BackgroundModel:
+        return self._model
 
     @property
     def Tq(self) -> TkNumericalIntegration:
@@ -256,7 +256,7 @@ class TensorSource(DatastoreObject):
             self._label = label
 
         self._compute_ref = compute_tensor_source.remote(
-            self.cosmology,
+            self._model,
             self.z_sample,
             self._Tq,
             self._Tr,

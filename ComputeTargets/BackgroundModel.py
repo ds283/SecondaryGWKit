@@ -1,8 +1,10 @@
+from collections import namedtuple
 from typing import Optional, List
 
 import ray
-from math import sqrt, fabs
+from math import sqrt, fabs, log
 from scipy.integrate import solve_ivp
+from scipy.interpolate import InterpolatedUnivariateSpline
 
 from ComputeTargets.GkNumericalIntegration import EXPECTED_SOL_LENGTH
 from ComputeTargets.integration_metadata import IntegrationSolver
@@ -15,6 +17,20 @@ from defaults import DEFAULT_ABS_TOLERANCE, DEFAULT_REL_TOLERANCE
 
 A0_TAU_INDEX = 0
 EXPECTED_SOL_LENGTH = 1
+
+ModelFunctions = namedtuple(
+    "ModelFunctions",
+    [
+        "Hubble",
+        "epsilon",
+        "wBackground",
+        "wPerturbations",
+        "tau",
+        "d_lnH_dz",
+        "d2_lnH_dz2",
+        "d3_lnH_dz3",
+    ],
+)
 
 
 @ray.remote
@@ -166,6 +182,8 @@ class BackgroundModel(DatastoreObject):
 
         self._cosmology = cosmology
 
+        self._functions = None
+
         self._compute_ref = None
 
         self._atol = atol
@@ -234,6 +252,68 @@ class BackgroundModel(DatastoreObject):
         if self._values is None:
             raise RuntimeError("values has not yet been populated")
         return self._values
+
+    @property
+    def functions(self) -> ModelFunctions:
+        if self._values is None:
+            raise RuntimeError("values has not yet been populated")
+
+        if self._functions is None:
+            self._create_functions()
+
+        return self._functions
+
+    def _create_functions(self):
+        tau_data = [(log(v.z.z), v.tau) for v in self.values]
+        tau_data.sort(key=lambda pair: pair[0])
+
+        tau_x_data, tau_y_data = zip(*tau_data)
+        tau_spline = InterpolatedUnivariateSpline(tau_x_data, tau_y_data, ext="raise")
+
+        # TODO: currently we just pass through most of these functions to the underlying BaseCosmology instance, on the
+        #  assumption that it will implement them for any needed value of z.
+        #  In future we might want to allow these quantities to be obtained from splies, or derivatives of splines.
+        def epsilon(z: float) -> float:
+            """
+            Evaluate the conventional epsilon parameter eps = -dot(H)/H^2
+            :param z: redshift of evaluation
+            :return:
+            """
+            one_plus_z = 1.0 + z
+            return one_plus_z * self._cosmology.d_lnH_dz(z)
+
+        def d_epsilon_dz(z: float) -> float:
+            """
+            Evaluate the z derivative of the epsilon parameter
+            :param z:
+            :return:
+            """
+            one_plus_z = 1.0 + z
+            return self._cosmology.d_lnH_dz(
+                z
+            ) + one_plus_z * self._cosmology.d2_lnH_dz2(z)
+
+        def d2_epsilon_dz2(z: float) -> float:
+            """
+            Evaluate the 2nd z derivative of the epsilon parameter
+            :param z:
+            :return:
+            """
+            one_plus_z = 1.0 + z
+            return 2.0 * self._cosmology.d2_lnH_dz2(
+                z
+            ) + one_plus_z * self._cosmology.d3_lnH_dz3(z)
+
+        self._functions = ModelFunctions(
+            Hubble=self._cosmology.Hubble,
+            epsilon=epsilon,
+            wBackground=self._cosmology.wBackground,
+            wPerturbations=self._cosmology.wPerturbations,
+            tau=lambda z: tau_spline(log(z)),
+            d_lnH_dz=self._cosmology.d_lnH_dz,
+            d2_lnH_dz2=self._cosmology.d2_lnH_dz2,
+            d3_lnH_dz3=self._cosmology.d3_lnH_dz3,
+        )
 
     def compute(self, label: Optional[str] = None):
         if self._values is not None:
