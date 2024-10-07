@@ -1,6 +1,6 @@
 from math import pi, sqrt
 
-from .base import UnitsLike
+from Units.base import UnitsLike
 
 
 class Mpc_units(UnitsLike):

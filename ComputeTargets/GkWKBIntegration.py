@@ -5,12 +5,18 @@ import ray
 from math import log, sqrt, fabs, cos, sin
 from scipy.integrate import solve_ivp
 
+from ComputeTargets.BackgroundModel import BackgroundModel
 from ComputeTargets.WKB_tensor_Green import WKB_omegaEff_sq, WKB_d_ln_omegaEffPrime_dz
 from ComputeTargets.analytic_Gk import (
     compute_analytic_G,
     compute_analytic_Gprime,
 )
 from ComputeTargets.integration_metadata import IntegrationSolver
+from ComputeTargets.integration_supervisor import (
+    RHS_timer,
+    IntegrationSupervisor,
+    DEFAULT_UPDATE_INTERVAL,
+)
 from CosmologyConcepts import wavenumber_exit_time, redshift, redshift_array, wavenumber
 from Datastore import DatastoreObject
 from MetadataConcepts import tolerance, store_tag
@@ -20,12 +26,6 @@ from defaults import (
     DEFAULT_REL_TOLERANCE,
 )
 from utilities import check_units, format_time
-from . import BackgroundModel
-from .integration_supervisor import (
-    RHS_timer,
-    IntegrationSupervisor,
-    DEFAULT_UPDATE_INTERVAL,
-)
 
 THETA_INDEX = 0
 EXPECTED_SOL_LENGTH = 1

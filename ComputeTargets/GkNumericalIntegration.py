@@ -6,6 +6,15 @@ from math import fabs, pi, log, sqrt
 from scipy.integrate import solve_ivp
 from scipy.optimize import root_scalar
 
+from ComputeTargets.BackgroundModel import BackgroundModel
+from ComputeTargets.WKB_tensor_Green import WKB_omegaEff_sq
+from ComputeTargets.analytic_Gk import compute_analytic_G, compute_analytic_Gprime
+from ComputeTargets.integration_metadata import IntegrationSolver
+from ComputeTargets.integration_supervisor import (
+    IntegrationSupervisor,
+    DEFAULT_UPDATE_INTERVAL,
+    RHS_timer,
+)
 from CosmologyConcepts import wavenumber, redshift, redshift_array, wavenumber_exit_time
 from Datastore import DatastoreObject
 from MetadataConcepts import tolerance, store_tag
@@ -15,15 +24,6 @@ from defaults import (
     DEFAULT_FLOAT_PRECISION,
 )
 from utilities import check_units, format_time
-from . import BackgroundModel
-from .WKB_tensor_Green import WKB_omegaEff_sq
-from .analytic_Gk import compute_analytic_G, compute_analytic_Gprime
-from .integration_metadata import IntegrationSolver
-from .integration_supervisor import (
-    IntegrationSupervisor,
-    DEFAULT_UPDATE_INTERVAL,
-    RHS_timer,
-)
 
 # RHS of ODE system
 #
