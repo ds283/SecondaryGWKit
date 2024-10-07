@@ -6,6 +6,7 @@ from random import sample
 from typing import List
 
 import matplotlib.pyplot as plt
+import pandas as pd
 import ray
 import seaborn as sns
 from math import fabs
@@ -177,6 +178,13 @@ with ShardedPool(
         fig = plt.figure()
         ax = plt.gca()
 
+        z_column = []
+        G_column = []
+        abs_G_column = []
+        analytic_G_column = []
+        abs_analytic_G_column = []
+        type_column = []
+
         if Gk_numerical.available:
             values: List[GkNumericalValue] = Gk_numerical.values
 
@@ -193,6 +201,13 @@ with ShardedPool(
                 label="Analytic $G_k$ (numerical region)",
                 linestyle="--",
             )
+
+            z_column.extend(value.z.z for value in values)
+            G_column.extend(value.G for value in values)
+            analytic_G_column.extend(value.analytic_G for value in values)
+            abs_G_column.extend(fabs(value.G) for value in values)
+            abs_analytic_G_column.extend(fabs(value.analytic_G) for value in values)
+            type_column.extend(0 for _ in range(len(values)))
 
         if Gk_WKB.available:
             values: List[GkWKBValue] = Gk_WKB.values
@@ -211,6 +226,13 @@ with ShardedPool(
                 linestyle="--",
             )
 
+            z_column.extend(value.z.z for value in values)
+            G_column.extend(value.G_WKB for value in values)
+            analytic_G_column.extend(value.analytic_G for value in values)
+            abs_G_column.extend(fabs(value.G_WKB) for value in values)
+            abs_analytic_G_column.extend(fabs(value.analytic_G) for value in values)
+            type_column.extend(1 for _ in range(len(values)))
+
         ax.set_xlabel("response redshift $z$")
         ax.set_ylabel("$G_k(z_{\\text{source}}, z_{\\text{response}})$")
 
@@ -228,6 +250,23 @@ with ShardedPool(
         fig_path.parents[0].mkdir(exist_ok=True, parents=True)
         fig.savefig(fig_path)
         plt.close()
+
+        csv_path = (
+            base_path
+            / f"csv/k-serial={k_exit.store_id}-k={k_exit.k.k_inv_Mpc:.5g}/z-serial={z_source.store_id}-zsource={z_source.z:.5g}.csv"
+        )
+        csv_path.parents[0].mkdir(exist_ok=True, parents=True)
+        df = pd.DataFrame.from_dict(
+            {
+                "redshift": z_column,
+                "G": G_column,
+                "abs_G": abs_G_column,
+                "analytic_G": analytic_G_column,
+                "abs_analytic_G": abs_analytic_G_column,
+                "type": type_column,
+            }
+        )
+        df.to_csv(csv_path, header=True, index=False)
 
     work_refs = [
         plot_Gk.remote(Gk_numerical, Gk_WKB) for Gk_numerical, Gk_WKB in work_items
