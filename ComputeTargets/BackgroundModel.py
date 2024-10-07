@@ -6,7 +6,6 @@ from math import sqrt, fabs, log
 from scipy.integrate import solve_ivp
 from scipy.interpolate import InterpolatedUnivariateSpline
 
-from ComputeTargets.GkNumericalIntegration import EXPECTED_SOL_LENGTH
 from ComputeTargets.integration_metadata import IntegrationSolver
 from ComputeTargets.integration_supervisor import RHS_timer, IntegrationSupervisor
 from CosmologyConcepts import redshift_array, redshift
