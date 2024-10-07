@@ -1,3 +1,4 @@
+from collections import namedtuple
 from typing import Optional, List
 
 from ComputeTargets import BackgroundModel
@@ -5,6 +6,9 @@ from CosmologyConcepts import wavenumber_exit_time, redshift, wavenumber, redshi
 from Datastore import DatastoreObject
 from MetadataConcepts import store_tag
 from utilities import check_units
+
+NumericData = namedtuple("NumericData", ["G", "Gprime"])
+WKBData = namedtuple("WKBData", ["theta", "H_ratio", "sin_coeff", "cos_coeff", "G_WKB"])
 
 
 class GkSource(DatastoreObject):
@@ -116,9 +120,9 @@ class GkSourceValue(DatastoreObject):
             )
 
         if has_numeric:
-            self.type = "numeric"
+            self._source = "numeric"
         else:
-            self.type = "WKB"
+            self._source = "WKB"
 
         self._G = G
         self._Gprime = Gprime
@@ -130,3 +134,27 @@ class GkSourceValue(DatastoreObject):
         self._G_WKB = G_WKB
 
         self._omega_WKB = omega_WKB_sq
+
+        self._numeric_data = NumericData(
+            G=self._G,
+            Gprime=self._Gprime,
+        )
+
+        self._WKB_data = WKBData(
+            theta=self._theta,
+            H_ratio=self._H_ratio,
+            sin_coeff=self._sin_coeff,
+            cos_coeff=self._cos_coeff,
+            G_WKB=self._G_WKB,
+        )
+
+    @property
+    def source(self):
+        return self._source
+
+    @property
+    def numeric(self):
+        if self._source != "numeric":
+            raise RuntimeError(
+                "GkSourceValue: attempt to read numeric data, but this value is not of numeric type"
+            )
