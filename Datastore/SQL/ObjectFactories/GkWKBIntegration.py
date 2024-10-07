@@ -597,19 +597,38 @@ class sqla_GkWKBValue_factory(SQLAFactoryBase):
 
     @staticmethod
     def build(payload, conn, table, inserter, tables, inserters):
-        wkb_serial = payload["wkb_serial"]
-        z = payload["z"]
-        H_ratio = payload["H_ratio"]
+        z: redshift = payload["z"]
 
-        theta = payload["theta"]
-        omega_WKB_sq = payload.get("omega_WKB_sq", None)
-        G_WKB = payload.get("G_WKB", None)
+        wkb_serial: Optional[int] = payload.get("wkb_serial", None)
 
-        analytic_G = payload.get("analytic_G", None)
-        analytic_Gprime = payload.get("analytic_Gprime", None)
+        H_ratio: Optional[float] = payload.get("H_ratio", None)
+        theta: Optional[float] = payload.get("theta", None)
+        omega_WKB_sq: Optional[float] = payload.get("omega_WKB_sq", None)
+        G_WKB: Optional[float] = payload.get("G_WKB", None)
+        has_data = all(
+            [
+                H_ratio is not None,
+                theta is not None,
+                omega_WKB_sq is not None,
+                G_WKB is not None,
+            ]
+        )
+
+        analytic_G: Optional[float] = payload.get("analytic_G", None)
+        analytic_Gprime: Optional[float] = payload.get("analytic_Gprime", None)
+
+        model: Optional[BackgroundModel] = payload.get("model", None)
+        atol: Optional[tolerance] = payload.get("atol", None)
+        rtol: Optional[tolerance] = payload.get("rtol", None)
+        tags: Optional[List[store_tag]] = payload.get("tags", None)
+
+        WKB_table = tables["GkWKBIntegration"]
+        atol_table = tables["tolerance"].alias("atol")
+        rtol_table = tables["tolerance"].alias("rtol")
+        tag_table = tables["GkWKB_tags"]
 
         try:
-            row_data = conn.execute(
+            query = (
                 sqla.select(
                     table.c.serial,
                     table.c.H_ratio,
@@ -618,11 +637,44 @@ class sqla_GkWKBValue_factory(SQLAFactoryBase):
                     table.c.G_WKB,
                     table.c.analytic_G,
                     table.c.analytic_Gprime,
-                ).filter(
-                    table.c.wkb_serial == wkb_serial,
+                )
+                .select_from(
+                    table.join(WKB_table, WKB_table.c.serial == table.c.wkb_serial)
+                    .join(atol_table, atol_table.c.serial == atol_table.c.serial)
+                    .join(rtol_table, rtol_table.c.serial == rtol_table.c.serial)
+                )
+                .filter(
                     table.c.z_serial == z.store_id,
                 )
-            ).one_or_none()
+            )
+
+            if wkb_serial is not None:
+                query = query.filter(table.c.wkb_serial == wkb_serial)
+
+            if model is not None:
+                query = query.filter(WKB_table.c.model_serial == model.store_id)
+
+                # require that the integration we search for has the specified list of tags
+                count = 0
+                for tag in tags:
+                    tag: store_tag
+                    tab = tag_table.alias(f"tag_{count}")
+                    count += 1
+                    query = query.join(
+                        tab,
+                        and_(
+                            tab.c.integration_serial == model.store_id,
+                            tab.c.tag_serial == tag.store_id,
+                        ),
+                    )
+
+            if atol is not None:
+                query = query.filter(atol_table.c.serial == atol.store_id)
+
+            if rtol is not None:
+                query = query.filter(rtol_table.c.serial == rtol.store_id)
+
+            row_data = conn.execute(query).one_or_none()
         except MultipleResultsFound as e:
             print(
                 f"!! Database error: multiple results found when querying for GkWKBValue"
@@ -630,19 +682,21 @@ class sqla_GkWKBValue_factory(SQLAFactoryBase):
             raise e
 
         if row_data is None:
-            store_id = inserter(
-                conn,
-                {
-                    "wkb_serial": wkb_serial,
-                    "z_serial": z.store_id,
-                    "H_ratio": H_ratio,
-                    "theta": theta,
-                    "omega_WKB_sq": omega_WKB_sq,
-                    "G_WKB": G_WKB,
-                    "analytic_G": analytic_G,
-                    "analytic_Gprime": analytic_Gprime,
-                },
-            )
+            store_id is None
+            if has_data:
+                store_id = inserter(
+                    conn,
+                    {
+                        "wkb_serial": wkb_serial,
+                        "z_serial": z.store_id,
+                        "H_ratio": H_ratio,
+                        "theta": theta,
+                        "omega_WKB_sq": omega_WKB_sq,
+                        "G_WKB": G_WKB,
+                        "analytic_G": analytic_G,
+                        "analytic_Gprime": analytic_Gprime,
+                    },
+                )
         else:
             store_id = row_data.serial
             omega_WKB_sq = row_data.omega_WKB_sq
@@ -650,14 +704,25 @@ class sqla_GkWKBValue_factory(SQLAFactoryBase):
             analytic_G = row_data.analytic_G
             analytic_Gprime = row_data.analytic_Gprime
 
-            if fabs(row_data.H_ratio - H_ratio) > DEFAULT_FLOAT_PRECISION:
+            # we choose H_ratio and theta to test because these are the critical data to reconstruct
+            # G_WKB; everything else, such as omega_WKB_sq, is optional
+            if (
+                H_ratio is not None
+                and fabs(row_data.H_ratio - H_ratio) > DEFAULT_FLOAT_PRECISION
+            ):
                 raise ValueError(
                     f"Stored WKB tensor Green function H_ratio ratio (WKB store_id={wkb_serial}, z={z.store_id}) = {row_data.H_ratio} differs from expected value = {H_ratio}"
                 )
-            if fabs(row_data.theta - theta) > DEFAULT_FLOAT_PRECISION:
+            if (
+                theta is not None
+                and fabs(row_data.theta - theta) > DEFAULT_FLOAT_PRECISION
+            ):
                 raise ValueError(
                     f"Stored WKB tensor Green function phase (WKB store_id={wkb_serial}, z={z.store_id}) = {row_data.theta} differs from expected value = {theta}"
                 )
+
+            H_ratio = row_data.H_ratio
+            theta = row_data.theta
 
         return GkWKBValue(
             store_id=store_id,

@@ -600,18 +600,31 @@ class sqla_GkNumericalValue_factory(SQLAFactoryBase):
 
     @staticmethod
     def build(payload, conn, table, inserter, tables, inserters):
-        integration_serial = payload["integration_serial"]
         z = payload["z"]
-        G = payload["G"]
-        Gprime = payload["Gprime"]
 
-        analytic_G = payload.get("analytic_G", None)
-        analytic_Gprime = payload.get("analytic_Gprime", None)
+        integration_serial = payload.get("integration_serial", None)
 
-        omega_WKB_sq = payload.get("omega_WKB_sq", None)
+        G: Optional[float] = payload.get("G", None)
+        Gprime: Optional[float] = payload.get("Gprime", None)
+        has_data = all([G is not None, Gprime is not None])
+
+        analytic_G: Optional[float] = payload.get("analytic_G", None)
+        analytic_Gprime: Optional[float] = payload.get("analytic_Gprime", None)
+
+        omega_WKB_sq: Optional[float] = payload.get("omega_WKB_sq", None)
+
+        model: Optional[BackgroundModel] = payload.get("model", None)
+        atol: Optional[tolerance] = payload.get("atol", None)
+        rtol: Optional[tolerance] = payload.get("rtol", None)
+        tags: Optional[List[store_tag]] = payload.get("tags", None)
+
+        integration_table = tables["GkNumericalIntegration"]
+        atol_table = tables["tolerance"].alias("atol")
+        rtol_table = tables["tolerance"].alias("rtol")
+        tag_table = tables["GkNumerical_tags"]
 
         try:
-            row_data = conn.execute(
+            query = (
                 sqla.select(
                     table.c.serial,
                     table.c.G,
@@ -619,11 +632,47 @@ class sqla_GkNumericalValue_factory(SQLAFactoryBase):
                     table.c.analytic_G,
                     table.c.analytic_Gprime,
                     table.c.omega_WKB_sq,
-                ).filter(
-                    table.c.integration_serial == integration_serial,
+                )
+                .select_from(
+                    table.join(
+                        integration_table,
+                        integration_table.c.serial == table.c.integration_serial,
+                    )
+                    .join(atol_table, atol_table.c.serial == table.c.atol_serial)
+                    .join(rtol_table, rtol_table.c.serial == table.c.rtol_serial)
+                )
+                .filter(
                     table.c.z_serial == z.store_id,
                 )
-            ).one_or_none()
+            )
+
+            if integration_serial is not None:
+                query = query.filter(table.c.integration_serial == integration_serial)
+
+            if model is not None:
+                query = query.filter(integration_table.c.model_serial == model.store_id)
+
+                # require that the integration we search for has the specified list of tags
+                count = 0
+                for tag in tags:
+                    tag: store_tag
+                    tab = tag_table.alias(f"tag_{count}")
+                    count += 1
+                    query = query.join(
+                        tab,
+                        and_(
+                            tab.c.integration_serial == model.store_id,
+                            tab.c.tag_serial == tag.store_id,
+                        ),
+                    )
+
+            if atol is not None:
+                query = query.filter(atol_table.c.serial == atol.store_id)
+
+            if rtol is not None:
+                query = query.filter(rtol_table.c.serial == rtol.store_id)
+
+            row_data = conn.execute(query).one_or_none()
         except MultipleResultsFound as e:
             print(
                 f"!! Database error: multiple results found when querying for GkNumericalValue"
@@ -631,32 +680,40 @@ class sqla_GkNumericalValue_factory(SQLAFactoryBase):
             raise e
 
         if row_data is None:
-            store_id = inserter(
-                conn,
-                {
-                    "integration_serial": integration_serial,
-                    "z_serial": z.store_id,
-                    "G": G,
-                    "Gprime": Gprime,
-                    "analytic_G": analytic_G,
-                    "analytic_Gprime": analytic_Gprime,
-                    "omega_WKB_sq": omega_WKB_sq,
-                },
-            )
+            store_id = None
+            if has_data:
+                store_id = inserter(
+                    conn,
+                    {
+                        "integration_serial": integration_serial,
+                        "z_serial": z.store_id,
+                        "G": G,
+                        "Gprime": Gprime,
+                        "analytic_G": analytic_G,
+                        "analytic_Gprime": analytic_Gprime,
+                        "omega_WKB_sq": omega_WKB_sq,
+                    },
+                )
         else:
             store_id = row_data.serial
             analytic_G = row_data.analytic_G
             analytic_Gprime = row_data.analytic_Gprime
             omega_WKB_sq = row_data.omega_WKB_sq
 
-            if fabs(row_data.G - G) > DEFAULT_FLOAT_PRECISION:
+            if G is not None and fabs(row_data.G - G) > DEFAULT_FLOAT_PRECISION:
                 raise ValueError(
                     f"Stored tensor Green function value (integration={integration_serial}, z={z.store_id}) = {row_data.G} differs from expected value = {G}"
                 )
-            if fabs(row_data.Gprime - Gprime) > DEFAULT_FLOAT_PRECISION:
+            if (
+                Gprime is not None
+                and fabs(row_data.Gprime - Gprime) > DEFAULT_FLOAT_PRECISION
+            ):
                 raise ValueError(
                     f"Stored tensor Green function derivative (integration={integration_serial}, z={z.store_id}) = {row_data.Gprime} differs from expected value = {Gprime}"
                 )
+
+            G = row_data.G
+            Gprime = row_data.Gprime
 
         return GkNumericalValue(
             store_id=store_id,
