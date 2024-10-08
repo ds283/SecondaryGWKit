@@ -182,8 +182,9 @@ class RayWorkPool:
                     count += 1
 
             # wait for some work to complete
+            num_returns = min(self._process_batch_size, len(self._inflight))
             done_refs, _ = ray.wait(
-                list(self._inflight.values()), num_returns=self._process_batch_size
+                list(self._inflight.values()), num_returns=num_returns
             )
 
             for ref in done_refs:
