@@ -415,6 +415,7 @@ with ShardedPool(
         store_results=False,
         create_batch_size=5,
         notify_batch_size=2000,
+        process_batch_size=20,
     )
     # Gk_numerical_queue.run()
 
@@ -550,6 +551,7 @@ with ShardedPool(
         store_results=False,
         create_batch_size=5,
         notify_batch_size=2000,
+        process_batch_size=20,
     )
     # Gk_WKB_queue.run()
 
@@ -656,5 +658,6 @@ with ShardedPool(
         store_results=False,
         create_batch_size=5,
         notify_batch_size=2000,
+        process_batch_size=20,
     )
     GkSource_queue.run()
