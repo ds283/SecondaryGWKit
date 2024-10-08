@@ -400,5 +400,5 @@ class RayWorkPool:
             print(f"      Queue summary: {self._build_completed_status_message()}")
             if self._num_compute_complete == 0:
                 print(
-                    "      (no compute items were evaluated - all assets were found in the datastore)"
+                    "      (no compute items were evaluated - all assets read from datastore)"
                 )
