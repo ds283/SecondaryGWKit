@@ -79,6 +79,30 @@ parser.add_argument(
     help="specify number of z-sample points per log10(z)",
 )
 parser.add_argument(
+    "--transfer-queue",
+    action=argparse.BooleanOptionalAction,
+    default=True,
+    help="run the transfer function work queue",
+)
+parser.add_argument(
+    "--numerical-queue",
+    action=argparse.BooleanOptionalAction,
+    default=True,
+    help="run the GkNumerical work queue",
+)
+parser.add_argument(
+    "--WKB-queue",
+    default=True,
+    action=argparse.BooleanOptionalAction,
+    help="run the GkWKB work queue",
+)
+parser.add_argument(
+    "--source-queue",
+    action=argparse.BooleanOptionalAction,
+    default=True,
+    help="run the GkSource builder work queue",
+)
+parser.add_argument(
     "--zend",
     type=float,
     default=DEFAULT_ZEND,
@@ -296,64 +320,65 @@ with ShardedPool(
     def post_Tk_work(Tk: TkNumericalIntegration):
         return ray.put(Tk)
 
-    Tk_queue = RayWorkPool(
-        pool,
-        k_exit_times,
-        task_builder=build_Tk_work,
-        validation_handler=validate_Tk_work,
-        post_handler=post_Tk_work,
-        label_builder=build_Tk_work_label,
-        title="CALCULATE MATTER TRANSFER FUNCTIONS",
-        store_results=True,
-    )
-    Tk_queue.run()
-    Tks = Tk_queue.results
+    if args.transfer_queue:
+        Tk_queue = RayWorkPool(
+            pool,
+            k_exit_times,
+            task_builder=build_Tk_work,
+            validation_handler=validate_Tk_work,
+            post_handler=post_Tk_work,
+            label_builder=build_Tk_work_label,
+            title="CALCULATE MATTER TRANSFER FUNCTIONS",
+            store_results=True,
+        )
+        Tk_queue.run()
+        Tks = Tk_queue.results
 
-    tensor_source_grid = list(
-        itertools.combinations_with_replacement(range(len(Tks)), 2)
-    )
-
-    def build_tensor_source_work(grid_idx):
-        idx_i, idx_j = grid_idx
-
-        q = k_sample[idx_i]
-        Tq = Tks[idx_i]
-        Tr = Tks[idx_j]
-
-        # q is not used by the TensorSource constructor, but is accepted because it functions as the shard key
-        return pool.object_get(
-            TensorSource,
-            z_sample=z_sample,
-            q=q,
-            Tq=Tq,
-            Tr=Tr,
-            tags=[
-                TkProductionTag,
-                GlobalZGridTag,
-                OutsideHorizonEfoldsTag,
-                LargestZTag,
-                SamplesPerLog10ZTag,
-            ],
+        tensor_source_grid = list(
+            itertools.combinations_with_replacement(range(len(Tks)), 2)
         )
 
-    def validate_tensor_source_work(calc: TensorSource):
-        return pool.object_validate(calc)
+        def build_tensor_source_work(grid_idx):
+            idx_i, idx_j = grid_idx
 
-    def build_tensor_source_work_label(calc: TensorSource):
-        q = calc.q
-        r = calc.r
-        return f"{args.job_name}-tensor-src-q{q.k_inv_Mpc:.3g}-r{r.k_inv_Mpc:.3g}-{datetime.now().replace(microsecond=0).isoformat()}"
+            q = k_sample[idx_i]
+            Tq = Tks[idx_i]
+            Tr = Tks[idx_j]
 
-    TensorSource_queue = RayWorkPool(
-        pool,
-        tensor_source_grid,
-        task_builder=build_tensor_source_work,
-        validation_handler=validate_tensor_source_work,
-        label_builder=build_tensor_source_work_label,
-        title="CALCULATE TENSOR SOURCE TERMS",
-        store_results=False,
-    )
-    TensorSource_queue.run()
+            # q is not used by the TensorSource constructor, but is accepted because it functions as the shard key
+            return pool.object_get(
+                TensorSource,
+                z_sample=z_sample,
+                q=q,
+                Tq=Tq,
+                Tr=Tr,
+                tags=[
+                    TkProductionTag,
+                    GlobalZGridTag,
+                    OutsideHorizonEfoldsTag,
+                    LargestZTag,
+                    SamplesPerLog10ZTag,
+                ],
+            )
+
+        def validate_tensor_source_work(calc: TensorSource):
+            return pool.object_validate(calc)
+
+        def build_tensor_source_work_label(calc: TensorSource):
+            q = calc.q
+            r = calc.r
+            return f"{args.job_name}-tensor-src-q{q.k_inv_Mpc:.3g}-r{r.k_inv_Mpc:.3g}-{datetime.now().replace(microsecond=0).isoformat()}"
+
+        TensorSource_queue = RayWorkPool(
+            pool,
+            tensor_source_grid,
+            task_builder=build_tensor_source_work,
+            validation_handler=validate_tensor_source_work,
+            label_builder=build_tensor_source_work_label,
+            title="CALCULATE TENSOR SOURCE TERMS",
+            store_results=False,
+        )
+        TensorSource_queue.run()
 
     ## STEP 3
     ## COMPUTE TENSOR GREEN'S FUNCTIONS NUMERICALLY FOR RESPONSE TIMES NOT TOO FAR INSIDE THE HORIZON
@@ -405,19 +430,20 @@ with ShardedPool(
     def validate_Gk_numerical_work(Gk: GkNumericalIntegration):
         return pool.object_validate(Gk)
 
-    Gk_numerical_queue = RayWorkPool(
-        pool,
-        z_sample,
-        task_builder=build_Gk_numerical_work,
-        validation_handler=validate_Gk_numerical_work,
-        label_builder=build_Gk_numerical_work_label,
-        title="CALCULATE NUMERICAL PART OF TENSOR GREEN FUNCTIONS",
-        store_results=False,
-        create_batch_size=5,
-        notify_batch_size=2000,
-        process_batch_size=20,
-    )
-    # Gk_numerical_queue.run()
+    if args.numerical_queue:
+        Gk_numerical_queue = RayWorkPool(
+            pool,
+            z_sample,
+            task_builder=build_Gk_numerical_work,
+            validation_handler=validate_Gk_numerical_work,
+            label_builder=build_Gk_numerical_work_label,
+            title="CALCULATE NUMERICAL PART OF TENSOR GREEN FUNCTIONS",
+            store_results=False,
+            create_batch_size=5,
+            notify_batch_size=2000,
+            process_batch_size=50,
+        )
+        Gk_numerical_queue.run()
 
     ## STEP 4
     ## COMPUTE TENSOR GREEN'S FUNCTIONS IN THE WKB APPROXIMATION FOR RESPONSE TIMES INSIDE THE HORIZON
@@ -541,19 +567,20 @@ with ShardedPool(
     def validate_Gk_WKB_work(Gk: GkWKBIntegration):
         return pool.object_validate(Gk)
 
-    Gk_WKB_queue = RayWorkPool(
-        pool,
-        z_sample,
-        task_builder=build_Gk_WKB_work,
-        validation_handler=validate_Gk_WKB_work,
-        label_builder=build_Gk_WKB_work_label,
-        title="CALCULATE WKB PART OF TENSOR GREEN FUNCTIONS",
-        store_results=False,
-        create_batch_size=5,
-        notify_batch_size=2000,
-        process_batch_size=20,
-    )
-    # Gk_WKB_queue.run()
+    if args.WKB_queue:
+        Gk_WKB_queue = RayWorkPool(
+            pool,
+            z_sample,
+            task_builder=build_Gk_WKB_work,
+            validation_handler=validate_Gk_WKB_work,
+            label_builder=build_Gk_WKB_work_label,
+            title="CALCULATE WKB PART OF TENSOR GREEN FUNCTIONS",
+            store_results=False,
+            create_batch_size=5,
+            notify_batch_size=2000,
+            process_batch_size=50,
+        )
+        Gk_WKB_queue.run()
 
     # STEP 5
     # REBUILD TENSOR GREEN'S FUNCTIONS AS FUNCTIONS OF THE SOURCE REDSHIFT, RATHER THAN THE RESPONSE REDSHIFT
@@ -562,14 +589,6 @@ with ShardedPool(
     # strictly, redundant. But it is likely much faster because we need to perform complicated table lookups with joins in order to build
     # these directly from GkNumericalValue and GkWKValue rows. Also, there is the reproducibility angle of keeping a record of what
     # rebuilt data products we used.)
-
-    # there is a lot of work to do!
-    # For each wavenumber in the k-sample (here k_exit_times), and each value of r_response,
-    # we need to build the Green's function for all possible values of z_source.
-
-    # we could set all this up insider the task builder, but to prevent spawning too many Ray tasks in one
-    # go, it seems preferable to break down the problem a bit more
-    GkSource_work_items = itertools.product(z_sample, k_exit_times)
 
     def build_GkSource_work(item):
         z_response, k_exit = item
@@ -648,16 +667,25 @@ with ShardedPool(
     def validate_GkSource_work(Gk: GkSource):
         return pool.object_validate(Gk)
 
-    GkSource_queue = RayWorkPool(
-        pool,
-        GkSource_work_items,
-        task_builder=build_GkSource_work,
-        validation_handler=validate_GkSource_work,
-        label_builder=build_GkSource_work_label,
-        title="REBUILD GREENS FUNCTIONS FOR SOURCE REDSHIFT",
-        store_results=False,
-        create_batch_size=5,
-        notify_batch_size=2000,
-        process_batch_size=20,
-    )
-    GkSource_queue.run()
+    if args.source_queue:
+        # there is a lot of work to do!
+        # For each wavenumber in the k-sample (here k_exit_times), and each value of r_response,
+        # we need to build the Green's function for all possible values of z_source.
+
+        # we could set all this up insider the task builder, but to prevent spawning too many Ray tasks in one
+        # go, it seems preferable to break down the problem a bit more
+        GkSource_work_items = itertools.product(z_sample, k_exit_times)
+
+        GkSource_queue = RayWorkPool(
+            pool,
+            GkSource_work_items,
+            task_builder=build_GkSource_work,
+            validation_handler=validate_GkSource_work,
+            label_builder=build_GkSource_work_label,
+            title="REBUILD GREENS FUNCTIONS FOR SOURCE REDSHIFT",
+            store_results=False,
+            create_batch_size=5,
+            notify_batch_size=2000,
+            process_batch_size=50,
+        )
+        GkSource_queue.run()
