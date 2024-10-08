@@ -55,6 +55,7 @@ class ShardedPool:
         shards=10,
         profile_db: Optional[PathType] = None,
         job_name: Optional[str] = None,
+        prune_unvalidated: Optional[bool] = False,
     ):
         """
         Initialize a pool of datastore actors
@@ -62,6 +63,8 @@ class ShardedPool:
         """
         self._job_name = job_name
         self._version_label = version_label
+
+        self._prune_unvalidated = prune_unvalidated
 
         self._db_name = db_name
         self._timeout = timeout
@@ -155,6 +158,7 @@ class ShardedPool:
             my_name=f"shard{shard0_key:04d}-store",
             serial_broker=self._broker,
             profile_agent=self._profile_agent,
+            prune_unvalidated=self._prune_unvalidated,
         )
         self._shards = {shard0_key: shard0_store}
 
@@ -174,6 +178,7 @@ class ShardedPool:
                     my_name=f"shard{key:04d}-store",
                     serial_broker=self._broker,
                     profile_agent=self._profile_agent,
+                    prune_unvalidated=self._prune_unvalidated,
                 )
                 for key in shard_ids
             }

@@ -107,12 +107,15 @@ class Datastore:
         my_name: Optional[str] = None,
         serial_broker: Optional[ActorHandle] = None,
         profile_agent: Optional[ActorHandle] = None,
+        prune_unvalidated: Optional[bool] = False,
     ):
         """
         Initialize an SQL datastore object
         """
         self._timeout = timeout
         self._my_name = my_name
+
+        self._prune_unvalidated = prune_unvalidated
 
         profile_label = my_name if my_name else "anonymous-Datastore"
         self._profile_batcher = ProfileBatcher(profile_agent, profile_label)
@@ -343,7 +346,9 @@ class Datastore:
                 tab = record["table"]
 
                 with self._engine.begin() as conn:
-                    msgs = factory.validate_on_startup(conn, tab, self._tables)
+                    msgs = factory.validate_on_startup(
+                        conn, tab, self._tables, self._prune_unvalidated
+                    )
 
                 if len(msgs) == 0:
                     continue

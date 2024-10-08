@@ -109,6 +109,12 @@ parser.add_argument(
     help="specify final redshift",
 )
 parser.add_argument(
+    "--prune-unvalidated",
+    action=argparse.BooleanOptionalAction,
+    default=True,
+    help="prune unvalidated data from the datastore during startup",
+)
+parser.add_argument(
     "--ray-address",
     default=DEFAULT_RAY_ADDRESS,
     type=str,
@@ -134,6 +140,7 @@ with ShardedPool(
     shards=args.shards,
     profile_db=args.profile_db,
     job_name=args.job_name,
+    prune_unvalidated=args.prune_unvalidated,
 ) as pool:
 
     # set up LambdaCDM object representing a basic Planck2018 cosmology in Mpc units
@@ -382,8 +389,6 @@ with ShardedPool(
 
     ## STEP 3
     ## COMPUTE TENSOR GREEN'S FUNCTIONS NUMERICALLY FOR RESPONSE TIMES NOT TOO FAR INSIDE THE HORIZON
-
-    G_LATEST_RESPONSE_Z = 0.5
 
     def build_Gk_numerical_work(z_source: redshift):
         work_refs = []

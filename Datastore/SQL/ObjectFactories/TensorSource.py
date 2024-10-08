@@ -3,7 +3,7 @@ from typing import Optional, List
 import sqlalchemy as sqla
 from math import fabs
 from sqlalchemy import and_, or_
-from sqlalchemy.exc import MultipleResultsFound
+from sqlalchemy.exc import MultipleResultsFound, SQLAlchemyError
 
 from ComputeTargets import TkNumericalIntegration
 from ComputeTargets.TensorSource import TensorSource, TensorSourceValue
@@ -319,7 +319,7 @@ class sqla_TensorSource_factory(SQLAFactoryBase):
         return validated
 
     @staticmethod
-    def validate_on_startup(conn, table, tables):
+    def validate_on_startup(conn, table, tables, prune=False):
         # query the datastore for any tensor source computations that are not validated
 
         Tq_table = tables["TkNumericalIntegration"].alias("Tq")
@@ -365,6 +365,27 @@ class sqla_TensorSource_factory(SQLAFactoryBase):
             msgs.append(
                 f"          contains {rows} z-sample values | expected={calc.z_samples}"
             )
+
+        if prune:
+            invalid_serials = [nv.serial for nv in not_validated]
+            try:
+                conn.execute(
+                    sqla.delete(value_table).where(
+                        value_table.c.parent_serial.in_(invalid_serials)
+                    )
+                )
+                conn.execute(
+                    sqla.delete(table).where(table.c.serial.in_(invalid_serials))
+                )
+            except SQLAlchemyError:
+                msgs.append(
+                    f"!!        DATABASE ERROR encountered when pruning these values"
+                )
+                pass
+            else:
+                msgs.append(
+                    f"     ** Note: these values have been pruned from the datastore."
+                )
 
         return msgs
 

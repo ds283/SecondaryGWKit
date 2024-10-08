@@ -24,5 +24,5 @@ class SQLAFactoryBase(ABC):
 
     @staticmethod
     @abstractmethod
-    def validate_on_startup(conn, table, tables):
+    def validate_on_startup(conn, table, tables, prune=False):
         raise NotImplementedError

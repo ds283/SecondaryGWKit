@@ -2,7 +2,7 @@ from typing import Optional, List
 
 import sqlalchemy as sqla
 from sqlalchemy import and_, or_
-from sqlalchemy.exc import MultipleResultsFound
+from sqlalchemy.exc import MultipleResultsFound, SQLAlchemyError
 
 from ComputeTargets import (
     GkWKBIntegration,
@@ -403,7 +403,7 @@ class sqla_GkSource_factory(SQLAFactoryBase):
         return validated
 
     @staticmethod
-    def validate_on_startup(conn, table, tables):
+    def validate_on_startup(conn, table, tables, prune=False):
         # query the datastore for any GkSource objects that are not validated
 
         atol_table = tables["tolerance"].alias("atol")
@@ -467,6 +467,27 @@ class sqla_GkSource_factory(SQLAFactoryBase):
             msgs.append(
                 f"          contains {rows} z-sample values | expected={obj.z_samples}"
             )
+
+        if prune:
+            invalid_serials = [nv.serial for nv in not_validated]
+            try:
+                conn.execute(
+                    sqla.delete(value_table).where(
+                        value_table.c.parent_serial.in_(invalid_serials)
+                    )
+                )
+                conn.execute(
+                    sqla.delete(table).where(table.c.serial.in_(invalid_serials))
+                )
+            except SQLAlchemyError:
+                msgs.append(
+                    f"!!        DATABASE ERROR encountered when pruning these values"
+                )
+                pass
+            else:
+                msgs.append(
+                    f"     ** Note: these values have been pruned from the datastore."
+                )
 
         return msgs
 
