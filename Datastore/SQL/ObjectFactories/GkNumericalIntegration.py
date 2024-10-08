@@ -669,6 +669,7 @@ class sqla_GkNumericalValue_factory(SQLAFactoryBase):
                 )
                 .filter(
                     table.c.z_serial == z.store_id,
+                    integration_table.c.validated == True,
                 )
             )
 

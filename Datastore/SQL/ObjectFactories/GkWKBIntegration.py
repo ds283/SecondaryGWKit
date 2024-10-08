@@ -672,6 +672,7 @@ class sqla_GkWKBValue_factory(SQLAFactoryBase):
                 )
                 .filter(
                     table.c.z_serial == z.store_id,
+                    WKB_table.c.validated == True,
                 )
             )
 
