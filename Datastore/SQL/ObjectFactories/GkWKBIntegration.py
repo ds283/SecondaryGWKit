@@ -686,7 +686,7 @@ class sqla_GkWKBValue_factory(SQLAFactoryBase):
                     query = query.join(
                         tab,
                         and_(
-                            tab.c.wkb_serial == model.store_id,
+                            tab.c.wkb_serial == WKB_table.c.serial,
                             tab.c.tag_serial == tag.store_id,
                         ),
                     )

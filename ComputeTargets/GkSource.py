@@ -2,6 +2,7 @@ from collections import namedtuple
 from typing import Optional, List
 
 import ray
+from math import fabs
 
 from ComputeTargets.BackgroundModel import BackgroundModel
 from ComputeTargets.GkNumericalIntegration import GkNumericalValue
@@ -9,6 +10,7 @@ from ComputeTargets.GkWKBIntegration import GkWKBValue
 from CosmologyConcepts import wavenumber_exit_time, redshift, wavenumber, redshift_array
 from Datastore import DatastoreObject
 from MetadataConcepts import store_tag, tolerance
+from defaults import DEFAULT_ABS_TOLERANCE
 from utilities import check_units
 
 NumericData = namedtuple("NumericData", ["G", "Gprime"])
@@ -22,6 +24,25 @@ def marshal_values(z_sample: redshift_array, numeric_data, WKB_data):
     for z_source in z_sample:
         numeric: GkNumericalValue = numeric_data.get(z_source.store_id, None)
         WKB: GkWKBValue = WKB_data.get(z_source.store_id, None)
+
+        if numeric is None and WKB is None:
+            raise RuntimeError(
+                f"marshal_values: no data supplied for source redshift z={z_source.z:.5g}"
+            )
+
+        if numeric is not None and WKB is not None:
+            if fabs(numeric.analytic_G - WKB.analytic_G) > DEFAULT_ABS_TOLERANCE:
+                raise RuntimeError(
+                    "marshal_values: analytic G values unexpectedly differ by a large amount"
+                )
+
+            if (
+                fabs(numeric.analytic_Gprime - WKB.analytic_Gprime)
+                > DEFAULT_ABS_TOLERANCE
+            ):
+                raise RuntimeError(
+                    "marshal_values: analytic G values unexpectedly differ by a large amount"
+                )
 
         values.append(
             GkSourceValue(

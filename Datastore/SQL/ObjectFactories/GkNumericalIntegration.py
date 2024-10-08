@@ -683,7 +683,7 @@ class sqla_GkNumericalValue_factory(SQLAFactoryBase):
                     query = query.join(
                         tab,
                         and_(
-                            tab.c.integration_serial == model.store_id,
+                            tab.c.integration_serial == integration_table.c.serial,
                             tab.c.tag_serial == tag.store_id,
                         ),
                     )

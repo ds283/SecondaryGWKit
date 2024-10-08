@@ -367,9 +367,9 @@ with ShardedPool(
             # find redshift where this k-mode is at least 3 efolds inside the horizon
             # we won't calculate numerical Green's functions with the response redshift later than this, because
             # the oscillations become rapid, and we are better switching to a WKB approximation
-            if z_source.z > k_exit.z_exit_subh_e3:
+            if z_source.z > k_exit.z_exit_subh_e3 - DEFAULT_FLOAT_PRECISION:
                 # cut down response zs to those that are (1) later than the source, and (2) earlier than the 5-efolds-inside-the-horizon point
-                # (with a 10% tolerance)
+                # (here with a 10% tolerance)
                 response_zs = z_sample.truncate(z_source, keep="lower").truncate(
                     0.9 * k_exit.z_exit_subh_e5, keep="higher"
                 )
@@ -464,7 +464,7 @@ with ShardedPool(
                 max_response = min(k_exit.z_exit_subh_e3, z_init)
                 response_zs = response_pool.truncate(max_response, keep="lower")
 
-                if len(response_zs) > 0 and response_zs.max.z > response_zs.min.z:
+                if len(response_zs) > 0:
                     work_refs.append(
                         pool.object_get(
                             GkWKBIntegration,
@@ -490,8 +490,8 @@ with ShardedPool(
             else:
                 # no pre-computed initial condition available.
                 # This is OK and expected if the z_source is sufficiently far after horizon re-entry,
-                # but we should warn if we would have expected an initial condition to have been available
-                if z_source.z > k_exit.z_exit_subh_e3 + DEFAULT_FLOAT_PRECISION:
+                # but we should warn if we expect an initial condition to be available
+                if z_source.z > k_exit.z_exit_subh_e3 - DEFAULT_FLOAT_PRECISION:
                     print(
                         f"!! WARNING: no numerically-computed initial conditions ia available for k={k_exit.k.k_inv_Mpc:.5g}/Mpc, z_source={z_source.z:.5g}"
                     )
@@ -574,7 +574,10 @@ with ShardedPool(
         k_exit: wavenumber_exit_time
         z_response: redshift
 
-        z_source_pool = z_sample.truncate(z_response, keep="higher")
+        z_sources = z_sample.truncate(z_response, keep="higher")
+
+        if len(z_sources) == 0:
+            return []
 
         # build a payload to query any available numerical/WKB data, for each response time
         value_query = [
@@ -593,7 +596,7 @@ with ShardedPool(
                     SamplesPerLog10ZTag,
                 ],
             }
-            for z_source in z_source_pool
+            for z_source in z_sources
         ]
 
         numeric_query = ray.get(
@@ -603,50 +606,39 @@ with ShardedPool(
             pool.object_get(GkWKBValue, payload_data=value_query),
         )
 
-        Gk_numeric_data = {}
-        Gk_WKB_data = {}
+        numeric_data = {
+            z_source.store_id: numeric
+            for z_source, numeric in zip(z_sources, numeric_query)
+            if numeric.available
+        }
+        WKB_data = {
+            z_source.store_id: WKB
+            for z_source, WKB in zip(z_sources, WKB_query)
+            if WKB.available
+        }
 
-        for z_source, numeric_value, WKB_value in zip(
-            z_source_pool, numeric_query, WKB_query
-        ):
-            z_source: redshift
-            numeric_value: GkNumericalValue
-            WKB_value: GkWKBValue
-
-            numeric_available = numeric_value.available
-            WKB_available = WKB_value.available
-
-            if numeric_available:
-                Gk_numeric_data[z_source.store_id] = numeric_value
-
-            if WKB_available:
-                Gk_WKB_data[z_source.store_id] = WKB_value
-
-            if all([not numeric_query, not WKB_available]):
-                print(
-                    f"@@ GkSource task builder: Warning: G_k data missing for k={k_exit.k.k_inv_Mpc:.5g}/Mpc, z_source={z_source.z:.5g}, z_response={z_response.z:.5g}"
-                )
-
-        return pool.object_get(
-            GkSource,
-            payload={
-                "numeric": Gk_numeric_data,
-                "WKB": Gk_WKB_data,
-            },
-            model=model,
-            k=k_exit,
-            atol=atol,
-            rtol=rtol,
-            z_response=z_response,
-            z_sample=z_source_pool,
-            tags=[
-                GkProductionTag,
-                GlobalZGridTag,
-                OutsideHorizonEfoldsTag,
-                LargestZTag,
-                SamplesPerLog10ZTag,
-            ],
-        )
+        return [
+            pool.object_get(
+                GkSource,
+                payload={
+                    "numeric": numeric_data,
+                    "WKB": WKB_data,
+                },
+                model=model,
+                k=k_exit,
+                atol=atol,
+                rtol=rtol,
+                z_response=z_response,
+                z_sample=z_sources,
+                tags=[
+                    GkProductionTag,
+                    GlobalZGridTag,
+                    OutsideHorizonEfoldsTag,
+                    LargestZTag,
+                    SamplesPerLog10ZTag,
+                ],
+            )
+        ]
 
     def build_GkSource_work_label(Gk: GkSource):
         return f"{args.job_name}-GkSource-k{Gk.k.k_inv_Mpc:.3g}-responsez{Gk.z_response.z:.5g}-{datetime.now().replace(microsecond=0).isoformat()}"
