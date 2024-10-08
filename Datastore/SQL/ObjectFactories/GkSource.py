@@ -234,7 +234,7 @@ class sqla_GkSource_factory(SQLAFactoryBase):
             sqla.select(
                 value_table.c.serial,
                 value_table.c.z_source_serial,
-                redshift_table.c.z_source,
+                redshift_table.c.z.label("z_source"),
                 value_table.c.G,
                 value_table.c.Gprime,
                 value_table.c.H_ratio,
