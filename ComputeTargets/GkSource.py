@@ -106,14 +106,24 @@ class GkSource(DatastoreObject):
 
         self._compute_ref = None
 
-        has_data_payload = all(
-            [
-                "numeric" in payload,
-                "WKB" in payload,
-            ]
-        )
+        if payload is not None:
+            self._has_compute_payload = all(
+                [
+                    "numeric" in payload,
+                    "WKB" in payload,
+                ]
+            )
+            self._has_deserialize_payload = all(
+                [
+                    "store_id" in payload,
+                    "values" in payload,
+                ]
+            )
+        else:
+            self._has_compute_payload = False
+            self._has_deserialize_payload = False
 
-        if has_data_payload:
+        if self._has_compute_payload:
             DatastoreObject.__init__(self, None)
 
             self._numeric_data = payload["numeric"]
@@ -121,15 +131,13 @@ class GkSource(DatastoreObject):
 
             self._values = None
 
-        elif "store_id" in payload:
+        elif self._has_deserialize_payload:
             DatastoreObject.__init__(self, payload["store_id"])
-
             self._values = payload["values"]
 
         else:
-            raise RuntimeError(
-                "GkSource: did not find either a data payload or store_id"
-            )
+            DatastoreObject.__init__(self, None)
+            self._values = None
 
         if self._z_sample is not None:
             z_response_float = float(z_response)
@@ -179,6 +187,11 @@ class GkSource(DatastoreObject):
         if self._z_response is None or self._z_sample is None:
             raise RuntimeError(
                 "Object has not been configured correctly for a concrete calculation (z_response or z_sample is missing). It can only represent a query."
+            )
+
+        if not self._has_compute_payload:
+            raise RuntimeError(
+                "Object has not been configured correctly for a concrete calculation (no compute payload was supplied). It can only represent a query."
             )
 
         # replace label if specified
@@ -288,19 +301,19 @@ class GkSourceValue(DatastoreObject):
         return self._z_source
 
     @property
+    def has_numeric(self) -> bool:
+        return self._has_numeric
+
+    @property
     def numeric(self) -> NumericData:
-        if not self._has_numeric:
-            raise RuntimeError(
-                "GkSourceValue: attempt to read numeric data, but they are not available for this sample point"
-            )
         return self._numeric_data
 
     @property
+    def has_WKB(self) -> bool:
+        return self._has_WKB
+
+    @property
     def WKB(self) -> WKBData:
-        if not self._has_WKB:
-            raise RuntimeError(
-                "GkSourceValue: attempt to read WKB data, they are not available for this sample point"
-            )
         return self._WKB_data
 
     @property
