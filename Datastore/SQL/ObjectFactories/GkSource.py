@@ -142,14 +142,13 @@ class sqla_GkSource_factory(SQLAFactoryBase):
         k_exit: wavenumber_exit_time = payload["k"]
         model: BackgroundModel = payload["model"]
         z_sample: redshift_array = payload["z_sample"]
-        z_response: redshift = payload.get("z_source", None)
+        z_response: redshift = payload["z_response"]
 
         payload: Optional[dict] = payload.get("payload", None)
 
         atol_table = tables["tolerance"].alias("atol")
         rtol_table = tables["tolerance"].alias("rtol")
-        solver_table = tables["IntegrationSolver"]
-        tag_table = tables["GkWKB_tags"]
+        tag_table = tables["GkSource_tags"]
         redshift_table = tables["redshift"]
 
         # notice that we query only for validated data
@@ -164,11 +163,10 @@ class sqla_GkSource_factory(SQLAFactoryBase):
                 rtol_table.c.log10_tol.label("log10_rtol"),
             )
             .select_from(
-                table.join(solver_table, solver_table.c.serial == table.c.solver_serial)
-                .join(atol_table, atol_table.c.serial == table.c.atol_serial)
+                table.join(atol_table, atol_table.c.serial == table.c.atol_serial)
                 .join(rtol_table, rtol_table.c.serial == table.c.rtol_serial)
                 .join(
-                    redshift_table, redshift_table.c.serial == table.c.z_source_serial
+                    redshift_table, redshift_table.c.serial == table.c.z_response_serial
                 )
             )
             .filter(

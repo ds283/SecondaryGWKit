@@ -44,7 +44,7 @@ _shard_tables = {
 class ShardedPool:
     """
     ShardedPool manages a pool of datastore actors that cooperate to
-    manage a sharded SQL database
+    form a sharded SQL database
     """
 
     def __init__(

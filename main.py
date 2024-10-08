@@ -416,7 +416,7 @@ with ShardedPool(
         create_batch_size=5,
         notify_batch_size=2000,
     )
-    Gk_numerical_queue.run()
+    # Gk_numerical_queue.run()
 
     ## STEP 4
     ## COMPUTE TENSOR GREEN'S FUNCTIONS IN THE WKB APPROXIMATION FOR RESPONSE TIMES INSIDE THE HORIZON
@@ -551,7 +551,7 @@ with ShardedPool(
         create_batch_size=5,
         notify_batch_size=2000,
     )
-    Gk_WKB_queue.run()
+    # Gk_WKB_queue.run()
 
     # STEP 5
     # REBUILD TENSOR GREEN'S FUNCTIONS AS FUNCTIONS OF THE SOURCE REDSHIFT, RATHER THAN THE RESPONSE REDSHIFT
@@ -567,22 +567,22 @@ with ShardedPool(
 
     # we could set all this up insider the task builder, but to prevent spawning too many Ray tasks in one
     # go, it seems preferable to break down the problem a bit more
-    GkSource_work_items = itertools.product(k_exit_times, z_sample)
+    GkSource_work_items = itertools.product(z_sample, k_exit_times)
 
     def build_GkSource_work(item):
-        k_exit, z_response = item
+        z_response, k_exit = item
         k_exit: wavenumber_exit_time
         z_response: redshift
 
         z_source_pool = z_sample.truncate(z_response, keep="higher")
 
         # build a payload to query any available numerical/WKB data, for each response time
-        value_payload = [
+        value_query = [
             {
                 "model": model,
                 "k": k_exit,
                 "z_source": z_source,
-                "z_response": z_response,
+                "z": z_response,
                 "atol": atol,
                 "rtol": rtol,
                 "tags": [
@@ -596,18 +596,18 @@ with ShardedPool(
             for z_source in z_source_pool
         ]
 
-        numeric_data, WKB_data = ray.get(
-            [
-                pool.object_get(GkNumericalValue, payload_data=value_payload),
-                pool.object_get(GkWKBValue, payload_data=value_payload),
-            ]
+        numeric_query = ray.get(
+            pool.object_get(GkNumericalValue, payload_data=value_query),
+        )
+        WKB_query = ray.get(
+            pool.object_get(GkWKBValue, payload_data=value_query),
         )
 
         Gk_numeric_data = {}
-        GK_WKB_data = {}
+        Gk_WKB_data = {}
 
         for z_source, numeric_value, WKB_value in zip(
-            z_source_pool, numeric_data, WKB_data
+            z_source_pool, numeric_query, WKB_query
         ):
             z_source: redshift
             numeric_value: GkNumericalValue
@@ -617,12 +617,12 @@ with ShardedPool(
             WKB_available = WKB_value.available
 
             if numeric_available:
-                Gk_numeric_data[z_response.store_id] = numeric_value
+                Gk_numeric_data[z_source.store_id] = numeric_value
 
             if WKB_available:
-                GK_WKB_data[z_response.store_id] = WKB_value
+                Gk_WKB_data[z_source.store_id] = WKB_value
 
-            if all([not numeric_data, not WKB_available]):
+            if all([not numeric_query, not WKB_available]):
                 print(
                     f"@@ GkSource task builder: Warning: G_k data missing for k={k_exit.k.k_inv_Mpc:.5g}/Mpc, z_source={z_source.z:.5g}, z_response={z_response.z:.5g}"
                 )
@@ -630,11 +630,13 @@ with ShardedPool(
         return pool.object_get(
             GkSource,
             payload={
-                "numeric_data": numeric_data,
-                "WKB_data": WKB_data,
+                "numeric": Gk_numeric_data,
+                "WKB": Gk_WKB_data,
             },
             model=model,
             k=k_exit,
+            atol=atol,
+            rtol=rtol,
             z_response=z_response,
             z_sample=z_source_pool,
             tags=[
@@ -656,8 +658,8 @@ with ShardedPool(
         pool,
         GkSource_work_items,
         task_builder=build_GkSource_work,
-        validation_handler=None,
-        label_builder=None,
+        validation_handler=validate_GkSource_work,
+        label_builder=build_GkSource_work_label,
         title="REBUILD GREENS FUNCTIONS FOR SOURCE REDSHIFT",
         store_results=False,
         create_batch_size=5,

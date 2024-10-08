@@ -615,6 +615,7 @@ class sqla_GkNumericalValue_factory(SQLAFactoryBase):
 
         model: Optional[BackgroundModel] = payload.get("model", None)
         k: Optional[wavenumber_exit_time] = payload.get("k", None)
+        z_source: Optional[redshift] = payload.get("z_source", None)
 
         atol: Optional[tolerance] = payload.get("atol", None)
         rtol: Optional[tolerance] = payload.get("rtol", None)
@@ -626,16 +627,16 @@ class sqla_GkNumericalValue_factory(SQLAFactoryBase):
         tag_table = tables["GkNumerical_tags"]
 
         has_serial = all([integration_serial is not None])
-        has_model_and_k = all([model is not None, k is not None])
+        has_model = all([model is not None, k is not None, z_source is not None])
 
-        if all([has_serial, has_model_and_k]):
+        if all([has_serial, has_model]):
             print(
-                "## GkNumericalValue.build(): both an integration serial number and a model/wavenumber pair were queried. Consider using only one combination of these."
+                "## GkNumericalValue.build(): both an integration serial number and a (model, wavenumber, z_source) set were queried. Consider using only one combination of these."
             )
 
-        if not any([has_serial, has_model_and_k]):
+        if not any([has_serial, has_model]):
             raise RuntimeError(
-                "GkNumericalValue.build(): at least one of an integration serial number and a model/wavenumber pair must be supplied."
+                "GkNumericalValue.build(): at least one of an integration serial number and a (model, wavenumber, z_source) set must be supplied."
             )
 
         try:
@@ -653,8 +654,14 @@ class sqla_GkNumericalValue_factory(SQLAFactoryBase):
                         integration_table,
                         integration_table.c.serial == table.c.integration_serial,
                     )
-                    .join(atol_table, atol_table.c.serial == table.c.atol_serial)
-                    .join(rtol_table, rtol_table.c.serial == table.c.rtol_serial)
+                    .join(
+                        atol_table,
+                        atol_table.c.serial == integration_table.c.atol_serial,
+                    )
+                    .join(
+                        rtol_table,
+                        rtol_table.c.serial == integration_table.c.rtol_serial,
+                    )
                 )
                 .filter(
                     table.c.z_serial == z.store_id,
@@ -684,6 +691,11 @@ class sqla_GkNumericalValue_factory(SQLAFactoryBase):
             if k is not None:
                 query = query.filter(
                     integration_table.c.wavenumber_exit_serial == k.store_id
+                )
+
+            if z_source is not None:
+                query = query.filter(
+                    integration_table.c.z_source_serial == z_source.store_id
                 )
 
             if atol is not None:

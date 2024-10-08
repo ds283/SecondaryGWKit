@@ -624,6 +624,7 @@ class sqla_GkWKBValue_factory(SQLAFactoryBase):
 
         model: Optional[BackgroundModel] = payload.get("model", None)
         k: Optional[wavenumber_exit_time] = payload.get("k", None)
+        z_source: Optional[redshift] = payload.get("z_source", None)
 
         atol: Optional[tolerance] = payload.get("atol", None)
         rtol: Optional[tolerance] = payload.get("rtol", None)
@@ -635,14 +636,14 @@ class sqla_GkWKBValue_factory(SQLAFactoryBase):
         tag_table = tables["GkWKB_tags"]
 
         has_serial = all([wkb_serial is not None])
-        has_model_and_k = all([model is not None, k is not None])
+        has_model = all([model is not None, k is not None, z_source is not None])
 
-        if all([has_serial, has_model_and_k]):
+        if all([has_serial, has_model]):
             print(
                 "## GkWKBValue.build(): both an integration serial number and a model/wavenumber pair were queried. Consider using only one combination of these."
             )
 
-        if not any([has_serial, has_model_and_k]):
+        if not any([has_serial, has_model]):
             raise RuntimeError(
                 "GkWKBValue.build(): at least one of an integration serial number and a model/wavenumber pair must be supplied."
             )
@@ -662,8 +663,8 @@ class sqla_GkWKBValue_factory(SQLAFactoryBase):
                 )
                 .select_from(
                     table.join(WKB_table, WKB_table.c.serial == table.c.wkb_serial)
-                    .join(atol_table, atol_table.c.serial == atol_table.c.serial)
-                    .join(rtol_table, rtol_table.c.serial == rtol_table.c.serial)
+                    .join(atol_table, atol_table.c.serial == WKB_table.c.atol_serial)
+                    .join(rtol_table, rtol_table.c.serial == WKB_table.c.rtol_serial)
                 )
                 .filter(
                     table.c.z_serial == z.store_id,
@@ -685,13 +686,16 @@ class sqla_GkWKBValue_factory(SQLAFactoryBase):
                     query = query.join(
                         tab,
                         and_(
-                            tab.c.integration_serial == model.store_id,
+                            tab.c.wkb_serial == model.store_id,
                             tab.c.tag_serial == tag.store_id,
                         ),
                     )
 
             if k is not None:
                 query = query.filter(WKB_table.c.wavenumber_exit_serial == k.store_id)
+
+            if z_source is not None:
+                query = query.filter(WKB_table.c.z_source_serial == z_source.store_id)
 
             if atol is not None:
                 query = query.filter(atol_table.c.serial == atol.store_id)

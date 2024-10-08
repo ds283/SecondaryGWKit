@@ -28,6 +28,9 @@ _default_serial_batch_size = {
     "GkWKBIntegration": 50,
     "GkWKB_tags": 10,
     "GkWKBValue": 5000,
+    "GkSource": 50,
+    "GkSource_tags": 10,
+    "GkSourceValue": 5000,
 }
 
 

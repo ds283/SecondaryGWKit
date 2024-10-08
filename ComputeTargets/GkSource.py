@@ -15,6 +15,46 @@ NumericData = namedtuple("NumericData", ["G", "Gprime"])
 WKBData = namedtuple("WKBData", ["theta", "H_ratio", "sin_coeff", "cos_coeff", "G_WKB"])
 
 
+@ray.remote
+def marshal_values(z_sample: redshift_array, numeric_data, WKB_data):
+    values = []
+
+    for z_source in z_sample:
+        numeric: GkNumericalValue = numeric_data.get(z_source.store_id, None)
+        WKB: GkWKBValue = WKB_data.get(z_source.store_id, None)
+
+        values.append(
+            GkSourceValue(
+                None,
+                z_source=z_source,
+                G=numeric.G if numeric is not None else None,
+                Gprime=numeric.Gprime if numeric is not None else None,
+                theta=WKB.theta if WKB is not None else None,
+                H_ratio=WKB.H_ratio if WKB is not None else None,
+                sin_coeff=WKB.sin_coeff if WKB is not None else None,
+                cos_coeff=WKB.cos_coeff if WKB is not None else None,
+                G_WKB=WKB.G_WKB if WKB is not None else None,
+                omega_WKB_sq=(
+                    numeric.omega_WKB_sq
+                    if numeric is not None
+                    else WKB.omega_WKB_sq if WKB is not None else None
+                ),
+                analytic_G=(
+                    numeric.analytic_G
+                    if numeric is not None
+                    else WKB.analytic_G if WKB is not None else None
+                ),
+                analytic_Gprime=(
+                    numeric.analytic_Gprime
+                    if numeric is not None
+                    else WKB.analytic_Gprime if WKB is not None else None
+                ),
+            )
+        )
+
+    return {"values": values}
+
+
 class GkSource(DatastoreObject):
     def __init__(
         self,
@@ -40,20 +80,23 @@ class GkSource(DatastoreObject):
         self._label = label
         self._tags = tags if tags is not None else []
 
+        self._atol = atol
+        self._rtol = rtol
+
         self._compute_ref = None
 
         has_data_payload = all(
             [
-                "numeric_data" in payload,
-                "WKB_data" in payload,
+                "numeric" in payload,
+                "WKB" in payload,
             ]
         )
 
         if has_data_payload:
             DatastoreObject.__init__(self, None)
 
-            self._numeric_data = payload["numeric_data"]
-            self._WKB_data = payload["WKB_data"]
+            self._numeric_data = payload["numeric"]
+            self._WKB_data = payload["WKB"]
 
             self._values = None
 
@@ -91,6 +134,10 @@ class GkSource(DatastoreObject):
         return self._z_response
 
     @property
+    def z_sample(self) -> redshift_array:
+        return self._z_sample
+
+    @property
     def label(self) -> str:
         return self._label
 
@@ -118,10 +165,13 @@ class GkSource(DatastoreObject):
             self._label = label
 
         # currently we have nothing to do here
-        return ray.put(["null_payload"])
+        self._compute_ref = marshal_values.remote(
+            self._z_sample, self._numeric_data, self._WKB_data
+        )
+        return self._compute_ref
 
     def store(self) -> Optional[bool]:
-        if self._comppute_ref is None:
+        if self._compute_ref is None:
             raise RuntimeError(
                 "GkSource: store() called, but no compute() is in progress"
             )
@@ -133,41 +183,10 @@ class GkSource(DatastoreObject):
         if len(resolved) == 0:
             return None
 
+        payload = ray.get(self._compute_ref)
         self._compute_ref = None
 
-        self._values = []
-        for z_source in self._z_sample:
-            numeric: GkNumericalValue = self._numeric_data.get(z_source.store_id, None)
-            WKB: GkWKBValue = self._WKB_data.get(z_source.store_id, None)
-
-            self._values.append(
-                GkSourceValue(
-                    None,
-                    z_source=z_source,
-                    G=numeric.G if numeric is not None else None,
-                    Gprime=numeric.Gprime if numeric is not None else None,
-                    theta=WKB.theta if WKB is not None else None,
-                    H_ratio=WKB.H_ratio if WKB is not None else None,
-                    sin_coeff=WKB.sin_coeff if WKB is not None else None,
-                    cos_coeff=WKB.cos_coeff if WKB is not None else None,
-                    G_WKB=WKB.G_WKB if WKB is not None else None,
-                    omega_WKB_sq=(
-                        numeric.omega_WKB_sq
-                        if numeric is not None
-                        else WKB.omega_WKB_sq if WKB is not None else None
-                    ),
-                    analytic_G=(
-                        numeric.analytic_G
-                        if numeric is not None
-                        else WKB.analytic_G if WKB is not None else None
-                    ),
-                    analytic_Gprime=(
-                        numeric.analytic_Gprime
-                        if numeric is not None
-                        else WKB.analytic_Gprime if WKB is not None else None
-                    ),
-                )
-            )
+        self._values = payload["values"]
 
 
 class GkSourceValue(DatastoreObject):
