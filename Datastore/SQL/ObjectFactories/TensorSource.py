@@ -376,7 +376,7 @@ class sqla_TensorSourceValue_factory(SQLAFactoryBase):
     @staticmethod
     def register():
         return {
-            "veersion": False,
+            "version": False,
             "timestamp": False,
             "stepping": False,
             "columns": [
@@ -473,6 +473,7 @@ class sqla_TensorSourceValue_factory(SQLAFactoryBase):
 
         return TensorSourceValue(
             store_id=store_id,
+            z=z,
             source_term=source_term,
             undiff_part=undiff_part,
             diff_part=diff_part,
