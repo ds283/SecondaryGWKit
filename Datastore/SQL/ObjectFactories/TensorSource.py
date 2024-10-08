@@ -147,7 +147,7 @@ class sqla_TensorSource_factory(SQLAFactoryBase):
             row_data = conn.execute(query).one_or_none()
         except MultipleResultsFound as e:
             print(
-                f"!! Database error: multiple results found when querying for TensorSource (Tq_id={Tq.store_id}, Tr_id={Tr.store_id})"
+                f"!! TensorSource.build(): multiple results found when querying for TensorSource (Tq_id={Tq.store_id}, Tr_id={Tr.store_id})"
             )
             raise e
 
@@ -429,7 +429,7 @@ class sqla_TensorSourceValue_factory(SQLAFactoryBase):
             ).one_or_none()
         except MultipleResultsFound as e:
             print(
-                f"!! Database error: multiple results found when querying for TensorSourceValue"
+                f"!! TensorSourceValue.build(): multiple results found when querying for TensorSourceValue"
             )
             raise e
 

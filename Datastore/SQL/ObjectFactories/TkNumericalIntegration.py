@@ -10,6 +10,7 @@ from ComputeTargets import (
     IntegrationSolver,
     TkNumericalIntegration,
     TkNumericalValue,
+    BackgroundModel,
 )
 from CosmologyConcepts import redshift_array, redshift, wavenumber_exit_time
 from Datastore.SQL.ObjectFactories.base import SQLAFactoryBase
@@ -239,7 +240,7 @@ class sqla_TkNumericalIntegration_factory(SQLAFactoryBase):
             row_data = conn.execute(query).one_or_none()
         except MultipleResultsFound as e:
             print(
-                f"!! Database error: multiple results found when querying for TkNumericalIntegration"
+                f"!! TkNumericalIntegration.build(): multiple results found when querying for TkNumericalIntegration"
             )
             raise e
 
@@ -601,7 +602,7 @@ class sqla_TkNumericalValue_factory(SQLAFactoryBase):
             ).one_or_none()
         except MultipleResultsFound as e:
             print(
-                f"!! Database error: multiple results found when querying for TkNumericalValue"
+                f"!! TkNumericalValue.build(): multiple results found when querying for TkNumericalValue"
             )
             raise e
 

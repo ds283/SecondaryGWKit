@@ -13,6 +13,9 @@ from ComputeTargets import (
     GkWKBIntegration,
     TensorSource,
     BackgroundModel,
+    GkNumericalValue,
+    GkWKBValue,
+    GkSource,
 )
 from CosmologyConcepts import (
     wavenumber,
@@ -419,6 +422,8 @@ with ShardedPool(
     ## COMPUTE TENSOR GREEN'S FUNCTIONS IN THE WKB APPROXIMATION FOR RESPONSE TIMES INSIDE THE HORIZON
 
     def build_Gk_WKB_work(z_source: redshift):
+        # Query for a GkNumericalIntegration instance for this choice of model, k_exit, and z_source.
+        # If it exists, it will be used to set initial conditions for the WKB part of the evolution.
         request_payload = [
             {
                 "solver_labels": solvers,
@@ -547,3 +552,115 @@ with ShardedPool(
         notify_batch_size=2000,
     )
     Gk_WKB_queue.run()
+
+    # STEP 5
+    # REBUILD TENSOR GREEN'S FUNCTIONS AS FUNCTIONS OF THE SOURCE REDSHIFT, RATHER THAN THE RESPONSE REDSHIFT
+
+    # (In theory we could construct this on-the-fly when we need it. Storing the rebuilt tensor Green's functions in the datastore is,
+    # strictly, redundant. But it is likely much faster because we need to perform complicated table lookups with joins in order to build
+    # these directly from GkNumericalValue and GkWKValue rows. Also, there is the reproducibility angle of keeping a record of what
+    # rebuilt data products we used.)
+
+    # there is a lot of work to do!
+    # For each wavenumber in the k-sample (here k_exit_times), and each value of r_response,
+    # we need to build the Green's function for all possible values of z_source.
+
+    # we could set all this up insider the task builder, but to prevent spawning too many Ray tasks in one
+    # go, it seems preferable to break down the problem a bit more
+    GkSource_work_items = itertools.product(k_exit_times, z_sample)
+
+    def build_GkSource_work(item):
+        k_exit, z_response = item
+        k_exit: wavenumber_exit_time
+        z_response: redshift
+
+        z_source_pool = z_sample.truncate(z_response, keep="higher")
+
+        # build a payload to query any available numerical/WKB data, for each response time
+        value_payload = [
+            {
+                "model": model,
+                "k": k_exit,
+                "z_source": z_source,
+                "z_response": z_response,
+                "atol": atol,
+                "rtol": rtol,
+                "tags": [
+                    GkProductionTag,
+                    GlobalZGridTag,
+                    OutsideHorizonEfoldsTag,
+                    LargestZTag,
+                    SamplesPerLog10ZTag,
+                ],
+            }
+            for z_source in z_source_pool
+        ]
+
+        numeric_data, WKB_data = ray.get(
+            [
+                pool.object_get(GkNumericalValue, payload_data=value_payload),
+                pool.object_get(GkWKBValue, payload_data=value_payload),
+            ]
+        )
+
+        Gk_numeric_data = {}
+        GK_WKB_data = {}
+
+        for z_source, numeric_value, WKB_value in zip(
+            z_source_pool, numeric_data, WKB_data
+        ):
+            z_source: redshift
+            numeric_value: GkNumericalValue
+            WKB_value: GkWKBValue
+
+            numeric_available = numeric_value.available
+            WKB_available = WKB_value.available
+
+            if numeric_available:
+                Gk_numeric_data[z_response.store_id] = numeric_value
+
+            if WKB_available:
+                GK_WKB_data[z_response.store_id] = WKB_value
+
+            if all([not numeric_data, not WKB_available]):
+                print(
+                    f"@@ GkSource task builder: Warning: G_k data missing for k={k_exit.k.k_inv_Mpc:.5g}/Mpc, z_source={z_source.z:.5g}, z_response={z_response.z:.5g}"
+                )
+
+        return pool.object_get(
+            GkSource,
+            payload={
+                "numeric_data": numeric_data,
+                "WKB_data": WKB_data,
+            },
+            model=model,
+            k=k_exit,
+            z_response=z_response,
+            z_sample=z_source_pool,
+            tags=[
+                GkProductionTag,
+                GlobalZGridTag,
+                OutsideHorizonEfoldsTag,
+                LargestZTag,
+                SamplesPerLog10ZTag,
+            ],
+        )
+
+    def build_GkSource_work_label(Gk: GkSource):
+        return f"{args.job_name}-GkSource-k{Gk.k.k_inv_Mpc:.3g}-responsez{Gk.z_response.z:.5g}-{datetime.now().replace(microsecond=0).isoformat()}"
+
+    def validate_GkSource_work(Gk: GkSource):
+        return pool.object_validate(Gk)
+
+    GkSource_queue = RayWorkPool(
+        pool,
+        GkSource_work_items,
+        task_builder=build_GkSource_work,
+        validation_handler=None,
+        label_builder=None,
+        title="REBUILD GREENS FUNCTIONS FOR SOURCE REDSHIFT",
+        store_results=False,
+        create_batch_size=5,
+        notify_batch_size=2000,
+    )
+    GkSource_queue.run()

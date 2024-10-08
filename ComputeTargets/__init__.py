@@ -6,6 +6,10 @@ from .GkNumericalIntegration import (
     GkNumericalIntegration,
     GkNumericalValue,
 )
+from .GkSource import (
+    GkSource,
+    GkSourceValue,
+)
 from .GkWKBIntegration import (
     GkWKBIntegration,
     GkWKBValue,

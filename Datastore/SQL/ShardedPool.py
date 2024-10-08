@@ -36,6 +36,8 @@ _shard_tables = {
     "TensorSourceValue": "q",
     "GkWKBIntegration": "k",
     "GkWKBValue": "k",
+    "GkSource": "k",
+    "GkSourceValue": "k",
 }
 
 

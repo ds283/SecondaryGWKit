@@ -1,10 +1,14 @@
 from collections import namedtuple
 from typing import Optional, List
 
-from ComputeTargets import BackgroundModel
+import ray
+
+from ComputeTargets.BackgroundModel import BackgroundModel
+from ComputeTargets.GkNumericalIntegration import GkNumericalValue
+from ComputeTargets.GkWKBIntegration import GkWKBValue
 from CosmologyConcepts import wavenumber_exit_time, redshift, wavenumber, redshift_array
 from Datastore import DatastoreObject
-from MetadataConcepts import store_tag
+from MetadataConcepts import store_tag, tolerance
 from utilities import check_units
 
 NumericData = namedtuple("NumericData", ["G", "Gprime"])
@@ -18,6 +22,8 @@ class GkSource(DatastoreObject):
         model: BackgroundModel,
         k: wavenumber_exit_time,
         z_response: redshift,
+        atol: tolerance,
+        rtol: tolerance,
         z_sample: Optional[redshift_array] = None,
         label: Optional[str] = None,
         tags: Optional[List[store_tag]] = None,
@@ -36,15 +42,29 @@ class GkSource(DatastoreObject):
 
         self._compute_ref = None
 
-        if "Gk_data" in payload:
+        has_data_payload = all(
+            [
+                "numeric_data" in payload,
+                "WKB_data" in payload,
+            ]
+        )
+
+        if has_data_payload:
             DatastoreObject.__init__(self, None)
+
+            self._numeric_data = payload["numeric_data"]
+            self._WKB_data = payload["WKB_data"]
+
+            self._values = None
 
         elif "store_id" in payload:
             DatastoreObject.__init__(self, payload["store_id"])
 
+            self._values = payload["values"]
+
         else:
             raise RuntimeError(
-                'GkSource: did not find either "Gk_data" or "store_id" in payload'
+                "GkSource: did not find either a data payload or store_id"
             )
 
         if self._z_sample is not None:
@@ -57,6 +77,97 @@ class GkSource(DatastoreObject):
                     raise ValueError(
                         f"GkSource: source redshift sample point z={z_float:.5g} exceeds response redshift z={z_response_float:.5g}"
                     )
+
+    @property
+    def k(self) -> wavenumber:
+        return self._k_exit.k
+
+    @property
+    def model(self) -> BackgroundModel:
+        return self._model
+
+    @property
+    def z_response(self) -> redshift:
+        return self._z_response
+
+    @property
+    def label(self) -> str:
+        return self._label
+
+    @property
+    def tags(self) -> List[store_tag]:
+        return self._tags
+
+    @property
+    def values(self) -> List:
+        if self._values is None:
+            raise RuntimeError("values has not yet been populated")
+        return self._values
+
+    def compute(self, label: Optional[str] = None):
+        if self._values is not None:
+            raise RuntimeError("values have already been computed")
+
+        if self._z_response is None or self._z_sample is None:
+            raise RuntimeError(
+                "Object has not been configured correctly for a concrete calculation (z_response or z_sample is missing). It can only represent a query."
+            )
+
+        # replace label if specified
+        if label is not None:
+            self._label = label
+
+        # currently we have nothing to do here
+        return ray.put(["null_payload"])
+
+    def store(self) -> Optional[bool]:
+        if self._comppute_ref is None:
+            raise RuntimeError(
+                "GkSource: store() called, but no compute() is in progress"
+            )
+
+        # check whether the computation has actually resolved
+        resolved, unresolved = ray.wait([self._compute_ref], timeout=0)
+
+        # if not, return None
+        if len(resolved) == 0:
+            return None
+
+        self._compute_ref = None
+
+        self._values = []
+        for z_source in self._z_sample:
+            numeric: GkNumericalValue = self._numeric_data.get(z_source.store_id, None)
+            WKB: GkWKBValue = self._WKB_data.get(z_source.store_id, None)
+
+            self._values.append(
+                GkSourceValue(
+                    None,
+                    z_source=z_source,
+                    G=numeric.G if numeric is not None else None,
+                    Gprime=numeric.Gprime if numeric is not None else None,
+                    theta=WKB.theta if WKB is not None else None,
+                    H_ratio=WKB.H_ratio if WKB is not None else None,
+                    sin_coeff=WKB.sin_coeff if WKB is not None else None,
+                    cos_coeff=WKB.cos_coeff if WKB is not None else None,
+                    G_WKB=WKB.G_WKB if WKB is not None else None,
+                    omega_WKB_sq=(
+                        numeric.omega_WKB_sq
+                        if numeric is not None
+                        else WKB.omega_WKB_sq if WKB is not None else None
+                    ),
+                    analytic_G=(
+                        numeric.analytic_G
+                        if numeric is not None
+                        else WKB.analytic_G if WKB is not None else None
+                    ),
+                    analytic_Gprime=(
+                        numeric.analytic_Gprime
+                        if numeric is not None
+                        else WKB.analytic_Gprime if WKB is not None else None
+                    ),
+                )
+            )
 
 
 class GkSourceValue(DatastoreObject):
@@ -72,12 +183,16 @@ class GkSourceValue(DatastoreObject):
         cos_coeff: Optional[float] = None,
         G_WKB: Optional[float] = None,
         omega_WKB_sq: Optional[float] = None,
+        analytic_G: Optional[float] = None,
+        analytic_Gprime: Optional[float] = None,
     ):
         DatastoreObject.__init__(self, store_id)
 
         self._z_source = z_source
 
         has_numeric = any([G is not None, Gprime is not None])
+        all_numeric = all([G is not None, Gprime is not None])
+
         has_WKB = any(
             [
                 theta is not None,
@@ -87,8 +202,6 @@ class GkSourceValue(DatastoreObject):
                 G_WKB,
             ]
         )
-
-        all_numeric = all([G is not None, Gprime is not None])
         all_WKB = all(
             [
                 theta is not None,
@@ -99,62 +212,65 @@ class GkSourceValue(DatastoreObject):
             ]
         )
 
-        if has_numeric and has_WKB:
-            raise ValueError(
-                "GkSourceValue: both numerical and WKB values specified. Only one should be supplied."
-            )
-
-        if not has_numeric and not has_WKB:
-            raise ValueError(
-                "GkSourceValue: neither numerical nor WKB values specified."
-            )
-
         if has_numeric and not all_numeric:
             raise ValueError(
-                "GkSourceValue: some numerical data was not supplied. G and Gprime should both be specified."
+                "GkSourceValue: only partial numeric data were supplied. Please supply all of G and Gprime."
             )
 
         if has_WKB and not all_WKB:
             raise ValueError(
-                "GkSourceValue: some WKB data was not supplied. theta, H_ratio, sin_coeff, cos_coeff and G_WKB should all be specified."
+                "GkSourceValue: only partial WKB data were supplied. Please supply all of theta, H_ratio, sin_coeff, cos_coeff and G_WKB."
             )
 
-        if has_numeric:
-            self._source = "numeric"
-        else:
-            self._source = "WKB"
-
-        self._G = G
-        self._Gprime = Gprime
-
-        self._theta = theta
-        self._H_ratio = H_ratio
-        self._sin_coeff = sin_coeff
-        self._cos_coeff = cos_coeff
-        self._G_WKB = G_WKB
-
-        self._omega_WKB = omega_WKB_sq
+        self._has_numeric = has_numeric
+        self._has_WKB = has_WKB
 
         self._numeric_data = NumericData(
-            G=self._G,
-            Gprime=self._Gprime,
+            G=G,
+            Gprime=Gprime,
         )
 
         self._WKB_data = WKBData(
-            theta=self._theta,
-            H_ratio=self._H_ratio,
-            sin_coeff=self._sin_coeff,
-            cos_coeff=self._cos_coeff,
-            G_WKB=self._G_WKB,
+            theta=theta,
+            H_ratio=H_ratio,
+            sin_coeff=sin_coeff,
+            cos_coeff=cos_coeff,
+            G_WKB=G_WKB,
         )
 
-    @property
-    def source(self):
-        return self._source
+        self._omega_WKB_sq = omega_WKB_sq
+
+        self._analytic_G = analytic_G
+        self._analytic_Gprime = analytic_Gprime
 
     @property
-    def numeric(self):
-        if self._source != "numeric":
+    def z_source(self) -> redshift:
+        return self._z_source
+
+    @property
+    def numeric(self) -> NumericData:
+        if not self._has_numeric:
             raise RuntimeError(
-                "GkSourceValue: attempt to read numeric data, but this value is not of numeric type"
+                "GkSourceValue: attempt to read numeric data, but they are not available for this sample point"
             )
+        return self._numeric_data
+
+    @property
+    def WKB(self) -> WKBData:
+        if not self._has_WKB:
+            raise RuntimeError(
+                "GkSourceValue: attempt to read WKB data, they are not available for this sample point"
+            )
+        return self._WKB_data
+
+    @property
+    def omega_WKB_sq(self) -> Optional[float]:
+        return self._omega_WKB_sq
+
+    @property
+    def analytic_G(self) -> Optional[float]:
+        return self._analytic_G
+
+    @property
+    def analytic_Gprime(self) -> Optional[float]:
+        return self._analytic_Gprime

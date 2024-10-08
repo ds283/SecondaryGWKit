@@ -251,7 +251,7 @@ class sqla_GkNumericalIntegration_factory(SQLAFactoryBase):
             row_data = conn.execute(query).one_or_none()
         except MultipleResultsFound as e:
             print(
-                f"!! Database error: multiple results found when querying for GkNumericalIntegration"
+                f"!! GkNumericalIntegration.build(): multiple results found when querying for GkNumericalIntegration"
             )
             raise e
 
@@ -614,6 +614,8 @@ class sqla_GkNumericalValue_factory(SQLAFactoryBase):
         omega_WKB_sq: Optional[float] = payload.get("omega_WKB_sq", None)
 
         model: Optional[BackgroundModel] = payload.get("model", None)
+        k: Optional[wavenumber_exit_time] = payload.get("k", None)
+
         atol: Optional[tolerance] = payload.get("atol", None)
         rtol: Optional[tolerance] = payload.get("rtol", None)
         tags: Optional[List[store_tag]] = payload.get("tags", None)
@@ -622,6 +624,19 @@ class sqla_GkNumericalValue_factory(SQLAFactoryBase):
         atol_table = tables["tolerance"].alias("atol")
         rtol_table = tables["tolerance"].alias("rtol")
         tag_table = tables["GkNumerical_tags"]
+
+        has_serial = all([integration_serial is not None])
+        has_model_and_k = all([model is not None, k is not None])
+
+        if all([has_serial, has_model_and_k]):
+            print(
+                "## GkNumericalValue.build(): both an integration serial number and a model/wavenumber pair were queried. Consider using only one combination of these."
+            )
+
+        if not any([has_serial, has_model_and_k]):
+            raise RuntimeError(
+                "GkNumericalValue.build(): at least one of an integration serial number and a model/wavenumber pair must be supplied."
+            )
 
         try:
             query = (
@@ -666,6 +681,11 @@ class sqla_GkNumericalValue_factory(SQLAFactoryBase):
                         ),
                     )
 
+            if k is not None:
+                query = query.filter(
+                    integration_table.c.wavenumber_exit_serial == k.store_id
+                )
+
             if atol is not None:
                 query = query.filter(atol_table.c.serial == atol.store_id)
 
@@ -675,7 +695,7 @@ class sqla_GkNumericalValue_factory(SQLAFactoryBase):
             row_data = conn.execute(query).one_or_none()
         except MultipleResultsFound as e:
             print(
-                f"!! Database error: multiple results found when querying for GkNumericalValue"
+                f"!! GkNumericalValue.build(): multiple results found when querying for GkNumericalValue"
             )
             raise e
 
@@ -702,14 +722,14 @@ class sqla_GkNumericalValue_factory(SQLAFactoryBase):
 
             if G is not None and fabs(row_data.G - G) > DEFAULT_FLOAT_PRECISION:
                 raise ValueError(
-                    f"Stored tensor Green function value (integration={integration_serial}, z={z.store_id}) = {row_data.G} differs from expected value = {G}"
+                    f"GkNumericalValue.build(): Stored tensor Green function value (integration={integration_serial}, z={z.store_id}) = {row_data.G} differs from expected value = {G}"
                 )
             if (
                 Gprime is not None
                 and fabs(row_data.Gprime - Gprime) > DEFAULT_FLOAT_PRECISION
             ):
                 raise ValueError(
-                    f"Stored tensor Green function derivative (integration={integration_serial}, z={z.store_id}) = {row_data.Gprime} differs from expected value = {Gprime}"
+                    f"GkNumericalValue.build(): Stored tensor Green function derivative (integration={integration_serial}, z={z.store_id}) = {row_data.Gprime} differs from expected value = {Gprime}"
                 )
 
             G = row_data.G

@@ -247,7 +247,7 @@ class sqla_GkWKBIntegration_factory(SQLAFactoryBase):
             row_data = conn.execute(query).one_or_none()
         except MultipleResultsFound as e:
             print(
-                f"!! Database error: multiple results found when querying for GkWKBIntegration"
+                f"!! GkWKBIntegration.build(): multiple results found when querying for GkWKBIntegration"
             )
             raise e
 
@@ -341,6 +341,8 @@ class sqla_GkWKBIntegration_factory(SQLAFactoryBase):
                     G_WKB=row.G_WKB,
                     analytic_G=row.analytic_G,
                     analytic_Gprime=row.analytic_Gprime,
+                    sin_coeff=sin_coeff,
+                    cos_coeff=cos_coeff,
                 )
             )
         imported_z_sample = redshift_array(z_points)
@@ -617,7 +619,12 @@ class sqla_GkWKBValue_factory(SQLAFactoryBase):
         analytic_G: Optional[float] = payload.get("analytic_G", None)
         analytic_Gprime: Optional[float] = payload.get("analytic_Gprime", None)
 
+        sin_coeff: Optional[float] = payload.get("sin_coeff", None)
+        cos_coeff: Optional[float] = payload.get("cos_coeff", None)
+
         model: Optional[BackgroundModel] = payload.get("model", None)
+        k: Optional[wavenumber_exit_time] = payload.get("k", None)
+
         atol: Optional[tolerance] = payload.get("atol", None)
         rtol: Optional[tolerance] = payload.get("rtol", None)
         tags: Optional[List[store_tag]] = payload.get("tags", None)
@@ -626,6 +633,19 @@ class sqla_GkWKBValue_factory(SQLAFactoryBase):
         atol_table = tables["tolerance"].alias("atol")
         rtol_table = tables["tolerance"].alias("rtol")
         tag_table = tables["GkWKB_tags"]
+
+        has_serial = all([wkb_serial is not None])
+        has_model_and_k = all([model is not None, k is not None])
+
+        if all([has_serial, has_model_and_k]):
+            print(
+                "## GkWKBValue.build(): both an integration serial number and a model/wavenumber pair were queried. Consider using only one combination of these."
+            )
+
+        if not any([has_serial, has_model_and_k]):
+            raise RuntimeError(
+                "GkWKBValue.build(): at least one of an integration serial number and a model/wavenumber pair must be supplied."
+            )
 
         try:
             query = (
@@ -637,6 +657,8 @@ class sqla_GkWKBValue_factory(SQLAFactoryBase):
                     table.c.G_WKB,
                     table.c.analytic_G,
                     table.c.analytic_Gprime,
+                    WKB_table.c.sin_coeff,
+                    WKB_table.c.cos_coeff,
                 )
                 .select_from(
                     table.join(WKB_table, WKB_table.c.serial == table.c.wkb_serial)
@@ -668,6 +690,9 @@ class sqla_GkWKBValue_factory(SQLAFactoryBase):
                         ),
                     )
 
+            if k is not None:
+                query = query.filter(WKB_table.c.wavenumber_exit_serial == k.store_id)
+
             if atol is not None:
                 query = query.filter(atol_table.c.serial == atol.store_id)
 
@@ -677,12 +702,12 @@ class sqla_GkWKBValue_factory(SQLAFactoryBase):
             row_data = conn.execute(query).one_or_none()
         except MultipleResultsFound as e:
             print(
-                f"!! Database error: multiple results found when querying for GkWKBValue"
+                f"!! GkWKBValue.build(): multiple results found when querying for GkWKBValue"
             )
             raise e
 
         if row_data is None:
-            store_id is None
+            store_id = None
             if has_data:
                 store_id = inserter(
                     conn,
@@ -703,6 +728,8 @@ class sqla_GkWKBValue_factory(SQLAFactoryBase):
             G_WKB = row_data.G_WKB
             analytic_G = row_data.analytic_G
             analytic_Gprime = row_data.analytic_Gprime
+            sin_coeff = row_data.sin_coeff
+            cos_coeff = row_data.cos_coeff
 
             # we choose H_ratio and theta to test because these are the critical data to reconstruct
             # G_WKB; everything else, such as omega_WKB_sq, is optional
@@ -711,14 +738,14 @@ class sqla_GkWKBValue_factory(SQLAFactoryBase):
                 and fabs(row_data.H_ratio - H_ratio) > DEFAULT_FLOAT_PRECISION
             ):
                 raise ValueError(
-                    f"Stored WKB tensor Green function H_ratio ratio (WKB store_id={wkb_serial}, z={z.store_id}) = {row_data.H_ratio} differs from expected value = {H_ratio}"
+                    f"GkWKBValue.build(): Stored WKB tensor Green function H_ratio ratio (WKB store_id={wkb_serial}, z={z.store_id}) = {row_data.H_ratio} differs from expected value = {H_ratio}"
                 )
             if (
                 theta is not None
                 and fabs(row_data.theta - theta) > DEFAULT_FLOAT_PRECISION
             ):
                 raise ValueError(
-                    f"Stored WKB tensor Green function phase (WKB store_id={wkb_serial}, z={z.store_id}) = {row_data.theta} differs from expected value = {theta}"
+                    f"GkWKBValue.build(): Stored WKB tensor Green function phase (WKB store_id={wkb_serial}, z={z.store_id}) = {row_data.theta} differs from expected value = {theta}"
                 )
 
             H_ratio = row_data.H_ratio
@@ -733,4 +760,6 @@ class sqla_GkWKBValue_factory(SQLAFactoryBase):
             G_WKB=G_WKB,
             analytic_G=analytic_G,
             analytic_Gprime=analytic_Gprime,
+            sin_coeff=sin_coeff,
+            cos_coeff=cos_coeff,
         )

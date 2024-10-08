@@ -20,6 +20,11 @@ from Datastore.SQL.ObjectFactories.GkNumericalIntegration import (
     sqla_GkNumericalValue_factory,
     sqla_GkNumericalTagAssociation_factory,
 )
+from Datastore.SQL.ObjectFactories.GkSource import (
+    sqla_GkSourceTagAssociation_factory,
+    sqla_GkSource_factory,
+    sqla_GkSourceValue_factory,
+)
 from Datastore.SQL.ObjectFactories.GkWKBIntegration import (
     sqla_GkWKBIntegration_factory,
     sqla_GkWKBTagAssociation_factory,
@@ -81,6 +86,9 @@ _factories = {
     "GkWKBIntegration": sqla_GkWKBIntegration_factory,
     "GkWKB_tags": sqla_GkWKBTagAssociation_factory,
     "GkWKBValue": sqla_GkWKBValue_factory,
+    "GkSource": sqla_GkSource_factory,
+    "GkSource_tags": sqla_GkSourceTagAssociation_factory,
+    "GkSourceValue": sqla_GkSourceValue_factory,
 }
 
 _FactoryMappingType = Mapping[str, SQLAFactoryBase]
@@ -134,13 +142,12 @@ class Datastore:
             # create parent directories if they do not already exist
             self._db_file.parents[0].mkdir(exist_ok=True, parents=True)
             self._create_engine()
-
-            # generate tables defined by any registered storable classes
-            self._build_storage_schema()
-            self._create_storage_tables()
+            self._build_schema()
+            self._ensure_tables()
         else:
             self._create_engine()
-            self._build_storage_schema()
+            self._build_schema()
+            self._ensure_tables()
             self._validate_on_startup()
 
         # convert version label to a version object
@@ -187,6 +194,7 @@ class Datastore:
             connect_args=connect_args,
         )
         self._metadata = sqla.MetaData()
+        self._inspector = sqla.inspect(self._engine)
 
     def register_factories(self, factories: _FactoryMappingType):
         """
@@ -210,7 +218,7 @@ class Datastore:
             self._factories[cls_name] = factory
             # print(f"Registered storable class factory '{cls_name}'")
 
-    def _build_storage_schema(self):
+    def _build_schema(self):
         # iterate through all registered storage adapters, querying them for the columns
         # they need to persist their data
         for cls_name, factory in self._factories.items():
@@ -311,9 +319,10 @@ class Datastore:
 
             self._schema[cls_name] = schema
 
-    def _create_storage_tables(self):
-        for tab in self._tables.values():
-            tab.create(self._engine)
+    def _ensure_tables(self):
+        for name, tab in self._tables.items():
+            if not self._inspector.has_table(name):
+                tab.create(self._engine)
 
     def _ensure_registered_schema(self, cls_name: str):
         if cls_name not in self._factories:

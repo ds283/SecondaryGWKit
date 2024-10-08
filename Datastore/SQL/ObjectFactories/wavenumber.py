@@ -170,7 +170,7 @@ class sqla_wavenumber_exit_time_factory(SQLAFactoryBase):
             ).one_or_none()
         except MultipleResultsFound as e:
             print(
-                f"!! Database error: multiple results found when querying for wavenumber_exit_time"
+                f"!! wavenumber_exit_time.build(): multiple results found when querying for wavenumber_exit_time"
             )
             raise e
 

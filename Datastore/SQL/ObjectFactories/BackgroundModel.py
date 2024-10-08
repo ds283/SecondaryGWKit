@@ -199,7 +199,7 @@ class sqla_BackgroundModelFactory(SQLAFactoryBase):
             row_data = conn.execute(query).one_or_none()
         except MultipleResultsFound as e:
             print(
-                f"!! Database error: multiple results found when querying for BackgroundModel"
+                f"!! BackgroundModel.build(): multiple results found when querying for BackgroundModel"
             )
             raise e
 
@@ -544,7 +544,7 @@ class sqla_BackgroundModelValue_factory(SQLAFactoryBase):
             ).one_or_none()
         except MultipleResultsFound as e:
             print(
-                f"!! Database error: multiple results found when querying for BackgroundModelValue"
+                f"!! BackgroundModelValue.build(): multiple results found when querying for BackgroundModelValue"
             )
             raise e
 
