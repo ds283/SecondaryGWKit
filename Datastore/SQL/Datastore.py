@@ -257,7 +257,10 @@ class Datastore:
                 schema["use_version"] = use_version
                 if use_version:
                     version_col = sqla.Column(
-                        "version", sqla.Integer, sqla.ForeignKey("version.serial")
+                        "version",
+                        sqla.Integer,
+                        sqla.ForeignKey("version.serial"),
+                        index=True,
                     )
                     tab.append_column(version_col)
                     schema["version_col"] = version_col

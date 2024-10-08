@@ -235,6 +235,7 @@ class ShardedPool:
                 "shard_id",
                 sqla.Integer,
                 sqla.ForeignKey("shards.serial"),
+                index=True,
                 nullable=False,
             ),
         )
