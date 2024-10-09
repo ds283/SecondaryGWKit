@@ -223,7 +223,7 @@ with ShardedPool(
 
             numerical_points = [(value.z.z, fabs(value.G_WKB)) for value in values]
             analytic_points = [(value.z.z, fabs(value.analytic_G)) for value in values]
-            theta_points = [(value.z.z, value.theta) for value in values]
+            theta_points = [(value.z.z, fabs(value.theta)) for value in values]
 
             numerical_x, numerical_y = zip(*numerical_points)
             analytic_x, analytic_y = zip(*analytic_points)
@@ -264,7 +264,9 @@ with ShardedPool(
         fig_path.parents[0].mkdir(exist_ok=True, parents=True)
         fig.savefig(fig_path)
 
-        ax.set_xlim(k_exit.z_exit_suph_e3, k_exit.z_exit_subh_e3)
+        ax.set_xlim(
+            k_exit.z_exit_suph_e3, int(round(0.85 * k_exit.z_exit_subh_e5 + 0.5, 0))
+        )
         fig_path = (
             base_path
             / f"plots/zoom-matching/k-serial={k_exit.store_id}-k={k_exit.k.k_inv_Mpc:.5g}/z-serial={z_source.store_id}-zsource={z_source.z:.5g}.pdf"
@@ -284,6 +286,8 @@ with ShardedPool(
             ax.set_ylabel("WKB phase $\\theta$")
 
             ax.set_xscale("log")
+            ax.set_yscale("log")
+
             ax.grid(True)
             ax.xaxis.set_inverted(True)
 
