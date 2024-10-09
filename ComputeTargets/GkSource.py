@@ -252,7 +252,7 @@ class GkSourceValue(DatastoreObject):
                 H_ratio is not None,
                 sin_coeff is not None,
                 cos_coeff is not None,
-                G_WKB,
+                G_WKB is not None,
             ]
         )
         all_WKB = all(
@@ -261,7 +261,7 @@ class GkSourceValue(DatastoreObject):
                 H_ratio is not None,
                 sin_coeff is not None,
                 cos_coeff is not None,
-                G_WKB,
+                G_WKB is not None,
             ]
         )
 
