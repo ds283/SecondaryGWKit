@@ -361,7 +361,7 @@ class RayWorkPool:
 
             now_time = time.perf_counter()
             elapsed = now_time - self._last_notify_time
-            if elapsed > self._notify_min_time_interval:
+            if self._title is not None and elapsed > self._notify_min_time_interval:
                 if (
                     elapsed > self._notify_time_interval
                     or self._batch > self._notify_batch_size

@@ -773,7 +773,7 @@ class sqla_GkNumericalValue_factory(SQLAFactoryBase):
             G = row_data.G
             Gprime = row_data.Gprime
 
-        return GkNumericalValue(
+        obj = GkNumericalValue(
             store_id=store_id,
             z=z,
             G=G,
@@ -782,3 +782,7 @@ class sqla_GkNumericalValue_factory(SQLAFactoryBase):
             analytic_Gprime=analytic_Gprime,
             omega_WKB_sq=omega_WKB_sq,
         )
+        obj._deserialized = True
+        obj._k_exit = k
+        obj._z_source = z_source
+        return obj

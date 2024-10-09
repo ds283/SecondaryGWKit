@@ -34,6 +34,7 @@ from defaults import (
     DEFAULT_REL_TOLERANCE,
     DEFAULT_FLOAT_PRECISION,
 )
+from utilities import grouper
 
 DEFAULT_LABEL = "SecondaryGWKit-test"
 DEFAULT_TIMEOUT = 60
@@ -594,19 +595,19 @@ with ShardedPool(
     # strictly, redundant. But it is likely much faster because we need to perform complicated table lookups with joins in order to build
     # these directly from GkNumericalValue and GkWKValue rows. Also, there is the reproducibility angle of keeping a record of what
     # rebuilt data products we used.)
+    def build_GkSource_batch(batch):
+        # try to do parallel lookup of the GkNumericalIntegration/GkWKBIntegration records needed
+        # to process this batch
 
-    def build_GkSource_work(item):
-        z_response, k_exit = item
-        k_exit: wavenumber_exit_time
-        z_response: redshift
+        z_sources_batch = [
+            z_sample.truncate(z_response, keep="higher") for z_response, _ in batch
+        ]
 
-        z_sources = z_sample.truncate(z_response, keep="higher")
+        batch_data = [
+            (data[0], data[1], z_sources_batch[i]) for i, data in enumerate(batch)
+        ]
 
-        if len(z_sources) == 0:
-            return []
-
-        # build a payload to query any available numerical/WKB data, for each response time
-        value_query = [
+        payload_batch = [
             {
                 "model": model,
                 "k": k_exit,
@@ -622,49 +623,84 @@ with ShardedPool(
                     SamplesPerLog10ZTag,
                 ],
             }
+            for z_response, k_exit, z_sources in batch_data
             for z_source in z_sources
         ]
 
-        numeric_query = ray.get(
-            pool.object_get(GkNumericalValue, payload_data=value_query),
-        )
-        WKB_query = ray.get(
-            pool.object_get(GkWKBValue, payload_data=value_query),
-        )
-
-        numeric_data = {
-            z_source.store_id: numeric
-            for z_source, numeric in zip(z_sources, numeric_query)
-            if numeric.available
-        }
-        WKB_data = {
-            z_source.store_id: WKB
-            for z_source, WKB in zip(z_sources, WKB_query)
-            if WKB.available
-        }
-
-        return [
-            pool.object_get(
-                GkSource,
-                payload={
-                    "numeric": numeric_data,
-                    "WKB": WKB_data,
-                },
-                model=model,
-                k=k_exit,
-                atol=atol,
-                rtol=rtol,
-                z_response=z_response,
-                z_sample=z_sources,
-                tags=[
-                    GkProductionTag,
-                    GlobalZGridTag,
-                    OutsideHorizonEfoldsTag,
-                    LargestZTag,
-                    SamplesPerLog10ZTag,
-                ],
-            )
+        labelled_payloads = [
+            (label, payload)
+            for payload in payload_batch
+            for label in ["GkNumericalValue", "GkWKBValue"]
         ]
+
+        lookup_queue = RayWorkPool(
+            pool,
+            labelled_payloads,
+            task_builder=lambda x: pool.object_get(x[0], **x[1]),
+            available_handler=None,
+            compute_handler=None,
+            store_handler=None,
+            validation_handler=None,
+            label_builder=None,
+            title=None,
+            store_results=True,
+            create_batch_size=25,  # tweak relative to number of shards
+        )
+        lookup_queue.run()
+
+        work_refs = []
+
+        i = 0
+        for z_response, k_exit, z_sources in batch_data:
+            z_response: redshift
+            k_exit: wavenumber_exit_time
+            z_sources: redshift_array
+
+            numeric_data = {}
+            WKB_data = {}
+
+            for z_source in z_sources:
+                numeric_value = lookup_queue.results[i]
+                WKB_value = lookup_queue.results[i + 1]
+                i += 2
+
+                assert isinstance(numeric_value, GkNumericalValue)
+                assert isinstance(WKB_value, GkWKBValue)
+
+                assert numeric_value._k_exit.store_id == k_exit.store_id
+                assert WKB_value._k_exit.store_id == k_exit.store_id
+                assert numeric_value._z_source.store_id == z_source.store_id
+                assert WKB_value._z_source.store_id == z_source.store_id
+
+                if numeric_value.available:
+                    numeric_data[z_source.store_id] = numeric_value
+                if WKB_value.available:
+                    WKB_data[z_source.store_id] = WKB_value
+
+            work_refs.append(
+                pool.object_get(
+                    GkSource,
+                    payload={
+                        "numeric": numeric_data,
+                        "WKB": WKB_data,
+                    },
+                    model=model,
+                    k=k_exit,
+                    atol=atol,
+                    rtol=rtol,
+                    z_response=z_response,
+                    z_sample=z_sources,
+                    tags=[
+                        GkProductionTag,
+                        GlobalZGridTag,
+                        OutsideHorizonEfoldsTag,
+                        LargestZTag,
+                        SamplesPerLog10ZTag,
+                    ],
+                )
+            )
+
+        return work_refs
 
     def build_GkSource_work_label(Gk: GkSource):
         return f"{args.job_name}-GkSource-k{Gk.k.k_inv_Mpc:.3g}-responsez{Gk.z_response.z:.5g}-{datetime.now().replace(microsecond=0).isoformat()}"
@@ -673,23 +709,30 @@ with ShardedPool(
         return pool.object_validate(Gk)
 
     if args.source_queue:
-        # there is a lot of work to do!
+        # THERE IS A LOT OF WORK TO DO!
         # For each wavenumber in the k-sample (here k_exit_times), and each value of r_response,
         # we need to build the Green's function for all possible values of z_source.
+        # Even with 10 wavenumbers and 2,000 z-samples points, that is 20,000 items.
+        # With 500 wavenumbers and 2,000 z-samples, it is 1 million items.
+        # To process these efficiently, we break the queue up into batches, and try to
+        # run a sub-queue that queries that needed data in parallel.
 
         # we could set all this up insider the task builder, but to prevent spawning too many Ray tasks in one
         # go, it seems preferable to break down the problem a bit more
         GkSource_work_items = itertools.product(z_sample, k_exit_times)
+        GkSource_work_batches = list(
+            grouper(GkSource_work_items, n=100, incomplete="ignore")
+        )
 
         GkSource_queue = RayWorkPool(
             pool,
-            GkSource_work_items,
-            task_builder=build_GkSource_work,
+            GkSource_work_batches,
+            task_builder=build_GkSource_batch,
             validation_handler=validate_GkSource_work,
             label_builder=build_GkSource_work_label,
             title="REBUILD GREENS FUNCTIONS FOR SOURCE REDSHIFT",
             store_results=False,
-            create_batch_size=5,
+            create_batch_size=1,  # we have batched the work queue into chunks ourselves
             notify_batch_size=2000,
             process_batch_size=50,
         )

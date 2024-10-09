@@ -781,7 +781,7 @@ class sqla_GkWKBValue_factory(SQLAFactoryBase):
             H_ratio = row_data.H_ratio
             theta = row_data.theta
 
-        return GkWKBValue(
+        obj = GkWKBValue(
             store_id=store_id,
             z=z,
             H_ratio=H_ratio,
@@ -793,3 +793,7 @@ class sqla_GkWKBValue_factory(SQLAFactoryBase):
             sin_coeff=sin_coeff,
             cos_coeff=cos_coeff,
         )
+        obj._deserialized = True
+        obj._k_exit = k
+        obj._z_source = z_source
+        return obj
