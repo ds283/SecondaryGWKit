@@ -25,7 +25,7 @@ def compute_analytic_Tprime(k, w, tau, H):
     n1 = 1.5 + b
     n2 = 2.5 + b
 
-    A = pow(2.0, n1)
+    A = pow(2.0, n0) * cs * k
     B = gamma(2.5 + b)
     C = pow(k_cs_tau, -n2)
     D1 = k_cs_tau * jv(n0, k_cs_tau)
@@ -33,4 +33,4 @@ def compute_analytic_Tprime(k, w, tau, H):
     D3 = -k_cs_tau * jv(n2, k_cs_tau)
     D = D1 + D2 + D3
 
-    return -(1.0 / H) * cs * k * A * B * C * D
+    return -(1.0 / H) * A * B * C * D
