@@ -177,9 +177,9 @@ with ShardedPool(
             (value.z_source.z, my_fabs(value.analytic_G)) for value in values
         ]
 
-        theta_points = [(value.z_source.z, value.WKB.theta) for value in values]
-        sin_coeff_points = [(value.z_source.z, value.WKB.sin_coeff) for value in values]
-        cos_coeff_points = [(value.z_source.z, value.WKB.cos_coeff) for value in values]
+        theta_points = [(value.z_source.z, my_fabs(value.WKB.theta)) for value in values]
+        sin_coeff_points = [(value.z_source.z, my_fabs(value.WKB.sin_coeff)) for value in values]
+        cos_coeff_points = [(value.z_source.z, my_fabs(value.WKB.cos_coeff)) for value in values]
 
         G_x, G_y = zip(*G_points)
         G_WKB_x, G_WKB_y = zip(*G_WKB_points)
@@ -232,6 +232,7 @@ with ShardedPool(
         ax.set_ylabel("WKB phase $\\theta$")
 
         ax.set_xscale("log")
+        ax.set_yscale("log")
 
         ax.grid(True)
         ax.xaxis.set_inverted(True)
@@ -254,6 +255,7 @@ with ShardedPool(
         ax.set_ylabel("coefficient")
 
         ax.set_xscale("log")
+        ax.set_yscale("log")
 
         ax.grid(True)
         ax.xaxis.set_inverted(True)
