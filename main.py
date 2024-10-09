@@ -2,6 +2,7 @@ import argparse
 import itertools
 import sys
 from datetime import datetime
+from typing import List
 
 import numpy as np
 import ray
@@ -9,10 +10,8 @@ import ray
 from ComputeTargets import (
     TkNumericalIntegration,
     GkNumericalIntegration,
-    IntegrationSolver,
     GkWKBIntegration,
     TensorSource,
-    BackgroundModel,
     GkNumericalValue,
     GkWKBValue,
     GkSource,
@@ -24,9 +23,8 @@ from CosmologyConcepts import (
     wavenumber_exit_time,
     redshift_array,
 )
-from CosmologyModels.LambdaCDM import LambdaCDM, Planck2018
+from CosmologyModels.LambdaCDM import Planck2018
 from Datastore.SQL.ShardedPool import ShardedPool
-from MetadataConcepts import tolerance, store_tag
 from RayWorkPool import RayWorkPool
 from Units import Mpc_units
 from defaults import (
@@ -148,7 +146,7 @@ with ShardedPool(
     units = Mpc_units()
     params = Planck2018()
     LambdaCDM_Planck2018 = ray.get(
-        pool.object_get(LambdaCDM, params=params, units=units)
+        pool.object_get("LambdaCDM", params=params, units=units)
     )
 
     zend = args.zend
@@ -158,20 +156,22 @@ with ShardedPool(
 
     def convert_to_wavenumbers(k_sample_set):
         return pool.object_get(
-            wavenumber,
+            "wavenumber",
             payload_data=[{"k_inv_Mpc": k, "units": units} for k in k_sample_set],
         )
 
     def convert_to_redshifts(z_sample_set):
-        return pool.object_get(redshift, payload_data=[{"z": z} for z in z_sample_set])
+        return pool.object_get(
+            "redshift", payload_data=[{"z": z} for z in z_sample_set]
+        )
 
     ## DATASTORE OBJECTS
 
     # build absolute and relative tolerances
     atol, rtol = ray.get(
         [
-            pool.object_get(tolerance, tol=DEFAULT_ABS_TOLERANCE),
-            pool.object_get(tolerance, tol=DEFAULT_REL_TOLERANCE),
+            pool.object_get("tolerance", tol=DEFAULT_ABS_TOLERANCE),
+            pool.object_get("tolerance", tol=DEFAULT_REL_TOLERANCE),
         ]
     )
 
@@ -186,11 +186,11 @@ with ShardedPool(
         solve_icp_LSODA,
     ) = ray.get(
         [
-            pool.object_get(IntegrationSolver, label="solve_ivp+RK45", stepping=0),
-            pool.object_get(IntegrationSolver, label="solve_ivp+DOP853", stepping=0),
-            pool.object_get(IntegrationSolver, label="solve_ivp+Radau", stepping=0),
-            pool.object_get(IntegrationSolver, label="solve_ivp+BDF", stepping=0),
-            pool.object_get(IntegrationSolver, label="solve_ivp+LSODA", stepping=0),
+            pool.object_get("IntegrationSolver", label="solve_ivp+RK45", stepping=0),
+            pool.object_get("IntegrationSolver", label="solve_ivp+DOP853", stepping=0),
+            pool.object_get("IntegrationSolver", label="solve_ivp+Radau", stepping=0),
+            pool.object_get("IntegrationSolver", label="solve_ivp+BDF", stepping=0),
+            pool.object_get("IntegrationSolver", label="solve_ivp+LSODA", stepping=0),
         ]
     )
     solvers = {
@@ -213,7 +213,7 @@ with ShardedPool(
 
     def build_k_exit_work(k: wavenumber):
         return pool.object_get(
-            wavenumber_exit_time,
+            "wavenumber_exit_time",
             k=k,
             cosmology=LambdaCDM_Planck2018,
             atol=atol,
@@ -262,12 +262,14 @@ with ShardedPool(
         SamplesPerLog10ZTag,
     ) = ray.get(
         [
-            pool.object_get(store_tag, label="TkOneLoopDensity"),
-            pool.object_get(store_tag, label="GkOneLoopDensity"),
-            pool.object_get(store_tag, label=f"GlobalRedshiftGrid_{len(z_sample)}"),
-            pool.object_get(store_tag, label=f"OutsideHorizonEfolds_e3"),
-            pool.object_get(store_tag, label=f"LargestRedshift_{z_sample.max.z:.5g}"),
-            pool.object_get(store_tag, label=f"SamplesPerLog10Z_{samples_per_log10z}"),
+            pool.object_get("store_tag", label="TkOneLoopDensity"),
+            pool.object_get("store_tag", label="GkOneLoopDensity"),
+            pool.object_get("store_tag", label=f"GlobalRedshiftGrid_{len(z_sample)}"),
+            pool.object_get("store_tag", label=f"OutsideHorizonEfolds_e3"),
+            pool.object_get("store_tag", label=f"LargestRedshift_{z_sample.max.z:.5g}"),
+            pool.object_get(
+                "store_tag", label=f"SamplesPerLog10Z_{samples_per_log10z}"
+            ),
         ]
     )
 
@@ -275,7 +277,7 @@ with ShardedPool(
     ## BAKE THE BACKGROUND COSMOLOGY INTO A BACKGROUND MODEL OBJECT
     model = ray.get(
         pool.object_get(
-            BackgroundModel,
+            "BackgroundModel",
             solver_labels=solvers,
             cosmology=LambdaCDM_Planck2018,
             z_sample=z_sample,
@@ -301,7 +303,7 @@ with ShardedPool(
     def build_Tk_work(k_exit: wavenumber_exit_time):
         my_sample = z_sample.truncate(k_exit.z_exit_suph_e5)
         return pool.object_get(
-            TkNumericalIntegration,
+            "TkNumericalIntegration",
             solver_labels=solvers,
             model=model,
             k=k_exit,
@@ -355,7 +357,7 @@ with ShardedPool(
 
             # q is not used by the TensorSource constructor, but is accepted because it functions as the shard key
             return pool.object_get(
-                TensorSource,
+                "TensorSource",
                 z_sample=z_sample,
                 q=q,
                 Tq=Tq,
@@ -408,7 +410,7 @@ with ShardedPool(
                 if len(response_zs) > 1:
                     work_refs.append(
                         pool.object_get(
-                            GkNumericalIntegration,
+                            "GkNumericalIntegration",
                             solver_labels=solvers,
                             model=model,
                             k=k_exit,
@@ -454,61 +456,145 @@ with ShardedPool(
     ## STEP 4
     ## COMPUTE TENSOR GREEN'S FUNCTIONS IN THE WKB APPROXIMATION FOR RESPONSE TIMES INSIDE THE HORIZON
 
-    def build_Gk_WKB_work(z_source: redshift):
-        # Query for a GkNumericalIntegration instance for this choice of model, k_exit, and z_source.
-        # If it exists, it will be used to set initial conditions for the WKB part of the evolution.
-        request_payload = [
+    def build_Gk_WKB_work(batch: List[redshift]):
+        # build GKWKBIntegration work items for a batch of z_source times
+
+        # Query for a GkNumericalIntegration instances for each combination of model, k_exit, and z_source.
+        # If one exists, it will be used to set initial conditions for the WKB part of the evolution.
+        # We want to do this in a vectorized way, pulling an entire batch of GkNumericalIntegration instances
+        # for a range of z-source values from the same shard. This is more efficient than paying the Ray and database
+        # overhead for multiple lookups
+        payload_batch = [
             {
-                "solver_labels": solvers,
-                "model": model,
                 "k": k_exit,
-                "z_source": z_source,
-                "z_sample": None,
-                "atol": atol,
-                "rtol": rtol,
-                "tags": [GkProductionTag, GlobalZGridTag, SamplesPerLog10ZTag],
+                "payload": [
+                    {
+                        "solver_labels": solvers,
+                        "model": model,
+                        "k": k_exit,
+                        "z_source": z_source,
+                        "z_sample": None,
+                        "atol": atol,
+                        "rtol": rtol,
+                        "tags": [GkProductionTag, GlobalZGridTag, SamplesPerLog10ZTag],
+                    }
+                    for z_source in batch
+                ],
             }
             for k_exit in k_exit_times
         ]
 
-        Gk_refs = pool.object_get(GkNumericalIntegration, payload_data=request_payload)
-        Gk_data = ray.get(Gk_refs)
-
-        response_pool = z_sample.truncate(z_source, keep="lower")
-
-        if len(response_pool) == 0 or response_pool.max.z <= response_pool.min.z:
-            return []
+        lookup_queue = RayWorkPool(
+            pool,
+            payload_batch,
+            task_builder=lambda x: pool.object_get_vectorized(
+                "GkNumericalIntegration", {"k": x["k"]}, payload_data=x["payload"]
+            ),
+            available_handler=None,
+            compute_handler=None,
+            store_handler=None,
+            validation_handler=None,
+            label_builder=None,
+            title=None,
+            store_results=True,
+            create_batch_size=5,  # may need to tweak relative to number of shards
+            process_batch_size=1,
+        )
+        lookup_queue.run()
 
         work_refs = []
 
-        for Gk_numerical, k_exit in zip(Gk_data, k_exit_times):
-            Gk_numerical: GkNumericalIntegration
+        response_pools = {
+            z_source.store_id: z_sample.truncate(z_source, keep="lower")
+            for z_source in batch
+        }
+
+        for i, k_exit in enumerate(k_exit_times):
             k_exit: wavenumber_exit_time
+            Gk_data = lookup_queue.results[i]
 
-            # query whether there is a pre-computed GkNumericalIntegration for this source redshift.
-            # typically, this will be the case provided the source redshift is sufficiently early
-            if Gk_numerical.available:
-                G_init = Gk_numerical.stop_G
-                Gprime_init = Gk_numerical.stop_Gprime
-                z_init = k_exit.z_exit - Gk_numerical.stop_efolds_subh
+            for z_source, Gk in zip(batch, Gk_data):
+                # be defensive about ensuring provenance for our data products
+                Gk: GkNumericalIntegration
+                assert Gk._k_exit.store_id == k_exit.store_id
+                assert Gk._z_source.store_id == z_source.store_id
 
-                # find redshift where this k-mode is at least 3 e-folds inside the horizon
-                # we don't calculate WKB Green's functions with the response redshift earlier than this
-                max_response = min(k_exit.z_exit_subh_e3, z_init)
-                response_zs = response_pool.truncate(max_response, keep="lower")
+                response_pool = response_pools[z_source.store_id]
 
-                if len(response_zs) > 0:
+                if (
+                    len(response_pool) == 0
+                    or response_pool.max.z <= response_pool.min.z
+                ):
+                    continue
+
+                # query whether there is a pre-computed GkNumericalIntegration for this source redshift.
+                # typically, this will be the case provided the source redshift is sufficiently early
+                if Gk.available:
+                    G_init = Gk.stop_G
+                    Gprime_init = Gk.stop_Gprime
+                    z_init = k_exit.z_exit - Gk.stop_efolds_subh
+
+                    # find redshift where this k-mode is at least 3 e-folds inside the horizon
+                    # we don't calculate WKB Green's functions with the response redshift earlier than this
+                    max_response = min(k_exit.z_exit_subh_e3, z_init)
+                    response_zs = response_pool.truncate(max_response, keep="lower")
+
+                    if len(response_zs) > 0:
+                        work_refs.append(
+                            pool.object_get(
+                                "GkWKBIntegration",
+                                solver_labels=solvers,
+                                model=model,
+                                k=k_exit,
+                                z_source=z_source,
+                                z_init=z_init,
+                                G_init=G_init,
+                                Gprime_init=Gprime_init,
+                                z_sample=response_zs,
+                                atol=atol,
+                                rtol=rtol,
+                                tags=[
+                                    GkProductionTag,
+                                    GlobalZGridTag,
+                                    OutsideHorizonEfoldsTag,
+                                    LargestZTag,
+                                    SamplesPerLog10ZTag,
+                                ],
+                            )
+                        )
+                else:
+                    # no pre-computed initial condition available.
+                    # This is OK and expected if the z_source is sufficiently far after horizon re-entry,
+                    # but we should warn if we expect an initial condition to be available
+                    if z_source.z > k_exit.z_exit_subh_e3 - DEFAULT_FLOAT_PRECISION:
+                        print(
+                            f"!! WARNING: no numerically-computed initial conditions ia available for k={k_exit.k.k_inv_Mpc:.5g}/Mpc, z_source={z_source.z:.5g}"
+                        )
+                        print(
+                            f"|    This may indicate an edge-effect, or possibly that not all initial conditions are present in the datastore."
+                        )
+
+                    if z_source.z >= k_exit.z_exit:
+                        print(
+                            f"!! ERROR: attempt to compute WKB solution for k={k_exit.k.k_inv_Mpc:.5g}/Mpc, z_source={z_source.z:.5g} without a pre-computed initial condition"
+                        )
+                        print(
+                            f"|    For this k-mode, horizon entry occurs at z_entry={k_exit.z_exit:.5g}"
+                        )
+                        raise RuntimeError(
+                            f"Cannot compute WKB solution outside the horizon"
+                        )
+
                     work_refs.append(
                         pool.object_get(
-                            GkWKBIntegration,
+                            "GkWKBIntegration",
                             solver_labels=solvers,
                             model=model,
                             k=k_exit,
                             z_source=z_source,
-                            z_init=z_init,
-                            G_init=G_init,
-                            Gprime_init=Gprime_init,
-                            z_sample=response_zs,
+                            G_init=0.0,
+                            Gprime_init=1.0,
+                            z_sample=response_pool,
                             atol=atol,
                             rtol=rtol,
                             tags=[
@@ -520,50 +606,6 @@ with ShardedPool(
                             ],
                         )
                     )
-            else:
-                # no pre-computed initial condition available.
-                # This is OK and expected if the z_source is sufficiently far after horizon re-entry,
-                # but we should warn if we expect an initial condition to be available
-                if z_source.z > k_exit.z_exit_subh_e3 - DEFAULT_FLOAT_PRECISION:
-                    print(
-                        f"!! WARNING: no numerically-computed initial conditions ia available for k={k_exit.k.k_inv_Mpc:.5g}/Mpc, z_source={z_source.z:.5g}"
-                    )
-                    print(
-                        f"|    This may indicate an edge-effect, or possibly that not all initial conditions are present in the datastore."
-                    )
-
-                if z_source.z >= k_exit.z_exit:
-                    print(
-                        f"!! ERROR: attempt to compute WKB solution for k={k_exit.k.k_inv_Mpc:.5g}/Mpc, z_source={z_source.z:.5g} without a pre-computed initial condition"
-                    )
-                    print(
-                        f"|    For this k-mode, horizon entry occurs at z_entry={k_exit.z_exit:.5g}"
-                    )
-                    raise RuntimeError(
-                        f"Cannot compute WKB solution outside the horizon"
-                    )
-
-                work_refs.append(
-                    pool.object_get(
-                        GkWKBIntegration,
-                        solver_labels=solvers,
-                        model=model,
-                        k=k_exit,
-                        z_source=z_source,
-                        G_init=0.0,
-                        Gprime_init=1.0,
-                        z_sample=response_pool,
-                        atol=atol,
-                        rtol=rtol,
-                        tags=[
-                            GkProductionTag,
-                            GlobalZGridTag,
-                            OutsideHorizonEfoldsTag,
-                            LargestZTag,
-                            SamplesPerLog10ZTag,
-                        ],
-                    )
-                )
 
         return work_refs
 
@@ -573,10 +615,12 @@ with ShardedPool(
     def validate_Gk_WKB_work(Gk: GkWKBIntegration):
         return pool.object_validate(Gk)
 
+    GkWKB_work_batches = list(grouper(z_sample, n=20, incomplete="ignore"))
+
     if args.WKB_queue:
         Gk_WKB_queue = RayWorkPool(
             pool,
-            z_sample,
+            GkWKB_work_batches,
             task_builder=build_Gk_WKB_work,
             validation_handler=validate_Gk_WKB_work,
             label_builder=build_Gk_WKB_work_label,
@@ -658,7 +702,8 @@ with ShardedPool(
             label_builder=None,
             title=None,
             store_results=True,
-            create_batch_size=5,  # tweak relative to number of shards
+            create_batch_size=5,  # may need to tweak relative to number of shards
+            process_batch_size=10,
         )
         lookup_queue.run()
 
@@ -680,7 +725,7 @@ with ShardedPool(
                 numeric_value = numerics[j]
                 WKB_value = WKBs[j]
 
-                # be defensive about ensuring we are collecting the correct data points!
+                # be defensive about ensuring the provenance for our data
                 assert isinstance(numeric_value, GkNumericalValue)
                 assert isinstance(WKB_value, GkWKBValue)
 
@@ -698,7 +743,7 @@ with ShardedPool(
 
             work_refs.append(
                 pool.object_get(
-                    GkSource,
+                    "GkSource",
                     payload={
                         "numeric": numeric_data,
                         "WKB": WKB_data,
