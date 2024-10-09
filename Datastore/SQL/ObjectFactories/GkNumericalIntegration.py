@@ -506,6 +506,7 @@ class sqla_GkNumericalIntegration_factory(SQLAFactoryBase):
         wavenumber_exit_table = tables["wavenumber_exit_time"]
         wavenumber_table = tables["wavenumber"]
         value_table = tables["GkNumericalValue"]
+        tags_table = tables["GkNumerical_tags"]
 
         # bake results into a list so that we can close this query; we are going to want to run
         # another one as we process the rows from this one
@@ -572,6 +573,11 @@ class sqla_GkNumericalIntegration_factory(SQLAFactoryBase):
                 conn.execute(
                     sqla.delete(value_table).where(
                         value_table.c.integration_serial.in_(invalid_serials)
+                    )
+                )
+                conn.execute(
+                    sqla.delete(tags_table).where(
+                        tags_table.c.integration_serial.in_(invalid_serials)
                     )
                 )
                 conn.execute(

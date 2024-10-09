@@ -431,6 +431,7 @@ class sqla_BackgroundModelFactory(SQLAFactoryBase):
         rtol_table = tables["tolerance"].alias("rtol")
         solver_table = tables["IntegrationSolver"]
         value_table = tables["BackgroundModelValue"]
+        tags_table = tables["BackgroundModel_tags"]
 
         # bake results into a list so that we can close this query; we are going to want to run
         # another one as we process the rows from this one
@@ -481,6 +482,11 @@ class sqla_BackgroundModelFactory(SQLAFactoryBase):
                 conn.execute(
                     sqla.delete(value_table).where(
                         value_table.c.model_serial.in_(invalid_serials)
+                    )
+                )
+                conn.execute(
+                    sqla.delete(tags_table).where(
+                        tags_table.c.model_serial.in_(invalid_serials)
                     )
                 )
                 conn.execute(
@@ -610,7 +616,7 @@ class sqla_BackgroundModelValue_factory(SQLAFactoryBase):
                     f"Stored background model w_Perturbations value (model store_id={model_serial}, z={z.store_id}) = {row_data.wPerturbations} differs from expected value = {wPerturbations}"
                 )
 
-        return BackgroundModelValue(
+        obj = BackgroundModelValue(
             store_id=store_id,
             z=z,
             Hubble=Hubble,
@@ -622,3 +628,5 @@ class sqla_BackgroundModelValue_factory(SQLAFactoryBase):
             d2_lnH_dz2=d2_lnH_dz2,
             d3_lnH_dz3=d3_lnH_dz3,
         )
+        obj._deserialized = True
+        return obj

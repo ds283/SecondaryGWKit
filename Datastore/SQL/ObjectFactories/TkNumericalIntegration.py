@@ -483,6 +483,7 @@ class sqla_TkNumericalIntegration_factory(SQLAFactoryBase):
         wavenumber_exit_table = tables["wavenumber_exit_time"]
         wavenumber_table = tables["wavenumber"]
         value_table = tables["TkNumericalValue"]
+        tags_table = tables["TkNumerical_tags"]
 
         # bake results into a list so that we can close this query; we are going to want to run
         # another one as we process the rows from this one
@@ -548,6 +549,11 @@ class sqla_TkNumericalIntegration_factory(SQLAFactoryBase):
                 conn.execute(
                     sqla.delete(value_table).where(
                         value_table.c.integration_serial.in_(invalid_serials)
+                    )
+                )
+                conn.execute(
+                    sqla.delete(tags_table).where(
+                        tags_table.c.integration_serial.in_(invalid_serials)
                     )
                 )
                 conn.execute(
@@ -657,7 +663,7 @@ class sqla_TkNumericalValue_factory(SQLAFactoryBase):
                     f"Stored matter transfer function derivative (integration={integration_serial}, z={z.z}) = {row_data.Tprime} differs from expected value = {Tprime}"
                 )
 
-        return TkNumericalValue(
+        obj = TkNumericalValue(
             store_id=store_id,
             z=z,
             T=T,
@@ -665,3 +671,5 @@ class sqla_TkNumericalValue_factory(SQLAFactoryBase):
             analytic_T=analytic_T,
             analytic_Tprime=analytic_Tprime,
         )
+        obj._deserialized = True
+        return obj

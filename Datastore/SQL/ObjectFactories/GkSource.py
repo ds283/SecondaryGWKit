@@ -412,6 +412,7 @@ class sqla_GkSource_factory(SQLAFactoryBase):
         wavenumber_exit_table = tables["wavenumber_exit_time"]
         wavenumber_table = tables["wavenumber"]
         value_table = tables["GkSourceValue"]
+        tags_table = tables["GkSource_tags"]
 
         # bake results into a list so that we can close this query; we are going to want to run
         # another one as we process the rows from this one
@@ -474,6 +475,11 @@ class sqla_GkSource_factory(SQLAFactoryBase):
                 conn.execute(
                     sqla.delete(value_table).where(
                         value_table.c.parent_serial.in_(invalid_serials)
+                    )
+                )
+                conn.execute(
+                    sqla.delete(tags_table).where(
+                        tags_table.c.parent_serial.in_(invalid_serials)
                     )
                 )
                 conn.execute(
@@ -606,7 +612,7 @@ class sqla_GkSourceValue_factory(SQLAFactoryBase):
             analytic_G = row_data.analytic_G
             analytic_Gprime = row_data.analytic_Gprime
 
-        return GkSourceValue(
+        obj = GkSourceValue(
             store_id=store_id,
             z_source=z_source,
             G=G,
@@ -620,3 +626,5 @@ class sqla_GkSourceValue_factory(SQLAFactoryBase):
             analytic_G=analytic_G,
             analytic_Gprime=analytic_Gprime,
         )
+        obj._deserialized = True
+        return obj

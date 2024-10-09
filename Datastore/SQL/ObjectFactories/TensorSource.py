@@ -325,6 +325,7 @@ class sqla_TensorSource_factory(SQLAFactoryBase):
         Tq_table = tables["TkNumericalIntegration"].alias("Tq")
         Tr_table = tables["TkNumericalIntegration"].alias("Tr")
         value_table = tables["TensorSourceValue"]
+        tags_table = tables["TensorSource_tags"]
 
         not_validated = list(
             conn.execute(
@@ -372,6 +373,11 @@ class sqla_TensorSource_factory(SQLAFactoryBase):
                 conn.execute(
                     sqla.delete(value_table).where(
                         value_table.c.parent_serial.in_(invalid_serials)
+                    )
+                )
+                conn.execute(
+                    sqla.delete(tags_table).where(
+                        tags_table.c.parent_serial.in_(invalid_serials)
                     )
                 )
                 conn.execute(
@@ -492,7 +498,7 @@ class sqla_TensorSourceValue_factory(SQLAFactoryBase):
                     f"Stored tensor source term differentiated part (calculation={parent_serial}, z={z.z}) = {row_data.diff_part} differs from expected vlalue = {diff_part}"
                 )
 
-        return TensorSourceValue(
+        obj = TensorSourceValue(
             store_id=store_id,
             z=z,
             source_term=source_term,
@@ -502,3 +508,5 @@ class sqla_TensorSourceValue_factory(SQLAFactoryBase):
             analytic_undiff_part=analytic_undiff_part,
             analytic_diff_part=analytic_diff_part,
         )
+        obj._deserialized = True
+        return obj
