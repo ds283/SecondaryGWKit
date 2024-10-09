@@ -183,6 +183,9 @@ with ShardedPool(
         abs_G_column = []
         analytic_G_column = []
         abs_analytic_G_column = []
+        theta_column = []
+        H_ratio_column = []
+        omega_WKB_sq_column = []
         type_column = []
 
         if Gk_numerical.available:
@@ -207,16 +210,23 @@ with ShardedPool(
             analytic_G_column.extend(value.analytic_G for value in values)
             abs_G_column.extend(fabs(value.G) for value in values)
             abs_analytic_G_column.extend(fabs(value.analytic_G) for value in values)
+            theta_column.extend(None for _ in range(len(values)))
+            H_ratio_column.extend(None for _ in range(len(values)))
+            omega_WKB_sq_column.extend(value.omega_WKB_sq for value in values)
             type_column.extend(0 for _ in range(len(values)))
 
+        theta_x = None
+        theta_y = None
         if Gk_WKB.available:
             values: List[GkWKBValue] = Gk_WKB.values
 
             numerical_points = [(value.z.z, fabs(value.G_WKB)) for value in values]
             analytic_points = [(value.z.z, fabs(value.analytic_G)) for value in values]
+            theta_points = [(value.z.z, value.theta) for value in values]
 
             numerical_x, numerical_y = zip(*numerical_points)
             analytic_x, analytic_y = zip(*analytic_points)
+            theta_x, theta_y = zip(*theta_points)
 
             ax.plot(numerical_x, numerical_y, label="WKB $G_k$")
             ax.plot(
@@ -231,6 +241,9 @@ with ShardedPool(
             analytic_G_column.extend(value.analytic_G for value in values)
             abs_G_column.extend(fabs(value.G_WKB) for value in values)
             abs_analytic_G_column.extend(fabs(value.analytic_G) for value in values)
+            theta_column.extend(value.theta for value in values)
+            H_ratio_column.extend(value.H_ratio for value in values)
+            omega_WKB_sq_column.extend(value.omega_WKB_sq for value in values)
             type_column.extend(1 for _ in range(len(values)))
 
         ax.set_xlabel("response redshift $z$")
@@ -245,11 +258,40 @@ with ShardedPool(
         base_path = Path(args.output).resolve()
         fig_path = (
             base_path
-            / f"figures/k-serial={k_exit.store_id}-k={k_exit.k.k_inv_Mpc:.5g}/z-serial={z_source.store_id}-zsource={z_source.z:.5g}.pdf"
+            / f"plots/full-range/k-serial={k_exit.store_id}-k={k_exit.k.k_inv_Mpc:.5g}/z-serial={z_source.store_id}-zsource={z_source.z:.5g}.pdf"
         )
         fig_path.parents[0].mkdir(exist_ok=True, parents=True)
         fig.savefig(fig_path)
+
+        ax.set_xlim(k_exit.z_exit_suph_e3, k_exit.z_exit_subh_e3)
+        fig_path = (
+            base_path
+            / f"plots/zoom-matching/k-serial={k_exit.store_id}-k={k_exit.k.k_inv_Mpc:.5g}/z-serial={z_source.store_id}-zsource={z_source.z:.5g}.pdf"
+        )
+        fig_path.parents[0].mkdir(exist_ok=True, parents=True)
+        fig.savefig(fig_path)
+
         plt.close()
+
+        if theta_x is not None and theta_y is not None:
+            fig = plt.figure()
+            ax = plt.gca()
+
+            ax.plot(theta_x, theta_y, label="WKB phase $\\theta$")
+
+            ax.set_xlabel("response redshift $z$")
+            ax.set_ylabel("WKB phase $\\theta$")
+
+            ax.set_xscale("log")
+            ax.grid(True)
+            ax.xaxis.set_inverted(True)
+
+            fig_path = (
+                base_path
+                / f"plots/theta/k-serial={k_exit.store_id}-k={k_exit.k.k_inv_Mpc:.5g}/z-serial={z_source.store_id}-zsource={z_source.z:.5g}.pdf"
+            )
+            fig_path.parents[0].mkdir(exist_ok=True, parents=True)
+            fig.savefig(fig_path)
 
         csv_path = (
             base_path
@@ -263,6 +305,9 @@ with ShardedPool(
                 "abs_G": abs_G_column,
                 "analytic_G": analytic_G_column,
                 "abs_analytic_G": abs_analytic_G_column,
+                "theta": theta_column,
+                "H_ratio": H_ratio_column,
+                "omega_WKB_sq": omega_WKB_sq_column,
                 "type": type_column,
             }
         )
