@@ -356,7 +356,7 @@ class Datastore:
                 if not printed_header:
                     if self._my_name is not None:
                         print(
-                            f'!! INTEGRITY WARNING: datastore "{self._my_name}" (physical file {str(self._db_file)})'
+                            f'!! INTEGRITY WARNING ({datetime.now().replace(microsecond=0).isoformat()}): datastore "{self._my_name}" (physical file {str(self._db_file)})'
                         )
                         printed_header = True
 
