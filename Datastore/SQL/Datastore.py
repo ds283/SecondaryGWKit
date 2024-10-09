@@ -369,7 +369,17 @@ class Datastore:
         else:
             cls_name = ObjectClass.__name__
 
-        with ProfileBatchManager(self._profile_batcher, "object_get", cls_name) as mgr:
+        profile_metadata = {"object": cls_name}
+        if "payload_data" in kwargs:
+            profile_metadata.update(
+                {"type": "vector", "size": len(kwargs["payload_data"])}
+            )
+        else:
+            profile_metadata.update({"type": "scalar"})
+
+        with ProfileBatchManager(
+            self._profile_batcher, "object_get", str(profile_metadata)
+        ) as mgr:
             self._ensure_registered_schema(cls_name)
             record = self._schema[cls_name]
 
