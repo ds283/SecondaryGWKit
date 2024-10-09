@@ -34,7 +34,9 @@ class ProfileAgent:
         if label is not None:
             self._label = label
         else:
-            self._label = "job-start-{datetime.now().replace(microsecond=0).isoformat()"
+            self._label = (
+                f"job-start-{datetime.now().replace(microsecond=0).isoformat()}"
+            )
         with self._engine.begin() as conn:
             obj = conn.execute(sqla.insert(self._job_table), {"label": self._label})
 
