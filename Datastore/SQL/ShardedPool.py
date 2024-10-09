@@ -408,6 +408,33 @@ class ShardedPool:
 
         return self._shards[shard_id].object_get.remote(cls_name, **kwargs)
 
+    def object_get_vectorized(self, ObjectClass, shard_key, payload_data):
+        if isinstance(ObjectClass, str):
+            cls_name = ObjectClass
+        else:
+            cls_name = ObjectClass.__name__
+
+        if cls_name not in _shard_tables:
+            raise RuntimeError(
+                "ShardedPool: it is only possible to vectorize object_get() over a sharded table"
+            )
+
+        shard_key_field = _shard_tables[cls_name]
+        if shard_key_field not in shard_key:
+            raise RuntimeError(
+                f'ShardedPool: expected shard key "{shard_key_field}" to be provided for object type "{cls_name}", but instead received keys: {shard_key.keys()}'
+            )
+
+        shard_id = self._wavenumber_keys[
+            self._get_k_store_id(shard_key[shard_key_field])
+        ]
+
+        for value in payload_data:
+            value.update(shard_key)
+        return self._shards[shard_id].object_get.remote(
+            cls_name, payload_data=payload_data
+        )
+
     def object_store(self, objects):
         if isinstance(objects, list) or isinstance(objects, tuple):
             payload_data = objects

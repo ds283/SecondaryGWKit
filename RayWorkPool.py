@@ -210,40 +210,56 @@ class RayWorkPool:
                     self._num_lookup_queue = max(self._num_lookup_queue - 1, 0)
                     self._num_lookup_complete += 1
 
-                    if obj.available:
-                        # check whether an availability handler exists
-                        if self._available_handler is not None:
-                            available_task: ObjectRef = self._available_handler(obj)
+                    # if the object has an 'available' attribute, we regard it as participating in the available/compute/store cycle
+                    if hasattr(obj, "available"):
+                        if obj.available:
+                            # check whether an availability handler exists
+                            if self._available_handler is not None:
+                                available_task: ObjectRef = self._available_handler(obj)
 
-                            # add this task to the work queue
-                            self._inflight[available_task.hex] = available_task
-                            self._data[available_task.hex] = ("available", (idx, obj))
+                                # add this task to the work queue
+                                self._inflight[available_task.hex] = available_task
+                                self._data[available_task.hex] = (
+                                    "available",
+                                    (idx, obj),
+                                )
 
-                            self._num_available_queue += 1
+                                self._num_available_queue += 1
 
-                        # otherwise, this is the exit point for driver flow associated with this task, so apply the
-                        # postprocessing task, if one was supplied
-                        elif self._post_handler is not None:
+                            # otherwise, this is the exit point for driver flow associated with this task, so apply the
+                            # postprocessing task, if one was supplied
+                            elif self._post_handler is not None:
+                                replacement_obj = self._post_handler(obj)
+                                if replacement_obj is not None and self._store_results:
+                                    self.results[idx] = replacement_obj
+
+                        else:
+                            # check whether a compute handler exists
+                            if self._compute_handler is not None:
+                                # otherwise, schedule a compute tasks
+                                label: str = (
+                                    self._label_builder(obj)
+                                    if self._label_builder is not None
+                                    else None
+                                )
+                                compute_task: ObjectRef = self._compute_handler(
+                                    obj, label
+                                )
+
+                                # add this compute task to the work queue
+                                self._inflight[compute_task.hex] = compute_task
+                                self._data[compute_task.hex] = ("compute", (idx, obj))
+
+                                self._num_compute_queue += 1
+
+                    # otherwise, we regard it as simply a blob that has been returned (perhaps from a vectorized object lookup),
+                    # and should be finalized
+                    else:
+                        # this is the exit point, so apply the postprocessing task, if one was provided
+                        if self._post_handler is not None:
                             replacement_obj = self._post_handler(obj)
                             if replacement_obj is not None and self._store_results:
                                 self.results[idx] = replacement_obj
-
-                    else:
-                        # check whether a compute handler exists
-                        if self._compute_handler is not None:
-                            # otherwise, schedule a compute tasks
-                            label: str = (
-                                self._label_builder(obj)
-                                if self._label_builder is not None
-                                else None
-                            )
-                            compute_task: ObjectRef = self._compute_handler(obj, label)
-
-                            # add this compute task to the work queue
-                            self._inflight[compute_task.hex] = compute_task
-                            self._data[compute_task.hex] = ("compute", (idx, obj))
-
-                            self._num_compute_queue += 1
 
                 elif type == "available":
                     # payload is a pair of the target index and the constructed object

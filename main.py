@@ -595,6 +595,7 @@ with ShardedPool(
     # strictly, redundant. But it is likely much faster because we need to perform complicated table lookups with joins in order to build
     # these directly from GkNumericalValue and GkWKValue rows. Also, there is the reproducibility angle of keeping a record of what
     # rebuilt data products we used.)
+
     def build_GkSource_batch(batch):
         # try to do parallel lookup of the GkNumericalIntegration/GkWKBIntegration records needed
         # to process this batch
@@ -607,24 +608,35 @@ with ShardedPool(
             (data[0], data[1], z_sources_batch[i]) for i, data in enumerate(batch)
         ]
 
+        # all the z-source values for a single k-mode will be held on the same database shard.
+        # It's critical that we vectorize the lookup for these. There will typically be hundreds or
+        # thousands of z values, and we cannot afford the overhead of looking up each GkNumericalValue or
+        # GkWKBValue individually. This entails a database overhead (lookups are much more efficient if wrapped
+        # in a single transaction) and a multiprocessing overhead (Ray has to serialize, schedule, deserialize, ...)
         payload_batch = [
             {
-                "model": model,
+                # note we don't specify the k mode as part of the main payload
+                # instead we specify it separately to object_get_vectorized()
                 "k": k_exit,
-                "z_source": z_source,
-                "z": z_response,
-                "atol": atol,
-                "rtol": rtol,
-                "tags": [
-                    GkProductionTag,
-                    GlobalZGridTag,
-                    OutsideHorizonEfoldsTag,
-                    LargestZTag,
-                    SamplesPerLog10ZTag,
+                "payload": [
+                    {
+                        "model": model,
+                        "z_source": z_source,
+                        "z": z_response,
+                        "atol": atol,
+                        "rtol": rtol,
+                        "tags": [
+                            GkProductionTag,
+                            GlobalZGridTag,
+                            OutsideHorizonEfoldsTag,
+                            LargestZTag,
+                            SamplesPerLog10ZTag,
+                        ],
+                    }
+                    for z_source in z_sources
                 ],
             }
             for z_response, k_exit, z_sources in batch_data
-            for z_source in z_sources
         ]
 
         labelled_payloads = [
@@ -636,7 +648,9 @@ with ShardedPool(
         lookup_queue = RayWorkPool(
             pool,
             labelled_payloads,
-            task_builder=lambda x: pool.object_get(x[0], **x[1]),
+            task_builder=lambda x: pool.object_get_vectorized(
+                x[0], {"k": x[1]["k"]}, payload_data=x[1]["payload"]
+            ),
             available_handler=None,
             compute_handler=None,
             store_handler=None,
@@ -644,29 +658,34 @@ with ShardedPool(
             label_builder=None,
             title=None,
             store_results=True,
-            create_batch_size=25,  # tweak relative to number of shards
+            create_batch_size=5,  # tweak relative to number of shards
         )
         lookup_queue.run()
 
         work_refs = []
 
-        i = 0
-        for z_response, k_exit, z_sources in batch_data:
+        for i, data in enumerate(batch_data):
+            z_response, k_exit, z_sources = data
             z_response: redshift
             k_exit: wavenumber_exit_time
             z_sources: redshift_array
 
+            numerics = lookup_queue.results[2 * i]
+            WKBs = lookup_queue.results[2 * i + 1]
+
             numeric_data = {}
             WKB_data = {}
 
-            for z_source in z_sources:
-                numeric_value = lookup_queue.results[i]
-                WKB_value = lookup_queue.results[i + 1]
-                i += 2
+            for j, z_source in enumerate(z_sources):
+                numeric_value = numerics[j]
+                WKB_value = WKBs[j]
 
+                # be defensive about ensuring we are collecting the correct data points!
                 assert isinstance(numeric_value, GkNumericalValue)
                 assert isinstance(WKB_value, GkWKBValue)
 
+                # the _k_exit and _z_source fields are not part of the public API for these
+                # objects, but they are set by the data store after deserialization
                 assert numeric_value._k_exit.store_id == k_exit.store_id
                 assert WKB_value._k_exit.store_id == k_exit.store_id
                 assert numeric_value._z_source.store_id == z_source.store_id
