@@ -68,6 +68,7 @@ with ShardedPool(
     timeout=args.db_timeout,
     profile_db=args.profile_db,
     job_name="extract_Gk_data",
+    prune_unvalidated=False,
 ) as pool:
 
     # set up LambdaCDM object representing a basic Planck2018 cosmology in Mpc units
