@@ -793,6 +793,10 @@ class sqla_GkWKBValue_factory(SQLAFactoryBase):
         wkb_table = tables["GkWKBIntegration"]
 
         try:
+            # TODO: benchmarking suggests this query is indistinguishable from filtering directly on the
+            #  GkWKBIntegration serial number (if we only knew what it was), so this may be about
+            #  as good as we can do. But it is still slow. For production use, should look at how this
+            #  can be improved.
             wkb_query = sqla.select(
                 wkb_table.c.serial, wkb_table.c.sin_coeff, wkb_table.c.cos_coeff
             ).filter(

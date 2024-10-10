@@ -695,6 +695,10 @@ class sqla_GkSourceValue_factory(SQLAFactoryBase):
         source_table = tables["GkSource"]
 
         try:
+            # TODO: benchmarking suggests this query is indistinguishable from filtering directly on the
+            #  GkSource serial number (if we only knew what it was), so this may be about
+            #  as good as we can do. But it is still slow. For production use, should look at how this
+            #  can be improved.
             source_query = sqla.select(source_table.c.serial).filter(
                 source_table.c.model_serial == model.store_id,
                 source_table.c.wavenumber_exit_serial == k.store_id,

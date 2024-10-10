@@ -759,6 +759,10 @@ class sqla_GkNumericalValue_factory(SQLAFactoryBase):
         integration_table = tables["GkNumericalIntegration"]
 
         try:
+            # TODO: benchmarking suggests this query is indistinguishable from filtering directly on the
+            #  GkNumericalIntegration serial number (if we only knew what it was), so this may be about
+            #  as good as we can do. But it is still slow. For production use, should look at how this
+            #  can be improved.
             integration_query = sqla.select(integration_table.c.serial).filter(
                 integration_table.c.model_serial == model.store_id,
                 integration_table.c.wavenumber_exit_serial == k.store_id,
