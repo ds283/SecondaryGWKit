@@ -5,11 +5,11 @@ from math import fabs
 from sqlalchemy import and_, or_
 from sqlalchemy.exc import MultipleResultsFound, SQLAlchemyError
 
-from ComputeTargets import TkNumericalIntegration
+from ComputeTargets import TkNumericalIntegration, BackgroundModel
 from ComputeTargets.TensorSource import TensorSource, TensorSourceValue
-from CosmologyConcepts import redshift, redshift_array
+from CosmologyConcepts import redshift, redshift_array, wavenumber_exit_time
 from Datastore.SQL.ObjectFactories.base import SQLAFactoryBase
-from MetadataConcepts import store_tag
+from MetadataConcepts import store_tag, tolerance
 from defaults import DEFAULT_STRING_LENGTH, DEFAULT_FLOAT_PRECISION
 
 
@@ -432,6 +432,36 @@ class sqla_TensorSourceValue_factory(SQLAFactoryBase):
 
     @staticmethod
     def build(payload, conn, table, inserter, tables, inserters):
+        parent_serial: Optional[int] = payload.get("parent_serial", None)
+
+        model: Optional[BackgroundModel] = payload.get("model", None)
+        q: Optional[wavenumber_exit_time] = payload.get("q", None)
+        r: Optional[wavenumber_exit_time] = payload.get("r", None)
+
+        has_serial = all([parent_serial is not None])
+        has_model = all([model is not None, q is not None, r is not None])
+
+        if all([has_serial, has_model]):
+            print(
+                "## TensorSourceValue.build(): both an parent serial number and a (model, q, r) set were queried. Only the serial number will be used."
+            )
+
+        if not any([has_serial, has_model]):
+            raise RuntimeError(
+                "TensorSourceValue.build(): at least one of a parent serial number and a (model, q, r) set must be supplied."
+            )
+
+        if has_serial:
+            return sqla_TensorSourceValue_factory._build_impl_serial(
+                payload, conn, table, inserter, tables, inserters
+            )
+
+        return sqla_TensorSourceValue_factory._build_impl_model(
+            payload, conn, table, inserter, tables, inserters
+        )
+
+    @staticmethod
+    def _build_impl_serial(payload, conn, table, inserter, tables, inserters):
         parent_serial = payload["parent_serial"]
         z = payload["z"]
 
@@ -478,6 +508,8 @@ class sqla_TensorSourceValue_factory(SQLAFactoryBase):
                     "analytic_diff_part": analytic_diff_part,
                 },
             )
+
+            attribute_set = {"_new_insert": True}
         else:
             store_id = row_data.serial
 
@@ -498,6 +530,8 @@ class sqla_TensorSourceValue_factory(SQLAFactoryBase):
                     f"Stored tensor source term differentiated part (calculation={parent_serial}, z={z.z}) = {row_data.diff_part} differs from expected vlalue = {diff_part}"
                 )
 
+            attribute_set = {"_deserialized": True}
+
         obj = TensorSourceValue(
             store_id=store_id,
             z=z,
@@ -508,5 +542,110 @@ class sqla_TensorSourceValue_factory(SQLAFactoryBase):
             analytic_undiff_part=analytic_undiff_part,
             analytic_diff_part=analytic_diff_part,
         )
+        for key, value in attribute_set.items():
+            setattr(obj, key, value)
+        return obj
+
+    @staticmethod
+    def _build_impl_model(payload, conn, table, inserter, tables, inserters):
+        z = payload["z"]
+
+        model: BackgroundModel = payload["model"]
+        q: wavenumber_exit_time = payload["q"]
+        r: wavenumber_exit_time = payload["r"]
+
+        atol: Optional[tolerance] = payload.get("atol", None)
+        rtol: Optional[tolerance] = payload.get("rtol", None)
+        tags: Optional[List[store_tag]] = payload.get("tags", None)
+
+        tensorsource_table = tables["TensorSource"]
+        Tq_table = tables["TkNumericalIntegration"].alias("Tk_table")
+        Tr_table = tables["TkNumericalIntegration"].alias("Tr_table")
+
+        try:
+            tensorsource_query = (
+                sqla.select(tensorsource_table.c.serial)
+                .select_from(
+                    tensorsource_table.join(
+                        Tq_table, Tq_table.serial == tensorsource_table.c.Tq_serial
+                    ).join(Tr_table, Tr_table.serial == tensorsource_table.c.Tr_serial)
+                )
+                .filter(
+                    Tq_table.c.model_serial == model.store_id,
+                    Tr_table.c.model_serial == model.store_id,
+                    Tq_table.c.wavenumber_exit_serial == q.store_id,
+                    Tr_table.c.wavenumber_exit_serial == r.store_id,
+                    tensorsource_table.c.validated == True,
+                )
+            )
+
+            if atol is not None:
+                tensorsource_query = tensorsource_query.filter(
+                    Tq_table.c.atol_serial == atol.store_id,
+                    Tr_table.c.atol_serial == atol.store_id,
+                )
+
+            if rtol is not None:
+                tensorsource_query = tensorsource_query.filter(
+                    Tq_table.c.rtol_serial == rtol.store_id,
+                    Tr_table.c.rtol_serial == rtol.store_id,
+                )
+
+            count = 0
+            for tag in tags:
+                tag: store_tag
+                tab = tables["TensorSource_tags"].alias(f"tag_{count}")
+                count += 1
+                tensorsource_query = tensorsource_query.join(
+                    tab,
+                    and_(
+                        tab.c.parent_serial == tensorsource_table.c.serial,
+                        tab.c.tag_serial == tag.store_id,
+                    ),
+                )
+
+            subquery = tensorsource_query.subquery()
+
+            row_data = conn.execute(
+                sqla.select(
+                    table.c.serial,
+                    table.c.source_term,
+                    table.c.undiff_part,
+                    table.c.diff_part,
+                    table.c.analytic_source_term,
+                    table.c.analytic_undiff_part,
+                    table.c.analytic_diff_part,
+                )
+                .select_from(
+                    subquery.join(table, table.c.parent_serial == subquery.c.serial)
+                )
+                .filter(
+                    table.c.z_serial == z.store_id,
+                )
+            ).one_or_none()
+        except MultipleResultsFound as e:
+            print(
+                f"!! TensorSourceValue.build(): multiple results found when querying for TensorSourceValue"
+            )
+            raise e
+
+        if row_data is None:
+            # return empty object
+            return TensorSourceValue(
+                store_id=None, z=z, source=None, undiff_part=None, diff_part=None
+            )
+
+        obj = TensorSourceValue(
+            store_id=row_data.serial,
+            z=z,
+            source_term=row_data.source_term,
+            undiff_part=row_data.undiff_part,
+            diff_part=row_data.diff_part,
+            analytic_source_term=row_data.analytic_source_term,
+            analytic_undiff_part=row_data.analytic_undiff_part,
+            analytic_diff_part=row_data.analytic_diff_part,
+        )
         obj._deserialized = True
+        obj._q_exit = q
+        obj._r_exit = r
         return obj

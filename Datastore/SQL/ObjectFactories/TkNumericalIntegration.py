@@ -610,8 +610,40 @@ class sqla_TkNumericalValue_factory(SQLAFactoryBase):
 
     @staticmethod
     def build(payload, conn, table, inserter, tables, inserters):
-        integration_serial = payload["integration_serial"]
+        integration_serial: Optional[int] = payload.get("integration_serial", None)
+
+        model: Optional[BackgroundModel] = payload.get("model", None)
+        k: Optional[wavenumber_exit_time] = payload.get("k", None)
+        z_init: Optional[redshift] = payload.get("z_init", None)
+
+        has_serial = all([integration_serial is not None])
+        has_model = all([model is not None, k is not None, z_init is not None])
+
+        if all([has_serial, has_model]):
+            print(
+                "## GkNumericalValue.build(): both an integration serial number and a (model, wavenumber, z_source) set were queried. Only the serial number will be used."
+            )
+
+        if not any([has_serial, has_model]):
+            raise RuntimeError(
+                "GkNumericalValue.build(): at least one of an integration serial number and a (model, wavenumber, z_source) set must be supplied."
+            )
+
+        if has_serial:
+            return sqla_TkNumericalValue_factory._build_impl_serial(
+                payload, conn, table, inserter, tables, inserters
+            )
+
+        return sqla_TkNumericalValue_factory._build_impl_model(
+            payload, conn, table, inserter, tables, inserters
+        )
+
+    @staticmethod
+    def _build_impl_serial(payload, conn, table, inserter, tables, inserters):
         z = payload["z"]
+
+        integration_serial: int = payload["integration_serial"]
+
         T = payload["T"]
         Tprime = payload["Tprime"]
 
@@ -649,6 +681,8 @@ class sqla_TkNumericalValue_factory(SQLAFactoryBase):
                     "analytic_Tprime": analytic_Tprime,
                 },
             )
+
+            attribute_set = {"_new_insert": True}
         else:
             store_id = row_data.serial
             analytic_T = row_data.analytic_T
@@ -663,6 +697,8 @@ class sqla_TkNumericalValue_factory(SQLAFactoryBase):
                     f"Stored matter transfer function derivative (integration={integration_serial}, z={z.z}) = {row_data.Tprime} differs from expected value = {Tprime}"
                 )
 
+            attribute_set = {"_deserialized": True}
+
         obj = TkNumericalValue(
             store_id=store_id,
             z=z,
@@ -671,5 +707,93 @@ class sqla_TkNumericalValue_factory(SQLAFactoryBase):
             analytic_T=analytic_T,
             analytic_Tprime=analytic_Tprime,
         )
+        for key, value in attribute_set.items():
+            setattr(obj, key, value)
+        return obj
+
+    @staticmethod
+    def _build_impl_model(payload, conn, table, inserter, tables, inserters):
+        z = payload["z"]
+
+        model: BackgroundModel = payload["model"]
+        k: wavenumber_exit_time = payload["k"]
+        z_init: redshift = payload["z_source"]
+
+        atol: Optional[tolerance] = payload.get("atol", None)
+        rtol: Optional[tolerance] = payload.get("rtol", None)
+        tags: Optional[List[store_tag]] = payload.get("tags", None)
+
+        integration_table = tables["TkNumericalIntegration"]
+
+        try:
+            integration_query = sqla.select(integration_table.c.serial).filter(
+                integration_table.c.model_serial == model.store_id,
+                integration_table.c.wavenumber_exit_serial == k.store_id,
+                integration_table.c.z_init_serial == z_init.store_id,
+                integration_table.c.validated == True,
+            )
+
+            if atol is not None:
+                integration_query = integration_query.filter(
+                    integration_table.c.atol_serial == atol.store_id
+                )
+
+            if rtol is not None:
+                integration_query = integration_query.filter(
+                    integration_table.c.rtol_serial == rtol.store_id
+                )
+
+            count = 0
+            for tag in tags:
+                tag: store_tag
+                tab = tables["TkNumerical_tags"].alias(f"tag_{count}")
+                count += 1
+                integration_query = integration_query.join(
+                    tab,
+                    and_(
+                        tab.c.integration_serial == integration_table.c.serial,
+                        tab.c.tag_serial == tag.store_id,
+                    ),
+                )
+
+            subquery = integration_query.subquery()
+
+            row_data = conn.execute(
+                sqla.select(
+                    table.c.serial,
+                    table.c.T,
+                    table.c.Tprime,
+                    table.c.analytic_T,
+                    table.c.analytic_Tprime,
+                )
+                .select_from(
+                    subquery.join(
+                        table, table.c.integration_serial == subquery.c.serial
+                    )
+                )
+                .filter(
+                    table.c.z_serial == z.store_id,
+                )
+            ).one_or_none()
+        except MultipleResultsFound as e:
+            print(
+                f"!! TkNumericalValue.build(): multiple results found when querying for TkNumericalValue"
+            )
+            raise e
+
+        if row_data is None:
+            # return empty object
+            return TkNumericalValue(store_id=None, z=z, T=None, Tprime=None)
+
+        obj = TkNumericalValue(
+            store_id=row_data.serial,
+            z=z,
+            T=row_data.T,
+            Tprime=row_data.Tprime,
+            analytic_T=row_data.analytic_T,
+            analytic_Tprime=row_data.analytic_Tprime,
+        )
         obj._deserialized = True
+        obj._k_exit = k
+        obj._z_init = z_init
         return obj
