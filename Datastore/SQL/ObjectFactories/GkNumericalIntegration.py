@@ -663,11 +663,10 @@ class sqla_GkNumericalValue_factory(SQLAFactoryBase):
     def _build_impl_serial(payload, conn, table, inserter, tables, inserters):
         z = payload["z"]
 
-        integration_serial: float = payload["integration_serial"]
+        integration_serial: int = payload["integration_serial"]
 
-        G: float = payload.get("G", None)
-        Gprime: float = payload.get("Gprime", None)
-        has_data = all([G is not None, Gprime is not None])
+        G: float = payload["G"]
+        Gprime: float = payload["Gprime"]
 
         analytic_G: Optional[float] = payload.get("analytic_G", None)
         analytic_Gprime: Optional[float] = payload.get("analytic_Gprime", None)
@@ -695,11 +694,6 @@ class sqla_GkNumericalValue_factory(SQLAFactoryBase):
             raise e
 
         if row_data is None:
-            if not has_data:
-                raise (
-                    "GkNumericalValue().build(): result was not found in datastore, but a data payload was not provided"
-                )
-
             store_id = inserter(
                 conn,
                 {
@@ -754,9 +748,9 @@ class sqla_GkNumericalValue_factory(SQLAFactoryBase):
     def _build_impl_model(payload, conn, table, inserter, tables, inserters):
         z = payload["z"]
 
-        model: Optional[BackgroundModel] = payload["model"]
-        k: Optional[wavenumber_exit_time] = payload["k"]
-        z_source: Optional[redshift] = payload["z_source"]
+        model: BackgroundModel = payload["model"]
+        k: wavenumber_exit_time = payload["k"]
+        z_source: redshift = payload["z_source"]
 
         atol: Optional[tolerance] = payload.get("atol", None)
         rtol: Optional[tolerance] = payload.get("rtol", None)

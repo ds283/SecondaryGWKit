@@ -570,7 +570,7 @@ class sqla_GkSourceValue_factory(SQLAFactoryBase):
     def _build_impl_serial(payload, conn, table, inserter, tables, inserters):
         z_source = payload["z_source"]
 
-        parent_serial: float = payload["parent_serial"]
+        parent_serial: int = payload["parent_serial"]
 
         G = payload.get("G", None)
         Gprime = payload.get("Gprime", None)
@@ -684,9 +684,9 @@ class sqla_GkSourceValue_factory(SQLAFactoryBase):
     def _build_impl_model(payload, conn, table, inserter, tables, inserters):
         z_source = payload["z_source"]
 
-        model: Optional[BackgroundModel] = payload["model"]
-        k: Optional[wavenumber_exit_time] = payload["k"]
-        z_response: Optional[redshift] = payload["z_response"]
+        model: BackgroundModel = payload["model"]
+        k: wavenumber_exit_time = payload["k"]
+        z_response: redshift = payload["z_response"]
 
         atol: Optional[tolerance] = payload.get("atol", None)
         rtol: Optional[tolerance] = payload.get("rtol", None)

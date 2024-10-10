@@ -662,7 +662,7 @@ class sqla_GkWKBValue_factory(SQLAFactoryBase):
     def _build_impl_serial(payload, conn, table, inserter, tables, inserters):
         z = payload["z"]
 
-        wkb_serial: float = payload["wkb_serial"]
+        wkb_serial: int = payload["wkb_serial"]
 
         H_ratio: Optional[float] = payload.get("H_ratio", None)
         theta: Optional[float] = payload.get("theta", None)
@@ -782,9 +782,9 @@ class sqla_GkWKBValue_factory(SQLAFactoryBase):
     def _build_impl_model(payload, conn, table, inserter, tables, inserters):
         z = payload["z"]
 
-        model: Optional[BackgroundModel] = payload["model"]
-        k: Optional[wavenumber_exit_time] = payload["k"]
-        z_source: Optional[redshift] = payload["z_source"]
+        model: BackgroundModel = payload["model"]
+        k: wavenumber_exit_time = payload["k"]
+        z_source: redshift = payload["z_source"]
 
         atol: Optional[tolerance] = payload.get("atol", None)
         rtol: Optional[tolerance] = payload.get("rtol", None)
