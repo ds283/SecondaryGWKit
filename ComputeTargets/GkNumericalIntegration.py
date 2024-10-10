@@ -578,11 +578,21 @@ class GkNumericalIntegration(DatastoreObject):
 
     @property
     def values(self) -> List:
+        if hasattr(self, "_do_not_populate"):
+            raise RuntimeError(
+                "GkNumericalIntegration: values read but _do_not_populate is set"
+            )
+
         if self._values is None:
             raise RuntimeError("values has not yet been populated")
         return self._values
 
     def compute(self, label: Optional[str] = None):
+        if hasattr(self, "_do_not_populate"):
+            raise RuntimeError(
+                "GkNumericalIntegration: compute() called but _do_not_populate is set"
+            )
+
         if self._values is not None:
             raise RuntimeError("values have already been computed")
 

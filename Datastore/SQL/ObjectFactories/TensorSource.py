@@ -164,54 +164,62 @@ class sqla_TensorSource_factory(SQLAFactoryBase):
 
         num_expected_samples = row_data.z_samples
 
-        value_table = tables["TensorSourceValue"]
+        if payload is None or not payload.get("_do_not_populate", False):
+            value_table = tables["TensorSourceValue"]
 
-        sample_rows = conn.execute(
-            sqla.select(
-                value_table.c.serial,
-                value_table.c.z_serial,
-                redshift_table.c.z,
-                value_table.c.source_term,
-                value_table.c.undiff_part,
-                value_table.c.diff_part,
-                value_table.c.analytic_source_term,
-                value_table.c.analytic_undiff_part,
-                value_table.c.analytic_diff_part,
-            )
-            .select_from(
-                value_table.join(
-                    redshift_table,
-                    redshift_table.c.serial == value_table.c.z_serial,
+            sample_rows = conn.execute(
+                sqla.select(
+                    value_table.c.serial,
+                    value_table.c.z_serial,
+                    redshift_table.c.z,
+                    value_table.c.source_term,
+                    value_table.c.undiff_part,
+                    value_table.c.diff_part,
+                    value_table.c.analytic_source_term,
+                    value_table.c.analytic_undiff_part,
+                    value_table.c.analytic_diff_part,
                 )
+                .select_from(
+                    value_table.join(
+                        redshift_table,
+                        redshift_table.c.serial == value_table.c.z_serial,
+                    )
+                )
+                .filter(value_table.c.parent_serial == store_id)
+                .order_by(redshift_table.c.z.desc())
             )
-            .filter(value_table.c.parent_serial == store_id)
-            .order_by(redshift_table.c.z.desc())
-        )
 
-        z_points = []
-        values = []
-        for row in sample_rows:
-            z_value = redshift(store_id=row.z_serial, z=row.z)
-            z_points.append(z_value)
-            values.append(
-                TensorSourceValue(
-                    store_id=row.serial,
-                    z=z_value,
-                    source_term=row.source_term,
-                    undiff_part=row.undiff_part,
-                    diff_part=row.diff_part,
-                    analytic_source_term=row.analytic_source_term,
-                    analytic_undiff_part=row.analytic_undiff_part,
-                    analytic_diff_part=row.analytic_diff_part,
+            z_points = []
+            values = []
+            for row in sample_rows:
+                z_value = redshift(store_id=row.z_serial, z=row.z)
+                z_points.append(z_value)
+                values.append(
+                    TensorSourceValue(
+                        store_id=row.serial,
+                        z=z_value,
+                        source_term=row.source_term,
+                        undiff_part=row.undiff_part,
+                        diff_part=row.diff_part,
+                        analytic_source_term=row.analytic_source_term,
+                        analytic_undiff_part=row.analytic_undiff_part,
+                        analytic_diff_part=row.analytic_diff_part,
+                    )
                 )
-            )
-        imported_z_sample = redshift_array(z_points)
+            imported_z_sample = redshift_array(z_points)
 
-        if num_expected_samples is not None:
-            if len(imported_z_sample) != num_expected_samples:
-                raise RuntimeError(
-                    f'Fewer z-samples than expected were recovered from the validated tensor source "{store_label}"'
-                )
+            if num_expected_samples is not None:
+                if len(imported_z_sample) != num_expected_samples:
+                    raise RuntimeError(
+                        f'Fewer z-samples than expected were recovered from the validated tensor source "{store_label}"'
+                    )
+
+            attributes = {"_deserialized": True}
+        else:
+            values = None
+            imported_z_sample = None
+
+            attributes = {"_do_not_populate": True, "_deserialized": True}
 
         obj = TensorSource(
             payload={
@@ -225,7 +233,8 @@ class sqla_TensorSource_factory(SQLAFactoryBase):
             label=store_label,
             tags=tags,
         )
-        obj._deserialized = True
+        for key, value in attributes.items():
+            setattr(obj, key, value)
         return obj
 
     @staticmethod
@@ -631,9 +640,12 @@ class sqla_TensorSourceValue_factory(SQLAFactoryBase):
 
         if row_data is None:
             # return empty object
-            return TensorSourceValue(
+            obj = TensorSourceValue(
                 store_id=None, z=z, source=None, undiff_part=None, diff_part=None
             )
+            obj._q_exit = q
+            obj._r_exit = r
+            return obj
 
         obj = TensorSourceValue(
             store_id=row_data.serial,

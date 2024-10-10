@@ -291,51 +291,59 @@ class sqla_TkNumericalIntegration_factory(SQLAFactoryBase):
             stepping=solver_stepping,
         )
 
-        # read out sample values associated with this integration
-        value_table = tables["TkNumericalValue"]
+        if payload is None or not payload.get("_do_not_populate", False):
+            # read out sample values associated with this integration
+            value_table = tables["TkNumericalValue"]
 
-        sample_rows = conn.execute(
-            sqla.select(
-                value_table.c.serial,
-                value_table.c.z_serial,
-                redshift_table.c.z,
-                value_table.c.T,
-                value_table.c.Tprime,
-                value_table.c.analytic_T,
-                value_table.c.analytic_Tprime,
-            )
-            .select_from(
-                value_table.join(
-                    redshift_table,
-                    redshift_table.c.serial == value_table.c.z_serial,
+            sample_rows = conn.execute(
+                sqla.select(
+                    value_table.c.serial,
+                    value_table.c.z_serial,
+                    redshift_table.c.z,
+                    value_table.c.T,
+                    value_table.c.Tprime,
+                    value_table.c.analytic_T,
+                    value_table.c.analytic_Tprime,
                 )
+                .select_from(
+                    value_table.join(
+                        redshift_table,
+                        redshift_table.c.serial == value_table.c.z_serial,
+                    )
+                )
+                .filter(value_table.c.integration_serial == store_id)
+                .order_by(redshift_table.c.z.desc())
             )
-            .filter(value_table.c.integration_serial == store_id)
-            .order_by(redshift_table.c.z.desc())
-        )
 
-        z_points = []
-        values = []
-        for row in sample_rows:
-            z_value = redshift(store_id=row.z_serial, z=row.z)
-            z_points.append(z_value)
-            values.append(
-                TkNumericalValue(
-                    store_id=row.serial,
-                    z=z_value,
-                    T=row.T,
-                    Tprime=row.Tprime,
-                    analytic_T=row.analytic_T,
-                    analytic_Tprime=row.analytic_Tprime,
+            z_points = []
+            values = []
+            for row in sample_rows:
+                z_value = redshift(store_id=row.z_serial, z=row.z)
+                z_points.append(z_value)
+                values.append(
+                    TkNumericalValue(
+                        store_id=row.serial,
+                        z=z_value,
+                        T=row.T,
+                        Tprime=row.Tprime,
+                        analytic_T=row.analytic_T,
+                        analytic_Tprime=row.analytic_Tprime,
+                    )
                 )
-            )
-        imported_z_sample = redshift_array(z_points)
+            imported_z_sample = redshift_array(z_points)
 
-        if num_expected_samples is not None:
-            if len(imported_z_sample) != num_expected_samples:
-                raise RuntimeError(
-                    f'Fewer z-samples than expected were recovered from the validated transfer function "{store_label}"'
-                )
+            if num_expected_samples is not None:
+                if len(imported_z_sample) != num_expected_samples:
+                    raise RuntimeError(
+                        f'Fewer z-samples than expected were recovered from the validated transfer function "{store_label}"'
+                    )
+
+            attributes = {"_deserialized": True}
+        else:
+            values = None
+            imported_z_sample = None
+
+            attributes = {"_do_not_populate": True, "_deserialized": True}
 
         obj = TkNumericalIntegration(
             payload={
@@ -364,7 +372,8 @@ class sqla_TkNumericalIntegration_factory(SQLAFactoryBase):
             tags=tags,
             delta_logz=delta_logz,
         )
-        obj._deserialized = True
+        for key, value in attributes.items():
+            setattr(obj, key, value)
         return obj
 
     @staticmethod
@@ -783,7 +792,10 @@ class sqla_TkNumericalValue_factory(SQLAFactoryBase):
 
         if row_data is None:
             # return empty object
-            return TkNumericalValue(store_id=None, z=z, T=None, Tprime=None)
+            obj = TkNumericalValue(store_id=None, z=z, T=None, Tprime=None)
+            obj._k_exit = k
+            obj._z_init = z_init
+            return obj
 
         obj = TkNumericalValue(
             store_id=row_data.serial,

@@ -6,6 +6,7 @@ from typing import List
 
 import numpy as np
 import ray
+from sqlalchemy import True_
 
 from ComputeTargets import (
     TkNumericalIntegration,
@@ -330,6 +331,37 @@ with ShardedPool(
     def post_Tk_work(Tk: TkNumericalIntegration):
         return ray.put(Tk)
 
+    def build_tensor_source_work(grid_idx):
+        idx_i, idx_j = grid_idx
+
+        q = k_sample[idx_i]
+        Tq = Tks[idx_i]
+        Tr = Tks[idx_j]
+
+        # q is not used by the TensorSource constructor, but is accepted because it functions as the shard key
+        return pool.object_get(
+            "TensorSource",
+            z_sample=z_sample,
+            q=q,
+            Tq=Tq,
+            Tr=Tr,
+            tags=[
+                TkProductionTag,
+                GlobalZGridTag,
+                OutsideHorizonEfoldsTag,
+                LargestZTag,
+                SamplesPerLog10ZTag,
+            ],
+        )
+
+    def validate_tensor_source_work(calc: TensorSource):
+        return pool.object_validate(calc)
+
+    def build_tensor_source_work_label(calc: TensorSource):
+        q = calc.q
+        r = calc.r
+        return f"{args.job_name}-tensor-src-q{q.k_inv_Mpc:.3g}-r{r.k_inv_Mpc:.3g}-{datetime.now().replace(microsecond=0).isoformat()}"
+
     if args.transfer_queue:
         Tk_queue = RayWorkPool(
             pool,
@@ -348,37 +380,6 @@ with ShardedPool(
             itertools.combinations_with_replacement(range(len(Tks)), 2)
         )
 
-        def build_tensor_source_work(grid_idx):
-            idx_i, idx_j = grid_idx
-
-            q = k_sample[idx_i]
-            Tq = Tks[idx_i]
-            Tr = Tks[idx_j]
-
-            # q is not used by the TensorSource constructor, but is accepted because it functions as the shard key
-            return pool.object_get(
-                "TensorSource",
-                z_sample=z_sample,
-                q=q,
-                Tq=Tq,
-                Tr=Tr,
-                tags=[
-                    TkProductionTag,
-                    GlobalZGridTag,
-                    OutsideHorizonEfoldsTag,
-                    LargestZTag,
-                    SamplesPerLog10ZTag,
-                ],
-            )
-
-        def validate_tensor_source_work(calc: TensorSource):
-            return pool.object_validate(calc)
-
-        def build_tensor_source_work_label(calc: TensorSource):
-            q = calc.q
-            r = calc.r
-            return f"{args.job_name}-tensor-src-q{q.k_inv_Mpc:.3g}-r{r.k_inv_Mpc:.3g}-{datetime.now().replace(microsecond=0).isoformat()}"
-
         TensorSource_queue = RayWorkPool(
             pool,
             tensor_source_grid,
@@ -393,42 +394,101 @@ with ShardedPool(
     ## STEP 3
     ## COMPUTE TENSOR GREEN'S FUNCTIONS NUMERICALLY FOR RESPONSE TIMES NOT TOO FAR INSIDE THE HORIZON
 
-    def build_Gk_numerical_work(z_source: redshift):
+    def build_Gk_numerical_work(batch: List[redshift]):
+        query_batch = [
+            {
+                "k": k_exit,
+                "payload": [
+                    {
+                        "solver_labels": [],
+                        "model": model,
+                        "z_source": z_source,
+                        "z_sample": None,
+                        "atol": atol,
+                        "rtol": rtol,
+                        "tags": [
+                            GkProductionTag,
+                            GlobalZGridTag,
+                            OutsideHorizonEfoldsTag,
+                            LargestZTag,
+                            SamplesPerLog10ZTag,
+                        ],
+                        "_do_not_populate": True,
+                    }
+                    for z_source in batch
+                ],
+            }
+            for k_exit in k_exit_times
+        ]
+
+        query_queue = RayWorkPool(
+            pool,
+            query_batch,
+            task_builder=lambda x: pool.object_get_vectorized(
+                "GkWKBIntegration", {"k": x["k"]}, payload_data=x["payload"]
+            ),
+            available_handler=None,
+            compute_handler=None,
+            store_handler=None,
+            validation_handler=None,
+            label_builder=None,
+            title=None,
+            store_results=True,
+            create_batch_size=5,  # may need to tweak relative to number of shards
+            process_batch_size=1,
+        )
+        query_queue.run()
+
+        missing = {
+            k_exit.store_id: [
+                z_source
+                for obj, z_source in zip(query_outcomes, batch)
+                if not obj.available
+            ]
+            for query_outcomes, k_exit in zip(query_queue.results, k_exit_times)
+        }
+
         work_refs = []
 
         for k_exit in k_exit_times:
+            k_exit: wavenumber_exit_time
+
             # find redshift where this k-mode is at least 3 efolds inside the horizon
             # we won't calculate numerical Green's functions with the response redshift later than this, because
             # the oscillations become rapid, and we are better switching to a WKB approximation
-            if z_source.z > k_exit.z_exit_subh_e3 - DEFAULT_FLOAT_PRECISION:
-                # cut down response zs to those that are (1) later than the source, and (2) earlier than the 5-efolds-inside-the-horizon point
-                # (here with a 10% tolerance)
-                response_zs = z_sample.truncate(z_source, keep="lower").truncate(
-                    0.9 * k_exit.z_exit_subh_e5, keep="higher"
-                )
+            for z_source in missing[k_exit.store_id]:
+                z_source: redshift
 
-                if len(response_zs) > 1:
-                    work_refs.append(
-                        pool.object_get(
-                            "GkNumericalIntegration",
-                            solver_labels=solvers,
-                            model=model,
-                            k=k_exit,
-                            z_source=z_source,
-                            z_sample=response_zs,
-                            atol=atol,
-                            rtol=rtol,
-                            tags=[
-                                GkProductionTag,
-                                GlobalZGridTag,
-                                OutsideHorizonEfoldsTag,
-                                LargestZTag,
-                                SamplesPerLog10ZTag,
-                            ],
-                            delta_logz=1.0 / float(samples_per_log10z),
-                            mode="stop",
-                        )
+                if z_source.z > k_exit.z_exit_subh_e3 - DEFAULT_FLOAT_PRECISION:
+                    # cut down response zs to those that are (1) later than the source, and (2) earlier than the 5-efolds-inside-the-horizon point
+                    # (here with a 10% tolerance)
+                    response_zs = z_sample.truncate(z_source, keep="lower").truncate(
+                        0.9 * k_exit.z_exit_subh_e5, keep="higher"
                     )
+
+                    if len(response_zs) > 1:
+                        work_refs.append(
+                            pool.object_get(
+                                "GkNumericalIntegration",
+                                solver_labels=solvers,
+                                model=model,
+                                k=k_exit,
+                                z_source=z_source,
+                                z_sample=response_zs,
+                                atol=atol,
+                                rtol=rtol,
+                                tags=[
+                                    GkProductionTag,
+                                    GlobalZGridTag,
+                                    OutsideHorizonEfoldsTag,
+                                    LargestZTag,
+                                    SamplesPerLog10ZTag,
+                                ],
+                                delta_logz=1.0 / float(samples_per_log10z),
+                                mode="stop",
+                                _do_not_populate=True,  # instructs the datastore not to read in the contents of this object
+                            )
+                        )
 
         return work_refs
 
@@ -439,9 +499,11 @@ with ShardedPool(
         return pool.object_validate(Gk)
 
     if args.numerical_queue:
+        GkNumerical_work_batches = list(grouper(z_sample, n=50, incomplete="ignore"))
+
         Gk_numerical_queue = RayWorkPool(
             pool,
-            z_sample,
+            GkNumerical_work_batches,
             task_builder=build_Gk_numerical_work,
             validation_handler=validate_Gk_numerical_work,
             label_builder=build_Gk_numerical_work_label,
@@ -459,6 +521,53 @@ with ShardedPool(
     def build_Gk_WKB_work(batch: List[redshift]):
         # build GKWKBIntegration work items for a batch of z_source times
 
+        query_batch = [
+            {
+                "k": k_exit,
+                "payload": [
+                    {
+                        "solver_labels": [],
+                        "model": model,
+                        "z_source": z_source,
+                        "z_sample": None,
+                        "atol": atol,
+                        "rtol": rtol,
+                        "tags": [GkProductionTag, GlobalZGridTag, SamplesPerLog10ZTag],
+                        "_do_not_populate": True_,
+                    }
+                    for z_source in batch
+                ],
+            }
+            for k_exit in k_exit_times
+        ]
+
+        query_queue = RayWorkPool(
+            pool,
+            query_batch,
+            task_builder=lambda x: pool.object_get_vectorized(
+                "GkWKBIntegration", {"k": x["k"]}, payload_data=x["payload"]
+            ),
+            available_handler=None,
+            compute_handler=None,
+            store_handler=None,
+            validation_handler=None,
+            label_builder=None,
+            title=None,
+            store_results=True,
+            create_batch_size=5,  # may need to tweak relative to number of shards
+            process_batch_size=1,
+        )
+        query_queue.run()
+
+        missing = {
+            k_exit.store_id: [
+                z_source
+                for obj, z_source in zip(query_outcomes, batch)
+                if not obj.available
+            ]
+            for query_outcomes, k_exit in zip(query_queue.results, k_exit_times)
+        }
+
         # Query for a GkNumericalIntegration instances for each combination of model, k_exit, and z_source.
         # If one exists, it will be used to set initial conditions for the WKB part of the evolution.
         # We want to do this in a vectorized way, pulling an entire batch of GkNumericalIntegration instances
@@ -466,19 +575,20 @@ with ShardedPool(
         # overhead for multiple lookups
         payload_batch = [
             {
+                # note we don't specify the k mode as part of the main payload
+                # instead we specify it separately to object_get_vectorized()
                 "k": k_exit,
                 "payload": [
                     {
-                        "solver_labels": solvers,
+                        "solver_labels": [],
                         "model": model,
-                        "k": k_exit,
                         "z_source": z_source,
                         "z_sample": None,
                         "atol": atol,
                         "rtol": rtol,
                         "tags": [GkProductionTag, GlobalZGridTag, SamplesPerLog10ZTag],
                     }
-                    for z_source in batch
+                    for z_source in missing[k_exit.store_id]
                 ],
             }
             for k_exit in k_exit_times
@@ -509,11 +619,11 @@ with ShardedPool(
             for z_source in batch
         }
 
-        for i, k_exit in enumerate(k_exit_times):
+        for k_exit, Gk_data in zip(k_exit_times, lookup_queue.results):
             k_exit: wavenumber_exit_time
-            Gk_data = lookup_queue.results[i]
+            Gk_data: List[GkNumericalIntegration]
 
-            for z_source, Gk in zip(batch, Gk_data):
+            for z_source, Gk in zip(missing[k_exit.store_id], Gk_data):
                 # be defensive about ensuring provenance for our data products
                 Gk: GkNumericalIntegration
                 assert Gk._k_exit.store_id == k_exit.store_id
@@ -560,6 +670,7 @@ with ShardedPool(
                                     LargestZTag,
                                     SamplesPerLog10ZTag,
                                 ],
+                                _do_not_populate=True,  # can specify this, but we know every object we query will not exist in the datastore, so redundant really
                             )
                         )
                 else:
@@ -615,9 +726,9 @@ with ShardedPool(
     def validate_Gk_WKB_work(Gk: GkWKBIntegration):
         return pool.object_validate(Gk)
 
-    GkWKB_work_batches = list(grouper(z_sample, n=20, incomplete="ignore"))
-
     if args.WKB_queue:
+        GkWKB_work_batches = list(grouper(z_sample, n=20, incomplete="ignore"))
+
         Gk_WKB_queue = RayWorkPool(
             pool,
             GkWKB_work_batches,
@@ -640,23 +751,74 @@ with ShardedPool(
     # these directly from GkNumericalValue and GkWKValue rows. Also, there is the reproducibility angle of keeping a record of what
     # rebuilt data products we used.)
 
-    def build_GkSource_batch(batch):
+    def build_GkSource_batch(batch: List[redshift]):
         # try to do parallel lookup of the GkNumericalIntegration/GkWKBIntegration records needed
         # to process this batch
+        z_source_pool = {
+            z_response.store_id: z_sample.truncate(z_response, keep="higher")
+            for z_response in batch
+        }
 
-        z_sources_batch = [
-            z_sample.truncate(z_response, keep="higher") for z_response, _ in batch
+        query_batch = [
+            {
+                "k": k_exit,
+                "payload": [
+                    {
+                        "model": model,
+                        "z_response": z_response,
+                        "z_sample": None,
+                        "atol": atol,
+                        "rtol": rtol,
+                        "tags": [
+                            GkProductionTag,
+                            GlobalZGridTag,
+                            OutsideHorizonEfoldsTag,
+                            LargestZTag,
+                            SamplesPerLog10ZTag,
+                        ],
+                        "_do_not_populate": True,
+                    }
+                    for z_response in batch
+                ],
+            }
+            for k_exit in k_exit_times
         ]
 
-        batch_data = [
-            (data[0], data[1], z_sources_batch[i]) for i, data in enumerate(batch)
-        ]
+        query_queue = RayWorkPool(
+            pool,
+            query_batch,
+            task_builder=lambda x: pool.object_get_vectorized(
+                "GkSource", {"k": x["k"]}, payload_data=x["payload"]
+            ),
+            available_handler=None,
+            compute_handler=None,
+            store_handler=None,
+            validation_handler=None,
+            label_builder=None,
+            title=None,
+            store_results=True,
+            create_batch_size=5,  # may need to tweak relative to number of shards
+            process_batch_size=1,
+        )
+        query_queue.run()
+
+        missing = {
+            k_exit.store_id: [
+                z_response
+                for obj, z_response in zip(query_outcomes, batch)
+                if not obj.available
+            ]
+            for query_outcomes, k_exit in zip(query_queue.results, k_exit_times)
+        }
 
         # all the z-source values for a single k-mode will be held on the same database shard.
         # It's critical that we vectorize the lookup for these. There will typically be hundreds or
         # thousands of z values, and we cannot afford the overhead of looking up each GkNumericalValue or
         # GkWKBValue individually. This entails a database overhead (lookups are much more efficient if wrapped
         # in a single transaction) and a multiprocessing overhead (Ray has to serialize, schedule, deserialize, ...)
+
+        # we try to vectorize as much as possible by flattening the z_source/z_response combinations into
+        # a single list
         payload_batch = [
             {
                 # note we don't specify the k mode as part of the main payload
@@ -677,10 +839,11 @@ with ShardedPool(
                             SamplesPerLog10ZTag,
                         ],
                     }
-                    for z_source in z_sources
+                    for z_response in missing[k_exit.store_id]
+                    for z_source in z_source_pool[z_response.store_id]
                 ],
             }
-            for z_response, k_exit, z_sources in batch_data
+            for k_exit in k_exit_times
         ]
 
         labelled_payloads = [
@@ -709,70 +872,85 @@ with ShardedPool(
 
         work_refs = []
 
-        for i, data in enumerate(batch_data):
-            z_response, k_exit, z_sources = data
-            z_response: redshift
+        for i, k_exit in enumerate(k_exit_times):
             k_exit: wavenumber_exit_time
-            z_sources: redshift_array
 
-            numerics = lookup_queue.results[2 * i]
-            WKBs = lookup_queue.results[2 * i + 1]
+            GkNs = lookup_queue.results[2 * i]
+            GkWs = lookup_queue.results[2 * i + 1]
 
-            numeric_data = {}
-            WKB_data = {}
+            response_list = {}
 
-            for j, z_source in enumerate(z_sources):
-                z_source: redshift
+            for GkN, GkW in zip(GkNs, GkWs):
+                GkN: GkNumericalValue
+                GkW: GkWKBValue
 
-                numeric_value = numerics[j]
-                WKB_value = WKBs[j]
-
-                # be defensive about ensuring the provenance for our data
-                assert isinstance(numeric_value, GkNumericalValue)
-                assert isinstance(WKB_value, GkWKBValue)
+                assert isinstance(GkN, GkNumericalValue)
+                assert isinstance(GkW, GkWKBValue)
 
                 # the _k_exit and _z_source fields are not part of the public API for these
                 # objects, but they are set by the data store after deserialization
+                assert GkN._k_exit.store_id == GkW._k_exit.store_id
+                assert GkN._k_exit.store_id == k_exit.store_id
+                assert GkN._z_source.store_id == GkW._z_source.store_id
+                assert GkN.z.store_id == GkW.z.store_id
 
-                if not numeric_value.available and not WKB_value.available:
-                    raise RuntimeError(
-                        f"GkSource builder: no data are available for k={k_exit.k.k_inv_Mpc}/Mpc, z_source={z_source.z:.5g}, z_response={z_response.z:.5g}"
+                z_source: redshift = GkN._z_source
+                z_response: redshift = GkN.z
+
+                if z_response.store_id not in response_list:
+                    response_list[z_response.store_id] = {}
+                source_list = response_list[z_response.store_id]
+
+                source_list[z_source.store_id] = (GkN, GkW)
+
+            for z_response in missing[k_exit.store_id]:
+                z_response: redshift
+                source_list = response_list[z_response.store_id]
+
+                numeric_data = {}
+                WKB_data = {}
+
+                for z_source in z_source_pool[z_response.store_id]:
+                    if z_source.store_id not in source_list:
+                        raise RuntimeError(
+                            f"GkSource builder: no source data retrieved for k={k_exit.k.k_inv_Mpc}/Mpc, z_source={z_source.z:.5g}, z_response={z_response.z:.5g}"
+                        )
+
+                    GkN, GkW = source_list[z_source.store_id]
+
+                    if not GkN.available and not GkW.available:
+                        raise RuntimeError(
+                            f"GkSource builder: no source data available for k={k_exit.k.k_inv_Mpc}/Mpc, z_source={z_source.z:.5g}, z_response={z_response.z:.5g}"
+                        )
+
+                    if GkN.available:
+                        numeric_data[z_source.store_id] = GkN
+
+                    if GkW.available:
+                        WKB_data[z_source.store_id] = GkW
+
+                work_refs.append(
+                    pool.object_get(
+                        "GkSource",
+                        payload={
+                            "numeric": numeric_data,
+                            "WKB": WKB_data,
+                        },
+                        model=model,
+                        k=k_exit,
+                        atol=atol,
+                        rtol=rtol,
+                        z_response=z_response,
+                        z_sample=z_source_pool[z_response.store_id],
+                        tags=[
+                            GkProductionTag,
+                            GlobalZGridTag,
+                            OutsideHorizonEfoldsTag,
+                            LargestZTag,
+                            SamplesPerLog10ZTag,
+                        ],
                     )
-
-                if numeric_value.available:
-                    assert numeric_value._k_exit.store_id == k_exit.store_id
-                    assert numeric_value._z_source.store_id == z_source.store_id
-
-                    numeric_data[z_source.store_id] = numeric_value
-
-                if WKB_value.available:
-                    assert WKB_value._k_exit.store_id == k_exit.store_id
-                    assert WKB_value._z_source.store_id == z_source.store_id
-
-                    WKB_data[z_source.store_id] = WKB_value
-
-            work_refs.append(
-                pool.object_get(
-                    "GkSource",
-                    payload={
-                        "numeric": numeric_data,
-                        "WKB": WKB_data,
-                    },
-                    model=model,
-                    k=k_exit,
-                    atol=atol,
-                    rtol=rtol,
-                    z_response=z_response,
-                    z_sample=z_sources,
-                    tags=[
-                        GkProductionTag,
-                        GlobalZGridTag,
-                        OutsideHorizonEfoldsTag,
-                        LargestZTag,
-                        SamplesPerLog10ZTag,
-                    ],
                 )
-            )
 
         return work_refs
 
@@ -791,12 +969,7 @@ with ShardedPool(
         # To process these efficiently, we break the queue up into batches, and try to
         # run a sub-queue that queries that needed data in parallel.
 
-        # we could set all this up insider the task builder, but to prevent spawning too many Ray tasks in one
-        # go, it seems preferable to break down the problem a bit more
-        GkSource_work_items = itertools.product(z_sample, k_exit_times)
-        GkSource_work_batches = list(
-            grouper(GkSource_work_items, n=100, incomplete="ignore")
-        )
+        GkSource_work_batches = list(grouper(z_sample, n=10, incomplete="ignore"))
 
         GkSource_queue = RayWorkPool(
             pool,

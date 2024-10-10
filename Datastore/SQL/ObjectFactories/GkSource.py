@@ -229,63 +229,71 @@ class sqla_GkSource_factory(SQLAFactoryBase):
         z_response_serial = row_data.z_response_serial
         z_response_value = row_data.z_response
 
-        # read out sample values associated with this integration
-        value_table = tables["GkSourceValue"]
+        if payload is None or not payload.get("_do_not_populate", False):
+            # read out sample values associated with this integration
+            value_table = tables["GkSourceValue"]
 
-        sample_rows = conn.execute(
-            sqla.select(
-                value_table.c.serial,
-                value_table.c.z_source_serial,
-                redshift_table.c.z.label("z_source"),
-                value_table.c.G,
-                value_table.c.Gprime,
-                value_table.c.H_ratio,
-                value_table.c.theta,
-                value_table.c.G_WKB,
-                value_table.c.sin_coeff,
-                value_table.c.cos_coeff,
-                value_table.c.omega_WKB_sq,
-                value_table.c.analytic_G,
-                value_table.c.analytic_Gprime,
-            )
-            .select_from(
-                value_table.join(
-                    redshift_table,
-                    redshift_table.c.serial == value_table.c.z_source_serial,
+            sample_rows = conn.execute(
+                sqla.select(
+                    value_table.c.serial,
+                    value_table.c.z_source_serial,
+                    redshift_table.c.z.label("z_source"),
+                    value_table.c.G,
+                    value_table.c.Gprime,
+                    value_table.c.H_ratio,
+                    value_table.c.theta,
+                    value_table.c.G_WKB,
+                    value_table.c.sin_coeff,
+                    value_table.c.cos_coeff,
+                    value_table.c.omega_WKB_sq,
+                    value_table.c.analytic_G,
+                    value_table.c.analytic_Gprime,
                 )
+                .select_from(
+                    value_table.join(
+                        redshift_table,
+                        redshift_table.c.serial == value_table.c.z_source_serial,
+                    )
+                )
+                .filter(value_table.c.parent_serial == store_id)
+                .order_by(redshift_table.c.z.desc())
             )
-            .filter(value_table.c.parent_serial == store_id)
-            .order_by(redshift_table.c.z.desc())
-        )
 
-        z_points = []
-        values = []
-        for row in sample_rows:
-            z_value = redshift(store_id=row.z_source_serial, z=row.z_source)
-            z_points.append(z_value)
-            values.append(
-                GkSourceValue(
-                    store_id=row.serial,
-                    z_source=z_value,
-                    G=row.G,
-                    Gprime=row.Gprime,
-                    H_ratio=row.H_ratio,
-                    theta=row.theta,
-                    sin_coeff=row.sin_coeff,
-                    cos_coeff=row.cos_coeff,
-                    G_WKB=row.G_WKB,
-                    omega_WKB_sq=row.omega_WKB_sq,
-                    analytic_G=row.analytic_G,
-                    analytic_Gprime=row.analytic_Gprime,
+            z_points = []
+            values = []
+            for row in sample_rows:
+                z_value = redshift(store_id=row.z_source_serial, z=row.z_source)
+                z_points.append(z_value)
+                values.append(
+                    GkSourceValue(
+                        store_id=row.serial,
+                        z_source=z_value,
+                        G=row.G,
+                        Gprime=row.Gprime,
+                        H_ratio=row.H_ratio,
+                        theta=row.theta,
+                        sin_coeff=row.sin_coeff,
+                        cos_coeff=row.cos_coeff,
+                        G_WKB=row.G_WKB,
+                        omega_WKB_sq=row.omega_WKB_sq,
+                        analytic_G=row.analytic_G,
+                        analytic_Gprime=row.analytic_Gprime,
+                    )
                 )
-            )
-        imported_z_sample = redshift_array(z_points)
+            imported_z_sample = redshift_array(z_points)
 
-        if num_expected_samples is not None:
-            if len(imported_z_sample) != num_expected_samples:
-                raise RuntimeError(
-                    f'Fewer z-samples than expected were recovered from the validated WKB tensor Green function "{store_label}"'
-                )
+            if num_expected_samples is not None:
+                if len(imported_z_sample) != num_expected_samples:
+                    raise RuntimeError(
+                        f'Fewer z-samples than expected were recovered from the validated WKB tensor Green function "{store_label}"'
+                    )
+
+            attributes = {"_deserialized": True}
+        else:
+            values = None
+            imported_z_sample = None
+
+            attributes = {"_do_not_populate": True, "_deserialized": True}
 
         obj = GkSource(
             payload={
@@ -301,7 +309,8 @@ class sqla_GkSource_factory(SQLAFactoryBase):
             z_sample=imported_z_sample,
             tags=tags,
         )
-        obj._deserialized = True
+        for key, value in attributes.items():
+            setattr(obj, key, value)
         return obj
 
     @staticmethod
@@ -760,7 +769,10 @@ class sqla_GkSourceValue_factory(SQLAFactoryBase):
 
         if row_data is None:
             # return empty object
-            return GkSourceValue(store_id=None, z_source=z_source)
+            obj = GkSourceValue(store_id=None, z_source=z_source)
+            obj._k_exit = k
+            obj._z_response = z_response
+            return obj
 
         obj = GkSourceValue(
             store_id=row_data.serial,
@@ -778,5 +790,5 @@ class sqla_GkSourceValue_factory(SQLAFactoryBase):
         )
         obj._deserialized = True
         obj._k_exit = k
-        obj._z_source = z_response
+        obj._z_response = z_response
         return obj

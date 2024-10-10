@@ -303,57 +303,65 @@ class sqla_GkWKBIntegration_factory(SQLAFactoryBase):
             stepping=solver_stepping,
         )
 
-        # read out sample values associated with this integration
-        value_table = tables["GkWKBValue"]
+        if payload is None or not payload.get("_do_not_populate", False):
+            # read out sample values associated with this integration
+            value_table = tables["GkWKBValue"]
 
-        sample_rows = conn.execute(
-            sqla.select(
-                value_table.c.serial,
-                value_table.c.z_serial,
-                redshift_table.c.z,
-                value_table.c.H_ratio,
-                value_table.c.theta,
-                value_table.c.G_WKB,
-                value_table.c.omega_WKB_sq,
-                value_table.c.analytic_G,
-                value_table.c.analytic_Gprime,
-            )
-            .select_from(
-                value_table.join(
-                    redshift_table,
-                    redshift_table.c.serial == value_table.c.z_serial,
+            sample_rows = conn.execute(
+                sqla.select(
+                    value_table.c.serial,
+                    value_table.c.z_serial,
+                    redshift_table.c.z,
+                    value_table.c.H_ratio,
+                    value_table.c.theta,
+                    value_table.c.G_WKB,
+                    value_table.c.omega_WKB_sq,
+                    value_table.c.analytic_G,
+                    value_table.c.analytic_Gprime,
                 )
+                .select_from(
+                    value_table.join(
+                        redshift_table,
+                        redshift_table.c.serial == value_table.c.z_serial,
+                    )
+                )
+                .filter(value_table.c.wkb_serial == store_id)
+                .order_by(redshift_table.c.z.desc())
             )
-            .filter(value_table.c.wkb_serial == store_id)
-            .order_by(redshift_table.c.z.desc())
-        )
 
-        z_points = []
-        values = []
-        for row in sample_rows:
-            z_value = redshift(store_id=row.z_serial, z=row.z)
-            z_points.append(z_value)
-            values.append(
-                GkWKBValue(
-                    store_id=row.serial,
-                    z=z_value,
-                    H_ratio=row.H_ratio,
-                    theta=row.theta,
-                    omega_WKB_sq=row.omega_WKB_sq,
-                    G_WKB=row.G_WKB,
-                    analytic_G=row.analytic_G,
-                    analytic_Gprime=row.analytic_Gprime,
-                    sin_coeff=sin_coeff,
-                    cos_coeff=cos_coeff,
+            z_points = []
+            values = []
+            for row in sample_rows:
+                z_value = redshift(store_id=row.z_serial, z=row.z)
+                z_points.append(z_value)
+                values.append(
+                    GkWKBValue(
+                        store_id=row.serial,
+                        z=z_value,
+                        H_ratio=row.H_ratio,
+                        theta=row.theta,
+                        omega_WKB_sq=row.omega_WKB_sq,
+                        G_WKB=row.G_WKB,
+                        analytic_G=row.analytic_G,
+                        analytic_Gprime=row.analytic_Gprime,
+                        sin_coeff=sin_coeff,
+                        cos_coeff=cos_coeff,
+                    )
                 )
-            )
-        imported_z_sample = redshift_array(z_points)
+            imported_z_sample = redshift_array(z_points)
 
-        if num_expected_samples is not None:
-            if len(imported_z_sample) != num_expected_samples:
-                raise RuntimeError(
-                    f'Fewer z-samples than expected were recovered from the validated WKB tensor Green function "{store_label}"'
-                )
+            if num_expected_samples is not None:
+                if len(imported_z_sample) != num_expected_samples:
+                    raise RuntimeError(
+                        f'Fewer z-samples than expected were recovered from the validated WKB tensor Green function "{store_label}"'
+                    )
+
+            attributes = {"_deserialized": True}
+        else:
+            values = None
+            imported_z_sample = None
+
+            attributes = {"_do_not_populate": True, "_deserialized": True}
 
         obj = GkWKBIntegration(
             payload={
@@ -383,7 +391,8 @@ class sqla_GkWKBIntegration_factory(SQLAFactoryBase):
             z_sample=imported_z_sample,
             tags=tags,
         )
-        obj._deserialized = True
+        for key, value in attributes.items():
+            setattr(obj, key, value)
         return obj
 
     @staticmethod
@@ -854,7 +863,10 @@ class sqla_GkWKBValue_factory(SQLAFactoryBase):
 
         if row_data is None:
             # return empty object
-            return GkWKBValue(store_id=None, z=z, H_ratio=None, theta=None)
+            obj = GkWKBValue(store_id=None, z=z, H_ratio=None, theta=None)
+            obj._k_exit = k
+            obj._z_source = z_source
+            return obj
 
         obj = GkWKBValue(
             store_id=row_data.serial,
