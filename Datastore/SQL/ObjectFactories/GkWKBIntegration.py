@@ -423,7 +423,7 @@ class sqla_GkWKBIntegration_factory(SQLAFactoryBase):
             },
         )
 
-        # set store_id on behalf of the GkNumericalIntegration instance
+        # set store_id on behalf of the GkWKBIntegration instance
         obj._my_id = store_id
 
         # add any tags that have been specified
@@ -449,7 +449,7 @@ class sqla_GkWKBIntegration_factory(SQLAFactoryBase):
                 },
             )
 
-            # set store_id on behalf of the GkNumericalValue instance
+            # set store_id on behalf of the GkWKBValue instance
             value._my_id = value_id
 
         return obj
@@ -630,9 +630,39 @@ class sqla_GkWKBValue_factory(SQLAFactoryBase):
 
     @staticmethod
     def build(payload, conn, table, inserter, tables, inserters):
-        z: redshift = payload["z"]
+        wkb_serial = payload.get("wkb_serial", None)
 
-        wkb_serial: Optional[int] = payload.get("wkb_serial", None)
+        model: Optional[BackgroundModel] = payload.get("model", None)
+        k: Optional[wavenumber_exit_time] = payload.get("k", None)
+        z_source: Optional[redshift] = payload.get("z_source", None)
+
+        has_serial = all([wkb_serial is not None])
+        has_model = all([model is not None, k is not None, z_source is not None])
+
+        if all([has_serial, has_model]):
+            print(
+                "## GkWKBValue.build(): both an WKB integration serial number and a (model, wavenumber, z_source) set were queried. Only the serial number will be used."
+            )
+
+        if not any([has_serial, has_model]):
+            raise RuntimeError(
+                "GkWKBValue.build(): at least one of a WKB integration serial number and a (model, wavenumber, z_source) set must be supplied."
+            )
+
+        if has_serial:
+            return sqla_GkWKBValue_factory._build_impl_serial(
+                payload, conn, table, inserter, tables, inserters
+            )
+
+        return sqla_GkWKBValue_factory._build_impl_model(
+            payload, conn, table, inserter, tables, inserters
+        )
+
+    @staticmethod
+    def _build_impl_serial(payload, conn, table, inserter, tables, inserters):
+        z = payload["z"]
+
+        wkb_serial: float = payload["wkb_serial"]
 
         H_ratio: Optional[float] = payload.get("H_ratio", None)
         theta: Optional[float] = payload.get("theta", None)
@@ -653,34 +683,10 @@ class sqla_GkWKBValue_factory(SQLAFactoryBase):
         sin_coeff: Optional[float] = payload.get("sin_coeff", None)
         cos_coeff: Optional[float] = payload.get("cos_coeff", None)
 
-        model: Optional[BackgroundModel] = payload.get("model", None)
-        k: Optional[wavenumber_exit_time] = payload.get("k", None)
-        z_source: Optional[redshift] = payload.get("z_source", None)
-
-        atol: Optional[tolerance] = payload.get("atol", None)
-        rtol: Optional[tolerance] = payload.get("rtol", None)
-        tags: Optional[List[store_tag]] = payload.get("tags", None)
-
-        WKB_table = tables["GkWKBIntegration"]
-        atol_table = tables["tolerance"].alias("atol")
-        rtol_table = tables["tolerance"].alias("rtol")
-        tag_table = tables["GkWKB_tags"]
-
-        has_serial = all([wkb_serial is not None])
-        has_model = all([model is not None, k is not None, z_source is not None])
-
-        if all([has_serial, has_model]):
-            print(
-                "## GkWKBValue.build(): both an integration serial number and a model/wavenumber pair were queried. Consider using only one combination of these."
-            )
-
-        if not any([has_serial, has_model]):
-            raise RuntimeError(
-                "GkWKBValue.build(): at least one of an integration serial number and a model/wavenumber pair must be supplied."
-            )
+        wkb_table = tables["GkWKBIntegration"]
 
         try:
-            query = (
+            row_data = conn.execute(
                 sqla.select(
                     table.c.serial,
                     table.c.H_ratio,
@@ -689,53 +695,15 @@ class sqla_GkWKBValue_factory(SQLAFactoryBase):
                     table.c.G_WKB,
                     table.c.analytic_G,
                     table.c.analytic_Gprime,
-                    WKB_table.c.sin_coeff,
-                    WKB_table.c.cos_coeff,
-                )
-                .select_from(
-                    table.join(WKB_table, WKB_table.c.serial == table.c.wkb_serial)
-                    .join(atol_table, atol_table.c.serial == WKB_table.c.atol_serial)
-                    .join(rtol_table, rtol_table.c.serial == WKB_table.c.rtol_serial)
+                    wkb_table.c.sin_coeff,
+                    wkb_table.c.cos_coeff,
                 )
                 .filter(
+                    table.c.wkb_serial == wkb_serial,
                     table.c.z_serial == z.store_id,
-                    WKB_table.c.validated == True,
                 )
-            )
-
-            if wkb_serial is not None:
-                query = query.filter(table.c.wkb_serial == wkb_serial)
-
-            if model is not None:
-                query = query.filter(WKB_table.c.model_serial == model.store_id)
-
-                # require that the integration we search for has the specified list of tags
-                count = 0
-                for tag in tags:
-                    tag: store_tag
-                    tab = tag_table.alias(f"tag_{count}")
-                    count += 1
-                    query = query.join(
-                        tab,
-                        and_(
-                            tab.c.wkb_serial == WKB_table.c.serial,
-                            tab.c.tag_serial == tag.store_id,
-                        ),
-                    )
-
-            if k is not None:
-                query = query.filter(WKB_table.c.wavenumber_exit_serial == k.store_id)
-
-            if z_source is not None:
-                query = query.filter(WKB_table.c.z_source_serial == z_source.store_id)
-
-            if atol is not None:
-                query = query.filter(atol_table.c.serial == atol.store_id)
-
-            if rtol is not None:
-                query = query.filter(rtol_table.c.serial == rtol.store_id)
-
-            row_data = conn.execute(query).one_or_none()
+                .join(wkb_table, wkb_table.c.serial == table.c.integration_serial)
+            ).one_or_none()
         except MultipleResultsFound as e:
             print(
                 f"!! GkWKBValue.build(): multiple results found when querying for GkWKBValue"
@@ -743,21 +711,26 @@ class sqla_GkWKBValue_factory(SQLAFactoryBase):
             raise e
 
         if row_data is None:
-            store_id = None
-            if has_data:
-                store_id = inserter(
-                    conn,
-                    {
-                        "wkb_serial": wkb_serial,
-                        "z_serial": z.store_id,
-                        "H_ratio": H_ratio,
-                        "theta": theta,
-                        "omega_WKB_sq": omega_WKB_sq,
-                        "G_WKB": G_WKB,
-                        "analytic_G": analytic_G,
-                        "analytic_Gprime": analytic_Gprime,
-                    },
+            if not has_data:
+                raise (
+                    "GkWKBValue().build(): result was not found in datastore, but a data payload was not provided"
                 )
+
+            store_id = inserter(
+                conn,
+                {
+                    "wkb_serial": wkb_serial,
+                    "z_serial": z.store_id,
+                    "H_ratio": H_ratio,
+                    "theta": theta,
+                    "omega_WKB_sq": omega_WKB_sq,
+                    "G_WKB": G_WKB,
+                    "analytic_G": analytic_G,
+                    "analytic_Gprime": analytic_Gprime,
+                },
+            )
+
+            attribute_set = {"_new_insert": True}
         else:
             store_id = row_data.serial
             omega_WKB_sq = row_data.omega_WKB_sq
@@ -787,6 +760,8 @@ class sqla_GkWKBValue_factory(SQLAFactoryBase):
             H_ratio = row_data.H_ratio
             theta = row_data.theta
 
+            attribute_set = {"_deserialized": True}
+
         obj = GkWKBValue(
             store_id=store_id,
             z=z,
@@ -798,6 +773,96 @@ class sqla_GkWKBValue_factory(SQLAFactoryBase):
             analytic_Gprime=analytic_Gprime,
             sin_coeff=sin_coeff,
             cos_coeff=cos_coeff,
+        )
+        for key, value in attribute_set.items():
+            setattr(obj, key, value)
+        return obj
+
+    @staticmethod
+    def _build_impl_model(payload, conn, table, inserter, tables, inserters):
+        z = payload["z"]
+
+        model: Optional[BackgroundModel] = payload["model"]
+        k: Optional[wavenumber_exit_time] = payload["k"]
+        z_source: Optional[redshift] = payload["z_source"]
+
+        atol: Optional[tolerance] = payload.get("atol", None)
+        rtol: Optional[tolerance] = payload.get("rtol", None)
+        tags: Optional[List[store_tag]] = payload.get("tags", None)
+
+        wkb_table = tables["GkWKBIntegration"]
+
+        try:
+            wkb_query = sqla.select(
+                wkb_table.c.serial, wkb_table.c.sin_coeff, wkb_table.c.cos_coeff
+            ).filter(
+                wkb_table.c.model_serial == model.store_id,
+                wkb_table.c.wavenumber_exit_serial == k.store_id,
+                wkb_table.c.z_source_serial == z_source.store_id,
+                wkb_table.c.validated == True,
+            )
+
+            if atol is not None:
+                wkb_query = wkb_query.filter(wkb_table.c.atol_serial == atol.store_id)
+
+            if rtol is not None:
+                wkb_query = wkb_query.filter(wkb_table.c.rtol_serial == rtol.store_id)
+
+            count = 0
+            for tag in tags:
+                tag: store_tag
+                tab = tables["GkWKB_tags"].alias(f"tag_{count}")
+                count += 1
+                wkb_query = wkb_query.join(
+                    tab,
+                    and_(
+                        tab.c.wkb_serial == wkb_table.c.serial,
+                        tab.c.tag_serial == tag.store_id,
+                    ),
+                )
+
+            subquery = wkb_query.subquery()
+
+            row_data = conn.execute(
+                sqla.select(
+                    table.c.serial,
+                    table.c.H_ratio,
+                    table.c.theta,
+                    table.c.omega_WKB_sq,
+                    table.c.G_WKB,
+                    table.c.analytic_G,
+                    table.c.analytic_Gprime,
+                    subquery.c.sin_coeff,
+                    subquery.c.cos_coeff,
+                )
+                .select_from(
+                    subquery.join(table, table.c.wkb_serial == subquery.c.serial)
+                )
+                .filter(
+                    table.c.z_serial == z.store_id,
+                )
+            ).one_or_none()
+        except MultipleResultsFound as e:
+            print(
+                f"!! GkWKBValue.build(): multiple results found when querying for GkWKBValue"
+            )
+            raise e
+
+        if row_data is None:
+            # return empty object
+            return GkWKBValue(store_id=None, z=z, H_ratio=None, theta=None)
+
+        obj = GkWKBValue(
+            store_id=row_data.serial,
+            z=z,
+            H_ratio=row_data.H_ratio,
+            theta=row_data.theta,
+            omega_WKB_sq=row_data.omega_WKB_sq,
+            G_WKB=row_data.G_WKB,
+            analytic_G=row_data.analytic_G,
+            analytic_Gprime=row_data.analytic_Gprime,
+            sin_coeff=row_data.sin_coeff,
+            cos_coeff=row_data.cos_coeff,
         )
         obj._deserialized = True
         obj._k_exit = k

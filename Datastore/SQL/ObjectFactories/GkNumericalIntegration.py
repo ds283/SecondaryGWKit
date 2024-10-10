@@ -631,38 +631,18 @@ class sqla_GkNumericalValue_factory(SQLAFactoryBase):
 
     @staticmethod
     def build(payload, conn, table, inserter, tables, inserters):
-        z = payload["z"]
-
         integration_serial = payload.get("integration_serial", None)
-
-        G: Optional[float] = payload.get("G", None)
-        Gprime: Optional[float] = payload.get("Gprime", None)
-        has_data = all([G is not None, Gprime is not None])
-
-        analytic_G: Optional[float] = payload.get("analytic_G", None)
-        analytic_Gprime: Optional[float] = payload.get("analytic_Gprime", None)
-
-        omega_WKB_sq: Optional[float] = payload.get("omega_WKB_sq", None)
 
         model: Optional[BackgroundModel] = payload.get("model", None)
         k: Optional[wavenumber_exit_time] = payload.get("k", None)
         z_source: Optional[redshift] = payload.get("z_source", None)
-
-        atol: Optional[tolerance] = payload.get("atol", None)
-        rtol: Optional[tolerance] = payload.get("rtol", None)
-        tags: Optional[List[store_tag]] = payload.get("tags", None)
-
-        integration_table = tables["GkNumericalIntegration"]
-        atol_table = tables["tolerance"].alias("atol")
-        rtol_table = tables["tolerance"].alias("rtol")
-        tag_table = tables["GkNumerical_tags"]
 
         has_serial = all([integration_serial is not None])
         has_model = all([model is not None, k is not None, z_source is not None])
 
         if all([has_serial, has_model]):
             print(
-                "## GkNumericalValue.build(): both an integration serial number and a (model, wavenumber, z_source) set were queried. Consider using only one combination of these."
+                "## GkNumericalValue.build(): both an integration serial number and a (model, wavenumber, z_source) set were queried. Only the serial number will be used."
             )
 
         if not any([has_serial, has_model]):
@@ -670,8 +650,32 @@ class sqla_GkNumericalValue_factory(SQLAFactoryBase):
                 "GkNumericalValue.build(): at least one of an integration serial number and a (model, wavenumber, z_source) set must be supplied."
             )
 
+        if has_serial:
+            return sqla_GkNumericalValue_factory._build_impl_serial(
+                payload, conn, table, inserter, tables, inserters
+            )
+
+        return sqla_GkNumericalValue_factory._build_impl_model(
+            payload, conn, table, inserter, tables, inserters
+        )
+
+    @staticmethod
+    def _build_impl_serial(payload, conn, table, inserter, tables, inserters):
+        z = payload["z"]
+
+        integration_serial: float = payload["integration_serial"]
+
+        G: float = payload.get("G", None)
+        Gprime: float = payload.get("Gprime", None)
+        has_data = all([G is not None, Gprime is not None])
+
+        analytic_G: Optional[float] = payload.get("analytic_G", None)
+        analytic_Gprime: Optional[float] = payload.get("analytic_Gprime", None)
+
+        omega_WKB_sq: Optional[float] = payload.get("omega_WKB_sq", None)
+
         try:
-            query = (
+            row_data = conn.execute(
                 sqla.select(
                     table.c.serial,
                     table.c.G,
@@ -679,64 +683,11 @@ class sqla_GkNumericalValue_factory(SQLAFactoryBase):
                     table.c.analytic_G,
                     table.c.analytic_Gprime,
                     table.c.omega_WKB_sq,
-                )
-                .select_from(
-                    table.join(
-                        integration_table,
-                        integration_table.c.serial == table.c.integration_serial,
-                    )
-                    .join(
-                        atol_table,
-                        atol_table.c.serial == integration_table.c.atol_serial,
-                    )
-                    .join(
-                        rtol_table,
-                        rtol_table.c.serial == integration_table.c.rtol_serial,
-                    )
-                )
-                .filter(
+                ).filter(
+                    table.c.integration_serial == integration_serial,
                     table.c.z_serial == z.store_id,
-                    integration_table.c.validated == True,
                 )
-            )
-
-            if integration_serial is not None:
-                query = query.filter(table.c.integration_serial == integration_serial)
-
-            if model is not None:
-                query = query.filter(integration_table.c.model_serial == model.store_id)
-
-                # require that the integration we search for has the specified list of tags
-                count = 0
-                for tag in tags:
-                    tag: store_tag
-                    tab = tag_table.alias(f"tag_{count}")
-                    count += 1
-                    query = query.join(
-                        tab,
-                        and_(
-                            tab.c.integration_serial == integration_table.c.serial,
-                            tab.c.tag_serial == tag.store_id,
-                        ),
-                    )
-
-            if k is not None:
-                query = query.filter(
-                    integration_table.c.wavenumber_exit_serial == k.store_id
-                )
-
-            if z_source is not None:
-                query = query.filter(
-                    integration_table.c.z_source_serial == z_source.store_id
-                )
-
-            if atol is not None:
-                query = query.filter(atol_table.c.serial == atol.store_id)
-
-            if rtol is not None:
-                query = query.filter(rtol_table.c.serial == rtol.store_id)
-
-            row_data = conn.execute(query).one_or_none()
+            ).one_or_none()
         except MultipleResultsFound as e:
             print(
                 f"!! GkNumericalValue.build(): multiple results found when querying for GkNumericalValue"
@@ -744,20 +695,25 @@ class sqla_GkNumericalValue_factory(SQLAFactoryBase):
             raise e
 
         if row_data is None:
-            store_id = None
-            if has_data:
-                store_id = inserter(
-                    conn,
-                    {
-                        "integration_serial": integration_serial,
-                        "z_serial": z.store_id,
-                        "G": G,
-                        "Gprime": Gprime,
-                        "analytic_G": analytic_G,
-                        "analytic_Gprime": analytic_Gprime,
-                        "omega_WKB_sq": omega_WKB_sq,
-                    },
+            if not has_data:
+                raise (
+                    "GkNumericalValue().build(): result was not found in datastore, but a data payload was not provided"
                 )
+
+            store_id = inserter(
+                conn,
+                {
+                    "integration_serial": integration_serial,
+                    "z_serial": z.store_id,
+                    "G": G,
+                    "Gprime": Gprime,
+                    "analytic_G": analytic_G,
+                    "analytic_Gprime": analytic_Gprime,
+                    "omega_WKB_sq": omega_WKB_sq,
+                },
+            )
+
+            attribute_set = {"_new_insert": True}
         else:
             store_id = row_data.serial
             analytic_G = row_data.analytic_G
@@ -779,6 +735,8 @@ class sqla_GkNumericalValue_factory(SQLAFactoryBase):
             G = row_data.G
             Gprime = row_data.Gprime
 
+            attribute_set = {"_deserialized": True}
+
         obj = GkNumericalValue(
             store_id=store_id,
             z=z,
@@ -787,6 +745,94 @@ class sqla_GkNumericalValue_factory(SQLAFactoryBase):
             analytic_G=analytic_G,
             analytic_Gprime=analytic_Gprime,
             omega_WKB_sq=omega_WKB_sq,
+        )
+        for key, value in attribute_set.items():
+            setattr(obj, key, value)
+        return obj
+
+    @staticmethod
+    def _build_impl_model(payload, conn, table, inserter, tables, inserters):
+        z = payload["z"]
+
+        model: Optional[BackgroundModel] = payload["model"]
+        k: Optional[wavenumber_exit_time] = payload["k"]
+        z_source: Optional[redshift] = payload["z_source"]
+
+        atol: Optional[tolerance] = payload.get("atol", None)
+        rtol: Optional[tolerance] = payload.get("rtol", None)
+        tags: Optional[List[store_tag]] = payload.get("tags", None)
+
+        integration_table = tables["GkNumericalIntegration"]
+
+        try:
+            integration_query = sqla.select(integration_table.c.serial).filter(
+                integration_table.c.model_serial == model.store_id,
+                integration_table.c.wavenumber_exit_serial == k.store_id,
+                integration_table.c.z_source_serial == z_source.store_id,
+                integration_table.c.validated == True,
+            )
+
+            if atol is not None:
+                integration_query = integration_query.filter(
+                    integration_table.c.atol_serial == atol.store_id
+                )
+
+            if rtol is not None:
+                integration_query = integration_query.filter(
+                    integration_table.c.rtol_serial == rtol.store_id
+                )
+
+            count = 0
+            for tag in tags:
+                tag: store_tag
+                tab = tables["GkNumerical_tags"].alias(f"tag_{count}")
+                count += 1
+                integration_query = integration_query.join(
+                    tab,
+                    and_(
+                        tab.c.integration_serial == integration_table.c.serial,
+                        tab.c.tag_serial == tag.store_id,
+                    ),
+                )
+
+            subquery = integration_query.subquery()
+
+            row_data = conn.execute(
+                sqla.select(
+                    table.c.serial,
+                    table.c.G,
+                    table.c.Gprime,
+                    table.c.analytic_G,
+                    table.c.analytic_Gprime,
+                    table.c.omega_WKB_sq,
+                )
+                .select_from(
+                    subquery.join(
+                        table, table.c.integration_serial == subquery.c.serial
+                    )
+                )
+                .filter(
+                    table.c.z_serial == z.store_id,
+                )
+            ).one_or_none()
+        except MultipleResultsFound as e:
+            print(
+                f"!! GkNumericalValue.build(): multiple results found when querying for GkNumericalValue"
+            )
+            raise e
+
+        if row_data is None:
+            # return empty object
+            return GkNumericalValue(store_id=None, z=z, G=None, Gprime=None)
+
+        obj = GkNumericalValue(
+            store_id=row_data.serial,
+            z=z,
+            G=row_data.G,
+            Gprime=row_data.Gprime,
+            analytic_G=row_data.analytic_G,
+            analytic_Gprime=row_data.analytic_Gprime,
+            omega_WKB_sq=row_data.omega_WKB_sq,
         )
         obj._deserialized = True
         obj._k_exit = k

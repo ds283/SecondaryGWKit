@@ -328,7 +328,7 @@ class sqla_GkSource_factory(SQLAFactoryBase):
             },
         )
 
-        # set store_id on behalf of the GkNumericalIntegration instance
+        # set store_id on behalf of the GkSource instance
         obj._my_id = store_id
 
         # add any tags that have been specified
@@ -358,7 +358,7 @@ class sqla_GkSource_factory(SQLAFactoryBase):
                 },
             )
 
-            # set store_id on behalf of the GkNumericalValue instance
+            # set store_id on behalf of the GkSourceValue instance
             value._my_id = value_id
 
         return obj
@@ -538,8 +538,39 @@ class sqla_GkSourceValue_factory(SQLAFactoryBase):
 
     @staticmethod
     def build(payload, conn, table, inserter, tables, inserters):
-        parent_serial = payload["parent_serial"]
-        z_source: redshift = payload["z_source"]
+        parent_serial = payload.get("parent_serial", None)
+
+        model: Optional[BackgroundModel] = payload.get("model", None)
+        k: Optional[wavenumber_exit_time] = payload.get("k", None)
+        z_source: Optional[redshift] = payload.get("z_source", None)
+
+        has_serial = all([parent_serial is not None])
+        has_model = all([model is not None, k is not None, z_source is not None])
+
+        if all([has_serial, has_model]):
+            print(
+                "## GkSourceValue.build(): both an source serial number and a (model, wavenumber, z_source) set were queried. Only the serial number will be used."
+            )
+
+        if not any([has_serial, has_model]):
+            raise RuntimeError(
+                "GkSourceValue.build(): at least one of a source serial number and a (model, wavenumber, z_source) set must be supplied."
+            )
+
+        if has_serial:
+            return sqla_GkSourceValue_factory._build_impl_serial(
+                payload, conn, table, inserter, tables, inserters
+            )
+
+        return sqla_GkSourceValue_factory._build_impl_model(
+            payload, conn, table, inserter, tables, inserters
+        )
+
+    @staticmethod
+    def _build_impl_serial(payload, conn, table, inserter, tables, inserters):
+        z_source = payload["z_source"]
+
+        parent_serial: float = payload["parent_serial"]
 
         G = payload.get("G", None)
         Gprime = payload.get("Gprime", None)
@@ -550,35 +581,50 @@ class sqla_GkSourceValue_factory(SQLAFactoryBase):
         cos_coeff = payload.get("cos_coeff", None)
         omega_WKB_sq = payload.get("omega_WKB_sq", None)
 
-        analytic_G = payload.get("analytic_G", None)
-        analytic_Gprime = payload.get("analytic_Gprime", None)
+        analytic_G: Optional[float] = payload.get("analytic_G", None)
+        analytic_Gprime: Optional[float] = payload.get("analytic_Gprime", None)
+
+        has_numerical = all([G is not None, Gprime is not None])
+        has_WKB = all(
+            [
+                G_WKB is not None,
+                H_ratio is not None,
+                theta is not None,
+                omega_WKB_sq is not None,
+            ]
+        )
 
         try:
-            query = sqla.select(
-                table.c.serial,
-                table.c.G,
-                table.c.Gprime,
-                table.c.H_ratio,
-                table.c.theta,
-                table.c.G_WKB,
-                table.c.sin_coeff,
-                table.c.cos_coeff,
-                table.c.omega_WKB_sq,
-                table.c.analytic_G,
-                table.c.analytic_Gprime,
-            ).filter(
-                table.c.parent_serial == parent_serial,
-                table.c.z_source_serial == z_source.store_id,
-            )
-
-            row_data = conn.execute(query).one_or_none()
+            row_data = conn.execute(
+                sqla.select(
+                    table.c.serial,
+                    table.c.G,
+                    table.c.Gprime,
+                    table.c.H_ratio,
+                    table.c.theta,
+                    table.c.G_WKB,
+                    table.c.sin_coeff,
+                    table.c.cos_coeff,
+                    table.c.omega_WKB_sq,
+                    table.c.analytic_G,
+                    table.c.analytic_Gprime,
+                ).filter(
+                    table.c.parent_serial == parent_serial,
+                    table.c.z_serial == z_source.store_id,
+                )
+            ).one_or_none()
         except MultipleResultsFound as e:
             print(
-                f"!! GkWKBValue.build(): multiple results found when querying for GkWKBValue"
+                f"!! GkSourceValue.build(): multiple results found when querying for GkSourceValue"
             )
             raise e
 
         if row_data is None:
+            if not has_numerical and not has_WKB:
+                raise (
+                    "GkSourceValue().build(): result was not found in datastore, but a data payload was not provided"
+                )
+
             store_id = inserter(
                 conn,
                 {
@@ -596,6 +642,8 @@ class sqla_GkSourceValue_factory(SQLAFactoryBase):
                     "analytic_Gprime": analytic_Gprime,
                 },
             )
+
+            attribute_set = {"_new_insert": True}
         else:
             store_id = row_data.serial
 
@@ -612,6 +660,8 @@ class sqla_GkSourceValue_factory(SQLAFactoryBase):
             analytic_G = row_data.analytic_G
             analytic_Gprime = row_data.analytic_Gprime
 
+            attribute_set = {"_deserialized": True}
+
         obj = GkSourceValue(
             store_id=store_id,
             z_source=z_source,
@@ -626,5 +676,103 @@ class sqla_GkSourceValue_factory(SQLAFactoryBase):
             analytic_G=analytic_G,
             analytic_Gprime=analytic_Gprime,
         )
+        for key, value in attribute_set.items():
+            setattr(obj, key, value)
+        return obj
+
+    @staticmethod
+    def _build_impl_model(payload, conn, table, inserter, tables, inserters):
+        z_source = payload["z_source"]
+
+        model: Optional[BackgroundModel] = payload["model"]
+        k: Optional[wavenumber_exit_time] = payload["k"]
+        z_response: Optional[redshift] = payload["z_response"]
+
+        atol: Optional[tolerance] = payload.get("atol", None)
+        rtol: Optional[tolerance] = payload.get("rtol", None)
+        tags: Optional[List[store_tag]] = payload.get("tags", None)
+
+        source_table = tables["GkSource"]
+
+        try:
+            source_query = sqla.select(source_table.c.serial).filter(
+                source_table.c.model_serial == model.store_id,
+                source_table.c.wavenumber_exit_serial == k.store_id,
+                source_table.c.z_response_serial == z_response.store_id,
+                source_table.c.validated == True,
+            )
+
+            if atol is not None:
+                source_query = source_query.filter(
+                    source_table.c.atol_serial == atol.store_id
+                )
+
+            if rtol is not None:
+                source_query = source_query.filter(
+                    source_table.c.rtol_serial == rtol.store_id
+                )
+
+            count = 0
+            for tag in tags:
+                tag: store_tag
+                tab = tables["GkSource_tags"].alias(f"tag_{count}")
+                count += 1
+                source_query = source_query.join(
+                    tab,
+                    and_(
+                        tab.c.parent_serial == source_table.c.serial,
+                        tab.c.tag_serial == tag.store_id,
+                    ),
+                )
+
+            subquery = source_query.subquery()
+
+            row_data = conn.execute(
+                sqla.select(
+                    table.c.serial,
+                    table.c.G,
+                    table.c.Gprime,
+                    table.c.H_ratio,
+                    table.c.theta,
+                    table.c.G_WKB,
+                    table.c.sin_coeff,
+                    table.c.cos_coeff,
+                    table.c.omega_WKB_sq,
+                    table.c.analytic_G,
+                    table.c.analytic_Gprime,
+                )
+                .select_from(
+                    subquery.join(table, table.c.parent_serial == subquery.c.serial)
+                )
+                .filter(
+                    table.c.z_source_serial == z_source.store_id,
+                )
+            ).one_or_none()
+        except MultipleResultsFound as e:
+            print(
+                f"!! GkSourceValue.build(): multiple results found when querying for GkSourceValue"
+            )
+            raise e
+
+        if row_data is None:
+            # return empty object
+            return GkSourceValue(store_id=None, z_source=z_source)
+
+        obj = GkSourceValue(
+            store_id=row_data.serial,
+            z_source=z_source,
+            G=row_data.G,
+            Gprime=row_data.Gprime,
+            H_ratio=row_data.H_ratio,
+            theta=row_data.theta,
+            G_WKB=row_data.G_WKB,
+            sin_coeff=row_data.sin_coeff,
+            cos_coeff=row_data.cos_coeff,
+            omega_WKB_sq=row_data.omega_WKB_sq,
+            analytic_G=row_data.analytic_G,
+            analytic_Gprime=row_data.analytic_Gprime,
+        )
         obj._deserialized = True
+        obj._k_exit = k
+        obj._z_source = z_response
         return obj

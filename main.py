@@ -722,6 +722,8 @@ with ShardedPool(
             WKB_data = {}
 
             for j, z_source in enumerate(z_sources):
+                z_source: redshift
+
                 numeric_value = numerics[j]
                 WKB_value = WKBs[j]
 
@@ -731,14 +733,22 @@ with ShardedPool(
 
                 # the _k_exit and _z_source fields are not part of the public API for these
                 # objects, but they are set by the data store after deserialization
-                assert numeric_value._k_exit.store_id == k_exit.store_id
-                assert WKB_value._k_exit.store_id == k_exit.store_id
-                assert numeric_value._z_source.store_id == z_source.store_id
-                assert WKB_value._z_source.store_id == z_source.store_id
+
+                if not numeric_value.available and not WKB_value.available:
+                    raise RuntimeError(
+                        f"GkSource builder: no data are available for k={k_exit.k.k_inv_Mpc}/Mpc, z_source={z_source.z:.5g}, z_response={z_response.z:.5g}"
+                    )
 
                 if numeric_value.available:
+                    assert numeric_value._k_exit.store_id == k_exit.store_id
+                    assert numeric_value._z_source.store_id == z_source.store_id
+
                     numeric_data[z_source.store_id] = numeric_value
+
                 if WKB_value.available:
+                    assert WKB_value._k_exit.store_id == k_exit.store_id
+                    assert WKB_value._z_source.store_id == z_source.store_id
+
                     WKB_data[z_source.store_id] = WKB_value
 
             work_refs.append(
