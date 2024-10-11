@@ -228,6 +228,12 @@ class GkSource(DatastoreObject):
 
         self._values = payload["values"]
 
+        # delete the (potentially significantly memory-consuming) data payload we were provided
+        del self._numeric_data
+        del self._WKB_data
+        self._has_compute_payload = False
+        self._has_deserialize_payload = False
+
 
 class GkSourceValue(DatastoreObject):
     def __init__(

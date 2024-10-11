@@ -921,6 +921,8 @@ with ShardedPool(
                         f"GkSource builder: no source data was retrieved for k={k_exit.k.k_inv_Mpc}/Mpc, z_response={z_response.z:.5g}"
                     )
 
+                # note that the payload for each GkSource workload can be quite large, so we do not want to overload the queue
+                # with pending compute/store/validate tasks. These all involve passing around the (possibly large) resulting object.
                 work_refs.append(
                     pool.object_get(
                         "GkSource",
@@ -963,6 +965,8 @@ with ShardedPool(
 
         GkSource_work_batches = list(grouper(z_sample, n=20, incomplete="ignore"))
 
+        # need to prune compute/store/validate tasks from the system very rapidly in order to prevent memory-consuming payloads
+        # for a number of compute workloads from piling up.
         GkSource_queue = RayWorkPool(
             pool,
             GkSource_work_batches,
@@ -973,6 +977,7 @@ with ShardedPool(
             store_results=False,
             create_batch_size=1,  # we have batched the work queue into chunks ourselves, so don't process too many of these chunks at once
             notify_batch_size=2000,
+            max_task_queue=100,
             process_batch_size=50,
         )
         GkSource_queue.run()

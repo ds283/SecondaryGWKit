@@ -236,7 +236,7 @@ class RayWorkPool:
                         else:
                             # check whether a compute handler exists
                             if self._compute_handler is not None:
-                                # otherwise, schedule a compute tasks
+                                # otherwise, schedule a compute task
                                 label: str = (
                                     self._label_builder(obj)
                                     if self._label_builder is not None
