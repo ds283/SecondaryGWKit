@@ -147,7 +147,7 @@ class ProfileBatcher:
 
 
 class ProfileBatchManager:
-    def __init__(self, batcher, method: str, metadata: Optional[str] = None):
+    def __init__(self, batcher, method: str, metadata: Optional[dict] = {}):
         self._batcher = batcher
 
         if method is None:
@@ -171,5 +171,8 @@ class ProfileBatchManager:
             method=self._method,
             start_time=self.start_time,
             elapsed=elapsed,
-            metadata=self._metadata,
+            metadata=str(self._metadata) if len(self._metadata) > 0 else None,
         )
+
+    def update_metadata(self, data):
+        self._metadata.update(data)

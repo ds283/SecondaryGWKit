@@ -378,7 +378,7 @@ class Datastore:
             profile_metadata.update({"type": "scalar"})
 
         with ProfileBatchManager(
-            self._profile_batcher, "object_get", str(profile_metadata)
+            self._profile_batcher, "object_get", profile_metadata
         ) as mgr:
             self._ensure_registered_schema(cls_name)
             record = self._schema[cls_name]
@@ -429,10 +429,8 @@ class Datastore:
         else:
             cls_name = ObjectClass.__name__
 
-        profile_metadata = {"object": cls_name}
-
         with ProfileBatchManager(
-            self._profile_batcher, "object_read_batch", str(profile_metadata)
+            self._profile_batcher, "object_read_batch", {"object": cls_name}
         ) as mgr:
             self._ensure_registered_schema(cls_name)
             record = self._schema[cls_name]
@@ -442,9 +440,11 @@ class Datastore:
 
             try:
                 with self._engine.begin() as conn:
-                    return factory.read_batch(
+                    objects = factory.read_batch(
                         payload=payload, conn=conn, table=tab, tables=self._tables
                     )
+                    mgr.update_metadata({"read_objects": len(objects)})
+
             except SQLAlchemyError as e:
                 print(
                     f"!! Database error in datastore build() [store={self._my_name}, physical store={self._db_file}]"
@@ -452,6 +452,8 @@ class Datastore:
                 print(f"|  payload data = {payload}")
                 print(f"|  {e}")
                 raise e
+
+        return objects
 
     def object_store(self, objects):
         if isinstance(objects, list) or isinstance(objects, tuple):
@@ -466,7 +468,7 @@ class Datastore:
             for obj in payload_data:
                 cls_name = type(obj).__name__
                 with ProfileBatchManager(
-                    self._profile_batcher, "object_store_item", cls_name
+                    self._profile_batcher, "object_store_item", {"object": cls_name}
                 ) as mgr:
                     self._ensure_registered_schema(cls_name)
                     record = self._schema[cls_name]
@@ -570,7 +572,7 @@ class Datastore:
             for obj in payload_data:
                 cls_name = type(obj).__name__
                 with ProfileBatchManager(
-                    self._profile_batcher, "object_validate_item", cls_name
+                    self._profile_batcher, "object_validate_item", {"object": cls_name}
                 ) as mgr:
                     self._ensure_registered_schema(cls_name)
                     record = self._schema[cls_name]
