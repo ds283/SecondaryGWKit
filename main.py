@@ -823,40 +823,32 @@ with ShardedPool(
             {
                 # note we don't specify the k mode as part of the main payload
                 # instead we specify it separately to object_get_vectorized()
-                "k": k_exit,
-                "payload": [
-                    {
-                        "model": model,
-                        "z_source": z_source,
-                        "z": z_response,
-                        "atol": atol,
-                        "rtol": rtol,
-                        "tags": [
-                            GkProductionTag,
-                            GlobalZGridTag,
-                            OutsideHorizonEfoldsTag,
-                            LargestZTag,
-                            SamplesPerLog10ZTag,
-                        ],
-                    }
-                    for z_response in missing[k_exit.store_id]
-                    for z_source in z_source_pool[z_response.store_id]
-                ],
+                "shard_key": {"k": k_exit},
+                "object": cls_name,
+                "payload": {
+                    "model": model,
+                    "z": z_response,
+                    "atol": atol,
+                    "rtol": rtol,
+                    "tags": [
+                        GkProductionTag,
+                        GlobalZGridTag,
+                        OutsideHorizonEfoldsTag,
+                        LargestZTag,
+                        SamplesPerLog10ZTag,
+                    ],
+                },
             }
             for k_exit in k_exit_times
-        ]
-
-        labelled_payloads = [
-            (label, payload)
-            for payload in payload_batch
-            for label in ["GkNumericalValue", "GkWKBValue"]
+            for z_response in missing[k_exit.store_id]
+            for cls_name in ["GkNumericalValue", "GkWKBValue"]
         ]
 
         lookup_queue = RayWorkPool(
             pool,
-            labelled_payloads,
-            task_builder=lambda x: pool.object_get_vectorized(
-                x[0], {"k": x[1]["k"]}, payload_data=x[1]["payload"]
+            payload_batch,
+            task_builder=lambda x: pool.object_read_batch(
+                x["object"], x["shard_key"], **x["payload"]
             ),
             available_handler=None,
             compute_handler=None,
@@ -872,62 +864,49 @@ with ShardedPool(
 
         work_refs = []
 
-        for i, k_exit in enumerate(k_exit_times):
+        i = 0
+        for k_exit in k_exit_times:
             k_exit: wavenumber_exit_time
-
-            GkNs = lookup_queue.results[2 * i]
-            GkWs = lookup_queue.results[2 * i + 1]
-
-            response_list = {}
-
-            for GkN, GkW in zip(GkNs, GkWs):
-                GkN: GkNumericalValue
-                GkW: GkWKBValue
-
-                assert isinstance(GkN, GkNumericalValue)
-                assert isinstance(GkW, GkWKBValue)
-
-                # the _k_exit and _z_source fields are not part of the public API for these
-                # objects, but they are set by the data store after deserialization
-                assert GkN._k_exit.store_id == GkW._k_exit.store_id
-                assert GkN._k_exit.store_id == k_exit.store_id
-                assert GkN._z_source.store_id == GkW._z_source.store_id
-                assert GkN.z.store_id == GkW.z.store_id
-
-                z_source: redshift = GkN._z_source
-                z_response: redshift = GkN.z
-
-                if z_response.store_id not in response_list:
-                    response_list[z_response.store_id] = {}
-                source_list = response_list[z_response.store_id]
-
-                source_list[z_source.store_id] = (GkN, GkW)
 
             for z_response in missing[k_exit.store_id]:
                 z_response: redshift
-                source_list = response_list[z_response.store_id]
+                GkNs = lookup_queue.results[i]
+                GkWs = lookup_queue.results[i + 1]
+
+                i += 2
 
                 numeric_data = {}
                 WKB_data = {}
 
+                for GkN in GkNs:
+                    GkN: GkNumericalValue
+                    assert isinstance(GkN, GkNumericalValue)
+
+                    # the _k_exit and _z_source fields are not part of the public API for these
+                    # objects, but they are set by the data store after deserialization
+                    assert GkN._k_exit.store_id == k_exit.store_id
+                    assert GkN.z.store_id == z_response.store_id
+
+                    numeric_data[GkN._z_source.store_id] = GkN
+
+                for GkW in GkWs:
+                    GkW: GkWKBValue
+                    assert isinstance(GkW, GkWKBValue)
+
+                    assert GkW._k_exit.store_id == k_exit.store_id
+                    assert GkW.z.store_id == z_response.store_id
+
+                    WKB_data[GkW._z_source.store_id] = GkW
+
+                # ensure there is at least one numeric or WKB data point for every source redshift we need
                 for z_source in z_source_pool[z_response.store_id]:
-                    if z_source.store_id not in source_list:
+                    if (
+                        z_source.store_id not in numeric_data
+                        and z_source.store_id not in WKB_data
+                    ):
                         raise RuntimeError(
-                            f"GkSource builder: no source data retrieved for k={k_exit.k.k_inv_Mpc}/Mpc, z_source={z_source.z:.5g}, z_response={z_response.z:.5g}"
+                            f"GkSource builder: no source data was retrieved for k={k_exit.k.k_inv_Mpc}/Mpc, z_source={z_source.z:.5g}, z_response={z_response.z:.5g}"
                         )
-
-                    GkN, GkW = source_list[z_source.store_id]
-
-                    if not GkN.available and not GkW.available:
-                        raise RuntimeError(
-                            f"GkSource builder: no source data available for k={k_exit.k.k_inv_Mpc}/Mpc, z_source={z_source.z:.5g}, z_response={z_response.z:.5g}"
-                        )
-
-                    if GkN.available:
-                        numeric_data[z_source.store_id] = GkN
-
-                    if GkW.available:
-                        WKB_data[z_source.store_id] = GkW
 
                 work_refs.append(
                     pool.object_get(
@@ -969,7 +948,7 @@ with ShardedPool(
         # To process these efficiently, we break the queue up into batches, and try to
         # run a sub-queue that queries that needed data in parallel.
 
-        GkSource_work_batches = list(grouper(z_sample, n=10, incomplete="ignore"))
+        GkSource_work_batches = list(grouper(z_sample, n=20, incomplete="ignore"))
 
         GkSource_queue = RayWorkPool(
             pool,

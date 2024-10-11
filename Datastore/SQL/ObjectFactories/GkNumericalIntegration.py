@@ -848,3 +848,108 @@ class sqla_GkNumericalValue_factory(SQLAFactoryBase):
         obj._k_exit = k
         obj._z_source = z_source
         return obj
+
+    @staticmethod
+    def read_batch(payload, conn, table, tables):
+        model: BackgroundModel = payload["model"]
+        k: wavenumber_exit_time = payload["k"]
+
+        atol: Optional[tolerance] = payload.get("atol", None)
+        rtol: Optional[tolerance] = payload.get("rtol", None)
+        tags: Optional[List[store_tag]] = payload.get("tags", None)
+
+        z_response: Optional[redshift] = payload.get("z", None)
+        z_source: Optional[redshift] = payload.get("z_source", None)
+
+        integration_table = tables["GkNumericalIntegration"]
+        redshift_table = tables["redshift"]
+
+        integration_query = (
+            sqla.select(
+                integration_table.c.serial,
+                integration_table.c.z_source_serial,
+                redshift_table.c.z.label("z_source"),
+            )
+            .filter(
+                integration_table.c.model_serial == model.store_id,
+                integration_table.c.wavenumber_exit_serial == k.store_id,
+                integration_table.c.validated == True,
+            )
+            .select_from(
+                integration_table.join(
+                    redshift_table,
+                    redshift_table.c.serial == integration_table.c.z_source_serial,
+                )
+            )
+        )
+
+        if z_source is not None:
+            integration_query = integration_query.filter(
+                integration_table.c.z_source_serial == z_source.store_id
+            )
+
+        if atol is not None:
+            integration_query = integration_query.filter(
+                integration_table.c.atol_serial == atol.store_id
+            )
+
+        if rtol is not None:
+            integration_query = integration_query.filter(
+                integration_table.c.rtol_serial == rtol.store_id
+            )
+
+        count = 0
+        for tag in tags:
+            tag: store_tag
+            tab = tables["GkNumerical_tags"].alias(f"tag_{count}")
+            count += 1
+            integration_query = integration_query.join(
+                tab,
+                and_(
+                    tab.c.integration_serial == integration_table.c.serial,
+                    tab.c.tag_serial == tag.store_id,
+                ),
+            )
+
+        subquery = integration_query.subquery()
+
+        row_query = sqla.select(
+            table.c.serial,
+            table.c.G,
+            table.c.Gprime,
+            table.c.analytic_G,
+            table.c.analytic_Gprime,
+            table.c.omega_WKB_sq,
+            subquery.c.z_source_serial,
+            subquery.c.z_source,
+            redshift_table.c.z.label("z_response"),
+            table.c.z_serial.label("z_response_serial"),
+        ).select_from(
+            subquery.join(table, table.c.integration_serial == subquery.c.serial).join(
+                redshift_table, redshift_table.c.serial == table.c.z_serial
+            )
+        )
+
+        if z_response is not None:
+            row_query = row_query.filter(table.c.z_serial == z_response.store_id)
+
+        row_data = conn.execute(row_query)
+
+        def make_obj(row):
+            obj = GkNumericalValue(
+                store_id=row.serial,
+                z=redshift(store_id=row.z_response_serial, z=row.z_response),
+                G=row.G,
+                Gprime=row.Gprime,
+                analytic_G=row.analytic_G,
+                analytic_Gprime=row.analytic_Gprime,
+                omega_WKB_sq=row.omega_WKB_sq,
+            )
+            obj._deserialized = True
+            obj._k_exit = k
+            obj._z_source = redshift(store_id=row.z_source, z=row.z_source)
+
+            return obj
+
+        objects = [make_obj(row) for row in row_data]
+        return objects

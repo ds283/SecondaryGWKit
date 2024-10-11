@@ -423,6 +423,36 @@ class Datastore:
 
         return objects
 
+    def object_read_batch(self, ObjectClass, **payload):
+        if isinstance(ObjectClass, str):
+            cls_name = ObjectClass
+        else:
+            cls_name = ObjectClass.__name__
+
+        profile_metadata = {"object": cls_name}
+
+        with ProfileBatchManager(
+            self._profile_batcher, "object_read_batch", str(profile_metadata)
+        ) as mgr:
+            self._ensure_registered_schema(cls_name)
+            record = self._schema[cls_name]
+
+            tab = record["table"]
+            factory = self._factories[cls_name]
+
+            try:
+                with self._engine.begin() as conn:
+                    return factory.read_batch(
+                        payload=payload, conn=conn, table=tab, tables=self._tables
+                    )
+            except SQLAlchemyError as e:
+                print(
+                    f"!! Database error in datastore build() [store={self._my_name}, physical store={self._db_file}]"
+                )
+                print(f"|  payload data = {payload}")
+                print(f"|  {e}")
+                raise e
+
     def object_store(self, objects):
         if isinstance(objects, list) or isinstance(objects, tuple):
             payload_data = objects

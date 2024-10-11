@@ -711,7 +711,7 @@ class sqla_GkWKBValue_factory(SQLAFactoryBase):
                     table.c.wkb_serial == wkb_serial,
                     table.c.z_serial == z.store_id,
                 )
-                .join(wkb_table, wkb_table.c.serial == table.c.integration_serial)
+                .join(wkb_table, wkb_table.c.serial == table.c.wkb_serial)
             ).one_or_none()
         except MultipleResultsFound as e:
             print(
@@ -884,3 +884,112 @@ class sqla_GkWKBValue_factory(SQLAFactoryBase):
         obj._k_exit = k
         obj._z_source = z_source
         return obj
+
+    @staticmethod
+    def read_batch(payload, conn, table, tables):
+        model: BackgroundModel = payload["model"]
+        k: wavenumber_exit_time = payload["k"]
+
+        atol: Optional[tolerance] = payload.get("atol", None)
+        rtol: Optional[tolerance] = payload.get("rtol", None)
+        tags: Optional[List[store_tag]] = payload.get("tags", None)
+
+        z_response: Optional[redshift] = payload.get("z", None)
+        z_source: Optional[redshift] = payload.get("z_source", None)
+
+        wkb_table = tables["GkWKBIntegration"]
+        redshift_table = tables["redshift"]
+
+        wkb_query = (
+            sqla.select(
+                wkb_table.c.serial,
+                wkb_table.c.sin_coeff,
+                wkb_table.c.cos_coeff,
+                wkb_table.c.z_source_serial,
+                redshift_table.c.z.label("z_source"),
+            )
+            .filter(
+                wkb_table.c.model_serial == model.store_id,
+                wkb_table.c.wavenumber_exit_serial == k.store_id,
+                wkb_table.c.validated == True,
+            )
+            .select_from(
+                wkb_table.join(
+                    redshift_table,
+                    redshift_table.c.serial == wkb_table.c.z_source_serial,
+                )
+            )
+        )
+
+        if z_source is not None:
+            wkb_query = wkb_query.filter(
+                wkb_table.c.z_source_serial == z_source.store_id
+            )
+
+        if atol is not None:
+            wkb_query = wkb_query.filter(wkb_table.c.atol_serial == atol.store_id)
+
+        if rtol is not None:
+            wkb_query = wkb_query.filter(wkb_table.c.rtol_serial == rtol.store_id)
+
+        count = 0
+        for tag in tags:
+            tag: store_tag
+            tab = tables["GkWKB_tags"].alias(f"tag_{count}")
+            count += 1
+            wkb_query = wkb_query.join(
+                tab,
+                and_(
+                    tab.c.wkb_serial == wkb_table.c.serial,
+                    tab.c.tag_serial == tag.store_id,
+                ),
+            )
+
+        subquery = wkb_query.subquery()
+
+        row_query = sqla.select(
+            table.c.serial,
+            table.c.H_ratio,
+            table.c.theta,
+            table.c.omega_WKB_sq,
+            table.c.G_WKB,
+            table.c.analytic_G,
+            table.c.analytic_Gprime,
+            subquery.c.sin_coeff,
+            subquery.c.cos_coeff,
+            subquery.c.z_source_serial,
+            subquery.c.z_source,
+            redshift_table.c.z.label("z_response"),
+            table.c.z_serial.label("z_response_serial"),
+        ).select_from(
+            subquery.join(table, table.c.wkb_serial == subquery.c.serial).join(
+                redshift_table, redshift_table.c.serial == table.c.z_serial
+            )
+        )
+
+        if z_response is not None:
+            row_query = row_query.filter(table.c.z_serial == z_response.store_id)
+
+        row_data = conn.execute(row_query)
+
+        def make_obj(row):
+            obj = GkWKBValue(
+                store_id=row.serial,
+                z=redshift(store_id=row.z_response_serial, z=row.z_response),
+                H_ratio=row.H_ratio,
+                theta=row.theta,
+                omega_WKB_sq=row.omega_WKB_sq,
+                G_WKB=row.G_WKB,
+                analytic_G=row.analytic_G,
+                analytic_Gprime=row.analytic_Gprime,
+                sin_coeff=row.sin_coeff,
+                cos_coeff=row.cos_coeff,
+            )
+            obj._deserialized = True
+            obj._k_exit = k
+            obj._z_source = redshift(store_id=row.z_source, z=row.z_source)
+
+            return obj
+
+        objects = [make_obj(row) for row in row_data]
+        return objects
