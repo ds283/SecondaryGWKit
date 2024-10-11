@@ -816,9 +816,6 @@ with ShardedPool(
         # thousands of z values, and we cannot afford the overhead of looking up each GkNumericalValue or
         # GkWKBValue individually. This entails a database overhead (lookups are much more efficient if wrapped
         # in a single transaction) and a multiprocessing overhead (Ray has to serialize, schedule, deserialize, ...)
-
-        # we try to vectorize as much as possible by flattening the z_source/z_response combinations into
-        # a single list
         payload_batch = [
             {
                 # note we don't specify the k mode as part of the main payload
@@ -899,14 +896,30 @@ with ShardedPool(
                     WKB_data[GkW._z_source.store_id] = GkW
 
                 # ensure there is at least one numeric or WKB data point for every source redshift we need
-                for z_source in z_source_pool[z_response.store_id]:
-                    if (
-                        z_source.store_id not in numeric_data
-                        and z_source.store_id not in WKB_data
-                    ):
-                        raise RuntimeError(
-                            f"GkSource builder: no source data was retrieved for k={k_exit.k.k_inv_Mpc}/Mpc, z_source={z_source.z:.5g}, z_response={z_response.z:.5g}"
+                missing_sources = [
+                    z_source
+                    for z_source in z_source_pool[z_response.store_id]
+                    if z_source.store_id not in numeric_data
+                    and z_source.store_id not in WKB_data
+                ]
+                if len(missing_sources) > 0:
+                    print(
+                        f"!! MISSING DATA WARNING ({datetime.now().replace(microsecond=0).isoformat()}) k={k_exit.k.k_inv_Mpc}/Mpc, z_response={z_response.z:.5g} (store_id={z_response.store_id})"
+                    )
+                    for missing_zsource in missing_sources[:20]:
+                        print(
+                            f"|  -- z_source={missing_zsource.z:.5g} (store_id={missing_zsource.store_id})"
                         )
+                    expected = len(z_source_pool[z_response.store_id])
+                    missing = len(missing_sources)
+                    if missing > 20:
+                        print("|  ... (more missing redshifts skipped)")
+                    print(
+                        f"|     total missing = {missing} out of {expected} = {100.0*missing/expected:.2f}%"
+                    )
+                    raise RuntimeError(
+                        f"GkSource builder: no source data was retrieved for k={k_exit.k.k_inv_Mpc}/Mpc, z_response={z_response.z:.5g}"
+                    )
 
                 work_refs.append(
                     pool.object_get(
@@ -958,7 +971,7 @@ with ShardedPool(
             label_builder=build_GkSource_work_label,
             title="REBUILD GREENS FUNCTIONS FOR SOURCE REDSHIFT",
             store_results=False,
-            create_batch_size=1,  # we have batched the work queue into chunks ourselves
+            create_batch_size=1,  # we have batched the work queue into chunks ourselves, so don't process too many of these chunks at once
             notify_batch_size=2000,
             process_batch_size=50,
         )
