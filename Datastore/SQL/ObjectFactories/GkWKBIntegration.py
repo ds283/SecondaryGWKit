@@ -987,7 +987,7 @@ class sqla_GkWKBValue_factory(SQLAFactoryBase):
             )
             obj._deserialized = True
             obj._k_exit = k
-            obj._z_source = redshift(store_id=row.z_source, z=row.z_source)
+            obj._z_source = redshift(store_id=row.z_source_serial, z=row.z_source)
 
             return obj
 
