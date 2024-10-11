@@ -2,7 +2,7 @@ import argparse
 import itertools
 import sys
 from datetime import datetime
-from typing import List
+from typing import List, Optional
 
 import numpy as np
 import ray
@@ -511,6 +511,7 @@ with ShardedPool(
             store_results=False,
             create_batch_size=5,
             notify_batch_size=2000,
+            max_task_queue=100,
             process_batch_size=50,
         )
         Gk_numerical_queue.run()
@@ -577,7 +578,7 @@ with ShardedPool(
             {
                 # note we don't specify the k mode as part of the main payload
                 # instead we specify it separately to object_get_vectorized()
-                "k": k_exit,
+                "shard_key": {"k": k_exit},
                 "payload": [
                     {
                         "solver_labels": [],
@@ -598,7 +599,7 @@ with ShardedPool(
             pool,
             payload_batch,
             task_builder=lambda x: pool.object_get_vectorized(
-                "GkNumericalIntegration", {"k": x["k"]}, payload_data=x["payload"]
+                "GkNumericalIntegration", x["shard_key"], payload_data=x["payload"]
             ),
             available_handler=None,
             compute_handler=None,
@@ -739,6 +740,7 @@ with ShardedPool(
             store_results=False,
             create_batch_size=5,
             notify_batch_size=2000,
+            max_task_queue=100,
             process_batch_size=50,
         )
         Gk_WKB_queue.run()
@@ -759,9 +761,12 @@ with ShardedPool(
             for z_response in batch
         }
 
+        # first, determine which GkSource objects are missing from the datastore. We do not rebuild (or even re-requery) any that are already
+        # present (although we do not attempt to validate them either). Even querying has an impact: scheduling a remote database lookup,
+        # serialization/deserialization of the output product, etc.
         query_batch = [
             {
-                "k": k_exit,
+                "shard_key": {"k": k_exit},
                 "payload": [
                     {
                         "model": model,
@@ -784,11 +789,13 @@ with ShardedPool(
             for k_exit in k_exit_times
         ]
 
+        # we use object_get_vectorized() to query a whole batch of GkSource objects on the same shard. This helps amortize the overheads
+        # of the remote database lookup.
         query_queue = RayWorkPool(
             pool,
             query_batch,
             task_builder=lambda x: pool.object_get_vectorized(
-                "GkSource", {"k": x["k"]}, payload_data=x["payload"]
+                "GkSource", x["shard_key"], payload_data=x["payload"]
             ),
             available_handler=None,
             compute_handler=None,
@@ -802,6 +809,7 @@ with ShardedPool(
         )
         query_queue.run()
 
+        # determine which z_response values are missing for each k_exit value
         missing = {
             k_exit.store_id: [
                 z_response
@@ -812,14 +820,13 @@ with ShardedPool(
         }
 
         # all the z-source values for a single k-mode will be held on the same database shard.
-        # It's critical that we vectorize the lookup for these. There will typically be hundreds or
-        # thousands of z values, and we cannot afford the overhead of looking up each GkNumericalValue or
-        # GkWKBValue individually. This entails a database overhead (lookups are much more efficient if wrapped
-        # in a single transaction) and a multiprocessing overhead (Ray has to serialize, schedule, deserialize, ...)
+        # It's critical that we look these up efficiently. We use the object_read_batch() API
+        # so that we can collect an entire set of z_source values for a given z_response value,
+        # in a single database query
         payload_batch = [
             {
                 # note we don't specify the k mode as part of the main payload
-                # instead we specify it separately to object_get_vectorized()
+                # instead we specify it separately to object_read_batch()
                 "shard_key": {"k": k_exit},
                 "object": cls_name,
                 "payload": {
@@ -924,32 +931,37 @@ with ShardedPool(
                 # note that the payload for each GkSource workload can be quite large, so we do not want to overload the queue
                 # with pending compute/store/validate tasks. These all involve passing around the (possibly large) resulting object.
                 work_refs.append(
-                    pool.object_get(
-                        "GkSource",
-                        payload={
+                    {
+                        "ref": pool.object_get(
+                            "GkSource",
+                            model=model,
+                            k=k_exit,
+                            atol=atol,
+                            rtol=rtol,
+                            z_response=z_response,
+                            z_sample=z_source_pool[z_response.store_id],
+                            tags=[
+                                GkProductionTag,
+                                GlobalZGridTag,
+                                OutsideHorizonEfoldsTag,
+                                LargestZTag,
+                                SamplesPerLog10ZTag,
+                            ],
+                        ),
+                        "compute_payload": {
                             "numeric": numeric_data,
                             "WKB": WKB_data,
                         },
-                        model=model,
-                        k=k_exit,
-                        atol=atol,
-                        rtol=rtol,
-                        z_response=z_response,
-                        z_sample=z_source_pool[z_response.store_id],
-                        tags=[
-                            GkProductionTag,
-                            GlobalZGridTag,
-                            OutsideHorizonEfoldsTag,
-                            LargestZTag,
-                            SamplesPerLog10ZTag,
-                        ],
-                    )
+                    }
                 )
 
         return work_refs
 
     def build_GkSource_work_label(Gk: GkSource):
         return f"{args.job_name}-GkSource-k{Gk.k.k_inv_Mpc:.3g}-responsez{Gk.z_response.z:.5g}-{datetime.now().replace(microsecond=0).isoformat()}"
+
+    def compute_GkSource_work(Gk: GkSource, payload, label: Optional[str] = None):
+        return Gk.compute(payload, label)
 
     def validate_GkSource_work(Gk: GkSource):
         return pool.object_validate(Gk)
@@ -971,6 +983,7 @@ with ShardedPool(
             pool,
             GkSource_work_batches,
             task_builder=build_GkSource_batch,
+            compute_handler=compute_GkSource_work,
             validation_handler=validate_GkSource_work,
             label_builder=build_GkSource_work_label,
             title="REBUILD GREENS FUNCTIONS FOR SOURCE REDSHIFT",

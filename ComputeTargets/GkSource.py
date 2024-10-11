@@ -107,31 +107,6 @@ class GkSource(DatastoreObject):
         self._compute_ref = None
 
         if payload is not None:
-            self._has_compute_payload = all(
-                [
-                    "numeric" in payload,
-                    "WKB" in payload,
-                ]
-            )
-            self._has_deserialize_payload = all(
-                [
-                    "store_id" in payload,
-                    "values" in payload,
-                ]
-            )
-        else:
-            self._has_compute_payload = False
-            self._has_deserialize_payload = False
-
-        if self._has_compute_payload:
-            DatastoreObject.__init__(self, None)
-
-            self._numeric_data = payload["numeric"]
-            self._WKB_data = payload["WKB"]
-
-            self._values = None
-
-        elif self._has_deserialize_payload:
             DatastoreObject.__init__(self, payload["store_id"])
             self._values = payload["values"]
 
@@ -183,7 +158,7 @@ class GkSource(DatastoreObject):
             raise RuntimeError("values has not yet been populated")
         return self._values
 
-    def compute(self, label: Optional[str] = None):
+    def compute(self, payload, label: Optional[str] = None):
         if hasattr(self, "_do_not_populate"):
             raise RuntimeError("GkSource: compute() called but _do_not_populate is set")
 
@@ -195,18 +170,13 @@ class GkSource(DatastoreObject):
                 "Object has not been configured correctly for a concrete calculation (z_response or z_sample is missing). It can only represent a query."
             )
 
-        if not self._has_compute_payload:
-            raise RuntimeError(
-                "Object has not been configured correctly for a concrete calculation (no compute payload was supplied). It can only represent a query."
-            )
-
         # replace label if specified
         if label is not None:
             self._label = label
 
         # currently we have nothing to do here
         self._compute_ref = marshal_values.remote(
-            self._z_sample, self._numeric_data, self._WKB_data
+            self._z_sample, payload["numeric"], payload["WKB"]
         )
         return self._compute_ref
 
@@ -227,12 +197,6 @@ class GkSource(DatastoreObject):
         self._compute_ref = None
 
         self._values = payload["values"]
-
-        # delete the (potentially significantly memory-consuming) data payload we were provided
-        del self._numeric_data
-        del self._WKB_data
-        self._has_compute_payload = False
-        self._has_deserialize_payload = False
 
 
 class GkSourceValue(DatastoreObject):

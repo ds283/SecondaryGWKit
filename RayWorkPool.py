@@ -1,6 +1,5 @@
 import time
 from datetime import datetime
-from typing import Iterable
 
 import ray
 from ray import ObjectRef
@@ -11,7 +10,7 @@ from utilities import format_time
 DEFAULT_CREATE_BATCH_SIZE = 5
 DEFAULT_PROCESS_BATCH_SIZE = 1
 
-DEFAULT_MAX_TASK_QUEUE = 2000
+DEFAULT_MAX_TASK_QUEUE = 200
 DEFAULT_NOTIFY_BATCH_SIZE = 500
 DEFAULT_NOTIFY_TIME_INTERVAL = 5 * 60
 DEFAULT_NOTIFY_MIN_INTERVAL = 30
@@ -88,6 +87,7 @@ class RayWorkPool:
 
         self._inflight = {}
         self._data = {}
+        self._compute_data = {}
 
         self._store_results = store_results
         if store_results:
@@ -155,29 +155,51 @@ class RayWorkPool:
                     item = self._todo.pop()
                     ref_data = self._task_builder(item)
 
-                    if isinstance(ref_data, Iterable):
-                        if self._store_results:
-                            raise RuntimeError(
-                                "store_results=True is not compatible with returning multiple work items from a task builder"
-                            )
-
-                        for ref in ref_data:
-                            self._inflight[ref.hex] = ref
-                            self._data[ref.hex] = ("lookup", None)
-
-                        self._num_lookup_queue += len(ref_data)
-
-                    else:
-                        ref = ref_data
+                    def store_single_ref(ref, allow_store=True):
                         self._inflight[ref.hex] = ref
 
-                        if self._store_results:
+                        if self._store_results and allow_store:
                             self._data[ref.hex] = ("lookup", self._current_idx)
                             self._current_idx += 1
                         else:
                             self._data[ref.hex] = ("lookup", None)
 
                         self._num_lookup_queue += 1
+
+                    def store_ref(ref_data, allow_store=True):
+                        if isinstance(ref_data, dict) and "ref" in ref_data:
+                            # interpret as a dict containing the ObjectRef, and possibly also a compute payload
+                            ref = ref_data["ref"]
+                            store_single_ref(ref, allow_store=allow_store)
+
+                            if "compute_payload" in ref_data:
+                                self._compute_data[ref.hex] = ref_data[
+                                    "compute_payload"
+                                ]
+
+                        elif isinstance(ref_data, ObjectRef):
+                            store_single_ref(ref_data, allow_store=allow_store)
+
+                        else:
+                            raise RuntimeError(
+                                f'could not interpret output from task builder (object type="{ref_data.__name__}", contents={str(ref_data)})'
+                            )
+
+                    if (
+                        isinstance(ref_data, list)
+                        or isinstance(ref_data, tuple)
+                        or isinstance(ref_data, set)
+                    ):
+                        if self._store_results:
+                            raise RuntimeError(
+                                "store_results=True is not compatible with returning multiple work items from a task builder"
+                            )
+
+                        for ref in ref_data:
+                            store_ref(ref, allow_store=False)
+
+                    else:
+                        store_ref(ref_data, allow_store=True)
 
                     count += 1
 
@@ -242,8 +264,15 @@ class RayWorkPool:
                                     if self._label_builder is not None
                                     else None
                                 )
+
+                                compute_args = {"label": label}
+                                if ref.hex in self._compute_data:
+                                    compute_args.update(
+                                        {"payload": self._compute_data[ref.hex]}
+                                    )
+
                                 compute_task: ObjectRef = self._compute_handler(
-                                    obj, label
+                                    obj, **compute_args
                                 )
 
                                 # add this compute task to the work queue
@@ -260,6 +289,8 @@ class RayWorkPool:
                             replacement_obj = self._post_handler(obj)
                             if replacement_obj is not None and self._store_results:
                                 self.results[idx] = replacement_obj
+
+                    self._compute_data.pop(ref.hex, None)
 
                 elif type == "available":
                     # payload is a pair of the target index and the constructed object
