@@ -499,8 +499,8 @@ class GkWKBIntegration(DatastoreObject):
         alpha = sqrt(num * num + den * den)
 
         sin_deltaTheta = sin(deltaTheta)
-        sgn_sin_deltaTheta = +1 if sin_deltaTheta >= 0.0 else -1.0
-        sgn_G = +1 if self._G_init >= 0.0 else -1.0
+        sgn_sin_deltaTheta = +1 if sin_deltaTheta >= 0.0 else -1
+        sgn_G = +1 if self._G_init >= 0.0 else -1
 
         self._cos_coeff = 0.0
         self._sin_coeff = sgn_sin_deltaTheta * sgn_G * alpha
