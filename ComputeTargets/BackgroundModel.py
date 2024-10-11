@@ -64,7 +64,7 @@ def compute_background(
             method="RK45",
             t_span=(z_init, z_stop),
             y0=initial_state,
-            t_eval=z_sample.as_list(),
+            t_eval=z_sample.as_float_list(),
             atol=atol,
             rtol=rtol,
             args=(supervisor,),

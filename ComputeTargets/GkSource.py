@@ -2,7 +2,7 @@ from collections import namedtuple
 from typing import Optional, List
 
 import ray
-from math import fabs
+from math import fabs, pi
 
 from ComputeTargets.BackgroundModel import BackgroundModel
 from ComputeTargets.GkNumericalIntegration import GkNumericalValue
@@ -21,7 +21,11 @@ WKBData = namedtuple("WKBData", ["theta", "H_ratio", "sin_coeff", "cos_coeff", "
 def marshal_values(z_sample: redshift_array, numeric_data, WKB_data):
     values = []
 
-    for z_source in z_sample:
+    # work through the z_sample array, and check whether there is any numeric or WKB data for each sample point.
+    # We do this in reverse order (from low to high redshift). This is done so that we can try to smooth the phase function.
+    # It will have step-like discontinuities due to the way we calculate it.
+    last_theta = None
+    for z_source in reversed(list(z_sample)):
         numeric: GkNumericalValue = numeric_data.get(z_source.store_id, None)
         WKB: GkWKBValue = WKB_data.get(z_source.store_id, None)
 
@@ -44,13 +48,21 @@ def marshal_values(z_sample: redshift_array, numeric_data, WKB_data):
                     "marshal_values: analytic G values unexpectedly differ by a large amount"
                 )
 
+        theta = WKB.theta if WKB is not None else None
+        if theta is not None and last_theta is not None:
+            while fabs(theta - last_theta) > 2.0 * pi:
+                if theta < last_theta:
+                    theta += 2.0 * pi
+                elif theta > last_theta:
+                    theta -= 2.0 * pi
+
         values.append(
             GkSourceValue(
                 None,
                 z_source=z_source,
                 G=numeric.G if numeric is not None else None,
                 Gprime=numeric.Gprime if numeric is not None else None,
-                theta=WKB.theta if WKB is not None else None,
+                theta=theta,
                 H_ratio=WKB.H_ratio if WKB is not None else None,
                 sin_coeff=WKB.sin_coeff if WKB is not None else None,
                 cos_coeff=WKB.cos_coeff if WKB is not None else None,
@@ -77,6 +89,8 @@ def marshal_values(z_sample: redshift_array, numeric_data, WKB_data):
                 ),
             )
         )
+
+        last_theta = theta
 
     return {"values": values}
 

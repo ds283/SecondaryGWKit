@@ -282,7 +282,7 @@ def compute_Gk(
             method="RK45",
             t_span=(z_source.z, z_min),
             y0=initial_state,
-            t_eval=z_sample.as_list(),
+            t_eval=z_sample.as_float_list(),
             events=events,
             dense_output=dense_output,
             atol=atol,

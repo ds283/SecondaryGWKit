@@ -41,8 +41,10 @@ class redshift_array:
         :param store_id: unique Datastore id. Should not be None
         :param z_array: array of redshift value
         """
-        # store array
-        self._z_array = z_array
+        # store array, sorted in descending order of redshift
+        self._z_array = sorted(z_array, key=lambda x: x.z, reverse=True)
+
+        # sort into descending order of redshift
 
     def __iter__(self):
         for z in self._z_array:
@@ -66,7 +68,7 @@ class redshift_array:
 
         return False
 
-    def as_list(self) -> list[float]:
+    def as_float_list(self) -> list[float]:
         return [float(z) for z in self._z_array]
 
     @property

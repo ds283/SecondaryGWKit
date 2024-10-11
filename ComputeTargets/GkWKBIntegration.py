@@ -2,7 +2,7 @@ import time
 from typing import Optional, List
 
 import ray
-from math import log, sqrt, fabs, cos, sin
+from math import log, sqrt, fabs, cos, sin, atan2
 from scipy.integrate import solve_ivp
 
 from ComputeTargets.BackgroundModel import BackgroundModel
@@ -127,7 +127,7 @@ def compute_Gk_WKB(
             method="RK45",
             t_span=(z_init, z_min),
             y0=initial_state,
-            t_eval=z_sample.as_list(),
+            t_eval=z_sample.as_float_list(),
             atol=atol,
             rtol=rtol,
             args=(supervisor,),
@@ -480,15 +480,33 @@ class GkWKBIntegration(DatastoreObject):
             )
             print(f"     This may lead to meaningless results.")
 
+        # we try to adjust the phase so that the solution is of the form G = amplitude * sin (theta + DeltaTheta)
+        # the point is that WKB solutions defined inside the horizon always have the coefficient of cos equal to zero,
+        # because the initial conditions are G = 0, G' = 0, and this forces the cos to be absent.
+        # When we try to smoothly match the outside-the-horizon source times to these inside-the-horizon ones,
+        # we do not want a discontinuity in the coefficients. So we have to keep the coefficient of the cos always zero.
+        # This makes a corresponding adjustment to the phase, which we must calculate.
         omega_WKB_init = sqrt(omega_WKB_sq_init)
         sqrt_omega_WKB_init = sqrt(omega_WKB_init)
 
-        self._cos_coeff = sqrt_omega_WKB_init * self._G_init
-
-        self._sin_coeff = (
+        num = sqrt_omega_WKB_init * self._G_init
+        den = (
             self._Gprime_init
-            + (self._G_init / 2.0) * (eps_init / one_plus_z_init + d_ln_omega_WKB_init)
+            + (self._G_init / 2.0) * (d_ln_omega_WKB_init + eps_init / one_plus_z_init)
         ) / sqrt_omega_WKB_init
+
+        deltaTheta = atan2(num, den)
+        alpha = sqrt(num * num + den * den)
+
+        sin_deltaTheta = sin(deltaTheta)
+        sgn_sin_deltaTheta = +1 if sin_deltaTheta >= 0.0 else -1.0
+        sgn_G = +1 if self._G_init >= 0.0 else -1.0
+
+        self._cos_coeff = 0.0
+        self._sin_coeff = sgn_sin_deltaTheta * sgn_G * alpha
+
+        for i in range(len(theta_sample)):
+            theta_sample[i] += deltaTheta
 
         # estimate tau at the source redshift
         H_source = self._model.functions.Hubble(self._z_source.z)
@@ -517,7 +535,7 @@ class GkWKBIntegration(DatastoreObject):
             d_ln_omega_WKB = WKB_d_ln_omegaEffPrime_dz(
                 self._model, self._k_exit.k.k, current_z_float
             )
-            WKB_criterion = d_ln_omega_WKB_init / omega_WKB
+            WKB_criterion = d_ln_omega_WKB / omega_WKB
 
             H_ratio = H_init / H
             norm_factor = sqrt(H_ratio / omega_WKB)

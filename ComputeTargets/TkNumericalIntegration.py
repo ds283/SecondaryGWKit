@@ -208,7 +208,7 @@ def compute_Tk(
             method="Radau",
             t_span=(z_init.z, z_min),
             y0=initial_state,
-            t_eval=z_sample.as_list(),
+            t_eval=z_sample.as_float_list(),
             atol=atol,
             rtol=rtol,
             args=(supervisor,),
