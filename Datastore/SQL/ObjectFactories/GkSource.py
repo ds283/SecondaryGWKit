@@ -246,6 +246,7 @@ class sqla_GkSource_factory(SQLAFactoryBase):
                     value_table.c.sin_coeff,
                     value_table.c.cos_coeff,
                     value_table.c.omega_WKB_sq,
+                    value_table.c.WKB_criterion,
                     value_table.c.analytic_G,
                     value_table.c.analytic_Gprime,
                 )
@@ -276,6 +277,7 @@ class sqla_GkSource_factory(SQLAFactoryBase):
                         cos_coeff=row.cos_coeff,
                         G_WKB=row.G_WKB,
                         omega_WKB_sq=row.omega_WKB_sq,
+                        WKB_criterion=row.WKB_criterion,
                         analytic_G=row.analytic_G,
                         analytic_Gprime=row.analytic_Gprime,
                     )
@@ -362,6 +364,7 @@ class sqla_GkSource_factory(SQLAFactoryBase):
                     "sin_coeff": value._WKB_data.sin_coeff,
                     "cos_coeff": value._WKB_data.cos_coeff,
                     "omega_WKB_sq": value.omega_WKB_sq,
+                    "WKB_criterion": value.WKB_criterion,
                     "analytic_G": value.analytic_G,
                     "analytic_Gprime": value.analytic_Gprime,
                 },
@@ -540,6 +543,7 @@ class sqla_GkSourceValue_factory(SQLAFactoryBase):
                 sqla.Column("sin_coeff", sqla.Float(64), nullable=True),
                 sqla.Column("cos_coeff", sqla.Float(64), nullable=True),
                 sqla.Column("omega_WKB_sq", sqla.Float(64), nullable=True),
+                sqla.Column("WKB_criterion", sqla.Float(64), nullable=True),
                 sqla.Column("analytic_G", sqla.Float(64), nullable=True),
                 sqla.Column("analytic_Gprime", sqla.Float(64), nullable=True),
             ],
@@ -589,6 +593,7 @@ class sqla_GkSourceValue_factory(SQLAFactoryBase):
         sin_coeff = payload.get("sin_coeff", None)
         cos_coeff = payload.get("cos_coeff", None)
         omega_WKB_sq = payload.get("omega_WKB_sq", None)
+        WKB_criterion = payload.get("WKB_criterion", None)
 
         analytic_G: Optional[float] = payload.get("analytic_G", None)
         analytic_Gprime: Optional[float] = payload.get("analytic_Gprime", None)
@@ -615,6 +620,7 @@ class sqla_GkSourceValue_factory(SQLAFactoryBase):
                     table.c.sin_coeff,
                     table.c.cos_coeff,
                     table.c.omega_WKB_sq,
+                    table.c.WKB_criterion,
                     table.c.analytic_G,
                     table.c.analytic_Gprime,
                 ).filter(
@@ -647,6 +653,7 @@ class sqla_GkSourceValue_factory(SQLAFactoryBase):
                     "sin_coeff": sin_coeff,
                     "cos_coeff": cos_coeff,
                     "omega_WKB_sq": omega_WKB_sq,
+                    "WKB_criterion": WKB_criterion,
                     "analytic_G": analytic_G,
                     "analytic_Gprime": analytic_Gprime,
                 },
@@ -666,6 +673,7 @@ class sqla_GkSourceValue_factory(SQLAFactoryBase):
             cos_coeff = row_data.cos_coeff
 
             omega_WKB_sq = row_data.omega_WKB_sq
+            WKB_criterion = row_data.WKB_criterion
             analytic_G = row_data.analytic_G
             analytic_Gprime = row_data.analytic_Gprime
 
@@ -682,6 +690,7 @@ class sqla_GkSourceValue_factory(SQLAFactoryBase):
             sin_coeff=sin_coeff,
             cos_coeff=cos_coeff,
             omega_WKB_sq=omega_WKB_sq,
+            WKB_criterion=WKB_criterion,
             analytic_G=analytic_G,
             analytic_Gprime=analytic_Gprime,
         )
@@ -751,6 +760,7 @@ class sqla_GkSourceValue_factory(SQLAFactoryBase):
                     table.c.sin_coeff,
                     table.c.cos_coeff,
                     table.c.omega_WKB_sq,
+                    table.c.WKB_criterion,
                     table.c.analytic_G,
                     table.c.analytic_Gprime,
                 )
@@ -785,6 +795,7 @@ class sqla_GkSourceValue_factory(SQLAFactoryBase):
             sin_coeff=row_data.sin_coeff,
             cos_coeff=row_data.cos_coeff,
             omega_WKB_sq=row_data.omega_WKB_sq,
+            WKB_criterion=row_data.WKB_criterion,
             analytic_G=row_data.analytic_G,
             analytic_Gprime=row_data.analytic_Gprime,
         )

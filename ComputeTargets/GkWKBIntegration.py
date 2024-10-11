@@ -464,20 +464,30 @@ class GkWKBIntegration(DatastoreObject):
 
         theta_sample = data["theta_sample"]
 
-        omega_WKB_sq_init = WKB_omegaEff_sq(self._model, self.k.k, initial_z)
+        omega_WKB_sq_init = WKB_omegaEff_sq(self._model, self._k_exit.k.k, initial_z)
+        d_ln_omega_WKB_init = WKB_d_ln_omegaEffPrime_dz(
+            self._model, self._k_exit.k.k, initial_z
+        )
         if omega_WKB_sq_init < 0.0:
             raise ValueError(
                 f"omega_WKB^2 must be non-negative at the initial time (k={self._k_exit.k.k_inv_Mpc}/Mpc, z_init={initial_z:.5g}, omega_WKB^2={omega_WKB_sq_init:.5g})"
             )
+        WKB_criterion_init = d_ln_omega_WKB_init / sqrt(omega_WKB_sq_init)
+        if WKB_criterion_init > 1.0:
+            print(f"!! Warning (GkWKBIntegration) k={self._k_exit.k.k_inv_Mpc:.5g}/Mpc")
+            print(
+                f"|    WKB diagnostic |d(omega) / omega^2| exceeds unity at initial time (value={WKB_criterion_init:.5g}, z_init={initial_z:.5g})"
+            )
+            print(f"     This may lead to meaningless results.")
 
         omega_WKB_init = sqrt(omega_WKB_sq_init)
         sqrt_omega_WKB_init = sqrt(omega_WKB_init)
+
         self._cos_coeff = sqrt_omega_WKB_init * self._G_init
 
-        d_ln_omega_WKB = WKB_d_ln_omegaEffPrime_dz(self._model, self.k.k, initial_z)
         self._sin_coeff = (
             self._Gprime_init
-            + (self._G_init / 2.0) * (eps_init / one_plus_z_init + d_ln_omega_WKB)
+            + (self._G_init / 2.0) * (eps_init / one_plus_z_init + d_ln_omega_WKB_init)
         ) / sqrt_omega_WKB_init
 
         # estimate tau at the source redshift
@@ -499,8 +509,15 @@ class GkWKBIntegration(DatastoreObject):
             )
 
             # should be safe to assume omega_WKB_sq > 0, since otherwise this would have been picked up during the integration
-            omega_WKB_sq = WKB_omegaEff_sq(self._model, self.k.k, current_z_float)
+            omega_WKB_sq = WKB_omegaEff_sq(
+                self._model, self._k_exit.k.k, current_z_float
+            )
             omega_WKB = sqrt(omega_WKB_sq)
+
+            d_ln_omega_WKB = WKB_d_ln_omegaEffPrime_dz(
+                self._model, self._k_exit.k.k, current_z_float
+            )
+            WKB_criterion = d_ln_omega_WKB_init / omega_WKB
 
             H_ratio = H_init / H
             norm_factor = sqrt(H_ratio / omega_WKB)
@@ -517,6 +534,7 @@ class GkWKBIntegration(DatastoreObject):
                     H_ratio,
                     theta_sample[i],
                     omega_WKB_sq=omega_WKB_sq,
+                    WKB_criterion=WKB_criterion,
                     G_WKB=G_WKB,
                     analytic_G=analytic_G,
                     analytic_Gprime=analytic_Gprime,
@@ -538,6 +556,7 @@ class GkWKBValue(DatastoreObject):
         H_ratio: float,
         theta: float,
         omega_WKB_sq: Optional[float] = None,
+        WKB_criterion: Optional[float] = None,
         G_WKB: Optional[float] = None,
         sin_coeff: Optional[float] = None,
         cos_coeff: Optional[float] = None,
@@ -551,6 +570,7 @@ class GkWKBValue(DatastoreObject):
 
         self._theta = theta
         self._omega_WKB_sq = omega_WKB_sq
+        self._WKB_criterion = WKB_criterion
         self._G_WKB = G_WKB
 
         self._analytic_G = analytic_G
@@ -581,6 +601,10 @@ class GkWKBValue(DatastoreObject):
     @property
     def omega_WKB_sq(self) -> Optional[float]:
         return self._omega_WKB_sq
+
+    @property
+    def WKB_criterion(self) -> Optional[float]:
+        return self._WKB_criterion
 
     @property
     def G_WKB(self) -> Optional[float]:

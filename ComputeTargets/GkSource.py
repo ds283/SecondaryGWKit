@@ -60,6 +60,11 @@ def marshal_values(z_sample: redshift_array, numeric_data, WKB_data):
                     if numeric is not None
                     else WKB.omega_WKB_sq if WKB is not None else None
                 ),
+                WKB_criterion=(
+                    numeric.WKB_criterion
+                    if numeric is not None
+                    else WKB.WKB_criterion if WKB is not None else None
+                ),
                 analytic_G=(
                     numeric.analytic_G
                     if numeric is not None
@@ -212,6 +217,7 @@ class GkSourceValue(DatastoreObject):
         cos_coeff: Optional[float] = None,
         G_WKB: Optional[float] = None,
         omega_WKB_sq: Optional[float] = None,
+        WKB_criterion: Optional[float] = None,
         analytic_G: Optional[float] = None,
         analytic_Gprime: Optional[float] = None,
     ):
@@ -268,6 +274,7 @@ class GkSourceValue(DatastoreObject):
         )
 
         self._omega_WKB_sq = omega_WKB_sq
+        self._WKB_criterion = WKB_criterion
 
         self._analytic_G = analytic_G
         self._analytic_Gprime = analytic_Gprime
@@ -295,6 +302,10 @@ class GkSourceValue(DatastoreObject):
     @property
     def omega_WKB_sq(self) -> Optional[float]:
         return self._omega_WKB_sq
+
+    @property
+    def WKB_criterion(self) -> Optional[float]:
+        return self._WKB_criterion
 
     @property
     def analytic_G(self) -> Optional[float]:

@@ -320,6 +320,7 @@ class sqla_GkNumericalIntegration_factory(SQLAFactoryBase):
                     value_table.c.analytic_G,
                     value_table.c.analytic_Gprime,
                     value_table.c.omega_WKB_sq,
+                    value_table.c.WKB_criterion,
                 )
                 .select_from(
                     value_table.join(
@@ -345,6 +346,7 @@ class sqla_GkNumericalIntegration_factory(SQLAFactoryBase):
                         analytic_G=row.analytic_G,
                         analytic_Gprime=row.analytic_Gprime,
                         omega_WKB_sq=row.omega_WKB_sq,
+                        WKB_criterion=row.WKB_criterion,
                     )
                 )
             imported_z_sample = redshift_array(z_points)
@@ -457,6 +459,7 @@ class sqla_GkNumericalIntegration_factory(SQLAFactoryBase):
                     "analytic_G": value.analytic_G,
                     "analytic_Gprime": value.analytic_Gprime,
                     "omega_WKB_sq": value.omega_WKB_sq,
+                    "WKB_criterion": value.WKB_criterion,
                 },
             )
 
@@ -635,6 +638,7 @@ class sqla_GkNumericalValue_factory(SQLAFactoryBase):
                 sqla.Column("analytic_G", sqla.Float(64), nullable=True),
                 sqla.Column("analytic_Gprime", sqla.Float(64), nullable=True),
                 sqla.Column("omega_WKB_sq", sqla.Float(64), nullable=True),
+                sqla.Column("WKB_criterion", sqla.Float(64), nullable=True),
             ],
         }
 
@@ -681,6 +685,7 @@ class sqla_GkNumericalValue_factory(SQLAFactoryBase):
         analytic_Gprime: Optional[float] = payload.get("analytic_Gprime", None)
 
         omega_WKB_sq: Optional[float] = payload.get("omega_WKB_sq", None)
+        WKB_criterion: Optional[float] = payload.get("WKB_criterion", None)
 
         try:
             row_data = conn.execute(
@@ -691,6 +696,7 @@ class sqla_GkNumericalValue_factory(SQLAFactoryBase):
                     table.c.analytic_G,
                     table.c.analytic_Gprime,
                     table.c.omega_WKB_sq,
+                    table.c.WKB_criterion,
                 ).filter(
                     table.c.integration_serial == integration_serial,
                     table.c.z_serial == z.store_id,
@@ -713,6 +719,7 @@ class sqla_GkNumericalValue_factory(SQLAFactoryBase):
                     "analytic_G": analytic_G,
                     "analytic_Gprime": analytic_Gprime,
                     "omega_WKB_sq": omega_WKB_sq,
+                    "WKB_criterion": WKB_criterion,
                 },
             )
 
@@ -722,6 +729,7 @@ class sqla_GkNumericalValue_factory(SQLAFactoryBase):
             analytic_G = row_data.analytic_G
             analytic_Gprime = row_data.analytic_Gprime
             omega_WKB_sq = row_data.omega_WKB_sq
+            WKB_criterion = row_data.WKB_criterion
 
             if G is not None and fabs(row_data.G - G) > DEFAULT_FLOAT_PRECISION:
                 raise ValueError(
@@ -748,6 +756,7 @@ class sqla_GkNumericalValue_factory(SQLAFactoryBase):
             analytic_G=analytic_G,
             analytic_Gprime=analytic_Gprime,
             omega_WKB_sq=omega_WKB_sq,
+            WKB_criterion=WKB_criterion,
         )
         for key, value in attribute_set.items():
             setattr(obj, key, value)
@@ -812,6 +821,7 @@ class sqla_GkNumericalValue_factory(SQLAFactoryBase):
                     table.c.analytic_G,
                     table.c.analytic_Gprime,
                     table.c.omega_WKB_sq,
+                    table.c.WKB_criterion,
                 )
                 .select_from(
                     subquery.join(
@@ -843,6 +853,7 @@ class sqla_GkNumericalValue_factory(SQLAFactoryBase):
             analytic_G=row_data.analytic_G,
             analytic_Gprime=row_data.analytic_Gprime,
             omega_WKB_sq=row_data.omega_WKB_sq,
+            WKB_criterion=row_data.WKB_criterion,
         )
         obj._deserialized = True
         obj._k_exit = k
@@ -920,6 +931,7 @@ class sqla_GkNumericalValue_factory(SQLAFactoryBase):
             table.c.analytic_G,
             table.c.analytic_Gprime,
             table.c.omega_WKB_sq,
+            table.c.WKB_criterion,
             subquery.c.z_source_serial,
             subquery.c.z_source,
             redshift_table.c.z.label("z_response"),
@@ -944,6 +956,7 @@ class sqla_GkNumericalValue_factory(SQLAFactoryBase):
                 analytic_G=row.analytic_G,
                 analytic_Gprime=row.analytic_Gprime,
                 omega_WKB_sq=row.omega_WKB_sq,
+                WKB_criterion=row.WKB_criterion,
             )
             obj._deserialized = True
             obj._k_exit = k

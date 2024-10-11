@@ -316,6 +316,7 @@ class sqla_GkWKBIntegration_factory(SQLAFactoryBase):
                     value_table.c.theta,
                     value_table.c.G_WKB,
                     value_table.c.omega_WKB_sq,
+                    value_table.c.WKB_criterion,
                     value_table.c.analytic_G,
                     value_table.c.analytic_Gprime,
                 )
@@ -341,6 +342,7 @@ class sqla_GkWKBIntegration_factory(SQLAFactoryBase):
                         H_ratio=row.H_ratio,
                         theta=row.theta,
                         omega_WKB_sq=row.omega_WKB_sq,
+                        WKB_criterion=row.WKB_criterion,
                         G_WKB=row.G_WKB,
                         analytic_G=row.analytic_G,
                         analytic_Gprime=row.analytic_Gprime,
@@ -453,6 +455,7 @@ class sqla_GkWKBIntegration_factory(SQLAFactoryBase):
                     "theta": value.theta,
                     "G_WKB": value.G_WKB,
                     "omega_WKB_sq": value.omega_WKB_sq,
+                    "WKB_criterion": value.WKB_criterion,
                     "analytic_G": value.analytic_G,
                     "analytic_Gprime": value.analytic_Gprime,
                 },
@@ -631,6 +634,7 @@ class sqla_GkWKBValue_factory(SQLAFactoryBase):
                 sqla.Column("H_ratio", sqla.Float(64), nullable=False),
                 sqla.Column("theta", sqla.Float(64), nullable=False),
                 sqla.Column("omega_WKB_sq", sqla.Float(64), nullable=True),
+                sqla.Column("WKB_criterion", sqla.Float(64), nullable=True),
                 sqla.Column("G_WKB", sqla.Float(64), nullable=True),
                 sqla.Column("analytic_G", sqla.Float(64), nullable=True),
                 sqla.Column("analytic_Gprime", sqla.Float(64), nullable=True),
@@ -676,12 +680,14 @@ class sqla_GkWKBValue_factory(SQLAFactoryBase):
         H_ratio: Optional[float] = payload.get("H_ratio", None)
         theta: Optional[float] = payload.get("theta", None)
         omega_WKB_sq: Optional[float] = payload.get("omega_WKB_sq", None)
+        WKB_criterion: Optional[float] = payload.get("WKB_criterion", None)
         G_WKB: Optional[float] = payload.get("G_WKB", None)
         has_data = all(
             [
                 H_ratio is not None,
                 theta is not None,
                 omega_WKB_sq is not None,
+                WKB_criterion is not None,
                 G_WKB is not None,
             ]
         )
@@ -701,6 +707,7 @@ class sqla_GkWKBValue_factory(SQLAFactoryBase):
                     table.c.H_ratio,
                     table.c.theta,
                     table.c.omega_WKB_sq,
+                    table.c.WKB_criterion,
                     table.c.G_WKB,
                     table.c.analytic_G,
                     table.c.analytic_Gprime,
@@ -733,6 +740,7 @@ class sqla_GkWKBValue_factory(SQLAFactoryBase):
                     "H_ratio": H_ratio,
                     "theta": theta,
                     "omega_WKB_sq": omega_WKB_sq,
+                    "WKB_criterion": WKB_criterion,
                     "G_WKB": G_WKB,
                     "analytic_G": analytic_G,
                     "analytic_Gprime": analytic_Gprime,
@@ -743,6 +751,7 @@ class sqla_GkWKBValue_factory(SQLAFactoryBase):
         else:
             store_id = row_data.serial
             omega_WKB_sq = row_data.omega_WKB_sq
+            WKB_criterion = row_data.WKB_criterio
             G_WKB = row_data.G_WKB
             analytic_G = row_data.analytic_G
             analytic_Gprime = row_data.analytic_Gprime
@@ -777,6 +786,7 @@ class sqla_GkWKBValue_factory(SQLAFactoryBase):
             H_ratio=H_ratio,
             theta=theta,
             omega_WKB_sq=omega_WKB_sq,
+            WKB_criterion=WKB_criterion,
             G_WKB=G_WKB,
             analytic_G=analytic_G,
             analytic_Gprime=analytic_Gprime,
@@ -842,6 +852,7 @@ class sqla_GkWKBValue_factory(SQLAFactoryBase):
                     table.c.H_ratio,
                     table.c.theta,
                     table.c.omega_WKB_sq,
+                    table.c.WKB_criterion,
                     table.c.G_WKB,
                     table.c.analytic_G,
                     table.c.analytic_Gprime,
@@ -874,6 +885,7 @@ class sqla_GkWKBValue_factory(SQLAFactoryBase):
             H_ratio=row_data.H_ratio,
             theta=row_data.theta,
             omega_WKB_sq=row_data.omega_WKB_sq,
+            WKB_criterion=row_data.WKB_criterion,
             G_WKB=row_data.G_WKB,
             analytic_G=row_data.analytic_G,
             analytic_Gprime=row_data.analytic_Gprime,
@@ -952,6 +964,7 @@ class sqla_GkWKBValue_factory(SQLAFactoryBase):
             table.c.H_ratio,
             table.c.theta,
             table.c.omega_WKB_sq,
+            table.c.WKB_criterion,
             table.c.G_WKB,
             table.c.analytic_G,
             table.c.analytic_Gprime,
@@ -979,6 +992,7 @@ class sqla_GkWKBValue_factory(SQLAFactoryBase):
                 H_ratio=row.H_ratio,
                 theta=row.theta,
                 omega_WKB_sq=row.omega_WKB_sq,
+                WKB_criterion=row.WKB_criterion,
                 G_WKB=row.G_WKB,
                 analytic_G=row.analytic_G,
                 analytic_Gprime=row.analytic_Gprime,

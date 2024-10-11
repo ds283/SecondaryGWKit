@@ -7,7 +7,7 @@ from scipy.integrate import solve_ivp
 from scipy.optimize import root_scalar
 
 from ComputeTargets.BackgroundModel import BackgroundModel
-from ComputeTargets.WKB_tensor_Green import WKB_omegaEff_sq
+from ComputeTargets.WKB_tensor_Green import WKB_omegaEff_sq, WKB_d_ln_omegaEffPrime_dz
 from ComputeTargets.analytic_Gk import compute_analytic_G, compute_analytic_Gprime
 from ComputeTargets.integration_metadata import IntegrationSolver
 from ComputeTargets.integration_supervisor import (
@@ -680,6 +680,9 @@ class GkNumericalIntegration(DatastoreObject):
                 self.k.k, 1.0 / 3.0, tau_source, tau, Hsource, H
             )
             omega_WKB_sq = WKB_omegaEff_sq(self._model, self.k.k, current_z_float)
+            WKB_criterion = fabs(
+                WKB_d_ln_omegaEffPrime_dz(self._model, self.k.k, current_z_float)
+            ) / sqrt(fabs(omega_WKB_sq))
 
             # create new GkNumericalValue object
             self._values.append(
@@ -691,6 +694,7 @@ class GkNumericalIntegration(DatastoreObject):
                     analytic_G=analytic_G,
                     analytic_Gprime=analytic_Gprime,
                     omega_WKB_sq=omega_WKB_sq,
+                    WKB_criterion=WKB_criterion,
                 )
             )
 
@@ -715,6 +719,7 @@ class GkNumericalValue(DatastoreObject):
         analytic_G: Optional[float] = None,
         analytic_Gprime: Optional[float] = None,
         omega_WKB_sq: Optional[float] = None,
+        WKB_criterion: Optional[float] = None,
     ):
         DatastoreObject.__init__(self, store_id)
 
@@ -726,6 +731,7 @@ class GkNumericalValue(DatastoreObject):
         self._analytic_Gprime = analytic_Gprime
 
         self._omega_WKB_sq = omega_WKB_sq
+        self._WKB_criterion = WKB_criterion
 
     def __float__(self):
         """
@@ -757,3 +763,7 @@ class GkNumericalValue(DatastoreObject):
     @property
     def omega_WKB_sq(self) -> Optional[float]:
         return self._omega_WKB_sq
+
+    @property
+    def WKB_criterion(self) -> Optional[float]:
+        return self._WKB_criterion
