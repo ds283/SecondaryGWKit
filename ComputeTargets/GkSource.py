@@ -2,7 +2,7 @@ from collections import namedtuple
 from typing import Optional, List
 
 import ray
-from math import fabs, pi
+from math import fabs, pi, floor
 
 from ComputeTargets.BackgroundModel import BackgroundModel
 from ComputeTargets.GkNumericalIntegration import GkNumericalValue
@@ -50,11 +50,14 @@ def marshal_values(z_sample: redshift_array, numeric_data, WKB_data):
 
         theta = WKB.theta if WKB is not None else None
         if theta is not None and last_theta is not None:
-            while fabs(theta - last_theta) > 2.0 * pi:
-                if theta < last_theta:
-                    theta += 2.0 * pi
-                elif theta > last_theta:
-                    theta -= 2.0 * pi
+            abs_diff = fabs(theta - last_theta)
+            if abs_diff > 2.0 * pi:
+                n = int(floor(abs_diff / (2.0 * pi)))
+
+                if theta > last_theta:
+                    theta -= n * 2.0 * pi
+                else:
+                    theta += n * 2.0 * pi
 
         values.append(
             GkSourceValue(
