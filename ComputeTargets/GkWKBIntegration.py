@@ -49,6 +49,10 @@ class GkWKBSupervisor(IntegrationSupervisor):
 
         self._last_z: float = self._z_init
 
+        self._WKB_violation: bool = False
+        self._WKB_violation_z: float = None
+        self._WKB_violation_efolds_subh: float = None
+
     def __enter__(self):
         super().__enter__()
         return self
@@ -82,6 +86,30 @@ class GkWKBSupervisor(IntegrationSupervisor):
 
         self._last_z = current_z
 
+    def report_WKB_violation(self, z: float, efolds_subh: float):
+        if self._WKB_violation:
+            return
+
+        print(
+            f"!! WARNING: WKB integration for Gr_k(z, z') for k = {self._k.k_inv_Mpc:.5g}/Mpc (store_id={self._k.store_id}) may have violated the validity criterion for the WKB approximation"
+        )
+        print(f"|    current z={z:.5g}, e-folds inside horizon={efolds_subh:.3g}")
+        self._WKB_violation = True
+        self._WKB_violation_z = z
+        self._WKB_violation_efolds_subh = efolds_subh
+
+    @property
+    def has_WKB_violation(self) -> bool:
+        return self._WKB_violation
+
+    @property
+    def WKB_violation_z(self) -> float:
+        return self._WKB_violation_z
+
+    @property
+    def WKB_violation_efolds_subh(self) -> float:
+        return self._WKB_violation_efolds_subh
+
 
 @ray.remote
 def compute_Gk_WKB(
@@ -113,6 +141,13 @@ def compute_Gk_WKB(
                 raise ValueError(
                     f"omega_WKB^2 cannot be negative during WKB integration (omega_WKB^2={omega_eff_sq:.5g})"
                 )
+
+            d_ln_omega_eff_dz = WKB_d_ln_omegaEffPrime_dz(model, k_float, z)
+            WKB_criterion = fabs(d_ln_omega_eff_dz) / sqrt(fabs(omega_eff_sq))
+            if WKB_criterion > 1.0:
+                H = model.functions.Hubble(z)
+                k_over_H = k_float / H
+                supervisor.report_WKB_violation(z, log((1.0 + z) * k_over_H))
 
             omega_eff = sqrt(omega_eff_sq)
             dtheta_dz = omega_eff
@@ -182,6 +217,9 @@ def compute_Gk_WKB(
         "min_RHS_time": supervisor.min_RHS_time,
         "theta_sample": sampled_theta,
         "solver_label": "solve_ivp+RK45-stepping0",
+        "has_WKB_violation": supervisor.has_WKB_violation,
+        "WKB_violation_z": supervisor.WKB_violation_z,
+        "WKB_violation_efolds_subh": supervisor.WKB_violation_efolds_subh,
     }
 
 
@@ -226,6 +264,10 @@ class GkWKBIntegration(DatastoreObject):
             self._max_RHS_time = None
             self._min_RHS_time = None
 
+            self._has_WKB_violation = None
+            self._WKB_violation_z = None
+            self._WKB_violation_efolds_subh = None
+
             self._init_efolds_suph = None
 
             self._solver = None
@@ -242,6 +284,10 @@ class GkWKBIntegration(DatastoreObject):
             self._mean_RHS_time = payload["mean_RHS_time"]
             self._max_RHS_time = payload["max_RHS_time"]
             self._min_RHS_time = payload["min_RHS_time"]
+
+            self._has_WKB_violation = payload["has_WKB_violation"]
+            self._WKB_violation_z = payload["WKB_violation_z"]
+            self._WKB_violation_efolds_subh = payload["WKB_violation_efolds_subh"]
 
             self._init_efolds_subh = payload["init_efolds_subh"]
 
@@ -362,6 +408,24 @@ class GkWKBIntegration(DatastoreObject):
         return self._RHS_evaluations
 
     @property
+    def has_WKB_violation(self) -> bool:
+        return self._has_WKB_violation
+
+    @property
+    def WKB_violation_z(self) -> float:
+        if not self._has_WKB_violation:
+            return None
+
+        return self._WKB_violation_z
+
+    @property
+    def WKB_violation_efolds_subh(self) -> float:
+        if not self._has_WKB_violation:
+            return None
+
+        return self._WKB_violation_efolds_subh
+
+    @property
     def init_efolds_subh(self) -> float:
         if self._init_efolds_subh is None:
             raise RuntimeError("init_efolds_subh has not yet been populated")
@@ -452,6 +516,10 @@ class GkWKBIntegration(DatastoreObject):
         self._mean_RHS_time = data["mean_RHS_time"]
         self._max_RHS_time = data["max_RHS_time"]
         self._min_RHS_time = data["min_RHS_time"]
+
+        self._has_WKB_violation = data["has_WKB_violation"]
+        self._WKB_violation_z = data["WKB_violation_z"]
+        self._WKB_violation_efolds_subh = data["WKB_violation_efolds_subh"]
 
         initial_z = self._z_init if self._z_init is not None else self._z_source.z
 

@@ -148,6 +148,9 @@ class sqla_GkWKBIntegration_factory(SQLAFactoryBase):
                 sqla.Column("mean_RHS_time", sqla.Float(64)),
                 sqla.Column("max_RHS_time", sqla.Float(64)),
                 sqla.Column("min_RHS_time", sqla.Float(64)),
+                sqla.Column("has_WKB_violation", sqla.Boolean),
+                sqla.Column("WKB_violation_z", sqla.Float(64)),
+                sqla.Column("WKB_violation_efolds_subh", sqla.Float(64)),
                 sqla.Column("init_efolds_subh", sqla.Float(64)),
                 sqla.Column("validated", sqla.Boolean, default=False, nullable=False),
             ],
@@ -190,6 +193,9 @@ class sqla_GkWKBIntegration_factory(SQLAFactoryBase):
                 table.c.mean_RHS_time,
                 table.c.max_RHS_time,
                 table.c.min_RHS_time,
+                table.c.has_WKB_violation,
+                table.c.WKB_violation_z,
+                table.c.WKB_violation_efolds_subh,
                 table.c.init_efolds_subh,
                 table.c.solver_serial,
                 table.c.label,
@@ -288,6 +294,10 @@ class sqla_GkWKBIntegration_factory(SQLAFactoryBase):
         max_RHS_time = row_data.max_RHS_time
         min_RHS_time = row_data.min_RHS_time
 
+        has_WKB_violation = row_data.has_WKB_violation
+        WKB_violation_z = row_data.WKB_violation_z
+        WKB_violation_efolds_subh = row_data.WKB_violation_efolds_subh
+
         init_efolds_subh = row_data.init_efolds_subh
 
         solver_label = row_data.solver_label
@@ -376,6 +386,9 @@ class sqla_GkWKBIntegration_factory(SQLAFactoryBase):
                 "mean_RHS_time": mean_RHS_time,
                 "max_RHS_time": max_RHS_time,
                 "min_RHS_time": min_RHS_time,
+                "has_WKB_violation": has_WKB_violation,
+                "WKB_violation_z": WKB_violation_z,
+                "WKB_violation_efolds_subh": WKB_violation_efolds_subh,
                 "init_efolds_subh": init_efolds_subh,
                 "solver": solver,
                 "values": values,
@@ -429,6 +442,9 @@ class sqla_GkWKBIntegration_factory(SQLAFactoryBase):
                 "mean_RHS_time": obj.mean_RHS_time,
                 "max_RHS_time": obj.max_RHS_time,
                 "min_RHS_time": obj.min_RHS_time,
+                "has_WKB_violation": obj.has_WKB_violation,
+                "WKB_violation_z": obj.WKB_violation_z,
+                "WKB_violation_efolds_subh": obj.WKB_violation_efolds_subh,
                 "init_efolds_subh": obj.init_efolds_subh,
                 "validated": False,
             },
