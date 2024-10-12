@@ -462,8 +462,6 @@ class GkWKBIntegration(DatastoreObject):
         k_over_aH = one_plus_z_init * self.k.k / H_init
         self._init_efolds_subh = log(k_over_aH)
 
-        theta_sample = data["theta_sample"]
-
         omega_WKB_sq_init = WKB_omegaEff_sq(self._model, self._k_exit.k.k, initial_z)
         d_ln_omega_WKB_init = WKB_d_ln_omegaEffPrime_dz(
             self._model, self._k_exit.k.k, initial_z
@@ -505,15 +503,15 @@ class GkWKBIntegration(DatastoreObject):
         self._cos_coeff = 0.0
         self._sin_coeff = sgn_sin_deltaTheta * sgn_G * alpha
 
-        for i in range(len(theta_sample)):
-            theta_sample[i] += deltaTheta
-
         # estimate tau at the source redshift
         H_source = self._model.functions.Hubble(self._z_source.z)
         tau_source = self._model.functions.tau(self._z_source.z)
 
+        theta_sample = data["theta_sample"]
+        shifted_theta_sample = [theta + deltaTheta for theta in theta_sample]
+
         self._values = []
-        for i in range(len(theta_sample)):
+        for i in range(len(shifted_theta_sample)):
             current_z = self._z_sample[i]
             current_z_float = current_z.z
             H = self._model.functions.Hubble(current_z_float)
@@ -535,14 +533,14 @@ class GkWKBIntegration(DatastoreObject):
             d_ln_omega_WKB = WKB_d_ln_omegaEffPrime_dz(
                 self._model, self._k_exit.k.k, current_z_float
             )
-            WKB_criterion = d_ln_omega_WKB / omega_WKB
+            WKB_criterion = fabs(d_ln_omega_WKB) / omega_WKB
 
             H_ratio = H_init / H
             norm_factor = sqrt(H_ratio / omega_WKB)
 
             G_WKB = self._cos_coeff * norm_factor * cos(
-                theta_sample[i]
-            ) + self._sin_coeff * norm_factor * sin(theta_sample[i])
+                shifted_theta_sample[i]
+            ) + self._sin_coeff * norm_factor * sin(shifted_theta_sample[i])
 
             # create new GkWKBValue object
             self._values.append(
@@ -550,7 +548,7 @@ class GkWKBIntegration(DatastoreObject):
                     None,
                     current_z,
                     H_ratio,
-                    theta_sample[i],
+                    shifted_theta_sample[i],
                     omega_WKB_sq=omega_WKB_sq,
                     WKB_criterion=WKB_criterion,
                     G_WKB=G_WKB,
