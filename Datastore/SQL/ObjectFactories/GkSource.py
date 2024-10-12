@@ -242,6 +242,7 @@ class sqla_GkSource_factory(SQLAFactoryBase):
                     value_table.c.Gprime,
                     value_table.c.H_ratio,
                     value_table.c.theta,
+                    value_table.c.raw_theta,
                     value_table.c.G_WKB,
                     value_table.c.sin_coeff,
                     value_table.c.cos_coeff,
@@ -273,6 +274,7 @@ class sqla_GkSource_factory(SQLAFactoryBase):
                         Gprime=row.Gprime,
                         H_ratio=row.H_ratio,
                         theta=row.theta,
+                        raw_theta=row.raw_theta,
                         sin_coeff=row.sin_coeff,
                         cos_coeff=row.cos_coeff,
                         G_WKB=row.G_WKB,
@@ -360,6 +362,7 @@ class sqla_GkSource_factory(SQLAFactoryBase):
                     "Gprime": value._numeric_data.Gprime,
                     "H_ratio": value._WKB_data.H_ratio,
                     "theta": value._WKB_data.theta,
+                    "raw_theta": value._WKB_data.raw_theta,
                     "G_WKB": value._WKB_data.G_WKB,
                     "sin_coeff": value._WKB_data.sin_coeff,
                     "cos_coeff": value._WKB_data.cos_coeff,
@@ -539,6 +542,7 @@ class sqla_GkSourceValue_factory(SQLAFactoryBase):
                 sqla.Column("Gprime", sqla.Float(64), nullable=True),
                 sqla.Column("H_ratio", sqla.Float(64), nullable=True),
                 sqla.Column("theta", sqla.Float(64), nullable=True),
+                sqla.Column("raw_theta", sqla.Float(64), nullable=True),
                 sqla.Column("G_WKB", sqla.Float(64), nullable=True),
                 sqla.Column("sin_coeff", sqla.Float(64), nullable=True),
                 sqla.Column("cos_coeff", sqla.Float(64), nullable=True),
@@ -589,6 +593,7 @@ class sqla_GkSourceValue_factory(SQLAFactoryBase):
         Gprime = payload.get("Gprime", None)
         H_ratio = payload.get("H_ratio", None)
         theta = payload.get("theta", None)
+        raw_theta = payload.get("raw_theta", None)
         G_WKB = payload.get("G_WKB", None)
         sin_coeff = payload.get("sin_coeff", None)
         cos_coeff = payload.get("cos_coeff", None)
@@ -616,6 +621,7 @@ class sqla_GkSourceValue_factory(SQLAFactoryBase):
                     table.c.Gprime,
                     table.c.H_ratio,
                     table.c.theta,
+                    table.c.raw_theta,
                     table.c.G_WKB,
                     table.c.sin_coeff,
                     table.c.cos_coeff,
@@ -649,6 +655,7 @@ class sqla_GkSourceValue_factory(SQLAFactoryBase):
                     "Gprime": Gprime,
                     "H_ratio": H_ratio,
                     "theta": theta,
+                    "raw_theta": raw_theta,
                     "G_WKB": G_WKB,
                     "sin_coeff": sin_coeff,
                     "cos_coeff": cos_coeff,
@@ -668,6 +675,7 @@ class sqla_GkSourceValue_factory(SQLAFactoryBase):
 
             H_ratio = row_data.H_ratio
             theta = row_data.theta
+            raw_theta = row_data.raw_theta
             G_WKB = row_data.G_WKB
             sin_coeff = row_data.sin_coeff
             cos_coeff = row_data.cos_coeff
@@ -686,6 +694,7 @@ class sqla_GkSourceValue_factory(SQLAFactoryBase):
             Gprime=Gprime,
             H_ratio=H_ratio,
             theta=theta,
+            raw_theta=raw_theta,
             G_WKB=G_WKB,
             sin_coeff=sin_coeff,
             cos_coeff=cos_coeff,
@@ -756,6 +765,7 @@ class sqla_GkSourceValue_factory(SQLAFactoryBase):
                     table.c.Gprime,
                     table.c.H_ratio,
                     table.c.theta,
+                    table.c.raw_theta,
                     table.c.G_WKB,
                     table.c.sin_coeff,
                     table.c.cos_coeff,
@@ -791,6 +801,7 @@ class sqla_GkSourceValue_factory(SQLAFactoryBase):
             Gprime=row_data.Gprime,
             H_ratio=row_data.H_ratio,
             theta=row_data.theta,
+            raw_theta=row_data.raw_theta,
             G_WKB=row_data.G_WKB,
             sin_coeff=row_data.sin_coeff,
             cos_coeff=row_data.cos_coeff,

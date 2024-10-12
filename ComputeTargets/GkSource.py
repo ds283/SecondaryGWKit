@@ -2,7 +2,7 @@ from collections import namedtuple
 from typing import Optional, List
 
 import ray
-from math import fabs, pi, floor
+from math import fabs
 
 from ComputeTargets.BackgroundModel import BackgroundModel
 from ComputeTargets.GkNumericalIntegration import GkNumericalValue
@@ -14,7 +14,9 @@ from defaults import DEFAULT_ABS_TOLERANCE
 from utilities import check_units
 
 NumericData = namedtuple("NumericData", ["G", "Gprime"])
-WKBData = namedtuple("WKBData", ["theta", "H_ratio", "sin_coeff", "cos_coeff", "G_WKB"])
+WKBData = namedtuple(
+    "WKBData", ["theta", "raw_theta", "H_ratio", "sin_coeff", "cos_coeff", "G_WKB"]
+)
 
 
 @ray.remote
@@ -48,16 +50,16 @@ def marshal_values(z_sample: redshift_array, numeric_data, WKB_data):
                     "marshal_values: analytic G values unexpectedly differ by a large amount"
                 )
 
-        theta = WKB.theta if WKB is not None else None
-        if theta is not None and last_theta is not None:
-            abs_diff = fabs(theta - last_theta)
-            if abs_diff > 2.0 * pi:
-                n = int(floor(abs_diff / (2.0 * pi)))
-
-                if theta > last_theta:
-                    theta -= n * 2.0 * pi
-                else:
-                    theta += n * 2.0 * pi
+        raw_theta = WKB.theta if WKB is not None else None
+        # if theta is not None and last_theta is not None:
+        #     abs_diff = fabs(theta - last_theta)
+        #     if abs_diff > 2.0 * pi:
+        #         n = int(floor(abs_diff / (2.0 * pi)))
+        #
+        #         if theta > last_theta:
+        #             theta -= n * 2.0 * pi
+        #         else:
+        #             theta += n * 2.0 * pi
 
         values.append(
             GkSourceValue(
@@ -65,7 +67,8 @@ def marshal_values(z_sample: redshift_array, numeric_data, WKB_data):
                 z_source=z_source,
                 G=numeric.G if numeric is not None else None,
                 Gprime=numeric.Gprime if numeric is not None else None,
-                theta=theta,
+                theta=raw_theta,
+                raw_theta=raw_theta,
                 H_ratio=WKB.H_ratio if WKB is not None else None,
                 sin_coeff=WKB.sin_coeff if WKB is not None else None,
                 cos_coeff=WKB.cos_coeff if WKB is not None else None,
@@ -93,7 +96,7 @@ def marshal_values(z_sample: redshift_array, numeric_data, WKB_data):
             )
         )
 
-        last_theta = theta
+        last_theta = raw_theta
 
     return {"values": values}
 
@@ -229,6 +232,7 @@ class GkSourceValue(DatastoreObject):
         G: Optional[float] = None,
         Gprime: Optional[float] = None,
         theta: Optional[float] = None,
+        raw_theta: Optional[float] = None,
         H_ratio: Optional[float] = None,
         sin_coeff: Optional[float] = None,
         cos_coeff: Optional[float] = None,
@@ -284,6 +288,7 @@ class GkSourceValue(DatastoreObject):
 
         self._WKB_data = WKBData(
             theta=theta,
+            raw_theta=raw_theta,
             H_ratio=H_ratio,
             sin_coeff=sin_coeff,
             cos_coeff=cos_coeff,
