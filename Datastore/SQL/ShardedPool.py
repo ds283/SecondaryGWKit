@@ -1,7 +1,7 @@
 import random
 from datetime import datetime
 from pathlib import Path
-from typing import Optional
+from typing import Optional, List
 
 import ray
 import sqlalchemy as sqla
@@ -56,6 +56,7 @@ class ShardedPool:
         profile_db: Optional[PathType] = None,
         job_name: Optional[str] = None,
         prune_unvalidated: Optional[bool] = False,
+        drop_actions: Optional[List[str]] = None,
     ):
         """
         Initialize a pool of datastore actors
@@ -159,6 +160,7 @@ class ShardedPool:
             serial_broker=self._broker,
             profile_agent=self._profile_agent,
             prune_unvalidated=self._prune_unvalidated,
+            drop_actions=drop_actions,
         )
         self._shards = {shard0_key: shard0_store}
 
@@ -179,6 +181,7 @@ class ShardedPool:
                     serial_broker=self._broker,
                     profile_agent=self._profile_agent,
                     prune_unvalidated=self._prune_unvalidated,
+                    drop_actions=drop_actions,
                 )
                 for key in shard_ids
             }

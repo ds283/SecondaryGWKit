@@ -115,6 +115,15 @@ parser.add_argument(
     help="prune unvalidated data from the datastore during startup",
 )
 parser.add_argument(
+    "--drop",
+    type=str,
+    nargs="+",
+    default=[],
+    choices=["numerical", "wkb", "source"],
+    help="drop one or more data categories",
+    action="extend",
+)
+parser.add_argument(
     "--ray-address",
     default=DEFAULT_RAY_ADDRESS,
     type=str,
@@ -133,6 +142,10 @@ ray.init(address=args.ray_address)
 # ourselves and the dataabase.
 # For performance reasons, we want all database activity to run on this node.
 # For one thing, this lets us use transactions efficiently.
+allowed_drop_actions = ["numerical", "wkb", "source"]
+specified_drop_actions = [x.lower() for x in args.drop]
+drop_actions = [x for x in specified_drop_actions if x in allowed_drop_actions]
+
 with ShardedPool(
     version_label="2024.1.1",
     db_name=args.database,
@@ -141,6 +154,7 @@ with ShardedPool(
     profile_db=args.profile_db,
     job_name=args.job_name,
     prune_unvalidated=args.prune_unvalidated,
+    drop_actions=drop_actions,
 ) as pool:
 
     # set up LambdaCDM object representing a basic Planck2018 cosmology in Mpc units

@@ -2,7 +2,7 @@ import functools
 from datetime import datetime
 from os import PathLike
 from pathlib import Path
-from typing import Union, Mapping, Callable, Optional
+from typing import Union, Mapping, Callable, Optional, List
 
 import ray
 import sqlalchemy as sqla
@@ -95,6 +95,12 @@ _FactoryMappingType = Mapping[str, SQLAFactoryBase]
 _TableMappingType = Mapping[str, sqla.Table]
 _InserterMappingType = Mapping[str, Callable]
 
+_drop_actions = {
+    "numerical": ["GkNumericalIntegration", "GkNumerical_tags", "GkNumericalValue"],
+    "wkb": ["GkWKBIntegration", "GkWKB_tags", "GkWKBValue"],
+    "source": ["GkSource", "GkSource_tags", "GkSourceValue"],
+}
+
 
 @ray.remote
 class Datastore:
@@ -108,6 +114,7 @@ class Datastore:
         serial_broker: Optional[ActorHandle] = None,
         profile_agent: Optional[ActorHandle] = None,
         prune_unvalidated: Optional[bool] = False,
+        drop_actions: Optional[List[str]] = None,
     ):
         """
         Initialize an SQL datastore object
@@ -150,6 +157,7 @@ class Datastore:
         else:
             self._create_engine()
             self._build_schema()
+            self._drop_actions(drop_actions)
             self._ensure_tables()
             self._validate_on_startup()
 
@@ -335,6 +343,20 @@ class Datastore:
             raise RuntimeError(
                 f'No storable class of type "{cls_name}" has been registered'
             )
+
+    def _drop_actions(self, actions):
+        for action in actions:
+            if action in _drop_actions:
+                print(f'Datastore: dropping tables for "{action}"')
+                drop_list = _drop_actions[action]
+                for table_name in drop_list:
+                    if self._inspector.has_table(table_name):
+                        tab = self._tables.get(table_name, None)
+                        if tab is not None:
+                            tab.drop(self._engine)
+                            self._metadata.remove(table_name)
+            else:
+                print(f'Datastore: unknown drop action "{action}"')
 
     def _validate_on_startup(self):
         printed_header = False
