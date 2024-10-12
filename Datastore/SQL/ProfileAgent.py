@@ -184,7 +184,7 @@ class ProfileBatchManager:
     def __exit__(self, exc_type, exc_val, exc_tb):
         elapsed = time.perf_counter() - self.perf_timer_start
 
-        if self._num_items is not None:
+        if self._num_items is not None and self._num_items > 0:
             self._metadata.update(
                 {
                     "num_items": self._num_items,
