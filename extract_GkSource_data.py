@@ -308,6 +308,7 @@ with ShardedPool(
         sin_coeff_column = [value.WKB.sin_coeff for value in values]
         cos_coeff_column = [value.WKB.cos_coeff for value in values]
         omega_WKB_sq_column = [value.omega_WKB_sq for value in values]
+        WKB_criterion_column = [value.WKB_criterion for value in values]
         analytic_G_column = [value.analytic_G for value in values]
         analytic_Gprime_column = [value.analytic_Gprime for value in values]
 
@@ -327,6 +328,7 @@ with ShardedPool(
                 "sin_coeff": sin_coeff_column,
                 "cos_coeff": cos_coeff_column,
                 "omega_WKB_sq": omega_WKB_sq_column,
+                "WKB_criterion": WKB_criterion_column,
                 "analytic_G": analytic_G_column,
                 "analytic_Gprime": analytic_Gprime_column,
             }

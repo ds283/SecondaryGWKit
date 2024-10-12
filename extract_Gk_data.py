@@ -141,6 +141,8 @@ with ShardedPool(
             ("Gprime", pa.float64()),
             ("analytic_G", pa.float64()),
             ("analytic_Gprime", pa.float64()),
+            ("omega_WKB_sq", pa.float64()),
+            ("WKB_criterion", pa.float64()),
         ]
     )
 
@@ -193,6 +195,8 @@ with ShardedPool(
                     "Gprime": value.Gprime,
                     "analytic_G": value.analytic_G,
                     "analytic_Gprime": value.analytic_Gprime,
+                    "omega_WKB_sq": value.omega_WKB_sq,
+                    "WKB_criterion": value.WKB_criterion,
                 }
                 for value in Gk.values
             ]

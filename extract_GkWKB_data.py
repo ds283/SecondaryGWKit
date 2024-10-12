@@ -187,6 +187,7 @@ with ShardedPool(
         theta_column = []
         H_ratio_column = []
         omega_WKB_sq_column = []
+        WKB_criterion_column = []
         type_column = []
 
         if Gk_numerical.available:
@@ -214,6 +215,7 @@ with ShardedPool(
             theta_column.extend(None for _ in range(len(values)))
             H_ratio_column.extend(None for _ in range(len(values)))
             omega_WKB_sq_column.extend(value.omega_WKB_sq for value in values)
+            WKB_criterion_column.extend(value.WKB_criterion for value in values)
             type_column.extend(0 for _ in range(len(values)))
 
         theta_x = None
@@ -245,6 +247,7 @@ with ShardedPool(
             theta_column.extend(value.theta for value in values)
             H_ratio_column.extend(value.H_ratio for value in values)
             omega_WKB_sq_column.extend(value.omega_WKB_sq for value in values)
+            WKB_criterion_column.extend(values.WKB_criterion for value in values)
             type_column.extend(1 for _ in range(len(values)))
 
         ax.set_xlabel("response redshift $z$")
@@ -313,6 +316,7 @@ with ShardedPool(
                 "theta": theta_column,
                 "H_ratio": H_ratio_column,
                 "omega_WKB_sq": omega_WKB_sq_column,
+                "WKB_criterion": WKB_criterion_column,
                 "type": type_column,
             }
         )
