@@ -152,7 +152,13 @@ class ProfileBatcher:
 
 
 class ProfileBatchManager:
-    def __init__(self, batcher, method: str, metadata: Optional[dict] = {}):
+    def __init__(
+        self,
+        batcher,
+        method: str,
+        metadata: Optional[dict] = {},
+        num_items: Optional[int] = None,
+    ):
         self._batcher = batcher
 
         if method is None:
@@ -167,6 +173,8 @@ class ProfileBatchManager:
         self._start_time = None
         self._perf_timer_start = None
 
+        self._num_items = num_items
+
     def __enter__(self):
         self.start_time = datetime.now()
         self.perf_timer_start = time.perf_counter()
@@ -175,6 +183,15 @@ class ProfileBatchManager:
 
     def __exit__(self, exc_type, exc_val, exc_tb):
         elapsed = time.perf_counter() - self.perf_timer_start
+
+        if self._num_items is not None:
+            self._metadata.update(
+                {
+                    "num_items": self._num_items,
+                    "time_per_item": elapsed / self._num_items,
+                }
+            )
+
         self._batcher.write(
             method=self._method,
             start_time=self.start_time,
@@ -184,3 +201,6 @@ class ProfileBatchManager:
 
     def update_metadata(self, data):
         self._metadata.update(data)
+
+    def update_num_items(self, num_items: int):
+        self._num_items = num_items

@@ -55,6 +55,7 @@ from Datastore.SQL.ObjectFactories.wavenumber import (
 )
 from Datastore.SQL.ProfileAgent import ProfileBatcher, ProfileBatchManager
 from MetadataConcepts import version
+from utilities import WallclockTimer
 
 VERSION_ID_LENGTH = 64
 
@@ -399,9 +400,7 @@ class Datastore:
 
         profile_metadata = {"object": cls_name}
         if "payload_data" in kwargs:
-            profile_metadata.update(
-                {"type": "vector", "size": len(kwargs["payload_data"])}
-            )
+            profile_metadata.update({"type": "vector"})
         else:
             profile_metadata.update({"type": "scalar"})
 
@@ -423,6 +422,10 @@ class Datastore:
             else:
                 payload_data = [kwargs]
                 scalar = True
+
+            num_items = len(payload_data)
+            if num_items > 1:
+                mgr.update_num_items(num_items)
 
             try:
                 with self._engine.begin() as conn:
@@ -471,7 +474,8 @@ class Datastore:
                     objects = factory.read_batch(
                         payload=payload, conn=conn, table=tab, tables=self._tables
                     )
-                    mgr.update_metadata({"read_objects": len(objects)})
+                    num_items = len(objects)
+                    mgr.update_num_items(num_items)
 
             except SQLAlchemyError as e:
                 print(
@@ -491,33 +495,49 @@ class Datastore:
             payload_data = [objects]
             scalar = True
 
-        output_objects = []
-        with self._engine.begin() as conn:
-            for obj in payload_data:
-                cls_name = type(obj).__name__
-                with ProfileBatchManager(
-                    self._profile_batcher, "object_store_item", {"object": cls_name}
-                ) as mgr:
-                    self._ensure_registered_schema(cls_name)
-                    record = self._schema[cls_name]
+        num_items = len(payload_data)
+        with ProfileBatchManager(
+            self._profile_batcher,
+            "object_store",
+            num_items=num_items,
+        ) as mgr:
+            store_data = {}
+            output_objects = []
+            with self._engine.begin() as conn:
+                for obj in payload_data:
+                    cls_name = type(obj).__name__
+                    if cls_name not in store_data:
+                        store_data[cls_name] = {"number": 0, "time": 0.0}
+                    cls_data = store_data[cls_name]
 
-                    tab = record["table"]
-                    inserter = record["insert"]
+                    with WallclockTimer() as item_timer:
+                        self._ensure_registered_schema(cls_name)
+                        record = self._schema[cls_name]
 
-                    factory = self._factories[cls_name]
+                        tab = record["table"]
+                        inserter = record["insert"]
 
-                    output_objects.append(
-                        factory.store(
-                            obj,
-                            conn=conn,
-                            table=tab,
-                            inserter=inserter,
-                            tables=self._tables,
-                            inserters=self._inserters,
+                        factory = self._factories[cls_name]
+
+                        output_objects.append(
+                            factory.store(
+                                obj,
+                                conn=conn,
+                                table=tab,
+                                inserter=inserter,
+                                tables=self._tables,
+                                inserters=self._inserters,
+                            )
                         )
-                    )
 
-            conn.commit()
+                    cls_data["number"] += 1
+                    cls_data["time"] += item_timer.elapsed
+
+                conn.commit()
+
+            for cls_data in store_data.values():
+                cls_data["time_per_item"] = cls_data["time"] / cls_data["number"]
+            mgr.update_metadata(store_data)
 
         if scalar:
             return output_objects[0]
