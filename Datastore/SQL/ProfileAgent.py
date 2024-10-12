@@ -27,9 +27,10 @@ class ProfileAgent:
             # create parent directories if they do not already exist
             self._db_file.parents[0].mkdir(parents=True, exist_ok=True)
             self._create_engine()
-            self._create_tables()
+            self._ensure_tables()
         else:
             self._create_engine()
+            self._ensure_tables()
 
         if label is not None:
             self._label = label
@@ -53,6 +54,7 @@ class ProfileAgent:
             connect_args=connect_args,
         )
         self._metadata = sqla.MetaData()
+        self._inspector = sqla.inspect(self._engine)
 
         self._job_table = sqla.Table(
             "jobs",
@@ -82,9 +84,12 @@ class ProfileAgent:
             sqla.Column("metadata", sqla.String(DEFAULT_STRING_LENGTH)),
         )
 
-    def _create_tables(self):
-        self._job_table.create(self._engine)
-        self._profile_table.create(self._engine)
+    def _ensure_tables(self):
+        if not self._inspector.has_table("jobs"):
+            self._job_table.create(self._engine)
+
+        if not self._inspector.has_table("profile_data"):
+            self._profile_table.create(self._engine)
 
     def write_batch(self, batch):
         try:
@@ -152,6 +157,9 @@ class ProfileBatchManager:
 
         if method is None:
             raise RuntimeError("method cannot be None")
+
+        if not isinstance(metadata, dict):
+            raise RuntimeError("metadata should be a dict")
 
         self._method = method
         self._metadata = metadata
