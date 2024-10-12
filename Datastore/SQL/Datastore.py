@@ -2,7 +2,7 @@ import functools
 from datetime import datetime
 from os import PathLike
 from pathlib import Path
-from typing import Union, Mapping, Callable, Optional, List
+from typing import Union, Mapping, Callable, Optional, List, Iterable
 
 import ray
 import sqlalchemy as sqla
@@ -345,6 +345,12 @@ class Datastore:
             )
 
     def _drop_actions(self, actions):
+        if actions is None:
+            return
+
+        if not isinstance(actions, Iterable):
+            raise RuntimeError("Could not interpret actions type")
+
         for action in actions:
             if action in _drop_actions:
                 print(f'Datastore: dropping tables for "{action}"')
