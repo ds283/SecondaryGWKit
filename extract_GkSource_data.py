@@ -180,8 +180,12 @@ with ShardedPool(
         ]
 
         theta_points = [(value.z_source.z, value.WKB.theta) for value in values]
+        raw_theta_points = [(value.z_source.z, value.WKB.raw_theta) for value in values]
         abs_theta_points = [
             (value.z_source.z, my_fabs(value.WKB.theta)) for value in values
+        ]
+        abs_raw_theta_points = [
+            (value.z_source.z, my_fabs(value.WKB.raw_theta)) for value in values
         ]
         abs_sin_coeff_points = [
             (value.z_source.z, my_fabs(value.WKB.sin_coeff)) for value in values
@@ -195,7 +199,9 @@ with ShardedPool(
         abs_analytic_x, abs_analytic_y = zip(*abs_analytic_points)
 
         theta_x, theta_y = zip(*theta_points)
+        raw_theta_x, raw_theta_y = zip(*abs_theta_points)
         abs_theta_x, abs_theta_y = zip(*abs_theta_points)
+        abs_raw_theta_x, abs_raw_theta_y = zip(*abs_raw_theta_points)
         abs_sin_coeff_x, abs_sin_coeff_y = zip(*abs_sin_coeff_points)
         abs_cos_coeff_x, abs_cos_coeff_y = zip(*abs_cos_coeff_points)
 
@@ -238,6 +244,7 @@ with ShardedPool(
         ax = plt.gca()
 
         ax.plot(abs_theta_x, abs_theta_y, label="WKB phase $\theta$")
+        ax.plot(abs_raw_theta_x, abs_raw_theta_y, label="Raw WKB phase $\theta$")
 
         ax.set_xlabel("source redshift $z$")
         ax.set_ylabel("WKB phase $\\theta$")
@@ -260,6 +267,7 @@ with ShardedPool(
         ax = plt.gca()
 
         ax.plot(theta_x, theta_y, label="WKB phase $\theta$")
+        ax.plot(raw_theta_x, raw_theta_y, label="Raw WKB phase $\theta$")
 
         ax.set_xlabel("source redshift $z$")
         ax.set_ylabel("WKB phase $\\theta$")
@@ -306,6 +314,7 @@ with ShardedPool(
         Gprime_column = [value.numeric.Gprime for value in values]
         G_WKB_column = [value.WKB.G_WKB for value in values]
         theta_column = [value.WKB.theta for value in values]
+        raw_theta_column = [value.WKB.raw_theta for value in values]
         H_ratio_column = [value.WKB.H_ratio for value in values]
         sin_coeff_column = [value.WKB.sin_coeff for value in values]
         cos_coeff_column = [value.WKB.cos_coeff for value in values]
@@ -326,6 +335,7 @@ with ShardedPool(
                 "Gprime": Gprime_column,
                 "G_WKB": G_WKB_column,
                 "theta": theta_column,
+                "raw_theta": raw_theta_column,
                 "H_ratio": H_ratio_column,
                 "sin_coeff": sin_coeff_column,
                 "cos_coeff": cos_coeff_column,
