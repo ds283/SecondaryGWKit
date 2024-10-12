@@ -361,9 +361,13 @@ class Datastore:
                         tab = self._tables.get(table_name, None)
                         if tab is not None:
                             tab.drop(self._engine)
-                            self._metadata.remove(table_name)
+                            self._metadata.remove(tab)
             else:
                 print(f'Datastore: unknown drop action "{action}"')
+
+        # regenerate inspector to pick up any changes that were made
+        # (the inspector apparently does not automatically reflect dropped tables)
+        self._inspector = sqla.inspect(self._engine)
 
     def _validate_on_startup(self):
         printed_header = False
