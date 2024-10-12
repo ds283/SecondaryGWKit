@@ -606,9 +606,10 @@ class GkWKBIntegration(DatastoreObject):
             H_ratio = H_init / H
             norm_factor = sqrt(H_ratio / omega_WKB)
 
-            G_WKB = self._cos_coeff * norm_factor * cos(
-                shifted_theta_sample[i]
-            ) + self._sin_coeff * norm_factor * sin(shifted_theta_sample[i])
+            G_WKB = norm_factor * (
+                self._cos_coeff * cos(shifted_theta_sample[i])
+                + self._sin_coeff * sin(shifted_theta_sample[i])
+            )
 
             # create new GkWKBValue object
             self._values.append(
