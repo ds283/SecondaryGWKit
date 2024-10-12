@@ -169,31 +169,35 @@ with ShardedPool(
 
             return fabs(x)
 
-        G_points = [(value.z_source.z, my_fabs(value.numeric.G)) for value in values]
-        G_WKB_points = [
+        abs_G_points = [
+            (value.z_source.z, my_fabs(value.numeric.G)) for value in values
+        ]
+        abs_G_WKB_points = [
             (value.z_source.z, my_fabs(value.WKB.G_WKB)) for value in values
         ]
-        analytic_points = [
+        abs_analytic_points = [
             (value.z_source.z, my_fabs(value.analytic_G)) for value in values
         ]
 
-        theta_points = [
+        theta_points = [(value.z_source.z, value.WKB.theta) for value in values]
+        abs_theta_points = [
             (value.z_source.z, my_fabs(value.WKB.theta)) for value in values
         ]
-        sin_coeff_points = [
+        abs_sin_coeff_points = [
             (value.z_source.z, my_fabs(value.WKB.sin_coeff)) for value in values
         ]
-        cos_coeff_points = [
+        abs_cos_coeff_points = [
             (value.z_source.z, my_fabs(value.WKB.cos_coeff)) for value in values
         ]
 
-        G_x, G_y = zip(*G_points)
-        G_WKB_x, G_WKB_y = zip(*G_WKB_points)
-        analytic_x, analytic_y = zip(*analytic_points)
+        abs_G_x, abs_G_y = zip(*abs_G_points)
+        abs_G_WKB_x, abs_G_WKB_y = zip(*abs_G_WKB_points)
+        abs_analytic_x, abs_analytic_y = zip(*abs_analytic_points)
 
         theta_x, theta_y = zip(*theta_points)
-        sin_coeff_x, sin_coeff_y = zip(*sin_coeff_points)
-        cos_coeff_x, cos_coeff_y = zip(*cos_coeff_points)
+        abs_theta_x, abs_theta_y = zip(*abs_theta_points)
+        abs_sin_coeff_x, abs_sin_coeff_y = zip(*abs_sin_coeff_points)
+        abs_cos_coeff_x, abs_cos_coeff_y = zip(*abs_cos_coeff_points)
 
         k_exit = Gk._k_exit
         z_response = Gk.z_response
@@ -202,11 +206,11 @@ with ShardedPool(
         fig = plt.figure()
         ax = plt.gca()
 
-        ax.plot(G_x, G_y, label="Numerical $G_k$")
-        ax.plot(G_WKB_x, G_WKB_y, label="WKB $G_k$")
+        ax.plot(abs_G_x, abs_G_y, label="Numerical $G_k$")
+        ax.plot(abs_G_WKB_x, abs_G_WKB_y, label="WKB $G_k$")
         ax.plot(
-            analytic_x,
-            analytic_y,
+            abs_analytic_x,
+            abs_analytic_y,
             label="Analytic $G_k$",
             linestyle="--",
         )
@@ -232,7 +236,7 @@ with ShardedPool(
         fig = plt.figure()
         ax = plt.gca()
 
-        ax.plot(theta_x, theta_y, label="WKB phase $\theta$")
+        ax.plot(abs_theta_x, abs_theta_y, label="WKB phase $\theta$")
 
         ax.set_xlabel("source redshift $z$")
         ax.set_ylabel("WKB phase $\\theta$")
@@ -245,7 +249,7 @@ with ShardedPool(
 
         fig_path = (
             base_path
-            / f"plots/theta/k-serial={k_exit.store_id}-k={k_exit.k.k_inv_Mpc:.5g}/z-serial={z_response.store_id}-zsource={z_response.z:.5g}.pdf"
+            / f"plots/theta-log/k-serial={k_exit.store_id}-k={k_exit.k.k_inv_Mpc:.5g}/z-serial={z_response.store_id}-zsource={z_response.z:.5g}.pdf"
         )
         fig_path.parents[0].mkdir(exist_ok=True, parents=True)
         fig.savefig(fig_path)
@@ -254,8 +258,29 @@ with ShardedPool(
         fig = plt.figure()
         ax = plt.gca()
 
-        ax.plot(sin_coeff_x, sin_coeff_y, label="$\\sin$ coefficient")
-        ax.plot(cos_coeff_x, cos_coeff_y, label="$\\cos coefficient")
+        ax.plot(theta_x, theta_y, label="WKB phase $\theta$")
+
+        ax.set_xlabel("source redshift $z$")
+        ax.set_ylabel("WKB phase $\\theta$")
+
+        ax.set_xscale("log")
+
+        ax.grid(True)
+        ax.xaxis.set_inverted(True)
+
+        fig_path = (
+            base_path
+            / f"plots/theta-linear/k-serial={k_exit.store_id}-k={k_exit.k.k_inv_Mpc:.5g}/z-serial={z_response.store_id}-zsource={z_response.z:.5g}.pdf"
+        )
+        fig_path.parents[0].mkdir(exist_ok=True, parents=True)
+        fig.savefig(fig_path)
+        plt.close()
+
+        fig = plt.figure()
+        ax = plt.gca()
+
+        ax.plot(abs_sin_coeff_x, abs_sin_coeff_y, label="$\\sin$ coefficient")
+        ax.plot(abs_cos_coeff_x, abs_cos_coeff_y, label="$\\cos coefficient")
 
         ax.set_xlabel("source redshift $z$")
         ax.set_ylabel("coefficient")
