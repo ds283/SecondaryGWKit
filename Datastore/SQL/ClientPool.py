@@ -57,7 +57,7 @@ class ClientPool:
                 with ProfileBatchManager(
                     self._profiler,
                     "ClientPool.lease_serial|commit_serials",
-                    self._table,
+                    {"table": self._table},
                 ) as mgr:
                     ray.get(
                         self._broker.commit_serials.remote(self._table, self._committed)
@@ -67,7 +67,7 @@ class ClientPool:
             with ProfileBatchManager(
                 self._profiler,
                 "ClientPool.lease_serial|lease_serials",
-                self._table,
+                {"table": self._table},
             ) as mgr:
                 self._pool = ray.get(
                     self._broker.lease_serials.remote(self._table, self._batch_size)
@@ -104,7 +104,7 @@ class ClientPool:
 
     def release(self) -> None:
         with ProfileBatchManager(
-            self._profiler, "ClientPool.release", self._table
+            self._profiler, "ClientPool.release", {"table": self._table}
         ) as mgr:
             ray.get(
                 [
