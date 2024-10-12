@@ -256,6 +256,7 @@ with ShardedPool(
         ax.set_xscale("log")
         ax.set_yscale("log")
 
+        ax.legend(loc="best")
         ax.grid(True)
         ax.xaxis.set_inverted(True)
 
