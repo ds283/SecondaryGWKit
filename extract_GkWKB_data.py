@@ -169,13 +169,17 @@ with ShardedPool(
             numerical_x, numerical_y = zip(*numerical_points)
             analytic_x, analytic_y = zip(*analytic_points)
 
-            ax.plot(numerical_x, numerical_y, label="Numerical $G_k$")
-            ax.plot(
-                analytic_x,
-                analytic_y,
-                label="Analytic $G_k$ (numerical region)",
-                linestyle="--",
-            )
+            if len(numerical_x) > 0 and (
+                any(y is not None and y > 0 for y in numerical_y)
+                or any(y is not None and y > 0 for y in analytic_y)
+            ):
+                ax.plot(numerical_x, numerical_y, label="Numerical $G_k$")
+                ax.plot(
+                    analytic_x,
+                    analytic_y,
+                    label="Analytic $G_k$ (numerical region)",
+                    linestyle="--",
+                )
 
             z_column.extend(value.z.z for value in values)
             G_column.extend(value.G for value in values)
@@ -201,13 +205,17 @@ with ShardedPool(
             analytic_x, analytic_y = zip(*analytic_points)
             theta_x, theta_y = zip(*theta_points)
 
-            ax.plot(numerical_x, numerical_y, label="WKB $G_k$")
-            ax.plot(
-                analytic_x,
-                analytic_y,
-                label="Analytic $G_k$ (WKB region)",
-                linestyle="--",
-            )
+            if len(numerical_x) > 0 and (
+                any(y is not None and y > 0 for y in numerical_y)
+                or any(y is not None and y > 0 for y in analytic_y)
+            ):
+                ax.plot(numerical_x, numerical_y, label="WKB $G_k$")
+                ax.plot(
+                    analytic_x,
+                    analytic_y,
+                    label="Analytic $G_k$ (WKB region)",
+                    linestyle="--",
+                )
 
             z_column.extend(value.z.z for value in values)
             G_column.extend(value.G_WKB for value in values)
@@ -219,6 +227,25 @@ with ShardedPool(
             omega_WKB_sq_column.extend(value.omega_WKB_sq for value in values)
             WKB_criterion_column.extend(value.WKB_criterion for value in values)
             type_column.extend(1 for _ in range(len(values)))
+
+        ax.axvline(k_exit.z_exit_subh_e3, linestyle="--", color="red")
+        ax.axvline(k_exit.z_exit_subh_e5, linestyle="--", color="blue")
+
+        trans = ax.get_xaxis_transform()
+        ax.text(
+            k_exit.z_exit_subh_e3,
+            0.05,
+            "$+3$ e-folds",
+            transform=trans,
+            fontsize="small",
+        )
+        ax.text(
+            k_exit.z_exit_subh_e5,
+            0.2,
+            "$+5$ e-folds",
+            transform=trans,
+            fontsize="small",
+        )
 
         ax.set_xlabel("response redshift $z$")
         ax.set_ylabel("$G_k(z_{\\text{source}}, z_{\\text{response}})$")
@@ -255,6 +282,25 @@ with ShardedPool(
             ax = plt.gca()
 
             ax.plot(theta_x, theta_y, label="WKB phase $\\theta$")
+
+            ax.axvline(k_exit.z_exit_subh_e3, linestyle="--", color="red")
+            ax.axvline(k_exit.z_exit_subh_e5, linestyle="--", color="blue")
+
+            trans = ax.get_xaxis_transform()
+            ax.text(
+                k_exit.z_exit_subh_e3,
+                0.05,
+                "$+3$ e-folds",
+                transform=trans,
+                fontsize="small",
+            )
+            ax.text(
+                k_exit.z_exit_subh_e5,
+                0.2,
+                "$+5$ e-folds",
+                transform=trans,
+                fontsize="small",
+            )
 
             ax.set_xlabel("response redshift $z$")
             ax.set_ylabel("WKB phase $\\theta$")

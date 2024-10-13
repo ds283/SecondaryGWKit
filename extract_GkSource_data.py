@@ -246,6 +246,22 @@ with ShardedPool(
             ax.axvline(k_exit.z_exit_subh_e3, linestyle="--", color="red")
             ax.axvline(k_exit.z_exit_subh_e5, linestyle="--", color="blue")
 
+            trans = ax.get_xaxis_transform()
+            ax.text(
+                k_exit.z_exit_subh_e3,
+                0.9,
+                "$+3$ e-folds",
+                transform=trans,
+                fontsize="small",
+            )
+            ax.text(
+                k_exit.z_exit_subh_e5,
+                0.75,
+                "$+5$ e-folds",
+                transform=trans,
+                fontsize="small",
+            )
+
             ax.set_xlabel("source redshift $z$")
             ax.set_ylabel("WKB phase $\\theta$")
 
@@ -276,6 +292,22 @@ with ShardedPool(
 
             ax.axvline(k_exit.z_exit_subh_e3, linestyle="--", color="red")
             ax.axvline(k_exit.z_exit_subh_e5, linestyle="--", color="blue")
+
+            trans = ax.get_xaxis_transform()
+            ax.text(
+                k_exit.z_exit_subh_e3,
+                0.9,
+                "$+3$ e-folds",
+                transform=trans,
+                fontsize="small",
+            )
+            ax.text(
+                k_exit.z_exit_subh_e5,
+                0.75,
+                "$+5$ e-folds",
+                transform=trans,
+                fontsize="small",
+            )
 
             ax.set_xlabel("source redshift $z$")
             ax.set_ylabel("WKB phase $\\theta$")
