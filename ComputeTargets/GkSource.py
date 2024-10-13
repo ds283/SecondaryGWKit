@@ -22,7 +22,10 @@ _two_pi = 2.0 * pi
 
 DEFAULT_G_WKB_DIFF_REL_TOLERANCE = 5e-3
 DEFAULT_G_WKB_DIFF_ABS_TOLERANCE = 1e-4
-DEFAULT_PHASE_JITTER_TOLERANCE = 1e-2
+
+# default tolerance for phase jitter, before we conclude that we have gone though a full 2pi in splicing together
+# discontinuities in the phase, is 3% of 2pi
+DEFAULT_PHASE_JITTER_TOLERANCE = 0.05 * _two_pi
 
 
 @ray.remote
@@ -149,8 +152,11 @@ def assemble_GkSource_values(
                 # if the 2pi block read from the data is more positive than our current one, we interpret this as a discontinuity.
                 # we adjust the current subtraction to bring 2pi block into alignment with our current one.
                 if theta_div_2pi > last_theta_div_2pi:
-                    if theta_mod_2pi > last_theta_mod_2pi:
-                        # need to move 2pi block towards more negative phase
+                    if (
+                        theta_mod_2pi
+                        > last_theta_mod_2pi + DEFAULT_PHASE_JITTER_TOLERANCE
+                    ):
+                        # phase appears to have wrapped around, so need to move 2pi block towards more negative phase
                         current_2pi_block -= 1
                         current_2pi_block_subtraction = (
                             theta_div_2pi - current_2pi_block
