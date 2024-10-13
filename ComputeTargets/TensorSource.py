@@ -1,6 +1,9 @@
+from collections import namedtuple
 from typing import Optional, List
 
 import ray
+from math import log
+from scipy.interpolate import InterpolatedUnivariateSpline
 
 from ComputeTargets import BackgroundModel
 from ComputeTargets.TkNumericalIntegration import (
@@ -11,6 +14,8 @@ from CosmologyConcepts import wavenumber, redshift_array, redshift
 from Datastore import DatastoreObject
 from MetadataConcepts import store_tag
 from utilities import check_cosmology, WallclockTimer
+
+TensorSourceFunctions = namedtuple("TensorSourceFunctions", ["source"])
 
 
 def source_function(
@@ -201,6 +206,8 @@ class TensorSource(DatastoreObject):
         self._q_exit = Tq._k_exit
         self._r_exit = Tr._k_exit
 
+        self._functions = None
+
         self._compute_ref = None
 
     @property
@@ -250,14 +257,70 @@ class TensorSource(DatastoreObject):
             raise RuntimeError("values has not yet been populated")
         return self._values
 
+    @property
+    def functions(self) -> TensorSourceFunctions:
+        if hasattr(self, "_do_not_populate"):
+            raise RuntimeError(
+                "TensorSource: attempt to construct dense output functions, but _do_not_populate is set"
+            )
+
+        if self._values is None:
+            raise RuntimeError(
+                "TensorSource: attempt to construct dense output functions, but values have not yet been populated"
+            )
+
+        if self._functions is None:
+            self._create_functions()
+
+        return self._functions
+
+    def _create_functions(self):
+        source_data = [(log(v.z.z), v.source_term) for v in self.values]
+        source_data.sort(key=lambda pair: pair[0])
+
+        source_x_data, source_y_data = zip(*source_data)
+        source_spline = InterpolatedUnivariateSpline(
+            source_x_data, source_y_data, ext="raise"
+        )
+
+        def source_wrapper(z: float):
+            z_max: redshift = self._z_sample.max
+            z_min: redshift = self._z_sample.min
+
+            if z > z_max.z:
+                raise RuntimeError(
+                    f"TensorSource.source_function: source function spline z is out of bounds (maximum allowed z_max={z_max.z:.5g}, recommended limit is z={0.95*z_max.z:.5g})"
+                )
+
+            if z < z_min.z:
+                raise RuntimeError(
+                    f"TensorSource.source_function: source function spline z is out of bounds (minimum allowed z_min={z_min.z:.5g}, recommended limit is z={1.05*z_min.z:.5g})"
+                )
+
+            if z >= 0.95 * z_max.z:
+                print(
+                    f"!! WARNING (TensorSource.source_function): attempt to use source function spline within 5% of its upper boundary (z_max={z_max.z:.5g}, recommended limit is z={0.95*z_max.z:.5g})"
+                )
+
+            if z <= 1.05 * z_min.z:
+                print(
+                    f"!! WARNING (TensorSource.source_function): attempt to use source function spline within 5% of its lower boundary (z_min={z_min.z:.5g}), recommended limit is z={1.05*z_min.z:.5g}"
+                )
+
+            return source_spline(log(z))
+
+        self._functions = TensorSourceFunctions(source=source_wrapper)
+
     def compute(self, label: Optional[str] = None):
         if hasattr(self, "_do_not_populate"):
             raise RuntimeError(
-                "TensorSource: compute() called but _do_not_populate is set"
+                "TensorSource: compute() called, but _do_not_populate is set"
             )
 
         if self._values is not None:
-            raise RuntimeError("values have already been computed")
+            raise RuntimeError(
+                "TensorSource: compute() called, but values have already been computed"
+            )
 
         # replace label if specified
         if label is not None:
