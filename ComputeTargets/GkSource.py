@@ -105,16 +105,18 @@ def marshal_values(
             # z_source. So for some z_source we will have data at a given z_response, and for others we won't. This can cause the WKB region
             # to appear non-contiguous.
             if (
-                z_response.z < k_exit.z_exit_subh_e3
+                z_response.z
+                < 0.65
+                * k_exit.z_exit_subh_e3  # not sure quite what the multiplier should be here, but the cut should not be too much later than z_e3
                 and theta_last_step is not True
                 and seen_WKB
             ):
                 print(
-                    f"!! WARNING (marshal_values): WKB region apparently non-contiguous at z_source={z_source.z:.5g} (store_id={z_source.store_id}) for k={k_exit.k.k_inv_Mpc}/Mpc (store_id={k_exit.store_id}), z_response={z_response.z:.5g} (store_id={z_response.store_id})"
+                    f"!! WARNING (marshal_values): WKB region apparently non-contiguous at z_source={z_source.z:.5g} (store_id={z_source.store_id}) for k={k_exit.k.k_inv_Mpc:.5g}/Mpc (store_id={k_exit.store_id}), z_response={z_response.z:.5g} (store_id={z_response.store_id})"
                 )
                 if theta_last_z is not None:
                     print(
-                        f"|  -- last theta value seen at redshift z_source={theta_last_z.z:.5g} (store_id={theta_last_z.store_id})"
+                        f"|  -- last theta value seen at redshift z_source={theta_last_z.z:.5g} (store_id={theta_last_z.store_id}) | z_e3 = {k_exit.z_exit_subh_e3:.5g}"
                     )
                 print(
                     f"|  -- last_theta_mod_2pi={last_theta_mod_2pi:.5g}, current_2pi_block={current_2pi_block}"
@@ -131,7 +133,7 @@ def marshal_values(
 
                 if current_2pi_block is None:
                     raise RuntimeError(
-                        f"marshal_values: current_2pi_block should not be None at z_source={z_source.z:.5g} (store_id={z_source.store_id}) for k={k_exit.k.k_inv_Mpc}/Mpc (store_id={k_exit.store_id}), z_response={z_response.z:.5g} (store_id={z_response.store_id})"
+                        f"marshal_values: current_2pi_block should not be None at z_source={z_source.z:.5g} (store_id={z_source.store_id}) for k={k_exit.k.k_inv_Mpc:.5g}/Mpc (store_id={k_exit.store_id}), z_response={z_response.z:.5g} (store_id={z_response.store_id})"
                     )
 
                 # allow a small tolerance for jitter in the phase function, without stepping into a new block
@@ -148,17 +150,17 @@ def marshal_values(
 
             if WKB.omega_WKB_sq is None or WKB.omega_WKB_sq < 0.0:
                 raise RuntimeError(
-                    f"marshal_values: cannot process WKB phase because omega_WKB_sq is negative or missing at z_source={z_source.z:.5g} (store_id={z_source.store_id}) for k={k_exit.k.k_inv_Mpc}/Mpc (store_id={k_exit.store_id}), z_response={z_response.z:.5g} (store_id={z_response.store_id})"
+                    f"marshal_values: cannot process WKB phase because omega_WKB_sq is negative or missing at z_source={z_source.z:.5g} (store_id={z_source.store_id}) for k={k_exit.k.k_inv_Mpc:.5g}/Mpc (store_id={k_exit.store_id}), z_response={z_response.z:.5g} (store_id={z_response.store_id})"
                 )
 
             if WKB.H_ratio is None or WKB.H_ratio < 0.0:
                 raise RuntimeError(
-                    f"marshal_values: cannot process WKB phase because H_ratio is negative or missing at z_source={z_source.z:.5g} (store_id={z_source.store_id}) for k={k_exit.k.k_inv_Mpc}/Mpc (store_id={k_exit.store_id}), z_response={z_response.z:.5g} (store_id={z_response.store_id})"
+                    f"marshal_values: cannot process WKB phase because H_ratio is negative or missing at z_source={z_source.z:.5g} (store_id={z_source.store_id}) for k={k_exit.k.k_inv_Mpc:.5g}/Mpc (store_id={k_exit.store_id}), z_response={z_response.z:.5g} (store_id={z_response.store_id})"
                 )
 
             if WKB.sin_coeff is None or WKB.cos_coeff is None:
                 raise RuntimeError(
-                    f"marshal_values: cannot process WKB phase because one of the sin or cos coefficients are missing at z_source={z_source.z:.5g} (store_id={z_source.store_id}) for k={k_exit.k.k_inv_Mpc}/Mpc (store_id={k_exit.store_id}), z_response={z_response.z:.5g} (store_id={z_response.store_id})"
+                    f"marshal_values: cannot process WKB phase because one of the sin or cos coefficients are missing at z_source={z_source.z:.5g} (store_id={z_source.store_id}) for k={k_exit.k.k_inv_Mpc:.5g}/Mpc (store_id={k_exit.store_id}), z_response={z_response.z:.5g} (store_id={z_response.store_id})"
                 )
 
             # defensively, test whether this has significantly changed the result
@@ -176,7 +178,7 @@ def marshal_values(
                 # test abs difference
                 if fabs(new_G_WKB - WKB.G_WKB) > DEFAULT_G_WKB_DIFF_TOLERANCE:
                     raise RuntimeError(
-                        f"marshal_values: rectified G_WKB differs from original G_WKB by an unexpectedly large amount at z_source={z_source.z:.5g} (store_id={z_source.store_id}) for k={k_exit.k.k_inv_Mpc}/Mpc (store_id={k_exit.store_id}), z_response={z_response.z:.5g} (store_id={z_response.store_id}) | old G_WKB={WKB.G_WKB:.7g}, new G_WKB={new_G_WKB:.7g}"
+                        f"marshal_values: rectified G_WKB differs from original G_WKB by an unexpectedly large amount at z_source={z_source.z:.5g} (store_id={z_source.store_id}) for k={k_exit.k.k_inv_Mpc:.5g}/Mpc (store_id={k_exit.store_id}), z_response={z_response.z:.5g} (store_id={z_response.store_id}) | old G_WKB={WKB.G_WKB:.7g}, new G_WKB={new_G_WKB:.7g}"
                     )
             else:
                 # test rel difference
@@ -184,7 +186,7 @@ def marshal_values(
                     fabs((new_G_WKB - WKB.G_WKB) / WKB.G_WKB)
                 ) > DEFAULT_G_WKB_DIFF_TOLERANCE:
                     raise RuntimeError(
-                        f"marshal_values: rectified G_WKB differs from original G_WKB by an unexpectedly large amount at z_source={z_source.z:.5g} (store_id={z_source.store_id}) for k={k_exit.k.k_inv_Mpc}/Mpc (store_id={k_exit.store_id}), z_response={z_response.z:.5g} (store_id={z_response.store_id}) | old G_WKB={WKB.G_WKB:.7g}, new G_WKB={new_G_WKB:.7g}"
+                        f"marshal_values: rectified G_WKB differs from original G_WKB by an unexpectedly large amount at z_source={z_source.z:.5g} (store_id={z_source.store_id}) for k={k_exit.k.k_inv_Mpc:.5g}/Mpc (store_id={k_exit.store_id}), z_response={z_response.z:.5g} (store_id={z_response.store_id}) | old G_WKB={WKB.G_WKB:.7g}, new G_WKB={new_G_WKB:.7g}"
                     )
 
         else:
