@@ -243,8 +243,8 @@ with ShardedPool(
                 label="Raw WKB phase $\\theta$",
             )
 
-            ax.axvline(k_exit.z_exit_subh_e3, linestyle="--", color="red")
-            ax.axvline(k_exit.z_exit_subh_e5, linestyle="--", color="blue")
+            ax.axvline(k_exit.z_exit_subh_e3, linestyle="--", color="r")
+            ax.axvline(k_exit.z_exit_subh_e5, linestyle="--", color="b")
 
             trans = ax.get_xaxis_transform()
             ax.text(
@@ -290,8 +290,8 @@ with ShardedPool(
             ax.plot(theta_x, theta_y, label="WKB phase $\\theta$")
             ax.plot(raw_theta_x, raw_theta_y, label="Raw WKB phase $\\theta$")
 
-            ax.axvline(k_exit.z_exit_subh_e3, linestyle="--", color="red")
-            ax.axvline(k_exit.z_exit_subh_e5, linestyle="--", color="blue")
+            ax.axvline(k_exit.z_exit_subh_e3, linestyle="--", color="r")
+            ax.axvline(k_exit.z_exit_subh_e5, linestyle="--", color="b")
 
             trans = ax.get_xaxis_transform()
             ax.text(

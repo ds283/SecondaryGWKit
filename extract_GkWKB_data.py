@@ -55,7 +55,7 @@ parser.add_argument(
     "--ray-address", default="auto", type=str, help="specify address of Ray cluster"
 )
 parser.add_argument(
-    "--output", default="Gk-WKB-out", type=str, help="specify folder for output files"
+    "--output", default="GkWKB-out", type=str, help="specify folder for output files"
 )
 args = parser.parse_args()
 
@@ -228,8 +228,8 @@ with ShardedPool(
             WKB_criterion_column.extend(value.WKB_criterion for value in values)
             type_column.extend(1 for _ in range(len(values)))
 
-        ax.axvline(k_exit.z_exit_subh_e3, linestyle="--", color="red")
-        ax.axvline(k_exit.z_exit_subh_e5, linestyle="--", color="blue")
+        ax.axvline(k_exit.z_exit_subh_e3, linestyle="--", color="r")
+        ax.axvline(k_exit.z_exit_subh_e5, linestyle="--", color="b")
 
         trans = ax.get_xaxis_transform()
         ax.text(
@@ -266,7 +266,8 @@ with ShardedPool(
         fig.savefig(fig_path)
 
         ax.set_xlim(
-            k_exit.z_exit_suph_e3, int(round(0.85 * k_exit.z_exit_subh_e5 + 0.5, 0))
+            int(round(k_exit.z_exit_suph_e3 + 0.5, 0)),
+            int(round(0.85 * k_exit.z_exit_subh_e5 + 0.5, 0)),
         )
         fig_path = (
             base_path
@@ -283,8 +284,8 @@ with ShardedPool(
 
             ax.plot(theta_x, theta_y, label="WKB phase $\\theta$")
 
-            ax.axvline(k_exit.z_exit_subh_e3, linestyle="--", color="red")
-            ax.axvline(k_exit.z_exit_subh_e5, linestyle="--", color="blue")
+            ax.axvline(k_exit.z_exit_subh_e3, linestyle="--", color="r")
+            ax.axvline(k_exit.z_exit_subh_e5, linestyle="--", color="b")
 
             trans = ax.get_xaxis_transform()
             ax.text(
