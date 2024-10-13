@@ -337,6 +337,7 @@ with ShardedPool(
                 "type": type_column,
             }
         )
+        df.sort_values(by="redshift", ascending=False, inplace=True, ignore_index=True)
         df.to_csv(csv_path, header=True, index=False)
 
     def build_plot_Gk_work(item):

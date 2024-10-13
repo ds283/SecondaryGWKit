@@ -390,6 +390,7 @@ with ShardedPool(
                 "analytic_Gprime": analytic_Gprime_column,
             }
         )
+        df.sort_values(by="z_source", ascending=False, inplace=True, ignore_index=True)
         df.to_csv(csv_path, header=True, index=False)
 
     def build_plot_GkSource_work(item):
