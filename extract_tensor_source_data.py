@@ -2,17 +2,22 @@ import argparse
 import itertools
 import sys
 from pathlib import Path
+from typing import List
 
-import pyarrow as pa
+import pandas as pd
 import ray
-from pyarrow import dataset
-from pyarrow.csv import CSVWriter
+import seaborn as sns
+from math import fabs
+from matplotlib import pyplot as plt
 
 from ComputeTargets import (
-    TkNumericalIntegration,
     BackgroundModel,
 )
-from ComputeTargets.TensorSource import TensorSource
+from ComputeTargets.TensorSource import (
+    TensorSource,
+    TensorSourceValue,
+    TensorSourceFunctions,
+)
 from CosmologyConcepts import (
     wavenumber,
     wavenumber_exit_time,
@@ -129,138 +134,267 @@ with ShardedPool(
     k_exit_queue.run()
     k_exit_times = k_exit_queue.results
 
-    def build_Tk_work(k_exit: wavenumber_exit_time):
-        if not k_exit.available:
-            raise RuntimeError(
-                f"k_exit object (store_id={k_exit.store_id}) is not ready"
-            )
-
-        return pool.object_get(
-            TkNumericalIntegration,
-            solver_labels=[],
-            model=model,
-            k=k_exit,
-            z_sample=None,
-            z_init=None,  # will query for any init time
-            atol=atol,
-            rtol=rtol,
-        )
-
-    Tk_queue = RayWorkPool(
-        pool,
-        k_exit_times,
-        task_builder=build_Tk_work,
-        compute_handler=None,
-        store_handler=None,
-        store_results=True,
-        title="QUERY MATTER TRANSFER FUNCTION VALUES",
-    )
-    Tk_queue.run()
-    Tks = Tk_queue.results
-
-    time_series_schema = pa.schema(
-        [
-            ("q_serial", pa.int32()),
-            ("q_exit_serial", pa.int32()),
-            ("q_inv_Mpc", pa.float64()),
-            ("q_exit", pa.float64()),
-            ("r_serial", pa.int32()),
-            ("r_exit_serial", pa.int32()),
-            ("r_inv_Mpc", pa.float64()),
-            ("r_exit", pa.float64()),
-            ("z_serial", pa.int32()),
-            ("z", pa.float64()),
-            ("source_term", pa.float64()),
-            ("undiff_part", pa.float64()),
-            ("diff_part", pa.float64()),
-            ("analytic_source_term", pa.float64()),
-            ("analytic_undiff_part", pa.float64()),
-            ("analytic_diff_part", pa.float64()),
-        ]
-    )
-
     @ray.remote
-    def write_CSV_content(source: TensorSource):
+    def plot_tensor_source(source: TensorSource):
+        q_exit: wavenumber_exit_time = source._q_exit
+        r_exit: wavenumber_exit_time = source._r_exit
         base_path = Path(args.output).resolve()
-        time_series_path = (
-            base_path
-            / f"time-series/storeid{source.store_id}-qid{source.q.store_id}-rid{source.r.store_id}.csv"
-        )
-        time_series_path.parents[0].mkdir(exist_ok=True, parents=True)
 
-        with CSVWriter(time_series_path, schema=time_series_schema) as writer:
-            time_series_rows = [
-                {
-                    "q_serial": source.q.store_id,
-                    "q_exit_serial": source._q_exit.store_id,
-                    "q_inv_Mpc": source.q.k_inv_Mpc,
-                    "q_exit": source._q_exit.z_exit,
-                    "r_serial": source.r.store_id,
-                    "r_exit_serial": source._r_exit.store_id,
-                    "r_inv_Mpc": source.r.k_inv_Mpc,
-                    "r_exit": source._r_exit.z_exit,
-                    "z_serial": value.z.store_id,
-                    "z": value.z.z,
-                    "source_term": value.source_term,
-                    "undiff_part": value.undiff_part,
-                    "diff_part": value.diff_part,
-                    "analytic_source_term": value.analytic_source_term,
-                    "analytic_undiff_part": value.analytic_undiff_part,
-                    "analytic_diff_part": value.analytic_diff_part,
-                }
-                for value in source.values
-            ]
-            batch = pa.RecordBatch.from_pylist(
-                time_series_rows, schema=time_series_schema
+        sns.set_theme()
+
+        values: List[TensorSourceValue] = source.values
+        functions: TensorSourceFunctions = source.functions
+
+        abs_source_points = [(value.z.z, fabs(value.source_term)) for value in values]
+        abs_undiff_points = [(value.z.z, fabs(value.undiff_part)) for value in values]
+        abs_diff_points = [(value.z.z, fabs(value.diff_part)) for value in values]
+        abs_analytic_points = [
+            (value.z.z, fabs(value.analytic_source_term)) for value in values
+        ]
+
+        abs_source_x, abs_source_y = zip(*abs_source_points)
+        abs_undiff_x, abs_undiff_y = zip(*abs_undiff_points)
+        abs_diff_x, abs_diff_y = zip(*abs_diff_points)
+        abs_analytic_x, abs_analytic_y = zip(*abs_analytic_points)
+        abs_spline_y = [fabs(functions.source(z)) for z in abs_source_x]
+
+        if len(abs_source_x) > 0 and (
+            any(y is not None and y > 0 for y in abs_source_y)
+            or any(y is not None and y > 0 for y in abs_undiff_y)
+            or any(y is not None and y > 0 for y in abs_diff_y)
+            or any(y is not None and y > 0 for y in abs_analytic_y)
+        ):
+            fig = plt.figure()
+            ax = plt.gca()
+
+            ax.plot(abs_source_x, abs_source_y, label="Numerical")
+            ax.plot(abs_analytic_x, abs_analytic_y, label="Analytic", linestyle="--")
+            ax.plot(abs_source_x, abs_spline_y, label="Spline")
+
+            ax.axvline(q_exit.z_exit_subh_e3, linestyle="--", color="r")
+            ax.axvline(q_exit.z_exit_subh_e5, linestyle="--", color="b")
+
+            trans = ax.get_xaxis_transform()
+            ax.text(
+                q_exit.z_exit_subh_e3,
+                0.05,
+                "$q+3$ e-folds",
+                transform=trans,
+                fontsize="small",
             )
-            writer.write(batch)
+            ax.text(
+                q_exit.z_exit_subh_e5,
+                0.2,
+                "$q+5$ e-folds",
+                transform=trans,
+                fontsize="small",
+            )
 
-    def build_tensor_source_work(grid_idx):
-        idx_i, idx_j = grid_idx
+            if r_exit.store_id != q_exit.store_id:
+                ax.axvline(r_exit.z_exit_subh_e3, linestyle="--", color="g")
+                ax.axvline(r_exit.z_exit_subh_e5, linestyle="--", color="m")
 
-        q = k_array[idx_i]
-        Tq = Tks[idx_i]
-        Tr = Tks[idx_j]
+                ax.text(
+                    r_exit.z_exit_subh_e3,
+                    0.05,
+                    "$r+3$ e-folds",
+                    transform=trans,
+                    fontsize="small",
+                )
+                ax.text(
+                    r_exit.z_exit_subh_e5,
+                    0.2,
+                    "$r+5$ e-folds",
+                    transform=trans,
+                    fontsize="small",
+                )
 
-        return pool.object_get(TensorSource, z_sample=None, q=q, Tq=Tq, Tr=Tr)
+            ax.set_xlabel("redshift $z$")
+            ax.set_ylabel("$T_k(z)$")
 
-    def tensor_source_available_map(Tk: TkNumericalIntegration):
-        return write_CSV_content.remote(Tk)
+            ax.set_xscale("log")
+            ax.set_yscale("log")
 
-    tensor_source_grid = list(
-        itertools.combinations_with_replacement(range(len(k_exit_times)), 2)
-    )
+            ax.legend(loc="best")
+            ax.grid(True)
+            ax.xaxis.set_inverted(True)
 
-    build_csv_queue = RayWorkPool(
+            fig_path = (
+                base_path
+                / f"plots/full/q-serial={source.q.store_id}-q={q_exit.k.k_inv_Mpc:.5g}-r-serial={source.r.store_id}-r={r_exit.k.k_inv_Mpc:.5g}.pdf"
+            )
+            fig_path.parents[0].mkdir(exist_ok=True, parents=True)
+            fig.savefig(fig_path)
+
+            ax.set_xlim(
+                int(round(q_exit.z_exit_suph_e3 + 0.5, 0)),
+                int(round(0.85 * q_exit.z_exit_subh_e5 + 0.5, 0)),
+            )
+
+            fig_path = (
+                base_path
+                / f"plots/q-zoom/q-serial={source.q.store_id}-q={q_exit.k.k_inv_Mpc:.5g}-r-serial={source.r.store_id}-r={r_exit.k.k_inv_Mpc:.5g}.pdf"
+            )
+            fig_path.parents[0].mkdir(exist_ok=True, parents=True)
+            fig.savefig(fig_path)
+
+            if q_exit.store_id != r_exit.store_id:
+                ax.set_xlim(
+                    int(round(r_exit.z_exit_suph_e3 + 0.5, 0)),
+                    int(round(0.85 * r_exit.z_exit_subh_e5 + 0.5, 0)),
+                )
+
+                fig_path = (
+                    base_path
+                    / f"plots/r-zoom/q-serial={source.q.store_id}-q={q_exit.k.k_inv_Mpc:.5g}-r-serial={source.r.store_id}-r={r_exit.k.k_inv_Mpc:.5g}.pdf"
+                )
+                fig_path.parents[0].mkdir(exist_ok=True, parents=True)
+                fig.savefig(fig_path)
+
+            plt.close()
+
+        if len(abs_undiff_x) > 0:
+            fig = plt.figure()
+            ax = plt.gca()
+
+            ax.plot(abs_source_x, abs_source_y, label="Numerical")
+            ax.plot(abs_undiff_x, abs_undiff_y, label="$T_{k}$ part")
+            ax.plot(abs_diff_x, abs_diff_y, label="$dT_{k}/dz$ part")
+
+            trans = ax.get_xaxis_transform()
+            ax.text(
+                q_exit.z_exit_subh_e3,
+                0.05,
+                "$q+3$ e-folds",
+                transform=trans,
+                fontsize="small",
+            )
+            ax.text(
+                q_exit.z_exit_subh_e5,
+                0.2,
+                "$q+5$ e-folds",
+                transform=trans,
+                fontsize="small",
+            )
+
+            if r_exit.store_id != q_exit.store_id:
+                ax.axvline(r_exit.z_exit_subh_e3, linestyle="--", color="g")
+                ax.axvline(r_exit.z_exit_subh_e5, linestyle="--", color="m")
+
+                ax.text(
+                    r_exit.z_exit_subh_e3,
+                    0.05,
+                    "$r+3$ e-folds",
+                    transform=trans,
+                    fontsize="small",
+                )
+                ax.text(
+                    r_exit.z_exit_subh_e5,
+                    0.2,
+                    "$r+5$ e-folds",
+                    transform=trans,
+                    fontsize="small",
+                )
+
+            ax.set_xlabel("redshift $z$")
+            ax.set_ylabel("$T_k(z)$")
+
+            ax.set_xscale("log")
+            ax.set_yscale("log")
+
+            ax.legend(loc="best")
+            ax.grid(True)
+            ax.xaxis.set_inverted(True)
+
+            fig_path = (
+                base_path
+                / f"plots/parts/q-serial={source.q.store_id}-q={q_exit.k.k_inv_Mpc:.5g}-r-serial={source.r.store_id}-r={r_exit.k.k_inv_Mpc:.5g}.pdf"
+            )
+            fig_path.parents[0].mkdir(exist_ok=True, parents=True)
+            fig.savefig(fig_path)
+            plt.close()
+
+        z_column = [value.z.z for value in values]
+        source_column = [value.source_term for value in values]
+        undiff_column = [value.undiff_part for value in values]
+        diff_column = [value.diff_part for value in values]
+        analytic_source_column = [value.analytic_source_term for value in values]
+        analytic_undiff_column = [value.analytic_undiff_part for value in values]
+        analytic_diff_column = [value.analytic_diff_part for value in values]
+        source_spline = [functions.source(z) for z in z_column]
+        spline_diff = [
+            source_spline[i] - source_column[i] for i in range(len(z_column))
+        ]
+        spline_err = [spline_diff[i] / source_column[i] for i in range(len(z_column))]
+
+        csv_path = (
+            base_path
+            / f"csv/q-serial={source.q.store_id}-q={q_exit.k.k_inv_Mpc:.5g}-r-serial={source.r.store_id}-r={r_exit.k.k_inv_Mpc:.5g}.csv"
+        )
+        csv_path.parents[0].mkdir(exist_ok=True, parents=True)
+        df = pd.DataFrame.from_dict(
+            {
+                "z": z_column,
+                "source_term": source_column,
+                "undiff": undiff_column,
+                "diff": diff_column,
+                "analytic_source_term": analytic_source_column,
+                "analytic_undiff": analytic_undiff_column,
+                "analytic_diff": analytic_diff_column,
+                "source_spline": source_spline,
+                "spline_diff": spline_diff,
+                "spline_err": spline_err,
+            }
+        )
+        df.sort_values(by="z", ascending=False, inplace=True, ignore_index=True)
+        df.to_csv(csv_path, header=True, index=False)
+
+    def build_tensor_source_work(item):
+        q, r = item
+        q: wavenumber_exit_time
+        r: wavenumber_exit_time
+
+        payload_data = [
+            {
+                "solver_labels": [],
+                "model": model,
+                "k": k_mode,
+                "z_sample": None,
+                "z_init": None,
+                "atol": atol,
+                "rtol": rtol,
+            }
+            for k_mode in [q, r]
+        ]
+
+        Tq_ref, Tr_ref = [
+            pool.object_get("TkNumericalIntegration", **payload)
+            for payload in payload_data
+        ]
+
+        Tsource_ref = pool.object_get(
+            "TensorSource", z_sample=None, q=q, Tq=Tq_ref, Tr=Tr_ref
+        )
+
+        return plot_tensor_source.remote(Tsource_ref)
+
+    work_grid = list(itertools.combinations_with_replacement(k_exit_times, 2))
+
+    work_queue = RayWorkPool(
         pool,
-        tensor_source_grid,
+        work_grid,
         task_builder=build_tensor_source_work,
-        available_handler=tensor_source_available_map,
         compute_handler=None,
         store_handler=None,
-        store_results=False,
+        available_handler=None,
+        validation_handler=None,
+        post_handler=None,
+        label_builder=None,
+        create_batch_size=10,
+        process_batch_size=10,
+        notify_batch_size=50,
+        notify_time_interval=120,
         title="EXTRACT TENSOR SOURCE DATA",
+        store_results=False,
     )
-    build_csv_queue.run()
-
-    # use PyArrow to ingest all created CSV files into a dataaset, and then re-emit them as a single consolidated CSV
-    base_path = Path(args.output).resolve()
-    time_series_path = base_path / "time-series"
-    metadata_path = base_path / "metadata"
-
-    time_series_data = dataset.dataset(
-        time_series_path, format="csv", schema=time_series_schema
-    )
-    # TODO: sorting turns out to be pointless. PyArrow does not guarantee sort order when writing out a dataset.
-    #  See: https://github.com/apache/arrow/issues/26818, https://github.com/apache/arrow/issues/39030
-    time_series_sorted = time_series_data.sort_by(
-        [("q_inv_Mpc", "ascending"), ("r_inv_Mpc", "ascending"), ("z", "descending")]
-    )
-    dataset.write_dataset(
-        time_series_sorted,
-        base_dir=base_path,
-        basename_template="time-series-{i}.csv",
-        format="csv",
-        schema=time_series_schema,
-        existing_data_behavior="overwrite_or_ignore",
-    )
+    work_queue.run()
