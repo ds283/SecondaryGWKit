@@ -15,13 +15,24 @@ from utilities import check_units
 
 _NumericData = namedtuple("NumericData", ["G", "Gprime"])
 _WKBData = namedtuple(
-    "WKBData", ["theta", "raw_theta", "H_ratio", "sin_coeff", "cos_coeff", "G_WKB"]
+    "WKBData",
+    [
+        "theta",
+        "raw_theta",
+        "H_ratio",
+        "sin_coeff",
+        "cos_coeff",
+        "G_WKB",
+        "new_G_WKB",
+        "abs_G_WKB_err",
+        "rel_G_WKB_err",
+    ],
 )
 
 _two_pi = 2.0 * pi
 
-DEFAULT_G_WKB_DIFF_REL_TOLERANCE = 5e-3
-DEFAULT_G_WKB_DIFF_ABS_TOLERANCE = 1e-4
+DEFAULT_G_WKB_DIFF_REL_TOLERANCE = 1e-2
+DEFAULT_G_WKB_DIFF_ABS_TOLERANCE = 1e-3
 
 # default tolerance for phase jitter, before we conclude that we have gone though a full 2pi in splicing together
 # discontinuities in the phase, is 3% of 2pi
@@ -88,6 +99,9 @@ def assemble_GkSource_values(
             )
 
         raw_theta = WKB.theta if WKB is not None else None
+        abs_err = None
+        rel_err = None
+        new_G_WKB = None
 
         # We need to adjust theta to produce a smooth, monotonic function of redshift.
         # The Levin quadrature method relies on representing the oscillations of G_k(z, z') using a smooth function.
@@ -241,6 +255,9 @@ def assemble_GkSource_values(
                 sin_coeff=WKB.sin_coeff if WKB is not None else None,
                 cos_coeff=WKB.cos_coeff if WKB is not None else None,
                 G_WKB=WKB.G_WKB if WKB is not None else None,
+                new_G_WKB=new_G_WKB,
+                abs_G_WKB_err=abs_err,
+                rel_G_WKB_err=rel_err,
                 omega_WKB_sq=(
                     numeric.omega_WKB_sq
                     if numeric is not None
@@ -407,6 +424,9 @@ class GkSourceValue(DatastoreObject):
         sin_coeff: Optional[float] = None,
         cos_coeff: Optional[float] = None,
         G_WKB: Optional[float] = None,
+        new_G_WKB: Optional[float] = None,
+        abs_G_WKB_err: Optional[float] = None,
+        rel_G_WKB_err: Optional[float] = None,
         omega_WKB_sq: Optional[float] = None,
         WKB_criterion: Optional[float] = None,
         analytic_G: Optional[float] = None,
@@ -463,6 +483,9 @@ class GkSourceValue(DatastoreObject):
             sin_coeff=sin_coeff,
             cos_coeff=cos_coeff,
             G_WKB=G_WKB,
+            new_G_WKB=new_G_WKB,
+            abs_G_WKB_err=abs_G_WKB_err,
+            rel_G_WKB_err=rel_G_WKB_err,
         )
 
         self._omega_WKB_sq = omega_WKB_sq

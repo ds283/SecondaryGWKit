@@ -544,6 +544,9 @@ class sqla_GkSourceValue_factory(SQLAFactoryBase):
                 sqla.Column("theta", sqla.Float(64), nullable=True),
                 sqla.Column("raw_theta", sqla.Float(64), nullable=True),
                 sqla.Column("G_WKB", sqla.Float(64), nullable=True),
+                sqla.Column("new_G_WKB", sqla.Float(64), nullable=True),
+                sqla.Column("abs_G_WKB_err", sqla.Float(64), nullable=True),
+                sqla.Column("rel_G_WKB_err", sqla.Float(64), nullable=True),
                 sqla.Column("sin_coeff", sqla.Float(64), nullable=True),
                 sqla.Column("cos_coeff", sqla.Float(64), nullable=True),
                 sqla.Column("omega_WKB_sq", sqla.Float(64), nullable=True),
@@ -591,10 +594,16 @@ class sqla_GkSourceValue_factory(SQLAFactoryBase):
 
         G = payload.get("G", None)
         Gprime = payload.get("Gprime", None)
+
         H_ratio = payload.get("H_ratio", None)
         theta = payload.get("theta", None)
         raw_theta = payload.get("raw_theta", None)
+
         G_WKB = payload.get("G_WKB", None)
+        new_G_WKB = payload.get("new_G_WKB", None)
+        abs_G_WKB_err = payload.get("abs_G_WKB_err", None)
+        rel_G_WKB_err = payload.get("rel_G_WKB_err", None)
+
         sin_coeff = payload.get("sin_coeff", None)
         cos_coeff = payload.get("cos_coeff", None)
         omega_WKB_sq = payload.get("omega_WKB_sq", None)
@@ -623,6 +632,9 @@ class sqla_GkSourceValue_factory(SQLAFactoryBase):
                     table.c.theta,
                     table.c.raw_theta,
                     table.c.G_WKB,
+                    table.c.new_G_WKB,
+                    table.c.abs_G_WKB_err,
+                    table.c.rel_G_WKB_err,
                     table.c.sin_coeff,
                     table.c.cos_coeff,
                     table.c.omega_WKB_sq,
@@ -657,6 +669,9 @@ class sqla_GkSourceValue_factory(SQLAFactoryBase):
                     "theta": theta,
                     "raw_theta": raw_theta,
                     "G_WKB": G_WKB,
+                    "new_G_WKB": new_G_WKB,
+                    "abs_G_WKB_err": abs_G_WKB_err,
+                    "rel_G_WKB_err": rel_G_WKB_err,
                     "sin_coeff": sin_coeff,
                     "cos_coeff": cos_coeff,
                     "omega_WKB_sq": omega_WKB_sq,
@@ -676,7 +691,12 @@ class sqla_GkSourceValue_factory(SQLAFactoryBase):
             H_ratio = row_data.H_ratio
             theta = row_data.theta
             raw_theta = row_data.raw_theta
+
             G_WKB = row_data.G_WKB
+            new_G_WKB = row_data.new_G_WKB
+            abs_G_WKB_err = row_data.abs_G_WKB_err
+            rel_G_WKB_err = row_data.rel_G_WKB_err
+
             sin_coeff = row_data.sin_coeff
             cos_coeff = row_data.cos_coeff
 
@@ -696,6 +716,9 @@ class sqla_GkSourceValue_factory(SQLAFactoryBase):
             theta=theta,
             raw_theta=raw_theta,
             G_WKB=G_WKB,
+            new_G_WKB=new_G_WKB,
+            abs_G_WKB_err=abs_G_WKB_err,
+            rel_G_WKB_err=rel_G_WKB_err,
             sin_coeff=sin_coeff,
             cos_coeff=cos_coeff,
             omega_WKB_sq=omega_WKB_sq,
@@ -767,6 +790,9 @@ class sqla_GkSourceValue_factory(SQLAFactoryBase):
                     table.c.theta,
                     table.c.raw_theta,
                     table.c.G_WKB,
+                    table.c.new_G_WKB,
+                    table.c.abs_G_WKB_err,
+                    table.c.rel_G_WKB_err,
                     table.c.sin_coeff,
                     table.c.cos_coeff,
                     table.c.omega_WKB_sq,
@@ -803,6 +829,9 @@ class sqla_GkSourceValue_factory(SQLAFactoryBase):
             theta=row_data.theta,
             raw_theta=row_data.raw_theta,
             G_WKB=row_data.G_WKB,
+            new_G_WKB=row_data.new_G_WKB,
+            abs_G_WKB_err=row_data.abs_G_WKB_err,
+            rel_G_WKB_err=row_data.rel_G_WKB_err,
             sin_coeff=row_data.sin_coeff,
             cos_coeff=row_data.cos_coeff,
             omega_WKB_sq=row_data.omega_WKB_sq,
