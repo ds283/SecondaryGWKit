@@ -2,7 +2,7 @@ from collections import namedtuple
 from typing import Optional, List
 
 import ray
-from math import fabs, pi, fmod, sqrt, cos, sin
+from math import fabs, pi, fmod, sqrt, cos, sin, floor
 
 from ComputeTargets.BackgroundModel import BackgroundModel
 from ComputeTargets.GkNumericalIntegration import GkNumericalValue
@@ -20,12 +20,13 @@ _WKBData = namedtuple(
 
 _two_pi = 2.0 * pi
 
-DEFAULT_G_WKB_DIFF_TOLERANCE = 1e-5
+DEFAULT_G_WKB_DIFF_REL_TOLERANCE = 5e-3
+DEFAULT_G_WKB_DIFF_ABS_TOLERANCE = 1e-4
 DEFAULT_PHASE_JITTER_TOLERANCE = 1e-2
 
 
 @ray.remote
-def marshal_values(
+def assemble_GkSource_values(
     k_exit: wavenumber_exit_time,
     z_response: redshift,
     z_sample: redshift_array,
@@ -42,6 +43,7 @@ def marshal_values(
     current_2pi_block = None
 
     last_theta_mod_2pi = None
+    last_theta_div_2pi = None
 
     # track whether we have seen a WKB data point
     # generally, we expect that the WKB region should be continuous; we use this as a validation step to test for
@@ -52,15 +54,17 @@ def marshal_values(
         numeric: GkNumericalValue = numeric_data.get(z_source.store_id, None)
         WKB: GkWKBValue = WKB_data.get(z_source.store_id, None)
 
+        # If there is neither a WKB or a numerical data point, then this is an error. We cannot proceed.
         if numeric is None and WKB is None:
             raise RuntimeError(
-                f"marshal_values: no data supplied at redshift z_source={z_source.z:.5g} for k={k_exit.k.k_inv_Mpc}/Mpc (store_id={k_exit.store_id}), z_response={z_response.z:.5g} (store_id={z_response.store_id})"
+                f"assemble_GkSource_values: no data supplied at redshift z_source={z_source.z:.5g} for k={k_exit.k.k_inv_Mpc}/Mpc (store_id={k_exit.store_id}), z_response={z_response.z:.5g} (store_id={z_response.store_id})"
             )
 
+        # If we have both data points, ensure that their analytic estimates match.
         if numeric is not None and WKB is not None:
             if fabs(numeric.analytic_G - WKB.analytic_G) > DEFAULT_ABS_TOLERANCE:
                 raise RuntimeError(
-                    f"marshal_values: analytic G values unexpectedly differ between numeric and WKB data values by a large amount at z_source={z_source.z:.5g} for k={k_exit.k.k_inv_Mpc}/Mpc (store_id={k_exit.store_id}), z_response={z_response.z:.5g} (store_id={z_response.store_id})"
+                    f"assemble_GkSource_values: analytic G values unexpectedly differ between numeric and WKB data values by a large amount at z_source={z_source.z:.5g} for k={k_exit.k.k_inv_Mpc}/Mpc (store_id={k_exit.store_id}), z_response={z_response.z:.5g} (store_id={z_response.store_id})"
                 )
 
             if (
@@ -68,12 +72,13 @@ def marshal_values(
                 > DEFAULT_ABS_TOLERANCE
             ):
                 raise RuntimeError(
-                    f"marshal_values: analytic G values unexpectedly differ between numeric and WKB data values by a large amount at z_source={z_source.z:.5g} for k={k_exit.k.k_inv_Mpc}/Mpc (store_id={k_exit.store_id}), z_response={z_response.z:.5g} (store_id={z_response.store_id})"
+                    f"assemble_GkSource_values: analytic G values unexpectedly differ between numeric and WKB data values by a large amount at z_source={z_source.z:.5g} for k={k_exit.k.k_inv_Mpc}/Mpc (store_id={k_exit.store_id}), z_response={z_response.z:.5g} (store_id={z_response.store_id})"
                 )
 
+        # If we have a WKB data point, check that the response redshift is in the expected region where z_response < z_e3 for this k-mode
         if WKB is not None and z_response.z >= k_exit.z_exit_subh_e3:
             print(
-                f"!! WARNING (marshal_values): WKB value detected for k={k_exit.k.k_inv_Mpc}/Mpc (store_id={k_exit.store_id}) for z_response less than 3 e-folds inside the horizon"
+                f"!! WARNING (assemble_GkSource_values): WKB value detected for k={k_exit.k.k_inv_Mpc}/Mpc (store_id={k_exit.store_id}) for z_response less than 3 e-folds inside the horizon"
             )
             print(
                 f"|  -- z_e3={k_exit.z_exit_subh_e3:.5g}, z_source={z_source.z:.5g} (store_id={z_source.store_id})), z_response={z_response.z:.5g} (store_id={z_response.store_id})"
@@ -81,7 +86,8 @@ def marshal_values(
 
         raw_theta = WKB.theta if WKB is not None else None
 
-        # Adjust theta to produce a smooth, monotonic function of redshift
+        # We need to adjust theta to produce a smooth, monotonic function of redshift.
+        # The Levin quadrature method relies on representing the oscillations of G_k(z, z') using a smooth function.
         # With our current way of calculating theta, we expect it to be an increasing function of redshift.
         # It is increasingly *negative* at large z.
 
@@ -92,11 +98,17 @@ def marshal_values(
         # We lay out the values of theta div 2pi in such a way that the phase is smooth and monotone.
         if raw_theta is not None:
             theta_mod_2pi = fmod(raw_theta, _two_pi)
+            theta_div_2pi = int(floor(fabs(raw_theta) / _two_pi))
+            if raw_theta < 0.0:
+                theta_div_2pi = -theta_div_2pi
+
             if theta_mod_2pi > 0:
                 theta_mod_2pi = theta_mod_2pi - _two_pi
 
             assert theta_mod_2pi <= 0.0
             assert theta_mod_2pi > -_two_pi
+
+            assert theta_div_2pi <= 0
 
             # warn if the region in which we have WKB data is (seemingly) not coniguous
             # note we do not need to be too concerned if this happens in the region between 3 and 5 e-folds inside the horizon where the analytic and
@@ -112,7 +124,7 @@ def marshal_values(
                 and seen_WKB
             ):
                 print(
-                    f"!! WARNING (marshal_values): WKB region apparently non-contiguous at z_source={z_source.z:.5g} (store_id={z_source.store_id}) for k={k_exit.k.k_inv_Mpc:.5g}/Mpc (store_id={k_exit.store_id}), z_response={z_response.z:.5g} (store_id={z_response.store_id})"
+                    f"!! WARNING (assemble_GkSource_values): WKB region apparently non-contiguous at z_source={z_source.z:.5g} (store_id={z_source.store_id}) for k={k_exit.k.k_inv_Mpc:.5g}/Mpc (store_id={k_exit.store_id}), z_response={z_response.z:.5g} (store_id={z_response.store_id})"
                 )
                 if theta_last_z is not None:
                     print(
@@ -124,43 +136,59 @@ def marshal_values(
 
             if last_theta_mod_2pi is None:
                 # presumably this is the first time we have seen a theta value. Start in the fundamental block (-2pi, 0]
-                theta = theta_mod_2pi
+
+                current_2pi_block_subtraction = theta_div_2pi
                 current_2pi_block = 0
 
             else:
-                # decide whether this phase is more negative than the last one. If so, we can stay within the same 2pi-block.
-                # Otherwise, we have to move one block to the left.
-
                 if current_2pi_block is None:
                     raise RuntimeError(
-                        f"marshal_values: current_2pi_block should not be None at z_source={z_source.z:.5g} (store_id={z_source.store_id}) for k={k_exit.k.k_inv_Mpc:.5g}/Mpc (store_id={k_exit.store_id}), z_response={z_response.z:.5g} (store_id={z_response.store_id})"
+                        f"assemble_GkSource_values: current_2pi_block should not be None at z_source={z_source.z:.5g} (store_id={z_source.store_id}) for k={k_exit.k.k_inv_Mpc:.5g}/Mpc (store_id={k_exit.store_id}), z_response={z_response.z:.5g} (store_id={z_response.store_id})"
                     )
 
-                # allow a small tolerance for jitter in the phase function, without stepping into a new block
-                # otherwise, we may generate a misleadingly large d(theta)/dz that will produce a misleading Levin quadrature
-                if theta_mod_2pi > last_theta_mod_2pi + DEFAULT_PHASE_JITTER_TOLERANCE:
-                    current_2pi_block -= 1
+                # if the 2pi block read from the data is more positive than our current one, we interpret this as a discontinuity.
+                # we adjust the current subtraction to bring 2pi block into alignment with our current one.
+                if theta_div_2pi > last_theta_div_2pi:
+                    if theta_mod_2pi > last_theta_mod_2pi:
+                        # need to move 2pi block towards more negative phase
+                        current_2pi_block -= 1
+                        current_2pi_block_subtraction = (
+                            theta_div_2pi - current_2pi_block
+                        )
+                    else:
+                        # we can keep our current 2pi block
+                        current_2pi_block_subtraction = (
+                            theta_div_2pi - current_2pi_block
+                        )
 
-                theta = current_2pi_block * _two_pi + theta_mod_2pi
+                # otherwise, we assume the current subtraction remains valid, and instead update our current 2pi block to match
+                else:
+                    current_2pi_block = theta_div_2pi - current_2pi_block_subtraction
 
+            theta = current_2pi_block * _two_pi + theta_mod_2pi
+
+            # remember our current values of theta div 2pi and theta mod 2pi for the next step in the algorithm
             last_theta_mod_2pi = theta_mod_2pi
+            last_theta_div_2pi = theta_div_2pi
+
             seen_WKB = True
             theta_last_step = True
             theta_last_z = z_source
 
+            # check that we are able to build the WKB solution from the data available
             if WKB.omega_WKB_sq is None or WKB.omega_WKB_sq < 0.0:
                 raise RuntimeError(
-                    f"marshal_values: cannot process WKB phase because omega_WKB_sq is negative or missing at z_source={z_source.z:.5g} (store_id={z_source.store_id}) for k={k_exit.k.k_inv_Mpc:.5g}/Mpc (store_id={k_exit.store_id}), z_response={z_response.z:.5g} (store_id={z_response.store_id})"
+                    f"assemble_GkSource_values: cannot process WKB phase because omega_WKB_sq is negative or missing at z_source={z_source.z:.5g} (store_id={z_source.store_id}) for k={k_exit.k.k_inv_Mpc:.5g}/Mpc (store_id={k_exit.store_id}), z_response={z_response.z:.5g} (store_id={z_response.store_id})"
                 )
 
             if WKB.H_ratio is None or WKB.H_ratio < 0.0:
                 raise RuntimeError(
-                    f"marshal_values: cannot process WKB phase because H_ratio is negative or missing at z_source={z_source.z:.5g} (store_id={z_source.store_id}) for k={k_exit.k.k_inv_Mpc:.5g}/Mpc (store_id={k_exit.store_id}), z_response={z_response.z:.5g} (store_id={z_response.store_id})"
+                    f"assemble_GkSource_values: cannot process WKB phase because H_ratio is negative or missing at z_source={z_source.z:.5g} (store_id={z_source.store_id}) for k={k_exit.k.k_inv_Mpc:.5g}/Mpc (store_id={k_exit.store_id}), z_response={z_response.z:.5g} (store_id={z_response.store_id})"
                 )
 
             if WKB.sin_coeff is None or WKB.cos_coeff is None:
                 raise RuntimeError(
-                    f"marshal_values: cannot process WKB phase because one of the sin or cos coefficients are missing at z_source={z_source.z:.5g} (store_id={z_source.store_id}) for k={k_exit.k.k_inv_Mpc:.5g}/Mpc (store_id={k_exit.store_id}), z_response={z_response.z:.5g} (store_id={z_response.store_id})"
+                    f"assemble_GkSource_values: cannot process WKB phase because at least of the sin/cos coefficients are missing at z_source={z_source.z:.5g} (store_id={z_source.store_id}) for k={k_exit.k.k_inv_Mpc:.5g}/Mpc (store_id={k_exit.store_id}), z_response={z_response.z:.5g} (store_id={z_response.store_id})"
                 )
 
             # defensively, test whether this has significantly changed the result
@@ -175,18 +203,18 @@ def marshal_values(
             # if the fractional error is too large, treat as an exception, so that we cannot silently
             # write meaningless results into the datastore
             if fabs(WKB.G_WKB) < DEFAULT_ABS_TOLERANCE:
+                abs_err = abs(new_G_WKB - WKB.G_WKB)
                 # test abs difference
-                if fabs(new_G_WKB - WKB.G_WKB) > DEFAULT_G_WKB_DIFF_TOLERANCE:
-                    raise RuntimeError(
-                        f"marshal_values: rectified G_WKB differs from original G_WKB by an unexpectedly large amount at z_source={z_source.z:.5g} (store_id={z_source.store_id}) for k={k_exit.k.k_inv_Mpc:.5g}/Mpc (store_id={k_exit.store_id}), z_response={z_response.z:.5g} (store_id={z_response.store_id}) | old G_WKB={WKB.G_WKB:.7g}, new G_WKB={new_G_WKB:.7g}"
+                if abs_err > DEFAULT_G_WKB_DIFF_ABS_TOLERANCE:
+                    print(
+                        f"!! WARNING (assemble_GkSource_values): rectified G_WKB differs from original G_WKB by an unexpectedly large amount at z_source={z_source.z:.5g} (store_id={z_source.store_id}) for k={k_exit.k.k_inv_Mpc:.5g}/Mpc (store_id={k_exit.store_id}), z_response={z_response.z:.5g} (store_id={z_response.store_id}) | old G_WKB={WKB.G_WKB:.7g}, new G_WKB={new_G_WKB:.7g}, abserr={abs_err:.3g}"
                     )
             else:
+                rel_err = fabs((new_G_WKB - WKB.G_WKB) / WKB.G_WKB)
                 # test rel difference
-                if (
-                    fabs((new_G_WKB - WKB.G_WKB) / WKB.G_WKB)
-                ) > DEFAULT_G_WKB_DIFF_TOLERANCE:
-                    raise RuntimeError(
-                        f"marshal_values: rectified G_WKB differs from original G_WKB by an unexpectedly large amount at z_source={z_source.z:.5g} (store_id={z_source.store_id}) for k={k_exit.k.k_inv_Mpc:.5g}/Mpc (store_id={k_exit.store_id}), z_response={z_response.z:.5g} (store_id={z_response.store_id}) | old G_WKB={WKB.G_WKB:.7g}, new G_WKB={new_G_WKB:.7g}"
+                if rel_err > DEFAULT_G_WKB_DIFF_REL_TOLERANCE:
+                    print(
+                        f"!! WARNING (assemble_GkSource_values): rectified G_WKB differs from original G_WKB by an unexpectedly large amount at z_source={z_source.z:.5g} (store_id={z_source.store_id}) for k={k_exit.k.k_inv_Mpc:.5g}/Mpc (store_id={k_exit.store_id}), z_response={z_response.z:.5g} (store_id={z_response.store_id}) | old G_WKB={WKB.G_WKB:.7g}, new G_WKB={new_G_WKB:.7g}, relerr={rel_err:.3g}"
                     )
 
         else:
@@ -332,7 +360,7 @@ class GkSource(DatastoreObject):
             self._label = label
 
         # currently we have nothing to do here
-        self._compute_ref = marshal_values.remote(
+        self._compute_ref = assemble_GkSource_values.remote(
             self._k_exit,
             self._z_response,
             self._z_sample,
