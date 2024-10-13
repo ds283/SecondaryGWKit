@@ -138,28 +138,12 @@ with ShardedPool(
         list(z_sample), k=int(round(0.12 * len(z_sample) + 0.5, 0))
     )
 
-    work_grid = product(k_exit_times, z_subsample)
-
-    payload_data = [
-        {
-            "model": model,
-            "k": k_exit,
-            "z_response": z_response,
-            "z_sample": None,
-            "atol": atol,
-            "rtol": rtol,
-        }
-        for k_exit, z_response in work_grid
-    ]
-
-    print("\n-- QUERYING GkSource CACHE")
-    Gk_source_grid = ray.get(pool.object_get(GkSource, payload_data=payload_data))
-    print(f"   >> GkSource cache populated with length {len(Gk_source_grid)}")
-
     @ray.remote
     def plot_Gk(Gk: GkSource):
         if not Gk.available:
             return
+
+        k_exit: wavenumber_exit_time = Gk._k_exit
 
         values: List[GkSourceValue] = Gk.values
 
@@ -199,7 +183,7 @@ with ShardedPool(
         abs_analytic_x, abs_analytic_y = zip(*abs_analytic_points)
 
         theta_x, theta_y = zip(*theta_points)
-        raw_theta_x, raw_theta_y = zip(*abs_theta_points)
+        raw_theta_x, raw_theta_y = zip(*raw_theta_points)
         abs_theta_x, abs_theta_y = zip(*abs_theta_points)
         abs_raw_theta_x, abs_raw_theta_y = zip(*abs_raw_theta_points)
         abs_sin_coeff_x, abs_sin_coeff_y = zip(*abs_sin_coeff_points)
@@ -209,105 +193,134 @@ with ShardedPool(
         z_response = Gk.z_response
 
         sns.set_theme()
-        fig = plt.figure()
-        ax = plt.gca()
 
-        ax.plot(abs_G_x, abs_G_y, label="Numerical $G_k$")
-        ax.plot(abs_G_WKB_x, abs_G_WKB_y, label="WKB $G_k$")
-        ax.plot(
-            abs_analytic_x,
-            abs_analytic_y,
-            label="Analytic $G_k$",
-            linestyle="--",
-        )
+        if len(abs_G_x) > 0 and (
+            any(y is not None and y > 0 for y in abs_G_y)
+            or any(y is not None and y > 0 for y in abs_G_WKB_y)
+        ):
+            fig = plt.figure()
+            ax = plt.gca()
 
-        ax.set_xlabel("source redshift $z$")
-        ax.set_ylabel("$G_k(z_{\\text{source}}, z_{\\text{response}})$")
+            ax.plot(abs_G_x, abs_G_y, label="Numerical $G_k$")
+            ax.plot(abs_G_WKB_x, abs_G_WKB_y, label="WKB $G_k$")
+            ax.plot(
+                abs_analytic_x,
+                abs_analytic_y,
+                label="Analytic $G_k$",
+                linestyle="--",
+            )
 
-        ax.set_xscale("log")
-        ax.set_yscale("log")
+            ax.set_xlabel("source redshift $z$")
+            ax.set_ylabel("$G_k(z_{\\text{source}}, z_{\\text{response}})$")
 
-        ax.legend(loc="best")
-        ax.grid(True)
-        ax.xaxis.set_inverted(True)
+            ax.set_xscale("log")
+            ax.set_yscale("log")
 
-        base_path = Path(args.output).resolve()
-        fig_path = (
-            base_path
-            / f"plots/Gk/k-serial={k_exit.store_id}-k={k_exit.k.k_inv_Mpc:.5g}/z-serial={z_response.store_id}-zresponse={z_response.z:.5g}.pdf"
-        )
-        fig_path.parents[0].mkdir(exist_ok=True, parents=True)
-        fig.savefig(fig_path)
-        plt.close()
+            ax.legend(loc="best")
+            ax.grid(True)
+            ax.xaxis.set_inverted(True)
 
-        fig = plt.figure()
-        ax = plt.gca()
+            base_path = Path(args.output).resolve()
+            fig_path = (
+                base_path
+                / f"plots/Gk/k-serial={k_exit.store_id}-k={k_exit.k.k_inv_Mpc:.5g}/z-serial={z_response.store_id}-zresponse={z_response.z:.5g}.pdf"
+            )
+            fig_path.parents[0].mkdir(exist_ok=True, parents=True)
+            fig.savefig(fig_path)
+            plt.close()
 
-        ax.plot(abs_theta_x, abs_theta_y, label="WKB phase $\theta$")
-        ax.plot(abs_raw_theta_x, abs_raw_theta_y, label="Raw WKB phase $\theta$")
+        if len(abs_theta_x) > 0 and (
+            any(y is not None and y > 0 for y in abs_theta_y)
+            or any(y is not None and y > 0 for y in abs_raw_theta_y)
+        ):
+            fig = plt.figure()
+            ax = plt.gca()
 
-        ax.set_xlabel("source redshift $z$")
-        ax.set_ylabel("WKB phase $\\theta$")
+            ax.plot(abs_theta_x, abs_theta_y, label="WKB phase $\\theta$")
+            ax.plot(
+                abs_raw_theta_x,
+                abs_raw_theta_y,
+                label="Raw WKB phase $\\theta$",
+            )
 
-        ax.set_xscale("log")
-        ax.set_yscale("log")
+            ax.axvline(k_exit.z_exit_subh_e3, linestyle="--", color="red")
+            ax.axvline(k_exit.z_exit_subh_e5, linestyle="--", color="blue")
 
-        ax.grid(True)
-        ax.xaxis.set_inverted(True)
+            ax.set_xlabel("source redshift $z$")
+            ax.set_ylabel("WKB phase $\\theta$")
 
-        fig_path = (
-            base_path
-            / f"plots/theta-log/k-serial={k_exit.store_id}-k={k_exit.k.k_inv_Mpc:.5g}/z-serial={z_response.store_id}-zsource={z_response.z:.5g}.pdf"
-        )
-        fig_path.parents[0].mkdir(exist_ok=True, parents=True)
-        fig.savefig(fig_path)
-        plt.close()
+            ax.set_xscale("log")
+            ax.set_yscale("log")
 
-        fig = plt.figure()
-        ax = plt.gca()
+            ax.legend(loc="best")
+            ax.grid(True)
+            ax.xaxis.set_inverted(True)
 
-        ax.plot(theta_x, theta_y, label="WKB phase $\theta$")
-        ax.plot(raw_theta_x, raw_theta_y, label="Raw WKB phase $\theta$")
+            fig_path = (
+                base_path
+                / f"plots/theta-log/k-serial={k_exit.store_id}-k={k_exit.k.k_inv_Mpc:.5g}/z-serial={z_response.store_id}-zsource={z_response.z:.5g}.pdf"
+            )
+            fig_path.parents[0].mkdir(exist_ok=True, parents=True)
+            fig.savefig(fig_path)
+            plt.close()
 
-        ax.set_xlabel("source redshift $z$")
-        ax.set_ylabel("WKB phase $\\theta$")
+        if len(theta_x) > 0 and (
+            any(y is not None for y in theta_y)
+            or any(y is not None for y in raw_theta_y)
+        ):
+            fig = plt.figure()
+            ax = plt.gca()
 
-        ax.set_xscale("log")
+            ax.plot(theta_x, theta_y, label="WKB phase $\\theta$")
+            ax.plot(raw_theta_x, raw_theta_y, label="Raw WKB phase $\\theta$")
 
-        ax.grid(True)
-        ax.xaxis.set_inverted(True)
+            ax.axvline(k_exit.z_exit_subh_e3, linestyle="--", color="red")
+            ax.axvline(k_exit.z_exit_subh_e5, linestyle="--", color="blue")
 
-        fig_path = (
-            base_path
-            / f"plots/theta-linear/k-serial={k_exit.store_id}-k={k_exit.k.k_inv_Mpc:.5g}/z-serial={z_response.store_id}-zsource={z_response.z:.5g}.pdf"
-        )
-        fig_path.parents[0].mkdir(exist_ok=True, parents=True)
-        fig.savefig(fig_path)
-        plt.close()
+            ax.set_xlabel("source redshift $z$")
+            ax.set_ylabel("WKB phase $\\theta$")
 
-        fig = plt.figure()
-        ax = plt.gca()
+            ax.set_xscale("log")
 
-        ax.plot(abs_sin_coeff_x, abs_sin_coeff_y, label="$\\sin$ coefficient")
-        ax.plot(abs_cos_coeff_x, abs_cos_coeff_y, label="$\\cos coefficient")
+            ax.legend(loc="best")
+            ax.grid(True)
+            ax.xaxis.set_inverted(True)
 
-        ax.set_xlabel("source redshift $z$")
-        ax.set_ylabel("coefficient")
+            fig_path = (
+                base_path
+                / f"plots/theta-linear/k-serial={k_exit.store_id}-k={k_exit.k.k_inv_Mpc:.5g}/z-serial={z_response.store_id}-zsource={z_response.z:.5g}.pdf"
+            )
+            fig_path.parents[0].mkdir(exist_ok=True, parents=True)
+            fig.savefig(fig_path)
+            plt.close()
 
-        ax.set_xscale("log")
-        ax.set_yscale("log")
+        if len(abs_sin_coeff_x) > 0 and (
+            any(y is not None and y > 0 for y in abs_sin_coeff_y)
+            or any(y is not None and y > 0 for y in abs_cos_coeff_y)
+        ):
+            fig = plt.figure()
+            ax = plt.gca()
 
-        ax.legend(loc="best")
-        ax.grid(True)
-        ax.xaxis.set_inverted(True)
+            ax.plot(abs_sin_coeff_x, abs_sin_coeff_y, label="$\\sin$ coefficient")
+            ax.plot(abs_cos_coeff_x, abs_cos_coeff_y, label="$\\cos coefficient")
 
-        fig_path = (
-            base_path
-            / f"plots/coeffs/k-serial={k_exit.store_id}-k={k_exit.k.k_inv_Mpc:.5g}/z-serial={z_response.store_id}-zsource={z_response.z:.5g}.pdf"
-        )
-        fig_path.parents[0].mkdir(exist_ok=True, parents=True)
-        fig.savefig(fig_path)
-        plt.close()
+            ax.set_xlabel("source redshift $z$")
+            ax.set_ylabel("coefficient")
+
+            ax.set_xscale("log")
+            ax.set_yscale("log")
+
+            ax.legend(loc="best")
+            ax.grid(True)
+            ax.xaxis.set_inverted(True)
+
+            fig_path = (
+                base_path
+                / f"plots/coeffs/k-serial={k_exit.store_id}-k={k_exit.k.k_inv_Mpc:.5g}/z-serial={z_response.store_id}-zsource={z_response.z:.5g}.pdf"
+            )
+            fig_path.parents[0].mkdir(exist_ok=True, parents=True)
+            fig.savefig(fig_path)
+            plt.close()
 
         z_source_column = [value.z_source.z for value in values]
         G_column = [value.numeric.G for value in values]
@@ -347,5 +360,41 @@ with ShardedPool(
         )
         df.to_csv(csv_path, header=True, index=False)
 
-    work_refs = [plot_Gk.remote(Gk) for Gk in Gk_source_grid]
-    ray.get(work_refs)
+    def build_plot_GkSource_work(item):
+        k_exit, z_response = item
+        k_exit: wavenumber_exit_time
+        z_response: redshift
+
+        query_payload = {
+            "model": model,
+            "k": k_exit,
+            "z_response": z_response,
+            "z_sample": None,
+            "atol": atol,
+            "rtol": rtol,
+        }
+
+        GkS_ref = pool.object_get("GkSource", **query_payload)
+
+        return plot_Gk.remote(GkS_ref)
+
+    work_grid = product(k_exit_times, z_subsample)
+
+    work_queue = RayWorkPool(
+        pool,
+        work_grid,
+        task_builder=build_plot_GkSource_work,
+        compute_handler=None,
+        store_handler=None,
+        available_handler=None,
+        validation_handler=None,
+        post_handler=None,
+        label_builder=None,
+        create_batch_size=10,
+        process_batch_size=10,
+        notify_batch_size=50,
+        notify_time_interval=120,
+        title="GENERATING GkSource DATA PRODUCTS",
+        store_results=False,
+    )
+    work_queue.run()

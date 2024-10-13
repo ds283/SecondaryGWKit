@@ -140,36 +140,6 @@ with ShardedPool(
         list(z_sample), k=int(round(0.07 * len(z_sample) + 0.5, 0))
     )
 
-    work_grid = product(k_exit_times, z_subsample)
-
-    payload_data = [
-        {
-            "solver_labels": [],
-            "model": model,
-            "k": k_exit,
-            "z_source": z_source,
-            "z_sample": None,
-            "atol": atol,
-            "rtol": rtol,
-        }
-        for k_exit, z_source in work_grid
-    ]
-
-    print("\n-- QUERYING NUMERICAL INTEGRATIONS")
-    Gk_numerical_grid = ray.get(
-        pool.object_get(GkNumericalIntegration, payload_data=payload_data)
-    )
-    print(
-        f"   >> numerical integrations populated with length {len(Gk_numerical_grid)}"
-    )
-
-    print("\n-- QUERYING WKB INTEGRATIONS")
-    Gk_WKB_grid = ray.get(pool.object_get(GkWKBIntegration, payload_data=payload_data))
-    print(f"   >> WKB integrations populated with length {len(Gk_WKB_grid)}")
-
-    work_items = zip(Gk_numerical_grid, Gk_WKB_grid)
-    print(f"\n-- BUILT WORK GRID")
-
     @ray.remote
     def plot_Gk(Gk_numerical: GkNumericalIntegration, Gk_WKB: GkWKBIntegration):
         k_exit = Gk_numerical._k_exit
@@ -247,7 +217,7 @@ with ShardedPool(
             theta_column.extend(value.theta for value in values)
             H_ratio_column.extend(value.H_ratio for value in values)
             omega_WKB_sq_column.extend(value.omega_WKB_sq for value in values)
-            WKB_criterion_column.extend(values.WKB_criterion for value in values)
+            WKB_criterion_column.extend(value.WKB_criterion for value in values)
             type_column.extend(1 for _ in range(len(values)))
 
         ax.set_xlabel("response redshift $z$")
@@ -323,7 +293,44 @@ with ShardedPool(
         )
         df.to_csv(csv_path, header=True, index=False)
 
-    work_refs = [
-        plot_Gk.remote(Gk_numerical, Gk_WKB) for Gk_numerical, Gk_WKB in work_items
-    ]
-    ray.get(work_refs)
+    def build_plot_Gk_work(item):
+        k_exit, z_source = item
+        k_exit: wavenumber_exit_time
+        z_source: redshift
+
+        # query the list of GkNumberical and GkWKB data for this k, z_source combination
+        query_payload = {
+            "solver_labels": [],
+            "model": model,
+            "k": k_exit,
+            "z_source": z_source,
+            "z_sample": None,
+            "atol": atol,
+            "rtol": rtol,
+        }
+
+        GkN_ref = pool.object_get("GkNumericalIntegration", **query_payload)
+        GkW_ref = pool.object_get("GkWKBIntegration", **query_payload)
+
+        return plot_Gk.remote(GkN_ref, GkW_ref)
+
+    work_grid = product(k_exit_times, z_subsample)
+
+    work_queue = RayWorkPool(
+        pool,
+        work_grid,
+        task_builder=build_plot_Gk_work,
+        compute_handler=None,
+        store_handler=None,
+        available_handler=None,
+        validation_handler=None,
+        post_handler=None,
+        label_builder=None,
+        create_batch_size=10,
+        process_batch_size=10,
+        notify_batch_size=50,
+        notify_time_interval=120,
+        title="GENERATING GkWKB DATA PRODUCTS",
+        store_results=False,
+    )
+    work_queue.run()
