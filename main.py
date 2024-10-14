@@ -278,23 +278,38 @@ with ShardedPool(
 
     # embed this universal redshift list into the database
     z_array = ray.get(convert_to_redshifts(universal_z_grid))
-    z_sample = redshift_array(z_array=z_array)
+
+    z_global_sample = redshift_array(z_array=z_array)
+    z_source_sample = z_global_sample
+    z_response_sample = z_source_sample
 
     # build tags and other labels
     (
         TkProductionTag,
         GkProductionTag,
-        GlobalZGridTag,
-        OutsideHorizonEfoldsTag,
-        LargestZTag,
-        SamplesPerLog10ZTag,
+        GlobalZGridSizeTag,  # labels size of the global redshift grid
+        SourceZGridSizeTag,  # labels size of the z_source sample grid
+        ResponseZGridSizeTag,  # labels size of the z_response sample grid
+        OutsideHorizonEfoldsTag,  # labels number of e-folds outside the horizon at which we begin Tk numerical integrations
+        LargestZTag,  # labels largest z in the global grid
+        SamplesPerLog10ZTag,  # labels number of redshifts per log10 interval of 1+z in the global grid
     ) = ray.get(
         [
             pool.object_get("store_tag", label="TkOneLoopDensity"),
             pool.object_get("store_tag", label="GkOneLoopDensity"),
-            pool.object_get("store_tag", label=f"GlobalRedshiftGrid_{len(z_sample)}"),
+            pool.object_get(
+                "store_tag", label=f"GlobalRedshiftGrid_{len(z_global_sample)}"
+            ),
+            pool.object_get(
+                "store_tag", label=f"SourceRedshiftGrid_{len(z_source_sample)}"
+            ),
+            pool.object_get(
+                "store_tag", label=f"ReponseRedshiftGrid_{len(z_response_sample)}"
+            ),
             pool.object_get("store_tag", label=f"OutsideHorizonEfolds_e3"),
-            pool.object_get("store_tag", label=f"LargestRedshift_{z_sample.max.z:.5g}"),
+            pool.object_get(
+                "store_tag", label=f"LargestRedshift_{z_global_sample.max.z:.5g}"
+            ),
             pool.object_get(
                 "store_tag", label=f"SamplesPerLog10Z_{samples_per_log10z}"
             ),
@@ -308,10 +323,10 @@ with ShardedPool(
             "BackgroundModel",
             solver_labels=solvers,
             cosmology=LambdaCDM_Planck2018,
-            z_sample=z_sample,
+            z_sample=z_global_sample,
             atol=atol,
             rtol=rtol,
-            tags=[GlobalZGridTag, LargestZTag, SamplesPerLog10ZTag],
+            tags=[GlobalZGridSizeTag, LargestZTag, SamplesPerLog10ZTag],
         )
     )
     if not model.available:
@@ -329,7 +344,7 @@ with ShardedPool(
     ## COMPUTE MATTER TRANSFER FUNCTIONS
 
     def build_Tk_work(k_exit: wavenumber_exit_time):
-        my_sample = z_sample.truncate(k_exit.z_exit_suph_e5)
+        my_sample = z_source_sample.truncate(k_exit.z_exit_suph_e5)
         return pool.object_get(
             "TkNumericalIntegration",
             solver_labels=solvers,
@@ -341,7 +356,8 @@ with ShardedPool(
             rtol=rtol,
             tags=[
                 TkProductionTag,
-                GlobalZGridTag,
+                GlobalZGridSizeTag,
+                SourceZGridSizeTag,
                 OutsideHorizonEfoldsTag,
                 LargestZTag,
                 SamplesPerLog10ZTag,
@@ -371,13 +387,14 @@ with ShardedPool(
         # q is not used by the TensorSource constructor, but is accepted because it functions as the shard key
         return pool.object_get(
             "TensorSource",
-            z_sample=z_sample,
+            z_sample=z_source_sample,
             q=q,
             Tq=Tq,
             Tr=Tr,
             tags=[
                 TkProductionTag,
-                GlobalZGridTag,
+                GlobalZGridSizeTag,
+                SourceZGridSizeTag,
                 OutsideHorizonEfoldsTag,
                 LargestZTag,
                 SamplesPerLog10ZTag,
@@ -442,8 +459,9 @@ with ShardedPool(
                         "rtol": rtol,
                         "tags": [
                             GkProductionTag,
-                            GlobalZGridTag,
-                            OutsideHorizonEfoldsTag,
+                            GlobalZGridSizeTag,
+                            SourceZGridSizeTag,  # restrict query to integrations with the correct source grid size
+                            ResponseZGridSizeTag,  # restrict query to integrations with the correct response grid size
                             LargestZTag,
                             SamplesPerLog10ZTag,
                         ],
@@ -496,9 +514,9 @@ with ShardedPool(
                 if z_source.z > k_exit.z_exit_subh_e3 - DEFAULT_FLOAT_PRECISION:
                     # cut down response zs to those that are (1) later than the source, and (2) earlier than the 5-efolds-inside-the-horizon point
                     # (here with a 10% tolerance)
-                    response_zs = z_sample.truncate(z_source, keep="lower").truncate(
-                        0.9 * k_exit.z_exit_subh_e5, keep="higher"
-                    )
+                    response_zs = z_response_sample.truncate(
+                        z_source, keep="lower"
+                    ).truncate(0.9 * k_exit.z_exit_subh_e5, keep="higher")
 
                     if len(response_zs) > 1:
                         work_refs.append(
@@ -513,8 +531,9 @@ with ShardedPool(
                                 rtol=rtol,
                                 tags=[
                                     GkProductionTag,
-                                    GlobalZGridTag,
-                                    OutsideHorizonEfoldsTag,
+                                    GlobalZGridSizeTag,
+                                    SourceZGridSizeTag,
+                                    ResponseZGridSizeTag,
                                     LargestZTag,
                                     SamplesPerLog10ZTag,
                                 ],
@@ -538,7 +557,9 @@ with ShardedPool(
         return pool.object_validate(Gk)
 
     if args.numerical_queue:
-        GkNumerical_work_batches = list(grouper(z_sample, n=50, incomplete="ignore"))
+        GkNumerical_work_batches = list(
+            grouper(z_source_sample, n=50, incomplete="ignore")
+        )
 
         Gk_numerical_queue = RayWorkPool(
             pool,
@@ -572,7 +593,14 @@ with ShardedPool(
                         "z_sample": None,
                         "atol": atol,
                         "rtol": rtol,
-                        "tags": [GkProductionTag, GlobalZGridTag, SamplesPerLog10ZTag],
+                        "tags": [
+                            GkProductionTag,
+                            GlobalZGridSizeTag,
+                            SourceZGridSizeTag,  # restrict query to integrations with the correct source grid size
+                            ResponseZGridSizeTag,  # restrict query to integrations with the correct response grid size
+                            LargestZTag,
+                            SamplesPerLog10ZTag,
+                        ],
                         "_do_not_populate": True_,
                     }
                     for z_source in batch
@@ -626,7 +654,14 @@ with ShardedPool(
                         "z_sample": None,
                         "atol": atol,
                         "rtol": rtol,
-                        "tags": [GkProductionTag, GlobalZGridTag, SamplesPerLog10ZTag],
+                        "tags": [
+                            GkProductionTag,
+                            GlobalZGridSizeTag,
+                            SourceZGridSizeTag,
+                            ResponseZGridSizeTag,
+                            LargestZTag,
+                            SamplesPerLog10ZTag,
+                        ],
                     }
                     for z_source in missing[k_exit.store_id]
                 ],
@@ -655,7 +690,7 @@ with ShardedPool(
         work_refs = []
 
         response_pools = {
-            z_source.store_id: z_sample.truncate(z_source, keep="lower")
+            z_source.store_id: z_response_sample.truncate(z_source, keep="lower")
             for z_source in batch
         }
 
@@ -705,8 +740,8 @@ with ShardedPool(
                                 rtol=rtol,
                                 tags=[
                                     GkProductionTag,
-                                    GlobalZGridTag,
-                                    OutsideHorizonEfoldsTag,
+                                    SourceZGridSizeTag,
+                                    ResponseZGridSizeTag,
                                     LargestZTag,
                                     SamplesPerLog10ZTag,
                                 ],
@@ -750,8 +785,9 @@ with ShardedPool(
                             rtol=rtol,
                             tags=[
                                 GkProductionTag,
-                                GlobalZGridTag,
-                                OutsideHorizonEfoldsTag,
+                                GlobalZGridSizeTag,
+                                SourceZGridSizeTag,
+                                ResponseZGridSizeTag,
                                 LargestZTag,
                                 SamplesPerLog10ZTag,
                             ],
@@ -770,7 +806,7 @@ with ShardedPool(
         return pool.object_validate(Gk)
 
     if args.WKB_queue:
-        GkWKB_work_batches = list(grouper(z_sample, n=20, incomplete="ignore"))
+        GkWKB_work_batches = list(grouper(z_source_sample, n=20, incomplete="ignore"))
 
         Gk_WKB_queue = RayWorkPool(
             pool,
@@ -800,7 +836,7 @@ with ShardedPool(
         # try to do parallel lookup of the GkNumericalIntegration/GkWKBIntegration records needed
         # to process this batch
         z_source_pool = {
-            z_response.store_id: z_sample.truncate(z_response, keep="higher")
+            z_response.store_id: z_source_sample.truncate(z_response, keep="higher")
             for z_response in batch
         }
 
@@ -819,8 +855,9 @@ with ShardedPool(
                         "rtol": rtol,
                         "tags": [
                             GkProductionTag,
-                            GlobalZGridTag,
-                            OutsideHorizonEfoldsTag,
+                            GlobalZGridSizeTag,
+                            SourceZGridSizeTag,
+                            ResponseZGridSizeTag,
                             LargestZTag,
                             SamplesPerLog10ZTag,
                         ],
@@ -879,8 +916,9 @@ with ShardedPool(
                     "rtol": rtol,
                     "tags": [
                         GkProductionTag,
-                        GlobalZGridTag,
-                        OutsideHorizonEfoldsTag,
+                        GlobalZGridSizeTag,
+                        SourceZGridSizeTag,
+                        ResponseZGridSizeTag,
                         LargestZTag,
                         SamplesPerLog10ZTag,
                     ],
@@ -985,8 +1023,9 @@ with ShardedPool(
                             z_sample=z_source_pool[z_response.store_id],
                             tags=[
                                 GkProductionTag,
-                                GlobalZGridTag,
-                                OutsideHorizonEfoldsTag,
+                                GlobalZGridSizeTag,
+                                SourceZGridSizeTag,
+                                ResponseZGridSizeTag,
                                 LargestZTag,
                                 SamplesPerLog10ZTag,
                             ],
@@ -1018,7 +1057,9 @@ with ShardedPool(
         # To process these efficiently, we break the queue up into batches, and try to
         # run a sub-queue that queries that needed data in parallel.
 
-        GkSource_work_batches = list(grouper(z_sample, n=20, incomplete="ignore"))
+        GkSource_work_batches = list(
+            grouper(z_response_sample, n=20, incomplete="ignore")
+        )
 
         # need to prune compute/store/validate tasks from the system very rapidly in order to prevent memory-consuming payloads
         # for a number of compute workloads from piling up.
