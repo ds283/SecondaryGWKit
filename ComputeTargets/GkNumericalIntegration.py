@@ -194,18 +194,47 @@ def compute_Gk(
     rtol: float = DEFAULT_REL_TOLERANCE,
     delta_logz: Optional[float] = None,
     mode: str = None,
+    stop_search_window_z_start: Optional[float] = None,
+    stop_search_window_z_end: Optional[float] = None,
 ) -> dict:
     k_wavenumber: wavenumber = k.k
     check_units(k_wavenumber, model.cosmology)
 
+    mode = mode.lower()
     if mode is not None and mode not in ["stop"]:
-        raise ValueError(f'Unknown compute mode "{mode}"')
+        raise ValueError(f'compute_Gk: unknown compute mode "{mode}"')
+
+    if mode in ["stop"]:
+        if stop_search_window_z_start is None:
+            raise ValueError(
+                "compute_Gk: in 'stop' mode, stop_search_window_z_start must be specified"
+            )
+        if stop_search_window_z_end is None:
+            raise ValueError(
+                "compute_Gk: in 'stop' mode, stop_search_window_z_end must be specified"
+            )
+
+        if stop_search_window_z_start < stop_search_window_z_end:
+            stop_search_window_z_start, stop_search_window_z_end = (
+                stop_search_window_z_end,
+                stop_search_window_z_start,
+            )
+            print(
+                f"## compute_Gk: stop search window start and end arguments in the wrong order. Now searching in interval: z in ({stop_search_window_z_start}, {stop_search_window_z_end})"
+            )
+
+        if stop_search_window_z_start > z_sample.max.z:
+            raise ValueError(
+                "compute_Gk: specified 'stop' window starting redshift exceeds highest z-response sample point"
+            )
+        if stop_search_window_z_end < z_sample.min.z:
+            raise ValueError(
+                "compute_Gk: specified 'stop' window ending redshift is smaller than lowest z-response sample point"
+            )
 
     # obtain dimensionful value of wavenumber; this should be measured in the same units used by the cosmology
     # (see below)
     k_float = k_wavenumber.k
-    z_subh_e3 = k.z_exit_subh_e3
-    z_subh_e6 = k.z_exit_subh_e5
 
     z_min = float(z_sample.min)
 
@@ -260,13 +289,13 @@ def compute_Gk(
         #   G(z', z') = 0
         #   Gprime(z' z') = -1/(a0 H(z'))
         # however we would rather not have a delicate initial condition for Gprime, so we
-        # instead solve with the boundary conditions Gprime = -1 and rescale afterwards
+        # instead solve with the boundary conditions Gprime = -1 and rescale later
         initial_state = [0.0, 1.0]
 
         if mode == "stop":
             # set up an event to terminate the integration when 6 e-folds inside the horizon
             def stop_event(z, state, supervisor):
-                return z - z_subh_e6
+                return z - stop_search_window_z_end + DEFAULT_FLOAT_PRECISION
 
             # terminate integration when > 5 e-folds inside the horizon
             stop_event.terminal = True
@@ -324,7 +353,9 @@ def compute_Gk(
     stop_Gprime = None
 
     if mode == "stop":
-        payload = search_G_minimum(sol.sol, start_z=z_subh_e3, stop_z=z_subh_e6)
+        payload = search_G_minimum(
+            sol.sol, start_z=stop_search_window_z_start, stop_z=stop_search_window_z_end
+        )
         stop_efolds_subh = k.z_exit - payload["z"]
         stop_G = payload["G"]
         stop_Gprime = payload["Gprime"]
@@ -388,7 +419,15 @@ class GkNumericalIntegration(DatastoreObject):
 
         self._solver_labels = solver_labels
         self._delta_logz = delta_logz
-        self._mode = mode
+        self._mode = mode.lower() if mode is not None else None
+
+        if self._mode is not None and self._mode not in ["stop"]:
+            raise ValueError(
+                f'GkNumericalIntegration: unknown compute mode "{self._mode}"'
+            )
+
+        self._stop_search_window_start_attr = "z_exit_subh_e3"
+        self._stop_search_window_end_attr = "z_exit_subh_e6"
 
         self._z_sample = z_sample
         if payload is None:
@@ -612,6 +651,16 @@ class GkNumericalIntegration(DatastoreObject):
         if label is not None:
             self._label = label
 
+        payload = {}
+        if self._mode in ["stop"]:
+            payload["mode"] = self._mode
+            payload["stop_search_window_z_start"] = getattr(
+                self._k_exit, self._stop_search_window_start_attr
+            )
+            payload["stop_search_window_z_stop"] = getattr(
+                self._k_exit, self._stop_search_window_end_attr
+            )
+
         self._compute_ref = compute_Gk.remote(
             self._model,
             self._k_exit,
@@ -620,7 +669,7 @@ class GkNumericalIntegration(DatastoreObject):
             atol=self._atol.tol,
             rtol=self._rtol.tol,
             delta_logz=self._delta_logz,
-            mode=self._mode,
+            **payload,
         )
         return self._compute_ref
 
