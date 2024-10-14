@@ -292,10 +292,10 @@ class TkNumericalIntegration(DatastoreObject):
                 f"!! Warning (TkNumericalIntegration) k={k.k.k_inv_Mpc:.5g}/Mpc, log10_atol={atol.log10_tol}, log10_rtol={rtol.log10_tol}"
             )
             print(
-                f"|    Initial redshift z_init={z_init.z:.5g} is later than the 3-efold superhorizon time z_3={k.z_exit_suph_e3:.5g}."
+                f"|    Initial redshift z_init={z_init.z:.5g} is later than the 3-efold superhorizon time z_e3={k.z_exit_suph_e3:.5g}."
             )
             print(
-                f"|    Setting initial conditions at this time may lead to meaningless results, because the initial values T_k(z) = 1, T'_k(z) = 0"
+                f"|    Setting initial conditions at this time may lead to meaningless results, because the initial values T_k(z) = 1, Tprime_k(z) = 0"
             )
             print(
                 f"|    used for the matter transfer function integration apply only on sufficiently superhorizon scales."
