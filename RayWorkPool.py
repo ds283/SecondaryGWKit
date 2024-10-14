@@ -261,8 +261,10 @@ class RayWorkPool:
                                     if self._label_builder is not None
                                     else None
                                 )
+                                compute_args = (
+                                    {"label": label} if label is not None else {}
+                                )
 
-                                compute_args = {"label": label}
                                 if ref.hex in self._compute_data:
                                     compute_args.update(
                                         {"payload": self._compute_data[ref.hex]}
