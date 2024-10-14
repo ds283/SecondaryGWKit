@@ -6,7 +6,6 @@ from typing import List, Optional
 
 import numpy as np
 import ray
-from sqlalchemy import True_
 
 from ComputeTargets import (
     TkNumericalIntegration,
@@ -601,7 +600,7 @@ with ShardedPool(
                             LargestZTag,
                             SamplesPerLog10ZTag,
                         ],
-                        "_do_not_populate": True_,
+                        "_do_not_populate": True,
                     }
                     for z_source in batch
                 ],
@@ -740,6 +739,7 @@ with ShardedPool(
                                 rtol=rtol,
                                 tags=[
                                     GkProductionTag,
+                                    GlobalZGridSizeTag,
                                     SourceZGridSizeTag,
                                     ResponseZGridSizeTag,
                                     LargestZTag,
