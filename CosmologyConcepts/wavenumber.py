@@ -1,5 +1,5 @@
 from functools import partial
-from typing import Iterable, Optional, Mapping
+from typing import Iterable, Optional, Mapping, List
 
 import ray
 from math import log10, log, fabs
@@ -44,9 +44,6 @@ class wavenumber_array:
     def __init__(self, k_array: Iterable[wavenumber]):
         """
         Construct a datastore-backed object representing an array of wavenumber values
-        :param store_id: unique Datastore id. Should not be None
-        :param k_inv_Mpc_array: array of wavenumbers, measured in 1/Mpc
-        :param units: units block
         """
         # store array
         self._k_array = k_array
@@ -63,6 +60,10 @@ class wavenumber_array:
 
     def as_list(self) -> list[float]:
         return [float(k) for k in self._k_array]
+
+
+_WAVENUMBER_EXIT_TIMES_SUPERHORIZON_EFOLDS = [1, 2, 3, 4, 5]
+_WAVENUMBER_EXIT_TIMES_SUBHORIZON_EFOLDS = [1, 2, 3, 4, 5]
 
 
 class wavenumber_exit_time(DatastoreObject):
@@ -88,20 +89,30 @@ class wavenumber_exit_time(DatastoreObject):
         if payload is None:
             DatastoreObject.__init__(self, None)
             self._z_exit = None
-            self._z_exit_suph_e3 = None
-            self._z_exit_suph_e5 = None
-            self._z_exit_subh_e3 = None
-            self._z_exit_minus_5 = None
+
+            for z_offset in _WAVENUMBER_EXIT_TIMES_SUPERHORIZON_EFOLDS:
+                setattr(self, f"_z_exit_suph_e{z_offset}", None)
+            for z_offset in _WAVENUMBER_EXIT_TIMES_SUBHORIZON_EFOLDS:
+                setattr(self, f"_z_exit_subh_e{z_offset}", None)
 
             self._compute_time = None
             self._stepping = None
         else:
             DatastoreObject.__init__(self, payload["store_id"])
             self._z_exit = payload["z_exit"]
-            self._z_exit_suph_e3 = payload["z_exit_suph_e3"]
-            self._z_exit_suph_e5 = payload["z_exit_suph_e5"]
-            self._z_exit_subh_e3 = payload["z_exit_subh_e3"]
-            self._z_exit_subh_e5 = payload["z_exit_subh_e5"]
+
+            for z_offset in _WAVENUMBER_EXIT_TIMES_SUPERHORIZON_EFOLDS:
+                setattr(
+                    self,
+                    f"_z_exit_suph_e{z_offset}",
+                    payload[f"z_exit_suph_e{z_offset}"],
+                )
+            for z_offset in _WAVENUMBER_EXIT_TIMES_SUBHORIZON_EFOLDS:
+                setattr(
+                    self,
+                    f"_z_exit_subh_e{z_offset}",
+                    payload[f"z_exit_subh_e{z_offset}"],
+                )
 
             self._compute_time = payload["compute_time"]
             self._stepping = payload["stepping"]
@@ -115,12 +126,14 @@ class wavenumber_exit_time(DatastoreObject):
         self._atol = atol
         self._rtol = rtol
 
-    def compute(self):
+    def compute(self, label: Optional[str] = None):
         if self._z_exit is not None:
             raise RuntimeError("z_exit has already been computed")
         self._compute_ref = find_horizon_exit_time.remote(
             self.cosmology,
             self.k,
+            suph_efolds=_WAVENUMBER_EXIT_TIMES_SUPERHORIZON_EFOLDS,
+            subh_efolds=_WAVENUMBER_EXIT_TIMES_SUBHORIZON_EFOLDS,
             atol=self._atol.tol,
             rtol=self._rtol.tol,
         )
@@ -144,10 +157,11 @@ class wavenumber_exit_time(DatastoreObject):
         self._compute_ref = None
 
         self._z_exit = data["z_exit"]
-        self._z_exit_suph_e3 = data["z_exit_suph_e3"]
-        self._z_exit_suph_e5 = data["z_exit_suph_e5"]
-        self._z_exit_subh_e3 = data["z_exit_subh_e3"]
-        self._z_exit_subh_e5 = data["z_exit_subh_e5"]
+
+        for z_offset in _WAVENUMBER_EXIT_TIMES_SUPERHORIZON_EFOLDS:
+            setattr(self, f"_z_exit_suph_e{z_offset}", data[f"z_exit_suph_e{z_offset}"])
+        for z_offset in _WAVENUMBER_EXIT_TIMES_SUBHORIZON_EFOLDS:
+            setattr(self, f"_z_exit_subh_e{z_offset}", data[f"z_exit_subh_e{z_offset}"])
 
         self._compute_time = data["compute_time"]
         self._stepping = 0
@@ -159,30 +173,6 @@ class wavenumber_exit_time(DatastoreObject):
         if self._z_exit is None:
             raise RuntimeError("z_exit has not yet been populated")
         return self._z_exit
-
-    @property
-    def z_exit_suph_e3(self) -> float:
-        if self._z_exit_suph_e3 is None:
-            raise RuntimeError("z_exit+3efolds has not yet been populated")
-        return self._z_exit_suph_e3
-
-    @property
-    def z_exit_suph_e5(self) -> float:
-        if self._z_exit_suph_e5 is None:
-            raise RuntimeError("z_exit+5efolds has not yet been populated")
-        return self._z_exit_suph_e5
-
-    @property
-    def z_exit_subh_e3(self) -> float:
-        if self._z_exit_subh_e3 is None:
-            raise RuntimeError("z_exit-3efolds has not yet been populated")
-        return self._z_exit_subh_e3
-
-    @property
-    def z_exit_subh_e5(self) -> float:
-        if self._z_exit_subh_e5 is None:
-            raise RuntimeError("z_exit-5efolds has not yet been populated")
-        return self._z_exit_subh_e5
 
     @property
     def compute_time(self) -> float:
@@ -208,31 +198,68 @@ class wavenumber_exit_time(DatastoreObject):
         self,
         samples_per_log10z: int = 50,
         z_end: float = 0.1,
-        outside_horizon_efolds: str = None,
+        outside_horizon_efolds: int = 3,
     ):
-        if outside_horizon_efolds is None:
-            outside_horizon_efolds = "zero"
-
-        if outside_horizon_efolds == "zero" or outside_horizon_efolds == "crossing":
+        if outside_horizon_efolds == 0:
             z_init = self._z_exit
-        elif outside_horizon_efolds == "suph_e5":
-            z_init = self._z_exit_suph_e5
-        elif outside_horizon_efolds == "suph_e3":
-            z_init = self._z_exit_suph_e3
-        elif outside_horizon_efolds == "subh_e3":
-            z_init = self._z_exit_subh_e3
-        elif outside_horizon_efolds == "subh_e5":
-            z_init = self._z_exit_subh_e5
-        else:
-            raise RuntimeError("Unknown outside_horizon_efolds value")
+        elif outside_horizon_efolds > 0:
+            if outside_horizon_efolds not in _WAVENUMBER_EXIT_TIMES_SUPERHORIZON_EFOLDS:
+                raise RuntimeError(
+                    f"wavenumber_exit_time: z_exit + superhorizon({outside_horizon_efolds}) is not computed"
+                )
 
-        # now we want to built a set of sample points for redshifts between z_init and
+            z_init = getattr(self, f"z_exit_suph_e{outside_horizon_efolds}")
+        elif outside_horizon_efolds < 0:
+            if outside_horizon_efolds not in _WAVENUMBER_EXIT_TIMES_SUBHORIZON_EFOLDS:
+                raise RuntimeError(
+                    f"wavenumber_exit_time: z_exit + subhorizon({outside_horizon_efolds}) is not computed"
+                )
+
+            z_init = getattr(self, f"z_exit_subh_e{outside_horizon_efolds}")
+        else:
+            raise RuntimeError(
+                f"Unknown outside_horizon_efolds value {outside_horizon_efolds}"
+            )
+
+        # now we want to build a set of sample points for redshifts between z_init and
         # the final point z = z_final, using the specified number of redshift sample points
         num_z_sample = int(
             round(samples_per_log10z * (log10(z_init) - log10(z_end)) + 0.5, 0)
         )
 
         return logspace(log10(z_init), log10(z_end), num=num_z_sample)
+
+
+# create accessors
+def _create_accessor(attr_label):
+    def accessor_template(self):
+        if not hasattr(self, attr_label):
+            raise RuntimeError(
+                f'wavenumber_exit_time: object does not have attribute "{attr_label}"'
+            )
+        value = getattr(self, attr_label)
+        if value is None:
+            raise RuntimeError(
+                f'wavenumber_exit_time: attribute "{attr_label}" has not yet been populated'
+            )
+        return value
+
+    return accessor_template
+
+
+for z_offset in _WAVENUMBER_EXIT_TIMES_SUPERHORIZON_EFOLDS:
+    setattr(
+        wavenumber_exit_time,
+        f"z_exit_suph_e{z_offset}",
+        property(_create_accessor(f"_z_exit_suph_e{z_offset}")),
+    )
+
+for z_offset in _WAVENUMBER_EXIT_TIMES_SUBHORIZON_EFOLDS:
+    setattr(
+        wavenumber_exit_time,
+        f"z_exit_subh_e{z_offset}",
+        property(_create_accessor(f"_z_exit_subh_e{z_offset}")),
+    )
 
 
 DEFAULT_HEXIT_TOLERANCE = 1e-2
@@ -242,6 +269,8 @@ DEFAULT_HEXIT_TOLERANCE = 1e-2
 def find_horizon_exit_time(
     cosmology: BaseCosmology,
     k: wavenumber,
+    suph_efolds: List[int],
+    subh_efolds: List[int],
     atol: float = DEFAULT_ABS_TOLERANCE,
     rtol: float = DEFAULT_REL_TOLERANCE,
 ) -> Mapping[str, float]:
@@ -275,12 +304,21 @@ def find_horizon_exit_time(
         q = state[0] + target_efolds_suph
         return q
 
-    q_subh_e5_event = partial(q_event, -5.0)
-    q_subh_e3_event = partial(q_event, -3.0)
+    suph_triggers = [partial(q_event, z_offset) for z_offset in suph_efolds]
+    subh_triggers = [partial(q_event, -z_offset) for z_offset in subh_efolds]
+
     q_zero_event = partial(q_event, 0.0)
-    q_suph_e3_event = partial(q_event, +3.0)
-    q_suph_e5_event = partial(q_event, +5.0)
-    q_suph_e5_event.terminal = True
+
+    suph_index_max = max(range(len(suph_efolds)), key=suph_efolds.__getitem__)
+    terminal_event = suph_triggers[suph_index_max]
+    terminal_event.terminal = True
+
+    triggers = subh_triggers + [q_zero_event] + suph_triggers
+    index_subh_trigger_start = 0
+    index_zero_event = len(subh_triggers)
+    index_suph_trigger_start = len(subh_triggers) + 1
+
+    num_triggers = len(triggers)
 
     with WallclockTimer() as timer:
         # solve to find the zero crossing point; we set the upper limit of integration to be 1E12, which should be comfortably above
@@ -289,13 +327,7 @@ def find_horizon_exit_time(
             RHS,
             t_span=(0.0, 1e20),
             y0=[q0],
-            events=[
-                q_subh_e5_event,
-                q_subh_e3_event,
-                q_zero_event,
-                q_suph_e3_event,
-                q_suph_e5_event,
-            ],
+            events=triggers,
             atol=atol,
             rtol=rtol,
         )
@@ -311,40 +343,12 @@ def find_horizon_exit_time(
             f"find_horizon_exit_time: integration to find horizon-crossing time did not detect k/aH = 0 within the integration range"
         )
 
-    if len(sol.t_events) != 5:
+    if len(sol.t_events) != num_triggers:
         raise RuntimeError(
-            f"find_horizon_exit_time: unexpected number of event types returned from horizon-crossing integration (num={len(sol.t_events)})"
+            f"find_horizon_exit_time: unexpected number of event types returned from horizon-crossing integration (expected={num_triggers}, found={len(sol.t_events)})"
         )
 
-    subh_e5_times, subh_e3_times, zero_times, suph_e3_times, suph_e5_times = (
-        sol.t_events
-    )
-    if len(subh_e5_times) != 1:
-        raise RuntimeError(
-            f"find_horizon_exit_time: more than one exp(-5) horizon-crossing time returned from integration (num={len(subh_e5_times)})"
-        )
-    if len(subh_e3_times) != 1:
-        raise RuntimeError(
-            f"find_horizon_exit_time: more than one exp(-3) horizon-crossing time returned from integration (num={len(subh_e3_times)})"
-        )
-    if len(zero_times) != 1:
-        raise RuntimeError(
-            f"find_horizon_exit_time: more than one horizon-crossing time returned from integration (num={len(zero_times)})"
-        )
-    if len(suph_e3_times) != 1:
-        raise RuntimeError(
-            f"find_horizon_exit_time: more than one exp(+3) horizon-crossing time returned from integration (num={len(suph_e3_times)})"
-        )
-    if len(suph_e5_times) != 1:
-        raise RuntimeError(
-            f"find_horizon_exit_time: more than one exp(+5) horizon-crossing time returned from integration (num={len(suph_e5_times)})"
-        )
-
-    z_exit = zero_times[0]
-    z_exit_suph_e3 = suph_e3_times[0]
-    z_exit_suph_e5 = suph_e5_times[0]
-    z_exit_subh_e3 = subh_e3_times[0]
-    z_exit_subh_e5 = subh_e5_times[0]
+    payload = {"compute_time": timer.elapsed}
 
     def check_log_k_aH(z_test, expected_log_N):
         H_test = cosmology.Hubble(z_test)
@@ -360,17 +364,33 @@ def find_horizon_exit_time(
                 f"Inconsistent determination of horizon-crossing time z_exit+{expected_log_N}"
             )
 
-    check_log_k_aH(z_exit, 0.0)
-    check_log_k_aH(z_exit_suph_e3, 3.0)
-    check_log_k_aH(z_exit_suph_e5, 5.0)
-    check_log_k_aH(z_exit_subh_e3, -3.0)
-    check_log_k_aH(z_exit_subh_e5, -5.0)
+    zero_times = sol.t_events[index_zero_event]
+    if len(zero_times) != 1:
+        raise RuntimeError(
+            f"find_horizon_exit_time: more than one horizon-crossing time returned from integration (num={len(zero_times)})"
+        )
+    event = zero_times[0]
+    payload["z_exit"] = event
+    check_log_k_aH(event, 0.0)
 
-    return {
-        "compute_time": timer.elapsed,
-        "z_exit": z_exit,
-        "z_exit_suph_e3": z_exit_suph_e3,
-        "z_exit_suph_e5": z_exit_suph_e5,
-        "z_exit_subh_e3": z_exit_subh_e3,
-        "z_exit_subh_e5": z_exit_subh_e5,
-    }
+    for i, z_offset in enumerate(subh_efolds):
+        times = sol.t_events[index_subh_trigger_start + i]
+        if len(times) != 1:
+            raise RuntimeError(
+                f"find_horizon_exit_time: more than one horizon-crossing time returned from integration (subhorizon efolds={z_offset}, num={len(times)})"
+            )
+        event = times[0]
+        check_log_k_aH(event, -z_offset)
+        payload[f"z_exit_subh_e{z_offset}"] = event
+
+    for i, z_offset in enumerate(suph_efolds):
+        times = sol.t_events[index_suph_trigger_start + i]
+        if len(times) != 1:
+            raise RuntimeError(
+                f"find_horizon_exit_time: more than one horizon-crossing time returned from integration (superhorizon efolds={z_offset}, num={len(times)})"
+            )
+        event = times[0]
+        check_log_k_aH(event, z_offset)
+        payload[f"z_exit_suph_e{z_offset}"] = event
+
+    return payload

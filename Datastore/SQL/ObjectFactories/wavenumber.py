@@ -2,6 +2,10 @@ import sqlalchemy as sqla
 from sqlalchemy.exc import MultipleResultsFound
 
 from CosmologyConcepts import wavenumber, wavenumber_exit_time
+from CosmologyConcepts.wavenumber import (
+    _WAVENUMBER_EXIT_TIMES_SUPERHORIZON_EFOLDS,
+    _WAVENUMBER_EXIT_TIMES_SUBHORIZON_EFOLDS,
+)
 from Datastore.SQL.ObjectFactories.base import SQLAFactoryBase
 from MetadataConcepts import tolerance
 from Units.base import UnitsLike
@@ -77,43 +81,43 @@ class sqla_wavenumber_exit_time_factory(SQLAFactoryBase):
         # The issue is that this is polymorphic, because we have different implementations of the CosmologyBase concept.
         # Rather than try to deal with this using SQLAlchemy-level polymorphism, we handle the polymorphism ourselves
         # and just skip foreign key constraints here
+        columns = [
+            sqla.Column(
+                "wavenumber_serial",
+                sqla.Integer,
+                sqla.ForeignKey("wavenumber.serial"),
+                index=True,
+                nullable=False,
+            ),
+            sqla.Column("cosmology_type", sqla.Integer, index=True, nullable=False),
+            sqla.Column("cosmology_serial", sqla.Integer, index=True, nullable=False),
+            sqla.Column(
+                "atol_serial",
+                sqla.Integer,
+                sqla.ForeignKey("tolerance.serial"),
+                index=True,
+                nullable=False,
+            ),
+            sqla.Column(
+                "rtol_serial",
+                sqla.Integer,
+                sqla.ForeignKey("tolerance.serial"),
+                index=True,
+                nullable=False,
+            ),
+            sqla.Column("compute_time", sqla.Float(64)),
+            sqla.Column("z_exit", sqla.Float(64)),
+        ]
+        for z_offset in _WAVENUMBER_EXIT_TIMES_SUPERHORIZON_EFOLDS:
+            columns.append(sqla.Column(f"z_exit_suph_e{z_offset}", sqla.Float(64)))
+        for z_offset in _WAVENUMBER_EXIT_TIMES_SUBHORIZON_EFOLDS:
+            columns.append(sqla.Column(f"z_exit_subh_e{z_offset}", sqla.Float(64)))
+
         return {
             "version": True,
             "timestamp": True,
             "stepping": "minimum",
-            "columns": [
-                sqla.Column(
-                    "wavenumber_serial",
-                    sqla.Integer,
-                    sqla.ForeignKey("wavenumber.serial"),
-                    index=True,
-                    nullable=False,
-                ),
-                sqla.Column("cosmology_type", sqla.Integer, index=True, nullable=False),
-                sqla.Column(
-                    "cosmology_serial", sqla.Integer, index=True, nullable=False
-                ),
-                sqla.Column(
-                    "atol_serial",
-                    sqla.Integer,
-                    sqla.ForeignKey("tolerance.serial"),
-                    index=True,
-                    nullable=False,
-                ),
-                sqla.Column(
-                    "rtol_serial",
-                    sqla.Integer,
-                    sqla.ForeignKey("tolerance.serial"),
-                    index=True,
-                    nullable=False,
-                ),
-                sqla.Column("compute_time", sqla.Float(64)),
-                sqla.Column("z_exit", sqla.Float(64)),
-                sqla.Column("z_exit_suph_e3", sqla.Float(64)),
-                sqla.Column("z_exit_suph_e5", sqla.Float(64)),
-                sqla.Column("z_exit_subh_e3", sqla.Float(64)),
-                sqla.Column("z_exit_subh_e5", sqla.Float(64)),
-            ],
+            "columns": columns,
         }
 
     @staticmethod
@@ -134,7 +138,7 @@ class sqla_wavenumber_exit_time_factory(SQLAFactoryBase):
         rtol_table = tables["tolerance"].alias("rtol")
 
         try:
-            row_data = conn.execute(
+            query = (
                 sqla.select(
                     table.c.serial,
                     table.c.stepping,
@@ -144,10 +148,6 @@ class sqla_wavenumber_exit_time_factory(SQLAFactoryBase):
                     atol_table.c.log10_tol.label("log10_atol"),
                     rtol_table.c.log10_tol.label("log10_rtol"),
                     table.c.z_exit,
-                    table.c.z_exit_suph_e3,
-                    table.c.z_exit_suph_e5,
-                    table.c.z_exit_subh_e3,
-                    table.c.z_exit_subh_e5,
                 )
                 .select_from(
                     table.join(
@@ -167,7 +167,13 @@ class sqla_wavenumber_exit_time_factory(SQLAFactoryBase):
                     )
                 )
                 .order_by(atol_table.c.log10_tol.desc(), rtol_table.c.log10_tol.desc())
-            ).one_or_none()
+            )
+            for z_offset in _WAVENUMBER_EXIT_TIMES_SUPERHORIZON_EFOLDS:
+                query = query.add_columns(table.c[f"z_exit_suph_e{z_offset}"])
+            for z_offset in _WAVENUMBER_EXIT_TIMES_SUBHORIZON_EFOLDS:
+                query = query.add_columns(table.c[f"z_exit_subh_e{z_offset}"])
+
+                row_data = conn.execute(query).one_or_none()
         except MultipleResultsFound as e:
             print(
                 f"!! wavenumber_exit_time.build(): multiple results found when querying for wavenumber_exit_time"
@@ -188,26 +194,26 @@ class sqla_wavenumber_exit_time_factory(SQLAFactoryBase):
         compute_time = row_data.compute_time
         stepping = row_data.stepping
 
-        z_exit = row_data.z_exit
-        z_exit_suph_e3 = row_data.z_exit_suph_e3
-        z_exit_suph_e5 = row_data.z_exit_suph_e5
-        z_exit_subh_e3 = row_data.z_exit_subh_e3
-        z_exit_subh_e5 = row_data.z_exit_subh_e5
-
         atol = tolerance(store_id=row_data.atol_serial, log10_tol=row_data.log10_atol)
         rtol = tolerance(store_id=row_data.rtol_serial, log10_tol=row_data.log10_rtol)
 
+        payload = {
+            "store_id": store_id,
+            "z_exit": row_data.z_exit,
+            "compute_time": compute_time,
+            "stepping": stepping,
+        }
+        for z_offset in _WAVENUMBER_EXIT_TIMES_SUPERHORIZON_EFOLDS:
+            payload[f"z_exit_suph_e{z_offset}"] = row_data._mapping[
+                f"z_exit_suph_e{z_offset}"
+            ]
+        for z_offset in _WAVENUMBER_EXIT_TIMES_SUBHORIZON_EFOLDS:
+            payload[f"z_exit_subh_e{z_offset}"] = row_data._mapping[
+                f"z_exit_subh_e{z_offset}"
+            ]
+
         obj = wavenumber_exit_time(
-            payload={
-                "store_id": store_id,
-                "z_exit": z_exit,
-                "z_exit_suph_e3": z_exit_suph_e3,
-                "z_exit_suph_e5": z_exit_suph_e5,
-                "z_exit_subh_e3": z_exit_subh_e3,
-                "z_exit_subh_e5": z_exit_subh_e5,
-                "compute_time": compute_time,
-                "stepping": stepping,
-            },
+            payload=payload,
             k=k,
             cosmology=cosmology,
             atol=atol,
@@ -226,23 +232,26 @@ class sqla_wavenumber_exit_time_factory(SQLAFactoryBase):
         inserters,
     ):
         # now serialize the computed value in the database
-        store_id = inserter(
-            conn,
-            {
-                "stepping": obj.stepping,
-                "wavenumber_serial": obj.k.store_id,
-                "cosmology_type": obj.cosmology.type_id,
-                "cosmology_serial": obj.cosmology.store_id,
-                "atol_serial": obj._atol.store_id,
-                "rtol_serial": obj._rtol.store_id,
-                "compute_time": obj.compute_time,
-                "z_exit": obj.z_exit,
-                "z_exit_suph_e3": obj.z_exit_suph_e3,
-                "z_exit_suph_e5": obj.z_exit_suph_e5,
-                "z_exit_subh_e3": obj.z_exit_subh_e3,
-                "z_exit_subh_e5": obj.z_exit_subh_e5,
-            },
-        )
+        payload = {
+            "stepping": obj.stepping,
+            "wavenumber_serial": obj.k.store_id,
+            "cosmology_type": obj.cosmology.type_id,
+            "cosmology_serial": obj.cosmology.store_id,
+            "atol_serial": obj._atol.store_id,
+            "rtol_serial": obj._rtol.store_id,
+            "compute_time": obj.compute_time,
+            "z_exit": obj.z_exit,
+        }
+        for z_offset in _WAVENUMBER_EXIT_TIMES_SUPERHORIZON_EFOLDS:
+            payload[f"z_exit_suph_e{z_offset}"] = getattr(
+                obj, f"z_exit_suph_e{z_offset}"
+            )
+        for z_offset in _WAVENUMBER_EXIT_TIMES_SUBHORIZON_EFOLDS:
+            payload[f"z_exit_subh_e{z_offset}"] = getattr(
+                obj, f"z_exit_subh_e{z_offset}"
+            )
+
+        store_id = inserter(conn, payload)
 
         # set store_id on behalf of constructed object
         obj._my_id = store_id

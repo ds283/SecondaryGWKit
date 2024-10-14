@@ -271,7 +271,7 @@ with ShardedPool(
     # build a log-spaced universal grid of wavenumbers
 
     universal_z_grid = k_exit_earliest.populate_z_sample(
-        outside_horizon_efolds="suph_e3",
+        outside_horizon_efolds=5,
         samples_per_log10z=samples_per_log10z,
         z_end=zend,
     )
