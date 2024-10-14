@@ -1000,13 +1000,13 @@ with ShardedPool(
                         )
                     expected = len(z_source_pool[z_response.store_id])
                     missing = len(missing_sources)
-                    if missing > 20:
+                    if missing > 15:
                         print("|  ... (more missing redshifts skipped)")
                     print(
                         f"|     total missing = {missing} out of {expected} = {100.0*missing/expected:.2f}%"
                     )
                     raise RuntimeError(
-                        f"GkSource builder: no source data was retrieved for k={k_exit.k.k_inv_Mpc}/Mpc, z_response={z_response.z:.5g}"
+                        f"GkSource builder: missing or incomplete source data for k={k_exit.k.k_inv_Mpc}/Mpc, z_response={z_response.z:.5g}"
                     )
 
                 # note that the payload for each GkSource workload can be quite large, so we do not want to overload the queue
