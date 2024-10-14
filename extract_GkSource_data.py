@@ -96,7 +96,7 @@ with ShardedPool(
     z_array = ray.get(pool.read_redshift_table())
     z_sample = redshift_array(z_array=z_array)
 
-    model = ray.get(
+    model: BackgroundModel = ray.get(
         pool.object_get(
             BackgroundModel,
             solver_labels=[],
@@ -147,35 +147,74 @@ with ShardedPool(
 
         values: List[GkSourceValue] = Gk.values
 
-        def my_fabs(x: Optional[float]):
+        def safe_fabs(x: Optional[float]) -> Optional[float]:
             if x is None:
                 return None
 
             return fabs(x)
 
+        def safe_div(x: Optional[float], y: float) -> Optional[float]:
+            if x is None:
+                return None
+
+            return x / y
+
         abs_G_points = [
-            (value.z_source.z, my_fabs(value.numeric.G)) for value in values
+            (
+                value.z_source.z,
+                safe_div(
+                    safe_fabs(value.numeric.G),
+                    (
+                        (1.0 + value.z_source.z)
+                        # * model.functions.Hubble(value.z_source.z)
+                        # * model.functions.Hubble(value.z_source.z)
+                    ),
+                ),
+            )
+            for value in values
         ]
         abs_G_WKB_points = [
-            (value.z_source.z, my_fabs(value.WKB.G_WKB)) for value in values
+            (
+                value.z_source.z,
+                safe_div(
+                    safe_fabs(value.WKB.G_WKB),
+                    (
+                        (1.0 + value.z_source.z)
+                        # * model.functions.Hubble(value.z_source.z)
+                        # * model.functions.Hubble(value.z_source.z)
+                    ),
+                ),
+            )
+            for value in values
         ]
         abs_analytic_points = [
-            (value.z_source.z, my_fabs(value.analytic_G)) for value in values
+            (
+                value.z_source.z,
+                safe_div(
+                    safe_fabs(value.analytic_G),
+                    (
+                        (1.0 + value.z_source.z)
+                        # * model.functions.Hubble(value.z_source.z)
+                        # * model.functions.Hubble(value.z_source.z)
+                    ),
+                ),
+            )
+            for value in values
         ]
 
         theta_points = [(value.z_source.z, value.WKB.theta) for value in values]
         raw_theta_points = [(value.z_source.z, value.WKB.raw_theta) for value in values]
         abs_theta_points = [
-            (value.z_source.z, my_fabs(value.WKB.theta)) for value in values
+            (value.z_source.z, safe_fabs(value.WKB.theta)) for value in values
         ]
         abs_raw_theta_points = [
-            (value.z_source.z, my_fabs(value.WKB.raw_theta)) for value in values
+            (value.z_source.z, safe_fabs(value.WKB.raw_theta)) for value in values
         ]
         abs_sin_coeff_points = [
-            (value.z_source.z, my_fabs(value.WKB.sin_coeff)) for value in values
+            (value.z_source.z, safe_fabs(value.WKB.sin_coeff)) for value in values
         ]
         abs_cos_coeff_points = [
-            (value.z_source.z, my_fabs(value.WKB.cos_coeff)) for value in values
+            (value.z_source.z, safe_fabs(value.WKB.cos_coeff)) for value in values
         ]
 
         abs_G_x, abs_G_y = zip(*abs_G_points)
@@ -211,7 +250,7 @@ with ShardedPool(
             )
 
             ax.set_xlabel("source redshift $z$")
-            ax.set_ylabel("$G_k(z_{\\text{source}}, z_{\\text{response}})$")
+            ax.set_ylabel("$G_k(z_{\\text{source}}, z_{\\text{response}}) / (1+z')$")
 
             ax.set_xscale("log")
             ax.set_yscale("log")
