@@ -16,11 +16,8 @@ DEFAULT_NOTIFY_TIME_INTERVAL = 5 * 60
 DEFAULT_NOTIFY_MIN_INTERVAL = 30
 
 
-def _default_compute_handler(obj, label=None) -> ObjectRef:
-    if label is not None:
-        return obj.compute(label=label)
-
-    return obj.compute()
+def _default_compute_handler(obj, **kwargs) -> ObjectRef:
+    return obj.compute(**kwargs)
 
 
 def _default_store_handler(obj, pool) -> ObjectRef:
