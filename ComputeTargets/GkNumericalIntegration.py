@@ -205,7 +205,7 @@ def compute_Gk(
     # (see below)
     k_float = k_wavenumber.k
     z_subh_e3 = k.z_exit_subh_e3
-    z_subh_e5 = k.z_exit_subh_e5
+    z_subh_e6 = k.z_exit_subh_e5
 
     z_min = float(z_sample.min)
 
@@ -264,9 +264,9 @@ def compute_Gk(
         initial_state = [0.0, 1.0]
 
         if mode == "stop":
-            # set up an event to terminate the integration when 5 e-folds inside the horizon
+            # set up an event to terminate the integration when 6 e-folds inside the horizon
             def stop_event(z, state, supervisor):
-                return z - z_subh_e5
+                return z - z_subh_e6
 
             # terminate integration when > 5 e-folds inside the horizon
             stop_event.terminal = True
@@ -324,7 +324,7 @@ def compute_Gk(
     stop_Gprime = None
 
     if mode == "stop":
-        payload = search_G_minimum(sol.sol, start_z=z_subh_e3, stop_z=z_subh_e5)
+        payload = search_G_minimum(sol.sol, start_z=z_subh_e3, stop_z=z_subh_e6)
         stop_efolds_subh = k.z_exit - payload["z"]
         stop_G = payload["G"]
         stop_Gprime = payload["Gprime"]

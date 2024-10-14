@@ -63,7 +63,7 @@ class wavenumber_array:
 
 
 _WAVENUMBER_EXIT_TIMES_SUPERHORIZON_EFOLDS = [1, 2, 3, 4, 5]
-_WAVENUMBER_EXIT_TIMES_SUBHORIZON_EFOLDS = [1, 2, 3, 4, 5]
+_WAVENUMBER_EXIT_TIMES_SUBHORIZON_EFOLDS = [1, 2, 3, 4, 5, 6]
 
 
 class wavenumber_exit_time(DatastoreObject):
@@ -375,6 +375,10 @@ def find_horizon_exit_time(
 
     for i, z_offset in enumerate(subh_efolds):
         times = sol.t_events[index_subh_trigger_start + i]
+        if len(times) == 0:
+            raise RuntimeError(
+                f"find_horizon_exit_time: no horizon-crossing time returned from integration (subhorizon efolds={z_offset})"
+            )
         if len(times) != 1:
             raise RuntimeError(
                 f"find_horizon_exit_time: more than one horizon-crossing time returned from integration (subhorizon efolds={z_offset}, num={len(times)})"
@@ -385,6 +389,10 @@ def find_horizon_exit_time(
 
     for i, z_offset in enumerate(suph_efolds):
         times = sol.t_events[index_suph_trigger_start + i]
+        if len(times) == 0:
+            raise RuntimeError(
+                f"find_horizon_exit_time: no horizon-crossing time returned from integration (superhorizon efolds={z_offset})"
+            )
         if len(times) != 1:
             raise RuntimeError(
                 f"find_horizon_exit_time: more than one horizon-crossing time returned from integration (superhorizon efolds={z_offset}, num={len(times)})"
