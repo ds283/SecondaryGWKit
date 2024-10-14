@@ -144,8 +144,8 @@ with ShardedPool(
             return
 
         k_exit: wavenumber_exit_time = Gk._k_exit
-
         values: List[GkSourceValue] = Gk.values
+        base_path = Path(args.output).resolve()
 
         def safe_fabs(x: Optional[float]) -> Optional[float]:
             if x is None:
@@ -259,7 +259,6 @@ with ShardedPool(
             ax.grid(True)
             ax.xaxis.set_inverted(True)
 
-            base_path = Path(args.output).resolve()
             fig_path = (
                 base_path
                 / f"plots/Gk/k-serial={k_exit.store_id}-k={k_exit.k.k_inv_Mpc:.5g}/z-serial={z_response.store_id}-zresponse={z_response.z:.5g}.pdf"
