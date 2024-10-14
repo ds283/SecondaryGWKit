@@ -10,7 +10,7 @@ from ComputeTargets.GkWKBIntegration import GkWKBValue
 from CosmologyConcepts import wavenumber_exit_time, redshift, wavenumber, redshift_array
 from Datastore import DatastoreObject
 from MetadataConcepts import store_tag, tolerance
-from defaults import DEFAULT_ABS_TOLERANCE
+from defaults import DEFAULT_ABS_TOLERANCE, DEFAULT_FLOAT_PRECISION
 from utilities import check_units
 
 _NumericData = namedtuple("NumericData", ["G", "Gprime"])
@@ -62,7 +62,14 @@ def assemble_GkSource_values(
     # track whether we have seen a WKB data point
     # generally, we expect that the WKB region should be continuous; we use this as a validation step to test for
     # possible trouble in the numerical solution
-    seen_WKB = False
+    seen_WKB: bool = False
+
+    # track whether we are in the "primary" contiguous WKB region (the one that extends to lowest redshift)
+    in_primary_WKB_region: Optional[bool] = None
+    primary_WKB_largest_z: Optional[redshift] = None
+
+    # track the latest redshift for which we have numerical information
+    numerical_smallest_z: Optional[redshift] = None
 
     for z_source in reversed(list(z_sample)):
         numeric: GkNumericalValue = numeric_data.get(z_source.store_id, None)
@@ -157,6 +164,8 @@ def assemble_GkSource_values(
                 current_2pi_block_subtraction = theta_div_2pi
                 current_2pi_block = 0
 
+                in_primary_WKB_region = True
+
             else:
                 if current_2pi_block is None:
                     raise RuntimeError(
@@ -194,6 +203,11 @@ def assemble_GkSource_values(
             seen_WKB = True
             theta_last_step = True
             theta_last_z = z_source
+
+            if in_primary_WKB_region and (
+                primary_WKB_largest_z is None or z_source.z > primary_WKB_largest_z.z
+            ):
+                primary_WKB_largest_z = z_source
 
             # check that we are able to build the WKB solution from the data available
             if WKB.omega_WKB_sq is None or WKB.omega_WKB_sq < 0.0:
@@ -243,6 +257,13 @@ def assemble_GkSource_values(
             theta_last_step = False
             theta = None
 
+            if in_primary_WKB_region:
+                in_primary_WKB_region = False
+
+        if numeric is not None:
+            if numerical_smallest_z is None or z_source.z < numerical_smallest_z.z:
+                numerical_smallest_z = z_source
+
         values.append(
             GkSourceValue(
                 None,
@@ -281,7 +302,46 @@ def assemble_GkSource_values(
             )
         )
 
-    return {"values": values}
+    if numerical_smallest_z is None:
+        if primary_WKB_largest_z is None:
+            print(
+                f"!! WARNING (assemble_GkSource_values): for k={k_exit.k.k_inv_Mpc:.5g}/Mpc (store_id={k_exit.store_id})"
+            )
+            print(f"|    -- no numerical region or primary WKB region was detected")
+        elif primary_WKB_largest_z.z < z_sample.max.z - DEFAULT_FLOAT_PRECISION:
+            print(
+                f"!! WARNING (assemble_GkSource_values): for k={k_exit.k.k_inv_Mpc:.5g}/Mpc (store_id={k_exit.store_id})"
+            )
+            print(
+                f"|    -- no numerical values for G_k(z,z') were detected, but largest source redshift in primary WKB region appears to be z_max={primary_WKB_largest_z.z:.5g} (store_id={primary_WKB_largest_z.store_id})"
+            )
+
+    else:
+        if primary_WKB_largest_z is None:
+            if numerical_smallest_z.z > z_sample.min.z + DEFAULT_FLOAT_PRECISION:
+                print(
+                    f"!! WARNING (assemble_GkSource_values): for k={k_exit.k.k_inv_Mpc:.5g}/Mpc (store_id={k_exit.store_id})"
+                )
+                print(
+                    f"|    -- no WKB values for G_k(z,z') were detected, but smallest numerical source redshift appears to be z_max={numerical_smallest_z.z:.5g} (store_id={numerical_smallest_z.store_id})"
+                )
+        else:
+            if (
+                numerical_smallest_z.z
+                > primary_WKB_largest_z.z + DEFAULT_FLOAT_PRECISION
+            ):
+                print(
+                    f"!! WARNING (assemble_GkSource_values): for k={k_exit.k.k_inv_Mpc:.5g}/Mpc (store_id={k_exit.store_id})"
+                )
+                print(
+                    f"|    smallest detected numerical source redshift z_min={numerical_smallest_z.z:.5g} (store_id={numerical_smallest_z.store_id}) is larger than largest dected source redshift in primary WKB region z_max={primary_WKB_largest_z.z:.5g} (store_id={primary_WKB_largest_z.store_id})"
+                )
+
+    return {
+        "values": values,
+        "numerical_smallest_z": numerical_smallest_z,
+        "primary_WKB_largest_z": primary_WKB_largest_z,
+    }
 
 
 class GkSource(DatastoreObject):
@@ -318,9 +378,15 @@ class GkSource(DatastoreObject):
             DatastoreObject.__init__(self, payload["store_id"])
             self._values = payload["values"]
 
+            self._numerical_smallest_z = payload["numerical_smallest_z"]
+            self._primary_WKB_largest_z = payload["primary_WKB_largest_z"]
+
         else:
             DatastoreObject.__init__(self, None)
             self._values = None
+
+            self._numerical_smallest_z = None
+            self._primary_WKB_largest_z = None
 
         if self._z_sample is not None:
             z_response_float = float(z_response)
@@ -358,12 +424,36 @@ class GkSource(DatastoreObject):
         return self._tags
 
     @property
+    def numerical_smallest_z(self) -> Optional[redshift]:
+        if hasattr(self, "_do_not_populate"):
+            raise RuntimeError(
+                "GkSource: numerical_smallest_z read but _do_not_populate is set"
+            )
+
+        if self._values is None:
+            raise RuntimeError("values have not yet been populated")
+
+        return self._numerical_smallest_z
+
+    @property
+    def primary_WKB_largest_z(self) -> Optional[redshift]:
+        if hasattr(self, "_do_not_populate"):
+            raise RuntimeError(
+                "GkSource: primary_WKB_largest_z read but _do_not_populate is set"
+            )
+
+        if self._values is None:
+            raise RuntimeError("values have not yet been populated")
+
+        return self._primary_WKB_largest_z
+
+    @property
     def values(self) -> List:
         if hasattr(self, "_do_not_populate"):
             raise RuntimeError("GkSource: values read but _do_not_populate is set")
 
         if self._values is None:
-            raise RuntimeError("values has not yet been populated")
+            raise RuntimeError("values have not yet been populated")
         return self._values
 
     def compute(self, payload, label: Optional[str] = None):
@@ -409,6 +499,8 @@ class GkSource(DatastoreObject):
         self._compute_ref = None
 
         self._values = payload["values"]
+        self._numerical_smallest_z = payload["numerical_smallest_z"]
+        self._primary_WKB_largest_z = payload["primary_WKB_largest_z"]
 
 
 class GkSourceValue(DatastoreObject):

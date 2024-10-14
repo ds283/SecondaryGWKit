@@ -129,6 +129,20 @@ class sqla_GkSource_factory(SQLAFactoryBase):
                     nullable=False,
                 ),
                 sqla.Column("z_samples", sqla.Integer, nullable=False),
+                sqla.Column(
+                    "numerical_smallest_z_serial",
+                    sqla.Integer,
+                    sqla.ForeignKey("redshift.serial"),
+                    index=True,
+                    nullable=True,
+                ),
+                sqla.Column(
+                    "primary_WKB_largest_z_serial",
+                    sqla.Integer,
+                    sqla.ForeignKey("redshift.serial"),
+                    index=True,
+                    nullable=True,
+                ),
                 sqla.Column("validated", sqla.Boolean, default=False, nullable=False),
             ],
         }
@@ -153,6 +167,9 @@ class sqla_GkSource_factory(SQLAFactoryBase):
         tag_table = tables["GkSource_tags"]
         redshift_table = tables["redshift"]
 
+        smallest_numerical_z_table = redshift_table.alias("smallest_numerical")
+        largest_WKB_z_table = redshift_table.alias("largest_WKB")
+
         # notice that we query only for validated data
         query = (
             sqla.select(
@@ -163,12 +180,26 @@ class sqla_GkSource_factory(SQLAFactoryBase):
                 table.c.z_samples,
                 atol_table.c.log10_tol.label("log10_atol"),
                 rtol_table.c.log10_tol.label("log10_rtol"),
+                table.c.numerical_smallest_z_serial,
+                smallest_numerical_z_table.c.z.label("numerical_smallest_z"),
+                table.c.primary_WKB_largest_z_serial,
+                largest_WKB_z_table.c.z.label("primary_WKB_largest_z"),
             )
             .select_from(
                 table.join(atol_table, atol_table.c.serial == table.c.atol_serial)
                 .join(rtol_table, rtol_table.c.serial == table.c.rtol_serial)
                 .join(
                     redshift_table, redshift_table.c.serial == table.c.z_response_serial
+                )
+                .outerjoin(
+                    smallest_numerical_z_table,
+                    smallest_numerical_z_table.c.serial
+                    == table.c.numerical_smallest_z_serial,
+                )
+                .outerjoin(
+                    largest_WKB_z_table,
+                    largest_WKB_z_table.c.serial
+                    == table.c.primary_WKB_largest_z_serial,
                 )
             )
             .filter(
@@ -223,6 +254,20 @@ class sqla_GkSource_factory(SQLAFactoryBase):
 
         store_id = row_data.serial
         store_label = row_data.label
+
+        numerical_smallest_z = None
+        if row_data.numerical_smallest_z_serial is not None:
+            numerical_smallest_z = redshift(
+                store_id=row_data.numerical_smallest_z_serial,
+                z=row_data.numerical_smallest_z,
+            )
+
+        primary_WKB_largest_z = None
+        if row_data.primary_WKB_largest_z_serial is not None:
+            primary_WKB_largest_z = redshift(
+                store_id=row_data.primary_WKB_largest_z_serial,
+                z=row_data.primary_WKB_largest_z,
+            )
 
         num_expected_samples = row_data.z_samples
 
@@ -309,6 +354,8 @@ class sqla_GkSource_factory(SQLAFactoryBase):
             payload={
                 "store_id": store_id,
                 "values": values,
+                "numerical_smallest_z": numerical_smallest_z,
+                "primary_WKB_largest_z": primary_WKB_largest_z,
             },
             k=k_exit,
             model=model,
@@ -343,6 +390,16 @@ class sqla_GkSource_factory(SQLAFactoryBase):
                 "z_response_serial": obj.z_response.store_id,
                 "z_max_serial": obj.z_sample.max.store_id,
                 "z_samples": len(obj.values),
+                "numerical_smallest_z_serial": (
+                    obj.numerical_smallest_z.store_id
+                    if obj.numerical_smallest_z is not None
+                    else None
+                ),
+                "primary_WKB_largest_z_serial": (
+                    obj.primary_WKB_largest_z.store_id
+                    if obj.primary_WKB_largest_z is not None
+                    else None
+                ),
                 "validated": False,
             },
         )
