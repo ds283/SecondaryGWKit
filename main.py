@@ -25,6 +25,7 @@ from CosmologyConcepts import (
     redshift_array,
 )
 from CosmologyModels.LambdaCDM import Planck2018
+from Datastore.SQL.ProfileAgent import ProfileAgent
 from Datastore.SQL.ShardedPool import ShardedPool
 from RayWorkPool import RayWorkPool
 from Units import Mpc_units
@@ -138,20 +139,32 @@ if args.database is None:
 # connect to ray cluster on supplied address; defaults to 'auto' meaning a locally running cluster
 ray.init(address=args.ray_address)
 
-# instantiate a Datastore actor: this runs on its own node, and acts as a broker between
-# ourselves and the dataabase.
-# For performance reasons, we want all database activity to run on this node.
-# For one thing, this lets us use transactions efficiently.
+VERSION_LABEL = "2024.1.1"
+
 allowed_drop_actions = ["numerical", "wkb", "source"]
 specified_drop_actions = [x.lower() for x in args.drop]
 drop_actions = [x for x in specified_drop_actions if x in allowed_drop_actions]
 
+profile_agent = None
+if args.profile_db is not None:
+    if args.job_name is not None:
+        label = f'{VERSION_LABEL}-jobname-"{args.job_name}"-primarydb-"{args.database}"-shards-{args.shards}-{datetime.now().replace(microsecond=0).isoformat()}'
+    else:
+        label = f'{VERSION_LABEL}-primarydb-"{args.database}"-shards-{args.shards}-{datetime.now().replace(microsecond=0).isoformat()}'
+
+    profile_agent = ProfileAgent.options(name="ProfileAgent").remote(
+        db_name=args.profile_db,
+        timeout=args.db_timeout,
+        label=label,
+    )
+
+# establish a ShardedPool to orchestrate database access
 with ShardedPool(
-    version_label="2024.1.1",
+    version_label=VERSION_LABEL,
     db_name=args.database,
     timeout=args.db_timeout,
     shards=args.shards,
-    profile_db=args.profile_db,
+    profile_agent=profile_agent,
     job_name=args.job_name,
     prune_unvalidated=args.prune_unvalidated,
     drop_actions=drop_actions,
@@ -339,6 +352,9 @@ with ShardedPool(
     def build_Tk_work_label(Tk: TkNumericalIntegration):
         return f"{args.job_name}-Tk-k{Tk.k.k_inv_Mpc:.3g}-{datetime.now().replace(microsecond=0).isoformat()}"
 
+    def compute_Tk_work(Tk: TkNumericalIntegration, label: Optional[str] = None):
+        return Tk.compute(label=label)
+
     def validate_Tk_work(Tk: TkNumericalIntegration):
         return pool.object_validate(Tk)
 
@@ -368,6 +384,9 @@ with ShardedPool(
             ],
         )
 
+    def compute_tensor_source_work(calc: TensorSource, label: Optional[str] = None):
+        return calc.compute(label=label)
+
     def validate_tensor_source_work(calc: TensorSource):
         return pool.object_validate(calc)
 
@@ -381,6 +400,7 @@ with ShardedPool(
             pool,
             k_exit_times,
             task_builder=build_Tk_work,
+            compute_handler=compute_Tk_work,
             validation_handler=validate_Tk_work,
             post_handler=post_Tk_work,
             label_builder=build_Tk_work_label,
@@ -508,6 +528,11 @@ with ShardedPool(
 
     def build_Gk_numerical_work_label(Gk: GkNumericalIntegration):
         return f"{args.job_name}-GkNumerical-k{Gk.k.k_inv_Mpc:.3g}-sourcez{Gk.z_source.z:.5g}-{datetime.now().replace(microsecond=0).isoformat()}"
+
+    def compute_Gk_numerical_work(
+        Gk: GkNumericalIntegration, label: Optional[str] = None
+    ):
+        return Gk.compute(label=label)
 
     def validate_Gk_numerical_work(Gk: GkNumericalIntegration):
         return pool.object_validate(Gk)
@@ -738,6 +763,9 @@ with ShardedPool(
     def build_Gk_WKB_work_label(Gk: GkWKBIntegration):
         return f"{args.job_name}-GkWKB-k{Gk.k.k_inv_Mpc:.3g}-sourcez{Gk.z_source.z:.5g}-zinit{Gk.z_init:.5g}-{datetime.now().replace(microsecond=0).isoformat()}"
 
+    def compute_Gk_WKB_work(Gk: GkWKBIntegration, label: Optional[str] = None):
+        return Gk.compute(label=label)
+
     def validate_Gk_WKB_work(Gk: GkWKBIntegration):
         return pool.object_validate(Gk)
 
@@ -748,6 +776,7 @@ with ShardedPool(
             pool,
             GkWKB_work_batches,
             task_builder=build_Gk_WKB_work,
+            compute_handler=compute_Gk_WKB_work,
             validation_handler=validate_Gk_WKB_work,
             label_builder=build_Gk_WKB_work_label,
             title="CALCULATE WKB PART OF TENSOR GREEN FUNCTIONS",
@@ -975,7 +1004,7 @@ with ShardedPool(
         return f"{args.job_name}-GkSource-k{Gk.k.k_inv_Mpc:.3g}-responsez{Gk.z_response.z:.5g}-{datetime.now().replace(microsecond=0).isoformat()}"
 
     def compute_GkSource_work(Gk: GkSource, payload, label: Optional[str] = None):
-        return Gk.compute(payload, label)
+        return Gk.compute(payload=payload, label=label)
 
     def validate_GkSource_work(Gk: GkSource):
         return pool.object_validate(Gk)

@@ -1,5 +1,4 @@
 import random
-from datetime import datetime
 from pathlib import Path
 from typing import Optional, List
 
@@ -53,7 +52,7 @@ class ShardedPool:
         db_name: PathType,
         timeout=None,
         shards=10,
-        profile_db: Optional[PathType] = None,
+        profile_agent: Optional[ProfileAgent] = None,
         job_name: Optional[str] = None,
         prune_unvalidated: Optional[bool] = False,
         drop_actions: Optional[List[str]] = None,
@@ -82,19 +81,7 @@ class ShardedPool:
             name="SerialPoolBroker"
         )
 
-        if profile_db is not None:
-            if self._job_name is not None:
-                label = f'{self._version_label}-jobname-"{self._job_name}"-primarydb-"{str(db_name)}"-shards-{str(shards)}-{datetime.now().replace(microsecond=0).isoformat()}'
-            else:
-                label = f'{self._version_label}-primarydb-"{str(db_name)}"-shards-{str(shards)}-{datetime.now().replace(microsecond=0).isoformat()}'
-
-            self._profile_agent = ProfileAgent.options(name="ProfileAgent").remote(
-                db_name=profile_db,
-                timeout=self._timeout,
-                label=label,
-            )
-        else:
-            self._profile_agent = None
+        self._profile_agent = profile_agent
 
         # if primary file is absent, all shard databases should be likewise absent
         if self._primary_file.is_dir():
