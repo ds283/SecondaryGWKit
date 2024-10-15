@@ -14,7 +14,7 @@ class IntegrationSupervisor:
         self._min_RHS_time: float = None
         self._max_RHS_time: float = None
 
-        self._num_notifications = 0
+        self._num_notifications: int = 0
 
     def __enter__(self):
         self._start_time = time.time()

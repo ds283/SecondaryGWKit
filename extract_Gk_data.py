@@ -165,7 +165,7 @@ with ShardedPool(
             ("unresolved_z", pa.float64()),
             ("unresolved_efolds_subh", pa.float64()),
             ("init_efolds_suph", pa.float64()),
-            ("stop_efolds_subh", pa.float64()),
+            ("stop_deltaz_subh", pa.float64()),
             ("stop_G", pa.float64()),
             ("stop_Gprime", pa.float64()),
         ]
@@ -231,7 +231,7 @@ with ShardedPool(
                     "unresolved_z": Gk.unresolved_z,
                     "unresolved_efolds_subh": Gk.unresolved_efolds_subh,
                     "init_efolds_suph": Gk.init_efolds_suph,
-                    "stop_efolds_subh": Gk.stop_efolds_subh,
+                    "stop_deltaz_subh": Gk.stop_deltaz_subh,
                     "stop_G": Gk.stop_G,
                     "stop_Gprime": Gk.stop_Gprime,
                 }

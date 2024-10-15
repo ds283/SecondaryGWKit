@@ -23,7 +23,7 @@ from defaults import (
     DEFAULT_REL_TOLERANCE,
     DEFAULT_FLOAT_PRECISION,
 )
-from utilities import check_units, format_time
+from utilities import check_units, format_time, IntegrationData
 
 # RHS of ODE system
 #
@@ -194,7 +194,7 @@ def compute_Gk(
     rtol: float = DEFAULT_REL_TOLERANCE,
     delta_logz: Optional[float] = None,
     mode: str = None,
-    stop_search_window_z_start: Optional[float] = None,
+    stop_search_window_z_begin: Optional[float] = None,
     stop_search_window_z_end: Optional[float] = None,
 ) -> dict:
     k_wavenumber: wavenumber = k.k
@@ -205,35 +205,36 @@ def compute_Gk(
         raise ValueError(f'compute_Gk: unknown compute mode "{mode}"')
 
     if mode in ["stop"]:
-        if stop_search_window_z_start is None:
+        if stop_search_window_z_begin is None:
             raise ValueError(
-                "compute_Gk: in 'stop' mode, stop_search_window_z_start must be specified"
+                "compute_Gk: in 'stop' mode, stop_search_window_z_begin must be specified"
             )
         if stop_search_window_z_end is None:
             raise ValueError(
                 "compute_Gk: in 'stop' mode, stop_search_window_z_end must be specified"
             )
 
-        if stop_search_window_z_start < stop_search_window_z_end:
-            stop_search_window_z_start, stop_search_window_z_end = (
+        if stop_search_window_z_begin < stop_search_window_z_end:
+            stop_search_window_z_begin, stop_search_window_z_end = (
                 stop_search_window_z_end,
-                stop_search_window_z_start,
+                stop_search_window_z_begin,
             )
             print(
-                f"## compute_Gk: stop search window start and end arguments in the wrong order. Now searching in interval: z in ({stop_search_window_z_start}, {stop_search_window_z_end})"
+                f"## compute_Gk: stop search window start and end arguments in the wrong order (for k={k.k.k_inv_Mpc:.5g}/Mpc). Now searching in interval: z in ({stop_search_window_z_begin}, {stop_search_window_z_end})"
             )
 
-        if stop_search_window_z_start > z_sample.max.z:
+        max_z = z_sample.max.z
+        min_z = z_sample.min.z
+        if stop_search_window_z_begin > max_z:
             raise ValueError(
-                "compute_Gk: specified 'stop' window starting redshift exceeds highest z-response sample point"
+                f"compute_Gk: (for k={k.k.k_inv_Mpc:.5g}/Mpc) specified 'stop' window starting redshift z={stop_search_window_z_begin:.5g} exceeds highest z-response sample point z={max_z:.5g}"
             )
-        if stop_search_window_z_end < z_sample.min.z:
-            raise ValueError(
-                "compute_Gk: specified 'stop' window ending redshift is smaller than lowest z-response sample point"
+        if stop_search_window_z_end < min_z:
+            raise (
+                f"## compute_Gk: (for k={k.k.k_inv_Mpc:.5g}/Mpc) specified 'stop' window ending redshift z={stop_search_window_z_end:.5g} is smaller than lowest z-response sample point z={min_z:.5g}. Search will terminate at z={min_z:.5g}."
             )
 
     # obtain dimensionful value of wavenumber; this should be measured in the same units used by the cosmology
-    # (see below)
     k_float = k_wavenumber.k
 
     z_min = float(z_sample.min)
@@ -274,10 +275,10 @@ def compute_Gk(
             # spacing
             # If the grid spacing is smaller than the oscillation wavelength, then
             # evidently we cannot resolve the oscillations
-            omega_eff_sq = WKB_omegaEff_sq(model, k_float, z)
+            omega_WKB_sq = WKB_omegaEff_sq(model, k_float, z)
 
-            if omega_eff_sq > 0.0:
-                wavelength = 2.0 * pi / sqrt(omega_eff_sq)
+            if omega_WKB_sq > 0.0:
+                wavelength = 2.0 * pi / sqrt(omega_WKB_sq)
                 supervisor.report_wavelength(z, wavelength, log((1.0 + z) * k_over_H))
 
         return [dG_dz, dGprime_dz]
@@ -348,15 +349,15 @@ def compute_Gk(
                 f"compute_Gk: solve_ivp returned {returned_values} samples, but expected {expected_values}"
             )
 
-    stop_efolds_subh = None
+    stop_deltaz_subh = None
     stop_G = None
     stop_Gprime = None
 
     if mode == "stop":
         payload = search_G_minimum(
-            sol.sol, start_z=stop_search_window_z_start, stop_z=stop_search_window_z_end
+            sol.sol, start_z=stop_search_window_z_begin, stop_z=stop_search_window_z_end
         )
-        stop_efolds_subh = k.z_exit - payload["z"]
+        stop_deltaz_subh = k.z_exit - payload["z"]
         stop_G = payload["G"]
         stop_Gprime = payload["Gprime"]
 
@@ -370,19 +371,21 @@ def compute_Gk(
             )
 
     return {
-        "compute_time": supervisor.integration_time,
-        "compute_steps": int(sol.nfev),
-        "RHS_evaluations": supervisor.RHS_evaluations,
-        "mean_RHS_time": supervisor.mean_RHS_time,
-        "max_RHS_time": supervisor.max_RHS_time,
-        "min_RHS_time": supervisor.min_RHS_time,
+        "data": IntegrationData(
+            compute_time=supervisor.integration_time,
+            compute_steps=int(sol.nfev),
+            RHS_evaluations=supervisor.RHS_evaluations,
+            mean_RHS_time=supervisor.mean_RHS_time,
+            max_RHS_time=supervisor.max_RHS_time,
+            min_RHS_time=supervisor.min_RHS_time,
+        ),
         "G_sample": sampled_G,
         "Gprime_sample": sampled_Gprime,
         "solver_label": "solve_ivp+RK45-stepping0",
         "has_unresolved_osc": supervisor.has_unresolved_osc,
         "unresolved_z": supervisor.unresolved_z,
         "unresolved_efolds_subh": supervisor.unresolved_efolds_subh,
-        "stop_efolds_subh": stop_efolds_subh,
+        "stop_deltaz_subh": stop_deltaz_subh,
         "stop_G": stop_G,
         "stop_Gprime": stop_Gprime,
     }
@@ -432,6 +435,7 @@ class GkNumericalIntegration(DatastoreObject):
         self._z_sample = z_sample
         if payload is None:
             DatastoreObject.__init__(self, None)
+            self._data = None
             self._compute_time = None
             self._compute_steps = None
             self._RHS_evaluations = None
@@ -444,7 +448,7 @@ class GkNumericalIntegration(DatastoreObject):
             self._unresolved_efolds_subh = None
 
             self._init_efolds_suph = None
-            self._stop_efolds_subh = None
+            self._stop_deltaz_subh = None
             self._stop_G = None
             self._stop_Gprime = None
 
@@ -453,19 +457,14 @@ class GkNumericalIntegration(DatastoreObject):
             self._values = None
         else:
             DatastoreObject.__init__(self, payload["store_id"])
-            self._compute_time = payload["compute_time"]
-            self._compute_steps = payload["compute_steps"]
-            self._RHS_evaluations = payload["RHS_evaluations"]
-            self._mean_RHS_time = payload["mean_RHS_time"]
-            self._max_RHS_time = payload["max_RHS_time"]
-            self._min_RHS_time = payload["min_RHS_time"]
+            self._data = payload["data"]
 
             self._has_unresolved_osc = payload["has_unresolved_osc"]
             self._unresolved_z = payload["unresolved_z"]
             self._unresolved_efolds_subh = payload["unresolved_efolds_subh"]
 
             self._init_efolds_suph = payload["init_efolds_suph"]
-            self._stop_efolds_subh = payload["stop_efolds_subh"]
+            self._stop_deltaz_subh = payload["stop_deltaz_subh"]
             self._stop_G = payload["stop_G"]
             self._stop_Gprime = payload["stop_Gprime"]
 
@@ -526,40 +525,11 @@ class GkNumericalIntegration(DatastoreObject):
         return self._z_sample
 
     @property
-    def compute_time(self) -> float:
-        if self._compute_time is None:
-            raise RuntimeError("compute_time has not yet been populated")
-        return self._compute_time
+    def data(self) -> IntegrationData:
+        if self.values is None:
+            raise RuntimeError("values have not yet been populated")
 
-    @property
-    def compute_steps(self) -> int:
-        if self._compute_steps is None:
-            raise RuntimeError("compute_steps has not yet been populated")
-        return self._compute_steps
-
-    @property
-    def mean_RHS_time(self) -> int:
-        if self._mean_RHS_time is None:
-            raise RuntimeError("mean_RHS_time has not yet been populated")
-        return self._mean_RHS_time
-
-    @property
-    def max_RHS_time(self) -> int:
-        if self._max_RHS_time is None:
-            raise RuntimeError("max_RHS_time has not yet been populated")
-        return self._max_RHS_time
-
-    @property
-    def min_RHS_time(self) -> int:
-        if self._min_RHS_time is None:
-            raise RuntimeError("min_RHS_time has not yet been populated")
-        return self._min_RHS_time
-
-    @property
-    def RHS_evaluations(self) -> int:
-        if self._RHS_evaluations is None:
-            raise RuntimeError("RHS_evaluations has not yet been populated")
-        return self._RHS_evaluations
+        return self._data
 
     @property
     def has_unresolved_osc(self) -> bool:
@@ -589,11 +559,11 @@ class GkNumericalIntegration(DatastoreObject):
         return self._init_efolds_suph
 
     @property
-    def stop_efolds_subh(self) -> float:
-        if self._stop_efolds_subh is None:
-            raise RuntimeError("stop_efolds_subh has not yet been populated")
+    def stop_deltaz_subh(self) -> float:
+        if self._stop_deltaz_subh is None:
+            raise RuntimeError("stop_deltaz_subh has not yet been populated")
 
-        return self._stop_efolds_subh
+        return self._stop_deltaz_subh
 
     @property
     def stop_G(self) -> float:
@@ -654,10 +624,10 @@ class GkNumericalIntegration(DatastoreObject):
         payload = {}
         if self._mode in ["stop"]:
             payload["mode"] = self._mode
-            payload["stop_search_window_z_start"] = getattr(
+            payload["stop_search_window_z_begin"] = getattr(
                 self._k_exit, self._stop_search_window_start_attr
             )
-            payload["stop_search_window_z_stop"] = getattr(
+            payload["stop_search_window_z_end"] = getattr(
                 self._k_exit, self._stop_search_window_end_attr
             )
 
@@ -690,18 +660,13 @@ class GkNumericalIntegration(DatastoreObject):
         data = ray.get(self._compute_ref)
         self._compute_ref = None
 
-        self._compute_time = data["compute_time"]
-        self._compute_steps = data["compute_steps"]
-        self._RHS_evaluations = data["RHS_evaluations"]
-        self._mean_RHS_time = data["mean_RHS_time"]
-        self._max_RHS_time = data["max_RHS_time"]
-        self._min_RHS_time = data["min_RHS_time"]
+        self._data = data["data"]
 
         self._has_unresolved_osc = data["has_unresolved_osc"]
         self._unresolved_z = data["unresolved_z"]
         self._unresolved_efolds_subh = data["unresolved_efolds_subh"]
 
-        self._stop_efolds_subh = data.get("stop_efolds_subh", None)
+        self._stop_deltaz_subh = data.get("stop_deltaz_subh", None)
         self._stop_G = data.get("stop_G", None)
         self._stop_Gprime = data.get("stop_Gprime", None)
 

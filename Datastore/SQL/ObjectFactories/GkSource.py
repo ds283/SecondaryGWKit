@@ -286,8 +286,9 @@ class sqla_GkSource_factory(SQLAFactoryBase):
                     value_table.c.G,
                     value_table.c.Gprime,
                     value_table.c.H_ratio,
-                    value_table.c.theta,
-                    value_table.c.raw_theta,
+                    value_table.c.theta_mod_2pi,
+                    value_table.c.theta_div_2pi,
+                    value_table.c.raw_theta_div_2pi,
                     value_table.c.G_WKB,
                     value_table.c.new_G_WKB,
                     value_table.c.abs_G_WKB_err,
@@ -321,8 +322,9 @@ class sqla_GkSource_factory(SQLAFactoryBase):
                         G=row.G,
                         Gprime=row.Gprime,
                         H_ratio=row.H_ratio,
-                        theta=row.theta,
-                        raw_theta=row.raw_theta,
+                        theta_mod_2pi=row.theta_mod_2pi,
+                        theta_div_2pi=row.theta_div_2pi,
+                        raw_theta_div_2pi=row.raw_theta_div_2pi,
                         sin_coeff=row.sin_coeff,
                         cos_coeff=row.cos_coeff,
                         G_WKB=row.G_WKB,
@@ -424,8 +426,9 @@ class sqla_GkSource_factory(SQLAFactoryBase):
                     "G": value._numeric_data.G,
                     "Gprime": value._numeric_data.Gprime,
                     "H_ratio": value._WKB_data.H_ratio,
-                    "theta": value._WKB_data.theta,
-                    "raw_theta": value._WKB_data.raw_theta,
+                    "theta_mod_2pi": value._WKB_data.theta_mod_2pi,
+                    "theta_div_2pi": value._WKB_data.theta_div_2pi,
+                    "raw_theta_mod_2pi": value._WKB_data.raw_theta_mod_2pi,
                     "G_WKB": value._WKB_data.G_WKB,
                     "new_G_WKB": value._WKB_data.new_G_WKB,
                     "abs_G_WKB_err": value._WKB_data.abs_G_WKB_err,
@@ -607,8 +610,9 @@ class sqla_GkSourceValue_factory(SQLAFactoryBase):
                 sqla.Column("G", sqla.Float(64), nullable=True),
                 sqla.Column("Gprime", sqla.Float(64), nullable=True),
                 sqla.Column("H_ratio", sqla.Float(64), nullable=True),
-                sqla.Column("theta", sqla.Float(64), nullable=True),
-                sqla.Column("raw_theta", sqla.Float(64), nullable=True),
+                sqla.Column("theta_mod_2pi", sqla.Float(64), nullable=True),
+                sqla.Column("theta_div_2pi", sqla.Integer, nullable=False),
+                sqla.Column("raw_theta_div_2pi", sqla.Integer, nullable=True),
                 sqla.Column("G_WKB", sqla.Float(64), nullable=True),
                 sqla.Column("new_G_WKB", sqla.Float(64), nullable=True),
                 sqla.Column("abs_G_WKB_err", sqla.Float(64), nullable=True),
@@ -662,8 +666,9 @@ class sqla_GkSourceValue_factory(SQLAFactoryBase):
         Gprime = payload.get("Gprime", None)
 
         H_ratio = payload.get("H_ratio", None)
-        theta = payload.get("theta", None)
-        raw_theta = payload.get("raw_theta", None)
+        theta_mod_2pi = payload.get("theta_mod_2pi", None)
+        theta_div_2pi = payload.get("theta_div_2pi", None)
+        raw_theta_div_2pi = payload.get("raw_theta_div_2pi", None)
 
         G_WKB = payload.get("G_WKB", None)
         new_G_WKB = payload.get("new_G_WKB", None)
@@ -683,7 +688,9 @@ class sqla_GkSourceValue_factory(SQLAFactoryBase):
             [
                 G_WKB is not None,
                 H_ratio is not None,
-                theta is not None,
+                theta_mod_2pi is not None,
+                theta_div_2pi is not None,
+                raw_theta_div_2pi is not None,
                 omega_WKB_sq is not None,
             ]
         )
@@ -695,8 +702,9 @@ class sqla_GkSourceValue_factory(SQLAFactoryBase):
                     table.c.G,
                     table.c.Gprime,
                     table.c.H_ratio,
-                    table.c.theta,
-                    table.c.raw_theta,
+                    table.c.theta_mod_2pi,
+                    table.c.theta_div_2pi,
+                    table.c.raw_theta_div_2pi,
                     table.c.G_WKB,
                     table.c.new_G_WKB,
                     table.c.abs_G_WKB_err,
@@ -732,8 +740,9 @@ class sqla_GkSourceValue_factory(SQLAFactoryBase):
                     "G": G,
                     "Gprime": Gprime,
                     "H_ratio": H_ratio,
-                    "theta": theta,
-                    "raw_theta": raw_theta,
+                    "theta_mod_2pi": theta_mod_2pi,
+                    "theta_div_2pi": theta_div_2pi,
+                    "raw_theta_div_2pi": raw_theta_div_2pi,
                     "G_WKB": G_WKB,
                     "new_G_WKB": new_G_WKB,
                     "abs_G_WKB_err": abs_G_WKB_err,
@@ -755,8 +764,9 @@ class sqla_GkSourceValue_factory(SQLAFactoryBase):
             Gprime = row_data.Gprime
 
             H_ratio = row_data.H_ratio
-            theta = row_data.theta
-            raw_theta = row_data.raw_theta
+            theta_mod_2pi = row_data.theta_mod_2pi
+            theta_div_2pi = row_data.theta_div_2pi
+            raw_theta_div_2pi = row_data.raw_theta_div_2pi
 
             G_WKB = row_data.G_WKB
             new_G_WKB = row_data.new_G_WKB
@@ -779,8 +789,9 @@ class sqla_GkSourceValue_factory(SQLAFactoryBase):
             G=G,
             Gprime=Gprime,
             H_ratio=H_ratio,
-            theta=theta,
-            raw_theta=raw_theta,
+            theta_mod_2pi=theta_mod_2pi,
+            theta_div_2pi=theta_div_2pi,
+            raw_theta_div_2pi=raw_theta_div_2pi,
             G_WKB=G_WKB,
             new_G_WKB=new_G_WKB,
             abs_G_WKB_err=abs_G_WKB_err,
@@ -853,8 +864,9 @@ class sqla_GkSourceValue_factory(SQLAFactoryBase):
                     table.c.G,
                     table.c.Gprime,
                     table.c.H_ratio,
-                    table.c.theta,
-                    table.c.raw_theta,
+                    table.c.theta_mod_2pi,
+                    table.c.theta_div_2pi,
+                    table.c.raw_theta_div_2pi,
                     table.c.G_WKB,
                     table.c.new_G_WKB,
                     table.c.abs_G_WKB_err,
@@ -892,8 +904,9 @@ class sqla_GkSourceValue_factory(SQLAFactoryBase):
             G=row_data.G,
             Gprime=row_data.Gprime,
             H_ratio=row_data.H_ratio,
-            theta=row_data.theta,
-            raw_theta=row_data.raw_theta,
+            theta_mod_2pi=row_data.theta_mod_2pi,
+            theta_div_2pi=row_data.theta_div_2pi,
+            raw_theta_div_2pi=row_data.raw_theta_div_2pi,
             G_WKB=row_data.G_WKB,
             new_G_WKB=row_data.new_G_WKB,
             abs_G_WKB_err=row_data.abs_G_WKB_err,

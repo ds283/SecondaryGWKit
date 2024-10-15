@@ -2,7 +2,7 @@ from collections import namedtuple
 from typing import Optional, List
 
 import ray
-from math import fabs, pi, fmod, sqrt, cos, sin, floor
+from math import fabs, pi, sqrt, cos, sin
 
 from ComputeTargets.BackgroundModel import BackgroundModel
 from ComputeTargets.GkNumericalIntegration import GkNumericalValue
@@ -17,8 +17,9 @@ _NumericData = namedtuple("NumericData", ["G", "Gprime"])
 _WKBData = namedtuple(
     "WKBData",
     [
-        "theta",
-        "raw_theta",
+        "theta_mod_2pi",
+        "theta_div_2pi",
+        "raw_theta_div_2pi",
         "H_ratio",
         "sin_coeff",
         "cos_coeff",
@@ -34,10 +35,6 @@ _two_pi = 2.0 * pi
 DEFAULT_G_WKB_DIFF_REL_TOLERANCE = 1e-2
 DEFAULT_G_WKB_DIFF_ABS_TOLERANCE = 1e-3
 
-# default tolerance for phase jitter, before we conclude that we have gone though a full 2pi in splicing together
-# discontinuities in the phase, is 3% of 2pi
-DEFAULT_PHASE_JITTER_TOLERANCE = 0.05 * _two_pi
-
 
 @ray.remote
 def assemble_GkSource_values(
@@ -52,12 +49,12 @@ def assemble_GkSource_values(
     # work through the z_sample array, and check whether there is any numeric or WKB data for each sample point.
     # We do this in reverse order (from low to high redshift). This is done so that we can try to smooth the phase function.
     # It will have step-like discontinuities due to the way we calculate it.
-    theta_last_step = None
-    theta_last_z = None
-    current_2pi_block = None
+    had_theta_last_step: Optional[float] = None
+    last_z_for_theta: Optional[redshift] = None
+    rectified_theta_div_2pi: Optional[int] = None
 
-    last_theta_mod_2pi = None
-    last_theta_div_2pi = None
+    last_theta_mod_2pi: Optional[float] = None
+    last_theta_div_2pi: Optional[float] = None
 
     # track whether we have seen a WKB data point
     # generally, we expect that the WKB region should be continuous; we use this as a validation step to test for
@@ -105,36 +102,28 @@ def assemble_GkSource_values(
                 f"|  -- z_e3={k_exit.z_exit_subh_e3:.5g}, z_source={z_source.z:.5g} (store_id={z_source.store_id})), z_response={z_response.z:.5g} (store_id={z_response.store_id})"
             )
 
-        raw_theta = WKB.theta if WKB is not None else None
-        abs_err = None
-        rel_err = None
-        new_G_WKB = None
+        theta_div_2pi: Optional[int] = WKB.theta_div_2pi if WKB is not None else None
+        theta_mod_2pi: Optional[float] = WKB.theta_mod_2pi if WKB is not None else None
+        abs_err: Optional[float] = None
+        rel_err: Optional[float] = None
+        new_G_WKB: Optional[float] = None
 
         # We need to adjust theta to produce a smooth, monotonic function of redshift.
         # The Levin quadrature method relies on representing the oscillations of G_k(z, z') using a smooth function.
         # With our current way of calculating theta, we expect it to be an increasing function of redshift.
         # It is increasingly *negative* at large z.
 
-        # The main idea is to keep track of the curent value of theta div 2pi and theta mod 2pi.
-        # If the next value of theta mod 2pi is larger than the current one (bearing in mind we take
-        # theta mod 2pi to be negative) then we must have moved into the next block.
-        # This way we only ever deal with the value of theta mod 2pi from the computed solution.
-        # We lay out the values of theta div 2pi in such a way that the phase is smooth and monotone.
-        if raw_theta is not None:
-            theta_mod_2pi = fmod(raw_theta, _two_pi)
-            theta_div_2pi = int(floor(fabs(raw_theta) / _two_pi))
-            if raw_theta < 0.0:
-                theta_div_2pi = -theta_div_2pi
+        # The main idea is to keep track of the current value of theta div 2pi and theta mod 2pi.
+        # If the next value of theta mod 2pi is less negative than the current one (bearing in mind we take
+        # theta mod 2pi to be negative) then there is a possibility that we have moved into the next block.
+        # Mathematically this is what should happen, because theta_WKB should be a monotone increasing
+        # function. But in practice, if the current theta is quite close to the last one, then doing so would
+        # entail nearly a 2pi discontinuity. In this case, it is more likely that we are seeing a small "jitter".
+        # We need to set a tolerance to determine where we think there is more likely jitter, and where there is
+        # a genuine progression.
 
-            if theta_mod_2pi > 0:
-                theta_mod_2pi = theta_mod_2pi - _two_pi
-
-            assert theta_mod_2pi <= 0.0
-            assert theta_mod_2pi > -_two_pi
-
-            assert theta_div_2pi <= 0
-
-            # warn if the region in which we have WKB data is (seemingly) not coniguous
+        if theta_mod_2pi is not None:
+            # warn if the region in which we have WKB data is (seemingly) not contiguous
             # note we do not need to be too concerned if this happens in the region between 3 and 5 e-folds inside the horizon where the analytic and
             # numerical solutions overlap.
             # In this region, the place where we cut the numerical solution to provide initial data for the WKB calculation can vary depending on
@@ -144,65 +133,69 @@ def assemble_GkSource_values(
                 z_response.z
                 < 0.65
                 * k_exit.z_exit_subh_e3  # not sure quite what the multiplier should be here, but the cut should not be too much later than z_e3
-                and theta_last_step is not True
+                and had_theta_last_step is not True
                 and seen_WKB
             ):
                 print(
                     f"!! WARNING (assemble_GkSource_values): WKB region apparently non-contiguous at z_source={z_source.z:.5g} (store_id={z_source.store_id}) for k={k_exit.k.k_inv_Mpc:.5g}/Mpc (store_id={k_exit.store_id}), z_response={z_response.z:.5g} (store_id={z_response.store_id})"
                 )
-                if theta_last_z is not None:
+                if last_z_for_theta is not None:
                     print(
-                        f"|  -- last theta value seen at redshift z_source={theta_last_z.z:.5g} (store_id={theta_last_z.store_id}) | z_e3 = {k_exit.z_exit_subh_e3:.5g}"
+                        f"|  -- last theta value seen at redshift z_source={last_z_for_theta.z:.5g} (store_id={last_z_for_theta.store_id}) | z_e3 = {k_exit.z_exit_subh_e3:.5g}"
                     )
                 print(
-                    f"|  -- last_theta_mod_2pi={last_theta_mod_2pi:.5g}, current_2pi_block={current_2pi_block}"
+                    f"|  -- last_theta_mod_2pi={last_theta_mod_2pi:.5g}, rectified_theta_div_2pi={rectified_theta_div_2pi}"
                 )
 
             if last_theta_mod_2pi is None:
                 # presumably this is the first time we have seen a theta value. Start in the fundamental block (-2pi, 0]
 
                 current_2pi_block_subtraction = theta_div_2pi
-                current_2pi_block = 0
+                rectified_theta_div_2pi = 0
 
                 in_primary_WKB_region = True
 
             else:
-                if current_2pi_block is None:
+                if rectified_theta_div_2pi is None:
                     raise RuntimeError(
-                        f"assemble_GkSource_values: current_2pi_block should not be None at z_source={z_source.z:.5g} (store_id={z_source.store_id}) for k={k_exit.k.k_inv_Mpc:.5g}/Mpc (store_id={k_exit.store_id}), z_response={z_response.z:.5g} (store_id={z_response.store_id})"
+                        f"assemble_GkSource_values: rectified_theta_div_2pi should not be None at z_source={z_source.z:.5g} (store_id={z_source.store_id}) for k={k_exit.k.k_inv_Mpc:.5g}/Mpc (store_id={k_exit.store_id}), z_response={z_response.z:.5g} (store_id={z_response.store_id})"
                     )
 
                 # if the 2pi block read from the data is more positive than our current one, we interpret this as a discontinuity.
                 # we adjust the current subtraction to bring 2pi block into alignment with our current one.
-                if theta_div_2pi > last_theta_div_2pi:
-                    if (
-                        theta_mod_2pi
-                        > last_theta_mod_2pi + DEFAULT_PHASE_JITTER_TOLERANCE
-                    ):
-                        # phase appears to have wrapped around, so need to move 2pi block towards more negative phase
-                        current_2pi_block -= 1
-                        current_2pi_block_subtraction = (
-                            theta_div_2pi - current_2pi_block
-                        )
-                    else:
-                        # we can keep our current 2pi block
-                        current_2pi_block_subtraction = (
-                            theta_div_2pi - current_2pi_block
-                        )
+
+                # note: in principle, discontinuities could occur in either sense, either with theta_div_2pi jumping suddenly up or down.
+                # But in practice, because of the way we calculate theta, the most significant discontinuities seem to occur with theta_div_2pi
+                # jumping *up*, which helpfully makes them easier to spot
+                if (
+                    theta_div_2pi > last_theta_div_2pi
+                    and theta_mod_2pi > last_theta_mod_2pi
+                ):
+                    # now we have to decide whether this is likely just a jitter or numerical fluctuation,
+                    # or whether it is more likely that the solution really descends very rapidly.
+
+                    # We pick the new solution point to be the one closest to our current point.
+                    if theta_mod_2pi - last_theta_mod_2pi > pi:
+                        # closer if we jump to the next block
+                        rectified_theta_div_2pi -= 1
+
+                    current_2pi_block_subtraction = (
+                        theta_div_2pi - rectified_theta_div_2pi
+                    )
 
                 # otherwise, we assume the current subtraction remains valid, and instead update our current 2pi block to match
                 else:
-                    current_2pi_block = theta_div_2pi - current_2pi_block_subtraction
-
-            theta = current_2pi_block * _two_pi + theta_mod_2pi
+                    rectified_theta_div_2pi = (
+                        theta_div_2pi - current_2pi_block_subtraction
+                    )
 
             # remember our current values of theta div 2pi and theta mod 2pi for the next step in the algorithm
             last_theta_mod_2pi = theta_mod_2pi
             last_theta_div_2pi = theta_div_2pi
 
             seen_WKB = True
-            theta_last_step = True
-            theta_last_z = z_source
+            had_theta_last_step = True
+            last_z_for_theta = z_source
 
             if in_primary_WKB_region and (
                 primary_WKB_largest_z is None or z_source.z > primary_WKB_largest_z.z
@@ -231,7 +224,7 @@ def assemble_GkSource_values(
             norm_factor = sqrt(WKB.H_ratio / omega_WKB)
 
             new_G_WKB = norm_factor * (
-                WKB.cos_coeff * cos(theta) + WKB.sin_coeff * sin(theta)
+                WKB.cos_coeff * cos(theta_mod_2pi) + WKB.sin_coeff * sin(theta_div_2pi)
             )
 
             # if the fractional error is too large, treat as an exception, so that we cannot silently
@@ -252,10 +245,9 @@ def assemble_GkSource_values(
                     )
 
         else:
-            # leave last_theta_mod_2pi and current_2pi_block alone.
+            # leave last_theta_mod_2pi and rectified_theta_div_2pi alone.
             # We can re-use their values later if needed.
-            theta_last_step = False
-            theta = None
+            had_theta_last_step = False
 
             if in_primary_WKB_region:
                 in_primary_WKB_region = False
@@ -270,8 +262,9 @@ def assemble_GkSource_values(
                 z_source=z_source,
                 G=numeric.G if numeric is not None else None,
                 Gprime=numeric.Gprime if numeric is not None else None,
-                theta=theta,
-                raw_theta=raw_theta,
+                theta_mod_2pi=theta_mod_2pi,
+                theta_div_2pi=rectified_theta_div_2pi,
+                raw_theta_div_2pi=theta_div_2pi,
                 H_ratio=WKB.H_ratio if WKB is not None else None,
                 sin_coeff=WKB.sin_coeff if WKB is not None else None,
                 cos_coeff=WKB.cos_coeff if WKB is not None else None,
@@ -305,12 +298,12 @@ def assemble_GkSource_values(
     if numerical_smallest_z is None:
         if primary_WKB_largest_z is None:
             print(
-                f"!! WARNING (assemble_GkSource_values): for k={k_exit.k.k_inv_Mpc:.5g}/Mpc (store_id={k_exit.store_id})"
+                f"!! WARNING (assemble_GkSource_values): for k={k_exit.k.k_inv_Mpc:.5g}/Mpc (store_id={k_exit.store_id}), z_response={z_response.z:.5g} (store_id={z_response.store_id})"
             )
             print(f"|    -- no numerical region or primary WKB region was detected")
         elif primary_WKB_largest_z.z < z_sample.max.z - DEFAULT_FLOAT_PRECISION:
             print(
-                f"!! WARNING (assemble_GkSource_values): for k={k_exit.k.k_inv_Mpc:.5g}/Mpc (store_id={k_exit.store_id})"
+                f"!! WARNING (assemble_GkSource_values): for k={k_exit.k.k_inv_Mpc:.5g}/Mpc (store_id={k_exit.store_id}), z_response={z_response.z:.5g} (store_id={z_response.store_id})"
             )
             print(
                 f"|    -- no numerical values for G_k(z,z') were detected, but largest source redshift in primary WKB region appears to be z_max={primary_WKB_largest_z.z:.5g} (store_id={primary_WKB_largest_z.store_id})"
@@ -320,7 +313,7 @@ def assemble_GkSource_values(
         if primary_WKB_largest_z is None:
             if numerical_smallest_z.z > z_sample.min.z + DEFAULT_FLOAT_PRECISION:
                 print(
-                    f"!! WARNING (assemble_GkSource_values): for k={k_exit.k.k_inv_Mpc:.5g}/Mpc (store_id={k_exit.store_id})"
+                    f"!! WARNING (assemble_GkSource_values): for k={k_exit.k.k_inv_Mpc:.5g}/Mpc (store_id={k_exit.store_id}), z_response={z_response.z:.5g} (store_id={z_response.store_id})"
                 )
                 print(
                     f"|    -- no WKB values for G_k(z,z') were detected, but smallest numerical source redshift appears to be z_max={numerical_smallest_z.z:.5g} (store_id={numerical_smallest_z.store_id})"
@@ -331,10 +324,10 @@ def assemble_GkSource_values(
                 > primary_WKB_largest_z.z + DEFAULT_FLOAT_PRECISION
             ):
                 print(
-                    f"!! WARNING (assemble_GkSource_values): for k={k_exit.k.k_inv_Mpc:.5g}/Mpc (store_id={k_exit.store_id})"
+                    f"!! WARNING (assemble_GkSource_values): for k={k_exit.k.k_inv_Mpc:.5g}/Mpc (store_id={k_exit.store_id}), z_response={z_response.z:.5g} (store_id={z_response.store_id})"
                 )
                 print(
-                    f"|    smallest detected numerical source redshift z_min={numerical_smallest_z.z:.5g} (store_id={numerical_smallest_z.store_id}) is larger than largest dected source redshift in primary WKB region z_max={primary_WKB_largest_z.z:.5g} (store_id={primary_WKB_largest_z.store_id})"
+                    f"|    smallest detected numerical source redshift z_min={numerical_smallest_z.z:.5g} (store_id={numerical_smallest_z.store_id}) is larger than largest detected source redshift in primary WKB region z_max={primary_WKB_largest_z.z:.5g} (store_id={primary_WKB_largest_z.store_id})"
                 )
 
     return {
@@ -510,8 +503,9 @@ class GkSourceValue(DatastoreObject):
         z_source: redshift,
         G: Optional[float] = None,
         Gprime: Optional[float] = None,
-        theta: Optional[float] = None,
-        raw_theta: Optional[float] = None,
+        theta_mod_2pi: Optional[float] = None,
+        theta_div_2pi: Optional[int] = None,
+        raw_theta_div_2pi: Optional[int] = None,
         H_ratio: Optional[float] = None,
         sin_coeff: Optional[float] = None,
         cos_coeff: Optional[float] = None,
@@ -528,27 +522,20 @@ class GkSourceValue(DatastoreObject):
 
         self._z_source = z_source
 
-        has_numeric = any([G is not None, Gprime is not None])
-        all_numeric = all([G is not None, Gprime is not None])
+        numeric_flags = [G is not None, Gprime is not None]
+        has_numeric = any(numeric_flags)
+        all_numeric = all(numeric_flags)
 
-        has_WKB = any(
-            [
-                theta is not None,
-                H_ratio is not None,
-                sin_coeff is not None,
-                cos_coeff is not None,
-                G_WKB is not None,
-            ]
-        )
-        all_WKB = all(
-            [
-                theta is not None,
-                H_ratio is not None,
-                sin_coeff is not None,
-                cos_coeff is not None,
-                G_WKB is not None,
-            ]
-        )
+        WKB_flags = [
+            theta_mod_2pi is not None,
+            theta_div_2pi is not None,
+            H_ratio is not None,
+            sin_coeff is not None,
+            cos_coeff is not None,
+            G_WKB is not None,
+        ]
+        has_WKB = any(WKB_flags)
+        all_WKB = all(WKB_flags)
 
         if has_numeric and not all_numeric:
             raise ValueError(
@@ -557,7 +544,7 @@ class GkSourceValue(DatastoreObject):
 
         if has_WKB and not all_WKB:
             raise ValueError(
-                "GkSourceValue: only partial WKB data were supplied. Please supply all of theta, H_ratio, sin_coeff, cos_coeff and G_WKB."
+                "GkSourceValue: only partial WKB data were supplied. Please supply all of theta_mod_2pi, theta_div_2pi, H_ratio, sin_coeff, cos_coeff and G_WKB."
             )
 
         self._has_numeric = has_numeric
@@ -569,8 +556,9 @@ class GkSourceValue(DatastoreObject):
         )
 
         self._WKB_data = _WKBData(
-            theta=theta,
-            raw_theta=raw_theta,
+            theta_mod_2pi=theta_mod_2pi,
+            theta_div_2pi=theta_div_2pi,
+            raw_theta_div_2pi=raw_theta_div_2pi,
             H_ratio=H_ratio,
             sin_coeff=sin_coeff,
             cos_coeff=cos_coeff,

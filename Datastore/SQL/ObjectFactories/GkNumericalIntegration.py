@@ -15,6 +15,7 @@ from CosmologyConcepts import redshift_array, redshift, wavenumber_exit_time
 from Datastore.SQL.ObjectFactories.base import SQLAFactoryBase
 from MetadataConcepts import tolerance, store_tag
 from defaults import DEFAULT_FLOAT_PRECISION, DEFAULT_STRING_LENGTH
+from utilities import IntegrationData
 
 
 class sqla_GkNumericalTagAssociation_factory(SQLAFactoryBase):
@@ -151,7 +152,7 @@ class sqla_GkNumericalIntegration_factory(SQLAFactoryBase):
                 sqla.Column("unresolved_z", sqla.Float(64)),
                 sqla.Column("unresolved_efolds_subh", sqla.Float(64)),
                 sqla.Column("init_efolds_suph", sqla.Float(64)),
-                sqla.Column("stop_efolds_subh", sqla.Float(64)),
+                sqla.Column("stop_deltaz_subh", sqla.Float(64)),
                 sqla.Column("stop_G", sqla.Float(64)),
                 sqla.Column("stop_Gprime", sqla.Float(64)),
                 sqla.Column("validated", sqla.Boolean, default=False, nullable=False),
@@ -200,7 +201,7 @@ class sqla_GkNumericalIntegration_factory(SQLAFactoryBase):
                 table.c.unresolved_z,
                 table.c.unresolved_efolds_subh,
                 table.c.init_efolds_suph,
-                table.c.stop_efolds_subh,
+                table.c.stop_deltaz_subh,
                 table.c.stop_G,
                 table.c.stop_Gprime,
                 table.c.solver_serial,
@@ -277,34 +278,7 @@ class sqla_GkNumericalIntegration_factory(SQLAFactoryBase):
         store_id = row_data.serial
         store_label = row_data.label
 
-        compute_time = row_data.compute_time
-        compute_steps = row_data.compute_steps
-        RHS_evaluations = row_data.RHS_evaluations
-        mean_RHS_time = row_data.mean_RHS_time
-        max_RHS_time = row_data.max_RHS_time
-        min_RHS_time = row_data.min_RHS_time
-
-        has_unresolved_osc = row_data.has_unresolved_osc
-        unresolved_z = row_data.unresolved_z
-        unresolved_efolds_subh = row_data.unresolved_efolds_subh
-
-        init_efolds_suph = row_data.init_efolds_suph
-        stop_efolds_subh = row_data.stop_efolds_subh
-        stop_G = row_data.stop_G
-        stop_Gprime = row_data.stop_Gprime
-
-        solver_label = row_data.solver_label
-        solver_stepping = row_data.solver_stepping
         num_expected_samples = row_data.z_samples
-
-        z_source_serial = row_data.z_source_serial
-        z_source_value = row_data.z_source
-
-        solver = IntegrationSolver(
-            store_id=row_data.solver_serial,
-            label=solver_label,
-            stepping=solver_stepping,
-        )
 
         if payload is None or not payload.get("_do_not_populate", False):
             # read out sample values associated with this integration
@@ -367,20 +341,28 @@ class sqla_GkNumericalIntegration_factory(SQLAFactoryBase):
         obj = GkNumericalIntegration(
             payload={
                 "store_id": store_id,
-                "compute_time": compute_time,
-                "compute_steps": compute_steps,
-                "RHS_evaluations": RHS_evaluations,
-                "mean_RHS_time": mean_RHS_time,
-                "max_RHS_time": max_RHS_time,
-                "min_RHS_time": min_RHS_time,
-                "has_unresolved_osc": has_unresolved_osc,
-                "unresolved_z": unresolved_z,
-                "unresolved_efolds_subh": unresolved_efolds_subh,
-                "init_efolds_suph": init_efolds_suph,
-                "stop_efolds_subh": stop_efolds_subh,
-                "stop_G": stop_G,
-                "stop_Gprime": stop_Gprime,
-                "solver": solver,
+                "data": IntegrationData(
+                    compute_time=row_data.compute_time,
+                    compute_steps=row_data.compute_steps,
+                    RHS_evaluations=row_data.RHS_evaluations,
+                    mean_RHS_time=row_data.mean_RHS_time,
+                    max_RHS_time=row_data.max_RHS_time,
+                    min_RHS_time=row_data.min_RHS_time,
+                ),
+                "has_unresolved_osc": (row_data.has_unresolved_osc),
+                "unresolved_z": (row_data.unresolved_z),
+                "unresolved_efolds_subh": (row_data.unresolved_efolds_subh),
+                "init_efolds_suph": (row_data.init_efolds_suph),
+                "stop_deltaz_subh": (row_data.stop_deltaz_subh),
+                "stop_G": (row_data.stop_G),
+                "stop_Gprime": (row_data.stop_Gprime),
+                "solver": (
+                    IntegrationSolver(
+                        store_id=row_data.solver_serial,
+                        label=(row_data.solver_label),
+                        stepping=(row_data.solver_stepping),
+                    )
+                ),
                 "values": values,
             },
             solver_labels=solver_labels,
@@ -389,7 +371,9 @@ class sqla_GkNumericalIntegration_factory(SQLAFactoryBase):
             label=store_label,
             atol=atol,
             rtol=rtol,
-            z_source=redshift(store_id=z_source_serial, z=z_source_value),
+            z_source=redshift(
+                store_id=(row_data.z_source_serial), z=(row_data.z_source)
+            ),
             z_sample=imported_z_sample,
             tags=tags,
             delta_logz=delta_logz,
@@ -420,17 +404,17 @@ class sqla_GkNumericalIntegration_factory(SQLAFactoryBase):
                 "z_source_serial": obj.z_source.store_id,
                 "z_min_serial": obj.z_sample.min.store_id,
                 "z_samples": len(obj.values),
-                "compute_time": obj.compute_time,
-                "compute_steps": obj.compute_steps,
-                "RHS_evaluations": obj.RHS_evaluations,
-                "mean_RHS_time": obj.mean_RHS_time,
-                "max_RHS_time": obj.max_RHS_time,
-                "min_RHS_time": obj.min_RHS_time,
+                "compute_time": obj.data.compute_time,
+                "compute_steps": obj.data.compute_steps,
+                "RHS_evaluations": obj.data.RHS_evaluations,
+                "mean_RHS_time": obj.data.mean_RHS_time,
+                "max_RHS_time": obj.data.max_RHS_time,
+                "min_RHS_time": obj.data.min_RHS_time,
                 "has_unresolved_osc": obj.has_unresolved_osc,
                 "unresolved_z": obj.unresolved_z,
                 "unresolved_efolds_subh": obj.unresolved_efolds_subh,
                 "init_efolds_suph": obj.init_efolds_suph,
-                "stop_efolds_subh": obj.stop_efolds_subh,
+                "stop_deltaz_subh": obj.stop_deltaz_subh,
                 "stop_G": obj.stop_G,
                 "stop_Gprime": obj.stop_Gprime,
                 "validated": False,

@@ -1,3 +1,4 @@
+import json
 from typing import Optional, List
 
 import sqlalchemy as sqla
@@ -15,6 +16,7 @@ from CosmologyConcepts import wavenumber_exit_time, redshift_array, redshift
 from Datastore.SQL.ObjectFactories.base import SQLAFactoryBase
 from MetadataConcepts import store_tag, tolerance
 from defaults import DEFAULT_STRING_LENGTH, DEFAULT_FLOAT_PRECISION
+from utilities import IntegrationData
 
 
 class sqla_GkWKBTagAssociation_factory(SQLAFactoryBase):
@@ -142,17 +144,26 @@ class sqla_GkWKBIntegration_factory(SQLAFactoryBase):
                 sqla.Column("cos_coeff", sqla.Float(64), nullable=False),
                 sqla.Column("G_init", sqla.Float(64), nullable=False),
                 sqla.Column("Gprime_init", sqla.Float(64), nullable=False),
-                sqla.Column("compute_time", sqla.Float(64)),
-                sqla.Column("compute_steps", sqla.Integer),
-                sqla.Column("RHS_evaluations", sqla.Integer),
-                sqla.Column("mean_RHS_time", sqla.Float(64)),
-                sqla.Column("max_RHS_time", sqla.Float(64)),
-                sqla.Column("min_RHS_time", sqla.Float(64)),
+                sqla.Column("stage_1_compute_time", sqla.Float(64)),
+                sqla.Column("stage_1_compute_steps", sqla.Integer),
+                sqla.Column("stage_1_RHS_evaluations", sqla.Integer),
+                sqla.Column("stage_1_mean_RHS_time", sqla.Float(64)),
+                sqla.Column("stage_1_max_RHS_time", sqla.Float(64)),
+                sqla.Column("stage_1_min_RHS_time", sqla.Float(64)),
+                sqla.Column("stage_2_compute_time", sqla.Float(64)),
+                sqla.Column("stage_2_compute_steps", sqla.Integer),
+                sqla.Column("stage_2_RHS_evaluations", sqla.Integer),
+                sqla.Column("stage_2_mean_RHS_time", sqla.Float(64)),
+                sqla.Column("stage_2_max_RHS_time", sqla.Float(64)),
+                sqla.Column("stage_2_min_RHS_time", sqla.Float(64)),
                 sqla.Column("has_WKB_violation", sqla.Boolean),
                 sqla.Column("WKB_violation_z", sqla.Float(64)),
                 sqla.Column("WKB_violation_efolds_subh", sqla.Float(64)),
                 sqla.Column("init_efolds_subh", sqla.Float(64)),
                 sqla.Column("validated", sqla.Boolean, default=False, nullable=False),
+                sqla.Column(
+                    "metadata", sqla.String(DEFAULT_STRING_LENGTH), nullable=True
+                ),
             ],
         }
 
@@ -187,16 +198,23 @@ class sqla_GkWKBIntegration_factory(SQLAFactoryBase):
                 table.c.serial,
                 table.c.sin_coeff,
                 table.c.cos_coeff,
-                table.c.compute_time,
-                table.c.compute_steps,
-                table.c.RHS_evaluations,
-                table.c.mean_RHS_time,
-                table.c.max_RHS_time,
-                table.c.min_RHS_time,
+                table.c.stage_1_compute_time,
+                table.c.stage_1_compute_steps,
+                table.c.stage_1_RHS_evaluations,
+                table.c.stage_1_mean_RHS_time,
+                table.c.stage_1_max_RHS_time,
+                table.c.stage_1_min_RHS_time,
+                table.c.stage_2_compute_time,
+                table.c.stage_2_compute_steps,
+                table.c.stage_2_RHS_evaluations,
+                table.c.stage_2_mean_RHS_time,
+                table.c.stage_2_max_RHS_time,
+                table.c.stage_2_min_RHS_time,
                 table.c.has_WKB_violation,
                 table.c.WKB_violation_z,
                 table.c.WKB_violation_efolds_subh,
                 table.c.init_efolds_subh,
+                table.c.metadata,
                 table.c.solver_serial,
                 table.c.label,
                 table.c.z_source_serial,
@@ -287,32 +305,6 @@ class sqla_GkWKBIntegration_factory(SQLAFactoryBase):
         G_init = row_data.G_init
         Gprime_init = row_data.Gprime_init
 
-        compute_time = row_data.compute_time
-        compute_steps = row_data.compute_steps
-        RHS_evaluations = row_data.RHS_evaluations
-        mean_RHS_time = row_data.mean_RHS_time
-        max_RHS_time = row_data.max_RHS_time
-        min_RHS_time = row_data.min_RHS_time
-
-        has_WKB_violation = row_data.has_WKB_violation
-        WKB_violation_z = row_data.WKB_violation_z
-        WKB_violation_efolds_subh = row_data.WKB_violation_efolds_subh
-
-        init_efolds_subh = row_data.init_efolds_subh
-
-        solver_label = row_data.solver_label
-        solver_stepping = row_data.solver_stepping
-        num_expected_samples = row_data.z_samples
-
-        z_source_serial = row_data.z_source_serial
-        z_source_value = row_data.z_source
-
-        solver = IntegrationSolver(
-            store_id=row_data.solver_serial,
-            label=solver_label,
-            stepping=solver_stepping,
-        )
-
         if payload is None or not payload.get("_do_not_populate", False):
             # read out sample values associated with this integration
             value_table = tables["GkWKBValue"]
@@ -323,7 +315,8 @@ class sqla_GkWKBIntegration_factory(SQLAFactoryBase):
                     value_table.c.z_serial,
                     redshift_table.c.z,
                     value_table.c.H_ratio,
-                    value_table.c.theta,
+                    value_table.c.theta_mod_2pi,
+                    value_table.c.theta_div_2pi,
                     value_table.c.G_WKB,
                     value_table.c.omega_WKB_sq,
                     value_table.c.WKB_criterion,
@@ -350,7 +343,8 @@ class sqla_GkWKBIntegration_factory(SQLAFactoryBase):
                         store_id=row.serial,
                         z=z_value,
                         H_ratio=row.H_ratio,
-                        theta=row.theta,
+                        theta_mod_2pi=row.theta_mod_2pi,
+                        theta_div_2pi=row.theta_div_2pi,
                         omega_WKB_sq=row.omega_WKB_sq,
                         WKB_criterion=row.WKB_criterion,
                         G_WKB=row.G_WKB,
@@ -362,8 +356,8 @@ class sqla_GkWKBIntegration_factory(SQLAFactoryBase):
                 )
             imported_z_sample = redshift_array(z_points)
 
-            if num_expected_samples is not None:
-                if len(imported_z_sample) != num_expected_samples:
+            if row_data.z_samples is not None:
+                if len(imported_z_sample) != row_data.z_samples:
                     raise RuntimeError(
                         f'Fewer z-samples than expected were recovered from the validated WKB tensor Green function "{store_label}"'
                     )
@@ -380,17 +374,34 @@ class sqla_GkWKBIntegration_factory(SQLAFactoryBase):
                 "store_id": store_id,
                 "sin_coeff": sin_coeff,
                 "cos_coeff": cos_coeff,
-                "compute_time": compute_time,
-                "compute_steps": compute_steps,
-                "RHS_evaluations": RHS_evaluations,
-                "mean_RHS_time": mean_RHS_time,
-                "max_RHS_time": max_RHS_time,
-                "min_RHS_time": min_RHS_time,
-                "has_WKB_violation": has_WKB_violation,
-                "WKB_violation_z": WKB_violation_z,
-                "WKB_violation_efolds_subh": WKB_violation_efolds_subh,
-                "init_efolds_subh": init_efolds_subh,
-                "solver": solver,
+                "stage_1_data": IntegrationData(
+                    compute_time=row_data.stage_1_compute_time,
+                    compute_steps=row_data.stage_1_compute_steps,
+                    RHS_evaluations=row_data.stage_1_RHS_evaluations,
+                    mean_RHS_time=row_data.stage_1_mean_RHS_time,
+                    max_RHS_time=row_data.stage_1_max_RHS_time,
+                    min_RHS_time=row_data.stage_1_min_RHS_time,
+                ),
+                "stage_2_data": IntegrationData(
+                    compute_time=row_data.stage_2_compute_time,
+                    compute_steps=row_data.stage_2_compute_steps,
+                    RHS_evaluations=row_data.stage_2_RHS_evaluations,
+                    mean_RHS_time=row_data.stage_2_mean_RHS_time,
+                    max_RHS_time=row_data.stage_2_max_RHS_time,
+                    min_RHS_time=row_data.stage_2_min_RHS_time,
+                ),
+                "has_WKB_violation": row_data.has_WKB_violation,
+                "WKB_violation_z": row_data.WKB_violation_z,
+                "WKB_violation_efolds_subh": row_data.WKB_violation_efolds_subh,
+                "init_efolds_subh": row_data.init_efolds_subh,
+                "metadata": json.loads(row_data.metadata),
+                "solver": (
+                    IntegrationSolver(
+                        store_id=row_data.solver_serial,
+                        label=(row_data.solver_label),
+                        stepping=(row_data.solver_stepping),
+                    )
+                ),
                 "values": values,
             },
             solver_labels=solver_labels,
@@ -399,7 +410,9 @@ class sqla_GkWKBIntegration_factory(SQLAFactoryBase):
             label=store_label,
             atol=atol,
             rtol=rtol,
-            z_source=redshift(store_id=z_source_serial, z=z_source_value),
+            z_source=redshift(
+                store_id=(row_data.z_source_serial), z=(row_data.z_source)
+            ),
             z_init=z_init,
             G_init=G_init,
             Gprime_init=Gprime_init,
@@ -436,16 +449,71 @@ class sqla_GkWKBIntegration_factory(SQLAFactoryBase):
                 "Gprime_init": obj.Gprime_init,
                 "sin_coeff": obj.sin_coeff,
                 "cos_coeff": obj.cos_coeff,
-                "compute_time": obj.compute_time,
-                "compute_steps": obj.compute_steps,
-                "RHS_evaluations": obj.RHS_evaluations,
-                "mean_RHS_time": obj.mean_RHS_time,
-                "max_RHS_time": obj.max_RHS_time,
-                "min_RHS_time": obj.min_RHS_time,
+                "stage_1_compute_time": (
+                    obj.stage_1_data.compute_time
+                    if obj.stage_1_data is not None
+                    else None
+                ),
+                "stage_1_compute_steps": (
+                    obj.stage_1_data.compute_steps
+                    if obj.stage_1_data is not None
+                    else None
+                ),
+                "stage_1_RHS_evaluations": (
+                    obj.stage_1_data.RHS_evaluations
+                    if obj.stage_1_data is not None
+                    else None
+                ),
+                "stage_1_mean_RHS_time": (
+                    obj.stage_1_data.mean_RHS_time
+                    if obj.stage_1_data is not None
+                    else None
+                ),
+                "stage_1_max_RHS_time": (
+                    obj.stage_1_data.max_RHS_time
+                    if obj.stage_1_data is not None
+                    else None
+                ),
+                "stage_1_min_RHS_time": (
+                    obj.stage_1_data.min_RHS_time
+                    if obj.stage_1_data is not None
+                    else None
+                ),
+                "stage_2_compute_time": (
+                    obj.stage_2_data.compute_time
+                    if obj.stage_2_data is not None
+                    else None
+                ),
+                "stage_2_compute_steps": (
+                    obj.stage_2_data.compute_steps
+                    if obj.stage_2_data is not None
+                    else None
+                ),
+                "stage_2_RHS_evaluations": (
+                    obj.stage_2_data.RHS_evaluations
+                    if obj.stage_2_data is not None
+                    else None
+                ),
+                "stage_2_mean_RHS_time": (
+                    obj.stage_2_data.mean_RHS_time
+                    if obj.stage_2_data is not None
+                    else None
+                ),
+                "stage_2_max_RHS_time": (
+                    obj.stage_2_data.max_RHS_time
+                    if obj.stage_2_data is not None
+                    else None
+                ),
+                "stage_2_min_RHS_time": (
+                    obj.stage_2_data.min_RHS_time
+                    if obj.stage_2_data is not None
+                    else None
+                ),
                 "has_WKB_violation": obj.has_WKB_violation,
                 "WKB_violation_z": obj.WKB_violation_z,
                 "WKB_violation_efolds_subh": obj.WKB_violation_efolds_subh,
                 "init_efolds_subh": obj.init_efolds_subh,
+                "metadata": json.dumps(obj.metadata),
                 "validated": False,
             },
         )
@@ -468,7 +536,8 @@ class sqla_GkWKBIntegration_factory(SQLAFactoryBase):
                     "wkb_serial": store_id,
                     "z_serial": value.z.store_id,
                     "H_ratio": value.H_ratio,
-                    "theta": value.theta,
+                    "theta_mod_2pi": value.theta_mod_2pi,
+                    "theta_div_2pi": value.theta_div_2pi,
                     "G_WKB": value.G_WKB,
                     "omega_WKB_sq": value.omega_WKB_sq,
                     "WKB_criterion": value.WKB_criterion,
@@ -648,7 +717,8 @@ class sqla_GkWKBValue_factory(SQLAFactoryBase):
                     nullable=False,
                 ),
                 sqla.Column("H_ratio", sqla.Float(64), nullable=False),
-                sqla.Column("theta", sqla.Float(64), nullable=False),
+                sqla.Column("theta_mod_2pi", sqla.Float(64), nullable=False),
+                sqla.Column("theta_div_2pi", sqla.Integer, nullable=False),
                 sqla.Column("omega_WKB_sq", sqla.Float(64), nullable=True),
                 sqla.Column("WKB_criterion", sqla.Float(64), nullable=True),
                 sqla.Column("G_WKB", sqla.Float(64), nullable=True),
@@ -694,14 +764,16 @@ class sqla_GkWKBValue_factory(SQLAFactoryBase):
         wkb_serial: int = payload["wkb_serial"]
 
         H_ratio: Optional[float] = payload.get("H_ratio", None)
-        theta: Optional[float] = payload.get("theta", None)
+        theta_mod_2pi: Optional[float] = payload.get("theta_mod_2pi", None)
+        theta_div_2pi: Optional[int] = payload.get("theta_div_2pi", None)
         omega_WKB_sq: Optional[float] = payload.get("omega_WKB_sq", None)
         WKB_criterion: Optional[float] = payload.get("WKB_criterion", None)
         G_WKB: Optional[float] = payload.get("G_WKB", None)
         has_data = all(
             [
                 H_ratio is not None,
-                theta is not None,
+                theta_mod_2pi is not None,
+                theta_div_2pi is not None,
                 omega_WKB_sq is not None,
                 WKB_criterion is not None,
                 G_WKB is not None,
@@ -721,7 +793,8 @@ class sqla_GkWKBValue_factory(SQLAFactoryBase):
                 sqla.select(
                     table.c.serial,
                     table.c.H_ratio,
-                    table.c.theta,
+                    table.c.theta_mod_2pi,
+                    table.c.theta_div_2pi,
                     table.c.omega_WKB_sq,
                     table.c.WKB_criterion,
                     table.c.G_WKB,
@@ -754,7 +827,8 @@ class sqla_GkWKBValue_factory(SQLAFactoryBase):
                     "wkb_serial": wkb_serial,
                     "z_serial": z.store_id,
                     "H_ratio": H_ratio,
-                    "theta": theta,
+                    "theta_mod_2pi": theta_mod_2pi,
+                    "theta_div_2pi": theta_div_2pi,
                     "omega_WKB_sq": omega_WKB_sq,
                     "WKB_criterion": WKB_criterion,
                     "G_WKB": G_WKB,
@@ -784,15 +858,21 @@ class sqla_GkWKBValue_factory(SQLAFactoryBase):
                     f"GkWKBValue.build(): Stored WKB tensor Green function H_ratio ratio (WKB store_id={wkb_serial}, z={z.store_id}) = {row_data.H_ratio} differs from expected value = {H_ratio}"
                 )
             if (
-                theta is not None
-                and fabs(row_data.theta - theta) > DEFAULT_FLOAT_PRECISION
+                theta_mod_2pi is not None
+                and fabs(row_data.theta_mod_2pi - theta_mod_2pi)
+                > DEFAULT_FLOAT_PRECISION
             ):
                 raise ValueError(
-                    f"GkWKBValue.build(): Stored WKB tensor Green function phase (WKB store_id={wkb_serial}, z={z.store_id}) = {row_data.theta} differs from expected value = {theta}"
+                    f"GkWKBValue.build(): Stored WKB tensor Green function theta mod 2pi (WKB store_id={wkb_serial}, z={z.store_id}) = {row_data.theta_mod_2pi} differs from expected value = {theta_mod_2pi}"
+                )
+            if theta_div_2pi is not None and row_data.theta_div_2pi != theta_div_2pi:
+                raise ValueError(
+                    f"GkWKBValue.build(): Stored WKB tensor Green function theta div 2pi (WKB store_id={wkb_serial}, z={z.store_id}) = {row_data.theta_div_2pi} differs from expected value = {theta_div_2pi}"
                 )
 
             H_ratio = row_data.H_ratio
-            theta = row_data.theta
+            theta_mod_2pi = row_data.theta_mod_2pi
+            theta_div_2pi = row_data.theta_div_2pi
 
             attribute_set = {"_deserialized": True}
 
@@ -800,7 +880,8 @@ class sqla_GkWKBValue_factory(SQLAFactoryBase):
             store_id=store_id,
             z=z,
             H_ratio=H_ratio,
-            theta=theta,
+            theta_mod_2pi=theta_mod_2pi,
+            theta_div_2pi=theta_div_2pi,
             omega_WKB_sq=omega_WKB_sq,
             WKB_criterion=WKB_criterion,
             G_WKB=G_WKB,
@@ -866,7 +947,8 @@ class sqla_GkWKBValue_factory(SQLAFactoryBase):
                 sqla.select(
                     table.c.serial,
                     table.c.H_ratio,
-                    table.c.theta,
+                    table.c.theta_mod_2pi,
+                    table.c.theta_div_2pi,
                     table.c.omega_WKB_sq,
                     table.c.WKB_criterion,
                     table.c.G_WKB,
@@ -890,7 +972,9 @@ class sqla_GkWKBValue_factory(SQLAFactoryBase):
 
         if row_data is None:
             # return empty object
-            obj = GkWKBValue(store_id=None, z=z, H_ratio=None, theta=None)
+            obj = GkWKBValue(
+                store_id=None, z=z, H_ratio=None, theta_mod_2pi=None, theta_div_2pi=None
+            )
             obj._k_exit = k
             obj._z_source = z_source
             return obj
@@ -899,7 +983,8 @@ class sqla_GkWKBValue_factory(SQLAFactoryBase):
             store_id=row_data.serial,
             z=z,
             H_ratio=row_data.H_ratio,
-            theta=row_data.theta,
+            theta_mod_2pi=row_data.theta_mod_2pi,
+            theta_div_2pi=row_data.theta_div_2pi,
             omega_WKB_sq=row_data.omega_WKB_sq,
             WKB_criterion=row_data.WKB_criterion,
             G_WKB=row_data.G_WKB,
@@ -978,7 +1063,8 @@ class sqla_GkWKBValue_factory(SQLAFactoryBase):
         row_query = sqla.select(
             table.c.serial,
             table.c.H_ratio,
-            table.c.theta,
+            table.c.theta_mod_2pi,
+            table.c.theta_div_2pi,
             table.c.omega_WKB_sq,
             table.c.WKB_criterion,
             table.c.G_WKB,
@@ -1006,7 +1092,8 @@ class sqla_GkWKBValue_factory(SQLAFactoryBase):
                 store_id=row.serial,
                 z=redshift(store_id=row.z_response_serial, z=row.z_response),
                 H_ratio=row.H_ratio,
-                theta=row.theta,
+                theta_mod_2pi=row.theta_mod_2pi,
+                theta_div_2pi=row.theta_div_2pi,
                 omega_WKB_sq=row.omega_WKB_sq,
                 WKB_criterion=row.WKB_criterion,
                 G_WKB=row.G_WKB,

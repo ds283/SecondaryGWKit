@@ -16,6 +16,7 @@ from CosmologyConcepts import redshift_array, redshift, wavenumber_exit_time
 from Datastore.SQL.ObjectFactories.base import SQLAFactoryBase
 from MetadataConcepts import tolerance, store_tag
 from defaults import DEFAULT_STRING_LENGTH, DEFAULT_FLOAT_PRECISION
+from utilities import IntegrationData
 
 
 class sqla_TkNumericalTagAssociation_factory(SQLAFactoryBase):
@@ -265,32 +266,6 @@ class sqla_TkNumericalIntegration_factory(SQLAFactoryBase):
         store_id = row_data.serial
         store_label = row_data.label
 
-        compute_time = row_data.compute_time
-        compute_steps = row_data.compute_steps
-        RHS_evaluations = row_data.RHS_evaluations
-        mean_RHS_time = row_data.mean_RHS_time
-        max_RHS_time = row_data.max_RHS_time
-        min_RHS_time = row_data.min_RHS_time
-
-        has_unresolved_osc = row_data.has_unresolved_osc
-        unresolved_z = row_data.unresolved_z
-        unresolved_efolds_subh = row_data.unresolved_efolds_subh
-
-        init_efolds_suph = row_data.init_efolds_suph
-
-        solver_label = row_data.solver_label
-        solver_stepping = row_data.solver_stepping
-        num_expected_samples = row_data.z_samples
-
-        z_init_serial = row_data.z_init_serial
-        z_init_value = row_data.z_init
-
-        solver = IntegrationSolver(
-            store_id=row_data.solver_serial,
-            label=solver_label,
-            stepping=solver_stepping,
-        )
-
         if payload is None or not payload.get("_do_not_populate", False):
             # read out sample values associated with this integration
             value_table = tables["TkNumericalValue"]
@@ -332,8 +307,8 @@ class sqla_TkNumericalIntegration_factory(SQLAFactoryBase):
                 )
             imported_z_sample = redshift_array(z_points)
 
-            if num_expected_samples is not None:
-                if len(imported_z_sample) != num_expected_samples:
+            if row_data.z_samples is not None:
+                if len(imported_z_sample) != row_data.z_samples:
                     raise RuntimeError(
                         f'Fewer z-samples than expected were recovered from the validated transfer function "{store_label}"'
                     )
@@ -348,17 +323,25 @@ class sqla_TkNumericalIntegration_factory(SQLAFactoryBase):
         obj = TkNumericalIntegration(
             payload={
                 "store_id": store_id,
-                "compute_time": compute_time,
-                "compute_steps": compute_steps,
-                "RHS_evaluations": RHS_evaluations,
-                "mean_RHS_time": mean_RHS_time,
-                "max_RHS_time": max_RHS_time,
-                "min_RHS_time": min_RHS_time,
-                "has_unresolved_osc": has_unresolved_osc,
-                "unresolved_z": unresolved_z,
-                "unresolved_efolds_subh": unresolved_efolds_subh,
-                "init_efolds_suph": init_efolds_suph,
-                "solver": solver,
+                "data": IntegrationData(
+                    compute_time=row_data.compute_time,
+                    compute_steps=row_data.compute_steps,
+                    RHS_evaluations=row_data.RHS_evaluations,
+                    mean_RHS_time=row_data.mean_RHS_time,
+                    max_RHS_time=row_data.max_RHS_time,
+                    min_RHS_time=row_data.min_RHS_time,
+                ),
+                "has_unresolved_osc": (row_data.has_unresolved_osc),
+                "unresolved_z": (row_data.unresolved_z),
+                "unresolved_efolds_subh": (row_data.unresolved_efolds_subh),
+                "init_efolds_suph": (row_data.init_efolds_suph),
+                "solver": (
+                    IntegrationSolver(
+                        store_id=row_data.solver_serial,
+                        label=(row_data.solver_label),
+                        stepping=(row_data.solver_stepping),
+                    )
+                ),
                 "values": values,
             },
             solver_labels=solver_labels,
@@ -368,7 +351,7 @@ class sqla_TkNumericalIntegration_factory(SQLAFactoryBase):
             atol=atol,
             rtol=rtol,
             z_sample=imported_z_sample,
-            z_init=redshift(store_id=z_init_serial, z=z_init_value),
+            z_init=redshift(store_id=(row_data.z_init_serial), z=(row_data.z_init)),
             tags=tags,
             delta_logz=delta_logz,
         )
@@ -399,12 +382,12 @@ class sqla_TkNumericalIntegration_factory(SQLAFactoryBase):
                 "z_init_serial": obj.z_init.store_id,
                 "z_min_serial": obj.z_sample.min.store_id,
                 "z_samples": len(obj.values),
-                "compute_time": obj.compute_time,
-                "compute_steps": obj.compute_steps,
-                "RHS_evaluations": obj.RHS_evaluations,
-                "mean_RHS_time": obj.mean_RHS_time,
-                "max_RHS_time": obj.max_RHS_time,
-                "min_RHS_time": obj.min_RHS_time,
+                "compute_time": obj.data.compute_time,
+                "compute_steps": obj.data.compute_steps,
+                "RHS_evaluations": obj.data.RHS_evaluations,
+                "mean_RHS_time": obj.data.mean_RHS_time,
+                "max_RHS_time": obj.data.max_RHS_time,
+                "min_RHS_time": obj.data.min_RHS_time,
                 "has_unresolved_osc": obj.has_unresolved_osc,
                 "unresolved_z": obj.unresolved_z,
                 "unresolved_efolds_subh": obj.unresolved_efolds_subh,

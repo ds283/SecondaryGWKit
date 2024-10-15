@@ -21,7 +21,7 @@ from defaults import (
     DEFAULT_REL_TOLERANCE,
     DEFAULT_FLOAT_PRECISION,
 )
-from utilities import check_units, format_time
+from utilities import check_units, format_time, IntegrationData
 
 
 class TkIntegrationSupervisor(IntegrationSupervisor):
@@ -180,21 +180,21 @@ def compute_Tk(
             k_over_H = k_float / H
             k_over_H_2 = k_over_H * k_over_H
 
-            omega_eff_sq = (
+            omega_WKB_sq = (
                 3.0 * (1.0 + wPerturbations) - 2.0 * eps
             ) / one_plus_z_2 + wPerturbations * k_over_H_2
 
             dTprime_dz = (
                 -(eps - 3.0 * (1.0 + wPerturbations)) * Tprime / one_plus_z
-                - omega_eff_sq * T
+                - omega_WKB_sq * T
             )
 
             # try to detect how many oscillations will fit into the log-z grid
             # spacing
             # If the grid spacing is smaller than the oscillation wavelength, then
             # evidently we cannot resolve the oscillations
-            if omega_eff_sq > 0.0:
-                wavelength = 2.0 * pi / sqrt(omega_eff_sq)
+            if omega_WKB_sq > 0.0:
+                wavelength = 2.0 * pi / sqrt(omega_WKB_sq)
                 supervisor.report_wavelength(z, wavelength, log((1.0 + z) * k_over_H))
 
         return [dT_dz, dTprime_dz]
@@ -205,7 +205,7 @@ def compute_Tk(
         initial_state = [1.0, 0.0]
         sol = solve_ivp(
             RHS,
-            method="Radau",
+            method="RK45",
             t_span=(z_init.z, z_min),
             y0=initial_state,
             t_eval=z_sample.as_float_list(),
@@ -245,12 +245,14 @@ def compute_Tk(
             )
 
     return {
-        "compute_time": supervisor.integration_time,
-        "compute_steps": int(sol.nfev),
-        "RHS_evaluations": supervisor.RHS_evaluations,
-        "mean_RHS_time": supervisor.mean_RHS_time,
-        "max_RHS_time": supervisor.max_RHS_time,
-        "min_RHS_time": supervisor.min_RHS_time,
+        "data": IntegrationData(
+            compute_time=supervisor.integration_time,
+            compute_steps=int(sol.nfev),
+            RHS_evaluations=supervisor.RHS_evaluations,
+            mean_RHS_time=supervisor.mean_RHS_time,
+            max_RHS_time=supervisor.max_RHS_time,
+            min_RHS_time=supervisor.min_RHS_time,
+        ),
         "T_sample": sampled_T,
         "Tprime_sample": sampled_Tprime,
         "solver_label": "solve_ivp+Radau-stepping0",
@@ -304,12 +306,7 @@ class TkNumericalIntegration(DatastoreObject):
         self._z_sample = z_sample
         if payload is None:
             DatastoreObject.__init__(self, None)
-            self._compute_time = None
-            self._compute_steps = None
-            self._RHS_evaluations = None
-            self._mean_RHS_time = None
-            self._max_RHS_time = None
-            self._min_RHS_time = None
+            self._data = None
 
             self._has_unresolved_osc = None
             self._unresolved_z = None
@@ -322,12 +319,7 @@ class TkNumericalIntegration(DatastoreObject):
             self._values = None
         else:
             DatastoreObject.__init__(self, payload["store_id"])
-            self._compute_time = payload["compute_time"]
-            self._compute_steps = payload["compute_steps"]
-            self._RHS_evaluations = payload["RHS_evaluations"]
-            self._mean_RHS_time = payload["mean_RHS_time"]
-            self._max_RHS_time = payload["max_RHS_time"]
-            self._min_RHS_time = payload["min_RHS_time"]
+            self._data = payload["data"]
 
             self._has_unresolved_osc = payload["has_unresolved_osc"]
             self._unresolved_z = payload["unresolved_z"]
@@ -392,40 +384,11 @@ class TkNumericalIntegration(DatastoreObject):
         return self._z_sample
 
     @property
-    def compute_time(self) -> float:
-        if self._compute_time is None:
-            raise RuntimeError("compute_time has not yet been populated")
-        return self._compute_time
+    def data(self) -> IntegrationData:
+        if self.values is None:
+            raise RuntimeError("values have not yet been populated")
 
-    @property
-    def compute_steps(self) -> int:
-        if self._compute_time is None:
-            raise RuntimeError("compute_steps has not yet been populated")
-        return self._compute_steps
-
-    @property
-    def mean_RHS_time(self) -> int:
-        if self._mean_RHS_time is None:
-            raise RuntimeError("mean_RHS_time has not yet been populated")
-        return self._mean_RHS_time
-
-    @property
-    def max_RHS_time(self) -> int:
-        if self._max_RHS_time is None:
-            raise RuntimeError("max_RHS_time has not yet been populated")
-        return self._max_RHS_time
-
-    @property
-    def min_RHS_time(self) -> int:
-        if self._min_RHS_time is None:
-            raise RuntimeError("min_RHS_time has not yet been populated")
-        return self._min_RHS_time
-
-    @property
-    def RHS_evaluations(self) -> int:
-        if self._RHS_evaluations is None:
-            raise RuntimeError("RHS_evaluations has not yet been populated")
-        return self._RHS_evaluations
+        return self._data
 
     @property
     def has_unresolved_osc(self) -> bool:
@@ -542,12 +505,7 @@ class TkNumericalIntegration(DatastoreObject):
         data = ray.get(self._compute_ref)
         self._compute_ref = None
 
-        self._compute_time = data["compute_time"]
-        self._compute_steps = data["compute_steps"]
-        self._RHS_evaluations = data["RHS_evaluations"]
-        self._mean_RHS_time = data["mean_RHS_time"]
-        self._max_RHS_time = data["max_RHS_time"]
-        self._min_RHS_time = data["min_RHS_time"]
+        self._data = data["data"]
 
         self._has_unresolved_osc = data["has_unresolved_osc"]
         self._unresolved_z = data["unresolved_z"]

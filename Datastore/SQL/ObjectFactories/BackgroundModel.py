@@ -11,6 +11,7 @@ from CosmologyModels import BaseCosmology
 from Datastore.SQL.ObjectFactories.base import SQLAFactoryBase
 from MetadataConcepts import store_tag, tolerance
 from defaults import DEFAULT_STRING_LENGTH, DEFAULT_FLOAT_PRECISION
+from utilities import IntegrationData
 
 
 class sqla_BackgroundModelTagAssociation_factory(SQLAFactoryBase):
@@ -221,22 +222,7 @@ class sqla_BackgroundModelFactory(SQLAFactoryBase):
         store_id = row_data.serial
         store_label = row_data.label
 
-        compute_time = row_data.compute_time
-        compute_steps = row_data.compute_steps
-        RHS_evaluations = row_data.RHS_evaluations
-        mean_RHS_time = row_data.mean_RHS_time
-        max_RHS_time = row_data.max_RHS_time
-        min_RHS_time = row_data.min_RHS_time
-
-        solver_label = row_data.solver_label
-        solver_stepping = row_data.solver_stepping
         num_expected_samples = row_data.z_samples
-
-        solver = IntegrationSolver(
-            store_id=row_data.solver_serial,
-            label=solver_label,
-            stepping=solver_stepping,
-        )
 
         # read out sample values associated with this integration
         value_table = tables["BackgroundModelValue"]
@@ -295,13 +281,21 @@ class sqla_BackgroundModelFactory(SQLAFactoryBase):
         obj = BackgroundModel(
             payload={
                 "store_id": store_id,
-                "compute_time": compute_time,
-                "compute_steps": compute_steps,
-                "RHS_evaluations": RHS_evaluations,
-                "mean_RHS_time": mean_RHS_time,
-                "max_RHS_time": max_RHS_time,
-                "min_RHS_time": min_RHS_time,
-                "solver": solver,
+                "data": IntegrationData(
+                    compute_time=row_data.compute_time,
+                    compute_steps=row_data.compute_steps,
+                    RHS_evaluations=row_data.RHS_evaluations,
+                    mean_RHS_time=row_data.mean_RHS_time,
+                    max_RHS_time=row_data.max_RHS_time,
+                    min_RHS_time=row_data.min_RHS_time,
+                ),
+                "solver": (
+                    IntegrationSolver(
+                        store_id=row_data.solver_serial,
+                        label=(row_data.solver_label),
+                        stepping=(row_data.solver_stepping),
+                    )
+                ),
                 "values": values,
             },
             solver_labels=solver_labels,
@@ -333,12 +327,12 @@ class sqla_BackgroundModelFactory(SQLAFactoryBase):
             "solver_serial": obj.solver.store_id,
             "z_init_serial": obj.z_sample.min.store_id,
             "z_samples": len(obj.values),
-            "compute_time": obj.compute_time,
-            "compute_steps": obj.compute_steps,
-            "RHS_evaluations": obj.RHS_evaluations,
-            "mean_RHS_time": obj.mean_RHS_time,
-            "max_RHS_time": obj.max_RHS_time,
-            "min_RHS_time": obj.min_RHS_time,
+            "compute_time": obj.data.compute_time,
+            "compute_steps": obj.data.compute_steps,
+            "RHS_evaluations": obj.data.RHS_evaluations,
+            "mean_RHS_time": obj.data.mean_RHS_time,
+            "max_RHS_time": obj.data.max_RHS_time,
+            "min_RHS_time": obj.data.min_RHS_time,
             "validated": False,
         }
 

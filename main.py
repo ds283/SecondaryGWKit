@@ -515,7 +515,7 @@ with ShardedPool(
                     # (here with a 10% tolerance)
                     response_zs = z_response_sample.truncate(
                         z_source, keep="lower"
-                    ).truncate(0.9 * k_exit.z_exit_subh_e5, keep="higher")
+                    ).truncate(0.85 * k_exit.z_exit_subh_e6, keep="higher")
 
                     if len(response_zs) > 1:
                         work_refs.append(
@@ -716,7 +716,7 @@ with ShardedPool(
                 if Gk.available:
                     G_init = Gk.stop_G
                     Gprime_init = Gk.stop_Gprime
-                    z_init = k_exit.z_exit - Gk.stop_efolds_subh
+                    z_init = k_exit.z_exit - Gk.stop_deltaz_subh
 
                     # find redshift where this k-mode is at least 3 e-folds inside the horizon
                     # we don't calculate WKB Green's functions with the response redshift earlier than this

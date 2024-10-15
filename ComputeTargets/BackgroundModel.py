@@ -13,6 +13,7 @@ from CosmologyModels import BaseCosmology
 from Datastore import DatastoreObject
 from MetadataConcepts import tolerance, store_tag
 from defaults import DEFAULT_ABS_TOLERANCE, DEFAULT_REL_TOLERANCE
+from utilities import IntegrationData
 
 A0_TAU_INDEX = 0
 EXPECTED_SOL_LENGTH = 1
@@ -110,12 +111,14 @@ def compute_background(
     d3_lnH_dz3_sample = [cosmology.d3_lnH_dz3(z.z) for z in z_sample]
 
     return {
-        "compute_time": supervisor.integration_time,
-        "compute_steps": int(sol.nfev),
-        "RHS_evaluations": supervisor.RHS_evaluations,
-        "mean_RHS_time": supervisor.mean_RHS_time,
-        "max_RHS_time": supervisor.max_RHS_time,
-        "min_RHS_time": supervisor.min_RHS_time,
+        "data": IntegrationData(
+            compute_time=supervisor.integration_time,
+            compute_steps=int(sol.nfev),
+            RHS_evaluations=supervisor.RHS_evaluations,
+            mean_RHS_time=supervisor.mean_RHS_time,
+            max_RHS_time=supervisor.max_RHS_time,
+            min_RHS_time=supervisor.min_RHS_time,
+        ),
         "a0_tau_sample": a0_tau_sample,
         "H_sample": H_sample,
         "rho_sample": rho_sample,
@@ -153,12 +156,7 @@ class BackgroundModel(DatastoreObject):
 
         if payload is None:
             DatastoreObject.__init__(self, None)
-            self._compute_time = None
-            self._compute_steps = None
-            self._RHS_evaluations = None
-            self._mean_RHS_time = None
-            self._max_RHS_time = None
-            self._min_RHS_time = None
+            self._data = None
 
             self._solver = None
 
@@ -166,12 +164,7 @@ class BackgroundModel(DatastoreObject):
 
         else:
             DatastoreObject.__init__(self, payload["store_id"])
-            self._compute_time = payload["compute_time"]
-            self._compute_steps = payload["compute_steps"]
-            self._RHS_evaluations = payload["RHS_evaluations"]
-            self._mean_RHS_time = payload["mean_RHS_time"]
-            self._max_RHS_time = payload["max_RHS_time"]
-            self._min_RHS_time = payload["min_RHS_time"]
+            self._data = payload["data"]
 
             self._solver = payload["solver"]
 
@@ -207,40 +200,11 @@ class BackgroundModel(DatastoreObject):
         return self._z_sample
 
     @property
-    def compute_time(self) -> float:
-        if self._compute_time is None:
-            raise RuntimeError("compute_time has not yet been populated")
-        return self._compute_time
+    def data(self) -> IntegrationData:
+        if self.values is None:
+            raise RuntimeError("values have not yet been populated")
 
-    @property
-    def compute_steps(self) -> int:
-        if self._compute_steps is None:
-            raise RuntimeError("compute_steps has not yet been populated")
-        return self._compute_steps
-
-    @property
-    def mean_RHS_time(self) -> int:
-        if self._mean_RHS_time is None:
-            raise RuntimeError("mean_RHS_time has not yet been populated")
-        return self._mean_RHS_time
-
-    @property
-    def max_RHS_time(self) -> int:
-        if self._max_RHS_time is None:
-            raise RuntimeError("max_RHS_time has not yet been populated")
-        return self._max_RHS_time
-
-    @property
-    def min_RHS_time(self) -> int:
-        if self._min_RHS_time is None:
-            raise RuntimeError("min_RHS_time has not yet been populated")
-        return self._min_RHS_time
-
-    @property
-    def RHS_evaluations(self) -> int:
-        if self._RHS_evaluations is None:
-            raise RuntimeError("RHS_evaluations has not yet been populated")
-        return self._RHS_evaluations
+        return self._data
 
     @property
     def solver(self) -> IntegrationSolver:
@@ -356,12 +320,7 @@ class BackgroundModel(DatastoreObject):
         data = ray.get(self._compute_ref)
         self._compute_ref = None
 
-        self._compute_time = data["compute_time"]
-        self._compute_steps = data["compute_steps"]
-        self._RHS_evaluations = data["RHS_evaluations"]
-        self._mean_RHS_time = data["mean_RHS_time"]
-        self._max_RHS_time = data["max_RHS_time"]
-        self._min_RHS_time = data["min_RHS_time"]
+        self._data = data["data"]
 
         H_sample = data["H_sample"]
         wB_sample = data["wB_sample"]
