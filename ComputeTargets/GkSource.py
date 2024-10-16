@@ -177,23 +177,29 @@ def assemble_GkSource_values(
                 # But in practice, because of the way we calculate theta, the most significant discontinuities seem to occur with theta_div_2pi
                 # jumping *up*, which helpfully makes them easier to spot
                 if theta_div_2pi > last_theta_div_2pi:
-                    if theta_mod_2pi > last_theta_mod_2pi:
-                        # now we have to decide whether this is likely just a jitter or numerical fluctuation,
-                        # or whether it is more likely that the solution really descends very rapidly.
+                    # we interpret this condition as a discontinuity
+                    # attempt to align the phase blocks to produce as smooth a curve as possible
+                    delta_theta_mod_2pi = theta_mod_2pi - last_theta_mod_2pi
 
-                        # We pick the new solution point to be the one closest to our current point.
-                        if theta_mod_2pi - last_theta_mod_2pi > pi:
-                            # closer if we jump to the next block
-                            rectified_theta_div_2pi = current_2pi_block - 1
-                            current_2pi_block -= 1
-                        else:
-                            rectified_theta_div_2pi = current_2pi_block
+                    # do we produce a closer result by staying in the current 2pi block, or by going up one, or by going down one?
+                    delta_theta_mod_2pi_0 = fabs(delta_theta_mod_2pi)
+                    delta_theta_mod_2pi_p1 = fabs(delta_theta_mod_2pi + _two_pi)
+                    delta_theta_mod_2pi_m1 = fabs(delta_theta_mod_2pi - _two_pi)
 
-                    else:
-                        rectified_theta_div_2pi = current_2pi_block
+                    jump_options = [
+                        (delta_theta_mod_2pi_0, 0),
+                        (delta_theta_mod_2pi_p1, +1),
+                        (delta_theta_mod_2pi_m1, -1),
+                    ]
+                    best_option = min(jump_options, key=lambda x: x[0])
+                    best_jump = best_option[1]
 
-                    # adjust current subtraction to match value of theta_div_2pi
-                    current_2pi_block_subtraction = theta_div_2pi - current_2pi_block
+                    rectified_theta_div_2pi = current_2pi_block + best_jump
+
+                    # adjust current subtraction to match value our chosen value of theta_div_2pi
+                    current_2pi_block_subtraction = (
+                        theta_div_2pi - rectified_theta_div_2pi
+                    )
 
                 else:
                     # baseline is that the rectified value of theta div 2pi is the current value minus the current subtraction:
