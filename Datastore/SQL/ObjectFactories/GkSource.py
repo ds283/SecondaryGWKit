@@ -428,7 +428,7 @@ class sqla_GkSource_factory(SQLAFactoryBase):
                     "H_ratio": value._WKB_data.H_ratio,
                     "theta_mod_2pi": value._WKB_data.theta_mod_2pi,
                     "theta_div_2pi": value._WKB_data.theta_div_2pi,
-                    "raw_theta_mod_2pi": value._WKB_data.raw_theta_mod_2pi,
+                    "raw_theta_div_2pi": value._WKB_data.raw_theta_div_2pi,
                     "G_WKB": value._WKB_data.G_WKB,
                     "new_G_WKB": value._WKB_data.new_G_WKB,
                     "abs_G_WKB_err": value._WKB_data.abs_G_WKB_err,
