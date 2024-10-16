@@ -19,7 +19,9 @@ _WKBData = namedtuple(
     [
         "theta_mod_2pi",
         "theta_div_2pi",
+        "theta",
         "raw_theta_div_2pi",
+        "raw_theta",
         "H_ratio",
         "sin_coeff",
         "cos_coeff",
@@ -52,6 +54,7 @@ def assemble_GkSource_values(
     had_theta_last_step: Optional[float] = None
     last_z_for_theta: Optional[redshift] = None
     current_2pi_block_subtraction: Optional[int] = None
+    current_2pi_block: Optional[int] = None
 
     last_theta_mod_2pi: Optional[float] = None
     last_theta_div_2pi: Optional[float] = None
@@ -152,6 +155,7 @@ def assemble_GkSource_values(
                 # presumably this is the first time we have seen a theta value. Start in the fundamental block (-2pi, 0]
 
                 current_2pi_block_subtraction = theta_div_2pi
+                current_2pi_block = 0
                 rectified_theta_div_2pi = 0
 
                 in_primary_WKB_region = True
@@ -161,9 +165,6 @@ def assemble_GkSource_values(
                     raise RuntimeError(
                         f"assemble_GkSource_values: current_2pi_block_subtraction should not be None at z_source={z_source.z:.5g} (store_id={z_source.store_id}) for k={k_exit.k.k_inv_Mpc:.5g}/Mpc (store_id={k_exit.store_id}), z_response={z_response.z:.5g} (store_id={z_response.store_id})"
                     )
-
-                # baseline is that the rectified value of theta div 2pi is the current value minus the current subtraction:
-                rectified_theta_div_2pi = theta_div_2pi - current_2pi_block_subtraction
 
                 # if the 2pi block read from the data is more positive than our current one, we interpret this as a discontinuity.
                 # we adjust the current subtraction to bring 2pi block into alignment with our current one.
@@ -181,8 +182,21 @@ def assemble_GkSource_values(
                     # We pick the new solution point to be the one closest to our current point.
                     if theta_mod_2pi - last_theta_mod_2pi > pi:
                         # closer if we jump to the next block
-                        rectified_theta_div_2pi -= 1
-                        current_2pi_block_subtraction += 1
+                        rectified_theta_div_2pi = current_2pi_block - 1
+                        current_2pi_block -= 1
+                    else:
+                        rectified_theta_div_2pi = current_2pi_block
+
+                    # adjust current subtraction to match value of theta_div_2pi
+                    current_2pi_block_subtraction = theta_div_2pi - current_2pi_block
+
+                else:
+                    # baseline is that the rectified value of theta div 2pi is the current value minus the current subtraction:
+                    rectified_theta_div_2pi = (
+                        theta_div_2pi - current_2pi_block_subtraction
+                    )
+
+                current_2pi_block = rectified_theta_div_2pi
 
             # remember our current values of theta div 2pi and theta mod 2pi for the next step in the algorithm
             last_theta_mod_2pi = theta_mod_2pi
@@ -606,7 +620,17 @@ class GkSourceValue(DatastoreObject):
         self._WKB_data = _WKBData(
             theta_mod_2pi=theta_mod_2pi,
             theta_div_2pi=theta_div_2pi,
+            theta=(
+                _two_pi * theta_div_2pi + theta_mod_2pi
+                if theta_div_2pi is not None and theta_mod_2pi is not None
+                else None
+            ),
             raw_theta_div_2pi=raw_theta_div_2pi,
+            raw_theta=(
+                _two_pi * raw_theta_div_2pi + theta_mod_2pi
+                if raw_theta_div_2pi is not None and theta_mod_2pi is not None
+                else None
+            ),
             H_ratio=H_ratio,
             sin_coeff=sin_coeff,
             cos_coeff=cos_coeff,

@@ -9,7 +9,7 @@ import matplotlib.pyplot as plt
 import pandas as pd
 import ray
 import seaborn as sns
-from math import fabs
+from math import fabs, pi
 
 from ComputeTargets import (
     BackgroundModel,
@@ -30,6 +30,8 @@ from Units import Mpc_units
 from defaults import DEFAULT_ABS_TOLERANCE, DEFAULT_REL_TOLERANCE
 
 DEFAULT_TIMEOUT = 60
+
+two_pi = 2.0 * pi
 
 parser = argparse.ArgumentParser()
 parser.add_argument(
@@ -340,7 +342,7 @@ with ShardedPool(
             ax = plt.gca()
 
             ax.plot(theta_x, theta_y, label="WKB phase $\\theta$")
-            ax.plot(raw_theta_x, raw_theta_y, label="Raw WKB phase $\\theta$")
+            # ax.plot(raw_theta_x, raw_theta_y, label="Raw WKB phase $\\theta$")
 
             ax.axvline(k_exit.z_exit_subh_e3, linestyle="--", color="r")
             ax.axvline(k_exit.z_exit_subh_e5, linestyle="--", color="b")
@@ -410,6 +412,8 @@ with ShardedPool(
         G_column = [value.numeric.G for value in values]
         Gprime_column = [value.numeric.Gprime for value in values]
         G_WKB_column = [value.WKB.G_WKB for value in values]
+        theta_div_2pi_column = [value.WKB.theta_div_2pi for value in values]
+        theta_mod_2pi_column = [value.WKB.theta_mod_2pi for value in values]
         theta_column = [value.WKB.theta for value in values]
         raw_theta_column = [value.WKB.raw_theta for value in values]
         H_ratio_column = [value.WKB.H_ratio for value in values]
@@ -431,6 +435,8 @@ with ShardedPool(
                 "G": G_column,
                 "Gprime": Gprime_column,
                 "G_WKB": G_WKB_column,
+                "theta_div_2pi": theta_div_2pi_column,
+                "theta_mod_2pi": theta_mod_2pi_column,
                 "theta": theta_column,
                 "raw_theta": raw_theta_column,
                 "H_ratio": H_ratio_column,
