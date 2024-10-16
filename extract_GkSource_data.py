@@ -415,6 +415,7 @@ with ShardedPool(
         theta_div_2pi_column = [value.WKB.theta_div_2pi for value in values]
         theta_mod_2pi_column = [value.WKB.theta_mod_2pi for value in values]
         theta_column = [value.WKB.theta for value in values]
+        raw_theta_div_2pi_column = [value.WKB.raw_theta_div_2pi for value in values]
         raw_theta_column = [value.WKB.raw_theta for value in values]
         H_ratio_column = [value.WKB.H_ratio for value in values]
         sin_coeff_column = [value.WKB.sin_coeff for value in values]
@@ -438,6 +439,7 @@ with ShardedPool(
                 "theta_div_2pi": theta_div_2pi_column,
                 "theta_mod_2pi": theta_mod_2pi_column,
                 "theta": theta_column,
+                "raw_theta_div_2pi": raw_theta_div_2pi_column,
                 "raw_theta": raw_theta_column,
                 "H_ratio": H_ratio_column,
                 "sin_coeff": sin_coeff_column,
