@@ -1211,6 +1211,10 @@ class GkWKBValue(DatastoreObject):
         return self._theta_div_2pi
 
     @property
+    def theta(self) -> int:
+        return self._theta_div_2pi * _two_pi + self._theta_mod_2pi
+
+    @property
     def omega_WKB_sq(self) -> Optional[float]:
         return self._omega_WKB_sq
 
