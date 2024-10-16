@@ -343,7 +343,7 @@ with ShardedPool(
     ## COMPUTE MATTER TRANSFER FUNCTIONS
 
     def build_Tk_work(k_exit: wavenumber_exit_time):
-        my_sample = z_source_sample.truncate(k_exit.z_exit_suph_e5)
+        my_sample = z_source_sample.truncate(k_exit.z_exit_suph_e5, keep="lower")
         return pool.object_get(
             "TkNumericalIntegration",
             solver_labels=solvers,
@@ -514,7 +514,7 @@ with ShardedPool(
                     # cut down response zs to those that are (1) later than the source, and (2) earlier than the 5-efolds-inside-the-horizon point
                     # (here with a 10% tolerance)
                     response_zs = z_response_sample.truncate(
-                        z_source, keep="lower"
+                        z_source, keep="lower-strict"
                     ).truncate(0.85 * k_exit.z_exit_subh_e6, keep="higher")
 
                     if len(response_zs) > 1:
@@ -689,7 +689,7 @@ with ShardedPool(
         work_refs = []
 
         response_pools = {
-            z_source.store_id: z_response_sample.truncate(z_source, keep="lower")
+            z_source.store_id: z_response_sample.truncate(z_source, keep="lower-strict")
             for z_source in batch
         }
 
@@ -836,7 +836,9 @@ with ShardedPool(
         # try to do parallel lookup of the GkNumericalIntegration/GkWKBIntegration records needed
         # to process this batch
         z_source_pool = {
-            z_response.store_id: z_source_sample.truncate(z_response, keep="higher")
+            z_response.store_id: z_source_sample.truncate(
+                z_response, keep="higher-strict"
+            )
             for z_response in batch
         }
 

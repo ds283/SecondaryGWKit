@@ -100,23 +100,69 @@ class redshift_array:
             return self._truncate_lower(z_limit)
         if keep == "higher":
             return self._truncate_higher(z_limit)
+        if keep == "lower-strict":
+            return self._truncate_lower_strict(z_limit)
+        if keep == "higher-strict":
+            return self._truncate_higher_strict(z_limit)
 
         raise ValueError(f'Unknown truncation mode "{keep}')
 
     def _truncate_lower(self, max_z) -> Self:
         if isinstance(max_z, redshift):
-            max_z_value = max_z.z
-        else:
-            max_z_value = float(max_z)
+            return redshift_array(
+                z_array=[
+                    z
+                    for z in self._z_array
+                    if z.z <= max_z.z + DEFAULT_FLOAT_PRECISION
+                    or z.store_id == max_z.store_id
+                ]
+            )
 
-        new_z_array = [z for z in self._z_array if z.z <= max_z_value]
-        return redshift_array(z_array=new_z_array)
+        return redshift_array(
+            z_array=[z for z in self._z_array if z.z <= max_z + DEFAULT_FLOAT_PRECISION]
+        )
 
     def _truncate_higher(self, min_z) -> Self:
         if isinstance(min_z, redshift):
-            max_z_value = min_z.z
-        else:
-            max_z_value = float(min_z)
+            return redshift_array(
+                z_array=[
+                    z
+                    for z in self._z_array
+                    if z.z >= min_z.z - DEFAULT_FLOAT_PRECISION
+                    or z.store_id == min_z.store_id
+                ]
+            )
 
-        new_z_array = [z for z in self._z_array if z.z >= max_z_value]
-        return redshift_array(z_array=new_z_array)
+        return redshift_array(
+            z_array=[z for z in self._z_array if z.z >= min_z - DEFAULT_FLOAT_PRECISION]
+        )
+
+    def _truncate_lower_strict(self, max_z) -> Self:
+        if isinstance(max_z, redshift):
+            return redshift_array(
+                z_array=[
+                    z
+                    for z in self._z_array
+                    if z.z < max_z.z - DEFAULT_FLOAT_PRECISION
+                    and z.store_id != max_z.store_id
+                ]
+            )
+
+        return redshift_array(
+            z_array=[z for z in self._z_array if z.z < max_z - DEFAULT_FLOAT_PRECISION]
+        )
+
+    def _truncate_higher_strict(self, min_z) -> Self:
+        if isinstance(min_z, redshift):
+            return redshift_array(
+                z_array=[
+                    z
+                    for z in self._z_array
+                    if z.z > min_z.z + DEFAULT_FLOAT_PRECISION
+                    and z.store_id != min_z.store_id
+                ]
+            )
+
+        return redshift_array(
+            z_array=[z for z in self._z_array if z.z > min_z + DEFAULT_FLOAT_PRECISION]
+        )
