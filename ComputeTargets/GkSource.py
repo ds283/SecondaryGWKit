@@ -219,12 +219,12 @@ def assemble_GkSource_values(
                 )
 
             # defensively, test whether this has significantly changed the result
-            # it should not, but ...
+            # it should not, but this way we should catch any inadvertent errors
             omega_WKB = sqrt(WKB.omega_WKB_sq)
             norm_factor = sqrt(WKB.H_ratio / omega_WKB)
 
             new_G_WKB = norm_factor * (
-                WKB.cos_coeff * cos(theta_mod_2pi) + WKB.sin_coeff * sin(theta_div_2pi)
+                WKB.cos_coeff * cos(theta_mod_2pi) + WKB.sin_coeff * sin(theta_mod_2pi)
             )
 
             # if the fractional error is too large, treat as an exception, so that we cannot silently
@@ -236,6 +236,16 @@ def assemble_GkSource_values(
                     print(
                         f"!! WARNING (assemble_GkSource_values): rectified G_WKB differs from original G_WKB by an unexpectedly large amount at z_source={z_source.z:.5g} (store_id={z_source.store_id}) for k={k_exit.k.k_inv_Mpc:.5g}/Mpc (store_id={k_exit.store_id}), z_response={z_response.z:.5g} (store_id={z_response.store_id}) | old G_WKB={WKB.G_WKB:.7g}, new G_WKB={new_G_WKB:.7g}, abserr={abs_err:.3g}"
                     )
+                    print(
+                        f"|    -- WKB.theta_mod_2pi={WKB._theta_mod_2pi:.5g}, WKB.theta_div_2pi={WKB.theta_div_2pi}"
+                    )
+                    print(
+                        f"|    -- WKB.H_ratio={WKB.H_ratio:.5g}, WKB.omega_WKB_sq={WKB.omega_WKB_sq:.5g}"
+                    )
+                    print(
+                        f"|    -- WKB.sin_coeff={WKB.sin_coeff:.5g}, WKB.cos_coeff={WKB.cos_coeff:.5g}"
+                    )
+                    print(f"|    -- norm_factor={norm_factor:.5g}")
             else:
                 rel_err = fabs((new_G_WKB - WKB.G_WKB) / WKB.G_WKB)
                 # test rel difference
@@ -243,6 +253,16 @@ def assemble_GkSource_values(
                     print(
                         f"!! WARNING (assemble_GkSource_values): rectified G_WKB differs from original G_WKB by an unexpectedly large amount at z_source={z_source.z:.5g} (store_id={z_source.store_id}) for k={k_exit.k.k_inv_Mpc:.5g}/Mpc (store_id={k_exit.store_id}), z_response={z_response.z:.5g} (store_id={z_response.store_id}) | old G_WKB={WKB.G_WKB:.7g}, new G_WKB={new_G_WKB:.7g}, relerr={rel_err:.3g}"
                     )
+                    print(
+                        f"|    -- WKB.theta_mod_2pi={WKB._theta_mod_2pi:.5g}, WKB.theta_div_2pi={WKB.theta_div_2pi}"
+                    )
+                    print(
+                        f"|    -- WKB.H_ratio={WKB.H_ratio:.5g}, WKB.omega_WKB_sq={WKB.omega_WKB_sq:.5g}"
+                    )
+                    print(
+                        f"|    -- WKB.sin_coeff={WKB.sin_coeff:.5g}, WKB.cos_coeff={WKB.cos_coeff:.5g}"
+                    )
+                    print(f"|    -- norm_factor={norm_factor:.5g}")
 
         else:
             # leave last_theta_mod_2pi and rectified_theta_div_2pi alone.
@@ -538,11 +558,25 @@ class GkSourceValue(DatastoreObject):
         all_WKB = all(WKB_flags)
 
         if has_numeric and not all_numeric:
+            print(
+                f"!! ERROR (GkSourceValue): only partial numeric data were supplied. Please supply all of G and Gprime."
+            )
+            print(f"|    -- G={G:.5g}, Gprime={Gprime:.5g}")
             raise ValueError(
                 "GkSourceValue: only partial numeric data were supplied. Please supply all of G and Gprime."
             )
 
         if has_WKB and not all_WKB:
+            print(
+                f"!! ERROR (GkSourceValue): only partial WKB data were supplied. Please supply all of theta_mod_2pi, theta_div_2pi, H_ratio, sin_coeff, cos_coeff and G_WKB."
+            )
+            print(
+                f"|    -- theta_mod_2pi={theta_mod_2pi:.5g}, theta_div_2pi={theta_div_2pi:.5g}"
+            )
+            print(
+                f"|    -- H_ratio={H_ratio:.5g}, sin_coeff={sin_coeff:.5g}, cos_coeff={cos_coeff:.5g}"
+            )
+            print(f"|    -- G_WKB={G_WKB:.5g}")
             raise ValueError(
                 "GkSourceValue: only partial WKB data were supplied. Please supply all of theta_mod_2pi, theta_div_2pi, H_ratio, sin_coeff, cos_coeff and G_WKB."
             )
