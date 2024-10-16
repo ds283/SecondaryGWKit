@@ -205,7 +205,7 @@ def compute_Tk(
         initial_state = [1.0, 0.0]
         sol = solve_ivp(
             RHS,
-            method="RK45",
+            method="Radau",
             t_span=(z_init.z, z_min),
             y0=initial_state,
             t_eval=z_sample.as_float_list(),
