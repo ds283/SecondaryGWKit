@@ -176,8 +176,10 @@ def assemble_GkSource_values(
                 # note: in principle, discontinuities could occur in either sense, either with theta_div_2pi jumping suddenly up or down.
                 # But in practice, because of the way we calculate theta, the most significant discontinuities seem to occur with theta_div_2pi
                 # jumping *up*, which helpfully makes them easier to spot
-                if theta_div_2pi > last_theta_div_2pi:
-                    # we interpret this condition as a discontinuity
+                last_theta = _two_pi * last_theta_div_2pi + last_theta_mod_2pi
+                theta = _two_pi * theta_div_2pi + theta_mod_2pi
+                if theta > last_theta:
+                    # we interpret this condition as a possible discontinuity
                     # attempt to align the phase blocks to produce as smooth a curve as possible
                     delta_theta_mod_2pi = theta_mod_2pi - last_theta_mod_2pi
 
