@@ -279,7 +279,7 @@ def assemble_GkSource_values(
                     print(f"|    -- norm_factor={norm_factor:.5g}")
 
         else:
-            # leave last_theta_mod_2pi and rectified_theta_div_2pi alone.
+            # leave last_theta_mod_2pi and current_2pi_block_subtraction alone.
             # We can re-use their values later if needed.
             had_theta_last_step = False
 
