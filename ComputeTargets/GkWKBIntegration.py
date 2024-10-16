@@ -156,6 +156,9 @@ class GkWKBQSupervisor(IntegrationSupervisor):
 
         self._last_u: float = self._u_init
 
+        self._largest_Q: Optional[float] = 0
+        self._smallest_Q: Optional[float] = 0
+
         self._WKB_violation: bool = False
         self._WKB_violation_z: Optional[float] = None
         self._WKB_violation_efolds_subh: Optional[float] = None
@@ -193,6 +196,13 @@ class GkWKBQSupervisor(IntegrationSupervisor):
 
         self._last_u = current_u
 
+    def update_Q(self, Q: float):
+        if self._largest_Q is None or Q > self._largest_Q:
+            self._largest_Q = Q
+
+        if self._smallest_Q is None or Q < self._smallest_Q:
+            self._smallest_Q = Q
+
     def report_WKB_violation(self, z: float, efolds_subh: float):
         if self._WKB_violation:
             return
@@ -210,12 +220,20 @@ class GkWKBQSupervisor(IntegrationSupervisor):
         return self._WKB_violation
 
     @property
-    def WKB_violation_z(self) -> float:
+    def WKB_violation_z(self) -> Optional[float]:
         return self._WKB_violation_z
 
     @property
-    def WKB_violation_efolds_subh(self) -> float:
+    def WKB_violation_efolds_subh(self) -> Optional[float]:
         return self._WKB_violation_efolds_subh
+
+    @property
+    def largest_Q(self) -> Optional[float]:
+        return self._largest_Q
+
+    @property
+    def smallest_Q(self) -> Optional[float]:
+        return self._smallest_Q
 
 
 def _mod_2pi(theta):
@@ -458,6 +476,8 @@ def stage_2_evolution(
             Q = state[Q_INDEX]
             z = z_init - u
 
+            supervisor.update_Q(Q)
+
             if supervisor.notify_available:
                 supervisor.message(u, f"current state: Q = {Q:.8g}")
                 supervisor.reset_notify_time()
@@ -556,6 +576,8 @@ def stage_2_evolution(
         "has_WKB_violation": supervisor.has_WKB_violation,
         "WKB_violation_z": supervisor.WKB_violation_z,
         "WKB_violation_efolds_subh": supervisor.WKB_violation_efolds_subh,
+        "largest_Q": supervisor.largest_Q,
+        "smallest_Q": supervisor.smallest_Q,
     }
 
 
@@ -658,6 +680,9 @@ def compute_Gk_WKB(
             atol,
             rtol,
         )
+
+        metadata["stage_2_largest_Q"] = stage_2_data["largest_Q"]
+        metadata["stage_2_smallest_Q"] = stage_2_data["smallest_Q"]
 
     if stage_1_data is None and stage_2_data is None:
         raise RuntimeError("compute_Gk_WKB: both stage #1 and stage #2 data are empty")
