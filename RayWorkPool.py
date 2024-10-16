@@ -424,7 +424,7 @@ class RayWorkPool:
                         )
 
                     now = datetime.now()
-                    msg = f"   -- {now:%Y-%m-%d %H:%M:%S%z} ({format_time(total_elapsed)} running): {len(self._todo)} work items remaining = {percent_complete:.2f}% complete"
+                    msg = f"   -- {now:%Y-%m-%d %H:%M:%S%z} ({format_time(total_elapsed)} running): {len(self._todo)}/{self._num_total_items} work items remaining = {percent_complete:.2f}% complete"
                     if percent_complete > 99.99:
                         msg += " (may be waiting for compute/store/validate tasks to finish)"
                     print(msg)
