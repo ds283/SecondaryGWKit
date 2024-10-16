@@ -51,7 +51,7 @@ def assemble_GkSource_values(
     # It will have step-like discontinuities due to the way we calculate it.
     had_theta_last_step: Optional[float] = None
     last_z_for_theta: Optional[redshift] = None
-    rectified_theta_div_2pi: Optional[int] = None
+    current_2pi_block_subtraction: Optional[int] = None
 
     last_theta_mod_2pi: Optional[float] = None
     last_theta_div_2pi: Optional[float] = None
@@ -104,6 +104,7 @@ def assemble_GkSource_values(
 
         theta_div_2pi: Optional[int] = WKB.theta_div_2pi if WKB is not None else None
         theta_mod_2pi: Optional[float] = WKB.theta_mod_2pi if WKB is not None else None
+        rectified_theta_div_2pi: Optional[int] = None
         abs_err: Optional[float] = None
         rel_err: Optional[float] = None
         new_G_WKB: Optional[float] = None
@@ -156,10 +157,13 @@ def assemble_GkSource_values(
                 in_primary_WKB_region = True
 
             else:
-                if rectified_theta_div_2pi is None:
+                if current_2pi_block_subtraction is None:
                     raise RuntimeError(
-                        f"assemble_GkSource_values: rectified_theta_div_2pi should not be None at z_source={z_source.z:.5g} (store_id={z_source.store_id}) for k={k_exit.k.k_inv_Mpc:.5g}/Mpc (store_id={k_exit.store_id}), z_response={z_response.z:.5g} (store_id={z_response.store_id})"
+                        f"assemble_GkSource_values: current_2pi_block_subtraction should not be None at z_source={z_source.z:.5g} (store_id={z_source.store_id}) for k={k_exit.k.k_inv_Mpc:.5g}/Mpc (store_id={k_exit.store_id}), z_response={z_response.z:.5g} (store_id={z_response.store_id})"
                     )
+
+                # baseline is that the rectified value of theta div 2pi is the current value minus the current subtraction:
+                rectified_theta_div_2pi = theta_div_2pi - current_2pi_block_subtraction
 
                 # if the 2pi block read from the data is more positive than our current one, we interpret this as a discontinuity.
                 # we adjust the current subtraction to bring 2pi block into alignment with our current one.
@@ -178,16 +182,7 @@ def assemble_GkSource_values(
                     if theta_mod_2pi - last_theta_mod_2pi > pi:
                         # closer if we jump to the next block
                         rectified_theta_div_2pi -= 1
-
-                    current_2pi_block_subtraction = (
-                        theta_div_2pi - rectified_theta_div_2pi
-                    )
-
-                # otherwise, we assume the current subtraction remains valid, and instead update our current 2pi block to match
-                else:
-                    rectified_theta_div_2pi = (
-                        theta_div_2pi - current_2pi_block_subtraction
-                    )
+                        current_2pi_block_subtraction += 1
 
             # remember our current values of theta div 2pi and theta mod 2pi for the next step in the algorithm
             last_theta_mod_2pi = theta_mod_2pi
@@ -347,7 +342,7 @@ def assemble_GkSource_values(
                     f"!! WARNING (assemble_GkSource_values): for k={k_exit.k.k_inv_Mpc:.5g}/Mpc (store_id={k_exit.store_id}), z_response={z_response.z:.5g} (store_id={z_response.store_id})"
                 )
                 print(
-                    f"|    smallest detected numerical source redshift z_min={numerical_smallest_z.z:.5g} (store_id={numerical_smallest_z.store_id}) is larger than largest detected source redshift in primary WKB region z_max={primary_WKB_largest_z.z:.5g} (store_id={primary_WKB_largest_z.store_id})"
+                    f"|    -- smallest detected numerical source redshift z_min={numerical_smallest_z.z:.5g} (store_id={numerical_smallest_z.store_id}) is larger than largest detected source redshift in primary WKB region z_max={primary_WKB_largest_z.z:.5g} (store_id={primary_WKB_largest_z.store_id})"
                 )
 
     return {
@@ -557,11 +552,26 @@ class GkSourceValue(DatastoreObject):
         has_WKB = any(WKB_flags)
         all_WKB = all(WKB_flags)
 
+        def emit_value(values, attr):
+            value = values[attr]
+            if value is None:
+                print(f"|    -- {attr} is missing")
+                return
+
+            if isinstance(value, float):
+                print(f"|    -- {attr} = {value:.5g}")
+                return
+
+            print(f"|    -- {attr} = {value}")
+
         if has_numeric and not all_numeric:
             print(
                 f"!! ERROR (GkSourceValue): only partial numeric data were supplied. Please supply all of G and Gprime."
             )
-            print(f"|    -- G={G:.5g}, Gprime={Gprime:.5g}")
+            attrs = {"G": G, "Gprime": Gprime}
+            for attr in attrs:
+                emit_value(attrs, attr)
+
             raise ValueError(
                 "GkSourceValue: only partial numeric data were supplied. Please supply all of G and Gprime."
             )
@@ -570,13 +580,17 @@ class GkSourceValue(DatastoreObject):
             print(
                 f"!! ERROR (GkSourceValue): only partial WKB data were supplied. Please supply all of theta_mod_2pi, theta_div_2pi, H_ratio, sin_coeff, cos_coeff and G_WKB."
             )
-            print(
-                f"|    -- theta_mod_2pi={theta_mod_2pi:.5g}, theta_div_2pi={theta_div_2pi:.5g}"
-            )
-            print(
-                f"|    -- H_ratio={H_ratio:.5g}, sin_coeff={sin_coeff:.5g}, cos_coeff={cos_coeff:.5g}"
-            )
-            print(f"|    -- G_WKB={G_WKB:.5g}")
+            attrs = {
+                "theta_mod_2pi": theta_mod_2pi,
+                "theta_div_2pi": theta_div_2pi,
+                "H_ratio": H_ratio,
+                "sin_coeff": sin_coeff,
+                "cos_coeff": cos_coeff,
+                "G_WKB": G_WKB,
+            }
+            for attr in attrs:
+                emit_value(attrs, attr)
+
             raise ValueError(
                 "GkSourceValue: only partial WKB data were supplied. Please supply all of theta_mod_2pi, theta_div_2pi, H_ratio, sin_coeff, cos_coeff and G_WKB."
             )
