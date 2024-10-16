@@ -611,7 +611,7 @@ class sqla_GkSourceValue_factory(SQLAFactoryBase):
                 sqla.Column("Gprime", sqla.Float(64), nullable=True),
                 sqla.Column("H_ratio", sqla.Float(64), nullable=True),
                 sqla.Column("theta_mod_2pi", sqla.Float(64), nullable=True),
-                sqla.Column("theta_div_2pi", sqla.Integer, nullable=False),
+                sqla.Column("theta_div_2pi", sqla.Integer, nullable=True),
                 sqla.Column("raw_theta_div_2pi", sqla.Integer, nullable=True),
                 sqla.Column("G_WKB", sqla.Float(64), nullable=True),
                 sqla.Column("new_G_WKB", sqla.Float(64), nullable=True),
