@@ -165,6 +165,10 @@ def assemble_GkSource_values(
                     raise RuntimeError(
                         f"assemble_GkSource_values: current_2pi_block_subtraction should not be None at z_source={z_source.z:.5g} (store_id={z_source.store_id}) for k={k_exit.k.k_inv_Mpc:.5g}/Mpc (store_id={k_exit.store_id}), z_response={z_response.z:.5g} (store_id={z_response.store_id})"
                     )
+                if current_2pi_block is None:
+                    raise RuntimeError(
+                        f"assemble_GkSource_values: current_2pi_block should not be None at z_source={z_source.z:.5g} (store_id={z_source.store_id}) for k={k_exit.k.k_inv_Mpc:.5g}/Mpc (store_id={k_exit.store_id}), z_response={z_response.z:.5g} (store_id={z_response.store_id})"
+                    )
 
                 # if the 2pi block read from the data is more positive than our current one, we interpret this as a discontinuity.
                 # we adjust the current subtraction to bring 2pi block into alignment with our current one.
@@ -172,18 +176,19 @@ def assemble_GkSource_values(
                 # note: in principle, discontinuities could occur in either sense, either with theta_div_2pi jumping suddenly up or down.
                 # But in practice, because of the way we calculate theta, the most significant discontinuities seem to occur with theta_div_2pi
                 # jumping *up*, which helpfully makes them easier to spot
-                if (
-                    theta_div_2pi > last_theta_div_2pi
-                    and theta_mod_2pi > last_theta_mod_2pi
-                ):
-                    # now we have to decide whether this is likely just a jitter or numerical fluctuation,
-                    # or whether it is more likely that the solution really descends very rapidly.
+                if theta_div_2pi > last_theta_div_2pi:
+                    if theta_mod_2pi > last_theta_mod_2pi:
+                        # now we have to decide whether this is likely just a jitter or numerical fluctuation,
+                        # or whether it is more likely that the solution really descends very rapidly.
 
-                    # We pick the new solution point to be the one closest to our current point.
-                    if theta_mod_2pi - last_theta_mod_2pi > pi:
-                        # closer if we jump to the next block
-                        rectified_theta_div_2pi = current_2pi_block - 1
-                        current_2pi_block -= 1
+                        # We pick the new solution point to be the one closest to our current point.
+                        if theta_mod_2pi - last_theta_mod_2pi > pi:
+                            # closer if we jump to the next block
+                            rectified_theta_div_2pi = current_2pi_block - 1
+                            current_2pi_block -= 1
+                        else:
+                            rectified_theta_div_2pi = current_2pi_block
+
                     else:
                         rectified_theta_div_2pi = current_2pi_block
 
