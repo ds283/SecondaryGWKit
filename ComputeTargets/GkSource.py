@@ -427,10 +427,6 @@ class GkSource(DatastoreObject):
 
         self._compute_ref = None
 
-        self._type = None
-        self._quality = None
-        self._crossover = None
-
         if payload is not None:
             DatastoreObject.__init__(self, payload["store_id"])
             self._values = payload["values"]
@@ -438,7 +434,11 @@ class GkSource(DatastoreObject):
             self._numerical_smallest_z = payload["numerical_smallest_z"]
             self._primary_WKB_largest_z = payload["primary_WKB_largest_z"]
 
-            self._classify_quality()
+            self._type = payload["type"]
+            self._quality = payload["quality"]
+            self._crossover = payload["crossover"]
+
+            self._metadata = payload["metadata"]
 
         else:
             DatastoreObject.__init__(self, None)
@@ -446,6 +446,12 @@ class GkSource(DatastoreObject):
 
             self._numerical_smallest_z = None
             self._primary_WKB_largest_z = None
+
+            self._type = None
+            self._quality = None
+            self._crossover = None
+
+            self._metadata = {}
 
         if self._z_sample is not None:
             z_response_float = float(z_response)
@@ -522,27 +528,57 @@ class GkSource(DatastoreObject):
 
     @property
     def numerical_smallest_z(self) -> Optional[redshift]:
-        if hasattr(self, "_do_not_populate"):
-            raise RuntimeError(
-                "GkSource: numerical_smallest_z read but _do_not_populate is set"
-            )
-
-        if self._values is None:
+        # allow this field to be read if we have been deserialized with _do_not_populate
+        # otherwise, absence of _values implies that we have not yet computed our contents
+        if self._values is None and not hasattr(self, "_do_not_populate"):
             raise RuntimeError("values have not yet been populated")
 
         return self._numerical_smallest_z
 
     @property
     def primary_WKB_largest_z(self) -> Optional[redshift]:
-        if hasattr(self, "_do_not_populate"):
-            raise RuntimeError(
-                "GkSource: primary_WKB_largest_z read but _do_not_populate is set"
-            )
-
-        if self._values is None:
+        # allow this field to be read if we have been deserialized with _do_not_populate
+        # otherwise, absence of _values implies that we have not yet computed our contents
+        if self._values is None and not hasattr(self, "_do_not_populate"):
             raise RuntimeError("values have not yet been populated")
 
         return self._primary_WKB_largest_z
+
+    @property
+    def type(self) -> Optional[str]:
+        # allow this field to be read if we have been deserialized with _do_not_populate
+        # otherwise, absence of _values implies that we have not yet computed our contents
+        if self._values is None and not hasattr(self, "_do_not_populate"):
+            raise RuntimeError("values have not yet been populated")
+
+        return self._type
+
+    @property
+    def quality(self) -> Optional[str]:
+        # allow this field to be read if we have been deserialized with _do_not_populate
+        # otherwise, absence of _values implies that we have not yet computed our contents
+        if self._values is None and not hasattr(self, "_do_not_populate"):
+            raise RuntimeError("values have not yet been populated")
+
+        return self._quality
+
+    @property
+    def crossover(self) -> Optional[float]:
+        # allow this field to be read if we have been deserialized with _do_not_populate
+        # otherwise, absence of _values implies that we have not yet computed our contents
+        if self._values is None and not hasattr(self, "_do_not_populate"):
+            raise RuntimeError("values have not yet been populated")
+
+        return self._crossover
+
+    @property
+    def metadata(self) -> dict:
+        # allow this field to be read if we have been deserialized with _do_not_populate
+        # otherwise, absence of _values implies that we have not yet computed our contents
+        if self._values is None and not hasattr(self, "_do_not_populate"):
+            raise RuntimeError("values have not yet been populated")
+
+        return self._metadata
 
     @property
     def functions(self) -> GkSourceFunctions:

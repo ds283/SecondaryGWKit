@@ -394,7 +394,11 @@ class sqla_GkWKBIntegration_factory(SQLAFactoryBase):
                 "WKB_violation_z": row_data.WKB_violation_z,
                 "WKB_violation_efolds_subh": row_data.WKB_violation_efolds_subh,
                 "init_efolds_subh": row_data.init_efolds_subh,
-                "metadata": json.loads(row_data.metadata),
+                "metadata": (
+                    json.loads(row_data.metadata)
+                    if row_data.metadata is not None
+                    else None
+                ),
                 "solver": (
                     IntegrationSolver(
                         store_id=row_data.solver_serial,
@@ -512,8 +516,10 @@ class sqla_GkWKBIntegration_factory(SQLAFactoryBase):
                 "has_WKB_violation": obj.has_WKB_violation,
                 "WKB_violation_z": obj.WKB_violation_z,
                 "WKB_violation_efolds_subh": obj.WKB_violation_efolds_subh,
-                "init_efolds_subh": obj.init_efolds_subh,
-                "metadata": json.dumps(obj.metadata),
+                "init_efolds_subh": obj._init_efolds_subh,
+                "metadata": (
+                    json.dumps(obj.metadata) if obj._metadata is not None else None
+                ),
                 "validated": False,
             },
         )

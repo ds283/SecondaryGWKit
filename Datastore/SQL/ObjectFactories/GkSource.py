@@ -1,3 +1,4 @@
+import json
 from typing import Optional, List
 
 import sqlalchemy as sqla
@@ -14,6 +15,32 @@ from CosmologyConcepts import wavenumber_exit_time, redshift_array, redshift
 from Datastore.SQL.ObjectFactories.base import SQLAFactoryBase
 from MetadataConcepts import store_tag, tolerance
 from defaults import DEFAULT_STRING_LENGTH
+
+_quality_serialize = {
+    "complete": 0,
+    "acceptable": 1,
+    "marginal": 2,
+    "incomplete": 3,
+}
+
+_quality_deserialize = {
+    0: "complete",
+    1: "acceptable",
+    2: "marginal",
+    3: "incomplete",
+}
+
+_type_serialize = {
+    "numeric": 0,
+    "WKB": 1,
+    "mixed": 2,
+}
+
+_type_deserialize = {
+    0: "numeric",
+    1: "WKB",
+    2: "mixed",
+}
 
 
 class sqla_GkSourceTagAssociation_factory(SQLAFactoryBase):
@@ -143,7 +170,17 @@ class sqla_GkSource_factory(SQLAFactoryBase):
                     index=True,
                     nullable=True,
                 ),
+                sqla.Column("quality", sqla.SmallInteger, nullable=False),
+                sqla.Column(
+                    "crossover",
+                    sqla.Float(64),
+                    nullable=False,
+                ),
+                sqla.Column("type", sqla.SmallInteger, nullable=False),
                 sqla.Column("validated", sqla.Boolean, default=False, nullable=False),
+                sqla.Column(
+                    "metadata", sqla.String(DEFAULT_STRING_LENGTH), nullable=True
+                ),
             ],
         }
 
@@ -184,6 +221,10 @@ class sqla_GkSource_factory(SQLAFactoryBase):
                 smallest_numerical_z_table.c.z.label("numerical_smallest_z"),
                 table.c.primary_WKB_largest_z_serial,
                 largest_WKB_z_table.c.z.label("primary_WKB_largest_z"),
+                table.c.type,
+                table.c.quality,
+                table.c.crossover,
+                table.c.metadata,
             )
             .select_from(
                 table.join(atol_table, atol_table.c.serial == table.c.atol_serial)
@@ -271,9 +312,6 @@ class sqla_GkSource_factory(SQLAFactoryBase):
 
         num_expected_samples = row_data.z_samples
 
-        z_response_serial = row_data.z_response_serial
-        z_response_value = row_data.z_response
-
         if payload is None or not payload.get("_do_not_populate", False):
             # read out sample values associated with this integration
             value_table = tables["GkSourceValue"]
@@ -358,13 +396,31 @@ class sqla_GkSource_factory(SQLAFactoryBase):
                 "values": values,
                 "numerical_smallest_z": numerical_smallest_z,
                 "primary_WKB_largest_z": primary_WKB_largest_z,
+                "type": (
+                    _type_deserialize[row_data.type]
+                    if row_data.type is not None
+                    else None
+                ),
+                "quality": (
+                    _quality_deserialize[row_data.quality]
+                    if row_data.quality is not None
+                    else None
+                ),
+                "crossover": row_data.crossover,
+                "metadata": (
+                    json.loads(row_data.metadata)
+                    if row_data.metadata is not None
+                    else None
+                ),
             },
             k=k_exit,
             model=model,
             label=store_label,
             atol=atol,
             rtol=rtol,
-            z_response=redshift(store_id=z_response_serial, z=z_response_value),
+            z_response=redshift(
+                store_id=(row_data.z_response_serial), z=(row_data.z_response)
+            ),
             z_sample=imported_z_sample,
             tags=tags,
         )
@@ -401,6 +457,16 @@ class sqla_GkSource_factory(SQLAFactoryBase):
                     obj.primary_WKB_largest_z.store_id
                     if obj.primary_WKB_largest_z is not None
                     else None
+                ),
+                "type": _type_serialize[obj._type] if obj._type is not None else None,
+                "quality": (
+                    _quality_serialize[obj._quality]
+                    if obj._quality is not None
+                    else None
+                ),
+                "crossover": obj._crossover,
+                "metadata": (
+                    json.dumps(obj._metadata) if obj._metadata is not None else None
                 ),
                 "validated": False,
             },

@@ -918,17 +918,29 @@ class GkWKBIntegration(DatastoreObject):
 
     @property
     def metadata(self) -> dict:
-        if self._values is None:
+        # allow this field to be read if we have been deserialized with _do_not_populate
+        # otherwise, absence of _values implies that we have not yet computed our contents
+        if self._values is None and not hasattr(self, "_do_not_populate"):
             raise RuntimeError("values have not yet been populated")
 
         return self._metadata
 
     @property
     def has_WKB_violation(self) -> bool:
+        # allow this field to be read if we have been deserialized with _do_not_populate
+        # otherwise, absence of _values implies that we have not yet computed our contents
+        if self._values is None and not hasattr(self, "_do_not_populate"):
+            raise RuntimeError("values have not yet been populated")
+
         return self._has_WKB_violation
 
     @property
     def WKB_violation_z(self) -> Optional[float]:
+        # allow this field to be read if we have been deserialized with _do_not_populate
+        # otherwise, absence of _values implies that we have not yet computed our contents
+        if self._values is None and not hasattr(self, "_do_not_populate"):
+            raise RuntimeError("values have not yet been populated")
+
         if not self._has_WKB_violation:
             return None
 
@@ -936,6 +948,11 @@ class GkWKBIntegration(DatastoreObject):
 
     @property
     def WKB_violation_efolds_subh(self) -> Optional[float]:
+        # allow this field to be read if we have been deserialized with _do_not_populate
+        # otherwise, absence of _values implies that we have not yet computed our contents
+        if self._values is None and not hasattr(self, "_do_not_populate"):
+            raise RuntimeError("values have not yet been populated")
+
         if not self._has_WKB_violation:
             return None
 
