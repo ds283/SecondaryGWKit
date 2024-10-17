@@ -170,13 +170,13 @@ class sqla_GkSource_factory(SQLAFactoryBase):
                     index=True,
                     nullable=True,
                 ),
+                sqla.Column("type", sqla.SmallInteger, nullable=False),
                 sqla.Column("quality", sqla.SmallInteger, nullable=False),
                 sqla.Column(
                     "crossover",
                     sqla.Float(64),
-                    nullable=False,
+                    nullable=True,
                 ),
-                sqla.Column("type", sqla.SmallInteger, nullable=False),
                 sqla.Column("validated", sqla.Boolean, default=False, nullable=False),
                 sqla.Column(
                     "metadata", sqla.String(DEFAULT_STRING_LENGTH), nullable=True
