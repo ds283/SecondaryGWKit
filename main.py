@@ -827,9 +827,10 @@ with ShardedPool(
     # STEP 5
     # REBUILD TENSOR GREEN'S FUNCTIONS AS FUNCTIONS OF THE SOURCE REDSHIFT, RATHER THAN THE RESPONSE REDSHIFT
 
-    # (In theory we could construct this on-the-fly when we need it. Storing the rebuilt tensor Green's functions in the datastore is,
-    # strictly, redundant. But it is likely much faster because we need to perform complicated table lookups with joins in order to build
-    # these directly from GkNumericalValue and GkWKValue rows. Also, there is the reproducibility angle of keeping a record of what
+    # (In theory we could construct G_k as functions of the source redshift z' on-the-fly when we need them.
+    # Storing the rebuilt tensor Green's functions in the datastore is, in this sense, redundant. But it is likely much faster
+    # to pre-build and cache, because we need to perform complicated table lookups with joins in order to extract the relevant
+    # solution points from GkNumericalValue and GkWKValue rows. Also, there is the reproducibility angle of keeping a record of what
     # rebuilt data products we used.)
 
     GkSource_statistics = {}
@@ -838,8 +839,8 @@ with ShardedPool(
     def postprocess_GkSource(Gk: GkSource):
         global GkSource_total
 
-        type = Gk._type
-        quality = Gk._quality
+        type: str = Gk.type
+        quality: str = Gk.quality
 
         if type not in GkSource_statistics:
             GkSource_statistics[type] = {}
@@ -861,7 +862,7 @@ with ShardedPool(
             for z_response in batch
         }
 
-        # first, determine which GkSource objects are missing from the datastore. We do not rebuild (or even re-requery) any that are already
+        # first, determine which GkSource objects are missing from the datastore. We do not rebuild (or even re-query) any that are already
         # present (although we do not attempt to validate them either). Even querying has an impact: scheduling a remote database lookup,
         # serialization/deserialization of the output product, etc.
         query_batch = [
