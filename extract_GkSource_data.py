@@ -1,5 +1,6 @@
 import argparse
 import sys
+from datetime import datetime
 from itertools import product
 from pathlib import Path
 from random import sample
@@ -9,13 +10,14 @@ import matplotlib.pyplot as plt
 import pandas as pd
 import ray
 import seaborn as sns
-from math import fabs, pi
+from math import fabs, pi, sqrt
 
 from ComputeTargets import (
     BackgroundModel,
     GkSource,
     GkSourceValue,
 )
+from ComputeTargets.GkSource import GkSourceFunctions
 from CosmologyConcepts import (
     wavenumber,
     wavenumber_exit_time,
@@ -23,6 +25,7 @@ from CosmologyConcepts import (
     redshift,
 )
 from CosmologyModels.LambdaCDM import Planck2018, LambdaCDM
+from Datastore.SQL.ProfileAgent import ProfileAgent
 from Datastore.SQL.ShardedPool import ShardedPool
 from MetadataConcepts import tolerance
 from RayWorkPool import RayWorkPool
@@ -175,16 +178,41 @@ with ShardedPool(
 
             return x / y
 
+        functions: GkSourceFunctions = Gk.functions
+
+        num_max_z = None
+        num_min_z = None
+        WKB_max_z = None
+        WKB_min_z = None
+
+        num_region = functions.numerical_region
+        if num_region is not None:
+            num_max_z, num_min_z = num_region
+
+        WKB_region = functions.WKB_region
+        if WKB_region is not None:
+            WKB_max_z, WKB_min_z = WKB_region
+
+        if num_region is not None:
+            numerical_points = [
+                value for value in values if num_max_z >= value.z_source.z >= num_min_z
+            ]
+        else:
+            numerical_points = []
+
+        if WKB_region is not None:
+            WKB_points = [
+                value for value in values if WKB_max_z >= value.z_source.z >= WKB_min_z
+            ]
+        else:
+            WKB_points = []
+
         abs_G_points = [
             (
                 value.z_source.z,
                 safe_div(
                     safe_fabs(value.numeric.G),
-                    (
-                        (1.0 + value.z_source.z)
-                        # * model.functions.Hubble(value.z_source.z)
-                        # * model.functions.Hubble(value.z_source.z)
-                    ),
+                    ((1.0 + value.z_source.z)),
                 ),
             )
             for value in values
@@ -194,14 +222,30 @@ with ShardedPool(
                 value.z_source.z,
                 safe_div(
                     safe_fabs(value.WKB.G_WKB),
-                    (
-                        (1.0 + value.z_source.z)
-                        # * model.functions.Hubble(value.z_source.z)
-                        # * model.functions.Hubble(value.z_source.z)
-                    ),
+                    ((1.0 + value.z_source.z)),
                 ),
             )
             for value in values
+        ]
+        abs_G_spline_points = [
+            (
+                value.z_source.z,
+                safe_div(
+                    safe_fabs(functions.numerical_Gk(value.z_source.z)),
+                    (1.0 + value.z_source.z),
+                ),
+            )
+            for value in numerical_points
+        ]
+        abs_G_WKB_spline_points = [
+            (
+                value.z_source.z,
+                safe_div(
+                    safe_fabs(functions.WKB_Gk(value.z_source.z)),
+                    (1.0 + value.z_source.z),
+                ),
+            )
+            for value in WKB_points
         ]
         abs_analytic_points = [
             (
@@ -226,23 +270,77 @@ with ShardedPool(
         abs_raw_theta_points = [
             (value.z_source.z, safe_fabs(value.WKB.raw_theta)) for value in values
         ]
-        abs_sin_coeff_points = [
-            (value.z_source.z, safe_fabs(value.WKB.sin_coeff)) for value in values
+        theta_spline_points = [
+            (
+                value.z_source.z,
+                functions.theta(value.z_source.z),
+            )
+            for value in WKB_points
         ]
-        abs_cos_coeff_points = [
-            (value.z_source.z, safe_fabs(value.WKB.cos_coeff)) for value in values
+        abs_theta_spline_points = [
+            (
+                value.z_source.z,
+                safe_fabs(functions.theta(value.z_source.z)),
+            )
+            for value in WKB_points
+        ]
+
+        abs_amplitude_sin_points = [
+            (
+                value.z_source.z,
+                safe_fabs(
+                    value.WKB.sin_coeff
+                    * sqrt(value.WKB.H_ratio / sqrt(value.omega_WKB_sq))
+                ),
+            )
+            for value in WKB_points
+        ]
+        abs_amplitude_cos_points = [
+            (
+                value.z_source.z,
+                safe_fabs(
+                    value.WKB.cos_coeff
+                    * sqrt(value.WKB.H_ratio / sqrt(value.omega_WKB_sq))
+                ),
+            )
+            for value in WKB_points
         ]
 
         abs_G_x, abs_G_y = zip(*abs_G_points)
         abs_G_WKB_x, abs_G_WKB_y = zip(*abs_G_WKB_points)
         abs_analytic_x, abs_analytic_y = zip(*abs_analytic_points)
+        abs_G_spline_x, abs_G_spline_y = (
+            zip(*abs_G_spline_points) if len(abs_G_spline_points) > 0 else ([], [])
+        )
+        abs_G_WKB_spline_x, abs_G_WKB_spline_y = (
+            zip(*abs_G_WKB_spline_points)
+            if len(abs_G_WKB_spline_points) > 0
+            else ([], [])
+        )
 
         theta_x, theta_y = zip(*theta_points)
         raw_theta_x, raw_theta_y = zip(*raw_theta_points)
         abs_theta_x, abs_theta_y = zip(*abs_theta_points)
         abs_raw_theta_x, abs_raw_theta_y = zip(*abs_raw_theta_points)
-        abs_sin_coeff_x, abs_sin_coeff_y = zip(*abs_sin_coeff_points)
-        abs_cos_coeff_x, abs_cos_coeff_y = zip(*abs_cos_coeff_points)
+        theta_spline_x, theta_spline_y = (
+            zip(*theta_spline_points) if len(theta_spline_points) > 0 else ([], [])
+        )
+        abs_theta_spline_x, abs_theta_spline_y = (
+            zip(*abs_theta_spline_points)
+            if len(abs_theta_spline_points) > 0
+            else ([], [])
+        )
+
+        abs_amplitude_sin_x, abs_amplitude_sin_y = (
+            zip(*abs_amplitude_sin_points)
+            if len(abs_amplitude_sin_points) > 0
+            else ([], [])
+        )
+        abs_amplitude_cos_x, abs_amplitude_cos_y = (
+            zip(*abs_amplitude_cos_points)
+            if len(abs_amplitude_cos_points) > 0
+            else ([], [])
+        )
 
         k_exit = Gk._k_exit
         z_response = Gk.z_response
@@ -252,17 +350,65 @@ with ShardedPool(
         if len(abs_G_x) > 0 and (
             any(y is not None and y > 0 for y in abs_G_y)
             or any(y is not None and y > 0 for y in abs_G_WKB_y)
+            or any(y is not None and y > 0 for y in abs_G_spline_y)
+            or any(y is not None and y > 0 for y in abs_G_WKB_spline_y)
         ):
             fig = plt.figure()
             ax = plt.gca()
 
-            ax.plot(abs_G_x, abs_G_y, label="Numerical $G_k$")
-            ax.plot(abs_G_WKB_x, abs_G_WKB_y, label="WKB $G_k$")
+            ax.plot(
+                abs_G_x,
+                abs_G_y,
+                label="Numerical $G_k$",
+                color="r",
+                linestyle="solid",
+            )
+            ax.plot(
+                abs_G_WKB_x,
+                abs_G_WKB_y,
+                label="WKB $G_k$",
+                color="b",
+                linestyle="solid",
+            )
             ax.plot(
                 abs_analytic_x,
                 abs_analytic_y,
                 label="Analytic $G_k$",
-                linestyle="--",
+                color="g",
+                linestyle="dashed",
+            )
+            ax.plot(
+                abs_G_spline_x,
+                abs_G_spline_y,
+                label="Spline $G_k$",
+                color="m",
+                linestyle="dashdot",
+            )
+            ax.plot(
+                abs_G_WKB_spline_x,
+                abs_G_WKB_spline_y,
+                label="Spline WKB $G_k$",
+                color="c",
+                linestyle="dashdot",
+            )
+
+            ax.axvline(k_exit.z_exit_subh_e3, linestyle="dashed", color="r")
+            ax.axvline(k_exit.z_exit_subh_e5, linestyle="dashed", color="b")
+
+            trans = ax.get_xaxis_transform()
+            ax.text(
+                k_exit.z_exit_subh_e3,
+                0.9,
+                "$+3$ e-folds",
+                transform=trans,
+                fontsize="small",
+            )
+            ax.text(
+                k_exit.z_exit_subh_e5,
+                0.75,
+                "$+5$ e-folds",
+                transform=trans,
+                fontsize="small",
             )
 
             ax.set_xlabel("source redshift $z$")
@@ -286,19 +432,35 @@ with ShardedPool(
         if len(abs_theta_x) > 0 and (
             any(y is not None and y > 0 for y in abs_theta_y)
             or any(y is not None and y > 0 for y in abs_raw_theta_y)
+            or any(y is not None and y > 0 for y in abs_theta_spline_y)
         ):
             fig = plt.figure()
             ax = plt.gca()
 
-            ax.plot(abs_theta_x, abs_theta_y, label="WKB phase $\\theta$")
+            ax.plot(
+                abs_theta_x,
+                abs_theta_y,
+                label="WKB phase $\\theta$",
+                color="r",
+                linestyle="solid",
+            )
             ax.plot(
                 abs_raw_theta_x,
                 abs_raw_theta_y,
                 label="Raw WKB phase $\\theta$",
+                color="b",
+                linestyle="dashed",
+            )
+            ax.plot(
+                abs_theta_spline_x,
+                abs_theta_spline_y,
+                label="Spline WKB phase $\\theta$",
+                color="g",
+                linestyle="solid",
             )
 
-            ax.axvline(k_exit.z_exit_subh_e3, linestyle="--", color="r")
-            ax.axvline(k_exit.z_exit_subh_e5, linestyle="--", color="b")
+            ax.axvline(k_exit.z_exit_subh_e3, linestyle="dashed", color="r")
+            ax.axvline(k_exit.z_exit_subh_e5, linestyle="dashed", color="b")
 
             trans = ax.get_xaxis_transform()
             ax.text(
@@ -337,15 +499,35 @@ with ShardedPool(
         if len(theta_x) > 0 and (
             any(y is not None for y in theta_y)
             or any(y is not None for y in raw_theta_y)
+            or any(y is not None for y in theta_spline_y)
         ):
             fig = plt.figure()
             ax = plt.gca()
 
-            ax.plot(theta_x, theta_y, label="WKB phase $\\theta$")
-            ax.plot(raw_theta_x, raw_theta_y, label="Raw WKB phase $\\theta$")
+            ax.plot(
+                theta_x,
+                theta_y,
+                label="WKB phase $\\theta$",
+                color="r",
+                linestyle="solid",
+            )
+            ax.plot(
+                raw_theta_x,
+                raw_theta_y,
+                label="Raw WKB phase $\\theta$",
+                color="b",
+                linestyle="dashed",
+            )
+            ax.plot(
+                theta_spline_x,
+                theta_spline_y,
+                label="Spline WKB phase $\\theta$",
+                color="g",
+                linestyle="solid",
+            )
 
-            ax.axvline(k_exit.z_exit_subh_e3, linestyle="--", color="r")
-            ax.axvline(k_exit.z_exit_subh_e5, linestyle="--", color="b")
+            ax.axvline(k_exit.z_exit_subh_e3, linestyle="dashed", color="r")
+            ax.axvline(k_exit.z_exit_subh_e5, linestyle="dashed", color="b")
 
             trans = ax.get_xaxis_transform()
             ax.text(
@@ -380,18 +562,18 @@ with ShardedPool(
             fig.savefig(fig_path)
             plt.close()
 
-        if len(abs_sin_coeff_x) > 0 and (
-            any(y is not None and y > 0 for y in abs_sin_coeff_y)
-            or any(y is not None and y > 0 for y in abs_cos_coeff_y)
+        if len(abs_amplitude_sin_x) > 0 and (
+            any(y is not None and y > 0 for y in abs_amplitude_sin_y)
+            or any(y is not None and y > 0 for y in abs_amplitude_cos_y)
         ):
             fig = plt.figure()
             ax = plt.gca()
 
-            ax.plot(abs_sin_coeff_x, abs_sin_coeff_y, label="$\\sin$ coefficient")
-            ax.plot(abs_cos_coeff_x, abs_cos_coeff_y, label="$\\cos coefficient")
+            ax.plot(abs_amplitude_sin_x, abs_amplitude_sin_y, label="$\\sin$ amplitude")
+            ax.plot(abs_amplitude_cos_x, abs_amplitude_cos_y, label="$\\cos$ amplitude")
 
             ax.set_xlabel("source redshift $z$")
-            ax.set_ylabel("coefficient")
+            ax.set_ylabel("amplitude")
 
             ax.set_xscale("log")
             ax.set_yscale("log")
@@ -402,7 +584,7 @@ with ShardedPool(
 
             fig_path = (
                 base_path
-                / f"plots/coeffs/k-serial={k_exit.store_id}-k={k_exit.k.k_inv_Mpc:.5g}/z-serial={z_response.store_id}-zsource={z_response.z:.5g}.pdf"
+                / f"plots/amplitude/k-serial={k_exit.store_id}-k={k_exit.k.k_inv_Mpc:.5g}/z-serial={z_response.store_id}-zsource={z_response.z:.5g}.pdf"
             )
             fig_path.parents[0].mkdir(exist_ok=True, parents=True)
             fig.savefig(fig_path)
