@@ -10,6 +10,7 @@ from ComputeTargets.TkNumericalIntegration import (
     TkNumericalIntegration,
     TkNumericalValue,
 )
+from ComputeTargets.spline_wrappers import ZSplineWrapper
 from CosmologyConcepts import wavenumber, redshift_array, redshift
 from Datastore import DatastoreObject
 from MetadataConcepts import store_tag
@@ -283,33 +284,15 @@ class TensorSource(DatastoreObject):
             source_x_data, source_y_data, ext="raise"
         )
 
-        def source_wrapper(z: float):
-            z_max: redshift = self._z_sample.max
-            z_min: redshift = self._z_sample.min
-
-            if z > z_max.z:
-                raise RuntimeError(
-                    f"TensorSource.source_function: source function spline z is out of bounds (maximum allowed z_max={z_max.z:.5g}, recommended limit is z={0.95*z_max.z:.5g})"
-                )
-
-            if z < z_min.z:
-                raise RuntimeError(
-                    f"TensorSource.source_function: source function spline z is out of bounds (minimum allowed z_min={z_min.z:.5g}, recommended limit is z={1.05*z_min.z:.5g})"
-                )
-
-            if z >= 0.95 * z_max.z:
-                print(
-                    f"!! WARNING (TensorSource.source_function): attempt to use source function spline within 5% of its upper boundary (z_max={z_max.z:.5g}, recommended limit is z={0.95*z_max.z:.5g})"
-                )
-
-            if z <= 1.05 * z_min.z:
-                print(
-                    f"!! WARNING (TensorSource.source_function): attempt to use source function spline within 5% of its lower boundary (z_min={z_min.z:.5g}), recommended limit is z={1.05*z_min.z:.5g}"
-                )
-
-            return source_spline(log(z))
-
-        self._functions = TensorSourceFunctions(source=source_wrapper)
+        self._functions = TensorSourceFunctions(
+            source=ZSplineWrapper(
+                source_spline,
+                "T_k",
+                self._z_sample.max.z,
+                self._z_sample.min.z,
+                log_z=True,
+            )
+        )
 
     def compute(self, label: Optional[str] = None):
         if hasattr(self, "_do_not_populate"):

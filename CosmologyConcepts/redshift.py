@@ -73,27 +73,11 @@ class redshift_array:
 
     @property
     def max(self) -> redshift:
-        z_max = None
-        z_max_item = None
-
-        for z in self._z_array:
-            if z_max is None or z.z > z_max:
-                z_max = z.z
-                z_max_item = z
-
-        return z_max_item
+        return max(self._z_array, key=lambda z: z.z)
 
     @property
     def min(self) -> redshift:
-        z_min = None
-        z_min_item = None
-
-        for z in self._z_array:
-            if z_min is None or z.z < z_min:
-                z_min = z.z
-                z_min_item = z
-
-        return z_min_item
+        return min(self._z_array, key=lambda z: z.z)
 
     def truncate(self, z_limit, keep: str = "lower") -> Self:
         if keep == "lower":

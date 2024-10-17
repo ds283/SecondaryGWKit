@@ -2,11 +2,13 @@ from collections import namedtuple
 from typing import Optional, List
 
 import ray
-from math import fabs, pi, sqrt, cos, sin
+from math import fabs, pi, sqrt, cos, sin, log
+from scipy.interpolate import InterpolatedUnivariateSpline, UnivariateSpline
 
 from ComputeTargets.BackgroundModel import BackgroundModel
 from ComputeTargets.GkNumericalIntegration import GkNumericalValue
 from ComputeTargets.GkWKBIntegration import GkWKBValue
+from ComputeTargets.spline_wrappers import GkWKBSplineWrapper, ZSplineWrapper
 from CosmologyConcepts import wavenumber_exit_time, redshift, wavenumber, redshift_array
 from Datastore import DatastoreObject
 from MetadataConcepts import store_tag, tolerance
@@ -29,6 +31,20 @@ _WKBData = namedtuple(
         "new_G_WKB",
         "abs_G_WKB_err",
         "rel_G_WKB_err",
+    ],
+)
+
+GkSourceFunctions = namedtuple(
+    "GkSourceFunctions",
+    [
+        "numerical_region",
+        "WKB_region",
+        "numerical_Gk",
+        "WKB_Gk",
+        "theta",
+        "type",
+        "quality",
+        "crossover",
     ],
 )
 
@@ -407,7 +423,13 @@ class GkSource(DatastoreObject):
         self._atol = atol
         self._rtol = rtol
 
+        self._functions = None
+
         self._compute_ref = None
+
+        self._type = None
+        self._quality = None
+        self._crossover = None
 
         if payload is not None:
             DatastoreObject.__init__(self, payload["store_id"])
@@ -415,6 +437,8 @@ class GkSource(DatastoreObject):
 
             self._numerical_smallest_z = payload["numerical_smallest_z"]
             self._primary_WKB_largest_z = payload["primary_WKB_largest_z"]
+
+            self._classify_quality()
 
         else:
             DatastoreObject.__init__(self, None)
@@ -433,6 +457,44 @@ class GkSource(DatastoreObject):
                     raise ValueError(
                         f"GkSource: source redshift sample point z={z_float:.5g} exceeds response redshift z={z_response_float:.5g}"
                     )
+
+    def _classify_quality(self):
+        if self._primary_WKB_largest_z is None:
+            self._type = "numeric"
+            self._crossover = None
+
+            if self._numerical_smallest_z.store_id == self._z_sample.min.store_id:
+                self._quality = "complete"
+            else:
+                self._quality = "incomplete"
+
+        elif self._numerical_smallest_z is None:
+            self._type = "WKB"
+            self._crossover = None
+
+            if self._primary_WKB_largest_z.store_id == self._z_sample.max.store_id:
+                self._quality = "complete"
+            else:
+                self._quality = "incomplete"
+
+        else:
+            self._type = "mixed"
+
+            if self._numerical_smallest_z.z <= 0.9 * self._primary_WKB_largest_z.z:
+                self._quality = "complete"
+                self._crossover = 0.91 * self._primary_WKB_largest_z.z
+
+            elif self._numerical_smallest_z.z <= 0.96 * self._primary_WKB_largest_z.z:
+                self._quality = "acceptable"
+                self._crossover = 0.97 * self._primary_WKB_largest_z.z
+
+            elif self._numerical_smallest_z.z <= self._primary_WKB_largest_z.z:
+                self._quality = "marginal"
+                self._crossover = self._primary_WKB_largest_z.z
+
+            else:
+                self._quality = "incomplete"
+                self._crossover = self._numerical_smallest_z.z
 
     @property
     def k(self) -> wavenumber:
@@ -481,6 +543,144 @@ class GkSource(DatastoreObject):
             raise RuntimeError("values have not yet been populated")
 
         return self._primary_WKB_largest_z
+
+    @property
+    def functions(self) -> GkSourceFunctions:
+        if hasattr(self, "_do_not_populate"):
+            raise RuntimeError(
+                "GkSource: attempt to construct functions, but _do_not_populate is set"
+            )
+
+        if self._values is None:
+            raise RuntimeError("values have not yet been populated")
+
+        if self._functions is None:
+            self._create_functions()
+
+        return self._functions
+
+    def _create_functions(self):
+        numerical_region = None
+        numerical_Gk = None
+        if self._numerical_smallest_z is not None:
+            max_z = self._z_sample.max
+            min_z = self._numerical_smallest_z
+
+            # must be sorted into ascending order of redshift for a smoothing spline
+            numerical_data = [
+                v
+                for v in self._values
+                if v.has_numeric
+                and (
+                    v.z_source.z <= max_z.z + DEFAULT_FLOAT_PRECISION
+                    or v.z_source.store_id == max_z.store_id
+                )
+                and (
+                    v.z_source.z >= min_z.z - DEFAULT_FLOAT_PRECISION
+                    or v.z_source.store_id == min_z.store_id
+                )
+            ]
+
+            if len(numerical_data) > 5:
+                numerical_region = (max_z.z, min_z.z)
+
+                numerical_data.sort(key=lambda x: x.z_source.z)
+
+                numerical_Gk_data = [
+                    (log(v.z_source.z), v.numeric.G) for v in numerical_data
+                ]
+                numerical_Gk_x, numerical_Gk_y = zip(*numerical_Gk_data)
+
+                _numerical_Gk_spline = InterpolatedUnivariateSpline(
+                    numerical_Gk_x,
+                    numerical_Gk_y,
+                    ext="raise",
+                )
+
+                numerical_Gk = ZSplineWrapper(
+                    _numerical_Gk_spline, "numerical Gk", max_z.z, min_z.z, log_z=True
+                )
+
+        WKB_region = None
+        WKB_Gk = None
+        WKB_theta = None
+        if self._primary_WKB_largest_z is not None:
+            max_z = self._primary_WKB_largest_z
+            min_z = self._z_sample.min
+
+            # must be sorted into ascending order of redshift for a smoothing spline
+            WKB_data = [
+                v
+                for v in self._values
+                if v.has_WKB
+                and (
+                    v.z_source.z <= max_z.z + DEFAULT_FLOAT_PRECISION
+                    or v.z_source.store_id == max_z.store_id
+                )
+                and (
+                    v.z_source.z >= min_z.z - DEFAULT_FLOAT_PRECISION
+                    or v.z_source.store_id == min_z.store_id
+                )
+            ]
+
+            if len(WKB_data) > 5:
+                WKB_region = (max_z.z, min_z.z)
+
+                WKB_data.sort(key=lambda x: x.z_source.z)
+
+                sin_amplitude_data = [
+                    (
+                        log(v.z_source.z),
+                        v.WKB.sin_coeff * sqrt(v.WKB.H_ratio / sqrt(v.omega_WKB_sq)),
+                    )
+                    for v in WKB_data
+                ]
+
+                theta_data = [
+                    (
+                        log(v.z_source.z),
+                        v.WKB.theta,
+                    )
+                    for v in WKB_data
+                ]
+
+                sin_amplitude_x, sin_amplitude_y = zip(*sin_amplitude_data)
+                theta_x, theta_y = zip(*theta_data)
+
+                _sin_amplitude_spline = InterpolatedUnivariateSpline(
+                    sin_amplitude_x,
+                    sin_amplitude_y,
+                    ext="raise",
+                )
+                _theta_spline = UnivariateSpline(
+                    theta_x,
+                    theta_y,
+                    ext="raise",
+                    s=300,
+                )
+
+                WKB_Gk = GkWKBSplineWrapper(
+                    _theta_spline,
+                    _sin_amplitude_spline,
+                    None,
+                    "Gk WKB",
+                    max_z.z,
+                    min_z.z,
+                )
+                WKB_theta = ZSplineWrapper(
+                    _theta_spline, "theta", max_z.z, min_z.z, log_z=True
+                )
+
+        self._functions = GkSourceFunctions(
+            numerical_region=numerical_region,
+            numerical_Gk=numerical_Gk,
+            WKB_region=WKB_region,
+            WKB_Gk=WKB_Gk,
+            theta=WKB_theta,
+            type=self._type,
+            quality=self._quality,
+            crossover=self._crossover,
+        )
 
     @property
     def values(self) -> List:
@@ -536,6 +736,8 @@ class GkSource(DatastoreObject):
         self._values = payload["values"]
         self._numerical_smallest_z = payload["numerical_smallest_z"]
         self._primary_WKB_largest_z = payload["primary_WKB_largest_z"]
+
+        self._classify_quality()
 
 
 class GkSourceValue(DatastoreObject):
