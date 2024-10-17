@@ -1,10 +1,13 @@
 import argparse
 import itertools
+import json
 import sys
 from datetime import datetime
+from pathlib import Path
 from typing import List, Optional
 
 import numpy as np
+import pandas as pd
 import ray
 
 from ComputeTargets import (
@@ -124,6 +127,12 @@ parser.add_argument(
     action="extend",
 )
 parser.add_argument(
+    "--dump-incomplete",
+    type=str,
+    default=None,
+    help="directory to be used to dump details of incomplete GkSource objects for diagnostic purposes (only dumps computed objects, not those deserialized from the datastore)",
+)
+parser.add_argument(
     "--ray-address",
     default=DEFAULT_RAY_ADDRESS,
     type=str,
@@ -143,6 +152,9 @@ VERSION_LABEL = "2024.1.1"
 allowed_drop_actions = ["numerical", "wkb", "source"]
 specified_drop_actions = [x.lower() for x in args.drop]
 drop_actions = [x for x in specified_drop_actions if x in allowed_drop_actions]
+
+dump_incomplete = args.dump_incomplete is not None
+dump_incomplete_path = Path(args.dump_incomplete).resolve() if dump_incomplete else None
 
 profile_agent = None
 if args.profile_db is not None:
@@ -514,7 +526,7 @@ with ShardedPool(
                     # cut down response zs to those that are (1) later than the source, and (2) earlier than the 5-efolds-inside-the-horizon point
                     # (here with a 10% tolerance)
                     response_zs = z_response_sample.truncate(
-                        z_source, keep="lower-strict"
+                        z_source, keep="lower"
                     ).truncate(0.85 * k_exit.z_exit_subh_e6, keep="higher")
 
                     if len(response_zs) > 1:
@@ -689,7 +701,7 @@ with ShardedPool(
         work_refs = []
 
         response_pools = {
-            z_source.store_id: z_response_sample.truncate(z_source, keep="lower-strict")
+            z_source.store_id: z_response_sample.truncate(z_source, keep="lower")
             for z_source in batch
         }
 
@@ -852,13 +864,120 @@ with ShardedPool(
 
         GkSource_total = GkSource_total + 1
 
+        if quality == "incomplete" and not hasattr(Gk, "_do_not_populate"):
+            output_folder = (
+                dump_incomplete_path
+                / f"store_id={Gk.store_id}_k={Gk.k.k_inv_Mpc:.5g}_zresponse={Gk.z_response.z:.5g}"
+            )
+            output_folder.mkdir(parents=True, exist_ok=True)
+
+            data = {
+                "store_id": Gk.store_id,
+                "k_inv_Mpc": Gk.k.k_inv_Mpc,
+                "z_exit": Gk._k_exit.z_exit,
+                "z_exit_subh_e3": Gk._k_exit.z_exit_subh_e3,
+                "z_exit_subh_e6": Gk._k_exit.z_exit_subh_e6,
+                "k_exit_store_id": Gk._k_exit.store_id,
+                "k_store_id": Gk.k.store_id,
+                "z_response_store_id": Gk.z_response.store_id,
+                "type": Gk.type,
+                "quality": Gk.quality,
+                "crossover": Gk.crossover,
+                "metadata": Gk.metadata,
+                "z_sample": [z.z for z in Gk.z_sample],
+                "z_sample_size": len(Gk.z_sample),
+                "values_size": len(Gk.values) if Gk.values is not None else None,
+                "numerical_smallest_z": (
+                    Gk.numerical_smallest_z.z
+                    if Gk.numerical_smallest_z is not None
+                    else None
+                ),
+                "numerical_smallest_z_store_id": (
+                    Gk.numerical_smallest_z.store_id
+                    if Gk.numerical_smallest_z is not None
+                    else None
+                ),
+                "primary_WKB_largest_z": (
+                    Gk.primary_WKB_largest_z.z
+                    if Gk.primary_WKB_largest_z is not None
+                    else None
+                ),
+                "primary_WKB_largest_z_store_id": (
+                    Gk.primary_WKB_largest_z.store_id
+                    if Gk.primary_WKB_largest_z is not None
+                    else None
+                ),
+                "label": Gk.label,
+                "tags": [tag.label for tag in Gk.tags],
+            }
+
+            data_file = output_folder / "data.json"
+            with open(data_file, "w", encoding="utf-8") as f:
+                json.dump(data, f, ensure_ascii=False, indent=4)
+
+            values = Gk.values
+            z_source_col = [value.z_source.z for value in values]
+            z_source_store_id_col = [value.z_source.store_id for value in values]
+            has_numeric_col = [value.has_numeric for value in values]
+            G_col = [value.numeric.G for value in values]
+            Gprime_col = [value.numeric.Gprime for value in values]
+            has_WKB_col = [value.has_WKB for value in values]
+            theta_mod_2pi_col = [value.WKB.theta_mod_2pi for value in values]
+            theta_div_2pi_col = [value.WKB.theta_div_2pi for value in values]
+            theta_col = [value.WKB.theta for value in values]
+            raw_theta_div_2pi_col = [value.WKB.raw_theta_div_2pi for value in values]
+            raw_theta_col = [value.WKB.raw_theta for value in values]
+            H_ratio_col = [value.WKB.H_ratio for value in values]
+            sin_coeff_col = [value.WKB.sin_coeff for value in values]
+            cos_coeff_col = [value.WKB.cos_coeff for value in values]
+            G_WKB_col = [value.WKB.G_WKB for value in values]
+            new_G_WKB_col = [value.WKB.new_G_WKB for value in values]
+            abs_G_WKB_err_col = [value.WKB.abs_G_WKB_err for value in values]
+            rel_G_WKB_err_col = [value.WKB.rel_G_WKB_err for value in values]
+            omega_WKB_sq_col = [value.omega_WKB_sq for value in values]
+            WKB_criterion_col = [value.WKB_criterion for value in values]
+            analytic_G_col = [value.analytic_G for value in values]
+            analytic_Gprime_col = [value.analytic_Gprime for value in values]
+
+            df = pd.DataFrame.from_dict(
+                {
+                    "z_source": z_source_col,
+                    "z_source_store_id": z_source_store_id_col,
+                    "has_numeric": has_numeric_col,
+                    "G_col": G_col,
+                    "Gprime_col": Gprime_col,
+                    "has_WKB_col": has_WKB_col,
+                    "theta_mod_2pi_col": theta_mod_2pi_col,
+                    "theta_div_2pi_col": theta_div_2pi_col,
+                    "theta_col": theta_col,
+                    "raw_theta_div_2pi_col": raw_theta_div_2pi_col,
+                    "raw_theta_col": raw_theta_col,
+                    "H_ratio_col": H_ratio_col,
+                    "sin_coeff_col": sin_coeff_col,
+                    "cos_coeff_col": cos_coeff_col,
+                    "G_WKB_col": G_WKB_col,
+                    "new_G_WKB_col": new_G_WKB_col,
+                    "abs_G_WKB_err_col": abs_G_WKB_err_col,
+                    "rel_G_WKB_err_col": rel_G_WKB_err_col,
+                    "omega_WKB_sq_col": omega_WKB_sq_col,
+                    "WKB_criterion_col": WKB_criterion_col,
+                    "analytic_G_col": analytic_G_col,
+                    "analytic_Gprime_col": analytic_Gprime_col,
+                }
+            )
+
+            df.sort_values(
+                by="z_source", ascending=False, inplace=True, ignore_index=True
+            )
+
+            csv_file = output_folder / "values.csv"
+            df.to_csv(csv_file, header=True, index=False)
+
     def build_GkSource_batch(batch: List[redshift]):
         # try to do parallel lookup of the GkNumericalIntegration/GkWKBIntegration records needed
         # to process this batch
         z_source_pool = {
-            z_response.store_id: z_source_sample.truncate(
-                z_response, keep="higher-strict"
-            )
+            z_response.store_id: z_source_sample.truncate(z_response, keep="higher")
             for z_response in batch
         }
 
@@ -1090,6 +1209,11 @@ with ShardedPool(
         # With 500 wavenumbers and 2,000 z-samples, it is 1 million items.
         # To process these efficiently, we break the queue up into batches, and try to
         # run a sub-queue that queries that needed data in parallel.
+
+        if dump_incomplete:
+            print(
+                f'\n** INCOMPLETE GKSOURCE OBJECTS WILL BE DUMPED TO "{dump_incomplete_path}"'
+            )
 
         GkSource_work_batches = list(
             grouper(z_response_sample, n=20, incomplete="ignore")
