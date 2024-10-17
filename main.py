@@ -832,6 +832,25 @@ with ShardedPool(
     # these directly from GkNumericalValue and GkWKValue rows. Also, there is the reproducibility angle of keeping a record of what
     # rebuilt data products we used.)
 
+    GkSource_statistics = {}
+    GkSource_total = 0
+
+    def postprocess_GkSource(Gk: GkSource):
+        global GkSource_total
+
+        type = Gk._type
+        quality = Gk._quality
+
+        if type not in GkSource_statistics:
+            GkSource_statistics[type] = {}
+        type_stats = GkSource_statistics[type]
+
+        if quality not in type_stats:
+            type_stats[quality] = 0
+        type_stats[quality] += 1
+
+        GkSource_total = GkSource_total + 1
+
     def build_GkSource_batch(batch: List[redshift]):
         # try to do parallel lookup of the GkNumericalIntegration/GkWKBIntegration records needed
         # to process this batch
@@ -890,6 +909,18 @@ with ShardedPool(
             process_batch_size=1,
         )
         query_queue.run()
+
+        # apply the postprocess handler to any available objects, so that we can include them in our summary statistics
+        # the work queue never sees these objects (they are never returned as ObjectRef instances from the task builder),
+        # so this is our only chance to count them
+        available = [
+            obj
+            for query_outcomes in query_queue.results
+            for obj in query_outcomes
+            if obj.available
+        ]
+        for obj in available:
+            postprocess_GkSource(obj)
 
         # determine which z_response values are missing for each k_exit value
         missing = {
@@ -1071,8 +1102,9 @@ with ShardedPool(
             task_builder=build_GkSource_batch,
             compute_handler=compute_GkSource_work,
             validation_handler=validate_GkSource_work,
+            post_handler=postprocess_GkSource,
             label_builder=build_GkSource_work_label,
-            title="REBUILD GREENS FUNCTIONS FOR SOURCE REDSHIFT",
+            title="CALCULATE GREENS FUNCTIONS FOR SOURCE REDSHIFT",
             store_results=False,
             create_batch_size=1,  # we have batched the work queue into chunks ourselves, so don't process too many of these chunks at once
             notify_batch_size=2000,
@@ -1080,3 +1112,16 @@ with ShardedPool(
             process_batch_size=50,
         )
         GkSource_queue.run()
+
+        print("\n** GKSOURCE SUMMARY STATISTICS")
+        print(f"     Total instances: {GkSource_total}")
+        for type in GkSource_statistics:
+            type_stats = GkSource_statistics[type]
+            type_total = sum(type_stats.values())
+            print(
+                f"\n     >> {type}: {type_total} instances = {type_total/GkSource_total:.2%}"
+            )
+            for quality, quality_total in type_stats.items():
+                print(
+                    f"        {quality}: {quality_total} instances = {quality_total/type_total:.2%} of this type, {quality_total/GkSource_total:.2%} of total"
+                )
