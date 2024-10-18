@@ -457,7 +457,7 @@ with ShardedPool(
     def build_Gk_numerical_work(batch: List[redshift]):
         query_batch = [
             {
-                "k": k_exit,
+                "shard_key": {"k": k_exit},
                 "payload": [
                     {
                         "solver_labels": [],
@@ -486,7 +486,7 @@ with ShardedPool(
             pool,
             query_batch,
             task_builder=lambda x: pool.object_get_vectorized(
-                "GkWKBIntegration", {"k": x["k"]}, payload_data=x["payload"]
+                "GkWKBIntegration", x["shard_key"], payload_data=x["payload"]
             ),
             available_handler=None,
             compute_handler=None,
@@ -515,12 +515,23 @@ with ShardedPool(
             k_exit: wavenumber_exit_time
 
             # find redshift where this k-mode is at least 3 efolds inside the horizon
-            # we won't calculate numerical Green's functions with the response redshift later than this, because
-            # the oscillations become rapid, and we are better switching to a WKB approximation
+
+            # we aim not to calculate numerical Green's functions with the response redshift
+            # (and hence the source redshift) later than this, because
+            # the oscillations become rapid, and we are better switching to a WKB approximation.
+            # Typically we cannot continue the numerical integratioan more than about 6 e-folds
+            # inside the horizon.
+            # However, we do need a bit of leeway. We sometimes cannot get WKB values for
+            # z_source/z_response combinations that are both close to the 3-efold crossover point.
+            # This is because we don't find a boundary conditions for the WKB evolution until
+            # some time after z_source.
+            # The upshot is that we don't find enough overlap between the numerical and WKB regions
+            # to allow a smooth handover. To deal with this, we allow z_source to go as far as
+            # 4 e-folds inside the horizon.
             for z_source in missing[k_exit.store_id]:
                 z_source: redshift
 
-                if z_source.z > k_exit.z_exit_subh_e3 - DEFAULT_FLOAT_PRECISION:
+                if z_source.z > k_exit.z_exit_subh_e4 - DEFAULT_FLOAT_PRECISION:
                     # cut down response zs to those that are (1) later than the source, and (2) earlier than the 6-efolds-inside-the-horizon point
                     # (here with a 10% tolerance)
                     response_zs = z_response_sample.truncate(
