@@ -223,7 +223,7 @@ def compute_Gk(
                 f"## compute_Gk: stop search window start and end arguments in the wrong order (for k={k.k.k_inv_Mpc:.5g}/Mpc). Now searching in interval: z in ({stop_search_window_z_begin}, {stop_search_window_z_end})"
             )
 
-        max_z = z_sample.max.z
+        max_z = z_source.z
         min_z = z_sample.min.z
         if stop_search_window_z_begin > max_z:
             raise ValueError(
@@ -642,7 +642,7 @@ class GkNumericalIntegration(DatastoreObject):
             )
 
         # check that source redshift is not too far inside the horizon for this k-mode
-        z_limit = self._k_exit.z_exit_subh_e3
+        z_limit = self._k_exit.z_exit_subh_e4
         if self._z_source.z < z_limit - DEFAULT_FLOAT_PRECISION:
             raise ValueError(
                 f"Specified source redshift z_source={self._z_source.z:.5g} is more than 3-efolds inside the horizon for k={self._k_exit.k.k_inv_Mpc:.5g}/Mpc (horizon re-entry at z_entry={self._k_exit.z_exit:.5g})"
@@ -652,15 +652,19 @@ class GkNumericalIntegration(DatastoreObject):
         if label is not None:
             self._label = label
 
+        # set up limits for the search window used to obtain an initial condition for a subsequent WKB integral
+        # this is done by always cutting at a point of fixed phase where G' = 0 at a minium, so we need to search
+        # for such a point, and that search should be performed within a fixed window.
         payload = {}
         if self._mode in ["stop"]:
             payload["mode"] = self._mode
-            payload["stop_search_window_z_begin"] = getattr(
-                self._k_exit, self._stop_search_window_start_attr
-            )
-            payload["stop_search_window_z_end"] = getattr(
-                self._k_exit, self._stop_search_window_end_attr
-            )
+
+            search_begin = getattr(self._k_exit, self._stop_search_window_start_attr)
+            search_end = getattr(self._k_exit, self._stop_search_window_end_attr)
+            if search_begin > self._z_sample.max.z + DEFAULT_FLOAT_PRECISION:
+                search_begin = self._z_sample.max.z
+            payload["stop_search_window_z_begin"] = search_begin
+            payload["stop_search_window_z_end"] = search_end
 
         self._compute_ref = compute_Gk.remote(
             self._model,
