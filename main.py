@@ -864,7 +864,11 @@ with ShardedPool(
 
         GkSource_total = GkSource_total + 1
 
-        if quality == "incomplete" and not hasattr(Gk, "_do_not_populate"):
+        if (
+            dump_incomplete
+            and quality == "incomplete"
+            and not hasattr(Gk, "_do_not_populate")
+        ):
             output_folder = (
                 dump_incomplete_path
                 / f"store_id={Gk.store_id}_k={Gk.k.k_inv_Mpc:.5g}_zresponse={Gk.z_response.z:.5g}"
@@ -879,6 +883,7 @@ with ShardedPool(
                 "z_exit_subh_e6": Gk._k_exit.z_exit_subh_e6,
                 "k_exit_store_id": Gk._k_exit.store_id,
                 "k_store_id": Gk.k.store_id,
+                "z_response": Gk.z_response.z,
                 "z_response_store_id": Gk.z_response.store_id,
                 "type": Gk.type,
                 "quality": Gk.quality,
