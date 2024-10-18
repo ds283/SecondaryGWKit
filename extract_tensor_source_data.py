@@ -23,6 +23,7 @@ from CosmologyConcepts import (
     wavenumber_exit_time,
 )
 from CosmologyModels.LambdaCDM import Planck2018, LambdaCDM
+from Datastore.SQL.ProfileAgent import ProfileAgent
 from Datastore.SQL.ShardedPool import ShardedPool
 from MetadataConcepts import tolerance
 from RayWorkPool import RayWorkPool
@@ -67,16 +68,30 @@ if args.database is None:
 # connect to ray cluster on supplied address; defaults to 'auto' meaning a locally running cluster
 ray.init(address=args.ray_address)
 
+VERSION_LABEL = "2024.1.1"
+
 # instantiate a Datastore actor: this runs on its own node, and acts as a broker between
 # ourselves and the dataabase.
 # For performance reasons, we want all database activity to run on this node.
 # For one thing, this lets us use transactions efficiently.
+
+profile_agent = None
+if args.profile_db is not None:
+    label = f'{VERSION_LABEL}-jobname-extract_GkSource_data-primarydb-"{args.database}"-shards-{args.shards}-{datetime.now().replace(microsecond=0).isoformat()}'
+
+    profile_agent = ProfileAgent.options(name="ProfileAgent").remote(
+        db_name=args.profile_db,
+        timeout=args.db_timeout,
+        label=label,
+    )
+
+# establish a ShardedPool to orchestrate database access
 with ShardedPool(
-    version_label="2024.1.1",
+    version_label=VERSION_LABEL,
     db_name=args.database,
     timeout=args.db_timeout,
-    profile_db=args.profile_db,
-    job_name="extract_tensor_source_data",
+    profile_agent=profile_agent,
+    job_name="extract_GkSource_data",
     prune_unvalidated=False,
 ) as pool:
 

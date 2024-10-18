@@ -25,6 +25,7 @@ from CosmologyConcepts import (
     redshift,
 )
 from CosmologyModels.LambdaCDM import Planck2018, LambdaCDM
+from Datastore.SQL.ProfileAgent import ProfileAgent
 from Datastore.SQL.ShardedPool import ShardedPool
 from MetadataConcepts import tolerance
 from RayWorkPool import RayWorkPool
