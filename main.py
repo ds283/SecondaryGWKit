@@ -523,13 +523,13 @@ with ShardedPool(
                 z_source: redshift
 
                 if z_source.z > k_exit.z_exit_subh_e3 - DEFAULT_FLOAT_PRECISION:
-                    # cut down response zs to those that are (1) later than the source, and (2) earlier than the 5-efolds-inside-the-horizon point
+                    # cut down response zs to those that are (1) later than the source, and (2) earlier than the 6-efolds-inside-the-horizon point
                     # (here with a 10% tolerance)
                     response_zs = z_response_sample.truncate(
                         z_source, keep="lower"
                     ).truncate(0.85 * k_exit.z_exit_subh_e6, keep="higher")
 
-                    if len(response_zs) > 1:
+                    if len(response_zs) > 0:
                         work_refs.append(
                             pool.object_get(
                                 "GkNumericalIntegration",
@@ -593,6 +593,9 @@ with ShardedPool(
     def build_Gk_WKB_work(batch: List[redshift]):
         # build GKWKBIntegration work items for a batch of z_source times
 
+        # first, we query for existing objects in the datastore matching these z_source times.
+        # if they are present (and validated) we assume them to be complete.
+        # We don't attempt to recompute objects that are already in the store.
         query_batch = [
             {
                 "k": k_exit,
@@ -638,6 +641,7 @@ with ShardedPool(
         )
         query_queue.run()
 
+        # determine which objects are missing
         missing = {
             k_exit.store_id: [
                 z_source
@@ -717,21 +721,23 @@ with ShardedPool(
 
                 response_pool = response_pools[z_source.store_id]
 
-                if (
-                    len(response_pool) == 0
-                    or response_pool.max.z <= response_pool.min.z
-                ):
+                if len(response_pool) == 0:
                     continue
 
                 # query whether there is a pre-computed GkNumericalIntegration for this source redshift.
                 # typically, this will be the case provided the source redshift is sufficiently early
                 if Gk.available:
+                    # obtain initial data and initial time from the GkNumericalIntegration object
                     G_init = Gk.stop_G
                     Gprime_init = Gk.stop_Gprime
                     z_init = k_exit.z_exit - Gk.stop_deltaz_subh
 
-                    # find redshift where this k-mode is at least 3 e-folds inside the horizon
-                    # we don't calculate WKB Green's functions with the response redshift earlier than this
+                    # Cut the response times so that we only extract responses later than 3-efolds inside the horizon,
+                    # or after z_exit, whichever is later
+                    #
+                    # Note that this means there may be z_source/z_response combinations that we do not get WKB values for.
+                    # These can cause some incompleteness when building GkSource objects (see below), if we are not
+                    # careful to allow sufficient overlap with the purely numerical results.
                     max_response = min(k_exit.z_exit_subh_e3, z_init)
                     response_zs = response_pool.truncate(max_response, keep="lower")
 
@@ -1069,7 +1075,7 @@ with ShardedPool(
                 "object": cls_name,
                 "payload": {
                     "model": model,
-                    "z": z_response,
+                    "z": z_response,  # no specification of z_source; means we read all available z_source values
                     "atol": atol,
                     "rtol": rtol,
                     "tags": [
@@ -1207,8 +1213,7 @@ with ShardedPool(
         return pool.object_validate(Gk)
 
     if args.source_queue:
-        # THERE IS A LOT OF WORK TO DO!
-        # For each wavenumber in the k-sample (here k_exit_times), and each value of r_response,
+        # For each wavenumber in the k-sample (here k_exit_times), and each value of z_response,
         # we need to build the Green's function for all possible values of z_source.
         # Even with 10 wavenumbers and 2,000 z-samples points, that is 20,000 items.
         # With 500 wavenumbers and 2,000 z-samples, it is 1 million items.

@@ -627,10 +627,20 @@ def compute_Gk_WKB(
 
     metadata = {}
 
+    if fabs(z_init - z_target) < atol:
+        z_sample_list.pop(0)
+        assert len(z_sample_list) == 0
+
+        sampled_z.append(z_init)
+        sampled_theta_mod_2pi.append(0)
+        sampled_theta_div_2pi.append(0)
+
+        metadata["initial_data_only"] = True
+
     # if omega_WKB < 1E3, run a "stage 1" integration.
     # This could exhaust the possible sample points, or it might terminate so that we can start a "stage 2" integration
     stage_1_data = None
-    if omega_WKB_sq_init < DEFAULT_OMEGA_WKB_SQ_MAX:
+    if len(z_sample_list) > 0 and omega_WKB_sq_init < DEFAULT_OMEGA_WKB_SQ_MAX:
         stage_1_data = stage_1_evolution(
             model,
             k,
@@ -684,7 +694,11 @@ def compute_Gk_WKB(
         metadata["stage_2_largest_Q"] = stage_2_data["largest_Q"]
         metadata["stage_2_smallest_Q"] = stage_2_data["smallest_Q"]
 
-    if stage_1_data is None and stage_2_data is None:
+    if (
+        stage_1_data is None
+        and stage_2_data is None
+        and not metadata.get("initial_data_only", False)
+    ):
         raise RuntimeError("compute_Gk_WKB: both stage #1 and stage #2 data are empty")
 
     returned_values = len(sampled_z)
@@ -828,10 +842,10 @@ class GkWKBIntegration(DatastoreObject):
             self._cos_coeff = payload["cos_coeff"]
             self._values = payload["values"]
 
-        if self._z_sample is not None:
+        if z_sample is not None:
             z_limit = k.z_exit_subh_e3
-            z_source_float = float(z_source)
-            for z in self._z_sample:
+            z_initial_float = z_init if z_init is not None else z_source.z
+            for z in z_sample:
                 # check that each response redshift is not too close to the horizon, or outside it, for this k-mode
                 z_float = float(z)
                 if z_float > z_limit - DEFAULT_FLOAT_PRECISION:
@@ -840,9 +854,9 @@ class GkWKBIntegration(DatastoreObject):
                     )
 
                 # also, check that each response redshift is later than the specified source redshift
-                if z_float > z_source_float:
+                if z_float > z_initial_float:
                     raise ValueError(
-                        f"Redshift sample point z={z_float:.5g} exceeds source redshift z={z_source_float:.5g}"
+                        f"Redshift sample point z={z_float:.5g} exceeds initial redshift z={z_initial_float:.5g}"
                     )
 
         # store parameters

@@ -230,8 +230,24 @@ def compute_Gk(
                 f"compute_Gk: (for k={k.k.k_inv_Mpc:.5g}/Mpc) specified 'stop' window starting redshift z={stop_search_window_z_begin:.5g} exceeds highest z-response sample point z={max_z:.5g}"
             )
         if stop_search_window_z_end < min_z:
-            raise (
+            raise ValueError(
                 f"## compute_Gk: (for k={k.k.k_inv_Mpc:.5g}/Mpc) specified 'stop' window ending redshift z={stop_search_window_z_end:.5g} is smaller than lowest z-response sample point z={min_z:.5g}. Search will terminate at z={min_z:.5g}."
+            )
+
+        if (
+            fabs(stop_search_window_z_begin - stop_search_window_z_end)
+            < DEFAULT_FLOAT_PRECISION
+        ):
+            raise ValueError(
+                f"## compute_Gk: (for k={k.k.k_inv_Mpc:.5g}/Mpc) specified search window has zero extent"
+            )
+
+        if (
+            fabs(z_source.z - z_sample.min.z) < DEFAULT_ABS_TOLERANCE
+            or z_source.store_id == z_sample.min.store_id
+        ):
+            raise ValueError(
+                f"## compute_Gk: (for k={k.k.k_inv_Mpc:.5g}/Mpc) in 'stop' mode, the source redshift and the lowest response redshift cannot be equal"
             )
 
     # obtain dimensionful value of wavenumber; this should be measured in the same units used by the cosmology
@@ -339,6 +355,21 @@ def compute_Gk(
         )
     sampled_G = sampled_values[G_INDEX]
     sampled_Gprime = sampled_values[GPRIME_INDEX]
+
+    # if no data points returned, check if this is because the target z (ie., lowest z_response)
+    # and the source z agree.
+    # If so, then we know the correct value from the initial data.
+    if (
+        len(sampled_z) == 0
+        and len(z_sample) == 0
+        and (
+            fabs(z_source.z - z_sample.min.z) < DEFAULT_ABS_TOLERANCE
+            or z_source.store_id == z_sample.min.store_id
+        )
+    ):
+        sampled_z.append(z_source.z)
+        sampled_G.append(0.0)
+        sampled_Gprime.append(1.0)
 
     returned_values = sampled_z.size
     if mode != "stop":
