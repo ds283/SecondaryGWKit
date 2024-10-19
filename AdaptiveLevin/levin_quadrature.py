@@ -58,29 +58,133 @@ def chebyshev_matrices(x_span: Tuple[float, float], N: int):
     return x, D
 
 
-def adaptive_levin_(
-    x_span: Tuple[float, float], f, theta, tol: float = 1e-7, chebyshev_order: int = 12
+class Weight_SinCos:
+    def __init__(self, theta):
+        """
+        :param theta:
+        """
+        self._theta = theta
+
+    def __call__(self, grid, Dmat):
+        # sample the phase function theta on the Chebyshev grid
+        theta_Cheb = np.array([self._theta(x) for x in grid])
+
+        # multiply theta by the spectral differentiation matrix Dmat in order to produce an estimate of theta'(x)
+        # evaluated at the collocation points
+        theta_prime_Cheb = np.matmul(Dmat, theta_Cheb)
+
+        # if w = (sin, cos) (regarded as a column vector), then w' = A w where A is the matrix
+        #   Amat = ( 0,       theta' )
+        #          ( -theta', 0      )
+        # and therefore its transpose is
+        #   Amat^T = ( 0,      -theta' )
+        #            ( theta', 0       )
+        theta_prime_I = np.diag(theta_prime_Cheb)
+
+        zero_block = np.zeros_like(theta_prime_I)
+        AmatT = np.block([[zero_block, -theta_prime_I], [theta_prime_I, zero_block]])
+
+        # note grid is in reverse order, with largest value in position 1 and smallest value in last position -1
+        theta0 = theta_Cheb[-1]
+        thetak = theta_Cheb[0]
+
+        w0 = [np.sin(theta0), np.cos(theta0)]
+        wk = [np.sin(thetak), np.cos(thetak)]
+
+        return AmatT, w0, wk
+
+
+def adaptive_levin_subregion(
+    x_span: Tuple[float, float],
+    f,
+    Weights,
+    chebyshev_order: int = 12,
 ):
     """
     f should be an m-vector of non-rapidly oscillating functions (Levin 96 eq. 2.1)
     theta should be an (m x m)-matrix representing the phase matrix of the system (Levin 96's A or A^t matrix)
     :param x_span:
-    :param f:
-    :param theta:
+    :param f: iterable of callables representing the integrand f-functions
+    :param Weights: callable
     :param tol:
     :param chebyshev_order:
     :return:
     """
     grid, Dmat = chebyshev_matrices(x_span, chebyshev_order)
 
-    # sample each component of f on the Chebyshev grid
-    # columns of the resulting matrix carry the Chebyshev grid index
-    # rows of the resulting matrix carry the f-vector index
-    f_Cheb = np.column_stack([func(x) for x in grid] for func in f)
+    # sample each component of f on the Chebyshev grid,
+    # then assemble the result into a flattened vector in an m x k representation
+    # Chen et al. around (166), (167)
+    m = len(f)
+    f_Cheb = np.hstack([[func(x) for x in grid] for func in f])
 
-    # sample the phase function theta on the Chebyshev grid
-    theta_Cheb = np.array(theta(x) for x in grid)
+    # build the Levin A^T matrix, and also the vector of weights w evaluated at theta0, thetak
+    # (these are needed in the final stap)
+    AmatT, w0, wk = Weights(grid, Dmat)
 
-    # multiply theta by the spectral differentiation matrix Dmat in order to produce an estiamte of g'(x)
-    # evaluated at the collocation points
-    theta_prime_Cheb = np.matmul(Dmat, theta_Cheb)
+    # build the Levin superoperator corresponding to this system
+    # Chen et al. (168)
+    zero_block = np.zeros((chebyshev_order, chebyshev_order))
+
+    row_list = []
+    for i in range(m):
+        row = [zero_block for _ in range(m)]
+        row[i] = Dmat
+        row_list.append(row)
+
+    LevinL = np.block(row_list) + AmatT
+
+    # now try to invert the Levin superoperator, to find the Levin antiderivatives
+    # Chen et al.
+    p, residuals, rank, s = np.linalg.lstsq(LevinL, f_Cheb)
+
+    # note grid is in reverse order, with largest value in position 1 and smallest value in last position -1
+    lower_limit = sum(p[(i + 1) * chebyshev_order - 1] * w0[i] for i in range(m))
+    upper_limit = sum(p[i * chebyshev_order] * wk[i] for i in range(m))
+
+    return upper_limit - lower_limit
+
+
+def adaptive_levin(
+    x_span: Tuple[float, float],
+    f,
+    Weights,
+    tol: float = 1e-7,
+    chebyshev_order: int = 12,
+):
+    regions = [x_span]
+
+    val = 0.0
+    used_regions = []
+    num_evaluations = 0
+
+    while len(regions) > 0:
+        a, b = regions.pop()
+
+        # Chen et al. (172)
+        estimate = adaptive_levin_subregion((a, b), f, Weights, chebyshev_order)
+
+        # Chen et al. (173)
+        c = (a + b) / 2.0
+        estimate_L = adaptive_levin_subregion((a, c), f, Weights, chebyshev_order)
+        estimate_R = adaptive_levin_subregion((c, b), f, Weights, chebyshev_order)
+
+        num_evaluations += 3
+
+        if np.fabs(estimate - estimate_L - estimate_R) < tol:
+            val = val + estimate
+            used_regions.append((a, b))
+
+        else:
+            regions.extend([(a, c), (c, b)])
+
+    used_regions.sort(key=lambda x: x[0])
+    return val, used_regions, num_evaluations
+
+
+def adaptive_levin_sincos(
+    x_span: Tuple[float, float], f, theta, tol: float = 1e-7, chebyshev_order: int = 12
+):
+    A = Weight_SinCos(theta)
+
+    return adaptive_levin(x_span, f, A, tol, chebyshev_order)

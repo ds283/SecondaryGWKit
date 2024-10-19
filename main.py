@@ -1090,7 +1090,7 @@ with ShardedPool(
             k_exit.store_id: [
                 z_response
                 for obj, z_response in zip(query_outcomes, batch)
-                if obj.quality == "incomplete"
+                if obj.available and obj.quality == "incomplete"
             ]
             for query_outcomes, k_exit in zip(query_queue.results, k_exit_times)
         }
@@ -1299,6 +1299,14 @@ with ShardedPool(
         return Gk.compute(payload=payload, label=label)
 
     def validate_GkSource_work(Gk: GkSource):
+        if not Gk.available:
+            raise RuntimeError(
+                "GkSource object passed for validation, but is not yet available"
+            )
+
+        if Gk.quality == "incomplete":
+            dump_incomplete_GkSource.remote(Gk)
+
         return pool.object_validate(Gk)
 
     if args.source_queue:
