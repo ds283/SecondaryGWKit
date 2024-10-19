@@ -99,6 +99,7 @@ def adaptive_levin_subregion(
     f,
     Weights,
     chebyshev_order: int = 12,
+    build_p_sample: bool = False,
 ):
     """
     f should be an m-vector of non-rapidly oscillating functions (Levin 96 eq. 2.1)
@@ -138,11 +139,19 @@ def adaptive_levin_subregion(
     # Chen et al.
     p, residuals, rank, s = np.linalg.lstsq(LevinL, f_Cheb)
 
+    if build_p_sample:
+        p_sample = [
+            (x, [p[j * chebyshev_order + i] for j in range(m)])
+            for i, x in enumerate(grid)
+        ]
+    else:
+        p_sample = []
+
     # note grid is in reverse order, with largest value in position 1 and smallest value in last position -1
     lower_limit = sum(p[(i + 1) * chebyshev_order - 1] * w0[i] for i in range(m))
     upper_limit = sum(p[i * chebyshev_order] * wk[i] for i in range(m))
 
-    return upper_limit - lower_limit
+    return upper_limit - lower_limit, p_sample
 
 
 def adaptive_levin(
@@ -151,40 +160,77 @@ def adaptive_levin(
     Weights,
     tol: float = 1e-7,
     chebyshev_order: int = 12,
+    build_p_sample: bool = False,
 ):
     regions = [x_span]
 
     val = 0.0
     used_regions = []
+    p_points = []
     num_evaluations = 0
 
     while len(regions) > 0:
         a, b = regions.pop()
 
         # Chen et al. (172)
-        estimate = adaptive_levin_subregion((a, b), f, Weights, chebyshev_order)
+        estimate, p_sample = adaptive_levin_subregion(
+            (a, b),
+            f,
+            Weights,
+            chebyshev_order=chebyshev_order,
+            build_p_sample=build_p_sample,
+        )
 
         # Chen et al. (173)
         c = (a + b) / 2.0
-        estimate_L = adaptive_levin_subregion((a, c), f, Weights, chebyshev_order)
-        estimate_R = adaptive_levin_subregion((c, b), f, Weights, chebyshev_order)
+        estimate_L, pL_sample = adaptive_levin_subregion(
+            (a, c),
+            f,
+            Weights,
+            chebyshev_order=chebyshev_order,
+            build_p_sample=build_p_sample,
+        )
+        estimate_R, pR_sample = adaptive_levin_subregion(
+            (c, b),
+            f,
+            Weights,
+            chebyshev_order=chebyshev_order,
+            build_p_sample=build_p_sample,
+        )
 
         num_evaluations += 3
 
+        # Chen et al. step (4), below (173)
         if np.fabs(estimate - estimate_L - estimate_R) < tol:
             val = val + estimate
             used_regions.append((a, b))
+            if build_p_sample:
+                p_points.extend(p_sample)
 
         else:
             regions.extend([(a, c), (c, b)])
 
     used_regions.sort(key=lambda x: x[0])
-    return val, used_regions, num_evaluations
+    if build_p_sample:
+        p_points.sort(key=lambda x: x[0])
+    return val, p_points, used_regions, num_evaluations
 
 
 def adaptive_levin_sincos(
-    x_span: Tuple[float, float], f, theta, tol: float = 1e-7, chebyshev_order: int = 12
+    x_span: Tuple[float, float],
+    f,
+    theta,
+    tol: float = 1e-7,
+    chebyshev_order: int = 12,
+    build_p_sample: bool = False,
 ):
     A = Weight_SinCos(theta)
 
-    return adaptive_levin(x_span, f, A, tol, chebyshev_order)
+    return adaptive_levin(
+        x_span,
+        f,
+        A,
+        tol=tol,
+        chebyshev_order=chebyshev_order,
+        build_p_sample=build_p_sample,
+    )
