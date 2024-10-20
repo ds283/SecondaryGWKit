@@ -7,7 +7,7 @@ from scipy.integrate import solve_ivp
 
 from ComputeTargets.BackgroundModel import BackgroundModel
 from ComputeTargets.analytic_Tk import compute_analytic_T, compute_analytic_Tprime
-from ComputeTargets.integration_metadata import IntegrationSolver
+from ComputeTargets.integration_metadata import IntegrationSolver, IntegrationData
 from ComputeTargets.integration_supervisor import (
     DEFAULT_UPDATE_INTERVAL,
     IntegrationSupervisor,
@@ -21,7 +21,7 @@ from defaults import (
     DEFAULT_REL_TOLERANCE,
     DEFAULT_FLOAT_PRECISION,
 )
-from utilities import check_units, format_time, IntegrationData
+from utilities import check_units, format_time
 
 
 class TkIntegrationSupervisor(IntegrationSupervisor):

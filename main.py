@@ -7,9 +7,9 @@ from pathlib import Path
 from typing import List, Optional
 
 import numpy as np
-import pandas as pd
 import ray
-from math import log, sqrt
+from math import sqrt
+from pandas import DataFrame
 
 from ComputeTargets import (
     TkNumericalIntegration,
@@ -732,9 +732,9 @@ with ShardedPool(
                 assert Gk._k_exit.store_id == k_exit.store_id
                 assert Gk._z_source.store_id == z_source.store_id
 
-                response_pool = response_pools[z_source.store_id]
+                response_sample = response_pools[z_source.store_id]
 
-                if len(response_pool) == 0:
+                if len(response_sample) == 0:
                     continue
 
                 # query whether there is a pre-computed GkNumericalIntegration for this source redshift.
@@ -761,15 +761,17 @@ with ShardedPool(
                     z_init = k_exit.z_exit - Gk.stop_deltaz_subh
 
                     # Cut the response times so that we only extract responses later than 3-efolds inside the horizon,
-                    # or after z_exit, whichever is later
+                    # or after z_init, whichever is later
                     #
                     # Note that this means there may be z_source/z_response combinations that we do not get WKB values for.
-                    # These can cause some incompleteness when building GkSource objects (see below), if we are not
+                    # These can cause incompleteness when building GkSource objects (see below), if we are not
                     # careful to allow sufficient overlap with the purely numerical results.
                     max_response = min(k_exit.z_exit_subh_e3, z_init)
-                    response_zs = response_pool.truncate(max_response, keep="lower")
+                    response_sample = response_sample.truncate(
+                        max_response, keep="lower"
+                    )
 
-                    if len(response_zs) > 0:
+                    if len(response_sample) > 0:
                         work_refs.append(
                             pool.object_get(
                                 "GkWKBIntegration",
@@ -780,7 +782,7 @@ with ShardedPool(
                                 z_init=z_init,
                                 G_init=G_init,
                                 Gprime_init=Gprime_init,
-                                z_sample=response_zs,
+                                z_sample=response_sample,
                                 atol=atol,
                                 rtol=rtol,
                                 tags=[
@@ -800,10 +802,10 @@ with ShardedPool(
                     # but we should warn if we expect an initial condition to be available
                     if z_source.z > k_exit.z_exit_subh_e3 - DEFAULT_FLOAT_PRECISION:
                         print(
-                            f"!! WARNING: no numerically-computed initial conditions ia available for k={k_exit.k.k_inv_Mpc:.5g}/Mpc, z_source={z_source.z:.5g}"
+                            f"!! WARNING: no numerically-computed initial conditions is available for k={k_exit.k.k_inv_Mpc:.5g}/Mpc, z_source={z_source.z:.5g}"
                         )
                         print(
-                            f"|    This may indicate an edge-effect, or possibly that not all initial conditions are present in the datastore."
+                            f"|    This may indicate that GkNumericalIntegration records for all necessary initial conditions are not present in the datastore."
                         )
 
                     if z_source.z >= k_exit.z_exit:
@@ -826,7 +828,7 @@ with ShardedPool(
                             z_source=z_source,
                             G_init=0.0,
                             Gprime_init=1.0,
-                            z_sample=response_pool,
+                            z_sample=response_sample,
                             atol=atol,
                             rtol=rtol,
                             tags=[
@@ -897,10 +899,6 @@ with ShardedPool(
         )
         output_folder.mkdir(parents=True, exist_ok=True)
 
-        def efolds_subh(k: wavenumber, z: redshift) -> float:
-            H = model.functions.Hubble(z.z)
-            return log((1.0 + z.z) * k.k / H)
-
         data = {
             "store_id": Gk.store_id,
             "k_inv_Mpc": Gk.k.k_inv_Mpc,
@@ -913,12 +911,13 @@ with ShardedPool(
             "z_exit_subh_e6": Gk._k_exit.z_exit_subh_e6,
             "z_response": Gk.z_response.z,
             "z_response_store_id": Gk.z_response.store_id,
-            "z_response_efolds_subh": efolds_subh(Gk.k, Gk.z_response),
+            "z_response_efolds_subh": model.efolds_subh(Gk.k, Gk.z_response),
             "numerical_z_source_limit": sqrt(
                 Gk._k_exit.z_exit_subh_e3 * Gk._k_exit.z_exit_subh_e4
             ),
-            "numerical_z_source_limit_efolds": efolds_subh(
-                sqrt(Gk._k_exit.z_exit_subh_e3 * Gk._k_exit.z_exit_subh_e4)
+            "numerical_z_source_limit_efolds": model.efolds_subh(
+                Gk.k,
+                sqrt(Gk._k_exit.z_exit_subh_e3 * Gk._k_exit.z_exit_subh_e4),
             ),
             "type": Gk.type,
             "quality": Gk.quality,
@@ -955,63 +954,7 @@ with ShardedPool(
         with open(data_file, "w", encoding="utf-8") as f:
             json.dump(data, f, ensure_ascii=False, indent=4)
 
-        values = Gk.values
-        z_source_store_id_col = [value.z_source.store_id for value in values]
-        z_source_col = [value.z_source.z for value in values]
-        z_source_efolds_subh_col = [
-            efolds_subh(Gk.k, value.z_source) for value in values
-        ]
-        has_numeric_col = [value.has_numeric for value in values]
-        G_col = [value.numeric.G for value in values]
-        Gprime_col = [value.numeric.Gprime for value in values]
-        has_WKB_col = [value.has_WKB for value in values]
-        theta_mod_2pi_col = [value.WKB.theta_mod_2pi for value in values]
-        theta_div_2pi_col = [value.WKB.theta_div_2pi for value in values]
-        theta_col = [value.WKB.theta for value in values]
-        raw_theta_div_2pi_col = [value.WKB.raw_theta_div_2pi for value in values]
-        raw_theta_col = [value.WKB.raw_theta for value in values]
-        H_ratio_col = [value.WKB.H_ratio for value in values]
-        sin_coeff_col = [value.WKB.sin_coeff for value in values]
-        cos_coeff_col = [value.WKB.cos_coeff for value in values]
-        G_WKB_col = [value.WKB.G_WKB for value in values]
-        new_G_WKB_col = [value.WKB.new_G_WKB for value in values]
-        abs_G_WKB_err_col = [value.WKB.abs_G_WKB_err for value in values]
-        rel_G_WKB_err_col = [value.WKB.rel_G_WKB_err for value in values]
-        omega_WKB_sq_col = [value.omega_WKB_sq for value in values]
-        WKB_criterion_col = [value.WKB_criterion for value in values]
-        analytic_G_col = [value.analytic_G for value in values]
-        analytic_Gprime_col = [value.analytic_Gprime for value in values]
-
-        df = pd.DataFrame.from_dict(
-            {
-                "z_source_store_id": z_source_store_id_col,
-                "z_source": z_source_col,
-                "z_source_efolds_subh": z_source_efolds_subh_col,
-                "has_numeric": has_numeric_col,
-                "G_col": G_col,
-                "Gprime_col": Gprime_col,
-                "has_WKB_col": has_WKB_col,
-                "theta_mod_2pi_col": theta_mod_2pi_col,
-                "theta_div_2pi_col": theta_div_2pi_col,
-                "theta_col": theta_col,
-                "raw_theta_div_2pi_col": raw_theta_div_2pi_col,
-                "raw_theta_col": raw_theta_col,
-                "H_ratio_col": H_ratio_col,
-                "sin_coeff_col": sin_coeff_col,
-                "cos_coeff_col": cos_coeff_col,
-                "G_WKB_col": G_WKB_col,
-                "new_G_WKB_col": new_G_WKB_col,
-                "abs_G_WKB_err_col": abs_G_WKB_err_col,
-                "rel_G_WKB_err_col": rel_G_WKB_err_col,
-                "omega_WKB_sq_col": omega_WKB_sq_col,
-                "WKB_criterion_col": WKB_criterion_col,
-                "analytic_G_col": analytic_G_col,
-                "analytic_Gprime_col": analytic_Gprime_col,
-            }
-        )
-
-        df.sort_values(by="z_source", ascending=False, inplace=True, ignore_index=True)
-
+        df: DataFrame = Gk.values_as_DataFrame()
         csv_file = output_folder / "values.csv"
         df.to_csv(csv_file, header=True, index=False)
 

@@ -5,13 +5,17 @@ from math import fabs
 from sqlalchemy import and_, or_
 from sqlalchemy.exc import MultipleResultsFound, SQLAlchemyError
 
-from ComputeTargets import BackgroundModel, IntegrationSolver, BackgroundModelValue
+from ComputeTargets import (
+    BackgroundModel,
+    IntegrationSolver,
+    BackgroundModelValue,
+    IntegrationData,
+)
 from CosmologyConcepts import redshift_array, redshift
 from CosmologyModels import BaseCosmology
 from Datastore.SQL.ObjectFactories.base import SQLAFactoryBase
 from MetadataConcepts import store_tag, tolerance
 from defaults import DEFAULT_STRING_LENGTH, DEFAULT_FLOAT_PRECISION
-from utilities import IntegrationData
 
 
 class sqla_BackgroundModelTagAssociation_factory(SQLAFactoryBase):

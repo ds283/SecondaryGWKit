@@ -1,9 +1,10 @@
 from collections import namedtuple
 from typing import Optional, List
 
+import pandas as pd
 import ray
 from math import fabs, pi, sqrt, cos, sin, log
-from scipy.interpolate import InterpolatedUnivariateSpline, UnivariateSpline
+from scipy.interpolate import InterpolatedUnivariateSpline
 
 from ComputeTargets.BackgroundModel import BackgroundModel
 from ComputeTargets.GkNumericalIntegration import GkNumericalValue
@@ -27,6 +28,7 @@ _WKBData = namedtuple(
         "H_ratio",
         "sin_coeff",
         "cos_coeff",
+        "z_init",  # if not None, shows that this WKB data point was obtained from a GkNumericalIntegration initial condition
         "G_WKB",
         "new_G_WKB",
         "abs_G_WKB_err",
@@ -52,6 +54,8 @@ _two_pi = 2.0 * pi
 
 DEFAULT_G_WKB_DIFF_REL_TOLERANCE = 1e-2
 DEFAULT_G_WKB_DIFF_ABS_TOLERANCE = 1e-3
+
+MIN_SPLINE_DATA_POINTS = 5
 
 
 @ray.remote
@@ -86,6 +90,8 @@ def assemble_GkSource_values(
 
     # track the latest redshift for which we have numerical information
     numerical_smallest_z: Optional[redshift] = None
+
+    lowest_z = z_sample.min
 
     for z_source in reversed(list(z_sample)):
         numeric: GkNumericalValue = numeric_data.get(z_source.store_id, None)
@@ -166,13 +172,22 @@ def assemble_GkSource_values(
                 )
 
             if last_theta_mod_2pi is None:
-                # presumably this is the first time we have seen a theta value. Start in the fundamental block (-2pi, 0]
+                # this is the first time we have seen a theta value. Start in the fundamental block (-2pi, 0].
 
                 current_2pi_block_subtraction = theta_div_2pi
                 current_2pi_block = 0
                 rectified_theta_div_2pi = 0
 
-                in_primary_WKB_region = True
+                # if this is also the lowest source redshift, we can begin counting up the primary WKB region.
+                # Otherwise, if the lowest source redshift has no WKB data, there is no WKB primary region.
+                # Instead, we have to rely on the numerical region going all the way down the z_min.
+                # (There will probably always be *some* k-modes/z_source combinations for which WKB data doee not
+                # go all the way down to the lowest z_source. WKB data are missing only for z_response values that lie
+                # between z_source and z_init, the time of the initial condition computed from a GkNumericalIntegration instance.
+                # Since there will typically be *some* response redshifts in this missing window, there wll also be some
+                # GkSource instances that also miss it.
+                if z_source.store_id == lowest_z.store_id:
+                    in_primary_WKB_region = True
 
             else:
                 if current_2pi_block_subtraction is None:
@@ -324,6 +339,7 @@ def assemble_GkSource_values(
                 H_ratio=WKB.H_ratio if WKB is not None else None,
                 sin_coeff=WKB.sin_coeff if WKB is not None else None,
                 cos_coeff=WKB.cos_coeff if WKB is not None else None,
+                z_init=WKB.z_init if WKB is not None else None,
                 G_WKB=WKB.G_WKB if WKB is not None else None,
                 new_G_WKB=new_G_WKB,
                 abs_G_WKB_err=abs_err,
@@ -421,10 +437,6 @@ class GkSource(DatastoreObject):
         self._atol = atol
         self._rtol = rtol
 
-        self._functions = None
-
-        self._compute_ref = None
-
         if payload is not None:
             DatastoreObject.__init__(self, payload["store_id"])
             self._values = payload["values"]
@@ -451,6 +463,10 @@ class GkSource(DatastoreObject):
 
             self._metadata = {}
 
+        self._values_df = None
+        self._functions = None
+        self._compute_ref = None
+
         if self._z_sample is not None:
             z_response_float = float(z_response)
             # check that each source redshift is earlier than the specified response redshift
@@ -462,7 +478,8 @@ class GkSource(DatastoreObject):
                         f"GkSource: source redshift sample point z={z_float:.5g} exceeds response redshift z={z_response_float:.5g}"
                     )
 
-    def _classify_quality(self):
+    def _classify(self):
+        # if primary WKB region is missing, we need numerical data to go all the way down to lowest redshift
         if self._primary_WKB_largest_z is None:
             self._type = "numeric"
             self._crossover = None
@@ -472,6 +489,7 @@ class GkSource(DatastoreObject):
             else:
                 self._quality = "incomplete"
 
+        # if numerical data is missing, we need WKB data to go all the way up to the highest redshift
         elif self._numerical_smallest_z is None:
             self._type = "WKB"
             self._crossover = None
@@ -481,7 +499,10 @@ class GkSource(DatastoreObject):
             else:
                 self._quality = "incomplete"
 
+        # otherwise, there should be an overlap region
         else:
+            # we're allowed to assume that the primary WKB region begins at z_sample.min, and the numerical region
+            # (if it is present) begins at z_sample.max
             self._type = "mixed"
 
             if self._numerical_smallest_z.z <= 0.9 * self._primary_WKB_largest_z.z:
@@ -657,10 +678,34 @@ class GkSource(DatastoreObject):
                 )
             ]
 
-            if len(WKB_data) > 5:
+            if len(WKB_data) > MIN_SPLINE_DATA_POINTS:
                 WKB_region = (max_z.z, min_z.z)
-
                 WKB_data.sort(key=lambda x: x.z_source.z)
+
+                if (
+                    WKB_data[0].z_source.z / WKB_region[1]
+                    > 1.0 + DEFAULT_FLOAT_PRECISION
+                    or WKB_data[-1].z_source.z / WKB_region[0]
+                    < 1.0 - DEFAULT_FLOAT_PRECISION
+                ):
+                    print("!! ERROR (GkSource.create_functions)")
+                    print(
+                        f"     ** WKB data missing: intended region = ({WKB_region[0]:.5g}, {WKB_region[1]:.5g}), but data available only between ({WKB_data[-1].z_source.z:.5g}, {WKB_data[0].z_source.z:.5g})"
+                    )
+                    print(
+                        f"        GkSource (store_id={self.store_id}): z_response = {self._z_response.z:.5g} (store_id={self._z_response.store_id}), type = {self._type}, quality label = {self._quality}"
+                    )
+                    z_source_limit = sqrt(
+                        self._k_exit.z_exit_subh_e3 * self._k_exit.z_exit_subh_e4
+                    )
+                    print(
+                        f"        k = {self._k_exit.k.k_inv_Mpc:.5g}/Mpc, z_exit = {self._k_exit.z_exit:.5g}, z_source_limit = {z_source_limit:.5g}"
+                    )
+                    df = self.values_as_DataFrame()
+                    df.to_csv("ERROR_VALUES.csv", header=True, index=False)
+                    raise RuntimeError(
+                        f"GkSource.create_functions: WKB data missing = intended region = ({WKB_region[0]:.5g}, {WKB_region[1]:.5g}), but data available only between ({WKB_data[-1].z_source.z:.5g}, {WKB_data[0].z_source.z:.5g})."
+                    )
 
                 sin_amplitude_data = [
                     (
@@ -686,11 +731,10 @@ class GkSource(DatastoreObject):
                     sin_amplitude_y,
                     ext="raise",
                 )
-                _theta_spline = UnivariateSpline(
+                _theta_spline = InterpolatedUnivariateSpline(
                     theta_x,
                     theta_y,
                     ext="raise",
-                    s=300,
                 )
 
                 WKB_Gk = GkWKBSplineWrapper(
@@ -724,6 +768,79 @@ class GkSource(DatastoreObject):
         if self._values is None:
             raise RuntimeError("values have not yet been populated")
         return self._values
+
+    def values_as_DataFrame(self) -> pd.DataFrame:
+        if hasattr(self, "_do_not_populate"):
+            raise RuntimeError("GkSource: values read but _do_not_populate is set")
+
+        if self._values is None:
+            raise RuntimeError("values have not yet been populated")
+
+        if self._values_df is None:
+            self._create_values_df()
+
+        return self._values_df
+
+    def _create_values_df(self):
+        z_source_store_id_col = [value.z_source.store_id for value in self._values]
+        z_source_col = [value.z_source.z for value in self._values]
+        z_source_efolds_subh_col = [
+            self._model.efolds_subh(self._k_exit.k, value.z_source)
+            for value in self._values
+        ]
+        has_numeric_col = [value.has_numeric for value in self._values]
+        G_col = [value.numeric.G for value in self._values]
+        Gprime_col = [value.numeric.Gprime for value in self._values]
+        has_WKB_col = [value.has_WKB for value in self._values]
+        theta_mod_2pi_col = [value.WKB.theta_mod_2pi for value in self._values]
+        theta_div_2pi_col = [value.WKB.theta_div_2pi for value in self._values]
+        theta_col = [value.WKB.theta for value in self._values]
+        raw_theta_div_2pi_col = [value.WKB.raw_theta_div_2pi for value in self._values]
+        raw_theta_col = [value.WKB.raw_theta for value in self._values]
+        H_ratio_col = [value.WKB.H_ratio for value in self._values]
+        sin_coeff_col = [value.WKB.sin_coeff for value in self._values]
+        cos_coeff_col = [value.WKB.cos_coeff for value in self._values]
+        z_init_col = [value.WKB.z_init for value in self._values]
+        G_WKB_col = [value.WKB.G_WKB for value in self._values]
+        new_G_WKB_col = [value.WKB.new_G_WKB for value in self._values]
+        abs_G_WKB_err_col = [value.WKB.abs_G_WKB_err for value in self._values]
+        rel_G_WKB_err_col = [value.WKB.rel_G_WKB_err for value in self._values]
+        omega_WKB_sq_col = [value.omega_WKB_sq for value in self._values]
+        WKB_criterion_col = [value.WKB_criterion for value in self._values]
+        analytic_G_col = [value.analytic_G for value in self._values]
+        analytic_Gprime_col = [value.analytic_Gprime for value in self._values]
+
+        df = pd.DataFrame.from_dict(
+            {
+                "z_source_store_id": z_source_store_id_col,
+                "z_source": z_source_col,
+                "z_source_efolds_subh": z_source_efolds_subh_col,
+                "has_numeric": has_numeric_col,
+                "G": G_col,
+                "Gprime": Gprime_col,
+                "has_WKB": has_WKB_col,
+                "theta_mod_2pi": theta_mod_2pi_col,
+                "theta_div_2pi": theta_div_2pi_col,
+                "theta": theta_col,
+                "raw_theta_div_2pi": raw_theta_div_2pi_col,
+                "raw_theta": raw_theta_col,
+                "H_ratio": H_ratio_col,
+                "sin_coeff": sin_coeff_col,
+                "cos_coeff": cos_coeff_col,
+                "z_init": z_init_col,
+                "G_WKB": G_WKB_col,
+                "new_G_WKB": new_G_WKB_col,
+                "abs_G_WKB_err": abs_G_WKB_err_col,
+                "rel_G_WKB_err": rel_G_WKB_err_col,
+                "omega_WKB_sq": omega_WKB_sq_col,
+                "WKB_criterion": WKB_criterion_col,
+                "analytic_G": analytic_G_col,
+                "analytic_Gprime": analytic_Gprime_col,
+            }
+        )
+
+        df.sort_values(by="z_source", ascending=False, inplace=True, ignore_index=True)
+        self._values_df = df
 
     def compute(self, payload, label: Optional[str] = None):
         if hasattr(self, "_do_not_populate"):
@@ -771,7 +888,7 @@ class GkSource(DatastoreObject):
         self._numerical_smallest_z = payload["numerical_smallest_z"]
         self._primary_WKB_largest_z = payload["primary_WKB_largest_z"]
 
-        self._classify_quality()
+        self._classify()
 
 
 class GkSourceValue(DatastoreObject):
@@ -795,6 +912,7 @@ class GkSourceValue(DatastoreObject):
         WKB_criterion: Optional[float] = None,
         analytic_G: Optional[float] = None,
         analytic_Gprime: Optional[float] = None,
+        z_init: Optional[float] = None,
     ):
         DatastoreObject.__init__(self, store_id)
 
@@ -887,6 +1005,7 @@ class GkSourceValue(DatastoreObject):
             new_G_WKB=new_G_WKB,
             abs_G_WKB_err=abs_G_WKB_err,
             rel_G_WKB_err=rel_G_WKB_err,
+            z_init=z_init,
         )
 
         self._omega_WKB_sq = omega_WKB_sq

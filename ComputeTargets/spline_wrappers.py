@@ -1,4 +1,5 @@
 from math import log, sin, cos
+from scipy.interpolate import UnivariateSpline
 
 
 class ZSplineWrapper:
@@ -40,9 +41,9 @@ class GkWKBSplineWrapper:
         max_z: float,
         min_z: float,
     ):
-        self._theta_spline = theta_spline
-        self._sin_amplitude_spline = sin_amplitude_spline
-        self._cos_amplitude_spline = cos_amplitude_spline
+        self._theta_spline: UnivariateSpline = theta_spline
+        self._sin_amplitude_spline: UnivariateSpline = sin_amplitude_spline
+        self._cos_amplitude_spline: UnivariateSpline = cos_amplitude_spline
 
         self._label = label
 
@@ -62,20 +63,27 @@ class GkWKBSplineWrapper:
 
         log_z = log(z)
 
-        if self._sin_amplitude_spline is not None:
-            sin_amplitude = self._sin_amplitude_spline(log_z)
-            sin_factor = sin(self._theta_spline(log_z))
+        try:
+            if self._sin_amplitude_spline is not None:
+                sin_amplitude = self._sin_amplitude_spline(log_z)
+                sin_factor = sin(self._theta_spline(log_z))
 
-            sin_part = sin_amplitude * sin_factor
-        else:
-            sin_part = 0.0
+                sin_part = sin_amplitude * sin_factor
+            else:
+                sin_part = 0.0
 
-        if self._cos_amplitude_spline is not None:
-            cos_amplitude = self._cos_amplitude_spline(log_z)
-            cos_factor = cos(self._theta_spline(log_z))
+            if self._cos_amplitude_spline is not None:
+                cos_amplitude = self._cos_amplitude_spline(log_z)
+                cos_factor = cos(self._theta_spline(log_z))
 
-            cos_part = cos_amplitude * cos_factor
-        else:
-            cos_part = 0.0
+                cos_part = cos_amplitude * cos_factor
+            else:
+                cos_part = 0.0
+        except ValueError as e:
+            print(
+                f"-- recorded z_interval (max, min) = ({self._max_z:.5g}, {self._min_z:.5g})"
+            )
+            print(f"-- requested z value = {z:.5g}")
+            raise e
 
         return sin_part + cos_part

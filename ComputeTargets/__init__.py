@@ -19,4 +19,7 @@ from .TkNumericalIntegration import (
     TkNumericalIntegration,
     TkNumericalValue,
 )
-from .integration_metadata import IntegrationSolver
+from .integration_metadata import (
+    IntegrationSolver,
+    IntegrationData,
+)

@@ -10,12 +10,12 @@ from ComputeTargets import (
     GkNumericalValue,
     IntegrationSolver,
     BackgroundModel,
+    IntegrationData,
 )
 from CosmologyConcepts import redshift_array, redshift, wavenumber_exit_time
 from Datastore.SQL.ObjectFactories.base import SQLAFactoryBase
 from MetadataConcepts import tolerance, store_tag
 from defaults import DEFAULT_FLOAT_PRECISION, DEFAULT_STRING_LENGTH
-from utilities import IntegrationData
 
 
 class sqla_GkNumericalTagAssociation_factory(SQLAFactoryBase):

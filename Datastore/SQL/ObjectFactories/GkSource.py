@@ -333,6 +333,7 @@ class sqla_GkSource_factory(SQLAFactoryBase):
                     value_table.c.rel_G_WKB_err,
                     value_table.c.sin_coeff,
                     value_table.c.cos_coeff,
+                    value_table.c.z_init,
                     value_table.c.omega_WKB_sq,
                     value_table.c.WKB_criterion,
                     value_table.c.analytic_G,
@@ -365,6 +366,7 @@ class sqla_GkSource_factory(SQLAFactoryBase):
                         raw_theta_div_2pi=row.raw_theta_div_2pi,
                         sin_coeff=row.sin_coeff,
                         cos_coeff=row.cos_coeff,
+                        z_init=row.z_init,
                         G_WKB=row.G_WKB,
                         new_G_WKB=row.new_G_WKB,
                         abs_G_WKB_err=row.abs_G_WKB_err,
@@ -501,6 +503,7 @@ class sqla_GkSource_factory(SQLAFactoryBase):
                     "rel_G_WKB_err": value._WKB_data.rel_G_WKB_err,
                     "sin_coeff": value._WKB_data.sin_coeff,
                     "cos_coeff": value._WKB_data.cos_coeff,
+                    "z_init": value.WKB.z_init,
                     "omega_WKB_sq": value.omega_WKB_sq,
                     "WKB_criterion": value.WKB_criterion,
                     "analytic_G": value.analytic_G,
@@ -685,6 +688,7 @@ class sqla_GkSourceValue_factory(SQLAFactoryBase):
                 sqla.Column("rel_G_WKB_err", sqla.Float(64), nullable=True),
                 sqla.Column("sin_coeff", sqla.Float(64), nullable=True),
                 sqla.Column("cos_coeff", sqla.Float(64), nullable=True),
+                sqla.Column("z_init", sqla.Float(64), nullable=True),
                 sqla.Column("omega_WKB_sq", sqla.Float(64), nullable=True),
                 sqla.Column("WKB_criterion", sqla.Float(64), nullable=True),
                 sqla.Column("analytic_G", sqla.Float(64), nullable=True),
@@ -743,6 +747,8 @@ class sqla_GkSourceValue_factory(SQLAFactoryBase):
 
         sin_coeff = payload.get("sin_coeff", None)
         cos_coeff = payload.get("cos_coeff", None)
+        z_init = payload.get("z_init", None)
+
         omega_WKB_sq = payload.get("omega_WKB_sq", None)
         WKB_criterion = payload.get("WKB_criterion", None)
 
@@ -777,6 +783,7 @@ class sqla_GkSourceValue_factory(SQLAFactoryBase):
                     table.c.rel_G_WKB_err,
                     table.c.sin_coeff,
                     table.c.cos_coeff,
+                    table.c.z_init,
                     table.c.omega_WKB_sq,
                     table.c.WKB_criterion,
                     table.c.analytic_G,
@@ -815,6 +822,7 @@ class sqla_GkSourceValue_factory(SQLAFactoryBase):
                     "rel_G_WKB_err": rel_G_WKB_err,
                     "sin_coeff": sin_coeff,
                     "cos_coeff": cos_coeff,
+                    "z_init": z_init,
                     "omega_WKB_sq": omega_WKB_sq,
                     "WKB_criterion": WKB_criterion,
                     "analytic_G": analytic_G,
@@ -841,6 +849,7 @@ class sqla_GkSourceValue_factory(SQLAFactoryBase):
 
             sin_coeff = row_data.sin_coeff
             cos_coeff = row_data.cos_coeff
+            z_init = row_data.z_init
 
             omega_WKB_sq = row_data.omega_WKB_sq
             WKB_criterion = row_data.WKB_criterion
@@ -864,6 +873,7 @@ class sqla_GkSourceValue_factory(SQLAFactoryBase):
             rel_G_WKB_err=rel_G_WKB_err,
             sin_coeff=sin_coeff,
             cos_coeff=cos_coeff,
+            z_init=z_init,
             omega_WKB_sq=omega_WKB_sq,
             WKB_criterion=WKB_criterion,
             analytic_G=analytic_G,
@@ -939,6 +949,7 @@ class sqla_GkSourceValue_factory(SQLAFactoryBase):
                     table.c.rel_G_WKB_err,
                     table.c.sin_coeff,
                     table.c.cos_coeff,
+                    table.c.z_init,
                     table.c.omega_WKB_sq,
                     table.c.WKB_criterion,
                     table.c.analytic_G,
@@ -979,6 +990,7 @@ class sqla_GkSourceValue_factory(SQLAFactoryBase):
             rel_G_WKB_err=row_data.rel_G_WKB_err,
             sin_coeff=row_data.sin_coeff,
             cos_coeff=row_data.cos_coeff,
+            z_init=row_data.z_init,
             omega_WKB_sq=row_data.omega_WKB_sq,
             WKB_criterion=row_data.WKB_criterion,
             analytic_G=row_data.analytic_G,

@@ -11,12 +11,12 @@ from ComputeTargets import (
     GkWKBIntegration,
     GkWKBValue,
     BackgroundModel,
+    IntegrationData,
 )
 from CosmologyConcepts import wavenumber_exit_time, redshift_array, redshift
 from Datastore.SQL.ObjectFactories.base import SQLAFactoryBase
 from MetadataConcepts import store_tag, tolerance
 from defaults import DEFAULT_STRING_LENGTH, DEFAULT_FLOAT_PRECISION
-from utilities import IntegrationData
 
 
 class sqla_GkWKBTagAssociation_factory(SQLAFactoryBase):

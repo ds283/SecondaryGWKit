@@ -1,3 +1,5 @@
+from collections import namedtuple
+
 from Datastore import DatastoreObject
 
 
@@ -22,3 +24,16 @@ class IntegrationSolver(DatastoreObject):
     @property
     def stepping(self) -> int:
         return self._stepping
+
+
+IntegrationData = namedtuple(
+    "IntegrationData",
+    [
+        "compute_time",
+        "compute_steps",
+        "mean_RHS_time",
+        "max_RHS_time",
+        "min_RHS_time",
+        "RHS_evaluations",
+    ],
+)

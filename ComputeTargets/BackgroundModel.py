@@ -6,14 +6,13 @@ from math import sqrt, fabs, log
 from scipy.integrate import solve_ivp
 from scipy.interpolate import InterpolatedUnivariateSpline
 
-from ComputeTargets.integration_metadata import IntegrationSolver
+from ComputeTargets.integration_metadata import IntegrationSolver, IntegrationData
 from ComputeTargets.integration_supervisor import RHS_timer, IntegrationSupervisor
-from CosmologyConcepts import redshift_array, redshift
+from CosmologyConcepts import redshift_array, redshift, wavenumber
 from CosmologyModels import BaseCosmology
 from Datastore import DatastoreObject
 from MetadataConcepts import tolerance, store_tag
 from defaults import DEFAULT_ABS_TOLERANCE, DEFAULT_REL_TOLERANCE
-from utilities import IntegrationData
 
 A0_TAU_INDEX = 0
 EXPECTED_SOL_LENGTH = 1
@@ -198,6 +197,10 @@ class BackgroundModel(DatastoreObject):
     @property
     def z_sample(self):
         return self._z_sample
+
+    def efolds_subh(self, k: wavenumber, z: redshift) -> float:
+        H = self.functions.Hubble(z.z)
+        return log((1.0 + z.z) * k.k / H)
 
     @property
     def data(self) -> IntegrationData:

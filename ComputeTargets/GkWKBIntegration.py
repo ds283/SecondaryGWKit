@@ -11,7 +11,7 @@ from ComputeTargets.analytic_Gk import (
     compute_analytic_G,
     compute_analytic_Gprime,
 )
-from ComputeTargets.integration_metadata import IntegrationSolver
+from ComputeTargets.integration_metadata import IntegrationSolver, IntegrationData
 from ComputeTargets.integration_supervisor import (
     RHS_timer,
     IntegrationSupervisor,
@@ -25,7 +25,7 @@ from defaults import (
     DEFAULT_ABS_TOLERANCE,
     DEFAULT_REL_TOLERANCE,
 )
-from utilities import check_units, format_time, IntegrationData
+from utilities import check_units, format_time
 
 THETA_INDEX = 0
 Q_INDEX = 0

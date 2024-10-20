@@ -9,7 +9,7 @@ from scipy.optimize import root_scalar
 from ComputeTargets.BackgroundModel import BackgroundModel
 from ComputeTargets.WKB_tensor_Green import WKB_omegaEff_sq, WKB_d_ln_omegaEffPrime_dz
 from ComputeTargets.analytic_Gk import compute_analytic_G, compute_analytic_Gprime
-from ComputeTargets.integration_metadata import IntegrationSolver
+from ComputeTargets.integration_metadata import IntegrationSolver, IntegrationData
 from ComputeTargets.integration_supervisor import (
     IntegrationSupervisor,
     DEFAULT_UPDATE_INTERVAL,
@@ -23,7 +23,7 @@ from defaults import (
     DEFAULT_REL_TOLERANCE,
     DEFAULT_FLOAT_PRECISION,
 )
-from utilities import check_units, format_time, IntegrationData
+from utilities import check_units, format_time
 
 # RHS of ODE system
 #

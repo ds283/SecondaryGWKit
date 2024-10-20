@@ -1,21 +1,8 @@
 import time
-from collections import namedtuple
 from itertools import zip_longest
 from traceback import print_tb
 
 from CosmologyModels import BaseCosmology
-
-IntegrationData = namedtuple(
-    "IntegrationData",
-    [
-        "compute_time",
-        "compute_steps",
-        "mean_RHS_time",
-        "max_RHS_time",
-        "min_RHS_time",
-        "RHS_evaluations",
-    ],
-)
 
 
 class WallclockTimer:
