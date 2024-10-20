@@ -135,7 +135,7 @@ def adaptive_levin_subregion(
 
     LevinL = np.block(row_list) + AmatT
 
-    # now try to invert the Levin superoperator, to find the Levin antiderivatives
+    # now try to invert the Levin superoperator, to find the Levin antiderivatives p(x)
     # Chen et al.
     p, residuals, rank, s = np.linalg.lstsq(LevinL, f_Cheb)
 
