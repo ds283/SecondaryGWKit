@@ -101,6 +101,8 @@ _drop_actions = {
     "wkb": ["GkWKBIntegration", "GkWKB_tags", "GkWKBValue"],
     "source": ["GkSource", "GkSource_tags", "GkSourceValue"],
 }
+# should drop tables in a defined order, so that we do not violate foreign key constrints
+_drop_order = ["source", "wkb", "numerical"]
 
 
 @ray.remote
@@ -352,8 +354,10 @@ class Datastore:
         if not isinstance(actions, Iterable):
             raise RuntimeError("Could not interpret actions type")
 
-        for action in actions:
-            if action in _drop_actions:
+        actions = set(actions)
+        dropped = set()
+        for action in _drop_order:
+            if action in actions:
                 print(f'Datastore: dropping tables for "{action}"')
                 drop_list = _drop_actions[action]
                 for table_name in drop_list:
@@ -362,8 +366,14 @@ class Datastore:
                         if tab is not None:
                             tab.drop(self._engine)
                             self._metadata.remove(tab)
-            else:
-                print(f'Datastore: unknown drop action "{action}"')
+                dropped.add(action)
+
+        for action in dropped:
+            while action in actions:
+                actions.remove(action)
+
+        for action in actions:
+            print(f'Datastore: unknown drop action "{action}"')
 
         # regenerate inspector to pick up any changes that were made
         # (the inspector apparently does not automatically reflect dropped tables)
