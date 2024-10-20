@@ -150,9 +150,7 @@ def assemble_GkSource_values(
             # z_source. So for some z_source we will have data at a given z_response, and for others we won't. This can cause the WKB region
             # to appear non-contiguous.
             if (
-                z_response.z
-                < 0.65
-                * k_exit.z_exit_subh_e3  # not sure quite what the multiplier should be here, but the cut should not be too much later than z_e3
+                z_response.z < k_exit.z_exit_subh_e4
                 and had_theta_last_step is not True
                 and seen_WKB
             ):
