@@ -9,7 +9,7 @@ from typing import List, Optional
 import numpy as np
 import pandas as pd
 import ray
-from math import log
+from math import log, sqrt
 
 from ComputeTargets import (
     TkNumericalIntegration,
@@ -722,6 +722,10 @@ with ShardedPool(
             k_exit: wavenumber_exit_time
             Gk_data: List[GkNumericalIntegration]
 
+            # use numerical initial conditions up to geometric mean of 3- and 4-efold points (inside the horizon)
+            # see long comment below
+            z_source_limit = sqrt(k_exit.z_exit_subh_e3 * k_exit.z_exit_subh_e4)
+
             for z_source, Gk in zip(missing[k_exit.store_id], Gk_data):
                 # be defensive about ensuring provenance for our data products
                 Gk: GkNumericalIntegration
@@ -734,8 +738,23 @@ with ShardedPool(
                     continue
 
                 # query whether there is a pre-computed GkNumericalIntegration for this source redshift.
-                # typically, this will be the case provided the source redshift is sufficiently early
-                if Gk.available:
+                # typically, this will be the case provided the source redshift is no more than
+                # 4 e-folds inside the horizon, because that is where we cut the GkNumericalIntegration work queue.
+
+                # Notice that, if a GkNumericalIntegration object is available, we don't get to decide where the
+                # initial condition is; we just have to use the initial condition that is available.
+                # That might be some time later than z_source. Then, we will not get WKB solutions for
+                # z_response between z_source and the initial condition. The can lead to gaps in the WKB data
+                # when we later assemble GkSource objects.
+
+                # The idea is to switch to a WKB solution fairly soon after 3 e-folds inside the horizon.
+                # In particular, we shouldn't keep using the GkNumericalIntegration boundary condition
+                # right up to the boundary where we stop computing it, because that risks the first available z_response
+                # for such very late z_source bouncing around erratically in a region where we depend on having it.
+                # Instead, we should use the numerical boundary condition for z_source up to some point between the 3 and 4 e-fold points.
+                # After that we should use a fully WKB analysis. Then we should have safely overlapping WKB and
+                # numerical solutions around the 4-efold point.
+                if z_source.z >= z_source_limit and Gk.available:
                     # obtain initial data and initial time from the GkNumericalIntegration object
                     G_init = Gk.stop_G
                     Gprime_init = Gk.stop_Gprime
@@ -889,10 +908,18 @@ with ShardedPool(
             "k_exit_store_id": Gk._k_exit.store_id,
             "z_exit": Gk._k_exit.z_exit,
             "z_exit_subh_e3": Gk._k_exit.z_exit_subh_e3,
+            "z_exit_subh_e4": Gk._k_exit.z_exit_subh_e4,
+            "z_exit_subh_e5": Gk._k_exit.z_exit_subh_e5,
             "z_exit_subh_e6": Gk._k_exit.z_exit_subh_e6,
             "z_response": Gk.z_response.z,
             "z_response_store_id": Gk.z_response.store_id,
             "z_response_efolds_subh": efolds_subh(Gk.k, Gk.z_response),
+            "numerical_z_source_limit": sqrt(
+                Gk._k_exit.z_exit_subh_e3 * Gk._k_exit.z_exit_subh_e4
+            ),
+            "numerical_z_source_limit_efolds": efolds_subh(
+                sqrt(Gk._k_exit.z_exit_subh_e3 * Gk._k_exit.z_exit_subh_e4)
+            ),
             "type": Gk.type,
             "quality": Gk.quality,
             "crossover": Gk.crossover,
