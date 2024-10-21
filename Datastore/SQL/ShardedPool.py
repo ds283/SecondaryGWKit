@@ -37,6 +37,8 @@ _shard_tables = {
     "GkWKBValue": "k",
     "GkSource": "k",
     "GkSourceValue": "k",
+    "QuadSourceIntegral": "k",
+    "QuadSourceIntegralValue": "k",
 }
 
 

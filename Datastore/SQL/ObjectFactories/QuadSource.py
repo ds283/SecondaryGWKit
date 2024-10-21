@@ -96,14 +96,15 @@ class sqla_QuadSource_factory(SQLAFactoryBase):
                 sqla.Column(
                     "q_wavenumber_exit_serial",
                     sqla.Integer,
-                    sqla.ForeignKey("wavenumber_exit_time.serial"),
+                    sqla.ForeignKey(
+                        "wavenumber_exit_time.serial"
+                    ),  # q instances will be held on this shard, because we shard by q.
                     index=True,
                     nullable=False,
                 ),
                 sqla.Column(
                     "r_wavenumber_exit_serial",
-                    sqla.Integer,
-                    sqla.ForeignKey("wavenumber_exit_time.serial"),
+                    sqla.Integer,  # Don't impose foreign key. r instances will not be held on this shard. We shard by q.
                     index=True,
                     nullable=False,
                 ),
@@ -119,7 +120,7 @@ class sqla_QuadSource_factory(SQLAFactoryBase):
                 sqla.Column(
                     "Tr_serial",
                     sqla.Integer,
-                    # sqla.ForeignKey("QuadSource.serial"),         # Tr instances will not be held on this shard. We shard by q.
+                    # sqla.ForeignKey("QuadSource.serial"),         # Don't impose foreign key. Tr instances may not be held on this shard. We shard by q.
                     # index=True,
                     nullable=False,
                 ),

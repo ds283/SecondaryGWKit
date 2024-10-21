@@ -19,6 +19,10 @@ from .QuadSource import (
     QuadSourceValue,
     QuadSourceFunctions,
 )
+from .QuadSourceIntegral import (
+    QuadSourceIntegral,
+    QuadSourceIntegralValue,
+)
 from .TkNumericalIntegration import (
     TkNumericalIntegration,
     TkNumericalValue,

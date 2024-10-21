@@ -2,6 +2,7 @@ import time
 from itertools import zip_longest
 from traceback import print_tb
 
+from CosmologyConcepts import redshift_array
 from CosmologyModels import BaseCosmology
 
 
@@ -44,6 +45,14 @@ def check_cosmology(A, B):
 
     if A_cosmology.store_id != B_cosmology.store_id:
         raise RuntimeError("Cosmology store_ids are different")
+
+
+def check_zsample(A, B):
+    A_sample: redshift_array = A.z_sample
+    B_sample: redshift_array = B.z_sample
+
+    if A != B:
+        raise RuntimeError("Redshift sample grids are not equal")
 
 
 SECONDS_PER_MINUTE = 60

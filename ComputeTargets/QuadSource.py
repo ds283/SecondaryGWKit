@@ -308,6 +308,8 @@ class QuadSource(DatastoreObject):
         check_cosmology(Tq.model, self.model)
         check_cosmology(Tr.model, self.model)
 
+        # don't check for equality between z-sample grids, because Tq and Tr will probably have different initial times if q is not equal to r
+
         self._compute_ref = compute_quad_source.remote(
             self._model,
             self.z_sample,

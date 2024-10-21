@@ -300,7 +300,6 @@ class sqla_GkWKBIntegration_factory(SQLAFactoryBase):
 
         sin_coeff = row_data.sin_coeff
         cos_coeff = row_data.cos_coeff
-        z_init = row_data.z_init
 
         z_init = row_data.z_init
         G_init = row_data.G_init
@@ -1040,16 +1039,16 @@ class sqla_GkWKBValue_factory(SQLAFactoryBase):
                 wkb_table.c.z_source_serial,
                 redshift_table.c.z.label("z_source"),
             )
-            .filter(
-                wkb_table.c.model_serial == model.store_id,
-                wkb_table.c.wavenumber_exit_serial == k.store_id,
-                wkb_table.c.validated == True,
-            )
             .select_from(
                 wkb_table.join(
                     redshift_table,
                     redshift_table.c.serial == wkb_table.c.z_source_serial,
                 )
+            )
+            .filter(
+                wkb_table.c.model_serial == model.store_id,
+                wkb_table.c.wavenumber_exit_serial == k.store_id,
+                wkb_table.c.validated == True,
             )
         )
 

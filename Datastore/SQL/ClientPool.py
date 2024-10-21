@@ -31,6 +31,9 @@ _default_serial_batch_size = {
     "GkSource": 50,
     "GkSource_tags": 10,
     "GkSourceValue": 5000,
+    "QuadSourceIntegral": 50,
+    "QuadSourceIntegral_tags": 10,
+    "QuadSourceIntegralValue": 5000,
 }
 
 

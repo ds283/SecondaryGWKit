@@ -36,6 +36,11 @@ from Datastore.SQL.ObjectFactories.QuadSource import (
     sqla_QuadSourceTagAssocation_factory,
     sqla_QuadSourceValue_factory,
 )
+from Datastore.SQL.ObjectFactories.QuadSourceIntegral import (
+    sqla_QuadSourceIntegralTagAssociation_factory,
+    sqla_QuadSourceIntegral_factory,
+    sqla_QuadSourceIntegralValue_factory,
+)
 from Datastore.SQL.ObjectFactories.TkNumericalIntegration import (
     sqla_TkNumericalIntegration_factory,
     sqla_TkNumericalValue_factory,
@@ -90,6 +95,9 @@ _factories = {
     "GkSource": sqla_GkSource_factory,
     "GkSource_tags": sqla_GkSourceTagAssociation_factory,
     "GkSourceValue": sqla_GkSourceValue_factory,
+    "QuadSourceIntegral": sqla_QuadSourceIntegral_factory,
+    "QuadSourceIntegral_tags": sqla_QuadSourceIntegralTagAssociation_factory,
+    "QuadSourceIntegralValue": sqla_QuadSourceIntegralValue_factory,
 }
 
 _FactoryMappingType = Mapping[str, SQLAFactoryBase]
@@ -102,9 +110,21 @@ _drop_actions = {
     "quad-source": ["QuadSource", "QuadSource_tags", "QuadSourceValue"],
     "tk-numeric": ["TkNumericalIntegration", "TkNumerical_tags", "TkNumericalValue"],
     "gk-numeric": ["GkNumericalIntegration", "GkNumerical_tags", "GkNumericalValue"],
+    "quad-source-integral": [
+        "QuadSourceIntegral",
+        "QuadSourceIntegral_tags",
+        "QuadSourceIntegralValue",
+    ],
 }
 # should drop tables in a defined order, so that we do not violate foreign key constrints
-_drop_order = ["gk-source", "gk-wkb", "gk-numeric", "quad-source", "tk-numeric"]
+_drop_order = [
+    "quad-source-integral",
+    "gk-source",
+    "gk-wkb",
+    "gk-numeric",
+    "quad-source",
+    "tk-numeric",
+]
 
 
 @ray.remote
