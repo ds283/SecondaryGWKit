@@ -1,4 +1,4 @@
-from functools import partial
+from functools import partial, total_ordering
 from typing import Iterable, Optional, Mapping, List
 
 import ray
@@ -13,6 +13,7 @@ from defaults import DEFAULT_ABS_TOLERANCE, DEFAULT_REL_TOLERANCE
 from utilities import check_units, WallclockTimer
 
 
+@total_ordering
 class wavenumber(DatastoreObject):
     def __init__(self, store_id: int, k_inv_Mpc: float, units):
         """
@@ -38,6 +39,18 @@ class wavenumber(DatastoreObject):
         :return:
         """
         return float(self.k)
+
+    def __eq__(self, other):
+        if not isinstance(other, type(self)):
+            return NotImplemented
+
+        return self.store_id == other.store_id
+
+    def __lt__(self, other):
+        if not isinstance(other, type(self)):
+            return NotImplemented
+
+        return self.k < other.k
 
 
 class wavenumber_array:

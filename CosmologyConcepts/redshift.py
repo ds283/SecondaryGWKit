@@ -1,3 +1,4 @@
+from functools import total_ordering
 from typing import Iterable, Self
 
 from math import fabs
@@ -6,6 +7,7 @@ from Datastore import DatastoreObject
 from defaults import DEFAULT_FLOAT_PRECISION
 
 
+@total_ordering
 class redshift(DatastoreObject):
     def __init__(self, store_id: int, z: float):
         """
@@ -28,10 +30,16 @@ class redshift(DatastoreObject):
         return float(self.z)
 
     def __eq__(self, other):
-        return not self.__ne__(other)
+        if not isinstance(other, type(self)):
+            return NotImplemented
 
-    def __ne__(self, other):
-        return fabs(self.z - other.z) > DEFAULT_FLOAT_PRECISION
+        return self.store_id == other.store_id
+
+    def __lt__(self, other):
+        if not isinstance(other, type(self)):
+            return NotImplemented
+
+        return self.z < other.z
 
 
 class redshift_array:
