@@ -1,5 +1,5 @@
 from collections import namedtuple
-from typing import Optional, List
+from typing import Optional, List, Union
 
 import ray
 from math import sqrt, fabs, log
@@ -198,9 +198,14 @@ class BackgroundModel(DatastoreObject):
     def z_sample(self):
         return self._z_sample
 
-    def efolds_subh(self, k: wavenumber, z: redshift) -> float:
-        H = self.functions.Hubble(z.z)
-        return log((1.0 + z.z) * k.k / H)
+    def efolds_subh(self, k: wavenumber, z: Union[redshift, float]) -> float:
+        if isinstance(z, redshift):
+            z_float = z.z
+        else:
+            z_float = float(z)
+
+        H = self.functions.Hubble(z_float)
+        return log((1.0 + z_float) * k.k / H)
 
     @property
     def data(self) -> IntegrationData:

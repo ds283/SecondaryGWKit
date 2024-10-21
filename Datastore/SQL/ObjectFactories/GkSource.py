@@ -20,14 +20,16 @@ _quality_serialize = {
     "complete": 0,
     "acceptable": 1,
     "marginal": 2,
-    "incomplete": 3,
+    "minimal": 3,
+    "incomplete": 4,
 }
 
 _quality_deserialize = {
     0: "complete",
     1: "acceptable",
     2: "marginal",
-    3: "incomplete",
+    3: "minimal",
+    4: "incomplete",
 }
 
 _type_serialize = {
@@ -173,10 +175,11 @@ class sqla_GkSource_factory(SQLAFactoryBase):
                 sqla.Column("type", sqla.SmallInteger, nullable=False),
                 sqla.Column("quality", sqla.SmallInteger, nullable=False),
                 sqla.Column(
-                    "crossover",
+                    "crossover_z",
                     sqla.Float(64),
                     nullable=True,
                 ),
+                sqla.Column("Levin_z", sqla.Float(65), nullable=True),
                 sqla.Column("validated", sqla.Boolean, default=False, nullable=False),
                 sqla.Column(
                     "metadata", sqla.String(DEFAULT_STRING_LENGTH), nullable=True
@@ -223,7 +226,8 @@ class sqla_GkSource_factory(SQLAFactoryBase):
                 largest_WKB_z_table.c.z.label("primary_WKB_largest_z"),
                 table.c.type,
                 table.c.quality,
-                table.c.crossover,
+                table.c.crossover_z,
+                table.c.Levin_z,
                 table.c.metadata,
             )
             .select_from(
@@ -408,7 +412,8 @@ class sqla_GkSource_factory(SQLAFactoryBase):
                     if row_data.quality is not None
                     else None
                 ),
-                "crossover": row_data.crossover,
+                "crossover_z": row_data.crossover_z,
+                "Levin_z": row_data.Levin_z,
                 "metadata": (
                     json.loads(row_data.metadata)
                     if row_data.metadata is not None
@@ -466,7 +471,8 @@ class sqla_GkSource_factory(SQLAFactoryBase):
                     if obj._quality is not None
                     else None
                 ),
-                "crossover": obj._crossover,
+                "crossover_z": obj._crossover_z,
+                "Levin_z": obj._Levin_z,
                 "metadata": (
                     json.dumps(obj._metadata) if obj._metadata is not None else None
                 ),

@@ -1042,7 +1042,7 @@ with ShardedPool(
             ),
             "type": Gk.type,
             "quality": Gk.quality,
-            "crossover": Gk.crossover,
+            "crossover_z": Gk.crossover_z,
             "metadata": Gk.metadata,
             "z_sample": [z.z for z in Gk.z_sample],
             "z_sample_size": len(Gk.z_sample),

@@ -403,40 +403,13 @@ with ShardedPool(
                 linestyle="dashdot",
             )
 
-            ax.axvline(k_exit.z_exit_subh_e3, linestyle="dashed", color="r")
-            ax.axvline(k_exit.z_exit_subh_e5, linestyle="dashed", color="b")
-
-            trans = ax.get_xaxis_transform()
-            ax.text(
-                k_exit.z_exit_subh_e3,
-                0.9,
-                "$+3$ e-folds",
-                transform=trans,
-                fontsize="small",
-            )
-            ax.text(
-                k_exit.z_exit_subh_e5,
-                0.75,
-                "$+5$ e-folds",
-                transform=trans,
-                fontsize="small",
-            )
-
-            if Gk.type == "mixed" and Gk.crossover is not None:
-                ax.axvline(Gk.crossover, linestyle="dashdot", color="m")
-                ax.text(
-                    Gk.crossover, 0.15, "crossover", transform=trans, fontsize="small"
-                )
+            add_z_labels(ax, Gk, k_exit)
+            add_Gk_labels(ax, Gk)
 
             ax.set_xlabel("source redshift $z$")
             ax.set_ylabel("$G_k(z_{\\text{source}}, z_{\\text{response}}) / (1+z')$")
 
-            ax.set_xscale("log")
-            ax.set_yscale("log")
-
-            ax.legend(loc="best")
-            ax.grid(True)
-            ax.xaxis.set_inverted(True)
+            set_loglog_axes(ax)
 
             fig_path = (
                 base_path
@@ -476,40 +449,13 @@ with ShardedPool(
                 linestyle="solid",
             )
 
-            ax.axvline(k_exit.z_exit_subh_e3, linestyle="dashed", color="r")
-            ax.axvline(k_exit.z_exit_subh_e5, linestyle="dashed", color="b")
-
-            trans = ax.get_xaxis_transform()
-            ax.text(
-                k_exit.z_exit_subh_e3,
-                0.9,
-                "$+3$ e-folds",
-                transform=trans,
-                fontsize="small",
-            )
-            ax.text(
-                k_exit.z_exit_subh_e5,
-                0.75,
-                "$+5$ e-folds",
-                transform=trans,
-                fontsize="small",
-            )
-
-            if Gk.type == "mixed" and Gk.crossover is not None:
-                ax.axvline(Gk.crossover, linestyle="dashdot", color="m")
-                ax.text(
-                    Gk.crossover, 0.15, "crossover", transform=trans, fontsize="small"
-                )
+            add_z_labels(ax, Gk, k_exit)
+            add_Gk_labels(ax, Gk)
 
             ax.set_xlabel("source redshift $z$")
             ax.set_ylabel("WKB phase $\\theta$")
 
-            ax.set_xscale("log")
-            ax.set_yscale("log")
-
-            ax.legend(loc="best")
-            ax.grid(True)
-            ax.xaxis.set_inverted(True)
+            set_loglog_axes(ax)
 
             fig_path = (
                 base_path
@@ -549,39 +495,13 @@ with ShardedPool(
                 linestyle="solid",
             )
 
-            ax.axvline(k_exit.z_exit_subh_e3, linestyle="dashed", color="r")
-            ax.axvline(k_exit.z_exit_subh_e5, linestyle="dashed", color="b")
-
-            trans = ax.get_xaxis_transform()
-            ax.text(
-                k_exit.z_exit_subh_e3,
-                0.9,
-                "$+3$ e-folds",
-                transform=trans,
-                fontsize="small",
-            )
-            ax.text(
-                k_exit.z_exit_subh_e5,
-                0.75,
-                "$+5$ e-folds",
-                transform=trans,
-                fontsize="small",
-            )
-
-            if Gk.type == "mixed" and Gk.crossover is not None:
-                ax.axvline(Gk.crossover, linestyle="dashdot", color="m")
-                ax.text(
-                    Gk.crossover, 0.15, "crossover", transform=trans, fontsize="small"
-                )
+            add_z_labels(ax, Gk, k_exit)
+            add_Gk_labels(ax, Gk)
 
             ax.set_xlabel("source redshift $z$")
             ax.set_ylabel("WKB phase $\\theta$")
 
-            ax.set_xscale("log")
-
-            ax.legend(loc="best")
-            ax.grid(True)
-            ax.xaxis.set_inverted(True)
+            set_loglinear_axes(ax)
 
             fig_path = (
                 base_path
@@ -603,38 +523,12 @@ with ShardedPool(
                 label="derivative of WKB phase $\\theta$",
             )
 
-            ax.axvline(k_exit.z_exit_subh_e3, linestyle="dashed", color="r")
-            ax.axvline(k_exit.z_exit_subh_e5, linestyle="dashed", color="b")
-
-            trans = ax.get_xaxis_transform()
-            ax.text(
-                k_exit.z_exit_subh_e3,
-                0.9,
-                "$+3$ e-folds",
-                transform=trans,
-                fontsize="small",
-            )
-            ax.text(
-                k_exit.z_exit_subh_e5,
-                0.75,
-                "$+5$ e-folds",
-                transform=trans,
-                fontsize="small",
-            )
-
-            if Gk.type == "mixed" and Gk.crossover is not None:
-                ax.axvline(Gk.crossover, linestyle="dashdot", color="m")
-                ax.text(
-                    Gk.crossover, 0.15, "crossover", transform=trans, fontsize="small"
-                )
+            add_z_labels(ax, Gk, k_exit)
+            add_Gk_labels(ax, Gk)
 
             ax.set_xlabel("source redshift $z$")
 
-            ax.set_xscale("log")
-
-            ax.legend(loc="best")
-            ax.grid(True)
-            ax.xaxis.set_inverted(True)
+            set_loglinear_axes(ax)
 
             fig_path = (
                 base_path
@@ -654,15 +548,12 @@ with ShardedPool(
             ax.plot(abs_amplitude_sin_x, abs_amplitude_sin_y, label="$\\sin$ amplitude")
             ax.plot(abs_amplitude_cos_x, abs_amplitude_cos_y, label="$\\cos$ amplitude")
 
+            add_Gk_labels(ax, Gk)
+
             ax.set_xlabel("source redshift $z$")
             ax.set_ylabel("amplitude")
 
-            ax.set_xscale("log")
-            ax.set_yscale("log")
-
-            ax.legend(loc="best")
-            ax.grid(True)
-            ax.xaxis.set_inverted(True)
+            set_loglog_axes(ax)
 
             fig_path = (
                 base_path
@@ -716,6 +607,88 @@ with ShardedPool(
         )
         df.sort_values(by="z_source", ascending=False, inplace=True, ignore_index=True)
         df.to_csv(csv_path, header=True, index=False)
+
+    def set_loglinear_axes(ax):
+        ax.set_xscale("log")
+        ax.legend(loc="best")
+        ax.grid(True)
+        ax.xaxis.set_inverted(True)
+
+    def set_loglog_axes(ax):
+        ax.set_xscale("log")
+        ax.set_yscale("log")
+        ax.legend(loc="best")
+        ax.grid(True)
+        ax.xaxis.set_inverted(True)
+
+    def add_z_labels(ax, Gk: GkSource, k_exit: wavenumber_exit_time):
+        ax.axvline(k_exit.z_exit_subh_e3, linestyle="dashed", color="r")
+        ax.axvline(k_exit.z_exit_subh_e5, linestyle="dashed", color="b")
+        trans = ax.get_xaxis_transform()
+        ax.text(
+            k_exit.z_exit_subh_e3,
+            0.9,
+            "$+3$ e-folds",
+            transform=trans,
+            fontsize="x-small",
+        )
+        ax.text(
+            k_exit.z_exit_subh_e5,
+            0.75,
+            "$+5$ e-folds",
+            transform=trans,
+            fontsize="x-small",
+        )
+
+        if Gk.type == "mixed" and Gk.crossover_z is not None:
+            ax.axvline(Gk.crossover_z, linestyle="dashdot", color="m")
+            ax.text(
+                Gk.crossover_z, 0.15, "crossover_z", transform=trans, fontsize="x-small"
+            )
+
+        if Gk.type == "mixed" or Gk.type == "WKB" and Gk.Levin_z is not None:
+            ax.axvline(Gk.Levin_z, linestyle="dashdot", color="c")
+            ax.text(
+                Gk.Levin_z, 0.2, "Levin boundary", transform=trans, fontsize="x-small"
+            )
+
+    def add_Gk_labels(ax, Gk: GkSource):
+        fns = Gk.functions
+        if fns.type is not None:
+            ax.text(
+                0.0,
+                1.05,
+                f"Type: {fns.type}",
+                transform=ax.transAxes,
+                fontsize="x-small",
+            )
+
+        if fns.quality is not None:
+            ax.text(
+                0.5,
+                1.05,
+                f"Quality: {fns.quality}",
+                transform=ax.transAxes,
+                fontsize="x-small",
+            )
+
+        if fns.WKB_region is not None:
+            ax.text(
+                0.0,
+                1.1,
+                f"WKB region: ({fns.WKB_region[0]:.3g}, {fns.WKB_region[1]:.3g})",
+                transform=ax.transAxes,
+                fontsize="x-small",
+            )
+
+        if fns.numerical_region is not None:
+            ax.text(
+                0.5,
+                1.1,
+                f"Numeric region: ({fns.numerical_region[0]:.3g}, {fns.numerical_region[1]:.3g})",
+                transform=ax.transAxes,
+                fontsize="x-small",
+            )
 
     def build_plot_GkSource_work(item):
         k_exit, z_response = item
