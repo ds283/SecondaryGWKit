@@ -300,6 +300,7 @@ class sqla_GkWKBIntegration_factory(SQLAFactoryBase):
 
         sin_coeff = row_data.sin_coeff
         cos_coeff = row_data.cos_coeff
+        z_init = row_data.z_init
 
         z_init = row_data.z_init
         G_init = row_data.G_init
@@ -352,6 +353,7 @@ class sqla_GkWKBIntegration_factory(SQLAFactoryBase):
                         analytic_Gprime=row.analytic_Gprime,
                         sin_coeff=sin_coeff,
                         cos_coeff=cos_coeff,
+                        z_init=z_init,
                     )
                 )
             imported_z_sample = redshift_array(z_points)
@@ -791,6 +793,7 @@ class sqla_GkWKBValue_factory(SQLAFactoryBase):
 
         sin_coeff: Optional[float] = payload.get("sin_coeff", None)
         cos_coeff: Optional[float] = payload.get("cos_coeff", None)
+        z_init: Optional[float] = payload.get("z_init", None)
 
         wkb_table = tables["GkWKBIntegration"]
 
@@ -808,6 +811,7 @@ class sqla_GkWKBValue_factory(SQLAFactoryBase):
                     table.c.analytic_Gprime,
                     wkb_table.c.sin_coeff,
                     wkb_table.c.cos_coeff,
+                    wkb_table.c.z_init,
                 )
                 .filter(
                     table.c.wkb_serial == wkb_serial,
@@ -851,8 +855,10 @@ class sqla_GkWKBValue_factory(SQLAFactoryBase):
             G_WKB = row_data.G_WKB
             analytic_G = row_data.analytic_G
             analytic_Gprime = row_data.analytic_Gprime
+
             sin_coeff = row_data.sin_coeff
             cos_coeff = row_data.cos_coeff
+            z_init = row_data.z_init
 
             # we choose H_ratio and theta to test because these are the critical data to reconstruct
             # G_WKB; everything else, such as omega_WKB_sq, is optional
@@ -895,6 +901,7 @@ class sqla_GkWKBValue_factory(SQLAFactoryBase):
             analytic_Gprime=analytic_Gprime,
             sin_coeff=sin_coeff,
             cos_coeff=cos_coeff,
+            z_init=z_init,
         )
         for key, value in attribute_set.items():
             setattr(obj, key, value)
@@ -920,7 +927,10 @@ class sqla_GkWKBValue_factory(SQLAFactoryBase):
             #  as good as we can do. But it is still slow. For production use, should look at how this
             #  can be improved.
             wkb_query = sqla.select(
-                wkb_table.c.serial, wkb_table.c.sin_coeff, wkb_table.c.cos_coeff
+                wkb_table.c.serial,
+                wkb_table.c.sin_coeff,
+                wkb_table.c.cos_coeff,
+                wkb_table.c.z_init,
             ).filter(
                 wkb_table.c.model_serial == model.store_id,
                 wkb_table.c.wavenumber_exit_serial == k.store_id,
@@ -962,6 +972,7 @@ class sqla_GkWKBValue_factory(SQLAFactoryBase):
                     table.c.analytic_Gprime,
                     subquery.c.sin_coeff,
                     subquery.c.cos_coeff,
+                    subquery.c.z_init,
                 )
                 .select_from(
                     subquery.join(table, table.c.wkb_serial == subquery.c.serial)
@@ -998,6 +1009,7 @@ class sqla_GkWKBValue_factory(SQLAFactoryBase):
             analytic_Gprime=row_data.analytic_Gprime,
             sin_coeff=row_data.sin_coeff,
             cos_coeff=row_data.cos_coeff,
+            z_init=row_data.z_init,
         )
         obj._deserialized = True
         obj._k_exit = k
@@ -1024,6 +1036,7 @@ class sqla_GkWKBValue_factory(SQLAFactoryBase):
                 wkb_table.c.serial,
                 wkb_table.c.sin_coeff,
                 wkb_table.c.cos_coeff,
+                wkb_table.c.z_init,
                 wkb_table.c.z_source_serial,
                 redshift_table.c.z.label("z_source"),
             )
@@ -1078,6 +1091,7 @@ class sqla_GkWKBValue_factory(SQLAFactoryBase):
             table.c.analytic_Gprime,
             subquery.c.sin_coeff,
             subquery.c.cos_coeff,
+            subquery.c.z_init,
             subquery.c.z_source_serial,
             subquery.c.z_source,
             redshift_table.c.z.label("z_response"),
@@ -1107,6 +1121,7 @@ class sqla_GkWKBValue_factory(SQLAFactoryBase):
                 analytic_Gprime=row.analytic_Gprime,
                 sin_coeff=row.sin_coeff,
                 cos_coeff=row.cos_coeff,
+                z_init=row.z_init,
             )
             obj._deserialized = True
             obj._k_exit = k

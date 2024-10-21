@@ -1202,6 +1202,7 @@ class GkWKBIntegration(DatastoreObject):
                     analytic_Gprime=analytic_Gprime,
                     sin_coeff=self._sin_coeff,
                     cos_coeff=self._cos_coeff,
+                    z_init=self._z_init,
                 )
             )
 
@@ -1223,6 +1224,7 @@ class GkWKBValue(DatastoreObject):
         G_WKB: Optional[float] = None,
         sin_coeff: Optional[float] = None,
         cos_coeff: Optional[float] = None,
+        z_init: Optional[float] = None,
         analytic_G: Optional[float] = None,
         analytic_Gprime: Optional[float] = None,
     ):
@@ -1242,6 +1244,8 @@ class GkWKBValue(DatastoreObject):
 
         self._sin_coeff = sin_coeff
         self._cos_coeff = cos_coeff
+
+        self._z_init = z_init
 
     def __float__(self):
         """
@@ -1297,3 +1301,7 @@ class GkWKBValue(DatastoreObject):
     @property
     def cos_coeff(self) -> Optional[float]:
         return self._cos_coeff
+
+    @property
+    def z_init(self) -> Optional[float]:
+        return self._z_init
