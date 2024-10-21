@@ -94,30 +94,32 @@ class sqla_QuadSource_factory(SQLAFactoryBase):
                     nullable=False,
                 ),
                 sqla.Column(
-                    "q_wavenumber_serial",
+                    "q_wavenumber_exit_serial",
                     sqla.Integer,
-                    sqla.ForeignKey("QuadSource.serial"),
+                    sqla.ForeignKey("wavenumber_exit_time.serial"),
                     index=True,
                     nullable=False,
                 ),
                 sqla.Column(
-                    "r_wavenumber_serial",
+                    "r_wavenumber_exit_serial",
                     sqla.Integer,
-                    sqla.ForeignKey("QuadSource.serial"),
+                    sqla.ForeignKey("wavenumber_exit_time.serial"),
                     index=True,
                     nullable=False,
                 ),
                 sqla.Column(
                     "Tq_serial",
                     sqla.Integer,
-                    sqla.ForeignKey("QuadSource.serial"),
+                    sqla.ForeignKey(
+                        "QuadSource.serial"
+                    ),  # Tq instances will be held on this shard, because we shard by q.
                     index=True,
                     nullable=False,
                 ),
                 sqla.Column(
                     "Tr_serial",
                     sqla.Integer,
-                    # sqla.ForeignKey("QuadSource.serial"),
+                    # sqla.ForeignKey("QuadSource.serial"),         # Tr instances will not be held on this shard. We shard by q.
                     # index=True,
                     nullable=False,
                 ),
@@ -155,8 +157,8 @@ class sqla_QuadSource_factory(SQLAFactoryBase):
         ).filter(
             table.c.validated == True,
             table.c.model_serial == model.store_id,
-            table.c.q_wavenumber_serial == q.store_id,
-            table.c.r_wavenumber_serial == r.store_id,
+            table.c.q_wavenumber_exit_serial == q.store_id,
+            table.c.r_wavenumber_exit_serial == r.store_id,
         )
 
         # require that the tensor source calculation we search for has the specified list of tags
@@ -177,7 +179,7 @@ class sqla_QuadSource_factory(SQLAFactoryBase):
             row_data = conn.execute(query).one_or_none()
         except MultipleResultsFound as e:
             print(
-                f"!! QuadSource.build(): multiple results found when querying for QuadSource (Tq_id={Tq.store_id}, Tr_id={Tr.store_id})"
+                f"!! QuadSource.build(): multiple results found when querying for QuadSource (q={q.k.k_inv_Mpc:.5g}/Mpc, store_id={q.store_id} | r={r.k.k_inv_Mpc:.5g}/Mpc, store_id={r.store_id})"
             )
             raise e
 
@@ -288,8 +290,8 @@ class sqla_QuadSource_factory(SQLAFactoryBase):
             {
                 "label": obj.label,
                 "model_serial": obj.model.store_id,
-                "q_wavenumber_serial": obj.q.store_id,
-                "r_wavenumber_serial": obj.r.store_id,
+                "q_wavenumber_exit_serial": obj._q_exit.store_id,
+                "r_wavenumber_exit_serial": obj._r_exit.store_id,
                 "Tq_serial": obj._Tq_serial,
                 "Tr_serial": obj._Tr_serial,
                 "z_samples": len(obj.values),
@@ -610,8 +612,8 @@ class sqla_QuadSourceValue_factory(SQLAFactoryBase):
         try:
             quadsource_query = sqla.select(quadsource_table.c.serial).filter(
                 quadsource_table.c.model_id == model.store_id,
-                quadsource_table.c.q_wavenumber_serial == q.store_id,
-                quadsource_table.c.r_wavenumber_serial == r.store_id,
+                quadsource_table.c.q_wavenumber_exit_serial == q.store_id,
+                quadsource_table.c.r_wavenumber_exit_serial == r.store_id,
                 quadsource_table.c.validated == True,
             )
 
