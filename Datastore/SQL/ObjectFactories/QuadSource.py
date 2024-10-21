@@ -263,6 +263,7 @@ class sqla_QuadSource_factory(SQLAFactoryBase):
                 "Tq_serial": row_data.Tq_serial,
                 "Tr_serial": row_data.Tr_serial,
             },
+            model=model,
             z_sample=imported_z_sample,
             q=q,
             r=r,
