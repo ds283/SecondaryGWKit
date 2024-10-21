@@ -1,8 +1,6 @@
 from functools import total_ordering
 from typing import Iterable, Self
 
-from math import fabs
-
 from Datastore import DatastoreObject
 from defaults import DEFAULT_FLOAT_PRECISION
 
@@ -41,6 +39,9 @@ class redshift(DatastoreObject):
 
         return self.z < other.z
 
+    def __hash__(self):
+        return ("redshift", self.store_id).__hash__()
+
 
 class redshift_array:
     def __init__(self, z_array: Iterable[redshift]):
@@ -49,8 +50,9 @@ class redshift_array:
         :param store_id: unique Datastore id. Should not be None
         :param z_array: array of redshift value
         """
-        # store array, sorted in descending order of redshift
-        self._z_array = sorted(z_array, key=lambda x: x.z, reverse=True)
+        # store array, sorted in descending order of redshift;
+        # the conversion to set ensure that we remove any duplicates
+        self._z_array = sorted(set(z_array), key=lambda x: x.z, reverse=True)
 
         # sort into descending order of redshift
 
@@ -76,16 +78,21 @@ class redshift_array:
 
         return False
 
+    def __add__(self, other):
+        full_set = set(self._z_array)
+        full_set.update(set(other._z_array))
+        return redshift_array(full_set)
+
     def as_float_list(self) -> list[float]:
         return [float(z) for z in self._z_array]
 
     @property
     def max(self) -> redshift:
-        return max(self._z_array, key=lambda z: z.z)
+        return self._z_array[0]
 
     @property
     def min(self) -> redshift:
-        return min(self._z_array, key=lambda z: z.z)
+        return self._z_array[-1]
 
     def truncate(self, z_limit, keep: str = "lower") -> Self:
         if keep == "lower":

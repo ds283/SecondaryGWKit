@@ -52,14 +52,17 @@ class wavenumber(DatastoreObject):
 
         return self.k < other.k
 
+    def __hash__(self):
+        return ("wavenumber", self.store_id).__hash__()
+
 
 class wavenumber_array:
     def __init__(self, k_array: Iterable[wavenumber]):
         """
         Construct a datastore-backed object representing an array of wavenumber values
         """
-        # store array
-        self._k_array = k_array
+        # store array in ascending order of k; the conversion to set ensure that we remove any duplicates
+        self._k_array = sorted(set(k_array), key=lambda x: x.k)
 
     def __iter__(self):
         for k in self._k_array:
@@ -71,14 +74,25 @@ class wavenumber_array:
     def __len__(self):
         return len(self._k_array)
 
+    def __add__(self, other):
+        full_set = set(self._k_array)
+        full_set.update(set(other._k_array))
+        return wavenumber_array(full_set)
+
     def as_list(self) -> list[float]:
         return [float(k) for k in self._k_array]
+
+    def extend(self, k_array: Iterable[wavenumber]):
+        full_set = set(self._k_array)
+        full_set.update(set(k_array))
+        self._k_array = sorted(full_set, key=lambda x: x.k)
 
 
 _WAVENUMBER_EXIT_TIMES_SUPERHORIZON_EFOLDS = [1, 2, 3, 4, 5]
 _WAVENUMBER_EXIT_TIMES_SUBHORIZON_EFOLDS = [1, 2, 3, 4, 5, 6]
 
 
+@total_ordering
 class wavenumber_exit_time(DatastoreObject):
     def __init__(
         self,
@@ -138,6 +152,21 @@ class wavenumber_exit_time(DatastoreObject):
 
         self._atol = atol
         self._rtol = rtol
+
+    def __eq__(self, other):
+        if not isinstance(other, type(self)):
+            return NotImplemented
+
+        return self.store_id == other.store_id
+
+    def __lt__(self, other):
+        if not isinstance(other, type(self)):
+            return NotImplemented
+
+        return self.k < other.k
+
+    def __hash__(self):
+        return ("wavenumber_exit_time", self.store_id).__hash__()
 
     def compute(self, label: Optional[str] = None):
         if self._z_exit is not None:
@@ -273,6 +302,46 @@ for z_offset in _WAVENUMBER_EXIT_TIMES_SUBHORIZON_EFOLDS:
         f"z_exit_subh_e{z_offset}",
         property(_create_accessor(f"_z_exit_subh_e{z_offset}")),
     )
+
+
+class wavenumber_exit_time_array:
+    def __init__(self, k_exit_array: Iterable[wavenumber_exit_time]):
+        """
+        Construct a datastore-backed object representing an array of wavenumber values
+        """
+        # store array in ascending order of k; the conversion to set ensure that we remove any duplicates
+        self._k_exit_array = sorted(set(k_exit_array), key=lambda x: x.k)
+
+    def __iter__(self):
+        for k in self._k_exit_array:
+            yield k
+
+    def __getitem__(self, key):
+        return self._k_exit_array[key]
+
+    def __len__(self):
+        return len(self._k_exit_array)
+
+    def __add__(self, other):
+        full_set = set(self._k_exit_array)
+        full_set.update(set(other._k_exit_array))
+        return wavenumber_exit_time_array(full_set)
+
+    def as_list(self) -> list[wavenumber_exit_time]:
+        return [k for k in self._k_exit_array]
+
+    def extend(self, k_array: Iterable[wavenumber]):
+        full_set = set(self._k_exit_array)
+        full_set.update(set(k_array))
+        self._k_exit_array = sorted(full_set, key=lambda x: x.k)
+
+    @property
+    def max(self) -> wavenumber_exit_time:
+        return self._k_exit_array[-1]
+
+    @property
+    def min(self) -> wavenumber_exit_time:
+        return self._k_exit_array[0]
 
 
 DEFAULT_HEXIT_TOLERANCE = 1e-2
