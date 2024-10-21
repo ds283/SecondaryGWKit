@@ -6,14 +6,14 @@ from math import fabs
 from sqlalchemy import and_, or_
 from sqlalchemy.exc import MultipleResultsFound, SQLAlchemyError
 
-from ComputeTargets import QuadSourceIntegral, BackgroundModel, QuadSourceIntegralValue
+from ComputeTargets import OneLoopIntegral, BackgroundModel, OneLoopIntegralValue
 from CosmologyConcepts import redshift_array, wavenumber_exit_time, redshift
 from Datastore.SQL.ObjectFactories.base import SQLAFactoryBase
 from MetadataConcepts import store_tag, tolerance
 from defaults import DEFAULT_STRING_LENGTH, DEFAULT_FLOAT_PRECISION
 
 
-class sqla_QuadSourceIntegralTagAssociation_factory(SQLAFactoryBase):
+class sqla_OneLoopIntegralTagAssociation_factory(SQLAFactoryBase):
     def __init__(self):
         pass
 
@@ -28,7 +28,7 @@ class sqla_QuadSourceIntegralTagAssociation_factory(SQLAFactoryBase):
                 sqla.Column(
                     "parent_serial",
                     sqla.Integer,
-                    sqla.ForeignKey("QuadSourceIntegral.serial"),
+                    sqla.ForeignKey("OneLoopIntegral.serial"),
                     index=True,
                     nullable=False,
                     primary_key=True,
@@ -49,7 +49,7 @@ class sqla_QuadSourceIntegralTagAssociation_factory(SQLAFactoryBase):
         raise NotImplementedError
 
     @staticmethod
-    def add_tag(conn, inserter, source: QuadSourceIntegral, tag: store_tag):
+    def add_tag(conn, inserter, source: OneLoopIntegral, tag: store_tag):
         inserter(
             conn,
             {
@@ -59,7 +59,7 @@ class sqla_QuadSourceIntegralTagAssociation_factory(SQLAFactoryBase):
         )
 
     @staticmethod
-    def remove_tag(conn, table, source: QuadSourceIntegral, tag: store_tag):
+    def remove_tag(conn, table, source: OneLoopIntegral, tag: store_tag):
         conn.execute(
             sqla.delete(table).where(
                 and_(
@@ -70,7 +70,7 @@ class sqla_QuadSourceIntegralTagAssociation_factory(SQLAFactoryBase):
         )
 
 
-class sqla_QuadSourceIntegral_factory(SQLAFactoryBase):
+class sqla_OneLoopIntegral_factory(SQLAFactoryBase):
     def __init__(self):
         pass
 
@@ -91,21 +91,9 @@ class sqla_QuadSourceIntegral_factory(SQLAFactoryBase):
                     nullable=False,
                 ),
                 sqla.Column(
-                    "k_wavenumber_exit_serial",
+                    "wavenumber_exit_serial",
                     sqla.Integer,
                     sqla.ForeignKey("wavenumber_exit_time.serial"),
-                    index=True,
-                    nullable=False,
-                ),
-                sqla.Column(
-                    "q_wavenumber_exit_serial",
-                    sqla.Integer,  # Don't impose foreign key. q instances may not be held on this shard. We shard by q.
-                    index=True,
-                    nullable=False,
-                ),
-                sqla.Column(
-                    "r_wavenumber_exit_serial",
-                    sqla.Integer,  # Don't impose foreign key. r instances may not be held on this shard. We shard by q.
                     index=True,
                     nullable=False,
                 ),
@@ -118,7 +106,8 @@ class sqla_QuadSourceIntegral_factory(SQLAFactoryBase):
                 ),
                 sqla.Column(
                     "source_serial",
-                    sqla.Integer,  # Don't impose foreign key. QuadSource instance may not be held on this shard.
+                    sqla.Integer,
+                    sqla.ForeignKey("QuadSourceIntegral.serial"),
                     index=True,
                     nullable=False,
                 ),
@@ -146,10 +135,8 @@ class sqla_QuadSourceIntegral_factory(SQLAFactoryBase):
 
         model: BackgroundModel = payload["model"]
         k: wavenumber_exit_time = payload["k"]
-        q: wavenumber_exit_time = payload["q"]
-        r: wavenumber_exit_time = payload["r"]
 
-        tag_table = tables["QuadSourceIntegral_tags"]
+        tag_table = tables["OneLoopIntegral_tags"]
         redshift_table = tables["redshift"]
 
         tol_table = tables["tolerance"].alias("tol")
@@ -170,9 +157,7 @@ class sqla_QuadSourceIntegral_factory(SQLAFactoryBase):
             .filter(
                 table.c.validated == True,
                 table.c.model_serial == model.store_id,
-                table.c.k_wavenumber_exit_serial == k.store_id,
-                table.c.q_wavenumber_exit_serial == q.store_id,
-                table.c.r_wavenumber_exit_serial == r.store_id,
+                table.c.wavenumber_exit_serial == k.store_id,
                 table.c.tol_serial == tol.store_id,
             )
         )
@@ -195,18 +180,16 @@ class sqla_QuadSourceIntegral_factory(SQLAFactoryBase):
             row_data = conn.execute(query).one_or_none()
         except MultipleResultsFound as e:
             print(
-                f"!! QuadSourceIntegral.build(): multiple results found when querying for QuadSourceIntegral (k={k.k.k_inv_Mpc:.5g}/Mpc, store_id={k.store_id} | q={q.k.k_inv_Mpc:.5g}/Mpc, store_id={q.store_id} | r={r.k.k_inv_Mpc:.5g}/Mpc, store_id={r.store_id})"
+                f"!! OneLoopIntegral.build(): multiple results found when querying for OneLoopIntegral (k={k.k.k_inv_Mpc:.5g}/Mpc, store_id={q.store_id})"
             )
             raise e
 
         if row_data is None:
-            return QuadSourceIntegral(
+            return OneLoopIntegral(
                 payload=None,
                 model=model,
                 z_response_sample=z_response_sample,
                 k=k,
-                q=q,
-                r=r,
                 tol=tol,
                 label=label,
                 tags=tags,
@@ -219,7 +202,7 @@ class sqla_QuadSourceIntegral_factory(SQLAFactoryBase):
         num_expected_samples = row_data.z_response_samples
 
         if payload is None or not payload.get("_do_not_populate", False):
-            value_table = tables["QuadSourceIntegralValue"]
+            value_table = tables["OneLoopIntegralValue"]
 
             sample_rows = conn.execute(
                 sqla.select(
@@ -227,10 +210,6 @@ class sqla_QuadSourceIntegral_factory(SQLAFactoryBase):
                     value_table.c.z_response_serial,
                     redshift_table.c.z.label("z_response"),
                     value_table.c.total,
-                    value_table.c.numeric_quad_part,
-                    value_table.c.WKB_quad_part,
-                    value_table.c.WKB_Levin_part,
-                    value_table.c.Gk_serial,
                 )
                 .select_from(
                     value_table.join(
@@ -250,14 +229,10 @@ class sqla_QuadSourceIntegral_factory(SQLAFactoryBase):
                 )
                 z_response_points.append(z_response_value)
                 values.append(
-                    QuadSourceIntegralValue(
+                    OneLoopIntegralValue(
                         store_id=row.serial,
                         z_response=z_response_value,
                         total=row.total,
-                        numeric_quad_part=row.numeric_quad_part,
-                        WKB_quad_part=row.WKB_quad_part,
-                        WKB_Levin_part=row.WKB_Levin_part,
-                        Gk_serial=row.Gk_serial,
                     )
                 )
             imported_z_sample = redshift_array(z_response_points)
@@ -265,7 +240,7 @@ class sqla_QuadSourceIntegral_factory(SQLAFactoryBase):
             if num_expected_samples is not None:
                 if len(imported_z_sample) != num_expected_samples:
                     raise RuntimeError(
-                        f'Fewer z-samples than expected were recovered from the validated quadratic source integral "{store_label}"'
+                        f'Fewer z-samples than expected were recovered from the validated 1-loop sample "{store_label}"'
                     )
 
             attributes = {"_deserialized": True}
@@ -275,7 +250,7 @@ class sqla_QuadSourceIntegral_factory(SQLAFactoryBase):
 
             attributes = {"_do_not_populate": True, "_deserialized": True}
 
-        obj = QuadSourceIntegral(
+        obj = OneLoopIntegral(
             payload={
                 "store_id": store_id,
                 "compute_time": compute_time,
@@ -290,8 +265,6 @@ class sqla_QuadSourceIntegral_factory(SQLAFactoryBase):
             model=model,
             z_response_sample=imported_z_sample,
             k=k,
-            q=q,
-            r=r,
             tol=tol,
             label=store_label,
             tags=tags,
@@ -302,7 +275,7 @@ class sqla_QuadSourceIntegral_factory(SQLAFactoryBase):
 
     @staticmethod
     def store(
-        obj: QuadSourceIntegral,
+        obj: OneLoopIntegral,
         conn,
         table,
         inserter,
@@ -314,9 +287,7 @@ class sqla_QuadSourceIntegral_factory(SQLAFactoryBase):
             {
                 "label": obj.label,
                 "model_serial": obj.model.store_id,
-                "k_wavenumber_exit_serial": obj._k_exit.store_id,
-                "q_wavenumber_exit_serial": obj._q_exit.store_id,
-                "r_wavenumber_exit_serial": obj._r_exit.store_id,
+                "wavenumber_exit_serial": obj._k_exit.store_id,
                 "tol_serial": obj._tol.store_id,
                 "z_response_samples": len(obj.values),
                 "source_serial": obj._source_serial,
@@ -327,46 +298,42 @@ class sqla_QuadSourceIntegral_factory(SQLAFactoryBase):
             },
         )
 
-        # set store_id on behalf of the QuadSourceIntegration instance
+        # set store_id on behalf of the OneLoopIntegral instance
         obj._my_id = store_id
 
         # add any tags that have been specified
-        tag_inserter = inserters["QuadSourceIntegral_tags"]
+        tag_inserter = inserters["OneLoopIntegral_tags"]
         for tag in obj.tags:
-            sqla_QuadSourceIntegralTagAssociation_factory.add_tag(
+            sqla_OneLoopIntegralTagAssociation_factory.add_tag(
                 conn, tag_inserter, obj, tag
             )
 
         # now serialize the sampled output points
-        value_inserter = inserters["QuadSourceIntegralValue"]
+        value_inserter = inserters["OneLoopIntegralValue"]
         for value in obj.values:
-            value: QuadSourceIntegralValue
+            value: OneLoopIntegralValue
             value_id = value_inserter(
                 conn,
                 {
                     "parent_serial": store_id,
                     "z_response_serial": value.z.store_id,
                     "total": value.total,
-                    "numeric_quad_part": value.numeric_quad_part,
-                    "WKB_quad_part": value.WKB_quad_part,
-                    "WKB_Levin_part": value.WKB_Levin_part,
-                    "Gk_serial": value.Gk_serial,
                 },
             )
 
-            # set store_id on behalf of the QuadSourceIntegralValue instance
+            # set store_id on behalf of the OneLoopIntegralValue instance
             value._my_id = value_id
 
         return obj
 
     @staticmethod
     def validate(
-        obj: QuadSourceIntegral,
+        obj: OneLoopIntegral,
         conn,
         table,
         tables,
     ):
-        # query the row in QuadSourceIntegral corresponding to this object
+        # query the row in OneLoopIntegralValue corresponding to this object
         if not obj.available:
             raise RuntimeError(
                 "Attempt to validate a datastore object that has not yet been serialized"
@@ -378,7 +345,7 @@ class sqla_QuadSourceIntegral_factory(SQLAFactoryBase):
             )
         ).scalar()
 
-        value_table = tables["QuadSourceIntegralValue"]
+        value_table = tables["OneLoopIntegralValue"]
         num_samples = conn.execute(
             sqla.select(sqla.func.count(value_table.c.serial)).filter(
                 value_table.c.parent_serial == obj.store_id
@@ -406,14 +373,10 @@ class sqla_QuadSourceIntegral_factory(SQLAFactoryBase):
 
         tol_table = tables["tolerance"].alias("tol")
         k_exit_table = tables["wavenumber_exit_time"].alias("k_exit_table")
-        q_exit_table = tables["wavenumber_exit_time"].alias("q_exit_table")
-        r_exit_table = tables["wavenumber_exit_time"].alias("r_exit_table")
         k_table = tables["wavenumber"].alias("k_table")
-        q_table = tables["wavenumber"].alias("q_table")
-        r_table = tables["wavenumber"].alias("r_table")
 
-        value_table = tables["QuadSourceIntegralValue"]
-        tags_table = tables["QuadSourceIntegral_tags"]
+        value_table = tables["OneLoopIntegralValue"]
+        tags_table = tables["OneLoopIntegral_tags"]
 
         # bake results into a list so that we can close this query; we are going to want to run
         # another one as we process the rows from this one
@@ -424,35 +387,17 @@ class sqla_QuadSourceIntegral_factory(SQLAFactoryBase):
                     table.c.label,
                     table.c.z_response_samples,
                     k_table.c.k_inv_Mpc.label("k_inv_Mpc"),
-                    q_table.c.k_inv_Mpc.label("q_inv_Mpc"),
-                    r_table.c.k_inv_Mpc.label("r_inv_Mpc"),
                     tol_table.c.log10_tol,
                 )
                 .select_from(
                     table.join(tol_table, tol_table.c.serial == table.c.tol_serial)
                     .join(
                         k_exit_table,
-                        k_exit_table.c.serial == table.c.k_wavenumber_exit_serial,
+                        k_exit_table.c.serial == table.c.wavenumber_exit_serial,
                     )
                     .join(
                         k_table,
                         k_table.c.serial == k_exit_table.c.wavenumber_serial,
-                    )
-                    .join(
-                        q_exit_table,
-                        q_exit_table.c.serial == table.c.q_wavenumber_exit_serial,
-                    )
-                    .join(
-                        q_table,
-                        q_table.c.serial == q_exit_table.c.wavenumber_serial,
-                    )
-                    .join(
-                        r_exit_table,
-                        r_exit_table.c.serial == table.c.r_wavenumber_exit_serial,
-                    )
-                    .join(
-                        r_table,
-                        r_table.c.serial == r_exit_table.c.wavenumber_serial,
                     )
                 )
                 .filter(or_(table.c.validated == False, table.c.validated == None))
@@ -463,12 +408,12 @@ class sqla_QuadSourceIntegral_factory(SQLAFactoryBase):
             return []
 
         msgs = [
-            ">> quadratic source integrals",
-            "     The following unvalidated source integrals were detected in the datastore:",
+            ">> 1-loop power spectrum integrals",
+            "     The following unvalidated 1-loop power spectrum integrals were detected in the datastore:",
         ]
         for calc in not_validated:
             msgs.append(
-                f'       -- "{calc.label}" (store_id={calc.serial}) for k={calc.k_inv_Mpc:.5g}/Mpc, q={calc.q_inv_Mpc:.5g}/Mpc, r={calc.r_inv_Mpc:.5g}/Mpc (log10_tol={calc.log10_atol})'
+                f'       -- "{calc.label}" (store_id={calc.serial}) for k={calc.k_inv_Mpc:.5g}/Mpc (log10_tol={calc.log10_atol})'
             )
             rows = conn.execute(
                 sqla.select(sqla.func.count(value_table.c.serial)).filter(
@@ -508,7 +453,7 @@ class sqla_QuadSourceIntegral_factory(SQLAFactoryBase):
         return msgs
 
 
-class sqla_QuadSourceIntegralValue_factory(SQLAFactoryBase):
+class sqla_OneLoopIntegralValue_factory(SQLAFactoryBase):
     def __init__(self):
         pass
 
@@ -522,7 +467,7 @@ class sqla_QuadSourceIntegralValue_factory(SQLAFactoryBase):
                 sqla.Column(
                     "parent_serial",
                     sqla.Integer,
-                    sqla.ForeignKey("QuadSourceIntegral.serial"),
+                    sqla.ForeignKey("OneLoopIntegral.serial"),
                     index=True,
                     nullable=False,
                 ),
@@ -534,16 +479,6 @@ class sqla_QuadSourceIntegralValue_factory(SQLAFactoryBase):
                     nullable=False,
                 ),
                 sqla.Column("total", sqla.Float(64), nullable=False),
-                sqla.Column("numeric_quad_part", sqla.Float(64), nullable=False),
-                sqla.Column("WKB_quad_part", sqla.Float(64), nullable=False),
-                sqla.Column("WKB_Levin_part", sqla.Float(64), nullable=False),
-                sqla.Column(
-                    "Gk_serial",
-                    sqla.Integer,
-                    sqla.ForeignKey("GkSource.serial"),
-                    index=True,
-                    nullable=True,
-                ),
             ],
         }
 
@@ -553,8 +488,6 @@ class sqla_QuadSourceIntegralValue_factory(SQLAFactoryBase):
 
         model: Optional[BackgroundModel] = payload.get("model", None)
         k: Optional[wavenumber_exit_time] = payload.get("k", None)
-        q: Optional[wavenumber_exit_time] = payload.get("k", None)
-        r: Optional[wavenumber_exit_time] = payload.get("k", None)
         z_response = payload.get("z_response", None)
 
         has_serial = all([parent_serial is not None])
@@ -562,28 +495,26 @@ class sqla_QuadSourceIntegralValue_factory(SQLAFactoryBase):
             [
                 model is not None,
                 k is not None,
-                q is not None,
-                r is not None,
                 z_response is not None,
             ]
         )
 
         if all([has_serial, has_model]):
             print(
-                "## QuadSourceIntegralValue.build(): both an QuadSourceIntegral serial number and a (model, k, q, r, z_response) set were queried. Only the serial number will be used."
+                "## OneLoopIntegralValue.build(): both an OneLoopIntegral serial number and a (model, k, z_response) set were queried. Only the serial number will be used."
             )
 
         if not any([has_serial, has_model]):
             raise RuntimeError(
-                "QuadSourceIntegralValue.build(): at least one of a QuadSourceIntegral serial number and a (model, k, q, r, z_response) set must be supplied."
+                "OneLoopIntegralValue.build(): at least one of a OneLoopIntegral serial number and a (model, k, z_response) set must be supplied."
             )
 
         if has_serial:
-            return sqla_QuadSourceIntegralValue_factory._build_impl_serial(
+            return sqla_OneLoopIntegralValue_factory._build_impl_serial(
                 payload, conn, table, inserter, tables, inserters
             )
 
-        return sqla_QuadSourceIntegralValue_factory._build_impl_model(
+        return sqla_OneLoopIntegralValue_factory._build_impl_model(
             payload, conn, table, inserter, tables, inserters
         )
 
@@ -594,30 +525,19 @@ class sqla_QuadSourceIntegralValue_factory(SQLAFactoryBase):
         parent_serial: int = payload["parent_serial"]
 
         total: Optional[float] = payload.get("total", None)
-        numeric_quad_part: Optional[float] = payload.get("numeric_quad_part", None)
-        WKB_quad_part: Optional[float] = payload.get("WKB_quad_part", None)
-        WKB_Levin_part: Optional[float] = payload.get("WKB_Levin_part", None)
-        Gk_serial: Optional[int] = payload.get("Gk_serial", None)
         has_data = all(
             [
                 total is not None,
-                numeric_quad_part is not None,
-                WKB_quad_part is not None,
-                WKB_Levin_part is not None,
             ]
         )
 
-        parent_table = tables["QuadSourceIntegral"]
+        parent_table = tables["OneLoopIntegral"]
 
         try:
             row_data = conn.execute(
                 sqla.select(
                     table.c.serial,
                     table.c.total,
-                    table.c.numeric_quad_part,
-                    table.c.WKB_quad_part,
-                    table.c.WKB_Levin_part,
-                    table.c.Gk_serial,
                     parent_table.c.source_serial,
                 )
                 .filter(
@@ -628,14 +548,14 @@ class sqla_QuadSourceIntegralValue_factory(SQLAFactoryBase):
             ).one_or_none()
         except MultipleResultsFound as e:
             print(
-                f"!! QuadSourceIntegralValue.build(): multiple results found when querying for QuadSourceIntegralValue"
+                f"!! OneLoopIntegralValue.build(): multiple results found when querying for OneLoopIntegralValue"
             )
             raise e
 
         if row_data is None:
             if not has_data:
                 raise (
-                    "QuadSourceIntegralValue().build(): result was not found in datastore, but a data payload was not provided"
+                    "OneLoopIntegralValue().build(): result was not found in datastore, but a data payload was not provided"
                 )
 
             store_id = inserter(
@@ -644,10 +564,6 @@ class sqla_QuadSourceIntegralValue_factory(SQLAFactoryBase):
                     "parent_serial": parent_serial,
                     "z_response_serial": z_response.store_id,
                     "total": total,
-                    "numeric_quad_part": numeric_quad_part,
-                    "WKB_quad_part": WKB_quad_part,
-                    "WKB_Levin_part": WKB_Levin_part,
-                    "Gk_serial": Gk_serial,
                 },
             )
 
@@ -655,17 +571,12 @@ class sqla_QuadSourceIntegralValue_factory(SQLAFactoryBase):
         else:
             store_id = row_data.serial
 
-            numeric_quad_part = row_data.numeric_quad_part
-            WKB_quad_part = row_data.WKB_quad_part
-            WKB_Levin_part = row_data.WKB_Levin_part
-            Gk_serial = row_data.Gk_serial
-
             if (
                 total is not None
                 and fabs(row_data.total - total) > DEFAULT_FLOAT_PRECISION
             ):
                 raise ValueError(
-                    f"QuadSourceIntegralValue.build(): Stored quadratic source integral value (QuadSourceIntegral store_id={parent_serial}, z_response={z_response.store_id}) = {row_data.total} differs from expected value = {total}"
+                    f"OneLoopIntegralValue.build(): Stored quadratic source integral value (OneLoopIntegral store_id={parent_serial}, z_response={z_response.store_id}) = {row_data.total} differs from expected value = {total}"
                 )
 
             total = row_data.total
@@ -675,14 +586,10 @@ class sqla_QuadSourceIntegralValue_factory(SQLAFactoryBase):
                 "_source_serial": row_data.source_serial,
             }
 
-        obj = QuadSourceIntegralValue(
+        obj = OneLoopIntegralValue(
             store_id=store_id,
             z_response=z_response,
             total=total,
-            numeric_quad_part=numeric_quad_part,
-            WKB_quad_part=WKB_quad_part,
-            WKB_Levin_part=WKB_Levin_part,
-            Gk_serial=Gk_serial,
         )
         for key, value in attribute_set.items():
             setattr(obj, key, value)
@@ -694,22 +601,18 @@ class sqla_QuadSourceIntegralValue_factory(SQLAFactoryBase):
 
         model: BackgroundModel = payload["model"]
         k: wavenumber_exit_time = payload["k"]
-        q: wavenumber_exit_time = payload["q"]
-        r: wavenumber_exit_time = payload["r"]
 
         tol: Optional[tolerance] = payload.get("tol", None)
         tags: Optional[List[store_tag]] = payload.get("tags", None)
 
-        parent_table = tables["QuadSourceIntegral"]
+        parent_table = tables["OneLoopIntegral"]
 
         try:
             parent_query = sqla.select(
                 parent_table.c.serial,
             ).filter(
                 parent_table.c.model_serial == model.store_id,
-                parent_table.c.k_wavenumber_exit_serial == k.store_id,
-                parent_table.c.q_wavenumber_exit_serial == q.store_id,
-                parent_table.c.r_wavenumber_exit_serial == r.store_id,
+                parent_table.c.wavenumber_exit_serial == k.store_id,
                 parent_table.c.validated == True,
             )
 
@@ -721,7 +624,7 @@ class sqla_QuadSourceIntegralValue_factory(SQLAFactoryBase):
             count = 0
             for tag in tags:
                 tag: store_tag
-                tab = tables["QuadSourceIntegral_tags"].alias(f"tag_{count}")
+                tab = tables["OneLoopIntegral_tags"].alias(f"tag_{count}")
                 count += 1
                 parent_query = parent_query.join(
                     tab,
@@ -737,10 +640,6 @@ class sqla_QuadSourceIntegralValue_factory(SQLAFactoryBase):
                 sqla.select(
                     table.c.serial,
                     table.c.total,
-                    table.c.numeric_quad_part,
-                    table.c.WKB_quad_part,
-                    table.c.WKB_Levin_part,
-                    table.c.Gk_serial,
                     subquery.c.source_serial,
                 )
                 .select_from(
@@ -752,38 +651,27 @@ class sqla_QuadSourceIntegralValue_factory(SQLAFactoryBase):
             ).one_or_none()
         except MultipleResultsFound as e:
             print(
-                f"!! QuadSourceIntegralValue.build(): multiple results found when querying for QuadSourceIntegralValue"
+                f"!! OneLoopIntegralValue.build(): multiple results found when querying for OneLoopIntegralValue"
             )
             raise e
 
         if row_data is None:
             # return empty object
-            obj = QuadSourceIntegralValue(
+            obj = OneLoopIntegralValue(
                 store_id=None,
                 z_response=z_response,
                 total=None,
-                numeric_quad_part=None,
-                WKB_quad_part=None,
-                WKB_Levin_part=None,
             )
             obj._k_exit = k
-            obj._q_exit = q
-            obj._r_exit = r
             return obj
 
-        obj = QuadSourceIntegralValue(
+        obj = OneLoopIntegralValue(
             store_id=row_data.serial,
             z_response=z_response,
             total=row_data.total,
-            numeric_quad_part=row_data.numeric_quad_part,
-            WKB_quad_part=row_data.WKB_quad_part,
-            WKB_Levin_part=row_data.WKB_Levin_part,
-            Gk_serial=row_data.Gk_serial,
         )
         obj._deserialized = True
         obj._k_exit = k
-        obj._q_exit = q
-        obj._r_exit = r
         obj._source_serial = row_data.source_serial
         return obj
 
@@ -791,13 +679,11 @@ class sqla_QuadSourceIntegralValue_factory(SQLAFactoryBase):
     def read_batch(payload, conn, table, tables):
         model: BackgroundModel = payload["model"]
         k: wavenumber_exit_time = payload["k"]
-        q: wavenumber_exit_time = payload["k"]
-        r: wavenumber_exit_time = payload["k"]
 
         tol: Optional[tolerance] = payload.get("tol", None)
         tags: Optional[List[store_tag]] = payload.get("tags", None)
 
-        parent_table = tables["QuadSourceIntegral"]
+        parent_table = tables["OneLoopIntegral"]
         redshift_table = tables["redshift"]
 
         parent_query = sqla.select(
@@ -805,9 +691,7 @@ class sqla_QuadSourceIntegralValue_factory(SQLAFactoryBase):
             parent_table.c.source_serial,
         ).filter(
             parent_table.c.model_serial == model.store_id,
-            parent_table.c.k_wavenumber_exit_serial == k.store_id,
-            parent_table.c.q_wavenumber_exit_serial == q.store_id,
-            parent_table.c.r_wavenumber_exit_serial == r.store_id,
+            parent_table.c.wavenumber_exit_serial == k.store_id,
             parent_table.c.validated == True,
         )
 
@@ -819,7 +703,7 @@ class sqla_QuadSourceIntegralValue_factory(SQLAFactoryBase):
         count = 0
         for tag in tags:
             tag: store_tag
-            tab = tables["QuadSourceIntegral_tags"].alias(f"tag_{count}")
+            tab = tables["OneLoopIntegral_tags"].alias(f"tag_{count}")
             count += 1
             parent_query = parent_query.join(
                 tab,
@@ -836,10 +720,6 @@ class sqla_QuadSourceIntegralValue_factory(SQLAFactoryBase):
             redshift_table.c.z.label("z_response"),
             table.c.z_serial.label("z_response_serial"),
             table.c.total,
-            table.c.numeric_quad_part,
-            table.c.WKB_quad_part,
-            table.c.WKB_Levin_part,
-            table.c.Gk_serial,
             subquery.c.source_serial,
         ).select_from(
             subquery.join(table, table.c.parent_serial == subquery.c.serial).join(
@@ -850,19 +730,13 @@ class sqla_QuadSourceIntegralValue_factory(SQLAFactoryBase):
         row_data = conn.execute(row_query)
 
         def make_obj(row):
-            obj = QuadSourceIntegralValue(
+            obj = OneLoopIntegralValue(
                 store_id=row.serial,
                 z_response=redshift(store_id=row.z_response_serial, z=row.z_response),
                 total=row.total,
-                numeric_quad_part=row.numeric_quad_part,
-                WKB_quad_part=row.WKB_quad_part,
-                WKB_Levin_part=row.WKB_Levin_part,
-                Gk_serial=row.Gk_serial,
             )
             obj._deserialized = True
             obj._k_exit = k
-            obj._q_exit = q
-            obj._r_exit = r
             obj._source_serial = row.source_serial
 
             return obj

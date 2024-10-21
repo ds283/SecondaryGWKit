@@ -34,6 +34,9 @@ _default_serial_batch_size = {
     "QuadSourceIntegral": 50,
     "QuadSourceIntegral_tags": 10,
     "QuadSourceIntegralValue": 5000,
+    "OneLoopIntegral": 50,
+    "OneLoopIntegral_tags": 10,
+    "OneLoopIntegralValue": 5000,
 }
 
 

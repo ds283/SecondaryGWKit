@@ -40,16 +40,16 @@ def check_cosmology(A, B):
     :param B:
     :return:
     """
-    A_cosmology: BaseCosmology = A.cosmology
-    B_cosmology: BaseCosmology = B.cosmology
+    A_cosmology: BaseCosmology = A if isinstance(A, BaseCosmology) else A.cosmology
+    B_cosmology: BaseCosmology = B if isinstance(A, BaseCosmology) else B.cosmology
 
     if A_cosmology.store_id != B_cosmology.store_id:
         raise RuntimeError("Cosmology store_ids are different")
 
 
 def check_zsample(A, B):
-    A_sample: redshift_array = A.z_sample
-    B_sample: redshift_array = B.z_sample
+    A_sample: redshift_array = A if isinstance(A, redshift_array) else A.z_sample
+    B_sample: redshift_array = B if isinstance(B, redshift_array) else B.z_sample
 
     if A != B:
         raise RuntimeError("Redshift sample grids are not equal")

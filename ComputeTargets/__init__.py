@@ -14,6 +14,10 @@ from .GkWKBIntegration import (
     GkWKBIntegration,
     GkWKBValue,
 )
+from .OneLoopIntegral import (
+    OneLoopIntegral,
+    OneLoopIntegralValue,
+)
 from .QuadSource import (
     QuadSource,
     QuadSourceValue,

@@ -54,6 +54,7 @@ allowed_drop_actions = [
     "quad-source",
     "tk-numeric",
     "quad-source-integral",
+    "1loop-integral",
 ]
 
 parser = argparse.ArgumentParser()
