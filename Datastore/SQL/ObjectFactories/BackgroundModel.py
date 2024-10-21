@@ -68,7 +68,7 @@ class sqla_BackgroundModelTagAssociation_factory(SQLAFactoryBase):
         conn.execute(
             sqla.delete(table).where(
                 and_(
-                    table.c.wkb_serial == model.store_id,
+                    table.c.model_serial == model.store_id,
                     table.c.tag_serial == tag.store_id,
                 )
             )
