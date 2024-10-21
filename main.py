@@ -27,6 +27,7 @@ from CosmologyConcepts import (
     wavenumber_exit_time,
     redshift_array,
 )
+from CosmologyConcepts.wavenumber import wavenumber_exit_time_array
 from CosmologyModels.LambdaCDM import Planck2018
 from Datastore.SQL.ProfileAgent import ProfileAgent
 from Datastore.SQL.ShardedPool import ShardedPool
@@ -248,12 +249,22 @@ with ShardedPool(
     ## STEP 1
     ## BUILD SAMPLE OF K-WAVENUMBERS AND OBTAIN THEIR CORRESPONDING HORIZON EXIT TIMES
 
-    # build array of k-sample points
     print("\n** BUILDING ARRAY OF WAVENUMBERS AT WHICH TO SAMPLE")
-    k_array = ray.get(
+
+    # build array of k-sample points covering the region of the primoridal power spectrum that we want to include
+    # in the one-loop integral. We will eventually evaluate the one-loop integral on a square grid
+    # of source_k_array x source_k_array
+    source_k_array = ray.get(
         convert_to_wavenumbers(np.logspace(np.log10(0.1), np.log10(5e7), 10))
     )
-    k_sample = wavenumber_array(k_array=k_array)
+    source_k_sample = wavenumber_array(k_array=source_k_array)
+
+    # build array of k-sample points covering the region of the target power spectrum where we want to evaluate
+    # the one-loop integral
+    response_k_array = ray.get(
+        convert_to_wavenumbers(np.logspace(np.log10(0.1), np.log10(5e7), 10))
+    )
+    response_k_sample = wavenumber_array(k_array=response_k_array)
 
     def build_k_exit_work(k: wavenumber):
         return pool.object_get(
@@ -265,23 +276,35 @@ with ShardedPool(
         )
 
     # for each k mode we sample, determine its horizon exit point
-    k_exit_queue = RayWorkPool(
+    source_k_exit_queue = RayWorkPool(
         pool,
-        k_sample,
+        source_k_sample,
         task_builder=build_k_exit_work,
-        title="CALCULATE HORIZON EXIT TIMES",
+        title="CALCULATE HORIZON EXIT TIMES FOR SOURCE K-SAMPLE",
         store_results=True,
     )
-    k_exit_queue.run()
-    k_exit_times = k_exit_queue.results
+    source_k_exit_queue.run()
+    source_k_exit_times = wavenumber_exit_time_array(source_k_exit_queue.results)
+
+    response_k_exit_queue = RayWorkPool(
+        pool,
+        response_k_sample,
+        task_builder=build_k_exit_work,
+        title="CALCULATE HORIZON EXIT TIMES FOR RESPONSE K-SAMPLE",
+        store_results=True,
+    )
+    response_k_exit_queue.run()
+    response_k_exit_times = wavenumber_exit_time_array(response_k_exit_queue.results)
 
     ## STEP 2
     ## BUILD A UNIVERSAL GRID OF Z-VALUES AT WHICH TO SAMPLE
 
     print("\n** BUILDING ARRAY OF Z-VALUES AT WHICH TO SAMPLE")
-    k_exit_earliest: wavenumber_exit_time = k_exit_times[-1]
+
+    full_k_exit_times = source_k_exit_times + response_k_exit_times
+    k_exit_earliest: wavenumber_exit_time = full_k_exit_times.max
     print(
-        f"   @@ earliest horizon exit time is {k_exit_earliest.k.k_inv_Mpc:.5g}/Mpc with z_exit={k_exit_earliest.z_exit:.5g}"
+        f"   @@ earliest horizon exit/re-entry time is {k_exit_earliest.k.k_inv_Mpc:.5g}/Mpc with z_exit={k_exit_earliest.z_exit:.5g}"
     )
 
     # build a log-spaced universal grid of wavenumbers
@@ -501,7 +524,7 @@ with ShardedPool(
     if args.transfer_queue:
         Tk_queue = RayWorkPool(
             pool,
-            k_exit_times,
+            source_k_exit_times,
             task_builder=build_Tk_work,
             compute_handler=compute_Tk_work,
             validation_handler=validate_Tk_work,
@@ -515,9 +538,11 @@ with ShardedPool(
 
         # the source term is obviously symmetric, so we do not need to compute QuadSource on
         # a square q x r grid; it will suffice to do so on an upper or lower triangle where q <= r.
-        # Then we can obtain the other values by reflectio.
+        # Then we can obtain the other values by reflection.
+
+        # The ordering of pairs should be stable, because source_k_exit_times is ordered.
         tensor_source_grid = list(
-            itertools.combinations_with_replacement(k_exit_times, 2)
+            itertools.combinations_with_replacement(source_k_exit_times, 2)
         )
 
         QuadSource_queue = RayWorkPool(
@@ -559,7 +584,7 @@ with ShardedPool(
                     for z_source in batch
                 ],
             }
-            for k_exit in k_exit_times
+            for k_exit in response_k_exit_times
         ]
 
         query_queue = RayWorkPool(
@@ -586,12 +611,14 @@ with ShardedPool(
                 for obj, z_source in zip(query_outcomes, batch)
                 if not obj.available
             ]
-            for query_outcomes, k_exit in zip(query_queue.results, k_exit_times)
+            for query_outcomes, k_exit in zip(
+                query_queue.results, response_k_exit_times
+            )
         }
 
         work_refs = []
 
-        for k_exit in k_exit_times:
+        for k_exit in response_k_exit_times:
             k_exit: wavenumber_exit_time
 
             # find redshift where this k-mode is at least 3 efolds inside the horizon
@@ -714,7 +741,7 @@ with ShardedPool(
                     for z_source in batch
                 ],
             }
-            for k_exit in k_exit_times
+            for k_exit in response_k_exit_times
         ]
 
         query_queue = RayWorkPool(
@@ -742,7 +769,9 @@ with ShardedPool(
                 for obj, z_source in zip(query_outcomes, batch)
                 if not obj.available
             ]
-            for query_outcomes, k_exit in zip(query_queue.results, k_exit_times)
+            for query_outcomes, k_exit in zip(
+                query_queue.results, response_k_exit_times
+            )
         }
 
         # Query for a GkNumericalIntegration instances for each combination of model, k_exit, and z_source.
@@ -775,7 +804,7 @@ with ShardedPool(
                     for z_source in missing[k_exit.store_id]
                 ],
             }
-            for k_exit in k_exit_times
+            for k_exit in response_k_exit_times
         ]
 
         lookup_queue = RayWorkPool(
@@ -803,7 +832,7 @@ with ShardedPool(
             for z_source in batch
         }
 
-        for k_exit, Gk_data in zip(k_exit_times, lookup_queue.results):
+        for k_exit, Gk_data in zip(response_k_exit_times, lookup_queue.results):
             k_exit: wavenumber_exit_time
             Gk_data: List[GkNumericalIntegration]
 
@@ -1101,7 +1130,7 @@ with ShardedPool(
                     for z_response in batch
                 ],
             }
-            for k_exit in k_exit_times
+            for k_exit in response_k_exit_times
         ]
 
         # we use object_get_vectorized() to query a whole batch of GkSource objects on the same shard. This helps amortize the overheads
@@ -1143,7 +1172,9 @@ with ShardedPool(
                 for obj, z_response in zip(query_outcomes, batch)
                 if not obj.available
             ]
-            for query_outcomes, k_exit in zip(query_queue.results, k_exit_times)
+            for query_outcomes, k_exit in zip(
+                query_queue.results, response_k_exit_times
+            )
         }
 
         incomplete = {
@@ -1152,7 +1183,9 @@ with ShardedPool(
                 for obj, z_response in zip(query_outcomes, batch)
                 if obj.available and obj.quality == "incomplete"
             ]
-            for query_outcomes, k_exit in zip(query_queue.results, k_exit_times)
+            for query_outcomes, k_exit in zip(
+                query_queue.results, response_k_exit_times
+            )
         }
 
         work_refs = build_missing_GkSource(missing, z_source_pool)
@@ -1187,7 +1220,7 @@ with ShardedPool(
                     ],
                 },
             }
-            for k_exit in k_exit_times
+            for k_exit in response_k_exit_times
             for z_response in missing[k_exit.store_id]
             for cls_name in ["GkNumericalValue", "GkWKBValue"]
         ]
@@ -1212,7 +1245,7 @@ with ShardedPool(
         work_refs = []
 
         i = 0
-        for k_exit in k_exit_times:
+        for k_exit in response_k_exit_times:
             k_exit: wavenumber_exit_time
 
             for z_response in missing[k_exit.store_id]:
@@ -1326,7 +1359,7 @@ with ShardedPool(
                     for z_response in incomplete[k_exit.store_id]
                 ],
             }
-            for k_exit in k_exit_times
+            for k_exit in response_k_exit_times
         ]
 
         def dump_Gk_handler(missing_Gk: List[GkSource]):
