@@ -64,12 +64,12 @@ class TkIntegrationSupervisor(IntegrationSupervisor):
 
         z_complete = self._z_init - current_z
         z_remain = self._z_range - z_complete
-        percent_remain = 100.0 * (z_remain / self._z_range)
+        percent_remain = z_remain / self._z_range
         print(
             f"** STATUS UPDATE #{update_number}: Integration for T(k) for k = {self._k.k_inv_Mpc:.5g}/Mpc (store_id={self._k.store_id}) has been running for {format_time(since_start)} ({format_time(since_last_notify)} since last notification)"
         )
         print(
-            f"|    current z={current_z:.5g} (initial z={self._z_init:.5g}, target z={self._z_final:.5g}, z complete={z_complete:.5g}, z remain={z_remain:.5g}, {percent_remain:.3g}% remains)"
+            f"|    current z={current_z:.5g} (initial z={self._z_init:.5g}, target z={self._z_final:.5g}, z complete={z_complete:.5g}, z remain={z_remain:.5g}, {percent_remain:.3%} remains)"
         )
         if self._last_z is not None:
             z_delta = self._last_z - current_z

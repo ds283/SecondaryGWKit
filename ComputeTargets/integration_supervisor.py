@@ -1,5 +1,6 @@
 import time
 from traceback import print_tb
+from typing import Optional
 
 DEFAULT_UPDATE_INTERVAL = 5 * 60
 
@@ -53,7 +54,7 @@ class IntegrationSupervisor:
             self._max_RHS_time = RHS_time
 
     @property
-    def mean_RHS_time(self) -> float:
+    def mean_RHS_time(self) -> Optional[float]:
         if self._RHS_evaluations == 0:
             return None
 

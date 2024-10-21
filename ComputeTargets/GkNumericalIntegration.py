@@ -75,12 +75,12 @@ class GkIntegrationSupervisor(IntegrationSupervisor):
 
         z_complete = self._z_source - current_z
         z_remain = self._z_range - z_complete
-        percent_remain = 100.0 * (z_remain / self._z_range)
+        percent_remain = z_remain / self._z_range
         print(
             f"** STATUS UPDATE #{update_number}: Integration for Gr(k) for k = {self._k.k_inv_Mpc:.5g}/Mpc (store_id={self._k.store_id}) has been running for {format_time(since_start)} ({format_time(since_last_notify)} since last notification)"
         )
         print(
-            f"|    current z={current_z:.5g} (source z={self._z_source:.5g}, target z={self._z_final:.5g}, z complete={z_complete:.5g}, z remain={z_remain:.5g}, {percent_remain:.3g}% remains)"
+            f"|    current z={current_z:.5g} (source z={self._z_source:.5g}, target z={self._z_final:.5g}, z complete={z_complete:.5g}, z remain={z_remain:.5g}, {percent_remain:.3%} remains)"
         )
         if self._last_z is not None:
             z_delta = self._last_z - current_z
@@ -302,11 +302,11 @@ def compute_Gk(
     with GkIntegrationSupervisor(
         k_wavenumber, z_source, z_sample.min, delta_logz=delta_logz
     ) as supervisor:
-        # initial conditions should be
-        #   G(z', z') = 0
-        #   Gprime(z' z') = -1/(a0 H(z'))
-        # however we would rather not have a delicate initial condition for Gprime, so we
-        # instead solve with the boundary conditions Gprime = -1 and rescale later
+        # The initial condition here is for the Green's function defined in David's analytic calculation,
+        # which has source -delta(z-z'). This gives the condition dG/dz = +1 at z = z'.
+        # This has the advantage that it gives us a simple, clean boundary condition.
+        # Rhe more familiar Green's function defined in conformal time tau with source
+        # delta(tau-tau') is related to this via G_us = - H(z') G_them.
         initial_state = [0.0, 1.0]
 
         if mode == "stop":

@@ -262,7 +262,7 @@ class QuadSource(DatastoreObject):
         return self._functions
 
     def _create_functions(self):
-        source_data = [(log(v.z.z), v.source_term) for v in self.values]
+        source_data = [(log(1.0 + v.z.z), v.source_term) for v in self.values]
         source_data.sort(key=lambda pair: pair[0])
 
         source_x_data, source_y_data = zip(*source_data)

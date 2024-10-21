@@ -503,7 +503,7 @@ class GkSource(DatastoreObject):
             WKB_data = self._build_WKB_values(max_z=max_z, min_z=min_z)
             theta_data = [
                 (
-                    log(v.z_source.z),
+                    log(1.0 + v.z_source.z),
                     v.WKB.theta,
                 )
                 for v in WKB_data
@@ -809,7 +809,7 @@ class GkSource(DatastoreObject):
                 numerical_data.sort(key=lambda x: x.z_source.z)
 
                 numerical_Gk_data = [
-                    (log(v.z_source.z), v.numeric.G) for v in numerical_data
+                    (log(1.0 + v.z_source.z), v.numeric.G) for v in numerical_data
                 ]
                 numerical_Gk_x, numerical_Gk_y = zip(*numerical_Gk_data)
 
@@ -863,7 +863,7 @@ class GkSource(DatastoreObject):
 
                 sin_amplitude_data = [
                     (
-                        log(v.z_source.z),
+                        log(1.0 + v.z_source.z),
                         v.WKB.sin_coeff * sqrt(v.WKB.H_ratio / sqrt(v.omega_WKB_sq)),
                     )
                     for v in WKB_data
@@ -871,7 +871,7 @@ class GkSource(DatastoreObject):
 
                 theta_data = [
                     (
-                        log(v.z_source.z),
+                        log(1.0 + v.z_source.z),
                         v.WKB.theta,
                     )
                     for v in WKB_data

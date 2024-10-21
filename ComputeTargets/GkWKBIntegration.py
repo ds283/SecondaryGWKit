@@ -81,12 +81,12 @@ class GkWKBThetaSupervisor(IntegrationSupervisor):
 
         z_complete = self._z_init - current_z
         z_remain = self._z_range - z_complete
-        percent_remain = 100.0 * (z_remain / self._z_range)
+        percent_remain = z_remain / self._z_range
         print(
             f"** STATUS UPDATE #{update_number}: Stage #1 integration for WKB theta_k(z) for k = {self._k.k_inv_Mpc:.5g}/Mpc (store_id={self._k.store_id}) has been running for {format_time(since_start)} ({format_time(since_last_notify)} since last notification)"
         )
         print(
-            f"|    current z={current_z:.5g} (initial z={self._z_init:.5g}, target z={self._z_target:.5g}, z complete={z_complete:.5g}, z remain={z_remain:.5g}, {percent_remain:.3g}% remains)"
+            f"|    current z={current_z:.5g} (initial z={self._z_init:.5g}, target z={self._z_target:.5g}, z complete={z_complete:.5g}, z remain={z_remain:.5g}, {percent_remain:.3%} remains)"
         )
         if self._last_z is not None:
             z_delta = self._last_z - current_z
@@ -179,12 +179,12 @@ class GkWKBQSupervisor(IntegrationSupervisor):
 
         u_complete = self._u_target - current_u
         u_remain = self._u_range - u_complete
-        percent_remain = 100.0 * (u_remain / self._u_range)
+        percent_remain = u_remain / self._u_range
         print(
             f"** STATUS UPDATE #{update_number}: Stage #2 integration for WKB Q_k(z) for k = {self._k.k_inv_Mpc:.5g}/Mpc (store_id={self._k.store_id}) has been running for {format_time(since_start)} ({format_time(since_last_notify)} since last notification)"
         )
         print(
-            f"|    current u={current_u:.5g} (initial u={self._u_init:.5g}, target z={self._u_target:.5g}, z complete={u_complete:.5g}, z remain={u_remain:.5g}, {percent_remain:.3g}% remains)"
+            f"|    current u={current_u:.5g} (initial u={self._u_init:.5g}, target z={self._u_target:.5g}, z complete={u_complete:.5g}, z remain={u_remain:.5g}, {percent_remain:.3%} remains)"
         )
         if self._last_u is not None:
             u_delta = current_u - self._last_u
