@@ -5,15 +5,18 @@ from math import fabs
 from sqlalchemy import and_, or_
 from sqlalchemy.exc import MultipleResultsFound, SQLAlchemyError
 
-from ComputeTargets import TkNumericalIntegration, BackgroundModel
-from ComputeTargets.TensorSource import TensorSource, TensorSourceValue
+from ComputeTargets import (
+    BackgroundModel,
+    QuadSource,
+    QuadSourceValue,
+)
 from CosmologyConcepts import redshift, redshift_array, wavenumber_exit_time
 from Datastore.SQL.ObjectFactories.base import SQLAFactoryBase
-from MetadataConcepts import store_tag, tolerance
+from MetadataConcepts import store_tag
 from defaults import DEFAULT_STRING_LENGTH, DEFAULT_FLOAT_PRECISION
 
 
-class sqla_TensorSourceTagAssocation_factory(SQLAFactoryBase):
+class sqla_QuadSourceTagAssocation_factory(SQLAFactoryBase):
     def __init__(self):
         pass
 
@@ -28,7 +31,7 @@ class sqla_TensorSourceTagAssocation_factory(SQLAFactoryBase):
                 sqla.Column(
                     "parent_serial",
                     sqla.Integer,
-                    sqla.ForeignKey("TensorSource.serial"),
+                    sqla.ForeignKey("QuadSource.serial"),
                     index=True,
                     nullable=False,
                     primary_key=True,
@@ -49,7 +52,7 @@ class sqla_TensorSourceTagAssocation_factory(SQLAFactoryBase):
         raise NotImplementedError
 
     @staticmethod
-    def add_tag(conn, inserter, source: TensorSource, tag: store_tag):
+    def add_tag(conn, inserter, source: QuadSource, tag: store_tag):
         inserter(
             conn,
             {
@@ -59,7 +62,7 @@ class sqla_TensorSourceTagAssocation_factory(SQLAFactoryBase):
         )
 
     @staticmethod
-    def remove_tag(conn, table, source: TensorSource, tag: store_tag):
+    def remove_tag(conn, table, source: QuadSource, tag: store_tag):
         conn.execute(
             sqla.delete(table).where(
                 and_(
@@ -70,7 +73,7 @@ class sqla_TensorSourceTagAssocation_factory(SQLAFactoryBase):
         )
 
 
-class sqla_TensorSource_factory(SQLAFactoryBase):
+class sqla_QuadSource_factory(SQLAFactoryBase):
     def __init__(self):
         pass
 
@@ -84,16 +87,37 @@ class sqla_TensorSource_factory(SQLAFactoryBase):
             "columns": [
                 sqla.Column("label", sqla.String(DEFAULT_STRING_LENGTH)),
                 sqla.Column(
+                    "model_serial",
+                    sqla.Integer,
+                    sqla.ForeignKey("BackgroundModel.serial"),
+                    index=True,
+                    nullable=False,
+                ),
+                sqla.Column(
+                    "q_wavenumber_serial",
+                    sqla.Integer,
+                    sqla.ForeignKey("QuadSource.serial"),
+                    index=True,
+                    nullable=False,
+                ),
+                sqla.Column(
+                    "r_wavenumber_serial",
+                    sqla.Integer,
+                    sqla.ForeignKey("QuadSource.serial"),
+                    index=True,
+                    nullable=False,
+                ),
+                sqla.Column(
                     "Tq_serial",
                     sqla.Integer,
-                    sqla.ForeignKey("TensorSource.serial"),
+                    sqla.ForeignKey("QuadSource.serial"),
                     index=True,
                     nullable=False,
                 ),
                 sqla.Column(
                     "Tr_serial",
                     sqla.Integer,
-                    # sqla.ForeignKey("TensorSource.serial"),
+                    # sqla.ForeignKey("QuadSource.serial"),
                     # index=True,
                     nullable=False,
                 ),
@@ -114,10 +138,11 @@ class sqla_TensorSource_factory(SQLAFactoryBase):
         label: Optional[str] = payload.get("label", None)
         tags: List[store_tag] = payload.get("tags", [])
 
-        Tq: TkNumericalIntegration = payload["Tq"]
-        Tr: TkNumericalIntegration = payload["Tr"]
+        model: BackgroundModel = payload["model"]
+        q: wavenumber_exit_time = payload["q"]
+        r: wavenumber_exit_time = payload["r"]
 
-        tag_table = tables["TensorSource_tags"]
+        tag_table = tables["QuadSource_tags"]
         redshift_table = tables["redshift"]
 
         query = sqla.select(
@@ -125,10 +150,13 @@ class sqla_TensorSource_factory(SQLAFactoryBase):
             table.c.compute_time,
             table.c.z_samples,
             table.c.label,
+            table.c.Tq_serial,
+            table.c.Tr_serial,
         ).filter(
             table.c.validated == True,
-            table.c.Tq_serial == Tq.store_id,
-            table.c.Tr_serial == Tr.store_id,
+            table.c.model_serial == model.store_id,
+            table.c.q_wavenumber_serial == q.store_id,
+            table.c.r_wavenumber_serial == r.store_id,
         )
 
         # require that the tensor source calculation we search for has the specified list of tags
@@ -149,13 +177,19 @@ class sqla_TensorSource_factory(SQLAFactoryBase):
             row_data = conn.execute(query).one_or_none()
         except MultipleResultsFound as e:
             print(
-                f"!! TensorSource.build(): multiple results found when querying for TensorSource (Tq_id={Tq.store_id}, Tr_id={Tr.store_id})"
+                f"!! QuadSource.build(): multiple results found when querying for QuadSource (Tq_id={Tq.store_id}, Tr_id={Tr.store_id})"
             )
             raise e
 
         if row_data is None:
-            return TensorSource(
-                payload=None, z_sample=z_sample, Tq=Tq, Tr=Tr, label=label, tags=tags
+            return QuadSource(
+                payload=None,
+                model=model,
+                z_sample=z_sample,
+                q=q,
+                r=r,
+                label=label,
+                tags=tags,
             )
 
         store_id = row_data.serial
@@ -165,7 +199,7 @@ class sqla_TensorSource_factory(SQLAFactoryBase):
         num_expected_samples = row_data.z_samples
 
         if payload is None or not payload.get("_do_not_populate", False):
-            value_table = tables["TensorSourceValue"]
+            value_table = tables["QuadSourceValue"]
 
             sample_rows = conn.execute(
                 sqla.select(
@@ -195,7 +229,7 @@ class sqla_TensorSource_factory(SQLAFactoryBase):
                 z_value = redshift(store_id=row.z_serial, z=row.z)
                 z_points.append(z_value)
                 values.append(
-                    TensorSourceValue(
+                    QuadSourceValue(
                         store_id=row.serial,
                         z=z_value,
                         source_term=row.source_term,
@@ -221,15 +255,17 @@ class sqla_TensorSource_factory(SQLAFactoryBase):
 
             attributes = {"_do_not_populate": True, "_deserialized": True}
 
-        obj = TensorSource(
+        obj = QuadSource(
             payload={
                 "store_id": store_id,
                 "compute_time": compute_time,
                 "values": values,
+                "Tq_serial": row_data.Tq_serial,
+                "Tr_serial": row_data.Tr_serial,
             },
             z_sample=imported_z_sample,
-            Tq=Tq,
-            Tr=Tr,
+            q=q,
+            r=r,
             label=store_label,
             tags=tags,
         )
@@ -239,7 +275,7 @@ class sqla_TensorSource_factory(SQLAFactoryBase):
 
     @staticmethod
     def store(
-        obj: TensorSource,
+        obj: QuadSource,
         conn,
         table,
         inserter,
@@ -250,26 +286,29 @@ class sqla_TensorSource_factory(SQLAFactoryBase):
             conn,
             {
                 "label": obj.label,
-                "Tq_serial": obj.Tq.store_id,
-                "Tr_serial": obj.Tr.store_id,
+                "model_serial": obj.model.store_id,
+                "q_wavenumber_serial": obj.q.store_id,
+                "r_wavenumber_serial": obj.r.store_id,
+                "Tq_serial": obj._Tq_serial,
+                "Tr_serial": obj._Tr_serial,
                 "z_samples": len(obj.values),
                 "compute_time": obj.compute_time,
                 "validated": False,
             },
         )
 
-        # set store_id on behalf of supplied TensorSource
+        # set store_id on behalf of supplied QuadSource
         obj._my_id = store_id
 
         # add any tags
-        tag_inserter = inserters["TensorSource_tags"]
+        tag_inserter = inserters["QuadSource_tags"]
         for tag in obj.tags:
-            sqla_TensorSourceTagAssocation_factory.add_tag(conn, tag_inserter, obj, tag)
+            sqla_QuadSourceTagAssocation_factory.add_tag(conn, tag_inserter, obj, tag)
 
         # now serialize the sample points
-        value_inserter = inserters["TensorSourceValue"]
+        value_inserter = inserters["QuadSourceValue"]
         for value in obj.values:
-            value: TensorSourceValue
+            value: QuadSourceValue
             value_id = value_inserter(
                 conn,
                 {
@@ -290,12 +329,12 @@ class sqla_TensorSource_factory(SQLAFactoryBase):
 
     @staticmethod
     def validate(
-        obj: TensorSource,
+        obj: QuadSource,
         conn,
         table,
         tables,
     ):
-        # query the row in TensorSource corresponding to this object
+        # query the row in QuadSource corresponding to this object
         if not obj.available:
             raise RuntimeError(
                 "Attempt to validate a datastore object that has not yet been serialized"
@@ -305,7 +344,7 @@ class sqla_TensorSource_factory(SQLAFactoryBase):
             sqla.select(table.c.z_samples).filter(table.c.serial == obj.store_id)
         ).scalar()
 
-        value_table = tables["TensorSourceValue"]
+        value_table = tables["QuadSourceValue"]
         num_samples = conn.execute(
             sqla.select(sqla.func.count(value_table.c.serial)).filter(
                 value_table.c.parent_serial == obj.store_id
@@ -333,8 +372,8 @@ class sqla_TensorSource_factory(SQLAFactoryBase):
 
         Tq_table = tables["TkNumericalIntegration"].alias("Tq")
         Tr_table = tables["TkNumericalIntegration"].alias("Tr")
-        value_table = tables["TensorSourceValue"]
-        tags_table = tables["TensorSource_tags"]
+        value_table = tables["QuadSourceValue"]
+        tags_table = tables["QuadSource_tags"]
 
         not_validated = list(
             conn.execute(
@@ -405,7 +444,7 @@ class sqla_TensorSource_factory(SQLAFactoryBase):
         return msgs
 
 
-class sqla_TensorSourceValue_factory(SQLAFactoryBase):
+class sqla_QuadSourceValue_factory(SQLAFactoryBase):
     def __init__(self):
         pass
 
@@ -419,7 +458,7 @@ class sqla_TensorSourceValue_factory(SQLAFactoryBase):
                 sqla.Column(
                     "parent_serial",
                     sqla.Integer,
-                    sqla.ForeignKey("TensorSource.serial"),
+                    sqla.ForeignKey("QuadSource.serial"),
                     index=True,
                     nullable=False,
                 ),
@@ -452,20 +491,20 @@ class sqla_TensorSourceValue_factory(SQLAFactoryBase):
 
         if all([has_serial, has_model]):
             print(
-                "## TensorSourceValue.build(): both an parent serial number and a (model, q, r) set were queried. Only the serial number will be used."
+                "## QuadSourceValue.build(): both an parent serial number and a (model, q, r) set were queried. Only the serial number will be used."
             )
 
         if not any([has_serial, has_model]):
             raise RuntimeError(
-                "TensorSourceValue.build(): at least one of a parent serial number and a (model, q, r) set must be supplied."
+                "QuadSourceValue.build(): at least one of a parent serial number and a (model, q, r) set must be supplied."
             )
 
         if has_serial:
-            return sqla_TensorSourceValue_factory._build_impl_serial(
+            return sqla_QuadSourceValue_factory._build_impl_serial(
                 payload, conn, table, inserter, tables, inserters
             )
 
-        return sqla_TensorSourceValue_factory._build_impl_model(
+        return sqla_QuadSourceValue_factory._build_impl_model(
             payload, conn, table, inserter, tables, inserters
         )
 
@@ -499,7 +538,7 @@ class sqla_TensorSourceValue_factory(SQLAFactoryBase):
             ).one_or_none()
         except MultipleResultsFound as e:
             print(
-                f"!! TensorSourceValue.build(): multiple results found when querying for TensorSourceValue"
+                f"!! QuadSourceValue.build(): multiple results found when querying for QuadSourceValue"
             )
             raise e
 
@@ -541,7 +580,7 @@ class sqla_TensorSourceValue_factory(SQLAFactoryBase):
 
             attribute_set = {"_deserialized": True}
 
-        obj = TensorSourceValue(
+        obj = QuadSourceValue(
             store_id=store_id,
             z=z,
             source_term=source_term,
@@ -563,57 +602,32 @@ class sqla_TensorSourceValue_factory(SQLAFactoryBase):
         q: wavenumber_exit_time = payload["q"]
         r: wavenumber_exit_time = payload["r"]
 
-        atol: Optional[tolerance] = payload.get("atol", None)
-        rtol: Optional[tolerance] = payload.get("rtol", None)
         tags: Optional[List[store_tag]] = payload.get("tags", None)
 
-        tensorsource_table = tables["TensorSource"]
-        Tq_table = tables["TkNumericalIntegration"].alias("Tk_table")
-        Tr_table = tables["TkNumericalIntegration"].alias("Tr_table")
+        quadsource_table = tables["QuadSource"]
 
         try:
-            tensorsource_query = (
-                sqla.select(tensorsource_table.c.serial)
-                .select_from(
-                    tensorsource_table.join(
-                        Tq_table, Tq_table.serial == tensorsource_table.c.Tq_serial
-                    ).join(Tr_table, Tr_table.serial == tensorsource_table.c.Tr_serial)
-                )
-                .filter(
-                    Tq_table.c.model_serial == model.store_id,
-                    Tr_table.c.model_serial == model.store_id,
-                    Tq_table.c.wavenumber_exit_serial == q.store_id,
-                    Tr_table.c.wavenumber_exit_serial == r.store_id,
-                    tensorsource_table.c.validated == True,
-                )
+            quadsource_query = sqla.select(quadsource_table.c.serial).filter(
+                quadsource_table.c.model_id == model.store_id,
+                quadsource_table.c.q_wavenumber_serial == q.store_id,
+                quadsource_table.c.r_wavenumber_serial == r.store_id,
+                quadsource_table.c.validated == True,
             )
-
-            if atol is not None:
-                tensorsource_query = tensorsource_query.filter(
-                    Tq_table.c.atol_serial == atol.store_id,
-                    Tr_table.c.atol_serial == atol.store_id,
-                )
-
-            if rtol is not None:
-                tensorsource_query = tensorsource_query.filter(
-                    Tq_table.c.rtol_serial == rtol.store_id,
-                    Tr_table.c.rtol_serial == rtol.store_id,
-                )
 
             count = 0
             for tag in tags:
                 tag: store_tag
-                tab = tables["TensorSource_tags"].alias(f"tag_{count}")
+                tab = tables["QuadSource_tags"].alias(f"tag_{count}")
                 count += 1
-                tensorsource_query = tensorsource_query.join(
+                quadsource_query = quadsource_query.join(
                     tab,
                     and_(
-                        tab.c.parent_serial == tensorsource_table.c.serial,
+                        tab.c.parent_serial == quadsource_table.c.serial,
                         tab.c.tag_serial == tag.store_id,
                     ),
                 )
 
-            subquery = tensorsource_query.subquery()
+            subquery = quadsource_query.subquery()
 
             row_data = conn.execute(
                 sqla.select(
@@ -634,20 +648,21 @@ class sqla_TensorSourceValue_factory(SQLAFactoryBase):
             ).one_or_none()
         except MultipleResultsFound as e:
             print(
-                f"!! TensorSourceValue.build(): multiple results found when querying for TensorSourceValue"
+                f"!! QuadSourceValue.build(): multiple results found when querying for QuadSourceValue"
             )
             raise e
 
         if row_data is None:
             # return empty object
-            obj = TensorSourceValue(
+            obj = QuadSourceValue(
                 store_id=None, z=z, source=None, undiff_part=None, diff_part=None
             )
+            obj._model = model
             obj._q_exit = q
             obj._r_exit = r
             return obj
 
-        obj = TensorSourceValue(
+        obj = QuadSourceValue(
             store_id=row_data.serial,
             z=z,
             source_term=row_data.source_term,
@@ -658,6 +673,7 @@ class sqla_TensorSourceValue_factory(SQLAFactoryBase):
             analytic_diff_part=row_data.analytic_diff_part,
         )
         obj._deserialized = True
+        obj._model = model
         obj._q_exit = q
         obj._r_exit = r
         return obj

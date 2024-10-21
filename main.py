@@ -15,7 +15,7 @@ from ComputeTargets import (
     TkNumericalIntegration,
     GkNumericalIntegration,
     GkWKBIntegration,
-    TensorSource,
+    QuadSource,
     GkNumericalValue,
     GkWKBValue,
     GkSource,
@@ -45,6 +45,14 @@ DEFAULT_SHARDS = 20
 DEFAULT_RAY_ADDRESS = "auto"
 DEFAULT_SAMPLES_PER_LOG10_Z = 150
 DEFAULT_ZEND = 0.1
+
+allowed_drop_actions = [
+    "gk-numeric",
+    "gk-wkb",
+    "gk-source",
+    "quad-source",
+    "tk-numeric",
+]
 
 parser = argparse.ArgumentParser()
 parser.add_argument(
@@ -123,7 +131,7 @@ parser.add_argument(
     type=str,
     nargs="+",
     default=[],
-    choices=["numerical", "wkb", "source"],
+    choices=allowed_drop_actions,
     help="drop one or more data categories",
     action="extend",
 )
@@ -150,7 +158,6 @@ ray.init(address=args.ray_address)
 
 VERSION_LABEL = "2024.1.1"
 
-allowed_drop_actions = ["numerical", "wkb", "source"]
 specified_drop_actions = [x.lower() for x in args.drop]
 drop_actions = [x for x in specified_drop_actions if x in allowed_drop_actions]
 
@@ -381,42 +388,112 @@ with ShardedPool(
         return Tk.compute(label=label)
 
     def validate_Tk_work(Tk: TkNumericalIntegration):
+        if not Tk.available:
+            raise RuntimeError(
+                "TkNumericalIntegration object passed for validation, but is not yet available"
+            )
+
         return pool.object_validate(Tk)
 
     def post_Tk_work(Tk: TkNumericalIntegration):
         return ray.put(Tk)
 
-    def build_tensor_source_work(grid_idx):
-        idx_i, idx_j = grid_idx
+    def build_tensor_source_work(qr_pair):
+        q, r = qr_pair
+        q: wavenumber_exit_time
+        r: wavenumber_exit_time
 
-        q = k_sample[idx_i]
-        Tq = Tks[idx_i]
-        Tr = Tks[idx_j]
+        # ensure that q, r are ordered respecting the triangular condition
+        assert q.k <= r.k
 
-        # q is not used by the TensorSource constructor, but is accepted because it functions as the shard key
-        return pool.object_get(
-            "TensorSource",
-            z_sample=z_source_sample,
-            q=q,
-            Tq=Tq,
-            Tr=Tr,
-            tags=[
-                TkProductionTag,
-                GlobalZGridSizeTag,
-                SourceZGridSizeTag,
-                OutsideHorizonEfoldsTag,
-                LargestZTag,
-                SamplesPerLog10ZTag,
-            ],
+        payload_batch = [
+            {
+                "model": model,
+                "z_sample": z_source_sample,
+                "k": q,
+                "z_init": None,  # don't specify
+                "atol": atol,
+                "rtol": rtol,
+                "tags": [
+                    TkProductionTag,
+                    GlobalZGridSizeTag,
+                    SourceZGridSizeTag,
+                    OutsideHorizonEfoldsTag,
+                    LargestZTag,
+                    SamplesPerLog10ZTag,
+                ],
+            },
+            {
+                "model": model,
+                "z_sample": z_source_sample,
+                "k": r,
+                "z_init": None,  # don't specify
+                "atol": atol,
+                "rtol": rtol,
+                "tags": [
+                    TkProductionTag,
+                    GlobalZGridSizeTag,
+                    SourceZGridSizeTag,
+                    OutsideHorizonEfoldsTag,
+                    LargestZTag,
+                    SamplesPerLog10ZTag,
+                ],
+            },
+        ]
+
+        Tq, Tr = ray.get(
+            pool.object_get("TkNumericalIntegration", payload_data=payload_batch)
         )
 
-    def compute_tensor_source_work(calc: TensorSource, label: Optional[str] = None):
-        return calc.compute(label=label)
+        if not Tq.available:
+            print(
+                f"!! MISSING DATA WARNING ({datetime.now().replace(microsecond=0).isoformat()}) TkNumericalIntegration for q={q.k.k_inv_Mpc}/Mpc"
+            )
+            raise RuntimeError(
+                f"QuadSource builder: missing or incomplete source data for q={q.k.k_inv_Mpc}/Mpc"
+            )
 
-    def validate_tensor_source_work(calc: TensorSource):
+        if not Tr.available:
+            print(
+                f"!! MISSING DATA WARNING ({datetime.now().replace(microsecond=0).isoformat()}) TkNumericalIntegration for r={r.k.k_inv_Mpc}/Mpc"
+            )
+            raise RuntimeError(
+                f"QuadSource builder: missing or incomplete source data for r={r.k.k_inv_Mpc}/Mpc"
+            )
+
+        return {
+            "ref": pool.object_get(
+                "QuadSource",
+                model=model,
+                z_sample=z_source_sample,
+                q=q,
+                r=r,
+                tags=[
+                    TkProductionTag,
+                    GlobalZGridSizeTag,
+                    SourceZGridSizeTag,
+                    OutsideHorizonEfoldsTag,
+                    LargestZTag,
+                    SamplesPerLog10ZTag,
+                ],
+            ),
+            "compute_payload": {"Tq": Tq, "Tr": Tr},
+        }
+
+    def compute_tensor_source_work(
+        calc: QuadSource, payload, label: Optional[str] = None
+    ):
+        return calc.compute(payload=payload, label=label)
+
+    def validate_tensor_source_work(calc: QuadSource):
+        if not calc.available:
+            raise RuntimeError(
+                "QuadSource object passed for validation, but is not yet available"
+            )
+
         return pool.object_validate(calc)
 
-    def build_tensor_source_work_label(calc: TensorSource):
+    def build_tensor_source_work_label(calc: QuadSource):
         q = calc.q
         r = calc.r
         return f"{args.job_name}-tensor-src-q{q.k_inv_Mpc:.3g}-r{r.k_inv_Mpc:.3g}-{datetime.now().replace(microsecond=0).isoformat()}"
@@ -436,11 +513,14 @@ with ShardedPool(
         Tk_queue.run()
         Tks = Tk_queue.results
 
+        # the source term is obviously symmetric, so we do not need to compute QuadSource on
+        # a square q x r grid; it will suffice to do so on an upper or lower triangle where q <= r.
+        # Then we can obtain the other values by reflectio.
         tensor_source_grid = list(
-            itertools.combinations_with_replacement(range(len(Tks)), 2)
+            itertools.combinations_with_replacement(k_exit_times, 2)
         )
 
-        TensorSource_queue = RayWorkPool(
+        QuadSource_queue = RayWorkPool(
             pool,
             tensor_source_grid,
             task_builder=build_tensor_source_work,
@@ -449,7 +529,7 @@ with ShardedPool(
             title="CALCULATE TENSOR SOURCE TERMS",
             store_results=False,
         )
-        TensorSource_queue.run()
+        QuadSource_queue.run()
 
     ## STEP 3
     ## COMPUTE TENSOR GREEN'S FUNCTIONS NUMERICALLY FOR RESPONSE TIMES NOT TOO FAR INSIDE THE HORIZON
@@ -574,6 +654,11 @@ with ShardedPool(
         return Gk.compute(label=label)
 
     def validate_Gk_numerical_work(Gk: GkNumericalIntegration):
+        if not Gk.available:
+            raise RuntimeError(
+                "GkNumericalIntegration object passed for validation, but is not yet available"
+            )
+
         return pool.object_validate(Gk)
 
     if args.numerical_queue:
@@ -851,6 +936,11 @@ with ShardedPool(
         return Gk.compute(label=label)
 
     def validate_Gk_WKB_work(Gk: GkWKBIntegration):
+        if not Gk.available:
+            raise RuntimeError(
+                "GkWKBIntegration object passed for validation, but is not yet available"
+            )
+
         return pool.object_validate(Gk)
 
     if args.WKB_queue:

@@ -12,11 +12,9 @@ from matplotlib import pyplot as plt
 
 from ComputeTargets import (
     BackgroundModel,
-)
-from ComputeTargets.TensorSource import (
-    TensorSource,
-    TensorSourceValue,
-    TensorSourceFunctions,
+    QuadSource,
+    QuadSourceValue,
+    QuadSourceFunctions,
 )
 from CosmologyConcepts import (
     wavenumber,
@@ -150,15 +148,15 @@ with ShardedPool(
     k_exit_times = k_exit_queue.results
 
     @ray.remote
-    def plot_tensor_source(source: TensorSource):
+    def plot_tensor_source(source: QuadSource):
         q_exit: wavenumber_exit_time = source._q_exit
         r_exit: wavenumber_exit_time = source._r_exit
         base_path = Path(args.output).resolve()
 
         sns.set_theme()
 
-        values: List[TensorSourceValue] = source.values
-        functions: TensorSourceFunctions = source.functions
+        values: List[QuadSourceValue] = source.values
+        functions: QuadSourceFunctions = source.functions
 
         abs_source_points = [(value.z.z, fabs(value.source_term)) for value in values]
         abs_undiff_points = [(value.z.z, fabs(value.undiff_part)) for value in values]
@@ -388,7 +386,7 @@ with ShardedPool(
         ]
 
         Tsource_ref = pool.object_get(
-            "TensorSource", z_sample=None, q=q, Tq=Tq_ref, Tr=Tr_ref
+            "QuadSource", z_sample=None, q=q, Tq=Tq_ref, Tr=Tr_ref
         )
 
         return plot_tensor_source.remote(Tsource_ref)

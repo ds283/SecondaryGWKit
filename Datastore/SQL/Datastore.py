@@ -31,10 +31,10 @@ from Datastore.SQL.ObjectFactories.GkWKBIntegration import (
     sqla_GkWKBValue_factory,
 )
 from Datastore.SQL.ObjectFactories.LambdaCDM import sqla_LambdaCDM_factory
-from Datastore.SQL.ObjectFactories.TensorSource import (
-    sqla_TensorSource_factory,
-    sqla_TensorSourceTagAssocation_factory,
-    sqla_TensorSourceValue_factory,
+from Datastore.SQL.ObjectFactories.QuadSource import (
+    sqla_QuadSource_factory,
+    sqla_QuadSourceTagAssocation_factory,
+    sqla_QuadSourceValue_factory,
 )
 from Datastore.SQL.ObjectFactories.TkNumericalIntegration import (
     sqla_TkNumericalIntegration_factory,
@@ -81,9 +81,9 @@ _factories = {
     "GkNumericalIntegration": sqla_GkNumericalIntegration_factory,
     "GkNumerical_tags": sqla_GkNumericalTagAssociation_factory,
     "GkNumericalValue": sqla_GkNumericalValue_factory,
-    "TensorSource": sqla_TensorSource_factory,
-    "TensorSource_tags": sqla_TensorSourceTagAssocation_factory,
-    "TensorSourceValue": sqla_TensorSourceValue_factory,
+    "QuadSource": sqla_QuadSource_factory,
+    "QuadSource_tags": sqla_QuadSourceTagAssocation_factory,
+    "QuadSourceValue": sqla_QuadSourceValue_factory,
     "GkWKBIntegration": sqla_GkWKBIntegration_factory,
     "GkWKB_tags": sqla_GkWKBTagAssociation_factory,
     "GkWKBValue": sqla_GkWKBValue_factory,
@@ -97,12 +97,14 @@ _TableMappingType = Mapping[str, sqla.Table]
 _InserterMappingType = Mapping[str, Callable]
 
 _drop_actions = {
-    "numerical": ["GkNumericalIntegration", "GkNumerical_tags", "GkNumericalValue"],
-    "wkb": ["GkWKBIntegration", "GkWKB_tags", "GkWKBValue"],
-    "source": ["GkSource", "GkSource_tags", "GkSourceValue"],
+    "gk-wkb": ["GkWKBIntegration", "GkWKB_tags", "GkWKBValue"],
+    "gk-source": ["GkSource", "GkSource_tags", "GkSourceValue"],
+    "quad-source": ["QuadSource", "QuadSource_tags", "QuadSourceValue"],
+    "tk-numeric": ["TkNumericalIntegration", "TkNumerical_tags", "TkNumericalValue"],
+    "gk-numeric": ["GkNumericalIntegration", "GkNumerical_tags", "GkNumericalValue"],
 }
 # should drop tables in a defined order, so that we do not violate foreign key constrints
-_drop_order = ["source", "wkb", "numerical"]
+_drop_order = ["gk-source", "gk-wkb", "gk-numeric", "quad-source", "tk-numeric"]
 
 
 @ray.remote

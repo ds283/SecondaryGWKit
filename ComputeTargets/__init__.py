@@ -14,7 +14,11 @@ from .GkWKBIntegration import (
     GkWKBIntegration,
     GkWKBValue,
 )
-from .TensorSource import TensorSource
+from .QuadSource import (
+    QuadSource,
+    QuadSourceValue,
+    QuadSourceFunctions,
+)
 from .TkNumericalIntegration import (
     TkNumericalIntegration,
     TkNumericalValue,

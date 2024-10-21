@@ -5,18 +5,18 @@ import ray
 from math import log
 from scipy.interpolate import InterpolatedUnivariateSpline
 
-from ComputeTargets import BackgroundModel
+from ComputeTargets.BackgroundModel import BackgroundModel
 from ComputeTargets.TkNumericalIntegration import (
     TkNumericalIntegration,
     TkNumericalValue,
 )
 from ComputeTargets.spline_wrappers import ZSplineWrapper
-from CosmologyConcepts import wavenumber, redshift_array, redshift
+from CosmologyConcepts import wavenumber, redshift_array, redshift, wavenumber_exit_time
 from Datastore import DatastoreObject
 from MetadataConcepts import store_tag
 from utilities import check_cosmology, WallclockTimer
 
-TensorSourceFunctions = namedtuple("TensorSourceFunctions", ["source"])
+QuadSourceFunctions = namedtuple("QuadSourceFunctions", ["source"])
 
 
 def source_function(
@@ -51,7 +51,7 @@ def source_function(
 
 
 @ray.remote
-def compute_tensor_source(
+def compute_quad_source(
     model: BackgroundModel,
     z_sample: redshift_array,
     Tq: TkNumericalIntegration,
@@ -157,7 +157,7 @@ def compute_tensor_source(
     }
 
 
-class TensorSource(DatastoreObject):
+class QuadSource(DatastoreObject):
     """
     Encapsulates the tensor source term produced in a particular cosmology,,
     with a particular set of z-sample points, labelled by two wavenumbers q and r.
@@ -166,23 +166,15 @@ class TensorSource(DatastoreObject):
     def __init__(
         self,
         payload,
+        model: BackgroundModel,
         z_sample: redshift_array,
-        Tq: TkNumericalIntegration,
-        Tr: TkNumericalIntegration,
+        q: wavenumber_exit_time,
+        r: wavenumber_exit_time,
         label: Optional[str] = None,
         tags: Optional[List[store_tag]] = None,
-        q: Optional[wavenumber] = None,
     ):
         # q is not used, but needs to be accepted because it functions as the shard key;
         # there is a .q attribute, but this is derived from the Tq TkNumericalIntegration object
-
-        # check compatibility of the ingredients we have been offered
-        check_cosmology(Tq.model, Tr.model)
-
-        if not Tq.available:
-            raise RuntimeError("Supplied Tq is not available")
-        if not Tr.available:
-            raise RuntimeError("Supplied Tr is not available")
 
         self._z_sample = z_sample
         if payload is None:
@@ -190,22 +182,24 @@ class TensorSource(DatastoreObject):
             self._compute_time = None
 
             self._values = None
+            self._Tq_serial = None
+            self._Tr_serial = None
         else:
             DatastoreObject.__init__(self, payload["store_id"])
             self._compute_time = payload["compute_time"]
 
             self._values = payload["values"]
+            self._Tq_serial = payload["Tq_serial"]
+            self._Tr_serial = payload["Tr_serial"]
 
         # store parameters
         self._label = label
         self._tags = tags if tags is not None else []
 
-        self._Tq = Tq
-        self._Tr = Tr
+        self._q_exit = q
+        self._r_exit = r
 
-        self._model = Tq.model
-        self._q_exit = Tq._k_exit
-        self._r_exit = Tr._k_exit
+        self._model = model
 
         self._functions = None
 
@@ -214,14 +208,6 @@ class TensorSource(DatastoreObject):
     @property
     def model(self) -> BackgroundModel:
         return self._model
-
-    @property
-    def Tq(self) -> TkNumericalIntegration:
-        return self._Tq
-
-    @property
-    def Tr(self) -> TkNumericalIntegration:
-        return self._Tr
 
     @property
     def q(self) -> wavenumber:
@@ -252,22 +238,22 @@ class TensorSource(DatastoreObject):
     @property
     def values(self) -> List:
         if hasattr(self, "_do_not_populate"):
-            raise RuntimeError("TensorSource: values read but _do_not_populate is set")
+            raise RuntimeError("QuadSource: values read but _do_not_populate is set")
 
         if self._values is None:
             raise RuntimeError("values has not yet been populated")
         return self._values
 
     @property
-    def functions(self) -> TensorSourceFunctions:
+    def functions(self) -> QuadSourceFunctions:
         if hasattr(self, "_do_not_populate"):
             raise RuntimeError(
-                "TensorSource: attempt to construct dense output functions, but _do_not_populate is set"
+                "QuadSource: attempt to construct dense output functions, but _do_not_populate is set"
             )
 
         if self._values is None:
             raise RuntimeError(
-                "TensorSource: attempt to construct dense output functions, but values have not yet been populated"
+                "QuadSource: attempt to construct dense output functions, but values have not yet been populated"
             )
 
         if self._functions is None:
@@ -284,7 +270,7 @@ class TensorSource(DatastoreObject):
             source_x_data, source_y_data, ext="raise"
         )
 
-        self._functions = TensorSourceFunctions(
+        self._functions = QuadSourceFunctions(
             source=ZSplineWrapper(
                 source_spline,
                 "T_k",
@@ -294,33 +280,50 @@ class TensorSource(DatastoreObject):
             )
         )
 
-    def compute(self, label: Optional[str] = None):
+    def compute(self, payload, label: Optional[str] = None):
         if hasattr(self, "_do_not_populate"):
             raise RuntimeError(
-                "TensorSource: compute() called, but _do_not_populate is set"
+                "QuadSource: compute() called, but _do_not_populate is set"
             )
 
         if self._values is not None:
             raise RuntimeError(
-                "TensorSource: compute() called, but values have already been computed"
+                "QuadSource: compute() called, but values have already been computed"
             )
 
         # replace label if specified
         if label is not None:
             self._label = label
 
-        self._compute_ref = compute_tensor_source.remote(
+        Tq: TkNumericalIntegration = payload["Tq"]
+        Tr: TkNumericalIntegration = payload["Tr"]
+
+        # check compatibility of the ingredients we have been offered
+        if not Tq.available:
+            raise RuntimeError("QuadSource: Supplied Tq is not available")
+        if not Tr.available:
+            raise RuntimeError("QuadSource: Supplied Tr is not available")
+
+        # ensure that data ingredients are compatible with our specification
+        check_cosmology(Tq.model, self.model)
+        check_cosmology(Tr.model, self.model)
+
+        self._compute_ref = compute_quad_source.remote(
             self._model,
             self.z_sample,
-            self._Tq,
-            self._Tr,
+            Tq,
+            Tr,
         )
+
+        self._Tq_serial = Tq.store_id
+        self._Tr_serial = Tr.store_id
+
         return self._compute_ref
 
     def store(self) -> Optional[bool]:
         if self._compute_ref is None:
             raise RuntimeError(
-                "TensorSource: store() called, but no compute() is in progress"
+                "QuadSource: store() called, but no compute() is in progress"
             )
 
             # check whether the computation has actually resolved
@@ -344,7 +347,7 @@ class TensorSource(DatastoreObject):
         self._values = []
         for i in range(len(source_term)):
             self._values.append(
-                TensorSourceValue(
+                QuadSourceValue(
                     None,
                     self._z_sample[i],
                     source_term[i],
@@ -359,7 +362,7 @@ class TensorSource(DatastoreObject):
         return True
 
 
-class TensorSourceValue(DatastoreObject):
+class QuadSourceValue(DatastoreObject):
     """
     Encapsulates a single sampled value of the tensor source term.
     """
