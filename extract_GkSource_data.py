@@ -411,6 +411,12 @@ with ShardedPool(
                 fontsize="small",
             )
 
+            if Gk.type == "mixed" and Gk.crossover is not None:
+                ax.axvline(Gk.crossover, linestyle="dashdot", color="m")
+                ax.text(
+                    Gk.crossover, 0.15, "crossover", transform=trans, fontsize="small"
+                )
+
             ax.set_xlabel("source redshift $z$")
             ax.set_ylabel("$G_k(z_{\\text{source}}, z_{\\text{response}}) / (1+z')$")
 
@@ -478,6 +484,12 @@ with ShardedPool(
                 fontsize="small",
             )
 
+            if Gk.type == "mixed" and Gk.crossover is not None:
+                ax.axvline(Gk.crossover, linestyle="dashdot", color="m")
+                ax.text(
+                    Gk.crossover, 0.15, "crossover", transform=trans, fontsize="small"
+                )
+
             ax.set_xlabel("source redshift $z$")
             ax.set_ylabel("WKB phase $\\theta$")
 
@@ -544,6 +556,12 @@ with ShardedPool(
                 transform=trans,
                 fontsize="small",
             )
+
+            if Gk.type == "mixed" and Gk.crossover is not None:
+                ax.axvline(Gk.crossover, linestyle="dashdot", color="m")
+                ax.text(
+                    Gk.crossover, 0.15, "crossover", transform=trans, fontsize="small"
+                )
 
             ax.set_xlabel("source redshift $z$")
             ax.set_ylabel("WKB phase $\\theta$")
