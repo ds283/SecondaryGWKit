@@ -285,6 +285,11 @@ with ShardedPool(
             for value in WKB_points
         ]
 
+        theta_spline_deriv_points = [
+            (value.z_source.z, functions.theta_deriv(value.z_source.z))
+            for value in WKB_points
+        ]
+
         abs_amplitude_sin_points = [
             (
                 value.z_source.z,
@@ -328,6 +333,12 @@ with ShardedPool(
         abs_theta_spline_x, abs_theta_spline_y = (
             zip(*abs_theta_spline_points)
             if len(abs_theta_spline_points) > 0
+            else ([], [])
+        )
+
+        theta_spline_deriv_x, theta_spline_deriv_y = (
+            zip(*theta_spline_deriv_points)
+            if len(theta_spline_deriv_points) > 0
             else ([], [])
         )
 
@@ -575,6 +586,59 @@ with ShardedPool(
             fig_path = (
                 base_path
                 / f"plots/theta-linear/k-serial={k_exit.store_id}-k={k_exit.k.k_inv_Mpc:.5g}/z-serial={z_response.store_id}-zsource={z_response.z:.5g}.pdf"
+            )
+            fig_path.parents[0].mkdir(exist_ok=True, parents=True)
+            fig.savefig(fig_path)
+            plt.close()
+
+        if len(theta_spline_deriv_x) > 0 and (
+            any(y is not None for y in theta_spline_deriv_y)
+        ):
+            fig = plt.figure()
+            ax = plt.gca()
+
+            ax.plot(
+                theta_spline_deriv_x,
+                theta_spline_deriv_y,
+                label="derivative of WKB phase $\\theta$",
+            )
+
+            ax.axvline(k_exit.z_exit_subh_e3, linestyle="dashed", color="r")
+            ax.axvline(k_exit.z_exit_subh_e5, linestyle="dashed", color="b")
+
+            trans = ax.get_xaxis_transform()
+            ax.text(
+                k_exit.z_exit_subh_e3,
+                0.9,
+                "$+3$ e-folds",
+                transform=trans,
+                fontsize="small",
+            )
+            ax.text(
+                k_exit.z_exit_subh_e5,
+                0.75,
+                "$+5$ e-folds",
+                transform=trans,
+                fontsize="small",
+            )
+
+            if Gk.type == "mixed" and Gk.crossover is not None:
+                ax.axvline(Gk.crossover, linestyle="dashdot", color="m")
+                ax.text(
+                    Gk.crossover, 0.15, "crossover", transform=trans, fontsize="small"
+                )
+
+            ax.set_xlabel("source redshift $z$")
+
+            ax.set_xscale("log")
+
+            ax.legend(loc="best")
+            ax.grid(True)
+            ax.xaxis.set_inverted(True)
+
+            fig_path = (
+                base_path
+                / f"plots/theta-linear-deriv/k-serial={k_exit.store_id}-k={k_exit.k.k_inv_Mpc:.5g}/z-serial={z_response.store_id}-zsource={z_response.z:.5g}.pdf"
             )
             fig_path.parents[0].mkdir(exist_ok=True, parents=True)
             fig.savefig(fig_path)

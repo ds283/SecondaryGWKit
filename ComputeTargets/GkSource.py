@@ -4,7 +4,7 @@ from typing import Optional, List
 import pandas as pd
 import ray
 from math import fabs, pi, sqrt, cos, sin, log
-from scipy.interpolate import InterpolatedUnivariateSpline
+from scipy.interpolate import InterpolatedUnivariateSpline, UnivariateSpline
 
 from ComputeTargets.BackgroundModel import BackgroundModel
 from ComputeTargets.GkNumericalIntegration import GkNumericalValue
@@ -44,6 +44,7 @@ GkSourceFunctions = namedtuple(
         "numerical_Gk",
         "WKB_Gk",
         "theta",
+        "theta_deriv",
         "type",
         "quality",
         "crossover",
@@ -659,6 +660,7 @@ class GkSource(DatastoreObject):
         WKB_region = None
         WKB_Gk = None
         WKB_theta = None
+        WKB_theta_deriv = None
         if self._primary_WKB_largest_z is not None:
             max_z = self._primary_WKB_largest_z
             min_z = self._z_sample.min
@@ -731,10 +733,11 @@ class GkSource(DatastoreObject):
                     sin_amplitude_y,
                     ext="raise",
                 )
-                _theta_spline = InterpolatedUnivariateSpline(
+                _theta_spline = UnivariateSpline(
                     theta_x,
                     theta_y,
                     ext="raise",
+                    s=1,
                 )
 
                 WKB_Gk = GkWKBSplineWrapper(
@@ -748,6 +751,14 @@ class GkSource(DatastoreObject):
                 WKB_theta = ZSplineWrapper(
                     _theta_spline, "theta", max_z.z, min_z.z, log_z=True
                 )
+                WKB_theta_deriv = ZSplineWrapper(
+                    _theta_spline.derivative(),
+                    "theta derivative",
+                    max_z.z,
+                    min_z.z,
+                    log_z=True,
+                    deriv=True,
+                )
 
         self._functions = GkSourceFunctions(
             numerical_region=numerical_region,
@@ -755,6 +766,7 @@ class GkSource(DatastoreObject):
             WKB_region=WKB_region,
             WKB_Gk=WKB_Gk,
             theta=WKB_theta,
+            theta_deriv=WKB_theta_deriv,
             type=self._type,
             quality=self._quality,
             crossover=self._crossover,

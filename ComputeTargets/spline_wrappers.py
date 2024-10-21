@@ -4,7 +4,13 @@ from scipy.interpolate import UnivariateSpline
 
 class ZSplineWrapper:
     def __init__(
-        self, spline, label: str, max_z: float, min_z: float, log_z: bool = True
+        self,
+        spline,
+        label: str,
+        max_z: float,
+        min_z: float,
+        log_z: bool = True,
+        deriv=False,
     ):
         self._spline = spline
         self._label = label
@@ -13,6 +19,7 @@ class ZSplineWrapper:
         self._max_z = max_z
 
         self._log_z = log_z
+        self._deriv = deriv
 
     def __call__(self, z: float) -> float:
         if z > self._max_z:
@@ -27,6 +34,10 @@ class ZSplineWrapper:
 
         if self._log_z:
             z = log(z)
+
+        if self._deriv and self._log_z:
+            # the spline will compute d/d(log z), so to get the raw derivative we need to divide by z
+            return self._spline(z) / z
 
         return self._spline(z)
 
