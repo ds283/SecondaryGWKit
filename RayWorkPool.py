@@ -1,5 +1,6 @@
 import time
 from datetime import datetime
+from typing import Optional
 
 import ray
 from ray import ObjectRef
@@ -103,6 +104,12 @@ class RayWorkPool:
         self._num_available_complete = 0
         self._num_validation_complete = 0
 
+        self._last_num_lookup_complete = None
+        self._last_num_compute_complete = None
+        self._last_num_store_complete = None
+        self._last_num_available_complete = None
+        self._numv_validation_complete = None
+
         self._batch = 0
 
         self._start_time = time.perf_counter()
@@ -116,25 +123,121 @@ class RayWorkPool:
         msg = f"{self._num_lookup_queue} lookup"
         if self._compute_handler is not None:
             msg += f", {self._num_compute_queue} compute"
+
         if self._store_handler is not None:
             msg += f", {self._num_store_queue} store"
+
         if self._available_handler is not None:
             msg += f", {self._num_available_queue} available"
+
         if self._validation_handler is not None:
             msg += f", {self._num_validation_queue} validation"
 
         return msg
 
-    def _build_completed_status_message(self):
+    def _build_completed_status_message(
+        self, total: Optional[float] = None, since_last_notify: Optional[float] = None
+    ):
         msg = f"{self._num_lookup_complete} lookup"
+        submsg = ""
+        if since_last_notify is not None and self._last_num_lookup_complete is not None:
+            current_rate_per_min = (
+                (self._num_lookup_complete - self._last_num_lookup_complete)
+                / since_last_notify
+                * 60.0
+            )
+            submsg += f"~{current_rate_per_min:.2f}/min"
+        if total is not None:
+            global_rate_per_min = self._num_lookup_complete / total * 60.0
+            submsg += (
+                ", " if len(submsg) > 0 else ""
+            ) + f"avg ~{global_rate_per_min:.2f}/min"
+        if len(submsg) > 0:
+            msg += f" ({submsg})"
+
         if self._compute_handler is not None:
             msg += f", {self._num_compute_complete} compute"
+            submsg = ""
+            if (
+                since_last_notify is not None
+                and self._last_num_compute_complete is not None
+            ):
+                current_rate_per_min = (
+                    (self._num_compute_complete - self._last_num_compute_complete)
+                    / since_last_notify
+                    * 60.0
+                )
+                submsg += f"~{current_rate_per_min:.2f}/min"
+            if total is not None:
+                global_rate_per_min = self._num_compute_complete / total * 60.0
+                submsg += (
+                    ", " if len(submsg) > 0 else ""
+                ) + f"avg ~{global_rate_per_min:.2f}/min"
+            if len(submsg) > 0:
+                msg += f" ({submsg})"
+
         if self._store_handler is not None:
             msg += f", {self._num_store_complete} store"
+            submsg = ""
+            if (
+                since_last_notify is not None
+                and self._last_num_store_complete is not None
+            ):
+                current_rate_per_min = (
+                    (self._num_store_complete - self._last_num_store_complete)
+                    / since_last_notify
+                    * 60.0
+                )
+                submsg += f"~{current_rate_per_min:.2f}/min"
+            if total is not None:
+                global_rate_per_min = self._num_store_complete / total * 60.0
+                submsg += (
+                    ", " if len(submsg) > 0 else ""
+                ) + f"avg ~{global_rate_per_min:.2f}/min"
+            if len(submsg) > 0:
+                msg += f" ({submsg})"
+
         if self._available_handler is not None:
             msg += f", {self._num_available_complete} available"
+            submsg = ""
+            if (
+                since_last_notify is not None
+                and self._last_num_available_complete is not None
+            ):
+                current_rate_per_min = (
+                    (self._num_available_complete - self._last_num_available_complete)
+                    / since_last_notify
+                    * 60.0
+                )
+                submsg += f"~{current_rate_per_min:.2f}/min"
+            if total is not None:
+                global_rate_per_min = self._num_available_complete / total * 60.0
+                submsg += (
+                    ", " if len(submsg) > 0 else ""
+                ) + f"avg ~{global_rate_per_min:.2f}/min"
+            if len(submsg) > 0:
+                msg += f" ({submsg})"
+
         if self._validation_handler is not None:
             msg += f", {self._num_validation_complete} validation"
+            submsg = ""
+            if (
+                since_last_notify is not None
+                and self._last_num_validation_complete is not None
+            ):
+                current_rate_per_min = (
+                    (self._num_validation_complete - self._last_num_validation_complete)
+                    / since_last_notify
+                    * 60.0
+                )
+                submsg += f"~{current_rate_per_min:.2f}/min"
+            if total is not None:
+                global_rate_per_min = self._num_validation_complete / total * 60.0
+                submsg += (
+                    ", " if len(submsg) > 0 else ""
+                ) + f"avg ~{global_rate_per_min:.2f}/min"
+            if len(submsg) > 0:
+                msg += f" ({submsg})"
 
         return msg
 
@@ -406,13 +509,16 @@ class RayWorkPool:
                 self._batch += 1
 
             now_time = time.perf_counter()
-            elapsed = now_time - self._last_notify_time
-            if self._title is not None and elapsed > self._notify_min_time_interval:
+            elapsed_since_last_notify = now_time - self._last_notify_time
+            elapsed_since_start = now_time - self._start_time
+            if (
+                self._title is not None
+                and elapsed_since_last_notify > self._notify_min_time_interval
+            ):
                 if (
-                    elapsed > self._notify_time_interval
+                    elapsed_since_last_notify > self._notify_time_interval
                     or self._batch > self._notify_batch_size
                 ):
-                    total_elapsed = now_time - self._start_time
                     num_items_remain = len(self._todo)
                     if num_items_remain == 0:
                         percent_complete = 100.0
@@ -424,26 +530,33 @@ class RayWorkPool:
                         )
 
                     now = datetime.now()
-                    msg = f"   -- {now:%Y-%m-%d %H:%M:%S%z} ({format_time(total_elapsed)} running): {len(self._todo)}/{self._num_total_items} work items remaining = {percent_complete:.2f}% complete"
+                    msg = f"   -- {now:%Y-%m-%d %H:%M:%S%z} ({format_time(elapsed_since_start)} running): {len(self._todo)}/{self._num_total_items} work items remaining = {percent_complete:.2f}% complete"
                     if percent_complete > 99.99:
                         msg += " (may be waiting for compute/store/validate tasks to finish)"
                     print(msg)
 
                     msg = f"      inflight items: {self._build_queued_status_message()}"
-                    msg += (
-                        f" | completed items: {self._build_completed_status_message()}"
-                    )
+                    msg += f" | completed items: {self._build_completed_status_message(total=elapsed_since_start, since_last_notify=elapsed_since_last_notify)}"
                     print(msg)
 
                     self._batch = 0
                     self._last_notify_time = time.perf_counter()
 
+                    self._last_num_lookup_complete = self._num_lookup_complete
+                    self._last_num_compute_complete = self._num_compute_complete
+                    self._last_num_store_complete = self._num_store_complete
+                    self._last_num_available_complete = self._num_store_complete
+                    self._last_num_validation_complete = self._num_validation_complete
+
         if self._title is not None:
-            self.total_time = time.perf_counter() - self._start_time
+            final_time = time.perf_counter()
+            self.total_time = final_time - self._start_time
             print(
                 f"   -- ALL WORK ITEMS COMPLETE in time {format_time(self.total_time)}"
             )
-            print(f"      Queue summary: {self._build_completed_status_message()}")
+            print(
+                f"      Queue summary: {self._build_completed_status_message(total=self.total_time)}"
+            )
             if self._num_compute_complete == 0:
                 print(
                     "      (no compute items were evaluated - all assets read from datastore)"
