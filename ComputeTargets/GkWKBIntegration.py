@@ -20,12 +20,13 @@ from ComputeTargets.integration_supervisor import (
 from CosmologyConcepts import wavenumber_exit_time, redshift, redshift_array, wavenumber
 from Datastore import DatastoreObject
 from MetadataConcepts import tolerance, store_tag
+from Units import check_units
 from defaults import (
     DEFAULT_FLOAT_PRECISION,
     DEFAULT_ABS_TOLERANCE,
     DEFAULT_REL_TOLERANCE,
 )
-from utilities import check_units, format_time
+from utilities import format_time
 
 THETA_INDEX = 0
 Q_INDEX = 0

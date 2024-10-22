@@ -3,6 +3,7 @@ import unittest
 from math import fabs, atan, sin, pi
 
 from AdaptiveLevin.levin_quadrature import adaptive_levin_sincos
+from utilities import format_time
 
 
 class TestAdaptiveLevinSinCos(unittest.TestCase):
@@ -16,15 +17,19 @@ class TestAdaptiveLevinSinCos(unittest.TestCase):
         # take theta to be 100x
         theta = lambda x: 100.0 * x
 
-        value, p_sample, regions, evaluations = adaptive_levin_sincos(
+        data = adaptive_levin_sincos(
             x_span,
             f,
             theta,
             tol=1e-10,
             chebyshev_order=12,
         )
+        value = data["value"]
+        regions = data["regions"]
+        evaluations = data["evaluations"]
+        elapsed = data["elapsed"]
         print(
-            f"integral_1^100 sin(100x)/x = {value} ({len(regions)} regions, {evaluations} evaluations)"
+            f"integral_1^100 sin(100x)/x = {value} ({len(regions)} regions, {evaluations} evaluations in time {format_time(elapsed)})"
         )
         for region in regions:
             print(f"  -- region: ({region[0]}, {region[1]})")
@@ -41,15 +46,19 @@ class TestAdaptiveLevinSinCos(unittest.TestCase):
         f = [lambda x: 0.0, lambda x: 1.0 / (1.0 + x * x)]
         theta = lambda x: lbda * atan(x)
 
-        value, p_sample, regions, evaluations = adaptive_levin_sincos(
+        data = adaptive_levin_sincos(
             x_span,
             f,
             theta,
             tol=1e-10,
             chebyshev_order=12,
         )
+        value = data["value"]
+        regions = data["regions"]
+        evaluations = data["evaluations"]
+        elapsed = data["elapsed"]
         print(
-            f"integral_(-1)^(+1) cos({lbda} arctan(x)) / (1 + x^2) = {value} ({len(regions)} regions, {evaluations} evaluations)"
+            f"integral_(-1)^(+1) cos({lbda} arctan(x)) / (1 + x^2) = {value} ({len(regions)} regions, {evaluations} evaluations in time {format_time(elapsed)})"
         )
         for region in regions:
             print(f"  -- region: ({region[0]}, {region[1]})")

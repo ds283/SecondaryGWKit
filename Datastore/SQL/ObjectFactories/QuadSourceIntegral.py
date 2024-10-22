@@ -237,6 +237,21 @@ class sqla_QuadSourceIntegral_factory(SQLAFactoryBase):
                     value_table.c.WKB_quad_part,
                     value_table.c.WKB_Levin_part,
                     value_table.c.Gk_serial,
+                    value_table.c.numeric_quad_compute_time,
+                    value_table.c.numeric_quad_compute_steps,
+                    value_table.c.numeric_quad_RHS_evaluations,
+                    value_table.c.numeric_quad_mean_RHS_time,
+                    value_table.c.numeric_quad_max_RHS_time,
+                    value_table.c.numeric_quad_min_RHS_time,
+                    value_table.c.WKB_quad_compute_time,
+                    value_table.c.WKB_quad_compute_steps,
+                    value_table.c.WKB_quad_RHS_evaluations,
+                    value_table.c.WKB_quad_mean_RHS_time,
+                    value_table.c.WKB_quad_max_RHS_time,
+                    value_table.c.WKB_quad_min_RHS_time,
+                    value_table.c.WKB_Levin_num_regions,
+                    value_table.c.WKB_Levin_num_evaluations,
+                    value_table.c.WKB_Levin_elapsed,
                 )
                 .select_from(
                     value_table.join(
@@ -264,6 +279,27 @@ class sqla_QuadSourceIntegral_factory(SQLAFactoryBase):
                         WKB_quad_part=row.WKB_quad_part,
                         WKB_Levin_part=row.WKB_Levin_part,
                         Gk_serial=row.Gk_serial,
+                        numeric_quad_data=IntegrationData(
+                            compute_time=row.numeric_quad_compute_time,
+                            compute_steps=row.numeric_quad_compute_steps,
+                            RHS_evaluations=row.numeric_quad_RHS_evaluations,
+                            mean_RHS_time=row.numeric_quad_mean_RHS_time,
+                            max_RHS_time=row.numeric_quad_max_RHS_time,
+                            min_RHS_time=row.numeric_quad_min_RHS_time,
+                        ),
+                        WKB_quad_data=IntegrationData(
+                            compute_time=row.WKB_quad_compute_time,
+                            compute_steps=row.WKB_quad_compute_steps,
+                            RHS_evaluations=row.WKB_quad_RHS_evaluations,
+                            mean_RHS_time=row.WKB_quad_mean_RHS_time,
+                            max_RHS_time=row.WKB_quad_max_RHS_time,
+                            min_RHS_time=row.WKB_quad_min_RHS_time,
+                        ),
+                        WKB_Levin_data=LevinData(
+                            num_regions=row.WKB_Levin_num_regions,
+                            evaluations=row.WKB_Levin_evaluations,
+                            elapsed=row.WKB_Levin_elapsed,
+                        ),
                     )
                 )
             imported_z_sample = redshift_array(z_response_points)
@@ -347,6 +383,11 @@ class sqla_QuadSourceIntegral_factory(SQLAFactoryBase):
         value_inserter = inserters["QuadSourceIntegralValue"]
         for value in obj.values:
             value: QuadSourceIntegralValue
+
+            numeric_quad_data = value._numeric_quad_data
+            WKB_quad_data = value._WKB_quad_data
+            WKB_Levin_data = value._WKB_Levin_data
+
             value_id = value_inserter(
                 conn,
                 {
@@ -357,6 +398,79 @@ class sqla_QuadSourceIntegral_factory(SQLAFactoryBase):
                     "WKB_quad_part": value.WKB_quad_part,
                     "WKB_Levin_part": value.WKB_Levin_part,
                     "Gk_serial": value.Gk_serial,
+                    "numeric_quad_compute_time": (
+                        numeric_quad_data.compute_time
+                        if numeric_quad_data is not None
+                        else None
+                    ),
+                    "numeric_quad_compute_steps": (
+                        numeric_quad_data.compute_steps
+                        if numeric_quad_data is not None
+                        else None
+                    ),
+                    "numeric_quad_RHS_evaluations": (
+                        numeric_quad_data.RHS_evaluations
+                        if numeric_quad_data is not None
+                        else None
+                    ),
+                    "numeric_quad_mean_RHS_time": (
+                        numeric_quad_data.mean_RHS_time
+                        if numeric_quad_data is not None
+                        else None
+                    ),
+                    "numeric_quad_max_RHS_time": (
+                        numeric_quad_data.max_RHS_time
+                        if numeric_quad_data is not None
+                        else None
+                    ),
+                    "numeric_quad_min_RHS_time": (
+                        numeric_quad_data.min_RHS_time
+                        if numeric_quad_data is not None
+                        else None
+                    ),
+                    "WKB_quad_compute_time": (
+                        WKB_quad_data.compute_time
+                        if WKB_quad_data is not None
+                        else None
+                    ),
+                    "WKB_quad_compute_steps": (
+                        WKB_quad_data.compute_steps
+                        if WKB_quad_data is not None
+                        else None
+                    ),
+                    "WKB_quad_RHS_evaluations": (
+                        WKB_quad_data.RHS_evaluations
+                        if WKB_quad_data is not None
+                        else None
+                    ),
+                    "WKB_quad_mean_RHS_time": (
+                        WKB_quad_data.mean_RHS_time
+                        if WKB_quad_data is not None
+                        else None
+                    ),
+                    "WKB_quad_max_RHS_time": (
+                        WKB_quad_data.max_RHS_time
+                        if WKB_quad_data is not None
+                        else None
+                    ),
+                    "WKB_quad_min_RHS_time": (
+                        WKB_quad_data.min_RHS_time
+                        if WKB_quad_data is not None
+                        else None
+                    ),
+                    "WKB_Levin_num_regions": (
+                        WKB_Levin_data.num_regions
+                        if WKB_Levin_data is not None
+                        else None
+                    ),
+                    "WKB_Levin_evaluations": (
+                        WKB_Levin_data.evaluations
+                        if WKB_Levin_data is not None
+                        else None
+                    ),
+                    "WKB_Levin_elapsed": (
+                        WKB_Levin_data.elapsed if WKB_Levin_data is not None else None
+                    ),
                 },
             )
 
@@ -564,6 +678,10 @@ class sqla_QuadSourceIntegralValue_factory(SQLAFactoryBase):
                 sqla.Column("WKB_quad_min_RHS_time", sqla.Float(64)),
                 sqla.Column("WKB_Levin_num_regions", sqla.Integer),
                 sqla.Column("WKB_Levin_num_evaluations", sqla.Integer),
+                sqla.Column(
+                    "WKB_Levin_elapsed",
+                    sqla.Float(64),
+                ),
             ],
         }
 
@@ -659,6 +777,7 @@ class sqla_QuadSourceIntegralValue_factory(SQLAFactoryBase):
                     table.c.WKB_quad_min_RHS_time,
                     table.c.WKB_Levin_num_regions,
                     table.c.WKB_Levin_num_evaluations,
+                    table.c.WKB_Levin_elapsed,
                     parent_table.c.source_serial,
                 )
                 .filter(
@@ -759,6 +878,9 @@ class sqla_QuadSourceIntegralValue_factory(SQLAFactoryBase):
                         if WKB_Levin_data is not None
                         else None
                     ),
+                    "WKB_Levin_elapsed": (
+                        WKB_Levin_data.elapsed if WKB_Levin_data is not None else None
+                    ),
                 },
             )
 
@@ -792,6 +914,7 @@ class sqla_QuadSourceIntegralValue_factory(SQLAFactoryBase):
             WKB_Levin_data = LevinData(
                 num_regions=row_data.WKB_Levin_num_regions,
                 evaluations=row_data.WKB_Levin_evaluations,
+                elapsed=row_data.WKB_Levin_elapsed,
             )
 
             if (
@@ -892,6 +1015,7 @@ class sqla_QuadSourceIntegralValue_factory(SQLAFactoryBase):
                     table.c.WKB_quad_min_RHS_time,
                     table.c.WKB_Levin_num_regions,
                     table.c.WKB_Levin_num_evaluations,
+                    table.c.WKB_Levin_elapsed,
                     subquery.c.source_serial,
                 )
                 .select_from(
@@ -949,6 +1073,7 @@ class sqla_QuadSourceIntegralValue_factory(SQLAFactoryBase):
             WKB_Levin_data=LevinData(
                 num_regions=row_data.WKB_Levin_num_regions,
                 evaluations=row_data.WKB_Levin_evaluations,
+                elapsed=row_data.WKB_Levin_elapsed,
             ),
         )
         obj._deserialized = True
@@ -1025,6 +1150,7 @@ class sqla_QuadSourceIntegralValue_factory(SQLAFactoryBase):
             table.c.WKB_quad_min_RHS_time,
             table.c.WKB_Levin_num_regions,
             table.c.WKB_Levin_num_evaluations,
+            table.c.WKB_Levin_elapsed,
             subquery.c.source_serial,
         ).select_from(
             subquery.join(table, table.c.parent_serial == subquery.c.serial).join(
@@ -1062,6 +1188,7 @@ class sqla_QuadSourceIntegralValue_factory(SQLAFactoryBase):
                 WKB_Levin_data=LevinData(
                     num_regions=row.WKB_Levin_num_regions,
                     evaluations=row.WKB_Levin_evaluations,
+                    elapsed=row.WKB_Levin_elapsed,
                 ),
             )
             obj._deserialized = True

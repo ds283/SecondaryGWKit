@@ -5,9 +5,9 @@ import ray
 from ComputeTargets.BackgroundModel import BackgroundModel
 from ComputeTargets.QuadSourceIntegral import QuadSourceIntegral
 from CosmologyConcepts import wavenumber, redshift_array, wavenumber_exit_time, redshift
+from CosmologyConcepts.redshift import check_zsample
 from Datastore import DatastoreObject
 from MetadataConcepts import store_tag, tolerance
-from utilities import check_zsample
 
 
 class OneLoopIntegral(DatastoreObject):

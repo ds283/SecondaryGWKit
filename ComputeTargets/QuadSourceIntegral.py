@@ -413,20 +413,22 @@ def WKB_Levin_integral(
     def Levin_theta(log_z_source: float) -> float:
         return Gk_f.theta(log_z_source, z_is_log=True)
 
-    value, p_sample, regions, evaluations = adaptive_levin_sincos(
+    data = adaptive_levin_sincos(
         x_span,
         Levin_f,
         Levin_theta,
         tol=tol,
         chebyshev_order=12,
+        notify_label=f"k={k.k_inv_Mpc:.3g}/Mpc, q={q.k_inv_Mpc:.3g}/Mpc, r={r.k_inv_Mpc:.3g}/Mpc @ z_response={z_response.z:.5g}",
     )
 
     return {
         "data": LevinData(
-            num_regions=len(regions),
-            evaluations=evaluations,
+            num_regions=len(data["regions"]),
+            evaluations=data["evaluations"],
+            elapsed=data["elapsed"],
         ),
-        "value": (1.0 + z_response.z) * value,
+        "value": (1.0 + z_response.z) * data["value"],
     }
 
 

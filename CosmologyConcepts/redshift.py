@@ -165,3 +165,11 @@ class redshift_array:
         return redshift_array(
             z_array=[z for z in self._z_array if z.z > min_z + DEFAULT_FLOAT_PRECISION]
         )
+
+
+def check_zsample(A, B):
+    A_sample: redshift_array = A if isinstance(A, redshift_array) else A.z_sample
+    B_sample: redshift_array = B if isinstance(B, redshift_array) else B.z_sample
+
+    if A_sample != B_sample:
+        raise RuntimeError("Redshift sample grids are not equal")

@@ -13,8 +13,8 @@ from ComputeTargets.spline_wrappers import GkWKBSplineWrapper, ZSplineWrapper
 from CosmologyConcepts import wavenumber_exit_time, redshift, wavenumber, redshift_array
 from Datastore import DatastoreObject
 from MetadataConcepts import store_tag, tolerance
+from Units import check_units
 from defaults import DEFAULT_ABS_TOLERANCE, DEFAULT_FLOAT_PRECISION
-from utilities import check_units
 
 _NumericData = namedtuple("NumericData", ["G", "Gprime"])
 _WKBData = namedtuple(

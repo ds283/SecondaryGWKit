@@ -39,4 +39,4 @@ IntegrationData = namedtuple(
 )
 
 
-LevinData = namedtuple("LevinData", ["num_regions", "evaluations"])
+LevinData = namedtuple("LevinData", ["num_regions", "evaluations", "elapsed"])

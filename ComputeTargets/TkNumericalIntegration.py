@@ -16,12 +16,13 @@ from ComputeTargets.integration_supervisor import (
 from CosmologyConcepts import redshift_array, wavenumber, redshift, wavenumber_exit_time
 from Datastore import DatastoreObject
 from MetadataConcepts import tolerance, store_tag
+from Units import check_units
 from defaults import (
     DEFAULT_ABS_TOLERANCE,
     DEFAULT_REL_TOLERANCE,
     DEFAULT_FLOAT_PRECISION,
 )
-from utilities import check_units, format_time
+from utilities import format_time
 
 
 class TkIntegrationSupervisor(IntegrationSupervisor):

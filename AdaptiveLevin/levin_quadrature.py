@@ -1,8 +1,12 @@
+import time
 from typing import Tuple
 
 import numpy as np
 from math import floor, ceil
 from scipy.linalg import toeplitz
+
+# default interval at which to log progress of the integration
+DEFAULT_LEVIN_NOTIFY_INTERVAL = 5 * 60
 
 
 def chebyshev_matrices(x_span: Tuple[float, float], N: int):
@@ -161,6 +165,8 @@ def adaptive_levin(
     tol: float = 1e-7,
     chebyshev_order: int = 12,
     build_p_sample: bool = False,
+    notify_interval: int = DEFAULT_LEVIN_NOTIFY_INTERVAL,
+    notify_label: str = None,
 ):
     regions = [x_span]
 
@@ -169,7 +175,28 @@ def adaptive_levin(
     p_points = []
     num_evaluations = 0
 
+    driver_start: float = time.perf_counter()
+    start_time: float = time.time()
+    last_notify: float = start_time
+    updates_issued: int = 0
+
     while len(regions) > 0:
+        now = time.time()
+        if now - last_notify > notify_interval:
+            updates_issued = updates_issued + 1
+            notify_progress(
+                now,
+                last_notify,
+                start_time,
+                len(used_regions),
+                num_evaluations,
+                len(regions),
+                val,
+                updates_issued,
+                notify_label,
+            )
+            last_notify = time.time()
+
         a, b = regions.pop()
 
         # Chen et al. (172)
@@ -213,7 +240,45 @@ def adaptive_levin(
     used_regions.sort(key=lambda x: x[0])
     if build_p_sample:
         p_points.sort(key=lambda x: x[0])
-    return val, p_points, used_regions, num_evaluations
+
+    driver_stop = time.perf_counter()
+    elapsed = driver_stop - driver_start
+
+    return {
+        "value": val,
+        "p_points": p_points,
+        "regions": used_regions,
+        "evaluations": num_evaluations,
+        "elapsed": elapsed,
+    }
+
+
+def notify(
+    now: float,
+    last_notify: float,
+    start_time: float,
+    used_regions: int,
+    num_evaluations: int,
+    remain_regions: int,
+    current_val: float,
+    update_number: int,
+    notify_label: str = None,
+):
+    since_last_notify = now - last_notify
+    since_start = now - start_time
+
+    if notify_label is not None:
+        print(
+            f'** STATUS UDPATE #{update_number}: Levin quadrature "{notify_label}" has been running for {format_time(since_start)} ({format_time(since_last_notify)} since last notification)'
+        )
+    else:
+        print(
+            f"** STATUS UDPATE #{update_number}: Levin quadrature  has been running for {format_time(since_start)} ({format_time(since_last_notify)} since last notification)"
+        )
+
+    print(
+        f"|  -- current value = {current_val:.7g}, {used_regions} used subintervals, {remain_regions} subintervals remain | {num_evaluations} integrand evaluations"
+    )
 
 
 def adaptive_levin_sincos(
@@ -223,6 +288,8 @@ def adaptive_levin_sincos(
     tol: float = 1e-7,
     chebyshev_order: int = 12,
     build_p_sample: bool = False,
+    notify_interval: int = DEFAULT_LEVIN_NOTIFY_INTERVAL,
+    notify_label: str = None,
 ):
     A = Weight_SinCos(theta)
 
@@ -233,4 +300,6 @@ def adaptive_levin_sincos(
         tol=tol,
         chebyshev_order=chebyshev_order,
         build_p_sample=build_p_sample,
+        notify_interval=notify_interval,
+        notify_label=notify_label,
     )

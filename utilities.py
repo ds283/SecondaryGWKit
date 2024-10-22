@@ -2,9 +2,6 @@ import time
 from itertools import zip_longest
 from traceback import print_tb
 
-from CosmologyConcepts import redshift_array
-from CosmologyModels import BaseCosmology
-
 
 class WallclockTimer:
     def __enter__(self):
@@ -18,41 +15,6 @@ class WallclockTimer:
         if exc_type is not None:
             print(f"type={exc_type}, value={exc_val}")
             print_tb(exc_tb)
-
-
-def check_units(A, B):
-    """
-    Check that objects A and B are defined with the same units.
-    Assumes they both provide a .units property that returns a UnitsLike object
-    :param A:
-    :param B:
-    :return:
-    """
-    if A.units != B.units:
-        raise RuntimeError("Units used for wavenumber k and cosmology are not equal")
-
-
-def check_cosmology(A, B):
-    """
-    Check that object A and B are defined with the same cosmology
-    Assumes that both provide a .cosmology property that returns a BaseCosmology object
-    :param A:
-    :param B:
-    :return:
-    """
-    A_cosmology: BaseCosmology = A if isinstance(A, BaseCosmology) else A.cosmology
-    B_cosmology: BaseCosmology = B if isinstance(A, BaseCosmology) else B.cosmology
-
-    if A_cosmology.store_id != B_cosmology.store_id:
-        raise RuntimeError("Cosmology store_ids are different")
-
-
-def check_zsample(A, B):
-    A_sample: redshift_array = A if isinstance(A, redshift_array) else A.z_sample
-    B_sample: redshift_array = B if isinstance(B, redshift_array) else B.z_sample
-
-    if A != B:
-        raise RuntimeError("Redshift sample grids are not equal")
 
 
 SECONDS_PER_MINUTE = 60

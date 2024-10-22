@@ -12,9 +12,10 @@ from ComputeTargets.TkNumericalIntegration import (
 )
 from ComputeTargets.spline_wrappers import ZSplineWrapper
 from CosmologyConcepts import wavenumber, redshift_array, redshift, wavenumber_exit_time
+from CosmologyModels.base import check_cosmology
 from Datastore import DatastoreObject
 from MetadataConcepts import store_tag
-from utilities import check_cosmology, WallclockTimer
+from utilities import WallclockTimer
 
 QuadSourceFunctions = namedtuple("QuadSourceFunctions", ["source"])
 

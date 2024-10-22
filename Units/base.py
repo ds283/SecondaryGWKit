@@ -60,3 +60,15 @@ class UnitsLike(ABC):
     @abstractmethod
     def Mpc(self):
         raise NotImplementedError
+
+
+def check_units(A, B):
+    """
+    Check that objects A and B are defined with the same units.
+    Assumes they both provide a .units property that returns a UnitsLike object
+    :param A:
+    :param B:
+    :return:
+    """
+    if A.units != B.units:
+        raise RuntimeError("Units used for wavenumber k and cosmology are not equal")

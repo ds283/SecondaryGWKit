@@ -56,3 +56,18 @@ class BaseCosmology(DatastoreObject, ABC):
     @abstractmethod
     def wPerturbations(self, z: float) -> float:
         raise NotImplementedError
+
+
+def check_cosmology(A, B):
+    """
+    Check that object A and B are defined with the same cosmology
+    Assumes that both provide a .cosmology property that returns a BaseCosmology object
+    :param A:
+    :param B:
+    :return:
+    """
+    A_cosmology: BaseCosmology = A if isinstance(A, BaseCosmology) else A.cosmology
+    B_cosmology: BaseCosmology = B if isinstance(A, BaseCosmology) else B.cosmology
+
+    if A_cosmology.store_id != B_cosmology.store_id:
+        raise RuntimeError("Cosmology store_ids are different")
