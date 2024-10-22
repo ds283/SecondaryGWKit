@@ -1673,8 +1673,8 @@ with ShardedPool(
             label_builder=build_QuadSourceIntegral_label,
             title="CALCULATE QUADRATIC SOURCE INTEGRALS",
             store_results=False,
-            create_batch_size=20,  # we have batched the work queue into chunks ourselves, so don't process too many of these chunks at once
-            notify_batch_size=2000,
+            create_batch_size=15,  # we have batched the work queue into chunks ourselves, so don't process too many of these chunks at once!
+            notify_batch_size=5000,
             max_task_queue=300,
             process_batch_size=50,
         )
