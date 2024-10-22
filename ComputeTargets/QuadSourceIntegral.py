@@ -6,10 +6,10 @@ from math import fabs, log, exp
 from scipy.integrate import solve_ivp
 
 from AdaptiveLevin import adaptive_levin_sincos
-from ComputeTargets import IntegrationData, LevinData
 from ComputeTargets.BackgroundModel import BackgroundModel
 from ComputeTargets.GkSource import GkSource
 from ComputeTargets.QuadSource import QuadSource
+from ComputeTargets.integration_metadata import IntegrationData, LevinData
 from ComputeTargets.integration_supervisor import (
     IntegrationSupervisor,
     DEFAULT_UPDATE_INTERVAL,
