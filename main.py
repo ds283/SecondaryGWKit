@@ -1446,11 +1446,11 @@ with ShardedPool(
 
         print("\n** GKSOURCE SUMMARY STATISTICS")
         print(f"     Total instances: {GkSource_total}")
-        for type in GkSource_statistics:
-            type_stats = GkSource_statistics[type]
+        for Gk_type in GkSource_statistics:
+            type_stats = GkSource_statistics[Gk_type]
             type_total = sum(type_stats.values())
             print(
-                f"\n     >> {type}: {type_total} instances = {type_total/GkSource_total:.2%}"
+                f"\n     >> {Gk_type}: {type_total} instances = {type_total/GkSource_total:.2%}"
             )
             for quality, quality_total in type_stats.items():
                 print(
@@ -1481,7 +1481,7 @@ with ShardedPool(
                 ],
                 "_do_not_populate": True,
             }
-            for k, q, r in batch
+            for (k, q, r) in batch
         ]
 
         query_queue = RayWorkPool(
@@ -1498,11 +1498,12 @@ with ShardedPool(
             create_batch_size=5,
             process_batch_size=1,
         )
+        query_queue.run()
 
         # determine which z_response values are missing for each (k, q, r) combination
         missing = {
             k_labels
-            for k_labels, obj in zip(query_queue.results, batch)
+            for obj, k_labels in zip(query_queue.results, batch)
             if not obj.available
         }
 
@@ -1518,6 +1519,7 @@ with ShardedPool(
                     {
                         "model": model,
                         "z_response": z_response,
+                        "z_sample": None,  # need to specify, but not queried against; we pick up whatever z_source sample is stored
                         "atol": atol,
                         "rtol": rtol,
                         "tags": [
@@ -1538,7 +1540,7 @@ with ShardedPool(
             pool,
             Gk_batch,
             task_builder=lambda x: pool.object_get_vectorized(
-                "GkSource", x["shard_key"], payload_batch=x["payload"]
+                "GkSource", x["shard_key"], payload_data=x["payload"]
             ),
             available_handler=None,
             compute_handler=None,
@@ -1567,7 +1569,7 @@ with ShardedPool(
                     SamplesPerLog10ZTag,
                 ],
             }
-            for k, q, r in missing
+            for (k, q, r) in missing
         ]
         QuadSource_lookup_queue = RayWorkPool(
             pool,
@@ -1590,7 +1592,7 @@ with ShardedPool(
         for Gks, source, k_labels in zip(
             Gk_lookup_queue.results, QuadSource_lookup_queue.results, missing
         ):
-            k, q, r = k_labels
+            (k, q, r) = k_labels
             k: wavenumber_exit_time
             q: wavenumber_exit_time
             r: wavenumber_exit_time
@@ -1671,14 +1673,15 @@ with ShardedPool(
             itertools.combinations_with_replacement(source_k_exit_times, 2),
         )
         qsi_work_items = [(k, q, r) for k, (q, r) in qsi_work_items]
+        qsi_work_batches = list(grouper(qsi_work_items, n=5, incomplete="ignore"))
 
         QuadSourceIntegral_queue = RayWorkPool(
             pool,
-            qsi_work_items,
+            qsi_work_batches,
             task_builder=build_QuadSourceIntegral_batch,
             validation_handler=validate_QuadSourceIntegral_work,
             label_builder=build_QuadSourceIntegral_label,
-            title="CALCULATE QUADRATiC SOURCE INTEGRALS",
+            title="CALCULATE QUADRATIC SOURCE INTEGRALS",
             store_results=False,
         )
         QuadSourceIntegral_queue.run()
