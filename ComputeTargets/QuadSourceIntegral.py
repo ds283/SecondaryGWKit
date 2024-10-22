@@ -6,6 +6,7 @@ from math import fabs, log, exp
 from scipy.integrate import solve_ivp
 
 from AdaptiveLevin import adaptive_levin_sincos
+from ComputeTargets import IntegrationData, LevinData
 from ComputeTargets.BackgroundModel import BackgroundModel
 from ComputeTargets.GkSource import GkSource
 from ComputeTargets.QuadSource import QuadSource
@@ -113,6 +114,10 @@ def compute_QuadSource_integral(
             WKB_quad: float = 0.0
             WKB_Levin: float = 0.0
 
+            numeric_quad_data = None
+            WKB_quad_data = None
+            WKB_Levin_data = None
+
             if Gk.type == "numeric":
                 regions = [
                     (Gk.z_sample.max, z_response),
@@ -154,7 +159,7 @@ def compute_QuadSource_integral(
                 and min_z is not None
                 and max_z - min_z > DEFAULT_QUADRATURE_TOLERANCE
             ):
-                numeric_quad = numeric_quad_integral(
+                payload = numeric_quad_integral(
                     model,
                     k.k,
                     q.k,
@@ -166,6 +171,8 @@ def compute_QuadSource_integral(
                     min_z=min_z,
                     tol=tol,
                 )
+                numeric_quad = payload["value"]
+                numeric_quad_data = payload["data"]
 
             max_z, min_z = regions.pop(0)
             if (
@@ -173,7 +180,7 @@ def compute_QuadSource_integral(
                 and min_z is not None
                 and max_z - min_z > DEFAULT_QUADRATURE_TOLERANCE
             ):
-                WKB_quad = WKB_quad_integral(
+                payload = WKB_quad_integral(
                     model,
                     k.k,
                     q.k,
@@ -185,6 +192,8 @@ def compute_QuadSource_integral(
                     min_z=min_z,
                     tol=tol,
                 )
+                WKB_quad = payload["value"]
+                WKB_quad_data = payload["data"]
 
             max_z, min_z = regions.pop(0)
             if (
@@ -192,7 +201,7 @@ def compute_QuadSource_integral(
                 and min_z is not None
                 and max_z - min_z > DEFAULT_QUADRATURE_TOLERANCE
             ):
-                WKB_Levin = WKB_Levin_integral(
+                payload = WKB_Levin_integral(
                     model,
                     k.k,
                     q.k,
@@ -204,6 +213,8 @@ def compute_QuadSource_integral(
                     min_z=min_z,
                     tol=tol,
                 )
+                WKB_Levin = payload["value"]
+                WKB_Levin_data = payload["data"]
 
             values.append(
                 QuadSourceIntegralValue(
@@ -214,6 +225,9 @@ def compute_QuadSource_integral(
                     WKB_quad_part=WKB_quad,
                     WKB_Levin_part=WKB_Levin,
                     Gk_serial=Gk.store_id,
+                    numeric_quad_data=numeric_quad_data,
+                    WKB_quad_data=WKB_quad_data,
+                    WKB_Levin_data=WKB_Levin_data,
                 )
             )
 
@@ -231,7 +245,7 @@ def numeric_quad_integral(
     max_z: float,
     min_z: float,
     tol: float,
-) -> float:
+) -> dict:
     source_f = source.functions
     Gk_f = Gk.functions
     model_f = model.functions
@@ -282,7 +296,17 @@ def numeric_quad_integral(
             f"compute_QuadSource_integral: solution does not have expected number of members (expected 1, found {len(sol.y)})"
         )
 
-    return (1.0 + z_response.z) * sol.y[0][-1]
+    return {
+        "data": IntegrationData(
+            compute_time=supervisor.compute_time,
+            compute_steps=int(sol.nfev),
+            RHS_evaluations=supervisor.RHS_evaluations,
+            mean_RHS_time=supervisor.mean_RHS_time,
+            max_RHS_time=supervisor.max_RHS_time,
+            min_RHS_time=supervisor.min_RHS_time,
+        ),
+        "value": (1.0 + z_response.z) * sol.y[0][-1],
+    }
 
 
 def WKB_quad_integral(
@@ -296,7 +320,7 @@ def WKB_quad_integral(
     max_z: float,
     min_z: float,
     tol: float,
-) -> float:
+) -> dict:
     source_f = source.functions
     Gk_f = Gk.functions
     model_f = model.functions
@@ -347,7 +371,17 @@ def WKB_quad_integral(
             f"compute_QuadSource_integral: solution does not have expected number of members (expected 1, found {len(sol.y)})"
         )
 
-    return (1.0 + z_response.z) * sol.y[0][-1]
+    return {
+        "data": IntegrationData(
+            compute_time=supervisor.compute_time,
+            compute_steps=int(sol.nfev),
+            RHS_evaluations=supervisor.RHS_evaluations,
+            mean_RHS_time=supervisor.mean_RHS_time,
+            max_RHS_time=supervisor.max_RHS_time,
+            min_RHS_time=supervisor.min_RHS_time,
+        ),
+        "value": (1.0 + z_response.z) * sol.y[0][-1],
+    }
 
 
 def WKB_Levin_integral(
@@ -361,7 +395,7 @@ def WKB_Levin_integral(
     max_z: float,
     min_z: float,
     tol: float,
-) -> float:
+) -> dict:
     source_f = source.functions
     Gk_f = Gk.functions
     model_f = model.functions
@@ -387,7 +421,13 @@ def WKB_Levin_integral(
         chebyshev_order=12,
     )
 
-    return value
+    return {
+        "data": LevinData(
+            num_regions=len(regions),
+            evaluations=evaluations,
+        ),
+        "value": value,
+    }
 
 
 class QuadSourceIntegral(DatastoreObject):
@@ -558,6 +598,9 @@ class QuadSourceIntegralValue(DatastoreObject):
         WKB_quad_part: float,
         WKB_Levin_part: float,
         Gk_serial: Optional[int] = None,
+        numeric_quad_data: Optional[IntegrationData] = None,
+        WKB_quad_data: Optional[IntegrationData] = None,
+        WKB_Levin_data: Optional[LevinData] = None,
     ):
         DatastoreObject.__init__(self, store_id)
 
@@ -569,6 +612,10 @@ class QuadSourceIntegralValue(DatastoreObject):
         self._WKB_Levin_part = WKB_Levin_part
 
         self._Gk_serial = Gk_serial
+
+        self._numeric_quad_data = numeric_quad_data
+        self._WKB_quad_data = WKB_quad_data
+        self._WKB_Levin_data = WKB_Levin_data
 
     @property
     def z_response(self) -> redshift:

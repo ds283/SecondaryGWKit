@@ -37,3 +37,6 @@ IntegrationData = namedtuple(
         "RHS_evaluations",
     ],
 )
+
+
+LevinData = namedtuple("LevinData", ["num_regions", "evaluations"])

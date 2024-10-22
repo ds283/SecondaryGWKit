@@ -34,4 +34,5 @@ from .TkNumericalIntegration import (
 from .integration_metadata import (
     IntegrationSolver,
     IntegrationData,
+    LevinData,
 )
