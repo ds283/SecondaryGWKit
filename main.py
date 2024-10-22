@@ -1673,7 +1673,7 @@ with ShardedPool(
             itertools.combinations_with_replacement(source_k_exit_times, 2),
         )
         qsi_work_items = [(k, q, r) for k, (q, r) in qsi_work_items]
-        qsi_work_batches = list(grouper(qsi_work_items, n=5, incomplete="ignore"))
+        qsi_work_batches = list(grouper(qsi_work_items, n=2, incomplete="ignore"))
 
         QuadSourceIntegral_queue = RayWorkPool(
             pool,
@@ -1683,5 +1683,9 @@ with ShardedPool(
             label_builder=build_QuadSourceIntegral_label,
             title="CALCULATE QUADRATIC SOURCE INTEGRALS",
             store_results=False,
+            create_batch_size=1,  # we have batched the work queue into chunks ourselves, so don't process too many of these chunks at once
+            notify_batch_size=20,
+            max_task_queue=5,
+            process_batch_size=50,
         )
         QuadSourceIntegral_queue.run()
