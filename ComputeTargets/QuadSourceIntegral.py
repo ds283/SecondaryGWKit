@@ -426,7 +426,7 @@ def WKB_Levin_integral(
             num_regions=len(regions),
             evaluations=evaluations,
         ),
-        "value": value,
+        "value": (1.0 + z_response.z) * value,
     }
 
 
