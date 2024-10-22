@@ -646,7 +646,7 @@ with ShardedPool(
                 Gk.crossover_z, 0.15, "crossover_z", transform=trans, fontsize="x-small"
             )
 
-        if Gk.type == "mixed" or Gk.type == "WKB" and Gk.Levin_z is not None:
+        if (Gk.type == "mixed" or Gk.type == "WKB") and Gk.Levin_z is not None:
             ax.axvline(Gk.Levin_z, linestyle="dashdot", color="c")
             ax.text(
                 Gk.Levin_z, 0.2, "Levin boundary", transform=trans, fontsize="x-small"
