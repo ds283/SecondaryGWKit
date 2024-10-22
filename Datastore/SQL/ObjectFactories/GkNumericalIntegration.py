@@ -280,7 +280,8 @@ class sqla_GkNumericalIntegration_factory(SQLAFactoryBase):
 
         num_expected_samples = row_data.z_samples
 
-        if payload is None or not payload.get("_do_not_populate", False):
+        do_not_populate = payload.get("_do_not_populate", False)
+        if not do_not_populate:
             # read out sample values associated with this integration
             value_table = tables["GkNumericalValue"]
 

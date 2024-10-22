@@ -200,8 +200,6 @@ class sqla_GkSource_factory(SQLAFactoryBase):
         z_sample: redshift_array = payload["z_sample"]
         z_response: redshift = payload["z_response"]
 
-        payload: Optional[dict] = payload.get("payload", None)
-
         atol_table = tables["tolerance"].alias("atol")
         rtol_table = tables["tolerance"].alias("rtol")
         tag_table = tables["GkSource_tags"]
@@ -286,7 +284,7 @@ class sqla_GkSource_factory(SQLAFactoryBase):
         if row_data is None:
             # build and return an unpopulated object
             return GkSource(
-                payload=payload,
+                payload=None,
                 label=label,
                 k=k_exit,
                 model=model,
@@ -316,7 +314,8 @@ class sqla_GkSource_factory(SQLAFactoryBase):
 
         num_expected_samples = row_data.z_samples
 
-        if payload is None or not payload.get("_do_not_populate", False):
+        do_not_populate = payload.get("_do_not_populate", False)
+        if not do_not_populate:
             # read out sample values associated with this integration
             value_table = tables["GkSourceValue"]
 
@@ -433,6 +432,14 @@ class sqla_GkSource_factory(SQLAFactoryBase):
         )
         for key, value in attributes.items():
             setattr(obj, key, value)
+
+        # obj_pickled = cloudpickle.dumps(obj)
+        # model_pickled = cloudpickle.dumps(model)
+        # sample_pickled = cloudpickle.dumps(imported_z_sample)
+        # print(
+        #     f"** deserialized GkSource object (store_id={store_id}) with cloudpickle size={humanize.naturalsize(len(obj_pickled), binary=True)}, model size={humanize.naturalsize(len(model_pickled), binary=True)}, zsample size={humanize.naturalsize(len(sample_pickled), binary=True)}) | _do_not_populate={payload.get("_do_not_populate", False)}"
+        # )
+
         return obj
 
     @staticmethod

@@ -224,7 +224,8 @@ class sqla_QuadSourceIntegral_factory(SQLAFactoryBase):
 
         num_expected_samples = row_data.z_response_samples
 
-        if payload is None or not payload.get("_do_not_populate", False):
+        do_not_populate = payload.get("_do_not_populate", False)
+        if not do_not_populate:
             value_table = tables["QuadSourceIntegralValue"]
 
             sample_rows = conn.execute(

@@ -104,11 +104,22 @@ def compute_QuadSource_integral(
             "compute_QuadSource_integral: Gks and z_response_sample must have the same length"
         )
 
+    print(
+        f"** QUADRATIC SOURCE INTERVAL: k={k.k.k_inv_Mpc:.3g}/Mpc, q={q.k.k_inv_Mpc:.3g}/Mpc, r={r.k.k_inv_Mpc:.3g}/Mpc (source store_id={source.store_id}, k store_id={k.store_id}) starting"
+    )
+    start_time = time.time()
+
     with WallclockTimer() as timer:
         # work through the z_response_sample array, building the source redshift integral as we go
         for z_response, Gk in zip(z_response_sample, Gks):
             z_response: redshift
             Gk: GkSource
+
+            now = time.time()
+            start_this_z = now
+            print(
+                f"|  --  (source store_id={source.store_id}, k store_id={k.store_id}) running time={format_time(now-start_time)}, starting calcluation for z_response={z_response.z:.5g}"
+            )
 
             numeric_quad: float = 0.0
             WKB_quad: float = 0.0
@@ -159,6 +170,10 @@ def compute_QuadSource_integral(
                 and min_z is not None
                 and max_z - min_z > DEFAULT_QUADRATURE_TOLERANCE
             ):
+                now = time.time()
+                print(
+                    f"|  --  (source store_id={source.store_id}, k store_id={k.store_id}) running time={format_time(now - start_time)}, starting numerical quadrature part"
+                )
                 payload = numeric_quad_integral(
                     model,
                     k.k,
@@ -180,6 +195,10 @@ def compute_QuadSource_integral(
                 and min_z is not None
                 and max_z - min_z > DEFAULT_QUADRATURE_TOLERANCE
             ):
+                now = time.time()
+                print(
+                    f"|  --  (source store_id={source.store_id}, k store_id={k.store_id}) running time={format_time(now - start_time)}, starting WKB quadrature part"
+                )
                 payload = WKB_quad_integral(
                     model,
                     k.k,
@@ -201,6 +220,10 @@ def compute_QuadSource_integral(
                 and min_z is not None
                 and max_z - min_z > DEFAULT_QUADRATURE_TOLERANCE
             ):
+                now = time.time()
+                print(
+                    f"|  --  (source store_id={source.store_id}, k store_id={k.store_id}) running time={format_time(now - start_time)}, starting WKB Levin part"
+                )
                 payload = WKB_Levin_integral(
                     model,
                     k.k,
@@ -229,6 +252,11 @@ def compute_QuadSource_integral(
                     WKB_quad_data=WKB_quad_data,
                     WKB_Levin_data=WKB_Levin_data,
                 )
+            )
+
+            end_this_z = time.time()
+            print(
+                f"|  --  (source store_id={source.store_id}, k store_id={k.store_id}) calculation for z_response={z_response.z:.5g} complete in time {format_time(end_this_z - start_this_z)}"
             )
 
     return {"values": values, "compute_time": timer.elapsed, "metadata": {}}

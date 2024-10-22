@@ -266,7 +266,8 @@ class sqla_TkNumericalIntegration_factory(SQLAFactoryBase):
         store_id = row_data.serial
         store_label = row_data.label
 
-        if payload is None or not payload.get("_do_not_populate", False):
+        do_not_populate = payload.get("_do_not_populate", False)
+        if not do_not_populate:
             # read out sample values associated with this integration
             value_table = tables["TkNumericalValue"]
 

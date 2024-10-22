@@ -305,7 +305,8 @@ class sqla_GkWKBIntegration_factory(SQLAFactoryBase):
         G_init = row_data.G_init
         Gprime_init = row_data.Gprime_init
 
-        if payload is None or not payload.get("_do_not_populate", False):
+        do_not_populate = payload.get("_do_not_populate", False)
+        if not do_not_populate:
             # read out sample values associated with this integration
             value_table = tables["GkWKBValue"]
 
