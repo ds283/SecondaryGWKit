@@ -629,11 +629,13 @@ class GkSource(DatastoreObject):
                 step_width = (crossover_trial_max_z - crossover_trial_min_z) / 10.0
 
                 iterations = 0
-                trial_z = crossover_trial_max_z
+                # start near the lower end, so that we include as many numerical results as possible.
+                # We probably trust the direct numerical results more than the WKB approximation.
+                trial_z = crossover_trial_min_z
                 while (
-                    iterations < 10
+                    iterations < 11
                     and self._crossover_z is None
-                    and trial_z >= crossover_trial_min_z
+                    and trial_z <= crossover_trial_max_z
                 ):
                     WKB_data = self._build_WKB_values(
                         max_z=trial_z, min_z=self._z_sample.min
@@ -662,7 +664,7 @@ class GkSource(DatastoreObject):
                         break
 
                     iterations = iterations + 1
-                    trial_z = trial_z - step_width
+                    trial_z = trial_z + step_width
 
                 if self._crossover_z is None:
                     # should get enough points for a good spline if we set the crossover scale to _primary_WKB_largest_z, since
@@ -920,7 +922,7 @@ class GkSource(DatastoreObject):
             theta_deriv=WKB_theta_deriv,
             type=self._type,
             quality=self._quality,
-            crossover=self._crossover_z,
+            crossover_z=self._crossover_z,
         )
 
     def _build_WKB_values(self, max_z, min_z):
