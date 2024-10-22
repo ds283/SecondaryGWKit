@@ -79,7 +79,7 @@ class sqla_OneLoopIntegral_factory(SQLAFactoryBase):
             "version": True,
             "stepping": False,
             "timestamp": True,
-            "validate_on_startup": True,
+            "validate_on_startup": False,
             "columns": [
                 sqla.Column("label", sqla.String(DEFAULT_STRING_LENGTH)),
                 sqla.Column(
