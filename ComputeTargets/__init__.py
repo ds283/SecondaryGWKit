@@ -25,7 +25,6 @@ from .QuadSource import (
 )
 from .QuadSourceIntegral import (
     QuadSourceIntegral,
-    QuadSourceIntegralValue,
 )
 from .TkNumericalIntegration import (
     TkNumericalIntegration,

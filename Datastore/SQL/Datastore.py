@@ -44,7 +44,6 @@ from Datastore.SQL.ObjectFactories.QuadSource import (
 from Datastore.SQL.ObjectFactories.QuadSourceIntegral import (
     sqla_QuadSourceIntegralTagAssociation_factory,
     sqla_QuadSourceIntegral_factory,
-    sqla_QuadSourceIntegralValue_factory,
 )
 from Datastore.SQL.ObjectFactories.TkNumericalIntegration import (
     sqla_TkNumericalIntegration_factory,
@@ -102,7 +101,6 @@ _factories = {
     "GkSourceValue": sqla_GkSourceValue_factory,
     "QuadSourceIntegral": sqla_QuadSourceIntegral_factory,
     "QuadSourceIntegral_tags": sqla_QuadSourceIntegralTagAssociation_factory,
-    "QuadSourceIntegralValue": sqla_QuadSourceIntegralValue_factory,
     "OneLoopIntegral": sqla_OneLoopIntegral_factory,
     "OneLoopIntegral_tags": sqla_OneLoopIntegralTagAssociation_factory,
     "OneLoopIntegralValue": sqla_OneLoopIntegralValue_factory,
@@ -121,7 +119,6 @@ _drop_actions = {
     "quad-source-integral": [
         "QuadSourceIntegral",
         "QuadSourceIntegral_tags",
-        "QuadSourceIntegralValue",
     ],
     "1loop-integral": [
         "OneLoopIntegral",

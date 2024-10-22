@@ -18,33 +18,47 @@ class ZSplineWrapper:
         self._min_z = min_z
         self._max_z = max_z
 
+        self._min_log_z = log(1.0 + min_z)
+        self._max_log_z = log(1.0 + max_z)
+
         self._log_z = log_z
         self._deriv = deriv
 
     def __call__(self, z: float, z_is_log: bool = False) -> float:
-        if z > self._max_z:
+        if z_is_log:
+            log_z = z
+            raw_z = exp(z) - 1.0
+        else:
+            log_z = log(1.0 + z)
+            raw_z = z
+
+        # if some way out of bounds, reject
+        if log_z > 1.01 * self._max_log_z:
             raise RuntimeError(
-                f"GkSource.function: evaluated {self._label} out of bounds @ z={z:.5g} (max allowed z={self._max_z:.5g}, recommended limit is z <= {0.95 * self._max_z:.5g})"
+                f"GkSource.function: evaluated {self._label} out of bounds @ z={raw_z:.5g} (max allowed z={self._max_z:.5g}, recommended limit is z <= {0.95 * self._max_z:.5g})"
             )
 
-        if z < self._min_z:
+        # otherwise, softly cushion the spline at the top end
+        if log_z > self._max_log_z:
+            log_z = self._max_log_z
+
+        # same at lower limit
+        if log_z < 0.99 * self._min_log_z:
             raise RuntimeError(
-                f"GkSource.function: evaluated {self._label} out of bounds @ z={z:.5g} (min allowed z={self._min_z:.5g}, recommended limit is z >= {1.05 * self._min_z:.5g})"
+                f"GkSource.function: evaluated {self._label} out of bounds @ z={raw_z:.5g} (min allowed z={self._min_z:.5g}, recommended limit is z >= {1.05 * self._min_z:.5g})"
             )
+
+        if log_z < self._min_log_z:
+            log_z = self._min_log_z
 
         if self._log_z:
-            if not z_is_log:
-                z = log(1.0 + z)
+            if self._deriv:
+                # the spline will compute d/d(log (1+z)), so to get the raw derivative we need to divide by 1+z, which here is exp(z) (since we redefined z = log(1+z))
+                return self._spline(log_z) / (1.0 + raw_z)
 
-        else:
-            if z_is_log:
-                z = exp(z)
+            return self._spline(log_z)
 
-        if self._deriv and self._log_z:
-            # the spline will compute d/d(log (1+z)), so to get the raw derivative we need to divide by 1+z, which here is exp(z) (since we redefined z = log(1+z))
-            return self._spline(z) / exp(z)
-
-        return self._spline(z)
+        return self._spline(raw_z)
 
 
 class GkWKBSplineWrapper:
@@ -66,23 +80,35 @@ class GkWKBSplineWrapper:
         self._min_z = min_z
         self._max_z = max_z
 
+        self._min_log_z = log(1.0 + min_z)
+        self._max_log_z = log(1.0 + max_z)
+
     def __call__(self, z: float, z_is_log: bool = False) -> float:
-        if z > self._max_z:
-            raise RuntimeError(
-                f"GkSource.function: evaluated {self._label} out of bounds @ z={z:.5g} (max allowed z={self._max_z:.5g}, recommended limit is z <= {0.95 * self._max_z:.5g})"
-            )
-
-        if z < self._min_z:
-            raise RuntimeError(
-                f"GkSource.function: evaluated {self._label} out of bounds @ z={z:.5g} (min allowed z={self._min_z:.5g}, recommended limit is z >= {1.05 * self._min_z:.5g})"
-            )
-
         if z_is_log:
             log_z = z
-            raw_z = exp(1.0 + z)
+            raw_z = exp(z) - 1.0
         else:
             log_z = log(1.0 + z)
             raw_z = z
+
+        # if some way out of bounds, reject
+        if log_z > 1.01 * self._max_log_z:
+            raise RuntimeError(
+                f"GkSource.function: evaluated {self._label} out of bounds @ z={raw_z:.5g} (max allowed z={self._max_z:.5g}, recommended limit is z <= {0.95 * self._max_z:.5g})"
+            )
+
+        # otherwise, softly cushion the spline at the top end
+        if log_z > self._max_log_z:
+            log_z = self._max_log_z
+
+        # same at lower limit
+        if log_z < 0.99 * self._min_log_z:
+            raise RuntimeError(
+                f"GkSource.function: evaluated {self._label} out of bounds @ z={raw_z:.5g} (min allowed z={self._min_z:.5g}, recommended limit is z >= {1.05 * self._min_z:.5g})"
+            )
+
+        if log_z < self._min_log_z:
+            log_z = self._min_log_z
 
         try:
             if self._sin_amplitude_spline is not None:

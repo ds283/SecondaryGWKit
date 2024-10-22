@@ -13,7 +13,7 @@ DEFAULT_PROCESS_BATCH_SIZE = 1
 DEFAULT_MAX_TASK_QUEUE = 200
 DEFAULT_NOTIFY_BATCH_SIZE = 500
 DEFAULT_NOTIFY_TIME_INTERVAL = 5 * 60
-DEFAULT_NOTIFY_MIN_INTERVAL = 30
+DEFAULT_NOTIFY_MIN_INTERVAL = 60
 
 
 def _default_compute_handler(obj, **kwargs) -> ObjectRef:
@@ -179,7 +179,7 @@ class RayWorkPool:
 
                         else:
                             raise RuntimeError(
-                                f'could not interpret output from task builder (object type="{ref_data.__name__}", contents={str(ref_data)})'
+                                f'could not interpret output from task builder (object type="{type(ref_data).__name__}", contents={str(ref_data)})'
                             )
 
                     if (
@@ -208,9 +208,9 @@ class RayWorkPool:
 
             for ref in done_refs:
                 ref: ObjectRef
-                type, payload = self._data[ref.hex]
+                item_type, payload = self._data[ref.hex]
 
-                if type == "lookup":
+                if item_type == "lookup":
                     # payload is an index into the result set
                     # we use this to store the constructed object in the right place.
                     # Later, it will be mutated in-place by the compute/store tasks
@@ -291,7 +291,7 @@ class RayWorkPool:
 
                     self._compute_data.pop(ref.hex, None)
 
-                elif type == "available":
+                elif item_type == "available":
                     # payload is a pair of the target index and the constructed object
                     idx, obj = payload
 
@@ -308,7 +308,7 @@ class RayWorkPool:
                         if replacement_obj is not None and self._store_results:
                             self.results[idx] = replacement_obj
 
-                elif type == "compute":
+                elif item_type == "compute":
                     # payload contains an index into the result set and (our local copy of) the object that has finished computation;
                     # we want it to store the result of the computation internally, and then submit a store request to the Datastore service.
                     # the results will then be serialized into the database
@@ -331,7 +331,7 @@ class RayWorkPool:
 
                     self._num_store_queue += 1
 
-                elif type == "store":
+                elif item_type == "store":
                     # payload contains an index into the result set and (again, our local copy of) the object that has been freshly
                     # serialized into the datastore. We should not expect it to have its store_id available.
                     # The result of the store operation is a mutated object that has this field (and corresponding
@@ -376,7 +376,7 @@ class RayWorkPool:
                         if replacement_obj is not None and self._store_results:
                             self.results[idx] = replacement_obj
 
-                elif type == "validate":
+                elif item_type == "validate":
                     # payload contains an index into the result set and (still, our local copy of)
                     # the object that has been freshly validated
                     idx, obj = payload
@@ -384,7 +384,7 @@ class RayWorkPool:
                     result = ray.get(ref)
                     if result is not True:
                         print(
-                            f"!! WARNING: {type(obj)} object with store_id={obj.store_id} did not validate after being emplaced in the datastore"
+                            f"!! WARNING: {type(obj).__name__} object with store_id={obj.store_id} did not validate after being emplaced in the datastore"
                         )
 
                     self._inflight.pop(ref.hex, None)
@@ -401,7 +401,7 @@ class RayWorkPool:
                             self.results[idx] = replacement_obj
 
                 else:
-                    raise RuntimeError(f'Unexpected work queue item type "{type}"')
+                    raise RuntimeError(f'Unexpected work queue item type "{item_type}"')
 
                 self._batch += 1
 

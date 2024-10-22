@@ -15,10 +15,13 @@ from ComputeTargets.integration_supervisor import (
     DEFAULT_UPDATE_INTERVAL,
     RHS_timer,
 )
-from CosmologyConcepts import wavenumber, redshift_array, wavenumber_exit_time, redshift
+from CosmologyConcepts import wavenumber, wavenumber_exit_time, redshift
 from Datastore import DatastoreObject
 from MetadataConcepts import store_tag, tolerance
-from defaults import DEFAULT_QUADRATURE_TOLERANCE, DEFAULT_ABS_TOLERANCE
+from defaults import (
+    DEFAULT_QUADRATURE_TOLERANCE,
+    DEFAULT_FLOAT_PRECISION,
+)
 from utilities import WallclockTimer, format_time
 
 
@@ -93,173 +96,158 @@ def compute_QuadSource_integral(
     q: wavenumber_exit_time,
     r: wavenumber_exit_time,
     source: QuadSource,
-    Gks: List[GkSource],
-    z_response_sample: redshift_array,
+    Gk: GkSource,
+    z_response: redshift,
+    z_source_max: redshift,
     tol: float = DEFAULT_QUADRATURE_TOLERANCE,
 ) -> dict:
-    values = []
-
-    if len(z_response_sample) != len(Gks):
-        raise RuntimeError(
-            "compute_QuadSource_integral: Gks and z_response_sample must have the same length"
-        )
+    # we are entitled to assume that Gk and source are evaluated at the same z_response
+    # also that source and Gk have z_samples at least as far back as z_source_max
 
     print(
-        f"** QUADRATIC SOURCE INTERVAL: k={k.k.k_inv_Mpc:.3g}/Mpc, q={q.k.k_inv_Mpc:.3g}/Mpc, r={r.k.k_inv_Mpc:.3g}/Mpc (source store_id={source.store_id}, k store_id={k.store_id}) starting"
+        f"** QUADRATIC SOURCE INTEGRAL: k={k.k.k_inv_Mpc:.3g}/Mpc, q={q.k.k_inv_Mpc:.3g}/Mpc, r={r.k.k_inv_Mpc:.3g}/Mpc (source store_id={source.store_id}, k store_id={k.store_id}) starting calculation for z_response={z_response.z:.5g}"
     )
     start_time = time.time()
 
     with WallclockTimer() as timer:
-        # work through the z_response_sample array, building the source redshift integral as we go
-        for z_response, Gk in zip(z_response_sample, Gks):
-            z_response: redshift
-            Gk: GkSource
+        numeric_quad: float = 0.0
+        WKB_quad: float = 0.0
+        WKB_Levin: float = 0.0
 
+        numeric_quad_data = None
+        WKB_quad_data = None
+        WKB_Levin_data = None
+
+        if Gk.type == "numeric":
+            regions = [
+                (z_source_max, z_response),
+                (None, None),
+                (None, None),
+            ]
+
+        elif Gk.type == "WKB":
+            Levin_z: Optional[float] = Gk.Levin_z
+
+            regions = [
+                (None, None),
+                (z_source_max, Levin_z if Levin_z is not None else z_response),
+                (Levin_z, z_response),
+            ]
+
+        elif Gk.type == "mixed":
+            crossover_z: Optional[float] = Gk.crossover_z
+            Levin_z: Optional[float] = Gk.Levin_z
+
+            if Levin_z > crossover_z:
+                Levin_z = crossover_z
+
+            regions = [
+                (z_source_max, crossover_z),
+                (
+                    crossover_z if crossover_z is not None else z_source_max,
+                    Levin_z if Levin_z is not None else z_response,
+                ),
+                (Levin_z, z_response),
+            ]
+
+        else:
+            raise NotImplementedError(f"Gk {Gk.type} not implemented")
+
+        max_z, min_z = regions.pop(0)
+        if (
+            max_z is not None
+            and min_z is not None
+            and max_z.z - min_z.z > DEFAULT_QUADRATURE_TOLERANCE
+        ):
             now = time.time()
-            start_this_z = now
             print(
-                f"|  --  (source store_id={source.store_id}, k store_id={k.store_id}) running time={format_time(now-start_time)}, starting calcluation for z_response={z_response.z:.5g}"
+                f"|  --  (source store_id={source.store_id}, k store_id={k.store_id}) running time={format_time(now - start_time)}, starting numerical quadrature part"
             )
-
-            numeric_quad: float = 0.0
-            WKB_quad: float = 0.0
-            WKB_Levin: float = 0.0
-
-            numeric_quad_data = None
-            WKB_quad_data = None
-            WKB_Levin_data = None
-
-            if Gk.type == "numeric":
-                regions = [
-                    (Gk.z_sample.max, z_response),
-                    (None, None),
-                    (None, None),
-                ]
-
-            elif Gk.type == "WKB":
-                Levin_z: Optional[float] = Gk.Levin_z
-
-                regions = [
-                    (None, None),
-                    (Gk.z_sample.max, Levin_z if Levin_z is not None else z_response),
-                    (Levin_z, z_response),
-                ]
-
-            elif Gk.type == "mixed":
-                crossover_z: Optional[float] = Gk.crossover_z
-                Levin_z: Optional[float] = Gk.Levin_z
-
-                if Levin_z > crossover_z:
-                    Levin_z = crossover_z
-
-                regions = [
-                    (Gk.z_sample.max, crossover_z),
-                    (
-                        crossover_z if crossover_z is not None else Gk.z_sample.max,
-                        Levin_z if Levin_z is not None else z_response,
-                    ),
-                    (Levin_z, z_response),
-                ]
-
-            else:
-                raise NotImplementedError(f"Gk {Gk.type} not implemented")
-
-            max_z, min_z = regions.pop(0)
-            if (
-                max_z is not None
-                and min_z is not None
-                and max_z - min_z > DEFAULT_QUADRATURE_TOLERANCE
-            ):
-                now = time.time()
-                print(
-                    f"|  --  (source store_id={source.store_id}, k store_id={k.store_id}) running time={format_time(now - start_time)}, starting numerical quadrature part"
-                )
-                payload = numeric_quad_integral(
-                    model,
-                    k.k,
-                    q.k,
-                    r.k,
-                    source,
-                    Gk,
-                    z_response,
-                    max_z=max_z,
-                    min_z=min_z,
-                    tol=tol,
-                )
-                numeric_quad = payload["value"]
-                numeric_quad_data = payload["data"]
-
-            max_z, min_z = regions.pop(0)
-            if (
-                max_z is not None
-                and min_z is not None
-                and max_z - min_z > DEFAULT_QUADRATURE_TOLERANCE
-            ):
-                now = time.time()
-                print(
-                    f"|  --  (source store_id={source.store_id}, k store_id={k.store_id}) running time={format_time(now - start_time)}, starting WKB quadrature part"
-                )
-                payload = WKB_quad_integral(
-                    model,
-                    k.k,
-                    q.k,
-                    r.k,
-                    source,
-                    Gk,
-                    z_response,
-                    max_z=max_z,
-                    min_z=min_z,
-                    tol=tol,
-                )
-                WKB_quad = payload["value"]
-                WKB_quad_data = payload["data"]
-
-            max_z, min_z = regions.pop(0)
-            if (
-                max_z is not None
-                and min_z is not None
-                and max_z - min_z > DEFAULT_QUADRATURE_TOLERANCE
-            ):
-                now = time.time()
-                print(
-                    f"|  --  (source store_id={source.store_id}, k store_id={k.store_id}) running time={format_time(now - start_time)}, starting WKB Levin part"
-                )
-                payload = WKB_Levin_integral(
-                    model,
-                    k.k,
-                    q.k,
-                    r.k,
-                    source,
-                    Gk,
-                    z_response,
-                    max_z=max_z,
-                    min_z=min_z,
-                    tol=tol,
-                )
-                WKB_Levin = payload["value"]
-                WKB_Levin_data = payload["data"]
-
-            values.append(
-                QuadSourceIntegralValue(
-                    None,
-                    z_response=z_response,
-                    total=numeric_quad + WKB_quad + WKB_Levin,
-                    numeric_quad_part=numeric_quad,
-                    WKB_quad_part=WKB_quad,
-                    WKB_Levin_part=WKB_Levin,
-                    Gk_serial=Gk.store_id,
-                    numeric_quad_data=numeric_quad_data,
-                    WKB_quad_data=WKB_quad_data,
-                    WKB_Levin_data=WKB_Levin_data,
-                )
+            payload = numeric_quad_integral(
+                model,
+                k.k,
+                q.k,
+                r.k,
+                source,
+                Gk,
+                z_response,
+                max_z=max_z.z,
+                min_z=min_z.z,
+                tol=tol,
             )
+            numeric_quad = payload["value"]
+            numeric_quad_data = payload["data"]
 
-            end_this_z = time.time()
+        max_z, min_z = regions.pop(0)
+        if (
+            max_z is not None
+            and min_z is not None
+            and max_z.z - min_z.z > DEFAULT_QUADRATURE_TOLERANCE
+        ):
+            now = time.time()
             print(
-                f"|  --  (source store_id={source.store_id}, k store_id={k.store_id}) calculation for z_response={z_response.z:.5g} complete in time {format_time(end_this_z - start_this_z)}"
+                f"|  --  (source store_id={source.store_id}, k store_id={k.store_id}) running time={format_time(now - start_time)}, starting WKB quadrature part"
             )
+            payload = WKB_quad_integral(
+                model,
+                k.k,
+                q.k,
+                r.k,
+                source,
+                Gk,
+                z_response,
+                max_z=max_z.z,
+                min_z=min_z.z,
+                tol=tol,
+            )
+            WKB_quad = payload["value"]
+            WKB_quad_data = payload["data"]
 
-    return {"values": values, "compute_time": timer.elapsed, "metadata": {}}
+        max_z, min_z = regions.pop(0)
+        if (
+            max_z is not None
+            and min_z is not None
+            and max_z.z - min_z.z > DEFAULT_QUADRATURE_TOLERANCE
+        ):
+            now = time.time()
+            print(
+                f"|  --  (source store_id={source.store_id}, k store_id={k.store_id}) running time={format_time(now - start_time)}, starting WKB Levin part"
+            )
+            payload = WKB_Levin_integral(
+                model,
+                k.k,
+                q.k,
+                r.k,
+                source,
+                Gk,
+                z_response,
+                max_z=max_z.z,
+                min_z=min_z.z,
+                tol=tol,
+            )
+            WKB_Levin = payload["value"]
+            WKB_Levin_data = payload["data"]
+
+    return {
+        "total": numeric_quad + WKB_quad + WKB_Levin,
+        "numeric_quad": numeric_quad,
+        "WKB_quad": WKB_quad,
+        "WKB_Levin": WKB_Levin,
+        "Gk_serial": Gk.store_id,
+        "source_serial": source.store_id,
+        "numeric_quad_data": numeric_quad_data,
+        "WKB_quad_data": WKB_quad_data,
+        "WKB_Levin_data": WKB_Levin_data,
+        "compute_time": timer.elapsed,
+        "metadata": {},
+    }
+
+
+def _extract_z(z: redshift) -> str:
+    if z is None:
+        return "(not set)"
+
+    return f"{z.z:.5g}"
 
 
 def numeric_quad_integral(
@@ -278,6 +266,31 @@ def numeric_quad_integral(
     Gk_f = Gk.functions
     model_f = model.functions
 
+    if Gk.type not in ["numeric", "mixed"]:
+        raise RuntimeError(
+            f'compute_QuadSource_integral: attempting to evaluate numerical quadrature, but Gk object is not of "numeric" or "mixed" type [domain={max_z:.5g}, {min_z:.5g}]'
+        )
+
+    if Gk_f.numerical_Gk is None:
+        raise RuntimeError(
+            f"compute_QuadSource_integral: attempting to evaluate numerical quadrature, but Gk_f.numerical_Gk is absent (type={Gk.type}, quality={Gk.quality}, lowest numeric z={_extract_z(Gk._numerical_smallest_z)}, primary WKB largest z={_extract_z(Gk._primary_WKB_largest_z)}) [domain={max_z:.5g}, {min_z:.5g}]"
+        )
+
+    if Gk_f.numerical_region is None:
+        raise RuntimeError(
+            f"compute_QuadSource_integral: attempting to evaluate numerical quadrature, but Gk_f.numerical_region is absent (type={Gk.type}, quality={Gk.quality}, lowest numeric z={_extract_z(Gk._numerical_smallest_z)}, primary WKB largest z={_extract_z(Gk._primary_WKB_largest_z)}) [domain={max_z:.5g}, {min_z:.5g}]"
+        )
+
+    region_max_z, region_min_z = Gk_f.numerical_region
+    if max_z > region_max_z + DEFAULT_FLOAT_PRECISION:
+        raise RuntimeError(
+            f"compute_QuadSource_integral: attempting to evaluate numerical quadrature, but max_z={max_z:.5g} is out-of-bounds for the region ({region_max_z:.5g}, {region_min_z}:.5g) where a numerical solution is available [domain={max_z:.5g}, {min_z:.5g}]"
+        )
+    if min_z < region_min_z - DEFAULT_FLOAT_PRECISION:
+        raise RuntimeError(
+            f"compute_QuadSource_integral: attempting to evaluate numerical quadrature, but min_z={min_z:.5g} is out-of-bounds for the region ({region_max_z:.5g}, {region_min_z}:.5g) where a numerical solution is available [domain={max_z:.5g}, {min_z:.5g}]"
+        )
+
     def RHS(log_z_source, state, supervisor) -> List[float]:
         with RHS_timer(supervisor) as timer:
             current_value = state[0]
@@ -294,6 +307,9 @@ def numeric_quad_integral(
 
         return [Green * f / H_sq]
 
+    log_min_z = log(1.0 + min_z)
+    log_max_z = log(1.0 + max_z)
+
     with QuadSourceSupervisor(
         k, q, r, "numeric quad", z_response, max_z, min_z
     ) as supervisor:
@@ -302,7 +318,8 @@ def numeric_quad_integral(
         sol = solve_ivp(
             RHS,
             method="RK45",
-            t_span=(log(1.0 + min_z), log(1.0 + max_z)),
+            t_span=(log_min_z, log_max_z),
+            t_eval=[log_max_z],
             y0=state,
             atol=tol,
             rtol=tol,
@@ -311,12 +328,12 @@ def numeric_quad_integral(
 
     if not sol.success:
         raise RuntimeError(
-            f'compute_QuadSource_integral: quadrature did not terminate successfully | error at z={sol.t[-1]}, "{sol.message}"'
+            f'compute_QuadSource_integral: quadrature did not terminate successfully | error at z={sol.t[0]}, "{sol.message}"'
         )
 
-    if fabs(sol.t[-1] - min_z) > DEFAULT_ABS_TOLERANCE:
+    if fabs((sol.t[0] - log_min_z) / log_min_z) > 1e-1:
         raise RuntimeError(
-            f"compute_QuadSource_integral: quadrature did not terminate at expected redshift z={min_z:.5g} (final z={sol.t[-1]:.3g})"
+            f"compute_QuadSource_integral: quadrature did not terminate at expected redshift log(1+z)={log_min_z:.5g} (final log(1+z)={sol.t[0]:.3g})"
         )
 
     if len(sol.y) != 1:
@@ -326,14 +343,14 @@ def numeric_quad_integral(
 
     return {
         "data": IntegrationData(
-            compute_time=supervisor.compute_time,
+            compute_time=supervisor.integration_time,
             compute_steps=int(sol.nfev),
             RHS_evaluations=supervisor.RHS_evaluations,
             mean_RHS_time=supervisor.mean_RHS_time,
             max_RHS_time=supervisor.max_RHS_time,
             min_RHS_time=supervisor.min_RHS_time,
         ),
-        "value": (1.0 + z_response.z) * sol.y[0][-1],
+        "value": (1.0 + z_response.z) * sol.y[0][0],
     }
 
 
@@ -353,6 +370,31 @@ def WKB_quad_integral(
     Gk_f = Gk.functions
     model_f = model.functions
 
+    if Gk.type not in ["WKB", "mixed"]:
+        raise RuntimeError(
+            f'compute_QuadSource_integral: attempting to evaluate WKB quadrature, but Gk object is not of "WKB" or "mixed" type [domain={max_z:.5g}, {min_z:.5g}]'
+        )
+
+    if Gk_f.WKB_Gk is None:
+        raise RuntimeError(
+            f"compute_QuadSource_integral: attempting to evaluate WKB quadrature, but Gk_f.WKB_Gk is absent (type={Gk.type}, quality={Gk.quality}, lowest numeric z={_extract_z(Gk._numerical_smallest_z)}, primary WKB largest z={_extract_z(Gk._primary_WKB_largest_z)}) [domain={max_z:.5g}, {min_z:.5g}]"
+        )
+
+    if Gk_f.WKB_region is None:
+        raise RuntimeError(
+            f"compute_QuadSource_integral: attempting to evaluate WKB quadrature, but Gk_f.WKB_region is absent (type={Gk.type}, quality={Gk.quality}, lowest numeric z={_extract_z(Gk._numerical_smallest_z)}, primary WKB largest z={_extract_z(Gk._primary_WKB_largest_z)}) [domain={max_z:.5g}, {min_z:.5g}]"
+        )
+
+    region_max_z, region_min_z = Gk_f.WKB_region
+    if max_z > region_max_z + DEFAULT_FLOAT_PRECISION:
+        raise RuntimeError(
+            f"compute_QuadSource_integral: attempting to evaluate WKB quadrature, but max_z={max_z:.5g} is out-of-bounds for the region ({region_max_z:.5g}, {region_min_z}:.5g) where a WKB solution is available [domain={max_z:.5g}, {min_z:.5g}]"
+        )
+    if min_z < region_min_z - DEFAULT_FLOAT_PRECISION:
+        raise RuntimeError(
+            f"compute_QuadSource_integral: attempting to evaluate WKB quadrature, but min_z={min_z:.5g} is out-of-bounds for the region ({region_max_z:.5g}, {region_min_z}:.5g) where a WKB solution is available [domain={max_z:.5g}, {min_z:.5g}]"
+        )
+
     def RHS(log_z_source, state, supervisor) -> List[float]:
         with RHS_timer(supervisor) as timer:
             current_value = state[0]
@@ -369,6 +411,9 @@ def WKB_quad_integral(
 
         return [Green * f / H_sq]
 
+    log_min_z = log(1.0 + min_z)
+    log_max_z = log(1.0 + max_z)
+
     with QuadSourceSupervisor(
         k, q, r, "WKB quad", z_response, max_z, min_z
     ) as supervisor:
@@ -377,7 +422,8 @@ def WKB_quad_integral(
         sol = solve_ivp(
             RHS,
             method="RK45",
-            t_span=(log(1.0 + min_z), log(1.0 + max_z)),
+            t_span=(log_min_z, log_max_z),
+            t_eval=[log_min_z],
             y0=state,
             atol=tol,
             rtol=tol,
@@ -386,12 +432,12 @@ def WKB_quad_integral(
 
     if not sol.success:
         raise RuntimeError(
-            f'compute_QuadSource_integral: quadrature did not terminate successfully | error at z={sol.t[-1]}, "{sol.message}"'
+            f'compute_QuadSource_integral: quadrature did not terminate successfully | error at log(1+z)={sol.t[0]}, "{sol.message}"'
         )
 
-    if fabs(sol.t[-1] - min_z) > DEFAULT_ABS_TOLERANCE:
+    if fabs((sol.t[0] - log_min_z) / log_min_z) > 1e-1:
         raise RuntimeError(
-            f"compute_QuadSource_integral: quadrature did not terminate at expected redshift z={min_z:.5g} (final z={sol.t[-1]:.3g})"
+            f"compute_QuadSource_integral: quadrature did not terminate at expected redshift log(1+z)={log_min_z:.5g} (final log(1+z)={sol.t[0]:.3g})"
         )
 
     if len(sol.y) != 1:
@@ -401,14 +447,14 @@ def WKB_quad_integral(
 
     return {
         "data": IntegrationData(
-            compute_time=supervisor.compute_time,
+            compute_time=supervisor.integration_time,
             compute_steps=int(sol.nfev),
             RHS_evaluations=supervisor.RHS_evaluations,
             mean_RHS_time=supervisor.mean_RHS_time,
             max_RHS_time=supervisor.max_RHS_time,
             min_RHS_time=supervisor.min_RHS_time,
         ),
-        "value": (1.0 + z_response.z) * sol.y[0][-1],
+        "value": (1.0 + z_response.z) * sol.y[0][0],
     }
 
 
@@ -428,7 +474,35 @@ def WKB_Levin_integral(
     Gk_f = Gk.functions
     model_f = model.functions
 
-    x_span = (log(1.0 + min_z), log(1.0 + max_z))
+    if Gk.type not in ["WKB", "mixed"]:
+        raise RuntimeError(
+            f'compute_QuadSource_integral: attempting to evaluate WKB Levin quadrature, but Gk object is not of "WKB" or "mixed" type [domain={max_z:.5g}, {min_z:.5g}]'
+        )
+
+    if Gk_f.theta is None:
+        raise RuntimeError(
+            f"compute_QuadSource_integral: attempting to evaluate WKB Levin quadrature, but Gk_f.theta is absent (type={Gk.type}, quality={Gk.quality}, lowest numeric z={_extract_z(Gk._numerical_smallest_z)}, primary WKB largest z={_extract_z(Gk._primary_WKB_largest_z)}) [domain={max_z:.5g}, {min_z:.5g}]"
+        )
+
+    if Gk_f.WKB_region is None:
+        raise RuntimeError(
+            f"compute_QuadSource_integral: attempting to evaluate WKB Levin quadrature, but Gk_f.WKB_region is absent (type={Gk.type}, quality={Gk.quality}, lowest numeric z={_extract_z(Gk._numerical_smallest_z)}, primary WKB largest z={_extract_z(Gk._primary_WKB_largest_z)}) [domain={max_z:.5g}, {min_z:.5g}]"
+        )
+
+    region_max_z, region_min_z = Gk_f.WKB_region
+    if max_z > region_max_z + DEFAULT_FLOAT_PRECISION:
+        raise RuntimeError(
+            f"compute_QuadSource_integral: attempting to evaluate WKB Levin quadrature, but max_z={max_z:.5g} is out-of-bounds for the region ({region_max_z:.5g}, {region_min_z}:.5g) where a WKB solution is available [domain={max_z:.5g}, {min_z:.5g}]"
+        )
+    if min_z < region_min_z - DEFAULT_FLOAT_PRECISION:
+        raise RuntimeError(
+            f"compute_QuadSource_integral: attempting to evaluate WKB Levin quadrature, but min_z={min_z:.5g} is out-of-bounds for the region ({region_max_z:.5g}, {region_min_z}:.5g) where a WKB solution is available [domain={max_z:.5g}, {min_z:.5g}]"
+        )
+
+    log_min_z = log(1.0 + min_z)
+    log_max_z = log(1.0 + max_z)
+
+    x_span = (log_min_z, log_max_z)
 
     # sinc integral is sin(x)/x, so sin weight is 1/x and cos weight is 0
     def Levin_f(log_z_source: float) -> float:
@@ -465,7 +539,8 @@ class QuadSourceIntegral(DatastoreObject):
         self,
         payload,
         model,
-        z_response_sample: redshift_array,
+        z_response: redshift,
+        z_source_max: redshift,
         k: wavenumber_exit_time,
         q: wavenumber_exit_time,
         r: wavenumber_exit_time,
@@ -479,26 +554,48 @@ class QuadSourceIntegral(DatastoreObject):
         self._q_exit = q
         self._r_exit = r
 
-        self._z_response_sample = z_response_sample
+        self._z_response = z_response
+        self._z_source_max = z_source_max
+
         if payload is None:
             DatastoreObject.__init__(self, None)
 
-            self._compute_time = None
-            self._source_serial = None
-            self._metadata = None
+            self._total = None
+            self._numeric_quad = None
+            self._WKB_quad = None
+            self._WKB_Levin = None
 
-            self._values = None
+            self._numeric_quad_data = None
+            self._WKB_quad_data = None
+            self._WKB_Levin_data = None
+
+            self._compute_time = None
+            self._Gk_serial = None
+            self._source_serial = None
+
+            self._metadata = {}
 
         else:
             DatastoreObject.__init__(self, payload["store_id"])
 
-            self._compute_time = payload["integration_data"]
+            self._total = payload["total"]
+            self._numeric_quad = payload["numeric_quad"]
+            self._WKB_quad = payload["WKB_quad"]
+            self._WKB_Levin = payload["WKB_Levin"]
+
+            self._Gk_serial = payload["Gk_serial"]
+
+            self._numeric_quad_data = payload["numeric_quad_data"]
+            self._WKB_quad_data = payload["WKB_quad_data"]
+            self._WKB_Levin_data = payload["WKB_Levin_data"]
+
+            self._compute_time = payload["compute_time"]
+            self._Gk_serial = payload["Gk_serial"]
+            self._source_serial = payload["source_serial"]
+
             self._metadata = payload["metadata"]
 
-            self._source_serial = payload["source_serial"]
-            self._values = payload["values"]
-
-        # store parametesr
+        # store parameters
         self._label = label
         self._tags = tags if tags is not None else []
 
@@ -523,18 +620,83 @@ class QuadSourceIntegral(DatastoreObject):
         return self._r_exit.k
 
     @property
+    def z_response(self) -> redshift:
+        return self._z_response
+
+    @property
+    def total(self) -> float:
+        if self._total is None:
+            raise RuntimeError("value has not yet been populated")
+
+        return self._total
+
+    @property
+    def numeric_quad(self) -> float:
+        if self._total is None:
+            raise RuntimeError("value has not yet been populated")
+
+        return self._numeric_quad
+
+    @property
+    def WKB_quad(self) -> float:
+        if self._total is None:
+            raise RuntimeError("value has not yet been populated")
+
+        return self._WKB_quad
+
+    @property
+    def WKB_Levin(self) -> float:
+        if self._total is None:
+            raise RuntimeError("value has not yet been populated")
+
+        return self._WKB_Levin
+
+    @property
+    def Gk_serial(self) -> Optional[int]:
+        if self._total is None:
+            raise RuntimeError("value has not yet been populated")
+
+        return self._Gk_serial
+
+    @property
+    def source_serial(self) -> Optional[int]:
+        if self._total is None:
+            raise RuntimeError("value has not yet been populated")
+
+        return self._source_serial
+
+    @property
+    def numeric_quad_data(self) -> Optional[IntegrationData]:
+        if self._total is None:
+            raise RuntimeError("value has not yet been populated")
+
+        return self._numeric_quad_data
+
+    @property
+    def WKB_quad_data(self) -> Optional[IntegrationData]:
+        if self._total is None:
+            raise RuntimeError("value has not yet been populated")
+
+        return self._WKB_quad_data
+
+    @property
+    def WKB_Levin_data(self) -> Optional[LevinData]:
+        if self._total is None:
+            raise RuntimeError("value has not yet been populated")
+
+        return self._WKB_Levin_data
+
+    @property
     def compute_time(self) -> Optional[float]:
-        if self._values is None:
-            raise RuntimeError("values have not yet been populated")
+        if self._total is None:
+            raise RuntimeError("value has not yet been populated")
 
         return self._compute_time
 
     @property
     def metadata(self) -> dict:
-        # allow this field to be read if we have been deserialized with _do_not_populate
-        # otherwise, absence of _values implies that we have not yet computed our contents
-        if self._values is None and not hasattr(self, "_do_not_populate"):
-            raise RuntimeError("values have not yet been populated")
+        if self._total is None:
+            raise RuntimeError("value has not yet been populated")
 
         return self._metadata
 
@@ -546,30 +708,10 @@ class QuadSourceIntegral(DatastoreObject):
     def tags(self) -> List[store_tag]:
         return self._tags
 
-    @property
-    def z_response_sample(self) -> redshift_array:
-        return self._z_response_sample
-
-    @property
-    def values(self) -> List:
-        if hasattr(self, "_do_not_populate"):
-            raise RuntimeError(
-                "QuadSourceIntegral: values read but _do_not_populate is set"
-            )
-
-        if self._values is None:
-            raise RuntimeError("values has not yet been populated")
-        return self._values
-
     def compute(self, payload, label: Optional[str] = None):
-        if hasattr(self, "_do_not_populate"):
+        if self._total is not None:
             raise RuntimeError(
-                "QuadSourceIntegral: compute() called, but _do_not_populate is set"
-            )
-
-        if self._values is not None:
-            raise RuntimeError(
-                "QuadSourceIntegral: compute() called, but values have already been computed"
+                "QuadSourceIntegral: compute() called, but value has already been computed"
             )
 
         # replace label if specified
@@ -577,25 +719,35 @@ class QuadSourceIntegral(DatastoreObject):
             self._label = label
 
         source: QuadSource = payload["source"]
-        Gks: GkSource = payload["Gk"]
+        Gk: GkSource = payload["Gk"]
 
         # TODO: improve compatibility check between source and Gk
-        count = 0
-        for z_response, Gk in zip(self._z_response_sample, Gks):
-            if Gk.z_response.store_id != z_response.store_id:
-                raise RuntimeError(
-                    f"QuadSourceIntegral: supplied vector of Green's functions does not match z_response sample for z_response={z_response.z:.5g} (element {count} of z_response sample)"
-                )
-            count = count + 1
+        if self._z_response.store_id != Gk.z_response.store_id:
+            raise RuntimeError(
+                f"QuadSourceIntegral: supplied GkSource object does not match specified z_response (z_response={self._z_response.z:.5g}, GkSource object evaluated at z_response={Gk.z_response.z:.5g})"
+            )
+
+        if source.z_sample.max.z < self._z_source_max.z - DEFAULT_FLOAT_PRECISION:
+            raise RuntimeError(
+                f"QuadSourceIntegral: supplied quadratic source term has maximum z_source={source.z_sample.max.z:.5g}, but required value is at least z_source={self._z_source_max.z:.5g}"
+            )
+
+        if Gk.z_sample.max.z < self._z_source_max.z - DEFAULT_FLOAT_PRECISION:
+            raise RuntimeError(
+                f"QuadSourceIntegral: supplied Gk has maximum z_source={Gk.z_sample.max.z:.5g}, but reqiured value is at least z_source={self._z_source_max.z:.5g}"
+            )
 
         self._compute_ref = compute_QuadSource_integral.remote(
             self._model,
+            self._k_exit,
+            self._q_exit,
+            self._r_exit,
             source,
-            Gks,
-            self._z_response_sample,
+            Gk,
+            self._z_response,
+            self._z_source_max,
         )
 
-        self._source_serial = source.store_id
         return self._compute_ref
 
     def store(self) -> Optional[bool]:
@@ -613,60 +765,17 @@ class QuadSourceIntegral(DatastoreObject):
         payload = ray.get(self._compute_ref)
         self._compute_ref = None
 
-        self._values = payload["values"]
+        self._total = payload["total"]
+        self._numeric_quad = payload["numeric_quad"]
+        self._WKB_quad = payload["WKB_quad"]
+        self._WKB_Levin = payload["WKB_Levin"]
+
+        self._Gk_serial = payload["Gk_serial"]
+        self._source_serial = payload["source_serial"]
+
+        self._numeric_quad_data = payload["numeric_quad_data"]
+        self._WKB_quad_data = payload["WKB_quad_data"]
+        self._WKB_Levin_data = payload["WKB_Levin_data"]
+
         self._compute_time = payload["compute_time"]
         self._metadata = payload["metadata"]
-
-
-class QuadSourceIntegralValue(DatastoreObject):
-    def __init__(
-        self,
-        store_id: None,
-        z_response: redshift,
-        total: float,
-        numeric_quad_part: float,
-        WKB_quad_part: float,
-        WKB_Levin_part: float,
-        Gk_serial: Optional[int] = None,
-        numeric_quad_data: Optional[IntegrationData] = None,
-        WKB_quad_data: Optional[IntegrationData] = None,
-        WKB_Levin_data: Optional[LevinData] = None,
-    ):
-        DatastoreObject.__init__(self, store_id)
-
-        self._z_response = z_response
-
-        self._total = total
-        self._numeric_quad_part = numeric_quad_part
-        self._WKB_quad_part = WKB_quad_part
-        self._WKB_Levin_part = WKB_Levin_part
-
-        self._Gk_serial = Gk_serial
-
-        self._numeric_quad_data = numeric_quad_data
-        self._WKB_quad_data = WKB_quad_data
-        self._WKB_Levin_data = WKB_Levin_data
-
-    @property
-    def z_response(self) -> redshift:
-        return self._z_response
-
-    @property
-    def total(self) -> float:
-        return self._total
-
-    @property
-    def numeric_quad_part(self) -> float:
-        return self._numeric_quad_part
-
-    @property
-    def WKB_quad_part(self) -> float:
-        return self._WKB_quad_part
-
-    @property
-    def WKB_Levin_part(self) -> float:
-        return self._WKB_Levin_part
-
-    @property
-    def Gk_serial(self) -> Optional[int]:
-        return self._Gk_serial

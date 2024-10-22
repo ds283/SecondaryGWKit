@@ -1460,15 +1460,29 @@ with ShardedPool(
     # STEP 6
     # PERFORM CALCULATION OF SOURCE INTEGRALS
 
+    # strip off a number of z-sample values so that we do not need to begin the source integration right at the upper limit, where we cannot construct a spline
+    if len(z_source_sample) < 11:
+        raise RuntimeError(
+            "z_source_sample is too small. At least O(10) sample points (but most likely very many more) are required to effectively construct the source integral."
+        )
+
+    z_source_integral_max_z = z_source_sample[10]
+    z_source_integral_response_sample = z_response_sample.truncate(
+        z_source_integral_max_z, keep="lower-strict"
+    )
+
     def build_QuadSourceIntegral_batch(batch):
-        # find which (k, q, r) instances are missing from the datastore
+        # batch is a list of (z_response, k, q, r) pairs to be queried, and work scheduled to produce them if they are missing
+
+        # find which instances are missing from the datastore
         query_batch = [
             {
                 "model": model,
                 "k": k,
                 "q": q,
                 "r": r,
-                "z_response_sample": z_response_sample,
+                "z_response": z_response,
+                "z_source_max": z_source_integral_max_z,
                 "tol": quadtol,
                 "tags": [
                     GkProductionTag,
@@ -1479,9 +1493,8 @@ with ShardedPool(
                     LargestZTag,
                     SamplesPerLog10ZTag,
                 ],
-                "_do_not_populate": True,
             }
-            for (k, q, r) in batch
+            for z_response, k, q, r in batch
         ]
 
         query_queue = RayWorkPool(
@@ -1500,64 +1513,39 @@ with ShardedPool(
         )
         query_queue.run()
 
-        # determine which z_response values are missing for each (k, q, r) combination
         missing = {
-            k_labels
-            for obj, k_labels in zip(query_queue.results, batch)
-            if not obj.available
+            data for obj, data in zip(query_queue.results, batch) if not obj.available
         }
 
         return build_missing_QuadSourceIntegral(missing)
 
     def build_missing_QuadSourceIntegral(missing):
-        # all of the G_k needed for the different response redshifts will be held on the same shard,
-        # so we can try a vectorized get to collect them efficiently
-        Gk_batch = [
-            {
-                "shard_key": {"k": k},
-                "payload": [
-                    {
-                        "model": model,
-                        "z_response": z_response,
-                        "z_sample": None,  # need to specify, but not queried against; we pick up whatever z_source sample is stored
-                        "atol": atol,
-                        "rtol": rtol,
-                        "tags": [
-                            GkProductionTag,
-                            GlobalZGridSizeTag,
-                            SourceZGridSizeTag,
-                            ResponseZGridSizeTag,
-                            LargestZTag,
-                            SamplesPerLog10ZTag,
-                        ],
-                    }
-                    for z_response in z_response_sample
-                ],
-            }
-            for k, q, r in missing
-        ]
-        Gk_lookup_queue = RayWorkPool(
-            pool,
-            Gk_batch,
-            task_builder=lambda x: pool.object_get_vectorized(
-                "GkSource", x["shard_key"], payload_data=x["payload"]
-            ),
-            available_handler=None,
-            compute_handler=None,
-            store_handler=None,
-            validation_handler=None,
-            label_builder=None,
-            title=None,
-            store_results=True,
-            create_batch_size=5,
-            process_batch_size=5,
-        )
-        Gk_lookup_queue.run()
-
-        QuadSource_batch = [
+        # for each (z_response, k, q, r) combination, we need to pull the associated Gk and QuadSource instances.
+        # These are needed to assemble the quadratic source integral.
+        GkSource_lookup_batch = [
             {
                 "model": model,
-                "z_sample": z_source_sample,
+                "z_response": z_response,
+                "z_sample": None,  # need to specify, but not queried against; we pick up whatever z_source sample is stored
+                "k": k,
+                "atol": atol,
+                "rtol": rtol,
+                "tags": [
+                    GkProductionTag,
+                    GlobalZGridSizeTag,
+                    SourceZGridSizeTag,
+                    ResponseZGridSizeTag,
+                    LargestZTag,
+                    SamplesPerLog10ZTag,
+                ],
+            }
+            for z_response, k, q, r in missing
+        ]
+
+        QuadSource_lookup_batch = [
+            {
+                "model": model,
+                "z_sample": None,
                 "q": q,
                 "r": r,
                 "tags": [
@@ -1569,11 +1557,28 @@ with ShardedPool(
                     SamplesPerLog10ZTag,
                 ],
             }
-            for (k, q, r) in missing
+            for z_response, k, q, r in missing
         ]
+
+        GkSource_lookup_queue = RayWorkPool(
+            pool,
+            GkSource_lookup_batch,
+            task_builder=lambda x: pool.object_get("GkSource", **x),
+            available_handler=None,
+            compute_handler=None,
+            store_handler=None,
+            validation_handler=None,
+            label_builder=None,
+            title=None,
+            store_results=True,
+            create_batch_size=10,
+            process_batch_size=10,
+        )
+        GkSource_lookup_queue.run()
+
         QuadSource_lookup_queue = RayWorkPool(
             pool,
-            QuadSource_batch,
+            QuadSource_lookup_batch,
             task_builder=lambda x: pool.object_get("QuadSource", **x),
             available_handler=None,
             compute_handler=None,
@@ -1582,41 +1587,29 @@ with ShardedPool(
             label_builder=None,
             title=None,
             store_results=True,
-            create_batch_size=5,
-            process_batch_size=5,
+            create_batch_size=10,
+            process_batch_size=10,
         )
         QuadSource_lookup_queue.run()
 
         work_refs = []
 
-        for Gks, source, k_labels in zip(
-            Gk_lookup_queue.results, QuadSource_lookup_queue.results, missing
+        for Gk, source, data in zip(
+            GkSource_lookup_queue.results, QuadSource_lookup_queue.results, missing
         ):
-            (k, q, r) = k_labels
+            z_response, k, q, r = data
+
+            z_response: redshift
             k: wavenumber_exit_time
             q: wavenumber_exit_time
             r: wavenumber_exit_time
 
             missing_data = False
-            missing_Gks = [Gk.z_response for Gk in Gks if not Gk.available]
-            if len(missing_Gks) > 0:
+            if not Gk.available:
                 missing_data = True
-
                 print(
-                    f"!! MISSING DATA WARNING ({datetime.now().replace(microsecond=0).isoformat()}) when building QuadSourceIntegral: GkSource for for k={k.k.k_inv_Mpc:.5g}/Mpc"
+                    f"!! MISSING DATA WARNING ({datetime.now().replace(microsecond=0).isoformat()}) when building QuadSourceIntegral: GkSource for for k={k.k.k_inv_Mpc:.5g}/Mpc, z_response={z_response.z:.5g}"
                 )
-                for missing_zresponse in missing_Gks[:20]:
-                    print(
-                        f"|  -- z_response={missing_zresponse.z:.5g} (store_id={missing_zresponse.store_id})"
-                    )
-                expected = len(z_response_sample)
-                missing = len(missing_Gks)
-                if missing > 15:
-                    print("|  ... (more missing z_response values skipped)")
-                print(
-                    f"|     total missing = {missing} out of {expected} = {missing/expected:.2%}"
-                )
-
             if not source.available:
                 missing_data = True
                 print(
@@ -1636,7 +1629,9 @@ with ShardedPool(
                         k=k,
                         q=q,
                         r=r,
-                        z_response_sample=z_response_sample,
+                        z_response=z_response,
+                        z_source_max=z_source_integral_max_z,
+                        tol=quadtol,
                         tags=[
                             TkProductionTag,
                             GkProductionTag,
@@ -1647,45 +1642,40 @@ with ShardedPool(
                             SamplesPerLog10ZTag,
                         ],
                     ),
-                    "compute_payload": {"Gks": Gks, "source": source},
+                    "compute_payload": {"Gk": Gk, "source": source},
                 }
             )
 
+        return work_refs
+
     def build_QuadSourceIntegral_label(qsi: QuadSourceIntegral):
-        return f"{args.job_name}-QuadSourceIntegral-k{qsi.k.k_inv_Mpc:.3g}-q{qsi.q.k_inv_Mpc:.3g}-r{qsi.r.k_inv_Mpc:.3g}-{datetime.now().replace(microsecond=0).isoformat()}"
+        return f"{args.job_name}-QuadSourceIntegral-k{qsi.k.k_inv_Mpc:.3g}-q{qsi.q.k_inv_Mpc:.3g}-r{qsi.r.k_inv_Mpc:.3g}-zresponse{qsi.z_response.z:.5g}-{datetime.now().replace(microsecond=0).isoformat()}"
 
     def compute_QuadSourceIntegral_work(
         qsi: QuadSourceIntegral, payload, label: Optional[str] = None
     ):
         return qsi.compute(payload=payload, label=label)
 
-    def validate_QuadSourceIntegral_work(qsi: QuadSourceIntegral):
-        if not qsi.available:
-            raise RuntimeError(
-                "QuadSourceIntegral object passed for validation, but is not yet available"
-            )
-
-        return pool.object_validate(qsi)
-
     if args.quad_source_integral_queue:
         qsi_work_items = itertools.product(
+            z_source_integral_response_sample,
             response_k_exit_times,
             itertools.combinations_with_replacement(source_k_exit_times, 2),
         )
-        qsi_work_items = [(k, q, r) for k, (q, r) in qsi_work_items]
-        qsi_work_batches = list(grouper(qsi_work_items, n=2, incomplete="ignore"))
+        qsi_work_items = [(z, k, q, r) for z, k, (q, r) in qsi_work_items]
+        qsi_work_batches = list(grouper(qsi_work_items, n=50, incomplete="ignore"))
 
         QuadSourceIntegral_queue = RayWorkPool(
             pool,
             qsi_work_batches,
             task_builder=build_QuadSourceIntegral_batch,
-            validation_handler=validate_QuadSourceIntegral_work,
+            validation_handler=None,
             label_builder=build_QuadSourceIntegral_label,
             title="CALCULATE QUADRATIC SOURCE INTEGRALS",
             store_results=False,
-            create_batch_size=1,  # we have batched the work queue into chunks ourselves, so don't process too many of these chunks at once
-            notify_batch_size=20,
-            max_task_queue=5,
+            create_batch_size=20,  # we have batched the work queue into chunks ourselves, so don't process too many of these chunks at once
+            notify_batch_size=2000,
+            max_task_queue=300,
             process_batch_size=50,
         )
         QuadSourceIntegral_queue.run()
