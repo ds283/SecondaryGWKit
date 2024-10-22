@@ -33,7 +33,6 @@ from Datastore.SQL.ObjectFactories.GkWKBIntegration import (
 from Datastore.SQL.ObjectFactories.LambdaCDM import sqla_LambdaCDM_factory
 from Datastore.SQL.ObjectFactories.OneLoopIntegral import (
     sqla_OneLoopIntegral_factory,
-    sqla_OneLoopIntegralValue_factory,
     sqla_OneLoopIntegralTagAssociation_factory,
 )
 from Datastore.SQL.ObjectFactories.QuadSource import (
@@ -103,7 +102,6 @@ _factories = {
     "QuadSourceIntegral_tags": sqla_QuadSourceIntegralTagAssociation_factory,
     "OneLoopIntegral": sqla_OneLoopIntegral_factory,
     "OneLoopIntegral_tags": sqla_OneLoopIntegralTagAssociation_factory,
-    "OneLoopIntegralValue": sqla_OneLoopIntegralValue_factory,
 }
 
 _FactoryMappingType = Mapping[str, SQLAFactoryBase]
@@ -123,7 +121,6 @@ _drop_actions = {
     "1loop-integral": [
         "OneLoopIntegral",
         "OneLoopIntegral_tags",
-        "OneLoopIntegralValue",
     ],
 }
 # should drop tables in a defined order, so that we do not violate foreign key constrints

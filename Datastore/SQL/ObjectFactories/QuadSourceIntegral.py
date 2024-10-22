@@ -487,6 +487,10 @@ class sqla_QuadSourceIntegral_factory(SQLAFactoryBase):
                 table.c.WKB_Levin_evaluations,
                 table.c.WKB_Levin_elapsed,
                 tol_table.c.log10_tol,
+                table.c.z_response_serial,
+                z_response_table.c.z.label("z_response"),
+                table.c.z_source_max_serial,
+                z_source_max_table.c.z.label("z_source_max"),
             )
             .select_from(
                 table.join(

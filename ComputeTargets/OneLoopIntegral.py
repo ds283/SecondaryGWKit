@@ -3,9 +3,7 @@ from typing import Optional, List
 import ray
 
 from ComputeTargets.BackgroundModel import BackgroundModel
-from ComputeTargets.QuadSourceIntegral import QuadSourceIntegral
-from CosmologyConcepts import wavenumber, redshift_array, wavenumber_exit_time, redshift
-from CosmologyConcepts.redshift import check_zsample
+from CosmologyConcepts import wavenumber, wavenumber_exit_time, redshift
 from Datastore import DatastoreObject
 from MetadataConcepts import store_tag, tolerance
 
@@ -15,7 +13,7 @@ class OneLoopIntegral(DatastoreObject):
         self,
         payload,
         model,
-        z_response_sample: redshift_array,
+        z_response: redshift,
         k: wavenumber_exit_time,
         tol: tolerance,
         label: Optional[str] = None,
@@ -24,27 +22,25 @@ class OneLoopIntegral(DatastoreObject):
         self._model = model
 
         self._k_exit = k
-        self._q_exit = q
-        self._r_exit = r
 
-        self._z_response_sample = z_response_sample
+        self._z_repsonse = z_response
         if payload is None:
             DatastoreObject.__init__(self, None)
+
+            self._value = None
 
             self._compute_time = None
             self._source_serial = None
             self._metadata = None
 
-            self._values = None
-
         else:
             DatastoreObject.__init__(self, payload["store_id"])
 
-            self._compute_time = payload["integration_data"]
-            self._metadata = payload["metadata"]
+            self._value = payload["value"]
 
+            self._compute_time = payload["compute_time"]
             self._source_serial = payload["source_serial"]
-            self._values = payload["values"]
+            self._metadata = payload["metadata"]
 
         # store parameters
         self._label = label
@@ -63,17 +59,13 @@ class OneLoopIntegral(DatastoreObject):
         return self._k_exit.k
 
     @property
-    def q(self) -> wavenumber:
-        return self._q_exit.k
-
-    @property
-    def r(self) -> wavenumber:
-        return self._r_exit.k
+    def z_response(self) -> redshift:
+        return self._z_response
 
     @property
     def compute_time(self) -> Optional[float]:
-        if self._values is None:
-            raise RuntimeError("values have not yet been populated")
+        if self._value is None:
+            raise RuntimeError("value has not yet been populated")
 
         return self._compute_time
 
@@ -81,8 +73,8 @@ class OneLoopIntegral(DatastoreObject):
     def metadata(self) -> dict:
         # allow this field to be read if we have been deserialized with _do_not_populate
         # otherwise, absence of _values implies that we have not yet computed our contents
-        if self._values is None and not hasattr(self, "_do_not_populate"):
-            raise RuntimeError("values have not yet been populated")
+        if self._value is None:
+            raise RuntimeError("value has not yet been populated")
 
         return self._metadata
 
@@ -95,19 +87,11 @@ class OneLoopIntegral(DatastoreObject):
         return self._tags
 
     @property
-    def z_response_sample(self) -> redshift_array:
-        return self._z_response_sample
+    def value(self) -> float:
+        if self._value is None:
+            raise RuntimeError("value has not yet been populated")
 
-    @property
-    def values(self) -> List:
-        if hasattr(self, "_do_not_populate"):
-            raise RuntimeError(
-                "OneLoopIntegral: values read but _do_not_populate is set"
-            )
-
-        if self._values is None:
-            raise RuntimeError("values has not yet been populated")
-        return self._values
+        return self._value
 
     def compute(self, payload, label: Optional[str] = None):
         if hasattr(self, "_do_not_populate"):
@@ -124,13 +108,6 @@ class OneLoopIntegral(DatastoreObject):
         if label is not None:
             self._label = label
 
-        source: QuadSourceIntegral = payload["source"]
-
-        # TODO: check compatibility condition between source and Gk
-        check_zsample(source.z_response_sample, self._z_response_sample)
-
-        self._source_serial = source.store_id
-
     def store(self) -> Optional[bool]:
         if self._compute_ref is None:
             raise RuntimeError(
@@ -142,25 +119,3 @@ class OneLoopIntegral(DatastoreObject):
 
         if len(resolved) == 0:
             return None
-
-
-class OneLoopIntegralValue(DatastoreObject):
-    def __init__(
-        self,
-        store_id: None,
-        z_response: redshift,
-        total: float,
-    ):
-        DatastoreObject.__init__(self, store_id)
-
-        self._z_response = z_response
-
-        self._total = total
-
-    @property
-    def z_response(self) -> redshift:
-        return self._z_response
-
-    @property
-    def total(self) -> float:
-        return self._total
