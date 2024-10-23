@@ -436,7 +436,7 @@ with ShardedPool(
 
             ax.set_xlim(
                 min(int(round(z_response.z * 100.0 + 0.5, 0)), z_sample.max.z),
-                max(int(round(z_response.z - 0.5, 0)), 0.01),
+                max(int(round(z_response.z * 0.9 - 0.5, 0)), 0.01),
             )
 
             fig_path = (
@@ -650,7 +650,7 @@ with ShardedPool(
         ax.grid(True)
         ax.xaxis.set_inverted(True)
 
-    TEXT_DISPLACEMENT_MULTIPLIER = 0.9
+    TEXT_DISPLACEMENT_MULTIPLIER = 0.85
 
     # Matplotlib line style from https://matplotlib.org/stable/gallery/lines_bars_and_markers/linestyles.html
     #      ('loosely dotted',        (0, (1, 10))),
