@@ -17,6 +17,46 @@ DEFAULT_NOTIFY_TIME_INTERVAL = 5 * 60
 DEFAULT_NOTIFY_MIN_INTERVAL = 60
 
 
+def _readable_rate(rate_per_second: float):
+    current_rate = rate_per_second
+    for unit, multiplier in [
+        ("sec", 60),
+        ("min", 60),
+        ("hr", 24),
+        ("day", None),
+    ]:
+        if current_rate >= 10 or multiplier is None:
+            return f"{current_rate:.4g}/{unit}"
+
+        current_rate = current_rate * multiplier
+
+    raise NotImplementedError
+
+
+def _format_rates(
+    time_delta_in_seconds: float,
+    total_time_in_seconds: float,
+    current_value: int,
+    last_value: int,
+):
+    assert current_value is not None
+
+    msg = ""
+    if time_delta_in_seconds is not None and last_value is not None:
+        current_rate_per_second = (current_value - last_value) / time_delta_in_seconds
+        msg += _readable_rate(current_rate_per_second)
+
+    if total_time_in_seconds is not None:
+        avg_rate_per_second = current_value / total_time_in_seconds
+        msg += (
+            (", " if len(msg) > 0 else "")
+            + "avg "
+            + _readable_rate(avg_rate_per_second)
+        )
+
+    return msg
+
+
 def _default_compute_handler(obj, **kwargs) -> ObjectRef:
     return obj.compute(**kwargs)
 
@@ -108,7 +148,7 @@ class RayWorkPool:
         self._last_num_compute_complete = None
         self._last_num_store_complete = None
         self._last_num_available_complete = None
-        self._numv_validation_complete = None
+        self._last_num_validation_complete = None
 
         self._batch = 0
 
@@ -136,106 +176,61 @@ class RayWorkPool:
         return msg
 
     def _build_completed_status_message(
-        self, total: Optional[float] = None, since_last_notify: Optional[float] = None
+        self,
+        total_time_in_seconds: Optional[float] = None,
+        since_last_notify_in_seconds: Optional[float] = None,
     ):
         msg = f"{self._num_lookup_complete} lookup"
-        submsg = ""
-        if since_last_notify is not None and self._last_num_lookup_complete is not None:
-            current_rate_per_min = (
-                (self._num_lookup_complete - self._last_num_lookup_complete)
-                / since_last_notify
-                * 60.0
-            )
-            submsg += f"~{current_rate_per_min:.2f}/min"
-        if total is not None:
-            global_rate_per_min = self._num_lookup_complete / total * 60.0
-            submsg += (
-                ", " if len(submsg) > 0 else ""
-            ) + f"avg ~{global_rate_per_min:.2f}/min"
+        submsg = _format_rates(
+            since_last_notify_in_seconds,
+            total_time_in_seconds,
+            self._num_lookup_complete,
+            self._last_num_lookup_complete,
+        )
         if len(submsg) > 0:
             msg += f" ({submsg})"
 
         if self._compute_handler is not None:
             msg += f", {self._num_compute_complete} compute"
-            submsg = ""
-            if (
-                since_last_notify is not None
-                and self._last_num_compute_complete is not None
-            ):
-                current_rate_per_min = (
-                    (self._num_compute_complete - self._last_num_compute_complete)
-                    / since_last_notify
-                    * 60.0
-                )
-                submsg += f"~{current_rate_per_min:.2f}/min"
-            if total is not None:
-                global_rate_per_min = self._num_compute_complete / total * 60.0
-                submsg += (
-                    ", " if len(submsg) > 0 else ""
-                ) + f"avg ~{global_rate_per_min:.2f}/min"
+            submsg = _format_rates(
+                since_last_notify_in_seconds,
+                total_time_in_seconds,
+                self._num_compute_complete,
+                self._last_num_compute_complete,
+            )
             if len(submsg) > 0:
                 msg += f" ({submsg})"
 
         if self._store_handler is not None:
             msg += f", {self._num_store_complete} store"
-            submsg = ""
-            if (
-                since_last_notify is not None
-                and self._last_num_store_complete is not None
-            ):
-                current_rate_per_min = (
-                    (self._num_store_complete - self._last_num_store_complete)
-                    / since_last_notify
-                    * 60.0
-                )
-                submsg += f"~{current_rate_per_min:.2f}/min"
-            if total is not None:
-                global_rate_per_min = self._num_store_complete / total * 60.0
-                submsg += (
-                    ", " if len(submsg) > 0 else ""
-                ) + f"avg ~{global_rate_per_min:.2f}/min"
+            submsg = _format_rates(
+                since_last_notify_in_seconds,
+                total_time_in_seconds,
+                self._num_store_complete,
+                self._last_num_store_complete,
+            )
             if len(submsg) > 0:
                 msg += f" ({submsg})"
 
         if self._available_handler is not None:
             msg += f", {self._num_available_complete} available"
-            submsg = ""
-            if (
-                since_last_notify is not None
-                and self._last_num_available_complete is not None
-            ):
-                current_rate_per_min = (
-                    (self._num_available_complete - self._last_num_available_complete)
-                    / since_last_notify
-                    * 60.0
-                )
-                submsg += f"~{current_rate_per_min:.2f}/min"
-            if total is not None:
-                global_rate_per_min = self._num_available_complete / total * 60.0
-                submsg += (
-                    ", " if len(submsg) > 0 else ""
-                ) + f"avg ~{global_rate_per_min:.2f}/min"
+            submsg = _format_rates(
+                since_last_notify_in_seconds,
+                total_time_in_seconds,
+                self._num_available_complete,
+                self._last_num_available_complete,
+            )
             if len(submsg) > 0:
                 msg += f" ({submsg})"
 
         if self._validation_handler is not None:
             msg += f", {self._num_validation_complete} validation"
-            submsg = ""
-            if (
-                since_last_notify is not None
-                and self._last_num_validation_complete is not None
-            ):
-                current_rate_per_min = (
-                    (self._num_validation_complete - self._last_num_validation_complete)
-                    / since_last_notify
-                    * 60.0
-                )
-                submsg += f"~{current_rate_per_min:.2f}/min"
-            if total is not None:
-                global_rate_per_min = self._num_validation_complete / total * 60.0
-                submsg += (
-                    ", " if len(submsg) > 0 else ""
-                ) + f"avg ~{global_rate_per_min:.2f}/min"
+            submsg = _format_rates(
+                since_last_notify_in_seconds,
+                total_time_in_seconds,
+                self._num_validation_complete,
+                self._last_num_validation_complete,
+            )
             if len(submsg) > 0:
                 msg += f" ({submsg})"
 
@@ -536,7 +531,7 @@ class RayWorkPool:
                     print(msg)
 
                     msg = f"      inflight items: {self._build_queued_status_message()}"
-                    msg += f" | completed items: {self._build_completed_status_message(total=elapsed_since_start, since_last_notify=elapsed_since_last_notify)}"
+                    msg += f" | completed items: {self._build_completed_status_message(total_time_in_seconds=elapsed_since_start, since_last_notify_in_seconds=elapsed_since_last_notify)}"
                     print(msg)
 
                     self._batch = 0
@@ -555,7 +550,7 @@ class RayWorkPool:
                 f"   -- ALL WORK ITEMS COMPLETE in time {format_time(self.total_time)}"
             )
             print(
-                f"      Queue summary: {self._build_completed_status_message(total=self.total_time)}"
+                f"      Queue summary: {self._build_completed_status_message(total_time_in_seconds=self.total_time)}"
             )
             if self._num_compute_complete == 0:
                 print(
