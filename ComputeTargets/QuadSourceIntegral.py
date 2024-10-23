@@ -2,7 +2,7 @@ import time
 from typing import Optional, List
 
 import ray
-from math import fabs, log, exp
+from math import log, exp
 from scipy.integrate import solve_ivp
 
 from AdaptiveLevin import adaptive_levin_sincos
@@ -49,44 +49,44 @@ class QuadSourceSupervisor(IntegrationSupervisor):
         self._log_z_init: float = log_z_init
         self._log_z_final: float = log_z_final
 
-        self._log_z_range: float = self._log_z_init - self._log_z_final
+        self._log_z_range: float = self._log_z_final - self._log_z_init
 
-        self._last_z: float = self._log_z_init
+        self._last_log_z: float = self._log_z_init
 
-        def __enter__(self):
-            super().__enter__()
-            return self
+    def __enter__(self):
+        super().__enter__()
+        return self
 
-        def __exit__(self, exc_type, exc_val, exc_tb):
-            super().__exit__(exc_type, exc_val, exc_tb)
+    def __exit__(self, exc_type, exc_val, exc_tb):
+        super().__exit__(exc_type, exc_val, exc_tb)
 
-        def message(self, current_log_z, msg):
-            current_time = time.time()
-            since_last_notify = current_time - self._last_notify
-            since_start = current_time - self._start_time
+    def message(self, current_log_z, msg):
+        current_time = time.time()
+        since_last_notify = current_time - self._last_notify
+        since_start = current_time - self._start_time
 
-            update_number = self.report_notify()
+        update_number = self.report_notify()
 
-            z_complete = self._z_int - current_log_z
-            z_remain = self._log_z_range - z_complete
-            percent_remain = z_remain / self._log_z_range
+        z_complete = current_log_z - self._log_z_init
+        z_remain = self._log_z_range - z_complete
+        percent_remain = z_remain / self._log_z_range
+        print(
+            f"** STATUS UPDATE #{update_number}: QuadSourceIntegral quadrature (type={self._label}) for k={self._k.k_inv_Mpc:.5g}/Mpc (store_id={self._k.store_id}), q={self._q.k_inv_Mpc:.5g}/Mpc (store_id={self._q.store_id}), r={self._r.k_inv_Mpc:.5g}/Mpc (store_id={self._r.store_id}) has been running for {format_time(since_start)} ({format_time(since_last_notify)} since last notification)"
+        )
+        print(
+            f"|    current log(1+z)={current_log_z:.5g} (init log(1+z)={self._log_z_init:.5g}, target log(1+z)={self._log_z_final:.5g}, log(1+z) complete={z_complete:.5g}, log(1+z) remain={z_remain:.5g}, {percent_remain:.3%} remains)"
+        )
+        if self._last_log_z is not None:
+            log_z_delta = current_log_z - self._last_log_z
             print(
-                f"** STATUS UPDATE #{update_number}: QuadSourceIntegral quadrature (type={self._label}) for k={self._k.k_inv_Mpc:.5g}/Mpc (store_id={self._k.store_id}), q={self._q.k_inv_Mpc:.5g}/Mpc (store_id={self._q.store_id}), r={self._r.k_inv_Mpc:.5g}/Mpc (store_id={self._r.store_id}) has been running for {format_time(since_start)} ({format_time(since_last_notify)} since last notification)"
+                f"|    redshift advance since last update: Delta log(1+z) = {log_z_delta:.5g}"
             )
-            print(
-                f"|    current log(1+z)={current_log_z:.5g} (init log(1+z)={self._log_z_init:.5g}, target log(1+z)={self._log_z_final:.5g}, log(1+z) complete={z_complete:.5g}, log(1+z) remain={z_remain:.5g}, {percent_remain:.3%} remains)"
-            )
-            if self._last_log_z is not None:
-                log_z_delta = self._last_log_z - current_log_z
-                print(
-                    f"|    redshift advance since last update: Delta log(1+z) = {log_z_delta:.5g}"
-                )
-            print(
-                f"|    {self.RHS_evaluations} RHS evaluations, mean {self.mean_RHS_time:.5g}s per evaluation, min RHS time = {self.min_RHS_time:.5g}s, max RHS time = {self.max_RHS_time:.5g}s"
-            )
-            print(f"|    {msg}")
+        print(
+            f"|    {self.RHS_evaluations} RHS evaluations, mean {self.mean_RHS_time:.5g}s per evaluation, min RHS time = {self.min_RHS_time:.5g}s, max RHS time = {self.max_RHS_time:.5g}s"
+        )
+        print(f"|    {msg}")
 
-            self._last_log_z = current_log_z
+        self._last_log_z = current_log_z
 
 
 @ray.remote
