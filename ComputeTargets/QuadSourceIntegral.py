@@ -291,7 +291,7 @@ def numeric_quad_integral(
             f"compute_QuadSource_integral: attempting to evaluate numerical quadrature, but min_z={min_z:.5g} is out-of-bounds for the region ({region_max_z:.5g}, {region_min_z}:.5g) where a numerical solution is available [domain={max_z:.5g}, {min_z:.5g}]"
         )
 
-    def RHS(log_z_source, state, supervisor) -> List[float]:
+    def RHS(log_z_source, state, supervisor: QuadSourceSupervisor) -> List[float]:
         with RHS_timer(supervisor) as timer:
             current_value = state[0]
 
@@ -311,7 +311,7 @@ def numeric_quad_integral(
     log_max_z = log(1.0 + max_z)
 
     with QuadSourceSupervisor(
-        k, q, r, "numeric quad", z_response, max_z, min_z
+        k, q, r, "numeric quad", z_response, min_z, max_z
     ) as supervisor:
         state = [0.0]
 
@@ -321,6 +321,7 @@ def numeric_quad_integral(
             t_span=(log_min_z, log_max_z),
             t_eval=[log_max_z],
             y0=state,
+            dense_output=True,
             atol=tol,
             rtol=tol,
             args=(supervisor,),
@@ -331,14 +332,14 @@ def numeric_quad_integral(
             f'compute_QuadSource_integral: quadrature did not terminate successfully | error at z={sol.t[0]}, "{sol.message}"'
         )
 
-    if fabs((sol.t[0] - log_min_z) / log_min_z) > 1e-1:
+    if sol.t[0] < log_max_z - DEFAULT_FLOAT_PRECISION:
         raise RuntimeError(
-            f"compute_QuadSource_integral: quadrature did not terminate at expected redshift log(1+z)={log_min_z:.5g} (final log(1+z)={sol.t[0]:.3g})"
+            f"compute_QuadSource_integral: quadrature did not terminate at expected redshift log(1+z)={log_max_z:.5g} (final log(1+z)={sol.t[0]:.3g})"
         )
 
-    if len(sol.y) != 1:
+    if len(sol.sol(log_max_z)) != 1:
         raise RuntimeError(
-            f"compute_QuadSource_integral: solution does not have expected number of members (expected 1, found {len(sol.y)})"
+            f"compute_QuadSource_integral: solution does not have expected number of members (expected 1, found {len(sol.sol(log_max_z))})"
         )
 
     return {
@@ -350,7 +351,7 @@ def numeric_quad_integral(
             max_RHS_time=supervisor.max_RHS_time,
             min_RHS_time=supervisor.min_RHS_time,
         ),
-        "value": (1.0 + z_response.z) * sol.y[0][0],
+        "value": (1.0 + z_response.z) * sol.sol(log_max_z)[0],
     }
 
 
@@ -395,7 +396,7 @@ def WKB_quad_integral(
             f"compute_QuadSource_integral: attempting to evaluate WKB quadrature, but min_z={min_z:.5g} is out-of-bounds for the region ({region_max_z:.5g}, {region_min_z}:.5g) where a WKB solution is available [domain={max_z:.5g}, {min_z:.5g}]"
         )
 
-    def RHS(log_z_source, state, supervisor) -> List[float]:
+    def RHS(log_z_source, state, supervisor: QuadSourceSupervisor) -> List[float]:
         with RHS_timer(supervisor) as timer:
             current_value = state[0]
 
@@ -415,7 +416,7 @@ def WKB_quad_integral(
     log_max_z = log(1.0 + max_z)
 
     with QuadSourceSupervisor(
-        k, q, r, "WKB quad", z_response, max_z, min_z
+        k, q, r, "WKB quad", z_response, log_min_z, log_max_z
     ) as supervisor:
         state = [0.0]
 
@@ -425,6 +426,7 @@ def WKB_quad_integral(
             t_span=(log_min_z, log_max_z),
             t_eval=[log_min_z],
             y0=state,
+            dense_output=True,
             atol=tol,
             rtol=tol,
             args=(supervisor,),
@@ -435,14 +437,14 @@ def WKB_quad_integral(
             f'compute_QuadSource_integral: quadrature did not terminate successfully | error at log(1+z)={sol.t[0]}, "{sol.message}"'
         )
 
-    if fabs((sol.t[0] - log_min_z) / log_min_z) > 1e-1:
+    if sol.t[0] < log_max_z - DEFAULT_FLOAT_PRECISION:
         raise RuntimeError(
-            f"compute_QuadSource_integral: quadrature did not terminate at expected redshift log(1+z)={log_min_z:.5g} (final log(1+z)={sol.t[0]:.3g})"
+            f"compute_QuadSource_integral: quadrature did not terminate at expected redshift log(1+z)={log_max_z:.5g} (final log(1+z)={sol.t[0]:.3g})"
         )
 
-    if len(sol.y) != 1:
+    if len(sol.sol(log_max_z)) != 1:
         raise RuntimeError(
-            f"compute_QuadSource_integral: solution does not have expected number of members (expected 1, found {len(sol.y)})"
+            f"compute_QuadSource_integral: solution does not have expected number of members (expected 1, found {len(sol.sol(log_max_z))})"
         )
 
     return {
@@ -454,7 +456,7 @@ def WKB_quad_integral(
             max_RHS_time=supervisor.max_RHS_time,
             min_RHS_time=supervisor.min_RHS_time,
         ),
-        "value": (1.0 + z_response.z) * sol.y[0][0],
+        "value": (1.0 + z_response.z) * sol.sol(log_max_z)[0],
     }
 
 
