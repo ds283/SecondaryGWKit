@@ -138,7 +138,12 @@ def compute_QuadSource_integral(
             crossover_z: Optional[float] = Gk.crossover_z
             Levin_z: Optional[float] = Gk.Levin_z
 
-            if Levin_z > crossover_z:
+            # if Levin threshold occurs before the crossover point, move it up to the crossover point
+            if (
+                Levin_z is not None
+                and crossover_z is not None
+                and Levin_z > crossover_z
+            ):
                 Levin_z = crossover_z
 
             regions = [
