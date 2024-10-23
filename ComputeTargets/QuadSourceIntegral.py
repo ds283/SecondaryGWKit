@@ -506,7 +506,6 @@ def WKB_Levin_integral(
 
     x_span = (log_min_z, log_max_z)
 
-    # sinc integral is sin(x)/x, so sin weight is 1/x and cos weight is 0
     def Levin_f(log_z_source: float) -> float:
         H = model_f.Hubble(exp(log_z_source) - 1.0)
         H_sq = H * H
