@@ -212,7 +212,8 @@ with ShardedPool(
                 value.z_source.z,
                 safe_div(
                     safe_fabs(value.numeric.G),
-                    ((1.0 + value.z_source.z)),
+                    (1.0 + value.z_source.z)
+                    * model.functions.Hubble(value.z_source.z) ** 2,
                 ),
             )
             for value in values
@@ -222,7 +223,8 @@ with ShardedPool(
                 value.z_source.z,
                 safe_div(
                     safe_fabs(value.WKB.G_WKB),
-                    ((1.0 + value.z_source.z)),
+                    (1.0 + value.z_source.z)
+                    * model.functions.Hubble(value.z_source.z) ** 2,
                 ),
             )
             for value in values
@@ -232,7 +234,8 @@ with ShardedPool(
                 value.z_source.z,
                 safe_div(
                     safe_fabs(functions.numerical_Gk(value.z_source.z)),
-                    (1.0 + value.z_source.z),
+                    (1.0 + value.z_source.z)
+                    * model.functions.Hubble(value.z_source.z) ** 2,
                 ),
             )
             for value in numerical_points
@@ -242,7 +245,8 @@ with ShardedPool(
                 value.z_source.z,
                 safe_div(
                     safe_fabs(functions.WKB_Gk(value.z_source.z)),
-                    (1.0 + value.z_source.z),
+                    (1.0 + value.z_source.z)
+                    * model.functions.Hubble(value.z_source.z) ** 2,
                 ),
             )
             for value in WKB_points
@@ -252,11 +256,8 @@ with ShardedPool(
                 value.z_source.z,
                 safe_div(
                     safe_fabs(value.analytic_G),
-                    (
-                        (1.0 + value.z_source.z)
-                        # * model.functions.Hubble(value.z_source.z)
-                        # * model.functions.Hubble(value.z_source.z)
-                    ),
+                    (1.0 + value.z_source.z)
+                    * model.functions.Hubble(value.z_source.z) ** 2,
                 ),
             )
             for value in values
@@ -407,7 +408,9 @@ with ShardedPool(
             add_Gk_labels(ax, Gk)
 
             ax.set_xlabel("source redshift $z$")
-            ax.set_ylabel("$G_k(z_{\\text{source}}, z_{\\text{response}}) / (1+z')$")
+            ax.set_ylabel(
+                "$G_k(z_{\\text{source}}, z_{\\text{response}}) / [(1+z') H(z')^2 ]$"
+            )
 
             set_loglog_axes(ax)
 
