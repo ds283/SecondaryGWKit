@@ -420,6 +420,32 @@ with ShardedPool(
             )
             fig_path.parents[0].mkdir(exist_ok=True, parents=True)
             fig.savefig(fig_path)
+
+            if z_response.z <= k_exit.z_exit_suph_e3:
+                ax.set_xlim(
+                    int(round(k_exit.z_exit_suph_e5 + 0.5, 0)),
+                    int(round(0.85 * k_exit.z_exit_subh_e5 + 0.5, 0)),
+                )
+
+                fig_path = (
+                    base_path
+                    / f"plots/Gk-reentry-zoom/k-serial={k_exit.store_id}-k={k_exit.k.k_inv_Mpc:.5g}/z-serial={z_response.store_id}-zresponse={z_response.z:.5g}.pdf"
+                )
+                fig_path.parents[0].mkdir(exist_ok=True, parents=True)
+                fig.savefig(fig_path)
+
+            ax.set_xlim(
+                min(int(round(z_response.z * 100.0 + 0.5, 0)), z_sample.max.z),
+                max(int(round(z_response.z - 0.5, 0)), 0.01),
+            )
+
+            fig_path = (
+                base_path
+                / f"plots/Gk-zresponse-zoom/k-serial={k_exit.store_id}-k={k_exit.k.k_inv_Mpc:.5g}/z-serial={z_response.store_id}-zresponse={z_response.z:.5g}.pdf"
+            )
+            fig_path.parents[0].mkdir(exist_ok=True, parents=True)
+            fig.savefig(fig_path)
+
             plt.close()
 
         if len(abs_theta_x) > 0 and (
@@ -624,35 +650,87 @@ with ShardedPool(
         ax.grid(True)
         ax.xaxis.set_inverted(True)
 
+    TEXT_DISPLACEMENT_MULTIPLIER = 0.9
+
+    # Matplotlib line style from https://matplotlib.org/stable/gallery/lines_bars_and_markers/linestyles.html
+    #      ('loosely dotted',        (0, (1, 10))),
+    #      ('dotted',                (0, (1, 1))),
+    #      ('densely dotted',        (0, (1, 1))),
+    #      ('long dash with offset', (5, (10, 3))),
+    #      ('loosely dashed',        (0, (5, 10))),
+    #      ('dashed',                (0, (5, 5))),
+    #      ('densely dashed',        (0, (5, 1))),
+    #
+    #      ('loosely dashdotted',    (0, (3, 10, 1, 10))),
+    #      ('dashdotted',            (0, (3, 5, 1, 5))),
+    #      ('densely dashdotted',    (0, (3, 1, 1, 1))),
+    #
+    #      ('dashdotdotted',         (0, (3, 5, 1, 5, 1, 5))),
+    #      ('loosely dashdotdotted', (0, (3, 10, 1, 10, 1, 10))),
+    #      ('densely dashdotdotted', (0, (3, 1, 1, 1, 1, 1)))]
     def add_z_labels(ax, Gk: GkSource, k_exit: wavenumber_exit_time):
-        ax.axvline(k_exit.z_exit_subh_e3, linestyle="dashed", color="r")
-        ax.axvline(k_exit.z_exit_subh_e5, linestyle="dashed", color="b")
+        ax.axvline(k_exit.z_exit_subh_e3, linestyle=(0, (1, 1)), color="b")  # dotted
+        ax.axvline(k_exit.z_exit_subh_e5, linestyle=(0, (1, 1)), color="b")  # dotted
+        ax.axvline(k_exit.z_exit_suph_e3, linestyle=(0, (1, 1)), color="b")  # dotted
+        ax.axvline(
+            k_exit.z_exit, linestyle=(0, (3, 1, 1, 1)), color="r"
+        )  # densely dashdotted
         trans = ax.get_xaxis_transform()
         ax.text(
-            k_exit.z_exit_subh_e3,
-            0.9,
+            TEXT_DISPLACEMENT_MULTIPLIER * k_exit.z_exit_suph_e3,
+            0.75,
+            "$-3$ e-folds",
+            transform=trans,
+            fontsize="x-small",
+            color="b",
+        )
+        ax.text(
+            TEXT_DISPLACEMENT_MULTIPLIER * k_exit.z_exit_subh_e3,
+            0.85,
             "$+3$ e-folds",
             transform=trans,
             fontsize="x-small",
+            color="b",
         )
         ax.text(
-            k_exit.z_exit_subh_e5,
+            TEXT_DISPLACEMENT_MULTIPLIER * k_exit.z_exit_subh_e5,
             0.75,
             "$+5$ e-folds",
             transform=trans,
             fontsize="x-small",
+            color="b",
+        )
+        ax.text(
+            TEXT_DISPLACEMENT_MULTIPLIER * k_exit.z_exit,
+            0.92,
+            "re-entry",
+            transform=trans,
+            fontsize="x-small",
+            color="r",
         )
 
         if Gk.type == "mixed" and Gk.crossover_z is not None:
-            ax.axvline(Gk.crossover_z, linestyle="dashdot", color="m")
+            ax.axvline(
+                Gk.crossover_z, linestyle=(5, (10, 3)), color="m"
+            )  # long dash with offset
             ax.text(
-                Gk.crossover_z, 0.15, "crossover_z", transform=trans, fontsize="x-small"
+                TEXT_DISPLACEMENT_MULTIPLIER * Gk.crossover_z,
+                0.15,
+                "crossover_z",
+                transform=trans,
+                fontsize="x-small",
+                color="m",
             )
 
         if (Gk.type == "mixed" or Gk.type == "WKB") and Gk.Levin_z is not None:
-            ax.axvline(Gk.Levin_z, linestyle="dashdot", color="c")
+            ax.axvline(Gk.Levin_z, linestyle=(0, (5, 10)), color="m")  # loosely dashed
             ax.text(
-                Gk.Levin_z, 0.2, "Levin boundary", transform=trans, fontsize="x-small"
+                TEXT_DISPLACEMENT_MULTIPLIER * Gk.Levin_z,
+                0.05,
+                "Levin boundary",
+                transform=trans,
+                fontsize="x-small",
+                color="m",
             )
 
     def add_Gk_labels(ax, Gk: GkSource):
