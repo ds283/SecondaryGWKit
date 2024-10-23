@@ -5,6 +5,8 @@ import numpy as np
 from math import floor, ceil
 from scipy.linalg import toeplitz
 
+from utilities import format_time
+
 # default interval at which to log progress of the integration
 DEFAULT_LEVIN_NOTIFY_INTERVAL = 5 * 60
 
