@@ -64,7 +64,7 @@ def chebyshev_matrices(x_span: Tuple[float, float], N: int):
     return x, D
 
 
-class Weight_SinCos:
+class _Weight_SinCos:
     def __init__(self, theta):
         """
         :param theta:
@@ -100,7 +100,7 @@ class Weight_SinCos:
         return AmatT, w0, wk
 
 
-def adaptive_levin_subregion(
+def _adaptive_levin_subregion(
     x_span: Tuple[float, float],
     f,
     Weights,
@@ -160,7 +160,7 @@ def adaptive_levin_subregion(
     return upper_limit - lower_limit, p_sample
 
 
-def adaptive_levin(
+def _adaptive_levin(
     x_span: Tuple[float, float],
     f,
     Weights,
@@ -186,7 +186,7 @@ def adaptive_levin(
         now = time.time()
         if now - last_notify > notify_interval:
             updates_issued = updates_issued + 1
-            notify_progress(
+            _notify_progress(
                 now,
                 last_notify,
                 start_time,
@@ -202,7 +202,7 @@ def adaptive_levin(
         a, b = regions.pop()
 
         # Chen et al. (172)
-        estimate, p_sample = adaptive_levin_subregion(
+        estimate, p_sample = _adaptive_levin_subregion(
             (a, b),
             f,
             Weights,
@@ -212,14 +212,14 @@ def adaptive_levin(
 
         # Chen et al. (173)
         c = (a + b) / 2.0
-        estimate_L, pL_sample = adaptive_levin_subregion(
+        estimate_L, pL_sample = _adaptive_levin_subregion(
             (a, c),
             f,
             Weights,
             chebyshev_order=chebyshev_order,
             build_p_sample=build_p_sample,
         )
-        estimate_R, pR_sample = adaptive_levin_subregion(
+        estimate_R, pR_sample = _adaptive_levin_subregion(
             (c, b),
             f,
             Weights,
@@ -255,7 +255,7 @@ def adaptive_levin(
     }
 
 
-def notify(
+def _notify_progress(
     now: float,
     last_notify: float,
     start_time: float,
@@ -293,9 +293,9 @@ def adaptive_levin_sincos(
     notify_interval: int = DEFAULT_LEVIN_NOTIFY_INTERVAL,
     notify_label: str = None,
 ):
-    A = Weight_SinCos(theta)
+    A = _Weight_SinCos(theta)
 
-    return adaptive_levin(
+    return _adaptive_levin(
         x_span,
         f,
         A,
