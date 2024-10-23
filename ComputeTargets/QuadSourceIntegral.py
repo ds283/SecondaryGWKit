@@ -734,7 +734,22 @@ class QuadSourceIntegral(DatastoreObject):
 
         if Gk.z_sample.max.z < self._z_source_max.z - DEFAULT_FLOAT_PRECISION:
             raise RuntimeError(
-                f"QuadSourceIntegral: supplied Gk has maximum z_source={Gk.z_sample.max.z:.5g}, but reqiured value is at least z_source={self._z_source_max.z:.5g}"
+                f"QuadSourceIntegral: supplied Gk has maximum z_source={Gk.z_sample.max.z:.5g}, but required value is at least z_source={self._z_source_max.z:.5g}"
+            )
+
+        if Gk.k.store_id != self._k_exit.k.store_id:
+            raise RuntimeError(
+                f"QuadSourceIntegral: supplied Gk is evaluated for a k-mode that does not match the required value (supplied Gk is for k={Gk.k.k_inv_Mpc:.3g}/Mpc [store_id={Gk.k.store_id}], required value is k={self._k_exit.k.k_inv_Mpc:.3g}/Mpc [store_id]{self._k_exit.k.store_id})"
+            )
+
+        if source.q.store_id != self._q_exit.k.store_id:
+            raise RuntimeError(
+                f"QuadSourceIntegral: supplied QuadSource is evaluated for a q-mode that does not match the required value (supplied source is for q={source.q.k_inv_Mpc:.3g}/Mpc [store_id={source.q.store_id}], required value is k={self._q_exit.k.k_inv_Mpc:.3g}/Mpc [store_id]{self._q_exit.k.store_id})"
+            )
+
+        if source.r.store_id != self._r_exit.k.store_id:
+            raise RuntimeError(
+                f"QuadSourceIntegral: supplied QuadSource is evaluated for an r-mode that does not match the required value (supplied source is for r={source.r.k_inv_Mpc:.3g}/Mpc [store_id={source.r.store_id}], required value is k={self._r_exit.k.k_inv_Mpc:.3g}/Mpc [store_id]{self._r_exit.k.store_id})"
             )
 
         self._compute_ref = compute_QuadSource_integral.remote(
