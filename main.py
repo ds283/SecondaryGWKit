@@ -33,6 +33,7 @@ from CosmologyModels.LambdaCDM import Planck2018
 from Datastore.SQL.ProfileAgent import ProfileAgent
 from Datastore.SQL.ShardedPool import ShardedPool
 from RayTools import RayWorkPool
+from RayTools.ModelProxy import ModelProxy
 from Units import Mpc_units
 from defaults import (
     DEFAULT_ABS_TOLERANCE,
@@ -389,6 +390,9 @@ with ShardedPool(
         print(
             f'\n** FOUND EXISTING BACKGROUND MODEL "{model.label}" (store_id={model.store_id})'
         )
+
+    # set up a proxy object to avoid having to repeatedly serialize the model instance and ship it out
+    model_proxy = ModelProxy(model)
 
     ## STEP 2
     ## COMPUTE MATTER TRANSFER FUNCTIONS
