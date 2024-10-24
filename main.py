@@ -32,7 +32,7 @@ from CosmologyConcepts.wavenumber import wavenumber_exit_time_array
 from CosmologyModels.LambdaCDM import Planck2018
 from Datastore.SQL.ProfileAgent import ProfileAgent
 from Datastore.SQL.ShardedPool import ShardedPool
-from RayWorkPool import RayWorkPool
+from RayTools import RayWorkPool
 from Units import Mpc_units
 from defaults import (
     DEFAULT_ABS_TOLERANCE,
