@@ -1,5 +1,5 @@
 import time
-from typing import Optional, List
+from typing import Optional, List, Union
 
 import ray
 from math import log, exp
@@ -89,6 +89,16 @@ class QuadSourceSupervisor(IntegrationSupervisor):
         self._last_log_z = current_log_z
 
 
+def get_z(z):
+    if isinstance(z, redshift):
+        return z.z
+
+    elif isinstance(z, float):
+        return z
+
+    return float(z)
+
+
 @ray.remote
 def compute_QuadSource_integral(
     model: BackgroundModel,
@@ -162,7 +172,7 @@ def compute_QuadSource_integral(
         if (
             max_z is not None
             and min_z is not None
-            and max_z.z - min_z.z > DEFAULT_QUADRATURE_TOLERANCE
+            and get_z(max_z) - get_z(min_z) > DEFAULT_QUADRATURE_TOLERANCE
         ):
             now = time.time()
             print(
@@ -176,8 +186,8 @@ def compute_QuadSource_integral(
                 source,
                 Gk,
                 z_response,
-                max_z=max_z.z,
-                min_z=min_z.z,
+                max_z=get_z(max_z),
+                min_z=get_z(min_z),
                 tol=tol,
             )
             numeric_quad = payload["value"]
@@ -187,7 +197,7 @@ def compute_QuadSource_integral(
         if (
             max_z is not None
             and min_z is not None
-            and max_z.z - min_z.z > DEFAULT_QUADRATURE_TOLERANCE
+            and get_z(max_z) - get_z(min_z) > DEFAULT_QUADRATURE_TOLERANCE
         ):
             now = time.time()
             print(
@@ -201,8 +211,8 @@ def compute_QuadSource_integral(
                 source,
                 Gk,
                 z_response,
-                max_z=max_z.z,
-                min_z=min_z.z,
+                max_z=get_z(max_z),
+                min_z=get_z(min_z),
                 tol=tol,
             )
             WKB_quad = payload["value"]
@@ -212,7 +222,7 @@ def compute_QuadSource_integral(
         if (
             max_z is not None
             and min_z is not None
-            and max_z.z - min_z.z > DEFAULT_QUADRATURE_TOLERANCE
+            and get_z(max_z) - get_z(min_z) > DEFAULT_QUADRATURE_TOLERANCE
         ):
             now = time.time()
             print(
@@ -226,8 +236,8 @@ def compute_QuadSource_integral(
                 source,
                 Gk,
                 z_response,
-                max_z=max_z.z,
-                min_z=min_z.z,
+                max_z=get_z(max_z),
+                min_z=get_z(min_z),
                 tol=tol,
             )
             WKB_Levin = payload["value"]
@@ -248,11 +258,17 @@ def compute_QuadSource_integral(
     }
 
 
-def _extract_z(z: redshift) -> str:
+def _extract_z(z: Union[type(None), redshift, float]) -> str:
     if z is None:
         return "(not set)"
 
-    return f"{z.z:.5g}"
+    if isinstance(z, redshift):
+        return f"{z.z:.5g}"
+
+    if isinstance(z, float):
+        return f"{z:.5g}"
+
+    return f"{float(z):..5g}"
 
 
 def numeric_quad_integral(
@@ -383,12 +399,12 @@ def WKB_quad_integral(
 
     if Gk_f.WKB_Gk is None:
         raise RuntimeError(
-            f"compute_QuadSource_integral: attempting to evaluate WKB quadrature, but Gk_f.WKB_Gk is absent (type={Gk.type}, quality={Gk.quality}, lowest numeric z={_extract_z(Gk._numerical_smallest_z)}, primary WKB largest z={_extract_z(Gk._primary_WKB_largest_z)}) [domain={max_z:.5g}, {min_z:.5g}]"
+            f"compute_QuadSource_integral: attempting to evaluate WKB quadrature, but Gk_f.WKB_Gk is absent (type={Gk.type}, quality={Gk.quality}, lowest numeric z={_extract_z(Gk._numerical_smallest_z)}, primary WKB largest z={_extract_z(Gk._primary_WKB_largest_z)}, z_crossover={_extract_z(Gk.crossover_z)}) [domain={max_z:.5g}, {min_z:.5g}]"
         )
 
     if Gk_f.WKB_region is None:
         raise RuntimeError(
-            f"compute_QuadSource_integral: attempting to evaluate WKB quadrature, but Gk_f.WKB_region is absent (type={Gk.type}, quality={Gk.quality}, lowest numeric z={_extract_z(Gk._numerical_smallest_z)}, primary WKB largest z={_extract_z(Gk._primary_WKB_largest_z)}) [domain={max_z:.5g}, {min_z:.5g}]"
+            f"compute_QuadSource_integral: attempting to evaluate WKB quadrature, but Gk_f.WKB_region is absent (type={Gk.type}, quality={Gk.quality}, lowest numeric z={_extract_z(Gk._numerical_smallest_z)}, primary WKB largest z={_extract_z(Gk._primary_WKB_largest_z)}), z_crossover={_extract_z(Gk.crossover_z)} [domain={max_z:.5g}, {min_z:.5g}]"
         )
 
     region_max_z, region_min_z = Gk_f.WKB_region
@@ -429,7 +445,7 @@ def WKB_quad_integral(
             RHS,
             method="RK45",
             t_span=(log_min_z, log_max_z),
-            t_eval=[log_min_z],
+            t_eval=[log_max_z],
             y0=state,
             dense_output=True,
             atol=tol,
@@ -488,12 +504,12 @@ def WKB_Levin_integral(
 
     if Gk_f.theta is None:
         raise RuntimeError(
-            f"compute_QuadSource_integral: attempting to evaluate WKB Levin quadrature, but Gk_f.theta is absent (type={Gk.type}, quality={Gk.quality}, lowest numeric z={_extract_z(Gk._numerical_smallest_z)}, primary WKB largest z={_extract_z(Gk._primary_WKB_largest_z)}) [domain={max_z:.5g}, {min_z:.5g}]"
+            f"compute_QuadSource_integral: attempting to evaluate WKB Levin quadrature, but Gk_f.theta is absent (type={Gk.type}, quality={Gk.quality}, lowest numeric z={_extract_z(Gk._numerical_smallest_z)}, primary WKB largest z={_extract_z(Gk._primary_WKB_largest_z)}, z_crossover={_extract_z(Gk.crossover_z)}, z_Levin={_extract_z(Gk.Levin_z)}) [domain={max_z:.5g}, {min_z:.5g}]"
         )
 
     if Gk_f.WKB_region is None:
         raise RuntimeError(
-            f"compute_QuadSource_integral: attempting to evaluate WKB Levin quadrature, but Gk_f.WKB_region is absent (type={Gk.type}, quality={Gk.quality}, lowest numeric z={_extract_z(Gk._numerical_smallest_z)}, primary WKB largest z={_extract_z(Gk._primary_WKB_largest_z)}) [domain={max_z:.5g}, {min_z:.5g}]"
+            f"compute_QuadSource_integral: attempting to evaluate WKB Levin quadrature, but Gk_f.WKB_region is absent (type={Gk.type}, quality={Gk.quality}, lowest numeric z={_extract_z(Gk._numerical_smallest_z)}, primary WKB largest z={_extract_z(Gk._primary_WKB_largest_z)}, z_crossover={_extract_z(Gk.crossover_z)}, z_Levin={_extract_z(Gk.Levin_z)}) [domain={max_z:.5g}, {min_z:.5g}]"
         )
 
     region_max_z, region_min_z = Gk_f.WKB_region

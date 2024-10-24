@@ -805,7 +805,7 @@ class GkSource(DatastoreObject):
                 )
             ]
 
-            if len(numerical_data) > 5:
+            if len(numerical_data) >= MIN_SPLINE_DATA_POINTS:
                 numerical_region = (max_z.z, min_z.z)
 
                 numerical_data.sort(key=lambda x: x.z_source.z)
@@ -835,7 +835,7 @@ class GkSource(DatastoreObject):
 
             WKB_data = self._build_WKB_values(max_z, min_z)
 
-            if len(WKB_data) > MIN_SPLINE_DATA_POINTS:
+            if len(WKB_data) >= MIN_SPLINE_DATA_POINTS:
                 WKB_region = (max_z.z, min_z.z)
 
                 if (
