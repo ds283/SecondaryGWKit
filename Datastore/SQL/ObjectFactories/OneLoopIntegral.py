@@ -170,7 +170,7 @@ class sqla_OneLoopIntegral_factory(SQLAFactoryBase):
             row_data = conn.execute(query).one_or_none()
         except MultipleResultsFound as e:
             print(
-                f"!! OneLoopIntegral.build(): multiple results found when querying for OneLoopIntegral (k={k.k.k_inv_Mpc:.5g}/Mpc, store_id={q.store_id})"
+                f"!! OneLoopIntegral.build(): multiple results found when querying for OneLoopIntegral (k={k.k.k_inv_Mpc:.5g}/Mpc, store_id={k.store_id})"
             )
             raise e
 

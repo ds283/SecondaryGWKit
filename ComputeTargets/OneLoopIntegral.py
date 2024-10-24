@@ -23,7 +23,7 @@ class OneLoopIntegral(DatastoreObject):
 
         self._k_exit = k
 
-        self._z_repsonse = z_response
+        self._z_response = z_response
         if payload is None:
             DatastoreObject.__init__(self, None)
 
@@ -99,9 +99,9 @@ class OneLoopIntegral(DatastoreObject):
                 "OneLoopIntegral: compute() called, but _do_not_populate is set"
             )
 
-        if self._values is not None:
+        if self._value is None:
             raise RuntimeError(
-                "OneLoopIntegral: compute() called, but values have already been computed"
+                "OneLoopIntegral: compute() called, but value haa already been computed"
             )
 
         # replace label if specified
