@@ -493,6 +493,12 @@ class Datastore:
                 print(f"|  {e}")
                 raise e
 
+        # for obj in objects:
+        #     obj_pickled = cloudpickle.dumps(obj)
+        #     print(
+        #         f'## Datastore.object_get: serialized size of object type "{type(obj).__name__}" = {humanize.naturalsize(len(obj_pickled))}'
+        #     )
+
         if scalar:
             return objects[0]
 
