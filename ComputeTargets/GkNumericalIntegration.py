@@ -6,7 +6,7 @@ from math import fabs, pi, log, sqrt
 from scipy.integrate import solve_ivp
 from scipy.optimize import root_scalar
 
-from ComputeTargets.BackgroundModel import BackgroundModel
+from ComputeTargets.BackgroundModel import BackgroundModel, ModelProxy
 from ComputeTargets.WKB_tensor_Green import WKB_omegaEff_sq, WKB_d_ln_omegaEffPrime_dz
 from ComputeTargets.analytic_Gk import compute_analytic_G, compute_analytic_Gprime
 from ComputeTargets.integration_metadata import IntegrationSolver, IntegrationData
@@ -187,7 +187,7 @@ def search_G_minimum(sol, start_z: float, stop_z: float):
 
 @ray.remote
 def compute_Gk(
-    model: BackgroundModel,
+    model_proxy: ModelProxy,
     k: wavenumber_exit_time,
     z_source: redshift,
     z_sample: redshift_array,
@@ -199,7 +199,9 @@ def compute_Gk(
     stop_search_window_z_end: Optional[float] = None,
 ) -> dict:
     k_wavenumber: wavenumber = k.k
-    check_units(k_wavenumber, model.cosmology)
+    check_units(k_wavenumber, model_proxy)
+
+    model: BackgroundModel = model_proxy.get()
 
     mode = mode.lower()
     if mode is not None and mode not in ["stop"]:
@@ -438,7 +440,7 @@ class GkNumericalIntegration(DatastoreObject):
         self,
         payload,
         solver_labels: dict,
-        model: BackgroundModel,
+        model: ModelProxy,
         k: wavenumber_exit_time,
         atol: tolerance,
         rtol: tolerance,
@@ -450,7 +452,7 @@ class GkNumericalIntegration(DatastoreObject):
         mode: Optional[str] = None,
     ):
         k_wavenumber: wavenumber = k.k
-        check_units(k_wavenumber, model.cosmology)
+        check_units(k_wavenumber, model)
 
         self._solver_labels = solver_labels
         self._delta_logz = delta_logz
@@ -518,7 +520,7 @@ class GkNumericalIntegration(DatastoreObject):
         self._label = label
         self._tags = tags if tags is not None else []
 
-        self._model = model
+        self._model_proxy = model
 
         self._k_exit = k
         self._z_source = z_source
@@ -529,8 +531,8 @@ class GkNumericalIntegration(DatastoreObject):
         self._rtol = rtol
 
     @property
-    def model(self) -> BackgroundModel:
-        return self._model
+    def model_proxy(self) -> ModelProxy:
+        return self._model_proxy
 
     @property
     def k(self) -> wavenumber:
@@ -668,7 +670,7 @@ class GkNumericalIntegration(DatastoreObject):
             payload["stop_search_window_z_end"] = search_end
 
         self._compute_ref = compute_Gk.remote(
-            self._model,
+            self._model_proxy,
             self._k_exit,
             self.z_source,
             self.z_sample,
@@ -706,22 +708,24 @@ class GkNumericalIntegration(DatastoreObject):
         self._stop_G = data.get("stop_G", None)
         self._stop_Gprime = data.get("stop_Gprime", None)
 
-        Hsource = self._model.functions.Hubble(self.z_source.z)
+        model: BackgroundModel = self._model_proxy.get()
+
+        Hsource = model.functions.Hubble(self.z_source.z)
         k_over_aH = (1.0 + self.z_source.z) * self.k.k / Hsource
         self._init_efolds_suph = -log(k_over_aH)
 
         G_sample = data["G_sample"]
         Gprime_sample = data["Gprime_sample"]
 
-        tau_source = self._model.functions.tau(self._z_sample[0].z)
+        tau_source = model.functions.tau(self._z_sample[0].z)
 
         # need to be aware that G_sample may not be as long as self._z_sample, if we are working in "stop" mode
         self._values = []
         for i in range(len(G_sample)):
             current_z = self._z_sample[i]
             current_z_float = current_z.z
-            H = self._model.functions.Hubble(current_z_float)
-            tau = self._model.functions.tau(current_z_float)
+            H = model.functions.Hubble(current_z_float)
+            tau = model.functions.tau(current_z_float)
 
             analytic_G = compute_analytic_G(
                 self.k.k, 1.0 / 3.0, tau_source, tau, Hsource
@@ -729,9 +733,9 @@ class GkNumericalIntegration(DatastoreObject):
             analytic_Gprime = compute_analytic_Gprime(
                 self.k.k, 1.0 / 3.0, tau_source, tau, Hsource, H
             )
-            omega_WKB_sq = WKB_omegaEff_sq(self._model, self.k.k, current_z_float)
+            omega_WKB_sq = WKB_omegaEff_sq(model, self.k.k, current_z_float)
             WKB_criterion = fabs(
-                WKB_d_ln_omegaEffPrime_dz(self._model, self.k.k, current_z_float)
+                WKB_d_ln_omegaEffPrime_dz(model, self.k.k, current_z_float)
             ) / sqrt(fabs(omega_WKB_sq))
 
             # create new GkNumericalValue object

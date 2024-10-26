@@ -7,10 +7,10 @@ from sqlalchemy.exc import MultipleResultsFound
 
 from ComputeTargets import (
     QuadSourceIntegral,
-    BackgroundModel,
     IntegrationData,
     LevinData,
 )
+from ComputeTargets.BackgroundModel import ModelProxy
 from CosmologyConcepts import wavenumber_exit_time, redshift
 from Datastore.SQL.ObjectFactories.base import SQLAFactoryBase
 from MetadataConcepts import store_tag, tolerance
@@ -187,7 +187,7 @@ class sqla_QuadSourceIntegral_factory(SQLAFactoryBase):
 
     @staticmethod
     def build(payload, conn, table, inserter, tables, inserters):
-        model: BackgroundModel = payload["model"]
+        model_proxy: ModelProxy = payload["model"]
         k: wavenumber_exit_time = payload["k"]
         q: wavenumber_exit_time = payload["q"]
         r: wavenumber_exit_time = payload["r"]
@@ -235,7 +235,7 @@ class sqla_QuadSourceIntegral_factory(SQLAFactoryBase):
                 table.join(tol_table, tol_table.c.serial == table.c.tol_serial)
             )
             .filter(
-                table.c.model_serial == model.store_id,
+                table.c.model_serial == model_proxy.store_id,
                 table.c.k_wavenumber_exit_serial == k.store_id,
                 table.c.q_wavenumber_exit_serial == q.store_id,
                 table.c.r_wavenumber_exit_serial == r.store_id,
@@ -270,7 +270,7 @@ class sqla_QuadSourceIntegral_factory(SQLAFactoryBase):
         if row_data is None:
             return QuadSourceIntegral(
                 payload=None,
-                model=model,
+                model=model_proxy,
                 z_response=z_response,
                 z_source_max=z_source_max,
                 k=k,
@@ -318,7 +318,7 @@ class sqla_QuadSourceIntegral_factory(SQLAFactoryBase):
                     else None
                 ),
             },
-            model=model,
+            model=model_proxy,
             z_response=z_response,
             z_source_max=z_source_max,
             k=k,
@@ -348,7 +348,7 @@ class sqla_QuadSourceIntegral_factory(SQLAFactoryBase):
             conn,
             {
                 "label": obj.label,
-                "model_serial": obj._model.store_id,
+                "model_serial": obj._model_proxy.store_id,
                 "z_response_serial": obj._z_response.store_id,
                 "z_source_max_serial": obj._z_source_max.store_id,
                 "k_wavenumber_exit_serial": obj._k_exit.store_id,
@@ -439,7 +439,7 @@ class sqla_QuadSourceIntegral_factory(SQLAFactoryBase):
 
     @staticmethod
     def read_batch(payload, conn, table, tables):
-        model: BackgroundModel = payload["model"]
+        model_proxy: ModelProxy = payload["model"]
         k: wavenumber_exit_time = payload["k"]
 
         q: Optional[wavenumber_exit_time] = payload.get("k", None)
@@ -514,7 +514,7 @@ class sqla_QuadSourceIntegral_factory(SQLAFactoryBase):
                 .join(tol_table, tol_table.c.serial == table.c.tol_serial)
             )
             .filter(
-                table.c.model_serial == model.store_id,
+                table.c.model_serial == model_proxy.store_id,
                 table.c.k_wavenumber_exit_serial == k.store_id,
             )
         )
@@ -599,7 +599,7 @@ class sqla_QuadSourceIntegral_factory(SQLAFactoryBase):
                         else None
                     ),
                 },
-                model=model,
+                model=model_proxy,
                 z_response=z_response,
                 k=k,
                 q=q,

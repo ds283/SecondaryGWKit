@@ -2,7 +2,7 @@ from typing import Optional, List
 
 import ray
 
-from ComputeTargets.BackgroundModel import BackgroundModel
+from ComputeTargets.BackgroundModel import ModelProxy
 from CosmologyConcepts import wavenumber, wavenumber_exit_time, redshift
 from Datastore import DatastoreObject
 from MetadataConcepts import store_tag, tolerance
@@ -12,14 +12,14 @@ class OneLoopIntegral(DatastoreObject):
     def __init__(
         self,
         payload,
-        model,
+        model: ModelProxy,
         z_response: redshift,
         k: wavenumber_exit_time,
         tol: tolerance,
         label: Optional[str] = None,
         tags: Optional[List[store_tag]] = None,
     ):
-        self._model = model
+        self._model_proxy = model
 
         self._k_exit = k
 
@@ -51,8 +51,8 @@ class OneLoopIntegral(DatastoreObject):
         self._compute_ref = None
 
     @property
-    def model(self) -> BackgroundModel:
-        return self._model
+    def model_proxy(self) -> ModelProxy:
+        return self._model_proxy
 
     @property
     def k(self) -> wavenumber:

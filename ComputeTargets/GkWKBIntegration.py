@@ -5,7 +5,7 @@ import ray
 from math import log, sqrt, fabs, cos, sin, atan2, fmod, floor, pi
 from scipy.integrate import solve_ivp
 
-from ComputeTargets.BackgroundModel import BackgroundModel
+from ComputeTargets.BackgroundModel import BackgroundModel, ModelProxy
 from ComputeTargets.WKB_tensor_Green import WKB_omegaEff_sq, WKB_d_ln_omegaEffPrime_dz
 from ComputeTargets.analytic_Gk import (
     compute_analytic_G,
@@ -584,7 +584,7 @@ def stage_2_evolution(
 
 @ray.remote
 def compute_Gk_WKB(
-    model: BackgroundModel,
+    model_proxy: ModelProxy,
     k: wavenumber_exit_time,
     z_init: float,
     z_sample: redshift_array,
@@ -594,7 +594,9 @@ def compute_Gk_WKB(
     k_wavenumber: wavenumber = k.k
     k_float = float(k_wavenumber.k)
 
-    check_units(k_wavenumber, model.cosmology)
+    check_units(k_wavenumber, model_proxy)
+
+    model: BackgroundModel = model_proxy.get()
 
     # need to keep theta integration in bounds, otherwise we lose accuracy in the WKB solution.
     # no simple way to do this. See https://github.com/scipy/scipy/issues/19645.
@@ -769,7 +771,7 @@ class GkWKBIntegration(DatastoreObject):
         self,
         payload,
         solver_labels: dict,
-        model: BackgroundModel,
+        model: ModelProxy,
         k: wavenumber_exit_time,
         atol: tolerance,
         rtol: tolerance,
@@ -782,7 +784,7 @@ class GkWKBIntegration(DatastoreObject):
         tags: Optional[List[store_tag]] = None,
     ):
         k_wavenumber: wavenumber = k.k
-        check_units(k_wavenumber, model.cosmology)
+        check_units(k_wavenumber, model)
 
         self._solver_labels = solver_labels
         self._z_sample = z_sample
@@ -864,7 +866,7 @@ class GkWKBIntegration(DatastoreObject):
         self._label = label
         self._tags = tags if tags is not None else []
 
-        self._model = model
+        self._model_proxy = model
 
         self._k_exit = k
         self._z_source = z_source
@@ -875,8 +877,8 @@ class GkWKBIntegration(DatastoreObject):
         self._rtol = rtol
 
     @property
-    def model(self) -> BackgroundModel:
-        return self._model
+    def model_proxy(self) -> ModelProxy:
+        return self._model_proxy
 
     @property
     def k(self) -> wavenumber:
@@ -1029,11 +1031,13 @@ class GkWKBIntegration(DatastoreObject):
         if label is not None:
             self._label = label
 
+        model: BackgroundModel = self._model_proxy.get()
+
         initial_z = self._z_init if self._z_init is not None else self._z_source.z
 
-        omega_WKB_sq_init = WKB_omegaEff_sq(self._model, self._k_exit.k.k, initial_z)
+        omega_WKB_sq_init = WKB_omegaEff_sq(model, self._k_exit.k.k, initial_z)
         d_ln_omega_WKB_init = WKB_d_ln_omegaEffPrime_dz(
-            self._model, self._k_exit.k.k, initial_z
+            model, self._k_exit.k.k, initial_z
         )
 
         if omega_WKB_sq_init < 0.0:
@@ -1050,7 +1054,7 @@ class GkWKBIntegration(DatastoreObject):
             print(f"     This may lead to meaningless results.")
 
         self._compute_ref = compute_Gk_WKB.remote(
-            self._model,
+            self._model_proxy,
             self._k_exit,
             initial_z,
             self._z_sample,
@@ -1085,10 +1089,12 @@ class GkWKBIntegration(DatastoreObject):
 
         self._metadata = data["metadata"]
 
+        model: BackgroundModel = self._model_proxy.get()
+
         initial_z = self._z_init if self._z_init is not None else self._z_source.z
 
-        H_init = self._model.functions.Hubble(initial_z)
-        eps_init = self._model.functions.epsilon(initial_z)
+        H_init = model.functions.Hubble(initial_z)
+        eps_init = model.functions.epsilon(initial_z)
 
         one_plus_z_init = 1.0 + initial_z
         k_over_aH = one_plus_z_init * self.k.k / H_init
@@ -1096,9 +1102,9 @@ class GkWKBIntegration(DatastoreObject):
 
         # can assume here that omega_WKB_sq_init > 0 and the WKB criterion < 1.
         # This has been checked in compute()
-        omega_WKB_sq_init = WKB_omegaEff_sq(self._model, self._k_exit.k.k, initial_z)
+        omega_WKB_sq_init = WKB_omegaEff_sq(model, self._k_exit.k.k, initial_z)
         d_ln_omega_WKB_init = WKB_d_ln_omegaEffPrime_dz(
-            self._model, self._k_exit.k.k, initial_z
+            model, self._k_exit.k.k, initial_z
         )
 
         # we try to adjust the phase so that the solution is of the form G = amplitude * sin (theta + DeltaTheta)
@@ -1127,8 +1133,8 @@ class GkWKBIntegration(DatastoreObject):
         self._sin_coeff = sgn_sin_deltaTheta * sgn_G * alpha
 
         # estimate tau at the source redshift
-        H_source = self._model.functions.Hubble(self._z_source.z)
-        tau_source = self._model.functions.tau(self._z_source.z)
+        H_source = model.functions.Hubble(self._z_source.z)
+        tau_source = model.functions.tau(self._z_source.z)
 
         theta_div_2pi_sample = data["theta_div_2pi_sample"]
         theta_mod_2pi_sample = data["theta_mod_2pi_sample"]
@@ -1157,8 +1163,8 @@ class GkWKBIntegration(DatastoreObject):
         for i in range(len(theta_mod_2pi_sample)):
             current_z = self._z_sample[i]
             current_z_float = current_z.z
-            H = self._model.functions.Hubble(current_z_float)
-            tau = self._model.functions.tau(current_z_float)
+            H = model.functions.Hubble(current_z_float)
+            tau = model.functions.tau(current_z_float)
 
             analytic_G = compute_analytic_G(
                 self.k.k, 1.0 / 3.0, tau_source, tau, H_source
@@ -1168,13 +1174,11 @@ class GkWKBIntegration(DatastoreObject):
             )
 
             # should be safe to assume omega_WKB_sq > 0, since otherwise this would have been picked up during the integration
-            omega_WKB_sq = WKB_omegaEff_sq(
-                self._model, self._k_exit.k.k, current_z_float
-            )
+            omega_WKB_sq = WKB_omegaEff_sq(model, self._k_exit.k.k, current_z_float)
             omega_WKB = sqrt(omega_WKB_sq)
 
             d_ln_omega_WKB = WKB_d_ln_omegaEffPrime_dz(
-                self._model, self._k_exit.k.k, current_z_float
+                model, self._k_exit.k.k, current_z_float
             )
             WKB_criterion = fabs(d_ln_omega_WKB) / omega_WKB
 

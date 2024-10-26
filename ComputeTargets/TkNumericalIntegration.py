@@ -5,7 +5,7 @@ import ray
 from math import fabs, pi, log, sqrt
 from scipy.integrate import solve_ivp
 
-from ComputeTargets.BackgroundModel import BackgroundModel
+from ComputeTargets.BackgroundModel import BackgroundModel, ModelProxy
 from ComputeTargets.analytic_Tk import compute_analytic_T, compute_analytic_Tprime
 from ComputeTargets.integration_metadata import IntegrationSolver, IntegrationData
 from ComputeTargets.integration_supervisor import (
@@ -126,7 +126,7 @@ class TkIntegrationSupervisor(IntegrationSupervisor):
 
 @ray.remote
 def compute_Tk(
-    model: BackgroundModel,
+    model_proxy: ModelProxy,
     k: wavenumber,
     z_sample: redshift_array,
     z_init: redshift,
@@ -134,6 +134,8 @@ def compute_Tk(
     rtol: float = DEFAULT_REL_TOLERANCE,
     delta_logz: Optional[float] = None,
 ) -> dict:
+    model: BackgroundModel = model_proxy.get()
+
     check_units(k, model.cosmology)
 
     # obtain dimensionful value of wavenumber; this should be measured in the same units used by the cosmology
@@ -274,7 +276,7 @@ class TkNumericalIntegration(DatastoreObject):
         self,
         payload,
         solver_labels: dict,
-        model: BackgroundModel,
+        model: ModelProxy,
         k: wavenumber_exit_time,
         atol: tolerance,
         rtol: tolerance,
@@ -284,7 +286,7 @@ class TkNumericalIntegration(DatastoreObject):
         tags: Optional[List[store_tag]] = None,
         delta_logz: Optional[float] = None,
     ):
-        check_units(k.k, model.cosmology)
+        check_units(k.k, model)
 
         self._solver_labels = solver_labels
         self._delta_logz = delta_logz
@@ -346,7 +348,7 @@ class TkNumericalIntegration(DatastoreObject):
         self._label = label
         self._tags = tags if tags is not None else []
 
-        self._model = model
+        self._model_proxy = model
 
         self._k_exit = k
         self._z_init = z_init
@@ -357,8 +359,8 @@ class TkNumericalIntegration(DatastoreObject):
         self._rtol = rtol
 
     @property
-    def model(self) -> BackgroundModel:
-        return self._model
+    def model_proxy(self) -> ModelProxy:
+        return self._model_proxy
 
     @property
     def k(self) -> wavenumber:
@@ -465,7 +467,11 @@ class TkNumericalIntegration(DatastoreObject):
         if label is not None:
             self._label = label
 
-        Hinit = self._model.functions.Hubble(self.z_init.z)
+        # want model to go out of scope, so that it is deleted; we don't want to keep a copy in self,
+        # since that would mean it is serialized
+        model = self._model_proxy.get()
+
+        Hinit = model.functions.Hubble(self.z_init.z)
         k_over_aH = (1.0 + self.z_init.z) * self.k.k / Hinit
         wavelength = 2.0 * pi / k_over_aH
         efolds_suph = -log(k_over_aH)
@@ -479,7 +485,7 @@ class TkNumericalIntegration(DatastoreObject):
             )
 
         self._compute_ref = compute_Tk.remote(
-            self._model,
+            self._model_proxy,
             self.k,
             self.z_sample,
             self.z_init,
@@ -512,7 +518,9 @@ class TkNumericalIntegration(DatastoreObject):
         self._unresolved_z = data["unresolved_z"]
         self._unresolved_efolds_subh = data["unresolved_efolds_subh"]
 
-        Hinit = self._model.functions.Hubble(self.z_init.z)
+        model = self._model_proxy.get()
+
+        Hinit = model.functions.Hubble(self.z_init.z)
         k_over_aH = (1.0 + self.z_init.z) * self.k.k / Hinit
         self._init_efolds_suph = -log(k_over_aH)
 
@@ -521,8 +529,8 @@ class TkNumericalIntegration(DatastoreObject):
         self._values = []
 
         for i in range(len(T_sample)):
-            H = self._model.functions.Hubble(self._z_sample[i].z)
-            tau = self._model.functions.tau(self._z_sample[i].z)
+            H = model.functions.Hubble(self._z_sample[i].z)
+            tau = model.functions.tau(self._z_sample[i].z)
 
             analytic_T = compute_analytic_T(self.k.k, 1.0 / 3.0, tau)
             analytic_Tprime = compute_analytic_Tprime(self.k.k, 1.0 / 3.0, tau, H)

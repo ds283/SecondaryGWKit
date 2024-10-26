@@ -6,7 +6,7 @@ import ray
 from math import fabs, pi, sqrt, cos, sin, log
 from scipy.interpolate import InterpolatedUnivariateSpline
 
-from ComputeTargets.BackgroundModel import BackgroundModel
+from ComputeTargets.BackgroundModel import BackgroundModel, ModelProxy
 from ComputeTargets.GkNumericalIntegration import GkNumericalValue
 from ComputeTargets.GkWKBIntegration import GkWKBValue
 from ComputeTargets.spline_wrappers import GkWKBSplineWrapper, ZSplineWrapper
@@ -417,7 +417,7 @@ class GkSource(DatastoreObject):
     def __init__(
         self,
         payload,
-        model: BackgroundModel,
+        model: ModelProxy,
         k: wavenumber_exit_time,
         z_response: redshift,
         atol: tolerance,
@@ -427,11 +427,11 @@ class GkSource(DatastoreObject):
         tags: Optional[List[store_tag]] = None,
     ):
         k_wavenumber: wavenumber = k.k
-        check_units(k_wavenumber, model.cosmology)
+        check_units(k_wavenumber, model)
 
         self._z_sample = z_sample
 
-        self._model = model
+        self._model_proxy = model
         self._k_exit = k
         self._z_response = z_response
 
@@ -521,7 +521,7 @@ class GkSource(DatastoreObject):
 
             # _z_sample is guaranteed to be in descending order of redshift
             for z_source in self._z_sample:
-                if z_source.z <= max_z and z_source.z >= min_z:
+                if max_z >= z_source.z >= min_z:
                     if fabs(theta_deriv(z_source.z)) > LEVIN_THRESHOLD:
                         self._Levin_z = z_source
                         self._metadata["Levin_z_dtheta_dz"] = theta_deriv(z_source.z)
@@ -686,8 +686,8 @@ class GkSource(DatastoreObject):
         return self._k_exit.k
 
     @property
-    def model(self) -> BackgroundModel:
-        return self._model
+    def model_proxy(self) -> ModelProxy:
+        return self._model_proxy
 
     @property
     def z_response(self) -> redshift:
@@ -977,11 +977,12 @@ class GkSource(DatastoreObject):
         return self._values_df
 
     def _create_values_df(self):
+        model: BackgroundModel = self._model_proxy.get()
+
         z_source_store_id_col = [value.z_source.store_id for value in self._values]
         z_source_col = [value.z_source.z for value in self._values]
         z_source_efolds_subh_col = [
-            self._model.efolds_subh(self._k_exit.k, value.z_source)
-            for value in self._values
+            model.efolds_subh(self._k_exit.k, value.z_source) for value in self._values
         ]
         has_numeric_col = [value.has_numeric for value in self._values]
         G_col = [value.numeric.G for value in self._values]

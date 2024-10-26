@@ -5,7 +5,8 @@ import sqlalchemy as sqla
 from sqlalchemy import and_
 from sqlalchemy.exc import MultipleResultsFound
 
-from ComputeTargets import OneLoopIntegral, BackgroundModel
+from ComputeTargets import OneLoopIntegral
+from ComputeTargets.BackgroundModel import ModelProxy
 from CosmologyConcepts import wavenumber_exit_time, redshift
 from Datastore.SQL.ObjectFactories.base import SQLAFactoryBase
 from MetadataConcepts import store_tag, tolerance
@@ -120,7 +121,7 @@ class sqla_OneLoopIntegral_factory(SQLAFactoryBase):
 
     @staticmethod
     def build(payload, conn, table, inserter, tables, inserters):
-        model: BackgroundModel = payload["model"]
+        model_proxy: ModelProxy = payload["model"]
         k: wavenumber_exit_time = payload["k"]
         z_response: redshift = payload["z_response"]
 
@@ -145,7 +146,7 @@ class sqla_OneLoopIntegral_factory(SQLAFactoryBase):
                 table.join(tol_table, tol_table.c.serial == table.c.tol_serial)
             )
             .filter(
-                table.c.model_serial == model.store_id,
+                table.c.model_serial == model_proxy.store_id,
                 table.c.wavenumber_exit_serial == k.store_id,
                 table.c.z_response_serial == z_response.store_id,
                 table.c.tol_serial == tol.store_id,
@@ -177,7 +178,7 @@ class sqla_OneLoopIntegral_factory(SQLAFactoryBase):
         if row_data is None:
             return OneLoopIntegral(
                 payload=None,
-                model=model,
+                model=model_proxy,
                 z_response=z_response,
                 k=k,
                 tol=tol,
@@ -196,7 +197,7 @@ class sqla_OneLoopIntegral_factory(SQLAFactoryBase):
                     else None
                 ),
             },
-            model=model,
+            model=model_proxy,
             z_response=z_response,
             k=k,
             tol=tol,
@@ -219,7 +220,7 @@ class sqla_OneLoopIntegral_factory(SQLAFactoryBase):
             conn,
             {
                 "label": obj.label,
-                "model_serial": obj.model.store_id,
+                "model_serial": obj.model_proxy.store_id,
                 "z_response_serial": obj.z_response.store_id,
                 "wavenumber_exit_serial": obj._k_exit.store_id,
                 "tol_serial": obj._tol.store_id,
@@ -243,94 +244,92 @@ class sqla_OneLoopIntegral_factory(SQLAFactoryBase):
 
         return obj
 
-    @staticmethod
-    def read_batch(payload, conn, table, tables):
-        model: BackgroundModel = payload["model"]
 
-        k: wavenumber_exit_time = payload.get("k", None)
-        z_response: redshift = payload.get("z_response", None)
+def read_batch(payload, conn, table, tables):
+    model_proxy: ModelProxy = payload["model"]
 
-        tol: Optional[tolerance] = payload.get("tol", None)
-        tags: Optional[List[store_tag]] = payload.get("tags", None)
+    k: wavenumber_exit_time = payload.get("k", None)
+    z_response: redshift = payload.get("z_response", None)
 
-        tol_table = tables["tolerance"].alias("tol")
-        k_exit_table = tables["wavenumber_exit_time"].alias("k_exit_tab")
-        k_table = tables["wavenumber"].alias("k_tab")
-        redshift_table = tables["redshift"]
+    tol: Optional[tolerance] = payload.get("tol", None)
+    tags: Optional[List[store_tag]] = payload.get("tags", None)
 
-        query = (
-            sqla.select(
-                table.c.serial,
-                table.c.compute_time,
-                table.c.label,
-                table.c.metadata,
-                table.c.value,
-                tol_table.c.log10_tol,
-                table.c.z_response_serial,
-                redshift_table.c.z.label("z_response"),
+    tol_table = tables["tolerance"].alias("tol")
+    k_exit_table = tables["wavenumber_exit_time"].alias("k_exit_tab")
+    k_table = tables["wavenumber"].alias("k_tab")
+    redshift_table = tables["redshift"]
+
+    query = (
+        sqla.select(
+            table.c.serial,
+            table.c.compute_time,
+            table.c.label,
+            table.c.metadata,
+            table.c.value,
+            tol_table.c.log10_tol,
+            table.c.z_response_serial,
+            redshift_table.c.z.label("z_response"),
+        )
+        .select_from(
+            table.join(tol_table, tol_table.c.serial == table.c.tol_serial)
+            .join(redshift_table, redshift_table.c.serial == table.c.z_response_serial)
+            .join(
+                k_exit_table,
+                k_exit_table.c.serial == table.c.wavenumber_exit_serial,
             )
-            .select_from(
-                table.join(tol_table, tol_table.c.serial == table.c.tol_serial)
-                .join(
-                    redshift_table, redshift_table.c.serial == table.c.z_response_serial
-                )
-                .join(
-                    k_exit_table,
-                    k_exit_table.c.serial == table.c.wavenumber_exit_serial,
-                )
-                .join(k_table, k_table.c.serial == k_exit_table.c.wavenumber_serial)
-            )
-            .filter(
-                table.c.model_serial == model.store_id,
-            )
+            .join(k_table, k_table.c.serial == k_exit_table.c.wavenumber_serial)
+        )
+        .filter(
+            table.c.model_serial == model_proxy.store_id,
+        )
+    )
+
+    if k is not None:
+        query = query.filter(table.c.wavenumber_exit_serial == k.store_id)
+
+    if z_response is not None:
+        query = query.filter(table.c.z_response_serial == z_response.store_id)
+
+    if tol is not None:
+        query = query.filter(
+            table.c.tol_serial == tol.store_id,
         )
 
-        if k is not None:
-            query = query.filter(table.c.wavenumber_exit_serial == k.store_id)
+    count = 0
+    for tag in tags:
+        tag: store_tag
+        tab = tables["OneLoopIntegral_tags"].alias(f"tag_{count}")
+        count += 1
+        query = query.join(
+            tab,
+            and_(
+                tab.c.parent_serial == query.c.serial,
+                tab.c.tag_serial == tag.store_id,
+            ),
+        )
 
-        if z_response is not None:
-            query = query.filter(table.c.z_response_serial == z_response.store_id)
+    row_data = conn.execute(query)
 
-        if tol is not None:
-            query = query.filter(
-                table.c.tol_serial == tol.store_id,
-            )
+    # TODO: not yet complete
 
-        count = 0
-        for tag in tags:
-            tag: store_tag
-            tab = tables["OneLoopIntegral_tags"].alias(f"tag_{count}")
-            count += 1
-            query = query.join(
-                tab,
-                and_(
-                    tab.c.parent_serial == query.c.serial,
-                    tab.c.tag_serial == tag.store_id,
+    def make_object(row_data):
+        obj = OneLoopIntegral(
+            payload={
+                "store_id": row_data.serial,
+                "compute_time": row_data.compute_time,
+                "value": row_data.value,
+                "metadata": (
+                    json.loads(row_data.metadata)
+                    if row_data.metadata is not None
+                    else None
                 ),
-            )
-
-        row_data = conn.execute(query)
-
-        # TODO: not yet complete
-
-        def make_object(row_data):
-            obj = OneLoopIntegral(
-                payload={
-                    "store_id": row_data.serial,
-                    "compute_time": row_data.compute_time,
-                    "value": row_data.value,
-                    "metadata": (
-                        json.loads(row_data.metadata)
-                        if row_data.metadata is not None
-                        else None
-                    ),
-                },
-                model=model,
-                z_response=z_response,
-                k=k,
-                tol=tol,
-                label=row_data.label,
-                tags=tags,
-            )
-            obj._deserialized = True
-            return obj
+            },
+            model=model_proxy,
+            z_response=z_response,
+            k=k,
+            tol=tol,
+            label=row_data.label,
+            tags=tags,
+        )
+        obj._deserialized = True
+        return obj

@@ -18,7 +18,7 @@ from CosmologyConcepts import (
 from CosmologyModels.LambdaCDM import Planck2018, LambdaCDM
 from Datastore.SQL.ShardedPool import ShardedPool
 from MetadataConcepts import tolerance
-from RayTools import RayWorkPool
+from RayTools.RayWorkPool import RayWorkPool
 from Units import Mpc_units
 from defaults import DEFAULT_ABS_TOLERANCE, DEFAULT_REL_TOLERANCE
 

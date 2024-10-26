@@ -21,6 +21,7 @@ from ComputeTargets import (
     GkSource,
     QuadSourceIntegral,
 )
+from ComputeTargets.BackgroundModel import ModelProxy
 from CosmologyConcepts import (
     wavenumber,
     redshift,
@@ -32,8 +33,7 @@ from CosmologyConcepts.wavenumber import wavenumber_exit_time_array
 from CosmologyModels.LambdaCDM import Planck2018
 from Datastore.SQL.ProfileAgent import ProfileAgent
 from Datastore.SQL.ShardedPool import ShardedPool
-from RayTools import RayWorkPool
-from RayTools.ModelProxy import ModelProxy
+from RayTools.RayWorkPool import RayWorkPool
 from Units import Mpc_units
 from defaults import (
     DEFAULT_ABS_TOLERANCE,
@@ -402,7 +402,7 @@ with ShardedPool(
         return pool.object_get(
             "TkNumericalIntegration",
             solver_labels=solvers,
-            model=model,
+            model=model_proxy,
             k=k_exit,
             z_sample=my_sample,
             z_init=my_sample.max,
@@ -446,7 +446,7 @@ with ShardedPool(
 
         payload_batch = [
             {
-                "model": model,
+                "model": model_proxy,
                 "z_sample": z_source_sample,
                 "k": q,
                 "z_init": None,  # don't specify
@@ -462,7 +462,7 @@ with ShardedPool(
                 ],
             },
             {
-                "model": model,
+                "model": model_proxy,
                 "z_sample": z_source_sample,
                 "k": r,
                 "z_init": None,  # don't specify
@@ -502,7 +502,7 @@ with ShardedPool(
         return {
             "ref": pool.object_get(
                 "QuadSource",
-                model=model,
+                model=model_proxy,
                 z_sample=z_source_sample,
                 q=q,
                 r=r,
@@ -581,7 +581,7 @@ with ShardedPool(
                 "payload": [
                     {
                         "solver_labels": [],
-                        "model": model,
+                        "model": model_proxy,
                         "z_source": z_source,
                         "z_sample": None,
                         "atol": atol,
@@ -606,7 +606,7 @@ with ShardedPool(
             pool,
             query_batch,
             task_builder=lambda x: pool.object_get_vectorized(
-                "GkWKBIntegration", x["shard_key"], payload_data=x["payload"]
+                "GkNumericalIntegration", x["shard_key"], payload_data=x["payload"]
             ),
             available_handler=None,
             compute_handler=None,
@@ -665,7 +665,7 @@ with ShardedPool(
                             pool.object_get(
                                 "GkNumericalIntegration",
                                 solver_labels=solvers,
-                                model=model,
+                                model=model_proxy,
                                 k=k_exit,
                                 z_source=z_source,
                                 z_sample=response_zs,
@@ -738,7 +738,7 @@ with ShardedPool(
                 "payload": [
                     {
                         "solver_labels": [],
-                        "model": model,
+                        "model": model_proxy,
                         "z_source": z_source,
                         "z_sample": None,
                         "atol": atol,
@@ -802,7 +802,7 @@ with ShardedPool(
                 "payload": [
                     {
                         "solver_labels": [],
-                        "model": model,
+                        "model": model_proxy,
                         "z_source": z_source,
                         "z_sample": None,
                         "atol": atol,
@@ -905,7 +905,7 @@ with ShardedPool(
                             pool.object_get(
                                 "GkWKBIntegration",
                                 solver_labels=solvers,
-                                model=model,
+                                model=model_proxy,
                                 k=k_exit,
                                 z_source=z_source,
                                 z_init=z_init,
@@ -952,7 +952,7 @@ with ShardedPool(
                         pool.object_get(
                             "GkWKBIntegration",
                             solver_labels=solvers,
-                            model=model,
+                            model=model_proxy,
                             k=k_exit,
                             z_source=z_source,
                             G_init=0.0,
@@ -1035,6 +1035,7 @@ with ShardedPool(
 
         data = {
             "store_id": Gk.store_id,
+            "model_store_id": Gk.model_proxy.store_id,
             "k_inv_Mpc": Gk.k.k_inv_Mpc,
             "k_store_id": Gk.k.store_id,
             "k_exit_store_id": Gk._k_exit.store_id,
@@ -1127,7 +1128,7 @@ with ShardedPool(
                 "shard_key": {"k": k_exit},
                 "payload": [
                     {
-                        "model": model,
+                        "model": model_proxy,
                         "z_response": z_response,
                         "z_sample": None,
                         "atol": atol,
@@ -1221,7 +1222,7 @@ with ShardedPool(
                 "shard_key": {"k": k_exit},
                 "object": cls_name,
                 "payload": {
-                    "model": model,
+                    "model": model_proxy,
                     "z": z_response,  # no specification of z_source; means we read all available z_source values
                     "atol": atol,
                     "rtol": rtol,
@@ -1325,7 +1326,7 @@ with ShardedPool(
                     {
                         "ref": pool.object_get(
                             "GkSource",
-                            model=model,
+                            model=model_proxy,
                             k=k_exit,
                             atol=atol,
                             rtol=rtol,
@@ -1357,7 +1358,7 @@ with ShardedPool(
                 "shard_key": {"k": k_exit},
                 "payload": [
                     {
-                        "model": model,
+                        "model": model_proxy,
                         "z_response": z_response,
                         "z_sample": None,
                         "atol": atol,
@@ -1496,7 +1497,7 @@ with ShardedPool(
                 "shard_key": {"k": k},
                 "payload": [
                     {
-                        "model": model,
+                        "model": model_proxy,
                         "q": q,
                         "r": r,
                         "z_response": z_response,
@@ -1586,7 +1587,7 @@ with ShardedPool(
                 "shard_key": {"k": k},
                 "payload": [
                     {
-                        "model": model,
+                        "model": model_proxy,
                         "z_response": z_response,
                         "z_sample": None,  # need to specify, but not queried against; we pick up whatever z_source sample is stored
                         "atol": atol,
@@ -1611,7 +1612,7 @@ with ShardedPool(
                 "shard_key": {"q": q},
                 "payload": [
                     {
-                        "model": model,
+                        "model": model_proxy,
                         "z_sample": None,
                         "r": r,
                         "tags": [
@@ -1719,7 +1720,7 @@ with ShardedPool(
                 {
                     "ref": pool.object_get(
                         "QuadSourceIntegral",
-                        model=model,
+                        model=model_proxy,
                         k=k,
                         q=q,
                         r=r,

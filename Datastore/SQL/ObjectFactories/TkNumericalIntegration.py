@@ -13,6 +13,7 @@ from ComputeTargets import (
     BackgroundModel,
     IntegrationData,
 )
+from ComputeTargets.BackgroundModel import ModelProxy
 from CosmologyConcepts import redshift_array, redshift, wavenumber_exit_time
 from Datastore.SQL.ObjectFactories.base import SQLAFactoryBase
 from MetadataConcepts import tolerance, store_tag
@@ -169,7 +170,7 @@ class sqla_TkNumericalIntegration_factory(SQLAFactoryBase):
         rtol: tolerance = payload["rtol"]
 
         k_exit: wavenumber_exit_time = payload["k"]
-        model: BackgroundModel = payload["model"]
+        model_proxy: ModelProxy = payload["model"]
         z_sample: redshift_array = payload["z_sample"]
         z_init: redshift = payload["z_init"]
 
@@ -214,7 +215,7 @@ class sqla_TkNumericalIntegration_factory(SQLAFactoryBase):
             .filter(
                 table.c.validated == True,
                 table.c.wavenumber_exit_serial == k_exit.store_id,
-                table.c.model_serial == model.store_id,
+                table.c.model_serial == model_proxy.store_id,
                 table.c.atol_serial == atol.store_id,
                 table.c.rtol_serial == rtol.store_id,
             )
@@ -252,7 +253,7 @@ class sqla_TkNumericalIntegration_factory(SQLAFactoryBase):
             return TkNumericalIntegration(
                 payload=None,
                 solver_labels=solver_labels,
-                model=model,
+                model=model_proxy,
                 label=label,
                 k=k_exit,
                 atol=atol,
@@ -346,7 +347,7 @@ class sqla_TkNumericalIntegration_factory(SQLAFactoryBase):
                 "values": values,
             },
             solver_labels=solver_labels,
-            model=model,
+            model=model_proxy,
             label=store_label,
             k=k_exit,
             atol=atol,
@@ -376,7 +377,7 @@ class sqla_TkNumericalIntegration_factory(SQLAFactoryBase):
             {
                 "label": obj.label,
                 "wavenumber_exit_serial": obj._k_exit.store_id,
-                "model_serial": obj.model.store_id,
+                "model_serial": obj.model_proxy.store_id,
                 "atol_serial": obj._atol.store_id,
                 "rtol_serial": obj._rtol.store_id,
                 "solver_serial": obj.solver.store_id,
@@ -605,21 +606,21 @@ class sqla_TkNumericalValue_factory(SQLAFactoryBase):
     def build(payload, conn, table, inserter, tables, inserters):
         integration_serial: Optional[int] = payload.get("integration_serial", None)
 
-        model: Optional[BackgroundModel] = payload.get("model", None)
+        model_proxy: Optional[BackgroundModel] = payload.get("model_proxy", None)
         k: Optional[wavenumber_exit_time] = payload.get("k", None)
         z_init: Optional[redshift] = payload.get("z_init", None)
 
         has_serial = all([integration_serial is not None])
-        has_model = all([model is not None, k is not None, z_init is not None])
+        has_model = all([model_proxy is not None, k is not None, z_init is not None])
 
         if all([has_serial, has_model]):
             print(
-                "## GkNumericalValue.build(): both an integration serial number and a (model, wavenumber, z_source) set were queried. Only the serial number will be used."
+                "## GkNumericalValue.build(): both an integration serial number and a (model_proxy, wavenumber, z_source) set were queried. Only the serial number will be used."
             )
 
         if not any([has_serial, has_model]):
             raise RuntimeError(
-                "GkNumericalValue.build(): at least one of an integration serial number and a (model, wavenumber, z_source) set must be supplied."
+                "GkNumericalValue.build(): at least one of an integration serial number and a (model_proxy, wavenumber, z_source) set must be supplied."
             )
 
         if has_serial:
@@ -708,7 +709,7 @@ class sqla_TkNumericalValue_factory(SQLAFactoryBase):
     def _build_impl_model(payload, conn, table, inserter, tables, inserters):
         z = payload["z"]
 
-        model: BackgroundModel = payload["model"]
+        model_proxy: ModelProxy = payload["model"]
         k: wavenumber_exit_time = payload["k"]
         z_init: redshift = payload["z_source"]
 
@@ -720,7 +721,7 @@ class sqla_TkNumericalValue_factory(SQLAFactoryBase):
 
         try:
             integration_query = sqla.select(integration_table.c.serial).filter(
-                integration_table.c.model_serial == model.store_id,
+                integration_table.c.model_serial == model_proxy.store_id,
                 integration_table.c.wavenumber_exit_serial == k.store_id,
                 integration_table.c.z_init_serial == z_init.store_id,
                 integration_table.c.validated == True,

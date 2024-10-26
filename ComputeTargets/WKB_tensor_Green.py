@@ -1,4 +1,4 @@
-from ComputeTargets import BackgroundModel
+from ComputeTargets.BackgroundModel import BackgroundModel
 
 
 def WKB_omegaEff_sq(model: BackgroundModel, k: float, z: float):

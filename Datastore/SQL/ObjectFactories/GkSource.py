@@ -7,10 +7,10 @@ from sqlalchemy.exc import MultipleResultsFound, SQLAlchemyError
 
 from ComputeTargets import (
     GkWKBIntegration,
-    BackgroundModel,
     GkSource,
     GkSourceValue,
 )
+from ComputeTargets.BackgroundModel import ModelProxy
 from CosmologyConcepts import wavenumber_exit_time, redshift_array, redshift
 from Datastore.SQL.ObjectFactories.base import SQLAFactoryBase
 from MetadataConcepts import store_tag, tolerance
@@ -196,7 +196,7 @@ class sqla_GkSource_factory(SQLAFactoryBase):
         rtol: tolerance = payload["rtol"]
 
         k_exit: wavenumber_exit_time = payload["k"]
-        model: BackgroundModel = payload["model"]
+        model_proxy: ModelProxy = payload["model_proxy"]
         z_sample: redshift_array = payload["z_sample"]
         z_response: redshift = payload["z_response"]
 
@@ -248,7 +248,7 @@ class sqla_GkSource_factory(SQLAFactoryBase):
             .filter(
                 table.c.validated == True,
                 table.c.wavenumber_exit_serial == k_exit.store_id,
-                table.c.model_serial == model.store_id,
+                table.c.model_serial == model_proxy.store_id,
                 table.c.atol_serial == atol.store_id,
                 table.c.rtol_serial == rtol.store_id,
             )
@@ -287,7 +287,7 @@ class sqla_GkSource_factory(SQLAFactoryBase):
                 payload=None,
                 label=label,
                 k=k_exit,
-                model=model,
+                model=model_proxy,
                 atol=atol,
                 rtol=rtol,
                 z_response=z_response,
@@ -420,7 +420,7 @@ class sqla_GkSource_factory(SQLAFactoryBase):
                 ),
             },
             k=k_exit,
-            model=model,
+            model=model_proxy,
             label=store_label,
             atol=atol,
             rtol=rtol,
@@ -434,10 +434,10 @@ class sqla_GkSource_factory(SQLAFactoryBase):
             setattr(obj, key, value)
 
         # obj_pickled = cloudpickle.dumps(obj)
-        # model_pickled = cloudpickle.dumps(model)
+        # model_pickled = cloudpickle.dumps(model_proxy)
         # sample_pickled = cloudpickle.dumps(imported_z_sample)
         # print(
-        #     f"** deserialized GkSource object (store_id={store_id}) with cloudpickle size={humanize.naturalsize(len(obj_pickled), binary=True)}, model size={humanize.naturalsize(len(model_pickled), binary=True)}, zsample size={humanize.naturalsize(len(sample_pickled), binary=True)}) | _do_not_populate={payload.get("_do_not_populate", False)}"
+        #     f"** deserialized GkSource object (store_id={store_id}) with cloudpickle size={humanize.naturalsize(len(obj_pickled), binary=True)}, model_proxy size={humanize.naturalsize(len(model_pickled), binary=True)}, zsample size={humanize.naturalsize(len(sample_pickled), binary=True)}) | _do_not_populate={payload.get("_do_not_populate", False)}"
         # )
 
         return obj
@@ -456,7 +456,7 @@ class sqla_GkSource_factory(SQLAFactoryBase):
             {
                 "label": obj.label,
                 "wavenumber_exit_serial": obj._k_exit.store_id,
-                "model_serial": obj.model.store_id,
+                "model_serial": obj.model_proxy.store_id,
                 "atol_serial": obj._atol.store_id,
                 "rtol_serial": obj._rtol.store_id,
                 "z_response_serial": obj.z_response.store_id,
@@ -713,12 +713,12 @@ class sqla_GkSourceValue_factory(SQLAFactoryBase):
     def build(payload, conn, table, inserter, tables, inserters):
         parent_serial = payload.get("parent_serial", None)
 
-        model: Optional[BackgroundModel] = payload.get("model", None)
+        model_proxy: Optional[ModelProxy] = payload.get("model", None)
         k: Optional[wavenumber_exit_time] = payload.get("k", None)
         z_source: Optional[redshift] = payload.get("z_source", None)
 
         has_serial = all([parent_serial is not None])
-        has_model = all([model is not None, k is not None, z_source is not None])
+        has_model = all([model_proxy is not None, k is not None, z_source is not None])
 
         if all([has_serial, has_model]):
             print(
@@ -900,7 +900,7 @@ class sqla_GkSourceValue_factory(SQLAFactoryBase):
     def _build_impl_model(payload, conn, table, inserter, tables, inserters):
         z_source = payload["z_source"]
 
-        model: BackgroundModel = payload["model"]
+        model_proxy: ModelProxy = payload["model"]
         k: wavenumber_exit_time = payload["k"]
         z_response: redshift = payload["z_response"]
 
@@ -916,7 +916,7 @@ class sqla_GkSourceValue_factory(SQLAFactoryBase):
             #  as good as we can do. But it is still slow. For production use, should look at how this
             #  can be improved.
             source_query = sqla.select(source_table.c.serial).filter(
-                source_table.c.model_serial == model.store_id,
+                source_table.c.model_serial == model_proxy.store_id,
                 source_table.c.wavenumber_exit_serial == k.store_id,
                 source_table.c.z_response_serial == z_response.store_id,
                 source_table.c.validated == True,

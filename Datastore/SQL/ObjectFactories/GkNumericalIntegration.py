@@ -9,9 +9,9 @@ from ComputeTargets import (
     GkNumericalIntegration,
     GkNumericalValue,
     IntegrationSolver,
-    BackgroundModel,
     IntegrationData,
 )
+from ComputeTargets.BackgroundModel import ModelProxy
 from CosmologyConcepts import redshift_array, redshift, wavenumber_exit_time
 from Datastore.SQL.ObjectFactories.base import SQLAFactoryBase
 from MetadataConcepts import tolerance, store_tag
@@ -171,7 +171,7 @@ class sqla_GkNumericalIntegration_factory(SQLAFactoryBase):
         rtol: tolerance = payload["rtol"]
 
         k_exit: wavenumber_exit_time = payload["k"]
-        model: BackgroundModel = payload["model"]
+        model_proxy: ModelProxy = payload["model"]
         z_sample: redshift_array = payload["z_sample"]
         z_source: redshift = payload.get("z_source", None)
 
@@ -225,7 +225,7 @@ class sqla_GkNumericalIntegration_factory(SQLAFactoryBase):
             .filter(
                 table.c.validated == True,
                 table.c.wavenumber_exit_serial == k_exit.store_id,
-                table.c.model_serial == model.store_id,
+                table.c.model_serial == model_proxy.store_id,
                 table.c.atol_serial == atol.store_id,
                 table.c.rtol_serial == rtol.store_id,
             )
@@ -265,7 +265,7 @@ class sqla_GkNumericalIntegration_factory(SQLAFactoryBase):
                 solver_labels=solver_labels,
                 label=label,
                 k=k_exit,
-                model=model,
+                model=model_proxy,
                 atol=atol,
                 rtol=rtol,
                 z_source=z_source,
@@ -368,7 +368,7 @@ class sqla_GkNumericalIntegration_factory(SQLAFactoryBase):
             },
             solver_labels=solver_labels,
             k=k_exit,
-            model=model,
+            model=model_proxy,
             label=store_label,
             atol=atol,
             rtol=rtol,
@@ -398,7 +398,7 @@ class sqla_GkNumericalIntegration_factory(SQLAFactoryBase):
             {
                 "label": obj.label,
                 "wavenumber_exit_serial": obj._k_exit.store_id,
-                "model_serial": obj.model.store_id,
+                "model_serial": obj.model_proxy.store_id,
                 "atol_serial": obj._atol.store_id,
                 "rtol_serial": obj._rtol.store_id,
                 "solver_serial": obj.solver.store_id,
@@ -631,12 +631,12 @@ class sqla_GkNumericalValue_factory(SQLAFactoryBase):
     def build(payload, conn, table, inserter, tables, inserters):
         integration_serial = payload.get("integration_serial", None)
 
-        model: Optional[BackgroundModel] = payload.get("model", None)
+        model_proxy: Optional[ModelProxy] = payload.get("model", None)
         k: Optional[wavenumber_exit_time] = payload.get("k", None)
         z_source: Optional[redshift] = payload.get("z_source", None)
 
         has_serial = all([integration_serial is not None])
-        has_model = all([model is not None, k is not None, z_source is not None])
+        has_model = all([model_proxy is not None, k is not None, z_source is not None])
 
         if all([has_serial, has_model]):
             print(
@@ -751,7 +751,7 @@ class sqla_GkNumericalValue_factory(SQLAFactoryBase):
     def _build_impl_model(payload, conn, table, inserter, tables, inserters):
         z = payload["z"]
 
-        model: BackgroundModel = payload["model"]
+        model_proxy: ModelProxy = payload["model"]
         k: wavenumber_exit_time = payload["k"]
         z_source: redshift = payload["z_source"]
 
@@ -767,7 +767,7 @@ class sqla_GkNumericalValue_factory(SQLAFactoryBase):
             #  as good as we can do. But it is still slow. For production use, should look at how this
             #  can be improved.
             integration_query = sqla.select(integration_table.c.serial).filter(
-                integration_table.c.model_serial == model.store_id,
+                integration_table.c.model_serial == model_proxy.store_id,
                 integration_table.c.wavenumber_exit_serial == k.store_id,
                 integration_table.c.z_source_serial == z_source.store_id,
                 integration_table.c.validated == True,
@@ -847,7 +847,7 @@ class sqla_GkNumericalValue_factory(SQLAFactoryBase):
 
     @staticmethod
     def read_batch(payload, conn, table, tables):
-        model: BackgroundModel = payload["model"]
+        model_proxy: ModelProxy = payload["model"]
         k: wavenumber_exit_time = payload["k"]
 
         atol: Optional[tolerance] = payload.get("atol", None)
@@ -867,7 +867,7 @@ class sqla_GkNumericalValue_factory(SQLAFactoryBase):
                 redshift_table.c.z.label("z_source"),
             )
             .filter(
-                integration_table.c.model_serial == model.store_id,
+                integration_table.c.model_serial == model_proxy.store_id,
                 integration_table.c.wavenumber_exit_serial == k.store_id,
                 integration_table.c.validated == True,
             )

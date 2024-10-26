@@ -5,7 +5,7 @@ import ray
 from math import log
 from scipy.interpolate import InterpolatedUnivariateSpline
 
-from ComputeTargets.BackgroundModel import BackgroundModel
+from ComputeTargets.BackgroundModel import BackgroundModel, ModelProxy
 from ComputeTargets.TkNumericalIntegration import (
     TkNumericalIntegration,
     TkNumericalValue,
@@ -53,11 +53,13 @@ def source_function(
 
 @ray.remote
 def compute_quad_source(
-    model: BackgroundModel,
+    model_proxy: ModelProxy,
     z_sample: redshift_array,
     Tq: TkNumericalIntegration,
     Tr: TkNumericalIntegration,
 ):
+    model: BackgroundModel = model_proxy.get()
+
     Tq_zsample = Tq.z_sample
     Tr_zsample = Tr.z_sample
 
@@ -167,7 +169,7 @@ class QuadSource(DatastoreObject):
     def __init__(
         self,
         payload,
-        model: BackgroundModel,
+        model: ModelProxy,
         z_sample: redshift_array,
         q: wavenumber_exit_time,
         r: wavenumber_exit_time,
@@ -200,15 +202,15 @@ class QuadSource(DatastoreObject):
         self._q_exit = q
         self._r_exit = r
 
-        self._model = model
+        self._model_proxy = model
 
         self._functions = None
 
         self._compute_ref = None
 
     @property
-    def model(self) -> BackgroundModel:
-        return self._model
+    def model_proxy(self) -> ModelProxy:
+        return self._model_proxy
 
     @property
     def q(self) -> wavenumber:
@@ -306,13 +308,13 @@ class QuadSource(DatastoreObject):
             raise RuntimeError("QuadSource: Supplied Tr is not available")
 
         # ensure that data ingredients are compatible with our specification
-        check_cosmology(Tq.model, self.model)
-        check_cosmology(Tr.model, self.model)
+        check_cosmology(Tq.model_proxy, self._model_proxy)
+        check_cosmology(Tr.model_proxy, self._model_proxy)
 
         # don't check for equality between z-sample grids, because Tq and Tr will probably have different initial times if q is not equal to r
 
         self._compute_ref = compute_quad_source.remote(
-            self._model,
+            self._model_proxy,
             self.z_sample,
             Tq,
             Tr,

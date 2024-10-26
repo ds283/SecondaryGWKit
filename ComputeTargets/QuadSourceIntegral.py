@@ -6,7 +6,7 @@ from math import log, exp
 from scipy.integrate import solve_ivp
 
 from AdaptiveLevin import adaptive_levin_sincos
-from ComputeTargets.BackgroundModel import BackgroundModel
+from ComputeTargets.BackgroundModel import BackgroundModel, ModelProxy
 from ComputeTargets.GkSource import GkSource
 from ComputeTargets.QuadSource import QuadSource
 from ComputeTargets.integration_metadata import IntegrationData, LevinData
@@ -101,7 +101,7 @@ def get_z(z):
 
 @ray.remote
 def compute_QuadSource_integral(
-    model: BackgroundModel,
+    model_proxy: ModelProxy,
     k: wavenumber_exit_time,
     q: wavenumber_exit_time,
     r: wavenumber_exit_time,
@@ -118,6 +118,8 @@ def compute_QuadSource_integral(
         f"** QUADRATIC SOURCE INTEGRAL: k={k.k.k_inv_Mpc:.3g}/Mpc, q={q.k.k_inv_Mpc:.3g}/Mpc, r={r.k.k_inv_Mpc:.3g}/Mpc (source store_id={source.store_id}, k store_id={k.store_id}) starting calculation for z_response={z_response.z:.5g}"
     )
     start_time = time.time()
+
+    model: BackgroundModel = model_proxy.get()
 
     with WallclockTimer() as timer:
         numeric_quad: float = 0.0
@@ -560,7 +562,7 @@ class QuadSourceIntegral(DatastoreObject):
     def __init__(
         self,
         payload,
-        model,
+        model: ModelProxy,
         z_response: redshift,
         z_source_max: redshift,
         k: wavenumber_exit_time,
@@ -570,7 +572,7 @@ class QuadSourceIntegral(DatastoreObject):
         label: Optional[str] = None,
         tags: Optional[List[store_tag]] = None,
     ):
-        self._model = model
+        self._model_proxy = model
 
         self._k_exit = k
         self._q_exit = q
@@ -626,8 +628,8 @@ class QuadSourceIntegral(DatastoreObject):
         self._compute_ref = None
 
     @property
-    def model(self) -> BackgroundModel:
-        return self._model
+    def model_proxy(self) -> ModelProxy:
+        return self._model_proxy
 
     @property
     def k(self) -> wavenumber:
@@ -775,7 +777,7 @@ class QuadSourceIntegral(DatastoreObject):
             )
 
         self._compute_ref = compute_QuadSource_integral.remote(
-            self._model,
+            self._model_proxy,
             self._k_exit,
             self._q_exit,
             self._r_exit,

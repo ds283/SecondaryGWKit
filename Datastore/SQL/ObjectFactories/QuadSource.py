@@ -6,10 +6,10 @@ from sqlalchemy import and_, or_
 from sqlalchemy.exc import MultipleResultsFound, SQLAlchemyError
 
 from ComputeTargets import (
-    BackgroundModel,
     QuadSource,
     QuadSourceValue,
 )
+from ComputeTargets.BackgroundModel import ModelProxy
 from CosmologyConcepts import redshift, redshift_array, wavenumber_exit_time
 from Datastore.SQL.ObjectFactories.base import SQLAFactoryBase
 from MetadataConcepts import store_tag
@@ -141,7 +141,7 @@ class sqla_QuadSource_factory(SQLAFactoryBase):
         label: Optional[str] = payload.get("label", None)
         tags: List[store_tag] = payload.get("tags", [])
 
-        model: BackgroundModel = payload["model"]
+        model_proxy: ModelProxy = payload["model"]
         q: wavenumber_exit_time = payload["q"]
         r: wavenumber_exit_time = payload["r"]
 
@@ -157,7 +157,7 @@ class sqla_QuadSource_factory(SQLAFactoryBase):
             table.c.Tr_serial,
         ).filter(
             table.c.validated == True,
-            table.c.model_serial == model.store_id,
+            table.c.model_serial == model_proxy.store_id,
             table.c.q_wavenumber_exit_serial == q.store_id,
             table.c.r_wavenumber_exit_serial == r.store_id,
         )
@@ -187,7 +187,7 @@ class sqla_QuadSource_factory(SQLAFactoryBase):
         if row_data is None:
             return QuadSource(
                 payload=None,
-                model=model,
+                model=model_proxy,
                 z_sample=z_sample,
                 q=q,
                 r=r,
@@ -267,7 +267,7 @@ class sqla_QuadSource_factory(SQLAFactoryBase):
                 "Tq_serial": row_data.Tq_serial,
                 "Tr_serial": row_data.Tr_serial,
             },
-            model=model,
+            model=model_proxy,
             z_sample=imported_z_sample,
             q=q,
             r=r,
@@ -291,7 +291,7 @@ class sqla_QuadSource_factory(SQLAFactoryBase):
             conn,
             {
                 "label": obj.label,
-                "model_serial": obj.model.store_id,
+                "model_serial": obj.model_proxy.store_id,
                 "q_wavenumber_exit_serial": obj._q_exit.store_id,
                 "r_wavenumber_exit_serial": obj._r_exit.store_id,
                 "Tq_serial": obj._Tq_serial,
@@ -487,12 +487,12 @@ class sqla_QuadSourceValue_factory(SQLAFactoryBase):
     def build(payload, conn, table, inserter, tables, inserters):
         parent_serial: Optional[int] = payload.get("parent_serial", None)
 
-        model: Optional[BackgroundModel] = payload.get("model", None)
+        model_proxy: Optional[ModelProxy] = payload.get("model", None)
         q: Optional[wavenumber_exit_time] = payload.get("q", None)
         r: Optional[wavenumber_exit_time] = payload.get("r", None)
 
         has_serial = all([parent_serial is not None])
-        has_model = all([model is not None, q is not None, r is not None])
+        has_model = all([model_proxy is not None, q is not None, r is not None])
 
         if all([has_serial, has_model]):
             print(
@@ -603,7 +603,7 @@ class sqla_QuadSourceValue_factory(SQLAFactoryBase):
     def _build_impl_model(payload, conn, table, inserter, tables, inserters):
         z = payload["z"]
 
-        model: BackgroundModel = payload["model"]
+        model_proxy: ModelProxy = payload["model"]
         q: wavenumber_exit_time = payload["q"]
         r: wavenumber_exit_time = payload["r"]
 
@@ -613,7 +613,7 @@ class sqla_QuadSourceValue_factory(SQLAFactoryBase):
 
         try:
             quadsource_query = sqla.select(quadsource_table.c.serial).filter(
-                quadsource_table.c.model_id == model.store_id,
+                quadsource_table.c.model_id == model_proxy.store_id,
                 quadsource_table.c.q_wavenumber_exit_serial == q.store_id,
                 quadsource_table.c.r_wavenumber_exit_serial == r.store_id,
                 quadsource_table.c.validated == True,
@@ -662,7 +662,7 @@ class sqla_QuadSourceValue_factory(SQLAFactoryBase):
             obj = QuadSourceValue(
                 store_id=None, z=z, source=None, undiff_part=None, diff_part=None
             )
-            obj._model = model
+            obj._model_proxy = model_proxy
             obj._q_exit = q
             obj._r_exit = r
             return obj
@@ -678,7 +678,7 @@ class sqla_QuadSourceValue_factory(SQLAFactoryBase):
             analytic_diff_part=row_data.analytic_diff_part,
         )
         obj._deserialized = True
-        obj._model = model
+        obj._model_proxy = model_proxy
         obj._q_exit = q
         obj._r_exit = r
         return obj

@@ -3,6 +3,7 @@ from typing import Optional, List, Union
 
 import ray
 from math import sqrt, fabs, log
+from ray import ObjectRef
 from scipy.integrate import solve_ivp
 from scipy.interpolate import InterpolatedUnivariateSpline
 
@@ -12,6 +13,7 @@ from CosmologyConcepts import redshift_array, redshift, wavenumber
 from CosmologyModels import BaseCosmology
 from Datastore import DatastoreObject
 from MetadataConcepts import tolerance, store_tag
+from Units.base import UnitsLike
 from defaults import DEFAULT_ABS_TOLERANCE, DEFAULT_REL_TOLERANCE
 
 A0_TAU_INDEX = 0
@@ -424,3 +426,34 @@ class BackgroundModelValue(DatastoreObject):
     @property
     def d3_lnH_dz3(self) -> Optional[float]:
         return self._d3_lnH_dz3
+
+
+class ModelProxy:
+    def __init__(self, model: BackgroundModel):
+        self._ref: ObjectRef = ray.put(model)
+
+        self._store_id: int = model.store_id
+
+        self._units: UnitsLike = model.cosmology.units
+        self._cosmology: BaseCosmology = model.cosmology
+
+    @property
+    def store_id(self) -> int:
+        return self._store_id
+
+    @property
+    def units(self) -> UnitsLike:
+        return self._units
+
+    @property
+    def cosmology(self) -> BaseCosmology:
+        return self._cosmology
+
+    def get(self) -> BackgroundModel:
+        """
+        The return value should only be held locally and not persisted, otherwise the entire
+        BackgroundModel instance may be serialized when it is passed around by Ray.
+        That would defeat the purpose of the proxy.
+        :return:
+        """
+        return ray.get(self._ref)

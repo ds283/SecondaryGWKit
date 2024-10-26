@@ -17,6 +17,7 @@ from ComputeTargets import (
     QuadSourceValue,
     QuadSourceFunctions,
 )
+from ComputeTargets.BackgroundModel import ModelProxy
 from CosmologyConcepts import (
     wavenumber,
     wavenumber_exit_time,
@@ -25,7 +26,7 @@ from CosmologyModels.LambdaCDM import Planck2018, LambdaCDM
 from Datastore.SQL.ProfileAgent import ProfileAgent
 from Datastore.SQL.ShardedPool import ShardedPool
 from MetadataConcepts import tolerance
-from RayTools import RayWorkPool
+from RayTools.RayWorkPool import RayWorkPool
 from Units import Mpc_units
 from defaults import DEFAULT_ABS_TOLERANCE, DEFAULT_REL_TOLERANCE
 
@@ -125,6 +126,9 @@ with ShardedPool(
         raise RuntimeError(
             "Could not locate suitable background model instance in the datastore"
         )
+
+    # set up a proxy object to avoid having to repeatedly serialize the model instance and ship it out
+    model_proxy = ModelProxy(model)
 
     def create_k_exit_work(k: wavenumber):
         return pool.object_get(
@@ -371,7 +375,7 @@ with ShardedPool(
         payload_data = [
             {
                 "solver_labels": [],
-                "model": model,
+                "model": model_proxy,
                 "k": k_mode,
                 "z_sample": None,
                 "z_init": None,
