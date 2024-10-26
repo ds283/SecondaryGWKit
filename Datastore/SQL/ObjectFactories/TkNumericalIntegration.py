@@ -606,7 +606,7 @@ class sqla_TkNumericalValue_factory(SQLAFactoryBase):
     def build(payload, conn, table, inserter, tables, inserters):
         integration_serial: Optional[int] = payload.get("integration_serial", None)
 
-        model_proxy: Optional[BackgroundModel] = payload.get("model_proxy", None)
+        model_proxy: Optional[BackgroundModel] = payload.get("model", None)
         k: Optional[wavenumber_exit_time] = payload.get("k", None)
         z_init: Optional[redshift] = payload.get("z_init", None)
 

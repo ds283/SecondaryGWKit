@@ -196,7 +196,7 @@ class sqla_GkSource_factory(SQLAFactoryBase):
         rtol: tolerance = payload["rtol"]
 
         k_exit: wavenumber_exit_time = payload["k"]
-        model_proxy: ModelProxy = payload["model_proxy"]
+        model_proxy: ModelProxy = payload["model"]
         z_sample: redshift_array = payload["z_sample"]
         z_response: redshift = payload["z_response"]
 
