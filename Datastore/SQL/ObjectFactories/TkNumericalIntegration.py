@@ -279,8 +279,10 @@ class sqla_TkNumericalIntegration_factory(SQLAFactoryBase):
                     redshift_table.c.z,
                     value_table.c.T,
                     value_table.c.Tprime,
-                    value_table.c.analytic_T,
-                    value_table.c.analytic_Tprime,
+                    value_table.c.analytic_T_rad,
+                    value_table.c.analytic_Tprime_rad,
+                    value_table.c.analytic_T_w,
+                    value_table.c.analytic_Tprime_w,
                 )
                 .select_from(
                     value_table.join(
@@ -303,8 +305,10 @@ class sqla_TkNumericalIntegration_factory(SQLAFactoryBase):
                         z=z_value,
                         T=row.T,
                         Tprime=row.Tprime,
-                        analytic_T=row.analytic_T,
-                        analytic_Tprime=row.analytic_Tprime,
+                        analytic_T_rad=row.analytic_T_rad,
+                        analytic_Tprime_rad=row.analytic_Tprime_rad,
+                        analytic_T_w=row.analytic_T_w,
+                        analytic_Tprime_w=row.analytic_Tprime_w,
                     )
                 )
             imported_z_sample = redshift_array(z_points)
@@ -417,8 +421,10 @@ class sqla_TkNumericalIntegration_factory(SQLAFactoryBase):
                     "z_serial": value.z.store_id,
                     "T": value.T,
                     "Tprime": value.Tprime,
-                    "analytic_T": value.analytic_T,
-                    "analytic_Tprime": value.analytic_Tprime,
+                    "analytic_T_rad": value.analytic_T_rad,
+                    "analytic_Tprime_rad": value.analytic_Tprime_rad,
+                    "analytic_T_w": value.analytic_T_w,
+                    "analytic_Tprime_w": value.analytic_Tprime_w,
                 },
             )
 
@@ -597,8 +603,10 @@ class sqla_TkNumericalValue_factory(SQLAFactoryBase):
                     nullable=False,
                 ),
                 sqla.Column("Tprime", sqla.Float(64), nullable=False),
-                sqla.Column("analytic_T", sqla.Float(64), nullable=True),
-                sqla.Column("analytic_Tprime", sqla.Float(64), nullable=True),
+                sqla.Column("analytic_T_rad", sqla.Float(64), nullable=True),
+                sqla.Column("analytic_Tprime_rad", sqla.Float(64), nullable=True),
+                sqla.Column("analytic_T_w", sqla.Float(64), nullable=True),
+                sqla.Column("analytic_Tprime_w", sqla.Float(64), nullable=True),
             ],
         }
 
@@ -641,8 +649,8 @@ class sqla_TkNumericalValue_factory(SQLAFactoryBase):
         T = payload["T"]
         Tprime = payload["Tprime"]
 
-        analytic_T = payload.get("analytic_T", None)
-        analytic_Tprime = payload.get("analytic_Tprime", None)
+        analytic_T = payload.get("analytic_T_rad", None)
+        analytic_Tprime = payload.get("analytic_Tprime_rad", None)
 
         try:
             row_data = conn.execute(
@@ -650,8 +658,10 @@ class sqla_TkNumericalValue_factory(SQLAFactoryBase):
                     table.c.serial,
                     table.c.T,
                     table.c.Tprime,
-                    table.c.analytic_T,
-                    table.c.analytic_Tprime,
+                    table.c.analytic_T_rad,
+                    table.c.analytic_Tprime_rad,
+                    table.c.analytic_T_w,
+                    table.c.analytic_Tprime_w,
                 ).filter(
                     table.c.integration_serial == integration_serial,
                     table.c.z_serial == z.store_id,
@@ -671,16 +681,16 @@ class sqla_TkNumericalValue_factory(SQLAFactoryBase):
                     "z_serial": z.store_id,
                     "T": T,
                     "Tprime": Tprime,
-                    "analytic_T": analytic_T,
-                    "analytic_Tprime": analytic_Tprime,
+                    "analytic_T_rad": analytic_T,
+                    "analytic_Tprime_rad": analytic_Tprime,
                 },
             )
 
             attribute_set = {"_new_insert": True}
         else:
             store_id = row_data.serial
-            analytic_T = row_data.analytic_T
-            analytic_Tprime = row_data.analytic_Tprime
+            analytic_T = row_data.analytic_T_rad
+            analytic_Tprime = row_data.analytic_Tprime_rad
 
             if fabs(row_data.T - T) > DEFAULT_FLOAT_PRECISION:
                 raise ValueError(
@@ -698,8 +708,8 @@ class sqla_TkNumericalValue_factory(SQLAFactoryBase):
             z=z,
             T=T,
             Tprime=Tprime,
-            analytic_T=analytic_T,
-            analytic_Tprime=analytic_Tprime,
+            analytic_T_rad=analytic_T,
+            analytic_Tprime_rad=analytic_Tprime,
         )
         for key, value in attribute_set.items():
             setattr(obj, key, value)
@@ -757,8 +767,10 @@ class sqla_TkNumericalValue_factory(SQLAFactoryBase):
                     table.c.serial,
                     table.c.T,
                     table.c.Tprime,
-                    table.c.analytic_T,
-                    table.c.analytic_Tprime,
+                    table.c.analytic_T_rad,
+                    table.c.analytic_Tprime_rad,
+                    table.c.analytic_T_w,
+                    table.c.analytic_Tprime_w,
                 )
                 .select_from(
                     subquery.join(
@@ -787,8 +799,10 @@ class sqla_TkNumericalValue_factory(SQLAFactoryBase):
             z=z,
             T=row_data.T,
             Tprime=row_data.Tprime,
-            analytic_T=row_data.analytic_T,
-            analytic_Tprime=row_data.analytic_Tprime,
+            analytic_T_rad=row_data.analytic_T_rad,
+            analytic_Tprime_rad=row_data.analytic_Tprime_rad,
+            analytic_T_w=row_data.analytic_T_w,
+            analytic_Tprime_w=row_data.analytic_Tprime_w,
         )
         obj._deserialized = True
         obj._k_exit = k

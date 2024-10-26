@@ -531,9 +531,15 @@ class TkNumericalIntegration(DatastoreObject):
         for i in range(len(T_sample)):
             H = model.functions.Hubble(self._z_sample[i].z)
             tau = model.functions.tau(self._z_sample[i].z)
+            wPerturbations = model.functions.wPerturbations(self._z_sample[i].z)
 
-            analytic_T = compute_analytic_T(self.k.k, 1.0 / 3.0, tau)
-            analytic_Tprime = compute_analytic_Tprime(self.k.k, 1.0 / 3.0, tau, H)
+            analytic_T_rad = compute_analytic_T(self.k.k, 1.0 / 3.0, tau)
+            analytic_Tprime_w = compute_analytic_Tprime(self.k.k, 1.0 / 3.0, tau, H)
+
+            analytic_T_w = compute_analytic_T(self.k.k, wPerturbations, tau)
+            analytic_Tprime_w = compute_analytic_Tprime(
+                self.k.k, wPerturbations, tau, H
+            )
 
             # create new TkNumericalValue object
             self._values.append(
@@ -542,8 +548,8 @@ class TkNumericalIntegration(DatastoreObject):
                     self._z_sample[i],
                     T_sample[i],
                     Tprime_sample[i],
-                    analytic_T=analytic_T,
-                    analytic_Tprime=analytic_Tprime,
+                    analytic_T_rad=analytic_T_rad,
+                    analytic_Tprime_rad=analytic_Tprime_w,
                 )
             )
 
@@ -565,8 +571,10 @@ class TkNumericalValue(DatastoreObject):
         z: redshift,
         T: float,
         Tprime: float,
-        analytic_T: Optional[float] = None,
-        analytic_Tprime: Optional[float] = None,
+        analytic_T_rad: Optional[float] = None,
+        analytic_Tprime_rad: Optional[float] = None,
+        analytic_T_w: Optional[float] = None,
+        analytic_Tprime_w: Optional[float] = None,
     ):
         DatastoreObject.__init__(self, store_id)
 
@@ -574,8 +582,11 @@ class TkNumericalValue(DatastoreObject):
         self._T = T
         self._Tprime = Tprime
 
-        self._analytic_T = analytic_T
-        self._analytic_Tprime = analytic_Tprime
+        self._analytic_T_rad = analytic_T_rad
+        self._analytic_Tprime_rad = analytic_Tprime_rad
+
+        self._analytic_T_w = analytic_T_w
+        self._analytic_Tprime_w = analytic_Tprime_w
 
     def __float__(self):
         """
@@ -597,9 +608,17 @@ class TkNumericalValue(DatastoreObject):
         return self._Tprime
 
     @property
-    def analytic_T(self) -> Optional[float]:
-        return self._analytic_T
+    def analytic_T_rad(self) -> Optional[float]:
+        return self._analytic_T_rad
 
     @property
-    def analytic_Tprime(self) -> Optional[float]:
-        return self._analytic_Tprime
+    def analytic_Tprime_rad(self) -> Optional[float]:
+        return self._analytic_Tprime_rad
+
+    @property
+    def analytic_T_w(self) -> Optional[float]:
+        return self._analytic_T_w
+
+    @property
+    def analytic_Tprime_w(self) -> Optional[float]:
+        return self._analytic_Tprime_w

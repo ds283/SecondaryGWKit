@@ -136,8 +136,10 @@ with ShardedPool(
             ("z", pa.float64()),
             ("T", pa.float64()),
             ("Tprime", pa.float64()),
-            ("analytic_T", pa.float64()),
-            ("analytic_Tprime", pa.float64()),
+            ("analytic_T_rad", pa.float64()),
+            ("analytic_Tprime_rad", pa.float64()),
+            ("analytic_T_w", pa.float64()),
+            ("analytic_Tprime_w", pa.float64()),
         ]
     )
     metadata_schema = pa.schema(
@@ -183,8 +185,10 @@ with ShardedPool(
                     "z": value.z.z,
                     "T": value.T,
                     "Tprime": value.Tprime,
-                    "analytic_T": value.analytic_T,
-                    "analytic_Tprime": value.analytic_Tprime,
+                    "analytic_T_rad": value.analytic_T_rad,
+                    "analytic_Tprime_rad": value.analytic_Tprime_rad,
+                    "analytic_T_w": value.analytic_T_w,
+                    "analytic_Tprime_w": value.analytic_Tprime_w,
                 }
                 for value in Tk.values
             ]

@@ -102,23 +102,29 @@ def compute_quad_source(
 
                 Tq_value = Tq_.T
                 Tq_prime = Tq_.Tprime
-                analytic_Tq_value = Tq_.analytic_T
-                analytic_Tq_prime = Tq_.analytic_Tprime
+                analytic_Tq_rad_value = Tq_.analytic_T_rad
+                analytic_Tq_prime_rad = Tq_.analytic_Tprime_rad
+                analytic_Tq_w_value = Tq_.analytic_T_w
+                analytic_Tq_prime_w = Tq_.analytic_Tprime_w
 
                 q_idx += 1
             else:
                 Tq_value = 1.0
                 Tq_prime = 0.0
-                analytic_Tq_value = 1.0
-                analytic_Tq_prime = 0.0
+                analytic_Tq_rad_value = 1.0
+                analytic_Tq_prime_rad = 0.0
+                analytic_Tq_w_value = 1.0
+                analytic_Tq_prime_w = 0.0
 
             if not missing_r:
                 Tr_: TkNumericalValue = Tr[r_idx]
 
                 Tr_value = Tr_.T
                 Tr_prime = Tr_.Tprime
-                analytic_Tr_value = Tr_.analytic_T
-                analytic_Tr_prime = Tr_.analytic_Tprime
+                analytic_Tr_value = Tr_.analytic_T_rad
+                analytic_Tr_prime = Tr_.analytic_Tprime_rad
+                analytic_Tr_w_value = Tr_.analytic_T_w
+                analytic_Tr_prime_w = Tr_.analytic_Tprime_w
 
                 r_idx += 1
             else:
@@ -126,6 +132,8 @@ def compute_quad_source(
                 Tr_prime = 0.0
                 analytic_Tr_value = 1.0
                 analytic_Tr_prime = 0.0
+                analytic_Tr_w_value = 1.0
+                analytic_Tr_prime_w = 0.0
 
             wBackground = model.functions.wBackground(z.z)
 
@@ -133,9 +141,9 @@ def compute_quad_source(
                 Tq_value, Tr_value, Tq_prime, Tr_prime, z.z, wBackground
             )
             analytic = source_function(
-                analytic_Tq_value,
+                analytic_Tq_rad_value,
                 analytic_Tr_value,
-                analytic_Tq_prime,
+                analytic_Tq_prime_rad,
                 analytic_Tr_prime,
                 z.z,
                 wBackground,
