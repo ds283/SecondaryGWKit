@@ -397,27 +397,84 @@ with ShardedPool(
     ## STEP 2
     ## COMPUTE MATTER TRANSFER FUNCTIONS
 
-    def build_Tk_work(k_exit: wavenumber_exit_time):
-        my_sample = z_source_sample.truncate(k_exit.z_exit_suph_e5, keep="lower")
-        return pool.object_get(
-            "TkNumericalIntegration",
-            solver_labels=solvers,
-            model=model_proxy,
-            k=k_exit,
-            z_sample=my_sample,
-            z_init=my_sample.max,
-            atol=atol,
-            rtol=rtol,
-            tags=[
-                TkProductionTag,
-                GlobalZGridSizeTag,
-                SourceZGridSizeTag,
-                OutsideHorizonEfoldsTag,
-                LargestZTag,
-                SamplesPerLog10ZTag,
-            ],
-            delta_logz=1.0 / float(samples_per_log10z),
+    def build_Tk_work(batch: List[wavenumber_exit_time]):
+        # grouper may fill with None values, so we need to strip those out
+        batch = [x for x in batch if x is not None]
+
+        query_batch = [
+            {
+                "solver_labels": [],
+                "model": model_proxy,
+                "k": k_exit,
+                "z_sample": None,
+                "z_init": None,
+                "atol": atol,
+                "rtol": rtol,
+                "tags": [
+                    TkProductionTag,
+                    GlobalZGridSizeTag,
+                    SourceZGridSizeTag,
+                    OutsideHorizonEfoldsTag,
+                    LargestZTag,
+                    SamplesPerLog10ZTag,
+                ],
+                "_do_not_populate": True,
+            }
+            for k_exit in batch
+        ]
+
+        query_queue = RayWorkPool(
+            pool,
+            query_batch,
+            task_builder=lambda x: pool.object_get("TkNumericalIntegration", **x),
+            available_handler=None,
+            compute_handler=None,
+            store_handler=None,
+            validation_handler=None,
+            label_builder=None,
+            title=None,
+            store_results=True,
+            create_batch_size=20,
+            process_batch_size=20,
         )
+        query_queue.run()
+
+        missing = [
+            k_exit
+            for k_exit, obj in zip(batch, query_queue.results)
+            if not obj.available
+        ]
+
+        if len(missing) == 0:
+            return []
+
+        work_refs = []
+
+        for k_exit in missing:
+            my_sample = z_source_sample.truncate(k_exit.z_exit_suph_e5, keep="lower")
+            work_refs.append(
+                pool.object_get(
+                    "TkNumericalIntegration",
+                    solver_labels=solvers,
+                    model=model_proxy,
+                    k=k_exit,
+                    z_sample=my_sample,
+                    z_init=my_sample.max,
+                    atol=atol,
+                    rtol=rtol,
+                    tags=[
+                        TkProductionTag,
+                        GlobalZGridSizeTag,
+                        SourceZGridSizeTag,
+                        OutsideHorizonEfoldsTag,
+                        LargestZTag,
+                        SamplesPerLog10ZTag,
+                    ],
+                    delta_logz=1.0 / float(samples_per_log10z),
+                )
+            )
+
+        return work_refs
 
     def build_Tk_work_label(Tk: TkNumericalIntegration):
         return f"{args.job_name}-Tk-k{Tk.k.k_inv_Mpc:.3g}-{datetime.now().replace(microsecond=0).isoformat()}"
@@ -433,80 +490,86 @@ with ShardedPool(
 
         return pool.object_validate(Tk)
 
-    def post_Tk_work(Tk: TkNumericalIntegration):
-        return ray.put(Tk)
+    def build_tensor_source_work(batch):
+        # grouper may fill with None values, so we need to strip those out
+        batch = [x for x in batch if x is not None]
 
-    def build_tensor_source_work(qr_pair):
-        q, r = qr_pair
-        q: wavenumber_exit_time
-        r: wavenumber_exit_time
+        binned_batch = {}
+        for q, r in batch:
+            if q not in binned_batch:
+                binned_batch[q] = []
+            binned_batch[q].append(r)
 
-        # ensure that q, r are ordered respecting the triangular condition
-        assert q.k <= r.k
+        # freeze q labels in a defined order, so we are guaranteed to know what order they come back in
+        q_keys = list(binned_batch.keys())
 
-        payload_batch = [
+        query_batch = [
             {
-                "model": model_proxy,
-                "z_sample": z_source_sample,
-                "k": q,
-                "z_init": None,  # don't specify
-                "atol": atol,
-                "rtol": rtol,
-                "tags": [
-                    TkProductionTag,
-                    GlobalZGridSizeTag,
-                    SourceZGridSizeTag,
-                    OutsideHorizonEfoldsTag,
-                    LargestZTag,
-                    SamplesPerLog10ZTag,
+                "shard_key": {"q": q},
+                "payload": [
+                    {
+                        "model": model_proxy,
+                        "r": r,
+                        "z_sample": None,
+                        "atol": atol,
+                        "rtol": rtol,
+                        "tags": [
+                            TkProductionTag,
+                            GlobalZGridSizeTag,
+                            SourceZGridSizeTag,
+                            OutsideHorizonEfoldsTag,
+                            LargestZTag,
+                            SamplesPerLog10ZTag,
+                        ],
+                        "_do_not_populate": True,
+                    }
+                    for r in binned_batch[q]
                 ],
-            },
-            {
-                "model": model_proxy,
-                "z_sample": z_source_sample,
-                "k": r,
-                "z_init": None,  # don't specify
-                "atol": atol,
-                "rtol": rtol,
-                "tags": [
-                    TkProductionTag,
-                    GlobalZGridSizeTag,
-                    SourceZGridSizeTag,
-                    OutsideHorizonEfoldsTag,
-                    LargestZTag,
-                    SamplesPerLog10ZTag,
-                ],
-            },
+            }
+            for q in q_keys
         ]
 
-        Tq, Tr = ray.get(
-            pool.object_get("TkNumericalIntegration", payload_data=payload_batch)
+        query_queue = RayWorkPool(
+            pool,
+            query_batch,
+            task_builder=lambda x: pool.object_get_vectorized(
+                "QuadSource", x["shard_key"], payload_data=x["payload"]
+            ),
+            available_handler=None,
+            compute_handler=None,
+            store_handler=None,
+            validation_handler=None,
+            label_builder=None,
+            title=None,
+            store_results=True,
+            create_batch_size=20,
+            process_batch_size=20,
         )
+        query_queue.run()
 
-        if not Tq.available:
-            print(
-                f"!! MISSING DATA WARNING ({datetime.now().replace(microsecond=0).isoformat()}) TkNumericalIntegration for q={q.k.k_inv_Mpc}/Mpc"
-            )
-            raise RuntimeError(
-                f"QuadSource builder: missing or incomplete source data for q={q.k.k_inv_Mpc}/Mpc"
-            )
+        missing_labels = [
+            (q, r)
+            for q, query_outcomes in zip(q_keys, query_queue.results)
+            for r, obj in zip(binned_batch[q], query_outcomes)
+            if not obj.available
+        ]
 
-        if not Tr.available:
-            print(
-                f"!! MISSING DATA WARNING ({datetime.now().replace(microsecond=0).isoformat()}) TkNumericalIntegration for r={r.k.k_inv_Mpc}/Mpc"
-            )
-            raise RuntimeError(
-                f"QuadSource builder: missing or incomplete source data for r={r.k.k_inv_Mpc}/Mpc"
-            )
+        if len(missing_labels) == 0:
+            return []
 
-        return {
-            "ref": pool.object_get(
-                "QuadSource",
-                model=model_proxy,
-                z_sample=z_source_sample,
-                q=q,
-                r=r,
-                tags=[
+        missing_set = set(q for q, r in missing_labels)
+        missing_set.update(r for q, r in missing_labels)
+        missing_Tk = list(missing_set)
+
+        Tk_lookup_batch = [
+            {
+                "model": model_proxy,
+                "z_sample": None,
+                "k": k,
+                "z_init": None,
+                "atol": atol,
+                "rtol": rtol,
+                "tags": [
                     TkProductionTag,
                     GlobalZGridSizeTag,
                     SourceZGridSizeTag,
@@ -514,9 +577,82 @@ with ShardedPool(
                     LargestZTag,
                     SamplesPerLog10ZTag,
                 ],
-            ),
-            "compute_payload": {"Tq": Tq, "Tr": Tr},
+            }
+            for k in missing_Tk
+        ]
+
+        Tk_lookup_queue = RayWorkPool(
+            pool,
+            Tk_lookup_batch,
+            task_builder=lambda x: pool.object_get("TkNumericalIntegration", **x),
+            available_handler=None,
+            compute_handler=None,
+            store_handler=None,
+            validation_handler=None,
+            label_builder=None,
+            title=None,
+            store_results=True,
+            create_batch_size=20,
+            process_batch_size=20,
+        )
+        Tk_lookup_queue.run()
+
+        Tk_cache = {
+            k.store_id: obj for k, obj in zip(missing_Tk, Tk_lookup_queue.results)
         }
+
+        work_refs = []
+
+        for q, r in missing_labels:
+            q: wavenumber_exit_time
+            r: wavenumber_exit_time
+
+            # ensure that q, r are ordered respecting the triangular condition
+            assert q.k <= r.k
+
+            Tq: TkNumericalIntegration = Tk_cache[q.store_id]
+            Tr: TkNumericalIntegration = Tk_cache[r.store_id]
+
+            missing_data = False
+            if not Tq.available:
+                missing_data = True
+                print(
+                    f"!! MISSING DATA WARNING ({datetime.now().replace(microsecond=0).isoformat()}) TkNumericalIntegration for q={q.k.k_inv_Mpc}/Mpc"
+                )
+
+            if not Tr.available:
+                missing_data = True
+                print(
+                    f"!! MISSING DATA WARNING ({datetime.now().replace(microsecond=0).isoformat()}) TkNumericalIntegration for r={r.k.k_inv_Mpc}/Mpc"
+                )
+
+            if missing_data:
+                raise RuntimeError(
+                    f"QuadSource builder: missing or incomplete source data for q={q.k.k_inv_Mpc}/Mpc, r={r.k.k_inv_Mpc}/Mpc"
+                )
+
+            work_refs.append(
+                {
+                    "ref": pool.object_get(
+                        "QuadSource",
+                        model=model_proxy,
+                        z_sample=z_source_sample,
+                        q=q,
+                        r=r,
+                        tags=[
+                            TkProductionTag,
+                            GlobalZGridSizeTag,
+                            SourceZGridSizeTag,
+                            OutsideHorizonEfoldsTag,
+                            LargestZTag,
+                            SamplesPerLog10ZTag,
+                        ],
+                    ),
+                    "compute_payload": {"Tq": Tq, "Tr": Tr},
+                }
+            )
+
+        return work_refs
 
     def compute_tensor_source_work(
         calc: QuadSource, payload, label: Optional[str] = None
@@ -537,19 +673,24 @@ with ShardedPool(
         return f"{args.job_name}-tensor-src-q{q.k_inv_Mpc:.3g}-r{r.k_inv_Mpc:.3g}-{datetime.now().replace(microsecond=0).isoformat()}"
 
     if args.Tk_numerical_queue:
+        Tk_numerical_work_batch = list(
+            grouper(source_k_exit_times, n=50, incomplete="fill")
+        )
+
         Tk_queue = RayWorkPool(
             pool,
-            source_k_exit_times,
+            Tk_numerical_work_batch,
             task_builder=build_Tk_work,
             compute_handler=compute_Tk_work,
             validation_handler=validate_Tk_work,
-            post_handler=post_Tk_work,
             label_builder=build_Tk_work_label,
             title="CALCULATE MATTER TRANSFER FUNCTIONS",
-            store_results=True,
+            store_results=False,
+            create_batch_size=1,
+            max_task_queue=300,
+            process_batch_size=20,
         )
         Tk_queue.run()
-        Tks = Tk_queue.results
 
         # the source term is obviously symmetric, so we do not need to compute QuadSource on
         # a square q x r grid; it will suffice to do so on an upper or lower triangle where q <= r.
@@ -557,7 +698,11 @@ with ShardedPool(
 
         # The ordering of pairs should be stable, because source_k_exit_times is ordered.
         tensor_source_grid = list(
-            itertools.combinations_with_replacement(source_k_exit_times, 2)
+            grouper(
+                itertools.combinations_with_replacement(source_k_exit_times, 2),
+                n=50,
+                incomplete="fill",
+            )
         )
 
         QuadSource_queue = RayWorkPool(
@@ -568,6 +713,9 @@ with ShardedPool(
             label_builder=build_tensor_source_work_label,
             title="CALCULATE QUADRATIC SOURCE TERMS",
             store_results=False,
+            create_batch_size=1,
+            max_task_queue=300,
+            process_batch_size=20,
         )
         QuadSource_queue.run()
 
@@ -575,6 +723,9 @@ with ShardedPool(
     ## COMPUTE TENSOR GREEN'S FUNCTIONS NUMERICALLY FOR RESPONSE TIMES NOT TOO FAR INSIDE THE HORIZON
 
     def build_Gk_numerical_work(batch: List[redshift]):
+        # grouper may fill with None values, so we need to strip those out
+        batch = [x for x in batch if x is not None]
+
         query_batch = [
             {
                 "shard_key": {"k": k_exit},
@@ -615,8 +766,8 @@ with ShardedPool(
             label_builder=None,
             title=None,
             store_results=True,
-            create_batch_size=5,  # may need to tweak relative to number of shards
-            process_batch_size=1,
+            create_batch_size=20,  # may need to tweak relative to number of shards
+            process_batch_size=20,
         )
         query_queue.run()
 
@@ -705,7 +856,7 @@ with ShardedPool(
 
     if args.Gk_numerical_queue:
         GkNumerical_work_batches = list(
-            grouper(z_source_sample, n=50, incomplete="ignore")
+            grouper(z_source_sample, n=50, incomplete="fill")
         )
 
         Gk_numerical_queue = RayWorkPool(
@@ -727,6 +878,9 @@ with ShardedPool(
     ## COMPUTE TENSOR GREEN'S FUNCTIONS IN THE WKB APPROXIMATION FOR RESPONSE TIMES INSIDE THE HORIZON
 
     def build_Gk_WKB_work(batch: List[redshift]):
+        # grouper may fill with None values, so we need to strip those out
+        batch = [x for x in batch if x is not None]
+
         # build GKWKBIntegration work items for a batch of z_source times
 
         # first, we query for existing objects in the datastore matching these z_source times.
@@ -772,8 +926,8 @@ with ShardedPool(
             label_builder=None,
             title=None,
             store_results=True,
-            create_batch_size=5,  # may need to tweak relative to number of shards
-            process_batch_size=1,
+            create_batch_size=20,  # may need to tweak relative to number of shards
+            process_batch_size=20,
         )
         query_queue.run()
 
@@ -988,7 +1142,7 @@ with ShardedPool(
         return pool.object_validate(Gk)
 
     if args.WKB_queue:
-        GkWKB_work_batches = list(grouper(z_source_sample, n=20, incomplete="ignore"))
+        GkWKB_work_batches = list(grouper(z_source_sample, n=20, incomplete="fill"))
 
         Gk_WKB_queue = RayWorkPool(
             pool,
@@ -1113,6 +1267,9 @@ with ShardedPool(
         GkSource_total = GkSource_total + 1
 
     def build_GkSource_batch(batch: List[redshift]):
+        # grouper may fill with None values, so we need to strip those out
+        batch = [x for x in batch if x is not None]
+
         # try to do parallel lookup of the GkNumericalIntegration/GkWKBIntegration records needed
         # to process this batch
         z_source_pool = {
@@ -1164,8 +1321,8 @@ with ShardedPool(
             label_builder=None,
             title=None,
             store_results=True,
-            create_batch_size=5,  # may need to tweak relative to number of shards
-            process_batch_size=1,
+            create_batch_size=20,  # may need to tweak relative to number of shards
+            process_batch_size=20,
         )
         query_queue.run()
 
@@ -1396,8 +1553,8 @@ with ShardedPool(
             label_builder=None,
             title=None,
             store_results=False,
-            create_batch_size=5,
-            process_batch_size=5,
+            create_batch_size=20,
+            process_batch_size=20,
         )
         query_queue.run()
 
@@ -1427,7 +1584,7 @@ with ShardedPool(
         # run a sub-queue that queries that needed data in parallel.
 
         GkSource_work_batches = list(
-            grouper(z_response_sample, n=20, incomplete="ignore")
+            grouper(z_response_sample, n=20, incomplete="fill")
         )
 
         # need to prune compute/store/validate tasks from the system very rapidly in order to prevent memory-consuming payloads
@@ -1477,6 +1634,9 @@ with ShardedPool(
     )
 
     def build_QuadSourceIntegral_batch(batch):
+        # grouper may fill with None values, so we need to strip those out
+        batch = [x for x in batch if x is not None]
+
         # batch is a list of (z_response, k, q, r) pairs to be queried, and work scheduled to produce them if they are missing
 
         # to allow vectorized object_gets to the datastore, we need to bin these labels by shards. Then we can pull all (z, q, r)
@@ -1532,8 +1692,8 @@ with ShardedPool(
             label_builder=None,
             title=None,
             store_results=True,
-            create_batch_size=5,
-            process_batch_size=5,
+            create_batch_size=20,
+            process_batch_size=20,
         )
         query_queue.run()
 
@@ -1646,8 +1806,8 @@ with ShardedPool(
             label_builder=None,
             title=None,
             store_results=True,
-            create_batch_size=10,
-            process_batch_size=10,
+            create_batch_size=20,
+            process_batch_size=20,
         )
         GkSource_lookup_queue.run()
 
@@ -1667,8 +1827,8 @@ with ShardedPool(
             label_builder=None,
             title=None,
             store_results=True,
-            create_batch_size=10,
-            process_batch_size=10,
+            create_batch_size=20,
+            process_batch_size=20,
         )
         QuadSource_lookup_queue.run()
 
@@ -1768,7 +1928,7 @@ with ShardedPool(
         # So we with 250 items we could lock up about 500 Mb or probably just a bit more to account for overheads.
         # On a small machine, this might need to be reduced.
         # On a larger machine, there could be efficiencies in making the chunk size bigger.
-        qsi_work_batches = list(grouper(qsi_work_items, n=250, incomplete="ignore"))
+        qsi_work_batches = list(grouper(qsi_work_items, n=250, incomplete="fill"))
 
         QuadSourceIntegral_queue = RayWorkPool(
             pool,
