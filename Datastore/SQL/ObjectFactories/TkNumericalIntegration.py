@@ -172,7 +172,8 @@ class sqla_TkNumericalIntegration_factory(SQLAFactoryBase):
         k_exit: wavenumber_exit_time = payload["k"]
         model_proxy: ModelProxy = payload["model"]
         z_sample: redshift_array = payload["z_sample"]
-        z_init: redshift = payload["z_init"]
+
+        z_init: redshift = payload.get("z_init", None)
 
         atol_table = tables["tolerance"].alias("atol")
         rtol_table = tables["tolerance"].alias("rtol")
@@ -649,8 +650,11 @@ class sqla_TkNumericalValue_factory(SQLAFactoryBase):
         T = payload["T"]
         Tprime = payload["Tprime"]
 
-        analytic_T = payload.get("analytic_T_rad", None)
-        analytic_Tprime = payload.get("analytic_Tprime_rad", None)
+        analytic_T_rad = payload.get("analytic_T_rad", None)
+        analytic_Tprime_rad = payload.get("analytic_Tprime_rad", None)
+
+        analytic_T_w = payload.get("analytic_T_w", None)
+        analytic_Tprime_w = payload.get("analytic_Tprime_w", None)
 
         try:
             row_data = conn.execute(
@@ -681,16 +685,22 @@ class sqla_TkNumericalValue_factory(SQLAFactoryBase):
                     "z_serial": z.store_id,
                     "T": T,
                     "Tprime": Tprime,
-                    "analytic_T_rad": analytic_T,
-                    "analytic_Tprime_rad": analytic_Tprime,
+                    "analytic_T_rad": analytic_T_rad,
+                    "analytic_Tprime_rad": analytic_Tprime_rad,
+                    "analytic_T_w": analytic_T_w,
+                    "analytic_Tprime_w": analytic_Tprime_w,
                 },
             )
 
             attribute_set = {"_new_insert": True}
         else:
             store_id = row_data.serial
-            analytic_T = row_data.analytic_T_rad
-            analytic_Tprime = row_data.analytic_Tprime_rad
+
+            analytic_T_rad = row_data.analytic_T_rad
+            analytic_Tprime_rad = row_data.analytic_Tprime_rad
+
+            analytic_T_w = row_data.analytic_T_w
+            analytic_Tprime_w = row_data.analytic_Tprime_w
 
             if fabs(row_data.T - T) > DEFAULT_FLOAT_PRECISION:
                 raise ValueError(
@@ -708,8 +718,10 @@ class sqla_TkNumericalValue_factory(SQLAFactoryBase):
             z=z,
             T=T,
             Tprime=Tprime,
-            analytic_T_rad=analytic_T,
-            analytic_Tprime_rad=analytic_Tprime,
+            analytic_T_rad=analytic_T_rad,
+            analytic_Tprime_rad=analytic_Tprime_rad,
+            analytic_T_w=analytic_T_rad,
+            analytic_Tprime_w=analytic_Tprime_rad,
         )
         for key, value in attribute_set.items():
             setattr(obj, key, value)

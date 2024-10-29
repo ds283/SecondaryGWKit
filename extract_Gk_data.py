@@ -1,5 +1,6 @@
 import argparse
 import sys
+from datetime import datetime
 from itertools import product
 from pathlib import Path
 from random import sample
@@ -253,17 +254,24 @@ with ShardedPool(
             return x / y
 
         abs_G_points = [(value.z, safe_fabs(value.G)) for value in values]
-        abs_analytic_G_points = [
+        abs_analytic_G_rad_points = [
             (value.z, safe_fabs(value.analytic_G_rad)) for value in values
+        ]
+        abs_analytic_G_w_points = [
+            (value.z, safe_fabs(value.analytic_G_w)) for value in values
         ]
 
         G_points = [(value.z, value.G) for value in values]
-        analytic_G_points = [(value.z, value.analytic_G_rad) for value in values]
+        analytic_G_rad_points = [(value.z, value.analytic_G_rad) for value in values]
+        analytic_G_w_points = [(value.z, value.analytic_G_w) for value in values]
 
         abs_G_x, abs_G_y = zip(*abs_G_points)
-        abs_analytic_G_x, abs_analytic_G_y = zip(*abs_analytic_G_points)
+        abs_analytic_G_rad_x, abs_analytic_G_rad_y = zip(*abs_analytic_G_rad_points)
+        abs_analytic_G_w_x, abs_analytic_G_w_y = zip(*abs_analytic_G_w_points)
+
         G_x, G_y = zip(*G_points)
-        analytic_G_x, analytic_G_y = zip(*analytic_G_points)
+        analytic_G_rad_x, analytic_G_rad_y = zip(*analytic_G_rad_points)
+        analytic_G_w_x, analytic_G_w_y = zip(*analytic_G_w_points)
 
         k_exit = Gk._k_exit
         z_source = Gk.z_source
@@ -272,7 +280,8 @@ with ShardedPool(
 
         if len(abs_G_x) > 0 and (
             any(y is not None and y > 0 for y in abs_G_y)
-            or any(y is not None and y > 0 for y in abs_analytic_G_y)
+            or any(y is not None and y > 0 for y in abs_analytic_G_rad_y)
+            or any(y is not None and y > 0 for y in abs_analytic_G_w_y)
         ):
             fig = plt.figure()
             ax = plt.gca()
@@ -281,11 +290,18 @@ with ShardedPool(
                 abs_G_x, abs_G_y, label="Numerical $G_k$", color="r", linestyle="solid"
             )
             ax.plot(
-                abs_analytic_G_x,
-                abs_analytic_G_y,
-                label="Analytic $G_k$",
+                abs_analytic_G_rad_x,
+                abs_analytic_G_rad_y,
+                label="Analytic $G_k$ [radiation]",
                 color="g",
                 linestyle="dashed",
+            )
+            ax.plot(
+                abs_analytic_G_w_x,
+                abs_analytic_G_w_y,
+                label="Analytic $G_k$ [$w=w(z)$]",
+                color="b",
+                linestyle="dashdot",
             )
 
             add_z_labels(ax, Gk, k_exit)
@@ -318,18 +334,26 @@ with ShardedPool(
             plt.close()
 
         if len(G_x) > 0 and (
-            any(y is not None for y in G_y) or any(y is not None for y in analytic_G_y)
+            any(y is not None for y in G_y)
+            or any(y is not None for y in analytic_G_rad_y)
         ):
             fig = plt.figure()
             ax = plt.gca()
 
             ax.plot(G_x, G_y, label="Numerical $G_k$", color="r", linestyle="solid")
             ax.plot(
-                analytic_G_x,
-                analytic_G_y,
-                label="Analytic $G_k$",
+                analytic_G_rad_x,
+                analytic_G_rad_y,
+                label="Analytic $G_k$ [radiation]",
                 color="g",
                 linestyle="dashed",
+            )
+            ax.plot(
+                analytic_G_w_x,
+                analytic_G_w_y,
+                label="Analytic $G_k$ [$w=w(z)$]",
+                color="b",
+                linestyle="dashdot",
             )
 
             add_z_labels(ax, Gk, k_exit)
@@ -364,8 +388,10 @@ with ShardedPool(
         z_response_column = [value.z for value in values]
         G_column = [value.G for value in values]
         Gprime_column = [value.Gprime for value in values]
-        analytic_G_column = [value.analytic_G_rad for value in values]
-        analytic_Gprime_column = [value.analytic_Gprime_rad for value in values]
+        analytic_G_rad_column = [value.analytic_G_rad for value in values]
+        analytic_Gprime_rad_column = [value.analytic_Gprime_rad for value in values]
+        analytic_G_w_column = [value.analytic_G_rad for value in values]
+        analytic_Gprime_w_column = [value.analytic_Gprime_rad for value in values]
         omega_WKB_sq_column = [value.omega_WKB_sq for value in values]
         WKB_criterion_column = [value.WKB_criterion for value in values]
 
@@ -379,8 +405,10 @@ with ShardedPool(
                 "z_response": z_response_column,
                 "G": G_column,
                 "Gprime": Gprime_column,
-                "analytic_G_rad": analytic_G_column,
-                "analytic_Gprime_rad": analytic_Gprime_column,
+                "analytic_G_rad": analytic_G_rad_column,
+                "analytic_Gprime_rad": analytic_Gprime_rad_column,
+                "analytic_G_w": analytic_G_w_column,
+                "analytic_Gprime_w": analytic_Gprime_w_column,
                 "omega_WKB_sq": omega_WKB_sq_column,
                 "WKB_criterion": WKB_criterion_column,
             }

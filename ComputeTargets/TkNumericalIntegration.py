@@ -534,7 +534,7 @@ class TkNumericalIntegration(DatastoreObject):
             wPerturbations = model.functions.wPerturbations(self._z_sample[i].z)
 
             analytic_T_rad = compute_analytic_T(self.k.k, 1.0 / 3.0, tau)
-            analytic_Tprime_w = compute_analytic_Tprime(self.k.k, 1.0 / 3.0, tau, H)
+            analytic_Tprime_rad = compute_analytic_Tprime(self.k.k, 1.0 / 3.0, tau, H)
 
             analytic_T_w = compute_analytic_T(self.k.k, wPerturbations, tau)
             analytic_Tprime_w = compute_analytic_Tprime(
@@ -549,7 +549,9 @@ class TkNumericalIntegration(DatastoreObject):
                     T_sample[i],
                     Tprime_sample[i],
                     analytic_T_rad=analytic_T_rad,
-                    analytic_Tprime_rad=analytic_Tprime_w,
+                    analytic_Tprime_rad=analytic_Tprime_rad,
+                    analytic_T_w=analytic_T_w,
+                    analytic_Tprime_w=analytic_Tprime_w,
                 )
             )
 

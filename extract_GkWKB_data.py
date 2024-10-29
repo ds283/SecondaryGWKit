@@ -155,10 +155,87 @@ with ShardedPool(
     k_exit_queue.run()
     k_exit_times = k_exit_queue.results
 
+    # choose a subsample of k modes
+    k_subsample: List[wavenumber_exit_time] = sample(
+        list(k_exit_times), k=int(round(0.9 * len(k_exit_times) + 0.5, 0))
+    )
+
     # choose a subsample of source redshifts
     z_subsample: List[redshift] = sample(
         list(z_sample), k=int(round(0.07 * len(z_sample) + 0.5, 0))
     )
+
+    def set_loglinear_axes(ax):
+        ax.set_xscale("log")
+        ax.legend(loc="best")
+        ax.grid(True)
+        ax.xaxis.set_inverted(True)
+
+    def set_loglog_axes(ax):
+        ax.set_xscale("log")
+        ax.set_yscale("log")
+        ax.legend(loc="best")
+        ax.grid(True)
+        ax.xaxis.set_inverted(True)
+
+    TEXT_DISPLACEMENT_MULTIPLIER = 0.85
+
+    # Matplotlib line style from https://matplotlib.org/stable/gallery/lines_bars_and_markers/linestyles.html
+    #      ('loosely dotted',        (0, (1, 10))),
+    #      ('dotted',                (0, (1, 1))),
+    #      ('densely dotted',        (0, (1, 1))),
+    #      ('long dash with offset', (5, (10, 3))),
+    #      ('loosely dashed',        (0, (5, 10))),
+    #      ('dashed',                (0, (5, 5))),
+    #      ('densely dashed',        (0, (5, 1))),
+    #
+    #      ('loosely dashdotted',    (0, (3, 10, 1, 10))),
+    #      ('dashdotted',            (0, (3, 5, 1, 5))),
+    #      ('densely dashdotted',    (0, (3, 1, 1, 1))),
+    #
+    #      ('dashdotdotted',         (0, (3, 5, 1, 5, 1, 5))),
+    #      ('loosely dashdotdotted', (0, (3, 10, 1, 10, 1, 10))),
+    #      ('densely dashdotdotted', (0, (3, 1, 1, 1, 1, 1)))]
+    def add_z_labels(ax, Gk: GkWKBIntegration, k_exit: wavenumber_exit_time):
+        ax.axvline(k_exit.z_exit_subh_e3, linestyle=(0, (1, 1)), color="b")  # dotted
+        ax.axvline(k_exit.z_exit_subh_e5, linestyle=(0, (1, 1)), color="b")  # dotted
+        ax.axvline(k_exit.z_exit_suph_e3, linestyle=(0, (1, 1)), color="b")  # dotted
+        ax.axvline(
+            k_exit.z_exit, linestyle=(0, (3, 1, 1, 1)), color="r"
+        )  # densely dashdotted
+        trans = ax.get_xaxis_transform()
+        ax.text(
+            TEXT_DISPLACEMENT_MULTIPLIER * k_exit.z_exit_suph_e3,
+            0.75,
+            "$-3$ e-folds",
+            transform=trans,
+            fontsize="x-small",
+            color="b",
+        )
+        ax.text(
+            TEXT_DISPLACEMENT_MULTIPLIER * k_exit.z_exit_subh_e3,
+            0.85,
+            "$+3$ e-folds",
+            transform=trans,
+            fontsize="x-small",
+            color="b",
+        )
+        ax.text(
+            TEXT_DISPLACEMENT_MULTIPLIER * k_exit.z_exit_subh_e5,
+            0.75,
+            "$+5$ e-folds",
+            transform=trans,
+            fontsize="x-small",
+            color="b",
+        )
+        ax.text(
+            TEXT_DISPLACEMENT_MULTIPLIER * k_exit.z_exit,
+            0.92,
+            "re-entry",
+            transform=trans,
+            fontsize="x-small",
+            color="r",
+        )
 
     @ray.remote
     def plot_Gk(Gk_numerical: GkNumericalIntegration, Gk_WKB: GkWKBIntegration):
@@ -252,34 +329,12 @@ with ShardedPool(
             WKB_criterion_column.extend(value.WKB_criterion for value in values)
             type_column.extend(1 for _ in range(len(values)))
 
-        ax.axvline(k_exit.z_exit_subh_e3, linestyle="--", color="r")
-        ax.axvline(k_exit.z_exit_subh_e5, linestyle="--", color="b")
-
-        trans = ax.get_xaxis_transform()
-        ax.text(
-            k_exit.z_exit_subh_e3,
-            0.05,
-            "$+3$ e-folds",
-            transform=trans,
-            fontsize="small",
-        )
-        ax.text(
-            k_exit.z_exit_subh_e5,
-            0.2,
-            "$+5$ e-folds",
-            transform=trans,
-            fontsize="small",
-        )
+        add_z_labels(ax, Gk_WKB, k_exit)
 
         ax.set_xlabel("response redshift $z$")
         ax.set_ylabel("$G_k(z_{\\text{source}}, z_{\\text{response}})$")
 
-        ax.set_xscale("log")
-        ax.set_yscale("log")
-
-        ax.legend(loc="best")
-        ax.grid(True)
-        ax.xaxis.set_inverted(True)
+        set_loglog_axes(ax)
 
         base_path = Path(args.output).resolve()
         fig_path = (
@@ -308,33 +363,12 @@ with ShardedPool(
 
             ax.plot(theta_x, theta_y, label="WKB phase $\\theta$")
 
-            ax.axvline(k_exit.z_exit_subh_e3, linestyle="--", color="r")
-            ax.axvline(k_exit.z_exit_subh_e5, linestyle="--", color="b")
-
-            trans = ax.get_xaxis_transform()
-            ax.text(
-                k_exit.z_exit_subh_e3,
-                0.05,
-                "$+3$ e-folds",
-                transform=trans,
-                fontsize="small",
-            )
-            ax.text(
-                k_exit.z_exit_subh_e5,
-                0.2,
-                "$+5$ e-folds",
-                transform=trans,
-                fontsize="small",
-            )
+            add_z_labels(ax, Gk_WKB, k_exit)
 
             ax.set_xlabel("response redshift $z$")
             ax.set_ylabel("WKB phase $\\theta$")
 
-            ax.set_xscale("log")
-            ax.set_yscale("log")
-
-            ax.grid(True)
-            ax.xaxis.set_inverted(True)
+            set_loglog_axes(ax)
 
             fig_path = (
                 base_path
@@ -386,7 +420,7 @@ with ShardedPool(
 
         return plot_Gk.remote(GkN_ref, GkW_ref)
 
-    work_grid = product(k_exit_times, z_subsample)
+    work_grid = product(k_subsample, z_subsample)
 
     work_queue = RayWorkPool(
         pool,
