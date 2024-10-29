@@ -726,13 +726,21 @@ class GkNumericalIntegration(DatastoreObject):
             current_z_float = current_z.z
             H = model.functions.Hubble(current_z_float)
             tau = model.functions.tau(current_z_float)
+            wBackground = model.functions.wBackground(current_z_float)
 
-            analytic_G = compute_analytic_G(
+            analytic_G_rad = compute_analytic_G(
                 self.k.k, 1.0 / 3.0, tau_source, tau, Hsource
             )
-            analytic_Gprime = compute_analytic_Gprime(
+            analytic_Gprime_rad = compute_analytic_Gprime(
                 self.k.k, 1.0 / 3.0, tau_source, tau, Hsource, H
             )
+            analytic_G_w = compute_analytic_G(
+                self.k.k, wBackground, tau_source, tau, Hsource
+            )
+            analytic_Gprime_w = compute_analytic_Gprime(
+                self.k.k, wBackground, tau_source, tau, Hsource, H
+            )
+
             omega_WKB_sq = WKB_omegaEff_sq(model, self.k.k, current_z_float)
             WKB_criterion = fabs(
                 WKB_d_ln_omegaEffPrime_dz(model, self.k.k, current_z_float)
@@ -745,8 +753,10 @@ class GkNumericalIntegration(DatastoreObject):
                     current_z,
                     G_sample[i],
                     Gprime_sample[i],
-                    analytic_G=analytic_G,
-                    analytic_Gprime=analytic_Gprime,
+                    analytic_G_rad=analytic_G_rad,
+                    analytic_Gprime_rad=analytic_Gprime_rad,
+                    analytic_G_w=analytic_G_w,
+                    analytic_Gprime_w=analytic_Gprime_w,
                     omega_WKB_sq=omega_WKB_sq,
                     WKB_criterion=WKB_criterion,
                 )
@@ -770,8 +780,10 @@ class GkNumericalValue(DatastoreObject):
         z: redshift,
         G: float,
         Gprime: float,
-        analytic_G: Optional[float] = None,
-        analytic_Gprime: Optional[float] = None,
+        analytic_G_rad: Optional[float] = None,
+        analytic_Gprime_rad: Optional[float] = None,
+        analytic_G_w: Optional[float] = None,
+        analytic_Gprime_w: Optional[float] = None,
         omega_WKB_sq: Optional[float] = None,
         WKB_criterion: Optional[float] = None,
     ):
@@ -781,8 +793,11 @@ class GkNumericalValue(DatastoreObject):
         self._G = G
         self._Gprime = Gprime
 
-        self._analytic_G = analytic_G
-        self._analytic_Gprime = analytic_Gprime
+        self._analytic_G_rad = analytic_G_rad
+        self._analytic_Gprime_rad = analytic_Gprime_rad
+
+        self._analytic_G_w = analytic_G_w
+        self._analytic_Gprime_w = analytic_Gprime_w
 
         self._omega_WKB_sq = omega_WKB_sq
         self._WKB_criterion = WKB_criterion
@@ -807,12 +822,20 @@ class GkNumericalValue(DatastoreObject):
         return self._Gprime
 
     @property
-    def analytic_G(self) -> Optional[float]:
-        return self._analytic_G
+    def analytic_G_rad(self) -> Optional[float]:
+        return self._analytic_G_rad
 
     @property
-    def analytic_Gprime(self) -> Optional[float]:
-        return self._analytic_Gprime
+    def analytic_Gprime_rad(self) -> Optional[float]:
+        return self._analytic_Gprime_rad
+
+    @property
+    def analytic_G_w(self) -> Optional[float]:
+        return self._analytic_G_w
+
+    @property
+    def analytic_Gprime_w(self) -> Optional[float]:
+        return self._analytic_Gprime_w
 
     @property
     def omega_WKB_sq(self) -> Optional[float]:

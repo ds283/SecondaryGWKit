@@ -184,7 +184,9 @@ with ShardedPool(
             values: List[GkNumericalValue] = Gk_numerical.values
 
             numerical_points = [(value.z.z, fabs(value.G)) for value in values]
-            analytic_points = [(value.z.z, fabs(value.analytic_G)) for value in values]
+            analytic_points = [
+                (value.z.z, fabs(value.analytic_G_rad)) for value in values
+            ]
 
             numerical_x, numerical_y = zip(*numerical_points)
             analytic_x, analytic_y = zip(*analytic_points)
@@ -203,9 +205,9 @@ with ShardedPool(
 
             z_column.extend(value.z.z for value in values)
             G_column.extend(value.G for value in values)
-            analytic_G_column.extend(value.analytic_G for value in values)
+            analytic_G_column.extend(value.analytic_G_rad for value in values)
             abs_G_column.extend(fabs(value.G) for value in values)
-            abs_analytic_G_column.extend(fabs(value.analytic_G) for value in values)
+            abs_analytic_G_column.extend(fabs(value.analytic_G_rad) for value in values)
             theta_column.extend(None for _ in range(len(values)))
             H_ratio_column.extend(None for _ in range(len(values)))
             omega_WKB_sq_column.extend(value.omega_WKB_sq for value in values)
@@ -218,7 +220,9 @@ with ShardedPool(
             values: List[GkWKBValue] = Gk_WKB.values
 
             numerical_points = [(value.z.z, fabs(value.G_WKB)) for value in values]
-            analytic_points = [(value.z.z, fabs(value.analytic_G)) for value in values]
+            analytic_points = [
+                (value.z.z, fabs(value.analytic_G_rad)) for value in values
+            ]
             theta_points = [(value.z.z, fabs(value.theta)) for value in values]
 
             numerical_x, numerical_y = zip(*numerical_points)
@@ -239,9 +243,9 @@ with ShardedPool(
 
             z_column.extend(value.z.z for value in values)
             G_column.extend(value.G_WKB for value in values)
-            analytic_G_column.extend(value.analytic_G for value in values)
+            analytic_G_column.extend(value.analytic_G_rad for value in values)
             abs_G_column.extend(fabs(value.G_WKB) for value in values)
-            abs_analytic_G_column.extend(fabs(value.analytic_G) for value in values)
+            abs_analytic_G_column.extend(fabs(value.analytic_G_rad) for value in values)
             theta_column.extend(value.theta for value in values)
             H_ratio_column.extend(value.H_ratio for value in values)
             omega_WKB_sq_column.extend(value.omega_WKB_sq for value in values)
@@ -349,7 +353,7 @@ with ShardedPool(
                 "redshift": z_column,
                 "G": G_column,
                 "abs_G": abs_G_column,
-                "analytic_G": analytic_G_column,
+                "analytic_G_rad": analytic_G_column,
                 "abs_analytic_G": abs_analytic_G_column,
                 "theta": theta_column,
                 "H_ratio": H_ratio_column,

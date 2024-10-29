@@ -254,11 +254,11 @@ with ShardedPool(
 
         abs_G_points = [(value.z, safe_fabs(value.G)) for value in values]
         abs_analytic_G_points = [
-            (value.z, safe_fabs(value.analytic_G)) for value in values
+            (value.z, safe_fabs(value.analytic_G_rad)) for value in values
         ]
 
         G_points = [(value.z, value.G) for value in values]
-        analytic_G_points = [(value.z, value.analytic_G) for value in values]
+        analytic_G_points = [(value.z, value.analytic_G_rad) for value in values]
 
         abs_G_x, abs_G_y = zip(*abs_G_points)
         abs_analytic_G_x, abs_analytic_G_y = zip(*abs_analytic_G_points)
@@ -364,8 +364,8 @@ with ShardedPool(
         z_response_column = [value.z for value in values]
         G_column = [value.G for value in values]
         Gprime_column = [value.Gprime for value in values]
-        analytic_G_column = [value.analytic_G for value in values]
-        analytic_Gprime_column = [value.analytic_Gprime for value in values]
+        analytic_G_column = [value.analytic_G_rad for value in values]
+        analytic_Gprime_column = [value.analytic_Gprime_rad for value in values]
         omega_WKB_sq_column = [value.omega_WKB_sq for value in values]
         WKB_criterion_column = [value.WKB_criterion for value in values]
 
@@ -379,8 +379,8 @@ with ShardedPool(
                 "z_response": z_response_column,
                 "G": G_column,
                 "Gprime": Gprime_column,
-                "analytic_G": analytic_G_column,
-                "analytic_Gprime": analytic_Gprime_column,
+                "analytic_G_rad": analytic_G_column,
+                "analytic_Gprime_rad": analytic_Gprime_column,
                 "omega_WKB_sq": omega_WKB_sq_column,
                 "WKB_criterion": WKB_criterion_column,
             }

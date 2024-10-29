@@ -91,17 +91,20 @@ def assemble_GkSource_values(
 
         # If we have both data points, ensure that their analytic estimates match.
         if numeric is not None and WKB is not None:
-            if fabs(numeric.analytic_G - WKB.analytic_G) > DEFAULT_ABS_TOLERANCE:
-                raise RuntimeError(
-                    f"assemble_GkSource_values: analytic G values unexpectedly differ between numeric and WKB data values by a large amount at z_source={z_source.z:.5g} for k={k_exit.k.k_inv_Mpc}/Mpc (store_id={k_exit.store_id}), z_response={z_response.z:.5g} (store_id={z_response.store_id})"
-                )
-
             if (
-                fabs(numeric.analytic_Gprime - WKB.analytic_Gprime)
+                fabs(numeric.analytic_G_rad - WKB.analytic_G_rad)
                 > DEFAULT_ABS_TOLERANCE
             ):
                 raise RuntimeError(
-                    f"assemble_GkSource_values: analytic G values unexpectedly differ between numeric and WKB data values by a large amount at z_source={z_source.z:.5g} for k={k_exit.k.k_inv_Mpc}/Mpc (store_id={k_exit.store_id}), z_response={z_response.z:.5g} (store_id={z_response.store_id})"
+                    f"assemble_GkSource_values: analytic G (radiation) values unexpectedly differ between numeric and WKB data values by a large amount at z_source={z_source.z:.5g} for k={k_exit.k.k_inv_Mpc}/Mpc (store_id={k_exit.store_id}), z_response={z_response.z:.5g} (store_id={z_response.store_id})"
+                )
+
+            if (
+                fabs(numeric.analytic_Gprime_rad - WKB.analytic_Gprime_rad)
+                > DEFAULT_ABS_TOLERANCE
+            ):
+                raise RuntimeError(
+                    f"assemble_GkSource_values: analytic G (radiation) values unexpectedly differ between numeric and WKB data values by a large amount at z_source={z_source.z:.5g} for k={k_exit.k.k_inv_Mpc}/Mpc (store_id={k_exit.store_id}), z_response={z_response.z:.5g} (store_id={z_response.store_id})"
                 )
 
         # If we have a WKB data point, check that the response redshift is in the expected region where z_response < z_e3 for this k-mode
@@ -340,15 +343,25 @@ def assemble_GkSource_values(
                     if numeric is not None
                     else WKB.WKB_criterion if WKB is not None else None
                 ),
-                analytic_G=(
-                    numeric.analytic_G
+                analytic_G_rad=(
+                    numeric.analytic_G_rad
                     if numeric is not None
-                    else WKB.analytic_G if WKB is not None else None
+                    else WKB.analytic_G_rad if WKB is not None else None
                 ),
-                analytic_Gprime=(
-                    numeric.analytic_Gprime
+                analytic_Gprime_rad=(
+                    numeric.analytic_Gprime_rad
                     if numeric is not None
-                    else WKB.analytic_Gprime if WKB is not None else None
+                    else WKB.analytic_Gprime_rad if WKB is not None else None
+                ),
+                analytic_G_w=(
+                    numeric.analytic_G_w
+                    if numeric is not None
+                    else WKB.analytic_G_w if WKB is not None else None
+                ),
+                analytic_Gprime_w=(
+                    numeric.analytic_Gprime_w
+                    if numeric is not None
+                    else WKB.analytic_Gprime_w if WKB is not None else None
                 ),
             )
         )
@@ -554,8 +567,10 @@ class GkSource(DatastoreObject):
         rel_G_WKB_err_col = [value.WKB.rel_G_WKB_err for value in self._values]
         omega_WKB_sq_col = [value.omega_WKB_sq for value in self._values]
         WKB_criterion_col = [value.WKB_criterion for value in self._values]
-        analytic_G_col = [value.analytic_G for value in self._values]
-        analytic_Gprime_col = [value.analytic_Gprime for value in self._values]
+        analytic_G_rad_col = [value.analytic_G_rad for value in self._values]
+        analytic_Gprime_rad_col = [value.analytic_Gprime_rad for value in self._values]
+        analytic_G_w_col = [value.analytic_G_w for value in self._values]
+        analytic_Gprime_w_col = [value.analytic_Gprime_w for value in self._values]
 
         df = pd.DataFrame.from_dict(
             {
@@ -581,8 +596,10 @@ class GkSource(DatastoreObject):
                 "rel_G_WKB_err": rel_G_WKB_err_col,
                 "omega_WKB_sq": omega_WKB_sq_col,
                 "WKB_criterion": WKB_criterion_col,
-                "analytic_G": analytic_G_col,
-                "analytic_Gprime": analytic_Gprime_col,
+                "analytic_G_rad": analytic_G_rad_col,
+                "analytic_Gprime_rad": analytic_Gprime_rad_col,
+                "analytic_G_w": analytic_G_w_col,
+                "analytic_Gprime_w": analytic_Gprime_w_col,
             }
         )
 
@@ -655,8 +672,10 @@ class GkSourceValue(DatastoreObject):
         rel_G_WKB_err: Optional[float] = None,
         omega_WKB_sq: Optional[float] = None,
         WKB_criterion: Optional[float] = None,
-        analytic_G: Optional[float] = None,
-        analytic_Gprime: Optional[float] = None,
+        analytic_G_rad: Optional[float] = None,
+        analytic_Gprime_rad: Optional[float] = None,
+        analytic_G_w: Optional[float] = None,
+        analytic_Gprime_w: Optional[float] = None,
         z_init: Optional[float] = None,
     ):
         DatastoreObject.__init__(self, store_id)
@@ -756,8 +775,11 @@ class GkSourceValue(DatastoreObject):
         self._omega_WKB_sq = omega_WKB_sq
         self._WKB_criterion = WKB_criterion
 
-        self._analytic_G = analytic_G
-        self._analytic_Gprime = analytic_Gprime
+        self._analytic_G_rad = analytic_G_rad
+        self._analytic_Gprime_rad = analytic_Gprime_rad
+
+        self._analytic_G_w = analytic_G_w
+        self._analytic_Gprime_w = analytic_Gprime_w
 
     @property
     def z_source(self) -> redshift:
@@ -788,12 +810,20 @@ class GkSourceValue(DatastoreObject):
         return self._WKB_criterion
 
     @property
-    def analytic_G(self) -> Optional[float]:
-        return self._analytic_G
+    def analytic_G_rad(self) -> Optional[float]:
+        return self._analytic_G_rad
 
     @property
-    def analytic_Gprime(self) -> Optional[float]:
-        return self._analytic_Gprime
+    def analytic_Gprime_rad(self) -> Optional[float]:
+        return self._analytic_Gprime_rad
+
+    @property
+    def analytic_G_w(self) -> Optional[float]:
+        return self._analytic_G_w
+
+    @property
+    def analytic_Gprime_w(self) -> Optional[float]:
+        return self._analytic_Gprime_w
 
 
 class GkSourceProxy:

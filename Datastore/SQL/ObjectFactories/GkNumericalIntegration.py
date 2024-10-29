@@ -292,8 +292,10 @@ class sqla_GkNumericalIntegration_factory(SQLAFactoryBase):
                     redshift_table.c.z,
                     value_table.c.G,
                     value_table.c.Gprime,
-                    value_table.c.analytic_G,
-                    value_table.c.analytic_Gprime,
+                    value_table.c.analytic_G_rad,
+                    value_table.c.analytic_Gprime_rad,
+                    value_table.c.analytic_G_w,
+                    value_table.c.analytic_Gprime_w,
                     value_table.c.omega_WKB_sq,
                     value_table.c.WKB_criterion,
                 )
@@ -318,8 +320,10 @@ class sqla_GkNumericalIntegration_factory(SQLAFactoryBase):
                         z=z_value,
                         G=row.G,
                         Gprime=row.Gprime,
-                        analytic_G=row.analytic_G,
-                        analytic_Gprime=row.analytic_Gprime,
+                        analytic_G_rad=row.analytic_G_rad,
+                        analytic_Gprime_rad=row.analytic_Gprime_rad,
+                        analytic_G_w=row.analytic_G_w,
+                        analytic_Gprime_w=row.analytic_Gprime_w,
                         omega_WKB_sq=row.omega_WKB_sq,
                         WKB_criterion=row.WKB_criterion,
                     )
@@ -441,8 +445,10 @@ class sqla_GkNumericalIntegration_factory(SQLAFactoryBase):
                     "z_serial": value.z.store_id,
                     "G": value.G,
                     "Gprime": value.Gprime,
-                    "analytic_G": value.analytic_G,
-                    "analytic_Gprime": value.analytic_Gprime,
+                    "analytic_G_rad": value.analytic_G_rad,
+                    "analytic_Gprime_rad": value.analytic_Gprime_rad,
+                    "analytic_G_w": value.analytic_G_w,
+                    "analytic_Gprime_w": value.analytic_Gprime_w,
                     "omega_WKB_sq": value.omega_WKB_sq,
                     "WKB_criterion": value.WKB_criterion,
                 },
@@ -620,8 +626,10 @@ class sqla_GkNumericalValue_factory(SQLAFactoryBase):
                 ),
                 sqla.Column("G", sqla.Float(64), nullable=False),
                 sqla.Column("Gprime", sqla.Float(64), nullable=False),
-                sqla.Column("analytic_G", sqla.Float(64), nullable=True),
-                sqla.Column("analytic_Gprime", sqla.Float(64), nullable=True),
+                sqla.Column("analytic_G_rad", sqla.Float(64), nullable=True),
+                sqla.Column("analytic_Gprime_rad", sqla.Float(64), nullable=True),
+                sqla.Column("analytic_G_w", sqla.Float(64), nullable=True),
+                sqla.Column("analytic_Gprime_w", sqla.Float(64), nullable=True),
                 sqla.Column("omega_WKB_sq", sqla.Float(64), nullable=True),
                 sqla.Column("WKB_criterion", sqla.Float(64), nullable=True),
             ],
@@ -666,8 +674,11 @@ class sqla_GkNumericalValue_factory(SQLAFactoryBase):
         G: float = payload["G"]
         Gprime: float = payload["Gprime"]
 
-        analytic_G: Optional[float] = payload.get("analytic_G", None)
-        analytic_Gprime: Optional[float] = payload.get("analytic_Gprime", None)
+        analytic_G_rad: Optional[float] = payload.get("analytic_G_rad", None)
+        analytic_Gprime_rad: Optional[float] = payload.get("analytic_Gprime_rad", None)
+
+        analytic_G_w: Optional[float] = payload.get("analytic_G_w", None)
+        analytic_Gprime_w: Optional[float] = payload.get("analytic_Gprime_w", None)
 
         omega_WKB_sq: Optional[float] = payload.get("omega_WKB_sq", None)
         WKB_criterion: Optional[float] = payload.get("WKB_criterion", None)
@@ -678,8 +689,10 @@ class sqla_GkNumericalValue_factory(SQLAFactoryBase):
                     table.c.serial,
                     table.c.G,
                     table.c.Gprime,
-                    table.c.analytic_G,
-                    table.c.analytic_Gprime,
+                    table.c.analytic_G_rad,
+                    table.c.analytic_Gprime_rad,
+                    table.c.analytic_G_w,
+                    table.c.analytic_Gprime_w,
                     table.c.omega_WKB_sq,
                     table.c.WKB_criterion,
                 ).filter(
@@ -701,8 +714,10 @@ class sqla_GkNumericalValue_factory(SQLAFactoryBase):
                     "z_serial": z.store_id,
                     "G": G,
                     "Gprime": Gprime,
-                    "analytic_G": analytic_G,
-                    "analytic_Gprime": analytic_Gprime,
+                    "analytic_G_rad": analytic_G_rad,
+                    "analytic_Gprime_rad": analytic_Gprime_rad,
+                    "analytic_G_w": analytic_G_w,
+                    "analytic_Gprime_w": analytic_Gprime_w,
                     "omega_WKB_sq": omega_WKB_sq,
                     "WKB_criterion": WKB_criterion,
                 },
@@ -711,8 +726,10 @@ class sqla_GkNumericalValue_factory(SQLAFactoryBase):
             attribute_set = {"_new_insert": True}
         else:
             store_id = row_data.serial
-            analytic_G = row_data.analytic_G
-            analytic_Gprime = row_data.analytic_Gprime
+            analytic_G_rad = row_data.analytic_G_rad
+            analytic_Gprime_rad = row_data.analytic_Gprime_rad
+            analytic_G_w = row_data.analytic_G_w
+            analytic_Gprime_w = row_data.analytic_Gprime_w
             omega_WKB_sq = row_data.omega_WKB_sq
             WKB_criterion = row_data.WKB_criterion
 
@@ -738,8 +755,10 @@ class sqla_GkNumericalValue_factory(SQLAFactoryBase):
             z=z,
             G=G,
             Gprime=Gprime,
-            analytic_G=analytic_G,
-            analytic_Gprime=analytic_Gprime,
+            analytic_G_rad=analytic_G_rad,
+            analytic_Gprime_rad=analytic_Gprime_rad,
+            analytic_G_w=analytic_G_w,
+            analytic_Gprime_w=analytic_Gprime_w,
             omega_WKB_sq=omega_WKB_sq,
             WKB_criterion=WKB_criterion,
         )
@@ -803,8 +822,10 @@ class sqla_GkNumericalValue_factory(SQLAFactoryBase):
                     table.c.serial,
                     table.c.G,
                     table.c.Gprime,
-                    table.c.analytic_G,
-                    table.c.analytic_Gprime,
+                    table.c.analytic_G_rad,
+                    table.c.analytic_Gprime_rad,
+                    table.c.analytic_G_w,
+                    table.c.analytic_Gprime_w,
                     table.c.omega_WKB_sq,
                     table.c.WKB_criterion,
                 )
@@ -835,8 +856,10 @@ class sqla_GkNumericalValue_factory(SQLAFactoryBase):
             z=z,
             G=row_data.G,
             Gprime=row_data.Gprime,
-            analytic_G=row_data.analytic_G,
-            analytic_Gprime=row_data.analytic_Gprime,
+            analytic_G_rad=row_data.analytic_G_rad,
+            analytic_Gprime_rad=row_data.analytic_Gprime_rad,
+            analytic_G_w=row_data.analytic_G_w,
+            analytic_Gprime_w=row_data.analytic_Gprime_w,
             omega_WKB_sq=row_data.omega_WKB_sq,
             WKB_criterion=row_data.WKB_criterion,
         )
@@ -913,8 +936,10 @@ class sqla_GkNumericalValue_factory(SQLAFactoryBase):
             table.c.serial,
             table.c.G,
             table.c.Gprime,
-            table.c.analytic_G,
-            table.c.analytic_Gprime,
+            table.c.analytic_G_rad,
+            table.c.analytic_Gprime_rad,
+            table.c.analytic_G_w,
+            table.c.analytic_Gprime_w,
             table.c.omega_WKB_sq,
             table.c.WKB_criterion,
             subquery.c.z_source_serial,
@@ -938,8 +963,10 @@ class sqla_GkNumericalValue_factory(SQLAFactoryBase):
                 z=redshift(store_id=row.z_response_serial, z=row.z_response),
                 G=row.G,
                 Gprime=row.Gprime,
-                analytic_G=row.analytic_G,
-                analytic_Gprime=row.analytic_Gprime,
+                analytic_G_rad=row.analytic_G_rad,
+                analytic_Gprime_rad=row.analytic_Gprime_rad,
+                analytic_G_w=row.analytic_G_w,
+                analytic_Gprime_w=row.analytic_Gprime_w,
                 omega_WKB_sq=row.omega_WKB_sq,
                 WKB_criterion=row.WKB_criterion,
             )

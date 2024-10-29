@@ -1165,12 +1165,20 @@ class GkWKBIntegration(DatastoreObject):
             current_z_float = current_z.z
             H = model.functions.Hubble(current_z_float)
             tau = model.functions.tau(current_z_float)
+            wBackground = model.functions.wBackground(current_z_float)
 
-            analytic_G = compute_analytic_G(
+            analytic_G_rad = compute_analytic_G(
                 self.k.k, 1.0 / 3.0, tau_source, tau, H_source
             )
-            analytic_Gprime = compute_analytic_Gprime(
+            analytic_Gprime_rad = compute_analytic_Gprime(
                 self.k.k, 1.0 / 3.0, tau_source, tau, H_source, H
+            )
+
+            analytic_G_w = compute_analytic_G(
+                self.k.k, wBackground, tau_source, tau, H_source
+            )
+            analytic_Gprime_w = compute_analytic_Gprime(
+                self.k.k, wBackground, tau_source, tau, H_source, H
             )
 
             # should be safe to assume omega_WKB_sq > 0, since otherwise this would have been picked up during the integration
@@ -1203,8 +1211,10 @@ class GkWKBIntegration(DatastoreObject):
                     omega_WKB_sq=omega_WKB_sq,
                     WKB_criterion=WKB_criterion,
                     G_WKB=G_WKB,
-                    analytic_G=analytic_G,
-                    analytic_Gprime=analytic_Gprime,
+                    analytic_G_rad=analytic_G_rad,
+                    analytic_Gprime_rad=analytic_Gprime_rad,
+                    analytic_G_w=analytic_G_w,
+                    analytic_Gprime_w=analytic_Gprime_w,
                     sin_coeff=self._sin_coeff,
                     cos_coeff=self._cos_coeff,
                     z_init=self._z_init,
@@ -1230,8 +1240,10 @@ class GkWKBValue(DatastoreObject):
         sin_coeff: Optional[float] = None,
         cos_coeff: Optional[float] = None,
         z_init: Optional[float] = None,
-        analytic_G: Optional[float] = None,
-        analytic_Gprime: Optional[float] = None,
+        analytic_G_rad: Optional[float] = None,
+        analytic_Gprime_rad: Optional[float] = None,
+        analytic_G_w: Optional[float] = None,
+        analytic_Gprime_w: Optional[float] = None,
     ):
         DatastoreObject.__init__(self, store_id)
 
@@ -1244,8 +1256,11 @@ class GkWKBValue(DatastoreObject):
         self._WKB_criterion = WKB_criterion
         self._G_WKB = G_WKB
 
-        self._analytic_G = analytic_G
-        self._analytic_Gprime = analytic_Gprime
+        self._analytic_G_rad = analytic_G_rad
+        self._analytic_Gprime_rad = analytic_Gprime_rad
+
+        self._analytic_G_w = analytic_G_w
+        self._analytic_Gprime_w = analytic_Gprime_w
 
         self._sin_coeff = sin_coeff
         self._cos_coeff = cos_coeff
@@ -1292,12 +1307,20 @@ class GkWKBValue(DatastoreObject):
         return self._G_WKB
 
     @property
-    def analytic_G(self) -> Optional[float]:
-        return self._analytic_G
+    def analytic_G_rad(self) -> Optional[float]:
+        return self._analytic_G_rad
 
     @property
-    def analytic_Gprime(self) -> Optional[float]:
-        return self._analytic_Gprime
+    def analytic_Gprime_rad(self) -> Optional[float]:
+        return self._analytic_Gprime_rad
+
+    @property
+    def analytic_G_w(self) -> Optional[float]:
+        return self._analytic_G_rad
+
+    @property
+    def analytic_Gprime_w(self) -> Optional[float]:
+        return self._analytic_Gprime_rad
 
     @property
     def sin_coeff(self) -> Optional[float]:
