@@ -281,7 +281,7 @@ with ShardedPool(
             )
             for value in WKB_points
         ]
-        abs_analytic_G_points = [
+        abs_analytic_G_rad_points = [
             (
                 value.z_source.z,
                 safe_div(
@@ -292,26 +292,38 @@ with ShardedPool(
             )
             for value in values
         ]
+        abs_analytic_G_w_points = [
+            (
+                value.z_source.z,
+                safe_div(
+                    safe_fabs(value.analytic_G_w),
+                    (1.0 + value.z_source.z)
+                    * model.functions.Hubble(value.z_source.z) ** 2,
+                ),
+            )
+            for value in values
+        ]
 
-        theta_points = [(value.z_source.z, value.WKB.theta) for value in values]
-        raw_theta_points = [(value.z_source.z, value.WKB.raw_theta) for value in values]
         abs_theta_points = [
             (value.z_source.z, safe_fabs(value.WKB.theta)) for value in values
         ]
         abs_raw_theta_points = [
             (value.z_source.z, safe_fabs(value.WKB.raw_theta)) for value in values
         ]
-        theta_spline_points = [
-            (
-                value.z_source.z,
-                functions.theta(value.z_source.z),
-            )
-            for value in WKB_points
-        ]
         abs_theta_spline_points = [
             (
                 value.z_source.z,
                 safe_fabs(functions.theta(value.z_source.z)),
+            )
+            for value in WKB_points
+        ]
+
+        theta_points = [(value.z_source.z, value.WKB.theta) for value in values]
+        raw_theta_points = [(value.z_source.z, value.WKB.raw_theta) for value in values]
+        theta_spline_points = [
+            (
+                value.z_source.z,
+                functions.theta(value.z_source.z),
             )
             for value in WKB_points
         ]
@@ -344,7 +356,9 @@ with ShardedPool(
 
         abs_G_x, abs_G_y = zip(*abs_G_points)
         abs_G_WKB_x, abs_G_WKB_y = zip(*abs_G_WKB_points)
-        abs_analytic_G_x, abs_analytic_G_y = zip(*abs_analytic_G_points)
+        abs_analytic_G_rad_x, abs_analytic_G_rad_y = zip(*abs_analytic_G_rad_points)
+        abs_analytic_G_w_x, abs_analytic_G_w_y = zip(*abs_analytic_G_w_points)
+
         abs_G_spline_x, abs_G_spline_y = (
             zip(*abs_G_spline_points) if len(abs_G_spline_points) > 0 else ([], [])
         )
@@ -354,17 +368,19 @@ with ShardedPool(
             else ([], [])
         )
 
-        theta_x, theta_y = zip(*theta_points)
-        raw_theta_x, raw_theta_y = zip(*raw_theta_points)
         abs_theta_x, abs_theta_y = zip(*abs_theta_points)
         abs_raw_theta_x, abs_raw_theta_y = zip(*abs_raw_theta_points)
-        theta_spline_x, theta_spline_y = (
-            zip(*theta_spline_points) if len(theta_spline_points) > 0 else ([], [])
-        )
+
+        theta_x, theta_y = zip(*theta_points)
+        raw_theta_x, raw_theta_y = zip(*raw_theta_points)
+
         abs_theta_spline_x, abs_theta_spline_y = (
             zip(*abs_theta_spline_points)
             if len(abs_theta_spline_points) > 0
             else ([], [])
+        )
+        theta_spline_x, theta_spline_y = (
+            zip(*theta_spline_points) if len(theta_spline_points) > 0 else ([], [])
         )
 
         theta_spline_deriv_x, theta_spline_deriv_y = (
@@ -392,6 +408,8 @@ with ShardedPool(
         if len(abs_G_x) > 0 and (
             any(y is not None and y > 0 for y in abs_G_y)
             or any(y is not None and y > 0 for y in abs_G_WKB_y)
+            or any(y is not None and y > 0 for y in abs_analytic_G_rad_y)
+            or any(y is not None and y > 0 for y in abs_analytic_G_w_y)
             or any(y is not None and y > 0 for y in abs_G_spline_y)
             or any(y is not None and y > 0 for y in abs_G_WKB_spline_y)
         ):
@@ -413,24 +431,31 @@ with ShardedPool(
                 linestyle="solid",
             )
             ax.plot(
-                abs_analytic_G_x,
-                abs_analytic_G_y,
-                label="Analytic $G_k$",
+                abs_analytic_G_rad_x,
+                abs_analytic_G_rad_y,
+                label="Analytic $G_k$ [radiation]",
                 color="g",
+                linestyle="dashed",
+            )
+            ax.plot(
+                abs_analytic_G_rad_x,
+                abs_analytic_G_rad_y,
+                label="Analytic $G_k$ [$w=w(z)$]",
+                color="b",
                 linestyle="dashed",
             )
             ax.plot(
                 abs_G_spline_x,
                 abs_G_spline_y,
                 label="Spline $G_k$",
-                color="m",
+                color="r",
                 linestyle="dashdot",
             )
             ax.plot(
                 abs_G_WKB_spline_x,
                 abs_G_WKB_spline_y,
                 label="Spline WKB $G_k$",
-                color="c",
+                color="b",
                 linestyle="dashdot",
             )
 
