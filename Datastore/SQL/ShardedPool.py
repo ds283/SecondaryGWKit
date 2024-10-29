@@ -38,6 +38,7 @@ _shard_tables = {
     "GkWKBValue": "k",
     "GkSource": "k",
     "GkSourceValue": "k",
+    "GkSourcePolicyData": "k",
     "QuadSourceIntegral": "k",
     "OneLoopIntegral": "k",
 }

@@ -15,6 +15,7 @@ class sqla_GkSourcePolicy_factory(SQLAFactoryBase):
             "version": False,
             "timestamp": True,
             "columns": [
+                sqla.Column("label", sqla.String(DEFAULT_STRING_LENGTH), nullable=True),
                 sqla.Column("Levin_threshold", sqla.Float(64), nullable=False),
                 sqla.Column(
                     "numeric_policy", sqla.String(DEFAULT_STRING_LENGTH), nullable=False
@@ -26,6 +27,8 @@ class sqla_GkSourcePolicy_factory(SQLAFactoryBase):
     def build(payload, conn, table, inserter, tables, inserters):
         Levin_threshold = payload["Levin_threshold"]
         numeric_policy = payload["numeric_policy"]
+
+        label = payload.get("label", None)
 
         store_id = conn.execute(
             sqla.select(table.c.serial).filter(
@@ -39,6 +42,7 @@ class sqla_GkSourcePolicy_factory(SQLAFactoryBase):
             store_id = inserter(
                 conn,
                 {
+                    "label": label,
                     "Levin_threshold": Levin_threshold,
                     "numeric_policy": numeric_policy,
                 },
@@ -48,7 +52,9 @@ class sqla_GkSourcePolicy_factory(SQLAFactoryBase):
         else:
             attribute_set = {"_deserialized": True}
 
-        obj = GkSourcePolicy(store_id=store_id, numeric_policy=numeric_policy)
+        obj = GkSourcePolicy(
+            store_id=store_id, numeric_policy=numeric_policy, label=label
+        )
         for key, value in attribute_set.items():
             setattr(obj, key, value)
         return obj

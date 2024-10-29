@@ -1,6 +1,7 @@
 from .BackgroundModel import (
     BackgroundModel,
     BackgroundModelValue,
+    ModelProxy,
 )
 from .GkNumericalIntegration import (
     GkNumericalIntegration,
@@ -9,7 +10,9 @@ from .GkNumericalIntegration import (
 from .GkSource import (
     GkSource,
     GkSourceValue,
+    GkSourceProxy,
 )
+from .GkSourcePolicyData import GkSourcePolicyData
 from .GkWKBIntegration import (
     GkWKBIntegration,
     GkWKBValue,

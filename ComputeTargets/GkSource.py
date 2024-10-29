@@ -3,13 +3,12 @@ from typing import Optional, List
 
 import pandas as pd
 import ray
-from math import fabs, pi, sqrt, cos, sin, log
-from scipy.interpolate import InterpolatedUnivariateSpline
+from math import fabs, pi, sqrt, cos, sin
+from ray import ObjectRef
 
 from ComputeTargets.BackgroundModel import BackgroundModel, ModelProxy
 from ComputeTargets.GkNumericalIntegration import GkNumericalValue
 from ComputeTargets.GkWKBIntegration import GkWKBValue
-from ComputeTargets.spline_wrappers import GkWKBSplineWrapper, ZSplineWrapper
 from CosmologyConcepts import wavenumber_exit_time, redshift, wavenumber, redshift_array
 from Datastore import DatastoreObject
 from MetadataConcepts import store_tag, tolerance
@@ -17,7 +16,6 @@ from Units import check_units
 from defaults import (
     DEFAULT_ABS_TOLERANCE,
     DEFAULT_FLOAT_PRECISION,
-    DEFAULT_LEVIN_THRESHOLD,
 )
 
 _NumericData = namedtuple("NumericData", ["G", "Gprime"])
@@ -40,27 +38,10 @@ _WKBData = namedtuple(
     ],
 )
 
-GkSourceFunctions = namedtuple(
-    "GkSourceFunctions",
-    [
-        "numerical_region",
-        "WKB_region",
-        "numerical_Gk",
-        "WKB_Gk",
-        "theta",
-        "theta_deriv",
-        "type",
-        "quality",
-        "crossover_z",
-    ],
-)
-
 _two_pi = 2.0 * pi
 
 DEFAULT_G_WKB_DIFF_REL_TOLERANCE = 1e-2
 DEFAULT_G_WKB_DIFF_ABS_TOLERANCE = 1e-3
-
-MIN_SPLINE_DATA_POINTS = 5
 
 
 @ray.remote
@@ -449,11 +430,6 @@ class GkSource(DatastoreObject):
             self._numerical_smallest_z = payload["numerical_smallest_z"]
             self._primary_WKB_largest_z = payload["primary_WKB_largest_z"]
 
-            self._type = payload["type"]
-            self._quality = payload["quality"]
-            self._crossover_z = payload["crossover_z"]
-            self._Levin_z = payload["Levin_z"]
-
             self._metadata = payload["metadata"]
 
         else:
@@ -463,15 +439,9 @@ class GkSource(DatastoreObject):
             self._numerical_smallest_z = None
             self._primary_WKB_largest_z = None
 
-            self._type = None
-            self._quality = None
-            self._crossover_z = None
-            self._Levin_z = None
-
             self._metadata = {}
 
         self._values_df = None
-        self._functions = None
         self._compute_ref = None
 
         if self._z_sample is not None:
@@ -483,203 +453,6 @@ class GkSource(DatastoreObject):
                 if z_float < z_response_float:
                     raise ValueError(
                         f"GkSource: source redshift sample point z={z_float:.5g} exceeds response redshift z={z_response_float:.5g}"
-                    )
-
-    def _classify(self):
-        self._classify_crossover()
-        self._classify_Levin()
-
-    def _classify_Levin(self):
-        # find the Levin point, if we are using WKB data
-        if (
-            self._type == "WKB" or self._type == "mixed"
-        ) and self._quality != "incomplete":
-            self._Levin_z = None
-            max_z = (
-                self._crossover_z
-                if self._crossover_z is not None
-                else self._primary_WKB_largest_z.z
-            )
-            min_z = self._z_sample.min.z
-            WKB_data = self._build_WKB_values(max_z=max_z, min_z=min_z)
-            theta_data = [
-                (
-                    log(1.0 + v.z_source.z),
-                    v.WKB.theta,
-                )
-                for v in WKB_data
-            ]
-            theta_x, theta_y = zip(*theta_data)
-            theta_spline = InterpolatedUnivariateSpline(theta_x, theta_y, ext="raise")
-            theta_deriv = ZSplineWrapper(
-                theta_spline.derivative(),
-                "theta derivative",
-                max_z,
-                min_z,
-                log_z=True,
-                deriv=True,
-            )
-
-            # _z_sample is guaranteed to be in descending order of redshift
-            for z_source in self._z_sample:
-                if max_z >= z_source.z >= min_z:
-                    if fabs(theta_deriv(z_source.z)) > DEFAULT_LEVIN_THRESHOLD:
-                        self._Levin_z = z_source
-                        self._metadata["Levin_z_dtheta_dz"] = theta_deriv(z_source.z)
-                        break
-
-    def _classify_crossover(self):
-        has_WKB_spline_points = False
-        if self._primary_WKB_largest_z is not None:
-            WKB_data = self._build_WKB_values(
-                max_z=self._primary_WKB_largest_z, min_z=self._z_sample.min
-            )
-
-            if len(WKB_data) >= MIN_SPLINE_DATA_POINTS:
-                has_WKB_spline_points = True
-            else:
-                self._metadata["WKB_spline_points"] = len(WKB_data)
-
-        # if primary WKB region is missing, or there are not enough points to construct an adequate spline,
-        # we need numerical data to go all the way down to lowest redshift
-        if self._primary_WKB_largest_z is None or not has_WKB_spline_points:
-            self._type = "numeric"
-            self._crossover_z = None
-
-            if self._numerical_smallest_z.store_id == self._z_sample.min.store_id:
-                self._quality = "complete"
-            else:
-                self._quality = "incomplete"
-                self._metadata["comment"] = (
-                    "No WKB region, and numeric region does not extend to z_sample.min"
-                )
-
-        # if numerical data is missing, we need WKB data to go all the way up to the highest redshift
-        elif self._numerical_smallest_z is None:
-            self._type = "WKB"
-            self._crossover_z = None
-
-            if (
-                self._primary_WKB_largest_z.store_id == self._z_sample.max.store_id
-                and has_WKB_spline_points
-            ):
-                self._quality = "complete"
-            else:
-                self._quality = "incomplete"
-                self._metadata["comment"] = (
-                    "No numeric region, and WKB region does not extend to z_sample.max"
-                )
-
-        # otherwise, there should be an overlap region
-        else:
-            # we're allowed to assume that the primary WKB region begins at z_sample.min, and the numerical region
-            # (if it is present) begins at z_sample.max
-
-            # we're also allowed to assume that we have at least a minimum number of sample points to produce a spline
-            # between _primary_WKB_largest_z and z_min
-            self._type = "mixed"
-
-            if (
-                self._numerical_smallest_z.z
-                >= self._primary_WKB_largest_z.z - DEFAULT_FLOAT_PRECISION
-            ):
-                self._quality = "incomplete"
-                self._crossover_z = self._numerical_smallest_z.z
-                self._metadata["comment"] = (
-                    "Both WKB and numeric regions are present, but numeric region does not extend below largest redshift in primary WKB region"
-                )
-
-            else:
-                # can assume _numerical_smallest_z is strictly smaller than _primary_WKB_largest_z
-
-                # find minimum of search window
-                # we want this not to be too close the lower bound at _numerical_smallest_z, but it must fall below the upper bound at
-                # _primary_WKB_largest_z
-                crossover_trial_min_z_options = [
-                    1.06 * self._numerical_smallest_z.z,
-                    1.03 * self._numerical_smallest_z.z,
-                    1.015 * self._numerical_smallest_z.z,
-                    self._numerical_smallest_z.z,
-                ]
-                crossover_trial_min_z_options = [
-                    z
-                    for z in crossover_trial_min_z_options
-                    if z <= self._primary_WKB_largest_z.z + DEFAULT_FLOAT_PRECISION
-                ]
-                crossover_trial_min_z = max(crossover_trial_min_z_options)
-
-                # find maximum of search window
-                # we want this not to be too close to the upper bound at _primary_WKB_largest_z, but it must fall above the lower bound at
-                # _numerical_smallest_z
-                crossover_trial_max_z_options = [
-                    0.94 * self._primary_WKB_largest_z.z,
-                    0.97 * self._primary_WKB_largest_z.z,
-                    0.985 * self._primary_WKB_largest_z.z,
-                    self._primary_WKB_largest_z.z,
-                ]
-                crossover_trial_max_z_options = [
-                    z
-                    for z in crossover_trial_max_z_options
-                    if z >= self._numerical_smallest_z.z - DEFAULT_FLOAT_PRECISION
-                ]
-                crossover_trial_max_z = min(crossover_trial_max_z_options)
-
-                # work through the search window, trying to find a crossover point at which we have enough data points to build a sensible spline
-                # after a limited number of iterations we give up
-                self._crossover_z = None
-                step_width = (crossover_trial_max_z - crossover_trial_min_z) / 10.0
-
-                iterations = 0
-                # start near the lower end, so that we include as many numerical results as possible.
-                # We probably trust the direct numerical results more than the WKB approximation.
-                trial_z = crossover_trial_min_z
-                while (
-                    iterations < 11
-                    and self._crossover_z is None
-                    and trial_z <= crossover_trial_max_z
-                ):
-                    WKB_data = self._build_WKB_values(
-                        max_z=trial_z, min_z=self._z_sample.min
-                    )
-
-                    # are there enough data points to get a sensible spline?
-                    if len(WKB_data) >= MIN_SPLINE_DATA_POINTS:
-                        self._crossover_z = trial_z
-
-                        WKB_clearance = trial_z / self._primary_WKB_largest_z.z
-                        numerical_clearance = trial_z / self._numerical_smallest_z.z
-
-                        # try to classify the quality of this crossover choice
-                        if WKB_clearance < 0.95 and numerical_clearance > 1.05:
-                            self._quality = "complete"
-                        elif WKB_clearance < 0.985 and numerical_clearance > 1.025:
-                            self._quality = "acceptable"
-                        elif WKB_clearance < 0.99 and numerical_clearance > 1.01:
-                            self._quality = "marginal"
-                        else:
-                            self._quality = "minimal"
-
-                        self._metadata["WKB_clearance"] = WKB_clearance
-                        self._metadata["numerical_clearance"] = numerical_clearance
-                        self._metadata["WKB_crossover_spline_points"] = len(WKB_data)
-                        break
-
-                    iterations = iterations + 1
-                    trial_z = trial_z + step_width
-
-                if self._crossover_z is None:
-                    # should get enough points for a good spline if we set the crossover scale to _primary_WKB_largest_z, since
-                    # we checked above that enough points are available.
-                    # The downside of this choice is only that it throws away numerical information that is potentially more accurate.
-                    self._crossover_z = self._primary_WKB_largest_z.z
-                    self._quality = "minimal"
-
-                    WKB_data = self._build_WKB_values(
-                        max_z=self._crossover_z, min_z=self._z_sample.min
-                    )
-
-                    self._metadata["comment"] = (
-                        f"Calculation of crossover_z did not converge. WKB spline contains {len(WKB_data)} points."
                     )
 
     @property
@@ -725,42 +498,6 @@ class GkSource(DatastoreObject):
         return self._primary_WKB_largest_z
 
     @property
-    def type(self) -> Optional[str]:
-        # allow this field to be read if we have been deserialized with _do_not_populate
-        # otherwise, absence of _values implies that we have not yet computed our contents
-        if self._values is None and not hasattr(self, "_do_not_populate"):
-            raise RuntimeError("values have not yet been populated")
-
-        return self._type
-
-    @property
-    def quality(self) -> Optional[str]:
-        # allow this field to be read if we have been deserialized with _do_not_populate
-        # otherwise, absence of _values implies that we have not yet computed our contents
-        if self._values is None and not hasattr(self, "_do_not_populate"):
-            raise RuntimeError("values have not yet been populated")
-
-        return self._quality
-
-    @property
-    def crossover_z(self) -> Optional[float]:
-        # allow this field to be read if we have been deserialized with _do_not_populate
-        # otherwise, absence of _values implies that we have not yet computed our contents
-        if self._values is None and not hasattr(self, "_do_not_populate"):
-            raise RuntimeError("values have not yet been populated")
-
-        return self._crossover_z
-
-    @property
-    def Levin_z(self) -> Optional[float]:
-        # allow this field to be read if we have been deserialized with _do_not_populate
-        # otherwise, absence of _values implies that we have not yet computed our contents
-        if self._values is None and not hasattr(self, "_do_not_populate"):
-            raise RuntimeError("values have not yet been populated")
-
-        return self._Levin_z
-
-    @property
     def metadata(self) -> dict:
         # allow this field to be read if we have been deserialized with _do_not_populate
         # otherwise, absence of _values implies that we have not yet computed our contents
@@ -768,193 +505,6 @@ class GkSource(DatastoreObject):
             raise RuntimeError("values have not yet been populated")
 
         return self._metadata
-
-    @property
-    def functions(self) -> GkSourceFunctions:
-        if hasattr(self, "_do_not_populate"):
-            raise RuntimeError(
-                "GkSource: attempt to construct functions, but _do_not_populate is set"
-            )
-
-        if self._values is None:
-            raise RuntimeError("values have not yet been populated")
-
-        if self._functions is None:
-            self._create_functions()
-
-        return self._functions
-
-    def _create_functions(self):
-        numerical_region = None
-        numerical_Gk = None
-        if self._numerical_smallest_z is not None:
-            max_z = self._z_sample.max
-            min_z = self._numerical_smallest_z
-
-            # must be sorted into ascending order of redshift for a smoothing spline
-            numerical_data = [
-                v
-                for v in self._values
-                if v.has_numeric
-                and (
-                    v.z_source.z <= max_z.z + DEFAULT_FLOAT_PRECISION
-                    or v.z_source.store_id == max_z.store_id
-                )
-                and (
-                    v.z_source.z >= min_z.z - DEFAULT_FLOAT_PRECISION
-                    or v.z_source.store_id == min_z.store_id
-                )
-            ]
-
-            if len(numerical_data) >= MIN_SPLINE_DATA_POINTS:
-                numerical_region = (max_z.z, min_z.z)
-
-                numerical_data.sort(key=lambda x: x.z_source.z)
-
-                numerical_Gk_data = [
-                    (log(1.0 + v.z_source.z), v.numeric.G) for v in numerical_data
-                ]
-                numerical_Gk_x, numerical_Gk_y = zip(*numerical_Gk_data)
-
-                _numerical_Gk_spline = InterpolatedUnivariateSpline(
-                    numerical_Gk_x,
-                    numerical_Gk_y,
-                    ext="raise",
-                )
-
-                numerical_Gk = ZSplineWrapper(
-                    _numerical_Gk_spline, "numerical Gk", max_z.z, min_z.z, log_z=True
-                )
-
-        WKB_region = None
-        WKB_Gk = None
-        WKB_theta = None
-        WKB_theta_deriv = None
-        if self._primary_WKB_largest_z is not None:
-            max_z = self._primary_WKB_largest_z
-            min_z = self._z_sample.min
-
-            WKB_data = self._build_WKB_values(max_z, min_z)
-
-            if len(WKB_data) >= MIN_SPLINE_DATA_POINTS:
-                WKB_region = (max_z.z, min_z.z)
-
-                if (
-                    WKB_data[0].z_source.z / WKB_region[1]
-                    > 1.0 + DEFAULT_FLOAT_PRECISION
-                    or WKB_data[-1].z_source.z / WKB_region[0]
-                    < 1.0 - DEFAULT_FLOAT_PRECISION
-                ):
-                    print("!! ERROR (GkSource.create_functions)")
-                    print(
-                        f"     ** WKB data missing: intended region = ({WKB_region[0]:.5g}, {WKB_region[1]:.5g}), but data available only between ({WKB_data[-1].z_source.z:.5g}, {WKB_data[0].z_source.z:.5g})"
-                    )
-                    print(
-                        f"        GkSource (store_id={self.store_id}): z_response = {self._z_response.z:.5g} (store_id={self._z_response.store_id}), type = {self._type}, quality label = {self._quality}"
-                    )
-                    z_source_limit = sqrt(
-                        self._k_exit.z_exit_subh_e3 * self._k_exit.z_exit_subh_e4
-                    )
-                    print(
-                        f"        k = {self._k_exit.k.k_inv_Mpc:.5g}/Mpc, z_exit = {self._k_exit.z_exit:.5g}, z_source_limit = {z_source_limit:.5g}"
-                    )
-                    df = self.values_as_DataFrame()
-                    df.to_csv("ERROR_VALUES.csv", header=True, index=False)
-                    raise RuntimeError(
-                        f"GkSource.create_functions: WKB data missing = intended region = ({WKB_region[0]:.5g}, {WKB_region[1]:.5g}), but data available only between ({WKB_data[-1].z_source.z:.5g}, {WKB_data[0].z_source.z:.5g})."
-                    )
-
-                sin_amplitude_data = [
-                    (
-                        log(1.0 + v.z_source.z),
-                        v.WKB.sin_coeff * sqrt(v.WKB.H_ratio / sqrt(v.omega_WKB_sq)),
-                    )
-                    for v in WKB_data
-                ]
-
-                theta_data = [
-                    (
-                        log(1.0 + v.z_source.z),
-                        v.WKB.theta,
-                    )
-                    for v in WKB_data
-                ]
-
-                sin_amplitude_x, sin_amplitude_y = zip(*sin_amplitude_data)
-                theta_x, theta_y = zip(*theta_data)
-
-                _sin_amplitude_spline = InterpolatedUnivariateSpline(
-                    sin_amplitude_x,
-                    sin_amplitude_y,
-                    ext="raise",
-                )
-                _theta_spline = InterpolatedUnivariateSpline(
-                    theta_x,
-                    theta_y,
-                    ext="raise",
-                )
-
-                WKB_Gk = GkWKBSplineWrapper(
-                    _theta_spline,
-                    _sin_amplitude_spline,
-                    None,
-                    "Gk WKB",
-                    max_z.z,
-                    min_z.z,
-                )
-                WKB_theta = ZSplineWrapper(
-                    _theta_spline, "theta", max_z.z, min_z.z, log_z=True
-                )
-                WKB_theta_deriv = ZSplineWrapper(
-                    _theta_spline.derivative(),
-                    "theta derivative",
-                    max_z.z,
-                    min_z.z,
-                    log_z=True,
-                    deriv=True,
-                )
-
-        self._functions = GkSourceFunctions(
-            numerical_region=numerical_region,
-            numerical_Gk=numerical_Gk,
-            WKB_region=WKB_region,
-            WKB_Gk=WKB_Gk,
-            theta=WKB_theta,
-            theta_deriv=WKB_theta_deriv,
-            type=self._type,
-            quality=self._quality,
-            crossover_z=self._crossover_z,
-        )
-
-    def _build_WKB_values(self, max_z, min_z):
-        def max_predicate(z: redshift):
-            if isinstance(max_z, redshift):
-                return (
-                    z.z <= max_z.z + DEFAULT_FLOAT_PRECISION
-                    or z.store_id == max_z.store_id
-                )
-
-            return z.z <= max_z + DEFAULT_FLOAT_PRECISION
-
-        def min_predicate(z: redshift):
-            if isinstance(min_z, redshift):
-                return (
-                    z.z >= min_z.z - DEFAULT_FLOAT_PRECISION
-                    or z.store_id == min_z.store_id
-                )
-
-            return z.z >= min_z - DEFAULT_FLOAT_PRECISION
-
-        # must be sorted into ascending order of redshift for a smoothing spline
-        WKB_data = [
-            v
-            for v in self._values
-            if v.has_WKB and max_predicate(v.z_source) and min_predicate(v.z_source)
-        ]
-
-        WKB_data.sort(key=lambda x: x.z_source.z)
-
-        return WKB_data
 
     @property
     def values(self) -> List:
@@ -1084,8 +634,6 @@ class GkSource(DatastoreObject):
         self._values = payload["values"]
         self._numerical_smallest_z = payload["numerical_smallest_z"]
         self._primary_WKB_largest_z = payload["primary_WKB_largest_z"]
-
-        self._classify()
 
 
 class GkSourceValue(DatastoreObject):
@@ -1246,3 +794,28 @@ class GkSourceValue(DatastoreObject):
     @property
     def analytic_Gprime(self) -> Optional[float]:
         return self._analytic_Gprime
+
+
+class GkSourceProxy:
+    def __init__(self, obj: GkSource):
+        self._ref: ObjectRef = ray.put(obj)
+
+        self._store_id: int = obj.store_id
+        self._k = obj.k
+
+    @property
+    def store_id(self) -> int:
+        return self._store_id
+
+    @property
+    def k(self) -> wavenumber:
+        return self._units
+
+    def get(self) -> GkSource:
+        """
+        The return value should only be held locally and not persisted, otherwise the entire
+        BackgroundModel instance may be serialized when it is passed around by Ray.
+        That would defeat the purpose of the proxy.
+        :return:
+        """
+        return ray.get(self._ref)

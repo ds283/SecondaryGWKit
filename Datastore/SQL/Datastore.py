@@ -26,6 +26,9 @@ from Datastore.SQL.ObjectFactories.GkSource import (
     sqla_GkSourceValue_factory,
 )
 from Datastore.SQL.ObjectFactories.GkSourcePolicy import sqla_GkSourcePolicy_factory
+from Datastore.SQL.ObjectFactories.GkSourcePolicyData import (
+    sqla_GkSourcePolicyData_factory,
+)
 from Datastore.SQL.ObjectFactories.GkWKBIntegration import (
     sqla_GkWKBIntegration_factory,
     sqla_GkWKBTagAssociation_factory,
@@ -100,6 +103,7 @@ _factories = {
     "GkSource_tags": sqla_GkSourceTagAssociation_factory,
     "GkSourceValue": sqla_GkSourceValue_factory,
     "GkSourcePolicy": sqla_GkSourcePolicy_factory,
+    "GkSourcePolicyData": sqla_GkSourcePolicyData_factory,
     "QuadSourceIntegral": sqla_QuadSourceIntegral_factory,
     "QuadSourceIntegral_tags": sqla_QuadSourceIntegralTagAssociation_factory,
     "OneLoopIntegral": sqla_OneLoopIntegral_factory,
@@ -113,6 +117,7 @@ _InserterMappingType = Mapping[str, Callable]
 _drop_actions = {
     "gk-wkb": ["GkWKBIntegration", "GkWKB_tags", "GkWKBValue"],
     "gk-source": ["GkSource", "GkSource_tags", "GkSourceValue"],
+    "gk-source-policy": ["GkSourcePolicyData"],
     "quad-source": ["QuadSource", "QuadSource_tags", "QuadSourceValue"],
     "tk-numeric": ["TkNumericalIntegration", "TkNumerical_tags", "TkNumericalValue"],
     "gk-numeric": ["GkNumericalIntegration", "GkNumerical_tags", "GkNumericalValue"],
@@ -129,6 +134,7 @@ _drop_actions = {
 _drop_order = [
     "1loop-integral",
     "quad-source-integral",
+    "gk-source-policy",
     "gk-source",
     "gk-wkb",
     "gk-numeric",

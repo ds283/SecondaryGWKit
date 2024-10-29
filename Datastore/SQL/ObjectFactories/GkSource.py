@@ -16,34 +16,6 @@ from Datastore.SQL.ObjectFactories.base import SQLAFactoryBase
 from MetadataConcepts import store_tag, tolerance
 from defaults import DEFAULT_STRING_LENGTH
 
-_quality_serialize = {
-    "complete": 0,
-    "acceptable": 1,
-    "marginal": 2,
-    "minimal": 3,
-    "incomplete": 4,
-}
-
-_quality_deserialize = {
-    0: "complete",
-    1: "acceptable",
-    2: "marginal",
-    3: "minimal",
-    4: "incomplete",
-}
-
-_type_serialize = {
-    "numeric": 0,
-    "WKB": 1,
-    "mixed": 2,
-}
-
-_type_deserialize = {
-    0: "numeric",
-    1: "WKB",
-    2: "mixed",
-}
-
 
 class sqla_GkSourceTagAssociation_factory(SQLAFactoryBase):
     def __init__(self):
@@ -172,14 +144,6 @@ class sqla_GkSource_factory(SQLAFactoryBase):
                     index=True,
                     nullable=True,
                 ),
-                sqla.Column("type", sqla.SmallInteger, nullable=False),
-                sqla.Column("quality", sqla.SmallInteger, nullable=False),
-                sqla.Column(
-                    "crossover_z",
-                    sqla.Float(64),
-                    nullable=True,
-                ),
-                sqla.Column("Levin_z", sqla.Float(65), nullable=True),
                 sqla.Column("validated", sqla.Boolean, default=False, nullable=False),
                 sqla.Column(
                     "metadata", sqla.String(DEFAULT_STRING_LENGTH), nullable=True
@@ -222,10 +186,6 @@ class sqla_GkSource_factory(SQLAFactoryBase):
                 smallest_numerical_z_table.c.z.label("numerical_smallest_z"),
                 table.c.primary_WKB_largest_z_serial,
                 largest_WKB_z_table.c.z.label("primary_WKB_largest_z"),
-                table.c.type,
-                table.c.quality,
-                table.c.crossover_z,
-                table.c.Levin_z,
                 table.c.metadata,
             )
             .select_from(
@@ -401,18 +361,6 @@ class sqla_GkSource_factory(SQLAFactoryBase):
                 "values": values,
                 "numerical_smallest_z": numerical_smallest_z,
                 "primary_WKB_largest_z": primary_WKB_largest_z,
-                "type": (
-                    _type_deserialize[row_data.type]
-                    if row_data.type is not None
-                    else None
-                ),
-                "quality": (
-                    _quality_deserialize[row_data.quality]
-                    if row_data.quality is not None
-                    else None
-                ),
-                "crossover_z": row_data.crossover_z,
-                "Levin_z": row_data.Levin_z,
                 "metadata": (
                     json.loads(row_data.metadata)
                     if row_data.metadata is not None
@@ -472,14 +420,6 @@ class sqla_GkSource_factory(SQLAFactoryBase):
                     if obj.primary_WKB_largest_z is not None
                     else None
                 ),
-                "type": _type_serialize[obj._type] if obj._type is not None else None,
-                "quality": (
-                    _quality_serialize[obj._quality]
-                    if obj._quality is not None
-                    else None
-                ),
-                "crossover_z": obj._crossover_z,
-                "Levin_z": obj._Levin_z,
                 "metadata": (
                     json.dumps(obj._metadata) if obj._metadata is not None else None
                 ),

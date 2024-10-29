@@ -13,7 +13,7 @@ from ComputeTargets import (
 from ComputeTargets.BackgroundModel import ModelProxy
 from CosmologyConcepts import wavenumber_exit_time, redshift
 from Datastore.SQL.ObjectFactories.base import SQLAFactoryBase
-from MetadataConcepts import store_tag, tolerance
+from MetadataConcepts import store_tag, tolerance, GkSourcePolicy
 from defaults import DEFAULT_STRING_LENGTH
 
 
@@ -121,15 +121,22 @@ class sqla_QuadSourceIntegral_factory(SQLAFactoryBase):
                     nullable=False,
                 ),
                 sqla.Column(
+                    "policy_serial",
+                    sqla.Integer,
+                    sqla.ForeignKey("GkSourcePolicy.serial"),
+                    index=True,
+                    nullable=False,
+                ),
+                sqla.Column(
                     "source_serial",
                     sqla.Integer,  # Don't impose foreign key. QuadSource instance may not be held on this shard.
                     index=True,
                     nullable=False,
                 ),
                 sqla.Column(
-                    "Gk_serial",
+                    "data_serial",
                     sqla.Integer,
-                    sqla.ForeignKey("GkSource.serial"),
+                    sqla.ForeignKey("GkSourcePolicyData.serial"),
                     index=True,
                     nullable=False,
                 ),
@@ -188,6 +195,8 @@ class sqla_QuadSourceIntegral_factory(SQLAFactoryBase):
     @staticmethod
     def build(payload, conn, table, inserter, tables, inserters):
         model_proxy: ModelProxy = payload["model"]
+        policy: GkSourcePolicy = payload["policy"]
+
         k: wavenumber_exit_time = payload["k"]
         q: wavenumber_exit_time = payload["q"]
         r: wavenumber_exit_time = payload["r"]
@@ -213,7 +222,7 @@ class sqla_QuadSourceIntegral_factory(SQLAFactoryBase):
                 table.c.numeric_quad,
                 table.c.WKB_quad,
                 table.c.WKB_Levin,
-                table.c.Gk_serial,
+                table.c.data_serial,
                 table.c.numeric_quad_compute_time,
                 table.c.numeric_quad_compute_steps,
                 table.c.numeric_quad_RHS_evaluations,
@@ -236,6 +245,7 @@ class sqla_QuadSourceIntegral_factory(SQLAFactoryBase):
             )
             .filter(
                 table.c.model_serial == model_proxy.store_id,
+                table.c.policy_serial == policy.store_id,
                 table.c.k_wavenumber_exit_serial == k.store_id,
                 table.c.q_wavenumber_exit_serial == q.store_id,
                 table.c.r_wavenumber_exit_serial == r.store_id,
@@ -271,6 +281,7 @@ class sqla_QuadSourceIntegral_factory(SQLAFactoryBase):
             return QuadSourceIntegral(
                 payload=None,
                 model=model_proxy,
+                policy=policy,
                 z_response=z_response,
                 z_source_max=z_source_max,
                 k=k,
@@ -319,6 +330,7 @@ class sqla_QuadSourceIntegral_factory(SQLAFactoryBase):
                 ),
             },
             model=model_proxy,
+            policy=policy,
             z_response=z_response,
             z_source_max=z_source_max,
             k=k,
@@ -355,8 +367,9 @@ class sqla_QuadSourceIntegral_factory(SQLAFactoryBase):
                 "q_wavenumber_exit_serial": obj._q_exit.store_id,
                 "r_wavenumber_exit_serial": obj._r_exit.store_id,
                 "tol_serial": obj._tol.store_id,
+                "policy_serial": obj._policy.store_id,
                 "source_serial": obj._source_serial,
-                "Gk_serial": obj._Gk_serial,
+                "data_serial": obj._Gk_serial,
                 "compute_time": obj.compute_time,
                 "total": obj._total,
                 "numeric_quad": obj._numeric_quad,
@@ -440,6 +453,7 @@ class sqla_QuadSourceIntegral_factory(SQLAFactoryBase):
     @staticmethod
     def read_batch(payload, conn, table, tables):
         model_proxy: ModelProxy = payload["model"]
+        policy: GkSourcePolicy = payload["policy"]
         k: wavenumber_exit_time = payload["k"]
 
         q: Optional[wavenumber_exit_time] = payload.get("k", None)
@@ -515,6 +529,7 @@ class sqla_QuadSourceIntegral_factory(SQLAFactoryBase):
             )
             .filter(
                 table.c.model_serial == model_proxy.store_id,
+                table.c.policy_serial == policy.store_id,
                 table.c.k_wavenumber_exit_serial == k.store_id,
             )
         )
@@ -600,7 +615,9 @@ class sqla_QuadSourceIntegral_factory(SQLAFactoryBase):
                     ),
                 },
                 model=model_proxy,
-                z_response=z_response,
+                policy=policy,
+                z_response=row_data.z_response,
+                z_source_max=row_data.z_source_max,
                 k=k,
                 q=q,
                 r=r,

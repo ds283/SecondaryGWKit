@@ -16,9 +16,10 @@ from ComputeTargets import (
     BackgroundModel,
     GkSource,
     GkSourceValue,
+    GkSourcePolicyData,
 )
 from ComputeTargets.BackgroundModel import ModelProxy
-from ComputeTargets.GkSource import GkSourceFunctions
+from ComputeTargets.GkSourcePolicyData import GkSourceFunctions
 from CosmologyConcepts import (
     wavenumber,
     wavenumber_exit_time,
@@ -161,12 +162,32 @@ with ShardedPool(
         list(z_sample), k=int(round(0.12 * len(z_sample) + 0.5, 0))
     )
 
+    GkSource_policy_2pt5, GkSource_policy_5pt0 = ray.get(
+        [
+            pool.object_get(
+                "GkSourcePolicy",
+                label='policy="maximize-numeric"-Levin-threshold="2.5"',
+                Levin_threshold=2.5,
+                numeric_policy="maximize_numeric",
+            ),
+            pool.object_get(
+                "GkSourcePolicy",
+                label='policy="maximize-numeric"-Levin-threshold="5.0"',
+                Levin_threshold=5.0,
+                numeric_policy="maximize_numeric",
+            ),
+        ]
+    )
+
     @ray.remote
-    def plot_Gk(Gk: GkSource):
+    def plot_Gk(GkPolicy: GkSourcePolicyData):
+        if not GkPolicy.available:
+            return
+
+        Gk: GkSource = GkPolicy._source_proxy.get()
         if not Gk.available:
             return
 
-        k_exit: wavenumber_exit_time = Gk._k_exit
         values: List[GkSourceValue] = Gk.values
         base_path = Path(args.output).resolve()
 
@@ -408,7 +429,7 @@ with ShardedPool(
                 linestyle="dashdot",
             )
 
-            add_z_labels(ax, Gk, k_exit)
+            add_z_labels(ax, Gk, GkPolicy, k_exit)
             add_Gk_labels(ax, Gk)
 
             ax.set_xlabel("source redshift $z$")
@@ -482,7 +503,7 @@ with ShardedPool(
                 linestyle="solid",
             )
 
-            add_z_labels(ax, Gk, k_exit)
+            add_z_labels(ax, Gk, GkPolicy, k_exit)
             add_Gk_labels(ax, Gk)
 
             ax.set_xlabel("source redshift $z$")
@@ -528,7 +549,7 @@ with ShardedPool(
                 linestyle="solid",
             )
 
-            add_z_labels(ax, Gk, k_exit)
+            add_z_labels(ax, Gk, GkPolicy, k_exit)
             add_Gk_labels(ax, Gk)
 
             ax.set_xlabel("source redshift $z$")
@@ -556,7 +577,7 @@ with ShardedPool(
                 label="derivative of WKB phase $\\theta$",
             )
 
-            add_z_labels(ax, Gk, k_exit)
+            add_z_labels(ax, Gk, GkPolicy, k_exit)
             add_Gk_labels(ax, Gk)
 
             ax.set_xlabel("source redshift $z$")
@@ -672,7 +693,9 @@ with ShardedPool(
     #      ('dashdotdotted',         (0, (3, 5, 1, 5, 1, 5))),
     #      ('loosely dashdotdotted', (0, (3, 10, 1, 10, 1, 10))),
     #      ('densely dashdotdotted', (0, (3, 1, 1, 1, 1, 1)))]
-    def add_z_labels(ax, Gk: GkSource, k_exit: wavenumber_exit_time):
+    def add_z_labels(
+        ax, Gk: GkSource, GkPolicy: GkSourcePolicyData, k_exit: wavenumber_exit_time
+    ):
         ax.axvline(k_exit.z_exit_subh_e3, linestyle=(0, (1, 1)), color="b")  # dotted
         ax.axvline(k_exit.z_exit_subh_e5, linestyle=(0, (1, 1)), color="b")  # dotted
         ax.axvline(k_exit.z_exit_suph_e3, linestyle=(0, (1, 1)), color="b")  # dotted
@@ -713,12 +736,12 @@ with ShardedPool(
             color="r",
         )
 
-        if Gk.type == "mixed" and Gk.crossover_z is not None:
+        if GkPolicy.type == "mixed" and GkPolicy.crossover_z is not None:
             ax.axvline(
-                Gk.crossover_z, linestyle=(5, (10, 3)), color="m"
+                GkPolicy.crossover_z, linestyle=(5, (10, 3)), color="m"
             )  # long dash with offset
             ax.text(
-                TEXT_DISPLACEMENT_MULTIPLIER * Gk.crossover_z,
+                TEXT_DISPLACEMENT_MULTIPLIER * GkPolicy.crossover_z,
                 0.15,
                 "crossover_z",
                 transform=trans,
@@ -726,10 +749,14 @@ with ShardedPool(
                 color="m",
             )
 
-        if (Gk.type == "mixed" or Gk.type == "WKB") and Gk.Levin_z is not None:
-            ax.axvline(Gk.Levin_z, linestyle=(0, (5, 10)), color="m")  # loosely dashed
+        if (
+            GkPolicy.type == "mixed" or GkPolicy.type == "WKB"
+        ) and GkPolicy.Levin_z is not None:
+            ax.axvline(
+                GkPolicy.Levin_z, linestyle=(0, (5, 10)), color="m"
+            )  # loosely dashed
             ax.text(
-                TEXT_DISPLACEMENT_MULTIPLIER * Gk.Levin_z,
+                TEXT_DISPLACEMENT_MULTIPLIER * GkPolicy.Levin_z,
                 0.05,
                 "Levin boundary",
                 transform=trans,

@@ -1,3 +1,5 @@
+from typing import Optional
+
 from Datastore import DatastoreObject
 from defaults import DEFAULT_LEVIN_THRESHOLD, DEFAULT_GKSOURCE_NUMERIC_POLICY
 
@@ -10,10 +12,13 @@ class GkSourcePolicy(DatastoreObject):
         store_id: int,
         Levin_threshold: int = DEFAULT_LEVIN_THRESHOLD,
         numeric_policy: str = DEFAULT_GKSOURCE_NUMERIC_POLICY,
+        label: Optional[str] = None,
     ):
         if store_id is None:
             raise ValueError("Store ID cannot be None")
         DatastoreObject.__init__(self, store_id)
+
+        self._label = label
 
         self._Levin_threshold = Levin_threshold
 
@@ -26,5 +31,9 @@ class GkSourcePolicy(DatastoreObject):
         return self._Levin_threshold
 
     @property
-    def Numeric_policy(self) -> str:
+    def numeric_policy(self) -> str:
         return self._numeric_policy
+
+    @property
+    def label(self) -> Optional[str]:
+        return self._label

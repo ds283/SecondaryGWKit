@@ -8,6 +8,7 @@ from scipy.integrate import solve_ivp
 from AdaptiveLevin import adaptive_levin_sincos
 from ComputeTargets.BackgroundModel import BackgroundModel, ModelProxy
 from ComputeTargets.GkSource import GkSource
+from ComputeTargets.GkSourcePolicyData import GkSourcePolicyData
 from ComputeTargets.QuadSource import QuadSource
 from ComputeTargets.integration_metadata import IntegrationData, LevinData
 from ComputeTargets.integration_supervisor import (
@@ -17,7 +18,7 @@ from ComputeTargets.integration_supervisor import (
 )
 from CosmologyConcepts import wavenumber, wavenumber_exit_time, redshift
 from Datastore import DatastoreObject
-from MetadataConcepts import store_tag, tolerance
+from MetadataConcepts import store_tag, tolerance, GkSourcePolicy
 from defaults import (
     DEFAULT_QUADRATURE_TOLERANCE,
     DEFAULT_FLOAT_PRECISION,
@@ -106,12 +107,12 @@ def compute_QuadSource_integral(
     q: wavenumber_exit_time,
     r: wavenumber_exit_time,
     source: QuadSource,
-    Gk: GkSource,
+    GkPolicy: GkSourcePolicyData,
     z_response: redshift,
     z_source_max: redshift,
     tol: float = DEFAULT_QUADRATURE_TOLERANCE,
 ) -> dict:
-    # we are entitled to assume that Gk and source are evaluated at the same z_response
+    # we are entitled to assume that the GkSource embedded in GkPolicy and source are evaluated at the same z_response
     # also that source and Gk have z_samples at least as far back as z_source_max
 
     print(
@@ -130,15 +131,15 @@ def compute_QuadSource_integral(
         WKB_quad_data = None
         WKB_Levin_data = None
 
-        if Gk.type == "numeric":
+        if GkPolicy.type == "numeric":
             regions = [
                 (z_source_max, z_response),
                 (None, None),
                 (None, None),
             ]
 
-        elif Gk.type == "WKB":
-            Levin_z: Optional[float] = Gk.Levin_z
+        elif GkPolicy.type == "WKB":
+            Levin_z: Optional[float] = GkPolicy.Levin_z
 
             regions = [
                 (None, None),
@@ -146,9 +147,9 @@ def compute_QuadSource_integral(
                 (Levin_z, z_response),
             ]
 
-        elif Gk.type == "mixed":
-            crossover_z: Optional[float] = Gk.crossover_z
-            Levin_z: Optional[float] = Gk.Levin_z
+        elif GkPolicy.type == "mixed":
+            crossover_z: Optional[float] = GkPolicy.crossover_z
+            Levin_z: Optional[float] = GkPolicy.Levin_z
 
             # if Levin threshold occurs before the crossover point, move it up to the crossover point
             if (
@@ -168,7 +169,7 @@ def compute_QuadSource_integral(
             ]
 
         else:
-            raise NotImplementedError(f"Gk {Gk.type} not implemented")
+            raise NotImplementedError(f"Gk {GkPolicy.type} not implemented")
 
         max_z, min_z = regions.pop(0)
         if (
@@ -186,7 +187,7 @@ def compute_QuadSource_integral(
                 q.k,
                 r.k,
                 source,
-                Gk,
+                GkPolicy,
                 z_response,
                 max_z=get_z(max_z),
                 min_z=get_z(min_z),
@@ -211,7 +212,7 @@ def compute_QuadSource_integral(
                 q.k,
                 r.k,
                 source,
-                Gk,
+                GkPolicy,
                 z_response,
                 max_z=get_z(max_z),
                 min_z=get_z(min_z),
@@ -236,7 +237,7 @@ def compute_QuadSource_integral(
                 q.k,
                 r.k,
                 source,
-                Gk,
+                GkPolicy,
                 z_response,
                 max_z=get_z(max_z),
                 min_z=get_z(min_z),
@@ -250,7 +251,7 @@ def compute_QuadSource_integral(
         "numeric_quad": numeric_quad,
         "WKB_quad": WKB_quad,
         "WKB_Levin": WKB_Levin,
-        "Gk_serial": Gk.store_id,
+        "GkPolicy_serial": GkPolicy.store_id,
         "source_serial": source.store_id,
         "numeric_quad_data": numeric_quad_data,
         "WKB_quad_data": WKB_quad_data,
@@ -279,29 +280,31 @@ def numeric_quad_integral(
     q: wavenumber,
     r: wavenumber,
     source: QuadSource,
-    Gk: GkSource,
+    GkPolicy: GkSourcePolicyData,
     z_response: redshift,
     max_z: float,
     min_z: float,
     tol: float,
 ) -> dict:
     source_f = source.functions
-    Gk_f = Gk.functions
+    Gk_f = GkPolicy.functions
     model_f = model.functions
 
-    if Gk.type not in ["numeric", "mixed"]:
+    if GkPolicy.type not in ["numeric", "mixed"]:
         raise RuntimeError(
             f'compute_QuadSource_integral: attempting to evaluate numerical quadrature, but Gk object is not of "numeric" or "mixed" type [domain={max_z:.5g}, {min_z:.5g}]'
         )
 
     if Gk_f.numerical_Gk is None:
+        Gk: GkSource = GkPolicy._source_proxy.get()
         raise RuntimeError(
-            f"compute_QuadSource_integral: attempting to evaluate numerical quadrature, but Gk_f.numerical_Gk is absent (type={Gk.type}, quality={Gk.quality}, lowest numeric z={_extract_z(Gk._numerical_smallest_z)}, primary WKB largest z={_extract_z(Gk._primary_WKB_largest_z)}) [domain={max_z:.5g}, {min_z:.5g}]"
+            f"compute_QuadSource_integral: attempting to evaluate numerical quadrature, but Gk_f.numerical_Gk is absent (type={GkPolicy.type}, quality={GkPolicy.quality}, lowest numeric z={_extract_z(Gk._numerical_smallest_z)}, primary WKB largest z={_extract_z(Gk._primary_WKB_largest_z)}) [domain={max_z:.5g}, {min_z:.5g}]"
         )
 
     if Gk_f.numerical_region is None:
+        Gk: GkSource = GkPolicy._source_proxy.get()
         raise RuntimeError(
-            f"compute_QuadSource_integral: attempting to evaluate numerical quadrature, but Gk_f.numerical_region is absent (type={Gk.type}, quality={Gk.quality}, lowest numeric z={_extract_z(Gk._numerical_smallest_z)}, primary WKB largest z={_extract_z(Gk._primary_WKB_largest_z)}) [domain={max_z:.5g}, {min_z:.5g}]"
+            f"compute_QuadSource_integral: attempting to evaluate numerical quadrature, but Gk_f.numerical_region is absent (type={GkPolicy.type}, quality={GkPolicy.quality}, lowest numeric z={_extract_z(Gk._numerical_smallest_z)}, primary WKB largest z={_extract_z(Gk._primary_WKB_largest_z)}) [domain={max_z:.5g}, {min_z:.5g}]"
         )
 
     region_max_z, region_min_z = Gk_f.numerical_region
@@ -384,29 +387,31 @@ def WKB_quad_integral(
     q: wavenumber,
     r: wavenumber,
     source: QuadSource,
-    Gk: GkSource,
+    GkPolicy: GkSourcePolicyData,
     z_response: redshift,
     max_z: float,
     min_z: float,
     tol: float,
 ) -> dict:
     source_f = source.functions
-    Gk_f = Gk.functions
+    Gk_f = GkPolicy.functions
     model_f = model.functions
 
-    if Gk.type not in ["WKB", "mixed"]:
+    if GkPolicy.type not in ["WKB", "mixed"]:
         raise RuntimeError(
             f'compute_QuadSource_integral: attempting to evaluate WKB quadrature, but Gk object is not of "WKB" or "mixed" type [domain={max_z:.5g}, {min_z:.5g}]'
         )
 
     if Gk_f.WKB_Gk is None:
+        Gk: GkSource = GkPolicy._source_proxy.get()
         raise RuntimeError(
-            f"compute_QuadSource_integral: attempting to evaluate WKB quadrature, but Gk_f.WKB_Gk is absent (type={Gk.type}, quality={Gk.quality}, lowest numeric z={_extract_z(Gk._numerical_smallest_z)}, primary WKB largest z={_extract_z(Gk._primary_WKB_largest_z)}, z_crossover={_extract_z(Gk.crossover_z)}) [domain={max_z:.5g}, {min_z:.5g}]"
+            f"compute_QuadSource_integral: attempting to evaluate WKB quadrature, but Gk_f.WKB_Gk is absent (type={GkPolicy.type}, quality={GkPolicy.quality}, lowest numeric z={_extract_z(Gk._numerical_smallest_z)}, primary WKB largest z={_extract_z(Gk._primary_WKB_largest_z)}, z_crossover={_extract_z(GkPolicy.crossover_z)}) [domain={max_z:.5g}, {min_z:.5g}]"
         )
 
     if Gk_f.WKB_region is None:
+        Gk: GkSource = GkPolicy._source_proxy.get()
         raise RuntimeError(
-            f"compute_QuadSource_integral: attempting to evaluate WKB quadrature, but Gk_f.WKB_region is absent (type={Gk.type}, quality={Gk.quality}, lowest numeric z={_extract_z(Gk._numerical_smallest_z)}, primary WKB largest z={_extract_z(Gk._primary_WKB_largest_z)}), z_crossover={_extract_z(Gk.crossover_z)} [domain={max_z:.5g}, {min_z:.5g}]"
+            f"compute_QuadSource_integral: attempting to evaluate WKB quadrature, but Gk_f.WKB_region is absent (type={GkPolicy.type}, quality={GkPolicy.quality}, lowest numeric z={_extract_z(Gk._numerical_smallest_z)}, primary WKB largest z={_extract_z(Gk._primary_WKB_largest_z)}), z_crossover={_extract_z(GkPolicy.crossover_z)} [domain={max_z:.5g}, {min_z:.5g}]"
         )
 
     region_max_z, region_min_z = Gk_f.WKB_region
@@ -489,29 +494,31 @@ def WKB_Levin_integral(
     q: wavenumber,
     r: wavenumber,
     source: QuadSource,
-    Gk: GkSource,
+    GkPolicy: GkSourcePolicyData,
     z_response: redshift,
     max_z: float,
     min_z: float,
     tol: float,
 ) -> dict:
     source_f = source.functions
-    Gk_f = Gk.functions
+    Gk_f = GkPolicy.functions
     model_f = model.functions
 
-    if Gk.type not in ["WKB", "mixed"]:
+    if GkPolicy.type not in ["WKB", "mixed"]:
         raise RuntimeError(
             f'compute_QuadSource_integral: attempting to evaluate WKB Levin quadrature, but Gk object is not of "WKB" or "mixed" type [domain={max_z:.5g}, {min_z:.5g}]'
         )
 
     if Gk_f.theta is None:
+        Gk: GkSource = GkPolicy._source_proxy.get()
         raise RuntimeError(
-            f"compute_QuadSource_integral: attempting to evaluate WKB Levin quadrature, but Gk_f.theta is absent (type={Gk.type}, quality={Gk.quality}, lowest numeric z={_extract_z(Gk._numerical_smallest_z)}, primary WKB largest z={_extract_z(Gk._primary_WKB_largest_z)}, z_crossover={_extract_z(Gk.crossover_z)}, z_Levin={_extract_z(Gk.Levin_z)}) [domain={max_z:.5g}, {min_z:.5g}]"
+            f"compute_QuadSource_integral: attempting to evaluate WKB Levin quadrature, but Gk_f.theta is absent (type={GkPolicy.type}, quality={GkPolicy.quality}, lowest numeric z={_extract_z(Gk._numerical_smallest_z)}, primary WKB largest z={_extract_z(Gk._primary_WKB_largest_z)}, z_crossover={_extract_z(GkPolicy.crossover_z)}, z_Levin={_extract_z(GkPolicy.Levin_z)}) [domain={max_z:.5g}, {min_z:.5g}]"
         )
 
     if Gk_f.WKB_region is None:
+        Gk: GkSource = GkPolicy._source_proxy.get()
         raise RuntimeError(
-            f"compute_QuadSource_integral: attempting to evaluate WKB Levin quadrature, but Gk_f.WKB_region is absent (type={Gk.type}, quality={Gk.quality}, lowest numeric z={_extract_z(Gk._numerical_smallest_z)}, primary WKB largest z={_extract_z(Gk._primary_WKB_largest_z)}, z_crossover={_extract_z(Gk.crossover_z)}, z_Levin={_extract_z(Gk.Levin_z)}) [domain={max_z:.5g}, {min_z:.5g}]"
+            f"compute_QuadSource_integral: attempting to evaluate WKB Levin quadrature, but Gk_f.WKB_region is absent (type={GkPolicy.type}, quality={GkPolicy.quality}, lowest numeric z={_extract_z(Gk._numerical_smallest_z)}, primary WKB largest z={_extract_z(Gk._primary_WKB_largest_z)}, z_crossover={_extract_z(GkPolicy.crossover_z)}, z_Levin={_extract_z(GkPolicy.Levin_z)}) [domain={max_z:.5g}, {min_z:.5g}]"
         )
 
     region_max_z, region_min_z = Gk_f.WKB_region
@@ -563,6 +570,7 @@ class QuadSourceIntegral(DatastoreObject):
         self,
         payload,
         model: ModelProxy,
+        policy: GkSourcePolicy,
         z_response: redshift,
         z_source_max: redshift,
         k: wavenumber_exit_time,
@@ -573,6 +581,7 @@ class QuadSourceIntegral(DatastoreObject):
         tags: Optional[List[store_tag]] = None,
     ):
         self._model_proxy = model
+        self._policy = policy
 
         self._k_exit = k
         self._q_exit = q
@@ -594,7 +603,7 @@ class QuadSourceIntegral(DatastoreObject):
             self._WKB_Levin_data = None
 
             self._compute_time = None
-            self._Gk_serial = None
+            self._GkPolicy_serial = None
             self._source_serial = None
 
             self._metadata = {}
@@ -614,7 +623,7 @@ class QuadSourceIntegral(DatastoreObject):
             self._WKB_Levin_data = payload["WKB_Levin_data"]
 
             self._compute_time = payload["compute_time"]
-            self._Gk_serial = payload["Gk_serial"]
+            self._GkPolicy_serial = payload["GkPolicy_serial"]
             self._source_serial = payload["source_serial"]
 
             self._metadata = payload["metadata"]
@@ -743,7 +752,14 @@ class QuadSourceIntegral(DatastoreObject):
             self._label = label
 
         source: QuadSource = payload["source"]
-        Gk: GkSource = payload["Gk"]
+        GkPolicy: GkSourcePolicyData = payload["GkPolicy"]
+
+        if self._policy.store_id != GkPolicy.policy.store_id:
+            raise RuntimeError(
+                f"QuadSourceIntegral: supplied GkSourcePolicyData object does not match specified policy (required policy store_id={self._policy.store_id}, supplied GkSourcePolicyData object has policy store_id={GkPolicy.policy.store_id})"
+            )
+
+        Gk = GkPolicy._source_proxy.get()
 
         # TODO: improve compatibility check between source and Gk
         if self._z_response.store_id != Gk.z_response.store_id:
@@ -782,7 +798,7 @@ class QuadSourceIntegral(DatastoreObject):
             self._q_exit,
             self._r_exit,
             source,
-            Gk,
+            GkPolicy,
             self._z_response,
             self._z_source_max,
         )
@@ -809,7 +825,7 @@ class QuadSourceIntegral(DatastoreObject):
         self._WKB_quad = payload["WKB_quad"]
         self._WKB_Levin = payload["WKB_Levin"]
 
-        self._Gk_serial = payload["Gk_serial"]
+        self._GkPolicy_serial = payload["GkPolicy_serial"]
         self._source_serial = payload["source_serial"]
 
         self._numeric_quad_data = payload["numeric_quad_data"]

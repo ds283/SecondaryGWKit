@@ -20,6 +20,8 @@ from ComputeTargets import (
     GkWKBValue,
     GkSource,
     QuadSourceIntegral,
+    GkSourceProxy,
+    GkSourcePolicyData,
 )
 from ComputeTargets.BackgroundModel import ModelProxy
 from CosmologyConcepts import (
@@ -33,6 +35,7 @@ from CosmologyConcepts.wavenumber import wavenumber_exit_time_array
 from CosmologyModels.LambdaCDM import Planck2018
 from Datastore.SQL.ProfileAgent import ProfileAgent
 from Datastore.SQL.ShardedPool import ShardedPool
+from MetadataConcepts import GkSourcePolicy
 from RayTools.RayWorkPool import RayWorkPool
 from Units import Mpc_units
 from defaults import (
@@ -258,14 +261,20 @@ with ShardedPool(
         "solve_ivp+LSODA-stepping0": solve_icp_LSODA,
     }
 
-    # create the GkSource policies that we will apply l;ater
+    # create the GkSource policies that we will apply later
     GkSource_policy_2pt5, GkSource_policy_5pt0 = ray.get(
         [
             pool.object_get(
-                "GkSourcePolicy", Levin_threshold=2.5, numeric_policy="maximize_numeric"
+                "GkSourcePolicy",
+                label='policy="maximize-numeric"-Levin-threshold="2.5"',
+                Levin_threshold=2.5,
+                numeric_policy="maximize_numeric",
             ),
             pool.object_get(
-                "GkSourcePolicy", Levin_threshold=5.0, numeric_policy="maximize_numeric"
+                "GkSourcePolicy",
+                label='policy="maximize-numeric"-Levin-threshold="5.0"',
+                Levin_threshold=5.0,
+                numeric_policy="maximize_numeric",
             ),
         ]
     )
@@ -1181,103 +1190,6 @@ with ShardedPool(
     # solution points from GkNumericalValue and GkWKValue rows. Also, there is the reproducibility angle of keeping a record of what
     # rebuilt data products we used.)
 
-    dump_incomplete = args.dump_incomplete is not None
-    dump_incomplete_path = (
-        Path(args.dump_incomplete).resolve() if dump_incomplete else None
-    )
-
-    if dump_incomplete:
-        print(
-            f'\n** INCOMPLETE GKSOURCE OBJECTS WILL BE DUMPED TO "{dump_incomplete_path}"'
-        )
-
-    @ray.remote
-    def dump_incomplete_GkSource(Gk: GkSource):
-        output_folder = (
-            dump_incomplete_path
-            / f"store_id={Gk.store_id}_k={Gk.k.k_inv_Mpc:.5g}_zresponse={Gk.z_response.z:.5g}"
-        )
-        output_folder.mkdir(parents=True, exist_ok=True)
-
-        data = {
-            "store_id": Gk.store_id,
-            "model_store_id": Gk.model_proxy.store_id,
-            "k_inv_Mpc": Gk.k.k_inv_Mpc,
-            "k_store_id": Gk.k.store_id,
-            "k_exit_store_id": Gk._k_exit.store_id,
-            "z_exit": Gk._k_exit.z_exit,
-            "z_exit_subh_e3": Gk._k_exit.z_exit_subh_e3,
-            "z_exit_subh_e4": Gk._k_exit.z_exit_subh_e4,
-            "z_exit_subh_e5": Gk._k_exit.z_exit_subh_e5,
-            "z_exit_subh_e6": Gk._k_exit.z_exit_subh_e6,
-            "z_response": Gk.z_response.z,
-            "z_response_store_id": Gk.z_response.store_id,
-            "z_response_efolds_subh": model.efolds_subh(Gk.k, Gk.z_response),
-            "numerical_z_source_limit": sqrt(
-                Gk._k_exit.z_exit_subh_e3 * Gk._k_exit.z_exit_subh_e4
-            ),
-            "numerical_z_source_limit_efolds": model.efolds_subh(
-                Gk.k,
-                sqrt(Gk._k_exit.z_exit_subh_e3 * Gk._k_exit.z_exit_subh_e4),
-            ),
-            "type": Gk.type,
-            "quality": Gk.quality,
-            "crossover_z": Gk.crossover_z,
-            "metadata": Gk.metadata,
-            "z_sample": [z.z for z in Gk.z_sample],
-            "z_sample_size": len(Gk.z_sample),
-            "values_size": len(Gk.values) if Gk.values is not None else None,
-            "numerical_smallest_z": (
-                Gk.numerical_smallest_z.z
-                if Gk.numerical_smallest_z is not None
-                else None
-            ),
-            "numerical_smallest_z_store_id": (
-                Gk.numerical_smallest_z.store_id
-                if Gk.numerical_smallest_z is not None
-                else None
-            ),
-            "primary_WKB_largest_z": (
-                Gk.primary_WKB_largest_z.z
-                if Gk.primary_WKB_largest_z is not None
-                else None
-            ),
-            "primary_WKB_largest_z_store_id": (
-                Gk.primary_WKB_largest_z.store_id
-                if Gk.primary_WKB_largest_z is not None
-                else None
-            ),
-            "label": Gk.label,
-            "tags": [tag.label for tag in Gk.tags],
-        }
-
-        data_file = output_folder / "data.json"
-        with open(data_file, "w", encoding="utf-8") as f:
-            json.dump(data, f, ensure_ascii=False, indent=4)
-
-        df: DataFrame = Gk.values_as_DataFrame()
-        csv_file = output_folder / "values.csv"
-        df.to_csv(csv_file, header=True, index=False)
-
-    GkSource_statistics = {}
-    GkSource_total = 0
-
-    def postprocess_GkSource(Gk: GkSource):
-        global GkSource_total
-
-        type: str = Gk.type
-        quality: str = Gk.quality
-
-        if type not in GkSource_statistics:
-            GkSource_statistics[type] = {}
-        type_stats = GkSource_statistics[type]
-
-        if quality not in type_stats:
-            type_stats[quality] = 0
-        type_stats[quality] += 1
-
-        GkSource_total = GkSource_total + 1
-
     def build_GkSource_batch(batch: List[redshift]):
         # grouper may fill with None values, so we need to strip those out
         batch = [x for x in batch if x is not None]
@@ -1338,18 +1250,6 @@ with ShardedPool(
         )
         query_queue.run()
 
-        # apply the postprocess handler to any available objects, so that we can include them in our summary statistics
-        # the work queue never sees these objects (they are never returned as ObjectRef instances from the task builder),
-        # so this is our only chance to count them
-        available = [
-            obj
-            for query_outcomes in query_queue.results
-            for obj in query_outcomes
-            if obj.available
-        ]
-        for obj in available:
-            postprocess_GkSource(obj)
-
         # determine which z_response values are missing for each k_exit value
         missing = {
             k_exit.store_id: [
@@ -1362,20 +1262,7 @@ with ShardedPool(
             )
         }
 
-        incomplete = {
-            k_exit.store_id: [
-                z_response
-                for obj, z_response in zip(query_outcomes, batch)
-                if obj.available and obj.quality == "incomplete"
-            ]
-            for query_outcomes, k_exit in zip(
-                query_queue.results, response_k_exit_times
-            )
-        }
-
         work_refs = build_missing_GkSource(missing, z_source_pool)
-        if dump_incomplete:
-            build_incomplete_GkSource(incomplete)
 
         return work_refs
 
@@ -1519,11 +1406,131 @@ with ShardedPool(
 
         return work_refs
 
-    def build_incomplete_GkSource(incomplete):
-        query_batch = [
+    def build_GkSource_work_label(Gk: GkSource):
+        return f"{args.job_name}-GkSource-k{Gk.k.k_inv_Mpc:.3g}-responsez{Gk.z_response.z:.5g}-{datetime.now().replace(microsecond=0).isoformat()}"
+
+    def compute_GkSource_work(Gk: GkSource, payload, label: Optional[str] = None):
+        return Gk.compute(payload=payload, label=label)
+
+    def validate_GkSource_work(Gk: GkSource):
+        if not Gk.available:
+            raise RuntimeError(
+                "GkSource object passed for validation, but is not yet available"
+            )
+
+        return pool.object_validate(Gk)
+
+    dump_incomplete = args.dump_incomplete is not None
+    dump_incomplete_path = (
+        Path(args.dump_incomplete).resolve() if dump_incomplete else None
+    )
+
+    if dump_incomplete:
+        print(
+            f'\n** INCOMPLETE GkSourcePolicyData OBJECTS WILL BE DUMPED TO "{dump_incomplete_path}"'
+        )
+
+    @ray.remote
+    def dump_incomplete_GkSourcePolicy(obj: GkSourcePolicyData):
+        output_folder = (
+            dump_incomplete_path
+            / f"store_id={obj.store_id}_k={obj.k.k_inv_Mpc:.5g}_zresponse={obj.z_response.z:.5g}"
+        )
+        output_folder.mkdir(parents=True, exist_ok=True)
+
+        source = obj._source_proxy.get()
+
+        data = {
+            "policy_store_id": obj.store_id,
+            "type": obj.type,
+            "quality": obj.quality,
+            "crossover_z": obj.crossover_z,
+            "metadata": obj.metadata,
+            "source_store_id": source.store_id,
+            "model_store_id": source.model_proxy.store_id,
+            "k_inv_Mpc": source.k.k_inv_Mpc,
+            "k_store_id": source.k.store_id,
+            "k_exit_store_id": source._k_exit.store_id,
+            "z_exit": source._k_exit.z_exit,
+            "z_exit_subh_e3": source._k_exit.z_exit_subh_e3,
+            "z_exit_subh_e4": source._k_exit.z_exit_subh_e4,
+            "z_exit_subh_e5": source._k_exit.z_exit_subh_e5,
+            "z_exit_subh_e6": source._k_exit.z_exit_subh_e6,
+            "z_response": source.z_response.z,
+            "z_response_store_id": source.z_response.store_id,
+            "z_response_efolds_subh": model.efolds_subh(source.k, source.z_response),
+            "numerical_z_source_limit": sqrt(
+                source._k_exit.z_exit_subh_e3 * source._k_exit.z_exit_subh_e4
+            ),
+            "numerical_z_source_limit_efolds": model.efolds_subh(
+                source.k,
+                sqrt(source._k_exit.z_exit_subh_e3 * source._k_exit.z_exit_subh_e4),
+            ),
+            "z_sample": [z.z for z in source.z_sample],
+            "z_sample_size": len(source.z_sample),
+            "values_size": len(source.values) if source.values is not None else None,
+            "numerical_smallest_z": (
+                source.numerical_smallest_z.z
+                if source.numerical_smallest_z is not None
+                else None
+            ),
+            "numerical_smallest_z_store_id": (
+                source.numerical_smallest_z.store_id
+                if source.numerical_smallest_z is not None
+                else None
+            ),
+            "primary_WKB_largest_z": (
+                source.primary_WKB_largest_z.z
+                if source.primary_WKB_largest_z is not None
+                else None
+            ),
+            "primary_WKB_largest_z_store_id": (
+                source.primary_WKB_largest_z.store_id
+                if source.primary_WKB_largest_z is not None
+                else None
+            ),
+            "label": source.label,
+            "tags": [tag.label for tag in source.tags],
+        }
+
+        data_file = output_folder / "data.json"
+        with open(data_file, "w", encoding="utf-8") as f:
+            json.dump(data, f, ensure_ascii=False, indent=4)
+
+        df: DataFrame = source.values_as_DataFrame()
+        csv_file = output_folder / "values.csv"
+        df.to_csv(csv_file, header=True, index=False)
+
+    GkSourcePolicy_statistics = {}
+
+    def postprocess_GkSourcePolicy(obj: GkSourcePolicyData):
+        global GkSourcePolicy_total
+
+        policy: GkSourcePolicy = obj.policy
+        policy_label = policy.label
+        key = policy_label if policy_label is not None else policy.store_id
+
+        if key not in GkSourcePolicy_statistics:
+            GkSourcePolicy_statistics[key] = {"total": 0, "statistics": {}}
+        policy_statistics = GkSourcePolicy_statistics[key]
+
+        type: str = obj.type
+        quality: str = obj.quality
+
+        statistics = policy_statistics["statistics"]
+        if type not in statistics:
+            statistics[type] = {}
+        type_stats = statistics[type]
+
+        if quality not in type_stats:
+            type_stats[quality] = 0
+        type_stats[quality] += 1
+
+        policy_statistics["total"] = policy_statistics["total"] + 1
+
+    def build_incomplete_GkSourcePolicy(incomplete):
+        GkSource_lookup = [
             {
-                # note we don't specify the k mode as part of the main payload
-                # instead we specify it separately to object_read_batch()
                 "shard_key": {"k": k_exit},
                 "payload": [
                     {
@@ -1547,15 +1554,60 @@ with ShardedPool(
             for k_exit in response_k_exit_times
         ]
 
+        GkSource_lookup_queue = RayWorkPool(
+            pool,
+            GkSource_lookup,
+            task_builder=lambda x: pool.object_get_vectorized(
+                "GkSource", x["shard_key"], payload_data=x["payload"]
+            ),
+            available_handler=None,
+            compute_handler=None,
+            store_handler=None,
+            validation_handler=None,
+            label_builder=None,
+            title=None,
+            store_results=True,
+            create_batch_size=20,  # may need to tweak relative to number of shards
+            process_batch_size=20,
+        )
+        GkSource_lookup_queue.run()
+        GkSource_proxies = {
+            k_exit.store_id: [GkSourceProxy(obj) for obj in lookup_data]
+            for k_exit, lookup_data in zip(
+                response_k_exit_times, GkSource_lookup_queue.results
+            )
+        }
+
+        query_batch = [
+            {
+                # note we don't specify the k mode as part of the main payload
+                # instead we specify it separately to object_read_batch()
+                "shard_key": {"k": k_exit},
+                "payload": [
+                    {
+                        "source": source_proxy,
+                        "policy": GkSource_policy_2pt5,
+                        "k": k_exit,
+                    }
+                    for z_response, source_proxy in zip(
+                        incomplete[k_exit.store_id], proxy_data
+                    )
+                ],
+            }
+            for k_exit, proxy_data in zip(
+                response_k_exit_times, GkSource_proxies.values()
+            )
+        ]
+
         def dump_Gk_handler(missing_Gk: List[GkSource]):
             for Gk in missing_Gk:
-                dump_incomplete_GkSource.remote(Gk)
+                dump_incomplete_GkSourcePolicy.remote(Gk)
 
         query_queue = RayWorkPool(
             pool,
             query_batch,
             task_builder=lambda x: pool.object_get_vectorized(
-                "GkSource", x["shard_key"], payload_data=x["payload"]
+                "GkSourcePolicyData", x["shard_key"], payload_data=x["payload"]
             ),
             available_handler=None,
             compute_handler=None,
@@ -1570,22 +1622,209 @@ with ShardedPool(
         )
         query_queue.run()
 
-    def build_GkSource_work_label(Gk: GkSource):
-        return f"{args.job_name}-GkSource-k{Gk.k.k_inv_Mpc:.3g}-responsez{Gk.z_response.z:.5g}-{datetime.now().replace(microsecond=0).isoformat()}"
+    def build_GkSourcePolicy_batch(batch: List[redshift]):
+        # grouper may fill with None values, so we need to strip those out
+        batch = [x for x in batch if x is not None]
 
-    def compute_GkSource_work(Gk: GkSource, payload, label: Optional[str] = None):
-        return Gk.compute(payload=payload, label=label)
+        GkSource_lookup = [
+            {
+                "shard_key": {"k": k_exit},
+                "payload": [
+                    {
+                        "model": model_proxy,
+                        "z_response": z_response,
+                        "z_sample": None,
+                        "atol": atol,
+                        "rtol": rtol,
+                        "tags": [
+                            GkProductionTag,
+                            GlobalZGridSizeTag,
+                            SourceZGridSizeTag,
+                            ResponseZGridSizeTag,
+                            LargestZTag,
+                            SamplesPerLog10ZTag,
+                        ],
+                        "_do_not_populate": True,
+                    }
+                    for z_response in batch
+                ],
+            }
+            for k_exit in response_k_exit_times
+        ]
 
-    def validate_GkSource_work(Gk: GkSource):
-        if not Gk.available:
+        GkSource_lookup_queue = RayWorkPool(
+            pool,
+            GkSource_lookup,
+            task_builder=lambda x: pool.object_get_vectorized(
+                "GkSource", x["shard_key"], payload_data=x["payload"]
+            ),
+            available_handler=None,
+            compute_handler=None,
+            store_handler=None,
+            validation_handler=None,
+            label_builder=None,
+            title=None,
+            store_results=True,
+            create_batch_size=20,  # may need to tweak relative to number of shards
+            process_batch_size=20,
+        )
+        GkSource_lookup_queue.run()
+        GkSource_proxies = {
+            k_exit.store_id: [GkSourceProxy(obj) for obj in lookup_data]
+            for k_exit, lookup_data in zip(
+                response_k_exit_times, GkSource_lookup_queue.results
+            )
+        }
+
+        query_batch = [
+            {
+                "shard_key": {"k": k_exit},
+                "payload": [
+                    {
+                        "source": source_proxy,
+                        "policy": GkSource_policy_2pt5,
+                        "k": k_exit,
+                    }
+                    for z_response, source_proxy in zip(batch, proxy_data)
+                ],
+            }
+            for k_exit, proxy_data in zip(
+                response_k_exit_times, GkSource_proxies.values()
+            )
+        ]
+
+        query_queue = RayWorkPool(
+            pool,
+            query_batch,
+            task_builder=lambda x: pool.object_get_vectorized(
+                "GkSourcePolicyData", x["shard_key"], payload_data=x["payload"]
+            ),
+            available_handler=None,
+            compute_handler=None,
+            store_handler=None,
+            validation_handler=None,
+            label_builder=None,
+            title=None,
+            store_results=True,
+            create_batch_size=20,  # may need to tweak relative to number of shards
+            process_batch_size=20,
+        )
+        query_queue.run()
+
+        # apply the postprocess handler to any available objects, so that we can include them in our summary statistics
+        # the work queue never sees these objects (they are never returned as ObjectRef instances from the task builder),
+        # so this is our only chance to count them
+        available = [
+            obj
+            for query_outcomes in query_queue.results
+            for obj in query_outcomes
+            if obj.available
+        ]
+        for obj in available:
+            postprocess_GkSourcePolicy(obj)
+
+        missing = {
+            k_exit.store_id: [
+                z_response for z_response, obj in zip(batch, query_outcomes)
+            ]
+            for k_exit, query_outcomes in zip(
+                response_k_exit_times, query_queue.results
+            )
+        }
+
+        incomplete = {
+            k_exit.store_id: [
+                z_response
+                for obj, z_response in zip(query_outcomes, batch)
+                if obj.available and obj.quality == "incomplete"
+            ]
+            for query_outcomes, k_exit in zip(
+                query_queue.results, response_k_exit_times
+            )
+        }
+
+        work_refs = build_missing_GkSourcePolicy(missing)
+        if dump_incomplete:
+            build_incomplete_GkSourcePolicy(incomplete)
+
+        return work_refs
+
+    def build_missing_GkSourcePolicy(missing):
+        GkSource_lookup = [
+            {
+                "shard_key": {"k": k_exit},
+                "payload": [
+                    {
+                        "model": model_proxy,
+                        "z_response": z_response,
+                        "z_sample": None,
+                        "atol": atol,
+                        "rtol": rtol,
+                        "tags": [
+                            GkProductionTag,
+                            GlobalZGridSizeTag,
+                            SourceZGridSizeTag,
+                            ResponseZGridSizeTag,
+                            LargestZTag,
+                            SamplesPerLog10ZTag,
+                        ],
+                    }
+                    for z_response in missing[k_exit.store_id]
+                ],
+            }
+            for k_exit in response_k_exit_times
+        ]
+
+        GkSource_lookup_queue = RayWorkPool(
+            pool,
+            GkSource_lookup,
+            task_builder=lambda x: pool.object_get_vectorized(
+                "GkSource", x["shard_key"], payload_data=x["payload"]
+            ),
+            available_handler=None,
+            compute_handler=None,
+            store_handler=None,
+            validation_handler=None,
+            label_builder=None,
+            title=None,
+            store_results=True,
+            create_batch_size=20,  # may need to tweak relative to number of shards
+            process_batch_size=20,
+        )
+        GkSource_lookup_queue.run()
+        GkSource_proxies = {
+            k_exit.store_id: [GkSourceProxy(obj) for obj in lookup_data]
+            for k_exit, lookup_data in zip(
+                response_k_exit_times, GkSource_lookup_queue.results
+            )
+        }
+
+        work_refs = []
+
+        for k_exit, proxy_data in zip(response_k_exit_times, GkSource_proxies.values()):
+            for z_response, source_proxy in zip(missing[k_exit.store_id], proxy_data):
+                work_refs.append(
+                    pool.object_get(
+                        "GkSourcePolicyData",
+                        source=source_proxy,
+                        policy=GkSource_policy_2pt5,
+                        k=k_exit,
+                    )
+                )
+
+        return work_refs
+
+    def compute_GkSourcePolicy_work(obj: GkSourcePolicyData):
+        return obj.compute()
+
+    def validate_GkSourcePolicy_work(obj: GkSourcePolicyData):
+        if not obj.available:
             raise RuntimeError(
-                "GkSource object passed for validation, but is not yet available"
+                "GkSourcePolicyData object passed for validation, but is not yet available"
             )
 
-        if Gk.quality == "incomplete":
-            dump_incomplete_GkSource.remote(Gk)
-
-        return pool.object_validate(Gk)
+        if obj.quality == "incomplete":
+            dump_incomplete_GkSourcePolicy.remote(obj)
 
     if args.Gk_source_queue:
         # For each wavenumber in the k-sample (here k_exit_times), and each value of z_response,
@@ -1607,7 +1846,7 @@ with ShardedPool(
             task_builder=build_GkSource_batch,
             compute_handler=compute_GkSource_work,
             validation_handler=validate_GkSource_work,
-            post_handler=postprocess_GkSource,
+            post_handler=postprocess_GkSourcePolicy,
             label_builder=build_GkSource_work_label,
             title="CALCULATE GREENS FUNCTIONS FOR SOURCE REDSHIFT",
             store_results=False,
@@ -1618,18 +1857,37 @@ with ShardedPool(
         )
         GkSource_queue.run()
 
-        print("\n** GKSOURCE SUMMARY STATISTICS")
-        print(f"     Total instances: {GkSource_total}")
-        for Gk_type in GkSource_statistics:
-            type_stats = GkSource_statistics[Gk_type]
-            type_total = sum(type_stats.values())
-            print(
-                f"\n     >> {Gk_type}: {type_total} instances = {type_total/GkSource_total:.2%}"
-            )
-            for quality, quality_total in type_stats.items():
+        GkSourcePolicy_queue = RayWorkPool(
+            pool,
+            GkSource_work_batches,
+            task_builder=build_GkSourcePolicy_batch,
+            compute_handler=compute_GkSourcePolicy_work,
+            validation_handler=None,
+            post_handler=None,
+            label_builder=None,
+            title="APPLY GKSOURCE POLICIES",
+            store_results=False,
+            create_batch_size=1,
+            notify_batch_size=2000,
+            max_task_queue=100,
+            process_batch_size=50,
+        )
+        GkSourcePolicy_queue.run()
+
+        print("\n** GkSourcePolicyData SUMMARY STATISTICS")
+        for policy_id, policy_data in GkSourcePolicy_statistics.items():
+            policy_total = policy_data["total"]
+            print(f"     * Policy: {policy_id}")
+            print(f"         Total instances: {policy_data["total"]}")
+            for Gk_type, type_stats in policy_data["statistics"].items():
+                type_total = sum(type_stats.values())
                 print(
-                    f"        {quality}: {quality_total} instances = {quality_total/type_total:.2%} of this type, {quality_total/GkSource_total:.2%} of total"
+                    f"\n        >> {Gk_type}: {type_total} instances = {type_total / policy_total:.2%}"
                 )
+                for quality, quality_total in type_stats.items():
+                    print(
+                        f"           {quality}: {quality_total} instances = {quality_total/type_total:.2%} of this type, {quality_total / policy_total:.2%} of total"
+                    )
 
     # STEP 6
     # PERFORM CALCULATION OF SOURCE INTEGRALS
@@ -1670,6 +1928,7 @@ with ShardedPool(
                 "payload": [
                     {
                         "model": model_proxy,
+                        "policy": GkSource_policy_2pt5,
                         "q": q,
                         "r": r,
                         "z_response": z_response,
@@ -1779,6 +2038,66 @@ with ShardedPool(
             for k in k_keys
         ]
 
+        GkSource_lookup_queue = RayWorkPool(
+            pool,
+            GkSource_lookup_batch,
+            task_builder=lambda x: pool.object_get_vectorized(
+                "GkSource", x["shard_key"], payload_data=x["payload"]
+            ),
+            available_handler=None,
+            compute_handler=None,
+            store_handler=None,
+            validation_handler=None,
+            # post_handler=lambda objlist: [
+            #     ray.put(obj) for obj in objlist
+            # ],  # replace list with Ray ObjectRefs to object store version
+            label_builder=None,
+            title=None,
+            store_results=True,
+            create_batch_size=20,
+            process_batch_size=20,
+        )
+        GkSource_lookup_queue.run()
+        GkSource_proxies = {
+            k_exit.store_id: [GkSourceProxy(obj) for obj in lookup_data]
+            for k_exit, lookup_data in zip(
+                response_k_exit_times, GkSource_lookup_queue.results
+            )
+        }
+
+        GkSourcePolicy_lookup_batch = [
+            {
+                "shard_key": {"k": k_exit},
+                "payload": [
+                    {
+                        "source": source_proxy,
+                        "policy": GkSource_policy_2pt5,
+                        "k": k_exit,
+                    }
+                    for z_response, source_proxy in zip(missing_Gk[k], proxy_data)
+                ],
+            }
+            for k_exit, proxy_data in zip(k_keys, GkSource_proxies.values())
+        ]
+
+        GkSourcePolicy_lookup_queue = RayWorkPool(
+            pool,
+            GkSourcePolicy_lookup_batch,
+            task_builder=lambda x: pool.object_get_vectorized(
+                "GkSourcePolicyData", x["shard_key"], payload_data=x["payload"]
+            ),
+            available_handler=None,
+            compute_handler=None,
+            store_handler=None,
+            validation_handler=None,
+            label_builder=None,
+            title=None,
+            store_results=True,
+            create_batch_size=20,
+            process_batch_size=20,
+        )
+        GkSourcePolicy_lookup_queue.run()
+
         QuadSource_lookup_batch = [
             {
                 "shard_key": {"q": q},
@@ -1802,27 +2121,6 @@ with ShardedPool(
             for q in q_keys
         ]
 
-        GkSource_lookup_queue = RayWorkPool(
-            pool,
-            GkSource_lookup_batch,
-            task_builder=lambda x: pool.object_get_vectorized(
-                "GkSource", x["shard_key"], payload_data=x["payload"]
-            ),
-            available_handler=None,
-            compute_handler=None,
-            store_handler=None,
-            validation_handler=None,
-            # post_handler=lambda objlist: [
-            #     ray.put(obj) for obj in objlist
-            # ],  # replace list with Ray ObjectRefs to object store version
-            label_builder=None,
-            title=None,
-            store_results=True,
-            create_batch_size=20,
-            process_batch_size=20,
-        )
-        GkSource_lookup_queue.run()
-
         QuadSource_lookup_queue = RayWorkPool(
             pool,
             QuadSource_lookup_batch,
@@ -1833,9 +2131,6 @@ with ShardedPool(
             compute_handler=None,
             store_handler=None,
             validation_handler=None,
-            # post_handler=lambda objlist: [
-            #     ray.put(obj) for obj in objlist
-            # ],  # replace list with Ray ObjectRefs to object store version
             label_builder=None,
             title=None,
             store_results=True,
@@ -1847,7 +2142,7 @@ with ShardedPool(
         # process these retrieved items into simple look-up tables
         Gk_cache = {
             (k.store_id, z_response.store_id): obj
-            for k, query_outcomes in zip(k_keys, GkSource_lookup_queue.results)
+            for k, query_outcomes in zip(k_keys, GkSourcePolicy_lookup_queue.results)
             for z_response, obj in zip(missing_Gk[k], query_outcomes)
         }
         source_cache = {
@@ -1868,11 +2163,11 @@ with ShardedPool(
             #  Then we would not have to repeatedly seralize them when shipping out payloads for computation.
             #  However, the QuadSourceIntegral object has to inspect each Gk and source, so this isn't completely trivial.
             #  Maybe we need to retain a double cache.
-            Gk: GkSource = Gk_cache[(k.store_id, z_response.store_id)]
+            GkPolicy: GkSourcePolicyData = Gk_cache[(k.store_id, z_response.store_id)]
             source: QuadSource = source_cache[(q.store_id, r.store_id)]
 
             missing_data = False
-            if not Gk.available:
+            if not GkPolicy.available:
                 missing_data = True
                 print(
                     f"!! MISSING DATA WARNING ({datetime.now().replace(microsecond=0).isoformat()}) when building QuadSourceIntegral: GkSource for for k={k.k.k_inv_Mpc:.5g}/Mpc, z_response={z_response.z:.5g}"
@@ -1893,6 +2188,7 @@ with ShardedPool(
                     "ref": pool.object_get(
                         "QuadSourceIntegral",
                         model=model_proxy,
+                        policy=GkSource_policy_2pt5,
                         k=k,
                         q=q,
                         r=r,
@@ -1909,7 +2205,7 @@ with ShardedPool(
                             SamplesPerLog10ZTag,
                         ],
                     ),
-                    "compute_payload": {"Gk": Gk, "source": source},
+                    "compute_payload": {"GkPolicy": GkPolicy, "source": source},
                 }
             )
 
