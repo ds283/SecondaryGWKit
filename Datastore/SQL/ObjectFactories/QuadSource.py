@@ -210,12 +210,15 @@ class sqla_QuadSource_factory(SQLAFactoryBase):
                     value_table.c.serial,
                     value_table.c.z_serial,
                     redshift_table.c.z,
-                    value_table.c.source_term,
-                    value_table.c.undiff_part,
-                    value_table.c.diff_part,
-                    value_table.c.analytic_source_term,
-                    value_table.c.analytic_undiff_part,
-                    value_table.c.analytic_diff_part,
+                    value_table.c.source,
+                    value_table.c.undiff,
+                    value_table.c.diff,
+                    value_table.c.analytic_source_rad,
+                    value_table.c.analytic_undiff_rad,
+                    value_table.c.analytic_diff_rad,
+                    value_table.c.analytic_source_w,
+                    value_table.c.analytic_undiff_w,
+                    value_table.c.analytic_diff_w,
                 )
                 .select_from(
                     value_table.join(
@@ -236,15 +239,20 @@ class sqla_QuadSource_factory(SQLAFactoryBase):
                     QuadSourceValue(
                         store_id=row.serial,
                         z=z_value,
-                        source_term=row.source_term,
-                        undiff_part=row.undiff_part,
-                        diff_part=row.diff_part,
-                        analytic_source_term=row.analytic_source_term,
-                        analytic_undiff_part=row.analytic_undiff_part,
-                        analytic_diff_part=row.analytic_diff_part,
+                        source=row.source,
+                        undiff=row.undiff,
+                        diff=row.diff,
+                        analytic_source_rad=row.analytic_source_rad,
+                        analytic_undiff_rad=row.analytic_undiff_rad,
+                        analytic_diff_rad=row.analytic_diff_rad,
+                        analytic_source_w=row.analytic_source_w,
+                        analytic_undiff_w=row.analytic_undiff_w,
+                        analytic_diff_w=row.analytic_diff_w,
                     )
                 )
             imported_z_sample = redshift_array(z_points)
+
+            print(f"** imported {len(values)} sample points into QuadSource instance")
 
             if num_expected_samples is not None:
                 if len(imported_z_sample) != num_expected_samples:
@@ -319,12 +327,15 @@ class sqla_QuadSource_factory(SQLAFactoryBase):
                 {
                     "parent_serial": store_id,
                     "z_serial": value.z.store_id,
-                    "source_term": value.source_term,
-                    "undiff_part": value.undiff_part,
-                    "diff_part": value.diff_part,
-                    "analytic_source_term": value.analytic_source_term,
-                    "analytic_undiff_part": value.analytic_undiff_part,
-                    "analytic_diff_part": value.analytic_diff_part,
+                    "source": value.source,
+                    "undiff": value.undiff,
+                    "diff": value.diff,
+                    "analytic_source_rad": value.analytic_source_rad,
+                    "analytic_undiff_rad": value.analytic_undiff_rad,
+                    "analytic_diff_rad": value.analytic_diff_rad,
+                    "analytic_source_w": value.analytic_source_w,
+                    "analytic_undiff_w": value.analytic_undiff_w,
+                    "analytic_diff_w": value.analytic_diff_w,
                 },
             )
 
@@ -474,12 +485,15 @@ class sqla_QuadSourceValue_factory(SQLAFactoryBase):
                     index=True,
                     nullable=False,
                 ),
-                sqla.Column("source_term", sqla.Float(64), nullable=False),
-                sqla.Column("undiff_part", sqla.Float(64), nullable=False),
-                sqla.Column("diff_part", sqla.Float(64), nullable=False),
-                sqla.Column("analytic_source_term", sqla.Float(64)),
-                sqla.Column("analytic_undiff_part", sqla.Float(64)),
-                sqla.Column("analytic_diff_part", sqla.Float(64)),
+                sqla.Column("source", sqla.Float(64), nullable=False),
+                sqla.Column("undiff", sqla.Float(64), nullable=False),
+                sqla.Column("diff", sqla.Float(64), nullable=False),
+                sqla.Column("analytic_source_rad", sqla.Float(64)),
+                sqla.Column("analytic_undiff_rad", sqla.Float(64)),
+                sqla.Column("analytic_diff_rad", sqla.Float(64)),
+                sqla.Column("analytic_source_w", sqla.Float(64)),
+                sqla.Column("analytic_undiff_w", sqla.Float(64)),
+                sqla.Column("analytic_diff_w", sqla.Float(64)),
             ],
         }
 
@@ -518,24 +532,31 @@ class sqla_QuadSourceValue_factory(SQLAFactoryBase):
         parent_serial = payload["parent_serial"]
         z = payload["z"]
 
-        source_term = payload["source_term"]
-        undiff_part = payload["undiff_part"]
-        diff_part = payload["diff_part"]
+        source = payload["source"]
+        undiff = payload["undiff"]
+        diff = payload["diff"]
 
-        analytic_source_term = payload.get("analytic_source_term", None)
-        analytic_undiff_part = payload.get("analytic_undiff_part", None)
-        analytic_diff_part = payload.get("analytic_diff_part", None)
+        analytic_source_rad = payload.get("analytic_source_rad", None)
+        analytic_undiff_rad = payload.get("analytic_undiff_rad", None)
+        analytic_diff_rad = payload.get("analytic_diff_rad", None)
+
+        analytic_source_w = payload.get("analytic_source_w", None)
+        analytic_undiff_w = payload.get("analytic_undiff_w", None)
+        analytic_diff_w = payload.get("analytic_diff_w", None)
 
         try:
             row_data = conn.execute(
                 sqla.select(
                     table.c.serial,
-                    table.c.source_term,
-                    table.c.undiff_part,
-                    table.c.diff_part,
-                    table.c.analytic_source_term,
-                    table.c.analytic_undiff_part,
-                    table.c.analytic_diff_part,
+                    table.c.source,
+                    table.c.undiff,
+                    table.c.diff,
+                    table.c.analytic_source_rad,
+                    table.c.analytic_undiff_rad,
+                    table.c.analytic_diff_rad,
+                    table.c.analytic_source_w,
+                    table.c.analytic_undiff_w,
+                    table.c.analytic_diff_w,
                 ).filter(
                     table.c.parent_serial == parent_serial,
                     table.c.z_serial == z.store_id,
@@ -553,12 +574,12 @@ class sqla_QuadSourceValue_factory(SQLAFactoryBase):
                 {
                     "parent_serial": parent_serial,
                     "z_serial": z.store_id,
-                    "source_term": source_term,
-                    "undiff_part": undiff_part,
-                    "diff_part": diff_part,
-                    "analytic_source_term": analytic_source_term,
-                    "analytic_undiff_part": analytic_undiff_part,
-                    "analytic_diff_part": analytic_diff_part,
+                    "source": source,
+                    "undiff": undiff,
+                    "diff": diff,
+                    "analytic_source_rad": analytic_source_rad,
+                    "analytic_undiff_rad": analytic_undiff_rad,
+                    "analytic_diff_rad": analytic_diff_rad,
                 },
             )
 
@@ -566,21 +587,25 @@ class sqla_QuadSourceValue_factory(SQLAFactoryBase):
         else:
             store_id = row_data.serial
 
-            analytic_source_term = row_data.analytic_source_term
-            analytic_undiff_part = row_data.analytic_undiff_part
-            analytic_diff_part = row_data.analytic_diff_part
+            analytic_source_rad = row_data.analytic_source_rad
+            analytic_undiff_rad = row_data.analytic_undiff_rad
+            analytic_diff_rad = row_data.analytic_diff_rad
 
-            if fabs(row_data.source_term - source_term) > DEFAULT_FLOAT_PRECISION:
+            analytic_source_w = row_data.analytic_source_w
+            analytic_undiff_w = row_data.analytic_undiff_w
+            analytic_diff_w = row_data.analytic_diff_w
+
+            if fabs(row_data.source - source) > DEFAULT_FLOAT_PRECISION:
                 raise ValueError(
-                    f"Stored tensor source term value (calculation={parent_serial}, z={z.z}) = {row_data.source_term} differs from expected vlalue = {source_term}"
+                    f"Stored tensor source term value (calculation={parent_serial}, z={z.z}) = {row_data.source} differs from expected vlalue = {source}"
                 )
-            if fabs(row_data.undiff_part - undiff_part) > DEFAULT_FLOAT_PRECISION:
+            if fabs(row_data.undiff - undiff) > DEFAULT_FLOAT_PRECISION:
                 raise ValueError(
-                    f"Stored tensor source term undifferentiated part (calculation={parent_serial}, z={z.z}) = {row_data.undiff_part} differs from expected vlalue = {undiff_part}"
+                    f"Stored tensor source term undifferentiated part (calculation={parent_serial}, z={z.z}) = {row_data.undiff} differs from expected vlalue = {undiff}"
                 )
-            if fabs(row_data.diff_part - diff_part) > DEFAULT_FLOAT_PRECISION:
+            if fabs(row_data.diff - diff) > DEFAULT_FLOAT_PRECISION:
                 raise ValueError(
-                    f"Stored tensor source term differentiated part (calculation={parent_serial}, z={z.z}) = {row_data.diff_part} differs from expected vlalue = {diff_part}"
+                    f"Stored tensor source term differentiated part (calculation={parent_serial}, z={z.z}) = {row_data.diff} differs from expected vlalue = {diff}"
                 )
 
             attribute_set = {"_deserialized": True}
@@ -588,12 +613,15 @@ class sqla_QuadSourceValue_factory(SQLAFactoryBase):
         obj = QuadSourceValue(
             store_id=store_id,
             z=z,
-            source_term=source_term,
-            undiff_part=undiff_part,
-            diff_part=diff_part,
-            analytic_source_term=analytic_source_term,
-            analytic_undiff_part=analytic_undiff_part,
-            analytic_diff_part=analytic_diff_part,
+            source=source,
+            undiff=undiff,
+            diff=diff,
+            analytic_source_rad=analytic_source_rad,
+            analytic_undiff_rad=analytic_undiff_rad,
+            analytic_diff_rad=analytic_diff_rad,
+            analytic_source_w=analytic_source_w,
+            analytic_undiff_w=analytic_undiff_w,
+            analytic_diff_w=analytic_diff_w,
         )
         for key, value in attribute_set.items():
             setattr(obj, key, value)
@@ -637,12 +665,15 @@ class sqla_QuadSourceValue_factory(SQLAFactoryBase):
             row_data = conn.execute(
                 sqla.select(
                     table.c.serial,
-                    table.c.source_term,
-                    table.c.undiff_part,
-                    table.c.diff_part,
-                    table.c.analytic_source_term,
-                    table.c.analytic_undiff_part,
-                    table.c.analytic_diff_part,
+                    table.c.source,
+                    table.c.undiff,
+                    table.c.diff,
+                    table.c.analytic_source_rad,
+                    table.c.analytic_undiff_rad,
+                    table.c.analytic_diff_rad,
+                    table.c.analytic_source_w,
+                    table.c.analytic_undiff_w,
+                    table.c.analytic_diff_w,
                 )
                 .select_from(
                     subquery.join(table, table.c.parent_serial == subquery.c.serial)
@@ -660,7 +691,7 @@ class sqla_QuadSourceValue_factory(SQLAFactoryBase):
         if row_data is None:
             # return empty object
             obj = QuadSourceValue(
-                store_id=None, z=z, source=None, undiff_part=None, diff_part=None
+                store_id=None, z=z, source=None, undiff=None, diff=None
             )
             obj._model_proxy = model_proxy
             obj._q_exit = q
@@ -670,12 +701,15 @@ class sqla_QuadSourceValue_factory(SQLAFactoryBase):
         obj = QuadSourceValue(
             store_id=row_data.serial,
             z=z,
-            source_term=row_data.source_term,
-            undiff_part=row_data.undiff_part,
-            diff_part=row_data.diff_part,
-            analytic_source_term=row_data.analytic_source_term,
-            analytic_undiff_part=row_data.analytic_undiff_part,
-            analytic_diff_part=row_data.analytic_diff_part,
+            source=row_data.source,
+            undiff=row_data.undiff,
+            diff=row_data.diff,
+            analytic_source_rad=row_data.analytic_source_rad,
+            analytic_undiff_rad=row_data.analytic_undiff_rad,
+            analytic_diff_rad=row_data.analytic_diff_rad,
+            analytic_source_w=row_data.analytic_source_w,
+            analytic_undiff_w=row_data.analytic_undiff_w,
+            analytic_diff_w=row_data.analytic_diff_w,
         )
         obj._deserialized = True
         obj._model_proxy = model_proxy

@@ -3,7 +3,8 @@ import itertools
 import sys
 from datetime import datetime
 from pathlib import Path
-from typing import List
+from random import sample
+from typing import List, Optional
 
 import pandas as pd
 import ray
@@ -152,10 +153,106 @@ with ShardedPool(
     k_exit_queue.run()
     k_exit_times = k_exit_queue.results
 
+    # choose a subsample of k modes
+    k_subsample: List[wavenumber_exit_time] = sample(
+        list(k_exit_times), k=int(round(0.9 * len(k_exit_times) + 0.5, 0))
+    )
+    k_subsample.sort(key=lambda x: x.k.k)
+
+    def set_loglinear_axes(ax):
+        ax.set_xscale("log")
+        ax.legend(loc="best")
+        ax.grid(True)
+        ax.xaxis.set_inverted(True)
+
+    def set_loglog_axes(ax):
+        ax.set_xscale("log")
+        ax.set_yscale("log")
+        ax.legend(loc="best")
+        ax.grid(True)
+        ax.xaxis.set_inverted(True)
+
+    TEXT_DISPLACEMENT_MULTIPLIER = 0.85
+
+    # Matplotlib line style from https://matplotlib.org/stable/gallery/lines_bars_and_markers/linestyles.html
+    #      ('loosely dotted',        (0, (1, 10))),
+    #      ('dotted',                (0, (1, 1))),
+    #      ('densely dotted',        (0, (1, 1))),
+    #      ('long dash with offset', (5, (10, 3))),
+    #      ('loosely dashed',        (0, (5, 10))),
+    #      ('dashed',                (0, (5, 5))),
+    #      ('densely dashed',        (0, (5, 1))),
+    #
+    #      ('loosely dashdotted',    (0, (3, 10, 1, 10))),
+    #      ('dashdotted',            (0, (3, 5, 1, 5))),
+    #      ('densely dashdotted',    (0, (3, 1, 1, 1))),
+    #
+    #      ('dashdotdotted',         (0, (3, 5, 1, 5, 1, 5))),
+    #      ('loosely dashdotdotted', (0, (3, 10, 1, 10, 1, 10))),
+    #      ('densely dashdotdotted', (0, (3, 1, 1, 1, 1, 1)))]
+    def add_z_labels(
+        ax,
+        source: QuadSource,
+        q_exit: wavenumber_exit_time,
+        r_exit: wavenumber_exit_time,
+    ):
+        def add_z_lines(k_exit: wavenumber_exit_time, col1: str, col2: str):
+            ax.axvline(
+                k_exit.z_exit_subh_e3, linestyle=(0, (1, 1)), color=col1
+            )  # dotted
+            ax.axvline(
+                k_exit.z_exit_subh_e5, linestyle=(0, (1, 1)), color=col1
+            )  # dotted
+            ax.axvline(
+                k_exit.z_exit_suph_e3, linestyle=(0, (1, 1)), color=col1
+            )  # dotted
+            ax.axvline(
+                k_exit.z_exit, linestyle=(0, (3, 1, 1, 1)), color=col2
+            )  # densely dashdotted
+
+            trans = ax.get_xaxis_transform()
+            ax.text(
+                TEXT_DISPLACEMENT_MULTIPLIER * k_exit.z_exit_suph_e3,
+                0.75,
+                "$q-3$ e-folds",
+                transform=trans,
+                fontsize="x-small",
+                color="b",
+            )
+            ax.text(
+                TEXT_DISPLACEMENT_MULTIPLIER * k_exit.z_exit_subh_e3,
+                0.85,
+                "$q+3$ e-folds",
+                transform=trans,
+                fontsize="x-small",
+                color="b",
+            )
+            ax.text(
+                TEXT_DISPLACEMENT_MULTIPLIER * k_exit.z_exit_subh_e5,
+                0.75,
+                "$q+5$ e-folds",
+                transform=trans,
+                fontsize="x-small",
+                color="b",
+            )
+            ax.text(
+                TEXT_DISPLACEMENT_MULTIPLIER * k_exit.z_exit,
+                0.92,
+                "$q$ re-entry",
+                transform=trans,
+                fontsize="x-small",
+                color="r",
+            )
+
+        add_z_lines(q_exit, "r", "b")
+        if q_exit.store_id != r_exit.store_id:
+            add_z_lines(r_exit, "m", "c")
+
     @ray.remote
     def plot_tensor_source(source: QuadSource):
         q_exit: wavenumber_exit_time = source._q_exit
         r_exit: wavenumber_exit_time = source._r_exit
+
         base_path = Path(args.output).resolve()
 
         sns.set_theme()
@@ -163,79 +260,67 @@ with ShardedPool(
         values: List[QuadSourceValue] = source.values
         functions: QuadSourceFunctions = source.functions
 
-        abs_source_points = [(value.z.z, fabs(value.source_term)) for value in values]
-        abs_undiff_points = [(value.z.z, fabs(value.undiff_part)) for value in values]
-        abs_diff_points = [(value.z.z, fabs(value.diff_part)) for value in values]
-        abs_analytic_points = [
-            (value.z.z, fabs(value.analytic_source_term)) for value in values
+        def safe_fabs(x: Optional[float]) -> Optional[float]:
+            if x is None:
+                return None
+
+            return fabs(x)
+
+        def safe_div(x: Optional[float], y: float) -> Optional[float]:
+            if x is None:
+                return None
+
+            return x / y
+
+        abs_source_points = [(value.z.z, safe_fabs(value.source)) for value in values]
+        abs_undiff_points = [(value.z.z, safe_fabs(value.undiff)) for value in values]
+        abs_diff_points = [(value.z.z, safe_fabs(value.diff)) for value in values]
+        abs_analytic_rad_points = [
+            (value.z.z, safe_fabs(value.analytic_source_rad)) for value in values
+        ]
+        abs_analytic_w_points = [
+            (value.z.z, safe_fabs(value.analytic_source_w)) for value in values
         ]
 
         abs_source_x, abs_source_y = zip(*abs_source_points)
         abs_undiff_x, abs_undiff_y = zip(*abs_undiff_points)
         abs_diff_x, abs_diff_y = zip(*abs_diff_points)
-        abs_analytic_x, abs_analytic_y = zip(*abs_analytic_points)
+
+        abs_analytic_rad_x, abs_analytic_rad_y = zip(*abs_analytic_rad_points)
+        abs_analytic_w_x, abs_analytic_w_y = zip(*abs_analytic_w_points)
+
         abs_spline_y = [fabs(functions.source(z)) for z in abs_source_x]
 
         if len(abs_source_x) > 0 and (
             any(y is not None and y > 0 for y in abs_source_y)
             or any(y is not None and y > 0 for y in abs_undiff_y)
             or any(y is not None and y > 0 for y in abs_diff_y)
-            or any(y is not None and y > 0 for y in abs_analytic_y)
+            or any(y is not None and y > 0 for y in abs_analytic_rad_y)
         ):
             fig = plt.figure()
             ax = plt.gca()
 
             ax.plot(abs_source_x, abs_source_y, label="Numerical")
-            ax.plot(abs_analytic_x, abs_analytic_y, label="Analytic", linestyle="--")
+            ax.plot(
+                abs_analytic_rad_x,
+                abs_analytic_rad_y,
+                label="Analytic [radiation]",
+                linestyle="dashed",
+            )
+            ax.plot(
+                abs_analytic_w_x,
+                abs_analytic_w_y,
+                label="Analytic [$w=w(z)$]",
+                linestyle="dashdot",
+            )
             ax.plot(abs_source_x, abs_spline_y, label="Spline")
 
-            ax.axvline(q_exit.z_exit_subh_e3, linestyle="--", color="r")
-            ax.axvline(q_exit.z_exit_subh_e5, linestyle="--", color="b")
-
-            trans = ax.get_xaxis_transform()
-            ax.text(
-                q_exit.z_exit_subh_e3,
-                0.05,
-                "$q+3$ e-folds",
-                transform=trans,
-                fontsize="small",
-            )
-            ax.text(
-                q_exit.z_exit_subh_e5,
-                0.2,
-                "$q+5$ e-folds",
-                transform=trans,
-                fontsize="small",
-            )
-
-            if r_exit.store_id != q_exit.store_id:
-                ax.axvline(r_exit.z_exit_subh_e3, linestyle="--", color="g")
-                ax.axvline(r_exit.z_exit_subh_e5, linestyle="--", color="m")
-
-                ax.text(
-                    r_exit.z_exit_subh_e3,
-                    0.05,
-                    "$r+3$ e-folds",
-                    transform=trans,
-                    fontsize="small",
-                )
-                ax.text(
-                    r_exit.z_exit_subh_e5,
-                    0.2,
-                    "$r+5$ e-folds",
-                    transform=trans,
-                    fontsize="small",
-                )
+            add_z_labels(ax, source=q_exit, q_exit=q_exit, r_exit=r_exit)
 
             ax.set_xlabel("redshift $z$")
             ax.set_ylabel("$T_k(z)$")
 
-            ax.set_xscale("log")
-            ax.set_yscale("log")
-
-            ax.legend(loc="best")
-            ax.grid(True)
-            ax.xaxis.set_inverted(True)
+            set_loglog_axes(ax)
 
             fig_path = (
                 base_path
@@ -276,53 +361,19 @@ with ShardedPool(
             ax = plt.gca()
 
             ax.plot(abs_source_x, abs_source_y, label="Numerical")
-            ax.plot(abs_undiff_x, abs_undiff_y, label="$T_{k}$ part")
-            ax.plot(abs_diff_x, abs_diff_y, label="$dT_{k}/dz$ part")
-
-            trans = ax.get_xaxis_transform()
-            ax.text(
-                q_exit.z_exit_subh_e3,
-                0.05,
-                "$q+3$ e-folds",
-                transform=trans,
-                fontsize="small",
+            ax.plot(
+                abs_undiff_x, abs_undiff_y, label="$T_{k}$ part", linestyle="dashed"
             )
-            ax.text(
-                q_exit.z_exit_subh_e5,
-                0.2,
-                "$q+5$ e-folds",
-                transform=trans,
-                fontsize="small",
+            ax.plot(
+                abs_diff_x, abs_diff_y, label="$dT_{k}/dz$ part", linestyle="dashdot"
             )
 
-            if r_exit.store_id != q_exit.store_id:
-                ax.axvline(r_exit.z_exit_subh_e3, linestyle="--", color="g")
-                ax.axvline(r_exit.z_exit_subh_e5, linestyle="--", color="m")
-
-                ax.text(
-                    r_exit.z_exit_subh_e3,
-                    0.05,
-                    "$r+3$ e-folds",
-                    transform=trans,
-                    fontsize="small",
-                )
-                ax.text(
-                    r_exit.z_exit_subh_e5,
-                    0.2,
-                    "$r+5$ e-folds",
-                    transform=trans,
-                    fontsize="small",
-                )
+            add_z_labels(ax, source=q_exit, q_exit=q_exit, r_exit=r_exit)
 
             ax.set_xlabel("redshift $z$")
             ax.set_ylabel("$T_k(z)$")
 
-            ax.set_xscale("log")
-            ax.set_yscale("log")
-
-            ax.legend(loc="best")
-            ax.grid(True)
-            ax.xaxis.set_inverted(True)
+            set_loglog_axes(ax)
 
             fig_path = (
                 base_path
@@ -333,12 +384,12 @@ with ShardedPool(
             plt.close()
 
         z_column = [value.z.z for value in values]
-        source_column = [value.source_term for value in values]
-        undiff_column = [value.undiff_part for value in values]
-        diff_column = [value.diff_part for value in values]
-        analytic_source_column = [value.analytic_source_term for value in values]
-        analytic_undiff_column = [value.analytic_undiff_part for value in values]
-        analytic_diff_column = [value.analytic_diff_part for value in values]
+        source_column = [value.source for value in values]
+        undiff_column = [value.undiff for value in values]
+        diff_column = [value.diff for value in values]
+        analytic_source_column = [value.analytic_source_rad for value in values]
+        analytic_undiff_column = [value.analytic_undiff_rad for value in values]
+        analytic_diff_column = [value.analytic_diff_rad for value in values]
         source_spline = [functions.source(z) for z in z_column]
         spline_diff = [
             source_spline[i] - source_column[i] for i in range(len(z_column))
@@ -353,10 +404,10 @@ with ShardedPool(
         df = pd.DataFrame.from_dict(
             {
                 "z": z_column,
-                "source_term": source_column,
+                "source": source_column,
                 "undiff": undiff_column,
                 "diff": diff_column,
-                "analytic_source_term": analytic_source_column,
+                "analytic_source_rad": analytic_source_column,
                 "analytic_undiff": analytic_undiff_column,
                 "analytic_diff": analytic_diff_column,
                 "source_spline": source_spline,
@@ -372,31 +423,17 @@ with ShardedPool(
         q: wavenumber_exit_time
         r: wavenumber_exit_time
 
-        payload_data = [
-            {
-                "solver_labels": [],
-                "model": model_proxy,
-                "k": k_mode,
-                "z_sample": None,
-                "z_init": None,
-                "atol": atol,
-                "rtol": rtol,
-            }
-            for k_mode in [q, r]
-        ]
-
-        Tq_ref, Tr_ref = [
-            pool.object_get("TkNumericalIntegration", **payload)
-            for payload in payload_data
-        ]
-
         Tsource_ref = pool.object_get(
-            "QuadSource", z_sample=None, q=q, Tq=Tq_ref, Tr=Tr_ref
+            "QuadSource",
+            model=model_proxy,
+            z_sample=None,
+            q=q,
+            r=r,
         )
 
         return plot_tensor_source.remote(Tsource_ref)
 
-    work_grid = list(itertools.combinations_with_replacement(k_exit_times, 2))
+    work_grid = list(itertools.combinations_with_replacement(k_subsample, 2))
 
     work_queue = RayWorkPool(
         pool,

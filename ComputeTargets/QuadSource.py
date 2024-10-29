@@ -45,9 +45,9 @@ def source_function(
     source_term = undiff_part + diff_part
 
     return {
-        "undiff_part": undiff_part,
-        "diff_part": diff_part,
-        "source_term": source_term,
+        "undiff": undiff_part,
+        "diff": diff_part,
+        "source": source_term,
     }
 
 
@@ -63,13 +63,17 @@ def compute_quad_source(
     Tq_zsample = Tq.z_sample
     Tr_zsample = Tr.z_sample
 
-    source_terms = []
-    undiff_parts = []
-    diff_parts = []
+    source = []
+    undiff = []
+    diff = []
 
-    analytic_source_terms = []
-    analytic_undiff_parts = []
-    analytic_diff_parts = []
+    analytic_source_rad = []
+    analytic_undiff_rad = []
+    analytic_diff_rad = []
+
+    analytic_source_w = []
+    analytic_undiff_w = []
+    analytic_diff_w = []
 
     q_idx = 0
     r_idx = 0
@@ -102,18 +106,18 @@ def compute_quad_source(
 
                 Tq_value = Tq_.T
                 Tq_prime = Tq_.Tprime
-                analytic_Tq_rad_value = Tq_.analytic_T_rad
+                analytic_Tq_rad = Tq_.analytic_T_rad
                 analytic_Tq_prime_rad = Tq_.analytic_Tprime_rad
-                analytic_Tq_w_value = Tq_.analytic_T_w
+                analytic_Tq_w = Tq_.analytic_T_w
                 analytic_Tq_prime_w = Tq_.analytic_Tprime_w
 
                 q_idx += 1
             else:
                 Tq_value = 1.0
                 Tq_prime = 0.0
-                analytic_Tq_rad_value = 1.0
+                analytic_Tq_rad = 1.0
                 analytic_Tq_prime_rad = 0.0
-                analytic_Tq_w_value = 1.0
+                analytic_Tq_w = 1.0
                 analytic_Tq_prime_w = 0.0
 
             if not missing_r:
@@ -121,18 +125,18 @@ def compute_quad_source(
 
                 Tr_value = Tr_.T
                 Tr_prime = Tr_.Tprime
-                analytic_Tr_value = Tr_.analytic_T_rad
-                analytic_Tr_prime = Tr_.analytic_Tprime_rad
-                analytic_Tr_w_value = Tr_.analytic_T_w
+                analytic_Tr_rad = Tr_.analytic_T_rad
+                analytic_Tr_prime_rad = Tr_.analytic_Tprime_rad
+                analytic_Tr_w = Tr_.analytic_T_w
                 analytic_Tr_prime_w = Tr_.analytic_Tprime_w
 
                 r_idx += 1
             else:
                 Tr_value = 1.0
                 Tr_prime = 0.0
-                analytic_Tr_value = 1.0
-                analytic_Tr_prime = 0.0
-                analytic_Tr_w_value = 1.0
+                analytic_Tr_rad = 1.0
+                analytic_Tr_prime_rad = 0.0
+                analytic_Tr_w = 1.0
                 analytic_Tr_prime_w = 0.0
 
             wBackground = model.functions.wBackground(z.z)
@@ -140,31 +144,46 @@ def compute_quad_source(
             numerical = source_function(
                 Tq_value, Tr_value, Tq_prime, Tr_prime, z.z, wBackground
             )
-            analytic = source_function(
-                analytic_Tq_rad_value,
-                analytic_Tr_value,
+            analytic_rad = source_function(
+                analytic_Tq_rad,
+                analytic_Tr_rad,
                 analytic_Tq_prime_rad,
-                analytic_Tr_prime,
+                analytic_Tr_prime_rad,
+                z.z,
+                wBackground,
+            )
+            analytic_w = source_function(
+                analytic_Tq_w,
+                analytic_Tr_w,
+                analytic_Tq_prime_w,
+                analytic_Tr_prime_w,
                 z.z,
                 wBackground,
             )
 
-            source_terms.append(numerical["source_term"])
-            undiff_parts.append(numerical["undiff_part"])
-            diff_parts.append(numerical["diff_part"])
+            source.append(numerical["source"])
+            undiff.append(numerical["undiff"])
+            diff.append(numerical["diff"])
 
-            analytic_source_terms.append(analytic["source_term"])
-            analytic_undiff_parts.append(analytic["undiff_part"])
-            analytic_diff_parts.append(analytic["diff_part"])
+            analytic_source_rad.append(analytic_rad["source"])
+            analytic_undiff_rad.append(analytic_rad["undiff"])
+            analytic_diff_rad.append(analytic_rad["diff"])
+
+            analytic_source_w.append(analytic_w["source"])
+            analytic_undiff_w.append(analytic_w["undiff"])
+            analytic_diff_w.append(analytic_w["diff"])
 
     return {
         "compute_time": timer.elapsed,
-        "source_term": source_terms,
-        "undiff_part": undiff_parts,
-        "diff_part": diff_parts,
-        "analytic_source_term": analytic_source_terms,
-        "analytic_undiff_part": analytic_undiff_parts,
-        "analytic_diff_part": analytic_diff_parts,
+        "source": source,
+        "undiff": undiff,
+        "diff": diff,
+        "analytic_source_rad": analytic_source_rad,
+        "analytic_undiff_rad": analytic_undiff_rad,
+        "analytic_diff_rad": analytic_diff_rad,
+        "analytic_source_w": analytic_source_w,
+        "analytic_undiff_w": analytic_undiff_w,
+        "analytic_diff_w": analytic_diff_w,
     }
 
 
@@ -273,7 +292,7 @@ class QuadSource(DatastoreObject):
         return self._functions
 
     def _create_functions(self):
-        source_data = [(log(1.0 + v.z.z), v.source_term) for v in self.values]
+        source_data = [(log(1.0 + v.z.z), v.source) for v in self.values]
         source_data.sort(key=lambda pair: pair[0])
 
         source_x_data, source_y_data = zip(*source_data)
@@ -350,25 +369,34 @@ class QuadSource(DatastoreObject):
         self._compute_ref = None
 
         self._compute_time = data["compute_time"]
-        source_term = data["source_term"]
-        undiff_part = data["undiff_part"]
-        diff_part = data["diff_part"]
-        analytic_source_term = data["analytic_source_term"]
-        analytic_undiff_part = data["analytic_undiff_part"]
-        analytic_diff_part = data["analytic_diff_part"]
+
+        source = data["source"]
+        undiff = data["undiff"]
+        diff = data["diff"]
+
+        analytic_source_rad = data["analytic_source_rad"]
+        analytic_undiff_rad = data["analytic_undiff_rad"]
+        analytic_diff_rad = data["analytic_diff_rad"]
+
+        analytic_source_w = data["analytic_source_w"]
+        analytic_undiff_w = data["analytic_undiff_w"]
+        analytic_diff_w = data["analytic_diff_w"]
 
         self._values = []
-        for i in range(len(source_term)):
+        for i in range(len(source)):
             self._values.append(
                 QuadSourceValue(
                     None,
                     self._z_sample[i],
-                    source_term[i],
-                    undiff_part[i],
-                    diff_part[i],
-                    analytic_source_term=analytic_source_term[i],
-                    analytic_undiff_part=analytic_undiff_part[i],
-                    analytic_diff_part=analytic_diff_part[i],
+                    source[i],
+                    undiff[i],
+                    diff[i],
+                    analytic_source_rad=analytic_source_rad[i],
+                    analytic_undiff_rad=analytic_undiff_rad[i],
+                    analytic_diff_rad=analytic_diff_rad[i],
+                    analytic_source_w=analytic_source_w[i],
+                    analytic_undiff_w=analytic_undiff_w[i],
+                    analytic_diff_w=analytic_diff_w[i],
                 )
             )
 
@@ -384,49 +412,68 @@ class QuadSourceValue(DatastoreObject):
         self,
         store_id: None,
         z: redshift,
-        source_term: float,
-        undiff_part: float,
-        diff_part: float,
-        analytic_source_term: Optional[float] = None,
-        analytic_undiff_part: Optional[float] = None,
-        analytic_diff_part: Optional[float] = None,
+        source: float,
+        undiff: float,
+        diff: float,
+        analytic_source_rad: Optional[float] = None,
+        analytic_undiff_rad: Optional[float] = None,
+        analytic_diff_rad: Optional[float] = None,
+        analytic_source_w: Optional[float] = None,
+        analytic_undiff_w: Optional[float] = None,
+        analytic_diff_w: Optional[float] = None,
     ):
         DatastoreObject.__init__(self, store_id)
 
         self._z = z
 
-        self._source_term = source_term
-        self._undiff_part = undiff_part
-        self._diff_part = diff_part
+        self._source = source
+        self._undiff = undiff
+        self._diff = diff
 
-        self._analytic_source_term = analytic_source_term
-        self._analytic_undiff_part = analytic_undiff_part
-        self._analytic_diff_part = analytic_diff_part
+        self._analytic_source_rad = analytic_source_rad
+        self._analytic_undiff_rad = analytic_undiff_rad
+        self._analytic_diff_rad = analytic_diff_rad
+
+        self._analytic_source_w = analytic_source_w
+        self._analytic_undiff_w = analytic_undiff_w
+        self._analytic_diff_w = analytic_diff_w
 
     @property
     def z(self) -> redshift:
         return self._z
 
     @property
-    def source_term(self) -> float:
-        return self._source_term
+    def source(self) -> float:
+        return self._source
 
     @property
-    def undiff_part(self) -> float:
-        return self._undiff_part
+    def undiff(self) -> float:
+        return self._undiff
 
     @property
-    def diff_part(self) -> float:
-        return self._diff_part
+    def diff(self) -> float:
+        return self._diff
 
     @property
-    def analytic_source_term(self) -> Optional[float]:
-        return self._analytic_source_term
+    def analytic_source_rad(self) -> Optional[float]:
+        return self._analytic_source_rad
 
     @property
-    def analytic_undiff_part(self) -> Optional[float]:
-        return self._analytic_undiff_part
+    def analytic_undiff_rad(self) -> Optional[float]:
+        return self._analytic_undiff_rad
 
     @property
-    def analytic_diff_part(self) -> Optional[float]:
-        return self._analytic_diff_part
+    def analytic_diff_rad(self) -> Optional[float]:
+        return self._analytic_diff_rad
+
+    @property
+    def analytic_source_w(self) -> Optional[float]:
+        return self._analytic_source_w
+
+    @property
+    def analytic_undiff_w(self) -> Optional[float]:
+        return self._analytic_undiff_w
+
+    @property
+    def analytic_diff_w(self) -> Optional[float]:
+        return self._analytic_diff_w
