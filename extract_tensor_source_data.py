@@ -387,9 +387,12 @@ with ShardedPool(
         source_column = [value.source for value in values]
         undiff_column = [value.undiff for value in values]
         diff_column = [value.diff for value in values]
-        analytic_source_column = [value.analytic_source_rad for value in values]
-        analytic_undiff_column = [value.analytic_undiff_rad for value in values]
-        analytic_diff_column = [value.analytic_diff_rad for value in values]
+        analytic_source_rad_column = [value.analytic_source_rad for value in values]
+        analytic_undiff_rad_column = [value.analytic_undiff_rad for value in values]
+        analytic_diff_rad_column = [value.analytic_diff_rad for value in values]
+        analytic_source_w_column = [value.analytic_source_w for value in values]
+        analytic_undiff_w_column = [value.analytic_undiff_w for value in values]
+        analytic_diff_w_column = [value.analytic_diff_w for value in values]
         source_spline = [functions.source(z) for z in z_column]
         spline_diff = [
             source_spline[i] - source_column[i] for i in range(len(z_column))
@@ -407,9 +410,12 @@ with ShardedPool(
                 "source": source_column,
                 "undiff": undiff_column,
                 "diff": diff_column,
-                "analytic_source_rad": analytic_source_column,
-                "analytic_undiff": analytic_undiff_column,
-                "analytic_diff": analytic_diff_column,
+                "analytic_source_rad": analytic_source_rad_column,
+                "analytic_undiff_rad": analytic_undiff_rad_column,
+                "analytic_diff_rad": analytic_diff_rad_column,
+                "analytic_source_w": analytic_source_w_column,
+                "analytic_undiff_w": analytic_undiff_w_column,
+                "analytic_diff_w": analytic_diff_w_column,
                 "source_spline": source_spline,
                 "spline_diff": spline_diff,
                 "spline_err": spline_err,

@@ -249,8 +249,10 @@ with ShardedPool(
         z_column = []
         G_column = []
         abs_G_column = []
-        analytic_G_column = []
-        abs_analytic_G_column = []
+        analytic_G_rad_column = []
+        abs_analytic_G_rad_column = []
+        analytic_G_w_column = []
+        abs_analytic_G_w_column = []
         theta_column = []
         H_ratio_column = []
         omega_WKB_sq_column = []
@@ -261,30 +263,45 @@ with ShardedPool(
             values: List[GkNumericalValue] = Gk_numerical.values
 
             numerical_points = [(value.z.z, fabs(value.G)) for value in values]
-            analytic_points = [
+            analytic_rad_points = [
                 (value.z.z, fabs(value.analytic_G_rad)) for value in values
+            ]
+            analytic_w_points = [
+                (value.z.z, fabs(value.analytic_G_w)) for value in values
             ]
 
             numerical_x, numerical_y = zip(*numerical_points)
-            analytic_x, analytic_y = zip(*analytic_points)
+            analytic_rad_x, analytic_rad_y = zip(*analytic_rad_points)
+            analytic_w_x, analytic_w_y = zip(*analytic_w_points)
 
             if len(numerical_x) > 0 and (
                 any(y is not None and y > 0 for y in numerical_y)
-                or any(y is not None and y > 0 for y in analytic_y)
+                or any(y is not None and y > 0 for y in analytic_rad_y)
+                or any(y is not None and y > 0 for y in analytic_w_y)
             ):
                 ax.plot(numerical_x, numerical_y, label="Numerical $G_k$")
                 ax.plot(
-                    analytic_x,
-                    analytic_y,
-                    label="Analytic $G_k$ (numerical region)",
-                    linestyle="--",
+                    analytic_rad_x,
+                    analytic_rad_y,
+                    label="Analytic $G_k$ [numeric, radiation]",
+                    linestyle="dashed",
+                )
+                ax.plot(
+                    analytic_w_x,
+                    analytic_w_y,
+                    label="Analytic $G_k$ [numeric, $w=w(z)$]",
+                    linestyle="dashdot",
                 )
 
             z_column.extend(value.z.z for value in values)
             G_column.extend(value.G for value in values)
-            analytic_G_column.extend(value.analytic_G_rad for value in values)
             abs_G_column.extend(fabs(value.G) for value in values)
-            abs_analytic_G_column.extend(fabs(value.analytic_G_rad) for value in values)
+            analytic_G_rad_column.extend(value.analytic_G_rad for value in values)
+            abs_analytic_G_rad_column.extend(
+                fabs(value.analytic_G_rad) for value in values
+            )
+            analytic_G_w_column.extend(value.analytic_G_w for value in values)
+            abs_analytic_G_w_column.extend(fabs(value.analytic_G_w) for value in values)
             theta_column.extend(None for _ in range(len(values)))
             H_ratio_column.extend(None for _ in range(len(values)))
             omega_WKB_sq_column.extend(value.omega_WKB_sq for value in values)
@@ -297,32 +314,47 @@ with ShardedPool(
             values: List[GkWKBValue] = Gk_WKB.values
 
             numerical_points = [(value.z.z, fabs(value.G_WKB)) for value in values]
-            analytic_points = [
+            analytic_rad_points = [
                 (value.z.z, fabs(value.analytic_G_rad)) for value in values
+            ]
+            analytic_w_points = [
+                (value.z.z, fabs(value.analytic_G_w)) for value in values
             ]
             theta_points = [(value.z.z, fabs(value.theta)) for value in values]
 
             numerical_x, numerical_y = zip(*numerical_points)
-            analytic_x, analytic_y = zip(*analytic_points)
+            analytic_rad_x, analytic_rad_y = zip(*analytic_rad_points)
+            analytic_w_x, analytic_w_y = zip(*analytic_w_points)
             theta_x, theta_y = zip(*theta_points)
 
             if len(numerical_x) > 0 and (
                 any(y is not None and y > 0 for y in numerical_y)
-                or any(y is not None and y > 0 for y in analytic_y)
+                or any(y is not None and y > 0 for y in analytic_rad_y)
+                or any(y is not None and y > 0 for y in analytic_w_y)
             ):
                 ax.plot(numerical_x, numerical_y, label="WKB $G_k$")
                 ax.plot(
-                    analytic_x,
-                    analytic_y,
-                    label="Analytic $G_k$ (WKB region)",
-                    linestyle="--",
+                    analytic_rad_x,
+                    analytic_rad_y,
+                    label="Analytic $G_k$ [WKB, radiation]]",
+                    linestyle="dashed",
+                )
+                ax.plot(
+                    analytic_w_x,
+                    analytic_w_y,
+                    label="Analytic $G_k$ [WKB, $w=w(z)$]",
+                    linestyle="dashdot",
                 )
 
             z_column.extend(value.z.z for value in values)
             G_column.extend(value.G_WKB for value in values)
-            analytic_G_column.extend(value.analytic_G_rad for value in values)
             abs_G_column.extend(fabs(value.G_WKB) for value in values)
-            abs_analytic_G_column.extend(fabs(value.analytic_G_rad) for value in values)
+            analytic_G_rad_column.extend(value.analytic_G_rad for value in values)
+            abs_analytic_G_rad_column.extend(
+                fabs(value.analytic_G_rad) for value in values
+            )
+            analytic_G_w_column.extend(value.analytic_G_w for value in values)
+            abs_analytic_G_w_column.extend(fabs(value.analytic_G_w) for value in values)
             theta_column.extend(value.theta for value in values)
             H_ratio_column.extend(value.H_ratio for value in values)
             omega_WKB_sq_column.extend(value.omega_WKB_sq for value in values)
@@ -387,8 +419,10 @@ with ShardedPool(
                 "redshift": z_column,
                 "G": G_column,
                 "abs_G": abs_G_column,
-                "analytic_G_rad": analytic_G_column,
-                "abs_analytic_G": abs_analytic_G_column,
+                "analytic_G_rad": analytic_G_rad_column,
+                "abs_analytic_G_rad": abs_analytic_G_rad_column,
+                "analytic_G_w": analytic_G_w_column,
+                "abs_analytic_G_w": abs_analytic_G_w_column,
                 "theta": theta_column,
                 "H_ratio": H_ratio_column,
                 "omega_WKB_sq": omega_WKB_sq_column,
