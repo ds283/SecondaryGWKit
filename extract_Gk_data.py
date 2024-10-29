@@ -1,22 +1,30 @@
 import argparse
 import sys
+from itertools import product
 from pathlib import Path
+from random import sample
+from typing import List, Optional
 
-import pyarrow as pa
+import pandas as pd
 import ray
-from pyarrow import dataset
-from pyarrow.csv import CSVWriter
+import seaborn as sns
+from math import fabs
+from matplotlib import pyplot as plt
 
 from ComputeTargets import (
     GkNumericalIntegration,
     BackgroundModel,
+    ModelProxy,
+    GkNumericalValue,
 )
 from CosmologyConcepts import (
     wavenumber,
     wavenumber_exit_time,
     redshift_array,
+    redshift,
 )
 from CosmologyModels.LambdaCDM import Planck2018, LambdaCDM
+from Datastore.SQL.ProfileAgent import ProfileAgent
 from Datastore.SQL.ShardedPool import ShardedPool
 from MetadataConcepts import tolerance
 from RayTools.RayWorkPool import RayWorkPool
@@ -58,15 +66,28 @@ if args.database is None:
 # connect to ray cluster on supplied address; defaults to 'auto' meaning a locally running cluster
 ray.init(address=args.ray_address)
 
+VERSION_LABEL = "2024.1.1"
+
 # instantiate a Datastore actor: this runs on its own node, and acts as a broker between
 # ourselves and the dataabase.
 # For performance reasons, we want all database activity to run on this node.
 # For one thing, this lets us use transactions efficiently.
+
+profile_agent = None
+if args.profile_db is not None:
+    label = f'{VERSION_LABEL}-jobname-extract_GkSource_data-primarydb-"{args.database}"-shards-{args.shards}-{datetime.now().replace(microsecond=0).isoformat()}'
+
+    profile_agent = ProfileAgent.options(name="ProfileAgent").remote(
+        db_name=args.profile_db,
+        timeout=args.db_timeout,
+        label=label,
+    )
+
 with ShardedPool(
     version_label="2024.1.1",
     db_name=args.database,
     timeout=args.db_timeout,
-    profile_db=args.profile_db,
+    profile_agent=profile_agent,
     job_name="extract_Gk_data",
     prune_unvalidated=False,
 ) as pool:
@@ -90,7 +111,7 @@ with ShardedPool(
     z_array = ray.get(pool.read_redshift_table())
     z_sample = redshift_array(z_array=z_array)
 
-    model = ray.get(
+    model: BackgroundModel = ray.get(
         pool.object_get(
             BackgroundModel,
             solver_labels=[],
@@ -104,6 +125,8 @@ with ShardedPool(
         raise RuntimeError(
             "Could not locate suitable background model instance in the datastore"
         )
+
+    model_proxy = ModelProxy(model)
 
     def create_k_exit_work(k: wavenumber):
         return pool.object_get(
@@ -127,189 +150,280 @@ with ShardedPool(
     k_exit_queue.run()
     k_exit_times = k_exit_queue.results
 
-    time_series_schema = pa.schema(
-        [
-            ("k_serial", pa.int32()),
-            ("k_exit_serial", pa.int32()),
-            ("k_inv_Mpc", pa.float64()),
-            ("z_exit", pa.float64()),
-            ("z_source_serial", pa.int32()),
-            ("z_source", pa.float64()),
-            ("z_response_serial", pa.int32()),
-            ("z_response", pa.float64()),
-            ("G", pa.float64()),
-            ("Gprime", pa.float64()),
-            ("analytic_G", pa.float64()),
-            ("analytic_Gprime", pa.float64()),
-            ("omega_WKB_sq", pa.float64()),
-            ("WKB_criterion", pa.float64()),
-        ]
+    # choose a subsample of k modes
+    k_subsample: List[wavenumber_exit_time] = sample(
+        list(k_exit_times), k=int(round(0.9 * len(k_exit_times) + 0.5, 0))
     )
 
-    metadata_schema = pa.schema(
-        [
-            ("integration_serial", pa.int32()),
-            ("k_serial", pa.int32()),
-            ("k_exit_serial", pa.int32()),
-            ("k_inv_Mpc", pa.float64()),
-            ("z_exit", pa.float64()),
-            ("z_source_serial", pa.int32()),
-            ("z_source", pa.float64()),
-            ("compute_time", pa.float64()),
-            ("compute_steps", pa.int32()),
-            ("RHS_evaluations", pa.int32()),
-            ("mean_RHS_time", pa.float64()),
-            ("min_RHS_time", pa.float64()),
-            ("max_RHS_time", pa.float64()),
-            ("has_unresolved_osc", pa.bool_()),
-            ("unresolved_z", pa.float64()),
-            ("unresolved_efolds_subh", pa.float64()),
-            ("init_efolds_suph", pa.float64()),
-            ("stop_deltaz_subh", pa.float64()),
-            ("stop_G", pa.float64()),
-            ("stop_Gprime", pa.float64()),
-        ]
+    # choose a subsample of source redshifts
+    z_subsample: List[redshift] = sample(
+        list(z_sample), k=int(round(0.12 * len(z_sample) + 0.5, 0))
     )
+
+    def set_loglinear_axes(ax):
+        ax.set_xscale("log")
+        ax.legend(loc="best")
+        ax.grid(True)
+        ax.xaxis.set_inverted(True)
+
+    def set_loglog_axes(ax):
+        ax.set_xscale("log")
+        ax.set_yscale("log")
+        ax.legend(loc="best")
+        ax.grid(True)
+        ax.xaxis.set_inverted(True)
+
+    TEXT_DISPLACEMENT_MULTIPLIER = 0.85
+
+    # Matplotlib line style from https://matplotlib.org/stable/gallery/lines_bars_and_markers/linestyles.html
+    #      ('loosely dotted',        (0, (1, 10))),
+    #      ('dotted',                (0, (1, 1))),
+    #      ('densely dotted',        (0, (1, 1))),
+    #      ('long dash with offset', (5, (10, 3))),
+    #      ('loosely dashed',        (0, (5, 10))),
+    #      ('dashed',                (0, (5, 5))),
+    #      ('densely dashed',        (0, (5, 1))),
+    #
+    #      ('loosely dashdotted',    (0, (3, 10, 1, 10))),
+    #      ('dashdotted',            (0, (3, 5, 1, 5))),
+    #      ('densely dashdotted',    (0, (3, 1, 1, 1))),
+    #
+    #      ('dashdotdotted',         (0, (3, 5, 1, 5, 1, 5))),
+    #      ('loosely dashdotdotted', (0, (3, 10, 1, 10, 1, 10))),
+    #      ('densely dashdotdotted', (0, (3, 1, 1, 1, 1, 1)))]
+    def add_z_labels(ax, Gk: GkNumericalIntegration, k_exit: wavenumber_exit_time):
+        ax.axvline(k_exit.z_exit_subh_e3, linestyle=(0, (1, 1)), color="b")  # dotted
+        ax.axvline(k_exit.z_exit_subh_e5, linestyle=(0, (1, 1)), color="b")  # dotted
+        ax.axvline(k_exit.z_exit_suph_e3, linestyle=(0, (1, 1)), color="b")  # dotted
+        ax.axvline(
+            k_exit.z_exit, linestyle=(0, (3, 1, 1, 1)), color="r"
+        )  # densely dashdotted
+        trans = ax.get_xaxis_transform()
+        ax.text(
+            TEXT_DISPLACEMENT_MULTIPLIER * k_exit.z_exit_suph_e3,
+            0.75,
+            "$-3$ e-folds",
+            transform=trans,
+            fontsize="x-small",
+            color="b",
+        )
+        ax.text(
+            TEXT_DISPLACEMENT_MULTIPLIER * k_exit.z_exit_subh_e3,
+            0.85,
+            "$+3$ e-folds",
+            transform=trans,
+            fontsize="x-small",
+            color="b",
+        )
+        ax.text(
+            TEXT_DISPLACEMENT_MULTIPLIER * k_exit.z_exit_subh_e5,
+            0.75,
+            "$+5$ e-folds",
+            transform=trans,
+            fontsize="x-small",
+            color="b",
+        )
+        ax.text(
+            TEXT_DISPLACEMENT_MULTIPLIER * k_exit.z_exit,
+            0.92,
+            "re-entry",
+            transform=trans,
+            fontsize="x-small",
+            color="r",
+        )
 
     @ray.remote
-    def write_CSV_content(Gk: GkNumericalIntegration):
+    def plot_Gk(Gk: GkNumericalIntegration):
+        if not Gk.available:
+            return
+
+        values: List[GkNumericalValue] = Gk.values
         base_path = Path(args.output).resolve()
-        time_series_path = (
+
+        def safe_fabs(x: Optional[float]) -> Optional[float]:
+            if x is None:
+                return None
+
+            return fabs(x)
+
+        def safe_div(x: Optional[float], y: float) -> Optional[float]:
+            if x is None:
+                return None
+
+            return x / y
+
+        abs_G_points = [(value.z, safe_fabs(value.G)) for value in values]
+        abs_analytic_G_points = [(value.z, safe_fabs(value.Gprime)) for value in values]
+
+        G_points = [(value.z, value.G) for value in values]
+        analytic_G_points = [(value.z, value.Gprime) for value in values]
+
+        abs_G_x, abs_G_y = zip(*abs_G_points)
+        abs_analytic_G_x, abs_analytic_G_y = zip(*abs_analytic_G_points)
+        G_x, G_y = zip(*G_points)
+        analytic_G_x, analytic_G_y = zip(*analytic_G_points)
+
+        k_exit = Gk._k_exit
+        z_source = Gk.z_source
+
+        sns.set_theme()
+
+        if len(abs_G_x) > 0 and (
+            any(y is not None and y > 0 for y in abs_G_y)
+            or any(y is not None and y > 0 for y in abs_analytic_G_y)
+        ):
+            fig = plt.figure()
+            ax = plt.gca()
+
+            ax.plot(
+                abs_G_x, abs_G_y, label="Numerical $G_k$", color="r", linestyle="solid"
+            )
+            ax.plot(
+                abs_analytic_G_x,
+                abs_analytic_G_y,
+                label="Analytic $G_k$",
+                color="g",
+                linestyle="dashed",
+            )
+
+            add_z_labels(ax, Gk, k_exit)
+
+            ax.set_xlabel("response redshift $z$")
+            ax.set_ylabel("$G_k(z, z')$")
+
+            set_loglog_axes(ax)
+
+            fig_path = (
+                base_path
+                / f"plots/Gk/k-serial={k_exit.store_id}-k={k_exit.k.k_inv_Mpc:.5g}/z-serial={z_source.store_id}-zsource={z_source.z:.5g}.pdf"
+            )
+            fig_path.parents[0].mkdir(exist_ok=True, parents=True)
+            fig.savefig(fig_path)
+
+            if z_source.z <= k_exit.z_exit_suph_e3:
+                ax.set_xlim(
+                    int(round(k_exit.z_exit_suph_e5 + 0.5, 0)),
+                    int(round(0.85 * k_exit.z_exit_subh_e5 + 0.5, 0)),
+                )
+
+                fig_path = (
+                    base_path
+                    / f"plots/Gk-reentry-zoom/k-serial={k_exit.store_id}-k={k_exit.k.k_inv_Mpc:.5g}/z-serial={z_source.store_id}-zresponse={z_source.z:.5g}.pdf"
+                )
+                fig_path.parents[0].mkdir(exist_ok=True, parents=True)
+                fig.savefig(fig_path)
+
+            plt.close()
+
+        if len(G_x) > 0 and (
+            any(y is not None for y in G_y) or any(y is not None for y in analytic_G_y)
+        ):
+            fig = plt.figure()
+            ax = plt.gca()
+
+            ax.plot(G_x, G_y, label="Numerical $G_k$", color="r", linestyle="solid")
+            ax.plot(
+                analytic_G_x,
+                analytic_G_y,
+                label="Analytic $G_k$",
+                color="g",
+                linestyle="dashed",
+            )
+
+            add_z_labels(ax, Gk, k_exit)
+
+            ax.set_xlabel("response redshift $z$")
+            ax.set_ylabel("$G_k(z, z')$")
+
+            set_loglinear_axes(ax)
+
+            fig_path = (
+                base_path
+                / f"plots/Gk-linear/k-serial={k_exit.store_id}-k={k_exit.k.k_inv_Mpc:.5g}/z-serial={z_source.store_id}-zsource={z_source.z:.5g}.pdf"
+            )
+            fig_path.parents[0].mkdir(exist_ok=True, parents=True)
+            fig.savefig(fig_path)
+
+            if z_source.z <= k_exit.z_exit_suph_e3:
+                ax.set_xlim(
+                    int(round(k_exit.z_exit_suph_e5 + 0.5, 0)),
+                    int(round(0.85 * k_exit.z_exit_subh_e5 + 0.5, 0)),
+                )
+
+                fig_path = (
+                    base_path
+                    / f"plots/Gk-linear-reentry-zoom/k-serial={k_exit.store_id}-k={k_exit.k.k_inv_Mpc:.5g}/z-serial={z_source.store_id}-zresponse={z_source.z:.5g}.pdf"
+                )
+                fig_path.parents[0].mkdir(exist_ok=True, parents=True)
+                fig.savefig(fig_path)
+
+            plt.close()
+
+        z_response_column = [value.z for value in values]
+        G_column = [value.G for value in values]
+        Gprime_column = [value.Gprime for value in values]
+        analytic_G_column = [value.analytic_G for value in values]
+        analytic_Gprime_column = [value.analytic_Gprime for value in values]
+        omega_WKB_sq_column = [value.omega_WKB_sq for value in values]
+        WKB_criterion_column = [value.WKB_criterion for value in values]
+
+        csv_path = (
             base_path
-            / f"time-series/storeid{Gk.store_id}-kid{Gk.k.store_id}-zsource{Gk.z_source.store_id}.csv"
+            / f"csv/k-serial={k_exit.store_id}-k={k_exit.k.k_inv_Mpc:.5g}/z-serial={z_source.store_id}-zsource={z_source.z:.5g}.csv"
         )
-        time_series_path.parents[0].mkdir(exist_ok=True, parents=True)
-
-        with CSVWriter(time_series_path, schema=time_series_schema) as writer:
-            time_series_rows = [
-                {
-                    "k_serial": Gk.k.store_id,
-                    "k_exit_serial": Gk._k_exit.store_id,
-                    "k_inv_Mpc": Gk.k.k_inv_Mpc,
-                    "z_exit": Gk.z_exit,
-                    "z_source_serial": Gk.z_source.store_id,
-                    "z_source": Gk.z_source.z,
-                    "z_response_serial": value.z.store_id,
-                    "z_response": value.z.z,
-                    "G": value.G,
-                    "Gprime": value.Gprime,
-                    "analytic_G": value.analytic_G,
-                    "analytic_Gprime": value.analytic_Gprime,
-                    "omega_WKB_sq": value.omega_WKB_sq,
-                    "WKB_criterion": value.WKB_criterion,
-                }
-                for value in Gk.values
-            ]
-            batch = pa.RecordBatch.from_pylist(
-                time_series_rows, schema=time_series_schema
-            )
-            writer.write(batch)
-
-        metadata_path = (
-            base_path
-            / f"metadata/storeid{Gk.store_id}-kid{Gk.k.store_id}-zsource{Gk.z_source.store_id}.csv"
+        csv_path.parents[0].mkdir(exist_ok=True, parents=True)
+        df = pd.DataFrame.from_dict(
+            {
+                "z_response": z_response_column,
+                "G": G_column,
+                "Gprime": Gprime_column,
+                "analytic_G": analytic_G_column,
+                "analytic_Gprime": analytic_Gprime_column,
+                "omega_WKB_sq": omega_WKB_sq_column,
+                "WKB_criterion": WKB_criterion_column,
+            }
         )
-        metadata_path.parents[0].mkdir(exist_ok=True, parents=True)
+        df.sort_values(
+            by="z_response", ascending=False, inplace=True, ignore_index=True
+        )
+        df.to_csv(csv_path, header=True, index=False)
 
-        with CSVWriter(metadata_path, schema=metadata_schema) as writer:
-            metadata_rows = [
-                {
-                    "integration_serial": Gk.store_id,
-                    "k_serial": Gk.k.store_id,
-                    "k_exit_serial": Gk._k_exit.store_id,
-                    "k_inv_Mpc": Gk.k.k_inv_Mpc,
-                    "z_exit": Gk.z_exit,
-                    "z_source_serial": Gk.z_source.store_id,
-                    "z_source": Gk.z_source.z,
-                    "compute_time": Gk.compute_time,
-                    "compute_steps": Gk.compute_steps,
-                    "RHS_evaluations": Gk.RHS_evaluations,
-                    "mean_RHS_time": Gk.mean_RHS_time,
-                    "min_RHS_time": Gk.min_RHS_time,
-                    "max_RHS_time": Gk.max_RHS_time,
-                    "has_unresolved_osc": Gk.has_unresolved_osc,
-                    "unresolved_z": Gk.unresolved_z,
-                    "unresolved_efolds_subh": Gk.unresolved_efolds_subh,
-                    "init_efolds_suph": Gk.init_efolds_suph,
-                    "stop_deltaz_subh": Gk.stop_deltaz_subh,
-                    "stop_G": Gk.stop_G,
-                    "stop_Gprime": Gk.stop_Gprime,
-                }
-            ]
-            batch = pa.RecordBatch.from_pylist(metadata_rows, schema=metadata_schema)
-            writer.write(batch)
+    def build_plot_Gk_work(item):
+        k_exit, z_source = item
+        k_exit: wavenumber_exit_time
+        z_source: redshift
 
-    def build_Gk_work(k_exit: wavenumber_exit_time):
-        if not k_exit.available:
-            raise RuntimeError(
-                f"k_exit object (store_id={k_exit.store_id}) is not ready"
-            )
+        query_payload = {
+            "solver_labels": [],
+            "model": model_proxy,
+            "k": k_exit,
+            "z_source": z_source,
+            "z_sample": None,
+            "atol": atol,
+            "rtol": rtol,
+        }
 
-        source_zs = z_sample.truncate(k_exit.z_exit_subh_e3, keep="higher")
+        GkS_ref = pool.object_get("GkNumericalIntegration", **query_payload)
 
-        return [
-            pool.object_get(
-                GkNumericalIntegration,
-                solver_labels=[],
-                model=model,
-                k=k_exit,
-                z_sample=None,
-                z_source=source_z,
-                atol=atol,
-                rtol=rtol,
-            )
-            for source_z in source_zs
-        ]
+        return plot_Gk.remote(GkS_ref)
 
-    def Gk_available_map(Gk: GkNumericalIntegration):
-        return write_CSV_content.remote(Gk)
+    work_grid = product(k_subsample, z_subsample)
 
-    build_csv_queue = RayWorkPool(
+    work_queue = RayWorkPool(
         pool,
-        k_exit_times,
-        task_builder=build_Gk_work,
-        available_handler=Gk_available_map,
+        work_grid,
+        task_builder=build_plot_Gk_work,
         compute_handler=None,
         store_handler=None,
+        available_handler=None,
+        validation_handler=None,
+        post_handler=None,
+        label_builder=None,
+        create_batch_size=10,
+        process_batch_size=10,
+        notify_batch_size=50,
+        notify_time_interval=120,
+        title="GENERATING GkNumerical DATA PRODUCTS",
         store_results=False,
-        title="EXTRACT TENSOR GREEN FUNCTION TIME SERIES DATA",
-        notify_time_interval=60,
-        notify_batch_size=5,
     )
-    build_csv_queue.run()
-
-    # use PyArrow to ingest all created CSV files into a dataaset, and then re-emit them as a single consolidated CSV
-    base_path = Path(args.output).resolve()
-    time_series_path = base_path / "time-series"
-    metadata_path = base_path / "metadata"
-
-    time_series_data = dataset.dataset(
-        time_series_path, format="csv", schema=time_series_schema
-    )
-    # TODO: sorting turns out to be pointless. PyArrow does not guarantee sort order when writing out a dataset.
-    #  See: https://github.com/apache/arrow/issues/26818, https://github.com/apache/arrow/issues/39030
-    time_series_sorted = time_series_data.sort_by(
-        [
-            ("k_inv_Mpc", "ascending"),
-            ("z_source", "descending"),
-            ("z_response", "descending"),
-        ]
-    )
-    dataset.write_dataset(
-        time_series_sorted,
-        base_dir=base_path,
-        basename_template="time-series-{i}.csv",
-        format="csv",
-        schema=time_series_schema,
-        existing_data_behavior="overwrite_or_ignore",
-    )
-
-    metadata_data = dataset.dataset(metadata_path, format="csv", schema=metadata_schema)
-    dataset.write_dataset(
-        metadata_data,
-        base_dir=base_path,
-        basename_template="metadata-{i}.csv",
-        format="csv",
-        schema=metadata_schema,
-        existing_data_behavior="overwrite_or_ignore",
-    )
+    work_queue.run()

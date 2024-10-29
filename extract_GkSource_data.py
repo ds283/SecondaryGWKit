@@ -157,6 +157,11 @@ with ShardedPool(
     k_exit_queue.run()
     k_exit_times = k_exit_queue.results
 
+    # choose a subsample of k modes
+    k_subsample: List[wavenumber_exit_time] = sample(
+        list(k_exit_times), k=int(round(0.9 * len(k_exit_times) + 0.5, 0))
+    )
+
     # choose a subsample of source redshifts
     z_subsample: List[redshift] = sample(
         list(z_sample), k=int(round(0.12 * len(z_sample) + 0.5, 0))
@@ -276,7 +281,7 @@ with ShardedPool(
             )
             for value in WKB_points
         ]
-        abs_analytic_points = [
+        abs_analytic_G_points = [
             (
                 value.z_source.z,
                 safe_div(
@@ -339,7 +344,7 @@ with ShardedPool(
 
         abs_G_x, abs_G_y = zip(*abs_G_points)
         abs_G_WKB_x, abs_G_WKB_y = zip(*abs_G_WKB_points)
-        abs_analytic_x, abs_analytic_y = zip(*abs_analytic_points)
+        abs_analytic_G_x, abs_analytic_G_y = zip(*abs_analytic_G_points)
         abs_G_spline_x, abs_G_spline_y = (
             zip(*abs_G_spline_points) if len(abs_G_spline_points) > 0 else ([], [])
         )
@@ -408,8 +413,8 @@ with ShardedPool(
                 linestyle="solid",
             )
             ax.plot(
-                abs_analytic_x,
-                abs_analytic_y,
+                abs_analytic_G_x,
+                abs_analytic_G_y,
                 label="Analytic $G_k$",
                 color="g",
                 linestyle="dashed",
@@ -433,9 +438,7 @@ with ShardedPool(
             add_Gk_labels(ax, Gk)
 
             ax.set_xlabel("source redshift $z$")
-            ax.set_ylabel(
-                "$G_k(z_{\\text{source}}, z_{\\text{response}}) / [(1+z') H(z')^2 ]$"
-            )
+            ax.set_ylabel("$G_k(z, z') / [(1+z') H(z')^2 ]$")
 
             set_loglog_axes(ax)
 
@@ -513,7 +516,7 @@ with ShardedPool(
 
             fig_path = (
                 base_path
-                / f"plots/theta-log/k-serial={k_exit.store_id}-k={k_exit.k.k_inv_Mpc:.5g}/z-serial={z_response.store_id}-zsource={z_response.z:.5g}.pdf"
+                / f"plots/theta-log/k-serial={k_exit.store_id}-k={k_exit.k.k_inv_Mpc:.5g}/z-serial={z_response.store_id}-zresponse={z_response.z:.5g}.pdf"
             )
             fig_path.parents[0].mkdir(exist_ok=True, parents=True)
             fig.savefig(fig_path)
@@ -559,7 +562,7 @@ with ShardedPool(
 
             fig_path = (
                 base_path
-                / f"plots/theta-linear/k-serial={k_exit.store_id}-k={k_exit.k.k_inv_Mpc:.5g}/z-serial={z_response.store_id}-zsource={z_response.z:.5g}.pdf"
+                / f"plots/theta-linear/k-serial={k_exit.store_id}-k={k_exit.k.k_inv_Mpc:.5g}/z-serial={z_response.store_id}-zresponse={z_response.z:.5g}.pdf"
             )
             fig_path.parents[0].mkdir(exist_ok=True, parents=True)
             fig.savefig(fig_path)
@@ -586,7 +589,7 @@ with ShardedPool(
 
             fig_path = (
                 base_path
-                / f"plots/theta-linear-deriv/k-serial={k_exit.store_id}-k={k_exit.k.k_inv_Mpc:.5g}/z-serial={z_response.store_id}-zsource={z_response.z:.5g}.pdf"
+                / f"plots/theta-linear-deriv/k-serial={k_exit.store_id}-k={k_exit.k.k_inv_Mpc:.5g}/z-serial={z_response.store_id}-zresponse={z_response.z:.5g}.pdf"
             )
             fig_path.parents[0].mkdir(exist_ok=True, parents=True)
             fig.savefig(fig_path)
@@ -611,7 +614,7 @@ with ShardedPool(
 
             fig_path = (
                 base_path
-                / f"plots/amplitude/k-serial={k_exit.store_id}-k={k_exit.k.k_inv_Mpc:.5g}/z-serial={z_response.store_id}-zsource={z_response.z:.5g}.pdf"
+                / f"plots/amplitude/k-serial={k_exit.store_id}-k={k_exit.k.k_inv_Mpc:.5g}/z-serial={z_response.store_id}-zesponse={z_response.z:.5g}.pdf"
             )
             fig_path.parents[0].mkdir(exist_ok=True, parents=True)
             fig.savefig(fig_path)
@@ -636,7 +639,7 @@ with ShardedPool(
 
         csv_path = (
             base_path
-            / f"csv/k-serial={k_exit.store_id}-k={k_exit.k.k_inv_Mpc:.5g}/z-serial={z_response.store_id}-zsource={z_response.z:.5g}.csv"
+            / f"csv/k-serial={k_exit.store_id}-k={k_exit.k.k_inv_Mpc:.5g}/z-serial={z_response.store_id}-zresponse={z_response.z:.5g}.csv"
         )
         csv_path.parents[0].mkdir(exist_ok=True, parents=True)
         df = pd.DataFrame.from_dict(
@@ -809,6 +812,7 @@ with ShardedPool(
 
         query_payload = {
             "model": model_proxy,
+            "policy": GkSource_policy_2pt5,
             "k": k_exit,
             "z_response": z_response,
             "z_sample": None,
@@ -816,11 +820,11 @@ with ShardedPool(
             "rtol": rtol,
         }
 
-        GkS_ref = pool.object_get("GkSource", **query_payload)
+        GkS_ref = pool.object_get("GkSourcePolicyData", **query_payload)
 
         return plot_Gk.remote(GkS_ref)
 
-    work_grid = product(k_exit_times, z_subsample)
+    work_grid = product(k_subsample, z_subsample)
 
     work_queue = RayWorkPool(
         pool,
