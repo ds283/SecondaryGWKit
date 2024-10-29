@@ -14,7 +14,11 @@ from CosmologyConcepts import wavenumber_exit_time, redshift, wavenumber, redshi
 from Datastore import DatastoreObject
 from MetadataConcepts import store_tag, tolerance
 from Units import check_units
-from defaults import DEFAULT_ABS_TOLERANCE, DEFAULT_FLOAT_PRECISION
+from defaults import (
+    DEFAULT_ABS_TOLERANCE,
+    DEFAULT_FLOAT_PRECISION,
+    DEFAULT_LEVIN_THRESHOLD,
+)
 
 _NumericData = namedtuple("NumericData", ["G", "Gprime"])
 _WKBData = namedtuple(
@@ -57,9 +61,6 @@ DEFAULT_G_WKB_DIFF_REL_TOLERANCE = 1e-2
 DEFAULT_G_WKB_DIFF_ABS_TOLERANCE = 1e-3
 
 MIN_SPLINE_DATA_POINTS = 5
-
-# value of dtheta/dz where we will switch to a Levin integration strategy
-LEVIN_THRESHOLD = 5.0
 
 
 @ray.remote
@@ -522,7 +523,7 @@ class GkSource(DatastoreObject):
             # _z_sample is guaranteed to be in descending order of redshift
             for z_source in self._z_sample:
                 if max_z >= z_source.z >= min_z:
-                    if fabs(theta_deriv(z_source.z)) > LEVIN_THRESHOLD:
+                    if fabs(theta_deriv(z_source.z)) > DEFAULT_LEVIN_THRESHOLD:
                         self._Levin_z = z_source
                         self._metadata["Levin_z_dtheta_dz"] = theta_deriv(z_source.z)
                         break

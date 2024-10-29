@@ -6,3 +6,8 @@ DEFAULT_ABS_TOLERANCE = 1e-8
 DEFAULT_REL_TOLERANCE = 1e-6
 
 DEFAULT_QUADRATURE_TOLERANCE = 1e-8
+
+# value of dtheta/dz where we will switch to a Levin integration strategy
+DEFAULT_LEVIN_THRESHOLD = 5.0
+
+DEFAULT_GKSOURCE_NUMERIC_POLICY = "maximize_numeric"

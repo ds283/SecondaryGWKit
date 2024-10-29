@@ -258,6 +258,18 @@ with ShardedPool(
         "solve_ivp+LSODA-stepping0": solve_icp_LSODA,
     }
 
+    # create the GkSource policies that we will apply l;ater
+    GkSource_policy_2pt5, GkSource_policy_5pt0 = ray.get(
+        [
+            pool.object_get(
+                "GkSourcePolicy", Levin_threshold=2.5, numeric_policy="maximize_numeric"
+            ),
+            pool.object_get(
+                "GkSourcePolicy", Levin_threshold=5.0, numeric_policy="maximize_numeric"
+            ),
+        ]
+    )
+
     ## STEP 1
     ## BUILD SAMPLE OF K-WAVENUMBERS AND OBTAIN THEIR CORRESPONDING HORIZON EXIT TIMES
 

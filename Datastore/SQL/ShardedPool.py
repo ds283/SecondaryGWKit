@@ -24,6 +24,7 @@ _replicate_tables = [
     "IntegrationSolver",
     "BackgroundModel",
     "BackgroundModelValue",
+    "GkSourcePolicy",
 ]
 _shard_tables = {
     "wavenumber_exit_time": "k",

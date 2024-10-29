@@ -25,6 +25,7 @@ from Datastore.SQL.ObjectFactories.GkSource import (
     sqla_GkSource_factory,
     sqla_GkSourceValue_factory,
 )
+from Datastore.SQL.ObjectFactories.GkSourcePolicy import sqla_GkSourcePolicy_factory
 from Datastore.SQL.ObjectFactories.GkWKBIntegration import (
     sqla_GkWKBIntegration_factory,
     sqla_GkWKBTagAssociation_factory,
@@ -98,6 +99,7 @@ _factories = {
     "GkSource": sqla_GkSource_factory,
     "GkSource_tags": sqla_GkSourceTagAssociation_factory,
     "GkSourceValue": sqla_GkSourceValue_factory,
+    "GkSourcePolicy": sqla_GkSourcePolicy_factory,
     "QuadSourceIntegral": sqla_QuadSourceIntegral_factory,
     "QuadSourceIntegral_tags": sqla_QuadSourceIntegralTagAssociation_factory,
     "OneLoopIntegral": sqla_OneLoopIntegral_factory,
