@@ -253,10 +253,12 @@ with ShardedPool(
             return x / y
 
         abs_G_points = [(value.z, safe_fabs(value.G)) for value in values]
-        abs_analytic_G_points = [(value.z, safe_fabs(value.Gprime)) for value in values]
+        abs_analytic_G_points = [
+            (value.z, safe_fabs(value.analytic_G)) for value in values
+        ]
 
         G_points = [(value.z, value.G) for value in values]
-        analytic_G_points = [(value.z, value.Gprime) for value in values]
+        analytic_G_points = [(value.z, value.analytic_G) for value in values]
 
         abs_G_x, abs_G_y = zip(*abs_G_points)
         abs_analytic_G_x, abs_analytic_G_y = zip(*abs_analytic_G_points)
@@ -300,7 +302,7 @@ with ShardedPool(
             fig_path.parents[0].mkdir(exist_ok=True, parents=True)
             fig.savefig(fig_path)
 
-            if z_source.z <= k_exit.z_exit_suph_e3:
+            if z_source.z >= k_exit.z_exit_subh_e5:
                 ax.set_xlim(
                     int(round(k_exit.z_exit_suph_e5 + 0.5, 0)),
                     int(round(0.85 * k_exit.z_exit_subh_e5 + 0.5, 0)),
@@ -308,7 +310,7 @@ with ShardedPool(
 
                 fig_path = (
                     base_path
-                    / f"plots/Gk-reentry-zoom/k-serial={k_exit.store_id}-k={k_exit.k.k_inv_Mpc:.5g}/z-serial={z_source.store_id}-zresponse={z_source.z:.5g}.pdf"
+                    / f"plots/Gk-reentry-zoom/k-serial={k_exit.store_id}-k={k_exit.k.k_inv_Mpc:.5g}/z-serial={z_source.store_id}-zsource={z_source.z:.5g}.pdf"
                 )
                 fig_path.parents[0].mkdir(exist_ok=True, parents=True)
                 fig.savefig(fig_path)
@@ -344,7 +346,7 @@ with ShardedPool(
             fig_path.parents[0].mkdir(exist_ok=True, parents=True)
             fig.savefig(fig_path)
 
-            if z_source.z <= k_exit.z_exit_suph_e3:
+            if z_source.z >= k_exit.z_exit_subh_e5:
                 ax.set_xlim(
                     int(round(k_exit.z_exit_suph_e5 + 0.5, 0)),
                     int(round(0.85 * k_exit.z_exit_subh_e5 + 0.5, 0)),
@@ -352,7 +354,7 @@ with ShardedPool(
 
                 fig_path = (
                     base_path
-                    / f"plots/Gk-linear-reentry-zoom/k-serial={k_exit.store_id}-k={k_exit.k.k_inv_Mpc:.5g}/z-serial={z_source.store_id}-zresponse={z_source.z:.5g}.pdf"
+                    / f"plots/Gk-linear-reentry-zoom/k-serial={k_exit.store_id}-k={k_exit.k.k_inv_Mpc:.5g}/z-serial={z_source.store_id}-zsource={z_source.z:.5g}.pdf"
                 )
                 fig_path.parents[0].mkdir(exist_ok=True, parents=True)
                 fig.savefig(fig_path)
