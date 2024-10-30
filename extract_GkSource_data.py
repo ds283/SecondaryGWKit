@@ -168,18 +168,18 @@ with ShardedPool(
         list(z_sample), k=int(round(0.12 * len(z_sample) + 0.5, 0))
     )
 
-    GkSource_policy_1pt0, GkSource_policy_2pt5 = ray.get(
+    GkSource_policy_2pt5, GkSource_policy_5pt0 = ray.get(
         [
-            pool.object_get(
-                "GkSourcePolicy",
-                label='policy="maximize-numeric"-Levin-threshold="1.0"',
-                Levin_threshold=1.0,
-                numeric_policy="maximize_numeric",
-            ),
             pool.object_get(
                 "GkSourcePolicy",
                 label='policy="maximize-numeric"-Levin-threshold="2.5"',
                 Levin_threshold=2.5,
+                numeric_policy="maximize_numeric",
+            ),
+            pool.object_get(
+                "GkSourcePolicy",
+                label='policy="maximize-numeric"-Levin-threshold="5.0"',
+                Levin_threshold=5.0,
                 numeric_policy="maximize_numeric",
             ),
         ]
@@ -594,6 +594,27 @@ with ShardedPool(
             )
             fig_path.parents[0].mkdir(exist_ok=True, parents=True)
             fig.savefig(fig_path)
+
+            if GkPolicy.Levin_z is not None:
+                theta_at_Levin_z = functions.theta(GkPolicy.Levin_z)
+                ax.set_xlim(
+                    int(round(GkPolicy.Levin_z - 50.0 + 0.5, 0)),
+                    int(round(GkPolicy.Levin_z + 50.0 + 0.5, 0)),
+                )
+                ax.set_ylim(
+                    int(round(theta_at_Levin_z - 100.0 + 0.5, 0)),
+                    int(round(theta_at_Levin_z + 100.0 + 0.5, 0)),
+                )
+
+                fig_path = (
+                    base_path
+                    / f"plots/theta-linear-Levin-zoom/k-serial={k_exit.store_id}-k={k_exit.k.k_inv_Mpc:.5g}/z-serial={z_response.store_id}-zresponse={z_response.z:.5g}.pdf"
+                )
+                fig_path.parents[0].mkdir(exist_ok=True, parents=True)
+                fig.savefig(fig_path)
+
+                set_linear_axes(ax)
+
             plt.close()
 
         if len(theta_spline_deriv_x) > 0 and (
@@ -695,6 +716,7 @@ with ShardedPool(
 
     def set_loglinear_axes(ax):
         ax.set_xscale("log")
+        ax.set_yscale("linear")
         ax.legend(loc="best")
         ax.grid(True)
         ax.xaxis.set_inverted(True)
@@ -702,6 +724,13 @@ with ShardedPool(
     def set_loglog_axes(ax):
         ax.set_xscale("log")
         ax.set_yscale("log")
+        ax.legend(loc="best")
+        ax.grid(True)
+        ax.xaxis.set_inverted(True)
+
+    def set_linear_axes(ax):
+        ax.set_xscale("linear")
+        ax.set_yscale("linear")
         ax.legend(loc="best")
         ax.grid(True)
         ax.xaxis.set_inverted(True)
@@ -851,7 +880,7 @@ with ShardedPool(
         Policy_ref = pool.object_get(
             "GkSourcePolicyData",
             source=GkSource_proxy,
-            policy=GkSource_policy_1pt0,
+            policy=GkSource_policy_2pt5,
             k=k_exit,
         )
 

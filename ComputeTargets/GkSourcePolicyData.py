@@ -109,13 +109,17 @@ def _classify_Levin(source: GkSource, policy: GkSourcePolicy, data) -> dict:
         ]
         theta_x, theta_y = zip(*theta_data)
         theta_spline = InterpolatedUnivariateSpline(theta_x, theta_y, ext="raise")
+
+        # mark as deriv=False so that we get the raw spline deritive d theta / d log(1+z)
+        # We are eventually going to do the Levin quadrature in log(1+z), so it is the
+        # frequency of oscillation with respect to log(1+z) that matters
         theta_deriv = ZSplineWrapper(
             theta_spline.derivative(),
             "theta derivative",
             max_z,
             min_z,
             log_z=True,
-            deriv=True,
+            deriv=False,
         )
 
         # _z_sample is guaranteed to be in descending order of redshift
@@ -123,7 +127,7 @@ def _classify_Levin(source: GkSource, policy: GkSourcePolicy, data) -> dict:
             if max_z >= z_source.z >= min_z:
                 if fabs(theta_deriv(z_source.z)) > policy.Levin_threshold:
                     payload["Levin_z"] = z_source
-                    metadata["Levin_z_dtheta_dz"] = theta_deriv(z_source.z)
+                    metadata["Levin_z_dtheta_dz"] = float(theta_deriv(z_source.z))
                     break
 
     if "Levin_z" not in payload:
