@@ -381,21 +381,21 @@ class GkSourcePolicyData(DatastoreObject):
 
     @property
     def quality(self) -> Optional[str]:
-        if self._quality is None:
+        if self._type is None:
             raise RuntimeError("values have not yet been populated")
 
         return self._quality
 
     @property
     def crossover_z(self) -> Optional[float]:
-        if self._crossover_z is None:
+        if self._type is None:
             raise RuntimeError("values have not yet been populated")
 
         return self._crossover_z
 
     @property
     def Levin_z(self) -> Optional[float]:
-        if self._Levin_z is None:
+        if self._type is None:
             raise RuntimeError("values have not yet been populated")
 
         return self._Levin_z
