@@ -59,6 +59,7 @@ allowed_drop_actions = [
     "gk-numeric",
     "gk-wkb",
     "gk-source",
+    "gk-source-policy-records",
     "gk-source-policy",
     "quad-source-integral",
     "1loop-integral",

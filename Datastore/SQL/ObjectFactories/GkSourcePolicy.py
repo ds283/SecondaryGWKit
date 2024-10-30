@@ -12,7 +12,7 @@ class sqla_GkSourcePolicy_factory(SQLAFactoryBase):
     @staticmethod
     def register():
         return {
-            "version": False,
+            "version": True,
             "timestamp": True,
             "columns": [
                 sqla.Column("label", sqla.String(DEFAULT_STRING_LENGTH), nullable=True),
@@ -39,14 +39,14 @@ class sqla_GkSourcePolicy_factory(SQLAFactoryBase):
         ).scalar()
 
         if store_id is None:
-            store_id = inserter(
-                conn,
-                {
-                    "label": label,
-                    "Levin_threshold": Levin_threshold,
-                    "numeric_policy": numeric_policy,
-                },
-            )
+            insert_data = {
+                "label": label,
+                "Levin_threshold": Levin_threshold,
+                "numeric_policy": numeric_policy,
+            }
+            if "serial" in payload:
+                insert_data["serial"] = payload["serial"]
+            store_id = inserter(conn, insert_data)
 
             attribute_set = {"_new_insert": True}
         else:

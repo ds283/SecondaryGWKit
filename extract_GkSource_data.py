@@ -17,6 +17,7 @@ from ComputeTargets import (
     GkSource,
     GkSourceValue,
     GkSourcePolicyData,
+    GkSourceProxy,
 )
 from ComputeTargets.BackgroundModel import ModelProxy
 from ComputeTargets.GkSourcePolicyData import GkSourceFunctions
@@ -187,10 +188,12 @@ with ShardedPool(
     @ray.remote
     def plot_Gk(GkPolicy: GkSourcePolicyData):
         if not GkPolicy.available:
+            print(f"** GkPolicy not available")
             return
 
         Gk: GkSource = GkPolicy._source_proxy.get()
         if not Gk.available:
+            print(f"** GkSource not available")
             return
 
         values: List[GkSourceValue] = Gk.values
@@ -835,19 +838,26 @@ with ShardedPool(
         k_exit: wavenumber_exit_time
         z_response: redshift
 
-        query_payload = {
-            "model": model_proxy,
-            "policy": GkSource_policy_2pt5,
-            "k": k_exit,
-            "z_response": z_response,
-            "z_sample": None,
-            "atol": atol,
-            "rtol": rtol,
-        }
+        GkSource_ref = pool.object_get(
+            "GkSource",
+            model=model_proxy,
+            k=k_exit,
+            z_response=z_response,
+            z_sample=None,
+            atol=atol,
+            rtol=rtol,
+        )
+        GkSource = ray.get(GkSource_ref)
+        GkSource_proxy = GkSourceProxy(GkSource)
 
-        GkS_ref = pool.object_get("GkSourcePolicyData", **query_payload)
+        Policy_ref = pool.object_get(
+            "GkSourcePolicyData",
+            source=GkSource_proxy,
+            policy=GkSource_policy_2pt5,
+            k=k_exit,
+        )
 
-        return plot_Gk.remote(GkS_ref)
+        return plot_Gk.remote(Policy_ref)
 
     work_grid = product(k_subsample, z_subsample)
 
