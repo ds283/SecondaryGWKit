@@ -252,8 +252,6 @@ class sqla_QuadSource_factory(SQLAFactoryBase):
                 )
             imported_z_sample = redshift_array(z_points)
 
-            print(f"** imported {len(values)} sample points into QuadSource instance")
-
             if num_expected_samples is not None:
                 if len(imported_z_sample) != num_expected_samples:
                     raise RuntimeError(

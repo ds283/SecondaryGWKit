@@ -414,7 +414,7 @@ class GkSourcePolicyData(DatastoreObject):
                 "GkSource: attempt to construct functions, but _do_not_populate is set"
             )
 
-        if self._values is None:
+        if self._type is None:
             raise RuntimeError("values have not yet been populated")
 
         if self._functions is None:
