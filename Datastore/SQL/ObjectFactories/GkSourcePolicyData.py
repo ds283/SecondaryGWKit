@@ -1,4 +1,5 @@
 import json
+from typing import Optional
 
 import sqlalchemy as sqla
 from sqlalchemy.exc import MultipleResultsFound
@@ -65,11 +66,12 @@ class sqla_GkSourcePolicyData_factory(SQLAFactoryBase):
                 sqla.Column(
                     "wavenumber_exit_serial", sqla.Integer, index=True, nullable=False
                 ),
+                sqla.Column("type", sqla.SmallInteger, nullable=False),
                 sqla.Column("quality", sqla.SmallInteger, nullable=False),
-                sqla.Column("crossover_z", sqla.SmallInteger, nullable=False),
-                sqla.Column("Levin_z", sqla.Float(64), nullable=False),
+                sqla.Column("crossover_z", sqla.Float(64), nullable=True),
+                sqla.Column("Levin_z", sqla.Float(64), nullable=True),
                 sqla.Column(
-                    "metadata", sqla.String(DEFAULT_STRING_LENGTH), nullable=False
+                    "metadata", sqla.String(DEFAULT_STRING_LENGTH), nullable=True
                 ),
             ],
         }
@@ -80,14 +82,18 @@ class sqla_GkSourcePolicyData_factory(SQLAFactoryBase):
         policy: GkSourcePolicy = payload["policy"]
         k_exit: wavenumber_exit_time = payload["k"]
 
+        label: Optional[str] = payload.get("label", None)
+
         query = sqla.select(
             table.c.serial,
+            table.c.type,
             table.c.quality,
             table.c.crossover_z,
             table.c.Levin_z,
             table.c.metadata,
         ).filter(
-            table.c.GkSource_serial == source.store_id,
+            table.c.source_serial == source.store_id,
+            table.c.policy_serial == policy.store_id,
             table.c.wavenumber_exit_serial == k_exit.store_id,
         )
 
@@ -101,14 +107,16 @@ class sqla_GkSourcePolicyData_factory(SQLAFactoryBase):
 
         if row_data is None:
             # build and return an unpopulated object
-            return GkSourcePolicyData(source=source, policy=policy, k=k_exit)
+            return GkSourcePolicyData(
+                payload=None, source=source, policy=policy, k=k_exit, label=label
+            )
 
         obj = GkSourcePolicyData(
             source=source,
             policy=policy,
             k=k_exit,
             payload={
-                "store_id": row_data["serial"],
+                "store_id": row_data.serial,
                 "type": (
                     _type_deserialize[row_data.type]
                     if row_data.type is not None
@@ -124,7 +132,7 @@ class sqla_GkSourcePolicyData_factory(SQLAFactoryBase):
                 "metadata": (
                     json.loads(row_data.metadata)
                     if row_data.metadata is not None
-                    else None
+                    else {}
                 ),
             },
         )
@@ -137,6 +145,9 @@ class sqla_GkSourcePolicyData_factory(SQLAFactoryBase):
         store_id = inserter(
             conn,
             {
+                "source_serial": obj._source_proxy.store_id,
+                "policy_serial": obj._policy.store_id,
+                "wavenumber_exit_serial": obj._k_exit.store_id,
                 "type": _type_serialize[obj._type] if obj._type is not None else None,
                 "quality": (
                     _quality_serialize[obj._quality]

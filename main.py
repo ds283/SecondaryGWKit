@@ -54,11 +54,12 @@ DEFAULT_SAMPLES_PER_LOG10_Z = 150
 DEFAULT_ZEND = 0.1
 
 allowed_drop_actions = [
+    "tk-numeric",
+    "quad-source",
     "gk-numeric",
     "gk-wkb",
     "gk-source",
-    "quad-source",
-    "tk-numeric",
+    "gk-source-policy",
     "quad-source-integral",
     "1loop-integral",
 ]
@@ -1725,7 +1726,9 @@ with ShardedPool(
 
         missing = {
             k_exit.store_id: [
-                z_response for z_response, obj in zip(batch, query_outcomes)
+                z_response
+                for z_response, obj in zip(batch, query_outcomes)
+                if not obj.available
             ]
             for k_exit, query_outcomes in zip(
                 response_k_exit_times, query_queue.results
@@ -1738,8 +1741,8 @@ with ShardedPool(
                 for obj, z_response in zip(query_outcomes, batch)
                 if obj.available and obj.quality == "incomplete"
             ]
-            for query_outcomes, k_exit in zip(
-                query_queue.results, response_k_exit_times
+            for k_exit, query_outcomes in zip(
+                response_k_exit_times, query_queue.results
             )
         }
 
@@ -1877,8 +1880,8 @@ with ShardedPool(
         print("\n** GkSourcePolicyData SUMMARY STATISTICS")
         for policy_id, policy_data in GkSourcePolicy_statistics.items():
             policy_total = policy_data["total"]
-            print(f"     * Policy: {policy_id}")
-            print(f"         Total instances: {policy_data["total"]}")
+            print(f"\n     * Policy: {policy_id}")
+            print(f"        Total instances: {policy_data["total"]}")
             for Gk_type, type_stats in policy_data["statistics"].items():
                 type_total = sum(type_stats.values())
                 print(

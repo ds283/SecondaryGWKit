@@ -115,20 +115,20 @@ _TableMappingType = Mapping[str, sqla.Table]
 _InserterMappingType = Mapping[str, Callable]
 
 _drop_actions = {
-    "gk-wkb": ["GkWKBIntegration", "GkWKB_tags", "GkWKBValue"],
-    "gk-source": ["GkSource", "GkSource_tags", "GkSourceValue"],
-    "gk-source-policy": ["GkSourcePolicyData"],
-    "quad-source": ["QuadSource", "QuadSource_tags", "QuadSourceValue"],
-    "tk-numeric": ["TkNumericalIntegration", "TkNumerical_tags", "TkNumericalValue"],
-    "gk-numeric": ["GkNumericalIntegration", "GkNumerical_tags", "GkNumericalValue"],
-    "quad-source-integral": [
-        "QuadSourceIntegral",
-        "QuadSourceIntegral_tags",
-    ],
     "1loop-integral": [
         "OneLoopIntegral",
         "OneLoopIntegral_tags",
     ],
+    "quad-source-integral": [
+        "QuadSourceIntegral",
+        "QuadSourceIntegral_tags",
+    ],
+    "gk-source-policy": ["GkSourcePolicyData"],
+    "gk-source": ["GkSource", "GkSource_tags", "GkSourceValue"],
+    "gk-wkb": ["GkWKBIntegration", "GkWKB_tags", "GkWKBValue"],
+    "gk-numeric": ["GkNumericalIntegration", "GkNumerical_tags", "GkNumericalValue"],
+    "quad-source": ["QuadSource", "QuadSource_tags", "QuadSourceValue"],
+    "tk-numeric": ["TkNumericalIntegration", "TkNumerical_tags", "TkNumericalValue"],
 }
 # should drop tables in a defined order, so that we do not violate foreign key constrints
 _drop_order = [

@@ -7,7 +7,7 @@ from scipy.interpolate import InterpolatedUnivariateSpline
 
 from ComputeTargets.GkSource import GkSourceProxy, GkSource
 from ComputeTargets.spline_wrappers import ZSplineWrapper, GkWKBSplineWrapper
-from CosmologyConcepts import wavenumber_exit_time, redshift
+from CosmologyConcepts import wavenumber_exit_time, redshift, wavenumber
 from Datastore import DatastoreObject
 from MetadataConcepts import GkSourcePolicy
 from defaults import DEFAULT_FLOAT_PRECISION
@@ -95,7 +95,6 @@ def _classify_Levin(source: GkSource, policy: GkSourcePolicy, data) -> dict:
     if (
         source_type == "WKB" or source_type == "mixed"
     ) and source_quality != "incomplete":
-        payload["Levin_z"] = None
         max_z = (
             crossover_z if crossover_z is not None else source.primary_WKB_largest_z.z
         )
@@ -127,6 +126,8 @@ def _classify_Levin(source: GkSource, policy: GkSourcePolicy, data) -> dict:
                     metadata["Levin_z_dtheta_dz"] = theta_deriv(z_source.z)
                     break
 
+    if "Levin_z" not in payload:
+        payload["Levin_z"] = None
     payload["metadata"] = metadata
     return payload
 
@@ -299,10 +300,10 @@ class GkSourcePolicyData(DatastoreObject):
     def __init__(
         self,
         payload,
-        label: str,
         source: GkSourceProxy,
         policy: GkSourcePolicy,
         k: wavenumber_exit_time,
+        label: Optional[str] = None,
     ):
         self._label = label
         self._k_exit = k
@@ -357,10 +358,15 @@ class GkSourcePolicyData(DatastoreObject):
         payload = ray.get(self._compute_ref)
         self._compute_ref = None
 
+        self._type = payload["type"]
         self._quality = payload["quality"]
         self._crossover_z = payload["crossover_z"]
         self._Levin_z = payload["Levin_z"]
         self._metadata = payload["metadata"]
+
+    @property
+    def k(self) -> wavenumber:
+        return self._k_exit.k
 
     @property
     def policy(self) -> GkSourcePolicy:
