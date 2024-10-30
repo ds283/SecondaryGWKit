@@ -211,7 +211,7 @@ with ShardedPool(
 
             return x / y
 
-        functions: GkSourceFunctions = Gk.functions
+        functions: GkSourceFunctions = GkPolicy.functions
 
         num_max_z = None
         num_min_z = None
@@ -462,8 +462,8 @@ with ShardedPool(
                 linestyle="dashdot",
             )
 
-            add_z_labels(ax, Gk, GkPolicy, k_exit)
-            add_Gk_labels(ax, Gk)
+            add_z_labels(ax, GkPolicy, k_exit)
+            add_Gk_labels(ax, GkPolicy)
 
             ax.set_xlabel("source redshift $z$")
             ax.set_ylabel("$G_k(z, z') / [(1+z') H(z')^2 ]$")
@@ -534,8 +534,8 @@ with ShardedPool(
                 linestyle="solid",
             )
 
-            add_z_labels(ax, Gk, GkPolicy, k_exit)
-            add_Gk_labels(ax, Gk)
+            add_z_labels(ax, GkPolicy, k_exit)
+            add_Gk_labels(ax, GkPolicy)
 
             ax.set_xlabel("source redshift $z$")
             ax.set_ylabel("WKB phase $\\theta$")
@@ -580,8 +580,8 @@ with ShardedPool(
                 linestyle="solid",
             )
 
-            add_z_labels(ax, Gk, GkPolicy, k_exit)
-            add_Gk_labels(ax, Gk)
+            add_z_labels(ax, GkPolicy, k_exit)
+            add_Gk_labels(ax, GkPolicy)
 
             ax.set_xlabel("source redshift $z$")
             ax.set_ylabel("WKB phase $\\theta$")
@@ -608,8 +608,8 @@ with ShardedPool(
                 label="derivative of WKB phase $\\theta$",
             )
 
-            add_z_labels(ax, Gk, GkPolicy, k_exit)
-            add_Gk_labels(ax, Gk)
+            add_z_labels(ax, GkPolicy, k_exit)
+            add_Gk_labels(ax, GkPolicy)
 
             ax.set_xlabel("source redshift $z$")
 
@@ -633,7 +633,7 @@ with ShardedPool(
             ax.plot(abs_amplitude_sin_x, abs_amplitude_sin_y, label="$\\sin$ amplitude")
             ax.plot(abs_amplitude_cos_x, abs_amplitude_cos_y, label="$\\cos$ amplitude")
 
-            add_Gk_labels(ax, Gk)
+            add_Gk_labels(ax, GkPolicy)
 
             ax.set_xlabel("source redshift $z$")
             ax.set_ylabel("amplitude")
@@ -724,9 +724,7 @@ with ShardedPool(
     #      ('dashdotdotted',         (0, (3, 5, 1, 5, 1, 5))),
     #      ('loosely dashdotdotted', (0, (3, 10, 1, 10, 1, 10))),
     #      ('densely dashdotdotted', (0, (3, 1, 1, 1, 1, 1)))]
-    def add_z_labels(
-        ax, Gk: GkSource, GkPolicy: GkSourcePolicyData, k_exit: wavenumber_exit_time
-    ):
+    def add_z_labels(ax, GkPolicy: GkSourcePolicyData, k_exit: wavenumber_exit_time):
         ax.axvline(k_exit.z_exit_subh_e3, linestyle=(0, (1, 1)), color="b")  # dotted
         ax.axvline(k_exit.z_exit_subh_e5, linestyle=(0, (1, 1)), color="b")  # dotted
         ax.axvline(k_exit.z_exit_suph_e3, linestyle=(0, (1, 1)), color="b")  # dotted
@@ -795,8 +793,8 @@ with ShardedPool(
                 color="m",
             )
 
-    def add_Gk_labels(ax, Gk: GkSource):
-        fns = Gk.functions
+    def add_Gk_labels(ax, obj: GkSourcePolicyData):
+        fns = obj.functions
         if fns.type is not None:
             ax.text(
                 0.0,
