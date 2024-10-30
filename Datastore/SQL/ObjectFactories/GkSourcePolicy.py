@@ -53,7 +53,10 @@ class sqla_GkSourcePolicy_factory(SQLAFactoryBase):
             attribute_set = {"_deserialized": True}
 
         obj = GkSourcePolicy(
-            store_id=store_id, numeric_policy=numeric_policy, label=label
+            store_id=store_id,
+            Levin_threshold=Levin_threshold,
+            numeric_policy=numeric_policy,
+            label=label,
         )
         for key, value in attribute_set.items():
             setattr(obj, key, value)
