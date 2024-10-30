@@ -12,7 +12,11 @@ from utilities import format_time
 class TestBesselLiouvilleGreen(unittest.TestCase):
 
     def _test_Bessel_JandY(self, nu: float, max_x: float):
-        data = bessel_phase(nu, max_x)
+        if max_x <= 10.0:
+            rhs_x = 10.0
+        else:
+            rhs_x = max_x + 5.0
+        data = bessel_phase(nu, rhs_x)
 
         bessel_j = data["bessel_j"]
         bessel_y = data["bessel_y"]
@@ -36,7 +40,11 @@ class TestBesselLiouvilleGreen(unittest.TestCase):
             )
 
     def _integrate_BesselJ(self, nu: float, max_x: float):
-        phase_data = bessel_phase(nu, max_x)
+        if max_x <= 10.0:
+            rhs_x = 10.0
+        else:
+            rhs_x = max_x + 5.0
+        phase_data = bessel_phase(nu, rhs_x)
 
         phase = phase_data["phase"]
         dphase = phase_data["dphase"]
@@ -45,7 +53,7 @@ class TestBesselLiouvilleGreen(unittest.TestCase):
         theta = phase
 
         Levin_data = adaptive_levin_sincos(
-            (1e-4, max_x),
+            (1e-6, max_x),
             f,
             theta,
             tol=1e-10,
@@ -64,17 +72,26 @@ class TestBesselLiouvilleGreen(unittest.TestCase):
         return value
 
     def test_Bessel(self):
+        self._test_Bessel_JandY(3.0 / 2.0, 1.0)
         self._test_Bessel_JandY(3.0 / 2.0, 10.0)
         self._test_Bessel_JandY(3.0 / 2.0, 100.0)
         self._test_Bessel_JandY(3.0 / 2.0, 100.0)
 
+        self._test_Bessel_JandY(5.0 / 2.0, 1.0)
         self._test_Bessel_JandY(5.0 / 2.0, 10.0)
         self._test_Bessel_JandY(5.0 / 2.0, 100.0)
         self._test_Bessel_JandY(5.0 / 2.0, 1000.0)
 
     def test_BesselJ_integral(self):
-        value = self._integrate_BesselJ(3.0 / 2.0, 10.0)
         MAX_INTEGRAL_RELERR = 1e-4
+
+        value = self._integrate_BesselJ(3.0 / 2.0, 0.1)
+        self.assertTrue(
+            fabs(value - 0.0003362308167) / 0.0003362308167 < MAX_INTEGRAL_RELERR,
+            f"BesselJ integral nu=3/2 max_x=10 (expected={0.0003362308167}, value={value}, relerr={100.0*(value-0.0003362308167)/0.0003362308167:.5g}%)",
+        )
+
+        value = self._integrate_BesselJ(3.0 / 2.0, 10.0)
         self.assertTrue(
             fabs(value - 1.148455377) / 1.148455377 < MAX_INTEGRAL_RELERR,
             f"BesselJ integral nu=3/2 max_x=10 (expected={1.148455377}, value={value}, relerr={100.0*(value-1.148455377)/1.148455377:.5g}%)",
@@ -84,6 +101,13 @@ class TestBesselLiouvilleGreen(unittest.TestCase):
         self.assertTrue(
             fabs(value - 1.040061274) / 1.040061274 < MAX_INTEGRAL_RELERR,
             f"BesselJ integral nu=3/2 max_x=100 (expected={1.040061274}, value={value}, relerr={100.0*(value-1.040061274)/1.040061274:.5g}%)",
+        )
+
+        value = self._integrate_BesselJ(5.0 / 2.0, 0.1)
+        self.assertTrue(
+            fabs(value - 4.803782622e-6) / 4.803782622e-6
+            < 0.01,  # this one is less accurate. Perhaps an issue with accuracy of the phase representation?
+            f"BesselJ integral nu=5/2 max_x=10 (expected={4.803782622E-6}, value={value}, relerr={100.0*(value-4.803782622E-6)/4.803782622E-6:.5g}%)",
         )
 
         value = self._integrate_BesselJ(5.0 / 2.0, 10.0)
