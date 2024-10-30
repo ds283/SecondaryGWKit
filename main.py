@@ -264,18 +264,18 @@ with ShardedPool(
     }
 
     # create the GkSource policies that we will apply later
-    GkSource_policy_2pt5, GkSource_policy_5pt0 = ray.get(
+    GkSource_policy_1pt0, GkSource_policy_2pt5 = ray.get(
         [
             pool.object_get(
                 "GkSourcePolicy",
-                label='policy="maximize-numeric"-Levin-threshold="2.5"',
-                Levin_threshold=2.5,
+                label='policy="maximize-numeric"-Levin-threshold="1.0"',
+                Levin_threshold=1.0,
                 numeric_policy="maximize_numeric",
             ),
             pool.object_get(
                 "GkSourcePolicy",
-                label='policy="maximize-numeric"-Levin-threshold="5.0"',
-                Levin_threshold=5.0,
+                label='policy="maximize-numeric"-Levin-threshold="2.5"',
+                Levin_threshold=2.5,
                 numeric_policy="maximize_numeric",
             ),
         ]
@@ -1588,7 +1588,7 @@ with ShardedPool(
                 "payload": [
                     {
                         "source": source_proxy,
-                        "policy": GkSource_policy_2pt5,
+                        "policy": GkSource_policy_1pt0,
                         "k": k_exit,
                     }
                     for z_response, source_proxy in zip(
@@ -1684,7 +1684,7 @@ with ShardedPool(
                 "payload": [
                     {
                         "source": source_proxy,
-                        "policy": GkSource_policy_2pt5,
+                        "policy": GkSource_policy_1pt0,
                         "k": k_exit,
                     }
                     for z_response, source_proxy in zip(batch, proxy_data)
@@ -1811,7 +1811,7 @@ with ShardedPool(
                     pool.object_get(
                         "GkSourcePolicyData",
                         source=source_proxy,
-                        policy=GkSource_policy_2pt5,
+                        policy=GkSource_policy_1pt0,
                         k=k_exit,
                     )
                 )
@@ -1932,7 +1932,7 @@ with ShardedPool(
                 "payload": [
                     {
                         "model": model_proxy,
-                        "policy": GkSource_policy_2pt5,
+                        "policy": GkSource_policy_1pt0,
                         "q": q,
                         "r": r,
                         "z_response": z_response,
@@ -2075,7 +2075,7 @@ with ShardedPool(
                 "payload": [
                     {
                         "source": source_proxy,
-                        "policy": GkSource_policy_2pt5,
+                        "policy": GkSource_policy_1pt0,
                         "k": k_exit,
                     }
                     for z_response, source_proxy in zip(missing_Gk[k], proxy_data)
@@ -2192,7 +2192,7 @@ with ShardedPool(
                     "ref": pool.object_get(
                         "QuadSourceIntegral",
                         model=model_proxy,
-                        policy=GkSource_policy_2pt5,
+                        policy=GkSource_policy_1pt0,
                         k=k,
                         q=q,
                         r=r,
