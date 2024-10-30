@@ -148,12 +148,16 @@ def bessel_phase(
     ddphase_spline = InterpolatedUnivariateSpline(ddphase_x, ddphase_y)
 
     def bessel_j(x: float) -> float:
+        # for sufficiently small x, switch to a series expansion to ensure we do not have division by zero issues
+        # at the moment we use an expansion valid up to O(x)^(5/2). It would be nice to have a few more terms here.
+        # But to do so, we would need higher derivative information about the phase function.
         if x <= 1e-3:
             return sqrt(2.0 / pi) * sqrt(init_dphase) * sqrt(x)
 
         return sqrt(2.0 / (pi * x * dphase_spline(x))) * sin(phase_spline(x))
 
     def bessel_y(x: float) -> float:
+        # likewise use a series expansion for small x, but now it is divergent
         if x <= 1e-3:
             sqrt_x = sqrt(x)
 
