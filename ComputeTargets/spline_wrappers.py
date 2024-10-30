@@ -21,8 +21,8 @@ class ZSplineWrapper:
         self._min_log_z = log(1.0 + min_z)
         self._max_log_z = log(1.0 + max_z)
 
-        self._log_z = log_z
-        self._deriv = deriv
+        self._uses_log_z = log_z
+        self._is_deriv = deriv
 
     def __call__(self, z: float, z_is_log: bool = False) -> float:
         if z_is_log:
@@ -51,9 +51,9 @@ class ZSplineWrapper:
         if log_z < self._min_log_z:
             log_z = self._min_log_z
 
-        if self._log_z:
-            if self._deriv:
-                # the spline will compute d/d(log (1+z)), so to get the raw derivative we need to divide by 1+z, which here is exp(z) (since we redefined z = log(1+z))
+        if self._uses_log_z:
+            if self._is_deriv:
+                # the spline will compute d/d(log (1+z)), so to get the raw derivative we need to divide by 1+z
                 return self._spline(log_z) / (1.0 + raw_z)
 
             return self._spline(log_z)
