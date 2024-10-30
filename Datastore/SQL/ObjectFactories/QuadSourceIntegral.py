@@ -369,7 +369,7 @@ class sqla_QuadSourceIntegral_factory(SQLAFactoryBase):
                 "tol_serial": obj._tol.store_id,
                 "policy_serial": obj._policy.store_id,
                 "source_serial": obj._source_serial,
-                "data_serial": obj._Gk_serial,
+                "data_serial": obj._data_serial,
                 "compute_time": obj.compute_time,
                 "total": obj._total,
                 "numeric_quad": obj._numeric_quad,
@@ -480,11 +480,11 @@ class sqla_QuadSourceIntegral_factory(SQLAFactoryBase):
                 table.c.label,
                 table.c.metadata,
                 table.c.source_serial,
+                table.c.data_serial,
                 table.c.total,
                 table.c.numeric_quad,
                 table.c.WKB_quad,
                 table.c.WKB_Levin,
-                table.c.Gk_serial,
                 table.c.numeric_quad_compute_time,
                 table.c.numeric_quad_compute_steps,
                 table.c.numeric_quad_RHS_evaluations,
@@ -606,8 +606,8 @@ class sqla_QuadSourceIntegral_factory(SQLAFactoryBase):
                         elapsed=row_data.WKB_Levin_elapsed,
                     ),
                     "compute_time": row_data.compute_time,
-                    "Gk_serial": row_data.Gk_serial,
                     "source_serial": row_data.source_serial,
+                    "data_serial": row_data.data_serial,
                     "metadata": (
                         json.loads(row_data.metadata)
                         if row_data.metadata is not None

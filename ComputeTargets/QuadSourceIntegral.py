@@ -603,7 +603,7 @@ class QuadSourceIntegral(DatastoreObject):
             self._WKB_Levin_data = None
 
             self._compute_time = None
-            self._GkPolicy_serial = None
+            self._data_serial = None
             self._source_serial = None
 
             self._metadata = {}
@@ -616,15 +616,14 @@ class QuadSourceIntegral(DatastoreObject):
             self._WKB_quad = payload["WKB_quad"]
             self._WKB_Levin = payload["WKB_Levin"]
 
-            self._Gk_serial = payload["Gk_serial"]
+            self._source_serial = payload["source_serial"]
+            self._data_serial = payload["data_serial"]
 
             self._numeric_quad_data = payload["numeric_quad_data"]
             self._WKB_quad_data = payload["WKB_quad_data"]
             self._WKB_Levin_data = payload["WKB_Levin_data"]
 
             self._compute_time = payload["compute_time"]
-            self._GkPolicy_serial = payload["GkPolicy_serial"]
-            self._source_serial = payload["source_serial"]
 
             self._metadata = payload["metadata"]
 
@@ -825,7 +824,7 @@ class QuadSourceIntegral(DatastoreObject):
         self._WKB_quad = payload["WKB_quad"]
         self._WKB_Levin = payload["WKB_Levin"]
 
-        self._GkPolicy_serial = payload["GkPolicy_serial"]
+        self._data_serial = payload["GkPolicy_serial"]
         self._source_serial = payload["source_serial"]
 
         self._numeric_quad_data = payload["numeric_quad_data"]
