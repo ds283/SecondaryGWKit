@@ -2,10 +2,12 @@ import time
 from typing import Optional, List, Union
 
 import ray
-from math import log, exp
+from math import log, exp, pow, sqrt, pi, gamma
 from scipy.integrate import solve_ivp
+from scipy.special import yv, jv
 
 from AdaptiveLevin import adaptive_levin_sincos
+from AdaptiveLevin.bessel_phase import bessel_phase
 from ComputeTargets.BackgroundModel import BackgroundModel, ModelProxy
 from ComputeTargets.GkSource import GkSource
 from ComputeTargets.GkSourcePolicyData import GkSourcePolicyData
@@ -246,6 +248,19 @@ def compute_QuadSource_integral(
             WKB_Levin = payload["value"]
             WKB_Levin_data = payload["data"]
 
+        # calculate analytic approximation for radiation
+        analytic_rad = analytic_integral(
+            model,
+            k.k,
+            q.k,
+            r.k,
+            z_response,
+            max_z=z_source_max,
+            min_z=z_response,
+            b=0.0,
+            tol=tol,
+        )
+
     return {
         "total": numeric_quad + WKB_quad + WKB_Levin,
         "numeric_quad": numeric_quad,
@@ -256,9 +271,259 @@ def compute_QuadSource_integral(
         "numeric_quad_data": numeric_quad_data,
         "WKB_quad_data": WKB_quad_data,
         "WKB_Levin_data": WKB_Levin_data,
+        "analytic_rad": analytic_rad,
         "compute_time": timer.elapsed,
         "metadata": {},
     }
+
+
+def _three_bessel_integrals(
+    k: wavenumber,
+    q: wavenumber,
+    r: wavenumber,
+    min_eta: float,
+    max_eta: float,
+    b: float,
+    phase_data_A,
+    phase_data_B,
+    tol: float,
+):
+    cs = sqrt((1.0 - b) / (1.0 + b) / 3.0)
+
+    phase_A = phase_data_A["phase"]
+    dphase_A = phase_data_A["dphase"]
+
+    phase_B = phase_data_B["phase"]
+    dphase_B = phase_data_B["dphase"]
+
+    def find_x_cut(x_min, x_max):
+        iter = 0
+
+        while (x_max - x_min) > 1e-2 and iter < 20:
+            dp_A_min = dphase_A(x_min)
+            dp_B_min = dphase_B(x_min)
+
+            if dp_A_min > 0.3 and dp_B_min > 0.3:
+                return x_min
+
+            dp_A_max = dphase_A(x_max)
+            dp_B_max = dphase_B(x_max)
+
+            if dp_A_max < 0.3 and dp_B_max < 0.3:
+                raise RuntimeError("phase is too small even at right-hand endpoint")
+
+            x_mid = (x_min + x_max) / 2.0
+
+            dp_A_mid = dphase_A(x_mid)
+            dp_B_mid = dphase_B(x_mid)
+
+            if dp_A_mid > 0.3 and dp_B_mid > 0.3:
+                x_max = x_mid
+            else:
+                x_min = x_mid
+
+            iter = iter + 1
+
+        return (x_min + x_max) / 2.0
+
+    min_x = min(k.k, q.k, r.k) * min_eta * cs
+    max_x = max(k.k, q.k, r.k) * max_eta
+
+    x_cut = find_x_cut(min_x, max_x)
+    print(f"x_cut = {x_cut}")
+
+    x_span = (log(min_eta), log(max_eta))
+
+    def Levin_f(log_eta: float):
+        eta = exp(log_eta)
+
+        x1 = k.k * eta
+        x2 = q.k * cs * eta
+        x3 = r.k * cs * eta
+
+        beta1 = dphase_A(x1)
+        beta2 = dphase_B(x2)
+        beta3 = dphase_B(x3)
+
+        if beta1 < 0.0:
+            raise ValueError(
+                f"beta_1(x_1) < 0.0 (beta1 value={beta1:.5g} @ x1={x1:.5g})"
+            )
+
+        if beta2 < 0.0:
+            raise ValueError(
+                f"beta_2(x_2) < 0.0 (beta2 value={beta2:.5g} @ x2={x2:.5g})"
+            )
+
+        if beta3 < 0.0:
+            raise ValueError(
+                f"beta_3(x_3) < 0.0 (beta3 value={beta3:.5g} @ x3={x3:.5g})"
+            )
+
+        A = pow(eta, -b)
+        B = 1.0 / sqrt(beta1 * beta2 * beta3)
+
+        return A * B
+
+    def phase1(log_eta: float):
+        eta = exp(log_eta)
+
+        x1 = k.k * eta
+        x2 = q.k * cs * eta
+        x3 = r.k * cs * eta
+
+        return phase_A(x1) + phase_B(x2) + phase_B(x3)
+
+    J1_data = adaptive_levin_sincos(
+        x_span, f=[Levin_f, lambda x: 0.0], theta=phase1, tol=tol
+    )
+    Y1_data = adaptive_levin_sincos(
+        x_span, f=[lambda x: 0.0, Levin_f], theta=phase1, tol=tol
+    )
+
+    def phase2(log_eta: float):
+        eta = exp(log_eta)
+
+        x1 = k.k * eta
+        x2 = q.k * cs * eta
+        x3 = r.k * cs * eta
+
+        return phase_A(x1) + phase_B(x2) - phase_B(x3)
+
+    J2_data = adaptive_levin_sincos(
+        x_span, f=[Levin_f, lambda x: 0.0], theta=phase2, tol=tol
+    )
+    Y2_data = adaptive_levin_sincos(
+        x_span, f=[lambda x: 0.0, Levin_f], theta=phase2, tol=tol
+    )
+
+    def phase3(log_eta: float):
+        eta = exp(log_eta)
+
+        x1 = k.k * eta
+        x2 = q.k * cs * eta
+        x3 = r.k * cs * eta
+
+        return phase_A(x1) - phase_B(x2) + phase_B(x3)
+
+    J3_data = adaptive_levin_sincos(
+        x_span, f=[Levin_f, lambda x: 0.0], theta=phase3, tol=tol
+    )
+    Y3_data = adaptive_levin_sincos(
+        x_span,
+        f=[
+            lambda x: 0.0,
+            Levin_f,
+        ],
+        theta=phase3,
+        tol=tol,
+    )
+
+    def phase4(log_eta: float):
+        eta = exp(log_eta)
+
+        x1 = k.k * eta
+        x2 = q.k * cs * eta
+        x3 = r.k * cs * eta
+
+        return phase_A(x1) - phase_B(x2) - phase_B(x3)
+
+    J4_data = adaptive_levin_sincos(
+        x_span, f=[Levin_f, lambda x: 0.0], theta=phase4, tol=tol
+    )
+    Y4_data = adaptive_levin_sincos(
+        x_span,
+        f=[
+            lambda x: 0.0,
+            Levin_f,
+        ],
+        theta=phase4,
+        tol=tol,
+    )
+
+    J1_value = J1_data["value"]
+    J2_value = J2_data["value"]
+    J3_value = J3_data["value"]
+    J4_value = J4_data["value"]
+
+    Y1_value = Y1_data["value"]
+    Y2_value = Y2_data["value"]
+    Y3_value = Y3_data["value"]
+    Y4_value = Y4_data["value"]
+
+    norm_factor = pow(2.0 / pi, 3.0 / 2.0) / sqrt(k.k * q.k * r.k * cs * cs) / 4.0
+    J = norm_factor * (-J1_value + J2_value + J3_value - J4_value)
+    Y = norm_factor * (-Y1_value + Y2_value + Y3_value - Y4_value)
+
+    return J, Y
+
+
+def analytic_integral(
+    model: BackgroundModel,
+    k: wavenumber,
+    q: wavenumber,
+    r: wavenumber,
+    z_response: redshift,
+    max_z: redshift,
+    min_z: redshift,
+    b: float,
+    tol: float = 1e-6,
+):
+    functions = model.functions
+    min_eta: float = functions.tau(max_z.z)
+    max_eta: float = functions.tau(min_z.z)
+
+    eta_response = functions.tau(z_response.z)
+
+    cs_sq = (1.0 - b) / (1.0 + b) / 3.0
+
+    min_x = min(k.k, q.k, r.k) * min_eta * sqrt(cs_sq)
+    max_x = max(k.k, q.k, r.k) * max_eta
+
+    phase_data_0pt5 = bessel_phase(0.5 + b, max_x + 10.0)
+    phase_data_2pt5 = bessel_phase(2.5 + b, max_x + 10.0)
+
+    dphase_0pt5 = phase_data_0pt5["dphase"]
+    dphase_2pt5 = phase_data_0pt5["dphase"]
+
+    x_step = (max_x - min_x) / 100.0
+    x_test = min_x
+    x_cut = None
+    while x_cut is None and x_test < max_x:
+        dp_0pt5 = dphase_0pt5(x_test)
+        dp_2pt5 = dphase_2pt5(x_test)
+
+        if dp_0pt5 > 0.5 and dp_2pt5 > 0.5:
+            x_cut = x_test
+            break
+
+        x_test = x_test + x_step
+
+    J0pt5, Y0pt5 = _three_bessel_integrals(
+        k, q, r, min_eta, max_eta, b, phase_data_0pt5, phase_data_0pt5, tol
+    )
+    J2pt5, Y2pt5 = _three_bessel_integrals(
+        k, q, r, min_eta, max_eta, b, phase_data_0pt5, phase_data_2pt5, tol
+    )
+
+    A = (2.0 + b) / (1.0 + b)
+
+    Y_factor = J0pt5 + A * J2pt5
+    J_factor = Y0pt5 + A * Y2pt5
+
+    B = pi / 2.0
+    C = pow(2.0, 3.0 + 2.0 * b) / (3.0 + 2.0 * b) / (2.0 + b)
+    D = gamma(2.5 + b) * gamma(2.5 + b)
+    E = pow(q.k * r.k * cs_sq * eta_response, -0.5 - b)
+
+    F = -B * C * D * E
+    x = k.k * eta_response
+
+    value = F * (yv(0.5 + b, x) * Y_factor - jv(0.5 + b, x) * J_factor)
+    print(
+        f"** analytic: eta_response={eta_response:.5g}, max_x={max_x:.5g}, min_eta={min_eta:.5g}, max_eta={max_eta:.5g}, value={value:.7g}"
+    )
+    return value
 
 
 def _extract_z(z: Union[type(None), redshift, float]) -> str:
@@ -602,6 +867,8 @@ class QuadSourceIntegral(DatastoreObject):
             self._WKB_quad_data = None
             self._WKB_Levin_data = None
 
+            self._analytic_rad = None
+
             self._compute_time = None
             self._data_serial = None
             self._source_serial = None
@@ -615,6 +882,8 @@ class QuadSourceIntegral(DatastoreObject):
             self._numeric_quad = payload["numeric_quad"]
             self._WKB_quad = payload["WKB_quad"]
             self._WKB_Levin = payload["WKB_Levin"]
+
+            self._analytic_rad = payload["analytic_rad"]
 
             self._source_serial = payload["source_serial"]
             self._data_serial = payload["data_serial"]
@@ -684,11 +953,18 @@ class QuadSourceIntegral(DatastoreObject):
         return self._WKB_Levin
 
     @property
-    def Gk_serial(self) -> Optional[int]:
+    def analytic_rad(self) -> float:
         if self._total is None:
             raise RuntimeError("value has not yet been populated")
 
-        return self._Gk_serial
+        return self._analytic_rad
+
+    @property
+    def data_serial(self) -> Optional[int]:
+        if self._total is None:
+            raise RuntimeError("value has not yet been populated")
+
+        return self._data_serial
 
     @property
     def source_serial(self) -> Optional[int]:
@@ -823,6 +1099,8 @@ class QuadSourceIntegral(DatastoreObject):
         self._numeric_quad = payload["numeric_quad"]
         self._WKB_quad = payload["WKB_quad"]
         self._WKB_Levin = payload["WKB_Levin"]
+
+        self._analytic_rad = payload["analytic_rad"]
 
         self._data_serial = payload["GkPolicy_serial"]
         self._source_serial = payload["source_serial"]

@@ -158,6 +158,7 @@ class sqla_QuadSourceIntegral_factory(SQLAFactoryBase):
                 sqla.Column("numeric_quad", sqla.Float(64), nullable=False),
                 sqla.Column("WKB_quad", sqla.Float(64), nullable=False),
                 sqla.Column("WKB_Levin", sqla.Float(64), nullable=False),
+                sqla.Column("analytic_rad", sqla.Float(64), nullable=False),
                 sqla.Column("numeric_quad_compute_time", sqla.Float(64), nullable=True),
                 sqla.Column("numeric_quad_compute_steps", sqla.Integer, nullable=True),
                 sqla.Column(
@@ -222,6 +223,7 @@ class sqla_QuadSourceIntegral_factory(SQLAFactoryBase):
                 table.c.numeric_quad,
                 table.c.WKB_quad,
                 table.c.WKB_Levin,
+                table.c.analytic_rad,
                 table.c.data_serial,
                 table.c.numeric_quad_compute_time,
                 table.c.numeric_quad_compute_steps,
@@ -299,6 +301,7 @@ class sqla_QuadSourceIntegral_factory(SQLAFactoryBase):
                 "numeric_quad": row_data.numeric_quad,
                 "WKB_quad": row_data.WKB_quad,
                 "WKB_Levin": row_data.WKB_Levin,
+                "analytic_rad": row_data.analytic_rad,
                 "numeric_quad_data": IntegrationData(
                     compute_time=row_data.numeric_quad_compute_time,
                     compute_steps=row_data.numeric_quad_compute_steps,
@@ -321,7 +324,7 @@ class sqla_QuadSourceIntegral_factory(SQLAFactoryBase):
                     elapsed=row_data.WKB_Levin_elapsed,
                 ),
                 "compute_time": row_data.compute_time,
-                "Gk_serial": row_data.Gk_serial,
+                "data_serial": row_data.data_serial,
                 "source_serial": row_data.source_serial,
                 "metadata": (
                     json.loads(row_data.metadata)
@@ -375,6 +378,7 @@ class sqla_QuadSourceIntegral_factory(SQLAFactoryBase):
                 "numeric_quad": obj._numeric_quad,
                 "WKB_quad": obj._WKB_quad,
                 "WKB_Levin": obj._WKB_Levin,
+                "analytic_rad": obj._analytic_rad,
                 "numeric_quad_compute_time": (
                     numeric_quad_data.compute_time
                     if numeric_quad_data is not None
@@ -485,6 +489,7 @@ class sqla_QuadSourceIntegral_factory(SQLAFactoryBase):
                 table.c.numeric_quad,
                 table.c.WKB_quad,
                 table.c.WKB_Levin,
+                table.c.analytic_rad,
                 table.c.numeric_quad_compute_time,
                 table.c.numeric_quad_compute_steps,
                 table.c.numeric_quad_RHS_evaluations,
@@ -584,6 +589,7 @@ class sqla_QuadSourceIntegral_factory(SQLAFactoryBase):
                     "numeric_quad": row_data.numeric_quad,
                     "WKB_quad": row_data.WKB_quad,
                     "WKB_Levin": row_data.WKB_Levin,
+                    "analytic_rad": row_data.analytic_rad,
                     "numeric_quad_data": IntegrationData(
                         compute_time=row_data.numeric_quad_compute_time,
                         compute_steps=row_data.numeric_quad_compute_steps,
