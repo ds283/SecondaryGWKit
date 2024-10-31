@@ -50,12 +50,11 @@ class TestBesselLiouvilleGreen(unittest.TestCase):
         dphase = phase_data["dphase"]
 
         f = [lambda x: sqrt(2.0 / (pi * x * dphase(x))), lambda x: 0.0]
-        theta = phase
 
         Levin_data = adaptive_levin_sincos(
-            (1e-6, max_x),
-            f,
-            theta,
+            x_span=(1e-6, max_x),
+            f=f,
+            theta=phase,
             tol=1e-10,
             chebyshev_order=12,
         )

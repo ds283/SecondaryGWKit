@@ -277,7 +277,143 @@ def compute_QuadSource_integral(
     }
 
 
+XCUT_SEARCH_TOLERANCE = 1e-2
+XCUT_SEARCH_MAX_ITERATIONS = 200
+XCUT_SEARCH_LEVIN_THRESHOLD = 0.1
+
+
+def find_x_cut(x_min, x_max, dphase_A, dphase_B):
+    iter = 0
+
+    while (x_max - x_min) > XCUT_SEARCH_TOLERANCE and iter < XCUT_SEARCH_MAX_ITERATIONS:
+        assert x_max > x_min
+
+        dp_A_min = dphase_A(x_min)
+        dp_B_min = dphase_B(x_min)
+
+        if (
+            dp_A_min > XCUT_SEARCH_LEVIN_THRESHOLD
+            and dp_B_min > XCUT_SEARCH_LEVIN_THRESHOLD
+        ):
+            return x_min
+
+        dp_A_max = dphase_A(x_max)
+        dp_B_max = dphase_B(x_max)
+
+        if (
+            dp_A_max < XCUT_SEARCH_LEVIN_THRESHOLD
+            and dp_B_max < XCUT_SEARCH_LEVIN_THRESHOLD
+        ):
+            raise RuntimeError(
+                "rate of change of phase is too small even at right-hand endpoint"
+            )
+
+        x_mid = (x_min + x_max) / 2.0
+
+        dp_A_mid = dphase_A(x_mid)
+        dp_B_mid = dphase_B(x_mid)
+
+        if (
+            dp_A_mid > XCUT_SEARCH_LEVIN_THRESHOLD
+            and dp_B_mid > XCUT_SEARCH_LEVIN_THRESHOLD
+        ):
+            x_max = x_mid
+        else:
+            x_min = x_mid
+
+        iter = iter + 1
+
+    if iter >= XCUT_SEARCH_MAX_ITERATIONS:
+        print(
+            f"** find_x_cut: recursive bisection to find x_cut did not converge: x_min={x_min:.5g}, x_max={x_max:.5g}"
+        )
+
+    x_cut_candidate = (x_min + x_max) / 2.0
+    dp_A = dphase_A(x_cut_candidate)
+    dp_B = dphase_B(x_cut_candidate)
+
+    if dp_A < XCUT_SEARCH_LEVIN_THRESHOLD or dp_B < XCUT_SEARCH_LEVIN_THRESHOLD:
+        # x_max should be guaranteed to satisfy dphase_A,B > XCUT_SEARCH_LEVIN_THRESHOLD
+        return x_max
+
+    return x_cut_candidate
+
+
 def _three_bessel_integrals(
+    k: wavenumber,
+    q: wavenumber,
+    r: wavenumber,
+    min_eta: float,
+    max_eta: float,
+    b: float,
+    phase_data: dict,
+    nu_type: str,
+    tol: float,
+):
+    if nu_type not in ["0pt5", "2pt5"]:
+        raise RuntimeError('phase_data should be "0pt5" or "2pt5"')
+
+    assert min_eta <= max_eta
+
+    cs = sqrt((1.0 - b) / (1.0 + b) / 3.0)
+
+    phase_data_A = phase_data["0pt5"]
+    phase_data_B = phase_data[nu_type]
+
+    dphase_A = phase_data_A["dphase"]
+    dphase_B = phase_data_B["dphase"]
+
+    min_k_mode = min(k.k, q.k, r.k)
+    max_k_mode = max(k.k, q.k, r.k)
+
+    min_x = min_k_mode * min_eta * cs
+    max_x = max_k_mode * max_eta
+
+    x_cut = find_x_cut(min_x, max_x, dphase_A, dphase_B)
+    eta_cut = x_cut / min_k_mode / cs
+
+    if eta_cut <= min_eta:
+        Levin = _three_bessel_Levin(
+            k,
+            q,
+            r,
+            min_eta=min_eta,
+            max_eta=max_eta,
+            b=b,
+            phase_data_A=phase_data_A,
+            phase_data_B=phase_data_B,
+            x_cut=x_cut,
+            tol=tol,
+        )
+        return Levin
+
+    if eta_cut < max_eta:
+        quad = _three_bessel_quad(
+            k, q, r, min_eta=min_eta, max_eta=eta_cut, b=b, nu_type=nu_type, tol=tol
+        )
+        Levin = _three_bessel_Levin(
+            k,
+            q,
+            r,
+            min_eta=eta_cut,
+            max_eta=max_eta,
+            b=b,
+            phase_data_A=phase_data_A,
+            phase_data_B=phase_data_B,
+            x_cut=x_cut,
+            tol=tol,
+        )
+        return (quad[0] + Levin[0], quad[1] + Levin[1])
+
+    assert eta_cut >= max_eta
+
+    quad = _three_bessel_quad(
+        k, q, r, min_eta=min_eta, max_eta=max_eta, b=b, nu_type=nu_type, tol=tol
+    )
+    return quad
+
+
+def _three_bessel_Levin(
     k: wavenumber,
     q: wavenumber,
     r: wavenumber,
@@ -286,53 +422,25 @@ def _three_bessel_integrals(
     b: float,
     phase_data_A,
     phase_data_B,
+    x_cut: float,
     tol: float,
 ):
+    assert min_eta <= max_eta
+
     cs = sqrt((1.0 - b) / (1.0 + b) / 3.0)
+    x_span = (log(min_eta), log(max_eta))
+
+    min_k_mode = min(k.k, q.k, r.k)
+    if min_k_mode * min_eta * cs > x_cut:
+        raise RuntimeError(
+            f"!! three_bessel_Levin: ERROR: smallest required x is smaller than x_cut (smallest x={min_k_mode * min_eta * cs:.5g}, x_cut={x_cut:.5g}, min_eta={min_eta:.5g}, min_k_mode={min_k_mode:.5g}, cs={cs:.5g}, coeff={min_k_mode*cs:.5g}, x_cut/coeff={x_cut/(min_k_mode*cs):.5g})"
+        )
 
     phase_A = phase_data_A["phase"]
     dphase_A = phase_data_A["dphase"]
 
     phase_B = phase_data_B["phase"]
     dphase_B = phase_data_B["dphase"]
-
-    def find_x_cut(x_min, x_max):
-        iter = 0
-
-        while (x_max - x_min) > 1e-2 and iter < 20:
-            dp_A_min = dphase_A(x_min)
-            dp_B_min = dphase_B(x_min)
-
-            if dp_A_min > 0.3 and dp_B_min > 0.3:
-                return x_min
-
-            dp_A_max = dphase_A(x_max)
-            dp_B_max = dphase_B(x_max)
-
-            if dp_A_max < 0.3 and dp_B_max < 0.3:
-                raise RuntimeError("phase is too small even at right-hand endpoint")
-
-            x_mid = (x_min + x_max) / 2.0
-
-            dp_A_mid = dphase_A(x_mid)
-            dp_B_mid = dphase_B(x_mid)
-
-            if dp_A_mid > 0.3 and dp_B_mid > 0.3:
-                x_max = x_mid
-            else:
-                x_min = x_mid
-
-            iter = iter + 1
-
-        return (x_min + x_max) / 2.0
-
-    min_x = min(k.k, q.k, r.k) * min_eta * cs
-    max_x = max(k.k, q.k, r.k) * max_eta
-
-    x_cut = find_x_cut(min_x, max_x)
-    print(f"x_cut = {x_cut}")
-
-    x_span = (log(min_eta), log(max_eta))
 
     def Levin_f(log_eta: float):
         eta = exp(log_eta)
@@ -411,10 +519,7 @@ def _three_bessel_integrals(
     )
     Y3_data = adaptive_levin_sincos(
         x_span,
-        f=[
-            lambda x: 0.0,
-            Levin_f,
-        ],
+        f=[lambda x: 0.0, Levin_f],
         theta=phase3,
         tol=tol,
     )
@@ -433,10 +538,7 @@ def _three_bessel_integrals(
     )
     Y4_data = adaptive_levin_sincos(
         x_span,
-        f=[
-            lambda x: 0.0,
-            Levin_f,
-        ],
+        f=[lambda x: 0.0, Levin_f],
         theta=phase4,
         tol=tol,
     )
@@ -458,6 +560,69 @@ def _three_bessel_integrals(
     return J, Y
 
 
+def _three_bessel_quad(
+    k: wavenumber,
+    q: wavenumber,
+    r: wavenumber,
+    min_eta: float,
+    max_eta: float,
+    b: float,
+    nu_type: str,
+    tol: float,
+):
+    assert min_eta <= max_eta
+
+    cs = sqrt((1.0 - b) / (1.0 + b) / 3.0)
+    log_min_eta = log(min_eta)
+    log_max_eta = log(max_eta)
+    x_span = (log_min_eta, log_max_eta)
+
+    nu_types = {"0pt5": 0.5, "2pt5": 2.5}
+    nu = nu_types[nu_type]
+
+    def RHS(log_eta, state):
+        eta = exp(log_eta)
+
+        x1 = k.k * eta
+        x2 = q.k * cs * eta
+        x3 = r.k * cs * eta
+
+        A = pow(eta, 1.5 - b)
+
+        dJ = jv(0.5 + b, x1) * jv(nu + b, x2) * jv(nu + b, x3)
+        dY = yv(0.5 + b, x1) * jv(nu + b, x2) * jv(nu + b, x3)
+
+        return [A * dJ, A * dY]
+
+    sol = solve_ivp(
+        RHS,
+        method="RK45",
+        t_span=x_span,
+        t_eval=[log_max_eta],
+        y0=[0.0, 0.0],
+        dense_output=True,
+        atol=tol,
+        rtol=tol,
+    )
+
+    if not sol.success:
+        raise RuntimeError(
+            f'_three_bessel_quad: quadrature did not terminate successfully | error at log(eta)={sol.t[-1]:.5g}, "{sol.message}"'
+        )
+
+    if sol.t[0] < log_max_eta:
+        raise RuntimeError(
+            f"_three_bessel_quad: quadrature did not terminate at expected conformal time log(eta)={log_max_eta:.5g} (final log(eta)={sol.t[0]:.5g})"
+        )
+
+    if len(sol.sol(log_max_eta)) != 2:
+        raise RuntimeError(
+            f"_three_bessel_quad: solution does not have expected number of members (expected 2, found {len(sol.sol(log_max_eta))})"
+        )
+
+    return sol.sol(log_max_eta)
+
+
 def analytic_integral(
     model: BackgroundModel,
     k: wavenumber,
@@ -477,33 +642,36 @@ def analytic_integral(
 
     cs_sq = (1.0 - b) / (1.0 + b) / 3.0
 
-    min_x = min(k.k, q.k, r.k) * min_eta * sqrt(cs_sq)
     max_x = max(k.k, q.k, r.k) * max_eta
+    if max_x > 1e5:
+        print(
+            f"!! analytic: WARNING: max_x very large, {max_x:.5g}. This may lead to issues with calculation of the Liouville-Green phase function for the Bessel functions."
+        )
 
     phase_data_0pt5 = bessel_phase(0.5 + b, max_x + 10.0)
     phase_data_2pt5 = bessel_phase(2.5 + b, max_x + 10.0)
 
-    dphase_0pt5 = phase_data_0pt5["dphase"]
-    dphase_2pt5 = phase_data_0pt5["dphase"]
-
-    x_step = (max_x - min_x) / 100.0
-    x_test = min_x
-    x_cut = None
-    while x_cut is None and x_test < max_x:
-        dp_0pt5 = dphase_0pt5(x_test)
-        dp_2pt5 = dphase_2pt5(x_test)
-
-        if dp_0pt5 > 0.5 and dp_2pt5 > 0.5:
-            x_cut = x_test
-            break
-
-        x_test = x_test + x_step
-
     J0pt5, Y0pt5 = _three_bessel_integrals(
-        k, q, r, min_eta, max_eta, b, phase_data_0pt5, phase_data_0pt5, tol
+        k,
+        q,
+        r,
+        min_eta=min_eta,
+        max_eta=max_eta,
+        b=b,
+        phase_data={"0pt5": phase_data_0pt5, "2pt5": phase_data_2pt5},
+        nu_type="0pt5",
+        tol=tol,
     )
     J2pt5, Y2pt5 = _three_bessel_integrals(
-        k, q, r, min_eta, max_eta, b, phase_data_0pt5, phase_data_2pt5, tol
+        k,
+        q,
+        r,
+        min_eta=min_eta,
+        max_eta=max_eta,
+        b=b,
+        phase_data={"0pt5": phase_data_0pt5, "2pt5": phase_data_2pt5},
+        nu_type="2pt5",
+        tol=tol,
     )
 
     A = (2.0 + b) / (1.0 + b)
@@ -520,9 +688,6 @@ def analytic_integral(
     x = k.k * eta_response
 
     value = F * (yv(0.5 + b, x) * Y_factor - jv(0.5 + b, x) * J_factor)
-    print(
-        f"** analytic: eta_response={eta_response:.5g}, max_x={max_x:.5g}, min_eta={min_eta:.5g}, max_eta={max_eta:.5g}, value={value:.7g}"
-    )
     return value
 
 
@@ -620,12 +785,12 @@ def numeric_quad_integral(
 
     if not sol.success:
         raise RuntimeError(
-            f'compute_QuadSource_integral: quadrature did not terminate successfully | error at z={sol.t[0]}, "{sol.message}"'
+            f'compute_QuadSource_integral: quadrature did not terminate successfully | error at log(1+z)={sol.t[0]:.5g}, "{sol.message}"'
         )
 
     if sol.t[0] < log_max_z - DEFAULT_FLOAT_PRECISION:
         raise RuntimeError(
-            f"compute_QuadSource_integral: quadrature did not terminate at expected redshift log(1+z)={log_max_z:.5g} (final log(1+z)={sol.t[0]:.3g})"
+            f"compute_QuadSource_integral: quadrature did not terminate at expected redshift log(1+z)={log_max_z:.5g} (final log(1+z)={sol.t[0]:.5g})"
         )
 
     if len(sol.sol(log_max_z)) != 1:
