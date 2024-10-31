@@ -340,6 +340,11 @@ class GkSourcePolicyData(DatastoreObject):
         if self._type is not None:
             raise RuntimeError("values have already been computed")
 
+        if self._source_proxy.k.store_id != self._k_exit.k.store_id:
+            raise RuntimeError(
+                f"GkSourcePolicyData.compute(): supplied source has incompatible k-mode (store_id={self._source_proxy.k.store_id}, expected store_id={self._k_exit.k.store_id})"
+            )
+
         self._compute_ref = apply_GkSource_policy.remote(
             self._source_proxy,
             self._policy,
