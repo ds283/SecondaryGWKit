@@ -1573,12 +1573,12 @@ with ShardedPool(
             process_batch_size=20,
         )
         GkSource_lookup_queue.run()
-        GkSource_proxies = {
-            k_exit.store_id: [GkSourceProxy(obj) for obj in lookup_data]
+        GkSource_proxies = [
+            [GkSourceProxy(obj) for obj in lookup_data]
             for k_exit, lookup_data in zip(
                 response_k_exit_times, GkSource_lookup_queue.results
             )
-        }
+        ]
 
         query_batch = [
             {
@@ -1596,9 +1596,7 @@ with ShardedPool(
                     )
                 ],
             }
-            for k_exit, proxy_data in zip(
-                response_k_exit_times, GkSource_proxies.values()
-            )
+            for k_exit, proxy_data in zip(response_k_exit_times, GkSource_proxies)
         ]
 
         def dump_Gk_handler(missing_Gk: List[GkSource]):
@@ -1671,12 +1669,12 @@ with ShardedPool(
             process_batch_size=20,
         )
         GkSource_lookup_queue.run()
-        GkSource_proxies = {
-            k_exit.store_id: [GkSourceProxy(obj) for obj in lookup_data]
+        GkSource_proxies = [
+            [GkSourceProxy(obj) for obj in lookup_data]
             for k_exit, lookup_data in zip(
                 response_k_exit_times, GkSource_lookup_queue.results
             )
-        }
+        ]
 
         query_batch = [
             {
@@ -1690,9 +1688,7 @@ with ShardedPool(
                     for z_response, source_proxy in zip(batch, proxy_data)
                 ],
             }
-            for k_exit, proxy_data in zip(
-                response_k_exit_times, GkSource_proxies.values()
-            )
+            for k_exit, proxy_data in zip(response_k_exit_times, GkSource_proxies)
         ]
 
         query_queue = RayWorkPool(
@@ -1796,16 +1792,16 @@ with ShardedPool(
             process_batch_size=20,
         )
         GkSource_lookup_queue.run()
-        GkSource_proxies = {
-            k_exit.store_id: [GkSourceProxy(obj) for obj in lookup_data]
+        GkSource_proxies = [
+            [GkSourceProxy(obj) for obj in lookup_data]
             for k_exit, lookup_data in zip(
                 response_k_exit_times, GkSource_lookup_queue.results
             )
-        }
+        ]
 
         work_refs = []
 
-        for k_exit, proxy_data in zip(response_k_exit_times, GkSource_proxies.values()):
+        for k_exit, proxy_data in zip(response_k_exit_times, GkSource_proxies):
             for z_response, source_proxy in zip(missing[k_exit.store_id], proxy_data):
                 work_refs.append(
                     pool.object_get(
@@ -2062,12 +2058,10 @@ with ShardedPool(
             process_batch_size=20,
         )
         GkSource_lookup_queue.run()
-        GkSource_proxies = {
-            k_exit.store_id: [GkSourceProxy(obj) for obj in lookup_data]
-            for k_exit, lookup_data in zip(
-                response_k_exit_times, GkSource_lookup_queue.results
-            )
-        }
+        GkSource_proxies = [
+            [GkSourceProxy(obj) for obj in lookup_data]
+            for k_exit, lookup_data in zip(k_keys, GkSource_lookup_queue.results)
+        ]
 
         GkSourcePolicy_lookup_batch = [
             {
@@ -2078,10 +2072,10 @@ with ShardedPool(
                         "policy": GkSource_policy_2pt5,
                         "k": k_exit,
                     }
-                    for z_response, source_proxy in zip(missing_Gk[k], proxy_data)
+                    for z_response, source_proxy in zip(missing_Gk[k_exit], proxy_data)
                 ],
             }
-            for k_exit, proxy_data in zip(k_keys, GkSource_proxies.values())
+            for k_exit, proxy_data in zip(k_keys, GkSource_proxies)
         ]
 
         GkSourcePolicy_lookup_queue = RayWorkPool(
