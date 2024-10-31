@@ -90,7 +90,7 @@ def bessel_phase(
 
     sol = solve_ivp(
         RHS,
-        method="RK45",
+        method="DOP853",
         t_span=(max_x, MINIMUM_X),
         y0=init_state,
         t_eval=sample_grid,
@@ -143,9 +143,9 @@ def bessel_phase(
     dphase_x, dphase_y = zip(*dphase_points)
     ddphase_x, ddphase_y = zip(*ddphase_points)
 
-    phase_spline = InterpolatedUnivariateSpline(phase_x, phase_y)
-    dphase_spline = InterpolatedUnivariateSpline(dphase_x, dphase_y)
-    ddphase_spline = InterpolatedUnivariateSpline(ddphase_x, ddphase_y)
+    phase_spline = InterpolatedUnivariateSpline(phase_x, phase_y, ext="raise")
+    dphase_spline = InterpolatedUnivariateSpline(dphase_x, dphase_y, ext="raise")
+    ddphase_spline = InterpolatedUnivariateSpline(ddphase_x, ddphase_y, ext="raise")
 
     def bessel_j(x: float) -> float:
         # for sufficiently small x, switch to a series expansion to ensure we do not have division by zero issues
