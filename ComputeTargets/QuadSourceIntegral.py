@@ -249,7 +249,7 @@ def compute_QuadSource_integral(
             WKB_Levin_data = payload["data"]
 
         # calculate analytic approximation for radiation
-        analytic_rad = analytic_integral(
+        analytic_data = analytic_integral(
             model,
             k.k,
             q.k,
@@ -271,9 +271,9 @@ def compute_QuadSource_integral(
         "numeric_quad_data": numeric_quad_data,
         "WKB_quad_data": WKB_quad_data,
         "WKB_Levin_data": WKB_Levin_data,
-        "analytic_rad": analytic_rad,
+        "analytic_rad": analytic_data["value"],
         "compute_time": timer.elapsed,
-        "metadata": {},
+        "metadata": {"analytic": analytic_data["metadata"]},
     }
 
 
@@ -356,6 +356,7 @@ def _three_bessel_integrals(
     assert min_eta <= max_eta
 
     cs = sqrt((1.0 - b) / (1.0 + b) / 3.0)
+    metadata = {}
 
     phase_data_A = phase_data["0pt5"]
     phase_data_B = phase_data[nu_type]
@@ -372,6 +373,9 @@ def _three_bessel_integrals(
     x_cut = find_x_cut(min_x, max_x, dphase_A, dphase_B)
     eta_cut = x_cut / min_k_mode / cs
 
+    metadata["x_cut"] = x_cut
+    metadata["eta_cut"] = eta_cut
+
     if eta_cut <= min_eta:
         Levin = _three_bessel_Levin(
             k,
@@ -385,7 +389,9 @@ def _three_bessel_integrals(
             x_cut=x_cut,
             tol=tol,
         )
-        return Levin
+        metadata["Levin_J"] = Levin[0]
+        metadata["Levin_Y"] = Levin[1]
+        return {"J": Levin[0], "Y": Levin[1], "metadata": metadata}
 
     if eta_cut < max_eta:
         quad = _three_bessel_quad(
@@ -403,14 +409,20 @@ def _three_bessel_integrals(
             x_cut=x_cut,
             tol=tol,
         )
-        return (quad[0] + Levin[0], quad[1] + Levin[1])
+        metadata["Levin_J"] = Levin[0]
+        metadata["Levin_Y"] = Levin[1]
+        metadata["quad_J"] = quad[0]
+        metadata["quad_Y"] = quad[1]
+        return {"J": quad[0] + Levin[0], "Y": quad[1] + Levin[1], "metadata": metadata}
 
     assert eta_cut >= max_eta
 
     quad = _three_bessel_quad(
         k, q, r, min_eta=min_eta, max_eta=max_eta, b=b, nu_type=nu_type, tol=tol
     )
-    return quad
+    metadata["quad_J"] = quad[0]
+    metadata["quad_Y"] = quad[1]
+    return {"J": quad[0], "Y": quad[1], "metadata": metadata}
 
 
 def _three_bessel_Levin(
@@ -651,7 +663,7 @@ def analytic_integral(
     phase_data_0pt5 = bessel_phase(0.5 + b, max_x + 10.0)
     phase_data_2pt5 = bessel_phase(2.5 + b, max_x + 10.0)
 
-    J0pt5, Y0pt5 = _three_bessel_integrals(
+    data0pt5 = _three_bessel_integrals(
         k,
         q,
         r,
@@ -662,7 +674,7 @@ def analytic_integral(
         nu_type="0pt5",
         tol=tol,
     )
-    J2pt5, Y2pt5 = _three_bessel_integrals(
+    data2pt5 = _three_bessel_integrals(
         k,
         q,
         r,
@@ -674,10 +686,12 @@ def analytic_integral(
         tol=tol,
     )
 
+    metadata = {"0pt5": data0pt5, "2pt5": data2pt5}
+
     A = (2.0 + b) / (1.0 + b)
 
-    Y_factor = J0pt5 + A * J2pt5
-    J_factor = Y0pt5 + A * Y2pt5
+    Y_factor = data0pt5["J"] + A * data2pt5["J"]
+    J_factor = data0pt5["Y"] + A * data2pt5["Y"]
 
     B = pi / 2.0
     C = pow(2.0, 3.0 + 2.0 * b) / (3.0 + 2.0 * b) / (2.0 + b)
@@ -688,7 +702,7 @@ def analytic_integral(
     x = k.k * eta_response
 
     value = F * (yv(0.5 + b, x) * Y_factor - jv(0.5 + b, x) * J_factor)
-    return value
+    return {"value": value, "metadata": metadata}
 
 
 def _extract_z(z: Union[type(None), redshift, float]) -> str:
