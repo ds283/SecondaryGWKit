@@ -1,3 +1,4 @@
+import numpy as np
 from math import log, sin, cos, exp
 from scipy.interpolate import UnivariateSpline
 
@@ -54,11 +55,11 @@ class ZSplineWrapper:
         if self._uses_log_z:
             if self._is_deriv:
                 # the spline will compute d/d(log (1+z)), so to get the raw derivative we need to divide by 1+z
-                return self._spline(log_z) / (1.0 + raw_z)
+                return np.float64(self._spline(log_z)) / (1.0 + raw_z)
 
-            return self._spline(log_z)
+            return np.float64(self._spline(log_z))
 
-        return self._spline(raw_z)
+        return np.float64(self._spline(raw_z))
 
 
 class GkWKBSplineWrapper:

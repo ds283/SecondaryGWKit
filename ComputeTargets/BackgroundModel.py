@@ -9,6 +9,7 @@ from scipy.interpolate import InterpolatedUnivariateSpline
 
 from ComputeTargets.integration_metadata import IntegrationSolver, IntegrationData
 from ComputeTargets.integration_supervisor import RHS_timer, IntegrationSupervisor
+from ComputeTargets.spline_wrappers import ZSplineWrapper
 from CosmologyConcepts import redshift_array, redshift, wavenumber
 from CosmologyModels import BaseCosmology
 from Datastore import DatastoreObject
@@ -244,6 +245,13 @@ class BackgroundModel(DatastoreObject):
 
         tau_x_data, tau_y_data = zip(*tau_data)
         tau_spline = InterpolatedUnivariateSpline(tau_x_data, tau_y_data, ext="raise")
+        tau_wrapped = ZSplineWrapper(
+            tau_spline,
+            label="tau",
+            min_z=self.z_sample.min.z,
+            max_z=self.z_sample.max.z,
+            log_z=True,
+        )
 
         # TODO: currently we just pass through most of these functions to the underlying BaseCosmology instance, on the
         #  assumption that it will implement them for any needed value of z.
@@ -286,7 +294,7 @@ class BackgroundModel(DatastoreObject):
             d2_epsilon_dz2=d2_epsilon_dz2,
             wBackground=self._cosmology.wBackground,
             wPerturbations=self._cosmology.wPerturbations,
-            tau=lambda z: tau_spline(log(z)),
+            tau=tau_wrapped,
             d_lnH_dz=self._cosmology.d_lnH_dz,
             d2_lnH_dz2=self._cosmology.d2_lnH_dz2,
             d3_lnH_dz3=self._cosmology.d3_lnH_dz3,
