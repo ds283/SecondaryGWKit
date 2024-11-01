@@ -431,7 +431,7 @@ def _three_bessel_Levin(
     x_span = (log(min_eta), log(max_eta))
 
     min_k_mode = min(k.k, q.k, r.k)
-    if min_k_mode * min_eta * cs > x_cut:
+    if min_k_mode * min_eta * cs > (1.0 + DEFAULT_FLOAT_PRECISION) * x_cut:
         raise RuntimeError(
             f"!! three_bessel_Levin: ERROR: smallest required x is smaller than x_cut (smallest x={min_k_mode * min_eta * cs:.5g}, x_cut={x_cut:.5g}, min_eta={min_eta:.5g}, min_k_mode={min_k_mode:.5g}, cs={cs:.5g}, coeff={min_k_mode*cs:.5g}, x_cut/coeff={x_cut/(min_k_mode*cs):.5g})"
         )
@@ -632,7 +632,7 @@ def analytic_integral(
     max_z: redshift,
     min_z: redshift,
     b: float,
-    tol: float = 1e-6,
+    tol: float,
 ):
     functions = model.functions
     min_eta: float = functions.tau(max_z.z)
@@ -971,14 +971,14 @@ def WKB_Levin_integral(
         H_sq = H * H
         f = source_f.source(log_z_source, z_is_log=True)
 
-        return [f / H_sq, 0.0]
+        return f / H_sq
 
     def Levin_theta(log_z_source: float) -> float:
         return Gk_f.theta(log_z_source, z_is_log=True)
 
     data = adaptive_levin_sincos(
         x_span,
-        Levin_f,
+        [Levin_f, lambda x: 0.0],
         Levin_theta,
         tol=tol,
         chebyshev_order=12,
