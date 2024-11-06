@@ -530,8 +530,8 @@ class RayWorkPool:
                         msg += " (may be waiting for compute/store/validate tasks to finish)"
                     print(msg)
 
-                    msg = f"      inflight items: {self._build_queued_status_message()}"
-                    msg += f" | completed items: {self._build_completed_status_message(total_time_in_seconds=elapsed_since_start, since_last_notify_in_seconds=elapsed_since_last_notify)}"
+                    msg = f"      inflight: {self._build_queued_status_message()}"
+                    msg += f" | completed: {self._build_completed_status_message(total_time_in_seconds=elapsed_since_start, since_last_notify_in_seconds=elapsed_since_last_notify)}"
                     print(msg)
 
                     self._batch = 0
