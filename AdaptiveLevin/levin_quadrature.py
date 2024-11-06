@@ -10,6 +10,9 @@ from utilities import format_time
 # default interval at which to log progress of the integration
 DEFAULT_LEVIN_NOTIFY_INTERVAL = 5 * 60
 
+# approximate machine epsilon for 64-bit floats
+MACHINE_EPSILON = 1e-16
+
 
 def chebyshev_matrices(x_span: Tuple[float, float], N: int):
     """
@@ -210,34 +213,46 @@ def _adaptive_levin(
             build_p_sample=build_p_sample,
         )
 
-        # Chen et al. (173)
         c = (a + b) / 2.0
-        estimate_L, pL_sample = _adaptive_levin_subregion(
-            (a, c),
-            f,
-            Weights,
-            chebyshev_order=chebyshev_order,
-            build_p_sample=build_p_sample,
-        )
-        estimate_R, pR_sample = _adaptive_levin_subregion(
-            (c, b),
-            f,
-            Weights,
-            chebyshev_order=chebyshev_order,
-            build_p_sample=build_p_sample,
-        )
+        if (c - a) / a > MACHINE_EPSILON and (b - c) / c > MACHINE_EPSILON:
+            # Chen et al. (173)
+            estimate_L, pL_sample = _adaptive_levin_subregion(
+                (a, c),
+                f,
+                Weights,
+                chebyshev_order=chebyshev_order,
+                build_p_sample=build_p_sample,
+            )
+            estimate_R, pR_sample = _adaptive_levin_subregion(
+                (c, b),
+                f,
+                Weights,
+                chebyshev_order=chebyshev_order,
+                build_p_sample=build_p_sample,
+            )
 
-        num_evaluations += 3
+            num_evaluations += 3
+            refined_estimate = estimate_L + estimate_R
 
-        # Chen et al. step (4), below (173)
-        if np.fabs(estimate - estimate_L - estimate_R) < tol:
+            # print(
+            #     f"** testing interval [{a:.8g},{b:.8g}] -> {estimate:.8g} against [{a:.8g},{c:.8g}] -> {estimate_L:.8g} + [{c:.8g},{b:.8g}] -> {estimate_R:.8g} | diff = {estimate-refined_estimate:.8g}, rel = {np.fabs((estimate - refined_estimate) / refined_estimate):.8g}, tol = {tol:.8g}"
+            # )
+
+            # Chen et al. step (4), below (173)
+            if np.fabs((estimate - refined_estimate) / refined_estimate) < tol:
+                # if np.fabs(estimate - refined_estimate) < tol:
+                val = val + estimate
+                used_regions.append((a, b))
+                if build_p_sample:
+                    p_points.extend(p_sample)
+
+            else:
+                regions.extend([(a, c), (c, b)])
+        else:
             val = val + estimate
             used_regions.append((a, b))
             if build_p_sample:
                 p_points.extend(p_sample)
-
-        else:
-            regions.extend([(a, c), (c, b)])
 
     used_regions.sort(key=lambda x: x[0])
     if build_p_sample:
@@ -247,11 +262,11 @@ def _adaptive_levin(
     elapsed = driver_stop - driver_start
 
     return {
-        "value": val,
+        "value": float(val),
         "p_points": p_points,
         "regions": used_regions,
-        "evaluations": num_evaluations,
-        "elapsed": elapsed,
+        "evaluations": int(num_evaluations),
+        "elapsed": float(elapsed),
     }
 
 
