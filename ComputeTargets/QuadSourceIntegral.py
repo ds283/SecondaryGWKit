@@ -1,4 +1,5 @@
 import time
+from datetime import datetime
 from typing import Optional, List, Union
 
 import ray
@@ -8,10 +9,14 @@ from scipy.special import yv, jv
 
 from AdaptiveLevin import adaptive_levin_sincos
 from AdaptiveLevin.bessel_phase import bessel_phase
-from ComputeTargets.BackgroundModel import BackgroundModel, ModelProxy
+from ComputeTargets.BackgroundModel import BackgroundModel, ModelProxy, ModelFunctions
 from ComputeTargets.GkSource import GkSource
-from ComputeTargets.GkSourcePolicyData import GkSourcePolicyData
-from ComputeTargets.QuadSource import QuadSource
+from ComputeTargets.GkSourcePolicyData import GkSourcePolicyData, GkSourceFunctions
+from ComputeTargets.QuadSource import QuadSource, QuadSourceFunctions
+from ComputeTargets.QuadSourceIntegral_debug import (
+    _bessel_function_plot,
+    _three_bessel_plot,
+)
 from ComputeTargets.integration_metadata import IntegrationData, LevinData
 from ComputeTargets.integration_supervisor import (
     IntegrationSupervisor,
@@ -26,6 +31,12 @@ from defaults import (
     DEFAULT_FLOAT_PRECISION,
 )
 from utilities import WallclockTimer, format_time
+
+LEVIN_MIN_2PI_CYCLES = 10
+LEVIN_MIN_PHASE_DIFF = LEVIN_MIN_2PI_CYCLES * 2.0 * pi
+
+CHEBYSHEV_ORDER = 64
+LEVIN_TOLERANCE = 1e-8
 
 
 class QuadSourceSupervisor(IntegrationSupervisor):
@@ -124,6 +135,9 @@ def compute_QuadSource_integral(
 
     model: BackgroundModel = model_proxy.get()
 
+    model_f: ModelFunctions = model.functions
+    Gk_f: GkSourceFunctions = GkPolicy.functions
+
     with WallclockTimer() as timer:
         numeric_quad: float = 0.0
         WKB_quad: float = 0.0
@@ -134,20 +148,25 @@ def compute_QuadSource_integral(
         WKB_Levin_data = None
 
         if GkPolicy.type == "numeric":
-            regions = [
-                (z_source_max, z_response),
-                (None, None),
-                (None, None),
-            ]
+            regions = [(z_source_max, z_response), (None, None), (None, None)]
 
         elif GkPolicy.type == "WKB":
             Levin_z: Optional[float] = GkPolicy.Levin_z
 
-            regions = [
-                (None, None),
-                (z_source_max, Levin_z if Levin_z is not None else z_response),
-                (Levin_z, z_response),
-            ]
+            if Levin_z is not None:
+                # unlikely to be worth doing Levin method (or that we will get an especially accurate result)
+                # unless the phase goes through enough cycles
+                phase_diff = Gk_f.theta(z_response.z) - Gk_f.theta(Levin_z)
+                if phase_diff > LEVIN_MIN_PHASE_DIFF:
+                    regions = [
+                        (None, None),
+                        (z_source_max, Levin_z),
+                        (Levin_z, z_response),
+                    ]
+                else:
+                    regions = [(None, None), (z_source_max, z_response), (None, None)]
+            else:
+                regions = [(None, None), (z_source_max, z_response), (None, None)]
 
         elif GkPolicy.type == "mixed":
             crossover_z: Optional[float] = GkPolicy.crossover_z
@@ -161,25 +180,47 @@ def compute_QuadSource_integral(
             ):
                 Levin_z = crossover_z
 
-            regions = [
-                (z_source_max, crossover_z),
-                (
-                    crossover_z if crossover_z is not None else z_source_max,
-                    Levin_z if Levin_z is not None else z_response,
-                ),
-                (Levin_z, z_response),
-            ]
+            if Levin_z is not None:
+                phase_diff = Gk_f.theta(z_response.z) - Gk_f.theta(Levin_z)
+                if phase_diff > LEVIN_MIN_PHASE_DIFF:
+                    regions = [
+                        (z_source_max, crossover_z),
+                        (
+                            crossover_z if crossover_z is not None else z_source_max,
+                            Levin_z,
+                        ),
+                        (Levin_z, z_response),
+                    ]
+                else:
+                    regions = [
+                        (z_source_max, crossover_z),
+                        (
+                            crossover_z if crossover_z is not None else z_source_max,
+                            z_response,
+                        ),
+                        (None, None),
+                    ]
+            else:
+                regions = [
+                    (z_source_max, crossover_z),
+                    (
+                        crossover_z if crossover_z is not None else z_source_max,
+                        z_response,
+                    ),
+                    (None, None),
+                ]
 
         else:
             raise NotImplementedError(f"Gk {GkPolicy.type} not implemented")
 
+        # REGION 1: ORDINARY QUADRATURE OF NUMERICAL RESULT
         max_z, min_z = regions.pop(0)
         if (
             max_z is not None
             and min_z is not None
             and get_z(max_z) - get_z(min_z) > DEFAULT_QUADRATURE_TOLERANCE
         ):
-            now = time.time()
+            # now = time.time()
             # print(
             #     f"|  --  (source store_id={source.store_id}, k store_id={k.store_id}) running time={format_time(now - start_time)}, starting numerical quadrature part"
             # )
@@ -198,13 +239,14 @@ def compute_QuadSource_integral(
             numeric_quad = payload["value"]
             numeric_quad_data = payload["data"]
 
+        # REGION 2: ORDINARY QUADRATURE OF WKB RESULTS
         max_z, min_z = regions.pop(0)
         if (
             max_z is not None
             and min_z is not None
             and get_z(max_z) - get_z(min_z) > DEFAULT_QUADRATURE_TOLERANCE
         ):
-            now = time.time()
+            # now = time.time()
             # print(
             #     f"|  --  (source store_id={source.store_id}, k store_id={k.store_id}) running time={format_time(now - start_time)}, starting WKB quadrature part"
             # )
@@ -223,13 +265,14 @@ def compute_QuadSource_integral(
             WKB_quad = payload["value"]
             WKB_quad_data = payload["data"]
 
+        # REGION 3: LEVIN QUADRATURE
         max_z, min_z = regions.pop(0)
         if (
             max_z is not None
             and min_z is not None
             and get_z(max_z) - get_z(min_z) > DEFAULT_QUADRATURE_TOLERANCE
         ):
-            now = time.time()
+            # now = time.time()
             # print(
             #     f"|  --  (source store_id={source.store_id}, k store_id={k.store_id}) running time={format_time(now - start_time)}, starting WKB Levin part"
             # )
@@ -271,6 +314,8 @@ def compute_QuadSource_integral(
         "numeric_quad_data": numeric_quad_data,
         "WKB_quad_data": WKB_quad_data,
         "WKB_Levin_data": WKB_Levin_data,
+        "eta_source_max": model_f.tau(z_source_max.z),
+        "eta_response": model_f.tau(z_response.z),
         "analytic_rad": analytic_data["value"],
         "compute_time": timer.elapsed,
         "metadata": {"analytic": analytic_data["metadata"]},
@@ -279,30 +324,30 @@ def compute_QuadSource_integral(
 
 XCUT_SEARCH_TOLERANCE = 1e-2
 XCUT_SEARCH_MAX_ITERATIONS = 200
-XCUT_SEARCH_LEVIN_THRESHOLD = 0.1
+XCUT_SEARCH_LEVIN_THRESHOLD = 0.01
 
 
-def find_x_cut(x_min, x_max, dphase_A, dphase_B):
+def find_x_cut(x_min, x_max, dphase_Gk, dphase_Tk):
     iter = 0
 
     while (x_max - x_min) > XCUT_SEARCH_TOLERANCE and iter < XCUT_SEARCH_MAX_ITERATIONS:
         assert x_max > x_min
 
-        dp_A_min = dphase_A(x_min)
-        dp_B_min = dphase_B(x_min)
+        dp_Gk_min = dphase_Gk(x_min)
+        dp_Tk_min = dphase_Tk(x_min)
 
         if (
-            dp_A_min > XCUT_SEARCH_LEVIN_THRESHOLD
-            and dp_B_min > XCUT_SEARCH_LEVIN_THRESHOLD
+            dp_Gk_min > XCUT_SEARCH_LEVIN_THRESHOLD
+            and dp_Tk_min > XCUT_SEARCH_LEVIN_THRESHOLD
         ):
             return x_min
 
-        dp_A_max = dphase_A(x_max)
-        dp_B_max = dphase_B(x_max)
+        dp_Gk_max = dphase_Gk(x_max)
+        dp_Tk_max = dphase_Tk(x_max)
 
         if (
-            dp_A_max < XCUT_SEARCH_LEVIN_THRESHOLD
-            and dp_B_max < XCUT_SEARCH_LEVIN_THRESHOLD
+            dp_Gk_max < XCUT_SEARCH_LEVIN_THRESHOLD
+            and dp_Tk_max < XCUT_SEARCH_LEVIN_THRESHOLD
         ):
             raise RuntimeError(
                 "rate of change of phase is too small even at right-hand endpoint"
@@ -310,12 +355,12 @@ def find_x_cut(x_min, x_max, dphase_A, dphase_B):
 
         x_mid = (x_min + x_max) / 2.0
 
-        dp_A_mid = dphase_A(x_mid)
-        dp_B_mid = dphase_B(x_mid)
+        dp_Gk_mid = dphase_Gk(x_mid)
+        dp_Tk_mid = dphase_Tk(x_mid)
 
         if (
-            dp_A_mid > XCUT_SEARCH_LEVIN_THRESHOLD
-            and dp_B_mid > XCUT_SEARCH_LEVIN_THRESHOLD
+            dp_Gk_mid > XCUT_SEARCH_LEVIN_THRESHOLD
+            and dp_Tk_mid > XCUT_SEARCH_LEVIN_THRESHOLD
         ):
             x_max = x_mid
         else:
@@ -329,11 +374,11 @@ def find_x_cut(x_min, x_max, dphase_A, dphase_B):
         )
 
     x_cut_candidate = (x_min + x_max) / 2.0
-    dp_A = dphase_A(x_cut_candidate)
-    dp_B = dphase_B(x_cut_candidate)
+    dp_Gk = dphase_Gk(x_cut_candidate)
+    dp_Tk = dphase_Tk(x_cut_candidate)
 
-    if dp_A < XCUT_SEARCH_LEVIN_THRESHOLD or dp_B < XCUT_SEARCH_LEVIN_THRESHOLD:
-        # x_max should be guaranteed to satisfy dphase_A,B > XCUT_SEARCH_LEVIN_THRESHOLD
+    if dp_Gk < XCUT_SEARCH_LEVIN_THRESHOLD or dp_Tk < XCUT_SEARCH_LEVIN_THRESHOLD:
+        # x_max should be guaranteed to satisfy dphase_Gk,Tk > XCUT_SEARCH_LEVIN_THRESHOLD
         return x_max
 
     return x_cut_candidate
@@ -348,21 +393,53 @@ def _three_bessel_integrals(
     b: float,
     phase_data: dict,
     nu_type: str,
+    timestamp: datetime,
     tol: float,
+    mode: str = "default",
+    debug_plots: bool = False,
 ):
     if nu_type not in ["0pt5", "2pt5"]:
         raise RuntimeError('phase_data should be "0pt5" or "2pt5"')
+
+    if mode not in ["default", "quad", "Levin"]:
+        mode = "default"
+
+    if debug_plots:
+        _bessel_function_plot(phase_data, b, timestamp)
+        _three_bessel_plot(k, q, r, min_eta, max_eta, b, phase_data, nu_type, timestamp)
 
     assert min_eta <= max_eta
 
     cs = sqrt((1.0 - b) / (1.0 + b) / 3.0)
     metadata = {}
 
-    phase_data_A = phase_data["0pt5"]
-    phase_data_B = phase_data[nu_type]
+    phase_data_Gk = phase_data["0pt5"]
+    phase_data_Tk = phase_data[nu_type]
 
-    dphase_A = phase_data_A["dphase"]
-    dphase_B = phase_data_B["dphase"]
+    phase_Gk = phase_data_Gk["phase"]
+    phase_Tk = phase_data_Tk["phase"]
+
+    # unlikely to be worth doing Levin (or to yield an especially accurate result)
+    # unless the phase goes through at least quite a few 2pi cycles
+    phase_diff_Gk = phase_Gk(k.k * max_eta) - phase_Gk(k.k * min_eta)
+    phase_diff_Tk_q = phase_Tk(q.k * cs * max_eta) - phase_Tk(q.k * cs * min_eta)
+    phase_diff_Tk_r = phase_Tk(r.k * cs * max_eta) - phase_Tk(r.k * cs * min_eta)
+
+    if phase_diff_Gk < -1.0:
+        raise RuntimeError(
+            f"_three_bessel_integrals: phase_diff_Gk < 0.0 (value={phase_diff_Gk:.5g}"
+        )
+    if phase_diff_Tk_q < -1.0:
+        raise RuntimeError(
+            f"_three_bessel_integrals: phase_diff_Tk_q < 0.0 (value={phase_diff_Tk_q:.5g}"
+        )
+    if phase_diff_Tk_r < -1.0:
+        raise RuntimeError(
+            f"_three_bessel_integrals: phase_diff_Tk_q < 0.0 (value={phase_diff_Tk_r:.5g}"
+        )
+
+    dphase_Gk = phase_data_Gk["dphase"]
+    dphase_Tk = phase_data_Tk["dphase"]
 
     min_k_mode = min(k.k, q.k, r.k)
     max_k_mode = max(k.k, q.k, r.k)
@@ -370,52 +447,94 @@ def _three_bessel_integrals(
     min_x = min_k_mode * min_eta * cs
     max_x = max_k_mode * max_eta
 
-    x_cut = find_x_cut(min_x, max_x, dphase_A, dphase_B)
+    x_cut = find_x_cut(min_x, max_x, dphase_Gk, dphase_Tk)
     eta_cut = x_cut / min_k_mode / cs
 
     metadata["x_cut"] = x_cut
     metadata["eta_cut"] = eta_cut
+    metadata["min_eta"] = min_eta
+    metadata["max_eta"] = max_eta
+    metadata["min_x"] = min_x
+    metadata["max_x"] = max_x
 
-    if eta_cut <= min_eta:
-        Levin = _three_bessel_Levin(
-            k,
-            q,
-            r,
-            min_eta=min_eta,
-            max_eta=max_eta,
-            b=b,
-            phase_data_A=phase_data_A,
-            phase_data_B=phase_data_B,
-            x_cut=x_cut,
-            tol=tol,
-        )
-        metadata["Levin_J"] = Levin[0]
-        metadata["Levin_Y"] = Levin[1]
-        return {"J": Levin[0], "Y": Levin[1], "metadata": metadata}
+    if mode == "Levin" or (mode == "default" and eta_cut <= min_eta):
+        # quad_comparison = _three_bessel_quad(
+        #     k, q, r, min_eta=min_eta, max_eta=max_eta, b=b, nu_type=nu_type, tol=tol
+        # )
+        if mode == "Levin" or (
+            phase_diff_Gk > LEVIN_MIN_PHASE_DIFF
+            or phase_diff_Tk_q > LEVIN_MIN_PHASE_DIFF
+            or phase_diff_Tk_r > LEVIN_MIN_PHASE_DIFF
+        ):
+            Levin = _three_bessel_Levin(
+                k,
+                q,
+                r,
+                min_eta=min_eta,
+                max_eta=max_eta,
+                b=b,
+                phase_data_Gk=phase_data_Gk,
+                phase_data_Tk=phase_data_Tk,
+                x_cut=x_cut,
+                tol=tol,
+            )
+            metadata["Levin_J"] = Levin[0]
+            metadata["Levin_Y"] = Levin[1]
+            # metadata["quad_comparison_J"] = quad_comparison[0]
+            # metadata["quad_comparison_Y"] = quad_comparison[1]
+            return {"J": Levin[0], "Y": Levin[1], "metadata": metadata}
+        else:
+            quad = _three_bessel_quad(
+                k, q, r, min_eta=min_eta, max_eta=max_eta, b=b, nu_type=nu_type, tol=tol
+            )
+            metadata["quad_J"] = quad[0]
+            metadata["quad_Y"] = quad[1]
+            return {"J": quad[0], "Y": quad[1], "metadata": metadata}
 
-    if eta_cut < max_eta:
-        quad = _three_bessel_quad(
-            k, q, r, min_eta=min_eta, max_eta=eta_cut, b=b, nu_type=nu_type, tol=tol
-        )
-        Levin = _three_bessel_Levin(
-            k,
-            q,
-            r,
-            min_eta=eta_cut,
-            max_eta=max_eta,
-            b=b,
-            phase_data_A=phase_data_A,
-            phase_data_B=phase_data_B,
-            x_cut=x_cut,
-            tol=tol,
-        )
-        metadata["Levin_J"] = Levin[0]
-        metadata["Levin_Y"] = Levin[1]
-        metadata["quad_J"] = quad[0]
-        metadata["quad_Y"] = quad[1]
-        return {"J": quad[0] + Levin[0], "Y": quad[1] + Levin[1], "metadata": metadata}
+    if mode == "default" and eta_cut < max_eta:
+        # quad_comparison = _three_bessel_quad(
+        #     k, q, r, min_eta=eta_cut, max_eta=max_eta, b=b, nu_type=nu_type, tol=tol
+        # )
+        if (
+            phase_diff_Gk > LEVIN_MIN_PHASE_DIFF
+            or phase_diff_Tk_q > LEVIN_MIN_PHASE_DIFF
+            or phase_diff_Tk_r > LEVIN_MIN_PHASE_DIFF
+        ):
+            quad = _three_bessel_quad(
+                k, q, r, min_eta=min_eta, max_eta=eta_cut, b=b, nu_type=nu_type, tol=tol
+            )
+            Levin = _three_bessel_Levin(
+                k,
+                q,
+                r,
+                min_eta=eta_cut,
+                max_eta=max_eta,
+                b=b,
+                phase_data_Gk=phase_data_Gk,
+                phase_data_Tk=phase_data_Tk,
+                x_cut=x_cut,
+                tol=tol,
+            )
+            metadata["Levin_J"] = Levin[0]
+            metadata["Levin_Y"] = Levin[1]
+            metadata["quad_J"] = quad[0]
+            metadata["quad_Y"] = quad[1]
+            # metadata["quad_comparison_J"] = quad_comparison[0]
+            # metadata["quad_comparison_Y"] = quad_comparison[1]
+            return {
+                "J": quad[0] + Levin[0],
+                "Y": quad[1] + Levin[1],
+                "metadata": metadata,
+            }
+        else:
+            quad = _three_bessel_quad(
+                k, q, r, min_eta=min_eta, max_eta=max_eta, b=b, nu_type=nu_type, tol=tol
+            )
+            metadata["quad_J"] = quad[0]
+            metadata["quad_Y"] = quad[1]
+            return {"J": quad[0], "Y": quad[1], "metadata": metadata}
 
-    assert eta_cut >= max_eta
+    assert mode == "quad" or eta_cut >= max_eta
 
     quad = _three_bessel_quad(
         k, q, r, min_eta=min_eta, max_eta=max_eta, b=b, nu_type=nu_type, tol=tol
@@ -432,8 +551,8 @@ def _three_bessel_Levin(
     min_eta: float,
     max_eta: float,
     b: float,
-    phase_data_A,
-    phase_data_B,
+    phase_data_Gk,
+    phase_data_Tk,
     x_cut: float,
     tol: float,
 ):
@@ -448,11 +567,11 @@ def _three_bessel_Levin(
             f"!! three_bessel_Levin: ERROR: smallest required x is smaller than x_cut (smallest x={min_k_mode * min_eta * cs:.5g}, x_cut={x_cut:.5g}, min_eta={min_eta:.5g}, min_k_mode={min_k_mode:.5g}, cs={cs:.5g}, coeff={min_k_mode*cs:.5g}, x_cut/coeff={x_cut/(min_k_mode*cs):.5g})"
         )
 
-    phase_A = phase_data_A["phase"]
-    dphase_A = phase_data_A["dphase"]
+    phase_Gk = phase_data_Gk["phase"]
+    dphase_Gk = phase_data_Gk["dphase"]
 
-    phase_B = phase_data_B["phase"]
-    dphase_B = phase_data_B["dphase"]
+    phase_Tk = phase_data_Tk["phase"]
+    dphase_Tk = phase_data_Tk["dphase"]
 
     def Levin_f(log_eta: float):
         eta = exp(log_eta)
@@ -461,9 +580,9 @@ def _three_bessel_Levin(
         x2 = q.k * cs * eta
         x3 = r.k * cs * eta
 
-        beta1 = dphase_A(x1)
-        beta2 = dphase_B(x2)
-        beta3 = dphase_B(x3)
+        beta1 = dphase_Gk(x1)
+        beta2 = dphase_Tk(x2)
+        beta3 = dphase_Tk(x3)
 
         if beta1 < 0.0:
             raise ValueError(
@@ -492,13 +611,21 @@ def _three_bessel_Levin(
         x2 = q.k * cs * eta
         x3 = r.k * cs * eta
 
-        return phase_A(x1) + phase_B(x2) + phase_B(x3)
+        return phase_Gk(x1) + phase_Tk(x2) + phase_Tk(x3)
 
     J1_data = adaptive_levin_sincos(
-        x_span, f=[Levin_f, lambda x: 0.0], theta=phase1, tol=tol
+        x_span,
+        f=[Levin_f, lambda x: 0.0],
+        theta=phase1,
+        tol=LEVIN_TOLERANCE,
+        chebyshev_order=CHEBYSHEV_ORDER,
     )
     Y1_data = adaptive_levin_sincos(
-        x_span, f=[lambda x: 0.0, Levin_f], theta=phase1, tol=tol
+        x_span,
+        f=[lambda x: 0.0, lambda x: -Levin_f(x)],
+        theta=phase1,
+        tol=LEVIN_TOLERANCE,
+        chebyshev_order=CHEBYSHEV_ORDER,
     )
 
     def phase2(log_eta: float):
@@ -508,13 +635,21 @@ def _three_bessel_Levin(
         x2 = q.k * cs * eta
         x3 = r.k * cs * eta
 
-        return phase_A(x1) + phase_B(x2) - phase_B(x3)
+        return phase_Gk(x1) + phase_Tk(x2) - phase_Tk(x3)
 
     J2_data = adaptive_levin_sincos(
-        x_span, f=[Levin_f, lambda x: 0.0], theta=phase2, tol=tol
+        x_span,
+        f=[Levin_f, lambda x: 0.0],
+        theta=phase2,
+        tol=LEVIN_TOLERANCE,
+        chebyshev_order=CHEBYSHEV_ORDER,
     )
     Y2_data = adaptive_levin_sincos(
-        x_span, f=[lambda x: 0.0, Levin_f], theta=phase2, tol=tol
+        x_span,
+        f=[lambda x: 0.0, lambda x: -Levin_f(x)],
+        theta=phase2,
+        tol=LEVIN_TOLERANCE,
+        chebyshev_order=CHEBYSHEV_ORDER,
     )
 
     def phase3(log_eta: float):
@@ -524,16 +659,21 @@ def _three_bessel_Levin(
         x2 = q.k * cs * eta
         x3 = r.k * cs * eta
 
-        return phase_A(x1) - phase_B(x2) + phase_B(x3)
+        return phase_Gk(x1) - phase_Tk(x2) + phase_Tk(x3)
 
     J3_data = adaptive_levin_sincos(
-        x_span, f=[Levin_f, lambda x: 0.0], theta=phase3, tol=tol
+        x_span,
+        f=[Levin_f, lambda x: 0.0],
+        theta=phase3,
+        tol=LEVIN_TOLERANCE,
+        chebyshev_order=CHEBYSHEV_ORDER,
     )
     Y3_data = adaptive_levin_sincos(
         x_span,
-        f=[lambda x: 0.0, Levin_f],
+        f=[lambda x: 0.0, lambda x: -Levin_f(x)],
         theta=phase3,
-        tol=tol,
+        tol=LEVIN_TOLERANCE,
+        chebyshev_order=CHEBYSHEV_ORDER,
     )
 
     def phase4(log_eta: float):
@@ -543,16 +683,21 @@ def _three_bessel_Levin(
         x2 = q.k * cs * eta
         x3 = r.k * cs * eta
 
-        return phase_A(x1) - phase_B(x2) - phase_B(x3)
+        return phase_Gk(x1) - phase_Tk(x2) - phase_Tk(x3)
 
     J4_data = adaptive_levin_sincos(
-        x_span, f=[Levin_f, lambda x: 0.0], theta=phase4, tol=tol
+        x_span,
+        f=[Levin_f, lambda x: 0.0],
+        theta=phase4,
+        tol=LEVIN_TOLERANCE,
+        chebyshev_order=CHEBYSHEV_ORDER,
     )
     Y4_data = adaptive_levin_sincos(
         x_span,
-        f=[lambda x: 0.0, Levin_f],
+        f=[lambda x: 0.0, lambda x: -Levin_f(x)],
         theta=phase4,
-        tol=tol,
+        tol=LEVIN_TOLERANCE,
+        chebyshev_order=CHEBYSHEV_ORDER,
     )
 
     J1_value = J1_data["value"]
@@ -565,7 +710,7 @@ def _three_bessel_Levin(
     Y3_value = Y3_data["value"]
     Y4_value = Y4_data["value"]
 
-    norm_factor = pow(2.0 / pi, 3.0 / 2.0) / sqrt(k.k * q.k * r.k * cs * cs) / 4.0
+    norm_factor = pow(2.0 / pi, 3.0 / 2.0) / sqrt(k.k * q.k * r.k) / cs / 4.0
     J = norm_factor * (-J1_value + J2_value + J3_value - J4_value)
     Y = norm_factor * (-Y1_value + Y2_value + Y3_value - Y4_value)
 
@@ -646,11 +791,11 @@ def analytic_integral(
     b: float,
     tol: float,
 ):
-    functions = model.functions
+    functions: ModelFunctions = model.functions
     min_eta: float = functions.tau(max_z.z)
     max_eta: float = functions.tau(min_z.z)
 
-    eta_response = functions.tau(z_response.z)
+    eta_response: float = functions.tau(z_response.z)
 
     cs_sq = (1.0 - b) / (1.0 + b) / 3.0
 
@@ -663,6 +808,8 @@ def analytic_integral(
     phase_data_0pt5 = bessel_phase(0.5 + b, max_x + 10.0)
     phase_data_2pt5 = bessel_phase(2.5 + b, max_x + 10.0)
 
+    timestamp = datetime.now().replace(microsecond=0)
+
     data0pt5 = _three_bessel_integrals(
         k,
         q,
@@ -672,7 +819,9 @@ def analytic_integral(
         b=b,
         phase_data={"0pt5": phase_data_0pt5, "2pt5": phase_data_2pt5},
         nu_type="0pt5",
+        timestamp=timestamp,
         tol=tol,
+        mode="Levin",
     )
     data2pt5 = _three_bessel_integrals(
         k,
@@ -683,10 +832,23 @@ def analytic_integral(
         b=b,
         phase_data={"0pt5": phase_data_0pt5, "2pt5": phase_data_2pt5},
         nu_type="2pt5",
+        timestamp=timestamp,
         tol=tol,
+        mode="Levin",
     )
 
-    metadata = {"0pt5": data0pt5, "2pt5": data2pt5}
+    metadata = {
+        "k": k.k,
+        "q": q.k,
+        "r": r.k,
+        "max_z": max_z.z,
+        "min_z": min_z.z,
+        "max_eta": max_eta,
+        "min_eta": min_eta,
+        "eta_response": eta_response,
+        "0pt5": data0pt5,
+        "2pt5": data2pt5,
+    }
 
     A = (2.0 + b) / (1.0 + b)
 
@@ -730,9 +892,9 @@ def numeric_quad_integral(
     min_z: float,
     tol: float,
 ) -> dict:
-    source_f = source.functions
-    Gk_f = GkPolicy.functions
-    model_f = model.functions
+    source_f: QuadSourceFunctions = source.functions
+    Gk_f: GkSourceFunctions = GkPolicy.functions
+    model_f: ModelFunctions = model.functions
 
     if GkPolicy.type not in ["numeric", "mixed"]:
         raise RuntimeError(
@@ -837,9 +999,9 @@ def WKB_quad_integral(
     min_z: float,
     tol: float,
 ) -> dict:
-    source_f = source.functions
-    Gk_f = GkPolicy.functions
-    model_f = model.functions
+    source_f: QuadSourceFunctions = source.functions
+    Gk_f: GkSourceFunctions = GkPolicy.functions
+    model_f: ModelFunctions = model.functions
 
     if GkPolicy.type not in ["WKB", "mixed"]:
         raise RuntimeError(
@@ -944,9 +1106,9 @@ def WKB_Levin_integral(
     min_z: float,
     tol: float,
 ) -> dict:
-    source_f = source.functions
-    Gk_f = GkPolicy.functions
-    model_f = model.functions
+    source_f: QuadSourceFunctions = source.functions
+    Gk_f: GkSourceFunctions = GkPolicy.functions
+    model_f: ModelFunctions = model.functions
 
     if GkPolicy.type not in ["WKB", "mixed"]:
         raise RuntimeError(
@@ -994,8 +1156,8 @@ def WKB_Levin_integral(
         x_span,
         [Levin_f, lambda x: 0.0],
         Levin_theta,
-        tol=tol,
-        chebyshev_order=12,
+        tol=LEVIN_TOLERANCE,
+        chebyshev_order=CHEBYSHEV_ORDER,
         notify_label=f"k={k.k_inv_Mpc:.3g}/Mpc, q={q.k_inv_Mpc:.3g}/Mpc, r={r.k_inv_Mpc:.3g}/Mpc @ z_response={z_response.z:.5g}",
     )
 
@@ -1046,6 +1208,8 @@ class QuadSourceIntegral(DatastoreObject):
             self._WKB_quad_data = None
             self._WKB_Levin_data = None
 
+            self._eta_source_max = None
+            self._eta_response = None
             self._analytic_rad = None
 
             self._compute_time = None
@@ -1062,6 +1226,8 @@ class QuadSourceIntegral(DatastoreObject):
             self._WKB_quad = payload["WKB_quad"]
             self._WKB_Levin = payload["WKB_Levin"]
 
+            self._eta_source_max = payload["eta_source_max"]
+            self._eta_response = payload["eta_response"]
             self._analytic_rad = payload["analytic_rad"]
 
             self._source_serial = payload["source_serial"]
@@ -1137,6 +1303,20 @@ class QuadSourceIntegral(DatastoreObject):
             raise RuntimeError("value has not yet been populated")
 
         return self._analytic_rad
+
+    @property
+    def eta_source_max(self) -> float:
+        if self._total is None:
+            raise RuntimeError("value has not yet been populated")
+
+        return self._eta_source_max
+
+    @property
+    def eta_response(self) -> float:
+        if self._total is None:
+            raise RuntimeError("value has not yet been populated")
+
+        return self._eta_response
 
     @property
     def data_serial(self) -> Optional[int]:
@@ -1279,6 +1459,8 @@ class QuadSourceIntegral(DatastoreObject):
         self._WKB_quad = payload["WKB_quad"]
         self._WKB_Levin = payload["WKB_Levin"]
 
+        self._eta_source_max = payload["eta_source_max"]
+        self._eta_response = payload["eta_response"]
         self._analytic_rad = payload["analytic_rad"]
 
         self._data_serial = payload["GkPolicy_serial"]

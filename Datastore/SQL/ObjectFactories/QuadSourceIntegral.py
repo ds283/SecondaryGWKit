@@ -159,6 +159,8 @@ class sqla_QuadSourceIntegral_factory(SQLAFactoryBase):
                 sqla.Column("WKB_quad", sqla.Float(64), nullable=False),
                 sqla.Column("WKB_Levin", sqla.Float(64), nullable=False),
                 sqla.Column("analytic_rad", sqla.Float(64), nullable=False),
+                sqla.Column("eta_source_max", sqla.Float(64), nullable=True),
+                sqla.Column("eta_response", sqla.Float(64), nullable=True),
                 sqla.Column("numeric_quad_compute_time", sqla.Float(64), nullable=True),
                 sqla.Column("numeric_quad_compute_steps", sqla.Integer, nullable=True),
                 sqla.Column(
@@ -224,6 +226,8 @@ class sqla_QuadSourceIntegral_factory(SQLAFactoryBase):
                 table.c.WKB_quad,
                 table.c.WKB_Levin,
                 table.c.analytic_rad,
+                table.c.eta_source_max,
+                table.c.eta_response,
                 table.c.data_serial,
                 table.c.numeric_quad_compute_time,
                 table.c.numeric_quad_compute_steps,
@@ -302,6 +306,8 @@ class sqla_QuadSourceIntegral_factory(SQLAFactoryBase):
                 "WKB_quad": row_data.WKB_quad,
                 "WKB_Levin": row_data.WKB_Levin,
                 "analytic_rad": row_data.analytic_rad,
+                "eta_source_max": row_data.eta_source_max,
+                "eta_response": row_data.eta_response,
                 "numeric_quad_data": IntegrationData(
                     compute_time=row_data.numeric_quad_compute_time,
                     compute_steps=row_data.numeric_quad_compute_steps,
@@ -359,88 +365,110 @@ class sqla_QuadSourceIntegral_factory(SQLAFactoryBase):
         WKB_quad_data = obj.WKB_quad_data
         WKB_Levin_data = obj.WKB_Levin_data
 
-        store_id = inserter(
-            conn,
-            {
-                "label": obj.label,
-                "model_serial": obj._model_proxy.store_id,
-                "z_response_serial": obj._z_response.store_id,
-                "z_source_max_serial": obj._z_source_max.store_id,
-                "k_wavenumber_exit_serial": obj._k_exit.store_id,
-                "q_wavenumber_exit_serial": obj._q_exit.store_id,
-                "r_wavenumber_exit_serial": obj._r_exit.store_id,
-                "tol_serial": obj._tol.store_id,
-                "policy_serial": obj._policy.store_id,
-                "source_serial": obj._source_serial,
-                "data_serial": obj._data_serial,
-                "compute_time": obj.compute_time,
-                "total": obj._total,
-                "numeric_quad": obj._numeric_quad,
-                "WKB_quad": obj._WKB_quad,
-                "WKB_Levin": obj._WKB_Levin,
-                "analytic_rad": obj._analytic_rad,
-                "numeric_quad_compute_time": (
-                    numeric_quad_data.compute_time
-                    if numeric_quad_data is not None
-                    else None
-                ),
-                "numeric_quad_compute_steps": (
-                    numeric_quad_data.compute_steps
-                    if numeric_quad_data is not None
-                    else None
-                ),
-                "numeric_quad_RHS_evaluations": (
-                    numeric_quad_data.RHS_evaluations
-                    if numeric_quad_data is not None
-                    else None
-                ),
-                "numeric_quad_mean_RHS_time": (
-                    numeric_quad_data.mean_RHS_time
-                    if numeric_quad_data is not None
-                    else None
-                ),
-                "numeric_quad_max_RHS_time": (
-                    numeric_quad_data.max_RHS_time
-                    if numeric_quad_data is not None
-                    else None
-                ),
-                "numeric_quad_min_RHS_time": (
-                    numeric_quad_data.min_RHS_time
-                    if numeric_quad_data is not None
-                    else None
-                ),
-                "WKB_quad_compute_time": (
-                    WKB_quad_data.compute_time if WKB_quad_data is not None else None
-                ),
-                "WKB_quad_compute_steps": (
-                    WKB_quad_data.compute_steps if WKB_quad_data is not None else None
-                ),
-                "WKB_quad_RHS_evaluations": (
-                    WKB_quad_data.RHS_evaluations if WKB_quad_data is not None else None
-                ),
-                "WKB_quad_mean_RHS_time": (
-                    WKB_quad_data.mean_RHS_time if WKB_quad_data is not None else None
-                ),
-                "WKB_quad_max_RHS_time": (
-                    WKB_quad_data.max_RHS_time if WKB_quad_data is not None else None
-                ),
-                "WKB_quad_min_RHS_time": (
-                    WKB_quad_data.min_RHS_time if WKB_quad_data is not None else None
-                ),
-                "WKB_Levin_num_regions": (
-                    WKB_Levin_data.num_regions if WKB_Levin_data is not None else None
-                ),
-                "WKB_Levin_evaluations": (
-                    WKB_Levin_data.evaluations if WKB_Levin_data is not None else None
-                ),
-                "WKB_Levin_elapsed": (
-                    WKB_Levin_data.elapsed if WKB_Levin_data is not None else None
-                ),
-                "metadata": (
-                    json.dumps(obj.metadata) if obj._metadata is not None else None
-                ),
-            },
-        )
+        try:
+            store_id = inserter(
+                conn,
+                {
+                    "label": obj.label,
+                    "model_serial": obj._model_proxy.store_id,
+                    "z_response_serial": obj._z_response.store_id,
+                    "z_source_max_serial": obj._z_source_max.store_id,
+                    "k_wavenumber_exit_serial": obj._k_exit.store_id,
+                    "q_wavenumber_exit_serial": obj._q_exit.store_id,
+                    "r_wavenumber_exit_serial": obj._r_exit.store_id,
+                    "tol_serial": obj._tol.store_id,
+                    "policy_serial": obj._policy.store_id,
+                    "source_serial": obj._source_serial,
+                    "data_serial": obj._data_serial,
+                    "compute_time": obj.compute_time,
+                    "total": obj._total,
+                    "numeric_quad": obj._numeric_quad,
+                    "WKB_quad": obj._WKB_quad,
+                    "WKB_Levin": obj._WKB_Levin,
+                    "analytic_rad": obj._analytic_rad,
+                    "eta_source_max": obj._eta_source_max,
+                    "eta_response": obj._eta_response,
+                    "numeric_quad_compute_time": (
+                        numeric_quad_data.compute_time
+                        if numeric_quad_data is not None
+                        else None
+                    ),
+                    "numeric_quad_compute_steps": (
+                        numeric_quad_data.compute_steps
+                        if numeric_quad_data is not None
+                        else None
+                    ),
+                    "numeric_quad_RHS_evaluations": (
+                        numeric_quad_data.RHS_evaluations
+                        if numeric_quad_data is not None
+                        else None
+                    ),
+                    "numeric_quad_mean_RHS_time": (
+                        numeric_quad_data.mean_RHS_time
+                        if numeric_quad_data is not None
+                        else None
+                    ),
+                    "numeric_quad_max_RHS_time": (
+                        numeric_quad_data.max_RHS_time
+                        if numeric_quad_data is not None
+                        else None
+                    ),
+                    "numeric_quad_min_RHS_time": (
+                        numeric_quad_data.min_RHS_time
+                        if numeric_quad_data is not None
+                        else None
+                    ),
+                    "WKB_quad_compute_time": (
+                        WKB_quad_data.compute_time
+                        if WKB_quad_data is not None
+                        else None
+                    ),
+                    "WKB_quad_compute_steps": (
+                        WKB_quad_data.compute_steps
+                        if WKB_quad_data is not None
+                        else None
+                    ),
+                    "WKB_quad_RHS_evaluations": (
+                        WKB_quad_data.RHS_evaluations
+                        if WKB_quad_data is not None
+                        else None
+                    ),
+                    "WKB_quad_mean_RHS_time": (
+                        WKB_quad_data.mean_RHS_time
+                        if WKB_quad_data is not None
+                        else None
+                    ),
+                    "WKB_quad_max_RHS_time": (
+                        WKB_quad_data.max_RHS_time
+                        if WKB_quad_data is not None
+                        else None
+                    ),
+                    "WKB_quad_min_RHS_time": (
+                        WKB_quad_data.min_RHS_time
+                        if WKB_quad_data is not None
+                        else None
+                    ),
+                    "WKB_Levin_num_regions": (
+                        WKB_Levin_data.num_regions
+                        if WKB_Levin_data is not None
+                        else None
+                    ),
+                    "WKB_Levin_evaluations": (
+                        WKB_Levin_data.evaluations
+                        if WKB_Levin_data is not None
+                        else None
+                    ),
+                    "WKB_Levin_elapsed": (
+                        WKB_Levin_data.elapsed if WKB_Levin_data is not None else None
+                    ),
+                    "metadata": (
+                        json.dumps(obj.metadata) if obj._metadata is not None else None
+                    ),
+                },
+            )
+        except TypeError as e:
+            print(obj._metadata)
+            raise e
 
         # set store_id on behalf of the QuadSourceIntegration instance
         obj._my_id = store_id
@@ -490,6 +518,8 @@ class sqla_QuadSourceIntegral_factory(SQLAFactoryBase):
                 table.c.WKB_quad,
                 table.c.WKB_Levin,
                 table.c.analytic_rad,
+                table.c.eta_source_max,
+                table.c.eta_response,
                 table.c.numeric_quad_compute_time,
                 table.c.numeric_quad_compute_steps,
                 table.c.numeric_quad_RHS_evaluations,
@@ -590,6 +620,8 @@ class sqla_QuadSourceIntegral_factory(SQLAFactoryBase):
                     "WKB_quad": row_data.WKB_quad,
                     "WKB_Levin": row_data.WKB_Levin,
                     "analytic_rad": row_data.analytic_rad,
+                    "eta_source_max": row_data.eta_source_max,
+                    "eta_response": row_data.eta_response,
                     "numeric_quad_data": IntegrationData(
                         compute_time=row_data.numeric_quad_compute_time,
                         compute_steps=row_data.numeric_quad_compute_steps,
