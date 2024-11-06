@@ -8,6 +8,50 @@ from utilities import format_time
 
 class TestAdaptiveLevinSinCos(unittest.TestCase):
 
+    def test_SinIntegral(self):
+        x_span = (1.0, 50000.0)
+
+        f = [lambda x: 1.0, lambda x: 0.0]
+
+        theta = lambda x: x
+
+        data = adaptive_levin_sincos(x_span, f, theta, tol=1e-10, chebyshev_order=12)
+        value = data["value"]
+        regions = data["regions"]
+        evaluations = data["evaluations"]
+        elapsed = data["elapsed"]
+        print(
+            f"integral_(1)^(50,000) sin(x) = {value} ({len(regions)} regions, {evaluations} evaluations in time {format_time(elapsed)})"
+        )
+        for region in regions:
+            print(f"  -- region: ({region[0]}, {region[1]})")
+        self.assertTrue(
+            fabs(value - 0.5581795618) < 1e-10,
+            f"Sin integral test failed: expected {0.5581795618}, obtained {value}",
+        )
+
+    def test_CosIntegral(self):
+        x_span = (1.0, 500000.0)
+
+        f = [lambda x: 0.0, lambda x: 1.0]
+
+        theta = lambda x: x
+
+        data = adaptive_levin_sincos(x_span, f, theta, tol=1e-10, chebyshev_order=12)
+        value = data["value"]
+        regions = data["regions"]
+        evaluations = data["evaluations"]
+        elapsed = data["elapsed"]
+        print(
+            f"integral_(1)^(500,000) Cos(x) = {value} ({len(regions)} regions, {evaluations} evaluations in time {format_time(elapsed)})"
+        )
+        for region in regions:
+            print(f"  -- region: ({region[0]}, {region[1]})")
+        self.assertTrue(
+            fabs(value - (-0.6636397833)) < 1e-10,
+            f"Cos integral test failed: expected {-0.6636397833}, obtained {value}",
+        )
+
     def test_SincIntegral(self):
         x_span = (1.0, 100.0)
 
