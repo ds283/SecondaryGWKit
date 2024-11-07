@@ -6,6 +6,7 @@ from pathlib import Path
 from random import sample
 from typing import List, Optional
 
+import numpy as np
 import pandas as pd
 import ray
 import seaborn as sns
@@ -24,6 +25,7 @@ from CosmologyConcepts import (
     redshift_array,
     redshift,
 )
+from CosmologyConcepts.wavenumber import wavenumber_exit_time_array
 from CosmologyModels.LambdaCDM import Planck2018, LambdaCDM
 from Datastore.SQL.ProfileAgent import ProfileAgent
 from Datastore.SQL.ShardedPool import ShardedPool
@@ -108,26 +110,28 @@ with ShardedPool(
         ]
     )
 
-    k_array = ray.get(pool.read_wavenumber_table(units=units))
-    z_array = ray.get(pool.read_redshift_table())
-    z_sample = redshift_array(z_array=z_array)
+    ## UTILITY FUNCTIONS
 
-    model: BackgroundModel = ray.get(
-        pool.object_get(
-            BackgroundModel,
-            solver_labels=[],
-            cosmology=LambdaCDM_Planck2018,
-            z_sample=z_sample,
-            atol=atol,
-            rtol=rtol,
+    def convert_to_wavenumbers(k_sample_set):
+        return pool.object_get(
+            "wavenumber",
+            payload_data=[{"k_inv_Mpc": k, "units": units} for k in k_sample_set],
         )
+
+    def convert_to_redshifts(z_sample_set):
+        return pool.object_get(
+            "redshift", payload_data=[{"z": z} for z in z_sample_set]
+        )
+
+    # array of k-modes matching the SOURCE k-grid
+    source_k_array = ray.get(
+        convert_to_wavenumbers(np.logspace(np.log10(1e3), np.log10(5e7), 10))
     )
-    if not model.available:
-        raise RuntimeError(
-            "Could not locate suitable background model instance in the datastore"
-        )
 
-    model_proxy = ModelProxy(model)
+    # array of k-modes matching the RESPONSE k-grid
+    response_k_array = ray.get(
+        convert_to_wavenumbers(np.logspace(np.log10(1e3), np.log10(5e7), 10))
+    )
 
     def create_k_exit_work(k: wavenumber):
         return pool.object_get(
@@ -139,27 +143,77 @@ with ShardedPool(
         )
 
     # query wavenumber_exit_time objects corresponding to these k modes
-    k_exit_queue = RayWorkPool(
+    source_k_exit_queue = RayWorkPool(
         pool,
-        k_array,
+        source_k_array,
         task_builder=create_k_exit_work,
         compute_handler=None,
         store_handler=None,
         store_results=True,
         title="QUERY K_EXIT VALUES",
     )
-    k_exit_queue.run()
-    k_exit_times = k_exit_queue.results
+    source_k_exit_queue.run()
+    source_k_exit_times = wavenumber_exit_time_array(source_k_exit_queue.results)
 
-    # choose a subsample of k modes
+    response_k_exit_queue = RayWorkPool(
+        pool,
+        response_k_array,
+        task_builder=create_k_exit_work,
+        compute_handler=None,
+        store_handler=None,
+        store_results=True,
+        title="QUERY K_EXIT VALUES",
+    )
+    response_k_exit_queue.run()
+    response_k_exit_times = wavenumber_exit_time_array(response_k_exit_queue.results)
+
+    full_k_exit_times = source_k_exit_times + response_k_exit_times
+
+    k_exit_earliest: wavenumber_exit_time = full_k_exit_times.max
+
+    # choose a subsample of the RESPONSE k modes
     k_subsample: List[wavenumber_exit_time] = sample(
-        list(k_exit_times), k=int(round(0.9 * len(k_exit_times) + 0.5, 0))
+        list(response_k_exit_times),
+        k=int(round(0.9 * len(response_k_exit_times) + 0.5, 0)),
     )
 
-    # choose a subsample of source redshifts
-    z_subsample: List[redshift] = sample(
-        list(z_sample), k=int(round(0.12 * len(z_sample) + 0.5, 0))
+    DEFAULT_SAMPLES_PER_LOG10_Z = 150
+    DEFAULT_ZEND = 0.1
+
+    # array of z-sample points matching the SOURCE GRID
+    universal_z_grid = k_exit_earliest.populate_z_sample(
+        outside_horizon_efolds=5,
+        samples_per_log10z=DEFAULT_SAMPLES_PER_LOG10_Z,
+        z_end=DEFAULT_ZEND,
     )
+
+    z_array = ray.get(convert_to_redshifts(universal_z_grid))
+    z_global_sample = redshift_array(z_array=z_array)
+
+    z_source_sample = z_global_sample
+    z_response_sample = z_global_sample
+
+    # choose a subsample of SOURCE redshifts
+    z_subsample: List[redshift] = sample(
+        list(z_source_sample), k=int(round(0.12 * len(z_source_sample) + 0.5, 0))
+    )
+
+    model: BackgroundModel = ray.get(
+        pool.object_get(
+            BackgroundModel,
+            solver_labels=[],
+            cosmology=LambdaCDM_Planck2018,
+            z_sample=None,
+            atol=atol,
+            rtol=rtol,
+        )
+    )
+    if not model.available:
+        raise RuntimeError(
+            "Could not locate suitable background model instance in the datastore"
+        )
+
+    model_proxy = ModelProxy(model)
 
     def set_loglinear_axes(ax):
         ax.set_xscale("log")

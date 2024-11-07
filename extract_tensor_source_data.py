@@ -6,6 +6,7 @@ from pathlib import Path
 from random import sample
 from typing import List, Optional
 
+import numpy as np
 import pandas as pd
 import ray
 import seaborn as sns
@@ -23,6 +24,7 @@ from CosmologyConcepts import (
     wavenumber,
     wavenumber_exit_time,
 )
+from CosmologyConcepts.wavenumber import wavenumber_exit_time_array
 from CosmologyModels.LambdaCDM import Planck2018, LambdaCDM
 from Datastore.SQL.ProfileAgent import ProfileAgent
 from Datastore.SQL.ShardedPool import ShardedPool
@@ -111,7 +113,48 @@ with ShardedPool(
         ]
     )
 
-    k_array = ray.get(pool.read_wavenumber_table(units=units))
+    ## UTILITY FUNCTIONS
+
+    ## UTILITY FUNCTIONS
+
+    def convert_to_wavenumbers(k_sample_set):
+        return pool.object_get(
+            "wavenumber",
+            payload_data=[{"k_inv_Mpc": k, "units": units} for k in k_sample_set],
+        )
+
+    # array of k-modes matching the SOURCE k-grid
+    source_k_array = ray.get(
+        convert_to_wavenumbers(np.logspace(np.log10(1e3), np.log10(5e7), 10))
+    )
+
+    def create_k_exit_work(k: wavenumber):
+        return pool.object_get(
+            wavenumber_exit_time,
+            k=k,
+            cosmology=LambdaCDM_Planck2018,
+            atol=atol,
+            rtol=rtol,
+        )
+
+    # query wavenumber_exit_time objects corresponding to these k modes
+    source_k_exit_queue = RayWorkPool(
+        pool,
+        source_k_array,
+        task_builder=create_k_exit_work,
+        compute_handler=None,
+        store_handler=None,
+        store_results=True,
+        title="QUERY K_EXIT VALUES",
+    )
+    source_k_exit_queue.run()
+    source_k_exit_times = wavenumber_exit_time_array(source_k_exit_queue.results)
+
+    # choose a subsample of the SOURCE k modes
+    k_subsample: List[wavenumber_exit_time] = sample(
+        list(source_k_exit_times),
+        k=int(round(0.9 * len(source_k_exit_times) + 0.5, 0)),
+    )
 
     model = ray.get(
         pool.object_get(
@@ -130,34 +173,6 @@ with ShardedPool(
 
     # set up a proxy object to avoid having to repeatedly serialize the model instance and ship it out
     model_proxy = ModelProxy(model)
-
-    def create_k_exit_work(k: wavenumber):
-        return pool.object_get(
-            wavenumber_exit_time,
-            k=k,
-            cosmology=LambdaCDM_Planck2018,
-            atol=atol,
-            rtol=rtol,
-        )
-
-    # query wavenumber_exit_time objects corresponding to these k modes
-    k_exit_queue = RayWorkPool(
-        pool,
-        k_array,
-        task_builder=create_k_exit_work,
-        compute_handler=None,
-        store_handler=None,
-        store_results=True,
-        title="QUERY K_EXIT VALUES",
-    )
-    k_exit_queue.run()
-    k_exit_times = k_exit_queue.results
-
-    # choose a subsample of k modes
-    k_subsample: List[wavenumber_exit_time] = sample(
-        list(k_exit_times), k=int(round(0.9 * len(k_exit_times) + 0.5, 0))
-    )
-    k_subsample.sort(key=lambda x: x.k.k)
 
     def set_loglinear_axes(ax):
         ax.set_xscale("log")
