@@ -495,7 +495,7 @@ class sqla_QuadSourceIntegral_factory(SQLAFactoryBase):
         z_source_max: Optional[redshift] = payload.get("z_source_max", None)
 
         tol: Optional[tolerance] = payload.get("tol", None)
-        tags: Optional[List[store_tag]] = payload.get("tags", None)
+        tags: List[store_tag] = payload.get("tags", [])
 
         tol_table = tables["tolerance"]
 
@@ -639,8 +639,10 @@ class sqla_QuadSourceIntegral_factory(SQLAFactoryBase):
                 },
                 model=model_proxy,
                 policy=policy,
-                z_response=row.z_response,
-                z_source_max=row.z_source_max,
+                z_response=redshift(store_id=row.z_response_serial, z=row.z_response),
+                z_source_max=redshift(
+                    store_id=row.z_source_max_serial, z=row.z_source_max
+                ),
                 k=k,
                 q=q,
                 r=r,

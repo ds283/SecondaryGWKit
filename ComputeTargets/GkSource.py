@@ -843,7 +843,7 @@ class GkSourceProxy:
 
     @property
     def k(self) -> wavenumber:
-        return self._units
+        return self._k
 
     def get(self) -> GkSource:
         """

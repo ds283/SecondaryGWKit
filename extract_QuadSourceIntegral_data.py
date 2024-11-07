@@ -182,7 +182,7 @@ with ShardedPool(
         k=int(round(0.4 * len(response_k_exit_times) + 0.5, 0)),
     )
 
-    qs_range = itertools.combinations_with_replacement(source_k_exit_times, 2)
+    qs_range = list(itertools.combinations_with_replacement(source_k_exit_times, 2))
     qs_subsample: List[Tuple[wavenumber_exit_time, wavenumber_exit_time]] = sample(
         qs_range,
         k=int(round(0.4 * len(qs_range) + 0.5, 0)),
@@ -369,55 +369,51 @@ with ShardedPool(
                 if z_max_Levin is None or obj.z_response > z_max_Levin:
                     z_max_Levin = obj.z_response
 
-            abs_x, abs_y = zip(*abs_points)
-            abs_analytic_x, abs_analytic_y = zip(*abs_analytic_points)
+        abs_x, abs_y = zip(*abs_points)
+        abs_analytic_x, abs_analytic_y = zip(*abs_analytic_points)
 
-            sns.set_theme()
-            if len(abs_x) > 0 and any(y is not None and y > 0 for y in abs_y):
-                fig = plt.figure()
-                ax = plt.gca()
+        sns.set_theme()
+        if len(abs_x) > 0 and any(y is not None and y > 0 for y in abs_y):
+            fig = plt.figure()
+            ax = plt.gca()
 
-                ax.plot(abs_x, abs_y, label="Numerical", color="r", linestyle="solid")
-                ax.plot(
-                    abs_analytic_x,
-                    abs_analytic_y,
-                    label="Analytic",
-                    color="g",
-                    linestyle="dashed",
+            ax.plot(abs_x, abs_y, label="Numerical", color="r", linestyle="solid")
+            ax.plot(
+                abs_analytic_x,
+                abs_analytic_y,
+                label="Analytic",
+                color="g",
+                linestyle="dashed",
+            )
+
+            add_z_labels(ax, k_exit)
+
+            if z_min_quad is not None and z_max_quad is not None:
+                ax.axvspan(xmin=z_min_quad.z, xmax=z_max_quad.z, color="b", alpha=0.3)
+
+            if z_min_WKB_quad is not None and z_max_WKB_quad is not None:
+                ax.axvspan(
+                    xmin=z_min_WKB_quad.z,
+                    xmax=z_max_WKB_quad.z,
+                    color="r",
+                    alpha=0.3,
                 )
 
-                add_z_labels(ax, k_exit)
+            if z_min_Levin is not None and z_max_Levin is not None:
+                ax.axvspan(xmin=z_min_Levin.z, xmax=z_max_Levin.z, color="g", alpha=0.3)
 
-                if z_min_quad is not None and z_max_quad is not None:
-                    ax.axvspan(
-                        xmin=z_min_quad.z, xmax=z_max_quad.z, color="b", alpha=0.3
-                    )
+            ax.set_xlabel("response redshift $z$")
 
-                if z_min_WKB_quad is not None and z_max_WKB_quad is not None:
-                    ax.axvspan(
-                        xmin=z_min_WKB_quad.z,
-                        xmax=z_max_WKB_quad.z,
-                        color="r",
-                        alpha=0.3,
-                    )
+            set_loglog_axes(ax)
 
-                if z_min_Levin is not None and z_max_Levin is not None:
-                    ax.axvspan(
-                        xmin=z_min_Levin.z, xmax=z_max_Levin.z, color="g", alpha=0.3
-                    )
+            fig_path = (
+                base_path
+                / f"plots/k-serial={k_exit.store_id}={k_exit.k.k_inv_Mpc:.5g}-q-serial={q_exit.store_id}={q_exit.k.k_inv_Mpc:.5g}-r-serial={r_exit.store_id}={r_exit.k.k_inv_Mpc:.5g}.pdf"
+            )
+            fig_path.parents[0].mkdir(exist_ok=True, parents=True)
+            fig.savefig(fig_path)
 
-                ax.set_xlabel("response redshift $z$")
-
-                set_loglog_axes(ax)
-
-                fig_path = (
-                    base_path
-                    / f"plots/k-serial={k_exit.store_id}={k_exit.k.k_inv_Mpc:.5g}-q-serial={q_exit.store_id}={q_exit.k.k_inv_Mpc:.5g}-r-serial={r_exit.store_id}={r_exit.k.k_inv_Mpc:.5g}.pdf"
-                )
-                fig_path.parents[0].mkdir(exist_ok=True, parents=True)
-                fig.savefig(fig_path)
-
-                plt.close()
+            plt.close()
 
     def build_plot_QuadSourceIntegral_work(item):
         k_exit, qr_pair, z_response = item
