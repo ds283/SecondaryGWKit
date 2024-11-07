@@ -830,8 +830,12 @@ class GkSourceProxy:
     def __init__(self, obj: GkSource):
         self._ref: ObjectRef = ray.put(obj)
 
-        self._store_id: int = obj.store_id
+        self._store_id: int = obj.store_id if obj.available else None
         self._k = obj.k
+
+    @property
+    def available(self) -> bool:
+        return self._store_id is not None
 
     @property
     def store_id(self) -> int:

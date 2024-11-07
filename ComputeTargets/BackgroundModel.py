@@ -440,7 +440,7 @@ class ModelProxy:
     def __init__(self, model: BackgroundModel):
         self._ref: ObjectRef = ray.put(model)
 
-        self._store_id: int = model.store_id
+        self._store_id: int = model.store_id if model.available else None
 
         self._units: UnitsLike = model.cosmology.units
         self._cosmology: BaseCosmology = model.cosmology
@@ -448,6 +448,10 @@ class ModelProxy:
     @property
     def store_id(self) -> int:
         return self._store_id
+
+    @property
+    def available(self) -> bool:
+        return self._store_id is not None
 
     @property
     def units(self) -> UnitsLike:
