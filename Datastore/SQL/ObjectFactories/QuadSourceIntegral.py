@@ -486,10 +486,11 @@ class sqla_QuadSourceIntegral_factory(SQLAFactoryBase):
     def read_batch(payload, conn, table, tables):
         model_proxy: ModelProxy = payload["model"]
         policy: GkSourcePolicy = payload["policy"]
-        k: wavenumber_exit_time = payload["k"]
 
-        q: Optional[wavenumber_exit_time] = payload.get("k", None)
-        r: Optional[wavenumber_exit_time] = payload.get("k", None)
+        k: wavenumber_exit_time = payload["k"]
+        q: wavenumber_exit_time = payload["q"]
+        r: wavenumber_exit_time = payload["r"]
+
         z_response: Optional[redshift] = payload.get("z_response", None)
         z_source_max: Optional[redshift] = payload.get("z_source_max", None)
 
@@ -498,10 +499,6 @@ class sqla_QuadSourceIntegral_factory(SQLAFactoryBase):
 
         tol_table = tables["tolerance"]
 
-        q_exit_table = tables["wavenumber_exit_time"].alias("q_exit_tab")
-        r_exit_table = tables["wavenumber_exit_time"].alias("r_exit_tab")
-        q_table = tables["wavenumber"].alias("q_tab")
-        r_table = tables["wavenumber"].alias("r_tab")
         z_response_table = tables["redshift"].alias("z_resp_tab")
         z_source_max_table = tables["redshift"].alias("z_src_max_tab")
 
@@ -550,22 +547,14 @@ class sqla_QuadSourceIntegral_factory(SQLAFactoryBase):
                     z_source_max_table,
                     z_source_max_table.c.serial == table.c.z_source_max_serial,
                 )
-                .join(
-                    q_exit_table,
-                    q_exit_table.c.serial == table.q_wavenumber_exit_serial,
-                )
-                .join(
-                    r_exit_table,
-                    r_exit_table.c.serial == table.r_wavenumber_exit_serial,
-                )
-                .join(q_table, q_table.c.serial == q_exit_table.c.wavenumber_serial)
-                .join(r_table, r_table.c.serial == r_exit_table.c.wavenumber_serial)
                 .join(tol_table, tol_table.c.serial == table.c.tol_serial)
             )
             .filter(
                 table.c.model_serial == model_proxy.store_id,
                 table.c.policy_serial == policy.store_id,
                 table.c.k_wavenumber_exit_serial == k.store_id,
+                table.c.q_wavenumber_exit_serial == q.store_id,
+                table.c.r_wavenumber_exit_serial == r.store_id,
             )
         )
 
@@ -609,59 +598,58 @@ class sqla_QuadSourceIntegral_factory(SQLAFactoryBase):
 
         row_data = conn.execute(query)
 
-        # TODO: not yet complete
-
-        def make_object(row_data):
+        def make_object(row):
             obj = QuadSourceIntegral(
                 payload={
-                    "store_id": row_data.serial,
-                    "total": row_data.total,
-                    "numeric_quad": row_data.numeric_quad,
-                    "WKB_quad": row_data.WKB_quad,
-                    "WKB_Levin": row_data.WKB_Levin,
-                    "analytic_rad": row_data.analytic_rad,
-                    "eta_source_max": row_data.eta_source_max,
-                    "eta_response": row_data.eta_response,
+                    "store_id": row.serial,
+                    "total": row.total,
+                    "numeric_quad": row.numeric_quad,
+                    "WKB_quad": row.WKB_quad,
+                    "WKB_Levin": row.WKB_Levin,
+                    "analytic_rad": row.analytic_rad,
+                    "eta_source_max": row.eta_source_max,
+                    "eta_response": row.eta_response,
                     "numeric_quad_data": IntegrationData(
-                        compute_time=row_data.numeric_quad_compute_time,
-                        compute_steps=row_data.numeric_quad_compute_steps,
-                        RHS_evaluations=row_data.numeric_quad_RHS_evaluations,
-                        mean_RHS_time=row_data.numeric_quad_mean_RHS_time,
-                        max_RHS_time=row_data.numeric_quad_max_RHS_time,
-                        min_RHS_time=row_data.numeric_quad_min_RHS_time,
+                        compute_time=row.numeric_quad_compute_time,
+                        compute_steps=row.numeric_quad_compute_steps,
+                        RHS_evaluations=row.numeric_quad_RHS_evaluations,
+                        mean_RHS_time=row.numeric_quad_mean_RHS_time,
+                        max_RHS_time=row.numeric_quad_max_RHS_time,
+                        min_RHS_time=row.numeric_quad_min_RHS_time,
                     ),
                     "WKB_quad_data": IntegrationData(
-                        compute_time=row_data.WKB_quad_compute_time,
-                        compute_steps=row_data.WKB_quad_compute_steps,
-                        RHS_evaluations=row_data.WKB_quad_RHS_evaluations,
-                        mean_RHS_time=row_data.WKB_quad_mean_RHS_time,
-                        max_RHS_time=row_data.WKB_quad_max_RHS_time,
-                        min_RHS_time=row_data.WKB_quad_min_RHS_time,
+                        compute_time=row.WKB_quad_compute_time,
+                        compute_steps=row.WKB_quad_compute_steps,
+                        RHS_evaluations=row.WKB_quad_RHS_evaluations,
+                        mean_RHS_time=row.WKB_quad_mean_RHS_time,
+                        max_RHS_time=row.WKB_quad_max_RHS_time,
+                        min_RHS_time=row.WKB_quad_min_RHS_time,
                     ),
                     "WKB_Levin_data": LevinData(
-                        num_regions=row_data.WKB_Levin_num_regions,
-                        evaluations=row_data.WKB_Levin_evaluations,
-                        elapsed=row_data.WKB_Levin_elapsed,
+                        num_regions=row.WKB_Levin_num_regions,
+                        evaluations=row.WKB_Levin_evaluations,
+                        elapsed=row.WKB_Levin_elapsed,
                     ),
-                    "compute_time": row_data.compute_time,
-                    "source_serial": row_data.source_serial,
-                    "data_serial": row_data.data_serial,
+                    "compute_time": row.compute_time,
+                    "source_serial": row.source_serial,
+                    "data_serial": row.data_serial,
                     "metadata": (
-                        json.loads(row_data.metadata)
-                        if row_data.metadata is not None
-                        else None
+                        json.loads(row.metadata) if row.metadata is not None else None
                     ),
                 },
                 model=model_proxy,
                 policy=policy,
-                z_response=row_data.z_response,
-                z_source_max=row_data.z_source_max,
+                z_response=row.z_response,
+                z_source_max=row.z_source_max,
                 k=k,
                 q=q,
                 r=r,
                 tol=tol,
-                label=row_data.label,
+                label=row.label,
                 tags=tags,
             )
             obj._deserialized = True
             return obj
+
+        objects = [make_object(row) for row in row_data]
+        return objects
