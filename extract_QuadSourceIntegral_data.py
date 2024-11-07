@@ -21,8 +21,6 @@ from ComputeTargets import (
 from CosmologyConcepts import (
     wavenumber,
     wavenumber_exit_time,
-    redshift_array,
-    redshift,
 )
 from CosmologyConcepts.wavenumber import wavenumber_exit_time_array
 from CosmologyModels.LambdaCDM import Planck2018, LambdaCDM
@@ -188,26 +186,6 @@ with ShardedPool(
         k=int(round(0.4 * len(qs_range) + 0.5, 0)),
     )
 
-    DEFAULT_SAMPLES_PER_LOG10_Z = 150
-    DEFAULT_ZEND = 0.1
-
-    universal_z_grid = k_exit_earliest.populate_z_sample(
-        outside_horizon_efolds=5,
-        samples_per_log10z=DEFAULT_SAMPLES_PER_LOG10_Z,
-        z_end=DEFAULT_ZEND,
-    )
-
-    z_array = ray.get(convert_to_redshifts(universal_z_grid))
-    z_global_sample = redshift_array(z_array=z_array)
-
-    z_source_sample = z_global_sample
-    z_response_sample = z_global_sample
-
-    # choose a subsample of RESPONSE redshifts
-    z_subsample: List[redshift] = sample(
-        list(z_response_sample), k=int(round(0.2 * len(z_response_sample) + 0.5, 0))
-    )
-
     model: BackgroundModel = ray.get(
         pool.object_get(
             BackgroundModel,
@@ -309,12 +287,34 @@ with ShardedPool(
             color="r",
         )
 
+    def add_labels(ax, k_exit, q_exit, r_exit):
+        ax.text(
+            0.0,
+            1.05,
+            f"k = {k_exit.k.k_inv_Mpc:.5g} Mpc$^{-1}$",
+            transform=ax.transAxes,
+            fontsize="x-small",
+        )
+        ax.text(
+            0.3,
+            1.05,
+            f"q: {q_exit.k.k_inv_Mpc:.5g} Mpc$^{-1}$",
+            transform=ax.transAxes,
+            fontsize="x-small",
+        )
+        ax.text(
+            0.6,
+            1.05,
+            f"r: {r_exit.k.k_inv_Mpc:.5g} Mpc$^{-1}$",
+            transform=ax.transAxes,
+            fontsize="x-small",
+        )
+
     @ray.remote
     def plot_QuadSourceIntegral(
         k_exit: wavenumber_exit_time,
         q_exit: wavenumber_exit_time,
         r_exit: wavenumber_exit_time,
-        z_response: redshift,
         data: List[QuadSourceIntegral],
     ):
         if len(data) <= 1:
@@ -387,9 +387,10 @@ with ShardedPool(
             )
 
             add_z_labels(ax, k_exit)
+            add_labels(ax, k_exit, q_exit, r_exit)
 
             if z_min_quad is not None and z_max_quad is not None:
-                ax.axvspan(xmin=z_min_quad.z, xmax=z_max_quad.z, color="b", alpha=0.3)
+                ax.axvspan(xmin=z_min_quad.z, xmax=z_max_quad.z, color="b", alpha=0.15)
 
             if z_min_WKB_quad is not None and z_max_WKB_quad is not None:
                 ax.axvspan(
@@ -400,7 +401,9 @@ with ShardedPool(
                 )
 
             if z_min_Levin is not None and z_max_Levin is not None:
-                ax.axvspan(xmin=z_min_Levin.z, xmax=z_max_Levin.z, color="g", alpha=0.3)
+                ax.axvspan(
+                    xmin=z_min_Levin.z, xmax=z_max_Levin.z, color="g", alpha=0.15
+                )
 
             ax.set_xlabel("response redshift $z$")
 
@@ -416,13 +419,12 @@ with ShardedPool(
             plt.close()
 
     def build_plot_QuadSourceIntegral_work(item):
-        k_exit, qr_pair, z_response = item
+        k_exit, qr_pair = item
         q_exit, r_exit = qr_pair
 
         k_exit: wavenumber_exit_time
         q_exit: wavenumber_exit_time
         r_exit: wavenumber_exit_time
-        z_response: redshift
 
         data_ref: ObjectRef = pool.object_read_batch(
             ObjectClass="QuadSourceIntegral",
@@ -436,11 +438,9 @@ with ShardedPool(
             z_source_max=None,
         )
 
-        return plot_QuadSourceIntegral.remote(
-            k_exit, q_exit, r_exit, z_response, data_ref
-        )
+        return plot_QuadSourceIntegral.remote(k_exit, q_exit, r_exit, data_ref)
 
-    work_grid = itertools.product(k_subsample, qs_subsample, z_subsample)
+    work_grid = itertools.product(k_subsample, qs_subsample)
 
     work_queue = RayWorkPool(
         pool,
