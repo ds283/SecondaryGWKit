@@ -12,6 +12,7 @@ import pandas as pd
 import ray
 import seaborn as sns
 from math import fabs, pi, sqrt
+from ray import ObjectRef
 
 from ComputeTargets import (
     BackgroundModel,
@@ -919,7 +920,7 @@ with ShardedPool(
         k_exit: wavenumber_exit_time
         z_response: redshift
 
-        GkSource_ref = pool.object_get(
+        GkSource_ref: ObjectRef = pool.object_get(
             "GkSource",
             model=model_proxy,
             k=k_exit,
@@ -931,7 +932,7 @@ with ShardedPool(
         GkSource = ray.get(GkSource_ref)
         GkSource_proxy = GkSourceProxy(GkSource)
 
-        Policy_ref = pool.object_get(
+        Policy_ref: ObjectRef = pool.object_get(
             "GkSourcePolicyData",
             source=GkSource_proxy,
             policy=GkSource_policy_2pt5,
