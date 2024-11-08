@@ -286,18 +286,21 @@ with ShardedPool(
 
     print("\n** BUILDING ARRAY OF WAVENUMBERS AT WHICH TO SAMPLE")
 
-    # build array of k-sample points covering the region of the primoridal power spectrum that we want to include
+    # Build array of k-sample points covering the region of the primoridal power spectrum that we want to include
     # in the one-loop integral. We will eventually evaluate the one-loop integral on a square grid
     # of source_k_array x source_k_array
+
+    # For a spike of power to produce a PBH, we want the peak to be around k = 1E6/Mpc.
+    # We choose a mesh of k-values around this point (with a longer tail to the IR)
     source_k_array = ray.get(
-        convert_to_wavenumbers(np.logspace(np.log10(0.1), np.log10(5e7), 10))
+        convert_to_wavenumbers(np.logspace(np.log10(1e3), np.log10(5e7), 10))
     )
     source_k_sample = wavenumber_array(k_array=source_k_array)
 
     # build array of k-sample points covering the region of the target power spectrum where we want to evaluate
     # the one-loop integral
     response_k_array = ray.get(
-        convert_to_wavenumbers(np.logspace(np.log10(0.1), np.log10(5e7), 10))
+        convert_to_wavenumbers(np.logspace(np.log10(1e3), np.log10(5e7), 10))
     )
     response_k_sample = wavenumber_array(k_array=response_k_array)
 
@@ -355,7 +358,7 @@ with ShardedPool(
 
     z_global_sample = redshift_array(z_array=z_array)
     z_source_sample = z_global_sample
-    z_response_sample = z_source_sample
+    z_response_sample = z_global_sample
 
     # build tags and other labels
     (
