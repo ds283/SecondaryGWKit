@@ -546,7 +546,7 @@ with ShardedPool(
                 fig.savefig(fig_path)
 
             ax.set_xlim(
-                min(int(round(z_response.z * 100.0 + 0.5, 0)), z_sample.max.z),
+                min(int(round(z_response.z * 100.0 + 0.5, 0)), z_response_sample.max.z),
                 max(int(round(z_response.z * 0.9 - 0.5, 0)), 0.01),
             )
 
