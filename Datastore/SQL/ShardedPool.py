@@ -19,6 +19,7 @@ _replicate_tables = [
     "store_tag",
     "redshift",
     "wavenumber",
+    "wavenumber_exit_time",  # needs to be replicated so that we can batch query QuadSourceIntegral and OneLoopIntegral objects
     "tolerance",
     "LambdaCDM",
     "IntegrationSolver",
@@ -27,7 +28,6 @@ _replicate_tables = [
     "GkSourcePolicy",
 ]
 _shard_tables = {
-    "wavenumber_exit_time": "k",
     "TkNumericalIntegration": "k",
     "TkNumericalValue": "k",
     "GkNumericalIntegration": "k",
