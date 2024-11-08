@@ -1,5 +1,6 @@
 import argparse
 import itertools
+import json
 import sys
 from datetime import datetime
 from pathlib import Path
@@ -8,6 +9,7 @@ from typing import List, Tuple, Optional
 
 import matplotlib.pyplot as plt
 import numpy as np
+import pandas as pd
 import ray
 import seaborn as sns
 from math import fabs, pi
@@ -287,28 +289,62 @@ with ShardedPool(
             color="r",
         )
 
-    def add_labels(ax, k_exit, q_exit, r_exit):
+    def add_k_labels(ax, k_exit, q_exit, r_exit):
         ax.text(
             0.0,
-            1.05,
-            f"k = {k_exit.k.k_inv_Mpc:.5g} Mpc$^{-1}$",
+            1.1,
+            f"$k$ = {k_exit.k.k_inv_Mpc:.5g} Mpc$^{{-1}}$",
             transform=ax.transAxes,
             fontsize="x-small",
         )
         ax.text(
-            0.3,
-            1.05,
-            f"q: {q_exit.k.k_inv_Mpc:.5g} Mpc$^{-1}$",
+            0.33,
+            1.1,
+            f"$q$ =  {q_exit.k.k_inv_Mpc:.5g} Mpc$^{{-1}}$",
             transform=ax.transAxes,
             fontsize="x-small",
         )
         ax.text(
-            0.6,
-            1.05,
-            f"r: {r_exit.k.k_inv_Mpc:.5g} Mpc$^{-1}$",
+            0.66,
+            1.1,
+            f"$r$ = {r_exit.k.k_inv_Mpc:.5g} Mpc$^{{-1}}$",
             transform=ax.transAxes,
             fontsize="x-small",
         )
+
+    def add_region_labels(
+        ax,
+        z_min_quad,
+        z_max_quad,
+        z_min_WKB_quad,
+        z_max_WKB_quad,
+        z_min_Levin,
+        z_max_Levin,
+    ):
+        if z_min_quad is not None and z_max_quad is not None:
+            ax.text(
+                0.0,
+                1.01,
+                f"numeric: [{z_min_quad.z:.5g}, {z_max_quad.z:.5g}]",
+                transform=ax.transAxes,
+                fontsize="x-small",
+            )
+        if z_min_WKB_quad is not None and z_max_WKB_quad is not None:
+            ax.text(
+                0.33,
+                1.05,
+                f"WKB numeric: [{z_min_WKB_quad.z:.5g}, {z_max_WKB_quad.z:.5g}]",
+                transform=ax.transAxes,
+                fontsize="x-small",
+            )
+        if z_min_Levin is not None and z_max_Levin is not None:
+            ax.text(
+                0.66,
+                1.01,
+                f"WKB Levin: [{z_min_Levin.z:.5g}, {z_max_Levin.z:.5g}]",
+                transform=ax.transAxes,
+                fontsize="x-small",
+            )
 
     @ray.remote
     def plot_QuadSourceIntegral(
@@ -351,19 +387,19 @@ with ShardedPool(
             )
             abs_analytic_points.append((obj.z_response.z, safe_fabs(obj.analytic_rad)))
 
-            if obj.numeric_quad is not None:
+            if obj.numeric_quad is not None and fabs(obj.numeric_quad) > 1e-25:
                 if z_min_quad is None or obj.z_response < z_min_quad:
                     z_min_quad = obj.z_response
                 if z_max_quad is None or obj.z_response > z_max_quad:
                     z_max_quad = obj.z_response
 
-            if obj.WKB_quad is not None:
+            if obj.WKB_quad is not None and fabs(obj.WKB_quad) > 1e-25:
                 if z_min_WKB_quad is None or obj.z_response < z_min_WKB_quad:
                     z_min_WKB_quad = obj.z_response
                 if z_max_WKB_quad is None or obj.z_response > z_max_WKB_quad:
                     z_max_WKB_quad = obj.z_response
 
-            if obj.WKB_Levin is not None:
+            if obj.WKB_Levin is not None and fabs(obj.WKB_Levin) > 1e-25:
                 if z_min_Levin is None or obj.z_response < z_min_Levin:
                     z_min_Levin = obj.z_response
                 if z_max_Levin is None or obj.z_response > z_max_Levin:
@@ -373,9 +409,28 @@ with ShardedPool(
         abs_analytic_x, abs_analytic_y = zip(*abs_analytic_points)
 
         sns.set_theme()
-        if len(abs_x) > 0 and any(y is not None and y > 0 for y in abs_y):
+        if len(abs_x) > 0 and (
+            any(y is not None and y > 0 for y in abs_y)
+            or any(y is not None and y > 0 for y in abs_analytic_y)
+        ):
             fig = plt.figure()
             ax = plt.gca()
+
+            if z_min_quad is not None and z_max_quad is not None:
+                ax.axvspan(xmin=z_min_quad.z, xmax=z_max_quad.z, color="b", alpha=0.15)
+
+            if z_min_WKB_quad is not None and z_max_WKB_quad is not None:
+                ax.axvspan(
+                    xmin=z_min_WKB_quad.z,
+                    xmax=z_max_WKB_quad.z,
+                    color="r",
+                    alpha=0.15,
+                )
+
+            if z_min_Levin is not None and z_max_Levin is not None:
+                ax.axvspan(
+                    xmin=z_min_Levin.z, xmax=z_max_Levin.z, color="g", alpha=0.15
+                )
 
             ax.plot(abs_x, abs_y, label="Numerical", color="r", linestyle="solid")
             ax.plot(
@@ -387,23 +442,16 @@ with ShardedPool(
             )
 
             add_z_labels(ax, k_exit)
-            add_labels(ax, k_exit, q_exit, r_exit)
-
-            if z_min_quad is not None and z_max_quad is not None:
-                ax.axvspan(xmin=z_min_quad.z, xmax=z_max_quad.z, color="b", alpha=0.15)
-
-            if z_min_WKB_quad is not None and z_max_WKB_quad is not None:
-                ax.axvspan(
-                    xmin=z_min_WKB_quad.z,
-                    xmax=z_max_WKB_quad.z,
-                    color="r",
-                    alpha=0.3,
-                )
-
-            if z_min_Levin is not None and z_max_Levin is not None:
-                ax.axvspan(
-                    xmin=z_min_Levin.z, xmax=z_max_Levin.z, color="g", alpha=0.15
-                )
+            add_k_labels(ax, k_exit, q_exit, r_exit)
+            add_region_labels(
+                ax,
+                z_min_quad,
+                z_max_quad,
+                z_min_WKB_quad,
+                z_max_WKB_quad,
+                z_min_Levin,
+                z_max_Levin,
+            )
 
             ax.set_xlabel("response redshift $z$")
 
@@ -417,6 +465,57 @@ with ShardedPool(
             fig.savefig(fig_path)
 
             plt.close()
+
+        csv_folder = (
+            base_path
+            / f"csv/k-serial={k_exit.store_id}={k_exit.k.k_inv_Mpc:.5g}-q-serial={q_exit.store_id}={q_exit.k.k_inv_Mpc:.5g}-r-serial={r_exit.store_id}={r_exit.k.k_inv_Mpc:.5g}"
+        )
+
+        payload = {
+            "k_inv_Mpc": k_exit.k.k_inv_Mpc,
+            "q_inv_Mpc": q_exit.k.k_inv_Mpc,
+            "r_inv_Mpc": r_exit.k.k_inv_Mpc,
+            "k_z_exit": k_exit.z_exit,
+            "q_z_exit": q_exit.z_exit,
+            "r_z_exit": r_exit.z_exit,
+        }
+
+        payload_path = csv_folder / "payload.csv"
+        payload_path.parents[0].mkdir(exist_ok=True, parents=True)
+        with open(payload_path, "w", newline="") as f:
+            json.dump(payload, f, indent=4, sort_keys=True)
+
+        z_response_column = [obj.z_response.z for obj in data]
+        z_source_max_column = [obj.z_source_max.z for obj in data]
+        eta_response_column = [obj.eta_response for obj in data]
+        eta_source_max_column = [obj.eta_source_max for obj in data]
+        total_column = [obj.total for obj in data]
+        numeric_quad_column = [obj.numeric_quad for obj in data]
+        WKB_quad_column = [obj.WKB_quad for obj in data]
+        WKB_Levin_column = [obj.WKB_Levin for obj in data]
+        analytic_rad_column = [obj.analytic_rad for obj in data]
+        metadata = [obj.metadata for obj in data]
+
+        csv_path = csv_folder / "data.csv"
+        csv_path.parents[0].mkdir(exist_ok=True, parents=True)
+        df = pd.DataFrame.from_dict(
+            {
+                "z_response": z_response_column,
+                "z_source_max": z_source_max_column,
+                "eta_response": eta_response_column,
+                "eta_source_max": eta_source_max_column,
+                "total": total_column,
+                "numeric_quad": numeric_quad_column,
+                "WKB_quad": WKB_quad_column,
+                "WKB_Levin": WKB_Levin_column,
+                "analytic_rad": analytic_rad_column,
+                "metadata": metadata,
+            }
+        )
+        df.sort_values(
+            by="z_response", ascending=False, inplace=True, ignore_index=True
+        )
+        df.to_csv(csv_path, header=True, index=False)
 
     def build_plot_QuadSourceIntegral_work(item):
         k_exit, qr_pair = item
