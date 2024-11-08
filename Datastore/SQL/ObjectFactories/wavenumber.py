@@ -251,6 +251,9 @@ class sqla_wavenumber_exit_time_factory(SQLAFactoryBase):
                 obj, f"z_exit_subh_e{z_offset}"
             )
 
+        if hasattr(obj, "_my_id") and obj._my_id is not None:
+            payload.update({"serial": obj._my_id})
+
         store_id = inserter(conn, payload)
 
         # set store_id on behalf of constructed object
