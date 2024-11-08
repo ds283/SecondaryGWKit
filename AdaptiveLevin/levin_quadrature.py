@@ -214,45 +214,39 @@ def _adaptive_levin(
         )
 
         c = (a + b) / 2.0
-        if (c - a) / a > MACHINE_EPSILON and (b - c) / c > MACHINE_EPSILON:
-            # Chen et al. (173)
-            estimate_L, pL_sample = _adaptive_levin_subregion(
-                (a, c),
-                f,
-                Weights,
-                chebyshev_order=chebyshev_order,
-                build_p_sample=build_p_sample,
-            )
-            estimate_R, pR_sample = _adaptive_levin_subregion(
-                (c, b),
-                f,
-                Weights,
-                chebyshev_order=chebyshev_order,
-                build_p_sample=build_p_sample,
-            )
+        # Chen et al. (173)
+        estimate_L, pL_sample = _adaptive_levin_subregion(
+            (a, c),
+            f,
+            Weights,
+            chebyshev_order=chebyshev_order,
+            build_p_sample=build_p_sample,
+        )
+        estimate_R, pR_sample = _adaptive_levin_subregion(
+            (c, b),
+            f,
+            Weights,
+            chebyshev_order=chebyshev_order,
+            build_p_sample=build_p_sample,
+        )
 
-            num_evaluations += 3
-            refined_estimate = estimate_L + estimate_R
+        num_evaluations += 3
+        refined_estimate = estimate_L + estimate_R
 
-            # print(
-            #     f"** testing interval [{a:.8g},{b:.8g}] -> {estimate:.8g} against [{a:.8g},{c:.8g}] -> {estimate_L:.8g} + [{c:.8g},{b:.8g}] -> {estimate_R:.8g} | diff = {estimate-refined_estimate:.8g}, rel = {np.fabs((estimate - refined_estimate) / refined_estimate):.8g}, tol = {tol:.8g}"
-            # )
+        # print(
+        #     f"** testing interval [{a:.8g},{b:.8g}] -> {estimate:.8g} against [{a:.8g},{c:.8g}] -> {estimate_L:.8g} + [{c:.8g},{b:.8g}] -> {estimate_R:.8g} | diff = {estimate-refined_estimate:.8g}, rel = {np.fabs((estimate - refined_estimate) / refined_estimate):.8g}, tol = {tol:.8g}"
+        # )
 
-            # Chen et al. step (4), below (173)
-            if np.fabs((estimate - refined_estimate) / refined_estimate) < tol:
-                # if np.fabs(estimate - refined_estimate) < tol:
-                val = val + estimate
-                used_regions.append((a, b))
-                if build_p_sample:
-                    p_points.extend(p_sample)
-
-            else:
-                regions.extend([(a, c), (c, b)])
-        else:
+        # Chen et al. step (4), below (173)
+        if np.fabs((estimate - refined_estimate) / refined_estimate) < tol:
+            # if np.fabs(estimate - refined_estimate) < tol:
             val = val + estimate
             used_regions.append((a, b))
             if build_p_sample:
                 p_points.extend(p_sample)
+
+        else:
+            regions.extend([(a, c), (c, b)])
 
     used_regions.sort(key=lambda x: x[0])
     if build_p_sample:
