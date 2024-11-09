@@ -10,7 +10,7 @@ import numpy as np
 import pandas as pd
 import ray
 import seaborn as sns
-from math import pi, fabs
+from math import pi, fabs, sqrt
 from matplotlib import pyplot as plt
 from ray import ObjectRef
 
@@ -23,7 +23,7 @@ from ComputeTargets import (
     GkSourceValue,
     QuadSourceValue,
 )
-from ComputeTargets.BackgroundModel import ModelProxy
+from ComputeTargets.BackgroundModel import ModelProxy, ModelFunctions
 from CosmologyConcepts import (
     wavenumber,
     wavenumber_exit_time,
@@ -431,6 +431,8 @@ with ShardedPool(
 
         base_path = Path(args.output).resolve()
 
+        model_f: ModelFunctions = model.functions
+
         Gk_values: List[GkSourceValue] = Gk.values
         source_values: List[QuadSourceValue] = source.values
 
@@ -449,8 +451,6 @@ with ShardedPool(
         source_value_ids = set(source_value_dict.keys())
 
         common_ids = Gk_value_ids.intersection(source_value_ids)
-
-        model_f = model.functions
 
         def safe_fabs(x: Optional[float]) -> Optional[float]:
             if x is None:
@@ -476,11 +476,20 @@ with ShardedPool(
             H = model_f.Hubble(Gk_value.z_source.z)
             H_sq = H * H
 
-            return {
+            payload = {
                 "z": Gk_value.z_source,
                 "integrand": Green * source / H_sq,
                 "analytic_integrand": Green_analytic * source_analytic / H_sq,
             }
+
+            if Gk_value.has_WKB:
+                sin_ampl = Gk_value.WKB.sin_coeff * sqrt(
+                    Gk_value.WKB.H_ratio / sqrt(Gk_value.omega_WKB_sq)
+                )
+                payload["Levin_f"] = sin_ampl * source / H_sq
+                payload["analytic_Levin_f"] = sin_ampl * source_analytic / H_sq
+
+            return payload
 
         integrand_points = [integrand(z_id) for z_id in common_ids]
         integrand_points.sort(key=lambda x: x["z"].z, reverse=True)
@@ -491,9 +500,24 @@ with ShardedPool(
         abs_analytic_points = [
             (x["z"].z, safe_fabs(x["analytic_integrand"])) for x in integrand_points
         ]
+        abs_Levin_f_points = [
+            (x["z"].z, safe_fabs(x["Levin_f"]))
+            for x in integrand_points
+            if "Levin_f" in x
+        ]
+        abs_analytic_Levin_f_points = [
+            (x["z"].z, safe_fabs(x["analytic_Levin_f"]))
+            for x in integrand_points
+            if "analytic_Levin_f" in x
+        ]
 
         abs_integrand_x, abs_integrand_y = zip(*abs_integrand_points)
         abs_analytic_x, abs_analytic_y = zip(*abs_analytic_points)
+
+        abs_Levin_f_x, abs_Levin_f_y = zip(*abs_Levin_f_points)
+        abs_analytic_Levin_f_x, abs_analytic_Levin_f_y = zip(
+            *abs_analytic_Levin_f_points
+        )
 
         sns.set_theme()
 
@@ -545,9 +569,52 @@ with ShardedPool(
 
             plt.close()
 
+        if len(abs_Levin_f_x) > 0 and (
+            any(y is not None and y > 0 for y in abs_Levin_f_y)
+            or any(y is not None and y > 0 for y in abs_analytic_Levin_f_y)
+        ):
+            fig = plt.figure()
+            ax = plt.gca()
+
+            ax.plot(
+                abs_Levin_f_x,
+                abs_Levin_f_y,
+                label="Numeric",
+                color="r",
+                linestyle="solid",
+            )
+            ax.plot(
+                abs_analytic_Levin_f_x,
+                abs_analytic_Levin_f_y,
+                label="Analytic",
+                color="b",
+                linestyle="dashed",
+            )
+
+            add_z_labels(ax, policy, k_exit)
+            add_Gk_labels(ax, policy)
+
+            set_loglog_axes(ax)
+
+            fig_path = (
+                base_path
+                / f"plots/Levin_f/k-serial={k_exit.store_id}-k={k_exit.k.k_inv_Mpc:.5g}.pdf"
+            )
+            fig_path.parents[0].mkdir(exist_ok=True, parents=True)
+            fig.savefig(fig_path)
+
+            plt.close()
+
         z_source_column = [x["z"].z for x in integrand_points]
         integrand_column = [x["integrand"] for x in integrand_points]
         analytic_column = [x["analytic_integrand"] for x in integrand_points]
+        Levin_f_column = [
+            x["Levin_f"] if hasattr(x, "Levin_f") else None for x in integrand_points
+        ]
+        analytic_Levin_f_column = [
+            x["analytic_Levin_f"] if hasattr(x, "analytic_Levin_f") else None
+            for x in integrand_points
+        ]
 
         csv_path = (
             base_path / f"csv/k-serial={k_exit.store_id}-k={k_exit.k.k_inv_Mpc:.5g}.csv"
@@ -558,6 +625,8 @@ with ShardedPool(
                 "z_source": z_source_column,
                 "integrand": integrand_column,
                 "analytic_integrand": analytic_column,
+                "Levin_f": Levin_f_column,
+                "analytic_Levin_f": analytic_Levin_f_column,
             }
         )
         df.sort_values(by="z_source", ascending=False, inplace=True, ignore_index=True)
