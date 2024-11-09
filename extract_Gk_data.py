@@ -78,7 +78,7 @@ VERSION_LABEL = "2024.1.1"
 
 profile_agent = None
 if args.profile_db is not None:
-    label = f'{VERSION_LABEL}-jobname-extract_GkSource_data-primarydb-"{args.database}"-shards-{args.shards}-{datetime.now().replace(microsecond=0).isoformat()}'
+    label = f'{VERSION_LABEL}-jobname-extract_Gk_data-primarydb-"{args.database}"-shards-{args.shards}-{datetime.now().replace(microsecond=0).isoformat()}'
 
     profile_agent = ProfileAgent.options(name="ProfileAgent").remote(
         db_name=args.profile_db,

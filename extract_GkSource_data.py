@@ -251,8 +251,9 @@ with ShardedPool(
             print(f"** GkSource not available")
             return
 
-        values: List[GkSourceValue] = Gk.values
         base_path = Path(args.output).resolve()
+
+        values: List[GkSourceValue] = Gk.values
 
         def safe_fabs(x: Optional[float]) -> Optional[float]:
             if x is None:
