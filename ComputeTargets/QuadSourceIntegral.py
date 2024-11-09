@@ -36,7 +36,7 @@ LEVIN_MIN_2PI_CYCLES = 10
 LEVIN_MIN_PHASE_DIFF = LEVIN_MIN_2PI_CYCLES * 2.0 * pi
 
 CHEBYSHEV_ORDER = 64
-LEVIN_TOLERANCE = 1e-8
+LEVIN_TOLERANCE = 1e-10
 
 
 class QuadSourceSupervisor(IntegrationSupervisor):
@@ -457,10 +457,14 @@ def _three_bessel_integrals(
     metadata["min_x"] = min_x
     metadata["max_x"] = max_x
 
-    if mode == "Levin" or (mode == "default" and eta_cut <= min_eta):
+    if mode == "Levin" or (
+        mode == "default" and eta_cut / min_eta <= 1.0 + DEFAULT_FLOAT_PRECISION
+    ):
         # quad_comparison = _three_bessel_quad(
         #     k, q, r, min_eta=min_eta, max_eta=max_eta, b=b, nu_type=nu_type, tol=tol
         # )
+
+        # if it is worth doing a Levin integration (or we are explicitly instructed to use a Levin method), do so
         if mode == "Levin" or (
             phase_diff_Gk > LEVIN_MIN_PHASE_DIFF
             or phase_diff_Tk_q > LEVIN_MIN_PHASE_DIFF
@@ -483,58 +487,64 @@ def _three_bessel_integrals(
             # metadata["quad_comparison_J"] = quad_comparison[0]
             # metadata["quad_comparison_Y"] = quad_comparison[1]
             return {"J": Levin[0], "Y": Levin[1], "metadata": metadata}
-        else:
-            quad = _three_bessel_quad(
-                k, q, r, min_eta=min_eta, max_eta=max_eta, b=b, nu_type=nu_type, tol=tol
-            )
-            metadata["quad_J"] = quad[0]
-            metadata["quad_Y"] = quad[1]
-            return {"J": quad[0], "Y": quad[1], "metadata": metadata}
 
-    if mode == "default" and eta_cut < max_eta:
-        # quad_comparison = _three_bessel_quad(
-        #     k, q, r, min_eta=eta_cut, max_eta=max_eta, b=b, nu_type=nu_type, tol=tol
-        # )
-        if (
-            phase_diff_Gk > LEVIN_MIN_PHASE_DIFF
-            or phase_diff_Tk_q > LEVIN_MIN_PHASE_DIFF
-            or phase_diff_Tk_r > LEVIN_MIN_PHASE_DIFF
-        ):
-            quad = _three_bessel_quad(
-                k, q, r, min_eta=min_eta, max_eta=eta_cut, b=b, nu_type=nu_type, tol=tol
-            )
-            Levin = _three_bessel_Levin(
-                k,
-                q,
-                r,
-                min_eta=eta_cut,
-                max_eta=max_eta,
-                b=b,
-                phase_data_Gk=phase_data_Gk,
-                phase_data_Tk=phase_data_Tk,
-                x_cut=x_cut,
-                tol=tol,
-            )
-            metadata["Levin_J"] = Levin[0]
-            metadata["Levin_Y"] = Levin[1]
-            metadata["quad_J"] = quad[0]
-            metadata["quad_Y"] = quad[1]
-            # metadata["quad_comparison_J"] = quad_comparison[0]
-            # metadata["quad_comparison_Y"] = quad_comparison[1]
-            return {
-                "J": quad[0] + Levin[0],
-                "Y": quad[1] + Levin[1],
-                "metadata": metadata,
-            }
-        else:
-            quad = _three_bessel_quad(
-                k, q, r, min_eta=min_eta, max_eta=max_eta, b=b, nu_type=nu_type, tol=tol
-            )
-            metadata["quad_J"] = quad[0]
-            metadata["quad_Y"] = quad[1]
-            return {"J": quad[0], "Y": quad[1], "metadata": metadata}
+        quad = _three_bessel_quad(
+            k, q, r, min_eta=min_eta, max_eta=max_eta, b=b, nu_type=nu_type, tol=tol
+        )
+        metadata["quad_J"] = quad[0]
+        metadata["quad_Y"] = quad[1]
+        return {"J": quad[0], "Y": quad[1], "metadata": metadata}
 
-    assert mode == "quad" or eta_cut >= max_eta
+    if mode == "quad" or (
+        mode == "default" and eta_cut / max_eta >= 1.0 - DEFAULT_FLOAT_PRECISION
+    ):
+        quad = _three_bessel_quad(
+            k, q, r, min_eta=min_eta, max_eta=max_eta, b=b, nu_type=nu_type, tol=tol
+        )
+        metadata["quad_J"] = quad[0]
+        metadata["quad_Y"] = quad[1]
+        return {"J": quad[0], "Y": quad[1], "metadata": metadata}
+
+    assert mode == "default"
+    # can assume eta_cut falls between min_eta and max_eta
+
+    # quad_comparison = _three_bessel_quad(
+    #     k, q, r, min_eta=eta_cut, max_eta=max_eta, b=b, nu_type=nu_type, tol=tol
+    # )
+
+    # if it is worth doing a Levin integration between eta_cut and max_eta, do so
+    # otherwise, do a numerical quadrature everywhere
+    if (
+        phase_diff_Gk > LEVIN_MIN_PHASE_DIFF
+        or phase_diff_Tk_q > LEVIN_MIN_PHASE_DIFF
+        or phase_diff_Tk_r > LEVIN_MIN_PHASE_DIFF
+    ):
+        quad = _three_bessel_quad(
+            k, q, r, min_eta=min_eta, max_eta=eta_cut, b=b, nu_type=nu_type, tol=tol
+        )
+        Levin = _three_bessel_Levin(
+            k,
+            q,
+            r,
+            min_eta=eta_cut,
+            max_eta=max_eta,
+            b=b,
+            phase_data_Gk=phase_data_Gk,
+            phase_data_Tk=phase_data_Tk,
+            x_cut=x_cut,
+            tol=tol,
+        )
+        metadata["Levin_J"] = Levin[0]
+        metadata["Levin_Y"] = Levin[1]
+        metadata["quad_J"] = quad[0]
+        metadata["quad_Y"] = quad[1]
+        # metadata["quad_comparison_J"] = quad_comparison[0]
+        # metadata["quad_comparison_Y"] = quad_comparison[1]
+        return {
+            "J": quad[0] + Levin[0],
+            "Y": quad[1] + Levin[1],
+            "metadata": metadata,
+        }
 
     quad = _three_bessel_quad(
         k, q, r, min_eta=min_eta, max_eta=max_eta, b=b, nu_type=nu_type, tol=tol
@@ -753,7 +763,7 @@ def _three_bessel_quad(
 
     sol = solve_ivp(
         RHS,
-        method="RK45",
+        method="DOP853",
         t_span=x_span,
         t_eval=[log_max_eta],
         y0=[0.0, 0.0],
@@ -767,9 +777,14 @@ def _three_bessel_quad(
             f'_three_bessel_quad: quadrature did not terminate successfully | error at log(eta)={sol.t[-1]:.5g}, "{sol.message}"'
         )
 
+    if len(sol.t) == 0:
+        raise RuntimeError(
+            f"_three_bessel_quad: quadrature did not return any samples (min eta={min_eta:.5g}, max eta={max_eta:.5g}, log(min_eta)={log_max_eta:.5g}, log(max_eta0={log_max_eta:.5g})"
+        )
+
     if sol.t[0] < log_max_eta:
         raise RuntimeError(
-            f"_three_bessel_quad: quadrature did not terminate at expected conformal time log(eta)={log_max_eta:.5g} (final log(eta)={sol.t[0]:.5g})"
+            f"_three_bessel_quad: quadrature did not terminate at expected conformal time (min eta={min_eta:.5g}, max eta={max_eta:.5g}, log(min_eta)={log_max_eta:.5g}, log(max_eta0={log_max_eta:.5g}, final log(eta)={sol.t[0]:.5g})"
         )
 
     if len(sol.sol(log_max_eta)) != 2:
@@ -821,7 +836,7 @@ def analytic_integral(
         nu_type="0pt5",
         timestamp=timestamp,
         tol=tol,
-        mode="Levin",
+        mode="default",
     )
     data2pt5 = _three_bessel_integrals(
         k,
@@ -834,7 +849,7 @@ def analytic_integral(
         nu_type="2pt5",
         timestamp=timestamp,
         tol=tol,
-        mode="Levin",
+        mode="default",
     )
 
     metadata = {
@@ -949,7 +964,7 @@ def numeric_quad_integral(
 
         sol = solve_ivp(
             RHS,
-            method="RK45",
+            method="DOP853",
             t_span=(log_min_z, log_max_z),
             t_eval=[log_max_z],
             y0=state,
@@ -964,9 +979,14 @@ def numeric_quad_integral(
             f'compute_QuadSource_integral: quadrature did not terminate successfully | error at log(1+z)={sol.t[0]:.5g}, "{sol.message}"'
         )
 
+    if len(sol.t) == 0:
+        raise RuntimeError(
+            f"compute_QuadSource_integral: quadrature did not return any samples (max z={max_z:.5g}, min z={min_z:.5g}, log(1+max z)={log_max_z:.5g}, log(1+min z)={log_min_z:.5g})"
+        )
+
     if sol.t[0] < log_max_z - DEFAULT_FLOAT_PRECISION:
         raise RuntimeError(
-            f"compute_QuadSource_integral: quadrature did not terminate at expected redshift log(1+z)={log_max_z:.5g} (final log(1+z)={sol.t[0]:.5g})"
+            f"compute_QuadSource_integral: quadrature did not terminate at expected redshift (max z={max_z:.5g}, min z={min_z:.5g}, log(1+max z)={log_max_z:.5g}, log(1+min z)={log_min_z:.5g}, final log(1+z)={sol.t[0]:.5g})"
         )
 
     if len(sol.sol(log_max_z)) != 1:
@@ -1056,7 +1076,7 @@ def WKB_quad_integral(
 
         sol = solve_ivp(
             RHS,
-            method="RK45",
+            method="DOP853",
             t_span=(log_min_z, log_max_z),
             t_eval=[log_max_z],
             y0=state,
@@ -1071,9 +1091,14 @@ def WKB_quad_integral(
             f'compute_QuadSource_integral: quadrature did not terminate successfully | error at log(1+z)={sol.t[0]}, "{sol.message}"'
         )
 
+    if len(sol.t) == 0:
+        raise RuntimeError(
+            f"compute_QuadSource_integral: quadrature did not return any samples (max z={max_z:.5g}, min z={min_z:.5g}, log(1+max z)={log_max_z:.5g}, log(1+min z)={log_min_z:.5g})"
+        )
+
     if sol.t[0] < log_max_z - DEFAULT_FLOAT_PRECISION:
         raise RuntimeError(
-            f"compute_QuadSource_integral: quadrature did not terminate at expected redshift log(1+z)={log_max_z:.5g} (final log(1+z)={sol.t[0]:.3g})"
+            f"compute_QuadSource_integral: quadrature did not terminate at expected redshift (max z={max_z:.5g}, min z={min_z:.5g}, log(1+max z)={log_max_z:.5g}, log(1+min z)={log_min_z:.5g}, final log(1+z)={sol.t[0]:.5g})"
         )
 
     if len(sol.sol(log_max_z)) != 1:
@@ -1146,8 +1171,9 @@ def WKB_Levin_integral(
         H = model_f.Hubble(exp(log_z_source) - 1.0)
         H_sq = H * H
         f = source_f.source(log_z_source, z_is_log=True)
+        sin_ampl = Gk_f.sin_amplitude(log_z_source, z_is_log=True)
 
-        return f / H_sq
+        return sin_ampl * f / H_sq
 
     def Levin_theta(log_z_source: float) -> float:
         return Gk_f.theta(log_z_source, z_is_log=True)
@@ -1268,6 +1294,10 @@ class QuadSourceIntegral(DatastoreObject):
     @property
     def z_response(self) -> redshift:
         return self._z_response
+
+    @property
+    def z_source_max(self) -> redshift:
+        return self._z_source_max
 
     @property
     def total(self) -> float:
@@ -1413,17 +1443,17 @@ class QuadSourceIntegral(DatastoreObject):
 
         if Gk.k.store_id != self._k_exit.k.store_id:
             raise RuntimeError(
-                f"QuadSourceIntegral: supplied Gk is evaluated for a k-mode that does not match the required value (supplied Gk is for k={Gk.k.k_inv_Mpc:.3g}/Mpc [store_id={Gk.k.store_id}], required value is k={self._k_exit.k.k_inv_Mpc:.3g}/Mpc [store_id]{self._k_exit.k.store_id})"
+                f"QuadSourceIntegral: supplied Gk is evaluated for a k-mode that does not match the required value (supplied Gk is for k={Gk.k.k_inv_Mpc:.3g}/Mpc [store_id={Gk.k.store_id}], required value is k={self._k_exit.k.k_inv_Mpc:.3g}/Mpc [store_id={self._k_exit.k.store_id}])"
             )
 
         if source.q.store_id != self._q_exit.k.store_id:
             raise RuntimeError(
-                f"QuadSourceIntegral: supplied QuadSource is evaluated for a q-mode that does not match the required value (supplied source is for q={source.q.k_inv_Mpc:.3g}/Mpc [store_id={source.q.store_id}], required value is k={self._q_exit.k.k_inv_Mpc:.3g}/Mpc [store_id]{self._q_exit.k.store_id})"
+                f"QuadSourceIntegral: supplied QuadSource is evaluated for a q-mode that does not match the required value (supplied source is for q={source.q.k_inv_Mpc:.3g}/Mpc [store_id={source.q.store_id}], required value is k={self._q_exit.k.k_inv_Mpc:.3g}/Mpc [store_id={self._q_exit.k.store_id}])"
             )
 
         if source.r.store_id != self._r_exit.k.store_id:
             raise RuntimeError(
-                f"QuadSourceIntegral: supplied QuadSource is evaluated for an r-mode that does not match the required value (supplied source is for r={source.r.k_inv_Mpc:.3g}/Mpc [store_id={source.r.store_id}], required value is k={self._r_exit.k.k_inv_Mpc:.3g}/Mpc [store_id]{self._r_exit.k.store_id})"
+                f"QuadSourceIntegral: supplied QuadSource is evaluated for an r-mode that does not match the required value (supplied source is for r={source.r.k_inv_Mpc:.3g}/Mpc [store_id={source.r.store_id}], required value is k={self._r_exit.k.k_inv_Mpc:.3g}/Mpc [store_id={self._r_exit.k.store_id}])"
             )
 
         self._compute_ref = compute_QuadSource_integral.remote(

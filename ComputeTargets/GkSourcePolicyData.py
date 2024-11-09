@@ -24,6 +24,7 @@ GkSourceFunctions = namedtuple(
         "WKB_Gk",
         "theta",
         "theta_deriv",
+        "sin_amplitude",
         "type",
         "quality",
         "crossover_z",
@@ -555,6 +556,9 @@ class GkSourcePolicyData(DatastoreObject):
                 WKB_theta = ZSplineWrapper(
                     _theta_spline, "theta", max_z.z, min_z.z, log_z=True
                 )
+                sin_amplitude = ZSplineWrapper(
+                    _sin_amplitude_spline, "sin amplitude", max_z.z, min_z.z, log_z=True
+                )
                 WKB_theta_deriv = ZSplineWrapper(
                     _theta_spline.derivative(),
                     "theta derivative",
@@ -571,6 +575,7 @@ class GkSourcePolicyData(DatastoreObject):
             WKB_Gk=WKB_Gk,
             theta=WKB_theta,
             theta_deriv=WKB_theta_deriv,
+            sin_amplitude=sin_amplitude,
             type=self._type,
             quality=self._quality,
             crossover_z=self._crossover_z,
