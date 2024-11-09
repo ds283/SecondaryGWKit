@@ -481,6 +481,7 @@ class GkSourcePolicyData(DatastoreObject):
         WKB_Gk = None
         WKB_theta = None
         WKB_theta_deriv = None
+        WKB_sin_amplitude = None
         if source.primary_WKB_largest_z is not None:
             max_z = source.primary_WKB_largest_z
             min_z = source.z_sample.min
@@ -556,7 +557,7 @@ class GkSourcePolicyData(DatastoreObject):
                 WKB_theta = ZSplineWrapper(
                     _theta_spline, "theta", max_z.z, min_z.z, log_z=True
                 )
-                sin_amplitude = ZSplineWrapper(
+                WKB_sin_amplitude = ZSplineWrapper(
                     _sin_amplitude_spline, "sin amplitude", max_z.z, min_z.z, log_z=True
                 )
                 WKB_theta_deriv = ZSplineWrapper(
@@ -575,7 +576,7 @@ class GkSourcePolicyData(DatastoreObject):
             WKB_Gk=WKB_Gk,
             theta=WKB_theta,
             theta_deriv=WKB_theta_deriv,
-            sin_amplitude=sin_amplitude,
+            sin_amplitude=WKB_sin_amplitude,
             type=self._type,
             quality=self._quality,
             crossover_z=self._crossover_z,
