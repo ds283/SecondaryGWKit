@@ -215,58 +215,50 @@ class sqla_QuadSourceIntegral_factory(SQLAFactoryBase):
         label: Optional[str] = payload.get("label", None)
         tags: List[store_tag] = payload.get("tags", [])
 
-        atol: tolerance = payload["tol"]
+        atol: tolerance = payload["atol"]
         rtol: tolerance = payload["rtol"]
 
         tag_table = tables["QuadSourceIntegral_tags"]
-        tol_table = tables["tolerance"].alias("tol")
 
-        query = (
-            sqla.select(
-                table.c.serial,
-                table.c.compute_time,
-                table.c.label,
-                table.c.metadata,
-                table.c.source_serial,
-                table.c.total,
-                table.c.numeric_quad,
-                table.c.WKB_quad,
-                table.c.WKB_Levin,
-                table.c.analytic_rad,
-                table.c.eta_source_max,
-                table.c.eta_response,
-                table.c.data_serial,
-                table.c.numeric_quad_compute_time,
-                table.c.numeric_quad_compute_steps,
-                table.c.numeric_quad_RHS_evaluations,
-                table.c.numeric_quad_mean_RHS_time,
-                table.c.numeric_quad_max_RHS_time,
-                table.c.numeric_quad_min_RHS_time,
-                table.c.WKB_quad_compute_time,
-                table.c.WKB_quad_compute_steps,
-                table.c.WKB_quad_RHS_evaluations,
-                table.c.WKB_quad_mean_RHS_time,
-                table.c.WKB_quad_max_RHS_time,
-                table.c.WKB_quad_min_RHS_time,
-                table.c.WKB_Levin_num_regions,
-                table.c.WKB_Levin_evaluations,
-                table.c.WKB_Levin_elapsed,
-                tol_table.c.log10_tol,
-            )
-            .select_from(
-                table.join(tol_table, tol_table.c.serial == table.c.tol_serial)
-            )
-            .filter(
-                table.c.model_serial == model_proxy.store_id,
-                table.c.policy_serial == policy.store_id,
-                table.c.k_wavenumber_exit_serial == k.store_id,
-                table.c.q_wavenumber_exit_serial == q.store_id,
-                table.c.r_wavenumber_exit_serial == r.store_id,
-                table.c.z_response_serial == z_response.store_id,
-                table.c.z_source_max_serial == z_source_max.store_id,
-                table.c.atol_serial == atol.store_id,
-                table.c.rtol_serial == rtol.store_id,
-            )
+        query = sqla.select(
+            table.c.serial,
+            table.c.compute_time,
+            table.c.label,
+            table.c.metadata,
+            table.c.source_serial,
+            table.c.total,
+            table.c.numeric_quad,
+            table.c.WKB_quad,
+            table.c.WKB_Levin,
+            table.c.analytic_rad,
+            table.c.eta_source_max,
+            table.c.eta_response,
+            table.c.data_serial,
+            table.c.numeric_quad_compute_time,
+            table.c.numeric_quad_compute_steps,
+            table.c.numeric_quad_RHS_evaluations,
+            table.c.numeric_quad_mean_RHS_time,
+            table.c.numeric_quad_max_RHS_time,
+            table.c.numeric_quad_min_RHS_time,
+            table.c.WKB_quad_compute_time,
+            table.c.WKB_quad_compute_steps,
+            table.c.WKB_quad_RHS_evaluations,
+            table.c.WKB_quad_mean_RHS_time,
+            table.c.WKB_quad_max_RHS_time,
+            table.c.WKB_quad_min_RHS_time,
+            table.c.WKB_Levin_num_regions,
+            table.c.WKB_Levin_evaluations,
+            table.c.WKB_Levin_elapsed,
+        ).filter(
+            table.c.model_serial == model_proxy.store_id,
+            table.c.policy_serial == policy.store_id,
+            table.c.k_wavenumber_exit_serial == k.store_id,
+            table.c.q_wavenumber_exit_serial == q.store_id,
+            table.c.r_wavenumber_exit_serial == r.store_id,
+            table.c.z_response_serial == z_response.store_id,
+            table.c.z_source_max_serial == z_source_max.store_id,
+            table.c.atol_serial == atol.store_id,
+            table.c.rtol_serial == rtol.store_id,
         )
 
         # require that the queried calculation has any specified tags

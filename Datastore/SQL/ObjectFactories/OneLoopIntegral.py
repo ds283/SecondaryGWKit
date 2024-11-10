@@ -98,7 +98,14 @@ class sqla_OneLoopIntegral_factory(SQLAFactoryBase):
                     nullable=False,
                 ),
                 sqla.Column(
-                    "tol_serial",
+                    "atol_serial",
+                    sqla.Integer,
+                    sqla.ForeignKey("tolerance.serial"),
+                    index=True,
+                    nullable=False,
+                ),
+                sqla.Column(
+                    "rtol_serial",
                     sqla.Integer,
                     sqla.ForeignKey("tolerance.serial"),
                     index=True,
@@ -128,29 +135,23 @@ class sqla_OneLoopIntegral_factory(SQLAFactoryBase):
         label: Optional[str] = payload.get("label", None)
         tags: List[store_tag] = payload.get("tags", [])
 
-        tol: tolerance = payload["tol"]
+        atol: tolerance = payload["atol"]
+        rtol: tolerance = payload["rtol"]
 
         tag_table = tables["QuadSourceIntegral_tags"]
-        tol_table = tables["tolerance"].alias("tol")
 
-        query = (
-            sqla.select(
-                table.c.serial,
-                table.c.compute_time,
-                table.c.label,
-                table.c.metadata,
-                table.c.value,
-                tol_table.c.log10_tol,
-            )
-            .select_from(
-                table.join(tol_table, tol_table.c.serial == table.c.tol_serial)
-            )
-            .filter(
-                table.c.model_serial == model_proxy.store_id,
-                table.c.wavenumber_exit_serial == k.store_id,
-                table.c.z_response_serial == z_response.store_id,
-                table.c.tol_serial == tol.store_id,
-            )
+        query = sqla.select(
+            table.c.serial,
+            table.c.compute_time,
+            table.c.label,
+            table.c.metadata,
+            table.c.value,
+        ).filter(
+            table.c.model_serial == model_proxy.store_id,
+            table.c.wavenumber_exit_serial == k.store_id,
+            table.c.z_response_serial == z_response.store_id,
+            table.c.atol_serial == atol.store_id,
+            table.c.rtol_serial == rtol.store_id,
         )
 
         # require that the queried calculation has any specified tags
@@ -181,7 +182,8 @@ class sqla_OneLoopIntegral_factory(SQLAFactoryBase):
                 model=model_proxy,
                 z_response=z_response,
                 k=k,
-                tol=tol,
+                atol=atol,
+                rtol=rtol,
                 label=label,
                 tags=tags,
             )
@@ -200,7 +202,8 @@ class sqla_OneLoopIntegral_factory(SQLAFactoryBase):
             model=model_proxy,
             z_response=z_response,
             k=k,
-            tol=tol,
+            atol=atol,
+            rtol=rtol,
             label=row_data.label,
             tags=tags,
         )
@@ -223,7 +226,8 @@ class sqla_OneLoopIntegral_factory(SQLAFactoryBase):
                 "model_serial": obj.model_proxy.store_id,
                 "z_response_serial": obj.z_response.store_id,
                 "wavenumber_exit_serial": obj._k_exit.store_id,
-                "tol_serial": obj._tol.store_id,
+                "atol_serial": obj._atol.store_id,
+                "rtol_serial": obj._rtol.store_id,
                 "value": obj.value,
                 "metadata": (
                     json.dumps(obj.metadata) if obj._metadata is not None else None
@@ -251,7 +255,9 @@ def read_batch(payload, conn, table, tables):
     k: wavenumber_exit_time = payload.get("k", None)
     z_response: redshift = payload.get("z_response", None)
 
-    tol: Optional[tolerance] = payload.get("tol", None)
+    atol: tolerance = payload["atol"]
+    rtol: tolerance = payload["rtol"]
+
     tags: Optional[List[store_tag]] = payload.get("tags", None)
 
     tol_table = tables["tolerance"].alias("tol")
@@ -266,13 +272,13 @@ def read_batch(payload, conn, table, tables):
             table.c.label,
             table.c.metadata,
             table.c.value,
-            tol_table.c.log10_tol,
             table.c.z_response_serial,
             redshift_table.c.z.label("z_response"),
         )
         .select_from(
-            table.join(tol_table, tol_table.c.serial == table.c.tol_serial)
-            .join(redshift_table, redshift_table.c.serial == table.c.z_response_serial)
+            table.join(
+                redshift_table, redshift_table.c.serial == table.c.z_response_serial
+            )
             .join(
                 k_exit_table,
                 k_exit_table.c.serial == table.c.wavenumber_exit_serial,
@@ -281,6 +287,8 @@ def read_batch(payload, conn, table, tables):
         )
         .filter(
             table.c.model_serial == model_proxy.store_id,
+            table.c.atol_serial == atol.store_id,
+            table.c.rtol_serial == rtol.store_id,
         )
     )
 
@@ -289,11 +297,6 @@ def read_batch(payload, conn, table, tables):
 
     if z_response is not None:
         query = query.filter(table.c.z_response_serial == z_response.store_id)
-
-    if tol is not None:
-        query = query.filter(
-            table.c.tol_serial == tol.store_id,
-        )
 
     count = 0
     for tag in tags:
@@ -327,7 +330,8 @@ def read_batch(payload, conn, table, tables):
             model=model_proxy,
             z_response=z_response,
             k=k,
-            tol=tol,
+            atol=atol,
+            rtol=rtol,
             label=row_data.label,
             tags=tags,
         )

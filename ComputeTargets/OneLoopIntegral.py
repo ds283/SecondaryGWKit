@@ -15,7 +15,8 @@ class OneLoopIntegral(DatastoreObject):
         model: ModelProxy,
         z_response: redshift,
         k: wavenumber_exit_time,
-        tol: tolerance,
+        atol: tolerance,
+        rtol: tolerance,
         label: Optional[str] = None,
         tags: Optional[List[store_tag]] = None,
     ):
@@ -46,7 +47,8 @@ class OneLoopIntegral(DatastoreObject):
         self._label = label
         self._tags = tags if tags is not None else []
 
-        self._tol = tol
+        self._atol = atol
+        self._rtol = rtol
 
         self._compute_ref = None
 
