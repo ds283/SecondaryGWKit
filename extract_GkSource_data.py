@@ -478,7 +478,7 @@ with ShardedPool(
             ax.plot(
                 abs_G_x,
                 abs_G_y,
-                label="Numerical $G_k$",
+                label="Numeric $G_k$",
                 color="r",
                 linestyle="solid",
             )

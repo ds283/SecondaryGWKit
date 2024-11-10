@@ -1,6 +1,6 @@
 import sqlalchemy as sqla
 
-from ComputeTargets import IntegrationSolver
+from AdaptiveLevin.integration_metadata import IntegrationSolver
 from Datastore.SQL.ObjectFactories.base import SQLAFactoryBase
 from defaults import DEFAULT_STRING_LENGTH
 

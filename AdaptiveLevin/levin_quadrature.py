@@ -3,8 +3,10 @@ from typing import Tuple
 
 import numpy as np
 from math import floor, ceil
+from numpy.linalg import LinAlgError
 from scipy.linalg import toeplitz
 
+from AdaptiveLevin.simple_quadrature import simple_quadrature
 from utilities import format_time
 
 # default interval at which to log progress of the integration
@@ -67,14 +69,17 @@ def chebyshev_matrices(x_span: Tuple[float, float], N: int):
     return x, D
 
 
-class _Weight_SinCos:
+class _Basis_SinCos:
     def __init__(self, theta):
         """
         :param theta:
         """
         self._theta = theta
 
-    def __call__(self, grid, Dmat):
+    def theta(self, x):
+        return self._theta(x)
+
+    def build_Levin_data(self, grid, Dmat):
         # sample the phase function theta on the Chebyshev grid
         theta_Cheb = np.array([self._theta(x) for x in grid])
 
@@ -102,11 +107,14 @@ class _Weight_SinCos:
 
         return AmatT, w0, wk
 
+    def eval_basis(self, x):
+        return [np.sin(self._theta(x)), np.cos(self._theta(x))]
+
 
 def _adaptive_levin_subregion(
     x_span: Tuple[float, float],
     f,
-    Weights,
+    BasisData,
     chebyshev_order: int = 12,
     build_p_sample: bool = False,
 ):
@@ -115,7 +123,7 @@ def _adaptive_levin_subregion(
     theta should be an (m x m)-matrix representing the phase matrix of the system (Levin 96's A or A^t matrix)
     :param x_span:
     :param f: iterable of callables representing the integrand f-functions
-    :param Weights: callable
+    :param BasisData: callable
     :param tol:
     :param chebyshev_order:
     :return:
@@ -130,7 +138,7 @@ def _adaptive_levin_subregion(
 
     # build the Levin A^T matrix, and also the vector of weights w evaluated at theta0, thetak
     # (these are needed in the final stap)
-    AmatT, w0, wk = Weights(grid, Dmat)
+    AmatT, w0, wk = BasisData.build_Levin_data(grid, Dmat)
 
     # build the Levin superoperator corresponding to this system
     # Chen et al. (168)
@@ -156,7 +164,7 @@ def _adaptive_levin_subregion(
     else:
         p_sample = []
 
-    # note grid is in reverse order, with largest value in position 1 and smallest value in last position -1
+    # note grid is in reverse order, with largest value in position o and smallest value in last position -1
     lower_limit = sum(p[(i + 1) * chebyshev_order - 1] * w0[i] for i in range(m))
     upper_limit = sum(p[i * chebyshev_order] * wk[i] for i in range(m))
 
@@ -166,13 +174,16 @@ def _adaptive_levin_subregion(
 def _adaptive_levin(
     x_span: Tuple[float, float],
     f,
-    Weights,
-    tol: float = 1e-7,
+    BasisData,
+    atol: float = 1e-15,
+    rtol: float = 1e-7,
     chebyshev_order: int = 12,
     build_p_sample: bool = False,
     notify_interval: int = DEFAULT_LEVIN_NOTIFY_INTERVAL,
     notify_label: str = None,
 ):
+    m = len(f)
+
     regions = [x_span]
 
     val = 0.0
@@ -204,41 +215,97 @@ def _adaptive_levin(
 
         a, b = regions.pop()
 
+        # if phase difference across this region is very small, there is likely no advantage in using the Levin
+        # rule to do the computation
+        phase_diff = np.fabs(BasisData.theta(b) - BasisData.theta(a))
+        if phase_diff < np.pi:
+
+            def integrand(x):
+                basis = BasisData.eval_basis(x)
+                return sum(f[i](x) * basis[i] for i in range(m))
+
+            data = simple_quadrature(
+                integrand,
+                a=a,
+                b=b,
+                atol=atol,
+                rtol=rtol,
+            )
+            val = val + data["value"]
+            used_regions.append((a, b))
+            continue
+
+        width = np.fabs(b - a)
+        # print(f">> region: (a,b) = ({a}, {b}), width = {width:.8g}")
+        # if width < 1e-5:
+        #     print(f"** small region (a,b) = ({a}, {b}), width={width:.8g}")
+        #
+        #     x_sample = np.linspace(a, b, 25)
+        #     sin_sample = [f[0](x) for x in x_sample]
+        #     cos_sample = [f[1](x) for x in x_sample]
+        #     print(f"   -- x_sample = {x_sample}")
+        #     print(f"   -- sin_sample = {sin_sample}")
+        #     print(f"   -- cos_sample = {cos_sample}")
+
         # Chen et al. (172)
-        estimate, p_sample = _adaptive_levin_subregion(
-            (a, b),
-            f,
-            Weights,
-            chebyshev_order=chebyshev_order,
-            build_p_sample=build_p_sample,
-        )
+        try:
+            estimate, p_sample = _adaptive_levin_subregion(
+                (a, b),
+                f,
+                BasisData,
+                chebyshev_order=chebyshev_order,
+                build_p_sample=build_p_sample,
+            )
+        except LinAlgError as e:
+            print(
+                f"!! adaptive_levin: linear algebra error when estimating Levin subregion ({a}, {b}), width={width:.8g}"
+            )
+            raise e
 
         c = (a + b) / 2.0
         # Chen et al. (173)
-        estimate_L, pL_sample = _adaptive_levin_subregion(
-            (a, c),
-            f,
-            Weights,
-            chebyshev_order=chebyshev_order,
-            build_p_sample=build_p_sample,
-        )
-        estimate_R, pR_sample = _adaptive_levin_subregion(
-            (c, b),
-            f,
-            Weights,
-            chebyshev_order=chebyshev_order,
-            build_p_sample=build_p_sample,
-        )
+        try:
+            estimate_L, pL_sample = _adaptive_levin_subregion(
+                (a, c),
+                f,
+                BasisData,
+                chebyshev_order=chebyshev_order,
+                build_p_sample=build_p_sample,
+            )
+        except LinAlgError as e:
+            print(
+                f"!! adaptive_levin: linear algebra error when estimating Levin left-comparison region ({a}, {c}), parent region = ({a}, {b})"
+            )
+            raise e
+
+        try:
+            estimate_R, pR_sample = _adaptive_levin_subregion(
+                (c, b),
+                f,
+                BasisData,
+                chebyshev_order=chebyshev_order,
+                build_p_sample=build_p_sample,
+            )
+        except LinAlgError as e:
+            print(
+                f"!! adaptive_levin: linear algebra error when estimating Levin right-comparison region ({c}, {b}), parent region = ({a}, {b})"
+            )
+            raise e
 
         num_evaluations += 3
         refined_estimate = estimate_L + estimate_R
 
-        # print(
-        #     f"** testing interval [{a:.8g},{b:.8g}] -> {estimate:.8g} against [{a:.8g},{c:.8g}] -> {estimate_L:.8g} + [{c:.8g},{b:.8g}] -> {estimate_R:.8g} | diff = {estimate-refined_estimate:.8g}, rel = {np.fabs((estimate - refined_estimate) / refined_estimate):.8g}, tol = {tol:.8g}"
-        # )
+        relerr = np.fabs((estimate - refined_estimate)) / min(
+            np.fabs(estimate), np.fabs(refined_estimate)
+        )
+        abserr = np.fabs(estimate - refined_estimate)
 
-        # Chen et al. step (4), below (173)
-        if np.fabs((estimate - refined_estimate) / refined_estimate) < tol:
+        # Chen et al. step (4), below (173) [adapted to also include a relative tolerance check]
+        if abserr < atol or relerr < rtol:
+            # print(
+            #     f"** accepting interval [{a:.12g},{b:.12g}] -> {estimate:.12g} against [{a:.12g},{c:.12g}] -> {estimate_L:.12g} + [{c:.12g},{b:.12g}] -> {estimate_R:.12g} | abserr={abserr:.12g}, relerr={relerr:.12g}, atol={atol:.8g}, rtol={rtol:.8g}"
+            # )
+
             # if np.fabs(estimate - refined_estimate) < tol:
             val = val + estimate
             used_regions.append((a, b))
@@ -246,6 +313,9 @@ def _adaptive_levin(
                 p_points.extend(p_sample)
 
         else:
+            # print(
+            #     f"** subdivided interval [{a:.12g},{b:.12g}] -> {estimate:.12g} against [{a:.12g},{c:.12g}] -> {estimate_L:.12g} + [{c:.12g},{b:.12g}] -> {estimate_R:.12g} | abserr={abserr:.12g}, relerr={relerr:.12g}, atol={atol:.8g}, rtol={rtol:.8g}"
+            # )
             regions.extend([(a, c), (c, b)])
 
     used_regions.sort(key=lambda x: x[0])
@@ -296,19 +366,21 @@ def adaptive_levin_sincos(
     x_span: Tuple[float, float],
     f,
     theta,
-    tol: float = 1e-7,
+    atol: float = 1e-15,
+    rtol: float = 1e-7,
     chebyshev_order: int = 12,
     build_p_sample: bool = False,
     notify_interval: int = DEFAULT_LEVIN_NOTIFY_INTERVAL,
     notify_label: str = None,
 ):
-    A = _Weight_SinCos(theta)
+    A = _Basis_SinCos(theta)
 
     return _adaptive_levin(
         x_span,
         f,
         A,
-        tol=tol,
+        atol=atol,
+        rtol=rtol,
         chebyshev_order=chebyshev_order,
         build_p_sample=build_p_sample,
         notify_interval=notify_interval,

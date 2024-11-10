@@ -42,7 +42,8 @@ from defaults import (
     DEFAULT_ABS_TOLERANCE,
     DEFAULT_REL_TOLERANCE,
     DEFAULT_FLOAT_PRECISION,
-    DEFAULT_QUADRATURE_TOLERANCE,
+    DEFAULT_QUADRATURE_RTOL,
+    DEFAULT_QUADRATURE_ATOL,
 )
 from utilities import grouper
 
@@ -229,11 +230,12 @@ with ShardedPool(
     ## DATASTORE OBJECTS
 
     # build absolute and relative tolerances
-    atol, rtol, quadtol = ray.get(
+    atol, rtol, quad_atol, quad_rtol = ray.get(
         [
             pool.object_get("tolerance", tol=DEFAULT_ABS_TOLERANCE),
             pool.object_get("tolerance", tol=DEFAULT_REL_TOLERANCE),
-            pool.object_get("tolerance", tol=DEFAULT_QUADRATURE_TOLERANCE),
+            pool.object_get("tolerance", tol=DEFAULT_QUADRATURE_ATOL),
+            pool.object_get("tolerance", tol=DEFAULT_QUADRATURE_RTOL),
         ]
     )
 
@@ -1936,7 +1938,8 @@ with ShardedPool(
                         "r": r,
                         "z_response": z_response,
                         "z_source_max": z_source_integral_max_z,
-                        "tol": quadtol,
+                        "atol": quad_atol,
+                        "rtol": quad_rtol,
                         "tags": [
                             GkProductionTag,
                             TkProductionTag,
@@ -2195,7 +2198,8 @@ with ShardedPool(
                         r=r,
                         z_response=z_response,
                         z_source_max=z_source_integral_max_z,
-                        tol=quadtol,
+                        atol=quad_atol,
+                        rtol=quad_rtol,
                         tags=[
                             TkProductionTag,
                             GkProductionTag,
@@ -2248,7 +2252,8 @@ with ShardedPool(
             title="CALCULATE QUADRATIC SOURCE INTEGRALS",
             store_results=False,
             create_batch_size=1,  # we have batched the work queue into chunks ourselves, so don't process too many of these chunks at once!
-            notify_batch_size=25,
+            notify_batch_size=350,
+            notify_min_time_interval=5 * 60,
             max_task_queue=300,  # don't allow too many tasks to build up, because the payload storage requirenments could max out the object store
             process_batch_size=50,
         )

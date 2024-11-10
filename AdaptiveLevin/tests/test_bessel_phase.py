@@ -55,7 +55,8 @@ class TestBesselPhase(unittest.TestCase):
             x_span=(1e-6, max_x),
             f=f,
             theta=phase,
-            tol=1e-6,
+            atol=1e-15,
+            rtol=1e-10,
             chebyshev_order=12,
         )
         value = Levin_data["value"]

@@ -315,7 +315,7 @@ with ShardedPool(
             fig = plt.figure()
             ax = plt.gca()
 
-            ax.plot(abs_source_x, abs_source_y, label="Numerical")
+            ax.plot(abs_source_x, abs_source_y, label="Numeric")
             ax.plot(
                 abs_analytic_rad_x,
                 abs_analytic_rad_y,
@@ -332,7 +332,7 @@ with ShardedPool(
 
             add_z_labels(ax, source=q_exit, q_exit=q_exit, r_exit=r_exit)
 
-            ax.set_xlabel("redshift $z$")
+            ax.set_xlabel("source redshift $z$")
             ax.set_ylabel("$T_k(z)$")
 
             set_loglog_axes(ax)

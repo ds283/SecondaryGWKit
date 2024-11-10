@@ -1,14 +1,15 @@
-import time
 from datetime import datetime
 from typing import Optional, List, Union
 
 import ray
 from math import log, exp, pow, sqrt, pi, gamma
-from scipy.integrate import solve_ivp
+from numpy.linalg import LinAlgError
 from scipy.special import yv, jv
 
 from AdaptiveLevin import adaptive_levin_sincos
 from AdaptiveLevin.bessel_phase import bessel_phase
+from AdaptiveLevin.integration_metadata import IntegrationData, LevinData
+from AdaptiveLevin.simple_quadrature import simple_quadrature
 from ComputeTargets.BackgroundModel import BackgroundModel, ModelProxy, ModelFunctions
 from ComputeTargets.GkSource import GkSource
 from ComputeTargets.GkSourcePolicyData import GkSourcePolicyData, GkSourceFunctions
@@ -17,90 +18,22 @@ from ComputeTargets.QuadSourceIntegral_debug import (
     _bessel_function_plot,
     _three_bessel_plot,
 )
-from ComputeTargets.integration_metadata import IntegrationData, LevinData
-from ComputeTargets.integration_supervisor import (
-    IntegrationSupervisor,
-    DEFAULT_UPDATE_INTERVAL,
-    RHS_timer,
-)
 from CosmologyConcepts import wavenumber, wavenumber_exit_time, redshift
 from Datastore import DatastoreObject
 from MetadataConcepts import store_tag, tolerance, GkSourcePolicy
 from defaults import (
-    DEFAULT_QUADRATURE_TOLERANCE,
+    DEFAULT_QUADRATURE_RTOL,
     DEFAULT_FLOAT_PRECISION,
+    DEFAULT_QUADRATURE_ATOL,
 )
-from utilities import WallclockTimer, format_time
+from utilities import WallclockTimer
 
 LEVIN_MIN_2PI_CYCLES = 10
 LEVIN_MIN_PHASE_DIFF = LEVIN_MIN_2PI_CYCLES * 2.0 * pi
 
 CHEBYSHEV_ORDER = 64
-LEVIN_TOLERANCE = 1e-10
-
-
-class QuadSourceSupervisor(IntegrationSupervisor):
-    def __init__(
-        self,
-        k: wavenumber,
-        q: wavenumber,
-        r: wavenumber,
-        label: str,
-        z_response: redshift,
-        log_z_init: float,
-        log_z_final: float,
-        notify_interval: int = DEFAULT_UPDATE_INTERVAL,
-    ):
-        super().__init__(notify_interval)
-
-        self._k = k
-        self._q = q
-        self._r = r
-
-        self._label = label
-
-        self._z_response: float = z_response.z
-        self._log_z_init: float = log_z_init
-        self._log_z_final: float = log_z_final
-
-        self._log_z_range: float = self._log_z_final - self._log_z_init
-
-        self._last_log_z: float = self._log_z_init
-
-    def __enter__(self):
-        super().__enter__()
-        return self
-
-    def __exit__(self, exc_type, exc_val, exc_tb):
-        super().__exit__(exc_type, exc_val, exc_tb)
-
-    def message(self, current_log_z, msg):
-        current_time = time.time()
-        since_last_notify = current_time - self._last_notify
-        since_start = current_time - self._start_time
-
-        update_number = self.report_notify()
-
-        z_complete = current_log_z - self._log_z_init
-        z_remain = self._log_z_range - z_complete
-        percent_remain = z_remain / self._log_z_range
-        print(
-            f"** STATUS UPDATE #{update_number}: QuadSourceIntegral quadrature (type={self._label}) for k={self._k.k_inv_Mpc:.5g}/Mpc (store_id={self._k.store_id}), q={self._q.k_inv_Mpc:.5g}/Mpc (store_id={self._q.store_id}), r={self._r.k_inv_Mpc:.5g}/Mpc (store_id={self._r.store_id}) has been running for {format_time(since_start)} ({format_time(since_last_notify)} since last notification)"
-        )
-        print(
-            f"|    current log(1+z)={current_log_z:.5g} (init log(1+z)={self._log_z_init:.5g}, target log(1+z)={self._log_z_final:.5g}, log(1+z) complete={z_complete:.5g}, log(1+z) remain={z_remain:.5g}, {percent_remain:.3%} remains)"
-        )
-        if self._last_log_z is not None:
-            log_z_delta = current_log_z - self._last_log_z
-            print(
-                f"|    redshift advance since last update: Delta log(1+z) = {log_z_delta:.5g}"
-            )
-        print(
-            f"|    {self.RHS_evaluations} RHS evaluations, mean {self.mean_RHS_time:.5g}s per evaluation, min RHS time = {self.min_RHS_time:.5g}s, max RHS time = {self.max_RHS_time:.5g}s"
-        )
-        print(f"|    {msg}")
-
-        self._last_log_z = current_log_z
+LEVIN_RELERR = 1e-8
+LEVIN_ABSERR = 1e-23
 
 
 def get_z(z):
@@ -123,16 +56,11 @@ def compute_QuadSource_integral(
     GkPolicy: GkSourcePolicyData,
     z_response: redshift,
     z_source_max: redshift,
-    tol: float = DEFAULT_QUADRATURE_TOLERANCE,
+    atol: float = DEFAULT_QUADRATURE_ATOL,
+    rtol: float = DEFAULT_QUADRATURE_RTOL,
 ) -> dict:
     # we are entitled to assume that the GkSource embedded in GkPolicy and source are evaluated at the same z_response
     # also that source and Gk have z_samples at least as far back as z_source_max
-
-    # print(
-    #     f"** QUADRATIC SOURCE INTEGRAL: k={k.k.k_inv_Mpc:.3g}/Mpc, q={q.k.k_inv_Mpc:.3g}/Mpc, r={r.k.k_inv_Mpc:.3g}/Mpc (source store_id={source.store_id}, k store_id={k.store_id}) starting calculation for z_response={z_response.z:.5g}"
-    # )
-    start_time = time.time()
-
     model: BackgroundModel = model_proxy.get()
 
     model_f: ModelFunctions = model.functions
@@ -218,7 +146,7 @@ def compute_QuadSource_integral(
         if (
             max_z is not None
             and min_z is not None
-            and get_z(max_z) - get_z(min_z) > DEFAULT_QUADRATURE_TOLERANCE
+            and get_z(max_z) / get_z(min_z) > 1.0 + DEFAULT_QUADRATURE_RTOL
         ):
             # now = time.time()
             # print(
@@ -234,7 +162,8 @@ def compute_QuadSource_integral(
                 z_response,
                 max_z=get_z(max_z),
                 min_z=get_z(min_z),
-                tol=tol,
+                atol=atol,
+                rtol=rtol,
             )
             numeric_quad = payload["value"]
             numeric_quad_data = payload["data"]
@@ -244,7 +173,7 @@ def compute_QuadSource_integral(
         if (
             max_z is not None
             and min_z is not None
-            and get_z(max_z) - get_z(min_z) > DEFAULT_QUADRATURE_TOLERANCE
+            and get_z(max_z) / get_z(min_z) > 1.0 + DEFAULT_QUADRATURE_RTOL
         ):
             # now = time.time()
             # print(
@@ -260,7 +189,8 @@ def compute_QuadSource_integral(
                 z_response,
                 max_z=get_z(max_z),
                 min_z=get_z(min_z),
-                tol=tol,
+                atol=atol,
+                rtol=rtol,
             )
             WKB_quad = payload["value"]
             WKB_quad_data = payload["data"]
@@ -270,7 +200,7 @@ def compute_QuadSource_integral(
         if (
             max_z is not None
             and min_z is not None
-            and get_z(max_z) - get_z(min_z) > DEFAULT_QUADRATURE_TOLERANCE
+            and get_z(max_z) / get_z(min_z) > 1.0 + DEFAULT_QUADRATURE_RTOL
         ):
             # now = time.time()
             # print(
@@ -286,7 +216,8 @@ def compute_QuadSource_integral(
                 z_response,
                 max_z=get_z(max_z),
                 min_z=get_z(min_z),
-                tol=tol,
+                atol=atol,
+                rtol=rtol,
             )
             WKB_Levin = payload["value"]
             WKB_Levin_data = payload["data"]
@@ -301,7 +232,8 @@ def compute_QuadSource_integral(
             max_z=z_source_max,
             min_z=z_response,
             b=0.0,
-            tol=tol,
+            rtol=rtol,
+            atol=atol,
         )
 
     return {
@@ -394,7 +326,8 @@ def _three_bessel_integrals(
     phase_data: dict,
     nu_type: str,
     timestamp: datetime,
-    tol: float,
+    atol: float,
+    rtol: float,
     mode: str = "default",
     debug_plots: bool = False,
 ):
@@ -470,26 +403,41 @@ def _three_bessel_integrals(
             or phase_diff_Tk_q > LEVIN_MIN_PHASE_DIFF
             or phase_diff_Tk_r > LEVIN_MIN_PHASE_DIFF
         ):
-            Levin = _three_bessel_Levin(
-                k,
-                q,
-                r,
-                min_eta=min_eta,
-                max_eta=max_eta,
-                b=b,
-                phase_data_Gk=phase_data_Gk,
-                phase_data_Tk=phase_data_Tk,
-                x_cut=x_cut,
-                tol=tol,
-            )
-            metadata["Levin_J"] = Levin[0]
-            metadata["Levin_Y"] = Levin[1]
-            # metadata["quad_comparison_J"] = quad_comparison[0]
-            # metadata["quad_comparison_Y"] = quad_comparison[1]
-            return {"J": Levin[0], "Y": Levin[1], "metadata": metadata}
+            try:
+                Levin = _three_bessel_Levin(
+                    k,
+                    q,
+                    r,
+                    min_eta=min_eta,
+                    max_eta=max_eta,
+                    b=b,
+                    phase_data_Gk=phase_data_Gk,
+                    phase_data_Tk=phase_data_Tk,
+                    x_cut=x_cut,
+                    atol=atol,
+                    rtol=rtol,
+                )
+                metadata["Levin_J"] = Levin[0]
+                metadata["Levin_Y"] = Levin[1]
+                # metadata["quad_comparison_J"] = quad_comparison[0]
+                # metadata["quad_comparison_Y"] = quad_comparison[1]
+                return {"J": Levin[0], "Y": Levin[1], "metadata": metadata}
+            except LinAlgError as e:
+                print(
+                    f"!! three_bessel_integrals: linear algebra error k={k.k_inv_Mpc:.5g}/Mpc, q={q.k_inv_Mpc:.5g}/Mpc, r={r.k_inv_Mpc:.5g}, min_eta={min_eta:.5g}, max_eta={max_eta:.5g}, x_cut={x_cut:.5g}, nu_type={nu_type}, mode={mode}"
+                )
+                raise e
 
         quad = _three_bessel_quad(
-            k, q, r, min_eta=min_eta, max_eta=max_eta, b=b, nu_type=nu_type, tol=tol
+            k,
+            q,
+            r,
+            min_eta=min_eta,
+            max_eta=max_eta,
+            b=b,
+            nu_type=nu_type,
+            atol=atol,
+            rtol=rtol,
         )
         metadata["quad_J"] = quad[0]
         metadata["quad_Y"] = quad[1]
@@ -499,7 +447,15 @@ def _three_bessel_integrals(
         mode == "default" and eta_cut / max_eta >= 1.0 - DEFAULT_FLOAT_PRECISION
     ):
         quad = _three_bessel_quad(
-            k, q, r, min_eta=min_eta, max_eta=max_eta, b=b, nu_type=nu_type, tol=tol
+            k,
+            q,
+            r,
+            min_eta=min_eta,
+            max_eta=max_eta,
+            b=b,
+            nu_type=nu_type,
+            atol=atol,
+            rtol=rtol,
         )
         metadata["quad_J"] = quad[0]
         metadata["quad_Y"] = quad[1]
@@ -520,7 +476,15 @@ def _three_bessel_integrals(
         or phase_diff_Tk_r > LEVIN_MIN_PHASE_DIFF
     ):
         quad = _three_bessel_quad(
-            k, q, r, min_eta=min_eta, max_eta=eta_cut, b=b, nu_type=nu_type, tol=tol
+            k,
+            q,
+            r,
+            min_eta=min_eta,
+            max_eta=eta_cut,
+            b=b,
+            nu_type=nu_type,
+            atol=atol,
+            rtol=rtol,
         )
         Levin = _three_bessel_Levin(
             k,
@@ -532,7 +496,8 @@ def _three_bessel_integrals(
             phase_data_Gk=phase_data_Gk,
             phase_data_Tk=phase_data_Tk,
             x_cut=x_cut,
-            tol=tol,
+            atol=atol,
+            rtol=rtol,
         )
         metadata["Levin_J"] = Levin[0]
         metadata["Levin_Y"] = Levin[1]
@@ -547,7 +512,15 @@ def _three_bessel_integrals(
         }
 
     quad = _three_bessel_quad(
-        k, q, r, min_eta=min_eta, max_eta=max_eta, b=b, nu_type=nu_type, tol=tol
+        k,
+        q,
+        r,
+        min_eta=min_eta,
+        max_eta=max_eta,
+        b=b,
+        nu_type=nu_type,
+        atol=atol,
+        rtol=rtol,
     )
     metadata["quad_J"] = quad[0]
     metadata["quad_Y"] = quad[1]
@@ -564,7 +537,8 @@ def _three_bessel_Levin(
     phase_data_Gk,
     phase_data_Tk,
     x_cut: float,
-    tol: float,
+    atol: float,
+    rtol: float,
 ):
     assert min_eta <= max_eta
 
@@ -627,14 +601,16 @@ def _three_bessel_Levin(
         x_span,
         f=[Levin_f, lambda x: 0.0],
         theta=phase1,
-        tol=LEVIN_TOLERANCE,
+        atol=LEVIN_ABSERR,
+        rtol=LEVIN_RELERR,
         chebyshev_order=CHEBYSHEV_ORDER,
     )
     Y1_data = adaptive_levin_sincos(
         x_span,
         f=[lambda x: 0.0, lambda x: -Levin_f(x)],
         theta=phase1,
-        tol=LEVIN_TOLERANCE,
+        atol=LEVIN_ABSERR,
+        rtol=LEVIN_RELERR,
         chebyshev_order=CHEBYSHEV_ORDER,
     )
 
@@ -651,14 +627,16 @@ def _three_bessel_Levin(
         x_span,
         f=[Levin_f, lambda x: 0.0],
         theta=phase2,
-        tol=LEVIN_TOLERANCE,
+        atol=LEVIN_ABSERR,
+        rtol=LEVIN_RELERR,
         chebyshev_order=CHEBYSHEV_ORDER,
     )
     Y2_data = adaptive_levin_sincos(
         x_span,
         f=[lambda x: 0.0, lambda x: -Levin_f(x)],
         theta=phase2,
-        tol=LEVIN_TOLERANCE,
+        atol=LEVIN_ABSERR,
+        rtol=LEVIN_RELERR,
         chebyshev_order=CHEBYSHEV_ORDER,
     )
 
@@ -675,14 +653,16 @@ def _three_bessel_Levin(
         x_span,
         f=[Levin_f, lambda x: 0.0],
         theta=phase3,
-        tol=LEVIN_TOLERANCE,
+        atol=LEVIN_ABSERR,
+        rtol=LEVIN_RELERR,
         chebyshev_order=CHEBYSHEV_ORDER,
     )
     Y3_data = adaptive_levin_sincos(
         x_span,
         f=[lambda x: 0.0, lambda x: -Levin_f(x)],
         theta=phase3,
-        tol=LEVIN_TOLERANCE,
+        atol=LEVIN_ABSERR,
+        rtol=LEVIN_RELERR,
         chebyshev_order=CHEBYSHEV_ORDER,
     )
 
@@ -699,14 +679,16 @@ def _three_bessel_Levin(
         x_span,
         f=[Levin_f, lambda x: 0.0],
         theta=phase4,
-        tol=LEVIN_TOLERANCE,
+        atol=LEVIN_ABSERR,
+        rtol=LEVIN_RELERR,
         chebyshev_order=CHEBYSHEV_ORDER,
     )
     Y4_data = adaptive_levin_sincos(
         x_span,
         f=[lambda x: 0.0, lambda x: -Levin_f(x)],
         theta=phase4,
-        tol=LEVIN_TOLERANCE,
+        atol=LEVIN_ABSERR,
+        rtol=LEVIN_RELERR,
         chebyshev_order=CHEBYSHEV_ORDER,
     )
 
@@ -735,19 +717,19 @@ def _three_bessel_quad(
     max_eta: float,
     b: float,
     nu_type: str,
-    tol: float,
+    atol: float,
+    rtol: float,
 ):
     assert min_eta <= max_eta
 
     cs = sqrt((1.0 - b) / (1.0 + b) / 3.0)
     log_min_eta = log(min_eta)
     log_max_eta = log(max_eta)
-    x_span = (log_min_eta, log_max_eta)
 
     nu_types = {"0pt5": 0.5, "2pt5": 2.5}
     nu = nu_types[nu_type]
 
-    def RHS(log_eta, state):
+    def integrand(log_eta):
         eta = exp(log_eta)
 
         x1 = k.k * eta
@@ -761,38 +743,16 @@ def _three_bessel_quad(
 
         return [A * dJ, A * dY]
 
-    sol = solve_ivp(
-        RHS,
-        method="DOP853",
-        t_span=x_span,
-        t_eval=[log_max_eta],
-        y0=[0.0, 0.0],
-        dense_output=True,
-        atol=tol,
-        rtol=tol,
+    data = simple_quadrature(
+        integrand,
+        a=log_min_eta,
+        b=log_max_eta,
+        atol=atol,
+        rtol=rtol,
+        label=f"three_bessel_quad for  k={k.k_inv_Mpc:.5g}/Mpc (store_id={k.store_id}), q={q.k_inv_Mpc:.5g}/Mpc (store_id={q.store_id}), r={r.k_inv_Mpc:.5g}/Mpc (store_id={r.store_id})",
     )
 
-    if not sol.success:
-        raise RuntimeError(
-            f'_three_bessel_quad: quadrature did not terminate successfully | error at log(eta)={sol.t[-1]:.5g}, "{sol.message}"'
-        )
-
-    if len(sol.t) == 0:
-        raise RuntimeError(
-            f"_three_bessel_quad: quadrature did not return any samples (min eta={min_eta:.5g}, max eta={max_eta:.5g}, log(min_eta)={log_max_eta:.5g}, log(max_eta0={log_max_eta:.5g})"
-        )
-
-    if sol.t[0] < log_max_eta:
-        raise RuntimeError(
-            f"_three_bessel_quad: quadrature did not terminate at expected conformal time (min eta={min_eta:.5g}, max eta={max_eta:.5g}, log(min_eta)={log_max_eta:.5g}, log(max_eta0={log_max_eta:.5g}, final log(eta)={sol.t[0]:.5g})"
-        )
-
-    if len(sol.sol(log_max_eta)) != 2:
-        raise RuntimeError(
-            f"_three_bessel_quad: solution does not have expected number of members (expected 2, found {len(sol.sol(log_max_eta))})"
-        )
-
-    return sol.sol(log_max_eta)
+    return data["value"]
 
 
 def analytic_integral(
@@ -804,7 +764,8 @@ def analytic_integral(
     max_z: redshift,
     min_z: redshift,
     b: float,
-    tol: float,
+    rtol: float,
+    atol: float,
 ):
     functions: ModelFunctions = model.functions
     min_eta: float = functions.tau(max_z.z)
@@ -835,7 +796,8 @@ def analytic_integral(
         phase_data={"0pt5": phase_data_0pt5, "2pt5": phase_data_2pt5},
         nu_type="0pt5",
         timestamp=timestamp,
-        tol=tol,
+        atol=LEVIN_ABSERR,
+        rtol=LEVIN_RELERR,
         mode="default",
     )
     data2pt5 = _three_bessel_integrals(
@@ -848,7 +810,8 @@ def analytic_integral(
         phase_data={"0pt5": phase_data_0pt5, "2pt5": phase_data_2pt5},
         nu_type="2pt5",
         timestamp=timestamp,
-        tol=tol,
+        atol=LEVIN_ABSERR,
+        rtol=LEVIN_RELERR,
         mode="default",
     )
 
@@ -905,7 +868,8 @@ def numeric_quad_integral(
     z_response: redshift,
     max_z: float,
     min_z: float,
-    tol: float,
+    atol: float,
+    rtol: float,
 ) -> dict:
     source_f: QuadSourceFunctions = source.functions
     Gk_f: GkSourceFunctions = GkPolicy.functions
@@ -938,73 +902,29 @@ def numeric_quad_integral(
             f"compute_QuadSource_integral: attempting to evaluate numerical quadrature, but min_z={min_z:.5g} is out-of-bounds for the region ({region_max_z:.5g}, {region_min_z}:.5g) where a numerical solution is available [domain={max_z:.5g}, {min_z:.5g}]"
         )
 
-    def RHS(log_z_source, state, supervisor: QuadSourceSupervisor) -> List[float]:
-        with RHS_timer(supervisor) as timer:
-            current_value = state[0]
+    def integrand(log_z_source) -> float:
+        Green = Gk_f.numerical_Gk(log_z_source, z_is_log=True)
+        H = model_f.Hubble(exp(log_z_source) - 1.0)
+        H_sq = H * H
+        f = source_f.source(log_z_source, z_is_log=True)
 
-            if supervisor.notify_available:
-                supervisor.message(
-                    log_z_source, f"current state: current value = {current_value:.5g}"
-                )
-
-            Green = Gk_f.numerical_Gk(log_z_source, z_is_log=True)
-            H = model_f.Hubble(exp(log_z_source) - 1.0)
-            H_sq = H * H
-            f = source_f.source(log_z_source, z_is_log=True)
-
-        return [Green * f / H_sq]
+        return Green * f / H_sq
 
     log_min_z = log(1.0 + min_z)
     log_max_z = log(1.0 + max_z)
 
-    with QuadSourceSupervisor(
-        k, q, r, "numeric quad", z_response, min_z, max_z
-    ) as supervisor:
-        state = [0.0]
+    data = simple_quadrature(
+        integrand,
+        a=log_min_z,
+        b=log_max_z,
+        atol=atol,
+        rtol=rtol,
+        label=f"numeric_quad_integral for k={k.k_inv_Mpc:.5g}/Mpc (store_id={k.store_id}), q={q.k_inv_Mpc:.5g}/Mpc (store_id={q.store_id}), r={r.k_inv_Mpc:.5g}/Mpc (store_id={r.store_id})",
+    )
 
-        sol = solve_ivp(
-            RHS,
-            method="DOP853",
-            t_span=(log_min_z, log_max_z),
-            t_eval=[log_max_z],
-            y0=state,
-            dense_output=True,
-            atol=tol,
-            rtol=tol,
-            args=(supervisor,),
-        )
+    data["value"] = (1.0 + z_response.z) * data["value"]
 
-    if not sol.success:
-        raise RuntimeError(
-            f'compute_QuadSource_integral: quadrature did not terminate successfully | error at log(1+z)={sol.t[0]:.5g}, "{sol.message}"'
-        )
-
-    if len(sol.t) == 0:
-        raise RuntimeError(
-            f"compute_QuadSource_integral: quadrature did not return any samples (max z={max_z:.5g}, min z={min_z:.5g}, log(1+max z)={log_max_z:.5g}, log(1+min z)={log_min_z:.5g})"
-        )
-
-    if sol.t[0] < log_max_z - DEFAULT_FLOAT_PRECISION:
-        raise RuntimeError(
-            f"compute_QuadSource_integral: quadrature did not terminate at expected redshift (max z={max_z:.5g}, min z={min_z:.5g}, log(1+max z)={log_max_z:.5g}, log(1+min z)={log_min_z:.5g}, final log(1+z)={sol.t[0]:.5g})"
-        )
-
-    if len(sol.sol(log_max_z)) != 1:
-        raise RuntimeError(
-            f"compute_QuadSource_integral: solution does not have expected number of members (expected 1, found {len(sol.sol(log_max_z))})"
-        )
-
-    return {
-        "data": IntegrationData(
-            compute_time=supervisor.integration_time,
-            compute_steps=int(sol.nfev),
-            RHS_evaluations=supervisor.RHS_evaluations,
-            mean_RHS_time=supervisor.mean_RHS_time,
-            max_RHS_time=supervisor.max_RHS_time,
-            min_RHS_time=supervisor.min_RHS_time,
-        ),
-        "value": (1.0 + z_response.z) * sol.sol(log_max_z)[0],
-    }
+    return data
 
 
 def WKB_quad_integral(
@@ -1017,7 +937,8 @@ def WKB_quad_integral(
     z_response: redshift,
     max_z: float,
     min_z: float,
-    tol: float,
+    atol: float,
+    rtol: float,
 ) -> dict:
     source_f: QuadSourceFunctions = source.functions
     Gk_f: GkSourceFunctions = GkPolicy.functions
@@ -1050,73 +971,29 @@ def WKB_quad_integral(
             f"compute_QuadSource_integral: attempting to evaluate WKB quadrature, but min_z={min_z:.5g} is out-of-bounds for the region ({region_max_z:.5g}, {region_min_z}:.5g) where a WKB solution is available [domain={max_z:.5g}, {min_z:.5g}]"
         )
 
-    def RHS(log_z_source, state, supervisor: QuadSourceSupervisor) -> List[float]:
-        with RHS_timer(supervisor) as timer:
-            current_value = state[0]
+    def integrand(log_z_source) -> float:
+        Green = Gk_f.WKB_Gk(log_z_source, z_is_log=True)
+        H = model_f.Hubble(exp(log_z_source) - 1.0)
+        H_sq = H * H
+        f = source_f.source(log_z_source, z_is_log=True)
 
-            if supervisor.notify_available:
-                supervisor.message(
-                    log_z_source, f"current state: current value = {current_value:.5g}"
-                )
-
-            Green = Gk_f.WKB_Gk(log_z_source, z_is_log=True)
-            H = model_f.Hubble(exp(log_z_source) - 1.0)
-            H_sq = H * H
-            f = source_f.source(log_z_source, z_is_log=True)
-
-        return [Green * f / H_sq]
+        return Green * f / H_sq
 
     log_min_z = log(1.0 + min_z)
     log_max_z = log(1.0 + max_z)
 
-    with QuadSourceSupervisor(
-        k, q, r, "WKB quad", z_response, log_min_z, log_max_z
-    ) as supervisor:
-        state = [0.0]
+    data = simple_quadrature(
+        integrand,
+        a=log_min_z,
+        b=log_max_z,
+        atol=atol,
+        rtol=rtol,
+        label=f"WKB_quad_integral for k={k.k_inv_Mpc:.5g}/Mpc (store_id={k.store_id}), q={q.k_inv_Mpc:.5g}/Mpc (store_id={q.store_id}), r={r.k_inv_Mpc:.5g}/Mpc (store_id={r.store_id})",
+    )
 
-        sol = solve_ivp(
-            RHS,
-            method="DOP853",
-            t_span=(log_min_z, log_max_z),
-            t_eval=[log_max_z],
-            y0=state,
-            dense_output=True,
-            atol=tol,
-            rtol=tol,
-            args=(supervisor,),
-        )
+    data["value"] = (1.0 + z_response.z) * data["value"]
 
-    if not sol.success:
-        raise RuntimeError(
-            f'compute_QuadSource_integral: quadrature did not terminate successfully | error at log(1+z)={sol.t[0]}, "{sol.message}"'
-        )
-
-    if len(sol.t) == 0:
-        raise RuntimeError(
-            f"compute_QuadSource_integral: quadrature did not return any samples (max z={max_z:.5g}, min z={min_z:.5g}, log(1+max z)={log_max_z:.5g}, log(1+min z)={log_min_z:.5g})"
-        )
-
-    if sol.t[0] < log_max_z - DEFAULT_FLOAT_PRECISION:
-        raise RuntimeError(
-            f"compute_QuadSource_integral: quadrature did not terminate at expected redshift (max z={max_z:.5g}, min z={min_z:.5g}, log(1+max z)={log_max_z:.5g}, log(1+min z)={log_min_z:.5g}, final log(1+z)={sol.t[0]:.5g})"
-        )
-
-    if len(sol.sol(log_max_z)) != 1:
-        raise RuntimeError(
-            f"compute_QuadSource_integral: solution does not have expected number of members (expected 1, found {len(sol.sol(log_max_z))})"
-        )
-
-    return {
-        "data": IntegrationData(
-            compute_time=supervisor.integration_time,
-            compute_steps=int(sol.nfev),
-            RHS_evaluations=supervisor.RHS_evaluations,
-            mean_RHS_time=supervisor.mean_RHS_time,
-            max_RHS_time=supervisor.max_RHS_time,
-            min_RHS_time=supervisor.min_RHS_time,
-        ),
-        "value": (1.0 + z_response.z) * sol.sol(log_max_z)[0],
-    }
+    return data
 
 
 def WKB_Levin_integral(
@@ -1129,7 +1006,8 @@ def WKB_Levin_integral(
     z_response: redshift,
     max_z: float,
     min_z: float,
-    tol: float,
+    atol: float,
+    rtol: float,
 ) -> dict:
     source_f: QuadSourceFunctions = source.functions
     Gk_f: GkSourceFunctions = GkPolicy.functions
@@ -1182,7 +1060,8 @@ def WKB_Levin_integral(
         x_span,
         [Levin_f, lambda x: 0.0],
         Levin_theta,
-        tol=LEVIN_TOLERANCE,
+        atol=LEVIN_ABSERR,
+        rtol=LEVIN_RELERR,
         chebyshev_order=CHEBYSHEV_ORDER,
         notify_label=f"k={k.k_inv_Mpc:.3g}/Mpc, q={q.k_inv_Mpc:.3g}/Mpc, r={r.k_inv_Mpc:.3g}/Mpc @ z_response={z_response.z:.5g}",
     )
@@ -1208,7 +1087,8 @@ class QuadSourceIntegral(DatastoreObject):
         k: wavenumber_exit_time,
         q: wavenumber_exit_time,
         r: wavenumber_exit_time,
-        tol: tolerance,
+        atol: tolerance,
+        rtol: tolerance,
         label: Optional[str] = None,
         tags: Optional[List[store_tag]] = None,
     ):
@@ -1271,7 +1151,8 @@ class QuadSourceIntegral(DatastoreObject):
         self._label = label
         self._tags = tags if tags is not None else []
 
-        self._tol = tol
+        self._atol = atol
+        self._rtol = rtol
 
         self._compute_ref = None
 
@@ -1461,10 +1342,12 @@ class QuadSourceIntegral(DatastoreObject):
             self._k_exit,
             self._q_exit,
             self._r_exit,
-            source,
-            GkPolicy,
-            self._z_response,
-            self._z_source_max,
+            source=source,
+            GkPolicy=GkPolicy,
+            z_response=self._z_response,
+            z_source_max=self._z_source_max,
+            atol=self._atol.tol,
+            rtol=self._rtol.tol,
         )
 
         return self._compute_ref

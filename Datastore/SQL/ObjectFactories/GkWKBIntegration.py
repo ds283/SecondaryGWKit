@@ -6,11 +6,10 @@ from math import fabs
 from sqlalchemy import and_, or_
 from sqlalchemy.exc import MultipleResultsFound, SQLAlchemyError
 
+from AdaptiveLevin.integration_metadata import IntegrationData, IntegrationSolver
 from ComputeTargets import (
-    IntegrationSolver,
     GkWKBIntegration,
     GkWKBValue,
-    IntegrationData,
 )
 from ComputeTargets.BackgroundModel import ModelProxy
 from CosmologyConcepts import wavenumber_exit_time, redshift_array, redshift

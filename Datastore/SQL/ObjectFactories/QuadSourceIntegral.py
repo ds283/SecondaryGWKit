@@ -5,10 +5,9 @@ import sqlalchemy as sqla
 from sqlalchemy import and_
 from sqlalchemy.exc import MultipleResultsFound
 
+from AdaptiveLevin.integration_metadata import IntegrationData, LevinData
 from ComputeTargets import (
     QuadSourceIntegral,
-    IntegrationData,
-    LevinData,
 )
 from ComputeTargets.BackgroundModel import ModelProxy
 from CosmologyConcepts import wavenumber_exit_time, redshift
@@ -114,7 +113,14 @@ class sqla_QuadSourceIntegral_factory(SQLAFactoryBase):
                     nullable=False,
                 ),
                 sqla.Column(
-                    "tol_serial",
+                    "atol_serial",
+                    sqla.Integer,
+                    sqla.ForeignKey("tolerance.serial"),
+                    index=True,
+                    nullable=False,
+                ),
+                sqla.Column(
+                    "rtol_serial",
                     sqla.Integer,
                     sqla.ForeignKey("tolerance.serial"),
                     index=True,
@@ -209,7 +215,8 @@ class sqla_QuadSourceIntegral_factory(SQLAFactoryBase):
         label: Optional[str] = payload.get("label", None)
         tags: List[store_tag] = payload.get("tags", [])
 
-        tol: tolerance = payload["tol"]
+        atol: tolerance = payload["tol"]
+        rtol: tolerance = payload["rtol"]
 
         tag_table = tables["QuadSourceIntegral_tags"]
         tol_table = tables["tolerance"].alias("tol")
@@ -257,7 +264,8 @@ class sqla_QuadSourceIntegral_factory(SQLAFactoryBase):
                 table.c.r_wavenumber_exit_serial == r.store_id,
                 table.c.z_response_serial == z_response.store_id,
                 table.c.z_source_max_serial == z_source_max.store_id,
-                table.c.tol_serial == tol.store_id,
+                table.c.atol_serial == atol.store_id,
+                table.c.rtol_serial == rtol.store_id,
             )
         )
 
@@ -293,7 +301,8 @@ class sqla_QuadSourceIntegral_factory(SQLAFactoryBase):
                 k=k,
                 q=q,
                 r=r,
-                tol=tol,
+                atol=atol,
+                rtol=rtol,
                 label=label,
                 tags=tags,
             )
@@ -345,7 +354,8 @@ class sqla_QuadSourceIntegral_factory(SQLAFactoryBase):
             k=k,
             q=q,
             r=r,
-            tol=tol,
+            atol=atol,
+            rtol=rtol,
             label=row_data.label,
             tags=tags,
         )
@@ -376,7 +386,8 @@ class sqla_QuadSourceIntegral_factory(SQLAFactoryBase):
                     "k_wavenumber_exit_serial": obj._k_exit.store_id,
                     "q_wavenumber_exit_serial": obj._q_exit.store_id,
                     "r_wavenumber_exit_serial": obj._r_exit.store_id,
-                    "tol_serial": obj._tol.store_id,
+                    "atol_serial": obj._atol.store_id,
+                    "rtol_serial": obj._rtol.store_id,
                     "policy_serial": obj._policy.store_id,
                     "source_serial": obj._source_serial,
                     "data_serial": obj._data_serial,
@@ -494,10 +505,10 @@ class sqla_QuadSourceIntegral_factory(SQLAFactoryBase):
         z_response: Optional[redshift] = payload.get("z_response", None)
         z_source_max: Optional[redshift] = payload.get("z_source_max", None)
 
-        tol: Optional[tolerance] = payload.get("tol", None)
-        tags: List[store_tag] = payload.get("tags", [])
+        atol: tolerance = payload["atol"]
+        rtol: tolerance = payload["rtol"]
 
-        tol_table = tables["tolerance"]
+        tags: List[store_tag] = payload.get("tags", [])
 
         z_response_table = tables["redshift"].alias("z_resp_tab")
         z_source_max_table = tables["redshift"].alias("z_src_max_tab")
@@ -532,7 +543,6 @@ class sqla_QuadSourceIntegral_factory(SQLAFactoryBase):
                 table.c.WKB_Levin_num_regions,
                 table.c.WKB_Levin_evaluations,
                 table.c.WKB_Levin_elapsed,
-                tol_table.c.log10_tol,
                 table.c.z_response_serial,
                 z_response_table.c.z.label("z_response"),
                 table.c.z_source_max_serial,
@@ -542,12 +552,10 @@ class sqla_QuadSourceIntegral_factory(SQLAFactoryBase):
                 table.join(
                     z_response_table,
                     z_response_table.c.serial == table.c.z_response_serial,
-                )
-                .join(
+                ).join(
                     z_source_max_table,
                     z_source_max_table.c.serial == table.c.z_source_max_serial,
                 )
-                .join(tol_table, tol_table.c.serial == table.c.tol_serial)
             )
             .filter(
                 table.c.model_serial == model_proxy.store_id,
@@ -555,6 +563,8 @@ class sqla_QuadSourceIntegral_factory(SQLAFactoryBase):
                 table.c.k_wavenumber_exit_serial == k.store_id,
                 table.c.q_wavenumber_exit_serial == q.store_id,
                 table.c.r_wavenumber_exit_serial == r.store_id,
+                table.c.atol_serial == atol.store_id,
+                table.c.rtol_serial == rtol.store_id,
             )
         )
 
@@ -576,11 +586,6 @@ class sqla_QuadSourceIntegral_factory(SQLAFactoryBase):
         if z_source_max is not None:
             query = query.filter(
                 table.c.z_source_max_serial == z_source_max.store_id,
-            )
-
-        if tol is not None:
-            query = query.filter(
-                table.c.tol_serial == tol.store_id,
             )
 
         count = 0
@@ -646,7 +651,8 @@ class sqla_QuadSourceIntegral_factory(SQLAFactoryBase):
                 k=k,
                 q=q,
                 r=r,
-                tol=tol,
+                atol=atol,
+                rtol=rtol,
                 label=row.label,
                 tags=tags,
             )

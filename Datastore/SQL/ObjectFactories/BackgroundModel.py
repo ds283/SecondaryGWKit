@@ -5,11 +5,10 @@ from math import fabs
 from sqlalchemy import and_, or_
 from sqlalchemy.exc import MultipleResultsFound, SQLAlchemyError
 
+from AdaptiveLevin.integration_metadata import IntegrationData, IntegrationSolver
 from ComputeTargets import (
     BackgroundModel,
-    IntegrationSolver,
     BackgroundModelValue,
-    IntegrationData,
 )
 from CosmologyConcepts import redshift_array, redshift
 from CosmologyModels import BaseCosmology

@@ -5,17 +5,17 @@ import ray
 from math import log, sqrt, fabs, cos, sin, atan2, fmod, floor, pi
 from scipy.integrate import solve_ivp
 
+from AdaptiveLevin.integration_metadata import IntegrationSolver, IntegrationData
+from AdaptiveLevin.integration_supervisor import (
+    RHS_timer,
+    IntegrationSupervisor,
+    DEFAULT_UPDATE_INTERVAL,
+)
 from ComputeTargets.BackgroundModel import BackgroundModel, ModelProxy
 from ComputeTargets.WKB_tensor_Green import WKB_omegaEff_sq, WKB_d_ln_omegaEffPrime_dz
 from ComputeTargets.analytic_Gk import (
     compute_analytic_G,
     compute_analytic_Gprime,
-)
-from ComputeTargets.integration_metadata import IntegrationSolver, IntegrationData
-from ComputeTargets.integration_supervisor import (
-    RHS_timer,
-    IntegrationSupervisor,
-    DEFAULT_UPDATE_INTERVAL,
 )
 from CosmologyConcepts import wavenumber_exit_time, redshift, redshift_array, wavenumber
 from Datastore import DatastoreObject

@@ -6,15 +6,15 @@ from math import fabs, pi, log, sqrt
 from scipy.integrate import solve_ivp
 from scipy.optimize import root_scalar
 
-from ComputeTargets.BackgroundModel import BackgroundModel, ModelProxy
-from ComputeTargets.WKB_tensor_Green import WKB_omegaEff_sq, WKB_d_ln_omegaEffPrime_dz
-from ComputeTargets.analytic_Gk import compute_analytic_G, compute_analytic_Gprime
-from ComputeTargets.integration_metadata import IntegrationSolver, IntegrationData
-from ComputeTargets.integration_supervisor import (
+from AdaptiveLevin.integration_metadata import IntegrationSolver, IntegrationData
+from AdaptiveLevin.integration_supervisor import (
     IntegrationSupervisor,
     DEFAULT_UPDATE_INTERVAL,
     RHS_timer,
 )
+from ComputeTargets.BackgroundModel import BackgroundModel, ModelProxy
+from ComputeTargets.WKB_tensor_Green import WKB_omegaEff_sq, WKB_d_ln_omegaEffPrime_dz
+from ComputeTargets.analytic_Gk import compute_analytic_G, compute_analytic_Gprime
 from CosmologyConcepts import wavenumber, redshift, redshift_array, wavenumber_exit_time
 from Datastore import DatastoreObject
 from MetadataConcepts import tolerance, store_tag

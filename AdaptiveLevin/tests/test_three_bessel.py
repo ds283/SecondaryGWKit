@@ -14,7 +14,8 @@ from utilities import format_time
 
 class TestBessel(unittest.TestCase):
 
-    TOLERANCE = 1e-9
+    atol = 1e-23
+    rtol = 1e-8
 
     sqrt_2_over_pi = sqrt(2.0 / pi)
 
@@ -23,15 +24,20 @@ class TestBessel(unittest.TestCase):
 
         self.units = Mpc_units
 
-        self.r = wavenumber(store_id=3, k_inv_Mpc=79.37005259841, units=self.units)
-        self.q = wavenumber(store_id=2, k_inv_Mpc=79.37005259841, units=self.units)
-        self.k = wavenumber(store_id=1, k_inv_Mpc=49999999.99999999, units=self.units)
+        # self.r = wavenumber(store_id=3, k_inv_Mpc=79.37005259841, units=self.units)
+        # self.q = wavenumber(store_id=2, k_inv_Mpc=79.37005259841, units=self.units)
+        # self.k = wavenumber(store_id=1, k_inv_Mpc=49999999.99999999, units=self.units)
+
+        self.r = wavenumber(store_id=3, k_inv_Mpc=49999999.99999999, units=self.units)
+        self.q = wavenumber(store_id=2, k_inv_Mpc=49999999.99999999, units=self.units)
+        self.k = wavenumber(store_id=1, k_inv_Mpc=11071.731788899118, units=self.units)
 
         self.b = 0
         self.cs_sq = (1.0 - self.b) / (1.0 + self.b) / 3.0
 
         self.min_eta = 1.5713009646109173e-10
-        self.max_eta = 2.0088449543832125e-10
+        self.max_eta = 2.2066e-06
+        # self.max_eta = 7.196808204366744e-06
         # self.max_eta = 5.05340787180641e-07
         # self.max_eta = 1e-5
         # self.max_eta = 1e-3
@@ -64,8 +70,9 @@ class TestBessel(unittest.TestCase):
             x_span=(min_x, self.max_x),
             f=[Levin_f, lambda x: 0.0],
             theta=phase,
+            atol=self.atol,
+            rtol=self.rtol,
             chebyshev_order=12,
-            tol=self.TOLERANCE,
         )
         print(f"\n** J integral data")
         value = J_data["value"]
@@ -83,8 +90,9 @@ class TestBessel(unittest.TestCase):
             x_span=(min_x, self.max_x),
             f=[lambda x: 0.0, lambda x: -Levin_f(x)],
             theta=phase,
+            atol=self.atol,
+            rtol=self.rtol,
             chebyshev_order=12,
-            tol=self.TOLERANCE,
         )
         print(f"\n** Y integral data")
         value = Y_data["value"]
@@ -110,7 +118,8 @@ class TestBessel(unittest.TestCase):
             phase_data={"0pt5": self.phase_data_0pt5, "2pt5": self.phase_data_2pt5},
             nu_type="0pt5",
             timestamp=timestamp,
-            tol=self.TOLERANCE,
+            atol=self.atol,
+            rtol=self.rtol,
             mode="quad",
         )
 
@@ -124,7 +133,8 @@ class TestBessel(unittest.TestCase):
             phase_data={"0pt5": self.phase_data_0pt5, "2pt5": self.phase_data_2pt5},
             nu_type="2pt5",
             timestamp=timestamp,
-            tol=self.TOLERANCE,
+            atol=self.atol,
+            rtol=self.rtol,
             mode="quad",
         )
 
@@ -144,7 +154,8 @@ class TestBessel(unittest.TestCase):
             phase_data={"0pt5": self.phase_data_0pt5, "2pt5": self.phase_data_2pt5},
             nu_type="0pt5",
             timestamp=timestamp,
-            tol=self.TOLERANCE,
+            atol=self.atol,
+            rtol=self.rtol,
             mode="Levin",
             debug_plots=True,
         )
@@ -159,7 +170,8 @@ class TestBessel(unittest.TestCase):
             phase_data={"0pt5": self.phase_data_0pt5, "2pt5": self.phase_data_2pt5},
             nu_type="2pt5",
             timestamp=timestamp,
-            tol=self.TOLERANCE,
+            atol=self.atol,
+            rtol=self.rtol,
             mode="Levin",
             debug_plots=True,
         )

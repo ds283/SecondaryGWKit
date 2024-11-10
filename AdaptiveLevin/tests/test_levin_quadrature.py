@@ -15,7 +15,9 @@ class TestAdaptiveLevinSinCos(unittest.TestCase):
 
         theta = lambda x: x
 
-        data = adaptive_levin_sincos(x_span, f, theta, tol=1e-10, chebyshev_order=12)
+        data = adaptive_levin_sincos(
+            x_span, f, theta, atol=1e-15, rtol=1e-10, chebyshev_order=12
+        )
         value = data["value"]
         regions = data["regions"]
         evaluations = data["evaluations"]
@@ -37,7 +39,9 @@ class TestAdaptiveLevinSinCos(unittest.TestCase):
 
         theta = lambda x: x
 
-        data = adaptive_levin_sincos(x_span, f, theta, tol=1e-10, chebyshev_order=12)
+        data = adaptive_levin_sincos(
+            x_span, f, theta, atol=1e-15, rtol=1e-10, chebyshev_order=12
+        )
         value = data["value"]
         regions = data["regions"]
         evaluations = data["evaluations"]
@@ -62,11 +66,7 @@ class TestAdaptiveLevinSinCos(unittest.TestCase):
         theta = lambda x: 100.0 * x
 
         data = adaptive_levin_sincos(
-            x_span,
-            f,
-            theta,
-            tol=1e-10,
-            chebyshev_order=12,
+            x_span, f, theta, atol=1e-15, rtol=1e-10, chebyshev_order=12
         )
         value = data["value"]
         regions = data["regions"]
@@ -91,11 +91,7 @@ class TestAdaptiveLevinSinCos(unittest.TestCase):
         theta = lambda x: lbda * atan(x)
 
         data = adaptive_levin_sincos(
-            x_span,
-            f,
-            theta,
-            tol=1e-10,
-            chebyshev_order=12,
+            x_span, f, theta, atol=1e-15, rtol=1e-10, chebyshev_order=12
         )
         value = data["value"]
         regions = data["regions"]
