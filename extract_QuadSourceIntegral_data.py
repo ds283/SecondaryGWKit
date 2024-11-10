@@ -287,7 +287,9 @@ with ShardedPool(
     #      ('dashdotdotted',         (0, (3, 5, 1, 5, 1, 5))),
     #      ('loosely dashdotdotted', (0, (3, 10, 1, 10, 1, 10))),
     #      ('densely dashdotdotted', (0, (3, 1, 1, 1, 1, 1)))]
-    def add_z_labels(ax, GkPolicy: GkSourcePolicyData, k_exit: wavenumber_exit_time):
+    def add_z_labels(
+        ax, GkPolicy: GkSourcePolicyData, k_exit: wavenumber_exit_time, label: str
+    ):
         ax.axvline(k_exit.z_exit_subh_e3, linestyle=(0, (1, 1)), color="b")  # dotted
         ax.axvline(k_exit.z_exit_subh_e5, linestyle=(0, (1, 1)), color="b")  # dotted
         ax.axvline(k_exit.z_exit_suph_e3, linestyle=(0, (1, 1)), color="b")  # dotted
@@ -298,7 +300,7 @@ with ShardedPool(
         ax.text(
             TEXT_DISPLACEMENT_MULTIPLIER * k_exit.z_exit_suph_e3,
             0.75,
-            "$-3$ e-folds",
+            f"{label}$-3$ e-folds",
             transform=trans,
             fontsize="x-small",
             color="b",
@@ -306,7 +308,7 @@ with ShardedPool(
         ax.text(
             TEXT_DISPLACEMENT_MULTIPLIER * k_exit.z_exit_subh_e3,
             0.85,
-            "$+3$ e-folds",
+            f"{label}$+3$ e-folds",
             transform=trans,
             fontsize="x-small",
             color="b",
@@ -314,7 +316,7 @@ with ShardedPool(
         ax.text(
             TEXT_DISPLACEMENT_MULTIPLIER * k_exit.z_exit_subh_e5,
             0.75,
-            "$+5$ e-folds",
+            f"{label}$+5$ e-folds",
             transform=trans,
             fontsize="x-small",
             color="b",
@@ -322,7 +324,7 @@ with ShardedPool(
         ax.text(
             TEXT_DISPLACEMENT_MULTIPLIER * k_exit.z_exit,
             0.92,
-            "re-entry",
+            f"{label} re-entry",
             transform=trans,
             fontsize="x-small",
             color="r",
@@ -553,7 +555,7 @@ with ShardedPool(
                 linestyle="dashed",
             )
 
-            add_z_labels(ax, policy, k_exit)
+            add_z_labels(ax, policy, k_exit, "$k$")
             add_k_labels(ax, k_exit, q_exit, r_exit)
             add_region_labels(
                 ax,
@@ -780,7 +782,7 @@ with ShardedPool(
                 linestyle="dashed",
             )
 
-            add_z_labels(ax, policy, k_exit)
+            add_z_labels(ax, policy, k_exit, "$k$")
             add_Gk_labels(ax, policy)
 
             set_loglog_axes(ax)
@@ -828,7 +830,7 @@ with ShardedPool(
                 linestyle="dashed",
             )
 
-            add_z_labels(ax, policy, k_exit)
+            add_z_labels(ax, policy, k_exit, "$k$")
             add_Gk_labels(ax, policy)
 
             set_loglog_axes(ax)
@@ -1058,7 +1060,7 @@ with ShardedPool(
                 linestyle="dashdot",
             )
 
-            add_z_labels(ax, GkPolicy, k_exit)
+            add_z_labels(ax, GkPolicy, k_exit, "$k$")
             add_Gk_labels(ax, GkPolicy)
 
             ax.set_xlabel("source redshift $z$")
@@ -1174,7 +1176,8 @@ with ShardedPool(
             )
             ax.plot(abs_source_x, abs_spline_y, label="Spline")
 
-            add_z_labels(ax, policy, k_exit)
+            add_z_labels(ax, policy, q_exit, "$q$")
+            add_k_labels(ax, k_exit, q_exit, r_exit)
 
             ax.set_xlabel("source redshift $z$")
             ax.set_ylabel("$T_k(z)$")
@@ -1201,10 +1204,32 @@ with ShardedPool(
             fig.savefig(fig_path)
 
             if q_exit.store_id != r_exit.store_id:
+                plt.close()
+
+                fig = plt.figure()
+                ax = plt.gca()
+
+                ax.plot(abs_source_x, abs_source_y, label="Numeric")
+                ax.plot(
+                    abs_analytic_rad_x,
+                    abs_analytic_rad_y,
+                    label="Analytic [radiation]",
+                    linestyle="dashed",
+                )
+                ax.plot(abs_source_x, abs_spline_y, label="Spline")
+
                 ax.set_xlim(
                     int(round(r_exit.z_exit_suph_e3 + 0.5, 0)),
                     int(round(0.85 * r_exit.z_exit_subh_e5 + 0.5, 0)),
                 )
+
+                add_z_labels(ax, policy, r_exit, "$r$")
+                add_k_labels(ax, k_exit, q_exit, r_exit)
+
+                ax.set_xlabel("source redshift $z$")
+                ax.set_ylabel("$T_k(z)$")
+
+                set_loglog_axes(ax)
 
                 fig_path = (
                     base_path
