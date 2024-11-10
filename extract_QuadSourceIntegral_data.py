@@ -39,13 +39,14 @@ from CosmologyConcepts.wavenumber import wavenumber_exit_time_array
 from CosmologyModels.LambdaCDM import Planck2018, LambdaCDM
 from Datastore.SQL.ProfileAgent import ProfileAgent
 from Datastore.SQL.ShardedPool import ShardedPool
-from MetadataConcepts import tolerance
 from RayTools.RayWorkPool import RayWorkPool
 from Units import Mpc_units
 from defaults import (
     DEFAULT_ABS_TOLERANCE,
     DEFAULT_REL_TOLERANCE,
     DEFAULT_FLOAT_PRECISION,
+    DEFAULT_QUADRATURE_ATOL,
+    DEFAULT_QUADRATURE_RTOL,
 )
 
 DEFAULT_TIMEOUT = 60
@@ -123,10 +124,12 @@ with ShardedPool(
     )
 
     # build absolute and relative tolerances
-    atol, rtol = ray.get(
+    atol, rtol, quad_atol, quad_rtol = ray.get(
         [
-            pool.object_get(tolerance, tol=DEFAULT_ABS_TOLERANCE),
-            pool.object_get(tolerance, tol=DEFAULT_REL_TOLERANCE),
+            pool.object_get("tolerance", tol=DEFAULT_ABS_TOLERANCE),
+            pool.object_get("tolerance", tol=DEFAULT_REL_TOLERANCE),
+            pool.object_get("tolerance", tol=DEFAULT_QUADRATURE_ATOL),
+            pool.object_get("tolerance", tol=DEFAULT_QUADRATURE_RTOL),
         ]
     )
 
@@ -1276,6 +1279,8 @@ with ShardedPool(
             r=r_exit,
             z_response=None,
             z_source_max=None,
+            atol=quad_atol,
+            rtol=quad_rtol,
         )
 
         GkSource_ref: ObjectRef = pool.object_get(
