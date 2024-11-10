@@ -1,5 +1,5 @@
 import time
-from typing import List, Optional
+from typing import List, Optional, Iterable
 
 from scipy.integrate import solve_ivp
 
@@ -81,6 +81,9 @@ def simple_quadrature(
     method: str = "DOP853",
     label: Optional[str] = None,
 ):
+    if not isinstance(integrand, Iterable):
+        integrand = [integrand]
+
     def RHS(x: float, state: List[float], supervisor: QuadSupervisor) -> List[float]:
         with RHS_timer(supervisor) as timer:
             current_value = state[0]
@@ -88,16 +91,16 @@ def simple_quadrature(
             if supervisor.notify_available:
                 supervisor.message(x, f"current state: value={current_value:.8g}")
 
-            return [integrand(x)]
+            return [f(x) for f in integrand]
 
     with QuadSupervisor(label, a, b) as supervisor:
-        state = [0.0]
+        state = [0.0 for _ in integrand]
 
         sol = solve_ivp(
             RHS,
             method=method,
             t_span=(a, b),
-            t_eval=(b),
+            t_eval=[b],
             y0=state,
             dense_output=True,
             atol=atol,
@@ -120,10 +123,14 @@ def simple_quadrature(
             f"simple_quadrature: quadrature did not terminate at expected ordinate (min x={a:.5g}, max x={b:.5g}), final x={sol.t[0]:.5g})"
         )
 
-    if len(sol.sol(b)) != 1:
+    if len(sol.sol(b)) != len(integrand):
         raise RuntimeError(
-            f"simple_quadrature: solution does not have expected number of members (expected 1, found {len(sol.sol(b))})"
+            f"simple_quadrature: solution does not have expected number of members (expected {len(integrand)}, found {len(sol.sol(b))})"
         )
+
+    value = sol.sol(b)
+    if len(integrand) == 1:
+        value = value[0]
 
     return {
         "data": IntegrationData(
@@ -134,5 +141,5 @@ def simple_quadrature(
             max_RHS_time=supervisor.max_RHS_time,
             min_RHS_time=supervisor.min_RHS_time,
         ),
-        "value": sol.sol(b)[0],
+        "value": value,
     }

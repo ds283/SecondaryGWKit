@@ -729,7 +729,7 @@ def _three_bessel_quad(
     nu_types = {"0pt5": 0.5, "2pt5": 2.5}
     nu = nu_types[nu_type]
 
-    def integrand(log_eta):
+    def J_integrand(log_eta):
         eta = exp(log_eta)
 
         x1 = k.k * eta
@@ -737,14 +737,24 @@ def _three_bessel_quad(
         x3 = r.k * cs * eta
 
         A = pow(eta, 1.5 - b)
-
         dJ = jv(0.5 + b, x1) * jv(nu + b, x2) * jv(nu + b, x3)
+
+        return A * dJ
+
+    def Y_integrand(log_eta):
+        eta = exp(log_eta)
+
+        x1 = k.k * eta
+        x2 = q.k * cs * eta
+        x3 = r.k * cs * eta
+
+        A = pow(eta, 1.5 - b)
         dY = yv(0.5 + b, x1) * jv(nu + b, x2) * jv(nu + b, x3)
 
-        return [A * dJ, A * dY]
+        return A * dY
 
     data = simple_quadrature(
-        integrand,
+        [J_integrand, Y_integrand],
         a=log_min_eta,
         b=log_max_eta,
         atol=atol,
