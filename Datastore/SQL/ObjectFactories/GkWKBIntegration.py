@@ -185,8 +185,6 @@ class sqla_GkWKBIntegration_factory(SQLAFactoryBase):
         G_init: Optional[float] = payload.get("G_init", 0.0)
         Gprime_init: Optional[float] = payload.get("Gprime_init", 1.0)
 
-        atol_table = tables["tolerance"].alias("atol")
-        rtol_table = tables["tolerance"].alias("rtol")
         solver_table = tables["IntegrationSolver"]
         tag_table = tables["GkWKB_tags"]
         redshift_table = tables["redshift"]
@@ -224,14 +222,11 @@ class sqla_GkWKBIntegration_factory(SQLAFactoryBase):
                 table.c.Gprime_init,
                 solver_table.c.label.label("solver_label"),
                 solver_table.c.stepping.label("solver_stepping"),
-                atol_table.c.log10_tol.label("log10_atol"),
-                rtol_table.c.log10_tol.label("log10_rtol"),
             )
             .select_from(
-                table.join(solver_table, solver_table.c.serial == table.c.solver_serial)
-                .join(atol_table, atol_table.c.serial == table.c.atol_serial)
-                .join(rtol_table, rtol_table.c.serial == table.c.rtol_serial)
-                .join(
+                table.join(
+                    solver_table, solver_table.c.serial == table.c.solver_serial
+                ).join(
                     redshift_table, redshift_table.c.serial == table.c.z_source_serial
                 )
             )
