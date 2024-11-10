@@ -383,12 +383,12 @@ def _three_bessel_integrals(
     x_cut = find_x_cut(min_x, max_x, dphase_Gk, dphase_Tk)
     eta_cut = x_cut / min_k_mode / cs
 
-    metadata["x_cut"] = x_cut
-    metadata["eta_cut"] = eta_cut
-    metadata["min_eta"] = min_eta
-    metadata["max_eta"] = max_eta
-    metadata["min_x"] = min_x
-    metadata["max_x"] = max_x
+    # metadata["x_cut"] = x_cut
+    # metadata["eta_cut"] = eta_cut
+    # metadata["min_eta"] = min_eta
+    # metadata["max_eta"] = max_eta
+    # metadata["min_x"] = min_x
+    # metadata["max_x"] = max_x
 
     if mode == "Levin" or (
         mode == "default" and eta_cut / min_eta <= 1.0 + DEFAULT_FLOAT_PRECISION
@@ -826,14 +826,14 @@ def analytic_integral(
     )
 
     metadata = {
-        "k": k.k,
-        "q": q.k,
-        "r": r.k,
-        "max_z": max_z.z,
-        "min_z": min_z.z,
+        # "k": k.k,
+        # "q": q.k,
+        # "r": r.k,
+        # "max_z": max_z.z,
+        # "min_z": min_z.z,
         "max_eta": max_eta,
         "min_eta": min_eta,
-        "eta_response": eta_response,
+        # "eta_response": eta_response,
         "0pt5": data0pt5,
         "2pt5": data2pt5,
     }
