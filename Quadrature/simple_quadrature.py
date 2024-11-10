@@ -194,7 +194,7 @@ def simple_quadrature(
     if method == "quad":
         return _quadrature_quad_impl(integrand, a, b, atol, rtol, label=label)
 
-    if method in ["RK45", "DOP53", "Radau", "LSODA", "BDF"]:
+    if method in ["RK45", "DOP853", "Radau", "LSODA", "BDF"]:
         return _quadature_solve_ivp_impl(
             integrand, a, b, atol, rtol, method, label=label
         )
