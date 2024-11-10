@@ -1,7 +1,7 @@
 import time
-from typing import List, Optional, Iterable
+from typing import Optional, Iterable, List
 
-from scipy.integrate import solve_ivp
+from scipy.integrate import quad, solve_ivp
 
 from Quadrature.integration_metadata import IntegrationData
 from Quadrature.integration_supervisor import (
@@ -72,7 +72,43 @@ class QuadSupervisor(IntegrationSupervisor):
         self._last_x = current_x
 
 
-def simple_quadrature(
+def _quadrature_quad_impl(
+    integrand, a: float, b: float, atol: float, rtol: float, label: Optional[str] = None
+):
+    with QuadSupervisor(label, a, b) as supervisor:
+        values = []
+        errs = []
+
+        for f in integrand:
+
+            def RHS(x):
+                with RHS_timer(supervisor) as timer:
+                    if supervisor.notify_available:
+                        supervisor.message(x, msg="... in progress")
+
+                    return f(x)
+
+            value, err = quad(RHS, a=a, b=b, epsabs=atol, epsrel=rtol)
+            values.append(value)
+            errs.append(err)
+
+    if len(integrand) == 1:
+        values = values[0]
+
+    return {
+        "data": IntegrationData(
+            compute_time=supervisor.integration_time,
+            compute_steps=int(supervisor.RHS_evaluations),
+            RHS_evaluations=supervisor.RHS_evaluations,
+            mean_RHS_time=supervisor.mean_RHS_time,
+            max_RHS_time=supervisor.max_RHS_time,
+            min_RHS_time=supervisor.min_RHS_time,
+        ),
+        "value": values,
+    }
+
+
+def _quadature_solve_ivp_impl(
     integrand,
     a: float,
     b: float,
@@ -81,8 +117,6 @@ def simple_quadrature(
     method: str = "DOP853",
     label: Optional[str] = None,
 ):
-    if not isinstance(integrand, Iterable):
-        integrand = [integrand]
 
     def RHS(x: float, state: List[float], supervisor: QuadSupervisor) -> List[float]:
         with RHS_timer(supervisor) as timer:
@@ -143,3 +177,28 @@ def simple_quadrature(
         ),
         "value": value,
     }
+
+
+def simple_quadrature(
+    integrand,
+    a: float,
+    b: float,
+    atol: float,
+    rtol: float,
+    method: str = "DOP853",
+    label: Optional[str] = None,
+):
+    if not isinstance(integrand, Iterable):
+        integrand = [integrand]
+
+    if method == "quad":
+        return _quadrature_quad_impl(integrand, a, b, atol, rtol, label=label)
+
+    if method in ["RK45", "DOP53", "Radau", "LSODA", "BDF"]:
+        return _quadature_solve_ivp_impl(
+            integrand, a, b, atol, rtol, method, label=label
+        )
+
+    return _quadature_solve_ivp_impl(
+        integrand, a, b, atol, rtol, method="DOP853", label=label
+    )
