@@ -5,7 +5,6 @@ import sqlalchemy as sqla
 from sqlalchemy import and_
 from sqlalchemy.exc import MultipleResultsFound
 
-from AdaptiveLevin.integration_metadata import IntegrationData, LevinData
 from ComputeTargets import (
     QuadSourceIntegral,
 )
@@ -13,6 +12,7 @@ from ComputeTargets.BackgroundModel import ModelProxy
 from CosmologyConcepts import wavenumber_exit_time, redshift
 from Datastore.SQL.ObjectFactories.base import SQLAFactoryBase
 from MetadataConcepts import store_tag, tolerance, GkSourcePolicy
+from Quadrature.integration_metadata import IntegrationData, LevinData
 from defaults import DEFAULT_STRING_LENGTH
 
 

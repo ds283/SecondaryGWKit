@@ -6,7 +6,7 @@ from math import floor, ceil
 from numpy.linalg import LinAlgError
 from scipy.linalg import toeplitz
 
-from AdaptiveLevin.simple_quadrature import simple_quadrature
+from Quadrature.simple_quadrature import simple_quadrature
 from utilities import format_time
 
 # default interval at which to log progress of the integration

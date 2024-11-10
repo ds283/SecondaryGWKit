@@ -8,8 +8,6 @@ from scipy.special import yv, jv
 
 from AdaptiveLevin import adaptive_levin_sincos
 from AdaptiveLevin.bessel_phase import bessel_phase
-from AdaptiveLevin.integration_metadata import IntegrationData, LevinData
-from AdaptiveLevin.simple_quadrature import simple_quadrature
 from ComputeTargets.BackgroundModel import BackgroundModel, ModelProxy, ModelFunctions
 from ComputeTargets.GkSource import GkSource
 from ComputeTargets.GkSourcePolicyData import GkSourcePolicyData, GkSourceFunctions
@@ -21,6 +19,8 @@ from ComputeTargets.QuadSourceIntegral_debug import (
 from CosmologyConcepts import wavenumber, wavenumber_exit_time, redshift
 from Datastore import DatastoreObject
 from MetadataConcepts import store_tag, tolerance, GkSourcePolicy
+from Quadrature.integration_metadata import IntegrationData, LevinData
+from Quadrature.simple_quadrature import simple_quadrature
 from defaults import (
     DEFAULT_QUADRATURE_RTOL,
     DEFAULT_FLOAT_PRECISION,

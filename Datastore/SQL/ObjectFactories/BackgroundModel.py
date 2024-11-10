@@ -5,7 +5,6 @@ from math import fabs
 from sqlalchemy import and_, or_
 from sqlalchemy.exc import MultipleResultsFound, SQLAlchemyError
 
-from AdaptiveLevin.integration_metadata import IntegrationData, IntegrationSolver
 from ComputeTargets import (
     BackgroundModel,
     BackgroundModelValue,
@@ -14,6 +13,7 @@ from CosmologyConcepts import redshift_array, redshift
 from CosmologyModels import BaseCosmology
 from Datastore.SQL.ObjectFactories.base import SQLAFactoryBase
 from MetadataConcepts import store_tag, tolerance
+from Quadrature.integration_metadata import IntegrationData, IntegrationSolver
 from defaults import DEFAULT_STRING_LENGTH, DEFAULT_FLOAT_PRECISION
 
 

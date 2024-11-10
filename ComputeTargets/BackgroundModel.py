@@ -7,13 +7,13 @@ from ray import ObjectRef
 from scipy.integrate import solve_ivp
 from scipy.interpolate import InterpolatedUnivariateSpline
 
-from AdaptiveLevin.integration_metadata import IntegrationSolver, IntegrationData
-from AdaptiveLevin.integration_supervisor import RHS_timer, IntegrationSupervisor
 from ComputeTargets.spline_wrappers import ZSplineWrapper
 from CosmologyConcepts import redshift_array, redshift, wavenumber
 from CosmologyModels import BaseCosmology
 from Datastore import DatastoreObject
 from MetadataConcepts import tolerance, store_tag
+from Quadrature.integration_metadata import IntegrationSolver, IntegrationData
+from Quadrature.integration_supervisor import RHS_timer, IntegrationSupervisor
 from Units.base import UnitsLike
 from defaults import DEFAULT_ABS_TOLERANCE, DEFAULT_REL_TOLERANCE
 

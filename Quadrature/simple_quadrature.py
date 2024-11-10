@@ -3,8 +3,8 @@ from typing import List, Optional
 
 from scipy.integrate import solve_ivp
 
-from AdaptiveLevin.integration_metadata import IntegrationData
-from AdaptiveLevin.integration_supervisor import (
+from Quadrature.integration_metadata import IntegrationData
+from Quadrature.integration_supervisor import (
     IntegrationSupervisor,
     DEFAULT_UPDATE_INTERVAL,
     RHS_timer,

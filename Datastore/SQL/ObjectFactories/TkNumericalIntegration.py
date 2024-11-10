@@ -6,7 +6,6 @@ from math import fabs
 from sqlalchemy import and_
 from sqlalchemy.exc import MultipleResultsFound, SQLAlchemyError
 
-from AdaptiveLevin.integration_metadata import IntegrationData, IntegrationSolver
 from ComputeTargets import (
     TkNumericalIntegration,
     TkNumericalValue,
@@ -16,6 +15,7 @@ from ComputeTargets.BackgroundModel import ModelProxy
 from CosmologyConcepts import redshift_array, redshift, wavenumber_exit_time
 from Datastore.SQL.ObjectFactories.base import SQLAFactoryBase
 from MetadataConcepts import tolerance, store_tag
+from Quadrature.integration_metadata import IntegrationData, IntegrationSolver
 from defaults import DEFAULT_STRING_LENGTH, DEFAULT_FLOAT_PRECISION
 
 
