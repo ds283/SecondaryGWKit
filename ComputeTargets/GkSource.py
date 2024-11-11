@@ -96,7 +96,7 @@ def assemble_GkSource_values(
                 > DEFAULT_ABS_TOLERANCE
             ):
                 raise RuntimeError(
-                    f"assemble_GkSource_values: analytic G (radiation) values unexpectedly differ between numeric and WKB data values by a large amount at z_source={z_source.z:.5g} for k={k_exit.k.k_inv_Mpc}/Mpc (store_id={k_exit.store_id}), z_response={z_response.z:.5g} (store_id={z_response.store_id})"
+                    f"assemble_GkSource_values: analytic G (radiation) values unexpectedly differ between numeric and WKB data values by a large amount at z_source={z_source.z:.5g} for k={k_exit.k.k_inv_Mpc}/Mpc (store_id={k_exit.store_id}), z_response={z_response.z:.5g} (store_id={z_response.store_id}): numeric={numeric.analytic_G_rad}, WKB={WKB.analytic_G_rad}"
                 )
 
             if (
@@ -104,7 +104,7 @@ def assemble_GkSource_values(
                 > DEFAULT_ABS_TOLERANCE
             ):
                 raise RuntimeError(
-                    f"assemble_GkSource_values: analytic G (radiation) values unexpectedly differ between numeric and WKB data values by a large amount at z_source={z_source.z:.5g} for k={k_exit.k.k_inv_Mpc}/Mpc (store_id={k_exit.store_id}), z_response={z_response.z:.5g} (store_id={z_response.store_id})"
+                    f"assemble_GkSource_values: analytic Gprime (radiation) values unexpectedly differ between numeric and WKB data values by a large amount at z_source={z_source.z:.5g} for k={k_exit.k.k_inv_Mpc}/Mpc (store_id={k_exit.store_id}), z_response={z_response.z:.5g} (store_id={z_response.store_id}): numeric={numeric.analytic_Gprime_rad}, WKB={WKB.analytic_Gprime_rad}"
                 )
 
         # If we have a WKB data point, check that the response redshift is in the expected region where z_response < z_e3 for this k-mode

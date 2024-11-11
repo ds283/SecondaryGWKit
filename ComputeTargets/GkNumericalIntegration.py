@@ -717,7 +717,7 @@ class GkNumericalIntegration(DatastoreObject):
         G_sample = data["G_sample"]
         Gprime_sample = data["Gprime_sample"]
 
-        tau_source = model.functions.tau(self._z_sample[0].z)
+        tau_source = model.functions.tau(self._z_source.z)
 
         # need to be aware that G_sample may not be as long as self._z_sample, if we are working in "stop" mode
         self._values = []
