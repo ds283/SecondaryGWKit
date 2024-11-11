@@ -1,4 +1,5 @@
 import time
+from datetime import datetime
 from typing import Tuple
 
 import numpy as np
@@ -152,9 +153,36 @@ def _adaptive_levin_subregion(
 
     LevinL = np.block(row_list) + AmatT
 
+    if not np.isfinite(LevinL).all():
+        print(
+            "!! WARNING (adaptive_levin_subregion): Levin super-operator contains non-numeric values (np.nan, np.inf, or np.-inf)"
+        )
+
+        raise ValueError(
+            "Levin super-operator contains non-numeric values (np.nan, np.inf, or np.-inf)"
+        )
+
     # now try to invert the Levin superoperator, to find the Levin antiderivatives p(x)
     # Chen et al.
-    p, residuals, rank, s = np.linalg.lstsq(LevinL, f_Cheb)
+    try:
+        p, residuals, rank, s = np.linalg.lstsq(LevinL, f_Cheb)
+    except LinAlgError as e:
+        print(
+            "!! WARNING (adaptive_levin_subregion): could not solve Levin collocation system using numpy.linalg.lstsq; attemping to use pseudo-inverse"
+        )
+        now = datetime.now().replace(microsecond=0)
+        LevinL_filename = f"LevinL_{now.isoformat()}.txt"
+        f_Cheb_filename = f"f_Cheb_{now.isoformat()}.txt"
+        print(
+            (
+                f'   -- Levin L super-operator written to file "{LevinL_filename}", f_Cheb written to file "{f_Cheb_filename}"'
+            )
+        )
+        np.savetxt(LevinL_filename, LevinL)
+        np.savetxt(f_Cheb_filename, f_Cheb)
+
+        LevinL_inv = np.linalg.pinv(LevinL)
+        p = np.matmul(LevinL_inv, f_Cheb)
 
     if build_p_sample:
         p_sample = [

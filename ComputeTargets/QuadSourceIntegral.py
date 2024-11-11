@@ -789,7 +789,7 @@ def analytic_integral(
     max_x = max(k.k, q.k, r.k) * max_eta
     if max_x > 1e5:
         print(
-            f"!! analytic: WARNING: max_x very large, {max_x:.5g}. This may lead to issues with calculation of the Liouville-Green phase function for the Bessel functions."
+            f"!! WARNING (analytic_integral): max_x very large, {max_x:.5g}. This may lead to issues with calculation of the Liouville-Green phase function for the Bessel functions."
         )
 
     phase_data_0pt5 = bessel_phase(0.5 + b, max_x + 10.0)
