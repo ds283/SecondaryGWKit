@@ -103,6 +103,10 @@ class redshift_array:
             return self._truncate_lower_strict(z_limit)
         if keep == "higher-strict":
             return self._truncate_higher_strict(z_limit)
+        if keep == "lower-include":
+            return self._truncate_lower_include(z_limit)
+        if keep == "higher-include":
+            return self._truncate_higher_include(z_limit)
 
         raise ValueError(f'Unknown truncation mode "{keep}')
 
@@ -165,6 +169,50 @@ class redshift_array:
         return redshift_array(
             z_array=[z for z in self._z_array if z.z > min_z + DEFAULT_FLOAT_PRECISION]
         )
+
+    def _truncate_lower_include(self, max_z) -> Self:
+        include_array = []
+        included_endpoint = False
+        for z in self._z_array:
+            if isinstance(max_z, redshift):
+                if (
+                    z.z <= max_z.z + DEFAULT_FLOAT_PRECISION
+                    or z.store_id == max_z.store_id
+                ):
+                    include_array.append(z)
+                elif not included_endpoint:
+                    include_array.append(z)
+                    included_endpoint = True
+            else:
+                if z.z <= max_z + DEFAULT_FLOAT_PRECISION:
+                    include_array.append(z)
+                elif not included_endpoint:
+                    include_array.append(z)
+                    included_endpoint = True
+
+        return redshift_array(include_array)
+
+    def _truncate_higher_include(self, max_z) -> Self:
+        include_array = []
+        included_endpoint = False
+        for z in self._z_array:
+            if isinstance(max_z, redshift):
+                if (
+                    z.z >= max_z.z - DEFAULT_FLOAT_PRECISION
+                    or z.store_id == max_z.store_id
+                ):
+                    include_array.append(z)
+                elif not included_endpoint:
+                    include_array.append(z)
+                    included_endpoint = True
+            else:
+                if z.z >= max_z - DEFAULT_FLOAT_PRECISION:
+                    include_array.append(z)
+                elif not included_endpoint:
+                    include_array.append(z)
+                    included_endpoint = True
+
+        return redshift_array(include_array)
 
 
 def check_zsample(A, B):

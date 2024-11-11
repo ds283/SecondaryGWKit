@@ -51,7 +51,8 @@ DEFAULT_LABEL = "SecondaryGWKit-test"
 DEFAULT_TIMEOUT = 60
 DEFAULT_SHARDS = 20
 DEFAULT_RAY_ADDRESS = "auto"
-DEFAULT_SAMPLES_PER_LOG10_Z = 150
+DEFAULT_SOURCE_SAMPLES_PER_LOG10_Z = 100
+DEFAULT_RESPONSE_SAMPLES_PER_LOG10_Z = 8
 DEFAULT_ZEND = 0.1
 
 allowed_drop_actions = [
@@ -97,10 +98,16 @@ parser.add_argument(
     help="write profiling and performance data to the specified database",
 )
 parser.add_argument(
-    "--samples-log10z",
+    "--source-samples-log10z",
     type=int,
-    default=DEFAULT_SAMPLES_PER_LOG10_Z,
-    help="specify number of z-sample points per log10(z)",
+    default=DEFAULT_SOURCE_SAMPLES_PER_LOG10_Z,
+    help="specify number of z-sample points per log10(z) for the source term",
+)
+parser.add_argument(
+    "--response-samples-log10z",
+    type=int,
+    default=DEFAULT_RESPONSE_SAMPLES_PER_LOG10_Z,
+    help="specify number of z-sample points per log10(z) for the source term",
 )
 parser.add_argument(
     "--Tk-numerical-queue",
@@ -212,7 +219,8 @@ with ShardedPool(
     )
 
     zend = args.zend
-    samples_per_log10z = args.samples_log10z
+    source_samples_per_log10z = args.source_samples_log10z
+    response_samples_per_log10z = args.response_samples_log10z
 
     ## UTILITY FUNCTIONS
 
@@ -266,12 +274,12 @@ with ShardedPool(
     }
 
     # create the GkSource policies that we will apply later
-    GkSource_policy_2pt5, GkSource_policy_5pt0 = ray.get(
+    GkSource_policy_1pt5, GkSource_policy_5pt0 = ray.get(
         [
             pool.object_get(
                 "GkSourcePolicy",
                 label='policy="maximize-numeric"-Levin-threshold="2.5"',
-                Levin_threshold=2.5,
+                Levin_threshold=1.5,
                 numeric_policy="maximize_numeric",
             ),
             pool.object_get(
@@ -347,38 +355,40 @@ with ShardedPool(
         f"   @@ earliest horizon exit/re-entry time is {k_exit_earliest.k.k_inv_Mpc:.5g}/Mpc with z_exit={k_exit_earliest.z_exit:.5g}"
     )
 
-    # build a log-spaced universal grid of wavenumbers
+    # build a log-spaced universal grid of source sample times
 
-    universal_z_grid = k_exit_earliest.populate_z_sample(
+    source_z_grid = k_exit_earliest.populate_z_sample(
         outside_horizon_efolds=5,
-        samples_per_log10z=samples_per_log10z,
+        samples_per_log10z=source_samples_per_log10z,
+        z_end=zend,
+    )
+    response_z_grid = k_exit_earliest.populate_z_sample(
+        outside_horizon_efolds=5,
+        samples_per_log10z=response_samples_per_log10z,
         z_end=zend,
     )
 
-    # embed this universal redshift list into the database
-    z_array = ray.get(convert_to_redshifts(universal_z_grid))
+    # embed these redshift list into the database
+    z_source_array = ray.get(convert_to_redshifts(source_z_grid))
+    z_response_array = ray.get(convert_to_redshifts(response_z_grid))
 
-    z_global_sample = redshift_array(z_array=z_array)
-    z_source_sample = z_global_sample
-    z_response_sample = z_global_sample
+    z_source_sample = redshift_array(z_array=z_source_array)
+    z_response_sample = redshift_array(z_array=z_response_array)
 
     # build tags and other labels
     (
         TkProductionTag,
         GkProductionTag,
-        GlobalZGridSizeTag,  # labels size of the global redshift grid
         SourceZGridSizeTag,  # labels size of the z_source sample grid
         ResponseZGridSizeTag,  # labels size of the z_response sample grid
         OutsideHorizonEfoldsTag,  # labels number of e-folds outside the horizon at which we begin Tk numerical integrations
-        LargestZTag,  # labels largest z in the global grid
-        SamplesPerLog10ZTag,  # labels number of redshifts per log10 interval of 1+z in the global grid
+        LargestSourceZTag,  # labels largest z in the global grid
+        SourceSamplesPerLog10ZTag,  # labels number of redshifts per log10 interval of 1+z in the source grid
+        ResponseSamplesPerLog10ZTag,  # labels number of redshifts per log10 interval of 1+z in the response grid
     ) = ray.get(
         [
             pool.object_get("store_tag", label="TkOneLoopDensity"),
             pool.object_get("store_tag", label="GkOneLoopDensity"),
-            pool.object_get(
-                "store_tag", label=f"GlobalRedshiftGrid_{len(z_global_sample)}"
-            ),
             pool.object_get(
                 "store_tag", label=f"SourceRedshiftGrid_{len(z_source_sample)}"
             ),
@@ -387,10 +397,14 @@ with ShardedPool(
             ),
             pool.object_get("store_tag", label=f"OutsideHorizonEfolds_e3"),
             pool.object_get(
-                "store_tag", label=f"LargestRedshift_{z_global_sample.max.z:.5g}"
+                "store_tag", label=f"LargestSourceRedshift_{z_source_sample.max.z:.5g}"
             ),
             pool.object_get(
-                "store_tag", label=f"SamplesPerLog10Z_{samples_per_log10z}"
+                "store_tag", label=f"SourceSamplesPerLog10Z_{source_samples_per_log10z}"
+            ),
+            pool.object_get(
+                "store_tag",
+                label=f"ResponseSamplesPerLog10Z_{response_samples_per_log10z}",
             ),
         ]
     )
@@ -402,10 +416,10 @@ with ShardedPool(
             "BackgroundModel",
             solver_labels=solvers,
             cosmology=LambdaCDM_Planck2018,
-            z_sample=z_global_sample,
+            z_sample=z_source_sample,
             atol=atol,
             rtol=rtol,
-            tags=[GlobalZGridSizeTag, LargestZTag, SamplesPerLog10ZTag],
+            tags=[LargestSourceZTag, SourceSamplesPerLog10ZTag],
         )
     )
     if not model.available:
@@ -440,11 +454,10 @@ with ShardedPool(
                 "rtol": rtol,
                 "tags": [
                     TkProductionTag,
-                    GlobalZGridSizeTag,
                     SourceZGridSizeTag,
                     OutsideHorizonEfoldsTag,
-                    LargestZTag,
-                    SamplesPerLog10ZTag,
+                    LargestSourceZTag,
+                    SourceSamplesPerLog10ZTag,
                 ],
                 "_do_not_populate": True,
             }
@@ -492,13 +505,12 @@ with ShardedPool(
                     rtol=rtol,
                     tags=[
                         TkProductionTag,
-                        GlobalZGridSizeTag,
                         SourceZGridSizeTag,
                         OutsideHorizonEfoldsTag,
-                        LargestZTag,
-                        SamplesPerLog10ZTag,
+                        LargestSourceZTag,
+                        SourceSamplesPerLog10ZTag,
                     ],
-                    delta_logz=1.0 / float(samples_per_log10z),
+                    delta_logz=1.0 / float(source_samples_per_log10z),
                 )
             )
 
@@ -543,11 +555,10 @@ with ShardedPool(
                         "rtol": rtol,
                         "tags": [
                             TkProductionTag,
-                            GlobalZGridSizeTag,
                             SourceZGridSizeTag,
                             OutsideHorizonEfoldsTag,
-                            LargestZTag,
-                            SamplesPerLog10ZTag,
+                            LargestSourceZTag,
+                            SourceSamplesPerLog10ZTag,
                         ],
                         "_do_not_populate": True,
                     }
@@ -599,11 +610,10 @@ with ShardedPool(
                 "rtol": rtol,
                 "tags": [
                     TkProductionTag,
-                    GlobalZGridSizeTag,
                     SourceZGridSizeTag,
                     OutsideHorizonEfoldsTag,
-                    LargestZTag,
-                    SamplesPerLog10ZTag,
+                    LargestSourceZTag,
+                    SourceSamplesPerLog10ZTag,
                 ],
             }
             for k in missing_Tk
@@ -669,11 +679,10 @@ with ShardedPool(
                         r=r,
                         tags=[
                             TkProductionTag,
-                            GlobalZGridSizeTag,
                             SourceZGridSizeTag,
                             OutsideHorizonEfoldsTag,
-                            LargestZTag,
-                            SamplesPerLog10ZTag,
+                            LargestSourceZTag,
+                            SourceSamplesPerLog10ZTag,
                         ],
                     ),
                     "compute_payload": {"Tq": Tq, "Tr": Tr},
@@ -767,11 +776,11 @@ with ShardedPool(
                         "rtol": rtol,
                         "tags": [
                             GkProductionTag,
-                            GlobalZGridSizeTag,
                             SourceZGridSizeTag,  # restrict query to integrations with the correct source grid size
                             ResponseZGridSizeTag,  # restrict query to integrations with the correct response grid size
-                            LargestZTag,
-                            SamplesPerLog10ZTag,
+                            LargestSourceZTag,
+                            SourceSamplesPerLog10ZTag,
+                            ResponseSamplesPerLog10ZTag,
                         ],
                         "_do_not_populate": True,
                     }
@@ -837,7 +846,7 @@ with ShardedPool(
                     # (here with a 10% tolerance)
                     response_zs = z_response_sample.truncate(
                         z_source, keep="lower"
-                    ).truncate(0.85 * k_exit.z_exit_subh_e6, keep="higher")
+                    ).truncate(0.85 * k_exit.z_exit_subh_e6, keep="higher-include")
 
                     if len(response_zs) > 0:
                         work_refs.append(
@@ -852,13 +861,13 @@ with ShardedPool(
                                 rtol=rtol,
                                 tags=[
                                     GkProductionTag,
-                                    GlobalZGridSizeTag,
                                     SourceZGridSizeTag,
                                     ResponseZGridSizeTag,
-                                    LargestZTag,
-                                    SamplesPerLog10ZTag,
+                                    LargestSourceZTag,
+                                    SourceSamplesPerLog10ZTag,
+                                    ResponseSamplesPerLog10ZTag,
                                 ],
-                                delta_logz=1.0 / float(samples_per_log10z),
+                                delta_logz=1.0 / float(source_samples_per_log10z),
                                 mode="stop",
                                 _do_not_populate=True,  # instructs the datastore not to read in the contents of this object
                             )
@@ -927,11 +936,11 @@ with ShardedPool(
                         "rtol": rtol,
                         "tags": [
                             GkProductionTag,
-                            GlobalZGridSizeTag,
                             SourceZGridSizeTag,  # restrict query to integrations with the correct source grid size
                             ResponseZGridSizeTag,  # restrict query to integrations with the correct response grid size
-                            LargestZTag,
-                            SamplesPerLog10ZTag,
+                            LargestSourceZTag,
+                            SourceSamplesPerLog10ZTag,
+                            ResponseSamplesPerLog10ZTag,
                         ],
                         "_do_not_populate": True,
                     }
@@ -991,11 +1000,11 @@ with ShardedPool(
                         "rtol": rtol,
                         "tags": [
                             GkProductionTag,
-                            GlobalZGridSizeTag,
                             SourceZGridSizeTag,
                             ResponseZGridSizeTag,
-                            LargestZTag,
-                            SamplesPerLog10ZTag,
+                            LargestSourceZTag,
+                            SourceSamplesPerLog10ZTag,
+                            ResponseSamplesPerLog10ZTag,
                         ],
                     }
                     for z_source in missing[k_exit.store_id]
@@ -1098,11 +1107,11 @@ with ShardedPool(
                                 rtol=rtol,
                                 tags=[
                                     GkProductionTag,
-                                    GlobalZGridSizeTag,
                                     SourceZGridSizeTag,
                                     ResponseZGridSizeTag,
-                                    LargestZTag,
-                                    SamplesPerLog10ZTag,
+                                    LargestSourceZTag,
+                                    SourceSamplesPerLog10ZTag,
+                                    ResponseSamplesPerLog10ZTag,
                                 ],
                                 _do_not_populate=True,  # can specify this, but we know every object we query will not exist in the datastore, so redundant really
                             )
@@ -1144,11 +1153,11 @@ with ShardedPool(
                             rtol=rtol,
                             tags=[
                                 GkProductionTag,
-                                GlobalZGridSizeTag,
                                 SourceZGridSizeTag,
                                 ResponseZGridSizeTag,
-                                LargestZTag,
-                                SamplesPerLog10ZTag,
+                                LargestSourceZTag,
+                                SourceSamplesPerLog10ZTag,
+                                ResponseSamplesPerLog10ZTag,
                             ],
                         )
                     )
@@ -1223,11 +1232,11 @@ with ShardedPool(
                         "rtol": rtol,
                         "tags": [
                             GkProductionTag,
-                            GlobalZGridSizeTag,
                             SourceZGridSizeTag,
                             ResponseZGridSizeTag,
-                            LargestZTag,
-                            SamplesPerLog10ZTag,
+                            LargestSourceZTag,
+                            SourceSamplesPerLog10ZTag,
+                            ResponseSamplesPerLog10ZTag,
                         ],
                         "_do_not_populate": True,
                     }
@@ -1291,11 +1300,11 @@ with ShardedPool(
                     "rtol": rtol,
                     "tags": [
                         GkProductionTag,
-                        GlobalZGridSizeTag,
                         SourceZGridSizeTag,
                         ResponseZGridSizeTag,
-                        LargestZTag,
-                        SamplesPerLog10ZTag,
+                        LargestSourceZTag,
+                        SourceSamplesPerLog10ZTag,
+                        ResponseSamplesPerLog10ZTag,
                     ],
                 },
             }
@@ -1397,11 +1406,11 @@ with ShardedPool(
                             z_sample=z_source_pool[z_response.store_id],
                             tags=[
                                 GkProductionTag,
-                                GlobalZGridSizeTag,
                                 SourceZGridSizeTag,
                                 ResponseZGridSizeTag,
-                                LargestZTag,
-                                SamplesPerLog10ZTag,
+                                LargestSourceZTag,
+                                SourceSamplesPerLog10ZTag,
+                                ResponseSamplesPerLog10ZTag,
                             ],
                         ),
                         "compute_payload": {
@@ -1548,11 +1557,11 @@ with ShardedPool(
                         "rtol": rtol,
                         "tags": [
                             GkProductionTag,
-                            GlobalZGridSizeTag,
                             SourceZGridSizeTag,
                             ResponseZGridSizeTag,
-                            LargestZTag,
-                            SamplesPerLog10ZTag,
+                            LargestSourceZTag,
+                            SourceSamplesPerLog10ZTag,
+                            ResponseSamplesPerLog10ZTag,
                         ],
                     }
                     for z_response in incomplete[k_exit.store_id]
@@ -1593,7 +1602,7 @@ with ShardedPool(
                 "payload": [
                     {
                         "source": source_proxy,
-                        "policy": GkSource_policy_2pt5,
+                        "policy": GkSource_policy_1pt5,
                         "k": k_exit,
                     }
                     for z_response, source_proxy in zip(
@@ -1643,11 +1652,11 @@ with ShardedPool(
                         "rtol": rtol,
                         "tags": [
                             GkProductionTag,
-                            GlobalZGridSizeTag,
                             SourceZGridSizeTag,
                             ResponseZGridSizeTag,
-                            LargestZTag,
-                            SamplesPerLog10ZTag,
+                            LargestSourceZTag,
+                            SourceSamplesPerLog10ZTag,
+                            ResponseSamplesPerLog10ZTag,
                         ],
                         "_do_not_populate": True,
                     }
@@ -1687,7 +1696,7 @@ with ShardedPool(
                 "payload": [
                     {
                         "source": source_proxy,
-                        "policy": GkSource_policy_2pt5,
+                        "policy": GkSource_policy_1pt5,
                         "k": k_exit,
                     }
                     for z_response, source_proxy in zip(batch, proxy_data)
@@ -1767,11 +1776,11 @@ with ShardedPool(
                         "rtol": rtol,
                         "tags": [
                             GkProductionTag,
-                            GlobalZGridSizeTag,
                             SourceZGridSizeTag,
                             ResponseZGridSizeTag,
-                            LargestZTag,
-                            SamplesPerLog10ZTag,
+                            LargestSourceZTag,
+                            SourceSamplesPerLog10ZTag,
+                            ResponseSamplesPerLog10ZTag,
                         ],
                     }
                     for z_response in missing[k_exit.store_id]
@@ -1812,7 +1821,7 @@ with ShardedPool(
                     pool.object_get(
                         "GkSourcePolicyData",
                         source=source_proxy,
-                        policy=GkSource_policy_2pt5,
+                        policy=GkSource_policy_1pt5,
                         k=k_exit,
                     )
                 )
@@ -1933,7 +1942,7 @@ with ShardedPool(
                 "payload": [
                     {
                         "model": model_proxy,
-                        "policy": GkSource_policy_2pt5,
+                        "policy": GkSource_policy_1pt5,
                         "q": q,
                         "r": r,
                         "z_response": z_response,
@@ -1943,11 +1952,11 @@ with ShardedPool(
                         "tags": [
                             GkProductionTag,
                             TkProductionTag,
-                            GlobalZGridSizeTag,
                             SourceZGridSizeTag,
                             ResponseZGridSizeTag,
-                            LargestZTag,
-                            SamplesPerLog10ZTag,
+                            LargestSourceZTag,
+                            SourceSamplesPerLog10ZTag,
+                            ResponseSamplesPerLog10ZTag,
                         ],
                     }
                     for z_response, q, r in binned_batch[k]
@@ -2031,11 +2040,11 @@ with ShardedPool(
                         "rtol": rtol,
                         "tags": [
                             GkProductionTag,
-                            GlobalZGridSizeTag,
                             SourceZGridSizeTag,
                             ResponseZGridSizeTag,
-                            LargestZTag,
-                            SamplesPerLog10ZTag,
+                            LargestSourceZTag,
+                            SourceSamplesPerLog10ZTag,
+                            ResponseSamplesPerLog10ZTag,
                         ],
                     }
                     for z_response in missing_Gk[k]
@@ -2075,7 +2084,7 @@ with ShardedPool(
                 "payload": [
                     {
                         "source": source_proxy,
-                        "policy": GkSource_policy_2pt5,
+                        "policy": GkSource_policy_1pt5,
                         "k": k_exit,
                     }
                     for z_response, source_proxy in zip(missing_Gk[k_exit], proxy_data)
@@ -2112,11 +2121,10 @@ with ShardedPool(
                         "r": r,
                         "tags": [
                             TkProductionTag,
-                            GlobalZGridSizeTag,
                             SourceZGridSizeTag,
                             OutsideHorizonEfoldsTag,
-                            LargestZTag,
-                            SamplesPerLog10ZTag,
+                            LargestSourceZTag,
+                            SourceSamplesPerLog10ZTag,
                         ],
                     }
                     for r in missing_source_b[q]
@@ -2192,7 +2200,7 @@ with ShardedPool(
                     "ref": pool.object_get(
                         "QuadSourceIntegral",
                         model=model_proxy,
-                        policy=GkSource_policy_2pt5,
+                        policy=GkSource_policy_1pt5,
                         k=k,
                         q=q,
                         r=r,
@@ -2203,11 +2211,11 @@ with ShardedPool(
                         tags=[
                             TkProductionTag,
                             GkProductionTag,
-                            GlobalZGridSizeTag,
                             SourceZGridSizeTag,
                             ResponseZGridSizeTag,
-                            LargestZTag,
-                            SamplesPerLog10ZTag,
+                            LargestSourceZTag,
+                            SourceSamplesPerLog10ZTag,
+                            ResponseSamplesPerLog10ZTag,
                         ],
                     ),
                     "compute_payload": {"GkPolicy": GkPolicy, "source": source},

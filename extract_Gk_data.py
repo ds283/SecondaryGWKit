@@ -177,21 +177,27 @@ with ShardedPool(
         k=int(round(0.9 * len(response_k_exit_times) + 0.5, 0)),
     )
 
-    DEFAULT_SAMPLES_PER_LOG10_Z = 150
+    DEFAULT_SOURCE_SAMPLES_PER_LOG10_Z = 100
+    DEFAULT_RESPONSE_SAMPLES_PER_LOG10_Z = 8
     DEFAULT_ZEND = 0.1
 
-    # array of z-sample points matching the SOURCE GRID
-    universal_z_grid = k_exit_earliest.populate_z_sample(
+    source_z_grid = k_exit_earliest.populate_z_sample(
         outside_horizon_efolds=5,
-        samples_per_log10z=DEFAULT_SAMPLES_PER_LOG10_Z,
+        samples_per_log10z=DEFAULT_SOURCE_SAMPLES_PER_LOG10_Z,
+        z_end=DEFAULT_ZEND,
+    )
+    response_z_grid = k_exit_earliest.populate_z_sample(
+        outside_horizon_efolds=5,
+        samples_per_log10z=DEFAULT_RESPONSE_SAMPLES_PER_LOG10_Z,
         z_end=DEFAULT_ZEND,
     )
 
-    z_array = ray.get(convert_to_redshifts(universal_z_grid))
-    z_global_sample = redshift_array(z_array=z_array)
+    # embed these redshift list into the database
+    z_source_array = ray.get(convert_to_redshifts(source_z_grid))
+    z_response_array = ray.get(convert_to_redshifts(response_z_grid))
 
-    z_source_sample = z_global_sample
-    z_response_sample = z_global_sample
+    z_source_sample = redshift_array(z_array=z_source_array)
+    z_response_sample = redshift_array(z_array=z_response_array)
 
     # choose a subsample of SOURCE redshifts
     z_subsample: List[redshift] = sample(
