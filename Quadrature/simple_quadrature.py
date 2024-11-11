@@ -88,7 +88,7 @@ def _quadrature_quad_impl(
 
                     return f(x)
 
-            value, err = quad(RHS, a=a, b=b, epsabs=atol, epsrel=rtol)
+            value, err = quad(RHS, a=a, b=b, epsabs=atol, epsrel=rtol, limit=100)
             values.append(value)
             errs.append(err)
 
