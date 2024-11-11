@@ -230,6 +230,7 @@ def _adaptive_levin(
                 b=b,
                 atol=atol,
                 rtol=rtol,
+                method="quad",
             )
             val = val + data["value"]
             used_regions.append((a, b))

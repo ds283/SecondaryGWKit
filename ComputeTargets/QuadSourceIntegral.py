@@ -760,6 +760,7 @@ def _three_bessel_quad(
         atol=atol,
         rtol=rtol,
         label=f"three_bessel_quad for  k={k.k_inv_Mpc:.5g}/Mpc (store_id={k.store_id}), q={q.k_inv_Mpc:.5g}/Mpc (store_id={q.store_id}), r={r.k_inv_Mpc:.5g}/Mpc (store_id={r.store_id})",
+        method="quad",
     )
 
     return data["value"]
@@ -930,6 +931,7 @@ def numeric_quad_integral(
         atol=atol,
         rtol=rtol,
         label=f"numeric_quad_integral for k={k.k_inv_Mpc:.5g}/Mpc (store_id={k.store_id}), q={q.k_inv_Mpc:.5g}/Mpc (store_id={q.store_id}), r={r.k_inv_Mpc:.5g}/Mpc (store_id={r.store_id})",
+        method="quad",
     )
 
     data["value"] = (1.0 + z_response.z) * data["value"]
@@ -999,6 +1001,7 @@ def WKB_quad_integral(
         atol=atol,
         rtol=rtol,
         label=f"WKB_quad_integral for k={k.k_inv_Mpc:.5g}/Mpc (store_id={k.store_id}), q={q.k_inv_Mpc:.5g}/Mpc (store_id={q.store_id}), r={r.k_inv_Mpc:.5g}/Mpc (store_id={r.store_id})",
+        method="quad",
     )
 
     data["value"] = (1.0 + z_response.z) * data["value"]
