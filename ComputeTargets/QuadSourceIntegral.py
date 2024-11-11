@@ -76,9 +76,20 @@ def compute_QuadSource_integral(
         WKB_Levin_data = None
 
         if GkPolicy.type == "numeric":
+            max_z, min_z = Gk_f.numerical_region
+            if z_response.z < min_z:
+                raise RuntimeError(
+                    f"compute_QuadSource_integral: z_response={z_response.z:.5g}, but min_z for numeric region is min_z={min_z:.5g} for k={k.k.k_inv_Mpc:.5g}/Mpc (store_id={k.store_id}), q={q.k.k_inv_Mpc:.5g}/Mpc (store_id={q.store_id}), r={r.k.k_inv_Mpc:.5g}/Mpc (store_id={r.store_id}), GkSourcePolicyData store_id={GkPolicy.store_id}"
+                )
             regions = [(z_source_max, z_response), (None, None), (None, None)]
 
         elif GkPolicy.type == "WKB":
+            max_z, min_z = Gk_f.WKB_region
+            if z_response.z < min_z:
+                raise RuntimeError(
+                    f"compute_QuadSource_integral: z_response={z_response.z:.5g}, but min_z for WKB region is min_z={min_z:.5g} for k={k.k.k_inv_Mpc:.5g}/Mpc (store_id={k.store_id}), q={q.k.k_inv_Mpc:.5g}/Mpc (store_id={q.store_id}), r={r.k.k_inv_Mpc:.5g}/Mpc (store_id={r.store_id}), GkSourcePolicyData store_id={GkPolicy.store_id}"
+                )
+
             Levin_z: Optional[float] = GkPolicy.Levin_z
 
             if Levin_z is not None:
@@ -107,6 +118,13 @@ def compute_QuadSource_integral(
                 and Levin_z > crossover_z
             ):
                 Levin_z = crossover_z
+
+            if crossover_z is not None:
+                max_z, min_z = Gk_f.numerical_region
+                if crossover_z < min_z:
+                    raise RuntimeError(
+                        f"compute_QuadSource_integral: crossover_z={crossover_z:.5g}, but min_z for numeric region is min_z={min_z:.5g} for z_response={z_response.z:.5g} (store_id={z_response.store_id}), k={k.k.k_inv_Mpc:.5g}/Mpc (store_id={k.store_id}), q={q.k.k_inv_Mpc:.5g}/Mpc (store_id={q.store_id}), r={r.k.k_inv_Mpc:.5g}/Mpc (store_id={r.store_id}), GkSourcePolicyData store_id={GkPolicy.store_id}"
+                    )
 
             if Levin_z is not None:
                 phase_diff = Gk_f.theta(z_response.z) - Gk_f.theta(Levin_z)
@@ -906,11 +924,11 @@ def numeric_quad_integral(
     region_max_z, region_min_z = Gk_f.numerical_region
     if max_z > region_max_z + DEFAULT_FLOAT_PRECISION:
         raise RuntimeError(
-            f"compute_QuadSource_integral: attempting to evaluate numerical quadrature, but max_z={max_z:.5g} is out-of-bounds for the region ({region_max_z:.5g}, {region_min_z}:.5g) where a numerical solution is available [domain={max_z:.5g}, {min_z:.5g}]"
+            f"compute_QuadSource_integral: attempting to evaluate numerical quadrature, but max_z={max_z:.5g} is out-of-bounds for the region ({region_max_z:.5g}, {region_min_z:.5g}) where a numerical solution is available [domain={max_z:.5g}, {min_z:.5g}]"
         )
     if min_z < region_min_z - DEFAULT_FLOAT_PRECISION:
         raise RuntimeError(
-            f"compute_QuadSource_integral: attempting to evaluate numerical quadrature, but min_z={min_z:.5g} is out-of-bounds for the region ({region_max_z:.5g}, {region_min_z}:.5g) where a numerical solution is available [domain={max_z:.5g}, {min_z:.5g}]"
+            f"compute_QuadSource_integral: attempting to evaluate numerical quadrature, but min_z={min_z:.5g} is out-of-bounds for the region ({region_max_z:.5g}, {region_min_z:.5g}) where a numerical solution is available [domain={max_z:.5g}, {min_z:.5g}]"
         )
 
     def integrand(log_z_source) -> float:
@@ -976,11 +994,11 @@ def WKB_quad_integral(
     region_max_z, region_min_z = Gk_f.WKB_region
     if max_z > region_max_z + DEFAULT_FLOAT_PRECISION:
         raise RuntimeError(
-            f"compute_QuadSource_integral: attempting to evaluate WKB quadrature, but max_z={max_z:.5g} is out-of-bounds for the region ({region_max_z:.5g}, {region_min_z}:.5g) where a WKB solution is available [domain={max_z:.5g}, {min_z:.5g}]"
+            f"compute_QuadSource_integral: attempting to evaluate WKB quadrature, but max_z={max_z:.5g} is out-of-bounds for the region ({region_max_z:.5g}, {region_min_z:.5g}) where a WKB solution is available [domain={max_z:.5g}, {min_z:.5g}]"
         )
     if min_z < region_min_z - DEFAULT_FLOAT_PRECISION:
         raise RuntimeError(
-            f"compute_QuadSource_integral: attempting to evaluate WKB quadrature, but min_z={min_z:.5g} is out-of-bounds for the region ({region_max_z:.5g}, {region_min_z}:.5g) where a WKB solution is available [domain={max_z:.5g}, {min_z:.5g}]"
+            f"compute_QuadSource_integral: attempting to evaluate WKB quadrature, but min_z={min_z:.5g} is out-of-bounds for the region ({region_max_z:.5g}, {region_min_z:.5g}) where a WKB solution is available [domain={max_z:.5g}, {min_z:.5g}]"
         )
 
     def integrand(log_z_source) -> float:
@@ -1046,11 +1064,11 @@ def WKB_Levin_integral(
     region_max_z, region_min_z = Gk_f.WKB_region
     if max_z > region_max_z + DEFAULT_FLOAT_PRECISION:
         raise RuntimeError(
-            f"compute_QuadSource_integral: attempting to evaluate WKB Levin quadrature, but max_z={max_z:.5g} is out-of-bounds for the region ({region_max_z:.5g}, {region_min_z}:.5g) where a WKB solution is available [domain={max_z:.5g}, {min_z:.5g}]"
+            f"compute_QuadSource_integral: attempting to evaluate WKB Levin quadrature, but max_z={max_z:.5g} is out-of-bounds for the region ({region_max_z:.5g}, {region_min_z:.5g}) where a WKB solution is available [domain={max_z:.5g}, {min_z:.5g}]"
         )
     if min_z < region_min_z - DEFAULT_FLOAT_PRECISION:
         raise RuntimeError(
-            f"compute_QuadSource_integral: attempting to evaluate WKB Levin quadrature, but min_z={min_z:.5g} is out-of-bounds for the region ({region_max_z:.5g}, {region_min_z}:.5g) where a WKB solution is available [domain={max_z:.5g}, {min_z:.5g}]"
+            f"compute_QuadSource_integral: attempting to evaluate WKB Levin quadrature, but min_z={min_z:.5g} is out-of-bounds for the region ({region_max_z:.5g}, {region_min_z:.5g}) where a WKB solution is available [domain={max_z:.5g}, {min_z:.5g}]"
         )
 
     log_min_z = log(1.0 + min_z)

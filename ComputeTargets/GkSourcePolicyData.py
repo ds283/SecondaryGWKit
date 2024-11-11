@@ -442,6 +442,11 @@ class GkSourcePolicyData(DatastoreObject):
             max_z = source.z_sample.max
             min_z = source.numerical_smallest_z
 
+            if self._crossover_z is not None and self._crossover_z < min_z:
+                raise RuntimeError(
+                    f"GkSourcePolicyData: inconsistent values of crossover_z={self._crossover_z.z:.5g} and smallest numerical z={min_z.z:.5g}"
+                )
+
             # must be sorted into ascending order of redshift for a smoothing spline
             numerical_data = [
                 v
@@ -485,6 +490,11 @@ class GkSourcePolicyData(DatastoreObject):
         if source.primary_WKB_largest_z is not None:
             max_z = source.primary_WKB_largest_z
             min_z = source.z_sample.min
+
+            if self._crossover_z is not None and self._crossover_z > max_z:
+                raise RuntimeError(
+                    f"GkSourcePolicyData: inconsistent values of crossover_z={self._crossover_z.z:.5g} and largest WKB z={max_z.z:.5g}"
+                )
 
             WKB_data = _build_WKB_values(source, max_z, min_z)
 
