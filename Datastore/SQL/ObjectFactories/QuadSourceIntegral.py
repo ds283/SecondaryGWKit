@@ -164,7 +164,7 @@ class sqla_QuadSourceIntegral_factory(SQLAFactoryBase):
                 sqla.Column("numeric_quad", sqla.Float(64), nullable=False),
                 sqla.Column("WKB_quad", sqla.Float(64), nullable=False),
                 sqla.Column("WKB_Levin", sqla.Float(64), nullable=False),
-                sqla.Column("analytic_rad", sqla.Float(64), nullable=False),
+                sqla.Column("analytic_rad", sqla.Float(64), nullable=True),
                 sqla.Column("eta_source_max", sqla.Float(64), nullable=True),
                 sqla.Column("eta_response", sqla.Float(64), nullable=True),
                 sqla.Column("numeric_quad_compute_time", sqla.Float(64), nullable=True),
