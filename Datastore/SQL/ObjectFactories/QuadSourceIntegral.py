@@ -196,6 +196,11 @@ class sqla_QuadSourceIntegral_factory(SQLAFactoryBase):
                     nullable=True,
                 ),
                 sqla.Column(
+                    "analytic_compute_time",
+                    sqla.Float(64),
+                    nullable=True,
+                ),
+                sqla.Column(
                     "metadata", sqla.String(DEFAULT_STRING_LENGTH), nullable=True
                 ),
             ],
@@ -223,6 +228,7 @@ class sqla_QuadSourceIntegral_factory(SQLAFactoryBase):
         query = sqla.select(
             table.c.serial,
             table.c.compute_time,
+            table.c.analytic_compute_time,
             table.c.label,
             table.c.metadata,
             table.c.source_serial,
@@ -331,6 +337,7 @@ class sqla_QuadSourceIntegral_factory(SQLAFactoryBase):
                     elapsed=row_data.WKB_Levin_elapsed,
                 ),
                 "compute_time": row_data.compute_time,
+                "analytic_compute_time": row_data.analytic_compute_time,
                 "data_serial": row_data.data_serial,
                 "source_serial": row_data.source_serial,
                 "metadata": (
@@ -384,6 +391,7 @@ class sqla_QuadSourceIntegral_factory(SQLAFactoryBase):
                     "source_serial": obj._source_serial,
                     "data_serial": obj._data_serial,
                     "compute_time": obj.compute_time,
+                    "analytic_compute_time": obj.analytic_compute_time,
                     "total": obj._total,
                     "numeric_quad": obj._numeric_quad,
                     "WKB_quad": obj._WKB_quad,
@@ -509,6 +517,7 @@ class sqla_QuadSourceIntegral_factory(SQLAFactoryBase):
             sqla.select(
                 table.c.serial,
                 table.c.compute_time,
+                table.c.analytic_compute_time,
                 table.c.label,
                 table.c.metadata,
                 table.c.source_serial,
@@ -628,6 +637,7 @@ class sqla_QuadSourceIntegral_factory(SQLAFactoryBase):
                         elapsed=row.WKB_Levin_elapsed,
                     ),
                     "compute_time": row.compute_time,
+                    "analytic_compute_time": row.analytic_compute_time,
                     "source_serial": row.source_serial,
                     "data_serial": row.data_serial,
                     "metadata": (

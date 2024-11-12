@@ -1,3 +1,4 @@
+import time
 from datetime import datetime
 from typing import Optional, List, Union
 
@@ -268,6 +269,7 @@ def compute_QuadSource_integral(
         "eta_response": model_f.tau(z_response.z),
         "analytic_rad": analytic_data["value"],
         "compute_time": timer.elapsed,
+        "analytic_compute_time": analytic_data["elapsed"],
         "metadata": {"analytic": analytic_data["metadata"]},
     }
 
@@ -411,10 +413,6 @@ def _three_bessel_integrals(
     if mode == "Levin" or (
         mode == "default" and eta_cut / min_eta <= 1.0 + DEFAULT_FLOAT_PRECISION
     ):
-        # quad_comparison = _three_bessel_quad(
-        #     k, q, r, min_eta=min_eta, max_eta=max_eta, b=b, nu_type=nu_type, tol=tol
-        # )
-
         # if it is worth doing a Levin integration (or we are explicitly instructed to use a Levin method), do so
         if mode == "Levin" or (
             phase_diff_Gk > LEVIN_MIN_PHASE_DIFF
@@ -435,11 +433,13 @@ def _three_bessel_integrals(
                     atol=atol,
                     rtol=rtol,
                 )
-                metadata["Levin_J"] = Levin[0]
-                metadata["Levin_Y"] = Levin[1]
-                # metadata["quad_comparison_J"] = quad_comparison[0]
-                # metadata["quad_comparison_Y"] = quad_comparison[1]
-                return {"J": Levin[0], "Y": Levin[1], "metadata": metadata}
+                value = Levin["value"]
+                return {
+                    "J": value[0],
+                    "Y": value[1],
+                    "metadata": Levin["metadata"]
+                    | {"compute_time": Levin["compute_time"]},
+                }
             except LinAlgError as e:
                 print(
                     f"!! three_bessel_integrals: linear algebra error k={k.k_inv_Mpc:.5g}/Mpc, q={q.k_inv_Mpc:.5g}/Mpc, r={r.k_inv_Mpc:.5g}, min_eta={min_eta:.5g}, max_eta={max_eta:.5g}, x_cut={x_cut:.5g}, nu_type={nu_type}, mode={mode}"
@@ -457,9 +457,12 @@ def _three_bessel_integrals(
             atol=atol,
             rtol=rtol,
         )
-        metadata["quad_J"] = quad[0]
-        metadata["quad_Y"] = quad[1]
-        return {"J": quad[0], "Y": quad[1], "metadata": metadata}
+        value = quad["value"]
+        return {
+            "J": value[0],
+            "Y": value[1],
+            "metadata": quad["metadata"] | {"compute_time": quad["compute_time"]},
+        }
 
     if mode == "quad" or (
         mode == "default" and eta_cut / max_eta >= 1.0 - DEFAULT_FLOAT_PRECISION
@@ -475,9 +478,12 @@ def _three_bessel_integrals(
             atol=atol,
             rtol=rtol,
         )
-        metadata["quad_J"] = quad[0]
-        metadata["quad_Y"] = quad[1]
-        return {"J": quad[0], "Y": quad[1], "metadata": metadata}
+        value = quad["value"]
+        return {
+            "J": value[0],
+            "Y": value[1],
+            "metadata": quad["metadata"] | {"compute_time": quad["compute_time"]},
+        }
 
     assert mode == "default"
     # can assume eta_cut falls between min_eta and max_eta
@@ -517,16 +523,16 @@ def _three_bessel_integrals(
             atol=atol,
             rtol=rtol,
         )
-        metadata["Levin_J"] = Levin[0]
-        metadata["Levin_Y"] = Levin[1]
-        metadata["quad_J"] = quad[0]
-        metadata["quad_Y"] = quad[1]
-        # metadata["quad_comparison_J"] = quad_comparison[0]
-        # metadata["quad_comparison_Y"] = quad_comparison[1]
+        quad_value = quad["value"]
+        Levin_value = Levin["value"]
         return {
-            "J": quad[0] + Levin[0],
-            "Y": quad[1] + Levin[1],
-            "metadata": metadata,
+            "J": quad_value[0] + Levin_value[0],
+            "Y": quad_value[1] + Levin_value[1],
+            "metadata": {
+                "quad": quad["metadata"],
+                "Levin": Levin["metadata"],
+                "compute_time": quad["compute_time"] + Levin["compute_time"],
+            },
         }
 
     quad = _three_bessel_quad(
@@ -540,9 +546,12 @@ def _three_bessel_integrals(
         atol=atol,
         rtol=rtol,
     )
-    metadata["quad_J"] = quad[0]
-    metadata["quad_Y"] = quad[1]
-    return {"J": quad[0], "Y": quad[1], "metadata": metadata}
+    value = quad["value"]
+    return {
+        "J": value[0],
+        "Y": value[1],
+        "metadata": quad["metadata"] | {"compute_time": quad["compute_time"]},
+    }
 
 
 def _three_bessel_Levin(
@@ -559,6 +568,8 @@ def _three_bessel_Levin(
     rtol: float,
 ):
     assert min_eta <= max_eta
+
+    start = time.perf_counter()
 
     cs = sqrt((1.0 - b) / (1.0 + b) / 3.0)
     x_span = (log(min_eta), log(max_eta))
@@ -724,7 +735,28 @@ def _three_bessel_Levin(
     J = norm_factor * (-J1_value + J2_value + J3_value - J4_value)
     Y = norm_factor * (-Y1_value + Y2_value + Y3_value - Y4_value)
 
-    return J, Y
+    data_blocks = {
+        "J1_data": J1_data,
+        "J2_data": J2_data,
+        "J3_data": J3_data,
+        "J4_data": J4_data,
+        "Y1_data": Y1_data,
+        "Y2_data": Y2_data,
+        "Y3_data": Y3_data,
+        "Y4_data": Y4_data,
+    }
+    metadata = {
+        key: {"elapsed": item["elapsed"], "regions": item["regions"]}
+        for key, item in data_blocks.items()
+    }
+
+    stop = time.perf_counter()
+
+    return {
+        "value": [J, Y],
+        "compute_time": stop - start,
+        "metadata": metadata,
+    }
 
 
 def _three_bessel_quad(
@@ -781,7 +813,11 @@ def _three_bessel_quad(
         method="quad",
     )
 
-    return data["value"]
+    return {
+        "value": data["value"],
+        "compute_time": data["data"].compute_time,
+        "metadata": {},
+    }
 
 
 def analytic_integral(
@@ -796,6 +832,8 @@ def analytic_integral(
     rtol: float,
     atol: float,
 ):
+    start = time.perf_counter()
+
     functions: ModelFunctions = model.functions
     min_eta: float = functions.tau(max_z.z)
     max_eta: float = functions.tau(min_z.z)
@@ -853,8 +891,8 @@ def analytic_integral(
         # "max_eta": max_eta,
         # "min_eta": min_eta,
         # "eta_response": eta_response,
-        "0pt5": data0pt5,
-        "2pt5": data2pt5,
+        "0pt5": data0pt5["metadata"],
+        "2pt5": data2pt5["metadata"],
     }
 
     A = (2.0 + b) / (1.0 + b)
@@ -871,7 +909,10 @@ def analytic_integral(
     x = k.k * eta_response
 
     value = F * (yv(0.5 + b, x) * Y_factor - jv(0.5 + b, x) * J_factor)
-    return {"value": value, "metadata": metadata}
+
+    stop = time.perf_counter()
+
+    return {"value": value, "elapsed": stop - start, "metadata": metadata}
 
 
 def _extract_z(z: Union[type(None), redshift, float]) -> str:
@@ -1150,6 +1191,8 @@ class QuadSourceIntegral(DatastoreObject):
             self._analytic_rad = None
 
             self._compute_time = None
+            self._analytic_compute_time = None
+
             self._data_serial = None
             self._source_serial = None
 
@@ -1175,6 +1218,7 @@ class QuadSourceIntegral(DatastoreObject):
             self._WKB_Levin_data = payload["WKB_Levin_data"]
 
             self._compute_time = payload["compute_time"]
+            self._analytic_compute_time = payload["analytic_compute_time"]
 
             self._metadata = payload["metadata"]
 
@@ -1303,6 +1347,13 @@ class QuadSourceIntegral(DatastoreObject):
         return self._compute_time
 
     @property
+    def analytic_compute_time(self) -> Optional[float]:
+        if self._total is None:
+            raise RuntimeError("value has not yet been populated")
+
+        return self._analytic_compute_time
+
+    @property
     def metadata(self) -> dict:
         if self._total is None:
             raise RuntimeError("value has not yet been populated")
@@ -1415,4 +1466,6 @@ class QuadSourceIntegral(DatastoreObject):
         self._WKB_Levin_data = payload["WKB_Levin_data"]
 
         self._compute_time = payload["compute_time"]
+        self._analytic_compute_time = payload["analytic_compute_time"]
+
         self._metadata = payload["metadata"]
