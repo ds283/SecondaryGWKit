@@ -630,16 +630,16 @@ def _three_bessel_Levin(
         x_span,
         f=[Levin_f, lambda x: 0.0],
         theta=phase1,
-        atol=LEVIN_ABSERR,
-        rtol=LEVIN_RELERR,
+        atol=atol,
+        rtol=rtol,
         chebyshev_order=CHEBYSHEV_ORDER,
     )
     Y1_data = adaptive_levin_sincos(
         x_span,
         f=[lambda x: 0.0, lambda x: -Levin_f(x)],
         theta=phase1,
-        atol=LEVIN_ABSERR,
-        rtol=LEVIN_RELERR,
+        atol=atol,
+        rtol=rtol,
         chebyshev_order=CHEBYSHEV_ORDER,
     )
 
@@ -656,16 +656,16 @@ def _three_bessel_Levin(
         x_span,
         f=[Levin_f, lambda x: 0.0],
         theta=phase2,
-        atol=LEVIN_ABSERR,
-        rtol=LEVIN_RELERR,
+        atol=atol,
+        rtol=rtol,
         chebyshev_order=CHEBYSHEV_ORDER,
     )
     Y2_data = adaptive_levin_sincos(
         x_span,
         f=[lambda x: 0.0, lambda x: -Levin_f(x)],
         theta=phase2,
-        atol=LEVIN_ABSERR,
-        rtol=LEVIN_RELERR,
+        atol=atol,
+        rtol=rtol,
         chebyshev_order=CHEBYSHEV_ORDER,
     )
 
@@ -682,8 +682,8 @@ def _three_bessel_Levin(
         x_span,
         f=[Levin_f, lambda x: 0.0],
         theta=phase3,
-        atol=LEVIN_ABSERR,
-        rtol=LEVIN_RELERR,
+        atol=atol,
+        rtol=rtol,
         chebyshev_order=CHEBYSHEV_ORDER,
     )
     Y3_data = adaptive_levin_sincos(
@@ -708,16 +708,16 @@ def _three_bessel_Levin(
         x_span,
         f=[Levin_f, lambda x: 0.0],
         theta=phase4,
-        atol=LEVIN_ABSERR,
-        rtol=LEVIN_RELERR,
+        atol=atol,
+        rtol=rtol,
         chebyshev_order=CHEBYSHEV_ORDER,
     )
     Y4_data = adaptive_levin_sincos(
         x_span,
         f=[lambda x: 0.0, lambda x: -Levin_f(x)],
         theta=phase4,
-        atol=LEVIN_ABSERR,
-        rtol=LEVIN_RELERR,
+        atol=atol,
+        rtol=rtol,
         chebyshev_order=CHEBYSHEV_ORDER,
     )
 
@@ -863,8 +863,8 @@ def analytic_integral(
         phase_data={"0pt5": phase_data_0pt5, "2pt5": phase_data_2pt5},
         nu_type="0pt5",
         timestamp=timestamp,
-        atol=LEVIN_ABSERR,
-        rtol=LEVIN_RELERR,
+        atol=atol,
+        rtol=rtol,
         mode="default",
     )
     data2pt5 = _three_bessel_integrals(
@@ -877,8 +877,8 @@ def analytic_integral(
         phase_data={"0pt5": phase_data_0pt5, "2pt5": phase_data_2pt5},
         nu_type="2pt5",
         timestamp=timestamp,
-        atol=LEVIN_ABSERR,
-        rtol=LEVIN_RELERR,
+        atol=atol,
+        rtol=rtol,
         mode="default",
     )
 
@@ -1132,8 +1132,8 @@ def WKB_Levin_integral(
         x_span,
         [Levin_f, lambda x: 0.0],
         Levin_theta,
-        atol=LEVIN_ABSERR,
-        rtol=LEVIN_RELERR,
+        atol=atol,
+        rtol=rtol,
         chebyshev_order=CHEBYSHEV_ORDER,
         notify_label=f"k={k.k_inv_Mpc:.3g}/Mpc, q={q.k_inv_Mpc:.3g}/Mpc, r={r.k_inv_Mpc:.3g}/Mpc @ z_response={z_response.z:.5g}",
     )
