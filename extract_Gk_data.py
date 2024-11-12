@@ -178,7 +178,7 @@ with ShardedPool(
     )
 
     DEFAULT_SOURCE_SAMPLES_PER_LOG10_Z = 100
-    DEFAULT_RESPONSE_SAMPLES_PER_LOG10_Z = 8
+    DEFAULT_RESPONSE_SAMPLES_SPARSENESS = 12
     DEFAULT_ZEND = 0.1
 
     source_z_grid = k_exit_earliest.populate_z_sample(
@@ -186,18 +186,17 @@ with ShardedPool(
         samples_per_log10z=DEFAULT_SOURCE_SAMPLES_PER_LOG10_Z,
         z_end=DEFAULT_ZEND,
     )
-    response_z_grid = k_exit_earliest.populate_z_sample(
-        outside_horizon_efolds=5,
-        samples_per_log10z=DEFAULT_RESPONSE_SAMPLES_PER_LOG10_Z,
-        z_end=DEFAULT_ZEND,
-    )
 
     # embed these redshift list into the database
     z_source_array = ray.get(convert_to_redshifts(source_z_grid))
-    z_response_array = ray.get(convert_to_redshifts(response_z_grid))
 
     z_source_sample = redshift_array(z_array=z_source_array)
-    z_response_sample = redshift_array(z_array=z_response_array)
+
+    # we need the response sample to be a subset of the source sample, otherwise we won't have
+    # source data for the Green's functions right the way down to the response time
+    z_response_sample = z_source_sample.winnow(
+        sparseness=DEFAULT_RESPONSE_SAMPLES_SPARSENESS
+    )
 
     # choose a subsample of SOURCE redshifts
     z_subsample: List[redshift] = sample(

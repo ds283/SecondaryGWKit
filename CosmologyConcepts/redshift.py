@@ -214,6 +214,12 @@ class redshift_array:
 
         return redshift_array(include_array)
 
+    def winnow(self, sparseness: int) -> Self:
+        sparseness = int(sparseness)
+        if sparseness <= 0:
+            raise ValueError("sparseness must be greater than zero")
+        return redshift_array(z_array=self._z_array[::-sparseness])
+
 
 def check_zsample(A, B):
     A_sample: redshift_array = A if isinstance(A, redshift_array) else A.z_sample
