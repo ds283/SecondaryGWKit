@@ -9,7 +9,11 @@ from ComputeTargets import (
     QuadSourceIntegral,
 )
 from ComputeTargets.BackgroundModel import ModelProxy
-from CosmologyConcepts import wavenumber_exit_time, redshift
+from CosmologyConcepts import wavenumber_exit_time, redshift, wavenumber
+from CosmologyConcepts.wavenumber import (
+    WAVENUMBER_EXIT_TIMES_SUPERHORIZON_EFOLDS,
+    WAVENUMBER_EXIT_TIMES_SUBHORIZON_EFOLDS,
+)
 from Datastore.SQL.ObjectFactories.base import SQLAFactoryBase
 from MetadataConcepts import store_tag, tolerance, GkSourcePolicy
 from Quadrature.integration_metadata import IntegrationData, LevinData
@@ -102,13 +106,15 @@ class sqla_QuadSourceIntegral_factory(SQLAFactoryBase):
                 ),
                 sqla.Column(
                     "q_wavenumber_exit_serial",
-                    sqla.Integer,  # Don't impose foreign key. q instances may not be held on this shard. We shard by q.
+                    sqla.Integer,
+                    sqla.ForeignKey("wavenumber_exit_time.serial"),
                     index=True,
                     nullable=False,
                 ),
                 sqla.Column(
                     "r_wavenumber_exit_serial",
-                    sqla.Integer,  # Don't impose foreign key. r instances may not be held on this shard. We shard by q.
+                    sqla.Integer,
+                    sqla.ForeignKey("wavenumber_exit_time.serial"),
                     index=True,
                     nullable=False,
                 ),
@@ -499,8 +505,8 @@ class sqla_QuadSourceIntegral_factory(SQLAFactoryBase):
         policy: GkSourcePolicy = payload["policy"]
 
         k: wavenumber_exit_time = payload["k"]
-        q: wavenumber_exit_time = payload["q"]
-        r: wavenumber_exit_time = payload["r"]
+        q: Optional[wavenumber_exit_time] = payload.get("q", None)
+        r: Optional[wavenumber_exit_time] = payload.get("r", None)
 
         z_response: Optional[redshift] = payload.get("z_response", None)
         z_source_max: Optional[redshift] = payload.get("z_source_max", None)
@@ -510,8 +516,16 @@ class sqla_QuadSourceIntegral_factory(SQLAFactoryBase):
 
         tags: List[store_tag] = payload.get("tags", [])
 
-        z_response_table = tables["redshift"].alias("z_resp_tab")
-        z_source_max_table = tables["redshift"].alias("z_src_max_tab")
+        z_response_tab = tables["redshift"].alias("z_resp_tab")
+        z_source_max_tab = tables["redshift"].alias("z_src_max_tab")
+        q_exit_tab = tables["wavenumber_exit_time"].alias("q_exit")
+        r_exit_tab = tables["wavenumber_exit_time"].alias("r_exit")
+        q_wavenumber_tab = tables["wavenumber"].alias("q_tab")
+        r_wavenumber_tab = tables["wavenumber"].alias("r_tab")
+        q_atol_tab = table["tolerance"].alias("q_atol")
+        q_rtol_tab = table["tolerance"].alias("q_rtol")
+        r_atol_tab = table["tolerance"].alias("r_atol")
+        r_rtol_tab = table["tolerance"].alias("r_rtol")
 
         query = (
             sqla.select(
@@ -545,29 +559,83 @@ class sqla_QuadSourceIntegral_factory(SQLAFactoryBase):
                 table.c.WKB_Levin_evaluations,
                 table.c.WKB_Levin_elapsed,
                 table.c.z_response_serial,
-                z_response_table.c.z.label("z_response"),
+                z_response_tab.c.z.label("z_response"),
                 table.c.z_source_max_serial,
-                z_source_max_table.c.z.label("z_source_max"),
+                z_source_max_tab.c.z.label("z_source_max"),
+                q_wavenumber_tab.c.serial.label("q_serial"),
+                q_wavenumber_tab.c.k_inv_Mpc.label("q_inv_Mpc"),
+                r_wavenumber_tab.c.serial.label("r_serial"),
+                r_wavenumber_tab.c.k_inv_Mpc.label("r_inv_Mpc"),
+                q_exit_tab.c.stepping.label("q_stepping"),
+                q_exit_tab.c.atol_serial.label("q_atol_serial"),
+                q_exit_tab.c.rtol_serial.label("q_rtol_serial"),
+                q_exit_tab.c.compute_time.label("q_compute_time"),
+                q_atol_tab.c.log10_tol.label("q_log10_atol"),
+                q_rtol_tab.c.log10_tol.label("q_log10_rtol"),
+                q_exit_tab.c.z_exit("q_z_exit"),
+                r_exit_tab.c.stepping.label("r_stepping"),
+                r_exit_tab.c.atol_serial.label("r_atol_serial"),
+                r_exit_tab.c.rtol_serial.label("r_rtol_serial"),
+                r_exit_tab.c.compute_time.label("r_compute_time"),
+                r_atol_tab.c.log10_tol.label("r_log10_atol"),
+                r_rtol_tab.c.log10_tol.label("r_log10_rtol"),
+                r_exit_tab.c.z_exit("r_z_exit"),
             )
             .select_from(
                 table.join(
-                    z_response_table,
-                    z_response_table.c.serial == table.c.z_response_serial,
-                ).join(
-                    z_source_max_table,
-                    z_source_max_table.c.serial == table.c.z_source_max_serial,
+                    z_response_tab,
+                    z_response_tab.c.serial == table.c.z_response_serial,
                 )
+                .join(
+                    z_source_max_tab,
+                    z_source_max_tab.c.serial == table.c.z_source_max_serial,
+                )
+                .join(
+                    q_exit_tab, q_exit_tab.c.serial == table.c.q_wavenumber_exit_serial
+                )
+                .join(
+                    r_exit_tab, r_exit_tab.c.serial == table.c.r_wavenumber_exit_serial
+                )
+                .join(
+                    q_wavenumber_tab,
+                    q_wavenumber_tab.c.serial == q_exit_tab.c.wavenumber_serial,
+                )
+                .join(
+                    r_wavenumber_tab,
+                    r_wavenumber_tab.c.serial == r_exit_tab.c.wavenumber_serial,
+                )
+                .join(q_atol_tab, q_atol_tab.c.serial == q_exit_tab.c.atol_serial)
+                .join(q_rtol_tab, q_rtol_tab.c.serial == q_exit_tab.c.rtol_serial)
+                .join(r_atol_tab, r_atol_tab.c.serial == r_exit_tab.c.atol_serial)
+                .join(r_rtol_tab, r_rtol_tab.c.serial == r_exit_tab.c.rtol_serial)
             )
             .filter(
                 table.c.model_serial == model_proxy.store_id,
                 table.c.policy_serial == policy.store_id,
                 table.c.k_wavenumber_exit_serial == k.store_id,
-                table.c.q_wavenumber_exit_serial == q.store_id,
-                table.c.r_wavenumber_exit_serial == r.store_id,
                 table.c.atol_serial == atol.store_id,
                 table.c.rtol_serial == rtol.store_id,
             )
         )
+
+        for z_offset in WAVENUMBER_EXIT_TIMES_SUPERHORIZON_EFOLDS:
+            query = query.add_columns(
+                q_exit_tab.c[f"z_exit_suph_e{z_offset}"].label(
+                    f"q_z_exit_suph_e{z_offset}"
+                ),
+                r_exit_tab.c[f"z_exit_suph_e{z_offset}"].label(
+                    f"r_z_exit_suph_e{z_offset}"
+                ),
+            )
+        for z_offset in WAVENUMBER_EXIT_TIMES_SUBHORIZON_EFOLDS:
+            query = query.add_columns(
+                q_exit_tab.c[f"z_exit_subh_e{z_offset}"].label(
+                    f"q_z_exit_subh_e{z_offset}"
+                ),
+                r_exit_tab.c[f"z_exit_subh_e{z_offset}"].label(
+                    f"r_z_exit_subh_e{z_offset}"
+                ),
+            )
 
         if q is not None:
             query = query.filter(
@@ -605,6 +673,55 @@ class sqla_QuadSourceIntegral_factory(SQLAFactoryBase):
         row_data = conn.execute(query)
 
         def make_object(row):
+            q: wavenumber = wavenumber(
+                store_id=row.q_serial, k_inv_Mpc=row.q_inv_Mpc, units=model_proxy.units
+            )
+            r: wavenumber = wavenumber(
+                store_id=row.r_serial, k_inv_Mpc=row.r_inv_Mpc, units=model_proxy.units
+            )
+
+            q_exit_payload = {
+                "store_id": row.q_serial,
+                "z_exit": row.q_z_exit,
+                "compute_time": row.q_compute_time,
+                "stepping": row.q_stepping,
+            }
+            r_exit_payload = {
+                "store_id": row.r_serial,
+                "z_exit": row.r_z_exit,
+                "compute_time": row.r_compute_time,
+                "stepping": row.r_stepping,
+            }
+            for z_offset in WAVENUMBER_EXIT_TIMES_SUPERHORIZON_EFOLDS:
+                q_exit_payload[f"z_exit_suph_e{z_offset}"] = row_data._mapping[
+                    f"q_z_exit_suph_e{z_offset}"
+                ]
+                r_exit_payload[f"z_exit_suph_e{z_offset}"] = row_data._mapping[
+                    f"r_z_exit_suph_e{z_offset}"
+                ]
+            for z_offset in WAVENUMBER_EXIT_TIMES_SUBHORIZON_EFOLDS:
+                q_exit_payload[f"z_exit_subh_e{z_offset}"] = row_data._mapping[
+                    f"q_z_exit_subh_e{z_offset}"
+                ]
+                r_exit_payload[f"z_exit_subh_e{z_offset}"] = row_data._mapping[
+                    f"r_z_exit_subh_e{z_offset}"
+                ]
+
+            q_exit: wavenumber_exit_time = wavenumber_exit_time(
+                payload=payload,
+                k=q,
+                cosmology=model_proxy.cosmology,
+                atol=tolerance(store_id=row.q_atol_serial, log10_tol=row.q_log10_atol),
+                rtol=tolerance(store_id=row.q_rtol_serial, log10_tol=row.q_log10_rtol),
+            )
+            r_exit: wavenumber_exit_time = wavenumber_exit_time(
+                payload=payload,
+                k=r,
+                cosmology=model_proxy.cosmology,
+                atol=tolerance(store_id=row.r_atol_serial, log10_tol=row.r_log10_atol),
+                rtol=tolerance(store_id=row.r_rtol_serial, log10_tol=row.r_log10_rtol),
+            )
+
             obj = QuadSourceIntegral(
                 payload={
                     "store_id": row.serial,
@@ -651,8 +768,8 @@ class sqla_QuadSourceIntegral_factory(SQLAFactoryBase):
                     store_id=row.z_source_max_serial, z=row.z_source_max
                 ),
                 k=k,
-                q=q,
-                r=r,
+                q=q_exit,
+                r=r_exit,
                 atol=atol,
                 rtol=rtol,
                 label=row.label,

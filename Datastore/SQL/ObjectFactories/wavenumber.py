@@ -3,8 +3,8 @@ from sqlalchemy.exc import MultipleResultsFound
 
 from CosmologyConcepts import wavenumber, wavenumber_exit_time
 from CosmologyConcepts.wavenumber import (
-    _WAVENUMBER_EXIT_TIMES_SUPERHORIZON_EFOLDS,
-    _WAVENUMBER_EXIT_TIMES_SUBHORIZON_EFOLDS,
+    WAVENUMBER_EXIT_TIMES_SUPERHORIZON_EFOLDS,
+    WAVENUMBER_EXIT_TIMES_SUBHORIZON_EFOLDS,
 )
 from Datastore.SQL.ObjectFactories.base import SQLAFactoryBase
 from MetadataConcepts import tolerance
@@ -108,9 +108,9 @@ class sqla_wavenumber_exit_time_factory(SQLAFactoryBase):
             sqla.Column("compute_time", sqla.Float(64)),
             sqla.Column("z_exit", sqla.Float(64)),
         ]
-        for z_offset in _WAVENUMBER_EXIT_TIMES_SUPERHORIZON_EFOLDS:
+        for z_offset in WAVENUMBER_EXIT_TIMES_SUPERHORIZON_EFOLDS:
             columns.append(sqla.Column(f"z_exit_suph_e{z_offset}", sqla.Float(64)))
-        for z_offset in _WAVENUMBER_EXIT_TIMES_SUBHORIZON_EFOLDS:
+        for z_offset in WAVENUMBER_EXIT_TIMES_SUBHORIZON_EFOLDS:
             columns.append(sqla.Column(f"z_exit_subh_e{z_offset}", sqla.Float(64)))
 
         return {
@@ -168,9 +168,9 @@ class sqla_wavenumber_exit_time_factory(SQLAFactoryBase):
                 )
                 .order_by(atol_table.c.log10_tol.desc(), rtol_table.c.log10_tol.desc())
             )
-            for z_offset in _WAVENUMBER_EXIT_TIMES_SUPERHORIZON_EFOLDS:
+            for z_offset in WAVENUMBER_EXIT_TIMES_SUPERHORIZON_EFOLDS:
                 query = query.add_columns(table.c[f"z_exit_suph_e{z_offset}"])
-            for z_offset in _WAVENUMBER_EXIT_TIMES_SUBHORIZON_EFOLDS:
+            for z_offset in WAVENUMBER_EXIT_TIMES_SUBHORIZON_EFOLDS:
                 query = query.add_columns(table.c[f"z_exit_subh_e{z_offset}"])
 
                 row_data = conn.execute(query).one_or_none()
@@ -203,11 +203,11 @@ class sqla_wavenumber_exit_time_factory(SQLAFactoryBase):
             "compute_time": compute_time,
             "stepping": stepping,
         }
-        for z_offset in _WAVENUMBER_EXIT_TIMES_SUPERHORIZON_EFOLDS:
+        for z_offset in WAVENUMBER_EXIT_TIMES_SUPERHORIZON_EFOLDS:
             payload[f"z_exit_suph_e{z_offset}"] = row_data._mapping[
                 f"z_exit_suph_e{z_offset}"
             ]
-        for z_offset in _WAVENUMBER_EXIT_TIMES_SUBHORIZON_EFOLDS:
+        for z_offset in WAVENUMBER_EXIT_TIMES_SUBHORIZON_EFOLDS:
             payload[f"z_exit_subh_e{z_offset}"] = row_data._mapping[
                 f"z_exit_subh_e{z_offset}"
             ]
@@ -242,11 +242,11 @@ class sqla_wavenumber_exit_time_factory(SQLAFactoryBase):
             "compute_time": obj.compute_time,
             "z_exit": obj.z_exit,
         }
-        for z_offset in _WAVENUMBER_EXIT_TIMES_SUPERHORIZON_EFOLDS:
+        for z_offset in WAVENUMBER_EXIT_TIMES_SUPERHORIZON_EFOLDS:
             payload[f"z_exit_suph_e{z_offset}"] = getattr(
                 obj, f"z_exit_suph_e{z_offset}"
             )
-        for z_offset in _WAVENUMBER_EXIT_TIMES_SUBHORIZON_EFOLDS:
+        for z_offset in WAVENUMBER_EXIT_TIMES_SUBHORIZON_EFOLDS:
             payload[f"z_exit_subh_e{z_offset}"] = getattr(
                 obj, f"z_exit_subh_e{z_offset}"
             )

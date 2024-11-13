@@ -89,8 +89,8 @@ class wavenumber_array:
         self._k_array = sorted(full_set, key=lambda x: x.k)
 
 
-_WAVENUMBER_EXIT_TIMES_SUPERHORIZON_EFOLDS = [1, 2, 3, 4, 5]
-_WAVENUMBER_EXIT_TIMES_SUBHORIZON_EFOLDS = [1, 2, 3, 4, 5, 6]
+WAVENUMBER_EXIT_TIMES_SUPERHORIZON_EFOLDS = [1, 2, 3, 4, 5]
+WAVENUMBER_EXIT_TIMES_SUBHORIZON_EFOLDS = [1, 2, 3, 4, 5, 6]
 
 
 @total_ordering
@@ -118,9 +118,9 @@ class wavenumber_exit_time(DatastoreObject):
             DatastoreObject.__init__(self, None)
             self._z_exit = None
 
-            for z_offset in _WAVENUMBER_EXIT_TIMES_SUPERHORIZON_EFOLDS:
+            for z_offset in WAVENUMBER_EXIT_TIMES_SUPERHORIZON_EFOLDS:
                 setattr(self, f"_z_exit_suph_e{z_offset}", None)
-            for z_offset in _WAVENUMBER_EXIT_TIMES_SUBHORIZON_EFOLDS:
+            for z_offset in WAVENUMBER_EXIT_TIMES_SUBHORIZON_EFOLDS:
                 setattr(self, f"_z_exit_subh_e{z_offset}", None)
 
             self._compute_time = None
@@ -129,13 +129,13 @@ class wavenumber_exit_time(DatastoreObject):
             DatastoreObject.__init__(self, payload["store_id"])
             self._z_exit = payload["z_exit"]
 
-            for z_offset in _WAVENUMBER_EXIT_TIMES_SUPERHORIZON_EFOLDS:
+            for z_offset in WAVENUMBER_EXIT_TIMES_SUPERHORIZON_EFOLDS:
                 setattr(
                     self,
                     f"_z_exit_suph_e{z_offset}",
                     payload[f"z_exit_suph_e{z_offset}"],
                 )
-            for z_offset in _WAVENUMBER_EXIT_TIMES_SUBHORIZON_EFOLDS:
+            for z_offset in WAVENUMBER_EXIT_TIMES_SUBHORIZON_EFOLDS:
                 setattr(
                     self,
                     f"_z_exit_subh_e{z_offset}",
@@ -175,8 +175,8 @@ class wavenumber_exit_time(DatastoreObject):
         self._compute_ref = find_horizon_exit_time.remote(
             self.cosmology,
             self.k,
-            suph_efolds=_WAVENUMBER_EXIT_TIMES_SUPERHORIZON_EFOLDS,
-            subh_efolds=_WAVENUMBER_EXIT_TIMES_SUBHORIZON_EFOLDS,
+            suph_efolds=WAVENUMBER_EXIT_TIMES_SUPERHORIZON_EFOLDS,
+            subh_efolds=WAVENUMBER_EXIT_TIMES_SUBHORIZON_EFOLDS,
             atol=self._atol.tol,
             rtol=self._rtol.tol,
         )
@@ -201,9 +201,9 @@ class wavenumber_exit_time(DatastoreObject):
 
         self._z_exit = data["z_exit"]
 
-        for z_offset in _WAVENUMBER_EXIT_TIMES_SUPERHORIZON_EFOLDS:
+        for z_offset in WAVENUMBER_EXIT_TIMES_SUPERHORIZON_EFOLDS:
             setattr(self, f"_z_exit_suph_e{z_offset}", data[f"z_exit_suph_e{z_offset}"])
-        for z_offset in _WAVENUMBER_EXIT_TIMES_SUBHORIZON_EFOLDS:
+        for z_offset in WAVENUMBER_EXIT_TIMES_SUBHORIZON_EFOLDS:
             setattr(self, f"_z_exit_subh_e{z_offset}", data[f"z_exit_subh_e{z_offset}"])
 
         self._compute_time = data["compute_time"]
@@ -246,14 +246,14 @@ class wavenumber_exit_time(DatastoreObject):
         if outside_horizon_efolds == 0:
             z_init = self._z_exit
         elif outside_horizon_efolds > 0:
-            if outside_horizon_efolds not in _WAVENUMBER_EXIT_TIMES_SUPERHORIZON_EFOLDS:
+            if outside_horizon_efolds not in WAVENUMBER_EXIT_TIMES_SUPERHORIZON_EFOLDS:
                 raise RuntimeError(
                     f"wavenumber_exit_time: z_exit + superhorizon({outside_horizon_efolds}) is not computed"
                 )
 
             z_init = getattr(self, f"z_exit_suph_e{outside_horizon_efolds}")
         elif outside_horizon_efolds < 0:
-            if outside_horizon_efolds not in _WAVENUMBER_EXIT_TIMES_SUBHORIZON_EFOLDS:
+            if outside_horizon_efolds not in WAVENUMBER_EXIT_TIMES_SUBHORIZON_EFOLDS:
                 raise RuntimeError(
                     f"wavenumber_exit_time: z_exit + subhorizon({outside_horizon_efolds}) is not computed"
                 )
@@ -290,14 +290,14 @@ def _create_accessor(attr_label):
     return accessor_template
 
 
-for z_offset in _WAVENUMBER_EXIT_TIMES_SUPERHORIZON_EFOLDS:
+for z_offset in WAVENUMBER_EXIT_TIMES_SUPERHORIZON_EFOLDS:
     setattr(
         wavenumber_exit_time,
         f"z_exit_suph_e{z_offset}",
         property(_create_accessor(f"_z_exit_suph_e{z_offset}")),
     )
 
-for z_offset in _WAVENUMBER_EXIT_TIMES_SUBHORIZON_EFOLDS:
+for z_offset in WAVENUMBER_EXIT_TIMES_SUBHORIZON_EFOLDS:
     setattr(
         wavenumber_exit_time,
         f"z_exit_subh_e{z_offset}",

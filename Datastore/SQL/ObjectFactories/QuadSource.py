@@ -104,7 +104,8 @@ class sqla_QuadSource_factory(SQLAFactoryBase):
                 ),
                 sqla.Column(
                     "r_wavenumber_exit_serial",
-                    sqla.Integer,  # Don't impose foreign key. r instances will not be held on this shard. We shard by q.
+                    sqla.Integer,
+                    sqla.ForeignKey("wavenumber_exit_time.serial"),
                     index=True,
                     nullable=False,
                 ),
