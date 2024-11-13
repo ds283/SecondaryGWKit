@@ -2246,7 +2246,7 @@ with ShardedPool(
         # So we with 250 items we could lock up about 500 Mb or probably just a bit more to account for overheads.
         # On a small machine, this might need to be reduced.
         # On a larger machine, there could be efficiencies in making the chunk size bigger.
-        qsi_work_batches = list(grouper(qsi_work_items, n=250, incomplete="fill"))
+        qsi_work_batches = list(grouper(qsi_work_items, n=750, incomplete="fill"))
 
         QuadSourceIntegral_queue = RayWorkPool(
             pool,
@@ -2257,9 +2257,9 @@ with ShardedPool(
             title="CALCULATE QUADRATIC SOURCE INTEGRALS",
             store_results=False,
             create_batch_size=1,  # we have batched the work queue into chunks ourselves, so don't process too many of these chunks at once!
-            notify_batch_size=350,
+            notify_batch_size=2000,
             notify_min_time_interval=5 * 60,
-            max_task_queue=300,  # don't allow too many tasks to build up, because the payload storage requirenments could max out the object store
-            process_batch_size=50,
+            max_task_queue=1000,  # don't allow too many tasks to build up, because the payload storage requirenments could max out the object store
+            process_batch_size=100,
         )
         QuadSourceIntegral_queue.run()
