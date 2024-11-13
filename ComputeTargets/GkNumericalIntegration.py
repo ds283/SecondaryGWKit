@@ -664,8 +664,15 @@ class GkNumericalIntegration(DatastoreObject):
 
             search_begin = getattr(self._k_exit, self._stop_search_window_start_attr)
             search_end = getattr(self._k_exit, self._stop_search_window_end_attr)
+
             if search_begin > self._z_sample.max.z + DEFAULT_FLOAT_PRECISION:
                 search_begin = self._z_sample.max.z
+
+            if search_begin > search_end:
+                raise RuntimeError(
+                    f"Search window in incorrect order (search_begin={search_begin:.5g}, search_end={search_end:.5g})"
+                )
+
             payload["stop_search_window_z_begin"] = search_begin
             payload["stop_search_window_z_end"] = search_end
 
