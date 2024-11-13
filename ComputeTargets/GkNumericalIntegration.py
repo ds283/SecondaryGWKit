@@ -352,12 +352,16 @@ def compute_Gk(
 
     sampled_z = sol.t
     sampled_values = sol.y
-    if len(sampled_values) != EXPECTED_SOL_LENGTH:
+    if len(sampled_z) > 0 and len(sampled_values) != EXPECTED_SOL_LENGTH:
         raise RuntimeError(
-            f"compute_Gk: solution does not have expected number of members (expected {EXPECTED_SOL_LENGTH}, found {len(sampled_values)}; k={k_wavenumber.k.k_inv_Mpc}/Mpc, length of sol.t={len(sampled_z)})"
+            f"compute_Gk: solution does not have expected number of members (expected {EXPECTED_SOL_LENGTH}, found {len(sampled_values)}; k={k_wavenumber.k_inv_Mpc}/Mpc, length of sol.t={len(sampled_z)})"
         )
-    sampled_G = sampled_values[G_INDEX]
-    sampled_Gprime = sampled_values[GPRIME_INDEX]
+    if len(sampled_values) > 0:
+        sampled_G = sampled_values[G_INDEX]
+        sampled_Gprime = sampled_values[GPRIME_INDEX]
+    else:
+        sampled_G = []
+        sampled_Gprime = []
 
     # if no data points returned, check if this is because the target z (ie., lowest z_response)
     # and the source z agree.
@@ -374,7 +378,7 @@ def compute_Gk(
         sampled_G.append(0.0)
         sampled_Gprime.append(1.0)
 
-    returned_values = sampled_z.size
+    returned_values = len(sampled_z)
     if mode != "stop":
         expected_values = len(z_sample)
 
@@ -665,10 +669,7 @@ class GkNumericalIntegration(DatastoreObject):
             search_begin = getattr(self._k_exit, self._stop_search_window_start_attr)
             search_end = getattr(self._k_exit, self._stop_search_window_end_attr)
 
-            if search_begin > self._z_sample.max.z + DEFAULT_FLOAT_PRECISION:
-                search_begin = self._z_sample.max.z
-
-            if search_begin > search_end:
+            if search_begin < search_end:
                 raise RuntimeError(
                     f"Search window in incorrect order (search_begin={search_begin:.5g}, search_end={search_end:.5g})"
                 )
