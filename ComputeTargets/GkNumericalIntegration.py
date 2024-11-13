@@ -230,12 +230,13 @@ def compute_Gk(
         min_z = z_sample.min.z
         if stop_search_window_z_begin > max_z:
             raise ValueError(
-                f"compute_Gk: (for k={k.k.k_inv_Mpc:.5g}/Mpc) specified 'stop' window starting redshift z={stop_search_window_z_begin:.5g} exceeds highest z-response sample point z={max_z:.5g}"
+                f"compute_Gk: (for k={k.k.k_inv_Mpc:.5g}/Mpc) specified 'stop' window starting redshift z={stop_search_window_z_begin:.5g} exceeds source redshift z_source={max_z:.5g}"
             )
         if stop_search_window_z_end < min_z:
-            raise ValueError(
+            print(
                 f"## compute_Gk: (for k={k.k.k_inv_Mpc:.5g}/Mpc) specified 'stop' window ending redshift z={stop_search_window_z_end:.5g} is smaller than lowest z-response sample point z={min_z:.5g}. Search will terminate at z={min_z:.5g}."
             )
+            stop_search_window_z_end = min_z
 
         if (
             fabs(stop_search_window_z_begin - stop_search_window_z_end)
@@ -668,6 +669,9 @@ class GkNumericalIntegration(DatastoreObject):
 
             search_begin = getattr(self._k_exit, self._stop_search_window_start_attr)
             search_end = getattr(self._k_exit, self._stop_search_window_end_attr)
+
+            if search_begin > self._z_source.z:
+                search_begin = self._z_source.z
 
             if search_begin < search_end:
                 raise RuntimeError(
