@@ -292,7 +292,11 @@ def _three_bessel_integrals(
 
     x_cut_Gk = phase_data_Gk["x_cut"]
     x_cut_Tk = phase_data_Tk["x_cut"]
-    x_cut = max(x_cut_Gk, x_cut_Tk)
+
+    # the nu = 0.5 Bessel function will have x_cut nearly zero, and in principle we can use it for almost any values
+    # of eta. But this doesn't actually produce good results, probably because of cancellations between the different
+    # phases in the 4 sin/cos integrals that are needed. In this region, we are better using ordinary numerical quadrature.
+    x_cut = max(x_cut_Gk, x_cut_Tk, 0.5)
 
     min_k_mode = min(k.k, q.k, r.k)
 
@@ -647,8 +651,13 @@ def analytic_integral(
     cs_sq = (1.0 - b) / (1.0 + b) / 3.0
 
     max_x = max(k.k, q.k, r.k) * max_eta
+
+    build_phase_start = time.perf_counter()
+
     phase_data_0pt5 = bessel_phase(0.5 + b, max_x + 10.0)
     phase_data_2pt5 = bessel_phase(2.5 + b, max_x + 10.0)
+
+    build_phase_stop = time.perf_counter()
 
     data0pt5 = _three_bessel_integrals(
         k,
@@ -684,6 +693,7 @@ def analytic_integral(
         # "max_eta": max_eta,
         # "min_eta": min_eta,
         # "eta_response": eta_response,
+        "build_phase_time": build_phase_stop - build_phase_start,
         "0pt5": data0pt5["metadata"],
         "2pt5": data2pt5["metadata"],
     }
