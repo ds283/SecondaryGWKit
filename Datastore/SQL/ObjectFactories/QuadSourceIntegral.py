@@ -522,10 +522,10 @@ class sqla_QuadSourceIntegral_factory(SQLAFactoryBase):
         r_exit_tab = tables["wavenumber_exit_time"].alias("r_exit")
         q_wavenumber_tab = tables["wavenumber"].alias("q_tab")
         r_wavenumber_tab = tables["wavenumber"].alias("r_tab")
-        q_atol_tab = table["tolerance"].alias("q_atol")
-        q_rtol_tab = table["tolerance"].alias("q_rtol")
-        r_atol_tab = table["tolerance"].alias("r_atol")
-        r_rtol_tab = table["tolerance"].alias("r_rtol")
+        q_atol_tab = tables["tolerance"].alias("q_atol")
+        q_rtol_tab = tables["tolerance"].alias("q_rtol")
+        r_atol_tab = tables["tolerance"].alias("r_atol")
+        r_rtol_tab = tables["tolerance"].alias("r_rtol")
 
         query = (
             sqla.select(
@@ -572,14 +572,14 @@ class sqla_QuadSourceIntegral_factory(SQLAFactoryBase):
                 q_exit_tab.c.compute_time.label("q_compute_time"),
                 q_atol_tab.c.log10_tol.label("q_log10_atol"),
                 q_rtol_tab.c.log10_tol.label("q_log10_rtol"),
-                q_exit_tab.c.z_exit("q_z_exit"),
+                q_exit_tab.c.z_exit.label("q_z_exit"),
                 r_exit_tab.c.stepping.label("r_stepping"),
                 r_exit_tab.c.atol_serial.label("r_atol_serial"),
                 r_exit_tab.c.rtol_serial.label("r_rtol_serial"),
                 r_exit_tab.c.compute_time.label("r_compute_time"),
                 r_atol_tab.c.log10_tol.label("r_log10_atol"),
                 r_rtol_tab.c.log10_tol.label("r_log10_rtol"),
-                r_exit_tab.c.z_exit("r_z_exit"),
+                r_exit_tab.c.z_exit.label("r_z_exit"),
             )
             .select_from(
                 table.join(
@@ -693,29 +693,29 @@ class sqla_QuadSourceIntegral_factory(SQLAFactoryBase):
                 "stepping": row.r_stepping,
             }
             for z_offset in WAVENUMBER_EXIT_TIMES_SUPERHORIZON_EFOLDS:
-                q_exit_payload[f"z_exit_suph_e{z_offset}"] = row_data._mapping[
+                q_exit_payload[f"z_exit_suph_e{z_offset}"] = row._mapping[
                     f"q_z_exit_suph_e{z_offset}"
                 ]
-                r_exit_payload[f"z_exit_suph_e{z_offset}"] = row_data._mapping[
+                r_exit_payload[f"z_exit_suph_e{z_offset}"] = row._mapping[
                     f"r_z_exit_suph_e{z_offset}"
                 ]
             for z_offset in WAVENUMBER_EXIT_TIMES_SUBHORIZON_EFOLDS:
-                q_exit_payload[f"z_exit_subh_e{z_offset}"] = row_data._mapping[
+                q_exit_payload[f"z_exit_subh_e{z_offset}"] = row._mapping[
                     f"q_z_exit_subh_e{z_offset}"
                 ]
-                r_exit_payload[f"z_exit_subh_e{z_offset}"] = row_data._mapping[
+                r_exit_payload[f"z_exit_subh_e{z_offset}"] = row._mapping[
                     f"r_z_exit_subh_e{z_offset}"
                 ]
 
             q_exit: wavenumber_exit_time = wavenumber_exit_time(
-                payload=payload,
+                payload=q_exit_payload,
                 k=q,
                 cosmology=model_proxy.cosmology,
                 atol=tolerance(store_id=row.q_atol_serial, log10_tol=row.q_log10_atol),
                 rtol=tolerance(store_id=row.q_rtol_serial, log10_tol=row.q_log10_rtol),
             )
             r_exit: wavenumber_exit_time = wavenumber_exit_time(
-                payload=payload,
+                payload=r_exit_payload,
                 k=r,
                 cosmology=model_proxy.cosmology,
                 atol=tolerance(store_id=row.r_atol_serial, log10_tol=row.r_log10_atol),

@@ -3,7 +3,7 @@ from typing import Optional
 
 import numpy as np
 import seaborn as sns
-from math import sqrt, pow, pi
+from math import sqrt, pow
 from matplotlib import pyplot as plt
 from scipy.special import jv, yv
 
@@ -45,6 +45,7 @@ def _bessel_function_plot(phase_data, b, timestamp):
     for nu_type, data in phase_data.items():
         nu = nu_types[nu_type]
 
+        x_cut = data["x_cut"]
         max_x = data["max_x"]
         x_grid = np.logspace(np.log10(1e-10), np.log10(max_x), num=250)
 
@@ -52,8 +53,7 @@ def _bessel_function_plot(phase_data, b, timestamp):
         bessel_y = data["bessel_y"]
 
         phase = data["phase"]
-        dphase = data["dphase"]
-        ddphase = data["ddphase"]
+        mod = data["mod"]
 
         j_grid = [_safe_fabs(jv(nu + b, x)) for x in x_grid]
         j_approx_grid = [_safe_fabs(bessel_j(x)) for x in x_grid]
@@ -62,8 +62,6 @@ def _bessel_function_plot(phase_data, b, timestamp):
         y_approx_grid = [_safe_fabs(bessel_y(x)) for x in x_grid]
 
         theta_grid = [_safe_fabs(phase(x)) for x in x_grid]
-        dphase_grid = [_safe_fabs(dphase(x)) for x in x_grid]
-        ddphase_grid = [_safe_fabs(ddphase(x)) for x in x_grid]
 
         fig = plt.figure()
         ax = plt.gca()
@@ -132,38 +130,6 @@ def _bessel_function_plot(phase_data, b, timestamp):
 
         plt.close()
 
-        fig = plt.figure()
-        ax = plt.gca()
-
-        ax.plot(
-            x_grid,
-            dphase_grid,
-            linestyle="solid",
-            color="g",
-            label="$\\beta = d\\theta/dx$",
-        )
-        ax.plot(
-            x_grid,
-            ddphase_grid,
-            linestyle="solid",
-            color="b",
-            label="$\\alpha = d^2\\theta/dx^2$",
-        )
-
-        set_loglog_axes(ax, inverted=False)
-
-        fig_path = base_path / nu_type / "Bessel_alpha_beta.pdf"
-        fig_path.parents[0].mkdir(exist_ok=True, parents=True)
-        fig.savefig(fig_path)
-
-        set_loglinear_axes(ax, inverted=False)
-
-        fig_path = base_path / nu_type / "Bessel_alpha_beta_linear.pdf"
-        fig_path.parents[0].mkdir(exist_ok=True, parents=True)
-        fig.savefig(fig_path)
-
-        plt.close()
-
 
 def _three_bessel_plot(k, q, r, min_eta, max_eta, b, phase_data, nu_type, timestamp):
     base_path = Path("three_bessel_debug").resolve() / f"{timestamp.isoformat()}"
@@ -180,8 +146,8 @@ def _three_bessel_plot(k, q, r, min_eta, max_eta, b, phase_data, nu_type, timest
     phase_A = phase_data_A["phase"]
     phase_B = phase_data_B["phase"]
 
-    dphase_A = phase_data_A["dphase"]
-    dphase_B = phase_data_B["dphase"]
+    mod_A = phase_data_A["mod"]
+    mod_B = phase_data_B["mod"]
 
     def j_integrand(eta):
         A = pow(eta, 1.5 - b)
@@ -212,12 +178,8 @@ def _three_bessel_plot(k, q, r, min_eta, max_eta, b, phase_data, nu_type, timest
         x2 = q.k * cs * eta
         x3 = r.k * cs * eta
 
-        beta1 = dphase_A(x1)
-        beta2 = dphase_B(x2)
-        beta3 = dphase_B(x3)
-
-        A = pow(eta, -b)
-        B = 1.0 / sqrt(beta1 * beta2 * beta3)
+        A = pow(eta, 1.5 - b)
+        B = mod_A(x1) * mod_B(x2) * mod_B(x3)
 
         gamma1 = phase_A(x1)
         gamma2 = phase_B(x2)
@@ -233,7 +195,7 @@ def _three_bessel_plot(k, q, r, min_eta, max_eta, b, phase_data, nu_type, timest
 
         C = -np.sin(P) + np.sin(Q) + np.sin(R) - np.sin(S)
 
-        norm_factor = pow(2.0 / pi, 3.0 / 2.0) / sqrt(k.k * q.k * r.k) / cs / 4.0
+        norm_factor = 1.0 / 4.0
 
         return norm_factor * A * B * C
 
@@ -242,12 +204,8 @@ def _three_bessel_plot(k, q, r, min_eta, max_eta, b, phase_data, nu_type, timest
         x2 = q.k * cs * eta
         x3 = r.k * cs * eta
 
-        beta1 = dphase_A(x1)
-        beta2 = dphase_B(x2)
-        beta3 = dphase_B(x3)
-
-        A = pow(eta, -b)
-        B = 1.0 / sqrt(beta1 * beta2 * beta3)
+        A = pow(eta, 1.5 - b)
+        B = mod_A(x1) * mod_B(x2) * mod_B(x3)
 
         gamma1 = phase_A(x1)
         gamma2 = phase_B(x2)
@@ -263,7 +221,7 @@ def _three_bessel_plot(k, q, r, min_eta, max_eta, b, phase_data, nu_type, timest
 
         C = -np.cos(P) + np.cos(Q) + np.cos(R) - np.cos(S)
 
-        norm_factor = pow(2.0 / pi, 3.0 / 2.0) / sqrt(k.k * q.k * r.k) / cs / 4.0
+        norm_factor = 1.0 / 4.0
 
         return norm_factor * A * B * C
 

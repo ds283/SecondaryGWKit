@@ -1,6 +1,5 @@
 import json
 import unittest
-from datetime import datetime
 
 from math import sqrt, pi
 
@@ -106,44 +105,6 @@ class TestBessel(unittest.TestCase):
         #     print(f"  -- region: ({region[0]}, {region[1]})")
 
     def test_three_bessel(self):
-        timestamp = datetime.now().replace(microsecond=0)
-
-        data0pt5_quad = _three_bessel_integrals(
-            self.k,
-            self.q,
-            self.r,
-            min_eta=self.min_eta,
-            max_eta=self.max_eta,
-            b=self.b,
-            phase_data={"0pt5": self.phase_data_0pt5, "2pt5": self.phase_data_2pt5},
-            nu_type="0pt5",
-            timestamp=timestamp,
-            atol=self.atol,
-            rtol=self.rtol,
-            mode="quad",
-        )
-
-        data2pt5_quad = _three_bessel_integrals(
-            self.k,
-            self.q,
-            self.r,
-            min_eta=self.min_eta,
-            max_eta=self.max_eta,
-            b=self.b,
-            phase_data={"0pt5": self.phase_data_0pt5, "2pt5": self.phase_data_2pt5},
-            nu_type="2pt5",
-            timestamp=timestamp,
-            atol=self.atol,
-            rtol=self.rtol,
-            mode="quad",
-        )
-
-        print(f"\n** 0pt5 integral data (numerical quadrature)")
-        print(json.dumps(data0pt5_quad, indent=4, sort_keys=True))
-
-        print(f"\n** 2pt5 integral data (numerical quadrature)")
-        print(json.dumps(data2pt5_quad, indent=4, sort_keys=True))
-
         data0pt5_Levin = _three_bessel_integrals(
             self.k,
             self.q,
@@ -153,11 +114,8 @@ class TestBessel(unittest.TestCase):
             b=self.b,
             phase_data={"0pt5": self.phase_data_0pt5, "2pt5": self.phase_data_2pt5},
             nu_type="0pt5",
-            timestamp=timestamp,
             atol=self.atol,
             rtol=self.rtol,
-            mode="Levin",
-            debug_plots=True,
         )
 
         data2pt5_Levin = _three_bessel_integrals(
@@ -169,17 +127,14 @@ class TestBessel(unittest.TestCase):
             b=self.b,
             phase_data={"0pt5": self.phase_data_0pt5, "2pt5": self.phase_data_2pt5},
             nu_type="2pt5",
-            timestamp=timestamp,
             atol=self.atol,
             rtol=self.rtol,
-            mode="Levin",
-            debug_plots=True,
         )
 
-        print(f"\n** 0pt5 integral data (Levin)")
+        print(f"\n** 0pt5 integral data")
         print(json.dumps(data0pt5_Levin, indent=4, sort_keys=True))
 
-        print(f"\n** 2pt5 integral data (Levin)")
+        print(f"\n** 2pt5 integral data")
         print(json.dumps(data2pt5_Levin, indent=4, sort_keys=True))
 
 

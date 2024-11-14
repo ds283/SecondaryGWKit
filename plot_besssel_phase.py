@@ -11,13 +11,13 @@ sns.set_theme()
 
 
 def plot_bessel_phase(nu: float):
-    data = bessel_phase(nu, 10.0)
-    grid_J = np.linspace(0.0, 5.0, 250)
-    grid_Y = np.linspace(0.25, 5.0, 250)
+    data = bessel_phase(nu, 100.0)
+    x_cut = data["x_cut"]
+    min_x = max(0.1, x_cut)
+    grid_J = np.linspace(min_x, 100.0, 250)
+    grid_Y = np.linspace(min_x, 100.0, 250)
 
     phase = data["phase"]
-    dphase = data["dphase"]
-    ddphase = data["ddphase"]
     bessel_j = data["bessel_j"]
     bessel_y = data["bessel_y"]
 
@@ -28,22 +28,17 @@ def plot_bessel_phase(nu: float):
     their_y_points = [yv(nu, x) for x in grid_Y]
 
     phase_points = [phase(x) for x in grid_J]
-    dphase_points = [dphase(x) for x in grid_J]
-    ddphase_points = [ddphase(x) for x in grid_J]
 
     # BESSEL PLOTS
+
+    sns.set_theme()
 
     fig = plt.figure()
     ax = plt.gca()
 
-    ax.plot(grid_J, our_j_points, linestyle="solid", color="r", label="Our $J_{\\nu}$")
+    ax.plot(grid_J, our_j_points, linestyle="solid", color="b", label="Our $J_{\\nu}$")
     ax.plot(
-        grid_J, their_j_points, linestyle="dashed", color="r", label="Their $J_{\\nu}$"
-    )
-
-    ax.plot(grid_Y, our_y_points, linestyle="solid", color="b", label="Our $Y_{\\nu}$")
-    ax.plot(
-        grid_Y, their_y_points, linestyle="dashed", color="b", label="Their $Y_{\\nu}$"
+        grid_J, their_j_points, linestyle="dashed", color="g", label="Their $J_{\\nu}$"
     )
 
     ax.set_xscale("linear")
@@ -51,7 +46,25 @@ def plot_bessel_phase(nu: float):
     ax.legend(loc="best")
     ax.grid(True)
 
-    fig_path = Path(f"bessel_plot_nu={nu:.3g}.pdf").resolve()
+    fig_path = Path(f"bessel_J_plot_nu={nu:.3g}.pdf").resolve()
+    fig_path.parents[0].mkdir(exist_ok=True, parents=True)
+    fig.savefig(fig_path)
+
+    plt.close()
+
+    fig = plt.figure()
+    ax = plt.gca()
+    ax.plot(grid_Y, our_y_points, linestyle="solid", color="b", label="Our $Y_{\\nu}$")
+    ax.plot(
+        grid_Y, their_y_points, linestyle="dashed", color="g", label="Their $Y_{\\nu}$"
+    )
+
+    ax.set_xscale("linear")
+    ax.set_yscale("linear")
+    ax.legend(loc="best")
+    ax.grid(True)
+
+    fig_path = Path(f"bessel_Y_plot_nu={nu:.3g}.pdf").resolve()
     fig_path.parents[0].mkdir(exist_ok=True, parents=True)
     fig.savefig(fig_path)
 
@@ -64,20 +77,6 @@ def plot_bessel_phase(nu: float):
 
     ax.plot(
         grid_J, phase_points, linestyle="solid", color="r", label="Phase $\\gamma(x)$"
-    )
-    ax.plot(
-        grid_J,
-        dphase_points,
-        linestyle="dashed",
-        color="b",
-        label="Derivative $\\beta(x)$",
-    )
-    ax.plot(
-        grid_J,
-        ddphase_points,
-        linestyle="dotted",
-        color="g",
-        label="2nd derivative $\\alpha(x)$",
     )
 
     ax.set_xscale("linear")
