@@ -1889,7 +1889,7 @@ with ShardedPool(
         for policy_id, policy_data in GkSourcePolicy_statistics.items():
             policy_total = policy_data["total"]
             print(f"\n     * Policy: {policy_id}")
-            print(f"        Total instances: {policy_data["total"]}")
+            print(f"        Total instances: {policy_data['total']}")
             for Gk_type, type_stats in policy_data["statistics"].items():
                 type_total = sum(type_stats.values())
                 print(
