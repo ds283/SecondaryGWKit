@@ -365,7 +365,6 @@ with ShardedPool(
 
     # embed these redshift list into the database
     z_source_array = ray.get(convert_to_redshifts(source_z_grid))
-
     z_source_sample = redshift_array(z_array=z_source_array)
 
     # we need the response sample to be a subset of the source sample, otherwise we won't have
@@ -2215,7 +2214,10 @@ with ShardedPool(
                             ReponseSparsenessZTag,
                         ],
                     ),
-                    "compute_payload": {"GkPolicy": GkPolicy, "source": source},
+                    "compute_payload": {
+                        "GkPolicy": GkPolicy,
+                        "source": source,
+                    },
                 }
             )
 

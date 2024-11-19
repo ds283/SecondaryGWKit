@@ -1,7 +1,6 @@
 import json
 import unittest
 from datetime import datetime
-
 from math import sqrt, pi
 
 from AdaptiveLevin import adaptive_levin_sincos
