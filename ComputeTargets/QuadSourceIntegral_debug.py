@@ -7,9 +7,6 @@ from math import sqrt, pow
 from matplotlib import pyplot as plt
 from scipy.special import jv, yv
 
-from AdaptiveLevin.bessel_phase import MINIMUM_X
-from thirdparty.autoscale import autoscale
-
 
 def _safe_fabs(x: Optional[float]) -> Optional[float]:
     if x is None:
@@ -38,28 +35,37 @@ def set_loglinear_axes(ax, inverted: bool = True):
         ax.xaxis.set_inverted(True)
 
 
-def _bessel_function_plot(phase_data, b, timestamp):
+def bessel_function_plot(phase_data, b, timestamp):
     nu_types = {"0pt5": 0.5, "2pt5": 2.5}
     base_path = Path("three_bessel_debug").resolve() / f"{timestamp.isoformat()}"
+
+    sns.set_theme()
 
     for nu_type, data in phase_data.items():
         nu = nu_types[nu_type]
 
-        x_cut = data["x_cut"]
+        x_cut = max(data["x_cut"], 0.5)
         max_x = data["max_x"]
-        x_grid = np.logspace(np.log10(1e-10), np.log10(max_x), num=250)
+        x_grid = np.logspace(np.log10(x_cut), np.log10(max_x), num=300)
 
         bessel_j = data["bessel_j"]
         bessel_y = data["bessel_y"]
 
         phase = data["phase"]
-        mod = data["mod"]
 
         j_grid = [_safe_fabs(jv(nu + b, x)) for x in x_grid]
         j_approx_grid = [_safe_fabs(bessel_j(x)) for x in x_grid]
+        j_abserr_grid = [_safe_fabs(bessel_j(x) - jv(nu + b, x)) for x in x_grid]
+        j_relerr_grid = [
+            _safe_fabs((bessel_j(x) - jv(nu + b, x)) / jv(nu + b, x)) for x in x_grid
+        ]
 
         y_grid = [_safe_fabs(yv(nu + b, x)) for x in x_grid]
         y_approx_grid = [_safe_fabs(bessel_y(x)) for x in x_grid]
+        y_abserr_grid = [_safe_fabs(bessel_y(x) - yv(nu + b, x)) for x in x_grid]
+        y_relerr_grid = [
+            _safe_fabs((bessel_y(x) - yv(nu + b, x)) / yv(nu + b, x)) for x in x_grid
+        ]
 
         theta_grid = [_safe_fabs(phase(x)) for x in x_grid]
 
@@ -107,6 +113,82 @@ def _bessel_function_plot(phase_data, b, timestamp):
         ax = plt.gca()
 
         ax.plot(
+            x_grid,
+            j_abserr_grid,
+            linestyle="solid",
+            color="b",
+            label="abs error in $J_{\\nu}$",
+        )
+
+        set_loglog_axes(ax, inverted=False)
+
+        fig_path = base_path / nu_type / "BesselJ_abserr.pdf"
+        fig_path.parents[0].mkdir(exist_ok=True, parents=True)
+        fig.savefig(fig_path)
+
+        plt.close()
+
+        fig = plt.figure()
+        ax = plt.gca()
+
+        ax.plot(
+            x_grid,
+            y_abserr_grid,
+            linestyle="solid",
+            color="b",
+            label="abs error in $Y_{\\nu}$",
+        )
+
+        set_loglog_axes(ax, inverted=False)
+
+        fig_path = base_path / nu_type / "BesselY_abserr.pdf"
+        fig_path.parents[0].mkdir(exist_ok=True, parents=True)
+        fig.savefig(fig_path)
+
+        plt.close()
+
+        fig = plt.figure()
+        ax = plt.gca()
+
+        ax.plot(
+            x_grid,
+            j_relerr_grid,
+            linestyle="solid",
+            color="b",
+            label="rel error in $J_{\\nu}$",
+        )
+
+        set_loglog_axes(ax, inverted=False)
+
+        fig_path = base_path / nu_type / "BesselJ_relerr.pdf"
+        fig_path.parents[0].mkdir(exist_ok=True, parents=True)
+        fig.savefig(fig_path)
+
+        plt.close()
+
+        fig = plt.figure()
+        ax = plt.gca()
+
+        ax.plot(
+            x_grid,
+            y_relerr_grid,
+            linestyle="solid",
+            color="b",
+            label="rel error in $Y_{\\nu}$",
+        )
+
+        set_loglog_axes(ax, inverted=False)
+
+        fig_path = base_path / nu_type / "BesselY_relerr.pdf"
+        fig_path.parents[0].mkdir(exist_ok=True, parents=True)
+        fig.savefig(fig_path)
+
+        plt.close()
+
+        fig = plt.figure()
+        ax = plt.gca()
+
+        ax.plot(
             x_grid, theta_grid, linestyle="solid", color="r", label="$\\theta$ phase"
         )
 
@@ -122,16 +204,16 @@ def _bessel_function_plot(phase_data, b, timestamp):
         fig_path.parents[0].mkdir(exist_ok=True, parents=True)
         fig.savefig(fig_path)
 
-        ax.set_xlim(MINIMUM_X, 5e-6)
-        autoscale(ax=ax, axis="y")
-        fig_path = base_path / nu_type / "Bessel_phase_linear_zoom.pdf"
-        fig_path.parents[0].mkdir(exist_ok=True, parents=True)
-        fig.savefig(fig_path)
+        # ax.set_xlim(MINIMUM_X, 5e-6)
+        # autoscale(ax=ax, axis="y")
+        # fig_path = base_path / nu_type / "Bessel_phase_linear_zoom.pdf"
+        # fig_path.parents[0].mkdir(exist_ok=True, parents=True)
+        # fig.savefig(fig_path)
 
         plt.close()
 
 
-def _three_bessel_plot(k, q, r, min_eta, max_eta, b, phase_data, nu_type, timestamp):
+def three_bessel_plot(k, q, r, min_eta, max_eta, b, phase_data, nu_type, timestamp):
     base_path = Path("three_bessel_debug").resolve() / f"{timestamp.isoformat()}"
     grid = np.logspace(np.log10(min_eta), np.log10(max_eta), num=250)
 

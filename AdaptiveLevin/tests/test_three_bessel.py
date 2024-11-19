@@ -1,11 +1,13 @@
 import json
 import unittest
+from datetime import datetime
 
 from math import sqrt, pi
 
 from AdaptiveLevin import adaptive_levin_sincos
 from AdaptiveLevin.bessel_phase import bessel_phase
 from ComputeTargets.QuadSourceIntegral import _three_bessel_integrals
+from ComputeTargets.QuadSourceIntegral_debug import bessel_function_plot
 from CosmologyConcepts import wavenumber
 from Units import Mpc_units
 from utilities import format_time
@@ -13,7 +15,7 @@ from utilities import format_time
 
 class TestBessel(unittest.TestCase):
 
-    atol = 1e-23
+    atol = 1e-25
     rtol = 1e-8
 
     sqrt_2_over_pi = sqrt(2.0 / pi)
@@ -27,16 +29,16 @@ class TestBessel(unittest.TestCase):
         # self.q = wavenumber(store_id=2, k_inv_Mpc=79.37005259841, units=self.units)
         # self.k = wavenumber(store_id=1, k_inv_Mpc=49999999.99999999, units=self.units)
 
-        self.r = wavenumber(store_id=3, k_inv_Mpc=49999999.99999999, units=self.units)
-        self.q = wavenumber(store_id=2, k_inv_Mpc=49999999.99999999, units=self.units)
-        self.k = wavenumber(store_id=1, k_inv_Mpc=11071.731788899118, units=self.units)
+        self.r = wavenumber(store_id=3, k_inv_Mpc=5e7, units=self.units)
+        self.q = wavenumber(store_id=2, k_inv_Mpc=11072, units=self.units)
+        self.k = wavenumber(store_id=1, k_inv_Mpc=5e7, units=self.units)
 
         self.b = 0
         self.cs_sq = (1.0 - self.b) / (1.0 + self.b) / 3.0
 
-        self.min_eta = 1.5713009646109173e-10
-        self.max_eta = 2.2066e-06
-        # self.max_eta = 7.196808204366744e-06
+        self.min_eta = 0.0000000001696765007801783
+        # self.max_eta = 0.4601909095284898
+        self.max_eta = 7.196808204366744e-06
         # self.max_eta = 5.05340787180641e-07
         # self.max_eta = 1e-5
         # self.max_eta = 1e-3
@@ -105,6 +107,10 @@ class TestBessel(unittest.TestCase):
         #     print(f"  -- region: ({region[0]}, {region[1]})")
 
     def test_three_bessel(self):
+        timestamp = datetime.now().replace(microsecond=0)
+        phase_data = {"0pt5": self.phase_data_0pt5, "2pt5": self.phase_data_2pt5}
+        bessel_function_plot(phase_data, 0.0, timestamp)
+
         data0pt5_Levin = _three_bessel_integrals(
             self.k,
             self.q,
@@ -112,7 +118,7 @@ class TestBessel(unittest.TestCase):
             min_eta=self.min_eta,
             max_eta=self.max_eta,
             b=self.b,
-            phase_data={"0pt5": self.phase_data_0pt5, "2pt5": self.phase_data_2pt5},
+            phase_data=phase_data,
             nu_type="0pt5",
             atol=self.atol,
             rtol=self.rtol,
@@ -125,7 +131,7 @@ class TestBessel(unittest.TestCase):
             min_eta=self.min_eta,
             max_eta=self.max_eta,
             b=self.b,
-            phase_data={"0pt5": self.phase_data_0pt5, "2pt5": self.phase_data_2pt5},
+            phase_data=phase_data,
             nu_type="2pt5",
             atol=self.atol,
             rtol=self.rtol,
