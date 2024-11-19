@@ -37,10 +37,14 @@ class XSplineWrapper:
             log_x = np.log(x)
 
         if raw_x < 0.99 * self._min_x:
-            raise ValueError(f"x too small (minimum value={self._min_x:.5g})")
+            raise ValueError(
+                f"x={raw_x:.5g} too small (minimum value={self._min_x:.5g})"
+            )
 
         if raw_x > 1.01 * self._max_x:
-            raise ValueError(f"x too large (maximum value={self._max_x:.5g})")
+            raise ValueError(
+                f"x={raw_x:.5g} too large (maximum value={self._max_x:.5g})"
+            )
 
         if raw_x < self._min_x:
             raw_x = self._min_x
@@ -76,9 +80,9 @@ def bessel_phase(
     # if nu > 1/2 then for small x the solution is not oscillatory, but instead exponential
     # We don't try to provide a phase function that is valid on this region
     if nu > 0.5:
-        x_cut = np.sqrt(nu * nu - 0.25)
+        min_x = np.sqrt(nu * nu - 0.25)
     else:
-        x_cut = 1e-10
+        min_x = 1e-5
 
     norm_factor = 2.0 / np.pi
 
@@ -97,7 +101,7 @@ def bessel_phase(
         dalpha_dlogx = norm_factor / m(x)
         return [dalpha_dlogx]
 
-    log_x_cut = np.log(x_cut)
+    log_x_cut = np.log(min_x)
     log_max_x = np.log(max_x)
 
     if sample_points is None or sample_points <= 0:
@@ -161,7 +165,7 @@ def bessel_phase(
 
     if match_f(bracket_lo) * match_f(bracket_hi) >= 0.0:
         raise RuntimeError(
-            f"Could not bracket phase shift phi (x_cut={x_cut:.5g}, max_x={max_x:.5g}, match_x={match_x:.5g}, log(match_x)={log_x_cut:.5g}, jv({nu}, match_x)={jv(nu, match_x):.8g}, bracket_lo={bracket_lo:.5g}, bracket_hi={bracket_hi:.5g})"
+            f"Could not bracket phase shift phi (x_cut={min_x:.5g}, max_x={max_x:.5g}, match_x={match_x:.5g}, log(match_x)={log_x_cut:.5g}, jv({nu}, match_x)={jv(nu, match_x):.8g}, bracket_lo={bracket_lo:.5g}, bracket_hi={bracket_hi:.5g})"
         )
 
     root = root_scalar(
@@ -182,20 +186,20 @@ def bessel_phase(
     phase_x, phase_y = zip(*phase_points)
     _phase_spline = InterpolatedUnivariateSpline(phase_x, phase_y, ext="raise")
 
-    phase_spline = XSplineWrapper(_phase_spline, min_x=x_cut, max_x=max_x)
-    mod_spline = XSplineWrapper(_mod_spline, min_x=x_cut, max_x=max_x)
+    phase_spline = XSplineWrapper(_phase_spline, min_x=min_x, max_x=max_x)
+    mod_spline = XSplineWrapper(_mod_spline, min_x=min_x, max_x=max_x)
 
-    def bessel_j(x: float) -> float:
-        return mod_spline(x) * np.sin(phase_spline(x))
+    def bessel_j(x: float, is_log=False) -> float:
+        return mod_spline(x, is_log=is_log) * np.sin(phase_spline(x, is_log=is_log))
 
-    def bessel_y(x: float) -> float:
-        return -mod_spline(x) * np.cos(phase_spline(x))
+    def bessel_y(x: float, is_log=False) -> float:
+        return -mod_spline(x, is_log=is_log) * np.cos(phase_spline(x, is_log=is_log))
 
     return {
         "phase": phase_spline,
         "mod": mod_spline,
         "phi": phi,
-        "x_cut": x_cut,
+        "x_cut": min_x,
         "bessel_j": bessel_j,
         "bessel_y": bessel_y,
         "max_x": max_x,
