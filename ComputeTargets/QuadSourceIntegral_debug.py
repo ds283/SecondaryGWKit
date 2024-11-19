@@ -1,9 +1,9 @@
+from math import sqrt, pow
 from pathlib import Path
 from typing import Optional
 
 import numpy as np
 import seaborn as sns
-from math import sqrt, pow
 from matplotlib import pyplot as plt
 from scipy.special import jv, yv
 
@@ -86,6 +86,7 @@ def bessel_function_plot(phase_data, b, timestamp):
         fig_path = base_path / nu_type / "BesselJ.pdf"
         fig_path.parents[0].mkdir(exist_ok=True, parents=True)
         fig.savefig(fig_path)
+        fig.savefig(fig_path.with_suffix(".png"))
 
         plt.close()
 
@@ -103,9 +104,10 @@ def bessel_function_plot(phase_data, b, timestamp):
 
         set_loglog_axes(ax, inverted=False)
 
-        fig_path = base_path / nu_type / "BesselY.pdf"
+        fig_path: Path = base_path / nu_type / "BesselY.pdf"
         fig_path.parents[0].mkdir(exist_ok=True, parents=True)
         fig.savefig(fig_path)
+        fig.savefig(fig_path.with_suffix(".png"))
 
         plt.close()
 
@@ -125,6 +127,7 @@ def bessel_function_plot(phase_data, b, timestamp):
         fig_path = base_path / nu_type / "BesselJ_abserr.pdf"
         fig_path.parents[0].mkdir(exist_ok=True, parents=True)
         fig.savefig(fig_path)
+        fig.savefig(fig_path.with_suffix(".png"))
 
         plt.close()
 
@@ -144,6 +147,7 @@ def bessel_function_plot(phase_data, b, timestamp):
         fig_path = base_path / nu_type / "BesselY_abserr.pdf"
         fig_path.parents[0].mkdir(exist_ok=True, parents=True)
         fig.savefig(fig_path)
+        fig.savefig(fig_path.with_suffix(".png"))
 
         plt.close()
 
@@ -163,6 +167,7 @@ def bessel_function_plot(phase_data, b, timestamp):
         fig_path = base_path / nu_type / "BesselJ_relerr.pdf"
         fig_path.parents[0].mkdir(exist_ok=True, parents=True)
         fig.savefig(fig_path)
+        fig.savefig(fig_path.with_suffix(".png"))
 
         plt.close()
 
@@ -182,6 +187,7 @@ def bessel_function_plot(phase_data, b, timestamp):
         fig_path = base_path / nu_type / "BesselY_relerr.pdf"
         fig_path.parents[0].mkdir(exist_ok=True, parents=True)
         fig.savefig(fig_path)
+        fig.savefig(fig_path.with_suffix(".png"))
 
         plt.close()
 
@@ -203,6 +209,7 @@ def bessel_function_plot(phase_data, b, timestamp):
         fig_path = base_path / nu_type / "Bessel_phase_linear.pdf"
         fig_path.parents[0].mkdir(exist_ok=True, parents=True)
         fig.savefig(fig_path)
+        fig.savefig(fig_path.with_suffix(".png"))
 
         # ax.set_xlim(MINIMUM_X, 5e-6)
         # autoscale(ax=ax, axis="y")
