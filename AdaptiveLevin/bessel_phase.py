@@ -1,4 +1,5 @@
 import numpy as np
+from numpy.ma.core import logical_xor
 from scipy.integrate import solve_ivp
 from scipy.interpolate import InterpolatedUnivariateSpline
 from scipy.optimize import root_scalar
@@ -65,7 +66,7 @@ def bessel_phase(
     rtol: float = DEFAULT_REL_TOLERANCE,
 ):
     """
-    Build a Liouville-Green phase function for the Bessel functions on the interval [0, max_x]
+    Build a Liouville-Green phase function for the Bessel functions on the interval [min_x, max_x]
     using the modulus method from Bremer (2022) http://arxiv.org/abs/2209.14561v2.
     We only provide the phase function back to the region where omega_eff = 0.
     :param nu:
@@ -95,29 +96,37 @@ def bessel_phase(
 
         return jsq + ysq
 
+    Q_INDEX = 0
+
     def RHS(log_x, state):
         x = np.exp(log_x)
+        Q = state[Q_INDEX]
 
-        dalpha_dlogx = norm_factor / m(x)
-        return [dalpha_dlogx]
+        dQ_dlogx = norm_factor / m(x) - Q
+        return [dQ_dlogx]
 
-    log_x_cut = np.log(min_x)
+    log_min_x = np.log(min_x)
     log_max_x = np.log(max_x)
 
     if sample_points is None or sample_points <= 0:
         sample_points = int(
-            round(DEFAULT_SAMPLE_DENSITY * (log_max_x - log_x_cut) + 0.5, 0)
+            round(DEFAULT_SAMPLE_DENSITY * (log_max_x - log_min_x) + 0.5, 0)
         )
 
-    sample_grid = np.linspace(log_x_cut, log_max_x, sample_points)
-    sample_grid = np.flip(sample_grid)
+    sample_grid = np.linspace(log_min_x, log_max_x, sample_points)
 
-    init_state = [0.0]
+    # try to build an accurate initial condition for Q
+    init_jv = jv(0.0, min_x)
+    init_sin = init_jv / m(min_x)
+    init_phase = np.asin(init_sin)
+    init_Q = init_phase / min_x
+
+    init_state = [init_Q]
 
     sol = solve_ivp(
         RHS,
         method="DOP853",
-        t_span=(log_max_x, log_x_cut),
+        t_span=(log_min_x, log_max_x),
         y0=init_state,
         t_eval=sample_grid,
         atol=atol,
@@ -126,18 +135,30 @@ def bessel_phase(
 
     if not sol.success:
         if sol.status == -1:
-            if sol.t[-1] > (1.01) * log_x_cut:
+            if sol.t[-1] > (1.01) * log_min_x:
                 raise RuntimeError(
-                    f"Final x-sample of phase function did not reach intended target (final point log(x)={sol.t[-1]:.5g}, expected log(x)={log_x_cut:.5g})"
+                    f"Final x-sample of phase function did not reach intended target (final point log(x)={sol.t[-1]:.5g}, expected log(x)={log_min_x:.5g})"
                 )
 
-    t_samples = sol.t
-    y_samples = sol.y[0]
+    log_x_samples = sol.t
+    Q_samples = sol.y[Q_INDEX]
 
-    phase_points = list(zip(t_samples, y_samples))
+    def map_phase_point(log_x, Q):
+        x = np.exp(log_x)
+        return x * Q
+
+    def map_modulus(log_x):
+        x = np.exp(log_x)
+        return np.sqrt(m(x))
+
+    phase_points = [
+        (log_x, map_phase_point(log_x, Q))
+        for (log_x, Q) in zip(log_x_samples, Q_samples)
+    ]
+    mod_points = [(log_x, map_modulus(log_x)) for (log_x, _) in phase_points]
+
     phase_points.sort(key=lambda x: x[0])
-
-    mod_points = [(log_x, np.sqrt(m(np.exp(log_x)))) for (log_x, _) in phase_points]
+    mod_points.sort(key=lambda x: x[0])
 
     phase_x, phase_y = zip(*phase_points)
     mod_x, mod_y = zip(*mod_points)
@@ -145,7 +166,15 @@ def bessel_phase(
     _phase_spline = InterpolatedUnivariateSpline(phase_x, phase_y, ext="raise")
     _mod_spline = InterpolatedUnivariateSpline(mod_x, mod_y, ext="raise")
 
-    log_match_x = max(log_x_cut, min(0.0, log_max_x))
+    # determine where we will try to match the phase
+    if log_min_x < 0.0:
+        if log_max_x > 0.0:
+            log_match_x = 0.0
+        else:
+            log_match_x = log_max_x
+    else:
+        log_match_x = log_min_x
+
     match_x = np.exp(log_match_x)
 
     stepsize = 0.1 * np.pi
@@ -165,7 +194,7 @@ def bessel_phase(
 
     if match_f(bracket_lo) * match_f(bracket_hi) >= 0.0:
         raise RuntimeError(
-            f"Could not bracket phase shift phi (x_cut={min_x:.5g}, max_x={max_x:.5g}, match_x={match_x:.5g}, log(match_x)={log_x_cut:.5g}, jv({nu}, match_x)={jv(nu, match_x):.8g}, bracket_lo={bracket_lo:.5g}, bracket_hi={bracket_hi:.5g})"
+            f"Could not bracket phase shift phi (x_cut={min_x:.5g}, max_x={max_x:.5g}, match_x={match_x:.5g}, log(match_x)={log_min_x:.5g}, jv({nu}, match_x)={jv(nu, match_x):.8g}, bracket_lo={bracket_lo:.5g}, bracket_hi={bracket_hi:.5g})"
         )
 
     root = root_scalar(
