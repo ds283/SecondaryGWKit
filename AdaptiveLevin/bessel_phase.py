@@ -1,5 +1,4 @@
 import numpy as np
-from numpy.ma.core import logical_xor
 from scipy.integrate import solve_ivp
 from scipy.interpolate import InterpolatedUnivariateSpline
 from scipy.optimize import root_scalar
@@ -102,7 +101,7 @@ def bessel_phase(
         x = np.exp(log_x)
         Q = state[Q_INDEX]
 
-        dQ_dlogx = norm_factor / m(x) - Q
+        dQ_dlogx = norm_factor / x / m(x) - Q
         return [dQ_dlogx]
 
     log_min_x = np.log(min_x)
