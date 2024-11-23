@@ -4,10 +4,10 @@ from datetime import datetime
 from math import sqrt, pi
 
 from AdaptiveLevin import adaptive_levin_sincos
-from AdaptiveLevin.bessel_phase import bessel_phase
 from ComputeTargets.QuadSourceIntegral import _three_bessel_integrals
 from ComputeTargets.QuadSourceIntegral_debug import bessel_function_plot
 from CosmologyConcepts import wavenumber
+from LiouvilleGreen.bessel_phase import bessel_phase
 from Units import Mpc_units
 from utilities import format_time
 
@@ -36,8 +36,8 @@ class TestBessel(unittest.TestCase):
         self.cs_sq = (1.0 - self.b) / (1.0 + self.b) / 3.0
 
         self.min_eta = 0.0000000001696765007801783
-        # self.max_eta = 0.4601909095284898
-        self.max_eta = 7.196808204366744e-06
+        self.max_eta = 0.4601909095284898
+        # self.max_eta = 7.196808204366744e-06
         # self.max_eta = 5.05340787180641e-07
         # self.max_eta = 1e-5
         # self.max_eta = 1e-3

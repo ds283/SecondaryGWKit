@@ -5,7 +5,7 @@ import numpy as np
 import seaborn as sns
 from scipy.special import jv, yv
 
-from AdaptiveLevin.bessel_phase import bessel_phase
+from LiouvilleGreen.bessel_phase import bessel_phase
 
 sns.set_theme()
 
