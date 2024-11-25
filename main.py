@@ -450,7 +450,7 @@ with ShardedPool(
     b_value = 0.0
 
     print(
-        f"   -- largest source k = {largest_source_k:.5g}/Mpc, latest tau = {largest_tau:.5g} (for z={zend:.5g}), largest x={largest_x:.5g}, largest x with 7.5% clearance={largest_x_with_clearance:.5g}"
+        f"   @@ largest source k = {largest_source_k.k_inv_Mpc:.5g}/Mpc, latest tau = {largest_tau:.5g} (for z={zend:.5g}), largest x={largest_x:.5g}, largest x with 7.5% clearance={largest_x_with_clearance:.5g}"
     )
 
     Bessel_0pt5 = bessel_phase(0.5 + b_value, largest_x_with_clearance)
@@ -460,7 +460,7 @@ with ShardedPool(
     Bessel_2pt5_proxy = BesselPhaseProxy(Bessel_2pt5)
 
     phase_end = time.perf_counter()
-    print(f"   -- constructed splines in time {format_time(phase_end - phase_start)}")
+    print(f"   @@ constructed splines in time {format_time(phase_end - phase_start)}")
 
     ## STEP 2
     ## COMPUTE MATTER TRANSFER FUNCTIONS
