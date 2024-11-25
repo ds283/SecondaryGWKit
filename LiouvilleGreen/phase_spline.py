@@ -270,6 +270,7 @@ class phase_spline:
         last_min_log_x = None
         last_max_log_x = None
 
+        # check that chunks have ascending x-ranges
         for chunk in self._chunk_list:
             start, end = chunk
             data = self._spline_points[chunk]
@@ -282,12 +283,16 @@ class phase_spline:
                 )
             if last_max_log_x is not None and spline.max_log_x <= last_max_log_x:
                 raise RuntimeError(
-                    "phase_spline: chinks are not in increasing max_x-order"
+                    "phase_spline: chunks are not in increasing max_x-order"
                 )
 
             self._splines[chunk] = spline
             last_min_log_x = spline.min_log_x
             last_max_log_x = spline.max_log_x
+
+        print(
+            f"## Built phase_spline objecting containing {len(self._splines)} chunks: {self._chunk_list}"
+        )
 
     def _match_chunk(self, log_x: float):
         num_chunks = len(self._chunk_list)
@@ -390,7 +395,7 @@ class phase_spline:
         # the available chunks fall strictly between the two
         assert lower_bound + 1 <= upper_bound - 1
 
-        chunk_index = []
+        chunk_penalties = []
         i = lower_bound + 1
         while i < upper_bound:
             spline = self._splines[self._chunk_list[i]]
@@ -402,12 +407,15 @@ class phase_spline:
 
             # penalize this chunk based on how far we are from the centre;
             metric = pow(0.5 - rel_pos, 2.0)
-            chunk_index.append((i, metric))
+            chunk_penalties.append((i, metric))
 
-        # find chunk with smallest penalty
-        chunk_index.sort(key=lambda x: x[1], reverse=True)
+        # find chunk with the smallest penalty
+        chunk_penalties.sort(key=lambda x: x[1], reverse=True)
+        print(
+            f">> found {len(chunk_penalties)} candidate chunks for log_x={log_x:.5g} with penalties {chunk_penalties}"
+        )
 
-        return self._splines[self._chunk_list[chunk_index[0][0]]]
+        return self._splines[self._chunk_list[chunk_penalties[0][0]]]
 
     def raw_theta(self, x: float, x_is_log: bool = False) -> float:
         if x_is_log:

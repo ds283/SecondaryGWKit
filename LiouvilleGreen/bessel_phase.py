@@ -6,6 +6,7 @@ from scipy.special import yv, jv
 
 from defaults import DEFAULT_ABS_TOLERANCE, DEFAULT_REL_TOLERANCE
 from .phase_spline import phase_spline
+from .range_reduce_mod_2pi import _simple_div_mod
 
 DEFAULT_SAMPLE_DENSITY = 250
 
@@ -215,8 +216,8 @@ def bessel_phase(
     theta_points = [(log_x, alpha - phi) for (log_x, alpha) in theta_points]
 
     phase_log_x = [p[0] for p in theta_points]
-    phase_div_2pi = [np.fmod(p[1], _twopi) for p in theta_points]
-    phase_mod_2pi = [np.fmod(p[1], _twopi) for p in theta_points]
+    phase_div_2pi = [_simple_div_mod(p[1])[0] for p in theta_points]
+    phase_mod_2pi = [_simple_div_mod(p[1])[1] for p in theta_points]
 
     theta_spline = phase_spline(
         phase_log_x, phase_div_2pi, phase_mod_2pi, x_is_log=True
