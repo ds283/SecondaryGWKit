@@ -5,10 +5,13 @@ from scipy.optimize import root_scalar
 from scipy.special import yv, jv
 
 from defaults import DEFAULT_ABS_TOLERANCE, DEFAULT_REL_TOLERANCE
+from .phase_spline import phase_spline
 
 DEFAULT_SAMPLE_DENSITY = 250
 
 MINIMUM_X = 1e-12
+
+_twopi = 2.0 * np.pi
 
 
 def _weff_sq(nu: float, x: float):
@@ -114,7 +117,7 @@ def bessel_phase(
 
     sample_grid = np.linspace(log_min_x, log_max_x, sample_points)
 
-    # try to build an accurate initial condition for Q
+    # try to build an accurate initial condition for Q by comparison with the numerical Bessel function
     init_jv = jv(0.0, min_x)
     init_sin = init_jv / m(min_x)
     init_phase = np.asin(init_sin)
@@ -150,19 +153,19 @@ def bessel_phase(
         x = np.exp(log_x)
         return np.sqrt(m(x))
 
-    phase_points = [
+    theta_points = [
         (log_x, map_phase_point(log_x, Q))
         for (log_x, Q) in zip(log_x_samples, Q_samples)
     ]
-    mod_points = [(log_x, map_modulus(log_x)) for (log_x, _) in phase_points]
+    mod_points = [(log_x, map_modulus(log_x)) for (log_x, _) in theta_points]
 
-    phase_points.sort(key=lambda x: x[0])
+    theta_points.sort(key=lambda x: x[0])
     mod_points.sort(key=lambda x: x[0])
 
-    phase_x, phase_y = zip(*phase_points)
+    phase_log_x, phase_y = zip(*theta_points)
     mod_x, mod_y = zip(*mod_points)
 
-    _phase_spline = InterpolatedUnivariateSpline(phase_x, phase_y, ext="raise")
+    _pre_theta_spline = InterpolatedUnivariateSpline(phase_log_x, phase_y, ext="raise")
     _mod_spline = InterpolatedUnivariateSpline(mod_x, mod_y, ext="raise")
 
     # determine where we will try to match the phase
@@ -177,13 +180,13 @@ def bessel_phase(
     match_x = np.exp(log_match_x)
 
     stepsize = 0.1 * np.pi
-    bracket_lo = _phase_spline(log_match_x) - np.pi / 2.0
+    bracket_lo = _pre_theta_spline(log_match_x) - np.pi / 2.0
     bracket_hi = bracket_lo + stepsize
 
     def match_f(phi):
-        return _mod_spline(log_match_x) * np.sin(_phase_spline(log_match_x) - phi) - jv(
-            nu, match_x
-        )
+        return _mod_spline(log_match_x) * np.sin(
+            _pre_theta_spline(log_match_x) - phi
+        ) - jv(nu, match_x)
 
     while (
         match_f(bracket_lo) * match_f(bracket_hi) >= 0.0
@@ -209,22 +212,29 @@ def bessel_phase(
         )
 
     phi = root.root
-    phase_points = [(log_x, alpha - phi) for (log_x, alpha) in phase_points]
+    theta_points = [(log_x, alpha - phi) for (log_x, alpha) in theta_points]
 
-    phase_x, phase_y = zip(*phase_points)
-    _phase_spline = InterpolatedUnivariateSpline(phase_x, phase_y, ext="raise")
+    phase_log_x = [p[0] for p in theta_points]
+    phase_div_2pi = [np.fmod(p[1], _twopi) for p in theta_points]
+    phase_mod_2pi = [np.fmod(p[1], _twopi) for p in theta_points]
 
-    phase_spline = XSplineWrapper(_phase_spline, min_x=min_x, max_x=max_x)
+    theta_spline = phase_spline(
+        phase_log_x, phase_div_2pi, phase_mod_2pi, x_is_log=True
+    )
     mod_spline = XSplineWrapper(_mod_spline, min_x=min_x, max_x=max_x)
 
     def bessel_j(x: float, is_log=False) -> float:
-        return mod_spline(x, is_log=is_log) * np.sin(phase_spline(x, is_log=is_log))
+        return mod_spline(x, is_log=is_log) * np.sin(
+            theta_spline.theta_mod_2pi(x, x_is_log=is_log)
+        )
 
     def bessel_y(x: float, is_log=False) -> float:
-        return -mod_spline(x, is_log=is_log) * np.cos(phase_spline(x, is_log=is_log))
+        return -mod_spline(x, is_log=is_log) * np.cos(
+            theta_spline.theta_mod_2pi(x, x_is_log=is_log)
+        )
 
     return {
-        "phase": phase_spline,
+        "phase": theta_spline,
         "mod": mod_spline,
         "phi": phi,
         "x_cut": min_x,

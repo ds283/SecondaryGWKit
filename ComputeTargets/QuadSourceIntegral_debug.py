@@ -67,7 +67,7 @@ def bessel_function_plot(phase_data, b, timestamp):
             _safe_fabs((bessel_y(x) - yv(nu + b, x)) / yv(nu + b, x)) for x in x_grid
         ]
 
-        theta_grid = [_safe_fabs(phase(x)) for x in x_grid]
+        theta_grid = [_safe_fabs(phase.raw_theta(x)) for x in x_grid]
 
         fig = plt.figure()
         ax = plt.gca()
