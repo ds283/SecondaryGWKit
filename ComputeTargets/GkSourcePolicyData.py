@@ -101,34 +101,33 @@ def _classify_Levin(source: GkSource, policy: GkSourcePolicy, data) -> dict:
         )
         min_z = source.z_sample.min.z
         WKB_data = _build_WKB_values(source, max_z=max_z, min_z=min_z)
-        theta_data = [
-            (
-                log(1.0 + v.z_source.z),
-                v.WKB.theta,
-            )
-            for v in WKB_data
-        ]
-        theta_x, theta_y = zip(*theta_data)
-        theta_spline = InterpolatedUnivariateSpline(theta_x, theta_y, ext="raise")
 
-        # mark as deriv=False so that we get the raw spline deritive d theta / d log(1+z)
-        # We are eventually going to do the Levin quadrature in log(1+z), so it is the
-        # frequency of oscillation with respect to log(1+z) that matters
-        theta_deriv = ZSplineWrapper(
-            theta_spline.derivative(),
-            "theta derivative",
-            max_z,
-            min_z,
-            log_z=True,
-            deriv=False,
+        log_x_points = [log(1.0 + v.z_source.z) for v in WKB_data]
+        theta_div_2pi_points = [v.WKB.theta_div_2pi for v in WKB_data]
+        theta_mod_2pi_points = [v.WKB.theta_mod_2pi for v in WKB_data]
+        theta_spline: phase_spline = phase_spline(
+            log_x_points,
+            theta_div_2pi_points,
+            theta_mod_2pi_points,
+            x_is_log=True,
+            x_is_redshift=True,
+            chunk_step=None,
+            chunk_logstep=50,
         )
 
+        # notice the derivative computing using theta_spline will give us d theta / d log(1+z),
+        # because the spline is stored internally with respect to log(1+z)
+        # We are eventually going to do the Levin quadrature in log(1+z), so it is the
+        # frequency of oscillation with respect to log(1+z) that matters
         # _z_sample is guaranteed to be in descending order of redshift
+
         for z_source in source.z_sample:
             if max_z >= z_source.z >= min_z:
-                if fabs(theta_deriv(z_source.z)) > policy.Levin_threshold:
+                if fabs(theta_spline.theta_deriv(z_source.z)) > policy.Levin_threshold:
                     payload["Levin_z"] = z_source
-                    metadata["Levin_z_dtheta_dz"] = float(theta_deriv(z_source.z))
+                    metadata["Levin_z_dtheta_dz"] = float(
+                        theta_spline.theta_deriv(z_source.z)
+                    )
                     break
 
     if "Levin_z" not in payload:
@@ -484,8 +483,7 @@ class GkSourcePolicyData(DatastoreObject):
 
         WKB_region = None
         WKB_Gk = None
-        WKB_theta = None
-        WKB_theta_deriv = None
+        WKB_theta_spline = None
         WKB_sin_amplitude = None
         if source.primary_WKB_largest_z is not None:
             max_z = source.primary_WKB_largest_z
@@ -544,17 +542,18 @@ class GkSourcePolicyData(DatastoreObject):
                 theta_x_points = [log(1.0 + v.z_source.z) for v in WKB_data]
                 theta_div_2pi_points = [v.WKB.theta_div_2pi for v in WKB_data]
                 theta_mod_2pi_points = [v.WKB.theta_mod_2pi for v in WKB_data]
-                _theta_spline = phase_spline(
+                WKB_theta_spline = phase_spline(
                     theta_x_points,
                     theta_div_2pi_points,
                     theta_mod_2pi_points,
                     x_is_log=True,
+                    x_is_redshift=True,
                     chunk_step=None,
                     chunk_logstep=50,
                 )
 
                 WKB_Gk = GkWKBSplineWrapper(
-                    _theta_spline,
+                    WKB_theta_spline,
                     _sin_amplitude_spline,
                     None,
                     "Gk WKB",
@@ -570,7 +569,7 @@ class GkSourcePolicyData(DatastoreObject):
             numerical_Gk=numerical_Gk,
             WKB_region=WKB_region,
             WKB_Gk=WKB_Gk,
-            phase=_theta_spline,
+            phase=WKB_theta_spline,
             sin_amplitude=WKB_sin_amplitude,
             type=self._type,
             quality=self._quality,

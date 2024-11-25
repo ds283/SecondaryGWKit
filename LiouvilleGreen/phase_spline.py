@@ -19,14 +19,16 @@ class _chunk_spline:
         div_2pi_base: int,
         data: Iterable[dict[str, float]],
         x_is_log: bool = False,
+        x_is_redshift: bool = False,
     ):
-        self._div_2pi_base = div_2pi_base
+        self._x_is_redshift: bool = x_is_redshift
+        self._div_2pi_base: int = div_2pi_base
 
         # cache supplied values
         self._data = data
         self._x_sample = [p["x"] for p in data]
 
-        self.data_points = len(self._data)
+        self.data_points: int = len(self._data)
 
         # build set of y values, but rebased mod 2pi so that all values are close to zero
         # in this way, we hope to avoid loss of precision when the result of the spline is evaluated mod 2pi, as it typically
@@ -68,16 +70,16 @@ class _chunk_spline:
                 f"chunk_spline: spline evaluated out-of-bounds of upper limit at log_x={log_x:.5g} (raw x={raw_x:.5g}) | Maximum allowed value is log_x={self._max_safe_log_x:.5g} (raw x={self._max_safe_x:.5g}) | Recommended safe maximum is log_x={self._max_safe_log_x:.5g} (raw x={self._max_safe_x:.5g})"
             )
 
-        if warn_unsafe:
-            if log_x < self._min_safe_log_x:
-                print(
-                    f"## WARNING (chunk_spline): chunk spline evaluated within 5% of lower limit at log_x={log_x:.5g} (raw={raw_x:.5g}) | Recommended safe minimum is log_x={self._min_safe_log_x:.5g} (raw x={self._min_safe_x:.5g})"
-                )
-
-            if log_x > self._max_safe_log_x:
-                print(
-                    f"## WARNING (chunk_spline): chunk spline evaluated within 5% of upper limit at log_x={log_x:.5g} (raw={raw_x:.5g}) | Recommended safe maximum is log_x={self._max_safe_log_x:.5g} (raw x={self._max_safe_x:.5g})"
-                )
+        # if warn_unsafe:
+        #     if log_x < self._min_safe_log_x:
+        #         print(
+        #             f"## WARNING (chunk_spline): chunk spline evaluated within 5% of lower limit at log_x={log_x:.5g} (raw={raw_x:.5g}) | Recommended safe minimum is log_x={self._min_safe_log_x:.5g} (raw x={self._min_safe_x:.5g})"
+        #         )
+        #
+        #     if log_x > self._max_safe_log_x:
+        #         print(
+        #             f"## WARNING (chunk_spline): chunk spline evaluated within 5% of upper limit at log_x={log_x:.5g} (raw={raw_x:.5g}) | Recommended safe maximum is log_x={self._max_safe_log_x:.5g} (raw x={self._max_safe_x:.5g})"
+        #         )
 
         return self._spline(log_x)
 
@@ -94,16 +96,16 @@ class _chunk_spline:
                 f"chunk_spline: spline evaluated out-of-bounds of upper limit at log_x={log_x:.5g} (raw x={raw_x:.5g}) | Maximum allowed value is log_x={self._max_safe_log_x:.5g} (raw x={self._max_safe_x:.5g}) | Recommended safe maximum is log_x={self._max_safe_log_x:.5g} (raw x={self._max_safe_x:.5g})"
             )
 
-        if warn_unsafe:
-            if log_x < self._min_safe_log_x:
-                print(
-                    f"## WARNING (chunk_spline): chunk spline evaluated within 5% of lower limit at log_x={log_x:.5g} (raw={raw_x:.5g}) | Recommended safe minimum is log_x={self._min_safe_log_x:.5g} (raw x={self._min_safe_x:.5g})"
-                )
-
-            if log_x > self._max_safe_log_x:
-                print(
-                    f"## WARNING (chunk_spline): chunk spline evaluated within 5% of upper limit at log_x={log_x:.5g} (raw={raw_x:.5g}) | Recommended safe maximum is log_x={self._max_safe_log_x:.5g} (raw x={self._max_safe_x:.5g})"
-                )
+        # if warn_unsafe:
+        #     if log_x < self._min_safe_log_x:
+        #         print(
+        #             f"## WARNING (chunk_spline): chunk spline evaluated within 5% of lower limit at log_x={log_x:.5g} (raw={raw_x:.5g}) | Recommended safe minimum is log_x={self._min_safe_log_x:.5g} (raw x={self._min_safe_x:.5g})"
+        #         )
+        #
+        #     if log_x > self._max_safe_log_x:
+        #         print(
+        #             f"## WARNING (chunk_spline): chunk spline evaluated within 5% of upper limit at log_x={log_x:.5g} (raw={raw_x:.5g}) | Recommended safe maximum is log_x={self._max_safe_log_x:.5g} (raw x={self._max_safe_x:.5g})"
+        #         )
 
         return self._derivative(log_x)
 
@@ -129,8 +131,12 @@ class _chunk_spline:
             )
 
         if x_is_log:
+            if self._x_is_redshift:
+                return exp(x) - 1.0, x
             return exp(x), x
 
+        if self._x_is_redshift:
+            return x, log(1.0 + x)
         return x, log(x)
 
     def raw_theta(
@@ -185,6 +191,7 @@ class phase_spline:
         chunk_step: Optional[int] = DEFAULT_CHUNK_SIZE,
         chunk_logstep: Optional[float] = None,
         x_is_log: bool = False,
+        x_is_redshift: bool = False,
     ):
         if len(x_sample) == 0:
             raise RuntimeError("phase_spline: empty x_sample")
@@ -192,8 +199,10 @@ class phase_spline:
         assert len(x_sample) == len(theta_div_2pi_sample)
         assert len(x_sample) == len(theta_mod_2pi_sample)
 
-        self._min_div_2pi = min(theta_div_2pi_sample)
-        self._max_div_2pi = max(theta_div_2pi_sample)
+        self._x_is_redshift: bool = x_is_redshift
+
+        self._min_div_2pi: int = min(theta_div_2pi_sample)
+        self._max_div_2pi: int = max(theta_div_2pi_sample)
 
         self._spline_points = {}
 
@@ -275,7 +284,12 @@ class phase_spline:
             start, end = chunk
             data = self._spline_points[chunk]
 
-            spline = _chunk_spline(div_2pi_base=start, data=data, x_is_log=x_is_log)
+            spline = _chunk_spline(
+                div_2pi_base=start,
+                data=data,
+                x_is_log=x_is_log,
+                x_is_redshift=x_is_redshift,
+            )
 
             if last_min_log_x is not None and spline.min_log_x <= last_min_log_x:
                 raise RuntimeError(
@@ -471,35 +485,27 @@ class phase_spline:
 
         return self._splines[self._chunk_list[chunk_penalties[0][0]]]
 
-    def raw_theta(self, x: float, x_is_log: bool = False) -> float:
+    def _get_raw_log_x(self, x: float, x_is_log: bool):
         if x_is_log:
-            raw_x = exp(x)
-            log_x = x
-        else:
-            raw_x = x
-            log_x = log(x)
+            if self._x_is_redshift:
+                return exp(x) - 1.0, x
+            return exp(x), x
 
+        if self._x_is_redshift:
+            return x, log(1.0 + x)
+        return x, log(x)
+
+    def raw_theta(self, x: float, x_is_log: bool = False) -> float:
+        raw_x, log_x = self._get_raw_log_x(x, x_is_log)
         spline = self._match_chunk(log_x)
         return spline.raw_theta(raw_x=raw_x, log_x=log_x)
 
     def theta_mod_2pi(self, x: float, x_is_log: bool = False) -> float:
-        if x_is_log:
-            raw_x = exp(x)
-            log_x = x
-        else:
-            raw_x = x
-            log_x = log(x)
-
+        raw_x, log_x = self._get_raw_log_x(x, x_is_log)
         spline = self._match_chunk(log_x)
         return spline.theta_mod_2pi(raw_x=raw_x, log_x=log_x)
 
     def theta_deriv(self, x: float, x_is_log: bool = False) -> float:
-        if x_is_log:
-            raw_x = exp(x)
-            log_x = x
-        else:
-            raw_x = x
-            log_x = log(x)
-
+        raw_x, log_x = self._get_raw_log_x(x, x_is_log)
         spline = self._match_chunk(log_x)
         return spline.theta_deriv(raw_x=raw_x, log_x=log_x)
