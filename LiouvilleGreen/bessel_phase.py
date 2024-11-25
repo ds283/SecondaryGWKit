@@ -212,15 +212,45 @@ def bessel_phase(
             f'root_scalar() did not converge to a solution: x_bracket=({bracket_lo:.5g}, {bracket_hi:.5g}), iterations={root.iterations}, method={root.method}: "{root.flag}"'
         )
 
+    # rebase phase to account for the offset we have computed
     phi = root.root
-    theta_points = [(log_x, alpha - phi) for (log_x, alpha) in theta_points]
+    phi_div_2pi, phi_mod_2pi = _simple_div_mod(phi)
 
-    phase_log_x = [p[0] for p in theta_points]
-    phase_div_2pi = [_simple_div_mod(p[1])[0] for p in theta_points]
-    phase_mod_2pi = [_simple_div_mod(p[1])[1] for p in theta_points]
+    def range_reduce_phase(log_x, Q):
+        x = np.exp(log_x)
+        # div_2pi, mod_2pi = range_reduce_mod_2pi(x, Q)
+        div_2pi, mod_2pi = _simple_div_mod(x * Q)
+
+        div_2pi = div_2pi - phi_div_2pi
+        mod_2pi = mod_2pi - phi_mod_2pi
+        if mod_2pi < 0.0:
+            div_2pi = div_2pi - 1
+            mod_2pi = mod_2pi + _twopi
+
+        # if div_2pi < 0:
+        #     raw_div_2pi, raw_mod_2pi = range_reduce_mod_2pi(x, Q)
+        #     raise RuntimeError(
+        #         f"bessel_phase: found negative phase div 2pi: log_x={log_x:.5g}, x={x:.5g}, Q={Q:.5g}, xQ div 2pi={raw_div_2pi}, xQ mod 2pi={raw_mod_2pi:.5g}, (xQ - phi) div 2pi={div_2pi}, (xQ - phi) mod 2pi={mod_2pi:.5g}, phi={phi:.5g}, phi div 2pi={phi_div_2pi}, phi mod 2pi={phi_mod_2pi:.5g}"
+        #     )
+
+        return div_2pi, mod_2pi
+
+    phase_div_mod_2pi = [
+        range_reduce_phase(log_x, Q) for (log_x, Q) in zip(log_x_samples, Q_samples)
+    ]
+
+    phase_div_2pi, phase_mod_2pi = zip(*phase_div_mod_2pi)
+    min_phase_div_2pi = min(phase_div_2pi)
+    if min_phase_div_2pi < 0:
+        phase_div_2pi = [x - min_phase_div_2pi for x in phase_div_2pi]
 
     theta_spline = phase_spline(
-        phase_log_x, phase_div_2pi, phase_mod_2pi, x_is_log=True
+        log_x_samples,
+        phase_div_2pi,
+        phase_mod_2pi,
+        x_is_log=True,
+        chunk_step=None,
+        chunk_logstep=50.0,
     )
     mod_spline = XSplineWrapper(_mod_spline, min_x=min_x, max_x=max_x)
 

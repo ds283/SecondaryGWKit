@@ -1,5 +1,5 @@
 from math import pi, log, exp, fmod
-from typing import Iterable, Tuple
+from typing import Iterable, Tuple, Optional
 
 from scipy.interpolate import InterpolatedUnivariateSpline
 
@@ -23,8 +23,10 @@ class _chunk_spline:
         self._div_2pi_base = div_2pi_base
 
         # cache supplied values
-        self._points = data
+        self._data = data
         self._x_sample = [p["x"] for p in data]
+
+        self.data_points = len(self._data)
 
         # build set of y values, but rebased mod 2pi so that all values are close to zero
         # in this way, we hope to avoid loss of precision when the result of the spline is evaluated mod 2pi, as it typically
@@ -133,9 +135,9 @@ class _chunk_spline:
 
     def raw_theta(
         self,
-        x: float = None,
-        raw_x: float = None,
-        log_x: float = None,
+        x: Optional[float] = None,
+        raw_x: Optional[float] = None,
+        log_x: Optional[float] = None,
         x_is_log: bool = False,
         warn_unsafe: bool = True,
     ) -> float:
@@ -145,9 +147,9 @@ class _chunk_spline:
 
     def theta_mod_2pi(
         self,
-        x: float = None,
-        raw_x: float = None,
-        log_x: float = None,
+        x: Optional[float] = None,
+        raw_x: Optional[float] = None,
+        log_x: Optional[float] = None,
         x_is_log: bool = False,
         warn_unsafe: bool = True,
     ) -> float:
@@ -157,9 +159,9 @@ class _chunk_spline:
 
     def theta_deriv(
         self,
-        x: float = None,
-        raw_x: float = None,
-        log_x: float = None,
+        x: Optional[float] = None,
+        raw_x: Optional[float] = None,
+        log_x: Optional[float] = None,
         x_is_log: bool = False,
         warn_unsafe: bool = True,
     ) -> float:
@@ -180,7 +182,8 @@ class phase_spline:
         x_sample: Iterable[float],
         theta_div_2pi_sample: Iterable[int],
         theta_mod_2pi_sample: Iterable[float],
-        chunk_size: int = DEFAULT_CHUNK_SIZE,
+        chunk_step: Optional[int] = DEFAULT_CHUNK_SIZE,
+        chunk_logstep: Optional[float] = None,
         x_is_log: bool = False,
     ):
         if len(x_sample) == 0:
@@ -192,9 +195,6 @@ class phase_spline:
         self._min_div_2pi = min(theta_div_2pi_sample)
         self._max_div_2pi = max(theta_div_2pi_sample)
 
-        self._chunk_size = chunk_size
-        self._chunk_step = int(round(0.75 * chunk_size + 0.5, 0))
-
         self._spline_points = {}
 
         # Sift through the set of points supplied
@@ -202,14 +202,14 @@ class phase_spline:
         # for smaller chunks. The numerical value of theta computed in each chunk is rebased so that it is close to zero.
         # This is intended to avoid loss of precision when we compute the spline mod 2pi.
 
-        # compute the range of value of div 2pi that should be included in each chunk
-        # we allow a 25% overlap for each chunk
-        chunk_start = self._min_div_2pi
-
-        while chunk_start <= self._max_div_2pi:
-            chunk_end = chunk_start + self._chunk_size
-            self._spline_points[(chunk_start, chunk_end)] = []
-            chunk_start = chunk_start + self._chunk_step
+        if chunk_step is not None:
+            self._build_linear_chunks(chunk_step)
+        elif chunk_logstep is not None:
+            self._build_log_chunks(chunk_logstep)
+        else:
+            raise RuntimeError(
+                "phase_spline: either chunk_step or chunk_logstep must be supplied"
+            )
 
         # sift through the supplied data points, adding them to chunks whatever chunks they fall within
         for i in range(len(x_sample)):
@@ -290,9 +290,47 @@ class phase_spline:
             last_min_log_x = spline.min_log_x
             last_max_log_x = spline.max_log_x
 
-        print(
-            f"## Built phase_spline objecting containing {len(self._splines)} chunks: {self._chunk_list}"
-        )
+        # print(
+        #     f"## Built phase_spline object containing {len(self._splines)} chunks: (min theta dvi 2pi = {self._min_div_2pi}, max theta dvi 2pi = {self._max_div_2pi})"
+        # )
+        # for chunk in self._chunk_list:
+        #     start, end = chunk
+        #     spline = self._splines[chunk]
+        #     print(f"   -- chunk: [{start}, {end}) | {spline.data_points} data points")
+
+    def _build_linear_chunks(self, chunk_step: int):
+        self._chunk_step = int(chunk_step)
+
+        # compute the range of value of div 2pi that should be included in each chunk
+        # we allow a 25% overlap for each chunk
+        chunk_start = int(self._min_div_2pi)
+        chunk_final = int(self._max_div_2pi)
+
+        while chunk_start <= chunk_final:
+            chunk_end = chunk_start + self._chunk_step
+            self._spline_points[(chunk_start, chunk_end)] = []
+            chunk_start = int(round(chunk_start + 0.75 * self._chunk_step - 0.5, 0))
+
+    def _build_log_chunks(self, chunk_logstep: float):
+        self._chunk_logstep = float(chunk_logstep)
+
+        chunk_start = int(self._min_div_2pi)
+        chunk_final = int(self._max_div_2pi)
+
+        if chunk_start < 0:
+            raise RuntimeError(
+                "phase_spline: cannot use negative div2pi values with logarithmic spacing"
+            )
+
+        while chunk_start <= chunk_final:
+            if chunk_start == 0:
+                chunk_end = int(round(self._chunk_logstep + 1.0, 0))
+            else:
+                chunk_end = int(round(chunk_start * self._chunk_logstep + 1.0, 0))
+
+            self._spline_points[(chunk_start, chunk_end)] = []
+
+            chunk_start = int(round(0.75 * chunk_end - 0.5, 0))
 
     def _match_chunk(self, log_x: float):
         num_chunks = len(self._chunk_list)
@@ -338,7 +376,7 @@ class phase_spline:
                         raise RuntimeError(
                             f"phase_spline: could not match log_x={log_x:.5g} to an upper bound chunk (A={A}, min_log_x(A)={splineA.min_log_x:.5g}, max_log_x(A)={splineA.max_log_x:.5g}, B={B}, min_log_x(B)={splineB.min_log_x:.5g}, max_log_x(B)={splineB.max_log_x:.5g})"
                         )
-                    upper_bound = A
+                    upper_bound = A + 1
                     break
                 else:
                     C = int(round((A + B) / 2, 0))
@@ -356,14 +394,14 @@ class phase_spline:
                         # C does contain our log x, so it becomes our new A
                         A = C
 
-            # find last chunk whose max_log_x value is smaller than our log_x
-            # this is the last chink that *cannot* include our point
-            if spline0.max_log_x >= log_x:
-                lower_bound = -1
-            else:
-                # A is exclusive this time, B is inclusive
-                A = 0
-                B = num_chunks - 1
+        # find last chunk whose max_log_x value is smaller than our log_x
+        # this is the last chunk that *cannot* include our point
+        if spline0.max_log_x >= log_x:
+            lower_bound = -1
+        else:
+            # A is exclusive this time, B is inclusive
+            A = 0
+            B = num_chunks - 1
 
             while A != B:
                 splineA = self._splines[self._chunk_list[A]]
@@ -373,7 +411,7 @@ class phase_spline:
                         raise RuntimeError(
                             f"phase_spline: could not match log_x={log_x:.5g} to a lower bound chunk (A={A}, min_log_x(A)={splineA.min_log_x:.5g}, max_log_x(A)={splineA.max_log_x:.5g}, B={B}, min_log_x(B)={splineB.min_log_x:.5g}, max_log_x(B)={splineB.max_log_x:.5g})"
                         )
-                    lower_bound = B
+                    lower_bound = A
                     break
                 else:
                     C = int(round((A + B) / 2, 0))
@@ -384,16 +422,31 @@ class phase_spline:
 
                     splineC = self._splines[self._chunk_list[C]]
 
-                    if splineC.min_log_x < log_x:
+                    if splineC.max_log_x < log_x:
                         # C doesn't contain our log x, so it becomes the new A
                         A = C
                     else:
                         # C does contain our log x, so it becomes our new B
                         B = C
 
-        # recall that both upper and lower bounds are exclusive
-        # the available chunks fall strictly between the two
-        assert lower_bound + 1 <= upper_bound - 1
+        # allowed chunks fall in (lower_bound, upper_bound)
+        if (
+            lower_bound + 1 > upper_bound - 1
+            or lower_bound + 1 < 0
+            or upper_bound > num_chunks
+        ):
+            print(
+                f"!! ERROR (phase_spline) incompatible lower_bound and upper_bound values for log_x={log_x:.5g} (lower_bound={lower_bound}, upper_bound={upper_bound})"
+            )
+            for chunk in self._chunk_list:
+                start, end = chunk
+                spline = self._splines[chunk]
+                print(
+                    f"   -- chunk: [{start}, {end}) has min_log_x={spline.min_log_x:.5g}, max_log_x={spline.max_log_x:.5g})"
+                )
+            raise RuntimeError(
+                f"phase_spline: incompatible lower_bound and upper_bound values for log_x={log_x:.5g} (lower_bound={lower_bound}, upper_bound={upper_bound})"
+            )
 
         chunk_penalties = []
         i = lower_bound + 1
@@ -405,15 +458,16 @@ class phase_spline:
             pos = log_x - spline.min_log_x
             rel_pos = pos / span
 
-            # penalize this chunk based on how far we are from the centre;
+            # penalize this chunk based on how far we are from the centre
             metric = pow(0.5 - rel_pos, 2.0)
             chunk_penalties.append((i, metric))
+            i = i + 1
 
         # find chunk with the smallest penalty
-        chunk_penalties.sort(key=lambda x: x[1], reverse=True)
-        print(
-            f">> found {len(chunk_penalties)} candidate chunks for log_x={log_x:.5g} with penalties {chunk_penalties}"
-        )
+        chunk_penalties.sort(key=lambda x: x[1])
+        # print(
+        #     f">> found {len(chunk_penalties)} candidate chunks for log_x={log_x:.5g} with penalties {chunk_penalties}"
+        # )
 
         return self._splines[self._chunk_list[chunk_penalties[0][0]]]
 
