@@ -1,14 +1,15 @@
 from collections import namedtuple
+from math import log, fabs, sqrt
 from typing import Optional
 
 import ray
-from math import log, fabs, sqrt
 from scipy.interpolate import InterpolatedUnivariateSpline
 
 from ComputeTargets.GkSource import GkSourceProxy, GkSource
 from ComputeTargets.spline_wrappers import ZSplineWrapper, GkWKBSplineWrapper
 from CosmologyConcepts import wavenumber_exit_time, redshift, wavenumber
 from Datastore import DatastoreObject
+from LiouvilleGreen.phase_spline import phase_spline
 from MetadataConcepts import GkSourcePolicy
 from defaults import DEFAULT_FLOAT_PRECISION
 
@@ -22,8 +23,7 @@ GkSourceFunctions = namedtuple(
         "WKB_region",
         "numerical_Gk",
         "WKB_Gk",
-        "theta",
-        "theta_deriv",
+        "phase",
         "sin_amplitude",
         "type",
         "quality",
@@ -534,26 +534,23 @@ class GkSourcePolicyData(DatastoreObject):
                     for v in WKB_data
                 ]
 
-                theta_data = [
-                    (
-                        log(1.0 + v.z_source.z),
-                        v.WKB.theta,
-                    )
-                    for v in WKB_data
-                ]
-
                 sin_amplitude_x, sin_amplitude_y = zip(*sin_amplitude_data)
-                theta_x, theta_y = zip(*theta_data)
-
                 _sin_amplitude_spline = InterpolatedUnivariateSpline(
                     sin_amplitude_x,
                     sin_amplitude_y,
                     ext="raise",
                 )
-                _theta_spline = InterpolatedUnivariateSpline(
-                    theta_x,
-                    theta_y,
-                    ext="raise",
+
+                theta_x_points = [log(1.0 + v.z_source.z) for v in WKB_data]
+                theta_div_2pi_points = [v.WKB.theta_div_2pi for v in WKB_data]
+                theta_mod_2pi_points = [v.WKB.theta_mod_2pi for v in WKB_data]
+                _theta_spline = phase_spline(
+                    theta_x_points,
+                    theta_div_2pi_points,
+                    theta_mod_2pi_points,
+                    x_is_log=True,
+                    chunk_step=None,
+                    chunk_logstep=50,
                 )
 
                 WKB_Gk = GkWKBSplineWrapper(
@@ -564,19 +561,8 @@ class GkSourcePolicyData(DatastoreObject):
                     max_z.z,
                     min_z.z,
                 )
-                WKB_theta = ZSplineWrapper(
-                    _theta_spline, "theta", max_z.z, min_z.z, log_z=True
-                )
                 WKB_sin_amplitude = ZSplineWrapper(
                     _sin_amplitude_spline, "sin amplitude", max_z.z, min_z.z, log_z=True
-                )
-                WKB_theta_deriv = ZSplineWrapper(
-                    _theta_spline.derivative(),
-                    "theta derivative",
-                    max_z.z,
-                    min_z.z,
-                    log_z=True,
-                    deriv=True,
                 )
 
         self._functions = GkSourceFunctions(
@@ -584,8 +570,7 @@ class GkSourcePolicyData(DatastoreObject):
             numerical_Gk=numerical_Gk,
             WKB_region=WKB_region,
             WKB_Gk=WKB_Gk,
-            theta=WKB_theta,
-            theta_deriv=WKB_theta_deriv,
+            phase=_theta_spline,
             sin_amplitude=WKB_sin_amplitude,
             type=self._type,
             quality=self._quality,

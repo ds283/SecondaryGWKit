@@ -2,13 +2,14 @@ import argparse
 import itertools
 import json
 import sys
+import time
 from datetime import datetime
+from math import sqrt
 from pathlib import Path
 from typing import List, Optional
 
 import numpy as np
 import ray
-from math import sqrt
 from pandas import DataFrame
 
 from ComputeTargets import (
@@ -22,19 +23,22 @@ from ComputeTargets import (
     QuadSourceIntegral,
     GkSourceProxy,
     GkSourcePolicyData,
+    ModelProxy,
+    BackgroundModel,
+    BesselPhaseProxy,
 )
-from ComputeTargets.BackgroundModel import ModelProxy
 from CosmologyConcepts import (
     wavenumber,
     redshift,
     wavenumber_array,
     wavenumber_exit_time,
+    wavenumber_exit_time_array,
     redshift_array,
 )
-from CosmologyConcepts.wavenumber import wavenumber_exit_time_array
 from CosmologyModels.LambdaCDM import Planck2018
 from Datastore.SQL.ProfileAgent import ProfileAgent
 from Datastore.SQL.ShardedPool import ShardedPool
+from LiouvilleGreen.bessel_phase import bessel_phase
 from MetadataConcepts import GkSourcePolicy
 from RayTools.RayWorkPool import RayWorkPool
 from Units import Mpc_units
@@ -45,7 +49,7 @@ from defaults import (
     DEFAULT_QUADRATURE_RTOL,
     DEFAULT_QUADRATURE_ATOL,
 )
-from utilities import grouper
+from utilities import grouper, format_time
 
 DEFAULT_LABEL = "SecondaryGWKit-test"
 DEFAULT_TIMEOUT = 60
@@ -407,7 +411,7 @@ with ShardedPool(
 
     ## STEP 1a
     ## BAKE THE BACKGROUND COSMOLOGY INTO A BACKGROUND MODEL OBJECT
-    model = ray.get(
+    model: BackgroundModel = ray.get(
         pool.object_get(
             "BackgroundModel",
             solver_labels=solvers,
@@ -431,6 +435,32 @@ with ShardedPool(
 
     # set up a proxy object to avoid having to repeatedly serialize the model instance and ship it out
     model_proxy = ModelProxy(model)
+
+    print("\n** BUILDING BESSEL FUNCTION SPLINES")
+    phase_start = time.perf_counter()
+
+    # find largest argument of the Bessel functions J_nu(k c_s \tau), Y_nu(k c_s \tau) that we will need
+    # these are
+    largest_source_k = source_k_exit_times.max.k
+    mod_f = model.functions
+    largest_tau = mod_f.tau(zend)
+    largest_x = largest_source_k.k * largest_tau
+    largest_x_with_clearance = 1.075 * largest_x
+
+    b_value = 0.0
+
+    print(
+        f"   -- largest source k = {largest_source_k:.5g}/Mpc, latest tau = {largest_tau:.5g} (for z={zend:.5g}), largest x={largest_x:.5g}, largest x with 7.5% clearance={largest_x_with_clearance:.5g}"
+    )
+
+    Bessel_0pt5 = bessel_phase(0.5 + b_value, largest_x_with_clearance)
+    Bessel_0pt5_proxy = BesselPhaseProxy(Bessel_0pt5)
+
+    Bessel_2pt5 = bessel_phase(2.5 + b_value, largest_x_with_clearance)
+    Bessel_2pt5_proxy = BesselPhaseProxy(Bessel_2pt5)
+
+    phase_end = time.perf_counter()
+    print(f"   -- constructed splines in time {format_time(phase_end - phase_start)}")
 
     ## STEP 2
     ## COMPUTE MATTER TRANSFER FUNCTIONS
@@ -2217,6 +2247,9 @@ with ShardedPool(
                     "compute_payload": {
                         "GkPolicy": GkPolicy,
                         "source": source,
+                        "b": b_value,
+                        "Bessel_0pt5": Bessel_0pt5_proxy,
+                        "Bessel_2pt5": Bessel_2pt5_proxy,
                     },
                 }
             )

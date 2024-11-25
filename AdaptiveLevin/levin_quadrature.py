@@ -1,9 +1,9 @@
 import time
 from datetime import datetime
+from math import floor, ceil
 from typing import Tuple
 
 import numpy as np
-from math import floor, ceil
 from numpy.linalg import LinAlgError
 from scipy.linalg import toeplitz
 
@@ -75,18 +75,32 @@ class _Basis_SinCos:
         """
         :param theta:
         """
-        self._theta = theta
+        if "theta" not in theta:
+            raise RuntimeError(
+                "levin_quadrature: Levin phase function theta must be provided"
+            )
 
-    def theta(self, x):
+        self._theta = theta["theta"]
+
+        if "theta_mod_2pi" in theta:
+            self._theta_mod_2pi = theta["theta_mod_2pi"]
+
+        if "theta_deriv" in theta:
+            self._theta_deriv = theta["theta_deriv"]
+
+    def raw_theta(self, x):
         return self._theta(x)
 
     def build_Levin_data(self, grid, Dmat):
-        # sample the phase function theta on the Chebyshev grid
-        theta_Cheb = np.array([self._theta(x) for x in grid])
+        if hasattr(self, "_theta_deriv"):
+            theta_prime_Cheb = np.array([self._theta_deriv(x) for x in grid])
+        else:
+            # sample the phase function theta on the Chebyshev grid
+            theta_Cheb = np.array([self._theta(x) for x in grid])
 
-        # multiply theta by the spectral differentiation matrix Dmat in order to produce an estimate of theta'(x)
-        # evaluated at the collocation points
-        theta_prime_Cheb = np.matmul(Dmat, theta_Cheb)
+            # multiply theta by the spectral differentiation matrix Dmat in order to produce an estimate of theta'(x)
+            # evaluated at the collocation points
+            theta_prime_Cheb = np.matmul(Dmat, theta_Cheb)
 
         # if w = (sin, cos) (regarded as a column vector), then w' = A w where A is the matrix
         #   Amat = ( 0,       theta' )
@@ -99,16 +113,26 @@ class _Basis_SinCos:
         zero_block = np.zeros_like(theta_prime_I)
         AmatT = np.block([[zero_block, -theta_prime_I], [theta_prime_I, zero_block]])
 
-        # note grid is in reverse order, with largest value in position 1 and smallest value in last position -1
-        theta0 = theta_Cheb[-1]
-        thetak = theta_Cheb[0]
+        if hasattr(self, "_theta_mod_2pi"):
+            theta0_mod_2pi = self._theta_mod_2pi(grid[-1])
+            thetak_mod_2pi = self._theta_mod_2pi(grid[0])
 
-        w0 = [np.sin(theta0), np.cos(theta0)]
-        wk = [np.sin(thetak), np.cos(thetak)]
+            w0 = [np.sin(theta0_mod_2pi), np.cos(theta0_mod_2pi)]
+            wk = [np.sin(thetak_mod_2pi), np.cos(thetak_mod_2pi)]
+        else:
+            # note grid is in reverse order, with largest value in position 1 and smallest value in last position -1
+            theta0 = theta_Cheb[-1]
+            thetak = theta_Cheb[0]
+
+            w0 = [np.sin(theta0), np.cos(theta0)]
+            wk = [np.sin(thetak), np.cos(thetak)]
 
         return AmatT, w0, wk
 
     def eval_basis(self, x):
+        if hasattr(self, "_theta_mod_2pi"):
+            return [np.sin(self._theta_mod_2pi(x)), np.cos(self._theta_mod_2pi(x))]
+
         return [np.sin(self._theta(x)), np.cos(self._theta(x))]
 
 
@@ -245,7 +269,7 @@ def _adaptive_levin(
 
         # if phase difference across this region is very small, there is likely no advantage in using the Levin
         # rule to do the computation
-        phase_diff = np.fabs(BasisData.theta(b) - BasisData.theta(a))
+        phase_diff = np.fabs(BasisData.raw_theta(b) - BasisData.raw_theta(a))
         if phase_diff < np.pi:
 
             def integrand(x):
@@ -394,7 +418,7 @@ def _notify_progress(
 def adaptive_levin_sincos(
     x_span: Tuple[float, float],
     f,
-    theta,
+    theta: dict,
     atol: float = 1e-15,
     rtol: float = 1e-7,
     chebyshev_order: int = 12,

@@ -26,6 +26,7 @@ from .QuadSource import (
     QuadSourceFunctions,
 )
 from .QuadSourceIntegral import (
+    BesselPhaseProxy,
     QuadSourceIntegral,
 )
 from .TkNumericalIntegration import (

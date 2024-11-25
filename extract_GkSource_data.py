@@ -2,6 +2,7 @@ import argparse
 import sys
 from datetime import datetime
 from itertools import product
+from math import fabs, pi, sqrt
 from pathlib import Path
 from random import sample
 from typing import List, Optional
@@ -11,7 +12,6 @@ import numpy as np
 import pandas as pd
 import ray
 import seaborn as sns
-from math import fabs, pi, sqrt
 from ray import ObjectRef
 
 from ComputeTargets import (
@@ -377,7 +377,7 @@ with ShardedPool(
         abs_theta_spline_points = [
             (
                 value.z_source.z,
-                safe_fabs(functions.theta(value.z_source.z)),
+                safe_fabs(functions.phase.raw_theta(value.z_source.z)),
             )
             for value in WKB_points
         ]
@@ -387,7 +387,7 @@ with ShardedPool(
         theta_spline_points = [
             (
                 value.z_source.z,
-                functions.theta(value.z_source.z),
+                functions.phase.raw_theta(value.z_source.z),
             )
             for value in WKB_points
         ]
@@ -657,7 +657,7 @@ with ShardedPool(
             fig.savefig(fig_path)
 
             if GkPolicy.Levin_z is not None:
-                theta_at_Levin_z = functions.theta(GkPolicy.Levin_z)
+                theta_at_Levin_z = functions.phase.raw_theta(GkPolicy.Levin_z)
                 ax.set_xlim(
                     int(round(GkPolicy.Levin_z - 50.0 + 0.5, 0)),
                     int(round(GkPolicy.Levin_z + 50.0 + 0.5, 0)),

@@ -1,6 +1,9 @@
-import numpy as np
 from math import log, sin, cos, exp
+
+import numpy as np
 from scipy.interpolate import UnivariateSpline
+
+from LiouvilleGreen.phase_spline import phase_spline
 
 
 class ZSplineWrapper:
@@ -65,14 +68,14 @@ class ZSplineWrapper:
 class GkWKBSplineWrapper:
     def __init__(
         self,
-        theta_spline,
+        theta_spline: phase_spline,
         sin_amplitude_spline,
         cos_amplitude_spline,
         label: str,
         max_z: float,
         min_z: float,
     ):
-        self._theta_spline: UnivariateSpline = theta_spline
+        self._theta_spline: phase_spline = theta_spline
         self._sin_amplitude_spline: UnivariateSpline = sin_amplitude_spline
         self._cos_amplitude_spline: UnivariateSpline = cos_amplitude_spline
 
@@ -114,7 +117,7 @@ class GkWKBSplineWrapper:
         try:
             if self._sin_amplitude_spline is not None:
                 sin_amplitude = self._sin_amplitude_spline(log_z)
-                sin_factor = sin(self._theta_spline(log_z))
+                sin_factor = sin(self._theta_spline.theta_mod_2pi(log_z, x_is_log=True))
 
                 sin_part = sin_amplitude * sin_factor
             else:
@@ -122,7 +125,7 @@ class GkWKBSplineWrapper:
 
             if self._cos_amplitude_spline is not None:
                 cos_amplitude = self._cos_amplitude_spline(log_z)
-                cos_factor = cos(self._theta_spline(log_z))
+                cos_factor = cos(self._theta_spline.theta_mod_2pi(log_z, x_is_log=True))
 
                 cos_part = cos_amplitude * cos_factor
             else:

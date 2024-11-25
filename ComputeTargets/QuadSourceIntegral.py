@@ -3,6 +3,7 @@ from math import log, exp, pow, sqrt, pi, gamma
 from typing import Optional, List, Union
 
 import ray
+from ray import ObjectRef
 from scipy.special import yv, jv
 
 from AdaptiveLevin import adaptive_levin_sincos
@@ -12,7 +13,6 @@ from ComputeTargets.GkSourcePolicyData import GkSourcePolicyData, GkSourceFuncti
 from ComputeTargets.QuadSource import QuadSource, QuadSourceFunctions
 from CosmologyConcepts import wavenumber, wavenumber_exit_time, redshift
 from Datastore import DatastoreObject
-from LiouvilleGreen.bessel_phase import bessel_phase
 from MetadataConcepts import store_tag, tolerance, GkSourcePolicy
 from Quadrature.integration_metadata import IntegrationData, LevinData
 from Quadrature.simple_quadrature import simple_quadrature
@@ -29,6 +29,17 @@ LEVIN_MIN_PHASE_DIFF = LEVIN_MIN_2PI_CYCLES * 2.0 * pi
 CHEBYSHEV_ORDER = 64
 LEVIN_RELERR = 1e-8
 LEVIN_ABSERR = 1e-23
+
+
+class BesselPhaseProxy:
+    def __init__(self, obj: dict):
+        self._ref: ObjectRef = ray.put(obj)
+
+    def get(self):
+        """
+        The return value should only be held locally and not persisted
+        """
+        return ray.get(self._ref)
 
 
 def get_z(z):
@@ -51,6 +62,9 @@ def compute_QuadSource_integral(
     GkPolicy: GkSourcePolicyData,
     z_response: redshift,
     z_source_max: redshift,
+    b: float,
+    Bessel_0pt5: BesselPhaseProxy,
+    Bessel_2pt5: BesselPhaseProxy,
     atol: float = DEFAULT_QUADRATURE_ATOL,
     rtol: float = DEFAULT_QUADRATURE_RTOL,
 ) -> dict:
@@ -90,7 +104,9 @@ def compute_QuadSource_integral(
             if Levin_z is not None:
                 # unlikely to be worth doing Levin method (or that we will get an especially accurate result)
                 # unless the phase goes through enough cycles
-                phase_diff = Gk_f.theta(z_response.z) - Gk_f.theta(Levin_z)
+                phase_diff = Gk_f.phase.raw_theta(z_response.z) - Gk_f.phase.raw_theta(
+                    Levin_z
+                )
                 if phase_diff > LEVIN_MIN_PHASE_DIFF:
                     regions = [
                         (None, None),
@@ -122,7 +138,9 @@ def compute_QuadSource_integral(
                     )
 
             if Levin_z is not None:
-                phase_diff = Gk_f.theta(z_response.z) - Gk_f.theta(Levin_z)
+                phase_diff = Gk_f.phase.raw_theta(z_response.z) - Gk_f.phase.raw_theta(
+                    Levin_z
+                )
                 if phase_diff > LEVIN_MIN_PHASE_DIFF:
                     regions = [
                         (z_source_max, crossover_z),
@@ -235,7 +253,7 @@ def compute_QuadSource_integral(
             WKB_Levin = payload["value"]
             WKB_Levin_data = payload["data"]
 
-        # calculate analytic approximation for radiation
+        # calculate analytic approximation for specified value of b using pre-supplied Bessel function splines
         analytic_data = analytic_integral(
             model,
             k.k,
@@ -244,7 +262,9 @@ def compute_QuadSource_integral(
             z_response,
             max_z=z_source_max,
             min_z=z_response,
-            b=0.0,
+            b=b,
+            Bessel_0pt5=Bessel_0pt5.get(),
+            Bessel_2pt5=Bessel_2pt5.get(),
             rtol=rtol,
             atol=atol,
         )
@@ -432,12 +452,16 @@ def _three_bessel_Levin(
         x2 = q.k * cs * eta
         x3 = r.k * cs * eta
 
-        return phase_Gk(x1) + phase_Tk(x2) + phase_Tk(x3)
+        return (
+            phase_Gk.theta_mod_2pi(x1)
+            + phase_Tk.theta_mod_2pi(x2)
+            + phase_Tk.theta_mod_2pi(x3)
+        )
 
     J1_data = adaptive_levin_sincos(
         x_span,
         f=[Levin_f, lambda x: 0.0],
-        theta=phase1,
+        theta={"theta": phase1},
         atol=atol,
         rtol=rtol,
         chebyshev_order=CHEBYSHEV_ORDER,
@@ -445,7 +469,7 @@ def _three_bessel_Levin(
     Y1_data = adaptive_levin_sincos(
         x_span,
         f=[lambda x: 0.0, lambda x: -Levin_f(x)],
-        theta=phase1,
+        theta={"theta": phase1},
         atol=atol,
         rtol=rtol,
         chebyshev_order=CHEBYSHEV_ORDER,
@@ -458,12 +482,16 @@ def _three_bessel_Levin(
         x2 = q.k * cs * eta
         x3 = r.k * cs * eta
 
-        return phase_Gk(x1) + phase_Tk(x2) - phase_Tk(x3)
+        return (
+            phase_Gk.theta_mod_2pi(x1)
+            + phase_Tk.theta_mod_2pi(x2)
+            - phase_Tk.theta_mod_2pi(x3)
+        )
 
     J2_data = adaptive_levin_sincos(
         x_span,
         f=[Levin_f, lambda x: 0.0],
-        theta=phase2,
+        theta={"theta": phase2},
         atol=atol,
         rtol=rtol,
         chebyshev_order=CHEBYSHEV_ORDER,
@@ -471,7 +499,7 @@ def _three_bessel_Levin(
     Y2_data = adaptive_levin_sincos(
         x_span,
         f=[lambda x: 0.0, lambda x: -Levin_f(x)],
-        theta=phase2,
+        theta={"theta": phase2},
         atol=atol,
         rtol=rtol,
         chebyshev_order=CHEBYSHEV_ORDER,
@@ -484,12 +512,16 @@ def _three_bessel_Levin(
         x2 = q.k * cs * eta
         x3 = r.k * cs * eta
 
-        return phase_Gk(x1) - phase_Tk(x2) + phase_Tk(x3)
+        return (
+            phase_Gk.theta_mod_2pi(x1)
+            - phase_Tk.theta_mod_2pi(x2)
+            + phase_Tk.theta_mod_2pi(x3)
+        )
 
     J3_data = adaptive_levin_sincos(
         x_span,
         f=[Levin_f, lambda x: 0.0],
-        theta=phase3,
+        theta={"theta": phase3},
         atol=atol,
         rtol=rtol,
         chebyshev_order=CHEBYSHEV_ORDER,
@@ -497,7 +529,7 @@ def _three_bessel_Levin(
     Y3_data = adaptive_levin_sincos(
         x_span,
         f=[lambda x: 0.0, lambda x: -Levin_f(x)],
-        theta=phase3,
+        theta={"theta": phase3},
         atol=LEVIN_ABSERR,
         rtol=LEVIN_RELERR,
         chebyshev_order=CHEBYSHEV_ORDER,
@@ -510,12 +542,16 @@ def _three_bessel_Levin(
         x2 = q.k * cs * eta
         x3 = r.k * cs * eta
 
-        return phase_Gk(x1) - phase_Tk(x2) - phase_Tk(x3)
+        return (
+            phase_Gk.theta_mod_2pi(x1)
+            - phase_Tk.theta_mod_2pi(x2)
+            - phase_Tk.theta_mod_2pi(x3)
+        )
 
     J4_data = adaptive_levin_sincos(
         x_span,
         f=[Levin_f, lambda x: 0.0],
-        theta=phase4,
+        theta={"theta": phase4},
         atol=atol,
         rtol=rtol,
         chebyshev_order=CHEBYSHEV_ORDER,
@@ -523,7 +559,7 @@ def _three_bessel_Levin(
     Y4_data = adaptive_levin_sincos(
         x_span,
         f=[lambda x: 0.0, lambda x: -Levin_f(x)],
-        theta=phase4,
+        theta={"theta": phase4},
         atol=atol,
         rtol=rtol,
         chebyshev_order=CHEBYSHEV_ORDER,
@@ -637,6 +673,8 @@ def analytic_integral(
     max_z: redshift,
     min_z: redshift,
     b: float,
+    Bessel_0pt5,
+    Bessel_2pt5,
     rtol: float,
     atol: float,
 ):
@@ -650,15 +688,6 @@ def analytic_integral(
 
     cs_sq = (1.0 - b) / (1.0 + b) / 3.0
 
-    max_x = max(k.k, q.k, r.k) * max_eta
-
-    build_phase_start = time.perf_counter()
-
-    phase_data_0pt5 = bessel_phase(0.5 + b, max_x + 10.0)
-    phase_data_2pt5 = bessel_phase(2.5 + b, max_x + 10.0)
-
-    build_phase_stop = time.perf_counter()
-
     data0pt5 = _three_bessel_integrals(
         k,
         q,
@@ -666,7 +695,7 @@ def analytic_integral(
         min_eta=min_eta,
         max_eta=max_eta,
         b=b,
-        phase_data={"0pt5": phase_data_0pt5, "2pt5": phase_data_2pt5},
+        phase_data={"0pt5": Bessel_0pt5},
         nu_type="0pt5",
         atol=atol,
         rtol=rtol,
@@ -678,7 +707,7 @@ def analytic_integral(
         min_eta=min_eta,
         max_eta=max_eta,
         b=b,
-        phase_data={"0pt5": phase_data_0pt5, "2pt5": phase_data_2pt5},
+        phase_data={"2pt5": Bessel_2pt5},
         nu_type="2pt5",
         atol=atol,
         rtol=rtol,
@@ -693,7 +722,6 @@ def analytic_integral(
         # "max_eta": max_eta,
         # "min_eta": min_eta,
         # "eta_response": eta_response,
-        "build_phase_time": build_phase_stop - build_phase_start,
         "0pt5": data0pt5["metadata"],
         "2pt5": data2pt5["metadata"],
     }
@@ -928,13 +956,29 @@ def WKB_Levin_integral(
 
         return sin_ampl * f / H_sq
 
-    def Levin_theta(log_z_source: float) -> float:
-        return Gk_f.theta(log_z_source, z_is_log=True)
+    def Levin_phase(log_z_source: float) -> float:
+        return Gk_f.phase.raw_theta(log_z_source, z_is_log=True)
+
+    def Levin_phase_mod_2pi(log_z_source: float) -> float:
+        return Gk_f.phase.theta_mod_2pi(log_z_source, z_is_log=True)
+
+    def Levin_deriv(log_z_source: float) -> float:
+        """
+        Returns dtheta/dlogz since the phase_spline object computes the derivative with respect to log_z
+        That's what we want here, because the integration is performed with respect to log_z
+        :param log_z_source:
+        :return:
+        """
+        return Gk_f.phase.theta_deriv(log_z_source, z_is_log=True)
 
     data = adaptive_levin_sincos(
         x_span,
         [Levin_f, lambda x: 0.0],
-        Levin_theta,
+        theta={
+            "theta": Levin_phase,
+            "theta_mod_2pi": Levin_phase_mod_2pi,
+            "theta_deriv": Levin_deriv,
+        },
         atol=atol,
         rtol=rtol,
         chebyshev_order=CHEBYSHEV_ORDER,
@@ -1231,6 +1275,9 @@ class QuadSourceIntegral(DatastoreObject):
             GkPolicy=GkPolicy,
             z_response=self._z_response,
             z_source_max=self._z_source_max,
+            b=payload["b"],
+            Bessel_0pt5=payload["Bessel0pt5"],
+            Bessel_2pt5=payload["Bessel2pt5"],
             atol=self._atol.tol,
             rtol=self._rtol.tol,
         )
