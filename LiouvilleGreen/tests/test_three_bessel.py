@@ -36,7 +36,7 @@ class TestBessel(unittest.TestCase):
         self.cs_sq = (1.0 - self.b) / (1.0 + self.b) / 3.0
 
         self.min_eta = 0.0000000001696765007801783
-        self.max_eta = 0.4601909095284898
+        self.max_eta = 10524
         # self.max_eta = 7.196808204366744e-06
         # self.max_eta = 5.05340787180641e-07
         # self.max_eta = 1e-5
