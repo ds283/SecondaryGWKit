@@ -28,7 +28,7 @@ def range_reduce_mod_2pi(big_number, small_number):
     """
 
     # write big_number as N + b, where N is an integer
-    N, b = modf(big_number)
+    b, N = modf(big_number)
     N = int(N)
 
     # write small_number as 2pi M + c, where M is an integer
