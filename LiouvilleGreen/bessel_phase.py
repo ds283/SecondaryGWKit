@@ -6,7 +6,7 @@ from scipy.special import yv, jv
 
 from defaults import DEFAULT_ABS_TOLERANCE, DEFAULT_REL_TOLERANCE
 from .phase_spline import phase_spline
-from .range_reduce_mod_2pi import _simple_div_mod
+from .range_reduce_mod_2pi import _simple_div_mod, range_reduce_mod_2pi
 
 DEFAULT_SAMPLE_DENSITY = 250
 
@@ -218,8 +218,17 @@ def bessel_phase(
 
     def range_reduce_phase(log_x, Q):
         x = np.exp(log_x)
-        # div_2pi, mod_2pi = range_reduce_mod_2pi(x, Q)
-        div_2pi, mod_2pi = _simple_div_mod(x * Q)
+        div_2pi, mod_2pi = range_reduce_mod_2pi(x, Q)
+        # div_2pi, mod_2pi = _simple_div_mod(x * Q)
+
+        # if (
+        #     div_2pi_rr != div_2pi
+        #     or fabs(mod_2pi_rr / mod_2pi) > 1.0 + 1e-7
+        #     or fabs(mod_2pi / mod_2pi) < 1.0 - 1e-7
+        # ):
+        #     raise RuntimeError(
+        #         f"bessel_phase: range reduce difference | x={x:.5g}, Q={Q:.5g}, xQ={x*Q:.5g}, div_2pi={div_2pi}, div_2pi_rr={div_2pi_rr}, mod_2pi={mod_2pi:.5g}, mod_2pi_rr={mod_2pi_rr:.5g}"
+        #     )
 
         div_2pi = div_2pi - phi_div_2pi
         mod_2pi = mod_2pi - phi_mod_2pi
