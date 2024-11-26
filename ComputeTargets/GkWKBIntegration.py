@@ -1,8 +1,8 @@
 import time
+from math import log, sqrt, fabs, cos, sin, atan2, fmod, floor, pi
 from typing import Optional, List, Tuple
 
 import ray
-from math import log, sqrt, fabs, cos, sin, atan2, fmod, floor, pi
 from scipy.integrate import solve_ivp
 
 from ComputeTargets.BackgroundModel import BackgroundModel, ModelProxy
@@ -373,7 +373,7 @@ def stage_1_evolution(
 
                 batch_theta = batch_values[THETA_INDEX]
 
-                # walk through sampled values, computing theta div 2pi and theta mod 2pi
+                # walk through sampled values, evaluating theta div 2pi and theta mod 2pi
                 for z, theta in zip(batch_z, batch_theta):
                     theta_div_2pi, theta_mod_2pi = _mod_2pi(theta)
 
@@ -602,8 +602,7 @@ def compute_Gk_WKB(
     # no simple way to do this. See https://github.com/scipy/scipy/issues/19645.
     # the solution used here is to compute the phase mod 2pi, i.e., we try to track theta mod 2pi
     # and theta div 2pi separately. We do that by postprocessing the output of the integration.
-    # To keep accuracy, we keep cutting the integral after we've gone about 1E3 in redshift.
-    # This should generate something accurate enough for our purposes.
+    # To keep accuracy, we keep cutting the integral after we've stepped about 1E3 in redshift.
     z_sample_list = z_sample.as_float_list()
     z_break_list = []
     z_target = z_sample.min.z
@@ -612,6 +611,8 @@ def compute_Gk_WKB(
     sampled_theta_mod_2pi = []
     sampled_theta_div_2pi = []
 
+    # keep track of the value of theta div 2pi that we need to add - because we break the integration
+    # into stages, we need to add an offset to subsequent stages so that theta lines up properly
     current_div_2pi_offset = 0
 
     d_ln_omega_WKB_dz_init = WKB_d_ln_omegaEffPrime_dz(model, k_float, z_init)
@@ -1139,6 +1140,11 @@ class GkWKBIntegration(DatastoreObject):
         theta_div_2pi_sample = data["theta_div_2pi_sample"]
         theta_mod_2pi_sample = data["theta_mod_2pi_sample"]
 
+        # shift theta by deltaTheta in order to put everything into the sin coefficient, rather than a linear
+        # combination of sin and cos
+        # We do this so that we get smooth functions of sin and cos when we reassemble the Green's functions as
+        # functions of the source redshift (the ones with late source times are always expressed as pure sin with zero
+        # cos mode)
         def wrap_theta(theta: float) -> Tuple[int, float]:
             if theta > 0.0:
                 return +1, theta - _two_pi
