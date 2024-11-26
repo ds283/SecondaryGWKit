@@ -168,6 +168,7 @@ def bessel_phase(
 
     _pre_theta_spline = InterpolatedUnivariateSpline(phase_log_x, phase_y, ext="raise")
     _mod_spline = InterpolatedUnivariateSpline(mod_x, mod_y, ext="raise")
+    _Q_spline = InterpolatedUnivariateSpline(log_x_samples, Q_samples, ext="raise")
 
     # determine where we will try to match the phase
     if log_min_x < 0.0:
@@ -262,6 +263,7 @@ def bessel_phase(
         chunk_logstep=50.0,
     )
     mod_spline = XSplineWrapper(_mod_spline, min_x=min_x, max_x=max_x)
+    Q_spline = XSplineWrapper(_Q_spline, min_x=min_x, max_x=max_x)
 
     def bessel_j(x: float, is_log=False) -> float:
         return mod_spline(x, is_log=is_log) * np.sin(
@@ -276,6 +278,7 @@ def bessel_phase(
     return {
         "phase": theta_spline,
         "mod": mod_spline,
+        "Q": Q_spline,
         "phi": phi,
         "x_cut": min_x,
         "bessel_j": bessel_j,

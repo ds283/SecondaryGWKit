@@ -20,6 +20,7 @@ def plot_bessel_phase(nu: float):
     phase = data["phase"]
     bessel_j = data["bessel_j"]
     bessel_y = data["bessel_y"]
+    Q = data["Q"]
 
     our_j_points = [bessel_j(x) for x in grid_J]
     their_j_points = [jv(nu, x) for x in grid_J]
@@ -28,6 +29,7 @@ def plot_bessel_phase(nu: float):
     their_y_points = [yv(nu, x) for x in grid_Y]
 
     phase_points = [phase(x) for x in grid_J]
+    Q_points = [Q(x) for x in grid_J]
 
     # BESSEL PLOTS
 
@@ -70,7 +72,7 @@ def plot_bessel_phase(nu: float):
 
     plt.close()
 
-    # PHASE_PLOTS PLOTS
+    # PHASE PLOTS
 
     fig = plt.figure()
     ax = plt.gca()
@@ -85,6 +87,30 @@ def plot_bessel_phase(nu: float):
     ax.grid(True)
 
     fig_path = Path(f"phase_plot_nu={nu:.3g}.pdf").resolve()
+    fig_path.parents[0].mkdir(exist_ok=True, parents=True)
+    fig.savefig(fig_path)
+
+    plt.close()
+
+    # Q PLOT
+
+    fig = plt.figure()
+    ax = plt.gca()
+
+    ax.plot(
+        grid_J,
+        Q_points,
+        linestyle="solid",
+        color="b",
+        label="$Q$",
+    )
+
+    ax.set_xscale("linear")
+    ax.set_yscale("linear")
+    ax.legend(loc="best")
+    ax.grid(True)
+
+    fig_path = Path(f"Q_plot_nu={nu:.3g}.pdf").resolve()
     fig_path.parents[0].mkdir(exist_ok=True, parents=True)
     fig.savefig(fig_path)
 

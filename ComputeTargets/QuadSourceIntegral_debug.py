@@ -52,6 +52,7 @@ def bessel_function_plot(phase_data, b, timestamp):
         bessel_y = data["bessel_y"]
 
         phase = data["phase"]
+        Q = data["Q"]
 
         j_grid = [_safe_fabs(jv(nu + b, x)) for x in x_grid]
         j_approx_grid = [_safe_fabs(bessel_j(x)) for x in x_grid]
@@ -68,6 +69,7 @@ def bessel_function_plot(phase_data, b, timestamp):
         ]
 
         theta_grid = [_safe_fabs(phase.raw_theta(x)) for x in x_grid]
+        Q_grid = [Q(x) for x in x_grid]
 
         fig = plt.figure()
         ax = plt.gca()
@@ -216,6 +218,20 @@ def bessel_function_plot(phase_data, b, timestamp):
         # fig_path = base_path / nu_type / "Bessel_phase_linear_zoom.pdf"
         # fig_path.parents[0].mkdir(exist_ok=True, parents=True)
         # fig.savefig(fig_path)
+
+        plt.close()
+
+        fig = plt.figure()
+        ax = plt.gca()
+
+        ax.plot(x_grid, Q_grid, linestyle="solid", color="r", label="$Q$")
+
+        set_loglinear_axes(ax, inverted=False)
+
+        fig_path = base_path / nu_type / "Q.pdf"
+        fig_path.parents[0].mkdir(exist_ok=True, parents=True)
+        fig.savefig(fig_path)
+        fig.savefig(fig_path.with_suffix(".png"))
 
         plt.close()
 
