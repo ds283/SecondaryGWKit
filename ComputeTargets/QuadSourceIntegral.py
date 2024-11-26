@@ -454,10 +454,23 @@ def _three_bessel_Levin(
 
         return phase_Gk.raw_theta(x1) + phase_Tk.raw_theta(x2) + phase_Tk.raw_theta(x3)
 
+    def phase1_mod_2pi(log_eta: float):
+        eta = exp(log_eta)
+
+        x1 = k.k * eta
+        x2 = q.k * cs * eta
+        x3 = r.k * cs * eta
+
+        return (
+            phase_Gk.theta_mod_2pi(x1)
+            + phase_Tk.theta_mod_2pi(x2)
+            + phase_Tk.theta_mod_2pi(x3)
+        )
+
     J1_data = adaptive_levin_sincos(
         x_span,
         f=[Levin_f, lambda x: 0.0],
-        theta={"theta": phase1},
+        theta={"theta": phase1, "theta_mod_2pi": phase1_mod_2pi},
         atol=atol,
         rtol=rtol,
         chebyshev_order=CHEBYSHEV_ORDER,
@@ -465,7 +478,7 @@ def _three_bessel_Levin(
     Y1_data = adaptive_levin_sincos(
         x_span,
         f=[lambda x: 0.0, lambda x: -Levin_f(x)],
-        theta={"theta": phase1},
+        theta={"theta": phase1, "theta_mod_2pi": phase1_mod_2pi},
         atol=atol,
         rtol=rtol,
         chebyshev_order=CHEBYSHEV_ORDER,
@@ -480,10 +493,23 @@ def _three_bessel_Levin(
 
         return phase_Gk.raw_theta(x1) + phase_Tk.raw_theta(x2) - phase_Tk.raw_theta(x3)
 
+    def phase2_mod_2pi(log_eta: float):
+        eta = exp(log_eta)
+
+        x1 = k.k * eta
+        x2 = q.k * cs * eta
+        x3 = r.k * cs * eta
+
+        return (
+            phase_Gk.theta_mod_2pi(x1)
+            + phase_Tk.theta_mod_2pi(x2)
+            - phase_Tk.theta_mod_2pi(x3)
+        )
+
     J2_data = adaptive_levin_sincos(
         x_span,
         f=[Levin_f, lambda x: 0.0],
-        theta={"theta": phase2},
+        theta={"theta": phase2, "theta_mod_2pi": phase2_mod_2pi},
         atol=atol,
         rtol=rtol,
         chebyshev_order=CHEBYSHEV_ORDER,
@@ -491,7 +517,7 @@ def _three_bessel_Levin(
     Y2_data = adaptive_levin_sincos(
         x_span,
         f=[lambda x: 0.0, lambda x: -Levin_f(x)],
-        theta={"theta": phase2},
+        theta={"theta": phase2, "theta_mod_2pi": phase2_mod_2pi},
         atol=atol,
         rtol=rtol,
         chebyshev_order=CHEBYSHEV_ORDER,
@@ -506,10 +532,23 @@ def _three_bessel_Levin(
 
         return phase_Gk.raw_theta(x1) - phase_Tk.raw_theta(x2) + phase_Tk.raw_theta(x3)
 
+    def phase3_mod_2pi(log_eta: float):
+        eta = exp(log_eta)
+
+        x1 = k.k * eta
+        x2 = q.k * cs * eta
+        x3 = r.k * cs * eta
+
+        return (
+            phase_Gk.theta_mod_2pi(x1)
+            - phase_Tk.theta_mod_2pi(x2)
+            + phase_Tk.theta_mod_2pi(x3)
+        )
+
     J3_data = adaptive_levin_sincos(
         x_span,
         f=[Levin_f, lambda x: 0.0],
-        theta={"theta": phase3},
+        theta={"theta": phase3, "theta_mod_2pi": phase3_mod_2pi},
         atol=atol,
         rtol=rtol,
         chebyshev_order=CHEBYSHEV_ORDER,
@@ -517,7 +556,7 @@ def _three_bessel_Levin(
     Y3_data = adaptive_levin_sincos(
         x_span,
         f=[lambda x: 0.0, lambda x: -Levin_f(x)],
-        theta={"theta": phase3},
+        theta={"theta": phase3, "theta_mod_2pi": phase3_mod_2pi},
         atol=LEVIN_ABSERR,
         rtol=LEVIN_RELERR,
         chebyshev_order=CHEBYSHEV_ORDER,
@@ -532,10 +571,23 @@ def _three_bessel_Levin(
 
         return phase_Gk.raw_theta(x1) - phase_Tk.raw_theta(x2) - phase_Tk.raw_theta(x3)
 
+    def phase4_mod_2pi(log_eta: float):
+        eta = exp(log_eta)
+
+        x1 = k.k * eta
+        x2 = q.k * cs * eta
+        x3 = r.k * cs * eta
+
+        return (
+            phase_Gk.theta_mod_2pi(x1)
+            - phase_Tk.theta_mod_2pi(x2)
+            - phase_Tk.theta_mod_2pi(x3)
+        )
+
     J4_data = adaptive_levin_sincos(
         x_span,
         f=[Levin_f, lambda x: 0.0],
-        theta={"theta": phase4},
+        theta={"theta": phase4, "theta_mod_2pi": phase4_mod_2pi},
         atol=atol,
         rtol=rtol,
         chebyshev_order=CHEBYSHEV_ORDER,
@@ -543,7 +595,7 @@ def _three_bessel_Levin(
     Y4_data = adaptive_levin_sincos(
         x_span,
         f=[lambda x: 0.0, lambda x: -Levin_f(x)],
-        theta={"theta": phase4},
+        theta={"theta": phase4, "theta_mod_2pi": phase4_mod_2pi},
         atol=atol,
         rtol=rtol,
         chebyshev_order=CHEBYSHEV_ORDER,
