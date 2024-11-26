@@ -453,10 +453,18 @@ with ShardedPool(
         f"   @@ largest source k = {largest_source_k.k_inv_Mpc:.5g}/Mpc, latest tau = {largest_tau:.5g} (for z={zend:.5g}), largest x={largest_x:.5g}, largest x with 7.5% clearance={largest_x_with_clearance:.5g}"
     )
 
-    Bessel_0pt5 = bessel_phase(0.5 + b_value, largest_x_with_clearance)
+    # tight tolerances are needed to compute the Liouville-Green phase function to good accuracy up to large values
+    # of the Bessel function argument x. We compute the phase in the form x Q where Q -> 1 at large x, so getting the phase
+    # accurately means keeping Q very accurately close to 1 as the integration proceeds.
+    # Internally, the bessel_phase() function uses the Dormand-Prince 8,5(3) stepper to compute a high accuracy solution.
+    Bessel_0pt5 = bessel_phase(
+        0.5 + b_value, largest_x_with_clearance, atol=1e-25, rtol=1e-16
+    )
     Bessel_0pt5_proxy = BesselPhaseProxy(Bessel_0pt5)
 
-    Bessel_2pt5 = bessel_phase(2.5 + b_value, largest_x_with_clearance)
+    Bessel_2pt5 = bessel_phase(
+        2.5 + b_value, largest_x_with_clearance, atol=1e-25, rtol=1e-16
+    )
     Bessel_2pt5_proxy = BesselPhaseProxy(Bessel_2pt5)
 
     phase_end = time.perf_counter()

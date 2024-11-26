@@ -45,8 +45,12 @@ class TestBessel(unittest.TestCase):
         self.max_x = max(self.k.k, self.q.k, self.r.k) * self.max_eta
         self.min_x = min(self.k.k, self.q.k, self.r.k) * self.min_eta * sqrt(self.cs_sq)
 
-        self.phase_data_0pt5 = bessel_phase(0.5 + self.b, self.max_x + 10.0)
-        self.phase_data_2pt5 = bessel_phase(2.5 + self.b, self.max_x + 10.0)
+        self.phase_data_0pt5 = bessel_phase(
+            0.5 + self.b, self.max_x + 10.0, atol=1e-25, rtol=1e-14
+        )
+        self.phase_data_2pt5 = bessel_phase(
+            2.5 + self.b, self.max_x + 10.0, atol=1e-25, rtol=1e-14
+        )
 
     def test_integrals(self):
         phase = self.phase_data_0pt5["phase"]
