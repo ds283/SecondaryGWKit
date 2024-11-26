@@ -452,11 +452,7 @@ def _three_bessel_Levin(
         x2 = q.k * cs * eta
         x3 = r.k * cs * eta
 
-        return (
-            phase_Gk.theta_mod_2pi(x1)
-            + phase_Tk.theta_mod_2pi(x2)
-            + phase_Tk.theta_mod_2pi(x3)
-        )
+        return phase_Gk.raw_theta(x1) + phase_Tk.raw_theta(x2) + phase_Tk.raw_theta(x3)
 
     J1_data = adaptive_levin_sincos(
         x_span,
@@ -482,11 +478,7 @@ def _three_bessel_Levin(
         x2 = q.k * cs * eta
         x3 = r.k * cs * eta
 
-        return (
-            phase_Gk.theta_mod_2pi(x1)
-            + phase_Tk.theta_mod_2pi(x2)
-            - phase_Tk.theta_mod_2pi(x3)
-        )
+        return phase_Gk.raw_theta(x1) + phase_Tk.raw_theta(x2) - phase_Tk.raw_theta(x3)
 
     J2_data = adaptive_levin_sincos(
         x_span,
@@ -512,11 +504,7 @@ def _three_bessel_Levin(
         x2 = q.k * cs * eta
         x3 = r.k * cs * eta
 
-        return (
-            phase_Gk.theta_mod_2pi(x1)
-            - phase_Tk.theta_mod_2pi(x2)
-            + phase_Tk.theta_mod_2pi(x3)
-        )
+        return phase_Gk.raw_theta(x1) - phase_Tk.raw_theta(x2) + phase_Tk.raw_theta(x3)
 
     J3_data = adaptive_levin_sincos(
         x_span,
@@ -542,11 +530,7 @@ def _three_bessel_Levin(
         x2 = q.k * cs * eta
         x3 = r.k * cs * eta
 
-        return (
-            phase_Gk.theta_mod_2pi(x1)
-            - phase_Tk.theta_mod_2pi(x2)
-            - phase_Tk.theta_mod_2pi(x3)
-        )
+        return phase_Gk.raw_theta(x1) - phase_Tk.raw_theta(x2) - phase_Tk.raw_theta(x3)
 
     J4_data = adaptive_levin_sincos(
         x_span,
