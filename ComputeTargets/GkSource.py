@@ -1,9 +1,9 @@
 from collections import namedtuple
+from math import fabs, pi, sqrt, cos, sin
 from typing import Optional, List
 
 import pandas as pd
 import ray
-from math import fabs, pi, sqrt, cos, sin
 from ray import ObjectRef
 
 from ComputeTargets.BackgroundModel import BackgroundModel, ModelProxy
@@ -79,6 +79,7 @@ def assemble_GkSource_values(
 
     lowest_z = z_sample.min
 
+    # recall we work from LOW to HIGH redshift, hence we iterate through the reversed list
     for z_source in reversed(list(z_sample)):
         numeric: GkNumericalValue = numeric_data.get(z_source.store_id, None)
         WKB: GkWKBValue = WKB_data.get(z_source.store_id, None)
@@ -125,12 +126,15 @@ def assemble_GkSource_values(
 
         # We need to adjust theta to produce a smooth, monotonic function of redshift.
         # The Levin quadrature method relies on representing the oscillations of G_k(z, z') using a smooth function.
-        # With our current way of calculating theta, we expect it to be an increasing function of redshift.
-        # It is increasingly *negative* at large z.
+        # With our current way of calculating theta, the phase gets increasingly negative as the response time
+        # becomes much later than the source time. For fixed redshift, therefore, the phase is small at low
+        # source redshift, becoming more negative at high source redshift. Hence the phase is a (perhaps monotone)
+        # increasing function of time.
 
         # The main idea is to keep track of the current value of theta div 2pi and theta mod 2pi.
-        # If the next value of theta mod 2pi is less negative than the current one (bearing in mind we take
-        # theta mod 2pi to be negative) then there is a possibility that we have moved into the next block.
+        # If the next value of theta mod 2pi is less negative than the current one (bearing in mind that
+        # we work from low redshift to high redshift, and also that we take theta mod 2pi to be negative)
+        # then there is a possibility that we have moved into the next block.
         # Mathematically this is what should happen, because theta_WKB should be a monotone increasing
         # function. But in practice, if the current theta is quite close to the last one, then doing so would
         # entail nearly a 2pi discontinuity. In this case, it is more likely that we are seeing a small "jitter".
@@ -170,7 +174,7 @@ def assemble_GkSource_values(
                 # if this is also the lowest source redshift, we can begin counting up the primary WKB region.
                 # Otherwise, if the lowest source redshift has no WKB data, there is no WKB primary region.
                 # Instead, we have to rely on the numerical region going all the way down the z_min.
-                # (There will probably always be *some* k-modes/z_source combinations for which WKB data doee not
+                # (There will probably always be *some* k-modes/z_source combinations for which WKB data does not
                 # go all the way down to the lowest z_source. WKB data are missing only for z_response values that lie
                 # between z_source and z_init, the time of the initial condition computed from a GkNumericalIntegration instance.
                 # Since there will typically be *some* response redshifts in this missing window, there wll also be some
@@ -188,7 +192,7 @@ def assemble_GkSource_values(
                         f"assemble_GkSource_values: current_2pi_block should not be None at z_source={z_source.z:.5g} (store_id={z_source.store_id}) for k={k_exit.k.k_inv_Mpc:.5g}/Mpc (store_id={k_exit.store_id}), z_response={z_response.z:.5g} (store_id={z_response.store_id})"
                     )
 
-                # if the 2pi block read from the data is more positive than our current one, we interpret this as a discontinuity.
+                # if the 2pi block read from the data is less negative than our current one, we interpret this as a discontinuity.
                 # we adjust the current subtraction to bring 2pi block into alignment with our current one.
 
                 # note: in principle, discontinuities could occur in either sense, either with theta_div_2pi jumping suddenly up or down.
@@ -277,7 +281,7 @@ def assemble_GkSource_values(
                         f"!! WARNING (assemble_GkSource_values): rectified G_WKB differs from original G_WKB by an unexpectedly large amount at z_source={z_source.z:.5g} (store_id={z_source.store_id}) for k={k_exit.k.k_inv_Mpc:.5g}/Mpc (store_id={k_exit.store_id}), z_response={z_response.z:.5g} (store_id={z_response.store_id}) | old G_WKB={WKB.G_WKB:.7g}, new G_WKB={new_G_WKB:.7g}, abserr={abs_err:.3g}"
                     )
                     print(
-                        f"|    -- WKB.theta_mod_2pi={WKB._theta_mod_2pi:.5g}, WKB.theta_div_2pi={WKB.theta_div_2pi}"
+                        f"|    -- WKB.theta_mod_2pi={WKB.theta_mod_2pi:.5g}, WKB.theta_div_2pi={WKB.theta_div_2pi}"
                     )
                     print(
                         f"|    -- WKB.H_ratio={WKB.H_ratio:.5g}, WKB.omega_WKB_sq={WKB.omega_WKB_sq:.5g}"
@@ -294,7 +298,7 @@ def assemble_GkSource_values(
                         f"!! WARNING (assemble_GkSource_values): rectified G_WKB differs from original G_WKB by an unexpectedly large amount at z_source={z_source.z:.5g} (store_id={z_source.store_id}) for k={k_exit.k.k_inv_Mpc:.5g}/Mpc (store_id={k_exit.store_id}), z_response={z_response.z:.5g} (store_id={z_response.store_id}) | old G_WKB={WKB.G_WKB:.7g}, new G_WKB={new_G_WKB:.7g}, relerr={rel_err:.3g}"
                     )
                     print(
-                        f"|    -- WKB.theta_mod_2pi={WKB._theta_mod_2pi:.5g}, WKB.theta_div_2pi={WKB.theta_div_2pi}"
+                        f"|    -- WKB.theta_mod_2pi={WKB.theta_mod_2pi:.5g}, WKB.theta_div_2pi={WKB.theta_div_2pi}"
                     )
                     print(
                         f"|    -- WKB.H_ratio={WKB.H_ratio:.5g}, WKB.omega_WKB_sq={WKB.omega_WKB_sq:.5g}"
