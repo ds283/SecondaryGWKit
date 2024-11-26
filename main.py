@@ -458,12 +458,12 @@ with ShardedPool(
     # accurately means keeping Q very accurately close to 1 as the integration proceeds.
     # Internally, the bessel_phase() function uses the Dormand-Prince 8,5(3) stepper to compute a high accuracy solution.
     Bessel_0pt5 = bessel_phase(
-        0.5 + b_value, largest_x_with_clearance, atol=1e-25, rtol=1e-16
+        0.5 + b_value, largest_x_with_clearance, atol=1e-25, rtol=5e-14
     )
     Bessel_0pt5_proxy = BesselPhaseProxy(Bessel_0pt5)
 
     Bessel_2pt5 = bessel_phase(
-        2.5 + b_value, largest_x_with_clearance, atol=1e-25, rtol=1e-16
+        2.5 + b_value, largest_x_with_clearance, atol=1e-25, rtol=5e-14
     )
     Bessel_2pt5_proxy = BesselPhaseProxy(Bessel_2pt5)
 
