@@ -652,16 +652,12 @@ class phase_spline:
     def raw_theta(self, x: float, x_is_log: bool = False) -> float:
         raw_x, log_x = self._get_raw_log_x(x, x_is_log)
         spline, first_or_last_chunk = self._match_chunk(log_x)
-        return spline.raw_theta(
-            raw_x=raw_x, log_x=log_x, warn_unsafe=not first_or_last_chunk
-        )
+        return spline.raw_theta(raw_x=raw_x, log_x=log_x, warn_unsafe=False)
 
     def theta_mod_2pi(self, x: float, x_is_log: bool = False) -> float:
         raw_x, log_x = self._get_raw_log_x(x, x_is_log)
         spline, first_or_last_chunk = self._match_chunk(log_x)
-        return spline.theta_mod_2pi(
-            raw_x=raw_x, log_x=log_x, warn_unsafe=not first_or_last_chunk
-        )
+        return spline.theta_mod_2pi(raw_x=raw_x, log_x=log_x, warn_unsafe=False)
 
     def theta_deriv(
         self, x: float, x_is_log: bool = False, log_derivative: bool = False
@@ -672,5 +668,5 @@ class phase_spline:
             raw_x=raw_x,
             log_x=log_x,
             log_derivative=log_derivative,
-            warn_unsafe=not first_or_last_chunk,
+            warn_unsafe=False,
         )
