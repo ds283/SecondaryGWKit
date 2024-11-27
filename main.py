@@ -318,7 +318,7 @@ with ShardedPool(
     ## STEP 1
     ## BUILD SAMPLE OF K-WAVENUMBERS AND OBTAIN THEIR CORRESPONDING HORIZON EXIT TIMES
 
-    print("\n** BUILDING ARRAY OF WAVENUMBERS AT WHICH TO SAMPLE")
+    print("\n** BUILD ARRAY OF WAVENUMBERS TO SAMPLE")
 
     # Build array of k-sample points covering the region of the primoridal power spectrum that we want to include
     # in the one-loop integral. We will eventually evaluate the one-loop integral on a square grid
