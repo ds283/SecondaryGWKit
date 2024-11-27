@@ -3,16 +3,15 @@ import itertools
 import json
 import sys
 from datetime import datetime
+from math import fabs, pi, sqrt
 from pathlib import Path
 from random import sample
 from typing import List, Tuple, Optional
 
 import matplotlib.pyplot as plt
-import numpy as np
 import pandas as pd
 import ray
 import seaborn as sns
-from math import fabs, pi, sqrt
 from ray import ObjectRef
 
 from ComputeTargets import (
@@ -133,27 +132,10 @@ with ShardedPool(
         ]
     )
 
-    ## UTILITY FUNCTIONS
-
-    def convert_to_wavenumbers(k_sample_set):
-        return pool.object_get(
-            "wavenumber",
-            payload_data=[{"k_inv_Mpc": k, "units": units} for k in k_sample_set],
-        )
-
-    def convert_to_redshifts(z_sample_set):
-        return pool.object_get(
-            "redshift", payload_data=[{"z": z} for z in z_sample_set]
-        )
-
-    # array of k-modes matching the SOURCE k-grid
-    source_k_array = ray.get(
-        convert_to_wavenumbers(np.logspace(np.log10(1e3), np.log10(5e7), 10))
-    )
-
-    # array of k-modes matching the RESPONSE k-grid
+    # array of k-modes matching the SOURCE and RESPONSE k-grids
+    source_k_array = ray.get(pool.read_wavenumber_table(units=units, is_source=True))
     response_k_array = ray.get(
-        convert_to_wavenumbers(np.logspace(np.log10(1e3), np.log10(5e7), 10))
+        pool.read_wavenumber_table(units=units, is_response=True)
     )
 
     def create_k_exit_work(k: wavenumber):
@@ -206,25 +188,11 @@ with ShardedPool(
         k=int(round(0.4 * len(qs_range) + 0.5, 0)),
     )
 
-    DEFAULT_SOURCE_SAMPLES_PER_LOG10_Z = 100
-    DEFAULT_RESPONSE_SAMPLES_SPARSENESS = 12
-    DEFAULT_ZEND = 0.1
-
-    source_z_grid = k_exit_earliest.populate_z_sample(
-        outside_horizon_efolds=5,
-        samples_per_log10z=DEFAULT_SOURCE_SAMPLES_PER_LOG10_Z,
-        z_end=DEFAULT_ZEND,
-    )
-
-    # embed these redshift list into the database
-    z_source_array = ray.get(convert_to_redshifts(source_z_grid))
+    z_source_array = ray.get(pool.read_redshift_table(is_source=True))
     z_source_sample = redshift_array(z_array=z_source_array)
 
-    # we need the response sample to be a subset of the source sample, otherwise we won't have
-    # source data for the Green's functions right the way down to the response time
-    z_response_sample = z_source_sample.winnow(
-        sparseness=DEFAULT_RESPONSE_SAMPLES_SPARSENESS
-    )
+    z_response_array = ray.get(pool.read_redshift_table(is_response=True))
+    z_response_sample = redshift_array(z_array=z_response_array)
 
     # choose a subsample of RESPONSE redshifts
     z_subsample: List[redshift] = sample(
@@ -253,7 +221,7 @@ with ShardedPool(
         [
             pool.object_get(
                 "GkSourcePolicy",
-                label='policy="maximize-numeric"-Levin-threshold="2.5"',
+                label='policy="maximize-numeric"-Levin-threshold="1.5"',
                 Levin_threshold=1.5,
                 numeric_policy="maximize_numeric",
             ),

@@ -1,3 +1,5 @@
+from typing import Optional
+
 import sqlalchemy as sqla
 
 from CosmologyConcepts import redshift
@@ -69,7 +71,12 @@ class sqla_redshift_factory(SQLAFactoryBase):
         return obj
 
     @staticmethod
-    def read_table(conn, table, is_source: bool = None, is_response: bool = None):
+    def read_table(
+        conn,
+        table,
+        is_source: Optional[bool] = None,
+        is_response: Optional[bool] = None,
+    ):
         # query for all redshift records in the table
         query = sqla.select(
             table.c.serial,

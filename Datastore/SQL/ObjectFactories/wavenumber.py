@@ -1,3 +1,5 @@
+from typing import Optional
+
 import sqlalchemy as sqla
 from sqlalchemy.exc import MultipleResultsFound
 
@@ -86,7 +88,11 @@ class sqla_wavenumber_factory(SQLAFactoryBase):
 
     @staticmethod
     def read_table(
-        conn, table, units: UnitsLike, is_source: bool = None, is_response: bool = None
+        conn,
+        table,
+        units: UnitsLike,
+        is_source: Optional[bool] = None,
+        is_response: Optional[bool] = None,
     ):
         # query for all wavenumber records in the table
         query = sqla.select(

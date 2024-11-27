@@ -6,7 +6,6 @@ from pathlib import Path
 from random import sample
 from typing import List, Optional
 
-import numpy as np
 import pandas as pd
 import ray
 import seaborn as sns
@@ -114,18 +113,8 @@ with ShardedPool(
         ]
     )
 
-    ## UTILITY FUNCTIONS
-
-    def convert_to_wavenumbers(k_sample_set):
-        return pool.object_get(
-            "wavenumber",
-            payload_data=[{"k_inv_Mpc": k, "units": units} for k in k_sample_set],
-        )
-
     # array of k-modes matching the SOURCE k-grid
-    source_k_array = ray.get(
-        convert_to_wavenumbers(np.logspace(np.log10(1e1), np.log10(1e3), 10))
-    )
+    source_k_array = ray.get(pool.read_wavenumber_table(units=units, is_source=True))
 
     def create_k_exit_work(k: wavenumber):
         return pool.object_get(

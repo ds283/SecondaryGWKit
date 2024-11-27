@@ -660,7 +660,12 @@ class ShardedPool:
 
             conn.commit()
 
-    def read_wavenumber_table(self, units: UnitsLike):
+    def read_wavenumber_table(
+        self,
+        units: UnitsLike,
+        is_source: Optional[bool] = None,
+        is_response: Optional[bool] = None,
+    ):
         """
         Read the wavenumber value table from one of the database shards
         :param units:
@@ -674,9 +679,13 @@ class ShardedPool:
         shard_ids[i], shard_ids[-1] = shard_ids[-1], shard_ids[i]
         shard_key = shard_ids.pop()
 
-        return self._shards[shard_key].read_wavenumber_table.remote(units=units)
+        return self._shards[shard_key].read_wavenumber_table.remote(
+            units=units, is_source=is_source, is_response=is_response
+        )
 
-    def read_redshift_table(self):
+    def read_redshift_table(
+        self, is_source: Optional[bool] = None, is_response: Optional[bool] = None
+    ):
         """
         Read the redshift value table from one of the database shards
         :return:
@@ -689,4 +698,6 @@ class ShardedPool:
         shard_ids[i], shard_ids[-1] = shard_ids[-1], shard_ids[i]
         shard_key = shard_ids.pop()
 
-        return self._shards[shard_key].read_redshift_table.remote()
+        return self._shards[shard_key].read_redshift_table.remote(
+            is_source=is_source, is_response=is_response
+        )
