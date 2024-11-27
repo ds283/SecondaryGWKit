@@ -851,7 +851,7 @@ with ShardedPool(
             )
 
     def add_Gk_labels(ax, obj: GkSourcePolicyData):
-        fns = obj.functions
+        fns: GkSourceFunctions = obj.functions
         if fns.type is not None:
             ax.text(
                 0.0,
@@ -884,6 +884,15 @@ with ShardedPool(
                 0.5,
                 1.1,
                 f"Numeric region: ({fns.numerical_region[0]:.3g}, {fns.numerical_region[1]:.3g})",
+                transform=ax.transAxes,
+                fontsize="x-small",
+            )
+
+        if fns.phase is not None:
+            ax.text(
+                0.8,
+                1.05,
+                f"Chunks: {fns.phase.num_chunks}",
                 transform=ax.transAxes,
                 fontsize="x-small",
             )
