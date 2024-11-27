@@ -1,6 +1,7 @@
 import argparse
 import sys
 from datetime import datetime
+from math import fabs
 from pathlib import Path
 from random import sample
 from typing import List, Optional
@@ -9,7 +10,6 @@ import numpy as np
 import pandas as pd
 import ray
 import seaborn as sns
-from math import fabs
 from matplotlib import pyplot as plt
 
 from ComputeTargets import (
@@ -29,7 +29,12 @@ from Datastore.SQL.ShardedPool import ShardedPool
 from MetadataConcepts import tolerance
 from RayTools.RayWorkPool import RayWorkPool
 from Units import Mpc_units
-from defaults import DEFAULT_ABS_TOLERANCE, DEFAULT_REL_TOLERANCE
+from defaults import (
+    DEFAULT_ABS_TOLERANCE,
+    DEFAULT_REL_TOLERANCE,
+    DEFAULT_TK_ABS_TOLERANCE,
+    DEFAULT_TK_REL_TOLERANCE,
+)
 
 DEFAULT_TIMEOUT = 60
 
@@ -100,10 +105,12 @@ with ShardedPool(
     )
 
     # build absolute and relative tolerances
-    atol, rtol = ray.get(
+    atol, rtol, tk_atol, tk_rtol = ray.get(
         [
-            pool.object_get(tolerance, tol=DEFAULT_ABS_TOLERANCE),
-            pool.object_get(tolerance, tol=DEFAULT_REL_TOLERANCE),
+            pool.object_get("tolerance", tol=DEFAULT_ABS_TOLERANCE),
+            pool.object_get("tolerance", tol=DEFAULT_REL_TOLERANCE),
+            pool.object_get(tolerance, tol=DEFAULT_TK_ABS_TOLERANCE),
+            pool.object_get(tolerance, tol=DEFAULT_TK_REL_TOLERANCE),
         ]
     )
 
@@ -117,7 +124,7 @@ with ShardedPool(
 
     # array of k-modes matching the SOURCE k-grid
     source_k_array = ray.get(
-        convert_to_wavenumbers(np.logspace(np.log10(1e3), np.log10(5e7), 10))
+        convert_to_wavenumbers(np.logspace(np.log10(1e1), np.log10(1e3), 10))
     )
 
     def create_k_exit_work(k: wavenumber):
@@ -310,7 +317,7 @@ with ShardedPool(
             add_z_labels(ax, Tk, k_exit)
 
             ax.set_xlabel("response redshift $z$")
-            ax.set_ylabel("$G_k(z, z')$")
+            ax.set_ylabel("$T_k(z)$")
 
             set_loglog_axes(ax)
 
@@ -350,7 +357,7 @@ with ShardedPool(
             add_z_labels(ax, Tk, k_exit)
 
             ax.set_xlabel("response redshift $z$")
-            ax.set_ylabel("$G_k(z, z')$")
+            ax.set_ylabel("$T_k(z)$")
 
             set_loglog_axes(ax)
 
@@ -363,7 +370,7 @@ with ShardedPool(
 
             plt.close()
 
-        z_response_column = [value.z for value in values]
+        z_source_column = [value.z.z for value in values]
         T_column = [value.T for value in values]
         Tprime_column = [value.Tprime for value in values]
         analytic_T_rad_column = [value.analytic_T_rad for value in values]
@@ -377,7 +384,7 @@ with ShardedPool(
         csv_path.parents[0].mkdir(exist_ok=True, parents=True)
         df = pd.DataFrame.from_dict(
             {
-                "z_response": z_response_column,
+                "z_source": z_source_column,
                 "T": T_column,
                 "Tprime": Tprime_column,
                 "analytic_T_rad": analytic_T_rad_column,
@@ -386,9 +393,7 @@ with ShardedPool(
                 "analytic_Tprime_w": analytic_Tprime_w_column,
             }
         )
-        df.sort_values(
-            by="z_response", ascending=False, inplace=True, ignore_index=True
-        )
+        df.sort_values(by="z_source", ascending=False, inplace=True, ignore_index=True)
         df.to_csv(csv_path, header=True, index=False)
 
     def build_plot_Tk_work(k_exit: wavenumber_exit_time):
@@ -397,8 +402,8 @@ with ShardedPool(
             "model": model_proxy,
             "k": k_exit,
             "z_sample": None,
-            "atol": atol,
-            "rtol": rtol,
+            "atol": tk_atol,
+            "rtol": tk_rtol,
         }
 
         GkS_ref = pool.object_get("TkNumericalIntegration", **query_payload)

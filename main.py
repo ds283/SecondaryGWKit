@@ -48,6 +48,8 @@ from defaults import (
     DEFAULT_FLOAT_PRECISION,
     DEFAULT_QUADRATURE_RTOL,
     DEFAULT_QUADRATURE_ATOL,
+    DEFAULT_TK_ABS_TOLERANCE,
+    DEFAULT_TK_REL_TOLERANCE,
 )
 from utilities import grouper, format_time
 
@@ -242,10 +244,12 @@ with ShardedPool(
     ## DATASTORE OBJECTS
 
     # build absolute and relative tolerances
-    atol, rtol, quad_atol, quad_rtol = ray.get(
+    atol, rtol, tk_atol, tk_rtol, quad_atol, quad_rtol = ray.get(
         [
             pool.object_get("tolerance", tol=DEFAULT_ABS_TOLERANCE),
             pool.object_get("tolerance", tol=DEFAULT_REL_TOLERANCE),
+            pool.object_get("tolerance", tol=DEFAULT_TK_ABS_TOLERANCE),
+            pool.object_get("tolerance", tol=DEFAULT_TK_REL_TOLERANCE),
             pool.object_get("tolerance", tol=DEFAULT_QUADRATURE_ATOL),
             pool.object_get("tolerance", tol=DEFAULT_QUADRATURE_RTOL),
         ]
@@ -484,8 +488,8 @@ with ShardedPool(
                 "k": k_exit,
                 "z_sample": None,
                 "z_init": None,
-                "atol": atol,
-                "rtol": rtol,
+                "atol": tk_atol,
+                "rtol": tk_rtol,
                 "tags": [
                     TkProductionTag,
                     SourceZGridSizeTag,
@@ -535,8 +539,8 @@ with ShardedPool(
                     k=k_exit,
                     z_sample=my_sample,
                     z_init=my_sample.max,
-                    atol=atol,
-                    rtol=rtol,
+                    atol=tk_atol,
+                    rtol=tk_rtol,
                     tags=[
                         TkProductionTag,
                         SourceZGridSizeTag,
@@ -585,8 +589,8 @@ with ShardedPool(
                         "model": model_proxy,
                         "r": r,
                         "z_sample": None,
-                        "atol": atol,
-                        "rtol": rtol,
+                        "atol": tk_atol,
+                        "rtol": tk_rtol,
                         "tags": [
                             TkProductionTag,
                             SourceZGridSizeTag,
@@ -640,8 +644,8 @@ with ShardedPool(
                 "z_sample": None,
                 "k": k,
                 "z_init": None,
-                "atol": atol,
-                "rtol": rtol,
+                "atol": tk_atol,
+                "rtol": tk_rtol,
                 "tags": [
                     TkProductionTag,
                     SourceZGridSizeTag,
