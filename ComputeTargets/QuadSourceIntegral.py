@@ -279,6 +279,9 @@ def compute_QuadSource_integral(
         "numeric_quad_data": numeric_quad_data,
         "WKB_quad_data": WKB_quad_data,
         "WKB_Levin_data": WKB_Levin_data,
+        "WKB_phase_spline_chunks": (
+            Gk_f.phase.num_chunks if Gk_f.phase is not None else None
+        ),
         "eta_source_max": model_f.tau(z_source_max.z),
         "eta_response": model_f.tau(z_response.z),
         "analytic_rad": analytic_data["value"],
@@ -1068,6 +1071,7 @@ class QuadSourceIntegral(DatastoreObject):
             self._numeric_quad_data = None
             self._WKB_quad_data = None
             self._WKB_Levin_data = None
+            self._WKB_phase_spline_chunks = None
 
             self._eta_source_max = None
             self._eta_response = None
@@ -1088,6 +1092,7 @@ class QuadSourceIntegral(DatastoreObject):
             self._numeric_quad = payload["numeric_quad"]
             self._WKB_quad = payload["WKB_quad"]
             self._WKB_Levin = payload["WKB_Levin"]
+            self._WKB_phase_spline_chunks = payload["WKB_phase_spline_chunks"]
 
             self._eta_source_max = payload["eta_source_max"]
             self._eta_response = payload["eta_response"]
@@ -1350,6 +1355,7 @@ class QuadSourceIntegral(DatastoreObject):
         self._numeric_quad_data = payload["numeric_quad_data"]
         self._WKB_quad_data = payload["WKB_quad_data"]
         self._WKB_Levin_data = payload["WKB_Levin_data"]
+        self._WKB_phase_spline_chunks = payload["WKB_phase_spline_chunks"]
 
         self._compute_time = payload["compute_time"]
         self._analytic_compute_time = payload["analytic_compute_time"]

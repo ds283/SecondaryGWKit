@@ -191,21 +191,10 @@ class sqla_QuadSourceIntegral_factory(SQLAFactoryBase):
                 sqla.Column("WKB_quad_min_RHS_time", sqla.Float(64), nullable=True),
                 sqla.Column("WKB_Levin_num_regions", sqla.Integer, nullable=True),
                 sqla.Column("WKB_Levin_evaluations", sqla.Integer, nullable=True),
-                sqla.Column(
-                    "WKB_Levin_elapsed",
-                    sqla.Float(64),
-                    nullable=True,
-                ),
-                sqla.Column(
-                    "compute_time",
-                    sqla.Float(64),
-                    nullable=True,
-                ),
-                sqla.Column(
-                    "analytic_compute_time",
-                    sqla.Float(64),
-                    nullable=True,
-                ),
+                sqla.Column("WKB_Levin_elapsed", sqla.Float(64), nullable=True),
+                sqla.Column("WKB_phase_spline_chunks", sqla.Integer, nullable=True),
+                sqla.Column("compute_time", sqla.Float(64), nullable=True),
+                sqla.Column("analytic_compute_time", sqla.Float(64), nullable=True),
                 sqla.Column(
                     "metadata", sqla.String(DEFAULT_STRING_LENGTH), nullable=True
                 ),
@@ -261,6 +250,7 @@ class sqla_QuadSourceIntegral_factory(SQLAFactoryBase):
             table.c.WKB_Levin_num_regions,
             table.c.WKB_Levin_evaluations,
             table.c.WKB_Levin_elapsed,
+            table.c.WKB_phase_spline_chunks,
         ).filter(
             table.c.model_serial == model_proxy.store_id,
             table.c.policy_serial == policy.store_id,
@@ -342,6 +332,7 @@ class sqla_QuadSourceIntegral_factory(SQLAFactoryBase):
                     evaluations=row_data.WKB_Levin_evaluations,
                     elapsed=row_data.WKB_Levin_elapsed,
                 ),
+                "WKB_phase_spline_chunks": row_data.WKB_phase_spline_chunks,
                 "compute_time": row_data.compute_time,
                 "analytic_compute_time": row_data.analytic_compute_time,
                 "data_serial": row_data.data_serial,
@@ -478,6 +469,7 @@ class sqla_QuadSourceIntegral_factory(SQLAFactoryBase):
                     "WKB_Levin_elapsed": (
                         WKB_Levin_data.elapsed if WKB_Levin_data is not None else None
                     ),
+                    "WKB_phase_spline_chunks": obj._WKB_phase_spline_chunks,
                     "metadata": (
                         json.dumps(obj.metadata) if obj._metadata is not None else None
                     ),
@@ -558,6 +550,7 @@ class sqla_QuadSourceIntegral_factory(SQLAFactoryBase):
                 table.c.WKB_Levin_num_regions,
                 table.c.WKB_Levin_evaluations,
                 table.c.WKB_Levin_elapsed,
+                table.c.WKB_phase_spline_chunks,
                 table.c.z_response_serial,
                 z_response_tab.c.z.label("z_response"),
                 table.c.z_source_max_serial,
@@ -753,6 +746,7 @@ class sqla_QuadSourceIntegral_factory(SQLAFactoryBase):
                         evaluations=row.WKB_Levin_evaluations,
                         elapsed=row.WKB_Levin_elapsed,
                     ),
+                    "WKB_phase_spline_chunks": row.WKB_phase_spline_chunks,
                     "compute_time": row.compute_time,
                     "analytic_compute_time": row.analytic_compute_time,
                     "source_serial": row.source_serial,
