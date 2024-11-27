@@ -1,6 +1,7 @@
 from math import pi, log, exp, fmod
 from typing import Iterable, Tuple, Optional
 
+from numpy import sign
 from scipy.interpolate import InterpolatedUnivariateSpline
 
 DEFAULT_CHUNK_SIZE = 200
@@ -26,21 +27,34 @@ class _chunk_spline:
 
         # cache supplied values
         self._data = data
-        self._x_sample = [p["x"] for p in data]
-
+        if self._data is None:
+            raise RuntimeError(
+                f"chunk_spline: supplied data is None (div_2pi_base={div_2pi_base})"
+            )
         self.data_points: int = len(self._data)
+
+        self._data.sort(key=lambda d: d["x"])
+        self._x_sample = [p["x"] for p in self._data]
+
+        if len(data) == 0:
+            raise RuntimeError(
+                f"chunk_spline: chunk has no data points (div_2pi_base={div_2pi_base})"
+            )
 
         # build set of y values, but rebased mod 2pi so that all values are close to zero
         # in this way, we hope to avoid loss of precision when the result of the spline is evaluated mod 2pi, as it typically
         # will be
         self._y_points = [
-            (p["div_2pi"] - div_2pi_base) * _twopi + p["mod_2pi"] for p in data
+            (p["div_2pi"] - div_2pi_base) * _twopi + p["mod_2pi"] for p in self._data
         ]
 
         if x_is_log:
             self._log_x_points = self._x_sample
         else:
-            self._log_x_points = [log(x) for x in self._x_sample]
+            if x_is_redshift:
+                self._log_x_points = [log(1.0 + x) for x in self._x_sample]
+            else:
+                self._log_x_points = [log(x) for x in self._x_sample]
 
         # find min and max values of x, so that we avoid extrapolation if we are asked to evaluate at an x position that is out-of-bounds
         self.min_log_x = min(self._log_x_points)
@@ -57,7 +71,7 @@ class _chunk_spline:
         self._max_safe_x = exp(self._max_safe_log_x)
 
         self._spline = InterpolatedUnivariateSpline(self._log_x_points, self._y_points)
-        self._derivative = self._spline.derivative
+        self._derivative = self._spline.derivative()
 
     def _theta(self, raw_x: float, log_x: float, warn_unsafe: bool = True) -> float:
         if log_x < self.min_log_x:
@@ -70,16 +84,16 @@ class _chunk_spline:
                 f"chunk_spline: spline evaluated out-of-bounds of upper limit at log_x={log_x:.5g} (raw x={raw_x:.5g}) | Maximum allowed value is log_x={self._max_safe_log_x:.5g} (raw x={self._max_safe_x:.5g}) | Recommended safe maximum is log_x={self._max_safe_log_x:.5g} (raw x={self._max_safe_x:.5g})"
             )
 
-        # if warn_unsafe:
-        #     if log_x < self._min_safe_log_x:
-        #         print(
-        #             f"## WARNING (chunk_spline): chunk spline evaluated within 5% of lower limit at log_x={log_x:.5g} (raw={raw_x:.5g}) | Recommended safe minimum is log_x={self._min_safe_log_x:.5g} (raw x={self._min_safe_x:.5g})"
-        #         )
-        #
-        #     if log_x > self._max_safe_log_x:
-        #         print(
-        #             f"## WARNING (chunk_spline): chunk spline evaluated within 5% of upper limit at log_x={log_x:.5g} (raw={raw_x:.5g}) | Recommended safe maximum is log_x={self._max_safe_log_x:.5g} (raw x={self._max_safe_x:.5g})"
-        #         )
+        if warn_unsafe:
+            if log_x < self._min_safe_log_x:
+                print(
+                    f"## WARNING (chunk_spline): chunk spline evaluated within 5% of lower limit at log_x={log_x:.5g} (raw={raw_x:.5g}) | Recommended safe minimum is log_x={self._min_safe_log_x:.5g} (raw x={self._min_safe_x:.5g})"
+                )
+
+            if log_x > self._max_safe_log_x:
+                print(
+                    f"## WARNING (chunk_spline): chunk spline evaluated within 5% of upper limit at log_x={log_x:.5g} (raw={raw_x:.5g}) | Recommended safe maximum is log_x={self._max_safe_log_x:.5g} (raw x={self._max_safe_x:.5g})"
+                )
 
         return self._spline(log_x)
 
@@ -96,16 +110,16 @@ class _chunk_spline:
                 f"chunk_spline: spline evaluated out-of-bounds of upper limit at log_x={log_x:.5g} (raw x={raw_x:.5g}) | Maximum allowed value is log_x={self._max_safe_log_x:.5g} (raw x={self._max_safe_x:.5g}) | Recommended safe maximum is log_x={self._max_safe_log_x:.5g} (raw x={self._max_safe_x:.5g})"
             )
 
-        # if warn_unsafe:
-        #     if log_x < self._min_safe_log_x:
-        #         print(
-        #             f"## WARNING (chunk_spline): chunk spline evaluated within 5% of lower limit at log_x={log_x:.5g} (raw={raw_x:.5g}) | Recommended safe minimum is log_x={self._min_safe_log_x:.5g} (raw x={self._min_safe_x:.5g})"
-        #         )
-        #
-        #     if log_x > self._max_safe_log_x:
-        #         print(
-        #             f"## WARNING (chunk_spline): chunk spline evaluated within 5% of upper limit at log_x={log_x:.5g} (raw={raw_x:.5g}) | Recommended safe maximum is log_x={self._max_safe_log_x:.5g} (raw x={self._max_safe_x:.5g})"
-        #         )
+        if warn_unsafe:
+            if log_x < self._min_safe_log_x:
+                print(
+                    f"## WARNING (chunk_spline): chunk spline evaluated within 5% of lower limit at log_x={log_x:.5g} (raw={raw_x:.5g}) | Recommended safe minimum is log_x={self._min_safe_log_x:.5g} (raw x={self._min_safe_x:.5g})"
+                )
+
+            if log_x > self._max_safe_log_x:
+                print(
+                    f"## WARNING (chunk_spline): chunk spline evaluated within 5% of upper limit at log_x={log_x:.5g} (raw={raw_x:.5g}) | Recommended safe maximum is log_x={self._max_safe_log_x:.5g} (raw x={self._max_safe_x:.5g})"
+                )
 
         return self._derivative(log_x)
 
@@ -169,10 +183,23 @@ class _chunk_spline:
         raw_x: Optional[float] = None,
         log_x: Optional[float] = None,
         x_is_log: bool = False,
+        log_derivative: bool = False,
         warn_unsafe: bool = True,
     ) -> float:
         raw_x, log_x = self._get_x(x, raw_x, log_x, x_is_log)
-        return self._theta_deriv(raw_x=raw_x, log_x=log_x, warn_unsafe=warn_unsafe)
+
+        deriv = self._theta_deriv(raw_x=raw_x, log_x=log_x, warn_unsafe=warn_unsafe)
+
+        if log_derivative:
+            # spline is computed as a function of log(x) or log(1+z) if we are working in redshift, so derivative
+            # will naturally by with respect to this
+            return deriv
+
+        # otherwise, this is not a log derivative, so we need to divide by 1/x or 1/(1+z)
+        if self._x_is_redshift:
+            return deriv / (1.0 + raw_x)
+
+        return deriv / raw_x
 
 
 class phase_spline:
@@ -192,6 +219,7 @@ class phase_spline:
         chunk_logstep: Optional[float] = None,
         x_is_log: bool = False,
         x_is_redshift: bool = False,
+        increasing: bool = True,
     ):
         if len(x_sample) == 0:
             raise RuntimeError("phase_spline: empty x_sample")
@@ -200,6 +228,7 @@ class phase_spline:
         assert len(x_sample) == len(theta_mod_2pi_sample)
 
         self._x_is_redshift: bool = x_is_redshift
+        self._increasing: bool = increasing
 
         self._min_div_2pi: int = min(theta_div_2pi_sample)
         self._max_div_2pi: int = max(theta_div_2pi_sample)
@@ -229,9 +258,12 @@ class phase_spline:
             # add this point to any chunks that should contain it
             for chunk, data in self._spline_points.items():
                 start, end = chunk
-                if start <= div_2pi < end:
+                # we can be inclusive at both ends. It doesn't really matter if we have a few extra data points at top or bottom.
+                # Also, we need to allow start = end for the edge case where div2pi is zero for all points
+                if start <= div_2pi <= end:
                     data.append(
                         {
+                            "id": i,
                             "x": x,
                             "div_2pi": div_2pi,
                             "mod_2pi": mod_2pi,
@@ -241,43 +273,96 @@ class phase_spline:
         # check number of spline points in each chunk; if the last chunk contains too few items, we want to merge it with the previous chunk
         # otherwise, warn if any chunk contains too few points to produce a good spline
 
-        # build list of intervals, sorted into order
-        chunk_list = list(self._spline_points.keys())
-        chunk_list.sort(key=lambda x: x[0])
+        issue_warning = False
 
-        for i, chunk in enumerate(chunk_list):
-            start, end = chunk
-            data = self._spline_points[chunk]
-            if len(data) < MINIMUM_SPLINE_DATA_POINTS:
+        # check number of spline points in each chunk, and merge neighbouring chunks if there are too few points to produce a good spline
+        finished = False
+        while not finished:
+            # build list of intervals, sorted into order of increasing div2pi (this works whether our div2pi values are positive or negative)
+            chunk_list = list(self._spline_points.keys())
 
-                # if last point, merge
-                if i == 0 or i < len(chunk_list) - 1:
-                    print(
-                        f"!! WARNING (phase_spline): chunk of range ({start:.5g}, {end:.5g}) has {len(data)} data points, which is below the recommended minimum to produce a good spline"
-                    )
+            # if phase is increasing with x, sort into ascending order, otherwise descending order (e.g. we get this with GkSource
+            # where the phase is a monotone decreasing function of the source redshift
+            if self._increasing:
+                chunk_list.sort(key=lambda x: x[0])
+            else:
+                chunk_list.sort(key=lambda x: x[0], reverse=True)
 
-                elif i == len(chunk_list) - 1:
-                    assert i > 0
-                    prev_chunk = chunk_list[i - 1]
-                    prev_start, prev_end = prev_chunk
+            # set finished to True, so need to manually reset it to False if we merge any chunks and require another pass
+            finished = True
+            for i, chunk in enumerate(chunk_list):
+                start, end = chunk
+                data = self._spline_points[chunk]
+                if len(data) < MINIMUM_SPLINE_DATA_POINTS:
+                    if len(chunk_list) == 1:
+                        print(
+                            f"!! WARNING (phase_spline): data vector contains only {len(data)} data points, which is below the recommended minimum to produce a good spline"
+                        )
+                        issue_warning = True
 
-                    prev_chunk_data = self._spline_points[prev_chunk]
+                    elif i == 0:
+                        # merge with next chunk
+                        next_chunk = chunk_list[i + 1]
+                        next_start, next_end = next_chunk
 
-                    new_chunk_data = prev_chunk_data.copy()
-                    new_chunk_data.extend(data)
+                        next_data = self._spline_points[next_chunk]
 
-                    self._spline_points.pop(chunk)
-                    self._spline_points.pop(prev_chunk)
-                    self._spline_points[(prev_start, end)] = new_chunk_data
+                        # merge data points, using dict based on point id to avoid creating duplicate points
+                        # (this causes spline creation to fail)
+                        _new_data = {x["id"]: x for x in next_data}
+                        _new_data.update({x["id"]: x for x in data})
+                        new_data = list(_new_data.values())
 
-        # build spline objects
+                        self._spline_points.pop(chunk)
+                        self._spline_points.pop(next_chunk)
+                        self._spline_points[(start, next_end)] = new_data
+                        finished = False
+                        break
+
+                    else:
+                        assert i > 0
+                        prev_chunk = chunk_list[i - 1]
+                        prev_start, prev_end = prev_chunk
+
+                        prev_data = self._spline_points[prev_chunk]
+
+                        # merge data points, using dict based on point id to avoid creating duplicate points
+                        # (this causes spline creation to fail)
+                        _new_data = {x["id"]: x for x in prev_data}
+                        _new_data.update({x["id"]: x for x in data})
+                        new_data = list(_new_data.values())
+
+                        self._spline_points.pop(chunk)
+                        self._spline_points.pop(prev_chunk)
+                        self._spline_points[(prev_start, end)] = new_data
+                        finished = False
+                        break
+
+        if issue_warning:
+            print(
+                f"## For information, the constructed chunks are (total data points={len(x_sample)}, min div2pi={self._min_div_2pi}, max div2pi={self._max_div_2pi}):"
+            )
+            for i, chunk in enumerate(chunk_list):
+                start, end = chunk
+                data = self._spline_points[chunk]
+                print(f"     {i}. ({start}, {end}) contains {len(data)} data points")
+
+        # BUILD SPLINE OBJECTS
+
+        # build list of keys, sorted into order of increasing div2pi
         self._chunk_list = list(self._spline_points.keys())
-        self._chunk_list.sort(key=lambda x: x[0])
+        if self._increasing:
+            self._chunk_list.sort(key=lambda x: x[0])
+        else:
+            self._chunk_list.sort(key=lambda x: x[0], reverse=True)
 
         self._splines = {}
 
         last_min_log_x = None
         last_max_log_x = None
+
+        last_start = None
+        last_end = None
 
         # check that chunks have ascending x-ranges
         for chunk in self._chunk_list:
@@ -291,18 +376,22 @@ class phase_spline:
                 x_is_redshift=x_is_redshift,
             )
 
-            if last_min_log_x is not None and spline.min_log_x <= last_min_log_x:
+            if last_min_log_x is not None and spline.min_log_x < last_min_log_x:
                 raise RuntimeError(
-                    "phase_spline: chunks are not in increasing min_x-order"
+                    f"phase_spline: chunks are not in increasing min_x-order (current chunk=({start}, {end}), min_log_x={spline.min_log_x:.5g}, max_log_x={spline.max_log_x:.5g}; last chunk=({last_start}, {last_end}), min_log_x={last_min_log_x:.5g}, max_log_x={last_max_log_x:.5g})"
                 )
-            if last_max_log_x is not None and spline.max_log_x <= last_max_log_x:
+            if last_max_log_x is not None and spline.max_log_x < last_max_log_x:
                 raise RuntimeError(
-                    "phase_spline: chunks are not in increasing max_x-order"
+                    f"phase_spline: chunks are not in increasing max_x-order (current chunk=({start}, {end}), min_log_x={spline.min_log_x:.5g}, max_log_x={spline.max_log_x:.5g}; last chunk=({last_start}, {last_end}), min_log_x={last_min_log_x:.5g}, max_log_x={last_max_log_x:.5g})"
                 )
 
             self._splines[chunk] = spline
+
             last_min_log_x = spline.min_log_x
             last_max_log_x = spline.max_log_x
+
+            last_start = start
+            last_end = end
 
         # print(
         #     f"## Built phase_spline object containing {len(self._splines)} chunks: (min theta dvi 2pi = {self._min_div_2pi}, max theta dvi 2pi = {self._max_div_2pi})"
@@ -326,17 +415,40 @@ class phase_spline:
             chunk_start = int(round(chunk_start + 0.75 * self._chunk_step - 0.5, 0))
 
     def _build_log_chunks(self, chunk_logstep: float):
-        self._chunk_logstep = float(chunk_logstep)
-
-        chunk_start = int(self._min_div_2pi)
+        chunk_initial = int(self._min_div_2pi)
         chunk_final = int(self._max_div_2pi)
 
-        if chunk_start < 0:
+        if chunk_initial == 0 and chunk_final < 0:
             raise RuntimeError(
-                "phase_spline: cannot use negative div2pi values with logarithmic spacing"
+                "phase_spline: when using logarithmic spacing, if initial div2pi=0 then final value must be non-negative"
             )
 
-        while chunk_start <= chunk_final:
+        if chunk_final == 0 and chunk_initial > 0:
+            raise RuntimeError(
+                "phase_spline: when using logarithmic spacing, if final div2pi=0 then initial value must be non-positive"
+            )
+
+        if chunk_initial * chunk_final < 0:
+            raise RuntimeError(
+                f"phase_spline: when using logarithmic spacing, initial and final div2pi values must have the same sign (start div2pi={sign(chunk_initial)}, final div2pi={sign(chunk_final)})"
+            )
+
+        if chunk_initial == 0 and chunk_final == 0:
+            self._spline_points[(0, 0)] = []
+        elif chunk_initial >= 0:
+            self._build_log_chunks_positive(chunk_initial, chunk_final, chunk_logstep)
+        else:
+            self._build_log_chunks_negative(chunk_initial, chunk_final, chunk_logstep)
+
+    def _build_log_chunks_positive(
+        self, chunk_start: int, chunk_stop: int, chunk_logstep: float
+    ):
+        self._chunk_logstep = float(chunk_logstep)
+
+        assert chunk_start >= 0
+        assert chunk_stop > 0
+
+        while chunk_start <= chunk_stop:
             if chunk_start == 0:
                 chunk_end = int(round(self._chunk_logstep + 1.0, 0))
             else:
@@ -345,6 +457,29 @@ class phase_spline:
             self._spline_points[(chunk_start, chunk_end)] = []
 
             chunk_start = int(round(0.75 * chunk_end - 0.5, 0))
+
+    def _build_log_chunks_negative(
+        self, chunk_start: int, chunk_stop: int, chunk_logstep: float
+    ):
+        self._chunk_logstep = float(chunk_logstep)
+
+        assert chunk_start < 0
+        assert chunk_stop <= 0
+
+        reverse_chunk_start = -chunk_stop
+        reverse_chunk_stop = -chunk_start
+
+        while reverse_chunk_start <= reverse_chunk_stop:
+            if reverse_chunk_start == 0:
+                reverse_chunk_end = int(round(self._chunk_logstep + 1.0, 0))
+            else:
+                reverse_chunk_end = int(
+                    round(reverse_chunk_start * self._chunk_logstep + 1.0, 0)
+                )
+
+            self._spline_points[(-reverse_chunk_end, -reverse_chunk_start)] = []
+
+            reverse_chunk_start = int(round(0.75 * reverse_chunk_end - 0.5, 0))
 
     def _match_chunk(self, log_x: float):
         num_chunks = len(self._chunk_list)
@@ -360,7 +495,7 @@ class phase_spline:
                     f"phase_spline: could not match log_x={log_x:.5g} to a spline chunk (only chunk has min_log_x={spline0.min_log_x:.5g}, max_log_x={spline0.max_log_x:.5g})"
                 )
 
-            return spline0
+            return spline0, True
 
         spline0 = self._splines[self._chunk_list[0]]
         if spline0.min_log_x > log_x:
@@ -483,7 +618,11 @@ class phase_spline:
         #     f">> found {len(chunk_penalties)} candidate chunks for log_x={log_x:.5g} with penalties {chunk_penalties}"
         # )
 
-        return self._splines[self._chunk_list[chunk_penalties[0][0]]]
+        selected_chunk_index = chunk_penalties[0][0]
+        return (
+            self._splines[self._chunk_list[selected_chunk_index]],
+            selected_chunk_index == 0 or selected_chunk_index == num_chunks - 1,
+        )
 
     def _get_raw_log_x(self, x: float, x_is_log: bool):
         if x_is_log:
@@ -497,15 +636,26 @@ class phase_spline:
 
     def raw_theta(self, x: float, x_is_log: bool = False) -> float:
         raw_x, log_x = self._get_raw_log_x(x, x_is_log)
-        spline = self._match_chunk(log_x)
-        return spline.raw_theta(raw_x=raw_x, log_x=log_x)
+        spline, first_or_last_chunk = self._match_chunk(log_x)
+        return spline.raw_theta(
+            raw_x=raw_x, log_x=log_x, warn_unsafe=not first_or_last_chunk
+        )
 
     def theta_mod_2pi(self, x: float, x_is_log: bool = False) -> float:
         raw_x, log_x = self._get_raw_log_x(x, x_is_log)
-        spline = self._match_chunk(log_x)
-        return spline.theta_mod_2pi(raw_x=raw_x, log_x=log_x)
+        spline, first_or_last_chunk = self._match_chunk(log_x)
+        return spline.theta_mod_2pi(
+            raw_x=raw_x, log_x=log_x, warn_unsafe=not first_or_last_chunk
+        )
 
-    def theta_deriv(self, x: float, x_is_log: bool = False) -> float:
+    def theta_deriv(
+        self, x: float, x_is_log: bool = False, log_derivative: bool = False
+    ) -> float:
         raw_x, log_x = self._get_raw_log_x(x, x_is_log)
-        spline = self._match_chunk(log_x)
-        return spline.theta_deriv(raw_x=raw_x, log_x=log_x)
+        spline, first_or_last_chunk = self._match_chunk(log_x)
+        return spline.theta_deriv(
+            raw_x=raw_x,
+            log_x=log_x,
+            log_derivative=log_derivative,
+            warn_unsafe=not first_or_last_chunk,
+        )
