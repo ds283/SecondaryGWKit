@@ -993,10 +993,10 @@ def WKB_Levin_integral(
         return sin_ampl * f / H_sq
 
     def Levin_phase(log_z_source: float) -> float:
-        return Gk_f.phase.raw_theta(log_z_source, z_is_log=True)
+        return Gk_f.phase.raw_theta(log_z_source, x_is_log=True)
 
     def Levin_phase_mod_2pi(log_z_source: float) -> float:
-        return Gk_f.phase.theta_mod_2pi(log_z_source, z_is_log=True)
+        return Gk_f.phase.theta_mod_2pi(log_z_source, x_is_log=True)
 
     def Levin_deriv(log_z_source: float) -> float:
         """
@@ -1005,7 +1005,7 @@ def WKB_Levin_integral(
         :param log_z_source:
         :return:
         """
-        return Gk_f.phase.theta_deriv(log_z_source, z_is_log=True, log_derivative=True)
+        return Gk_f.phase.theta_deriv(log_z_source, x_is_log=True, log_derivative=True)
 
     data = adaptive_levin_sincos(
         x_span,
