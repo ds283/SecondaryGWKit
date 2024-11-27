@@ -1,8 +1,8 @@
 from collections import namedtuple
+from math import sqrt, fabs, log
 from typing import Optional, List, Union
 
 import ray
-from math import sqrt, fabs, log
 from ray import ObjectRef
 from scipy.integrate import solve_ivp
 from scipy.interpolate import InterpolatedUnivariateSpline
@@ -240,7 +240,7 @@ class BackgroundModel(DatastoreObject):
         return self._functions
 
     def _create_functions(self):
-        tau_data = [(log(v.z.z), v.tau) for v in self.values]
+        tau_data = [(log(1.0 + v.z.z), v.tau) for v in self.values]
         tau_data.sort(key=lambda pair: pair[0])
 
         tau_x_data, tau_y_data = zip(*tau_data)
