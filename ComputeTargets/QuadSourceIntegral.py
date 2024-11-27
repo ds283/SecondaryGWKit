@@ -1016,7 +1016,7 @@ def WKB_Levin_integral(
         theta={
             "theta": Levin_phase,
             "theta_mod_2pi": Levin_phase_mod_2pi,
-            "theta_deriv": Levin_deriv,
+            # "theta_deriv": Levin_deriv,
         },
         atol=atol,
         rtol=rtol,
