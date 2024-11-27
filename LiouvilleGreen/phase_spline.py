@@ -260,9 +260,8 @@ class phase_spline:
         elif chunk_logstep is not None:
             self._build_log_chunks(chunk_logstep)
         else:
-            raise RuntimeError(
-                "phase_spline: either chunk_step or chunk_logstep must be supplied"
-            )
+            # force just a single chunk, which replicates the effect of a simple spline
+            self._spline_points[(self._min_div_2pi, self._max_div_2pi)] = []
 
         # sift through the supplied data points, adding them to chunks whatever chunks they fall within
         for i in range(len(x_sample)):
@@ -415,6 +414,10 @@ class phase_spline:
         #     start, end = chunk
         #     spline = self._splines[chunk]
         #     print(f"   -- chunk: [{start}, {end}) | {spline.data_points} data points")
+
+    @property
+    def num_chunks(self) -> int:
+        return len(self._chunk_list)
 
     def _build_linear_chunks(self, chunk_step: int):
         self._chunk_step = int(chunk_step)
