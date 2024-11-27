@@ -198,7 +198,7 @@ def bessel_phase(
 
     if match_f(bracket_lo) * match_f(bracket_hi) >= 0.0:
         raise RuntimeError(
-            f"Could not bracket phase shift phi (x_cut={min_x:.5g}, max_x={max_x:.5g}, match_x={match_x:.5g}, log(match_x)={log_min_x:.5g}, jv({nu}, match_x)={jv(nu, match_x):.8g}, bracket_lo={bracket_lo:.5g}, bracket_hi={bracket_hi:.5g})"
+            f"Could not bracket phase shift phi (min_x={min_x:.5g}, max_x={max_x:.5g}, match_x={match_x:.5g}, log(match_x)={log_min_x:.5g}, jv({nu}, match_x)={jv(nu, match_x):.8g}, bracket_lo={bracket_lo:.5g}, bracket_hi={bracket_hi:.5g})"
         )
 
     root = root_scalar(
@@ -283,8 +283,8 @@ def bessel_phase(
         "mod": mod_spline,
         "Q": Q_spline,
         "phi": phi,
-        "x_cut": min_x,
         "bessel_j": bessel_j,
         "bessel_y": bessel_y,
+        "min_x": min_x,
         "max_x": max_x,
     }

@@ -18,12 +18,12 @@ class TestBesselPhase(unittest.TestCase):
             rhs_x = max_x + 5.0
         data = bessel_phase(nu, rhs_x)
 
-        x_cut = data["x_cut"]
+        min_x = data["min_x"]
         phase = data["phase"]
         bessel_j = data["bessel_j"]
         bessel_y = data["bessel_y"]
 
-        test_grid = np.linspace(x_cut, max_x, 100)
+        test_grid = np.linspace(min_x, max_x, 100)
         for x in test_grid:
             our_j = bessel_j(x)
             our_y = bessel_y(x)

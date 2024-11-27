@@ -44,9 +44,9 @@ def bessel_function_plot(phase_data, b, timestamp):
     for nu_type, data in phase_data.items():
         nu = nu_types[nu_type]
 
-        x_cut = max(data["x_cut"], 0.5)
+        min_x = max(data["min_x"], 0.5)
         max_x = data["max_x"]
-        x_grid = np.logspace(np.log10(x_cut), np.log10(max_x), num=300)
+        x_grid = np.logspace(np.log10(min_x), np.log10(max_x), num=300)
 
         bessel_j = data["bessel_j"]
         bessel_y = data["bessel_y"]

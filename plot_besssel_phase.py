@@ -12,8 +12,7 @@ sns.set_theme()
 
 def plot_bessel_phase(nu: float):
     data = bessel_phase(nu, 100.0)
-    x_cut = data["x_cut"]
-    min_x = max(0.1, x_cut)
+    min_x = max(0.1, data["x_min"])
     grid_J = np.linspace(min_x, 100.0, 250)
     grid_Y = np.linspace(min_x, 100.0, 250)
 
