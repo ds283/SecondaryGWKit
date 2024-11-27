@@ -7,7 +7,7 @@ from scipy.interpolate import InterpolatedUnivariateSpline
 from defaults import DEFAULT_FLOAT_PRECISION
 
 DEFAULT_CHUNK_SIZE = 200
-MINIMUM_SPLINE_DATA_POINTS = 10
+MINIMUM_SPLINE_DATA_POINTS = 30
 SPLINE_TOP_BOTTOM_CUSHION = 0.001
 
 _twopi = 2.0 * pi
@@ -32,7 +32,7 @@ class _chunk_spline:
         self._data = data
         if self._data is None:
             raise RuntimeError(
-                f"chunk_spline: supplied data is None (div_2pi_base={div_2pi_base})"
+                f"chunk_spline: supplied data vector is empty (div_2pi_base={div_2pi_base})"
             )
         self.data_points: int = len(self._data)
 
