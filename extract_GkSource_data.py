@@ -393,7 +393,7 @@ with ShardedPool(
         ]
 
         theta_spline_deriv_points = [
-            (value.z_source.z, functions.theta_deriv(value.z_source.z))
+            (value.z_source.z, functions.phase.theta_deriv(value.z_source.z))
             for value in WKB_points
         ]
 
