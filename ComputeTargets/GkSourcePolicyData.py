@@ -105,6 +105,10 @@ def _classify_Levin(source: GkSource, policy: GkSourcePolicy, data) -> dict:
         log_x_points = [log(1.0 + v.z_source.z) for v in WKB_data]
         theta_div_2pi_points = [v.WKB.theta_div_2pi for v in WKB_data]
         theta_mod_2pi_points = [v.WKB.theta_mod_2pi for v in WKB_data]
+
+        # setting chunk_step and chunk_logstep to None forces phase_spline to use a single chunk
+        # here, any benefit gained from chunking is offset by the risk of edge effects in the derivative
+        # near the chunk boundaries
         theta_spline: phase_spline = phase_spline(
             log_x_points,
             theta_div_2pi_points,
@@ -112,7 +116,8 @@ def _classify_Levin(source: GkSource, policy: GkSourcePolicy, data) -> dict:
             x_is_log=True,
             x_is_redshift=True,
             chunk_step=None,
-            chunk_logstep=125,
+            # chunk_logstep=125,
+            chunk_logstep=None,
             increasing=False,
         )
 
@@ -547,6 +552,9 @@ class GkSourcePolicyData(DatastoreObject):
                 theta_log_x_points = [log(1.0 + v.z_source.z) for v in WKB_data]
                 theta_div_2pi_points = [v.WKB.theta_div_2pi for v in WKB_data]
                 theta_mod_2pi_points = [v.WKB.theta_mod_2pi for v in WKB_data]
+
+                # currently force spline to use a single chunk
+                # multi-chunk implementation seems currently not mature enough for production use
                 WKB_theta_spline = phase_spline(
                     theta_log_x_points,
                     theta_div_2pi_points,
@@ -554,7 +562,8 @@ class GkSourcePolicyData(DatastoreObject):
                     x_is_log=True,
                     x_is_redshift=True,
                     chunk_step=None,
-                    chunk_logstep=125,
+                    # chunk_logstep=125,
+                    chunk_logstep=None,
                     increasing=False,
                 )
 

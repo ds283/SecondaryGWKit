@@ -254,13 +254,16 @@ def bessel_phase(
     if min_phase_div_2pi < 0:
         phase_div_2pi = [x - min_phase_div_2pi for x in phase_div_2pi]
 
+    # currently force spline to use a single chunk
+    # multi-chunk implementation seems currently not mature enough for production use
     theta_spline = phase_spline(
         log_x_samples,
         phase_div_2pi,
         phase_mod_2pi,
         x_is_log=True,
         chunk_step=None,
-        chunk_logstep=50.0,
+        # chunk_logstep=50.0,
+        chunk_logstep=None,
     )
     mod_spline = XSplineWrapper(_mod_spline, min_x=min_x, max_x=max_x)
     Q_spline = XSplineWrapper(_Q_spline, min_x=min_x, max_x=max_x)
