@@ -743,7 +743,7 @@ def analytic_integral(
         min_eta=min_eta,
         max_eta=max_eta,
         b=b,
-        phase_data={"2pt5": Bessel_2pt5},
+        phase_data={"0pt5": Bessel_0pt5, "2pt5": Bessel_2pt5},
         nu_type="2pt5",
         atol=atol,
         rtol=rtol,
@@ -1000,12 +1000,12 @@ def WKB_Levin_integral(
 
     def Levin_deriv(log_z_source: float) -> float:
         """
-        Returns dtheta/dlogz since the phase_spline object computes the derivative with respect to log_z
+        Returns dtheta/dlogz.
         That's what we want here, because the integration is performed with respect to log_z
         :param log_z_source:
         :return:
         """
-        return Gk_f.phase.theta_deriv(log_z_source, z_is_log=True)
+        return Gk_f.phase.theta_deriv(log_z_source, z_is_log=True, log_derivative=True)
 
     data = adaptive_levin_sincos(
         x_span,
@@ -1312,8 +1312,8 @@ class QuadSourceIntegral(DatastoreObject):
             z_response=self._z_response,
             z_source_max=self._z_source_max,
             b=payload["b"],
-            Bessel_0pt5=payload["Bessel0pt5"],
-            Bessel_2pt5=payload["Bessel2pt5"],
+            Bessel_0pt5=payload["Bessel_0pt5"],
+            Bessel_2pt5=payload["Bessel_2pt5"],
             atol=self._atol.tol,
             rtol=self._rtol.tol,
         )
