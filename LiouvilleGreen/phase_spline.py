@@ -4,8 +4,11 @@ from typing import Iterable, Tuple, Optional
 from numpy import sign
 from scipy.interpolate import InterpolatedUnivariateSpline
 
+from defaults import DEFAULT_FLOAT_PRECISION
+
 DEFAULT_CHUNK_SIZE = 200
 MINIMUM_SPLINE_DATA_POINTS = 10
+SPLINE_TOP_BOTTOM_CUSHION = 0.001
 
 _twopi = 2.0 * pi
 
@@ -74,15 +77,21 @@ class _chunk_spline:
         self._derivative = self._spline.derivative()
 
     def _theta(self, raw_x: float, log_x: float, warn_unsafe: bool = True) -> float:
-        if log_x < self.min_log_x:
+        # raise an error if requested value is too far outside our range
+        # we allow a 1% cushion at the top and the bottom, in which we return just the top or bottom value
+        if log_x < self.min_log_x * (1.0 - SPLINE_TOP_BOTTOM_CUSHION):
             raise RuntimeError(
                 f"chunk_spline: spline evaluated out-of-bounds of lower limit at log_x={log_x:.5g} (raw x={raw_x:.5g}) | Minimum allowed value is log_x={self._min_safe_log_x:.5g} (raw x={self._min_safe_x:.5g}) | Recommended safe minimum is log_x={self._min_safe_log_x:.5g} (raw x={self._min_safe_x:.5g})"
             )
+        elif log_x < self.min_log_x:
+            log_x = self.min_log_x
 
-        if log_x > self.max_log_x:
+        if log_x > self.max_log_x * (1.0 + SPLINE_TOP_BOTTOM_CUSHION):
             raise RuntimeError(
                 f"chunk_spline: spline evaluated out-of-bounds of upper limit at log_x={log_x:.5g} (raw x={raw_x:.5g}) | Maximum allowed value is log_x={self._max_safe_log_x:.5g} (raw x={self._max_safe_x:.5g}) | Recommended safe maximum is log_x={self._max_safe_log_x:.5g} (raw x={self._max_safe_x:.5g})"
             )
+        elif log_x > self.max_log_x:
+            log_x = self.max_log_x
 
         if warn_unsafe:
             if log_x < self._min_safe_log_x:
@@ -100,15 +109,21 @@ class _chunk_spline:
     def _theta_deriv(
         self, raw_x: float, log_x: float, warn_unsafe: bool = True
     ) -> float:
-        if log_x < self.min_log_x:
+        # raise an error if requested value is too far outside our range
+        # we allow a 1% cushion at the top and the bottom, in which we return just the top or bottom value
+        if log_x < self.min_log_x * (1.0 - SPLINE_TOP_BOTTOM_CUSHION):
             raise RuntimeError(
                 f"chunk_spline: spline evaluated out-of-bounds of lower limit at log_x={log_x:.5g} (raw x={raw_x:.5g}) | Minimum allowed value is log_x={self._min_safe_log_x:.5g} (raw x={self._min_safe_x:.5g}) | Recommended safe minimum is log_x={self._min_safe_log_x:.5g} (raw x={self._min_safe_x:.5g})"
             )
+        elif log_x < self.min_log_x:
+            log_x = self.min_log_x
 
-        if log_x > self.max_log_x:
+        if log_x > self.max_log_x * (1.0 + SPLINE_TOP_BOTTOM_CUSHION):
             raise RuntimeError(
                 f"chunk_spline: spline evaluated out-of-bounds of upper limit at log_x={log_x:.5g} (raw x={raw_x:.5g}) | Maximum allowed value is log_x={self._max_safe_log_x:.5g} (raw x={self._max_safe_x:.5g}) | Recommended safe maximum is log_x={self._max_safe_log_x:.5g} (raw x={self._max_safe_x:.5g})"
             )
+        elif log_x > self.max_log_x:
+            log_x = self.max_log_x
 
         if warn_unsafe:
             if log_x < self._min_safe_log_x:
@@ -486,11 +501,11 @@ class phase_spline:
         if num_chunks == 1:
             spline0 = self._splines[self._chunk_list[0]]
 
-            if spline0.min_log_x > log_x:
+            if spline0.min_log_x > log_x * (1.0 + DEFAULT_FLOAT_PRECISION):
                 raise RuntimeError(
                     f"phase_spline: could not match log_x={log_x:.5g} to a spline chunk (only chunk has min_log_x={spline0.min_log_x:.5g}, max_log_x={spline0.max_log_x:.5g})"
                 )
-            if spline0.max_log_x < log_x:
+            if spline0.max_log_x < log_x * (1.0 - DEFAULT_FLOAT_PRECISION):
                 raise RuntimeError(
                     f"phase_spline: could not match log_x={log_x:.5g} to a spline chunk (only chunk has min_log_x={spline0.min_log_x:.5g}, max_log_x={spline0.max_log_x:.5g})"
                 )
@@ -498,14 +513,14 @@ class phase_spline:
             return spline0, True
 
         spline0 = self._splines[self._chunk_list[0]]
-        if spline0.min_log_x > log_x:
+        if spline0.min_log_x > log_x * (1.0 + DEFAULT_FLOAT_PRECISION):
             raise RuntimeError(
-                f"phase_spline: could not match log_x={log_x:.5g} to a spline chunk (first chunk already has min_log_x={spline0.min_log_x:.5g})"
+                f"phase_spline: could not match log_x={log_x:.5g} to a spline chunk (first chunk already has min_log_x={spline0.min_log_x:.5g}, num_chunks={num_chunks})"
             )
         splineN = self._splines[self._chunk_list[num_chunks - 1]]
-        if splineN.max_log_x < log_x:
+        if splineN.max_log_x < log_x * (1.0 - DEFAULT_FLOAT_PRECISION):
             raise RuntimeError(
-                f"phase_spline: could not match log_x={log_x:.5g} to a spline chunk (last chunk already has max_log_x={splineN.max_log_x:.5g})"
+                f"phase_spline: could not match log_x={log_x:.5g} to a spline chunk (last chunk already has max_log_x={splineN.max_log_x:.5g}, num_chunks={num_chunks})"
             )
 
         # find first chunk whose min_log_x value is larger than our log_x
@@ -521,7 +536,7 @@ class phase_spline:
                 splineA = self._splines[self._chunk_list[A]]
                 splineB = self._splines[self._chunk_list[B]]
                 if B == A + 1:
-                    if splineA.min_log_x > log_x:
+                    if splineA.min_log_x > log_x * (1.0 + DEFAULT_FLOAT_PRECISION):
                         raise RuntimeError(
                             f"phase_spline: could not match log_x={log_x:.5g} to an upper bound chunk (A={A}, min_log_x(A)={splineA.min_log_x:.5g}, max_log_x(A)={splineA.max_log_x:.5g}, B={B}, min_log_x(B)={splineB.min_log_x:.5g}, max_log_x(B)={splineB.max_log_x:.5g})"
                         )
@@ -536,7 +551,7 @@ class phase_spline:
 
                     splineC = self._splines[self._chunk_list[C]]
 
-                    if splineC.min_log_x > log_x:
+                    if splineC.min_log_x > log_x * (1.0 + DEFAULT_FLOAT_PRECISION):
                         # C doesn't contain our log x, so it becomes the new B
                         B = C
                     else:
@@ -556,7 +571,7 @@ class phase_spline:
                 splineA = self._splines[self._chunk_list[A]]
                 splineB = self._splines[self._chunk_list[B]]
                 if B == A + 1:
-                    if splineB.max_log_x < log_x:
+                    if splineB.max_log_x < log_x * (1.0 - DEFAULT_FLOAT_PRECISION):
                         raise RuntimeError(
                             f"phase_spline: could not match log_x={log_x:.5g} to a lower bound chunk (A={A}, min_log_x(A)={splineA.min_log_x:.5g}, max_log_x(A)={splineA.max_log_x:.5g}, B={B}, min_log_x(B)={splineB.min_log_x:.5g}, max_log_x(B)={splineB.max_log_x:.5g})"
                         )
@@ -571,7 +586,7 @@ class phase_spline:
 
                     splineC = self._splines[self._chunk_list[C]]
 
-                    if splineC.max_log_x < log_x:
+                    if splineC.max_log_x < log_x * (1.0 - DEFAULT_FLOAT_PRECISION):
                         # C doesn't contain our log x, so it becomes the new A
                         A = C
                     else:
