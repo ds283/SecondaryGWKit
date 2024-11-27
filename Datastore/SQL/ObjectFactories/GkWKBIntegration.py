@@ -1,8 +1,8 @@
 import json
+from math import fabs
 from typing import Optional, List
 
 import sqlalchemy as sqla
-from math import fabs
 from sqlalchemy import and_, or_
 from sqlalchemy.exc import MultipleResultsFound, SQLAlchemyError
 
@@ -216,6 +216,8 @@ class sqla_GkWKBIntegration_factory(SQLAFactoryBase):
                 table.c.label,
                 table.c.z_source_serial,
                 redshift_table.c.z.label("z_source"),
+                redshift_table.c.source.label("z_source_is_source"),
+                redshift_table.c.response.label("z_response_is_response"),
                 table.c.z_samples,
                 table.c.z_init,
                 table.c.G_init,
@@ -309,6 +311,8 @@ class sqla_GkWKBIntegration_factory(SQLAFactoryBase):
                     value_table.c.serial,
                     value_table.c.z_serial,
                     redshift_table.c.z,
+                    redshift_table.c.source.label("z_is_source"),
+                    redshift_table.c.response.label("z_is_response"),
                     value_table.c.H_ratio,
                     value_table.c.theta_mod_2pi,
                     value_table.c.theta_div_2pi,
@@ -333,7 +337,12 @@ class sqla_GkWKBIntegration_factory(SQLAFactoryBase):
             z_points = []
             values = []
             for row in sample_rows:
-                z_value = redshift(store_id=row.z_serial, z=row.z)
+                z_value = redshift(
+                    store_id=row.z_serial,
+                    z=row.z,
+                    is_source=row.z_is_source,
+                    is_response=row.z_is_response,
+                )
                 z_points.append(z_value)
                 values.append(
                     GkWKBValue(
@@ -415,7 +424,10 @@ class sqla_GkWKBIntegration_factory(SQLAFactoryBase):
             atol=atol,
             rtol=rtol,
             z_source=redshift(
-                store_id=(row_data.z_source_serial), z=(row_data.z_source)
+                store_id=row_data.z_source_serial,
+                z=row_data.z_source,
+                is_source=row_data.z_source_is_source,
+                is_response=row_data.z_source_is_response,
             ),
             z_init=z_init,
             G_init=G_init,
@@ -1054,6 +1066,8 @@ class sqla_GkWKBValue_factory(SQLAFactoryBase):
                 wkb_table.c.z_init,
                 wkb_table.c.z_source_serial,
                 redshift_table.c.z.label("z_source"),
+                redshift_table.c.source.label("z_source_is_source"),
+                redshift_table.c.response.label("z_source_is_response"),
             )
             .select_from(
                 wkb_table.join(
@@ -1111,8 +1125,12 @@ class sqla_GkWKBValue_factory(SQLAFactoryBase):
             subquery.c.z_init,
             subquery.c.z_source_serial,
             subquery.c.z_source,
+            subquery.c.z_source_is_source,
+            subquery.c.z_source_is_response,
             redshift_table.c.z.label("z_response"),
             table.c.z_serial.label("z_response_serial"),
+            redshift_table.c.source.label("z_response_is_source"),
+            redshift_table.c.response.label("z_response_is_response"),
         ).select_from(
             subquery.join(table, table.c.wkb_serial == subquery.c.serial).join(
                 redshift_table, redshift_table.c.serial == table.c.z_serial
@@ -1127,7 +1145,12 @@ class sqla_GkWKBValue_factory(SQLAFactoryBase):
         def make_obj(row):
             obj = GkWKBValue(
                 store_id=row.serial,
-                z=redshift(store_id=row.z_response_serial, z=row.z_response),
+                z=redshift(
+                    store_id=row.z_response_serial,
+                    z=row.z_response,
+                    is_source=row.z_response_is_response,
+                    is_response=row.z_response_is_response,
+                ),
                 H_ratio=row.H_ratio,
                 theta_mod_2pi=row.theta_mod_2pi,
                 theta_div_2pi=row.theta_div_2pi,
@@ -1144,7 +1167,12 @@ class sqla_GkWKBValue_factory(SQLAFactoryBase):
             )
             obj._deserialized = True
             obj._k_exit = k
-            obj._z_source = redshift(store_id=row.z_source_serial, z=row.z_source)
+            obj._z_source = redshift(
+                store_id=row.z_source_serial,
+                z=row.z_source,
+                is_source=row.z_source_is_source,
+                is_response=row.z_source_is_response,
+            )
 
             return obj
 

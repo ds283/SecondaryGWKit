@@ -7,7 +7,13 @@ from defaults import DEFAULT_FLOAT_PRECISION
 
 @total_ordering
 class redshift(DatastoreObject):
-    def __init__(self, store_id: int, z: float):
+    def __init__(
+        self,
+        store_id: int,
+        z: float,
+        is_source: bool = False,
+        is_response: bool = False,
+    ):
         """
         Represents a redshift,
         e.g., used to sample a transfer function or power spectrum
@@ -19,6 +25,9 @@ class redshift(DatastoreObject):
         DatastoreObject.__init__(self, store_id)
 
         self.z = z
+
+        self.is_source = is_source
+        self.is_response = is_response
 
     def __float__(self):
         """

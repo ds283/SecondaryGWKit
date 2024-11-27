@@ -184,8 +184,12 @@ class sqla_GkSource_factory(SQLAFactoryBase):
                 rtol_table.c.log10_tol.label("log10_rtol"),
                 table.c.numerical_smallest_z_serial,
                 smallest_numerical_z_table.c.z.label("numerical_smallest_z"),
+                smallest_numerical_z_table.c.source.label("nsz_is_source"),
+                smallest_numerical_z_table.c.response.label("nsz_is_response"),
                 table.c.primary_WKB_largest_z_serial,
                 largest_WKB_z_table.c.z.label("primary_WKB_largest_z"),
+                largest_WKB_z_table.c.source.label("plz_is_source"),
+                largest_WKB_z_table.c.response.label("plz_is_response"),
                 table.c.metadata,
             )
             .select_from(
@@ -263,6 +267,8 @@ class sqla_GkSource_factory(SQLAFactoryBase):
             numerical_smallest_z = redshift(
                 store_id=row_data.numerical_smallest_z_serial,
                 z=row_data.numerical_smallest_z,
+                is_source=row_data.nsz_is_source,
+                is_response=row_data.nsz_is_response,
             )
 
         primary_WKB_largest_z = None
@@ -270,6 +276,8 @@ class sqla_GkSource_factory(SQLAFactoryBase):
             primary_WKB_largest_z = redshift(
                 store_id=row_data.primary_WKB_largest_z_serial,
                 z=row_data.primary_WKB_largest_z,
+                is_source=row_data.plz_is_source,
+                is_response=row_data.plz_is_response,
             )
 
         num_expected_samples = row_data.z_samples
@@ -284,6 +292,8 @@ class sqla_GkSource_factory(SQLAFactoryBase):
                     value_table.c.serial,
                     value_table.c.z_source_serial,
                     redshift_table.c.z.label("z_source"),
+                    redshift_table.c.source.label("z_source_is_source"),
+                    redshift_table.c.response.label("z_source_is_response"),
                     value_table.c.G,
                     value_table.c.Gprime,
                     value_table.c.H_ratio,
@@ -315,7 +325,12 @@ class sqla_GkSource_factory(SQLAFactoryBase):
             z_points = []
             values = []
             for row in sample_rows:
-                z_value = redshift(store_id=row.z_source_serial, z=row.z_source)
+                z_value = redshift(
+                    store_id=row.z_source_serial,
+                    z=row.z_source,
+                    is_source=row.z_source_is_source,
+                    is_response=row.z_source_is_response,
+                )
                 z_points.append(z_value)
                 values.append(
                     GkSourceValue(

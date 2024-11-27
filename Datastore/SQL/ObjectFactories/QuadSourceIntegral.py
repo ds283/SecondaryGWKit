@@ -553,12 +553,20 @@ class sqla_QuadSourceIntegral_factory(SQLAFactoryBase):
                 table.c.WKB_phase_spline_chunks,
                 table.c.z_response_serial,
                 z_response_tab.c.z.label("z_response"),
+                z_response_tab.c.source.label("z_response_is_source"),
+                z_response_tab.c.response.label("z_response_is_response"),
                 table.c.z_source_max_serial,
                 z_source_max_tab.c.z.label("z_source_max"),
+                z_source_max_tab.c.source.label("z_source_max_is_source"),
+                z_source_max_tab.c.response.label("z_source_max_is_response"),
                 q_wavenumber_tab.c.serial.label("q_serial"),
                 q_wavenumber_tab.c.k_inv_Mpc.label("q_inv_Mpc"),
+                q_wavenumber_tab.c.source.label("q_is_source"),
+                q_wavenumber_tab.c.response.label("q_is_response"),
                 r_wavenumber_tab.c.serial.label("r_serial"),
                 r_wavenumber_tab.c.k_inv_Mpc.label("r_inv_Mpc"),
+                r_wavenumber_tab.c.source.label("r_is_source"),
+                r_wavenumber_tab.c.response.label("r_is_response"),
                 q_exit_tab.c.stepping.label("q_stepping"),
                 q_exit_tab.c.atol_serial.label("q_atol_serial"),
                 q_exit_tab.c.rtol_serial.label("q_rtol_serial"),
@@ -667,10 +675,18 @@ class sqla_QuadSourceIntegral_factory(SQLAFactoryBase):
 
         def make_object(row):
             q: wavenumber = wavenumber(
-                store_id=row.q_serial, k_inv_Mpc=row.q_inv_Mpc, units=model_proxy.units
+                store_id=row.q_serial,
+                k_inv_Mpc=row.q_inv_Mpc,
+                units=model_proxy.units,
+                is_source=row.q_is_source,
+                is_response=row.q_is_response,
             )
             r: wavenumber = wavenumber(
-                store_id=row.r_serial, k_inv_Mpc=row.r_inv_Mpc, units=model_proxy.units
+                store_id=row.r_serial,
+                k_inv_Mpc=row.r_inv_Mpc,
+                units=model_proxy.units,
+                is_source=row.r_is_source,
+                is_response=row.r_is_response,
             )
 
             q_exit_payload = {
@@ -757,9 +773,17 @@ class sqla_QuadSourceIntegral_factory(SQLAFactoryBase):
                 },
                 model=model_proxy,
                 policy=policy,
-                z_response=redshift(store_id=row.z_response_serial, z=row.z_response),
+                z_response=redshift(
+                    store_id=row.z_response_serial,
+                    z=row.z_response,
+                    is_source=row.z_response_is_source,
+                    is_response=row.z_response_is_response,
+                ),
                 z_source_max=redshift(
-                    store_id=row.z_source_max_serial, z=row.z_source_max
+                    store_id=row.z_source_max_serial,
+                    z=row.z_source_max,
+                    is_source=row.z_source_max_is_source,
+                    is_response=row.z_source_max_is_response,
                 ),
                 k=k,
                 q=q_exit,

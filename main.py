@@ -230,15 +230,31 @@ with ShardedPool(
 
     ## UTILITY FUNCTIONS
 
-    def convert_to_wavenumbers(k_sample_set):
+    def convert_to_wavenumbers(
+        k_sample_set: List[float], is_source: bool = False, is_response: bool = False
+    ):
         return pool.object_get(
             "wavenumber",
-            payload_data=[{"k_inv_Mpc": k, "units": units} for k in k_sample_set],
+            payload_data=[
+                {
+                    "k_inv_Mpc": k,
+                    "units": units,
+                    "is_source": is_source,
+                    "is_response": is_response,
+                }
+                for k in k_sample_set
+            ],
         )
 
-    def convert_to_redshifts(z_sample_set):
+    def convert_to_redshifts(
+        z_sample_set, is_source: bool = False, is_response: bool = False
+    ):
         return pool.object_get(
-            "redshift", payload_data=[{"z": z} for z in z_sample_set]
+            "redshift",
+            payload_data=[
+                {"z": z, "is_source": is_source, "is_response": is_response}
+                for z in z_sample_set
+            ],
         )
 
     ## DATASTORE OBJECTS
@@ -311,14 +327,18 @@ with ShardedPool(
     # For a spike of power to produce a PBH, we want the peak to be around k = 1E6/Mpc.
     # We choose a mesh of k-values around this point (with a longer tail to the IR)
     source_k_array = ray.get(
-        convert_to_wavenumbers(np.logspace(np.log10(1e3), np.log10(5e7), 10))
+        convert_to_wavenumbers(
+            np.logspace(np.log10(1e3), np.log10(5e7), 10), is_source=True
+        )
     )
     source_k_sample = wavenumber_array(k_array=source_k_array)
 
     # build array of k-sample points covering the region of the target power spectrum where we want to evaluate
     # the one-loop integral
     response_k_array = ray.get(
-        convert_to_wavenumbers(np.logspace(np.log10(1e3), np.log10(5e7), 10))
+        convert_to_wavenumbers(
+            np.logspace(np.log10(1e3), np.log10(5e7), 10), is_response=True
+        )
     )
     response_k_sample = wavenumber_array(k_array=response_k_array)
 
@@ -372,12 +392,18 @@ with ShardedPool(
     )
 
     # embed these redshift list into the database
-    z_source_array = ray.get(convert_to_redshifts(source_z_grid))
+    z_source_array = ray.get(convert_to_redshifts(source_z_grid, is_source=True))
     z_source_sample = redshift_array(z_array=z_source_array)
 
     # we need the response sample to be a subset of the source sample, otherwise we won't have
-    # source data for the Green's functions right the way down to the response time
-    z_response_sample = z_source_sample.winnow(sparseness=response_sparseness)
+    # source data for the Green's functions right the way down to the response time.
+    # We need to re-query the database for theses redshifts, so that they get their is_response flag
+    # set correctly.
+    _z_response_sample = z_source_sample.winnow(sparseness=response_sparseness)
+    z_response_array = ray.get(
+        convert_to_redshifts([z.z for z in _z_response_sample], is_response=True)
+    )
+    z_response_sample = redshift_array(z_array=z_response_array)
 
     # build tags and other labels
     (

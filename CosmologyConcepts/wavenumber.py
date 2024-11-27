@@ -1,8 +1,8 @@
 from functools import partial, total_ordering
+from math import log10, log, fabs
 from typing import Iterable, Optional, Mapping, List
 
 import ray
-from math import log10, log, fabs
 from numpy import logspace
 from scipy.integrate import solve_ivp
 
@@ -16,7 +16,14 @@ from utilities import WallclockTimer
 
 @total_ordering
 class wavenumber(DatastoreObject):
-    def __init__(self, store_id: int, k_inv_Mpc: float, units):
+    def __init__(
+        self,
+        store_id: int,
+        k_inv_Mpc: float,
+        units,
+        is_source: bool = False,
+        is_response: bool = False,
+    ):
         """
         Represents a wavenumber, e.g.,
         used to sample a transfer function or power spectrum
@@ -33,6 +40,9 @@ class wavenumber(DatastoreObject):
 
         self.k_inv_Mpc = k_inv_Mpc
         self.k = k_inv_Mpc / units.Mpc
+
+        self.is_source = is_source
+        self.is_response = is_response
 
     def __float__(self):
         """

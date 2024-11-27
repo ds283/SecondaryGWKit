@@ -1,7 +1,7 @@
+from math import fabs
 from typing import List, Optional
 
 import sqlalchemy as sqla
-from math import fabs
 from sqlalchemy import and_, or_
 from sqlalchemy.exc import MultipleResultsFound, SQLAlchemyError
 
@@ -205,6 +205,8 @@ class sqla_GkNumericalIntegration_factory(SQLAFactoryBase):
                 table.c.label,
                 table.c.z_source_serial,
                 redshift_table.c.z.label("z_source"),
+                redshift_table.c.source.label("z_source_is_source"),
+                redshift_table.c.source.label("z_source_is_response"),
                 table.c.z_samples,
                 solver_table.c.label.label("solver_label"),
                 solver_table.c.stepping.label("solver_stepping"),
@@ -284,6 +286,8 @@ class sqla_GkNumericalIntegration_factory(SQLAFactoryBase):
                     value_table.c.serial,
                     value_table.c.z_serial,
                     redshift_table.c.z,
+                    redshift_table.c.source.label("z_is_source"),
+                    redshift_table.c.response.label("z_is_response"),
                     value_table.c.G,
                     value_table.c.Gprime,
                     value_table.c.analytic_G_rad,
@@ -306,7 +310,12 @@ class sqla_GkNumericalIntegration_factory(SQLAFactoryBase):
             z_points = []
             values = []
             for row in sample_rows:
-                z_value = redshift(store_id=row.z_serial, z=row.z)
+                z_value = redshift(
+                    store_id=row.z_serial,
+                    z=row.z,
+                    is_source=row.z_is_source,
+                    is_response=row.z_is_response,
+                )
                 z_points.append(z_value)
                 values.append(
                     GkNumericalValue(
@@ -371,7 +380,10 @@ class sqla_GkNumericalIntegration_factory(SQLAFactoryBase):
             atol=atol,
             rtol=rtol,
             z_source=redshift(
-                store_id=(row_data.z_source_serial), z=(row_data.z_source)
+                store_id=row_data.z_source_serial,
+                z=row_data.z_source,
+                is_source=row_data.z_source_is_source,
+                is_response=row_data.z_source_is_response,
             ),
             z_sample=imported_z_sample,
             tags=tags,
@@ -882,6 +894,8 @@ class sqla_GkNumericalValue_factory(SQLAFactoryBase):
                 integration_table.c.serial,
                 integration_table.c.z_source_serial,
                 redshift_table.c.z.label("z_source"),
+                redshift_table.c.source.label("z_source_is_source"),
+                redshift_table.c.response.label("z_source_is_response"),
             )
             .filter(
                 integration_table.c.model_serial == model_proxy.store_id,
@@ -938,8 +952,12 @@ class sqla_GkNumericalValue_factory(SQLAFactoryBase):
             table.c.WKB_criterion,
             subquery.c.z_source_serial,
             subquery.c.z_source,
-            redshift_table.c.z.label("z_response"),
+            subquery.c.z_source_is_source,
+            subquery.c.z_source_is_reponse,
+            subquery.c.redshift_table.c.z.label("z_response"),
             table.c.z_serial.label("z_response_serial"),
+            redshift_table.c.source.label("z_response_is_source"),
+            redshift_table.c.source.label("z_response_is_response"),
         ).select_from(
             subquery.join(table, table.c.integration_serial == subquery.c.serial).join(
                 redshift_table, redshift_table.c.serial == table.c.z_serial
@@ -954,7 +972,12 @@ class sqla_GkNumericalValue_factory(SQLAFactoryBase):
         def make_obj(row):
             obj = GkNumericalValue(
                 store_id=row.serial,
-                z=redshift(store_id=row.z_response_serial, z=row.z_response),
+                z=redshift(
+                    store_id=row.z_response_serial,
+                    z=row.z_response,
+                    is_source=row.z_response_is_source,
+                    is_response=row.z_response_is_response,
+                ),
                 G=row.G,
                 Gprime=row.Gprime,
                 analytic_G_rad=row.analytic_G_rad,
@@ -966,7 +989,12 @@ class sqla_GkNumericalValue_factory(SQLAFactoryBase):
             )
             obj._deserialized = True
             obj._k_exit = k
-            obj._z_source = redshift(store_id=row.z_source_serial, z=row.z_source)
+            obj._z_source = redshift(
+                store_id=row.z_source_serial,
+                z=row.z_source,
+                is_source=row.z_source_is_source,
+                is_response=row.z_source_is_response,
+            )
 
             return obj
 

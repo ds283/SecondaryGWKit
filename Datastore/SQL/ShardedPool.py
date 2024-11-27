@@ -329,12 +329,15 @@ class ShardedPool:
             # add explicit serial specifier
             new_payload = []
             for i in range(len(payload_data)):
-                # if this object has a valid store_id and was not deserialized, push to all the
-                # remaining shards in order to replicate it
+                # if this object has a valid store_id and has the _new_insert or _updated metadata
+                # flags set, push to all the remaining shards in order to keep them in symc
                 if (
                     hasattr(objects[i], "_my_id")
                     and objects[i]._my_id is not None
-                    and not hasattr(objects[i], "_deserialized")
+                    and (
+                        hasattr(objects[i], "_new_insert")
+                        or hasattr(objects[i], "_updated")
+                    )
                 ):
                     payload_data[i]["serial"] = objects[i].store_id
                     new_payload.append(payload_data[i])
@@ -352,12 +355,12 @@ class ShardedPool:
         else:
             # this was a scalar get
 
-            # if this object has a valid store_id and was not deserialized, push to all the
-            # remaining shards in order to replicate it
+            # if this object has a valid store_id and has the _new_insert or _updated
+            # metadata flags set, push to all remaining shards in order to keep them in sync
             if (
                 hasattr(objects, "_my_id")
                 and objects._my_id is not None
-                and not hasattr(objects, "_deserialized")
+                and (hasattr(objects, "_new_insert") or hasattr(objects, "_updated"))
             ):
                 ray.get(
                     [

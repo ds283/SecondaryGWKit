@@ -1,7 +1,7 @@
+from math import fabs
 from typing import Optional, List
 
 import sqlalchemy as sqla
-from math import fabs
 from sqlalchemy import and_, or_
 from sqlalchemy.exc import MultipleResultsFound, SQLAlchemyError
 
@@ -235,6 +235,8 @@ class sqla_BackgroundModelFactory(SQLAFactoryBase):
                 value_table.c.serial,
                 value_table.c.z_serial,
                 redshift_table.c.z,
+                redshift_table.c.source.label("z_is_source"),
+                redshift_table.c.response.label("z_is_response"),
                 value_table.c.Hubble,
                 value_table.c.wBackground,
                 value_table.c.wPerturbations,
@@ -257,7 +259,12 @@ class sqla_BackgroundModelFactory(SQLAFactoryBase):
         z_points = []
         values = []
         for row in sample_rows:
-            z_value = redshift(store_id=row.z_serial, z=row.z)
+            z_value = redshift(
+                store_id=row.z_serial,
+                z=row.z,
+                is_source=row.z_is_source,
+                is_response=row.z_is_response,
+            )
             z_points.append(z_value)
             values.append(
                 BackgroundModelValue(

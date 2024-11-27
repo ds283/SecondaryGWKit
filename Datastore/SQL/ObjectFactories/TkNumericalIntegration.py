@@ -1,8 +1,8 @@
+from math import fabs
 from operator import or_
 from typing import List, Optional
 
 import sqlalchemy as sqla
-from math import fabs
 from sqlalchemy import and_
 from sqlalchemy.exc import MultipleResultsFound, SQLAlchemyError
 
@@ -202,6 +202,8 @@ class sqla_TkNumericalIntegration_factory(SQLAFactoryBase):
                 table.c.label,
                 table.c.z_init_serial,
                 redshift_table.c.z.label("z_init"),
+                redshift_table.c.source.label("z_init_is_source"),
+                redshift_table.c.response.label("z_init_is_response"),
                 table.c.z_samples,
                 solver_table.c.label.label("solver_label"),
                 solver_table.c.stepping.label("solver_stepping"),
@@ -277,6 +279,8 @@ class sqla_TkNumericalIntegration_factory(SQLAFactoryBase):
                     value_table.c.serial,
                     value_table.c.z_serial,
                     redshift_table.c.z,
+                    redshift_table.c.source.label("z_is_source"),
+                    redshift_table.c.response.label("z_is_response"),
                     value_table.c.T,
                     value_table.c.Tprime,
                     value_table.c.analytic_T_rad,
@@ -297,7 +301,12 @@ class sqla_TkNumericalIntegration_factory(SQLAFactoryBase):
             z_points = []
             values = []
             for row in sample_rows:
-                z_value = redshift(store_id=row.z_serial, z=row.z)
+                z_value = redshift(
+                    store_id=row.z_serial,
+                    z=row.z,
+                    is_source=row.z_is_source,
+                    is_response=row.z_is_response,
+                )
                 z_points.append(z_value)
                 values.append(
                     TkNumericalValue(
@@ -357,7 +366,12 @@ class sqla_TkNumericalIntegration_factory(SQLAFactoryBase):
             atol=atol,
             rtol=rtol,
             z_sample=imported_z_sample,
-            z_init=redshift(store_id=(row_data.z_init_serial), z=(row_data.z_init)),
+            z_init=redshift(
+                store_id=row_data.z_init_serial,
+                z=row_data.z_init,
+                is_source=row_data.z_init_is_source,
+                is_response=row_data.z_init_is_response,
+            ),
             tags=tags,
             delta_logz=delta_logz,
         )
