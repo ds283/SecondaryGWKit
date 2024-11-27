@@ -393,7 +393,7 @@ with ShardedPool(
                 "store_tag", label=f"SourceRedshiftGrid_{len(z_source_sample)}"
             ),
             pool.object_get(
-                "store_tag", label=f"ReponseRedshiftGrid_{len(z_response_sample)}"
+                "store_tag", label=f"ResponseRedshiftGrid_{len(z_response_sample)}"
             ),
             pool.object_get("store_tag", label=f"OutsideHorizonEfolds_e3"),
             pool.object_get(
