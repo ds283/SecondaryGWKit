@@ -1,4 +1,5 @@
 import time
+import uuid
 from datetime import datetime
 from math import floor, ceil
 from typing import Tuple
@@ -234,6 +235,9 @@ def _adaptive_levin(
     notify_interval: int = DEFAULT_LEVIN_NOTIFY_INTERVAL,
     notify_label: str = None,
 ):
+    # generate unique id to identify this calculation
+    id_label = uuid.uuid4()
+
     m = len(f)
 
     regions = [x_span]
@@ -261,6 +265,7 @@ def _adaptive_levin(
                 len(regions),
                 val,
                 updates_issued,
+                id_label,
                 notify_label,
             )
             last_notify = time.time()
@@ -311,7 +316,7 @@ def _adaptive_levin(
             )
         except LinAlgError as e:
             print(
-                f"!! adaptive_levin: linear algebra error when estimating Levin subregion ({a}, {b}), width={width:.8g}"
+                f"!! adaptive_levin ({id_label}): linear algebra error when estimating Levin subregion ({a}, {b}), width={width:.8g}"
             )
             raise e
 
@@ -327,7 +332,7 @@ def _adaptive_levin(
             )
         except LinAlgError as e:
             print(
-                f"!! adaptive_levin: linear algebra error when estimating Levin left-comparison region ({a}, {c}), parent region = ({a}, {b})"
+                f"!! adaptive_levin ({id_label}): linear algebra error when estimating Levin left-comparison region ({a}, {c}), parent region = ({a}, {b})"
             )
             raise e
 
@@ -341,7 +346,7 @@ def _adaptive_levin(
             )
         except LinAlgError as e:
             print(
-                f"!! adaptive_levin: linear algebra error when estimating Levin right-comparison region ({c}, {b}), parent region = ({a}, {b})"
+                f"!! adaptive_levin ({id_label}): linear algebra error when estimating Levin right-comparison region ({c}, {b}), parent region = ({a}, {b})"
             )
             raise e
 
@@ -396,6 +401,7 @@ def _notify_progress(
     remain_regions: int,
     current_val: float,
     update_number: int,
+    id_label,
     notify_label: str = None,
 ):
     since_last_notify = now - last_notify
@@ -403,11 +409,11 @@ def _notify_progress(
 
     if notify_label is not None:
         print(
-            f'** STATUS UDPATE #{update_number}: Levin quadrature "{notify_label}" has been running for {format_time(since_start)} ({format_time(since_last_notify)} since last notification)'
+            f'** STATUS UDPATE #{update_number}: Levin quadrature "{notify_label}" ({id_label}) has been running for {format_time(since_start)} ({format_time(since_last_notify)} since last notification)'
         )
     else:
         print(
-            f"** STATUS UDPATE #{update_number}: Levin quadrature  has been running for {format_time(since_start)} ({format_time(since_last_notify)} since last notification)"
+            f"** STATUS UDPATE #{update_number}: Levin quadrature {id_label} has been running for {format_time(since_start)} ({format_time(since_last_notify)} since last notification)"
         )
 
     print(
