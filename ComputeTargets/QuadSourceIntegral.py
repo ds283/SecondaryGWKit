@@ -477,6 +477,7 @@ def _three_bessel_Levin(
         atol=atol,
         rtol=rtol,
         chebyshev_order=CHEBYSHEV_ORDER,
+        notify_label="analytic J1",
     )
     Y1_data = adaptive_levin_sincos(
         x_span,
@@ -485,6 +486,7 @@ def _three_bessel_Levin(
         atol=atol,
         rtol=rtol,
         chebyshev_order=CHEBYSHEV_ORDER,
+        notify_label="analytic Y1",
     )
 
     def phase2(log_eta: float):
@@ -516,6 +518,7 @@ def _three_bessel_Levin(
         atol=atol,
         rtol=rtol,
         chebyshev_order=CHEBYSHEV_ORDER,
+        notify_label="analytic J2",
     )
     Y2_data = adaptive_levin_sincos(
         x_span,
@@ -524,6 +527,7 @@ def _three_bessel_Levin(
         atol=atol,
         rtol=rtol,
         chebyshev_order=CHEBYSHEV_ORDER,
+        notify_label="analytic Y2",
     )
 
     def phase3(log_eta: float):
@@ -555,6 +559,7 @@ def _three_bessel_Levin(
         atol=atol,
         rtol=rtol,
         chebyshev_order=CHEBYSHEV_ORDER,
+        notify_label="analytic J3",
     )
     Y3_data = adaptive_levin_sincos(
         x_span,
@@ -563,6 +568,7 @@ def _three_bessel_Levin(
         atol=LEVIN_ABSERR,
         rtol=LEVIN_RELERR,
         chebyshev_order=CHEBYSHEV_ORDER,
+        notify_label="analytic Y3",
     )
 
     def phase4(log_eta: float):
@@ -594,6 +600,7 @@ def _three_bessel_Levin(
         atol=atol,
         rtol=rtol,
         chebyshev_order=CHEBYSHEV_ORDER,
+        notify_label="analytic J4",
     )
     Y4_data = adaptive_levin_sincos(
         x_span,
@@ -602,6 +609,7 @@ def _three_bessel_Levin(
         atol=atol,
         rtol=rtol,
         chebyshev_order=CHEBYSHEV_ORDER,
+        notify_label="analytic Y4",
     )
 
     J1_value = J1_data["value"]
