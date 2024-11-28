@@ -282,6 +282,8 @@ def _adaptive_levin(
                     chebyshev_order,
                     val,
                     id_label,
+                    atol,
+                    rtol,
                     notify_label,
                 )
 
@@ -452,6 +454,8 @@ def _write_progress_data(
     chebyshev_order: int,
     current_val: float,
     id_label,
+    atol,
+    rtol,
     notify_label: str = None,
 ):
     path = Path(
@@ -461,20 +465,20 @@ def _write_progress_data(
 
     payload = {
         "current_val": current_val,
-        "regions": regions,
         "id_label": str(id_label),
         "user_label": notify_label,
+        "atol": atol,
+        "rtol": rtol,
     }
-    payload_path = path / "payload.json"
-    with open(payload_path, "w", newline="") as handle:
-        json.dump(payload, handle, indent=4, sort_keys=True)
 
     sns.set_theme()
 
     m = len(f)
 
+    region_list = []
     for reg_num, region in enumerate(regions):
         start, end = region
+        region_data = {"id": reg_num, "start": start, "end": end}
 
         x_grid = np.linspace(start, end, 500)
         y_grid = []
@@ -486,40 +490,103 @@ def _write_progress_data(
             for i in range(m):
                 f_grid[i].append(_safe_fabs(f[i](x)))
 
-        _, p_sample = _adaptive_levin_subregion(
+        estimate, p_sample = _adaptive_levin_subregion(
             (start, end),
             f,
             BasisData,
             chebyshev_order=chebyshev_order,
             build_p_sample=True,
         )
+        region_data["estimate"] = estimate
 
-        p_x_grid = []
-        p_y_grid = [[] for _ in range(m)]
-        for x, p_data in p_sample:
-            p_x_grid.append(x)
+        mid = (start + end) / 2
+
+        estimate_L, pL_sample = _adaptive_levin_subregion(
+            (start, mid),
+            f,
+            BasisData,
+            chebyshev_order=chebyshev_order,
+            build_p_sample=True,
+        )
+        estimate_R, pR_sample = _adaptive_levin_subregion(
+            (mid, end),
+            f,
+            BasisData,
+            chebyshev_order=chebyshev_order,
+            build_p_sample=True,
+        )
+        refined_estimate = estimate_L + estimate_R
+        region_data["estimate_L"] = estimate_L
+        region_data["estimate_R"] = estimate_R
+        region_data["refined_estimate"] = refined_estimate
+
+        relerr = np.fabs((estimate - refined_estimate)) / min(
+            np.fabs(estimate), np.fabs(refined_estimate)
+        )
+        abserr = np.fabs(estimate - refined_estimate)
+
+        region_data["relerr"] = relerr
+        region_data["abserr"] = abserr
+        region_data["abserr_status"] = "fail" if abserr >= atol else "pass"
+        region_data["relerr_status"] = "fail" if relerr >= rtol else "pass"
+
+        # only report regions that will not be accepted in the next step
+        if abserr >= atol and relerr >= rtol:
+            region_list.append(region_data)
+
+            p_x_grid = []
+            p_y_grid = [[] for _ in range(m)]
+            for x, p_data in p_sample:
+                p_x_grid.append(x)
+                for i in range(m):
+                    p_y_grid[i].append(_safe_fabs(p_data[i]))
+
+            pL_x_grid = []
+            pL_y_grid = [[] for _ in range(m)]
+            for x, p_data in pL_sample:
+                pL_x_grid.append(x)
+                for i in range(m):
+                    pL_y_grid[i].append(_safe_fabs(p_data[i]))
+
+            pR_x_grid = []
+            pR_y_grid = [[] for _ in range(m)]
+            for x, p_data in pR_sample:
+                pR_x_grid.append(x)
+                for i in range(m):
+                    pR_y_grid[i].append(_safe_fabs(p_data[i]))
+
+            fig = plt.figure()
+            ax = plt.gca()
+
+            ax.plot(x_grid, y_grid, label="integrand", color="r")
+
             for i in range(m):
-                p_y_grid[i].append(_safe_fabs(p_data[i]))
+                ax.plot(x_grid, f_grid[i], linestyle="dashdot", label=f"Levin f{i+1}")
+                ax.plot(
+                    p_x_grid, p_y_grid[i], linestyle="dashed", label=f"Levin p{i+1}"
+                )
+                ax.plot(
+                    pL_x_grid, pL_y_grid[i], linestyle="dotted", label=f"Levin p{i+1} L"
+                )
+                ax.plot(
+                    pR_x_grid, pR_y_grid[i], linestyle="dotted", label=f"Levin p{i+1} R"
+                )
 
-        fig = plt.figure()
-        ax = plt.gca()
+            ax.set_xscale("linear")
+            ax.set_yscale("log")
+            ax.legend(loc="best")
+            ax.grid(True)
 
-        ax.plot(x_grid, y_grid, label="integrand", color="r")
+            fig_path = path / f"region{reg_num}_start{start:.5g}_end{end:.5g}.pdf"
+            fig.savefig(fig_path)
+            fig.savefig(fig_path.with_suffix(".png"))
 
-        for i in range(m):
-            ax.plot(x_grid, f_grid[i], linestyle="dashdot", label=f"Levin f{i+1}")
-            ax.plot(p_x_grid, p_y_grid[i], linestyle="dashed", label=f"Levin p{i+1}")
+            plt.close()
 
-        ax.set_xscale("linear")
-        ax.set_yscale("log")
-        ax.legend(loc="best")
-        ax.grid(True)
-
-        fig_path = path / f"region{reg_num}_start{start:.5g}_end{end:.5g}.pdf"
-        fig.savefig(fig_path)
-        fig.savefig(fig_path.with_suffix(".png"))
-
-        plt.close()
+    payload["regions"] = region_list
+    payload_path = path / "payload.json"
+    with open(payload_path, "w", newline="") as handle:
+        json.dump(payload, handle, indent=4, sort_keys=True)
 
 
 def adaptive_levin_sincos(
