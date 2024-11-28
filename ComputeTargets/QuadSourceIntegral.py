@@ -744,8 +744,8 @@ def analytic_integral(
         b=b,
         phase_data={"0pt5": Bessel_0pt5},
         nu_type="0pt5",
-        atol=atol,
-        rtol=rtol,
+        atol=1e-18,
+        rtol=1e-8,
     )
     data2pt5 = _three_bessel_integrals(
         k,
@@ -756,8 +756,8 @@ def analytic_integral(
         b=b,
         phase_data={"0pt5": Bessel_0pt5, "2pt5": Bessel_2pt5},
         nu_type="2pt5",
-        atol=atol,
-        rtol=rtol,
+        atol=1e-18,
+        rtol=1e-8,
     )
 
     metadata = {
