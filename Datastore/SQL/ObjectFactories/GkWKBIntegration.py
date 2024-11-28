@@ -217,7 +217,7 @@ class sqla_GkWKBIntegration_factory(SQLAFactoryBase):
                 table.c.z_source_serial,
                 redshift_table.c.z.label("z_source"),
                 redshift_table.c.source.label("z_source_is_source"),
-                redshift_table.c.response.label("z_response_is_response"),
+                redshift_table.c.response.label("z_source_is_response"),
                 table.c.z_samples,
                 table.c.z_init,
                 table.c.G_init,
