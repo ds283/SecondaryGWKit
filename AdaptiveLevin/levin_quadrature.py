@@ -21,6 +21,8 @@ DEFAULT_LEVIN_NOTIFY_INTERVAL = 5 * 60
 # approximate machine epsilon for 64-bit floats
 MACHINE_EPSILON = 1e-16
 
+SIX_PI = 6.0 * np.pi
+
 
 def chebyshev_matrices(x_span: Tuple[float, float], N: int):
     """
@@ -249,12 +251,16 @@ def _adaptive_levin(
     val = 0.0
     used_regions = []
     p_points = []
+    num_used_regions = 0
     num_evaluations = 0
 
     driver_start: float = time.perf_counter()
     start_time: float = time.time()
     last_notify: float = start_time
     updates_issued: int = 0
+
+    start, end = x_span
+    full_width = np.fabs(end - start)
 
     while len(regions) > 0:
         now = time.time()
@@ -264,7 +270,7 @@ def _adaptive_levin(
                 now,
                 last_notify,
                 start_time,
-                len(used_regions),
+                num_used_regions,
                 num_evaluations,
                 len(regions),
                 val,
@@ -291,10 +297,11 @@ def _adaptive_levin(
 
         a, b = regions.pop()
 
-        # if phase difference across this region is very small, there is likely no advantage in using the Levin
-        # rule to do the computation
+        # if phase difference across this region is small enough that we do not have many oscillations,
+        # there is likely no advantage in using the Levin rule to do the computation.
+        # We can terminate the adaptive process by doing ordinary numerical quadrature
         phase_diff = np.fabs(BasisData.raw_theta(b) - BasisData.raw_theta(a))
-        if np.fabs(phase_diff) < np.pi:
+        if np.fabs(phase_diff) < SIX_PI:
 
             def integrand(x):
                 basis = BasisData.eval_basis(x)
@@ -310,6 +317,7 @@ def _adaptive_levin(
             )
             val = val + data["value"]
             used_regions.append((a, b))
+            num_used_regions = num_used_regions + 1
             continue
 
         width = np.fabs(b - a)
@@ -378,7 +386,10 @@ def _adaptive_levin(
         abserr = np.fabs(estimate - refined_estimate)
 
         # Chen et al. step (4), below (173) [adapted to also include a relative tolerance check]
-        if abserr < atol or relerr < rtol:
+        # but terminate the process if the width of the interval has become extremely small
+        if (abserr < atol or relerr < rtol) or (
+            num_used_regions > 1e4 and width / full_width < 1e-3
+        ):
             # print(
             #     f"** accepting interval [{a:.12g},{b:.12g}] -> {estimate:.12g} against [{a:.12g},{c:.12g}] -> {estimate_L:.12g} + [{c:.12g},{b:.12g}] -> {estimate_R:.12g} | abserr={abserr:.12g}, relerr={relerr:.12g}, atol={atol:.8g}, rtol={rtol:.8g}"
             # )
@@ -386,6 +397,7 @@ def _adaptive_levin(
             # if np.fabs(estimate - refined_estimate) < tol:
             val = val + estimate
             used_regions.append((a, b))
+            num_used_regions = num_used_regions + 1
             if build_p_sample:
                 p_points.extend(p_sample)
 
