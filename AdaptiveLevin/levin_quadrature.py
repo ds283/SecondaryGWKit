@@ -1,10 +1,14 @@
+import json
 import time
 import uuid
 from datetime import datetime
 from math import floor, ceil
-from typing import Tuple
+from pathlib import Path
+from typing import Tuple, List
 
 import numpy as np
+import seaborn as sns
+from matplotlib import pyplot as plt
 from numpy.linalg import LinAlgError
 from scipy.linalg import toeplitz
 
@@ -268,6 +272,19 @@ def _adaptive_levin(
                 id_label,
                 notify_label,
             )
+
+            # dump data every 3 notifications
+            if updates_issued % 3 == 1:
+                _write_progress_data(
+                    f,
+                    BasisData,
+                    regions,
+                    chebyshev_order,
+                    val,
+                    id_label,
+                    notify_label,
+                )
+
             last_notify = time.time()
 
         a, b = regions.pop()
@@ -275,7 +292,7 @@ def _adaptive_levin(
         # if phase difference across this region is very small, there is likely no advantage in using the Levin
         # rule to do the computation
         phase_diff = np.fabs(BasisData.raw_theta(b) - BasisData.raw_theta(a))
-        if phase_diff < np.pi:
+        if np.fabs(phase_diff) < np.pi:
 
             def integrand(x):
                 basis = BasisData.eval_basis(x)
@@ -419,6 +436,90 @@ def _notify_progress(
     print(
         f"|  -- current value = {current_val:.7g}, {used_regions} used subintervals, {remain_regions} subintervals remain | {num_evaluations} integrand evaluations"
     )
+
+
+def _safe_fabs(x):
+    if x is None:
+        return None
+
+    return np.fabs(x)
+
+
+def _write_progress_data(
+    f,
+    BasisData,
+    regions: List[Tuple[float, float]],
+    chebyshev_order: int,
+    current_val: float,
+    id_label,
+    notify_label: str = None,
+):
+    path = Path(
+        f"SlowLevinData/{id_label}/{datetime.now().replace(microsecond=0).isoformat()}"
+    ).resolve()
+    path.mkdir(parents=True, exist_ok=True)
+
+    payload = {
+        "current_val": current_val,
+        "regions": regions,
+        "id_label": str(id_label),
+        "user_label": notify_label,
+    }
+    payload_path = path / "payload.json"
+    with open(payload_path, "w", newline="") as handle:
+        json.dump(payload, handle, indent=4, sort_keys=True)
+
+    sns.set_theme()
+
+    m = len(f)
+
+    for reg_num, region in enumerate(regions):
+        start, end = region
+
+        x_grid = np.linspace(start, end, 500)
+        y_grid = []
+        f_grid = [[] for _ in range(m)]
+        for x in x_grid:
+            basis = BasisData.eval_basis(x)
+            y = sum(f[i](x) * basis[i] for i in range(m))
+            y_grid.append(_safe_fabs(y))
+            for i in range(m):
+                f_grid[i].append(_safe_fabs(f[i](x)))
+
+        _, p_sample = _adaptive_levin_subregion(
+            (start, end),
+            f,
+            BasisData,
+            chebyshev_order=chebyshev_order,
+            build_p_sample=True,
+        )
+
+        p_x_grid = []
+        p_y_grid = [[] for _ in range(m)]
+        for x, p_data in p_sample:
+            p_x_grid.append(x)
+            for i in range(m):
+                p_y_grid[i].append(_safe_fabs(p_data[i]))
+
+        fig = plt.figure()
+        ax = plt.gca()
+
+        ax.plot(x_grid, y_grid, label="integrand", color="r")
+
+        for i in range(m):
+            ax.plot(x_grid, f_grid[i], linestyle="dashdot", label=f"Levin f{i+1}")
+            ax.plot(p_x_grid, p_y_grid[i], linestyle="dashed", label=f"Levin p{i+1}")
+
+        ax.set_xscale("linear")
+        ax.set_yscale("log")
+        ax.legend(loc="best")
+        ax.grid(True)
+
+        fig_path = path / f"region{reg_num}_start{start:.5g}_end{end:.5g}.pdf"
+        fig.savefig(fig_path)
+        fig.savefig(fig_path.with_suffix(".png"))
+
+        plt.close()
 
 
 def adaptive_levin_sincos(
