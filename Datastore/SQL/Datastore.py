@@ -705,7 +705,12 @@ class Datastore:
 
         return output_flags
 
-    def read_wavenumber_table(self, units):
+    def read_wavenumber_table(
+        self,
+        units,
+        is_source: Optional[bool] = None,
+        is_response: Optional[bool] = None,
+    ):
         """
         Read the wavenumber value table from the database
         :param units:
@@ -719,11 +724,13 @@ class Datastore:
             factory = self._factories["wavenumber"]
 
             with self._engine.begin() as conn:
-                objects = factory.read_table(conn, tab, units)
+                objects = factory.read_table(conn, tab, units, is_source, is_response)
 
         return objects
 
-    def read_redshift_table(self):
+    def read_redshift_table(
+        self, is_source: Optional[bool] = None, is_response: Optional[bool] = None
+    ):
         """
         Read the redshift value table from the database
         :return:
@@ -736,7 +743,7 @@ class Datastore:
             factory = self._factories["redshift"]
 
             with self._engine.begin() as conn:
-                objects = factory.read_table(conn, tab)
+                objects = factory.read_table(conn, tab, is_source, is_response)
 
         return objects
 

@@ -98,6 +98,8 @@ class sqla_wavenumber_factory(SQLAFactoryBase):
         query = sqla.select(
             table.c.serial,
             table.c.k_inv_Mpc,
+            table.c.source,
+            table.c.response,
         )
 
         if is_source is not None:
