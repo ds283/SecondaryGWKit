@@ -9,7 +9,7 @@ DEFAULT_ABS_TOLERANCE = 1e-10
 DEFAULT_REL_TOLERANCE = 1e-8
 
 DEFAULT_QUADRATURE_RTOL = 1e-8
-DEFAULT_QUADRATURE_ATOL = 1e-18
+DEFAULT_QUADRATURE_ATOL = 1e-25
 
 # value of dtheta/dz where we will switch to a Levin integration strategy
 DEFAULT_LEVIN_THRESHOLD = 1.0
