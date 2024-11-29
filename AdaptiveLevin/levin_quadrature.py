@@ -519,7 +519,7 @@ def _adaptive_levin(
         "p_points": p_points,
         "num_regions": num_used_regions,
         "regions": used_regions,
-        "num_simple_region": num_simple_regions,
+        "num_simple_regions": num_simple_regions,
         "evaluations": int(num_evaluations),
         "elapsed": float(elapsed),
         "num_SVD_errors": num_SVD_errors,
