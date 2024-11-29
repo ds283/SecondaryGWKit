@@ -1034,8 +1034,11 @@ def WKB_Levin_integral(
 
     return {
         "data": LevinData(
-            num_regions=len(data["regions"]),
+            num_regions=data["num_regions"],
             evaluations=data["evaluations"],
+            num_simple_regions=data["num_simple_regions"],
+            num_SVD_errors=data["num_SVD_errors"],
+            num_order_changes=data["num_order_changes"],
             elapsed=data["elapsed"],
         ),
         "value": (1.0 + z_response.z) * data["value"],

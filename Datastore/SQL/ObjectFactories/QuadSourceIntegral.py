@@ -191,6 +191,9 @@ class sqla_QuadSourceIntegral_factory(SQLAFactoryBase):
                 sqla.Column("WKB_quad_min_RHS_time", sqla.Float(64), nullable=True),
                 sqla.Column("WKB_Levin_num_regions", sqla.Integer, nullable=True),
                 sqla.Column("WKB_Levin_evaluations", sqla.Integer, nullable=True),
+                sqla.Column("WKB_Levin_simple_regions", sqla.Integer, nullable=True),
+                sqla.Column("WKB_Levin_SVD_errors", sqla.Integer, nullable=True),
+                sqla.Column("WKB_Levin_order_changes", sqla.Integer, nullable=True),
                 sqla.Column("WKB_Levin_elapsed", sqla.Float(64), nullable=True),
                 sqla.Column("WKB_phase_spline_chunks", sqla.Integer, nullable=True),
                 sqla.Column("compute_time", sqla.Float(64), nullable=True),
@@ -249,6 +252,9 @@ class sqla_QuadSourceIntegral_factory(SQLAFactoryBase):
             table.c.WKB_quad_min_RHS_time,
             table.c.WKB_Levin_num_regions,
             table.c.WKB_Levin_evaluations,
+            table.c.WKB_Levin_simple_regions,
+            table.c.WKB_Levin_SVD_errors,
+            table.c.WKB_Levin_order_changes,
             table.c.WKB_Levin_elapsed,
             table.c.WKB_phase_spline_chunks,
         ).filter(
@@ -330,6 +336,9 @@ class sqla_QuadSourceIntegral_factory(SQLAFactoryBase):
                 "WKB_Levin_data": LevinData(
                     num_regions=row_data.WKB_Levin_num_regions,
                     evaluations=row_data.WKB_Levin_evaluations,
+                    num_simple_regions=row_data.WKB_Levin_simple_regions,
+                    num_SVD_errors=row_data.WKB_Levin_SVD_errors,
+                    num_order_changes=row_data.WKB_Levin_order_changes,
                     elapsed=row_data.WKB_Levin_elapsed,
                 ),
                 "WKB_phase_spline_chunks": row_data.WKB_phase_spline_chunks,
@@ -466,6 +475,21 @@ class sqla_QuadSourceIntegral_factory(SQLAFactoryBase):
                         if WKB_Levin_data is not None
                         else None
                     ),
+                    "WKB_Levin_simple_regions": (
+                        WKB_Levin_data.num_simple_regions
+                        if WKB_Levin_data is not None
+                        else None
+                    ),
+                    "WKB_Levin_SVD_errors": (
+                        WKB_Levin_data.num_SVD_errors
+                        if WKB_Levin_data is not None
+                        else None
+                    ),
+                    "WKB_Levin_order_changes": (
+                        WKB_Levin_data.num_order_changes
+                        if WKB_Levin_data is not None
+                        else None
+                    ),
                     "WKB_Levin_elapsed": (
                         WKB_Levin_data.elapsed if WKB_Levin_data is not None else None
                     ),
@@ -549,6 +573,9 @@ class sqla_QuadSourceIntegral_factory(SQLAFactoryBase):
                 table.c.WKB_quad_min_RHS_time,
                 table.c.WKB_Levin_num_regions,
                 table.c.WKB_Levin_evaluations,
+                table.c.WKB_Levin_simple_regions,
+                table.c.WKB_Levin_SVD_errors,
+                table.c.WKB_Levin_order_changes,
                 table.c.WKB_Levin_elapsed,
                 table.c.WKB_phase_spline_chunks,
                 table.c.z_response_serial,
@@ -760,6 +787,9 @@ class sqla_QuadSourceIntegral_factory(SQLAFactoryBase):
                     "WKB_Levin_data": LevinData(
                         num_regions=row.WKB_Levin_num_regions,
                         evaluations=row.WKB_Levin_evaluations,
+                        num_simple_regions=row.WKB_Levin_simple_regions,
+                        num_SVD_errors=row.WKB_Levin_SVD_errors,
+                        num_order_changes=row.WKB_Levin_order_changes,
                         elapsed=row.WKB_Levin_elapsed,
                     ),
                     "WKB_phase_spline_chunks": row.WKB_phase_spline_chunks,
