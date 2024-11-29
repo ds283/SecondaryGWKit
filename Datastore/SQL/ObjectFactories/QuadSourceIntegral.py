@@ -194,7 +194,9 @@ class sqla_QuadSourceIntegral_factory(SQLAFactoryBase):
                 sqla.Column("WKB_Levin_simple_regions", sqla.Integer, nullable=True),
                 sqla.Column("WKB_Levin_SVD_errors", sqla.Integer, nullable=True),
                 sqla.Column("WKB_Levin_order_changes", sqla.Integer, nullable=True),
-                sqla.Column("WKB_Levin_chebyshev_min_order", sqla.Integer, nullable=True),
+                sqla.Column(
+                    "WKB_Levin_chebyshev_min_order", sqla.Integer, nullable=True
+                ),
                 sqla.Column("WKB_Levin_elapsed", sqla.Float(64), nullable=True),
                 sqla.Column("WKB_phase_spline_chunks", sqla.Integer, nullable=True),
                 sqla.Column("compute_time", sqla.Float(64), nullable=True),
