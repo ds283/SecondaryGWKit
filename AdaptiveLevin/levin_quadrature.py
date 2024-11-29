@@ -390,7 +390,7 @@ def _adaptive_levin(
 
             if num_quad_warnings < 5:
                 print(
-                    f'## adaptive_levin ({label}): phase difference in region ({a:.8g}, {b:.8g}) is {phase_diff:.5g} = {phase_diff/np.pi:/.3g} pi; using simple quadrature: balue={data["value"]:.8g}'
+                    f'## adaptive_levin ({label}): phase difference in region ({a:.8g}, {b:.8g}) is {phase_diff:.5g} = {phase_diff/np.pi:.3g} pi; using simple quadrature: balue={data["value"]:.8g}'
                 )
                 num_quad_warnings += 1
                 if num_quad_warnings == 5:
