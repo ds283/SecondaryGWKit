@@ -4,7 +4,7 @@ import uuid
 from datetime import datetime
 from math import floor, ceil
 from pathlib import Path
-from typing import Tuple, List
+from typing import Tuple, List, Optional
 
 import numpy as np
 import seaborn as sns
@@ -147,8 +147,52 @@ def _adaptive_levin_subregion(
     x_span: Tuple[float, float],
     f,
     BasisData,
+    id_label: uuid,
     chebyshev_order: int = 12,
     build_p_sample: bool = False,
+    notify_label: Optional[str] = None,
+):
+    working_order = max(chebyshev_order, 12)
+    num_order_changes = 0
+    metadata = {}
+
+    # to handle possible SVD failures, allow the working Chebyshev order to be stepped down.
+    # this changes the matrices that we need to invert, so gives another change for the required SVD to converge
+    while working_order >= 12:
+        value, p_sample, _metadata = _adaptive_levin_subregion(
+            x_span,
+            f,
+            BasisData,
+            id_label,
+            chebyshev_order,
+            build_p_sample,
+            notify_label,
+        )
+        if metadata.get("SVD_failure", False):
+            working_order -= 2
+            num_order_changes += 1
+            continue
+
+        break
+
+    if value is None:
+        raise LinAlgError("SVD failure")
+
+    metadata["SVD_failure"] = _metadata.get("SVD_failure", False)
+    metadata["num_order_changes"] = num_order_changes
+    metadata["chebyshev_order"] = working_order
+
+    return value, p_sample, metadata
+
+
+def _adaptive_levin_subregion_impl(
+    x_span: Tuple[float, float],
+    f,
+    BasisData,
+    id_label: uuid,
+    chebyshev_order: int = 12,
+    build_p_sample: bool = False,
+    notify_label: Optional[str] = None,
 ):
     """
     f should be an m-vector of non-rapidly oscillating functions (Levin 96 eq. 2.1)
@@ -156,10 +200,15 @@ def _adaptive_levin_subregion(
     :param x_span:
     :param f: iterable of callables representing the integrand f-functions
     :param BasisData: callable
-    :param tol:
     :param chebyshev_order:
     :return:
     """
+    metadata = {}
+    if id_label is not None:
+        label = f"{notify_label} id={id_label}"
+    else:
+        label = f"{id_label}"
+
     grid, Dmat = chebyshev_matrices(x_span, chebyshev_order)
 
     # sample each component of f on the Chebyshev grid,
@@ -186,7 +235,7 @@ def _adaptive_levin_subregion(
 
     if not np.isfinite(LevinL).all():
         print(
-            "!! WARNING (adaptive_levin_subregion): Levin super-operator contains non-numeric values (np.nan, np.inf, or np.-inf)"
+            f"!! WARNING (adaptive_levin_subregion, {label}): Levin super-operator contains non-numeric values (np.nan, np.inf, or np.-inf)"
         )
 
         raise ValueError(
@@ -195,11 +244,12 @@ def _adaptive_levin_subregion(
 
     # now try to invert the Levin superoperator, to find the Levin antiderivatives p(x)
     # Chen et al.
+    success = False
     try:
         p, residuals, rank, s = np.linalg.lstsq(LevinL, f_Cheb)
     except LinAlgError as e:
         print(
-            "!! WARNING (adaptive_levin_subregion): could not solve Levin collocation system using numpy.linalg.lstsq; attemping to use pseudo-inverse"
+            f"!! WARNING (adaptive_levin_subregion, {label}): could not solve Levin collocation system using numpy.linalg.lstsq; attemping to use pseudo-inverse"
         )
         now = datetime.now().replace(microsecond=0)
         LevinL_filename = f"LevinL_{now.isoformat()}.txt"
@@ -211,9 +261,20 @@ def _adaptive_levin_subregion(
         )
         np.savetxt(LevinL_filename, LevinL)
         np.savetxt(f_Cheb_filename, f_Cheb)
+        metadata["SVD_errors"] = 1
+    else:
+        success = True
 
-        LevinL_inv = np.linalg.pinv(LevinL)
-        p = np.matmul(LevinL_inv, f_Cheb)
+    if not success:
+        try:
+            LevinL_inv = np.linalg.pinv(LevinL)
+            p = np.matmul(LevinL_inv, f_Cheb)
+        except LinAlgError as e:
+            print(
+                f"!! WARNING (adaptive_levin_subregion, {label}): could not solve Levin collocation system using numpy.linalg.pinv; failing"
+            )
+            metadata["SVD_failure"] = True
+            return None, None, metadata
 
     if build_p_sample:
         p_sample = [
@@ -227,7 +288,7 @@ def _adaptive_levin_subregion(
     lower_limit = sum(p[(i + 1) * chebyshev_order - 1] * w0[i] for i in range(m))
     upper_limit = sum(p[i * chebyshev_order] * wk[i] for i in range(m))
 
-    return upper_limit - lower_limit, p_sample
+    return upper_limit - lower_limit, p_sample, metadata
 
 
 def _adaptive_levin(
@@ -240,9 +301,14 @@ def _adaptive_levin(
     build_p_sample: bool = False,
     notify_interval: int = DEFAULT_LEVIN_NOTIFY_INTERVAL,
     notify_label: str = None,
+    emit_diagnostics=False,
 ):
     # generate unique id to identify this calculation
     id_label = uuid.uuid4()
+    if notify_label is not None:
+        label = f"{notify_label}, id={id_label}"
+    else:
+        label = f"{id_label}"
 
     m = len(f)
 
@@ -252,12 +318,18 @@ def _adaptive_levin(
     used_regions = []
     p_points = []
     num_used_regions = 0
+    num_simple_regions = 0
     num_evaluations = 0
 
     driver_start: float = time.perf_counter()
     start_time: float = time.time()
     last_notify: float = start_time
     updates_issued: int = 0
+
+    num_quad_warnings = 0
+
+    num_SVD_errors = 0
+    num_order_changes = 0
 
     start, end = x_span
     full_width = np.fabs(end - start)
@@ -280,7 +352,7 @@ def _adaptive_levin(
             )
 
             # dump data every 3 notifications
-            if updates_issued % 3 == 1:
+            if emit_diagnostics and updates_issued % 3 == 1:
                 _write_progress_data(
                     f,
                     BasisData,
@@ -315,9 +387,21 @@ def _adaptive_levin(
                 rtol=rtol,
                 method="quad",
             )
+
+            if num_quad_warnings < 5:
+                print(
+                    f'## adaptive_levin ({label}): phase difference in region ({a:.8g}, {b:.8g}) is {phase_diff:.5g} = {phase_diff/np.pi:/.3g} pi; using simple quadrature: balue={data["value"]:.8g}'
+                )
+                num_quad_warnings += 1
+                if num_quad_warnings == 5:
+                    print(
+                        f"## adaptive_levin ({label}): further warnings for simple quadrature will be suppressed for this computation"
+                    )
+
             val = val + data["value"]
             used_regions.append((a, b))
             num_used_regions = num_used_regions + 1
+            num_simple_regions = num_simple_regions + 1
             continue
 
         width = np.fabs(b - a)
@@ -334,46 +418,54 @@ def _adaptive_levin(
 
         # Chen et al. (172)
         try:
-            estimate, p_sample = _adaptive_levin_subregion(
+            estimate, p_sample, metadata = _adaptive_levin_subregion(
                 (a, b),
                 f,
                 BasisData,
+                id_label=id_label,
                 chebyshev_order=chebyshev_order,
                 build_p_sample=build_p_sample,
+                notify_label=notify_label,
             )
+            num_SVD_errors = num_SVD_errors + metadata.get("SVD_errors", 0)
+            num_order_changes = num_order_changes + metadata.get("num_order_changes", 0)
         except LinAlgError as e:
             print(
-                f"!! adaptive_levin ({id_label}): linear algebra error when estimating Levin subregion ({a}, {b}), width={width:.8g}"
+                f"!! adaptive_levin ({label}): linear algebra error when estimating Levin subregion ({a}, {b}), width={width:.8g}"
             )
             raise e
 
         c = (a + b) / 2.0
         # Chen et al. (173)
         try:
-            estimate_L, pL_sample = _adaptive_levin_subregion(
+            estimate_L, pL_sample, metadataL = _adaptive_levin_subregion(
                 (a, c),
                 f,
                 BasisData,
+                id_label=id_label,
                 chebyshev_order=chebyshev_order,
                 build_p_sample=build_p_sample,
+                notify_label=notify_label,
             )
         except LinAlgError as e:
             print(
-                f"!! adaptive_levin ({id_label}): linear algebra error when estimating Levin left-comparison region ({a}, {c}), parent region = ({a}, {b})"
+                f"!! adaptive_levin ({label}): linear algebra error when estimating Levin left-comparison region ({a}, {c}), parent region = ({a}, {b})"
             )
             raise e
 
         try:
-            estimate_R, pR_sample = _adaptive_levin_subregion(
+            estimate_R, pR_sample, metadataR = _adaptive_levin_subregion(
                 (c, b),
                 f,
                 BasisData,
+                id_label=id_label,
                 chebyshev_order=chebyshev_order,
                 build_p_sample=build_p_sample,
+                notify_label=notify_label,
             )
         except LinAlgError as e:
             print(
-                f"!! adaptive_levin ({id_label}): linear algebra error when estimating Levin right-comparison region ({c}, {b}), parent region = ({a}, {b})"
+                f"!! adaptive_levin ({label}): linear algebra error when estimating Levin right-comparison region ({c}, {b}), parent region = ({a}, {b})"
             )
             raise e
 
@@ -417,9 +509,13 @@ def _adaptive_levin(
     return {
         "value": float(val),
         "p_points": p_points,
+        "num_regions": num_used_regions,
         "regions": used_regions,
+        "num_simple_region": num_simple_regions,
         "evaluations": int(num_evaluations),
         "elapsed": float(elapsed),
+        "num_SVD_errors": num_SVD_errors,
+        "num_order_changes": num_order_changes,
     }
 
 
@@ -465,10 +561,10 @@ def _write_progress_data(
     regions: List[Tuple[float, float]],
     chebyshev_order: int,
     current_val: float,
-    id_label,
-    atol,
-    rtol,
-    notify_label: str = None,
+    id_label: uuid,
+    atol: float,
+    rtol: float,
+    notify_label: Optional[str] = None,
 ):
     path = Path(
         f"SlowLevinData/{id_label}/{datetime.now().replace(microsecond=0).isoformat()}"
@@ -502,30 +598,36 @@ def _write_progress_data(
             for i in range(m):
                 f_grid[i].append(_safe_fabs(f[i](x)))
 
-        estimate, p_sample = _adaptive_levin_subregion(
+        estimate, p_sample, metadata = _adaptive_levin_subregion(
             (start, end),
             f,
             BasisData,
+            id_label=id_label,
             chebyshev_order=chebyshev_order,
             build_p_sample=True,
+            notify_label=notify_label,
         )
         region_data["estimate"] = estimate
 
         mid = (start + end) / 2
 
-        estimate_L, pL_sample = _adaptive_levin_subregion(
+        estimate_L, pL_sample, metadataL = _adaptive_levin_subregion(
             (start, mid),
             f,
             BasisData,
+            id_label=id_label,
             chebyshev_order=chebyshev_order,
             build_p_sample=True,
+            notify_label=notify_label,
         )
-        estimate_R, pR_sample = _adaptive_levin_subregion(
+        estimate_R, pR_sample, metadataR = _adaptive_levin_subregion(
             (mid, end),
             f,
             BasisData,
+            id_label=id_label,
             chebyshev_order=chebyshev_order,
             build_p_sample=True,
+            notify_label=notify_label,
         )
         refined_estimate = estimate_L + estimate_R
         region_data["estimate_L"] = estimate_L
@@ -611,6 +713,7 @@ def adaptive_levin_sincos(
     build_p_sample: bool = False,
     notify_interval: int = DEFAULT_LEVIN_NOTIFY_INTERVAL,
     notify_label: str = None,
+    emit_diagnostics=False,
 ):
     A = _Basis_SinCos(theta)
 
@@ -624,4 +727,5 @@ def adaptive_levin_sincos(
         build_p_sample=build_p_sample,
         notify_interval=notify_interval,
         notify_label=notify_label,
+        emit_diagnostics=emit_diagnostics,
     )
