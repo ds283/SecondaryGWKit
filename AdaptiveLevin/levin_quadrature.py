@@ -171,6 +171,14 @@ def _adaptive_levin_subregion(
         if metadata.get("SVD_failure", False):
             working_order -= 2
             num_order_changes += 1
+
+            if id_label is not None:
+                label = f"{notify_label} id={id_label}"
+            else:
+                label = f"{id_label}"
+            print(
+                f"!! WARNING (adaptive_levin_subregion, {label}): SVD failure - stepping down Chebyshev spectral order to {working_order}"
+            )
             continue
 
         break
@@ -390,7 +398,7 @@ def _adaptive_levin(
 
             if num_quad_warnings < 5:
                 print(
-                    f'## adaptive_levin ({label}): phase difference in region ({a:.8g}, {b:.8g}) is {phase_diff:.5g} = {phase_diff/np.pi:.3g} pi; using simple quadrature: balue={data["value"]:.8g}'
+                    f'## adaptive_levin ({label}): phase difference in region ({a:.8g}, {b:.8g}) is {phase_diff:.5g} = {phase_diff/np.pi:.3g} pi; using simple quadrature: value={data["value"]:.8g}'
                 )
                 num_quad_warnings += 1
                 if num_quad_warnings == 5:
