@@ -159,7 +159,7 @@ def _adaptive_levin_subregion(
     # to handle possible SVD failures, allow the working Chebyshev order to be stepped down.
     # this changes the matrices that we need to invert, so gives another change for the required SVD to converge
     while working_order >= 12:
-        value, p_sample, _metadata = _adaptive_levin_subregion(
+        value, p_sample, _metadata = _adaptive_levin_subregion_impl(
             x_span,
             f,
             BasisData,
