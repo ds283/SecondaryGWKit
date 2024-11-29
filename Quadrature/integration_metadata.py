@@ -47,6 +47,7 @@ LevinData = namedtuple(
         "num_simple_regions",
         "num_SVD_errors",
         "num_order_changes",
+        "chebyshev_order",
         "elapsed",
     ],
 )

@@ -169,8 +169,8 @@ def _adaptive_levin_subregion(
             notify_label,
         )
         if metadata.get("SVD_failure", False):
-            working_order -= 2
-            num_order_changes += 1
+            working_order = working_order - 2
+            num_order_changes = num_order_changes + 1
 
             if id_label is not None:
                 label = f"{notify_label} id={id_label}"

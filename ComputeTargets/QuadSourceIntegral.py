@@ -1039,6 +1039,7 @@ def WKB_Levin_integral(
             num_simple_regions=data["num_simple_regions"],
             num_SVD_errors=data["num_SVD_errors"],
             num_order_changes=data["num_order_changes"],
+            chebyshev_order=data["chebyshev_order"],
             elapsed=data["elapsed"],
         ),
         "value": (1.0 + z_response.z) * data["value"],
