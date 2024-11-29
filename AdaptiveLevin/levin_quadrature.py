@@ -311,6 +311,11 @@ def _adaptive_levin(
     notify_label: str = None,
     emit_diagnostics=False,
 ):
+    driver_start: float = time.perf_counter()
+    start_time: float = time.time()
+    last_notify: float = start_time
+    updates_issued: int = 0
+
     # generate unique id to identify this calculation
     id_label = uuid.uuid4()
     if notify_label is not None:
@@ -329,15 +334,9 @@ def _adaptive_levin(
     num_simple_regions = 0
     num_evaluations = 0
 
-    driver_start: float = time.perf_counter()
-    start_time: float = time.time()
-    last_notify: float = start_time
-    updates_issued: int = 0
-
-    num_quad_warnings = 0
-
     num_SVD_errors = 0
     num_order_changes = 0
+    chebyshev_min_order = None
 
     start, end = x_span
     full_width = np.fabs(end - start)
@@ -396,16 +395,6 @@ def _adaptive_levin(
                 method="quad",
             )
 
-            # if num_quad_warnings < 5:
-            #     print(
-            #         f'## adaptive_levin ({label}): phase difference in region ({a:.8g}, {b:.8g}) is {phase_diff:.5g} = {phase_diff/np.pi:.3g} pi; using simple quadrature: value={data["value"]:.8g}'
-            #     )
-            #     num_quad_warnings += 1
-            #     if num_quad_warnings == 5:
-            #         print(
-            #             f"## adaptive_levin ({label}): further warnings for simple quadrature will be suppressed for this computation"
-            #         )
-
             val = val + data["value"]
             used_regions.append((a, b))
             num_used_regions = num_used_regions + 1
@@ -435,6 +424,11 @@ def _adaptive_levin(
                 build_p_sample=build_p_sample,
                 notify_label=notify_label,
             )
+            order = metadata.get("chebyshev_order", None)
+            if order is not None:
+                if chebyshev_min_order is None or order < chebyshev_min_order:
+                    chebyshev_min_order = order
+
             num_SVD_errors = num_SVD_errors + metadata.get("SVD_errors", 0)
             num_order_changes = num_order_changes + metadata.get("num_order_changes", 0)
         except LinAlgError as e:
@@ -524,6 +518,7 @@ def _adaptive_levin(
         "elapsed": float(elapsed),
         "num_SVD_errors": num_SVD_errors,
         "num_order_changes": num_order_changes,
+        "chebyshev_min_order": chebyshev_min_order,
     }
 
 
