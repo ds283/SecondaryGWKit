@@ -480,7 +480,7 @@ def _adaptive_levin(
         # Chen et al. step (4), below (173) [adapted to also include a relative tolerance check]
         # but terminate the process if the width of the interval has become extremely small
         if (abserr < atol or relerr < rtol) or (
-            num_used_regions > 1e4 and width / full_width < 1e-3
+            num_used_regions > 1e3 and width / full_width < 1e-2
         ):
             # print(
             #     f"** accepting interval [{a:.12g},{b:.12g}] -> {estimate:.12g} against [{a:.12g},{c:.12g}] -> {estimate_L:.12g} + [{c:.12g},{b:.12g}] -> {estimate_R:.12g} | abserr={abserr:.12g}, relerr={relerr:.12g}, atol={atol:.8g}, rtol={rtol:.8g}"
