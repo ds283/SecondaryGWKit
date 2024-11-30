@@ -1,5 +1,5 @@
 from pathlib import Path
-from random import uniform
+from random import uniform, choice
 
 import numpy as np
 import seaborn as sns
@@ -327,10 +327,132 @@ def Levin_3bessel(
 k = uniform(0.1, 5.0)
 q = uniform(0.1, 5.0)
 s = uniform(0.1, 5.0)
-mu = 1.0
-nu = 1.0
-sigma = 0.0
 
-analytic = (np.pi / 8.0) * (k * k + q * q - s * s) / (k * k * q * q * s)
 
-eval_3bessel(mu, nu, sigma, k, q, s, max_x=1e5, analytic_result=analytic)
+class J000:
+    mu = 0.0
+    nu = 0.0
+    sigma = 0.0
+
+    @staticmethod
+    def analytic(k, q, s):
+        return (np.pi / 4.0) / (k * q * s)
+
+
+class J110:
+    mu = 1.0
+    nu = 1.0
+    sigma = 0.0
+
+    @staticmethod
+    def analytic(k, q, s):
+        k_sq = k * k
+        q_sq = q * q
+        s_sq = s * s
+        return (np.pi / 8.0) * (k_sq + q_sq - s_sq) / (k_sq * q_sq * s)
+
+
+class J220:
+    mu = 2.0
+    nu = 2.0
+    sigma = 0.0
+
+    @staticmethod
+    def analytic(k, q, s):
+        k_sq = k * k
+        k3 = k_sq * k
+        k4 = k_sq * k_sq
+        q_sq = q * q
+        q3 = q_sq * q
+        s_sq = s * s
+
+        pre_factor = np.pi / 32.0
+        numerator = (
+            3.0 * k4
+            + 2.0 * k_sq * (q_sq - 3.0 * s_sq)
+            + 3.0 * (q_sq - s_sq) * (q_sq - s_sq)
+        )
+        denominator = k3 * q3 * s
+
+        return pre_factor * numerator / denominator
+
+
+class J222:
+    mu = 2.0
+    nu = 2.0
+    sigma = 2.0
+
+    @staticmethod
+    def analytic(k, q, s):
+        k_sq = k * k
+        q_sq = q * q
+        s_sq = s * s
+
+        k3 = k_sq * k
+        q3 = q_sq * q
+        s3 = s_sq * s
+
+        k4 = k_sq * k_sq
+        q4 = q_sq * q_sq
+        s4 = s_sq * s_sq
+
+        s6 = s4 * s_sq
+
+        pre_factor = np.pi / 64.0
+
+        numerator = (
+            (3.0 * k4 + 2.0 * k_sq * q_sq + 3.0 * q4) * s_sq
+            + 3.0 * (k_sq + q_sq) * s4
+            - 3.0 * (k_sq - q_sq) * (k_sq - q_sq) * (k_sq + q_sq)
+            - 3.0 * s6
+        )
+        denominator = k3 * q3 * s3
+
+        return pre_factor * numerator / denominator
+
+
+class J231:
+    mu = 2.0
+    nu = 3.0
+    sigma = 1.0
+
+    @staticmethod
+    def analytic(k, q, s):
+        k_sq = k * k
+        q_sq = q * q
+        s_sq = s * s
+
+        k3 = k_sq * k
+
+        k4 = k_sq * k_sq
+        q4 = q_sq * q_sq
+        s4 = s_sq * s_sq
+
+        k6 = s4 * s_sq
+
+        pre_factor = np.pi / 64.0
+
+        numerator = (
+            3.0 * k4 * (q_sq + 5.0 * s_sq)
+            + (q_sq - s_sq) * (q_sq - s_sq) * (q_sq + 5.0 * s_sq)
+            + k_sq * (q4 + 6.0 * q_sq * s_sq - 15.0 * s4)
+            - 5.0 * k6
+        )
+        denominator = k3 * q4 * s_sq
+
+        return pre_factor * numerator / denominator
+
+
+Jintegrals = [J000, J110, J220, J222, J231]
+whichJ = choice(Jintegrals)
+
+eval_3bessel(
+    whichJ.mu,
+    whichJ.nu,
+    whichJ.sigma,
+    k,
+    q,
+    s,
+    max_x=1e5,
+    analytic_result=whichJ.analytic(k, q, s),
+)
