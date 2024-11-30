@@ -1,20 +1,29 @@
+from pathlib import Path
+from random import uniform
+
 import numpy as np
+import seaborn as sns
+from matplotlib import pyplot as plt
 from scipy.special import jv
 
-from matplotlib import pyplot as plt
-import seaborn as sns
-
-from LiouvilleGreen.bessel_phase import bessel_phase
 from AdaptiveLevin.levin_quadrature import adaptive_levin_sincos
+from LiouvilleGreen.bessel_phase import bessel_phase
 from Quadrature.simple_quadrature import simple_quadrature
 
 
 def eval_3bessel(
-    mu: float, nu: float, sigma: float, k: float, q: float, s: float, max_x: float
+    mu: float,
+    nu: float,
+    sigma: float,
+    k: float,
+    q: float,
+    s: float,
+    max_x: float,
+    analytic_result: float,
 ):
-    mu_phase = bessel_phase(mu + 0.5, 1.075 * max_x, atol=1e-25, rtol=5e-14)
-    nu_phase = bessel_phase(nu + 0.5, 1.075 * max_x, atol=1e-25, rtol=5e-14)
-    sigma_phase = bessel_phase(sigma + 0.5, 1.075 * max_x, atol=1e-25, rtol=5e-14)
+    mu_phase = bessel_phase(mu + 0.5, 1.075 * k * max_x, atol=1e-25, rtol=5e-14)
+    nu_phase = bessel_phase(nu + 0.5, 1.075 * q * max_x, atol=1e-25, rtol=5e-14)
+    sigma_phase = bessel_phase(sigma + 0.5, 1.075 * s * max_x, atol=1e-25, rtol=5e-14)
 
     x_grid = np.logspace(np.log10(100.0), np.log10(max_x), 250)
     y_grid = [
@@ -41,6 +50,51 @@ def eval_3bessel(
     ax = plt.gca()
 
     ax.plot(x_grid, y_grid, color="b", label="Numeric + Levin")
+
+    ax.axhline(analytic_result, color="r", linestyle=(0, (1, 1)), label="Analytic")
+
+    ax.text(0.0, 1.03, f"k={k:.5g}", transform=ax.transAxes, fontsize="x-small")
+    ax.text(0.3, 1.03, f"q={q:.5g}", transform=ax.transAxes, fontsize="x-small")
+    ax.text(0.6, 1.03, f"s={s:.5g}", transform=ax.transAxes, fontsize="x-small")
+    ax.text(0.0, 1.08, f"$\\mu$={mu:.5g}", transform=ax.transAxes, fontsize="x-small")
+    ax.text(0.3, 1.08, f"$\\nu$={nu:.5g}", transform=ax.transAxes, fontsize="x-small")
+    ax.text(
+        0.6, 1.08, f"$\\sigma$={sigma:.5g}", transform=ax.transAxes, fontsize="x-small"
+    )
+
+    ax.set_xscale("log")
+    ax.set_yscale("linear")
+    ax.legend(loc="best")
+    ax.grid(True)
+
+    fig_path = Path(
+        f"mu={mu:.3f}_nu={nu:.3f}_sigma={sigma:.3f}_k={k:.3f}_q={q:.3f}_s={s:.3f}_maxx={max_x:.5g}.pdf"
+    ).resolve()
+    fig.savefig(fig_path)
+    fig.savefig(fig_path.with_suffix(".png"))
+
+    plt.close()
+
+    value = quad_3bessel(
+        mu_phase,
+        nu_phase,
+        sigma_phase,
+        mu,
+        nu,
+        sigma,
+        k,
+        q,
+        s,
+        max_x,
+        atol=1e-14,
+        rtol=1e-10,
+    )
+    print(f"@@ quadrature result = {value}")
+    print(f"@@ analytic result = {analytic_result}")
+
+    abserr = np.fabs(value - analytic_result)
+    relerr = abserr / value
+    print(f"relerr = {relerr:.5g}, abserr = {abserr:.5g}")
 
 
 def quad_3bessel(
@@ -74,6 +128,9 @@ def quad_3bessel(
     Levin = Levin_3bessel(
         mu_phase, nu_phase, sigma_phase, k, q, s, min_cut, max_x, atol, rtol
     )
+
+    # print(f">> numeric on (0, {min_cut}) = {numeric}")
+    # print(f">> Levin on ({min_cut}, {max_x}) = {Levin}")
 
     return numeric + Levin
 
@@ -136,7 +193,7 @@ def Levin_3bessel(
     def Levin_f(log_x: float):
         x = np.exp(log_x)
 
-        return np.sqrt(x) * m_mu(k * x) * m_nu(q * x) * m_sigma(s * x)
+        return np.pow(x, 3.0 / 2.0) * m_mu(k * x) * m_nu(q * x) * m_sigma(s * x)
 
     def phase1(log_x: float):
         x = np.exp(log_x)
@@ -257,4 +314,23 @@ def Levin_3bessel(
 
     norm_factor = np.pow(np.pi / 2.0, 3.0 / 2.0) / np.sqrt(k * q * s) / 4.0
 
+    # print(
+    #     f">> Levin groups: group1: {group1_value}, group2 {group2_value}, group3 {group3_value}, group4 {group4_value}"
+    # )
+    # print(
+    #     f">> Levin result = {norm_factor} * ( {-group1_value} + {group2_value} + {group3_value} + {-group4_value} = {norm_factor * (-group1_value + group2_value + group3_value - group4_value)}"
+    # )
+
     return norm_factor * (-group1_value + group2_value + group3_value - group4_value)
+
+
+k = uniform(0.1, 5.0)
+q = uniform(0.1, 5.0)
+s = uniform(0.1, 5.0)
+mu = 1.0
+nu = 1.0
+sigma = 0.0
+
+analytic = (np.pi / 8.0) * (k * k + q * q - s * s) / (k * k * q * q * s)
+
+eval_3bessel(mu, nu, sigma, k, q, s, max_x=1e5, analytic_result=analytic)
