@@ -324,6 +324,10 @@ def Levin_3bessel(
     return Levin
 
 
+def is_triangle(k: float, q: float, s: float):
+    return np.fabs(k - q) < s < k + q
+
+
 class J000:
     mu = 0.0
     nu = 0.0
@@ -331,6 +335,9 @@ class J000:
 
     @staticmethod
     def analytic(k, q, s):
+        if not is_triangle(k, q, s):
+            return 0.0
+
         return (np.pi / 4.0) / (k * q * s)
 
 
@@ -341,6 +348,9 @@ class J110:
 
     @staticmethod
     def analytic(k, q, s):
+        if not is_triangle(k, q, s):
+            return 0.0
+
         k_sq = k * k
         q_sq = q * q
         s_sq = s * s
@@ -354,6 +364,9 @@ class J220:
 
     @staticmethod
     def analytic(k, q, s):
+        if not is_triangle(k, q, s):
+            return 0.0
+
         k_sq = k * k
         k3 = k_sq * k
         k4 = k_sq * k_sq
@@ -379,6 +392,9 @@ class J222:
 
     @staticmethod
     def analytic(k, q, s):
+        if not is_triangle(k, q, s):
+            return 0.0
+
         k_sq = k * k
         q_sq = q * q
         s_sq = s * s
@@ -413,6 +429,9 @@ class J231:
 
     @staticmethod
     def analytic(k, q, s):
+        if not is_triangle(k, q, s):
+            return 0.0
+
         k_sq = k * k
         q_sq = q * q
         s_sq = s * s
@@ -447,9 +466,9 @@ class Test3BesselAnalytic(unittest.TestCase):
         timestamp = datetime.now().replace(microsecond=0)
 
         for J in Jintegrals:
-            k = uniform(1.0, 5.0)
-            q = uniform(1.0, 5.0)
-            s = uniform(1.0, 5.0)
+            k = uniform(0.1, 5.0)
+            q = uniform(0.1, 5.0)
+            s = uniform(0.1, 5.0)
 
             analytic = J.analytic(k, q, s)
             numeric = eval_3bessel(
@@ -471,7 +490,9 @@ class Test3BesselAnalytic(unittest.TestCase):
                 return int(round(x, 0))
 
             print(f"@@ ({intify(J.mu)},{intify(J.nu)},{intify(J.sigma)}):")
-            print(f"   k={k}, q={q}, s=s{s}")
+            print(
+                f"   k={k}, q={q}, s=s{s} | is_triangle(k, q, s)={is_triangle(k, q, s)}"
+            )
             print(f"   quadrature result = {numeric}")
             print(f"   analytic result = {analytic}")
             print(f"   relerr={relerr:.5g}, abserr={abserr:.5g}")
@@ -514,7 +535,7 @@ class Test3BesselAnalytic(unittest.TestCase):
             return int(round(x, 0))
 
         print(f"@@ ({intify(J.mu)},{intify(J.nu)},{intify(J.sigma)}):")
-        print(f"   k={k}, q={q}, s={s}")
+        print(f"   k={k}, q={q}, s={s}, is_triangle={is_triangle(k, q, s)}")
         print(f"   quadrature result = {numeric}")
         print(f"   analytic result = {analytic}")
         print(f"   relerr={relerr:.5g}, abserr={abserr:.5g}")
