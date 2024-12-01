@@ -119,8 +119,9 @@ def bessel_phase(
     sample_grid = np.linspace(log_min_x, log_max_x, sample_points)
 
     # try to build an accurate initial condition for Q by comparison with the numerical Bessel function
-    init_jv = jv(0.0, min_x)
+    init_jv = jv(nu, min_x)
     init_sin = init_jv / m(min_x)
+    print(f"min_x = {min_x}, init_jv = {init_jv}, init_sin = {init_sin}")
     init_phase = np.asin(init_sin)
     init_Q = init_phase / min_x
 
