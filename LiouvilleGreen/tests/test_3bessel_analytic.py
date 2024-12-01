@@ -1,5 +1,7 @@
+import unittest
+from datetime import datetime
 from pathlib import Path
-from random import uniform, choice
+from random import uniform
 
 import numpy as np
 import seaborn as sns
@@ -20,6 +22,7 @@ def eval_3bessel(
     s: float,
     max_x: float,
     analytic_result: float,
+    timestamp,
 ):
     mu_phase = bessel_phase(mu + 0.5, 1.075 * k * max_x, atol=1e-25, rtol=5e-14)
     nu_phase = bessel_phase(nu + 0.5, 1.075 * q * max_x, atol=1e-25, rtol=5e-14)
@@ -68,8 +71,9 @@ def eval_3bessel(
     ax.grid(True)
 
     fig_path = Path(
-        f"mu={mu:.3f}_nu={nu:.3f}_sigma={sigma:.3f}_k={k:.3f}_q={q:.3f}_s={s:.3f}_maxx={max_x:.5g}.pdf"
+        f"test_3bessel_analytic/{timestamp.isoformat()}/mu={mu:.3f}_nu={nu:.3f}_sigma={sigma:.3f}_k={k:.3f}_q={q:.3f}_s={s:.3f}_maxx={max_x:.5g}.pdf"
     ).resolve()
+    fig_path.parents[0].mkdir(parents=True, exist_ok=True)
     fig.savefig(fig_path)
     fig.savefig(fig_path.with_suffix(".png"))
 
@@ -89,12 +93,7 @@ def eval_3bessel(
         atol=1e-14,
         rtol=1e-10,
     )
-    print(f"@@ quadrature result = {value}")
-    print(f"@@ analytic result = {analytic_result}")
-
-    abserr = np.fabs(value - analytic_result)
-    relerr = abserr / value
-    print(f"relerr = {relerr:.5g}, abserr = {abserr:.5g}")
+    return value
 
 
 def quad_3bessel(
@@ -324,11 +323,6 @@ def Levin_3bessel(
     return norm_factor * (-group1_value + group2_value + group3_value - group4_value)
 
 
-k = uniform(0.1, 5.0)
-q = uniform(0.1, 5.0)
-s = uniform(0.1, 5.0)
-
-
 class J000:
     mu = 0.0
     nu = 0.0
@@ -444,15 +438,40 @@ class J231:
 
 
 Jintegrals = [J000, J110, J220, J222, J231]
-whichJ = choice(Jintegrals)
 
-eval_3bessel(
-    whichJ.mu,
-    whichJ.nu,
-    whichJ.sigma,
-    k,
-    q,
-    s,
-    max_x=1e5,
-    analytic_result=whichJ.analytic(k, q, s),
-)
+
+class Test3BesselAnalytic(unittest.TestCase):
+
+    def test_3Bessel(self):
+        timestamp = datetime.now().replace(microsecond=0)
+
+        for J in Jintegrals:
+            k = uniform(1.0, 5.0)
+            q = uniform(1.0, 5.0)
+            s = uniform(1.0, 5.0)
+
+            analytic = J.analytic(k, q, s)
+            numeric = eval_3bessel(
+                J.mu,
+                J.nu,
+                J.sigma,
+                k,
+                q,
+                s,
+                max_x=1e5,
+                analytic_result=analytic,
+                timestamp=timestamp,
+            )
+
+            abserr = np.fabs(numeric - analytic)
+            relerr = abserr / analytic
+
+            def intify(x: float):
+                return int(round(x, 0))
+
+            print(f"@@ ({intify(J.mu)},{intify(J.nu)},{intify(J.sigma)}):")
+            print(f"   k={k}, q={q}, s=s{s}")
+            print(f"   quadrature result = {numeric}")
+            print(f"   analytic result = {analytic}")
+            print(f"   relerr={relerr:.5g}, abserr={abserr:.5g}")
+            self.assertTrue(relerr < 1e-5 or abserr < 1e-6)
