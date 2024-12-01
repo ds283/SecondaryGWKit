@@ -12,6 +12,11 @@ from AdaptiveLevin.levin_quadrature import adaptive_levin_sincos
 from LiouvilleGreen.bessel_phase import bessel_phase
 from Quadrature.simple_quadrature import simple_quadrature
 
+ABS_TOLERANCE = 1e-6
+REL_TOLERANCE = 1e-5
+
+MAX_X = 1e8
+
 
 def eval_3bessel(
     mu: float,
@@ -460,6 +465,10 @@ class J231:
 Jintegrals = [J000, J110, J220, J222, J231]
 
 
+def intify(x: float):
+    return int(round(x, 0))
+
+
 class Test3BesselAnalytic(unittest.TestCase):
 
     def test_3Bessel(self):
@@ -478,25 +487,33 @@ class Test3BesselAnalytic(unittest.TestCase):
                 k,
                 q,
                 s,
-                max_x=1e5,
+                max_x=MAX_X,
                 analytic_result=analytic,
                 timestamp=timestamp,
             )
 
-            abserr = np.fabs(numeric - analytic)
-            relerr = abserr / analytic
+            if is_triangle(k, q, s):
+                abserr = np.fabs(numeric - analytic)
+                relerr = abserr / analytic
 
-            def intify(x: float):
-                return int(round(x, 0))
+                print(f"@@ ({intify(J.mu)},{intify(J.nu)},{intify(J.sigma)}):")
+                print(f"   k={k}, q={q}, s={s} satisfies the triangle inequality")
+                print(f"   quadrature result = {numeric}")
+                print(f"   analytic result = {analytic}")
+                print(f"   relerr={relerr:.5g}, abserr={abserr:.5g}")
+                self.assertTrue(relerr < REL_TOLERANCE or abserr < ABS_TOLERANCE)
 
-            print(f"@@ ({intify(J.mu)},{intify(J.nu)},{intify(J.sigma)}):")
-            print(
-                f"   k={k}, q={q}, s=s{s} | is_triangle(k, q, s)={is_triangle(k, q, s)}"
-            )
-            print(f"   quadrature result = {numeric}")
-            print(f"   analytic result = {analytic}")
-            print(f"   relerr={relerr:.5g}, abserr={abserr:.5g}")
-            self.assertTrue(relerr < 1e-5 or abserr < 1e-6)
+            else:
+                abserr = np.fabs(numeric - analytic)
+
+                print(f"@@ ({intify(J.mu)},{intify(J.nu)},{intify(J.sigma)}):")
+                print(
+                    f"   k={k}, q={q}, s={s} does not satisfy the triangle inequality"
+                )
+                print(f"   quadrature result = {numeric}")
+                print(f"   analytic result = {analytic}")
+                print(f"   abserr={abserr:.5g}")
+                self.assertTrue(abserr < ABS_TOLERANCE)
 
     def test_110_notriangle(self):
         J = J110
@@ -506,7 +523,7 @@ class Test3BesselAnalytic(unittest.TestCase):
 
         analytic = J.analytic(k, q, s)
 
-        max_x = 1e5
+        max_x = MAX_X
         mu_phase = bessel_phase(J.mu + 0.5, 1.075 * k * max_x, atol=1e-25, rtol=5e-14)
         nu_phase = bessel_phase(J.nu + 0.5, 1.075 * q * max_x, atol=1e-25, rtol=5e-14)
         sigma_phase = bessel_phase(
@@ -529,14 +546,10 @@ class Test3BesselAnalytic(unittest.TestCase):
         )
 
         abserr = np.fabs(numeric - analytic)
-        relerr = abserr / analytic
-
-        def intify(x: float):
-            return int(round(x, 0))
 
         print(f"@@ ({intify(J.mu)},{intify(J.nu)},{intify(J.sigma)}):")
         print(f"   k={k}, q={q}, s={s}, is_triangle={is_triangle(k, q, s)}")
         print(f"   quadrature result = {numeric}")
         print(f"   analytic result = {analytic}")
-        print(f"   relerr={relerr:.5g}, abserr={abserr:.5g}")
-        self.assertTrue(relerr < 1e-5 or abserr < 1e-6)
+        print(f"   abserr={abserr:.5g}")
+        self.assertTrue(abserr < ABS_TOLERANCE)
