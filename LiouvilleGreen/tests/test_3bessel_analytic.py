@@ -312,6 +312,7 @@ def Levin_3bessel(
     group4_value = group4_data["value"]
 
     norm_factor = np.pow(np.pi / 2.0, 3.0 / 2.0) / np.sqrt(k * q * s) / 4.0
+    Levin = norm_factor * (-group1_value + group2_value + group3_value - group4_value)
 
     # print(
     #     f">> Levin groups: group1: {group1_value}, group2 {group2_value}, group3 {group3_value}, group4 {group4_value}"
@@ -320,7 +321,7 @@ def Levin_3bessel(
     #     f">> Levin result = {norm_factor} * ( {-group1_value} + {group2_value} + {group3_value} + {-group4_value} = {norm_factor * (-group1_value + group2_value + group3_value - group4_value)}"
     # )
 
-    return norm_factor * (-group1_value + group2_value + group3_value - group4_value)
+    return Levin
 
 
 class J000:
@@ -475,3 +476,46 @@ class Test3BesselAnalytic(unittest.TestCase):
             print(f"   analytic result = {analytic}")
             print(f"   relerr={relerr:.5g}, abserr={abserr:.5g}")
             self.assertTrue(relerr < 1e-5 or abserr < 1e-6)
+
+    def test_110_notriangle(self):
+        J = J110
+        k = 4.870969802124623
+        q = 1.3338040554375765
+        s = 2.0319743925393587
+
+        analytic = J.analytic(k, q, s)
+
+        max_x = 1e5
+        mu_phase = bessel_phase(J.mu + 0.5, 1.075 * k * max_x, atol=1e-25, rtol=5e-14)
+        nu_phase = bessel_phase(J.nu + 0.5, 1.075 * q * max_x, atol=1e-25, rtol=5e-14)
+        sigma_phase = bessel_phase(
+            J.sigma + 0.5, 1.075 * s * max_x, atol=1e-25, rtol=5e-14
+        )
+
+        numeric = quad_3bessel(
+            mu_phase,
+            nu_phase,
+            sigma_phase,
+            J.mu,
+            J.nu,
+            J.sigma,
+            k,
+            q,
+            s,
+            max_x,
+            atol=1e-14,
+            rtol=1e-10,
+        )
+
+        abserr = np.fabs(numeric - analytic)
+        relerr = abserr / analytic
+
+        def intify(x: float):
+            return int(round(x, 0))
+
+        print(f"@@ ({intify(J.mu)},{intify(J.nu)},{intify(J.sigma)}):")
+        print(f"   k={k}, q={q}, s={s}")
+        print(f"   quadrature result = {numeric}")
+        print(f"   analytic result = {analytic}")
+        print(f"   relerr={relerr:.5g}, abserr={abserr:.5g}")
+        self.assertTrue(relerr < 1e-5 or abserr < 1e-6)
