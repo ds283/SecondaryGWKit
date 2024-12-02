@@ -61,6 +61,8 @@ DEFAULT_SOURCE_SAMPLES_PER_LOG10_Z = 100
 DEFAULT_RESPONSE_SAMPLES_SPARSENESS = 12
 DEFAULT_ZEND = 0.1
 
+MIN_NOTIFY_INTERVAL = 5 * 60
+
 allowed_drop_actions = [
     "tk-numeric",
     "quad-source",
@@ -790,6 +792,7 @@ with ShardedPool(
             create_batch_size=1,
             max_task_queue=300,
             process_batch_size=20,
+            notify_min_time_interval=MIN_NOTIFY_INTERVAL,
         )
         Tk_queue.run()
 
@@ -817,6 +820,7 @@ with ShardedPool(
             create_batch_size=1,
             max_task_queue=300,
             process_batch_size=20,
+            notify_min_time_interval=MIN_NOTIFY_INTERVAL,
         )
         QuadSource_queue.run()
 
@@ -972,6 +976,7 @@ with ShardedPool(
             notify_batch_size=2000,
             max_task_queue=100,
             process_batch_size=50,
+            notify_min_time_interval=MIN_NOTIFY_INTERVAL,
         )
         Gk_numerical_queue.run()
 
@@ -1258,6 +1263,7 @@ with ShardedPool(
             notify_batch_size=2000,
             max_task_queue=100,
             process_batch_size=50,
+            notify_min_time_interval=MIN_NOTIFY_INTERVAL,
         )
         Gk_WKB_queue.run()
 
@@ -1932,6 +1938,7 @@ with ShardedPool(
             notify_batch_size=2000,
             max_task_queue=100,
             process_batch_size=50,
+            notify_min_time_interval=MIN_NOTIFY_INTERVAL,
         )
         GkSource_queue.run()
 
@@ -1949,6 +1956,7 @@ with ShardedPool(
             notify_batch_size=2000,
             max_task_queue=100,
             process_batch_size=50,
+            notify_min_time_interval=MIN_NOTIFY_INTERVAL,
         )
         GkSourcePolicy_queue.run()
 
@@ -2331,7 +2339,7 @@ with ShardedPool(
             store_results=False,
             create_batch_size=1,  # we have batched the work queue into chunks ourselves, so don't process too many of these chunks at once!
             notify_batch_size=2000,
-            notify_min_time_interval=5 * 60,
+            notify_min_time_interval=MIN_NOTIFY_INTERVAL,
             max_task_queue=1000,  # don't allow too many tasks to build up, because the payload storage requirenments could max out the object store
             process_batch_size=100,
         )
