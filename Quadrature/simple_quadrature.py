@@ -85,6 +85,7 @@ def _quadrature_quad_impl(
                 with RHS_timer(supervisor) as timer:
                     if supervisor.notify_available:
                         supervisor.message(x, msg="... in progress")
+                        supervisor.reset_notify_time()
 
                     return f(x)
 
@@ -124,6 +125,7 @@ def _quadature_solve_ivp_impl(
 
             if supervisor.notify_available:
                 supervisor.message(x, f"current state: value={current_value:.8g}")
+                supervisor.reset_notify_time()
 
             return [f(x) for f in integrand]
 
