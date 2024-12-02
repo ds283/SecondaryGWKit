@@ -158,7 +158,8 @@ def _adaptive_levin_subregion(
 
     # to handle possible SVD failures, allow the working Chebyshev order to be stepped down.
     # this changes the matrices that we need to invert, so gives another change for the required SVD to converge
-    while working_order >= 12:
+    finished = False
+    while not finished and working_order >= 12:
         value, p_sample, _metadata = _adaptive_levin_subregion_impl(
             x_span,
             f,
@@ -168,7 +169,7 @@ def _adaptive_levin_subregion(
             build_p_sample,
             notify_label,
         )
-        if metadata.get("SVD_failure", False):
+        if _metadata.get("SVD_failure", False):
             working_order = working_order - 2
             num_order_changes = num_order_changes + 1
 
@@ -177,11 +178,11 @@ def _adaptive_levin_subregion(
             else:
                 label = f"{id_label}"
             print(
-                f"!! WARNING (adaptive_levin_subregion, {label}): SVD failure - stepping down Chebyshev spectral order to {working_order}"
+                f"!! WARNING (adaptive_levin_subregion, {label}): SVD failure - stepping down Chebyshev order to {working_order}"
             )
             continue
 
-        break
+        finished = True
 
     if value is None:
         raise LinAlgError("SVD failure")
@@ -257,7 +258,7 @@ def _adaptive_levin_subregion_impl(
         p, residuals, rank, s = np.linalg.lstsq(LevinL, f_Cheb)
     except LinAlgError as e:
         print(
-            f"!! WARNING (adaptive_levin_subregion, {label}): could not solve Levin collocation system using numpy.linalg.lstsq; attemping to use pseudo-inverse"
+            f"!! WARNING (adaptive_levin_subregion, {label}): could not solve Levin collocation system using numpy.linalg.lstsq (chebyshev_order={chebyshev_order}; will now attempt to use pseudo-inverse)"
         )
         now = datetime.now().replace(microsecond=0)
         LevinL_filename = f"LevinL_{now.isoformat()}.txt"
@@ -279,7 +280,7 @@ def _adaptive_levin_subregion_impl(
             p = np.matmul(LevinL_inv, f_Cheb)
         except LinAlgError as e:
             print(
-                f"!! WARNING (adaptive_levin_subregion, {label}): could not solve Levin collocation system using numpy.linalg.pinv; failing"
+                f"!! WARNING (adaptive_levin_subregion, {label}): could not solve Levin collocation system using numpy.linalg.pinv (chebyshev_order={chebyshev_order}; final failure at this order)"
             )
             metadata["SVD_failure"] = True
             return None, None, metadata
