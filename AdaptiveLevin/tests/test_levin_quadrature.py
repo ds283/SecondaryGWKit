@@ -30,7 +30,7 @@ class TestAdaptiveLevinSinCos(unittest.TestCase):
             f"integral_(1)^(50,000) sin(x) = {value} ({len(regions)} regions, {evaluations} evaluations in time {format_time(elapsed)})"
         )
         for region in regions:
-            print(f"  -- region: ({region[0]}, {region[1]})")
+            print(f"  -- region: {region}")
         self.assertTrue(
             fabs(value - 0.5581795618) < 1e-10,
             f"Sin integral test failed: expected {0.5581795618}, obtained {value}",
@@ -59,7 +59,7 @@ class TestAdaptiveLevinSinCos(unittest.TestCase):
             f"integral_(1)^(500,000) Cos(x) = {value} ({len(regions)} regions, {evaluations} evaluations in time {format_time(elapsed)})"
         )
         for region in regions:
-            print(f"  -- region: ({region[0]}, {region[1]})")
+            print(f"  -- region: {region}")
         self.assertTrue(
             fabs(value - (-0.6636397833)) < 1e-10,
             f"Cos integral test failed: expected {-0.6636397833}, obtained {value}",
@@ -90,7 +90,7 @@ class TestAdaptiveLevinSinCos(unittest.TestCase):
             f"integral_1^100 sin(100x)/x = {value} ({len(regions)} regions, {evaluations} evaluations in time {format_time(elapsed)})"
         )
         for region in regions:
-            print(f"  -- region: ({region[0]}, {region[1]})")
+            print(f"  -- region: {region}")
         self.assertTrue(
             fabs(value - 0.00866607847) < 1e-10,
             f"Sinc integral test failed: expected {0.00866607847}, obtained {value}",
@@ -120,7 +120,7 @@ class TestAdaptiveLevinSinCos(unittest.TestCase):
             f"integral_(-1)^(+1) cos({lbda} arctan(x)) / (1 + x^2) = {value} ({len(regions)} regions, {evaluations} evaluations in time {format_time(elapsed)})"
         )
         for region in regions:
-            print(f"  -- region: ({region[0]}, {region[1]})")
+            print(f"  -- region: {region}")
 
         analytic_sol = (2.0 / lbda) * sin(pi * lbda / 4.0)
         self.assertTrue(

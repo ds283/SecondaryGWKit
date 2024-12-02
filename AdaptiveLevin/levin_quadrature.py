@@ -23,6 +23,117 @@ MACHINE_EPSILON = 1e-16
 
 SIX_PI = 6.0 * np.pi
 
+INTERVAL_TYPE_LEVIN = 0
+INTERVAL_TYPE_DIRECT = 1
+types = {0: "Levin", 1: "direct"}
+
+
+class used_interval:
+
+    def __init__(
+        self,
+        start: float,
+        end: float,
+        depth: int,
+        type: int,
+        abserr: Optional[float] = None,
+        relerr: Optional[float] = None,
+    ):
+        self._start = start
+        self._end = end
+        self._depth = depth
+
+        self._type = type
+
+        self._abserr = abserr
+        self._relerr = relerr
+
+    def __str__(self):
+        if self._abserr is not None:
+            abserr_label = f"abserr={self._abserr:.8g}"
+        else:
+            abserr_label = "(not recorded)"
+
+        if self._relerr is not None:
+            relerr_label = f"relerr={self._relerr:.8g}"
+        else:
+            relerr_label = "(not recorded)"
+
+        return f"({self._start:.8g}, {self._end:.8g}), depth={self._depth} | {types[self._type]}, abserr={abserr_label}, relerr={relerr_label}"
+
+    @property
+    def start(self) -> float:
+        return self._start
+
+    @property
+    def end(self) -> float:
+        return self._end
+
+    @property
+    def width(self) -> float:
+        return np.fabs(self._end - self._start)
+
+    @property
+    def depth(self) -> int:
+        return self._depth
+
+    @property
+    def type(self) -> str:
+        return types[self._type]
+
+    @property
+    def abserr(self) -> float:
+        return self._abserr
+
+    @property
+    def relerr(self) -> float:
+        return self._relerr
+
+
+class _levin_interval:
+    def __init__(
+        self,
+        start: float,
+        end: float,
+        depth: int,
+        prev_abserr: Optional[float] = None,
+        prev_relerr: Optional[float] = None,
+    ):
+        self._start = start
+        self._end = end
+        self._depth = depth
+
+        self._prev_abserr = prev_abserr
+        self._prev_relerr = prev_relerr
+
+    @property
+    def start(self) -> float:
+        return self._start
+
+    @property
+    def end(self) -> float:
+        return self._end
+
+    @property
+    def width(self) -> float:
+        return np.fabs(self._end - self._start)
+
+    @property
+    def break_point(self) -> float:
+        return (self._end + self._start) / 2.0
+
+    @property
+    def depth(self) -> int:
+        return self._depth
+
+    @property
+    def prev_abserr(self) -> float:
+        return self._prev_abserr
+
+    @property
+    def prev_relerr(self) -> float:
+        return self._prev_relerr
+
 
 def chebyshev_matrices(x_span: Tuple[float, float], N: int):
     """
@@ -307,6 +418,7 @@ def _adaptive_levin(
     atol: float = 1e-15,
     rtol: float = 1e-7,
     chebyshev_order: int = 12,
+    depth_max: int = 150,
     build_p_sample: bool = False,
     notify_interval: int = DEFAULT_LEVIN_NOTIFY_INTERVAL,
     notify_label: str = None,
@@ -326,7 +438,7 @@ def _adaptive_levin(
 
     m = len(f)
 
-    regions = [x_span]
+    regions = [_levin_interval(start=x_span[0], end=x_span[1], depth=0)]
 
     val = 0.0
     used_regions = []
@@ -375,7 +487,10 @@ def _adaptive_levin(
 
             last_notify = time.time()
 
-        a, b = regions.pop()
+        current_region = regions.pop()
+        a = current_region.start
+        b = current_region.end
+        width = current_region.width
 
         # if phase difference across this region is small enough that we do not have many oscillations,
         # there is likely no advantage in using the Levin rule to do the computation.
@@ -397,22 +512,19 @@ def _adaptive_levin(
             )
 
             val = val + data["value"]
-            used_regions.append((a, b))
+            used_regions.append(
+                used_interval(
+                    start=a,
+                    end=b,
+                    depth=current_region.depth,
+                    abserr=data["abserr"],
+                    relerr=None,
+                    type=INTERVAL_TYPE_DIRECT,
+                )
+            )
             num_used_regions = num_used_regions + 1
             num_simple_regions = num_simple_regions + 1
             continue
-
-        width = np.fabs(b - a)
-        # print(f">> region: (a,b) = ({a}, {b}), width = {width:.8g}")
-        # if width < 1e-5:
-        #     print(f"** small region (a,b) = ({a}, {b}), width={width:.8g}")
-        #
-        #     x_sample = np.linspace(a, b, 25)
-        #     sin_sample = [f[0](x) for x in x_sample]
-        #     cos_sample = [f[1](x) for x in x_sample]
-        #     print(f"   -- x_sample = {x_sample}")
-        #     print(f"   -- sin_sample = {sin_sample}")
-        #     print(f"   -- cos_sample = {cos_sample}")
 
         # Chen et al. (172)
         try:
@@ -438,7 +550,7 @@ def _adaptive_levin(
             )
             raise e
 
-        c = (a + b) / 2.0
+        c = current_region.break_point
         # Chen et al. (173)
         try:
             estimate_L, pL_sample, metadataL = _adaptive_levin_subregion(
@@ -481,28 +593,44 @@ def _adaptive_levin(
         abserr = np.fabs(estimate - refined_estimate)
 
         # Chen et al. step (4), below (173) [adapted to also include a relative tolerance check]
-        # but terminate the process if the width of the interval has become extremely small
-        if (abserr < atol or relerr < rtol) or (
-            num_used_regions > 1e3 and width / full_width < 1e-2
-        ):
-            # print(
-            #     f"** accepting interval [{a:.12g},{b:.12g}] -> {estimate:.12g} against [{a:.12g},{c:.12g}] -> {estimate_L:.12g} + [{c:.12g},{b:.12g}] -> {estimate_R:.12g} | abserr={abserr:.12g}, relerr={relerr:.12g}, atol={atol:.8g}, rtol={rtol:.8g}"
-            # )
-
-            # if np.fabs(estimate - refined_estimate) < tol:
+        # but terminate the process if we exceed a specified number of bisections
+        if (abserr < atol or relerr < rtol) or current_region.depth >= depth_max:
             val = val + estimate
-            used_regions.append((a, b))
+            used_regions.append(
+                used_interval(
+                    start=a,
+                    end=b,
+                    depth=current_region.depth,
+                    type=INTERVAL_TYPE_LEVIN,
+                    abserr=abserr,
+                    relerr=relerr,
+                )
+            )
             num_used_regions = num_used_regions + 1
             if build_p_sample:
                 p_points.extend(p_sample)
 
         else:
-            # print(
-            #     f"** subdivided interval [{a:.12g},{b:.12g}] -> {estimate:.12g} against [{a:.12g},{c:.12g}] -> {estimate_L:.12g} + [{c:.12g},{b:.12g}] -> {estimate_R:.12g} | abserr={abserr:.12g}, relerr={relerr:.12g}, atol={atol:.8g}, rtol={rtol:.8g}"
-            # )
-            regions.extend([(a, c), (c, b)])
+            regions.extend(
+                [
+                    _levin_interval(
+                        start=a,
+                        end=c,
+                        depth=current_region.depth + 1,
+                        prev_abserr=abserr,
+                        prev_relerr=relerr,
+                    ),
+                    _levin_interval(
+                        start=c,
+                        end=b,
+                        depth=current_region.depth + 1,
+                        prev_abserr=abserr,
+                        prev_relerr=relerr,
+                    ),
+                ]
+            )
 
-    used_regions.sort(key=lambda x: x[0])
+    used_regions.sort(key=lambda x: x.start)
     if build_p_sample:
         p_points.sort(key=lambda x: x[0])
 
@@ -562,7 +690,7 @@ def _safe_fabs(x):
 def _write_progress_data(
     f,
     BasisData,
-    regions: List[Tuple[float, float]],
+    regions: List[_levin_interval],
     chebyshev_order: int,
     current_val: float,
     id_label: uuid,
@@ -589,8 +717,16 @@ def _write_progress_data(
 
     region_list = []
     for reg_num, region in enumerate(regions):
-        start, end = region
-        region_data = {"id": reg_num, "start": start, "end": end}
+        start = region.start
+        end = region.end
+        region_data = {
+            "id": reg_num,
+            "start": start,
+            "end": end,
+            "depth": region.depth,
+            "prev_abserr": region.prev_abserr,
+            "prev_relerr": region.prev_relerr,
+        }
 
         x_grid = np.linspace(start, end, 500)
         y_grid = []
@@ -613,7 +749,7 @@ def _write_progress_data(
         )
         region_data["estimate"] = estimate
 
-        mid = (start + end) / 2
+        mid = region.break_point
 
         estimate_L, pL_sample, metadataL = _adaptive_levin_subregion(
             (start, mid),
@@ -714,6 +850,7 @@ def adaptive_levin_sincos(
     atol: float = 1e-15,
     rtol: float = 1e-7,
     chebyshev_order: int = 12,
+    depth_max: int = 150,
     build_p_sample: bool = False,
     notify_interval: int = DEFAULT_LEVIN_NOTIFY_INTERVAL,
     notify_label: str = None,
@@ -728,6 +865,7 @@ def adaptive_levin_sincos(
         atol=atol,
         rtol=rtol,
         chebyshev_order=chebyshev_order,
+        depth_max=depth_max,
         build_p_sample=build_p_sample,
         notify_interval=notify_interval,
         notify_label=notify_label,

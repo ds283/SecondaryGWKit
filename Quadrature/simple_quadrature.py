@@ -95,6 +95,7 @@ def _quadrature_quad_impl(
 
     if len(integrand) == 1:
         values = values[0]
+        errs = errs[0]
 
     return {
         "data": IntegrationData(
@@ -106,6 +107,7 @@ def _quadrature_quad_impl(
             min_RHS_time=supervisor.min_RHS_time,
         ),
         "value": values,
+        "abserr": errs,
     }
 
 
@@ -178,6 +180,7 @@ def _quadature_solve_ivp_impl(
             min_RHS_time=supervisor.min_RHS_time,
         ),
         "value": value,
+        "abserr": None,
     }
 
 
