@@ -326,7 +326,8 @@ with ShardedPool(
     # in the one-loop integral. We will eventually evaluate the one-loop integral on a square grid
     # of source_k_array x source_k_array
 
-    # For a spike of power to produce a PBH, we want the peak to be around k = 1E6/Mpc.
+    # For a spike of power to produce a solar-mass PBH, we want the peak to be around k = 1E6/Mpc.
+    # For asteroid-mass PBHs that could be the dark matter, the peak should be even higher.
     # We choose a mesh of k-values around this point (with a longer tail to the IR)
     source_k_array = ray.get(
         convert_to_wavenumbers(
