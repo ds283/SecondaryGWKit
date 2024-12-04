@@ -844,7 +844,7 @@ def _write_progress_data(
             for i in range(m):
                 f_grid[i].append(_safe_fabs(f[i](x)))
 
-        estimate, p_sample, metadata = _adaptive_levin_subregion(
+        data = _adaptive_levin_subregion(
             (start, end),
             f,
             BasisData,
@@ -852,11 +852,12 @@ def _write_progress_data(
             chebyshev_order=chebyshev_order,
             notify_label=notify_label,
         )
+        estimate = data["value"]
         region_data["estimate"] = estimate
 
         mid = region.break_point
 
-        estimate_L, pL_sample, metadataL = _adaptive_levin_subregion(
+        dataL = _adaptive_levin_subregion(
             (start, mid),
             f,
             BasisData,
@@ -864,7 +865,9 @@ def _write_progress_data(
             chebyshev_order=chebyshev_order,
             notify_label=notify_label,
         )
-        estimate_R, pR_sample, metadataR = _adaptive_levin_subregion(
+        estimateL = dataL["value"]
+
+        dataR = _adaptive_levin_subregion(
             (mid, end),
             f,
             BasisData,
@@ -872,9 +875,11 @@ def _write_progress_data(
             chebyshev_order=chebyshev_order,
             notify_label=notify_label,
         )
-        refined_estimate = estimate_L + estimate_R
-        region_data["estimate_L"] = estimate_L
-        region_data["estimate_R"] = estimate_R
+        estimateR = dataR["value"]
+
+        refined_estimate = estimateL + estimateR
+        region_data["estimate_L"] = estimateL
+        region_data["estimate_R"] = estimateR
         region_data["refined_estimate"] = refined_estimate
 
         relerr = np.fabs((estimate - refined_estimate)) / min(
@@ -893,21 +898,21 @@ def _write_progress_data(
 
             p_x_grid = []
             p_y_grid = [[] for _ in range(m)]
-            for x, p_data in p_sample:
+            for x, p_data in data["p_sample"]:
                 p_x_grid.append(x)
                 for i in range(m):
                     p_y_grid[i].append(_safe_fabs(p_data[i]))
 
             pL_x_grid = []
             pL_y_grid = [[] for _ in range(m)]
-            for x, p_data in pL_sample:
+            for x, p_data in dataL["p_sample"]:
                 pL_x_grid.append(x)
                 for i in range(m):
                     pL_y_grid[i].append(_safe_fabs(p_data[i]))
 
             pR_x_grid = []
             pR_y_grid = [[] for _ in range(m)]
-            for x, p_data in pR_sample:
+            for x, p_data in dataR["p_sample"]:
                 pR_x_grid.append(x)
                 for i in range(m):
                     pR_y_grid[i].append(_safe_fabs(p_data[i]))
