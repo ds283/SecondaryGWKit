@@ -451,8 +451,6 @@ def _adaptive_levin(
     num_order_changes = 0
     chebyshev_min_order = None
 
-    start, end = x_span
-
     while len(regions) > 0:
         now = time.time()
         if now - last_notify > notify_interval:
@@ -489,7 +487,6 @@ def _adaptive_levin(
         current_region = regions.pop()
         a = current_region.start
         b = current_region.end
-        width = current_region.width
 
         # if phase difference across this region is small enough that we do not have many oscillations,
         # there is likely no advantage in using the Levin rule to do the computation.
@@ -545,7 +542,7 @@ def _adaptive_levin(
             num_order_changes = num_order_changes + metadata.get("num_order_changes", 0)
         except LinAlgError as e:
             print(
-                f"!! adaptive_levin ({label}): linear algebra error when estimating Levin subregion ({a}, {b}), width={width:.8g}"
+                f"!! adaptive_levin ({label}): linear algebra error when estimating Levin subregion ({a}, {b}), width={current_region.width :.8g}"
             )
             raise e
 
