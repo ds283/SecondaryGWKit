@@ -418,7 +418,7 @@ def _adaptive_levin(
     atol: float = 1e-15,
     rtol: float = 1e-7,
     chebyshev_order: int = 12,
-    depth_max: int = 150,
+    depth_max: int = 25,
     build_p_sample: bool = False,
     notify_interval: int = DEFAULT_LEVIN_NOTIFY_INTERVAL,
     notify_label: str = None,
@@ -452,7 +452,6 @@ def _adaptive_levin(
     chebyshev_min_order = None
 
     start, end = x_span
-    full_width = np.fabs(end - start)
 
     while len(regions) > 0:
         now = time.time()
