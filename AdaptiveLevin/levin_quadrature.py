@@ -18,6 +18,18 @@ from utilities import format_time
 # default interval at which to log progress of the integration
 DEFAULT_LEVIN_NOTIFY_INTERVAL = 5 * 60
 
+# default Chebyshev spectral order
+DEFAULT_LEVIN_CHEBSHEV_ORDER = 12
+
+# default maximum bisection depth. 1/2^20 is roughly 1E-6
+DEFAULT_LEVIN_MAX_DEPTH = 20
+
+# default abs tolerance
+DEFAULT_LEVIN_ABSTOL = 1e-15
+
+# default rel tolerance
+DEFAULT_LEVIN_RELTOL = 1e-7
+
 # approximate machine epsilon for 64-bit floats
 MACHINE_EPSILON = 1e-16
 
@@ -259,7 +271,7 @@ def _adaptive_levin_subregion(
     f,
     BasisData,
     id_label: uuid,
-    chebyshev_order: int = 12,
+    chebyshev_order: int = DEFAULT_LEVIN_CHEBSHEV_ORDER,
     build_p_sample: bool = False,
     notify_label: Optional[str] = None,
 ):
@@ -310,7 +322,7 @@ def _adaptive_levin_subregion_impl(
     f,
     BasisData,
     id_label: uuid,
-    chebyshev_order: int = 12,
+    chebyshev_order: int = DEFAULT_LEVIN_CHEBSHEV_ORDER,
     build_p_sample: bool = False,
     notify_label: Optional[str] = None,
 ):
@@ -415,14 +427,14 @@ def _adaptive_levin(
     x_span: Tuple[float, float],
     f,
     BasisData,
-    atol: float = 1e-15,
-    rtol: float = 1e-7,
-    chebyshev_order: int = 12,
-    depth_max: int = 25,
+    atol: float = DEFAULT_LEVIN_ABSTOL,
+    rtol: float = DEFAULT_LEVIN_RELTOL,
+    chebyshev_order: int = DEFAULT_LEVIN_CHEBSHEV_ORDER,
+    depth_max: int = DEFAULT_LEVIN_MAX_DEPTH,
     build_p_sample: bool = False,
     notify_interval: int = DEFAULT_LEVIN_NOTIFY_INTERVAL,
     notify_label: str = None,
-    emit_diagnostics=False,
+    emit_diagnostics: bool = False,
 ):
     driver_start: float = time.perf_counter()
     start_time: float = time.time()
@@ -460,10 +472,15 @@ def _adaptive_levin(
                 now,
                 last_notify,
                 start_time,
-                num_used_regions,
-                num_evaluations,
-                len(regions),
                 val,
+                num_used_regions,
+                len(regions),
+                num_simple_regions,
+                max_depth,
+                num_evaluations,
+                num_SVD_errors,
+                num_order_changes,
+                chebyshev_min_order,
                 updates_issued,
                 id_label,
                 notify_label,
@@ -674,10 +691,15 @@ def _notify_progress(
     now: float,
     last_notify: float,
     start_time: float,
-    used_regions: int,
-    num_evaluations: int,
-    remain_regions: int,
     current_val: float,
+    used_regions: int,
+    remain_regions: int,
+    simple_regions: int,
+    max_depth: int,
+    num_evaluations: int,
+    num_SVD_errors,
+    num_order_changes,
+    chebyshev_min_order,
     update_number: int,
     id_label,
     notify_label: str = None,
@@ -695,8 +717,12 @@ def _notify_progress(
         )
 
     print(
-        f"|  -- current value = {current_val:.7g}, {used_regions} used subintervals, {remain_regions} subintervals remain | {num_evaluations} integrand evaluations"
+        f"|  -- current value = {current_val:.7g}, {used_regions} used subintervals (of which {simple_regions} direct quadrature), {remain_regions} subintervals remain | {num_evaluations} integrand evaluations | max depth {max_depth}"
     )
+    if num_SVD_errors > 0 or num_order_changes > 0:
+        print(
+            f"|  -- {num_SVD_errors} SVD errors, {num_order_changes} Chebyshev order changes | minimum used Chebyshev order = {chebyshev_min_order}"
+        )
 
 
 def _safe_fabs(x):
@@ -866,10 +892,10 @@ def adaptive_levin_sincos(
     x_span: Tuple[float, float],
     f,
     theta: dict,
-    atol: float = 1e-15,
-    rtol: float = 1e-7,
-    chebyshev_order: int = 12,
-    depth_max: int = 150,
+    atol: float = DEFAULT_LEVIN_ABSTOL,
+    rtol: float = DEFAULT_LEVIN_RELTOL,
+    chebyshev_order: int = DEFAULT_LEVIN_CHEBSHEV_ORDER,
+    depth_max: int = DEFAULT_LEVIN_MAX_DEPTH,
     build_p_sample: bool = False,
     notify_interval: int = DEFAULT_LEVIN_NOTIFY_INTERVAL,
     notify_label: str = None,
