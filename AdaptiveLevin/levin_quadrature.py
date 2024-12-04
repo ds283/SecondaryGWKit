@@ -450,6 +450,7 @@ def _adaptive_levin(
     num_SVD_errors = 0
     num_order_changes = 0
     chebyshev_min_order = None
+    max_depth = 0
 
     while len(regions) > 0:
         now = time.time()
@@ -588,23 +589,44 @@ def _adaptive_levin(
         )
         abserr = np.fabs(estimate - refined_estimate)
 
+        # print(
+        #     f"region: ({a}, {b}) | depth {current_region.depth+1} | abserr={abserr:.8g}, relerr={relerr:.8g}"
+        # )
+        # if current_region.prev_abserr is not None:
+        #     print(
+        #         f"prev abserr={current_region.prev_abserr:.8g}, improvement abserr={current_region.prev_abserr/abserr:.4g}"
+        #     )
+        # if current_region.prev_relerr is not None:
+        #     print(
+        #         f"prev relerr={current_region.prev_relerr:.8g}, improvement relerr={current_region.prev_relerr/relerr:.4g}"
+        #     )
+
         # Chen et al. step (4), below (173) [adapted to also include a relative tolerance check]
         # but terminate the process if we exceed a specified number of bisections
         if (abserr < atol or relerr < rtol) or current_region.depth >= depth_max:
             val = val + estimate
+            new_depth = current_region.depth + 1
+
             used_regions.append(
                 used_interval(
                     start=a,
                     end=b,
-                    depth=current_region.depth,
+                    depth=new_depth,
                     type=INTERVAL_TYPE_LEVIN,
                     abserr=abserr,
                     relerr=relerr,
                 )
             )
             num_used_regions = num_used_regions + 1
+
+            if new_depth > max_depth:
+                max_depth = new_depth
+
             if build_p_sample:
                 p_points.extend(p_sample)
+
+            # if current_region.depth >= depth_max:
+            #     print("exiting due to depth termination")
 
         else:
             regions.extend(
@@ -644,6 +666,7 @@ def _adaptive_levin(
         "num_SVD_errors": num_SVD_errors,
         "num_order_changes": num_order_changes,
         "chebyshev_min_order": chebyshev_min_order,
+        "max_depth": max_depth,
     }
 
 

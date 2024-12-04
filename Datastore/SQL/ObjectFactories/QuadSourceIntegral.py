@@ -197,6 +197,7 @@ class sqla_QuadSourceIntegral_factory(SQLAFactoryBase):
                 sqla.Column(
                     "WKB_Levin_chebyshev_min_order", sqla.Integer, nullable=True
                 ),
+                sqla.Column("WKB_Levin_max_depth", sqla.Integer, nullable=True),
                 sqla.Column("WKB_Levin_elapsed", sqla.Float(64), nullable=True),
                 sqla.Column("WKB_phase_spline_chunks", sqla.Integer, nullable=True),
                 sqla.Column("compute_time", sqla.Float(64), nullable=True),
@@ -259,6 +260,7 @@ class sqla_QuadSourceIntegral_factory(SQLAFactoryBase):
             table.c.WKB_Levin_SVD_errors,
             table.c.WKB_Levin_order_changes,
             table.c.WKB_Levin_chebyshev_min_order,
+            table.c.WKB_Levin_max_depth,
             table.c.WKB_Levin_elapsed,
             table.c.WKB_phase_spline_chunks,
         ).filter(
@@ -344,6 +346,7 @@ class sqla_QuadSourceIntegral_factory(SQLAFactoryBase):
                     num_SVD_errors=row_data.WKB_Levin_SVD_errors,
                     num_order_changes=row_data.WKB_Levin_order_changes,
                     chebyshev_min_order=row_data.WKB_Levin_chebyshev_min_order,
+                    max_depth=row_data.WKB_Levin_max_depth,
                     elapsed=row_data.WKB_Levin_elapsed,
                 ),
                 "WKB_phase_spline_chunks": row_data.WKB_phase_spline_chunks,
@@ -500,6 +503,9 @@ class sqla_QuadSourceIntegral_factory(SQLAFactoryBase):
                         if WKB_Levin_data is not None
                         else None
                     ),
+                    "WKB_Levin_max_depth": (
+                        WKB_Levin_data.max_depth if WKB_Levin_data is not None else None
+                    ),
                     "WKB_Levin_elapsed": (
                         WKB_Levin_data.elapsed if WKB_Levin_data is not None else None
                     ),
@@ -587,6 +593,7 @@ class sqla_QuadSourceIntegral_factory(SQLAFactoryBase):
                 table.c.WKB_Levin_SVD_errors,
                 table.c.WKB_Levin_order_changes,
                 table.c.WKB_Levin_chebyshev_min_order,
+                table.c.WKB_Levin_max_depth,
                 table.c.WKB_Levin_elapsed,
                 table.c.WKB_phase_spline_chunks,
                 table.c.z_response_serial,
@@ -802,6 +809,7 @@ class sqla_QuadSourceIntegral_factory(SQLAFactoryBase):
                         num_SVD_errors=row.WKB_Levin_SVD_errors,
                         num_order_changes=row.WKB_Levin_order_changes,
                         chebyshev_min_order=row.WKB_Levin_chebyshev_min_order,
+                        max_depth=row.WKB_Levin_max_depth,
                         elapsed=row.WKB_Levin_elapsed,
                     ),
                     "WKB_phase_spline_chunks": row.WKB_phase_spline_chunks,

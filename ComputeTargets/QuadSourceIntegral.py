@@ -1040,6 +1040,7 @@ def WKB_Levin_integral(
             num_SVD_errors=data["num_SVD_errors"],
             num_order_changes=data["num_order_changes"],
             chebyshev_min_order=data["chebyshev_min_order"],
+            max_depth=data["max_depth"],
             elapsed=data["elapsed"],
         ),
         "value": (1.0 + z_response.z) * data["value"],
