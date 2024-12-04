@@ -51,6 +51,7 @@ class used_interval:
         type: int,
         abserr: Optional[float] = None,
         relerr: Optional[float] = None,
+        p_ratios: Optional[List[float]] = None,
     ):
         self._start = start
         self._end = end
@@ -60,6 +61,8 @@ class used_interval:
 
         self._abserr = abserr
         self._relerr = relerr
+
+        self._p_ratios = p_ratios if p_ratios is not None else []
 
     def __str__(self):
         if self._abserr is not None:
@@ -72,7 +75,12 @@ class used_interval:
         else:
             relerr_label = "(not recorded)"
 
-        return f"({self._start:.8g}, {self._end:.8g}), depth={self._depth} | {types[self._type]}, abserr={abserr_label}, relerr={relerr_label}"
+        if self._p_ratios is not None:
+            p_ratios_label = f"[{", ".join(f"{p:.4g}" for p in self._p_ratios)}]"
+        else:
+            p_ratios_label = "(not recorded)"
+
+        return f"({self._start:.8g}, {self._end:.8g}), depth={self._depth} | {types[self._type]}, abserr={abserr_label}, relerr={relerr_label} | p-ratios={p_ratios_label}"
 
     @property
     def start(self) -> float:
@@ -102,8 +110,13 @@ class used_interval:
     def relerr(self) -> float:
         return self._relerr
 
+    @property
+    def p_ratios(self) -> List[float]:
+        return self._p_ratios
+
 
 ErrorHistoryType = dict[int, float]
+PScaleHistoryType = dict[int, List[float]]
 
 
 class _levin_interval:
@@ -114,6 +127,7 @@ class _levin_interval:
         depth: int,
         abserr_history: Optional[ErrorHistoryType] = None,
         relerr_history: Optional[ErrorHistoryType] = None,
+        p_ratios_history: Optional[PScaleHistoryType] = None,
     ):
         self._start = start
         self._end = end
@@ -121,6 +135,10 @@ class _levin_interval:
 
         self._abserr_history = abserr_history if abserr_history is not None else {}
         self._relerr_history = relerr_history if relerr_history is not None else {}
+
+        self._p_ratios_history = (
+            p_ratios_history if p_ratios_history is not None else {}
+        )
 
     @property
     def start(self) -> float:
@@ -149,6 +167,10 @@ class _levin_interval:
     @property
     def relerr_history(self) -> ErrorHistoryType:
         return self._relerr_history
+
+    @property
+    def p_ratios_history(self) -> PScaleHistoryType:
+        return self._p_ratios_history
 
 
 def chebyshev_matrices(x_span: Tuple[float, float], N: int):
@@ -276,27 +298,19 @@ def _adaptive_levin_subregion(
     BasisData,
     id_label: uuid,
     chebyshev_order: int = DEFAULT_LEVIN_CHEBSHEV_ORDER,
-    build_p_sample: bool = False,
     notify_label: Optional[str] = None,
 ):
     working_order = max(chebyshev_order, _LEVIN_MINIMUM_ALLOWED_ORDER)
     num_order_changes = 0
-    metadata = {}
 
     # to handle possible SVD failures, allow the working Chebyshev order to be stepped down.
     # this changes the matrices that we need to invert, so gives another change for the required SVD to converge
     finished = False
     while not finished and working_order >= _LEVIN_MINIMUM_ALLOWED_ORDER:
-        value, p_sample, _metadata = _adaptive_levin_subregion_impl(
-            x_span,
-            f,
-            BasisData,
-            id_label,
-            working_order,
-            build_p_sample,
-            notify_label,
+        data = _adaptive_levin_subregion_impl(
+            x_span, f, BasisData, id_label, working_order, notify_label
         )
-        if _metadata.get("SVD_failure", False):
+        if data["metadata"].get("SVD_failure", False):
             working_order = working_order - 2
             num_order_changes = num_order_changes + 1
 
@@ -311,14 +325,18 @@ def _adaptive_levin_subregion(
 
         finished = True
 
-    if value is None:
+    if data["value"] is None:
         raise LinAlgError("SVD failure")
 
-    metadata["SVD_failure"] = _metadata.get("SVD_failure", False)
-    metadata["num_order_changes"] = num_order_changes
-    metadata["chebyshev_order"] = working_order
+    data["metadata"]["SVD_failure"] = data["metadata"].get("SVD_failure", False)
+    data["metadata"].update(
+        {
+            "num_order_changes": num_order_changes,
+            "chebyshev_order": working_order,
+        }
+    )
 
-    return value, p_sample, metadata
+    return data
 
 
 def _adaptive_levin_subregion_impl(
@@ -327,7 +345,6 @@ def _adaptive_levin_subregion_impl(
     BasisData,
     id_label: uuid,
     chebyshev_order: int = DEFAULT_LEVIN_CHEBSHEV_ORDER,
-    build_p_sample: bool = False,
     notify_label: Optional[str] = None,
 ):
     """
@@ -412,19 +429,24 @@ def _adaptive_levin_subregion_impl(
             metadata["SVD_failure"] = True
             return None, None, metadata
 
-    if build_p_sample:
-        p_sample = [
-            (x, [p[j * chebyshev_order + i] for j in range(m)])
-            for i, x in enumerate(grid)
-        ]
-    else:
-        p_sample = []
+    p_sample = [
+        (x, [p[j * chebyshev_order + i] for j in range(m)]) for i, x in enumerate(grid)
+    ]
+
+    p_means = [sum(np.fabs(p[1][i]) for p in p_sample) / len(grid) for i in range(m)]
+    p_mean_max = max(p_means)
+    p_ratios = [pm / p_mean_max for pm in p_means]
 
     # note grid is in reverse order, with largest value in position o and smallest value in last position -1
     lower_limit = sum(p[(i + 1) * chebyshev_order - 1] * w0[i] for i in range(m))
     upper_limit = sum(p[i * chebyshev_order] * wk[i] for i in range(m))
 
-    return upper_limit - lower_limit, p_sample, metadata
+    return {
+        "value": upper_limit - lower_limit,
+        "p_sample": p_sample,
+        "p_ratios": p_ratios,
+        "metadata": metadata,
+    }
 
 
 def _adaptive_levin(
@@ -521,6 +543,7 @@ def _adaptive_levin(
 
             abs_history = current_region.abserr_history
             rel_history = current_region.relerr_history
+            p_scale_history = current_region.p_ratios_history
 
             prev_abs = None
             prev_rel = None
@@ -528,21 +551,22 @@ def _adaptive_levin(
             for i in range(0, current_region.depth):
                 this_abs = abs_history[i]
                 this_rel = rel_history[i]
+                this_p_ratios = p_scale_history[i]
 
                 if i == 0:
                     print(
-                        f"   -- {i+1}. abserr={this_abs :.5g}, relerr={this_rel :.5g}"
+                        f"   -- {i+1}. abserr={this_abs :.5g}, relerr={this_rel :.5g}, p-ratios=[{', '.join(f'{p:.4g}' for p in this_p_ratios)}]"
                     )
 
                 else:
                     abs_improvement = prev_abs / this_abs
                     rel_improvement = prev_rel / this_rel
                     print(
-                        f"   -- {i+1}. abserr={this_abs :.5g} (improvement={abs_improvement:.3g}), relerr={this_rel :.5g} (improvement={rel_improvement:.3g})"
+                        f"   -- {i+1}. abserr={this_abs :.5g} (improvement={abs_improvement:.3g}), relerr={this_rel :.5g} (improvement={rel_improvement:.3g}), p-ratios=[{', '.join(f'{p:.3g}' for p in this_p_ratios)}]"
                     )
 
-                    prev_abs = this_abs
-                    prev_rel = this_rel
+                prev_abs = this_abs
+                prev_rel = this_rel
 
         # if phase difference across this region is small enough that we do not have many oscillations,
         # there is likely no advantage in using the Levin rule to do the computation.
@@ -580,22 +604,23 @@ def _adaptive_levin(
 
         # Chen et al. (172)
         try:
-            estimate, p_sample, metadata = _adaptive_levin_subregion(
+            data = _adaptive_levin_subregion(
                 (a, b),
                 f,
                 BasisData,
                 id_label=id_label,
                 chebyshev_order=chebyshev_order,
-                build_p_sample=build_p_sample,
                 notify_label=notify_label,
             )
-            order = metadata.get("chebyshev_order", None)
+            order = data["metadata"].get("chebyshev_order", None)
             if order is not None:
                 if chebyshev_min_order is None or order < chebyshev_min_order:
                     chebyshev_min_order = order
 
-            num_SVD_errors = num_SVD_errors + metadata.get("SVD_errors", 0)
-            num_order_changes = num_order_changes + metadata.get("num_order_changes", 0)
+            num_SVD_errors = num_SVD_errors + data["metadata"].get("SVD_errors", 0)
+            num_order_changes = num_order_changes + data["metadata"].get(
+                "num_order_changes", 0
+            )
         except LinAlgError as e:
             print(
                 f"!! adaptive_levin ({label}): linear algebra error when estimating Levin subregion ({a}, {b}), width={current_region.width :.8g}"
@@ -605,13 +630,12 @@ def _adaptive_levin(
         c = current_region.break_point
         # Chen et al. (173)
         try:
-            estimate_L, pL_sample, metadataL = _adaptive_levin_subregion(
+            dataL = _adaptive_levin_subregion(
                 (a, c),
                 f,
                 BasisData,
                 id_label=id_label,
                 chebyshev_order=chebyshev_order,
-                build_p_sample=build_p_sample,
                 notify_label=notify_label,
             )
         except LinAlgError as e:
@@ -621,13 +645,12 @@ def _adaptive_levin(
             raise e
 
         try:
-            estimate_R, pR_sample, metadataR = _adaptive_levin_subregion(
+            dataR = _adaptive_levin_subregion(
                 (c, b),
                 f,
                 BasisData,
                 id_label=id_label,
                 chebyshev_order=chebyshev_order,
-                build_p_sample=build_p_sample,
                 notify_label=notify_label,
             )
         except LinAlgError as e:
@@ -637,48 +660,37 @@ def _adaptive_levin(
             raise e
 
         num_evaluations += 3
-        refined_estimate = estimate_L + estimate_R
+        estimate = data["value"]
+        refined_estimate = dataL["value"] + dataR["value"]
 
         relerr = np.fabs((estimate - refined_estimate)) / min(
             np.fabs(estimate), np.fabs(refined_estimate)
         )
         abserr = np.fabs(estimate - refined_estimate)
 
-        # print(
-        #     f"region: ({a}, {b}) | depth {current_region.depth+1} | abserr={abserr:.8g}, relerr={relerr:.8g}"
-        # )
-        # if current_region.abserr_history is not None:
-        #     print(
-        #         f"prev abserr={current_region.abserr_history:.8g}, improvement abserr={current_region.abserr_history/abserr:.4g}"
-        #     )
-        # if current_region.relerr_history is not None:
-        #     print(
-        #         f"prev relerr={current_region.relerr_history:.8g}, improvement relerr={current_region.relerr_history/relerr:.4g}"
-        #     )
-
         # Chen et al. step (4), below (173) [adapted to also include a relative tolerance check]
         # but terminate the process if we exceed a specified number of bisections
         if (abserr < atol or relerr < rtol) or current_region.depth >= depth_max:
             val = val + estimate
-            new_depth = current_region.depth + 1
 
             used_regions.append(
                 used_interval(
                     start=a,
                     end=b,
-                    depth=new_depth,
+                    depth=current_region.depth,
                     type=INTERVAL_TYPE_LEVIN,
                     abserr=abserr,
                     relerr=relerr,
+                    p_ratios=data["p_ratios"],
                 )
             )
             num_used_regions = num_used_regions + 1
 
-            if new_depth > max_depth:
-                max_depth = new_depth
+            if current_region.depth > max_depth:
+                max_depth = current_region.depth
 
             if build_p_sample:
-                p_points.extend(p_sample)
+                p_points.extend(data["p_sample"])
 
         else:
             new_abs_history = current_region.abserr_history | {
@@ -686,6 +698,9 @@ def _adaptive_levin(
             }
             new_rel_history = current_region.relerr_history | {
                 current_region.depth: relerr
+            }
+            new_p_ratios_history = current_region.p_ratios_history | {
+                current_region.depth: data["p_ratios"]
             }
             new_depth = current_region.depth + 1
 
@@ -697,6 +712,7 @@ def _adaptive_levin(
                         depth=new_depth,
                         abserr_history=new_abs_history,
                         relerr_history=new_rel_history,
+                        p_ratios_history=new_p_ratios_history,
                     ),
                     _levin_interval(
                         start=c,
@@ -704,6 +720,7 @@ def _adaptive_levin(
                         depth=new_depth,
                         abserr_history=new_abs_history,
                         relerr_history=new_rel_history,
+                        p_ratios_history=new_p_ratios_history,
                     ),
                 ]
             )
@@ -814,6 +831,7 @@ def _write_progress_data(
             "depth": region.depth,
             "abserr_history": region.abserr_history,
             "relerr_history": region.relerr_history,
+            "p_ratios_history": region.p_ratios_history,
         }
 
         x_grid = np.linspace(start, end, 500)
@@ -832,7 +850,6 @@ def _write_progress_data(
             BasisData,
             id_label=id_label,
             chebyshev_order=chebyshev_order,
-            build_p_sample=True,
             notify_label=notify_label,
         )
         region_data["estimate"] = estimate
@@ -845,7 +862,6 @@ def _write_progress_data(
             BasisData,
             id_label=id_label,
             chebyshev_order=chebyshev_order,
-            build_p_sample=True,
             notify_label=notify_label,
         )
         estimate_R, pR_sample, metadataR = _adaptive_levin_subregion(
@@ -854,7 +870,6 @@ def _write_progress_data(
             BasisData,
             id_label=id_label,
             chebyshev_order=chebyshev_order,
-            build_p_sample=True,
             notify_label=notify_label,
         )
         refined_estimate = estimate_L + estimate_R
