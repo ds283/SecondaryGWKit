@@ -276,7 +276,7 @@ def _adaptive_levin_subregion(
             f,
             BasisData,
             id_label,
-            chebyshev_order,
+            working_order,
             build_p_sample,
             notify_label,
         )
