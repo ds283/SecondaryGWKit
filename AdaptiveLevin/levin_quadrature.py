@@ -20,6 +20,7 @@ DEFAULT_LEVIN_NOTIFY_INTERVAL = 5 * 60
 
 # default Chebyshev spectral order
 DEFAULT_LEVIN_CHEBSHEV_ORDER = 12
+_LEVIN_MINIMUM_ALLOWED_ORDER = 8
 
 # default maximum bisection depth. 1/2^20 is roughly 1E-6
 DEFAULT_LEVIN_MAX_DEPTH = 20
@@ -102,21 +103,24 @@ class used_interval:
         return self._relerr
 
 
+ErrorHistoryType = dict[int, float]
+
+
 class _levin_interval:
     def __init__(
         self,
         start: float,
         end: float,
         depth: int,
-        prev_abserr: Optional[float] = None,
-        prev_relerr: Optional[float] = None,
+        abserr_history: Optional[ErrorHistoryType] = None,
+        relerr_history: Optional[ErrorHistoryType] = None,
     ):
         self._start = start
         self._end = end
         self._depth = depth
 
-        self._prev_abserr = prev_abserr
-        self._prev_relerr = prev_relerr
+        self._abserr_history = abserr_history if abserr_history is not None else {}
+        self._relerr_history = relerr_history if relerr_history is not None else {}
 
     @property
     def start(self) -> float:
@@ -139,12 +143,12 @@ class _levin_interval:
         return self._depth
 
     @property
-    def prev_abserr(self) -> float:
-        return self._prev_abserr
+    def abserr_history(self) -> ErrorHistoryType:
+        return self._abserr_history
 
     @property
-    def prev_relerr(self) -> float:
-        return self._prev_relerr
+    def relerr_history(self) -> ErrorHistoryType:
+        return self._relerr_history
 
 
 def chebyshev_matrices(x_span: Tuple[float, float], N: int):
@@ -275,14 +279,14 @@ def _adaptive_levin_subregion(
     build_p_sample: bool = False,
     notify_label: Optional[str] = None,
 ):
-    working_order = max(chebyshev_order, 12)
+    working_order = max(chebyshev_order, _LEVIN_MINIMUM_ALLOWED_ORDER)
     num_order_changes = 0
     metadata = {}
 
     # to handle possible SVD failures, allow the working Chebyshev order to be stepped down.
     # this changes the matrices that we need to invert, so gives another change for the required SVD to converge
     finished = False
-    while not finished and working_order >= 12:
+    while not finished and working_order >= _LEVIN_MINIMUM_ALLOWED_ORDER:
         value, p_sample, _metadata = _adaptive_levin_subregion_impl(
             x_span,
             f,
@@ -464,6 +468,8 @@ def _adaptive_levin(
     chebyshev_min_order = None
     max_depth = 0
 
+    num_errhistory_messages = 0
+
     while len(regions) > 0:
         now = time.time()
         if now - last_notify > notify_interval:
@@ -505,6 +511,38 @@ def _adaptive_levin(
         current_region = regions.pop()
         a = current_region.start
         b = current_region.end
+
+        if current_region.depth >= 18 and num_errhistory_messages < 20:
+            num_errhistory_messages += 1
+
+            print(
+                f"@@ adaptive_levin ({label}): encountered subinterval of depth {current_region.depth} (notification {num_errhistory_messages}/20 for this quadrature)"
+            )
+
+            abs_history = current_region.abserr_history
+            rel_history = current_region.relerr_history
+
+            prev_abs = None
+            prev_rel = None
+
+            for i in range(0, current_region.depth):
+                this_abs = abs_history[i]
+                this_rel = rel_history[i]
+
+                if i == 0:
+                    print(
+                        f"   -- {i+1}. abserr={this_abs :.5g}, relerr={this_rel :.5g}"
+                    )
+
+                else:
+                    abs_improvement = prev_abs / this_abs
+                    rel_improvement = prev_rel / this_rel
+                    print(
+                        f"   -- {i+1}. abserr={this_abs :.5g} (improvement={abs_improvement:.3g}), relerr={this_rel :.5g} (improvement={rel_improvement:.3g})"
+                    )
+
+                    prev_abs = this_abs
+                    prev_rel = this_rel
 
         # if phase difference across this region is small enough that we do not have many oscillations,
         # there is likely no advantage in using the Levin rule to do the computation.
@@ -609,13 +647,13 @@ def _adaptive_levin(
         # print(
         #     f"region: ({a}, {b}) | depth {current_region.depth+1} | abserr={abserr:.8g}, relerr={relerr:.8g}"
         # )
-        # if current_region.prev_abserr is not None:
+        # if current_region.abserr_history is not None:
         #     print(
-        #         f"prev abserr={current_region.prev_abserr:.8g}, improvement abserr={current_region.prev_abserr/abserr:.4g}"
+        #         f"prev abserr={current_region.abserr_history:.8g}, improvement abserr={current_region.abserr_history/abserr:.4g}"
         #     )
-        # if current_region.prev_relerr is not None:
+        # if current_region.relerr_history is not None:
         #     print(
-        #         f"prev relerr={current_region.prev_relerr:.8g}, improvement relerr={current_region.prev_relerr/relerr:.4g}"
+        #         f"prev relerr={current_region.relerr_history:.8g}, improvement relerr={current_region.relerr_history/relerr:.4g}"
         #     )
 
         # Chen et al. step (4), below (173) [adapted to also include a relative tolerance check]
@@ -642,25 +680,30 @@ def _adaptive_levin(
             if build_p_sample:
                 p_points.extend(p_sample)
 
-            # if current_region.depth >= depth_max:
-            #     print("exiting due to depth termination")
-
         else:
+            new_abs_history = current_region.abserr_history | {
+                current_region.depth: abserr
+            }
+            new_rel_history = current_region.relerr_history | {
+                current_region.depth: relerr
+            }
+            new_depth = current_region.depth + 1
+
             regions.extend(
                 [
                     _levin_interval(
                         start=a,
                         end=c,
-                        depth=current_region.depth + 1,
-                        prev_abserr=abserr,
-                        prev_relerr=relerr,
+                        depth=new_depth,
+                        abserr_history=new_abs_history,
+                        relerr_history=new_rel_history,
                     ),
                     _levin_interval(
                         start=c,
                         end=b,
-                        depth=current_region.depth + 1,
-                        prev_abserr=abserr,
-                        prev_relerr=relerr,
+                        depth=new_depth,
+                        abserr_history=new_abs_history,
+                        relerr_history=new_rel_history,
                     ),
                 ]
             )
@@ -769,8 +812,8 @@ def _write_progress_data(
             "start": start,
             "end": end,
             "depth": region.depth,
-            "prev_abserr": region.prev_abserr,
-            "prev_relerr": region.prev_relerr,
+            "abserr_history": region.abserr_history,
+            "relerr_history": region.relerr_history,
         }
 
         x_grid = np.linspace(start, end, 500)
