@@ -664,11 +664,11 @@ def _notify_progress(
 
     if notify_label is not None:
         print(
-            f'** STATUS UDPATE #{update_number}: Levin quadrature "{notify_label}" ({id_label}) has been running for {format_time(since_start)} ({format_time(since_last_notify)} since last notification)'
+            f'** STATUS UPDATE #{update_number}: Levin quadrature "{notify_label}" ({id_label}) has been running for {format_time(since_start)} ({format_time(since_last_notify)} since last notification)'
         )
     else:
         print(
-            f"** STATUS UDPATE #{update_number}: Levin quadrature {id_label} has been running for {format_time(since_start)} ({format_time(since_last_notify)} since last notification)"
+            f"** STATUS UPDATE #{update_number}: Levin quadrature {id_label} has been running for {format_time(since_start)} ({format_time(since_last_notify)} since last notification)"
         )
 
     print(
