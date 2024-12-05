@@ -562,8 +562,8 @@ class GkSourcePolicyData(DatastoreObject):
                     x_is_log=True,
                     x_is_redshift=True,
                     chunk_step=None,
-                    # chunk_logstep=125,
-                    chunk_logstep=None,
+                    chunk_logstep=125,
+                    # chunk_logstep=None,
                     increasing=False,
                 )
 

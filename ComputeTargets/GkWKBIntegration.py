@@ -13,6 +13,7 @@ from ComputeTargets.analytic_Gk import (
 )
 from CosmologyConcepts import wavenumber_exit_time, redshift, redshift_array, wavenumber
 from Datastore import DatastoreObject
+from LiouvilleGreen.range_reduce_mod_2pi import range_reduce_mod_2pi
 from MetadataConcepts import tolerance, store_tag
 from Quadrature.integration_metadata import IntegrationSolver, IntegrationData
 from Quadrature.integration_supervisor import (
@@ -237,15 +238,40 @@ class GkWKBQSupervisor(IntegrationSupervisor):
         return self._smallest_Q
 
 
-def _mod_2pi(theta):
+def _mod_2pi(theta: float):
     theta_mod_2pi = fmod(theta, _two_pi)
     theta_div_2pi = int(floor(fabs(theta) / _two_pi))
 
     if theta < 0.0:
         theta_div_2pi = -theta_div_2pi
 
+    # our convention is that theta mod 2pi is taken to be negative
     if theta_mod_2pi > 0:
+        theta_div_2pi = theta_div_2pi + 1
         theta_mod_2pi = theta_mod_2pi - _two_pi
+
+    return theta_div_2pi, theta_mod_2pi
+
+
+def _product_mod_2pi(big_number: float, small_number: float, mod_2pi_init: float):
+    # use custom range reduction to (try to) preserve precision in the product big_number*small_number (mod 2pi)
+    # theta_div_2pi and theta_mod_2pi should have the same sign as the product big_number*small_number
+    theta_div_2pi, theta_mod_2pi = range_reduce_mod_2pi(big_number, small_number)
+
+    # mod_2pi_init is an offset that should be added to mod_2pi. We then (possibly) have to range-reduce again.
+    theta_mod_2pi = theta_mod_2pi + mod_2pi_init
+    while theta_mod_2pi > 0.0:
+        theta_mod_2pi = theta_mod_2pi - _two_pi
+        theta_div_2pi = theta_div_2pi + 1
+
+    while theta_mod_2pi < -_two_pi:
+        theta_mod_2pi = theta_mod_2pi + _two_pi
+        theta_div_2pi = theta_div_2pi - 1
+
+    if theta_mod_2pi > DEFAULT_ABS_TOLERANCE:
+        raise RuntimeError(
+            f"product_mod_2pi: big_number={big_number:.8g}, small_number={small_number:.8g}, product={big_number*small_number:.8g}, mod_2pi_init={mod_2pi_init:.8g}, theta_div_2pi={theta_div_2pi}, theta_mod_2pi={theta_mod_2pi:.8g}, theta={theta_div_2pi*_two_pi+theta_mod_2pi:.8g}"
+        )
 
     return theta_div_2pi, theta_mod_2pi
 
@@ -553,8 +579,11 @@ def stage_2_evolution(
 
         # walk through the sampled values returned from solve_ivp, computing theta div 2pi and theta mod 2pi at each step
         for u, Q in zip(batch_u, batch_Q):
-            theta = omega_WKB_init * (1.0 + u) * Q + theta_mod_2pi_init
-            theta_div_2pi, theta_mod_2pi = _mod_2pi(theta)
+            # _product_mod_2pi uses our custom range reduction method in an attempt to maintain precision mod 2pi when the product
+            # omega_WKB_init * (1+u) * Q becomes very large
+            theta_div_2pi, theta_mod_2pi = _product_mod_2pi(
+                omega_WKB_init * (1.0 + u), Q, theta_mod_2pi_init
+            )
 
             z = z_init - u
 

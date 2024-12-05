@@ -761,14 +761,6 @@ def analytic_integral(
     )
 
     metadata = {
-        # "k": k.k,
-        # "q": q.k,
-        # "r": r.k,
-        # "max_z": max_z.z,
-        # "min_z": min_z.z,
-        # "max_eta": max_eta,
-        # "min_eta": min_eta,
-        # "eta_response": eta_response,
         "0pt5": data0pt5["metadata"],
         "2pt5": data2pt5["metadata"],
     }

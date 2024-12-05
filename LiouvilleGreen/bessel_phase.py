@@ -262,8 +262,8 @@ def bessel_phase(
         phase_mod_2pi,
         x_is_log=True,
         chunk_step=None,
-        # chunk_logstep=50.0,
-        chunk_logstep=None,
+        chunk_logstep=125,
+        # chunk_logstep=None,
     )
     mod_spline = XSplineWrapper(_mod_spline, min_x=min_x, max_x=max_x)
     Q_spline = XSplineWrapper(_Q_spline, min_x=min_x, max_x=max_x)
