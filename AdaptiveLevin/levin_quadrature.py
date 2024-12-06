@@ -427,7 +427,12 @@ def _adaptive_levin_subregion_impl(
                 f"!! WARNING (adaptive_levin_subregion, {label}): could not solve Levin collocation system using numpy.linalg.pinv (chebyshev_order={chebyshev_order}; final failure at this order)"
             )
             metadata["SVD_failure"] = True
-            return None, None, metadata
+            return {
+                "value": None,
+                "p_sample": None,
+                "p_ratios": None,
+                "metadata": metadata,
+            }
 
     p_sample = [
         (x, [p[j * chebyshev_order + i] for j in range(m)]) for i, x in enumerate(grid)
