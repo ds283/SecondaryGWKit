@@ -8,14 +8,30 @@ import sqlalchemy as sqla
 from sqlalchemy.exc import SQLAlchemyError
 
 from defaults import DEFAULT_STRING_LENGTH
+from utilities import format_time
+
+DEFAULT_NOTIFY_TIME_INTERVAL = 20 * 60
+
+TIME_2_SECONDS = 2
+TIME_5_SECONDS = 5
+TIME_10_SECONDS = 10
+TIME_30_SECONDS = 30
 
 
 @ray.remote
 class ProfileAgent:
     def __init__(
-        self, db_name: str, timeout: Optional[int] = None, label: Optional[str] = None
+        self,
+        db_name: str,
+        timeout: Optional[int] = None,
+        label: Optional[str] = None,
+        notify_time_interval: Optional[int] = DEFAULT_NOTIFY_TIME_INTERVAL,
     ):
         self._timeout = timeout
+        self._notify_time_interval = notify_time_interval
+
+        self._start_time = time.perf_counter()
+        self._last_notify_time = self._start_time
 
         self._db_file = Path(db_name).resolve()
 
@@ -38,10 +54,19 @@ class ProfileAgent:
             self._label = (
                 f"job-start-{datetime.now().replace(microsecond=0).isoformat()}"
             )
+
         with self._engine.begin() as conn:
             obj = conn.execute(sqla.insert(self._job_table), {"label": self._label})
 
             self._job_id = obj.lastrowid
+
+        self._total_events = 0
+        self._events_at_last_notify = None
+
+        self._2sec_queries = {}
+        self._5sec_queries = {}
+        self._10sec_queries = {}
+        self._30sec_queries = {}
 
     def _create_engine(self):
         connect_args = {}
@@ -95,24 +120,87 @@ class ProfileAgent:
         try:
             with self._engine.begin() as conn:
                 for item in batch:
-                    obj = conn.execute(
+                    self._total_events = self._total_events + 1
+
+                    elapsed = item["elapsed"]
+                    method = item["method"]
+                    _ = conn.execute(
                         sqla.insert(self._profile_table),
                         {
                             "job_serial": self._job_id,
                             "source": item["source"],
-                            "method": item["method"],
+                            "method": method,
                             "start_time": item["start_time"],
-                            "elapsed": item["elapsed"],
+                            "elapsed": elapsed,
                             "metadata": item["metadata"],
                         },
                     )
+
+                    if elapsed > TIME_30_SECONDS:
+                        if method in self._30sec_queries:
+                            self._30sec_queries[method] = (
+                                self._30sec_queries[method] + 1
+                            )
+                        else:
+                            self._30sec_queries[method] = 1
+                    elif elapsed > TIME_10_SECONDS:
+                        if method in self._10sec_queries:
+                            self._10sec_queries[method] = (
+                                self._10sec_queries[method] + 1
+                            )
+                        else:
+                            self._10sec_queries[method] = 1
+                    elif elapsed > TIME_5_SECONDS:
+                        if method in self._5sec_queries:
+                            self._5sec_queries[method] = self._5sec_queries[method] + 1
+                        else:
+                            self._5sec_queries[method] = 1
+                    elif elapsed > TIME_2_SECONDS:
+                        if method in self._2sec_queries:
+                            self._2sec_queries[method] = self._2sec_queries[method] + 1
+                        else:
+                            self._2sec_queries[method] = 1
+
         except SQLAlchemyError as e:
             print(f"!! ProfileAgent: insert error, payload = {batch}")
             raise e
 
+        if self._notify_time_interval is not None:
+            now = time.perf_counter()
+            if now - self._last_notify_time > self._notify_time_interval:
+                self._notify_progress(now)
+                self._last_notify_time = now
+                self._events_at_last_notify = self._total_events
+
+    def _notify_progress(self, now):
+        timestamp = datetime.now()
+        msg = f"   ## {timestamp:%Y-%m-%d %H:%M:%S%z}: database report | {self._total_events} database events"
+        if self._events_at_last_notify is not None:
+            msg += f" | {self._total_events - self._events_at_last_notify} since last notification ({format_time(now-self._last_notify_time)} ago)"
+        print(msg)
+
+        slow_queries = (
+            len(self._2sec_queries)
+            + len(self._5sec_queries)
+            + len(self._10sec_queries)
+            + len(self._30sec_queries)
+        )
+        if slow_queries > 0:
+            num_2sec_queries = sum(self._2sec_queries.values())
+            num_5sec_queries = sum(self._5sec_queries.values())
+            num_10sec_queries = sum(self._10sec_queries.values())
+            num_30sec_queries = sum(self._30sec_queries.values())
+
+            msg = f"   ## {num_2sec_queries} > 2 sec, {num_5sec_queries} > 5 sec, {num_10sec_queries} > 10 sec, {num_30sec_queries} > 30 sec"
+            print(msg)
+
     def clean_up(self) -> None:
         if self._engine is not None:
             self._engine.dispose()
+
+        if self._notify_time_interval is not None:
+            now = time.perf_counter()
+            self._notify_progress(now)
 
 
 class ProfileBatcher:
@@ -156,7 +244,7 @@ class ProfileBatchManager:
         self,
         batcher,
         method: str,
-        metadata: Optional[dict] = {},
+        metadata: Optional[dict] = None,
         num_items: Optional[int] = None,
     ):
         self._batcher = batcher
@@ -168,7 +256,7 @@ class ProfileBatchManager:
             raise RuntimeError("metadata should be a dict")
 
         self._method = method
-        self._metadata = metadata
+        self._metadata = metadata if metadata is not None else {}
 
         self._start_time = None
         self._perf_timer_start = None
