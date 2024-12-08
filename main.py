@@ -578,6 +578,8 @@ with ShardedPool(
                         SourceSamplesPerLog10ZTag,
                     ],
                     delta_logz=1.0 / float(source_samples_per_log10z),
+                    mode="stop",
+                    _do_not_populate=True,  # ignored if object foes not
                 )
             )
 
@@ -912,7 +914,7 @@ with ShardedPool(
 
                 if z_source.z > k_exit.z_exit_subh_e4 - DEFAULT_FLOAT_PRECISION:
                     # cut down response zs to those that are (1) later than the source, and (2) earlier than the 6-efolds-inside-the-horizon point
-                    # (here with a 10% tolerance)
+                    # (here with a 15% tolerance)
                     response_zs = z_response_sample.truncate(
                         z_source, keep="lower"
                     ).truncate(0.85 * k_exit.z_exit_subh_e6, keep="higher-include")
@@ -938,7 +940,7 @@ with ShardedPool(
                                 ],
                                 delta_logz=1.0 / float(source_samples_per_log10z),
                                 mode="stop",
-                                _do_not_populate=True,  # instructs the datastore not to read in the contents of this object
+                                _do_not_populate=True,  # ignored if object does not already exist in database, so does not spoil work scheduling
                             )
                         )
 

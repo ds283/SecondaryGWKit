@@ -57,6 +57,14 @@ class BaseCosmology(DatastoreObject, ABC):
     def wPerturbations(self, z: float) -> float:
         raise NotImplementedError
 
+    @abstractmethod
+    def d_wPerturbations_dz(self, z: float) -> float:
+        raise NotImplementedError
+
+    @abstractmethod
+    def d2_wPerturbations_dz2(self, z: float) -> float:
+        raise NotImplementedError
+
 
 def check_cosmology(A, B):
     """

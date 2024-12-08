@@ -1,16 +1,16 @@
 import time
+from math import fabs, pi, log, sqrt
 from typing import Optional, List
 
 import ray
-from math import fabs, pi, log, sqrt
 from scipy.integrate import solve_ivp
-from scipy.optimize import root_scalar
 
 from ComputeTargets.BackgroundModel import BackgroundModel, ModelProxy
-from ComputeTargets.WKB_tensor_Green import WKB_omegaEff_sq, WKB_d_ln_omegaEffPrime_dz
+from ComputeTargets.WKB_Gk import Gk_omegaEff_sq, Gk_d_ln_omegaEffPrime_dz
 from ComputeTargets.analytic_Gk import compute_analytic_G, compute_analytic_Gprime
 from CosmologyConcepts import wavenumber, redshift, redshift_array, wavenumber_exit_time
 from Datastore import DatastoreObject
+from LiouvilleGreen.integration_tools import find_phase_minimum
 from MetadataConcepts import tolerance, store_tag
 from Quadrature.integration_metadata import IntegrationSolver, IntegrationData
 from Quadrature.integration_supervisor import (
@@ -134,57 +134,6 @@ class GkIntegrationSupervisor(IntegrationSupervisor):
         return self._unresolved_osc_efolds_subh
 
 
-def search_G_minimum(sol, start_z: float, stop_z: float):
-    start_Gprime = sol(start_z)[GPRIME_INDEX]
-    last_Gprime = start_Gprime
-
-    stepsize = -(1e-3) * start_z
-    found_zero = False
-
-    last_z = start_z
-    current_z = start_z + stepsize
-    current_Gprime = None
-    while current_z > stop_z:
-        current_Gprime = sol(current_z)[GPRIME_INDEX]
-
-        # has there been a sign change since the last time we sampled Gprime?
-        if current_Gprime * last_Gprime < 0 and last_Gprime < 0:
-            found_zero = True
-            break
-
-        last_z = current_z
-
-        stepsize = -(1e-3) * current_z
-        current_z += stepsize
-        last_Gprime = current_Gprime
-
-    if not found_zero:
-        raise RuntimeError(
-            f"Did not find zero of Gprime in the search window (start_z={start_z:.5g}, stop_z={stop_z:.5g}), current_z={current_z:.5g}, start Gprime={start_Gprime:.5g}, last Gprime={last_Gprime:.5g}, current Gprime={current_Gprime:.5g}"
-        )
-
-    root = root_scalar(
-        lambda z: sol(z)[GPRIME_INDEX],
-        bracket=(last_z, current_z),
-        xtol=1e-6,
-        rtol=1e-4,
-    )
-
-    if not root.converged:
-        raise RuntimeError(
-            f'root_scalar() did not converge to a solution: z_bracket=({last_z:.5g}, {current_z:.5g}), iterations={root.iterations}, method={root.method}: "{root.flag}"'
-        )
-
-    root_z = root.root
-    sol_root = sol(root_z)
-
-    return {
-        "z": root_z,
-        "G": sol_root[G_INDEX],
-        "Gprime": sol_root[GPRIME_INDEX],
-    }
-
-
 @ray.remote
 def compute_Gk(
     model_proxy: ModelProxy,
@@ -223,18 +172,18 @@ def compute_Gk(
                 stop_search_window_z_begin,
             )
             print(
-                f"## compute_Gk: stop search window start and end arguments in the wrong order (for k={k.k.k_inv_Mpc:.5g}/Mpc). Now searching in interval: z in ({stop_search_window_z_begin}, {stop_search_window_z_end})"
+                f"## compute_Gk: stop search window start and end arguments in the wrong order (for k={k_wavenumber.k_inv_Mpc:.5g}/Mpc). Now searching in interval: z in ({stop_search_window_z_begin}, {stop_search_window_z_end})"
             )
 
         max_z = z_source.z
         min_z = z_sample.min.z
         if stop_search_window_z_begin > max_z:
             raise ValueError(
-                f"compute_Gk: (for k={k.k.k_inv_Mpc:.5g}/Mpc) specified 'stop' window starting redshift z={stop_search_window_z_begin:.5g} exceeds source redshift z_source={max_z:.5g}"
+                f"compute_Gk: (for k={k_wavenumber.k_inv_Mpc:.5g}/Mpc) specified 'stop' window starting redshift z={stop_search_window_z_begin:.5g} exceeds source redshift z_source={max_z:.5g}"
             )
         if stop_search_window_z_end < min_z:
             print(
-                f"## compute_Gk: (for k={k.k.k_inv_Mpc:.5g}/Mpc) specified 'stop' window ending redshift z={stop_search_window_z_end:.5g} is smaller than lowest z-response sample point z={min_z:.5g}. Search will terminate at z={min_z:.5g}."
+                f"## compute_Gk: (for k={k_wavenumber.k_inv_Mpc:.5g}/Mpc) specified 'stop' window ending redshift z={stop_search_window_z_end:.5g} is smaller than lowest z-response sample point z={min_z:.5g}. Search will terminate at z={min_z:.5g}."
             )
             stop_search_window_z_end = min_z
 
@@ -243,7 +192,7 @@ def compute_Gk(
             < DEFAULT_FLOAT_PRECISION
         ):
             raise ValueError(
-                f"## compute_Gk: (for k={k.k.k_inv_Mpc:.5g}/Mpc) specified search window has zero extent"
+                f"## compute_Gk: (for k={k_wavenumber.k_inv_Mpc:.5g}/Mpc) specified search window has zero extent"
             )
 
         if (
@@ -251,12 +200,11 @@ def compute_Gk(
             or z_source.store_id == z_sample.min.store_id
         ):
             raise ValueError(
-                f"## compute_Gk: (for k={k.k.k_inv_Mpc:.5g}/Mpc) in 'stop' mode, the source redshift and the lowest response redshift cannot be equal"
+                f"## compute_Gk: (for k={k_wavenumber.k_inv_Mpc:.5g}/Mpc) in 'stop' mode, the source redshift and the lowest response redshift cannot be equal"
             )
 
     # obtain dimensionful value of wavenumber; this should be measured in the same units used by the cosmology
     k_float = k_wavenumber.k
-
     z_min = float(z_sample.min)
 
     def RHS(z, state, supervisor) -> List[float]:
@@ -287,7 +235,7 @@ def compute_Gk(
             k_over_H_2 = k_over_H * k_over_H
 
             dGprime_dz = (
-                -(eps / one_plus_z) * Gprime
+                -eps * Gprime / one_plus_z
                 - (k_over_H_2 + (eps - 2.0) / one_plus_z_2) * G
             )
 
@@ -295,7 +243,7 @@ def compute_Gk(
             # spacing
             # If the grid spacing is smaller than the oscillation wavelength, then
             # evidently we cannot resolve the oscillations
-            omega_WKB_sq = WKB_omegaEff_sq(model, k_float, z)
+            omega_WKB_sq = Gk_omegaEff_sq(model, k_float, z)
 
             if omega_WKB_sq > 0.0:
                 wavelength = 2.0 * pi / sqrt(omega_WKB_sq)
@@ -314,11 +262,11 @@ def compute_Gk(
         initial_state = [0.0, 1.0]
 
         if mode == "stop":
-            # set up an event to terminate the integration when 6 e-folds inside the horizon
+            # set up an event to terminate the integration when a specified number of e-folds inside the horizon
             def stop_event(z, state, supervisor):
                 return z - stop_search_window_z_end + DEFAULT_FLOAT_PRECISION
 
-            # terminate integration when > 5 e-folds inside the horizon
+            # mark stop_event as terminal
             stop_event.terminal = True
 
             events = [stop_event]
@@ -329,7 +277,7 @@ def compute_Gk(
 
         sol = solve_ivp(
             RHS,
-            method="RK45",
+            method="DOP853",
             t_span=(z_source.z, z_min),
             y0=initial_state,
             t_eval=z_sample.as_float_list(),
@@ -348,7 +296,7 @@ def compute_Gk(
 
     if mode == "stop" and sol.status != 1:
         raise RuntimeError(
-            f'compute_Gk: mode is "{mode}", but solution did not terminate due to an event"'
+            f'compute_Gk: mode is "{mode}", but integration did not finish following a termination event'
         )
 
     sampled_z = sol.t
@@ -393,12 +341,16 @@ def compute_Gk(
     stop_Gprime = None
 
     if mode == "stop":
-        payload = search_G_minimum(
-            sol.sol, start_z=stop_search_window_z_begin, stop_z=stop_search_window_z_end
+        payload = find_phase_minimum(
+            sol.sol,
+            start_z=stop_search_window_z_begin,
+            stop_z=stop_search_window_z_end,
+            value_index=G_INDEX,
+            deriv_index=GPRIME_INDEX,
         )
         stop_deltaz_subh = k.z_exit - payload["z"]
-        stop_G = payload["G"]
-        stop_Gprime = payload["Gprime"]
+        stop_G = payload["value"]
+        stop_Gprime = payload["derivative"]
 
     # validate that the samples of the solution correspond to the z-sample points that we specified.
     # This really should be true, but there is no harm in being defensive.
@@ -420,7 +372,7 @@ def compute_Gk(
         ),
         "G_sample": sampled_G,
         "Gprime_sample": sampled_Gprime,
-        "solver_label": "solve_ivp+RK45-stepping0",
+        "solver_label": "solve_ivp+DOP853-stepping0",
         "has_unresolved_osc": supervisor.has_unresolved_osc,
         "unresolved_z": supervisor.unresolved_z,
         "unresolved_efolds_subh": supervisor.unresolved_efolds_subh,
@@ -684,8 +636,8 @@ class GkNumericalIntegration(DatastoreObject):
         self._compute_ref = compute_Gk.remote(
             self._model_proxy,
             self._k_exit,
-            self.z_source,
-            self.z_sample,
+            self._z_source,
+            self._z_sample,
             atol=self._atol.tol,
             rtol=self._rtol.tol,
             delta_logz=self._delta_logz,
@@ -753,9 +705,9 @@ class GkNumericalIntegration(DatastoreObject):
                 self.k.k, wBackground, tau_source, tau, Hsource, H
             )
 
-            omega_WKB_sq = WKB_omegaEff_sq(model, self.k.k, current_z_float)
+            omega_WKB_sq = Gk_omegaEff_sq(model, self.k.k, current_z_float)
             WKB_criterion = fabs(
-                WKB_d_ln_omegaEffPrime_dz(model, self.k.k, current_z_float)
+                Gk_d_ln_omegaEffPrime_dz(model, self.k.k, current_z_float)
             ) / sqrt(fabs(omega_WKB_sq))
 
             # create new GkNumericalValue object

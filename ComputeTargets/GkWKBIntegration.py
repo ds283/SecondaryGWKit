@@ -6,7 +6,7 @@ import ray
 from scipy.integrate import solve_ivp
 
 from ComputeTargets.BackgroundModel import BackgroundModel, ModelProxy
-from ComputeTargets.WKB_tensor_Green import WKB_omegaEff_sq, WKB_d_ln_omegaEffPrime_dz
+from ComputeTargets.WKB_Gk import Gk_omegaEff_sq, Gk_d_ln_omegaEffPrime_dz
 from ComputeTargets.analytic_Gk import (
     compute_analytic_G,
     compute_analytic_Gprime,
@@ -302,7 +302,7 @@ def stage_1_evolution(
 
     def terminate_trigger(z, float, _) -> float:
         # terminate when omega_WKB_sq exceeds 1E6 (at that point we want to switch to a different numerical scheme)
-        omega_WKB_sq = WKB_omegaEff_sq(model, k_float, z)
+        omega_WKB_sq = Gk_omegaEff_sq(model, k_float, z)
 
         return omega_WKB_sq - DEFAULT_OMEGA_WKB_SQ_MAX
 
@@ -319,14 +319,14 @@ def stage_1_evolution(
                 )
                 supervisor.reset_notify_time()
 
-            omega_WKB_sq = WKB_omegaEff_sq(model, k_float, z)
+            omega_WKB_sq = Gk_omegaEff_sq(model, k_float, z)
 
             if omega_WKB_sq < 0.0:
                 raise ValueError(
                     f"compute_Gk_WKB: omega_WKB^2 cannot be negative during WKB integration (omega_WKB^2={omega_WKB_sq:.5g})"
                 )
 
-            d_ln_omega_WKB_dz = WKB_d_ln_omegaEffPrime_dz(model, k_float, z)
+            d_ln_omega_WKB_dz = Gk_d_ln_omegaEffPrime_dz(model, k_float, z)
             WKB_criterion = fabs(d_ln_omega_WKB_dz) / sqrt(fabs(omega_WKB_sq))
             if WKB_criterion > 1.0:
                 H = model.functions.Hubble(z)
@@ -491,7 +491,7 @@ def stage_2_evolution(
     k_wavenumber: wavenumber = k.k
     k_float = k_wavenumber.k
 
-    omega_WKB_sq_init = WKB_omegaEff_sq(model, k_float, z_init)
+    omega_WKB_sq_init = Gk_omegaEff_sq(model, k_float, z_init)
     omega_WKB_init = sqrt(omega_WKB_sq_init)
 
     # the idea here is to change variables so that u = z_init - z, theta = theta_init + omega_WKB_init Q (1+u).
@@ -509,14 +509,14 @@ def stage_2_evolution(
                 supervisor.message(u, f"current state: Q = {Q:.8g}")
                 supervisor.reset_notify_time()
 
-            omega_WKB_sq = WKB_omegaEff_sq(model, k_float, z)
+            omega_WKB_sq = Gk_omegaEff_sq(model, k_float, z)
 
             if omega_WKB_sq < 0.0:
                 raise ValueError(
                     f"compute_Gk_WKB: omega_WKB^2 cannot be negative during WKB integration (omega_WKB^2={omega_WKB_sq:.5g})"
                 )
 
-            d_ln_omega_WKB_dz = WKB_d_ln_omegaEffPrime_dz(model, k_float, z)
+            d_ln_omega_WKB_dz = Gk_d_ln_omegaEffPrime_dz(model, k_float, z)
             WKB_criterion = fabs(d_ln_omega_WKB_dz) / sqrt(fabs(omega_WKB_sq))
             if WKB_criterion > 1.0:
                 H = model.functions.Hubble(z)
@@ -644,8 +644,8 @@ def compute_Gk_WKB(
     # into stages, we need to add an offset to subsequent stages so that theta lines up properly
     current_div_2pi_offset = 0
 
-    d_ln_omega_WKB_dz_init = WKB_d_ln_omegaEffPrime_dz(model, k_float, z_init)
-    omega_WKB_sq_init = WKB_omegaEff_sq(model, k_float, z_init)
+    d_ln_omega_WKB_dz_init = Gk_d_ln_omegaEffPrime_dz(model, k_float, z_init)
+    omega_WKB_sq_init = Gk_omegaEff_sq(model, k_float, z_init)
 
     if omega_WKB_sq_init < 0.0:
         raise RuntimeError(
@@ -1065,8 +1065,8 @@ class GkWKBIntegration(DatastoreObject):
 
         initial_z = self._z_init if self._z_init is not None else self._z_source.z
 
-        omega_WKB_sq_init = WKB_omegaEff_sq(model, self._k_exit.k.k, initial_z)
-        d_ln_omega_WKB_init = WKB_d_ln_omegaEffPrime_dz(
+        omega_WKB_sq_init = Gk_omegaEff_sq(model, self._k_exit.k.k, initial_z)
+        d_ln_omega_WKB_init = Gk_d_ln_omegaEffPrime_dz(
             model, self._k_exit.k.k, initial_z
         )
 
@@ -1132,8 +1132,8 @@ class GkWKBIntegration(DatastoreObject):
 
         # can assume here that omega_WKB_sq_init > 0 and the WKB criterion < 1.
         # This has been checked in compute()
-        omega_WKB_sq_init = WKB_omegaEff_sq(model, self._k_exit.k.k, initial_z)
-        d_ln_omega_WKB_init = WKB_d_ln_omegaEffPrime_dz(
+        omega_WKB_sq_init = Gk_omegaEff_sq(model, self._k_exit.k.k, initial_z)
+        d_ln_omega_WKB_init = Gk_d_ln_omegaEffPrime_dz(
             model, self._k_exit.k.k, initial_z
         )
 
@@ -1217,10 +1217,10 @@ class GkWKBIntegration(DatastoreObject):
             )
 
             # should be safe to assume omega_WKB_sq > 0, since otherwise this would have been picked up during the integration
-            omega_WKB_sq = WKB_omegaEff_sq(model, self._k_exit.k.k, current_z_float)
+            omega_WKB_sq = Gk_omegaEff_sq(model, self._k_exit.k.k, current_z_float)
             omega_WKB = sqrt(omega_WKB_sq)
 
-            d_ln_omega_WKB = WKB_d_ln_omegaEffPrime_dz(
+            d_ln_omega_WKB = Gk_d_ln_omegaEffPrime_dz(
                 model, self._k_exit.k.k, current_z_float
             )
             WKB_criterion = fabs(d_ln_omega_WKB) / omega_WKB

@@ -153,6 +153,9 @@ class sqla_TkNumericalIntegration_factory(SQLAFactoryBase):
                 sqla.Column("unresolved_z", sqla.Float(64)),
                 sqla.Column("unresolved_efolds_subh", sqla.Float(64)),
                 sqla.Column("init_efolds_suph", sqla.Float(64)),
+                sqla.Column("stop_deltaz_subh", sqla.Float(64)),
+                sqla.Column("stop_T", sqla.Float(64)),
+                sqla.Column("stop_Tprime", sqla.Float(64)),
                 sqla.Column("validated", sqla.Boolean, default=False, nullable=False),
             ],
         }
@@ -173,6 +176,8 @@ class sqla_TkNumericalIntegration_factory(SQLAFactoryBase):
         z_sample: redshift_array = payload["z_sample"]
 
         z_init: redshift = payload.get("z_init", None)
+
+        mode: str = payload.get("mode", None)
 
         atol_table = tables["tolerance"].alias("atol")
         rtol_table = tables["tolerance"].alias("rtol")
@@ -198,6 +203,9 @@ class sqla_TkNumericalIntegration_factory(SQLAFactoryBase):
                 table.c.unresolved_z,
                 table.c.unresolved_efolds_subh,
                 table.c.init_efolds_suph,
+                table.c.stop_deltaz_subh,
+                table.c.stop_T,
+                table.c.stop_Tprime,
                 table.c.solver_serial,
                 table.c.label,
                 table.c.z_init_serial,
@@ -264,6 +272,7 @@ class sqla_TkNumericalIntegration_factory(SQLAFactoryBase):
                 z_init=z_init,
                 tags=tags,
                 delta_logz=delta_logz,
+                mode=mode,
             )
 
         store_id = row_data.serial
@@ -287,6 +296,8 @@ class sqla_TkNumericalIntegration_factory(SQLAFactoryBase):
                     value_table.c.analytic_Tprime_rad,
                     value_table.c.analytic_T_w,
                     value_table.c.analytic_Tprime_w,
+                    value_table.c.omega_WKB_sq,
+                    value_table.c.WKB_criterion,
                 )
                 .select_from(
                     value_table.join(
@@ -318,6 +329,8 @@ class sqla_TkNumericalIntegration_factory(SQLAFactoryBase):
                         analytic_Tprime_rad=row.analytic_Tprime_rad,
                         analytic_T_w=row.analytic_T_w,
                         analytic_Tprime_w=row.analytic_Tprime_w,
+                        omega_WKB_sq=row.omega_WKB_sq,
+                        WKB_criterion=row.WKB_criterion,
                     )
                 )
             imported_z_sample = redshift_array(z_points)
@@ -350,6 +363,9 @@ class sqla_TkNumericalIntegration_factory(SQLAFactoryBase):
                 "unresolved_z": (row_data.unresolved_z),
                 "unresolved_efolds_subh": (row_data.unresolved_efolds_subh),
                 "init_efolds_suph": (row_data.init_efolds_suph),
+                "stop_deltaz_subh": (row_data.stop_deltaz_subh),
+                "stop_T": (row_data.stop_T),
+                "stop_Tprime": (row_data.stop_Tprime),
                 "solver": (
                     IntegrationSolver(
                         store_id=row_data.solver_serial,
@@ -398,20 +414,23 @@ class sqla_TkNumericalIntegration_factory(SQLAFactoryBase):
                 "model_serial": obj.model_proxy.store_id,
                 "atol_serial": obj._atol.store_id,
                 "rtol_serial": obj._rtol.store_id,
-                "solver_serial": obj.solver.store_id,
-                "z_init_serial": obj.z_init.store_id,
-                "z_min_serial": obj.z_sample.min.store_id,
-                "z_samples": len(obj.values),
-                "compute_time": obj.data.compute_time,
-                "compute_steps": obj.data.compute_steps,
-                "RHS_evaluations": obj.data.RHS_evaluations,
-                "mean_RHS_time": obj.data.mean_RHS_time,
-                "max_RHS_time": obj.data.max_RHS_time,
-                "min_RHS_time": obj.data.min_RHS_time,
-                "has_unresolved_osc": obj.has_unresolved_osc,
-                "unresolved_z": obj.unresolved_z,
-                "unresolved_efolds_subh": obj.unresolved_efolds_subh,
-                "init_efolds_suph": obj.init_efolds_suph,
+                "solver_serial": obj._solver.store_id,
+                "z_init_serial": obj._z_init.store_id,
+                "z_min_serial": obj._z_sample.min.store_id,
+                "z_samples": len(obj._values),
+                "compute_time": obj._data.compute_time,
+                "compute_steps": obj._data.compute_steps,
+                "RHS_evaluations": obj._data.RHS_evaluations,
+                "mean_RHS_time": obj._data.mean_RHS_time,
+                "max_RHS_time": obj._data.max_RHS_time,
+                "min_RHS_time": obj._data.min_RHS_time,
+                "has_unresolved_osc": obj._has_unresolved_osc,
+                "unresolved_z": obj._unresolved_z,
+                "unresolved_efolds_subh": obj._unresolved_efolds_subh,
+                "init_efolds_suph": obj._init_efolds_suph,
+                "stop_deltaz_subh": obj._stop_deltaz_subh,
+                "stop_T": obj._stop_T,
+                "stop_Tprime": obj._stop_Tprime,
                 "validated": False,
             },
         )
@@ -439,6 +458,8 @@ class sqla_TkNumericalIntegration_factory(SQLAFactoryBase):
                     "analytic_Tprime_rad": value.analytic_Tprime_rad,
                     "analytic_T_w": value.analytic_T_w,
                     "analytic_Tprime_w": value.analytic_Tprime_w,
+                    "omega_WKB_sq": value.omega_WKB_sq,
+                    "WKB_criterion": value.WKB_criterion,
                 },
             )
 
@@ -621,6 +642,8 @@ class sqla_TkNumericalValue_factory(SQLAFactoryBase):
                 sqla.Column("analytic_Tprime_rad", sqla.Float(64), nullable=True),
                 sqla.Column("analytic_T_w", sqla.Float(64), nullable=True),
                 sqla.Column("analytic_Tprime_w", sqla.Float(64), nullable=True),
+                sqla.Column("omega_WKB_sq", sqla.Float(64), nullable=True),
+                sqla.Column("WKB_criterion", sqla.Float(64), nullable=True),
             ],
         }
 
@@ -669,6 +692,9 @@ class sqla_TkNumericalValue_factory(SQLAFactoryBase):
         analytic_T_w = payload.get("analytic_T_w", None)
         analytic_Tprime_w = payload.get("analytic_Tprime_w", None)
 
+        omega_WKB_sq: Optional[float] = payload.get("omega_WKB_sq", None)
+        WKB_criterion: Optional[float] = payload.get("WKB_criterion", None)
+
         try:
             row_data = conn.execute(
                 sqla.select(
@@ -679,6 +705,8 @@ class sqla_TkNumericalValue_factory(SQLAFactoryBase):
                     table.c.analytic_Tprime_rad,
                     table.c.analytic_T_w,
                     table.c.analytic_Tprime_w,
+                    table.c.omega_WKB_sq,
+                    table.c.WKB_criterion,
                 ).filter(
                     table.c.integration_serial == integration_serial,
                     table.c.z_serial == z.store_id,
@@ -702,6 +730,8 @@ class sqla_TkNumericalValue_factory(SQLAFactoryBase):
                     "analytic_Tprime_rad": analytic_Tprime_rad,
                     "analytic_T_w": analytic_T_w,
                     "analytic_Tprime_w": analytic_Tprime_w,
+                    "omega_WKB_sq": omega_WKB_sq,
+                    "WKB_criterion": WKB_criterion,
                 },
             )
 
@@ -714,6 +744,9 @@ class sqla_TkNumericalValue_factory(SQLAFactoryBase):
 
             analytic_T_w = row_data.analytic_T_w
             analytic_Tprime_w = row_data.analytic_Tprime_w
+
+            omega_WKB_sq = row_data.omega_WKB_sq
+            WKB_criterion = row_data.WKB_criterion
 
             if fabs(row_data.T - T) > DEFAULT_FLOAT_PRECISION:
                 raise ValueError(
@@ -733,8 +766,10 @@ class sqla_TkNumericalValue_factory(SQLAFactoryBase):
             Tprime=Tprime,
             analytic_T_rad=analytic_T_rad,
             analytic_Tprime_rad=analytic_Tprime_rad,
-            analytic_T_w=analytic_T_rad,
-            analytic_Tprime_w=analytic_Tprime_rad,
+            analytic_T_w=analytic_T_w,
+            analytic_Tprime_w=analytic_Tprime_w,
+            omega_WKB_sq=omega_WKB_sq,
+            WKB_criterion=WKB_criterion,
         )
         for key, value in attribute_set.items():
             setattr(obj, key, value)
@@ -796,6 +831,8 @@ class sqla_TkNumericalValue_factory(SQLAFactoryBase):
                     table.c.analytic_Tprime_rad,
                     table.c.analytic_T_w,
                     table.c.analytic_Tprime_w,
+                    table.c.omega_WKB_sq,
+                    table.c.WKB_criterion,
                 )
                 .select_from(
                     subquery.join(
@@ -828,6 +865,8 @@ class sqla_TkNumericalValue_factory(SQLAFactoryBase):
             analytic_Tprime_rad=row_data.analytic_Tprime_rad,
             analytic_T_w=row_data.analytic_T_w,
             analytic_Tprime_w=row_data.analytic_Tprime_w,
+            omega_WKB_sq=row_data.omega_WKB_sq,
+            WKB_criterion=row_data.WKB_criterion,
         )
         obj._deserialized = True
         obj._k_exit = k

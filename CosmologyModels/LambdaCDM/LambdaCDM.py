@@ -1,5 +1,4 @@
 from collections import namedtuple
-
 from math import sqrt, pow
 
 from CosmologyModels import BaseCosmology
@@ -209,12 +208,29 @@ class LambdaCDM(BaseCosmology):
         w_rad = 1.0 / 3.0
 
         one_plus_z = 1.0 + z
-        one_plus_z_2 = one_plus_z * one_plus_z
-        one_plus_z_3 = one_plus_z_2 * one_plus_z
-        one_plus_z_4 = one_plus_z_2 * one_plus_z_2
 
         # discard w_matter contribution to the numerator, which is proportional to zero
-        numerator = w_rad * self.omega_r * one_plus_z_4
-        denominator = self.omega_m * one_plus_z_3 + self.omega_r * one_plus_z_4
+        numerator = w_rad * self.omega_r * one_plus_z
+        denominator = self.omega_m + self.omega_r * one_plus_z
 
         return numerator / denominator
+
+    def d_wPerturbations_dz(self, z: float) -> float:
+        w_rad = 1.0 / 3.0
+
+        one_plus_z = 1.0 + z
+
+        numerator = w_rad * self.omega_r * self.omega_m
+        denominator = self.omega_m + self.omega_r * one_plus_z
+
+        return numerator / (denominator * denominator)
+
+    def d2_wPerturbations_dz2(self, z: float) -> float:
+        w_rad = 1.0 / 3.0
+
+        one_plus_z = 1.0 + z
+
+        numerator = -2.0 * w_rad * self.omega_r * self.omega_r * self.omega_m
+        denominator = self.omega_m + self.omega_r * one_plus_z
+
+        return numerator / (denominator * denominator * denominator)
