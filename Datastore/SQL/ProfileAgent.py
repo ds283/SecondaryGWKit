@@ -249,14 +249,14 @@ class ProfileBatchManager:
     ):
         self._batcher = batcher
 
-        if method is None:
-            raise RuntimeError("method cannot be None")
-
-        if not isinstance(metadata, dict):
-            raise RuntimeError("metadata should be a dict")
-
         self._method = method
         self._metadata = metadata if metadata is not None else {}
+
+        if self._method is None:
+            raise RuntimeError("method cannot be None")
+
+        if not isinstance(self._metadata, dict):
+            raise RuntimeError("metadata should be a dict")
 
         self._start_time = None
         self._perf_timer_start = None
