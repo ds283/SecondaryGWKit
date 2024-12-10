@@ -298,6 +298,7 @@ def _adaptive_levin_subregion(
     BasisData,
     id_label: uuid,
     chebyshev_order: int = DEFAULT_LEVIN_CHEBSHEV_ORDER,
+    rtol: float = DEFAULT_LEVIN_RELTOL,
     notify_label: Optional[str] = None,
 ):
     working_order = max(chebyshev_order, _LEVIN_MINIMUM_ALLOWED_ORDER)
@@ -308,7 +309,13 @@ def _adaptive_levin_subregion(
     finished = False
     while not finished and working_order >= _LEVIN_MINIMUM_ALLOWED_ORDER:
         data = _adaptive_levin_subregion_impl(
-            x_span, f, BasisData, id_label, working_order, notify_label
+            x_span,
+            f,
+            BasisData,
+            id_label,
+            chebyshev_order=working_order,
+            rtol=rtol,
+            notify_label=notify_label,
         )
         if data["metadata"].get("SVD_failure", False):
             working_order = working_order - 2
@@ -345,11 +352,13 @@ def _adaptive_levin_subregion_impl(
     BasisData,
     id_label: uuid,
     chebyshev_order: int = DEFAULT_LEVIN_CHEBSHEV_ORDER,
+    rtol: float = DEFAULT_LEVIN_RELTOL,
     notify_label: Optional[str] = None,
 ):
     """
     f should be an m-vector of non-rapidly oscillating functions (Levin 96 eq. 2.1)
     theta should be an (m x m)-matrix representing the phase matrix of the system (Levin 96's A or A^t matrix)
+    :param rtol:
     :param x_span:
     :param f: iterable of callables representing the integrand f-functions
     :param BasisData: callable
@@ -427,7 +436,12 @@ def _adaptive_levin_subregion_impl(
                 f"!! WARNING (adaptive_levin_subregion, {label}): could not solve Levin collocation system using numpy.linalg.pinv (chebyshev_order={chebyshev_order}; final failure at this order)"
             )
             metadata["SVD_failure"] = True
-            return None, None, metadata
+            return {
+                "value": None,
+                "p_sample": None,
+                "p_ratios": None,
+                "metadata": metadata,
+            }
 
     p_sample = [
         (x, [p[j * chebyshev_order + i] for j in range(m)]) for i, x in enumerate(grid)
@@ -437,9 +451,20 @@ def _adaptive_levin_subregion_impl(
     p_mean_max = max(p_means)
     p_ratios = [pm / p_mean_max for pm in p_means]
 
+    # don't keep p-modes that have relative amplitude smaller than the requested rtol.
+    # Presumably we cannot compute these accurately anyway (especially if they are associated with small singular values that are
+    # also not being handled correctly in the singular value decomposition of the Levin operator)
+    # so they just behave as a source of numerical noise that pollutes our abserr estimates,
+    # and can prevent convergence of the bisection step.
+    p_use = [r > rtol for r in p_ratios]
+
     # note grid is in reverse order, with largest value in position o and smallest value in last position -1
-    lower_limit = sum(p[(i + 1) * chebyshev_order - 1] * w0[i] for i in range(m))
-    upper_limit = sum(p[i * chebyshev_order] * wk[i] for i in range(m))
+    lower_limit = sum(
+        p[(i + 1) * chebyshev_order - 1] * w0[i] if p_use[i] else 0.0 for i in range(m)
+    )
+    upper_limit = sum(
+        p[i * chebyshev_order] * wk[i] if p_use[i] else 0.0 for i in range(m)
+    )
 
     return {
         "value": upper_limit - lower_limit,
@@ -490,7 +515,7 @@ def _adaptive_levin(
     chebyshev_min_order = None
     max_depth = 0
 
-    num_errhistory_messages = 0
+    num_history_messages = 0
 
     while len(regions) > 0:
         now = time.time()
@@ -534,11 +559,11 @@ def _adaptive_levin(
         a = current_region.start
         b = current_region.end
 
-        if current_region.depth >= 18 and num_errhistory_messages < 20:
-            num_errhistory_messages += 1
+        if current_region.depth >= 18 and num_history_messages < 20:
+            num_history_messages += 1
 
             print(
-                f"@@ adaptive_levin ({label}): encountered subinterval of depth {current_region.depth} (notification {num_errhistory_messages}/20 for this quadrature)"
+                f"@@ adaptive_levin ({label}): encountered subinterval of depth {current_region.depth} (notification {num_history_messages}/20 for this quadrature)"
             )
 
             abs_history = current_region.abserr_history
@@ -610,6 +635,7 @@ def _adaptive_levin(
                 BasisData,
                 id_label=id_label,
                 chebyshev_order=chebyshev_order,
+                rtol=rtol,
                 notify_label=notify_label,
             )
             order = data["metadata"].get("chebyshev_order", None)
@@ -636,6 +662,7 @@ def _adaptive_levin(
                 BasisData,
                 id_label=id_label,
                 chebyshev_order=chebyshev_order,
+                rtol=rtol,
                 notify_label=notify_label,
             )
         except LinAlgError as e:
@@ -651,6 +678,7 @@ def _adaptive_levin(
                 BasisData,
                 id_label=id_label,
                 chebyshev_order=chebyshev_order,
+                rtol=rtol,
                 notify_label=notify_label,
             )
         except LinAlgError as e:
@@ -850,6 +878,7 @@ def _write_progress_data(
             BasisData,
             id_label=id_label,
             chebyshev_order=chebyshev_order,
+            rtol=rtol,
             notify_label=notify_label,
         )
         estimate = data["value"]
@@ -863,6 +892,7 @@ def _write_progress_data(
             BasisData,
             id_label=id_label,
             chebyshev_order=chebyshev_order,
+            rtol=rtol,
             notify_label=notify_label,
         )
         estimateL = dataL["value"]
@@ -873,6 +903,7 @@ def _write_progress_data(
             BasisData,
             id_label=id_label,
             chebyshev_order=chebyshev_order,
+            rtol=rtol,
             notify_label=notify_label,
         )
         estimateR = dataR["value"]

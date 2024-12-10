@@ -56,7 +56,7 @@ class TestAdaptiveLevinSinCos(unittest.TestCase):
         evaluations = data["evaluations"]
         elapsed = data["elapsed"]
         print(
-            f"integral_(1)^(500,000) Cos(x) = {value} ({len(regions)} regions, {evaluations} evaluations in time {format_time(elapsed)})"
+            f"integral_(1)^(500,000) cos(x) = {value} ({len(regions)} regions, {evaluations} evaluations in time {format_time(elapsed)})"
         )
         for region in regions:
             print(f"  -- region: {region}")
