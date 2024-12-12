@@ -793,8 +793,8 @@ def compute_Gk_WKB(
 
 class GkWKBIntegration(DatastoreObject):
     """
-    Encapsulates all sample points produced for a calculation of the WKB
-    phase associated with the tensor Green's function
+    Encapsulates all sample points produced for a calculation of the Liouville-Green
+    phase function for the tensor Green's function
     """
 
     def __init__(
