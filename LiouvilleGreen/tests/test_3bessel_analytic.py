@@ -235,7 +235,23 @@ class J231:
         return pre_factor * numerator / denominator
 
 
+class Y000:
+    mu = 0.0
+    nu = 0.0
+    sigma = 0.0
+
+    @staticmethod
+    def analytic(k, q, s):
+        prefactor = (1.0 / 4.0) / (k * q * s)
+
+        numerator = (k - q + s) * (k + q - s)
+        denominator = (k + q + s) * (k - q - s)
+
+        return prefactor * np.log(np.abs(numerator / denominator))
+
+
 Jintegrals = [J000, J110, J220, J222, J231]
+Yintegrals = [Y000]
 
 
 def intify(x: float):
@@ -267,11 +283,12 @@ class Test3BesselAnalytic(unittest.TestCase):
                 timestamp=timestamp,
             )
 
+            abserr = np.fabs(numeric - analytic)
+
             if is_triangle(k, q, s):
-                abserr = np.fabs(numeric - analytic)
                 relerr = abserr / analytic
 
-                print(f"@@ ({intify(J.mu)},{intify(J.nu)},{intify(J.sigma)}):")
+                print(f"@@ (J{intify(J.mu)},J{intify(J.nu)},J{intify(J.sigma)}):")
                 print(f"   k={k}, q={q}, s={s} satisfies the triangle inequality")
                 print(f"   quadrature result = {numeric}")
                 print(f"   analytic result = {analytic}")
@@ -279,9 +296,7 @@ class Test3BesselAnalytic(unittest.TestCase):
                 self.assertTrue(relerr < REL_TOLERANCE or abserr < ABS_TOLERANCE)
 
             else:
-                abserr = np.fabs(numeric - analytic)
-
-                print(f"@@ ({intify(J.mu)},{intify(J.nu)},{intify(J.sigma)}):")
+                print(f"@@ (J{intify(J.mu)},J{intify(J.nu)},J{intify(J.sigma)}):")
                 print(
                     f"   k={k}, q={q}, s={s} does not satisfy the triangle inequality"
                 )
@@ -290,38 +305,46 @@ class Test3BesselAnalytic(unittest.TestCase):
                 print(f"   abserr={abserr:.5g}")
                 self.assertTrue(abserr < ABS_TOLERANCE)
 
-    def test_YJJ_000(self):
-        k = 1.5
-        q = 1.2
-        s = 1.7
-
-        mathematica = -0.08286797856
-
+    def test_YJJ(self):
         timestamp = datetime.now().replace(microsecond=0)
-        numeric = plot_and_compute_3Bessel(
-            quad_YJJ,
-            0.0,
-            0.0,
-            0.0,
-            k,
-            q,
-            s,
-            max_x=MAX_X,
-            analytic_result=mathematica,
-            label="YJJ",
-            timestamp=timestamp,
-        )
 
-        abserr = np.fabs(numeric - mathematica)
+        for Y in Yintegrals:
+            k = uniform(0.1, 5.0)
+            q = uniform(0.1, 5.0)
+            s = uniform(0.1, 5.0)
 
-        print(f"@@ (0,0,0):")
-        print(f"   k={k}, q={q}, s={s}, is_triangle={is_triangle(k, q, s)}")
-        print(f"   quadrature result = {numeric}")
-        print(f"   Mathematica result = {mathematica}")
-        print(f"   abserr={abserr:.5g}")
-        self.assertTrue(abserr < ABS_TOLERANCE)
+            analytic = Y.analytic(k, q, s)
+            numeric = plot_and_compute_3Bessel(
+                quad_YJJ,
+                Y.mu,
+                Y.nu,
+                Y.sigma,
+                k,
+                q,
+                s,
+                max_x=MAX_X,
+                analytic_result=analytic,
+                label="YJJ",
+                timestamp=timestamp,
+            )
 
-    def test_110_notriangle(self):
+            abserr = np.fabs(numeric - analytic)
+            relerr = abserr / analytic
+
+            print(f"@@ (Y{intify(Y.mu)},J{intify(Y.nu)},J{intify(Y.sigma)}):")
+            if is_triangle(k, q, s):
+                print(f"   k={k}, q={q}, s={s} satisfies the triangle inequality")
+            else:
+                print(
+                    f"   k={k}, q={q}, s={s} does not satisfy the triangle inequality"
+                )
+
+            print(f"   quadrature result = {numeric}")
+            print(f"   analytic result = {analytic}")
+            print(f"   relerr={relerr:.5g}, abserr={abserr:.5g}")
+            self.assertTrue(relerr < REL_TOLERANCE or abserr < ABS_TOLERANCE)
+
+    def test_J110_notriangle(self):
         J = J110
         k = 4.870969802124623
         q = 1.3338040554375765
