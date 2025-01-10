@@ -250,8 +250,37 @@ class Y000:
         return prefactor * np.log(np.abs(numerator / denominator))
 
 
+class Y022:
+    mu = 0.0
+    nu = 2.0
+    sigma = 2.0
+
+    @staticmethod
+    def analytic(k, q, s):
+        k_sq = k * k
+        q_sq = q * q
+        s_sq = s * s
+
+        q3 = q * q_sq
+        s3 = s * s_sq
+
+        k4 = k_sq * k_sq
+        q4 = q_sq * q_sq
+        s4 = s_sq * s_sq
+
+        A = 3.0 * (q_sq + s_sq - k_sq) / 8.0 / (k * q_sq * s_sq)
+
+        B = 3.0 * (k4 + q4 + s4) - 6.0 * (k_sq * q_sq + k_sq * s_sq) + 2.0 * q_sq * s_sq
+        C = 32.0 * k * q3 * s3
+
+        numerator = (k - q + s) * (k + q - s)
+        denominator = (k + q + s) * (k - q - s)
+
+        return A + (B / C) * np.log(np.abs(numerator / denominator))
+
+
 Jintegrals = [J000, J110, J220, J222, J231]
-Yintegrals = [Y000]
+Yintegrals = [Y000, Y022]
 
 
 def intify(x: float):
