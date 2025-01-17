@@ -521,10 +521,11 @@ class Test3BesselAnalytic(unittest.TestCase):
                     elapsed = stop - start
                     elapsed_grid.append(elapsed)
 
-                    last_notify_period = stop - last_notify
-                    if elapsed > 2 * 60 or last_notify_period > 5 * 60:
+                    last_notify_elapsed = stop - last_notify
+                    total_elapsed = stop - total_start
+                    if elapsed > 2 * 60 or last_notify_elapsed > 5 * 60:
                         print(
-                            f"   -- evaluated eps={eps:.3g} (value={numeric:.5g}) in time {format_time(elapsed)} (total time for this YJJ {format_time(last_notify_period)})"
+                            f"   -- evaluated eps={eps:.3g} (value={numeric:.5g}) in time {format_time(elapsed)} (total time for this YJJ {format_time(total_elapsed)})"
                         )
                         last_notify = stop
 
