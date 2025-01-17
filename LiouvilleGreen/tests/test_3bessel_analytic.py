@@ -483,6 +483,7 @@ class Test3BesselAnalytic(unittest.TestCase):
 
                 analytic_grid = []
                 numeric_grid = []
+                elapsed_grid = []
 
                 for eps in singularity_eps:
                     start = time.perf_counter()
@@ -512,15 +513,18 @@ class Test3BesselAnalytic(unittest.TestCase):
                         rtol=quad_rtol,
                     )
 
+                    stop = time.perf_counter()
+
                     analytic_grid.append(analytic)
                     numeric_grid.append(numeric)
 
-                    stop = time.perf_counter()
-                    eps_period = stop - start
+                    elapsed = stop - start
+                    elapsed_grid.append(elapsed)
+
                     last_notify_period = stop - last_notify
-                    if eps_period > 2 * 60 or last_notify_period > 5 * 60:
+                    if elapsed > 2 * 60 or last_notify_period > 5 * 60:
                         print(
-                            f"   -- evaluated eps={eps:.3g} (value={numeric:.5g}) in time {format_time(eps_period)} (total time for this YJJ {format_time(last_notify_period)})"
+                            f"   -- evaluated eps={eps:.3g} (value={numeric:.5g}) in time {format_time(elapsed)} (total time for this YJJ {format_time(last_notify_period)})"
                         )
                         last_notify = stop
 
@@ -571,6 +575,8 @@ class Test3BesselAnalytic(unittest.TestCase):
 
                 ax.set_xscale("log")
                 ax.set_yscale("linear")
+                ax.xaxis.set_inverted(True)
+                ax.set_xlabel("$\epsilon$")
                 ax.legend(loc="best")
                 ax.grid(True)
 
@@ -582,6 +588,58 @@ class Test3BesselAnalytic(unittest.TestCase):
                 fig.savefig(fig_path.with_suffix(".png"))
 
                 plt.close()
+
+                fig = plt.figure()
+                ax = plt.gca()
+
+                ax.plot(
+                    singularity_eps, elapsed_grid, color="b", label="Integration time"
+                )
+
+                ax.text(
+                    0.0, 1.03, f"k={k:.5g}", transform=ax.transAxes, fontsize="x-small"
+                )
+                ax.text(
+                    0.3, 1.03, f"q={q:.5g}", transform=ax.transAxes, fontsize="x-small"
+                )
+                ax.text(
+                    0.6, 1.03, f"s={s:.5g}", transform=ax.transAxes, fontsize="x-small"
+                )
+                ax.text(
+                    0.0,
+                    1.08,
+                    f"$\\mu$={Y.mu:.5g}",
+                    transform=ax.transAxes,
+                    fontsize="x-small",
+                )
+                ax.text(
+                    0.3,
+                    1.08,
+                    f"$\\nu$={Y.nu:.5g}",
+                    transform=ax.transAxes,
+                    fontsize="x-small",
+                )
+                ax.text(
+                    0.6,
+                    1.08,
+                    f"$\\sigma$={Y.sigma:.5g}",
+                    transform=ax.transAxes,
+                    fontsize="x-small",
+                )
+
+                ax.set_xscale("log")
+                ax.set_yscale("log")
+                ax.xaxis.set_inverted(True)
+                ax.set_xlabel("$\epsilon$")
+                ax.legend(loc="best")
+                ax.grid(True)
+
+                fig_path = Path(
+                    f"test_3bessel_analytic/{timestamp.isoformat()}/integration_time_{label}_mu={Y.mu:.3f}_nu={Y.nu:.3f}_sigma={Y.sigma:.3f}_k={k:.3f}_q={q:.3f}_s={s:.3f}_maxx={max_x:.5g}.pdf"
+                ).resolve()
+                fig_path.parents[0].mkdir(parents=True, exist_ok=True)
+                fig.savefig(fig_path)
+                fig.savefig(fig_path.with_suffix(".png"))
 
                 total_stop = time.perf_counter()
                 total_elapsed = total_stop - total_start
