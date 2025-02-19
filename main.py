@@ -400,7 +400,7 @@ with ShardedPool(
 
     # we need the response sample to be a subset of the source sample, otherwise we won't have
     # source data for the Green's functions right the way down to the response time.
-    # We need to re-query the database for theses redshifts, so that they get their is_response flag
+    # We need to re-query the database for these redshifts, so that they get their is_response flag
     # set correctly.
     _z_response_sample = z_source_sample.winnow(sparseness=response_sparseness)
     z_response_array = ray.get(
@@ -579,7 +579,7 @@ with ShardedPool(
                     ],
                     delta_logz=1.0 / float(source_samples_per_log10z),
                     mode="stop",
-                    _do_not_populate=True,  # ignored if object foes not
+                    _do_not_populate=True,  # ignored if object does not
                 )
             )
 
@@ -2343,7 +2343,7 @@ with ShardedPool(
             create_batch_size=1,  # we have batched the work queue into chunks ourselves, so don't process too many of these chunks at once!
             notify_batch_size=2000,
             notify_min_time_interval=MIN_NOTIFY_INTERVAL,
-            max_task_queue=1000,  # don't allow too many tasks to build up, because the payload storage requirenments could max out the object store
+            max_task_queue=1000,  # don't allow too many tasks to build up, because the payload storage requirements could max out the object store
             process_batch_size=100,
         )
         QuadSourceIntegral_queue.run()
