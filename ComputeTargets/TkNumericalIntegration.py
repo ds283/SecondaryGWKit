@@ -268,7 +268,7 @@ def compute_Tk(
         initial_state = [1.0, 0.0]
 
         if mode == "stop":
-            # set up an event to terminate the integration when a specified number of e-folds inside the horizon
+            # set up an event to terminate the integration after the end of the search window
             def stop_event(z, state, supervisor):
                 return z - stop_search_window_z_end + DEFAULT_FLOAT_PRECISION
 
@@ -415,6 +415,7 @@ class TkNumericalIntegration(DatastoreObject):
                 f'TkNumericalIntegration: unknown compute mode "{self._mode}"'
             )
 
+        # search for a handover point (to the WKB calculation) from 3 to 6 e-folds inside the horizon
         self._stop_search_window_start_attr = "z_exit_subh_e3"
         self._stop_search_window_end_attr = "z_exit_subh_e6"
 

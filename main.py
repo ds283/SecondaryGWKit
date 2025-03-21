@@ -65,6 +65,7 @@ MIN_NOTIFY_INTERVAL = 5 * 60
 
 allowed_drop_actions = [
     "tk-numeric",
+    "tk-wkb",
     "quad-source",
     "gk-numeric",
     "gk-wkb",
@@ -121,19 +122,25 @@ parser.add_argument(
     "--Tk-numerical-queue",
     action=argparse.BooleanOptionalAction,
     default=True,
-    help="run the transfer function work queue",
+    help="run the TkNumerical transfer function work queue",
+)
+parser.add_argument(
+    "--Tk-wkb-queue",
+    action=argparse.BooleanOptionalAction,
+    default=True,
+    help="run the TkWKB transfer function work queue",
 )
 parser.add_argument(
     "--Gk-numerical-queue",
     action=argparse.BooleanOptionalAction,
     default=True,
-    help="run the GkNumerical work queue",
+    help="run the GkNumerical Green's function work queue",
 )
 parser.add_argument(
-    "--WKB-queue",
+    "--Gk-WKB-queue",
     default=True,
     action=argparse.BooleanOptionalAction,
-    help="run the GkWKB work queue",
+    help="run the GkWKB Green's functionwork queue",
 )
 parser.add_argument(
     "--Gk-source-queue",
@@ -189,11 +196,12 @@ if args.database is None:
 # connect to ray cluster on supplied address; defaults to 'auto' meaning a locally running cluster
 ray.init(address=args.ray_address)
 
-VERSION_LABEL = "2024.1.1"
+VERSION_LABEL = "2025.1.1"
 
 specified_drop_actions = [x.lower() for x in args.drop]
 drop_actions = [x for x in specified_drop_actions if x in allowed_drop_actions]
 
+# instantiate a ProfileAgent to profile database operations; this is passed as an argument to ShardedPool below
 profile_agent = None
 if args.profile_db is not None:
     if args.job_name is not None:
@@ -207,7 +215,7 @@ if args.profile_db is not None:
         label=label,
     )
 
-# establish a ShardedPool to orchestrate database access
+# construct a ShardedPool to orchestrate database access
 with ShardedPool(
     version_label=VERSION_LABEL,
     db_name=args.database,
@@ -416,6 +424,7 @@ with ShardedPool(
         ResponseZGridSizeTag,  # labels size of the z_response sample grid
         OutsideHorizonEfoldsTag,  # labels number of e-folds outside the horizon at which we begin Tk numerical integrations
         LargestSourceZTag,  # labels largest z in the global grid
+        SmallestSourceZTag,  # labels smallest z in the global grid
         SourceSamplesPerLog10ZTag,  # labels number of redshifts per log10 interval of 1+z in the source grid
         ResponseSparsenessZTag,  # labels number of redshifts per log10 interval of 1+z in the response grid
     ) = ray.get(
@@ -431,6 +440,9 @@ with ShardedPool(
             pool.object_get("store_tag", label=f"OutsideHorizonEfolds_e3"),
             pool.object_get(
                 "store_tag", label=f"LargestSourceRedshift_{z_source_sample.max.z:.5g}"
+            ),
+            pool.object_get(
+                "store_tag", label=f"SmallestSourceRedshift_{z_source_sample.min.z:.5g}"
             ),
             pool.object_get(
                 "store_tag", label=f"SourceSamplesPerLog10Z_{source_samples_per_log10z}"
@@ -452,7 +464,7 @@ with ShardedPool(
             z_sample=z_source_sample,
             atol=atol,
             rtol=rtol,
-            tags=[LargestSourceZTag, SourceSamplesPerLog10ZTag],
+            tags=[LargestSourceZTag, SmallestSourceZTag, SourceSamplesPerLog10ZTag],
         )
     )
     if not model.available:
@@ -524,6 +536,7 @@ with ShardedPool(
                     SourceZGridSizeTag,
                     OutsideHorizonEfoldsTag,
                     LargestSourceZTag,
+                    SmallestSourceZTag,
                     SourceSamplesPerLog10ZTag,
                 ],
                 "_do_not_populate": True,
@@ -559,15 +572,21 @@ with ShardedPool(
         work_refs = []
 
         for k_exit in missing:
-            my_sample = z_source_sample.truncate(k_exit.z_exit_suph_e5, keep="lower")
+            # cut down zs at which we sample the transfer function, to those that are
+            # (1) later than the initial time, taken to be 5 e-folds outside the horizon,
+            # and (2) earlier than the 6-efolds-inside-the-horizon (with a 15% tolerance)
+            source_zs = z_source_sample.truncate(
+                k_exit.z_exit_suph_e5, keep="lower"
+            ).truncate(0.85 * k_exit.z_exit_subh_e6, keep="higher-include")
+
             work_refs.append(
                 pool.object_get(
                     "TkNumericalIntegration",
                     solver_labels=solvers,
                     model=model_proxy,
                     k=k_exit,
-                    z_sample=my_sample,
-                    z_init=my_sample.max,
+                    z_sample=source_zs,
+                    z_init=source_zs.max,
                     atol=tk_atol,
                     rtol=tk_rtol,
                     tags=[
@@ -575,11 +594,12 @@ with ShardedPool(
                         SourceZGridSizeTag,
                         OutsideHorizonEfoldsTag,
                         LargestSourceZTag,
+                        SmallestSourceZTag,
                         SourceSamplesPerLog10ZTag,
                     ],
                     delta_logz=1.0 / float(source_samples_per_log10z),
                     mode="stop",
-                    _do_not_populate=True,  # ignored if object does not
+                    _do_not_populate=True,  # ignored if object does not already exist in database, so does not spoil work scheduling
                 )
             )
 
@@ -627,6 +647,7 @@ with ShardedPool(
                             SourceZGridSizeTag,
                             OutsideHorizonEfoldsTag,
                             LargestSourceZTag,
+                            SmallestSourceZTag,
                             SourceSamplesPerLog10ZTag,
                         ],
                         "_do_not_populate": True,
@@ -682,6 +703,7 @@ with ShardedPool(
                     SourceZGridSizeTag,
                     OutsideHorizonEfoldsTag,
                     LargestSourceZTag,
+                    SmallestSourceZTag,
                     SourceSamplesPerLog10ZTag,
                 ],
             }
@@ -751,6 +773,7 @@ with ShardedPool(
                             SourceZGridSizeTag,
                             OutsideHorizonEfoldsTag,
                             LargestSourceZTag,
+                            SmallestSourceZTag,
                             SourceSamplesPerLog10ZTag,
                         ],
                     ),
@@ -850,6 +873,7 @@ with ShardedPool(
                             SourceZGridSizeTag,  # restrict query to integrations with the correct source grid size
                             ResponseZGridSizeTag,  # restrict query to integrations with the correct response grid size
                             LargestSourceZTag,
+                            SmallestSourceZTag,
                             SourceSamplesPerLog10ZTag,
                             ResponseSparsenessZTag,
                         ],
@@ -895,12 +919,10 @@ with ShardedPool(
         for k_exit in response_k_exit_times:
             k_exit: wavenumber_exit_time
 
-            # find redshift where this k-mode is at least 3 efolds inside the horizon
-
-            # we aim not to calculate numerical Green's functions with the response redshift
-            # (and hence the source redshift) later than this, because
-            # the oscillations become rapid, and we are better switching to a WKB approximation.
-            # Typically we cannot continue the numerical integratioan more than about 6 e-folds
+            # we don't calculate numerical Green's functions when the response redshift
+            # is too far inside the horizon, later than this, because the oscillations become rapid,
+            # and we are better switching to a WKB approximation.
+            # Typically, we cannot continue the numerical integration more than about 6 or 7 e-folds
             # inside the horizon.
             # However, we do need a bit of leeway. We sometimes cannot get WKB values for
             # z_source/z_response combinations that are both close to the 3-efold crossover point.
@@ -908,13 +930,14 @@ with ShardedPool(
             # some time after z_source.
             # The upshot is that we don't find enough overlap between the numerical and WKB regions
             # to allow a smooth handover. To deal with this, we allow z_source to go as far as
-            # 4 e-folds inside the horizon.
+            # 6 e-folds inside the horizon.
             for z_source in missing[k_exit.store_id]:
                 z_source: redshift
 
                 if z_source.z > k_exit.z_exit_subh_e4 - DEFAULT_FLOAT_PRECISION:
-                    # cut down response zs to those that are (1) later than the source, and (2) earlier than the 6-efolds-inside-the-horizon point
-                    # (here with a 15% tolerance)
+                    # cut down response zs, at which we sample the Green's function, to those that are
+                    # (1) later than the source, and (2) earlier than the 6-efolds-inside-the-horizon
+                    # point (with a 15% tolerance)
                     response_zs = z_response_sample.truncate(
                         z_source, keep="lower"
                     ).truncate(0.85 * k_exit.z_exit_subh_e6, keep="higher-include")
@@ -935,6 +958,7 @@ with ShardedPool(
                                     SourceZGridSizeTag,
                                     ResponseZGridSizeTag,
                                     LargestSourceZTag,
+                                    SmallestSourceZTag,
                                     SourceSamplesPerLog10ZTag,
                                     ResponseSparsenessZTag,
                                 ],
@@ -1011,6 +1035,7 @@ with ShardedPool(
                             SourceZGridSizeTag,  # restrict query to integrations with the correct source grid size
                             ResponseZGridSizeTag,  # restrict query to integrations with the correct response grid size
                             LargestSourceZTag,
+                            SmallestSourceZTag,
                             SourceSamplesPerLog10ZTag,
                             ResponseSparsenessZTag,
                         ],
@@ -1075,6 +1100,7 @@ with ShardedPool(
                             SourceZGridSizeTag,
                             ResponseZGridSizeTag,
                             LargestSourceZTag,
+                            SmallestSourceZTag,
                             SourceSamplesPerLog10ZTag,
                             ResponseSparsenessZTag,
                         ],
@@ -1182,6 +1208,7 @@ with ShardedPool(
                                     SourceZGridSizeTag,
                                     ResponseZGridSizeTag,
                                     LargestSourceZTag,
+                                    SmallestSourceZTag,
                                     SourceSamplesPerLog10ZTag,
                                     ResponseSparsenessZTag,
                                 ],
@@ -1228,6 +1255,7 @@ with ShardedPool(
                                 SourceZGridSizeTag,
                                 ResponseZGridSizeTag,
                                 LargestSourceZTag,
+                                SmallestSourceZTag,
                                 SourceSamplesPerLog10ZTag,
                                 ResponseSparsenessZTag,
                             ],
@@ -1308,6 +1336,7 @@ with ShardedPool(
                             SourceZGridSizeTag,
                             ResponseZGridSizeTag,
                             LargestSourceZTag,
+                            SmallestSourceZTag,
                             SourceSamplesPerLog10ZTag,
                             ResponseSparsenessZTag,
                         ],
@@ -1376,6 +1405,7 @@ with ShardedPool(
                         SourceZGridSizeTag,
                         ResponseZGridSizeTag,
                         LargestSourceZTag,
+                        SmallestSourceZTag,
                         SourceSamplesPerLog10ZTag,
                         ResponseSparsenessZTag,
                     ],
@@ -1482,6 +1512,7 @@ with ShardedPool(
                                 SourceZGridSizeTag,
                                 ResponseZGridSizeTag,
                                 LargestSourceZTag,
+                                SmallestSourceZTag,
                                 SourceSamplesPerLog10ZTag,
                                 ResponseSparsenessZTag,
                             ],
@@ -1633,6 +1664,7 @@ with ShardedPool(
                             SourceZGridSizeTag,
                             ResponseZGridSizeTag,
                             LargestSourceZTag,
+                            SmallestSourceZTag,
                             SourceSamplesPerLog10ZTag,
                             ResponseSparsenessZTag,
                         ],
@@ -1728,6 +1760,7 @@ with ShardedPool(
                             SourceZGridSizeTag,
                             ResponseZGridSizeTag,
                             LargestSourceZTag,
+                            SmallestSourceZTag,
                             SourceSamplesPerLog10ZTag,
                             ResponseSparsenessZTag,
                         ],
@@ -1852,6 +1885,7 @@ with ShardedPool(
                             SourceZGridSizeTag,
                             ResponseZGridSizeTag,
                             LargestSourceZTag,
+                            SmallestSourceZTag,
                             SourceSamplesPerLog10ZTag,
                             ResponseSparsenessZTag,
                         ],
@@ -2030,6 +2064,7 @@ with ShardedPool(
                             SourceZGridSizeTag,
                             ResponseZGridSizeTag,
                             LargestSourceZTag,
+                            SmallestSourceZTag,
                             SourceSamplesPerLog10ZTag,
                             ResponseSparsenessZTag,
                         ],
@@ -2118,6 +2153,7 @@ with ShardedPool(
                             SourceZGridSizeTag,
                             ResponseZGridSizeTag,
                             LargestSourceZTag,
+                            SmallestSourceZTag,
                             SourceSamplesPerLog10ZTag,
                             ResponseSparsenessZTag,
                         ],
@@ -2199,6 +2235,7 @@ with ShardedPool(
                             SourceZGridSizeTag,
                             OutsideHorizonEfoldsTag,
                             LargestSourceZTag,
+                            SmallestSourceZTag,
                             SourceSamplesPerLog10ZTag,
                         ],
                     }
@@ -2289,6 +2326,7 @@ with ShardedPool(
                             SourceZGridSizeTag,
                             ResponseZGridSizeTag,
                             LargestSourceZTag,
+                            SmallestSourceZTag,
                             SourceSamplesPerLog10ZTag,
                             ResponseSparsenessZTag,
                         ],

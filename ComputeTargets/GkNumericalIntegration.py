@@ -262,7 +262,7 @@ def compute_Gk(
         initial_state = [0.0, 1.0]
 
         if mode == "stop":
-            # set up an event to terminate the integration when a specified number of e-folds inside the horizon
+            # set up an event to terminate the integration after the end of the search window
             def stop_event(z, state, supervisor):
                 return z - stop_search_window_z_end + DEFAULT_FLOAT_PRECISION
 
@@ -428,6 +428,7 @@ class GkNumericalIntegration(DatastoreObject):
                 f'GkNumericalIntegration: unknown compute mode "{self._mode}"'
             )
 
+        # search for a handover point (to the WKB calculation) from 3 to 6 e-folds inside the horizon
         self._stop_search_window_start_attr = "z_exit_subh_e3"
         self._stop_search_window_end_attr = "z_exit_subh_e6"
 
@@ -613,7 +614,7 @@ class GkNumericalIntegration(DatastoreObject):
         z_limit = self._k_exit.z_exit_subh_e4
         if self._z_source.z < z_limit - DEFAULT_FLOAT_PRECISION:
             raise ValueError(
-                f"Specified source redshift z_source={self._z_source.z:.5g} is more than 3-efolds inside the horizon for k={self._k_exit.k.k_inv_Mpc:.5g}/Mpc (horizon re-entry at z_entry={self._k_exit.z_exit:.5g})"
+                f"Specified source redshift z_source={self._z_source.z:.5g} is more than 4-efolds inside the horizon for k={self._k_exit.k.k_inv_Mpc:.5g}/Mpc (horizon re-entry at z_entry={self._k_exit.z_exit:.5g})"
             )
 
         # replace label if specified
