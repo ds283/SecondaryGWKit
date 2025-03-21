@@ -172,7 +172,7 @@ def compute_Gk(
                 stop_search_window_z_begin,
             )
             print(
-                f"## compute_Gk: stop search window start and end arguments in the wrong order (for k={k_wavenumber.k_inv_Mpc:.5g}/Mpc). Now searching in interval: z in ({stop_search_window_z_begin}, {stop_search_window_z_end})"
+                f"## compute_Gk: search window start/end arguments in the wrong order (for k={k_wavenumber.k_inv_Mpc:.5g}/Mpc). Now searching in interval: z in ({stop_search_window_z_begin}, {stop_search_window_z_end})"
             )
 
         max_z = z_source.z
@@ -192,7 +192,7 @@ def compute_Gk(
             < DEFAULT_FLOAT_PRECISION
         ):
             raise ValueError(
-                f"## compute_Gk: (for k={k_wavenumber.k_inv_Mpc:.5g}/Mpc) specified search window has zero extent"
+                f"## compute_Gk: (for k={k_wavenumber.k_inv_Mpc:.5g}/Mpc) specified search window has effectively zero extent"
             )
 
         if (
@@ -270,6 +270,8 @@ def compute_Gk(
             stop_event.terminal = True
 
             events = [stop_event]
+
+            # need dense output for the root-finding algorithm, used to cut at a point of fixed phase
             dense_output = True
         else:
             events = None
@@ -295,8 +297,10 @@ def compute_Gk(
         )
 
     if mode == "stop" and sol.status != 1:
+        # in "stop" mode, we expect the integration to finish at an event; if this doesn't happen, it implies
+        # we somehow missed the termination criterion
         raise RuntimeError(
-            f'compute_Gk: mode is "{mode}", but integration did not finish following a termination event'
+            f'compute_Gk: mode is "{mode}", but integration did not finish at a termination event'
         )
 
     sampled_z = sol.t
@@ -341,6 +345,10 @@ def compute_Gk(
     stop_Gprime = None
 
     if mode == "stop":
+        # find value of G and Gprime at a point of fixed phase (taken to be a minimum of the function)
+        # we want to cut at a fixed phase to make the subsequent calculation of a WKB phase as stable
+        # as possible (don't want jitter in the final value of the phase, just from starting at a
+        # different point in the cycle)
         payload = find_phase_minimum(
             sol.sol,
             start_z=stop_search_window_z_begin,
@@ -470,7 +478,7 @@ class GkNumericalIntegration(DatastoreObject):
                 z_float = float(z)
                 if z_float > z_source_float:
                     raise ValueError(
-                        f"Redshift sample point z={z_float:.5g} exceeds source redshift z={z_source_float:.5g}"
+                        f"Redshift sample point z={z_float:.5g} is earlier than source redshift z={z_source_float:.5g}"
                     )
 
         # store parameters

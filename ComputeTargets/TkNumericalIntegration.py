@@ -29,9 +29,8 @@ from utilities import format_time
 # RHS of ODE system
 #
 # State layout:
-#   state[0] = a_0 tau(z) [tau = conformal time]
-#   state[1] = T(z)
-#   state[2] = dT/dz = T' = "T prime"
+#   state[0] = T(z)
+#   state[1] = dT/dz = T' = "T prime"
 T_INDEX = 0
 TPRIME_INDEX = 1
 EXPECTED_SOL_LENGTH = 2
@@ -174,7 +173,7 @@ def compute_Tk(
                 stop_search_window_z_begin,
             )
             print(
-                f"## compute_Tk: stop search window start and end arguments in the wrong order (for k={k_wavenumber.k_inv_Mpc:.5g}/Mpc). Now searching in interval: z in ({stop_search_window_z_begin}, {stop_search_window_z_end})"
+                f"## compute_Tk: search window start/end arguments in the wrong order (for k={k_wavenumber.k_inv_Mpc:.5g}/Mpc). Now searching in interval: z in ({stop_search_window_z_begin}, {stop_search_window_z_end})"
             )
 
         max_z = z_init.z
@@ -194,7 +193,7 @@ def compute_Tk(
             < DEFAULT_FLOAT_PRECISION
         ):
             raise ValueError(
-                f"## compute_Tk: (for k={k_wavenumber.k_inv_Mpc:.5g}/Mpc) specified search window has zero extent"
+                f"## compute_Tk: (for k={k_wavenumber.k_inv_Mpc:.5g}/Mpc) specified search window has effectively zero extent"
             )
 
         if (
@@ -277,6 +276,8 @@ def compute_Tk(
             stop_event.terminal = True
 
             events = [stop_event]
+
+            # need dense output for the root-finding algorithm, used to cut at a point of fixed phase
             dense_output = True
         else:
             events = None
@@ -302,8 +303,10 @@ def compute_Tk(
         )
 
     if mode == "stop" and sol.status != 1:
+        # in "stop" mode, we expect the integration to finish at an event; if this doesn't happen, it implies
+        # we somehow missed the termination criterion
         raise RuntimeError(
-            f'compute_Tk: mode is "{mode}", but integration did not finish following a termination event'
+            f'compute_Tk: mode is "{mode}", but integration did not finish at a termination event'
         )
 
     sampled_z = sol.t
@@ -333,6 +336,10 @@ def compute_Tk(
     stop_Tprime = None
 
     if mode == "stop":
+        # find value of T and Tprime at a point of fixed phase (taken to be a minimum of the function)
+        # we want to cut at a fixed phase to make the subsequent calculation of a WKB phase as stable
+        # as possible (don't want jitter in the final value of the phase, just from starting at a
+        # different point in the cycle)
         payload = find_phase_minimum(
             sol.sol,
             start_z=stop_search_window_z_begin,
@@ -414,15 +421,9 @@ class TkNumericalIntegration(DatastoreObject):
         # if initial time is not really compatible with the initial conditions we use, warn the user
         if z_init is not None and z_init.z < k.z_exit_suph_e3 - DEFAULT_FLOAT_PRECISION:
             print(
-                f"!! Warning (TkNumericalIntegration) k={k_wavenumber.k_inv_Mpc:.5g}/Mpc, log10_atol={atol.log10_tol}, log10_rtol={rtol.log10_tol}"
-            )
-            print(
-                f"|    Initial redshift z_init={z_init.z:.5g} is later than the 3-efold superhorizon time z_e3={k.z_exit_suph_e3:.5g}."
-            )
-            print(
-                f"|    Setting initial conditions at this time may lead to meaningless results, because the initial values T_k(z) = 1, Tprime_k(z) = 0"
-            )
-            print(
+                f"!! Warning (TkNumericalIntegration) k={k_wavenumber.k_inv_Mpc:.5g}/Mpc, log10_atol={atol.log10_tol}, log10_rtol={rtol.log10_tol}\n"
+                f"|    Initial redshift z_init={z_init.z:.5g} is later than the 3-efold superhorizon time z_e3={k.z_exit_suph_e3:.5g}.\n"
+                f"|    Setting initial conditions at this time may lead to meaningless results, because the initial values T_k(z) = 1, Tprime_k(z) = 0.\n"
                 f"|    used for the matter transfer function integration apply only on sufficiently superhorizon scales."
             )
 
@@ -467,7 +468,7 @@ class TkNumericalIntegration(DatastoreObject):
                 z_float = float(z)
                 if z_float > z_init_float:
                     raise ValueError(
-                        f"Redshift sample point z={z_float} exceeds initial redshift z={z_init_float}"
+                        f"Redshift sample point z={z_float} is earlier than initial redshift z={z_init_float}"
                     )
 
         # store parameters
