@@ -4,7 +4,7 @@ from typing import Optional, Iterable, List
 from scipy.integrate import quad, solve_ivp
 
 from Quadrature.integration_metadata import IntegrationData
-from Quadrature.integration_supervisor import (
+from Quadrature.supervisors.base import (
     IntegrationSupervisor,
     DEFAULT_UPDATE_INTERVAL,
     RHS_timer,

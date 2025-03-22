@@ -1,5 +1,5 @@
 from collections import namedtuple
-from math import fabs, pi, sqrt, cos, sin
+from math import fabs, sqrt, cos, sin
 from typing import Optional, List
 
 import pandas as pd
@@ -11,6 +11,7 @@ from ComputeTargets.GkNumericalIntegration import GkNumericalValue
 from ComputeTargets.GkWKBIntegration import GkWKBValue
 from CosmologyConcepts import wavenumber_exit_time, redshift, wavenumber, redshift_array
 from Datastore import DatastoreObject
+from LiouvilleGreen.constants import TWO_PI
 from MetadataConcepts import store_tag, tolerance
 from Units import check_units
 from defaults import (
@@ -37,8 +38,6 @@ _WKBData = namedtuple(
         "rel_G_WKB_err",
     ],
 )
-
-_two_pi = 2.0 * pi
 
 DEFAULT_G_WKB_DIFF_REL_TOLERANCE = 1e-2
 DEFAULT_G_WKB_DIFF_ABS_TOLERANCE = 1e-3
@@ -198,8 +197,8 @@ def assemble_GkSource_values(
                 # note: in principle, discontinuities could occur in either sense, either with theta_div_2pi jumping suddenly up or down.
                 # But in practice, because of the way we calculate theta, the most significant discontinuities seem to occur with theta_div_2pi
                 # jumping *up*, which helpfully makes them easier to spot
-                last_theta = _two_pi * last_theta_div_2pi + last_theta_mod_2pi
-                theta = _two_pi * theta_div_2pi + theta_mod_2pi
+                last_theta = TWO_PI * last_theta_div_2pi + last_theta_mod_2pi
+                theta = TWO_PI * theta_div_2pi + theta_mod_2pi
                 if theta > last_theta:
                     # we interpret this condition as a possible discontinuity
                     # attempt to align the phase blocks to produce as smooth a curve as possible
@@ -207,8 +206,8 @@ def assemble_GkSource_values(
 
                     # do we produce a closer result by staying in the current 2pi block, or by going up one, or by going down one?
                     delta_theta_mod_2pi_0 = fabs(delta_theta_mod_2pi)
-                    delta_theta_mod_2pi_p1 = fabs(delta_theta_mod_2pi + _two_pi)
-                    delta_theta_mod_2pi_m1 = fabs(delta_theta_mod_2pi - _two_pi)
+                    delta_theta_mod_2pi_p1 = fabs(delta_theta_mod_2pi + TWO_PI)
+                    delta_theta_mod_2pi_m1 = fabs(delta_theta_mod_2pi - TWO_PI)
 
                     jump_options = [
                         (delta_theta_mod_2pi_0, 0),
@@ -756,13 +755,13 @@ class GkSourceValue(DatastoreObject):
             theta_mod_2pi=theta_mod_2pi,
             theta_div_2pi=theta_div_2pi,
             theta=(
-                _two_pi * theta_div_2pi + theta_mod_2pi
+                TWO_PI * theta_div_2pi + theta_mod_2pi
                 if theta_div_2pi is not None and theta_mod_2pi is not None
                 else None
             ),
             raw_theta_div_2pi=raw_theta_div_2pi,
             raw_theta=(
-                _two_pi * raw_theta_div_2pi + theta_mod_2pi
+                TWO_PI * raw_theta_div_2pi + theta_mod_2pi
                 if raw_theta_div_2pi is not None and theta_mod_2pi is not None
                 else None
             ),

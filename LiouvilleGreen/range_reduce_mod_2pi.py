@@ -1,26 +1,25 @@
-from math import modf, pi, floor, fabs, fmod, prod
+from math import modf, floor, fabs, fmod, prod
 
 from sympy import factorint
 
-_two_pi = 2.0 * pi
-_two_pi_100 = 100.0 * _two_pi
+from .constants import TWO_PI, TWO_PI_100
 
 
-def _simple_div_mod(num):
-    M = int(floor(fabs(num) / _two_pi))
-    c = fmod(fabs(num), _two_pi)
+def simple_mod_2pi(num):
+    mod_2pi = fmod(fabs(num), TWO_PI)
+    div_2pi = int(floor(fabs(num) / TWO_PI))
 
     if num < 0.0:
-        M = -M
-        c = -c
+        div_2pi = -div_2pi
+        mod_2pi = -mod_2pi
 
-    return M, c
+    return div_2pi, mod_2pi
 
 
 def range_reduce_mod_2pi(big_number, small_number):
     """
     Compute the product big_number * small_number mod 2pi, but with as high precision as we can.
-    big_number and small_number are indicative names, but these quantities do not need to satify any
+    big_number and small_number are indicative names, but these quantities do not need to satisfy any
     specific conditions.
     :param big_number:
     :param small_number:
@@ -33,7 +32,7 @@ def range_reduce_mod_2pi(big_number, small_number):
 
     # write small_number as 2pi M + c, where M is an integer
     # the idea is to perform the mod step on small_number, because this will lose least precision
-    M, c = _simple_div_mod(small_number)
+    M, c = simple_mod_2pi(small_number)
 
     # big * small = (N + b) * (2pi M + c) = 2pi M N + 2pi M b + N c + b c
     # = 2pi ( M N + floor(M b) ) + 2pi frac(M b) + N c + b c
@@ -50,17 +49,17 @@ def range_reduce_mod_2pi(big_number, small_number):
     # to handle this, our strategy is to move prime factors from N into c until it is modestly large,
     # but still small enough that using fmod() will not result in a drastic loss of precision
 
-    mod_2pi = _two_pi * Mb_frac + b * c
+    mod_2pi = TWO_PI * Mb_frac + b * c
 
     factor_list = factorint(N, multiple=True)
     while len(factor_list) > 0:
-        while fabs(c) < _two_pi_100 and len(factor_list) > 0:
+        while fabs(c) < TWO_PI_100 and len(factor_list) > 0:
             # pop the smallest remaining prime factor
             factor = factor_list.pop(0)
             c = c * factor
 
         # write c = 2pi L + d
-        L, d = _simple_div_mod(c)
+        L, d = simple_mod_2pi(c)
 
         # the product is now Nprime (2pi L + d) where Nprime is the product of remaining prime factors
         # from the original N. So we can move Nprime L into div_2pi
@@ -73,7 +72,7 @@ def range_reduce_mod_2pi(big_number, small_number):
     # add c to mod_2pi
     mod_2pi += c
 
-    L, d = _simple_div_mod(mod_2pi)
+    L, d = simple_mod_2pi(mod_2pi)
     div_2pi = div_2pi + L
     mod_2pi = d
 

@@ -5,14 +5,13 @@ from scipy.optimize import root_scalar
 from scipy.special import yv, jv
 
 from defaults import DEFAULT_ABS_TOLERANCE, DEFAULT_REL_TOLERANCE
+from .constants import TWO_PI
 from .phase_spline import phase_spline
-from .range_reduce_mod_2pi import _simple_div_mod, range_reduce_mod_2pi
+from .range_reduce_mod_2pi import simple_mod_2pi, range_reduce_mod_2pi
 
 DEFAULT_SAMPLE_DENSITY = 250
 
 MINIMUM_X = 1e-12
-
-_twopi = 2.0 * np.pi
 
 
 def _weff_sq(nu: float, x: float):
@@ -215,12 +214,12 @@ def bessel_phase(
 
     # rebase phase to account for the offset we have computed
     phi = root.root
-    phi_div_2pi, phi_mod_2pi = _simple_div_mod(phi)
+    phi_div_2pi, phi_mod_2pi = simple_mod_2pi(phi)
 
     def range_reduce_phase(log_x, Q):
         x = np.exp(log_x)
         div_2pi, mod_2pi = range_reduce_mod_2pi(x, Q)
-        # div_2pi, mod_2pi = _simple_div_mod(x * Q)
+        # div_2pi, mod_2pi = simple_mod_2pi(x * Q)
 
         # if (
         #     div_2pi_rr != div_2pi
@@ -235,7 +234,7 @@ def bessel_phase(
         mod_2pi = mod_2pi - phi_mod_2pi
         if mod_2pi < 0.0:
             div_2pi = div_2pi - 1
-            mod_2pi = mod_2pi + _twopi
+            mod_2pi = mod_2pi + TWO_PI
 
         # if div_2pi < 0:
         #     raw_div_2pi, raw_mod_2pi = range_reduce_mod_2pi(x, Q)

@@ -1,16 +1,15 @@
-from math import pi, log, exp, fmod
+from math import log, exp, fmod
 from typing import Iterable, Tuple, Optional
 
 from numpy import sign
 from scipy.interpolate import InterpolatedUnivariateSpline
 
 from defaults import DEFAULT_FLOAT_PRECISION
+from .constants import TWO_PI
 
 DEFAULT_CHUNK_SIZE = 200
 MINIMUM_SPLINE_DATA_POINTS = 30
 SPLINE_TOP_BOTTOM_CUSHION = 0.001
-
-_twopi = 2.0 * pi
 
 
 class _chunk_spline:
@@ -48,7 +47,7 @@ class _chunk_spline:
         # in this way, we hope to avoid loss of precision when the result of the spline is evaluated mod 2pi, as it typically
         # will be
         self._y_points = [
-            (p["div_2pi"] - div_2pi_base) * _twopi + p["mod_2pi"] for p in self._data
+            (p["div_2pi"] - div_2pi_base) * TWO_PI + p["mod_2pi"] for p in self._data
         ]
 
         if x_is_log:
@@ -178,7 +177,7 @@ class _chunk_spline:
     ) -> float:
         raw_x, log_x = self._get_x(x, raw_x, log_x, x_is_log)
         theta = self._theta(raw_x=raw_x, log_x=log_x, warn_unsafe=warn_unsafe)
-        return theta + self._div_2pi_base * _twopi
+        return theta + self._div_2pi_base * TWO_PI
 
     def theta_mod_2pi(
         self,
@@ -190,7 +189,7 @@ class _chunk_spline:
     ) -> float:
         raw_x, log_x = self._get_x(x, raw_x, log_x, x_is_log)
         theta = self._theta(raw_x=raw_x, log_x=log_x, warn_unsafe=warn_unsafe)
-        return fmod(theta, _twopi)
+        return fmod(theta, TWO_PI)
 
     def theta_deriv(
         self,

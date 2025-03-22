@@ -1,5 +1,4 @@
-import time
-from math import log, sqrt, fabs, cos, sin, atan2, fmod, floor, pi
+from math import log, sqrt, fabs, cos, sin, atan2
 from typing import Optional, List, Tuple
 
 import ray
@@ -13,13 +12,16 @@ from ComputeTargets.analytic_Gk import (
 )
 from CosmologyConcepts import wavenumber_exit_time, redshift, redshift_array, wavenumber
 from Datastore import DatastoreObject
-from LiouvilleGreen.range_reduce_mod_2pi import range_reduce_mod_2pi
+from LiouvilleGreen.WKBtools import WKB_mod_2pi, WKB_product_mod_2pi
+from LiouvilleGreen.constants import TWO_PI
 from MetadataConcepts import tolerance, store_tag
 from Quadrature.integration_metadata import IntegrationSolver, IntegrationData
-from Quadrature.integration_supervisor import (
+from Quadrature.supervisors.WKB import (
+    ThetaSupervisor,
+    QSupervisor,
+)
+from Quadrature.supervisors.base import (
     RHS_timer,
-    IntegrationSupervisor,
-    DEFAULT_UPDATE_INTERVAL,
 )
 from Units import check_units
 from defaults import (
@@ -27,253 +29,19 @@ from defaults import (
     DEFAULT_ABS_TOLERANCE,
     DEFAULT_REL_TOLERANCE,
 )
-from utilities import format_time
 
 THETA_INDEX = 0
 Q_INDEX = 0
 EXPECTED_SOL_LENGTH = 1
 
-# how large to we allow the WKB phase theta to become, before we terminate the integration and reset to a small value?
-# we need to resolve the phase on the scale of (0, 2pi), otherwise we will compute cos(theta), sin(theta) and hence G_WKB incorrectly
+# how large do we allow the WKB phase theta to become, before we terminate the integration and
+# reset to a small value?
+# we need to resolve the phase on the scale of (0, 2pi), otherwise we will compute cos(theta),
+# sin(theta) and hence G_WKB incorrectly
 DEFAULT_PHASE_RUN_LENGTH = 1e4
 
 # how large do we allow omega_WKB_sq to get before switching to a "stage #2" integration?
 DEFAULT_OMEGA_WKB_SQ_MAX = 1e6
-
-_two_pi = 2.0 * pi
-
-
-class GkWKBThetaSupervisor(IntegrationSupervisor):
-    def __init__(
-        self,
-        k: wavenumber,
-        z_init: float,
-        z_target: float,
-        notify_interval: int = DEFAULT_UPDATE_INTERVAL,
-    ):
-        super().__init__(notify_interval)
-
-        self._k: wavenumber = k
-        self._z_init: float = z_init
-        self._z_target: float = z_target
-
-        self._z_range: float = self._z_init - self._z_target
-
-        self._last_z: float = self._z_init
-
-        self._WKB_violation: bool = False
-        self._WKB_violation_z: Optional[float] = None
-        self._WKB_violation_efolds_subh: Optional[float] = None
-
-        self._nfev: int = 0
-
-    def __enter__(self):
-        super().__enter__()
-        return self
-
-    def __exit__(self, exc_type, exc_val, exc_tb):
-        super().__exit__(exc_type, exc_val, exc_tb)
-
-    def message(self, current_z, msg):
-        current_time = time.time()
-        since_last_notify = current_time - self._last_notify
-        since_start = current_time - self._start_time
-
-        update_number = self.report_notify()
-
-        z_complete = self._z_init - current_z
-        z_remain = self._z_range - z_complete
-        percent_remain = z_remain / self._z_range
-        print(
-            f"** STATUS UPDATE #{update_number}: Stage #1 integration for WKB theta_k(z) for k = {self._k.k_inv_Mpc:.5g}/Mpc (store_id={self._k.store_id}) has been running for {format_time(since_start)} ({format_time(since_last_notify)} since last notification)"
-        )
-        print(
-            f"|    current z={current_z:.5g} (initial z={self._z_init:.5g}, target z={self._z_target:.5g}, z complete={z_complete:.5g}, z remain={z_remain:.5g}, {percent_remain:.3%} remains)"
-        )
-        if self._last_z is not None:
-            z_delta = self._last_z - current_z
-            print(f"|    redshift advance since last update: Delta z = {z_delta:.5g}")
-        print(
-            f"|    {self.RHS_evaluations} RHS evaluations, mean {self.mean_RHS_time:.5g}s per evaluation, min RHS time = {self.min_RHS_time:.5g}s, max RHS time = {self.max_RHS_time:.5g}s"
-        )
-        print(f"|    {msg}")
-
-        self._last_z = current_z
-
-    def report_WKB_violation(self, z: float, efolds_subh: float):
-        if self._WKB_violation:
-            return
-
-        print(
-            f"!! WARNING: WKB integration for Gr_k(z, z') for k = {self._k.k_inv_Mpc:.5g}/Mpc (store_id={self._k.store_id}) may have violated the validity criterion for the WKB approximation"
-        )
-        print(f"|    current z={z:.5g}, e-folds inside horizon={efolds_subh:.3g}")
-        self._WKB_violation = True
-        self._WKB_violation_z = z
-        self._WKB_violation_efolds_subh = efolds_subh
-
-    @property
-    def has_WKB_violation(self) -> bool:
-        return self._WKB_violation
-
-    @property
-    def WKB_violation_z(self) -> float:
-        return self._WKB_violation_z
-
-    @property
-    def WKB_violation_efolds_subh(self) -> float:
-        return self._WKB_violation_efolds_subh
-
-    def notify_new_nfev(self, nfev: int):
-        self._nfev += nfev
-
-    @property
-    def nfev(self) -> int:
-        return self._nfev
-
-    @property
-    def z_init(self) -> float:
-        return self._z_init
-
-    @property
-    def z_target(self) -> float:
-        return self._z_target
-
-
-class GkWKBQSupervisor(IntegrationSupervisor):
-    def __init__(
-        self,
-        k: wavenumber,
-        u_init: float,
-        u_target: float,
-        notify_interval: int = DEFAULT_UPDATE_INTERVAL,
-    ):
-        super().__init__(notify_interval)
-
-        self._k: wavenumber = k
-        self._u_init: float = u_init
-        self._u_target: float = u_target
-
-        self._u_range: float = self._u_target - self._u_init
-
-        self._last_u: float = self._u_init
-
-        self._largest_Q: Optional[float] = 0
-        self._smallest_Q: Optional[float] = 0
-
-        self._WKB_violation: bool = False
-        self._WKB_violation_z: Optional[float] = None
-        self._WKB_violation_efolds_subh: Optional[float] = None
-
-    def __enter__(self):
-        super().__enter__()
-        return self
-
-    def __exit__(self, exc_type, exc_val, exc_tb):
-        super().__exit__(exc_type, exc_val, exc_tb)
-
-    def message(self, current_u, msg):
-        current_time = time.time()
-        since_last_notify = current_time - self._last_notify
-        since_start = current_time - self._start_time
-
-        update_number = self.report_notify()
-
-        u_complete = self._u_target - current_u
-        u_remain = self._u_range - u_complete
-        percent_remain = u_remain / self._u_range
-        print(
-            f"** STATUS UPDATE #{update_number}: Stage #2 integration for WKB Q_k(z) for k = {self._k.k_inv_Mpc:.5g}/Mpc (store_id={self._k.store_id}) has been running for {format_time(since_start)} ({format_time(since_last_notify)} since last notification)"
-        )
-        print(
-            f"|    current u={current_u:.5g} (initial u={self._u_init:.5g}, target z={self._u_target:.5g}, z complete={u_complete:.5g}, z remain={u_remain:.5g}, {percent_remain:.3%} remains)"
-        )
-        if self._last_u is not None:
-            u_delta = current_u - self._last_u
-            print(f"|    u advance since last update: Delta u = {u_delta:.5g}")
-        print(
-            f"|    {self.RHS_evaluations} RHS evaluations, mean {self.mean_RHS_time:.5g}s per evaluation, min RHS time = {self.min_RHS_time:.5g}s, max RHS time = {self.max_RHS_time:.5g}s"
-        )
-        print(f"|    {msg}")
-
-        self._last_u = current_u
-
-    def update_Q(self, Q: float):
-        if self._largest_Q is None or Q > self._largest_Q:
-            self._largest_Q = Q
-
-        if self._smallest_Q is None or Q < self._smallest_Q:
-            self._smallest_Q = Q
-
-    def report_WKB_violation(self, z: float, efolds_subh: float):
-        if self._WKB_violation:
-            return
-
-        print(
-            f"!! WARNING: WKB integration for Gr_k(z, z') for k = {self._k.k_inv_Mpc:.5g}/Mpc (store_id={self._k.store_id}) may have violated the validity criterion for the WKB approximation"
-        )
-        print(f"|    current z={z:.5g}, e-folds inside horizon={efolds_subh:.3g}")
-        self._WKB_violation = True
-        self._WKB_violation_z = z
-        self._WKB_violation_efolds_subh = efolds_subh
-
-    @property
-    def has_WKB_violation(self) -> bool:
-        return self._WKB_violation
-
-    @property
-    def WKB_violation_z(self) -> Optional[float]:
-        return self._WKB_violation_z
-
-    @property
-    def WKB_violation_efolds_subh(self) -> Optional[float]:
-        return self._WKB_violation_efolds_subh
-
-    @property
-    def largest_Q(self) -> Optional[float]:
-        return self._largest_Q
-
-    @property
-    def smallest_Q(self) -> Optional[float]:
-        return self._smallest_Q
-
-
-def _mod_2pi(theta: float):
-    theta_mod_2pi = fmod(theta, _two_pi)
-    theta_div_2pi = int(floor(fabs(theta) / _two_pi))
-
-    if theta < 0.0:
-        theta_div_2pi = -theta_div_2pi
-
-    # our convention is that theta mod 2pi is taken to be negative
-    if theta_mod_2pi > 0:
-        theta_div_2pi = theta_div_2pi + 1
-        theta_mod_2pi = theta_mod_2pi - _two_pi
-
-    return theta_div_2pi, theta_mod_2pi
-
-
-def _product_mod_2pi(big_number: float, small_number: float, mod_2pi_init: float):
-    # use custom range reduction to (try to) preserve precision in the product big_number*small_number (mod 2pi)
-    # theta_div_2pi and theta_mod_2pi should have the same sign as the product big_number*small_number
-    theta_div_2pi, theta_mod_2pi = range_reduce_mod_2pi(big_number, small_number)
-
-    # mod_2pi_init is an offset that should be added to mod_2pi. We then (possibly) have to range-reduce again.
-    theta_mod_2pi = theta_mod_2pi + mod_2pi_init
-    while theta_mod_2pi > 0.0:
-        theta_mod_2pi = theta_mod_2pi - _two_pi
-        theta_div_2pi = theta_div_2pi + 1
-
-    while theta_mod_2pi < -_two_pi:
-        theta_mod_2pi = theta_mod_2pi + _two_pi
-        theta_div_2pi = theta_div_2pi - 1
-
-    if theta_mod_2pi > DEFAULT_ABS_TOLERANCE:
-        raise RuntimeError(
-            f"product_mod_2pi: big_number={big_number:.8g}, small_number={small_number:.8g}, product={big_number*small_number:.8g}, mod_2pi_init={mod_2pi_init:.8g}, theta_div_2pi={theta_div_2pi}, theta_mod_2pi={theta_mod_2pi:.8g}, theta={theta_div_2pi*_two_pi+theta_mod_2pi:.8g}"
-        )
-
-    return theta_div_2pi, theta_mod_2pi
 
 
 def stage_1_evolution(
@@ -338,7 +106,7 @@ def stage_1_evolution(
 
             return [dtheta_dz]
 
-    with GkWKBThetaSupervisor(k_wavenumber, z_init, z_target) as supervisor:
+    with ThetaSupervisor(k_wavenumber, z_init, z_target, "Gr_k(z, z')") as supervisor:
         state = [0.0]
         t_span = (z_init, z_target)
 
@@ -348,7 +116,7 @@ def stage_1_evolution(
         while len(z_sample_list) > 0:
             sol = solve_ivp(
                 RHS,
-                method="RK45",
+                method="DOP853",
                 t_span=t_span,
                 y0=state,
                 t_eval=z_sample_list,
@@ -401,7 +169,7 @@ def stage_1_evolution(
 
                 # walk through sampled values, evaluating theta div 2pi and theta mod 2pi
                 for z, theta in zip(batch_z, batch_theta):
-                    theta_div_2pi, theta_mod_2pi = _mod_2pi(theta)
+                    theta_div_2pi, theta_mod_2pi = WKB_mod_2pi(theta)
 
                     sampled_z.append(z)
                     sampled_theta_mod_2pi.append(theta_mod_2pi)
@@ -428,7 +196,7 @@ def stage_1_evolution(
                             f"compute_Gk_WKB: could not find event record to restart phase integration (k={k_wavenumber.k_inv_Mpc:.5g}/Mpc, z_init={z_init:.5g})"
                         )
                     new_theta_init = values[0]
-                    new_theta_init_div_2pi, new_theta_init_mod_2pi = _mod_2pi(
+                    new_theta_init_div_2pi, new_theta_init_mod_2pi = WKB_mod_2pi(
                         new_theta_init
                     )
 
@@ -443,7 +211,7 @@ def stage_1_evolution(
                             f"compute_Gk_WKB: could not find event record to terminate stage 1 integration (k={k_wavenumber.k_inv_Mpc:.5g}/Mpc, z_init={z_init:.5g})"
                         )
                     theta_terminate = values[0]
-                    theta_terminate_div_2pi, theta_terminate_mod_2pi = _mod_2pi(
+                    theta_terminate_div_2pi, theta_terminate_mod_2pi = WKB_mod_2pi(
                         theta_terminate
                     )
 
@@ -531,7 +299,7 @@ def stage_2_evolution(
 
     u_init = 0
     u_target = z_init - z_target
-    with GkWKBQSupervisor(k_wavenumber, u_init, u_target) as supervisor:
+    with QSupervisor(k_wavenumber, u_init, u_target, "Gr_k(z, z')") as supervisor:
         # initial condition is Q = 0 at u = 0
         # then we expect Q close to unity for u >> 1
         state = [0.0]
@@ -539,7 +307,7 @@ def stage_2_evolution(
 
         sol = solve_ivp(
             RHS,
-            method="RK45",
+            method="DOP853",
             t_span=(u_init, u_target),
             y0=state,
             t_eval=u_sample_list,
@@ -579,9 +347,9 @@ def stage_2_evolution(
 
         # walk through the sampled values returned from solve_ivp, computing theta div 2pi and theta mod 2pi at each step
         for u, Q in zip(batch_u, batch_Q):
-            # _product_mod_2pi uses our custom range reduction method in an attempt to maintain precision mod 2pi when the product
+            # WKB_product_mod_2pi uses our custom range reduction method in an attempt to maintain precision mod 2pi when the product
             # omega_WKB_init * (1+u) * Q becomes very large
-            theta_div_2pi, theta_mod_2pi = _product_mod_2pi(
+            theta_div_2pi, theta_mod_2pi = WKB_product_mod_2pi(
                 omega_WKB_init * (1.0 + u), Q, theta_mod_2pi_init
             )
 
@@ -777,7 +545,7 @@ def compute_Gk_WKB(
         "stage_2_data": stage_2_data["data"] if stage_2_data is not None else None,
         "theta_div_2pi_sample": sampled_theta_div_2pi,
         "theta_mod_2pi_sample": sampled_theta_mod_2pi,
-        "solver_label": "solve_ivp+RK45-stepping0",
+        "solver_label": "solve_ivp+DOP853-stepping0",
         "has_WKB_violation": merge_stage_data(
             "has_WKB_violation", lambda a, b: a or b, allow_none=True
         ),
@@ -1176,9 +944,9 @@ class GkWKBIntegration(DatastoreObject):
         # cos mode)
         def wrap_theta(theta: float) -> Tuple[int, float]:
             if theta > 0.0:
-                return +1, theta - _two_pi
-            if theta <= -_two_pi:
-                return -1, theta + _two_pi
+                return +1, theta - TWO_PI
+            if theta <= -TWO_PI:
+                return -1, theta + TWO_PI
 
             return 0, theta
 
@@ -1327,7 +1095,7 @@ class GkWKBValue(DatastoreObject):
 
     @property
     def theta(self) -> int:
-        return self._theta_div_2pi * _two_pi + self._theta_mod_2pi
+        return self._theta_div_2pi * TWO_PI + self._theta_mod_2pi
 
     @property
     def omega_WKB_sq(self) -> Optional[float]:
