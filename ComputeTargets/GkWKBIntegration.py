@@ -561,7 +561,7 @@ def compute_Gk_WKB(
 
 class GkWKBIntegration(DatastoreObject):
     """
-    Encapsulates all sample points produced for a calculation of the Liouville-Green
+    Encapsulates all sample points produced for a calculation of the Liouville-Green (WKB)
     phase function for the tensor Green's function
     """
 
@@ -643,12 +643,16 @@ class GkWKBIntegration(DatastoreObject):
             self._cos_coeff = payload["cos_coeff"]
             self._values = payload["values"]
 
+        # we only expect the WKB method to give a good approximation on sufficiently subhorizon
+        # scales, so we should validate that none of the sample points are too close to horizon re-entry
         if z_sample is not None:
-            z_limit = k.z_exit_subh_e3
-            z_initial_float = z_init if z_init is not None else z_source.z
+            z_limit: float = k.z_exit_subh_e3
+            z_initial_float: float = z_init if z_init is not None else z_source.z
+
             for z in z_sample:
-                # check that each response redshift is not too close to the horizon, or outside it, for this k-mode
+                # check that each sample redshift is not too close to the horizon, or outside it, for this k-mode
                 z_float = float(z)
+
                 if z_float > z_limit - DEFAULT_FLOAT_PRECISION:
                     raise ValueError(
                         f"Specified response redshift z={z_float:.5g} is closer than 3-folds to horizon re-entry for wavenumber k={k_wavenumber:.5g}/Mpc"
@@ -833,6 +837,7 @@ class GkWKBIntegration(DatastoreObject):
 
         initial_z = self._z_init if self._z_init is not None else self._z_source.z
 
+        # check that WKB approximation is likely to be valid at the specified initial time
         omega_WKB_sq_init = Gk_omegaEff_sq(model, self._k_exit.k.k, initial_z)
         d_ln_omega_WKB_init = Gk_d_ln_omegaEffPrime_dz(
             model, self._k_exit.k.k, initial_z
@@ -874,7 +879,7 @@ class GkWKBIntegration(DatastoreObject):
         if len(resolved) == 0:
             return None
 
-        # retrieve result and populate ourselves
+        # retrieve result and populate our internal fields from the payload
         data = ray.get(self._compute_ref)
         self._compute_ref = None
 
@@ -910,7 +915,7 @@ class GkWKBIntegration(DatastoreObject):
         # because the initial conditions are G = 0, G' = 0, and this forces the cos to be absent.
         # When we try to smoothly match the outside-the-horizon source times to these inside-the-horizon ones,
         # we do not want a discontinuity in the coefficients. So we have to keep the coefficient of the cos always zero.
-        # This makes a corresponding adjustment to the phase, which we must calculate.
+        # This requires a corresponding adjustment to the phase, which we must calculate.
         omega_WKB_init = sqrt(omega_WKB_sq_init)
         sqrt_omega_WKB_init = sqrt(omega_WKB_init)
 
