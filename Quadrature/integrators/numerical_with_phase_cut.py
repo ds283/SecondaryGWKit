@@ -25,7 +25,7 @@ EXPECTED_SOL_LENGTH = 2
 
 
 @ray.remote
-def integrate_with_cut_search(
+def numerical_with_phase_cut(
     model_proxy: ModelProxy,
     k: wavenumber_exit_time,
     z_init: redshift,
@@ -39,7 +39,7 @@ def integrate_with_cut_search(
     mode: str = None,
     stop_search_window_z_begin: Optional[float] = None,
     stop_search_window_z_end: Optional[float] = None,
-    task_label: str = "integrate_with_cut_search",
+    task_label: str = "numerical_with_phase_cut",
     object_label: str = "(object)",
 ) -> dict:
     k_wavenumber: wavenumber = k.k

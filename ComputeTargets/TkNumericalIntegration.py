@@ -10,10 +10,10 @@ from CosmologyConcepts import redshift_array, wavenumber, redshift, wavenumber_e
 from Datastore import DatastoreObject
 from MetadataConcepts import tolerance, store_tag
 from Quadrature.integration_metadata import IntegrationSolver, IntegrationData
-from Quadrature.integrators.integrate_with_cut_search import (
+from Quadrature.integrators.numerical_with_phase_cut import (
     VALUE_INDEX,
     DERIV_INDEX,
-    integrate_with_cut_search,
+    numerical_with_phase_cut,
 )
 from Quadrature.supervisors.base import (
     RHS_timer,
@@ -368,7 +368,7 @@ class TkNumericalIntegration(DatastoreObject):
             payload["stop_search_window_z_begin"] = search_begin
             payload["stop_search_window_z_end"] = search_end
 
-        self._compute_ref = integrate_with_cut_search.remote(
+        self._compute_ref = numerical_with_phase_cut.remote(
             self._model_proxy,
             self._k_exit,
             self._z_init,

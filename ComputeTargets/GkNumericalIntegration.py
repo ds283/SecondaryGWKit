@@ -10,8 +10,8 @@ from CosmologyConcepts import wavenumber, redshift, redshift_array, wavenumber_e
 from Datastore import DatastoreObject
 from MetadataConcepts import tolerance, store_tag
 from Quadrature.integration_metadata import IntegrationSolver, IntegrationData
-from Quadrature.integrators.integrate_with_cut_search import (
-    integrate_with_cut_search,
+from Quadrature.integrators.numerical_with_phase_cut import (
+    numerical_with_phase_cut,
     VALUE_INDEX,
     DERIV_INDEX,
 )
@@ -335,7 +335,7 @@ class GkNumericalIntegration(DatastoreObject):
         # This has the advantage that it gives us a simple, clean boundary condition.
         # The more familiar Green's function defined in conformal time tau with source
         # delta(tau-tau') is related to this via G_us = - H(z') G_them.
-        self._compute_ref = integrate_with_cut_search.remote(
+        self._compute_ref = numerical_with_phase_cut.remote(
             self._model_proxy,
             self._k_exit,
             self._z_source,
