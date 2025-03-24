@@ -2,281 +2,94 @@ from math import fabs, pi, log, sqrt
 from typing import Optional, List
 
 import ray
-from scipy.integrate import solve_ivp
 
 from ComputeTargets.BackgroundModel import BackgroundModel, ModelProxy
 from ComputeTargets.WKB_Tk import Tk_omegaEff_sq, Tk_d_ln_omegaEffPrime_dz
 from ComputeTargets.analytic_Tk import compute_analytic_T, compute_analytic_Tprime
 from CosmologyConcepts import redshift_array, wavenumber, redshift, wavenumber_exit_time
 from Datastore import DatastoreObject
-from LiouvilleGreen.integration_tools import find_phase_minimum
 from MetadataConcepts import tolerance, store_tag
 from Quadrature.integration_metadata import IntegrationSolver, IntegrationData
+from Quadrature.integrators.integrate_with_cut_search import (
+    VALUE_INDEX,
+    DERIV_INDEX,
+    integrate_with_cut_search,
+)
 from Quadrature.supervisors.base import (
     RHS_timer,
 )
 from Quadrature.supervisors.numerical import NumericalIntegrationSupervisor
 from Units import check_units
 from defaults import (
-    DEFAULT_ABS_TOLERANCE,
-    DEFAULT_REL_TOLERANCE,
     DEFAULT_FLOAT_PRECISION,
 )
+
 
 # RHS of ODE system
 #
 # State layout:
 #   state[0] = T(z)
-#   state[1] = dT/dz = T' = "T prime"
-T_INDEX = 0
-TPRIME_INDEX = 1
-EXPECTED_SOL_LENGTH = 2
+#   state[1] = dT/dz = T' = "T prime
+
+# RHS of ODE system for computing transfer function T_k(z) for gravitational potential Phi(z)
+# We normalize to 1.0 at high redshift, so the initial condition needs to be Phi* (the primordial
+# value of the Newtonian potential) rather than \zeta* (the primordial value of the curvature
+# perturbation on uniform energy hypersurfaces)
 
 
-@ray.remote
-def compute_Tk(
-    model_proxy: ModelProxy,
-    k: wavenumber_exit_time,
-    z_sample: redshift_array,
-    z_init: redshift,
-    atol: float = DEFAULT_ABS_TOLERANCE,
-    rtol: float = DEFAULT_REL_TOLERANCE,
-    delta_logz: Optional[float] = None,
-    mode: str = None,
-    stop_search_window_z_begin: Optional[float] = None,
-    stop_search_window_z_end: Optional[float] = None,
-) -> dict:
-    k_wavenumber: wavenumber = k.k
-    check_units(k_wavenumber, model_proxy)
+def RHS(
+    z: float,
+    state: List[float],
+    model: BackgroundModel,
+    k_float: float,
+    supervisor: NumericalIntegrationSupervisor,
+) -> List[float]:
+    """
+    k *must* be measured using the same units used for H(z) in the cosmology
+    """
+    with RHS_timer(supervisor) as timer:
+        T = state[VALUE_INDEX]
+        Tprime = state[DERIV_INDEX]
 
-    model: BackgroundModel = model_proxy.get()
-
-    mode = mode.lower()
-    if mode is not None and mode not in ["stop"]:
-        raise ValueError(f'compute_Gk: unknown compute mode "{mode}"')
-
-    if mode in ["stop"]:
-        if stop_search_window_z_begin is None:
-            raise ValueError(
-                "compute_Tk: in 'stop' mode, stop_search_window_z_begin must be specified"
+        if supervisor.notify_available:
+            supervisor.message(
+                z,
+                f"current state: T(k) = {T:.5g}, dT(k)/dz = {Tprime:.5g}",
             )
-        if stop_search_window_z_end is None:
-            raise ValueError(
-                "compute_Tk: in 'stop' mode, stop_search_window_z_end must be specified"
+            supervisor.reset_notify_time()
+
+        H = model.functions.Hubble(z)
+        wPerturbations = model.functions.wPerturbations(z)
+        eps = model.functions.epsilon(z)
+
+        one_plus_z = 1.0 + z
+        one_plus_z_2 = one_plus_z * one_plus_z
+
+        dT_dz = Tprime
+
+        k_over_H = k_float / H
+        k_over_H_2 = k_over_H * k_over_H
+
+        dTprime_dz = (
+            -(eps - 3.0 * (1.0 + wPerturbations)) * Tprime / one_plus_z
+            - (
+                (3.0 * (1.0 + wPerturbations) - 2.0 * eps) / one_plus_z_2
+                + wPerturbations * k_over_H_2
             )
-
-        if stop_search_window_z_begin < stop_search_window_z_end:
-            stop_search_window_z_begin, stop_search_window_z_end = (
-                stop_search_window_z_end,
-                stop_search_window_z_begin,
-            )
-            print(
-                f"## compute_Tk: search window start/end arguments in the wrong order (for k={k_wavenumber.k_inv_Mpc:.5g}/Mpc). Now searching in interval: z in ({stop_search_window_z_begin}, {stop_search_window_z_end})"
-            )
-
-        max_z = z_init.z
-        min_z = z_sample.min.z
-        if stop_search_window_z_begin > max_z:
-            raise ValueError(
-                f"compute_Tk: (for k={k_wavenumber.k_inv_Mpc:.5g}/Mpc) specified 'stop' window starting redshift z={stop_search_window_z_begin:.5g} exceeds initial redshift z_init={max_z:.5g}"
-            )
-        if stop_search_window_z_end < min_z:
-            print(
-                f"## compute_Tk: (for k={k_wavenumber.k_inv_Mpc:.5g}/Mpc) specified 'stop' window ending redshift z={stop_search_window_z_end:.5g} is smaller than lowest z-source sample point z={min_z:.5g}. Search will terminate at z={min_z:.5g}."
-            )
-            stop_search_window_z_end = min_z
-
-        if (
-            fabs(stop_search_window_z_begin - stop_search_window_z_end)
-            < DEFAULT_FLOAT_PRECISION
-        ):
-            raise ValueError(
-                f"## compute_Tk: (for k={k_wavenumber.k_inv_Mpc:.5g}/Mpc) specified search window has effectively zero extent"
-            )
-
-        if (
-            fabs(z_init.z - z_sample.min.z) < DEFAULT_ABS_TOLERANCE
-            or z_init.store_id == z_sample.min.store_id
-        ):
-            raise ValueError(
-                f"## compute_Gk: (for k={k_wavenumber.k_inv_Mpc:.5g}/Mpc) in 'stop' mode, the initial redshift and the lowest source redshift cannot be equal"
-            )
-
-    # obtain dimensionful value of wavenumber; this should be measured in the same units used by the cosmology
-    # (see below)
-    k_float = k_wavenumber.k
-    z_min = float(z_sample.min)
-
-    # RHS of ODE system for computing transfer function T_k(z) for gravitational potential Phi(z)
-    # We normalize to 1.0 at high redshift, so the initial condition needs to be Phi* (the primordial
-    # value of the Newtonian potential) rather than \zeta* (the primordial value of the curvature
-    # perturbation on uniform energy hypersurfaces)
-
-    def RHS(z, state, supervisor: NumericalIntegrationSupervisor) -> List[float]:
-        """
-        k *must* be measured using the same units used for H(z) in the cosmology
-        """
-        with RHS_timer(supervisor) as timer:
-            T = state[T_INDEX]
-            Tprime = state[TPRIME_INDEX]
-
-            if supervisor.notify_available:
-                supervisor.message(
-                    z,
-                    f"current state: T(k) = {T:.5g}, dT(k)/dz = {Tprime:.5g}",
-                )
-                supervisor.reset_notify_time()
-
-            H = model.functions.Hubble(z)
-            wPerturbations = model.functions.wPerturbations(z)
-            eps = model.functions.epsilon(z)
-
-            one_plus_z = 1.0 + z
-            one_plus_z_2 = one_plus_z * one_plus_z
-
-            dT_dz = Tprime
-
-            k_over_H = k_float / H
-            k_over_H_2 = k_over_H * k_over_H
-
-            dTprime_dz = (
-                -(eps - 3.0 * (1.0 + wPerturbations)) * Tprime / one_plus_z
-                - (
-                    (3.0 * (1.0 + wPerturbations) - 2.0 * eps) / one_plus_z_2
-                    + wPerturbations * k_over_H_2
-                )
-                * T
-            )
-
-            omega_WKB_sq = Tk_omegaEff_sq(model, k_float, z)
-
-            # try to detect how many oscillations will fit into the log-z grid
-            # spacing
-            # If the grid spacing is smaller than the oscillation wavelength, then
-            # evidently we cannot resolve the oscillations
-            if omega_WKB_sq > 0.0:
-                wavelength = 2.0 * pi / sqrt(omega_WKB_sq)
-                supervisor.report_wavelength(z, wavelength, log((1.0 + z) * k_over_H))
-
-        return [dT_dz, dTprime_dz]
-
-    with NumericalIntegrationSupervisor(
-        k_wavenumber, z_init, z_sample.min, "T_k(z)", delta_logz=delta_logz
-    ) as supervisor:
-        initial_state = [1.0, 0.0]
-
-        if mode == "stop":
-            # set up an event to terminate the integration after the end of the search window
-            def stop_event(z, state, supervisor):
-                return z - stop_search_window_z_end + DEFAULT_FLOAT_PRECISION
-
-            # mark stop_event as terminal
-            stop_event.terminal = True
-
-            events = [stop_event]
-
-            # need dense output for the root-finding algorithm, used to cut at a point of fixed phase
-            dense_output = True
-        else:
-            events = None
-            dense_output = False
-
-        sol = solve_ivp(
-            RHS,
-            method="DOP853",
-            t_span=(z_init.z, z_min),
-            y0=initial_state,
-            t_eval=z_sample.as_float_list(),
-            events=events,
-            dense_output=dense_output,
-            atol=atol,
-            rtol=rtol,
-            args=(supervisor,),
+            * T
         )
 
-    # test whether the integration concluded successfully
-    if not sol.success:
-        raise RuntimeError(
-            f'compute_Tk: integration did not terminate successfully (k={k_wavenumber.k_inv_Mpc}/Mpc, z_init={z_init.z}, error at z={sol.t[-1]}, "{sol.message}")'
-        )
+        omega_WKB_sq = Tk_omegaEff_sq(model, k_float, z)
 
-    if mode == "stop" and sol.status != 1:
-        # in "stop" mode, we expect the integration to finish at an event; if this doesn't happen, it implies
-        # we somehow missed the termination criterion
-        raise RuntimeError(
-            f'compute_Tk: mode is "{mode}", but integration did not finish at a termination event'
-        )
+        # try to detect how many oscillations will fit into the log-z grid
+        # spacing
+        # If the grid spacing is smaller than the oscillation wavelength, then
+        # evidently we cannot resolve the oscillations
+        if omega_WKB_sq > 0.0:
+            wavelength = 2.0 * pi / sqrt(omega_WKB_sq)
+            supervisor.report_wavelength(z, wavelength, log((1.0 + z) * k_over_H))
 
-    sampled_z = sol.t
-    sampled_values = sol.y
-    if len(sampled_z) > 0 and len(sampled_values) != EXPECTED_SOL_LENGTH:
-        raise RuntimeError(
-            f"compute_Tk: solution does not have expected number of members (expected {EXPECTED_SOL_LENGTH}, found {len(sampled_values)}; k={k_wavenumber.k_inv_Mpc}/Mpc, length of sol.t={len(sampled_z)})"
-        )
-    if len(sampled_values) > 0:
-        sampled_T = sampled_values[T_INDEX]
-        sampled_Tprime = sampled_values[TPRIME_INDEX]
-    else:
-        sampled_T = []
-        sampled_Tprime = []
-
-    returned_values = sampled_z.size
-    if mode != "stop":
-        expected_values = len(z_sample)
-
-        if returned_values != expected_values:
-            raise RuntimeError(
-                f"compute_Tk: solve_ivp returned {returned_values} samples, but expected {expected_values}"
-            )
-
-    stop_deltaz_subh = None
-    stop_T = None
-    stop_Tprime = None
-
-    if mode == "stop":
-        # find value of T and Tprime at a point of fixed phase (taken to be a minimum of the function)
-        # we want to cut at a fixed phase to make the subsequent calculation of a WKB phase as stable
-        # as possible (don't want jitter in the final value of the phase, just from starting at a
-        # different point in the cycle)
-        payload = find_phase_minimum(
-            sol.sol,
-            start_z=stop_search_window_z_begin,
-            stop_z=stop_search_window_z_end,
-            value_index=T_INDEX,
-            deriv_index=TPRIME_INDEX,
-        )
-        stop_deltaz_subh = k.z_exit - payload["z"]
-        stop_T = payload["value"]
-        stop_Tprime = payload["derivative"]
-
-    # validate that the samples of the solution correspond to the z-sample points that we specified.
-    # This really should be true, but there is no harm in being defensive.
-    for i in range(returned_values):
-        diff = sampled_z[i] - z_sample[i].z
-        if fabs(diff) > DEFAULT_ABS_TOLERANCE:
-            raise RuntimeError(
-                f"compute_Tk: solve_ivp returned sample points that differ from those requested (difference={diff} at i={i})"
-            )
-
-    return {
-        "data": IntegrationData(
-            compute_time=supervisor.integration_time,
-            compute_steps=int(sol.nfev),
-            RHS_evaluations=supervisor.RHS_evaluations,
-            mean_RHS_time=supervisor.mean_RHS_time,
-            max_RHS_time=supervisor.max_RHS_time,
-            min_RHS_time=supervisor.min_RHS_time,
-        ),
-        "T_sample": sampled_T,
-        "Tprime_sample": sampled_Tprime,
-        "solver_label": "solve_ivp+DOP853-stepping0",
-        "has_unresolved_osc": supervisor.has_unresolved_osc,
-        "unresolved_z": supervisor.unresolved_z,
-        "unresolved_efolds_subh": supervisor.unresolved_efolds_subh,
-        "stop_deltaz_subh": stop_deltaz_subh,
-        "stop_T": stop_T,
-        "stop_Tprime": stop_Tprime,
-    }
+    return [dT_dz, dTprime_dz]
 
 
 class TkNumericalIntegration(DatastoreObject):
@@ -555,14 +368,19 @@ class TkNumericalIntegration(DatastoreObject):
             payload["stop_search_window_z_begin"] = search_begin
             payload["stop_search_window_z_end"] = search_end
 
-        self._compute_ref = compute_Tk.remote(
+        self._compute_ref = integrate_with_cut_search.remote(
             self._model_proxy,
             self._k_exit,
-            self._z_sample,
             self._z_init,
+            self._z_sample,
+            initial_value=1.0,
+            initial_deriv=0.0,
+            RHS=RHS,
             atol=self._atol.tol,
             rtol=self._rtol.tol,
             delta_logz=self._delta_logz,
+            task_label="compute_Tk",
+            object_label="Tk(z)",
             **payload,
         )
         return self._compute_ref
@@ -591,8 +409,8 @@ class TkNumericalIntegration(DatastoreObject):
         self._unresolved_efolds_subh = data["unresolved_efolds_subh"]
 
         self._stop_deltaz_subh = data.get("stop_deltaz_subh", None)
-        self._stop_T = data.get("stop_T", None)
-        self._stop_Tprime = data.get("stop_Tprime", None)
+        self._stop_T = data.get("stop_value", None)
+        self._stop_Tprime = data.get("stop_deriv", None)
 
         model: BackgroundModel = self._model_proxy.get()
 
@@ -600,10 +418,11 @@ class TkNumericalIntegration(DatastoreObject):
         k_over_aH = (1.0 + self.z_init.z) * self.k.k / Hinit
         self._init_efolds_suph = -log(k_over_aH)
 
-        T_sample = data["T_sample"]
-        Tprime_sample = data["Tprime_sample"]
-        self._values = []
+        T_sample = data["value_sample"]
+        Tprime_sample = data["deriv_sample"]
 
+        # need to be aware that T_sample may not be as long as self._z_sample, if we are working in "stop" mode
+        self._values = []
         for i in range(len(T_sample)):
             current_z = self._z_sample[i]
             current_z_float = current_z.z

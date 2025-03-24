@@ -1,292 +1,81 @@
-from math import fabs, pi, log, sqrt
+from math import fabs, log, sqrt, pi
 from typing import Optional, List
 
 import ray
-from scipy.integrate import solve_ivp
 
 from ComputeTargets.BackgroundModel import BackgroundModel, ModelProxy
 from ComputeTargets.WKB_Gk import Gk_omegaEff_sq, Gk_d_ln_omegaEffPrime_dz
 from ComputeTargets.analytic_Gk import compute_analytic_G, compute_analytic_Gprime
 from CosmologyConcepts import wavenumber, redshift, redshift_array, wavenumber_exit_time
 from Datastore import DatastoreObject
-from LiouvilleGreen.integration_tools import find_phase_minimum
 from MetadataConcepts import tolerance, store_tag
 from Quadrature.integration_metadata import IntegrationSolver, IntegrationData
-from Quadrature.supervisors.base import (
-    RHS_timer,
+from Quadrature.integrators.integrate_with_cut_search import (
+    integrate_with_cut_search,
+    VALUE_INDEX,
+    DERIV_INDEX,
 )
+from Quadrature.supervisors.base import RHS_timer
 from Quadrature.supervisors.numerical import NumericalIntegrationSupervisor
 from Units import check_units
 from defaults import (
-    DEFAULT_ABS_TOLERANCE,
-    DEFAULT_REL_TOLERANCE,
     DEFAULT_FLOAT_PRECISION,
 )
+
 
 # RHS of ODE system
 #
 # State layout:
 #   state[0] = G_k(z, z')
 #   state[1] = Gprime_k(z, z')
-G_INDEX = 0
-GPRIME_INDEX = 1
-EXPECTED_SOL_LENGTH = 2
+def RHS(
+    z: float,
+    state: List[float],
+    model: BackgroundModel,
+    k_float: float,
+    supervisor: NumericalIntegrationSupervisor,
+) -> List[float]:
+    """
+    k *must* be measured using the same units used for H(z) in the cosmology, otherwise we will not get
+    correct dimensionless ratios
+    """
+    with RHS_timer(supervisor) as timer:
+        G = state[VALUE_INDEX]
+        Gprime = state[DERIV_INDEX]
 
-
-@ray.remote
-def compute_Gk(
-    model_proxy: ModelProxy,
-    k: wavenumber_exit_time,
-    z_source: redshift,
-    z_sample: redshift_array,
-    atol: float = DEFAULT_ABS_TOLERANCE,
-    rtol: float = DEFAULT_REL_TOLERANCE,
-    delta_logz: Optional[float] = None,
-    mode: str = None,
-    stop_search_window_z_begin: Optional[float] = None,
-    stop_search_window_z_end: Optional[float] = None,
-) -> dict:
-    k_wavenumber: wavenumber = k.k
-    check_units(k_wavenumber, model_proxy)
-
-    model: BackgroundModel = model_proxy.get()
-
-    mode = mode.lower()
-    if mode is not None and mode not in ["stop"]:
-        raise ValueError(f'compute_Gk: unknown compute mode "{mode}"')
-
-    if mode in ["stop"]:
-        if stop_search_window_z_begin is None:
-            raise ValueError(
-                "compute_Gk: in 'stop' mode, stop_search_window_z_begin must be specified"
+        if supervisor.notify_available:
+            supervisor.message(
+                z,
+                f"current state: Gr(k) = {G:.5g}, dGr(k)/dz = {Gprime:.5g}",
             )
-        if stop_search_window_z_end is None:
-            raise ValueError(
-                "compute_Gk: in 'stop' mode, stop_search_window_z_end must be specified"
-            )
+            supervisor.reset_notify_time()
 
-        if stop_search_window_z_begin < stop_search_window_z_end:
-            stop_search_window_z_begin, stop_search_window_z_end = (
-                stop_search_window_z_end,
-                stop_search_window_z_begin,
-            )
-            print(
-                f"## compute_Gk: search window start/end arguments in the wrong order (for k={k_wavenumber.k_inv_Mpc:.5g}/Mpc). Now searching in interval: z in ({stop_search_window_z_begin}, {stop_search_window_z_end})"
-            )
+        H = model.functions.Hubble(z)
+        eps = model.functions.epsilon(z)
 
-        max_z = z_source.z
-        min_z = z_sample.min.z
-        if stop_search_window_z_begin > max_z:
-            raise ValueError(
-                f"compute_Gk: (for k={k_wavenumber.k_inv_Mpc:.5g}/Mpc) specified 'stop' window starting redshift z={stop_search_window_z_begin:.5g} exceeds source redshift z_source={max_z:.5g}"
-            )
-        if stop_search_window_z_end < min_z:
-            print(
-                f"## compute_Gk: (for k={k_wavenumber.k_inv_Mpc:.5g}/Mpc) specified 'stop' window ending redshift z={stop_search_window_z_end:.5g} is smaller than lowest z-response sample point z={min_z:.5g}. Search will terminate at z={min_z:.5g}."
-            )
-            stop_search_window_z_end = min_z
+        one_plus_z = 1.0 + z
+        one_plus_z_2 = one_plus_z * one_plus_z
 
-        if (
-            fabs(stop_search_window_z_begin - stop_search_window_z_end)
-            < DEFAULT_FLOAT_PRECISION
-        ):
-            raise ValueError(
-                f"## compute_Gk: (for k={k_wavenumber.k_inv_Mpc:.5g}/Mpc) specified search window has effectively zero extent"
-            )
+        dG_dz = Gprime
 
-        if (
-            fabs(z_source.z - z_sample.min.z) < DEFAULT_ABS_TOLERANCE
-            or z_source.store_id == z_sample.min.store_id
-        ):
-            raise ValueError(
-                f"## compute_Gk: (for k={k_wavenumber.k_inv_Mpc:.5g}/Mpc) in 'stop' mode, the source redshift and the lowest response redshift cannot be equal"
-            )
+        k_over_H = k_float / H
+        k_over_H_2 = k_over_H * k_over_H
 
-    # obtain dimensionful value of wavenumber; this should be measured in the same units used by the cosmology
-    k_float = k_wavenumber.k
-    z_min = float(z_sample.min)
-
-    def RHS(z, state, supervisor: NumericalIntegrationSupervisor) -> List[float]:
-        """
-        k *must* be measured using the same units used for H(z) in the cosmology, otherwise we will not get
-        correct dimensionless ratios
-        """
-        with RHS_timer(supervisor) as timer:
-            G = state[G_INDEX]
-            Gprime = state[GPRIME_INDEX]
-
-            if supervisor.notify_available:
-                supervisor.message(
-                    z,
-                    f"current state: Gr(k) = {G:.5g}, dGr(k)/dz = {Gprime:.5g}",
-                )
-                supervisor.reset_notify_time()
-
-            H = model.functions.Hubble(z)
-            eps = model.functions.epsilon(z)
-
-            one_plus_z = 1.0 + z
-            one_plus_z_2 = one_plus_z * one_plus_z
-
-            dG_dz = Gprime
-
-            k_over_H = k_float / H
-            k_over_H_2 = k_over_H * k_over_H
-
-            dGprime_dz = (
-                -eps * Gprime / one_plus_z
-                - (k_over_H_2 + (eps - 2.0) / one_plus_z_2) * G
-            )
-
-            # try to detect how many oscillations will fit into the log-z grid
-            # spacing
-            # If the grid spacing is smaller than the oscillation wavelength, then
-            # evidently we cannot resolve the oscillations
-            omega_WKB_sq = Gk_omegaEff_sq(model, k_float, z)
-
-            if omega_WKB_sq > 0.0:
-                wavelength = 2.0 * pi / sqrt(omega_WKB_sq)
-                supervisor.report_wavelength(z, wavelength, log((1.0 + z) * k_over_H))
-
-        return [dG_dz, dGprime_dz]
-
-    with NumericalIntegrationSupervisor(
-        k_wavenumber, z_source, z_sample.min, "Gr_k(z, z')", delta_logz=delta_logz
-    ) as supervisor:
-        # The initial condition here is for the Green's function defined in David's analytic calculation,
-        # which has source -delta(z-z'). This gives the condition dG/dz = +1 at z = z'.
-        # This has the advantage that it gives us a simple, clean boundary condition.
-        # Rhe more familiar Green's function defined in conformal time tau with source
-        # delta(tau-tau') is related to this via G_us = - H(z') G_them.
-        initial_state = [0.0, 1.0]
-
-        if mode == "stop":
-            # set up an event to terminate the integration after the end of the search window
-            def stop_event(z, state, supervisor):
-                return z - stop_search_window_z_end + DEFAULT_FLOAT_PRECISION
-
-            # mark stop_event as terminal
-            stop_event.terminal = True
-
-            events = [stop_event]
-
-            # need dense output for the root-finding algorithm, used to cut at a point of fixed phase
-            dense_output = True
-        else:
-            events = None
-            dense_output = False
-
-        sol = solve_ivp(
-            RHS,
-            method="DOP853",
-            t_span=(z_source.z, z_min),
-            y0=initial_state,
-            t_eval=z_sample.as_float_list(),
-            events=events,
-            dense_output=dense_output,
-            atol=atol,
-            rtol=rtol,
-            args=(supervisor,),
+        dGprime_dz = (
+            -eps * Gprime / one_plus_z - (k_over_H_2 + (eps - 2.0) / one_plus_z_2) * G
         )
 
-    # test whether the integration concluded successfully
-    if not sol.success:
-        raise RuntimeError(
-            f'compute_Gk: integration did not terminate successfully (k={k_wavenumber.k_inv_Mpc}/Mpc, z_source={z_source.z}, error at z={sol.t[-1]}, "{sol.message}")'
-        )
+        # try to detect how many oscillations will fit into the log-z grid
+        # spacing
+        # If the grid spacing is smaller than the oscillation wavelength, then
+        # evidently we cannot resolve the oscillations
+        omega_WKB_sq = Gk_omegaEff_sq(model, k_float, z)
 
-    if mode == "stop" and sol.status != 1:
-        # in "stop" mode, we expect the integration to finish at an event; if this doesn't happen, it implies
-        # we somehow missed the termination criterion
-        raise RuntimeError(
-            f'compute_Gk: mode is "{mode}", but integration did not finish at a termination event'
-        )
+        if omega_WKB_sq > 0.0:
+            wavelength = 2.0 * pi / sqrt(omega_WKB_sq)
+            supervisor.report_wavelength(z, wavelength, log((1.0 + z) * k_over_H))
 
-    sampled_z = sol.t
-    sampled_values = sol.y
-    if len(sampled_z) > 0 and len(sampled_values) != EXPECTED_SOL_LENGTH:
-        raise RuntimeError(
-            f"compute_Gk: solution does not have expected number of members (expected {EXPECTED_SOL_LENGTH}, found {len(sampled_values)}; k={k_wavenumber.k_inv_Mpc}/Mpc, length of sol.t={len(sampled_z)})"
-        )
-    if len(sampled_values) > 0:
-        sampled_G = sampled_values[G_INDEX]
-        sampled_Gprime = sampled_values[GPRIME_INDEX]
-    else:
-        sampled_G = []
-        sampled_Gprime = []
-
-    # if no data points returned, check if this is because the target z (ie., lowest z_response)
-    # and the source z agree.
-    # If so, then we know the correct value from the initial data.
-    if (
-        len(sampled_z) == 0
-        and len(z_sample) == 0
-        and (
-            fabs(z_source.z - z_sample.min.z) < DEFAULT_ABS_TOLERANCE
-            or z_source.store_id == z_sample.min.store_id
-        )
-    ):
-        sampled_z.append(z_source.z)
-        sampled_G.append(0.0)
-        sampled_Gprime.append(1.0)
-
-    returned_values = len(sampled_z)
-    if mode != "stop":
-        expected_values = len(z_sample)
-
-        if returned_values != expected_values:
-            raise RuntimeError(
-                f"compute_Gk: solve_ivp returned {returned_values} samples, but expected {expected_values}"
-            )
-
-    stop_deltaz_subh = None
-    stop_G = None
-    stop_Gprime = None
-
-    if mode == "stop":
-        # find value of G and Gprime at a point of fixed phase (taken to be a minimum of the function)
-        # we want to cut at a fixed phase to make the subsequent calculation of a WKB phase as stable
-        # as possible (don't want jitter in the final value of the phase, just from starting at a
-        # different point in the cycle)
-        payload = find_phase_minimum(
-            sol.sol,
-            start_z=stop_search_window_z_begin,
-            stop_z=stop_search_window_z_end,
-            value_index=G_INDEX,
-            deriv_index=GPRIME_INDEX,
-        )
-        stop_deltaz_subh = k.z_exit - payload["z"]
-        stop_G = payload["value"]
-        stop_Gprime = payload["derivative"]
-
-    # validate that the samples of the solution correspond to the z-sample points that we specified.
-    # This really should be true, but there is no harm in being defensive.
-    for i in range(returned_values):
-        diff = sampled_z[i] - z_sample[i].z
-        if fabs(diff) > DEFAULT_ABS_TOLERANCE:
-            raise RuntimeError(
-                f"compute_Gk: solve_ivp returned sample points that differ from those requested (difference={diff} at i={i})"
-            )
-
-    return {
-        "data": IntegrationData(
-            compute_time=supervisor.integration_time,
-            compute_steps=int(sol.nfev),
-            RHS_evaluations=supervisor.RHS_evaluations,
-            mean_RHS_time=supervisor.mean_RHS_time,
-            max_RHS_time=supervisor.max_RHS_time,
-            min_RHS_time=supervisor.min_RHS_time,
-        ),
-        "G_sample": sampled_G,
-        "Gprime_sample": sampled_Gprime,
-        "solver_label": "solve_ivp+DOP853-stepping0",
-        "has_unresolved_osc": supervisor.has_unresolved_osc,
-        "unresolved_z": supervisor.unresolved_z,
-        "unresolved_efolds_subh": supervisor.unresolved_efolds_subh,
-        "stop_deltaz_subh": stop_deltaz_subh,
-        "stop_G": stop_G,
-        "stop_Gprime": stop_Gprime,
-    }
+    return [dG_dz, dGprime_dz]
 
 
 class GkNumericalIntegration(DatastoreObject):
@@ -541,14 +330,24 @@ class GkNumericalIntegration(DatastoreObject):
             payload["stop_search_window_z_begin"] = search_begin
             payload["stop_search_window_z_end"] = search_end
 
-        self._compute_ref = compute_Gk.remote(
+        # The initial condition here is for the Green's function defined in David's analytic calculation,
+        # which has source -delta(z-z'). This gives the condition dG/dz = +1 at z = z'.
+        # This has the advantage that it gives us a simple, clean boundary condition.
+        # The more familiar Green's function defined in conformal time tau with source
+        # delta(tau-tau') is related to this via G_us = - H(z') G_them.
+        self._compute_ref = integrate_with_cut_search.remote(
             self._model_proxy,
             self._k_exit,
             self._z_source,
             self._z_sample,
+            initial_value=0.0,
+            initial_deriv=1.0,
+            RHS=RHS,
             atol=self._atol.tol,
             rtol=self._rtol.tol,
             delta_logz=self._delta_logz,
+            task_label="compute_Gk",
+            object_label="Gr_k(z, z')",
             **payload,
         )
         return self._compute_ref
@@ -577,8 +376,8 @@ class GkNumericalIntegration(DatastoreObject):
         self._unresolved_efolds_subh = data["unresolved_efolds_subh"]
 
         self._stop_deltaz_subh = data.get("stop_deltaz_subh", None)
-        self._stop_G = data.get("stop_G", None)
-        self._stop_Gprime = data.get("stop_Gprime", None)
+        self._stop_G = data.get("stop_value", None)
+        self._stop_Gprime = data.get("stop_deriv", None)
 
         model: BackgroundModel = self._model_proxy.get()
 
@@ -586,8 +385,8 @@ class GkNumericalIntegration(DatastoreObject):
         k_over_aH = (1.0 + self.z_source.z) * self.k.k / Hsource
         self._init_efolds_suph = -log(k_over_aH)
 
-        G_sample = data["G_sample"]
-        Gprime_sample = data["Gprime_sample"]
+        G_sample = data["value_sample"]
+        Gprime_sample = data["deriv_sample"]
 
         tau_source = model.functions.tau(self._z_source.z)
 
