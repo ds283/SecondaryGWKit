@@ -11,8 +11,10 @@ from Datastore import DatastoreObject
 from LiouvilleGreen.constants import TWO_PI
 from MetadataConcepts import tolerance, store_tag
 from Quadrature.integration_metadata import IntegrationData, IntegrationSolver
-from Quadrature.integrators import WKB_phase_function
-from Quadrature.integrators.WKB_phase_function import FRICTION_INDEX
+from Quadrature.integrators.WKB_phase_function import (
+    WKB_phase_function,
+    FRICTION_INDEX,
+)
 from Quadrature.supervisors.base import RHS_timer
 from Quadrature.supervisors.numerical import NumericalIntegrationSupervisor
 from Units import check_units
@@ -363,7 +365,7 @@ class TkWKBIntegration(DatastoreObject):
             self._k_exit,
             self._z_init,
             self._z_sample,
-            omega_eq=Tk_omegaEff_sq,
+            omega_sq=Tk_omegaEff_sq,
             d_ln_omega_dz=Tk_d_ln_omegaEff_dz,
             friction=friction_RHS,
             atol=self._atol.tol,
@@ -541,7 +543,7 @@ class TkWKBIntegration(DatastoreObject):
                 )
             )
 
-        self._phase_solver = self._solver_labels[data["solver_label"]]
+        self._phase_solver = self._solver_labels[data["phase_solver_label"]]
         self._friction_solver = self._solver_labels[data["friction_solver_label"]]
 
         return True

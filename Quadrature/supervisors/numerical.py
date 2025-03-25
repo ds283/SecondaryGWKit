@@ -1,5 +1,5 @@
 import time
-from typing import Optional
+from typing import Optional, Union
 
 from CosmologyConcepts import wavenumber, redshift
 from Quadrature.supervisors.base import IntegrationSupervisor, DEFAULT_UPDATE_INTERVAL
@@ -10,8 +10,8 @@ class NumericalIntegrationSupervisor(IntegrationSupervisor):
     def __init__(
         self,
         k: wavenumber,
-        z_init: redshift,
-        z_final: redshift,
+        z_init: Union[redshift, float],
+        z_final: Union[redshift, float],
         label: str,
         notify_interval: int = DEFAULT_UPDATE_INTERVAL,
         delta_logz: Optional[float] = None,
@@ -21,8 +21,12 @@ class NumericalIntegrationSupervisor(IntegrationSupervisor):
         self._label: str = label
 
         self._k: wavenumber = k
-        self._z_init: float = z_init.z
-        self._z_final: float = z_final.z
+        self._z_init: float = (
+            z_init.z if isinstance(z_init, redshift) else float(z_init)
+        )
+        self._z_final: float = (
+            z_final.z if isinstance(z_final, redshift) else float(z_final)
+        )
 
         self._z_range: float = self._z_init - self._z_final
 

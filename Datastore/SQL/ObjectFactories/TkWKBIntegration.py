@@ -223,14 +223,15 @@ class sqla_TkWKBIntegration_factory(SQLAFactoryBase):
                 table.c.WKB_violation_efolds_subh,
                 table.c.init_efolds_subh,
                 table.c.metadata,
-                table.c.solver_serial,
                 table.c.label,
                 table.c.z_samples,
                 table.c.z_init,
-                table.c.Tinit,
+                table.c.T_init,
                 table.c.Tprime_init,
+                table.c.phase_solver_serial,
                 phase_solver_table.c.label.label("phase_solver_label"),
                 phase_solver_table.c.stepping.label("phase_solver_stepping"),
+                table.c.friction_solver_serial,
                 friction_solver_table.c.label.label("friction_solver_label"),
                 friction_solver_table.c.stepping.label("friction_solver_stepping"),
             )
@@ -361,7 +362,7 @@ class sqla_TkWKBIntegration_factory(SQLAFactoryBase):
                         friction=row.friction,
                         omega_WKB_sq=row.omega_WKB_sq,
                         WKB_criterion=row.WKB_criterion,
-                        T_WKB=row.G_WKB,
+                        T_WKB=row.T_WKB,
                         analytic_T_rad=row.analytic_T_rad,
                         analytic_Tprime_rad=row.analytic_Tprime_rad,
                         analytic_T_w=row.analytic_T_w,
@@ -478,8 +479,8 @@ class sqla_TkWKBIntegration_factory(SQLAFactoryBase):
                 "z_min_serial": obj.z_sample.min.store_id,
                 "z_samples": len(obj.values),
                 "z_init": obj.z_init,
-                "T_init": obj.G_init,
-                "Tprime_init": obj.Gprime_init,
+                "T_init": obj.T_init,
+                "Tprime_init": obj.Tprime_init,
                 "sin_coeff": obj.sin_coeff,
                 "cos_coeff": obj.cos_coeff,
                 "stage_1_compute_time": (
@@ -604,7 +605,7 @@ class sqla_TkWKBIntegration_factory(SQLAFactoryBase):
                     "theta_mod_2pi": value.theta_mod_2pi,
                     "theta_div_2pi": value.theta_div_2pi,
                     "friction": value.friction,
-                    "T_WKB": value.G_WKB,
+                    "T_WKB": value.T_WKB,
                     "omega_WKB_sq": value.omega_WKB_sq,
                     "WKB_criterion": value.WKB_criterion,
                     "analytic_T_rad": value.analytic_T_rad,
@@ -877,7 +878,7 @@ class sqla_TkWKBValue_factory(SQLAFactoryBase):
                     table.c.friction,
                     table.c.omega_WKB_sq,
                     table.c.WKB_criterion,
-                    table.c.G_WKB,
+                    table.c.T_WKB,
                     table.c.analytic_T_rad,
                     table.c.analytic_Tprime_rad,
                     table.c.analytic_T_w,
@@ -941,7 +942,7 @@ class sqla_TkWKBValue_factory(SQLAFactoryBase):
             z_init = row_data.z_init
 
             # we choose H_ratio and theta to test because these are the critical data to reconstruct
-            # G_WKB; everything else, such as omega_WKB_sq, is optional
+            # T_WKB; everything else, such as omega_WKB_sq, is optional
             if (
                 H_ratio is not None
                 and fabs(row_data.H_ratio - H_ratio) > DEFAULT_FLOAT_PRECISION
@@ -1057,7 +1058,7 @@ class sqla_TkWKBValue_factory(SQLAFactoryBase):
                     table.c.friction,
                     table.c.omega_WKB_sq,
                     table.c.WKB_criterion,
-                    table.c.G_WKB,
+                    table.c.T_WKB,
                     table.c.analytic_T_rad,
                     table.c.analytic_Tprime_rad,
                     table.c.analytic_T_w,
@@ -1168,11 +1169,11 @@ class sqla_TkWKBValue_factory(SQLAFactoryBase):
             table.c.friction,
             table.c.omega_WKB_sq,
             table.c.WKB_criterion,
-            table.c.G_WKB,
-            table.c.analytic_G_rad,
-            table.c.analytic_Gprime_rad,
-            table.c.analytic_G_w,
-            table.c.analytic_Gprime_w,
+            table.c.T_WKB,
+            table.c.analytic_T_rad,
+            table.c.analytic_Tprime_rad,
+            table.c.analytic_T_w,
+            table.c.analytic_Tprime_w,
             subquery.c.sin_coeff,
             subquery.c.cos_coeff,
             subquery.c.z_init,

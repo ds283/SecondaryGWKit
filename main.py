@@ -26,6 +26,7 @@ from ComputeTargets import (
     ModelProxy,
     BackgroundModel,
     BesselPhaseProxy,
+    TkWKBIntegration,
 )
 from CosmologyConcepts import (
     wavenumber,
@@ -48,8 +49,6 @@ from defaults import (
     DEFAULT_FLOAT_PRECISION,
     DEFAULT_QUADRATURE_RTOL,
     DEFAULT_QUADRATURE_ATOL,
-    DEFAULT_TK_ABS_TOLERANCE,
-    DEFAULT_TK_REL_TOLERANCE,
 )
 from utilities import grouper, format_time
 
@@ -125,10 +124,16 @@ parser.add_argument(
     help="run the TkNumerical transfer function work queue",
 )
 parser.add_argument(
-    "--Tk-wkb-queue",
+    "--Tk-WKB-queue",
     action=argparse.BooleanOptionalAction,
     default=True,
     help="run the TkWKB transfer function work queue",
+)
+parser.add_argument(
+    "--quad-source-queue",
+    action=argparse.BooleanOptionalAction,
+    default=True,
+    help="run the Quad?Source work queue",
 )
 parser.add_argument(
     "--Gk-numerical-queue",
@@ -140,7 +145,7 @@ parser.add_argument(
     "--Gk-WKB-queue",
     default=True,
     action=argparse.BooleanOptionalAction,
-    help="run the GkWKB Green's functionwork queue",
+    help="run the GkWKB Green's function work queue",
 )
 parser.add_argument(
     "--Gk-source-queue",
@@ -270,12 +275,10 @@ with ShardedPool(
     ## DATASTORE OBJECTS
 
     # build absolute and relative tolerances
-    atol, rtol, tk_atol, tk_rtol, quad_atol, quad_rtol = ray.get(
+    atol, rtol, quad_atol, quad_rtol = ray.get(
         [
             pool.object_get("tolerance", tol=DEFAULT_ABS_TOLERANCE),
             pool.object_get("tolerance", tol=DEFAULT_REL_TOLERANCE),
-            pool.object_get("tolerance", tol=DEFAULT_TK_ABS_TOLERANCE),
-            pool.object_get("tolerance", tol=DEFAULT_TK_REL_TOLERANCE),
             pool.object_get("tolerance", tol=DEFAULT_QUADRATURE_ATOL),
             pool.object_get("tolerance", tol=DEFAULT_QUADRATURE_RTOL),
         ]
@@ -516,12 +519,13 @@ with ShardedPool(
     print(f"   @@ constructed splines in time {format_time(phase_end - phase_start)}")
 
     ## STEP 2
-    ## COMPUTE MATTER TRANSFER FUNCTIONS
+    ## COMPUTE MATTER TRANSFER FUNCTIONS NUMERICALLY FOR SOURCE TIMES NOT TOO FAR INSIDE THE HORIZON
 
-    def build_Tk_work(batch: List[wavenumber_exit_time]):
+    def build_Tk_numerical_work(batch: List[wavenumber_exit_time]):
         # grouper may fill with None values, so we need to strip those out
         batch = [x for x in batch if x is not None]
 
+        # query all sampled redshifts for the range of k modes we have been given
         query_batch = [
             {
                 "solver_labels": [],
@@ -529,8 +533,8 @@ with ShardedPool(
                 "k": k_exit,
                 "z_sample": None,
                 "z_init": None,
-                "atol": tk_atol,
-                "rtol": tk_rtol,
+                "atol": atol,
+                "rtol": rtol,
                 "tags": [
                     TkProductionTag,
                     SourceZGridSizeTag,
@@ -560,9 +564,10 @@ with ShardedPool(
         )
         query_queue.run()
 
+        # which k-modes are missing?
         missing = [
             k_exit
-            for k_exit, obj in zip(batch, query_queue.results)
+            for obj, k_exit in zip(query_queue.results, batch)
             if not obj.available
         ]
 
@@ -574,7 +579,8 @@ with ShardedPool(
         for k_exit in missing:
             # cut down zs at which we sample the transfer function, to those that are
             # (1) later than the initial time, taken to be 5 e-folds outside the horizon,
-            # and (2) earlier than the 6-efolds-inside-the-horizon (with a 15% tolerance)
+            # and (2) earlier than the 6-efolds-inside-the-horizon cut point used in "stop"
+            # mode (with a 15% tolerance)
             source_zs = z_source_sample.truncate(
                 k_exit.z_exit_suph_e5, keep="lower"
             ).truncate(0.85 * k_exit.z_exit_subh_e6, keep="higher-include")
@@ -587,8 +593,8 @@ with ShardedPool(
                     k=k_exit,
                     z_sample=source_zs,
                     z_init=source_zs.max,
-                    atol=tk_atol,
-                    rtol=tk_rtol,
+                    atol=atol,
+                    rtol=rtol,
                     tags=[
                         TkProductionTag,
                         SourceZGridSizeTag,
@@ -605,19 +611,234 @@ with ShardedPool(
 
         return work_refs
 
-    def build_Tk_work_label(Tk: TkNumericalIntegration):
-        return f"{args.job_name}-Tk-k{Tk.k.k_inv_Mpc:.3g}-{datetime.now().replace(microsecond=0).isoformat()}"
+    def build_Tk_numerical_work_label(Tk: TkNumericalIntegration):
+        return f"{args.job_name}-TkNumerical-k{Tk.k.k_inv_Mpc:.3g}-{datetime.now().replace(microsecond=0).isoformat()}"
 
-    def compute_Tk_work(Tk: TkNumericalIntegration, label: Optional[str] = None):
+    def compute_Tk_numerical_work(
+        Tk: TkNumericalIntegration, label: Optional[str] = None
+    ):
         return Tk.compute(label=label)
 
-    def validate_Tk_work(Tk: TkNumericalIntegration):
+    def validate_Tk_numerical_work(Tk: TkNumericalIntegration):
         if not Tk.available:
             raise RuntimeError(
                 "TkNumericalIntegration object passed for validation, but is not yet available"
             )
 
         return pool.object_validate(Tk)
+
+    if args.Tk_numerical_queue:
+        # group work by k mode
+        # (then we have to compute the transfer function for all source redshifts, given this k mode)
+        Tk_numerical_work_batches = list(
+            grouper(source_k_exit_times, n=50, incomplete="fill")
+        )
+
+        Tk_numerical_queue = RayWorkPool(
+            pool,
+            Tk_numerical_work_batches,
+            task_builder=build_Tk_numerical_work,
+            compute_handler=compute_Tk_numerical_work,
+            validation_handler=validate_Tk_numerical_work,
+            label_builder=build_Tk_numerical_work_label,
+            title="CALCULATE NUMERICAL PART OF MATTER TRANSFER FUNCTIONS",
+            store_results=False,
+            create_batch_size=2,
+            notify_batch_size=500,
+            max_task_queue=100,
+            process_batch_size=50,
+            notify_min_time_interval=MIN_NOTIFY_INTERVAL,
+        )
+        Tk_numerical_queue.run()
+
+    ## STEP 3
+    ## COMPUTE MATTER TRANSFER FUNCTIONS USING THE WKB APPROXIMATION FOR SOURCE TIMES INSIDE THE HORIZON
+
+    def build_Tk_WKB_work(batch: List[wavenumber_exit_time]):
+        # grouper may fill with None values, so we need to strip these out
+        batch = [x for x in batch if x is not None]
+
+        # build TkWKBIntegration work items for a batch of wavenumbers
+
+        # query for existing objects in the datastore matching these k modes
+        # if they are present and validated, we assume them to be complete.
+        # We don't attempt to recompute any objects already held in the store
+        query_batch = [
+            {
+                "solver_labels": [],
+                "model": model_proxy,
+                "k": k_exit,
+                "z_sample": None,
+                "z_init": None,
+                "atol": atol,
+                "rtol": rtol,
+                "tags": [
+                    TkProductionTag,
+                    SourceZGridSizeTag,
+                    OutsideHorizonEfoldsTag,
+                    LargestSourceZTag,
+                    SmallestSourceZTag,
+                    SourceSamplesPerLog10ZTag,
+                ],
+                "_do_not_populate": True,
+            }
+            for k_exit in batch
+        ]
+
+        query_queue = RayWorkPool(
+            pool,
+            query_batch,
+            task_builder=lambda x: pool.object_get("TkWKBIntegration", **x),
+            available_handler=None,
+            compute_handler=None,
+            store_handler=None,
+            validation_handler=None,
+            label_builder=None,
+            title=None,
+            store_results=True,
+            create_batch_size=20,
+            process_batch_size=20,
+        )
+        query_queue.run()
+
+        # which k-modes are missing?
+        missing = [
+            k_exit
+            for obj, k_exit in zip(query_queue.results, batch)
+            if not obj.available
+        ]
+
+        if len(missing) == 0:
+            return []
+
+        # query for a TkNumericalIntegration instance for each k mode. One should always exist.
+        # We use it to set initial conditions for the WKB part of the evolution.
+        payload_batch = [
+            {
+                "solver_labels": [],
+                "model": model_proxy,
+                "k": k_exit,
+                "z_sample": None,
+                "z_init": None,
+                "atol": atol,
+                "rtol": rtol,
+                "tags": [
+                    TkProductionTag,
+                    SourceZGridSizeTag,
+                    OutsideHorizonEfoldsTag,
+                    LargestSourceZTag,
+                    SmallestSourceZTag,
+                    SourceSamplesPerLog10ZTag,
+                ],
+                "_do_not_populate": True,
+            }
+            for k_exit in missing
+        ]
+
+        lookup_queue = RayWorkPool(
+            pool,
+            query_batch,
+            task_builder=lambda x: pool.object_get("TkNumericalIntegration", **x),
+            available_handler=None,
+            compute_handler=None,
+            store_handler=None,
+            validation_handler=None,
+            label_builder=None,
+            title=None,
+            store_results=True,
+            create_batch_size=20,
+            process_batch_size=20,
+        )
+        lookup_queue.run()
+
+        work_refs = []
+
+        for k_exit, Tk in zip(missing, lookup_queue.results):
+            k_exit: wavenumber_exit_time
+            Tk: TkNumericalIntegration
+            assert Tk._k_exit.store_id == k_exit.store_id
+
+            if not Tk.available:
+                print(
+                    f"!! ERROR: attempt to compute WKB solution for k={k_exit.k.k_inv_Mpc:.5g}/Mpc without a pre-computed initial condition"
+                )
+                print(
+                    f"|    For this k-mode, horizon entry occurs at z_entry={k_exit.z_exit:.5g}"
+                )
+                raise RuntimeError(
+                    f"No initial condition for the WKB evolution is available"
+                )
+
+            T_init = Tk.stop_T
+            Tprime_init = Tk.stop_Tprime
+            z_init = k_exit.z_exit - Tk.stop_deltaz_subh
+
+            max_source = min(k_exit.z_exit_subh_e3, z_init)
+            source_sample = z_source_sample.truncate(max_source, keep="lower")
+            work_refs.append(
+                pool.object_get(
+                    "TkWKBIntegration",
+                    solver_labels=solvers,
+                    model=model_proxy,
+                    k=k_exit,
+                    z_init=z_init,
+                    T_init=T_init,
+                    Tprime_init=Tprime_init,
+                    z_sample=source_sample,
+                    atol=atol,
+                    rtol=rtol,
+                    tags=[
+                        TkProductionTag,
+                        SourceZGridSizeTag,
+                        OutsideHorizonEfoldsTag,
+                        LargestSourceZTag,
+                        SmallestSourceZTag,
+                        SourceSamplesPerLog10ZTag,
+                    ],
+                    _do_not_populate=True,
+                )
+            )
+
+        return work_refs
+
+    def build_Tk_WKB_work_label(Tk: TkWKBIntegration):
+        return f"{args.job_name}-TkWKB-k{Tk.k.k_inv_Mpc:.3g}-{datetime.now().replace(microsecond=0).isoformat()}"
+
+    def compute_Tk_numerical_work(Tk: TkWKBIntegration, label: Optional[str] = None):
+        return Tk.compute(label=label)
+
+    def validate_Tk_numerical_work(Tk: TkWKBIntegration):
+        if not Tk.available:
+            raise RuntimeError(
+                "TkWKBIntegration object passed for validation, but is not yet available"
+            )
+
+        return pool.object_validate(Tk)
+
+    if args.Tk_WKB_queue:
+        Tk_WKB_work_batches = list(
+            grouper(source_k_exit_times, n=50, incomplete="fill")
+        )
+
+        Tk_WKB_queue = RayWorkPool(
+            pool,
+            Tk_WKB_work_batches,
+            task_builder=build_Tk_WKB_work,
+            compute_handler=compute_Tk_numerical_work,
+            validation_handler=validate_Tk_numerical_work,
+            label_builder=build_Tk_numerical_work_label,
+            title="CALCULATE WKB PART OF MATTER TRANSFER FUNCTIONS",
+            store_results=False,
+            create_batch_size=2,
+            notify_batch_size=500,
+            max_task_queue=100,
+            process_batch_size=50,
+            notify_min_time_interval=MIN_NOTIFY_INTERVAL,
+        )
+        Tk_WKB_queue.run()
+
+    ## STEP 4
+    ## BUILD QUADRATIC SOURCE FUNCTIONS FOR THE TENSOR MODES
 
     def build_tensor_source_work(batch):
         # grouper may fill with None values, so we need to strip those out
@@ -640,8 +861,8 @@ with ShardedPool(
                         "model": model_proxy,
                         "r": r,
                         "z_sample": None,
-                        "atol": tk_atol,
-                        "rtol": tk_rtol,
+                        "atol": atol,
+                        "rtol": rtol,
                         "tags": [
                             TkProductionTag,
                             SourceZGridSizeTag,
@@ -696,8 +917,8 @@ with ShardedPool(
                 "z_sample": None,
                 "k": k,
                 "z_init": None,
-                "atol": tk_atol,
-                "rtol": tk_rtol,
+                "atol": atol,
+                "rtol": rtol,
                 "tags": [
                     TkProductionTag,
                     SourceZGridSizeTag,
@@ -801,31 +1022,11 @@ with ShardedPool(
         r = calc.r
         return f"{args.job_name}-tensor-src-q{q.k_inv_Mpc:.3g}-r{r.k_inv_Mpc:.3g}-{datetime.now().replace(microsecond=0).isoformat()}"
 
-    if args.Tk_numerical_queue:
-        Tk_numerical_work_batch = list(
-            grouper(source_k_exit_times, n=50, incomplete="fill")
-        )
-
-        Tk_queue = RayWorkPool(
-            pool,
-            Tk_numerical_work_batch,
-            task_builder=build_Tk_work,
-            compute_handler=compute_Tk_work,
-            validation_handler=validate_Tk_work,
-            label_builder=build_Tk_work_label,
-            title="CALCULATE MATTER TRANSFER FUNCTIONS",
-            store_results=False,
-            create_batch_size=1,
-            max_task_queue=300,
-            process_batch_size=20,
-            notify_min_time_interval=MIN_NOTIFY_INTERVAL,
-        )
-        Tk_queue.run()
-
         # the source term is obviously symmetric, so we do not need to compute QuadSource on
         # a square q x r grid; it will suffice to do so on an upper or lower triangle where q <= r.
         # Then we can obtain the other values by reflection.
 
+    if args.quad_source_queue:
         # The ordering of pairs should be stable, because source_k_exit_times is ordered.
         tensor_source_grid = list(
             grouper(
@@ -850,13 +1051,14 @@ with ShardedPool(
         )
         QuadSource_queue.run()
 
-    ## STEP 3
+    ## STEP 5
     ## COMPUTE TENSOR GREEN'S FUNCTIONS NUMERICALLY FOR RESPONSE TIMES NOT TOO FAR INSIDE THE HORIZON
 
     def build_Gk_numerical_work(batch: List[redshift]):
         # grouper may fill with None values, so we need to strip those out
         batch = [x for x in batch if x is not None]
 
+        # query all k-modes for the range of source redshifts we have been given
         query_batch = [
             {
                 "shard_key": {"k": k_exit},
@@ -903,6 +1105,7 @@ with ShardedPool(
         )
         query_queue.run()
 
+        # which combinations of k-mode and source redshift are missing?
         missing = {
             k_exit.store_id: [
                 z_source
@@ -987,13 +1190,15 @@ with ShardedPool(
         return pool.object_validate(Gk)
 
     if args.Gk_numerical_queue:
-        GkNumerical_work_batches = list(
+        # group work by source redshift
+        # (then we have to compute Green's functions for all k modes and response redshifts, given this source)
+        Gk_numerical_work_batches = list(
             grouper(z_source_sample, n=50, incomplete="fill")
         )
 
         Gk_numerical_queue = RayWorkPool(
             pool,
-            GkNumerical_work_batches,
+            Gk_numerical_work_batches,
             task_builder=build_Gk_numerical_work,
             validation_handler=validate_Gk_numerical_work,
             label_builder=build_Gk_numerical_work_label,
@@ -1007,8 +1212,8 @@ with ShardedPool(
         )
         Gk_numerical_queue.run()
 
-    ## STEP 4
-    ## COMPUTE TENSOR GREEN'S FUNCTIONS IN THE WKB APPROXIMATION FOR RESPONSE TIMES INSIDE THE HORIZON
+    ## STEP 6
+    ## COMPUTE TENSOR GREEN'S FUNCTIONS USING THE WKB APPROXIMATION FOR RESPONSE TIMES INSIDE THE HORIZON
 
     def build_Gk_WKB_work(batch: List[redshift]):
         # grouper may fill with None values, so we need to strip those out
@@ -1016,7 +1221,7 @@ with ShardedPool(
 
         # build GKWKBIntegration work items for a batch of z_source times
 
-        # first, we query for existing objects in the datastore matching these z_source times.
+        # query for existing objects in the datastore matching these z_source times.
         # if they are present (and validated) we assume them to be complete.
         # We don't attempt to recompute objects that are already in the store.
         query_batch = [
@@ -1077,7 +1282,7 @@ with ShardedPool(
             )
         }
 
-        # Query for a GkNumericalIntegration instances for each combination of model, k_exit, and z_source.
+        # Query for a GkNumericalIntegration instance for each combination of model, k_exit, and z_source.
         # If one exists, it will be used to set initial conditions for the WKB part of the evolution.
         # We want to do this in a vectorized way, pulling an entire batch of GkNumericalIntegration instances
         # for a range of z-source values from the same shard. This is more efficient than paying the Ray and database
@@ -1124,8 +1329,8 @@ with ShardedPool(
             label_builder=None,
             title=None,
             store_results=True,
-            create_batch_size=5,  # may need to tweak relative to number of shards
-            process_batch_size=1,
+            create_batch_size=20,  # may need to tweak relative to number of shards
+            process_batch_size=20,
         )
         lookup_queue.run()
 
@@ -1235,7 +1440,7 @@ with ShardedPool(
                             f"|    For this k-mode, horizon entry occurs at z_entry={k_exit.z_exit:.5g}"
                         )
                         raise RuntimeError(
-                            f"Cannot compute WKB solution outside the horizon"
+                            f"No initial condition for the WKB evolution is available"
                         )
 
                     work_refs.append(
@@ -1278,12 +1483,12 @@ with ShardedPool(
 
         return pool.object_validate(Gk)
 
-    if args.WKB_queue:
-        GkWKB_work_batches = list(grouper(z_source_sample, n=20, incomplete="fill"))
+    if args.Gk_WKB_queue:
+        Gk_WKB_work_batches = list(grouper(z_source_sample, n=50, incomplete="fill"))
 
         Gk_WKB_queue = RayWorkPool(
             pool,
-            GkWKB_work_batches,
+            Gk_WKB_work_batches,
             task_builder=build_Gk_WKB_work,
             compute_handler=compute_Gk_WKB_work,
             validation_handler=validate_Gk_WKB_work,
@@ -1298,7 +1503,7 @@ with ShardedPool(
         )
         Gk_WKB_queue.run()
 
-    # STEP 5
+    # STEP 7
     # REBUILD TENSOR GREEN'S FUNCTIONS AS FUNCTIONS OF THE SOURCE REDSHIFT, RATHER THAN THE RESPONSE REDSHIFT
 
     # (In theory we could construct G_k as functions of the source redshift z' on-the-fly when we need them.
@@ -2012,7 +2217,7 @@ with ShardedPool(
                         f"           {quality}: {quality_total} instances = {quality_total/type_total:.2%} of this type, {quality_total / policy_total:.2%} of total"
                     )
 
-    # STEP 6
+    # STEP 8
     # PERFORM CALCULATION OF SOURCE INTEGRALS
 
     # strip off a number of z-sample values so that we do not need to begin the source integration right at the upper limit, where we cannot construct a spline
