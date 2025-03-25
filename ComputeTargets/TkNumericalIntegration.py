@@ -4,7 +4,7 @@ from typing import Optional, List
 import ray
 
 from ComputeTargets.BackgroundModel import BackgroundModel, ModelProxy
-from ComputeTargets.WKB_Tk import Tk_omegaEff_sq, Tk_d_ln_omegaEffPrime_dz
+from ComputeTargets.WKB_Tk import Tk_omegaEff_sq, Tk_d_ln_omegaEff_dz
 from ComputeTargets.analytic_Tk import compute_analytic_T, compute_analytic_Tprime
 from CosmologyConcepts import redshift_array, wavenumber, redshift, wavenumber_exit_time
 from Datastore import DatastoreObject
@@ -438,10 +438,10 @@ class TkNumericalIntegration(DatastoreObject):
                 self.k.k, wPerturbations, tau, H
             )
 
-            omega_WKB_sq = Tk_omegaEff_sq(model, self.k.k, current_z_float)
+            omega_sq = Tk_omegaEff_sq(model, self.k.k, current_z_float)
             WKB_criterion = fabs(
-                Tk_d_ln_omegaEffPrime_dz(model, self.k.k, current_z_float)
-            ) / sqrt(fabs(omega_WKB_sq))
+                Tk_d_ln_omegaEff_dz(model, self.k.k, current_z_float)
+            ) / sqrt(fabs(omega_sq))
 
             # create new TkNumericalValue object
             self._values.append(
@@ -454,7 +454,7 @@ class TkNumericalIntegration(DatastoreObject):
                     analytic_Tprime_rad=analytic_Tprime_rad,
                     analytic_T_w=analytic_T_w,
                     analytic_Tprime_w=analytic_Tprime_w,
-                    omega_WKB_sq=omega_WKB_sq,
+                    omega_WKB_sq=omega_sq,
                     WKB_criterion=WKB_criterion,
                 )
             )

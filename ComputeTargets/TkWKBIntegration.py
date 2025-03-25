@@ -1,29 +1,49 @@
-from math import sqrt, log
-from typing import Optional, List
+from math import sqrt, log, atan2, sin, fabs, cos, exp
+from typing import Optional, List, Tuple
 
 import ray
 
 from ComputeTargets import ModelProxy, BackgroundModel
-from ComputeTargets.WKB_Tk import Tk_omegaEff_sq, Tk_d_ln_omegaEffPrime_dz
-from CosmologyConcepts import wavenumber_exit_time, redshift_array, wavenumber
+from ComputeTargets.WKB_Tk import Tk_omegaEff_sq, Tk_d_ln_omegaEff_dz
+from ComputeTargets.analytic_Tk import compute_analytic_T, compute_analytic_Tprime
+from CosmologyConcepts import wavenumber_exit_time, redshift_array, wavenumber, redshift
 from Datastore import DatastoreObject
+from LiouvilleGreen.constants import TWO_PI
 from MetadataConcepts import tolerance, store_tag
 from Quadrature.integration_metadata import IntegrationData, IntegrationSolver
+from Quadrature.integrators import WKB_phase_function
+from Quadrature.integrators.WKB_phase_function import FRICTION_INDEX
+from Quadrature.supervisors.base import RHS_timer
+from Quadrature.supervisors.numerical import NumericalIntegrationSupervisor
 from Units import check_units
 from defaults import DEFAULT_FLOAT_PRECISION
 
-THETA_INDEX = 0
-Q_INDEX = 0
-EXPECTED_SOL_LENGTH = 1
 
-# how large do we allow the WKB phase theta to become, before we terminate the integration and
-# reset to a small value?
-# we need to resolve the phase on the scale of (0, 2pi), otherwise we will compute cos(theta),
-# sin(theta) and hence the transfer function incorrectly
-DEFAULT_PHASE_RUN_LENGTH = 1e4
+def friction_RHS(
+    z: float,
+    state: List[float],
+    model: BackgroundModel,
+    k_float: float,
+    supervisor: NumericalIntegrationSupervisor,
+) -> List[float]:
+    """
+    k *must* be measured using the same units used for H(z) in the cosmology, otherwise we will not get
+    correct dimensionless ratios
+    """
+    with RHS_timer(supervisor) as timer:
+        if supervisor.notify_available:
+            f = state[FRICTION_INDEX]
 
-# how large do we allow omega_WKB_sq to get before switching to a "stage #2" integration?
-DEFAULT_OMEGA_WKB_SQ_MAX = 1e6
+            supervisor.message(
+                z,
+                f"current state: friction_func = {f:.5g}",
+            )
+            supervisor.reset_notify_time()
+
+        one_plus_z = 1.0 + z
+        cs2 = model.functions.wPerturbations(z)
+
+        return [(3.0 / 2.0) * (1.0 + cs2) / one_plus_z]
 
 
 class TkWKBIntegration(DatastoreObject):
@@ -76,6 +96,14 @@ class TkWKBIntegration(DatastoreObject):
                 max_RHS_time=None,
                 min_RHS_time=None,
             )
+            self._friction_data = IntegrationData(
+                compute_time=None,
+                compute_steps=None,
+                RHS_evaluations=None,
+                mean_RHS_time=None,
+                max_RHS_time=None,
+                min_RHS_time=None,
+            )
 
             self._has_WKB_violation = None
             self._WKB_violation_z = None
@@ -84,7 +112,8 @@ class TkWKBIntegration(DatastoreObject):
             self._init_efolds_suph = None
             self._metadata = None
 
-            self._solver = None
+            self._phase_solver = None
+            self._friction_solver = None
 
             self._sin_coeff = None
             self._cos_coeff = None
@@ -95,6 +124,7 @@ class TkWKBIntegration(DatastoreObject):
 
             self._stage_1 = payload["stage_1_data"]
             self._stage_2 = payload["stage_2_data"]
+            self._friction_data = payload["friction_data"]
 
             self._has_WKB_violation = payload["has_WKB_violation"]
             self._WKB_violation_z = payload["WKB_violation_z"]
@@ -103,7 +133,8 @@ class TkWKBIntegration(DatastoreObject):
             self._init_efolds_subh = payload["init_efolds_subh"]
             self._metadata = payload["metadata"]
 
-            self._solver = payload["solver"]
+            self._phase_solver = payload["solver"]
+            self._friction_solver = payload["friction_solver"]
 
             self._sin_coeff = payload["sin_coeff"]
             self._cos_coeff = payload["cos_coeff"]
@@ -198,6 +229,13 @@ class TkWKBIntegration(DatastoreObject):
         return self._stage_2
 
     @property
+    def friction_data(self) -> IntegrationData:
+        if self._values is None:
+            raise RuntimeError("values have not yet been populated")
+
+        return self._friction_data
+
+    @property
     def metadata(self) -> dict:
         # allow this field to be read if we have been deserialized with _do_not_populate
         # otherwise, absence of _values implies that we have not yet computed our contents
@@ -261,10 +299,16 @@ class TkWKBIntegration(DatastoreObject):
         return self._cos_coeff
 
     @property
-    def solver(self) -> IntegrationSolver:
-        if self._solver is None:
+    def phase_solver(self) -> IntegrationSolver:
+        if self._phase_solver is None:
             raise RuntimeError("solver has not yet been populated")
-        return self._solver
+        return self._phase_solver
+
+    @property
+    def friction_solver(self) -> IntegrationSolver:
+        if self._friction_solver is None:
+            raise RuntimeError("solver has not yet been populated")
+        return self._friction_solver
 
     @property
     def values(self) -> List:
@@ -299,9 +343,7 @@ class TkWKBIntegration(DatastoreObject):
 
         # check that WKB approximation is likely to be valid at the specified initial time
         omega_WKB_sq_init = Tk_omegaEff_sq(model, self._k_exit.k.k, self._z_init)
-        d_ln_omega_WKB_init = Tk_d_ln_omegaEffPrime_dz(
-            model, self._k_exit.k.k, self.z_init
-        )
+        d_ln_omega_WKB_init = Tk_d_ln_omegaEff_dz(model, self._k_exit.k.k, self.z_init)
 
         if omega_WKB_sq_init < 0.0:
             raise ValueError(
@@ -316,13 +358,18 @@ class TkWKBIntegration(DatastoreObject):
             )
             print(f"     This may lead to meaningless results.")
 
-        self._compute_ref = compute_Tk_WKB.remote(
+        self._compute_ref = WKB_phase_function.remote(
             self._model_proxy,
             self._k_exit,
             self._z_init,
             self._z_sample,
+            omega_eq=Tk_omegaEff_sq,
+            d_ln_omega_dz=Tk_d_ln_omegaEff_dz,
+            friction=friction_RHS,
             atol=self._atol.tol,
             rtol=self._rtol.tol,
+            task_label="compute_Tk_WKB_phase",
+            object_label="T_k(z)",
         )
         return self._compute_ref
 
@@ -345,6 +392,7 @@ class TkWKBIntegration(DatastoreObject):
 
         self._stage_1 = data["stage_1_data"]
         self._stage_2 = data["stage_2_data"]
+        self._friction_data = data["friction_data"]
 
         self._has_WKB_violation = data["has_WKB_violation"]
         self._WKB_violation_z = data["WKB_violation_z"]
@@ -364,12 +412,11 @@ class TkWKBIntegration(DatastoreObject):
         # can assume here that omega_WKB_sq_init > 0 and the WKB criterion < 1.
         # This has been checked in compute()
         omega_WKB_sq_init = Tk_omegaEff_sq(model, self._k_exit.k.k, self._z_init)
-        d_ln_omega_WKB_init = Tk_d_ln_omegaEffPrime_dz(
-            model, self._k_exit.k.k, self._z_init
-        )
+        d_ln_omega_WKB_init = Tk_d_ln_omegaEff_dz(model, self._k_exit.k.k, self._z_init)
+        cs2_init = model.functions.wPerturbations(self._z_init)
 
         # in the Green's function WKB calculation we adjust the phase so that the cos part of the
-        # solution is absent. This is because when we compute Gr_k(z, z') for source z' inside the horizon,
+        # solution is absent. This is because when we compute Gr_k(z, z') for a source z' inside the horizon,
         # the boundary conditions kill the cos part. Hence, when we fix the response time z and
         # assemble Gr_k for all possible values of z', we will pick up a discontinuity in the phase and
         # coefficient if we don't also kill the cos for z' outside the horizon.
@@ -377,37 +424,43 @@ class TkWKBIntegration(DatastoreObject):
         # there is no similar effect for the transfer function, but we still make the same shift
         # so that we only get a sin solution. This at least simplifies the representation a bit.
 
+        # STEP 1. USE INITIAL DATA TO FIX THE COEFFICIENTS OF THE LIOUVILLE-GREEN SOLUTION
+        #   alpha sin( theta ) + beta cos( theta )
+        # (for now we are ignoring the effective friction term, except for its contribution
+        # to fixing the values of alpha and beta
         omega_WKB_init = sqrt(omega_WKB_sq_init)
         sqrt_omega_WKB_init = sqrt(omega_WKB_init)
 
-        num = sqrt_omega_WKB_init * self._G_init
-        den = (
-            self._Gprime_init
-            + (self._G_init / 2.0) * (d_ln_omega_WKB_init + eps_init / one_plus_z_init)
+        raw_cos_coeff = sqrt_omega_WKB_init * self._T_init
+        raw_sin_coeff = (
+            self._Tprime_init
+            + (self._T_init / 2.0)
+            * (
+                d_ln_omega_WKB_init
+                + (eps_init - 3.0 * (1.0 + cs2_init)) / one_plus_z_init
+            )
         ) / sqrt_omega_WKB_init
 
-        deltaTheta = atan2(num, den)
-        alpha = sqrt(num * num + den * den)
+        # STEP 2. WRITE THE SOLUTION IN THE FORM
+        #   B sin ( theta + deltaTheta )
+        deltaTheta = atan2(raw_cos_coeff, raw_sin_coeff)
+        B = sqrt(raw_cos_coeff * raw_cos_coeff + raw_sin_coeff * raw_sin_coeff)
 
+        # fix the sign of B by comparison with the original T
         sin_deltaTheta = sin(deltaTheta)
         sgn_sin_deltaTheta = +1 if sin_deltaTheta >= 0.0 else -1
-        sgn_G = +1 if self._G_init >= 0.0 else -1
+        sgn_T = +1 if self._T_init >= 0.0 else -1
 
+        # evaluate the new coefficients of the sin and cos terms
         self._cos_coeff = 0.0
-        self._sin_coeff = sgn_sin_deltaTheta * sgn_G * alpha
+        self._sin_coeff = sgn_sin_deltaTheta * sgn_T * B
 
-        # estimate tau at the source redshift
-        H_source = model.functions.Hubble(self._z_source.z)
-        tau_source = model.functions.tau(self._z_source.z)
-
+        # STEP 3. APPLY THE SHIFT TO THE PHASE FUNCTION
+        # change theta to theta + deltaTheta, and then update the result mod 2pi
         theta_div_2pi_sample = data["theta_div_2pi_sample"]
         theta_mod_2pi_sample = data["theta_mod_2pi_sample"]
+        friction_sample = data["friction_sample"]
 
-        # shift theta by deltaTheta in order to put everything into the sin coefficient, rather than a linear
-        # combination of sin and cos
-        # We do this so that we get smooth functions of sin and cos when we reassemble the Green's functions as
-        # functions of the source redshift (the ones with late source times are always expressed as pure sin with zero
-        # cos mode)
         def wrap_theta(theta: float) -> Tuple[int, float]:
             if theta > 0.0:
                 return +1, theta - TWO_PI
@@ -428,68 +481,182 @@ class TkWKBIntegration(DatastoreObject):
             for (d, shift) in zip(theta_div_2pi_sample, theta_div_2pi_shift)
         ]
 
+        # STEP 4. EVALUATE THE FULL LIOUVILLE-GREEN SOLUTIONS
         self._values = []
         for i in range(len(theta_mod_2pi_sample)):
             current_z = self._z_sample[i]
             current_z_float = current_z.z
             H = model.functions.Hubble(current_z_float)
             tau = model.functions.tau(current_z_float)
-            wBackground = model.functions.wBackground(current_z_float)
+            wPerturbations = model.functions.wPerturbations(current_z_float)
 
-            analytic_G_rad = compute_analytic_G(
-                self.k.k, 1.0 / 3.0, tau_source, tau, H_source
-            )
-            analytic_Gprime_rad = compute_analytic_Gprime(
-                self.k.k, 1.0 / 3.0, tau_source, tau, H_source, H
-            )
+            analytic_T_rad = compute_analytic_T(self.k.k, 1.0 / 3.0, tau)
+            analytic_Tprime_rad = compute_analytic_Tprime(self.k.k, 1.0 / 3.0, tau, H)
 
-            analytic_G_w = compute_analytic_G(
-                self.k.k, wBackground, tau_source, tau, H_source
-            )
-            analytic_Gprime_w = compute_analytic_Gprime(
-                self.k.k, wBackground, tau_source, tau, H_source, H
+            analytic_T_w = compute_analytic_T(self.k.k, wPerturbations, tau)
+            analytic_Tprime_w = compute_analytic_Tprime(
+                self.k.k, wPerturbations, tau, H
             )
 
-            # should be safe to assume omega_WKB_sq > 0, since otherwise this would have been picked up during the integration
-            omega_WKB_sq = Gk_omegaEff_sq(model, self._k_exit.k.k, current_z_float)
-            omega_WKB = sqrt(omega_WKB_sq)
+            omega_sq = Tk_omegaEff_sq(model, self.k.k, current_z_float)
+            omega = sqrt(omega_sq)
 
-            d_ln_omega_WKB = Gk_d_ln_omegaEffPrime_dz(
-                model, self._k_exit.k.k, current_z_float
-            )
-            WKB_criterion = fabs(d_ln_omega_WKB) / omega_WKB
+            WKB_criterion = fabs(
+                Tk_d_ln_omegaEff_dz(model, self.k.k, current_z_float)
+            ) / sqrt(fabs(omega_sq))
 
             H_ratio = H_init / H
-            norm_factor = sqrt(H_ratio / omega_WKB)
+            norm_factor = sqrt(H_ratio / omega)
 
-            # no need to include theta div 2pi in the calculation of G_WKB
+            # no need to include theta div 2pi in the calculation of the Liouville-Green solution
             # (and indeed it may be more accurate if we don't)
-            G_WKB = norm_factor * (
-                self._cos_coeff * cos(theta_mod_2pi_sample[i])
-                + self._sin_coeff * sin(theta_mod_2pi_sample[i])
+            T_WKB = (
+                norm_factor
+                * exp(friction_sample[i])
+                * (
+                    self._cos_coeff * cos(theta_mod_2pi_sample[i])
+                    + self._sin_coeff * sin(theta_mod_2pi_sample[i])
+                )
             )
 
             # create new GkWKBValue object
             self._values.append(
-                GkWKBValue(
+                TkWKBValue(
                     None,
                     current_z,
                     H_ratio,
                     theta_mod_2pi_sample[i],
                     theta_div_2pi_sample[i],
-                    omega_WKB_sq=omega_WKB_sq,
+                    friction_sample[i],
+                    omega_WKB_sq=omega_sq,
                     WKB_criterion=WKB_criterion,
-                    G_WKB=G_WKB,
-                    analytic_G_rad=analytic_G_rad,
-                    analytic_Gprime_rad=analytic_Gprime_rad,
-                    analytic_G_w=analytic_G_w,
-                    analytic_Gprime_w=analytic_Gprime_w,
+                    T_WKB=T_WKB,
+                    analytic_T_rad=analytic_T_rad,
+                    analytic_Tprime_rad=analytic_Tprime_rad,
+                    analytic_T_w=analytic_T_w,
+                    analytic_Tprime_w=analytic_Tprime_w,
                     sin_coeff=self._sin_coeff,
                     cos_coeff=self._cos_coeff,
                     z_init=self._z_init,
                 )
             )
 
-        self._solver = self._solver_labels[data["solver_label"]]
+        self._phase_solver = self._solver_labels[data["solver_label"]]
+        self._friction_solver = self._solver_labels[data["friction_solver_label"]]
 
         return True
+
+
+class TkWKBValue(DatastoreObject):
+    def __init__(
+        self,
+        store_id: int,
+        z: redshift,
+        H_ratio: float,
+        theta_mod_2pi: float,
+        theta_div_2pi: int,
+        friction: float,
+        omega_WKB_sq: Optional[float] = None,
+        WKB_criterion: Optional[float] = None,
+        T_WKB: Optional[float] = None,
+        sin_coeff: Optional[float] = None,
+        cos_coeff: Optional[float] = None,
+        z_init: Optional[float] = None,
+        analytic_T_rad: Optional[float] = None,
+        analytic_Tprime_rad: Optional[float] = None,
+        analytic_T_w: Optional[float] = None,
+        analytic_Tprime_w: Optional[float] = None,
+    ):
+        DatastoreObject.__init__(self, store_id)
+
+        self._z = z
+        self._H_ratio = H_ratio
+
+        self._theta_mod_2pi = theta_mod_2pi
+        self._theta_div_2pi = theta_div_2pi
+        self._friction = friction
+        self._omega_WKB_sq = omega_WKB_sq
+        self._WKB_criterion = WKB_criterion
+        self._T_WKB = T_WKB
+
+        self._analytic_T_rad = analytic_T_rad
+        self._analytic_Tprime_rad = analytic_Tprime_rad
+
+        self._analytic_T_w = analytic_T_w
+        self._analytic_Tprime_w = analytic_Tprime_w
+
+        self._sin_coeff = sin_coeff
+        self._cos_coeff = cos_coeff
+
+        self._z_init = z_init
+
+    def __float__(self):
+        """
+        Cast to float. Returns value of G_k estimated using the WKB approximation
+        :return:
+        """
+        return self._T_WKB
+
+    @property
+    def z(self) -> redshift:
+        return self._z
+
+    @property
+    def H_ratio(self) -> float:
+        return self._H_ratio
+
+    @property
+    def theta_mod_2pi(self) -> float:
+        return self._theta_mod_2pi
+
+    @property
+    def theta_div_2pi(self) -> int:
+        return self._theta_div_2pi
+
+    @property
+    def theta(self) -> int:
+        return self._theta_div_2pi * TWO_PI + self._theta_mod_2pi
+
+    @property
+    def friction(self) -> float:
+        return self._friction
+
+    @property
+    def omega_WKB_sq(self) -> Optional[float]:
+        return self._omega_WKB_sq
+
+    @property
+    def WKB_criterion(self) -> Optional[float]:
+        return self._WKB_criterion
+
+    @property
+    def T_WKB(self) -> Optional[float]:
+        return self._T_WKB
+
+    @property
+    def analytic_T_rad(self) -> Optional[float]:
+        return self._analytic_T_rad
+
+    @property
+    def analytic_Tprime_rad(self) -> Optional[float]:
+        return self._analytic_Tprime_rad
+
+    @property
+    def analytic_T_w(self) -> Optional[float]:
+        return self._analytic_T_rad
+
+    @property
+    def analytic_Tprime_w(self) -> Optional[float]:
+        return self._analytic_Tprime_rad
+
+    @property
+    def sin_coeff(self) -> Optional[float]:
+        return self._sin_coeff
+
+    @property
+    def cos_coeff(self) -> Optional[float]:
+        return self._cos_coeff
+
+    @property
+    def z_init(self) -> Optional[float]:
+        return self._z_init

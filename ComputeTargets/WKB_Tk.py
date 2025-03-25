@@ -25,7 +25,7 @@ def Tk_omegaEff_sq(model: BackgroundModel, k: float, z: float) -> float:
     return A + B + C
 
 
-def Tk_d_ln_omegaEffPrime_dz(model: BackgroundModel, k: float, z: float) -> float:
+def Tk_d_ln_omegaEff_dz(model: BackgroundModel, k: float, z: float) -> float:
     one_plus_z = 1.0 + z
     one_plus_z_2 = one_plus_z * one_plus_z
     one_plus_z_3 = one_plus_z_2 * one_plus_z

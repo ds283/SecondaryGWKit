@@ -4,7 +4,7 @@ from typing import Optional, List
 import ray
 
 from ComputeTargets.BackgroundModel import BackgroundModel, ModelProxy
-from ComputeTargets.WKB_Gk import Gk_omegaEff_sq, Gk_d_ln_omegaEffPrime_dz
+from ComputeTargets.WKB_Gk import Gk_omegaEff_sq, Gk_d_ln_omegaEff_dz
 from ComputeTargets.analytic_Gk import compute_analytic_G, compute_analytic_Gprime
 from CosmologyConcepts import wavenumber, redshift, redshift_array, wavenumber_exit_time
 from Datastore import DatastoreObject
@@ -414,7 +414,7 @@ class GkNumericalIntegration(DatastoreObject):
 
             omega_WKB_sq = Gk_omegaEff_sq(model, self.k.k, current_z_float)
             WKB_criterion = fabs(
-                Gk_d_ln_omegaEffPrime_dz(model, self.k.k, current_z_float)
+                Gk_d_ln_omegaEff_dz(model, self.k.k, current_z_float)
             ) / sqrt(fabs(omega_WKB_sq))
 
             # create new GkNumericalValue object
