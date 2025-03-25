@@ -7,8 +7,8 @@ from sqlalchemy import and_, or_
 from sqlalchemy.exc import MultipleResultsFound, SQLAlchemyError
 
 from ComputeTargets import (
-    GkWKBIntegration,
-    GkWKBValue,
+    TkWKBIntegration,
+    TkWKBValue,
 )
 from ComputeTargets.BackgroundModel import ModelProxy
 from CosmologyConcepts import wavenumber_exit_time, redshift_array, redshift
@@ -18,7 +18,7 @@ from Quadrature.integration_metadata import IntegrationData, IntegrationSolver
 from defaults import DEFAULT_STRING_LENGTH, DEFAULT_FLOAT_PRECISION
 
 
-class sqla_GkWKBTagAssociation_factory(SQLAFactoryBase):
+class sqla_TkWKBTagAssociation_factory(SQLAFactoryBase):
     def __init__(self):
         pass
 
@@ -33,7 +33,7 @@ class sqla_GkWKBTagAssociation_factory(SQLAFactoryBase):
                 sqla.Column(
                     "wkb_serial",
                     sqla.Integer,
-                    sqla.ForeignKey("GkWKBIntegration.serial"),
+                    sqla.ForeignKey("TkWKBIntegration.serial"),
                     index=True,
                     nullable=False,
                     primary_key=True,
@@ -54,7 +54,7 @@ class sqla_GkWKBTagAssociation_factory(SQLAFactoryBase):
         raise NotImplementedError
 
     @staticmethod
-    def add_tag(conn, inserter, wkb: GkWKBIntegration, tag: store_tag):
+    def add_tag(conn, inserter, wkb: TkWKBIntegration, tag: store_tag):
         inserter(
             conn,
             {
@@ -64,7 +64,7 @@ class sqla_GkWKBTagAssociation_factory(SQLAFactoryBase):
         )
 
     @staticmethod
-    def remove_tag(conn, table, wkb: GkWKBIntegration, tag: store_tag):
+    def remove_tag(conn, table, wkb: TkWKBIntegration, tag: store_tag):
         conn.execute(
             sqla.delete(table).where(
                 and_(
@@ -75,7 +75,7 @@ class sqla_GkWKBTagAssociation_factory(SQLAFactoryBase):
         )
 
 
-class sqla_GkWKBIntegration_factory(SQLAFactoryBase):
+class sqla_TkWKBIntegration_factory(SQLAFactoryBase):
     def __init__(self):
         pass
 
@@ -117,16 +117,16 @@ class sqla_GkWKBIntegration_factory(SQLAFactoryBase):
                     nullable=False,
                 ),
                 sqla.Column(
-                    "solver_serial",
+                    "phase_solver_serial",
                     sqla.Integer,
                     sqla.ForeignKey("IntegrationSolver.serial"),
                     index=True,
                     nullable=False,
                 ),
                 sqla.Column(
-                    "z_source_serial",
+                    "friction_solver_serial",
                     sqla.Integer,
-                    sqla.ForeignKey("redshift.serial"),
+                    sqla.ForeignKey("IntegrationSolver.serial"),
                     index=True,
                     nullable=False,
                 ),
@@ -141,8 +141,8 @@ class sqla_GkWKBIntegration_factory(SQLAFactoryBase):
                 sqla.Column("z_init", sqla.Float(64), nullable=False),
                 sqla.Column("sin_coeff", sqla.Float(64), nullable=False),
                 sqla.Column("cos_coeff", sqla.Float(64), nullable=False),
-                sqla.Column("G_init", sqla.Float(64), nullable=False),
-                sqla.Column("Gprime_init", sqla.Float(64), nullable=False),
+                sqla.Column("T_init", sqla.Float(64), nullable=False),
+                sqla.Column("Tprime_init", sqla.Float(64), nullable=False),
                 sqla.Column("stage_1_compute_time", sqla.Float(64)),
                 sqla.Column("stage_1_compute_steps", sqla.Integer),
                 sqla.Column("stage_1_RHS_evaluations", sqla.Integer),
@@ -155,6 +155,12 @@ class sqla_GkWKBIntegration_factory(SQLAFactoryBase):
                 sqla.Column("stage_2_mean_RHS_time", sqla.Float(64)),
                 sqla.Column("stage_2_max_RHS_time", sqla.Float(64)),
                 sqla.Column("stage_2_min_RHS_time", sqla.Float(64)),
+                sqla.Column("friction_compute_time", sqla.Float(64)),
+                sqla.Column("friction_compute_steps", sqla.Integer),
+                sqla.Column("friction_RHS_evaluations", sqla.Integer),
+                sqla.Column("friction_mean_RHS_time", sqla.Float(64)),
+                sqla.Column("friction_max_RHS_time", sqla.Float(64)),
+                sqla.Column("friction_min_RHS_time", sqla.Float(64)),
                 sqla.Column("has_WKB_violation", sqla.Boolean),
                 sqla.Column("WKB_violation_z", sqla.Float(64)),
                 sqla.Column("WKB_violation_efolds_subh", sqla.Float(64)),
@@ -179,15 +185,14 @@ class sqla_GkWKBIntegration_factory(SQLAFactoryBase):
         k_exit: wavenumber_exit_time = payload["k"]
         model_proxy: ModelProxy = payload["model"]
         z_sample: redshift_array = payload["z_sample"]
-        z_source: redshift = payload.get("z_source", None)
 
         z_init: Optional[float] = payload.get("z_init", None)
-        G_init: Optional[float] = payload.get("G_init", 0.0)
-        Gprime_init: Optional[float] = payload.get("Gprime_init", 1.0)
+        T_init: Optional[float] = payload.get("T_init", 1.0)
+        Tprime_init: Optional[float] = payload.get("Tprime_init", 0.0)
 
-        solver_table = tables["IntegrationSolver"]
-        tag_table = tables["GkWKB_tags"]
-        redshift_table = tables["redshift"]
+        phase_solver_table = tables["IntegrationSolver"].alias("phase_solver")
+        friction_solver_table = tables["IntegrationSolver"].alias("friction_solver")
+        tag_table = tables["TkWKB_tags"]
 
         # notice that we query only for validated data
         query = (
@@ -207,6 +212,12 @@ class sqla_GkWKBIntegration_factory(SQLAFactoryBase):
                 table.c.stage_2_mean_RHS_time,
                 table.c.stage_2_max_RHS_time,
                 table.c.stage_2_min_RHS_time,
+                table.c.friction_compute_time,
+                table.c.friction_compute_steps,
+                table.c.friction_RHS_evaluations,
+                table.c.friction_mean_RHS_time,
+                table.c.friction_max_RHS_time,
+                table.c.friction_min_RHS_time,
                 table.c.has_WKB_violation,
                 table.c.WKB_violation_z,
                 table.c.WKB_violation_efolds_subh,
@@ -214,22 +225,22 @@ class sqla_GkWKBIntegration_factory(SQLAFactoryBase):
                 table.c.metadata,
                 table.c.solver_serial,
                 table.c.label,
-                table.c.z_source_serial,
-                redshift_table.c.z.label("z_source"),
-                redshift_table.c.source.label("z_source_is_source"),
-                redshift_table.c.response.label("z_source_is_response"),
                 table.c.z_samples,
                 table.c.z_init,
-                table.c.G_init,
-                table.c.Gprime_init,
-                solver_table.c.label.label("solver_label"),
-                solver_table.c.stepping.label("solver_stepping"),
+                table.c.Tinit,
+                table.c.Tprime_init,
+                phase_solver_table.c.label.label("phase_solver_label"),
+                phase_solver_table.c.stepping.label("phase_solver_stepping"),
+                friction_solver_table.c.label.label("friction_solver_label"),
+                friction_solver_table.c.stepping.label("friction_solver_stepping"),
             )
             .select_from(
                 table.join(
-                    solver_table, solver_table.c.serial == table.c.solver_serial
+                    phase_solver_table,
+                    phase_solver_table.c.serial == table.c.phase_solver_serial,
                 ).join(
-                    redshift_table, redshift_table.c.serial == table.c.z_source_serial
+                    friction_solver_table,
+                    friction_solver_table.c.serial == table.c.friction_solver_serial,
                 )
             )
             .filter(
@@ -240,11 +251,6 @@ class sqla_GkWKBIntegration_factory(SQLAFactoryBase):
                 table.c.rtol_serial == rtol.store_id,
             )
         )
-
-        if z_source is not None:
-            query = query.filter(
-                table.c.z_source_serial == z_source.store_id,
-            )
 
         if z_init is not None:
             query = query.filter(
@@ -269,13 +275,13 @@ class sqla_GkWKBIntegration_factory(SQLAFactoryBase):
             row_data = conn.execute(query).one_or_none()
         except MultipleResultsFound as e:
             print(
-                f"!! GkWKBIntegration.build(): multiple results found when querying for GkWKBIntegration"
+                f"!! TkWKBIntegration.build(): multiple results found when querying for TkWKBIntegration"
             )
             raise e
 
         if row_data is None:
             # build and return an unpopulated object
-            return GkWKBIntegration(
+            return TkWKBIntegration(
                 payload=None,
                 solver_labels=solver_labels,
                 label=label,
@@ -283,10 +289,9 @@ class sqla_GkWKBIntegration_factory(SQLAFactoryBase):
                 model=model_proxy,
                 atol=atol,
                 rtol=rtol,
-                z_source=z_source,
                 z_init=z_init,
-                G_init=G_init,
-                Gprime_init=Gprime_init,
+                T_init=T_init,
+                Tprime_init=Tprime_init,
                 z_sample=z_sample,
                 tags=tags,
             )
@@ -298,13 +303,14 @@ class sqla_GkWKBIntegration_factory(SQLAFactoryBase):
         cos_coeff = row_data.cos_coeff
 
         z_init = row_data.z_init
-        G_init = row_data.G_init
-        Gprime_init = row_data.Gprime_init
+        T_init = row_data.T_init
+        Tprime_init = row_data.Tprime_init
 
         do_not_populate = payload.get("_do_not_populate", False)
         if not do_not_populate:
             # read out sample values associated with this integration
-            value_table = tables["GkWKBValue"]
+            value_table = tables["TkWKBValue"]
+            redshift_table = tables["redshift"]
 
             sample_rows = conn.execute(
                 sqla.select(
@@ -316,13 +322,14 @@ class sqla_GkWKBIntegration_factory(SQLAFactoryBase):
                     value_table.c.H_ratio,
                     value_table.c.theta_mod_2pi,
                     value_table.c.theta_div_2pi,
-                    value_table.c.G_WKB,
+                    value_table.c.friction,
+                    value_table.c.T_WKB,
                     value_table.c.omega_WKB_sq,
                     value_table.c.WKB_criterion,
-                    value_table.c.analytic_G_rad,
-                    value_table.c.analytic_Gprime_rad,
-                    value_table.c.analytic_G_w,
-                    value_table.c.analytic_Gprime_w,
+                    value_table.c.analytic_T_rad,
+                    value_table.c.analytic_Tprime_rad,
+                    value_table.c.analytic_T_w,
+                    value_table.c.analytic_Tprime_w,
                 )
                 .select_from(
                     value_table.join(
@@ -345,19 +352,20 @@ class sqla_GkWKBIntegration_factory(SQLAFactoryBase):
                 )
                 z_points.append(z_value)
                 values.append(
-                    GkWKBValue(
+                    TkWKBValue(
                         store_id=row.serial,
                         z=z_value,
                         H_ratio=row.H_ratio,
                         theta_mod_2pi=row.theta_mod_2pi,
                         theta_div_2pi=row.theta_div_2pi,
+                        friction=row.friction,
                         omega_WKB_sq=row.omega_WKB_sq,
                         WKB_criterion=row.WKB_criterion,
-                        G_WKB=row.G_WKB,
-                        analytic_G_rad=row.analytic_G_rad,
-                        analytic_Gprime_rad=row.analytic_Gprime_rad,
-                        analytic_G_w=row.analytic_G_w,
-                        analytic_Gprime_w=row.analytic_Gprime_w,
+                        T_WKB=row.G_WKB,
+                        analytic_T_rad=row.analytic_T_rad,
+                        analytic_Tprime_rad=row.analytic_Tprime_rad,
+                        analytic_T_w=row.analytic_T_w,
+                        analytic_Tprime_w=row.analytic_Tprime_w,
                         sin_coeff=sin_coeff,
                         cos_coeff=cos_coeff,
                         z_init=z_init,
@@ -378,7 +386,7 @@ class sqla_GkWKBIntegration_factory(SQLAFactoryBase):
 
             attributes = {"_do_not_populate": True, "_deserialized": True}
 
-        obj = GkWKBIntegration(
+        obj = TkWKBIntegration(
             payload={
                 "store_id": store_id,
                 "sin_coeff": sin_coeff,
@@ -399,6 +407,14 @@ class sqla_GkWKBIntegration_factory(SQLAFactoryBase):
                     max_RHS_time=row_data.stage_2_max_RHS_time,
                     min_RHS_time=row_data.stage_2_min_RHS_time,
                 ),
+                "friction_data": IntegrationData(
+                    compute_time=row_data.friction_compute_time,
+                    compute_steps=row_data.friction_compute_steps,
+                    RHS_evaluations=row_data.friction_RHS_evaluations,
+                    mean_RHS_time=row_data.friction_mean_RHS_time,
+                    max_RHS_time=row_data.friction_max_RHS_time,
+                    min_RHS_time=row_data.friction_min_RHS_time,
+                ),
                 "has_WKB_violation": row_data.has_WKB_violation,
                 "WKB_violation_z": row_data.WKB_violation_z,
                 "WKB_violation_efolds_subh": row_data.WKB_violation_efolds_subh,
@@ -408,11 +424,18 @@ class sqla_GkWKBIntegration_factory(SQLAFactoryBase):
                     if row_data.metadata is not None
                     else None
                 ),
-                "solver": (
+                "phase_solver": (
                     IntegrationSolver(
-                        store_id=row_data.solver_serial,
-                        label=(row_data.solver_label),
-                        stepping=(row_data.solver_stepping),
+                        store_id=row_data.phase_solver_serial,
+                        label=(row_data.phase_solver_label),
+                        stepping=(row_data.phase_solver_stepping),
+                    )
+                ),
+                "friction_solver": (
+                    IntegrationSolver(
+                        store_id=row_data.friction_solver_serial,
+                        label=(row_data.friction_solver_label),
+                        stepping=(row_data.friction_solver_stepping),
                     )
                 ),
                 "values": values,
@@ -423,15 +446,9 @@ class sqla_GkWKBIntegration_factory(SQLAFactoryBase):
             label=store_label,
             atol=atol,
             rtol=rtol,
-            z_source=redshift(
-                store_id=row_data.z_source_serial,
-                z=row_data.z_source,
-                is_source=row_data.z_source_is_source,
-                is_response=row_data.z_source_is_response,
-            ),
             z_init=z_init,
-            G_init=G_init,
-            Gprime_init=Gprime_init,
+            T_init=T_init,
+            Tprime_init=Tprime_init,
             z_sample=imported_z_sample,
             tags=tags,
         )
@@ -441,7 +458,7 @@ class sqla_GkWKBIntegration_factory(SQLAFactoryBase):
 
     @staticmethod
     def store(
-        obj: GkWKBIntegration,
+        obj: TkWKBIntegration,
         conn,
         table,
         inserter,
@@ -456,13 +473,13 @@ class sqla_GkWKBIntegration_factory(SQLAFactoryBase):
                 "model_serial": obj.model_proxy.store_id,
                 "atol_serial": obj._atol.store_id,
                 "rtol_serial": obj._rtol.store_id,
-                "solver_serial": obj.solver.store_id,
-                "z_source_serial": obj.z_source.store_id,
+                "phase_solver_serial": obj.phase_solver.store_id,
+                "friction_solver_serial": obj.friction_solver.store_id,
                 "z_min_serial": obj.z_sample.min.store_id,
                 "z_samples": len(obj.values),
                 "z_init": obj.z_init,
-                "G_init": obj.G_init,
-                "Gprime_init": obj.Gprime_init,
+                "T_init": obj.G_init,
+                "Tprime_init": obj.Gprime_init,
                 "sin_coeff": obj.sin_coeff,
                 "cos_coeff": obj.cos_coeff,
                 "stage_1_compute_time": (
@@ -525,6 +542,36 @@ class sqla_GkWKBIntegration_factory(SQLAFactoryBase):
                     if obj.stage_2_data is not None
                     else None
                 ),
+                "friction_compute_time": (
+                    obj.friction_data.compute_time
+                    if obj.friction_data is not None
+                    else None
+                ),
+                "friction_compute_steps": (
+                    obj.friction_data.compute_steps
+                    if obj.friction_data is not None
+                    else None
+                ),
+                "friction_RHS_evaluations": (
+                    obj.friction_data.RHS_evaluations
+                    if obj.friction_data is not None
+                    else None
+                ),
+                "friction_mean_RHS_time": (
+                    obj.friction_data.mean_RHS_time
+                    if obj.friction_data is not None
+                    else None
+                ),
+                "friction_max_RHS_time": (
+                    obj.friction_data.max_RHS_time
+                    if obj.friction_data is not None
+                    else None
+                ),
+                "friction_min_RHS_time": (
+                    obj.friction_data.min_RHS_time
+                    if obj.friction_data is not None
+                    else None
+                ),
                 "has_WKB_violation": obj.has_WKB_violation,
                 "WKB_violation_z": obj.WKB_violation_z,
                 "WKB_violation_efolds_subh": obj.WKB_violation_efolds_subh,
@@ -536,18 +583,18 @@ class sqla_GkWKBIntegration_factory(SQLAFactoryBase):
             },
         )
 
-        # set store_id on behalf of the GkWKBIntegration instance
+        # set store_id on behalf of the TkWKBIntegration instance
         obj._my_id = store_id
 
         # add any tags that have been specified
-        tag_inserter = inserters["GkWKB_tags"]
+        tag_inserter = inserters["TkWKB_tags"]
         for tag in obj.tags:
-            sqla_GkWKBTagAssociation_factory.add_tag(conn, tag_inserter, obj, tag)
+            sqla_TkWKBTagAssociation_factory.add_tag(conn, tag_inserter, obj, tag)
 
         # now serialize the sampled output points
-        value_inserter = inserters["GkWKBValue"]
+        value_inserter = inserters["TkWKBValue"]
         for value in obj.values:
-            value: GkWKBValue
+            value: TkWKBValue
             value_id = value_inserter(
                 conn,
                 {
@@ -556,29 +603,30 @@ class sqla_GkWKBIntegration_factory(SQLAFactoryBase):
                     "H_ratio": value.H_ratio,
                     "theta_mod_2pi": value.theta_mod_2pi,
                     "theta_div_2pi": value.theta_div_2pi,
-                    "G_WKB": value.G_WKB,
+                    "friction": value.friction,
+                    "T_WKB": value.G_WKB,
                     "omega_WKB_sq": value.omega_WKB_sq,
                     "WKB_criterion": value.WKB_criterion,
-                    "analytic_G_rad": value.analytic_G_rad,
-                    "analytic_Gprime_rad": value.analytic_Gprime_rad,
-                    "analytic_G_w": value.analytic_G_w,
-                    "analytic_Gprime_w": value.analytic_Gprime_w,
+                    "analytic_T_rad": value.analytic_T_rad,
+                    "analytic_Tprime_rad": value.analytic_Tprime_rad,
+                    "analytic_T_w": value.analytic_T_w,
+                    "analytic_Tprime_w": value.analytic_Tprime_w,
                 },
             )
 
-            # set store_id on behalf of the GkWKBValue instance
+            # set store_id on behalf of the TkWKBValue instance
             value._my_id = value_id
 
         return obj
 
     @staticmethod
     def validate(
-        obj: GkWKBIntegration,
+        obj: TkWKBIntegration,
         conn,
         table,
         tables,
     ):
-        # query the row in GkWKBIntegration corresponding to this object
+        # query the row in TkWKBIntegration corresponding to this object
         if not obj.available:
             raise RuntimeError(
                 "Attempt to validate a datastore object that has not yet been serialized"
@@ -588,7 +636,7 @@ class sqla_GkWKBIntegration_factory(SQLAFactoryBase):
             sqla.select(table.c.z_samples).filter(table.c.serial == obj.store_id)
         ).scalar()
 
-        value_table = tables["GkWKBValue"]
+        value_table = tables["TkWKBValue"]
         num_samples = conn.execute(
             sqla.select(sqla.func.count(value_table.c.serial)).filter(
                 value_table.c.wkb_serial == obj.store_id
@@ -616,12 +664,13 @@ class sqla_GkWKBIntegration_factory(SQLAFactoryBase):
 
         atol_table = tables["tolerance"].alias("atol")
         rtol_table = tables["tolerance"].alias("rtol")
-        solver_table = tables["IntegrationSolver"]
+        phase_solver_table = tables["IntegrationSolver"].alias("phase_solver")
+        friction_solver_table = tables["IntegrationSolver"].alias("friction_solver")
         redshift_table = tables["redshift"]
         wavenumber_exit_table = tables["wavenumber_exit_time"]
         wavenumber_table = tables["wavenumber"]
-        value_table = tables["GkWKBValue"]
-        tags_table = tables["GkWKB_tags"]
+        value_table = tables["TkWKBValue"]
+        tags_table = tables["TkWKB_tags"]
 
         # bake results into a list so that we can close this query; we are going to want to run
         # another one as we process the rows from this one
@@ -632,21 +681,23 @@ class sqla_GkWKBIntegration_factory(SQLAFactoryBase):
                     table.c.label,
                     table.c.z_samples,
                     wavenumber_table.c.k_inv_Mpc.label("k_inv_Mpc"),
-                    solver_table.c.label.label("solver_label"),
+                    phase_solver_table.c.label.label("phase_solver_label"),
+                    friction_solver_table.c.label.label("friction_solver_label"),
                     atol_table.c.log10_tol.label("log10_atol"),
                     rtol_table.c.log10_tol.label("log10_rtol"),
-                    redshift_table.c.z.label("z_source"),
                 )
                 .select_from(
                     table.join(
-                        solver_table, solver_table.c.serial == table.c.solver_serial
+                        phase_solver_table,
+                        phase_solver_table.c.serial == table.c.phase_solver_serial,
+                    )
+                    .join(
+                        friction_solver_table,
+                        friction_solver_table.c.serial
+                        == table.c.friction_solver_serial,
                     )
                     .join(atol_table, atol_table.c.serial == table.c.atol_serial)
                     .join(rtol_table, rtol_table.c.serial == table.c.rtol_serial)
-                    .join(
-                        redshift_table,
-                        redshift_table.c.serial == table.c.z_source_serial,
-                    )
                     .join(
                         wavenumber_exit_table,
                         wavenumber_exit_table.c.serial
@@ -671,7 +722,7 @@ class sqla_GkWKBIntegration_factory(SQLAFactoryBase):
         ]
         for integration in not_validated:
             msgs.append(
-                f'       -- "{integration.label}" (store_id={integration.serial}) for k={integration.k_inv_Mpc:.5g}/Mpc and z_source={integration.z_source:.5g} (log10_atol={integration.log10_atol}, log10_rtol={integration.log10_rtol})'
+                f'       -- "{integration.label}" (store_id={integration.serial}) for k={integration.k_inv_Mpc:.5g}/Mpc (log10_atol={integration.log10_atol}, log10_rtol={integration.log10_rtol})'
             )
             rows = conn.execute(
                 sqla.select(sqla.func.count(value_table.c.serial)).filter(
@@ -711,7 +762,7 @@ class sqla_GkWKBIntegration_factory(SQLAFactoryBase):
         return msgs
 
 
-class sqla_GkWKBValue_factory(SQLAFactoryBase):
+class sqla_TkWKBValue_factory(SQLAFactoryBase):
     def __init__(self):
         pass
 
@@ -725,7 +776,7 @@ class sqla_GkWKBValue_factory(SQLAFactoryBase):
                 sqla.Column(
                     "wkb_serial",
                     sqla.Integer,
-                    sqla.ForeignKey("GkWKBIntegration.serial"),
+                    sqla.ForeignKey("TkWKBIntegration.serial"),
                     index=True,
                     nullable=False,
                 ),
@@ -739,13 +790,14 @@ class sqla_GkWKBValue_factory(SQLAFactoryBase):
                 sqla.Column("H_ratio", sqla.Float(64), nullable=False),
                 sqla.Column("theta_mod_2pi", sqla.Float(64), nullable=False),
                 sqla.Column("theta_div_2pi", sqla.Integer, nullable=False),
+                sqla.Column("friction", sqla.Float(64), nullable=True),
                 sqla.Column("omega_WKB_sq", sqla.Float(64), nullable=True),
                 sqla.Column("WKB_criterion", sqla.Float(64), nullable=True),
-                sqla.Column("G_WKB", sqla.Float(64), nullable=True),
-                sqla.Column("analytic_G_rad", sqla.Float(64), nullable=True),
-                sqla.Column("analytic_Gprime_rad", sqla.Float(64), nullable=True),
-                sqla.Column("analytic_G_w", sqla.Float(64), nullable=True),
-                sqla.Column("analytic_Gprime_w", sqla.Float(64), nullable=True),
+                sqla.Column("T_WKB", sqla.Float(64), nullable=True),
+                sqla.Column("analytic_T_rad", sqla.Float(64), nullable=True),
+                sqla.Column("analytic_Tprime_rad", sqla.Float(64), nullable=True),
+                sqla.Column("analytic_T_w", sqla.Float(64), nullable=True),
+                sqla.Column("analytic_Tprime_w", sqla.Float(64), nullable=True),
             ],
         }
 
@@ -755,27 +807,26 @@ class sqla_GkWKBValue_factory(SQLAFactoryBase):
 
         model_proxy: Optional[ModelProxy] = payload.get("model", None)
         k: Optional[wavenumber_exit_time] = payload.get("k", None)
-        z_source: Optional[redshift] = payload.get("z_source", None)
 
         has_serial = all([wkb_serial is not None])
-        has_model = all([model_proxy is not None, k is not None, z_source is not None])
+        has_model = all([model_proxy is not None, k is not None])
 
         if all([has_serial, has_model]):
             print(
-                "## GkWKBValue.build(): both an WKB integration serial number and a (model, wavenumber, z_source) set were queried. Only the serial number will be used."
+                "## TkWKBValue.build(): both an WKB integration serial number and a (model, wavenumber) set were queried. Only the serial number will be used."
             )
 
         if not any([has_serial, has_model]):
             raise RuntimeError(
-                "GkWKBValue.build(): at least one of a WKB integration serial number and a (model, wavenumber, z_source) set must be supplied."
+                "TkWKBValue.build(): at least one of a WKB integration serial number and a (model, wavenumber) set must be supplied."
             )
 
         if has_serial:
-            return sqla_GkWKBValue_factory._build_impl_serial(
+            return sqla_TkWKBValue_factory._build_impl_serial(
                 payload, conn, table, inserter, tables, inserters
             )
 
-        return sqla_GkWKBValue_factory._build_impl_model(
+        return sqla_TkWKBValue_factory._build_impl_model(
             payload, conn, table, inserter, tables, inserters
         )
 
@@ -788,31 +839,33 @@ class sqla_GkWKBValue_factory(SQLAFactoryBase):
         H_ratio: Optional[float] = payload.get("H_ratio", None)
         theta_mod_2pi: Optional[float] = payload.get("theta_mod_2pi", None)
         theta_div_2pi: Optional[int] = payload.get("theta_div_2pi", None)
+        friction: Optional[float] = payload.get("friction", None)
         omega_WKB_sq: Optional[float] = payload.get("omega_WKB_sq", None)
         WKB_criterion: Optional[float] = payload.get("WKB_criterion", None)
-        G_WKB: Optional[float] = payload.get("G_WKB", None)
+        T_WKB: Optional[float] = payload.get("T_WKB", None)
         has_data = all(
             [
                 H_ratio is not None,
                 theta_mod_2pi is not None,
                 theta_div_2pi is not None,
+                friction is not None,
                 omega_WKB_sq is not None,
                 WKB_criterion is not None,
-                G_WKB is not None,
+                T_WKB is not None,
             ]
         )
 
-        analytic_G_rad: Optional[float] = payload.get("analytic_G_rad", None)
-        analytic_Gprime_rad: Optional[float] = payload.get("analytic_Gprime_rad", None)
+        analytic_T_rad: Optional[float] = payload.get("analytic_T_rad", None)
+        analytic_Tprime_rad: Optional[float] = payload.get("analytic_Tprime_rad", None)
 
-        analytic_G_w: Optional[float] = payload.get("analytic_G_w", None)
-        analytic_Gprime_w: Optional[float] = payload.get("analytic_Gprime_w", None)
+        analytic_T_w: Optional[float] = payload.get("analytic_T_w", None)
+        analytic_Tprime_w: Optional[float] = payload.get("analytic_Tprime_w", None)
 
         sin_coeff: Optional[float] = payload.get("sin_coeff", None)
         cos_coeff: Optional[float] = payload.get("cos_coeff", None)
         z_init: Optional[float] = payload.get("z_init", None)
 
-        wkb_table = tables["GkWKBIntegration"]
+        wkb_table = tables["TkWKBIntegration"]
 
         try:
             row_data = conn.execute(
@@ -821,13 +874,14 @@ class sqla_GkWKBValue_factory(SQLAFactoryBase):
                     table.c.H_ratio,
                     table.c.theta_mod_2pi,
                     table.c.theta_div_2pi,
+                    table.c.friction,
                     table.c.omega_WKB_sq,
                     table.c.WKB_criterion,
                     table.c.G_WKB,
-                    table.c.analytic_G_rad,
-                    table.c.analytic_Gprime_rad,
-                    table.c.analytic_G_w,
-                    table.c.analytic_Gprime_w,
+                    table.c.analytic_T_rad,
+                    table.c.analytic_Tprime_rad,
+                    table.c.analytic_T_w,
+                    table.c.analytic_Tprime_w,
                     wkb_table.c.sin_coeff,
                     wkb_table.c.cos_coeff,
                     wkb_table.c.z_init,
@@ -840,14 +894,14 @@ class sqla_GkWKBValue_factory(SQLAFactoryBase):
             ).one_or_none()
         except MultipleResultsFound as e:
             print(
-                f"!! GkWKBValue.build(): multiple results found when querying for GkWKBValue"
+                f"!! TkWKBValue.build(): multiple results found when querying for TkWKBValue"
             )
             raise e
 
         if row_data is None:
             if not has_data:
                 raise (
-                    "GkWKBValue().build(): result was not found in datastore, but a data payload was not provided"
+                    "TkWKBValue().build(): result was not found in datastore, but a data payload was not provided"
                 )
 
             store_id = inserter(
@@ -858,13 +912,14 @@ class sqla_GkWKBValue_factory(SQLAFactoryBase):
                     "H_ratio": H_ratio,
                     "theta_mod_2pi": theta_mod_2pi,
                     "theta_div_2pi": theta_div_2pi,
+                    "friction": friction,
                     "omega_WKB_sq": omega_WKB_sq,
                     "WKB_criterion": WKB_criterion,
-                    "G_WKB": G_WKB,
-                    "analytic_G_rad": analytic_G_rad,
-                    "analytic_Gprime_rad": analytic_Gprime_rad,
-                    "analytic_G_w": analytic_G_w,
-                    "analytic_Gprime_w": analytic_Gprime_w,
+                    "T_WKB": T_WKB,
+                    "analytic_T_rad": analytic_T_rad,
+                    "analytic_Tprime_rad": analytic_Tprime_rad,
+                    "analytic_T_w": analytic_T_w,
+                    "analytic_Tprime_w": analytic_Tprime_w,
                 },
             )
 
@@ -874,12 +929,12 @@ class sqla_GkWKBValue_factory(SQLAFactoryBase):
             omega_WKB_sq = row_data.omega_WKB_sq
             WKB_criterion = row_data.WKB_criterio
 
-            G_WKB = row_data.G_WKB
+            T_WKB = row_data.T_WKB
 
-            analytic_G_rad = row_data.analytic_G_rad
-            analytic_Gprime_rad = row_data.analytic_Gprime_rad
-            analytic_G_w = row_data.analytic_G_w
-            analytic_Gprime_w = row_data.analytic_Gprime_w
+            analytic_T_rad = row_data.analytic_T_rad
+            analytic_Tprime_rad = row_data.analytic_Tprime_rad
+            analytic_T_w = row_data.analytic_T_w
+            analytic_Tprime_w = row_data.analytic_Tprime_w
 
             sin_coeff = row_data.sin_coeff
             cos_coeff = row_data.cos_coeff
@@ -892,7 +947,7 @@ class sqla_GkWKBValue_factory(SQLAFactoryBase):
                 and fabs(row_data.H_ratio - H_ratio) > DEFAULT_FLOAT_PRECISION
             ):
                 raise ValueError(
-                    f"GkWKBValue.build(): Stored H_ratio ratio (WKB store_id={wkb_serial}, z={z.store_id}) = {row_data.H_ratio} differs from expected value = {H_ratio}"
+                    f"TkWKBValue.build(): Stored WKB H_ratio ratio (WKB store_id={wkb_serial}, z={z.store_id}) = {row_data.H_ratio} differs from expected value = {H_ratio}"
                 )
             if (
                 theta_mod_2pi is not None
@@ -900,32 +955,41 @@ class sqla_GkWKBValue_factory(SQLAFactoryBase):
                 > DEFAULT_FLOAT_PRECISION
             ):
                 raise ValueError(
-                    f"GkWKBValue.build(): Stored theta mod 2pi (WKB store_id={wkb_serial}, z={z.store_id}) = {row_data.theta_mod_2pi} differs from expected value = {theta_mod_2pi}"
+                    f"TkWKBValue.build(): Stored WKB theta mod 2pi (WKB store_id={wkb_serial}, z={z.store_id}) = {row_data.theta_mod_2pi} differs from expected value = {theta_mod_2pi}"
                 )
             if theta_div_2pi is not None and row_data.theta_div_2pi != theta_div_2pi:
                 raise ValueError(
-                    f"GkWKBValue.build(): Stored WKB theta div 2pi (WKB store_id={wkb_serial}, z={z.store_id}) = {row_data.theta_div_2pi} differs from expected value = {theta_div_2pi}"
+                    f"TkWKBValue.build(): Stored WKB theta div 2pi (WKB store_id={wkb_serial}, z={z.store_id}) = {row_data.theta_div_2pi} differs from expected value = {theta_div_2pi}"
+                )
+            if (
+                friction is not None
+                and fabs(row_data.friction - friction) > DEFAULT_FLOAT_PRECISION
+            ):
+                raise ValueError(
+                    f"TkWKBValue.build(): Stored WKB friction (WKB store_id={wkb_serial}, z={z.store_id}) = {row_data.theta_mod_2pi} differs from expected value = {theta_mod_2pi}"
                 )
 
             H_ratio = row_data.H_ratio
             theta_mod_2pi = row_data.theta_mod_2pi
             theta_div_2pi = row_data.theta_div_2pi
+            friction = row_data.friction
 
             attribute_set = {"_deserialized": True}
 
-        obj = GkWKBValue(
+        obj = TkWKBValue(
             store_id=store_id,
             z=z,
             H_ratio=H_ratio,
             theta_mod_2pi=theta_mod_2pi,
             theta_div_2pi=theta_div_2pi,
+            friction=friction,
             omega_WKB_sq=omega_WKB_sq,
             WKB_criterion=WKB_criterion,
-            G_WKB=G_WKB,
-            analytic_G_rad=analytic_G_rad,
-            analytic_Gprime_rad=analytic_Gprime_rad,
-            analytic_G_w=analytic_G_w,
-            analytic_Gprime_w=analytic_Gprime_w,
+            T_WKB=T_WKB,
+            analytic_T_rad=analytic_T_rad,
+            analytic_Tprime_rad=analytic_Tprime_rad,
+            analytic_T_w=analytic_T_w,
+            analytic_Tprime_w=analytic_Tprime_w,
             sin_coeff=sin_coeff,
             cos_coeff=cos_coeff,
             z_init=z_init,
@@ -940,17 +1004,16 @@ class sqla_GkWKBValue_factory(SQLAFactoryBase):
 
         model_payload: ModelProxy = payload["model"]
         k: wavenumber_exit_time = payload["k"]
-        z_source: redshift = payload["z_source"]
 
         atol: Optional[tolerance] = payload.get("atol", None)
         rtol: Optional[tolerance] = payload.get("rtol", None)
         tags: Optional[List[store_tag]] = payload.get("tags", None)
 
-        wkb_table = tables["GkWKBIntegration"]
+        wkb_table = tables["TkWKBIntegration"]
 
         try:
             # TODO: benchmarking suggests this query is indistinguishable from filtering directly on the
-            #  GkWKBIntegration serial number (if we only knew what it was), so this may be about
+            #  TkWKBIntegration serial number (if we only knew what it was), so this may be about
             #  as good as we can do. But it is still slow. For production use, should look at how this
             #  can be improved.
             wkb_query = sqla.select(
@@ -961,7 +1024,6 @@ class sqla_GkWKBValue_factory(SQLAFactoryBase):
             ).filter(
                 wkb_table.c.model_serial == model_payload.store_id,
                 wkb_table.c.wavenumber_exit_serial == k.store_id,
-                wkb_table.c.z_source_serial == z_source.store_id,
                 wkb_table.c.validated == True,
             )
 
@@ -974,7 +1036,7 @@ class sqla_GkWKBValue_factory(SQLAFactoryBase):
             count = 0
             for tag in tags:
                 tag: store_tag
-                tab = tables["GkWKB_tags"].alias(f"tag_{count}")
+                tab = tables["TkWKB_tags"].alias(f"tag_{count}")
                 count += 1
                 wkb_query = wkb_query.join(
                     tab,
@@ -992,13 +1054,14 @@ class sqla_GkWKBValue_factory(SQLAFactoryBase):
                     table.c.H_ratio,
                     table.c.theta_mod_2pi,
                     table.c.theta_div_2pi,
+                    table.c.friction,
                     table.c.omega_WKB_sq,
                     table.c.WKB_criterion,
                     table.c.G_WKB,
-                    table.c.analytic_G_rad,
-                    table.c.analytic_Gprime_rad,
-                    table.c.analytic_G_w,
-                    table.c.analytic_Gprime_w,
+                    table.c.analytic_T_rad,
+                    table.c.analytic_Tprime_rad,
+                    table.c.analytic_T_w,
+                    table.c.analytic_Tprime_w,
                     subquery.c.sin_coeff,
                     subquery.c.cos_coeff,
                     subquery.c.z_init,
@@ -1012,39 +1075,43 @@ class sqla_GkWKBValue_factory(SQLAFactoryBase):
             ).one_or_none()
         except MultipleResultsFound as e:
             print(
-                f"!! GkWKBValue.build(): multiple results found when querying for GkWKBValue"
+                f"!! TkWKBValue.build(): multiple results found when querying for TkWKBValue"
             )
             raise e
 
         if row_data is None:
             # return empty object
-            obj = GkWKBValue(
-                store_id=None, z=z, H_ratio=None, theta_mod_2pi=None, theta_div_2pi=None
+            obj = TkWKBValue(
+                store_id=None,
+                z=z,
+                H_ratio=None,
+                theta_mod_2pi=None,
+                theta_div_2pi=None,
+                friction=None,
             )
             obj._k_exit = k
-            obj._z_source = z_source
             return obj
 
-        obj = GkWKBValue(
+        obj = TkWKBValue(
             store_id=row_data.serial,
             z=z,
             H_ratio=row_data.H_ratio,
             theta_mod_2pi=row_data.theta_mod_2pi,
             theta_div_2pi=row_data.theta_div_2pi,
+            friction=row_data.friction,
             omega_WKB_sq=row_data.omega_WKB_sq,
             WKB_criterion=row_data.WKB_criterion,
-            G_WKB=row_data.G_WKB,
-            analytic_G_rad=row_data.analytic_G_rad,
-            analytic_Gprime_rad=row_data.analytic_Gprime_rad,
-            analytic_G_w=row_data.analytic_G_w,
-            analytic_Gprime_w=row_data.analytic_Gprime_w,
+            T_WKB=row_data.T_WKB,
+            analytic_T_rad=row_data.analytic_T_rad,
+            analytic_Tprime_rad=row_data.analytic_Tprime_rad,
+            analytic_T_w=row_data.analytic_T_w,
+            analytic_Tprime_w=row_data.analytic_Tprime_w,
             sin_coeff=row_data.sin_coeff,
             cos_coeff=row_data.cos_coeff,
             z_init=row_data.z_init,
         )
         obj._deserialized = True
         obj._k_exit = k
-        obj._z_source = z_source
         return obj
 
     @staticmethod
@@ -1056,40 +1123,21 @@ class sqla_GkWKBValue_factory(SQLAFactoryBase):
         rtol: Optional[tolerance] = payload.get("rtol", None)
         tags: Optional[List[store_tag]] = payload.get("tags", None)
 
-        z_response: Optional[redshift] = payload.get("z", None)
-        z_source: Optional[redshift] = payload.get("z_source", None)
+        z: Optional[redshift] = payload.get("z", None)
 
-        wkb_table = tables["GkWKBIntegration"]
+        wkb_table = tables["TkWKBIntegration"]
         redshift_table = tables["redshift"]
 
-        wkb_query = (
-            sqla.select(
-                wkb_table.c.serial,
-                wkb_table.c.sin_coeff,
-                wkb_table.c.cos_coeff,
-                wkb_table.c.z_init,
-                wkb_table.c.z_source_serial,
-                redshift_table.c.z.label("z_source"),
-                redshift_table.c.source.label("z_source_is_source"),
-                redshift_table.c.response.label("z_source_is_response"),
-            )
-            .select_from(
-                wkb_table.join(
-                    redshift_table,
-                    redshift_table.c.serial == wkb_table.c.z_source_serial,
-                )
-            )
-            .filter(
-                wkb_table.c.model_serial == model_proxy.store_id,
-                wkb_table.c.wavenumber_exit_serial == k.store_id,
-                wkb_table.c.validated == True,
-            )
+        wkb_query = sqla.select(
+            wkb_table.c.serial,
+            wkb_table.c.sin_coeff,
+            wkb_table.c.cos_coeff,
+            wkb_table.c.z_init,
+        ).filter(
+            wkb_table.c.model_serial == model_proxy.store_id,
+            wkb_table.c.wavenumber_exit_serial == k.store_id,
+            wkb_table.c.validated == True,
         )
-
-        if z_source is not None:
-            wkb_query = wkb_query.filter(
-                wkb_table.c.z_source_serial == z_source.store_id
-            )
 
         if atol is not None:
             wkb_query = wkb_query.filter(wkb_table.c.atol_serial == atol.store_id)
@@ -1100,7 +1148,7 @@ class sqla_GkWKBValue_factory(SQLAFactoryBase):
         count = 0
         for tag in tags:
             tag: store_tag
-            tab = tables["GkWKB_tags"].alias(f"tag_{count}")
+            tab = tables["TkWKB_tags"].alias(f"tag_{count}")
             count += 1
             wkb_query = wkb_query.join(
                 tab,
@@ -1117,6 +1165,7 @@ class sqla_GkWKBValue_factory(SQLAFactoryBase):
             table.c.H_ratio,
             table.c.theta_mod_2pi,
             table.c.theta_div_2pi,
+            table.c.friction,
             table.c.omega_WKB_sq,
             table.c.WKB_criterion,
             table.c.G_WKB,
@@ -1127,56 +1176,46 @@ class sqla_GkWKBValue_factory(SQLAFactoryBase):
             subquery.c.sin_coeff,
             subquery.c.cos_coeff,
             subquery.c.z_init,
-            subquery.c.z_source_serial,
-            subquery.c.z_source,
-            subquery.c.z_source_is_source,
-            subquery.c.z_source_is_response,
-            redshift_table.c.z.label("z_response"),
-            table.c.z_serial.label("z_response_serial"),
-            redshift_table.c.source.label("z_response_is_source"),
-            redshift_table.c.response.label("z_response_is_response"),
+            redshift_table.c.z.label("z"),
+            table.c.z_serial.label("z_serial"),
+            redshift_table.c.source.label("z_is_source"),
+            redshift_table.c.response.label("z_is_response"),
         ).select_from(
             subquery.join(table, table.c.wkb_serial == subquery.c.serial).join(
                 redshift_table, redshift_table.c.serial == table.c.z_serial
             )
         )
 
-        if z_response is not None:
-            row_query = row_query.filter(table.c.z_serial == z_response.store_id)
+        if z is not None:
+            row_query = row_query.filter(table.c.z_serial == z.store_id)
 
         row_data = conn.execute(row_query)
 
         def make_obj(row):
-            obj = GkWKBValue(
+            obj = TkWKBValue(
                 store_id=row.serial,
                 z=redshift(
-                    store_id=row.z_response_serial,
-                    z=row.z_response,
-                    is_source=row.z_response_is_source,
-                    is_response=row.z_response_is_response,
+                    store_id=row.z_serial,
+                    z=row.z,
+                    is_source=row.z_is_source,
+                    is_response=row.z_is_response,
                 ),
                 H_ratio=row.H_ratio,
                 theta_mod_2pi=row.theta_mod_2pi,
                 theta_div_2pi=row.theta_div_2pi,
                 omega_WKB_sq=row.omega_WKB_sq,
                 WKB_criterion=row.WKB_criterion,
-                G_WKB=row.G_WKB,
-                analytic_G_rad=row.analytic_G_rad,
-                analytic_Gprime_rad=row.analytic_Gprime_rad,
-                analytic_G_w=row.analytic_G_w,
-                analytic_Gprime_w=row.analytic_Gprime_w,
+                T_WKB=row.T_WKB,
+                analytic_T_rad=row.analytic_T_rad,
+                analytic_Tprime_rad=row.analytic_Tprime_rad,
+                analytic_T_w=row.analytic_T_w,
+                analytic_Tprime_w=row.analytic_Tprime_w,
                 sin_coeff=row.sin_coeff,
                 cos_coeff=row.cos_coeff,
                 z_init=row.z_init,
             )
             obj._deserialized = True
             obj._k_exit = k
-            obj._z_source = redshift(
-                store_id=row.z_source_serial,
-                z=row.z_source,
-                is_source=row.z_source_is_source,
-                is_response=row.z_source_is_response,
-            )
 
             return obj
 

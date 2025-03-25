@@ -53,6 +53,11 @@ from Datastore.SQL.ObjectFactories.TkNumericalIntegration import (
     sqla_TkNumericalValue_factory,
     sqla_TkNumericalTagAssociation_factory,
 )
+from Datastore.SQL.ObjectFactories.TkWKBIntegration import (
+    sqla_TkWKBIntegration_factory,
+    sqla_TkWKBTagAssociation_factory,
+    sqla_TkWKBValue_factory,
+)
 from Datastore.SQL.ObjectFactories.base import SQLAFactoryBase
 from Datastore.SQL.ObjectFactories.integration_metadata import (
     sqla_IntegrationSolver_factory,
@@ -90,12 +95,15 @@ _factories = {
     "TkNumericalIntegration": sqla_TkNumericalIntegration_factory,
     "TkNumerical_tags": sqla_TkNumericalTagAssociation_factory,
     "TkNumericalValue": sqla_TkNumericalValue_factory,
-    "GkNumericalIntegration": sqla_GkNumericalIntegration_factory,
-    "GkNumerical_tags": sqla_GkNumericalTagAssociation_factory,
-    "GkNumericalValue": sqla_GkNumericalValue_factory,
+    "TkWKBIntegration": sqla_TkWKBIntegration_factory,
+    "TkWKB_tags": sqla_TkWKBTagAssociation_factory,
+    "TkWKBValue": sqla_TkWKBValue_factory,
     "QuadSource": sqla_QuadSource_factory,
     "QuadSource_tags": sqla_QuadSourceTagAssocation_factory,
     "QuadSourceValue": sqla_QuadSourceValue_factory,
+    "GkNumericalIntegration": sqla_GkNumericalIntegration_factory,
+    "GkNumerical_tags": sqla_GkNumericalTagAssociation_factory,
+    "GkNumericalValue": sqla_GkNumericalValue_factory,
     "GkWKBIntegration": sqla_GkWKBIntegration_factory,
     "GkWKB_tags": sqla_GkWKBTagAssociation_factory,
     "GkWKBValue": sqla_GkWKBValue_factory,
@@ -130,6 +138,7 @@ _drop_actions = {
     "gk-numeric": ["GkNumericalIntegration", "GkNumerical_tags", "GkNumericalValue"],
     "quad-source": ["QuadSource", "QuadSource_tags", "QuadSourceValue"],
     "tk-numeric": ["TkNumericalIntegration", "TkNumerical_tags", "TkNumericalValue"],
+    "tk-wkb": ["TkWKBIntegration", "TkWKB_tags", "TkWKBValue"],
 }
 # should drop tables in a defined order, so that we do not violate foreign key constrints
 _drop_order = [
@@ -142,6 +151,7 @@ _drop_order = [
     "gk-numeric",
     "quad-source",
     "tk-numeric",
+    "tk-wkb",
 ]
 
 

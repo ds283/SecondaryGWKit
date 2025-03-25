@@ -33,3 +33,7 @@ from .TkNumericalIntegration import (
     TkNumericalIntegration,
     TkNumericalValue,
 )
+from .TkWKBIntegration import (
+    TkWKBIntegration,
+    TkWKBValue,
+)
