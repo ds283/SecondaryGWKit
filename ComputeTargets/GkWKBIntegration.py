@@ -1,5 +1,5 @@
 from math import log, sqrt, fabs, cos, sin, atan2
-from typing import Optional, List, Tuple
+from typing import Optional, List
 
 import ray
 
@@ -11,6 +11,7 @@ from ComputeTargets.analytic_Gk import (
 )
 from CosmologyConcepts import wavenumber_exit_time, redshift, redshift_array, wavenumber
 from Datastore import DatastoreObject
+from LiouvilleGreen.WKBtools import shift_theta_sample
 from LiouvilleGreen.constants import TWO_PI
 from MetadataConcepts import tolerance, store_tag
 from Quadrature.integration_metadata import IntegrationSolver, IntegrationData
@@ -410,28 +411,11 @@ class GkWKBIntegration(DatastoreObject):
 
         # STEP 3. APPLY THE SHIFT TO THE PHASE FUNCTION
         # change theta to theta + deltaTheta, and then update the result mod 2pi
-        theta_div_2pi_sample = data["theta_div_2pi_sample"]
-        theta_mod_2pi_sample = data["theta_mod_2pi_sample"]
-
-        def wrap_theta(theta: float) -> Tuple[int, float]:
-            if theta > 0.0:
-                return +1, theta - TWO_PI
-            if theta <= -TWO_PI:
-                return -1, theta + TWO_PI
-
-            return 0, theta
-
-        theta_sample_shifts = [
-            wrap_theta(theta_mod_2pi_sample + deltaTheta)
-            for theta_mod_2pi_sample in theta_mod_2pi_sample
-        ]
-        theta_div_2pi_shift, theta_mod_2pi_sample = zip(*theta_sample_shifts)
-
-        theta_div_2pi_shift_base = theta_div_2pi_shift[0]
-        theta_div_2pi_sample = [
-            d + shift - theta_div_2pi_shift_base
-            for (d, shift) in zip(theta_div_2pi_sample, theta_div_2pi_shift)
-        ]
+        theta_div_2pi_sample, theta_mod_2pi_sample = shift_theta_sample(
+            div_2pi_sample=data["theta_div_2pi_sample"],
+            mod_2pi_sample=data["theta_mod_2pi_sample"],
+            shift=deltaTheta,
+        )
 
         # STEP 4. EVALUATE THE FULL LIOUVILLE-GREEN SOLUTIONS
 
