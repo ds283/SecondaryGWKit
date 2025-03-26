@@ -135,7 +135,7 @@ class TkWKBIntegration(DatastoreObject):
             self._init_efolds_subh = payload["init_efolds_subh"]
             self._metadata = payload["metadata"]
 
-            self._phase_solver = payload["solver"]
+            self._phase_solver = payload["phase_solver"]
             self._friction_solver = payload["friction_solver"]
 
             self._sin_coeff = payload["sin_coeff"]

@@ -1,39 +1,38 @@
 import argparse
 import sys
 from datetime import datetime
-from itertools import product
 from math import fabs
 from pathlib import Path
 from random import sample
-from typing import List
+from typing import List, Optional
 
-import matplotlib.pyplot as plt
 import pandas as pd
 import ray
 import seaborn as sns
+from matplotlib import pyplot as plt
 
 from ComputeTargets import (
-    GkWKBIntegration,
+    TkNumericalIntegration,
     BackgroundModel,
-    GkNumericalIntegration,
-    GkNumericalValue,
-    GkWKBValue,
+    TkNumericalValue,
+    ModelProxy,
+    TkWKBIntegration,
+    TkWKBValue,
 )
-from ComputeTargets.BackgroundModel import ModelProxy
 from CosmologyConcepts import (
     wavenumber,
     wavenumber_exit_time,
-    redshift_array,
-    redshift,
 )
 from CosmologyConcepts.wavenumber import wavenumber_exit_time_array
 from CosmologyModels.LambdaCDM import Planck2018, LambdaCDM
 from Datastore.SQL.ProfileAgent import ProfileAgent
 from Datastore.SQL.ShardedPool import ShardedPool
-from MetadataConcepts import tolerance
 from RayTools.RayWorkPool import RayWorkPool
 from Units import Mpc_units
-from defaults import DEFAULT_ABS_TOLERANCE, DEFAULT_REL_TOLERANCE
+from defaults import (
+    DEFAULT_ABS_TOLERANCE,
+    DEFAULT_REL_TOLERANCE,
+)
 
 DEFAULT_TIMEOUT = 60
 
@@ -59,7 +58,7 @@ parser.add_argument(
     "--ray-address", default="auto", type=str, help="specify address of Ray cluster"
 )
 parser.add_argument(
-    "--output", default="GkWKB-out", type=str, help="specify folder for output files"
+    "--output", default="TkWKB-out", type=str, help="specify folder for output files"
 )
 args = parser.parse_args()
 
@@ -79,7 +78,7 @@ VERSION_LABEL = "2025.1.1"
 
 profile_agent = None
 if args.profile_db is not None:
-    label = f'{VERSION_LABEL}-jobname-extract_GkWKB_data-primarydb-"{args.database}"-shards-{args.shards}-{datetime.now().replace(microsecond=0).isoformat()}'
+    label = f'{VERSION_LABEL}-jobname-extract_Tk_data-primarydb-"{args.database}"-shards-{args.shards}-{datetime.now().replace(microsecond=0).isoformat()}'
 
     profile_agent = ProfileAgent.options(name="ProfileAgent").remote(
         db_name=args.profile_db,
@@ -87,13 +86,12 @@ if args.profile_db is not None:
         label=label,
     )
 
-# establish a ShardedPool to orchestrate database access
 with ShardedPool(
     version_label=VERSION_LABEL,
     db_name=args.database,
     timeout=args.db_timeout,
     profile_agent=profile_agent,
-    job_name="extract_GkWKB_data",
+    job_name="extract_TkWKB_data",
     prune_unvalidated=False,
 ) as pool:
 
@@ -107,16 +105,13 @@ with ShardedPool(
     # build absolute and relative tolerances
     atol, rtol = ray.get(
         [
-            pool.object_get(tolerance, tol=DEFAULT_ABS_TOLERANCE),
-            pool.object_get(tolerance, tol=DEFAULT_REL_TOLERANCE),
+            pool.object_get("tolerance", tol=DEFAULT_ABS_TOLERANCE),
+            pool.object_get("tolerance", tol=DEFAULT_REL_TOLERANCE),
         ]
     )
 
-    # array of k-modes matching the SOURCE and RESPONSE k-grids
+    # array of k-modes matching the SOURCE k-grid
     source_k_array = ray.get(pool.read_wavenumber_table(units=units, is_source=True))
-    response_k_array = ray.get(
-        pool.read_wavenumber_table(units=units, is_response=True)
-    )
 
     def create_k_exit_work(k: wavenumber):
         return pool.object_get(
@@ -140,41 +135,14 @@ with ShardedPool(
     source_k_exit_queue.run()
     source_k_exit_times = wavenumber_exit_time_array(source_k_exit_queue.results)
 
-    response_k_exit_queue = RayWorkPool(
-        pool,
-        response_k_array,
-        task_builder=create_k_exit_work,
-        compute_handler=None,
-        store_handler=None,
-        store_results=True,
-        title="QUERY K_EXIT VALUES",
-    )
-    response_k_exit_queue.run()
-    response_k_exit_times = wavenumber_exit_time_array(response_k_exit_queue.results)
-
-    full_k_exit_times = source_k_exit_times + response_k_exit_times
-
-    k_exit_earliest: wavenumber_exit_time = full_k_exit_times.max
-
-    # choose a subsample of the RESPONSE k modes
-    if len(response_k_exit_times) > 20:
+    # choose a subsample of the SOURCE k modes
+    if len(source_k_exit_times) > 20:
         k_subsample: List[wavenumber_exit_time] = sample(
-            list(response_k_exit_times),
-            k=int(round(0.5 * len(response_k_exit_times) + 0.5, 0)),
+            list(source_k_exit_times),
+            k=int(round(0.5 * len(source_k_exit_times) + 0.5, 0)),
         )
     else:
-        k_subsample: List[wavenumber_exit_time] = list(response_k_exit_times)
-
-    z_source_array = ray.get(pool.read_redshift_table(is_source=True))
-    z_source_sample = redshift_array(z_array=z_source_array)
-
-    z_response_array = ray.get(pool.read_redshift_table(is_response=True))
-    z_response_sample = redshift_array(z_array=z_response_array)
-
-    # choose a subsample of SOURCE redshifts
-    z_subsample: List[redshift] = sample(
-        list(z_source_sample), k=int(round(0.15 * len(z_source_sample) + 0.5, 0))
-    )
+        k_subsample: List[wavenumber_exit_time] = list(source_k_exit_times)
 
     model = ray.get(
         pool.object_get(
@@ -191,7 +159,6 @@ with ShardedPool(
             "Could not locate suitable background model instance in the datastore"
         )
 
-    # set up a proxy object to avoid having to repeatedly serialize the model instance and ship it out
     model_proxy = ModelProxy(model)
 
     def set_loglinear_axes(ax):
@@ -225,7 +192,7 @@ with ShardedPool(
     #      ('dashdotdotted',         (0, (3, 5, 1, 5, 1, 5))),
     #      ('loosely dashdotdotted', (0, (3, 10, 1, 10, 1, 10))),
     #      ('densely dashdotdotted', (0, (3, 1, 1, 1, 1, 1)))]
-    def add_z_labels(ax, Gk: GkWKBIntegration, k_exit: wavenumber_exit_time):
+    def add_z_labels(ax, Tk: TkNumericalIntegration, k_exit: wavenumber_exit_time):
         ax.axvline(k_exit.z_exit_subh_e3, linestyle=(0, (1, 1)), color="b")  # dotted
         ax.axvline(k_exit.z_exit_subh_e5, linestyle=(0, (1, 1)), color="b")  # dotted
         ax.axvline(k_exit.z_exit_suph_e3, linestyle=(0, (1, 1)), color="b")  # dotted
@@ -267,36 +234,48 @@ with ShardedPool(
         )
 
     @ray.remote
-    def plot_Gk(Gk_numerical: GkNumericalIntegration, Gk_WKB: GkWKBIntegration):
-        k_exit = Gk_numerical._k_exit
-        z_source = Gk_numerical.z_source
+    def plot_Tk(Tk_numerical: TkNumericalIntegration, Tk_WKB: TkWKBIntegration):
+        k_exit = Tk_numerical._k_exit
 
         sns.set_theme()
         fig = plt.figure()
         ax = plt.gca()
 
         z_column = []
-        G_column = []
-        abs_G_column = []
-        analytic_G_rad_column = []
-        abs_analytic_G_rad_column = []
-        analytic_G_w_column = []
-        abs_analytic_G_w_column = []
+        T_column = []
+        abs_T_column = []
+        analytic_T_rad_column = []
+        abs_analytic_T_rad_column = []
+        analytic_T_w_column = []
+        abs_analytic_T_w_column = []
         theta_column = []
+        friction_column = []
         H_ratio_column = []
         omega_WKB_sq_column = []
         WKB_criterion_column = []
         type_column = []
 
-        if Gk_numerical.available:
-            values: List[GkNumericalValue] = Gk_numerical.values
+        def safe_fabs(x: Optional[float]) -> Optional[float]:
+            if x is None:
+                return None
 
-            numerical_points = [(value.z.z, fabs(value.G)) for value in values]
+            return fabs(x)
+
+        def safe_div(x: Optional[float], y: float) -> Optional[float]:
+            if x is None:
+                return None
+
+            return x / y
+
+        if Tk_numerical.available:
+            values: List[TkNumericalValue] = Tk_numerical.values
+
+            numerical_points = [(value.z.z, safe_fabs(value.T)) for value in values]
             analytic_rad_points = [
-                (value.z.z, fabs(value.analytic_G_rad)) for value in values
+                (value.z, safe_fabs(value.analytic_T_rad)) for value in values
             ]
             analytic_w_points = [
-                (value.z.z, fabs(value.analytic_G_w)) for value in values
+                (value.z, safe_fabs(value.analytic_T_w)) for value in values
             ]
 
             numerical_x, numerical_y = zip(*numerical_points)
@@ -311,32 +290,33 @@ with ShardedPool(
                 ax.plot(
                     numerical_x,
                     numerical_y,
-                    label="Numerical $G_k$",
+                    label="Numerical $T_k$",
                     linestyle="solid",
                 )
                 ax.plot(
                     analytic_rad_x,
                     analytic_rad_y,
-                    label="Analytic $G_k$ [numeric, radiation]",
+                    label="Analytic $T_k$ [radiation]",
                     linestyle="dashed",
                 )
                 ax.plot(
                     analytic_w_x,
                     analytic_w_y,
-                    label="Analytic $G_k$ [numeric, $w=w(z)$]",
+                    label="Analytic $T_k$ [$w=w(z)$]",
                     linestyle="dashdot",
                 )
 
             z_column.extend(value.z.z for value in values)
-            G_column.extend(value.G for value in values)
-            abs_G_column.extend(fabs(value.G) for value in values)
-            analytic_G_rad_column.extend(value.analytic_G_rad for value in values)
-            abs_analytic_G_rad_column.extend(
-                fabs(value.analytic_G_rad) for value in values
+            T_column.extend(value.T for value in values)
+            abs_T_column.extend(safe_fabs(value.T) for value in values)
+            analytic_T_rad_column.extend(value.analytic_T_rad for value in values)
+            abs_analytic_T_rad_column.extend(
+                safe_fabs(value.analytic_T_rad) for value in values
             )
-            analytic_G_w_column.extend(value.analytic_G_w for value in values)
-            abs_analytic_G_w_column.extend(fabs(value.analytic_G_w) for value in values)
+            analytic_T_w_column.extend(value.analytic_T_w for value in values)
+            abs_analytic_T_w_column.extend(value.analytic_T_w for value in values)
             theta_column.extend(None for _ in range(len(values)))
+            friction_column.extend(None for _ in range(len(values)))
             H_ratio_column.extend(None for _ in range(len(values)))
             omega_WKB_sq_column.extend(value.omega_WKB_sq for value in values)
             WKB_criterion_column.extend(value.WKB_criterion for value in values)
@@ -344,22 +324,28 @@ with ShardedPool(
 
         theta_x = None
         theta_y = None
-        if Gk_WKB.available:
-            values: List[GkWKBValue] = Gk_WKB.values
+        friction_X = None
+        friction_y = None
+        if Tk_WKB.available:
+            values: List[TkWKBValue] = Tk_WKB.values
 
-            numerical_points = [(value.z.z, fabs(value.G_WKB)) for value in values]
+            numerical_points = [(value.z.z, safe_fabs(value.T_WKB)) for value in values]
             analytic_rad_points = [
-                (value.z.z, fabs(value.analytic_G_rad)) for value in values
+                (value.z, safe_fabs(value.analytic_T_rad)) for value in values
             ]
             analytic_w_points = [
-                (value.z.z, fabs(value.analytic_G_w)) for value in values
+                (value.z, safe_fabs(value.analytic_T_w)) for value in values
             ]
-            theta_points = [(value.z.z, fabs(value.theta)) for value in values]
+            theta_points = [(value.z.z, safe_fabs(value.theta)) for value in values]
+            friction_points = [
+                (value.z.z, safe_fabs(value.friction)) for value in values
+            ]
 
             numerical_x, numerical_y = zip(*numerical_points)
             analytic_rad_x, analytic_rad_y = zip(*analytic_rad_points)
             analytic_w_x, analytic_w_y = zip(*analytic_w_points)
             theta_x, theta_y = zip(*theta_points)
+            friction_x, friction_y = zip(*friction_points)
 
             if len(numerical_x) > 0 and (
                 any(y is not None and y > 0 for y in numerical_y)
@@ -369,48 +355,49 @@ with ShardedPool(
                 ax.plot(
                     numerical_x,
                     numerical_y,
-                    label="WKB $G_k$",
+                    label="WKB $T_k$",
                     linestyle="solid",
                 )
                 ax.plot(
                     analytic_rad_x,
                     analytic_rad_y,
-                    label="Analytic $G_k$ [WKB, radiation]]",
+                    label="Analytic $T_k$ [radiation]",
                     linestyle="dashed",
                 )
                 ax.plot(
                     analytic_w_x,
                     analytic_w_y,
-                    label="Analytic $G_k$ [WKB, $w=w(z)$]",
+                    label="Analytic $T_k$ [$w=w(z)$]",
                     linestyle="dashdot",
                 )
 
             z_column.extend(value.z.z for value in values)
-            G_column.extend(value.G_WKB for value in values)
-            abs_G_column.extend(fabs(value.G_WKB) for value in values)
-            analytic_G_rad_column.extend(value.analytic_G_rad for value in values)
-            abs_analytic_G_rad_column.extend(
-                fabs(value.analytic_G_rad) for value in values
+            T_column.extend(value.T_WKB for value in values)
+            abs_T_column.extend(safe_fabs(value.T_WKB) for value in values)
+            analytic_T_rad_column.extend(value.analytic_T_rad for value in values)
+            abs_analytic_T_rad_column.extend(
+                safe_fabs(value.analytic_T_rad) for value in values
             )
-            analytic_G_w_column.extend(value.analytic_G_w for value in values)
-            abs_analytic_G_w_column.extend(fabs(value.analytic_G_w) for value in values)
+            analytic_T_w_column.extend(value.analytic_T_w for value in values)
+            abs_analytic_T_w_column.extend(value.analytic_T_w for value in values)
             theta_column.extend(value.theta for value in values)
+            friction_column.extend(value.friction for value in values)
             H_ratio_column.extend(value.H_ratio for value in values)
             omega_WKB_sq_column.extend(value.omega_WKB_sq for value in values)
             WKB_criterion_column.extend(value.WKB_criterion for value in values)
             type_column.extend(1 for _ in range(len(values)))
 
-        add_z_labels(ax, Gk_WKB, k_exit)
+        add_z_labels(ax, Tk_WKB, k_exit)
 
-        ax.set_xlabel("response redshift $z$")
-        ax.set_ylabel("$G_k(z_{\\text{source}}, z_{\\text{response}})$")
+        ax.set_xlabel("source redshift $z$")
+        ax.set_ylabel("$T_k(z)$")
 
         set_loglog_axes(ax)
 
         base_path = Path(args.output).resolve()
         fig_path = (
             base_path
-            / f"plots/full-range/k-serial={k_exit.store_id}-k={k_exit.k.k_inv_Mpc:.5g}/z-serial={z_source.store_id}-zsource={z_source.z:.5g}.pdf"
+            / f"plots/full-range/k-serial={k_exit.store_id}-k={k_exit.k.k_inv_Mpc:.5g}.pdf"
         )
         fig_path.parents[0].mkdir(exist_ok=True, parents=True)
         fig.savefig(fig_path)
@@ -421,7 +408,7 @@ with ShardedPool(
         )
         fig_path = (
             base_path
-            / f"plots/zoom-matching/k-serial={k_exit.store_id}-k={k_exit.k.k_inv_Mpc:.5g}/z-serial={z_source.store_id}-zsource={z_source.z:.5g}.pdf"
+            / f"plots/zoom-matching/k-serial={k_exit.store_id}-k={k_exit.k.k_inv_Mpc:.5g}.pdf"
         )
         fig_path.parents[0].mkdir(exist_ok=True, parents=True)
         fig.savefig(fig_path)
@@ -434,34 +421,53 @@ with ShardedPool(
 
             ax.plot(theta_x, theta_y, label="WKB phase $\\theta$")
 
-            add_z_labels(ax, Gk_WKB, k_exit)
+            add_z_labels(ax, Tk_WKB, k_exit)
 
-            ax.set_xlabel("response redshift $z$")
+            ax.set_xlabel("source redshift $z$")
             ax.set_ylabel("WKB phase $\\theta$")
 
             set_loglog_axes(ax)
 
             fig_path = (
                 base_path
-                / f"plots/theta/k-serial={k_exit.store_id}-k={k_exit.k.k_inv_Mpc:.5g}/z-serial={z_source.store_id}-zsource={z_source.z:.5g}.pdf"
+                / f"plots/theta/k-serial={k_exit.store_id}-k={k_exit.k.k_inv_Mpc:.5g}.pdf"
+            )
+            fig_path.parents[0].mkdir(exist_ok=True, parents=True)
+            fig.savefig(fig_path)
+
+        if friction_x is not None and friction_y is not None:
+            fig = plt.figure()
+            ax = plt.gca()
+
+            ax.plot(friction_x, friction_y, label="WKB friction")
+
+            add_z_labels(ax, Tk_WKB, k_exit)
+
+            ax.set_xlabel("source redshift $z$")
+            ax.set_ylabel("WKB friction")
+
+            set_loglog_axes(ax)
+
+            fig_path = (
+                base_path
+                / f"plots/friction/k-serial={k_exit.store_id}-k={k_exit.k.k_inv_Mpc:.5g}.pdf"
             )
             fig_path.parents[0].mkdir(exist_ok=True, parents=True)
             fig.savefig(fig_path)
 
         csv_path = (
-            base_path
-            / f"csv/k-serial={k_exit.store_id}-k={k_exit.k.k_inv_Mpc:.5g}/z-serial={z_source.store_id}-zsource={z_source.z:.5g}.csv"
+            base_path / f"csv/k-serial={k_exit.store_id}-k={k_exit.k.k_inv_Mpc:.5g}.csv"
         )
         csv_path.parents[0].mkdir(exist_ok=True, parents=True)
         df = pd.DataFrame.from_dict(
             {
                 "redshift": z_column,
-                "G": G_column,
-                "abs_G": abs_G_column,
-                "analytic_G_rad": analytic_G_rad_column,
-                "abs_analytic_G_rad": abs_analytic_G_rad_column,
-                "analytic_G_w": analytic_G_w_column,
-                "abs_analytic_G_w": abs_analytic_G_w_column,
+                "T": T_column,
+                "abs_T": abs_T_column,
+                "analytic_T_rad": analytic_T_rad_column,
+                "abs_analytic_T_rad": abs_analytic_T_rad_column,
+                "analytic_T_w": analytic_T_w_column,
+                "abs_analytic_T_w": abs_analytic_T_w_column,
                 "theta": theta_column,
                 "H_ratio": H_ratio_column,
                 "omega_WKB_sq": omega_WKB_sq_column,
@@ -472,33 +478,25 @@ with ShardedPool(
         df.sort_values(by="redshift", ascending=False, inplace=True, ignore_index=True)
         df.to_csv(csv_path, header=True, index=False)
 
-    def build_plot_Gk_work(item):
-        k_exit, z_source = item
-        k_exit: wavenumber_exit_time
-        z_source: redshift
-
-        # query the list of GkNumberical and GkWKB data for this k, z_source combination
+    def build_plot_Tk_work(k_exit: wavenumber_exit_time):
         query_payload = {
             "solver_labels": [],
             "model": model_proxy,
             "k": k_exit,
-            "z_source": z_source,
             "z_sample": None,
             "atol": atol,
             "rtol": rtol,
         }
 
-        GkN_ref = pool.object_get("GkNumericalIntegration", **query_payload)
-        GkW_ref = pool.object_get("GkWKBIntegration", **query_payload)
+        TkNumerical_ref = pool.object_get("TkNumericalIntegration", **query_payload)
+        TkWKB_ref = pool.object_get("TkWKBIntegration", **query_payload)
 
-        return plot_Gk.remote(GkN_ref, GkW_ref)
-
-    work_grid = product(k_subsample, z_subsample)
+        return plot_Tk.remote(TkNumerical_ref, TkWKB_ref)
 
     work_queue = RayWorkPool(
         pool,
-        work_grid,
-        task_builder=build_plot_Gk_work,
+        k_subsample,
+        task_builder=build_plot_Tk_work,
         compute_handler=None,
         store_handler=None,
         available_handler=None,
@@ -509,7 +507,7 @@ with ShardedPool(
         process_batch_size=10,
         notify_batch_size=50,
         notify_time_interval=120,
-        title="GENERATING GkNumerical/GkWKB DATA PRODUCTS",
+        title="GENERATING TkNumerical/TkWKB DATA PRODUCTS",
         store_results=False,
     )
     work_queue.run()
