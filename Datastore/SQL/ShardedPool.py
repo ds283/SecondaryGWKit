@@ -26,6 +26,7 @@ _replicate_tables = [
     "BackgroundModel",
     "BackgroundModelValue",
     "GkSourcePolicy",
+    "QuadSourcePolicy",
 ]
 _shard_tables = {
     "TkNumericalIntegration": "k",

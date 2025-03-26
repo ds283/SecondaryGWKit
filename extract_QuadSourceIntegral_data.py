@@ -221,15 +221,15 @@ with ShardedPool(
         [
             pool.object_get(
                 "GkSourcePolicy",
-                label='policy="maximize-numeric"-Levin-threshold="1.5"',
+                label='policy="maximize-Levin"-Levin-threshold="1.5"',
                 Levin_threshold=1.5,
-                numeric_policy="maximize_numeric",
+                numeric_policy="maximize_Levin",
             ),
             pool.object_get(
                 "GkSourcePolicy",
-                label='policy="maximize-numeric"-Levin-threshold="5.0"',
+                label='policy="maximize-Levin"-Levin-threshold="5.0"',
                 Levin_threshold=5.0,
-                numeric_policy="maximize_numeric",
+                numeric_policy="maximize_Levin",
             ),
         ]
     )

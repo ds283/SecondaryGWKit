@@ -310,20 +310,38 @@ with ShardedPool(
         "solve_ivp+LSODA-stepping0": solve_icp_LSODA,
     }
 
-    # create the GkSource policies that we will apply later
+    # create GkSource policies that we will apply later
     GkSource_policy_1pt5, GkSource_policy_5pt0 = ray.get(
         [
             pool.object_get(
                 "GkSourcePolicy",
-                label='policy="maximize-numeric"-Levin-threshold="1.5"',
+                label='policy="maximize-Levin"-Levin-threshold="1.5"',
                 Levin_threshold=1.5,
-                numeric_policy="maximize_numeric",
+                numeric_policy="maximize_Levin",
             ),
             pool.object_get(
                 "GkSourcePolicy",
-                label='policy="maximize-numeric"-Levin-threshold="5.0"',
+                label='policy="maximize-Levin"-Levin-threshold="5.0"',
                 Levin_threshold=5.0,
-                numeric_policy="maximize_numeric",
+                numeric_policy="maximize_Levin",
+            ),
+        ]
+    )
+
+    # create QuadSource policies that we will apply later
+    QuadSource_policy_1pt5, QuadSource_policy_5pt0 = ray.get(
+        [
+            pool.object_get(
+                "QuadSourcePolicy",
+                label='policy="maximize-Levin"-Levin-threshold="1.5"',
+                Levin_threshold=1.5,
+                numeric_policy="maximize_Levin",
+            ),
+            pool.object_get(
+                "QuadSourcePolicy",
+                label='policy="maximize-Levin"-Levin-threshold="5.0"',
+                Levin_threshold=5.0,
+                numeric_policy="maximize_Levin",
             ),
         ]
     )
