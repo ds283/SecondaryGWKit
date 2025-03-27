@@ -233,6 +233,15 @@ with ShardedPool(
             color="r",
         )
 
+    def add_k_labels(ax, k_exit):
+        ax.text(
+            0.0,
+            1.1,
+            f"$k$ = {k_exit.k.k_inv_Mpc:.5g} Mpc$^{{-1}}$",
+            transform=ax.transAxes,
+            fontsize="x-small",
+        )
+
     @ray.remote
     def plot_Tk(Tk_numerical: TkNumericalIntegration, Tk_WKB: TkWKBIntegration):
         k_exit = Tk_numerical._k_exit
@@ -324,7 +333,7 @@ with ShardedPool(
 
         theta_x = None
         theta_y = None
-        friction_X = None
+        friction_x = None
         friction_y = None
         if Tk_WKB.available:
             values: List[TkWKBValue] = Tk_WKB.values
@@ -388,6 +397,7 @@ with ShardedPool(
             type_column.extend(1 for _ in range(len(values)))
 
         add_z_labels(ax, Tk_WKB, k_exit)
+        add_k_labels(ax, k_exit)
 
         ax.set_xlabel("source redshift $z$")
         ax.set_ylabel("$T_k(z)$")
@@ -401,6 +411,7 @@ with ShardedPool(
         )
         fig_path.parents[0].mkdir(exist_ok=True, parents=True)
         fig.savefig(fig_path)
+        fig.savefig(fig_path.with_suffix(".png"))
 
         ax.set_xlim(
             int(round(k_exit.z_exit_suph_e3 + 0.5, 0)),
@@ -412,6 +423,22 @@ with ShardedPool(
         )
         fig_path.parents[0].mkdir(exist_ok=True, parents=True)
         fig.savefig(fig_path)
+        fig.savefig(fig_path.with_suffix(".png"))
+
+        min_z = min(numerical_x)
+        max_z = max(numerical_x)
+        ax.set_xlim(
+            min(int(round(min_z * 100.0 + 0.5, 0)), max_z),
+            max(int(round(min_z * 0.9 - 0.5, 0)), 0.01),
+        )
+
+        fig_path = (
+            base_path
+            / f"plots/zoom-lowz/k-serial={k_exit.store_id}-k={k_exit.k.k_inv_Mpc:.5g}.pdf"
+        )
+        fig_path.parents[0].mkdir(exist_ok=True, parents=True)
+        fig.savefig(fig_path)
+        fig.savefig(fig_path.with_suffix(".png"))
 
         plt.close()
 
@@ -434,6 +461,7 @@ with ShardedPool(
             )
             fig_path.parents[0].mkdir(exist_ok=True, parents=True)
             fig.savefig(fig_path)
+            fig.savefig(fig_path.with_suffix(".png"))
 
         if friction_x is not None and friction_y is not None:
             fig = plt.figure()
@@ -454,6 +482,7 @@ with ShardedPool(
             )
             fig_path.parents[0].mkdir(exist_ok=True, parents=True)
             fig.savefig(fig_path)
+            fig.savefig(fig_path.with_suffix(".png"))
 
         csv_path = (
             base_path / f"csv/k-serial={k_exit.store_id}-k={k_exit.k.k_inv_Mpc:.5g}.csv"
