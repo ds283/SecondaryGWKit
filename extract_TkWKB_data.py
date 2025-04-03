@@ -9,6 +9,7 @@ from typing import List, Optional
 import pandas as pd
 import ray
 import seaborn as sns
+from CosmologyModels.QCDCosmology import QCDCosmology
 from matplotlib import pyplot as plt
 
 from ComputeTargets import (
@@ -98,9 +99,14 @@ with ShardedPool(
     # set up LambdaCDM object representing a basic Planck2018 cosmology in Mpc units
     units = Mpc_units()
     params = Planck2018()
+
     LambdaCDM_Planck2018 = ray.get(
         pool.object_get(LambdaCDM, params=params, units=units)
     )
+
+    # Get QCD model with same parameters
+
+    QCD_model = ray.get(pool.object_get("QCDCosmology", params=params, units=units))
 
     # build absolute and relative tolerances
     atol, rtol = ray.get(
@@ -192,13 +198,21 @@ with ShardedPool(
     #      ('dashdotdotted',         (0, (3, 5, 1, 5, 1, 5))),
     #      ('loosely dashdotdotted', (0, (3, 10, 1, 10, 1, 10))),
     #      ('densely dashdotdotted', (0, (3, 1, 1, 1, 1, 1)))]
-    def add_z_labels(ax, Tk: TkNumericalIntegration, k_exit: wavenumber_exit_time):
+    def add_z_labels(
+        ax,
+        Tk: TkNumericalIntegration,
+        k_exit: wavenumber_exit_time,
+        model_type: str = "LCDM",
+    ):
+        color = "b" if model_type == "LCDM" else "r"
+
         ax.axvline(k_exit.z_exit_subh_e3, linestyle=(0, (1, 1)), color="b")  # dotted
         ax.axvline(k_exit.z_exit_subh_e5, linestyle=(0, (1, 1)), color="b")  # dotted
         ax.axvline(k_exit.z_exit_suph_e3, linestyle=(0, (1, 1)), color="b")  # dotted
         ax.axvline(
             k_exit.z_exit, linestyle=(0, (3, 1, 1, 1)), color="r"
         )  # densely dashdotted
+        prefix = "ΛCDM" if model_type == "LCDM" else "QCD"
         trans = ax.get_xaxis_transform()
         ax.text(
             TEXT_DISPLACEMENT_MULTIPLIER * k_exit.z_exit_suph_e3,
@@ -233,17 +247,13 @@ with ShardedPool(
             color="r",
         )
 
-    def add_k_labels(ax, k_exit):
-        ax.text(
-            0.0,
-            1.1,
-            f"$k$ = {k_exit.k.k_inv_Mpc:.5g} Mpc$^{{-1}}$",
-            transform=ax.transAxes,
-            fontsize="x-small",
-        )
-
     @ray.remote
-    def plot_Tk(Tk_numerical: TkNumericalIntegration, Tk_WKB: TkWKBIntegration):
+    def plot_Tk(
+        Tk_numerical: TkNumericalIntegration,
+        Tk_WKB: TkWKBIntegration,
+        Tk_numerical_qcd: TkNumericalIntegration,
+        Tk_WKB_qcd: TkWKBIntegration,
+    ):
         k_exit = Tk_numerical._k_exit
 
         sns.set_theme()
@@ -333,7 +343,7 @@ with ShardedPool(
 
         theta_x = None
         theta_y = None
-        friction_x = None
+        friction_X = None
         friction_y = None
         if Tk_WKB.available:
             values: List[TkWKBValue] = Tk_WKB.values
@@ -396,8 +406,50 @@ with ShardedPool(
             WKB_criterion_column.extend(value.WKB_criterion for value in values)
             type_column.extend(1 for _ in range(len(values)))
 
-        add_z_labels(ax, Tk_WKB, k_exit)
-        add_k_labels(ax, k_exit)
+        # QCD numerical and WKB
+
+        if Tk_numerical_qcd.available:  # QCD numerical
+            values: List[TkNumericalValue] = Tk_numerical_qcd.values
+            numerical_points = [(value.z.z, safe_fabs(value.T)) for value in values]
+            numerical_x, numerical_y = zip(*numerical_points)
+            z_column.extend(value.z.z for value in values)
+            T_column.extend(value.T for value in values)
+            abs_T_column.extend(safe_fabs(value.T) for value in values)
+            analytic_T_rad_column.extend(value.analytic_T_rad for value in values)
+            abs_analytic_T_rad_column.extend(
+                safe_fabs(value.analytic_T_rad) for value in values
+            )
+            analytic_T_w_column.extend(value.analytic_T_w for value in values)
+            abs_analytic_T_w_column.extend(value.analytic_T_w for value in values)
+            theta_column.extend(None for _ in range(len(values)))
+            friction_column.extend(None for _ in range(len(values)))
+            H_ratio_column.extend(None for _ in range(len(values)))
+            omega_WKB_sq_column.extend(value.omega_WKB_sq for value in values)
+            WKB_criterion_column.extend(value.WKB_criterion for value in values)
+            type_column.extend(
+                2 for _ in range(len(values))
+            )  # type 2 for QCD numerical
+
+        if Tk_WKB_qcd.available:  # QCD WKB
+            add_z_labels(ax, Tk_WKB_qcd, k_exit, model_type="QCD")
+            values: List[TkWKBValue] = Tk_WKB_qcd.values
+            z_column.extend(value.z.z for value in values)
+            T_column.extend(value.T_WKB for value in values)
+            abs_T_column.extend(safe_fabs(value.T_WKB) for value in values)
+            analytic_T_rad_column.extend(value.analytic_T_rad for value in values)
+            abs_analytic_T_rad_column.extend(
+                safe_fabs(value.analytic_T_rad) for value in values
+            )
+            analytic_T_w_column.extend(value.analytic_T_w for value in values)
+            abs_analytic_T_w_column.extend(value.analytic_T_w for value in values)
+            theta_column.extend(value.theta for value in values)
+            friction_column.extend(value.friction for value in values)
+            H_ratio_column.extend(value.H_ratio for value in values)
+            omega_WKB_sq_column.extend(value.omega_WKB_sq for value in values)
+            WKB_criterion_column.extend(value.WKB_criterion for value in values)
+            type_column.extend(3 for _ in range(len(values)))  # type 3 for QCD WKB
+
+        add_z_labels(ax, Tk_WKB, k_exit, model_type="LCDM")
 
         ax.set_xlabel("source redshift $z$")
         ax.set_ylabel("$T_k(z)$")
@@ -411,7 +463,6 @@ with ShardedPool(
         )
         fig_path.parents[0].mkdir(exist_ok=True, parents=True)
         fig.savefig(fig_path)
-        fig.savefig(fig_path.with_suffix(".png"))
 
         ax.set_xlim(
             int(round(k_exit.z_exit_suph_e3 + 0.5, 0)),
@@ -423,22 +474,6 @@ with ShardedPool(
         )
         fig_path.parents[0].mkdir(exist_ok=True, parents=True)
         fig.savefig(fig_path)
-        fig.savefig(fig_path.with_suffix(".png"))
-
-        min_z = min(numerical_x)
-        max_z = max(numerical_x)
-        ax.set_xlim(
-            min(int(round(min_z * 100.0 + 0.5, 0)), max_z),
-            max(int(round(min_z * 0.9 - 0.5, 0)), 0.01),
-        )
-
-        fig_path = (
-            base_path
-            / f"plots/zoom-lowz/k-serial={k_exit.store_id}-k={k_exit.k.k_inv_Mpc:.5g}.pdf"
-        )
-        fig_path.parents[0].mkdir(exist_ok=True, parents=True)
-        fig.savefig(fig_path)
-        fig.savefig(fig_path.with_suffix(".png"))
 
         plt.close()
 
@@ -461,7 +496,6 @@ with ShardedPool(
             )
             fig_path.parents[0].mkdir(exist_ok=True, parents=True)
             fig.savefig(fig_path)
-            fig.savefig(fig_path.with_suffix(".png"))
 
         if friction_x is not None and friction_y is not None:
             fig = plt.figure()
@@ -482,7 +516,6 @@ with ShardedPool(
             )
             fig_path.parents[0].mkdir(exist_ok=True, parents=True)
             fig.savefig(fig_path)
-            fig.savefig(fig_path.with_suffix(".png"))
 
         csv_path = (
             base_path / f"csv/k-serial={k_exit.store_id}-k={k_exit.k.k_inv_Mpc:.5g}.csv"
@@ -502,41 +535,61 @@ with ShardedPool(
                 "omega_WKB_sq": omega_WKB_sq_column,
                 "WKB_criterion": WKB_criterion_column,
                 "type": type_column,
-            }
+                "model": ["LCDM" if t < 2 else "QCD" for t in type_column],
+            }  # Add model identifier}
         )
         df.sort_values(by="redshift", ascending=False, inplace=True, ignore_index=True)
         df.to_csv(csv_path, header=True, index=False)
 
-    def build_plot_Tk_work(k_exit: wavenumber_exit_time):
-        query_payload = {
-            "solver_labels": [],
-            "model": model_proxy,
-            "k": k_exit,
-            "z_sample": None,
-            "atol": atol,
-            "rtol": rtol,
-        }
 
-        TkNumerical_ref = pool.object_get("TkNumericalIntegration", **query_payload)
-        TkWKB_ref = pool.object_get("TkWKBIntegration", **query_payload)
+def build_plot_Tk_work(k_exit: wavenumber_exit_time):
+    # ΛCDM query
+    query_payload = {
+        "solver_labels": [],
+        "model": model_proxy,
+        "k": k_exit,
+        "z_sample": None,
+        "atol": atol,
+        "rtol": rtol,
+    }
 
-        return plot_Tk.remote(TkNumerical_ref, TkWKB_ref)
+    # Get ΛCDM results
+    TkNumerical_ref = pool.object_get("TkNumericalIntegration", **query_payload)
+    TkWKB_ref = pool.object_get("TkWKBIntegration", **query_payload)
 
-    work_queue = RayWorkPool(
-        pool,
-        k_subsample,
-        task_builder=build_plot_Tk_work,
-        compute_handler=None,
-        store_handler=None,
-        available_handler=None,
-        validation_handler=None,
-        post_handler=None,
-        label_builder=None,
-        create_batch_size=10,
-        process_batch_size=10,
-        notify_batch_size=50,
-        notify_time_interval=120,
-        title="GENERATING TkNumerical/TkWKB DATA PRODUCTS",
-        store_results=False,
-    )
-    work_queue.run()
+    # QCD query
+    qcd_payload = {
+        "solver_labels": [],
+        "model": ModelProxy(QCD_model),
+        "k": k_exit,
+        "z_sample": None,
+        "atol": atol,
+        "rtol": rtol,
+    }
+
+    # Get QCD results
+    TkNumerical_qcd = pool.object_get("TkNumericalIntegration", **qcd_payload)
+    TkWKB_qcd = pool.object_get("TkWKBIntegration", **qcd_payload)
+
+    # Return both ΛCDM and QCD results
+    return plot_Tk.remote(TkNumerical_ref, TkWKB_ref, TkNumerical_qcd, TkWKB_qcd)
+
+
+work_queue = RayWorkPool(
+    pool,
+    k_subsample,
+    task_builder=build_plot_Tk_work,
+    compute_handler=None,
+    store_handler=None,
+    available_handler=None,
+    validation_handler=None,
+    post_handler=None,
+    label_builder=None,
+    create_batch_size=10,
+    process_batch_size=10,
+    notify_batch_size=50,
+    notify_time_interval=120,
+    title="GENERATING TkNumerical/TkWKB DATA PRODUCTS",
+    store_results=False,
+)
+work_queue.run()

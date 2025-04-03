@@ -235,8 +235,12 @@ with ShardedPool(
     # set up LambdaCDM object representing a basic Planck2018 cosmology in Mpc units
     units = Mpc_units()
     params = Planck2018()
+
     LambdaCDM_Planck2018 = ray.get(
         pool.object_get("LambdaCDM", params=params, units=units)
+    )
+    QCD_EOS_Planck2018 = ray.get(
+        pool.object_get("QCDCosmology", params=params, units=units)
     )
 
     zend = args.zend
@@ -477,7 +481,8 @@ with ShardedPool(
 
     ## STEP 1a
     ## BAKE THE BACKGROUND COSMOLOGY INTO A BACKGROUND MODEL OBJECT
-    model: BackgroundModel = ray.get(
+
+    LambdaCDM_model: BackgroundModel = ray.get(
         pool.object_get(
             "BackgroundModel",
             solver_labels=solvers,
@@ -488,19 +493,44 @@ with ShardedPool(
             tags=[LargestSourceZTag, SmallestSourceZTag, SourceSamplesPerLog10ZTag],
         )
     )
-    if not model.available:
-        print("\n** CALCULATING BACKGROUND MODEL")
-        data = ray.get(model.compute(label=LambdaCDM_Planck2018.name))
-        model.store()
-        model = ray.get(pool.object_store(model))
-        outcome = ray.get(pool.object_validate(model))
+    if not LambdaCDM_model.available:
+        print("\n** CALCULATING BACKGROUND LAMBDA-CDM MODEL")
+        data = ray.get(LambdaCDM_model.compute(label=LambdaCDM_Planck2018.name))
+        LambdaCDM_model.store()
+        LambdaCDM_model = ray.get(pool.object_store(LambdaCDM_model))
+        outcome = ray.get(pool.object_validate(LambdaCDM_model))
     else:
         print(
-            f'\n** FOUND EXISTING BACKGROUND MODEL "{model.label}" (store_id={model.store_id})'
+            f'\n** FOUND EXISTING LAMBDA-CDM BACKGROUND MODEL "{LambdaCDM_model.label}" (store_id={LambdaCDM_model.store_id})'
         )
 
     # set up a proxy object to avoid having to repeatedly serialize the model instance and ship it out
-    model_proxy = ModelProxy(model)
+    model_proxy = ModelProxy(LambdaCDM_model)
+
+    QCD_EOS_model: BackgroundModel = ray.get(
+        pool.object_get(
+            "BackgroundModel",
+            solver_labels=solvers,
+            cosmology=QCD_EOS_Planck2018,
+            z_sample=z_source_sample,
+            atol=atol,
+            rtol=rtol,
+            tags=[LargestSourceZTag, SmallestSourceZTag, SourceSamplesPerLog10ZTag],
+        )
+    )
+    if not QCD_EOS_model.available:
+        print("\n** CALCULATING BACKGROUND QCD-EOS MODEL")
+        data = ray.get(QCD_EOS_model.compute(label=QCD_EOS_Planck2018.name))
+        QCD_EOS_model.store()
+        QCD_EOS_model = ray.get(pool.object_store(QCD_EOS_model))
+        outcome = ray.get(pool.object_validate(QCD_EOS_model))
+    else:
+        print(
+            f'\n** FOUND EXISTING QCD-EOS BACKGROUND MODEL "{QCD_EOS_model.label}" (store_id={QCD_EOS_model.store_id})'
+        )
+
+    # set up a proxy object to avoid having to repeatedly serialize the model instance and ship it out
+    model_proxy = ModelProxy(LambdaCDM_model)
 
     print("\n** BUILDING BESSEL FUNCTION SPLINES")
     phase_start = time.perf_counter()
@@ -508,7 +538,7 @@ with ShardedPool(
     # find largest argument of the Bessel functions J_nu(k c_s \tau), Y_nu(k c_s \tau) that we will need
     # these are
     largest_source_k = source_k_exit_times.max.k
-    mod_f = model.functions
+    mod_f = LambdaCDM_model.functions
     largest_tau = mod_f.tau(zend)
     largest_x = largest_source_k.k * largest_tau
     largest_x_with_clearance = 1.075 * largest_x
