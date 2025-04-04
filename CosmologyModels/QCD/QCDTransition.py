@@ -132,28 +132,30 @@ def G(T: float) -> float:
         return 3.36  # Low temperature limit
 
 
+
 def Gs(T: float) -> float:
     """Complete effective d.o.f for entropy density across all temperatures"""
     if T > 1e16:
         return 106.75  # Asymptotic high temperature limit
     elif 0.12 <= T <= 1e16:
         lnT = np.log(T)
-        return polynomial_sum(c_coeffs, lnT) / polynomial_sum(d_coeffs, lnT)
+        return G(T) * polynomial_sum(d_coeffs, lnT) / (polynomial_sum(d_coeffs, lnT) + polynomial_sum(c_coeffs, lnT))
     elif 1e-5 <= T < 0.12:
         return (
-            2.030
-            + 1.353 * S_fit(m_e / T) ** (4 / 3)
-            + 3.495 * f_s(m_e / T)
-            + 3.446 * f_s(m_mu / T)
-            + 1.05 * b_s(m_pi0 / T)
-            + 2.08 * b_s(m_piplus / T)
-            + 4.165 * b_s(m_1 / T)
+            2.008
+            + 1.923 * S_fit(m_e / T) ** (4 / 3)
+            + 3.442 * f_s(m_e / T)
+            + 3.468 * f_s(m_mu / T)
+            + 1.034 * b_s(m_pi0 / T)
+            + 2.068 * b_s(m_piplus / T)
+            + 4.16 * b_s(m_1 / T)
             + 30.55 * b_s(m_2 / T)
-            + 89.4 * b_s(m_3 / T)
-            + 8209 * b_s(m_4 / T)
+            + 90 * b_s(m_3 / T)
+            + 6209 * b_s(m_4 / T)
         )
     else:
         return 3.91  # Low temperature limit
+
 
 
 def w_of_T(T: float) -> float:
