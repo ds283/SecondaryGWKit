@@ -1,5 +1,7 @@
 import numpy as np
 
+# Fitting functions from Appendix C of Saikawa & Shirai https://arxiv.org/pdf/1803.01038
+
 # Energy density coefficients
 a_coeffs = [
     1,
