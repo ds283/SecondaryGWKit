@@ -143,7 +143,7 @@ def Gs(T: float) -> float:
     elif 1e-5 <= T < 0.12:
         return (
             2.008
-            + 1.923 * S_fit(m_e / T) ** (4 / 3)
+            + 1.923 * S_fit(m_e / T)
             + 3.442 * f_s(m_e / T)
             + 3.468 * f_s(m_mu / T)
             + 1.034 * b_s(m_pi0 / T)
