@@ -50,3 +50,52 @@ class QCDCosmology(LambdaCDM):
         else:
             # Outside the QCD range, revert to the default LCDM value.
             return self.wBackground(z)
+
+
+
+
+############################################################################
+
+# Corrected Hubble for QCD transition
+# This method modifies the Hubble function to account for the radiation corrections
+# only in the QCD transition range. Outside that range, it reverts to the standard LCDM Hubble.
+def Hubble(self, z: float) -> float:
+    """
+    Evaluate H(z) with radiation corrections as follows:
+      - For T < T_low: use LCDM Hubble (i.e. no extra corrections).
+      - For T_low <= T <= T_switch: use variable corrections based on G(T) and Gs(T).
+      - For T > T_switch: use the asymptotic Standard Model values (106.75) for g_* and g_{*,s}.
+    """
+    T = self.T_of_z(z)
+    one_plus_z = 1.0 + z
+
+    # Set threshold values (in GeV); adjust these as needed.
+    T_low = 5e-4    # Below this, LCDM behavior applies.
+    T_switch = 200  # Above this, use asymptotic SM values.
+
+    if T < T_low:
+        # For low T, effective degrees are constant as in today’s universe.
+        return super().Hubble(z)
+    elif T <= T_switch:
+        # In the intermediate (QCD transition) region, use variable effective degrees.
+        g_star = G(T)
+        gs = Gs(T)
+        # Today’s effective numbers (from your document)
+        g_star0 = 3.36
+        gs0 = 3.94
+        rad_factor = (g_star / g_star0) * (gs0 / gs)**(4/3)
+    else:
+        # For high T, the Standard Model predicts asymptotic values:
+        g_star_asympt = 106.75
+        gs_asympt = 106.75
+        g_star0 = 3.36
+        gs0 = 3.94
+        rad_factor = (g_star_asympt / g_star0) * (gs0 / gs_asympt)**(4/3)
+
+    rho_r_corr = self.rho_r0 * rad_factor * one_plus_z**4
+    rho_m = self.rho_m0 * one_plus_z**3
+    rho_total = rho_r_corr + rho_m + self.rho_cc
+    H2 = rho_total / (3.0 * self.Mpsq)
+    return np.sqrt(H2)
+
+
