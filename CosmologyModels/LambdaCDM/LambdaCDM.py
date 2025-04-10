@@ -2,6 +2,7 @@ from collections import namedtuple
 from math import sqrt, pow
 
 from CosmologyModels import BaseCosmology
+from CosmologyModels.model_ids import LAMBDACDM_IDENTIFIER
 from Units.base import UnitsLike
 from constants import RadiationConstant
 
@@ -84,7 +85,7 @@ class LambdaCDM(BaseCosmology):
     @property
     def type_id(self) -> int:
         # 0 is the unique ID for the LambdaCDM cosmology type
-        return 0
+        return LAMBDACDM_IDENTIFIER
 
     @property
     def name(self) -> str:

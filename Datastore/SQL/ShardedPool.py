@@ -22,6 +22,7 @@ _replicate_tables = [
     "wavenumber_exit_time",  # needs to be replicated so that we can batch query QuadSourceIntegral and OneLoopIntegral objects
     "tolerance",
     "LambdaCDM",
+    "QCDCosmology",
     "IntegrationSolver",
     "BackgroundModel",
     "BackgroundModelValue",
