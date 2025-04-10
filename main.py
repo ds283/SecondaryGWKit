@@ -505,7 +505,7 @@ with ShardedPool(
         )
 
     # set up a proxy object to avoid having to repeatedly serialize the model instance and ship it out
-    model_proxy = ModelProxy(LambdaCDM_model)
+    # model_proxy = ModelProxy(LambdaCDM_model)
 
     QCD_EOS_model: BackgroundModel = ray.get(
         pool.object_get(
@@ -530,16 +530,17 @@ with ShardedPool(
         )
 
     # set up a proxy object to avoid having to repeatedly serialize the model instance and ship it out
-    model_proxy = ModelProxy(LambdaCDM_model)
+    model_proxy = ModelProxy(QCD_EOS_model)
 
     print("\n** BUILDING BESSEL FUNCTION SPLINES")
     phase_start = time.perf_counter()
 
     # find largest argument of the Bessel functions J_nu(k c_s \tau), Y_nu(k c_s \tau) that we will need
-    # these are
     largest_source_k = source_k_exit_times.max.k
-    mod_f = LambdaCDM_model.functions
-    largest_tau = mod_f.tau(zend)
+    lcdm_f = LambdaCDM_model.functions
+    qcd_f = QCD_EOS_model.functions
+
+    largest_tau = max(lcdm_f.tau(zend), qcd_f.tau(zend))
     largest_x = largest_source_k.k * largest_tau
     largest_x_with_clearance = 1.075 * largest_x
 
