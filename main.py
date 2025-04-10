@@ -225,7 +225,111 @@ def run_pipeline(model_data: dict):
     model_label = model_data["label"]
     model_cosmology = model_data["cosmology"]
 
-    print(f"\n>> RUNNING PIPELINE FOR MODEL {model_label}\n")
+    print(f"\n>> RUNNING PIPELINE FOR MODEL {model_label}")
+
+    ## STEP 0
+    ## COMPUTE HORIZON EXIT TIMES FOR THIS MODEL, AND USE THESE TO BUILD A Z-SAMPLE GRID
+
+    def build_k_exit_work(k: wavenumber):
+        return pool.object_get(
+            "wavenumber_exit_time",
+            k=k,
+            cosmology=model_cosmology,
+            atol=atol,
+            rtol=rtol,
+        )
+
+    # for each k mode we sample, determine its horizon exit point
+    source_k_exit_queue = RayWorkPool(
+        pool,
+        source_k_sample,
+        task_builder=build_k_exit_work,
+        title=f"CALCULATE HORIZON EXIT TIMES FOR {model_label} SOURCE K-SAMPLE",
+        store_results=True,
+    )
+    source_k_exit_queue.run()
+    source_k_exit_times = wavenumber_exit_time_array(source_k_exit_queue.results)
+
+    response_k_exit_queue = RayWorkPool(
+        pool,
+        response_k_sample,
+        task_builder=build_k_exit_work,
+        title=f"CALCULATE HORIZON EXIT TIMES FOR {model_label} RESPONSE K-SAMPLE",
+        store_results=True,
+    )
+    response_k_exit_queue.run()
+    response_k_exit_times = wavenumber_exit_time_array(response_k_exit_queue.results)
+
+    ## STEP 2
+    ## BUILD A UNIVERSAL GRID OF Z-VALUES AT WHICH TO SAMPLE
+
+    print("\n** BUILDING ARRAY OF Z-VALUES AT WHICH TO SAMPLE")
+
+    full_k_exit_times = source_k_exit_times + response_k_exit_times
+    k_exit_earliest: wavenumber_exit_time = full_k_exit_times.max
+    print(
+        f"   @@ earliest horizon exit/re-entry time is {k_exit_earliest.k.k_inv_Mpc:.5g}/Mpc with z_exit={k_exit_earliest.z_exit:.5g}"
+    )
+
+    # build a log-spaced universal grid of source sample times
+
+    source_z_grid = k_exit_earliest.populate_z_sample(
+        outside_horizon_efolds=5,
+        samples_per_log10z=source_samples_per_log10z,
+        z_end=zend,
+    )
+
+    # embed these redshift list into the database
+    z_source_array = ray.get(convert_to_redshifts(source_z_grid, is_source=True))
+    z_source_sample = redshift_array(z_array=z_source_array)
+
+    # we need the response sample to be a subset of the source sample, otherwise we won't have
+    # source data for the Green's functions right the way down to the response time.
+    # We need to re-query the database for these redshifts, so that they get the correct is_response flag
+    # set correctly.
+    _z_response_sample = z_source_sample.winnow(sparseness=response_sparseness)
+    z_response_array = ray.get(
+        convert_to_redshifts([z.z for z in _z_response_sample], is_response=True)
+    )
+    z_response_sample = redshift_array(z_array=z_response_array)
+
+    # build tags and other labels, based on these sample grids
+    (
+        TkProductionTag,
+        GkProductionTag,
+        SourceZGridSizeTag,  # labels size of the z_source sample grid
+        ResponseZGridSizeTag,  # labels size of the z_response sample grid
+        OutsideHorizonEfoldsTag,  # labels number of e-folds outside the horizon at which we begin Tk numerical integrations
+        LargestSourceZTag,  # labels largest z in the global grid
+        SmallestSourceZTag,  # labels smallest z in the global grid
+        SourceSamplesPerLog10ZTag,  # labels number of redshifts per log10 interval of 1+z in the source grid
+        ResponseSparsenessZTag,  # labels number of redshifts per log10 interval of 1+z in the response grid
+    ) = ray.get(
+        [
+            pool.object_get("store_tag", label="TkOneLoopDensity"),
+            pool.object_get("store_tag", label="GkOneLoopDensity"),
+            pool.object_get(
+                "store_tag", label=f"SourceRedshiftGrid_{len(z_source_sample)}"
+            ),
+            pool.object_get(
+                "store_tag", label=f"ResponseRedshiftGrid_{len(z_response_sample)}"
+            ),
+            pool.object_get("store_tag", label=f"OutsideHorizonEfolds_e3"),
+            pool.object_get(
+                "store_tag", label=f"LargestSourceRedshift_{z_source_sample.max.z:.5g}"
+            ),
+            pool.object_get(
+                "store_tag", label=f"SmallestSourceRedshift_{z_source_sample.min.z:.5g}"
+            ),
+            pool.object_get(
+                "store_tag", label=f"SourceSamplesPerLog10Z_{source_samples_per_log10z}"
+            ),
+            pool.object_get(
+                "store_tag",
+                label=f"ResponseSparsenessZ_{response_sparseness}",
+            ),
+        ]
+    )
 
     ## STEP 1
     ## BAKE THE BACKGROUND COSMOLOGY INTO A BACKGROUND MODEL OBJECT
@@ -2496,7 +2600,9 @@ with ShardedPool(
     # We choose a mesh of k-values around this point (with a longer tail to the IR)
     source_k_array = ray.get(
         convert_to_wavenumbers(
-            np.logspace(np.log10(1e3), np.log10(5e7), 10), is_source=True
+            np.logspace(np.log10(1e5), np.log10(3e8), 50),
+            is_source=True,
+            # np.logspace(np.log10(1e3), np.log10(5e7), 10), is_source=True
         )
     )
     source_k_sample = wavenumber_array(k_array=source_k_array)
@@ -2505,111 +2611,10 @@ with ShardedPool(
     # the one-loop integral
     response_k_array = ray.get(
         convert_to_wavenumbers(
-            np.logspace(np.log10(1e3), np.log10(5e7), 10), is_response=True
+            np.logspace(np.log10(1e5), np.log10(3e8), 50), is_source=True
         )
     )
     response_k_sample = wavenumber_array(k_array=response_k_array)
-
-    def build_k_exit_work(k: wavenumber):
-        return pool.object_get(
-            "wavenumber_exit_time",
-            k=k,
-            cosmology=LambdaCDM_Planck2018,
-            atol=atol,
-            rtol=rtol,
-        )
-
-    # for each k mode we sample, determine its horizon exit point
-    source_k_exit_queue = RayWorkPool(
-        pool,
-        source_k_sample,
-        task_builder=build_k_exit_work,
-        title="CALCULATE HORIZON EXIT TIMES FOR SOURCE K-SAMPLE",
-        store_results=True,
-    )
-    source_k_exit_queue.run()
-    source_k_exit_times = wavenumber_exit_time_array(source_k_exit_queue.results)
-
-    response_k_exit_queue = RayWorkPool(
-        pool,
-        response_k_sample,
-        task_builder=build_k_exit_work,
-        title="CALCULATE HORIZON EXIT TIMES FOR RESPONSE K-SAMPLE",
-        store_results=True,
-    )
-    response_k_exit_queue.run()
-    response_k_exit_times = wavenumber_exit_time_array(response_k_exit_queue.results)
-
-    ## STEP 2
-    ## BUILD A UNIVERSAL GRID OF Z-VALUES AT WHICH TO SAMPLE
-
-    print("\n** BUILDING ARRAY OF Z-VALUES AT WHICH TO SAMPLE")
-
-    full_k_exit_times = source_k_exit_times + response_k_exit_times
-    k_exit_earliest: wavenumber_exit_time = full_k_exit_times.max
-    print(
-        f"   @@ earliest horizon exit/re-entry time is {k_exit_earliest.k.k_inv_Mpc:.5g}/Mpc with z_exit={k_exit_earliest.z_exit:.5g}"
-    )
-
-    # build a log-spaced universal grid of source sample times
-
-    source_z_grid = k_exit_earliest.populate_z_sample(
-        outside_horizon_efolds=5,
-        samples_per_log10z=source_samples_per_log10z,
-        z_end=zend,
-    )
-
-    # embed these redshift list into the database
-    z_source_array = ray.get(convert_to_redshifts(source_z_grid, is_source=True))
-    z_source_sample = redshift_array(z_array=z_source_array)
-
-    # we need the response sample to be a subset of the source sample, otherwise we won't have
-    # source data for the Green's functions right the way down to the response time.
-    # We need to re-query the database for these redshifts, so that they get their is_response flag
-    # set correctly.
-    _z_response_sample = z_source_sample.winnow(sparseness=response_sparseness)
-    z_response_array = ray.get(
-        convert_to_redshifts([z.z for z in _z_response_sample], is_response=True)
-    )
-    z_response_sample = redshift_array(z_array=z_response_array)
-
-    # build tags and other labels
-    (
-        TkProductionTag,
-        GkProductionTag,
-        SourceZGridSizeTag,  # labels size of the z_source sample grid
-        ResponseZGridSizeTag,  # labels size of the z_response sample grid
-        OutsideHorizonEfoldsTag,  # labels number of e-folds outside the horizon at which we begin Tk numerical integrations
-        LargestSourceZTag,  # labels largest z in the global grid
-        SmallestSourceZTag,  # labels smallest z in the global grid
-        SourceSamplesPerLog10ZTag,  # labels number of redshifts per log10 interval of 1+z in the source grid
-        ResponseSparsenessZTag,  # labels number of redshifts per log10 interval of 1+z in the response grid
-    ) = ray.get(
-        [
-            pool.object_get("store_tag", label="TkOneLoopDensity"),
-            pool.object_get("store_tag", label="GkOneLoopDensity"),
-            pool.object_get(
-                "store_tag", label=f"SourceRedshiftGrid_{len(z_source_sample)}"
-            ),
-            pool.object_get(
-                "store_tag", label=f"ResponseRedshiftGrid_{len(z_response_sample)}"
-            ),
-            pool.object_get("store_tag", label=f"OutsideHorizonEfolds_e3"),
-            pool.object_get(
-                "store_tag", label=f"LargestSourceRedshift_{z_source_sample.max.z:.5g}"
-            ),
-            pool.object_get(
-                "store_tag", label=f"SmallestSourceRedshift_{z_source_sample.min.z:.5g}"
-            ),
-            pool.object_get(
-                "store_tag", label=f"SourceSamplesPerLog10Z_{source_samples_per_log10z}"
-            ),
-            pool.object_get(
-                "store_tag",
-                label=f"ResponseSparsenessZ_{response_sparseness}",
-            ),
-        ]
-    )
 
     model_list = [
         {

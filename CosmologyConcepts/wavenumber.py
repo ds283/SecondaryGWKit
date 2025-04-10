@@ -253,6 +253,15 @@ class wavenumber_exit_time(DatastoreObject):
         z_end: float = 0.1,
         outside_horizon_efolds: int = 3,
     ):
+        """
+        Build a set of z sample points, with specified density per log_10(z), and ending at the specified z_end.
+        The initial time is taken to be the horizon re-entry time for this k-mode, or possibly offset by a specified
+        number of e-folds in/outside the horizon, specified in 'outside_horizon_efolds'
+        :param samples_per_log10z:
+        :param z_end:
+        :param outside_horizon_efolds:
+        :return:
+        """
         if outside_horizon_efolds == 0:
             z_init = self._z_exit
         elif outside_horizon_efolds > 0:
