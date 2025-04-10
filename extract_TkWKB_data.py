@@ -9,7 +9,7 @@ from typing import List, Optional
 import pandas as pd
 import ray
 import seaborn as sns
-from CosmologyModels.QCDCosmology import QCDCosmology
+from CosmologyModels.QCD.QCDCosmology import QCDCosmology
 from matplotlib import pyplot as plt
 
 from ComputeTargets import (
