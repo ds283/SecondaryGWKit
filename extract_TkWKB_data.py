@@ -9,7 +9,6 @@ from typing import List, Optional
 import pandas as pd
 import ray
 import seaborn as sns
-from CosmologyModels.QCD.QCDCosmology import QCDCosmology
 from matplotlib import pyplot as plt
 
 from ComputeTargets import (
@@ -25,7 +24,6 @@ from CosmologyConcepts import (
     wavenumber_exit_time,
 )
 from CosmologyConcepts.wavenumber import wavenumber_exit_time_array
-from CosmologyModels.LambdaCDM import Planck2018, LambdaCDM
 from Datastore.SQL.ProfileAgent import ProfileAgent
 from Datastore.SQL.ShardedPool import ShardedPool
 from RayTools.RayWorkPool import RayWorkPool
@@ -34,6 +32,7 @@ from defaults import (
     DEFAULT_ABS_TOLERANCE,
     DEFAULT_REL_TOLERANCE,
 )
+from model_list import build_model_list
 
 DEFAULT_TIMEOUT = 60
 
@@ -87,26 +86,354 @@ if args.profile_db is not None:
         label=label,
     )
 
-with ShardedPool(
-    version_label=VERSION_LABEL,
-    db_name=args.database,
-    timeout=args.db_timeout,
-    profile_agent=profile_agent,
-    job_name="extract_TkWKB_data",
-    prune_unvalidated=False,
-) as pool:
 
-    # set up LambdaCDM object representing a basic Planck2018 cosmology in Mpc units
-    units = Mpc_units()
-    params = Planck2018()
+def set_loglinear_axes(ax):
+    ax.set_xscale("log")
+    ax.legend(loc="best")
+    ax.grid(True)
+    ax.xaxis.set_inverted(True)
 
-    LambdaCDM_Planck2018 = ray.get(
-        pool.object_get(LambdaCDM, params=params, units=units)
+
+def set_loglog_axes(ax):
+    ax.set_xscale("log")
+    ax.set_yscale("log")
+    ax.legend(loc="best")
+    ax.grid(True)
+    ax.xaxis.set_inverted(True)
+
+
+# Matplotlib line style from https://matplotlib.org/stable/gallery/lines_bars_and_markers/linestyles.html
+#      ('loosely dotted',        (0, (1, 10))),
+#      ('dotted',                (0, (1, 1))),
+#      ('densely dotted',        (0, (1, 1))),
+#      ('long dash with offset', (5, (10, 3))),
+#      ('loosely dashed',        (0, (5, 10))),
+#      ('dashed',                (0, (5, 5))),
+#      ('densely dashed',        (0, (5, 1))),
+#
+#      ('loosely dashdotted',    (0, (3, 10, 1, 10))),
+#      ('dashdotted',            (0, (3, 5, 1, 5))),
+#      ('densely dashdotted',    (0, (3, 1, 1, 1))),
+#
+#      ('dashdotdotted',         (0, (3, 5, 1, 5, 1, 5))),
+#      ('loosely dashdotdotted', (0, (3, 10, 1, 10, 1, 10))),
+#      ('densely dashdotdotted', (0, (3, 1, 1, 1, 1, 1)))]
+
+TEXT_DISPLACEMENT_MULTIPLIER = 0.85
+
+
+def add_z_labels(
+    ax,
+    Tk: TkNumericalIntegration,
+    k_exit: wavenumber_exit_time,
+    model_type: str = "LCDM",
+):
+    color = "b" if model_type == "LCDM" else "r"
+
+    ax.axvline(k_exit.z_exit_subh_e3, linestyle=(0, (1, 1)), color="b")  # dotted
+    ax.axvline(k_exit.z_exit_subh_e5, linestyle=(0, (1, 1)), color="b")  # dotted
+    ax.axvline(k_exit.z_exit_suph_e3, linestyle=(0, (1, 1)), color="b")  # dotted
+    ax.axvline(
+        k_exit.z_exit, linestyle=(0, (3, 1, 1, 1)), color="r"
+    )  # densely dashdotted
+    trans = ax.get_xaxis_transform()
+    ax.text(
+        TEXT_DISPLACEMENT_MULTIPLIER * k_exit.z_exit_suph_e3,
+        0.75,
+        "$-3$ e-folds",
+        transform=trans,
+        fontsize="x-small",
+        color="b",
+    )
+    ax.text(
+        TEXT_DISPLACEMENT_MULTIPLIER * k_exit.z_exit_subh_e3,
+        0.85,
+        "$+3$ e-folds",
+        transform=trans,
+        fontsize="x-small",
+        color="b",
+    )
+    ax.text(
+        TEXT_DISPLACEMENT_MULTIPLIER * k_exit.z_exit_subh_e5,
+        0.75,
+        "$+5$ e-folds",
+        transform=trans,
+        fontsize="x-small",
+        color="b",
+    )
+    ax.text(
+        TEXT_DISPLACEMENT_MULTIPLIER * k_exit.z_exit,
+        0.92,
+        "re-entry",
+        transform=trans,
+        fontsize="x-small",
+        color="r",
     )
 
-    # Get QCD model with same parameters
 
-    QCD_model = ray.get(pool.object_get("QCDCosmology", params=params, units=units))
+@ray.remote
+def plot_Tk(
+    model_label: str,
+    Tk_numerical: TkNumericalIntegration,
+    Tk_WKB: TkWKBIntegration,
+):
+    k_exit = Tk_numerical._k_exit
+
+    base_path = Path(args.output).resolve()
+    base_path = base_path / f"{model_label}"
+
+    print(f"base_path: {base_path}")
+
+    sns.set_theme()
+    fig = plt.figure()
+    ax = plt.gca()
+
+    z_column = []
+    T_column = []
+    abs_T_column = []
+    analytic_T_rad_column = []
+    abs_analytic_T_rad_column = []
+    analytic_T_w_column = []
+    abs_analytic_T_w_column = []
+    theta_column = []
+    friction_column = []
+    H_ratio_column = []
+    omega_WKB_sq_column = []
+    WKB_criterion_column = []
+    type_column = []
+
+    def safe_fabs(x: Optional[float]) -> Optional[float]:
+        if x is None:
+            return None
+
+        return fabs(x)
+
+    def safe_div(x: Optional[float], y: float) -> Optional[float]:
+        if x is None:
+            return None
+
+        return x / y
+
+    if Tk_numerical.available:
+        values: List[TkNumericalValue] = Tk_numerical.values
+
+        numerical_points = [(value.z.z, safe_fabs(value.T)) for value in values]
+        analytic_rad_points = [
+            (value.z, safe_fabs(value.analytic_T_rad)) for value in values
+        ]
+        analytic_w_points = [
+            (value.z, safe_fabs(value.analytic_T_w)) for value in values
+        ]
+
+        numerical_x, numerical_y = zip(*numerical_points)
+        analytic_rad_x, analytic_rad_y = zip(*analytic_rad_points)
+        analytic_w_x, analytic_w_y = zip(*analytic_w_points)
+
+        if len(numerical_x) > 0 and (
+            any(y is not None and y > 0 for y in numerical_y)
+            or any(y is not None and y > 0 for y in analytic_rad_y)
+            or any(y is not None and y > 0 for y in analytic_w_y)
+        ):
+            ax.plot(
+                numerical_x,
+                numerical_y,
+                label="Numerical $T_k$",
+                linestyle="solid",
+            )
+            ax.plot(
+                analytic_rad_x,
+                analytic_rad_y,
+                label="Analytic $T_k$ [radiation]",
+                linestyle="dashed",
+            )
+            ax.plot(
+                analytic_w_x,
+                analytic_w_y,
+                label="Analytic $T_k$ [$w=w(z)$]",
+                linestyle="dashdot",
+            )
+
+        z_column.extend(value.z.z for value in values)
+        T_column.extend(value.T for value in values)
+        abs_T_column.extend(safe_fabs(value.T) for value in values)
+        analytic_T_rad_column.extend(value.analytic_T_rad for value in values)
+        abs_analytic_T_rad_column.extend(
+            safe_fabs(value.analytic_T_rad) for value in values
+        )
+        analytic_T_w_column.extend(value.analytic_T_w for value in values)
+        abs_analytic_T_w_column.extend(value.analytic_T_w for value in values)
+        theta_column.extend(None for _ in range(len(values)))
+        friction_column.extend(None for _ in range(len(values)))
+        H_ratio_column.extend(None for _ in range(len(values)))
+        omega_WKB_sq_column.extend(value.omega_WKB_sq for value in values)
+        WKB_criterion_column.extend(value.WKB_criterion for value in values)
+        type_column.extend(0 for _ in range(len(values)))
+
+    theta_x = None
+    theta_y = None
+    friction_x = None
+    friction_y = None
+    if Tk_WKB.available:
+        values: List[TkWKBValue] = Tk_WKB.values
+
+        numerical_points = [(value.z.z, safe_fabs(value.T_WKB)) for value in values]
+        analytic_rad_points = [
+            (value.z, safe_fabs(value.analytic_T_rad)) for value in values
+        ]
+        analytic_w_points = [
+            (value.z, safe_fabs(value.analytic_T_w)) for value in values
+        ]
+        theta_points = [(value.z.z, safe_fabs(value.theta)) for value in values]
+        friction_points = [(value.z.z, safe_fabs(value.friction)) for value in values]
+
+        numerical_x, numerical_y = zip(*numerical_points)
+        analytic_rad_x, analytic_rad_y = zip(*analytic_rad_points)
+        analytic_w_x, analytic_w_y = zip(*analytic_w_points)
+        theta_x, theta_y = zip(*theta_points)
+        friction_x, friction_y = zip(*friction_points)
+
+        if len(numerical_x) > 0 and (
+            any(y is not None and y > 0 for y in numerical_y)
+            or any(y is not None and y > 0 for y in analytic_rad_y)
+            or any(y is not None and y > 0 for y in analytic_w_y)
+        ):
+            ax.plot(
+                numerical_x,
+                numerical_y,
+                label="WKB $T_k$",
+                linestyle="solid",
+            )
+            ax.plot(
+                analytic_rad_x,
+                analytic_rad_y,
+                label="Analytic $T_k$ [radiation]",
+                linestyle="dashed",
+            )
+            ax.plot(
+                analytic_w_x,
+                analytic_w_y,
+                label="Analytic $T_k$ [$w=w(z)$]",
+                linestyle="dashdot",
+            )
+
+        z_column.extend(value.z.z for value in values)
+        T_column.extend(value.T_WKB for value in values)
+        abs_T_column.extend(safe_fabs(value.T_WKB) for value in values)
+        analytic_T_rad_column.extend(value.analytic_T_rad for value in values)
+        abs_analytic_T_rad_column.extend(
+            safe_fabs(value.analytic_T_rad) for value in values
+        )
+        analytic_T_w_column.extend(value.analytic_T_w for value in values)
+        abs_analytic_T_w_column.extend(value.analytic_T_w for value in values)
+        theta_column.extend(value.theta for value in values)
+        friction_column.extend(value.friction for value in values)
+        H_ratio_column.extend(value.H_ratio for value in values)
+        omega_WKB_sq_column.extend(value.omega_WKB_sq for value in values)
+        WKB_criterion_column.extend(value.WKB_criterion for value in values)
+        type_column.extend(1 for _ in range(len(values)))
+
+    add_z_labels(ax, Tk_WKB, k_exit, model_type="LCDM")
+
+    ax.set_xlabel("source redshift $z$")
+    ax.set_ylabel("$T_k(z)$")
+
+    set_loglog_axes(ax)
+
+    fig_path = (
+        base_path
+        / f"plots/full-range/k-serial={k_exit.store_id}-k={k_exit.k.k_inv_Mpc:.5g}.pdf"
+    )
+    fig_path.parents[0].mkdir(exist_ok=True, parents=True)
+    print(f"fig_path: {fig_path}")
+    fig.savefig(fig_path)
+    fig.savefig(fig_path.with_suffix(".png"))
+
+    ax.set_xlim(
+        int(round(k_exit.z_exit_suph_e3 + 0.5, 0)),
+        int(round(0.85 * k_exit.z_exit_subh_e5 + 0.5, 0)),
+    )
+    fig_path = (
+        base_path
+        / f"plots/zoom-matching/k-serial={k_exit.store_id}-k={k_exit.k.k_inv_Mpc:.5g}.pdf"
+    )
+    fig_path.parents[0].mkdir(exist_ok=True, parents=True)
+    fig.savefig(fig_path)
+    fig.savefig(fig_path.with_suffix(".png"))
+
+    plt.close()
+
+    if theta_x is not None and theta_y is not None:
+        fig = plt.figure()
+        ax = plt.gca()
+
+        ax.plot(theta_x, theta_y, label="WKB phase $\\theta$")
+
+        add_z_labels(ax, Tk_WKB, k_exit)
+
+        ax.set_xlabel("source redshift $z$")
+        ax.set_ylabel("WKB phase $\\theta$")
+
+        set_loglog_axes(ax)
+
+        fig_path = (
+            base_path
+            / f"plots/theta/k-serial={k_exit.store_id}-k={k_exit.k.k_inv_Mpc:.5g}.pdf"
+        )
+        fig_path.parents[0].mkdir(exist_ok=True, parents=True)
+        fig.savefig(fig_path)
+        fig.savefig(fig_path.with_suffix(".png"))
+
+    if friction_x is not None and friction_y is not None:
+        fig = plt.figure()
+        ax = plt.gca()
+
+        ax.plot(friction_x, friction_y, label="WKB friction")
+
+        add_z_labels(ax, Tk_WKB, k_exit)
+
+        ax.set_xlabel("source redshift $z$")
+        ax.set_ylabel("WKB friction")
+
+        set_loglog_axes(ax)
+
+        fig_path = (
+            base_path
+            / f"plots/friction/k-serial={k_exit.store_id}-k={k_exit.k.k_inv_Mpc:.5g}.pdf"
+        )
+        fig_path.parents[0].mkdir(exist_ok=True, parents=True)
+        fig.savefig(fig_path)
+        fig.savefig(fig_path.with_suffix(".png"))
+
+    csv_path = (
+        base_path / f"csv/k-serial={k_exit.store_id}-k={k_exit.k.k_inv_Mpc:.5g}.csv"
+    )
+    csv_path.parents[0].mkdir(exist_ok=True, parents=True)
+    df = pd.DataFrame.from_dict(
+        {
+            "redshift": z_column,
+            "T": T_column,
+            "abs_T": abs_T_column,
+            "analytic_T_rad": analytic_T_rad_column,
+            "abs_analytic_T_rad": abs_analytic_T_rad_column,
+            "analytic_T_w": analytic_T_w_column,
+            "abs_analytic_T_w": abs_analytic_T_w_column,
+            "theta": theta_column,
+            "friction": friction_column,
+            "H_ratio": H_ratio_column,
+            "omega_WKB_sq": omega_WKB_sq_column,
+            "WKB_criterion": WKB_criterion_column,
+            "type": type_column,
+        }  # Add model identifier}
+    )
+    df.sort_values(by="redshift", ascending=False, inplace=True, ignore_index=True)
+    df.to_csv(csv_path, header=True, index=False)
+
+
+def run_pipeline(model_data):
+    model_label = model_data["label"]
+    model_cosmology = model_data["cosmology"]
+
+    print(f"\n>> RUNNING PIPELINE FOR MODEL {model_label}")
 
     # build absolute and relative tolerances
     atol, rtol = ray.get(
@@ -117,13 +444,15 @@ with ShardedPool(
     )
 
     # array of k-modes matching the SOURCE k-grid
-    source_k_array = ray.get(pool.read_wavenumber_table(units=units, is_source=True))
+    source_k_array = ray.get(
+        pool.read_wavenumber_table(units=model_cosmology.units, is_source=True)
+    )
 
     def create_k_exit_work(k: wavenumber):
         return pool.object_get(
             wavenumber_exit_time,
             k=k,
-            cosmology=LambdaCDM_Planck2018,
+            cosmology=model_cosmology,
             atol=atol,
             rtol=rtol,
         )
@@ -136,7 +465,7 @@ with ShardedPool(
         compute_handler=None,
         store_handler=None,
         store_results=True,
-        title="QUERY K_EXIT VALUES",
+        title=f"QUERY K_EXIT VALUES FOR {model_label}",
     )
     source_k_exit_queue.run()
     source_k_exit_times = wavenumber_exit_time_array(source_k_exit_queue.results)
@@ -154,7 +483,7 @@ with ShardedPool(
         pool.object_get(
             BackgroundModel,
             solver_labels=[],
-            cosmology=LambdaCDM_Planck2018,
+            cosmology=model_cosmology,
             z_sample=None,
             atol=atol,
             rtol=rtol,
@@ -167,429 +496,53 @@ with ShardedPool(
 
     model_proxy = ModelProxy(model)
 
-    def set_loglinear_axes(ax):
-        ax.set_xscale("log")
-        ax.legend(loc="best")
-        ax.grid(True)
-        ax.xaxis.set_inverted(True)
+    def build_plot_Tk_work(k_exit: wavenumber_exit_time):
+        query_payload = {
+            "solver_labels": [],
+            "model": model_proxy,
+            "k": k_exit,
+            "z_sample": None,
+            "atol": atol,
+            "rtol": rtol,
+        }
 
-    def set_loglog_axes(ax):
-        ax.set_xscale("log")
-        ax.set_yscale("log")
-        ax.legend(loc="best")
-        ax.grid(True)
-        ax.xaxis.set_inverted(True)
+        TkNumerical_ref = pool.object_get("TkNumericalIntegration", **query_payload)
+        TkWKB_ref = pool.object_get("TkWKBIntegration", **query_payload)
 
-    TEXT_DISPLACEMENT_MULTIPLIER = 0.85
+        return plot_Tk.remote(model_label, TkNumerical_ref, TkWKB_ref)
 
-    # Matplotlib line style from https://matplotlib.org/stable/gallery/lines_bars_and_markers/linestyles.html
-    #      ('loosely dotted',        (0, (1, 10))),
-    #      ('dotted',                (0, (1, 1))),
-    #      ('densely dotted',        (0, (1, 1))),
-    #      ('long dash with offset', (5, (10, 3))),
-    #      ('loosely dashed',        (0, (5, 10))),
-    #      ('dashed',                (0, (5, 5))),
-    #      ('densely dashed',        (0, (5, 1))),
-    #
-    #      ('loosely dashdotted',    (0, (3, 10, 1, 10))),
-    #      ('dashdotted',            (0, (3, 5, 1, 5))),
-    #      ('densely dashdotted',    (0, (3, 1, 1, 1))),
-    #
-    #      ('dashdotdotted',         (0, (3, 5, 1, 5, 1, 5))),
-    #      ('loosely dashdotdotted', (0, (3, 10, 1, 10, 1, 10))),
-    #      ('densely dashdotdotted', (0, (3, 1, 1, 1, 1, 1)))]
-    def add_z_labels(
-        ax,
-        Tk: TkNumericalIntegration,
-        k_exit: wavenumber_exit_time,
-        model_type: str = "LCDM",
-    ):
-        color = "b" if model_type == "LCDM" else "r"
-
-        ax.axvline(k_exit.z_exit_subh_e3, linestyle=(0, (1, 1)), color="b")  # dotted
-        ax.axvline(k_exit.z_exit_subh_e5, linestyle=(0, (1, 1)), color="b")  # dotted
-        ax.axvline(k_exit.z_exit_suph_e3, linestyle=(0, (1, 1)), color="b")  # dotted
-        ax.axvline(
-            k_exit.z_exit, linestyle=(0, (3, 1, 1, 1)), color="r"
-        )  # densely dashdotted
-        prefix = "ΛCDM" if model_type == "LCDM" else "QCD"
-        trans = ax.get_xaxis_transform()
-        ax.text(
-            TEXT_DISPLACEMENT_MULTIPLIER * k_exit.z_exit_suph_e3,
-            0.75,
-            "$-3$ e-folds",
-            transform=trans,
-            fontsize="x-small",
-            color="b",
-        )
-        ax.text(
-            TEXT_DISPLACEMENT_MULTIPLIER * k_exit.z_exit_subh_e3,
-            0.85,
-            "$+3$ e-folds",
-            transform=trans,
-            fontsize="x-small",
-            color="b",
-        )
-        ax.text(
-            TEXT_DISPLACEMENT_MULTIPLIER * k_exit.z_exit_subh_e5,
-            0.75,
-            "$+5$ e-folds",
-            transform=trans,
-            fontsize="x-small",
-            color="b",
-        )
-        ax.text(
-            TEXT_DISPLACEMENT_MULTIPLIER * k_exit.z_exit,
-            0.92,
-            "re-entry",
-            transform=trans,
-            fontsize="x-small",
-            color="r",
-        )
-
-    @ray.remote
-    def plot_Tk(
-        Tk_numerical: TkNumericalIntegration,
-        Tk_WKB: TkWKBIntegration,
-        Tk_numerical_qcd: TkNumericalIntegration,
-        Tk_WKB_qcd: TkWKBIntegration,
-    ):
-        k_exit = Tk_numerical._k_exit
-
-        sns.set_theme()
-        fig = plt.figure()
-        ax = plt.gca()
-
-        z_column = []
-        T_column = []
-        abs_T_column = []
-        analytic_T_rad_column = []
-        abs_analytic_T_rad_column = []
-        analytic_T_w_column = []
-        abs_analytic_T_w_column = []
-        theta_column = []
-        friction_column = []
-        H_ratio_column = []
-        omega_WKB_sq_column = []
-        WKB_criterion_column = []
-        type_column = []
-
-        def safe_fabs(x: Optional[float]) -> Optional[float]:
-            if x is None:
-                return None
-
-            return fabs(x)
-
-        def safe_div(x: Optional[float], y: float) -> Optional[float]:
-            if x is None:
-                return None
-
-            return x / y
-
-        if Tk_numerical.available:
-            values: List[TkNumericalValue] = Tk_numerical.values
-
-            numerical_points = [(value.z.z, safe_fabs(value.T)) for value in values]
-            analytic_rad_points = [
-                (value.z, safe_fabs(value.analytic_T_rad)) for value in values
-            ]
-            analytic_w_points = [
-                (value.z, safe_fabs(value.analytic_T_w)) for value in values
-            ]
-
-            numerical_x, numerical_y = zip(*numerical_points)
-            analytic_rad_x, analytic_rad_y = zip(*analytic_rad_points)
-            analytic_w_x, analytic_w_y = zip(*analytic_w_points)
-
-            if len(numerical_x) > 0 and (
-                any(y is not None and y > 0 for y in numerical_y)
-                or any(y is not None and y > 0 for y in analytic_rad_y)
-                or any(y is not None and y > 0 for y in analytic_w_y)
-            ):
-                ax.plot(
-                    numerical_x,
-                    numerical_y,
-                    label="Numerical $T_k$",
-                    linestyle="solid",
-                )
-                ax.plot(
-                    analytic_rad_x,
-                    analytic_rad_y,
-                    label="Analytic $T_k$ [radiation]",
-                    linestyle="dashed",
-                )
-                ax.plot(
-                    analytic_w_x,
-                    analytic_w_y,
-                    label="Analytic $T_k$ [$w=w(z)$]",
-                    linestyle="dashdot",
-                )
-
-            z_column.extend(value.z.z for value in values)
-            T_column.extend(value.T for value in values)
-            abs_T_column.extend(safe_fabs(value.T) for value in values)
-            analytic_T_rad_column.extend(value.analytic_T_rad for value in values)
-            abs_analytic_T_rad_column.extend(
-                safe_fabs(value.analytic_T_rad) for value in values
-            )
-            analytic_T_w_column.extend(value.analytic_T_w for value in values)
-            abs_analytic_T_w_column.extend(value.analytic_T_w for value in values)
-            theta_column.extend(None for _ in range(len(values)))
-            friction_column.extend(None for _ in range(len(values)))
-            H_ratio_column.extend(None for _ in range(len(values)))
-            omega_WKB_sq_column.extend(value.omega_WKB_sq for value in values)
-            WKB_criterion_column.extend(value.WKB_criterion for value in values)
-            type_column.extend(0 for _ in range(len(values)))
-
-        theta_x = None
-        theta_y = None
-        friction_X = None
-        friction_y = None
-        if Tk_WKB.available:
-            values: List[TkWKBValue] = Tk_WKB.values
-
-            numerical_points = [(value.z.z, safe_fabs(value.T_WKB)) for value in values]
-            analytic_rad_points = [
-                (value.z, safe_fabs(value.analytic_T_rad)) for value in values
-            ]
-            analytic_w_points = [
-                (value.z, safe_fabs(value.analytic_T_w)) for value in values
-            ]
-            theta_points = [(value.z.z, safe_fabs(value.theta)) for value in values]
-            friction_points = [
-                (value.z.z, safe_fabs(value.friction)) for value in values
-            ]
-
-            numerical_x, numerical_y = zip(*numerical_points)
-            analytic_rad_x, analytic_rad_y = zip(*analytic_rad_points)
-            analytic_w_x, analytic_w_y = zip(*analytic_w_points)
-            theta_x, theta_y = zip(*theta_points)
-            friction_x, friction_y = zip(*friction_points)
-
-            if len(numerical_x) > 0 and (
-                any(y is not None and y > 0 for y in numerical_y)
-                or any(y is not None and y > 0 for y in analytic_rad_y)
-                or any(y is not None and y > 0 for y in analytic_w_y)
-            ):
-                ax.plot(
-                    numerical_x,
-                    numerical_y,
-                    label="WKB $T_k$",
-                    linestyle="solid",
-                )
-                ax.plot(
-                    analytic_rad_x,
-                    analytic_rad_y,
-                    label="Analytic $T_k$ [radiation]",
-                    linestyle="dashed",
-                )
-                ax.plot(
-                    analytic_w_x,
-                    analytic_w_y,
-                    label="Analytic $T_k$ [$w=w(z)$]",
-                    linestyle="dashdot",
-                )
-
-            z_column.extend(value.z.z for value in values)
-            T_column.extend(value.T_WKB for value in values)
-            abs_T_column.extend(safe_fabs(value.T_WKB) for value in values)
-            analytic_T_rad_column.extend(value.analytic_T_rad for value in values)
-            abs_analytic_T_rad_column.extend(
-                safe_fabs(value.analytic_T_rad) for value in values
-            )
-            analytic_T_w_column.extend(value.analytic_T_w for value in values)
-            abs_analytic_T_w_column.extend(value.analytic_T_w for value in values)
-            theta_column.extend(value.theta for value in values)
-            friction_column.extend(value.friction for value in values)
-            H_ratio_column.extend(value.H_ratio for value in values)
-            omega_WKB_sq_column.extend(value.omega_WKB_sq for value in values)
-            WKB_criterion_column.extend(value.WKB_criterion for value in values)
-            type_column.extend(1 for _ in range(len(values)))
-
-        # QCD numerical and WKB
-
-        if Tk_numerical_qcd.available:  # QCD numerical
-            values: List[TkNumericalValue] = Tk_numerical_qcd.values
-            numerical_points = [(value.z.z, safe_fabs(value.T)) for value in values]
-            numerical_x, numerical_y = zip(*numerical_points)
-            z_column.extend(value.z.z for value in values)
-            T_column.extend(value.T for value in values)
-            abs_T_column.extend(safe_fabs(value.T) for value in values)
-            analytic_T_rad_column.extend(value.analytic_T_rad for value in values)
-            abs_analytic_T_rad_column.extend(
-                safe_fabs(value.analytic_T_rad) for value in values
-            )
-            analytic_T_w_column.extend(value.analytic_T_w for value in values)
-            abs_analytic_T_w_column.extend(value.analytic_T_w for value in values)
-            theta_column.extend(None for _ in range(len(values)))
-            friction_column.extend(None for _ in range(len(values)))
-            H_ratio_column.extend(None for _ in range(len(values)))
-            omega_WKB_sq_column.extend(value.omega_WKB_sq for value in values)
-            WKB_criterion_column.extend(value.WKB_criterion for value in values)
-            type_column.extend(
-                2 for _ in range(len(values))
-            )  # type 2 for QCD numerical
-
-        if Tk_WKB_qcd.available:  # QCD WKB
-            add_z_labels(ax, Tk_WKB_qcd, k_exit, model_type="QCD")
-            values: List[TkWKBValue] = Tk_WKB_qcd.values
-            z_column.extend(value.z.z for value in values)
-            T_column.extend(value.T_WKB for value in values)
-            abs_T_column.extend(safe_fabs(value.T_WKB) for value in values)
-            analytic_T_rad_column.extend(value.analytic_T_rad for value in values)
-            abs_analytic_T_rad_column.extend(
-                safe_fabs(value.analytic_T_rad) for value in values
-            )
-            analytic_T_w_column.extend(value.analytic_T_w for value in values)
-            abs_analytic_T_w_column.extend(value.analytic_T_w for value in values)
-            theta_column.extend(value.theta for value in values)
-            friction_column.extend(value.friction for value in values)
-            H_ratio_column.extend(value.H_ratio for value in values)
-            omega_WKB_sq_column.extend(value.omega_WKB_sq for value in values)
-            WKB_criterion_column.extend(value.WKB_criterion for value in values)
-            type_column.extend(3 for _ in range(len(values)))  # type 3 for QCD WKB
-
-        add_z_labels(ax, Tk_WKB, k_exit, model_type="LCDM")
-
-        ax.set_xlabel("source redshift $z$")
-        ax.set_ylabel("$T_k(z)$")
-
-        set_loglog_axes(ax)
-
-        base_path = Path(args.output).resolve()
-        fig_path = (
-            base_path
-            / f"plots/full-range/k-serial={k_exit.store_id}-k={k_exit.k.k_inv_Mpc:.5g}.pdf"
-        )
-        fig_path.parents[0].mkdir(exist_ok=True, parents=True)
-        fig.savefig(fig_path)
-
-        ax.set_xlim(
-            int(round(k_exit.z_exit_suph_e3 + 0.5, 0)),
-            int(round(0.85 * k_exit.z_exit_subh_e5 + 0.5, 0)),
-        )
-        fig_path = (
-            base_path
-            / f"plots/zoom-matching/k-serial={k_exit.store_id}-k={k_exit.k.k_inv_Mpc:.5g}.pdf"
-        )
-        fig_path.parents[0].mkdir(exist_ok=True, parents=True)
-        fig.savefig(fig_path)
-
-        plt.close()
-
-        if theta_x is not None and theta_y is not None:
-            fig = plt.figure()
-            ax = plt.gca()
-
-            ax.plot(theta_x, theta_y, label="WKB phase $\\theta$")
-
-            add_z_labels(ax, Tk_WKB, k_exit)
-
-            ax.set_xlabel("source redshift $z$")
-            ax.set_ylabel("WKB phase $\\theta$")
-
-            set_loglog_axes(ax)
-
-            fig_path = (
-                base_path
-                / f"plots/theta/k-serial={k_exit.store_id}-k={k_exit.k.k_inv_Mpc:.5g}.pdf"
-            )
-            fig_path.parents[0].mkdir(exist_ok=True, parents=True)
-            fig.savefig(fig_path)
-
-        if friction_x is not None and friction_y is not None:
-            fig = plt.figure()
-            ax = plt.gca()
-
-            ax.plot(friction_x, friction_y, label="WKB friction")
-
-            add_z_labels(ax, Tk_WKB, k_exit)
-
-            ax.set_xlabel("source redshift $z$")
-            ax.set_ylabel("WKB friction")
-
-            set_loglog_axes(ax)
-
-            fig_path = (
-                base_path
-                / f"plots/friction/k-serial={k_exit.store_id}-k={k_exit.k.k_inv_Mpc:.5g}.pdf"
-            )
-            fig_path.parents[0].mkdir(exist_ok=True, parents=True)
-            fig.savefig(fig_path)
-
-        csv_path = (
-            base_path / f"csv/k-serial={k_exit.store_id}-k={k_exit.k.k_inv_Mpc:.5g}.csv"
-        )
-        csv_path.parents[0].mkdir(exist_ok=True, parents=True)
-        df = pd.DataFrame.from_dict(
-            {
-                "redshift": z_column,
-                "T": T_column,
-                "abs_T": abs_T_column,
-                "analytic_T_rad": analytic_T_rad_column,
-                "abs_analytic_T_rad": abs_analytic_T_rad_column,
-                "analytic_T_w": analytic_T_w_column,
-                "abs_analytic_T_w": abs_analytic_T_w_column,
-                "theta": theta_column,
-                "H_ratio": H_ratio_column,
-                "omega_WKB_sq": omega_WKB_sq_column,
-                "WKB_criterion": WKB_criterion_column,
-                "type": type_column,
-                "model": ["LCDM" if t < 2 else "QCD" for t in type_column],
-            }  # Add model identifier}
-        )
-        df.sort_values(by="redshift", ascending=False, inplace=True, ignore_index=True)
-        df.to_csv(csv_path, header=True, index=False)
+    work_queue = RayWorkPool(
+        pool,
+        k_subsample,
+        task_builder=build_plot_Tk_work,
+        compute_handler=None,
+        store_handler=None,
+        available_handler=None,
+        validation_handler=None,
+        post_handler=None,
+        label_builder=None,
+        create_batch_size=10,
+        process_batch_size=10,
+        notify_batch_size=50,
+        notify_time_interval=120,
+        title=f"GENERATING TkNumerical/TkWKB DATA PRODUCTS FOR {model_label}",
+        store_results=False,
+    )
+    work_queue.run()
 
 
-def build_plot_Tk_work(k_exit: wavenumber_exit_time):
-    # ΛCDM query
-    query_payload = {
-        "solver_labels": [],
-        "model": model_proxy,
-        "k": k_exit,
-        "z_sample": None,
-        "atol": atol,
-        "rtol": rtol,
-    }
+with ShardedPool(
+    version_label=VERSION_LABEL,
+    db_name=args.database,
+    timeout=args.db_timeout,
+    profile_agent=profile_agent,
+    job_name="extract_TkWKB_data",
+    prune_unvalidated=False,
+) as pool:
 
-    # Get ΛCDM results
-    TkNumerical_ref = pool.object_get("TkNumericalIntegration", **query_payload)
-    TkWKB_ref = pool.object_get("TkWKBIntegration", **query_payload)
+    # get list of models we want to extract transfer functions for
+    units = Mpc_units()
+    model_list = build_model_list(pool, units)
 
-    # QCD query
-    qcd_payload = {
-        "solver_labels": [],
-        "model": ModelProxy(QCD_model),
-        "k": k_exit,
-        "z_sample": None,
-        "atol": atol,
-        "rtol": rtol,
-    }
-
-    # Get QCD results
-    TkNumerical_qcd = pool.object_get("TkNumericalIntegration", **qcd_payload)
-    TkWKB_qcd = pool.object_get("TkWKBIntegration", **qcd_payload)
-
-    # Return both ΛCDM and QCD results
-    return plot_Tk.remote(TkNumerical_ref, TkWKB_ref, TkNumerical_qcd, TkWKB_qcd)
-
-
-work_queue = RayWorkPool(
-    pool,
-    k_subsample,
-    task_builder=build_plot_Tk_work,
-    compute_handler=None,
-    store_handler=None,
-    available_handler=None,
-    validation_handler=None,
-    post_handler=None,
-    label_builder=None,
-    create_batch_size=10,
-    process_batch_size=10,
-    notify_batch_size=50,
-    notify_time_interval=120,
-    title="GENERATING TkNumerical/TkWKB DATA PRODUCTS",
-    store_results=False,
-)
-work_queue.run()
+    for model_data in model_list:
+        run_pipeline(model_data)

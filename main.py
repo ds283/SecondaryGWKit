@@ -36,7 +36,6 @@ from CosmologyConcepts import (
     wavenumber_exit_time_array,
     redshift_array,
 )
-from CosmologyModels.LambdaCDM import Planck2018
 from Datastore.SQL.ProfileAgent import ProfileAgent
 from Datastore.SQL.ShardedPool import ShardedPool
 from LiouvilleGreen.bessel_phase import bessel_phase
@@ -50,6 +49,7 @@ from defaults import (
     DEFAULT_QUADRATURE_RTOL,
     DEFAULT_QUADRATURE_ATOL,
 )
+from model_list import build_model_list
 from utilities import grouper, format_time
 
 DEFAULT_LABEL = "SecondaryGWKit-test"
@@ -347,7 +347,7 @@ def run_pipeline(model_data: dict):
     )
     if not bg_model.available:
         print(f"\n** CALCULATING BACKGROUND {model_label} MODEL")
-        data = ray.get(bg_model.compute(label=LambdaCDM_Planck2018.name))
+        data = ray.get(bg_model.compute(label=model_cosmology.name))
         bg_model.store()
         bg_model = ray.get(pool.object_store(bg_model))
         outcome = ray.get(pool.object_validate(bg_model))
@@ -1650,11 +1650,11 @@ def run_pipeline(model_data: dict):
             "z_exit_subh_e6": source._k_exit.z_exit_subh_e6,
             "z_response": source.z_response.z,
             "z_response_store_id": source.z_response.store_id,
-            "z_response_efolds_subh": model.efolds_subh(source.k, source.z_response),
+            "z_response_efolds_subh": bg_model.efolds_subh(source.k, source.z_response),
             "numerical_z_source_limit": sqrt(
                 source._k_exit.z_exit_subh_e3 * source._k_exit.z_exit_subh_e4
             ),
-            "numerical_z_source_limit_efolds": model.efolds_subh(
+            "numerical_z_source_limit_efolds": bg_model.efolds_subh(
                 source.k,
                 sqrt(source._k_exit.z_exit_subh_e3 * source._k_exit.z_exit_subh_e4),
             ),
@@ -2469,19 +2469,12 @@ with ShardedPool(
 ) as pool:
 
     # set up LambdaCDM object representing a basic Planck2018 cosmology in Mpc units
-    units = Mpc_units()
-    params = Planck2018()
-
-    LambdaCDM_Planck2018 = ray.get(
-        pool.object_get("LambdaCDM", params=params, units=units)
-    )
-    QCD_EOS_Planck2018 = ray.get(
-        pool.object_get("QCDCosmology", params=params, units=units)
-    )
 
     zend = args.zend
     source_samples_per_log10z = args.source_samples_log10z
     response_sparseness = args.response_sparseness
+
+    units = Mpc_units()
 
     ## UTILITY FUNCTIONS
 
@@ -2616,16 +2609,6 @@ with ShardedPool(
     )
     response_k_sample = wavenumber_array(k_array=response_k_array)
 
-    model_list = [
-        {
-            "label": "LambdaCDM",
-            "cosmology": LambdaCDM_Planck2018,
-        },
-        {
-            "label": "QCDCosmology",
-            "cosmology": QCD_EOS_Planck2018,
-        },
-    ]
-
+    model_list = build_model_list(pool, units)
     for model_data in model_list:
         run_pipeline(model_data)
