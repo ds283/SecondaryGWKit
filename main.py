@@ -220,327 +220,48 @@ if args.profile_db is not None:
         label=label,
     )
 
-# construct a ShardedPool to orchestrate database access
-with ShardedPool(
-    version_label=VERSION_LABEL,
-    db_name=args.database,
-    timeout=args.db_timeout,
-    shards=args.shards,
-    profile_agent=profile_agent,
-    job_name=args.job_name,
-    prune_unvalidated=args.prune_unvalidated,
-    drop_actions=drop_actions,
-) as pool:
 
-    # set up LambdaCDM object representing a basic Planck2018 cosmology in Mpc units
-    units = Mpc_units()
-    params = Planck2018()
+def run_pipeline(model_data: dict):
+    model_label = model_data["label"]
+    model_cosmology = model_data["cosmology"]
 
-    LambdaCDM_Planck2018 = ray.get(
-        pool.object_get("LambdaCDM", params=params, units=units)
-    )
-    QCD_EOS_Planck2018 = ray.get(
-        pool.object_get("QCDCosmology", params=params, units=units)
-    )
-
-    zend = args.zend
-    source_samples_per_log10z = args.source_samples_log10z
-    response_sparseness = args.response_sparseness
-
-    ## UTILITY FUNCTIONS
-
-    def convert_to_wavenumbers(
-        k_sample_set: List[float], is_source: bool = False, is_response: bool = False
-    ):
-        return pool.object_get(
-            "wavenumber",
-            payload_data=[
-                {
-                    "k_inv_Mpc": k,
-                    "units": units,
-                    "is_source": is_source,
-                    "is_response": is_response,
-                }
-                for k in k_sample_set
-            ],
-        )
-
-    def convert_to_redshifts(
-        z_sample_set, is_source: bool = False, is_response: bool = False
-    ):
-        return pool.object_get(
-            "redshift",
-            payload_data=[
-                {"z": z, "is_source": is_source, "is_response": is_response}
-                for z in z_sample_set
-            ],
-        )
-
-    ## DATASTORE OBJECTS
-
-    # build absolute and relative tolerances
-    atol, rtol, quad_atol, quad_rtol = ray.get(
-        [
-            pool.object_get("tolerance", tol=DEFAULT_ABS_TOLERANCE),
-            pool.object_get("tolerance", tol=DEFAULT_REL_TOLERANCE),
-            pool.object_get("tolerance", tol=DEFAULT_QUADRATURE_ATOL),
-            pool.object_get("tolerance", tol=DEFAULT_QUADRATURE_RTOL),
-        ]
-    )
-
-    # build stepper labels; we have to query these up-front from the pool in order to be
-    # certain that they get the same serial number in each database shard.
-    # So we can no longer construct these on-the-fly in the integration classes, as used to be done
-    (
-        solve_ivp_RK45,
-        solve_ivp_DOP852,
-        solve_ivp_Radau,
-        solve_ivp_BDF,
-        solve_icp_LSODA,
-    ) = ray.get(
-        [
-            pool.object_get("IntegrationSolver", label="solve_ivp+RK45", stepping=0),
-            pool.object_get("IntegrationSolver", label="solve_ivp+DOP853", stepping=0),
-            pool.object_get("IntegrationSolver", label="solve_ivp+Radau", stepping=0),
-            pool.object_get("IntegrationSolver", label="solve_ivp+BDF", stepping=0),
-            pool.object_get("IntegrationSolver", label="solve_ivp+LSODA", stepping=0),
-        ]
-    )
-    solvers = {
-        "solve_ivp+RK45-stepping0": solve_ivp_RK45,
-        "solve_ivp+DOP853-stepping0": solve_ivp_DOP852,
-        "solve_ivp+Radau-stepping0": solve_ivp_Radau,
-        "solve_ivp+BDF-stepping0": solve_ivp_BDF,
-        "solve_ivp+LSODA-stepping0": solve_icp_LSODA,
-    }
-
-    # create GkSource policies that we will apply later
-    GkSource_policy_1pt5, GkSource_policy_5pt0 = ray.get(
-        [
-            pool.object_get(
-                "GkSourcePolicy",
-                label='policy="maximize-Levin"-Levin-threshold="1.5"',
-                Levin_threshold=1.5,
-                numeric_policy="maximize_Levin",
-            ),
-            pool.object_get(
-                "GkSourcePolicy",
-                label='policy="maximize-Levin"-Levin-threshold="5.0"',
-                Levin_threshold=5.0,
-                numeric_policy="maximize_Levin",
-            ),
-        ]
-    )
-
-    # create QuadSource policies that we will apply later
-    QuadSource_policy_1pt5, QuadSource_policy_5pt0 = ray.get(
-        [
-            pool.object_get(
-                "QuadSourcePolicy",
-                label='policy="maximize-Levin"-Levin-threshold="1.5"',
-                Levin_threshold=1.5,
-                numeric_policy="maximize_Levin",
-            ),
-            pool.object_get(
-                "QuadSourcePolicy",
-                label='policy="maximize-Levin"-Levin-threshold="5.0"',
-                Levin_threshold=5.0,
-                numeric_policy="maximize_Levin",
-            ),
-        ]
-    )
+    print(f"\n>> RUNNING PIPELINE FOR MODEL {model_label}\n")
 
     ## STEP 1
-    ## BUILD SAMPLE OF K-WAVENUMBERS AND OBTAIN THEIR CORRESPONDING HORIZON EXIT TIMES
-
-    print("\n** BUILD ARRAY OF WAVENUMBERS TO SAMPLE")
-
-    # Build array of k-sample points covering the region of the primoridal power spectrum that we want to include
-    # in the one-loop integral. We will eventually evaluate the one-loop integral on a square grid
-    # of source_k_array x source_k_array
-
-    # For a spike of power to produce a solar-mass PBH, we want the peak to be around k = 1E6/Mpc.
-    # For asteroid-mass PBHs that could be the dark matter, the peak should be even higher.
-    # We choose a mesh of k-values around this point (with a longer tail to the IR)
-    source_k_array = ray.get(
-        convert_to_wavenumbers(
-            np.logspace(np.log10(1e3), np.log10(5e7), 10), is_source=True
-        )
-    )
-    source_k_sample = wavenumber_array(k_array=source_k_array)
-
-    # build array of k-sample points covering the region of the target power spectrum where we want to evaluate
-    # the one-loop integral
-    response_k_array = ray.get(
-        convert_to_wavenumbers(
-            np.logspace(np.log10(1e3), np.log10(5e7), 10), is_response=True
-        )
-    )
-    response_k_sample = wavenumber_array(k_array=response_k_array)
-
-    def build_k_exit_work(k: wavenumber):
-        return pool.object_get(
-            "wavenumber_exit_time",
-            k=k,
-            cosmology=LambdaCDM_Planck2018,
-            atol=atol,
-            rtol=rtol,
-        )
-
-    # for each k mode we sample, determine its horizon exit point
-    source_k_exit_queue = RayWorkPool(
-        pool,
-        source_k_sample,
-        task_builder=build_k_exit_work,
-        title="CALCULATE HORIZON EXIT TIMES FOR SOURCE K-SAMPLE",
-        store_results=True,
-    )
-    source_k_exit_queue.run()
-    source_k_exit_times = wavenumber_exit_time_array(source_k_exit_queue.results)
-
-    response_k_exit_queue = RayWorkPool(
-        pool,
-        response_k_sample,
-        task_builder=build_k_exit_work,
-        title="CALCULATE HORIZON EXIT TIMES FOR RESPONSE K-SAMPLE",
-        store_results=True,
-    )
-    response_k_exit_queue.run()
-    response_k_exit_times = wavenumber_exit_time_array(response_k_exit_queue.results)
-
-    ## STEP 2
-    ## BUILD A UNIVERSAL GRID OF Z-VALUES AT WHICH TO SAMPLE
-
-    print("\n** BUILDING ARRAY OF Z-VALUES AT WHICH TO SAMPLE")
-
-    full_k_exit_times = source_k_exit_times + response_k_exit_times
-    k_exit_earliest: wavenumber_exit_time = full_k_exit_times.max
-    print(
-        f"   @@ earliest horizon exit/re-entry time is {k_exit_earliest.k.k_inv_Mpc:.5g}/Mpc with z_exit={k_exit_earliest.z_exit:.5g}"
-    )
-
-    # build a log-spaced universal grid of source sample times
-
-    source_z_grid = k_exit_earliest.populate_z_sample(
-        outside_horizon_efolds=5,
-        samples_per_log10z=source_samples_per_log10z,
-        z_end=zend,
-    )
-
-    # embed these redshift list into the database
-    z_source_array = ray.get(convert_to_redshifts(source_z_grid, is_source=True))
-    z_source_sample = redshift_array(z_array=z_source_array)
-
-    # we need the response sample to be a subset of the source sample, otherwise we won't have
-    # source data for the Green's functions right the way down to the response time.
-    # We need to re-query the database for these redshifts, so that they get their is_response flag
-    # set correctly.
-    _z_response_sample = z_source_sample.winnow(sparseness=response_sparseness)
-    z_response_array = ray.get(
-        convert_to_redshifts([z.z for z in _z_response_sample], is_response=True)
-    )
-    z_response_sample = redshift_array(z_array=z_response_array)
-
-    # build tags and other labels
-    (
-        TkProductionTag,
-        GkProductionTag,
-        SourceZGridSizeTag,  # labels size of the z_source sample grid
-        ResponseZGridSizeTag,  # labels size of the z_response sample grid
-        OutsideHorizonEfoldsTag,  # labels number of e-folds outside the horizon at which we begin Tk numerical integrations
-        LargestSourceZTag,  # labels largest z in the global grid
-        SmallestSourceZTag,  # labels smallest z in the global grid
-        SourceSamplesPerLog10ZTag,  # labels number of redshifts per log10 interval of 1+z in the source grid
-        ResponseSparsenessZTag,  # labels number of redshifts per log10 interval of 1+z in the response grid
-    ) = ray.get(
-        [
-            pool.object_get("store_tag", label="TkOneLoopDensity"),
-            pool.object_get("store_tag", label="GkOneLoopDensity"),
-            pool.object_get(
-                "store_tag", label=f"SourceRedshiftGrid_{len(z_source_sample)}"
-            ),
-            pool.object_get(
-                "store_tag", label=f"ResponseRedshiftGrid_{len(z_response_sample)}"
-            ),
-            pool.object_get("store_tag", label=f"OutsideHorizonEfolds_e3"),
-            pool.object_get(
-                "store_tag", label=f"LargestSourceRedshift_{z_source_sample.max.z:.5g}"
-            ),
-            pool.object_get(
-                "store_tag", label=f"SmallestSourceRedshift_{z_source_sample.min.z:.5g}"
-            ),
-            pool.object_get(
-                "store_tag", label=f"SourceSamplesPerLog10Z_{source_samples_per_log10z}"
-            ),
-            pool.object_get(
-                "store_tag",
-                label=f"ResponseSparsenessZ_{response_sparseness}",
-            ),
-        ]
-    )
-
-    ## STEP 1a
     ## BAKE THE BACKGROUND COSMOLOGY INTO A BACKGROUND MODEL OBJECT
 
-    LambdaCDM_model: BackgroundModel = ray.get(
+    bg_model: BackgroundModel = ray.get(
         pool.object_get(
             "BackgroundModel",
             solver_labels=solvers,
-            cosmology=LambdaCDM_Planck2018,
+            cosmology=model_cosmology,
             z_sample=z_source_sample,
             atol=atol,
             rtol=rtol,
             tags=[LargestSourceZTag, SmallestSourceZTag, SourceSamplesPerLog10ZTag],
         )
     )
-    if not LambdaCDM_model.available:
-        print("\n** CALCULATING BACKGROUND LAMBDA-CDM MODEL")
-        data = ray.get(LambdaCDM_model.compute(label=LambdaCDM_Planck2018.name))
-        LambdaCDM_model.store()
-        LambdaCDM_model = ray.get(pool.object_store(LambdaCDM_model))
-        outcome = ray.get(pool.object_validate(LambdaCDM_model))
+    if not bg_model.available:
+        print(f"\n** CALCULATING BACKGROUND {model_label} MODEL")
+        data = ray.get(bg_model.compute(label=LambdaCDM_Planck2018.name))
+        bg_model.store()
+        bg_model = ray.get(pool.object_store(bg_model))
+        outcome = ray.get(pool.object_validate(bg_model))
     else:
         print(
-            f'\n** FOUND EXISTING LAMBDA-CDM BACKGROUND MODEL "{LambdaCDM_model.label}" (store_id={LambdaCDM_model.store_id})'
+            f'\n** FOUND EXISTING {model_label} BACKGROUND MODEL "{bg_model.label}" (store_id={bg_model.store_id})'
         )
 
-    # set up a proxy object to avoid having to repeatedly serialize the model instance and ship it out
-    # model_proxy = ModelProxy(LambdaCDM_model)
+    model_proxy = ModelProxy(bg_model)
 
-    QCD_EOS_model: BackgroundModel = ray.get(
-        pool.object_get(
-            "BackgroundModel",
-            solver_labels=solvers,
-            cosmology=QCD_EOS_Planck2018,
-            z_sample=z_source_sample,
-            atol=atol,
-            rtol=rtol,
-            tags=[LargestSourceZTag, SmallestSourceZTag, SourceSamplesPerLog10ZTag],
-        )
-    )
-    if not QCD_EOS_model.available:
-        print("\n** CALCULATING BACKGROUND QCD-EOS MODEL")
-        data = ray.get(QCD_EOS_model.compute(label=QCD_EOS_Planck2018.name))
-        QCD_EOS_model.store()
-        QCD_EOS_model = ray.get(pool.object_store(QCD_EOS_model))
-        outcome = ray.get(pool.object_validate(QCD_EOS_model))
-    else:
-        print(
-            f'\n** FOUND EXISTING QCD-EOS BACKGROUND MODEL "{QCD_EOS_model.label}" (store_id={QCD_EOS_model.store_id})'
-        )
-
-    # set up a proxy object to avoid having to repeatedly serialize the model instance and ship it out
-    model_proxy = ModelProxy(QCD_EOS_model)
-
-    print("\n** BUILDING BESSEL FUNCTION SPLINES")
+    print(f"\n** BUILDING BESSEL FUNCTION SPLINES FOR {model_label}")
     phase_start = time.perf_counter()
 
     # find largest argument of the Bessel functions J_nu(k c_s \tau), Y_nu(k c_s \tau) that we will need
     largest_source_k = source_k_exit_times.max.k
-    lcdm_f = LambdaCDM_model.functions
-    qcd_f = QCD_EOS_model.functions
+    mod_f = bg_model.functions
 
-    largest_tau = max(lcdm_f.tau(zend), qcd_f.tau(zend))
+    largest_tau = mod_f.tau(zend)
     largest_x = largest_source_k.k * largest_tau
     largest_x_with_clearance = 1.075 * largest_x
 
@@ -569,7 +290,6 @@ with ShardedPool(
 
     ## STEP 2
     ## COMPUTE MATTER TRANSFER FUNCTIONS NUMERICALLY FOR SOURCE TIMES NOT TOO FAR INSIDE THE HORIZON
-
     def build_Tk_numerical_work(batch: List[wavenumber_exit_time]):
         # grouper may fill with None values, so we need to strip those out
         batch = [x for x in batch if x is not None]
@@ -702,7 +422,6 @@ with ShardedPool(
 
     ## STEP 3
     ## COMPUTE MATTER TRANSFER FUNCTIONS USING THE WKB APPROXIMATION FOR SOURCE TIMES INSIDE THE HORIZON
-
     def build_Tk_WKB_work(batch: List[wavenumber_exit_time]):
         # grouper may fill with None values, so we need to strip these out
         batch = [x for x in batch if x is not None]
@@ -888,7 +607,6 @@ with ShardedPool(
 
     ## STEP 4
     ## BUILD QUADRATIC SOURCE FUNCTIONS FOR THE TENSOR MODES
-
     def build_tensor_source_work(batch):
         # grouper may fill with None values, so we need to strip those out
         batch = [x for x in batch if x is not None]
@@ -1102,7 +820,6 @@ with ShardedPool(
 
     ## STEP 5
     ## COMPUTE TENSOR GREEN'S FUNCTIONS NUMERICALLY FOR RESPONSE TIMES NOT TOO FAR INSIDE THE HORIZON
-
     def build_Gk_numerical_work(batch: List[redshift]):
         # grouper may fill with None values, so we need to strip those out
         batch = [x for x in batch if x is not None]
@@ -1263,7 +980,6 @@ with ShardedPool(
 
     ## STEP 6
     ## COMPUTE TENSOR GREEN'S FUNCTIONS USING THE WKB APPROXIMATION FOR RESPONSE TIMES INSIDE THE HORIZON
-
     def build_Gk_WKB_work(batch: List[redshift]):
         # grouper may fill with None values, so we need to strip those out
         batch = [x for x in batch if x is not None]
@@ -1466,7 +1182,8 @@ with ShardedPool(
                                     SourceSamplesPerLog10ZTag,
                                     ResponseSparsenessZTag,
                                 ],
-                                _do_not_populate=True,  # can specify this, but we know every object we query will not exist in the datastore, so redundant really
+                                _do_not_populate=True,
+                                # can specify this, but we know every object we query will not exist in the datastore, so redundant really
                             )
                         )
                 else:
@@ -1554,13 +1271,11 @@ with ShardedPool(
 
     # STEP 7
     # REBUILD TENSOR GREEN'S FUNCTIONS AS FUNCTIONS OF THE SOURCE REDSHIFT, RATHER THAN THE RESPONSE REDSHIFT
-
     # (In theory we could construct G_k as functions of the source redshift z' on-the-fly when we need them.
     # Storing the rebuilt tensor Green's functions in the datastore is, in this sense, redundant. But it is likely much faster
     # to pre-build and cache, because we need to perform complicated table lookups with joins in order to extract the relevant
     # solution points from GkNumericalValue and GkWKValue rows. Also, there is the reproducibility angle of keeping a record of what
     # rebuilt data products we used.)
-
     def build_GkSource_batch(batch: List[redshift]):
         # grouper may fill with None values, so we need to strip those out
         batch = [x for x in batch if x is not None]
@@ -1798,7 +1513,6 @@ with ShardedPool(
     dump_incomplete_path = (
         Path(args.dump_incomplete).resolve() if dump_incomplete else None
     )
-
     if dump_incomplete:
         print(
             f'\n** INCOMPLETE GkSourcePolicyData OBJECTS WILL BE DUMPED TO "{dump_incomplete_path}"'
@@ -2263,18 +1977,15 @@ with ShardedPool(
                 )
                 for quality, quality_total in type_stats.items():
                     print(
-                        f"           {quality}: {quality_total} instances = {quality_total/type_total:.2%} of this type, {quality_total / policy_total:.2%} of total"
+                        f"           {quality}: {quality_total} instances = {quality_total / type_total:.2%} of this type, {quality_total / policy_total:.2%} of total"
                     )
-
     # STEP 8
     # PERFORM CALCULATION OF SOURCE INTEGRALS
-
     # strip off a number of z-sample values so that we do not need to begin the source integration right at the upper limit, where we cannot construct a spline
     if len(z_source_sample) < 11:
         raise RuntimeError(
             "z_source_sample is too small. At least O(10) sample points (but most likely very many more) are required to effectively construct the source integral."
         )
-
     z_source_integral_max_z = z_source_sample[10]
     z_source_integral_response_sample = z_response_sample.truncate(
         z_source_integral_max_z, keep="lower-strict"
@@ -2639,3 +2350,277 @@ with ShardedPool(
             process_batch_size=100,
         )
         QuadSourceIntegral_queue.run()
+
+
+# construct a ShardedPool to orchestrate database access
+with ShardedPool(
+    version_label=VERSION_LABEL,
+    db_name=args.database,
+    timeout=args.db_timeout,
+    shards=args.shards,
+    profile_agent=profile_agent,
+    job_name=args.job_name,
+    prune_unvalidated=args.prune_unvalidated,
+    drop_actions=drop_actions,
+) as pool:
+
+    # set up LambdaCDM object representing a basic Planck2018 cosmology in Mpc units
+    units = Mpc_units()
+    params = Planck2018()
+
+    LambdaCDM_Planck2018 = ray.get(
+        pool.object_get("LambdaCDM", params=params, units=units)
+    )
+    QCD_EOS_Planck2018 = ray.get(
+        pool.object_get("QCDCosmology", params=params, units=units)
+    )
+
+    zend = args.zend
+    source_samples_per_log10z = args.source_samples_log10z
+    response_sparseness = args.response_sparseness
+
+    ## UTILITY FUNCTIONS
+
+    def convert_to_wavenumbers(
+        k_sample_set: List[float], is_source: bool = False, is_response: bool = False
+    ):
+        return pool.object_get(
+            "wavenumber",
+            payload_data=[
+                {
+                    "k_inv_Mpc": k,
+                    "units": units,
+                    "is_source": is_source,
+                    "is_response": is_response,
+                }
+                for k in k_sample_set
+            ],
+        )
+
+    def convert_to_redshifts(
+        z_sample_set, is_source: bool = False, is_response: bool = False
+    ):
+        return pool.object_get(
+            "redshift",
+            payload_data=[
+                {"z": z, "is_source": is_source, "is_response": is_response}
+                for z in z_sample_set
+            ],
+        )
+
+    ## DATASTORE OBJECTS
+
+    # build absolute and relative tolerances
+    atol, rtol, quad_atol, quad_rtol = ray.get(
+        [
+            pool.object_get("tolerance", tol=DEFAULT_ABS_TOLERANCE),
+            pool.object_get("tolerance", tol=DEFAULT_REL_TOLERANCE),
+            pool.object_get("tolerance", tol=DEFAULT_QUADRATURE_ATOL),
+            pool.object_get("tolerance", tol=DEFAULT_QUADRATURE_RTOL),
+        ]
+    )
+
+    # build stepper labels; we have to query these up-front from the pool in order to be
+    # certain that they get the same serial number in each database shard.
+    # So we can no longer construct these on-the-fly in the integration classes, as used to be done
+    (
+        solve_ivp_RK45,
+        solve_ivp_DOP852,
+        solve_ivp_Radau,
+        solve_ivp_BDF,
+        solve_icp_LSODA,
+    ) = ray.get(
+        [
+            pool.object_get("IntegrationSolver", label="solve_ivp+RK45", stepping=0),
+            pool.object_get("IntegrationSolver", label="solve_ivp+DOP853", stepping=0),
+            pool.object_get("IntegrationSolver", label="solve_ivp+Radau", stepping=0),
+            pool.object_get("IntegrationSolver", label="solve_ivp+BDF", stepping=0),
+            pool.object_get("IntegrationSolver", label="solve_ivp+LSODA", stepping=0),
+        ]
+    )
+    solvers = {
+        "solve_ivp+RK45-stepping0": solve_ivp_RK45,
+        "solve_ivp+DOP853-stepping0": solve_ivp_DOP852,
+        "solve_ivp+Radau-stepping0": solve_ivp_Radau,
+        "solve_ivp+BDF-stepping0": solve_ivp_BDF,
+        "solve_ivp+LSODA-stepping0": solve_icp_LSODA,
+    }
+
+    # create GkSource policies that we will apply later
+    GkSource_policy_1pt5, GkSource_policy_5pt0 = ray.get(
+        [
+            pool.object_get(
+                "GkSourcePolicy",
+                label='policy="maximize-Levin"-Levin-threshold="1.5"',
+                Levin_threshold=1.5,
+                numeric_policy="maximize_Levin",
+            ),
+            pool.object_get(
+                "GkSourcePolicy",
+                label='policy="maximize-Levin"-Levin-threshold="5.0"',
+                Levin_threshold=5.0,
+                numeric_policy="maximize_Levin",
+            ),
+        ]
+    )
+
+    # create QuadSource policies that we will apply later
+    QuadSource_policy_1pt5, QuadSource_policy_5pt0 = ray.get(
+        [
+            pool.object_get(
+                "QuadSourcePolicy",
+                label='policy="maximize-Levin"-Levin-threshold="1.5"',
+                Levin_threshold=1.5,
+                numeric_policy="maximize_Levin",
+            ),
+            pool.object_get(
+                "QuadSourcePolicy",
+                label='policy="maximize-Levin"-Levin-threshold="5.0"',
+                Levin_threshold=5.0,
+                numeric_policy="maximize_Levin",
+            ),
+        ]
+    )
+
+    ## STEP 1
+    ## BUILD SAMPLE OF K-WAVENUMBERS AND OBTAIN THEIR CORRESPONDING HORIZON EXIT TIMES
+
+    print("\n** BUILD ARRAY OF WAVENUMBERS TO SAMPLE")
+
+    # Build array of k-sample points covering the region of the primoridal power spectrum that we want to include
+    # in the one-loop integral. We will eventually evaluate the one-loop integral on a square grid
+    # of source_k_array x source_k_array
+
+    # For a spike of power to produce a solar-mass PBH, we want the peak to be around k = 1E6/Mpc.
+    # For asteroid-mass PBHs that could be the dark matter, the peak should be even higher.
+    # We choose a mesh of k-values around this point (with a longer tail to the IR)
+    source_k_array = ray.get(
+        convert_to_wavenumbers(
+            np.logspace(np.log10(1e3), np.log10(5e7), 10), is_source=True
+        )
+    )
+    source_k_sample = wavenumber_array(k_array=source_k_array)
+
+    # build array of k-sample points covering the region of the target power spectrum where we want to evaluate
+    # the one-loop integral
+    response_k_array = ray.get(
+        convert_to_wavenumbers(
+            np.logspace(np.log10(1e3), np.log10(5e7), 10), is_response=True
+        )
+    )
+    response_k_sample = wavenumber_array(k_array=response_k_array)
+
+    def build_k_exit_work(k: wavenumber):
+        return pool.object_get(
+            "wavenumber_exit_time",
+            k=k,
+            cosmology=LambdaCDM_Planck2018,
+            atol=atol,
+            rtol=rtol,
+        )
+
+    # for each k mode we sample, determine its horizon exit point
+    source_k_exit_queue = RayWorkPool(
+        pool,
+        source_k_sample,
+        task_builder=build_k_exit_work,
+        title="CALCULATE HORIZON EXIT TIMES FOR SOURCE K-SAMPLE",
+        store_results=True,
+    )
+    source_k_exit_queue.run()
+    source_k_exit_times = wavenumber_exit_time_array(source_k_exit_queue.results)
+
+    response_k_exit_queue = RayWorkPool(
+        pool,
+        response_k_sample,
+        task_builder=build_k_exit_work,
+        title="CALCULATE HORIZON EXIT TIMES FOR RESPONSE K-SAMPLE",
+        store_results=True,
+    )
+    response_k_exit_queue.run()
+    response_k_exit_times = wavenumber_exit_time_array(response_k_exit_queue.results)
+
+    ## STEP 2
+    ## BUILD A UNIVERSAL GRID OF Z-VALUES AT WHICH TO SAMPLE
+
+    print("\n** BUILDING ARRAY OF Z-VALUES AT WHICH TO SAMPLE")
+
+    full_k_exit_times = source_k_exit_times + response_k_exit_times
+    k_exit_earliest: wavenumber_exit_time = full_k_exit_times.max
+    print(
+        f"   @@ earliest horizon exit/re-entry time is {k_exit_earliest.k.k_inv_Mpc:.5g}/Mpc with z_exit={k_exit_earliest.z_exit:.5g}"
+    )
+
+    # build a log-spaced universal grid of source sample times
+
+    source_z_grid = k_exit_earliest.populate_z_sample(
+        outside_horizon_efolds=5,
+        samples_per_log10z=source_samples_per_log10z,
+        z_end=zend,
+    )
+
+    # embed these redshift list into the database
+    z_source_array = ray.get(convert_to_redshifts(source_z_grid, is_source=True))
+    z_source_sample = redshift_array(z_array=z_source_array)
+
+    # we need the response sample to be a subset of the source sample, otherwise we won't have
+    # source data for the Green's functions right the way down to the response time.
+    # We need to re-query the database for these redshifts, so that they get their is_response flag
+    # set correctly.
+    _z_response_sample = z_source_sample.winnow(sparseness=response_sparseness)
+    z_response_array = ray.get(
+        convert_to_redshifts([z.z for z in _z_response_sample], is_response=True)
+    )
+    z_response_sample = redshift_array(z_array=z_response_array)
+
+    # build tags and other labels
+    (
+        TkProductionTag,
+        GkProductionTag,
+        SourceZGridSizeTag,  # labels size of the z_source sample grid
+        ResponseZGridSizeTag,  # labels size of the z_response sample grid
+        OutsideHorizonEfoldsTag,  # labels number of e-folds outside the horizon at which we begin Tk numerical integrations
+        LargestSourceZTag,  # labels largest z in the global grid
+        SmallestSourceZTag,  # labels smallest z in the global grid
+        SourceSamplesPerLog10ZTag,  # labels number of redshifts per log10 interval of 1+z in the source grid
+        ResponseSparsenessZTag,  # labels number of redshifts per log10 interval of 1+z in the response grid
+    ) = ray.get(
+        [
+            pool.object_get("store_tag", label="TkOneLoopDensity"),
+            pool.object_get("store_tag", label="GkOneLoopDensity"),
+            pool.object_get(
+                "store_tag", label=f"SourceRedshiftGrid_{len(z_source_sample)}"
+            ),
+            pool.object_get(
+                "store_tag", label=f"ResponseRedshiftGrid_{len(z_response_sample)}"
+            ),
+            pool.object_get("store_tag", label=f"OutsideHorizonEfolds_e3"),
+            pool.object_get(
+                "store_tag", label=f"LargestSourceRedshift_{z_source_sample.max.z:.5g}"
+            ),
+            pool.object_get(
+                "store_tag", label=f"SmallestSourceRedshift_{z_source_sample.min.z:.5g}"
+            ),
+            pool.object_get(
+                "store_tag", label=f"SourceSamplesPerLog10Z_{source_samples_per_log10z}"
+            ),
+            pool.object_get(
+                "store_tag",
+                label=f"ResponseSparsenessZ_{response_sparseness}",
+            ),
+        ]
+    )
+
+    model_list = [
+        {
+            "label": "LambdaCDM",
+            "cosmology": LambdaCDM_Planck2018,
+        },
+        {
+            "label": "QCDCosmology",
+            "cosmology": QCD_EOS_Planck2018,
+        },
+    ]
+
+    for model_data in model_list:
+        run_pipeline(model_data)
