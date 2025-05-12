@@ -73,7 +73,7 @@ def test_T_z_conversion():
         # Use the QCDCosmology method which applies the switch
         w_qcd_bg_vals.append(qcd.wBackground(z))
         w_qcd_pert_vals.append(qcd.wPerturbations(z))
-        w_qcd_vals.append(eos.w(z))
+        w_qcd_vals.append(eos.w(T))
 
         g_star_vals.append(eos.G(T))
         g_s_vals.append(eos.Gs(T))
