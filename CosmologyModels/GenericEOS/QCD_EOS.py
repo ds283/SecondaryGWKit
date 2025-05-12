@@ -1,7 +1,7 @@
 from math import exp, log, pow
 from typing import Dict
 
-from CosmologyModels.GenericEOS.base import (
+from CosmologyModels.GenericEOS.GenericEOS import (
     GenericEOSBase,
     HIGH_T_GSTAR,
     LOW_T_G_S_STAR,

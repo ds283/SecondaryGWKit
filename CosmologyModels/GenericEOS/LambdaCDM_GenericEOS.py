@@ -8,7 +8,7 @@ from scipy.optimize import root_scalar
 
 from ComputeTargets.spline_wrappers import ZSplineWrapper
 from CosmologyModels import BaseCosmology
-from CosmologyModels.GenericEOS.base import GenericEOSBase, HIGH_T_GSTAR
+from CosmologyModels.GenericEOS.GenericEOS import GenericEOSBase, HIGH_T_GSTAR
 from Units.base import UnitsLike
 from constants import RadiationConstant
 
