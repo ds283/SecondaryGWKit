@@ -59,4 +59,12 @@ class GenericEOSBase(ABC):
         T should be regarded as a dimensionful quantity, measured in the given UnitsLike system
         :return:
         """
-        return 4.0 * self.Gs(T) / (3.0 * self.G(T)) - 1.0
+        G = self.G(T)
+        Gs = self.Gs(T)
+        w = (4.0 * Gs) / (3.0 * G) - 1.0
+
+        # print(
+        #     f">> evaluate w(T) at T = {T/self._units.GeV:.5g} GeV = {T/self._units.Kelvin:.5g} K | g* = {G:.5g}, g_S* = {Gs:.5g}, w = {w:.5g}"
+        # )
+
+        return w
