@@ -67,8 +67,7 @@ class LambdaCDM(BaseCosmology):
         self.omega_r = self.rho_r0 / Omega_factor
 
         rho_today = self.rho(0)
-        gram = units.Kilogram / 1000.0
-        gram_per_m3 = gram / (units.Metre * units.Metre * units.Metre)
+        gram_per_m3 = units.Gram / (units.Metre * units.Metre * units.Metre)
         rho_today_gram_m3 = rho_today / gram_per_m3
 
         matter_radiation_equality = self.omega_m / self.omega_r - 1.0

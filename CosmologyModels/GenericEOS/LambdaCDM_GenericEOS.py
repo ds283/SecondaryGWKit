@@ -74,8 +74,7 @@ class LambdaCDM_GenericEOS(BaseCosmology):
         self._T_z_spline = self._build_T_z_spline(min_z, max_z)
 
         rho_today = self.rho(0)
-        gram = units.Kilogram / 1000.0
-        gram_per_m3 = gram / (units.Metre * units.Metre * units.Metre)
+        gram_per_m3 = units.Gram / (units.Metre * units.Metre * units.Metre)
         rho_today_gram_m3 = rho_today / gram_per_m3
 
         print(f'@@ Parametrized equation-of-state LambdaCDM-like model "{self._name}"')
