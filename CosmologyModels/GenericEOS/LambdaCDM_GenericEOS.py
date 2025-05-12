@@ -108,15 +108,6 @@ class LambdaCDM_GenericEOS(BaseCosmology):
         print(f"|  matter-radiation equality at z = {matter_radiation_equality:.4g}")
         print(f"|  matter-Lambda equality at z = {matter_cc_equality:.4g}")
 
-        self.T_CMB = 2.7255  # in Kelvin
-        self.K_to_GeV = 8.6173e-14
-        self.cosmology = self
-
-        # Define the temperature range where the QCD modifications apply.
-        # You can adjust these values as needed.
-        self.T_min = 0.0054  # GeV, lower bound of valid QCD range
-        self.T_max = 1e16  # GeV, upper bound of valid QCD range
-
     @property
     def type_id(self) -> int:
         # inherit our unique ID from the underlying choice of equation of state
