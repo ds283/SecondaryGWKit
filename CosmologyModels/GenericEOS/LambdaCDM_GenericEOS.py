@@ -1,6 +1,7 @@
 from math import exp, sqrt, log
 from typing import Dict
 
+import numpy as np
 from numpy import linspace
 from scipy.differentiate import derivative
 from scipy.interpolate import InterpolatedUnivariateSpline
@@ -78,8 +79,9 @@ class LambdaCDM_GenericEOS(BaseCosmology):
 
         # build the spline used to map z to a temperature, given the specified equation of state
         # we need to go all the way to z=0 so that we can compute the radiation temperature today
-        # (needed to match to the CMB)
-        self._T_z_spline = self._build_T_z_spline(0.0, max_z)
+        # (needed to match to the CMB), but we need to compute a bit into the future (negative z)
+        # so that we can accurately compute numerical derivatives at z=0
+        self._T_z_spline = self._build_T_z_spline(min_z=-0.2, max_z=max_z)
 
         # COMPUTE BASIC DATA ABOUT THIS COSMOLOGICAL MODEL
 
@@ -276,17 +278,21 @@ class LambdaCDM_GenericEOS(BaseCosmology):
         :return: value of d(ln H)/dz
         """
 
-        def ln_H(z: float) -> float:
-            return log(self.Hubble(z))
+        f = np.vectorize(pyfunc=lambda z: log(self.Hubble(z)))
 
-        data = derivative(ln_H, z0, tolerances={"atol": 1e-6, "rtol": 1e-4})
+        def ln_H(z_array: np.ndarray) -> np.ndarray:
+            return f(z_array)
+
+        data = derivative(
+            f=ln_H, x=[z0], tolerances={"atol": 1e-6, "rtol": 1e-4}, initial_step=0.1
+        )
 
         if not data.success:
             raise RuntimeError(
                 f"derivative() failed: {data.message} (status={data.status}, iterations={data.nit}, nfev={data.nfev}, error={data.error})"
             )
 
-        return data.df
+        return data.df.item()
 
     def d2_lnH_dz2(self, z0: float) -> float:
         """
@@ -295,17 +301,19 @@ class LambdaCDM_GenericEOS(BaseCosmology):
         :return: value of d^2(ln H)/dz^2
         """
 
-        def d_ln_H(z: float) -> float:
-            return self.d_lnH_dz(z)
+        f = np.vectorize(pyfunc=lambda z: self.d_lnH_dz(z))
 
-        data = derivative(d_ln_H, z0, tolerances={"atol": 1e-6, "rtol": 1e-4})
+        def d_ln_H(z_array: np.ndarray) -> np.ndarray:
+            return f(z_array)
+
+        data = derivative(f=d_ln_H, x=[z0], tolerances={"atol": 1e-6, "rtol": 1e-4})
 
         if not data.success:
             raise RuntimeError(
                 f"derivative() failed: {data.message} (status={data.status}, iterations={data.nit}, nfev={data.nfev}, error={data.error})"
             )
 
-        return data.df
+        return data.df.item()
 
     def d3_lnH_dz3(self, z0: float) -> float:
         """
@@ -314,17 +322,19 @@ class LambdaCDM_GenericEOS(BaseCosmology):
         :return: value of d^3(ln H)/dz^3
         """
 
-        def d2_ln_H(z: float) -> float:
-            return self.d2_lnH_dz2(z)
+        f = np.vectorize(pyfunc=lambda z: self.d2_lnH_dz2(z))
 
-        data = derivative(d2_ln_H, z0, tolerances={"atol": 1e-6, "rtol": 1e-4})
+        def d2_ln_H(z_array: np.ndarray) -> np.ndarray:
+            return f(z_array)
+
+        data = derivative(f=d2_ln_H, x=[z0], tolerances={"atol": 1e-6, "rtol": 1e-4})
 
         if not data.success:
             raise RuntimeError(
                 f"derivative() failed: {data.message} (status={data.status}, iterations={data.nit}, nfev={data.nfev}, error={data.error})"
             )
 
-        return data.df
+        return data.df.item()
 
     def wBackground(self, z: float) -> float:
         rho = self._rho_fluid(z)
@@ -358,17 +368,19 @@ class LambdaCDM_GenericEOS(BaseCosmology):
         :return: value of dw/dz
         """
 
-        def w(z: float) -> float:
-            return self.wPerturbations(z)
+        f = np.vectorize(pyfunc=lambda z: self.wPerturbations(z))
 
-        data = derivative(w, z0, tolerances={"atol": 1e-6, "rtol": 1e-4})
+        def w(z_array: np.ndarray) -> np.ndarray:
+            return f(z_array)
+
+        data = derivative(f=w, x=[z0], tolerances={"atol": 1e-6, "rtol": 1e-4})
 
         if not data.success:
             raise RuntimeError(
                 f"derivative() failed: {data.message} (status={data.status}, iterations={data.nit}, nfev={data.nfev}, error={data.error})"
             )
 
-        return data.df
+        return data.df.item()
 
     def d2_wPerturbations_dz2(self, z0: float) -> float:
         """
@@ -377,14 +389,16 @@ class LambdaCDM_GenericEOS(BaseCosmology):
         :return: value of d^2w/dz^2
         """
 
-        def d_w(z: float) -> float:
-            return self.d_wPerturbations_dz(z)
+        f = np.vectorize(pyfunc=lambda z: self.d_wPerturbations_dz(z))
 
-        data = derivative(d_w, z0, tolerances={"atol": 1e-6, "rtol": 1e-4})
+        def d_w(z_array: np.ndarray) -> np.ndarray:
+            return f(z_array)
+
+        data = derivative(f=d_w, x=[z0], tolerances={"atol": 1e-6, "rtol": 1e-4})
 
         if not data.success:
             raise RuntimeError(
                 f"derivative() failed: {data.message} (status={data.status}, iterations={data.nit}, nfev={data.nfev}, error={data.error})"
             )
 
-        return data.df
+        return data.df.item()
