@@ -118,8 +118,8 @@ class LambdaCDM(BaseCosmology):
         :return: value of H(z)
         """
         rho_total = self.rho(z)
-        H0sq = rho_total / (3.0 * self.Mpsq)
-        return sqrt(H0sq)
+        Hsq = rho_total / (3.0 * self.Mpsq)
+        return sqrt(Hsq)
 
     def d_lnH_dz(self, z: float) -> float:
         """
