@@ -380,7 +380,7 @@ def find_horizon_exit_time(
     """
     Compute the redshift of horizon exit for a mode of wavenumber k in the specified cosmology, by solving
     the equation (k/H) * (1+z) = k/(aH) = 1.
-    To do this we fix an initial condition for q = ln[ (k/H)*(1+z) ] today via q = ln[ k/H0 ],
+    To do this, we fix an initial condition for q = ln[ (k/H)*(1+z) ] today via q = ln[ k/H0 ],
     and then integrate dq/dz up to a point where it crosses zero.
     :param cosmology:
     :param k:
@@ -388,9 +388,58 @@ def find_horizon_exit_time(
     """
     check_units(k, cosmology)
 
-    # set initial conditions for q = ln(k/aH)
-    # the normalization a0 is absorbed into k/a0 = k_phys.
-    q0 = log(float(k) / cosmology.H0)
+    # GUESS A SENSIBLE INITIAL REDSHIFT FOR THE CALCULATION
+
+    # in radiation domination H(z) = H0 (1+z)^2 because H^2 ~ rho ~ T^4 and T ~ (1+z).
+    # Therefore a(z)H(z) ~ H0(1+z).
+    # The normalization a0 of a(z) is absorbed into k/a0 = k_phys.
+    # Hence we can guess a possible redshift of horizon exit for this mode as
+    #   1 + z_exit(k) = k/H0
+
+    # in practice we want to get redshifts for horizon crossing - subh_efolds and horizon_crossing + suph_efolds
+    largest_subh_efold = max(subh_efolds)
+    largest_suph_efold = max(suph_efolds)
+
+    # find estimate for horizon crossing time of largest subhorizon e-fold
+    z_lo_guess = exp(-largest_subh_efold) * (float(k) / cosmology.H0) - 1.0
+    q_lo_guess = log(float(k) * (1.0 + z_lo_guess) / cosmology.Hubble(z_lo_guess))
+
+    # if q_lo_guess is +ve then z_lo_guess is a good lower bound; its redshift is late enough.
+    # Otherwise, we should gently decrease z_lo_guess until we get a lower bound
+    COUNT_MAX = 25
+    count = 0
+    while (
+        q_lo_guess - largest_subh_efold < DEFAULT_HEXIT_TOLERANCE and count < COUNT_MAX
+    ):
+        z_lo_guess = z_lo_guess / 2.0
+        q_lo_guess = log(float(k) * (1.0 + z_lo_guess) / cosmology.Hubble(z_lo_guess))
+
+        count += 1
+
+    if count >= COUNT_MAX:
+        raise RuntimeError(
+            f"find_horizon_exit_time: failed to find lower bound for z_lo_guess"
+        )
+
+    # find estimate for horizon crossing time of largest superhorizon e-fold
+    z_hi_guess = exp(+largest_suph_efold) * (float(k) / cosmology.H0) - 1.0
+    q_hi_guess = log(float(k) * (1.0 + z_hi_guess) / cosmology.Hubble(z_hi_guess))
+
+    # if q_hi_guess is -ve then z_hi_guess is a good upper bound; its redshift is early enough.
+    # Otherwise, we should gently increase z_hi_guess until we get an upper bound
+    count = 0
+    while (
+        q_hi_guess + largest_suph_efold > -DEFAULT_HEXIT_TOLERANCE and count < COUNT_MAX
+    ):
+        z_hi_guess = z_hi_guess * 2.0
+        q_hi_guess = log(float(k) * (1.0 + z_hi_guess) / cosmology.Hubble(z_hi_guess))
+
+        count += 1
+
+    if count >= COUNT_MAX:
+        raise RuntimeError(
+            f"find_horizon_exit_time: failed to find upper bound for z_hi_guess"
+        )
 
     # RHS of ODE system for dq/dz = f(z)
     def RHS(log_z, state, supervisor):
@@ -437,17 +486,16 @@ def find_horizon_exit_time(
 
     num_triggers = len(triggers)
 
-    Z_SEARCH_START = 0.0
-    Z_SEARCH_END = 1e20
-
-    with WavenumberExitSupervisor(k=k, z_init=0.0) as supervisor:
+    with WavenumberExitSupervisor(
+        k=k, z_init=z_lo_guess, z_final=z_hi_guess
+    ) as supervisor:
         # solve to find the zero crossing point; we set the upper limit of integration to be 1E12, which should be comfortably above
         # the redshift of any horizon crossing in which we are interested.
         sol = solve_ivp(
             RHS,
-            t_span=(log(1.0 + Z_SEARCH_START), log(1.0 + Z_SEARCH_END)),
+            t_span=(log(1.0 + z_lo_guess), log(1.0 + z_hi_guess)),
             method="DOP853",
-            y0=[q0],
+            y0=[q_lo_guess],
             events=triggers,
             atol=atol,
             rtol=rtol,
@@ -463,7 +511,7 @@ def find_horizon_exit_time(
     if sol.status != 1:
         print(sol)
         raise RuntimeError(
-            f"find_horizon_exit_time: integration to find horizon-crossing time did not detect k/aH = 0 within the integration range"
+            f"find_horizon_exit_time: integration to find horizon-crossing time did not detect all required horizon exit times (and/or their offsets) within the integration range"
         )
 
     if len(sol.t_events) != num_triggers:

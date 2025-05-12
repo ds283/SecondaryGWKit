@@ -77,8 +77,8 @@ class LambdaCDM_GenericEOS(BaseCosmology):
         self._G_CMB_pow13 = pow(self._G_CMB, 1.0 / 3.0)
         self._G_S_CMB_pow13 = pow(self._G_S_CMB, 1.0 / 3.0)
 
-        # build the spline used to map z to a temperature, given the specified equation of state
-        # we need to go all the way to z=0 so that we can compute the radiation temperature today
+        # Build the spline used to map z to a temperature, given the specified equation of state.
+        # We need to go all the way to z=0 so that we can compute the radiation temperature today
         # (needed to match to the CMB), but we need to compute a bit into the future (negative z)
         # so that we can accurately compute numerical derivatives at z=0
         self._T_z_spline = self._build_T_z_spline(min_z=-0.2, max_z=max_z)

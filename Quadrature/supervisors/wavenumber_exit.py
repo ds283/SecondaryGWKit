@@ -9,18 +9,26 @@ DEFAULT_KEXIT_NOTIFY_INTERVAL = 2 * 60
 
 
 class WavenumberExitSupervisor(IntegrationSupervisor):
+
     def __init__(
         self,
         k: wavenumber,
         z_init: Union[redshift, float],
+        z_final: Union[redshift, float],
         notify_interval=DEFAULT_KEXIT_NOTIFY_INTERVAL,
     ):
         super().__init__(notify_interval)
 
         self._k: wavenumber = k
+
         self._z_init: float = (
             z_init.z if isinstance(z_init, redshift) else float(z_init)
         )
+        self._z_final: float = (
+            z_final.z if isinstance(z_final, redshift) else float(z_final)
+        )
+        self._z_range: float = self._z_init - self._z_final
+
         self._last_z = self._z_init
 
     def __enter__(self):
@@ -37,10 +45,15 @@ class WavenumberExitSupervisor(IntegrationSupervisor):
 
         update_number = self.report_notify()
 
+        z_complete = self._z_init - current_z
+        z_remain = self._z_range - z_complete
+        percent_remain = z_remain / self._z_range
         print(
             f"** STATUS UPDATE #{update_number}: horizon-exit finding integration for k = {self._k.k_inv_Mpc:.5g}/Mpc (store_id={self._k.store_id}) has been running for {format_time(since_start)} ({format_time(since_last_notify)} since last notification)"
         )
-        print(f"|    current z={current_z:.5g} (init z={self._z_init:.5g})")
+        print(
+            f"|    current z={current_z:.5g} (init z={self._z_init:.5g}, target z={self._z_final:.5g}, z complete={z_complete:.5g}, z remain={z_remain:.5g}, {percent_remain:.3%} remains)"
+        )
         if self._last_z is not None:
             z_delta = self._last_z - current_z
             print(f"|    redshift advance since last update: Delta z = {z_delta:.5g}")
