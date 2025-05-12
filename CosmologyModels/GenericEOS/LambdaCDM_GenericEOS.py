@@ -37,10 +37,6 @@ class LambdaCDM_GenericEOS(BaseCosmology):
         # unpack details of the parameter block so we can access them without extensive nesting
         self._name = f"{eos.name} | {params.name}"
 
-        print(
-            f'>> Building LambdaCDM_GenericEOS model "{self._name}" with max_z={self._max_z:.5g}'
-        )
-
         # Omega factors are all measured today
         self.omega_cc = params.omega_cc
         self.omega_m = params.omega_m
