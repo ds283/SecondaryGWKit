@@ -32,6 +32,10 @@ class UnitsLike(ABC):
         raise NotImplementedError
 
     @property
+    def Gram(self):
+        return self.Kilogram / 1e3
+
+    @property
     @abstractmethod
     def Second(self):
         raise NotImplementedError
