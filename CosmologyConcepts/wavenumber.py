@@ -1,5 +1,5 @@
 from functools import partial, total_ordering
-from math import log10, log, fabs
+from math import log10, log, fabs, exp
 from typing import Iterable, Optional, Mapping, List
 
 import ray
@@ -9,9 +9,10 @@ from scipy.integrate import solve_ivp
 from CosmologyModels import BaseCosmology
 from Datastore import DatastoreObject
 from MetadataConcepts import tolerance
+from Quadrature.supervisors.base import RHS_timer
+from Quadrature.supervisors.wavenumber_exit import WavenumberExitSupervisor
 from Units import check_units
 from defaults import DEFAULT_ABS_TOLERANCE, DEFAULT_REL_TOLERANCE
-from utilities import WallclockTimer
 
 
 @total_ordering
@@ -392,17 +393,31 @@ def find_horizon_exit_time(
     q0 = log(float(k) / cosmology.H0)
 
     # RHS of ODE system for dq/dz = f(z)
-    def RHS(z, state):
-        # q = state[0]
-        return [1.0 / (1.0 + z) - cosmology.d_lnH_dz(z)]
+    def RHS(log_z, state, supervisor):
+        with RHS_timer(supervisor) as timer:
+            one_plus_z = exp(log_z)
+            z = one_plus_z - 1.0
+
+            if supervisor.notify_available:
+                k_over_aH = one_plus_z * float(k) / cosmology.Hubble(z)
+                q = log(k_over_aH)
+                supervisor.message(
+                    z, f"current k/aH = {k_over_aH:.5g}, log(k/aH) = {q:.5g}"
+                )
+                supervisor.reset_notify_time()
+
+            # q = state[0]
+            # evaluate (d/d ln(1+z)) (k/aH)
+            return [1.0 - one_plus_z * cosmology.d_lnH_dz(z)]
 
     # build event function to terminate when q crosses zero
-    def q_event(target_efolds_suph, z, state):
+    def q_event(target_efolds_suph, log_z, state, supervisor):
         # target e-folds determines how many e-folds in/outside the horizon we should be to trigger the event
         # q = ln(k/aH)
         # if k/aH = exp(N), with N +ve for e-folds inside the horizon, -ve for e-folds outside, then we should trigger then
         # ln(k/aH0 = q = N, or q - N = 0.
         # hence, we want to trigger when q + target_efolds_suph = 0
+
         q = state[0] + target_efolds_suph
         return q
 
@@ -422,16 +437,21 @@ def find_horizon_exit_time(
 
     num_triggers = len(triggers)
 
-    with WallclockTimer() as timer:
+    Z_SEARCH_START = 0.0
+    Z_SEARCH_END = 1e20
+
+    with WavenumberExitSupervisor(k=k, z_init=0.0) as supervisor:
         # solve to find the zero crossing point; we set the upper limit of integration to be 1E12, which should be comfortably above
         # the redshift of any horizon crossing in which we are interested.
         sol = solve_ivp(
             RHS,
-            t_span=(0.0, 1e20),
+            t_span=(log(1.0 + Z_SEARCH_START), log(1.0 + Z_SEARCH_END)),
+            method="DOP853",
             y0=[q0],
             events=triggers,
             atol=atol,
             rtol=rtol,
+            args=(supervisor,),
         )
 
     # test whether termination occurred due to the q_zero_event() firing
@@ -441,6 +461,7 @@ def find_horizon_exit_time(
         )
 
     if sol.status != 1:
+        print(sol)
         raise RuntimeError(
             f"find_horizon_exit_time: integration to find horizon-crossing time did not detect k/aH = 0 within the integration range"
         )
@@ -450,7 +471,7 @@ def find_horizon_exit_time(
             f"find_horizon_exit_time: unexpected number of event types returned from horizon-crossing integration (expected={num_triggers}, found={len(sol.t_events)})"
         )
 
-    payload = {"compute_time": timer.elapsed}
+    payload = {"compute_time": supervisor.integration_time}
 
     def check_log_k_aH(z_test, expected_log_N):
         H_test = cosmology.Hubble(z_test)
@@ -471,7 +492,7 @@ def find_horizon_exit_time(
         raise RuntimeError(
             f"find_horizon_exit_time: more than one horizon-crossing time returned from integration (num={len(zero_times)})"
         )
-    event = zero_times[0]
+    event = exp(zero_times[0]) - 1.0
     payload["z_exit"] = event
     check_log_k_aH(event, 0.0)
 
@@ -485,7 +506,7 @@ def find_horizon_exit_time(
             raise RuntimeError(
                 f"find_horizon_exit_time: more than one horizon-crossing time returned from integration (subhorizon efolds={z_offset}, num={len(times)})"
             )
-        event = times[0]
+        event = exp(times[0]) - 1.0
         check_log_k_aH(event, -z_offset)
         payload[f"z_exit_subh_e{z_offset}"] = event
 
@@ -499,7 +520,7 @@ def find_horizon_exit_time(
             raise RuntimeError(
                 f"find_horizon_exit_time: more than one horizon-crossing time returned from integration (superhorizon efolds={z_offset}, num={len(times)})"
             )
-        event = times[0]
+        event = exp(times[0]) - 1.0
         check_log_k_aH(event, z_offset)
         payload[f"z_exit_suph_e{z_offset}"] = event
 
