@@ -246,6 +246,11 @@ def run_pipeline(model_data: dict):
         task_builder=build_k_exit_work,
         title=f"CALCULATE HORIZON EXIT TIMES FOR {model_label} SOURCE K-SAMPLE",
         store_results=True,
+        create_batch_size=10,
+        notify_batch_size=10,
+        max_task_queue=30,
+        process_batch_size=10,
+        notify_min_time_interval=MIN_NOTIFY_INTERVAL,
     )
     source_k_exit_queue.run()
     source_k_exit_times = wavenumber_exit_time_array(source_k_exit_queue.results)
@@ -256,6 +261,11 @@ def run_pipeline(model_data: dict):
         task_builder=build_k_exit_work,
         title=f"CALCULATE HORIZON EXIT TIMES FOR {model_label} RESPONSE K-SAMPLE",
         store_results=True,
+        create_batch_size=10,
+        notify_batch_size=10,
+        max_task_queue=30,
+        process_batch_size=10,
+        notify_min_time_interval=MIN_NOTIFY_INTERVAL,
     )
     response_k_exit_queue.run()
     response_k_exit_times = wavenumber_exit_time_array(response_k_exit_queue.results)
