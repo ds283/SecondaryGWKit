@@ -123,7 +123,7 @@ class LambdaCDM(BaseCosmology):
     def d_lnH_dz(self, z: float) -> float:
         """
         Evaluate the logarithmic derivative d(ln H)/dz at the specified redshift z
-        :param z: returned redshift
+        :param z: required redshift
         :return: value of d(ln H)/dz
         """
         one_plus_z = 1.0 + z
@@ -143,9 +143,9 @@ class LambdaCDM(BaseCosmology):
 
     def d2_lnH_dz2(self, z: float) -> float:
         """
-        Evaluate d^2(ln H)/dz^2
-        :param z:
-        :return:
+        Evaluate the logarithmic derivative d^2(ln H)/dz^2 at the specified redshift z
+        :param z: required redshift
+        :return: value of d^2(ln H)/dz^2
         """
         one_plus_z = 1.0 + z
 
@@ -164,9 +164,9 @@ class LambdaCDM(BaseCosmology):
 
     def d3_lnH_dz3(self, z: float) -> float:
         """
-        Evaluate d^3(ln H)/dz^3
-        :param z:
-        :return:
+        Evaluate the logarithmic derivative d^3(ln H)/dz^3 at the specified redshift z
+        :param z: required redshift
+        :return: value of d^3(ln H)/dz^3
         """
         one_plus_z = 1.0 + z
 
@@ -216,6 +216,11 @@ class LambdaCDM(BaseCosmology):
         return numerator / denominator
 
     def d_wPerturbations_dz(self, z: float) -> float:
+        """
+        Evaluate the derivative dw/dz at the specified redshift z0
+        :param z0: returned redshift
+        :return: value of dw/dz
+        """
         w_rad = 1.0 / 3.0
 
         one_plus_z = 1.0 + z
@@ -226,6 +231,11 @@ class LambdaCDM(BaseCosmology):
         return numerator / (denominator * denominator)
 
     def d2_wPerturbations_dz2(self, z: float) -> float:
+        """
+        Evaluate the derivative d^2w/dz^2 at the specified redshift z0
+        :param z0: returned redshift
+        :return: value of d^2w/dz^2
+        """
         w_rad = 1.0 / 3.0
 
         one_plus_z = 1.0 + z

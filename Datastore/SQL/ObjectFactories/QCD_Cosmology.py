@@ -92,13 +92,7 @@ class sqla_QCDCosmology_factory(SQLAFactoryBase):
         else:
             attribute_set = {"_deserialized": True}
 
-        obj = QCD_Cosmology(
-            store_id=store_id,
-            units=units,
-            params=params,
-            min_z=min_z,
-            max_z=max_z,
-        )
+        obj = QCD_Cosmology(store_id=store_id, units=units, params=params, max_z=max_z)
         for key, value in attribute_set.items():
             setattr(obj, key, value)
 

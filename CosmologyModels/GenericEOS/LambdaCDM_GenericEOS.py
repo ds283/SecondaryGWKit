@@ -1,6 +1,8 @@
-from math import log10, exp, sqrt
+from math import exp, sqrt, log
+from typing import Dict
 
 from numpy import linspace
+from scipy.differentiate import derivative
 from scipy.interpolate import InterpolatedUnivariateSpline
 from scipy.optimize import root_scalar
 
@@ -22,7 +24,6 @@ class LambdaCDM_GenericEOS(BaseCosmology):
         eos: GenericEOSBase,
         units: UnitsLike,
         params,
-        min_z: float = 0.1,
         max_z: float = 1e14,
     ):
         BaseCosmology.__init__(self, store_id)
@@ -31,11 +32,14 @@ class LambdaCDM_GenericEOS(BaseCosmology):
         self._units = units
         self._eos = eos
 
-        self._min_z = min_z
         self._max_z = max_z
 
         # unpack details of the parameter block so we can access them without extensive nesting
         self._name = f"{eos.name} | {params.name}"
+
+        print(
+            f'>> Building LambdaCDM_GenericEOS model "{self._name}" with max_z={self._max_z:.5g}'
+        )
 
         # Omega factors are all measured today
         self.omega_cc = params.omega_cc
@@ -43,7 +47,9 @@ class LambdaCDM_GenericEOS(BaseCosmology):
         self.f_baryon = params.f_baryon
         self.h = params.h
         self.T_CMB_Kelvin = params.T_CMB_Kelvin
-        self.Neff = params.Neff
+
+        # Neff not used here because it is baked into the G(T) and G_S(T) parametersa computed by the EOS object
+        # self.Neff = params.Neff
 
         # derived dimensionful quantities, expressed in whatever system of units we require
         self._H0 = 100.0 * params.h * units.Kilometre / (units.Second * units.Mpc)
@@ -51,6 +57,8 @@ class LambdaCDM_GenericEOS(BaseCosmology):
 
         self.H0sq = self._H0 * self._H0
         self.Mpsq = units.PlanckMass * units.PlanckMass
+
+        # POPULATE KEY DATA NOT PROVIDED AS PART OF THE PARAMS BLOCK
 
         T_CMB_2 = self._T_CMB * self._T_CMB
         T_CMB_4 = T_CMB_2 * T_CMB_2
@@ -60,26 +68,41 @@ class LambdaCDM_GenericEOS(BaseCosmology):
         self.rho_m0 = Omega_factor * self.omega_m
         # note the effective G* reported by the EOS object should have reheating
         # of the thermal bath relative to the neutrinos already included.
-        # Therefore we don't need the extra famous factor (4/11)^(4/3)
+        # Therefore, we don't need the extra famous factor (4/11)^(4/3)
         self.rho_r0 = RadiationConstant * self._eos.G(self._T_CMB) * T_CMB_4
         self.rho_cc = Omega_factor * self.omega_cc
 
         self.omega_r = self.rho_r0 / Omega_factor
 
+        # cache values of G(T_CMB), G_S(T_CMB), [G(T_CMB)]^(4/3) and [G_S(T_CMB)]^(4/3) which we need to use later
         self._G_CMB = eos.G(self._T_CMB)
         self._G_S_CMB = eos.Gs(self._T_CMB)
         self._G_CMB_pow13 = pow(self._G_CMB, 1.0 / 3.0)
         self._G_S_CMB_pow13 = pow(self._G_S_CMB, 1.0 / 3.0)
 
-        self._T_z_spline = self._build_T_z_spline(min_z, max_z)
+        # build the spline used to map z to a temperature, given the specified equation of state
+        # we need to go all the way to z=0 so that we can compute the radiation temperature today
+        # (needed to match to the CMB)
+        self._T_z_spline = self._build_T_z_spline(0.0, max_z)
+
+        # COMPUTE BASIC DATA ABOUT THIS COSMOLOGICAL MODEL
 
         rho_today = self.rho(0)
         gram_per_m3 = units.Gram / (units.Metre * units.Metre * units.Metre)
         rho_today_gram_m3 = rho_today / gram_per_m3
 
+        # solve for epochs of matter/radiation and matter/Lambda equality
+        matter_radiation_equality = self._find_rho_equality(
+            "matter", "radiation", init_z=self.omega_m / self.omega_r - 1.0
+        )
+        matter_cc_equality = self._find_rho_equality(
+            "matter",
+            "lambda",
+            init_z=pow(self.omega_cc / self.omega_m, 1.0 / 3.0) - 1.0,
+        )
+
         print(f'@@ Parametrized equation-of-state LambdaCDM-like model "{self._name}"')
-        print(f'|  equation of state = "{self._eos.name}"')
-        print(f"|  min_z = {self._min_z}, max_z = {self._max_z}")
+        print(f'|  equation of state = "{self._eos.name}", max_z = {self._max_z:.5g}')
         print(f"|  Omega_m = {self.omega_m:.4g}")
         print(f"|  Omega_cc = {self.omega_cc:.4g}")
         print(f"|  Omega_r = {self.omega_r:.4g}")
@@ -150,7 +173,9 @@ class LambdaCDM_GenericEOS(BaseCosmology):
                 f"Could not bracket target temperature T(z) at z={z:.4g}, bracket_lo={bracket_lo:.5g}, bracket_hi={bracket_hi:.5g}"
             )
 
-        root = root_scalar(T_equation, bracket=bracket_lo, xtol=1e-6, rtol=1e-4)
+        root = root_scalar(
+            T_equation, bracket=(bracket_lo, bracket_hi), xtol=1e-6, rtol=1e-4
+        )
 
         if not root.converged:
             raise RuntimeError(
@@ -166,7 +191,7 @@ class LambdaCDM_GenericEOS(BaseCosmology):
         min_z = 0.95 * min_z
         max_z = 1.05 * max_z
 
-        log_z_values = linspace(log10(1.0 + min_z), log10(1.0 + max_z), samples)
+        log_z_values = linspace(log(1.0 + min_z), log(1.0 + max_z), samples)
         T_values = [self._solve_T_z(exp(logz) - 1.0) for logz in log_z_values]
 
         spline = InterpolatedUnivariateSpline(log_z_values, T_values, ext="raise")
@@ -178,7 +203,12 @@ class LambdaCDM_GenericEOS(BaseCosmology):
             log_z=True,
         )
 
-    def rho(self, z: float) -> float:
+    def _rho_fluid(self, z: float) -> Dict[str, float]:
+        """
+        Determine the densities of the matter, radiation (etc.) fluids at redshift z
+        :param z:
+        :return:
+        """
         one_plus_z = 1.0 + z
 
         one_plus_z_2 = one_plus_z * one_plus_z
@@ -194,7 +224,44 @@ class LambdaCDM_GenericEOS(BaseCosmology):
         # neutrino temperatures at low redshift, should be included already in the EOS object
         rho_r = RadiationConstant * self._eos.G(T) * T_4
 
-        return rho_m + rho_r + self.rho_cc
+        return {
+            "T": T,
+            "matter": rho_m,
+            "radiation": rho_r,
+            "lambda": self.rho_cc,
+        }
+
+    def _find_rho_equality(
+        self, species_A: str, species_B: str, init_z: float
+    ) -> float:
+        """
+        Determine the redshift at which the energy density in species A equals the energy density in species B
+        :param species_A:
+        :param species_B:
+        :return:
+        """
+
+        def match_rho(z: float) -> float:
+            rho = self._rho_fluid(z)
+            return rho[species_A] - rho[species_B]
+
+        root = root_scalar(match_rho, x0=init_z, xtol=1e-6, rtol=1e-4)
+
+        if not root.converged:
+            raise RuntimeError(
+                f'root_scalar() did not converge to a solution: iterations={root.iterations}, method={root.method}: "{root.flag}"'
+            )
+
+        return root.root
+
+    def rho(self, z: float) -> float:
+        """
+        Determine the total matter density at redshift z
+        :param z:
+        :return:
+        """
+        rho = self._rho_fluid(z)
+        return rho["matter"] + rho["radiation"] + rho["lambda"]
 
     def Hubble(self, z: float) -> float:
         """
@@ -206,32 +273,122 @@ class LambdaCDM_GenericEOS(BaseCosmology):
         H0sq = rho_total / (3.0 * self.Mpsq)
         return sqrt(H0sq)
 
+    def d_lnH_dz(self, z0: float) -> float:
+        """
+        Evaluate the logarithmic derivative d(ln H)/dz at the specified redshift z0
+        :param z0: required redshift
+        :return: value of d(ln H)/dz
+        """
+
+        def ln_H(z: float) -> float:
+            return log(self.Hubble(z))
+
+        data = derivative(ln_H, z0, tolerances={"atol": 1e-6, "rtol": 1e-4})
+
+        if not data.success:
+            raise RuntimeError(
+                f"derivative() failed: {data.message} (status={data.status}, iterations={data.nit}, nfev={data.nfev}, error={data.error})"
+            )
+
+        return data.df
+
+    def d2_lnH_dz2(self, z0: float) -> float:
+        """
+        Evaluate the logarithmic derivative d^2(ln H)/dz^2 at the specified redshift z0
+        :param z0: returned redshift
+        :return: value of d^2(ln H)/dz^2
+        """
+
+        def d_ln_H(z: float) -> float:
+            return self.d_lnH_dz(z)
+
+        data = derivative(d_ln_H, z0, tolerances={"atol": 1e-6, "rtol": 1e-4})
+
+        if not data.success:
+            raise RuntimeError(
+                f"derivative() failed: {data.message} (status={data.status}, iterations={data.nit}, nfev={data.nfev}, error={data.error})"
+            )
+
+        return data.df
+
+    def d3_lnH_dz3(self, z0: float) -> float:
+        """
+        Evaluate the logarithmic derivative d^3(ln H)/dz^3 at the specified redshift z0
+        :param z0: returned redshift
+        :return: value of d^3(ln H)/dz^3
+        """
+
+        def d2_ln_H(z: float) -> float:
+            return self.d2_lnH_dz2(z)
+
+        data = derivative(d2_ln_H, z0, tolerances={"atol": 1e-6, "rtol": 1e-4})
+
+        if not data.success:
+            raise RuntimeError(
+                f"derivative() failed: {data.message} (status={data.status}, iterations={data.nit}, nfev={data.nfev}, error={data.error})"
+            )
+
+        return data.df
+
     def wBackground(self, z: float) -> float:
-        # there is no w_matter contribution to the numerator, which is zero
-        T: float = self._T_z_spline(z)
-        T_2 = T * T
-        T_4 = T_2 * T_2
+        rho = self._rho_fluid(z)
 
-        # how to deal with reheating of the thermal bath from species that annihilate?
-        # here the famous factor (4/11)^(4/3) from e+/e- annihilation has been left in
-        rho_r = RadiationConstant * self._eos.G(T) * T_4
+        T = rho["T"]
 
-        numerator = self._eos.w(T) * rho_r - self.rho_cc
+        # background w(z) includes contributions from radiation, cosmological constant, and matter
+        # (but matter has w=0 and drops out)
+        numerator = self._eos.w(T) * rho["radiation"] + (-1.0) * rho["lambda"]
         denominator = self.rho(z)
 
         return numerator / denominator
 
     def wPerturbations(self, z: float) -> float:
-        # there is no w_matter contribution to the numerator, which is zero
-        T: float = self._T_z_spline(z)
-        T_2 = T * T
-        T_4 = T_2 * T_2
+        rho = self._rho_fluid(z)
+        T = rho["T"]
 
-        # how to deal with reheating of the thermal bath from species that annihilate?
-        # here the famous factor (4/11)^(4/3) from e+/e- annihilation has been left in
-        rho_r = RadiationConstant * self._eos.G(T) * T_4
-
-        numerator = self._eos.w(T) * rho_r - self.rho_cc
+        # perturbations w(z) includes contributions from radiation and matter, but not the cosmological constant,
+        # which we take not to have perturbations. (Possibly we shouldn't do that, but instead allow the cosmological
+        # constant to cluster with c_s=1?)
+        # As for the background, matter has w=0 and drops out.
+        numerator = self._eos.w(T) * rho["radiation"] + (-1.0) * rho["lambda"]
         denominator = self.rho(z)
 
         return numerator / denominator
+
+    def d_wPerturbations_dz(self, z0: float) -> float:
+        """
+        Evaluate the derivative dw/dz at the specified redshift z0
+        :param z0: returned redshift
+        :return: value of dw/dz
+        """
+
+        def w(z: float) -> float:
+            return self.wPerturbations(z)
+
+        data = derivative(w, z0, tolerances={"atol": 1e-6, "rtol": 1e-4})
+
+        if not data.success:
+            raise RuntimeError(
+                f"derivative() failed: {data.message} (status={data.status}, iterations={data.nit}, nfev={data.nfev}, error={data.error})"
+            )
+
+        return data.df
+
+    def d2_wPerturbations_dz2(self, z0: float) -> float:
+        """
+        Evaluate the derivative d^2w/dz^2 at the specified redshift z0
+        :param z0: returned redshift
+        :return: value of d^2w/dz^2
+        """
+
+        def d_w(z: float) -> float:
+            return self.d_wPerturbations_dz(z)
+
+        data = derivative(d_w, z0, tolerances={"atol": 1e-6, "rtol": 1e-4})
+
+        if not data.success:
+            raise RuntimeError(
+                f"derivative() failed: {data.message} (status={data.status}, iterations={data.nit}, nfev={data.nfev}, error={data.error})"
+            )
+
+        return data.df
