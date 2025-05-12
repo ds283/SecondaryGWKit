@@ -40,17 +40,18 @@ def test_T_z_conversion():
     as functions of redshift. This helps verify that your QCDCosmology class is converting
     redshift to temperature accurately.
     """
-    # Initialize cosmology models
-    units = Mpc_units()
-    eos = QCD_EOS(units)
-    params = Planck2018()
-    lcdm = LambdaCDM(store_id=1, units=units, params=params)
-    qcd = QCD_Cosmology(store_id=2, units=units, params=params)
 
     # Choose a redshift range wide enough to cover the temperature domain from ~T0 up to the QCD transition
     # Note: With T_CMB ~ 2.7255 K and conversion factor ~8.6173e-14, reaching T ~ 0.12 GeV requires z ~ 5e11.
     # We use a logarithmic spacing for z.
     z_values = np.logspace(0.1, 17, 5000)  # z from 1 to 1e13
+
+    # Initialize cosmology models
+    units = Mpc_units()
+    eos = QCD_EOS(units)
+    params = Planck2018()
+    lcdm = LambdaCDM(store_id=1, units=units, params=params)
+    qcd = QCD_Cosmology(store_id=2, units=units, params=params, max_z=z_values.max())
 
     T_vals = []  # Temperature in GeV computed from T_of_z(z)
     g_star_vals = []  # Effective d.o.f for energy density G(T)
