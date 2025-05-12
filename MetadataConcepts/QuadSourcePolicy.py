@@ -25,7 +25,7 @@ class QuadSourcePolicy(DatastoreObject):
         if numeric_policy not in _allowed_numeric_policies:
             numeric_policy = DEFAULT_QUADSOURCE_NUMERIC_POLICY
             print(
-                f'!! Unknwon Quadsource numeric policy "{numeric_policy}". Defaulting to policy "{DEFAULT_QUADSOURCE_NUMERIC_POLICY}"'
+                f'!! Unknown Quadsource numeric policy "{numeric_policy}". Defaulting to policy "{DEFAULT_QUADSOURCE_NUMERIC_POLICY}"'
             )
         self._numeric_policy = numeric_policy
 

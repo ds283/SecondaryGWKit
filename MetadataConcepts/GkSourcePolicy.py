@@ -25,7 +25,7 @@ class GkSourcePolicy(DatastoreObject):
         if numeric_policy not in _allowed_numeric_policies:
             numeric_policy = DEFAULT_GKSOURCE_NUMERIC_POLICY
             print(
-                f'!! Unknwon GkSource numeric policy "{numeric_policy}". Defaulting to policy "{DEFAULT_GKSOURCE_NUMERIC_POLICY}"'
+                f'!! Unknown GkSource numeric policy "{numeric_policy}". Defaulting to policy "{DEFAULT_GKSOURCE_NUMERIC_POLICY}"'
             )
         self._numeric_policy = numeric_policy
 
