@@ -7,7 +7,8 @@ from AdaptiveLevin import adaptive_levin_sincos
 from ComputeTargets.QuadSourceIntegral import _three_bessel_integrals
 from ComputeTargets.QuadSourceIntegral_debug import bessel_function_plot
 from CosmologyConcepts import wavenumber
-from LiouvilleGreen.bessel_phase import bessel_phase
+from LiouvilleGreen.bessel_phase import bessel_phase, XSplineWrapper
+from LiouvilleGreen.phase_spline import phase_spline
 from Units import Mpc_units
 from utilities import format_time
 
@@ -28,12 +29,14 @@ class TestBessel(unittest.TestCase):
         # self.q = wavenumber(store_id=2, k_inv_Mpc=79.37005259841, units=self.units)
         # self.k = wavenumber(store_id=1, k_inv_Mpc=49999999.99999999, units=self.units)
 
-        self.r = wavenumber(store_id=3, k_inv_Mpc=5e7, units=self.units)
-        self.q = wavenumber(store_id=2, k_inv_Mpc=11072, units=self.units)
-        self.k = wavenumber(store_id=1, k_inv_Mpc=5e7, units=self.units)
+        self.r = wavenumber(
+            store_id=3, k_inv_Mpc=sqrt(100.0 * 100.0 + 200.0 * 200.0), units=self.units
+        )
+        self.q = wavenumber(store_id=2, k_inv_Mpc=200.0, units=self.units)
+        self.k = wavenumber(store_id=1, k_inv_Mpc=100.0, units=self.units)
 
         self.b = 0
-        self.cs_sq = (1.0 - self.b) / (1.0 + self.b) / 3.0
+        self.cs_sq = 1.0
 
         self.min_eta = 0.0000000001696765007801783
         self.max_eta = 10524
@@ -53,27 +56,24 @@ class TestBessel(unittest.TestCase):
         )
 
     def test_integrals(self):
-        phase = self.phase_data_0pt5["phase"]
-        dphase = self.phase_data_0pt5["dphase"]
+        self._test_integrals(100.0, self.phase_data_0pt5, label="0.5")
+        self._test_integrals(3.0, self.phase_data_0pt5, label="0.5")
 
-        self._test_integrals(100.0, phase, dphase, label="0.5")
-        self._test_integrals(1.0, phase, dphase, label="0.5")
+        self._test_integrals(100.0, self.phase_data_2pt5, label="2.5")
+        self._test_integrals(3.0, self.phase_data_2pt5, label="2.5")
 
-        phase = self.phase_data_2pt5["phase"]
-        dphase = self.phase_data_2pt5["dphase"]
+    def _test_integrals(self, min_x, phase_data, label):
+        phase: phase_spline = phase_data["phase"]
+        m: XSplineWrapper = phase_data["mod"]
 
-        self._test_integrals(100.0, phase, dphase, label="2.5")
-        self._test_integrals(1.0, phase, dphase, label="2.5")
-
-    def _test_integrals(self, min_x, phase, dphase, label):
         def Levin_f(x):
-            return self.sqrt_2_over_pi / sqrt(x * dphase(x))
+            return m(x)
 
         # J integral order 0.5
         J_data = adaptive_levin_sincos(
             x_span=(min_x, self.max_x),
             f=[Levin_f, lambda x: 0.0],
-            theta=phase,
+            theta={"theta": lambda x: phase.raw_theta(x)},
             atol=self.atol,
             rtol=self.rtol,
             chebyshev_order=12,
@@ -93,7 +93,7 @@ class TestBessel(unittest.TestCase):
         Y_data = adaptive_levin_sincos(
             x_span=(min_x, self.max_x),
             f=[lambda x: 0.0, lambda x: -Levin_f(x)],
-            theta=phase,
+            theta={"theta": lambda x: phase.raw_theta(x)},
             atol=self.atol,
             rtol=self.rtol,
             chebyshev_order=12,
