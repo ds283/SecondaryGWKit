@@ -54,13 +54,13 @@ class wavenumber(DatastoreObject):
 
     def __eq__(self, other):
         if not isinstance(other, type(self)):
-            return NotImplemented
+            raise NotImplementedError
 
         return self.store_id == other.store_id
 
     def __lt__(self, other):
         if not isinstance(other, type(self)):
-            return NotImplemented
+            raise NotImplementedError
 
         return self.k < other.k
 
@@ -167,13 +167,13 @@ class wavenumber_exit_time(DatastoreObject):
 
     def __eq__(self, other):
         if not isinstance(other, type(self)):
-            return NotImplemented
+            raise NotImplementedError
 
         return self.store_id == other.store_id
 
     def __lt__(self, other):
         if not isinstance(other, type(self)):
-            return NotImplemented
+            raise NotImplementedError
 
         return self.k < other.k
 

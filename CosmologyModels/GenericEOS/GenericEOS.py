@@ -26,12 +26,12 @@ class GenericEOSBase(ABC):
     @property
     @abstractmethod
     def name(self):
-        return NotImplemented
+        raise NotImplementedError
 
     @property
     @abstractmethod
     def type_id(self) -> int:
-        return NotImplemented
+        raise NotImplementedError
 
     @abstractmethod
     def G(self, T: float) -> float:
@@ -41,7 +41,7 @@ class GenericEOSBase(ABC):
         :param T: dimensionful temperature T
         :return: dimensionless number representing g(T)
         """
-        return NotImplemented
+        raise NotImplementedError
 
     @abstractmethod
     def Gs(self, T: float) -> float:
@@ -51,7 +51,7 @@ class GenericEOSBase(ABC):
         :param T: dimensionful temperature T
         :return: dimensionless number representing g_S(T)
         """
-        return NotImplemented
+        raise NotImplementedError
 
     def w(self, T: float) -> float:
         """
