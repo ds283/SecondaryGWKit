@@ -1,6 +1,8 @@
+from math import log10
+
 import sqlalchemy as sqla
 
-from CosmologyModels.QCD.QCDCosmology import QCDCosmology
+from CosmologyModels.GenericEOS.QCD_Cosmology import QCD_Cosmology
 from Datastore.SQL.ObjectFactories.base import SQLAFactoryBase
 from defaults import DEFAULT_FLOAT_PRECISION, DEFAULT_STRING_LENGTH
 
@@ -22,6 +24,8 @@ class sqla_QCDCosmology_factory(SQLAFactoryBase):
                 sqla.Column("f_baryon", sqla.Float(64)),
                 sqla.Column("T_CMB_Kelvin", sqla.Float(64)),
                 sqla.Column("Neff", sqla.Float(64)),
+                sqla.Column("log10_min_z", sqla.Float(64)),
+                sqla.Column("log10_max_z", sqla.Float(64)),
             ],
         }
 
@@ -29,6 +33,12 @@ class sqla_QCDCosmology_factory(SQLAFactoryBase):
     def build(payload, conn, table, inserter, tables, inserters):
         params = payload["params"]
         units = payload["units"]
+
+        min_z = payload["min_z"]
+        max_z = payload["max_z"]
+
+        log10_min_z = log10(1.0 + min_z)
+        log10_max_z = log10(1.0 + max_z)
 
         name = params.name
         omega_m = params.omega_m
@@ -50,6 +60,10 @@ class sqla_QCDCosmology_factory(SQLAFactoryBase):
                     sqla.func.abs(table.c.T_CMB_Kelvin - T_CMB_Kelvin)
                     < DEFAULT_FLOAT_PRECISION,
                     sqla.func.abs(table.c.Neff - Neff) < DEFAULT_FLOAT_PRECISION,
+                    sqla.func.abs(table.c.log10_min_z - log10_min_z)
+                    < DEFAULT_FLOAT_PRECISION,
+                    sqla.func.abs(table.c.log10_max_z - log10_max_z)
+                    < DEFAULT_FLOAT_PRECISION,
                 )
             )
         ).scalar()
@@ -64,6 +78,8 @@ class sqla_QCDCosmology_factory(SQLAFactoryBase):
                 "f_baryon": f_baryon,
                 "T_CMB_Kelvin": T_CMB_Kelvin,
                 "Neff": Neff,
+                "log10_min_z": log10_min_z,
+                "log10_max_z": log10_max_z,
             }
             if "serial" in payload:
                 insert_data["serial"] = payload["serial"]
@@ -76,10 +92,12 @@ class sqla_QCDCosmology_factory(SQLAFactoryBase):
         else:
             attribute_set = {"_deserialized": True}
 
-        obj = QCDCosmology(
+        obj = QCD_Cosmology(
             store_id=store_id,
             units=units,
             params=params,
+            min_z=min_z,
+            max_z=max_z,
         )
         for key, value in attribute_set.items():
             setattr(obj, key, value)

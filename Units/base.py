@@ -52,6 +52,18 @@ class UnitsLike(ABC):
         raise NotImplementedError
 
     @property
+    def keV(self):
+        return 1e3 * self.eV
+
+    @property
+    def MeV(self):
+        return 1e6 * self.eV
+
+    @property
+    def GeV(self):
+        return 1e9 * self.eV
+
+    @property
     @abstractmethod
     def c(self):
         raise NotImplementedError

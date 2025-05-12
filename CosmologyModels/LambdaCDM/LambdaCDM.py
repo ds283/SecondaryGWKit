@@ -84,7 +84,7 @@ class LambdaCDM(BaseCosmology):
 
     @property
     def type_id(self) -> int:
-        # 0 is the unique ID for the LambdaCDM cosmology type
+        # return the unique ID for the LambdaCDM cosmology type
         return LAMBDACDM_IDENTIFIER
 
     @property
