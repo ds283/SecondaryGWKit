@@ -13,7 +13,9 @@ def build_model_list(pool: ShardedPool, units: UnitsLike):
     )
 
     QCD_EOS_Planck2018 = ray.get(
-        pool.object_get("QCDCosmology", params=params, units=units)
+        pool.object_get(
+            "QCD_Cosmology", params=params, units=units, min_z=0.01, max_z=1e14
+        )
     )
 
     return [
@@ -22,7 +24,7 @@ def build_model_list(pool: ShardedPool, units: UnitsLike):
             "cosmology": LambdaCDM_Planck2018,
         },
         {
-            "label": "QCDCosmology",
+            "label": "QCD_Cosmology",
             "cosmology": QCD_EOS_Planck2018,
         },
     ]

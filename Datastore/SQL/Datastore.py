@@ -39,7 +39,7 @@ from Datastore.SQL.ObjectFactories.OneLoopIntegral import (
     sqla_OneLoopIntegral_factory,
     sqla_OneLoopIntegralTagAssociation_factory,
 )
-from Datastore.SQL.ObjectFactories.QCDCosmology import sqla_QCDCosmology_factory
+from Datastore.SQL.ObjectFactories.QCD_Cosmology import sqla_QCDCosmology_factory
 from Datastore.SQL.ObjectFactories.QuadSource import (
     sqla_QuadSource_factory,
     sqla_QuadSourceTagAssocation_factory,
@@ -90,7 +90,7 @@ _factories = {
     "wavenumber_exit_time": sqla_wavenumber_exit_time_factory,
     "tolerance": sqla_tolerance_factory,
     "LambdaCDM": sqla_LambdaCDM_factory,
-    "QCDCosmology": sqla_QCDCosmology_factory,
+    "QCD_Cosmology": sqla_QCDCosmology_factory,
     "IntegrationSolver": sqla_IntegrationSolver_factory,
     "BackgroundModel": sqla_BackgroundModelFactory,
     "BackgroundModel_tags": sqla_BackgroundModelTagAssociation_factory,

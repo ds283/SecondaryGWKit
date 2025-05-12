@@ -13,7 +13,7 @@ _default_serial_batch_size = {
     "wavenumber_exit_time": 100,
     "tolerance": 5,
     "LambdaCDM": 5,
-    "QCDCosmology": 5,
+    "QCD_Cosmology": 5,
     "IntegrationSolver": 6,
     "BackgroundModel": 5,
     "BackgroundModelValue": 100,
