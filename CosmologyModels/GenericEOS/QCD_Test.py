@@ -56,19 +56,25 @@ def test_T_z_conversion():
     T_vals = []  # Temperature in GeV computed from T_of_z(z)
     g_star_vals = []  # Effective d.o.f for energy density G(T)
     g_s_vals = []  # Effective d.o.f for entropy density Gs(T)
-    w_lcdm_vals = []  # LCDM equation of state parameter
-    w_qcd_vals = []  # QCD equation of state parameter
-    # w_lcdm = lcdm.wBackground(z) # LCDM equation of state parameter
+    w_lcdm_bg_vals = []  # LCDM equation of state parameter w(z) for the background
+    w_lcdm_pert_vals = []  # LCDM equation of state parameter w(z) for perturbations
+    w_qcd_bg_vals = []  # QCD equation of state parameter w(z) for the background
+    w_qcd_pert_vals = []  # QCD equation of state parameter w(z) for perturbations
+    w_qcd_vals = []  # QCD equation of state parameter *only* (just pure hot QCD)
+    # w_lcdm_bg = lcdm.wBackground(z) # LCDM equation of state parameter
     # Iterate over z-values to compute T, G, Gs, and w
     for z in z_values:
         T = qcd.T_z(z)
 
         T_vals.append(T / units.GeV)
-        w_lcdm = lcdm.wBackground(z)
-        w_lcdm_vals.append(w_lcdm)
+        w_lcdm_bg_vals.append(lcdm.wBackground(z))
+        w_lcdm_pert_vals.append(lcdm.wPerturbations(z))
 
         # Use the QCDCosmology method which applies the switch
-        w_qcd_vals.append(qcd.wBackground(z))
+        w_qcd_bg_vals.append(qcd.wBackground(z))
+        w_qcd_pert_vals.append(qcd.wPerturbations(z))
+        w_qcd_vals.append(eos.w(z))
+
         g_star_vals.append(eos.G(T))
         g_s_vals.append(eos.Gs(T))
 
@@ -89,14 +95,17 @@ def test_T_z_conversion():
 
     # --- Plot Effective Degrees of Freedom (G and Gs) vs. Redshift ---
     fig2, ax2 = plt.subplots()
-    plt.plot(z_values, w_qcd_vals, "r-", lw=3, label=r"$QCD$")
-    plt.plot(z_values, w_lcdm_vals, "b--", lw=3, label=r"${\Lambda\mathrm{CDM}}$")
+    plt.plot(z_values, w_qcd_vals, "g-", label=r"pure QCD")
+    plt.plot(z_values, w_qcd_bg_vals, "r-", label=r"$\Lambda$QCD background")
+    plt.plot(z_values, w_qcd_pert_vals, "r--", label=r"$\Lambda$QCD perturbations")
+    plt.plot(z_values, w_lcdm_bg_vals, "b-", label=r"$\Lambda$CDM background")
+    plt.plot(z_values, w_lcdm_pert_vals, "b--", label=r"$\Lambda$CDM perturbations")
     plt.xscale("log")
     # plt.yscale('log')
     # plt.axvline(5e-4, color='g', lw=2.5, linestyle=':', label=r'$e_{+} \,e_{-}$ annihilation')
     # plt.axvline(0.12, color='purple', lw=2.5, linestyle=':', label=r'$T_{QCD}$')
     plt.axvline(3400, color="orange", lw=2.5, linestyle=":", label=r"M-R equality")
-    # ax2.semilogx(z_values, w_lcdm_vals, 'g--', label=r'$\Lambda CDM$')
+    # ax2.semilogx(z_values, w_lcdm_bg_vals, 'g--', label=r'$\Lambda CDM$')
     ax2.set_xlabel(r"Redshift, $z$")
     ax2.set_ylabel(r"Background $w(z)$")
     ax2.grid(True)
@@ -105,8 +114,8 @@ def test_T_z_conversion():
     plt.show()
 
     fig3, ax3 = plt.subplots()
-    ax3.semilogx(z_values, g_star_vals, "r-", lw=3, label=r"$g_*(T)$")
-    ax3.semilogx(z_values, g_s_vals, "g--", lw=3, label=r"$g_s(T)$")
+    ax3.semilogx(z_values, g_star_vals, "r-", label=r"$g_*(T)$")
+    ax3.semilogx(z_values, g_s_vals, "g--", label=r"$g_{S,\ast}(T)$")
     plt.xscale("log")
     ax3.set_xlabel(r"Redshift, $z$")
     ax3.set_ylabel(r"Effective degrees of freedom $g_\ast(T)$")
