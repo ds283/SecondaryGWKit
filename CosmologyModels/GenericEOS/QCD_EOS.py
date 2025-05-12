@@ -92,14 +92,14 @@ def polynomial_sum(coeffs: Dict[int, float], x: float) -> float:
 
 # Fitting functions for energy density
 def f_rho(x: float) -> float:
-    """Low temperature fitting function for fermion energy density"""
+    """Low-temperature fitting function for fermion energy density"""
     return exp(-1.04855 * x) * (
         1.0 + 1.03757 * x + 0.508630 * (x * x) + 0.0893988 * (x * x * x)
     )
 
 
 def b_rho(x: float) -> float:
-    """Low temperature fitting function for boson energy density"""
+    """Low-temperature fitting function for boson energy density"""
     return exp(-1.03149 * x) * (
         1.0 + 1.03317 * x + 0.398264 * (x * x) + 0.0648056 * (x * x * x)
     )
@@ -107,14 +107,14 @@ def b_rho(x: float) -> float:
 
 # Fitting functions for entropy density
 def f_s(x: float) -> float:
-    """Low temperature fitting function for fermion entropy"""
+    """Low-temperature fitting function for fermion entropy"""
     return exp(-1.04190 * x) * (
         1.0 + 1.03400 * x + 0.456426 * (x * x) + 0.0595249 * (x * x * x)
     )
 
 
 def b_s(x: float) -> float:
-    """Low temperature fitting function for boson entropy"""
+    """Low-temperature fitting function for boson entropy"""
     return exp(-1.03365 * x) * (
         1.0 + 1.03397 * x + 0.342548 * (x * x) + 0.0506182 * (x * x * x)
     )
