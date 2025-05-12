@@ -1,5 +1,5 @@
 from math import exp, log, pow
-from typing import Dict
+from typing import Mapping
 
 from CosmologyModels.GenericEOS.GenericEOS import (
     GenericEOSBase,
@@ -85,7 +85,7 @@ M_3 = 1.2
 M_4 = 2.0
 
 
-def polynomial_sum(coeffs: Dict[int, float], x: float) -> float:
+def polynomial_sum(coeffs: Mapping[int, float], x: float) -> float:
     """Compute sum of polynomial terms"""
     return sum(c * pow(x, i) for i, c in coeffs.items())
 

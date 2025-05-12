@@ -1,5 +1,5 @@
 from math import exp, sqrt, log
-from typing import Dict
+from typing import Mapping
 
 import numpy as np
 from numpy import linspace
@@ -192,7 +192,7 @@ class LambdaCDM_GenericEOS(BaseCosmology):
             log_z=True,
         )
 
-    def _rho_fluid(self, z: float) -> Dict[str, float]:
+    def _rho_fluid(self, z: float) -> Mapping[str, float]:
         """
         Determine the densities of the matter, radiation (etc.) fluids at redshift z
         :param z:
