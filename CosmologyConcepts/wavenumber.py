@@ -451,7 +451,7 @@ def find_horizon_exit_time(
                 k_over_aH = one_plus_z * float(k) / cosmology.Hubble(z)
                 q = log(k_over_aH)
                 supervisor.message(
-                    z, f"current k/aH = {k_over_aH:.5g}, log(k/aH) = {q:.5g}"
+                    log_z, f"current k/aH = {k_over_aH:.5g}, log(k/aH) = {q:.5g}"
                 )
                 supervisor.reset_notify_time()
 
@@ -486,14 +486,17 @@ def find_horizon_exit_time(
 
     num_triggers = len(triggers)
 
+    log_z_lo = log(1.0 + z_lo_guess)
+    log_z_hi = log(1.0 + z_hi_guess)
+
     with WavenumberExitSupervisor(
-        k=k, z_init=z_lo_guess, z_final=z_hi_guess
+        k=k, log_z_init=log_z_lo, log_z_final=log_z_hi
     ) as supervisor:
         # solve to find the zero crossing point; we set the upper limit of integration to be 1E12, which should be comfortably above
         # the redshift of any horizon crossing in which we are interested.
         sol = solve_ivp(
             RHS,
-            t_span=(log(1.0 + z_lo_guess), log(1.0 + z_hi_guess)),
+            t_span=(log_z_lo, log_z_hi),
             method="DOP853",
             y0=[q_lo_guess],
             events=triggers,
