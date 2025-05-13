@@ -366,7 +366,7 @@ class LambdaCDM_GenericEOS(BaseCosmology):
         # which we take not to have perturbations. (Possibly we shouldn't do that, but instead allow the cosmological
         # constant to cluster with c_s=1?)
         # As for the background, matter has w=0 and drops out.
-        numerator = self._eos.w(T) * rho["radiation"] + (-1.0) * rho["lambda"]
+        numerator = self._eos.w(T) * rho["radiation"] * rho["lambda"]
         denominator = self.rho(z)
 
         return numerator / denominator
