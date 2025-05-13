@@ -13,6 +13,10 @@ from CosmologyModels.GenericEOS.GenericEOS import GenericEOSBase, HIGH_T_GSTAR
 from Units.base import UnitsLike
 from constants import RadiationConstant
 
+DEFAULT_MAX_TEMPERATURE_Z_REDSHIFT = 1e20
+DEFAULT_MIN_TEMPERATURE_Z_REDSHIFT = -0.2
+DEFAULT_Z_DERIVATIVE_STEPSIZE = 0.05
+
 
 class LambdaCDM_GenericEOS(BaseCosmology):
     """
@@ -25,7 +29,7 @@ class LambdaCDM_GenericEOS(BaseCosmology):
         eos: GenericEOSBase,
         units: UnitsLike,
         params,
-        max_z: float = 1e14,
+        max_z: float = DEFAULT_MAX_TEMPERATURE_Z_REDSHIFT,
     ):
         BaseCosmology.__init__(self, store_id)
 
@@ -81,7 +85,9 @@ class LambdaCDM_GenericEOS(BaseCosmology):
         # We need to go all the way to z=0 so that we can compute the radiation temperature today
         # (needed to match to the CMB), but we need to compute a bit into the future (negative z)
         # so that we can accurately compute numerical derivatives at z=0
-        self._T_z_spline = self._build_T_z_spline(min_z=-0.2, max_z=max_z)
+        self._T_z_spline = self._build_T_z_spline(
+            min_z=DEFAULT_MIN_TEMPERATURE_Z_REDSHIFT, max_z=max_z
+        )
 
         # COMPUTE BASIC DATA ABOUT THIS COSMOLOGICAL MODEL
 
@@ -275,7 +281,10 @@ class LambdaCDM_GenericEOS(BaseCosmology):
             return f(z_array)
 
         data = derivative(
-            f=ln_H, x=[z0], tolerances={"atol": 1e-6, "rtol": 1e-4}, initial_step=0.1
+            f=ln_H,
+            x=[z0],
+            tolerances={"atol": 1e-6, "rtol": 1e-4},
+            initial_step=DEFAULT_Z_DERIVATIVE_STEPSIZE,
         )
 
         if not data.success:
@@ -297,7 +306,12 @@ class LambdaCDM_GenericEOS(BaseCosmology):
         def d_ln_H(z_array: np.ndarray) -> np.ndarray:
             return f(z_array)
 
-        data = derivative(f=d_ln_H, x=[z0], tolerances={"atol": 1e-6, "rtol": 1e-4})
+        data = derivative(
+            f=d_ln_H,
+            x=[z0],
+            tolerances={"atol": 1e-6, "rtol": 1e-4},
+            initial_step=DEFAULT_Z_DERIVATIVE_STEPSIZE,
+        )
 
         if not data.success:
             raise RuntimeError(
@@ -318,7 +332,12 @@ class LambdaCDM_GenericEOS(BaseCosmology):
         def d2_ln_H(z_array: np.ndarray) -> np.ndarray:
             return f(z_array)
 
-        data = derivative(f=d2_ln_H, x=[z0], tolerances={"atol": 1e-6, "rtol": 1e-4})
+        data = derivative(
+            f=d2_ln_H,
+            x=[z0],
+            tolerances={"atol": 1e-6, "rtol": 1e-4},
+            initial_step=DEFAULT_Z_DERIVATIVE_STEPSIZE,
+        )
 
         if not data.success:
             raise RuntimeError(
@@ -364,7 +383,12 @@ class LambdaCDM_GenericEOS(BaseCosmology):
         def w(z_array: np.ndarray) -> np.ndarray:
             return f(z_array)
 
-        data = derivative(f=w, x=[z0], tolerances={"atol": 1e-6, "rtol": 1e-4})
+        data = derivative(
+            f=w,
+            x=[z0],
+            tolerances={"atol": 1e-6, "rtol": 1e-4},
+            initial_step=DEFAULT_Z_DERIVATIVE_STEPSIZE,
+        )
 
         if not data.success:
             raise RuntimeError(
@@ -385,7 +409,12 @@ class LambdaCDM_GenericEOS(BaseCosmology):
         def d_w(z_array: np.ndarray) -> np.ndarray:
             return f(z_array)
 
-        data = derivative(f=d_w, x=[z0], tolerances={"atol": 1e-6, "rtol": 1e-4})
+        data = derivative(
+            f=d_w,
+            x=[z0],
+            tolerances={"atol": 1e-6, "rtol": 1e-4},
+            initial_step=DEFAULT_Z_DERIVATIVE_STEPSIZE,
+        )
 
         if not data.success:
             raise RuntimeError(

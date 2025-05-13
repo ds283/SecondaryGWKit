@@ -13,9 +13,7 @@ def build_model_list(pool: ShardedPool, units: UnitsLike):
     )
 
     QCD_EOS_Planck2018 = ray.get(
-        pool.object_get(
-            "QCD_Cosmology", params=params, units=units, min_z=0.01, max_z=1e14
-        )
+        pool.object_get("QCD_Cosmology", params=params, units=units, max_z=1e20)
     )
 
     return [
