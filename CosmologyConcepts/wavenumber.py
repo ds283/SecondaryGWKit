@@ -1,18 +1,17 @@
-from functools import partial, total_ordering
+from functools import total_ordering
 from math import log10, log, fabs, exp
 from typing import Iterable, Optional, Mapping, List
 
 import ray
 from numpy import logspace
-from scipy.integrate import solve_ivp
+from scipy.optimize import root_scalar
 
 from CosmologyModels import BaseCosmology
 from Datastore import DatastoreObject
 from MetadataConcepts import tolerance
-from Quadrature.supervisors.base import RHS_timer
-from Quadrature.supervisors.wavenumber_exit import WavenumberExitSupervisor
 from Units import check_units
 from defaults import DEFAULT_ABS_TOLERANCE, DEFAULT_REL_TOLERANCE
+from utilities import WallclockTimer
 
 
 @total_ordering
@@ -368,6 +367,119 @@ class wavenumber_exit_time_array:
 DEFAULT_HEXIT_TOLERANCE = 1e-2
 
 
+def _solve_horizon_exit(
+    cosmology: BaseCosmology,
+    k: wavenumber,
+    offset_subh: int,
+    atol: float = DEFAULT_ABS_TOLERANCE,
+    rtol: float = DEFAULT_REL_TOLERANCE,
+):
+    """
+    Solve the implicit equation log(k/aH) - offset_subh = 0 to find the horizon exit time (plus offset) associated with wavenumber k, i.e.
+    (k/aH) = exp(offset).
+    offset_subh should be a number representing the number of e-folds *inside* the horizon that we wish to locate.
+    If it is a positive number, it represents the number of e-folds *inside* the horizon.
+    If it is a negative number, it represents the number of e-folds *outside* the horizon.
+    :param cosmology:
+    :param k:
+    :param offset:
+    :param atol:
+    :param rtol:
+    :return:
+    """
+
+    # GUESS A SENSIBLE INITIAL REDSHIFT FOR THE CALCULATION
+
+    # in radiation domination H(z) = H0 (1+z)^2 because H^2 ~ rho ~ T^4 and T ~ (1+z).
+    # Therefore a(z)H(z) ~ H0(1+z).
+    # The normalization a0 of a(z) is absorbed into k/a0 = k_phys.
+    # Hence we can guess a possible redshift of horizon exit for this mode as
+    #   1 + z_exit(k) = k/H0
+
+    z_guess = exp(-offset_subh) * (float(k) / cosmology.H0) - 1.0
+
+    def q(z: float) -> float:
+        return log(float(k) * (1.0 + z) / cosmology.Hubble(z)) - offset_subh
+
+    q_guess = q(z_guess)
+
+    # If q_guess is a positive number, then z_guess is a LOWER BOUND for the desired crossing time.
+    # On the other hand, if q_quess is a negative number, then z_guess is an UPPER BOUND for the desired crossing time.
+
+    COUNT_MAX = 25
+    SEARCH_MULTIPLIER = 1.5
+
+    if q_guess > DEFAULT_HEXIT_TOLERANCE:
+        z_lo = z_guess
+        q_lo = q_guess
+
+        z_hi = SEARCH_MULTIPLIER * z_lo
+        q_hi = q(z_hi)
+        count = 0
+        while q_hi > -DEFAULT_HEXIT_TOLERANCE and count < COUNT_MAX:
+            z_hi = 1.5 * z_hi
+            q_hi = q(z_hi)
+
+            count += 1
+
+        if count >= COUNT_MAX:
+            raise RuntimeError(
+                f"_solve_horizon_exit: failed to find upper bound z_hi for k={k.k_inv_Mpc:.5}/Mpc (z_lo={z_lo:.5g}, q_lo={q_lo:.5g}, last z_hi={z_hi:.5g}, last q_hi={q_hi:.5g})"
+            )
+
+    elif q_guess < -DEFAULT_HEXIT_TOLERANCE:
+        z_hi = z_guess
+        q_hi = q_guess
+
+        z_lo = z_hi / SEARCH_MULTIPLIER
+        q_lo = q(z_lo)
+        count = 0
+        while q_lo < DEFAULT_HEXIT_TOLERANCE and count < COUNT_MAX:
+            z_lo = z_lo / SEARCH_MULTIPLIER
+            q_lo = q(z_lo)
+
+            count += 1
+
+        if count >= COUNT_MAX:
+            raise RuntimeError(
+                f"_solve_horizon_exit: failed to find lower bound z_lo for k={k.k_inv_Mpc:.5}/Mpc (z_hi={z_hi:.5g}, q_hi={q_hi:.5g}, last z_lo={z_lo:.5g}, last q_lo={q_lo:.5g})"
+            )
+
+    else:
+        # q_guess is very close to zero
+        z_lo = z_guess / SEARCH_MULTIPLIER
+        z_hi = z_guess * SEARCH_MULTIPLIER
+
+        q_lo = q(z_lo)
+        q_hi = q(z_hi)
+
+    if q_hi * q_lo > 0.0:
+        raise RuntimeError(
+            f"_solve_horizon_exit: failed to bracket horizon crossing time for k={k.k_inv_Mpc:.5}/Mpc (z_lo={z_lo:.5g}, q_lo={q_lo:.5g}, z_hi={z_hi:.5g}, q_hi={q_hi:.5g})"
+        )
+
+    root = root_scalar(
+        q,
+        bracket=(z_lo, z_hi),
+        xtol=atol,
+        rtol=rtol,
+    )
+
+    if not root.converged:
+        raise RuntimeError(
+            f'_solve_horizon_exit: root_scalar() did not converge to a solution for k={k.k_inv_Mpc:.5}/Mpc: x_bracket=({z_lo:.5g}, {z_hi:.5g}), iterations={root.iterations}, method={root.method}: "{root.flag}"'
+        )
+
+    z_root = root.root
+    q_root = q(z_root)
+    if fabs(q_root) > DEFAULT_HEXIT_TOLERANCE:
+        raise RuntimeError(
+            f"_solve_horizon_exit: root_scalar() converged, but root is out of tolerance for k={k.k_inv_Mpc:.5}/Mpc: z_root={z_root:.5g}, |q_root|={fabs(q_root):.5g}, x_bracket=({z_lo:.5g}, {z_hi:.5g}), iterations={root.iterations}, method={root.method}"
+        )
+
+    return root.root
+
+
 @ray.remote
 def find_horizon_exit_time(
     cosmology: BaseCosmology,
@@ -378,201 +490,32 @@ def find_horizon_exit_time(
     rtol: float = DEFAULT_REL_TOLERANCE,
 ) -> Mapping[str, float]:
     """
-    Compute the redshift of horizon exit for a mode of wavenumber k in the specified cosmology, by solving
-    the equation (k/H) * (1+z) = k/(aH) = 1.
-    To do this, we fix an initial condition for q = ln[ (k/H)*(1+z) ] today via q = ln[ k/H0 ],
-    and then integrate dq/dz up to a point where it crosses zero.
+    Compute the redshift of horizon exit for a mode of wavenumber k in the specified cosmology
     :param cosmology:
     :param k:
     :return:
     """
     check_units(k, cosmology)
 
-    # GUESS A SENSIBLE INITIAL REDSHIFT FOR THE CALCULATION
-
-    # in radiation domination H(z) = H0 (1+z)^2 because H^2 ~ rho ~ T^4 and T ~ (1+z).
-    # Therefore a(z)H(z) ~ H0(1+z).
-    # The normalization a0 of a(z) is absorbed into k/a0 = k_phys.
-    # Hence we can guess a possible redshift of horizon exit for this mode as
-    #   1 + z_exit(k) = k/H0
-
-    # in practice we want to get redshifts for horizon crossing - subh_efolds and horizon_crossing + suph_efolds
-    largest_subh_efold = max(subh_efolds)
-    largest_suph_efold = max(suph_efolds)
-
-    # find estimate for horizon crossing time of largest subhorizon e-fold
-    z_lo_guess = exp(-largest_subh_efold) * (float(k) / cosmology.H0) - 1.0
-    q_lo_guess = log(float(k) * (1.0 + z_lo_guess) / cosmology.Hubble(z_lo_guess))
-
-    # if q_lo_guess is +ve then z_lo_guess is a good lower bound; its redshift is late enough.
-    # Otherwise, we should gently decrease z_lo_guess until we get a lower bound
-    COUNT_MAX = 25
-    count = 0
-    while (
-        q_lo_guess - largest_subh_efold < DEFAULT_HEXIT_TOLERANCE and count < COUNT_MAX
-    ):
-        z_lo_guess = z_lo_guess / 2.0
-        q_lo_guess = log(float(k) * (1.0 + z_lo_guess) / cosmology.Hubble(z_lo_guess))
-
-        count += 1
-
-    if count >= COUNT_MAX:
-        raise RuntimeError(
-            f"find_horizon_exit_time: failed to find lower bound for z_lo_guess"
+    payload = {}
+    with WallclockTimer() as timer:
+        z_exit = _solve_horizon_exit(
+            cosmology, k, offset_subh=0.0, atol=atol, rtol=rtol
         )
+        payload["z_exit"] = z_exit
 
-    # find estimate for horizon crossing time of largest superhorizon e-fold
-    z_hi_guess = exp(+largest_suph_efold) * (float(k) / cosmology.H0) - 1.0
-    q_hi_guess = log(float(k) * (1.0 + z_hi_guess) / cosmology.Hubble(z_hi_guess))
-
-    # if q_hi_guess is -ve then z_hi_guess is a good upper bound; its redshift is early enough.
-    # Otherwise, we should gently increase z_hi_guess until we get an upper bound
-    count = 0
-    while (
-        q_hi_guess + largest_suph_efold > -DEFAULT_HEXIT_TOLERANCE and count < COUNT_MAX
-    ):
-        z_hi_guess = z_hi_guess * 2.0
-        q_hi_guess = log(float(k) * (1.0 + z_hi_guess) / cosmology.Hubble(z_hi_guess))
-
-        count += 1
-
-    if count >= COUNT_MAX:
-        raise RuntimeError(
-            f"find_horizon_exit_time: failed to find upper bound for z_hi_guess"
-        )
-
-    # RHS of ODE system for dq/dz = f(z)
-    def RHS(log_z, state, supervisor):
-        with RHS_timer(supervisor) as timer:
-            one_plus_z = exp(log_z)
-            z = one_plus_z - 1.0
-
-            if supervisor.notify_available:
-                k_over_aH = one_plus_z * float(k) / cosmology.Hubble(z)
-                q = log(k_over_aH)
-                supervisor.message(
-                    log_z, f"current k/aH = {k_over_aH:.5g}, log(k/aH) = {q:.5g}"
-                )
-                supervisor.reset_notify_time()
-
-            # q = state[0]
-            # evaluate (d/d ln(1+z)) (k/aH)
-            return [1.0 - one_plus_z * cosmology.d_lnH_dz(z)]
-
-    # build event function to terminate when q crosses zero
-    def q_event(target_efolds_suph, log_z, state, supervisor):
-        # target e-folds determines how many e-folds in/outside the horizon we should be to trigger the event
-        # q = ln(k/aH)
-        # if k/aH = exp(N), with N +ve for e-folds inside the horizon, -ve for e-folds outside, then we should trigger then
-        # ln(k/aH0 = q = N, or q - N = 0.
-        # hence, we want to trigger when q + target_efolds_suph = 0
-
-        q = state[0] + target_efolds_suph
-        return q
-
-    suph_triggers = [partial(q_event, z_offset) for z_offset in suph_efolds]
-    subh_triggers = [partial(q_event, -z_offset) for z_offset in subh_efolds]
-
-    q_zero_event = partial(q_event, 0.0)
-
-    suph_index_max = max(range(len(suph_efolds)), key=suph_efolds.__getitem__)
-    terminal_event = suph_triggers[suph_index_max]
-    terminal_event.terminal = True
-
-    triggers = subh_triggers + [q_zero_event] + suph_triggers
-    index_subh_trigger_start = 0
-    index_zero_event = len(subh_triggers)
-    index_suph_trigger_start = len(subh_triggers) + 1
-
-    num_triggers = len(triggers)
-
-    log_z_lo = log(1.0 + z_lo_guess)
-    log_z_hi = log(1.0 + z_hi_guess)
-
-    with WavenumberExitSupervisor(
-        k=k, log_z_init=log_z_lo, log_z_final=log_z_hi
-    ) as supervisor:
-        # solve to find the zero crossing point; we set the upper limit of integration to be 1E12, which should be comfortably above
-        # the redshift of any horizon crossing in which we are interested.
-        sol = solve_ivp(
-            RHS,
-            t_span=(log_z_lo, log_z_hi),
-            method="DOP853",
-            y0=[q_lo_guess],
-            events=triggers,
-            atol=atol,
-            rtol=rtol,
-            args=(supervisor,),
-        )
-
-    # test whether termination occurred due to the q_zero_event() firing
-    if not sol.success:
-        raise RuntimeError(
-            f'find_horizon_exit_time: integration to find horizon-crossing time did not terminate successfully ("{sol.message}")'
-        )
-
-    if sol.status != 1:
-        print(sol)
-        raise RuntimeError(
-            f"find_horizon_exit_time: integration to find horizon-crossing time did not detect all required horizon exit times (and/or their offsets) within the integration range"
-        )
-
-    if len(sol.t_events) != num_triggers:
-        raise RuntimeError(
-            f"find_horizon_exit_time: unexpected number of event types returned from horizon-crossing integration (expected={num_triggers}, found={len(sol.t_events)})"
-        )
-
-    payload = {"compute_time": supervisor.integration_time}
-
-    def check_log_k_aH(z_test, expected_log_N):
-        H_test = cosmology.Hubble(z_test)
-        k_over_aH = (1.0 + z_test) * float(k) / H_test
-        q_test = log(k_over_aH)
-
-        if fabs(q_test + expected_log_N) > DEFAULT_HEXIT_TOLERANCE:
-            print("!! INCONSISTENT DETERMINATION OF HORIZON-CROSSING TIME")
-            print(
-                f"|    k = {k.k_inv_Mpc:.5g}/Mpc, estimated z_exit+{expected_log_N}= {z_test:.5g}, k/(aH)_test = {k_over_aH:.5g}, q_test = {q_test:.5g}"
+        for z_subh in subh_efolds:
+            z_exit = _solve_horizon_exit(
+                cosmology, k, offset_subh=z_subh, atol=atol, rtol=rtol
             )
-            raise RuntimeError(
-                f"Inconsistent determination of horizon-crossing time z_exit+{expected_log_N}"
-            )
+            payload[f"z_exit_subh_e{z_subh}"] = z_exit
 
-    zero_times = sol.t_events[index_zero_event]
-    if len(zero_times) != 1:
-        raise RuntimeError(
-            f"find_horizon_exit_time: more than one horizon-crossing time returned from integration (num={len(zero_times)})"
-        )
-    event = exp(zero_times[0]) - 1.0
-    payload["z_exit"] = event
-    check_log_k_aH(event, 0.0)
+        for z_suph in suph_efolds:
+            z_exit = _solve_horizon_exit(
+                cosmology, k, offset_subh=-z_suph, atol=atol, rtol=rtol
+            )
+            payload[f"z_exit_suph_e{z_suph}"] = z_exit
 
-    for i, z_offset in enumerate(subh_efolds):
-        times = sol.t_events[index_subh_trigger_start + i]
-        if len(times) == 0:
-            raise RuntimeError(
-                f"find_horizon_exit_time: no horizon-crossing time returned from integration (subhorizon efolds={z_offset})"
-            )
-        if len(times) != 1:
-            raise RuntimeError(
-                f"find_horizon_exit_time: more than one horizon-crossing time returned from integration (subhorizon efolds={z_offset}, num={len(times)})"
-            )
-        event = exp(times[0]) - 1.0
-        check_log_k_aH(event, -z_offset)
-        payload[f"z_exit_subh_e{z_offset}"] = event
-
-    for i, z_offset in enumerate(suph_efolds):
-        times = sol.t_events[index_suph_trigger_start + i]
-        if len(times) == 0:
-            raise RuntimeError(
-                f"find_horizon_exit_time: no horizon-crossing time returned from integration (superhorizon efolds={z_offset})"
-            )
-        if len(times) != 1:
-            raise RuntimeError(
-                f"find_horizon_exit_time: more than one horizon-crossing time returned from integration (superhorizon efolds={z_offset}, num={len(times)})"
-            )
-        event = exp(times[0]) - 1.0
-        check_log_k_aH(event, z_offset)
-        payload[f"z_exit_suph_e{z_offset}"] = event
+    payload["compute_time"] = timer.elapsed
 
     return payload
