@@ -50,7 +50,7 @@ from defaults import (
     DEFAULT_QUADRATURE_ATOL,
 )
 from model_list import build_model_list
-from utilities import grouper, format_time
+from utilities import grouper, format_time, WallclockTimer
 
 DEFAULT_LABEL = "SecondaryGWKit-test"
 DEFAULT_TIMEOUT = 60
@@ -357,10 +357,14 @@ def run_pipeline(model_data: dict):
     )
     if not bg_model.available:
         print(f"\n** CALCULATING BACKGROUND {model_label} MODEL")
-        data = ray.get(bg_model.compute(label=model_cosmology.name))
-        bg_model.store()
-        bg_model = ray.get(pool.object_store(bg_model))
-        outcome = ray.get(pool.object_validate(bg_model))
+        with WallclockTimer() as timer:
+            data = ray.get(bg_model.compute(label=model_cosmology.name))
+            bg_model.store()
+            bg_model = ray.get(pool.object_store(bg_model))
+            outcome = ray.get(pool.object_validate(bg_model))
+        print(
+            f"   @@ computed and stored new background solution in time {format_time(timer.elapsed)}"
+        )
     else:
         print(
             f'\n** FOUND EXISTING {model_label} BACKGROUND MODEL "{bg_model.label}" (store_id={bg_model.store_id})'
