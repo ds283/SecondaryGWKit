@@ -182,8 +182,6 @@ def plot_Tk(
     base_path = Path(args.output).resolve()
     base_path = base_path / f"{model_label}"
 
-    print(f"base_path: {base_path}")
-
     sns.set_theme()
     fig = plt.figure()
     ax = plt.gca()
@@ -344,7 +342,6 @@ def plot_Tk(
         / f"plots/full-range/k-serial={k_exit.store_id}-k={k_exit.k.k_inv_Mpc:.5g}.pdf"
     )
     fig_path.parents[0].mkdir(exist_ok=True, parents=True)
-    print(f"fig_path: {fig_path}")
     fig.savefig(fig_path)
     fig.savefig(fig_path.with_suffix(".png"))
 
