@@ -283,7 +283,7 @@ class sqla_BackgroundModelFactory(SQLAFactoryBase):
                     wBackground=row.wBackground,
                     wPerturbations=row.wPerturbations,
                     rho=row.rho_GeV * GeV4,
-                    tau=row.tau * Mpc,
+                    tau=row.tau_Mpc * Mpc,
                     T_photon=row.T_photon_GeV * GeV,
                     d_lnH_dz=row.d_lnH_dz,
                     d2_lnH_dz2=row.d2_lnH_dz2,
