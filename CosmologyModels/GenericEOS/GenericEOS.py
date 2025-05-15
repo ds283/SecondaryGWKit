@@ -59,6 +59,9 @@ class GenericEOSBase(ABC):
         T should be regarded as a dimensionful quantity, measured in the given UnitsLike system
         :return:
         """
+
+        # TODO: This formula is valid only in thermal equilibrium, where all species have the same temperature T.
+        #  It strictly IS NOT VALID after e+e- annihilation, when the neutrino and photon temperatures separate.
         G = self.G(T)
         Gs = self.Gs(T)
         w = (4.0 * Gs) / (3.0 * G) - 1.0

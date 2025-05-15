@@ -218,3 +218,25 @@ class QCD_EOS(GenericEOSBase):
             )
         else:
             return LOW_T_G_S_STAR  # Low temperature limit
+
+    # override equation of state implementation
+    def w(self, T: float) -> float:
+        """
+        Compute equation of state parameter w(T) as a function of temperature T.
+        :return:
+        """
+
+        # Note: This formula is valid only in thermal equilibrium, where all species have the same temperature T.
+        # It strictly IS NOT VALID after e+e- annihilation, when the neutrino and photon temperatures separate.
+        T_in_GeV = T / self._units.GeV
+
+        if T_in_GeV > QCD_EOS.T_LO:
+            G = self.G(T)
+            Gs = self.Gs(T)
+            return (4.0 * Gs) / (3.0 * G) - 1.0
+
+        # below T_LO we have photons and neutrinos, each with
+        #   P(T) = s(T) T - rho(T)
+        # so we cannot write a single formula for w(T) = P(T)/rho(T) that is valid both above and below T_LO.
+        # However, with our choices w(z) will just evaluate to 1/3 for all temperatures in this range.
+        return 1.0 / 3.0
