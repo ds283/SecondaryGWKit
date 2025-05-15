@@ -244,12 +244,12 @@ def plot_Tk(
                 label="Analytic $T_k$ [radiation]",
                 linestyle="dashed",
             )
-            ax.plot(
-                analytic_w_x,
-                analytic_w_y,
-                label="Analytic $T_k$ [$w=w(z)$]",
-                linestyle="dashdot",
-            )
+            # ax.plot(
+            #     analytic_w_x,
+            #     analytic_w_y,
+            #     label="Analytic $T_k$ [$w=w(z)$]",
+            #     linestyle="dashdot",
+            # )
 
         z_column.extend(value.z.z for value in values)
         T_column.extend(value.T for value in values)
@@ -307,12 +307,12 @@ def plot_Tk(
                 label="Analytic $T_k$ [radiation]",
                 linestyle="dashed",
             )
-            ax.plot(
-                analytic_w_x,
-                analytic_w_y,
-                label="Analytic $T_k$ [$w=w(z)$]",
-                linestyle="dashdot",
-            )
+            # ax.plot(
+            #     analytic_w_x,
+            #     analytic_w_y,
+            #     label="Analytic $T_k$ [$w=w(z)$]",
+            #     linestyle="dashdot",
+            # )
 
         z_column.extend(value.z.z for value in values)
         T_column.extend(value.T_WKB for value in values)
