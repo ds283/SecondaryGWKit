@@ -2598,7 +2598,7 @@ with ShardedPool(
 
     print("\n** BUILD ARRAY OF WAVENUMBERS TO SAMPLE")
 
-    # Build array of k-sample points covering the region of the primoridal power spectrum that we want to include
+    # Build array of k-sample points covering the region of the primordial power spectrum that we want to include
     # in the one-loop integral. We will eventually evaluate the one-loop integral on a square grid
     # of source_k_array x source_k_array
 
@@ -2618,7 +2618,7 @@ with ShardedPool(
     # the one-loop integral
     response_k_array = ray.get(
         convert_to_wavenumbers(
-            np.logspace(np.log10(1e5), np.log10(3e8), 50), is_source=True
+            np.logspace(np.log10(1e5), np.log10(3e8), 50), is_response=True
         )
     )
     response_k_sample = wavenumber_array(k_array=response_k_array)
