@@ -2,7 +2,7 @@ from math import log, exp, fmod
 from typing import Iterable, Tuple, Optional
 
 from numpy import sign
-from scipy.interpolate import InterpolatedUnivariateSpline
+from scipy.interpolate import InterpolatedUnivariateSpline, make_interp_spline
 
 from defaults import DEFAULT_FLOAT_PRECISION
 from .constants import TWO_PI
@@ -72,7 +72,7 @@ class _chunk_spline:
         self._min_safe_x = exp(self._min_safe_log_x)
         self._max_safe_x = exp(self._max_safe_log_x)
 
-        self._spline = InterpolatedUnivariateSpline(self._log_x_points, self._y_points)
+        self._spline = make_interp_spline(self._log_x_points, self._y_points)
         self._derivative = self._spline.derivative()
 
     def _theta(self, raw_x: float, log_x: float, warn_unsafe: bool = True) -> float:

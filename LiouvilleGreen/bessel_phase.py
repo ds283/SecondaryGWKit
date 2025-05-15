@@ -1,6 +1,6 @@
 import numpy as np
 from scipy.integrate import solve_ivp
-from scipy.interpolate import InterpolatedUnivariateSpline
+from scipy.interpolate import make_interp_spline
 from scipy.optimize import root_scalar
 from scipy.special import yv, jv
 
@@ -165,9 +165,9 @@ def bessel_phase(
     phase_log_x, phase_y = zip(*theta_points)
     mod_x, mod_y = zip(*mod_points)
 
-    _pre_theta_spline = InterpolatedUnivariateSpline(phase_log_x, phase_y, ext="raise")
-    _mod_spline = InterpolatedUnivariateSpline(mod_x, mod_y, ext="raise")
-    _Q_spline = InterpolatedUnivariateSpline(log_x_samples, Q_samples, ext="raise")
+    _pre_theta_spline = make_interp_spline(phase_log_x, phase_y)
+    _mod_spline = make_interp_spline(mod_x, mod_y)
+    _Q_spline = make_interp_spline(log_x_samples, Q_samples)
 
     # determine where we will try to match the phase
     if log_min_x < 0.0:

@@ -380,6 +380,8 @@ class sqla_BackgroundModelFactory(SQLAFactoryBase):
                     "d_lnH_dz": value.d_lnH_dz,
                     "d2_lnH_dz2": value.d2_lnH_dz2,
                     "d3_lnH_dz3": value.d3_lnH_dz3,
+                    "d_wPerturbations_dz": value.d_wPerturbations_dz,
+                    "d2_wPerturbations_dz2": value.d2_wPerturbations_dz2,
                 },
             )
 
@@ -542,6 +544,8 @@ class sqla_BackgroundModelValue_factory(SQLAFactoryBase):
                 sqla.Column("d_lnH_dz", sqla.Float(64), nullable=False),
                 sqla.Column("d2_lnH_dz2", sqla.Float(64), nullable=True),
                 sqla.Column("d3_lnH_dz3", sqla.Float(64), nullable=True),
+                sqla.Column("d_wPerturbations_dz", sqla.Float(64), nullable=True),
+                sqla.Column("d2_wPerturbations_dz2", sqla.Float(64), nullable=True),
             ],
         }
 
@@ -560,6 +564,9 @@ class sqla_BackgroundModelValue_factory(SQLAFactoryBase):
         d2_lnH_dz2 = payload["d2_lnH_dz2"]
         d3_lnH_dz3 = payload["d3_lnH_dz3"]
 
+        d_wPerturbations_dz = payload["d_wPerturbations_dz"]
+        d2_wPerturbations_dz2 = payload["d2_wPerturbations_dz2"]
+
         try:
             row_data = conn.execute(
                 sqla.select(
@@ -572,6 +579,8 @@ class sqla_BackgroundModelValue_factory(SQLAFactoryBase):
                     table.c.d_lnH_dz,
                     table.c.d2_lnH_dz2,
                     table.c.d3_lnH_dz3,
+                    table.c.d_wPerturbations_dz,
+                    table.c.d2_wPerturbations_dz2,
                 ).filter(
                     table.c.model_serial == model_serial,
                     table.c.z_serial == z.store_id,
@@ -597,15 +606,21 @@ class sqla_BackgroundModelValue_factory(SQLAFactoryBase):
                     "d_lnH_dz": d_lnH_dz,
                     "d2_lnH_dz2": d2_lnH_dz2,
                     "d3_lnH_dz3": d3_lnH_dz3,
+                    "d_wPerturbations_dz": d_wPerturbations_dz,
+                    "d2_wPerturbations_dz2": d2_wPerturbations_dz2,
                 },
             )
         else:
             store_id = row_data.serial
 
             tau = row_data.tau
+
             d_lnH_dz = row_data.d_lnH_dz
             d2_lnH_dz2 = row_data.d2_lnH_dz2
             d3_lnH_dz3 = row_data.d3_lnH_dz3
+
+            d_wPerturbations_dz = row_data.d_wPerturbations_dz
+            d2_wPerturbations_dz2 = row_data.d2_wPerturbations_dz2
 
             if fabs(row_data.Hubble - Hubble) > DEFAULT_FLOAT_PRECISION:
                 raise ValueError(
@@ -614,10 +629,6 @@ class sqla_BackgroundModelValue_factory(SQLAFactoryBase):
             if fabs(row_data.wBackground - wBackground) > DEFAULT_FLOAT_PRECISION:
                 raise ValueError(
                     f"Stored background model w_Background value (model store_id={model_serial}, z={z.store_id}) = {row_data.wBackground} differs from expected value = {wBackground}"
-                )
-            if fabs(row_data.Hubble - Hubble) > DEFAULT_FLOAT_PRECISION:
-                raise ValueError(
-                    f"Stored background model w_Perturbations value (model store_id={model_serial}, z={z.store_id}) = {row_data.wPerturbations} differs from expected value = {wPerturbations}"
                 )
 
         obj = BackgroundModelValue(
@@ -631,6 +642,8 @@ class sqla_BackgroundModelValue_factory(SQLAFactoryBase):
             d_lnH_dz=d_lnH_dz,
             d2_lnH_dz2=d2_lnH_dz2,
             d3_lnH_dz3=d3_lnH_dz3,
+            d_wPerturbations_dz=d_wPerturbations_dz,
+            d2_wPerturbations_dz2=d2_wPerturbations_dz2,
         )
         obj._deserialized = True
         return obj

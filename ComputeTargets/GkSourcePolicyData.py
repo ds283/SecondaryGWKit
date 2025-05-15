@@ -3,7 +3,7 @@ from math import log, fabs, sqrt
 from typing import Optional
 
 import ray
-from scipy.interpolate import InterpolatedUnivariateSpline
+from scipy.interpolate import make_interp_spline
 
 from ComputeTargets.GkSource import GkSourceProxy, GkSource
 from ComputeTargets.spline_wrappers import ZSplineWrapper, GkWKBSplineWrapper
@@ -481,10 +481,9 @@ class GkSourcePolicyData(DatastoreObject):
                 ]
                 numerical_Gk_x, numerical_Gk_y = zip(*numerical_Gk_data)
 
-                _numerical_Gk_spline = InterpolatedUnivariateSpline(
+                _numerical_Gk_spline = make_interp_spline(
                     numerical_Gk_x,
                     numerical_Gk_y,
-                    ext="raise",
                 )
 
                 numerical_Gk = ZSplineWrapper(
@@ -543,10 +542,9 @@ class GkSourcePolicyData(DatastoreObject):
                 ]
 
                 sin_amplitude_x, sin_amplitude_y = zip(*sin_amplitude_data)
-                _sin_amplitude_spline = InterpolatedUnivariateSpline(
+                _sin_amplitude_spline = make_interp_spline(
                     sin_amplitude_x,
                     sin_amplitude_y,
-                    ext="raise",
                 )
 
                 theta_log_x_points = [log(1.0 + v.z_source.z) for v in WKB_data]

@@ -38,31 +38,11 @@ class BaseCosmology(DatastoreObject, ABC):
         raise NotImplementedError
 
     @abstractmethod
-    def d_lnH_dz(self, z: float) -> float:
-        raise NotImplementedError
-
-    @abstractmethod
-    def d2_lnH_dz2(self, z: float) -> float:
-        raise NotImplementedError
-
-    @abstractmethod
-    def d3_lnH_dz3(self, z: float) -> float:
-        raise NotImplementedError
-
-    @abstractmethod
     def wBackground(self, z: float) -> float:
         raise NotImplementedError
 
     @abstractmethod
     def wPerturbations(self, z: float) -> float:
-        raise NotImplementedError
-
-    @abstractmethod
-    def d_wPerturbations_dz(self, z: float) -> float:
-        raise NotImplementedError
-
-    @abstractmethod
-    def d2_wPerturbations_dz2(self, z: float) -> float:
         raise NotImplementedError
 
 

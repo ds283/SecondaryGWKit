@@ -1,9 +1,9 @@
 from collections import namedtuple
+from math import log
 from typing import Optional, List
 
 import ray
-from math import log
-from scipy.interpolate import InterpolatedUnivariateSpline
+from scipy.interpolate import make_interp_spline
 
 from ComputeTargets.BackgroundModel import BackgroundModel, ModelProxy
 from ComputeTargets.TkNumericalIntegration import (
@@ -296,9 +296,7 @@ class QuadSource(DatastoreObject):
         source_data.sort(key=lambda pair: pair[0])
 
         source_x_data, source_y_data = zip(*source_data)
-        source_spline = InterpolatedUnivariateSpline(
-            source_x_data, source_y_data, ext="raise"
-        )
+        source_spline = make_interp_spline(source_x_data, source_y_data)
 
         self._functions = QuadSourceFunctions(
             source=ZSplineWrapper(

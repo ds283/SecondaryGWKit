@@ -1,10 +1,8 @@
 from math import exp, sqrt, log
 from typing import Mapping
 
-import numpy as np
 from numpy import linspace
-from scipy.differentiate import derivative
-from scipy.interpolate import InterpolatedUnivariateSpline
+from scipy.interpolate import make_interp_spline
 from scipy.optimize import root_scalar
 
 from ComputeTargets.spline_wrappers import ZSplineWrapper
@@ -189,7 +187,7 @@ class LambdaCDM_GenericEOS(BaseCosmology):
         log_z_values = linspace(log(1.0 + min_z), log(1.0 + max_z), samples)
         T_values = [self._solve_T_z(exp(logz) - 1.0) for logz in log_z_values]
 
-        spline = InterpolatedUnivariateSpline(log_z_values, T_values, ext="raise")
+        spline = make_interp_spline(log_z_values, T_values)
         return ZSplineWrapper(
             spline,
             label="T(z)",
@@ -268,84 +266,6 @@ class LambdaCDM_GenericEOS(BaseCosmology):
         H0sq = rho_total / (3.0 * self.Mpsq)
         return sqrt(H0sq)
 
-    def d_lnH_dz(self, z0: float) -> float:
-        """
-        Evaluate the logarithmic derivative d(ln H)/dz at the specified redshift z0
-        :param z0: required redshift
-        :return: value of d(ln H)/dz
-        """
-
-        f = np.vectorize(pyfunc=lambda z: log(self.Hubble(z)))
-
-        def ln_H(z_array: np.ndarray) -> np.ndarray:
-            return f(z_array)
-
-        data = derivative(
-            f=ln_H,
-            x=[z0],
-            tolerances={"atol": 1e-6, "rtol": 1e-4},
-            initial_step=DEFAULT_Z_DERIVATIVE_STEPSIZE,
-        )
-
-        if not data.success:
-            raise RuntimeError(
-                f"derivative() failed: {data.message} (status={data.status}, iterations={data.nit}, nfev={data.nfev}, error={data.error})"
-            )
-
-        return data.df.item()
-
-    def d2_lnH_dz2(self, z0: float) -> float:
-        """
-        Evaluate the logarithmic derivative d^2(ln H)/dz^2 at the specified redshift z0
-        :param z0: returned redshift
-        :return: value of d^2(ln H)/dz^2
-        """
-
-        f = np.vectorize(pyfunc=lambda z: self.d_lnH_dz(z))
-
-        def d_ln_H(z_array: np.ndarray) -> np.ndarray:
-            return f(z_array)
-
-        data = derivative(
-            f=d_ln_H,
-            x=[z0],
-            tolerances={"atol": 1e-6, "rtol": 1e-4},
-            initial_step=DEFAULT_Z_DERIVATIVE_STEPSIZE,
-        )
-
-        if not data.success:
-            raise RuntimeError(
-                f"derivative() failed: {data.message} (status={data.status}, iterations={data.nit}, nfev={data.nfev}, error={data.error})"
-            )
-
-        return data.df.item()
-
-    def d3_lnH_dz3(self, z0: float) -> float:
-        """
-        Evaluate the logarithmic derivative d^3(ln H)/dz^3 at the specified redshift z0
-        :param z0: returned redshift
-        :return: value of d^3(ln H)/dz^3
-        """
-
-        f = np.vectorize(pyfunc=lambda z: self.d2_lnH_dz2(z))
-
-        def d2_ln_H(z_array: np.ndarray) -> np.ndarray:
-            return f(z_array)
-
-        data = derivative(
-            f=d2_ln_H,
-            x=[z0],
-            tolerances={"atol": 1e-6, "rtol": 1e-4},
-            initial_step=DEFAULT_Z_DERIVATIVE_STEPSIZE,
-        )
-
-        if not data.success:
-            raise RuntimeError(
-                f"derivative() failed: {data.message} (status={data.status}, iterations={data.nit}, nfev={data.nfev}, error={data.error})"
-            )
-
-        return data.df.item()
-
     def wBackground(self, z: float) -> float:
         rho = self._rho_fluid(z)
 
@@ -370,55 +290,3 @@ class LambdaCDM_GenericEOS(BaseCosmology):
         denominator = self.rho(z)
 
         return numerator / denominator
-
-    def d_wPerturbations_dz(self, z0: float) -> float:
-        """
-        Evaluate the derivative dw/dz at the specified redshift z0
-        :param z0: returned redshift
-        :return: value of dw/dz
-        """
-
-        f = np.vectorize(pyfunc=lambda z: self.wPerturbations(z))
-
-        def w(z_array: np.ndarray) -> np.ndarray:
-            return f(z_array)
-
-        data = derivative(
-            f=w,
-            x=[z0],
-            tolerances={"atol": 1e-6, "rtol": 1e-4},
-            initial_step=DEFAULT_Z_DERIVATIVE_STEPSIZE,
-        )
-
-        if not data.success:
-            raise RuntimeError(
-                f"derivative() failed: {data.message} (status={data.status}, iterations={data.nit}, nfev={data.nfev}, error={data.error})"
-            )
-
-        return data.df.item()
-
-    def d2_wPerturbations_dz2(self, z0: float) -> float:
-        """
-        Evaluate the derivative d^2w/dz^2 at the specified redshift z0
-        :param z0: returned redshift
-        :return: value of d^2w/dz^2
-        """
-
-        f = np.vectorize(pyfunc=lambda z: self.d_wPerturbations_dz(z))
-
-        def d_w(z_array: np.ndarray) -> np.ndarray:
-            return f(z_array)
-
-        data = derivative(
-            f=d_w,
-            x=[z0],
-            tolerances={"atol": 1e-6, "rtol": 1e-4},
-            initial_step=DEFAULT_Z_DERIVATIVE_STEPSIZE,
-        )
-
-        if not data.success:
-            raise RuntimeError(
-                f"derivative() failed: {data.message} (status={data.status}, iterations={data.nit}, nfev={data.nfev}, error={data.error})"
-            )
-
-        return data.df.item()
