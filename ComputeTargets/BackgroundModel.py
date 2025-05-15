@@ -106,7 +106,7 @@ def compute_background(
             )
 
     # each BaseCosmology instance provides methods to evaluate H(z), rho(z), and the value of the equation of state
-    # for background and perturbations
+    # for the background and perturbations
     H_sample = [cosmology.Hubble(z.z) for z in z_sample]
     rho_sample = [cosmology.rho(z.z) for z in z_sample]
     wBackground_sample = [cosmology.wBackground(z.z) for z in z_sample]
@@ -115,123 +115,50 @@ def compute_background(
     # further, each BaseCosmology instance may provide methods to evaluate the derivatives of H(z) and w(z), but if it doesn't,
     # we estimate these derivatives using a spline
 
-    if hasattr(cosmology, "d_lnH_dz"):
-        d_lnH_dz_sample = [cosmology.d_lnH_dz(z.z) for z in z_sample]
-    else:
-        lnH_data = [(log(1.0 + z.z), log(H)) for z, H in zip(z_sample, H_sample)]
-        lnH_data.sort(key=lambda pair: pair[0])
-        lnH_data_x, lnH_data_y = zip(*lnH_data)
-        lnH_spline = make_interp_spline(lnH_data_x, lnH_data_y)
-        raw_d_lnH_dz_spline = lnH_spline.derivative()
-        d_lnH_dz_spline = ZSplineWrapper(
-            raw_d_lnH_dz_spline,
-            label="d_lnH_dz",
+    def _build_derivative(attr: str, f_to_diff=None, sample_to_diff=None):
+        if f_to_diff is None and sample_to_diff is None:
+            raise RuntimeError(
+                "compute_background._build_derivative: f_to_diff and sample_to_diff cannot both be None"
+            )
+
+        if hasattr(cosmology, attr):
+            return [getattr(cosmology, attr)(z.z) for z in z_sample]
+
+        if f_to_diff is not None:
+            data = [(log(1.0 + z.z), f_to_diff(z.z)) for z in z_sample]
+        else:
+            data = [(log(1.0 + z.z), s) for z, s in zip(z_sample, sample_to_diff)]
+
+        data.sort(key=lambda pair: pair[0])
+        x_data, y_data = zip(*data)
+
+        raw = make_interp_spline(x_data, y_data)
+        deriv = raw.derivative()
+
+        spline = ZSplineWrapper(
+            deriv,
+            label=attr,
             min_z=z_sample.min.z,
             max_z=z_sample.max.z,
             log_z=True,
             deriv=True,
         )
 
-        d_lnH_dz_sample = [d_lnH_dz_spline(z.z) for z in z_sample]
+        return [spline(z.z) for z in z_sample]
 
-    if hasattr(cosmology, "d2_lnH_dz2"):
-        d2_lnH_dz2_sample = [cosmology.d2_lnH_dz2(z.z) for z in z_sample]
-    else:
-        d_lnH_dz_data = [
-            (log(1.0 + z.z), d_lnH_dz) for z, d_lnH_dz in zip(z_sample, d_lnH_dz_sample)
-        ]
-        d_lnH_dz_data.sort(key=lambda pair: pair[0])
-        d_lnH_dz_data_x, d_lnH_dz_data_y = zip(*d_lnH_dz_data)
-        raw_d_lnH_dz_spline = make_interp_spline(d_lnH_dz_data_x, d_lnH_dz_data_y)
-        raw_d2_lnH_dz2_spline = raw_d_lnH_dz_spline.derivative()
-        d2_lnH_dz2_spline = ZSplineWrapper(
-            raw_d2_lnH_dz2_spline,
-            label="d2_lnH_dz2",
-            min_z=z_sample.min.z,
-            max_z=z_sample.max.z,
-            log_z=True,
-            deriv=True,
-        )
-
-        d2_lnH_dz2_sample = [d2_lnH_dz2_spline(z.z) for z in z_sample]
-
-    if hasattr(cosmology, "d3_lnH_dz3"):
-        d3_lnH_dz3_sample = [cosmology.d3_lnH_dz3(z.z) for z in z_sample]
-    else:
-        d2_lnH_dz2_data = [
-            (log(1.0 + z.z), d2_lnH_dz2)
-            for z, d2_lnH_dz2 in zip(z_sample, d2_lnH_dz2_sample)
-        ]
-        d2_lnH_dz2_data.sort(key=lambda pair: pair[0])
-        d2_lnH_dz2_data_x, d2_lnH_dz2_data_y = zip(*d2_lnH_dz2_data)
-        raw_d2_lnH_dz2_spline = make_interp_spline(d2_lnH_dz2_data_x, d2_lnH_dz2_data_y)
-        raw_d3_lnH_dz3_spline = raw_d2_lnH_dz2_spline.derivative()
-        d3_lnH_dz3_spline = ZSplineWrapper(
-            raw_d3_lnH_dz3_spline,
-            label="d3_lnH_dz3",
-            min_z=z_sample.min.z,
-            max_z=z_sample.max.z,
-            log_z=True,
-            deriv=True,
-        )
-
-        d3_lnH_dz3_sample = [d3_lnH_dz3_spline(z.z) for z in z_sample]
-
-    if hasattr(cosmology, "d_wPerturbations_dz"):
-        d_wPerturbations_dz_sample = [
-            cosmology.d_wPerturbations_dz(z.z) for z in z_sample
-        ]
-    else:
-        wPerturbations_data = [
-            (log(1.0 + z.z), wPerturbations)
-            for z, wPerturbations in zip(z_sample, wPerturbations_sample)
-        ]
-        wPerturbations_data.sort(key=lambda pair: pair[0])
-        wPerturbations_data_x, wPerturbations_data_y = zip(*wPerturbations_data)
-        raw_wPerturbations_spline = make_interp_spline(
-            wPerturbations_data_x, wPerturbations_data_y
-        )
-        raw_d_wPerturbations_dz_spline = raw_wPerturbations_spline.derivative()
-        d_wPerturbations_dz_spline = ZSplineWrapper(
-            raw_d_wPerturbations_dz_spline,
-            label="d_wPerturbations_dz",
-            min_z=z_sample.min.z,
-            max_z=z_sample.max.z,
-            log_z=True,
-            deriv=True,
-        )
-
-        d_wPerturbations_dz_sample = [d_wPerturbations_dz_spline(z.z) for z in z_sample]
-
-    if hasattr(cosmology, "d2_wPerturbations_dz2"):
-        d2_wPerturbations_dz2_sample = [
-            cosmology.d2_wPerturbations_dz2(z.z) for z in z_sample
-        ]
-    else:
-        d_wPerturbations_dz_data = [
-            (log(1.0 + z.z), d_wPerturbations_dz)
-            for z, d_wPerturbations_dz in zip(z_sample, d_wPerturbations_dz_sample)
-        ]
-        d_wPerturbations_dz_data.sort(key=lambda pair: pair[0])
-        d_wPerturbations_dz_data_x, d_wPerturbations_dz_data_y = zip(
-            *d_wPerturbations_dz_data
-        )
-        raw_d_wPerturbations_dz_spline = make_interp_spline(
-            d_wPerturbations_dz_data_x, d_wPerturbations_dz_data_y
-        )
-        raw_d2_wPerturbations_dz2_spline = raw_d_wPerturbations_dz_spline.derivative()
-        d2_wPerturbations_dz2_spline = ZSplineWrapper(
-            raw_d2_wPerturbations_dz2_spline,
-            label="d2_wPerturbations_dz2",
-            min_z=z_sample.min.z,
-            max_z=z_sample.max.z,
-            log_z=True,
-            deriv=True,
-        )
-
-        d2_wPerturbations_dz2_sample = [
-            d2_wPerturbations_dz2_spline(z.z) for z in z_sample
-        ]
+    d_lnH_dz_sample = _build_derivative(
+        "d_lnH_dz", f_to_diff=lambda z: log(cosmology.Hubble(z))
+    )
+    d2_lnH_dz2_sample = _build_derivative("d2_lnH_dz2", sample_to_diff=d_lnH_dz_sample)
+    d3_lnH_dz3_sample = _build_derivative(
+        "d3_lnH_dz3", sample_to_diff=d2_lnH_dz2_sample
+    )
+    d_wPerturbations_dz_sample = _build_derivative(
+        "d_wPerturbations_dz", sample_to_diff=wPerturbations_sample
+    )
+    d2_wPerturbations_dz2_sample = _build_derivative(
+        "d2_wPerturbations_dz2", sample_to_diff=d_wPerturbations_dz_sample
+    )
 
     return {
         "data": IntegrationData(
@@ -359,110 +286,29 @@ class BackgroundModel(DatastoreObject):
         return self._functions
 
     def _create_functions(self):
-        tau_data = [(log(1.0 + v.z.z), v.tau) for v in self.values]
-        tau_data.sort(key=lambda pair: pair[0])
+        def _build_func(attr: str):
+            if hasattr(self._cosmology, attr):
+                return getattr(self._cosmology, attr)
 
-        tau_x_data, tau_y_data = zip(*tau_data)
-        tau_spline = make_interp_spline(tau_x_data, tau_y_data)
-        tau_func = ZSplineWrapper(
-            tau_spline,
-            label="tau",
-            min_z=self.z_sample.min.z,
-            max_z=self.z_sample.max.z,
-            log_z=True,
-        )
+            data = [(log(1.0 + v.z.z), getattr(v, attr)) for v in self.values]
+            data.sort(key=lambda pair: pair[0])
 
-        if hasattr(self._cosmology, "d_lnH_dz"):
-            d_lnH_dz_func = self._cosmology.d_lnH_dz
-        else:
-            d_lnH_dz_data = [(log(1.0 + v.z.z), v.d_lnH_dz) for v in self.values]
-            d_lnH_dz_data.sort(key=lambda pair: pair[0])
-
-            d_lnH_dz_x_data, d_lnH_dz_y_data = zip(*d_lnH_dz_data)
-            d_lnH_dz_spline = make_interp_spline(d_lnH_dz_x_data, d_lnH_dz_y_data)
-            d_lnH_dz_func = ZSplineWrapper(
-                d_lnH_dz_spline,
-                label="d_lnH_dz",
+            x_data, y_data = zip(*data)
+            spline = make_interp_spline(x_data, y_data)
+            return ZSplineWrapper(
+                spline,
+                label=attr,
                 min_z=self.z_sample.min.z,
                 max_z=self.z_sample.max.z,
                 log_z=True,
             )
 
-        if hasattr(self._cosmology, "d2_lnH_dz2"):
-            d2_lnH_dz2_func = self._cosmology.d2_lnH_dz2
-        else:
-            d2_lnH_dz2_data = [(log(1.0 + v.z.z), v.d2_lnH_dz2) for v in self.values]
-            d2_lnH_dz2_data.sort(key=lambda pair: pair[0])
-
-            d2_lnH_dz2_x_data, d2_lnH_dz2_y_data = zip(*d2_lnH_dz2_data)
-            d2_lnH_dz2_spline = make_interp_spline(d2_lnH_dz2_x_data, d2_lnH_dz2_y_data)
-            d2_lnH_dz2_func = ZSplineWrapper(
-                d2_lnH_dz2_spline,
-                label="d2_lnH_dz2",
-                min_z=self.z_sample.min.z,
-                max_z=self.z_sample.max.z,
-                log_z=True,
-            )
-
-        if hasattr(self._cosmology, "d3_lnH_d32"):
-            d3_lnH_dz3_func = self._cosmology.d3_lnH_d32
-        else:
-            d3_lnH_dz3_data = [(log(1.0 + v.z.z), v.d3_lnH_dz3) for v in self.values]
-            d3_lnH_dz3_data.sort(key=lambda pair: pair[0])
-
-            d3_lnH_dz3_x_data, d3_lnH_dz3_y_data = zip(*d3_lnH_dz3_data)
-            d3_lnH_dz3_spline = make_interp_spline(d3_lnH_dz3_x_data, d3_lnH_dz3_y_data)
-            d3_lnH_dz3_func = ZSplineWrapper(
-                d3_lnH_dz3_spline,
-                label="d3_lnH_dz3",
-                min_z=self.z_sample.min.z,
-                max_z=self.z_sample.max.z,
-                log_z=True,
-            )
-
-        if hasattr(self._cosmology, "d_wPerturbations_dz"):
-            d_wPerturbations_dz_func = self._cosmology.d_wPerturbations_dz
-        else:
-            d_wPerturbations_dz_data = [
-                (log(1.0 + v.z.z), v.d_wPerturbations_dz) for v in self.values
-            ]
-            d_wPerturbations_dz_data.sort(key=lambda pair: pair[0])
-
-            d_wPerturbations_dz_x_data, d_wPerturbations_dz_y_data = zip(
-                *d_wPerturbations_dz_data
-            )
-            d_wPerturbations_dz_spline = make_interp_spline(
-                d_wPerturbations_dz_x_data, d_wPerturbations_dz_y_data
-            )
-            d_wPerturbations_dz_func = ZSplineWrapper(
-                d_wPerturbations_dz_spline,
-                label="d_wPerturbations_dz",
-                min_z=self.z_sample.min.z,
-                max_z=self.z_sample.max.z,
-                log_z=True,
-            )
-
-        if hasattr(self._cosmology, "d2_wPerturbations_dz2"):
-            d2_wPerturbations_dz2_func = self._cosmology.d2_wPerturbations_dz2
-        else:
-            d2_wPerturbations_dz2_data = [
-                (log(1.0 + v.z.z), v.d2_wPerturbations_dz2) for v in self.values
-            ]
-            d2_wPerturbations_dz2_data.sort(key=lambda pair: pair[0])
-
-            d2_wPerturbations_dz2_x_data, d2_wPerturbations_dz2_y_data = zip(
-                *d2_wPerturbations_dz2_data
-            )
-            d2_wPerturbations_dz2_spline = make_interp_spline(
-                d2_wPerturbations_dz2_x_data, d2_wPerturbations_dz2_y_data
-            )
-            d2_wPerturbations_dz2_func = ZSplineWrapper(
-                d2_wPerturbations_dz2_spline,
-                label="d2_wPerturbations_dz2",
-                min_z=self.z_sample.min.z,
-                max_z=self.z_sample.max.z,
-                log_z=True,
-            )
+        tau_func = _build_func("tau")
+        d_lnH_dz_func = _build_func("d_lnH_dz")
+        d2_lnH_dz2_func = _build_func("d2_lnH_dz2")
+        d3_lnH_dz3_func = _build_func("d3_lnH_dz3")
+        d_wPerturbations_dz_func = _build_func("d_wPerturbations_dz")
+        d2_wPerturbations_dz2_func = _build_func("d2_wPerturbations_dz2")
 
         def epsilon(z: float) -> float:
             """
@@ -491,6 +337,12 @@ class BackgroundModel(DatastoreObject):
             one_plus_z = 1.0 + z
             return 2.0 * d2_lnH_dz2_func(z) + one_plus_z * d3_lnH_dz3_func(z)
 
+        # the underlying cosmology object is guaranteed to provide methods for Hubble, rho, wBackground, and wPerturbations.
+        # it may or may not provide methods for other quantities.
+        # The functions built above will pass through to the underlying cosmology object when it can perform the computation
+        # (so we can make use of e.g. analytic expressions where they are available), but otherwise we use splines
+        # constructed by differentiation (usually of another spline). Differentiating a spline gives us much less noisy
+        # results than finite difference formulae.
         self._functions = ModelFunctions(
             Hubble=self._cosmology.Hubble,
             epsilon=epsilon,
