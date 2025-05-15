@@ -133,8 +133,14 @@ class QCD_EOS(GenericEOSBase):
     # boundary value (measured in GeV) from Saikawa & Shirai
     T_120_MEV = 0.12
 
-    # below T_LOW (measured in GeV) we assume the asymptotic low temperature degrees of freedom
+    # below T_LO (measured in GeV) we assume the asymptotic low temperature degrees of freedom.
+    # Saikawa & Shirai say that their parametrization is valid down to 10 keV = 1E-5 GeV, which
+    # may well be true for G(T) and G_S(T) alone, but we will get the wrong equation of state
+    # if we do this, because the neutrinos are already out of thermal equilibrium here.
+    # We cut to the late-time asymptotic values at 600 keV, just before e+e- annihilation reheats
+    # the photon temperature.
     T_LO = 1e-5
+    EOS_T_LO = 2e-3
 
     def __init__(self, units: UnitsLike):
         GenericEOSBase.__init__(self, units)
@@ -166,7 +172,7 @@ class QCD_EOS(GenericEOSBase):
             return polynomial_sum(a_coeffs, log_T_in_GeV) / polynomial_sum(
                 b_coeffs, log_T_in_GeV
             )
-        elif QCD_EOS.T_LO <= T_in_GeV < QCD_EOS.T_120_MEV:
+        elif QCD_EOS.T_LO <= T_in_GeV <= QCD_EOS.T_120_MEV:
             # Eq. (C.3) of 1803.01038 v2
             return (
                 2.030
@@ -196,13 +202,13 @@ class QCD_EOS(GenericEOSBase):
         if T_in_GeV > QCD_EOS.T_HI:
             return HIGH_T_GSTAR  # Asymptotic high temperature limit
         elif QCD_EOS.T_120_MEV <= T_in_GeV <= QCD_EOS.T_HI:
-            log_T_in_GeV = log(T)
+            log_T_in_GeV = log(T_in_GeV)
             return self.G(T) / (
                 1.0
                 + polynomial_sum(c_coeffs, log_T_in_GeV)
                 / polynomial_sum(d_coeffs, log_T_in_GeV)
             )
-        elif QCD_EOS.T_LO <= T_in_GeV < QCD_EOS.T_120_MEV:
+        elif QCD_EOS.T_LO <= T_in_GeV <= QCD_EOS.T_120_MEV:
             # Eq. (C.4) of 1803.01038 v2
             return (
                 2.008
@@ -226,17 +232,19 @@ class QCD_EOS(GenericEOSBase):
         :return:
         """
 
-        # Note: This formula is valid only in thermal equilibrium, where all species have the same temperature T.
-        # It strictly IS NOT VALID after e+e- annihilation, when the neutrino and photon temperatures separate.
-        T_in_GeV = T / self._units.GeV
-
-        if T_in_GeV > QCD_EOS.T_LO:
-            G = self.G(T)
-            Gs = self.Gs(T)
-            return (4.0 * Gs) / (3.0 * G) - 1.0
-
         # below T_LO we have photons and neutrinos, each with
         #   P(T) = s(T) T - rho(T)
         # so we cannot write a single formula for w(T) = P(T)/rho(T) that is valid both above and below T_LO.
         # However, with our choices w(z) will just evaluate to 1/3 for all temperatures in this range.
-        return 1.0 / 3.0
+        # To get a smooth result we evaluate the asymptotic value exactly at T_LO
+
+        T_in_GeV = T / self._units.GeV
+
+        if T_in_GeV <= QCD_EOS.EOS_T_LO:
+            # Note: This formula is valid only in thermal equilibrium, where all species have the same temperature T.
+            # It strictly IS NOT VALID after e+e- annihilation, when the neutrino and photon temperatures separate.
+            T = QCD_EOS.EOS_T_LO * self._units.GeV
+
+        G = self.G(T)
+        Gs = self.Gs(T)
+        return (4.0 * Gs) / (3.0 * G) - 1.0
