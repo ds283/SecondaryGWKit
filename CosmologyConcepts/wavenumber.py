@@ -396,88 +396,89 @@ def _solve_horizon_exit(
     # Hence we can guess a possible redshift of horizon exit for this mode as
     #   1 + z_exit(k) = k/H0
 
-    z_guess = exp(-offset_subh) * (float(k) / cosmology.H0) - 1.0
-
-    def q(z: float) -> float:
+    def q(log_z: float) -> float:
+        z: float = exp(log_z) - 1.0
         return log(float(k) * (1.0 + z) / cosmology.Hubble(z)) - offset_subh
 
-    q_guess = q(z_guess)
+    log_z_guess = log(float(k) / cosmology.H0) - offset_subh
+    q_guess = q(log_z_guess)
 
     # If q_guess is a positive number, then z_guess is a LOWER BOUND for the desired crossing time.
     # On the other hand, if q_quess is a negative number, then z_guess is an UPPER BOUND for the desired crossing time.
 
     COUNT_MAX = 25
     SEARCH_MULTIPLIER = 1.5
+    LOG_SEARCH_OFFSET = log(SEARCH_MULTIPLIER)
 
     if q_guess > DEFAULT_HEXIT_TOLERANCE:
-        z_lo = z_guess
+        log_z_lo = log_z_guess
         q_lo = q_guess
 
-        z_hi = SEARCH_MULTIPLIER * z_lo
-        q_hi = q(z_hi)
+        log_z_hi = log_z_lo + LOG_SEARCH_OFFSET
+        q_hi = q(log_z_hi)
         count = 0
         while q_hi > -DEFAULT_HEXIT_TOLERANCE and count < COUNT_MAX:
-            z_hi = 1.5 * z_hi
-            q_hi = q(z_hi)
+            log_z_hi = log_z_hi + LOG_SEARCH_OFFSET
+            q_hi = q(log_z_hi)
 
             count += 1
 
         if count >= COUNT_MAX:
             raise RuntimeError(
-                f"_solve_horizon_exit: failed to find upper bound z_hi for k={k.k_inv_Mpc:.5}/Mpc (z_lo={z_lo:.5g}, q_lo={q_lo:.5g}, last z_hi={z_hi:.5g}, last q_hi={q_hi:.5g})"
+                f"_solve_horizon_exit: failed to find upper bound z_hi for k={k.k_inv_Mpc:.5}/Mpc (z_lo={log_z_lo:.5g}, q_lo={q_lo:.5g}, last z_hi={log_z_hi:.5g}, last q_hi={q_hi:.5g})"
             )
 
     elif q_guess < -DEFAULT_HEXIT_TOLERANCE:
-        z_hi = z_guess
+        log_z_hi = log_z_guess
         q_hi = q_guess
 
-        z_lo = z_hi / SEARCH_MULTIPLIER
-        q_lo = q(z_lo)
+        log_z_lo = log_z_hi - LOG_SEARCH_OFFSET
+        q_lo = q(log_z_lo)
         count = 0
         while q_lo < DEFAULT_HEXIT_TOLERANCE and count < COUNT_MAX:
-            z_lo = z_lo / SEARCH_MULTIPLIER
-            q_lo = q(z_lo)
+            log_z_lo = log_z_lo - LOG_SEARCH_OFFSET
+            q_lo = q(log_z_lo)
 
             count += 1
 
         if count >= COUNT_MAX:
             raise RuntimeError(
-                f"_solve_horizon_exit: failed to find lower bound z_lo for k={k.k_inv_Mpc:.5}/Mpc (z_hi={z_hi:.5g}, q_hi={q_hi:.5g}, last z_lo={z_lo:.5g}, last q_lo={q_lo:.5g})"
+                f"_solve_horizon_exit: failed to find lower bound z_lo for k={k.k_inv_Mpc:.5}/Mpc (z_hi={log_z_hi:.5g}, q_hi={q_hi:.5g}, last z_lo={log_z_lo:.5g}, last q_lo={q_lo:.5g})"
             )
 
     else:
         # q_guess is very close to zero
-        z_lo = z_guess / SEARCH_MULTIPLIER
-        z_hi = z_guess * SEARCH_MULTIPLIER
+        log_z_lo = log_z_guess - LOG_SEARCH_OFFSET
+        log_z_hi = log_z_guess + LOG_SEARCH_OFFSET
 
-        q_lo = q(z_lo)
-        q_hi = q(z_hi)
+        q_lo = q(log_z_lo)
+        q_hi = q(log_z_hi)
 
     if q_hi * q_lo > 0.0:
         raise RuntimeError(
-            f"_solve_horizon_exit: failed to bracket horizon crossing time for k={k.k_inv_Mpc:.5}/Mpc (z_lo={z_lo:.5g}, q_lo={q_lo:.5g}, z_hi={z_hi:.5g}, q_hi={q_hi:.5g})"
+            f"_solve_horizon_exit: failed to bracket horizon crossing time for k={k.k_inv_Mpc:.5}/Mpc (z_lo={log_z_lo:.5g}, q_lo={q_lo:.5g}, z_hi={log_z_hi:.5g}, q_hi={q_hi:.5g})"
         )
 
     root = root_scalar(
         q,
-        bracket=(z_lo, z_hi),
+        bracket=(log_z_lo, log_z_hi),
         xtol=atol,
         rtol=rtol,
     )
 
     if not root.converged:
         raise RuntimeError(
-            f'_solve_horizon_exit: root_scalar() did not converge to a solution for k={k.k_inv_Mpc:.5}/Mpc: x_bracket=({z_lo:.5g}, {z_hi:.5g}), iterations={root.iterations}, method={root.method}: "{root.flag}"'
+            f'_solve_horizon_exit: root_scalar() did not converge to a solution for k={k.k_inv_Mpc:.5}/Mpc: x_bracket=({log_z_lo:.5g}, {log_z_hi:.5g}), iterations={root.iterations}, method={root.method}: "{root.flag}"'
         )
 
-    z_root = root.root
-    q_root = q(z_root)
+    log_z_root = root.root
+    q_root = q(log_z_root)
     if fabs(q_root) > DEFAULT_HEXIT_TOLERANCE:
         raise RuntimeError(
-            f"_solve_horizon_exit: root_scalar() converged, but root is out of tolerance for k={k.k_inv_Mpc:.5}/Mpc: z_root={z_root:.5g}, |q_root|={fabs(q_root):.5g}, x_bracket=({z_lo:.5g}, {z_hi:.5g}), iterations={root.iterations}, method={root.method}"
+            f"_solve_horizon_exit: root_scalar() converged, but root is out of tolerance for k={k.k_inv_Mpc:.5}/Mpc: log_z_root={log_z_root:.5g}, |q_root|={fabs(q_root):.5g}, x_bracket=({log_z_lo:.5g}, {log_z_hi:.5g}), q_bracket-({q_lo:.5g}, {q_hi:.5g}), iterations={root.iterations}, method={root.method}"
         )
 
-    return root.root
+    return exp(log_z_root) - 1.0
 
 
 @ray.remote
