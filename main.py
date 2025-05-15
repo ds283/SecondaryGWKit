@@ -386,7 +386,7 @@ def run_pipeline(model_data: dict):
     b_value = 0.0
 
     print(
-        f"   @@ largest source k = {largest_source_k.k_inv_Mpc:.5g}/Mpc, latest tau = {largest_tau:.5g} (for z={zend:.5g}), largest x={largest_x:.5g}, largest x with 7.5% clearance={largest_x_with_clearance:.5g}"
+        f"   @@ largest source k = {largest_source_k.k_inv_Mpc:.5g}/Mpc, latest tau = {largest_tau:.5g} (for z={zend:.5g}), largest x={largest_x:.5g}, largest x +7.5% clearance={largest_x_with_clearance:.5g}"
     )
 
     # tight tolerances are needed to compute the Liouville-Green phase function to good accuracy up to large values
