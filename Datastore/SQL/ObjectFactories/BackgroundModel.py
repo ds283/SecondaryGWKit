@@ -14,6 +14,7 @@ from CosmologyModels import BaseCosmology
 from Datastore.SQL.ObjectFactories.base import SQLAFactoryBase
 from MetadataConcepts import store_tag, tolerance
 from Quadrature.integration_metadata import IntegrationData, IntegrationSolver
+from Units.base import UnitsLike
 from defaults import DEFAULT_STRING_LENGTH, DEFAULT_FLOAT_PRECISION
 
 
@@ -237,11 +238,13 @@ class sqla_BackgroundModelFactory(SQLAFactoryBase):
                 redshift_table.c.z,
                 redshift_table.c.source.label("z_is_source"),
                 redshift_table.c.response.label("z_is_response"),
-                value_table.c.Hubble,
+                value_table.c.Hubble_GeV,
                 value_table.c.wBackground,
                 value_table.c.wPerturbations,
-                value_table.c.rho,
-                value_table.c.tau,
+                value_table.c.rho_GeV,
+                value_table.c.tau_Mpc,
+                value_table.c.T_photon_GeV,
+                # don't need to read redundant value of T_photon_Kelvin
                 value_table.c.d_lnH_dz,
                 value_table.c.d2_lnH_dz2,
                 value_table.c.d3_lnH_dz3,
@@ -258,6 +261,12 @@ class sqla_BackgroundModelFactory(SQLAFactoryBase):
 
         z_points = []
         values = []
+
+        units: UnitsLike = cosmology.units
+        GeV = units.GeV
+        GeV4 = pow(GeV, 4.0)
+        Mpc = units.Mpc
+
         for row in sample_rows:
             z_value = redshift(
                 store_id=row.z_serial,
@@ -270,11 +279,12 @@ class sqla_BackgroundModelFactory(SQLAFactoryBase):
                 BackgroundModelValue(
                     store_id=row.serial,
                     z=z_value,
-                    Hubble=row.Hubble,
+                    Hubble=row.Hubble_GeV * GeV,
                     wBackground=row.wBackground,
                     wPerturbations=row.wPerturbations,
-                    rho=row.rho,
-                    tau=row.tau,
+                    rho=row.rho_GeV * GeV4,
+                    tau=row.tau * Mpc,
+                    T_photon=row.T_photon_GeV * GeV,
                     d_lnH_dz=row.d_lnH_dz,
                     d2_lnH_dz2=row.d2_lnH_dz2,
                     d3_lnH_dz3=row.d3_lnH_dz3,
@@ -364,6 +374,12 @@ class sqla_BackgroundModelFactory(SQLAFactoryBase):
             )
 
         # now serialize the sampled output points
+        units: UnitsLike = obj._units
+        GeV = units.GeV
+        GeV4 = pow(GeV, 4.0)
+        Kelvin = units.Kelvin
+        Mpc = units.Mpc
+
         value_inserter = inserters["BackgroundModelValue"]
         for value in obj.values:
             value: BackgroundModelValue
@@ -372,11 +388,13 @@ class sqla_BackgroundModelFactory(SQLAFactoryBase):
                 {
                     "model_serial": store_id,
                     "z_serial": value.z.store_id,
-                    "Hubble": value.Hubble,
-                    "rho": value.rho,
+                    "Hubble_GeV": value.Hubble / GeV,
+                    "rho_GeV": value.rho / GeV4,
                     "wBackground": value.wBackground,
                     "wPerturbations": value.wPerturbations,
-                    "tau": value.tau,
+                    "tau_Mpc": value.tau / Mpc,
+                    "T_photon_GeV": value.T_photon / GeV,
+                    "T_photon_Kelvin": value.T_photon / Kelvin,
                     "d_lnH_dz": value.d_lnH_dz,
                     "d2_lnH_dz2": value.d2_lnH_dz2,
                     "d3_lnH_dz3": value.d3_lnH_dz3,
@@ -536,29 +554,35 @@ class sqla_BackgroundModelValue_factory(SQLAFactoryBase):
                     index=True,
                     nullable=False,
                 ),
-                sqla.Column("Hubble", sqla.Float(64), nullable=False),
+                sqla.Column("Hubble_GeV", sqla.Float(64), nullable=False),
                 sqla.Column("wBackground", sqla.Float(64), nullable=False),
                 sqla.Column("wPerturbations", sqla.Float(64), nullable=False),
-                sqla.Column("rho", sqla.Float(64), nullable=False),
-                sqla.Column("tau", sqla.Float(64), nullable=False),
+                sqla.Column("rho_GeV", sqla.Float(64), nullable=False),
+                sqla.Column("tau_Mpc", sqla.Float(64), nullable=False),
+                sqla.Column("T_photon_GeV", sqla.Float(64), nullable=False),
+                sqla.Column("T_photon_Kelvin", sqla.Float(64), nullable=False),
                 sqla.Column("d_lnH_dz", sqla.Float(64), nullable=False),
-                sqla.Column("d2_lnH_dz2", sqla.Float(64), nullable=True),
-                sqla.Column("d3_lnH_dz3", sqla.Float(64), nullable=True),
-                sqla.Column("d_wPerturbations_dz", sqla.Float(64), nullable=True),
-                sqla.Column("d2_wPerturbations_dz2", sqla.Float(64), nullable=True),
+                sqla.Column("d2_lnH_dz2", sqla.Float(64), nullable=False),
+                sqla.Column("d3_lnH_dz3", sqla.Float(64), nullable=False),
+                sqla.Column("d_wPerturbations_dz", sqla.Float(64), nullable=False),
+                sqla.Column("d2_wPerturbations_dz2", sqla.Float(64), nullable=False),
             ],
         }
 
     @staticmethod
     def build(payload, conn, table, inserter, tables, inserters):
         model_serial = payload["model_serial"]
+        units = payload["units"]
+
         z = payload["z"]
 
         Hubble = payload["Hubble"]
-        rho = payload["rho"]
         wBackground = payload["wBackground"]
         wPerturbations = payload["wPerturbations"]
+
+        rho = payload["rho"]
         tau = payload["tau"]
+        T_photon = payload["T_photon"]
 
         d_lnH_dz = payload["d_lnH_dz"]
         d2_lnH_dz2 = payload["d2_lnH_dz2"]
@@ -571,11 +595,13 @@ class sqla_BackgroundModelValue_factory(SQLAFactoryBase):
             row_data = conn.execute(
                 sqla.select(
                     table.c.serial,
-                    table.c.Hubble,
-                    table.c.rho,
+                    table.c.Hubble_GeV,
+                    table.c.rho_GeV,
                     table.c.wBackground,
                     table.c.wPerturbations,
-                    table.c.tau,
+                    table.c.tau_Mpc,
+                    table.c.T_photon_GeV,
+                    # don't need to read redundant value of T_photon_Kelvin
                     table.c.d_lnH_dz,
                     table.c.d2_lnH_dz2,
                     table.c.d3_lnH_dz3,
@@ -592,17 +618,24 @@ class sqla_BackgroundModelValue_factory(SQLAFactoryBase):
             )
             raise e
 
+        GeV = units.GeV
+        GeV4 = pow(GeV, 4.0)
+        Kelvin = units.Kelvin
+        Mpc = units.Mpc
+
         if row_data is None:
             store_id = inserter(
                 conn,
                 {
                     "wkb_serial": model_serial,
                     "z_serial": z.store_id,
-                    "Hubble": Hubble,
-                    "rho": rho,
+                    "Hubble_GeV": Hubble / GeV,
+                    "rho_GeV": rho / GeV4,
                     "wBackground": wBackground,
                     "wPerturbations": wPerturbations,
-                    "tau": tau,
+                    "tau_Mpc": tau / Mpc,
+                    "T_photon_GeV": T_photon / GeV,
+                    "T_photon_Kelvin": T_photon / Kelvin,
                     "d_lnH_dz": d_lnH_dz,
                     "d2_lnH_dz2": d2_lnH_dz2,
                     "d3_lnH_dz3": d3_lnH_dz3,
@@ -613,7 +646,10 @@ class sqla_BackgroundModelValue_factory(SQLAFactoryBase):
         else:
             store_id = row_data.serial
 
-            tau = row_data.tau
+            Hubble = row_data.Hubble_GeV * GeV
+            rho = row_data.rho_GeV * GeV4
+            tau = row_data.tau_Mpc * Mpc
+            T_photon = row_data.T_photon_GeV * GeV
 
             d_lnH_dz = row_data.d_lnH_dz
             d2_lnH_dz2 = row_data.d2_lnH_dz2
@@ -639,6 +675,7 @@ class sqla_BackgroundModelValue_factory(SQLAFactoryBase):
             wBackground=wBackground,
             wPerturbations=wPerturbations,
             tau=tau,
+            T_photon=T_photon,
             d_lnH_dz=d_lnH_dz,
             d2_lnH_dz2=d2_lnH_dz2,
             d3_lnH_dz3=d3_lnH_dz3,

@@ -30,6 +30,7 @@ ModelFunctions = namedtuple(
         "wBackground",
         "wPerturbations",
         "tau",
+        "T_photon",
         "d_lnH_dz",
         "d2_lnH_dz2",
         "d3_lnH_dz3",
@@ -109,6 +110,7 @@ def compute_background(
     # for the background and perturbations
     H_sample = [cosmology.Hubble(z.z) for z in z_sample]
     rho_sample = [cosmology.rho(z.z) for z in z_sample]
+    T_photon_sample = [cosmology.T_photon(z.z) for z in z_sample]
     wBackground_sample = [cosmology.wBackground(z.z) for z in z_sample]
     wPerturbations_sample = [cosmology.wPerturbations(z.z) for z in z_sample]
 
@@ -172,6 +174,7 @@ def compute_background(
         "a0_tau_sample": a0_tau_sample,
         "H_sample": H_sample,
         "rho_sample": rho_sample,
+        "T_photon_sample": T_photon_sample,
         "wBackground_sample": wBackground_sample,
         "wPerturbations_sample": wPerturbations_sample,
         "d_lnH_dz_sample": d_lnH_dz_sample,
@@ -223,6 +226,7 @@ class BackgroundModel(DatastoreObject):
         self._tags = tags if tags is not None else []
 
         self._cosmology = cosmology
+        self._units = cosmology.units
 
         self._functions = None
 
@@ -304,6 +308,7 @@ class BackgroundModel(DatastoreObject):
             )
 
         tau_func = _build_func("tau")
+        T_photon_func = _build_func("T_photon")
         d_lnH_dz_func = _build_func("d_lnH_dz")
         d2_lnH_dz2_func = _build_func("d2_lnH_dz2")
         d3_lnH_dz3_func = _build_func("d3_lnH_dz3")
@@ -351,6 +356,7 @@ class BackgroundModel(DatastoreObject):
             wBackground=self._cosmology.wBackground,
             wPerturbations=self._cosmology.wPerturbations,
             tau=tau_func,
+            T_photon=T_photon_func,
             d_lnH_dz=d_lnH_dz_func,
             d2_lnH_dz2=d2_lnH_dz2_func,
             d3_lnH_dz3=d3_lnH_dz3_func,
@@ -402,6 +408,7 @@ class BackgroundModel(DatastoreObject):
         wB_sample = data["wBackground_sample"]
         wP_sample = data["wPerturbations_sample"]
         rho_sample = data["rho_sample"]
+        T_photon_sample = data["T_photon_sample"]
         tau_sample = data["a0_tau_sample"]
 
         d_lnH_ds_sample = data["d_lnH_dz_sample"]
@@ -422,6 +429,7 @@ class BackgroundModel(DatastoreObject):
                     wPerturbations=wP_sample[i],
                     rho=rho_sample[i],
                     tau=tau_sample[i],
+                    T_photon=T_photon_sample[i],
                     d_lnH_dz=d_lnH_ds_sample[i],
                     d2_lnH_dz2=d2_lnH_dz2_sample[i],
                     d3_lnH_dz3=d3_lnH_dz3_sample[i],
@@ -445,6 +453,7 @@ class BackgroundModelValue(DatastoreObject):
         wPerturbations: float,
         rho: float,
         tau: float,
+        T_photon: float,
         d_lnH_dz: float,
         d2_lnH_dz2: Optional[float] = None,
         d3_lnH_dz3: Optional[float] = None,
@@ -458,8 +467,10 @@ class BackgroundModelValue(DatastoreObject):
         self._Hubble: float = Hubble
         self._wBackground: float = wBackground
         self._wPerturbations: float = wPerturbations
+
         self._rho: float = rho
         self._tau: float = tau
+        self._T_photon: float = T_photon
 
         self._d_lnH_dz: float = d_lnH_dz
         self._d2_lnH_dz2: float = d2_lnH_dz2
@@ -491,6 +502,10 @@ class BackgroundModelValue(DatastoreObject):
     @property
     def tau(self) -> float:
         return self._tau
+
+    @property
+    def T_photon(self) -> float:
+        return self._T_photon
 
     @property
     def d_lnH_dz(self) -> float:
