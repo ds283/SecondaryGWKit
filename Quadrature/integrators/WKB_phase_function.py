@@ -674,6 +674,8 @@ def WKB_phase_function(
             "has_WKB_violation": False,
             "WKB_violation_z": None,
             "WKB_violation_efolds_subh": None,
+            "stage_1_data": None,
+            "stage_2_data": None,
         }
         if friction is not None:
             payload["friction_sample"] = [0.0]
