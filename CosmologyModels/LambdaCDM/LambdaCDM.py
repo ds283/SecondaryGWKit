@@ -120,6 +120,14 @@ class LambdaCDM(BaseCosmology):
         Hsq = rho_total / (3.0 * self.Mpsq)
         return sqrt(Hsq)
 
+    def T_photon(self, z: float) -> float:
+        """
+        Evaluate the photon temperature at redshift z
+        :param z:
+        :return:
+        """
+        return self._T_CMB * (1.0 + z)
+
     def d_lnH_dz(self, z: float) -> float:
         """
         Evaluate the logarithmic derivative d(ln H)/dz at the specified redshift z

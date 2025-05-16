@@ -64,7 +64,7 @@ def test_T_z_conversion():
     # w_lcdm_bg = lcdm.wBackground(z) # LCDM equation of state parameter
     # Iterate over z-values to compute T, G, Gs, and w
     for z in z_values:
-        T = qcd.T_z(z)
+        T = qcd.T_photon(z)
 
         T_vals.append(T / units.GeV)
         w_lcdm_bg_vals.append(lcdm.wBackground(z))

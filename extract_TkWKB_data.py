@@ -126,10 +126,7 @@ def add_z_labels(
     ax,
     Tk: TkNumericalIntegration,
     k_exit: wavenumber_exit_time,
-    model_type: str = "LCDM",
 ):
-    color = "b" if model_type == "LCDM" else "r"
-
     ax.axvline(k_exit.z_exit_subh_e3, linestyle=(0, (1, 1)), color="b")  # dotted
     ax.axvline(k_exit.z_exit_subh_e5, linestyle=(0, (1, 1)), color="b")  # dotted
     ax.axvline(k_exit.z_exit_suph_e3, linestyle=(0, (1, 1)), color="b")  # dotted
@@ -170,6 +167,23 @@ def add_z_labels(
         color="r",
     )
 
+def add_k_labels(ax, k_exit: wavenumber_exit_time,
+                 model_type: str="LCDM"):
+    ax.text(
+        0.0,
+        1.05,
+        f"$k$ = {k_exit.k.k_inv_Mpc:.5g} Mpc$^{{-1}}$",
+        transform=ax.transAxes,
+        fontsize="x-small",
+    )
+    ax.text(
+        0.8,
+        1.05,
+        f"Model: {model_type}",
+        transform=ax.transAxes,
+        fontsize="x-small",
+    )
+
 
 @ray.remote
 def plot_Tk(
@@ -181,8 +195,6 @@ def plot_Tk(
 
     base_path = Path(args.output).resolve()
     base_path = base_path / f"{model_label}"
-
-    print(f"base_path: {base_path}")
 
     sns.set_theme()
     fig = plt.figure()
@@ -246,12 +258,12 @@ def plot_Tk(
                 label="Analytic $T_k$ [radiation]",
                 linestyle="dashed",
             )
-            ax.plot(
-                analytic_w_x,
-                analytic_w_y,
-                label="Analytic $T_k$ [$w=w(z)$]",
-                linestyle="dashdot",
-            )
+            # ax.plot(
+            #     analytic_w_x,
+            #     analytic_w_y,
+            #     label="Analytic $T_k$ [$w=w(z)$]",
+            #     linestyle="dashdot",
+            # )
 
         z_column.extend(value.z.z for value in values)
         T_column.extend(value.T for value in values)
@@ -309,12 +321,12 @@ def plot_Tk(
                 label="Analytic $T_k$ [radiation]",
                 linestyle="dashed",
             )
-            ax.plot(
-                analytic_w_x,
-                analytic_w_y,
-                label="Analytic $T_k$ [$w=w(z)$]",
-                linestyle="dashdot",
-            )
+            # ax.plot(
+            #     analytic_w_x,
+            #     analytic_w_y,
+            #     label="Analytic $T_k$ [$w=w(z)$]",
+            #     linestyle="dashdot",
+            # )
 
         z_column.extend(value.z.z for value in values)
         T_column.extend(value.T_WKB for value in values)
@@ -332,7 +344,8 @@ def plot_Tk(
         WKB_criterion_column.extend(value.WKB_criterion for value in values)
         type_column.extend(1 for _ in range(len(values)))
 
-    add_z_labels(ax, Tk_WKB, k_exit, model_type="LCDM")
+    add_z_labels(ax, Tk_WKB, k_exit)
+    add_k_labels(ax, k_exit, model_type=model_label)
 
     ax.set_xlabel("source redshift $z$")
     ax.set_ylabel("$T_k(z)$")
@@ -344,7 +357,6 @@ def plot_Tk(
         / f"plots/full-range/k-serial={k_exit.store_id}-k={k_exit.k.k_inv_Mpc:.5g}.pdf"
     )
     fig_path.parents[0].mkdir(exist_ok=True, parents=True)
-    print(f"fig_path: {fig_path}")
     fig.savefig(fig_path)
     fig.savefig(fig_path.with_suffix(".png"))
 
@@ -369,6 +381,7 @@ def plot_Tk(
         ax.plot(theta_x, theta_y, label="WKB phase $\\theta$")
 
         add_z_labels(ax, Tk_WKB, k_exit)
+        add_k_labels(ax, k_exit, model_type=model_label)
 
         ax.set_xlabel("source redshift $z$")
         ax.set_ylabel("WKB phase $\\theta$")
@@ -390,6 +403,7 @@ def plot_Tk(
         ax.plot(friction_x, friction_y, label="WKB friction")
 
         add_z_labels(ax, Tk_WKB, k_exit)
+        add_k_labels(ax, k_exit, model_type=model_label)
 
         ax.set_xlabel("source redshift $z$")
         ax.set_ylabel("WKB friction")

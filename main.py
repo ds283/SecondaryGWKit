@@ -50,7 +50,7 @@ from defaults import (
     DEFAULT_QUADRATURE_ATOL,
 )
 from model_list import build_model_list
-from utilities import grouper, format_time
+from utilities import grouper, format_time, WallclockTimer
 
 DEFAULT_LABEL = "SecondaryGWKit-test"
 DEFAULT_TIMEOUT = 60
@@ -357,10 +357,14 @@ def run_pipeline(model_data: dict):
     )
     if not bg_model.available:
         print(f"\n** CALCULATING BACKGROUND {model_label} MODEL")
-        data = ray.get(bg_model.compute(label=model_cosmology.name))
-        bg_model.store()
-        bg_model = ray.get(pool.object_store(bg_model))
-        outcome = ray.get(pool.object_validate(bg_model))
+        with WallclockTimer() as timer:
+            data = ray.get(bg_model.compute(label=model_cosmology.name))
+            bg_model.store()
+            bg_model = ray.get(pool.object_store(bg_model))
+            outcome = ray.get(pool.object_validate(bg_model))
+        print(
+            f"   @@ computed and stored new background solution in time {format_time(timer.elapsed)}"
+        )
     else:
         print(
             f'\n** FOUND EXISTING {model_label} BACKGROUND MODEL "{bg_model.label}" (store_id={bg_model.store_id})'
@@ -382,7 +386,7 @@ def run_pipeline(model_data: dict):
     b_value = 0.0
 
     print(
-        f"   @@ largest source k = {largest_source_k.k_inv_Mpc:.5g}/Mpc, latest tau = {largest_tau:.5g} (for z={zend:.5g}), largest x={largest_x:.5g}, largest x with 7.5% clearance={largest_x_with_clearance:.5g}"
+        f"   @@ largest source k = {largest_source_k.k_inv_Mpc:.5g}/Mpc, latest tau = {largest_tau:.5g} (for z={zend:.5g}), largest x={largest_x:.5g}, largest x +7.5% clearance={largest_x_with_clearance:.5g}"
     )
 
     # tight tolerances are needed to compute the Liouville-Green phase function to good accuracy up to large values
@@ -2594,7 +2598,7 @@ with ShardedPool(
 
     print("\n** BUILD ARRAY OF WAVENUMBERS TO SAMPLE")
 
-    # Build array of k-sample points covering the region of the primoridal power spectrum that we want to include
+    # Build array of k-sample points covering the region of the primordial power spectrum that we want to include
     # in the one-loop integral. We will eventually evaluate the one-loop integral on a square grid
     # of source_k_array x source_k_array
 
@@ -2614,7 +2618,7 @@ with ShardedPool(
     # the one-loop integral
     response_k_array = ray.get(
         convert_to_wavenumbers(
-            np.logspace(np.log10(1e5), np.log10(3e8), 50), is_source=True
+            np.logspace(np.log10(1e5), np.log10(3e8), 50), is_response=True
         )
     )
     response_k_sample = wavenumber_array(k_array=response_k_array)

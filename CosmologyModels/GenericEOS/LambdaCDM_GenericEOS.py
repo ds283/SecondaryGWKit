@@ -129,7 +129,7 @@ class LambdaCDM_GenericEOS(BaseCosmology):
     def H0(self) -> float:
         return self._H0
 
-    def T_z(self, z: float) -> float:
+    def T_photon(self, z: float) -> float:
         return self._T_z_spline(z)
 
     def _solve_T_z(self, z: float) -> float:

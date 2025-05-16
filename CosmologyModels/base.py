@@ -38,6 +38,10 @@ class BaseCosmology(DatastoreObject, ABC):
         raise NotImplementedError
 
     @abstractmethod
+    def T_photon(self, z: float) -> float:
+        raise NotImplementedError
+
+    @abstractmethod
     def wBackground(self, z: float) -> float:
         raise NotImplementedError
 
