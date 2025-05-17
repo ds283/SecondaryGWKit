@@ -248,6 +248,8 @@ class sqla_BackgroundModelFactory(SQLAFactoryBase):
                 value_table.c.d_lnH_dz,
                 value_table.c.d2_lnH_dz2,
                 value_table.c.d3_lnH_dz3,
+                value_table.c.d_wPerturbations_dz,
+                value_table.c.d2_wPerturbations_dz2,
             )
             .select_from(
                 value_table.join(
@@ -288,6 +290,8 @@ class sqla_BackgroundModelFactory(SQLAFactoryBase):
                     d_lnH_dz=row.d_lnH_dz,
                     d2_lnH_dz2=row.d2_lnH_dz2,
                     d3_lnH_dz3=row.d3_lnH_dz3,
+                    d_wPerturbations_dz=row.d_wPerturbations_dz,
+                    d2_wPerturbations_dz2=row.d2_wPerturbations_dz2,
                 )
             )
         imported_z_sample = redshift_array(z_points)
