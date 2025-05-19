@@ -196,20 +196,16 @@ class ProfileAgent:
         print(msg)
 
         if self._has_slow_queries:
-            num_2sec_queries = sum(self._2sec_queries.values()) + sum(
-                self._new_2sec_queries.values()
-            )
-            num_5sec_queries = sum(self._5sec_queries.values()) + sum(
-                self._new_5sec_queries.values()
-            )
-            num_10sec_queries = sum(self._10sec_queries.values()) + sum(
-                self._new_10sec_queries.values()
-            )
-            num_30sec_queries = sum(self._30sec_queries.values()) + sum(
-                self._new_30sec_queries.values()
-            )
+            new_2sec_queries = sum(self._new_2sec_queries.values())
+            num_2sec_queries = sum(self._2sec_queries.values()) + new_2sec_queries
+            new_5sec_queries = sum(self._new_5sec_queries.values())
+            num_5sec_queries = sum(self._5sec_queries.values()) + new_5sec_queries
+            new_10sec_queries = sum(self._new_10sec_queries.values())
+            num_10sec_queries = sum(self._10sec_queries.values()) + new_10sec_queries
+            new_30sec_queries = sum(self._new_30sec_queries.values())
+            num_30sec_queries = sum(self._30sec_queries.values()) + new_30sec_queries
 
-            msg = f"   ## Slow queries reported (total): {num_2sec_queries} >2 sec, {num_5sec_queries} >5 sec, {num_10sec_queries} >10 sec, {num_30sec_queries} >30 sec"
+            msg = f"   ## Slow queries reported (total): {num_2sec_queries} >2 sec ({new_2sec_queries} new), {num_5sec_queries} >5 sec ({new_5sec_queries} new), {num_10sec_queries} >10 sec ({new_10sec_queries} new), {num_30sec_queries} >30 sec ({new_30sec_queries} new)"
             print(msg)
 
             def print_slow_query_records(label: str, records: _SlowQueryRecord):
