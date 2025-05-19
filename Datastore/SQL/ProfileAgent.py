@@ -17,7 +17,7 @@ TIME_5_SECONDS = 5
 TIME_10_SECONDS = 10
 TIME_30_SECONDS = 30
 
-_SlowQueryRecord = dict[str, int]
+_SlowQueryRecordType = dict[str, int]
 
 
 @ray.remote
@@ -67,15 +67,15 @@ class ProfileAgent:
 
         self._has_slow_queries: bool = False
 
-        self._new_2sec_queries: _SlowQueryRecord = {}
-        self._new_5sec_queries: _SlowQueryRecord = {}
-        self._new_10sec_queries: _SlowQueryRecord = {}
-        self._new_30sec_queries: _SlowQueryRecord = {}
+        self._new_2sec_queries: _SlowQueryRecordType = {}
+        self._new_5sec_queries: _SlowQueryRecordType = {}
+        self._new_10sec_queries: _SlowQueryRecordType = {}
+        self._new_30sec_queries: _SlowQueryRecordType = {}
 
-        self._2sec_queries: _SlowQueryRecord = {}
-        self._5sec_queries: _SlowQueryRecord = {}
-        self._10sec_queries: _SlowQueryRecord = {}
-        self._30sec_queries: _SlowQueryRecord = {}
+        self._2sec_queries: _SlowQueryRecordType = {}
+        self._5sec_queries: _SlowQueryRecordType = {}
+        self._10sec_queries: _SlowQueryRecordType = {}
+        self._30sec_queries: _SlowQueryRecordType = {}
 
     def _create_engine(self):
         connect_args = {}
@@ -208,7 +208,7 @@ class ProfileAgent:
             msg = f"   ## Slow queries reported (total): {num_2sec_queries} >2 sec ({new_2sec_queries} new), {num_5sec_queries} >5 sec ({new_5sec_queries} new), {num_10sec_queries} >10 sec ({new_10sec_queries} new), {num_30sec_queries} >30 sec ({new_30sec_queries} new)"
             print(msg)
 
-            def print_slow_query_records(label: str, records: _SlowQueryRecord):
+            def print_slow_query_records(label: str, records: _SlowQueryRecordType):
                 data = sorted(records.items(), key=lambda q: q[1], reverse=True)
                 print(f"   ## New {label} queries:")
                 for method, count in data:
@@ -220,7 +220,7 @@ class ProfileAgent:
             print_slow_query_records(">30 sec", self._new_30sec_queries)
 
             def merge_slow_query_records(
-                total: _SlowQueryRecord, new: _SlowQueryRecord
+                total: _SlowQueryRecordType, new: _SlowQueryRecordType
             ):
                 for method, count in new.items():
                     if method in total:
