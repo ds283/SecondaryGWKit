@@ -178,11 +178,12 @@ def add_z_labels(
 
 
 @ray.remote
-def plot_tensor_source(source: QuadSource):
+def plot_tensor_source(model_label: str, source: QuadSource):
     q_exit: wavenumber_exit_time = source._q_exit
     r_exit: wavenumber_exit_time = source._r_exit
 
     base_path = Path(args.output).resolve()
+    base_path = base_path / f"{model_label}"
 
     sns.set_theme()
 
@@ -424,7 +425,7 @@ def run_pipeline(model_data):
             r=r,
         )
 
-        return plot_tensor_source.remote(Tsource_ref)
+        return plot_tensor_source.remote(model_label, Tsource_ref)
 
     work_grid = list(itertools.combinations_with_replacement(k_subsample, 2))
 

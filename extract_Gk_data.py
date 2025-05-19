@@ -25,13 +25,13 @@ from CosmologyConcepts import (
     redshift,
 )
 from CosmologyConcepts.wavenumber import wavenumber_exit_time_array
-from CosmologyModels.LambdaCDM import Planck2018, LambdaCDM
 from Datastore.SQL.ProfileAgent import ProfileAgent
 from Datastore.SQL.ShardedPool import ShardedPool
 from MetadataConcepts import tolerance
 from RayTools.RayWorkPool import RayWorkPool
 from Units import Mpc_units
 from defaults import DEFAULT_ABS_TOLERANCE, DEFAULT_REL_TOLERANCE
+from model_list import build_model_list
 
 DEFAULT_TIMEOUT = 60
 
@@ -85,21 +85,270 @@ if args.profile_db is not None:
         label=label,
     )
 
-with ShardedPool(
-    version_label=VERSION_LABEL,
-    db_name=args.database,
-    timeout=args.db_timeout,
-    profile_agent=profile_agent,
-    job_name="extract_Gk_data",
-    prune_unvalidated=False,
-) as pool:
 
-    # set up LambdaCDM object representing a basic Planck2018 cosmology in Mpc units
-    units = Mpc_units()
-    params = Planck2018()
-    LambdaCDM_Planck2018 = ray.get(
-        pool.object_get(LambdaCDM, params=params, units=units)
+def set_loglinear_axes(ax):
+    ax.set_xscale("log")
+    ax.legend(loc="best")
+    ax.grid(True)
+    ax.xaxis.set_inverted(True)
+
+
+def set_loglog_axes(ax):
+    ax.set_xscale("log")
+    ax.set_yscale("log")
+    ax.legend(loc="best")
+    ax.grid(True)
+    ax.xaxis.set_inverted(True)
+
+
+TEXT_DISPLACEMENT_MULTIPLIER = 0.85
+
+
+# Matplotlib line style from https://matplotlib.org/stable/gallery/lines_bars_and_markers/linestyles.html
+#      ('loosely dotted',        (0, (1, 10))),
+#      ('dotted',                (0, (1, 1))),
+#      ('densely dotted',        (0, (1, 1))),
+#      ('long dash with offset', (5, (10, 3))),
+#      ('loosely dashed',        (0, (5, 10))),
+#      ('dashed',                (0, (5, 5))),
+#      ('densely dashed',        (0, (5, 1))),
+#
+#      ('loosely dashdotted',    (0, (3, 10, 1, 10))),
+#      ('dashdotted',            (0, (3, 5, 1, 5))),
+#      ('densely dashdotted',    (0, (3, 1, 1, 1))),
+#
+#      ('dashdotdotted',         (0, (3, 5, 1, 5, 1, 5))),
+#      ('loosely dashdotdotted', (0, (3, 10, 1, 10, 1, 10))),
+#      ('densely dashdotdotted', (0, (3, 1, 1, 1, 1, 1)))]
+def add_z_labels(ax, Gk: GkNumericalIntegration, k_exit: wavenumber_exit_time):
+    ax.axvline(k_exit.z_exit_subh_e3, linestyle=(0, (1, 1)), color="b")  # dotted
+    ax.axvline(k_exit.z_exit_subh_e5, linestyle=(0, (1, 1)), color="b")  # dotted
+    ax.axvline(k_exit.z_exit_suph_e3, linestyle=(0, (1, 1)), color="b")  # dotted
+    ax.axvline(
+        k_exit.z_exit, linestyle=(0, (3, 1, 1, 1)), color="r"
+    )  # densely dashdotted
+    trans = ax.get_xaxis_transform()
+    ax.text(
+        TEXT_DISPLACEMENT_MULTIPLIER * k_exit.z_exit_suph_e3,
+        0.75,
+        "$-3$ e-folds",
+        transform=trans,
+        fontsize="x-small",
+        color="b",
     )
+    ax.text(
+        TEXT_DISPLACEMENT_MULTIPLIER * k_exit.z_exit_subh_e3,
+        0.85,
+        "$+3$ e-folds",
+        transform=trans,
+        fontsize="x-small",
+        color="b",
+    )
+    ax.text(
+        TEXT_DISPLACEMENT_MULTIPLIER * k_exit.z_exit_subh_e5,
+        0.75,
+        "$+5$ e-folds",
+        transform=trans,
+        fontsize="x-small",
+        color="b",
+    )
+    ax.text(
+        TEXT_DISPLACEMENT_MULTIPLIER * k_exit.z_exit,
+        0.92,
+        "re-entry",
+        transform=trans,
+        fontsize="x-small",
+        color="r",
+    )
+
+
+@ray.remote
+def plot_Gk(model_label: str, Gk: GkNumericalIntegration):
+    if not Gk.available:
+        return
+
+    values: List[GkNumericalValue] = Gk.values
+    base_path = Path(args.output).resolve()
+    base_path = base_path / f"{model_label}"
+
+    def safe_fabs(x: Optional[float]) -> Optional[float]:
+        if x is None:
+            return None
+
+        return fabs(x)
+
+    def safe_div(x: Optional[float], y: float) -> Optional[float]:
+        if x is None:
+            return None
+
+        return x / y
+
+    abs_G_points = [(value.z, safe_fabs(value.G)) for value in values]
+    abs_analytic_G_rad_points = [
+        (value.z, safe_fabs(value.analytic_G_rad)) for value in values
+    ]
+    abs_analytic_G_w_points = [
+        (value.z, safe_fabs(value.analytic_G_w)) for value in values
+    ]
+
+    G_points = [(value.z, value.G) for value in values]
+    analytic_G_rad_points = [(value.z, value.analytic_G_rad) for value in values]
+    analytic_G_w_points = [(value.z, value.analytic_G_w) for value in values]
+
+    abs_G_x, abs_G_y = zip(*abs_G_points)
+    abs_analytic_G_rad_x, abs_analytic_G_rad_y = zip(*abs_analytic_G_rad_points)
+    abs_analytic_G_w_x, abs_analytic_G_w_y = zip(*abs_analytic_G_w_points)
+
+    G_x, G_y = zip(*G_points)
+    analytic_G_rad_x, analytic_G_rad_y = zip(*analytic_G_rad_points)
+    analytic_G_w_x, analytic_G_w_y = zip(*analytic_G_w_points)
+
+    k_exit = Gk._k_exit
+    z_source = Gk.z_source
+
+    sns.set_theme()
+
+    if len(abs_G_x) > 0 and (
+        any(y is not None and y > 0 for y in abs_G_y)
+        or any(y is not None and y > 0 for y in abs_analytic_G_rad_y)
+        or any(y is not None and y > 0 for y in abs_analytic_G_w_y)
+    ):
+        fig = plt.figure()
+        ax = plt.gca()
+
+        ax.plot(abs_G_x, abs_G_y, label="Numerical $G_k$", color="r", linestyle="solid")
+        ax.plot(
+            abs_analytic_G_rad_x,
+            abs_analytic_G_rad_y,
+            label="Analytic $G_k$ [radiation]",
+            color="g",
+            linestyle="dashed",
+        )
+        ax.plot(
+            abs_analytic_G_w_x,
+            abs_analytic_G_w_y,
+            label="Analytic $G_k$ [$w=w(z)$]",
+            color="b",
+            linestyle="dashdot",
+        )
+
+        add_z_labels(ax, Gk, k_exit)
+
+        ax.set_xlabel("response redshift $z$")
+        ax.set_ylabel("$G_k(z, z')$")
+
+        set_loglog_axes(ax)
+
+        fig_path = (
+            base_path
+            / f"plots/Gk/k-serial={k_exit.store_id}-k={k_exit.k.k_inv_Mpc:.5g}/z-serial={z_source.store_id}-zsource={z_source.z:.5g}.pdf"
+        )
+        fig_path.parents[0].mkdir(exist_ok=True, parents=True)
+        fig.savefig(fig_path)
+
+        if z_source.z >= k_exit.z_exit_subh_e5:
+            ax.set_xlim(
+                int(round(k_exit.z_exit_suph_e5 + 0.5, 0)),
+                int(round(0.85 * k_exit.z_exit_subh_e5 + 0.5, 0)),
+            )
+
+            fig_path = (
+                base_path
+                / f"plots/Gk-reentry-zoom/k-serial={k_exit.store_id}-k={k_exit.k.k_inv_Mpc:.5g}/z-serial={z_source.store_id}-zsource={z_source.z:.5g}.pdf"
+            )
+            fig_path.parents[0].mkdir(exist_ok=True, parents=True)
+            fig.savefig(fig_path)
+
+        plt.close()
+
+    if len(G_x) > 0 and (
+        any(y is not None for y in G_y) or any(y is not None for y in analytic_G_rad_y)
+    ):
+        fig = plt.figure()
+        ax = plt.gca()
+
+        ax.plot(G_x, G_y, label="Numerical $G_k$", color="r", linestyle="solid")
+        ax.plot(
+            analytic_G_rad_x,
+            analytic_G_rad_y,
+            label="Analytic $G_k$ [radiation]",
+            color="g",
+            linestyle="dashed",
+        )
+        ax.plot(
+            analytic_G_w_x,
+            analytic_G_w_y,
+            label="Analytic $G_k$ [$w=w(z)$]",
+            color="b",
+            linestyle="dashdot",
+        )
+
+        add_z_labels(ax, Gk, k_exit)
+
+        ax.set_xlabel("response redshift $z$")
+        ax.set_ylabel("$G_k(z, z')$")
+
+        set_loglinear_axes(ax)
+
+        fig_path = (
+            base_path
+            / f"plots/Gk-linear/k-serial={k_exit.store_id}-k={k_exit.k.k_inv_Mpc:.5g}/z-serial={z_source.store_id}-zsource={z_source.z:.5g}.pdf"
+        )
+        fig_path.parents[0].mkdir(exist_ok=True, parents=True)
+        fig.savefig(fig_path)
+
+        if z_source.z >= k_exit.z_exit_subh_e5:
+            ax.set_xlim(
+                int(round(k_exit.z_exit_suph_e5 + 0.5, 0)),
+                int(round(0.85 * k_exit.z_exit_subh_e5 + 0.5, 0)),
+            )
+
+            fig_path = (
+                base_path
+                / f"plots/Gk-linear-reentry-zoom/k-serial={k_exit.store_id}-k={k_exit.k.k_inv_Mpc:.5g}/z-serial={z_source.store_id}-zsource={z_source.z:.5g}.pdf"
+            )
+            fig_path.parents[0].mkdir(exist_ok=True, parents=True)
+            fig.savefig(fig_path)
+
+        plt.close()
+
+    z_response_column = [value.z for value in values]
+    G_column = [value.G for value in values]
+    Gprime_column = [value.Gprime for value in values]
+    analytic_G_rad_column = [value.analytic_G_rad for value in values]
+    analytic_Gprime_rad_column = [value.analytic_Gprime_rad for value in values]
+    analytic_G_w_column = [value.analytic_G_rad for value in values]
+    analytic_Gprime_w_column = [value.analytic_Gprime_rad for value in values]
+    omega_WKB_sq_column = [value.omega_WKB_sq for value in values]
+    WKB_criterion_column = [value.WKB_criterion for value in values]
+
+    csv_path = (
+        base_path
+        / f"csv/k-serial={k_exit.store_id}-k={k_exit.k.k_inv_Mpc:.5g}/z-serial={z_source.store_id}-zsource={z_source.z:.5g}.csv"
+    )
+    csv_path.parents[0].mkdir(exist_ok=True, parents=True)
+    df = pd.DataFrame.from_dict(
+        {
+            "z_response": z_response_column,
+            "G": G_column,
+            "Gprime": Gprime_column,
+            "analytic_G_rad": analytic_G_rad_column,
+            "analytic_Gprime_rad": analytic_Gprime_rad_column,
+            "analytic_G_w": analytic_G_w_column,
+            "analytic_Gprime_w": analytic_Gprime_w_column,
+            "omega_WKB_sq": omega_WKB_sq_column,
+            "WKB_criterion": WKB_criterion_column,
+        }
+    )
+    df.sort_values(by="z_response", ascending=False, inplace=True, ignore_index=True)
+    df.to_csv(csv_path, header=True, index=False)
+
+
+def run_pipeline(model_data):
+    model_label = model_data["label"]
+    model_cosmology = model_data["cosmology"]
+
+    print(f"\n>> RUNNING PIPELINE FOR MODEL {model_label}")
 
     # build absolute and relative tolerances
     atol, rtol = ray.get(
@@ -119,7 +368,7 @@ with ShardedPool(
         return pool.object_get(
             wavenumber_exit_time,
             k=k,
-            cosmology=LambdaCDM_Planck2018,
+            cosmology=model_cosmology,
             atol=atol,
             rtol=rtol,
         )
@@ -174,7 +423,7 @@ with ShardedPool(
         pool.object_get(
             BackgroundModel,
             solver_labels=[],
-            cosmology=LambdaCDM_Planck2018,
+            cosmology=model_cosmology,
             z_sample=None,
             atol=atol,
             rtol=rtol,
@@ -186,263 +435,6 @@ with ShardedPool(
         )
 
     model_proxy = ModelProxy(model)
-
-    def set_loglinear_axes(ax):
-        ax.set_xscale("log")
-        ax.legend(loc="best")
-        ax.grid(True)
-        ax.xaxis.set_inverted(True)
-
-    def set_loglog_axes(ax):
-        ax.set_xscale("log")
-        ax.set_yscale("log")
-        ax.legend(loc="best")
-        ax.grid(True)
-        ax.xaxis.set_inverted(True)
-
-    TEXT_DISPLACEMENT_MULTIPLIER = 0.85
-
-    # Matplotlib line style from https://matplotlib.org/stable/gallery/lines_bars_and_markers/linestyles.html
-    #      ('loosely dotted',        (0, (1, 10))),
-    #      ('dotted',                (0, (1, 1))),
-    #      ('densely dotted',        (0, (1, 1))),
-    #      ('long dash with offset', (5, (10, 3))),
-    #      ('loosely dashed',        (0, (5, 10))),
-    #      ('dashed',                (0, (5, 5))),
-    #      ('densely dashed',        (0, (5, 1))),
-    #
-    #      ('loosely dashdotted',    (0, (3, 10, 1, 10))),
-    #      ('dashdotted',            (0, (3, 5, 1, 5))),
-    #      ('densely dashdotted',    (0, (3, 1, 1, 1))),
-    #
-    #      ('dashdotdotted',         (0, (3, 5, 1, 5, 1, 5))),
-    #      ('loosely dashdotdotted', (0, (3, 10, 1, 10, 1, 10))),
-    #      ('densely dashdotdotted', (0, (3, 1, 1, 1, 1, 1)))]
-    def add_z_labels(ax, Gk: GkNumericalIntegration, k_exit: wavenumber_exit_time):
-        ax.axvline(k_exit.z_exit_subh_e3, linestyle=(0, (1, 1)), color="b")  # dotted
-        ax.axvline(k_exit.z_exit_subh_e5, linestyle=(0, (1, 1)), color="b")  # dotted
-        ax.axvline(k_exit.z_exit_suph_e3, linestyle=(0, (1, 1)), color="b")  # dotted
-        ax.axvline(
-            k_exit.z_exit, linestyle=(0, (3, 1, 1, 1)), color="r"
-        )  # densely dashdotted
-        trans = ax.get_xaxis_transform()
-        ax.text(
-            TEXT_DISPLACEMENT_MULTIPLIER * k_exit.z_exit_suph_e3,
-            0.75,
-            "$-3$ e-folds",
-            transform=trans,
-            fontsize="x-small",
-            color="b",
-        )
-        ax.text(
-            TEXT_DISPLACEMENT_MULTIPLIER * k_exit.z_exit_subh_e3,
-            0.85,
-            "$+3$ e-folds",
-            transform=trans,
-            fontsize="x-small",
-            color="b",
-        )
-        ax.text(
-            TEXT_DISPLACEMENT_MULTIPLIER * k_exit.z_exit_subh_e5,
-            0.75,
-            "$+5$ e-folds",
-            transform=trans,
-            fontsize="x-small",
-            color="b",
-        )
-        ax.text(
-            TEXT_DISPLACEMENT_MULTIPLIER * k_exit.z_exit,
-            0.92,
-            "re-entry",
-            transform=trans,
-            fontsize="x-small",
-            color="r",
-        )
-
-    @ray.remote
-    def plot_Gk(Gk: GkNumericalIntegration):
-        if not Gk.available:
-            return
-
-        values: List[GkNumericalValue] = Gk.values
-        base_path = Path(args.output).resolve()
-
-        def safe_fabs(x: Optional[float]) -> Optional[float]:
-            if x is None:
-                return None
-
-            return fabs(x)
-
-        def safe_div(x: Optional[float], y: float) -> Optional[float]:
-            if x is None:
-                return None
-
-            return x / y
-
-        abs_G_points = [(value.z, safe_fabs(value.G)) for value in values]
-        abs_analytic_G_rad_points = [
-            (value.z, safe_fabs(value.analytic_G_rad)) for value in values
-        ]
-        abs_analytic_G_w_points = [
-            (value.z, safe_fabs(value.analytic_G_w)) for value in values
-        ]
-
-        G_points = [(value.z, value.G) for value in values]
-        analytic_G_rad_points = [(value.z, value.analytic_G_rad) for value in values]
-        analytic_G_w_points = [(value.z, value.analytic_G_w) for value in values]
-
-        abs_G_x, abs_G_y = zip(*abs_G_points)
-        abs_analytic_G_rad_x, abs_analytic_G_rad_y = zip(*abs_analytic_G_rad_points)
-        abs_analytic_G_w_x, abs_analytic_G_w_y = zip(*abs_analytic_G_w_points)
-
-        G_x, G_y = zip(*G_points)
-        analytic_G_rad_x, analytic_G_rad_y = zip(*analytic_G_rad_points)
-        analytic_G_w_x, analytic_G_w_y = zip(*analytic_G_w_points)
-
-        k_exit = Gk._k_exit
-        z_source = Gk.z_source
-
-        sns.set_theme()
-
-        if len(abs_G_x) > 0 and (
-            any(y is not None and y > 0 for y in abs_G_y)
-            or any(y is not None and y > 0 for y in abs_analytic_G_rad_y)
-            or any(y is not None and y > 0 for y in abs_analytic_G_w_y)
-        ):
-            fig = plt.figure()
-            ax = plt.gca()
-
-            ax.plot(
-                abs_G_x, abs_G_y, label="Numerical $G_k$", color="r", linestyle="solid"
-            )
-            ax.plot(
-                abs_analytic_G_rad_x,
-                abs_analytic_G_rad_y,
-                label="Analytic $G_k$ [radiation]",
-                color="g",
-                linestyle="dashed",
-            )
-            ax.plot(
-                abs_analytic_G_w_x,
-                abs_analytic_G_w_y,
-                label="Analytic $G_k$ [$w=w(z)$]",
-                color="b",
-                linestyle="dashdot",
-            )
-
-            add_z_labels(ax, Gk, k_exit)
-
-            ax.set_xlabel("response redshift $z$")
-            ax.set_ylabel("$G_k(z, z')$")
-
-            set_loglog_axes(ax)
-
-            fig_path = (
-                base_path
-                / f"plots/Gk/k-serial={k_exit.store_id}-k={k_exit.k.k_inv_Mpc:.5g}/z-serial={z_source.store_id}-zsource={z_source.z:.5g}.pdf"
-            )
-            fig_path.parents[0].mkdir(exist_ok=True, parents=True)
-            fig.savefig(fig_path)
-
-            if z_source.z >= k_exit.z_exit_subh_e5:
-                ax.set_xlim(
-                    int(round(k_exit.z_exit_suph_e5 + 0.5, 0)),
-                    int(round(0.85 * k_exit.z_exit_subh_e5 + 0.5, 0)),
-                )
-
-                fig_path = (
-                    base_path
-                    / f"plots/Gk-reentry-zoom/k-serial={k_exit.store_id}-k={k_exit.k.k_inv_Mpc:.5g}/z-serial={z_source.store_id}-zsource={z_source.z:.5g}.pdf"
-                )
-                fig_path.parents[0].mkdir(exist_ok=True, parents=True)
-                fig.savefig(fig_path)
-
-            plt.close()
-
-        if len(G_x) > 0 and (
-            any(y is not None for y in G_y)
-            or any(y is not None for y in analytic_G_rad_y)
-        ):
-            fig = plt.figure()
-            ax = plt.gca()
-
-            ax.plot(G_x, G_y, label="Numerical $G_k$", color="r", linestyle="solid")
-            ax.plot(
-                analytic_G_rad_x,
-                analytic_G_rad_y,
-                label="Analytic $G_k$ [radiation]",
-                color="g",
-                linestyle="dashed",
-            )
-            ax.plot(
-                analytic_G_w_x,
-                analytic_G_w_y,
-                label="Analytic $G_k$ [$w=w(z)$]",
-                color="b",
-                linestyle="dashdot",
-            )
-
-            add_z_labels(ax, Gk, k_exit)
-
-            ax.set_xlabel("response redshift $z$")
-            ax.set_ylabel("$G_k(z, z')$")
-
-            set_loglinear_axes(ax)
-
-            fig_path = (
-                base_path
-                / f"plots/Gk-linear/k-serial={k_exit.store_id}-k={k_exit.k.k_inv_Mpc:.5g}/z-serial={z_source.store_id}-zsource={z_source.z:.5g}.pdf"
-            )
-            fig_path.parents[0].mkdir(exist_ok=True, parents=True)
-            fig.savefig(fig_path)
-
-            if z_source.z >= k_exit.z_exit_subh_e5:
-                ax.set_xlim(
-                    int(round(k_exit.z_exit_suph_e5 + 0.5, 0)),
-                    int(round(0.85 * k_exit.z_exit_subh_e5 + 0.5, 0)),
-                )
-
-                fig_path = (
-                    base_path
-                    / f"plots/Gk-linear-reentry-zoom/k-serial={k_exit.store_id}-k={k_exit.k.k_inv_Mpc:.5g}/z-serial={z_source.store_id}-zsource={z_source.z:.5g}.pdf"
-                )
-                fig_path.parents[0].mkdir(exist_ok=True, parents=True)
-                fig.savefig(fig_path)
-
-            plt.close()
-
-        z_response_column = [value.z for value in values]
-        G_column = [value.G for value in values]
-        Gprime_column = [value.Gprime for value in values]
-        analytic_G_rad_column = [value.analytic_G_rad for value in values]
-        analytic_Gprime_rad_column = [value.analytic_Gprime_rad for value in values]
-        analytic_G_w_column = [value.analytic_G_rad for value in values]
-        analytic_Gprime_w_column = [value.analytic_Gprime_rad for value in values]
-        omega_WKB_sq_column = [value.omega_WKB_sq for value in values]
-        WKB_criterion_column = [value.WKB_criterion for value in values]
-
-        csv_path = (
-            base_path
-            / f"csv/k-serial={k_exit.store_id}-k={k_exit.k.k_inv_Mpc:.5g}/z-serial={z_source.store_id}-zsource={z_source.z:.5g}.csv"
-        )
-        csv_path.parents[0].mkdir(exist_ok=True, parents=True)
-        df = pd.DataFrame.from_dict(
-            {
-                "z_response": z_response_column,
-                "G": G_column,
-                "Gprime": Gprime_column,
-                "analytic_G_rad": analytic_G_rad_column,
-                "analytic_Gprime_rad": analytic_Gprime_rad_column,
-                "analytic_G_w": analytic_G_w_column,
-                "analytic_Gprime_w": analytic_Gprime_w_column,
-                "omega_WKB_sq": omega_WKB_sq_column,
-                "WKB_criterion": WKB_criterion_column,
-            }
-        )
-        df.sort_values(
-            by="z_response", ascending=False, inplace=True, ignore_index=True
-        )
-        df.to_csv(csv_path, header=True, index=False)
 
     def build_plot_Gk_work(item):
         k_exit, z_source = item
@@ -461,7 +453,7 @@ with ShardedPool(
 
         GkS_ref = pool.object_get("GkNumericalIntegration", **query_payload)
 
-        return plot_Gk.remote(GkS_ref)
+        return plot_Gk.remote(model_label, GkS_ref)
 
     work_grid = product(k_subsample, z_subsample)
 
@@ -483,3 +475,20 @@ with ShardedPool(
         store_results=False,
     )
     work_queue.run()
+
+
+with ShardedPool(
+    version_label=VERSION_LABEL,
+    db_name=args.database,
+    timeout=args.db_timeout,
+    profile_agent=profile_agent,
+    job_name="extract_Gk_data",
+    prune_unvalidated=False,
+) as pool:
+
+    # get list of models we want to extract transfer functions for
+    units = Mpc_units()
+    model_list = build_model_list(pool, units)
+
+    for model_data in model_list:
+        run_pipeline(model_data)
