@@ -10,12 +10,14 @@ from sqlalchemy.exc import SQLAlchemyError
 from defaults import DEFAULT_STRING_LENGTH
 from utilities import format_time
 
-DEFAULT_NOTIFY_TIME_INTERVAL = 20 * 60
+DEFAULT_NOTIFY_TIME_INTERVAL = 30 * 60
 
 TIME_2_SECONDS = 2
 TIME_5_SECONDS = 5
 TIME_10_SECONDS = 10
 TIME_30_SECONDS = 30
+
+_SlowQueryRecord = dict[str, int]
 
 
 @ray.remote
@@ -27,13 +29,13 @@ class ProfileAgent:
         label: Optional[str] = None,
         notify_time_interval: Optional[int] = DEFAULT_NOTIFY_TIME_INTERVAL,
     ):
-        self._timeout = timeout
-        self._notify_time_interval = notify_time_interval
+        self._timeout: Optional[int] = timeout
+        self._notify_time_interval: Optional[int] = notify_time_interval
 
-        self._start_time = time.perf_counter()
-        self._last_notify_time = self._start_time
+        self._start_time: float = time.perf_counter()
+        self._last_notify_time: float = self._start_time
 
-        self._db_file = Path(db_name).resolve()
+        self._db_file: Path = Path(db_name).resolve()
 
         if self._db_file.is_dir():
             raise RuntimeError(
@@ -60,13 +62,20 @@ class ProfileAgent:
 
             self._job_id = obj.lastrowid
 
-        self._total_events = 0
-        self._events_at_last_notify = None
+        self._total_events: int = 0
+        self._events_at_last_notify: int = None
 
-        self._2sec_queries = {}
-        self._5sec_queries = {}
-        self._10sec_queries = {}
-        self._30sec_queries = {}
+        self._has_slow_queries: bool = False
+
+        self._new_2sec_queries: _SlowQueryRecord = {}
+        self._new_5sec_queries: _SlowQueryRecord = {}
+        self._new_10sec_queries: _SlowQueryRecord = {}
+        self._new_30sec_queries: _SlowQueryRecord = {}
+
+        self._2sec_queries: _SlowQueryRecord = {}
+        self._5sec_queries: _SlowQueryRecord = {}
+        self._10sec_queries: _SlowQueryRecord = {}
+        self._30sec_queries: _SlowQueryRecord = {}
 
     def _create_engine(self):
         connect_args = {}
@@ -136,30 +145,37 @@ class ProfileAgent:
                         },
                     )
 
-                    if elapsed > TIME_30_SECONDS:
-                        if method in self._30sec_queries:
-                            self._30sec_queries[method] = (
-                                self._30sec_queries[method] + 1
-                            )
+                    if elapsed > TIME_2_SECONDS:
+                        self._has_slow_queries = True
+
+                        if elapsed > TIME_30_SECONDS:
+                            if method in self._new_30sec_queries:
+                                self._new_30sec_queries[method] = (
+                                    self._new_30sec_queries[method] + 1
+                                )
+                            else:
+                                self._new_30sec_queries[method] = 1
+                        elif elapsed > TIME_10_SECONDS:
+                            if method in self._new_10sec_queries:
+                                self._new_10sec_queries[method] = (
+                                    self._new_10sec_queries[method] + 1
+                                )
+                            else:
+                                self._new_10sec_queries[method] = 1
+                        elif elapsed > TIME_5_SECONDS:
+                            if method in self._new_5sec_queries:
+                                self._new_5sec_queries[method] = (
+                                    self._new_5sec_queries[method] + 1
+                                )
+                            else:
+                                self._new_5sec_queries[method] = 1
                         else:
-                            self._30sec_queries[method] = 1
-                    elif elapsed > TIME_10_SECONDS:
-                        if method in self._10sec_queries:
-                            self._10sec_queries[method] = (
-                                self._10sec_queries[method] + 1
-                            )
-                        else:
-                            self._10sec_queries[method] = 1
-                    elif elapsed > TIME_5_SECONDS:
-                        if method in self._5sec_queries:
-                            self._5sec_queries[method] = self._5sec_queries[method] + 1
-                        else:
-                            self._5sec_queries[method] = 1
-                    elif elapsed > TIME_2_SECONDS:
-                        if method in self._2sec_queries:
-                            self._2sec_queries[method] = self._2sec_queries[method] + 1
-                        else:
-                            self._2sec_queries[method] = 1
+                            if method in self._new_2sec_queries:
+                                self._new_2sec_queries[method] = (
+                                    self._new_2sec_queries[method] + 1
+                                )
+                            else:
+                                self._new_2sec_queries[method] = 1
 
         except SQLAlchemyError as e:
             print(f"!! ProfileAgent: insert error, payload = {batch}")
@@ -174,25 +190,57 @@ class ProfileAgent:
 
     def _notify_progress(self, now):
         timestamp = datetime.now()
-        msg = f"   ## {timestamp:%Y-%m-%d %H:%M:%S%z}: database report | {self._total_events} database events"
+        msg = f"   ## {timestamp:%Y-%m-%d %H:%M:%S%z}: database report | {self._total_events} total database events"
         if self._events_at_last_notify is not None:
             msg += f" | {self._total_events - self._events_at_last_notify} since last notification ({format_time(now-self._last_notify_time)} ago)"
         print(msg)
 
-        slow_queries = (
-            len(self._2sec_queries)
-            + len(self._5sec_queries)
-            + len(self._10sec_queries)
-            + len(self._30sec_queries)
-        )
-        if slow_queries > 0:
-            num_2sec_queries = sum(self._2sec_queries.values())
-            num_5sec_queries = sum(self._5sec_queries.values())
-            num_10sec_queries = sum(self._10sec_queries.values())
-            num_30sec_queries = sum(self._30sec_queries.values())
+        if self._has_slow_queries:
+            num_2sec_queries = sum(self._2sec_queries.values()) + sum(
+                self._new_2sec_queries.values()
+            )
+            num_5sec_queries = sum(self._5sec_queries.values()) + sum(
+                self._new_5sec_queries.values()
+            )
+            num_10sec_queries = sum(self._10sec_queries.values()) + sum(
+                self._new_10sec_queries.values()
+            )
+            num_30sec_queries = sum(self._30sec_queries.values()) + sum(
+                self._new_30sec_queries.values()
+            )
 
-            msg = f"   ## {num_2sec_queries} > 2 sec, {num_5sec_queries} > 5 sec, {num_10sec_queries} > 10 sec, {num_30sec_queries} > 30 sec"
+            msg = f"   ## Slow queries reported (total): {num_2sec_queries} >2 sec, {num_5sec_queries} >5 sec, {num_10sec_queries} >10 sec, {num_30sec_queries} >30 sec"
             print(msg)
+
+            def print_slow_query_records(label: str, records: _SlowQueryRecord):
+                data = sorted(records.items(), key=lambda q: q[1], reverse=True)
+                print(f"   ## New {label} queries:")
+                for method, count in data:
+                    print(f"   ##   {method}: {count}")
+
+            print_slow_query_records(">2 sec", self._new_2sec_queries)
+            print_slow_query_records(">5 sec", self._new_5sec_queries)
+            print_slow_query_records(">10 sec", self._new_10sec_queries)
+            print_slow_query_records(">30 sec", self._new_30sec_queries)
+
+            def merge_slow_query_records(
+                total: _SlowQueryRecord, new: _SlowQueryRecord
+            ):
+                for method, count in new.items():
+                    if method in total:
+                        total[method] = total[method] + count
+                    else:
+                        total[method] = count
+
+            merge_slow_query_records(self._2sec_queries, self._new_2sec_queries)
+            merge_slow_query_records(self._5sec_queries, self._new_5sec_queries)
+            merge_slow_query_records(self._10sec_queries, self._new_10sec_queries)
+            merge_slow_query_records(self._30sec_queries, self._new_30sec_queries)
+
+            self._new_2sec_queries = {}
+            self._new_5sec_queries = {}
+            self._new_10sec_queries = {}
+            self._new_30sec_queries = {}
 
     def clean_up(self) -> None:
         if self._engine is not None:
