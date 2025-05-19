@@ -471,7 +471,7 @@ def run_pipeline(model_data):
         k_exit: wavenumber_exit_time
         z_source: redshift
 
-        # query the list of GkNumberical and GkWKB data for this k, z_source combination
+        # query the list of GkNumerical and GkWKB data for this k, z_source combination
         query_payload = {
             "solver_labels": [],
             "model": model_proxy,
