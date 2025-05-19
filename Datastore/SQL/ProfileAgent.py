@@ -228,15 +228,14 @@ class ProfileAgent:
                     else:
                         total[method] = count
 
+                # empty "new" dict; because dicts are mutable, this will clear the corresponding
+                # dictionary in the parent scope
+                new.clear()
+
             merge_slow_query_records(self._2sec_queries, self._new_2sec_queries)
             merge_slow_query_records(self._5sec_queries, self._new_5sec_queries)
             merge_slow_query_records(self._10sec_queries, self._new_10sec_queries)
             merge_slow_query_records(self._30sec_queries, self._new_30sec_queries)
-
-            self._new_2sec_queries = {}
-            self._new_5sec_queries = {}
-            self._new_10sec_queries = {}
-            self._new_30sec_queries = {}
 
     def clean_up(self) -> None:
         if self._engine is not None:
