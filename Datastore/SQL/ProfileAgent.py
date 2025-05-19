@@ -190,7 +190,7 @@ class ProfileAgent:
 
     def _notify_progress(self, now):
         timestamp = datetime.now()
-        msg = f"   ## {timestamp:%Y-%m-%d %H:%M:%S%z}: database report | {self._total_events} total database events"
+        msg = f"[DATABASE] {timestamp:%Y-%m-%d %H:%M:%S%z}: {self._total_events} total database events"
         if self._events_at_last_notify is not None:
             msg += f" | {self._total_events - self._events_at_last_notify} since last notification ({format_time(now-self._last_notify_time)} ago)"
         print(msg)
@@ -205,14 +205,14 @@ class ProfileAgent:
             new_30sec_queries = sum(self._new_30sec_queries.values())
             num_30sec_queries = sum(self._30sec_queries.values()) + new_30sec_queries
 
-            msg = f"   ## Slow queries reported (total): {num_2sec_queries} >2 sec ({new_2sec_queries} new), {num_5sec_queries} >5 sec ({new_5sec_queries} new), {num_10sec_queries} >10 sec ({new_10sec_queries} new), {num_30sec_queries} >30 sec ({new_30sec_queries} new)"
+            msg = f"-- Slow queries reported (total): {num_2sec_queries} >2 sec ({new_2sec_queries} new), {num_5sec_queries} >5 sec ({new_5sec_queries} new), {num_10sec_queries} >10 sec ({new_10sec_queries} new), {num_30sec_queries} >30 sec ({new_30sec_queries} new)"
             print(msg)
 
             def print_slow_query_records(label: str, records: _SlowQueryRecordType):
                 data = sorted(records.items(), key=lambda q: q[1], reverse=True)
-                print(f"   ## New {label} queries:")
+                print(f"   New {label} queries:")
                 for method, count in data:
-                    print(f"   ##   {method}: {count}")
+                    print(f"   ## {method}: {count}")
 
             print_slow_query_records(">2 sec", self._new_2sec_queries)
             print_slow_query_records(">5 sec", self._new_5sec_queries)
