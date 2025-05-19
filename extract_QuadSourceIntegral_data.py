@@ -1224,9 +1224,9 @@ def run_pipeline(model_data):
     z_response_sample = redshift_array(z_array=z_response_array)
 
     # choose a subsample of RESPONSE redshifts
-    z_subsample: List[redshift] = sample(
-        list(z_response_sample), k=int(round(0.12 * len(z_response_sample) + 0.5, 0))
-    )
+    # z_subsample: List[redshift] = sample(
+    #     list(z_response_sample), k=int(round(0.12 * len(z_response_sample) + 0.5, 0))
+    # )
 
     z_source_integral_max_z = z_source_sample[10]
     z_source_integral_response_sample = z_response_sample.truncate(

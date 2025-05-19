@@ -254,7 +254,12 @@ def add_Gk_labels(ax, obj: GkSourcePolicyData):
 
 
 @ray.remote
-def plot_Gk(model_label: str, model_proxy: ModelProxy, GkPolicy: GkSourcePolicyData):
+def plot_Gk(
+    model_label: str,
+    model_proxy: ModelProxy,
+    GkPolicy: GkSourcePolicyData,
+    z_response_sample_max_z: redshift,
+):
     if not GkPolicy.available:
         print(f"** GkPolicy not available")
         return
@@ -542,6 +547,7 @@ def plot_Gk(model_label: str, model_proxy: ModelProxy, GkPolicy: GkSourcePolicyD
         )
         fig_path.parents[0].mkdir(exist_ok=True, parents=True)
         fig.savefig(fig_path)
+        fig.savefig(fig_path.with_suffix(".png"))
 
         if z_response.z <= k_exit.z_exit_suph_e3:
             ax.set_xlim(
@@ -555,9 +561,10 @@ def plot_Gk(model_label: str, model_proxy: ModelProxy, GkPolicy: GkSourcePolicyD
             )
             fig_path.parents[0].mkdir(exist_ok=True, parents=True)
             fig.savefig(fig_path)
+            fig.savefig(fig_path.with_suffix(".png"))
 
         ax.set_xlim(
-            min(int(round(z_response.z * 100.0 + 0.5, 0)), z_response_sample.max.z),
+            min(int(round(z_response.z * 100.0 + 0.5, 0)), z_response_sample_max_z.z),
             max(int(round(z_response.z * 0.9 - 0.5, 0)), 0.01),
         )
 
@@ -567,6 +574,7 @@ def plot_Gk(model_label: str, model_proxy: ModelProxy, GkPolicy: GkSourcePolicyD
         )
         fig_path.parents[0].mkdir(exist_ok=True, parents=True)
         fig.savefig(fig_path)
+        fig.savefig(fig_path.with_suffix(".png"))
 
         plt.close()
 
@@ -614,6 +622,7 @@ def plot_Gk(model_label: str, model_proxy: ModelProxy, GkPolicy: GkSourcePolicyD
         )
         fig_path.parents[0].mkdir(exist_ok=True, parents=True)
         fig.savefig(fig_path)
+        fig.savefig(fig_path.with_suffix(".png"))
         plt.close()
 
     if len(theta_x) > 0 and (
@@ -660,6 +669,7 @@ def plot_Gk(model_label: str, model_proxy: ModelProxy, GkPolicy: GkSourcePolicyD
         )
         fig_path.parents[0].mkdir(exist_ok=True, parents=True)
         fig.savefig(fig_path)
+        fig.savefig(fig_path.with_suffix(".png"))
 
         if GkPolicy.Levin_z is not None:
             theta_at_Levin_z = functions.phase.raw_theta(GkPolicy.Levin_z)
@@ -678,6 +688,7 @@ def plot_Gk(model_label: str, model_proxy: ModelProxy, GkPolicy: GkSourcePolicyD
             )
             fig_path.parents[0].mkdir(exist_ok=True, parents=True)
             fig.savefig(fig_path)
+            fig.savefig(fig_path.with_suffix(".png"))
 
             set_linear_axes(ax)
 
@@ -708,6 +719,7 @@ def plot_Gk(model_label: str, model_proxy: ModelProxy, GkPolicy: GkSourcePolicyD
         )
         fig_path.parents[0].mkdir(exist_ok=True, parents=True)
         fig.savefig(fig_path)
+        fig.savefig(fig_path.with_suffix(".png"))
         plt.close()
 
     if len(abs_amplitude_sin_x) > 0 and (
@@ -733,6 +745,7 @@ def plot_Gk(model_label: str, model_proxy: ModelProxy, GkPolicy: GkSourcePolicyD
         )
         fig_path.parents[0].mkdir(exist_ok=True, parents=True)
         fig.savefig(fig_path)
+        fig.savefig(fig_path.with_suffix(".png"))
         plt.close()
 
     z_source_column = [value.z_source.z for value in values]
@@ -855,6 +868,7 @@ def run_pipeline(model_data):
     z_subsample: List[redshift] = sample(
         list(z_response_sample), k=int(round(0.12 * len(z_response_sample) + 0.5, 0))
     )
+    z_response_sample_max_z = z_subsample.max.z
 
     model: BackgroundModel = ray.get(
         pool.object_get(
@@ -915,7 +929,9 @@ def run_pipeline(model_data):
             k=k_exit,
         )
 
-        return plot_Gk.remote(model_label, model_proxy, Policy_ref)
+        return plot_Gk.remote(
+            model_label, model_proxy, Policy_ref, z_response_sample_max_z
+        )
 
     work_grid = product(k_subsample, z_subsample)
 

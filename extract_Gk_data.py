@@ -245,6 +245,7 @@ def plot_Gk(model_label: str, Gk: GkNumericalIntegration):
         )
         fig_path.parents[0].mkdir(exist_ok=True, parents=True)
         fig.savefig(fig_path)
+        fig.savefig(fig_path.with_suffix(".png"))
 
         if z_source.z >= k_exit.z_exit_subh_e5:
             ax.set_xlim(
@@ -258,6 +259,7 @@ def plot_Gk(model_label: str, Gk: GkNumericalIntegration):
             )
             fig_path.parents[0].mkdir(exist_ok=True, parents=True)
             fig.savefig(fig_path)
+            fig.savefig(fig_path.with_suffix(".png"))
 
         plt.close()
 
@@ -296,6 +298,7 @@ def plot_Gk(model_label: str, Gk: GkNumericalIntegration):
         )
         fig_path.parents[0].mkdir(exist_ok=True, parents=True)
         fig.savefig(fig_path)
+        fig.savefig(fig_path.with_suffix(".png"))
 
         if z_source.z >= k_exit.z_exit_subh_e5:
             ax.set_xlim(
@@ -309,6 +312,7 @@ def plot_Gk(model_label: str, Gk: GkNumericalIntegration):
             )
             fig_path.parents[0].mkdir(exist_ok=True, parents=True)
             fig.savefig(fig_path)
+            fig.savefig(fig_path.with_suffix(".png"))
 
         plt.close()
 

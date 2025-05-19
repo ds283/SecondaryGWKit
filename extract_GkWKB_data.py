@@ -308,6 +308,7 @@ def plot_Gk(
     )
     fig_path.parents[0].mkdir(exist_ok=True, parents=True)
     fig.savefig(fig_path)
+    fig.savefig(fig_path.with_suffix(".png"))
 
     ax.set_xlim(
         int(round(k_exit.z_exit_suph_e3 + 0.5, 0)),
@@ -319,6 +320,7 @@ def plot_Gk(
     )
     fig_path.parents[0].mkdir(exist_ok=True, parents=True)
     fig.savefig(fig_path)
+    fig.savefig(fig_path.with_suffix(".png"))
 
     plt.close()
 
@@ -341,6 +343,7 @@ def plot_Gk(
         )
         fig_path.parents[0].mkdir(exist_ok=True, parents=True)
         fig.savefig(fig_path)
+        fig.savefig(fig_path.with_suffix(".png"))
 
     csv_path = (
         base_path
