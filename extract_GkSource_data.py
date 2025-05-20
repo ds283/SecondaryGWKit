@@ -261,12 +261,16 @@ def plot_Gk(
     z_response_sample_max_z: redshift,
 ):
     if not GkPolicy.available:
-        print(f"** GkPolicy not available")
+        print(
+            f"** [FATAL] GkSourcePolicyData object is not marked as available. This GkSource object may not have been processed, or be incomplete."
+        )
         return
 
     Gk: GkSource = GkPolicy._source_proxy.get()
     if not Gk.available:
-        print(f"** GkSource not available")
+        print(
+            f"** [FATAL] GkSource object is not marked as available. The datastore is likely incomplete."
+        )
         return
 
     model: BackgroundModel = model_proxy.get()
