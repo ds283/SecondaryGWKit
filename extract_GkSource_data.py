@@ -868,7 +868,7 @@ def run_pipeline(model_data):
     z_subsample: List[redshift] = sample(
         list(z_response_sample), k=int(round(0.12 * len(z_response_sample) + 0.5, 0))
     )
-    z_response_sample_max_z = z_subsample.max.z
+    z_response_sample_max_z = max(z_subsample)
 
     model: BackgroundModel = ray.get(
         pool.object_get(
