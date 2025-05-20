@@ -208,16 +208,14 @@ class ProfileAgent:
             msg = f"-- Slow queries reported (total): {num_2sec_queries} >2 sec ({new_2sec_queries} new), {num_5sec_queries} >5 sec ({new_5sec_queries} new), {num_10sec_queries} >10 sec ({new_10sec_queries} new), {num_30sec_queries} >30 sec ({new_30sec_queries} new)"
             print(msg)
 
-            def print_slow_query_records(label: str, records: _SlowQueryRecordType):
-                data = sorted(records.items(), key=lambda q: q[1], reverse=True)
+            def print_slow_query_records(label: str, new: _SlowQueryRecordType):
+                if len(new) == 0:
+                    return
+
+                data = sorted(new.items(), key=lambda q: q[1], reverse=True)
                 print(f"   New {label} queries:")
                 for method, count in data:
                     print(f"   ## {method}: {count}")
-
-            print_slow_query_records(">2 sec", self._new_2sec_queries)
-            print_slow_query_records(">5 sec", self._new_5sec_queries)
-            print_slow_query_records(">10 sec", self._new_10sec_queries)
-            print_slow_query_records(">30 sec", self._new_30sec_queries)
 
             def merge_slow_query_records(
                 total: _SlowQueryRecordType, new: _SlowQueryRecordType
@@ -231,6 +229,11 @@ class ProfileAgent:
                 # empty "new" dict; because dicts are mutable, this will clear the corresponding
                 # dictionary in the parent scope
                 new.clear()
+
+            print_slow_query_records(">2 sec", self._new_2sec_queries)
+            print_slow_query_records(">5 sec", self._new_5sec_queries)
+            print_slow_query_records(">10 sec", self._new_10sec_queries)
+            print_slow_query_records(">30 sec", self._new_30sec_queries)
 
             merge_slow_query_records(self._2sec_queries, self._new_2sec_queries)
             merge_slow_query_records(self._5sec_queries, self._new_5sec_queries)
