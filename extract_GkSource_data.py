@@ -2,10 +2,10 @@ import argparse
 import sys
 from datetime import datetime
 from itertools import product
-from math import fabs, pi, sqrt
+from math import pi, sqrt
 from pathlib import Path
 from random import sample
-from typing import List, Optional
+from typing import List
 
 import matplotlib.pyplot as plt
 import pandas as pd
@@ -35,6 +35,21 @@ from MetadataConcepts import tolerance
 from RayTools.RayWorkPool import RayWorkPool
 from Units import Mpc_units
 from defaults import DEFAULT_ABS_TOLERANCE, DEFAULT_REL_TOLERANCE
+from extract_common import (
+    TEXT_DISPLACEMENT_MULTIPLIER,
+    TOP_ROW,
+    MIDDLE_ROW,
+    BOTTOM_ROW,
+    LEFT_COLUMN,
+    MIDDLE_COLUMN,
+    RIGHT_COLUMN,
+    set_loglinear_axes,
+    set_loglog_axes,
+    set_linear_axes,
+    add_zexit_lines,
+    safe_div,
+    safe_fabs,
+)
 from model_list import build_model_list
 
 DEFAULT_TIMEOUT = 60
@@ -92,33 +107,6 @@ if args.profile_db is not None:
     )
 
 
-def set_loglinear_axes(ax):
-    ax.set_xscale("log")
-    ax.set_yscale("linear")
-    ax.legend(loc="best")
-    ax.grid(True)
-    ax.xaxis.set_inverted(True)
-
-
-def set_loglog_axes(ax):
-    ax.set_xscale("log")
-    ax.set_yscale("log")
-    ax.legend(loc="best")
-    ax.grid(True)
-    ax.xaxis.set_inverted(True)
-
-
-def set_linear_axes(ax):
-    ax.set_xscale("linear")
-    ax.set_yscale("linear")
-    ax.legend(loc="best")
-    ax.grid(True)
-    ax.xaxis.set_inverted(True)
-
-
-TEXT_DISPLACEMENT_MULTIPLIER = 0.85
-
-
 # Matplotlib line style from https://matplotlib.org/stable/gallery/lines_bars_and_markers/linestyles.html
 #      ('loosely dotted',        (0, (1, 10))),
 #      ('dotted',                (0, (1, 1))),
@@ -135,46 +123,11 @@ TEXT_DISPLACEMENT_MULTIPLIER = 0.85
 #      ('dashdotdotted',         (0, (3, 5, 1, 5, 1, 5))),
 #      ('loosely dashdotdotted', (0, (3, 10, 1, 10, 1, 10))),
 #      ('densely dashdotdotted', (0, (3, 1, 1, 1, 1, 1)))]
-def add_z_labels(ax, GkPolicy: GkSourcePolicyData, k_exit: wavenumber_exit_time):
-    ax.axvline(k_exit.z_exit_subh_e3, linestyle=(0, (1, 1)), color="b")  # dotted
-    ax.axvline(k_exit.z_exit_subh_e5, linestyle=(0, (1, 1)), color="b")  # dotted
-    ax.axvline(k_exit.z_exit_suph_e3, linestyle=(0, (1, 1)), color="b")  # dotted
-    ax.axvline(
-        k_exit.z_exit, linestyle=(0, (3, 1, 1, 1)), color="r"
-    )  # densely dashdotted
+def add_z_labels(ax, Gk, GkPolicy: GkSourcePolicyData):
+    k_exit: wavenumber_exit_time = Gk._k_exit
+    add_zexit_lines(ax, k_exit)
+
     trans = ax.get_xaxis_transform()
-    ax.text(
-        TEXT_DISPLACEMENT_MULTIPLIER * k_exit.z_exit_suph_e3,
-        0.75,
-        "$-3$ e-folds",
-        transform=trans,
-        fontsize="x-small",
-        color="b",
-    )
-    ax.text(
-        TEXT_DISPLACEMENT_MULTIPLIER * k_exit.z_exit_subh_e3,
-        0.85,
-        "$+3$ e-folds",
-        transform=trans,
-        fontsize="x-small",
-        color="b",
-    )
-    ax.text(
-        TEXT_DISPLACEMENT_MULTIPLIER * k_exit.z_exit_subh_e5,
-        0.75,
-        "$+5$ e-folds",
-        transform=trans,
-        fontsize="x-small",
-        color="b",
-    )
-    ax.text(
-        TEXT_DISPLACEMENT_MULTIPLIER * k_exit.z_exit,
-        0.92,
-        "re-entry",
-        transform=trans,
-        fontsize="x-small",
-        color="r",
-    )
 
     if GkPolicy.type == "mixed" and GkPolicy.crossover_z is not None:
         ax.axvline(
@@ -205,12 +158,18 @@ def add_z_labels(ax, GkPolicy: GkSourcePolicyData, k_exit: wavenumber_exit_time)
         )
 
 
-def add_Gk_labels(ax, obj: GkSourcePolicyData):
-    fns: GkSourceFunctions = obj.functions
+def add_GkSource_plot_labels(
+    ax, Gk: GkSource, GkPolicy: GkSourcePolicyData, model_label: str = "LambdaCDM"
+):
+    k_exit: wavenumber_exit_time = Gk._k_exit
+    fns: GkSourceFunctions = GkPolicy.functions
+
+    # MIDDLE ROW
+
     if fns.type is not None:
         ax.text(
-            0.0,
-            1.05,
+            LEFT_COLUMN,
+            MIDDLE_ROW,
             f"Type: {fns.type}",
             transform=ax.transAxes,
             fontsize="x-small",
@@ -218,17 +177,28 @@ def add_Gk_labels(ax, obj: GkSourcePolicyData):
 
     if fns.quality is not None:
         ax.text(
-            0.5,
-            1.05,
+            MIDDLE_COLUMN,
+            MIDDLE_ROW,
             f"Quality: {fns.quality}",
             transform=ax.transAxes,
             fontsize="x-small",
         )
 
+    if fns.phase is not None:
+        ax.text(
+            RIGHT_COLUMN,
+            MIDDLE_ROW,
+            f"Chunks: {fns.phase.num_chunks}",
+            transform=ax.transAxes,
+            fontsize="x-small",
+        )
+
+    # TOP ROW
+
     if fns.WKB_region is not None:
         ax.text(
-            0.0,
-            1.1,
+            LEFT_COLUMN,
+            TOP_ROW,
             f"WKB region: ({fns.WKB_region[0]:.3g}, {fns.WKB_region[1]:.3g})",
             transform=ax.transAxes,
             fontsize="x-small",
@@ -236,21 +206,43 @@ def add_Gk_labels(ax, obj: GkSourcePolicyData):
 
     if fns.numerical_region is not None:
         ax.text(
-            0.5,
-            1.1,
+            MIDDLE_COLUMN,
+            TOP_ROW,
             f"Numeric region: ({fns.numerical_region[0]:.3g}, {fns.numerical_region[1]:.3g})",
             transform=ax.transAxes,
             fontsize="x-small",
         )
 
-    if fns.phase is not None:
-        ax.text(
-            0.8,
-            1.05,
-            f"Chunks: {fns.phase.num_chunks}",
-            transform=ax.transAxes,
-            fontsize="x-small",
-        )
+    ax.text(
+        RIGHT_COLUMN,
+        TOP_ROW,
+        f"Model: {model_label}",
+        transform=ax.transAxes,
+        fontsize="x-small",
+    )
+
+    # BOTTOM ROW
+    ax.text(
+        LEFT_COLUMN,
+        BOTTOM_ROW,
+        f"z-response: {Gk.z_response.z:.5g}",
+        transform=ax.transAxes,
+        fontsize="x-small",
+    )
+    ax.text(
+        MIDDLE_COLUMN,
+        BOTTOM_ROW,
+        f"z-exit: {k_exit.z_exit:.5g}",
+        transform=ax.transAxes,
+        fontsize="x-small",
+    )
+    ax.text(
+        RIGHT_COLUMN,
+        BOTTOM_ROW,
+        f"$k$ = {k_exit.k.k_inv_Mpc:.5g} Mpc$^{{-1}}$",
+        transform=ax.transAxes,
+        fontsize="x-small",
+    )
 
 
 @ray.remote
@@ -279,18 +271,6 @@ def plot_Gk(
     base_path = base_path / f"{model_label}"
 
     values: List[GkSourceValue] = Gk.values
-
-    def safe_fabs(x: Optional[float]) -> Optional[float]:
-        if x is None:
-            return None
-
-        return fabs(x)
-
-    def safe_div(x: Optional[float], y: float) -> Optional[float]:
-        if x is None:
-            return None
-
-        return x / y
 
     functions: GkSourceFunctions = GkPolicy.functions
 
@@ -537,8 +517,8 @@ def plot_Gk(
             linestyle="dashdot",
         )
 
-        add_z_labels(ax, GkPolicy, k_exit)
-        add_Gk_labels(ax, GkPolicy)
+        add_z_labels(ax, Gk, GkPolicy)
+        add_GkSource_plot_labels(ax, Gk, GkPolicy, model_label)
 
         ax.set_xlabel("source redshift $z$")
         ax.set_ylabel("$G_k(z, z') / [(1+z') H(z')^2 ]$")
@@ -547,7 +527,7 @@ def plot_Gk(
 
         fig_path = (
             base_path
-            / f"plots/Gk/k-serial={k_exit.store_id}-k={k_exit.k.k_inv_Mpc:.5g}/z-serial={z_response.store_id}-zresponse={z_response.z:.5g}.pdf"
+            / f"plots/Gk/k={k_exit.k.k_inv_Mpc:.5g}-k-serial={k_exit.store_id}/zresponse={z_response.z:.5g}-z-serial={z_response.store_id}.pdf"
         )
         fig_path.parents[0].mkdir(exist_ok=True, parents=True)
         fig.savefig(fig_path)
@@ -561,7 +541,7 @@ def plot_Gk(
 
             fig_path = (
                 base_path
-                / f"plots/Gk-reentry-zoom/k-serial={k_exit.store_id}-k={k_exit.k.k_inv_Mpc:.5g}/z-serial={z_response.store_id}-zresponse={z_response.z:.5g}.pdf"
+                / f"plots/Gk-reentry-zoom/k={k_exit.k.k_inv_Mpc:.5g}-k-serial={k_exit.store_id}/zresponse={z_response.z:.5g}-z-serial={z_response.store_id}.pdf"
             )
             fig_path.parents[0].mkdir(exist_ok=True, parents=True)
             fig.savefig(fig_path)
@@ -574,7 +554,7 @@ def plot_Gk(
 
         fig_path = (
             base_path
-            / f"plots/Gk-zresponse-zoom/k-serial={k_exit.store_id}-k={k_exit.k.k_inv_Mpc:.5g}/z-serial={z_response.store_id}-zresponse={z_response.z:.5g}.pdf"
+            / f"plots/Gk-zresponse-zoom/k={k_exit.k.k_inv_Mpc:.5g}-k-serial={k_exit.store_id}/zresponse={z_response.z:.5g}-z-serial={z_response.store_id}.pdf"
         )
         fig_path.parents[0].mkdir(exist_ok=True, parents=True)
         fig.savefig(fig_path)
@@ -612,8 +592,8 @@ def plot_Gk(
             linestyle="solid",
         )
 
-        add_z_labels(ax, GkPolicy, k_exit)
-        add_Gk_labels(ax, GkPolicy)
+        add_z_labels(ax, Gk, GkPolicy)
+        add_GkSource_plot_labels(ax, Gk, GkPolicy, model_label)
 
         ax.set_xlabel("source redshift $z$")
         ax.set_ylabel("WKB phase $\\theta$")
@@ -622,7 +602,7 @@ def plot_Gk(
 
         fig_path = (
             base_path
-            / f"plots/theta-log/k-serial={k_exit.store_id}-k={k_exit.k.k_inv_Mpc:.5g}/z-serial={z_response.store_id}-zresponse={z_response.z:.5g}.pdf"
+            / f"plots/theta-log/k={k_exit.k.k_inv_Mpc:.5g}-k-serial={k_exit.store_id}/zresponse={z_response.z:.5g}-z-serial={z_response.store_id}.pdf"
         )
         fig_path.parents[0].mkdir(exist_ok=True, parents=True)
         fig.savefig(fig_path)
@@ -659,8 +639,8 @@ def plot_Gk(
             linestyle="solid",
         )
 
-        add_z_labels(ax, GkPolicy, k_exit)
-        add_Gk_labels(ax, GkPolicy)
+        add_z_labels(ax, Gk, GkPolicy)
+        add_GkSource_plot_labels(ax, Gk, GkPolicy, model_label)
 
         ax.set_xlabel("source redshift $z$")
         ax.set_ylabel("WKB phase $\\theta$")
@@ -669,7 +649,7 @@ def plot_Gk(
 
         fig_path = (
             base_path
-            / f"plots/theta-linear/k-serial={k_exit.store_id}-k={k_exit.k.k_inv_Mpc:.5g}/z-serial={z_response.store_id}-zresponse={z_response.z:.5g}.pdf"
+            / f"plots/theta-linear/k={k_exit.k.k_inv_Mpc:.5g}-k-serial={k_exit.store_id}/zresponse={z_response.z:.5g}-z-serial={z_response.store_id}.pdf"
         )
         fig_path.parents[0].mkdir(exist_ok=True, parents=True)
         fig.savefig(fig_path)
@@ -688,7 +668,7 @@ def plot_Gk(
 
             fig_path = (
                 base_path
-                / f"plots/theta-linear-Levin-zoom/k-serial={k_exit.store_id}-k={k_exit.k.k_inv_Mpc:.5g}/z-serial={z_response.store_id}-zresponse={z_response.z:.5g}.pdf"
+                / f"plots/theta-linear-Levin-zoom/k={k_exit.k.k_inv_Mpc:.5g}-k-serial={k_exit.store_id}/zresponse={z_response.z:.5g}-z-serial={z_response.store_id}.pdf"
             )
             fig_path.parents[0].mkdir(exist_ok=True, parents=True)
             fig.savefig(fig_path)
@@ -710,8 +690,8 @@ def plot_Gk(
             label="derivative of WKB phase $\\theta$",
         )
 
-        add_z_labels(ax, GkPolicy, k_exit)
-        add_Gk_labels(ax, GkPolicy)
+        add_z_labels(ax, Gk, GkPolicy)
+        add_GkSource_plot_labels(ax, Gk, GkPolicy, model_label)
 
         ax.set_xlabel("source redshift $z$")
 
@@ -719,7 +699,7 @@ def plot_Gk(
 
         fig_path = (
             base_path
-            / f"plots/theta-linear-deriv/k-serial={k_exit.store_id}-k={k_exit.k.k_inv_Mpc:.5g}/z-serial={z_response.store_id}-zresponse={z_response.z:.5g}.pdf"
+            / f"plots/theta-linear-deriv/k={k_exit.k.k_inv_Mpc:.5g}-k-serial={k_exit.store_id}/zresponse={z_response.z:.5g}-z-serial={z_response.store_id}.pdf"
         )
         fig_path.parents[0].mkdir(exist_ok=True, parents=True)
         fig.savefig(fig_path)
@@ -736,7 +716,7 @@ def plot_Gk(
         ax.plot(abs_amplitude_sin_x, abs_amplitude_sin_y, label="$\\sin$ amplitude")
         ax.plot(abs_amplitude_cos_x, abs_amplitude_cos_y, label="$\\cos$ amplitude")
 
-        add_Gk_labels(ax, GkPolicy)
+        add_GkSource_plot_labels(ax, Gk, GkPolicy, model_label)
 
         ax.set_xlabel("source redshift $z$")
         ax.set_ylabel("amplitude")
@@ -745,7 +725,7 @@ def plot_Gk(
 
         fig_path = (
             base_path
-            / f"plots/amplitude/k-serial={k_exit.store_id}-k={k_exit.k.k_inv_Mpc:.5g}/z-serial={z_response.store_id}-zesponse={z_response.z:.5g}.pdf"
+            / f"plots/amplitude/k={k_exit.k.k_inv_Mpc:.5g}-k-serial={k_exit.store_id}/zresponse={z_response.z:.5g}-z-serial={z_response.store_id}.pdf"
         )
         fig_path.parents[0].mkdir(exist_ok=True, parents=True)
         fig.savefig(fig_path)
@@ -771,7 +751,7 @@ def plot_Gk(
 
     csv_path = (
         base_path
-        / f"csv/k-serial={k_exit.store_id}-k={k_exit.k.k_inv_Mpc:.5g}/z-serial={z_response.store_id}-zresponse={z_response.z:.5g}.csv"
+        / f"csv/k={k_exit.k.k_inv_Mpc:.5g}-k-serial={k_exit.store_id}/zresponse={z_response.z:.5g}-z-serial={z_response.store_id}.csv"
     )
     csv_path.parents[0].mkdir(exist_ok=True, parents=True)
     df = pd.DataFrame.from_dict(

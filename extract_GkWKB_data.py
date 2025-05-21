@@ -33,6 +33,7 @@ from MetadataConcepts import tolerance
 from RayTools.RayWorkPool import RayWorkPool
 from Units import Mpc_units
 from defaults import DEFAULT_ABS_TOLERANCE, DEFAULT_REL_TOLERANCE
+from extract_common import add_zexit_lines, set_loglog_axes, add_simple_plot_labels
 from model_list import build_model_list
 
 DEFAULT_TIMEOUT = 60
@@ -85,82 +86,6 @@ if args.profile_db is not None:
         db_name=args.profile_db,
         timeout=args.db_timeout,
         label=label,
-    )
-
-
-def set_loglinear_axes(ax):
-    ax.set_xscale("log")
-    ax.legend(loc="best")
-    ax.grid(True)
-    ax.xaxis.set_inverted(True)
-
-
-def set_loglog_axes(ax):
-    ax.set_xscale("log")
-    ax.set_yscale("log")
-    ax.legend(loc="best")
-    ax.grid(True)
-    ax.xaxis.set_inverted(True)
-
-
-TEXT_DISPLACEMENT_MULTIPLIER = 0.85
-
-
-# Matplotlib line style from https://matplotlib.org/stable/gallery/lines_bars_and_markers/linestyles.html
-#      ('loosely dotted',        (0, (1, 10))),
-#      ('dotted',                (0, (1, 1))),
-#      ('densely dotted',        (0, (1, 1))),
-#      ('long dash with offset', (5, (10, 3))),
-#      ('loosely dashed',        (0, (5, 10))),
-#      ('dashed',                (0, (5, 5))),
-#      ('densely dashed',        (0, (5, 1))),
-#
-#      ('loosely dashdotted',    (0, (3, 10, 1, 10))),
-#      ('dashdotted',            (0, (3, 5, 1, 5))),
-#      ('densely dashdotted',    (0, (3, 1, 1, 1))),
-#
-#      ('dashdotdotted',         (0, (3, 5, 1, 5, 1, 5))),
-#      ('loosely dashdotdotted', (0, (3, 10, 1, 10, 1, 10))),
-#      ('densely dashdotdotted', (0, (3, 1, 1, 1, 1, 1)))]
-def add_z_labels(ax, Gk: GkWKBIntegration, k_exit: wavenumber_exit_time):
-    ax.axvline(k_exit.z_exit_subh_e3, linestyle=(0, (1, 1)), color="b")  # dotted
-    ax.axvline(k_exit.z_exit_subh_e5, linestyle=(0, (1, 1)), color="b")  # dotted
-    ax.axvline(k_exit.z_exit_suph_e3, linestyle=(0, (1, 1)), color="b")  # dotted
-    ax.axvline(
-        k_exit.z_exit, linestyle=(0, (3, 1, 1, 1)), color="r"
-    )  # densely dashdotted
-    trans = ax.get_xaxis_transform()
-    ax.text(
-        TEXT_DISPLACEMENT_MULTIPLIER * k_exit.z_exit_suph_e3,
-        0.75,
-        "$-3$ e-folds",
-        transform=trans,
-        fontsize="x-small",
-        color="b",
-    )
-    ax.text(
-        TEXT_DISPLACEMENT_MULTIPLIER * k_exit.z_exit_subh_e3,
-        0.85,
-        "$+3$ e-folds",
-        transform=trans,
-        fontsize="x-small",
-        color="b",
-    )
-    ax.text(
-        TEXT_DISPLACEMENT_MULTIPLIER * k_exit.z_exit_subh_e5,
-        0.75,
-        "$+5$ e-folds",
-        transform=trans,
-        fontsize="x-small",
-        color="b",
-    )
-    ax.text(
-        TEXT_DISPLACEMENT_MULTIPLIER * k_exit.z_exit,
-        0.92,
-        "re-entry",
-        transform=trans,
-        fontsize="x-small",
-        color="r",
     )
 
 
@@ -292,7 +217,8 @@ def plot_Gk(
         WKB_criterion_column.extend(value.WKB_criterion for value in values)
         type_column.extend(1 for _ in range(len(values)))
 
-    add_z_labels(ax, Gk_WKB, k_exit)
+    add_zexit_lines(ax, k_exit)
+    add_simple_plot_labels(ax, k_exit=k_exit, model_label=model_label)
 
     ax.set_xlabel("response redshift $z$")
     ax.set_ylabel("$G_k(z_{\\text{source}}, z_{\\text{response}})$")
@@ -304,7 +230,7 @@ def plot_Gk(
 
     fig_path = (
         base_path
-        / f"plots/full-range/k-serial={k_exit.store_id}-k={k_exit.k.k_inv_Mpc:.5g}/z-serial={z_source.store_id}-zsource={z_source.z:.5g}.pdf"
+        / f"plots/full-range/k={k_exit.k.k_inv_Mpc:.5g}-k-serial={k_exit.store_id}/zsource={z_source.z:.5g}-z-serial={z_source.store_id}.pdf"
     )
     fig_path.parents[0].mkdir(exist_ok=True, parents=True)
     fig.savefig(fig_path)
@@ -316,7 +242,7 @@ def plot_Gk(
     )
     fig_path = (
         base_path
-        / f"plots/zoom-matching/k-serial={k_exit.store_id}-k={k_exit.k.k_inv_Mpc:.5g}/z-serial={z_source.store_id}-zsource={z_source.z:.5g}.pdf"
+        / f"plots/zoom-matching/k={k_exit.k.k_inv_Mpc:.5g}-k-serial={k_exit.store_id}/zsource={z_source.z:.5g}-z-serial={z_source.store_id}.pdf"
     )
     fig_path.parents[0].mkdir(exist_ok=True, parents=True)
     fig.savefig(fig_path)
@@ -330,7 +256,7 @@ def plot_Gk(
 
         ax.plot(theta_x, theta_y, label="WKB phase $\\theta$")
 
-        add_z_labels(ax, Gk_WKB, k_exit)
+        add_zexit_lines(ax, k_exit)
 
         ax.set_xlabel("response redshift $z$")
         ax.set_ylabel("WKB phase $\\theta$")
@@ -339,7 +265,7 @@ def plot_Gk(
 
         fig_path = (
             base_path
-            / f"plots/theta/k-serial={k_exit.store_id}-k={k_exit.k.k_inv_Mpc:.5g}/z-serial={z_source.store_id}-zsource={z_source.z:.5g}.pdf"
+            / f"plots/theta/k={k_exit.k.k_inv_Mpc:.5g}-k-serial={k_exit.store_id}/zsource={z_source.z:.5g}-z-serial={z_source.store_id}.pdf"
         )
         fig_path.parents[0].mkdir(exist_ok=True, parents=True)
         fig.savefig(fig_path)
@@ -347,7 +273,7 @@ def plot_Gk(
 
     csv_path = (
         base_path
-        / f"csv/k-serial={k_exit.store_id}-k={k_exit.k.k_inv_Mpc:.5g}/z-serial={z_source.store_id}-zsource={z_source.z:.5g}.csv"
+        / f"csv/k={k_exit.k.k_inv_Mpc:.5g}-k-serial={k_exit.store_id}/zsource={z_source.z:.5g}-z-serial={z_source.store_id}.csv"
     )
     csv_path.parents[0].mkdir(exist_ok=True, parents=True)
     df = pd.DataFrame.from_dict(

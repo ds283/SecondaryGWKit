@@ -6,7 +6,7 @@ from datetime import datetime
 from math import fabs, pi, sqrt
 from pathlib import Path
 from random import sample
-from typing import List, Tuple, Optional
+from typing import List, Tuple
 
 import matplotlib.pyplot as plt
 import pandas as pd
@@ -45,6 +45,20 @@ from defaults import (
     DEFAULT_FLOAT_PRECISION,
     DEFAULT_QUADRATURE_ATOL,
     DEFAULT_QUADRATURE_RTOL,
+)
+from extract_GkSource_data import add_GkSource_plot_labels
+from extract_common import (
+    add_zexit_lines,
+    TEXT_DISPLACEMENT_MULTIPLIER,
+    LEFT_COLUMN,
+    RIGHT_COLUMN,
+    MIDDLE_COLUMN,
+    TOP_ROW,
+    safe_fabs,
+    set_loglog_axes,
+    safe_div,
+    add_k_labels,
+    MIDDLE_ROW,
 )
 from model_list import build_model_list
 
@@ -106,76 +120,12 @@ if args.profile_db is not None:
     )
 
 
-def set_loglog_axes(ax):
-    ax.set_xscale("log")
-    ax.set_yscale("log")
-    ax.legend(loc="best")
-    ax.grid(True)
-    ax.xaxis.set_inverted(True)
-
-
-TEXT_DISPLACEMENT_MULTIPLIER = 0.85
-
-
-# Matplotlib line style from https://matplotlib.org/stable/gallery/lines_bars_and_markers/linestyles.html
-#      ('loosely dotted',        (0, (1, 10))),
-#      ('dotted',                (0, (1, 1))),
-#      ('densely dotted',        (0, (1, 1))),
-#      ('long dash with offset', (5, (10, 3))),
-#      ('loosely dashed',        (0, (5, 10))),
-#      ('dashed',                (0, (5, 5))),
-#      ('densely dashed',        (0, (5, 1))),
-#
-#      ('loosely dashdotted',    (0, (3, 10, 1, 10))),
-#      ('dashdotted',            (0, (3, 5, 1, 5))),
-#      ('densely dashdotted',    (0, (3, 1, 1, 1))),
-#
-#      ('dashdotdotted',         (0, (3, 5, 1, 5, 1, 5))),
-#      ('loosely dashdotdotted', (0, (3, 10, 1, 10, 1, 10))),
-#      ('densely dashdotdotted', (0, (3, 1, 1, 1, 1, 1)))]
 def add_z_labels(
     ax, GkPolicy: GkSourcePolicyData, k_exit: wavenumber_exit_time, label: str
 ):
-    ax.axvline(k_exit.z_exit_subh_e3, linestyle=(0, (1, 1)), color="b")  # dotted
-    ax.axvline(k_exit.z_exit_subh_e5, linestyle=(0, (1, 1)), color="b")  # dotted
-    ax.axvline(k_exit.z_exit_suph_e3, linestyle=(0, (1, 1)), color="b")  # dotted
-    ax.axvline(
-        k_exit.z_exit, linestyle=(0, (3, 1, 1, 1)), color="r"
-    )  # densely dashdotted
-    trans = ax.get_xaxis_transform()
-    ax.text(
-        TEXT_DISPLACEMENT_MULTIPLIER * k_exit.z_exit_suph_e3,
-        0.75,
-        f"{label}$-3$ e-folds",
-        transform=trans,
-        fontsize="x-small",
-        color="b",
-    )
-    ax.text(
-        TEXT_DISPLACEMENT_MULTIPLIER * k_exit.z_exit_subh_e3,
-        0.85,
-        f"{label}$+3$ e-folds",
-        transform=trans,
-        fontsize="x-small",
-        color="b",
-    )
-    ax.text(
-        TEXT_DISPLACEMENT_MULTIPLIER * k_exit.z_exit_subh_e5,
-        0.75,
-        f"{label}$+5$ e-folds",
-        transform=trans,
-        fontsize="x-small",
-        color="b",
-    )
-    ax.text(
-        TEXT_DISPLACEMENT_MULTIPLIER * k_exit.z_exit,
-        0.92,
-        f"{label} re-entry",
-        transform=trans,
-        fontsize="x-small",
-        color="r",
-    )
+    add_zexit_lines(ax, k_exit)
 
+    trans = ax.get_xaxis_transform()
     if GkPolicy.type == "mixed" and GkPolicy.crossover_z is not None:
         ax.axvline(
             GkPolicy.crossover_z, linestyle=(5, (10, 3)), color="m"
@@ -205,30 +155,6 @@ def add_z_labels(
         )
 
 
-def add_k_labels(ax, k_exit, q_exit, r_exit):
-    ax.text(
-        0.0,
-        1.1,
-        f"$k$ = {k_exit.k.k_inv_Mpc:.5g} Mpc$^{{-1}}$",
-        transform=ax.transAxes,
-        fontsize="x-small",
-    )
-    ax.text(
-        0.33,
-        1.1,
-        f"$q$ =  {q_exit.k.k_inv_Mpc:.5g} Mpc$^{{-1}}$",
-        transform=ax.transAxes,
-        fontsize="x-small",
-    )
-    ax.text(
-        0.66,
-        1.1,
-        f"$r$ = {r_exit.k.k_inv_Mpc:.5g} Mpc$^{{-1}}$",
-        transform=ax.transAxes,
-        fontsize="x-small",
-    )
-
-
 def add_region_labels(
     ax,
     z_min_quad,
@@ -237,93 +163,40 @@ def add_region_labels(
     z_max_WKB_quad,
     z_min_Levin,
     z_max_Levin,
+    model_label: str = "LambdaCDM",
 ):
     if z_min_quad is not None and z_max_quad is not None:
         ax.text(
-            0.0,
-            1.01,
+            LEFT_COLUMN,
+            MIDDLE_ROW,
             f"numeric: [{z_min_quad.z:.5g}, {z_max_quad.z:.5g}]",
             transform=ax.transAxes,
             fontsize="x-small",
         )
     if z_min_WKB_quad is not None and z_max_WKB_quad is not None:
         ax.text(
-            0.33,
-            1.05,
+            MIDDLE_COLUMN,
+            MIDDLE_ROW,
             f"WKB numeric: [{z_min_WKB_quad.z:.5g}, {z_max_WKB_quad.z:.5g}]",
             transform=ax.transAxes,
             fontsize="x-small",
         )
     if z_min_Levin is not None and z_max_Levin is not None:
         ax.text(
-            0.66,
-            1.01,
+            RIGHT_COLUMN,
+            MIDDLE_ROW,
             f"WKB Levin: [{z_min_Levin.z:.5g}, {z_max_Levin.z:.5g}]",
             transform=ax.transAxes,
             fontsize="x-small",
         )
 
-
-def add_Gk_labels(ax, obj: GkSourcePolicyData):
-    fns: GkSourceFunctions = obj.functions
-    if fns.type is not None:
-        ax.text(
-            0.0,
-            1.05,
-            f"Type: {fns.type}",
-            transform=ax.transAxes,
-            fontsize="x-small",
-        )
-
-    if fns.quality is not None:
-        ax.text(
-            0.5,
-            1.05,
-            f"Quality: {fns.quality}",
-            transform=ax.transAxes,
-            fontsize="x-small",
-        )
-
-    if fns.WKB_region is not None:
-        ax.text(
-            0.0,
-            1.1,
-            f"WKB region: ({fns.WKB_region[0]:.3g}, {fns.WKB_region[1]:.3g})",
-            transform=ax.transAxes,
-            fontsize="x-small",
-        )
-
-    if fns.numerical_region is not None:
-        ax.text(
-            0.5,
-            1.1,
-            f"Numeric region: ({fns.numerical_region[0]:.3g}, {fns.numerical_region[1]:.3g})",
-            transform=ax.transAxes,
-            fontsize="x-small",
-        )
-
-    if fns.phase is not None:
-        ax.text(
-            0.8,
-            1.05,
-            f"Chunks: {fns.phase.num_chunks}",
-            transform=ax.transAxes,
-            fontsize="x-small",
-        )
-
-
-def safe_fabs(x: Optional[float]) -> Optional[float]:
-    if x is None:
-        return None
-
-    return fabs(x)
-
-
-def safe_div(x: Optional[float], y: float) -> Optional[float]:
-    if x is None:
-        return None
-
-    return x / y
+    ax.text(
+        RIGHT_COLUMN,
+        TOP_ROW,
+        f"Model: {model_label}",
+        transform=ax.transAxes,
+        fontsize="x-small",
+    )
 
 
 @ray.remote
@@ -426,6 +299,7 @@ def plot_QuadSourceIntegral(
             z_max_WKB_quad,
             z_min_Levin,
             z_max_Levin,
+            model_label,
         )
 
         ax.set_xlabel("response redshift $z$")
@@ -434,7 +308,7 @@ def plot_QuadSourceIntegral(
 
         fig_path = (
             base_path
-            / f"plots/k-serial={k_exit.store_id}={k_exit.k.k_inv_Mpc:.5g}-q-serial={q_exit.store_id}={q_exit.k.k_inv_Mpc:.5g}-r-serial={r_exit.store_id}={r_exit.k.k_inv_Mpc:.5g}/integral.pdf"
+            / f"plots/k={k_exit.k.k_inv_Mpc:.5g}-q={q_exit.k.k_inv_Mpc:.5g}-r={r_exit.k.k_inv_Mpc:.5g}-k-serial={k_exit.store_id}-q-serial={q_exit.store_id}-r-serial={r_exit.store_id}/integral.pdf"
         )
         fig_path.parents[0].mkdir(exist_ok=True, parents=True)
         fig.savefig(fig_path)
@@ -443,7 +317,7 @@ def plot_QuadSourceIntegral(
 
     csv_folder = (
         base_path
-        / f"csv/k-serial={k_exit.store_id}={k_exit.k.k_inv_Mpc:.5g}-q-serial={q_exit.store_id}={q_exit.k.k_inv_Mpc:.5g}-r-serial={r_exit.store_id}={r_exit.k.k_inv_Mpc:.5g}"
+        / f"csv/k={k_exit.k.k_inv_Mpc:.5g}-q={q_exit.k.k_inv_Mpc:.5g}-r={r_exit.k.k_inv_Mpc:.5g}-k-serial={k_exit.store_id}-q-serial={q_exit.store_id}-r-serial={r_exit.store_id}"
     )
 
     payload = {
@@ -498,15 +372,15 @@ def plot_QuadSourceIntegrand(
     q_exit: wavenumber_exit_time,
     r_exit: wavenumber_exit_time,
     model_proxy: ModelProxy,
-    policy: GkSourcePolicyData,
+    GkPolicy: GkSourcePolicyData,
     source: QuadSource,
     z_source_max: redshift,
 ):
-    if not policy.available:
+    if not GkPolicy.available:
         print(f"** GkPolicy not available")
         return
 
-    Gk: GkSource = policy._source_proxy.get()
+    Gk: GkSource = GkPolicy._source_proxy.get()
     if not Gk.available:
         print(f"** GkSource not available")
         return
@@ -640,14 +514,14 @@ def plot_QuadSourceIntegrand(
             linestyle="dashed",
         )
 
-        add_z_labels(ax, policy, k_exit, "$k$")
-        add_Gk_labels(ax, policy)
+        add_z_labels(ax, GkPolicy, k_exit, "$k$")
+        add_GkSource_plot_labels(ax, Gk, GkPolicy)
 
         set_loglog_axes(ax)
 
         fig_path = (
             base_path
-            / f"plots/k-serial={k_exit.store_id}={k_exit.k.k_inv_Mpc:.5g}-q-serial={q_exit.store_id}={q_exit.k.k_inv_Mpc:.5g}-r-serial={r_exit.store_id}={r_exit.k.k_inv_Mpc:.5g}/integrand.pdf"
+            / f"plots/k={k_exit.k.k_inv_Mpc:.5g}-q={q_exit.k.k_inv_Mpc:.5g}-r={r_exit.k.k_inv_Mpc:.5g}-k-serial={k_exit.store_id}-q-serial={q_exit.store_id}-r-serial={r_exit.store_id}/integrand.pdf"
         )
         fig_path.parents[0].mkdir(exist_ok=True, parents=True)
         fig.savefig(fig_path)
@@ -659,7 +533,7 @@ def plot_QuadSourceIntegrand(
 
         fig_path = (
             base_path
-            / f"plots/k-serial={k_exit.store_id}={k_exit.k.k_inv_Mpc:.5g}-q-serial={q_exit.store_id}={q_exit.k.k_inv_Mpc:.5g}-r-serial={r_exit.store_id}={r_exit.k.k_inv_Mpc:.5g}/integrand_reentry_zoom.pdf"
+            / f"plots/k={k_exit.k.k_inv_Mpc:.5g}-q={q_exit.k.k_inv_Mpc:.5g}-r={r_exit.k.k_inv_Mpc:.5g}-k-serial={k_exit.store_id}-q-serial={q_exit.store_id}-r-serial={r_exit.store_id}/integrand_reentry_zoom.pdf"
         )
         fig_path.parents[0].mkdir(exist_ok=True, parents=True)
         fig.savefig(fig_path)
@@ -688,14 +562,14 @@ def plot_QuadSourceIntegrand(
             linestyle="dashed",
         )
 
-        add_z_labels(ax, policy, k_exit, "$k$")
-        add_Gk_labels(ax, policy)
+        add_z_labels(ax, GkPolicy, k_exit, "$k$")
+        add_Gk_labels(ax, GkPolicy)
 
         set_loglog_axes(ax)
 
         fig_path = (
             base_path
-            / f"plots/k-serial={k_exit.store_id}={k_exit.k.k_inv_Mpc:.5g}-q-serial={q_exit.store_id}={q_exit.k.k_inv_Mpc:.5g}-r-serial={r_exit.store_id}={r_exit.k.k_inv_Mpc:.5g}/Levin_function.pdf"
+            / f"plots/k={k_exit.k.k_inv_Mpc:.5g}-q={q_exit.k.k_inv_Mpc:.5g}-r={r_exit.k.k_inv_Mpc:.5g}-k-serial={k_exit.store_id}-q-serial={q_exit.store_id}-r-serial={r_exit.store_id}/Levin_function.pdf"
         )
         fig_path.parents[0].mkdir(exist_ok=True, parents=True)
         fig.savefig(fig_path)
@@ -715,7 +589,7 @@ def plot_QuadSourceIntegrand(
 
     csv_path = (
         base_path
-        / f"csv/k-serial={k_exit.store_id}={k_exit.k.k_inv_Mpc:.5g}-q-serial={q_exit.store_id}={q_exit.k.k_inv_Mpc:.5g}-r-serial={r_exit.store_id}={r_exit.k.k_inv_Mpc:.5g}/integrand.csv"
+        / f"csv/k={k_exit.k.k_inv_Mpc:.5g}-q={q_exit.k.k_inv_Mpc:.5g}-r={r_exit.k.k_inv_Mpc:.5g}-k-serial={k_exit.store_id}-q-serial={q_exit.store_id}-r-serial={r_exit.store_id}/integrand.csv"
     )
     csv_path.parents[0].mkdir(exist_ok=True, parents=True)
     df = pd.DataFrame.from_dict(
@@ -932,7 +806,7 @@ def plot_Gk(
 
         fig_path = (
             base_path
-            / f"plots/k-serial={k_exit.store_id}={k_exit.k.k_inv_Mpc:.5g}-q-serial={q_exit.store_id}={q_exit.k.k_inv_Mpc:.5g}-r-serial={r_exit.store_id}={r_exit.k.k_inv_Mpc:.5g}/GkSource.pdf"
+            / f"plots/k={k_exit.k.k_inv_Mpc:.5g}-q={q_exit.k.k_inv_Mpc:.5g}-r={r_exit.k.k_inv_Mpc:.5g}-k-serial={k_exit.store_id}-q-serial={q_exit.store_id}-r-serial={r_exit.store_id}/GkSource.pdf"
         )
         fig_path.parents[0].mkdir(exist_ok=True, parents=True)
         fig.savefig(fig_path)
@@ -945,7 +819,7 @@ def plot_Gk(
 
             fig_path = (
                 base_path
-                / f"plots/k-serial={k_exit.store_id}={k_exit.k.k_inv_Mpc:.5g}-q-serial={q_exit.store_id}={q_exit.k.k_inv_Mpc:.5g}-r-serial={r_exit.store_id}={r_exit.k.k_inv_Mpc:.5g}/GkSource-reentry-zoom.pdf"
+                / f"plots/k={k_exit.k.k_inv_Mpc:.5g}-q={q_exit.k.k_inv_Mpc:.5g}-r={r_exit.k.k_inv_Mpc:.5g}-k-serial={k_exit.store_id}-q-serial={q_exit.store_id}-r-serial={r_exit.store_id}/GkSource-reentry-zoom.pdf"
             )
             fig_path.parents[0].mkdir(exist_ok=True, parents=True)
             fig.savefig(fig_path)
@@ -971,7 +845,7 @@ def plot_Gk(
 
     csv_path = (
         base_path
-        / f"csv/k-serial={k_exit.store_id}={k_exit.k.k_inv_Mpc:.5g}-q-serial={q_exit.store_id}={q_exit.k.k_inv_Mpc:.5g}-r-serial={r_exit.store_id}={r_exit.k.k_inv_Mpc:.5g}/GkSource.csv"
+        / f"csv/k={k_exit.k.k_inv_Mpc:.5g}-q={q_exit.k.k_inv_Mpc:.5g}-r={r_exit.k.k_inv_Mpc:.5g}-k-serial={k_exit.store_id}-q-serial={q_exit.store_id}-r-serial={r_exit.store_id}/GkSource.csv"
     )
     csv_path.parents[0].mkdir(exist_ok=True, parents=True)
     df = pd.DataFrame.from_dict(
@@ -1051,7 +925,7 @@ def plot_tensor_source(
 
         fig_path = (
             base_path
-            / f"plots/k-serial={k_exit.store_id}={k_exit.k.k_inv_Mpc:.5g}-q-serial={q_exit.store_id}={q_exit.k.k_inv_Mpc:.5g}-r-serial={r_exit.store_id}={r_exit.k.k_inv_Mpc:.5g}/quad_source.pdf"
+            / f"plots/k={k_exit.k.k_inv_Mpc:.5g}-q={q_exit.k.k_inv_Mpc:.5g}-r={r_exit.k.k_inv_Mpc:.5g}-k-serial={k_exit.store_id}-q-serial={q_exit.store_id}-r-serial={r_exit.store_id}/quad_source.pdf"
         )
         fig_path.parents[0].mkdir(exist_ok=True, parents=True)
         fig.savefig(fig_path)
@@ -1063,7 +937,7 @@ def plot_tensor_source(
 
         fig_path = (
             base_path
-            / f"plots/k-serial={k_exit.store_id}={k_exit.k.k_inv_Mpc:.5g}-q-serial={q_exit.store_id}={q_exit.k.k_inv_Mpc:.5g}-r-serial={r_exit.store_id}={r_exit.k.k_inv_Mpc:.5g}/quad_source_q_reentry_zoom.pdf"
+            / f"plots/k={k_exit.k.k_inv_Mpc:.5g}-q={q_exit.k.k_inv_Mpc:.5g}-r={r_exit.k.k_inv_Mpc:.5g}-k-serial={k_exit.store_id}-q-serial={q_exit.store_id}-r-serial={r_exit.store_id}/quad_source_q_reentry_zoom.pdf"
         )
         fig_path.parents[0].mkdir(exist_ok=True, parents=True)
         fig.savefig(fig_path)
@@ -1098,7 +972,7 @@ def plot_tensor_source(
 
             fig_path = (
                 base_path
-                / f"plots/k-serial={k_exit.store_id}={k_exit.k.k_inv_Mpc:.5g}-q-serial={q_exit.store_id}={q_exit.k.k_inv_Mpc:.5g}-r-serial={r_exit.store_id}={r_exit.k.k_inv_Mpc:.5g}/quad_source_r_reentry_zoom.pdf"
+                / f"plots/k={k_exit.k.k_inv_Mpc:.5g}-q={q_exit.k.k_inv_Mpc:.5g}-r={r_exit.k.k_inv_Mpc:.5g}-k-serial={k_exit.store_id}-q-serial={q_exit.store_id}-r-serial={r_exit.store_id}/quad_source_r_reentry_zoom.pdf"
             )
             fig_path.parents[0].mkdir(exist_ok=True, parents=True)
             fig.savefig(fig_path)
@@ -1121,7 +995,7 @@ def plot_tensor_source(
 
     csv_path = (
         base_path
-        / f"csv/k-serial={k_exit.store_id}={k_exit.k.k_inv_Mpc:.5g}-q-serial={q_exit.store_id}={q_exit.k.k_inv_Mpc:.5g}-r-serial={r_exit.store_id}={r_exit.k.k_inv_Mpc:.5g}/quad_source.csv"
+        / f"csv/k={k_exit.k.k_inv_Mpc:.5g}-q={q_exit.k.k_inv_Mpc:.5g}-r={r_exit.k.k_inv_Mpc:.5g}-k-serial={k_exit.store_id}-q-serial={q_exit.store_id}-r-serial={r_exit.store_id}/quad_source.csv"
     )
     csv_path.parents[0].mkdir(exist_ok=True, parents=True)
     df = pd.DataFrame.from_dict(

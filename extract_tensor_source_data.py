@@ -5,7 +5,7 @@ from datetime import datetime
 from math import fabs
 from pathlib import Path
 from random import sample
-from typing import List, Optional
+from typing import List
 
 import pandas as pd
 import ray
@@ -30,6 +30,12 @@ from MetadataConcepts import tolerance
 from RayTools.RayWorkPool import RayWorkPool
 from Units import Mpc_units
 from defaults import DEFAULT_ABS_TOLERANCE, DEFAULT_REL_TOLERANCE
+from extract_common import (
+    add_zexit_lines,
+    safe_fabs,
+    set_loglog_axes,
+    add_simple_plot_labels,
+)
 from model_list import build_model_list
 
 DEFAULT_TIMEOUT = 60
@@ -88,93 +94,10 @@ if args.profile_db is not None:
     )
 
 
-def set_loglinear_axes(ax):
-    ax.set_xscale("log")
-    ax.legend(loc="best")
-    ax.grid(True)
-    ax.xaxis.set_inverted(True)
-
-
-def set_loglog_axes(ax):
-    ax.set_xscale("log")
-    ax.set_yscale("log")
-    ax.legend(loc="best")
-    ax.grid(True)
-    ax.xaxis.set_inverted(True)
-
-
-TEXT_DISPLACEMENT_MULTIPLIER = 0.85
-
-
-def add_z_lines(ax, k_exit: wavenumber_exit_time, col1: str, col2: str):
-    ax.axvline(k_exit.z_exit_subh_e3, linestyle=(0, (1, 1)), color=col1)  # dotted
-    ax.axvline(k_exit.z_exit_subh_e5, linestyle=(0, (1, 1)), color=col1)  # dotted
-    ax.axvline(k_exit.z_exit_suph_e3, linestyle=(0, (1, 1)), color=col1)  # dotted
-    ax.axvline(
-        k_exit.z_exit, linestyle=(0, (3, 1, 1, 1)), color=col2
-    )  # densely dashdotted
-
-    trans = ax.get_xaxis_transform()
-    ax.text(
-        TEXT_DISPLACEMENT_MULTIPLIER * k_exit.z_exit_suph_e3,
-        0.75,
-        "$q-3$ e-folds",
-        transform=trans,
-        fontsize="x-small",
-        color="b",
-    )
-    ax.text(
-        TEXT_DISPLACEMENT_MULTIPLIER * k_exit.z_exit_subh_e3,
-        0.85,
-        "$q+3$ e-folds",
-        transform=trans,
-        fontsize="x-small",
-        color="b",
-    )
-    ax.text(
-        TEXT_DISPLACEMENT_MULTIPLIER * k_exit.z_exit_subh_e5,
-        0.75,
-        "$q+5$ e-folds",
-        transform=trans,
-        fontsize="x-small",
-        color="b",
-    )
-    ax.text(
-        TEXT_DISPLACEMENT_MULTIPLIER * k_exit.z_exit,
-        0.92,
-        "$q$ re-entry",
-        transform=trans,
-        fontsize="x-small",
-        color="r",
-    )
-
-
-# Matplotlib line style from https://matplotlib.org/stable/gallery/lines_bars_and_markers/linestyles.html
-#      ('loosely dotted',        (0, (1, 10))),
-#      ('dotted',                (0, (1, 1))),
-#      ('densely dotted',        (0, (1, 1))),
-#      ('long dash with offset', (5, (10, 3))),
-#      ('loosely dashed',        (0, (5, 10))),
-#      ('dashed',                (0, (5, 5))),
-#      ('densely dashed',        (0, (5, 1))),
-#
-#      ('loosely dashdotted',    (0, (3, 10, 1, 10))),
-#      ('dashdotted',            (0, (3, 5, 1, 5))),
-#      ('densely dashdotted',    (0, (3, 1, 1, 1))),
-#
-#      ('dashdotdotted',         (0, (3, 5, 1, 5, 1, 5))),
-#      ('loosely dashdotdotted', (0, (3, 10, 1, 10, 1, 10))),
-#      ('densely dashdotdotted', (0, (3, 1, 1, 1, 1, 1)))]
-def add_z_labels(
-    ax,
-    source: QuadSource,
-    q_exit: wavenumber_exit_time,
-    r_exit: wavenumber_exit_time,
-):
-
-    add_z_lines(ax, q_exit, "r", "b")
+def add_z_labels(ax, q_exit: wavenumber_exit_time, r_exit: wavenumber_exit_time):
+    add_zexit_lines(ax, q_exit, "r", "b")
     if q_exit.store_id != r_exit.store_id:
-        add_z_lines(ax, r_exit, "m", "c")
+        add_zexit_lines(ax, r_exit, "m", "c")
 
 
 @ray.remote
@@ -189,18 +112,6 @@ def plot_tensor_source(model_label: str, source: QuadSource):
 
     values: List[QuadSourceValue] = source.values
     functions: QuadSourceFunctions = source.functions
-
-    def safe_fabs(x: Optional[float]) -> Optional[float]:
-        if x is None:
-            return None
-
-        return fabs(x)
-
-    def safe_div(x: Optional[float], y: float) -> Optional[float]:
-        if x is None:
-            return None
-
-        return x / y
 
     abs_source_points = [(value.z.z, safe_fabs(value.source)) for value in values]
     abs_undiff_points = [(value.z.z, safe_fabs(value.undiff)) for value in values]
@@ -245,7 +156,10 @@ def plot_tensor_source(model_label: str, source: QuadSource):
         )
         ax.plot(abs_source_x, abs_spline_y, label="Spline")
 
-        add_z_labels(ax, source=q_exit, q_exit=q_exit, r_exit=r_exit)
+        add_z_labels(ax, q_exit=q_exit, r_exit=r_exit)
+        add_simple_plot_labels(
+            ax, q_exit=q_exit, r_exit=r_exit, model_label=model_label
+        )
 
         ax.set_xlabel("source redshift $z$")
         ax.set_ylabel("$T_k(z)$")
@@ -254,7 +168,7 @@ def plot_tensor_source(model_label: str, source: QuadSource):
 
         fig_path = (
             base_path
-            / f"plots/full/q-serial={source.q.store_id}-q={q_exit.k.k_inv_Mpc:.5g}-r-serial={source.r.store_id}-r={r_exit.k.k_inv_Mpc:.5g}.pdf"
+            / f"plots/full/q={q_exit.k.k_inv_Mpc:.5g}-r={r_exit.k.k_inv_Mpc:.5g}-q-serial={q_exit.store_id}-r-serial={r_exit.store_id}.pdf"
         )
         fig_path.parents[0].mkdir(exist_ok=True, parents=True)
         fig.savefig(fig_path)
@@ -266,7 +180,7 @@ def plot_tensor_source(model_label: str, source: QuadSource):
 
         fig_path = (
             base_path
-            / f"plots/q-zoom/q-serial={source.q.store_id}-q={q_exit.k.k_inv_Mpc:.5g}-r-serial={source.r.store_id}-r={r_exit.k.k_inv_Mpc:.5g}.pdf"
+            / f"plots/q-zoom/q={q_exit.k.k_inv_Mpc:.5g}-r={r_exit.k.k_inv_Mpc:.5g}-q-serial={q_exit.store_id}-r-serial={r_exit.store_id}.pdf"
         )
         fig_path.parents[0].mkdir(exist_ok=True, parents=True)
         fig.savefig(fig_path)
@@ -279,7 +193,7 @@ def plot_tensor_source(model_label: str, source: QuadSource):
 
             fig_path = (
                 base_path
-                / f"plots/r-zoom/q-serial={source.q.store_id}-q={q_exit.k.k_inv_Mpc:.5g}-r-serial={source.r.store_id}-r={r_exit.k.k_inv_Mpc:.5g}.pdf"
+                / f"plots/r-zoom/q={q_exit.k.k_inv_Mpc:.5g}-r={r_exit.k.k_inv_Mpc:.5g}-q-serial={q_exit.store_id}-r-serial={r_exit.store_id}.pdf"
             )
             fig_path.parents[0].mkdir(exist_ok=True, parents=True)
             fig.savefig(fig_path)
@@ -294,7 +208,10 @@ def plot_tensor_source(model_label: str, source: QuadSource):
         ax.plot(abs_undiff_x, abs_undiff_y, label="$T_{k}$ part", linestyle="dashed")
         ax.plot(abs_diff_x, abs_diff_y, label="$dT_{k}/dz$ part", linestyle="dashdot")
 
-        add_z_labels(ax, source=q_exit, q_exit=q_exit, r_exit=r_exit)
+        add_z_labels(ax, q_exit=q_exit, r_exit=r_exit)
+        add_simple_plot_labels(
+            ax, q_exit=q_exit, r_exit=r_exit, model_label=model_label
+        )
 
         ax.set_xlabel("redshift $z$")
         ax.set_ylabel("$T_k(z)$")
@@ -303,7 +220,7 @@ def plot_tensor_source(model_label: str, source: QuadSource):
 
         fig_path = (
             base_path
-            / f"plots/parts/q-serial={source.q.store_id}-q={q_exit.k.k_inv_Mpc:.5g}-r-serial={source.r.store_id}-r={r_exit.k.k_inv_Mpc:.5g}.pdf"
+            / f"plots/parts/q={q_exit.k.k_inv_Mpc:.5g}-r={r_exit.k.k_inv_Mpc:.5g}-q-serial={q_exit.store_id}-r-serial={r_exit.store_id}.pdf"
         )
         fig_path.parents[0].mkdir(exist_ok=True, parents=True)
         fig.savefig(fig_path)
@@ -325,7 +242,7 @@ def plot_tensor_source(model_label: str, source: QuadSource):
 
     csv_path = (
         base_path
-        / f"csv/q-serial={source.q.store_id}-q={q_exit.k.k_inv_Mpc:.5g}-r-serial={source.r.store_id}-r={r_exit.k.k_inv_Mpc:.5g}.csv"
+        / f"csv/q={q_exit.k.k_inv_Mpc:.5g}-r={r_exit.k.k_inv_Mpc:.5g}-q-serial={q_exit.store_id}-r-serial={r_exit.store_id}.csv"
     )
     csv_path.parents[0].mkdir(exist_ok=True, parents=True)
     df = pd.DataFrame.from_dict(

@@ -1,10 +1,9 @@
 import argparse
 import sys
 from datetime import datetime
-from math import fabs
 from pathlib import Path
 from random import sample
-from typing import List, Optional
+from typing import List
 
 import pandas as pd
 import ray
@@ -31,6 +30,12 @@ from Units import Mpc_units
 from defaults import (
     DEFAULT_ABS_TOLERANCE,
     DEFAULT_REL_TOLERANCE,
+)
+from extract_common import (
+    set_loglog_axes,
+    add_zexit_lines,
+    safe_fabs,
+    add_simple_plot_labels,
 )
 from model_list import build_model_list
 
@@ -87,104 +92,6 @@ if args.profile_db is not None:
     )
 
 
-def set_loglinear_axes(ax):
-    ax.set_xscale("log")
-    ax.legend(loc="best")
-    ax.grid(True)
-    ax.xaxis.set_inverted(True)
-
-
-def set_loglog_axes(ax):
-    ax.set_xscale("log")
-    ax.set_yscale("log")
-    ax.legend(loc="best")
-    ax.grid(True)
-    ax.xaxis.set_inverted(True)
-
-
-# Matplotlib line style from https://matplotlib.org/stable/gallery/lines_bars_and_markers/linestyles.html
-#      ('loosely dotted',        (0, (1, 10))),
-#      ('dotted',                (0, (1, 1))),
-#      ('densely dotted',        (0, (1, 1))),
-#      ('long dash with offset', (5, (10, 3))),
-#      ('loosely dashed',        (0, (5, 10))),
-#      ('dashed',                (0, (5, 5))),
-#      ('densely dashed',        (0, (5, 1))),
-#
-#      ('loosely dashdotted',    (0, (3, 10, 1, 10))),
-#      ('dashdotted',            (0, (3, 5, 1, 5))),
-#      ('densely dashdotted',    (0, (3, 1, 1, 1))),
-#
-#      ('dashdotdotted',         (0, (3, 5, 1, 5, 1, 5))),
-#      ('loosely dashdotdotted', (0, (3, 10, 1, 10, 1, 10))),
-#      ('densely dashdotdotted', (0, (3, 1, 1, 1, 1, 1)))]
-
-TEXT_DISPLACEMENT_MULTIPLIER = 0.85
-
-
-def add_z_labels(
-    ax,
-    Tk: TkNumericalIntegration,
-    k_exit: wavenumber_exit_time,
-):
-    ax.axvline(k_exit.z_exit_subh_e3, linestyle=(0, (1, 1)), color="b")  # dotted
-    ax.axvline(k_exit.z_exit_subh_e5, linestyle=(0, (1, 1)), color="b")  # dotted
-    ax.axvline(k_exit.z_exit_suph_e3, linestyle=(0, (1, 1)), color="b")  # dotted
-    ax.axvline(
-        k_exit.z_exit, linestyle=(0, (3, 1, 1, 1)), color="r"
-    )  # densely dashdotted
-    trans = ax.get_xaxis_transform()
-    ax.text(
-        TEXT_DISPLACEMENT_MULTIPLIER * k_exit.z_exit_suph_e3,
-        0.75,
-        "$-3$ e-folds",
-        transform=trans,
-        fontsize="x-small",
-        color="b",
-    )
-    ax.text(
-        TEXT_DISPLACEMENT_MULTIPLIER * k_exit.z_exit_subh_e3,
-        0.85,
-        "$+3$ e-folds",
-        transform=trans,
-        fontsize="x-small",
-        color="b",
-    )
-    ax.text(
-        TEXT_DISPLACEMENT_MULTIPLIER * k_exit.z_exit_subh_e5,
-        0.75,
-        "$+5$ e-folds",
-        transform=trans,
-        fontsize="x-small",
-        color="b",
-    )
-    ax.text(
-        TEXT_DISPLACEMENT_MULTIPLIER * k_exit.z_exit,
-        0.92,
-        "re-entry",
-        transform=trans,
-        fontsize="x-small",
-        color="r",
-    )
-
-def add_k_labels(ax, k_exit: wavenumber_exit_time,
-                 model_type: str="LCDM"):
-    ax.text(
-        0.0,
-        1.05,
-        f"$k$ = {k_exit.k.k_inv_Mpc:.5g} Mpc$^{{-1}}$",
-        transform=ax.transAxes,
-        fontsize="x-small",
-    )
-    ax.text(
-        0.8,
-        1.05,
-        f"Model: {model_type}",
-        transform=ax.transAxes,
-        fontsize="x-small",
-    )
-
-
 @ray.remote
 def plot_Tk(
     model_label: str,
@@ -213,18 +120,6 @@ def plot_Tk(
     omega_WKB_sq_column = []
     WKB_criterion_column = []
     type_column = []
-
-    def safe_fabs(x: Optional[float]) -> Optional[float]:
-        if x is None:
-            return None
-
-        return fabs(x)
-
-    def safe_div(x: Optional[float], y: float) -> Optional[float]:
-        if x is None:
-            return None
-
-        return x / y
 
     if Tk_numerical.available:
         values: List[TkNumericalValue] = Tk_numerical.values
@@ -344,8 +239,8 @@ def plot_Tk(
         WKB_criterion_column.extend(value.WKB_criterion for value in values)
         type_column.extend(1 for _ in range(len(values)))
 
-    add_z_labels(ax, Tk_WKB, k_exit)
-    add_k_labels(ax, k_exit, model_type=model_label)
+    add_zexit_lines(ax, k_exit)
+    add_simple_plot_labels(ax, k_exit=k_exit, model_label=model_label)
 
     ax.set_xlabel("source redshift $z$")
     ax.set_ylabel("$T_k(z)$")
@@ -354,7 +249,7 @@ def plot_Tk(
 
     fig_path = (
         base_path
-        / f"plots/full-range/k-serial={k_exit.store_id}-k={k_exit.k.k_inv_Mpc:.5g}.pdf"
+        / f"plots/full-range/k={k_exit.k.k_inv_Mpc:.5g}-k-serial={k_exit.store_id}.pdf"
     )
     fig_path.parents[0].mkdir(exist_ok=True, parents=True)
     fig.savefig(fig_path)
@@ -366,7 +261,7 @@ def plot_Tk(
     )
     fig_path = (
         base_path
-        / f"plots/zoom-matching/k-serial={k_exit.store_id}-k={k_exit.k.k_inv_Mpc:.5g}.pdf"
+        / f"plots/zoom-matching/k={k_exit.k.k_inv_Mpc:.5g}-k-serial={k_exit.store_id}.pdf"
     )
     fig_path.parents[0].mkdir(exist_ok=True, parents=True)
     fig.savefig(fig_path)
@@ -380,8 +275,8 @@ def plot_Tk(
 
         ax.plot(theta_x, theta_y, label="WKB phase $\\theta$")
 
-        add_z_labels(ax, Tk_WKB, k_exit)
-        add_k_labels(ax, k_exit, model_type=model_label)
+        add_zexit_lines(ax, k_exit)
+        add_simple_plot_labels(ax, k_exit=k_exit, model_label=model_label)
 
         ax.set_xlabel("source redshift $z$")
         ax.set_ylabel("WKB phase $\\theta$")
@@ -390,7 +285,7 @@ def plot_Tk(
 
         fig_path = (
             base_path
-            / f"plots/theta/k-serial={k_exit.store_id}-k={k_exit.k.k_inv_Mpc:.5g}.pdf"
+            / f"plots/theta/k={k_exit.k.k_inv_Mpc:.5g}-k-serial={k_exit.store_id}.pdf"
         )
         fig_path.parents[0].mkdir(exist_ok=True, parents=True)
         fig.savefig(fig_path)
@@ -402,8 +297,8 @@ def plot_Tk(
 
         ax.plot(friction_x, friction_y, label="WKB friction")
 
-        add_z_labels(ax, Tk_WKB, k_exit)
-        add_k_labels(ax, k_exit, model_type=model_label)
+        add_zexit_lines(ax, k_exit)
+        add_simple_plot_labels(ax, k_exit=k_exit, model_label=model_label)
 
         ax.set_xlabel("source redshift $z$")
         ax.set_ylabel("WKB friction")
@@ -412,14 +307,14 @@ def plot_Tk(
 
         fig_path = (
             base_path
-            / f"plots/friction/k-serial={k_exit.store_id}-k={k_exit.k.k_inv_Mpc:.5g}.pdf"
+            / f"plots/friction/k={k_exit.k.k_inv_Mpc:.5g}-k-serial={k_exit.store_id}.pdf"
         )
         fig_path.parents[0].mkdir(exist_ok=True, parents=True)
         fig.savefig(fig_path)
         fig.savefig(fig_path.with_suffix(".png"))
 
     csv_path = (
-        base_path / f"csv/k-serial={k_exit.store_id}-k={k_exit.k.k_inv_Mpc:.5g}.csv"
+        base_path / f"csv/k={k_exit.k.k_inv_Mpc:.5g}-k-serial={k_exit.store_id}.csv"
     )
     csv_path.parents[0].mkdir(exist_ok=True, parents=True)
     df = pd.DataFrame.from_dict(

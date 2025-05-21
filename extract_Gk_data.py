@@ -2,10 +2,9 @@ import argparse
 import sys
 from datetime import datetime
 from itertools import product
-from math import fabs
 from pathlib import Path
 from random import sample
-from typing import List, Optional
+from typing import List
 
 import pandas as pd
 import ray
@@ -31,6 +30,13 @@ from MetadataConcepts import tolerance
 from RayTools.RayWorkPool import RayWorkPool
 from Units import Mpc_units
 from defaults import DEFAULT_ABS_TOLERANCE, DEFAULT_REL_TOLERANCE
+from extract_common import (
+    add_zexit_lines,
+    set_loglog_axes,
+    set_loglinear_axes,
+    safe_fabs,
+    add_simple_plot_labels,
+)
 from model_list import build_model_list
 
 DEFAULT_TIMEOUT = 60
@@ -86,82 +92,6 @@ if args.profile_db is not None:
     )
 
 
-def set_loglinear_axes(ax):
-    ax.set_xscale("log")
-    ax.legend(loc="best")
-    ax.grid(True)
-    ax.xaxis.set_inverted(True)
-
-
-def set_loglog_axes(ax):
-    ax.set_xscale("log")
-    ax.set_yscale("log")
-    ax.legend(loc="best")
-    ax.grid(True)
-    ax.xaxis.set_inverted(True)
-
-
-TEXT_DISPLACEMENT_MULTIPLIER = 0.85
-
-
-# Matplotlib line style from https://matplotlib.org/stable/gallery/lines_bars_and_markers/linestyles.html
-#      ('loosely dotted',        (0, (1, 10))),
-#      ('dotted',                (0, (1, 1))),
-#      ('densely dotted',        (0, (1, 1))),
-#      ('long dash with offset', (5, (10, 3))),
-#      ('loosely dashed',        (0, (5, 10))),
-#      ('dashed',                (0, (5, 5))),
-#      ('densely dashed',        (0, (5, 1))),
-#
-#      ('loosely dashdotted',    (0, (3, 10, 1, 10))),
-#      ('dashdotted',            (0, (3, 5, 1, 5))),
-#      ('densely dashdotted',    (0, (3, 1, 1, 1))),
-#
-#      ('dashdotdotted',         (0, (3, 5, 1, 5, 1, 5))),
-#      ('loosely dashdotdotted', (0, (3, 10, 1, 10, 1, 10))),
-#      ('densely dashdotdotted', (0, (3, 1, 1, 1, 1, 1)))]
-def add_z_labels(ax, Gk: GkNumericalIntegration, k_exit: wavenumber_exit_time):
-    ax.axvline(k_exit.z_exit_subh_e3, linestyle=(0, (1, 1)), color="b")  # dotted
-    ax.axvline(k_exit.z_exit_subh_e5, linestyle=(0, (1, 1)), color="b")  # dotted
-    ax.axvline(k_exit.z_exit_suph_e3, linestyle=(0, (1, 1)), color="b")  # dotted
-    ax.axvline(
-        k_exit.z_exit, linestyle=(0, (3, 1, 1, 1)), color="r"
-    )  # densely dashdotted
-    trans = ax.get_xaxis_transform()
-    ax.text(
-        TEXT_DISPLACEMENT_MULTIPLIER * k_exit.z_exit_suph_e3,
-        0.75,
-        "$-3$ e-folds",
-        transform=trans,
-        fontsize="x-small",
-        color="b",
-    )
-    ax.text(
-        TEXT_DISPLACEMENT_MULTIPLIER * k_exit.z_exit_subh_e3,
-        0.85,
-        "$+3$ e-folds",
-        transform=trans,
-        fontsize="x-small",
-        color="b",
-    )
-    ax.text(
-        TEXT_DISPLACEMENT_MULTIPLIER * k_exit.z_exit_subh_e5,
-        0.75,
-        "$+5$ e-folds",
-        transform=trans,
-        fontsize="x-small",
-        color="b",
-    )
-    ax.text(
-        TEXT_DISPLACEMENT_MULTIPLIER * k_exit.z_exit,
-        0.92,
-        "re-entry",
-        transform=trans,
-        fontsize="x-small",
-        color="r",
-    )
-
-
 @ray.remote
 def plot_Gk(model_label: str, Gk: GkNumericalIntegration):
     if not Gk.available:
@@ -170,18 +100,6 @@ def plot_Gk(model_label: str, Gk: GkNumericalIntegration):
     values: List[GkNumericalValue] = Gk.values
     base_path = Path(args.output).resolve()
     base_path = base_path / f"{model_label}"
-
-    def safe_fabs(x: Optional[float]) -> Optional[float]:
-        if x is None:
-            return None
-
-        return fabs(x)
-
-    def safe_div(x: Optional[float], y: float) -> Optional[float]:
-        if x is None:
-            return None
-
-        return x / y
 
     abs_G_points = [(value.z, safe_fabs(value.G)) for value in values]
     abs_analytic_G_rad_points = [
@@ -232,7 +150,8 @@ def plot_Gk(model_label: str, Gk: GkNumericalIntegration):
             linestyle="dashdot",
         )
 
-        add_z_labels(ax, Gk, k_exit)
+        add_zexit_lines(ax, k_exit)
+        add_simple_plot_labels(ax, k_exit=k_exit, model_label=model_label)
 
         ax.set_xlabel("response redshift $z$")
         ax.set_ylabel("$G_k(z, z')$")
@@ -241,7 +160,7 @@ def plot_Gk(model_label: str, Gk: GkNumericalIntegration):
 
         fig_path = (
             base_path
-            / f"plots/Gk/k-serial={k_exit.store_id}-k={k_exit.k.k_inv_Mpc:.5g}/z-serial={z_source.store_id}-zsource={z_source.z:.5g}.pdf"
+            / f"plots/Gk/k={k_exit.k.k_inv_Mpc:.5g}-k-serial={k_exit.store_id}/zsource={z_source.z:.5g}-z-serial={z_source.store_id}.pdf"
         )
         fig_path.parents[0].mkdir(exist_ok=True, parents=True)
         fig.savefig(fig_path)
@@ -255,7 +174,7 @@ def plot_Gk(model_label: str, Gk: GkNumericalIntegration):
 
             fig_path = (
                 base_path
-                / f"plots/Gk-reentry-zoom/k-serial={k_exit.store_id}-k={k_exit.k.k_inv_Mpc:.5g}/z-serial={z_source.store_id}-zsource={z_source.z:.5g}.pdf"
+                / f"plots/Gk-reentry-zoom/k={k_exit.k.k_inv_Mpc:.5g}-k-serial={k_exit.store_id}/zsource={z_source.z:.5g}-z-serial={z_source.store_id}.pdf"
             )
             fig_path.parents[0].mkdir(exist_ok=True, parents=True)
             fig.savefig(fig_path)
@@ -285,7 +204,8 @@ def plot_Gk(model_label: str, Gk: GkNumericalIntegration):
             linestyle="dashdot",
         )
 
-        add_z_labels(ax, Gk, k_exit)
+        add_zexit_lines(ax, k_exit)
+        add_simple_plot_labels(ax, k_exit=k_exit, model_label=model_label)
 
         ax.set_xlabel("response redshift $z$")
         ax.set_ylabel("$G_k(z, z')$")
@@ -294,7 +214,7 @@ def plot_Gk(model_label: str, Gk: GkNumericalIntegration):
 
         fig_path = (
             base_path
-            / f"plots/Gk-linear/k-serial={k_exit.store_id}-k={k_exit.k.k_inv_Mpc:.5g}/z-serial={z_source.store_id}-zsource={z_source.z:.5g}.pdf"
+            / f"plots/Gk-linear/k={k_exit.k.k_inv_Mpc:.5g}-k-serial={k_exit.store_id}/zsource={z_source.z:.5g}-z-serial={z_source.store_id}.pdf"
         )
         fig_path.parents[0].mkdir(exist_ok=True, parents=True)
         fig.savefig(fig_path)
@@ -308,7 +228,7 @@ def plot_Gk(model_label: str, Gk: GkNumericalIntegration):
 
             fig_path = (
                 base_path
-                / f"plots/Gk-linear-reentry-zoom/k-serial={k_exit.store_id}-k={k_exit.k.k_inv_Mpc:.5g}/z-serial={z_source.store_id}-zsource={z_source.z:.5g}.pdf"
+                / f"plots/Gk-linear-reentry-zoom/k={k_exit.k.k_inv_Mpc:.5g}-k-serial={k_exit.store_id}/zsource={z_source.z:.5g}-z-serial={z_source.store_id}.pdf"
             )
             fig_path.parents[0].mkdir(exist_ok=True, parents=True)
             fig.savefig(fig_path)
@@ -328,7 +248,7 @@ def plot_Gk(model_label: str, Gk: GkNumericalIntegration):
 
     csv_path = (
         base_path
-        / f"csv/k-serial={k_exit.store_id}-k={k_exit.k.k_inv_Mpc:.5g}/z-serial={z_source.store_id}-zsource={z_source.z:.5g}.csv"
+        / f"csv/k={k_exit.k.k_inv_Mpc:.5g}-k-serial={k_exit.store_id}/zsource={z_source.z:.5g}-z-serial={z_source.store_id}.csv"
     )
     csv_path.parents[0].mkdir(exist_ok=True, parents=True)
     df = pd.DataFrame.from_dict(
