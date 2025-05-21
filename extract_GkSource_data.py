@@ -492,29 +492,29 @@ def plot_Gk(
             abs_analytic_G_rad_x,
             abs_analytic_G_rad_y,
             label="Analytic $G_k$ [radiation]",
-            color="g",
+            color="y",
             linestyle="dashed",
         )
         ax.plot(
             abs_analytic_G_rad_x,
             abs_analytic_G_rad_y,
             label="Analytic $G_k$ [$w=w(z)$]",
-            color="b",
+            color="g",
             linestyle="dashed",
         )
         ax.plot(
             abs_G_spline_x,
             abs_G_spline_y,
-            label="Spline $G_k$",
-            color="r",
-            linestyle="dashdot",
+            label="Spline numeric $G_k$",
+            color="c",
+            linestyle=(0, (1, 1)),
         )
         ax.plot(
             abs_G_WKB_spline_x,
             abs_G_WKB_spline_y,
             label="Spline WKB $G_k$",
-            color="b",
-            linestyle="dashdot",
+            color="m",
+            linestyle=(0, (1, 1)),
         )
 
         add_z_labels(ax, Gk, GkPolicy)
@@ -589,7 +589,7 @@ def plot_Gk(
             abs_theta_spline_y,
             label="Spline WKB phase $\\theta$",
             color="g",
-            linestyle="solid",
+            linestyle=(0, (1, 1)),
         )
 
         add_z_labels(ax, Gk, GkPolicy)
@@ -636,7 +636,7 @@ def plot_Gk(
             theta_spline_y,
             label="Spline WKB phase $\\theta$",
             color="g",
-            linestyle="solid",
+            linestyle=(0, (1, 1)),
         )
 
         add_z_labels(ax, Gk, GkPolicy)
