@@ -668,6 +668,8 @@ def plot_Gk(
                 int(round(theta_at_Levin_z + 100.0 + 0.5, 0)),
             )
 
+            set_linear_axes(ax)
+
             fig_path = (
                 base_path
                 / f"plots/theta-linear-Levin-zoom/k={k_exit.k.k_inv_Mpc:.5g}-k-serial={k_exit.store_id}/zresponse={z_response.z:.5g}-z-serial={z_response.store_id}.pdf"
@@ -675,8 +677,6 @@ def plot_Gk(
             fig_path.parents[0].mkdir(exist_ok=True, parents=True)
             fig.savefig(fig_path)
             fig.savefig(fig_path.with_suffix(".png"))
-
-            set_linear_axes(ax)
 
         plt.close()
 
