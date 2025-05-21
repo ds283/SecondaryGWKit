@@ -735,15 +735,20 @@ class Datastore:
             record = self._schema["wavenumber"]
 
             tab = record["table"]
-            factory = self._factories["wavenumber"]
+            factory: sqla_wavenumber_factory = self._factories["wavenumber"]
 
             with self._engine.begin() as conn:
-                objects = factory.read_table(conn, tab, units, is_source, is_response)
+                objects = factory.read_table(
+                    conn, tab, units, is_source=is_source, is_response=is_response
+                )
 
         return objects
 
     def read_redshift_table(
-        self, is_source: Optional[bool] = None, is_response: Optional[bool] = None
+        self,
+        is_source: Optional[bool] = None,
+        is_response: Optional[bool] = None,
+        **kwargs,
     ):
         """
         Read the redshift value table from the database
@@ -754,10 +759,17 @@ class Datastore:
             record = self._schema["redshift"]
 
             tab = record["table"]
-            factory = self._factories["redshift"]
+            factory: sqla_redshift_factory = self._factories["redshift"]
 
             with self._engine.begin() as conn:
-                objects = factory.read_table(conn, tab, is_source, is_response)
+                objects = factory.read_table(
+                    conn,
+                    tab,
+                    tables=self._tables,
+                    is_source=is_source,
+                    is_response=is_response,
+                    **kwargs,
+                )
 
         return objects
 

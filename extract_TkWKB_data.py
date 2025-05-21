@@ -353,7 +353,26 @@ def run_pipeline(model_data):
         ]
     )
 
-    # array of k-modes matching the SOURCE k-grid
+    # read in the model instance, which will tell us which z-sample points to use
+    model = ray.get(
+        pool.object_get(
+            BackgroundModel,
+            solver_labels=[],
+            cosmology=model_cosmology,
+            z_sample=None,
+            atol=atol,
+            rtol=rtol,
+        )
+    )
+    if not model.available:
+        raise RuntimeError(
+            "Could not locate suitable background model instance in the datastore"
+        )
+
+    model_proxy = ModelProxy(model)
+
+    # set up/read in array of k-modes matching the SOURCE k-grid
+    # for now, we assume data is available for all k-modes in the database
     source_k_array = ray.get(
         pool.read_wavenumber_table(units=model_cosmology.units, is_source=True)
     )
@@ -388,23 +407,6 @@ def run_pipeline(model_data):
         )
     else:
         k_subsample: List[wavenumber_exit_time] = list(source_k_exit_times)
-
-    model = ray.get(
-        pool.object_get(
-            BackgroundModel,
-            solver_labels=[],
-            cosmology=model_cosmology,
-            z_sample=None,
-            atol=atol,
-            rtol=rtol,
-        )
-    )
-    if not model.available:
-        raise RuntimeError(
-            "Could not locate suitable background model instance in the datastore"
-        )
-
-    model_proxy = ModelProxy(model)
 
     def build_plot_Tk_work(k_exit: wavenumber_exit_time):
         query_payload = {

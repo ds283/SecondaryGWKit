@@ -285,6 +285,25 @@ def run_pipeline(model_data):
         ]
     )
 
+    # read in the model instance, which will tell us which z-sample points to use
+    model = ray.get(
+        pool.object_get(
+            BackgroundModel,
+            solver_labels=[],
+            cosmology=model_cosmology,
+            z_sample=None,
+            atol=atol,
+            rtol=rtol,
+        )
+    )
+    if not model.available:
+        raise RuntimeError(
+            "Could not locate suitable background model instance in the datastore"
+        )
+
+    # set up a proxy object to avoid having to repeatedly serialize the model instance and ship it out
+    model_proxy = ModelProxy(model)
+
     # array of k-modes matching the SOURCE k-grid
     source_k_array = ray.get(pool.read_wavenumber_table(units=units, is_source=True))
 
@@ -315,24 +334,6 @@ def run_pipeline(model_data):
         list(source_k_exit_times),
         k=int(round(0.9 * len(source_k_exit_times) + 0.5, 0)),
     )
-
-    model = ray.get(
-        pool.object_get(
-            BackgroundModel,
-            solver_labels=[],
-            cosmology=model_cosmology,
-            z_sample=None,
-            atol=atol,
-            rtol=rtol,
-        )
-    )
-    if not model.available:
-        raise RuntimeError(
-            "Could not locate suitable background model instance in the datastore"
-        )
-
-    # set up a proxy object to avoid having to repeatedly serialize the model instance and ship it out
-    model_proxy = ModelProxy(model)
 
     def build_tensor_source_work(item):
         q, r = item

@@ -283,6 +283,24 @@ def run_pipeline(model_data):
         ]
     )
 
+    # read in the model instance, which will tell us which z-sample points to use
+    model: BackgroundModel = ray.get(
+        pool.object_get(
+            BackgroundModel,
+            solver_labels=[],
+            cosmology=model_cosmology,
+            z_sample=None,
+            atol=atol,
+            rtol=rtol,
+        )
+    )
+    if not model.available:
+        raise RuntimeError(
+            "Could not locate suitable background model instance in the datastore"
+        )
+
+    model_proxy = ModelProxy(model)
+
     # array of k-modes matching the SOURCE and RESPONSE k-grids
     source_k_array = ray.get(pool.read_wavenumber_table(units=units, is_source=True))
     response_k_array = ray.get(
@@ -327,39 +345,26 @@ def run_pipeline(model_data):
 
     k_exit_earliest: wavenumber_exit_time = full_k_exit_times.max
 
-    # choose a subsample of the RESPONSE k modes
+    # choose a subsample of about 30% of the RESPONSE k modes
     k_subsample: List[wavenumber_exit_time] = sample(
         list(response_k_exit_times),
-        k=int(round(0.9 * len(response_k_exit_times) + 0.5, 0)),
+        k=int(round(0.3 * len(response_k_exit_times) + 0.5, 0)),
     )
 
-    z_source_array = ray.get(pool.read_redshift_table(is_source=True))
+    z_source_array = ray.get(
+        pool.read_redshift_table(is_source=True, model_proxy=model_proxy)
+    )
     z_source_sample = redshift_array(z_array=z_source_array)
 
-    z_response_array = ray.get(pool.read_redshift_table(is_response=True))
+    z_response_array = ray.get(
+        pool.read_redshift_table(is_response=True, model_proxy=model_proxy)
+    )
     z_response_sample = redshift_array(z_array=z_response_array)
 
-    # choose a subsample of SOURCE redshifts
+    # choose a subsample of about 10% of the SOURCE redshifts
     z_subsample: List[redshift] = sample(
-        list(z_source_sample), k=int(round(0.15 * len(z_source_sample) + 0.5, 0))
+        list(z_source_sample), k=int(round(0.1 * len(z_source_sample) + 0.5, 0))
     )
-
-    model: BackgroundModel = ray.get(
-        pool.object_get(
-            BackgroundModel,
-            solver_labels=[],
-            cosmology=model_cosmology,
-            z_sample=None,
-            atol=atol,
-            rtol=rtol,
-        )
-    )
-    if not model.available:
-        raise RuntimeError(
-            "Could not locate suitable background model instance in the datastore"
-        )
-
-    model_proxy = ModelProxy(model)
 
     def build_plot_Gk_work(item):
         k_exit, z_source = item

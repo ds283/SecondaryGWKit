@@ -39,7 +39,8 @@ from CosmologyConcepts import (
 from Datastore.SQL.ProfileAgent import ProfileAgent
 from Datastore.SQL.ShardedPool import ShardedPool
 from LiouvilleGreen.bessel_phase import bessel_phase
-from MetadataConcepts import GkSourcePolicy
+from MetadataConcepts import GkSourcePolicy, tolerance, QuadSourcePolicy
+from Quadrature.integration_metadata import IntegrationSolver
 from RayTools.RayWorkPool import RayWorkPool
 from Units import Mpc_units
 from defaults import (
@@ -221,7 +222,18 @@ if args.profile_db is not None:
     )
 
 
-def run_pipeline(model_data: dict):
+def run_pipeline(
+    model_data: dict,
+    source_k_sample: wavenumber_array,
+    response_k_sample: wavenumber_array,
+    atol: tolerance,
+    rtol: tolerance,
+    solvers: dict[str, IntegrationSolver],
+    GkSource_policy_1pt5: GkSourcePolicy,
+    GkSource_policy_5pt0: GkSourcePolicy,
+    QuadSource_policy_1pt5: QuadSourcePolicy,
+    QuadSource_policy_5pt0: QuadSourcePolicy,
+):
     model_label = model_data["label"]
     model_cosmology = model_data["cosmology"]
 
@@ -289,7 +301,7 @@ def run_pipeline(model_data: dict):
         z_end=zend,
     )
 
-    # embed these redshift list into the database
+    # embed these redshift lists into the database
     z_source_array = ray.get(convert_to_redshifts(source_z_grid, is_source=True))
     z_source_sample = redshift_array(z_array=z_source_array)
 
@@ -1084,6 +1096,7 @@ def run_pipeline(model_data: dict):
             pool,
             Gk_numerical_work_batches,
             task_builder=build_Gk_numerical_work,
+            compute_handler=compute_Gk_numerical_work,
             validation_handler=validate_Gk_numerical_work,
             label_builder=build_Gk_numerical_work_label,
             title="CALCULATE NUMERICAL PART OF TENSOR GREEN FUNCTIONS",
@@ -1258,7 +1271,7 @@ def run_pipeline(model_data: dict):
                 # right up to the boundary where we stop computing it, because that risks the first available z_response
                 # for such very late z_source bouncing around erratically in a region where we depend on having it.
                 # Instead, we should use the numerical boundary condition for z_source up to some point between the 3 and 4 e-fold points.
-                # After that we should use a fully WKB analysis. Then we should have safely overlapping WKB and
+                # After that we should use a purely WKB analysis. Then we should have safely overlapping WKB and
                 # numerical solutions around the 4-efold point.
                 if z_source.z >= z_source_limit and Gk.available:
                     # obtain initial data and initial time from the GkNumericalIntegration object
@@ -2625,4 +2638,15 @@ with ShardedPool(
 
     model_list = build_model_list(pool, units)
     for model_data in model_list:
-        run_pipeline(model_data)
+        run_pipeline(
+            model_data,
+            source_k_sample,
+            response_k_sample,
+            atol,
+            rtol,
+            solvers,
+            GkSource_policy_1pt5,
+            GkSource_policy_5pt0,
+            QuadSource_policy_1pt5,
+            QuadSource_policy_5pt0,
+        )

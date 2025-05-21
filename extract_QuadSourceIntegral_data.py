@@ -1037,6 +1037,25 @@ def run_pipeline(model_data):
         ]
     )
 
+    # read in the model instance, which will tell us which z-sample points to use
+    model: BackgroundModel = ray.get(
+        pool.object_get(
+            BackgroundModel,
+            solver_labels=[],
+            cosmology=model_cosmology,
+            z_sample=None,
+            atol=atol,
+            rtol=rtol,
+        )
+    )
+    if not model.available:
+        raise RuntimeError(
+            "Could not locate suitable background model instance in the datastore"
+        )
+
+    # set up a proxy object to avoid having to repeatedly serialize the model instance and ship it out
+    model_proxy = ModelProxy(model)
+
     # array of k-modes matching the SOURCE and RESPONSE k-grids
     source_k_array = ray.get(pool.read_wavenumber_table(units=units, is_source=True))
     response_k_array = ray.get(
@@ -1077,10 +1096,6 @@ def run_pipeline(model_data):
     response_k_exit_queue.run()
     response_k_exit_times = wavenumber_exit_time_array(response_k_exit_queue.results)
 
-    full_k_exit_times = source_k_exit_times + response_k_exit_times
-
-    k_exit_earliest: wavenumber_exit_time = full_k_exit_times.max
-
     # choose a subsample of the RESPONSE k modes
     k_subsample: List[wavenumber_exit_time] = sample(
         list(response_k_exit_times),
@@ -1093,10 +1108,14 @@ def run_pipeline(model_data):
         k=int(round(0.4 * len(qs_range) + 0.5, 0)),
     )
 
-    z_source_array = ray.get(pool.read_redshift_table(is_source=True))
+    z_source_array = ray.get(
+        pool.read_redshift_table(is_source=True, model_proxy=model_proxy)
+    )
     z_source_sample = redshift_array(z_array=z_source_array)
 
-    z_response_array = ray.get(pool.read_redshift_table(is_response=True))
+    z_response_array = ray.get(
+        pool.read_redshift_table(is_response=True, model_proxy=model_proxy)
+    )
     z_response_sample = redshift_array(z_array=z_response_array)
 
     # choose a subsample of RESPONSE redshifts
@@ -1108,24 +1127,6 @@ def run_pipeline(model_data):
     z_source_integral_response_sample = z_response_sample.truncate(
         z_source_integral_max_z, keep="lower-strict"
     )
-
-    model: BackgroundModel = ray.get(
-        pool.object_get(
-            BackgroundModel,
-            solver_labels=[],
-            cosmology=model_cosmology,
-            z_sample=None,
-            atol=atol,
-            rtol=rtol,
-        )
-    )
-    if not model.available:
-        raise RuntimeError(
-            "Could not locate suitable background model instance in the datastore"
-        )
-
-    # set up a proxy object to avoid having to repeatedly serialize the model instance and ship it out
-    model_proxy = ModelProxy(model)
 
     GkSource_policy_1pt5, GkSource_policy_5pt0 = ray.get(
         [

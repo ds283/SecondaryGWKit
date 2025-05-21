@@ -1,7 +1,9 @@
 from typing import Optional
 
 import sqlalchemy as sqla
+from sqlalchemy import and_
 
+from ComputeTargets import ModelProxy, BackgroundModel
 from CosmologyConcepts import redshift
 from Datastore.SQL.ObjectFactories.base import SQLAFactoryBase
 from defaults import DEFAULT_REDSHIFT_RELATIVE_PRECISION
@@ -62,7 +64,7 @@ class sqla_redshift_factory(SQLAFactoryBase):
                 )
                 attribute_set["_updated"] = True
 
-        # return constructed object
+        # return the constructed object
         obj = redshift(
             store_id=store_id, z=z, is_source=is_source, is_response=is_response
         )
@@ -74,8 +76,10 @@ class sqla_redshift_factory(SQLAFactoryBase):
     def read_table(
         conn,
         table,
+        tables,
         is_source: Optional[bool] = None,
         is_response: Optional[bool] = None,
+        model_proxy: Optional[ModelProxy] = None,
     ):
         # query for all redshift records in the table
         query = sqla.select(
@@ -84,6 +88,20 @@ class sqla_redshift_factory(SQLAFactoryBase):
             table.c.source,
             table.c.response,
         )
+
+        if model_proxy is not None:
+            bgv_table = tables["BackgroundModelValue"]
+            model: BackgroundModel = model_proxy.get()
+
+            # force a join to the BackgroundModelValue table, on redshift serial and matching model number
+            # the net result will filter out only those redshifts that are used for the intended model
+            query = query.join(
+                bgv_table,
+                and_(
+                    bgv_table.c.model_serial == model.store_id,
+                    bgv_table.c.z_serial == table.c.serial,
+                ),
+            )
 
         if is_source is not None:
             query = query.filter(table.c.source == is_source)

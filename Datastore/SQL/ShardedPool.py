@@ -688,7 +688,10 @@ class ShardedPool:
         )
 
     def read_redshift_table(
-        self, is_source: Optional[bool] = None, is_response: Optional[bool] = None
+        self,
+        is_source: Optional[bool] = None,
+        is_response: Optional[bool] = None,
+        **kwargs,
     ):
         """
         Read the redshift value table from one of the database shards
@@ -703,5 +706,7 @@ class ShardedPool:
         shard_key = shard_ids.pop()
 
         return self._shards[shard_key].read_redshift_table.remote(
-            is_source=is_source, is_response=is_response
+            is_source=is_source,
+            is_response=is_response,
+            **kwargs,
         )
