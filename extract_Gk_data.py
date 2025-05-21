@@ -152,7 +152,9 @@ def plot_Gk(model_label: str, Gk: GkNumericalIntegration):
         )
 
         add_zexit_lines(ax, k_exit)
-        add_simple_plot_labels(ax, k_exit=k_exit, model_label=model_label)
+        add_simple_plot_labels(
+            ax, z_source=z_source, k_exit=k_exit, model_label=model_label
+        )
 
         ax.set_xlabel("response redshift $z$")
         ax.set_ylabel("$G_k(z, z')$")
@@ -206,7 +208,9 @@ def plot_Gk(model_label: str, Gk: GkNumericalIntegration):
         )
 
         add_zexit_lines(ax, k_exit)
-        add_simple_plot_labels(ax, k_exit=k_exit, model_label=model_label)
+        add_simple_plot_labels(
+            ax, z_source=z_source, k_exit=k_exit, model_label=model_label
+        )
 
         ax.set_xlabel("response redshift $z$")
         ax.set_ylabel("$G_k(z, z')$")

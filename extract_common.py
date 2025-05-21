@@ -1,7 +1,7 @@
 from math import fabs
 from typing import Optional
 
-from CosmologyConcepts import wavenumber_exit_time
+from CosmologyConcepts import wavenumber_exit_time, redshift
 
 TEXT_DISPLACEMENT_MULTIPLIER = 0.85
 TOP_ROW = 1.12
@@ -149,12 +149,31 @@ def add_k_labels(
 
 def add_simple_plot_labels(
     ax,
+    z_source: Optional[redshift] = None,
+    z_response: Optional[redshift] = None,
     k_exit: Optional[wavenumber_exit_time] = None,
     q_exit: Optional[wavenumber_exit_time] = None,
     r_exit: Optional[wavenumber_exit_time] = None,
     model_label: str = "LambdaCDM",
 ):
     add_k_labels(ax, k_exit, q_exit, r_exit)
+
+    if z_source is not None:
+        ax.text(
+            LEFT_COLUMN,
+            MIDDLE_ROW,
+            f"z-source: {z_source.z:.5g}",
+            transform=ax.transAxes,
+            fontsize="x-small",
+        )
+    elif z_response is not None:
+        ax.text(
+            LEFT_COLUMN,
+            MIDDLE_ROW,
+            f"z-response: {z_response.z:.5g}",
+            transform=ax.transAxes,
+            fontsize="x-small",
+        )
 
     if model_label is not None:
         ax.text(

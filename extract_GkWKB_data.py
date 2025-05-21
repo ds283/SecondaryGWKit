@@ -232,7 +232,9 @@ def plot_Gk(
             )
 
     add_zexit_lines(ax, k_exit)
-    add_simple_plot_labels(ax, k_exit=k_exit, model_label=model_label)
+    add_simple_plot_labels(
+        ax, z_source=z_source, k_exit=k_exit, model_label=model_label
+    )
 
     ax.set_xlabel("response redshift $z$")
     ax.set_ylabel("$G_k(z_{\\text{source}}, z_{\\text{response}})$")
@@ -271,6 +273,9 @@ def plot_Gk(
         ax.plot(theta_x, theta_y, label="WKB phase $\\theta$")
 
         add_zexit_lines(ax, k_exit)
+        add_simple_plot_labels(
+            ax, z_source=z_source, k_exit=k_exit, model_label=model_label
+        )
 
         ax.set_xlabel("response redshift $z$")
         ax.set_ylabel("WKB phase $\\theta$")
