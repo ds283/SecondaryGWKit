@@ -36,6 +36,7 @@ from extract_common import (
     add_zexit_lines,
     safe_fabs,
     add_simple_plot_labels,
+    LOOSE_DASHED,
 )
 from model_list import build_model_list
 
@@ -151,13 +152,13 @@ def plot_Tk(
                 analytic_rad_x,
                 analytic_rad_y,
                 label="Analytic $T_k$ [radiation]",
-                linestyle="dashed",
+                linestyle=LOOSE_DASHED,
             )
             # ax.plot(
             #     analytic_w_x,
             #     analytic_w_y,
             #     label="Analytic $T_k$ [$w=w(z)$]",
-            #     linestyle="dashdot",
+            #     linestyle=LOOSE_DASHED,
             # )
 
         z_column.extend(value.z.z for value in values)
@@ -214,13 +215,13 @@ def plot_Tk(
                 analytic_rad_x,
                 analytic_rad_y,
                 label="Analytic $T_k$ [radiation]",
-                linestyle="dashed",
+                linestyle=LOOSE_DASHED,
             )
             # ax.plot(
             #     analytic_w_x,
             #     analytic_w_y,
             #     label="Analytic $T_k$ [$w=w(z)$]",
-            #     linestyle="dashdot",
+            #     linestyle=LOOSE_DASHED,
             # )
 
         z_column.extend(value.z.z for value in values)

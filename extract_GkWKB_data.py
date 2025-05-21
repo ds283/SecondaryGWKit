@@ -33,7 +33,12 @@ from MetadataConcepts import tolerance
 from RayTools.RayWorkPool import RayWorkPool
 from Units import Mpc_units
 from defaults import DEFAULT_ABS_TOLERANCE, DEFAULT_REL_TOLERANCE
-from extract_common import add_zexit_lines, set_loglog_axes, add_simple_plot_labels
+from extract_common import (
+    add_zexit_lines,
+    set_loglog_axes,
+    add_simple_plot_labels,
+    LOOSE_DASHED,
+)
 from model_list import build_model_list
 
 DEFAULT_TIMEOUT = 60
@@ -113,41 +118,29 @@ def plot_Gk(
     WKB_criterion_column = []
     type_column = []
 
+    analytic_rad_points = []
+    analytic_w_points = []
+
     if Gk_numerical.available:
         values: List[GkNumericalValue] = Gk_numerical.values
 
         numerical_points = [(value.z.z, fabs(value.G)) for value in values]
-        analytic_rad_points = [
-            (value.z.z, fabs(value.analytic_G_rad)) for value in values
-        ]
-        analytic_w_points = [(value.z.z, fabs(value.analytic_G_w)) for value in values]
+        analytic_rad_points.extend(
+            [(value.z.z, fabs(value.analytic_G_rad)) for value in values]
+        )
+        analytic_w_points.extend(
+            [(value.z.z, fabs(value.analytic_G_w)) for value in values]
+        )
 
         numerical_x, numerical_y = zip(*numerical_points)
-        analytic_rad_x, analytic_rad_y = zip(*analytic_rad_points)
-        analytic_w_x, analytic_w_y = zip(*analytic_w_points)
 
-        if len(numerical_x) > 0 and (
-            any(y is not None and y > 0 for y in numerical_y)
-            or any(y is not None and y > 0 for y in analytic_rad_y)
-            or any(y is not None and y > 0 for y in analytic_w_y)
-        ):
+        if len(numerical_x) > 0 and (any(y is not None and y > 0 for y in numerical_y)):
             ax.plot(
                 numerical_x,
                 numerical_y,
-                label="Numerical $G_k$",
+                label="Numeric $G_k$",
+                color="r",
                 linestyle="solid",
-            )
-            ax.plot(
-                analytic_rad_x,
-                analytic_rad_y,
-                label="Analytic $G_k$ [numeric, radiation]",
-                linestyle="dashed",
-            )
-            ax.plot(
-                analytic_w_x,
-                analytic_w_y,
-                label="Analytic $G_k$ [numeric, $w=w(z)$]",
-                linestyle="dashdot",
             )
 
         z_column.extend(value.z.z for value in values)
@@ -169,39 +162,24 @@ def plot_Gk(
         values: List[GkWKBValue] = Gk_WKB.values
 
         numerical_points = [(value.z.z, fabs(value.G_WKB)) for value in values]
-        analytic_rad_points = [
-            (value.z.z, fabs(value.analytic_G_rad)) for value in values
-        ]
-        analytic_w_points = [(value.z.z, fabs(value.analytic_G_w)) for value in values]
+        analytic_rad_points.extend(
+            [(value.z.z, fabs(value.analytic_G_rad)) for value in values]
+        )
+        analytic_w_points.extend(
+            [(value.z.z, fabs(value.analytic_G_w)) for value in values]
+        )
         theta_points = [(value.z.z, fabs(value.theta)) for value in values]
 
         numerical_x, numerical_y = zip(*numerical_points)
-        analytic_rad_x, analytic_rad_y = zip(*analytic_rad_points)
-        analytic_w_x, analytic_w_y = zip(*analytic_w_points)
         theta_x, theta_y = zip(*theta_points)
 
-        if len(numerical_x) > 0 and (
-            any(y is not None and y > 0 for y in numerical_y)
-            or any(y is not None and y > 0 for y in analytic_rad_y)
-            or any(y is not None and y > 0 for y in analytic_w_y)
-        ):
+        if len(numerical_x) > 0 and (any(y is not None and y > 0 for y in numerical_y)):
             ax.plot(
                 numerical_x,
                 numerical_y,
                 label="WKB $G_k$",
+                color="b",
                 linestyle="solid",
-            )
-            ax.plot(
-                analytic_rad_x,
-                analytic_rad_y,
-                label="Analytic $G_k$ [WKB, radiation]]",
-                linestyle="dashed",
-            )
-            ax.plot(
-                analytic_w_x,
-                analytic_w_y,
-                label="Analytic $G_k$ [WKB, $w=w(z)$]",
-                linestyle="dashdot",
             )
 
         z_column.extend(value.z.z for value in values)
@@ -216,6 +194,36 @@ def plot_Gk(
         omega_WKB_sq_column.extend(value.omega_WKB_sq for value in values)
         WKB_criterion_column.extend(value.WKB_criterion for value in values)
         type_column.extend(1 for _ in range(len(values)))
+
+    if len(analytic_rad_points) > 0:
+        analytic_rad_points.sort(key=lambda x: x[0])
+        analytic_rad_x, analytic_rad_y = zip(*analytic_rad_points)
+
+        if len(analytic_rad_x) > 0 and (
+            any(y is not None and y > 0 for y in analytic_rad_y)
+        ):
+            ax.plot(
+                analytic_rad_x,
+                analytic_rad_y,
+                label="Analytic $G_k$ [radiation]]",
+                color="y",
+                linestyle=LOOSE_DASHED,
+            )
+
+    if len(analytic_w_points) > 0:
+        analytic_w_points.sort(key=lambda x: x[0])
+        analytic_w_x, analytic_w_y = zip(*analytic_w_points)
+
+        if len(analytic_w_x) > 0 and (
+            any(y is not None and y > 0 for y in analytic_w_y)
+        ):
+            ax.plot(
+                analytic_w_x,
+                analytic_w_y,
+                label="Analytic $G_k$ [$w=w(z)$]",
+                color="g",
+                linestyle=LOOSE_DASHED,
+            )
 
     add_zexit_lines(ax, k_exit)
     add_simple_plot_labels(ax, k_exit=k_exit, model_label=model_label)

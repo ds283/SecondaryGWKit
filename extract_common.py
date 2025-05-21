@@ -67,6 +67,9 @@ def set_linear_axes(ax):
 #      ('loosely dashdotdotted', (0, (3, 10, 1, 10, 1, 10))),
 #      ('densely dashdotdotted', (0, (3, 1, 1, 1, 1, 1)))]
 
+LOOSE_DASHED = (0, (4, 4))
+LOOSE_DOTTED = (0, (1, 2))
+
 
 def add_zexit_lines(ax, k_exit: wavenumber_exit_time, col1: str = "b", col2: str = "r"):
     ax.axvline(k_exit.z_exit_subh_e3, linestyle=(0, (1, 1)), color=col1)  # dotted

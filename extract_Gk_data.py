@@ -36,6 +36,7 @@ from extract_common import (
     set_loglinear_axes,
     safe_fabs,
     add_simple_plot_labels,
+    LOOSE_DASHED,
 )
 from model_list import build_model_list
 
@@ -140,14 +141,14 @@ def plot_Gk(model_label: str, Gk: GkNumericalIntegration):
             abs_analytic_G_rad_y,
             label="Analytic $G_k$ [radiation]",
             color="g",
-            linestyle="dashed",
+            linestyle=LOOSE_DASHED,
         )
         ax.plot(
             abs_analytic_G_w_x,
             abs_analytic_G_w_y,
             label="Analytic $G_k$ [$w=w(z)$]",
             color="b",
-            linestyle="dashdot",
+            linestyle=LOOSE_DASHED,
         )
 
         add_zexit_lines(ax, k_exit)
@@ -194,14 +195,14 @@ def plot_Gk(model_label: str, Gk: GkNumericalIntegration):
             analytic_G_rad_y,
             label="Analytic $G_k$ [radiation]",
             color="g",
-            linestyle="dashed",
+            linestyle=LOOSE_DASHED,
         )
         ax.plot(
             analytic_G_w_x,
             analytic_G_w_y,
             label="Analytic $G_k$ [$w=w(z)$]",
             color="b",
-            linestyle="dashdot",
+            linestyle=LOOSE_DASHED,
         )
 
         add_zexit_lines(ax, k_exit)

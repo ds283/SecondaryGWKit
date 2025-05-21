@@ -49,6 +49,8 @@ from extract_common import (
     add_zexit_lines,
     safe_div,
     safe_fabs,
+    LOOSE_DASHED,
+    LOOSE_DOTTED,
 )
 from model_list import build_model_list
 
@@ -493,28 +495,28 @@ def plot_Gk(
             abs_analytic_G_rad_y,
             label="Analytic $G_k$ [radiation]",
             color="y",
-            linestyle="dashed",
+            linestyle=LOOSE_DASHED,
         )
         ax.plot(
             abs_analytic_G_rad_x,
             abs_analytic_G_rad_y,
             label="Analytic $G_k$ [$w=w(z)$]",
             color="g",
-            linestyle="dashed",
+            linestyle=LOOSE_DASHED,
         )
         ax.plot(
             abs_G_spline_x,
             abs_G_spline_y,
             label="Spline numeric $G_k$",
             color="c",
-            linestyle=(0, (1, 1)),
+            linestyle=LOOSE_DOTTED,
         )
         ax.plot(
             abs_G_WKB_spline_x,
             abs_G_WKB_spline_y,
             label="Spline WKB $G_k$",
             color="m",
-            linestyle=(0, (1, 1)),
+            linestyle=LOOSE_DOTTED,
         )
 
         add_z_labels(ax, Gk, GkPolicy)
@@ -582,7 +584,7 @@ def plot_Gk(
             abs_raw_theta_y,
             label="Raw WKB phase $\\theta$",
             color="b",
-            linestyle="dashed",
+            linestyle=LOOSE_DASHED,
         )
         ax.plot(
             abs_theta_spline_x,
@@ -629,7 +631,7 @@ def plot_Gk(
             raw_theta_y,
             label="Raw WKB phase $\\theta$",
             color="b",
-            linestyle="dashed",
+            linestyle=LOOSE_DASHED,
         )
         ax.plot(
             theta_spline_x,

@@ -59,6 +59,8 @@ from extract_common import (
     safe_div,
     add_k_labels,
     MIDDLE_ROW,
+    LOOSE_DASHED,
+    LOOSE_DOTTED,
 )
 from model_list import build_model_list
 
@@ -286,7 +288,7 @@ def plot_QuadSourceIntegral(
             abs_analytic_y,
             label="Analytic",
             color="g",
-            linestyle="dashed",
+            linestyle=LOOSE_DASHED,
         )
 
         add_z_labels(ax, policy, k_exit, "$k$")
@@ -511,7 +513,7 @@ def plot_QuadSourceIntegrand(
             abs_analytic_y,
             label="Analytic",
             color="b",
-            linestyle="dashed",
+            linestyle=LOOSE_DASHED,
         )
 
         add_z_labels(ax, GkPolicy, k_exit, "$k$")
@@ -559,11 +561,11 @@ def plot_QuadSourceIntegrand(
             abs_analytic_Levin_f_y,
             label="Analytic",
             color="b",
-            linestyle="dashed",
+            linestyle=LOOSE_DASHED,
         )
 
         add_z_labels(ax, GkPolicy, k_exit, "$k$")
-        add_Gk_labels(ax, GkPolicy)
+        add_GkSource_plot_labels(ax, Gk, GkPolicy, model_label)
 
         set_loglog_axes(ax)
 
@@ -772,32 +774,32 @@ def plot_Gk(
             abs_analytic_G_rad_y,
             label="Analytic $G_k$ [radiation]",
             color="g",
-            linestyle="dashed",
+            linestyle=LOOSE_DASHED,
         )
         ax.plot(
             abs_analytic_G_rad_x,
             abs_analytic_G_rad_y,
             label="Analytic $G_k$ [$w=w(z)$]",
             color="b",
-            linestyle="dashed",
+            linestyle=LOOSE_DASHED,
         )
         ax.plot(
             abs_G_spline_x,
             abs_G_spline_y,
             label="Spline $G_k$",
             color="r",
-            linestyle="dashdot",
+            linestyle=LOOSE_DOTTED,
         )
         ax.plot(
             abs_G_WKB_spline_x,
             abs_G_WKB_spline_y,
             label="Spline WKB $G_k$",
             color="b",
-            linestyle="dashdot",
+            linestyle=LOOSE_DOTTED,
         )
 
         add_z_labels(ax, GkPolicy, k_exit, "$k$")
-        add_Gk_labels(ax, GkPolicy)
+        add_GkSource_plot_labels(ax, Gk, GkPolicy, model_label)
 
         ax.set_xlabel("source redshift $z$")
         ax.set_ylabel("$G_k(z, z') / [(1+z') H(z')^2 ]$")
@@ -911,7 +913,7 @@ def plot_tensor_source(
             abs_analytic_rad_x,
             abs_analytic_rad_y,
             label="Analytic [radiation]",
-            linestyle="dashed",
+            linestyle=LOOSE_DASHED,
         )
         ax.plot(abs_source_x, abs_spline_y, label="Spline")
 
@@ -953,7 +955,7 @@ def plot_tensor_source(
                 abs_analytic_rad_x,
                 abs_analytic_rad_y,
                 label="Analytic [radiation]",
-                linestyle="dashed",
+                linestyle=LOOSE_DASHED,
             )
             ax.plot(abs_source_x, abs_spline_y, label="Spline")
 

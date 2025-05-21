@@ -35,6 +35,7 @@ from extract_common import (
     safe_fabs,
     set_loglog_axes,
     add_simple_plot_labels,
+    LOOSE_DASHED,
 )
 from model_list import build_model_list
 
@@ -146,13 +147,13 @@ def plot_tensor_source(model_label: str, source: QuadSource):
             abs_analytic_rad_x,
             abs_analytic_rad_y,
             label="Analytic [radiation]",
-            linestyle="dashed",
+            linestyle=LOOSE_DASHED,
         )
         ax.plot(
             abs_analytic_w_x,
             abs_analytic_w_y,
             label="Analytic [$w=w(z)$]",
-            linestyle="dashdot",
+            linestyle=LOOSE_DASHED,
         )
         ax.plot(abs_source_x, abs_spline_y, label="Spline")
 
@@ -205,8 +206,12 @@ def plot_tensor_source(model_label: str, source: QuadSource):
         ax = plt.gca()
 
         ax.plot(abs_source_x, abs_source_y, label="Numerical")
-        ax.plot(abs_undiff_x, abs_undiff_y, label="$T_{k}$ part", linestyle="dashed")
-        ax.plot(abs_diff_x, abs_diff_y, label="$dT_{k}/dz$ part", linestyle="dashdot")
+        ax.plot(
+            abs_undiff_x, abs_undiff_y, label="$T_{k}$ part", linestyle=LOOSE_DASHED
+        )
+        ax.plot(
+            abs_diff_x, abs_diff_y, label="$dT_{k}/dz$ part", linestyle=LOOSE_DASHED
+        )
 
         add_z_labels(ax, q_exit=q_exit, r_exit=r_exit)
         add_simple_plot_labels(
