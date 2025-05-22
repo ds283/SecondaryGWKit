@@ -20,10 +20,15 @@ def safe_fabs(x: Optional[float]) -> Optional[float]:
 
 
 def safe_div(x: Optional[float], y: float) -> Optional[float]:
-    if x is None:
+    if x is None or y is None:
         return None
 
-    return x / y
+    try:
+        return x / y
+    except ZeroDivisionError:
+        pass
+
+    return None
 
 
 def set_loglinear_axes(ax):

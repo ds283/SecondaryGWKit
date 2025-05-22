@@ -369,6 +369,26 @@ def plot_Gk(
         )
         for value in values
     ]
+    abs_analytic_G_rad_numeric_ratio_points = [
+        (
+            value.z_source.z,
+            safe_div(
+                safe_fabs(value.numeric.G),
+                safe_fabs(value.analytic_G_rad),
+            ),
+        )
+        for value in values
+    ]
+    abs_analytic_G_rad_WKB_ratio_points = [
+        (
+            value.z_source.z,
+            safe_div(
+                safe_fabs(value.WKB.G_WKB),
+                safe_fabs(value.analytic_G_rad),
+            ),
+        )
+        for value in values
+    ]
 
     abs_theta_points = [
         (value.z_source.z, safe_fabs(value.WKB.theta)) for value in values
@@ -423,6 +443,13 @@ def plot_Gk(
     abs_analytic_G_rad_x, abs_analytic_G_rad_y = zip(*abs_analytic_G_rad_points)
     abs_analytic_G_w_x, abs_analytic_G_w_y = zip(*abs_analytic_G_w_points)
 
+    abs_analytic_G_rad_numeric_ratio_x, abs_analytic_G_rad_numeric_ratio_y = zip(
+        *abs_analytic_G_rad_numeric_ratio_points
+    )
+    abs_analytic_G_rad_WKB_ratio_x, abs_analytic_G_rad_WKB_ratio_y = zip(
+        *abs_analytic_G_rad_WKB_ratio_points
+    )
+
     abs_G_spline_x, abs_G_spline_y = (
         zip(*abs_G_spline_points) if len(abs_G_spline_points) > 0 else ([], [])
     )
@@ -465,7 +492,7 @@ def plot_Gk(
 
     sns.set_theme()
 
-    if len(abs_G_x) > 0 and (
+    if (len(abs_G_x) > 0 or len(abs_G_WKB_x) > 0) and (
         any(y is not None and y > 0 for y in abs_G_y)
         or any(y is not None and y > 0 for y in abs_G_WKB_y)
         or any(y is not None and y > 0 for y in abs_analytic_G_rad_y)
@@ -561,6 +588,63 @@ def plot_Gk(
         fig_path.parents[0].mkdir(exist_ok=True, parents=True)
         fig.savefig(fig_path)
         fig.savefig(fig_path.with_suffix(".png"))
+
+        plt.close()
+
+    if (
+        len(abs_analytic_G_rad_numeric_ratio_x) > 0
+        or len(abs_analytic_G_rad_WKB_ratio_x) > 0
+    ) and (
+        any(y is not None and y > 0 for y in abs_analytic_G_rad_numeric_ratio_y)
+        or any(y is not None and y > 0 for y in abs_analytic_G_rad_WKB_ratio_y)
+    ):
+        fig = plt.figure()
+        ax = plt.gca()
+
+        ax.plot(
+            abs_analytic_G_rad_numeric_ratio_x,
+            abs_analytic_G_rad_numeric_ratio_y,
+            label="Numeric $G_k$",
+            color="r",
+            linestyle="solid",
+        )
+        ax.plot(
+            abs_analytic_G_rad_WKB_ratio_x,
+            abs_analytic_G_rad_WKB_ratio_y,
+            label="WKB $G_k$",
+            color="b",
+            linestyle="solid",
+        )
+
+        add_z_labels(ax, Gk, GkPolicy)
+        add_GkSource_plot_labels(ax, Gk, GkPolicy, model_label)
+
+        ax.set_xlabel("source redshift $z$")
+        ax.set_ylabel("$G_k(z, z')$ numeric-to-analytic ratio")
+
+        set_loglog_axes(ax)
+
+        fig_path = (
+            base_path
+            / f"plots/Gk-ratio/k={k_exit.k.k_inv_Mpc:.5g}-k-serial={k_exit.store_id}/zresponse={z_response.z:.5g}-z-serial={z_response.store_id}.pdf"
+        )
+        fig_path.parents[0].mkdir(exist_ok=True, parents=True)
+        fig.savefig(fig_path)
+        fig.savefig(fig_path.with_suffix(".png"))
+
+        if z_response.z <= k_exit.z_exit_suph_e3:
+            ax.set_xlim(
+                int(round(k_exit.z_exit_suph_e5 + 0.5, 0)),
+                int(round(0.85 * k_exit.z_exit_subh_e5 + 0.5, 0)),
+            )
+
+            fig_path = (
+                base_path
+                / f"plots/Gk-ratio-reentry-zoom/k={k_exit.k.k_inv_Mpc:.5g}-k-serial={k_exit.store_id}/zresponse={z_response.z:.5g}-z-serial={z_response.store_id}.pdf"
+            )
+            fig_path.parents[0].mkdir(exist_ok=True, parents=True)
+            fig.savefig(fig_path)
+            fig.savefig(fig_path.with_suffix(".png"))
 
         plt.close()
 
