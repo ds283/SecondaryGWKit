@@ -333,7 +333,7 @@ def plot_Tk(
             "omega_WKB_sq": omega_WKB_sq_column,
             "WKB_criterion": WKB_criterion_column,
             "type": type_column,
-        }  # Add model identifier}
+        }  # Add model identifier
     )
     df.sort_values(by="redshift", ascending=False, inplace=True, ignore_index=True)
     df.to_csv(csv_path, header=True, index=False)
