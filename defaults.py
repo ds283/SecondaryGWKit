@@ -11,5 +11,5 @@ DEFAULT_QUADRATURE_ATOL = 1e-25
 # value of dtheta/dz where we will switch to a Levin integration strategy
 DEFAULT_LEVIN_THRESHOLD = 1.0
 
-DEFAULT_GKSOURCE_NUMERIC_POLICY = "maximize_Levin"
-DEFAULT_QUADSOURCE_NUMERIC_POLICY = "maximize_Levin"
+DEFAULT_GKSOURCE_NUMERIC_POLICY = "maximize-WKB"
+DEFAULT_QUADSOURCE_NUMERIC_POLICY = "maximize-WKB"

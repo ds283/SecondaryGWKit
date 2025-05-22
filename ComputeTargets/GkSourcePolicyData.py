@@ -1,6 +1,6 @@
 from collections import namedtuple
 from math import log, fabs, sqrt
-from typing import Optional
+from typing import Optional, Union, List
 
 import ray
 from scipy.interpolate import make_interp_spline
@@ -54,37 +54,88 @@ def apply_GkSource_policy(source_proxy: GkSourceProxy, policy: GkSourcePolicy) -
     return payload
 
 
-def _build_WKB_values(source: GkSource, max_z, min_z):
-    def max_predicate(z):
-        if isinstance(max_z, redshift):
+RedshiftLike = Union[float, redshift]
+StringListLike = Union[str, List[str]]
+
+
+class RedshiftRangePredicate:
+
+    def __init__(
+        self,
+        min_z: RedshiftLike,
+        max_z: RedshiftLike,
+        property_list: Optional[StringListLike] = None,
+    ):
+        self.min_z: RedshiftLike = min_z
+        self.max_z: RedshiftLike = max_z
+
+        self.property_list = None
+        if property_list is not None:
+            if isinstance(property_list, str):
+                self.property_list = [property_list]
+            else:
+                self.property_list = property_list
+
+    def _less_than_max(self, z: RedshiftLike):
+        if isinstance(self.max_z, redshift):
             return (
-                z.z <= max_z.z + DEFAULT_FLOAT_PRECISION or z.store_id == max_z.store_id
+                z.z <= self.max_z.z + DEFAULT_FLOAT_PRECISION
+                or z.store_id == self.max_z.store_id
             )
 
-        return z.z <= max_z + DEFAULT_FLOAT_PRECISION
+        return float(z) <= self.max_z + DEFAULT_FLOAT_PRECISION
 
-    def min_predicate(z):
-        if isinstance(min_z, redshift):
+    def _greater_than_min(self, z: RedshiftLike):
+        if isinstance(self.min_z, redshift):
             return (
-                z.z >= min_z.z - DEFAULT_FLOAT_PRECISION or z.store_id == min_z.store_id
+                z.z >= self.min_z.z - DEFAULT_FLOAT_PRECISION
+                or z.store_id == self.min_z.store_id
             )
 
-        return z.z >= min_z - DEFAULT_FLOAT_PRECISION
+        return float(z) >= self.min_z - DEFAULT_FLOAT_PRECISION
+
+    def _has_properties(self, v):
+        if self.property_list is None:
+            return True
+
+        return all(getattr(v, p) for p in self.property_list)
+
+    def __call__(self, z):
+        return (
+            self._less_than_max(z.z_source)
+            and self._greater_than_min(z.z_source)
+            and self._has_properties(z)
+        )
+
+
+def _filter_values_from_range(
+    source: GkSource,
+    max_z: RedshiftLike,
+    min_z: RedshiftLike,
+    property_list: Optional[StringListLike] = None,
+):
+    predicate: RedshiftRangePredicate = RedshiftRangePredicate(
+        min_z, max_z, property_list=property_list
+    )
 
     # must be sorted into ascending order of redshift for a smoothing spline
-    WKB_data = [
-        v
-        for v in source.values
-        if v.has_WKB and max_predicate(v.z_source) and min_predicate(v.z_source)
-    ]
+    data = [v for v in source.values if predicate(v)]
 
-    WKB_data.sort(key=lambda x: x.z_source.z)
+    data.sort(key=lambda x: x.z_source.z)
 
-    return WKB_data
+    return data
 
 
 def _classify_Levin(source: GkSource, policy: GkSourcePolicy, data) -> dict:
-    # find the Levin point, if we are using WKB data
+    """
+    Determine the point where we should enable Levin integration for this Green's function,
+    assuming it has some WKB phase data that can be used for a Levin quadrature.
+    (GkSource instances that are "numeric" only cannot be used with Levin quadrature.)
+    :param source:
+    :param policy:
+    :param data:
+    :return:
+    """
 
     payload = {}
     metadata = {}
@@ -93,78 +144,143 @@ def _classify_Levin(source: GkSource, policy: GkSourcePolicy, data) -> dict:
     source_quality = data["quality"]
     crossover_z = data.get("crossover_z", None)
 
-    if (
-        source_type == "WKB" or source_type == "mixed"
-    ) and source_quality != "incomplete":
-        max_z = (
-            crossover_z if crossover_z is not None else source.primary_WKB_largest_z.z
-        )
-        min_z = source.z_sample.min.z
-        WKB_data = _build_WKB_values(source, max_z=max_z, min_z=min_z)
+    if source_quality in ["incomplete"] or source_type in ["numeric", "fail"]:
+        return {"Levin_z": None, "metadata": metadata}
 
-        log_x_points = [log(1.0 + v.z_source.z) for v in WKB_data]
-        theta_div_2pi_points = [v.WKB.theta_div_2pi for v in WKB_data]
-        theta_mod_2pi_points = [v.WKB.theta_mod_2pi for v in WKB_data]
+    max_z = crossover_z if crossover_z is not None else source.primary_WKB_largest_z.z
+    min_z = source.z_sample.min.z
+    WKB_data = _filter_values_from_range(
+        source, max_z=max_z, min_z=min_z, property_list="has_WKB"
+    )
 
-        # setting chunk_step and chunk_logstep to None forces phase_spline to use a single chunk
-        # here, any benefit gained from chunking is offset by the risk of edge effects in the derivative
-        # near the chunk boundaries
-        theta_spline: phase_spline = phase_spline(
-            log_x_points,
-            theta_div_2pi_points,
-            theta_mod_2pi_points,
-            x_is_log=True,
-            x_is_redshift=True,
-            chunk_step=None,
-            # chunk_logstep=125,
-            chunk_logstep=None,
-            increasing=False,
-        )
+    log_x_points = [log(1.0 + v.z_source.z) for v in WKB_data]
+    theta_div_2pi_points = [v.WKB.theta_div_2pi for v in WKB_data]
+    theta_mod_2pi_points = [v.WKB.theta_mod_2pi for v in WKB_data]
 
-        # note that we compute the logarithmic derivative of theta with respect to log(1+z)
+    # setting chunk_step and chunk_logstep to None forces phase_spline to use a single chunk
+    # here, any benefit gained from chunking is offset by the risk of edge effects in the derivative
+    # near the chunk boundaries
+    theta_spline: phase_spline = phase_spline(
+        log_x_points,
+        theta_div_2pi_points,
+        theta_mod_2pi_points,
+        x_is_log=True,
+        x_is_redshift=True,
+        chunk_step=None,
+        # chunk_logstep=125,
+        chunk_logstep=None,
+        increasing=False,
+    )
 
-        # We are eventually going to do the Levin quadrature in log(1+z), so it is the
-        # frequency of oscillation with respect to log(1+z) that matters
+    # note that we compute the logarithmic derivative of theta with respect to log(1+z)
 
-        # finally, note _z_sample is guaranteed to be in descending order of redshift
+    # We are eventually going to do the Levin quadrature in log(1+z), so it is the
+    # frequency of oscillation with respect to log(1+z) that matters
 
-        for z_source in source.z_sample:
-            if max_z >= z_source.z >= min_z:
-                if (
-                    fabs(theta_spline.theta_deriv(z_source.z, log_derivative=True))
-                    > policy.Levin_threshold
-                ):
-                    payload["Levin_z"] = z_source
-                    metadata["Levin_z_dtheta_dlogz"] = float(
-                        theta_spline.theta_deriv(z_source.z, log_derivative=True)
-                    )
-                    break
+    # finally, note _z_sample is guaranteed to be in descending order of redshift
 
-    if "Levin_z" not in payload:
-        payload["Levin_z"] = None
+    for z_source in source.z_sample:
+        if max_z >= z_source.z >= min_z:
+            if (
+                fabs(theta_spline.theta_deriv(z_source.z, log_derivative=True))
+                > policy.Levin_threshold
+            ):
+                payload["Levin_z"] = z_source
+                metadata["Levin_z_dtheta_dlogz"] = float(
+                    theta_spline.theta_deriv(z_source.z, log_derivative=True)
+                )
+                break
+
     payload["metadata"] = metadata
+
     return payload
 
 
+CLEARANCE_GOOD = 0.05
+CLEARANCE_ACCEPTABLE = 0.025
+CLEARANCE_MARGINAL = 0.01
+
+
+# select candidate crossover points in a given order of preference
+PREFERRED_PROPERTIES = [
+    ("good", ["numeric_good", "WKB_good"]),
+    ("acceptable", ["numeric_acceptable", "WKB_good"]),
+    ("acceptable", ["numeric_good", "WKB_acceptable"]),
+    ("acceptable", ["numeric_acceptable", "WKB_acceptable"]),
+    ("marginal", ["numeric_marginal", "WKB_good"]),
+    ("marginal", ["numeric_marginal", "WKB_acceptable"]),
+    ("marginal", ["numeric_good", "WKB_marginal"]),
+    ("marginal", ["numeric_acceptable", "WKB_marginal"]),
+    ("marginal", ["numeric_marginal", "WKB_marginal"]),
+    ("minimal", ["numeric_minimal", "WKB_minimal"]),
+]
+
+
 def _classify_crossover(source: GkSource, policy: GkSourcePolicy) -> dict:
-    has_WKB_spline_points = False
+    """
+    Classify this Green's function. We classify whether the combination of numerical and WKB
+    data form a complete or incomplete representation of the Green's function over the range of interest.
+    We also classify whether the *quality* of the representation is good. This means that we can spline
+    the data in both regions without getting too close to one of the end-points. For that we need
+    some overlap between the numeric and WKB regions.
+    Finally, we apply a numerical policy to decide where we should switch from using the
+    numerical data to using the WKB data.
+    :param source:
+    :param policy:
+    :return:
+    """
+    has_WKB_region: bool = source.primary_WKB_largest_z is not None
+    has_WKB_spline_points: bool = False
+
+    has_numeric_region: bool = source.numerical_smallest_z is not None
+    has_numeric_spline_points: bool = False
 
     payload = {}
     metadata = {}
 
-    if source.primary_WKB_largest_z is not None:
-        WKB_data = _build_WKB_values(
-            source, max_z=source.primary_WKB_largest_z, min_z=source.z_sample.min
+    # do we have WKB data?
+    if has_WKB_region:
+        WKB_data = _filter_values_from_range(
+            source,
+            max_z=source.primary_WKB_largest_z,
+            min_z=source.z_sample.min,
+            property_list="has_WKB",
         )
 
+        # if we have enough data points, we can build an adequate spline. Otherwise, we can't.
         if len(WKB_data) >= MIN_SPLINE_DATA_POINTS:
             has_WKB_spline_points = True
         else:
             metadata["WKB_spline_points"] = len(WKB_data)
 
-    # if primary WKB region is missing, or there are not enough points to construct an adequate spline,
-    # we need numerical data to go all the way down to lowest redshift
-    if source.primary_WKB_largest_z is None or not has_WKB_spline_points:
+    # do we have numeric data?
+    if has_numeric_region:
+        numeric_data = _filter_values_from_range(
+            source,
+            max_z=source.z_sample.max,
+            min_z=source.numerical_smallest_z,
+            property_list="has_numeric",
+        )
+
+        if len(numeric_data) >= MIN_SPLINE_DATA_POINTS:
+            has_numeric_spline_points = True
+        else:
+            metadata["numeric_spline_points"] = len(numeric_data)
+
+    # if both the WKB and numeric regions are missing, we have a fail
+    if (not has_numeric_region or not has_numeric_spline_points) and (
+        not has_WKB_region or not has_WKB_spline_points
+    ):
+        payload["type"] = "fail"
+        payload["crossover_z"] = None
+        payload["quality"] = "incomplete"
+        metadata["comment"] = "No WKB region and no numeric region"
+
+    # if the primary WKB region is missing, or there are not enough points to construct an adequate spline,
+    # we need the numeric data to go all the way *down* to the smallest relevant redshift. Otherwise we have
+    # an incomplete representation
+    elif not has_WKB_region or not has_WKB_spline_points:
+        # can assume has_numeric_region and has_numeric_spline_points
         payload["type"] = "numeric"
         payload["crossover_z"] = None
 
@@ -173,34 +289,32 @@ def _classify_crossover(source: GkSource, policy: GkSourcePolicy) -> dict:
         else:
             payload["quality"] = "incomplete"
             metadata["comment"] = (
-                "No WKB region, and numeric region does not extend to z_sample.min"
+                f"No WKB region. Numeric region does not cover full range. numerical_smallest_z={source.numerical_smallest_z.z:.5g}, z_sample.min={source.z_sample.min.z:.5g}"
             )
 
-    # if numerical data is missing, we need WKB data to go all the way up to the highest redshift
-    elif source.numerical_smallest_z is None:
+    # if the numeric region is missing, or there are not enough points to construct an adequate spline,
+    # we need the WKB data to go all the way *up* to the highest relevant redshift. Otherwise we have
+    # an incomplete representation
+    elif not has_numeric_region or not has_numeric_spline_points:
+        # can assume has_WKB_region and has_WKB_spline_points
         payload["type"] = "WKB"
         payload["crossover_z"] = None
 
-        if (
-            source.primary_WKB_largest_z.store_id == source.z_sample.max.store_id
-            and has_WKB_spline_points
-        ):
+        if source.primary_WKB_largest_z.store_id == source.z_sample.max.store_id:
             payload["quality"] = "complete"
         else:
             payload["quality"] = "incomplete"
             metadata["comment"] = (
-                "No numeric region, and WKB region does not extend to z_sample.max"
+                f"No numeric region. WKB region does not cover full range. primary_WKB_largest_z={source.primary_WKB_largest_z.z:.5g}, z_sample.max={source.z_sample.max.z:.5g}"
             )
 
-    # otherwise, there should be an overlap region
+    # otherwise, we have both a WKB region and a numeric region, and we need to decide where we are going
+    # to switch between them. We're also allowed to assume that we have at least a minimum number of
+    # sample points to produce both numeric and WKB splines
     else:
-        # we're allowed to assume that the primary WKB region begins at z_sample.min, and the numerical region
-        # (if it is present) begins at z_sample.max
-
-        # we're also allowed to assume that we have at least a minimum number of sample points to produce a spline
-        # between _primary_WKB_largest_z and z_min
         payload["type"] = "mixed"
 
+        # if there is no overlap, we have a gap, and this Green's function is incomplete
         if (
             source.numerical_smallest_z.z
             >= source.primary_WKB_largest_z.z - DEFAULT_FLOAT_PRECISION
@@ -208,103 +322,116 @@ def _classify_crossover(source: GkSource, policy: GkSourcePolicy) -> dict:
             payload["quality"] = "incomplete"
             payload["crossover_z"] = source.numerical_smallest_z.z
             metadata["comment"] = (
-                "Both WKB and numeric regions are present, but numeric region does not extend below largest redshift in primary WKB region"
+                "WKB and numeric regions are both present, but the numeric region does not overlap with the primary WKB region"
             )
 
         else:
-            # can assume _numerical_smallest_z is strictly smaller than _primary_WKB_largest_z
+            # get numeric policy from the policy object
+            policy_name = policy.numeric_policy
 
-            # find minimum of search window
-            # we want this not to be too close the lower bound at _numerical_smallest_z, but it must fall below the upper bound at
-            # _primary_WKB_largest_z
-            crossover_trial_min_z_options = [
-                1.06 * source.numerical_smallest_z.z,
-                1.03 * source.numerical_smallest_z.z,
-                1.015 * source.numerical_smallest_z.z,
-                source.numerical_smallest_z.z,
-            ]
-            crossover_trial_min_z_options = [
-                z
-                for z in crossover_trial_min_z_options
-                if z <= source.primary_WKB_largest_z.z + DEFAULT_FLOAT_PRECISION
-            ]
-            crossover_trial_min_z = max(crossover_trial_min_z_options)
+            # Can assume there is an overlap. Filter out all values in the overlapping region.
+            overlap_values = _filter_values_from_range(
+                source,
+                max_z=source.primary_WKB_largest_z,
+                min_z=source.numerical_smallest_z,
+                property_list=["has_WKB", "has_numeric"],
+            )
 
-            # find maximum of search window
-            # we want this not to be too close to the upper bound at _primary_WKB_largest_z, but it must fall above the lower bound at
-            # _numerical_smallest_z
-            crossover_trial_max_z_options = [
-                0.94 * source.primary_WKB_largest_z.z,
-                0.97 * source.primary_WKB_largest_z.z,
-                0.985 * source.primary_WKB_largest_z.z,
-                source.primary_WKB_largest_z.z,
-            ]
-            crossover_trial_max_z_options = [
-                z
-                for z in crossover_trial_max_z_options
-                if z >= source.numerical_smallest_z.z - DEFAULT_FLOAT_PRECISION
-            ]
-            crossover_trial_max_z = min(crossover_trial_max_z_options)
+            # For each value, figure out how close we would be to the corresponding end of the spline, bearing in mind
+            # that we spline in log(1+z), not z itself
+            numeric_logz_low = log(1.0 + source.numerical_smallest_z.z)
+            WKB_logz_high = log(1.0 + source.primary_WKB_largest_z.z)
 
-            # work through the search window, trying to find a crossover point at which we have enough data points to build a sensible spline
-            # after a limited number of iterations we give up
+            def classify_point(v):
+                logz = log(1.0 + v.z_source)
+                numeric_clearance = (logz - numeric_logz_low) / numeric_logz_low
+                WKB_clearance = (WKB_logz_high - logz) / WKB_logz_high
+
+                # a point is good if we have more than 5% clearance;
+                # acceptable if we have less than 5% but more than 2.5% clearance
+                # marginal if we have less than 2.5% but more than 1% clearance
+                # otherwise minimal
+                return {
+                    "value": v,
+                    "numeric_clearance": numeric_clearance,
+                    "WKB_clearance": WKB_clearance,
+                    "numeric_good": numeric_clearance > CLEARANCE_GOOD,
+                    "WKB_good": WKB_clearance > CLEARANCE_GOOD,
+                    "numeric_acceptable": numeric_clearance > CLEARANCE_ACCEPTABLE,
+                    "WKB_acceptable": WKB_clearance > CLEARANCE_ACCEPTABLE,
+                    "numeric_marginal": numeric_clearance > CLEARANCE_MARGINAL,
+                    "WKB_marginal": WKB_clearance > CLEARANCE_MARGINAL,
+                    "numeric_minimal": numeric_clearance > 0.0,
+                    "WKB_minimal": numeric_clearance > 0.0,
+                }
+
+            # classify each value in the overlapping region
+            classified_values = [classify_point(v) for v in overlap_values]
+
             crossover_z = None
-            step_width = (crossover_trial_max_z - crossover_trial_min_z) / 10.0
+            quality = None
+            i: int = 0
+            while crossover_z is None and i < len(PREFERRED_PROPERTIES):
+                target_quality, property_list = PREFERRED_PROPERTIES[i]
+                i += 1
 
-            iterations = 0
-            # start near the lower end, so that we include as many numerical results as possible.
-            # We probably trust the direct numerical results more than the WKB approximation.
-            trial_z = crossover_trial_min_z
-            while (
-                iterations < 11
-                and crossover_z is None
-                and trial_z <= crossover_trial_max_z
-            ):
-                WKB_data = _build_WKB_values(
-                    source, max_z=trial_z, min_z=source.z_sample.min
-                )
+                filtered_values = [
+                    v
+                    for v in classified_values
+                    if all(getattr(v, p) for p in property_list)
+                ]
+                if len(filtered_values) == 0:
+                    continue
 
-                # are there enough data points to get a sensible spline?
-                if len(WKB_data) >= MIN_SPLINE_DATA_POINTS:
-                    crossover_z = trial_z
+                quality = target_quality
 
-                    WKB_clearance = trial_z / source.primary_WKB_largest_z.z
-                    numerical_clearance = trial_z / source.numerical_smallest_z.z
-
-                    # try to classify the quality of this crossover choice
-                    if WKB_clearance < 0.95 and numerical_clearance > 1.05:
-                        payload["quality"] = "complete"
-                    elif WKB_clearance < 0.985 and numerical_clearance > 1.025:
-                        payload["quality"] = "acceptable"
-                    elif WKB_clearance < 0.99 and numerical_clearance > 1.01:
-                        payload["quality"] = "marginal"
-                    else:
-                        payload["quality"] = "minimal"
-
-                    metadata["WKB_clearance"] = WKB_clearance
-                    metadata["numerical_clearance"] = numerical_clearance
-                    metadata["WKB_crossover_spline_points"] = len(WKB_data)
+                # on the maximize-WKB policy we should switch to WKB as soon as possible
+                if policy_name == "maximize-WKB":
+                    sorted_values = sorted(
+                        filtered_values, key=lambda v: v["value"].z_source, reverse=True
+                    )
+                    crossover_z = sorted_values[0]["value"].z_source
                     break
 
-                iterations = iterations + 1
-                trial_z = trial_z + step_width
+                # on the maximize-numeric policy we should switch to WKB as late as possible
+                elif policy_name == "minimize-WKB":
+                    sorted_values = sorted(
+                        filtered_values, key=lambda v: v["value"].z_source
+                    )
+                    crossover_z = sorted_values[0]["value"].z_source
+                    break
+
+                else:
+                    raise RuntimeError(
+                        f'Unknown GkSourcePolicy numeric policy "{policy_name}"'
+                    )
 
             if crossover_z is None:
                 # should get enough points for a good spline if we set the crossover scale to _primary_WKB_largest_z, since
                 # we checked above that enough points are available.
                 # The downside of this choice is only that it throws away numerical information that is potentially more accurate.
                 crossover_z = source.primary_WKB_largest_z.z
-                payload["quality"] = "minimal"
+                quality = "minimal"
 
-                WKB_data = _build_WKB_values(
-                    source, max_z=crossover_z, min_z=source.z_sample.min
+                WKB_data = _filter_values_from_range(
+                    source,
+                    max_z=crossover_z,
+                    min_z=source.z_sample.min,
+                    property_list="has_WKB",
+                )
+                numeric_data = _filter_values_from_range(
+                    source,
+                    max_z - source.z_sample.max,
+                    min_z=source.numerical_smallest_z,
+                    property_list="has_numeric",
                 )
 
                 metadata["comment"] = (
-                    f"Calculation of crossover_z did not converge. WKB spline contains {len(WKB_data)} points."
+                    f"Calculation of crossover_z did not yield a result. Crossover set to largest z in primary WKB region: z={source.primary_WKB_largest_z.z:.5g}. Numeric spline contains {len(numeric_data)} points. WKB spline contains {len(WKB_data)} points."
                 )
 
             payload["crossover_z"] = crossover_z
+            payload["quality"] = quality
 
     payload["metadata"] = metadata
     return payload
@@ -503,7 +630,7 @@ class GkSourcePolicyData(DatastoreObject):
                     f"GkSourcePolicyData: inconsistent values of crossover_z={self._crossover_z:.5g} and largest WKB z={max_z.z:.5g}"
                 )
 
-            WKB_data = _build_WKB_values(source, max_z, min_z)
+            WKB_data = (source, max_z, min_z)
 
             if len(WKB_data) >= MIN_SPLINE_DATA_POINTS:
                 WKB_region = (max_z.z, min_z.z)

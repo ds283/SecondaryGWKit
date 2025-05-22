@@ -30,12 +30,14 @@ _type_serialize = {
     "numeric": 0,
     "WKB": 1,
     "mixed": 2,
+    "fail": 99,
 }
 
 _type_deserialize = {
     0: "numeric",
     1: "WKB",
     2: "mixed",
+    99: "fail",
 }
 
 
