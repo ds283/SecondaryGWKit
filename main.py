@@ -2577,13 +2577,13 @@ with ShardedPool(
                 "GkSourcePolicy",
                 label='policy="maximize-WKB"-Levin-threshold="1.5"',
                 Levin_threshold=1.5,
-                numeric_policy="maximize_Levin",
+                numeric_policy="maximize-WKB",
             ),
             pool.object_get(
                 "GkSourcePolicy",
                 label='policy="maximize-WKB"-Levin-threshold="5.0"',
                 Levin_threshold=5.0,
-                numeric_policy="maximize_Levin",
+                numeric_policy="maximize-WKB",
             ),
         ]
     )
@@ -2595,13 +2595,13 @@ with ShardedPool(
                 "QuadSourcePolicy",
                 label='policy="maximize-WKB"-Levin-threshold="1.5"',
                 Levin_threshold=1.5,
-                numeric_policy="maximize_Levin",
+                numeric_policy="maximize-WKB",
             ),
             pool.object_get(
                 "QuadSourcePolicy",
                 label='policy="maximize-WKB"-Levin-threshold="5.0"',
                 Levin_threshold=5.0,
-                numeric_policy="maximize_Levin",
+                numeric_policy="maximize-WKB",
             ),
         ]
     )

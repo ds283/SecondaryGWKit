@@ -3,7 +3,7 @@ from typing import Optional
 from Datastore import DatastoreObject
 from defaults import DEFAULT_LEVIN_THRESHOLD, DEFAULT_QUADSOURCE_NUMERIC_POLICY
 
-_allowed_numeric_policies = ["maximize_numeric", "maximize_Levin"]
+_allowed_numeric_policies = ["maximize_numeric", "maximize-WKB"]
 
 
 class QuadSourcePolicy(DatastoreObject):
