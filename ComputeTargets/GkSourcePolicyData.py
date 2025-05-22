@@ -343,7 +343,7 @@ def _classify_crossover(source: GkSource, policy: GkSourcePolicy) -> dict:
             WKB_logz_high = log(1.0 + source.primary_WKB_largest_z.z)
 
             def classify_point(v):
-                logz = log(1.0 + v.z_source)
+                logz = log(1.0 + v.z_source.z)
                 numeric_clearance = (logz - numeric_logz_low) / numeric_logz_low
                 WKB_clearance = (WKB_logz_high - logz) / WKB_logz_high
 
