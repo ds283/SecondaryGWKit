@@ -7,7 +7,7 @@ import ray
 from ray import ObjectRef
 
 from ComputeTargets.BackgroundModel import BackgroundModel, ModelProxy
-from ComputeTargets.GkNumericalIntegration import GkNumericalValue
+from ComputeTargets.GkNumericIntegration import GkNumericValue
 from ComputeTargets.GkWKBIntegration import GkWKBValue
 from CosmologyConcepts import wavenumber_exit_time, redshift, wavenumber, redshift_array
 from Datastore import DatastoreObject
@@ -31,7 +31,7 @@ _WKBData = namedtuple(
         "H_ratio",
         "sin_coeff",
         "cos_coeff",
-        "z_init",  # if not None, shows that this WKB data point was obtained from a GkNumericalIntegration initial condition
+        "z_init",  # if not None, shows that this WKB data point was obtained from a GkNumericIntegration initial condition
         "G_WKB",
         "new_G_WKB",
         "abs_G_WKB_err",
@@ -74,13 +74,13 @@ def assemble_GkSource_values(
     primary_WKB_largest_z: Optional[redshift] = None
 
     # track the latest redshift for which we have numerical information
-    numerical_smallest_z: Optional[redshift] = None
+    numeric_smallest_z: Optional[redshift] = None
 
     lowest_z = z_sample.min
 
     # recall we work from LOW to HIGH redshift, hence we iterate through the reversed list
     for z_source in reversed(list(z_sample)):
-        numeric: GkNumericalValue = numeric_data.get(z_source.store_id, None)
+        numeric: GkNumericValue = numeric_data.get(z_source.store_id, None)
         WKB: GkWKBValue = WKB_data.get(z_source.store_id, None)
 
         # If there is neither a WKB or a numerical data point, then this is an error. We cannot proceed.
@@ -175,7 +175,7 @@ def assemble_GkSource_values(
                 # Instead, we have to rely on the numerical region going all the way down the z_min.
                 # (There will probably always be *some* k-modes/z_source combinations for which WKB data does not
                 # go all the way down to the lowest z_source. WKB data are missing only for z_response values that lie
-                # between z_source and z_init, the time of the initial condition computed from a GkNumericalIntegration instance.
+                # between z_source and z_init, the time of the initial condition computed from a GkNumericIntegration instance.
                 # Since there will typically be *some* response redshifts in this missing window, there wll also be some
                 # GkSource instances that also miss it.
                 if z_source.store_id == lowest_z.store_id:
@@ -316,8 +316,8 @@ def assemble_GkSource_values(
                 in_primary_WKB_region = False
 
         if numeric is not None:
-            if numerical_smallest_z is None or z_source.z < numerical_smallest_z.z:
-                numerical_smallest_z = z_source
+            if numeric_smallest_z is None or z_source.z < numeric_smallest_z.z:
+                numeric_smallest_z = z_source
 
         values.append(
             GkSourceValue(
@@ -369,44 +369,41 @@ def assemble_GkSource_values(
             )
         )
 
-    if numerical_smallest_z is None:
+    if numeric_smallest_z is None:
         if primary_WKB_largest_z is None:
             print(
                 f"!! WARNING (assemble_GkSource_values): for k={k_exit.k.k_inv_Mpc:.5g}/Mpc (store_id={k_exit.store_id}), z_response={z_response.z:.5g} (store_id={z_response.store_id})"
             )
-            print(f"|    -- no numerical region or primary WKB region was detected")
+            print(f"|    -- no numeric region or primary WKB region was detected")
         elif primary_WKB_largest_z.z < z_sample.max.z - DEFAULT_FLOAT_PRECISION:
             print(
                 f"!! WARNING (assemble_GkSource_values): for k={k_exit.k.k_inv_Mpc:.5g}/Mpc (store_id={k_exit.store_id}), z_response={z_response.z:.5g} (store_id={z_response.store_id})"
             )
             print(
-                f"|    -- no numerical values for G_k(z,z') were detected, but largest source redshift in primary WKB region appears to be z_max={primary_WKB_largest_z.z:.5g} (store_id={primary_WKB_largest_z.store_id})"
+                f"|    -- no numeric values for G_k(z,z') were detected, but largest source redshift in primary WKB region appears to be z_max={primary_WKB_largest_z.z:.5g} (store_id={primary_WKB_largest_z.store_id})"
             )
 
     else:
         if primary_WKB_largest_z is None:
-            if numerical_smallest_z.z > z_sample.min.z + DEFAULT_FLOAT_PRECISION:
+            if numeric_smallest_z.z > z_sample.min.z + DEFAULT_FLOAT_PRECISION:
                 print(
                     f"!! WARNING (assemble_GkSource_values): for k={k_exit.k.k_inv_Mpc:.5g}/Mpc (store_id={k_exit.store_id}), z_response={z_response.z:.5g} (store_id={z_response.store_id})"
                 )
                 print(
-                    f"|    -- no WKB values for G_k(z,z') were detected, but smallest numerical source redshift appears to be z_max={numerical_smallest_z.z:.5g} (store_id={numerical_smallest_z.store_id})"
+                    f"|    -- no WKB values for G_k(z,z') were detected, but smallest numeric source redshift appears to be z_max={numeric_smallest_z.z:.5g} (store_id={numeric_smallest_z.store_id})"
                 )
         else:
-            if (
-                numerical_smallest_z.z
-                > primary_WKB_largest_z.z + DEFAULT_FLOAT_PRECISION
-            ):
+            if numeric_smallest_z.z > primary_WKB_largest_z.z + DEFAULT_FLOAT_PRECISION:
                 print(
                     f"!! WARNING (assemble_GkSource_values): for k={k_exit.k.k_inv_Mpc:.5g}/Mpc (store_id={k_exit.store_id}), z_response={z_response.z:.5g} (store_id={z_response.store_id})"
                 )
                 print(
-                    f"|    -- smallest detected numerical source redshift z_min={numerical_smallest_z.z:.5g} (store_id={numerical_smallest_z.store_id}) is larger than largest detected source redshift in primary WKB region z_max={primary_WKB_largest_z.z:.5g} (store_id={primary_WKB_largest_z.store_id})"
+                    f"|    -- smallest detected numeric source redshift z_min={numeric_smallest_z.z:.5g} (store_id={numeric_smallest_z.store_id}) is larger than largest detected source redshift in primary WKB region z_max={primary_WKB_largest_z.z:.5g} (store_id={primary_WKB_largest_z.store_id})"
                 )
 
     return {
         "values": values,
-        "numerical_smallest_z": numerical_smallest_z,
+        "numeric_smallest_z": numeric_smallest_z,
         "primary_WKB_largest_z": primary_WKB_largest_z,
     }
 
@@ -443,7 +440,7 @@ class GkSource(DatastoreObject):
             DatastoreObject.__init__(self, payload["store_id"])
             self._values = payload["values"]
 
-            self._numerical_smallest_z = payload["numerical_smallest_z"]
+            self._numeric_smallest_z = payload["numeric_smallest_z"]
             self._primary_WKB_largest_z = payload["primary_WKB_largest_z"]
 
             self._metadata = payload["metadata"]
@@ -452,7 +449,7 @@ class GkSource(DatastoreObject):
             DatastoreObject.__init__(self, None)
             self._values = None
 
-            self._numerical_smallest_z = None
+            self._numeric_smallest_z = None
             self._primary_WKB_largest_z = None
 
             self._metadata = {}
@@ -496,13 +493,13 @@ class GkSource(DatastoreObject):
         return self._tags
 
     @property
-    def numerical_smallest_z(self) -> Optional[redshift]:
+    def numeric_smallest_z(self) -> Optional[redshift]:
         # allow this field to be read if we have been deserialized with _do_not_populate
         # otherwise, absence of _values implies that we have not yet computed our contents
         if self._values is None and not hasattr(self, "_do_not_populate"):
             raise RuntimeError("values have not yet been populated")
 
-        return self._numerical_smallest_z
+        return self._numeric_smallest_z
 
     @property
     def primary_WKB_largest_z(self) -> Optional[redshift]:
@@ -652,7 +649,7 @@ class GkSource(DatastoreObject):
         self._compute_ref = None
 
         self._values = payload["values"]
-        self._numerical_smallest_z = payload["numerical_smallest_z"]
+        self._numeric_smallest_z = payload["numeric_smallest_z"]
         self._primary_WKB_largest_z = payload["primary_WKB_largest_z"]
 
 

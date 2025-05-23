@@ -8,8 +8,8 @@ SELECT vs.serial                 AS serial,
        vs.z_serial               AS z_serial,
        rs.z                      AS z,
        vs.value                  AS value
-FROM TkNumericalValue vs
-         INNER JOIN TkNumericalIntegration ig ON ig.serial = vs.integration_serial
+FROM TkNumericValue vs
+         INNER JOIN TkNumericIntegration ig ON ig.serial = vs.integration_serial
          INNER JOIN wavenumber_exit_time kes ON kes.serial = ig.wavenumber_exit_serial
          INNER JOIN wavenumber ks ON ks.serial = kes.wavenumber_serial
          INNER JOIN redshift rs ON rs.serial = vs.z_serial
@@ -27,8 +27,8 @@ SELECT vs.serial                 AS serial,
        ig.z_source_serial        AS z_source_serial,
        ss.z                      AS z_source,
        vs.value                  AS value
-FROM GkNumericalValue vs
-         INNER JOIN GkNumericalIntegration ig ON ig.serial = vs.integration_serial
+FROM GkNumericValue vs
+         INNER JOIN GkNumericIntegration ig ON ig.serial = vs.integration_serial
          INNER JOIN wavenumber_exit_time kes ON kes.serial = ig.wavenumber_exit_serial
          INNER JOIN wavenumber ks ON ks.serial = kes.wavenumber_serial
          INNER JOIN redshift rs ON rs.serial = vs.z_serial
@@ -52,7 +52,7 @@ FROM wavenumber ks
                            MAX(ig2.z_source)     AS z_source,
                            ig2.compute_time      AS compute_time,
                            ig2.compute_steps     AS compute_steps
-                    FROM GkNumericalIntegration ig2
+                    FROM GkNumericIntegration ig2
                     GROUP BY ig2.wavenumber_serial) max_z_table
                    ON ks.serial == max_z_table.k_serial
          LEFT JOIN (SELECT ig3.serial            AS serial,
@@ -60,7 +60,7 @@ FROM wavenumber ks
                            ig3.z_source          AS z_source,
                            MAX(ig3.compute_time) AS compute_time,
                            ig3.compute_steps     AS compute_steps
-                    FROM GkNumericalIntegration ig3
+                    FROM GkNumericIntegration ig3
                     GROUP BY ig3.wavenumber_serial) max_compute_table
                    ON ks.serial = max_compute_table.k_serial
 ORDER BY ks.k_inv_Mpc;

@@ -13,11 +13,11 @@ import ray
 from pandas import DataFrame
 
 from ComputeTargets import (
-    TkNumericalIntegration,
-    GkNumericalIntegration,
+    TkNumericIntegration,
+    GkNumericIntegration,
     GkWKBIntegration,
     QuadSource,
-    GkNumericalValue,
+    GkNumericValue,
     GkWKBValue,
     GkSource,
     QuadSourceIntegral,
@@ -119,10 +119,10 @@ parser.add_argument(
     help="specify sparseness of response z-sample points relative to source sample",
 )
 parser.add_argument(
-    "--Tk-numerical-queue",
+    "--Tk-numeric-queue",
     action=argparse.BooleanOptionalAction,
     default=True,
-    help="run the TkNumerical transfer function work queue",
+    help="run the TkNumeric transfer function work queue",
 )
 parser.add_argument(
     "--Tk-WKB-queue",
@@ -137,10 +137,10 @@ parser.add_argument(
     help="run the Quad?Source work queue",
 )
 parser.add_argument(
-    "--Gk-numerical-queue",
+    "--Gk-numeric-queue",
     action=argparse.BooleanOptionalAction,
     default=True,
-    help="run the GkNumerical Green's function work queue",
+    help="run the GkNumeric Green's function work queue",
 )
 parser.add_argument(
     "--Gk-WKB-queue",
@@ -321,7 +321,7 @@ def run_pipeline(
         GkProductionTag,
         SourceZGridSizeTag,  # labels size of the z_source sample grid
         ResponseZGridSizeTag,  # labels size of the z_response sample grid
-        OutsideHorizonEfoldsTag,  # labels number of e-folds outside the horizon at which we begin Tk numerical integrations
+        OutsideHorizonEfoldsTag,  # labels number of e-folds outside the horizon at which we begin Tk numeric integrations
         LargestSourceZTag,  # labels largest z in the global grid
         SmallestSourceZTag,  # labels smallest z in the global grid
         SourceSamplesPerLog10ZTag,  # labels number of redshifts per log10 interval of 1+z in the source grid
@@ -420,7 +420,7 @@ def run_pipeline(
 
     ## STEP 2
     ## COMPUTE MATTER TRANSFER FUNCTIONS NUMERICALLY FOR SOURCE TIMES NOT TOO FAR INSIDE THE HORIZON
-    def build_Tk_numerical_work(batch: List[wavenumber_exit_time]):
+    def build_Tk_numeric_work(batch: List[wavenumber_exit_time]):
         # grouper may fill with None values, so we need to strip those out
         batch = [x for x in batch if x is not None]
 
@@ -450,7 +450,7 @@ def run_pipeline(
         query_queue = RayWorkPool(
             pool,
             query_batch,
-            task_builder=lambda x: pool.object_get("TkNumericalIntegration", **x),
+            task_builder=lambda x: pool.object_get("TkNumericIntegration", **x),
             available_handler=None,
             compute_handler=None,
             store_handler=None,
@@ -486,7 +486,7 @@ def run_pipeline(
 
             work_refs.append(
                 pool.object_get(
-                    "TkNumericalIntegration",
+                    "TkNumericIntegration",
                     solver_labels=solvers,
                     model=model_proxy,
                     k=k_exit,
@@ -510,36 +510,34 @@ def run_pipeline(
 
         return work_refs
 
-    def build_Tk_numerical_work_label(Tk: TkNumericalIntegration):
-        return f"{args.job_name}-TkNumerical-k{Tk.k.k_inv_Mpc:.3g}-{datetime.now().replace(microsecond=0).isoformat()}"
+    def build_Tk_numeric_work_label(Tk: TkNumericIntegration):
+        return f"{args.job_name}-TkNumeric-k{Tk.k.k_inv_Mpc:.3g}-{datetime.now().replace(microsecond=0).isoformat()}"
 
-    def compute_Tk_numerical_work(
-        Tk: TkNumericalIntegration, label: Optional[str] = None
-    ):
+    def compute_Tk_numeric_work(Tk: TkNumericIntegration, label: Optional[str] = None):
         return Tk.compute(label=label)
 
-    def validate_Tk_numerical_work(Tk: TkNumericalIntegration):
+    def validate_Tk_numeric_work(Tk: TkNumericIntegration):
         if not Tk.available:
             raise RuntimeError(
-                "TkNumericalIntegration object passed for validation, but is not yet available"
+                "TkNumericIntegration object passed for validation, but is not yet available"
             )
 
         return pool.object_validate(Tk)
 
-    if args.Tk_numerical_queue:
+    if args.Tk_numeric_queue:
         # group work by k mode
         # (then we have to compute the transfer function for all source redshifts, given this k mode)
-        Tk_numerical_work_batches = list(
+        Tk_numeric_work_batches = list(
             grouper(source_k_exit_times, n=50, incomplete="fill")
         )
 
-        Tk_numerical_queue = RayWorkPool(
+        Tk_numeric_queue = RayWorkPool(
             pool,
-            Tk_numerical_work_batches,
-            task_builder=build_Tk_numerical_work,
-            compute_handler=compute_Tk_numerical_work,
-            validation_handler=validate_Tk_numerical_work,
-            label_builder=build_Tk_numerical_work_label,
+            Tk_numeric_work_batches,
+            task_builder=build_Tk_numeric_work,
+            compute_handler=compute_Tk_numeric_work,
+            validation_handler=validate_Tk_numeric_work,
+            label_builder=build_Tk_numeric_work_label,
             title="CALCULATE NUMERICAL PART OF MATTER TRANSFER FUNCTIONS",
             store_results=False,
             create_batch_size=2,
@@ -548,7 +546,7 @@ def run_pipeline(
             process_batch_size=50,
             notify_min_time_interval=MIN_NOTIFY_INTERVAL,
         )
-        Tk_numerical_queue.run()
+        Tk_numeric_queue.run()
 
     ## STEP 3
     ## COMPUTE MATTER TRANSFER FUNCTIONS USING THE WKB APPROXIMATION FOR SOURCE TIMES INSIDE THE HORIZON
@@ -609,7 +607,7 @@ def run_pipeline(
         if len(missing) == 0:
             return []
 
-        # query for a TkNumericalIntegration instance for each k mode. One should always exist.
+        # query for a TkNumericIntegration instance for each k mode. One should always exist.
         # We use it to set initial conditions for the WKB part of the evolution.
         payload_batch = [
             {
@@ -636,7 +634,7 @@ def run_pipeline(
         lookup_queue = RayWorkPool(
             pool,
             query_batch,
-            task_builder=lambda x: pool.object_get("TkNumericalIntegration", **x),
+            task_builder=lambda x: pool.object_get("TkNumericIntegration", **x),
             available_handler=None,
             compute_handler=None,
             store_handler=None,
@@ -653,7 +651,7 @@ def run_pipeline(
 
         for k_exit, Tk in zip(missing, lookup_queue.results):
             k_exit: wavenumber_exit_time
-            Tk: TkNumericalIntegration
+            Tk: TkNumericIntegration
             assert Tk._k_exit.store_id == k_exit.store_id
 
             if not Tk.available:
@@ -702,10 +700,10 @@ def run_pipeline(
     def build_Tk_WKB_work_label(Tk: TkWKBIntegration):
         return f"{args.job_name}-TkWKB-k{Tk.k.k_inv_Mpc:.3g}-{datetime.now().replace(microsecond=0).isoformat()}"
 
-    def compute_Tk_numerical_work(Tk: TkWKBIntegration, label: Optional[str] = None):
+    def compute_Tk_numeric_work(Tk: TkWKBIntegration, label: Optional[str] = None):
         return Tk.compute(label=label)
 
-    def validate_Tk_numerical_work(Tk: TkWKBIntegration):
+    def validate_Tk_numeric_work(Tk: TkWKBIntegration):
         if not Tk.available:
             raise RuntimeError(
                 "TkWKBIntegration object passed for validation, but is not yet available"
@@ -722,9 +720,9 @@ def run_pipeline(
             pool,
             Tk_WKB_work_batches,
             task_builder=build_Tk_WKB_work,
-            compute_handler=compute_Tk_numerical_work,
-            validation_handler=validate_Tk_numerical_work,
-            label_builder=build_Tk_numerical_work_label,
+            compute_handler=compute_Tk_numeric_work,
+            validation_handler=validate_Tk_numeric_work,
+            label_builder=build_Tk_numeric_work_label,
             title="CALCULATE WKB PART OF MATTER TRANSFER FUNCTIONS",
             store_results=False,
             create_batch_size=2,
@@ -831,7 +829,7 @@ def run_pipeline(
         Tk_lookup_queue = RayWorkPool(
             pool,
             Tk_lookup_batch,
-            task_builder=lambda x: pool.object_get("TkNumericalIntegration", **x),
+            task_builder=lambda x: pool.object_get("TkNumericIntegration", **x),
             available_handler=None,
             compute_handler=None,
             store_handler=None,
@@ -857,20 +855,20 @@ def run_pipeline(
             # ensure that q, r are ordered respecting the triangular condition
             assert q.k <= r.k
 
-            Tq: TkNumericalIntegration = Tk_cache[q.store_id]
-            Tr: TkNumericalIntegration = Tk_cache[r.store_id]
+            Tq: TkNumericIntegration = Tk_cache[q.store_id]
+            Tr: TkNumericIntegration = Tk_cache[r.store_id]
 
             missing_data = False
             if not Tq.available:
                 missing_data = True
                 print(
-                    f"!! MISSING DATA WARNING ({datetime.now().replace(microsecond=0).isoformat()}) TkNumericalIntegration for q={q.k.k_inv_Mpc}/Mpc"
+                    f"!! MISSING DATA WARNING ({datetime.now().replace(microsecond=0).isoformat()}) TkNumericIntegration for q={q.k.k_inv_Mpc}/Mpc"
                 )
 
             if not Tr.available:
                 missing_data = True
                 print(
-                    f"!! MISSING DATA WARNING ({datetime.now().replace(microsecond=0).isoformat()}) TkNumericalIntegration for r={r.k.k_inv_Mpc}/Mpc"
+                    f"!! MISSING DATA WARNING ({datetime.now().replace(microsecond=0).isoformat()}) TkNumericIntegration for r={r.k.k_inv_Mpc}/Mpc"
                 )
 
             if missing_data:
@@ -950,7 +948,7 @@ def run_pipeline(
 
     ## STEP 5
     ## COMPUTE TENSOR GREEN'S FUNCTIONS NUMERICALLY FOR RESPONSE TIMES NOT TOO FAR INSIDE THE HORIZON
-    def build_Gk_numerical_work(batch: List[redshift]):
+    def build_Gk_numeric_work(batch: List[redshift]):
         # grouper may fill with None values, so we need to strip those out
         batch = [x for x in batch if x is not None]
 
@@ -987,7 +985,7 @@ def run_pipeline(
             pool,
             query_batch,
             task_builder=lambda x: pool.object_get_vectorized(
-                "GkNumericalIntegration", x["shard_key"], payload_data=x["payload"]
+                "GkNumericIntegration", x["shard_key"], payload_data=x["payload"]
             ),
             available_handler=None,
             compute_handler=None,
@@ -1018,16 +1016,16 @@ def run_pipeline(
         for k_exit in response_k_exit_times:
             k_exit: wavenumber_exit_time
 
-            # we don't calculate numerical Green's functions when the response redshift
+            # we don't calculate numeric Green's functions when the response redshift
             # is too far inside the horizon, later than this, because the oscillations become rapid,
             # and we are better switching to a WKB approximation.
-            # Typically, we cannot continue the numerical integration more than about 6 or 7 e-folds
+            # Typically, we cannot continue the numeric integration more than about 6 or 7 e-folds
             # inside the horizon.
             # However, we do need a bit of leeway. We sometimes cannot get WKB values for
             # z_source/z_response combinations that are both close to the 3-efold crossover point.
             # This is because we don't find a boundary conditions for the WKB evolution until
             # some time after z_source.
-            # The upshot is that we don't find enough overlap between the numerical and WKB regions
+            # The upshot is that we don't find enough overlap between the numeric and WKB regions
             # to allow a smooth handover. To deal with this, we allow z_source to go as far as
             # 6 e-folds inside the horizon.
             for z_source in missing[k_exit.store_id]:
@@ -1044,7 +1042,7 @@ def run_pipeline(
                     if len(response_zs) > 0:
                         work_refs.append(
                             pool.object_get(
-                                "GkNumericalIntegration",
+                                "GkNumericIntegration",
                                 solver_labels=solvers,
                                 model=model_proxy,
                                 k=k_exit,
@@ -1069,36 +1067,34 @@ def run_pipeline(
 
         return work_refs
 
-    def build_Gk_numerical_work_label(Gk: GkNumericalIntegration):
-        return f"{args.job_name}-GkNumerical-k{Gk.k.k_inv_Mpc:.3g}-sourcez{Gk.z_source.z:.5g}-{datetime.now().replace(microsecond=0).isoformat()}"
+    def build_Gk_numeric_work_label(Gk: GkNumericIntegration):
+        return f"{args.job_name}-GkNumeric-k{Gk.k.k_inv_Mpc:.3g}-sourcez{Gk.z_source.z:.5g}-{datetime.now().replace(microsecond=0).isoformat()}"
 
-    def compute_Gk_numerical_work(
-        Gk: GkNumericalIntegration, label: Optional[str] = None
-    ):
+    def compute_Gk_numeric_work(Gk: GkNumericIntegration, label: Optional[str] = None):
         return Gk.compute(label=label)
 
-    def validate_Gk_numerical_work(Gk: GkNumericalIntegration):
+    def validate_Gk_numeric_work(Gk: GkNumericIntegration):
         if not Gk.available:
             raise RuntimeError(
-                "GkNumericalIntegration object passed for validation, but is not yet available"
+                "GkNumericIntegration object passed for validation, but is not yet available"
             )
 
         return pool.object_validate(Gk)
 
-    if args.Gk_numerical_queue:
+    if args.Gk_numeric_queue:
         # group work by source redshift
         # (then we have to compute Green's functions for all k modes and response redshifts, given this source)
-        Gk_numerical_work_batches = list(
+        Gk_numeric_work_batches = list(
             grouper(z_source_sample, n=50, incomplete="fill")
         )
 
-        Gk_numerical_queue = RayWorkPool(
+        Gk_numeric_queue = RayWorkPool(
             pool,
-            Gk_numerical_work_batches,
-            task_builder=build_Gk_numerical_work,
-            compute_handler=compute_Gk_numerical_work,
-            validation_handler=validate_Gk_numerical_work,
-            label_builder=build_Gk_numerical_work_label,
+            Gk_numeric_work_batches,
+            task_builder=build_Gk_numeric_work,
+            compute_handler=compute_Gk_numeric_work,
+            validation_handler=validate_Gk_numeric_work,
+            label_builder=build_Gk_numeric_work_label,
             title="CALCULATE NUMERICAL PART OF TENSOR GREEN FUNCTIONS",
             store_results=False,
             create_batch_size=2,
@@ -1107,7 +1103,7 @@ def run_pipeline(
             process_batch_size=50,
             notify_min_time_interval=MIN_NOTIFY_INTERVAL,
         )
-        Gk_numerical_queue.run()
+        Gk_numeric_queue.run()
 
     ## STEP 6
     ## COMPUTE TENSOR GREEN'S FUNCTIONS USING THE WKB APPROXIMATION FOR RESPONSE TIMES INSIDE THE HORIZON
@@ -1178,9 +1174,9 @@ def run_pipeline(
             )
         }
 
-        # Query for a GkNumericalIntegration instance for each combination of model, k_exit, and z_source.
+        # Query for a GkNumericIntegration instance for each combination of model, k_exit, and z_source.
         # If one exists, it will be used to set initial conditions for the WKB part of the evolution.
-        # We want to do this in a vectorized way, pulling an entire batch of GkNumericalIntegration instances
+        # We want to do this in a vectorized way, pulling an entire batch of GkNumericIntegration instances
         # for a range of z-source values from the same shard. This is more efficient than paying the Ray and database
         # overhead for multiple lookups
         payload_batch = [
@@ -1216,7 +1212,7 @@ def run_pipeline(
             pool,
             payload_batch,
             task_builder=lambda x: pool.object_get_vectorized(
-                "GkNumericalIntegration", x["shard_key"], payload_data=x["payload"]
+                "GkNumericIntegration", x["shard_key"], payload_data=x["payload"]
             ),
             available_handler=None,
             compute_handler=None,
@@ -1239,15 +1235,15 @@ def run_pipeline(
 
         for k_exit, Gk_data in zip(response_k_exit_times, lookup_queue.results):
             k_exit: wavenumber_exit_time
-            Gk_data: List[GkNumericalIntegration]
+            Gk_data: List[GkNumericIntegration]
 
-            # use numerical initial conditions up to geometric mean of 3- and 4-efold points (inside the horizon)
+            # use numeric initial conditions up to geometric mean of 3- and 4-efold points (inside the horizon)
             # see long comment below
             z_source_limit = sqrt(k_exit.z_exit_subh_e3 * k_exit.z_exit_subh_e4)
 
             for z_source, Gk in zip(missing[k_exit.store_id], Gk_data):
                 # be defensive about ensuring provenance for our data products
-                Gk: GkNumericalIntegration
+                Gk: GkNumericIntegration
                 assert Gk._k_exit.store_id == k_exit.store_id
                 assert Gk._z_source.store_id == z_source.store_id
 
@@ -1256,25 +1252,25 @@ def run_pipeline(
                 if len(response_sample) == 0:
                     continue
 
-                # query whether there is a pre-computed GkNumericalIntegration for this source redshift.
+                # query whether there is a pre-computed GkNumericIntegration for this source redshift.
                 # typically, this will be the case provided the source redshift is no more than
-                # 4 e-folds inside the horizon, because that is where we cut the GkNumericalIntegration work queue.
+                # 4 e-folds inside the horizon, because that is where we cut the GkNumericIntegration work queue.
 
-                # Notice that, if a GkNumericalIntegration object is available, we don't get to decide where the
+                # Notice that, if a GkNumericIntegration object is available, we don't get to decide where the
                 # initial condition is; we just have to use the initial condition that is available.
                 # That might be some time later than z_source. Then, we will not get WKB solutions for
                 # z_response between z_source and the initial condition. The can lead to gaps in the WKB data
                 # when we later assemble GkSource objects.
 
                 # The idea is to switch to a WKB solution fairly soon after 3 e-folds inside the horizon.
-                # In particular, we shouldn't keep using the GkNumericalIntegration boundary condition
+                # In particular, we shouldn't keep using the GkNumericIntegration boundary condition
                 # right up to the boundary where we stop computing it, because that risks the first available z_response
                 # for such very late z_source bouncing around erratically in a region where we depend on having it.
-                # Instead, we should use the numerical boundary condition for z_source up to some point between the 3 and 4 e-fold points.
+                # Instead, we should use the numeric boundary condition for z_source up to some point between the 3 and 4 e-fold points.
                 # After that we should use a purely WKB analysis. Then we should have safely overlapping WKB and
-                # numerical solutions around the 4-efold point.
+                # numeric solutions around the 4-efold point.
                 if z_source.z >= z_source_limit and Gk.available:
-                    # obtain initial data and initial time from the GkNumericalIntegration object
+                    # obtain initial data and initial time from the GkNumericIntegration object
                     G_init = Gk.stop_G
                     Gprime_init = Gk.stop_Gprime
                     z_init = k_exit.z_exit - Gk.stop_deltaz_subh
@@ -1284,7 +1280,7 @@ def run_pipeline(
                     #
                     # Note that this means there may be z_source/z_response combinations that we do not get WKB values for.
                     # These can cause incompleteness when building GkSource objects (see below), if we are not
-                    # careful to allow sufficient overlap with the purely numerical results.
+                    # careful to allow sufficient overlap with the purely numeric results.
                     max_response = min(k_exit.z_exit_subh_e3, z_init)
                     response_sample = response_sample.truncate(
                         max_response, keep="lower"
@@ -1323,10 +1319,10 @@ def run_pipeline(
                     # but we should warn if we expect an initial condition to be available
                     if z_source.z > k_exit.z_exit_subh_e3 - DEFAULT_FLOAT_PRECISION:
                         print(
-                            f"!! WARNING: no numerically-computed initial conditions is available for k={k_exit.k.k_inv_Mpc:.5g}/Mpc, z_source={z_source.z:.5g}"
+                            f"!! WARNING: no numerically-computed initial condition is available for k={k_exit.k.k_inv_Mpc:.5g}/Mpc, z_source={z_source.z:.5g}"
                         )
                         print(
-                            f"|    This may indicate that GkNumericalIntegration records for all necessary initial conditions are not present in the datastore."
+                            f"|    This may indicate that GkNumericIntegration records for all necessary initial conditions are not present in the datastore."
                         )
 
                     if z_source.z >= k_exit.z_exit:
@@ -1405,13 +1401,13 @@ def run_pipeline(
     # (In theory we could construct G_k as functions of the source redshift z' on-the-fly when we need them.
     # Storing the rebuilt tensor Green's functions in the datastore is, in this sense, redundant. But it is likely much faster
     # to pre-build and cache, because we need to perform complicated table lookups with joins in order to extract the relevant
-    # solution points from GkNumericalValue and GkWKValue rows. Also, there is the reproducibility angle of keeping a record of what
+    # solution points from GkNumericValue and GkWKValue rows. Also, there is the reproducibility angle of keeping a record of what
     # rebuilt data products we used.)
     def build_GkSource_batch(batch: List[redshift]):
         # grouper may fill with None values, so we need to strip those out
         batch = [x for x in batch if x is not None]
 
-        # try to do parallel lookup of the GkNumericalIntegration/GkWKBIntegration records needed
+        # try to do parallel lookup of the GkNumericIntegration/GkWKBIntegration records needed
         # to process this batch
         z_source_pool = {
             z_response.store_id: z_source_sample.truncate(z_response, keep="higher")
@@ -1513,7 +1509,7 @@ def run_pipeline(
             }
             for k_exit in response_k_exit_times
             for z_response in missing[k_exit.store_id]
-            for cls_name in ["GkNumericalValue", "GkWKBValue"]
+            for cls_name in ["GkNumericValue", "GkWKBValue"]
         ]
         lookup_queue = RayWorkPool(
             pool,
@@ -1550,8 +1546,8 @@ def run_pipeline(
                 WKB_data = {}
 
                 for GkN in GkNs:
-                    GkN: GkNumericalValue
-                    assert isinstance(GkN, GkNumericalValue)
+                    GkN: GkNumericValue
+                    assert isinstance(GkN, GkNumericValue)
 
                     # the _k_exit and _z_source fields are not part of the public API for these
                     # objects, but they are set by the data store after deserialization
@@ -1678,24 +1674,24 @@ def run_pipeline(
             "z_response": source.z_response.z,
             "z_response_store_id": source.z_response.store_id,
             "z_response_efolds_subh": bg_model.efolds_subh(source.k, source.z_response),
-            "numerical_z_source_limit": sqrt(
+            "numeric_z_source_limit": sqrt(
                 source._k_exit.z_exit_subh_e3 * source._k_exit.z_exit_subh_e4
             ),
-            "numerical_z_source_limit_efolds": bg_model.efolds_subh(
+            "numeric_z_source_limit_efolds": bg_model.efolds_subh(
                 source.k,
                 sqrt(source._k_exit.z_exit_subh_e3 * source._k_exit.z_exit_subh_e4),
             ),
             "z_sample": [z.z for z in source.z_sample],
             "z_sample_size": len(source.z_sample),
             "values_size": len(source.values) if source.values is not None else None,
-            "numerical_smallest_z": (
-                source.numerical_smallest_z.z
-                if source.numerical_smallest_z is not None
+            "numeric_smallest_z": (
+                source.numeric_smallest_z.z
+                if source.numeric_smallest_z is not None
                 else None
             ),
-            "numerical_smallest_z_store_id": (
-                source.numerical_smallest_z.store_id
-                if source.numerical_smallest_z is not None
+            "numeric_smallest_z_store_id": (
+                source.numeric_smallest_z.store_id
+                if source.numeric_smallest_z is not None
                 else None
             ),
             "primary_WKB_largest_z": (

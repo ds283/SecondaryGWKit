@@ -205,7 +205,7 @@ def plot_tensor_source(model_label: str, source: QuadSource):
         fig = plt.figure()
         ax = plt.gca()
 
-        ax.plot(abs_source_x, abs_source_y, label="Numerical")
+        ax.plot(abs_source_x, abs_source_y, label="Numeric")
         ax.plot(
             abs_undiff_x, abs_undiff_y, label="$T_{k}$ part", linestyle=LOOSE_DASHED
         )

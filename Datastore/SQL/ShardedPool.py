@@ -30,14 +30,14 @@ _replicate_tables = [
     "QuadSourcePolicy",
 ]
 _shard_tables = {
-    "TkNumericalIntegration": "k",
-    "TkNumericalValue": "k",
+    "TkNumericIntegration": "k",
+    "TkNumericValue": "k",
     "TkWKBIntegration": "k",
     "TkWKBValue": "k",
     "QuadSource": "q",
     "QuadSourceValue": "q",
-    "GkNumericalIntegration": "k",
-    "GkNumericalValue": "k",
+    "GkNumericIntegration": "k",
+    "GkNumericValue": "k",
     "GkWKBIntegration": "k",
     "GkWKBValue": "k",
     "GkSource": "k",

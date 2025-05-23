@@ -6,7 +6,7 @@ from Quadrature.supervisors.base import IntegrationSupervisor, DEFAULT_UPDATE_IN
 from utilities import format_time
 
 
-class NumericalIntegrationSupervisor(IntegrationSupervisor):
+class NumericIntegrationSupervisor(IntegrationSupervisor):
     def __init__(
         self,
         k: wavenumber,

@@ -407,7 +407,7 @@ class sqla_BackgroundModelFactory(SQLAFactoryBase):
                 },
             )
 
-            # set store_id on behalf of the GkNumericalValue instance
+            # set store_id on behalf of the GkNumericValue instance
             value._my_id = value_id
 
         return obj

@@ -11,9 +11,9 @@ import seaborn as sns
 from matplotlib import pyplot as plt
 
 from ComputeTargets import (
-    TkNumericalIntegration,
+    TkNumericIntegration,
     BackgroundModel,
-    TkNumericalValue,
+    TkNumericValue,
     ModelProxy,
     TkWKBIntegration,
     TkWKBValue,
@@ -96,10 +96,10 @@ if args.profile_db is not None:
 @ray.remote
 def plot_Tk(
     model_label: str,
-    Tk_numerical: TkNumericalIntegration,
+    Tk_numeric: TkNumericIntegration,
     Tk_WKB: TkWKBIntegration,
 ):
-    k_exit = Tk_numerical._k_exit
+    k_exit = Tk_numeric._k_exit
 
     base_path = Path(args.output).resolve()
     base_path = base_path / f"{model_label}"
@@ -122,10 +122,10 @@ def plot_Tk(
     WKB_criterion_column = []
     type_column = []
 
-    if Tk_numerical.available:
-        values: List[TkNumericalValue] = Tk_numerical.values
+    if Tk_numeric.available:
+        values: List[TkNumericValue] = Tk_numeric.values
 
-        numerical_points = [(value.z.z, safe_fabs(value.T)) for value in values]
+        numeric_points = [(value.z.z, safe_fabs(value.T)) for value in values]
         analytic_rad_points = [
             (value.z, safe_fabs(value.analytic_T_rad)) for value in values
         ]
@@ -133,19 +133,19 @@ def plot_Tk(
             (value.z, safe_fabs(value.analytic_T_w)) for value in values
         ]
 
-        numerical_x, numerical_y = zip(*numerical_points)
+        numeric_x, numeric_y = zip(*numeric_points)
         analytic_rad_x, analytic_rad_y = zip(*analytic_rad_points)
         analytic_w_x, analytic_w_y = zip(*analytic_w_points)
 
-        if len(numerical_x) > 0 and (
-            any(y is not None and y > 0 for y in numerical_y)
+        if len(numeric_x) > 0 and (
+            any(y is not None and y > 0 for y in numeric_y)
             or any(y is not None and y > 0 for y in analytic_rad_y)
             or any(y is not None and y > 0 for y in analytic_w_y)
         ):
             ax.plot(
-                numerical_x,
-                numerical_y,
-                label="Numerical $T_k$",
+                numeric_x,
+                numeric_y,
+                label="Numeric $T_k$",
                 linestyle="solid",
             )
             ax.plot(
@@ -184,7 +184,7 @@ def plot_Tk(
     if Tk_WKB.available:
         values: List[TkWKBValue] = Tk_WKB.values
 
-        numerical_points = [(value.z.z, safe_fabs(value.T_WKB)) for value in values]
+        numeric_points = [(value.z.z, safe_fabs(value.T_WKB)) for value in values]
         analytic_rad_points = [
             (value.z, safe_fabs(value.analytic_T_rad)) for value in values
         ]
@@ -194,20 +194,20 @@ def plot_Tk(
         theta_points = [(value.z.z, safe_fabs(value.theta)) for value in values]
         friction_points = [(value.z.z, safe_fabs(value.friction)) for value in values]
 
-        numerical_x, numerical_y = zip(*numerical_points)
+        numeric_x, numeric_y = zip(*numeric_points)
         analytic_rad_x, analytic_rad_y = zip(*analytic_rad_points)
         analytic_w_x, analytic_w_y = zip(*analytic_w_points)
         theta_x, theta_y = zip(*theta_points)
         friction_x, friction_y = zip(*friction_points)
 
-        if len(numerical_x) > 0 and (
-            any(y is not None and y > 0 for y in numerical_y)
+        if len(numeric_x) > 0 and (
+            any(y is not None and y > 0 for y in numeric_y)
             or any(y is not None and y > 0 for y in analytic_rad_y)
             or any(y is not None and y > 0 for y in analytic_w_y)
         ):
             ax.plot(
-                numerical_x,
-                numerical_y,
+                numeric_x,
+                numeric_y,
                 label="WKB $T_k$",
                 linestyle="solid",
             )
@@ -418,10 +418,10 @@ def run_pipeline(model_data):
             "rtol": rtol,
         }
 
-        TkNumerical_ref = pool.object_get("TkNumericalIntegration", **query_payload)
+        TkNumeric_ref = pool.object_get("TkNumericIntegration", **query_payload)
         TkWKB_ref = pool.object_get("TkWKBIntegration", **query_payload)
 
-        return plot_Tk.remote(model_label, TkNumerical_ref, TkWKB_ref)
+        return plot_Tk.remote(model_label, TkNumeric_ref, TkWKB_ref)
 
     work_queue = RayWorkPool(
         pool,
@@ -437,7 +437,7 @@ def run_pipeline(model_data):
         process_batch_size=10,
         notify_batch_size=50,
         notify_time_interval=120,
-        title=f"GENERATING TkNumerical/TkWKB DATA PRODUCTS FOR {model_label}",
+        title=f"GENERATING TkNumeric/TkWKB DATA PRODUCTS FOR {model_label}",
         store_results=False,
     )
     work_queue.run()

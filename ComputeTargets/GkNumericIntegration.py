@@ -10,13 +10,13 @@ from CosmologyConcepts import wavenumber, redshift, redshift_array, wavenumber_e
 from Datastore import DatastoreObject
 from MetadataConcepts import tolerance, store_tag
 from Quadrature.integration_metadata import IntegrationSolver, IntegrationData
-from Quadrature.integrators.numerical_with_phase_cut import (
-    numerical_with_phase_cut,
+from Quadrature.integrators.numeric_with_phase_cut import (
+    numeric_with_phase_cut,
     VALUE_INDEX,
     DERIV_INDEX,
 )
 from Quadrature.supervisors.base import RHS_timer
-from Quadrature.supervisors.numerical import NumericalIntegrationSupervisor
+from Quadrature.supervisors.numeric import NumericIntegrationSupervisor
 from Units import check_units
 from defaults import (
     DEFAULT_FLOAT_PRECISION,
@@ -33,7 +33,7 @@ def RHS(
     state: List[float],
     model: BackgroundModel,
     k_float: float,
-    supervisor: NumericalIntegrationSupervisor,
+    supervisor: NumericIntegrationSupervisor,
 ) -> List[float]:
     """
     k *must* be measured using the same units used for H(z) in the cosmology, otherwise we will not get
@@ -78,7 +78,7 @@ def RHS(
     return [dG_dz, dGprime_dz]
 
 
-class GkNumericalIntegration(DatastoreObject):
+class GkNumericIntegration(DatastoreObject):
     """
     Encapsulates all sample points produced during a single integration of the
     tensor Green's function, labelled by a wavenumber k, and two redshifts:
@@ -113,7 +113,7 @@ class GkNumericalIntegration(DatastoreObject):
 
         if self._mode is not None and self._mode not in ["stop"]:
             raise ValueError(
-                f'GkNumericalIntegration: unknown compute mode "{self._mode}"'
+                f'GkNumericIntegration: unknown compute mode "{self._mode}"'
             )
 
         # search for a handover point (to the WKB calculation) from 3 to 6 e-folds inside the horizon
@@ -277,7 +277,7 @@ class GkNumericalIntegration(DatastoreObject):
     def values(self) -> List:
         if hasattr(self, "_do_not_populate"):
             raise RuntimeError(
-                "GkNumericalIntegration: values read but _do_not_populate is set"
+                "GkNumericIntegration: values read but _do_not_populate is set"
             )
 
         if self._values is None:
@@ -287,7 +287,7 @@ class GkNumericalIntegration(DatastoreObject):
     def compute(self, label: Optional[str] = None):
         if hasattr(self, "_do_not_populate"):
             raise RuntimeError(
-                "GkNumericalIntegration: compute() called but _do_not_populate is set"
+                "GkNumericIntegration: compute() called but _do_not_populate is set"
             )
 
         if self._values is not None:
@@ -335,7 +335,7 @@ class GkNumericalIntegration(DatastoreObject):
         # This has the advantage that it gives us a simple, clean boundary condition.
         # The more familiar Green's function defined in conformal time tau with source
         # delta(tau-tau') is related to this via G_us = - H(z') G_them.
-        self._compute_ref = numerical_with_phase_cut.remote(
+        self._compute_ref = numeric_with_phase_cut.remote(
             self._model_proxy,
             self._k_exit,
             self._z_source,
@@ -355,7 +355,7 @@ class GkNumericalIntegration(DatastoreObject):
     def store(self) -> Optional[bool]:
         if self._compute_ref is None:
             raise RuntimeError(
-                "GkNumericalIntegration: store() called, but no compute() is in progress"
+                "GkNumericIntegration: store() called, but no compute() is in progress"
             )
 
         # check whether the computation has actually resolved
@@ -417,9 +417,9 @@ class GkNumericalIntegration(DatastoreObject):
                 Gk_d_ln_omegaEff_dz(model, self.k.k, current_z_float)
             ) / sqrt(fabs(omega_WKB_sq))
 
-            # create new GkNumericalValue object
+            # create new GkNumericValue object
             self._values.append(
-                GkNumericalValue(
+                GkNumericValue(
                     None,
                     current_z,
                     G_sample[i],
@@ -438,11 +438,11 @@ class GkNumericalIntegration(DatastoreObject):
         return True
 
 
-class GkNumericalValue(DatastoreObject):
+class GkNumericValue(DatastoreObject):
     """
     Encapsulates a single sampled value of the tensor Green's transfer functions.
     Parameters such as wavenumber k, source redshift z_source, etc., are held by the
-    owning GkNumericalIntegration object
+    owning GkNumericIntegration object
     """
 
     def __init__(

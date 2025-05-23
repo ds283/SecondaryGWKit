@@ -12,10 +12,10 @@ import seaborn as sns
 from matplotlib import pyplot as plt
 
 from ComputeTargets import (
-    GkNumericalIntegration,
+    GkNumericIntegration,
     BackgroundModel,
     ModelProxy,
-    GkNumericalValue,
+    GkNumericValue,
 )
 from CosmologyConcepts import (
     wavenumber,
@@ -94,11 +94,11 @@ if args.profile_db is not None:
 
 
 @ray.remote
-def plot_Gk(model_label: str, Gk: GkNumericalIntegration):
+def plot_Gk(model_label: str, Gk: GkNumericIntegration):
     if not Gk.available:
         return
 
-    values: List[GkNumericalValue] = Gk.values
+    values: List[GkNumericValue] = Gk.values
     base_path = Path(args.output).resolve()
     base_path = base_path / f"{model_label}"
 
@@ -135,7 +135,7 @@ def plot_Gk(model_label: str, Gk: GkNumericalIntegration):
         fig = plt.figure()
         ax = plt.gca()
 
-        ax.plot(abs_G_x, abs_G_y, label="Numerical $G_k$", color="r", linestyle="solid")
+        ax.plot(abs_G_x, abs_G_y, label="Numeric $G_k$", color="r", linestyle="solid")
         ax.plot(
             abs_analytic_G_rad_x,
             abs_analytic_G_rad_y,
@@ -191,7 +191,7 @@ def plot_Gk(model_label: str, Gk: GkNumericalIntegration):
         fig = plt.figure()
         ax = plt.gca()
 
-        ax.plot(G_x, G_y, label="Numerical $G_k$", color="r", linestyle="solid")
+        ax.plot(G_x, G_y, label="Numeric $G_k$", color="r", linestyle="solid")
         ax.plot(
             analytic_G_rad_x,
             analytic_G_rad_y,
@@ -385,7 +385,7 @@ def run_pipeline(model_data):
             "rtol": rtol,
         }
 
-        GkS_ref = pool.object_get("GkNumericalIntegration", **query_payload)
+        GkS_ref = pool.object_get("GkNumericIntegration", **query_payload)
 
         return plot_Gk.remote(model_label, GkS_ref)
 
@@ -405,7 +405,7 @@ def run_pipeline(model_data):
         process_batch_size=10,
         notify_batch_size=50,
         notify_time_interval=120,
-        title="GENERATING GkNumerical DATA PRODUCTS",
+        title="GENERATING GkNumeric DATA PRODUCTS",
         store_results=False,
     )
     work_queue.run()

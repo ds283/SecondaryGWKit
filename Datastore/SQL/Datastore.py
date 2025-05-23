@@ -15,10 +15,10 @@ from Datastore.SQL.ObjectFactories.BackgroundModel import (
     sqla_BackgroundModelTagAssociation_factory,
     sqla_BackgroundModelValue_factory,
 )
-from Datastore.SQL.ObjectFactories.GkNumericalIntegration import (
-    sqla_GkNumericalIntegration_factory,
-    sqla_GkNumericalValue_factory,
-    sqla_GkNumericalTagAssociation_factory,
+from Datastore.SQL.ObjectFactories.GkNumericIntegration import (
+    sqla_GkNumericIntegration_factory,
+    sqla_GkNumericValue_factory,
+    sqla_GkNumericTagAssociation_factory,
 )
 from Datastore.SQL.ObjectFactories.GkSource import (
     sqla_GkSourceTagAssociation_factory,
@@ -50,10 +50,10 @@ from Datastore.SQL.ObjectFactories.QuadSourceIntegral import (
     sqla_QuadSourceIntegral_factory,
 )
 from Datastore.SQL.ObjectFactories.QuadSourcePolicy import sqla_QuadSourcePolicy_factory
-from Datastore.SQL.ObjectFactories.TkNumericalIntegration import (
-    sqla_TkNumericalIntegration_factory,
-    sqla_TkNumericalValue_factory,
-    sqla_TkNumericalTagAssociation_factory,
+from Datastore.SQL.ObjectFactories.TkNumericIntegration import (
+    sqla_TkNumericIntegration_factory,
+    sqla_TkNumericValue_factory,
+    sqla_TkNumericTagAssociation_factory,
 )
 from Datastore.SQL.ObjectFactories.TkWKBIntegration import (
     sqla_TkWKBIntegration_factory,
@@ -95,15 +95,15 @@ _factories = {
     "BackgroundModel": sqla_BackgroundModelFactory,
     "BackgroundModel_tags": sqla_BackgroundModelTagAssociation_factory,
     "BackgroundModelValue": sqla_BackgroundModelValue_factory,
-    "TkNumericalIntegration": sqla_TkNumericalIntegration_factory,
-    "TkNumerical_tags": sqla_TkNumericalTagAssociation_factory,
-    "TkNumericalValue": sqla_TkNumericalValue_factory,
+    "TkNumericIntegration": sqla_TkNumericIntegration_factory,
+    "TkNumeric_tags": sqla_TkNumericTagAssociation_factory,
+    "TkNumericValue": sqla_TkNumericValue_factory,
     "TkWKBIntegration": sqla_TkWKBIntegration_factory,
     "TkWKB_tags": sqla_TkWKBTagAssociation_factory,
     "TkWKBValue": sqla_TkWKBValue_factory,
-    "GkNumericalIntegration": sqla_GkNumericalIntegration_factory,
-    "GkNumerical_tags": sqla_GkNumericalTagAssociation_factory,
-    "GkNumericalValue": sqla_GkNumericalValue_factory,
+    "GkNumericIntegration": sqla_GkNumericIntegration_factory,
+    "GkNumeric_tags": sqla_GkNumericTagAssociation_factory,
+    "GkNumericValue": sqla_GkNumericValue_factory,
     "GkWKBIntegration": sqla_GkWKBIntegration_factory,
     "GkWKB_tags": sqla_GkWKBTagAssociation_factory,
     "GkWKBValue": sqla_GkWKBValue_factory,
@@ -139,9 +139,9 @@ _drop_actions = {
     "gk-source-policy-records": ["GkSourcePolicy"],
     "gk-source": ["GkSource", "GkSource_tags", "GkSourceValue"],
     "gk-wkb": ["GkWKBIntegration", "GkWKB_tags", "GkWKBValue"],
-    "gk-numeric": ["GkNumericalIntegration", "GkNumerical_tags", "GkNumericalValue"],
+    "gk-numeric": ["GkNumericIntegration", "GkNumeric_tags", "GkNumericValue"],
     "quad-source": ["QuadSource", "QuadSource_tags", "QuadSourceValue"],
-    "tk-numeric": ["TkNumericalIntegration", "TkNumerical_tags", "TkNumericalValue"],
+    "tk-numeric": ["TkNumericIntegration", "TkNumeric_tags", "TkNumericValue"],
     "tk-wkb": ["TkWKBIntegration", "TkWKB_tags", "TkWKBValue"],
 }
 # should drop tables in a defined order, so that we do not violate foreign key constrints

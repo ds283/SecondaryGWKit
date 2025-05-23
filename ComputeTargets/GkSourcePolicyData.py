@@ -19,9 +19,9 @@ MIN_SPLINE_DATA_POINTS = 5
 GkSourceFunctions = namedtuple(
     "GkSourceFunctions",
     [
-        "numerical_region",
+        "numeric_region",
         "WKB_region",
-        "numerical_Gk",
+        "numeric_Gk",
         "WKB_Gk",
         "phase",
         "sin_amplitude",
@@ -120,7 +120,6 @@ def _filter_values_from_range(
 
     # must be sorted into ascending order of redshift for a smoothing spline
     data = [v for v in source.values if predicate(v)]
-
     data.sort(key=lambda x: x.z_source.z)
 
     return data
@@ -222,13 +221,13 @@ CLASSIFICATION_BANDS = [
 
 def _classify_crossover(source: GkSource, policy: GkSourcePolicy) -> dict:
     """
-    Classify this Green's function. We classify whether the combination of numerical and WKB
+    Classify this Green's function. We classify whether the combination of numeric and WKB
     data form a complete or incomplete representation of the Green's function over the range of interest.
     We also classify whether the *quality* of the representation is good. This means that we can spline
     the data in both regions without getting too close to one of the end-points. For that we need
     some overlap between the numeric and WKB regions.
     Finally, we apply a numerical policy to decide where we should switch from using the
-    numerical data to using the WKB data.
+    numeric data to using the WKB data.
     :param source:
     :param policy:
     :return:
@@ -236,7 +235,7 @@ def _classify_crossover(source: GkSource, policy: GkSourcePolicy) -> dict:
     has_WKB_region: bool = source.primary_WKB_largest_z is not None
     has_WKB_spline_points: bool = False
 
-    has_numeric_region: bool = source.numerical_smallest_z is not None
+    has_numeric_region: bool = source.numeric_smallest_z is not None
     has_numeric_spline_points: bool = False
 
     payload = {}
@@ -262,7 +261,7 @@ def _classify_crossover(source: GkSource, policy: GkSourcePolicy) -> dict:
         numeric_data = _filter_values_from_range(
             source,
             max_z=source.z_sample.max,
-            min_z=source.numerical_smallest_z,
+            min_z=source.numeric_smallest_z,
             property_list="has_numeric",
         )
 
@@ -288,12 +287,12 @@ def _classify_crossover(source: GkSource, policy: GkSourcePolicy) -> dict:
         payload["type"] = "numeric"
         payload["crossover_z"] = None
 
-        if source.numerical_smallest_z.store_id == source.z_sample.min.store_id:
+        if source.numeric_smallest_z.store_id == source.z_sample.min.store_id:
             payload["quality"] = "complete"
         else:
             payload["quality"] = "incomplete"
             metadata["comment"] = (
-                f"No WKB region. Numeric region does not cover full range. numerical_smallest_z={source.numerical_smallest_z.z:.5g}, z_sample.min={source.z_sample.min.z:.5g}"
+                f"No WKB region. Numeric region does not cover full range. numeric_smallest_z={source.numeric_smallest_z.z:.5g}, z_sample.min={source.z_sample.min.z:.5g}"
             )
 
     # if the numeric region is missing, or there are not enough points to construct an adequate spline,
@@ -320,11 +319,11 @@ def _classify_crossover(source: GkSource, policy: GkSourcePolicy) -> dict:
 
         # if there is no overlap, we have a gap, and this Green's function is incomplete
         if (
-            source.numerical_smallest_z.z
+            source.numeric_smallest_z.z
             >= source.primary_WKB_largest_z.z - DEFAULT_FLOAT_PRECISION
         ):
             payload["quality"] = "incomplete"
-            payload["crossover_z"] = source.numerical_smallest_z.z
+            payload["crossover_z"] = source.numeric_smallest_z.z
             metadata["comment"] = (
                 "WKB and numeric regions are both present, but the numeric region does not overlap with the primary WKB region"
             )
@@ -337,13 +336,13 @@ def _classify_crossover(source: GkSource, policy: GkSourcePolicy) -> dict:
             overlap_values = _filter_values_from_range(
                 source,
                 max_z=source.primary_WKB_largest_z,
-                min_z=source.numerical_smallest_z,
+                min_z=source.numeric_smallest_z,
                 property_list=["has_WKB", "has_numeric"],
             )
 
             # For each value, figure out how close we would be to the corresponding end of the spline, bearing in mind
             # that we spline in log(1+z), not z itself
-            numeric_logz_low = log(1.0 + source.numerical_smallest_z.z)
+            numeric_logz_low = log(1.0 + source.numeric_smallest_z.z)
             WKB_logz_high = log(1.0 + source.primary_WKB_largest_z.z)
 
             def classify_point(v) -> dict:
@@ -413,7 +412,6 @@ def _classify_crossover(source: GkSource, policy: GkSourcePolicy) -> dict:
             if crossover_z is None:
                 # should get enough points for a good spline if we set the crossover scale to _primary_WKB_largest_z, since
                 # we checked above that enough points are available.
-                # The downside of this choice is only that it throws away numerical information that is potentially more accurate.
                 crossover_z = source.primary_WKB_largest_z
                 quality = "minimal"
 
@@ -426,7 +424,7 @@ def _classify_crossover(source: GkSource, policy: GkSourcePolicy) -> dict:
                 numeric_data = _filter_values_from_range(
                     source,
                     max_z=source.z_sample.max,
-                    min_z=source.numerical_smallest_z,
+                    min_z=source.numeric_smallest_z,
                     property_list="has_numeric",
                 )
 
@@ -575,56 +573,53 @@ class GkSourcePolicyData(DatastoreObject):
     def _create_functions(self):
         source = self._source_proxy.get()
 
-        numerical_region = None
-        numerical_Gk = None
+        numeric_region = None
+        numeric_Gk = None
 
-        if source.numerical_smallest_z is not None:
+        if source.numeric_smallest_z is not None:
             max_z = source.z_sample.max
-            min_z = source.numerical_smallest_z
+            min_z = source.numeric_smallest_z
 
             if self._crossover_z is not None and self._crossover_z < min_z.z:
                 raise RuntimeError(
-                    f"GkSourcePolicyData: inconsistent values of crossover_z={self._crossover_z:.5g} and smallest numerical z={min_z.z:.5g}"
+                    f"GkSourcePolicyData: inconsistent values of crossover_z={self._crossover_z:.5g} and smallest numeric z={min_z.z:.5g}"
                 )
 
             # must be sorted into ascending order of redshift for a smoothing spline
-            numerical_data = [
-                v
-                for v in source.values
-                if v.has_numeric
-                and (
-                    v.z_source.z <= max_z.z + DEFAULT_FLOAT_PRECISION
-                    or v.z_source.store_id == max_z.store_id
-                )
-                and (
-                    v.z_source.z >= min_z.z - DEFAULT_FLOAT_PRECISION
-                    or v.z_source.store_id == min_z.store_id
-                )
-            ]
+            numeric_data = _filter_values_from_range(
+                source, max_z, min_z, property_list="has_numeric"
+            )
+            if len(numeric_data) >= MIN_SPLINE_DATA_POINTS:
+                if (
+                    numeric_data[0].z_source.z / min_z.z > 1.0 + DEFAULT_FLOAT_PRECISION
+                    or numeric_data[-1].z_source.z / max_z.z
+                    < 1.0 - DEFAULT_FLOAT_PRECISION
+                ):
+                    self._report_missing_data(
+                        "numeric data", source, numeric_data, max_z, min_z
+                    )
 
-            if len(numerical_data) >= MIN_SPLINE_DATA_POINTS:
-                numerical_region = (max_z.z, min_z.z)
-
-                numerical_data.sort(key=lambda x: x.z_source.z)
-
-                numerical_Gk_data = [
-                    (log(1.0 + v.z_source.z), v.numeric.G) for v in numerical_data
+                numeric_Gk_data = [
+                    (log(1.0 + v.z_source.z), v.numeric.G) for v in numeric_data
                 ]
-                numerical_Gk_x, numerical_Gk_y = zip(*numerical_Gk_data)
+                numeric_Gk_x, numeric_Gk_y = zip(*numeric_Gk_data)
 
-                _numerical_Gk_spline = make_interp_spline(
-                    numerical_Gk_x,
-                    numerical_Gk_y,
+                _numeric_Gk_spline = make_interp_spline(
+                    numeric_Gk_x,
+                    numeric_Gk_y,
                 )
 
-                numerical_Gk = ZSplineWrapper(
-                    _numerical_Gk_spline, "numerical Gk", max_z.z, min_z.z, log_z=True
+                numeric_Gk = ZSplineWrapper(
+                    _numeric_Gk_spline, "numeric Gk", max_z.z, min_z.z, log_z=True
                 )
+
+                numeric_region = (max_z.z, min_z.z)
 
         WKB_region = None
         WKB_Gk = None
         WKB_theta_spline = None
         WKB_sin_amplitude = None
+
         if source.primary_WKB_largest_z is not None:
             max_z = source.primary_WKB_largest_z
             min_z = source.z_sample.min
@@ -634,34 +629,16 @@ class GkSourcePolicyData(DatastoreObject):
                     f"GkSourcePolicyData: inconsistent values of crossover_z={self._crossover_z:.5g} and largest WKB z={max_z.z:.5g}"
                 )
 
-            WKB_data = (source, max_z, min_z)
-
+            WKB_data = _filter_values_from_range(
+                source, max_z, min_z, property_list="has_WKB"
+            )
             if len(WKB_data) >= MIN_SPLINE_DATA_POINTS:
-                WKB_region = (max_z.z, min_z.z)
-
                 if (
-                    WKB_data[0].z_source.z / WKB_region[1]
-                    > 1.0 + DEFAULT_FLOAT_PRECISION
-                    or WKB_data[-1].z_source.z / WKB_region[0]
-                    < 1.0 - DEFAULT_FLOAT_PRECISION
+                    WKB_data[0].z_source.z / min_z.z > 1.0 + DEFAULT_FLOAT_PRECISION
+                    or WKB_data[-1].z_source.z / max_z.z < 1.0 - DEFAULT_FLOAT_PRECISION
                 ):
-                    print("!! ERROR (GkSource.create_functions)")
-                    print(
-                        f"     ** WKB data missing: intended region = ({WKB_region[0]:.5g}, {WKB_region[1]:.5g}), but data available only between ({WKB_data[-1].z_source.z:.5g}, {WKB_data[0].z_source.z:.5g})"
-                    )
-                    print(
-                        f"        GkSource (store_id={self.store_id}): z_response = {source.z_response.z:.5g} (store_id={source.z_response.store_id}), type = {self._type}, quality label = {self._quality}"
-                    )
-                    z_source_limit = sqrt(
-                        source._k_exit.z_exit_subh_e3 * source._k_exit.z_exit_subh_e4
-                    )
-                    print(
-                        f"        k = {source._k_exit.k.k_inv_Mpc:.5g}/Mpc, z_exit = {source._k_exit.z_exit:.5g}, z_source_limit = {z_source_limit:.5g}"
-                    )
-                    df = source.values_as_DataFrame()
-                    df.to_csv("ERROR_VALUES.csv", header=True, index=False)
-                    raise RuntimeError(
-                        f"GkSource.create_functions: WKB data missing = intended region = ({WKB_region[0]:.5g}, {WKB_region[1]:.5g}), but data available only between ({WKB_data[-1].z_source.z:.5g}, {WKB_data[0].z_source.z:.5g})."
+                    self._report_missing_data(
+                        "WKB data", source, WKB_data, max_z, min_z
                     )
 
                 sin_amplitude_data = [
@@ -682,8 +659,6 @@ class GkSourcePolicyData(DatastoreObject):
                 theta_div_2pi_points = [v.WKB.theta_div_2pi for v in WKB_data]
                 theta_mod_2pi_points = [v.WKB.theta_mod_2pi for v in WKB_data]
 
-                # currently force spline to use a single chunk
-                # multi-chunk implementation seems currently not mature enough for production use
                 WKB_theta_spline = phase_spline(
                     theta_log_x_points,
                     theta_div_2pi_points,
@@ -692,7 +667,6 @@ class GkSourcePolicyData(DatastoreObject):
                     x_is_redshift=True,
                     chunk_step=None,
                     chunk_logstep=125,
-                    # chunk_logstep=None,
                     increasing=False,
                 )
 
@@ -708,9 +682,11 @@ class GkSourcePolicyData(DatastoreObject):
                     _sin_amplitude_spline, "sin amplitude", max_z.z, min_z.z, log_z=True
                 )
 
+                WKB_region = (max_z.z, min_z.z)
+
         self._functions = GkSourceFunctions(
-            numerical_region=numerical_region,
-            numerical_Gk=numerical_Gk,
+            numeric_region=numeric_region,
+            numeric_Gk=numeric_Gk,
             WKB_region=WKB_region,
             WKB_Gk=WKB_Gk,
             phase=WKB_theta_spline,
@@ -718,4 +694,28 @@ class GkSourcePolicyData(DatastoreObject):
             type=self._type,
             quality=self._quality,
             crossover_z=self._crossover_z,
+        )
+
+    def _report_missing_data(self, label, source, data, max_z, min_z):
+        print("!! ERROR (GkSource.create_functions)")
+        print(
+            f"     ** {label} missing: intended region = ({max_z.z:.5g}, {min_z.z:.5g}), but available only between ({data[-1].z_source.z:.5g}, {data[0].z_source.z:.5g})"
+        )
+        print(
+            f"        GkSource (store_id={self.store_id}): z_response = {source.z_response.z:.5g} (store_id={source.z_response.store_id}), type = {self._type}, quality label = {self._quality}"
+        )
+        z_source_limit = sqrt(
+            source._k_exit.z_exit_subh_e3 * source._k_exit.z_exit_subh_e4
+        )
+        print(
+            f"        k = {source._k_exit.k.k_inv_Mpc:.5g}/Mpc, z_exit = {source._k_exit.z_exit:.5g}, z_source_limit = {z_source_limit:.5g}"
+        )
+        df = source.values_as_DataFrame()
+        df.to_csv(
+            f"GkSourcePolicyData-create_functions-ERRORDATA-GkSource-{source.store_id}.csv",
+            header=True,
+            index=False,
+        )
+        raise RuntimeError(
+            f"GkSource.create_functions: {label} missing = intended region = ({max_z.z:.5g}, {min_z.z:.5g}), but available only between ({data[-1].z_source.z:.5g}, {data[0].z_source.z:.5g})."
         )

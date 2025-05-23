@@ -6,9 +6,9 @@ import ray
 from scipy.interpolate import make_interp_spline
 
 from ComputeTargets.BackgroundModel import BackgroundModel, ModelProxy
-from ComputeTargets.TkNumericalIntegration import (
-    TkNumericalIntegration,
-    TkNumericalValue,
+from ComputeTargets.TkNumericIntegration import (
+    TkNumericIntegration,
+    TkNumericValue,
 )
 from ComputeTargets.spline_wrappers import ZSplineWrapper
 from CosmologyConcepts import wavenumber, redshift_array, redshift, wavenumber_exit_time
@@ -55,8 +55,8 @@ def source_function(
 def compute_quad_source(
     model_proxy: ModelProxy,
     z_sample: redshift_array,
-    Tq: TkNumericalIntegration,
-    Tr: TkNumericalIntegration,
+    Tq: TkNumericIntegration,
+    Tr: TkNumericIntegration,
 ):
     model: BackgroundModel = model_proxy.get()
 
@@ -102,7 +102,7 @@ def compute_quad_source(
                 missing_r = True
 
             if not missing_q:
-                Tq_: TkNumericalValue = Tq[q_idx]
+                Tq_: TkNumericValue = Tq[q_idx]
 
                 Tq_value = Tq_.T
                 Tq_prime = Tq_.Tprime
@@ -121,7 +121,7 @@ def compute_quad_source(
                 analytic_Tq_prime_w = 0.0
 
             if not missing_r:
-                Tr_: TkNumericalValue = Tr[r_idx]
+                Tr_: TkNumericValue = Tr[r_idx]
 
                 Tr_value = Tr_.T
                 Tr_prime = Tr_.Tprime
@@ -141,7 +141,7 @@ def compute_quad_source(
 
             wBackground = model.functions.wBackground(z.z)
 
-            numerical = source_function(
+            numeric = source_function(
                 Tq_value, Tr_value, Tq_prime, Tr_prime, z.z, wBackground
             )
             analytic_rad = source_function(
@@ -161,9 +161,9 @@ def compute_quad_source(
                 wBackground,
             )
 
-            source.append(numerical["source"])
-            undiff.append(numerical["undiff"])
-            diff.append(numerical["diff"])
+            source.append(numeric["source"])
+            undiff.append(numeric["undiff"])
+            diff.append(numeric["diff"])
 
             analytic_source_rad.append(analytic_rad["source"])
             analytic_undiff_rad.append(analytic_rad["undiff"])
@@ -204,7 +204,7 @@ class QuadSource(DatastoreObject):
         tags: Optional[List[store_tag]] = None,
     ):
         # q is not used, but needs to be accepted because it functions as the shard key;
-        # there is a .q attribute, but this is derived from the Tq TkNumericalIntegration object
+        # there is a .q attribute, but this is derived from the Tq TkNumericIntegration object
 
         self._z_sample = z_sample
         if payload is None:
@@ -323,8 +323,8 @@ class QuadSource(DatastoreObject):
         if label is not None:
             self._label = label
 
-        Tq: TkNumericalIntegration = payload["Tq"]
-        Tr: TkNumericalIntegration = payload["Tr"]
+        Tq: TkNumericIntegration = payload["Tq"]
+        Tr: TkNumericIntegration = payload["Tr"]
 
         # check compatibility of the ingredients we have been offered
         if not Tq.available:

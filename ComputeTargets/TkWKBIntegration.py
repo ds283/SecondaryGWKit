@@ -17,7 +17,7 @@ from Quadrature.integrators.WKB_phase_function import (
     FRICTION_INDEX,
 )
 from Quadrature.supervisors.base import RHS_timer
-from Quadrature.supervisors.numerical import NumericalIntegrationSupervisor
+from Quadrature.supervisors.numeric import NumericIntegrationSupervisor
 from Units import check_units
 from defaults import DEFAULT_FLOAT_PRECISION
 
@@ -27,7 +27,7 @@ def friction_RHS(
     state: List[float],
     model: BackgroundModel,
     k_float: float,
-    supervisor: NumericalIntegrationSupervisor,
+    supervisor: NumericIntegrationSupervisor,
 ) -> List[float]:
     """
     k *must* be measured using the same units used for H(z) in the cosmology, otherwise we will not get

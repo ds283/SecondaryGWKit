@@ -85,7 +85,7 @@ def compute_QuadSource_integral(
         WKB_Levin_data = None
 
         if GkPolicy.type == "numeric":
-            max_z, min_z = Gk_f.numerical_region
+            max_z, min_z = Gk_f.numeric_region
             if z_response.z < min_z:
                 raise RuntimeError(
                     f"compute_QuadSource_integral: z_response={z_response.z:.5g}, but min_z for numeric region is min_z={min_z:.5g} for k={k.k.k_inv_Mpc:.5g}/Mpc (store_id={k.store_id}), q={q.k.k_inv_Mpc:.5g}/Mpc (store_id={q.store_id}), r={r.k.k_inv_Mpc:.5g}/Mpc (store_id={r.store_id}), GkSourcePolicyData store_id={GkPolicy.store_id}"
@@ -131,7 +131,7 @@ def compute_QuadSource_integral(
                 Levin_z = crossover_z
 
             if crossover_z is not None:
-                max_z, min_z = Gk_f.numerical_region
+                max_z, min_z = Gk_f.numeric_region
                 if crossover_z < min_z:
                     raise RuntimeError(
                         f"compute_QuadSource_integral: crossover_z={crossover_z:.5g}, but min_z for numeric region is min_z={min_z:.5g} for z_response={z_response.z:.5g} (store_id={z_response.store_id}), k={k.k.k_inv_Mpc:.5g}/Mpc (store_id={k.store_id}), q={q.k.k_inv_Mpc:.5g}/Mpc (store_id={q.store_id}), r={r.k.k_inv_Mpc:.5g}/Mpc (store_id={r.store_id}), GkSourcePolicyData store_id={GkPolicy.store_id}"
@@ -820,19 +820,19 @@ def numeric_quad_integral(
             f'compute_QuadSource_integral: attempting to evaluate numerical quadrature, but Gk object is not of "numeric" or "mixed" type [domain={max_z:.5g}, {min_z:.5g}]'
         )
 
-    if Gk_f.numerical_Gk is None:
+    if Gk_f.numeric_Gk is None:
         Gk: GkSource = GkPolicy._source_proxy.get()
         raise RuntimeError(
-            f"compute_QuadSource_integral: attempting to evaluate numerical quadrature, but Gk_f.numerical_Gk is absent (type={GkPolicy.type}, quality={GkPolicy.quality}, lowest numeric z={_extract_z(Gk._numerical_smallest_z)}, primary WKB largest z={_extract_z(Gk._primary_WKB_largest_z)}) [domain={max_z:.5g}, {min_z:.5g}]"
+            f"compute_QuadSource_integral: attempting to evaluate numerical quadrature, but Gk_f.numeric_Gk is absent (type={GkPolicy.type}, quality={GkPolicy.quality}, lowest numeric z={_extract_z(Gk._numeric_smallest_z)}, primary WKB largest z={_extract_z(Gk._primary_WKB_largest_z)}) [domain={max_z:.5g}, {min_z:.5g}]"
         )
 
-    if Gk_f.numerical_region is None:
+    if Gk_f.numeric_region is None:
         Gk: GkSource = GkPolicy._source_proxy.get()
         raise RuntimeError(
-            f"compute_QuadSource_integral: attempting to evaluate numerical quadrature, but Gk_f.numerical_region is absent (type={GkPolicy.type}, quality={GkPolicy.quality}, lowest numeric z={_extract_z(Gk._numerical_smallest_z)}, primary WKB largest z={_extract_z(Gk._primary_WKB_largest_z)}) [domain={max_z:.5g}, {min_z:.5g}]"
+            f"compute_QuadSource_integral: attempting to evaluate numerical quadrature, but Gk_f.numeric_region is absent (type={GkPolicy.type}, quality={GkPolicy.quality}, lowest numeric z={_extract_z(Gk._numeric_smallest_z)}, primary WKB largest z={_extract_z(Gk._primary_WKB_largest_z)}) [domain={max_z:.5g}, {min_z:.5g}]"
         )
 
-    region_max_z, region_min_z = Gk_f.numerical_region
+    region_max_z, region_min_z = Gk_f.numeric_region
     if max_z > region_max_z + DEFAULT_FLOAT_PRECISION:
         raise RuntimeError(
             f"compute_QuadSource_integral: attempting to evaluate numerical quadrature, but max_z={max_z:.5g} is out-of-bounds for the region ({region_max_z:.5g}, {region_min_z:.5g}) where a numerical solution is available [domain={max_z:.5g}, {min_z:.5g}]"
@@ -843,7 +843,7 @@ def numeric_quad_integral(
         )
 
     def integrand(log_z_source) -> float:
-        Green = Gk_f.numerical_Gk(log_z_source, z_is_log=True)
+        Green = Gk_f.numeric_Gk(log_z_source, z_is_log=True)
         H = model_f.Hubble(exp(log_z_source) - 1.0)
         H_sq = H * H
         f = source_f.source(log_z_source, z_is_log=True)
@@ -893,13 +893,13 @@ def WKB_quad_integral(
     if Gk_f.WKB_Gk is None:
         Gk: GkSource = GkPolicy._source_proxy.get()
         raise RuntimeError(
-            f"compute_QuadSource_integral: attempting to evaluate WKB quadrature, but Gk_f.WKB_Gk is absent (type={GkPolicy.type}, quality={GkPolicy.quality}, lowest numeric z={_extract_z(Gk._numerical_smallest_z)}, primary WKB largest z={_extract_z(Gk._primary_WKB_largest_z)}, z_crossover={_extract_z(GkPolicy.crossover_z)}) [domain={max_z:.5g}, {min_z:.5g}]"
+            f"compute_QuadSource_integral: attempting to evaluate WKB quadrature, but Gk_f.WKB_Gk is absent (type={GkPolicy.type}, quality={GkPolicy.quality}, lowest numeric z={_extract_z(Gk._numeric_smallest_z)}, primary WKB largest z={_extract_z(Gk._primary_WKB_largest_z)}, z_crossover={_extract_z(GkPolicy.crossover_z)}) [domain={max_z:.5g}, {min_z:.5g}]"
         )
 
     if Gk_f.WKB_region is None:
         Gk: GkSource = GkPolicy._source_proxy.get()
         raise RuntimeError(
-            f"compute_QuadSource_integral: attempting to evaluate WKB quadrature, but Gk_f.WKB_region is absent (type={GkPolicy.type}, quality={GkPolicy.quality}, lowest numeric z={_extract_z(Gk._numerical_smallest_z)}, primary WKB largest z={_extract_z(Gk._primary_WKB_largest_z)}), z_crossover={_extract_z(GkPolicy.crossover_z)} [domain={max_z:.5g}, {min_z:.5g}]"
+            f"compute_QuadSource_integral: attempting to evaluate WKB quadrature, but Gk_f.WKB_region is absent (type={GkPolicy.type}, quality={GkPolicy.quality}, lowest numeric z={_extract_z(Gk._numeric_smallest_z)}, primary WKB largest z={_extract_z(Gk._primary_WKB_largest_z)}), z_crossover={_extract_z(GkPolicy.crossover_z)} [domain={max_z:.5g}, {min_z:.5g}]"
         )
 
     region_max_z, region_min_z = Gk_f.WKB_region
@@ -963,13 +963,13 @@ def WKB_Levin_integral(
     if Gk_f.phase is None:
         Gk: GkSource = GkPolicy._source_proxy.get()
         raise RuntimeError(
-            f"compute_QuadSource_integral: attempting to evaluate WKB Levin quadrature, but Gk_f.phase is absent (type={GkPolicy.type}, quality={GkPolicy.quality}, lowest numeric z={_extract_z(Gk._numerical_smallest_z)}, primary WKB largest z={_extract_z(Gk._primary_WKB_largest_z)}, z_crossover={_extract_z(GkPolicy.crossover_z)}, z_Levin={_extract_z(GkPolicy.Levin_z)}) [domain={max_z:.5g}, {min_z:.5g}]"
+            f"compute_QuadSource_integral: attempting to evaluate WKB Levin quadrature, but Gk_f.phase is absent (type={GkPolicy.type}, quality={GkPolicy.quality}, lowest numeric z={_extract_z(Gk._numeric_smallest_z)}, primary WKB largest z={_extract_z(Gk._primary_WKB_largest_z)}, z_crossover={_extract_z(GkPolicy.crossover_z)}, z_Levin={_extract_z(GkPolicy.Levin_z)}) [domain={max_z:.5g}, {min_z:.5g}]"
         )
 
     if Gk_f.WKB_region is None:
         Gk: GkSource = GkPolicy._source_proxy.get()
         raise RuntimeError(
-            f"compute_QuadSource_integral: attempting to evaluate WKB Levin quadrature, but Gk_f.WKB_region is absent (type={GkPolicy.type}, quality={GkPolicy.quality}, lowest numeric z={_extract_z(Gk._numerical_smallest_z)}, primary WKB largest z={_extract_z(Gk._primary_WKB_largest_z)}, z_crossover={_extract_z(GkPolicy.crossover_z)}, z_Levin={_extract_z(GkPolicy.Levin_z)}) [domain={max_z:.5g}, {min_z:.5g}]"
+            f"compute_QuadSource_integral: attempting to evaluate WKB Levin quadrature, but Gk_f.WKB_region is absent (type={GkPolicy.type}, quality={GkPolicy.quality}, lowest numeric z={_extract_z(Gk._numeric_smallest_z)}, primary WKB largest z={_extract_z(Gk._primary_WKB_largest_z)}, z_crossover={_extract_z(GkPolicy.crossover_z)}, z_Levin={_extract_z(GkPolicy.Levin_z)}) [domain={max_z:.5g}, {min_z:.5g}]"
         )
 
     region_max_z, region_min_z = Gk_f.WKB_region

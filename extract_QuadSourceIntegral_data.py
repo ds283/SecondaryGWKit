@@ -639,7 +639,7 @@ def plot_Gk(
     WKB_max_z = None
     WKB_min_z = None
 
-    num_region = functions.numerical_region
+    num_region = functions.numeric_region
     if num_region is not None:
         num_max_z, num_min_z = num_region
 
@@ -648,11 +648,11 @@ def plot_Gk(
         WKB_max_z, WKB_min_z = WKB_region
 
     if num_region is not None:
-        numerical_points = [
+        numeric_points = [
             value for value in values if num_max_z >= value.z_source.z >= num_min_z
         ]
     else:
-        numerical_points = []
+        numeric_points = []
 
     if WKB_region is not None:
         WKB_points = [
@@ -687,12 +687,12 @@ def plot_Gk(
         (
             value.z_source.z,
             safe_div(
-                safe_fabs(functions.numerical_Gk(value.z_source.z)),
+                safe_fabs(functions.numeric_Gk(value.z_source.z)),
                 (1.0 + value.z_source.z)
                 * model.functions.Hubble(value.z_source.z) ** 2,
             ),
         )
-        for value in numerical_points
+        for value in numeric_points
     ]
     abs_G_WKB_spline_points = [
         (

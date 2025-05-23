@@ -7,8 +7,8 @@ from sqlalchemy import and_
 from sqlalchemy.exc import MultipleResultsFound, SQLAlchemyError
 
 from ComputeTargets import (
-    TkNumericalIntegration,
-    TkNumericalValue,
+    TkNumericIntegration,
+    TkNumericValue,
     BackgroundModel,
 )
 from ComputeTargets.BackgroundModel import ModelProxy
@@ -19,7 +19,7 @@ from Quadrature.integration_metadata import IntegrationData, IntegrationSolver
 from defaults import DEFAULT_STRING_LENGTH, DEFAULT_FLOAT_PRECISION
 
 
-class sqla_TkNumericalTagAssociation_factory(SQLAFactoryBase):
+class sqla_TkNumericTagAssociation_factory(SQLAFactoryBase):
     def __init__(self):
         pass
 
@@ -34,7 +34,7 @@ class sqla_TkNumericalTagAssociation_factory(SQLAFactoryBase):
                 sqla.Column(
                     "integration_serial",
                     sqla.Integer,
-                    sqla.ForeignKey("TkNumericalIntegration.serial"),
+                    sqla.ForeignKey("TkNumericIntegration.serial"),
                     index=True,
                     nullable=False,
                     primary_key=True,
@@ -55,7 +55,7 @@ class sqla_TkNumericalTagAssociation_factory(SQLAFactoryBase):
         raise NotImplementedError
 
     @staticmethod
-    def add_tag(conn, inserter, integration: TkNumericalIntegration, tag: store_tag):
+    def add_tag(conn, inserter, integration: TkNumericIntegration, tag: store_tag):
         inserter(
             conn,
             {
@@ -65,7 +65,7 @@ class sqla_TkNumericalTagAssociation_factory(SQLAFactoryBase):
         )
 
     @staticmethod
-    def remove_tag(conn, table, integration: TkNumericalIntegration, tag: store_tag):
+    def remove_tag(conn, table, integration: TkNumericIntegration, tag: store_tag):
         conn.execute(
             sqla.delete(table).where(
                 and_(
@@ -76,7 +76,7 @@ class sqla_TkNumericalTagAssociation_factory(SQLAFactoryBase):
         )
 
 
-class sqla_TkNumericalIntegration_factory(SQLAFactoryBase):
+class sqla_TkNumericIntegration_factory(SQLAFactoryBase):
     def __init__(self):
         pass
 
@@ -181,7 +181,7 @@ class sqla_TkNumericalIntegration_factory(SQLAFactoryBase):
 
         atol_table = tables["tolerance"].alias("atol")
         rtol_table = tables["tolerance"].alias("rtol")
-        tag_table = tables["TkNumerical_tags"]
+        tag_table = tables["TkNumeric_tags"]
         solver_table = tables["IntegrationSolver"]
         redshift_table = tables["redshift"]
 
@@ -254,13 +254,13 @@ class sqla_TkNumericalIntegration_factory(SQLAFactoryBase):
             row_data = conn.execute(query).one_or_none()
         except MultipleResultsFound as e:
             print(
-                f"!! TkNumericalIntegration.build(): multiple results found when querying for TkNumericalIntegration"
+                f"!! TkNumericIntegration.build(): multiple results found when querying for TkNumericIntegration"
             )
             raise e
 
         if row_data is None:
             # build and return an unpopulated object
-            return TkNumericalIntegration(
+            return TkNumericIntegration(
                 payload=None,
                 solver_labels=solver_labels,
                 model=model_proxy,
@@ -281,7 +281,7 @@ class sqla_TkNumericalIntegration_factory(SQLAFactoryBase):
         do_not_populate = payload.get("_do_not_populate", False)
         if not do_not_populate:
             # read out sample values associated with this integration
-            value_table = tables["TkNumericalValue"]
+            value_table = tables["TkNumericValue"]
 
             sample_rows = conn.execute(
                 sqla.select(
@@ -320,7 +320,7 @@ class sqla_TkNumericalIntegration_factory(SQLAFactoryBase):
                 )
                 z_points.append(z_value)
                 values.append(
-                    TkNumericalValue(
+                    TkNumericValue(
                         store_id=row.serial,
                         z=z_value,
                         T=row.T,
@@ -348,7 +348,7 @@ class sqla_TkNumericalIntegration_factory(SQLAFactoryBase):
 
             attributes = {"_do_not_populate": True, "_deserialized": True}
 
-        obj = TkNumericalIntegration(
+        obj = TkNumericIntegration(
             payload={
                 "store_id": store_id,
                 "data": IntegrationData(
@@ -397,7 +397,7 @@ class sqla_TkNumericalIntegration_factory(SQLAFactoryBase):
 
     @staticmethod
     def store(
-        obj: TkNumericalIntegration,
+        obj: TkNumericIntegration,
         conn,
         table,
         inserter,
@@ -435,18 +435,18 @@ class sqla_TkNumericalIntegration_factory(SQLAFactoryBase):
             },
         )
 
-        # set store_id on behalf of the TkNumericalIntegration instance
+        # set store_id on behalf of the TkNumericIntegration instance
         obj._my_id = store_id
 
         # add any tags that have been specified
-        tag_inserter = inserters["TkNumerical_tags"]
+        tag_inserter = inserters["TkNumeric_tags"]
         for tag in obj.tags:
-            sqla_TkNumericalTagAssociation_factory.add_tag(conn, tag_inserter, obj, tag)
+            sqla_TkNumericTagAssociation_factory.add_tag(conn, tag_inserter, obj, tag)
 
         # now serialize the sampled output points
-        value_inserter = inserters["TkNumericalValue"]
+        value_inserter = inserters["TkNumericValue"]
         for value in obj.values:
-            value: TkNumericalValue
+            value: TkNumericValue
             value_id = value_inserter(
                 conn,
                 {
@@ -463,19 +463,19 @@ class sqla_TkNumericalIntegration_factory(SQLAFactoryBase):
                 },
             )
 
-            # set store_id on behalf of the TkNumericalValue instance
+            # set store_id on behalf of the TkNumericValue instance
             value._my_id = value_id
 
         return obj
 
     @staticmethod
     def validate(
-        obj: TkNumericalIntegration,
+        obj: TkNumericIntegration,
         conn,
         table,
         tables,
     ):
-        # query the row in TkNumericalIntegration corresponding to this object
+        # query the row in TkNumericIntegration corresponding to this object
         if not obj.available:
             raise RuntimeError(
                 "Attempt to validate a datastore object that has not yet been serialized"
@@ -485,7 +485,7 @@ class sqla_TkNumericalIntegration_factory(SQLAFactoryBase):
             sqla.select(table.c.z_samples).filter(table.c.serial == obj.store_id)
         ).scalar()
 
-        value_table = tables["TkNumericalValue"]
+        value_table = tables["TkNumericValue"]
         num_samples = conn.execute(
             sqla.select(sqla.func.count(value_table.c.serial)).filter(
                 value_table.c.integration_serial == obj.store_id
@@ -517,8 +517,8 @@ class sqla_TkNumericalIntegration_factory(SQLAFactoryBase):
         redshift_table = tables["redshift"]
         wavenumber_exit_table = tables["wavenumber_exit_time"]
         wavenumber_table = tables["wavenumber"]
-        value_table = tables["TkNumericalValue"]
-        tags_table = tables["TkNumerical_tags"]
+        value_table = tables["TkNumericValue"]
+        tags_table = tables["TkNumeric_tags"]
 
         # bake results into a list so that we can close this query; we are going to want to run
         # another one as we process the rows from this one
@@ -607,7 +607,7 @@ class sqla_TkNumericalIntegration_factory(SQLAFactoryBase):
         return msgs
 
 
-class sqla_TkNumericalValue_factory(SQLAFactoryBase):
+class sqla_TkNumericValue_factory(SQLAFactoryBase):
     def __init__(self):
         pass
 
@@ -621,7 +621,7 @@ class sqla_TkNumericalValue_factory(SQLAFactoryBase):
                 sqla.Column(
                     "integration_serial",
                     sqla.Integer,
-                    sqla.ForeignKey("TkNumericalIntegration.serial"),
+                    sqla.ForeignKey("TkNumericIntegration.serial"),
                     index=True,
                     nullable=False,
                 ),
@@ -660,20 +660,20 @@ class sqla_TkNumericalValue_factory(SQLAFactoryBase):
 
         if all([has_serial, has_model]):
             print(
-                "## GkNumericalValue.build(): both an integration serial number and a (model_proxy, wavenumber, z_source) set were queried. Only the serial number will be used."
+                "## GkNumericValue.build(): both an integration serial number and a (model_proxy, wavenumber, z_source) set were queried. Only the serial number will be used."
             )
 
         if not any([has_serial, has_model]):
             raise RuntimeError(
-                "GkNumericalValue.build(): at least one of an integration serial number and a (model_proxy, wavenumber, z_source) set must be supplied."
+                "GkNumericValue.build(): at least one of an integration serial number and a (model_proxy, wavenumber, z_source) set must be supplied."
             )
 
         if has_serial:
-            return sqla_TkNumericalValue_factory._build_impl_serial(
+            return sqla_TkNumericValue_factory._build_impl_serial(
                 payload, conn, table, inserter, tables, inserters
             )
 
-        return sqla_TkNumericalValue_factory._build_impl_model(
+        return sqla_TkNumericValue_factory._build_impl_model(
             payload, conn, table, inserter, tables, inserters
         )
 
@@ -714,7 +714,7 @@ class sqla_TkNumericalValue_factory(SQLAFactoryBase):
             ).one_or_none()
         except MultipleResultsFound as e:
             print(
-                f"!! TkNumericalValue.build(): multiple results found when querying for TkNumericalValue"
+                f"!! TkNumericValue.build(): multiple results found when querying for TkNumericValue"
             )
             raise e
 
@@ -759,7 +759,7 @@ class sqla_TkNumericalValue_factory(SQLAFactoryBase):
 
             attribute_set = {"_deserialized": True}
 
-        obj = TkNumericalValue(
+        obj = TkNumericValue(
             store_id=store_id,
             z=z,
             T=T,
@@ -787,7 +787,7 @@ class sqla_TkNumericalValue_factory(SQLAFactoryBase):
         rtol: Optional[tolerance] = payload.get("rtol", None)
         tags: Optional[List[store_tag]] = payload.get("tags", None)
 
-        integration_table = tables["TkNumericalIntegration"]
+        integration_table = tables["TkNumericIntegration"]
 
         try:
             integration_query = sqla.select(integration_table.c.serial).filter(
@@ -810,7 +810,7 @@ class sqla_TkNumericalValue_factory(SQLAFactoryBase):
             count = 0
             for tag in tags:
                 tag: store_tag
-                tab = tables["TkNumerical_tags"].alias(f"tag_{count}")
+                tab = tables["TkNumeric_tags"].alias(f"tag_{count}")
                 count += 1
                 integration_query = integration_query.join(
                     tab,
@@ -845,18 +845,18 @@ class sqla_TkNumericalValue_factory(SQLAFactoryBase):
             ).one_or_none()
         except MultipleResultsFound as e:
             print(
-                f"!! TkNumericalValue.build(): multiple results found when querying for TkNumericalValue"
+                f"!! TkNumericValue.build(): multiple results found when querying for TkNumericValue"
             )
             raise e
 
         if row_data is None:
             # return empty object
-            obj = TkNumericalValue(store_id=None, z=z, T=None, Tprime=None)
+            obj = TkNumericValue(store_id=None, z=z, T=None, Tprime=None)
             obj._k_exit = k
             obj._z_init = z_init
             return obj
 
-        obj = TkNumericalValue(
+        obj = TkNumericValue(
             store_id=row_data.serial,
             z=z,
             T=row_data.T,

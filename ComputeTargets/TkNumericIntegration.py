@@ -10,15 +10,15 @@ from CosmologyConcepts import redshift_array, wavenumber, redshift, wavenumber_e
 from Datastore import DatastoreObject
 from MetadataConcepts import tolerance, store_tag
 from Quadrature.integration_metadata import IntegrationSolver, IntegrationData
-from Quadrature.integrators.numerical_with_phase_cut import (
+from Quadrature.integrators.numeric_with_phase_cut import (
     VALUE_INDEX,
     DERIV_INDEX,
-    numerical_with_phase_cut,
+    numeric_with_phase_cut,
 )
 from Quadrature.supervisors.base import (
     RHS_timer,
 )
-from Quadrature.supervisors.numerical import NumericalIntegrationSupervisor
+from Quadrature.supervisors.numeric import NumericIntegrationSupervisor
 from Units import check_units
 from defaults import (
     DEFAULT_FLOAT_PRECISION,
@@ -42,7 +42,7 @@ def RHS(
     state: List[float],
     model: BackgroundModel,
     k_float: float,
-    supervisor: NumericalIntegrationSupervisor,
+    supervisor: NumericIntegrationSupervisor,
 ) -> List[float]:
     """
     k *must* be measured using the same units used for H(z) in the cosmology
@@ -92,7 +92,7 @@ def RHS(
     return [dT_dz, dTprime_dz]
 
 
-class TkNumericalIntegration(DatastoreObject):
+class TkNumericIntegration(DatastoreObject):
     """
     Encapsulates all sample points produced during a single integration of the
     matter transfer function, labelled by a wavenumber k, and sampled over
@@ -123,7 +123,7 @@ class TkNumericalIntegration(DatastoreObject):
 
         if self._mode is not None and self._mode not in ["stop"]:
             raise ValueError(
-                f'TkNumericalIntegration: unknown compute mode "{self._mode}"'
+                f'TkNumericIntegration: unknown compute mode "{self._mode}"'
             )
 
         # search for a handover point (to the WKB calculation) from 3 to 6 e-folds inside the horizon
@@ -133,7 +133,7 @@ class TkNumericalIntegration(DatastoreObject):
         # if initial time is not really compatible with the initial conditions we use, warn the user
         if z_init is not None and z_init.z < k.z_exit_suph_e3 - DEFAULT_FLOAT_PRECISION:
             print(
-                f"!! Warning (TkNumericalIntegration) k={k_wavenumber.k_inv_Mpc:.5g}/Mpc, log10_atol={atol.log10_tol}, log10_rtol={rtol.log10_tol}\n"
+                f"!! Warning (TkNumericIntegration) k={k_wavenumber.k_inv_Mpc:.5g}/Mpc, log10_atol={atol.log10_tol}, log10_rtol={rtol.log10_tol}\n"
                 f"|    Initial redshift z_init={z_init.z:.5g} is later than the 3-efold superhorizon time z_e3={k.z_exit_suph_e3:.5g}.\n"
                 f"|    Setting initial conditions at this time may lead to meaningless results, because the initial values T_k(z) = 1, Tprime_k(z) = 0.\n"
                 f"|    used for the matter transfer function integration apply only on sufficiently superhorizon scales."
@@ -290,7 +290,7 @@ class TkNumericalIntegration(DatastoreObject):
     def values(self) -> List:
         if hasattr(self, "_do_not_populate"):
             raise RuntimeError(
-                "TkNumericalIntegration: values read but _do_not_populate is set"
+                "TkNumericIntegration: values read but _do_not_populate is set"
             )
 
         if self._values is None:
@@ -312,7 +312,7 @@ class TkNumericalIntegration(DatastoreObject):
     def compute(self, label: Optional[str] = None):
         if hasattr(self, "_do_not_populate"):
             raise RuntimeError(
-                "TkNumericalIntegration: compute() called but _do_not_populate is set"
+                "TkNumericIntegration: compute() called but _do_not_populate is set"
             )
 
         if self._values is not None:
@@ -337,7 +337,7 @@ class TkNumericalIntegration(DatastoreObject):
         efolds_suph = -log(k_over_aH)
         if efolds_suph < 1:
             print(
-                "!! WARNING (TkNumericalIntegration): T(k) COMPUTATION BEGINNING TOO CLOSE TO HORIZON SCALE"
+                "!! WARNING (TkNumericIntegration): T(k) COMPUTATION BEGINNING TOO CLOSE TO HORIZON SCALE"
             )
             print(
                 f"|    k = {self.k.k_inv_Mpc}/Mpc, z_exit = {self.z_exit}, z_init = {self.z_init.z}, z_sample(max) = {self.z_sample.max.z}, z_sample(min) = {self.z_sample.min.z}"
@@ -368,7 +368,7 @@ class TkNumericalIntegration(DatastoreObject):
             payload["stop_search_window_z_begin"] = search_begin
             payload["stop_search_window_z_end"] = search_end
 
-        self._compute_ref = numerical_with_phase_cut.remote(
+        self._compute_ref = numeric_with_phase_cut.remote(
             self._model_proxy,
             self._k_exit,
             self._z_init,
@@ -388,7 +388,7 @@ class TkNumericalIntegration(DatastoreObject):
     def store(self) -> Optional[bool]:
         if self._compute_ref is None:
             raise RuntimeError(
-                "TkNumericalIntegration: store() called, but no compute() is in progress"
+                "TkNumericIntegration: store() called, but no compute() is in progress"
             )
 
         # check whether the computation has actually resolved
@@ -443,9 +443,9 @@ class TkNumericalIntegration(DatastoreObject):
                 Tk_d_ln_omegaEff_dz(model, self.k.k, current_z_float)
             ) / sqrt(fabs(omega_sq))
 
-            # create new TkNumericalValue object
+            # create new TkNumericValue object
             self._values.append(
-                TkNumericalValue(
+                TkNumericValue(
                     None,
                     current_z,
                     T_sample[i],
@@ -464,11 +464,11 @@ class TkNumericalIntegration(DatastoreObject):
         return True
 
 
-class TkNumericalValue(DatastoreObject):
+class TkNumericValue(DatastoreObject):
     """
     Encapsulates a single sampled value of the matter transfer functions.
     Parameters such as wavenumber k, initial redshift z_init, etc., are held by the
-    owning TkNumericalIntegration object
+    owning TkNumericIntegration object
     """
 
     def __init__(

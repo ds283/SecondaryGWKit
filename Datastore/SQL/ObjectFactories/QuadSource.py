@@ -392,8 +392,8 @@ class sqla_QuadSource_factory(SQLAFactoryBase):
     def validate_on_startup(conn, table, tables, prune=False):
         # query the datastore for any tensor source computations that are not validated
 
-        Tq_table = tables["TkNumericalIntegration"].alias("Tq")
-        Tr_table = tables["TkNumericalIntegration"].alias("Tr")
+        Tq_table = tables["TkNumericIntegration"].alias("Tq")
+        Tr_table = tables["TkNumericIntegration"].alias("Tr")
         value_table = tables["QuadSourceValue"]
         tags_table = tables["QuadSource_tags"]
 

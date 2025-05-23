@@ -15,8 +15,8 @@ import seaborn as sns
 from ComputeTargets import (
     GkWKBIntegration,
     BackgroundModel,
-    GkNumericalIntegration,
-    GkNumericalValue,
+    GkNumericIntegration,
+    GkNumericValue,
     GkWKBValue,
 )
 from ComputeTargets.BackgroundModel import ModelProxy
@@ -96,7 +96,7 @@ if args.profile_db is not None:
 
 @ray.remote
 def plot_Gk(
-    model_label: str, Gk_numeric: GkNumericalIntegration, Gk_WKB: GkWKBIntegration
+    model_label: str, Gk_numeric: GkNumericIntegration, Gk_WKB: GkWKBIntegration
 ):
     k_exit = Gk_numeric._k_exit
     z_source = Gk_numeric.z_source
@@ -128,9 +128,9 @@ def plot_Gk(
         return
 
     if Gk_numeric.available:
-        values: List[GkNumericalValue] = Gk_numeric.values
+        values: List[GkNumericValue] = Gk_numeric.values
 
-        numerical_points = [(value.z.z, fabs(value.G)) for value in values]
+        numeric_points = [(value.z.z, fabs(value.G)) for value in values]
         analytic_rad_points.extend(
             [(value.z.z, fabs(value.analytic_G_rad)) for value in values]
         )
@@ -138,12 +138,12 @@ def plot_Gk(
             [(value.z.z, fabs(value.analytic_G_w)) for value in values]
         )
 
-        numerical_x, numerical_y = zip(*numerical_points)
+        numeric_x, numeric_y = zip(*numeric_points)
 
-        if len(numerical_x) > 0 and (any(y is not None and y > 0 for y in numerical_y)):
+        if len(numeric_x) > 0 and (any(y is not None and y > 0 for y in numeric_y)):
             ax.plot(
-                numerical_x,
-                numerical_y,
+                numeric_x,
+                numeric_y,
                 label="Numeric $G_k$",
                 color="r",
                 linestyle="solid",
@@ -167,7 +167,7 @@ def plot_Gk(
     if Gk_WKB.available:
         values: List[GkWKBValue] = Gk_WKB.values
 
-        numerical_points = [(value.z.z, fabs(value.G_WKB)) for value in values]
+        numeric_points = [(value.z.z, fabs(value.G_WKB)) for value in values]
         analytic_rad_points.extend(
             [(value.z.z, fabs(value.analytic_G_rad)) for value in values]
         )
@@ -176,13 +176,13 @@ def plot_Gk(
         )
         theta_points = [(value.z.z, fabs(value.theta)) for value in values]
 
-        numerical_x, numerical_y = zip(*numerical_points)
+        numeric_x, numeric_y = zip(*numeric_points)
         theta_x, theta_y = zip(*theta_points)
 
-        if len(numerical_x) > 0 and (any(y is not None and y > 0 for y in numerical_y)):
+        if len(numeric_x) > 0 and (any(y is not None and y > 0 for y in numeric_y)):
             ax.plot(
-                numerical_x,
-                numerical_y,
+                numeric_x,
+                numeric_y,
                 label="WKB $G_k$",
                 color="b",
                 linestyle="solid",
@@ -413,7 +413,7 @@ def run_pipeline(model_data):
         k_exit: wavenumber_exit_time
         z_source: redshift
 
-        # query the list of GkNumerical and GkWKB data for this k, z_source combination
+        # query the list of GkNumeric and GkWKB data for this k, z_source combination
         query_payload = {
             "solver_labels": [],
             "model": model_proxy,
@@ -424,7 +424,7 @@ def run_pipeline(model_data):
             "rtol": rtol,
         }
 
-        GkN_ref = pool.object_get("GkNumericalIntegration", **query_payload)
+        GkN_ref = pool.object_get("GkNumericIntegration", **query_payload)
         GkW_ref = pool.object_get("GkWKBIntegration", **query_payload)
 
         return plot_Gk.remote(model_label, GkN_ref, GkW_ref)
@@ -445,7 +445,7 @@ def run_pipeline(model_data):
         process_batch_size=10,
         notify_batch_size=50,
         notify_time_interval=120,
-        title="GENERATING GkNumerical/GkWKB DATA PRODUCTS",
+        title="GENERATING GkNumeric/GkWKB DATA PRODUCTS",
         store_results=False,
     )
     work_queue.run()

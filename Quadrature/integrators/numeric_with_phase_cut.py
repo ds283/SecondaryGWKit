@@ -8,7 +8,7 @@ from ComputeTargets import ModelProxy, BackgroundModel
 from CosmologyConcepts import wavenumber_exit_time, redshift, redshift_array, wavenumber
 from LiouvilleGreen.integration_tools import find_phase_minimum
 from Quadrature.integration_metadata import IntegrationData
-from Quadrature.supervisors.numerical import NumericalIntegrationSupervisor
+from Quadrature.supervisors.numeric import NumericIntegrationSupervisor
 from Units import check_units
 from defaults import (
     DEFAULT_ABS_TOLERANCE,
@@ -25,7 +25,7 @@ EXPECTED_SOL_LENGTH = 2
 
 
 @ray.remote
-def numerical_with_phase_cut(
+def numeric_with_phase_cut(
     model_proxy: ModelProxy,
     k: wavenumber_exit_time,
     z_init: redshift,
@@ -39,7 +39,7 @@ def numerical_with_phase_cut(
     mode: str = None,
     stop_search_window_z_begin: Optional[float] = None,
     stop_search_window_z_end: Optional[float] = None,
-    task_label: str = "numerical_with_phase_cut",
+    task_label: str = "numeric_with_phase_cut",
     object_label: str = "(object)",
 ) -> dict:
     k_wavenumber: wavenumber = k.k
@@ -102,7 +102,7 @@ def numerical_with_phase_cut(
     k_float = k_wavenumber.k
     z_min = float(z_sample.min)
 
-    with NumericalIntegrationSupervisor(
+    with NumericIntegrationSupervisor(
         k_wavenumber, z_init, z_sample.min, object_label, delta_logz=delta_logz
     ) as supervisor:
         initial_state = [initial_value, initial_deriv]

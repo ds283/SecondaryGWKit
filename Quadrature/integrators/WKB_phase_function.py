@@ -10,7 +10,7 @@ from LiouvilleGreen.WKBtools import WKB_mod_2pi, WKB_product_mod_2pi
 from Quadrature.integration_metadata import IntegrationData
 from Quadrature.supervisors.WKB import ThetaSupervisor, QSupervisor
 from Quadrature.supervisors.base import RHS_timer
-from Quadrature.supervisors.numerical import NumericalIntegrationSupervisor
+from Quadrature.supervisors.numeric import NumericIntegrationSupervisor
 from Units import check_units
 from defaults import DEFAULT_ABS_TOLERANCE, DEFAULT_REL_TOLERANCE
 
@@ -553,7 +553,7 @@ def integrate_friction_function(
     k_float = float(k_wavenumber.k)
     z_min = float(z_sample.min)
 
-    with NumericalIntegrationSupervisor(
+    with NumericIntegrationSupervisor(
         k_wavenumber,
         z_init,
         z_sample.min,

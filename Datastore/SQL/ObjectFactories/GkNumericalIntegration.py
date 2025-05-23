@@ -6,8 +6,8 @@ from sqlalchemy import and_, or_
 from sqlalchemy.exc import MultipleResultsFound, SQLAlchemyError
 
 from ComputeTargets import (
-    GkNumericalIntegration,
-    GkNumericalValue,
+    GkNumericIntegration,
+    GkNumericValue,
 )
 from ComputeTargets.BackgroundModel import ModelProxy
 from CosmologyConcepts import redshift_array, redshift, wavenumber_exit_time
@@ -17,7 +17,7 @@ from Quadrature.integration_metadata import IntegrationData, IntegrationSolver
 from defaults import DEFAULT_FLOAT_PRECISION, DEFAULT_STRING_LENGTH
 
 
-class sqla_GkNumericalTagAssociation_factory(SQLAFactoryBase):
+class sqla_GkNumericTagAssociation_factory(SQLAFactoryBase):
     def __init__(self):
         pass
 
@@ -32,7 +32,7 @@ class sqla_GkNumericalTagAssociation_factory(SQLAFactoryBase):
                 sqla.Column(
                     "integration_serial",
                     sqla.Integer,
-                    sqla.ForeignKey("GkNumericalIntegration.serial"),
+                    sqla.ForeignKey("GkNumericIntegration.serial"),
                     index=True,
                     nullable=False,
                     primary_key=True,
@@ -53,7 +53,7 @@ class sqla_GkNumericalTagAssociation_factory(SQLAFactoryBase):
         raise NotImplementedError
 
     @staticmethod
-    def add_tag(conn, inserter, integration: GkNumericalIntegration, tag: store_tag):
+    def add_tag(conn, inserter, integration: GkNumericIntegration, tag: store_tag):
         inserter(
             conn,
             {
@@ -63,7 +63,7 @@ class sqla_GkNumericalTagAssociation_factory(SQLAFactoryBase):
         )
 
     @staticmethod
-    def remove_tag(conn, table, integration: GkNumericalIntegration, tag: store_tag):
+    def remove_tag(conn, table, integration: GkNumericIntegration, tag: store_tag):
         conn.execute(
             sqla.delete(table).where(
                 and_(
@@ -74,7 +74,7 @@ class sqla_GkNumericalTagAssociation_factory(SQLAFactoryBase):
         )
 
 
-class sqla_GkNumericalIntegration_factory(SQLAFactoryBase):
+class sqla_GkNumericIntegration_factory(SQLAFactoryBase):
     def __init__(self):
         pass
 
@@ -177,7 +177,7 @@ class sqla_GkNumericalIntegration_factory(SQLAFactoryBase):
         mode: str = payload.get("mode", None)
 
         solver_table = tables["IntegrationSolver"]
-        tag_table = tables["GkNumerical_tags"]
+        tag_table = tables["GkNumeric_tags"]
         redshift_table = tables["redshift"]
 
         # we treat z_sample as a target rather than a selection criterion;
@@ -250,13 +250,13 @@ class sqla_GkNumericalIntegration_factory(SQLAFactoryBase):
             row_data = conn.execute(query).one_or_none()
         except MultipleResultsFound as e:
             print(
-                f"!! GkNumericalIntegration.build(): multiple results found when querying for GkNumericalIntegration"
+                f"!! GkNumericIntegration.build(): multiple results found when querying for GkNumericIntegration"
             )
             raise e
 
         if row_data is None:
             # build and return an unpopulated object
-            return GkNumericalIntegration(
+            return GkNumericIntegration(
                 payload=None,
                 solver_labels=solver_labels,
                 label=label,
@@ -279,7 +279,7 @@ class sqla_GkNumericalIntegration_factory(SQLAFactoryBase):
         do_not_populate = payload.get("_do_not_populate", False)
         if not do_not_populate:
             # read out sample values associated with this integration
-            value_table = tables["GkNumericalValue"]
+            value_table = tables["GkNumericValue"]
 
             sample_rows = conn.execute(
                 sqla.select(
@@ -318,7 +318,7 @@ class sqla_GkNumericalIntegration_factory(SQLAFactoryBase):
                 )
                 z_points.append(z_value)
                 values.append(
-                    GkNumericalValue(
+                    GkNumericValue(
                         store_id=row.serial,
                         z=z_value,
                         G=row.G,
@@ -346,7 +346,7 @@ class sqla_GkNumericalIntegration_factory(SQLAFactoryBase):
 
             attributes = {"_do_not_populate": True, "_deserialized": True}
 
-        obj = GkNumericalIntegration(
+        obj = GkNumericIntegration(
             payload={
                 "store_id": store_id,
                 "data": IntegrationData(
@@ -388,7 +388,7 @@ class sqla_GkNumericalIntegration_factory(SQLAFactoryBase):
             z_sample=imported_z_sample,
             tags=tags,
             delta_logz=delta_logz,
-            # no need to pass the mode argument, which is only needed/relevant for unpopulated GkNumericalIntegration instances
+            # no need to pass the mode argument, which is only needed/relevant for unpopulated GkNumericIntegration instances
         )
         for key, value in attributes.items():
             setattr(obj, key, value)
@@ -396,7 +396,7 @@ class sqla_GkNumericalIntegration_factory(SQLAFactoryBase):
 
     @staticmethod
     def store(
-        obj: GkNumericalIntegration,
+        obj: GkNumericIntegration,
         conn,
         table,
         inserter,
@@ -432,18 +432,18 @@ class sqla_GkNumericalIntegration_factory(SQLAFactoryBase):
             },
         )
 
-        # set store_id on behalf of the GkNumericalIntegration instance
+        # set store_id on behalf of the GkNumericIntegration instance
         obj._my_id = store_id
 
         # add any tags that have been specified
-        tag_inserter = inserters["GkNumerical_tags"]
+        tag_inserter = inserters["GkNumeric_tags"]
         for tag in obj.tags:
-            sqla_GkNumericalTagAssociation_factory.add_tag(conn, tag_inserter, obj, tag)
+            sqla_GkNumericTagAssociation_factory.add_tag(conn, tag_inserter, obj, tag)
 
         # now serialize the sampled output points
-        value_inserter = inserters["GkNumericalValue"]
+        value_inserter = inserters["GkNumericValue"]
         for value in obj.values:
-            value: GkNumericalValue
+            value: GkNumericValue
             value_id = value_inserter(
                 conn,
                 {
@@ -460,19 +460,19 @@ class sqla_GkNumericalIntegration_factory(SQLAFactoryBase):
                 },
             )
 
-            # set store_id on behalf of the GkNumericalValue instance
+            # set store_id on behalf of the GkNumericValue instance
             value._my_id = value_id
 
         return obj
 
     @staticmethod
     def validate(
-        obj: GkNumericalIntegration,
+        obj: GkNumericIntegration,
         conn,
         table,
         tables,
     ):
-        # query the row in GkNumericalIntegration corresponding to this object
+        # query the row in GkNumericIntegration corresponding to this object
         if not obj.available:
             raise RuntimeError(
                 "Attempt to validate a datastore object that has not yet been serialized"
@@ -482,7 +482,7 @@ class sqla_GkNumericalIntegration_factory(SQLAFactoryBase):
             sqla.select(table.c.z_samples).filter(table.c.serial == obj.store_id)
         ).scalar()
 
-        value_table = tables["GkNumericalValue"]
+        value_table = tables["GkNumericValue"]
         num_samples = conn.execute(
             sqla.select(sqla.func.count(value_table.c.serial)).filter(
                 value_table.c.integration_serial == obj.store_id
@@ -514,8 +514,8 @@ class sqla_GkNumericalIntegration_factory(SQLAFactoryBase):
         redshift_table = tables["redshift"]
         wavenumber_exit_table = tables["wavenumber_exit_time"]
         wavenumber_table = tables["wavenumber"]
-        value_table = tables["GkNumericalValue"]
-        tags_table = tables["GkNumerical_tags"]
+        value_table = tables["GkNumericValue"]
+        tags_table = tables["GkNumeric_tags"]
 
         # bake results into a list so that we can close this query; we are going to want to run
         # another one as we process the rows from this one
@@ -605,7 +605,7 @@ class sqla_GkNumericalIntegration_factory(SQLAFactoryBase):
         return msgs
 
 
-class sqla_GkNumericalValue_factory(SQLAFactoryBase):
+class sqla_GkNumericValue_factory(SQLAFactoryBase):
     def __init__(self):
         pass
 
@@ -619,7 +619,7 @@ class sqla_GkNumericalValue_factory(SQLAFactoryBase):
                 sqla.Column(
                     "integration_serial",
                     sqla.Integer,
-                    sqla.ForeignKey("GkNumericalIntegration.serial"),
+                    sqla.ForeignKey("GkNumericIntegration.serial"),
                     index=True,
                     nullable=False,
                 ),
@@ -654,20 +654,20 @@ class sqla_GkNumericalValue_factory(SQLAFactoryBase):
 
         if all([has_serial, has_model]):
             print(
-                "## GkNumericalValue.build(): both an integration serial number and a (model, wavenumber, z_source) set were queried. Only the serial number will be used."
+                "## GkNumericValue.build(): both an integration serial number and a (model, wavenumber, z_source) set were queried. Only the serial number will be used."
             )
 
         if not any([has_serial, has_model]):
             raise RuntimeError(
-                "GkNumericalValue.build(): at least one of an integration serial number and a (model, wavenumber, z_source) set must be supplied."
+                "GkNumericValue.build(): at least one of an integration serial number and a (model, wavenumber, z_source) set must be supplied."
             )
 
         if has_serial:
-            return sqla_GkNumericalValue_factory._build_impl_serial(
+            return sqla_GkNumericValue_factory._build_impl_serial(
                 payload, conn, table, inserter, tables, inserters
             )
 
-        return sqla_GkNumericalValue_factory._build_impl_model(
+        return sqla_GkNumericValue_factory._build_impl_model(
             payload, conn, table, inserter, tables, inserters
         )
 
@@ -708,7 +708,7 @@ class sqla_GkNumericalValue_factory(SQLAFactoryBase):
             ).one_or_none()
         except MultipleResultsFound as e:
             print(
-                f"!! GkNumericalValue.build(): multiple results found when querying for GkNumericalValue"
+                f"!! GkNumericValue.build(): multiple results found when querying for GkNumericValue"
             )
             raise e
 
@@ -741,14 +741,14 @@ class sqla_GkNumericalValue_factory(SQLAFactoryBase):
 
             if G is not None and fabs(row_data.G - G) > DEFAULT_FLOAT_PRECISION:
                 raise ValueError(
-                    f"GkNumericalValue.build(): Stored tensor Green function value (integration={integration_serial}, z={z.store_id}) = {row_data.G} differs from expected value = {G}"
+                    f"GkNumericValue.build(): Stored tensor Green function value (integration={integration_serial}, z={z.store_id}) = {row_data.G} differs from expected value = {G}"
                 )
             if (
                 Gprime is not None
                 and fabs(row_data.Gprime - Gprime) > DEFAULT_FLOAT_PRECISION
             ):
                 raise ValueError(
-                    f"GkNumericalValue.build(): Stored tensor Green function derivative (integration={integration_serial}, z={z.store_id}) = {row_data.Gprime} differs from expected value = {Gprime}"
+                    f"GkNumericValue.build(): Stored tensor Green function derivative (integration={integration_serial}, z={z.store_id}) = {row_data.Gprime} differs from expected value = {Gprime}"
                 )
 
             G = row_data.G
@@ -756,7 +756,7 @@ class sqla_GkNumericalValue_factory(SQLAFactoryBase):
 
             attribute_set = {"_deserialized": True}
 
-        obj = GkNumericalValue(
+        obj = GkNumericValue(
             store_id=store_id,
             z=z,
             G=G,
@@ -784,11 +784,11 @@ class sqla_GkNumericalValue_factory(SQLAFactoryBase):
         rtol: Optional[tolerance] = payload.get("rtol", None)
         tags: Optional[List[store_tag]] = payload.get("tags", None)
 
-        integration_table = tables["GkNumericalIntegration"]
+        integration_table = tables["GkNumericIntegration"]
 
         try:
             # TODO: benchmarking suggests this query is indistinguishable from filtering directly on the
-            #  GkNumericalIntegration serial number (if we only knew what it was), so this may be about
+            #  GkNumericIntegration serial number (if we only knew what it was), so this may be about
             #  as good as we can do. But it is still slow. For production use, should look at how this
             #  can be improved.
             integration_query = sqla.select(integration_table.c.serial).filter(
@@ -811,7 +811,7 @@ class sqla_GkNumericalValue_factory(SQLAFactoryBase):
             count = 0
             for tag in tags:
                 tag: store_tag
-                tab = tables["GkNumerical_tags"].alias(f"tag_{count}")
+                tab = tables["GkNumeric_tags"].alias(f"tag_{count}")
                 count += 1
                 integration_query = integration_query.join(
                     tab,
@@ -846,18 +846,18 @@ class sqla_GkNumericalValue_factory(SQLAFactoryBase):
             ).one_or_none()
         except MultipleResultsFound as e:
             print(
-                f"!! GkNumericalValue.build(): multiple results found when querying for GkNumericalValue"
+                f"!! GkNumericValue.build(): multiple results found when querying for GkNumericValue"
             )
             raise e
 
         if row_data is None:
             # return empty object
-            obj = GkNumericalValue(store_id=None, z=z, G=None, Gprime=None)
+            obj = GkNumericValue(store_id=None, z=z, G=None, Gprime=None)
             obj._k_exit = k
             obj._z_source = z_source
             return obj
 
-        obj = GkNumericalValue(
+        obj = GkNumericValue(
             store_id=row_data.serial,
             z=z,
             G=row_data.G,
@@ -886,7 +886,7 @@ class sqla_GkNumericalValue_factory(SQLAFactoryBase):
         z_response: Optional[redshift] = payload.get("z", None)
         z_source: Optional[redshift] = payload.get("z_source", None)
 
-        integration_table = tables["GkNumericalIntegration"]
+        integration_table = tables["GkNumericIntegration"]
         redshift_table = tables["redshift"]
 
         integration_query = (
@@ -928,7 +928,7 @@ class sqla_GkNumericalValue_factory(SQLAFactoryBase):
         count = 0
         for tag in tags:
             tag: store_tag
-            tab = tables["GkNumerical_tags"].alias(f"tag_{count}")
+            tab = tables["GkNumeric_tags"].alias(f"tag_{count}")
             count += 1
             integration_query = integration_query.join(
                 tab,
@@ -970,7 +970,7 @@ class sqla_GkNumericalValue_factory(SQLAFactoryBase):
         row_data = conn.execute(row_query)
 
         def make_obj(row):
-            obj = GkNumericalValue(
+            obj = GkNumericValue(
                 store_id=row.serial,
                 z=redshift(
                     store_id=row.z_response_serial,

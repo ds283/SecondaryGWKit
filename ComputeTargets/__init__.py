@@ -3,9 +3,9 @@ from .BackgroundModel import (
     BackgroundModelValue,
     ModelProxy,
 )
-from .GkNumericalIntegration import (
-    GkNumericalIntegration,
-    GkNumericalValue,
+from .GkNumericIntegration import (
+    GkNumericIntegration,
+    GkNumericValue,
 )
 from .GkSource import (
     GkSource,
@@ -29,9 +29,9 @@ from .QuadSourceIntegral import (
     BesselPhaseProxy,
     QuadSourceIntegral,
 )
-from .TkNumericalIntegration import (
-    TkNumericalIntegration,
-    TkNumericalValue,
+from .TkNumericIntegration import (
+    TkNumericIntegration,
+    TkNumericValue,
 )
 from .TkWKBIntegration import (
     TkWKBIntegration,
