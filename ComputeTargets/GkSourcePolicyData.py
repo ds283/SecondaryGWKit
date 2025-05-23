@@ -196,14 +196,18 @@ def _classify_Levin(source: GkSource, policy: GkSourcePolicy, data) -> dict:
     return payload
 
 
+# a point is good if we have more than 5% clearance;
+# acceptable if we have less than 5% but more than 2.5% clearance
+# marginal if we have less than 2.5% but more than 1% clearance
+# otherwise minimal
 CLEARANCE_GOOD = 0.05
 CLEARANCE_ACCEPTABLE = 0.025
 CLEARANCE_MARGINAL = 0.01
 
 
 # select candidate crossover points in a given order of preference
-PREFERRED_PROPERTIES = [
-    ("good", ["numeric_good", "WKB_good"]),
+CLASSIFICATION_BANDS = [
+    ("complete", ["numeric_good", "WKB_good"]),
     ("acceptable", ["numeric_acceptable", "WKB_good"]),
     ("acceptable", ["numeric_good", "WKB_acceptable"]),
     ("acceptable", ["numeric_acceptable", "WKB_acceptable"]),
@@ -342,15 +346,11 @@ def _classify_crossover(source: GkSource, policy: GkSourcePolicy) -> dict:
             numeric_logz_low = log(1.0 + source.numerical_smallest_z.z)
             WKB_logz_high = log(1.0 + source.primary_WKB_largest_z.z)
 
-            def classify_point(v):
+            def classify_point(v) -> dict:
                 logz = log(1.0 + v.z_source.z)
                 numeric_clearance = (logz - numeric_logz_low) / numeric_logz_low
                 WKB_clearance = (WKB_logz_high - logz) / WKB_logz_high
 
-                # a point is good if we have more than 5% clearance;
-                # acceptable if we have less than 5% but more than 2.5% clearance
-                # marginal if we have less than 2.5% but more than 1% clearance
-                # otherwise minimal
                 return {
                     "value": v,
                     "numeric_clearance": numeric_clearance,
@@ -371,15 +371,19 @@ def _classify_crossover(source: GkSource, policy: GkSourcePolicy) -> dict:
             crossover_z = None
             quality = None
             i: int = 0
-            while crossover_z is None and i < len(PREFERRED_PROPERTIES):
-                target_quality, property_list = PREFERRED_PROPERTIES[i]
+            while crossover_z is None and i < len(CLASSIFICATION_BANDS):
+                # find properties that are required to classify as target_quality
+                target_quality, property_list = CLASSIFICATION_BANDS[i]
                 i += 1
 
+                # find points that satisfy these properties (if any)
                 filtered_values = [
-                    v
-                    for v in classified_values
-                    if all(getattr(v, p) for p in property_list)
+                    item
+                    for item in classified_values
+                    if all(item[p] for p in property_list)
                 ]
+
+                # if there are no points, move on
                 if len(filtered_values) == 0:
                     continue
 
@@ -410,7 +414,7 @@ def _classify_crossover(source: GkSource, policy: GkSourcePolicy) -> dict:
                 # should get enough points for a good spline if we set the crossover scale to _primary_WKB_largest_z, since
                 # we checked above that enough points are available.
                 # The downside of this choice is only that it throws away numerical information that is potentially more accurate.
-                crossover_z = source.primary_WKB_largest_z.z
+                crossover_z = source.primary_WKB_largest_z
                 quality = "minimal"
 
                 WKB_data = _filter_values_from_range(
@@ -421,7 +425,7 @@ def _classify_crossover(source: GkSource, policy: GkSourcePolicy) -> dict:
                 )
                 numeric_data = _filter_values_from_range(
                     source,
-                    max_z - source.z_sample.max,
+                    max_z=source.z_sample.max,
                     min_z=source.numerical_smallest_z,
                     property_list="has_numeric",
                 )
@@ -430,7 +434,7 @@ def _classify_crossover(source: GkSource, policy: GkSourcePolicy) -> dict:
                     f"Calculation of crossover_z did not yield a result. Crossover set to largest z in primary WKB region: z={source.primary_WKB_largest_z.z:.5g}. Numeric spline contains {len(numeric_data)} points. WKB spline contains {len(WKB_data)} points."
                 )
 
-            payload["crossover_z"] = crossover_z
+            payload["crossover_z"] = crossover_z.z
             payload["quality"] = quality
 
     payload["metadata"] = metadata
