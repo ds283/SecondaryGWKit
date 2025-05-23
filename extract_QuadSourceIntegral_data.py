@@ -46,21 +46,17 @@ from defaults import (
     DEFAULT_QUADRATURE_ATOL,
     DEFAULT_QUADRATURE_RTOL,
 )
-from extract_GkSource_data import add_GkSource_plot_labels
 from extract_common import (
     add_zexit_lines,
-    TEXT_DISPLACEMENT_MULTIPLIER,
-    LEFT_COLUMN,
-    RIGHT_COLUMN,
-    MIDDLE_COLUMN,
-    TOP_ROW,
     safe_fabs,
     set_loglog_axes,
     safe_div,
     add_k_labels,
-    MIDDLE_ROW,
     LOOSE_DASHED,
     LOOSE_DOTTED,
+    add_GkSourcePolicyData_lines,
+    add_GkSource_plot_labels,
+    add_region_labels,
 )
 from model_list import build_model_list
 
@@ -126,79 +122,7 @@ def add_z_labels(
     ax, GkPolicy: GkSourcePolicyData, k_exit: wavenumber_exit_time, label: str
 ):
     add_zexit_lines(ax, k_exit)
-
-    trans = ax.get_xaxis_transform()
-    if GkPolicy.type == "mixed" and GkPolicy.crossover_z is not None:
-        ax.axvline(
-            GkPolicy.crossover_z, linestyle=(5, (10, 3)), color="m"
-        )  # long dash with offset
-        ax.text(
-            TEXT_DISPLACEMENT_MULTIPLIER * GkPolicy.crossover_z,
-            0.15,
-            "crossover_z",
-            transform=trans,
-            fontsize="x-small",
-            color="m",
-        )
-
-    if (
-        GkPolicy.type == "mixed" or GkPolicy.type == "WKB"
-    ) and GkPolicy.Levin_z is not None:
-        ax.axvline(
-            GkPolicy.Levin_z, linestyle=(0, (5, 10)), color="m"
-        )  # loosely dashed
-        ax.text(
-            TEXT_DISPLACEMENT_MULTIPLIER * GkPolicy.Levin_z,
-            0.05,
-            "Levin boundary",
-            transform=trans,
-            fontsize="x-small",
-            color="m",
-        )
-
-
-def add_region_labels(
-    ax,
-    z_min_quad,
-    z_max_quad,
-    z_min_WKB_quad,
-    z_max_WKB_quad,
-    z_min_Levin,
-    z_max_Levin,
-    model_label: str = "LambdaCDM",
-):
-    if z_min_quad is not None and z_max_quad is not None:
-        ax.text(
-            LEFT_COLUMN,
-            MIDDLE_ROW,
-            f"numeric: [{z_min_quad.z:.5g}, {z_max_quad.z:.5g}]",
-            transform=ax.transAxes,
-            fontsize="x-small",
-        )
-    if z_min_WKB_quad is not None and z_max_WKB_quad is not None:
-        ax.text(
-            MIDDLE_COLUMN,
-            MIDDLE_ROW,
-            f"WKB numeric: [{z_min_WKB_quad.z:.5g}, {z_max_WKB_quad.z:.5g}]",
-            transform=ax.transAxes,
-            fontsize="x-small",
-        )
-    if z_min_Levin is not None and z_max_Levin is not None:
-        ax.text(
-            RIGHT_COLUMN,
-            MIDDLE_ROW,
-            f"WKB Levin: [{z_min_Levin.z:.5g}, {z_max_Levin.z:.5g}]",
-            transform=ax.transAxes,
-            fontsize="x-small",
-        )
-
-    ax.text(
-        RIGHT_COLUMN,
-        TOP_ROW,
-        f"Model: {model_label}",
-        transform=ax.transAxes,
-        fontsize="x-small",
-    )
+    add_GkSourcePolicyData_lines(ax, GkPolicy)
 
 
 @ray.remote

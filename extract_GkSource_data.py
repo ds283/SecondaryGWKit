@@ -36,13 +36,6 @@ from RayTools.RayWorkPool import RayWorkPool
 from Units import Mpc_units
 from defaults import DEFAULT_ABS_TOLERANCE, DEFAULT_REL_TOLERANCE
 from extract_common import (
-    TEXT_DISPLACEMENT_MULTIPLIER,
-    TOP_ROW,
-    MIDDLE_ROW,
-    BOTTOM_ROW,
-    LEFT_COLUMN,
-    MIDDLE_COLUMN,
-    RIGHT_COLUMN,
     set_loglinear_axes,
     set_loglog_axes,
     set_linear_axes,
@@ -51,6 +44,8 @@ from extract_common import (
     safe_fabs,
     LOOSE_DASHED,
     LOOSE_DOTTED,
+    add_GkSourcePolicyData_lines,
+    add_GkSource_plot_labels,
 )
 from model_list import build_model_list
 
@@ -109,142 +104,11 @@ if args.profile_db is not None:
     )
 
 
-# Matplotlib line style from https://matplotlib.org/stable/gallery/lines_bars_and_markers/linestyles.html
-#      ('loosely dotted',        (0, (1, 10))),
-#      ('dotted',                (0, (1, 1))),
-#      ('densely dotted',        (0, (1, 1))),
-#      ('long dash with offset', (5, (10, 3))),
-#      ('loosely dashed',        (0, (5, 10))),
-#      ('dashed',                (0, (5, 5))),
-#      ('densely dashed',        (0, (5, 1))),
-#
-#      ('loosely dashdotted',    (0, (3, 10, 1, 10))),
-#      ('dashdotted',            (0, (3, 5, 1, 5))),
-#      ('densely dashdotted',    (0, (3, 1, 1, 1))),
-#
-#      ('dashdotdotted',         (0, (3, 5, 1, 5, 1, 5))),
-#      ('loosely dashdotdotted', (0, (3, 10, 1, 10, 1, 10))),
-#      ('densely dashdotdotted', (0, (3, 1, 1, 1, 1, 1)))]
 def add_z_labels(ax, Gk, GkPolicy: GkSourcePolicyData):
     k_exit: wavenumber_exit_time = Gk._k_exit
+
     add_zexit_lines(ax, k_exit)
-
-    trans = ax.get_xaxis_transform()
-
-    if GkPolicy.type == "mixed" and GkPolicy.crossover_z is not None:
-        ax.axvline(
-            GkPolicy.crossover_z, linestyle=(5, (10, 3)), color="m"
-        )  # long dash with offset
-        ax.text(
-            TEXT_DISPLACEMENT_MULTIPLIER * GkPolicy.crossover_z,
-            0.15,
-            "crossover_z",
-            transform=trans,
-            fontsize="x-small",
-            color="m",
-        )
-
-    if (
-        GkPolicy.type == "mixed" or GkPolicy.type == "WKB"
-    ) and GkPolicy.Levin_z is not None:
-        ax.axvline(
-            GkPolicy.Levin_z, linestyle=(0, (5, 10)), color="m"
-        )  # loosely dashed
-        ax.text(
-            TEXT_DISPLACEMENT_MULTIPLIER * GkPolicy.Levin_z,
-            0.05,
-            "Levin boundary",
-            transform=trans,
-            fontsize="x-small",
-            color="m",
-        )
-
-
-def add_GkSource_plot_labels(
-    ax, Gk: GkSource, GkPolicy: GkSourcePolicyData, model_label: str = "LambdaCDM"
-):
-    k_exit: wavenumber_exit_time = Gk._k_exit
-    fns: GkSourceFunctions = GkPolicy.functions
-
-    # MIDDLE ROW
-
-    if fns.type is not None:
-        ax.text(
-            LEFT_COLUMN,
-            MIDDLE_ROW,
-            f"Type: {fns.type}",
-            transform=ax.transAxes,
-            fontsize="x-small",
-        )
-
-    if fns.quality is not None:
-        ax.text(
-            MIDDLE_COLUMN,
-            MIDDLE_ROW,
-            f"Quality: {fns.quality}",
-            transform=ax.transAxes,
-            fontsize="x-small",
-        )
-
-    if fns.phase is not None:
-        ax.text(
-            RIGHT_COLUMN,
-            MIDDLE_ROW,
-            f"Chunks: {fns.phase.num_chunks}",
-            transform=ax.transAxes,
-            fontsize="x-small",
-        )
-
-    # TOP ROW
-
-    if fns.WKB_region is not None:
-        ax.text(
-            LEFT_COLUMN,
-            TOP_ROW,
-            f"WKB region: ({fns.WKB_region[0]:.3g}, {fns.WKB_region[1]:.3g})",
-            transform=ax.transAxes,
-            fontsize="x-small",
-        )
-
-    if fns.numeric_region is not None:
-        ax.text(
-            MIDDLE_COLUMN,
-            TOP_ROW,
-            f"Numeric region: ({fns.numeric_region[0]:.3g}, {fns.numeric_region[1]:.3g})",
-            transform=ax.transAxes,
-            fontsize="x-small",
-        )
-
-    ax.text(
-        RIGHT_COLUMN,
-        TOP_ROW,
-        f"Model: {model_label}",
-        transform=ax.transAxes,
-        fontsize="x-small",
-    )
-
-    # BOTTOM ROW
-    ax.text(
-        LEFT_COLUMN,
-        BOTTOM_ROW,
-        f"z-response: {Gk.z_response.z:.5g}",
-        transform=ax.transAxes,
-        fontsize="x-small",
-    )
-    ax.text(
-        MIDDLE_COLUMN,
-        BOTTOM_ROW,
-        f"z-exit: {k_exit.z_exit:.5g}",
-        transform=ax.transAxes,
-        fontsize="x-small",
-    )
-    ax.text(
-        RIGHT_COLUMN,
-        BOTTOM_ROW,
-        f"$k$ = {k_exit.k.k_inv_Mpc:.5g} Mpc$^{{-1}}$",
-        transform=ax.transAxes,
-        fontsize="x-small",
-    )
+    add_GkSourcePolicyData_lines(ax, GkPolicy)
 
 
 @ray.remote
