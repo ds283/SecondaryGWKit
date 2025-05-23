@@ -215,7 +215,7 @@ class ProfileAgent:
                 data = sorted(new.items(), key=lambda q: q[1], reverse=True)
                 print(f"   New {label} queries:")
                 for method, count in data:
-                    print(f"   ## {method}: {count}")
+                    print(f"     ## {method}: {count}")
 
             def merge_slow_query_records(
                 total: _SlowQueryRecordType, new: _SlowQueryRecordType
