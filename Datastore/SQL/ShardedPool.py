@@ -1,11 +1,10 @@
 import random
 from pathlib import Path
-from typing import Optional, List
+from typing import Optional, List, Dict
 
 import ray
 import sqlalchemy as sqla
 
-from CosmologyConcepts import wavenumber, wavenumber_exit_time
 from Datastore.SQL import Datastore
 from Datastore.SQL.Datastore import PathType
 from Datastore.SQL.ProfileAgent import ProfileAgent
@@ -58,6 +57,8 @@ class ShardedPool:
         self,
         version_label: str,
         db_name: PathType,
+        ShardKeyType,
+        ShardKeyStoreIdGetter,
         timeout=None,
         shards=10,
         profile_agent: Optional[ProfileAgent] = None,
@@ -67,23 +68,34 @@ class ShardedPool:
     ):
         """
         Initialize a pool of datastore actors
+        :param ShardKeyStoreIdGetter:
         :param version_label:
         """
-        self._job_name = job_name
-        self._version_label = version_label
+        self._job_name: Optional[str] = job_name
+        self._version_label: str = version_label
 
-        self._prune_unvalidated = prune_unvalidated
+        self._prune_unvalidated: Optional[List[str]] = prune_unvalidated
 
-        self._db_name = db_name
-        self._timeout = timeout
-        self._shards = max(shards, 1)
+        self._db_name: PathType = db_name
+        self._timeout: int = timeout
+        self._shards: int = max(shards, 1)
 
         # resolve concerts the supplied db_name to an absolute path, resolving symlinks if necessary
         # this database file will be taken to be the primary database
-        self._primary_file = Path(db_name).resolve()
+        self._primary_file: PathType = Path(db_name).resolve()
 
-        self._shard_db_files = {}
-        self._wavenumber_keys = {}
+        # expected type of shard key
+        self._ShardKeyType = ShardKeyType
+        self._ShardKeyType_name: str = ShardKeyType.__name__
+
+        # provided getter function to extract store id from a shard key object (or a proxy)
+        self._ShardKeyStoreIdGetter = ShardKeyStoreIdGetter
+
+        # shard_db_files is a map from shard number -> path representing dataabase on disk
+        self._shard_db_files: Dict[int, PathType] = {}
+
+        # shard_keys is a map from key id -> shard id
+        self._shard_keys: Dict[int, int] = {}
 
         self._broker = SerialPoolBroker.options(name="SerialPoolBroker").remote(
             name="SerialPoolBroker"
@@ -231,9 +243,7 @@ class ShardedPool:
         self._shard_key_table = sqla.Table(
             "shard_keys",
             self._metadata,
-            sqla.Column(
-                "wavenumber_serial", sqla.Integer, primary_key=True, nullable=False
-            ),
+            sqla.Column("key_serial", sqla.Integer, primary_key=True, nullable=False),
             sqla.Column(
                 "shard_id",
                 sqla.Integer,
@@ -278,13 +288,13 @@ class ShardedPool:
 
             keys = conn.execute(
                 sqla.select(
-                    self._shard_key_table.c.wavenumber_serial,
+                    self._shard_key_table.c.key_serial,
                     self._shard_key_table.c.shard_id,
                 )
             )
 
             for key in keys:
-                self._wavenumber_keys[key.wavenumber_serial] = key.shard_id
+                self._shard_keys[key.key_serial] = key.shard_id
 
     def object_get(self, ObjectClass, **kwargs):
         if isinstance(ObjectClass, str):
@@ -377,7 +387,7 @@ class ShardedPool:
 
         # test whether this query was for a shard key, and, if so, assign any shard keys
         # that are missing
-        if cls_name == "wavenumber":
+        if cls_name == self._ShardKeyType_name:
             self._assign_shard_keys(objects)
 
         # return original object (we just discard any copies returned from other shards)
@@ -393,8 +403,8 @@ class ShardedPool:
 
             work_refs = []
             for item in payload_data:
-                k = item[shard_key_field]
-                shard_id = self._wavenumber_keys[self._get_k_store_id(k)]
+                key = item[shard_key_field]
+                shard_id = self._shard_keys[self._ShardKeyStoreIdGetter(key)]
 
                 work_refs.append(
                     self._shards[shard_id].object_get.remote(cls_name, **item)
@@ -404,8 +414,8 @@ class ShardedPool:
             # TODO: consider consolidating all objects for the same shard into a list, for efficiency
 
         # otherwise, can assume this is scalar get
-        k = kwargs[shard_key_field]
-        shard_id = self._wavenumber_keys[self._get_k_store_id(k)]
+        key = kwargs[shard_key_field]
+        shard_id = self._shard_keys[self._ShardKeyStoreIdGetter(key)]
 
         return self._shards[shard_id].object_get.remote(cls_name, **kwargs)
 
@@ -426,8 +436,8 @@ class ShardedPool:
                 f'ShardedPool: expected shard key "{shard_key_field}" to be provided for object type "{cls_name}", but instead received keys: {shard_key.keys()}'
             )
 
-        shard_id = self._wavenumber_keys[
-            self._get_k_store_id(shard_key[shard_key_field])
+        shard_id = self._shard_keys[
+            self._ShardKeyStoreIdGetter(shard_key[shard_key_field])
         ]
 
         for value in payload_data:
@@ -453,8 +463,8 @@ class ShardedPool:
                 f'ShardedPool: expected shard key "{shard_key_field}" to be provided for object type "{cls_name}", but instead received keys: {shard_key.keys()}'
             )
 
-        shard_id = self._wavenumber_keys[
-            self._get_k_store_id(shard_key[shard_key_field])
+        shard_id = self._shard_keys[
+            self._ShardKeyStoreIdGetter(shard_key[shard_key_field])
         ]
 
         payload.update(shard_key)
@@ -525,8 +535,8 @@ class ShardedPool:
                 f'Unable to determine shard, because object of type "{cls_name}" has no "{shard_key_field}" attribute'
             )
 
-        k = getattr(item, shard_key_field)
-        shard_id = self._wavenumber_keys[self._get_k_store_id(k)]
+        key = getattr(item, shard_key_field)
+        shard_id = self._shard_keys[self._ShardKeyStoreIdGetter(key)]
 
         # TODO: consider consolidating all stores for the same shard into a list, for efficiency
         return [self._shards[shard_id].object_store.remote(item)]
@@ -598,22 +608,11 @@ class ShardedPool:
                 f'Unable to determine shard, because object of type "{cls_name}" has no "{shard_key_field}" attribute'
             )
 
-        k = getattr(item, shard_key_field)
-        shard_id = self._wavenumber_keys[self._get_k_store_id(k)]
+        key = getattr(item, shard_key_field)
+        shard_id = self._shard_keys[self._ShardKeyStoreIdGetter(key)]
 
         # TODO: consider consolidating all validates for the same shard into a list, for efficiency
         return [self._shards[shard_id].object_validate.remote(item)]
-
-    def _get_k_store_id(self, obj):
-        if isinstance(obj, wavenumber):
-            return obj.store_id
-
-        if isinstance(obj, wavenumber_exit_time):
-            return obj.k.store_id
-
-        raise RuntimeError(
-            f'Could not determine shard index k for object of type "{type(obj)}"'
-        )
 
     def _assign_shard_keys(self, obj):
         if isinstance(obj, list):
@@ -625,10 +624,12 @@ class ShardedPool:
         # (because this is bound to be slower)
         missing_keys = []
         for item in data:
-            if not isinstance(item, wavenumber):
-                raise RuntimeError("shard keys should be of type wavenumber")
+            if not isinstance(item, self._ShardKeyType):
+                raise RuntimeError(
+                    f'shard keys should be of type "{self._ShardKeyType_name}"'
+                )
 
-            if item.store_id not in self._wavenumber_keys:
+            if item.store_id not in self._shard_keys:
                 missing_keys.append(item)
 
         # if no work to do, return
@@ -636,9 +637,9 @@ class ShardedPool:
             return
 
         # otherwise, we have to populate keys
-        # try to load balance by working out which shard has fewest wavenumbers
+        # try to load balance by working out which shard has fewest keys
         loads = {key: 0 for key in self._shards.keys()}
-        for shard in self._wavenumber_keys.values():
+        for shard in self._shard_keys.values():
             loads[shard] = loads[shard] + 1
 
         with self._engine.begin() as conn:
@@ -652,14 +653,14 @@ class ShardedPool:
                 # insert a new record for this key
                 conn.execute(
                     sqla.insert(self._shard_key_table),
-                    {"wavenumber_id": item.store_id, "shard_id": new_shard},
+                    {"key_id": item.store_id, "shard_id": new_shard},
                 )
 
-                self._wavenumber_keys[item.store_id] = new_shard
+                self._shard_keys[item.store_id] = new_shard
                 loads[new_shard] = loads[new_shard] + 1
 
                 # print(
-                #     f">> assigned shard #{new_shard} to wavenumber object #{item.store_id} (k={item.k_inv_Mpc}/Mpc)"
+                #     f">> assigned shard #{new_shard} to key object #{item.store_id}"
                 # )
 
             conn.commit()

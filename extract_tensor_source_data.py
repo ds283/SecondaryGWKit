@@ -23,7 +23,10 @@ from CosmologyConcepts import (
     wavenumber,
     wavenumber_exit_time,
 )
-from CosmologyConcepts.wavenumber import wavenumber_exit_time_array
+from CosmologyConcepts.wavenumber import (
+    wavenumber_exit_time_array,
+    shard_key_wavenumber_store_id,
+)
 from Datastore.SQL.ProfileAgent import ProfileAgent
 from Datastore.SQL.ShardedPool import ShardedPool
 from MetadataConcepts import tolerance
@@ -376,6 +379,8 @@ def run_pipeline(model_data):
 with ShardedPool(
     version_label=VERSION_LABEL,
     db_name=args.database,
+    ShardKeyType=wavenumber,
+    ShardKeyStoreIdGetter=shard_key_wavenumber_store_id,
     timeout=args.db_timeout,
     profile_agent=profile_agent,
     job_name="extract_tensor_source_data",
