@@ -1,6 +1,6 @@
 import random
 from pathlib import Path
-from typing import Optional, List, Dict
+from typing import Optional, List, Dict, Callable
 
 import ray
 import sqlalchemy as sqla
@@ -23,12 +23,12 @@ class ShardedPool:
         self,
         version_label: str,
         db_name: PathType,
-        ShardKeyType: object,
-        ShardKeyStoreIdGetter: object,
+        ShardKeyType,
+        ShardKeyStoreIdGetter: Callable,
         replicated_tables: List[str],
         sharded_tables: Dict[str, str],
-        timeout: object = None,
-        shards: object = 10,
+        timeout: int = None,
+        shards: int = 10,
         profile_agent: Optional[ProfileAgent] = None,
         job_name: Optional[str] = None,
         prune_unvalidated: Optional[bool] = False,
