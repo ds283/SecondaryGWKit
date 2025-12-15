@@ -36,7 +36,6 @@ from CosmologyConcepts import (
     wavenumber_exit_time_array,
     redshift_array,
 )
-from CosmologyConcepts.wavenumber import shard_key_wavenumber_store_id
 from Datastore.SQL.ProfileAgent import ProfileAgent
 from Datastore.SQL.ShardedPool import ShardedPool
 from LiouvilleGreen.bessel_phase import bessel_phase
@@ -52,7 +51,12 @@ from config.defaults import (
     DEFAULT_QUADRATURE_ATOL,
 )
 from config.model_list import build_model_list
-from config.sharding import replicated_tables, sharded_tables
+from config.sharding import (
+    replicated_tables,
+    sharded_tables,
+    shard_key_wavenumber_store_id,
+    shard_key_type,
+)
 from utilities import grouper, format_time, WallclockTimer
 
 DEFAULT_LABEL = "SecondaryGWKit-test"
@@ -2485,7 +2489,7 @@ def run_pipeline(
 with ShardedPool(
     version_label=VERSION_LABEL,
     db_name=args.database,
-    ShardKeyType=wavenumber,
+    ShardKeyType=shard_key_type,
     ShardKeyStoreIdGetter=shard_key_wavenumber_store_id,
     replicated_tables=replicated_tables,
     sharded_tables=sharded_tables,

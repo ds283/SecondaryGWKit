@@ -24,17 +24,17 @@ class ShardedPool:
         self,
         version_label: str,
         db_name: PathType,
-        ShardKeyType,
-        ShardKeyStoreIdGetter,
+        ShardKeyType: object,
+        ShardKeyStoreIdGetter: object,
         replicated_tables: List[str],
         sharded_tables: Dict[str, str],
-        timeout=None,
-        shards=10,
+        timeout: object = None,
+        shards: object = 10,
         profile_agent: Optional[ProfileAgent] = None,
         job_name: Optional[str] = None,
         prune_unvalidated: Optional[bool] = False,
         drop_actions: Optional[List[str]] = None,
-    ):
+    ) -> None:
         """
         Initialize a pool of datastore actors
         :param replicated_tables:

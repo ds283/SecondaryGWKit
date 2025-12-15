@@ -28,7 +28,6 @@ from CosmologyConcepts import (
 )
 from CosmologyConcepts.wavenumber import (
     wavenumber_exit_time_array,
-    shard_key_wavenumber_store_id,
 )
 from Datastore.SQL.ProfileAgent import ProfileAgent
 from Datastore.SQL.ShardedPool import ShardedPool
@@ -37,7 +36,12 @@ from RayTools.RayWorkPool import RayWorkPool
 from Units import Mpc_units
 from config.defaults import DEFAULT_ABS_TOLERANCE, DEFAULT_REL_TOLERANCE
 from config.model_list import build_model_list
-from config.sharding import replicated_tables, sharded_tables
+from config.sharding import (
+    replicated_tables,
+    sharded_tables,
+    shard_key_wavenumber_store_id,
+    shard_key_type,
+)
 from extract_common import (
     add_zexit_lines,
     set_loglog_axes,
@@ -459,7 +463,7 @@ def run_pipeline(model_data):
 with ShardedPool(
     version_label=VERSION_LABEL,
     db_name=args.database,
-    ShardKeyType=wavenumber,
+    ShardKeyType=shard_key_type,
     ShardKeyStoreIdGetter=shard_key_wavenumber_store_id,
     replicated_tables=replicated_tables,
     sharded_tables=sharded_tables,
