@@ -8,7 +8,7 @@ from ComputeTargets import GkSourceProxy, GkSourcePolicyData
 from CosmologyConcepts import wavenumber_exit_time
 from Datastore.SQL.ObjectFactories.base import SQLAFactoryBase
 from MetadataConcepts import GkSourcePolicy
-from defaults import DEFAULT_STRING_LENGTH
+from config.defaults import DEFAULT_STRING_LENGTH
 
 _quality_serialize = {
     "complete": 0,

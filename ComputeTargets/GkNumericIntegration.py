@@ -18,7 +18,7 @@ from Quadrature.integrators.numeric_with_phase_cut import (
 from Quadrature.supervisors.base import RHS_timer
 from Quadrature.supervisors.numeric import NumericIntegrationSupervisor
 from Units import check_units
-from defaults import (
+from config.defaults import (
     DEFAULT_FLOAT_PRECISION,
 )
 

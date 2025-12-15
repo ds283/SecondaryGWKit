@@ -17,7 +17,7 @@ from MetadataConcepts import tolerance, store_tag
 from Quadrature.integration_metadata import IntegrationSolver, IntegrationData
 from Quadrature.integrators.WKB_phase_function import WKB_phase_function
 from Units import check_units
-from defaults import (
+from config.defaults import (
     DEFAULT_FLOAT_PRECISION,
 )
 

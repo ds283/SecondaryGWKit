@@ -2,9 +2,9 @@ from math import log, exp, fmod
 from typing import Iterable, Tuple, Optional
 
 from numpy import sign
-from scipy.interpolate import InterpolatedUnivariateSpline, make_interp_spline
+from scipy.interpolate import make_interp_spline
 
-from defaults import DEFAULT_FLOAT_PRECISION
+from config.defaults import DEFAULT_FLOAT_PRECISION
 from .constants import TWO_PI
 
 DEFAULT_CHUNK_SIZE = 200

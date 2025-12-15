@@ -14,7 +14,7 @@ from Datastore import DatastoreObject
 from LiouvilleGreen.constants import TWO_PI
 from MetadataConcepts import store_tag, tolerance
 from Units import check_units
-from defaults import (
+from config.defaults import (
     DEFAULT_ABS_TOLERANCE,
     DEFAULT_FLOAT_PRECISION,
 )

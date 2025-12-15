@@ -37,7 +37,9 @@ from Datastore.SQL.ShardedPool import ShardedPool
 from MetadataConcepts import tolerance
 from RayTools.RayWorkPool import RayWorkPool
 from Units import Mpc_units
-from defaults import DEFAULT_ABS_TOLERANCE, DEFAULT_REL_TOLERANCE
+from config.defaults import DEFAULT_ABS_TOLERANCE, DEFAULT_REL_TOLERANCE
+from config.model_list import build_model_list
+from config.sharding import replicated_tables, sharded_tables
 from extract_common import (
     set_loglinear_axes,
     set_loglog_axes,
@@ -50,7 +52,6 @@ from extract_common import (
     add_GkSourcePolicyData_lines,
     add_GkSource_plot_labels,
 )
-from model_list import build_model_list
 
 DEFAULT_TIMEOUT = 60
 
@@ -900,6 +901,8 @@ with ShardedPool(
     db_name=args.database,
     ShardKeyType=wavenumber,
     ShardKeyStoreIdGetter=shard_key_wavenumber_store_id,
+    replicated_tables=replicated_tables,
+    sharded_tables=sharded_tables,
     timeout=args.db_timeout,
     profile_agent=profile_agent,
     job_name="extract_GkSource_data",

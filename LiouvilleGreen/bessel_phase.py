@@ -4,7 +4,7 @@ from scipy.interpolate import make_interp_spline
 from scipy.optimize import root_scalar
 from scipy.special import yv, jv
 
-from defaults import DEFAULT_ABS_TOLERANCE, DEFAULT_REL_TOLERANCE
+from config.defaults import DEFAULT_ABS_TOLERANCE, DEFAULT_REL_TOLERANCE
 from .constants import TWO_PI
 from .phase_spline import phase_spline
 from .range_reduce_mod_2pi import simple_mod_2pi, range_reduce_mod_2pi

@@ -11,7 +11,7 @@ from CosmologyConcepts.wavenumber import (
 from Datastore.SQL.ObjectFactories.base import SQLAFactoryBase
 from MetadataConcepts import tolerance
 from Units.base import UnitsLike
-from defaults import (
+from config.defaults import (
     DEFAULT_FLOAT_PRECISION,
 )
 

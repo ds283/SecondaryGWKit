@@ -6,7 +6,7 @@ from sqlalchemy import and_
 from ComputeTargets import ModelProxy, BackgroundModel
 from CosmologyConcepts import redshift
 from Datastore.SQL.ObjectFactories.base import SQLAFactoryBase
-from defaults import DEFAULT_REDSHIFT_RELATIVE_PRECISION
+from config.defaults import DEFAULT_REDSHIFT_RELATIVE_PRECISION
 
 
 class sqla_redshift_factory(SQLAFactoryBase):

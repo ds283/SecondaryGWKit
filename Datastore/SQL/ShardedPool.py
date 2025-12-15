@@ -11,40 +11,7 @@ from Datastore.SQL.ProfileAgent import ProfileAgent
 from Datastore.SQL.SerialPoolBroker import SerialPoolBroker
 from MetadataConcepts import version
 from Units.base import UnitsLike
-from defaults import DEFAULT_STRING_LENGTH
-
-_replicate_tables = [
-    "version",
-    "store_tag",
-    "redshift",
-    "wavenumber",
-    "wavenumber_exit_time",  # needs to be replicated so that we can batch query QuadSourceIntegral and OneLoopIntegral objects
-    "tolerance",
-    "LambdaCDM",
-    "QCD_Cosmology",
-    "IntegrationSolver",
-    "BackgroundModel",
-    "BackgroundModelValue",
-    "GkSourcePolicy",
-    "QuadSourcePolicy",
-]
-_shard_tables = {
-    "TkNumericIntegration": "k",
-    "TkNumericValue": "k",
-    "TkWKBIntegration": "k",
-    "TkWKBValue": "k",
-    "QuadSource": "q",
-    "QuadSourceValue": "q",
-    "GkNumericIntegration": "k",
-    "GkNumericValue": "k",
-    "GkWKBIntegration": "k",
-    "GkWKBValue": "k",
-    "GkSource": "k",
-    "GkSourceValue": "k",
-    "GkSourcePolicyData": "k",
-    "QuadSourceIntegral": "k",
-    "OneLoopIntegral": "k",
-}
+from config.defaults import DEFAULT_STRING_LENGTH
 
 
 class ShardedPool:
@@ -59,6 +26,8 @@ class ShardedPool:
         db_name: PathType,
         ShardKeyType,
         ShardKeyStoreIdGetter,
+        replicated_tables: List[str],
+        sharded_tables: Dict[str, str],
         timeout=None,
         shards=10,
         profile_agent: Optional[ProfileAgent] = None,
@@ -68,6 +37,8 @@ class ShardedPool:
     ):
         """
         Initialize a pool of datastore actors
+        :param replicated_tables:
+        :param sharded_tables:
         :param ShardKeyStoreIdGetter:
         :param version_label:
         """
@@ -75,6 +46,20 @@ class ShardedPool:
         self._version_label: str = version_label
 
         self._prune_unvalidated: Optional[List[str]] = prune_unvalidated
+
+        ## SHARDING CONFIGURATION
+
+        # expected type of shard key
+        self._ShardKeyType = ShardKeyType
+        self._ShardKeyType_name: str = ShardKeyType.__name__
+
+        # provided getter function to extract store id from a shard key object (or a proxy)
+        self._ShardKeyStoreIdGetter = ShardKeyStoreIdGetter
+
+        self._replicated_tables: List[str] = replicated_tables
+        self._sharded_tables: Dict[str, str] = sharded_tables
+
+        ## DATABASE CONFIGURATION
 
         self._db_name: PathType = db_name
         self._timeout: int = timeout
@@ -84,14 +69,7 @@ class ShardedPool:
         # this database file will be taken to be the primary database
         self._primary_file: PathType = Path(db_name).resolve()
 
-        # expected type of shard key
-        self._ShardKeyType = ShardKeyType
-        self._ShardKeyType_name: str = ShardKeyType.__name__
-
-        # provided getter function to extract store id from a shard key object (or a proxy)
-        self._ShardKeyStoreIdGetter = ShardKeyStoreIdGetter
-
-        # shard_db_files is a map from shard number -> path representing dataabase on disk
+        # shard_db_files is a map from shard number -> path representing the database on disk
         self._shard_db_files: Dict[int, PathType] = {}
 
         # shard_keys is a map from key id -> shard id
@@ -240,6 +218,16 @@ class ShardedPool:
             sqla.Column("serial", sqla.Integer, primary_key=True, nullable=False),
             sqla.Column("filename", sqla.String(DEFAULT_STRING_LENGTH), nullable=False),
         )
+        self._shard_key_config_table = sqla.Table(
+            "shard_key_config",
+            self._metadata,
+            sqla.Column(
+                "key_type",
+                sqla.String(DEFAULT_STRING_LENGTH),
+                primary_key=True,
+                nullable=False,
+            ),
+        )
         self._shard_key_table = sqla.Table(
             "shard_keys",
             self._metadata,
@@ -252,30 +240,68 @@ class ShardedPool:
                 nullable=False,
             ),
         )
+        self._replicated_tables_table = sqla.Table(
+            "replicated_tables",
+            self._metadata,
+            sqla.Column("serial", sqla.Integer, primary_key=True, nullable=False),
+            sqla.Column("table", sqla.String(DEFAULT_STRING_LENGTH), nullable=False),
+        )
+        self._sharded_tables_table = sqla.Table(
+            "sharded_tables",
+            self._metadata,
+            sqla.Column("serial", sqla.Integer, primary_key=True, nullable=False),
+            sqla.Column("table", sqla.String(DEFAULT_STRING_LENGTH), nullable=False),
+            sqla.Column("key_attr", sqla.String(DEFAULT_STRING_LENGTH), nullable=False),
+        )
 
     def _write_shard_data(self):
         self._shard_file_table.create(self._engine)
+        self._shard_key_config_table.create(self._engine)
         self._shard_key_table.create(self._engine)
+        self._replicated_tables_table.create(self._engine)
+        self._sharded_tables_table.create(self._engine)
 
         with self._engine.begin() as conn:
-            values = [
+            # write table of database shard files
+            shard_file_values = [
                 {"serial": key, "filename": str(db_name)}
                 for key, db_name in self._shard_db_files.items()
             ]
+            conn.execute(sqla.insert(self._shard_file_table), shard_file_values)
 
-            conn.execute(sqla.insert(self._shard_file_table), values)
+            # write shard key configuration type
+            conn.execute(
+                sqla.insert(self._shard_key_config_table),
+                {"key_type": self._ShardKeyType_name},
+            )
+
+            # write table of replicated tables
+            replicated_table_values = [
+                {"serial": n, "table": t} for n, t in enumerate(self._replicated_tables)
+            ]
+            conn.execute(
+                sqla.insert(self._replicated_tables_table), replicated_table_values
+            )
+
+            # write table of sharded tables
+            sharded_table_values = [
+                {"serial": n, "table": t, "key_attr": k}
+                for n, (t, k) in enumerate(self._sharded_tables.items())
+            ]
+            conn.execute(self._sharded_tables_table.insert(), sharded_table_values)
+
             conn.commit()
 
     def _read_shard_data(self):
         with self._engine.begin() as conn:
-            rows = conn.execute(
+            # read table of database shard files
+            shard_files = conn.execute(
                 sqla.select(
                     self._shard_file_table.c.serial,
                     self._shard_file_table.c.filename,
                 )
             )
-
-            for row in rows:
+            for row in shard_files:
                 serial = row.serial
                 filename = Path(row.filename)
 
@@ -286,13 +312,117 @@ class ShardedPool:
 
                 self._shard_db_files[row.serial] = Path(row.filename)
 
+            # read shard key configuration type
+            shard_key_configs = conn.execute(
+                sqla.select(
+                    self._shard_key_config_table.c.key_type,
+                )
+            )
+            num_config = 0
+            for row in shard_key_configs:
+                num_config += 1
+                if num_config == 1:
+                    if row.key_attr != self._ShardKeyType_name:
+                        raise RuntimeError(
+                            f'Existing ShardedPool was configured with shard key type "{row.key_attr}", but provided type was "{self._ShardKeyType_name}"'
+                        )
+
+                elif num_config > 1:
+                    raise print(
+                        f'ShardedPool has unexpected multiple shard key types: {num_config}="{row.key_attr}"'
+                    )
+            if num_config == 0:
+                raise RuntimeError(f"No configured shard key type was found")
+            elif num_config > 1:
+                raise RuntimeError(f"Multiple configured shard key types were found")
+
+            # read table of replicated tables
+            replicated_table_data = conn.execute(
+                sqla.select(
+                    self._replicated_tables_table.c.serial,
+                    self._replicated_tables_table.c.table,
+                )
+            )
+            missing_read_replicated = set()
+            missing_supplied_replicated = set(self._replicated_tables)
+            for row in replicated_table_data:
+                if row.table not in missing_supplied_replicated:
+                    missing_read_replicated.add(row.table)
+                missing_supplied_replicated.discard(row.table)
+            if len(missing_read_replicated) > 0:
+                print(
+                    f"The following replicated tables are configured in the existing ShardedPool, but were not supplied to the constructor:"
+                )
+                for table in missing_read_replicated:
+                    print(f"  {table}")
+            if len(missing_supplied_replicated) > 0:
+                print(
+                    f"The following replicated tables were supplied to the constructor, but are not configured in the existing ShardedPool:"
+                )
+                for table in missing_supplied_replicated:
+                    print(f"  {table}")
+            if len(missing_read_replicated) > 0 or len(missing_supplied_replicated) > 0:
+                raise RuntimeError(
+                    f"Mismatch between replicated tables supplied to the constructor and read from the existing ShardedPool"
+                )
+
+            # read table of sharded tables
+            sharded_table_data = conn.execute(
+                sqla.select(
+                    self._sharded_tables_table.c.serial,
+                    self._sharded_tables_table.c.table,
+                    self._sharded_tables_table.c.key_attr,
+                )
+            )
+            missing_read_sharded = set()
+            mismatching_key_attr = {}
+            missing_supplied_sharded = set(self._sharded_tables.keys())
+            for row in sharded_table_data:
+                if row.table not in missing_supplied_sharded:
+                    missing_read_sharded.add(row.table)
+                attr = self._sharded_tables[row.table]
+                if row.key_attr != attr:
+                    mismatching_key_attr[row.table] = {
+                        "supplied": attr,
+                        "configured": row.key_attr,
+                    }
+                missing_supplied_sharded.discard(row.table)
+            if len(missing_read_sharded) > 0:
+                print(
+                    f"The following sharded tables are configured in the existing ShardedPool, but were not supplied to the constructor:"
+                )
+                for table in missing_read_sharded:
+                    print(f"  {table}")
+            if len(missing_supplied_sharded) > 0:
+                print(
+                    f"The following sharded tables are supplied to the constructor, but are not configured in the existing ShardedPool:"
+                )
+                for table in missing_supplied_sharded:
+                    print(f"  {table}")
+            if len(mismatching_key_attr) > 0:
+                print(
+                    f"The following sharded tables were configured with a different key attribute in the existing ShardedPool:"
+                )
+                for table, data in mismatching_key_attr.items():
+                    print(
+                        f'  {table}: configured key="{data["configured"]}", supplied key="{data["supplied"]}"'
+                    )
+            if len(missing_read_sharded) > 0 or len(missing_supplied_sharded) > 0:
+                raise RuntimeError(
+                    f"Mismatch between sharded tables supplied to the constructor and read from the existing ShardedPool"
+                )
+            if len(mismatching_key_attr) > 0:
+                raise RuntimeError(
+                    f"Some sharded tables had mismatching key configurations in the existing ShardedPool"
+                )
+
+            # read table of existing shard keys
             keys = conn.execute(
                 sqla.select(
                     self._shard_key_table.c.key_serial,
                     self._shard_key_table.c.shard_id,
                 )
             )
-
             for key in keys:
                 self._shard_keys[key.key_serial] = key.shard_id
 
@@ -302,10 +432,10 @@ class ShardedPool:
         else:
             cls_name = ObjectClass.__name__
 
-        if cls_name in _replicate_tables:
+        if cls_name in self._replicated_tables:
             return self._get_impl_replicated_table(cls_name, kwargs)
 
-        if cls_name in _shard_tables.keys():
+        if cls_name in self._sharded_tables.keys():
             return self._get_impl_sharded_table(cls_name, kwargs)
 
         raise RuntimeError(
@@ -344,7 +474,7 @@ class ShardedPool:
             new_payload = []
             for i in range(len(payload_data)):
                 # if this object has a valid store_id and has the _new_insert or _updated metadata
-                # flags set, push to all the remaining shards in order to keep them in symc
+                # flags set, push to all the remaining shards in order to keep them in sync
                 if (
                     hasattr(objects[i], "_my_id")
                     and objects[i]._my_id is not None
@@ -395,7 +525,7 @@ class ShardedPool:
 
     def _get_impl_sharded_table(self, cls_name, kwargs):
         # for sharded tables, we should query/insert into only the appropriate shard
-        shard_key_field = _shard_tables[cls_name]
+        shard_key_field = self._sharded_tables[cls_name]
 
         # is this a vectorized get?
         if "payload_data" in kwargs:
@@ -425,12 +555,12 @@ class ShardedPool:
         else:
             cls_name = ObjectClass.__name__
 
-        if cls_name not in _shard_tables:
+        if cls_name not in self._sharded_tables:
             raise RuntimeError(
                 f"ShardedPool: it is only possible to vectorize object_get() over a sharded table (object type={cls_name})"
             )
 
-        shard_key_field = _shard_tables[cls_name]
+        shard_key_field = self._sharded_tables[cls_name]
         if shard_key_field not in shard_key:
             raise RuntimeError(
                 f'ShardedPool: expected shard key "{shard_key_field}" to be provided for object type "{cls_name}", but instead received keys: {shard_key.keys()}'
@@ -452,12 +582,12 @@ class ShardedPool:
         else:
             cls_name = ObjectClass.__name__
 
-        if cls_name not in _shard_tables:
+        if cls_name not in self._sharded_tables:
             raise RuntimeError(
                 f"ShardedPool: it is only possible to apply object_read_batch() to a sharded table (object type={cls_name})"
             )
 
-        shard_key_field = _shard_tables[cls_name]
+        shard_key_field = self._sharded_tables[cls_name]
         if shard_key_field not in shard_key:
             raise RuntimeError(
                 f'ShardedPool: expected shard key "{shard_key_field}" to be provided for object type "{cls_name}", but instead received keys: {shard_key.keys()}'
@@ -482,11 +612,11 @@ class ShardedPool:
         for item in payload_data:
             cls_name = type(item).__name__
 
-            if cls_name in _replicate_tables:
+            if cls_name in self._replicated_tables:
                 work_refs.extend(self._store_impl_replicated_table(cls_name, item))
                 continue
 
-            if cls_name in _shard_tables.keys():
+            if cls_name in self._sharded_tables.keys():
                 work_refs.extend(self._store_impl_sharded_table(cls_name, item))
                 continue
 
@@ -512,15 +642,15 @@ class ShardedPool:
         shard_key = shard_ids.pop()
 
         ref = self._shards[shard_key].object_store.remote(item)
-        object = ray.get(ref)
+        obj = ray.get(ref)
 
         # now push the object, complete with its new 'store_id', to all the other shards
-        if not hasattr(object, "_my_id") or object._my_id is None:
+        if not hasattr(obj, "_my_id") or obj._my_id is None:
             raise RuntimeError(
                 f'Stored object of type "{cls_name}" was not assigned a store_id field'
             )
 
-        ray.get([self._shards[key].object_store.remote(object) for key in shard_ids])
+        ray.get([self._shards[key].object_store.remote(obj) for key in shard_ids])
 
         return [ref]
 
@@ -529,7 +659,7 @@ class ShardedPool:
         # unlike the replicated case,
         # we don't have to care about what happens to its store_id
 
-        shard_key_field = _shard_tables[cls_name]
+        shard_key_field = self._sharded_tables[cls_name]
         if not hasattr(item, shard_key_field):
             raise RuntimeError(
                 f'Unable to determine shard, because object of type "{cls_name}" has no "{shard_key_field}" attribute'
@@ -554,11 +684,11 @@ class ShardedPool:
         for item in payload_data:
             cls_name = type(item).__name__
 
-            if cls_name in _replicate_tables:
+            if cls_name in self._replicated_tables:
                 work_refs.extend(self._validate_impl_replicated_table(cls_name, item))
                 continue
 
-            if cls_name in _shard_tables.keys():
+            if cls_name in self._sharded_tables.keys():
                 work_refs.extend(self._validate_impl_sharded_table(cls_name, item))
                 continue
 
@@ -602,7 +732,7 @@ class ShardedPool:
 
     def _validate_impl_sharded_table(self, cls_name, item):
         # item need only be validated on a single shard
-        shard_key_field = _shard_tables[cls_name]
+        shard_key_field = self._sharded_tables[cls_name]
         if not hasattr(item, shard_key_field):
             raise RuntimeError(
                 f'Unable to determine shard, because object of type "{cls_name}" has no "{shard_key_field}" attribute'
@@ -637,7 +767,7 @@ class ShardedPool:
             return
 
         # otherwise, we have to populate keys
-        # try to load balance by working out which shard has fewest keys
+        # try to load balance by working out which shard has the fewest keys
         loads = {key: 0 for key in self._shards.keys()}
         for shard in self._shard_keys.values():
             loads[shard] = loads[shard] + 1

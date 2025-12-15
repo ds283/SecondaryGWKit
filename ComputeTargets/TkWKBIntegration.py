@@ -19,7 +19,7 @@ from Quadrature.integrators.WKB_phase_function import (
 from Quadrature.supervisors.base import RHS_timer
 from Quadrature.supervisors.numeric import NumericIntegrationSupervisor
 from Units import check_units
-from defaults import DEFAULT_FLOAT_PRECISION
+from config.defaults import DEFAULT_FLOAT_PRECISION
 
 
 def friction_RHS(

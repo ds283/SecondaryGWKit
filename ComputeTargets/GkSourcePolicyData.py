@@ -11,7 +11,7 @@ from CosmologyConcepts import wavenumber_exit_time, redshift, wavenumber
 from Datastore import DatastoreObject
 from LiouvilleGreen.phase_spline import phase_spline
 from MetadataConcepts import GkSourcePolicy
-from defaults import DEFAULT_FLOAT_PRECISION
+from config.defaults import DEFAULT_FLOAT_PRECISION
 
 MIN_SPLINE_DATA_POINTS = 5
 

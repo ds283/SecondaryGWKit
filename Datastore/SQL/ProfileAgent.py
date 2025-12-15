@@ -7,7 +7,7 @@ import ray
 import sqlalchemy as sqla
 from sqlalchemy.exc import SQLAlchemyError
 
-from defaults import DEFAULT_STRING_LENGTH
+from config.defaults import DEFAULT_STRING_LENGTH
 from utilities import format_time
 
 DEFAULT_NOTIFY_TIME_INTERVAL = 30 * 60

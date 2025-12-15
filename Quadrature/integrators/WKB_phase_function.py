@@ -12,7 +12,7 @@ from Quadrature.supervisors.WKB import ThetaSupervisor, QSupervisor
 from Quadrature.supervisors.base import RHS_timer
 from Quadrature.supervisors.numeric import NumericIntegrationSupervisor
 from Units import check_units
-from defaults import DEFAULT_ABS_TOLERANCE, DEFAULT_REL_TOLERANCE
+from config.defaults import DEFAULT_ABS_TOLERANCE, DEFAULT_REL_TOLERANCE
 
 THETA_INDEX = 0
 Q_INDEX = 0

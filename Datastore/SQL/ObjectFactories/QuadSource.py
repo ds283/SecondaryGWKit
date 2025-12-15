@@ -13,7 +13,7 @@ from ComputeTargets.BackgroundModel import ModelProxy
 from CosmologyConcepts import redshift, redshift_array, wavenumber_exit_time
 from Datastore.SQL.ObjectFactories.base import SQLAFactoryBase
 from MetadataConcepts import store_tag
-from defaults import DEFAULT_STRING_LENGTH, DEFAULT_FLOAT_PRECISION
+from config.defaults import DEFAULT_STRING_LENGTH, DEFAULT_FLOAT_PRECISION
 
 
 class sqla_QuadSourceTagAssocation_factory(SQLAFactoryBase):

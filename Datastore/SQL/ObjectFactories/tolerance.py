@@ -1,9 +1,10 @@
-import sqlalchemy as sqla
 from math import log10
+
+import sqlalchemy as sqla
 
 from Datastore.SQL.ObjectFactories.base import SQLAFactoryBase
 from MetadataConcepts import tolerance
-from defaults import DEFAULT_FLOAT_PRECISION
+from config.defaults import DEFAULT_FLOAT_PRECISION
 
 
 class sqla_tolerance_factory(SQLAFactoryBase):

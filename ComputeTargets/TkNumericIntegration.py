@@ -20,7 +20,7 @@ from Quadrature.supervisors.base import (
 )
 from Quadrature.supervisors.numeric import NumericIntegrationSupervisor
 from Units import check_units
-from defaults import (
+from config.defaults import (
     DEFAULT_FLOAT_PRECISION,
 )
 

@@ -15,7 +15,7 @@ from MetadataConcepts import tolerance, store_tag
 from Quadrature.integration_metadata import IntegrationSolver, IntegrationData
 from Quadrature.supervisors.base import RHS_timer, IntegrationSupervisor
 from Units.base import UnitsLike
-from defaults import DEFAULT_ABS_TOLERANCE, DEFAULT_REL_TOLERANCE
+from config.defaults import DEFAULT_ABS_TOLERANCE, DEFAULT_REL_TOLERANCE
 
 A0_TAU_INDEX = 0
 EXPECTED_SOL_LENGTH = 1

@@ -16,7 +16,7 @@ from Datastore import DatastoreObject
 from MetadataConcepts import store_tag, tolerance, GkSourcePolicy
 from Quadrature.integration_metadata import IntegrationData, LevinData
 from Quadrature.simple_quadrature import simple_quadrature
-from defaults import (
+from config.defaults import (
     DEFAULT_QUADRATURE_RTOL,
     DEFAULT_FLOAT_PRECISION,
     DEFAULT_QUADRATURE_ATOL,

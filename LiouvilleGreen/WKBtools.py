@@ -3,7 +3,7 @@ from typing import Tuple
 
 from LiouvilleGreen.constants import TWO_PI
 from LiouvilleGreen.range_reduce_mod_2pi import range_reduce_mod_2pi
-from defaults import DEFAULT_ABS_TOLERANCE
+from config.defaults import DEFAULT_ABS_TOLERANCE
 
 
 # similar to LiouvilleGreen.range_reduce_mod_2pi.simple_mod_2pi, but with a specific

@@ -15,7 +15,7 @@ from Datastore.SQL.ObjectFactories.base import SQLAFactoryBase
 from MetadataConcepts import store_tag, tolerance
 from Quadrature.integration_metadata import IntegrationData, IntegrationSolver
 from Units.base import UnitsLike
-from defaults import DEFAULT_STRING_LENGTH, DEFAULT_FLOAT_PRECISION
+from config.defaults import DEFAULT_STRING_LENGTH, DEFAULT_FLOAT_PRECISION
 
 
 class sqla_BackgroundModelTagAssociation_factory(SQLAFactoryBase):

@@ -16,7 +16,7 @@ from CosmologyConcepts import redshift_array, redshift, wavenumber_exit_time
 from Datastore.SQL.ObjectFactories.base import SQLAFactoryBase
 from MetadataConcepts import tolerance, store_tag
 from Quadrature.integration_metadata import IntegrationData, IntegrationSolver
-from defaults import DEFAULT_STRING_LENGTH, DEFAULT_FLOAT_PRECISION
+from config.defaults import DEFAULT_STRING_LENGTH, DEFAULT_FLOAT_PRECISION
 
 
 class sqla_TkNumericTagAssociation_factory(SQLAFactoryBase):

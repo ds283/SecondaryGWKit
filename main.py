@@ -44,14 +44,15 @@ from MetadataConcepts import GkSourcePolicy, tolerance, QuadSourcePolicy
 from Quadrature.integration_metadata import IntegrationSolver
 from RayTools.RayWorkPool import RayWorkPool
 from Units import Mpc_units
-from defaults import (
+from config.defaults import (
     DEFAULT_ABS_TOLERANCE,
     DEFAULT_REL_TOLERANCE,
     DEFAULT_FLOAT_PRECISION,
     DEFAULT_QUADRATURE_RTOL,
     DEFAULT_QUADRATURE_ATOL,
 )
-from model_list import build_model_list
+from config.model_list import build_model_list
+from config.sharding import replicated_tables, sharded_tables
 from utilities import grouper, format_time, WallclockTimer
 
 DEFAULT_LABEL = "SecondaryGWKit-test"
@@ -2486,6 +2487,8 @@ with ShardedPool(
     db_name=args.database,
     ShardKeyType=wavenumber,
     ShardKeyStoreIdGetter=shard_key_wavenumber_store_id,
+    replicated_tables=replicated_tables,
+    sharded_tables=sharded_tables,
     timeout=args.db_timeout,
     shards=args.shards,
     profile_agent=profile_agent,

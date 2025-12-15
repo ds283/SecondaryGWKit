@@ -17,7 +17,7 @@ from CosmologyConcepts.wavenumber import (
 from Datastore.SQL.ObjectFactories.base import SQLAFactoryBase
 from MetadataConcepts import store_tag, tolerance, GkSourcePolicy
 from Quadrature.integration_metadata import IntegrationData, LevinData
-from defaults import DEFAULT_STRING_LENGTH
+from config.defaults import DEFAULT_STRING_LENGTH
 
 
 class sqla_QuadSourceIntegralTagAssociation_factory(SQLAFactoryBase):

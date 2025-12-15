@@ -1,7 +1,7 @@
 from typing import Optional
 
 from Datastore import DatastoreObject
-from defaults import DEFAULT_LEVIN_THRESHOLD, DEFAULT_GKSOURCE_NUMERIC_POLICY
+from config.defaults import DEFAULT_LEVIN_THRESHOLD, DEFAULT_GKSOURCE_NUMERIC_POLICY
 
 _allowed_numeric_policies = ["maximize-numeric", "maximize-WKB"]
 

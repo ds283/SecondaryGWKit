@@ -2,7 +2,7 @@ import sqlalchemy as sqla
 
 from CosmologyModels.LambdaCDM import LambdaCDM
 from Datastore.SQL.ObjectFactories.base import SQLAFactoryBase
-from defaults import DEFAULT_FLOAT_PRECISION, DEFAULT_STRING_LENGTH
+from config.defaults import DEFAULT_FLOAT_PRECISION, DEFAULT_STRING_LENGTH
 
 
 class sqla_LambdaCDM_factory(SQLAFactoryBase):

@@ -10,7 +10,7 @@ from LiouvilleGreen.integration_tools import find_phase_minimum
 from Quadrature.integration_metadata import IntegrationData
 from Quadrature.supervisors.numeric import NumericIntegrationSupervisor
 from Units import check_units
-from defaults import (
+from config.defaults import (
     DEFAULT_ABS_TOLERANCE,
     DEFAULT_REL_TOLERANCE,
     DEFAULT_FLOAT_PRECISION,

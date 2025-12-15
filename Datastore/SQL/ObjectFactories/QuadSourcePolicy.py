@@ -2,7 +2,7 @@ import sqlalchemy as sqla
 
 from Datastore.SQL.ObjectFactories.base import SQLAFactoryBase
 from MetadataConcepts import QuadSourcePolicy
-from defaults import DEFAULT_STRING_LENGTH, DEFAULT_FLOAT_PRECISION
+from config.defaults import DEFAULT_STRING_LENGTH, DEFAULT_FLOAT_PRECISION
 
 
 class sqla_QuadSourcePolicy_factory(SQLAFactoryBase):

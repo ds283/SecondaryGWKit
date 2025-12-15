@@ -10,7 +10,7 @@ from ComputeTargets.BackgroundModel import ModelProxy
 from CosmologyConcepts import wavenumber_exit_time, redshift
 from Datastore.SQL.ObjectFactories.base import SQLAFactoryBase
 from MetadataConcepts import store_tag, tolerance
-from defaults import DEFAULT_STRING_LENGTH
+from config.defaults import DEFAULT_STRING_LENGTH
 
 
 class sqla_OneLoopIntegralTagAssociation_factory(SQLAFactoryBase):

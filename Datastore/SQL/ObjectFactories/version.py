@@ -2,7 +2,7 @@ import sqlalchemy as sqla
 
 from Datastore.SQL.ObjectFactories.base import SQLAFactoryBase
 from MetadataConcepts import store_tag
-from defaults import DEFAULT_STRING_LENGTH
+from config.defaults import DEFAULT_STRING_LENGTH
 
 
 class sqla_version_factory(SQLAFactoryBase):
