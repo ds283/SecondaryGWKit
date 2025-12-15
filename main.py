@@ -56,6 +56,7 @@ from config.sharding import (
     sharded_tables,
     shard_key_wavenumber_store_id,
     shard_key_type,
+    read_table_config,
 )
 from utilities import grouper, format_time, WallclockTimer
 
@@ -2499,6 +2500,7 @@ with ShardedPool(
     job_name=args.job_name,
     prune_unvalidated=args.prune_unvalidated,
     drop_actions=drop_actions,
+    read_table_config=read_table_config,
 ) as pool:
 
     # set up LambdaCDM object representing a basic Planck2018 cosmology in Mpc units

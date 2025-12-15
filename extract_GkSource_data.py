@@ -43,6 +43,7 @@ from config.sharding import (
     sharded_tables,
     shard_key_wavenumber_store_id,
     shard_key_type,
+    read_table_config,
 )
 from extract_common import (
     set_loglinear_axes,
@@ -911,6 +912,7 @@ with ShardedPool(
     profile_agent=profile_agent,
     job_name="extract_GkSource_data",
     prune_unvalidated=False,
+    read_table_config=read_table_config,
 ) as pool:
 
     # get list of models we want to extract transfer functions for
