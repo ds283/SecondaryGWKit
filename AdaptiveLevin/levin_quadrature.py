@@ -2,6 +2,7 @@ import json
 import time
 import uuid
 from datetime import datetime
+from functools import lru_cache
 from math import floor, ceil
 from pathlib import Path
 from typing import Tuple, List, Optional
@@ -35,6 +36,15 @@ DEFAULT_LEVIN_RELTOL = 1e-7
 MACHINE_EPSILON = 1e-16
 
 SIX_PI = 6.0 * np.pi
+
+# minimum phase change across a subinterval before we are prepared to invert the Levin super-operator
+# with a direct LU solve rather than a least-squares (SVD) solve. Below this the operator is poorly
+# conditioned and we need the minimum-norm solution; see _adaptive_levin_subregion_impl().
+_LEVIN_DIRECT_SOLVE_PHASE_SPAN = 20.0 * np.pi
+
+# tolerance on the relative residual ||Lp - f||/||f|| accepted from the direct solve. This is only a
+# secondary sanity check -- the primary guard is the phase span above.
+_LEVIN_DIRECT_SOLVE_RESIDUAL = 1e-10
 
 INTERVAL_TYPE_LEVIN = 0
 INTERVAL_TYPE_DIRECT = 1
@@ -128,6 +138,7 @@ class _levin_interval:
         abserr_history: Optional[ErrorHistoryType] = None,
         relerr_history: Optional[ErrorHistoryType] = None,
         p_ratios_history: Optional[PScaleHistoryType] = None,
+        estimate: Optional[dict] = None,
     ):
         self._start = start
         self._end = end
@@ -139,6 +150,15 @@ class _levin_interval:
         self._p_ratios_history = (
             p_ratios_history if p_ratios_history is not None else {}
         )
+
+        # Levin estimate for this interval, if it has already been computed. When a region is bisected
+        # its two halves have already been evaluated in order to produce the refined estimate, so we
+        # carry those results forward rather than recomputing them when the children are popped.
+        self._estimate = estimate
+
+    @property
+    def estimate(self) -> Optional[dict]:
+        return self._estimate
 
     @property
     def start(self) -> float:
@@ -173,13 +193,22 @@ class _levin_interval:
         return self._p_ratios_history
 
 
-def chebyshev_matrices(x_span: Tuple[float, float], N: int):
+@lru_cache(maxsize=32)
+def _chebyshev_base(N: int):
     """
     Compute the Chebyshev spectral collocation points (corresponding to the extremal points)
-    and the first order spectral differentiation matrix.
+    and the first order spectral differentiation matrix, on the reference interval [-1, 1].
+
+    Only the affine rescaling to an arbitrary interval depends on the endpoints, so this part of the
+    construction is cached: the adaptive driver evaluates many subregions at the same Chebyshev order,
+    and rebuilding these matrices each time is a significant fraction of the cost of the linear solve
+    they feed.
+
+    The returned arrays are marked read-only and shared between callers. chebyshev_matrices() below
+    only ever forms new arrays from them, so this is safe; do not mutate them in place.
+
     Based on the implementation by Wiedeman & Reddy (http://dx.doi.org/10.1145/365723.365727)
     and pyddx (https://github.com/ronojoy/pyddx)
-    :param x_span:
     :param N:
     :return:
     """
@@ -218,10 +247,30 @@ def chebyshev_matrices(x_span: Tuple[float, float], N: int):
     D = Z * (C * np.tile(np.diag(D), (N, 1)).T - D)  # off-diagonals
     D[range(N), range(N)] = -np.sum(D, axis=1)  # negative sum trick
 
-    # rescale for the arbitrary interval
+    x.setflags(write=False)
+    D.setflags(write=False)
+
+    return x, D
+
+
+def chebyshev_matrices(x_span: Tuple[float, float], N: int):
+    """
+    Compute the Chebyshev spectral collocation points (corresponding to the extremal points)
+    and the first order spectral differentiation matrix, rescaled to the interval x_span.
+
+    Note the returned grid is in *descending* order: x[0] is the upper endpoint of x_span and x[-1]
+    is the lower endpoint. The Levin endpoint extraction depends on this convention.
+    :param x_span:
+    :param N:
+    :return:
+    """
+    x_base, D_base = _chebyshev_base(N)
+
+    # rescale for the arbitrary interval. Both operations below form new arrays, so the cached
+    # read-only base matrices are left untouched.
     a, b = x_span
-    x = (a + b) / 2.0 + (b - a) / 2.0 * x
-    D = 2.0 * D / (b - a)
+    x = (a + b) / 2.0 + (b - a) / 2.0 * x_base
+    D = 2.0 * D_base / (b - a)
 
     return x, D
 
@@ -248,12 +297,33 @@ class _Basis_SinCos:
         return self._theta(x)
 
     def build_Levin_data(self, grid, Dmat):
-        if hasattr(self, "_theta_deriv"):
-            theta_prime_Cheb = np.array([self._theta_deriv(x) for x in grid])
-        else:
+        """
+        Build the Levin A^T matrix, the basis vector w evaluated at each endpoint, and an estimate of
+        the total phase change across the interval.
+
+        :return: (AmatT, w0, wk, phase_span)
+        """
+        # we need theta sampled on the Chebyshev grid if either (a) we have to obtain theta' by spectral
+        # differentiation, or (b) we have no range-reduced phase function and therefore have to evaluate
+        # the basis functions from the raw phase at the endpoints.
+        # These are independent conditions, so both have to be tested; testing only the first leaves
+        # theta_Cheb undefined in the endpoint block below.
+        need_theta_Cheb = not hasattr(self, "_theta_deriv") or not hasattr(
+            self, "_theta_mod_2pi"
+        )
+
+        theta_Cheb = None
+        if need_theta_Cheb:
             # sample the phase function theta on the Chebyshev grid
             theta_Cheb = np.array([self._theta(x) for x in grid])
 
+        if hasattr(self, "_theta_deriv"):
+            # prefer an explicitly supplied theta'. At large argument the raw phase theta is a large float
+            # whose absolute resolution is ~ eps*theta, so spectral differentiation of the sampled values
+            # below inherits an error ~ eps*theta/(phase span across the interval). A phase function that
+            # can supply theta' directly (e.g. from a range-reduced spline) does not suffer from this.
+            theta_prime_Cheb = np.array([self._theta_deriv(x) for x in grid])
+        else:
             # multiply theta by the spectral differentiation matrix Dmat in order to produce an estimate of theta'(x)
             # evaluated at the collocation points
             theta_prime_Cheb = np.matmul(Dmat, theta_Cheb)
@@ -269,6 +339,13 @@ class _Basis_SinCos:
         zero_block = np.zeros_like(theta_prime_I)
         AmatT = np.block([[zero_block, -theta_prime_I], [theta_prime_I, zero_block]])
 
+        # estimate the total phase change across the interval from quantities we have already computed.
+        # This costs no further evaluations of the phase function, and is used to decide whether the
+        # Levin super-operator is well enough conditioned to be inverted by a direct solve.
+        phase_span = float(
+            np.mean(np.fabs(theta_prime_Cheb)) * np.fabs(grid[0] - grid[-1])
+        )
+
         if hasattr(self, "_theta_mod_2pi"):
             theta0_mod_2pi = self._theta_mod_2pi(grid[-1])
             thetak_mod_2pi = self._theta_mod_2pi(grid[0])
@@ -283,7 +360,7 @@ class _Basis_SinCos:
             w0 = [np.sin(theta0), np.cos(theta0)]
             wk = [np.sin(thetak), np.cos(thetak)]
 
-        return AmatT, w0, wk
+        return AmatT, w0, wk, phase_span
 
     def eval_basis(self, x):
         if hasattr(self, "_theta_mod_2pi"):
@@ -300,6 +377,7 @@ def _adaptive_levin_subregion(
     chebyshev_order: int = DEFAULT_LEVIN_CHEBSHEV_ORDER,
     rtol: float = DEFAULT_LEVIN_RELTOL,
     notify_label: Optional[str] = None,
+    build_p_sample: bool = False,
 ):
     working_order = max(chebyshev_order, _LEVIN_MINIMUM_ALLOWED_ORDER)
     num_order_changes = 0
@@ -316,6 +394,7 @@ def _adaptive_levin_subregion(
             chebyshev_order=working_order,
             rtol=rtol,
             notify_label=notify_label,
+            build_p_sample=build_p_sample,
         )
         if data["metadata"].get("SVD_failure", False):
             working_order = working_order - 2
@@ -354,6 +433,7 @@ def _adaptive_levin_subregion_impl(
     chebyshev_order: int = DEFAULT_LEVIN_CHEBSHEV_ORDER,
     rtol: float = DEFAULT_LEVIN_RELTOL,
     notify_label: Optional[str] = None,
+    build_p_sample: bool = False,
 ):
     """
     f should be an m-vector of non-rapidly oscillating functions (Levin 96 eq. 2.1)
@@ -363,6 +443,7 @@ def _adaptive_levin_subregion_impl(
     :param f: iterable of callables representing the integrand f-functions
     :param BasisData: callable
     :param chebyshev_order:
+    :param build_p_sample: retain the sampled Levin antiderivatives p(x)? Only needed for diagnostics
     :return:
     """
     metadata = {}
@@ -381,7 +462,7 @@ def _adaptive_levin_subregion_impl(
 
     # build the Levin A^T matrix, and also the vector of weights w evaluated at theta0, thetak
     # (these are needed in the final stap)
-    AmatT, w0, wk = BasisData.build_Levin_data(grid, Dmat)
+    AmatT, w0, wk, phase_span = BasisData.build_Levin_data(grid, Dmat)
 
     # build the Levin superoperator corresponding to this system
     # Chen et al. (168)
@@ -407,25 +488,54 @@ def _adaptive_levin_subregion_impl(
     # now try to invert the Levin superoperator, to find the Levin antiderivatives p(x)
     # Chen et al.
     success = False
-    try:
-        p, residuals, rank, s = np.linalg.lstsq(LevinL, f_Cheb)
-    except LinAlgError as e:
-        print(
-            f"!! WARNING (adaptive_levin_subregion, {label}): could not solve Levin collocation system using numpy.linalg.lstsq (chebyshev_order={chebyshev_order}; will now attempt to use pseudo-inverse)"
-        )
-        now = datetime.now().replace(microsecond=0)
-        LevinL_filename = f"LevinL_{now.isoformat()}.txt"
-        f_Cheb_filename = f"f_Cheb_{now.isoformat()}.txt"
-        print(
-            (
-                f'   -- Levin L super-operator written to file "{LevinL_filename}", f_Cheb written to file "{f_Cheb_filename}"'
+
+    # Fast path. As theta' -> 0 the Levin super-operator degenerates to a block-diagonal matrix of
+    # spectral differentiation matrices, and Dmat is singular (it annihilates constants). So the system
+    # is badly conditioned on weakly oscillatory intervals, and there we need the minimum-norm solution
+    # that lstsq provides. Once the interval carries enough phase the operator becomes well conditioned
+    # (empirically cond ~ 4e2 at a phase span of 20*pi, and ~13 at 100*pi), and an ordinary LU solve
+    # agrees with lstsq to machine precision while being an order of magnitude cheaper.
+    #
+    # NOTE the gate has to be the phase span, *not* the residual of the solve. In the near-singular
+    # regime the residual is small (~1e-14) even when the computed p is completely wrong, so a residual
+    # test alone would silently accept garbage. The residual check below is only a secondary guard
+    # against non-finite values and outright failure.
+    if phase_span > _LEVIN_DIRECT_SOLVE_PHASE_SPAN:
+        try:
+            p_direct = np.linalg.solve(LevinL, f_Cheb)
+        except LinAlgError:
+            pass
+        else:
+            f_norm = np.linalg.norm(f_Cheb)
+            residual = np.linalg.norm(np.matmul(LevinL, p_direct) - f_Cheb)
+            if np.isfinite(p_direct).all() and (
+                f_norm <= 0.0 or residual <= _LEVIN_DIRECT_SOLVE_RESIDUAL * f_norm
+            ):
+                p = p_direct
+                success = True
+                metadata["direct_solve"] = 1
+
+    # otherwise fall back to the least-squares (SVD) solution, which handles the ill-conditioned case
+    if not success:
+        try:
+            p, residuals, rank, s = np.linalg.lstsq(LevinL, f_Cheb, rcond=None)
+        except LinAlgError as e:
+            print(
+                f"!! WARNING (adaptive_levin_subregion, {label}): could not solve Levin collocation system using numpy.linalg.lstsq (chebyshev_order={chebyshev_order}; will now attempt to use pseudo-inverse)"
             )
-        )
-        np.savetxt(LevinL_filename, LevinL)
-        np.savetxt(f_Cheb_filename, f_Cheb)
-        metadata["SVD_errors"] = 1
-    else:
-        success = True
+            now = datetime.now().replace(microsecond=0)
+            LevinL_filename = f"LevinL_{now.isoformat()}.txt"
+            f_Cheb_filename = f"f_Cheb_{now.isoformat()}.txt"
+            print(
+                (
+                    f'   -- Levin L super-operator written to file "{LevinL_filename}", f_Cheb written to file "{f_Cheb_filename}"'
+                )
+            )
+            np.savetxt(LevinL_filename, LevinL)
+            np.savetxt(f_Cheb_filename, f_Cheb)
+            metadata["SVD_errors"] = 1
+        else:
+            success = True
 
     if not success:
         try:
@@ -443,13 +553,18 @@ def _adaptive_levin_subregion_impl(
                 "metadata": metadata,
             }
 
-    p_sample = [
-        (x, [p[j * chebyshev_order + i] for j in range(m)]) for i, x in enumerate(grid)
-    ]
+    # p is stored flattened, with component j at collocation point i in position j*chebyshev_order + i,
+    # so this reshape gives P[j, i]. Taking the mean over the collocation points in numpy avoids building
+    # a Python list of m-element lists on every solve; that list is only needed for diagnostics.
+    P = p.reshape(m, chebyshev_order)
 
-    p_means = [sum(np.fabs(p[1][i]) for p in p_sample) / len(grid) for i in range(m)]
-    p_mean_max = max(p_means)
-    p_ratios = [pm / p_mean_max for pm in p_means]
+    p_means = np.fabs(P).mean(axis=1)
+    p_mean_max = p_means.max()
+    p_ratios = [float(pm / p_mean_max) for pm in p_means]
+
+    p_sample = None
+    if build_p_sample:
+        p_sample = [(x, [P[j, i] for j in range(m)]) for i, x in enumerate(grid)]
 
     # don't keep p-modes that have relative amplitude smaller than the requested rtol.
     # Presumably we cannot compute these accurately anyway (especially if they are associated with small singular values that are
@@ -512,6 +627,7 @@ def _adaptive_levin(
 
     num_SVD_errors = 0
     num_order_changes = 0
+    num_direct_solves = 0
     chebyshev_min_order = None
     max_depth = 0
 
@@ -627,31 +743,42 @@ def _adaptive_levin(
             num_simple_regions = num_simple_regions + 1
             continue
 
-        # Chen et al. (172)
-        try:
-            data = _adaptive_levin_subregion(
-                (a, b),
-                f,
-                BasisData,
-                id_label=id_label,
-                chebyshev_order=chebyshev_order,
-                rtol=rtol,
-                notify_label=notify_label,
-            )
-            order = data["metadata"].get("chebyshev_order", None)
-            if order is not None:
-                if chebyshev_min_order is None or order < chebyshev_min_order:
-                    chebyshev_min_order = order
+        # Chen et al. (172).
+        # If this region was produced by bisecting a parent, its estimate was already computed as one
+        # half of the parent's refined estimate, and we can reuse it. Note that the metadata bookkeeping
+        # below counts each region exactly once, when it is processed here as a parent -- the metadata
+        # of the comparison regions dataL/dataR has never been accumulated, so reusing them preserves
+        # the existing accounting exactly.
+        data = current_region.estimate
+        if data is None:
+            try:
+                data = _adaptive_levin_subregion(
+                    (a, b),
+                    f,
+                    BasisData,
+                    id_label=id_label,
+                    chebyshev_order=chebyshev_order,
+                    rtol=rtol,
+                    notify_label=notify_label,
+                    build_p_sample=build_p_sample,
+                )
+                num_evaluations += 1
+            except LinAlgError as e:
+                print(
+                    f"!! adaptive_levin ({label}): linear algebra error when estimating Levin subregion ({a}, {b}), width={current_region.width :.8g}"
+                )
+                raise e
 
-            num_SVD_errors = num_SVD_errors + data["metadata"].get("SVD_errors", 0)
-            num_order_changes = num_order_changes + data["metadata"].get(
-                "num_order_changes", 0
-            )
-        except LinAlgError as e:
-            print(
-                f"!! adaptive_levin ({label}): linear algebra error when estimating Levin subregion ({a}, {b}), width={current_region.width :.8g}"
-            )
-            raise e
+        order = data["metadata"].get("chebyshev_order", None)
+        if order is not None:
+            if chebyshev_min_order is None or order < chebyshev_min_order:
+                chebyshev_min_order = order
+
+        num_SVD_errors = num_SVD_errors + data["metadata"].get("SVD_errors", 0)
+        num_order_changes = num_order_changes + data["metadata"].get(
+            "num_order_changes", 0
+        )
+        num_direct_solves = num_direct_solves + data["metadata"].get("direct_solve", 0)
 
         c = current_region.break_point
         # Chen et al. (173)
@@ -664,6 +791,7 @@ def _adaptive_levin(
                 chebyshev_order=chebyshev_order,
                 rtol=rtol,
                 notify_label=notify_label,
+                build_p_sample=build_p_sample,
             )
         except LinAlgError as e:
             print(
@@ -680,6 +808,7 @@ def _adaptive_levin(
                 chebyshev_order=chebyshev_order,
                 rtol=rtol,
                 notify_label=notify_label,
+                build_p_sample=build_p_sample,
             )
         except LinAlgError as e:
             print(
@@ -687,7 +816,7 @@ def _adaptive_levin(
             )
             raise e
 
-        num_evaluations += 3
+        num_evaluations += 2
         estimate = data["value"]
         refined_estimate = dataL["value"] + dataR["value"]
 
@@ -732,6 +861,9 @@ def _adaptive_levin(
             }
             new_depth = current_region.depth + 1
 
+            # carry the comparison estimates forward as the children's own estimates; they have just
+            # been computed on exactly these intervals, so recomputing them when the children are
+            # popped would repeat a third of all the linear solves performed by this driver
             regions.extend(
                 [
                     _levin_interval(
@@ -741,6 +873,7 @@ def _adaptive_levin(
                         abserr_history=new_abs_history,
                         relerr_history=new_rel_history,
                         p_ratios_history=new_p_ratios_history,
+                        estimate=dataL,
                     ),
                     _levin_interval(
                         start=c,
@@ -749,6 +882,7 @@ def _adaptive_levin(
                         abserr_history=new_abs_history,
                         relerr_history=new_rel_history,
                         p_ratios_history=new_p_ratios_history,
+                        estimate=dataR,
                     ),
                 ]
             )
@@ -760,6 +894,30 @@ def _adaptive_levin(
     driver_stop = time.perf_counter()
     elapsed = driver_stop - driver_start
 
+    # Health check. If neither atol nor rtol is attainable -- typically because the caller has asked for
+    # an accuracy the phase function cannot deliver -- the bisection runs to the depth limit and we
+    # accept whatever estimate we have. The answer is usually still good, but the cost can be two orders
+    # of magnitude higher than necessary, so it is worth saying so rather than letting it pass silently.
+    #
+    # Note we deliberately do NOT warn on a high proportion of direct-quadrature subintervals. When the
+    # integration variable is log(x) (as it is for the Bessel integrals this module was written for),
+    # subintervals at small x carry very little phase and are *correctly* handled by direct quadrature;
+    # difference-type phase groups, whose net frequency can be small, do the same over much of the
+    # range. In that geometry a direct-quadrature fraction above 90% is normal rather than pathological,
+    # and no threshold separates it from genuine non-convergence. num_simple_regions is reported in the
+    # returned dictionary for callers who want to look.
+    if max_depth >= depth_max:
+        print(
+            f"!! WARNING (adaptive_levin, {label}): bisection reached the maximum depth {depth_max} "
+            f"without meeting either tolerance, so some subintervals were accepted unconverged "
+            f"| {num_used_regions} subintervals ({num_simple_regions} direct), "
+            f"{num_evaluations} Levin solves | atol={atol:.3g}, rtol={rtol:.3g}"
+        )
+        print(
+            "   -- consider relaxing atol/rtol, or check that the phase function is accurate "
+            "enough to support the requested tolerance"
+        )
+
     return {
         "value": float(val),
         "p_points": p_points,
@@ -770,6 +928,7 @@ def _adaptive_levin(
         "elapsed": float(elapsed),
         "num_SVD_errors": num_SVD_errors,
         "num_order_changes": num_order_changes,
+        "num_direct_solves": num_direct_solves,
         "chebyshev_min_order": chebyshev_min_order,
         "max_depth": max_depth,
     }
@@ -880,6 +1039,7 @@ def _write_progress_data(
             chebyshev_order=chebyshev_order,
             rtol=rtol,
             notify_label=notify_label,
+            build_p_sample=True,
         )
         estimate = data["value"]
         region_data["estimate"] = estimate
@@ -894,6 +1054,7 @@ def _write_progress_data(
             chebyshev_order=chebyshev_order,
             rtol=rtol,
             notify_label=notify_label,
+            build_p_sample=True,
         )
         estimateL = dataL["value"]
 
@@ -905,6 +1066,7 @@ def _write_progress_data(
             chebyshev_order=chebyshev_order,
             rtol=rtol,
             notify_label=notify_label,
+            build_p_sample=True,
         )
         estimateR = dataR["value"]
 
