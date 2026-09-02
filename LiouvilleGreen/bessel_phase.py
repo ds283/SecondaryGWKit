@@ -117,9 +117,20 @@ def bessel_phase(
 
     sample_grid = np.linspace(log_min_x, log_max_x, sample_points)
 
-    # try to build an accurate initial condition for Q by comparison with the numerical Bessel function
+    # try to build an accurate initial condition for Q by comparison with the numerical Bessel function.
+    # In the Liouville-Green representation J_nu = sqrt(m) sin(theta) with m = J^2 + Y^2, so the sine of
+    # the phase is J/sqrt(m), *not* J/m. (Asymptotically m ~ 2/(pi x), so J/m grows like sqrt(x) and
+    # exceeds unity for nu greater than about 5.5, which would push asin() out of its domain.)
     init_jv = jv(nu, min_x)
-    init_sin = init_jv / m(min_x)
+    init_sin = init_jv / np.sqrt(m(min_x))
+
+    if not np.isfinite(init_sin) or np.fabs(init_sin) > 1.0:
+        raise RuntimeError(
+            f"bessel_phase: could not build an initial condition for the phase function "
+            f"(nu={nu}, min_x={min_x:.5g}): sin(theta) = J/sqrt(m) = {init_sin:.5g} is not a valid "
+            f"argument for asin()"
+        )
+
     init_phase = np.asin(init_sin)
     init_Q = init_phase / min_x
 
