@@ -158,7 +158,7 @@ _drop_order = [
 ]
 
 # read table configuration should be a Dict with the mapping
-# "method_name" -> {"class": class specifier, "tables_arg": bool}
+# class_name -> {"tables_arg": bool}
 ReadTableConfigType = Dict[str, Any]
 
 
@@ -222,18 +222,7 @@ class Datastore:
             self._ensure_tables()
             self._validate_on_startup()
 
-        # build read table methods
-        if read_table_config is not None:
-            for method_name, method_config in read_table_config:
-
-                def wrapper(self, **kwargs):
-                    if method_config.get("tables_arg", False):
-                        kwargs["tables"] = self._tables
-                    return self._generic_read_table(
-                        method_config["class"], method_name, **kwargs
-                    )
-
-                setattr(self, method_name, wrapper)
+        self._read_table_config: Optional[ReadTableConfigType] = read_table_config
 
         # convert version label to a version object
         # if a serial is specified, we are probably running as a replica, and we need to ensure that the specified
@@ -736,28 +725,47 @@ class Datastore:
 
         return output_flags
 
-    def _generic_read_table(self, cls, method_name: str, **kwargs):
+    def read_table(self, cls, *args, **kwargs):
         """
-        Provide a generic reusable implementation to scan a table in the underlying datastore
+        Provide a generic reusable service to scan a table in the underlying datastore
         :param cls:
-        :param method_name:
+        :param args:
         :param kwargs:
         :return:
         """
+        if self._read_table_config is None:
+            raise RuntimeError("Datastore: the read_table service is not configured")
+
         if isinstance(cls, str):
             class_name = cls
         else:
             class_name = cls.__name__
 
-        with ProfileBatchManager(self._profile_batcher, method_name) as mgr:
+        if class_name not in self._read_table_config:
+            raise RuntimeError(
+                f'Datastore: the read_table service is not available for objects of class "{class_name}"'
+            )
+
+        with ProfileBatchManager(
+            self._profile_batcher, f"read_table[{class_name}]"
+        ) as mgr:
             self._ensure_registered_schema(class_name)
             record = self._schema[class_name]
 
             tab = record["table"]
             factory = self._factories[class_name]
 
+            if not hasattr(factory, "read_table"):
+                raise RuntimeError(
+                    f'Datastore: the object factory for "{class_name}" does not provide a read_table service'
+                )
+
+            config = self._read_table_config[class_name]
+            if config.get("tables_arg", False):
+                kwargs["tables"] = self._tables
+
             with self._engine.begin() as conn:
-                objects = factory.read_table(conn, tab, tables=self._tables, **kwargs)
+                objects = factory.read_table(conn, tab, *args, **kwargs)
 
         return objects
 

@@ -1,10 +1,12 @@
 # Log 03 — Small robustness fixes (F6, B4, D1, D3, D4, F3)
 
 **Prompt:** prompts/backport-modules/03-robustness-fixes.md
-**Commit:** `3e8a984` — Tidy up latent faults in ShardedPool, RayWorkPool and ClientPool
-(recorded via one post-commit amend — see the `[commit-sha-links-stale]` note in
-`IMPLEMENTATION_STATE.md` §3 for why this SHA is necessarily the commit *before* this metadata
-amend, not the amended commit's own final hash — the self-reference cannot converge in one step)
+**Commit:** `e81b145` — Tidy up latent faults in ShardedPool, RayWorkPool and ClientPool
+(corrected 2026-09-04, by prompt 04's housekeeping pass — the SHA originally recorded here,
+`3e8a984`, was itself one amend behind the branch tip, exhibiting the same
+`[commit-sha-links-stale]` drift as prompts 01 and 02; see that entry, now resolved, in
+`IMPLEMENTATION_STATE.md` §4 for the convention adopted from prompt 04 onward to prevent
+recurrence)
 **Date:** 2026-09-03
 **Result:** COMPLETE
 

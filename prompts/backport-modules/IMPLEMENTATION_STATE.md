@@ -2,7 +2,7 @@
 
 **Campaign:** [`README.md`](README.md) · **Source audit:** [`docs/backport-modules-audit.md`](../../docs/backport-modules-audit.md)
 **Baseline commit:** `79f0360` (`main`, clean)
-**Last updated:** 2026-09-03 — after prompt 03
+**Last updated:** 2026-09-04 — after prompt 04
 
 > **Maintenance rule.** Every prompt updates this file *in its own commit*, before committing.
 > Set your row's status, fill in the commit SHA and the log link, and add or clear entries in
@@ -18,10 +18,10 @@ Legend: ⬜ not started · 🟡 in flight · ✅ complete · ⚠️ complete wit
 
 | # | Prompt | Items | Status | Commit | Log |
 |---|---|---|---|---|---|
-| 01 | [Shard-key persistence](01-shard-key-persistence.md) | B1, B5 | ✅ | `fbc3a90` | [log](logs/01-shard-key-persistence.md) |
-| 02 | [Shard-config reader](02-shard-config-reader.md) | B2, D2 | ✅ | `34380ba` | [log](logs/02-shard-config-reader.md) |
-| 03 | [Robustness fixes](03-robustness-fixes.md) | F6, B4, D1, D3, D4, F3 | ✅ | `3e8a984` | [log](logs/03-robustness-fixes.md) |
-| 04 | [`read_table` service](04-read-table-service.md) | B3 | ⬜ | — | — |
+| 01 | [Shard-key persistence](01-shard-key-persistence.md) | B1, B5 | ✅ | `2610abe` | [log](logs/01-shard-key-persistence.md) |
+| 02 | [Shard-config reader](02-shard-config-reader.md) | B2, D2 | ✅ | `9206704` | [log](logs/02-shard-config-reader.md) |
+| 03 | [Robustness fixes](03-robustness-fixes.md) | F6, B4, D1, D3, D4, F3 | ✅ | `e81b145` | [log](logs/03-robustness-fixes.md) |
+| 04 | [`read_table` service](04-read-table-service.md) | B3 | ✅ | *(SHA intentionally not embedded — see §5 note 11)* | [log](logs/04-read-table-service.md) |
 | 05 | [`persist_handler` split](05-persist-handler-split.md) | E1 | ⬜ | — | — |
 
 ### `inventory()` sub-campaign (F2)
@@ -39,7 +39,7 @@ Legend: ⬜ not started · 🟡 in flight · ✅ complete · ⚠️ complete wit
 |---|---|---|---|---|---|
 | 10 | [Verification pass](10-verification.md) | audit §8 + F2 | ⬜ | — | — |
 
-**Progress:** 3 / 10 complete.
+**Progress:** 4 / 10 complete.
 
 ---
 
@@ -59,7 +59,7 @@ Traceability from the audit's finding IDs to the prompt that discharges them.
 | D3 | Latent | `_default_serial_batch_size[table]` raises `KeyError` for unlisted classes | 03 | ✅ (fallback = 500, `ClientPool`'s own default) |
 | D4 | Latent | `_last_num_available_complete` assigned from `_num_store_complete` | 03 | ✅ |
 | F3 | Optional | `object_get("version", …)` by name, dropping the `MetadataConcepts` coupling | 03 | ✅ (taken, not skipped — both `Datastore.py` and `ShardedPool.py`) |
-| B3 | High | `read_table_config` method generation is broken in four ways; replace with `read_table()` | 04 | ⬜ |
+| B3 | High | `read_table_config` method generation is broken in four ways; replace with `read_table()` | 04 | ✅ |
 | E1 | Feature | `store_handler` / `persist_handler` split in `RayWorkPool` — **confirmed wanted** | 05 | ⬜ |
 | F2a | Feature | `inventory()` plumbing: `Datastore`, `ShardedPool`, `_merge_queue`, numeric merge policies | 06 | ⬜ |
 | F2b | Feature | `inventory()` on the 13 replicated-table factories | 07 | ⬜ |
@@ -98,27 +98,28 @@ Traceability from the audit's finding IDs to the prompt that discharges them.
   either fix `LiouvilleGreen/WKBtools.py:6` to `from config.defaults import
   DEFAULT_ABS_TOLERANCE` in whichever prompt first needs a real import (flagging it
   explicitly as an out-of-campaign fix in that prompt's log, since it is not a tracked
-  item), or raise it with the user as a prerequisite before prompt 04. Confirmed again
-  while verifying prompt 03's B4 fix (worked around the same way, see
-  [log](logs/03-robustness-fixes.md) §Verification item 6); still open.
+  item), or raise it with the user as a prerequisite. Confirmed again while verifying
+  prompt 03's B4 fix (worked around the same way, see [log](logs/03-robustness-fixes.md)
+  §Verification item 6) and again in prompt 04's `read_table` verification (see
+  [log](logs/04-read-table-service.md) §Verification item 4); still open. Four prompts in a
+  row have now needed the same stub — worth raising with the user before prompt 05, rather
+  than assuming a fifth prompt will just work around it again.
 
-- **[commit-sha-links-stale]** *(opened by prompt 03, 2026-09-03)* — The commit SHAs recorded for
-  prompts 01 and 02 in §1 (`fbc3a90`, `34380ba`) and in their own logs are **not reachable from the
-  branch tip**: `git merge-base --is-ancestor <sha> HEAD` fails for both. The commits actually on
-  the branch, with identical messages and diffs, are `2610abe` (prompt 01) and `9206704` (prompt 02)
-  respectively. This is a structural consequence of the self-referential requirement in README.md
-  §5.1 — the log/status board must record the commit's own SHA, but editing the file to embed a
-  guessed SHA and then amending to correct it necessarily produces a *new* SHA, which cannot itself
-  be embedded without repeating the problem. It looks like each of the first two prompts amended
-  once to inject a best-guess SHA and stopped, leaving the recorded value one amend behind the true
-  final commit. **Impact:** the commit links for rows 01 and 02 (and inside their log files) point
-  to dangling objects that `git show` can still resolve today but that are not part of the branch
-  history and are liable to be garbage-collected. Not a correctness issue in the shipped code — only
-  a documentation/traceability gap. **Next step:** purely cosmetic; whoever next touches this file
-  can correct rows 01/02's `Commit` column and the two log files' header lines to `2610abe` and
-  `9206704` respectively (verify with `git log --oneline -- prompts/backport-modules/` first, since
-  more amends may have happened by then). Prompt 03 accepts the same unavoidable one-amend
-  staleness for its own SHA rather than chasing convergence — see this prompt's log.
+- **[04-read-table-service]** *(opened by prompt 04, 2026-09-04)* — Audit §8 checklist items 5–6
+  (each `extract_*.py` script constructs its `ShardedPool` and returns the same wavenumber/redshift
+  arrays as before, under a real multi-shard Ray run) need a live Ray cluster with multiple shard
+  actors and were not exercised. The `read_table` implementation itself was verified two other ways
+  instead (see [log](logs/04-read-table-service.md) §Verification items 5–6): a real `Datastore`
+  instance (not Ray-wrapped) against a fresh SQLite file, read via `read_table` and cross-checked
+  against a direct SQL query of the same file; and `ShardedPool.read_table`'s two required negative
+  cases (sharded-class rejection, unconfigured-class rejection) against a minimally-constructed
+  `ShardedPool` object. Neither exercises the actual multi-shard random-selection dispatch
+  (`shard.read_table.remote(...)`) against live shard actors. **Impact:** behavioural confirmation of
+  `read_table` end-to-end, across real shards, under real Ray, is outstanding — same class of gap as
+  the `[01-shard-key-persistence]` issue above. **Next step:** prompt 10 should run at least one
+  `extract_*.py` script (or a minimal equivalent) against a fresh multi-shard `ShardedPool`, and
+  confirm `read_table("wavenumber", ...)`/`read_table("redshift", ...)` return correct data by
+  cross-checking against direct SQL on the shard chosen.
 
 > Add an entry here whenever a prompt finishes with something unresolved: a verification step that
 > could not be run, an assumption that could not be confirmed, a deviation that a later prompt has
@@ -133,7 +134,21 @@ Traceability from the audit's finding IDs to the prompt that discharges them.
 
 ## 4. Resolved issues
 
-*None yet.*
+- **[commit-sha-links-stale]** *(opened by prompt 03, 2026-09-03; resolved by prompt 04, 2026-09-04)*
+  — The commit SHAs recorded for prompts 01, 02 and 03 in §1 (`fbc3a90`, `34380ba`, `3e8a984`) and in
+  their own logs were **not reachable from the branch tip**: `git merge-base --is-ancestor <sha> HEAD`
+  failed for all three. The commits actually on the branch, with identical messages and diffs, are
+  `2610abe` (prompt 01), `9206704` (prompt 02) and `e81b145` (prompt 03). This was a structural
+  consequence of the self-referential requirement in the old wording of README.md §5.1 — the
+  log/status board had to record the commit's own SHA, but editing the file to embed a guessed SHA
+  and then amending to correct it necessarily produces a *new* SHA, which cannot itself be embedded
+  without repeating the problem. Each of the first three prompts amended once to inject a best-guess
+  SHA and stopped, leaving the recorded value one amend behind the true final commit — prompt 03
+  diagnosed this for 01/02 but then reproduced it a third time for its own commit rather than
+  avoiding it. **Fix:** (a) corrected all three `Commit` columns in §1 and both affected log headers
+  (01, 02) plus 03's own log header to the branch-reachable SHAs above; (b) prompt 04 stops writing a
+  guessed self-referential SHA at all — see §5 note 11 for the convention adopted from prompt 04
+  onward, which removes the underlying cause rather than re-chasing convergence each time.
 
 ---
 
@@ -194,3 +209,13 @@ re-deriving.
    prompt 08 must check what that occurrence actually is rather than assuming.
 10. **Zero factories expose `inventory` today.** Prompts 07 and 08 write all ~28 from scratch;
     there is nothing to reconcile against in this tree.
+11. **Do not embed a commit's own SHA in that same commit.** Prompts 01–03 each tried to record
+    their own commit hash in this file and the prompt's log (per README.md §5.1), then amended once
+    to fix a guessed value — but an amend produces a new SHA, so the recorded value was always one
+    amend behind the real branch tip (see the resolved `[commit-sha-links-stale]` issue in §4). From
+    prompt 04 onward: do not write a guessed SHA into `Commit` cells or log headers. Either leave a
+    placeholder that says the SHA is intentionally omitted and why (as prompt 04's own row does), or
+    — if a later prompt's edit touches this file anyway — fill in *previous* prompts' real SHAs
+    (verified reachable with `git merge-base --is-ancestor <sha> HEAD`) while leaving the current
+    prompt's own row/log without one. The gap is harmless: `git log --oneline -- prompts/backport-modules/`
+    always recovers the true mapping.

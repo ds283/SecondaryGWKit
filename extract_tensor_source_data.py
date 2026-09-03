@@ -314,7 +314,7 @@ def run_pipeline(model_data):
     model_proxy = ModelProxy(model)
 
     # array of k-modes matching the SOURCE k-grid
-    source_k_array = ray.get(pool.read_wavenumber_table(units=units, is_source=True))
+    source_k_array = ray.get(pool.read_table("wavenumber", units=units, is_source=True))
 
     def create_k_exit_work(k: wavenumber):
         return pool.object_get(

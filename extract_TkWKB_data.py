@@ -383,7 +383,7 @@ def run_pipeline(model_data):
     # set up/read in array of k-modes matching the SOURCE k-grid
     # for now, we assume data is available for all k-modes in the database
     source_k_array = ray.get(
-        pool.read_wavenumber_table(units=model_cosmology.units, is_source=True)
+        pool.read_table("wavenumber", units=model_cosmology.units, is_source=True)
     )
 
     def create_k_exit_work(k: wavenumber):

@@ -35,8 +35,8 @@ sharded_tables = {
 }
 
 read_table_config = {
-    "read_wavenumber_table": {"class": "wavenumber", "tables_arg": False},
-    "read_redshift_table": {"class": "redshift", "tables_arg": True},
+    "wavenumber": {"tables_arg": False},
+    "redshift": {"tables_arg": True},
 }
 
 

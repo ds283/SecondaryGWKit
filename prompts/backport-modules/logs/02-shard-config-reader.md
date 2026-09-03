@@ -1,7 +1,10 @@
 # Log 02 — Fix shard-key config reader (B2 + D2)
 
 **Prompt:** prompts/backport-modules/02-shard-config-reader.md
-**Commit:** `34380ba` — Fix shard-key config reader in ShardedPool._read_shard_data
+**Commit:** `9206704` — Fix shard-key config reader in ShardedPool._read_shard_data
+(corrected 2026-09-04, by prompt 04's housekeeping pass — the SHA originally recorded here,
+`34380ba`, was one amend behind the branch tip; see the `[commit-sha-links-stale]` entry, now
+resolved, in `IMPLEMENTATION_STATE.md` §4)
 **Date:** 2026-09-03
 **Result:** COMPLETE
 

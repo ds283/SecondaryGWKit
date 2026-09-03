@@ -772,9 +772,9 @@ def run_pipeline(model_data):
 
     # set up/read in array of k-modes matching the SOURCE and RESPONSE k-grids
     # for now, we assume data is available for all k-modes in the database
-    source_k_array = ray.get(pool.read_wavenumber_table(units=units, is_source=True))
+    source_k_array = ray.get(pool.read_table("wavenumber", units=units, is_source=True))
     response_k_array = ray.get(
-        pool.read_wavenumber_table(units=units, is_response=True)
+        pool.read_table("wavenumber", units=units, is_response=True)
     )
 
     def create_k_exit_work(k: wavenumber):
@@ -818,12 +818,12 @@ def run_pipeline(model_data):
     )
 
     z_source_array = ray.get(
-        pool.read_redshift_table(is_source=True, model_proxy=model_proxy)
+        pool.read_table("redshift", is_source=True, model_proxy=model_proxy)
     )
     z_source_sample = redshift_array(z_array=z_source_array)
 
     z_response_array = ray.get(
-        pool.read_redshift_table(is_response=True, model_proxy=model_proxy)
+        pool.read_table("redshift", is_response=True, model_proxy=model_proxy)
     )
     z_response_sample = redshift_array(z_array=z_response_array)
 

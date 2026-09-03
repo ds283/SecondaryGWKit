@@ -1,7 +1,10 @@
 # Log 01 — Fix shard-key persistence (B1 + B5)
 
 **Prompt:** prompts/backport-modules/01-shard-key-persistence.md
-**Commit:** `fbc3a90` — Fix shard-key persistence in ShardedPool
+**Commit:** `2610abe` — Fix shard-key persistence in ShardedPool
+(corrected 2026-09-04, by prompt 04's housekeeping pass — the SHA originally recorded here,
+`fbc3a90`, was one amend behind the branch tip; see the `[commit-sha-links-stale]` entry, now
+resolved, in `IMPLEMENTATION_STATE.md` §4)
 **Date:** 2026-09-03
 **Result:** COMPLETE
 
