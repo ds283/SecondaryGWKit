@@ -2,7 +2,7 @@
 
 **Campaign:** [`README.md`](README.md) · **Source audit:** [`docs/backport-modules-audit.md`](../../docs/backport-modules-audit.md)
 **Baseline commit:** `79f0360` (`main`, clean)
-**Last updated:** 2026-09-03 — after prompt 01
+**Last updated:** 2026-09-03 — after prompt 02
 
 > **Maintenance rule.** Every prompt updates this file *in its own commit*, before committing.
 > Set your row's status, fill in the commit SHA and the log link, and add or clear entries in
@@ -19,7 +19,7 @@ Legend: ⬜ not started · 🟡 in flight · ✅ complete · ⚠️ complete wit
 | # | Prompt | Items | Status | Commit | Log |
 |---|---|---|---|---|---|
 | 01 | [Shard-key persistence](01-shard-key-persistence.md) | B1, B5 | ✅ | `fbc3a90` | [log](logs/01-shard-key-persistence.md) |
-| 02 | [Shard-config reader](02-shard-config-reader.md) | B2, D2 | ⬜ | — | — |
+| 02 | [Shard-config reader](02-shard-config-reader.md) | B2, D2 | ✅ | `34380ba` | [log](logs/02-shard-config-reader.md) |
 | 03 | [Robustness fixes](03-robustness-fixes.md) | F6, B4, D1, D3, D4, F3 | ⬜ | — | — |
 | 04 | [`read_table` service](04-read-table-service.md) | B3 | ⬜ | — | — |
 | 05 | [`persist_handler` split](05-persist-handler-split.md) | E1 | ⬜ | — | — |
@@ -39,7 +39,7 @@ Legend: ⬜ not started · 🟡 in flight · ✅ complete · ⚠️ complete wit
 |---|---|---|---|---|---|
 | 10 | [Verification pass](10-verification.md) | audit §8 + F2 | ⬜ | — | — |
 
-**Progress:** 1 / 10 complete.
+**Progress:** 2 / 10 complete.
 
 ---
 
@@ -51,8 +51,8 @@ Traceability from the audit's finding IDs to the prompt that discharges them.
 |---|---|---|---|---|
 | B1 | **Critical** | `_assign_shard_keys` inserts `key_id` into a `key_serial` PK column → silent shard misrouting after restart | 01 | ✅ |
 | B5 | Low–Medium | `_assign_shard_keys` does not dedup within a batch (hard prerequisite for B1) | 01 | ✅ |
-| B2 | High | `_read_shard_data` reads `row.key_attr` from a `key_type`-only select → `AttributeError` on every reopen | 02 | ⬜ |
-| D2 | Latent | `raise print(f"…")` raises `TypeError`, and the branch is unreachable | 02 | ⬜ |
+| B2 | High | `_read_shard_data` reads `row.key_attr` from a `key_type`-only select → `AttributeError` on every reopen | 02 | ✅ |
+| D2 | Latent | `raise print(f"…")` raises `TypeError`, and the branch is unreachable | 02 | ✅ (kept & repaired — see log; branch found reachable, not dead) |
 | F6 | Low | Unguarded empty-list insert into `sharded_tables` | 03 | ⬜ |
 | B4 | Low | `RayWorkPool` rejects a task builder returning `None` | 03 | ⬜ |
 | D1 | Latent | `ShardedPool.__init__` error path references non-existent `self._db_file` | 03 | ⬜ |
@@ -83,6 +83,22 @@ Traceability from the audit's finding IDs to the prompt that discharges them.
   behavioural confirmation of the fix on a real pipeline is outstanding. **Next step:** prompt 10
   should run a real (or minimal) `SGWK` pipeline against a fresh datastore, inspect for `MISMATCH`
   output, and do a stop/resume cycle.
+
+- **[02-shard-config-reader]** *(opened by prompt 02, 2026-09-03)* — `import
+  Datastore.SQL.ShardedPool` (and therefore `Datastore.SQL.Datastore`,
+  `ComputeTargets`, and everything downstream) currently fails in this tree:
+  `LiouvilleGreen/WKBtools.py:6` does `from defaults import DEFAULT_ABS_TOLERANCE`, but
+  the top-level `defaults.py` module was deleted in `a2bd966` (2025-12-15 — the same
+  commit that introduced B2) and its contents moved to `config/defaults.py`. Not one of
+  this campaign's tracked items (B1–B5/D1–D4/F2/F3/F6/E1), so not fixed here. **Impact:**
+  blocks any real (non-static) exercise of these modules — prompt 02's own behavioural
+  test worked around it with a `sys.modules` stub inside a throwaway test script rather
+  than touching the source, but prompts 04/05/09/10, which need to actually run this
+  code, will hit the same failure unless someone fixes the import first. **Next step:**
+  either fix `LiouvilleGreen/WKBtools.py:6` to `from config.defaults import
+  DEFAULT_ABS_TOLERANCE` in whichever prompt first needs a real import (flagging it
+  explicitly as an out-of-campaign fix in that prompt's log, since it is not a tracked
+  item), or raise it with the user as a prerequisite before prompt 04.
 
 > Add an entry here whenever a prompt finishes with something unresolved: a verification step that
 > could not be run, an assumption that could not be confirmed, a deviation that a later prompt has

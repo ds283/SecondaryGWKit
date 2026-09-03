@@ -339,14 +339,14 @@ class ShardedPool:
             for row in shard_key_configs:
                 num_config += 1
                 if num_config == 1:
-                    if row.key_attr != self._ShardKeyType_name:
+                    if row.key_type != self._ShardKeyType_name:
                         raise RuntimeError(
-                            f'Existing ShardedPool was configured with shard key type "{row.key_attr}", but provided type was "{self._ShardKeyType_name}"'
+                            f'Existing ShardedPool was configured with shard key type "{row.key_type}", but provided type was "{self._ShardKeyType_name}"'
                         )
 
                 elif num_config > 1:
-                    raise print(
-                        f'ShardedPool has unexpected multiple shard key types: {num_config}="{row.key_attr}"'
+                    raise RuntimeError(
+                        f'ShardedPool has unexpected multiple shard key types: {num_config}="{row.key_type}"'
                     )
             if num_config == 0:
                 raise RuntimeError(f"No configured shard key type was found")
