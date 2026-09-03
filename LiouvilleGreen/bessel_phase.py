@@ -7,7 +7,7 @@ from scipy.special import yv, jv
 from defaults import DEFAULT_ABS_TOLERANCE, DEFAULT_REL_TOLERANCE
 from .constants import TWO_PI
 from .phase_spline import phase_spline
-from .range_reduce_mod_2pi import simple_mod_2pi, range_reduce_mod_2pi
+from .range_reduce_mod_2pi import simple_mod_2pi
 
 DEFAULT_SAMPLE_DENSITY = 250
 
@@ -228,30 +228,23 @@ def bessel_phase(
     phi_div_2pi, phi_mod_2pi = simple_mod_2pi(phi)
 
     def range_reduce_phase(log_x, Q):
+        # The (cycle count, remainder) split is genuinely needed here: the raw phase x*Q reaches
+        # ~1e15 in production, and the remainder is what gets splined as a smooth O(1) function.
+        # Splining the raw phase instead would discard every significant digit.
+        #
+        # This previously used range_reduce_mod_2pi(x, Q), which avoided forming the rounded
+        # product x*Q on the theory that this preserved precision. It was measured not to: it was
+        # no more accurate than the plain reduction below, worse in most cases, and ~21x slower
+        # because it called sympy.factorint on every sample. See the module docstring of
+        # LiouvilleGreen.range_reduce_mod_2pi for the measurements.
         x = np.exp(log_x)
-        div_2pi, mod_2pi = range_reduce_mod_2pi(x, Q)
-        # div_2pi, mod_2pi = simple_mod_2pi(x * Q)
-
-        # if (
-        #     div_2pi_rr != div_2pi
-        #     or fabs(mod_2pi_rr / mod_2pi) > 1.0 + 1e-7
-        #     or fabs(mod_2pi / mod_2pi) < 1.0 - 1e-7
-        # ):
-        #     raise RuntimeError(
-        #         f"bessel_phase: range reduce difference | x={x:.5g}, Q={Q:.5g}, xQ={x*Q:.5g}, div_2pi={div_2pi}, div_2pi_rr={div_2pi_rr}, mod_2pi={mod_2pi:.5g}, mod_2pi_rr={mod_2pi_rr:.5g}"
-        #     )
+        div_2pi, mod_2pi = simple_mod_2pi(x * Q)
 
         div_2pi = div_2pi - phi_div_2pi
         mod_2pi = mod_2pi - phi_mod_2pi
         if mod_2pi < 0.0:
             div_2pi = div_2pi - 1
             mod_2pi = mod_2pi + TWO_PI
-
-        # if div_2pi < 0:
-        #     raw_div_2pi, raw_mod_2pi = range_reduce_mod_2pi(x, Q)
-        #     raise RuntimeError(
-        #         f"bessel_phase: found negative phase div 2pi: log_x={log_x:.5g}, x={x:.5g}, Q={Q:.5g}, xQ div 2pi={raw_div_2pi}, xQ mod 2pi={raw_mod_2pi:.5g}, (xQ - phi) div 2pi={div_2pi}, (xQ - phi) mod 2pi={mod_2pi:.5g}, phi={phi:.5g}, phi div 2pi={phi_div_2pi}, phi mod 2pi={phi_mod_2pi:.5g}"
-        #     )
 
         return div_2pi, mod_2pi
 

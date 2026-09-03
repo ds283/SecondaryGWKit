@@ -2,7 +2,7 @@ from math import fmod, floor, fabs
 from typing import Tuple
 
 from LiouvilleGreen.constants import TWO_PI
-from LiouvilleGreen.range_reduce_mod_2pi import range_reduce_mod_2pi
+from LiouvilleGreen.range_reduce_mod_2pi import simple_mod_2pi
 from defaults import DEFAULT_ABS_TOLERANCE
 
 
@@ -23,13 +23,21 @@ def WKB_mod_2pi(theta: float):
     return theta_div_2pi, theta_mod_2pi
 
 
-# similar to LiouvilleGreen.range_reduce_mod_2pi.range_reduce_mod_2pi, but with the
-# same phase convention as WKB_mod_2pi above.
-# Also allows an offset mod_2pi_init
+# Decompose the product big_number*small_number into a cycle count plus a remainder, using the
+# same phase convention as WKB_mod_2pi above. Also allows an offset mod_2pi_init.
+#
+# NOTE this used to call range_reduce_mod_2pi(), a prime-factorisation scheme that avoided forming
+# the rounded product big_number*small_number. That scheme was measured to be no more accurate
+# than the plain reduction used here -- worse in most cases -- and ~21x slower, so it has been
+# removed; see the docstring of LiouvilleGreen.range_reduce_mod_2pi for the measurements.
+#
+# The remainder produced here is only ever used as an *argument to sin/cos* via a phase spline. If
+# you find yourself wanting the phase itself, do not reconstruct it as div*TWO_PI + mod and reduce
+# again: pass the unreduced value to libm, which reduces more accurately than we can. See the
+# module docstring of LiouvilleGreen.range_reduce_mod_2pi.
 def WKB_product_mod_2pi(big_number: float, small_number: float, mod_2pi_init: float):
-    # use custom range reduction to (try to) preserve precision in the product big_number*small_number (mod 2pi)
-    # theta_div_2pi and theta_mod_2pi should have the same sign as the product big_number*small_number
-    theta_div_2pi, theta_mod_2pi = range_reduce_mod_2pi(big_number, small_number)
+    # theta_div_2pi and theta_mod_2pi have the same sign as the product big_number*small_number
+    theta_div_2pi, theta_mod_2pi = simple_mod_2pi(big_number * small_number)
 
     # mod_2pi_init is an offset that should be added to mod_2pi. We then (possibly) have to range-reduce again.
     theta_mod_2pi = theta_mod_2pi + mod_2pi_init

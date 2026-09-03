@@ -344,8 +344,12 @@ def stage_2_evolution(
 
         # walk through the sampled values returned from solve_ivp, computing theta div 2pi and theta mod 2pi at each step
         for u, Q in zip(batch_u, batch_Q):
-            # WKB_product_mod_2pi uses our custom range reduction method in an attempt to maintain precision mod 2pi when the product
-            # omega_WKB_init * (1+u) * Q becomes very large
+            # WKB_product_mod_2pi splits the product omega_WKB_init * (1+u) * Q into an integer
+            # cycle count plus a remainder, which is what the phase spline needs; the product can
+            # become very large. Note this used to route through a bespoke range-reduction scheme
+            # that avoided forming the rounded product, which was measured to give no accuracy
+            # benefit and has been removed -- see the module docstring of
+            # LiouvilleGreen.range_reduce_mod_2pi.
             theta_div_2pi, theta_mod_2pi = WKB_product_mod_2pi(
                 omega_init * (1.0 + u), Q, theta_mod_2pi_init
             )
