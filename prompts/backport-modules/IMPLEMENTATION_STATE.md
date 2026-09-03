@@ -2,7 +2,7 @@
 
 **Campaign:** [`README.md`](README.md) · **Source audit:** [`docs/backport-modules-audit.md`](../../docs/backport-modules-audit.md)
 **Baseline commit:** `79f0360` (`main`, clean)
-**Last updated:** 2026-09-03 — by the planning pass (no code written yet)
+**Last updated:** 2026-09-03 — after prompt 01
 
 > **Maintenance rule.** Every prompt updates this file *in its own commit*, before committing.
 > Set your row's status, fill in the commit SHA and the log link, and add or clear entries in
@@ -18,7 +18,7 @@ Legend: ⬜ not started · 🟡 in flight · ✅ complete · ⚠️ complete wit
 
 | # | Prompt | Items | Status | Commit | Log |
 |---|---|---|---|---|---|
-| 01 | [Shard-key persistence](01-shard-key-persistence.md) | B1, B5 | ⬜ | — | — |
+| 01 | [Shard-key persistence](01-shard-key-persistence.md) | B1, B5 | ✅ | `fbc3a90` | [log](logs/01-shard-key-persistence.md) |
 | 02 | [Shard-config reader](02-shard-config-reader.md) | B2, D2 | ⬜ | — | — |
 | 03 | [Robustness fixes](03-robustness-fixes.md) | F6, B4, D1, D3, D4, F3 | ⬜ | — | — |
 | 04 | [`read_table` service](04-read-table-service.md) | B3 | ⬜ | — | — |
@@ -39,7 +39,7 @@ Legend: ⬜ not started · 🟡 in flight · ✅ complete · ⚠️ complete wit
 |---|---|---|---|---|---|
 | 10 | [Verification pass](10-verification.md) | audit §8 + F2 | ⬜ | — | — |
 
-**Progress:** 0 / 10 complete.
+**Progress:** 1 / 10 complete.
 
 ---
 
@@ -49,8 +49,8 @@ Traceability from the audit's finding IDs to the prompt that discharges them.
 
 | ID | Severity | Description | Prompt | Status |
 |---|---|---|---|---|
-| B1 | **Critical** | `_assign_shard_keys` inserts `key_id` into a `key_serial` PK column → silent shard misrouting after restart | 01 | ⬜ |
-| B5 | Low–Medium | `_assign_shard_keys` does not dedup within a batch (hard prerequisite for B1) | 01 | ⬜ |
+| B1 | **Critical** | `_assign_shard_keys` inserts `key_id` into a `key_serial` PK column → silent shard misrouting after restart | 01 | ✅ |
+| B5 | Low–Medium | `_assign_shard_keys` does not dedup within a batch (hard prerequisite for B1) | 01 | ✅ |
 | B2 | High | `_read_shard_data` reads `row.key_attr` from a `key_type`-only select → `AttributeError` on every reopen | 02 | ⬜ |
 | D2 | Latent | `raise print(f"…")` raises `TypeError`, and the branch is unreachable | 02 | ⬜ |
 | F6 | Low | Unguarded empty-list insert into `sharded_tables` | 03 | ⬜ |
@@ -73,7 +73,16 @@ Traceability from the audit's finding IDs to the prompt that discharges them.
 
 ## 3. Active and unresolved issues
 
-*Nothing yet — the campaign has not started.*
+- **[01-shard-key-persistence]** *(opened by prompt 01, 2026-09-03)* — Audit §8 checklist items
+  1–2 (a fresh `SGWK` datastore has no `_assign_shard_keys MISMATCH` lines and every
+  `shard_keys.key_serial` equals its `wavenumber.serial`; a stopped-and-resumed run finds all
+  previously-written records) need a real Ray pipeline run and were not exercised. The B1/B5 code
+  fix itself was verified against synthetic sqlite fixtures built for this prompt (see
+  [log](logs/01-shard-key-persistence.md) §Verification), not against a genuine `SGWK` pipeline
+  run — no current-schema `SGWK` datastore exists in the tree to test against. **Impact:**
+  behavioural confirmation of the fix on a real pipeline is outstanding. **Next step:** prompt 10
+  should run a real (or minimal) `SGWK` pipeline against a fresh datastore, inspect for `MISMATCH`
+  output, and do a stop/resume cycle.
 
 > Add an entry here whenever a prompt finishes with something unresolved: a verification step that
 > could not be run, an assumption that could not be confirmed, a deviation that a later prompt has

@@ -769,6 +769,7 @@ class ShardedPool:
 
         # assign any shard keys that we can, without going out to the database
         # (because this is bound to be slower)
+        seen_store_ids = set()
         missing_keys = []
         for item in data:
             if not isinstance(item, self._ShardKeyType):
@@ -776,8 +777,12 @@ class ShardedPool:
                     f'shard keys should be of type "{self._ShardKeyType_name}"'
                 )
 
-            if item.store_id not in self._shard_keys:
+            if (
+                item.store_id not in self._shard_keys
+                and item.store_id not in seen_store_ids
+            ):
                 missing_keys.append(item)
+                seen_store_ids.add(item.store_id)
 
         # if no work to do, return
         if len(missing_keys) == 0:
@@ -798,10 +803,19 @@ class ShardedPool:
                     new_shard = list(self._shards.keys()).pop()
 
                 # insert a new record for this key
-                conn.execute(
+                result = conn.execute(
                     sqla.insert(self._shard_key_table),
-                    {"key_id": item.store_id, "shard_id": new_shard},
+                    {"key_serial": item.store_id, "shard_id": new_shard},
                 )
+                assigned_serial = result.inserted_primary_key[0]
+
+                if assigned_serial != item.store_id:
+                    print(
+                        f"!! _assign_shard_keys MISMATCH: "
+                        f"store_id={item.store_id}, "
+                        f"assigned key_serial={assigned_serial}, "
+                        f"shard={new_shard}"
+                    )
 
                 self._shard_keys[item.store_id] = new_shard
                 loads[new_shard] = loads[new_shard] + 1
