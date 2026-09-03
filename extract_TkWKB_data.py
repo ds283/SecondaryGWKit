@@ -402,6 +402,7 @@ def run_pipeline(model_data):
         task_builder=create_k_exit_work,
         compute_handler=None,
         store_handler=None,
+        persist_handler=None,
         store_results=True,
         title=f"QUERY K_EXIT VALUES FOR {model_label}",
     )
@@ -438,6 +439,7 @@ def run_pipeline(model_data):
         task_builder=build_plot_Tk_work,
         compute_handler=None,
         store_handler=None,
+        persist_handler=None,
         available_handler=None,
         validation_handler=None,
         post_handler=None,

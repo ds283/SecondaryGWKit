@@ -2,7 +2,7 @@
 
 **Campaign:** [`README.md`](README.md) · **Source audit:** [`docs/backport-modules-audit.md`](../../docs/backport-modules-audit.md)
 **Baseline commit:** `79f0360` (`main`, clean)
-**Last updated:** 2026-09-04 — after prompt 04, plus an out-of-sequence fix for
+**Last updated:** 2026-09-04 — after prompt 05, plus an out-of-sequence fix for
 `[02-shard-config-reader]` (see §4)
 
 > **Maintenance rule.** Every prompt updates this file *in its own commit*, before committing.
@@ -23,7 +23,7 @@ Legend: ⬜ not started · 🟡 in flight · ✅ complete · ⚠️ complete wit
 | 02 | [Shard-config reader](02-shard-config-reader.md) | B2, D2 | ✅ | `9206704` | [log](logs/02-shard-config-reader.md) |
 | 03 | [Robustness fixes](03-robustness-fixes.md) | F6, B4, D1, D3, D4, F3 | ✅ | `e81b145` | [log](logs/03-robustness-fixes.md) |
 | 04 | [`read_table` service](04-read-table-service.md) | B3 | ✅ | *(SHA intentionally not embedded — see §5 note 11)* | [log](logs/04-read-table-service.md) |
-| 05 | [`persist_handler` split](05-persist-handler-split.md) | E1 | ⬜ | — | — |
+| 05 | [`persist_handler` split](05-persist-handler-split.md) | E1 | ✅ | *(SHA intentionally not embedded — see §5 note 11)* | [log](logs/05-persist-handler-split.md) |
 
 ### `inventory()` sub-campaign (F2)
 
@@ -40,7 +40,7 @@ Legend: ⬜ not started · 🟡 in flight · ✅ complete · ⚠️ complete wit
 |---|---|---|---|---|---|
 | 10 | [Verification pass](10-verification.md) | audit §8 + F2 | ⬜ | — | — |
 
-**Progress:** 4 / 10 complete.
+**Progress:** 5 / 10 complete.
 
 ---
 
@@ -61,7 +61,7 @@ Traceability from the audit's finding IDs to the prompt that discharges them.
 | D4 | Latent | `_last_num_available_complete` assigned from `_num_store_complete` | 03 | ✅ |
 | F3 | Optional | `object_get("version", …)` by name, dropping the `MetadataConcepts` coupling | 03 | ✅ (taken, not skipped — both `Datastore.py` and `ShardedPool.py`) |
 | B3 | High | `read_table_config` method generation is broken in four ways; replace with `read_table()` | 04 | ✅ |
-| E1 | Feature | `store_handler` / `persist_handler` split in `RayWorkPool` — **confirmed wanted** | 05 | ⬜ |
+| E1 | Feature | `store_handler` / `persist_handler` split in `RayWorkPool` — **confirmed wanted** | 05 | ✅ |
 | F2a | Feature | `inventory()` plumbing: `Datastore`, `ShardedPool`, `_merge_queue`, numeric merge policies | 06 | ⬜ |
 | F2b | Feature | `inventory()` on the 13 replicated-table factories | 07 | ⬜ |
 | F2c | Feature | `inventory()` on the 15 sharded-table factories + `inventory_config` | 08 | ⬜ |
@@ -100,6 +100,22 @@ Traceability from the audit's finding IDs to the prompt that discharges them.
   `extract_*.py` script (or a minimal equivalent) against a fresh multi-shard `ShardedPool`, and
   confirm `read_table("wavenumber", ...)`/`read_table("redshift", ...)` return correct data by
   cross-checking against direct SQL on the shard chosen.
+
+- **[05-persist-handler-split]** *(opened by prompt 05, 2026-09-04)* — Audit §8 checklist item 7
+  (a real driver run exercising the `store_handler`/`persist_handler` split end-to-end, confirming
+  results are still stored exactly as before) needs a live Ray cluster and was not exercised. The
+  split itself was verified statically and with a synthetic in-process harness instead (see
+  [log](logs/05-persist-handler-split.md) §Verification items 1-5): grep-verified 35/35
+  `store_handler=None`/`persist_handler=None` pairings across all 7 call-site files, 45 unchanged
+  `RayWorkPool(` constructions, `py_compile` and `black --check` clean on all 8 touched files, and a
+  throwaway harness exercising `_default_store_handler`/`_default_persist_handler` call order and
+  both constructor-validation branches directly against the real `RayTools.RayWorkPool` module.
+  Neither exercises an actual Ray task graph. **Impact:** behavioural confirmation that a real
+  `RayWorkPool` run still stores results correctly under the new two-hook split is outstanding — same
+  class of gap as `[01-shard-key-persistence]` and `[04-read-table-service]` above. **Next step:**
+  prompt 10 should run at least one real (or minimal) Ray-backed `RayWorkPool` with default handlers
+  and confirm results are stored identically to a pre-split baseline (or, if no baseline is
+  practical, confirm the stored objects are correct against a direct datastore query).
 
 > Add an entry here whenever a prompt finishes with something unresolved: a verification step that
 > could not be run, an assumption that could not be confirmed, a deviation that a later prompt has
