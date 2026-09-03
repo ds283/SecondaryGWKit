@@ -2,7 +2,8 @@
 
 **Campaign:** [`README.md`](README.md) · **Source audit:** [`docs/backport-modules-audit.md`](../../docs/backport-modules-audit.md)
 **Baseline commit:** `79f0360` (`main`, clean)
-**Last updated:** 2026-09-04 — after prompt 04
+**Last updated:** 2026-09-04 — after prompt 04, plus an out-of-sequence fix for
+`[02-shard-config-reader]` (see §4)
 
 > **Maintenance rule.** Every prompt updates this file *in its own commit*, before committing.
 > Set your row's status, fill in the commit SHA and the log link, and add or clear entries in
@@ -84,27 +85,6 @@ Traceability from the audit's finding IDs to the prompt that discharges them.
   should run a real (or minimal) `SGWK` pipeline against a fresh datastore, inspect for `MISMATCH`
   output, and do a stop/resume cycle.
 
-- **[02-shard-config-reader]** *(opened by prompt 02, 2026-09-03)* — `import
-  Datastore.SQL.ShardedPool` (and therefore `Datastore.SQL.Datastore`,
-  `ComputeTargets`, and everything downstream) currently fails in this tree:
-  `LiouvilleGreen/WKBtools.py:6` does `from defaults import DEFAULT_ABS_TOLERANCE`, but
-  the top-level `defaults.py` module was deleted in `a2bd966` (2025-12-15 — the same
-  commit that introduced B2) and its contents moved to `config/defaults.py`. Not one of
-  this campaign's tracked items (B1–B5/D1–D4/F2/F3/F6/E1), so not fixed here. **Impact:**
-  blocks any real (non-static) exercise of these modules — prompt 02's own behavioural
-  test worked around it with a `sys.modules` stub inside a throwaway test script rather
-  than touching the source, but prompts 04/05/09/10, which need to actually run this
-  code, will hit the same failure unless someone fixes the import first. **Next step:**
-  either fix `LiouvilleGreen/WKBtools.py:6` to `from config.defaults import
-  DEFAULT_ABS_TOLERANCE` in whichever prompt first needs a real import (flagging it
-  explicitly as an out-of-campaign fix in that prompt's log, since it is not a tracked
-  item), or raise it with the user as a prerequisite. Confirmed again while verifying
-  prompt 03's B4 fix (worked around the same way, see [log](logs/03-robustness-fixes.md)
-  §Verification item 6) and again in prompt 04's `read_table` verification (see
-  [log](logs/04-read-table-service.md) §Verification item 4); still open. Four prompts in a
-  row have now needed the same stub — worth raising with the user before prompt 05, rather
-  than assuming a fifth prompt will just work around it again.
-
 - **[04-read-table-service]** *(opened by prompt 04, 2026-09-04)* — Audit §8 checklist items 5–6
   (each `extract_*.py` script constructs its `ShardedPool` and returns the same wavenumber/redshift
   arrays as before, under a real multi-shard Ray run) need a live Ray cluster with multiple shard
@@ -133,6 +113,19 @@ Traceability from the audit's finding IDs to the prompt that discharges them.
 ---
 
 ## 4. Resolved issues
+
+- **[02-shard-config-reader]** *(opened by prompt 02, 2026-09-03; resolved 2026-09-04, outside the
+  prompt sequence, at the user's direct request)* — `LiouvilleGreen/WKBtools.py:6` did
+  `from defaults import DEFAULT_ABS_TOLERANCE`, but the top-level `defaults.py` module was deleted in
+  `a2bd966` (2025-12-15 — the same commit that introduced B2) and its contents moved to
+  `config/defaults.py`. This broke any real (non-stubbed) import of `Datastore.SQL.ShardedPool` and
+  everything downstream, and had been worked around with a `sys.modules` stub in throwaway
+  verification harnesses across prompts 02, 03 and 04. **Fix:** one-line import correction to
+  `from config.defaults import DEFAULT_ABS_TOLERANCE`; confirmed `import Datastore.SQL.ShardedPool`
+  now succeeds with no stub required. Not one of this campaign's tracked audit items
+  (B1–B5/D1–D4/F2/F3/F6/E1) — fixed as a standalone commit rather than folded into any prompt's
+  commit, since it did not originate from this campaign's audit and touches a file (`WKBtools.py`)
+  outside every prompt's stated file list.
 
 - **[commit-sha-links-stale]** *(opened by prompt 03, 2026-09-03; resolved by prompt 04, 2026-09-04)*
   — The commit SHAs recorded for prompts 01, 02 and 03 in §1 (`fbc3a90`, `34380ba`, `3e8a984`) and in
