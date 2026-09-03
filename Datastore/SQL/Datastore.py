@@ -73,7 +73,6 @@ from Datastore.SQL.ObjectFactories.wavenumber import (
     sqla_wavenumber_exit_time_factory,
 )
 from Datastore.SQL.ProfileAgent import ProfileBatcher, ProfileBatchManager
-from MetadataConcepts import version
 from utilities import WallclockTimer
 
 VERSION_ID_LENGTH = 64
@@ -243,7 +242,7 @@ class Datastore:
         if version_serial is not None:
             version_payload["serial"] = version_serial
 
-        self._version = self.object_get(version, **version_payload)
+        self._version = self.object_get("version", **version_payload)
 
         if version_serial is not None and self._version.store_id != version_serial:
             raise IntegrityError(

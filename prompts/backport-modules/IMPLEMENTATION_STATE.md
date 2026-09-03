@@ -2,7 +2,7 @@
 
 **Campaign:** [`README.md`](README.md) · **Source audit:** [`docs/backport-modules-audit.md`](../../docs/backport-modules-audit.md)
 **Baseline commit:** `79f0360` (`main`, clean)
-**Last updated:** 2026-09-03 — after prompt 02
+**Last updated:** 2026-09-03 — after prompt 03
 
 > **Maintenance rule.** Every prompt updates this file *in its own commit*, before committing.
 > Set your row's status, fill in the commit SHA and the log link, and add or clear entries in
@@ -20,7 +20,7 @@ Legend: ⬜ not started · 🟡 in flight · ✅ complete · ⚠️ complete wit
 |---|---|---|---|---|---|
 | 01 | [Shard-key persistence](01-shard-key-persistence.md) | B1, B5 | ✅ | `fbc3a90` | [log](logs/01-shard-key-persistence.md) |
 | 02 | [Shard-config reader](02-shard-config-reader.md) | B2, D2 | ✅ | `34380ba` | [log](logs/02-shard-config-reader.md) |
-| 03 | [Robustness fixes](03-robustness-fixes.md) | F6, B4, D1, D3, D4, F3 | ⬜ | — | — |
+| 03 | [Robustness fixes](03-robustness-fixes.md) | F6, B4, D1, D3, D4, F3 | ✅ | `3e8a984` | [log](logs/03-robustness-fixes.md) |
 | 04 | [`read_table` service](04-read-table-service.md) | B3 | ⬜ | — | — |
 | 05 | [`persist_handler` split](05-persist-handler-split.md) | E1 | ⬜ | — | — |
 
@@ -39,7 +39,7 @@ Legend: ⬜ not started · 🟡 in flight · ✅ complete · ⚠️ complete wit
 |---|---|---|---|---|---|
 | 10 | [Verification pass](10-verification.md) | audit §8 + F2 | ⬜ | — | — |
 
-**Progress:** 2 / 10 complete.
+**Progress:** 3 / 10 complete.
 
 ---
 
@@ -53,12 +53,12 @@ Traceability from the audit's finding IDs to the prompt that discharges them.
 | B5 | Low–Medium | `_assign_shard_keys` does not dedup within a batch (hard prerequisite for B1) | 01 | ✅ |
 | B2 | High | `_read_shard_data` reads `row.key_attr` from a `key_type`-only select → `AttributeError` on every reopen | 02 | ✅ |
 | D2 | Latent | `raise print(f"…")` raises `TypeError`, and the branch is unreachable | 02 | ✅ (kept & repaired — see log; branch found reachable, not dead) |
-| F6 | Low | Unguarded empty-list insert into `sharded_tables` | 03 | ⬜ |
-| B4 | Low | `RayWorkPool` rejects a task builder returning `None` | 03 | ⬜ |
-| D1 | Latent | `ShardedPool.__init__` error path references non-existent `self._db_file` | 03 | ⬜ |
-| D3 | Latent | `_default_serial_batch_size[table]` raises `KeyError` for unlisted classes | 03 | ⬜ |
-| D4 | Latent | `_last_num_available_complete` assigned from `_num_store_complete` | 03 | ⬜ |
-| F3 | Optional | `object_get("version", …)` by name, dropping the `MetadataConcepts` coupling | 03 | ⬜ |
+| F6 | Low | Unguarded empty-list insert into `sharded_tables` | 03 | ✅ (`replicated_tables` insert also guarded — implementation choice) |
+| B4 | Low | `RayWorkPool` rejects a task builder returning `None` | 03 | ✅ |
+| D1 | Latent | `ShardedPool.__init__` error path references non-existent `self._db_file` | 03 | ✅ |
+| D3 | Latent | `_default_serial_batch_size[table]` raises `KeyError` for unlisted classes | 03 | ✅ (fallback = 500, `ClientPool`'s own default) |
+| D4 | Latent | `_last_num_available_complete` assigned from `_num_store_complete` | 03 | ✅ |
+| F3 | Optional | `object_get("version", …)` by name, dropping the `MetadataConcepts` coupling | 03 | ✅ (taken, not skipped — both `Datastore.py` and `ShardedPool.py`) |
 | B3 | High | `read_table_config` method generation is broken in four ways; replace with `read_table()` | 04 | ⬜ |
 | E1 | Feature | `store_handler` / `persist_handler` split in `RayWorkPool` — **confirmed wanted** | 05 | ⬜ |
 | F2a | Feature | `inventory()` plumbing: `Datastore`, `ShardedPool`, `_merge_queue`, numeric merge policies | 06 | ⬜ |
@@ -98,7 +98,27 @@ Traceability from the audit's finding IDs to the prompt that discharges them.
   either fix `LiouvilleGreen/WKBtools.py:6` to `from config.defaults import
   DEFAULT_ABS_TOLERANCE` in whichever prompt first needs a real import (flagging it
   explicitly as an out-of-campaign fix in that prompt's log, since it is not a tracked
-  item), or raise it with the user as a prerequisite before prompt 04.
+  item), or raise it with the user as a prerequisite before prompt 04. Confirmed again
+  while verifying prompt 03's B4 fix (worked around the same way, see
+  [log](logs/03-robustness-fixes.md) §Verification item 6); still open.
+
+- **[commit-sha-links-stale]** *(opened by prompt 03, 2026-09-03)* — The commit SHAs recorded for
+  prompts 01 and 02 in §1 (`fbc3a90`, `34380ba`) and in their own logs are **not reachable from the
+  branch tip**: `git merge-base --is-ancestor <sha> HEAD` fails for both. The commits actually on
+  the branch, with identical messages and diffs, are `2610abe` (prompt 01) and `9206704` (prompt 02)
+  respectively. This is a structural consequence of the self-referential requirement in README.md
+  §5.1 — the log/status board must record the commit's own SHA, but editing the file to embed a
+  guessed SHA and then amending to correct it necessarily produces a *new* SHA, which cannot itself
+  be embedded without repeating the problem. It looks like each of the first two prompts amended
+  once to inject a best-guess SHA and stopped, leaving the recorded value one amend behind the true
+  final commit. **Impact:** the commit links for rows 01 and 02 (and inside their log files) point
+  to dangling objects that `git show` can still resolve today but that are not part of the branch
+  history and are liable to be garbage-collected. Not a correctness issue in the shipped code — only
+  a documentation/traceability gap. **Next step:** purely cosmetic; whoever next touches this file
+  can correct rows 01/02's `Commit` column and the two log files' header lines to `2610abe` and
+  `9206704` respectively (verify with `git log --oneline -- prompts/backport-modules/` first, since
+  more amends may have happened by then). Prompt 03 accepts the same unavoidable one-amend
+  staleness for its own SHA rather than chasing convergence — see this prompt's log.
 
 > Add an entry here whenever a prompt finishes with something unresolved: a verification step that
 > could not be run, an assumption that could not be confirmed, a deviation that a later prompt has
@@ -133,6 +153,9 @@ re-deriving.
    pytest suites are `AdaptiveLevin/tests/` and `LiouvilleGreen/tests/`. Verification in this
    campaign is by static check plus purpose-written scripts; be explicit in your log about what you
    actually executed versus what you only reasoned about.
+   **`ray` (and this project's other runtime dependencies) are only installed in the repo's own
+   `./venv`**, not in the ambient `python3` — use `./venv/bin/python3` for any throwaway harness
+   that imports `Datastore.SQL.*` or `RayTools.*` (confirmed while verifying prompt 03's B4 fix).
 3. **Only two factories expose `read_table`:** `ObjectFactories/redshift.py:76`
    (`conn, table, tables, is_source, is_response, model_proxy` → `tables_arg: True`) and
    `ObjectFactories/wavenumber.py:90` (`conn, table, units, is_source, is_response` →

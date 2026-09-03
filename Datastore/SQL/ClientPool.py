@@ -160,7 +160,7 @@ class SerialPoolManager:
                 table,
                 self._profiler,
                 self._broker,
-                default_batch_size=_default_serial_batch_size[table],
+                default_batch_size=_default_serial_batch_size.get(table, 500),
             )
 
         serial = self._tables[table].lease_serial()

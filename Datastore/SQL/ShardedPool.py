@@ -9,7 +9,6 @@ from Datastore.SQL import Datastore
 from Datastore.SQL.Datastore import PathType, ReadTableConfigType
 from Datastore.SQL.ProfileAgent import ProfileAgent
 from Datastore.SQL.SerialPoolBroker import SerialPoolBroker
-from MetadataConcepts import version
 from config.defaults import DEFAULT_STRING_LENGTH
 
 
@@ -84,7 +83,7 @@ class ShardedPool:
         # if primary file is absent, all shard databases should be likewise absent
         if self._primary_file.is_dir():
             raise RuntimeError(
-                f'Specified database file "{str(self._db_file)}" is a directory'
+                f'Specified database file "{str(self._primary_file)}" is a directory'
             )
         if not self._primary_file.exists():
             # ensure parent directories also exist
@@ -152,7 +151,7 @@ class ShardedPool:
 
         # get the version label from this store
         self._version = ray.get(
-            shard0_store.object_get.remote(version, label=version_label)
+            shard0_store.object_get.remote("version", label=version_label)
         )
 
         # populate the remaining pool of shard stores
@@ -296,16 +295,22 @@ class ShardedPool:
             replicated_table_values = [
                 {"serial": n, "table": t} for n, t in enumerate(self._replicated_tables)
             ]
-            conn.execute(
-                sqla.insert(self._replicated_tables_table), replicated_table_values
-            )
+            # SQLAlchemy 2.x executes DEFAULT VALUES when given an empty list;
+            # guard to avoid that when no replicated tables are configured.
+            if replicated_table_values:
+                conn.execute(
+                    sqla.insert(self._replicated_tables_table), replicated_table_values
+                )
 
             # write table of sharded tables
             sharded_table_values = [
                 {"serial": n, "table": t, "key_attr": k}
                 for n, (t, k) in enumerate(self._sharded_tables.items())
             ]
-            conn.execute(self._sharded_tables_table.insert(), sharded_table_values)
+            # SQLAlchemy 2.x executes DEFAULT VALUES when given an empty list;
+            # guard to avoid that when no sharded tables are configured.
+            if sharded_table_values:
+                conn.execute(self._sharded_tables_table.insert(), sharded_table_values)
 
             conn.commit()
 

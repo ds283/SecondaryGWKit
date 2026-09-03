@@ -280,7 +280,14 @@ class RayWorkPool:
                                 f'could not interpret output from task builder (object type="{type(ref_data).__name__}", contents={str(ref_data)})'
                             )
 
-                    if (
+                    if ref_data is None:
+                        if self._store_results:
+                            raise RuntimeError(
+                                "a task builder returned None, which is not compatible with store_results=True"
+                            )
+                        # nothing to enqueue for this item
+
+                    elif (
                         isinstance(ref_data, list)
                         or isinstance(ref_data, tuple)
                         or isinstance(ref_data, set)
@@ -540,7 +547,7 @@ class RayWorkPool:
                     self._last_num_lookup_complete = self._num_lookup_complete
                     self._last_num_compute_complete = self._num_compute_complete
                     self._last_num_store_complete = self._num_store_complete
-                    self._last_num_available_complete = self._num_store_complete
+                    self._last_num_available_complete = self._num_available_complete
                     self._last_num_validation_complete = self._num_validation_complete
 
         if self._title is not None:
