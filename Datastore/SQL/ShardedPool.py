@@ -1,4 +1,5 @@
 import random
+from datetime import datetime
 from pathlib import Path
 from typing import Optional, List, Dict, Callable
 
@@ -6,7 +7,7 @@ import ray
 import sqlalchemy as sqla
 
 from Datastore.SQL import Datastore
-from Datastore.SQL.Datastore import PathType, ReadTableConfigType
+from Datastore.SQL.Datastore import PathType, ReadTableConfigType, InventoryConfigType
 from Datastore.SQL.ProfileAgent import ProfileAgent
 from Datastore.SQL.SerialPoolBroker import SerialPoolBroker
 from config.defaults import DEFAULT_STRING_LENGTH
@@ -33,6 +34,7 @@ class ShardedPool:
         prune_unvalidated: Optional[bool] = False,
         drop_actions: Optional[List[str]] = None,
         read_table_config: Optional[ReadTableConfigType] = None,
+        inventory_config: Optional[InventoryConfigType] = None,
     ) -> None:
         """
         Initialize a pool of datastore actors
@@ -191,6 +193,8 @@ class ShardedPool:
                     raise RuntimeError(
                         f'It is only possible to configure a read-table method for a replicated table (class name="{class_name}")'
                     )
+
+        self._inventory_config: Optional[InventoryConfigType] = inventory_config
 
     def __enter__(self):
         return self
@@ -861,3 +865,177 @@ class ShardedPool:
         shard = self._shards[shard_key]
 
         return shard.read_table.remote(class_name, *args, **kwargs)
+
+    @staticmethod
+    def _merge_queue(class_name, merge_queue, field_config):
+        """
+        Merge a list of per-shard inventory dicts for a single sharded class into one dict, using
+        the declarative per-field merge policy in field_config (field_name -> policy string).
+        :param class_name: name of the object class, used only to produce diagnostic messages
+        :param merge_queue: list of per-shard inventory dicts; all are expected to share the same keys
+        :param field_config: mapping field_name -> merge policy
+        :return: merged dict
+        """
+        # take a copy of the list before popping, so we do not mutate the caller's list.
+        # the popped dict itself is *not* copied -- it becomes the accumulator and is merged into
+        # in place, which means the shard's own returned dict is mutated as a side effect. Harmless
+        # given how this is called (on a freshly-built ray.get(...) list), but worth flagging.
+        queue = list(merge_queue)
+        data = queue.pop()
+
+        for shard_data in queue:
+            for field, next_value in shard_data.items():
+                if field not in field_config:
+                    raise RuntimeError(
+                        f'ShardedPool: no merge policy is configured for field "{field}" of class '
+                        f'"{class_name}" (configured fields: {sorted(field_config.keys())})'
+                    )
+                policy = field_config[field]
+
+                current = data.get(field)
+
+                if current is None:
+                    data[field] = next_value
+                    continue
+
+                if next_value is None:
+                    # nothing to merge from this shard; keep the accumulated value as-is
+                    continue
+
+                if isinstance(current, bool) or isinstance(next_value, bool):
+                    raise RuntimeError(
+                        f'ShardedPool: do not know how to merge boolean field "{field}" of class "{class_name}"'
+                    )
+
+                if isinstance(current, list):
+                    if policy != "extend":
+                        raise RuntimeError(
+                            f'ShardedPool: unknown merge policy "{policy}" for list field "{field}" of class "{class_name}"'
+                        )
+                    # mutates the accumulator in place, and therefore the underlying shard dict too
+                    current.extend(next_value)
+                    continue
+
+                if isinstance(current, set):
+                    if policy != "extend":
+                        raise RuntimeError(
+                            f'ShardedPool: unknown merge policy "{policy}" for set field "{field}" of class "{class_name}"'
+                        )
+                    current.update(next_value)
+                    continue
+
+                if isinstance(current, datetime):
+                    if policy == "earliest":
+                        data[field] = min(current, next_value)
+                    elif policy == "latest":
+                        data[field] = max(current, next_value)
+                    else:
+                        raise RuntimeError(
+                            f'ShardedPool: unknown merge policy "{policy}" for datetime field "{field}" of class "{class_name}"'
+                        )
+                    continue
+
+                if isinstance(current, (int, float)):
+                    if policy == "sum":
+                        data[field] = current + next_value
+                    elif policy == "min":
+                        data[field] = min(current, next_value)
+                    elif policy == "max":
+                        data[field] = max(current, next_value)
+                    else:
+                        raise RuntimeError(
+                            f'ShardedPool: unknown merge policy "{policy}" for numeric field "{field}" of class "{class_name}"'
+                        )
+                    continue
+
+                raise RuntimeError(
+                    f'ShardedPool: do not know how to merge field "{field}" of class "{class_name}" '
+                    f"(value type {type(current).__name__})"
+                )
+
+        return data
+
+    def inventory(self, cls, *args, **kwargs):
+        """
+        Provide a generic service to report the contents of the datastore for a particular object
+        class. A replicated class is reported directly from a single (randomly-chosen) shard, since
+        every shard holds an identical copy. A sharded class is reported from every shard and merged
+        under the per-field policy in inventory_config.
+        :param cls:
+        :param args:
+        :param kwargs:
+        :return:
+        """
+        if isinstance(cls, str):
+            class_name = cls
+        else:
+            class_name = cls.__name__
+
+        if class_name in self._replicated_tables:
+            # the inventory of a replicated table is identical on every shard, so pick one at random
+            shard_ids = list(self._shards.keys())
+            i = random.randrange(len(shard_ids))
+
+            # swap this entry with the last element, then pop it
+            shard_ids[i], shard_ids[-1] = shard_ids[-1], shard_ids[i]
+            shard_key = shard_ids.pop()
+
+            shard = self._shards[shard_key]
+
+            # unlike read_table, inventory() is ray.get() here: the sharded-class branch below has
+            # to resolve every shard's ObjectRef anyway in order to merge them, so returning a value
+            # rather than an ObjectRef in both branches keeps the caller's contract uniform
+            return ray.get(shard.inventory.remote(class_name, *args, **kwargs))
+
+        if class_name in self._sharded_tables:
+            if self._inventory_config is None:
+                raise RuntimeError(
+                    "ShardedPool: the inventory service is not configured"
+                )
+
+            if class_name not in self._inventory_config:
+                raise RuntimeError(
+                    f'ShardedPool: the inventory service is not available for objects of class "{class_name}"'
+                )
+
+            field_config = self._inventory_config[class_name]
+
+            data_queue = ray.get(
+                [
+                    shard.inventory.remote(class_name, *args, **kwargs)
+                    for shard in self._shards.values()
+                ]
+            )
+
+            field = list(data_queue[0].keys()).pop()
+            labelled = isinstance(data_queue[0][field], dict)
+
+            if any(
+                isinstance(value, dict) != labelled for value in data_queue[0].values()
+            ):
+                raise RuntimeError(
+                    f'ShardedPool: inventory for class "{class_name}" mixes labelled and flat '
+                    f"fields at the top level; cannot determine how to merge it"
+                )
+
+            if labelled:
+                merged = {}
+                for label in data_queue[0].keys():
+                    if label not in field_config:
+                        raise RuntimeError(
+                            f'ShardedPool: inventory_config for class "{class_name}" does not '
+                            f'mention label "{label}" (configured labels: '
+                            f"{sorted(field_config.keys())})"
+                        )
+                    label_queue = [shard_data[label] for shard_data in data_queue]
+                    merged[label] = self._merge_queue(
+                        class_name, label_queue, field_config[label]
+                    )
+
+                return merged
+
+            return self._merge_queue(class_name, data_queue, field_config)
+
+        raise RuntimeError(
+            f'Unable to dispatch inventory() for item of type "{class_name}"'
+        )

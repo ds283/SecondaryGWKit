@@ -161,6 +161,11 @@ _drop_order = [
 # class_name -> {"tables_arg": bool}
 ReadTableConfigType = Dict[str, Any]
 
+# inventory configuration should be a Dict with the mapping
+# class_name -> {field_name -> merge policy}, used by ShardedPool to merge
+# per-shard inventory reports for sharded tables
+InventoryConfigType = Dict[str, Any]
+
 
 @ray.remote
 class Datastore:
@@ -766,6 +771,35 @@ class Datastore:
 
             with self._engine.begin() as conn:
                 objects = factory.read_table(conn, tab, *args, **kwargs)
+
+        return objects
+
+    def inventory(self, cls, *args, **kwargs):
+        """
+        Return a human-readable inventory of the Datastore contents for a particular object class
+        :return:
+        """
+        if isinstance(cls, str):
+            class_name = cls
+        else:
+            class_name = cls.__name__
+
+        with ProfileBatchManager(
+            self._profile_batcher, f"inventory[{class_name}]"
+        ) as mgr:
+            self._ensure_registered_schema(class_name)
+            record = self._schema[class_name]
+
+            tab = record["table"]
+            factory = self._factories[class_name]
+
+            if not hasattr(factory, "inventory"):
+                raise RuntimeError(
+                    f'Datastore: the object factory for "{class_name}" does not provide an inventory service'
+                )
+
+            with self._engine.begin() as conn:
+                objects = factory.inventory(conn, tab, self._tables, *args, **kwargs)
 
         return objects
 

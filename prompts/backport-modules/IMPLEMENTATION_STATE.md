@@ -2,7 +2,7 @@
 
 **Campaign:** [`README.md`](README.md) · **Source audit:** [`docs/backport-modules-audit.md`](../../docs/backport-modules-audit.md)
 **Baseline commit:** `79f0360` (`main`, clean)
-**Last updated:** 2026-09-04 — after prompt 05, plus an out-of-sequence fix for
+**Last updated:** 2026-09-04 — after prompt 06, plus an out-of-sequence fix for
 `[02-shard-config-reader]` (see §4)
 
 > **Maintenance rule.** Every prompt updates this file *in its own commit*, before committing.
@@ -29,7 +29,7 @@ Legend: ⬜ not started · 🟡 in flight · ✅ complete · ⚠️ complete wit
 
 | # | Prompt | Items | Status | Commit | Log |
 |---|---|---|---|---|---|
-| 06 | [Inventory plumbing](06-inventory-plumbing.md) | F2a | ⬜ | — | — |
+| 06 | [Inventory plumbing](06-inventory-plumbing.md) | F2a | ✅ | *(SHA intentionally not embedded — see §5 note 11)* | [log](logs/06-inventory-plumbing.md) |
 | 07 | [Replicated factories](07-inventory-replicated-factories.md) | F2b | ⬜ | — | — |
 | 08 | [Sharded factories + merge config](08-inventory-sharded-factories.md) | F2c | ⬜ | — | — |
 | 09 | [Inventory reporting](09-inventory-reporting.md) | F2d | ⬜ | — | — |
@@ -40,7 +40,7 @@ Legend: ⬜ not started · 🟡 in flight · ✅ complete · ⚠️ complete wit
 |---|---|---|---|---|---|
 | 10 | [Verification pass](10-verification.md) | audit §8 + F2 | ⬜ | — | — |
 
-**Progress:** 5 / 10 complete.
+**Progress:** 6 / 10 complete.
 
 ---
 
@@ -62,7 +62,7 @@ Traceability from the audit's finding IDs to the prompt that discharges them.
 | F3 | Optional | `object_get("version", …)` by name, dropping the `MetadataConcepts` coupling | 03 | ✅ (taken, not skipped — both `Datastore.py` and `ShardedPool.py`) |
 | B3 | High | `read_table_config` method generation is broken in four ways; replace with `read_table()` | 04 | ✅ |
 | E1 | Feature | `store_handler` / `persist_handler` split in `RayWorkPool` — **confirmed wanted** | 05 | ✅ |
-| F2a | Feature | `inventory()` plumbing: `Datastore`, `ShardedPool`, `_merge_queue`, numeric merge policies | 06 | ⬜ |
+| F2a | Feature | `inventory()` plumbing: `Datastore`, `ShardedPool`, `_merge_queue`, numeric merge policies | 06 | ✅ |
 | F2b | Feature | `inventory()` on the 13 replicated-table factories | 07 | ⬜ |
 | F2c | Feature | `inventory()` on the 15 sharded-table factories + `inventory_config` | 08 | ⬜ |
 | F2d | Feature | Inventory reporting entry point | 09 | ⬜ |
@@ -228,3 +228,19 @@ re-deriving.
     (verified reachable with `git merge-base --is-ancestor <sha> HEAD`) while leaving the current
     prompt's own row/log without one. The gap is harmless: `git log --oneline -- prompts/backport-modules/`
     always recovers the true mapping.
+12. **`inventory()` plumbing (prompt 06) is complete and inert, exactly as planned — see
+    [log](logs/06-inventory-plumbing.md) for the full contract.** The load-bearing facts prompts 07/08
+    must follow: every factory `inventory` method is `@staticmethod def inventory(conn, table, tables,
+    *args, **kwargs):` (a stray `self` binds `conn` incorrectly — note 5 above); `tables` is passed
+    positionally and *unconditionally* (no `tables_arg` switch, unlike `read_table`); every field a
+    sharded-class factory returns must use one of the merge policies `_merge_queue` supports —
+    `"extend"` (list/set), `"earliest"`/`"latest"` (datetime), `"sum"`/`"min"`/`"max"` (int/float, never
+    bool) — or `inventory_config` merging will raise at call time; a labelled-shape factory (`{label:
+    {field: value}}`) must return **the same set of labels on every shard regardless of row count**,
+    because the merge path reads `data_queue[0]` to determine both the shape and the label set — a
+    shard-dependent label set will surface as a bare `KeyError` inside `_merge_queue`'s field-lookup on
+    whichever shard is missing a label, not as the diagnosed "label not in config" error (which only
+    catches a label absent from *config*, not one absent from *some other shard's dict*). Also:
+    `ShardedPool.inventory`'s replicated-class branch `ray.get`s and returns a **value**, not an
+    `ObjectRef` (asymmetric with `read_table`) — prompt 09 can call `pool.inventory(...)` directly for
+    either kind of class with no `ray.get` of its own.
