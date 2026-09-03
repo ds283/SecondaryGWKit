@@ -237,7 +237,7 @@ class J231:
         q4 = q_sq * q_sq
         s4 = s_sq * s_sq
 
-        k6 = s4 * s_sq
+        k6 = k4 * k_sq
 
         pre_factor = np.pi / 64.0
 

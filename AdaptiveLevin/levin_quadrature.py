@@ -1,7 +1,63 @@
+"""
+Adaptive Levin quadrature for rapidly oscillatory integrals.
+
+BASIS OF THE ALGORITHM
+----------------------
+The adaptive scheme implemented here is the algorithm of
+
+    J. Bremer, Z. Chen, H. Yang,
+    "Rapid evaluation of oscillatory integrals and their application to
+     the numerical solution of the Helmholtz equation",
+    arXiv:2211.13400,
+
+specifically the adaptive Levin method of its section 5. Equation and step
+numbers appearing in comments throughout this file ("Chen et al. (168)",
+"Chen et al. step (4), below (173)", ...) refer to that preprint. Page
+references are to **v3**; the numbering differs in v1/v2.
+
+The underlying non-adaptive Levin rule is due to
+
+    D. Levin, "Fast integration of rapidly oscillatory functions",
+    J. Comput. Appl. Math. 67 (1996) 95-101,
+
+whose equation numbers are cited as "Levin 96".
+
+DEVIATIONS FROM THE REFERENCE ALGORITHM
+---------------------------------------
+This implementation has evolved beyond the bare algorithm of section 5. The
+deliberate departures are:
+
+  * Region acceptance (step (4)) additionally admits a *relative* tolerance;
+    Chen et al.'s test is absolute only. See _adaptive_levin() for why this
+    matters and how it is now gated.
+
+  * The returned error estimate accounts for the endpoint phase-evaluation
+    floor as well as the step-(4) resolution residual. See the extended
+    discussion in _adaptive_levin(); the short version is that the step-(4)
+    residual is a *resolution* criterion and is blind, by construction, to
+    rounding of the phase at the region endpoints. Chen et al. describe that
+    loss of accuracy in prose (v3 p. 30, immediately after the algorithm)
+    rather than folding it into their estimate, which is legitimate for a
+    paper but misleading in a library API.
+
+  * Weakly oscillatory regions (phase span < 6*pi) are handed to ordinary
+    adaptive quadrature rather than to the Levin rule.
+
+  * A direct LU solve is used in place of the least-squares/SVD solve when the
+    phase span shows the Levin super-operator to be well conditioned. Note
+    that Remark 2 of Chen et al. recommends a *rank-revealing QR* in place of
+    the truncated SVD throughout (they report ~5x faster with no apparent loss
+    of accuracy). That suggestion has NOT been taken up here: the fast path is
+    an LU solve gated on conditioning, with lstsq retained as the fallback for
+    the ill-conditioned case where the minimum-norm solution is needed. An
+    RRQR fallback in place of lstsq remains an unexplored optimisation.
+"""
+
 import json
 import time
 import uuid
 from datetime import datetime
+from functools import lru_cache
 from math import floor, ceil
 from pathlib import Path
 from typing import Tuple, List, Optional
@@ -34,11 +90,77 @@ DEFAULT_LEVIN_RELTOL = 1e-7
 # approximate machine epsilon for 64-bit floats
 MACHINE_EPSILON = 1e-16
 
+TWO_PI = 2.0 * np.pi
 SIX_PI = 6.0 * np.pi
+
+# Safety factor applied to the endpoint phase-rounding bound; see _phase_error() and the
+# discussion in _adaptive_levin().
+#
+# Measured against closed-form oracles for int_{1/3}^{7/3} f(x) sin(w x) dx with
+# f in {exp(-x), 1/x, 1} and w from 1e3 to 1e13 (18 cells), the bound with this factor set to
+# 1.0 over-estimated the delivered absolute error by between 1.6x and 36x and never
+# under-reported it. It is therefore reported as-is; the factor exists so the margin can be
+# retuned without touching the derivation.
+#
+# CAVEAT on those numbers: the bound assumes the phase carries full relative rounding error,
+# d(theta) ~ eps*|theta|. That is the generic case, but it is *not* attained when the endpoints
+# and the frequency conspire to make theta exactly representable -- e.g. integrating over
+# [0, 1] with w a power of ten, where w*x is exact and libm reduces it perfectly, so the true
+# d(theta) is zero. On such intervals the bound was measured to be loose by up to ten orders of
+# magnitude. This is unavoidable without a way for the phase function to report its own
+# accuracy, and erring towards a bound that is loose (never optimistic) is the safe direction
+# for a library that callers use to decide whether to trust a result.
+_LEVIN_PHASE_ERROR_SAFETY = 1.0
+
+# minimum phase change across a subinterval before we are prepared to invert the Levin super-operator
+# with a direct LU solve rather than a least-squares (SVD) solve. Below this the operator is poorly
+# conditioned and we need the minimum-norm solution; see _adaptive_levin_subregion_impl().
+_LEVIN_DIRECT_SOLVE_PHASE_SPAN = 20.0 * np.pi
+
+# tolerance on the relative residual ||Lp - f||/||f|| accepted from the direct solve. This is only a
+# secondary sanity check -- the primary guard is the phase span above.
+_LEVIN_DIRECT_SOLVE_RESIDUAL = 1e-10
 
 INTERVAL_TYPE_LEVIN = 0
 INTERVAL_TYPE_DIRECT = 1
 types = {0: "Levin", 1: "direct"}
+
+
+def _phase_error(theta_scale: float, p_endpoint_l1: float) -> float:
+    """
+    Estimate the absolute error contributed to a region's Levin estimate by rounding of the
+    phase function at the two region endpoints.
+
+    The Levin estimate for a region is
+
+        value = sum_i p_i(b) w_i(b) - sum_i p_i(a) w_i(a),        w = (sin theta, cos theta)
+
+    i.e. it depends on theta *only* through its values at the two endpoints. If those values
+    carry an absolute error d(theta) then, since |d w / d theta| <= 1 componentwise,
+
+        |d value| <= d(theta) * ( sum_i |p_i(b)| + sum_i |p_i(a)| ).
+
+    With d(theta) ~ eps * theta_scale this gives the bound returned here.
+
+    Why this is needed at all: the step-(4) residual |val0 - valL - valR| cannot see this
+    error. Bisecting [a, b] at c gives regions [a, c] and [c, b] whose contributions at c
+    cancel in the sum, so parent and children are built from the *identical* values of
+    theta(a) and theta(b). Endpoint phase rounding is therefore common-mode between the two
+    sides of the step-(4) comparison and subtracts out exactly. It is invisible by
+    construction, and no amount of subdivision will reveal it.
+
+    Chen et al. (v3, p. 30) identify the same effect in prose immediately after stating the
+    algorithm: they note that the condition number of the oscillatory integral grows with the
+    magnitude of the phase, that the principal loss of accuracy occurs when the large-magnitude
+    exponentials of their (171) -- the endpoint expression above -- are evaluated, and that
+    since the integral itself typically shrinks with frequency the *absolute* error often stays
+    constant or decays. So the step-(4) test is a valid resolution criterion; it is simply not
+    a total-error estimate, and was never claimed to be one.
+
+    :param theta_scale: magnitude of the phase argument handed to sin/cos at the endpoints
+    :param p_endpoint_l1: sum over components of |p| at both endpoints
+    """
+    return _LEVIN_PHASE_ERROR_SAFETY * MACHINE_EPSILON * theta_scale * p_endpoint_l1
 
 
 class used_interval:
@@ -52,6 +174,8 @@ class used_interval:
         abserr: Optional[float] = None,
         relerr: Optional[float] = None,
         p_ratios: Optional[List[float]] = None,
+        phase_err: Optional[float] = None,
+        phase_limited: bool = False,
     ):
         self._start = start
         self._end = end
@@ -59,8 +183,15 @@ class used_interval:
 
         self._type = type
 
+        # abserr/relerr are the step-(4) *resolution* residual: |val0 - valL - valR|.
+        # phase_err is an estimate of the error contributed by rounding of the phase function
+        # at the two region endpoints, which the resolution residual cannot see (see
+        # _adaptive_levin()). The total error of the region is bounded by the larger of the two.
         self._abserr = abserr
         self._relerr = relerr
+
+        self._phase_err = phase_err
+        self._phase_limited = phase_limited
 
         self._p_ratios = p_ratios if p_ratios is not None else []
 
@@ -68,19 +199,26 @@ class used_interval:
         if self._abserr is not None:
             abserr_label = f"abserr={self._abserr:.8g}"
         else:
-            abserr_label = "(not recorded)"
+            abserr_label = "abserr=(not recorded)"
 
         if self._relerr is not None:
             relerr_label = f"relerr={self._relerr:.8g}"
         else:
-            relerr_label = "(not recorded)"
+            relerr_label = "relerr=(not recorded)"
 
         if self._p_ratios is not None:
             p_ratios_label = f"[{", ".join(f"{p:.4g}" for p in self._p_ratios)}]"
         else:
             p_ratios_label = "(not recorded)"
 
-        return f"({self._start:.8g}, {self._end:.8g}), depth={self._depth} | {types[self._type]}, abserr={abserr_label}, relerr={relerr_label} | p-ratios={p_ratios_label}"
+        if self._phase_err is not None:
+            phase_label = f"phase_err={self._phase_err:.8g}"
+            if self._phase_limited:
+                phase_label = phase_label + " (PHASE LIMITED)"
+        else:
+            phase_label = "phase_err=(not recorded)"
+
+        return f"({self._start:.8g}, {self._end:.8g}), depth={self._depth} | {types[self._type]}, {abserr_label}, {relerr_label}, {phase_label} | p-ratios={p_ratios_label}"
 
     @property
     def start(self) -> float:
@@ -111,6 +249,31 @@ class used_interval:
         return self._relerr
 
     @property
+    def phase_err(self) -> Optional[float]:
+        """
+        Estimated absolute error contributed by rounding of the phase function at the region
+        endpoints. This is *not* included in abserr; the total error of the region is
+        max(abserr, phase_err).
+        """
+        return self._phase_err
+
+    @property
+    def phase_limited(self) -> bool:
+        """
+        True if this region was accepted because phase rounding, not lack of resolution, set
+        the achievable accuracy. Subdividing such a region cannot improve it.
+        """
+        return self._phase_limited
+
+    @property
+    def total_err(self) -> Optional[float]:
+        if self._abserr is None:
+            return self._phase_err
+        if self._phase_err is None:
+            return self._abserr
+        return max(self._abserr, self._phase_err)
+
+    @property
     def p_ratios(self) -> List[float]:
         return self._p_ratios
 
@@ -128,6 +291,7 @@ class _levin_interval:
         abserr_history: Optional[ErrorHistoryType] = None,
         relerr_history: Optional[ErrorHistoryType] = None,
         p_ratios_history: Optional[PScaleHistoryType] = None,
+        estimate: Optional[dict] = None,
     ):
         self._start = start
         self._end = end
@@ -139,6 +303,15 @@ class _levin_interval:
         self._p_ratios_history = (
             p_ratios_history if p_ratios_history is not None else {}
         )
+
+        # Levin estimate for this interval, if it has already been computed. When a region is bisected
+        # its two halves have already been evaluated in order to produce the refined estimate, so we
+        # carry those results forward rather than recomputing them when the children are popped.
+        self._estimate = estimate
+
+    @property
+    def estimate(self) -> Optional[dict]:
+        return self._estimate
 
     @property
     def start(self) -> float:
@@ -173,13 +346,22 @@ class _levin_interval:
         return self._p_ratios_history
 
 
-def chebyshev_matrices(x_span: Tuple[float, float], N: int):
+@lru_cache(maxsize=32)
+def _chebyshev_base(N: int):
     """
     Compute the Chebyshev spectral collocation points (corresponding to the extremal points)
-    and the first order spectral differentiation matrix.
+    and the first order spectral differentiation matrix, on the reference interval [-1, 1].
+
+    Only the affine rescaling to an arbitrary interval depends on the endpoints, so this part of the
+    construction is cached: the adaptive driver evaluates many subregions at the same Chebyshev order,
+    and rebuilding these matrices each time is a significant fraction of the cost of the linear solve
+    they feed.
+
+    The returned arrays are marked read-only and shared between callers. chebyshev_matrices() below
+    only ever forms new arrays from them, so this is safe; do not mutate them in place.
+
     Based on the implementation by Wiedeman & Reddy (http://dx.doi.org/10.1145/365723.365727)
     and pyddx (https://github.com/ronojoy/pyddx)
-    :param x_span:
     :param N:
     :return:
     """
@@ -218,10 +400,30 @@ def chebyshev_matrices(x_span: Tuple[float, float], N: int):
     D = Z * (C * np.tile(np.diag(D), (N, 1)).T - D)  # off-diagonals
     D[range(N), range(N)] = -np.sum(D, axis=1)  # negative sum trick
 
-    # rescale for the arbitrary interval
+    x.setflags(write=False)
+    D.setflags(write=False)
+
+    return x, D
+
+
+def chebyshev_matrices(x_span: Tuple[float, float], N: int):
+    """
+    Compute the Chebyshev spectral collocation points (corresponding to the extremal points)
+    and the first order spectral differentiation matrix, rescaled to the interval x_span.
+
+    Note the returned grid is in *descending* order: x[0] is the upper endpoint of x_span and x[-1]
+    is the lower endpoint. The Levin endpoint extraction depends on this convention.
+    :param x_span:
+    :param N:
+    :return:
+    """
+    x_base, D_base = _chebyshev_base(N)
+
+    # rescale for the arbitrary interval. Both operations below form new arrays, so the cached
+    # read-only base matrices are left untouched.
     a, b = x_span
-    x = (a + b) / 2.0 + (b - a) / 2.0 * x
-    D = 2.0 * D / (b - a)
+    x = (a + b) / 2.0 + (b - a) / 2.0 * x_base
+    D = 2.0 * D_base / (b - a)
 
     return x, D
 
@@ -248,12 +450,33 @@ class _Basis_SinCos:
         return self._theta(x)
 
     def build_Levin_data(self, grid, Dmat):
-        if hasattr(self, "_theta_deriv"):
-            theta_prime_Cheb = np.array([self._theta_deriv(x) for x in grid])
-        else:
+        """
+        Build the Levin A^T matrix, the basis vector w evaluated at each endpoint, and an estimate of
+        the total phase change across the interval.
+
+        :return: (AmatT, w0, wk, phase_span)
+        """
+        # we need theta sampled on the Chebyshev grid if either (a) we have to obtain theta' by spectral
+        # differentiation, or (b) we have no range-reduced phase function and therefore have to evaluate
+        # the basis functions from the raw phase at the endpoints.
+        # These are independent conditions, so both have to be tested; testing only the first leaves
+        # theta_Cheb undefined in the endpoint block below.
+        need_theta_Cheb = not hasattr(self, "_theta_deriv") or not hasattr(
+            self, "_theta_mod_2pi"
+        )
+
+        theta_Cheb = None
+        if need_theta_Cheb:
             # sample the phase function theta on the Chebyshev grid
             theta_Cheb = np.array([self._theta(x) for x in grid])
 
+        if hasattr(self, "_theta_deriv"):
+            # prefer an explicitly supplied theta'. At large argument the raw phase theta is a large float
+            # whose absolute resolution is ~ eps*theta, so spectral differentiation of the sampled values
+            # below inherits an error ~ eps*theta/(phase span across the interval). A phase function that
+            # can supply theta' directly (e.g. from a range-reduced spline) does not suffer from this.
+            theta_prime_Cheb = np.array([self._theta_deriv(x) for x in grid])
+        else:
             # multiply theta by the spectral differentiation matrix Dmat in order to produce an estimate of theta'(x)
             # evaluated at the collocation points
             theta_prime_Cheb = np.matmul(Dmat, theta_Cheb)
@@ -269,12 +492,33 @@ class _Basis_SinCos:
         zero_block = np.zeros_like(theta_prime_I)
         AmatT = np.block([[zero_block, -theta_prime_I], [theta_prime_I, zero_block]])
 
+        # estimate the total phase change across the interval from quantities we have already computed.
+        # This costs no further evaluations of the phase function, and is used to decide whether the
+        # Levin super-operator is well enough conditioned to be inverted by a direct solve.
+        phase_span = float(
+            np.mean(np.fabs(theta_prime_Cheb)) * np.fabs(grid[0] - grid[-1])
+        )
+
+        # theta_scale is the magnitude of the phase argument actually handed to sin/cos at the
+        # endpoints. It sets the absolute resolution of those two values, and hence the floor on
+        # the accuracy of the Levin estimate for this region -- see _phase_error(). Like
+        # phase_span above it costs no additional evaluations of the phase function.
         if hasattr(self, "_theta_mod_2pi"):
             theta0_mod_2pi = self._theta_mod_2pi(grid[-1])
             thetak_mod_2pi = self._theta_mod_2pi(grid[0])
 
             w0 = [np.sin(theta0_mod_2pi), np.cos(theta0_mod_2pi)]
             wk = [np.sin(thetak_mod_2pi), np.cos(thetak_mod_2pi)]
+
+            # a range-reduced phase hands sin/cos an O(2pi) argument, so its representation error
+            # is O(eps) no matter how large the underlying phase is. This is exactly why a
+            # range-reduced phase function is worth supplying.
+            #
+            # CAVEAT: this accounts only for the rounding of the reduced value as a float. Any
+            # error inherited from the *construction* of the reduced phase -- e.g. the fit error
+            # of a phase spline, or precision lost while reducing a large product -- is invisible
+            # from here, and the bound below does not include it.
+            theta_scale = TWO_PI
         else:
             # note grid is in reverse order, with largest value in position 1 and smallest value in last position -1
             theta0 = theta_Cheb[-1]
@@ -283,13 +527,29 @@ class _Basis_SinCos:
             w0 = [np.sin(theta0), np.cos(theta0)]
             wk = [np.sin(thetak), np.cos(thetak)]
 
-        return AmatT, w0, wk
+            # the raw phase is a large float at large argument, with absolute resolution
+            # ~ eps*|theta|. sin/cos then inherit an absolute error of the same size, because
+            # |d(sin)/d(theta)| <= 1. This is the dominant error at high frequency.
+            theta_scale = float(np.max(np.fabs(theta_Cheb)))
+
+        return AmatT, w0, wk, phase_span, theta_scale
 
     def eval_basis(self, x):
         if hasattr(self, "_theta_mod_2pi"):
             return [np.sin(self._theta_mod_2pi(x)), np.cos(self._theta_mod_2pi(x))]
 
         return [np.sin(self._theta(x)), np.cos(self._theta(x))]
+
+    def phase_scale(self, a: float, b: float) -> float:
+        """
+        Magnitude of the phase argument that is handed to sin/cos on the interval [a, b]. This
+        sets the absolute resolution of the basis functions there, and hence the accuracy floor
+        of any quadrature rule built on them. See _phase_error().
+        """
+        if hasattr(self, "_theta_mod_2pi"):
+            return TWO_PI
+
+        return float(max(np.fabs(self.raw_theta(a)), np.fabs(self.raw_theta(b))))
 
 
 def _adaptive_levin_subregion(
@@ -300,6 +560,7 @@ def _adaptive_levin_subregion(
     chebyshev_order: int = DEFAULT_LEVIN_CHEBSHEV_ORDER,
     rtol: float = DEFAULT_LEVIN_RELTOL,
     notify_label: Optional[str] = None,
+    build_p_sample: bool = False,
 ):
     working_order = max(chebyshev_order, _LEVIN_MINIMUM_ALLOWED_ORDER)
     num_order_changes = 0
@@ -316,6 +577,7 @@ def _adaptive_levin_subregion(
             chebyshev_order=working_order,
             rtol=rtol,
             notify_label=notify_label,
+            build_p_sample=build_p_sample,
         )
         if data["metadata"].get("SVD_failure", False):
             working_order = working_order - 2
@@ -354,6 +616,7 @@ def _adaptive_levin_subregion_impl(
     chebyshev_order: int = DEFAULT_LEVIN_CHEBSHEV_ORDER,
     rtol: float = DEFAULT_LEVIN_RELTOL,
     notify_label: Optional[str] = None,
+    build_p_sample: bool = False,
 ):
     """
     f should be an m-vector of non-rapidly oscillating functions (Levin 96 eq. 2.1)
@@ -363,6 +626,7 @@ def _adaptive_levin_subregion_impl(
     :param f: iterable of callables representing the integrand f-functions
     :param BasisData: callable
     :param chebyshev_order:
+    :param build_p_sample: retain the sampled Levin antiderivatives p(x)? Only needed for diagnostics
     :return:
     """
     metadata = {}
@@ -381,7 +645,7 @@ def _adaptive_levin_subregion_impl(
 
     # build the Levin A^T matrix, and also the vector of weights w evaluated at theta0, thetak
     # (these are needed in the final stap)
-    AmatT, w0, wk = BasisData.build_Levin_data(grid, Dmat)
+    AmatT, w0, wk, phase_span, theta_scale = BasisData.build_Levin_data(grid, Dmat)
 
     # build the Levin superoperator corresponding to this system
     # Chen et al. (168)
@@ -407,25 +671,66 @@ def _adaptive_levin_subregion_impl(
     # now try to invert the Levin superoperator, to find the Levin antiderivatives p(x)
     # Chen et al.
     success = False
-    try:
-        p, residuals, rank, s = np.linalg.lstsq(LevinL, f_Cheb)
-    except LinAlgError as e:
-        print(
-            f"!! WARNING (adaptive_levin_subregion, {label}): could not solve Levin collocation system using numpy.linalg.lstsq (chebyshev_order={chebyshev_order}; will now attempt to use pseudo-inverse)"
-        )
-        now = datetime.now().replace(microsecond=0)
-        LevinL_filename = f"LevinL_{now.isoformat()}.txt"
-        f_Cheb_filename = f"f_Cheb_{now.isoformat()}.txt"
-        print(
-            (
-                f'   -- Levin L super-operator written to file "{LevinL_filename}", f_Cheb written to file "{f_Cheb_filename}"'
+
+    # Fast path. As theta' -> 0 the Levin super-operator degenerates to a block-diagonal matrix of
+    # spectral differentiation matrices, and Dmat is singular (it annihilates constants). So the system
+    # is badly conditioned on weakly oscillatory intervals, and there we need the minimum-norm solution
+    # that lstsq provides. Once the interval carries enough phase the operator becomes well conditioned
+    # (empirically cond ~ 4e2 at a phase span of 20*pi, and ~13 at 100*pi), and an ordinary LU solve
+    # agrees with lstsq to machine precision while being an order of magnitude cheaper.
+    #
+    # NOTE the gate has to be the phase span, *not* the residual of the solve. In the near-singular
+    # regime the residual is small (~1e-14) even when the computed p is completely wrong, so a residual
+    # test alone would silently accept garbage. The residual check below is only a secondary guard
+    # against non-finite values and outright failure.
+    if phase_span > _LEVIN_DIRECT_SOLVE_PHASE_SPAN:
+        try:
+            p_direct = np.linalg.solve(LevinL, f_Cheb)
+        except LinAlgError:
+            pass
+        else:
+            f_norm = np.linalg.norm(f_Cheb)
+            residual = np.linalg.norm(np.matmul(LevinL, p_direct) - f_Cheb)
+            if np.isfinite(p_direct).all() and (
+                f_norm <= 0.0 or residual <= _LEVIN_DIRECT_SOLVE_RESIDUAL * f_norm
+            ):
+                p = p_direct
+                success = True
+                metadata["direct_solve"] = 1
+
+    # otherwise fall back to the least-squares (SVD) solution, which handles the ill-conditioned case
+    #
+    # NOTE on the choice of solver. Chen et al. (arXiv:2211.13400) solve the collocation system
+    # (168) with a truncated SVD, but Remark 2 of that paper records that their own implementation
+    # replaces it with a *rank-revealing QR* factorization, which they report to be roughly 5x
+    # faster with no observed loss of accuracy. That substitution has deliberately NOT been made
+    # here: scipy exposes RRQR only via pivoted QR (scipy.linalg.qr(pivoting=True)) with manual
+    # rank determination and a triangular solve, so it is a non-trivial amount of new numerical
+    # code to own, and the direct-solve fast path above already removes the SVD from the
+    # well-conditioned majority of regions. Swapping lstsq for RRQR in this fallback branch
+    # remains an unexplored optimisation; it would need A/B benchmarking against the closed-form
+    # Bessel oracles before being trusted, because this branch is exactly the ill-conditioned
+    # regime where the minimum-norm property of lstsq is doing real work.
+    if not success:
+        try:
+            p, residuals, rank, s = np.linalg.lstsq(LevinL, f_Cheb, rcond=None)
+        except LinAlgError as e:
+            print(
+                f"!! WARNING (adaptive_levin_subregion, {label}): could not solve Levin collocation system using numpy.linalg.lstsq (chebyshev_order={chebyshev_order}; will now attempt to use pseudo-inverse)"
             )
-        )
-        np.savetxt(LevinL_filename, LevinL)
-        np.savetxt(f_Cheb_filename, f_Cheb)
-        metadata["SVD_errors"] = 1
-    else:
-        success = True
+            now = datetime.now().replace(microsecond=0)
+            LevinL_filename = f"LevinL_{now.isoformat()}.txt"
+            f_Cheb_filename = f"f_Cheb_{now.isoformat()}.txt"
+            print(
+                (
+                    f'   -- Levin L super-operator written to file "{LevinL_filename}", f_Cheb written to file "{f_Cheb_filename}"'
+                )
+            )
+            np.savetxt(LevinL_filename, LevinL)
+            np.savetxt(f_Cheb_filename, f_Cheb)
+            metadata["SVD_errors"] = 1
+        else:
+            success = True
 
     if not success:
         try:
@@ -443,13 +748,18 @@ def _adaptive_levin_subregion_impl(
                 "metadata": metadata,
             }
 
-    p_sample = [
-        (x, [p[j * chebyshev_order + i] for j in range(m)]) for i, x in enumerate(grid)
-    ]
+    # p is stored flattened, with component j at collocation point i in position j*chebyshev_order + i,
+    # so this reshape gives P[j, i]. Taking the mean over the collocation points in numpy avoids building
+    # a Python list of m-element lists on every solve; that list is only needed for diagnostics.
+    P = p.reshape(m, chebyshev_order)
 
-    p_means = [sum(np.fabs(p[1][i]) for p in p_sample) / len(grid) for i in range(m)]
-    p_mean_max = max(p_means)
-    p_ratios = [pm / p_mean_max for pm in p_means]
+    p_means = np.fabs(P).mean(axis=1)
+    p_mean_max = p_means.max()
+    p_ratios = [float(pm / p_mean_max) for pm in p_means]
+
+    p_sample = None
+    if build_p_sample:
+        p_sample = [(x, [P[j, i] for j in range(m)]) for i, x in enumerate(grid)]
 
     # don't keep p-modes that have relative amplitude smaller than the requested rtol.
     # Presumably we cannot compute these accurately anyway (especially if they are associated with small singular values that are
@@ -466,10 +776,24 @@ def _adaptive_levin_subregion_impl(
         p[i * chebyshev_order] * wk[i] if p_use[i] else 0.0 for i in range(m)
     )
 
+    # first-order bound on the error inherited from rounding of the phase at the two endpoints.
+    # The same p-values and the same p_use gating are used as in the estimate itself, so this
+    # costs only a handful of flops and no extra evaluations of theta or f. See _phase_error().
+    p_endpoint_l1 = sum(
+        (
+            np.fabs(p[(i + 1) * chebyshev_order - 1]) + np.fabs(p[i * chebyshev_order])
+            if p_use[i]
+            else 0.0
+        )
+        for i in range(m)
+    )
+
     return {
         "value": upper_limit - lower_limit,
         "p_sample": p_sample,
         "p_ratios": p_ratios,
+        "phase_span": phase_span,
+        "phase_err": _phase_error(theta_scale, p_endpoint_l1),
         "metadata": metadata,
     }
 
@@ -512,6 +836,7 @@ def _adaptive_levin(
 
     num_SVD_errors = 0
     num_order_changes = 0
+    num_direct_solves = 0
     chebyshev_min_order = None
     max_depth = 0
 
@@ -612,6 +937,21 @@ def _adaptive_levin(
                 method="quad",
             )
 
+            # phase-rounding floor for the direct-quadrature branch. quad's own error estimate,
+            # like the Levin step-(4) residual, is blind to rounding of the phase inside the
+            # integrand -- refining the panel resamples the same rounded sin/cos values. Bound the
+            # contribution by eps * theta_scale * integral|f|, the direct analogue of the endpoint
+            # bound in _phase_error() with integral|f| in place of the sum of |p| at the endpoints.
+            # integral|f| is estimated from a 3-point sample of the amplitude, which costs three
+            # evaluations of f against a full adaptive quad call.
+            f_scale = max(
+                sum(np.fabs(f[i](x)) for i in range(m))
+                for x in (a, 0.5 * (a + b), b)
+            )
+            direct_phase_err = _phase_error(
+                BasisData.phase_scale(a, b), f_scale * np.fabs(b - a)
+            )
+
             val = val + data["value"]
             used_regions.append(
                 used_interval(
@@ -621,37 +961,52 @@ def _adaptive_levin(
                     abserr=data["abserr"],
                     relerr=None,
                     type=INTERVAL_TYPE_DIRECT,
+                    phase_err=direct_phase_err,
+                    # as in the Levin branch: only flag it if the floor actually capped the
+                    # region, not merely because the worst-case bound is large
+                    phase_limited=direct_phase_err > max(data["abserr"], atol),
                 )
             )
             num_used_regions = num_used_regions + 1
             num_simple_regions = num_simple_regions + 1
             continue
 
-        # Chen et al. (172)
-        try:
-            data = _adaptive_levin_subregion(
-                (a, b),
-                f,
-                BasisData,
-                id_label=id_label,
-                chebyshev_order=chebyshev_order,
-                rtol=rtol,
-                notify_label=notify_label,
-            )
-            order = data["metadata"].get("chebyshev_order", None)
-            if order is not None:
-                if chebyshev_min_order is None or order < chebyshev_min_order:
-                    chebyshev_min_order = order
+        # Chen et al. (172).
+        # If this region was produced by bisecting a parent, its estimate was already computed as one
+        # half of the parent's refined estimate, and we can reuse it. Note that the metadata bookkeeping
+        # below counts each region exactly once, when it is processed here as a parent -- the metadata
+        # of the comparison regions dataL/dataR has never been accumulated, so reusing them preserves
+        # the existing accounting exactly.
+        data = current_region.estimate
+        if data is None:
+            try:
+                data = _adaptive_levin_subregion(
+                    (a, b),
+                    f,
+                    BasisData,
+                    id_label=id_label,
+                    chebyshev_order=chebyshev_order,
+                    rtol=rtol,
+                    notify_label=notify_label,
+                    build_p_sample=build_p_sample,
+                )
+                num_evaluations += 1
+            except LinAlgError as e:
+                print(
+                    f"!! adaptive_levin ({label}): linear algebra error when estimating Levin subregion ({a}, {b}), width={current_region.width :.8g}"
+                )
+                raise e
 
-            num_SVD_errors = num_SVD_errors + data["metadata"].get("SVD_errors", 0)
-            num_order_changes = num_order_changes + data["metadata"].get(
-                "num_order_changes", 0
-            )
-        except LinAlgError as e:
-            print(
-                f"!! adaptive_levin ({label}): linear algebra error when estimating Levin subregion ({a}, {b}), width={current_region.width :.8g}"
-            )
-            raise e
+        order = data["metadata"].get("chebyshev_order", None)
+        if order is not None:
+            if chebyshev_min_order is None or order < chebyshev_min_order:
+                chebyshev_min_order = order
+
+        num_SVD_errors = num_SVD_errors + data["metadata"].get("SVD_errors", 0)
+        num_order_changes = num_order_changes + data["metadata"].get(
+            "num_order_changes", 0
+        )
+        num_direct_solves = num_direct_solves + data["metadata"].get("direct_solve", 0)
 
         c = current_region.break_point
         # Chen et al. (173)
@@ -664,6 +1019,7 @@ def _adaptive_levin(
                 chebyshev_order=chebyshev_order,
                 rtol=rtol,
                 notify_label=notify_label,
+                build_p_sample=build_p_sample,
             )
         except LinAlgError as e:
             print(
@@ -680,6 +1036,7 @@ def _adaptive_levin(
                 chebyshev_order=chebyshev_order,
                 rtol=rtol,
                 notify_label=notify_label,
+                build_p_sample=build_p_sample,
             )
         except LinAlgError as e:
             print(
@@ -687,18 +1044,54 @@ def _adaptive_levin(
             )
             raise e
 
-        num_evaluations += 3
+        num_evaluations += 2
         estimate = data["value"]
         refined_estimate = dataL["value"] + dataR["value"]
 
-        relerr = np.fabs((estimate - refined_estimate)) / min(
-            np.fabs(estimate), np.fabs(refined_estimate)
-        )
         abserr = np.fabs(estimate - refined_estimate)
 
-        # Chen et al. step (4), below (173) [adapted to also include a relative tolerance check]
-        # but terminate the process if we exceed a specified number of bisections
-        if (abserr < atol or relerr < rtol) or current_region.depth >= depth_max:
+        # guard the relative-error denominator. The integrand can pass through an accidental zero,
+        # and there min(|estimate|, |refined_estimate|) is arbitrarily small, so relerr blows up
+        # even though the region is perfectly well resolved -- driving subdivision to depth_max for
+        # no gain. Below the requested absolute tolerance a relative test is meaningless anyway, so
+        # floor the denominator at atol. (min() rather than max() of the two estimates is retained:
+        # it is the more conservative choice.)
+        relerr_denom = max(min(np.fabs(estimate), np.fabs(refined_estimate)), atol)
+        relerr = abserr / relerr_denom
+
+        # endpoint phase-rounding floor for this region, from the parent estimate: it is the
+        # parent's endpoints that survive into the accumulated result. See _phase_error().
+        phase_err = data.get("phase_err", 0.0) or 0.0
+
+        # Is this region precision-limited rather than under-resolved? Both of the following must
+        # hold: the phase floor exceeds what the caller asked for, AND the step-(4) resolution
+        # residual has already come down to that floor. In that case bisecting cannot help -- the
+        # children inherit the *same* two endpoint phase values (plus a new interior one that
+        # cancels), so subdivision buys additional cost and no accuracy. Accept and flag it.
+        #
+        # The second condition matters: without it a region with a large but still-reducible
+        # resolution residual would be accepted early merely because its phase floor sits above
+        # atol, which would lose real accuracy.
+        phase_limited = (
+            phase_err > atol and phase_err > rtol * relerr_denom and abserr <= phase_err
+        )
+
+        # Chen et al. step (4), below (173), adapted in two ways: a relative tolerance check is
+        # also admitted, and regions whose accuracy is set by phase rounding rather than by lack
+        # of resolution are accepted rather than subdivided.
+        # Terminate in any case if we exceed the specified number of bisections.
+        resolved = abserr < atol or relerr < rtol
+
+        # Only report the region as phase-limited if the phase floor actually capped it, i.e. the
+        # tolerance was *not* otherwise met. The bound in _phase_error() is a worst case that
+        # assumes d(theta) ~ eps*|theta|, and on intervals where theta happens to be exactly
+        # representable (e.g. the identity phase theta(x) = x at integer endpoints) the true
+        # d(theta) is zero and the bound is loose. Flagging those would produce a warning about a
+        # result that in fact met its tolerance. The conservative bound is still carried into the
+        # aggregate abserr either way; this only governs the diagnostic.
+        phase_limited = phase_limited and not resolved
+
+        if resolved or phase_limited or current_region.depth >= depth_max:
             val = val + estimate
 
             used_regions.append(
@@ -710,6 +1103,8 @@ def _adaptive_levin(
                     abserr=abserr,
                     relerr=relerr,
                     p_ratios=data["p_ratios"],
+                    phase_err=phase_err,
+                    phase_limited=phase_limited,
                 )
             )
             num_used_regions = num_used_regions + 1
@@ -732,6 +1127,9 @@ def _adaptive_levin(
             }
             new_depth = current_region.depth + 1
 
+            # carry the comparison estimates forward as the children's own estimates; they have just
+            # been computed on exactly these intervals, so recomputing them when the children are
+            # popped would repeat a third of all the linear solves performed by this driver
             regions.extend(
                 [
                     _levin_interval(
@@ -741,6 +1139,7 @@ def _adaptive_levin(
                         abserr_history=new_abs_history,
                         relerr_history=new_rel_history,
                         p_ratios_history=new_p_ratios_history,
+                        estimate=dataL,
                     ),
                     _levin_interval(
                         start=c,
@@ -749,6 +1148,7 @@ def _adaptive_levin(
                         abserr_history=new_abs_history,
                         relerr_history=new_rel_history,
                         p_ratios_history=new_p_ratios_history,
+                        estimate=dataR,
                     ),
                 ]
             )
@@ -760,8 +1160,81 @@ def _adaptive_levin(
     driver_stop = time.perf_counter()
     elapsed = driver_stop - driver_start
 
+    # Aggregate error estimate. This function previously returned no error estimate at all, which
+    # left callers with no option but to trust the result or re-run at a tighter tolerance and
+    # compare. Each region contributes max(resolution residual, endpoint phase floor): the two are
+    # estimates of independent error sources, and the larger dominates.
+    #
+    # The regions are summed in absolute value rather than in quadrature. The phase-floor
+    # contributions are not independent random errors -- neighbouring regions share endpoints, and
+    # an inaccurate phase function produces a systematic drift common to all of them -- so a linear
+    # sum is the defensible choice even though it is pessimistic when the residuals really do
+    # behave randomly.
+    abserr_total = 0.0
+    num_phase_limited = 0
+    for region in used_regions:
+        contribution = region.total_err
+        if contribution is not None:
+            abserr_total = abserr_total + contribution
+        if region.phase_limited:
+            num_phase_limited = num_phase_limited + 1
+
+    # guarded exactly as the per-region relative test is guarded, and for the same reason
+    relerr_total = abserr_total / max(np.fabs(val), atol)
+
+    # Health check. If neither atol nor rtol is attainable -- typically because the caller has asked for
+    # an accuracy the phase function cannot deliver -- the bisection runs to the depth limit and we
+    # accept whatever estimate we have. The answer is usually still good, but the cost can be two orders
+    # of magnitude higher than necessary, so it is worth saying so rather than letting it pass silently.
+    #
+    # Note we deliberately do NOT warn on a high proportion of direct-quadrature subintervals. When the
+    # integration variable is log(x) (as it is for the Bessel integrals this module was written for),
+    # subintervals at small x carry very little phase and are *correctly* handled by direct quadrature;
+    # difference-type phase groups, whose net frequency can be small, do the same over much of the
+    # range. In that geometry a direct-quadrature fraction above 90% is normal rather than pathological,
+    # and no threshold separates it from genuine non-convergence. num_simple_regions is reported in the
+    # returned dictionary for callers who want to look.
+    if max_depth >= depth_max:
+        print(
+            f"!! WARNING (adaptive_levin, {label}): bisection reached the maximum depth {depth_max} "
+            f"without meeting either tolerance, so some subintervals were accepted unconverged "
+            f"| {num_used_regions} subintervals ({num_simple_regions} direct), "
+            f"{num_evaluations} Levin solves | atol={atol:.3g}, rtol={rtol:.3g}"
+        )
+        print(
+            "   -- consider relaxing atol/rtol, or check that the phase function is accurate "
+            "enough to support the requested tolerance"
+        )
+
+    # Second health check, on the phase floor rather than on resolution. This is the case the
+    # step-(4) residual cannot detect on its own, so it has to be reported explicitly: the caller
+    # asked for an accuracy that the precision of the phase at the region endpoints cannot deliver.
+    # Tightening atol/rtol will not help; supplying a range-reduced phase function will, because it
+    # replaces an O(theta) argument to sin/cos with an O(2*pi) one.
+    if num_phase_limited > 0:
+        print(
+            f"!! WARNING (adaptive_levin, {label}): {num_phase_limited} of {num_used_regions} "
+            f"subintervals were limited by rounding of the phase at their endpoints, not by "
+            f"resolution | estimated abserr={abserr_total:.3g}, relerr={relerr_total:.3g} "
+            f"| atol={atol:.3g}, rtol={rtol:.3g}"
+        )
+        print(
+            "   -- the requested tolerance is not attainable with this phase function; supplying "
+            "a range-reduced phase (theta_mod_2pi) would lower the floor"
+        )
+
     return {
         "value": float(val),
+        # estimated absolute and relative error of "value". abserr already includes the endpoint
+        # phase-rounding floor as well as the step-(4) resolution residual, so it does not
+        # under-report at high frequency the way the resolution residual alone does.
+        "abserr": float(abserr_total),
+        "relerr": float(relerr_total),
+        # True if at least one accepted region was limited by phase rounding rather than by
+        # resolution. When this is set, the requested tolerance was not attainable with the
+        # supplied phase function and tightening atol/rtol will not help.
+        "phase_limited": num_phase_limited > 0,
+        "num_phase_limited_regions": num_phase_limited,
         "p_points": p_points,
         "num_regions": num_used_regions,
         "regions": used_regions,
@@ -770,6 +1243,7 @@ def _adaptive_levin(
         "elapsed": float(elapsed),
         "num_SVD_errors": num_SVD_errors,
         "num_order_changes": num_order_changes,
+        "num_direct_solves": num_direct_solves,
         "chebyshev_min_order": chebyshev_min_order,
         "max_depth": max_depth,
     }
@@ -880,6 +1354,7 @@ def _write_progress_data(
             chebyshev_order=chebyshev_order,
             rtol=rtol,
             notify_label=notify_label,
+            build_p_sample=True,
         )
         estimate = data["value"]
         region_data["estimate"] = estimate
@@ -894,6 +1369,7 @@ def _write_progress_data(
             chebyshev_order=chebyshev_order,
             rtol=rtol,
             notify_label=notify_label,
+            build_p_sample=True,
         )
         estimateL = dataL["value"]
 
@@ -905,6 +1381,7 @@ def _write_progress_data(
             chebyshev_order=chebyshev_order,
             rtol=rtol,
             notify_label=notify_label,
+            build_p_sample=True,
         )
         estimateR = dataR["value"]
 

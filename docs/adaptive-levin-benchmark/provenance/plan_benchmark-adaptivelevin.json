@@ -1,0 +1,64 @@
+{
+  "version": 3,
+  "created_at": "2026-09-02T12:12:59.422Z",
+  "task_summary": "Benchmark AdaptiveLevin against quad and QAWO across frequency, accuracy and cost",
+  "agents": [],
+  "phases": [
+    {
+      "name": "Plan",
+      "delegations": [
+        {
+          "steps": [
+            {
+              "title": "Stand up harness and reproduce the existing suite",
+              "description": "Work entirely in the workspace against the read-only repo checkout, running the repo's own interpreter (./venv/bin/python, Python 3.12 / NumPy 2.2.4 / SciPy 1.15.2) with PYTHONPATH set to the repo root, so no repository file is modified. Confirm the four AdaptiveLevin unit tests and the LiouvilleGreen Bessel tests import and pass, and record which working-tree modifications are live (the bessel_phase sqrt(m) initial condition, the refactored three_bessel_integrals shared driver, the supplied theta_deriv) since these define the code under test. Create levin_bench/ with runners.py: uniform wrappers around adaptive_levin_sincos, scipy.integrate.quad, and QAWO (quad with weight='sin'|'cos'), each returning a common record of value, wall time (best of 3 repeats), integrand-evaluation count from a counter-wrapped amplitude and phase, and — for Levin — the full diagnostics dict (num_regions, num_simple_regions, evaluations, max_depth, num_SVD_errors, num_order_changes, chebyshev_min_order). Include a per-call wall-clock budget so a diverging brute-force run is recorded as a timeout rather than hanging the campaign. Deliverable: levin_bench/runners.py plus a smoke-test log confirming all three runners agree on one low-frequency integral."
+            },
+            {
+              "title": "Define synthetic problem set with exact oracles",
+              "description": "Write levin_bench/problems.py holding five oscillatory problems whose exact values are known in closed form, so accuracy is measured against truth and not against a converged reference: exponentially damped sine on [0,1]; sin(wx)/x on [1,100] with the Si-function oracle; the repository's own Gradshteyn-Ryzhik case cos(lambda arctan x)/(1+x^2) on [-1,1] with oracle (2/lambda)sin(pi lambda/4), which exercises a nonlinear phase; a quadratic chirp x sin(w x^2) on [0,1] with oracle (1-cos w)/(2w), where the local frequency varies across the interval; and a near-singular amplitude 1/(x^2+delta^2) with small delta, which tests the central claim that cost is set by amplitude smoothness rather than oscillation count. Each problem exposes the amplitude pair f, the phase in all three contract forms (theta, theta_mod_2pi, theta_deriv), the raw integrand for the brute-force runners, and the oracle. Validate every oracle against mpmath at 50 digits at one frequency each. Deliverable: levin_bench/problems.py and an oracle-validation table printed to log."
+            },
+            {
+              "title": "Frequency ladder: Levin vs quad vs QAWO",
+              "description": "Run the synthetic set across a frequency ladder w = 10^1 ... 10^12, each method at matched accuracy targets, recording achieved relative error against the exact oracle, wall time, and evaluation counts. Run the Levin path twice per cell — once with theta_mod_2pi supplied and once with the naive phase only — to locate the frequency at which naive phase evaluation loses its significant digits (expected near theta ~ 1e6), which is the single most important constraint on the extracted package's API contract. Time-cap the brute-force runners and record timeouts explicitly. Fit power-law scaling exponents of wall time and evaluation count versus w for each method, and extract the crossover frequency at which Levin becomes faster than each baseline at equal delivered accuracy. Deliverables: tier-A rows appended to levin_bench_results.csv, plus figures fig_error_vs_omega.png and fig_time_vs_omega.png (log-log, fitted exponents annotated, timeouts marked)."
+            },
+            {
+              "title": "Accuracy-cost Pareto fronts",
+              "description": "For three representative frequencies (moderate, high, extreme) sweep each method across its tolerance controls — Levin over atol x rtol, quad and QAWO over epsabs/epsrel and limit — and plot delivered relative error against wall time and against evaluation count. This is the fair comparison the raw frequency ladder cannot give: it answers 'how long does each method take to reach 1e-8' rather than 'how accurate is each method at its defaults', and it exposes each method's accuracy floor as a vertical asymptote. Report a table of time-to-reach-1e-6 / 1e-8 / 1e-10 per method per frequency, with unreachable targets marked. Deliverables: fig_pareto.png (three panels, one per frequency) and a time-to-accuracy table in the results CSV."
+            },
+            {
+              "title": "Map the tolerance trap and derive a tolerance policy",
+              "description": "Grid over (atol, rtol) at two frequencies and record, for each cell, the delivered error, the wall time, the total region count, the direct-quadrature fraction num_simple_regions/num_regions, and whether max_depth saturated at depth_max. The review documents a regime in which unattainable tolerances drive 96% of regions into scipy.quad at 80x the cost while returning the same answer; this step establishes where that boundary lies and whether it is predictable from inputs. From the map, derive a concrete recommended tolerance rule and a health-check predicate on the returned diagnostics that flags a misconfigured call, both intended to ship in the extracted package. Deliverables: fig_tolerance_regime.png (heat maps of time, error and direct-quadrature fraction over the atol-rtol grid) and a stated policy with the measurements that justify it."
+            },
+            {
+              "title": "Chebyshev order and solve-count economics",
+              "description": "At a fixed accuracy target, scan chebyshev_order over 8, 12, 16, 24, 32, 48, 64, 96 on both a synthetic high-frequency case and a Bessel case, recording region count, linear-solve count, wall time and delivered error, to confirm or correct the review's claim that order 12-32 is optimal and that the order 64 used throughout three_bessel_integrals costs about 2x for no accuracy gain. In the same instrumentation pass, count actual linear solves against accepted regions to quantify the redundant-child-solve overhead the review identifies (three solves per bisection where 2N+1 would suffice), giving a measured rather than estimated saving for the extraction work list. Deliverables: fig_order_scan.png (error and time versus order, twin axes) and measured solve-count ratios per problem."
+            },
+            {
+              "title": "Bessel tier: closed-form oracles and scale scan",
+              "description": "Drive quad_JJJ against the five JJJ closed forms (J000, J110, J220, J222, J231 — using the corrected k^6 term in the J231 oracle) and quad_YJJ against the two YJJ forms (Y000, Y022), at fixed triangle-inequality-satisfying configurations, scanning the overall wavenumber scale over four decades so the oscillation count at max_x reaches ~1e8. Because the closed forms are X-to-infinity limits, first scan max_x at fixed scale to separate truncation error from quadrature error, and report the two contributions separately rather than conflating them. Baseline against brute-force scipy.quad on the spherical-Bessel triple product with the tail-averaging recipe needed for these conditionally convergent integrals, time-capped, plus QAWO applied per sum-and-difference phase group where the amplitude x sin/cos decomposition is available. Deliverables: tier-B rows in the results CSV and fig_bessel_scale_scan.png (error and time versus wavenumber scale, per oracle, brute-force baseline overlaid with timeouts marked)."
+            },
+            {
+              "title": "Separate the phase-function accuracy floor",
+              "description": "Scan bessel_phase sample_points density at spherical orders l = 2, 20, 100, 400 and 1000 and measure the delivered accuracy floor of the Bessel tier at each, holding the Levin tolerances tight enough not to bind. This partitions the tier-B error budget into Levin-core error and Liouville-Green phase-spline error, which is the number that decides whether the extracted package can support sub-1e-8 claims and how much phase-build cost must be amortised across wavenumbers. Also time the phase build itself, since the current call pattern rebuilds it per wavenumber combination. Deliverable: fig_phase_floor.png (accuracy floor and build time versus sample density, one series per order) plus a stated per-order accuracy ceiling at default settings."
+            },
+            {
+              "title": "Synthesise report and package the harness",
+              "description": "Write LEVIN-PERFORMANCE-REPORT.md pulling the campaign together: methodology and oracle provenance; the frequency ladder with fitted scaling exponents and measured crossover frequencies against both baselines; the accuracy-cost Pareto and time-to-accuracy tables; the tolerance-trap map with the recommended policy and health-check predicate; order and solve-count recommendations; the Bessel-tier results with truncation and quadrature error separated; and the per-order phase-function accuracy ceiling. State plainly where Levin wins, where it loses, and where the win is against a rule not designed for the job. Close with an extraction-time change list ordered by measured payoff rather than by inspection. Tidy levin_bench/ into a self-contained directory with a README and a single entry point that regenerates every figure and table, so the campaign can be re-run as a regression benchmark inside the new package. Deliverables: LEVIN-PERFORMANCE-REPORT.md, levin_bench/ with README and driver, and the complete levin_bench_results.csv."
+            }
+          ]
+        }
+      ],
+      "id": "phase-0"
+    }
+  ],
+  "desired_outputs": [
+    "Reusable benchmark harness (levin_bench/) that ships with the extracted package",
+    "Long-format results table levin_bench_results.csv covering every problem x method x frequency x tolerance cell",
+    "Figure set: error-vs-frequency, time-vs-frequency with fitted scaling exponents, accuracy-cost Pareto fronts, crossover-frequency summary, tolerance regime heat map, Chebyshev order scan, phase-function accuracy floor",
+    "LEVIN-PERFORMANCE-REPORT.md: methodology, measured crossover frequencies, recommended tolerance and order policy, and extraction-time changes justified by measurement"
+  ],
+  "feasibility": {
+    "rationale": "The integrator runs, the working tree already carries the bessel_phase sqrt(m) fix, and there are seven closed-form three-Bessel oracles plus four analytic sin/cos oracles in the existing suite to measure against — so every accuracy number can be referred to an exact value rather than to a self-consistency check. The main uncertainty is in the Bessel tier: the JJJ/YJJ closed forms are X to infinity limits, so measured error mixes truncation with quadrature error and has to be separated by scanning max_x, and the achievable floor there is set by the phase-spline density (~1e-6 to 1e-8), not by the Levin core. Brute-force baselines at the top of the frequency ladder will have to be time-capped and recorded as timeouts rather than run to convergence.",
+    "confidence": "high"
+  }
+}

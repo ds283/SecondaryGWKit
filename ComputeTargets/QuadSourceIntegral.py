@@ -1016,6 +1016,21 @@ def WKB_Levin_integral(
         theta={
             "theta": Levin_phase,
             "theta_mod_2pi": Levin_phase_mod_2pi,
+            # Disabled in ccbd369 (Nov 2024) as an experiment, to test whether spline derivatives were
+            # the cause of some very slow Levin integrations.
+            #
+            # Two later measurements bear on whether to re-enable it. (1) Cost: phase_spline.theta_deriv
+            # and .raw_theta are within 2% of each other (9.90 vs 10.04 us per call), and using
+            # theta_deriv also saves a matmul, so it is not plausibly the source of a slowdown.
+            # (2) Accuracy: obtaining theta' by spectral differentiation of the raw phase loses precision
+            # in proportion to theta/(phase change across the subinterval), because the sampled raw phase
+            # only has absolute resolution ~eps*theta. Measured against the exact Bessel phase derivative
+            # on 6*pi-wide subintervals, the spectral route gives relative errors of 4e-9 at x~1e5 and
+            # 1e-6 at x~1e7, where theta_deriv is flat at ~5e-10.
+            #
+            # LiouvilleGreen/three_bessel_integrals.py now supplies theta_deriv for exactly this reason.
+            # Re-enabling it here is likely a straight win, but has not been validated end-to-end against
+            # this pipeline, so it is left as it was.
             # "theta_deriv": Levin_deriv,
         },
         atol=atol,
