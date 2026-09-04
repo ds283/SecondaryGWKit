@@ -2,7 +2,7 @@
 
 **Campaign:** [`README.md`](README.md) · **Source audit:** [`docs/adaptive-levin-audit-2026-09.md`](../../docs/adaptive-levin-audit-2026-09.md)
 **Baseline commit:** `c8a1918` (`main`, clean; `AdaptiveLevin/levin_quadrature.py` byte-identical to the audited `68cff5d`)
-**Last updated:** 2026-09-04 — prompt 08 (spectral order and vectorised sampling) complete.
+**Last updated:** 2026-09-04 — prompt 09 (propagate error estimate to callers) complete with deviations.
 
 > **Maintenance rule.** Every prompt updates this file *in its own commit*, before committing.
 > Set your row's status and the log link, and add or clear entries in §3 (Active issues). Do not
@@ -36,8 +36,8 @@ Legend: ⬜ not started · 🟡 in flight · ✅ complete · ⚠️ complete wit
 | # | Prompt | Audit items | Status | Commit | Log |
 |---|---|---|---|---|---|
 | 07 | [Diagnostics, logging, import hygiene](07-diagnostics-hygiene.md) | recs 11, 12 · C10, C11 | ⚠️ | `78cae32` | [07](logs/07-diagnostics-hygiene.md) |
-| 08 | [Spectral order and vectorised sampling](08-order-and-sampling.md) | recs 13, 14 · §4.3, §4.5 | ✅ | — (this commit) | [08](logs/08-order-and-sampling.md) |
-| 09 | [Propagate the error estimate to callers](09-caller-propagation.md) | rec 15 · §3.4 | ⬜ | — | — |
+| 08 | [Spectral order and vectorised sampling](08-order-and-sampling.md) | recs 13, 14 · §4.3, §4.5 | ✅ | `c4dc41d` | [08](logs/08-order-and-sampling.md) |
+| 09 | [Propagate the error estimate to callers](09-caller-propagation.md) | rec 15 · §3.4 | ⚠️ | — (this commit) | [09](logs/09-caller-propagation.md) |
 
 ### Close-out
 
@@ -45,7 +45,7 @@ Legend: ⬜ not started · 🟡 in flight · ✅ complete · ⚠️ complete wit
 |---|---|---|---|---|---|
 | 10 | [Test matrix and campaign verification](10-test-matrix.md) | rec 16 · C12 | ⬜ | — | — |
 
-**Progress:** 8 / 10 complete.
+**Progress:** 9 / 10 complete.
 
 ---
 
@@ -84,7 +84,7 @@ Traceability from the audit's finding and recommendation IDs to the prompt that 
 | 12 | `seaborn`/`matplotlib` behind `emit_diagnostics`; parameterise paths; `logging` | 07 | ✅ |
 | 13 | Raise the default order to 16; document the 12–32 band | 08 | ✅ |
 | 14 | Optional vectorised sampling | 08 | ✅ (mechanism in place, unused by production — see log) |
-| 15 | Propagate `abserr` out of the callers | 09 | ⬜ |
+| 15 | Propagate `abserr` out of the callers | 09 | ⚠️ (`quad_JJJ`/`quad_YJJ` and `QuadSourceIntegral.py`'s nine call sites all propagate `abserr`/`converged`/`phase_limited`; the reported number does not yet bound the true error on 5/7 analytic oracles — see prompt 09's log and issue [09-abserr-does-not-bound-phase-spline-floor] below) |
 | 16 | Test matrix | distributed + 10 | ⬜ |
 
 **Measured and explicitly rejected — do not schedule** (audit §2.3, §4.6): p-refinement before
@@ -147,6 +147,34 @@ falls to the fallback branch (4% at worst, and prompt 03 removes it anyway).
   01's territory) should decide whether a zero-width span should raise (arguably correct — it is
   almost certainly a caller bug) or return 0.0 (matches the stale premise in the README), and fix the
   README's "Reversed spans" note either way.
+
+- **[09-abserr-does-not-bound-phase-spline-floor]** *(opened by prompt 09, 2026-09-04)* — the
+  `abserr` now returned by `quad_JJJ`/`quad_YJJ` (and threaded through `QuadSourceIntegral.py`'s
+  `_three_bessel_Levin`/`_three_bessel_integrals`/`analytic_integral`) does not bound the true error
+  against the analytic oracle on 5 of 7 three-Bessel closed forms measured, by up to 11.5x (see
+  prompt 09's log, "Numerical evidence", and the new `test_abserr_bounds_truth` in
+  `LiouvilleGreen/tests/test_3bessel_analytic.py`, marked `@unittest.expectedFailure`). This is the
+  scoping note prompt 09 was given in advance: `abserr` measures the Levin quadrature's own accuracy
+  against the phase it was *given*, and cannot see the ~2e-8 relative fit floor of the phase/modulus
+  splines that build that phase. **Impact:** any caller trusting this `abserr` as a total error bound
+  on a three-Bessel value is currently over-confident by up to an order of magnitude on about
+  two-thirds of the parameter space measured. **Next step:** `LiouvilleGreen/phase_spline.py` needs
+  to report its own fit accuracy (README §6), and `adaptive_levin_sincos`'s existing but currently
+  unused `theta_abserr` parameter (prompt 04) needs a caller in `LiouvilleGreen/bessel_phase.py` to
+  wire the two together. Out of scope for this campaign (README §6).
+- **[09-quadsource-total-error-incomplete]** *(opened by prompt 09, 2026-09-04)* — prompt 09
+  propagated the *Levin* error estimate only (its own scope, by title). `compute_QuadSource_integral`'s
+  `"total"` = `numeric_quad + WKB_quad + WKB_Levin` still has no combined error bound: `WKB_Levin`'s
+  share is now in `metadata["WKB_Levin"]["abserr"]`, but `numeric_quad_data`/`WKB_quad_data` (regions
+  1 and 2, plain `scipy.quad` via `simple_quadrature`) already compute their own `abserr` and it is
+  silently discarded one level up — `numeric_quad_integral`/`WKB_quad_integral` return it under
+  `payload["abserr"]`, but `compute_QuadSource_integral` only reads `payload["value"]`/`payload["data"]`
+  (see prompt 09's log, "Observations not acted on"). This predates prompt 09 and is not
+  Levin-specific. **Impact:** `"total"`'s true error is unknown even after this prompt; only its
+  `WKB_Levin` third has a number attached. **Next step:** whoever wants a genuine end-to-end bound on
+  `"total"` should read `payload["abserr"]` at all three regions in `compute_QuadSource_integral` and
+  fold them (linearly, per this campaign's established policy) into the metadata dict alongside
+  `"WKB_Levin"`.
 
 > Add an entry here whenever a prompt finishes with something unresolved: a verification step that
 > could not be run, an assumption that could not be confirmed, a deviation a later prompt has to
@@ -382,3 +410,22 @@ because something has landed since.
     (`TestVectorizedSampling`) and by any future caller supplying genuinely array-capable
     callables. A future new loop-sampling call site should accept and thread the same
     `vectorize_cache` rather than sampling in a bare Python loop or inventing a second cache.
+30. **`quad_JJJ`/`quad_YJJ` (`LiouvilleGreen/three_bessel_integrals.py`) return a
+    `BesselIntegralResult` NamedTuple (`value`, `abserr`, `converged`, `phase_limited`) as of
+    prompt 09, not a bare `float`.** Every error component this campaign introduced downstream of
+    `adaptive_levin_sincos` is combined **linearly** across the four sum-and-difference phase groups
+    and across the numeric/Levin split, never in quadrature -- the same policy prompt 09's own log
+    justifies (the four groups share a phase construction, so an inaccurate phase produces a common
+    drift, not independent noise). `ComputeTargets/QuadSourceIntegral.py`'s own (separate,
+    `GkSource`-driven) `_three_bessel_Levin`/`_three_bessel_quad`/`_three_bessel_integrals`/
+    `analytic_integral` functions follow the identical linear-combination policy, propagating
+    `abserr`/`converged`/`phase_limited` all the way to `compute_QuadSource_integral`'s returned
+    `"metadata"` dict (`metadata["analytic"]["abserr"]`, `metadata["WKB_Levin"]["abserr"]`) rather
+    than into `LevinData` (a namedtuple mapped onto fixed Datastore SQL columns -- adding a field
+    there is a schema change, out of scope). **The reported `abserr` does not yet bound the true
+    error** on 5 of 7 analytic three-Bessel oracles measured (see
+    `[09-abserr-does-not-bound-phase-spline-floor]` above) -- treat a small `abserr` from either
+    `quad_JJJ`/`quad_YJJ` or `QuadSourceIntegral.py`'s Levin path as "the quadrature resolved the
+    phase it was given", not as "this value is accurate to that many digits", until that issue
+    closes. A future new three-Bessel error-propagating call site should follow the same
+    linear-combination convention rather than combining in quadrature.

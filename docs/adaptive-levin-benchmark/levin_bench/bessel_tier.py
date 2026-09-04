@@ -104,7 +104,10 @@ def run_bessel_levin(
     t0 = time.perf_counter()
     with warnings.catch_warnings():
         warnings.simplefilter("ignore")
-        value = evaluator(
+        # quad_JJJ/quad_YJJ return a BesselIntegralResult (value, abserr, converged,
+        # phase_limited) as of prompts/levin-refactor's prompt 09, not a bare float -- see
+        # LiouvilleGreen/three_bessel_integrals.py.
+        result = evaluator(
             ph[0],
             ph[1],
             ph[2],
@@ -121,9 +124,18 @@ def run_bessel_levin(
         )
     wall = time.perf_counter() - t0
 
+    value = result.value
     ref = O.analytic(k, q, s)
     abs_err = abs(value - ref)
     rel_err = abs_err / abs(ref) if ref != 0.0 else np.nan
+
+    # the harness exists to compare reported against true, so record both: the propagated
+    # abserr this evaluator now reports, and whether the measured abs_err above actually falls
+    # within it (it does not always -- the reported abserr is a quadrature-only estimate that
+    # cannot see the phase/modulus splines' own fit error; see BesselIntegralResult's docstring
+    # and prompts/levin-refactor/logs/09-caller-propagation.md)
+    reported_abserr = result.abserr
+    abserr_ratio = abs_err / reported_abserr if reported_abserr > 0 else np.nan
 
     return {
         "tier": "B",
@@ -144,6 +156,11 @@ def run_bessel_levin(
         "value": value,
         "abs_err": abs_err,
         "rel_err": rel_err,
+        "reported_abserr": reported_abserr,
+        "abserr_bounds_truth": bool(abs_err <= reported_abserr),
+        "abserr_ratio_true_over_reported": abserr_ratio,
+        "converged": result.converged,
+        "phase_limited": result.phase_limited,
         "time_s": wall,
         "phase_build_s": phase_time,
         "total_s": wall + phase_time,

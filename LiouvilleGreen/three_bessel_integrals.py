@@ -1,8 +1,43 @@
+from typing import NamedTuple
+
 import numpy as np
 from scipy.special import jv, yv
 
 from AdaptiveLevin import adaptive_levin_sincos
 from Quadrature.simple_quadrature import simple_quadrature
+
+
+class BesselIntegralResult(NamedTuple):
+    """
+    Return type of quad_JJJ/quad_YJJ (and their internal building blocks). Replaces the bare float
+    this module used to return (prompts/levin-refactor's prompt 09, audit sec 3.4 / recommendation
+    15): the four sum-and-difference phase groups combine as (-G1+G2+G3-G4)/4, a cancellative
+    combination whose *relative* error is amplified by the cancellation factor, and only the summed
+    absolute error can reveal that -- four group values of order one cancelling to 1e-6, each
+    accurate to 1e-12, give a relative error of 1e-6 with nothing in a bare float to say so.
+
+    Component errors are combined **linearly**, not in quadrature, for the same reason the
+    quadrature itself sums regions linearly (levin_quadrature.py): the four groups share a phase
+    construction, so a systematically inaccurate phase produces a common drift across them rather
+    than independent noise.
+
+    IMPORTANT: "abserr" is the estimated error of the *quadrature* only. It does not, and cannot,
+    include the fit error of the phase and modulus splines the phase/mod callables are built from --
+    that is invisible from inside this module. On this module's own oracles that floor was measured
+    at a uniform ~2e-8 relative accuracy across all seven closed forms (see
+    DEFAULT_3BESSEL_CHEBYSHEV_ORDER's comment above and
+    prompts/levin-refactor/logs/09-caller-propagation.md), well above the ~1e-15 this "abserr" alone
+    would suggest. adaptive_levin_sincos() accepts an optional theta_abserr for exactly this gap;
+    nothing in LiouvilleGreen/ supplies one yet (prompts/levin-refactor's README Sec 6). Treat a
+    small reported "abserr" here as "the Levin rule resolved the phase it was given accurately", not
+    as "this value is accurate to that many digits".
+    """
+
+    value: float
+    abserr: float
+    converged: bool
+    phase_limited: bool
+
 
 # The Levin rule integrates against a (sin, cos) basis carrying a single phase, so a product of three
 # Bessel functions has to be decomposed into sum-and-difference phases first. Writing each Bessel factor
@@ -72,7 +107,14 @@ def quad_JJJ(
     # print(f">> numeric on (0, {min_cut}) = {numeric}")
     # print(f">> Levin on ({min_cut}, {max_x}) = {Levin}")
 
-    return numeric + Levin
+    return BesselIntegralResult(
+        value=numeric.value + Levin.value,
+        abserr=numeric.abserr + Levin.abserr,
+        converged=numeric.converged and Levin.converged,
+        # plain quadrature (the "numeric" part) has no phase-limited concept; whether the combined
+        # result is phase-limited is entirely a property of the Levin part
+        phase_limited=Levin.phase_limited,
+    )
 
 
 def _direct_JJJ(
@@ -105,7 +147,17 @@ def _direct_JJJ(
         method="quad",
     )
 
-    return np.pow(np.pi / 2.0, 3.0 / 2.0) / np.sqrt(k * q * s) * data["value"]
+    norm_factor = np.pow(np.pi / 2.0, 3.0 / 2.0) / np.sqrt(k * q * s)
+    value = norm_factor * data["value"]
+    abserr = norm_factor * data["abserr"]
+
+    return BesselIntegralResult(
+        value=value,
+        abserr=abserr,
+        converged=abserr <= max(atol, rtol * np.fabs(value)),
+        # plain quadrature has no phase-limited concept
+        phase_limited=False,
+    )
 
 
 def _phase_group(phase_mu, phase_nu, phase_sigma, k, q, s, e_nu, e_sigma):
@@ -195,6 +247,9 @@ def _Levin_3bessel(
         return np.pow(x, 3.0 / 2.0) * m_mu(k * x) * m_nu(q * x) * m_sigma(s * x)
 
     total = 0.0
+    abserr_total = 0.0
+    converged = True
+    phase_limited = False
     for index, (e_nu, e_sigma) in enumerate(_PHASE_GROUP_SIGNS):
         data = adaptive_levin_sincos(
             x_span,
@@ -206,10 +261,21 @@ def _Levin_3bessel(
             notify_label=f"phase{index + 1}",
         )
         total = total + combination[index] * data["value"]
+        # combined linearly, not in quadrature: the four groups share a phase construction, so a
+        # systematically inaccurate phase produces a common drift rather than independent noise --
+        # see BesselIntegralResult's docstring
+        abserr_total = abserr_total + np.fabs(combination[index]) * data["abserr"]
+        converged = converged and data["converged"]
+        phase_limited = phase_limited or data["phase_limited"]
 
     norm_factor = np.pow(np.pi / 2.0, 3.0 / 2.0) / np.sqrt(k * q * s) / 4.0
 
-    return norm_factor * total
+    return BesselIntegralResult(
+        value=norm_factor * total,
+        abserr=norm_factor * abserr_total,
+        converged=converged,
+        phase_limited=phase_limited,
+    )
 
 
 def _Levin_JJJ(
@@ -282,7 +348,12 @@ def quad_YJJ(
         chebyshev_order=chebyshev_order,
     )
 
-    return numeric + Levin
+    return BesselIntegralResult(
+        value=numeric.value + Levin.value,
+        abserr=numeric.abserr + Levin.abserr,
+        converged=numeric.converged and Levin.converged,
+        phase_limited=Levin.phase_limited,
+    )
 
 
 def _direct_YJJ(
@@ -315,7 +386,16 @@ def _direct_YJJ(
         method="quad",
     )
 
-    return np.pow(np.pi / 2.0, 3.0 / 2.0) / np.sqrt(k * q * s) * data["value"]
+    norm_factor = np.pow(np.pi / 2.0, 3.0 / 2.0) / np.sqrt(k * q * s)
+    value = norm_factor * data["value"]
+    abserr = norm_factor * data["abserr"]
+
+    return BesselIntegralResult(
+        value=value,
+        abserr=abserr,
+        converged=abserr <= max(atol, rtol * np.fabs(value)),
+        phase_limited=False,
+    )
 
 
 def _Levin_YJJ(

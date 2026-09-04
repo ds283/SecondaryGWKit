@@ -101,6 +101,7 @@ def compute_QuadSource_integral(
         numeric_quad_data = None
         WKB_quad_data = None
         WKB_Levin_data = None
+        WKB_Levin_metadata = None
 
         if GkPolicy.type == "numeric":
             max_z, min_z = Gk_f.numeric_region
@@ -270,6 +271,11 @@ def compute_QuadSource_integral(
             )
             WKB_Levin = payload["value"]
             WKB_Levin_data = payload["data"]
+            WKB_Levin_metadata = {
+                "abserr": payload["abserr"],
+                "converged": payload["converged"],
+                "phase_limited": payload["phase_limited"],
+            }
 
         # calculate analytic approximation for specified value of b using pre-supplied Bessel function splines
         analytic_data = analytic_integral(
@@ -305,7 +311,19 @@ def compute_QuadSource_integral(
         "analytic_rad": analytic_data["value"],
         "compute_time": timer.elapsed,
         "analytic_compute_time": analytic_data["elapsed"],
-        "metadata": {"analytic": analytic_data["metadata"]},
+        # "abserr"/"converged" propagated from the Levin quadrature calls (prompts/levin-refactor's
+        # prompt 09). numeric_quad/WKB_quad's own reported errors are not folded in here -- that
+        # would give "total" a genuine combined error bound, but those two regions use plain
+        # scipy quadrature, not the Levin machinery this prompt is scoped to; see this prompt's log
+        # for the open issue this leaves.
+        "metadata": {
+            "analytic": {
+                **analytic_data["metadata"],
+                "abserr": analytic_data["abserr"],
+                "converged": analytic_data["converged"],
+            },
+            "WKB_Levin": WKB_Levin_metadata,
+        },
     }
 
 
@@ -358,9 +376,15 @@ def _three_bessel_integrals(
             rtol=rtol,
         )
         value = Levin["value"]
+        abserr = Levin["abserr"]
+        converged = Levin["converged"]
         return {
             "J": value[0],
             "Y": value[1],
+            "J_abserr": abserr[0],
+            "Y_abserr": abserr[1],
+            "J_converged": converged[0],
+            "Y_converged": converged[1],
             "metadata": Levin["metadata"] | {"compute_time": Levin["compute_time"]},
         }
 
@@ -377,9 +401,15 @@ def _three_bessel_integrals(
             rtol=rtol,
         )
         value = quad["value"]
+        abserr = quad["abserr"]
+        converged = quad["converged"]
         return {
             "J": value[0],
             "Y": value[1],
+            "J_abserr": abserr[0],
+            "Y_abserr": abserr[1],
+            "J_converged": converged[0],
+            "Y_converged": converged[1],
             "metadata": quad["metadata"] | {"compute_time": quad["compute_time"]},
         }
 
@@ -411,9 +441,15 @@ def _three_bessel_integrals(
     )
     quad_value = quad["value"]
     Levin_value = Levin["value"]
+    quad_abserr = quad["abserr"]
+    Levin_abserr = Levin["abserr"]
     return {
         "J": quad_value[0] + Levin_value[0],
         "Y": quad_value[1] + Levin_value[1],
+        "J_abserr": quad_abserr[0] + Levin_abserr[0],
+        "Y_abserr": quad_abserr[1] + Levin_abserr[1],
+        "J_converged": quad["converged"][0] and Levin["converged"][0],
+        "Y_converged": quad["converged"][1] and Levin["converged"][1],
         "metadata": {
             "quad": quad["metadata"],
             "Levin": Levin["metadata"],
@@ -644,6 +680,20 @@ def _three_bessel_Levin(
     J = norm_factor * (-J1_value + J2_value + J3_value - J4_value)
     Y = norm_factor * (-Y1_value + Y2_value + Y3_value - Y4_value)
 
+    J_blocks = [J1_data, J2_data, J3_data, J4_data]
+    Y_blocks = [Y1_data, Y2_data, Y3_data, Y4_data]
+
+    # combined linearly, not in quadrature, for the same reason as three_bessel_integrals.py's
+    # BesselIntegralResult (prompts/levin-refactor's prompt 09): the four groups share a phase
+    # construction, so an inaccurate phase produces a common drift, not independent noise. Every
+    # combination coefficient here has magnitude 1, so |coefficient| is elided.
+    J_abserr = norm_factor * sum(item["abserr"] for item in J_blocks)
+    Y_abserr = norm_factor * sum(item["abserr"] for item in Y_blocks)
+    J_converged = all(item["converged"] for item in J_blocks)
+    Y_converged = all(item["converged"] for item in Y_blocks)
+    J_phase_limited = any(item["phase_limited"] for item in J_blocks)
+    Y_phase_limited = any(item["phase_limited"] for item in Y_blocks)
+
     data_blocks = {
         "J1_data": J1_data,
         "J2_data": J2_data,
@@ -655,7 +705,13 @@ def _three_bessel_Levin(
         "Y4_data": Y4_data,
     }
     metadata = {
-        key: {"elapsed": item["elapsed"], "regions": len(item["regions"])}
+        key: {
+            "elapsed": item["elapsed"],
+            "regions": len(item["regions"]),
+            "abserr": item["abserr"],
+            "converged": item["converged"],
+            "phase_limited": item["phase_limited"],
+        }
         for key, item in data_blocks.items()
     }
 
@@ -663,6 +719,9 @@ def _three_bessel_Levin(
 
     return {
         "value": [J, Y],
+        "abserr": [J_abserr, Y_abserr],
+        "converged": [J_converged, Y_converged],
+        "phase_limited": [J_phase_limited, Y_phase_limited],
         "compute_time": stop - start,
         "metadata": metadata,
     }
@@ -722,8 +781,16 @@ def _three_bessel_quad(
         method="quad",
     )
 
+    J_value, Y_value = data["value"]
+    J_abserr, Y_abserr = data["abserr"]
+
     return {
         "value": data["value"],
+        "abserr": data["abserr"],
+        "converged": [
+            J_abserr <= max(atol, rtol * abs(J_value)),
+            Y_abserr <= max(atol, rtol * abs(Y_value)),
+        ],
         "compute_time": data["data"].compute_time,
         "metadata": {},
     }
@@ -788,6 +855,18 @@ def analytic_integral(
     Y_factor = data0pt5["J"] + A * data2pt5["J"]
     J_factor = data0pt5["Y"] + A * data2pt5["Y"]
 
+    # combined linearly, not in quadrature, for the same reason as everywhere else in this file's
+    # three-Bessel machinery (prompts/levin-refactor's prompt 09): a common phase-spline drift, not
+    # independent noise
+    Y_factor_abserr = data0pt5["J_abserr"] + abs(A) * data2pt5["J_abserr"]
+    J_factor_abserr = data0pt5["Y_abserr"] + abs(A) * data2pt5["Y_abserr"]
+    converged = (
+        data0pt5["J_converged"]
+        and data0pt5["Y_converged"]
+        and data2pt5["J_converged"]
+        and data2pt5["Y_converged"]
+    )
+
     B = pi / 2.0
     C = pow(2.0, 3.0 + 2.0 * b) / (3.0 + 2.0 * b) / (2.0 + b)
     D = gamma(2.5 + b) * gamma(2.5 + b)
@@ -796,11 +875,23 @@ def analytic_integral(
     F = -B * C * D * E
     x = k.k * eta_response
 
-    value = F * (yv(0.5 + b, x) * Y_factor - jv(0.5 + b, x) * J_factor)
+    Y_bessel = yv(0.5 + b, x)
+    J_bessel = jv(0.5 + b, x)
+
+    value = F * (Y_bessel * Y_factor - J_bessel * J_factor)
+    abserr = abs(F) * (
+        abs(Y_bessel) * Y_factor_abserr + abs(J_bessel) * J_factor_abserr
+    )
 
     stop = time.perf_counter()
 
-    return {"value": value, "elapsed": stop - start, "metadata": metadata}
+    return {
+        "value": value,
+        "abserr": abserr,
+        "converged": converged,
+        "elapsed": stop - start,
+        "metadata": metadata,
+    }
 
 
 def _extract_z(z: Union[type(None), redshift, float]) -> str:
@@ -1057,6 +1148,11 @@ def WKB_Levin_integral(
         notify_label=f"k={k.k_inv_Mpc:.3g}/Mpc, q={q.k_inv_Mpc:.3g}/Mpc, r={r.k_inv_Mpc:.3g}/Mpc @ z_response={z_response.z:.5g}",
     )
 
+    # LevinData is a fixed namedtuple mapped onto explicit Datastore SQL columns (see
+    # Datastore/SQL/ObjectFactories/QuadSourceIntegral.py); adding a field there is a schema change
+    # and out of scope here (prompts/levin-refactor's prompt 09). "abserr"/"converged"/
+    # "phase_limited" are returned as siblings of "data" instead, for the caller to fold into the
+    # free-form "metadata" dict that is already persisted as JSON.
     return {
         "data": LevinData(
             num_regions=data["num_regions"],
@@ -1069,6 +1165,11 @@ def WKB_Levin_integral(
             elapsed=data["elapsed"],
         ),
         "value": (1.0 + z_response.z) * data["value"],
+        # scaled by the same (1 + z_response.z) factor as "value": abserr is an absolute error, so
+        # it scales linearly under the same multiplicative rescaling
+        "abserr": (1.0 + z_response.z) * data["abserr"],
+        "converged": data["converged"],
+        "phase_limited": data["phase_limited"],
     }
 
 

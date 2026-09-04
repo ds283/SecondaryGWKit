@@ -69,7 +69,7 @@ def plot_and_compute_3Bessel(
             x,
             atol=quad_atol,
             rtol=quad_rtol,
-        )
+        ).value
         for x in x_grid
     ]
 
@@ -106,7 +106,7 @@ def plot_and_compute_3Bessel(
 
     plt.close()
 
-    value = evaluator(
+    result = evaluator(
         mu_phase,
         nu_phase,
         sigma_phase,
@@ -120,7 +120,7 @@ def plot_and_compute_3Bessel(
         atol=quad_atol,
         rtol=quad_rtol,
     )
-    return value
+    return result
 
 
 class J000:
@@ -300,6 +300,11 @@ Jintegrals = [J000, J110, J220, J222, J231]
 Yintegrals = [Y000, Y022]
 singularity_eps = [1e-1, 1e-2, 1e-3, 1e-4, 1e-5, 1e-6, 1e-7, 1e-8, 1e-9, 1e-10]
 
+# fixed wavenumber triple used by test_abserr_bounds_truth below: satisfies the triangle
+# inequality, no two equal, not a right-angle or degenerate configuration. Matches
+# docs/adaptive-levin-benchmark/levin_bench/bessel_tier.py's K0, Q0, S0.
+ABSERR_BOUNDS_K, ABSERR_BOUNDS_Q, ABSERR_BOUNDS_S = 1.3, 1.7, 2.1
+
 
 def intify(x: float):
     return int(round(x, 0))
@@ -316,7 +321,7 @@ class Test3BesselAnalytic(unittest.TestCase):
             s = uniform(0.1, 5.0)
 
             analytic = J.analytic(k, q, s)
-            numeric = plot_and_compute_3Bessel(
+            result = plot_and_compute_3Bessel(
                 quad_JJJ,
                 J.mu,
                 J.nu,
@@ -329,7 +334,7 @@ class Test3BesselAnalytic(unittest.TestCase):
                 label="JJJ",
                 timestamp=timestamp,
             )
-
+            numeric = result.value
             abserr = np.fabs(numeric - analytic)
 
             if is_triangle(k, q, s):
@@ -340,6 +345,9 @@ class Test3BesselAnalytic(unittest.TestCase):
                 print(f"   quadrature result = {numeric}")
                 print(f"   analytic result = {analytic}")
                 print(f"   relerr={relerr:.5g}, abserr={abserr:.5g}")
+                print(
+                    f"   reported abserr={result.abserr:.5g}, converged={result.converged}, phase_limited={result.phase_limited}"
+                )
                 self.assertTrue(relerr < REL_TOLERANCE or abserr < ABS_TOLERANCE)
 
             else:
@@ -350,6 +358,9 @@ class Test3BesselAnalytic(unittest.TestCase):
                 print(f"   quadrature result = {numeric}")
                 print(f"   analytic result = {analytic}")
                 print(f"   abserr={abserr:.5g}")
+                print(
+                    f"   reported abserr={result.abserr:.5g}, converged={result.converged}, phase_limited={result.phase_limited}"
+                )
                 self.assertTrue(abserr < ABS_TOLERANCE)
 
     def test_YJJ(self):
@@ -361,7 +372,7 @@ class Test3BesselAnalytic(unittest.TestCase):
             s = uniform(0.1, 5.0)
 
             analytic = Y.analytic(k, q, s)
-            numeric = plot_and_compute_3Bessel(
+            result = plot_and_compute_3Bessel(
                 quad_YJJ,
                 Y.mu,
                 Y.nu,
@@ -374,6 +385,7 @@ class Test3BesselAnalytic(unittest.TestCase):
                 label="YJJ",
                 timestamp=timestamp,
             )
+            numeric = result.value
 
             abserr = np.fabs(numeric - analytic)
             relerr = abserr / analytic
@@ -389,6 +401,9 @@ class Test3BesselAnalytic(unittest.TestCase):
             print(f"   quadrature result = {numeric}")
             print(f"   analytic result = {analytic}")
             print(f"   relerr={relerr:.5g}, abserr={abserr:.5g}")
+            print(
+                f"   reported abserr={result.abserr:.5g}, converged={result.converged}, phase_limited={result.phase_limited}"
+            )
             self.assertTrue(relerr < REL_TOLERANCE or abserr < ABS_TOLERANCE)
 
     def test_YJJ_log_singularity(self):
@@ -406,7 +421,7 @@ class Test3BesselAnalytic(unittest.TestCase):
 
                 for label, s in values:
                     analytic = Y.analytic(k, q, s)
-                    numeric = plot_and_compute_3Bessel(
+                    result = plot_and_compute_3Bessel(
                         quad_YJJ,
                         Y.mu,
                         Y.nu,
@@ -421,6 +436,7 @@ class Test3BesselAnalytic(unittest.TestCase):
                         quad_atol=1e-10,
                         quad_rtol=1e-8,
                     )
+                    numeric = result.value
 
                     abserr = np.fabs(numeric - analytic)
                     relerr = abserr / analytic
@@ -440,10 +456,102 @@ class Test3BesselAnalytic(unittest.TestCase):
                     print(f"   quadrature result = {numeric}")
                     print(f"   analytic result = {analytic}")
                     print(f"   relerr={relerr:.5g}, abserr={abserr:.5g}")
+                    print(
+                        f"   reported abserr={result.abserr:.5g}, converged={result.converged}, phase_limited={result.phase_limited}"
+                    )
                     self.assertTrue(
                         relerr < SINGULARITY_REL_TOLERANCE
                         or abserr < SINGULARITY_ABS_TOLERANCE
                     )
+
+    @unittest.expectedFailure
+    def test_abserr_bounds_truth(self):
+        """
+        C12 (audit) / prompt 09: does the abserr quad_JJJ/quad_YJJ now report actually bound the
+        true error against the analytic oracle?
+
+        Measured at the fixed triple (ABSERR_BOUNDS_K, ABSERR_BOUNDS_Q, ABSERR_BOUNDS_S) =
+        (1.3, 1.7, 2.1), max_x=1e12, atol=1e-14, rtol=1e-10 (prompts/levin-refactor/logs/
+        09-caller-propagation.md has the full seven-oracle table): reported abserr bounds the true
+        error on 2 of 7 oracles (J000, Y000) and underbounds it -- by up to ~11.5x -- on the other
+        5 (J110, J220, J222, J231, Y022). This is exactly the gap this module's own scoping note
+        predicts: "abserr" measures how accurately the Levin rule integrated the phase it was
+        *given*, not the accuracy of that phase itself, and LiouvilleGreen's phase/modulus splines
+        carry their own ~2e-8 relative fit floor that is invisible from inside the quadrature (see
+        BesselIntegralResult's docstring in three_bessel_integrals.py, and README Sec 6 of the
+        levin-refactor campaign). Marked xfail rather than weakened or removed -- this campaign's
+        rule is not to paper over a failing abserr-bounds-truth assertion. Closing this needs
+        LiouvilleGreen/phase_spline.py to report its own fit accuracy and
+        adaptive_levin_sincos's theta_abserr wired up to consume it; see
+        prompts/levin-refactor/IMPLEMENTATION_STATE.md Sec 3,
+        [09-abserr-does-not-bound-phase-spline-floor].
+        """
+        k, q, s = ABSERR_BOUNDS_K, ABSERR_BOUNDS_Q, ABSERR_BOUNDS_S
+        max_x = MAX_X
+        quad_atol = 1e-14
+        quad_rtol = 1e-10
+
+        cases = [("JJJ", quad_JJJ, J) for J in Jintegrals] + [
+            ("YJJ", quad_YJJ, Y) for Y in Yintegrals
+        ]
+
+        # gather every oracle's measurement before asserting, so a failure on an early oracle
+        # (expected -- see docstring) does not suppress the diagnostic print for the later ones;
+        # a single assertion at the end keeps this compatible with @unittest.expectedFailure, which
+        # expects exactly one failure from the whole test, not one per subTest
+        failures = []
+        for kind, evaluator, integral_class in cases:
+            mu_phase = bessel_phase(
+                integral_class.mu + 0.5, 1.075 * k * max_x, atol=1e-25, rtol=5e-14
+            )
+            nu_phase = bessel_phase(
+                integral_class.nu + 0.5, 1.075 * q * max_x, atol=1e-25, rtol=5e-14
+            )
+            sigma_phase = bessel_phase(
+                integral_class.sigma + 0.5, 1.075 * s * max_x, atol=1e-25, rtol=5e-14
+            )
+
+            analytic = integral_class.analytic(k, q, s)
+            result = evaluator(
+                mu_phase,
+                nu_phase,
+                sigma_phase,
+                integral_class.mu,
+                integral_class.nu,
+                integral_class.sigma,
+                k,
+                q,
+                s,
+                max_x,
+                atol=quad_atol,
+                rtol=quad_rtol,
+            )
+
+            true_abserr = np.fabs(result.value - analytic)
+            ratio = true_abserr / result.abserr if result.abserr > 0 else np.inf
+            bounds = true_abserr <= result.abserr
+
+            print(
+                f"@@ ({kind} {intify(integral_class.mu)},{intify(integral_class.nu)},{intify(integral_class.sigma)}): "
+                f"true abserr={true_abserr:.5g}, reported abserr={result.abserr:.5g}, "
+                f"ratio (true/reported)={ratio:.5g}, bounds={bounds}"
+            )
+            if not bounds:
+                failures.append(
+                    f"{kind}({integral_class.mu},{integral_class.nu},{integral_class.sigma}): "
+                    f"reported abserr={result.abserr:.5g} < true abserr={true_abserr:.5g} "
+                    f"(ratio={ratio:.5g})"
+                )
+
+        self.assertEqual(
+            failures,
+            [],
+            msg=(
+                "reported abserr did not bound the true error against the analytic oracle on "
+                f"{len(failures)}/{len(cases)} cases (expected -- see this test's docstring): "
+                + "; ".join(failures)
+            ),
+        )
 
     def test_YJJ_log_scaling(
         self,
@@ -498,7 +606,7 @@ class Test3BesselAnalytic(unittest.TestCase):
                     )
 
                     analytic = Y.analytic(k, q, s)
-                    numeric = quad_YJJ(
+                    result = quad_YJJ(
                         mu_phase,
                         nu_phase,
                         sigma_phase,
@@ -512,6 +620,7 @@ class Test3BesselAnalytic(unittest.TestCase):
                         atol=quad_atol,
                         rtol=quad_rtol,
                     )
+                    numeric = result.value
 
                     stop = time.perf_counter()
 
