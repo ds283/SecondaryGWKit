@@ -49,3 +49,27 @@ class sqla_IntegrationSolver_factory(SQLAFactoryBase):
             setattr(obj, key, value)
 
         return obj
+
+    @staticmethod
+    def inventory(conn, table, tables, *args, **kwargs):
+        earliest_timestamp = conn.execute(
+            sqla.select(sqla.func.min(table.c.timestamp))
+        ).scalar()
+        latest_timestamp = conn.execute(
+            sqla.select(sqla.func.max(table.c.timestamp))
+        ).scalar()
+
+        values = [
+            {"label": row.label, "stepping": row.stepping}
+            for row in conn.execute(
+                sqla.select(table.c.label, table.c.stepping).order_by(
+                    table.c.label, table.c.stepping
+                )
+            )
+        ]
+
+        return {
+            "earliest_timestamp": earliest_timestamp,
+            "latest_timestamp": latest_timestamp,
+            "values": values,
+        }

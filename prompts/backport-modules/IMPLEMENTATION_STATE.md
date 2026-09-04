@@ -2,8 +2,7 @@
 
 **Campaign:** [`README.md`](README.md) · **Source audit:** [`docs/backport-modules-audit.md`](../../docs/backport-modules-audit.md)
 **Baseline commit:** `79f0360` (`main`, clean)
-**Last updated:** 2026-09-04 — after prompt 06, plus an out-of-sequence fix for
-`[02-shard-config-reader]` (see §4)
+**Last updated:** 2026-09-04 — after prompt 07
 
 > **Maintenance rule.** Every prompt updates this file *in its own commit*, before committing.
 > Set your row's status, fill in the commit SHA and the log link, and add or clear entries in
@@ -30,7 +29,7 @@ Legend: ⬜ not started · 🟡 in flight · ✅ complete · ⚠️ complete wit
 | # | Prompt | Items | Status | Commit | Log |
 |---|---|---|---|---|---|
 | 06 | [Inventory plumbing](06-inventory-plumbing.md) | F2a | ✅ | *(SHA intentionally not embedded — see §5 note 11)* | [log](logs/06-inventory-plumbing.md) |
-| 07 | [Replicated factories](07-inventory-replicated-factories.md) | F2b | ⬜ | — | — |
+| 07 | [Replicated factories](07-inventory-replicated-factories.md) | F2b | ✅ | *(SHA intentionally not embedded — see §5 note 11)* | [log](logs/07-inventory-replicated-factories.md) |
 | 08 | [Sharded factories + merge config](08-inventory-sharded-factories.md) | F2c | ⬜ | — | — |
 | 09 | [Inventory reporting](09-inventory-reporting.md) | F2d | ⬜ | — | — |
 
@@ -40,7 +39,7 @@ Legend: ⬜ not started · 🟡 in flight · ✅ complete · ⚠️ complete wit
 |---|---|---|---|---|---|
 | 10 | [Verification pass](10-verification.md) | audit §8 + F2 | ⬜ | — | — |
 
-**Progress:** 6 / 10 complete.
+**Progress:** 7 / 10 complete.
 
 ---
 
@@ -63,7 +62,7 @@ Traceability from the audit's finding IDs to the prompt that discharges them.
 | B3 | High | `read_table_config` method generation is broken in four ways; replace with `read_table()` | 04 | ✅ |
 | E1 | Feature | `store_handler` / `persist_handler` split in `RayWorkPool` — **confirmed wanted** | 05 | ✅ |
 | F2a | Feature | `inventory()` plumbing: `Datastore`, `ShardedPool`, `_merge_queue`, numeric merge policies | 06 | ✅ |
-| F2b | Feature | `inventory()` on the 13 replicated-table factories | 07 | ⬜ |
+| F2b | Feature | `inventory()` on the 13 replicated-table factories | 07 | ✅ |
 | F2c | Feature | `inventory()` on the 15 sharded-table factories + `inventory_config` | 08 | ⬜ |
 | F2d | Feature | Inventory reporting entry point | 09 | ⬜ |
 

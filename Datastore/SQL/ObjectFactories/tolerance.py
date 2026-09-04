@@ -48,3 +48,27 @@ class sqla_tolerance_factory(SQLAFactoryBase):
         for key, value in attribute_set.items():
             setattr(obj, key, value)
         return obj
+
+    @staticmethod
+    def inventory(conn, table, tables, *args, **kwargs):
+        earliest_timestamp = conn.execute(
+            sqla.select(sqla.func.min(table.c.timestamp))
+        ).scalar()
+        latest_timestamp = conn.execute(
+            sqla.select(sqla.func.max(table.c.timestamp))
+        ).scalar()
+
+        # report the tolerance values themselves (not their log10), since
+        # that is what a caller of this table actually asked for
+        values = [
+            pow(10.0, row.log10_tol)
+            for row in conn.execute(
+                sqla.select(table.c.log10_tol).order_by(table.c.log10_tol)
+            )
+        ]
+
+        return {
+            "earliest_timestamp": earliest_timestamp,
+            "latest_timestamp": latest_timestamp,
+            "values": values,
+        }

@@ -91,3 +91,40 @@ class sqla_QCDCosmology_factory(SQLAFactoryBase):
             setattr(obj, key, value)
 
         return obj
+
+    @staticmethod
+    def inventory(conn, table, tables, *args, **kwargs):
+        earliest_timestamp = conn.execute(
+            sqla.select(sqla.func.min(table.c.timestamp))
+        ).scalar()
+        latest_timestamp = conn.execute(
+            sqla.select(sqla.func.max(table.c.timestamp))
+        ).scalar()
+
+        # a small configuration table -- a label per row (name plus the
+        # distinguishing cosmological parameters) is more useful than a raw
+        # value list
+        values = [
+            {
+                "name": row.name,
+                "omega_m": row.omega_m,
+                "omega_cc": row.omega_cc,
+                "h": row.h,
+                "log10_max_z": row.log10_max_z,
+            }
+            for row in conn.execute(
+                sqla.select(
+                    table.c.name,
+                    table.c.omega_m,
+                    table.c.omega_cc,
+                    table.c.h,
+                    table.c.log10_max_z,
+                ).order_by(table.c.name)
+            )
+        ]
+
+        return {
+            "earliest_timestamp": earliest_timestamp,
+            "latest_timestamp": latest_timestamp,
+            "values": values,
+        }

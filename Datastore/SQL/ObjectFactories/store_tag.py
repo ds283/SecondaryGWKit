@@ -39,3 +39,23 @@ class sqla_store_tag_factory(SQLAFactoryBase):
         for key, value in attribute_set.items():
             setattr(obj, key, value)
         return obj
+
+    @staticmethod
+    def inventory(conn, table, tables, *args, **kwargs):
+        earliest_timestamp = conn.execute(
+            sqla.select(sqla.func.min(table.c.timestamp))
+        ).scalar()
+        latest_timestamp = conn.execute(
+            sqla.select(sqla.func.max(table.c.timestamp))
+        ).scalar()
+
+        values = [
+            row.label
+            for row in conn.execute(sqla.select(table.c.label).order_by(table.c.label))
+        ]
+
+        return {
+            "earliest_timestamp": earliest_timestamp,
+            "latest_timestamp": latest_timestamp,
+            "values": values,
+        }

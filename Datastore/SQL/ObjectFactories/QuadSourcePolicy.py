@@ -61,3 +61,31 @@ class sqla_QuadSourcePolicy_factory(SQLAFactoryBase):
         for key, value in attribute_set.items():
             setattr(obj, key, value)
         return obj
+
+    @staticmethod
+    def inventory(conn, table, tables, *args, **kwargs):
+        earliest_timestamp = conn.execute(
+            sqla.select(sqla.func.min(table.c.timestamp))
+        ).scalar()
+        latest_timestamp = conn.execute(
+            sqla.select(sqla.func.max(table.c.timestamp))
+        ).scalar()
+
+        values = [
+            {
+                "label": row.label,
+                "Levin_threshold": row.Levin_threshold,
+                "numeric_policy": row.numeric_policy,
+            }
+            for row in conn.execute(
+                sqla.select(
+                    table.c.label, table.c.Levin_threshold, table.c.numeric_policy
+                ).order_by(table.c.serial)
+            )
+        ]
+
+        return {
+            "earliest_timestamp": earliest_timestamp,
+            "latest_timestamp": latest_timestamp,
+            "values": values,
+        }

@@ -532,6 +532,46 @@ class sqla_BackgroundModelFactory(SQLAFactoryBase):
 
         return msgs
 
+    @staticmethod
+    def inventory(conn, table, tables, *args, **kwargs):
+        def _bucket(validated_value: bool):
+            if validated_value:
+                condition = table.c.validated == True
+            else:
+                # a non-nullable "validated" column defaults to False, but
+                # validate_on_startup() defensively also treats a legacy NULL
+                # as unvalidated -- match that here rather than silently
+                # dropping such rows from either bucket
+                condition = sqla.or_(
+                    table.c.validated == False, table.c.validated.is_(None)
+                )
+
+            label_rows = conn.execute(
+                sqla.select(table.c.label)
+                .where(condition)
+                .where(table.c.label.isnot(None))
+                .order_by(table.c.label)
+            )
+            labels = sorted({row.label for row in label_rows})
+
+            earliest_timestamp = conn.execute(
+                sqla.select(sqla.func.min(table.c.timestamp)).where(condition)
+            ).scalar()
+            latest_timestamp = conn.execute(
+                sqla.select(sqla.func.max(table.c.timestamp)).where(condition)
+            ).scalar()
+
+            return {
+                "labels": labels,
+                "earliest_timestamp": earliest_timestamp,
+                "latest_timestamp": latest_timestamp,
+            }
+
+        return {
+            "validated": _bucket(True),
+            "unvalidated": _bucket(False),
+        }
+
 
 class sqla_BackgroundModelValue_factory(SQLAFactoryBase):
     def __init__(self):
@@ -688,3 +728,13 @@ class sqla_BackgroundModelValue_factory(SQLAFactoryBase):
         )
         obj._deserialized = True
         return obj
+
+    @staticmethod
+    def inventory(conn, table, tables, *args, **kwargs):
+        # registered "timestamp": False -- this is a high-volume child table
+        # (one row per (model, z) sample point), so the only meaningful
+        # inventory is a row count, computed with a SQL aggregate rather than
+        # by loading every row into the driver
+        count = conn.execute(sqla.select(sqla.func.count()).select_from(table)).scalar()
+
+        return {"count": count}

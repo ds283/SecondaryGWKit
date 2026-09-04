@@ -119,3 +119,22 @@ class sqla_redshift_factory(SQLAFactoryBase):
             )
             for row in rows
         ]
+
+    @staticmethod
+    def inventory(conn, table, tables, *args, **kwargs):
+        earliest_timestamp = conn.execute(
+            sqla.select(sqla.func.min(table.c.timestamp))
+        ).scalar()
+        latest_timestamp = conn.execute(
+            sqla.select(sqla.func.max(table.c.timestamp))
+        ).scalar()
+
+        values = [
+            row.z for row in conn.execute(sqla.select(table.c.z).order_by(table.c.z))
+        ]
+
+        return {
+            "earliest_timestamp": earliest_timestamp,
+            "latest_timestamp": latest_timestamp,
+            "values": values,
+        }

@@ -120,6 +120,41 @@ class sqla_wavenumber_factory(SQLAFactoryBase):
             for row in rows
         ]
 
+    @staticmethod
+    def inventory(
+        conn, table, tables, units: Optional[UnitsLike] = None, *args, **kwargs
+    ):
+        earliest_timestamp = conn.execute(
+            sqla.select(sqla.func.min(table.c.timestamp))
+        ).scalar()
+        latest_timestamp = conn.execute(
+            sqla.select(sqla.func.max(table.c.timestamp))
+        ).scalar()
+
+        raw_values = [
+            row.k_inv_Mpc
+            for row in conn.execute(
+                sqla.select(table.c.k_inv_Mpc).order_by(table.c.k_inv_Mpc)
+            )
+        ]
+
+        result = {
+            "earliest_timestamp": earliest_timestamp,
+            "latest_timestamp": latest_timestamp,
+            "values": raw_values,
+            "values_unit": "1/Mpc (comoving)",
+        }
+
+        # if a units block is supplied, also report the dimensionful wavenumber
+        # values it implies, alongside the name of the unit system used
+        if units is not None:
+            result["values_physical"] = [
+                k_inv_Mpc / units.Mpc for k_inv_Mpc in raw_values
+            ]
+            result["values_physical_unit"] = units.system_name
+
+        return result
+
 
 class sqla_wavenumber_exit_time_factory(SQLAFactoryBase):
     def __init__(self):
@@ -310,3 +345,24 @@ class sqla_wavenumber_exit_time_factory(SQLAFactoryBase):
         obj._my_id = store_id
 
         return obj
+
+    @staticmethod
+    def inventory(conn, table, tables, *args, **kwargs):
+        earliest_timestamp = conn.execute(
+            sqla.select(sqla.func.min(table.c.timestamp))
+        ).scalar()
+        latest_timestamp = conn.execute(
+            sqla.select(sqla.func.max(table.c.timestamp))
+        ).scalar()
+
+        count = conn.execute(sqla.select(sqla.func.count()).select_from(table)).scalar()
+        distinct_wavenumbers = conn.execute(
+            sqla.select(sqla.func.count(sqla.func.distinct(table.c.wavenumber_serial)))
+        ).scalar()
+
+        return {
+            "earliest_timestamp": earliest_timestamp,
+            "latest_timestamp": latest_timestamp,
+            "count": count,
+            "distinct_wavenumbers": distinct_wavenumbers,
+        }
