@@ -1,11 +1,13 @@
 import unittest
-from math import fabs, atan, sin, exp, pi, nan
+from math import fabs, atan, sin, cos, exp, pi, nan
 
 import numpy as np
+from scipy.special import sici
 
 from AdaptiveLevin.levin_quadrature import (
     adaptive_levin_sincos,
     _Basis_SinCos,
+    _adaptive_levin,
     _adaptive_levin_subregion_impl,
     chebyshev_matrices,
     _cc_weights,
@@ -15,6 +17,99 @@ from AdaptiveLevin.levin_quadrature import (
     _sample_vectorized,
 )
 from utilities import format_time
+
+
+class _TwoIndependentSinCosBasis:
+    """
+    Prompt 10 (C12 gap: m != 2). A minimal, self-contained basis exercising the *generic*
+    m-component code path in _adaptive_levin_subregion_impl() -- the np.block-assembled real
+    system, the row_list construction, the P.reshape(m, chebyshev_order) layout -- which
+    _Basis_SinCos's m == 2 complexified fast path (prompt 02) bypasses entirely. There is no
+    public entry point for m != 2 (adaptive_levin_sincos hard-validates len(f) == 2), so this
+    basis is driven directly through _adaptive_levin(), which is written for general m (standing
+    note 10 of IMPLEMENTATION_STATE.md).
+
+    The basis is w = (sin theta1, cos theta1, sin theta2, cos theta2): two independent (sin, cos)
+    pairs at independent linear phases theta1(x) = lambda1*x, theta2(x) = lambda2*x, stacked block-
+    diagonally. Each pair obeys exactly the same w' = A w relation _Basis_SinCos implements (Amat =
+    [[0, theta'], [-theta', 0]]) with the two pairs decoupled, so
+
+        w1' = theta1' w2,   w2' = -theta1' w1,   w3' = theta2' w4,   w4' = -theta2' w3
+
+    i.e. A^T = block_diag([[0, -theta1'], [theta1', 0]], [[0, -theta2'], [theta2', 0]]). This is
+    not a contrived degenerate case: it is exactly the shape a future basis combining two
+    independent oscillatory phases (e.g. two Liouville-Green modes) would take -- the audit itself
+    (docs/adaptive-levin-audit-2026-09.md Sec 4.2) says the generic m-component path "should be
+    retained for the future bases sketched in the [prior] review's Sec 8.3", and
+    IMPLEMENTATION_STATE.md standing note 10 records the same requirement.
+
+    With f = [1, 0, 0, 1] this evaluates
+        integral f1(x) sin(theta1) + f2(x) cos(theta1) + f3(x) sin(theta2) + f4(x) cos(theta2) dx
+      = integral sin(lambda1 x) dx + integral cos(lambda2 x) dx
+    which has an elementary closed form -- see test_generic_m_component_basis_two_decoupled_phases.
+    """
+
+    def __init__(self, lambda1: float, lambda2: float):
+        self._lambda1 = lambda1
+        self._lambda2 = lambda2
+
+    def theta_abserr_at(self, x):
+        # No declared phase error for this synthetic basis -- same "no theta_abserr supplied"
+        # contract _Basis_SinCos.theta_abserr_at() implements when its own "theta_abserr" key is
+        # absent (see _declared_endpoint_phase_err()).
+        return None
+
+    def build_Levin_data(
+        self,
+        grid,
+        Dmat,
+        notify_label=None,
+        id_label=None,
+        need_AmatT: bool = True,
+        vectorize_cache=None,
+    ):
+        theta1 = self._lambda1 * grid
+        theta2 = self._lambda2 * grid
+        theta1_prime = self._lambda1 * np.ones_like(grid)
+        theta2_prime = self._lambda2 * np.ones_like(grid)
+
+        AmatT = None
+        if need_AmatT:
+            N = len(grid)
+            zero = np.zeros((N, N))
+            t1 = np.diag(theta1_prime)
+            t2 = np.diag(theta2_prime)
+            AmatT = np.block(
+                [
+                    [zero, -t1, zero, zero],
+                    [t1, zero, zero, zero],
+                    [zero, zero, zero, -t2],
+                    [zero, zero, t2, zero],
+                ]
+            )
+
+        # Total variation across both phases -- generalises _Basis_SinCos's own
+        # mean|theta'| * width construction to a two-phase basis. This basis is only ever driven
+        # with a phase_span comfortably above SIX_PI in this test file's own use of it, so the
+        # Clenshaw-Curtis fallback path (which also calls eval_basis() below) is not separately
+        # exercised by this basis.
+        phase_span = float(
+            (np.mean(np.fabs(theta1_prime)) + np.mean(np.fabs(theta2_prime)))
+            * np.fabs(grid[0] - grid[-1])
+        )
+
+        # grid is descending: grid[-1] is the lower endpoint a, grid[0] is the upper endpoint b.
+        theta1_a, theta1_b = theta1[-1], theta1[0]
+        theta2_a, theta2_b = theta2[-1], theta2[0]
+        w0 = [np.sin(theta1_a), np.cos(theta1_a), np.sin(theta2_a), np.cos(theta2_a)]
+        wk = [np.sin(theta1_b), np.cos(theta1_b), np.sin(theta2_b), np.cos(theta2_b)]
+
+        return AmatT, theta1_prime, w0, wk, phase_span
+
+    def eval_basis(self, x):
+        theta1 = self._lambda1 * x
+        theta2 = self._lambda2 * x
+        return [np.sin(theta1), np.cos(theta1), np.sin(theta2), np.cos(theta2)]
 
 
 class TestAdaptiveLevinSinCos(unittest.TestCase):
@@ -43,10 +138,21 @@ class TestAdaptiveLevinSinCos(unittest.TestCase):
         )
         for region in regions:
             print(f"  -- region: {region}")
+
+        # Prompt 10: tightened from the campaign-original 1e-10 (eight orders of magnitude
+        # looser than what this module actually delivers -- README standing note 4) to 1e-12,
+        # using the full-precision closed form (the old literal, 0.5581795618, is itself only
+        # accurate to ~3.5e-11, which is *tighter* than the old threshold allowed for). Measured
+        # true error here is ~7.8e-16; 1e-12 is a ~1000x margin above that, not a value set at
+        # the measured error itself (which would flake).
+        true_value = -cos(50000.0) + cos(1.0)
+        true_err = fabs(value - true_value)
         self.assertTrue(
-            fabs(value - 0.5581795618) < 1e-10,
-            f"Sin integral test failed: expected {0.5581795618}, obtained {value}",
+            true_err < 1e-12,
+            f"Sin integral test failed: expected {true_value}, obtained {value} (true_err={true_err:.3e})",
         )
+        # abserr must bound the true error against the closed form (README Sec 5.2; audit rec 16).
+        self.assertGreaterEqual(data["abserr"], true_err)
 
     def test_CosIntegral(self):
         x_span = (1.0, 500000.0)
@@ -72,10 +178,17 @@ class TestAdaptiveLevinSinCos(unittest.TestCase):
         )
         for region in regions:
             print(f"  -- region: {region}")
+
+        # Prompt 10: tightened from 1e-10 to 1e-12 using the full-precision closed form (the old
+        # literal, -0.6636397833, is itself only accurate to ~3.6e-11). Measured true error here
+        # is ~1.2e-15; 1e-12 is a ~1000x margin above that.
+        true_value = sin(500000.0) - sin(1.0)
+        true_err = fabs(value - true_value)
         self.assertTrue(
-            fabs(value - (-0.6636397833)) < 1e-10,
-            f"Cos integral test failed: expected {-0.6636397833}, obtained {value}",
+            true_err < 1e-12,
+            f"Cos integral test failed: expected {true_value}, obtained {value} (true_err={true_err:.3e})",
         )
+        self.assertGreaterEqual(data["abserr"], true_err)
 
     def test_SincIntegral(self):
         x_span = (1.0, 100.0)
@@ -103,10 +216,21 @@ class TestAdaptiveLevinSinCos(unittest.TestCase):
         )
         for region in regions:
             print(f"  -- region: {region}")
+
+        # Prompt 10: tightened from 1e-10 to 1e-11 using the exact closed form Si(10000) - Si(100)
+        # (substitute u = 100x in integral_1^100 sin(100x)/x dx) instead of the truncated literal
+        # 0.00866607847. Measured true error here is ~9.8e-14 (this problem needs 10 regions to
+        # resolve, so the round-off floor is not the whole story) -- 1e-11 is a ~100x margin above
+        # that.
+        si_hi, _ = sici(100.0 * 100.0)
+        si_lo, _ = sici(100.0 * 1.0)
+        true_value = si_hi - si_lo
+        true_err = fabs(value - true_value)
         self.assertTrue(
-            fabs(value - 0.00866607847) < 1e-10,
-            f"Sinc integral test failed: expected {0.00866607847}, obtained {value}",
+            true_err < 1e-11,
+            f"Sinc integral test failed: expected {true_value}, obtained {value} (true_err={true_err:.3e})",
         )
+        self.assertGreaterEqual(data["abserr"], true_err)
 
     def _GRZIntegral(self, lbda):
 
@@ -135,15 +259,49 @@ class TestAdaptiveLevinSinCos(unittest.TestCase):
             print(f"  -- region: {region}")
 
         analytic_sol = (2.0 / lbda) * sin(pi * lbda / 4.0)
+        true_err = fabs(value - analytic_sol)
+        # Prompt 10: tightened from 1e-10 to 1e-11. Measured worst-case true error across
+        # lambda = 10, 100, 1000 is ~2.8e-13 (at lambda=100); 1e-11 is a ~35x margin above that,
+        # not a value set at the measured error itself.
         self.assertTrue(
-            fabs(value - analytic_sol) < 1e-10,
-            f"Gradshtein & Ryzhik integral test: expected {analytic_sol}, obtained {value}",
+            true_err < 1e-11,
+            f"Gradshtein & Ryzhik integral test: expected {analytic_sol}, obtained {value} "
+            f"(true_err={true_err:.3e})",
         )
+        self.assertGreaterEqual(data["abserr"], true_err)
+        return data
 
     def test_GRZIntegral(self):
-        self._GRZIntegral(10.0)
-        self._GRZIntegral(100.0)
-        self._GRZIntegral(1000.0)
+        # C12: the audit's own text says "_GRZIntegral(10.0) takes the fallback by accident...
+        # that test never exercises Levin at all". README Sec 2.4 note (d) corrects this: the
+        # test also runs at lambda=100 and lambda=1000, which do reach the Levin rule -- but which
+        # path each lambda takes was never asserted, only exercised incidentally. Make it
+        # explicit, using num_simple_regions (rec 16). Re-derived against the post-prompt-03
+        # total-variation gate, not assumed unchanged from the audit's pre-campaign analysis:
+        # theta'(x) = lambda/(1+x^2) never changes sign on [-1, 1], so total variation equals net
+        # phase change here regardless of which gate is used.
+        data10 = self._GRZIntegral(10.0)
+        self.assertEqual(
+            data10["num_simple_regions"],
+            data10["num_regions"],
+            "GRZIntegral(10.0): expected every region to take the Clenshaw-Curtis fallback "
+            "(net phase change 10*(atan(1)-atan(-1)) ~= 15.7 rad is below SIX_PI ~= 18.8 rad, "
+            "so the Levin rule should never be invoked)",
+        )
+
+        data100 = self._GRZIntegral(100.0)
+        self.assertLess(
+            data100["num_simple_regions"],
+            data100["num_regions"],
+            "GRZIntegral(100.0): expected at least one region to take the Levin rule",
+        )
+
+        data1000 = self._GRZIntegral(1000.0)
+        self.assertLess(
+            data1000["num_simple_regions"],
+            data1000["num_regions"],
+            "GRZIntegral(1000.0): expected at least one region to take the Levin rule",
+        )
 
     def test_nan_amplitude_raises(self):
         # amplitude goes non-finite partway through the region; C1: previously this made the
@@ -225,9 +383,7 @@ class TestAdaptiveLevinSinCos(unittest.TestCase):
             data = adaptive_levin_sincos(
                 (1.0, 50.0), good_f, theta={"theta": theta}, chebyshev_order=4
             )
-        self.assertTrue(
-            any("clamp" in message.lower() for message in log_ctx.output)
-        )
+        self.assertTrue(any("clamp" in message.lower() for message in log_ctx.output))
         self.assertIsNotNone(data["value"])
 
     def test_atol_zero_rejected(self):
@@ -405,7 +561,11 @@ class TestAdaptiveLevinSinCos(unittest.TestCase):
 
         def closed_form(omega):
             def F(x):
-                return -exp(-x) * (sin(omega * x) + omega * np.cos(omega * x)) / (1.0 + omega * omega)
+                return (
+                    -exp(-x)
+                    * (sin(omega * x) + omega * np.cos(omega * x))
+                    / (1.0 + omega * omega)
+                )
 
             return F(b) - F(a)
 
@@ -429,7 +589,12 @@ class TestAdaptiveLevinSinCos(unittest.TestCase):
                 (a, b), f, theta=theta_raw, atol=1e-18, rtol=1e-13, chebyshev_order=12
             )
             data_reduced = adaptive_levin_sincos(
-                (a, b), f, theta=theta_reduced, atol=1e-18, rtol=1e-13, chebyshev_order=12
+                (a, b),
+                f,
+                theta=theta_reduced,
+                atol=1e-18,
+                rtol=1e-13,
+                chebyshev_order=12,
             )
 
             self.assertAlmostEqual(
@@ -453,7 +618,12 @@ class TestAdaptiveLevinSinCos(unittest.TestCase):
         theta = lambda x: omega * x
 
         data_plain = adaptive_levin_sincos(
-            (a, b), f, theta={"theta": theta}, atol=1e-18, rtol=1e-13, chebyshev_order=12
+            (a, b),
+            f,
+            theta={"theta": theta},
+            atol=1e-18,
+            rtol=1e-13,
+            chebyshev_order=12,
         )
         data_declared = adaptive_levin_sincos(
             (a, b),
@@ -582,6 +752,117 @@ class TestAdaptiveLevinSinCos(unittest.TestCase):
         # at a tight tolerance the mode is retained and there is nothing to account for
         self.assertEqual(tight["abserr_truncation"], 0.0)
 
+    def test_theta_mod_2pi_path_only(self):
+        # C12 gap: "the theta_mod_2pi path -- the branch production actually uses". Every other
+        # test in this file supplies either the raw "theta" alone or a full {theta, theta_mod_2pi,
+        # theta_deriv} triple; ComputeTargets/QuadSourceIntegral.py (the production caller,
+        # standing note 7) supplies theta + theta_mod_2pi but deliberately NOT theta_deriv, so
+        # theta' is obtained by spectral differentiation of the raw phase (need_theta_Cheb is
+        # True) while sin/cos are evaluated from the range-reduced value (the
+        # hasattr(self, "_theta_mod_2pi") branch in build_Levin_data/eval_basis). This is the one
+        # combination no existing test isolated.
+        a, b = 1.0 / 3.0, 7.0 / 3.0
+        omega = 1.0e6
+        f = [lambda x: exp(-x), lambda x: 0.0]
+
+        def theta_mod_2pi(x, w=omega):
+            val = np.fmod(w * x, 2.0 * pi)
+            if val < 0.0:
+                val += 2.0 * pi
+            return val
+
+        theta = {"theta": lambda x, w=omega: w * x, "theta_mod_2pi": theta_mod_2pi}
+        data = adaptive_levin_sincos(
+            (a, b), f, theta=theta, atol=1e-18, rtol=1e-13, chebyshev_order=12
+        )
+
+        def closed_form(w):
+            def F(x):
+                return -exp(-x) * (sin(w * x) + w * cos(w * x)) / (1.0 + w * w)
+
+            return F(b) - F(a)
+
+        true_err = fabs(data["value"] - closed_form(omega))
+        # Measured true error here is ~1.1e-16; 1e-13 is a >500x margin above that.
+        self.assertLess(true_err, 1e-13)
+        self.assertGreaterEqual(data["abserr"], true_err)
+
+    def test_theta_deriv_path_only(self):
+        # C12 gap: "the theta_deriv path (all four [original] tests use spectral
+        # differentiation)". Supply theta_deriv alone (no theta_mod_2pi), so sin/cos are still
+        # evaluated from the raw phase but theta' comes directly from the caller rather than from
+        # differentiating a sampled theta -- the branch three_bessel_integrals.py's four phase
+        # groups use (standing note in README Sec 2.5).
+        a, b = 1.0 / 3.0, 7.0 / 3.0
+        omega = 1.0e6
+        f = [lambda x: exp(-x), lambda x: 0.0]
+        theta = {"theta": lambda x, w=omega: w * x, "theta_deriv": lambda x, w=omega: w}
+
+        data = adaptive_levin_sincos(
+            (a, b), f, theta=theta, atol=1e-18, rtol=1e-13, chebyshev_order=12
+        )
+
+        def closed_form(w):
+            def F(x):
+                return -exp(-x) * (sin(w * x) + w * cos(w * x)) / (1.0 + w * w)
+
+            return F(b) - F(a)
+
+        true_err = fabs(data["value"] - closed_form(omega))
+        # Measured true error here is ~1.0e-16; 1e-13 is a >500x margin above that.
+        self.assertLess(true_err, 1e-13)
+        self.assertGreaterEqual(data["abserr"], true_err)
+
+    def test_reversed_span(self):
+        # C12 gap: "reversed span". Not covered by any existing test -- module docstring/audit
+        # Sec 1.1 claims a reversed span (b < a) "works and returns the correctly negated value.
+        # Untested, but correct." Verify directly, and check both directions converge.
+        f = [lambda x: 1.0, lambda x: 0.0]
+        theta = {"theta": lambda x: 100.0 * x}
+
+        forward = adaptive_levin_sincos(
+            (1.0, 5.0), f, theta=theta, atol=1e-13, rtol=1e-11
+        )
+        reversed_ = adaptive_levin_sincos(
+            (5.0, 1.0), f, theta=theta, atol=1e-13, rtol=1e-11
+        )
+
+        self.assertTrue(forward["converged"])
+        self.assertTrue(reversed_["converged"])
+        # exactly negated, up to round-off -- not merely "close"
+        self.assertAlmostEqual(forward["value"], -reversed_["value"], delta=1e-13)
+
+        true_value = (cos(1.0 * 100.0) - cos(5.0 * 100.0)) / 100.0
+        self.assertLess(fabs(forward["value"] - true_value), 1e-11)
+        self.assertLess(fabs(reversed_["value"] + true_value), 1e-11)
+
+    def test_generic_m_component_basis_two_decoupled_phases(self):
+        # C12 gap: "m != 2". There is no public entry point for a basis with other than two
+        # components (adaptive_levin_sincos hard-validates len(f) == 2, per prompt 01's
+        # _Basis_SinCos-specific check), so this drives _adaptive_levin() directly with a minimal
+        # m=4 basis (_TwoIndependentSinCosBasis, defined at module scope above) -- two independent
+        # (sin, cos) pairs at independent linear phases, exercising the generic real-valued
+        # np.block assembly / row_list construction that _Basis_SinCos's m==2 complexified fast
+        # path (prompt 02) bypasses. This is the only test of the generic m-component path in the
+        # repository; the generic path exists precisely so a future basis (prior review Sec 8.3)
+        # has somewhere to land -- see the class docstring for the derivation and the closed form.
+        lambda1, lambda2 = 1.0, 2.0
+        x_span = (1.0, 50.0)
+        f = [lambda x: 1.0, lambda x: 0.0, lambda x: 0.0, lambda x: 1.0]
+        basis = _TwoIndependentSinCosBasis(lambda1, lambda2)
+
+        data = _adaptive_levin(
+            x_span, f, basis, atol=1e-13, rtol=1e-11, chebyshev_order=16
+        )
+
+        true_value = (cos(1.0) - cos(50.0)) + 0.5 * (sin(100.0) - sin(2.0))
+        true_err = fabs(data["value"] - true_value)
+
+        self.assertTrue(data["converged"])
+        # Measured true error here is ~2.0e-15; 1e-11 is a >1000x margin above that.
+        self.assertLess(true_err, 1e-11)
+        self.assertGreaterEqual(data["abserr"], true_err)
+
 
 class TestVectorizedSampling(unittest.TestCase):
     """
@@ -670,7 +951,12 @@ class TestVectorizedSampling(unittest.TestCase):
         theta = {"theta": lambda x: 100.0 * x}
 
         data = adaptive_levin_sincos(
-            x_span, f_vectorized, theta=theta, atol=1e-15, rtol=1e-10, chebyshev_order=12
+            x_span,
+            f_vectorized,
+            theta=theta,
+            atol=1e-15,
+            rtol=1e-10,
+            chebyshev_order=12,
         )
         self.assertTrue(
             fabs(data["value"] - 0.00866607847) < 1e-10,

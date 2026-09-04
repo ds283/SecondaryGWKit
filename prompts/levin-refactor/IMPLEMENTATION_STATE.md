@@ -2,7 +2,8 @@
 
 **Campaign:** [`README.md`](README.md) · **Source audit:** [`docs/adaptive-levin-audit-2026-09.md`](../../docs/adaptive-levin-audit-2026-09.md)
 **Baseline commit:** `c8a1918` (`main`, clean; `AdaptiveLevin/levin_quadrature.py` byte-identical to the audited `68cff5d`)
-**Last updated:** 2026-09-04 — prompt 09 (propagate error estimate to callers) complete with deviations.
+**Last updated:** 2026-09-04 — prompt 10 (test matrix and campaign verification) complete with
+deviations. **The campaign is complete: 10 of 10 prompts landed.**
 
 > **Maintenance rule.** Every prompt updates this file *in its own commit*, before committing.
 > Set your row's status and the log link, and add or clear entries in §3 (Active issues). Do not
@@ -37,15 +38,15 @@ Legend: ⬜ not started · 🟡 in flight · ✅ complete · ⚠️ complete wit
 |---|---|---|---|---|---|
 | 07 | [Diagnostics, logging, import hygiene](07-diagnostics-hygiene.md) | recs 11, 12 · C10, C11 | ⚠️ | `78cae32` | [07](logs/07-diagnostics-hygiene.md) |
 | 08 | [Spectral order and vectorised sampling](08-order-and-sampling.md) | recs 13, 14 · §4.3, §4.5 | ✅ | `c4dc41d` | [08](logs/08-order-and-sampling.md) |
-| 09 | [Propagate the error estimate to callers](09-caller-propagation.md) | rec 15 · §3.4 | ⚠️ | — (this commit) | [09](logs/09-caller-propagation.md) |
+| 09 | [Propagate the error estimate to callers](09-caller-propagation.md) | rec 15 · §3.4 | ⚠️ | `d384031` | [09](logs/09-caller-propagation.md) |
 
 ### Close-out
 
 | # | Prompt | Audit items | Status | Commit | Log |
 |---|---|---|---|---|---|
-| 10 | [Test matrix and campaign verification](10-test-matrix.md) | rec 16 · C12 | ⬜ | — | — |
+| 10 | [Test matrix and campaign verification](10-test-matrix.md) | rec 16 · C12 | ⚠️ | — (this commit) | [10](logs/10-test-matrix.md) |
 
-**Progress:** 9 / 10 complete.
+**Progress:** 10 / 10 complete. **Campaign complete.**
 
 ---
 
@@ -66,7 +67,7 @@ Traceability from the audit's finding and recommendation IDs to the prompt that 
 | **C9** | Low | No input validation; `adaptive_levin_sincos` has no docstring | 01 | ✅ |
 | **C10** | Low | Diagnostic counters count regions but are named for solves; `evaluations` counts solves not evaluations | 07 | ✅ |
 | **C11** | Low | `seaborn`/`matplotlib` at module scope (>95% of import time); cwd-relative failure dumps; `print` not `logging` | 07 | ✅ |
-| **C12** | Low | Test coverage gaps | distributed + 10 | ⬜ |
+| **C12** | Low | Test coverage gaps | distributed + 10 | ✅ (`theta_mod_2pi`-only path, `theta_deriv`-only path, reversed span, `m != 2` (a new `_TwoIndependentSinCosBasis`, m=4, driven directly through `_adaptive_levin()`), and an explicit path-classification assertion for `_GRZIntegral`'s three lambdas are new in `AdaptiveLevin/tests/test_levin_quadrature.py`; non-monotonic phase / non-finite amplitude / a deliberate fallback region / `atol=0` were already covered and re-verified; `abserr`-vs-truth is now asserted on every problem with a closed form, including the four originals, whose 1e-10 thresholds are tightened to measurement-based values -- see `docs/adaptive-levin-verification.md` Sec 3) |
 
 | Rec | Description | Prompt | Status |
 |---|---|---|---|
@@ -85,7 +86,7 @@ Traceability from the audit's finding and recommendation IDs to the prompt that 
 | 13 | Raise the default order to 16; document the 12–32 band | 08 | ✅ |
 | 14 | Optional vectorised sampling | 08 | ✅ (mechanism in place, unused by production — see log) |
 | 15 | Propagate `abserr` out of the callers | 09 | ⚠️ (`quad_JJJ`/`quad_YJJ` and `QuadSourceIntegral.py`'s nine call sites all propagate `abserr`/`converged`/`phase_limited`; the reported number does not yet bound the true error on 5/7 analytic oracles — see prompt 09's log and issue [09-abserr-does-not-bound-phase-spline-floor] below) |
-| 16 | Test matrix | distributed + 10 | ⬜ |
+| 16 | Test matrix | distributed + 10 | ✅ (`AdaptiveLevin/tests/test_levin_quadrature.py` grew from 28 to 32 tests, 0.043-0.059s; every C12 gap named or verified -- see prompt 10's log and `docs/adaptive-levin-verification.md`) |
 
 **Measured and explicitly rejected — do not schedule** (audit §2.3, §4.6): p-refinement before
 bisection; global worst-first error balancing; recovering the Levin solve discarded when a child
@@ -112,6 +113,17 @@ falls to the fallback branch (4% at worst, and prompt 03 removes it anyway).
   order/cost re-measurement should use post-prompt-03 numbers as its baseline, not prompt 02's; if
   the extra cost is unwelcome, raising `SIX_PI` (audit §4.5) is the lever, evaluated with prompt
   03's log measurements in hand rather than re-derived from scratch.
+  **Update (prompt 10, 2026-09-04):** quantified as a wall-clock ratio against the true
+  pre-campaign baseline for the first time (every prior measurement was prompt-to-prompt, not
+  against `c8a1918`): on the `J000` three-Bessel oracle (`k,q,s=1.3,1.7,2.1`, `max_x=1e5`,
+  `chebyshev_order=12`), evaluations rise 308 -> 1042 (3.4x, matching this issue's own figure) and
+  wall time rises 0.804s -> 2.961s through the real `quad_JJJ` caller chain -- the *finished*
+  campaign is **3.7x slower** than the pre-campaign code on this oracle, despite the complexified
+  solve (prompt 02) being real and independently confirmed faster in isolation. See
+  `docs/adaptive-levin-verification.md` Sec 4.5 for the full measurement, including the synthetic
+  problems where the net effect is closer to parity (0.94x-1.26x) because their region count is
+  unaffected by the total-variation gate. This does not change the "next step" above; it sharpens
+  the evidence for it.
 
 - **[04-roundoff-floor-can-be-infinite]** *(opened by prompt 04, 2026-09-04)* — a region's
   `phase_err` / `abserr_roundoff` / `total_err` can now be `+inf` (`_roundoff_floor()` returns it
@@ -429,3 +441,34 @@ because something has landed since.
     phase it was given", not as "this value is accurate to that many digits", until that issue
     closes. A future new three-Bessel error-propagating call site should follow the same
     linear-combination convention rather than combining in quadrature.
+31. **As of prompt 10, the campaign is complete (10/10) and independently re-verified against the
+    real `c8a1918` baseline, not just prompt-to-prompt.** `docs/adaptive-levin-verification.md`
+    re-ran C1 (5 cases), C2, C3 (18 combinations), C4, the `lstsq` share, and all seven three-Bessel
+    oracles, and found no contradiction of any prior prompt's claim on any of those. It also found
+    one thing no prior prompt had computed: **the audit's/prompt 02's 1.4-1.8x complexification
+    speedup does not describe the finished campaign's net effect.** On the production `J000`
+    three-Bessel oracle through the real caller chain, the finished campaign is **3.7x slower**
+    than the pre-campaign code (evaluations 308 -> 1042, wall time 0.804s -> 2.961s), because
+    prompt 03's total-variation gate fix (C2, necessary for correctness) increases evaluation
+    counts on exactly this phase-group family more than complexification saves. This is not a new
+    defect -- `[03-fallback-cost-on-difference-groups]` above already named the mechanism -- but the
+    wall-clock ratio against the true baseline is new evidence, folded into that issue rather than
+    opened as a separate one. Meanwhile, **all seven three-Bessel oracles' delivered values are
+    unchanged by the campaign** (agree with `c8a1918` to round-off or near-round-off in every
+    case): the campaign changed reporting and cost, not correctness, on this integrand family.
+    `AdaptiveLevin/tests/test_levin_quadrature.py` grew from 28 to 32 tests (0.043-0.059s); every
+    C12 gap is now named or verified. Two things this pass could not close, honestly recorded rather
+    than assumed: (a) the full plotting-inclusive `LiouvilleGreen/tests/test_3bessel_analytic.py::
+    test_JJJ`/`test_YJJ` run, flagged as an open gap by prompt 09's own log -- see
+    `docs/adaptive-levin-verification.md` Sec 5/5.1 for the outcome of this session's attempt; (b)
+    `ComputeTargets/QuadSourceIntegral.py` end to end under a real Ray/Datastore pipeline, which no
+    prompt in this campaign has ever exercised.
+
+---
+
+**Campaign status: COMPLETE.** All ten prompts have landed, each in its own commit, each
+independently revertible per README §5 rule 1. Every audit finding (C1-C12) and every
+recommendation (1-16) is closed against the item-level tracking table in §2, with the open items in
+§3 being genuine, correctly-still-open follow-on work (a `LiouvilleGreen/phase_spline.py` accuracy
+API, a `SIX_PI` retuning decision, a full `ComputeTargets/QuadSourceIntegral.py`-under-Ray
+verification pass) rather than anything this campaign was scoped to finish.
