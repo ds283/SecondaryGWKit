@@ -2,7 +2,7 @@
 
 **Campaign:** [`README.md`](README.md) · **Source audit:** [`docs/adaptive-levin-audit-2026-09.md`](../../docs/adaptive-levin-audit-2026-09.md)
 **Baseline commit:** `c8a1918` (`main`, clean; `AdaptiveLevin/levin_quadrature.py` byte-identical to the audited `68cff5d`)
-**Last updated:** 2026-09-04 — prompt 06 (mode filter) complete.
+**Last updated:** 2026-09-04 — prompt 07 (diagnostics hygiene) complete.
 
 > **Maintenance rule.** Every prompt updates this file *in its own commit*, before committing.
 > Set your row's status and the log link, and add or clear entries in §3 (Active issues). Do not
@@ -29,13 +29,13 @@ Legend: ⬜ not started · 🟡 in flight · ✅ complete · ⚠️ complete wit
 |---|---|---|---|---|---|
 | 04 | [Round-off floor from eq. (151)](04-roundoff-floor.md) | recs 5, 10 · C4, §3.2–§3.4 | ⚠️ | `13773b9` | [04](logs/04-roundoff-floor.md) |
 | 05 | [Make `atol` a global tolerance](05-global-tolerance.md) | rec 8 · C3b | ⚠️ | `88f6ab3` | [05](logs/05-global-tolerance.md) |
-| 06 | [Fix the `p_use` mode filter](06-mode-filter.md) | rec 9 · C5 | ✅ | — (this commit) | [06](logs/06-mode-filter.md) |
+| 06 | [Fix the `p_use` mode filter](06-mode-filter.md) | rec 9 · C5 | ✅ | `ab8f7ca` | [06](logs/06-mode-filter.md) |
 
 ### Operational and tuning
 
 | # | Prompt | Audit items | Status | Commit | Log |
 |---|---|---|---|---|---|
-| 07 | [Diagnostics, logging, import hygiene](07-diagnostics-hygiene.md) | recs 11, 12 · C10, C11 | ⬜ | — | — |
+| 07 | [Diagnostics, logging, import hygiene](07-diagnostics-hygiene.md) | recs 11, 12 · C10, C11 | ⚠️ | — (this commit) | [07](logs/07-diagnostics-hygiene.md) |
 | 08 | [Spectral order and vectorised sampling](08-order-and-sampling.md) | recs 13, 14 · §4.3, §4.5 | ⬜ | — | — |
 | 09 | [Propagate the error estimate to callers](09-caller-propagation.md) | rec 15 · §3.4 | ⬜ | — | — |
 
@@ -45,7 +45,7 @@ Legend: ⬜ not started · 🟡 in flight · ✅ complete · ⚠️ complete wit
 |---|---|---|---|---|---|
 | 10 | [Test matrix and campaign verification](10-test-matrix.md) | rec 16 · C12 | ⬜ | — | — |
 
-**Progress:** 6 / 10 complete.
+**Progress:** 7 / 10 complete.
 
 ---
 
@@ -64,8 +64,8 @@ Traceability from the audit's finding and recommendation IDs to the prompt that 
 | **C7** | Medium | Fallback regions accepted unconditionally; `quad`'s `abserr` recorded but never tested; global tolerances passed to each small panel | 03 | ✅ |
 | **C8** | Medium | `atol = 0` subdivides without bound (2²⁰ regions at the default depth) | 01 | ✅ |
 | **C9** | Low | No input validation; `adaptive_levin_sincos` has no docstring | 01 | ✅ |
-| **C10** | Low | Diagnostic counters count regions but are named for solves; `evaluations` counts solves not evaluations | 07 | ⬜ |
-| **C11** | Low | `seaborn`/`matplotlib` at module scope (>95% of import time); cwd-relative failure dumps; `print` not `logging` | 07 | ⬜ |
+| **C10** | Low | Diagnostic counters count regions but are named for solves; `evaluations` counts solves not evaluations | 07 | ✅ |
+| **C11** | Low | `seaborn`/`matplotlib` at module scope (>95% of import time); cwd-relative failure dumps; `print` not `logging` | 07 | ✅ |
 | **C12** | Low | Test coverage gaps | distributed + 10 | ⬜ |
 
 | Rec | Description | Prompt | Status |
@@ -80,8 +80,8 @@ Traceability from the audit's finding and recommendation IDs to the prompt that 
 | 8 | Distribute `atol` in proportion to interval length | 05 | ✅ |
 | 9 | Gate `p_use` on endpoint magnitudes; add the discarded contribution to `abserr` | 06 | ✅ |
 | 10 | Retune the phase-error safety factor | 04 (see README §2.4 note 2) | ✅ |
-| 11 | Honest solve counters; rename `evaluations`; return `abserr` components | 07 (+ 04 for the components) | 🟡 (components done, counters/rename pending) |
-| 12 | `seaborn`/`matplotlib` behind `emit_diagnostics`; parameterise paths; `logging` | 07 | ⬜ |
+| 11 | Honest solve counters; rename `evaluations`; return `abserr` components | 07 (+ 04 for the components) | ✅ (see 07's log for the naming deviation: added `num_solves_direct`/`num_solves_lstsq`/`num_solves_pinv`/`num_solves_total`/`num_subregion_solves` rather than repurposing/renaming the existing `num_direct_solves`/`evaluations`, to keep this commit bit-equal and the benchmark harness untouched) |
+| 12 | `seaborn`/`matplotlib` behind `emit_diagnostics`; parameterise paths; `logging` | 07 | ✅ |
 | 13 | Raise the default order to 16; document the 12–32 band | 08 | ⬜ |
 | 14 | Optional vectorised sampling | 08 | ⬜ |
 | 15 | Propagate `abserr` out of the callers | 09 | ⬜ |
@@ -161,7 +161,15 @@ falls to the fallback branch (4% at worst, and prompt 03 removes it anyway).
 
 ## 4. Resolved issues
 
-*(none yet)*
+- **[07-write-progress-data-cc-crash]** *(opened and closed by prompt 07, 2026-09-04)* —
+  `_write_progress_data()` crashed (`TypeError: 'NoneType' object is not iterable`) whenever a
+  region it re-solved for diagnostics landed on a Clenshaw-Curtis fallback region, because it
+  iterated `dataX["p_sample"]` unconditionally and a fallback region's `p_sample` is always `None`
+  (no Levin antiderivative exists there). Latent since prompt 03 introduced the fallback branch;
+  never exercised because `emit_diagnostics=True` is off by default and nothing in this repository
+  sets it. Found while verifying prompt 07's own "the `emit_diagnostics=True` path still works end
+  to end" requirement, and fixed in the same commit with `X["p_sample"] or []` at the three
+  iteration sites. See prompt 07's log, "Deviations", for the full trace.
 
 ---
 
@@ -308,3 +316,42 @@ because something has landed since.
     campaign's own set (`sin_1_100`, 3.64x closer to the closed form with the filter on than off),
     while never firing across a 12-combination three-Bessel oracle sweep at production `rtol`. See
     prompt 06's log, "The open question, answered", for the full evidence and reasoning.
+24. **As of prompt 07, this module logs through `logging.getLogger("AdaptiveLevin.levin_quadrature")`
+    and is silent by default** (a `logging.NullHandler()` is attached, no other handler is
+    configured). Every message that used to `print()` unconditionally -- including warnings -- now
+    requires the host to call `logging.basicConfig(...)` or attach its own handler to see it. A
+    caller or test that used to capture stdout to check for a warning (as `test_input_validation`
+    did) must use `self.assertLogs("AdaptiveLevin.levin_quadrature", level=...)` instead. `seaborn`/
+    `matplotlib.pyplot` are imported inside `_write_progress_data()`, not at module scope (import
+    time dropped from a measured 1.57s mean to 0.25s mean); nothing else in this module or its
+    tests uses either.
+25. **`adaptive_levin_sincos()` has a new `diagnostics_path` parameter** (default `None`, resolved
+    internally to `DEFAULT_LEVIN_DIAGNOSTICS_PATH = Path("levin_diagnostics")`), threaded to both
+    the lstsq-failure dump and `_write_progress_data()`'s output. This is a **behavioural change**:
+    both used to write cwd-relative (the failure dump directly into cwd; progress data under a
+    cwd-relative `SlowLevinData/`). Nothing in this repository reads either path (grepped), so
+    nothing in-tree needed updating. The failure-dump filename now carries the run's `id_label`
+    (previously just an isoformat timestamp at one-second resolution), so two workers failing in
+    the same second cannot collide.
+26. **The returned dictionary gained five more keys as of prompt 07**: `num_subregion_solves`
+    (identical value to `evaluations`, correctly named -- `evaluations` counts subregion solves,
+    not integrand evaluations, and is kept under its original name only because
+    `docs/adaptive-levin-benchmark/levin_bench/` reads it by key), and `num_solves_direct` /
+    `num_solves_lstsq` / `num_solves_pinv` / `num_solves_total` (true solve counts, accumulated
+    from every Levin subregion solve actually attempted -- a region's own solve *and* both
+    comparison children, whichever method succeeded -- unlike the pre-existing `num_direct_solves`,
+    which is a *per-region* count that never sees a comparison-child solve whose parent region is
+    accepted rather than bisected, and is kept exactly as before under that name for
+    `docs/adaptive-levin-benchmark/levin_bench/runners.py`'s sake). All additive; the pre-existing
+    keys are bit-identical before/after (verified by equality across five problems, prompt 07's
+    log). Use `num_solves_direct / num_solves_total` to check the LU fast path's coverage, not
+    `num_direct_solves / evaluations`.
+27. **`_LazyUUID` and `_format_label(notify_label, id_label)` are the pattern for anything that logs
+    a run's id, as of prompt 07.** `_adaptive_levin()` now constructs `id_label = _LazyUUID()`
+    (defers `uuid.uuid4()`, ~1.9 microseconds, until first stringified) rather than
+    `uuid.uuid4()` directly; every function that used to precompute a `label = f"...{id_label}..."`
+    string unconditionally at its top (which would stringify the lazy id on every call regardless
+    of whether a message is ever emitted, defeating the laziness) now takes `notify_label`/
+    `id_label` separately and calls `_format_label()` only at the point a message is actually
+    logged. A future new log call site should follow the same pattern, not reintroduce a
+    precomputed `label`.

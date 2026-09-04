@@ -1,5 +1,3 @@
-import contextlib
-import io
 import unittest
 from math import fabs, atan, sin, exp, pi, nan
 
@@ -215,13 +213,19 @@ class TestAdaptiveLevinSinCos(unittest.TestCase):
             adaptive_levin_sincos((nan, 2.0), good_f, theta={"theta": theta})
         self.assertIn("x_span", str(ctx.exception))
 
-        # chebyshev_order < 8: warned about and clamped, not rejected
-        buf = io.StringIO()
-        with contextlib.redirect_stdout(buf):
+        # chebyshev_order < 8: warned about and clamped, not rejected. As of prompt 07
+        # (prompts/levin-refactor/logs/07-diagnostics-hygiene.md) this module logs through the
+        # standard "AdaptiveLevin.levin_quadrature" logger rather than printing to stdout, so the
+        # warning is captured with assertLogs rather than stdout redirection.
+        with self.assertLogs(
+            "AdaptiveLevin.levin_quadrature", level="WARNING"
+        ) as log_ctx:
             data = adaptive_levin_sincos(
                 (1.0, 50.0), good_f, theta={"theta": theta}, chebyshev_order=4
             )
-        self.assertIn("clamp", buf.getvalue().lower())
+        self.assertTrue(
+            any("clamp" in message.lower() for message in log_ctx.output)
+        )
         self.assertIsNotNone(data["value"])
 
     def test_atol_zero_rejected(self):

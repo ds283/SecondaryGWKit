@@ -75,27 +75,63 @@ deliberate departures are:
     an LU solve gated on conditioning, with lstsq retained as the fallback for
     the ill-conditioned case where the minimum-norm solution is needed. An
     RRQR fallback in place of lstsq remains an unexplored optimisation.
+
+LOGGING
+-------
+This module logs through the standard library logger "AdaptiveLevin.levin_quadrature"
+(logging.getLogger(__name__)) rather than printing to stdout. As a library it attaches only a
+logging.NullHandler(), so by default -- with no handler configured anywhere in the logging
+hierarchy -- every message from this module is silently discarded, including warnings. This is a
+deliberate, and as of prompts/levin-refactor/logs/07-diagnostics-hygiene.md a *new*, default:
+earlier versions of this module printed warnings and progress notices unconditionally. A host
+application that wants to see them should configure logging in the usual way, e.g.
+
+    import logging
+    logging.basicConfig(level=logging.INFO)   # or WARNING to see only warnings
+
+or attach a handler directly to logging.getLogger("AdaptiveLevin.levin_quadrature"). Solve
+failures/degradations and the aggregate/health-check warnings are logged at WARNING; progress
+notifications and the depth-18 diagnostic history dump are logged at INFO.
 """
 
 import json
+import logging
 import time
 import uuid
 from datetime import datetime
 from functools import lru_cache
 from math import floor, ceil
 from pathlib import Path
-from typing import Tuple, List, Optional
+from typing import Tuple, List, Optional, Union
 
 import numpy as np
-import seaborn as sns
-from matplotlib import pyplot as plt
 from numpy.linalg import LinAlgError
 from scipy.linalg import toeplitz
 
 from utilities import format_time
 
+# seaborn and matplotlib.pyplot are imported inside _write_progress_data(), the only function
+# that uses them, rather than at module scope. Measured with -X importtime (see prompts/levin-
+# refactor/logs/07-diagnostics-hygiene.md): they accounted for 95-97% of this module's 1.3-2.1 s
+# import cost, paid unconditionally -- including by every Ray worker that imports this module but
+# never runs with emit_diagnostics=True.
+
+_logger = logging.getLogger(__name__)
+_logger.addHandler(logging.NullHandler())
+
 # default interval at which to log progress of the integration
 DEFAULT_LEVIN_NOTIFY_INTERVAL = 5 * 60
+
+# Default location for diagnostic output (the lstsq/pinv failure dump, and the emit_diagnostics
+# progress plots/JSON payload), used when adaptive_levin_sincos()'s diagnostics_path argument is
+# not supplied. Previously both writers used cwd-relative paths computed implicitly at call time
+# (the failure dump wrote directly into whatever the process's current working directory happened
+# to be; _write_progress_data wrote to a cwd-relative "SlowLevinData/" tree) -- hazardous under a
+# Ray driver, where cwd is not guaranteed to be stable, writable, or distinct per worker. This is
+# a named, explicit default rather than a Path.cwd() computed on demand, and it is a behavioural
+# change for anyone relying on the old implicit locations -- see
+# prompts/levin-refactor/logs/07-diagnostics-hygiene.md.
+DEFAULT_LEVIN_DIAGNOSTICS_PATH = Path("levin_diagnostics")
 
 # default Chebyshev spectral order
 DEFAULT_LEVIN_CHEBSHEV_ORDER = 12
@@ -181,6 +217,47 @@ _LEVIN_DIRECT_SOLVE_PHASE_SPAN = 20.0 * np.pi
 INTERVAL_TYPE_LEVIN = 0
 INTERVAL_TYPE_DIRECT = 1
 types = {0: "Levin", 1: "direct"}
+
+
+class _LazyUUID:
+    """
+    Defers uuid.uuid4() (measured ~2.3 microseconds, audit sec 4.3) until this run's id is first
+    stringified -- which happens only inside a warning or progress message. A run that never emits
+    one (the common case: well-conditioned, low-depth, no diagnostics) never pays for a uuid at
+    all. Formats exactly like the uuid.UUID it wraps, so every existing f"...{id_label}..." call
+    site works unchanged; only the *construction* site (_adaptive_levin()) changes.
+    """
+
+    __slots__ = ("_uuid",)
+
+    def __init__(self):
+        self._uuid = None
+
+    def _get(self) -> uuid.UUID:
+        if self._uuid is None:
+            self._uuid = uuid.uuid4()
+        return self._uuid
+
+    def __str__(self) -> str:
+        return str(self._get())
+
+    def __repr__(self) -> str:
+        return str(self._get())
+
+
+def _format_label(notify_label: Optional[str], id_label) -> str:
+    """
+    Build the "<notify_label> id=<id_label>" tag used throughout this module's log messages, from
+    the same two values every function already carries as parameters. Kept as a function (rather
+    than a value precomputed once per call and threaded through as a "label" parameter, which is
+    what earlier versions of this module did) so that it is only ever evaluated at an actual
+    logging call site -- an unconditional precomputed "label" would stringify id_label (see
+    _LazyUUID above) on every subregion solve regardless of whether a message is ever emitted,
+    which is exactly the fixed per-call cost sec 4.3 measures.
+    """
+    if id_label is not None:
+        return f"{notify_label} id={id_label}"
+    return f"{id_label}"
 
 
 def _phase_error(theta_abserr: float, p_endpoint_l1: float) -> float:
@@ -814,15 +891,22 @@ class _Basis_SinCos:
         return True
 
     def build_Levin_data(
-        self, grid, Dmat, label: Optional[str] = None, need_AmatT: bool = True
+        self,
+        grid,
+        Dmat,
+        notify_label: Optional[str] = None,
+        id_label=None,
+        need_AmatT: bool = True,
     ):
         """
         Sample the phase function once and build everything derived from that sample: theta',
         the A^T super-operator block (unless need_AmatT is False), the basis vector w evaluated
         at each endpoint, and an estimate of the total phase change across the interval.
 
-        :param label: optional identifying label for this region, used only to annotate a
-            non-finite-phase-derivative warning.
+        :param notify_label: caller-supplied label for this run, used only (with id_label) to
+            annotate a non-finite-phase-derivative warning -- see _format_label().
+        :param id_label: caller-supplied run id (typically a _LazyUUID), likewise used only for
+            that warning.
         :param need_AmatT: whether to build and return the A^T block. The complexified solve
             path (see supports_complexified_solve) needs theta_prime_Cheb directly and never
             needs A^T, so the caller passes False there to skip an O(N^2) allocation that would
@@ -859,8 +943,10 @@ class _Basis_SinCos:
             theta_prime_Cheb = np.matmul(Dmat, theta_Cheb)
 
         if not np.isfinite(theta_prime_Cheb).all():
-            print(
-                f"!! WARNING (adaptive_levin_subregion, {label}): sampled phase derivative theta' contains non-numeric values (np.nan, np.inf, or np.-inf)"
+            _logger.warning(
+                "!! WARNING (adaptive_levin_subregion, %s): sampled phase derivative theta' "
+                "contains non-numeric values (np.nan, np.inf, or np.-inf)",
+                _format_label(notify_label, id_label),
             )
             raise ValueError(
                 "sampled phase derivative theta' contains non-numeric values (np.nan, np.inf, or np.-inf)"
@@ -929,12 +1015,20 @@ def _adaptive_levin_subregion(
     rtol: float = DEFAULT_LEVIN_RELTOL,
     notify_label: Optional[str] = None,
     build_p_sample: bool = False,
+    diagnostics_path: Path = DEFAULT_LEVIN_DIAGNOSTICS_PATH,
 ):
     working_order = max(chebyshev_order, _LEVIN_MINIMUM_ALLOWED_ORDER)
     num_order_changes = 0
 
     # to handle possible SVD failures, allow the working Chebyshev order to be stepped down.
     # this changes the matrices that we need to invert, so gives another change for the required SVD to converge
+    #
+    # NOTE the order actually reported below (working_order, after the loop) is always the order
+    # that *succeeded* -- the loop's failure branch below only decrements working_order and
+    # `continue`s to try again; if that retry (or every subsequent one down to the floor) also
+    # fails, "if data['value'] is None: raise" below fires before the metadata update that reports
+    # chebyshev_order, so a total failure never returns a chebyshev_order that was never attempted.
+    # Confirmed with a forced-total-failure regression test (07's log).
     finished = False
     while not finished and working_order >= _LEVIN_MINIMUM_ALLOWED_ORDER:
         data = _adaptive_levin_subregion_impl(
@@ -946,17 +1040,17 @@ def _adaptive_levin_subregion(
             rtol=rtol,
             notify_label=notify_label,
             build_p_sample=build_p_sample,
+            diagnostics_path=diagnostics_path,
         )
         if data["metadata"].get("SVD_failure", False):
             working_order = working_order - 2
             num_order_changes = num_order_changes + 1
 
-            if id_label is not None:
-                label = f"{notify_label} id={id_label}"
-            else:
-                label = f"{id_label}"
-            print(
-                f"!! WARNING (adaptive_levin_subregion, {label}): SVD failure - stepping down Chebyshev order to {working_order}"
+            _logger.warning(
+                "!! WARNING (adaptive_levin_subregion, %s): SVD failure - stepping down "
+                "Chebyshev order to %d",
+                _format_label(notify_label, id_label),
+                working_order,
             )
             continue
 
@@ -985,6 +1079,7 @@ def _adaptive_levin_subregion_impl(
     rtol: float = DEFAULT_LEVIN_RELTOL,
     notify_label: Optional[str] = None,
     build_p_sample: bool = False,
+    diagnostics_path: Path = DEFAULT_LEVIN_DIAGNOSTICS_PATH,
 ):
     """
     f should be an m-vector of non-rapidly oscillating functions (Levin 96 eq. 2.1)
@@ -995,13 +1090,17 @@ def _adaptive_levin_subregion_impl(
     :param BasisData: callable
     :param chebyshev_order:
     :param build_p_sample: retain the sampled Levin antiderivatives p(x)? Only needed for diagnostics
+    :param diagnostics_path: directory the lstsq-failure dump (LevinL_*.txt / f_Cheb_*.txt) is
+        written under, on the rare path where lstsq itself raises. Not used otherwise.
     :return:
     """
+    # This function is on the hottest path in the module -- called once per popped region, plus
+    # twice more for its comparison children -- so, unlike the wrapper above, it does not
+    # precompute a "label" string here: that would stringify id_label (see _LazyUUID) on every
+    # call regardless of whether a message is ever emitted. notify_label/id_label are passed
+    # through unchanged to whichever branch below actually needs to log something, and
+    # _format_label() builds the string only there.
     metadata = {}
-    if id_label is not None:
-        label = f"{notify_label} id={id_label}"
-    else:
-        label = f"{id_label}"
 
     m = len(f)
     grid, Dmat = chebyshev_matrices(x_span, chebyshev_order)
@@ -1022,7 +1121,11 @@ def _adaptive_levin_subregion_impl(
     )
 
     AmatT, theta_prime_Cheb, w0, wk, phase_span = BasisData.build_Levin_data(
-        grid, Dmat, label=label, need_AmatT=not use_complex_solve
+        grid,
+        Dmat,
+        notify_label=notify_label,
+        id_label=id_label,
+        need_AmatT=not use_complex_solve,
     )
 
     # C2 fix: gate on the phase's *total variation* across the region, not its net change
@@ -1036,7 +1139,14 @@ def _adaptive_levin_subregion_impl(
     # need the Levin solve.
     if phase_span < SIX_PI:
         return _adaptive_levin_subregion_cc(
-            x_span, f, BasisData, chebyshev_order, phase_span, theta_prime_Cheb, label
+            x_span,
+            f,
+            BasisData,
+            chebyshev_order,
+            phase_span,
+            theta_prime_Cheb,
+            notify_label,
+            id_label,
         )
 
     # sample each component of f on the Chebyshev grid,
@@ -1045,8 +1155,10 @@ def _adaptive_levin_subregion_impl(
     f_Cheb = np.hstack([[func(x) for x in grid] for func in f])
 
     if not np.isfinite(f_Cheb).all():
-        print(
-            f"!! WARNING (adaptive_levin_subregion, {label}): sampled amplitude f contains non-numeric values (np.nan, np.inf, or np.-inf)"
+        _logger.warning(
+            "!! WARNING (adaptive_levin_subregion, %s): sampled amplitude f contains "
+            "non-numeric values (np.nan, np.inf, or np.-inf)",
+            _format_label(notify_label, id_label),
         )
         raise ValueError(
             "sampled amplitude f contains non-numeric values (np.nan, np.inf, or np.-inf)"
@@ -1077,8 +1189,10 @@ def _adaptive_levin_subregion_impl(
         rhs = f_Cheb
 
     if not np.isfinite(LevinL).all():
-        print(
-            f"!! WARNING (adaptive_levin_subregion, {label}): Levin super-operator contains non-numeric values (np.nan, np.inf, or np.-inf)"
+        _logger.warning(
+            "!! WARNING (adaptive_levin_subregion, %s): Levin super-operator contains "
+            "non-numeric values (np.nan, np.inf, or np.-inf)",
+            _format_label(notify_label, id_label),
         )
 
         raise ValueError(
@@ -1145,30 +1259,47 @@ def _adaptive_levin_subregion_impl(
         try:
             sol, residuals, rank, s = np.linalg.lstsq(LevinL, rhs, rcond=None)
         except LinAlgError as e:
-            print(
-                f"!! WARNING (adaptive_levin_subregion, {label}): could not solve Levin collocation system using numpy.linalg.lstsq (chebyshev_order={chebyshev_order}; will now attempt to use pseudo-inverse)"
+            label = _format_label(notify_label, id_label)
+            _logger.warning(
+                "!! WARNING (adaptive_levin_subregion, %s): could not solve Levin collocation "
+                "system using numpy.linalg.lstsq (chebyshev_order=%d; will now attempt to use "
+                "pseudo-inverse)",
+                label,
+                chebyshev_order,
             )
+            # Parallel-safety: two workers failing in the same second must not collide, so the
+            # run's id_label (unique per top-level adaptive_levin_sincos() call) is part of the
+            # filename, not just the directory -- see prompts/levin-refactor/logs/
+            # 07-diagnostics-hygiene.md. diagnostics_path is resolved once by _adaptive_levin()
+            # (never left as None below this point).
             now = datetime.now().replace(microsecond=0)
-            LevinL_filename = f"LevinL_{now.isoformat()}.txt"
-            f_Cheb_filename = f"f_Cheb_{now.isoformat()}.txt"
-            print(
-                (
-                    f'   -- Levin L super-operator written to file "{LevinL_filename}", f_Cheb written to file "{f_Cheb_filename}"'
-                )
+            failure_dir = diagnostics_path / "failures"
+            failure_dir.mkdir(parents=True, exist_ok=True)
+            LevinL_filename = failure_dir / f"LevinL_{id_label}_{now.isoformat()}.txt"
+            f_Cheb_filename = failure_dir / f"f_Cheb_{id_label}_{now.isoformat()}.txt"
+            _logger.warning(
+                '   -- Levin L super-operator written to file "%s", f_Cheb written to file "%s"',
+                LevinL_filename,
+                f_Cheb_filename,
             )
             np.savetxt(LevinL_filename, LevinL)
             np.savetxt(f_Cheb_filename, rhs)
             metadata["SVD_errors"] = 1
         else:
             success = True
+            metadata["lstsq_solve"] = 1
 
     if not success:
         try:
             LevinL_inv = np.linalg.pinv(LevinL)
             sol = np.matmul(LevinL_inv, rhs)
         except LinAlgError as e:
-            print(
-                f"!! WARNING (adaptive_levin_subregion, {label}): could not solve Levin collocation system using numpy.linalg.pinv (chebyshev_order={chebyshev_order}; final failure at this order)"
+            _logger.warning(
+                "!! WARNING (adaptive_levin_subregion, %s): could not solve Levin collocation "
+                "system using numpy.linalg.pinv (chebyshev_order=%d; final failure at this "
+                "order)",
+                _format_label(notify_label, id_label),
+                chebyshev_order,
             )
             metadata["SVD_failure"] = True
             return {
@@ -1177,10 +1308,14 @@ def _adaptive_levin_subregion_impl(
                 "p_ratios": None,
                 "metadata": metadata,
             }
+        else:
+            metadata["pinv_solve"] = 1
 
     if not np.isfinite(sol).all():
-        print(
-            f"!! WARNING (adaptive_levin_subregion, {label}): solved Levin antiderivative p contains non-numeric values (np.nan, np.inf, or np.-inf)"
+        _logger.warning(
+            "!! WARNING (adaptive_levin_subregion, %s): solved Levin antiderivative p contains "
+            "non-numeric values (np.nan, np.inf, or np.-inf)",
+            _format_label(notify_label, id_label),
         )
         raise ValueError(
             "solved Levin antiderivative p contains non-numeric values (np.nan, np.inf, or np.-inf)"
@@ -1289,7 +1424,8 @@ def _adaptive_levin_subregion_cc(
     chebyshev_order: int,
     phase_span: float,
     theta_prime_Cheb: np.ndarray,
-    label: str,
+    notify_label: Optional[str],
+    id_label,
 ):
     """
     Bounded-cost fallback for a region whose total phase variation (phase_span) falls below
@@ -1327,8 +1463,10 @@ def _adaptive_levin_subregion_cc(
     f_fine = np.vstack([[func(x) for x in fine_grid] for func in f])
 
     if not np.isfinite(f_fine).all():
-        print(
-            f"!! WARNING (adaptive_levin_subregion, {label}): sampled amplitude f contains non-numeric values (np.nan, np.inf, or np.-inf)"
+        _logger.warning(
+            "!! WARNING (adaptive_levin_subregion, %s): sampled amplitude f contains "
+            "non-numeric values (np.nan, np.inf, or np.-inf)",
+            _format_label(notify_label, id_label),
         )
         raise ValueError(
             "sampled amplitude f contains non-numeric values (np.nan, np.inf, or np.-inf)"
@@ -1422,6 +1560,7 @@ def _adaptive_levin(
     notify_interval: int = DEFAULT_LEVIN_NOTIFY_INTERVAL,
     notify_label: str = None,
     emit_diagnostics: bool = False,
+    diagnostics_path: Optional[Union[str, Path]] = None,
 ):
     # Input validation (rec 4, C8, C9). This module cannot deliver a purely relative-error
     # contract: the phase-rounding floor computed by _phase_error() is absolute by nature, so a
@@ -1459,18 +1598,31 @@ def _adaptive_levin(
     last_notify: float = start_time
     updates_issued: int = 0
 
-    # generate unique id to identify this calculation
-    id_label = uuid.uuid4()
-    if notify_label is not None:
-        label = f"{notify_label}, id={id_label}"
-    else:
-        label = f"{id_label}"
+    # Unique id for this calculation, used only to tag log messages and (if emit_diagnostics or a
+    # solve failure) diagnostic file paths. Deferred (sec 4.3, "fixed per-call overhead"): a
+    # _LazyUUID does not call uuid.uuid4() (~2.3 microseconds) until it is first stringified, which
+    # happens only inside an actual log message -- so a run that never logs anything (the common
+    # case) never pays for one. See _LazyUUID and _format_label().
+    id_label = _LazyUUID()
+
+    # Resolved once, here, rather than per-subregion-call: every function below that can write a
+    # diagnostic file receives this same concrete Path, never None (rec 12, C11 -- see
+    # DEFAULT_LEVIN_DIAGNOSTICS_PATH's docstring for why the default is an explicit named
+    # directory rather than an implicit Path.cwd()).
+    resolved_diagnostics_path = (
+        Path(diagnostics_path)
+        if diagnostics_path is not None
+        else DEFAULT_LEVIN_DIAGNOSTICS_PATH
+    )
 
     if chebyshev_order < _LEVIN_MINIMUM_ALLOWED_ORDER:
-        print(
-            f"!! WARNING (adaptive_levin, {label}): chebyshev_order={chebyshev_order} is below "
-            f"the minimum allowed order {_LEVIN_MINIMUM_ALLOWED_ORDER}; every subregion solve "
-            f"will be clamped up to {_LEVIN_MINIMUM_ALLOWED_ORDER}"
+        _logger.warning(
+            "!! WARNING (adaptive_levin, %s): chebyshev_order=%d is below the minimum allowed "
+            "order %d; every subregion solve will be clamped up to %d",
+            _format_label(notify_label, id_label),
+            chebyshev_order,
+            _LEVIN_MINIMUM_ALLOWED_ORDER,
+            _LEVIN_MINIMUM_ALLOWED_ORDER,
         )
 
     regions = [_levin_interval(start=x_span[0], end=x_span[1], depth=0)]
@@ -1491,6 +1643,17 @@ def _adaptive_levin(
     num_direct_solves = 0
     chebyshev_min_order = None
     max_depth = 0
+
+    # True solve counts (rec 11, C10), accumulated from every Levin subregion solve actually
+    # attempted -- the region's own solve (data) *and* the two comparison children (dataL, dataR)
+    # computed for every Levin region regardless of whether the parent is accepted or bisected.
+    # This is the honest total that num_direct_solves (below, kept for backward compatibility --
+    # see its own note) is not: that counter accumulates only from each popped region's own
+    # solve, so a solve performed purely to compute a comparison residual for an *accepted* parent
+    # is never counted anywhere by it. See prompts/levin-refactor/logs/07-diagnostics-hygiene.md.
+    num_solves_direct = 0
+    num_solves_lstsq = 0
+    num_solves_pinv = 0
 
     num_history_messages = 0
 
@@ -1528,6 +1691,7 @@ def _adaptive_levin(
                     atol,
                     rtol,
                     notify_label,
+                    resolved_diagnostics_path,
                 )
 
             last_notify = time.time()
@@ -1551,8 +1715,12 @@ def _adaptive_levin(
         if current_region.depth >= 18 and num_history_messages < 20:
             num_history_messages += 1
 
-            print(
-                f"@@ adaptive_levin ({label}): encountered subinterval of depth {current_region.depth} (notification {num_history_messages}/20 for this quadrature)"
+            _logger.info(
+                "@@ adaptive_levin (%s): encountered subinterval of depth %d (notification "
+                "%d/20 for this quadrature)",
+                _format_label(notify_label, id_label),
+                current_region.depth,
+                num_history_messages,
             )
 
             abs_history = current_region.abserr_history
@@ -1568,15 +1736,26 @@ def _adaptive_levin(
                 this_p_ratios = p_scale_history[i]
 
                 if i == 0:
-                    print(
-                        f"   -- {i+1}. abserr={this_abs :.5g}, relerr={this_rel :.5g}, p-ratios=[{', '.join(f'{p:.4g}' for p in this_p_ratios)}]"
+                    _logger.info(
+                        "   -- %d. abserr=%.5g, relerr=%.5g, p-ratios=[%s]",
+                        i + 1,
+                        this_abs,
+                        this_rel,
+                        ", ".join(f"{p:.4g}" for p in this_p_ratios),
                     )
 
                 else:
                     abs_improvement = prev_abs / this_abs
                     rel_improvement = prev_rel / this_rel
-                    print(
-                        f"   -- {i+1}. abserr={this_abs :.5g} (improvement={abs_improvement:.3g}), relerr={this_rel :.5g} (improvement={rel_improvement:.3g}), p-ratios=[{', '.join(f'{p:.3g}' for p in this_p_ratios)}]"
+                    _logger.info(
+                        "   -- %d. abserr=%.5g (improvement=%.3g), relerr=%.5g "
+                        "(improvement=%.3g), p-ratios=[%s]",
+                        i + 1,
+                        this_abs,
+                        abs_improvement,
+                        this_rel,
+                        rel_improvement,
+                        ", ".join(f"{p:.3g}" for p in this_p_ratios),
                     )
 
                 prev_abs = this_abs
@@ -1605,11 +1784,27 @@ def _adaptive_levin(
                     rtol=rtol,
                     notify_label=notify_label,
                     build_p_sample=build_p_sample,
+                    diagnostics_path=resolved_diagnostics_path,
                 )
                 num_evaluations += 1
+                # True-solve accounting (rec 11, C10): only inside this branch, i.e. only when a
+                # solve is actually performed here -- when data is instead carried forward from a
+                # parent's dataL/dataR (current_region.estimate was not None), that same solve was
+                # already counted at the point dataL/dataR were computed, below. Counting it again
+                # here (as the existing num_direct_solves/num_SVD_errors/num_order_changes
+                # per-region accounting deliberately does, for a different reason -- see the
+                # comment above this block) would double-count it for these new true totals.
+                num_solves_direct += data["metadata"].get("direct_solve", 0)
+                num_solves_lstsq += data["metadata"].get("lstsq_solve", 0)
+                num_solves_pinv += data["metadata"].get("pinv_solve", 0)
             except LinAlgError as e:
-                print(
-                    f"!! adaptive_levin ({label}): linear algebra error when estimating Levin subregion ({a}, {b}), width={current_region.width :.8g}"
+                _logger.warning(
+                    "!! adaptive_levin (%s): linear algebra error when estimating Levin "
+                    "subregion (%s, %s), width=%.8g",
+                    _format_label(notify_label, id_label),
+                    a,
+                    b,
+                    current_region.width,
                 )
                 raise e
 
@@ -1728,10 +1923,17 @@ def _adaptive_levin(
                 rtol=rtol,
                 notify_label=notify_label,
                 build_p_sample=build_p_sample,
+                diagnostics_path=resolved_diagnostics_path,
             )
         except LinAlgError as e:
-            print(
-                f"!! adaptive_levin ({label}): linear algebra error when estimating Levin left-comparison region ({a}, {c}), parent region = ({a}, {b})"
+            _logger.warning(
+                "!! adaptive_levin (%s): linear algebra error when estimating Levin "
+                "left-comparison region (%s, %s), parent region = (%s, %s)",
+                _format_label(notify_label, id_label),
+                a,
+                c,
+                a,
+                b,
             )
             raise e
 
@@ -1745,14 +1947,31 @@ def _adaptive_levin(
                 rtol=rtol,
                 notify_label=notify_label,
                 build_p_sample=build_p_sample,
+                diagnostics_path=resolved_diagnostics_path,
             )
         except LinAlgError as e:
-            print(
-                f"!! adaptive_levin ({label}): linear algebra error when estimating Levin right-comparison region ({c}, {b}), parent region = ({a}, {b})"
+            _logger.warning(
+                "!! adaptive_levin (%s): linear algebra error when estimating Levin "
+                "right-comparison region (%s, %s), parent region = (%s, %s)",
+                _format_label(notify_label, id_label),
+                c,
+                b,
+                a,
+                b,
             )
             raise e
 
         num_evaluations += 2
+        # True-solve accounting (rec 11, C10): dataL/dataR are always two fresh solves, computed
+        # here unconditionally regardless of whether this region ends up accepted (in which case
+        # they are used only for the residual below and then discarded -- the case the existing
+        # per-region num_direct_solves never captures at all) or bisected (in which case they also
+        # become the two children's own "data" when popped, but are not re-counted there -- see
+        # the note where num_solves_direct/lstsq/pinv are accumulated above).
+        for _solve_data in (dataL, dataR):
+            num_solves_direct += _solve_data["metadata"].get("direct_solve", 0)
+            num_solves_lstsq += _solve_data["metadata"].get("lstsq_solve", 0)
+            num_solves_pinv += _solve_data["metadata"].get("pinv_solve", 0)
         estimate = data["value"]
         refined_estimate = dataL["value"] + dataR["value"]
 
@@ -1934,12 +2153,16 @@ def _adaptive_levin(
     requested_total = max(atol, rtol * np.fabs(val))
     converged = abserr_total <= requested_total
     if not converged:
-        print(
-            f"!! WARNING (adaptive_levin, {label}): the aggregate error estimate exceeds what was "
-            f"requested | abserr_total={abserr_total:.3g} > requested={requested_total:.3g} "
-            f"(atol={atol:.3g}, rtol={rtol:.3g})"
+        _logger.warning(
+            "!! WARNING (adaptive_levin, %s): the aggregate error estimate exceeds what was "
+            "requested | abserr_total=%.3g > requested=%.3g (atol=%.3g, rtol=%.3g)",
+            _format_label(notify_label, id_label),
+            abserr_total,
+            requested_total,
+            atol,
+            rtol,
         )
-        print(
+        _logger.warning(
             "   -- atol is distributed across subintervals by length share, so this usually means "
             "a region hit depth_max unresolved, or the round-off floor (Chen et al. eq. 151) "
             "exceeds its share of atol; consider a tighter atol/rtol, a larger depth_max, or a "
@@ -1959,13 +2182,19 @@ def _adaptive_levin(
     # and no threshold separates it from genuine non-convergence. num_simple_regions is reported in the
     # returned dictionary for callers who want to look.
     if max_depth >= depth_max:
-        print(
-            f"!! WARNING (adaptive_levin, {label}): bisection reached the maximum depth {depth_max} "
-            f"without meeting either tolerance, so some subintervals were accepted unconverged "
-            f"| {num_used_regions} subintervals ({num_simple_regions} direct), "
-            f"{num_evaluations} Levin solves | atol={atol:.3g}, rtol={rtol:.3g}"
+        _logger.warning(
+            "!! WARNING (adaptive_levin, %s): bisection reached the maximum depth %d without "
+            "meeting either tolerance, so some subintervals were accepted unconverged | %d "
+            "subintervals (%d direct), %d Levin solves | atol=%.3g, rtol=%.3g",
+            _format_label(notify_label, id_label),
+            depth_max,
+            num_used_regions,
+            num_simple_regions,
+            num_evaluations,
+            atol,
+            rtol,
         )
-        print(
+        _logger.warning(
             "   -- consider relaxing atol/rtol, or check that the phase function is accurate "
             "enough to support the requested tolerance"
         )
@@ -1980,13 +2209,19 @@ def _adaptive_levin(
     # (e.g. a fitted spline), a declared theta_abserr so the caller sees an honest number instead
     # of an artificially small one.
     if num_phase_limited > 0:
-        print(
-            f"!! WARNING (adaptive_levin, {label}): {num_phase_limited} of {num_used_regions} "
-            f"subintervals were limited by the round-off floor (Chen et al. eq. 151), not by "
-            f"resolution | estimated abserr={abserr_total:.3g}, relerr={relerr_total:.3g} "
-            f"| atol={atol:.3g}, rtol={rtol:.3g}"
+        _logger.warning(
+            "!! WARNING (adaptive_levin, %s): %d of %d subintervals were limited by the "
+            "round-off floor (Chen et al. eq. 151), not by resolution | estimated abserr=%.3g, "
+            "relerr=%.3g | atol=%.3g, rtol=%.3g",
+            _format_label(notify_label, id_label),
+            num_phase_limited,
+            num_used_regions,
+            abserr_total,
+            relerr_total,
+            atol,
+            rtol,
         )
-        print(
+        _logger.warning(
             "   -- the requested tolerance is not attainable at this Chebyshev order and interval "
             "geometry; this floor does NOT depend on whether the phase is range-reduced"
         )
@@ -2021,11 +2256,30 @@ def _adaptive_levin(
         "num_regions": num_used_regions,
         "regions": used_regions,
         "num_simple_regions": num_simple_regions,
+        # "evaluations" counts subregion *solves* (a fresh region solve, plus the two comparison
+        # children for every region that takes the Levin branch), not integrand evaluations --
+        # kept under this name because docs/adaptive-levin-benchmark/levin_bench/ reads it by key
+        # (rec 11, C10). num_subregion_solves is the same value under a name that says what it
+        # counts; prefer it in new code.
         "evaluations": int(num_evaluations),
+        "num_subregion_solves": int(num_evaluations),
         "elapsed": float(elapsed),
         "num_SVD_errors": num_SVD_errors,
         "num_order_changes": num_order_changes,
+        # num_direct_solves is kept exactly as before -- a *per-region* count, accumulated only
+        # from each popped region's own solve, never from a comparison child (dataL/dataR) whose
+        # parent is accepted rather than bisected (rec 11, C10; see the comment where it is
+        # accumulated above). docs/adaptive-levin-benchmark/levin_bench/runners.py reads it by
+        # this name. num_solves_direct/num_solves_lstsq/num_solves_pinv below are the true totals,
+        # counting every solve actually attempted (region + both comparison children, whether or
+        # not the parent is ultimately accepted); num_solves_total is their sum. A caller wanting
+        # to check the LU fast path's coverage (audit sec 4.4) should use
+        # num_solves_direct / num_solves_total, not num_direct_solves / evaluations.
         "num_direct_solves": num_direct_solves,
+        "num_solves_direct": num_solves_direct,
+        "num_solves_lstsq": num_solves_lstsq,
+        "num_solves_pinv": num_solves_pinv,
+        "num_solves_total": num_solves_direct + num_solves_lstsq + num_solves_pinv,
         "chebyshev_min_order": chebyshev_min_order,
         "max_depth": max_depth,
     }
@@ -2052,20 +2306,45 @@ def _notify_progress(
     since_start = now - start_time
 
     if notify_label is not None:
-        print(
-            f'** STATUS UPDATE #{update_number}: Levin quadrature "{notify_label}" ({id_label}) has been running for {format_time(since_start)} ({format_time(since_last_notify)} since last notification)'
+        _logger.info(
+            '** STATUS UPDATE #%d: Levin quadrature "%s" (%s) has been running for %s (%s '
+            "since last notification)",
+            update_number,
+            notify_label,
+            id_label,
+            format_time(since_start),
+            format_time(since_last_notify),
         )
     else:
-        print(
-            f"** STATUS UPDATE #{update_number}: Levin quadrature {id_label} has been running for {format_time(since_start)} ({format_time(since_last_notify)} since last notification)"
+        _logger.info(
+            "** STATUS UPDATE #%d: Levin quadrature %s has been running for %s (%s since last "
+            "notification)",
+            update_number,
+            id_label,
+            format_time(since_start),
+            format_time(since_last_notify),
         )
 
-    print(
-        f"|  -- current value = {current_val:.7g}, {used_regions} used subintervals (of which {simple_regions} direct quadrature), {remain_regions} subintervals remain | {num_evaluations} integrand evaluations | max depth {max_depth}"
+    # "subregion solves", not "integrand evaluations" -- num_evaluations counts calls to
+    # _adaptive_levin_subregion (rec 11, C10; see the "evaluations" / "num_subregion_solves" note
+    # on the returned dictionary above), and this message previously named it the way the audit
+    # itself misread it.
+    _logger.info(
+        "|  -- current value = %.7g, %d used subintervals (of which %d direct quadrature), %d "
+        "subintervals remain | %d subregion solves | max depth %d",
+        current_val,
+        used_regions,
+        simple_regions,
+        remain_regions,
+        num_evaluations,
+        max_depth,
     )
     if num_SVD_errors > 0 or num_order_changes > 0:
-        print(
-            f"|  -- {num_SVD_errors} SVD errors, {num_order_changes} Chebyshev order changes | minimum used Chebyshev order = {chebyshev_min_order}"
+        _logger.info(
+            "|  -- %d SVD errors, %d Chebyshev order changes | minimum used Chebyshev order = %s",
+            num_SVD_errors,
+            num_order_changes,
+            chebyshev_min_order,
         )
 
 
@@ -2086,9 +2365,21 @@ def _write_progress_data(
     atol: float,
     rtol: float,
     notify_label: Optional[str] = None,
+    diagnostics_path: Path = DEFAULT_LEVIN_DIAGNOSTICS_PATH,
 ):
-    path = Path(
-        f"SlowLevinData/{id_label}/{datetime.now().replace(microsecond=0).isoformat()}"
+    # Imported here, not at module scope: this is the only function in the module that uses
+    # either, and both are expensive to import (95-97% of this module's own import cost -- see
+    # the module docstring's LOGGING section neighbour and prompts/levin-refactor/logs/
+    # 07-diagnostics-hygiene.md). Only reached under emit_diagnostics=True, so the cost is paid at
+    # most once every three notification intervals, not on every import of this module.
+    import seaborn as sns
+    from matplotlib import pyplot as plt
+
+    path = (
+        diagnostics_path
+        / "SlowLevinData"
+        / str(id_label)
+        / datetime.now().replace(microsecond=0).isoformat()
     ).resolve()
     path.mkdir(parents=True, exist_ok=True)
 
@@ -2137,6 +2428,7 @@ def _write_progress_data(
             rtol=rtol,
             notify_label=notify_label,
             build_p_sample=True,
+            diagnostics_path=diagnostics_path,
         )
         estimate = data["value"]
         region_data["estimate"] = estimate
@@ -2152,6 +2444,7 @@ def _write_progress_data(
             rtol=rtol,
             notify_label=notify_label,
             build_p_sample=True,
+            diagnostics_path=diagnostics_path,
         )
         estimateL = dataL["value"]
 
@@ -2164,6 +2457,7 @@ def _write_progress_data(
             rtol=rtol,
             notify_label=notify_label,
             build_p_sample=True,
+            diagnostics_path=diagnostics_path,
         )
         estimateR = dataR["value"]
 
@@ -2172,10 +2466,15 @@ def _write_progress_data(
         region_data["estimate_R"] = estimateR
         region_data["refined_estimate"] = refined_estimate
 
-        relerr = np.fabs((estimate - refined_estimate)) / min(
-            np.fabs(estimate), np.fabs(refined_estimate)
-        )
         abserr = np.fabs(estimate - refined_estimate)
+
+        # Guarded exactly as the main path's relative-error denominator is guarded (:relerr_denom,
+        # in the driver loop above) -- min(|estimate|, |refined_estimate|) is arbitrarily small
+        # whenever the integrand passes through an accidental zero, which previously made this
+        # diagnostic-only relerr blow up (or divide by exactly zero) even for a well-resolved
+        # region. Floored at atol, the same absolute tolerance this function already receives.
+        relerr_denom = max(min(np.fabs(estimate), np.fabs(refined_estimate)), atol)
+        relerr = np.fabs(estimate - refined_estimate) / relerr_denom
 
         region_data["relerr"] = relerr
         region_data["abserr"] = abserr
@@ -2186,23 +2485,29 @@ def _write_progress_data(
         if abserr >= atol and relerr >= rtol:
             region_list.append(region_data)
 
+            # p_sample is None for a Clenshaw-Curtis fallback region (no Levin antiderivative
+            # exists there -- see _adaptive_levin_subregion_cc()'s return dict): "or []" plots an
+            # empty p-curve for such a region rather than crashing. Latent since prompt 03
+            # introduced the fallback branch; this diagnostics-only function was never exercised
+            # against it until prompt 07 verified emit_diagnostics end to end (see
+            # prompts/levin-refactor/logs/07-diagnostics-hygiene.md).
             p_x_grid = []
             p_y_grid = [[] for _ in range(m)]
-            for x, p_data in data["p_sample"]:
+            for x, p_data in data["p_sample"] or []:
                 p_x_grid.append(x)
                 for i in range(m):
                     p_y_grid[i].append(_safe_fabs(p_data[i]))
 
             pL_x_grid = []
             pL_y_grid = [[] for _ in range(m)]
-            for x, p_data in dataL["p_sample"]:
+            for x, p_data in dataL["p_sample"] or []:
                 pL_x_grid.append(x)
                 for i in range(m):
                     pL_y_grid[i].append(_safe_fabs(p_data[i]))
 
             pR_x_grid = []
             pR_y_grid = [[] for _ in range(m)]
-            for x, p_data in dataR["p_sample"]:
+            for x, p_data in dataR["p_sample"] or []:
                 pR_x_grid.append(x)
                 for i in range(m):
                     pR_y_grid[i].append(_safe_fabs(p_data[i]))
@@ -2253,6 +2558,7 @@ def adaptive_levin_sincos(
     notify_interval: int = DEFAULT_LEVIN_NOTIFY_INTERVAL,
     notify_label: str = None,
     emit_diagnostics=False,
+    diagnostics_path: Optional[Union[str, Path]] = None,
 ):
     """
     Adaptive Levin quadrature of an integral of the form
@@ -2321,6 +2627,19 @@ def adaptive_levin_sincos(
     :param notify_label: optional label included in progress and warning messages.
     :param emit_diagnostics: if True, periodically write plots and a JSON payload describing
         slow-to-converge regions to disk (see _write_progress_data()).
+    :param diagnostics_path: directory under which diagnostic output is written: the
+        emit_diagnostics plots/JSON payload (in a "SlowLevinData/<run id>/<timestamp>"
+        subdirectory, as before), and -- regardless of emit_diagnostics -- the rare lstsq-failure
+        dump (LevinL_*.txt / f_Cheb_*.txt, under a "failures" subdirectory). Defaults to
+        DEFAULT_LEVIN_DIAGNOSTICS_PATH ("levin_diagnostics", relative to the process cwd) rather
+        than the process cwd directly, so that the location is a stable, named default instead of
+        an implicit dependency on whatever cwd happens to be -- notably under a Ray driver, where
+        cwd is not guaranteed to be stable, writable, or distinct per worker. This is a
+        behavioural change from before prompts/levin-refactor/logs/07-diagnostics-hygiene.md,
+        which wrote both outputs directly into cwd ("SlowLevinData/..." and, for the failure
+        dump, cwd itself); pass diagnostics_path=Path(".") to recover the old failure-dump
+        location, or diagnostics_path=Path(".") together with reading "SlowLevinData/" under it
+        for the old progress-data location.
 
     :return: a dict with (at least) the following keys:
           * "value" -- the estimated value of the integral.
@@ -2349,10 +2668,25 @@ def adaptive_levin_sincos(
             than the Levin rule.
           * "regions" -- list of used_interval objects describing each accepted subinterval.
           * "p_points" -- sampled Levin antiderivatives, if build_p_sample was True.
-          * "evaluations" -- number of Levin subregion solves performed.
+          * "evaluations" / "num_subregion_solves" -- identical values: the number of subregion
+            solves performed (a region's own solve, plus two comparison-child solves for every
+            region that takes the Levin branch). "evaluations" is the pre-existing name -- kept
+            because docs/adaptive-levin-benchmark/levin_bench/ reads it by key -- despite naming
+            them "evaluations" of the integrand, which they are not; "num_subregion_solves" is the
+            same number under an accurate name (rec 11, C10).
           * "elapsed" -- wall-clock time in seconds.
-          * "num_SVD_errors", "num_order_changes", "num_direct_solves", "chebyshev_min_order",
-            "max_depth" -- diagnostic counters; see the source for exact semantics.
+          * "num_SVD_errors", "num_order_changes", "chebyshev_min_order", "max_depth" --
+            diagnostic counters; see the source for exact semantics.
+          * "num_direct_solves" -- kept for backward compatibility with
+            docs/adaptive-levin-benchmark/levin_bench/runners.py, which reads it by this name.
+            Despite the name, this is a *per-region* count (accumulated only from each popped
+            region's own solve), not a total solve count: a comparison-child solve (dataL/dataR)
+            whose parent region is accepted rather than bisected is never counted by it (rec 11,
+            C10). "num_solves_direct", "num_solves_lstsq" and "num_solves_pinv" below are the
+            true totals -- every solve actually attempted, by the method that succeeded --
+            and "num_solves_total" is their sum; prefer these in new code, e.g. to check what
+            fraction of solves took the fast LU path (audit sec 4.4) via
+            num_solves_direct / num_solves_total.
     """
     if len(f) != 2:
         raise ValueError(
@@ -2375,4 +2709,5 @@ def adaptive_levin_sincos(
         notify_interval=notify_interval,
         notify_label=notify_label,
         emit_diagnostics=emit_diagnostics,
+        diagnostics_path=diagnostics_path,
     )
