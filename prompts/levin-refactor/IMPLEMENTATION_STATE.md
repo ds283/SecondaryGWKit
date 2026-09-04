@@ -2,7 +2,7 @@
 
 **Campaign:** [`README.md`](README.md) · **Source audit:** [`docs/adaptive-levin-audit-2026-09.md`](../../docs/adaptive-levin-audit-2026-09.md)
 **Baseline commit:** `c8a1918` (`main`, clean; `AdaptiveLevin/levin_quadrature.py` byte-identical to the audited `68cff5d`)
-**Last updated:** 2026-09-04 — prompt 03 (total-variation gate + nested CC fallback) complete.
+**Last updated:** 2026-09-04 — prompt 04 (round-off floor from eq. 151) complete.
 
 > **Maintenance rule.** Every prompt updates this file *in its own commit*, before committing.
 > Set your row's status and the log link, and add or clear entries in §3 (Active issues). Do not
@@ -27,7 +27,7 @@ Legend: ⬜ not started · 🟡 in flight · ✅ complete · ⚠️ complete wit
 
 | # | Prompt | Audit items | Status | Commit | Log |
 |---|---|---|---|---|---|
-| 04 | [Round-off floor from eq. (151)](04-roundoff-floor.md) | recs 5, 10 · C4, §3.2–§3.4 | ⬜ | — | — |
+| 04 | [Round-off floor from eq. (151)](04-roundoff-floor.md) | recs 5, 10 · C4, §3.2–§3.4 | ⚠️ | — (this commit) | [04](logs/04-roundoff-floor.md) |
 | 05 | [Make `atol` a global tolerance](05-global-tolerance.md) | rec 8 · C3b | ⬜ | — | — |
 | 06 | [Fix the `p_use` mode filter](06-mode-filter.md) | rec 9 · C5 | ⬜ | — | — |
 
@@ -45,7 +45,7 @@ Legend: ⬜ not started · 🟡 in flight · ✅ complete · ⚠️ complete wit
 |---|---|---|---|---|---|
 | 10 | [Test matrix and campaign verification](10-test-matrix.md) | rec 16 · C12 | ⬜ | — | — |
 
-**Progress:** 3 / 10 complete.
+**Progress:** 4 / 10 complete.
 
 ---
 
@@ -58,7 +58,7 @@ Traceability from the audit's finding and recommendation IDs to the prompt that 
 | **C1** | **Critical** | Non-finite amplitude → region contributes exactly 0 with `abserr` exactly 0; caller gets a partial integral certified at machine precision | 01 | ✅ |
 | **C2** | **Critical** | Weakly-oscillatory gate uses *net* phase change, not total variation → 1590% error on a phase with an interior stationary point, Levin never invoked | 03 | ✅ |
 | **C3** | High | `atol` is per-region; aggregate `abserr` never compared with the request | 01 (report) + 05 (distribute) | 🟡 (report done, distribute pending) |
-| **C4** | High | `theta_scale = TWO_PI` hardwired for a range-reduced phase → floor optimistic by up to 10¹⁰; delays `phase_limited` by ~8 decades of `atol` on the production path | 04 | ⬜ |
+| **C4** | High | `theta_scale = TWO_PI` hardwired for a range-reduced phase → floor optimistic by up to 10¹⁰; delays `phase_limited` by ~8 decades of `atol` on the production path | 04 | ✅ |
 | **C5** | Medium | `p_use` gates on the *mean* of `\|p\|` but the estimate uses *endpoint* values; makes the value a function of `rtol`; is the mechanism behind C1 | 01 (non-finite half) + 06 (rest) | 🟡 (non-finite half done, rest pending) |
 | **C6** | Medium | `max_depth` not updated on the fallback branch → depth-limit health warning cannot fire | 01 | ✅ |
 | **C7** | Medium | Fallback regions accepted unconditionally; `quad`'s `abserr` recorded but never tested; global tolerances passed to each small panel | 03 | ✅ |
@@ -74,13 +74,13 @@ Traceability from the audit's finding and recommendation IDs to the prompt that 
 | 2 | Compare `abserr_total` with `max(atol, rtol·\|val\|)`; return `converged`; warn | 01 | ✅ |
 | 3 | `max_depth` updated on every popped region | 01 | ✅ |
 | 4 | Reject `atol <= 0`, `rtol < 0`, `depth_max < 0`, `len(f) != 2`, `len(x_span) != 2`; docstring | 01 | ✅ |
-| 5 | Replace the endpoint phase floor with eq. (151); add optional `theta_abserr` | 04 | ⬜ |
+| 5 | Replace the endpoint phase floor with eq. (151); add optional `theta_abserr` | 04 | ✅ |
 | 6 | Complexify the `(sin, cos)` solve to `N×N`; preallocated assembly | 02 | ✅ |
 | 7 | Sample once → gate on total variation → nested Clenshaw–Curtis fallback → same accept/bisect logic | 03 | ✅ |
 | 8 | Distribute `atol` in proportion to interval length | 05 | ⬜ |
 | 9 | Gate `p_use` on endpoint magnitudes; add the discarded contribution to `abserr` | 06 | ⬜ |
-| 10 | Retune the phase-error safety factor | 04 (see README §2.4 note 2) | ⬜ |
-| 11 | Honest solve counters; rename `evaluations`; return `abserr` components | 07 (+ 04 for the components) | ⬜ |
+| 10 | Retune the phase-error safety factor | 04 (see README §2.4 note 2) | ✅ |
+| 11 | Honest solve counters; rename `evaluations`; return `abserr` components | 07 (+ 04 for the components) | 🟡 (components done, counters/rename pending) |
 | 12 | `seaborn`/`matplotlib` behind `emit_diagnostics`; parameterise paths; `logging` | 07 | ⬜ |
 | 13 | Raise the default order to 16; document the 12–32 band | 08 | ⬜ |
 | 14 | Optional vectorised sampling | 08 | ⬜ |
@@ -112,6 +112,25 @@ falls to the fallback branch (4% at worst, and prompt 03 removes it anyway).
   order/cost re-measurement should use post-prompt-03 numbers as its baseline, not prompt 02's; if
   the extra cost is unwelcome, raising `SIX_PI` (audit §4.5) is the lever, evaluated with prompt
   03's log measurements in hand rather than re-derived from scratch.
+
+- **[04-roundoff-floor-can-be-infinite]** *(opened by prompt 04, 2026-09-04)* — a region's
+  `phase_err` / `abserr_roundoff` / `total_err` can now be `+inf` (`_roundoff_floor()` returns it
+  when `G0 = min|theta'|` is at or below a floating-point noise floor relative to `G1`, which
+  happens at an interior stationary point strictly inside a still-strongly-oscillatory Levin
+  region — see prompt 04's log, "Deviations", for the regression this fixed). `phase_limited` is
+  already guarded against this (`np.isfinite(phase_err)` is required before it can fire), so it
+  cannot cause a wrong early acceptance. **Impact:** any future code that sums, plots, or takes a
+  ratio involving `used_interval.total_err`/`.abserr_roundoff` across many regions (prompt 07's
+  diagnostics rewrite is the obvious candidate) must not assume finiteness. **Next step:** prompt
+  07 should audit `_write_progress_data` and any new diagnostics for this before shipping.
+- **[04-theta-abserr-cc-branch-proxy]** *(opened by prompt 04, 2026-09-04)* — the declared-
+  `theta_abserr` endpoint term (recommendation 5.2) is exact per-endpoint on a Levin region (true
+  `p_endpoint_l1` split by side) but an even 50/50 split of a lumped `f_scale * width` proxy on a
+  Clenshaw-Curtis fallback region, which has no Levin antiderivative to weight by. This is a
+  judgement call (prompt 04's log, "Deviations"), not a defect — nothing supplies `theta_abserr`
+  yet so it has no live consequence. **Impact:** none today. **Next step:** whoever wires up the
+  first real `theta_abserr` caller (README §6's `phase_spline` accuracy API) should re-examine
+  whether the CC-branch proxy is tight enough once there is a real number to check it against.
 
 > Add an entry here whenever a prompt finishes with something unresolved: a verification step that
 > could not be run, an assumption that could not be confirmed, a deviation a later prompt has to
@@ -213,3 +232,30 @@ because something has landed since.
     regression, and fallback-bisects-on-missed-tolerance), all passing in ~0.03s. Standing note 3's
     "4 tests" baseline is the pre-campaign figure at `c8a1918` and is left as written for historical
     accuracy; use this note for the current count.
+18. **As of prompt 04, `theta_scale` and the `TWO_PI` inference are gone entirely** — deleted, not
+    deprecated. `build_Levin_data()` now returns a 5-tuple (`AmatT, theta_prime_Cheb, w0, wk,
+    phase_span`), not the former 6-tuple; `_adaptive_levin_subregion_cc()`'s signature takes
+    `theta_prime_Cheb` where it used to take `theta_scale`. The default accuracy floor is now
+    `_roundoff_floor()` (Chen et al. eq. 151), computed from `_levin_G0_G1()` and each region's
+    already-sampled `f`; `_phase_error()` survives only for the optional, caller-declared
+    `theta_abserr` endpoint term (recommendation 5.2), and no longer applies an internal `eps`
+    factor -- its first argument is now a true absolute error in radians, not an inferred scale.
+    See prompt 04's log for the full before/after and the reasoning.
+19. **A region's round-off floor (`used_interval.phase_err` / `.abserr_roundoff` / `.total_err`)
+    can be `+inf`.** `_roundoff_floor()` returns it when `G0 = min|theta'|` on a region is at or
+    below a relative floating-point noise floor of `G1 = max|theta'|` (constant
+    `_LEVIN_ROUNDOFF_G0_NOISE_FLOOR = 1e-10`) -- reachable whenever a Levin region (large total
+    variation) contains an interior stationary point close to a sampled node, which a bare
+    `G0 > 0` test does **not** catch (differentiation noise from a spectrally-differentiated phase
+    gives a small nonzero G0 even at an exact stationary point). `_adaptive_levin()`'s
+    `phase_limited` test requires `np.isfinite(phase_err)`, so an infinite floor cannot force a
+    wrong early acceptance -- it can only be reported once a region is accepted on some other
+    basis. See §3 `[04-roundoff-floor-can-be-infinite]` and prompt 04's log ("Deviations") for the
+    real regression this was found by (not anticipated by the prompt as written).
+20. **`_adaptive_levin()`'s returned dict has three new keys**: `abserr_resolution`,
+    `abserr_roundoff`, `abserr_fallback` (the aggregate `abserr` broken down by source, rec 11 /
+    §3.4). Additive, safe for `docs/adaptive-levin-benchmark/levin_bench/` (confirmed by grep: it
+    reads only `abserr` off `used_interval` objects, not these new keys or properties).
+    `used_interval` gained matching properties `abserr_resolution`/`abserr_fallback` (type-gated:
+    `None` on the wrong region type) and `abserr_roundoff` (an alias for the existing `phase_err`,
+    defined on every region type).

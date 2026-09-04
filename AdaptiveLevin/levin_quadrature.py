@@ -31,14 +31,22 @@ deliberate departures are:
     Chen et al.'s test is absolute only. See _adaptive_levin() for why this
     matters and how it is now gated.
 
-  * The returned error estimate accounts for the endpoint phase-evaluation
-    floor as well as the step-(4) resolution residual. See the extended
-    discussion in _adaptive_levin(); the short version is that the step-(4)
-    residual is a *resolution* criterion and is blind, by construction, to
-    rounding of the phase at the region endpoints. Chen et al. describe that
-    loss of accuracy in prose (v3 p. 30, immediately after the algorithm)
-    rather than folding it into their estimate, which is legitimate for a
-    paper but misleading in a library API.
+  * The returned error estimate accounts for a round-off floor -- Chen et
+    al.'s own eq. (151), see _roundoff_floor() -- as well as the step-(4)
+    resolution residual (or, for a Clenshaw-Curtis fallback region, its
+    nested-pair estimate). See the extended discussion in _adaptive_levin();
+    the short version is that the step-(4) residual is a *resolution*
+    criterion and is blind, by construction, to round-off, which is
+    dominated by eps * ||f||_inf and the phase's local conditioning rather
+    than by how well the Chebyshev interpolant resolves f and theta'. Chen
+    et al. describe the existence of this loss of accuracy in prose (v3 p.
+    30, immediately after the algorithm) rather than folding a bound for it
+    into their estimate, which is legitimate for a paper but misleading in a
+    library API. (An earlier version of this module modelled the floor as
+    rounding of the phase specifically at the two region endpoints, with an
+    inferred scale; that model was optimistic by up to 8.1e9 on the
+    production code path and has been replaced -- see prompts/levin-refactor
+    /logs/04-roundoff-floor.md.)
 
   * Weakly oscillatory regions (total variation of the phase, mean|theta'| * width,
     below 6*pi) are handed to a nested Clenshaw-Curtis rule rather than to the Levin
@@ -105,27 +113,65 @@ DEFAULT_LEVIN_RELTOL = 1e-7
 # approximate machine epsilon for 64-bit floats
 MACHINE_EPSILON = 1e-16
 
-TWO_PI = 2.0 * np.pi
 SIX_PI = 6.0 * np.pi
 
-# Safety factor applied to the endpoint phase-rounding bound; see _phase_error() and the
-# discussion in _adaptive_levin().
+# Safety factor 'C' in Chen et al. eq. (151), the round-off floor applied to every region's
+# estimate (Levin or Clenshaw-Curtis fallback alike):
 #
-# Measured against closed-form oracles for int_{1/3}^{7/3} f(x) sin(w x) dx with
-# f in {exp(-x), 1/x, 1} and w from 1e3 to 1e13 (18 cells), the bound with this factor set to
-# 1.0 over-estimated the delivered absolute error by between 1.6x and 36x and never
-# under-reported it. It is therefore reported as-is; the factor exists so the margin can be
-# retuned without touching the derivation.
+#   round_off_err = C * eps * ||f||_inf * (h/2) * (1 + G1/G0 + max(G1, k^2)/G0)
 #
-# CAVEAT on those numbers: the bound assumes the phase carries full relative rounding error,
-# d(theta) ~ eps*|theta|. That is the generic case, but it is *not* attained when the endpoints
-# and the frequency conspire to make theta exactly representable -- e.g. integrating over
-# [0, 1] with w a power of ten, where w*x is exact and libm reduces it perfectly, so the true
-# d(theta) is zero. On such intervals the bound was measured to be loose by up to ten orders of
-# magnitude. This is unavoidable without a way for the phase function to report its own
-# accuracy, and erring towards a bound that is loose (never optimistic) is the safe direction
-# for a library that callers use to decide whether to trust a result.
+# See _roundoff_floor() and prompts/levin-refactor/logs/04-roundoff-floor.md. Measured across 26
+# resolved cells (three problem families x five decades of omega x two Chebyshev orders,
+# audit's e29_paperbound.py) the worst true/bound ratio at C = 1.0 was 0.22 -- i.e. 4.5x margin --
+# against 1.24 (an *exceeded*, i.e. wrong, bound) for the endpoint model this floor replaces.
+# Reported as measured: the margin is already ample and there is no evidence here that would
+# justify inflating every reported error bar for a wider one.
+_LEVIN_ROUNDOFF_SAFETY = 1.0
+
+# Safety factor applied only to the *declared* theta_abserr endpoint term (recommendation 5.2);
+# see _phase_error(). This is deliberately a separate constant from _LEVIN_ROUNDOFF_SAFETY above:
+# eq. (151) replaces the endpoint model as the *default* floor, so one shared factor could not
+# serve both models at once. The audit's recommendation 10 measured the *old, inferred* endpoint
+# model (theta_scale inferred as max|theta| or a hardwired 2*pi -- see prompt 04's log for why
+# that inference was removed) exceeded by 1.24x in one of 30 cells and suggested raising a shared
+# factor to 4-8. That does not transfer unchanged to this narrower use: a *declared* theta_abserr
+# is a number the caller supplies about their own phase function, not a scale this module infers,
+# and no production caller supplies one yet (see adaptive_levin_sincos()'s docstring and README
+# Sec 6 of the levin-refactor campaign). Kept at 1.0 pending a real caller and a validation set of
+# its own.
+#
+# CAVEAT carried over from the endpoint model this narrows to: the term assumes theta_abserr is a
+# genuine *estimate* of the phase's own error, carrying full relative weight, not already a loose
+# upper bound -- if a future caller's theta_abserr is itself conservative, this factor should not
+# also inflate it. Erring loose rather than optimistic remains the safe default in the meantime.
 _LEVIN_PHASE_ERROR_SAFETY = 1.0
+
+# Relative noise floor for G0 = min|theta'| in _roundoff_floor()'s eq. (151) bound (prompt 04,
+# note (b)): G0 <= this fraction of G1 = max|theta'| is treated as G0 being numerically
+# indistinguishable from zero, not merely small, and the round-off floor is reported as +inf
+# rather than as whatever large-but-finite number the ratio G1/G0 happens to produce.
+#
+# This is not cosmetic. A literal `G0 > 0.0` test is not enough: when theta' is obtained by
+# spectral differentiation of a sampled phase (the common case -- no theta_deriv supplied), a
+# region whose true minimum |theta'| is exactly zero at an interior stationary point still comes
+# back from the Chebyshev differentiation matrix as a small nonzero float, because Chebyshev
+# differentiation amplifies floating-point noise in the sampled theta values by a factor that
+# grows with the collocation order (empirically ~k^2). Measured on the C2 stationary-phase
+# regression (theta = 1e6*(x - x^2), true stationary point at x = 0.5, order 12): a region with
+# one endpoint exactly at the stationary point produced G0 ~ 1.9e-9, G1 ~ 2.5e5 -- a ratio of
+# ~7.5e-15, comfortably nonzero by a bare G0 > 0.0 test, but pure differentiation noise. Treating
+# it at face value inflated the reported round-off floor to ~4e-3 (comparable to the integral's
+# own value) and let it satisfy _adaptive_levin()'s phase_limited test, freezing a region whose
+# value was in fact 490% wrong -- see prompts/levin-refactor/logs/04-roundoff-floor.md.
+#
+# 1e-10 sits several orders of magnitude above the observed noise level (~1e-15 to ~1e-12 for the
+# collocation orders 8-32 this module clamps to) while remaining far below any ratio a genuinely
+# resolvable (non-degenerate-to-double-precision) physical configuration could produce -- a real
+# G0/G1 ratio below ~1e-10 is not meaningfully distinguishable from zero in float64 arithmetic
+# regardless of its origin. Erring towards +inf here is safe in the sense _roundoff_floor()'s
+# docstring explains: it can only ever delay acceptance of a region (forcing further bisection or
+# a fall-through to depth_max), never force a wrong early acceptance.
+_LEVIN_ROUNDOFF_G0_NOISE_FLOOR = 1.0e-10
 
 # minimum phase change across a subinterval before we are prepared to invert the Levin super-operator
 # with a direct LU solve rather than a least-squares (SVD) solve. Below this the operator is poorly
@@ -137,10 +183,19 @@ INTERVAL_TYPE_DIRECT = 1
 types = {0: "Levin", 1: "direct"}
 
 
-def _phase_error(theta_scale: float, p_endpoint_l1: float) -> float:
+def _phase_error(theta_abserr: float, p_endpoint_l1: float) -> float:
     """
-    Estimate the absolute error contributed to a region's Levin estimate by rounding of the
-    phase function at the two region endpoints.
+    Estimate the absolute error contributed to a region's estimate by a declared absolute error
+    theta_abserr in the phase at one region endpoint.
+
+    As of prompt 04 (prompts/levin-refactor/logs/04-roundoff-floor.md) this function is used only
+    for the *declared* theta_abserr endpoint term (recommendation 5.2): it is no longer the
+    default accuracy floor, which is now _roundoff_floor()'s implementation of Chen et al. eq.
+    (151). Previously theta_scale here was a *magnitude* the module inferred (max|theta|, or a
+    hardwired 2*pi) and the true error was assumed to be eps * theta_scale; that inference is
+    gone (see prompt 04's log for why it was wrong -- C4), so this function's first argument is
+    now a caller-declared absolute error already in radians, and is used directly with no
+    additional eps factor.
 
     The Levin estimate for a region is
 
@@ -151,7 +206,7 @@ def _phase_error(theta_scale: float, p_endpoint_l1: float) -> float:
 
         |d value| <= d(theta) * ( sum_i |p_i(b)| + sum_i |p_i(a)| ).
 
-    With d(theta) ~ eps * theta_scale this gives the bound returned here.
+    With d(theta) = theta_abserr this gives the bound returned here.
 
     Why this is needed at all: the step-(4) residual |val0 - valL - valR| cannot see this
     error. Bisecting [a, b] at c gives regions [a, c] and [c, b] whose contributions at c
@@ -168,10 +223,136 @@ def _phase_error(theta_scale: float, p_endpoint_l1: float) -> float:
     constant or decays. So the step-(4) test is a valid resolution criterion; it is simply not
     a total-error estimate, and was never claimed to be one.
 
-    :param theta_scale: magnitude of the phase argument handed to sin/cos at the endpoints
-    :param p_endpoint_l1: sum over components of |p| at both endpoints
+    :param theta_abserr: declared absolute error of the phase at the endpoint, in radians
+    :param p_endpoint_l1: sum over components of |p| at the endpoint(s) this call covers
     """
-    return _LEVIN_PHASE_ERROR_SAFETY * MACHINE_EPSILON * theta_scale * p_endpoint_l1
+    return _LEVIN_PHASE_ERROR_SAFETY * theta_abserr * p_endpoint_l1
+
+
+def _levin_G0_G1(theta_prime_sample: np.ndarray, width: float) -> Tuple[float, float]:
+    """
+    G0 = min|theta'| and G1 = max|theta'|, on the *rescaled* interval [-1, 1] that Chen et al.
+    (151) is stated on -- not on the raw x-interval. theta_prime_sample is theta' sampled on the
+    raw interval (e.g. theta_prime_Cheb), so it is scaled here by (h/2), h = width, to convert.
+
+    This distinction matters (prompt 04's note (a)): the ratio G1/G0 is scale-invariant, so it
+    looks the same whichever interval you compute it on and a bug here would go unnoticed on it;
+    max(G1, k^2)/G0 is *not* scale-invariant, and silently omitting the (h/2) factor gives a bound
+    that is wrong by (h/2)^2 on every problem where the k^2 term dominates.
+
+    :param theta_prime_sample: theta' sampled at the region's Chebyshev collocation points (any
+        order; only its min/max magnitude is used).
+    :param width: |b - a|, the raw interval width.
+    """
+    half_width = 0.5 * width
+    abs_theta_prime = np.fabs(theta_prime_sample)
+    G0 = float(np.min(abs_theta_prime)) * half_width
+    G1 = float(np.max(abs_theta_prime)) * half_width
+    return G0, G1
+
+
+def _roundoff_floor(f_scale: float, width: float, G0: float, G1: float, k: float) -> float:
+    """
+    Round-off floor for a region's estimate, from Chen et al. (arXiv:2211.13400v3) eq. (151):
+
+        |I_1 - I| <~ eps * ||f||_inf * (h/2) * (1 + G1/G0 + max(G1, k^2)/G0)
+
+    where G0 = min|theta'| and G1 = max|theta'| on the rescaled interval [-1, 1] (see
+    _levin_G0_G1()) and h = width is the raw interval width. This supersedes the module's former
+    endpoint-phase model (_phase_error() with an inferred theta_scale) as the *default* accuracy
+    floor -- see prompt 04's log (prompts/levin-refactor/logs/04-roundoff-floor.md) for the
+    measurement showing the old model was optimistic by up to 8.1e9 on exactly the production
+    code path, and for why this one is not: it is independent of whether the phase is presented
+    raw or range-reduced, needs no evaluations the region's own solve does not already make, and
+    (unlike the endpoint model) aggregates to a total that is roughly invariant under how finely
+    an interval is subdivided rather than growing with the region count.
+
+    G0 = min|theta'| can be exactly, or numerically, zero at an interior stationary point that
+    happens to coincide with (or land extremely close to) a sampled collocation node -- reachable
+    (see prompt 04, note (b)) for a Levin region with large total variation but a turning point
+    strictly inside it (a region with *small* total variation and a turning point is routed to the
+    Clenshaw-Curtis fallback by the total-variation gate before this function is ever called on it
+    -- see _adaptive_levin_subregion_impl()).
+
+    This is treated as +inf, not merely as a large finite number, whenever
+    G0 <= _LEVIN_ROUNDOFF_G0_NOISE_FLOOR * G1 -- i.e. whenever G0 sits at or below a generous
+    relative floating-point noise floor for theta', given its scale G1 elsewhere in the interval.
+    See _LEVIN_ROUNDOFF_G0_NOISE_FLOOR's own comment for the constant's value and derivation; the
+    short version is that this threshold is not cosmetic. An interior turning point that lands
+    close to, but not exactly on, a sampled collocation node still gives a *finite* G0 -- and when
+    theta' comes from spectral differentiation of a sampled phase (no theta_deriv supplied), even a
+    node placed exactly at a true stationary point produces a small nonzero G0 from differentiation
+    noise, not true zero. The naive reading -- "just check G0 > 0" -- was tried and measured to
+    fail: on the C2 stationary-phase regression (theta = 1e6*(x - x^2), true stationary point at
+    x = 0.5; prompts/levin-refactor/logs/04-roundoff-floor.md) a region with one endpoint exactly
+    at the stationary point produced G0 ~ 1.9e-9 and G1 ~ 2.5e5 -- a ratio ~7.5e-15, comfortably
+    nonzero by a bare G0 > 0.0 test but pure differentiation noise -- which inflated
+    max(G1, k^2)/G0 to a bound comparable to the integral's own value and let it satisfy
+    _adaptive_levin()'s phase_limited test, freezing a region whose value was in fact 490% wrong.
+    Only the relative test below catches this; G0 > 0 alone does not. Eq. (151) is undefined in
+    the true G0 = 0 limit (division by zero) and is not trustworthy in this noise-floor
+    neighbourhood of it either, so this returns +inf in both cases rather than raising or
+    fabricating a number the derivation does not support. This is deliberately NOT clamped to some
+    other large-but-finite value: _adaptive_levin()'s phase_limited test additionally requires a
+    *finite* floor before it will accept a region early on the strength of it (see the comment
+    there), so an infinite floor here can only ever be reported once the region is accepted on some
+    other basis (the step-(4) residual, or depth_max) -- it cannot itself
+    freeze a region that genuine further bisection could still improve. See prompt 04's log for the
+    full numerical consequence of this choice, including the regression this specific threshold
+    fixes.
+
+    :param f_scale: max_grid |f| for this region -- max sqrt(f_1(x)^2 + f_2(x)^2) over the grid
+        already sampled to build the region's estimate (see prompt 04, note (c), for why the
+        Euclidean combination of the two components was chosen over max_i max_grid|f_i| or their
+        sum).
+    :param width: |b - a|, the raw interval width. The (h/2) prefactor multiplying the whole
+        bound is formed from this directly, rather than being threaded through from the caller's
+        own (h/2), so it can never be confused with the (h/2) already folded into G0/G1.
+    :param G0: min|theta'| * (h/2) on the rescaled interval; see _levin_G0_G1().
+    :param G1: max|theta'| * (h/2) on the rescaled interval; see _levin_G0_G1().
+    :param k: Chebyshev collocation order used for this region (note (d): not the region index,
+        not a wave number).
+    """
+    if not (G0 > 0.0) or G0 <= _LEVIN_ROUNDOFF_G0_NOISE_FLOOR * G1:
+        return float("inf")
+
+    half_width = 0.5 * width
+    k2 = float(k) * float(k)
+    return (
+        _LEVIN_ROUNDOFF_SAFETY
+        * MACHINE_EPSILON
+        * f_scale
+        * half_width
+        * (1.0 + G1 / G0 + max(G1, k2) / G0)
+    )
+
+
+def _declared_endpoint_phase_err(
+    BasisData, a: float, b: float, p_endpoint_l1_a: float, p_endpoint_l1_b: float
+) -> float:
+    """
+    Optional endpoint-rounding contribution from a caller-declared theta_abserr (recommendation
+    5.2). Returns 0.0 when the phase dict supplies no "theta_abserr" key, so a region's floor is
+    exactly the eq. (151) round-off floor and nothing more -- see _Basis_SinCos.theta_abserr_at()
+    and prompt 04's log.
+
+    :param a: lower endpoint of the region (x_span[0]).
+    :param b: upper endpoint of the region (x_span[1]).
+    :param p_endpoint_l1_a: sum over components of |p| (or an analogous proxy for the
+        Clenshaw-Curtis fallback, which has no Levin antiderivative) attributed to endpoint a.
+    :param p_endpoint_l1_b: as above, attributed to endpoint b.
+    """
+    err = 0.0
+
+    theta_abserr_a = BasisData.theta_abserr_at(a)
+    if theta_abserr_a is not None:
+        err += _phase_error(theta_abserr_a, p_endpoint_l1_a)
+
+    theta_abserr_b = BasisData.theta_abserr_at(b)
+    if theta_abserr_b is not None:
+        err += _phase_error(theta_abserr_b, p_endpoint_l1_b)
+
+    return err
 
 
 class used_interval:
@@ -194,10 +375,16 @@ class used_interval:
 
         self._type = type
 
-        # abserr/relerr are the step-(4) *resolution* residual: |val0 - valL - valR|.
-        # phase_err is an estimate of the error contributed by rounding of the phase function
-        # at the two region endpoints, which the resolution residual cannot see (see
-        # _adaptive_levin()). The total error of the region is bounded by the larger of the two.
+        # For a Levin region (type == INTERVAL_TYPE_LEVIN), abserr/relerr are the step-(4)
+        # *resolution* residual: |val0 - valL - valR|. For a Clenshaw-Curtis fallback region
+        # (type == INTERVAL_TYPE_DIRECT) there is no such comparison; abserr/relerr are instead
+        # the nested-pair estimate |CC_{2N-1} - CC_N| (see _adaptive_levin_subregion_cc()).
+        # phase_err is the round-off floor from Chen et al. eq. (151) (_roundoff_floor()), plus
+        # any declared-theta_abserr endpoint contribution (_declared_endpoint_phase_err()) -- an
+        # error source neither the resolution residual nor the nested-pair estimate can see (see
+        # _adaptive_levin()). The total error of the region is bounded by the larger of the two;
+        # see abserr_resolution/abserr_fallback/abserr_roundoff below for the type-disambiguated
+        # accessors, and total_err for the max.
         self._abserr = abserr
         self._relerr = relerr
 
@@ -262,17 +449,19 @@ class used_interval:
     @property
     def phase_err(self) -> Optional[float]:
         """
-        Estimated absolute error contributed by rounding of the phase function at the region
-        endpoints. This is *not* included in abserr; the total error of the region is
-        max(abserr, phase_err).
+        Round-off floor for this region (Chen et al. eq. (151), _roundoff_floor()), plus any
+        declared-theta_abserr endpoint contribution. This is *not* included in abserr; the total
+        error of the region is max(abserr, phase_err) -- see total_err. Can be +inf; see
+        _roundoff_floor()'s docstring for when and why.
         """
         return self._phase_err
 
     @property
     def phase_limited(self) -> bool:
         """
-        True if this region was accepted because phase rounding, not lack of resolution, set
-        the achievable accuracy. Subdividing such a region cannot improve it.
+        True if this region was accepted because the round-off floor, not lack of resolution, set
+        the achievable accuracy. Subdividing such a region cannot improve it. Never True when
+        phase_err is not finite -- see _adaptive_levin()'s phase_limited computation.
         """
         return self._phase_limited
 
@@ -283,6 +472,38 @@ class used_interval:
         if self._phase_err is None:
             return self._abserr
         return max(self._abserr, self._phase_err)
+
+    @property
+    def abserr_resolution(self) -> Optional[float]:
+        """
+        Step-(4) resolution residual |val0 - valL - valR|. Defined only for a Levin region (type
+        == "Levin"); None for a Clenshaw-Curtis fallback region, whose own nested-pair estimate
+        is abserr_fallback instead. See prompts/levin-refactor/04-roundoff-floor.md item 5.
+        """
+        if self._type == INTERVAL_TYPE_LEVIN:
+            return self._abserr
+        return None
+
+    @property
+    def abserr_fallback(self) -> Optional[float]:
+        """
+        Clenshaw-Curtis nested-pair estimate |CC_{2N-1} - CC_N|. Defined only for a fallback
+        region (type == "direct"); None for a Levin region, whose own resolution residual is
+        abserr_resolution instead.
+        """
+        if self._type == INTERVAL_TYPE_DIRECT:
+            return self._abserr
+        return None
+
+    @property
+    def abserr_roundoff(self) -> Optional[float]:
+        """
+        Round-off floor (Chen et al. eq. (151), plus any declared-theta_abserr endpoint term).
+        Defined for every region type -- an alias for phase_err, named to match
+        abserr_resolution/abserr_fallback for the aggregate breakdown in _adaptive_levin()'s
+        returned dict.
+        """
+        return self._phase_err
 
     @property
     def p_ratios(self) -> List[float]:
@@ -502,8 +723,8 @@ class _Basis_SinCos:
     def __init__(self, theta):
         """
         :param theta: dict with a required "theta" key (the phase function) and optional
-            "theta_mod_2pi" / "theta_deriv" keys; see adaptive_levin_sincos()'s docstring for the
-            full contract.
+            "theta_mod_2pi" / "theta_deriv" / "theta_abserr" keys; see
+            adaptive_levin_sincos()'s docstring for the full contract.
         """
         if callable(theta):
             raise TypeError(
@@ -523,8 +744,28 @@ class _Basis_SinCos:
         if "theta_deriv" in theta:
             self._theta_deriv = theta["theta_deriv"]
 
+        if "theta_abserr" in theta:
+            self._theta_abserr = theta["theta_abserr"]
+
     def raw_theta(self, x):
         return self._theta(x)
+
+    def theta_abserr_at(self, x) -> Optional[float]:
+        """
+        Declared absolute error of the phase at x, in radians (recommendation 5.2), or None when
+        the phase dict supplied no "theta_abserr" key. theta_abserr may be a scalar (the same
+        declared error everywhere) or a callable of x; follows the same hasattr convention as
+        theta_mod_2pi/theta_deriv above rather than an explicit-None default (standing note 11 of
+        prompts/levin-refactor/IMPLEMENTATION_STATE.md).
+
+        Nothing in LiouvilleGreen/ supplies this today -- see prompt 04's log and README Sec 6 of
+        the levin-refactor campaign. It exists so a future phase_spline accuracy API has somewhere
+        to report its own construction error, which this module cannot otherwise see or express.
+        """
+        if not hasattr(self, "_theta_abserr"):
+            return None
+        theta_abserr = self._theta_abserr
+        return float(theta_abserr(x)) if callable(theta_abserr) else float(theta_abserr)
 
     @property
     def supports_complexified_solve(self) -> bool:
@@ -552,8 +793,11 @@ class _Basis_SinCos:
             path (see supports_complexified_solve) needs theta_prime_Cheb directly and never
             needs A^T, so the caller passes False there to skip an O(N^2) allocation that would
             just be discarded.
-        :return: (AmatT, theta_prime_Cheb, w0, wk, phase_span, theta_scale). AmatT is None when
-            need_AmatT is False.
+        :return: (AmatT, theta_prime_Cheb, w0, wk, phase_span). AmatT is None when need_AmatT is
+            False. Prior to prompt 04 this also returned a sixth element, theta_scale, used only
+            by the endpoint phase-rounding model that eq. (151) (_roundoff_floor()) replaces as
+            the default accuracy floor -- see prompt 04's log for why that model, and the
+            inference it required, were removed.
         """
         # we need theta sampled on the Chebyshev grid if either (a) we have to obtain theta' by spectral
         # differentiation, or (b) we have no range-reduced phase function and therefore have to evaluate
@@ -610,26 +854,21 @@ class _Basis_SinCos:
             np.mean(np.fabs(theta_prime_Cheb)) * np.fabs(grid[0] - grid[-1])
         )
 
-        # theta_scale is the magnitude of the phase argument actually handed to sin/cos at the
-        # endpoints. It sets the absolute resolution of those two values, and hence the floor on
-        # the accuracy of the Levin estimate for this region -- see _phase_error(). Like
-        # phase_span above it costs no additional evaluations of the phase function.
+        # w0/wk are w = (sin theta, cos theta) at the two region endpoints, preferring a
+        # range-reduced phase when one is supplied (an O(2*pi) argument to sin/cos rather than an
+        # O(theta) one). This is still worth doing for its own sake -- it keeps the *values*
+        # handed to sin/cos well-conditioned -- but, as of prompt 04, no longer changes the
+        # reported accuracy floor: eq. (151) (_roundoff_floor()) does not depend on how the phase
+        # is presented, only on f, theta' and the interval geometry. See prompt 04's log (C4) for
+        # the measurement showing the previous model's dependence on this branch was the defect,
+        # not a feature -- the reduced-phase floor was optimistic by up to 8.1e9 on the production
+        # path while the raw-phase floor and the reduced-phase *value* were both fine.
         if hasattr(self, "_theta_mod_2pi"):
             theta0_mod_2pi = self._theta_mod_2pi(grid[-1])
             thetak_mod_2pi = self._theta_mod_2pi(grid[0])
 
             w0 = [np.sin(theta0_mod_2pi), np.cos(theta0_mod_2pi)]
             wk = [np.sin(thetak_mod_2pi), np.cos(thetak_mod_2pi)]
-
-            # a range-reduced phase hands sin/cos an O(2pi) argument, so its representation error
-            # is O(eps) no matter how large the underlying phase is. This is exactly why a
-            # range-reduced phase function is worth supplying.
-            #
-            # CAVEAT: this accounts only for the rounding of the reduced value as a float. Any
-            # error inherited from the *construction* of the reduced phase -- e.g. the fit error
-            # of a phase spline, or precision lost while reducing a large product -- is invisible
-            # from here, and the bound below does not include it.
-            theta_scale = TWO_PI
         else:
             # note grid is in reverse order, with largest value in position 1 and smallest value in last position -1
             theta0 = theta_Cheb[-1]
@@ -638,12 +877,7 @@ class _Basis_SinCos:
             w0 = [np.sin(theta0), np.cos(theta0)]
             wk = [np.sin(thetak), np.cos(thetak)]
 
-            # the raw phase is a large float at large argument, with absolute resolution
-            # ~ eps*|theta|. sin/cos then inherit an absolute error of the same size, because
-            # |d(sin)/d(theta)| <= 1. This is the dominant error at high frequency.
-            theta_scale = float(np.max(np.fabs(theta_Cheb)))
-
-        return AmatT, theta_prime_Cheb, w0, wk, phase_span, theta_scale
+        return AmatT, theta_prime_Cheb, w0, wk, phase_span
 
     def eval_basis(self, x):
         if hasattr(self, "_theta_mod_2pi"):
@@ -753,10 +987,8 @@ def _adaptive_levin_subregion_impl(
         BasisData, "supports_complexified_solve", False
     )
 
-    AmatT, theta_prime_Cheb, w0, wk, phase_span, theta_scale = (
-        BasisData.build_Levin_data(
-            grid, Dmat, label=label, need_AmatT=not use_complex_solve
-        )
+    AmatT, theta_prime_Cheb, w0, wk, phase_span = BasisData.build_Levin_data(
+        grid, Dmat, label=label, need_AmatT=not use_complex_solve
     )
 
     # C2 fix: gate on the phase's *total variation* across the region, not its net change
@@ -770,7 +1002,7 @@ def _adaptive_levin_subregion_impl(
     # need the Levin solve.
     if phase_span < SIX_PI:
         return _adaptive_levin_subregion_cc(
-            x_span, f, BasisData, chebyshev_order, phase_span, theta_scale, label
+            x_span, f, BasisData, chebyshev_order, phase_span, theta_prime_Cheb, label
         )
 
     # sample each component of f on the Chebyshev grid,
@@ -960,11 +1192,24 @@ def _adaptive_levin_subregion_impl(
     lower_limit = sum(P[i, -1] * w0[i] if p_use[i] else 0.0 for i in range(m))
     upper_limit = sum(P[i, 0] * wk[i] if p_use[i] else 0.0 for i in range(m))
 
-    # first-order bound on the error inherited from rounding of the phase at the two endpoints.
-    # The same p-values and the same p_use gating are used as in the estimate itself, so this
-    # costs only a handful of flops and no extra evaluations of theta or f. See _phase_error().
-    p_endpoint_l1 = sum(
-        (np.fabs(P[i, -1]) + np.fabs(P[i, 0])) if p_use[i] else 0.0 for i in range(m)
+    # Round-off floor, Chen et al. eq. (151) -- see _roundoff_floor(). G0/G1 use theta' already
+    # sampled by build_Levin_data(); f_scale = max_grid sqrt(f_1^2 + f_2^2) reuses f_Cheb, which
+    # was already sampled and finiteness-checked above (F[j, i] recovers the same per-component
+    # layout as P[j, i], by the same construction -- see the comment above P's reshape). Neither
+    # costs an extra evaluation of anything.
+    width = np.fabs(x_span[1] - x_span[0])
+    G0, G1 = _levin_G0_G1(theta_prime_Cheb, width)
+    F = f_Cheb.reshape(m, chebyshev_order)
+    f_scale = float(np.max(np.sqrt(np.sum(F * F, axis=0))))
+    round_off_err = _roundoff_floor(f_scale, width, G0, G1, chebyshev_order)
+
+    # Optional declared-theta_abserr endpoint term (recommendation 5.2), 0.0 unless the phase dict
+    # supplied "theta_abserr". Uses the same p-values and the same p_use gating as the estimate
+    # itself, split by endpoint since a callable theta_abserr may differ at a and b.
+    p_endpoint_l1_a = sum(np.fabs(P[i, -1]) if p_use[i] else 0.0 for i in range(m))
+    p_endpoint_l1_b = sum(np.fabs(P[i, 0]) if p_use[i] else 0.0 for i in range(m))
+    declared_err = _declared_endpoint_phase_err(
+        BasisData, x_span[0], x_span[1], p_endpoint_l1_a, p_endpoint_l1_b
     )
 
     return {
@@ -972,7 +1217,7 @@ def _adaptive_levin_subregion_impl(
         "p_sample": p_sample,
         "p_ratios": p_ratios,
         "phase_span": phase_span,
-        "phase_err": _phase_error(theta_scale, p_endpoint_l1),
+        "phase_err": round_off_err + declared_err,
         "metadata": metadata,
         "is_direct": False,
     }
@@ -984,7 +1229,7 @@ def _adaptive_levin_subregion_cc(
     BasisData,
     chebyshev_order: int,
     phase_span: float,
-    theta_scale: float,
+    theta_prime_Cheb: np.ndarray,
     label: str,
 ):
     """
@@ -1003,8 +1248,10 @@ def _adaptive_levin_subregion_cc(
 
     :param phase_span: total phase variation across x_span, already computed by the caller's
         call to BasisData.build_Levin_data() -- passed in rather than recomputed.
-    :param theta_scale: magnitude of the phase argument handed to sin/cos, likewise already
-        computed by the caller.
+    :param theta_prime_Cheb: theta' sampled at the order-chebyshev_order collocation points,
+        likewise already computed by the caller's call to build_Levin_data() -- used for the
+        round-off floor's G0/G1 (see _levin_G0_G1()), not recomputed on the fine grid because the
+        coarse sample is what the gate above already paid for.
     :return: a dict with the same "value"/"phase_span"/"phase_err"/"metadata" keys as the Levin
         path, "abserr_direct" in place of a p-based estimate, "is_direct": True, and
         "p_sample"/"p_ratios" both None (the Levin antiderivative concept does not apply here).
@@ -1044,16 +1291,28 @@ def _adaptive_levin_subregion_cc(
 
     abserr_direct = float(np.fabs(value_fine - value_coarse))
 
-    # Phase-rounding floor for this fallback: the direct analogue of _phase_error()'s endpoint
-    # bound, with integral|f| in place of the sum of |p| at the two endpoints. integral|f| is
-    # estimated from the fine-grid samples already in hand (a crude sup-norm x width bound, same
-    # as the estimate the direct-quadrature branch this replaces used to make from a 3-point
-    # sample) -- no extra evaluations. theta_scale is exactly what build_Levin_data computed for
-    # the gate above, reused rather than recomputed. Pending prompt 04's eq. (151) floor, which
-    # replaces this estimate along with the Levin branch's _phase_error() call.
-    f_scale = float(np.max(np.sum(np.fabs(f_fine), axis=0)))
+    # Round-off floor, Chen et al. eq. (151) -- the same model as the Levin branch
+    # (_roundoff_floor()), replacing this fallback's own former endpoint-phase estimate (pending
+    # prompt 04 note in earlier versions of this comment). f_scale = max_grid sqrt(sum_i f_i^2)
+    # over the fine-grid samples already in hand, matching the Levin branch's choice (note (c) of
+    # prompt 04) rather than the previous max_i sum_grid|f_i| L1-style estimate -- no extra
+    # evaluations either way. G0/G1 reuse the *coarse* theta_prime_Cheb sample the phase_span gate
+    # above already paid for, rather than resampling theta' on the fine grid.
     width = np.fabs(x_span[1] - x_span[0])
-    phase_err = _phase_error(theta_scale, f_scale * width)
+    G0, G1 = _levin_G0_G1(theta_prime_Cheb, width)
+    f_scale = float(np.max(np.sqrt(np.sum(f_fine * f_fine, axis=0))))
+    round_off_err = _roundoff_floor(f_scale, width, G0, G1, chebyshev_order)
+
+    # Optional declared-theta_abserr endpoint term (recommendation 5.2), 0.0 unless the phase dict
+    # supplied "theta_abserr". This fallback has no Levin antiderivative p to weight by, so it
+    # reuses the same f_scale * (width / 2) proxy per endpoint that the pre-prompt-04 code used
+    # for the whole interval (a crude sup-norm bound, not a per-endpoint quantity) -- see prompt
+    # 04's log for why this, rather than the Levin branch's true per-endpoint p_endpoint_l1, was
+    # judged an acceptable approximation here.
+    endpoint_proxy = 0.5 * f_scale * width
+    declared_err = _declared_endpoint_phase_err(
+        BasisData, x_span[0], x_span[1], endpoint_proxy, endpoint_proxy
+    )
 
     return {
         "value": value_fine,
@@ -1061,7 +1320,7 @@ def _adaptive_levin_subregion_cc(
         "p_sample": None,
         "p_ratios": None,
         "phase_span": phase_span,
-        "phase_err": phase_err,
+        "phase_err": round_off_err + declared_err,
         "metadata": {},
         "is_direct": True,
     }
@@ -1292,9 +1551,16 @@ def _adaptive_levin(
             resolved = abserr < atol or relerr < rtol
 
             # same precision-limited logic as the Levin branch below, adapted: a fallback region
-            # has no step-(4) residual, so its own nested-pair abserr stands in for it.
+            # has no step-(4) residual, so its own nested-pair abserr stands in for it. The
+            # np.isfinite() guard matters here as of prompt 04: _roundoff_floor() returns +inf at
+            # an interior stationary point whose G0 = min|theta'| lands on (or numerically at) a
+            # sampled node, and an infinite floor must not be able to force early acceptance of a
+            # region that further bisection could still improve -- see _roundoff_floor()'s
+            # docstring. Without this guard "abserr <= phase_err" is trivially true against +inf
+            # and phase_limited would fire on every such region regardless of resolution.
             phase_limited = (
-                phase_err > atol
+                np.isfinite(phase_err)
+                and phase_err > atol
                 and phase_err > rtol * relerr_denom
                 and abserr <= phase_err
             )
@@ -1404,21 +1670,34 @@ def _adaptive_levin(
         relerr_denom = max(min(np.fabs(estimate), np.fabs(refined_estimate)), atol)
         relerr = abserr / relerr_denom
 
-        # endpoint phase-rounding floor for this region, from the parent estimate: it is the
-        # parent's endpoints that survive into the accumulated result. See _phase_error().
+        # Round-off floor for this region, from the parent estimate: it is the parent's endpoints
+        # and grid that survive into the accumulated result. See _roundoff_floor().
         phase_err = data.get("phase_err", 0.0) or 0.0
 
-        # Is this region precision-limited rather than under-resolved? Both of the following must
-        # hold: the phase floor exceeds what the caller asked for, AND the step-(4) resolution
-        # residual has already come down to that floor. In that case bisecting cannot help -- the
-        # children inherit the *same* two endpoint phase values (plus a new interior one that
-        # cancels), so subdivision buys additional cost and no accuracy. Accept and flag it.
+        # Is this region precision-limited rather than under-resolved? All of the following must
+        # hold: the round-off floor is finite, it exceeds what the caller asked for, AND the
+        # step-(4) resolution residual has already come down to that floor. In that case
+        # bisecting cannot help -- the children inherit essentially the same round-off floor (see
+        # _roundoff_floor()), so subdivision buys additional cost and no accuracy. Accept and flag
+        # it.
         #
-        # The second condition matters: without it a region with a large but still-reducible
-        # resolution residual would be accepted early merely because its phase floor sits above
-        # atol, which would lose real accuracy.
+        # The finiteness guard matters as of prompt 04: _roundoff_floor() returns +inf when G0 =
+        # min|theta'| lands on (or numerically at) a sampled node -- an interior stationary point,
+        # reachable here because the total-variation gate only routes a *weakly* oscillatory
+        # neighbourhood of such a point to the Clenshaw-Curtis fallback (see the module docstring
+        # and prompt 03's log); a strongly oscillatory region can still contain one. An infinite
+        # floor must not be able to force early acceptance of a region that further bisection
+        # could still improve -- without this guard "abserr <= phase_err" is trivially true
+        # against +inf and phase_limited would fire regardless of resolution.
+        #
+        # The resolution-residual condition matters for a different reason: without it a region
+        # with a large but still-reducible resolution residual would be accepted early merely
+        # because its floor sits above atol, which would lose real accuracy.
         phase_limited = (
-            phase_err > atol and phase_err > rtol * relerr_denom and abserr <= phase_err
+            np.isfinite(phase_err)
+            and phase_err > atol
+            and phase_err > rtol * relerr_denom
+            and abserr <= phase_err
         )
 
         # Chen et al. step (4), below (173), adapted in two ways: a relative tolerance check is
@@ -1427,13 +1706,12 @@ def _adaptive_levin(
         # Terminate in any case if we exceed the specified number of bisections.
         resolved = abserr < atol or relerr < rtol
 
-        # Only report the region as phase-limited if the phase floor actually capped it, i.e. the
-        # tolerance was *not* otherwise met. The bound in _phase_error() is a worst case that
-        # assumes d(theta) ~ eps*|theta|, and on intervals where theta happens to be exactly
-        # representable (e.g. the identity phase theta(x) = x at integer endpoints) the true
-        # d(theta) is zero and the bound is loose. Flagging those would produce a warning about a
-        # result that in fact met its tolerance. The conservative bound is still carried into the
-        # aggregate abserr either way; this only governs the diagnostic.
+        # Only report the region as phase-limited if the floor actually capped it, i.e. the
+        # tolerance was *not* otherwise met. Eq. (151) (_roundoff_floor()) is a worst-case bound
+        # with 4.5x measured margin at C = 1 (see _LEVIN_ROUNDOFF_SAFETY), so it can be loose on a
+        # region that in fact already met its tolerance by resolution alone. Flagging those would
+        # produce a warning about a result that in fact met its tolerance. The conservative bound
+        # is still carried into the aggregate abserr either way; this only governs the diagnostic.
         phase_limited = phase_limited and not resolved
 
         if resolved or phase_limited or current_region.depth >= depth_max:
@@ -1504,20 +1782,34 @@ def _adaptive_levin(
 
     # Aggregate error estimate. This function previously returned no error estimate at all, which
     # left callers with no option but to trust the result or re-run at a tighter tolerance and
-    # compare. Each region contributes max(resolution residual, endpoint phase floor): the two are
-    # estimates of independent error sources, and the larger dominates.
+    # compare. Each region contributes max(resolution/fallback residual, round-off floor): the two
+    # are estimates of independent error sources, and the larger dominates.
     #
-    # The regions are summed in absolute value rather than in quadrature. The phase-floor
+    # The regions are summed in absolute value rather than in quadrature. The round-off
     # contributions are not independent random errors -- neighbouring regions share endpoints, and
     # an inaccurate phase function produces a systematic drift common to all of them -- so a linear
     # sum is the defensible choice even though it is pessimistic when the residuals really do
     # behave randomly.
+    #
+    # abserr_resolution/abserr_roundoff/abserr_fallback (rec 11, §3.4) break the same total down
+    # by source, at no extra cost, so a caller can see *why* they cannot get more digits: a large
+    # abserr_resolution means the driver could still make progress by bisecting further (until
+    # depth_max); a large abserr_roundoff means it cannot, no matter the tolerance requested.
     abserr_total = 0.0
+    abserr_resolution_total = 0.0
+    abserr_roundoff_total = 0.0
+    abserr_fallback_total = 0.0
     num_phase_limited = 0
     for region in used_regions:
         contribution = region.total_err
         if contribution is not None:
             abserr_total = abserr_total + contribution
+        if region.abserr_resolution is not None:
+            abserr_resolution_total = abserr_resolution_total + region.abserr_resolution
+        if region.abserr_roundoff is not None:
+            abserr_roundoff_total = abserr_roundoff_total + region.abserr_roundoff
+        if region.abserr_fallback is not None:
+            abserr_fallback_total = abserr_fallback_total + region.abserr_fallback
         if region.phase_limited:
             num_phase_limited = num_phase_limited + 1
 
@@ -1566,37 +1858,47 @@ def _adaptive_levin(
             "enough to support the requested tolerance"
         )
 
-    # Second health check, on the phase floor rather than on resolution. This is the case the
+    # Second health check, on the round-off floor rather than on resolution. This is the case the
     # step-(4) residual cannot detect on its own, so it has to be reported explicitly: the caller
-    # asked for an accuracy that the precision of the phase at the region endpoints cannot deliver.
-    # Tightening atol/rtol will not help; supplying a range-reduced phase function will, because it
-    # replaces an O(theta) argument to sin/cos with an O(2*pi) one.
+    # asked for an accuracy below the eq. (151) round-off floor (_roundoff_floor()) for one or more
+    # regions. Tightening atol/rtol will not help, and -- unlike before prompt 04 -- supplying a
+    # range-reduced phase (theta_mod_2pi) will not help either: the floor is independent of how the
+    # phase is presented (C4; see prompt 04's log). What can help is a smaller chebyshev_order
+    # (lowering the max(G1, k^2) term) or, where the phase's own construction is the real limit
+    # (e.g. a fitted spline), a declared theta_abserr so the caller sees an honest number instead
+    # of an artificially small one.
     if num_phase_limited > 0:
         print(
             f"!! WARNING (adaptive_levin, {label}): {num_phase_limited} of {num_used_regions} "
-            f"subintervals were limited by rounding of the phase at their endpoints, not by "
+            f"subintervals were limited by the round-off floor (Chen et al. eq. 151), not by "
             f"resolution | estimated abserr={abserr_total:.3g}, relerr={relerr_total:.3g} "
             f"| atol={atol:.3g}, rtol={rtol:.3g}"
         )
         print(
-            "   -- the requested tolerance is not attainable with this phase function; supplying "
-            "a range-reduced phase (theta_mod_2pi) would lower the floor"
+            "   -- the requested tolerance is not attainable at this Chebyshev order and interval "
+            "geometry; this floor does NOT depend on whether the phase is range-reduced"
         )
 
     return {
         "value": float(val),
-        # estimated absolute and relative error of "value". abserr already includes the endpoint
-        # phase-rounding floor as well as the step-(4) resolution residual, so it does not
+        # estimated absolute and relative error of "value". abserr already includes the round-off
+        # floor (Chen et al. eq. 151) as well as the step-(4)/nested-pair residual, so it does not
         # under-report at high frequency the way the resolution residual alone does.
         "abserr": float(abserr_total),
         "relerr": float(relerr_total),
+        # abserr broken down by source (rec 11, §3.4) -- see used_interval.abserr_resolution /
+        # .abserr_roundoff / .abserr_fallback. New keys as of prompt 04; existing consumers keyed
+        # on "abserr"/"relerr" are unaffected.
+        "abserr_resolution": float(abserr_resolution_total),
+        "abserr_roundoff": float(abserr_roundoff_total),
+        "abserr_fallback": float(abserr_fallback_total),
         # True if the aggregate abserr actually meets max(atol, rtol*|value|). atol is currently
         # a per-region tolerance (prompt 05 changes this), so this can be False even though every
         # individual region met its own test -- see the warning printed above.
         "converged": bool(converged),
-        # True if at least one accepted region was limited by phase rounding rather than by
-        # resolution. When this is set, the requested tolerance was not attainable with the
-        # supplied phase function and tightening atol/rtol will not help.
+        # True if at least one accepted region was limited by the round-off floor rather than by
+        # resolution. When this is set, the requested tolerance was not attainable at this
+        # Chebyshev order and interval geometry, and tightening atol/rtol will not help.
         "phase_limited": num_phase_limited > 0,
         "num_phase_limited_regions": num_phase_limited,
         "p_points": p_points,
@@ -1864,19 +2166,31 @@ def adaptive_levin_sincos(
             any range of length 2*pi). When supplied, sin/cos are evaluated from this
             range-reduced value instead of the raw phase, which is handed an O(2*pi) argument
             rather than an O(theta) one and so has O(eps) absolute rounding error instead of
-            O(eps*theta). This is the single most effective way to lower the reported error floor
-            at high frequency (see phase_err below).
+            O(eps*theta). This keeps the *values* handed to sin/cos well-conditioned, but as of
+            prompt 04 does NOT lower the reported error floor: the floor is now Chen et al. eq.
+            (151) (see "abserr_roundoff" below), which is independent of how the phase is
+            presented (C4 -- an earlier version of this module inferred the floor from whether
+            this key was supplied, and that inference was optimistic by up to 8.1e9 at high
+            frequency; see prompts/levin-refactor/logs/04-roundoff-floor.md).
           * "theta_deriv" (optional) -- callable, theta'(x). When supplied, it is used directly
             instead of differentiating a sampled theta(x) with the spectral differentiation
             matrix; this avoids inheriting rounding error from the magnitude of the raw phase
             into the derivative estimate.
+          * "theta_abserr" (optional) -- scalar, or callable of x, giving a declared absolute
+            error of the phase itself, in radians (recommendation 5.2). When supplied, each
+            region's round-off floor gains an endpoint term proportional to it. This is the only
+            way to represent error that the phase function's own construction introduces -- e.g.
+            the fit error of a phase spline -- which is otherwise invisible to this module.
+            Nothing in LiouvilleGreen/ supplies this today; it ships unused by production callers
+            pending phase_spline.py growing an accuracy API of its own (README Sec 6 of the
+            levin-refactor campaign).
     :param atol: requested absolute tolerance. Must be strictly positive: this module cannot
-        deliver a purely relative-error contract because its phase-rounding error floor is
-        absolute by construction. NOTE: atol is currently applied as a *per-region* tolerance,
-        and the returned "abserr" is a sum over accepted regions, so the delivered accuracy
-        degrades with the number of regions the driver needs. The returned "converged" flag
-        reports whether the aggregate in fact met max(atol, rtol*|value|); a future change will
-        distribute atol across regions so that "converged" is usually true by construction.
+        deliver a purely relative-error contract because its round-off error floor (Chen et al.
+        eq. 151) is absolute by construction. NOTE: atol is currently applied as a *per-region*
+        tolerance, and the returned "abserr" is a sum over accepted regions, so the delivered
+        accuracy degrades with the number of regions the driver needs. The returned "converged"
+        flag reports whether the aggregate in fact met max(atol, rtol*|value|); a future change
+        will distribute atol across regions so that "converged" is usually true by construction.
     :param rtol: requested relative tolerance. Must be non-negative.
     :param chebyshev_order: spectral order used for each Levin subregion collocation grid.
         Values below 8 are clamped up, with a warning.
@@ -1891,14 +2205,21 @@ def adaptive_levin_sincos(
     :return: a dict with (at least) the following keys:
           * "value" -- the estimated value of the integral.
           * "abserr" -- estimated absolute error of "value". This is a sum, over accepted
-            regions, of max(step-(4) resolution residual, endpoint phase-rounding floor); it is
-            an estimate, not a proven bound.
+            regions, of max(resolution/fallback residual, round-off floor); it is an estimate,
+            not a proven bound.
+          * "abserr_resolution", "abserr_roundoff", "abserr_fallback" -- "abserr" broken down by
+            source (new as of prompt 04): the summed step-(4) residual over Levin regions, the
+            summed round-off floor (Chen et al. eq. 151, plus any declared theta_abserr endpoint
+            term) over every region, and the summed nested-pair estimate over Clenshaw-Curtis
+            fallback regions, respectively. A caller that cannot get more digits can tell from
+            these which source is responsible: a large abserr_resolution means further bisection
+            (a tighter atol/rtol) could still help; a large abserr_roundoff means it cannot.
           * "relerr" -- "abserr" divided by max(|value|, atol).
           * "converged" -- True if "abserr" <= max(atol, rtol*|value|), i.e. whether the request
             was actually met in aggregate (see the atol caveat above).
           * "phase_limited" -- True if at least one accepted region's achievable accuracy was set
-            by phase rounding rather than by lack of resolution; tightening atol/rtol will not
-            help such regions, only a more accurate phase function will.
+            by the round-off floor rather than by lack of resolution; tightening atol/rtol will
+            not help such regions -- see abserr_roundoff above.
           * "num_phase_limited_regions" -- count of such regions.
           * "num_regions" -- number of accepted subintervals (Levin + direct quadrature).
           * "num_simple_regions" -- of those, how many were handled by direct quadrature rather
