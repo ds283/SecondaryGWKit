@@ -40,8 +40,24 @@ deliberate departures are:
     rather than folding it into their estimate, which is legitimate for a
     paper but misleading in a library API.
 
-  * Weakly oscillatory regions (phase span < 6*pi) are handed to ordinary
-    adaptive quadrature rather than to the Levin rule.
+  * Weakly oscillatory regions (total variation of the phase, mean|theta'| * width,
+    below 6*pi) are handed to a nested Clenshaw-Curtis rule rather than to the Levin
+    rule. The extremal Chebyshev grid the Levin solve already uses *is* the
+    Clenshaw-Curtis grid, and its N-point grid is exactly every other node of the
+    (2N-1)-point grid (nesting holds for every N >= 2), so the pair (CC_N, CC_{2N-1})
+    costs 2N-1 integrand and phase evaluations, always, and comes with its own error
+    estimate |CC_{2N-1} - CC_N|. That estimate re-enters the same accept/bisect logic
+    as a Levin estimate, so a fallback region that misses its tolerance is bisected
+    rather than accepted outright. The gate is the phase's *total variation*, not its
+    net change across the region: the two differ whenever theta' changes sign inside
+    the region (a stationary point of the phase), and gating on the net change alone
+    hands such a region to a direct rule that has to resolve the full oscillation in
+    one panel, or -- if gated on net change *without even measuring the oscillation at
+    all* -- can be handed a case whose net phase change happens to be small purely by
+    cancellation. Levin's method itself is not applicable at a stationary point (its
+    antiderivative p ~ f/(i*theta') is singular there); refining until the stationary
+    neighbourhood is weakly oscillatory and then applying a direct rule to it, which is
+    what this gate-and-bisect structure does, is the correct structural response.
 
   * A direct LU solve is used in place of the least-squares/SVD solve when the
     phase span shows the Levin super-operator to be well conditioned. Note
@@ -68,7 +84,6 @@ from matplotlib import pyplot as plt
 from numpy.linalg import LinAlgError
 from scipy.linalg import toeplitz
 
-from Quadrature.simple_quadrature import simple_quadrature
 from utilities import format_time
 
 # default interval at which to log progress of the integration
@@ -424,6 +439,65 @@ def chebyshev_matrices(x_span: Tuple[float, float], N: int):
     return x, D
 
 
+@lru_cache(maxsize=32)
+def _cc_weights_base(N: int):
+    """
+    Clenshaw-Curtis quadrature weights for the extremal Chebyshev grid returned by
+    _chebyshev_base(N) -- i.e. for the nodes x_k = cos(k*pi/(N-1)), k = 0, ..., N-1 on
+    [-1, 1], in that order (x_0 = +1, x_{N-1} = -1). This is the standard closed-form
+    construction (Waldvogel, "Fast construction of the Fejer and Clenshaw-Curtis
+    quadrature rules", BIT 46 (2006) 195-202; equivalent to the "clencurt" algorithm of
+    Trefethen, Spectral Methods in MATLAB, ch. 12), specialised to real weights via the
+    cosine-sum form rather than the FFT, since N here is at most a few dozen.
+
+    Verified in AdaptiveLevin/tests/test_levin_quadrature.py by exact integration of
+    polynomials of degree < N and against a known transcendental integral -- see
+    prompt 03's log (prompts/levin-refactor/logs/03-total-variation-gate.md) for the
+    numbers.
+
+    Cached like _chebyshev_base(), for the same reason: the driver evaluates many
+    fallback regions at the same order. The returned array is read-only and shared
+    between callers; form new arrays from it rather than mutating in place.
+
+    :param N: number of points (N >= 2).
+    """
+    n = N - 1  # number of intervals
+
+    theta = np.pi * np.arange(N) / n
+
+    w = np.zeros(N)
+    if n % 2 == 0:
+        w[0] = 1.0 / (n * n - 1)
+    else:
+        w[0] = 1.0 / (n * n)
+    w[-1] = w[0]
+
+    if n > 1:
+        ii = np.arange(1, n)
+        v = np.ones(n - 1)
+        if n % 2 == 0:
+            for k in range(1, n // 2):
+                v -= 2.0 * np.cos(2 * k * theta[ii]) / (4 * k * k - 1)
+            v -= np.cos(n * theta[ii]) / (n * n - 1)
+        else:
+            for k in range(1, (n - 1) // 2 + 1):
+                v -= 2.0 * np.cos(2 * k * theta[ii]) / (4 * k * k - 1)
+        w[ii] = 2.0 * v / n
+
+    w.setflags(write=False)
+    return w
+
+
+def _cc_weights(x_span: Tuple[float, float], N: int):
+    """
+    Clenshaw-Curtis weights for chebyshev_matrices(x_span, N)'s grid, i.e. _cc_weights_base(N)
+    rescaled from [-1, 1] to x_span. Cheap (one array multiply of a cached base array), so not
+    itself cached.
+    """
+    a, b = x_span
+    return _cc_weights_base(N) * (np.fabs(b - a) / 2.0)
+
+
 class _Basis_SinCos:
     def __init__(self, theta):
         """
@@ -577,17 +651,6 @@ class _Basis_SinCos:
 
         return [np.sin(self._theta(x)), np.cos(self._theta(x))]
 
-    def phase_scale(self, a: float, b: float) -> float:
-        """
-        Magnitude of the phase argument that is handed to sin/cos on the interval [a, b]. This
-        sets the absolute resolution of the basis functions there, and hence the accuracy floor
-        of any quadrature rule built on them. See _phase_error().
-        """
-        if hasattr(self, "_theta_mod_2pi"):
-            return TWO_PI
-
-        return float(max(np.fabs(self.raw_theta(a)), np.fabs(self.raw_theta(b))))
-
 
 def _adaptive_levin_subregion(
     x_span: Tuple[float, float],
@@ -672,31 +735,20 @@ def _adaptive_levin_subregion_impl(
     else:
         label = f"{id_label}"
 
+    m = len(f)
     grid, Dmat = chebyshev_matrices(x_span, chebyshev_order)
 
-    # sample each component of f on the Chebyshev grid,
-    # then assemble the result into a flattened vector in an m x k representation
-    # Chen et al. around (166), (167)
-    m = len(f)
-    f_Cheb = np.hstack([[func(x) for x in grid] for func in f])
-
-    if not np.isfinite(f_Cheb).all():
-        print(
-            f"!! WARNING (adaptive_levin_subregion, {label}): sampled amplitude f contains non-numeric values (np.nan, np.inf, or np.-inf)"
-        )
-        raise ValueError(
-            "sampled amplitude f contains non-numeric values (np.nan, np.inf, or np.-inf)"
-        )
-
-    # Sample the phase once. build_Levin_data returns everything either solve path needs: theta'
-    # itself (for the complex path's diagonal, and for the real path's A^T block), the endpoint
-    # basis vectors w0/wk, and phase_span/theta_scale (needed by both regardless of solve path).
+    # Sample the phase once, before deciding anything else. build_Levin_data returns
+    # phase_span = mean|theta'| * width, which is the total variation of the phase across this
+    # region and costs no evaluations beyond theta' itself -- so it is available *before* we
+    # decide whether to solve the Levin system at all, and before sampling f.
     #
     # A basis reports whether its Levin system can be solved in the complexified N x N form
     # (D + i diag(theta')) q = f1 + i f2 -- Chen et al. (168) -- instead of the realified 2N x 2N
     # one. This is asked of the basis object rather than sniffed via isinstance, so a future basis
     # with a different structure or component count simply answers False. It is also gated on
-    # m == 2: the complex form only exists for a two-component (sin, cos) basis.
+    # m == 2: the complex form only exists for a two-component (sin, cos) basis. This decision is
+    # independent of phase_span, so it is safe to make before the gate below.
     use_complex_solve = m == 2 and getattr(
         BasisData, "supports_complexified_solve", False
     )
@@ -706,6 +758,33 @@ def _adaptive_levin_subregion_impl(
             grid, Dmat, label=label, need_AmatT=not use_complex_solve
         )
     )
+
+    # C2 fix: gate on the phase's *total variation* across the region, not its net change
+    # (theta(b) - theta(a)) -- the two differ whenever theta' changes sign inside the region, and
+    # the net change can be accidentally small at a stationary point while the phase still
+    # oscillates heavily either side of it. See the module docstring and prompt 03's log.
+    #
+    # This also means the fallback is chosen *before* f is sampled at all: a region routed to the
+    # nested Clenshaw-Curtis rule below samples f on its own (2*chebyshev_order - 1)-point grid,
+    # never on this one, so there is no wasted evaluation of f for a region that turns out not to
+    # need the Levin solve.
+    if phase_span < SIX_PI:
+        return _adaptive_levin_subregion_cc(
+            x_span, f, BasisData, chebyshev_order, phase_span, theta_scale, label
+        )
+
+    # sample each component of f on the Chebyshev grid,
+    # then assemble the result into a flattened vector in an m x k representation
+    # Chen et al. around (166), (167)
+    f_Cheb = np.hstack([[func(x) for x in grid] for func in f])
+
+    if not np.isfinite(f_Cheb).all():
+        print(
+            f"!! WARNING (adaptive_levin_subregion, {label}): sampled amplitude f contains non-numeric values (np.nan, np.inf, or np.-inf)"
+        )
+        raise ValueError(
+            "sampled amplitude f contains non-numeric values (np.nan, np.inf, or np.-inf)"
+        )
 
     if use_complex_solve:
         # Chen et al. (168) in complexified form: q = p1 + i*p2 solves (D + i diag(theta')) q =
@@ -895,6 +974,96 @@ def _adaptive_levin_subregion_impl(
         "phase_span": phase_span,
         "phase_err": _phase_error(theta_scale, p_endpoint_l1),
         "metadata": metadata,
+        "is_direct": False,
+    }
+
+
+def _adaptive_levin_subregion_cc(
+    x_span: Tuple[float, float],
+    f,
+    BasisData,
+    chebyshev_order: int,
+    phase_span: float,
+    theta_scale: float,
+    label: str,
+):
+    """
+    Bounded-cost fallback for a region whose total phase variation (phase_span) falls below
+    SIX_PI, replacing the module's former use of scipy.integrate.quad (C2, C7; see the module
+    docstring and prompt 03's log).
+
+    The extremal Chebyshev grid the Levin solve uses at order N *is* the Clenshaw-Curtis grid,
+    and its N-point grid is exactly every other node of the (2*N - 1)-point grid (nesting holds
+    for every N >= 2 -- see _cc_weights_base()). So the integrand is sampled once, on the
+    (2*N - 1)-point grid, and both the order-N and order-(2*N - 1) Clenshaw-Curtis rules are
+    formed from that one sample: CC_{2N-1} is returned as the region's value, and
+    |CC_{2N-1} - CC_N| is returned as its error estimate -- a genuine nested-pair estimate, not a
+    resolution proxy. Cost is exactly 2*N - 1 evaluations of each f_i and of the phase, always,
+    against scipy.quad's unbounded panel count under a tight global tolerance.
+
+    :param phase_span: total phase variation across x_span, already computed by the caller's
+        call to BasisData.build_Levin_data() -- passed in rather than recomputed.
+    :param theta_scale: magnitude of the phase argument handed to sin/cos, likewise already
+        computed by the caller.
+    :return: a dict with the same "value"/"phase_span"/"phase_err"/"metadata" keys as the Levin
+        path, "abserr_direct" in place of a p-based estimate, "is_direct": True, and
+        "p_sample"/"p_ratios" both None (the Levin antiderivative concept does not apply here).
+    """
+    m = len(f)
+    fine_order = 2 * chebyshev_order - 1
+
+    # Node reuse: fine_grid[::2] is exactly chebyshev_matrices(x_span, chebyshev_order)[0] (see
+    # the nesting test in AdaptiveLevin/tests/test_levin_quadrature.py), so the coarse rule below
+    # is formed from a subset of these same samples rather than by evaluating f or the basis a
+    # second time.
+    fine_grid, _ = chebyshev_matrices(x_span, fine_order)
+
+    f_fine = np.vstack([[func(x) for x in fine_grid] for func in f])
+
+    if not np.isfinite(f_fine).all():
+        print(
+            f"!! WARNING (adaptive_levin_subregion, {label}): sampled amplitude f contains non-numeric values (np.nan, np.inf, or np.-inf)"
+        )
+        raise ValueError(
+            "sampled amplitude f contains non-numeric values (np.nan, np.inf, or np.-inf)"
+        )
+
+    # w_i(x) = (sin theta(x), cos theta(x)) at each of the 2*N - 1 nodes. Unlike the Levin path,
+    # which needs only theta' on the grid and theta at the two endpoints, the CC rule integrates
+    # the full integrand sum_i f_i(x) w_i(x) and therefore needs w_i sampled at every node.
+    # eval_basis() already prefers theta_mod_2pi when the caller supplied one.
+    basis_fine = np.array([BasisData.eval_basis(x) for x in fine_grid]).T
+
+    integrand_fine = np.sum(f_fine * basis_fine, axis=0)
+
+    w_fine = _cc_weights(x_span, fine_order)
+    w_coarse = _cc_weights(x_span, chebyshev_order)
+
+    value_fine = float(np.dot(w_fine, integrand_fine))
+    value_coarse = float(np.dot(w_coarse, integrand_fine[::2]))
+
+    abserr_direct = float(np.fabs(value_fine - value_coarse))
+
+    # Phase-rounding floor for this fallback: the direct analogue of _phase_error()'s endpoint
+    # bound, with integral|f| in place of the sum of |p| at the two endpoints. integral|f| is
+    # estimated from the fine-grid samples already in hand (a crude sup-norm x width bound, same
+    # as the estimate the direct-quadrature branch this replaces used to make from a 3-point
+    # sample) -- no extra evaluations. theta_scale is exactly what build_Levin_data computed for
+    # the gate above, reused rather than recomputed. Pending prompt 04's eq. (151) floor, which
+    # replaces this estimate along with the Levin branch's _phase_error() call.
+    f_scale = float(np.max(np.sum(np.fabs(f_fine), axis=0)))
+    width = np.fabs(x_span[1] - x_span[0])
+    phase_err = _phase_error(theta_scale, f_scale * width)
+
+    return {
+        "value": value_fine,
+        "abserr_direct": abserr_direct,
+        "p_sample": None,
+        "p_ratios": None,
+        "phase_span": phase_span,
+        "phase_err": phase_err,
+        "metadata": {},
+        "is_direct": True,
     }
 
 
@@ -960,8 +1129,6 @@ def _adaptive_levin(
             f"the minimum allowed order {_LEVIN_MINIMUM_ALLOWED_ORDER}; every subregion solve "
             f"will be clamped up to {_LEVIN_MINIMUM_ALLOWED_ORDER}"
         )
-
-    m = len(f)
 
     regions = [_levin_interval(start=x_span[0], end=x_span[1], depth=0)]
 
@@ -1062,64 +1229,17 @@ def _adaptive_levin(
                 prev_abs = this_abs
                 prev_rel = this_rel
 
-        # if phase difference across this region is small enough that we do not have many oscillations,
-        # there is likely no advantage in using the Levin rule to do the computation.
-        # We can terminate the adaptive process by doing ordinary numerical quadrature
-        phase_diff = np.fabs(BasisData.raw_theta(b) - BasisData.raw_theta(a))
-        if np.fabs(phase_diff) < SIX_PI:
-
-            def integrand(x):
-                basis = BasisData.eval_basis(x)
-                return sum(f[i](x) * basis[i] for i in range(m))
-
-            data = simple_quadrature(
-                integrand,
-                a=a,
-                b=b,
-                atol=atol,
-                rtol=rtol,
-                method="quad",
-            )
-
-            # phase-rounding floor for the direct-quadrature branch. quad's own error estimate,
-            # like the Levin step-(4) residual, is blind to rounding of the phase inside the
-            # integrand -- refining the panel resamples the same rounded sin/cos values. Bound the
-            # contribution by eps * theta_scale * integral|f|, the direct analogue of the endpoint
-            # bound in _phase_error() with integral|f| in place of the sum of |p| at the endpoints.
-            # integral|f| is estimated from a 3-point sample of the amplitude, which costs three
-            # evaluations of f against a full adaptive quad call.
-            f_scale = max(
-                sum(np.fabs(f[i](x)) for i in range(m)) for x in (a, 0.5 * (a + b), b)
-            )
-            direct_phase_err = _phase_error(
-                BasisData.phase_scale(a, b), f_scale * np.fabs(b - a)
-            )
-
-            val = val + data["value"]
-            used_regions.append(
-                used_interval(
-                    start=a,
-                    end=b,
-                    depth=current_region.depth,
-                    abserr=data["abserr"],
-                    relerr=None,
-                    type=INTERVAL_TYPE_DIRECT,
-                    phase_err=direct_phase_err,
-                    # as in the Levin branch: only flag it if the floor actually capped the
-                    # region, not merely because the worst-case bound is large
-                    phase_limited=direct_phase_err > max(data["abserr"], atol),
-                )
-            )
-            num_used_regions = num_used_regions + 1
-            num_simple_regions = num_simple_regions + 1
-            continue
-
         # Chen et al. (172).
         # If this region was produced by bisecting a parent, its estimate was already computed as one
         # half of the parent's refined estimate, and we can reuse it. Note that the metadata bookkeeping
         # below counts each region exactly once, when it is processed here as a parent -- the metadata
         # of the comparison regions dataL/dataR has never been accumulated, so reusing them preserves
         # the existing accounting exactly.
+        #
+        # This single call also makes the Levin-vs-fallback decision (C2): _adaptive_levin_subregion
+        # samples theta' first, gates on the region's total phase variation, and only then either
+        # solves the Levin system or evaluates the nested Clenshaw-Curtis pair -- see
+        # _adaptive_levin_subregion_impl(). The two outcomes are told apart below by data["is_direct"].
         data = current_region.estimate
         if data is None:
             try:
@@ -1152,6 +1272,88 @@ def _adaptive_levin(
         num_direct_solves = num_direct_solves + data["metadata"].get("direct_solve", 0)
 
         c = current_region.break_point
+
+        if data.get("is_direct", False):
+            # Nested Clenshaw-Curtis fallback (C2, C7). Unlike the Levin branch below, this
+            # region's error estimate -- |CC_{2N-1} - CC_N| -- comes from a nested pair evaluated
+            # entirely within this one region, not from a comparison against children. So there is
+            # no dataL/dataR to compute here, and none of the "reuse the comparison estimate as the
+            # child's own estimate" bookkeeping applies: a bisected fallback region's children are
+            # freshly evaluated (and independently re-gated on their own, roughly-halved phase span)
+            # when they are popped.
+            estimate = data["value"]
+            abserr = data["abserr_direct"]
+
+            relerr_denom = max(np.fabs(estimate), atol)
+            relerr = abserr / relerr_denom
+
+            phase_err = data.get("phase_err", 0.0) or 0.0
+
+            resolved = abserr < atol or relerr < rtol
+
+            # same precision-limited logic as the Levin branch below, adapted: a fallback region
+            # has no step-(4) residual, so its own nested-pair abserr stands in for it.
+            phase_limited = (
+                phase_err > atol
+                and phase_err > rtol * relerr_denom
+                and abserr <= phase_err
+            )
+            phase_limited = phase_limited and not resolved
+
+            if resolved or phase_limited or current_region.depth >= depth_max:
+                val = val + estimate
+
+                used_regions.append(
+                    used_interval(
+                        start=a,
+                        end=b,
+                        depth=current_region.depth,
+                        type=INTERVAL_TYPE_DIRECT,
+                        abserr=abserr,
+                        relerr=relerr,
+                        phase_err=phase_err,
+                        phase_limited=phase_limited,
+                    )
+                )
+                num_used_regions = num_used_regions + 1
+                num_simple_regions = num_simple_regions + 1
+
+                # no Levin antiderivative sample exists for a fallback region
+            else:
+                new_abs_history = current_region.abserr_history | {
+                    current_region.depth: abserr
+                }
+                new_rel_history = current_region.relerr_history | {
+                    current_region.depth: relerr
+                }
+                new_p_ratios_history = current_region.p_ratios_history | {
+                    current_region.depth: []
+                }
+                new_depth = current_region.depth + 1
+
+                regions.extend(
+                    [
+                        _levin_interval(
+                            start=a,
+                            end=c,
+                            depth=new_depth,
+                            abserr_history=new_abs_history,
+                            relerr_history=new_rel_history,
+                            p_ratios_history=new_p_ratios_history,
+                        ),
+                        _levin_interval(
+                            start=c,
+                            end=b,
+                            depth=new_depth,
+                            abserr_history=new_abs_history,
+                            relerr_history=new_rel_history,
+                            p_ratios_history=new_p_ratios_history,
+                        ),
+                    ]
+                )
+
+            continue
+
         # Chen et al. (173)
         try:
             dataL = _adaptive_levin_subregion(
@@ -1640,8 +1842,12 @@ def adaptive_levin_sincos(
         integral_{x_span} [ f[0](x) sin(theta(x)) + f[1](x) cos(theta(x)) ] dx
 
     using the adaptive Levin method of Bremer, Chen & Yang (arXiv:2211.13400, section 5), falling
-    back to ordinary adaptive quadrature (scipy.integrate.quad) on subintervals that are not
-    oscillatory enough for the Levin rule to offer an advantage.
+    back to a nested Clenshaw-Curtis rule (a pair of Chebyshev quadratures at orders N and
+    2*N - 1, sharing the same 2*N - 1 integrand samples) on subintervals whose total phase
+    variation is too small for the Levin rule to offer an advantage. The fallback's own error
+    estimate, |CC_{2N-1} - CC_N|, is tested against atol/rtol on the same terms as a Levin
+    region's, so a fallback region that misses its tolerance is bisected rather than accepted
+    outright.
 
     :param x_span: a 2-tuple (a, b) giving the integration limits. Must have exactly two finite
         entries.
