@@ -2,7 +2,7 @@
 
 **Campaign:** [`README.md`](README.md) · **Source audit:** [`docs/backport-modules-audit.md`](../../docs/backport-modules-audit.md)
 **Baseline commit:** `79f0360` (`main`, clean)
-**Last updated:** 2026-09-04 — after prompt 09 (F2 complete end to end)
+**Last updated:** 2026-09-04 — after prompt 10. **Campaign complete: 10/10 prompts done.**
 
 > **Maintenance rule.** Every prompt updates this file *in its own commit*, before committing.
 > Set your row's status, fill in the commit SHA and the log link, and add or clear entries in
@@ -37,9 +37,13 @@ Legend: ⬜ not started · 🟡 in flight · ✅ complete · ⚠️ complete wit
 
 | # | Prompt | Items | Status | Commit | Log |
 |---|---|---|---|---|---|
-| 10 | [Verification pass](10-verification.md) | audit §8 + F2 | ⬜ | — | — |
+| 10 | [Verification pass](10-verification.md) | audit §8 + F2 | ✅ | *(SHA intentionally not embedded — see §5 note 11)* | [log](logs/10-verification.md) |
 
-**Progress:** 9 / 10 complete. F2 (`inventory()` sub-campaign, prompts 06–09) is complete end to end.
+**Progress:** 10 / 10 complete. **Campaign complete.** See
+[`docs/backport-modules-verification.md`](../../docs/backport-modules-verification.md) for the full
+verification record: 8 of 12 audit-checklist items now have live confirmation against a real,
+multi-shard, Ray-actor-backed pool; the remaining 3 need actual physics compute and are handed to the
+user with a cost estimate.
 
 ---
 
@@ -73,82 +77,41 @@ Traceability from the audit's finding IDs to the prompt that discharges them.
 
 ## 3. Active and unresolved issues
 
-- **[01-shard-key-persistence]** *(opened by prompt 01, 2026-09-03)* — Audit §8 checklist items
-  1–2 (a fresh `SGWK` datastore has no `_assign_shard_keys MISMATCH` lines and every
-  `shard_keys.key_serial` equals its `wavenumber.serial`; a stopped-and-resumed run finds all
-  previously-written records) need a real Ray pipeline run and were not exercised. The B1/B5 code
-  fix itself was verified against synthetic sqlite fixtures built for this prompt (see
-  [log](logs/01-shard-key-persistence.md) §Verification), not against a genuine `SGWK` pipeline
-  run — no current-schema `SGWK` datastore exists in the tree to test against. **Impact:**
-  behavioural confirmation of the fix on a real pipeline is outstanding. **Next step:** prompt 10
-  should run a real (or minimal) `SGWK` pipeline against a fresh datastore, inspect for `MISMATCH`
-  output, and do a stop/resume cycle.
+Three of the four issues open before prompt 10 are now resolved (moved to §4) or narrowed. See
+[`docs/backport-modules-verification.md`](../../docs/backport-modules-verification.md) for the full
+account of what prompt 10 ran and how.
 
-- **[04-read-table-service]** *(opened by prompt 04, 2026-09-04)* — Audit §8 checklist items 5–6
-  (each `extract_*.py` script constructs its `ShardedPool` and returns the same wavenumber/redshift
-  arrays as before, under a real multi-shard Ray run) need a live Ray cluster with multiple shard
-  actors and were not exercised. The `read_table` implementation itself was verified two other ways
-  instead (see [log](logs/04-read-table-service.md) §Verification items 5–6): a real `Datastore`
-  instance (not Ray-wrapped) against a fresh SQLite file, read via `read_table` and cross-checked
-  against a direct SQL query of the same file; and `ShardedPool.read_table`'s two required negative
-  cases (sharded-class rejection, unconfigured-class rejection) against a minimally-constructed
-  `ShardedPool` object. Neither exercises the actual multi-shard random-selection dispatch
-  (`shard.read_table.remote(...)`) against live shard actors. **Impact:** behavioural confirmation of
-  `read_table` end-to-end, across real shards, under real Ray, is outstanding — same class of gap as
-  the `[01-shard-key-persistence]` issue above. **Next step:** prompt 10 should run at least one
-  `extract_*.py` script (or a minimal equivalent) against a fresh multi-shard `ShardedPool`, and
-  confirm `read_table("wavenumber", ...)`/`read_table("redshift", ...)` return correct data by
-  cross-checking against direct SQL on the shard chosen.
+- **[04-read-table-service]** *(opened by prompt 04, 2026-09-04; narrowed by prompt 10, 2026-09-04)*
+  — Audit §8 checklist items 5–6. **Item 5 is now closed**: prompt 10 ran
+  `pool.read_table("GkSource")`/`pool.read_table("LambdaCDM")` against a real, live, multi-shard
+  `ShardedPool` (not the `__new__`-constructed stand-in prompt 04's own verification used), both
+  raising the intended `RuntimeError`s — see
+  [`docs/backport-modules-verification.md`](../../docs/backport-modules-verification.md) §4 check 5.
+  **Item 6 remains open**: each `extract_*.py` script constructing its pool and returning the correct
+  wavenumber/redshift arrays under a real multi-shard Ray run, against data produced by an actual
+  compute pipeline, was not exercised — this needs a populated datastore, which needs real physics
+  compute (`main.py`'s wavenumber sample size is hardcoded at 50+50 with no CLI override to shrink
+  it). **Impact:** end-to-end confirmation of the six extract scripts under a live multi-shard run is
+  outstanding. **Next step:** see
+  [`docs/backport-modules-verification.md`](../../docs/backport-modules-verification.md) §5 for a
+  concrete, scoped-down approach (a small driver script outside production code, 5–10 wavenumbers,
+  one queue enabled) and a rough time estimate.
 
 - **[05-persist-handler-split]** *(opened by prompt 05, 2026-09-04)* — Audit §8 checklist item 7
   (a real driver run exercising the `store_handler`/`persist_handler` split end-to-end, confirming
   results are still stored exactly as before) needs a live Ray cluster and was not exercised. The
   split itself was verified statically and with a synthetic in-process harness instead (see
-  [log](logs/05-persist-handler-split.md) §Verification items 1-5): grep-verified 35/35
-  `store_handler=None`/`persist_handler=None` pairings across all 7 call-site files, 45 unchanged
-  `RayWorkPool(` constructions, `py_compile` and `black --check` clean on all 8 touched files, and a
-  throwaway harness exercising `_default_store_handler`/`_default_persist_handler` call order and
-  both constructor-validation branches directly against the real `RayTools.RayWorkPool` module.
-  Neither exercises an actual Ray task graph. **Impact:** behavioural confirmation that a real
-  `RayWorkPool` run still stores results correctly under the new two-hook split is outstanding — same
-  class of gap as `[01-shard-key-persistence]` and `[04-read-table-service]` above. **Next step:**
-  prompt 10 should run at least one real (or minimal) Ray-backed `RayWorkPool` with default handlers
-  and confirm results are stored identically to a pre-split baseline (or, if no baseline is
-  practical, confirm the stored objects are correct against a direct datastore query).
-
-- **[08-inventory-sharded-factories]** *(opened by prompt 08, 2026-09-04)* — Verification step 5
-  (call `pool.inventory(...)` for one class from each of the three groups against a real multi-shard
-  datastore and confirm the merge produces sensible values, in particular that a `count` is summed
-  across shards) needs a live Ray cluster and was not exercised end-to-end through
-  `ShardedPool.inventory()` itself. It **was** exercised against the real `ShardedPool._merge_queue`
-  and the real per-shard `factory.inventory()` output, reproducing `ShardedPool.inventory()`'s
-  dispatch logic (label sniff, per-label merge) by hand against two independent in-memory SQLite
-  "shards" instead of `ray.get([shard.inventory.remote(...) ...])` — see
-  [log](logs/08-inventory-sharded-factories.md) §Verification item 5 for one class from each group,
-  including confirming `count` is genuinely summed (5 = 3+2, 11 = 7+4) rather than reflecting one
-  shard. **Impact:** behavioural confirmation of the full `ShardedPool.inventory()` fan-out
-  (`ray.get` over real shard actors) is outstanding — same class of gap as
-  `[01-shard-key-persistence]`, `[04-read-table-service]`, and `[05-persist-handler-split]` above.
-  **Next step:** prompt 10 should build a real (or minimal) multi-shard `ShardedPool` and call
-  `pool.inventory(...)` for at least one class per group (a Group A labelled class, e.g.
-  `TkNumericIntegration`; a Group B flat class, e.g. `GkSourcePolicyData`; a Group C count-only
-  class, e.g. `TkNumericValue`), confirming counts are summed and label lists/timestamp ranges span
-  all shards, not just one.
-  **Partially closed by prompt 09** — building the real end-to-end reporting path required a real,
-  Ray-actor-backed, multi-shard `ShardedPool` anyway, and it turns out a local `ray.init()` (no
-  pre-existing cluster) is sufficient (see [log](logs/09-inventory-reporting.md) §State handed to the
-  next prompt — every earlier prompt's "no live Ray cluster available" framing was about connecting to
-  an *existing* cluster, not about whether one could be started locally). Against that real pool,
-  prompt 09 confirmed the **Group C count-only case live**: synthetic rows inserted directly into the
-  real `TkNumericValue` table across two genuine shard files, `pool.inventory("TkNumericValue")`
-  returning `{"count": 11}` via the real `ray.get([shard.inventory.remote(...) ...])` fan-out, cross-
-  checked against `SELECT COUNT(*)` summed by hand on each shard file (7 + 4 = 11). **Still
-  outstanding:** a live Group A (labelled, e.g. `TkNumericIntegration`) and Group B (flat-with-
-  timestamps, e.g. `GkSourcePolicyData`) class were only exercised against empty shards in prompt 09's
-  run (populating either for real needs actual physics compute, out of scope there) — prompt 10 can
-  close the remainder by inserting synthetic rows for one class in each of those two groups the same
-  way prompt 09 did for `TkNumericValue`, now that the harness pattern (local `ray.init()` + direct
-  shard-file SQL inserts + `pool.inventory(...)`) is established and confirmed to work.
+  [log](logs/05-persist-handler-split.md) §Verification items 1-5). Prompt 10 separately re-confirmed
+  the *related* B4 checklist item (a task builder returning `None`) live, against a real pool (see
+  [`docs/backport-modules-verification.md`](../../docs/backport-modules-verification.md) §4 check 6)
+  — but that is not this issue's ask. **Impact:** behavioural confirmation that a real `RayWorkPool`
+  run still stores a genuine compute result correctly under the new two-hook split is outstanding —
+  this needs one real compute-target object (the `.available`/`.compute()`/`.store()` contract, e.g.
+  `TkNumericIntegration`) carried through a live `RayWorkPool`, i.e. actual physics compute. **Next
+  step:** see
+  [`docs/backport-modules-verification.md`](../../docs/backport-modules-verification.md) §5 — the
+  same scoped-down driver script that would close `[04-read-table-service]`'s item 6 would also close
+  this, since both need one real computed-and-stored object to check against.
 
 > Add an entry here whenever a prompt finishes with something unresolved: a verification step that
 > could not be run, an assumption that could not be confirmed, a deviation that a later prompt has
@@ -191,6 +154,36 @@ Traceability from the audit's finding IDs to the prompt that discharges them.
   (01, 02) plus 03's own log header to the branch-reachable SHAs above; (b) prompt 04 stops writing a
   guessed self-referential SHA at all — see §5 note 11 for the convention adopted from prompt 04
   onward, which removes the underlying cause rather than re-chasing convergence each time.
+
+- **[01-shard-key-persistence]** *(opened by prompt 01, 2026-09-03; resolved by prompt 10,
+  2026-09-04)* — Audit §8 checklist items 1–2 needed a real Ray pipeline run, which did not exist
+  anywhere in this tree when prompt 01 landed. Prompt 10 built one: a real 2-shard `ShardedPool`
+  under a locally-bootstrapped Ray runtime, inserted 5 wavenumbers via the real
+  `pool.object_get(...)` → `_assign_shard_keys` path, and confirmed (a) zero `MISMATCH` lines during
+  insertion, (b) every `shard_keys.key_serial` matches its shard's `wavenumber.serial` — cross-checked
+  both by direct SQL and by running the actual `tools/shard_key_audit.py` tool, which returned
+  `VERDICT: OK`, exit 0; (c) stopping (`ray.shutdown()`) and reopening a second pool against the same
+  primary file found the same 5 records (identical `store_id`s, no duplication) with no
+  `AttributeError`. See
+  [`docs/backport-modules-verification.md`](../../docs/backport-modules-verification.md) §4 checks
+  1–3 for the full account. **Scope note carried forward:** this exercises the shard-key/datastore-
+  reopen dedup path B1/B5/B2 concern, not a full compute-target stop/resume (no object was computed
+  and interrupted mid-flight) — that gap is now folded into the `[04-read-table-service]`/
+  `[05-persist-handler-split]` entries above, since closing it needs the same real compute run.
+
+- **[08-inventory-sharded-factories]** *(opened by prompt 08, 2026-09-04; partially closed by prompt
+  09, 2026-09-04; fully closed by prompt 10, 2026-09-04)* — Verification step 5 needed a live Ray
+  cluster to exercise `ShardedPool.inventory()`'s real fan-out (`ray.get([shard.inventory.remote(...)
+  ...])`) for one class per group. Prompt 09 closed the Group C (count-only) case live
+  (`TkNumericValue`, `{"count": 11}` = 7+4 across two real shard files). Prompt 10 closed the
+  remaining two groups against the same live pool: **Group A** (`TkNumericIntegration`, labelled) —
+  one `validated` row inserted on each of two real shards with different labels and timestamps;
+  `pool.inventory(...)` returned both labels merged (not one shard's), with the timestamp range
+  correctly spanning both days. **Group B** (`GkSourcePolicyData`, flat-with-timestamps) — 3 rows on
+  one shard, 2 on the other; `pool.inventory(...)` returned `{"count": 5, ...}` (summed, not `3` or
+  `2`), timestamp range spanning both. See
+  [`docs/backport-modules-verification.md`](../../docs/backport-modules-verification.md) §4.1 for the
+  full record. All three groups are now confirmed live; this issue is closed.
 
 ---
 
@@ -317,3 +310,17 @@ re-deriving.
       broker actor under the fixed name `"SerialPoolBroker"`, so only one `ShardedPool` can exist per
       Ray runtime at a time — building a second one in the same process needs `ray.shutdown()` /
       fresh `ray.init()` first.
+15. **Campaign complete as of prompt 10 — see
+    [`docs/backport-modules-verification.md`](../../docs/backport-modules-verification.md) for the
+    full verification record.** Note 14's prediction was confirmed: a local `ray.init()` did unblock
+    live verification of `[01-shard-key-persistence]` (fully closed) and
+    `[08-inventory-sharded-factories]` (fully closed), plus the `read_table`-negative-case half of
+    `[04-read-table-service]`. What it did *not* unblock is anything requiring an actual computed
+    result — `[04-read-table-service]`'s `extract_*.py` half and all of
+    `[05-persist-handler-split]` still need a real `TkNumericIntegration`-style object carried through
+    a live `RayWorkPool`'s compute→store→persist cycle, which is genuine physics compute, not
+    infrastructure the local-Ray trick can shortcut. `main.py`'s wavenumber sample size is hardcoded
+    (50 source + 50 response, `main.py` lines 2669/2682) with no CLI flag to shrink it, so even "the
+    smallest configuration `main.py` accepts" is a real compute run — closing the two remaining issues
+    needs a small custom driver script outside production code instead (see the verification
+    document §5 for a scoped-down approach and time estimate), not a `main.py` invocation.
