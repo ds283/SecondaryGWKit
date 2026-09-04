@@ -1,5 +1,7 @@
+import contextlib
+import io
 import unittest
-from math import fabs, atan, sin, pi
+from math import fabs, atan, sin, exp, pi, nan
 
 from AdaptiveLevin.levin_quadrature import adaptive_levin_sincos
 from utilities import format_time
@@ -132,6 +134,120 @@ class TestAdaptiveLevinSinCos(unittest.TestCase):
         self._GRZIntegral(10.0)
         self._GRZIntegral(100.0)
         self._GRZIntegral(1000.0)
+
+    def test_nan_amplitude_raises(self):
+        # amplitude goes non-finite partway through the region; C1: previously this made the
+        # region contribute exactly 0.0 with a reported error of exactly 0.0 instead of raising.
+        def f0(x):
+            return nan if x > 1.9 else 1.0
+
+        f = [f0, lambda x: 0.0]
+        theta = lambda x: 1.0e5 * x
+
+        with self.assertRaises(ValueError) as ctx:
+            adaptive_levin_sincos((1.0, 2.0), f, theta={"theta": theta})
+        self.assertIn("amplitude", str(ctx.exception))
+
+    def test_all_nan_amplitude_raises(self):
+        # C1: an entirely non-finite integrand previously returned value=0.0, abserr=0.0 -- the
+        # most dangerous possible response to a completely broken integrand.
+        f = [lambda x: nan, lambda x: nan]
+        theta = lambda x: 1.0e5 * x
+
+        with self.assertRaises(ValueError) as ctx:
+            adaptive_levin_sincos((1.0, 2.0), f, theta={"theta": theta})
+        self.assertIn("amplitude", str(ctx.exception))
+
+    def test_input_validation(self):
+        theta = lambda x: x
+        good_f = [lambda x: 1.0, lambda x: 0.0]
+
+        # len(f) != 2
+        with self.assertRaises(ValueError) as ctx:
+            adaptive_levin_sincos((1.0, 2.0), [lambda x: 1.0], theta={"theta": theta})
+        self.assertIn("f=", str(ctx.exception))
+
+        # f = []
+        with self.assertRaises(ValueError) as ctx:
+            adaptive_levin_sincos((1.0, 2.0), [], theta={"theta": theta})
+        self.assertIn("f=", str(ctx.exception))
+
+        # len(x_span) != 2
+        with self.assertRaises(ValueError) as ctx:
+            adaptive_levin_sincos((1.0, 2.0, 3.0), good_f, theta={"theta": theta})
+        self.assertIn("x_span", str(ctx.exception))
+
+        # atol <= 0
+        with self.assertRaises(ValueError) as ctx:
+            adaptive_levin_sincos((1.0, 2.0), good_f, theta={"theta": theta}, atol=0.0)
+        self.assertIn("atol", str(ctx.exception))
+
+        # rtol < 0
+        with self.assertRaises(ValueError) as ctx:
+            adaptive_levin_sincos((1.0, 2.0), good_f, theta={"theta": theta}, rtol=-1.0)
+        self.assertIn("rtol", str(ctx.exception))
+
+        # depth_max < 0
+        with self.assertRaises(ValueError) as ctx:
+            adaptive_levin_sincos(
+                (1.0, 2.0), good_f, theta={"theta": theta}, depth_max=-1
+            )
+        self.assertIn("depth_max", str(ctx.exception))
+
+        # theta as a bare callable, rather than {"theta": callable} -- an easy mistake, since the
+        # parameter is *named* theta
+        with self.assertRaises(TypeError) as ctx:
+            adaptive_levin_sincos((1.0, 2.0), good_f, theta=theta)
+        self.assertIn("theta", str(ctx.exception))
+
+        # NaN endpoint
+        with self.assertRaises(ValueError) as ctx:
+            adaptive_levin_sincos((nan, 2.0), good_f, theta={"theta": theta})
+        self.assertIn("x_span", str(ctx.exception))
+
+        # chebyshev_order < 8: warned about and clamped, not rejected
+        buf = io.StringIO()
+        with contextlib.redirect_stdout(buf):
+            data = adaptive_levin_sincos(
+                (1.0, 50.0), good_f, theta={"theta": theta}, chebyshev_order=4
+            )
+        self.assertIn("clamp", buf.getvalue().lower())
+        self.assertIsNotNone(data["value"])
+
+    def test_atol_zero_rejected(self):
+        theta = lambda x: x
+        f = [lambda x: 1.0, lambda x: 0.0]
+
+        with self.assertRaises(ValueError) as ctx:
+            adaptive_levin_sincos((1.0, 50.0), f, theta={"theta": theta}, atol=0.0)
+        self.assertIn("atol", str(ctx.exception))
+
+    def test_converged_flag(self):
+        theta = lambda x: x
+        f = [lambda x: 1.0, lambda x: 0.0]
+
+        data = adaptive_levin_sincos(
+            (1.0, 50000.0),
+            f,
+            theta={"theta": theta},
+            atol=1e-15,
+            rtol=1e-10,
+            chebyshev_order=12,
+        )
+        self.assertTrue(data["converged"])
+
+        # C3: reproduced at HEAD as reporting abserr=1.26e-10 at atol=1e-10, exceeding what was
+        # requested, with nothing previously indicating it.
+        def gaussian_bump(x):
+            return exp(-400.0 * (x - 1.1) ** 2)
+
+        f_bump = [gaussian_bump, lambda x: 0.0]
+        theta_bump = lambda x: 3.0e4 * x
+
+        data_bump = adaptive_levin_sincos(
+            (0.0, 3.0), f_bump, theta={"theta": theta_bump}, atol=1e-10
+        )
+        self.assertFalse(data_bump["converged"])
 
 
 if __name__ == "__main__":

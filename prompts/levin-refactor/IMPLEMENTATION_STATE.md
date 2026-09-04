@@ -2,7 +2,7 @@
 
 **Campaign:** [`README.md`](README.md) · **Source audit:** [`docs/adaptive-levin-audit-2026-09.md`](../../docs/adaptive-levin-audit-2026-09.md)
 **Baseline commit:** `c8a1918` (`main`, clean; `AdaptiveLevin/levin_quadrature.py` byte-identical to the audited `68cff5d`)
-**Last updated:** 2026-09-04 — plan written, no prompts executed.
+**Last updated:** 2026-09-04 — prompt 01 (refuse or report) complete.
 
 > **Maintenance rule.** Every prompt updates this file *in its own commit*, before committing.
 > Set your row's status and the log link, and add or clear entries in §3 (Active issues). Do not
@@ -19,7 +19,7 @@ Legend: ⬜ not started · 🟡 in flight · ✅ complete · ⚠️ complete wit
 
 | # | Prompt | Audit items | Status | Commit | Log |
 |---|---|---|---|---|---|
-| 01 | [Refuse or report](01-refuse-or-report.md) | recs 1–4 · C1, C3a, C6, C8, C9 | ⬜ | — | — |
+| 01 | [Refuse or report](01-refuse-or-report.md) | recs 1–4 · C1, C3a, C6, C8, C9 | ✅ | — (this commit) | [01](logs/01-refuse-or-report.md) |
 | 02 | [Complexified solve](02-complexified-solve.md) | rec 6 · §4.1, §4.2 | ⬜ | — | — |
 | 03 | [Total-variation gate + nested CC](03-total-variation-gate.md) | rec 7 · C2, C7, §2.2, §2.4 | ⬜ | — | — |
 
@@ -45,7 +45,7 @@ Legend: ⬜ not started · 🟡 in flight · ✅ complete · ⚠️ complete wit
 |---|---|---|---|---|---|
 | 10 | [Test matrix and campaign verification](10-test-matrix.md) | rec 16 · C12 | ⬜ | — | — |
 
-**Progress:** 0 / 10 complete.
+**Progress:** 1 / 10 complete.
 
 ---
 
@@ -55,25 +55,25 @@ Traceability from the audit's finding and recommendation IDs to the prompt that 
 
 | ID | Severity | Description | Prompt | Status |
 |---|---|---|---|---|
-| **C1** | **Critical** | Non-finite amplitude → region contributes exactly 0 with `abserr` exactly 0; caller gets a partial integral certified at machine precision | 01 | ⬜ |
+| **C1** | **Critical** | Non-finite amplitude → region contributes exactly 0 with `abserr` exactly 0; caller gets a partial integral certified at machine precision | 01 | ✅ |
 | **C2** | **Critical** | Weakly-oscillatory gate uses *net* phase change, not total variation → 1590% error on a phase with an interior stationary point, Levin never invoked | 03 | ⬜ |
-| **C3** | High | `atol` is per-region; aggregate `abserr` never compared with the request | 01 (report) + 05 (distribute) | ⬜ |
+| **C3** | High | `atol` is per-region; aggregate `abserr` never compared with the request | 01 (report) + 05 (distribute) | 🟡 (report done, distribute pending) |
 | **C4** | High | `theta_scale = TWO_PI` hardwired for a range-reduced phase → floor optimistic by up to 10¹⁰; delays `phase_limited` by ~8 decades of `atol` on the production path | 04 | ⬜ |
-| **C5** | Medium | `p_use` gates on the *mean* of `\|p\|` but the estimate uses *endpoint* values; makes the value a function of `rtol`; is the mechanism behind C1 | 01 (non-finite half) + 06 (rest) | ⬜ |
-| **C6** | Medium | `max_depth` not updated on the fallback branch → depth-limit health warning cannot fire | 01 | ⬜ |
+| **C5** | Medium | `p_use` gates on the *mean* of `\|p\|` but the estimate uses *endpoint* values; makes the value a function of `rtol`; is the mechanism behind C1 | 01 (non-finite half) + 06 (rest) | 🟡 (non-finite half done, rest pending) |
+| **C6** | Medium | `max_depth` not updated on the fallback branch → depth-limit health warning cannot fire | 01 | ✅ |
 | **C7** | Medium | Fallback regions accepted unconditionally; `quad`'s `abserr` recorded but never tested; global tolerances passed to each small panel | 03 | ⬜ |
-| **C8** | Medium | `atol = 0` subdivides without bound (2²⁰ regions at the default depth) | 01 | ⬜ |
-| **C9** | Low | No input validation; `adaptive_levin_sincos` has no docstring | 01 | ⬜ |
+| **C8** | Medium | `atol = 0` subdivides without bound (2²⁰ regions at the default depth) | 01 | ✅ |
+| **C9** | Low | No input validation; `adaptive_levin_sincos` has no docstring | 01 | ✅ |
 | **C10** | Low | Diagnostic counters count regions but are named for solves; `evaluations` counts solves not evaluations | 07 | ⬜ |
 | **C11** | Low | `seaborn`/`matplotlib` at module scope (>95% of import time); cwd-relative failure dumps; `print` not `logging` | 07 | ⬜ |
 | **C12** | Low | Test coverage gaps | distributed + 10 | ⬜ |
 
 | Rec | Description | Prompt | Status |
 |---|---|---|---|
-| 1 | Finiteness checks on `f_Cheb`, sampled `θ′`, solved `p`; `p_use` rejects non-finite | 01 | ⬜ |
-| 2 | Compare `abserr_total` with `max(atol, rtol·\|val\|)`; return `converged`; warn | 01 | ⬜ |
-| 3 | `max_depth` updated on every popped region | 01 | ⬜ |
-| 4 | Reject `atol <= 0`, `rtol < 0`, `depth_max < 0`, `len(f) != 2`, `len(x_span) != 2`; docstring | 01 | ⬜ |
+| 1 | Finiteness checks on `f_Cheb`, sampled `θ′`, solved `p`; `p_use` rejects non-finite | 01 | ✅ |
+| 2 | Compare `abserr_total` with `max(atol, rtol·\|val\|)`; return `converged`; warn | 01 | ✅ |
+| 3 | `max_depth` updated on every popped region | 01 | ✅ |
+| 4 | Reject `atol <= 0`, `rtol < 0`, `depth_max < 0`, `len(f) != 2`, `len(x_span) != 2`; docstring | 01 | ✅ |
 | 5 | Replace the endpoint phase floor with eq. (151); add optional `theta_abserr` | 04 | ⬜ |
 | 6 | Complexify the `(sin, cos)` solve to `N×N`; preallocated assembly | 02 | ⬜ |
 | 7 | Sample once → gate on total variation → nested Clenshaw–Curtis fallback → same accept/bisect logic | 03 | ⬜ |

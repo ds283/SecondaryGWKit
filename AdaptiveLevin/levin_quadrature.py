@@ -431,11 +431,18 @@ def chebyshev_matrices(x_span: Tuple[float, float], N: int):
 class _Basis_SinCos:
     def __init__(self, theta):
         """
-        :param theta:
+        :param theta: dict with a required "theta" key (the phase function) and optional
+            "theta_mod_2pi" / "theta_deriv" keys; see adaptive_levin_sincos()'s docstring for the
+            full contract.
         """
+        if callable(theta):
+            raise TypeError(
+                "levin_quadrature: theta must be a dict with a 'theta' key mapping to the phase "
+                "function, not a bare callable -- did you mean theta={'theta': theta}?"
+            )
         if "theta" not in theta:
             raise RuntimeError(
-                "levin_quadrature: Levin phase function theta must be provided"
+                "levin_quadrature: Levin phase function theta must be provided as theta['theta']"
             )
 
         self._theta = theta["theta"]
@@ -449,11 +456,13 @@ class _Basis_SinCos:
     def raw_theta(self, x):
         return self._theta(x)
 
-    def build_Levin_data(self, grid, Dmat):
+    def build_Levin_data(self, grid, Dmat, label: Optional[str] = None):
         """
         Build the Levin A^T matrix, the basis vector w evaluated at each endpoint, and an estimate of
         the total phase change across the interval.
 
+        :param label: optional identifying label for this region, used only to annotate a
+            non-finite-phase-derivative warning.
         :return: (AmatT, w0, wk, phase_span)
         """
         # we need theta sampled on the Chebyshev grid if either (a) we have to obtain theta' by spectral
@@ -480,6 +489,14 @@ class _Basis_SinCos:
             # multiply theta by the spectral differentiation matrix Dmat in order to produce an estimate of theta'(x)
             # evaluated at the collocation points
             theta_prime_Cheb = np.matmul(Dmat, theta_Cheb)
+
+        if not np.isfinite(theta_prime_Cheb).all():
+            print(
+                f"!! WARNING (adaptive_levin_subregion, {label}): sampled phase derivative theta' contains non-numeric values (np.nan, np.inf, or np.-inf)"
+            )
+            raise ValueError(
+                "sampled phase derivative theta' contains non-numeric values (np.nan, np.inf, or np.-inf)"
+            )
 
         # if w = (sin, cos) (regarded as a column vector), then w' = A w where A is the matrix
         #   Amat = ( 0,       theta' )
@@ -643,9 +660,19 @@ def _adaptive_levin_subregion_impl(
     m = len(f)
     f_Cheb = np.hstack([[func(x) for x in grid] for func in f])
 
+    if not np.isfinite(f_Cheb).all():
+        print(
+            f"!! WARNING (adaptive_levin_subregion, {label}): sampled amplitude f contains non-numeric values (np.nan, np.inf, or np.-inf)"
+        )
+        raise ValueError(
+            "sampled amplitude f contains non-numeric values (np.nan, np.inf, or np.-inf)"
+        )
+
     # build the Levin A^T matrix, and also the vector of weights w evaluated at theta0, thetak
     # (these are needed in the final stap)
-    AmatT, w0, wk, phase_span, theta_scale = BasisData.build_Levin_data(grid, Dmat)
+    AmatT, w0, wk, phase_span, theta_scale = BasisData.build_Levin_data(
+        grid, Dmat, label=label
+    )
 
     # build the Levin superoperator corresponding to this system
     # Chen et al. (168)
@@ -748,6 +775,14 @@ def _adaptive_levin_subregion_impl(
                 "metadata": metadata,
             }
 
+    if not np.isfinite(p).all():
+        print(
+            f"!! WARNING (adaptive_levin_subregion, {label}): solved Levin antiderivative p contains non-numeric values (np.nan, np.inf, or np.-inf)"
+        )
+        raise ValueError(
+            "solved Levin antiderivative p contains non-numeric values (np.nan, np.inf, or np.-inf)"
+        )
+
     # p is stored flattened, with component j at collocation point i in position j*chebyshev_order + i,
     # so this reshape gives P[j, i]. Taking the mean over the collocation points in numpy avoids building
     # a Python list of m-element lists on every solve; that list is only needed for diagnostics.
@@ -755,7 +790,15 @@ def _adaptive_levin_subregion_impl(
 
     p_means = np.fabs(P).mean(axis=1)
     p_mean_max = p_means.max()
-    p_ratios = [float(pm / p_mean_max) for pm in p_means]
+    if p_mean_max > 0.0:
+        p_ratios = [float(pm / p_mean_max) for pm in p_means]
+    else:
+        # every component of p is identically zero -- reachable when the sampled amplitude
+        # underflows to zero on this region. A zero solution genuinely contributes zero, so
+        # report an all-ones ratio vector (rather than the nan that pm / 0.0 would produce) so
+        # every component is kept by p_use below instead of being discarded by a divide-by-zero
+        # artefact.
+        p_ratios = [1.0 for _ in p_means]
 
     p_sample = None
     if build_p_sample:
@@ -766,7 +809,7 @@ def _adaptive_levin_subregion_impl(
     # also not being handled correctly in the singular value decomposition of the Levin operator)
     # so they just behave as a source of numerical noise that pollutes our abserr estimates,
     # and can prevent convergence of the bisection step.
-    p_use = [r > rtol for r in p_ratios]
+    p_use = [np.isfinite(r) and r > rtol for r in p_ratios]
 
     # note grid is in reverse order, with largest value in position o and smallest value in last position -1
     lower_limit = sum(
@@ -811,6 +854,37 @@ def _adaptive_levin(
     notify_label: str = None,
     emit_diagnostics: bool = False,
 ):
+    # Input validation (rec 4, C8, C9). This module cannot deliver a purely relative-error
+    # contract: the phase-rounding floor computed by _phase_error() is absolute by nature, so a
+    # caller asking for atol=0 leaves the relative-error denominator floor at :relerr_denom inert
+    # and the phase_limited branch unable to fire, and was measured to subdivide an
+    # identically-zero integrand to the full depth limit (256 regions / 1023 solves at
+    # depth_max=8, against 1 region / 3 solves at atol=1e-15). Reject rather than silently
+    # accepting a request this module cannot honour.
+    if not (atol > 0):
+        raise ValueError(
+            f"levin_quadrature: atol must be strictly positive (received atol={atol!r}); "
+            "this module cannot deliver a purely relative-error contract because its "
+            "phase-rounding error floor is absolute by construction -- choose a small positive atol"
+        )
+    if rtol < 0:
+        raise ValueError(
+            f"levin_quadrature: rtol must be non-negative (received rtol={rtol!r})"
+        )
+    if depth_max < 0:
+        raise ValueError(
+            f"levin_quadrature: depth_max must be non-negative (received depth_max={depth_max!r})"
+        )
+    if len(x_span) != 2:
+        raise ValueError(
+            f"levin_quadrature: x_span must have exactly two entries (start, end); "
+            f"received {len(x_span)} entries: {x_span!r}"
+        )
+    if not (np.isfinite(x_span[0]) and np.isfinite(x_span[1])):
+        raise ValueError(
+            f"levin_quadrature: x_span endpoints must be finite; received x_span={x_span!r}"
+        )
+
     driver_start: float = time.perf_counter()
     start_time: float = time.time()
     last_notify: float = start_time
@@ -822,6 +896,13 @@ def _adaptive_levin(
         label = f"{notify_label}, id={id_label}"
     else:
         label = f"{id_label}"
+
+    if chebyshev_order < _LEVIN_MINIMUM_ALLOWED_ORDER:
+        print(
+            f"!! WARNING (adaptive_levin, {label}): chebyshev_order={chebyshev_order} is below "
+            f"the minimum allowed order {_LEVIN_MINIMUM_ALLOWED_ORDER}; every subregion solve "
+            f"will be clamped up to {_LEVIN_MINIMUM_ALLOWED_ORDER}"
+        )
 
     m = len(f)
 
@@ -884,6 +965,12 @@ def _adaptive_levin(
         a = current_region.start
         b = current_region.end
 
+        # updated here, unconditionally, rather than only on the branch that accepts a Levin
+        # region: the direct-quadrature branch below `continue`s before reaching that branch, so
+        # updating it there missed every run that terminated in direct quadrature (C6).
+        if current_region.depth > max_depth:
+            max_depth = current_region.depth
+
         if current_region.depth >= 18 and num_history_messages < 20:
             num_history_messages += 1
 
@@ -945,8 +1032,7 @@ def _adaptive_levin(
             # integral|f| is estimated from a 3-point sample of the amplitude, which costs three
             # evaluations of f against a full adaptive quad call.
             f_scale = max(
-                sum(np.fabs(f[i](x)) for i in range(m))
-                for x in (a, 0.5 * (a + b), b)
+                sum(np.fabs(f[i](x)) for i in range(m)) for x in (a, 0.5 * (a + b), b)
             )
             direct_phase_err = _phase_error(
                 BasisData.phase_scale(a, b), f_scale * np.fabs(b - a)
@@ -1109,9 +1195,6 @@ def _adaptive_levin(
             )
             num_used_regions = num_used_regions + 1
 
-            if current_region.depth > max_depth:
-                max_depth = current_region.depth
-
             if build_p_sample:
                 p_points.extend(data["p_sample"])
 
@@ -1182,6 +1265,24 @@ def _adaptive_levin(
     # guarded exactly as the per-region relative test is guarded, and for the same reason
     relerr_total = abserr_total / max(np.fabs(val), atol)
 
+    # Honest-aggregate check (rec 2, C3). Region acceptance at step (4) tests each region's own
+    # abserr/relerr against atol/rtol, so the *summed* abserr_total scales with the number of
+    # accepted regions and was never itself compared with what the caller actually asked for.
+    # Report whether the aggregate in fact meets the request; this does not change what gets
+    # accepted (that is prompt 05's distribute-atol-by-length change), only what gets reported.
+    requested_total = max(atol, rtol * np.fabs(val))
+    converged = abserr_total <= requested_total
+    if not converged:
+        print(
+            f"!! WARNING (adaptive_levin, {label}): the aggregate error estimate exceeds what was "
+            f"requested | abserr_total={abserr_total:.3g} > requested={requested_total:.3g} "
+            f"(atol={atol:.3g}, rtol={rtol:.3g})"
+        )
+        print(
+            "   -- atol is currently a per-region tolerance, so the delivered error grows with "
+            "the number of accepted regions; consider a tighter atol/rtol"
+        )
+
     # Health check. If neither atol nor rtol is attainable -- typically because the caller has asked for
     # an accuracy the phase function cannot deliver -- the bisection runs to the depth limit and we
     # accept whatever estimate we have. The answer is usually still good, but the cost can be two orders
@@ -1230,6 +1331,10 @@ def _adaptive_levin(
         # under-report at high frequency the way the resolution residual alone does.
         "abserr": float(abserr_total),
         "relerr": float(relerr_total),
+        # True if the aggregate abserr actually meets max(atol, rtol*|value|). atol is currently
+        # a per-region tolerance (prompt 05 changes this), so this can be False even though every
+        # individual region met its own test -- see the warning printed above.
+        "converged": bool(converged),
         # True if at least one accepted region was limited by phase rounding rather than by
         # resolution. When this is set, the requested tolerance was not attainable with the
         # supplied phase function and tightening atol/rtol will not help.
@@ -1472,6 +1577,83 @@ def adaptive_levin_sincos(
     notify_label: str = None,
     emit_diagnostics=False,
 ):
+    """
+    Adaptive Levin quadrature of an integral of the form
+
+        integral_{x_span} [ f[0](x) sin(theta(x)) + f[1](x) cos(theta(x)) ] dx
+
+    using the adaptive Levin method of Bremer, Chen & Yang (arXiv:2211.13400, section 5), falling
+    back to ordinary adaptive quadrature (scipy.integrate.quad) on subintervals that are not
+    oscillatory enough for the Levin rule to offer an advantage.
+
+    :param x_span: a 2-tuple (a, b) giving the integration limits. Must have exactly two finite
+        entries.
+    :param f: a 2-element sequence of callables [f_sin, f_cos]. f_sin multiplies sin(theta(x)),
+        f_cos multiplies cos(theta(x)). This basis is fixed at two components (sin, cos); the
+        underlying driver supports an arbitrary number of components for other bases, but this
+        entry point does not expose that.
+    :param theta: a dict describing the phase function, with keys:
+          * "theta" (required) -- callable, the raw phase theta(x). Always used to decide
+            whether a subinterval is oscillatory enough for the Levin rule (via the total phase
+            change across it), and used to evaluate sin/cos directly if "theta_mod_2pi" is not
+            supplied.
+          * "theta_mod_2pi" (optional) -- callable, theta(x) reduced to the range [0, 2*pi) (or
+            any range of length 2*pi). When supplied, sin/cos are evaluated from this
+            range-reduced value instead of the raw phase, which is handed an O(2*pi) argument
+            rather than an O(theta) one and so has O(eps) absolute rounding error instead of
+            O(eps*theta). This is the single most effective way to lower the reported error floor
+            at high frequency (see phase_err below).
+          * "theta_deriv" (optional) -- callable, theta'(x). When supplied, it is used directly
+            instead of differentiating a sampled theta(x) with the spectral differentiation
+            matrix; this avoids inheriting rounding error from the magnitude of the raw phase
+            into the derivative estimate.
+    :param atol: requested absolute tolerance. Must be strictly positive: this module cannot
+        deliver a purely relative-error contract because its phase-rounding error floor is
+        absolute by construction. NOTE: atol is currently applied as a *per-region* tolerance,
+        and the returned "abserr" is a sum over accepted regions, so the delivered accuracy
+        degrades with the number of regions the driver needs. The returned "converged" flag
+        reports whether the aggregate in fact met max(atol, rtol*|value|); a future change will
+        distribute atol across regions so that "converged" is usually true by construction.
+    :param rtol: requested relative tolerance. Must be non-negative.
+    :param chebyshev_order: spectral order used for each Levin subregion collocation grid.
+        Values below 8 are clamped up, with a warning.
+    :param depth_max: maximum bisection depth. Must be non-negative.
+    :param build_p_sample: if True, retain and return the sampled Levin antiderivatives p(x) on
+        every accepted region (diagnostics only; costs additional memory).
+    :param notify_interval: seconds between progress notifications for long-running calls.
+    :param notify_label: optional label included in progress and warning messages.
+    :param emit_diagnostics: if True, periodically write plots and a JSON payload describing
+        slow-to-converge regions to disk (see _write_progress_data()).
+
+    :return: a dict with (at least) the following keys:
+          * "value" -- the estimated value of the integral.
+          * "abserr" -- estimated absolute error of "value". This is a sum, over accepted
+            regions, of max(step-(4) resolution residual, endpoint phase-rounding floor); it is
+            an estimate, not a proven bound.
+          * "relerr" -- "abserr" divided by max(|value|, atol).
+          * "converged" -- True if "abserr" <= max(atol, rtol*|value|), i.e. whether the request
+            was actually met in aggregate (see the atol caveat above).
+          * "phase_limited" -- True if at least one accepted region's achievable accuracy was set
+            by phase rounding rather than by lack of resolution; tightening atol/rtol will not
+            help such regions, only a more accurate phase function will.
+          * "num_phase_limited_regions" -- count of such regions.
+          * "num_regions" -- number of accepted subintervals (Levin + direct quadrature).
+          * "num_simple_regions" -- of those, how many were handled by direct quadrature rather
+            than the Levin rule.
+          * "regions" -- list of used_interval objects describing each accepted subinterval.
+          * "p_points" -- sampled Levin antiderivatives, if build_p_sample was True.
+          * "evaluations" -- number of Levin subregion solves performed.
+          * "elapsed" -- wall-clock time in seconds.
+          * "num_SVD_errors", "num_order_changes", "num_direct_solves", "chebyshev_min_order",
+            "max_depth" -- diagnostic counters; see the source for exact semantics.
+    """
+    if len(f) != 2:
+        raise ValueError(
+            f"levin_quadrature: adaptive_levin_sincos requires exactly two amplitude functions "
+            f"f=[f_sin, f_cos] (the sin/cos basis _Basis_SinCos is fixed at two components); "
+            f"received {len(f)}"
+        )
+
     A = _Basis_SinCos(theta)
 
     return _adaptive_levin(
