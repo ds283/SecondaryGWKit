@@ -3,7 +3,7 @@ import io
 import unittest
 from math import fabs, atan, sin, exp, pi, nan
 
-from AdaptiveLevin.levin_quadrature import adaptive_levin_sincos
+from AdaptiveLevin.levin_quadrature import adaptive_levin_sincos, _Basis_SinCos
 from utilities import format_time
 
 
@@ -221,6 +221,38 @@ class TestAdaptiveLevinSinCos(unittest.TestCase):
         with self.assertRaises(ValueError) as ctx:
             adaptive_levin_sincos((1.0, 50.0), f, theta={"theta": theta}, atol=0.0)
         self.assertIn("atol", str(ctx.exception))
+
+    def test_sincos_basis_reports_complex_support(self):
+        # prompt 02: the (sin, cos) basis is solved via the complexified N x N system rather than
+        # the realified 2N x 2N one, gated on this capability rather than on isinstance(). Lock in
+        # the contract so a future refactor that silently drops it is caught here rather than only
+        # by a performance regression nobody notices.
+        basis = _Basis_SinCos({"theta": lambda x: x})
+        self.assertTrue(basis.supports_complexified_solve)
+
+    def test_lstsq_and_direct_solve_paths_converge(self):
+        # prompt 02: the complexified system keeps the same phase-span gate between the direct LU
+        # solve and the lstsq fallback (_LEVIN_DIRECT_SOLVE_PHASE_SPAN = 20*pi). Exercise both
+        # branches of the complexified solve explicitly, rather than relying on incidental coverage
+        # from the other tests. See prompt 02's log for a standalone before/after comparison of the
+        # lstsq branch against the pre-complexification code on this same problem.
+        x_span = (0.0, 1.0)
+        f = [lambda x: exp(-x), lambda x: 0.3]
+        theta_ill = (
+            lambda x: 10.0 * pi * x
+        )  # phase span 10*pi < 20*pi gate: forces lstsq
+        theta_direct = (
+            lambda x: 30.0 * pi * x
+        )  # phase span 30*pi > 20*pi gate: forces direct LU
+
+        data_ill = adaptive_levin_sincos(
+            x_span, f, theta={"theta": theta_ill}, atol=1e-15, rtol=1e-12
+        )
+        data_direct = adaptive_levin_sincos(
+            x_span, f, theta={"theta": theta_direct}, atol=1e-15, rtol=1e-12
+        )
+        self.assertTrue(data_ill["converged"])
+        self.assertTrue(data_direct["converged"])
 
     def test_converged_flag(self):
         theta = lambda x: x

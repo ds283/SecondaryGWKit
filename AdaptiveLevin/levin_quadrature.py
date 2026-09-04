@@ -117,10 +117,6 @@ _LEVIN_PHASE_ERROR_SAFETY = 1.0
 # conditioned and we need the minimum-norm solution; see _adaptive_levin_subregion_impl().
 _LEVIN_DIRECT_SOLVE_PHASE_SPAN = 20.0 * np.pi
 
-# tolerance on the relative residual ||Lp - f||/||f|| accepted from the direct solve. This is only a
-# secondary sanity check -- the primary guard is the phase span above.
-_LEVIN_DIRECT_SOLVE_RESIDUAL = 1e-10
-
 INTERVAL_TYPE_LEVIN = 0
 INTERVAL_TYPE_DIRECT = 1
 types = {0: "Levin", 1: "direct"}
@@ -456,14 +452,34 @@ class _Basis_SinCos:
     def raw_theta(self, x):
         return self._theta(x)
 
-    def build_Levin_data(self, grid, Dmat, label: Optional[str] = None):
+    @property
+    def supports_complexified_solve(self) -> bool:
         """
-        Build the Levin A^T matrix, the basis vector w evaluated at each endpoint, and an estimate of
-        the total phase change across the interval.
+        True if this basis's Levin collocation system can be solved in the complexified N x N
+        form (D + i diag(theta')) q = f1 + i f2 (Chen et al. (168)) instead of the realified
+        2N x 2N one. This holds for the two-component (sin, cos) basis implemented here; see the
+        module docstring and prompt 02's log for the derivation. A basis with a different number
+        of components, or a genuinely different structure, would answer False here rather than
+        the driver sniffing isinstance(BasisData, _Basis_SinCos).
+        """
+        return True
+
+    def build_Levin_data(
+        self, grid, Dmat, label: Optional[str] = None, need_AmatT: bool = True
+    ):
+        """
+        Sample the phase function once and build everything derived from that sample: theta',
+        the A^T super-operator block (unless need_AmatT is False), the basis vector w evaluated
+        at each endpoint, and an estimate of the total phase change across the interval.
 
         :param label: optional identifying label for this region, used only to annotate a
             non-finite-phase-derivative warning.
-        :return: (AmatT, w0, wk, phase_span)
+        :param need_AmatT: whether to build and return the A^T block. The complexified solve
+            path (see supports_complexified_solve) needs theta_prime_Cheb directly and never
+            needs A^T, so the caller passes False there to skip an O(N^2) allocation that would
+            just be discarded.
+        :return: (AmatT, theta_prime_Cheb, w0, wk, phase_span, theta_scale). AmatT is None when
+            need_AmatT is False.
         """
         # we need theta sampled on the Chebyshev grid if either (a) we have to obtain theta' by spectral
         # differentiation, or (b) we have no range-reduced phase function and therefore have to evaluate
@@ -498,16 +514,20 @@ class _Basis_SinCos:
                 "sampled phase derivative theta' contains non-numeric values (np.nan, np.inf, or np.-inf)"
             )
 
-        # if w = (sin, cos) (regarded as a column vector), then w' = A w where A is the matrix
-        #   Amat = ( 0,       theta' )
-        #          ( -theta', 0      )
-        # and therefore its transpose is
-        #   Amat^T = ( 0,      -theta' )
-        #            ( theta', 0       )
-        theta_prime_I = np.diag(theta_prime_Cheb)
+        AmatT = None
+        if need_AmatT:
+            # if w = (sin, cos) (regarded as a column vector), then w' = A w where A is the matrix
+            #   Amat = ( 0,       theta' )
+            #          ( -theta', 0      )
+            # and therefore its transpose is
+            #   Amat^T = ( 0,      -theta' )
+            #            ( theta', 0       )
+            theta_prime_I = np.diag(theta_prime_Cheb)
 
-        zero_block = np.zeros_like(theta_prime_I)
-        AmatT = np.block([[zero_block, -theta_prime_I], [theta_prime_I, zero_block]])
+            zero_block = np.zeros_like(theta_prime_I)
+            AmatT = np.block(
+                [[zero_block, -theta_prime_I], [theta_prime_I, zero_block]]
+            )
 
         # estimate the total phase change across the interval from quantities we have already computed.
         # This costs no further evaluations of the phase function, and is used to decide whether the
@@ -549,7 +569,7 @@ class _Basis_SinCos:
             # |d(sin)/d(theta)| <= 1. This is the dominant error at high frequency.
             theta_scale = float(np.max(np.fabs(theta_Cheb)))
 
-        return AmatT, w0, wk, phase_span, theta_scale
+        return AmatT, theta_prime_Cheb, w0, wk, phase_span, theta_scale
 
     def eval_basis(self, x):
         if hasattr(self, "_theta_mod_2pi"):
@@ -668,23 +688,48 @@ def _adaptive_levin_subregion_impl(
             "sampled amplitude f contains non-numeric values (np.nan, np.inf, or np.-inf)"
         )
 
-    # build the Levin A^T matrix, and also the vector of weights w evaluated at theta0, thetak
-    # (these are needed in the final stap)
-    AmatT, w0, wk, phase_span, theta_scale = BasisData.build_Levin_data(
-        grid, Dmat, label=label
+    # Sample the phase once. build_Levin_data returns everything either solve path needs: theta'
+    # itself (for the complex path's diagonal, and for the real path's A^T block), the endpoint
+    # basis vectors w0/wk, and phase_span/theta_scale (needed by both regardless of solve path).
+    #
+    # A basis reports whether its Levin system can be solved in the complexified N x N form
+    # (D + i diag(theta')) q = f1 + i f2 -- Chen et al. (168) -- instead of the realified 2N x 2N
+    # one. This is asked of the basis object rather than sniffed via isinstance, so a future basis
+    # with a different structure or component count simply answers False. It is also gated on
+    # m == 2: the complex form only exists for a two-component (sin, cos) basis.
+    use_complex_solve = m == 2 and getattr(
+        BasisData, "supports_complexified_solve", False
     )
 
-    # build the Levin superoperator corresponding to this system
-    # Chen et al. (168)
-    zero_block = np.zeros((chebyshev_order, chebyshev_order))
+    AmatT, theta_prime_Cheb, w0, wk, phase_span, theta_scale = (
+        BasisData.build_Levin_data(
+            grid, Dmat, label=label, need_AmatT=not use_complex_solve
+        )
+    )
 
-    row_list = []
-    for i in range(m):
-        row = [zero_block for _ in range(m)]
-        row[i] = Dmat
-        row_list.append(row)
+    if use_complex_solve:
+        # Chen et al. (168) in complexified form: q = p1 + i*p2 solves (D + i diag(theta')) q =
+        # f1 + i*f2, where f1/f2 are the sampled amplitudes for the sin/cos slots respectively
+        # (f_Cheb is [f1(grid); f2(grid)] by construction above). D.astype(complex) always
+        # allocates a fresh array (astype copies by default), so mutating its diagonal in place
+        # cannot corrupt the shared, read-only base matrices from _chebyshev_base(), nor Dmat
+        # itself -- see chebyshev_matrices()'s own note that it forms a new D on every call.
+        LevinL = Dmat.astype(complex)
+        LevinL[np.diag_indices(chebyshev_order)] += 1j * theta_prime_Cheb
+        rhs = f_Cheb[:chebyshev_order] + 1j * f_Cheb[chebyshev_order:]
+    else:
+        # build the Levin superoperator corresponding to this system
+        # Chen et al. (168), realified
+        zero_block = np.zeros((chebyshev_order, chebyshev_order))
 
-    LevinL = np.block(row_list) + AmatT
+        row_list = []
+        for i in range(m):
+            row = [zero_block for _ in range(m)]
+            row[i] = Dmat
+            row_list.append(row)
+
+        LevinL = np.block(row_list) + AmatT
+        rhs = f_Cheb
 
     if not np.isfinite(LevinL).all():
         print(
@@ -695,7 +740,8 @@ def _adaptive_levin_subregion_impl(
             "Levin super-operator contains non-numeric values (np.nan, np.inf, or np.-inf)"
         )
 
-    # now try to invert the Levin superoperator, to find the Levin antiderivatives p(x)
+    # now try to invert the Levin superoperator, to find the Levin antiderivatives p(x) (or, on
+    # the complex path, q = p1 + i*p2)
     # Chen et al.
     success = False
 
@@ -704,24 +750,31 @@ def _adaptive_levin_subregion_impl(
     # is badly conditioned on weakly oscillatory intervals, and there we need the minimum-norm solution
     # that lstsq provides. Once the interval carries enough phase the operator becomes well conditioned
     # (empirically cond ~ 4e2 at a phase span of 20*pi, and ~13 at 100*pi), and an ordinary LU solve
-    # agrees with lstsq to machine precision while being an order of magnitude cheaper.
+    # agrees with lstsq to machine precision while being an order of magnitude cheaper. The complex
+    # N x N system has identical conditioning to the realified 2N x 2N one (verified: agrees to 4
+    # significant figures at every order tested), so the same gate applies unchanged.
     #
     # NOTE the gate has to be the phase span, *not* the residual of the solve. In the near-singular
     # regime the residual is small (~1e-14) even when the computed p is completely wrong, so a residual
-    # test alone would silently accept garbage. The residual check below is only a secondary guard
-    # against non-finite values and outright failure.
+    # test alone would silently accept garbage.
+    #
+    # A prior version of this branch also checked ||Lq - rhs|| / ||rhs|| against a fixed tolerance
+    # before accepting the direct solve, as a secondary guard against outright failure -- but the
+    # phase-span gate above is what actually protects against a wrong-but-finite answer, and the
+    # residual check cost 58-72% of the solve it guarded. Measured across the full AdaptiveLevin
+    # test suite plus the J000 three-Bessel oracle (221 direct-solve calls), the relative residual
+    # never exceeded ~5e-15 against a 1e-10 threshold, and every call the residual check would have
+    # accepted, the finiteness check below also accepted, and vice versa -- so it was removed and
+    # the finiteness check on the solved vector (below) is relied on instead. See prompt 02's log
+    # for the measurement.
     if phase_span > _LEVIN_DIRECT_SOLVE_PHASE_SPAN:
         try:
-            p_direct = np.linalg.solve(LevinL, f_Cheb)
+            sol_direct = np.linalg.solve(LevinL, rhs)
         except LinAlgError:
             pass
         else:
-            f_norm = np.linalg.norm(f_Cheb)
-            residual = np.linalg.norm(np.matmul(LevinL, p_direct) - f_Cheb)
-            if np.isfinite(p_direct).all() and (
-                f_norm <= 0.0 or residual <= _LEVIN_DIRECT_SOLVE_RESIDUAL * f_norm
-            ):
-                p = p_direct
+            if np.isfinite(sol_direct).all():
+                sol = sol_direct
                 success = True
                 metadata["direct_solve"] = 1
 
@@ -738,9 +791,14 @@ def _adaptive_levin_subregion_impl(
     # remains an unexplored optimisation; it would need A/B benchmarking against the closed-form
     # Bessel oracles before being trusted, because this branch is exactly the ill-conditioned
     # regime where the minimum-norm property of lstsq is doing real work.
+    #
+    # rcond=None truncates at eps * max(M, N) * sigma_1 (the paper's own step-5 truncation). On the
+    # complex path M == N == chebyshev_order rather than 2*chebyshev_order, halving that threshold;
+    # this is a real behavioural difference on the ill-conditioned branch but was confirmed
+    # immaterial in practice -- see prompt 02's log for the measurement.
     if not success:
         try:
-            p, residuals, rank, s = np.linalg.lstsq(LevinL, f_Cheb, rcond=None)
+            sol, residuals, rank, s = np.linalg.lstsq(LevinL, rhs, rcond=None)
         except LinAlgError as e:
             print(
                 f"!! WARNING (adaptive_levin_subregion, {label}): could not solve Levin collocation system using numpy.linalg.lstsq (chebyshev_order={chebyshev_order}; will now attempt to use pseudo-inverse)"
@@ -754,7 +812,7 @@ def _adaptive_levin_subregion_impl(
                 )
             )
             np.savetxt(LevinL_filename, LevinL)
-            np.savetxt(f_Cheb_filename, f_Cheb)
+            np.savetxt(f_Cheb_filename, rhs)
             metadata["SVD_errors"] = 1
         else:
             success = True
@@ -762,7 +820,7 @@ def _adaptive_levin_subregion_impl(
     if not success:
         try:
             LevinL_inv = np.linalg.pinv(LevinL)
-            p = np.matmul(LevinL_inv, f_Cheb)
+            sol = np.matmul(LevinL_inv, rhs)
         except LinAlgError as e:
             print(
                 f"!! WARNING (adaptive_levin_subregion, {label}): could not solve Levin collocation system using numpy.linalg.pinv (chebyshev_order={chebyshev_order}; final failure at this order)"
@@ -775,7 +833,7 @@ def _adaptive_levin_subregion_impl(
                 "metadata": metadata,
             }
 
-    if not np.isfinite(p).all():
+    if not np.isfinite(sol).all():
         print(
             f"!! WARNING (adaptive_levin_subregion, {label}): solved Levin antiderivative p contains non-numeric values (np.nan, np.inf, or np.-inf)"
         )
@@ -783,10 +841,16 @@ def _adaptive_levin_subregion_impl(
             "solved Levin antiderivative p contains non-numeric values (np.nan, np.inf, or np.-inf)"
         )
 
-    # p is stored flattened, with component j at collocation point i in position j*chebyshev_order + i,
-    # so this reshape gives P[j, i]. Taking the mean over the collocation points in numpy avoids building
-    # a Python list of m-element lists on every solve; that list is only needed for diagnostics.
-    P = p.reshape(m, chebyshev_order)
+    # P[j, i] is Levin antiderivative component j at collocation point i. On the real path p is
+    # stored flattened with component j at collocation point i in position j*chebyshev_order + i,
+    # so this reshape recovers P[j, i]. On the complex path q = p1 + i*p2 by construction, so its
+    # real/imaginary parts stacked in slot order are exactly the same P[j, i]. Taking the mean over
+    # the collocation points in numpy avoids building a Python list of m-element lists on every
+    # solve; that list is only needed for diagnostics.
+    if use_complex_solve:
+        P = np.vstack([sol.real, sol.imag])
+    else:
+        P = sol.reshape(m, chebyshev_order)
 
     p_means = np.fabs(P).mean(axis=1)
     p_mean_max = p_means.max()
@@ -811,24 +875,17 @@ def _adaptive_levin_subregion_impl(
     # and can prevent convergence of the bisection step.
     p_use = [np.isfinite(r) and r > rtol for r in p_ratios]
 
-    # note grid is in reverse order, with largest value in position o and smallest value in last position -1
-    lower_limit = sum(
-        p[(i + 1) * chebyshev_order - 1] * w0[i] if p_use[i] else 0.0 for i in range(m)
-    )
-    upper_limit = sum(
-        p[i * chebyshev_order] * wk[i] if p_use[i] else 0.0 for i in range(m)
-    )
+    # note grid is in reverse order, with P[i, 0] at the upper endpoint b and P[i, -1] at the
+    # lower endpoint a. Indexing P directly (rather than a flattened p vector) means this is the
+    # same expression regardless of which solve path produced P.
+    lower_limit = sum(P[i, -1] * w0[i] if p_use[i] else 0.0 for i in range(m))
+    upper_limit = sum(P[i, 0] * wk[i] if p_use[i] else 0.0 for i in range(m))
 
     # first-order bound on the error inherited from rounding of the phase at the two endpoints.
     # The same p-values and the same p_use gating are used as in the estimate itself, so this
     # costs only a handful of flops and no extra evaluations of theta or f. See _phase_error().
     p_endpoint_l1 = sum(
-        (
-            np.fabs(p[(i + 1) * chebyshev_order - 1]) + np.fabs(p[i * chebyshev_order])
-            if p_use[i]
-            else 0.0
-        )
-        for i in range(m)
+        (np.fabs(P[i, -1]) + np.fabs(P[i, 0])) if p_use[i] else 0.0 for i in range(m)
     )
 
     return {

@@ -2,7 +2,7 @@
 
 **Campaign:** [`README.md`](README.md) · **Source audit:** [`docs/adaptive-levin-audit-2026-09.md`](../../docs/adaptive-levin-audit-2026-09.md)
 **Baseline commit:** `c8a1918` (`main`, clean; `AdaptiveLevin/levin_quadrature.py` byte-identical to the audited `68cff5d`)
-**Last updated:** 2026-09-04 — prompt 01 (refuse or report) complete.
+**Last updated:** 2026-09-04 — prompt 02 (complexified solve) complete.
 
 > **Maintenance rule.** Every prompt updates this file *in its own commit*, before committing.
 > Set your row's status and the log link, and add or clear entries in §3 (Active issues). Do not
@@ -19,8 +19,8 @@ Legend: ⬜ not started · 🟡 in flight · ✅ complete · ⚠️ complete wit
 
 | # | Prompt | Audit items | Status | Commit | Log |
 |---|---|---|---|---|---|
-| 01 | [Refuse or report](01-refuse-or-report.md) | recs 1–4 · C1, C3a, C6, C8, C9 | ✅ | — (this commit) | [01](logs/01-refuse-or-report.md) |
-| 02 | [Complexified solve](02-complexified-solve.md) | rec 6 · §4.1, §4.2 | ⬜ | — | — |
+| 01 | [Refuse or report](01-refuse-or-report.md) | recs 1–4 · C1, C3a, C6, C8, C9 | ✅ | `0002fb4` | [01](logs/01-refuse-or-report.md) |
+| 02 | [Complexified solve](02-complexified-solve.md) | rec 6 · §4.1, §4.2 | ✅ | — (this commit) | [02](logs/02-complexified-solve.md) |
 | 03 | [Total-variation gate + nested CC](03-total-variation-gate.md) | rec 7 · C2, C7, §2.2, §2.4 | ⬜ | — | — |
 
 ### Error estimates
@@ -45,7 +45,7 @@ Legend: ⬜ not started · 🟡 in flight · ✅ complete · ⚠️ complete wit
 |---|---|---|---|---|---|
 | 10 | [Test matrix and campaign verification](10-test-matrix.md) | rec 16 · C12 | ⬜ | — | — |
 
-**Progress:** 1 / 10 complete.
+**Progress:** 2 / 10 complete.
 
 ---
 
@@ -75,7 +75,7 @@ Traceability from the audit's finding and recommendation IDs to the prompt that 
 | 3 | `max_depth` updated on every popped region | 01 | ✅ |
 | 4 | Reject `atol <= 0`, `rtol < 0`, `depth_max < 0`, `len(f) != 2`, `len(x_span) != 2`; docstring | 01 | ✅ |
 | 5 | Replace the endpoint phase floor with eq. (151); add optional `theta_abserr` | 04 | ⬜ |
-| 6 | Complexify the `(sin, cos)` solve to `N×N`; preallocated assembly | 02 | ⬜ |
+| 6 | Complexify the `(sin, cos)` solve to `N×N`; preallocated assembly | 02 | ✅ |
 | 7 | Sample once → gate on total variation → nested Clenshaw–Curtis fallback → same accept/bisect logic | 03 | ⬜ |
 | 8 | Distribute `atol` in proportion to interval length | 05 | ⬜ |
 | 9 | Gate `p_use` on endpoint magnitudes; add the discarded contribution to `abserr` | 06 | ⬜ |
@@ -166,3 +166,16 @@ because something has landed since.
     ordinary Python warning; the audit's phrase "neither caught nor surfaced" means it is not
     *acted on* and does not reach the returned dictionary. It is visible in a terminal.
     Prompt 03 deletes this branch entirely.
+13. **As of prompt 02, the `(sin, cos)` Levin system is solved as the complexified `N×N` system by
+    default** (`_Basis_SinCos.supports_complexified_solve` is `True`, gated additionally on
+    `m == 2`). Every existing test and production caller goes through this path today. Downstream
+    code should read Levin antiderivatives via `P[i, k]` (shape `(m, chebyshev_order)`), never via
+    a flattened `p` vector — the complex path has no such vector. Solve-ladder variable names are
+    now `LevinL`/`rhs`/`sol` (previously `LevinL`/`f_Cheb`/`p`); the residual sanity check on the
+    LU branch was removed (measured: 221 direct-solve calls across the whole test suite plus the
+    `J000` oracle never exceeded a relative residual of 4.65e-15 against the 1e-10 threshold it was
+    tested against, and finiteness-only vs. finiteness-and-residual agreed on every call).
+14. **Prompt 02 measured the `lstsq` share on two three-Bessel oracles at 69–77%**, well above the
+    audit's own synthetic reference points (0–25%, §4.4). This is new evidence for the still-deferred
+    RRQR decision (audit §4.4, README §6) — not acted on, but the next person to revisit that
+    decision should use these figures rather than only the audit's synthetic ones.
