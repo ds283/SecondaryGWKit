@@ -368,6 +368,7 @@ class used_interval:
         p_ratios: Optional[List[float]] = None,
         phase_err: Optional[float] = None,
         phase_limited: bool = False,
+        abserr_truncation: Optional[float] = None,
     ):
         self._start = start
         self._end = end
@@ -382,14 +383,21 @@ class used_interval:
         # phase_err is the round-off floor from Chen et al. eq. (151) (_roundoff_floor()), plus
         # any declared-theta_abserr endpoint contribution (_declared_endpoint_phase_err()) -- an
         # error source neither the resolution residual nor the nested-pair estimate can see (see
-        # _adaptive_levin()). The total error of the region is bounded by the larger of the two;
-        # see abserr_resolution/abserr_fallback/abserr_roundoff below for the type-disambiguated
-        # accessors, and total_err for the max.
+        # _adaptive_levin()). abserr_truncation (prompt 06, rec 9) is a third, independent source:
+        # the endpoint contribution of p-modes the rtol gate in _adaptive_levin_subregion_impl()
+        # dropped from this region's own value -- a deliberate truncation, not a resolution
+        # residual or a round-off floor, and None for a Clenshaw-Curtis fallback region (which has
+        # no Levin antiderivative to gate). The total error of the region is the resolution/
+        # round-off max, plus the truncation term; see abserr_resolution/abserr_fallback/
+        # abserr_roundoff/abserr_truncation below for the type-disambiguated accessors, and
+        # total_err for the combination.
         self._abserr = abserr
         self._relerr = relerr
 
         self._phase_err = phase_err
         self._phase_limited = phase_limited
+
+        self._abserr_truncation = abserr_truncation
 
         self._p_ratios = p_ratios if p_ratios is not None else []
 
@@ -467,11 +475,25 @@ class used_interval:
 
     @property
     def total_err(self) -> Optional[float]:
+        """
+        Combined per-region error estimate: max(resolution/fallback residual, round-off floor),
+        plus the truncation term (prompt 06) if this region has one. The truncation term is added
+        rather than maxed because it is a distinct, always-present bias -- the endpoint
+        contribution of modes the rtol gate discarded from this region's own value -- not another
+        estimate of the same underlying quantity the max() is choosing between.
+        """
         if self._abserr is None:
-            return self._phase_err
-        if self._phase_err is None:
-            return self._abserr
-        return max(self._abserr, self._phase_err)
+            base = self._phase_err
+        elif self._phase_err is None:
+            base = self._abserr
+        else:
+            base = max(self._abserr, self._phase_err)
+
+        if base is None:
+            return self._abserr_truncation
+        if self._abserr_truncation is None:
+            return base
+        return base + self._abserr_truncation
 
     @property
     def abserr_resolution(self) -> Optional[float]:
@@ -504,6 +526,18 @@ class used_interval:
         returned dict.
         """
         return self._phase_err
+
+    @property
+    def abserr_truncation(self) -> Optional[float]:
+        """
+        Endpoint contribution of p-modes dropped by the rtol gate in
+        _adaptive_levin_subregion_impl() (prompt 06, rec 9): sum over discarded components i of
+        (|p_i(a)| + |p_i(b)|), an upper bound on what those modes would have contributed to
+        lower_limit/upper_limit (the sin/cos weights multiplying them have magnitude <= 1). None
+        for a Clenshaw-Curtis fallback region (type == "direct"), which has no Levin antiderivative
+        to gate.
+        """
+        return self._abserr_truncation
 
     @property
     def p_ratios(self) -> List[float]:
@@ -1163,17 +1197,30 @@ def _adaptive_levin_subregion_impl(
     else:
         P = sol.reshape(m, chebyshev_order)
 
-    p_means = np.fabs(P).mean(axis=1)
-    p_mean_max = p_means.max()
-    if p_mean_max > 0.0:
-        p_ratios = [float(pm / p_mean_max) for pm in p_means]
+    # p_endpoint[i] = |p_i(a)| + |p_i(b)| -- note grid is in reverse order, with P[i, 0] at the
+    # upper endpoint b and P[i, -1] at the lower endpoint a. This is the quantity the endpoint sum
+    # below (lower_limit/upper_limit) actually consumes. Prompt 06 (problem (a)) gates on this
+    # instead of the collocation-point mean |P[j, :]| the original heuristic (commit af85ef2)
+    # used: a mode with a small mean and a large endpoint value could be discarded wrongly under
+    # the old gate. The audit's own 400-problem randomised sweep found no case where this changed
+    # a result, but verifying this prompt did find one, in this campaign's own standard problem
+    # set (grz_1000, a mode whose mean-based and endpoint-based ratios sit on opposite sides of
+    # rtol) -- see prompt 06's log for the measurement. Either way this is a fix to what the gate
+    # tests, not a report of a field failure this module was producing.
+    p_endpoint = np.fabs(P[:, -1]) + np.fabs(P[:, 0])
+    p_endpoint_max = p_endpoint.max()
+    if p_endpoint_max > 0.0:
+        # ratio-to-maximum, not fraction-of-total: this preserves the meaning of the existing
+        # rtol threshold and of the p_ratios values recorded in used_interval and printed by its
+        # __str__ / the depth-18 diagnostic (prompt 06's log, "normalisation choice").
+        p_ratios = [float(pe / p_endpoint_max) for pe in p_endpoint]
     else:
-        # every component of p is identically zero -- reachable when the sampled amplitude
-        # underflows to zero on this region. A zero solution genuinely contributes zero, so
-        # report an all-ones ratio vector (rather than the nan that pm / 0.0 would produce) so
-        # every component is kept by p_use below instead of being discarded by a divide-by-zero
-        # artefact.
-        p_ratios = [1.0 for _ in p_means]
+        # every component's endpoint value is identically zero -- reachable when the sampled
+        # amplitude underflows to zero on this region. A zero solution genuinely contributes
+        # zero, so report an all-ones ratio vector (rather than the nan that pe / 0.0 would
+        # produce) so every component is kept by p_use below instead of being discarded by a
+        # divide-by-zero artefact.
+        p_ratios = [1.0 for _ in p_endpoint]
 
     p_sample = None
     if build_p_sample:
@@ -1191,6 +1238,17 @@ def _adaptive_levin_subregion_impl(
     # same expression regardless of which solve path produced P.
     lower_limit = sum(P[i, -1] * w0[i] if p_use[i] else 0.0 for i in range(m))
     upper_limit = sum(P[i, 0] * wk[i] if p_use[i] else 0.0 for i in range(m))
+
+    # Prompt 06 (problem (b)): the endpoint contribution of a discarded mode used to vanish
+    # silently from lower_limit/upper_limit above with no trace in the reported error -- common-
+    # mode between a parent and its dataL/dataR comparison children (both apply the same gate),
+    # so the step-(4) resolution residual cannot see it either. |w0[i]|, |wk[i]| <= 1 (sin/cos),
+    # so summing p_endpoint over the discarded components bounds what they would have added.
+    # Measured (prompt 06's log): the value can jump by an amount bounded by rtol as rtol crosses
+    # a mode's ratio, with abserr previously unmoved; this term makes that jump visible.
+    abserr_truncation = float(
+        sum(pe for pe, used in zip(p_endpoint, p_use) if not used)
+    )
 
     # Round-off floor, Chen et al. eq. (151) -- see _roundoff_floor(). G0/G1 use theta' already
     # sampled by build_Levin_data(); f_scale = max_grid sqrt(f_1^2 + f_2^2) reuses f_Cheb, which
@@ -1218,6 +1276,7 @@ def _adaptive_levin_subregion_impl(
         "p_ratios": p_ratios,
         "phase_span": phase_span,
         "phase_err": round_off_err + declared_err,
+        "abserr_truncation": abserr_truncation,
         "metadata": metadata,
         "is_direct": False,
     }
@@ -1321,6 +1380,9 @@ def _adaptive_levin_subregion_cc(
         "p_ratios": None,
         "phase_span": phase_span,
         "phase_err": round_off_err + declared_err,
+        # No Levin antiderivative exists on this branch, so there is no p-mode to gate and
+        # nothing for the rtol filter to discard -- see used_interval.abserr_truncation.
+        "abserr_truncation": None,
         "metadata": {},
         "is_direct": True,
     }
@@ -1611,6 +1673,9 @@ def _adaptive_levin(
                         relerr=relerr,
                         phase_err=phase_err,
                         phase_limited=phase_limited,
+                        # no Levin antiderivative on this branch -- see
+                        # used_interval.abserr_truncation.
+                        abserr_truncation=data.get("abserr_truncation"),
                     )
                 )
                 num_used_regions = num_used_regions + 1
@@ -1761,6 +1826,10 @@ def _adaptive_levin(
                     p_ratios=data["p_ratios"],
                     phase_err=phase_err,
                     phase_limited=phase_limited,
+                    # data is this region's own solve (not dataL/dataR): "value" above is
+                    # data["value"], so data["abserr_truncation"] is the truncation actually
+                    # incurred by the value this region contributes (prompt 06, problem (b)).
+                    abserr_truncation=data.get("abserr_truncation"),
                 )
             )
             num_used_regions = num_used_regions + 1
@@ -1824,14 +1893,17 @@ def _adaptive_levin(
     # sum is the defensible choice even though it is pessimistic when the residuals really do
     # behave randomly.
     #
-    # abserr_resolution/abserr_roundoff/abserr_fallback (rec 11, §3.4) break the same total down
-    # by source, at no extra cost, so a caller can see *why* they cannot get more digits: a large
-    # abserr_resolution means the driver could still make progress by bisecting further (until
-    # depth_max); a large abserr_roundoff means it cannot, no matter the tolerance requested.
+    # abserr_resolution/abserr_roundoff/abserr_fallback/abserr_truncation (rec 9, rec 11, §3.4)
+    # break the same total down by source, at no extra cost, so a caller can see *why* they
+    # cannot get more digits: a large abserr_resolution means the driver could still make
+    # progress by bisecting further (until depth_max); a large abserr_roundoff means it cannot,
+    # no matter the tolerance requested; a large abserr_truncation means the rtol gate on small
+    # p-modes (prompt 06) is the limiting factor, and a smaller rtol would help.
     abserr_total = 0.0
     abserr_resolution_total = 0.0
     abserr_roundoff_total = 0.0
     abserr_fallback_total = 0.0
+    abserr_truncation_total = 0.0
     num_phase_limited = 0
     for region in used_regions:
         contribution = region.total_err
@@ -1843,6 +1915,8 @@ def _adaptive_levin(
             abserr_roundoff_total = abserr_roundoff_total + region.abserr_roundoff
         if region.abserr_fallback is not None:
             abserr_fallback_total = abserr_fallback_total + region.abserr_fallback
+        if region.abserr_truncation is not None:
+            abserr_truncation_total = abserr_truncation_total + region.abserr_truncation
         if region.phase_limited:
             num_phase_limited = num_phase_limited + 1
 
@@ -1924,12 +1998,14 @@ def _adaptive_levin(
         # under-report at high frequency the way the resolution residual alone does.
         "abserr": float(abserr_total),
         "relerr": float(relerr_total),
-        # abserr broken down by source (rec 11, §3.4) -- see used_interval.abserr_resolution /
-        # .abserr_roundoff / .abserr_fallback. New keys as of prompt 04; existing consumers keyed
-        # on "abserr"/"relerr" are unaffected.
+        # abserr broken down by source (rec 11, rec 9, §3.4) -- see used_interval.abserr_resolution
+        # / .abserr_roundoff / .abserr_fallback / .abserr_truncation. abserr_resolution/roundoff/
+        # fallback are new as of prompt 04; abserr_truncation as of prompt 06. Existing consumers
+        # keyed on "abserr"/"relerr" are unaffected.
         "abserr_resolution": float(abserr_resolution_total),
         "abserr_roundoff": float(abserr_roundoff_total),
         "abserr_fallback": float(abserr_fallback_total),
+        "abserr_truncation": float(abserr_truncation_total),
         # True if the aggregate abserr actually meets max(atol, rtol*|value|). As of prompt 05,
         # atol is distributed across subintervals by length share (_local_atol()), so this is
         # usually True by construction for a run that terminates normally; see the warning printed
@@ -2249,15 +2325,18 @@ def adaptive_levin_sincos(
     :return: a dict with (at least) the following keys:
           * "value" -- the estimated value of the integral.
           * "abserr" -- estimated absolute error of "value". This is a sum, over accepted
-            regions, of max(resolution/fallback residual, round-off floor); it is an estimate,
-            not a proven bound.
-          * "abserr_resolution", "abserr_roundoff", "abserr_fallback" -- "abserr" broken down by
-            source (new as of prompt 04): the summed step-(4) residual over Levin regions, the
-            summed round-off floor (Chen et al. eq. 151, plus any declared theta_abserr endpoint
-            term) over every region, and the summed nested-pair estimate over Clenshaw-Curtis
-            fallback regions, respectively. A caller that cannot get more digits can tell from
-            these which source is responsible: a large abserr_resolution means further bisection
-            (a tighter atol/rtol) could still help; a large abserr_roundoff means it cannot.
+            regions, of max(resolution/fallback residual, round-off floor) plus any truncation
+            term (see abserr_truncation below); it is an estimate, not a proven bound.
+          * "abserr_resolution", "abserr_roundoff", "abserr_fallback", "abserr_truncation" --
+            "abserr" broken down by source: the summed step-(4) residual over Levin regions (new
+            as of prompt 04), the summed round-off floor (Chen et al. eq. 151, plus any declared
+            theta_abserr endpoint term) over every region (new as of prompt 04), the summed
+            nested-pair estimate over Clenshaw-Curtis fallback regions (new as of prompt 04), and
+            the summed endpoint contribution of p-modes dropped by the rtol gate on Levin regions
+            (new as of prompt 06, rec 9), respectively. A caller that cannot get more digits can
+            tell from these which source is responsible: a large abserr_resolution means further
+            bisection (a tighter atol/rtol) could still help; a large abserr_roundoff means it
+            cannot; a large abserr_truncation means a smaller rtol would recover more modes.
           * "relerr" -- "abserr" divided by max(|value|, atol).
           * "converged" -- True if "abserr" <= max(atol, rtol*|value|), i.e. whether the request
             was actually met in aggregate. Usually True as of prompt 05 (see the atol note above).

@@ -8,6 +8,7 @@ import numpy as np
 from AdaptiveLevin.levin_quadrature import (
     adaptive_levin_sincos,
     _Basis_SinCos,
+    _adaptive_levin_subregion_impl,
     chebyshev_matrices,
     _cc_weights,
     _roundoff_floor,
@@ -521,6 +522,59 @@ class TestAdaptiveLevinSinCos(unittest.TestCase):
         # flat to within a factor of a few, not the ~500x growth (matching the cell count) that
         # the endpoint model this replaces exhibited over a comparable range (README Sec 2.3g).
         self.assertLess(max(sums) / min(sums), 5.0)
+
+    def test_mode_filter_gates_on_endpoint_not_mean(self):
+        # Prompt 06 (problem (a)) regression: found while verifying this prompt, not
+        # anticipated by the audit's own 400-problem randomised sweep (which reported no case
+        # where the old mean-based gate changed a result). On this region the second
+        # component's collocation-point mean ratio (~2.2e-11) sits *below* rtol=1e-10, while
+        # its endpoint ratio (~1.4e-10) -- the quantity the estimate actually consumes -- sits
+        # *above* it: the old gate would have wrongly discarded a mode the new one correctly
+        # keeps. See prompts/levin-refactor/logs/06-mode-filter.md for the full measurement
+        # (this is the GRZ integral at lambda=1000, restricted to its left half).
+        f = [lambda x: 0.0, lambda x: 1.0 / (1.0 + x * x)]
+        BasisData = _Basis_SinCos({"theta": lambda x: 1000.0 * atan(x)})
+        data = _adaptive_levin_subregion_impl(
+            (-1.0, 0.0), f, BasisData, id_label=None, chebyshev_order=16, rtol=1e-10
+        )
+        self.assertFalse(data["is_direct"])
+        self.assertGreater(data["p_ratios"][1], 1e-10)
+
+    def test_mode_filter_truncation_visible_in_abserr(self):
+        # Prompt 06 (problem (b)): a p-mode dropped by the rtol gate used to vanish from the
+        # region's value with no matching change in abserr -- parent and children apply
+        # identical gating, so the drop is common-mode in the step-(4) residual and subtracts
+        # out exactly. Reproduces the audit's Sec1.5b measurement: a single region (order 16,
+        # phase span >> SIX_PI) whose second (coupled, f2 = 0) component has an endpoint ratio
+        # near 1e-6 -- discarded at rtol = 1e-2, kept at rtol <= 1e-6. See
+        # prompts/levin-refactor/logs/06-mode-filter.md for the full before/after table.
+        a, b = 1.0, 1.0003
+        omega = 1.0e6
+        f = [lambda x: exp(-x), lambda x: 0.0]
+        theta = {"theta": lambda x: omega * x}
+
+        loose = adaptive_levin_sincos(
+            (a, b), f, theta, atol=1e-20, rtol=1e-2, chebyshev_order=16, depth_max=20
+        )
+        tight = adaptive_levin_sincos(
+            (a, b), f, theta, atol=1e-20, rtol=1e-8, chebyshev_order=16, depth_max=20
+        )
+
+        self.assertEqual(loose["num_regions"], 1)
+        self.assertEqual(tight["num_regions"], 1)
+
+        jump = fabs(loose["value"] - tight["value"])
+        self.assertGreater(jump, 0.0)
+
+        # the mode was actually discarded at the loose tolerance ...
+        self.assertGreater(loose["abserr_truncation"], 0.0)
+        # ... and the reported abserr now bounds the value it perturbed -- before this prompt,
+        # abserr stayed near 1e-16 (round-off only) regardless of rtol, while the value itself
+        # jumped by an amount bounded only by rtol; see the log for the actual numbers.
+        self.assertGreaterEqual(loose["abserr"], jump)
+
+        # at a tight tolerance the mode is retained and there is nothing to account for
+        self.assertEqual(tight["abserr_truncation"], 0.0)
 
 
 if __name__ == "__main__":

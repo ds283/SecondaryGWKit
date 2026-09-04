@@ -2,7 +2,7 @@
 
 **Campaign:** [`README.md`](README.md) · **Source audit:** [`docs/adaptive-levin-audit-2026-09.md`](../../docs/adaptive-levin-audit-2026-09.md)
 **Baseline commit:** `c8a1918` (`main`, clean; `AdaptiveLevin/levin_quadrature.py` byte-identical to the audited `68cff5d`)
-**Last updated:** 2026-09-04 — prompt 05 (global tolerance) complete.
+**Last updated:** 2026-09-04 — prompt 06 (mode filter) complete.
 
 > **Maintenance rule.** Every prompt updates this file *in its own commit*, before committing.
 > Set your row's status and the log link, and add or clear entries in §3 (Active issues). Do not
@@ -28,8 +28,8 @@ Legend: ⬜ not started · 🟡 in flight · ✅ complete · ⚠️ complete wit
 | # | Prompt | Audit items | Status | Commit | Log |
 |---|---|---|---|---|---|
 | 04 | [Round-off floor from eq. (151)](04-roundoff-floor.md) | recs 5, 10 · C4, §3.2–§3.4 | ⚠️ | `13773b9` | [04](logs/04-roundoff-floor.md) |
-| 05 | [Make `atol` a global tolerance](05-global-tolerance.md) | rec 8 · C3b | ⚠️ | — (this commit) | [05](logs/05-global-tolerance.md) |
-| 06 | [Fix the `p_use` mode filter](06-mode-filter.md) | rec 9 · C5 | ⬜ | — | — |
+| 05 | [Make `atol` a global tolerance](05-global-tolerance.md) | rec 8 · C3b | ⚠️ | `88f6ab3` | [05](logs/05-global-tolerance.md) |
+| 06 | [Fix the `p_use` mode filter](06-mode-filter.md) | rec 9 · C5 | ✅ | — (this commit) | [06](logs/06-mode-filter.md) |
 
 ### Operational and tuning
 
@@ -45,7 +45,7 @@ Legend: ⬜ not started · 🟡 in flight · ✅ complete · ⚠️ complete wit
 |---|---|---|---|---|---|
 | 10 | [Test matrix and campaign verification](10-test-matrix.md) | rec 16 · C12 | ⬜ | — | — |
 
-**Progress:** 5 / 10 complete.
+**Progress:** 6 / 10 complete.
 
 ---
 
@@ -59,7 +59,7 @@ Traceability from the audit's finding and recommendation IDs to the prompt that 
 | **C2** | **Critical** | Weakly-oscillatory gate uses *net* phase change, not total variation → 1590% error on a phase with an interior stationary point, Levin never invoked | 03 | ✅ |
 | **C3** | High | `atol` is per-region; aggregate `abserr` never compared with the request | 01 (report) + 05 (distribute) | ✅ |
 | **C4** | High | `theta_scale = TWO_PI` hardwired for a range-reduced phase → floor optimistic by up to 10¹⁰; delays `phase_limited` by ~8 decades of `atol` on the production path | 04 | ✅ |
-| **C5** | Medium | `p_use` gates on the *mean* of `\|p\|` but the estimate uses *endpoint* values; makes the value a function of `rtol`; is the mechanism behind C1 | 01 (non-finite half) + 06 (rest) | 🟡 (non-finite half done, rest pending) |
+| **C5** | Medium | `p_use` gates on the *mean* of `\|p\|` but the estimate uses *endpoint* values; makes the value a function of `rtol`; is the mechanism behind C1 | 01 (non-finite half) + 06 (rest) | ✅ |
 | **C6** | Medium | `max_depth` not updated on the fallback branch → depth-limit health warning cannot fire | 01 | ✅ |
 | **C7** | Medium | Fallback regions accepted unconditionally; `quad`'s `abserr` recorded but never tested; global tolerances passed to each small panel | 03 | ✅ |
 | **C8** | Medium | `atol = 0` subdivides without bound (2²⁰ regions at the default depth) | 01 | ✅ |
@@ -78,7 +78,7 @@ Traceability from the audit's finding and recommendation IDs to the prompt that 
 | 6 | Complexify the `(sin, cos)` solve to `N×N`; preallocated assembly | 02 | ✅ |
 | 7 | Sample once → gate on total variation → nested Clenshaw–Curtis fallback → same accept/bisect logic | 03 | ✅ |
 | 8 | Distribute `atol` in proportion to interval length | 05 | ✅ |
-| 9 | Gate `p_use` on endpoint magnitudes; add the discarded contribution to `abserr` | 06 | ⬜ |
+| 9 | Gate `p_use` on endpoint magnitudes; add the discarded contribution to `abserr` | 06 | ✅ |
 | 10 | Retune the phase-error safety factor | 04 (see README §2.4 note 2) | ✅ |
 | 11 | Honest solve counters; rename `evaluations`; return `abserr` components | 07 (+ 04 for the components) | 🟡 (components done, counters/rename pending) |
 | 12 | `seaborn`/`matplotlib` behind `emit_diagnostics`; parameterise paths; `logging` | 07 | ⬜ |
@@ -294,3 +294,17 @@ because something has landed since.
     in practice: `adaptive_levin_sincos((x, x), ...)` fails earlier, inside `build_Levin_data()`,
     with a non-finite-theta-prime `ValueError`, before the driver loop's acceptance test (and hence
     `_local_atol()`) is ever reached. See §3 `[05-zero-width-span-raises]`.
+23. **As of prompt 06, `p_use` (the Levin mode filter) gates on endpoint magnitudes
+    (`\|p_i(a)\| + \|p_i(b)\|`, ratio-to-maximum), not the collocation-point mean it used before.**
+    This is a live distinction, not just a paper one: it was found to flip the accept/reject
+    decision for a genuinely borderline mode on `grz_1000` (a problem already in this campaign's
+    own standard set), changing that problem's returned value at the ~1e-13 level (see prompt 06's
+    log, "A field case where problem (a) changes a result"). The discarded endpoint contribution of
+    any *still-dropped* mode is now a fourth `used_interval`/return-dict component,
+    `abserr_truncation` (always finite, `None` only for a Clenshaw-Curtis fallback region, which
+    has no Levin antiderivative to gate), added into `total_err` alongside the existing
+    `max(resolution/fallback residual, round-off floor)`. **The filter itself was kept, not
+    removed** — measured to fire (and measurably improve accuracy) on an ordinary problem in this
+    campaign's own set (`sin_1_100`, 3.64x closer to the closed form with the filter on than off),
+    while never firing across a 12-combination three-Bessel oracle sweep at production `rtol`. See
+    prompt 06's log, "The open question, answered", for the full evidence and reasoning.
