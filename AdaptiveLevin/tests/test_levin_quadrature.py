@@ -11,6 +11,8 @@ from AdaptiveLevin.levin_quadrature import (
     _cc_weights,
     _roundoff_floor,
     _levin_G0_G1,
+    _detect_vectorized,
+    _sample_vectorized,
 )
 from utilities import format_time
 
@@ -579,6 +581,101 @@ class TestAdaptiveLevinSinCos(unittest.TestCase):
 
         # at a tight tolerance the mode is retained and there is nothing to account for
         self.assertEqual(tight["abserr_truncation"], 0.0)
+
+
+class TestVectorizedSampling(unittest.TestCase):
+    """
+    Prompt 08 (recommendation 14): _sample_vectorized() samples a callable at every point of a
+    grid with one array call in place of a Python loop, when detection (_detect_vectorized())
+    confirms the callable supports it. See prompts/levin-refactor/logs/08-order-and-sampling.md.
+    """
+
+    def test_detects_and_uses_genuinely_vectorized_callable(self):
+        grid = np.linspace(1.0, 5.0, 12)
+
+        def f(x):
+            return np.sin(x) * x
+
+        self.assertTrue(_detect_vectorized(f, grid))
+
+        cache = {}
+        result = _sample_vectorized(f, grid, cache, ("f", id(f)))
+        expected = np.array([f(x) for x in grid])
+        # bit-equal: sampling the same callable at the same points as a single array call or as
+        # an elementwise loop must agree exactly for a callable that does not branch on input type
+        # (verification item 4 of prompt 08).
+        np.testing.assert_array_equal(result, expected)
+        self.assertTrue(cache[("f", id(f))])
+
+    def test_constant_broadcast_is_not_mistaken_for_vectorized(self):
+        # lambda x: 1.0 "vectorises" trivially (it ignores its argument) but returns a bare
+        # float, not an array of the grid's shape, for an array input -- exactly the "silently
+        # broadcasts" failure mode the prior review's Sec 7.6 warns about. Detection must reject
+        # it on the shape check, not accept it and corrupt every non-constant caller that shares
+        # its cache key by coincidence (it does not, since the key includes id(func), but the
+        # rejection itself is the property under test).
+        grid = np.linspace(1.0, 5.0, 12)
+
+        def const_f(x):
+            return 1.0
+
+        self.assertFalse(_detect_vectorized(const_f, grid))
+
+        cache = {}
+        result = _sample_vectorized(const_f, grid, cache, ("f", id(const_f)))
+        np.testing.assert_array_equal(result, np.ones_like(grid))
+        self.assertFalse(cache[("f", id(const_f))])
+
+    def test_scalar_only_callable_falls_back_without_raising(self):
+        # math.atan raises on an array argument (TypeError: only length-1 arrays can be
+        # converted to Python scalars) -- exactly the shape of theta = lambda x: lbda*atan(x)
+        # used by this module's own _GRZIntegral test helper. Detection must catch the failure
+        # and fall back to the loop, not propagate the exception.
+        grid = np.linspace(0.1, 0.9, 12)
+
+        def scalar_only(x):
+            return atan(x)
+
+        self.assertFalse(_detect_vectorized(scalar_only, grid))
+
+        cache = {}
+        result = _sample_vectorized(scalar_only, grid, cache, ("f", id(scalar_only)))
+        expected = np.array([scalar_only(x) for x in grid])
+        np.testing.assert_array_equal(result, expected)
+        self.assertFalse(cache[("f", id(scalar_only))])
+
+    def test_detection_runs_once_per_callable_not_once_per_call(self):
+        grid = np.linspace(1.0, 5.0, 12)
+        calls = {"count": 0}
+
+        def f(x):
+            calls["count"] += 1
+            return np.sin(x)
+
+        cache = {}
+        for _ in range(5):
+            _sample_vectorized(f, grid, cache, ("f", id(f)))
+
+        # one array call to sample the grid, per invocation (5), plus the one-time detection
+        # probe's one array call and two scalar calls -- detection itself must not repeat.
+        self.assertEqual(calls["count"], 5 + 1 + 2)
+
+    def test_end_to_end_value_unchanged_by_vectorized_sampling(self):
+        # A full adaptive_levin_sincos() run with a genuinely vectorizing integrand must return
+        # the same value as the same integral evaluated through the non-vectorizing SincIntegral-
+        # style callables elsewhere in this file -- vectorized sampling is a performance path,
+        # not a numerical one.
+        x_span = (1.0, 100.0)
+        f_vectorized = [lambda x: 1.0 / x, lambda x: 0.0 * x]
+        theta = {"theta": lambda x: 100.0 * x}
+
+        data = adaptive_levin_sincos(
+            x_span, f_vectorized, theta=theta, atol=1e-15, rtol=1e-10, chebyshev_order=12
+        )
+        self.assertTrue(
+            fabs(data["value"] - 0.00866607847) < 1e-10,
+            f"expected {0.00866607847}, obtained {data['value']}",
+        )
 
 
 if __name__ == "__main__":

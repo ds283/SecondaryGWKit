@@ -133,8 +133,21 @@ DEFAULT_LEVIN_NOTIFY_INTERVAL = 5 * 60
 # prompts/levin-refactor/logs/07-diagnostics-hygiene.md.
 DEFAULT_LEVIN_DIAGNOSTICS_PATH = Path("levin_diagnostics")
 
-# default Chebyshev spectral order
-DEFAULT_LEVIN_CHEBSHEV_ORDER = 12
+# default Chebyshev spectral order (recommendation 13). Raised from 12 to 16 in prompt 08
+# (prompts/levin-refactor/logs/08-order-and-sampling.md) after re-measuring order 8/12/16/24/32 on
+# the four AdaptiveLevin/tests/ problems and three three-Bessel oracles the audit's own sec 4.5
+# names: order 16 was faster than 12 on all three three-Bessel oracles (1.4-3.9x, best-of-2) and on
+# every AdaptiveLevin test problem that subdivides at all (fewer regions -> fewer solves), with
+# delivered accuracy against each closed form unaffected (three-Bessel: bit-identical to the
+# reported digits) or improved. The useful band is 12-32: below it (order 8) is worse on every
+# problem measured, sometimes catastrophically (500x on a QuadSourceIntegral-shaped problem -- see
+# the log); above roughly 32 the per-solve cost keeps rising once a problem has already stopped
+# subdividing, for no further accuracy. The optimum depends on how much the amplitude subdivides at
+# a given order, so this is a default, not a universally-best value -- see the log's order-sweep
+# table for the full evidence, including the one place raising the default has a real cost: eq.
+# (151)'s max(G1, k^2)/G0 term rises by (16/12)^2 = 1.78x wherever k^2 > G1, measured in isolation
+# at 1.68x on a region just above the SIX_PI Levin/fallback boundary.
+DEFAULT_LEVIN_CHEBSHEV_ORDER = 16
 _LEVIN_MINIMUM_ALLOWED_ORDER = 8
 
 # default maximum bisection depth. 1/2^20 is roughly 1E-6
@@ -830,6 +843,96 @@ def _cc_weights(x_span: Tuple[float, float], N: int):
     return _cc_weights_base(N) * (np.fabs(b - a) / 2.0)
 
 
+def _detect_vectorized(func, grid: np.ndarray) -> bool:
+    """
+    Probe once whether `func` accepts a whole grid of points as a single array argument and
+    returns an array of the same shape whose entries agree exactly with calling func pointwise
+    (recommendation 14; audit sec 4.1/4.3 -- see _sample_vectorized()).
+
+    Two probe points, not one: a callable that silently broadcasts a scalar result across an
+    array argument instead of evaluating pointwise (e.g. a constant amplitude `lambda x: 1.0`,
+    which several of this module's own tests use) would pass a one-point check trivially. Using
+    two distinct points and requiring exact agreement with the elementwise loop catches that
+    failure mode -- the one the prior review's Sec 7.6 warns "produces silent garbage" -- rather
+    than trusting the shape alone.
+
+    Exceptions from either the scalar or the array call (e.g. math.atan, or any other function
+    that assumes a scalar argument and raises when handed an array) are treated as "does not
+    vectorize", not propagated: this is a capability probe, not a correctness check on `func`
+    itself.
+
+    :param grid: the actual sampling grid this call would use; only its first two points (or
+        fewer, if the grid is shorter) are evaluated.
+    """
+    probe = grid[:2] if grid.size >= 2 else grid
+    try:
+        scalar_values = np.array([func(x) for x in probe], dtype=float)
+    except Exception:
+        return False
+
+    try:
+        vector_values = np.asarray(func(probe))
+    except Exception:
+        return False
+
+    if vector_values.shape != probe.shape:
+        return False
+    if not np.issubdtype(vector_values.dtype, np.number):
+        return False
+    if not np.isfinite(vector_values).all() or not np.isfinite(scalar_values).all():
+        return False
+
+    return bool(np.array_equal(vector_values, scalar_values))
+
+
+def _sample_vectorized(func, grid: np.ndarray, cache: dict, key) -> np.ndarray:
+    """
+    Sample `func` at every point of `grid`, using one array call in place of the Python loop
+    `np.array([func(x) for x in grid])` whenever `func` supports it (recommendation 14).
+
+    Audit sec 4.1/4.3: this loop -- for the amplitude f and, separately, for the phase
+    derivative theta' -- is 20-37% of a subregion evaluation at the default order, more than the
+    linear solve, and drops from 11.7 us to 2.5 us at N=12 (18x at N=64) when the callable
+    accepts an array. Whether it helps in production depends entirely on whether the real
+    callables vectorize -- see prompt 08's log (prompts/levin-refactor/logs/08-order-and-
+    sampling.md) for the measurement on the actual three_bessel_integrals.py /
+    QuadSourceIntegral.py callables (they do not, as of this commit: their phase and modulus
+    splines branch on a scalar argument).
+
+    Detection is by one-time probing (_detect_vectorized()), chosen over an opt-in flag (prior
+    review Sec 7.6) so that a caller whose callables happen to vectorize gets the speedup for
+    free. `cache` is created once per top-level adaptive_levin_sincos() call (in
+    _adaptive_levin()) and threaded down through every subregion solve, so each distinct
+    callable is probed at most once per run, not once per subregion -- the cost of the probe
+    (one array call plus two scalar calls) is paid at most len(f) + 2 times per run, not
+    len(f) + 2 times per region.
+
+    :param cache: a dict, shared across every subregion of one run, mapping `key` to the
+        previously-detected bool. Mutated in place.
+    :param key: a hashable identifying `func` for the lifetime of `cache` -- typically
+        (tag, id(func)). Using id() is safe here only because `cache` (and everything it keys)
+        is discarded at the end of the run that created it, so an id cannot be reused by an
+        unrelated object while the cache is still live.
+    """
+    vectorizes = cache.get(key)
+    if vectorizes is None:
+        vectorizes = _detect_vectorized(func, grid)
+        cache[key] = vectorizes
+
+    if vectorizes:
+        result = np.asarray(func(grid), dtype=float)
+        if result.shape == grid.shape:
+            return result
+        # The grid size changed since detection (e.g. a stepped-down chebyshev_order retry) and
+        # this callable's apparent vectorisation turns out to be shape-dependent after all --
+        # a genuinely vectorizing callable (np.sin and friends) matches any input shape, so this
+        # is itself evidence of a broadcasting bug rather than a fluke. Stop trusting it for the
+        # rest of this run and fall back to the loop, for this call and every later one.
+        cache[key] = False
+
+    return np.array([func(x) for x in grid], dtype=float)
+
+
 class _Basis_SinCos:
     def __init__(self, theta):
         """
@@ -897,6 +1000,7 @@ class _Basis_SinCos:
         notify_label: Optional[str] = None,
         id_label=None,
         need_AmatT: bool = True,
+        vectorize_cache: Optional[dict] = None,
     ):
         """
         Sample the phase function once and build everything derived from that sample: theta',
@@ -911,12 +1015,21 @@ class _Basis_SinCos:
             path (see supports_complexified_solve) needs theta_prime_Cheb directly and never
             needs A^T, so the caller passes False there to skip an O(N^2) allocation that would
             just be discarded.
+        :param vectorize_cache: dict shared across every subregion of the current
+            adaptive_levin_sincos() call, passed straight to _sample_vectorized() to decide
+            whether theta/theta' can be sampled with one array call instead of a Python loop
+            (recommendation 14). None (the default, used by any direct caller that does not
+            thread one through) is equivalent to a fresh, un-shared cache -- correct, just
+            without the cross-region reuse the driver otherwise gets.
         :return: (AmatT, theta_prime_Cheb, w0, wk, phase_span). AmatT is None when need_AmatT is
             False. Prior to prompt 04 this also returned a sixth element, theta_scale, used only
             by the endpoint phase-rounding model that eq. (151) (_roundoff_floor()) replaces as
             the default accuracy floor -- see prompt 04's log for why that model, and the
             inference it required, were removed.
         """
+        if vectorize_cache is None:
+            vectorize_cache = {}
+
         # we need theta sampled on the Chebyshev grid if either (a) we have to obtain theta' by spectral
         # differentiation, or (b) we have no range-reduced phase function and therefore have to evaluate
         # the basis functions from the raw phase at the endpoints.
@@ -929,14 +1042,18 @@ class _Basis_SinCos:
         theta_Cheb = None
         if need_theta_Cheb:
             # sample the phase function theta on the Chebyshev grid
-            theta_Cheb = np.array([self._theta(x) for x in grid])
+            theta_Cheb = _sample_vectorized(
+                self._theta, grid, vectorize_cache, ("theta", id(self))
+            )
 
         if hasattr(self, "_theta_deriv"):
             # prefer an explicitly supplied theta'. At large argument the raw phase theta is a large float
             # whose absolute resolution is ~ eps*theta, so spectral differentiation of the sampled values
             # below inherits an error ~ eps*theta/(phase span across the interval). A phase function that
             # can supply theta' directly (e.g. from a range-reduced spline) does not suffer from this.
-            theta_prime_Cheb = np.array([self._theta_deriv(x) for x in grid])
+            theta_prime_Cheb = _sample_vectorized(
+                self._theta_deriv, grid, vectorize_cache, ("theta_deriv", id(self))
+            )
         else:
             # multiply theta by the spectral differentiation matrix Dmat in order to produce an estimate of theta'(x)
             # evaluated at the collocation points
@@ -1016,6 +1133,7 @@ def _adaptive_levin_subregion(
     notify_label: Optional[str] = None,
     build_p_sample: bool = False,
     diagnostics_path: Path = DEFAULT_LEVIN_DIAGNOSTICS_PATH,
+    vectorize_cache: Optional[dict] = None,
 ):
     working_order = max(chebyshev_order, _LEVIN_MINIMUM_ALLOWED_ORDER)
     num_order_changes = 0
@@ -1041,6 +1159,7 @@ def _adaptive_levin_subregion(
             notify_label=notify_label,
             build_p_sample=build_p_sample,
             diagnostics_path=diagnostics_path,
+            vectorize_cache=vectorize_cache,
         )
         if data["metadata"].get("SVD_failure", False):
             working_order = working_order - 2
@@ -1080,6 +1199,7 @@ def _adaptive_levin_subregion_impl(
     notify_label: Optional[str] = None,
     build_p_sample: bool = False,
     diagnostics_path: Path = DEFAULT_LEVIN_DIAGNOSTICS_PATH,
+    vectorize_cache: Optional[dict] = None,
 ):
     """
     f should be an m-vector of non-rapidly oscillating functions (Levin 96 eq. 2.1)
@@ -1092,8 +1212,16 @@ def _adaptive_levin_subregion_impl(
     :param build_p_sample: retain the sampled Levin antiderivatives p(x)? Only needed for diagnostics
     :param diagnostics_path: directory the lstsq-failure dump (LevinL_*.txt / f_Cheb_*.txt) is
         written under, on the rare path where lstsq itself raises. Not used otherwise.
+    :param vectorize_cache: dict shared across every subregion of the current
+        adaptive_levin_sincos() call (recommendation 14) -- see _sample_vectorized(). None
+        (the default) is safe for a direct caller that does not thread one through; it just
+        means each of this call's f-components is probed for vectorisation on its own rather
+        than sharing a probe with sibling subregions.
     :return:
     """
+    if vectorize_cache is None:
+        vectorize_cache = {}
+
     # This function is on the hottest path in the module -- called once per popped region, plus
     # twice more for its comparison children -- so, unlike the wrapper above, it does not
     # precompute a "label" string here: that would stringify id_label (see _LazyUUID) on every
@@ -1126,6 +1254,7 @@ def _adaptive_levin_subregion_impl(
         notify_label=notify_label,
         id_label=id_label,
         need_AmatT=not use_complex_solve,
+        vectorize_cache=vectorize_cache,
     )
 
     # C2 fix: gate on the phase's *total variation* across the region, not its net change
@@ -1147,12 +1276,18 @@ def _adaptive_levin_subregion_impl(
             theta_prime_Cheb,
             notify_label,
             id_label,
+            vectorize_cache=vectorize_cache,
         )
 
     # sample each component of f on the Chebyshev grid,
     # then assemble the result into a flattened vector in an m x k representation
     # Chen et al. around (166), (167)
-    f_Cheb = np.hstack([[func(x) for x in grid] for func in f])
+    f_Cheb = np.hstack(
+        [
+            _sample_vectorized(func, grid, vectorize_cache, ("f", id(func)))
+            for func in f
+        ]
+    )
 
     if not np.isfinite(f_Cheb).all():
         _logger.warning(
@@ -1426,6 +1561,7 @@ def _adaptive_levin_subregion_cc(
     theta_prime_Cheb: np.ndarray,
     notify_label: Optional[str],
     id_label,
+    vectorize_cache: Optional[dict] = None,
 ):
     """
     Bounded-cost fallback for a region whose total phase variation (phase_span) falls below
@@ -1451,6 +1587,9 @@ def _adaptive_levin_subregion_cc(
         path, "abserr_direct" in place of a p-based estimate, "is_direct": True, and
         "p_sample"/"p_ratios" both None (the Levin antiderivative concept does not apply here).
     """
+    if vectorize_cache is None:
+        vectorize_cache = {}
+
     m = len(f)
     fine_order = 2 * chebyshev_order - 1
 
@@ -1460,7 +1599,12 @@ def _adaptive_levin_subregion_cc(
     # second time.
     fine_grid, _ = chebyshev_matrices(x_span, fine_order)
 
-    f_fine = np.vstack([[func(x) for x in fine_grid] for func in f])
+    f_fine = np.vstack(
+        [
+            _sample_vectorized(func, fine_grid, vectorize_cache, ("f", id(func)))
+            for func in f
+        ]
+    )
 
     if not np.isfinite(f_fine).all():
         _logger.warning(
@@ -1605,6 +1749,12 @@ def _adaptive_levin(
     # case) never pays for one. See _LazyUUID and _format_label().
     id_label = _LazyUUID()
 
+    # Vectorised-sampling detection cache (recommendation 14), created once per top-level call and
+    # threaded to every subregion solve below -- see _sample_vectorized(). Each distinct f
+    # component and phase callable is probed for array support at most once for the life of this
+    # dict, not once per subregion.
+    vectorize_cache: dict = {}
+
     # Resolved once, here, rather than per-subregion-call: every function below that can write a
     # diagnostic file receives this same concrete Path, never None (rec 12, C11 -- see
     # DEFAULT_LEVIN_DIAGNOSTICS_PATH's docstring for why the default is an explicit named
@@ -1692,6 +1842,7 @@ def _adaptive_levin(
                     rtol,
                     notify_label,
                     resolved_diagnostics_path,
+                    vectorize_cache=vectorize_cache,
                 )
 
             last_notify = time.time()
@@ -1785,6 +1936,7 @@ def _adaptive_levin(
                     notify_label=notify_label,
                     build_p_sample=build_p_sample,
                     diagnostics_path=resolved_diagnostics_path,
+                    vectorize_cache=vectorize_cache,
                 )
                 num_evaluations += 1
                 # True-solve accounting (rec 11, C10): only inside this branch, i.e. only when a
@@ -1924,6 +2076,7 @@ def _adaptive_levin(
                 notify_label=notify_label,
                 build_p_sample=build_p_sample,
                 diagnostics_path=resolved_diagnostics_path,
+                vectorize_cache=vectorize_cache,
             )
         except LinAlgError as e:
             _logger.warning(
@@ -1948,6 +2101,7 @@ def _adaptive_levin(
                 notify_label=notify_label,
                 build_p_sample=build_p_sample,
                 diagnostics_path=resolved_diagnostics_path,
+                vectorize_cache=vectorize_cache,
             )
         except LinAlgError as e:
             _logger.warning(
@@ -2366,6 +2520,7 @@ def _write_progress_data(
     rtol: float,
     notify_label: Optional[str] = None,
     diagnostics_path: Path = DEFAULT_LEVIN_DIAGNOSTICS_PATH,
+    vectorize_cache: Optional[dict] = None,
 ):
     # Imported here, not at module scope: this is the only function in the module that uses
     # either, and both are expensive to import (95-97% of this module's own import cost -- see
@@ -2429,6 +2584,7 @@ def _write_progress_data(
             notify_label=notify_label,
             build_p_sample=True,
             diagnostics_path=diagnostics_path,
+            vectorize_cache=vectorize_cache,
         )
         estimate = data["value"]
         region_data["estimate"] = estimate
@@ -2445,6 +2601,7 @@ def _write_progress_data(
             notify_label=notify_label,
             build_p_sample=True,
             diagnostics_path=diagnostics_path,
+            vectorize_cache=vectorize_cache,
         )
         estimateL = dataL["value"]
 
@@ -2458,6 +2615,7 @@ def _write_progress_data(
             notify_label=notify_label,
             build_p_sample=True,
             diagnostics_path=diagnostics_path,
+            vectorize_cache=vectorize_cache,
         )
         estimateR = dataR["value"]
 
@@ -2578,7 +2736,14 @@ def adaptive_levin_sincos(
     :param f: a 2-element sequence of callables [f_sin, f_cos]. f_sin multiplies sin(theta(x)),
         f_cos multiplies cos(theta(x)). This basis is fixed at two components (sin, cos); the
         underlying driver supports an arbitrary number of components for other bases, but this
-        entry point does not expose that.
+        entry point does not expose that. Each of f_sin/f_cos, and the phase callables in theta
+        below, is sampled with a single array call instead of a per-point Python loop
+        (recommendation 14) if a one-time probe (on first use, not on every subregion) finds that
+        the callable accepts an array argument and returns pointwise-correct results -- no flag or
+        opt-in needed. A callable that does not vectorize (e.g. one built on scalar-only branching,
+        as every phase/modulus spline in LiouvilleGreen/ is as of prompt 08 -- see
+        prompts/levin-refactor/logs/08-order-and-sampling.md) is unaffected: detection falls back
+        to the loop and costs one array call plus two scalar calls, once per run.
     :param theta: a dict describing the phase function, with keys:
           * "theta" (required) -- callable, the raw phase theta(x). Always used to decide
             whether a subinterval is oscillatory enough for the Levin rule (via the total phase
@@ -2619,7 +2784,14 @@ def adaptive_levin_sincos(
         per region, unscaled: a relative tolerance is not additive over a partition the way an
         absolute one is, so there is no length-proportional analogue that would mean anything.
     :param chebyshev_order: spectral order used for each Levin subregion collocation grid.
-        Values below 8 are clamped up, with a warning.
+        Values below 8 are clamped up, with a warning. Default 16 (recommendation 13; raised from
+        12 in prompt 08 -- see DEFAULT_LEVIN_CHEBSHEV_ORDER's comment and
+        prompts/levin-refactor/logs/08-order-and-sampling.md for the measurement). 12-32 is the
+        useful band: below it, order 8 was slower on every problem measured (sometimes by two
+        orders of magnitude); above it, a problem that has already stopped subdividing pays a
+        rising per-solve cost for no further accuracy. The optimum is problem-dependent (it tracks
+        how much the amplitude subdivides at a given order), so a caller with an unusually
+        expensive integrand may still want to sweep this rather than trust the default.
     :param depth_max: maximum bisection depth. Must be non-negative.
     :param build_p_sample: if True, retain and return the sampled Levin antiderivatives p(x) on
         every accepted region (diagnostics only; costs additional memory).

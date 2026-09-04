@@ -26,7 +26,25 @@ from utilities import WallclockTimer
 LEVIN_MIN_2PI_CYCLES = 10
 LEVIN_MIN_PHASE_DIFF = LEVIN_MIN_2PI_CYCLES * 2.0 * pi
 
-CHEBYSHEV_ORDER = 64
+# Retuned from 64 to 24 in prompts/levin-refactor's prompt 08 (see
+# prompts/levin-refactor/logs/08-order-and-sampling.md for the measurement). This module has no
+# analytic oracle, so the order was chosen by self-consistency against a synthetic problem built
+# directly from bessel_phase() with the same domain, amplitude form and phase contract (theta +
+# theta_mod_2pi, no theta_deriv) as this file's own nine call sites, swept across three
+# configurations spanning the phase magnitude the LEVIN_MIN_PHASE_DIFF gate below allows (a
+# near-threshold ~14-cycle case up to a ~4.5e6-cycle deep-sub-horizon case). Orders 12 through 64
+# agreed with each other to within their own round-off floor in every configuration -- the same
+# "accuracy is set by the phase/modulus splines, not the spectral order" finding that took
+# three_bessel_integrals.py's DEFAULT_3BESSEL_CHEBYSHEV_ORDER from 64 to 12 in commit cc64ae4, here
+# transferred by self-consistency rather than re-derived against an analytic reference. 24 was
+# chosen over three_bessel_integrals.py's more aggressive 12 specifically because that finding
+# rests on self-consistency here, not an analytic oracle (the audit sec 7 caveat on same-core
+# references applies): at 24 every large-phase configuration measured had already collapsed to its
+# minimal one-region solution (matching order 64's region count while costing 2-2.6x less per
+# solve), whereas order 16 had not always done so. See the log for the full sweep table; this is
+# an "evidence supports choosing an order, not evidence of absolute accuracy" result -- the
+# self-consistency check cannot rule out an order-independent bias shared by every order tested.
+CHEBYSHEV_ORDER = 24
 LEVIN_RELERR = 1e-8
 LEVIN_ABSERR = 1e-23
 

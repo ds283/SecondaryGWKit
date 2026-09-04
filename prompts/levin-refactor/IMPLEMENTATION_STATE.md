@@ -2,7 +2,7 @@
 
 **Campaign:** [`README.md`](README.md) · **Source audit:** [`docs/adaptive-levin-audit-2026-09.md`](../../docs/adaptive-levin-audit-2026-09.md)
 **Baseline commit:** `c8a1918` (`main`, clean; `AdaptiveLevin/levin_quadrature.py` byte-identical to the audited `68cff5d`)
-**Last updated:** 2026-09-04 — prompt 07 (diagnostics hygiene) complete.
+**Last updated:** 2026-09-04 — prompt 08 (spectral order and vectorised sampling) complete.
 
 > **Maintenance rule.** Every prompt updates this file *in its own commit*, before committing.
 > Set your row's status and the log link, and add or clear entries in §3 (Active issues). Do not
@@ -35,8 +35,8 @@ Legend: ⬜ not started · 🟡 in flight · ✅ complete · ⚠️ complete wit
 
 | # | Prompt | Audit items | Status | Commit | Log |
 |---|---|---|---|---|---|
-| 07 | [Diagnostics, logging, import hygiene](07-diagnostics-hygiene.md) | recs 11, 12 · C10, C11 | ⚠️ | — (this commit) | [07](logs/07-diagnostics-hygiene.md) |
-| 08 | [Spectral order and vectorised sampling](08-order-and-sampling.md) | recs 13, 14 · §4.3, §4.5 | ⬜ | — | — |
+| 07 | [Diagnostics, logging, import hygiene](07-diagnostics-hygiene.md) | recs 11, 12 · C10, C11 | ⚠️ | `78cae32` | [07](logs/07-diagnostics-hygiene.md) |
+| 08 | [Spectral order and vectorised sampling](08-order-and-sampling.md) | recs 13, 14 · §4.3, §4.5 | ✅ | — (this commit) | [08](logs/08-order-and-sampling.md) |
 | 09 | [Propagate the error estimate to callers](09-caller-propagation.md) | rec 15 · §3.4 | ⬜ | — | — |
 
 ### Close-out
@@ -45,7 +45,7 @@ Legend: ⬜ not started · 🟡 in flight · ✅ complete · ⚠️ complete wit
 |---|---|---|---|---|---|
 | 10 | [Test matrix and campaign verification](10-test-matrix.md) | rec 16 · C12 | ⬜ | — | — |
 
-**Progress:** 7 / 10 complete.
+**Progress:** 8 / 10 complete.
 
 ---
 
@@ -82,8 +82,8 @@ Traceability from the audit's finding and recommendation IDs to the prompt that 
 | 10 | Retune the phase-error safety factor | 04 (see README §2.4 note 2) | ✅ |
 | 11 | Honest solve counters; rename `evaluations`; return `abserr` components | 07 (+ 04 for the components) | ✅ (see 07's log for the naming deviation: added `num_solves_direct`/`num_solves_lstsq`/`num_solves_pinv`/`num_solves_total`/`num_subregion_solves` rather than repurposing/renaming the existing `num_direct_solves`/`evaluations`, to keep this commit bit-equal and the benchmark harness untouched) |
 | 12 | `seaborn`/`matplotlib` behind `emit_diagnostics`; parameterise paths; `logging` | 07 | ✅ |
-| 13 | Raise the default order to 16; document the 12–32 band | 08 | ⬜ |
-| 14 | Optional vectorised sampling | 08 | ⬜ |
+| 13 | Raise the default order to 16; document the 12–32 band | 08 | ✅ |
+| 14 | Optional vectorised sampling | 08 | ✅ (mechanism in place, unused by production — see log) |
 | 15 | Propagate `abserr` out of the callers | 09 | ⬜ |
 | 16 | Test matrix | distributed + 10 | ⬜ |
 
@@ -355,3 +355,30 @@ because something has landed since.
     `id_label` separately and calls `_format_label()` only at the point a message is actually
     logged. A future new log call site should follow the same pattern, not reintroduce a
     precomputed `label`.
+28. **`DEFAULT_LEVIN_CHEBSHEV_ORDER` is 16 as of prompt 08** (raised from 12; re-measured, not
+    assumed, on the four `AdaptiveLevin/tests/` problems and three three-Bessel oracles -- see
+    prompt 08's log for the full order-sweep table). `_LEVIN_MINIMUM_ALLOWED_ORDER` (8) is
+    unchanged. Separately, `ComputeTargets/QuadSourceIntegral.py`'s own `CHEBYSHEV_ORDER` (all nine
+    call sites pass it explicitly, so it is independent of the module default) is now 24, not 64 --
+    chosen more conservatively than `three_bessel_integrals.py`'s 12 because no analytic oracle
+    exists for this integrand and the evidence is self-consistency only (audit §7's caveat applies
+    in full). **Raising the order has a real, measured cost**: eq. (151)'s `max(G1, k^2)/G0` term
+    scales with `k^2`, so a region whose round-off floor is `k^2`-dominated (small `G1`, i.e. one
+    that only just cleared the `SIX_PI` Levin/fallback gate) now reports a floor `(16/12)^2 = 1.78x`
+    larger than before this prompt -- measured in isolation at 1.68x. This did not show up as a
+    worse *aggregate* `abserr` on any concrete problem measured, because fewer regions at the
+    higher order more than offset it there, but it is not free in principle and a future problem
+    dominated by many such regions could see it.
+29. **`_sample_vectorized(func, grid, cache, key)` and `_detect_vectorized(func, grid)`
+    (`levin_quadrature.py`, just above `_Basis_SinCos`) are the pattern for sampling any
+    caller-supplied callable at every point of a grid, as of prompt 08 (recommendation 14).**
+    Detection (one array call, two scalar calls, checked for shape/dtype/finiteness/exact
+    agreement) runs at most once per distinct callable per `adaptive_levin_sincos()` call, via a
+    `vectorize_cache: dict` created once in `_adaptive_levin()` and threaded through every
+    subregion-solving function and `_Basis_SinCos.build_Levin_data()`. **None of this campaign's
+    production callers vectorize as of this prompt** -- `LiouvilleGreen/bessel_phase.py`'s
+    `XSplineWrapper` and `LiouvilleGreen/phase_spline.py`'s `chunk_spline` both branch on a scalar
+    argument throughout -- so the mechanism is exercised only by its own tests
+    (`TestVectorizedSampling`) and by any future caller supplying genuinely array-capable
+    callables. A future new loop-sampling call site should accept and thread the same
+    `vectorize_cache` rather than sampling in a bare Python loop or inventing a second cache.
