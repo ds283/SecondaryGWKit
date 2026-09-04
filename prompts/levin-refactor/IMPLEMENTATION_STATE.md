@@ -2,7 +2,7 @@
 
 **Campaign:** [`README.md`](README.md) · **Source audit:** [`docs/adaptive-levin-audit-2026-09.md`](../../docs/adaptive-levin-audit-2026-09.md)
 **Baseline commit:** `c8a1918` (`main`, clean; `AdaptiveLevin/levin_quadrature.py` byte-identical to the audited `68cff5d`)
-**Last updated:** 2026-09-04 — prompt 04 (round-off floor from eq. 151) complete.
+**Last updated:** 2026-09-04 — prompt 05 (global tolerance) complete.
 
 > **Maintenance rule.** Every prompt updates this file *in its own commit*, before committing.
 > Set your row's status and the log link, and add or clear entries in §3 (Active issues). Do not
@@ -21,14 +21,14 @@ Legend: ⬜ not started · 🟡 in flight · ✅ complete · ⚠️ complete wit
 |---|---|---|---|---|---|
 | 01 | [Refuse or report](01-refuse-or-report.md) | recs 1–4 · C1, C3a, C6, C8, C9 | ✅ | `0002fb4` | [01](logs/01-refuse-or-report.md) |
 | 02 | [Complexified solve](02-complexified-solve.md) | rec 6 · §4.1, §4.2 | ✅ | `5d5b958` | [02](logs/02-complexified-solve.md) |
-| 03 | [Total-variation gate + nested CC](03-total-variation-gate.md) | rec 7 · C2, C7, §2.2, §2.4 | ✅ | — (this commit) | [03](logs/03-total-variation-gate.md) |
+| 03 | [Total-variation gate + nested CC](03-total-variation-gate.md) | rec 7 · C2, C7, §2.2, §2.4 | ✅ | `c4f2ab8` | [03](logs/03-total-variation-gate.md) |
 
 ### Error estimates
 
 | # | Prompt | Audit items | Status | Commit | Log |
 |---|---|---|---|---|---|
-| 04 | [Round-off floor from eq. (151)](04-roundoff-floor.md) | recs 5, 10 · C4, §3.2–§3.4 | ⚠️ | — (this commit) | [04](logs/04-roundoff-floor.md) |
-| 05 | [Make `atol` a global tolerance](05-global-tolerance.md) | rec 8 · C3b | ⬜ | — | — |
+| 04 | [Round-off floor from eq. (151)](04-roundoff-floor.md) | recs 5, 10 · C4, §3.2–§3.4 | ⚠️ | `13773b9` | [04](logs/04-roundoff-floor.md) |
+| 05 | [Make `atol` a global tolerance](05-global-tolerance.md) | rec 8 · C3b | ⚠️ | — (this commit) | [05](logs/05-global-tolerance.md) |
 | 06 | [Fix the `p_use` mode filter](06-mode-filter.md) | rec 9 · C5 | ⬜ | — | — |
 
 ### Operational and tuning
@@ -45,7 +45,7 @@ Legend: ⬜ not started · 🟡 in flight · ✅ complete · ⚠️ complete wit
 |---|---|---|---|---|---|
 | 10 | [Test matrix and campaign verification](10-test-matrix.md) | rec 16 · C12 | ⬜ | — | — |
 
-**Progress:** 4 / 10 complete.
+**Progress:** 5 / 10 complete.
 
 ---
 
@@ -57,7 +57,7 @@ Traceability from the audit's finding and recommendation IDs to the prompt that 
 |---|---|---|---|---|
 | **C1** | **Critical** | Non-finite amplitude → region contributes exactly 0 with `abserr` exactly 0; caller gets a partial integral certified at machine precision | 01 | ✅ |
 | **C2** | **Critical** | Weakly-oscillatory gate uses *net* phase change, not total variation → 1590% error on a phase with an interior stationary point, Levin never invoked | 03 | ✅ |
-| **C3** | High | `atol` is per-region; aggregate `abserr` never compared with the request | 01 (report) + 05 (distribute) | 🟡 (report done, distribute pending) |
+| **C3** | High | `atol` is per-region; aggregate `abserr` never compared with the request | 01 (report) + 05 (distribute) | ✅ |
 | **C4** | High | `theta_scale = TWO_PI` hardwired for a range-reduced phase → floor optimistic by up to 10¹⁰; delays `phase_limited` by ~8 decades of `atol` on the production path | 04 | ✅ |
 | **C5** | Medium | `p_use` gates on the *mean* of `\|p\|` but the estimate uses *endpoint* values; makes the value a function of `rtol`; is the mechanism behind C1 | 01 (non-finite half) + 06 (rest) | 🟡 (non-finite half done, rest pending) |
 | **C6** | Medium | `max_depth` not updated on the fallback branch → depth-limit health warning cannot fire | 01 | ✅ |
@@ -77,7 +77,7 @@ Traceability from the audit's finding and recommendation IDs to the prompt that 
 | 5 | Replace the endpoint phase floor with eq. (151); add optional `theta_abserr` | 04 | ✅ |
 | 6 | Complexify the `(sin, cos)` solve to `N×N`; preallocated assembly | 02 | ✅ |
 | 7 | Sample once → gate on total variation → nested Clenshaw–Curtis fallback → same accept/bisect logic | 03 | ✅ |
-| 8 | Distribute `atol` in proportion to interval length | 05 | ⬜ |
+| 8 | Distribute `atol` in proportion to interval length | 05 | ✅ |
 | 9 | Gate `p_use` on endpoint magnitudes; add the discarded contribution to `abserr` | 06 | ⬜ |
 | 10 | Retune the phase-error safety factor | 04 (see README §2.4 note 2) | ✅ |
 | 11 | Honest solve counters; rename `evaluations`; return `abserr` components | 07 (+ 04 for the components) | 🟡 (components done, counters/rename pending) |
@@ -131,6 +131,22 @@ falls to the fallback branch (4% at worst, and prompt 03 removes it anyway).
   yet so it has no live consequence. **Impact:** none today. **Next step:** whoever wires up the
   first real `theta_abserr` caller (README §6's `phase_spline` accuracy API) should re-examine
   whether the CC-branch proxy is tight enough once there is a real number to check it against.
+
+- **[05-zero-width-span-raises]** *(opened by prompt 05, 2026-09-04)* — prompt 05's own text assumed
+  "a zero-width span returns 0.0 before the loop" (README's "Reversed spans" note); that early return
+  does not exist. Confirmed empirically: `adaptive_levin_sincos((5.0, 5.0), ...)` raises `ValueError:
+  sampled phase derivative theta' contains non-numeric values` from `build_Levin_data()`, reached
+  *before* the driver loop's acceptance test (and thus before prompt 05's new `_local_atol()`
+  scaling) ever runs. Not a regression from this commit — pre-existing behaviour, reached the same way
+  before and after — and out of prompt 05's scope per README §5 rule 6. `_local_atol()` itself still
+  guards `x_span_width == 0.0` defensively (returns `atol` unscaled) so it cannot divide by zero if
+  this upstream crash is ever relaxed. **Impact:** any caller that can produce a genuinely zero-width
+  `x_span` (e.g. a degenerate sub-interval from an upstream splitting routine) gets an exception, not a
+  0.0 result, contrary to what a reader of this campaign's own planning doc would expect. **Next
+  step:** whoever next touches input validation (`_adaptive_levin`'s `len`/finiteness checks, prompt
+  01's territory) should decide whether a zero-width span should raise (arguably correct — it is
+  almost certainly a caller bug) or return 0.0 (matches the stale premise in the README), and fix the
+  README's "Reversed spans" note either way.
 
 > Add an entry here whenever a prompt finishes with something unresolved: a verification step that
 > could not be run, an assumption that could not be confirmed, a deviation a later prompt has to
@@ -259,3 +275,22 @@ because something has landed since.
     `used_interval` gained matching properties `abserr_resolution`/`abserr_fallback` (type-gated:
     `None` on the wrong region type) and `abserr_roundoff` (an alias for the existing `phase_err`,
     defined on every region type).
+21. **As of prompt 05, `atol` is distributed across subregions by length share, not applied raw.**
+    `_local_atol(atol, a, b, x_span_width)` (`levin_quadrature.py:1329`) returns
+    `atol * |b-a| / x_span_width`, computed once per popped region and used by all three per-region
+    `atol` sites (the acceptance test, the relative-error denominator floor, the `phase_limited`
+    guard) in both the fallback and Levin branches. `rtol` is deliberately **not** scaled -- it stays
+    a raw per-region test, because a relative tolerance has no additive length-proportional analogue.
+    The two post-loop, whole-integral `atol` uses (`relerr_total`'s denominator, and
+    `requested_total` for `converged`) are unchanged and still use the raw, global `atol`. Net
+    effect: `Σ abserr <= atol` holds by construction for a run that terminates normally, so
+    `converged` is now usually `True` (previously it could be `False` on a normal run purely because
+    of region count -- the audit's C3). See prompt 05's log for the full before/after measurement,
+    including the one case where scaling changes cost (a 24-to-32-region problem, 1.31x more
+    evaluations for a correctly-certified error bound) and the cases where it is a no-op (any
+    problem resolving in 1-2 regions, where `local_atol ~= atol` regardless of the nominal value).
+22. **A zero-width `x_span` raises, it does not return 0.0.** `_local_atol()` guards its own division
+    against `x_span_width == 0.0` (returns `atol` unscaled), but that guard is currently unreachable
+    in practice: `adaptive_levin_sincos((x, x), ...)` fails earlier, inside `build_Levin_data()`,
+    with a non-finite-theta-prime `ValueError`, before the driver loop's acceptance test (and hence
+    `_local_atol()`) is ever reached. See §3 `[05-zero-width-span-raises]`.

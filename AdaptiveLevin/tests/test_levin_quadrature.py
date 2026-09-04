@@ -277,8 +277,12 @@ class TestAdaptiveLevinSinCos(unittest.TestCase):
         )
         self.assertTrue(data["converged"])
 
-        # C3: reproduced at HEAD as reporting abserr=1.26e-10 at atol=1e-10, exceeding what was
-        # requested, with nothing previously indicating it.
+        # C3: before prompt 05, this reproduced at HEAD as reporting abserr=1.26e-10 at
+        # atol=1e-10, exceeding what was requested, with nothing previously indicating it (the
+        # per-region acceptance test compared each region's residual against atol directly, so
+        # the summed abserr scaled with the number of accepted regions). As of prompt 05, atol is
+        # distributed across regions by length share, so the summed abserr is bounded by atol by
+        # construction and this now converges.
         def gaussian_bump(x):
             return exp(-400.0 * (x - 1.1) ** 2)
 
@@ -288,7 +292,8 @@ class TestAdaptiveLevinSinCos(unittest.TestCase):
         data_bump = adaptive_levin_sincos(
             (0.0, 3.0), f_bump, theta={"theta": theta_bump}, atol=1e-10
         )
-        self.assertFalse(data_bump["converged"])
+        self.assertTrue(data_bump["converged"])
+        self.assertLess(data_bump["abserr"], 1e-10)
 
     def test_chebyshev_nesting(self):
         # prompt 03: the N-point extremal Chebyshev grid must be exactly every other node of the

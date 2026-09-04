@@ -1326,6 +1326,28 @@ def _adaptive_levin_subregion_cc(
     }
 
 
+def _local_atol(atol: float, a: float, b: float, x_span_width: float) -> float:
+    """
+    Scale the caller's atol by this region's share of the original integration interval's length
+    (rec 8, C3b). Summing abserr over regions whose acceptance test uses this scaled value bounds
+    the total by atol, by construction, because the length fractions of a partition sum to one.
+
+    x_span_width is |b0 - a0| for the original x_span passed to _adaptive_levin, computed once
+    before the driver loop starts; a and b are the current region's endpoints, in either order
+    (Chen et al. step (4) does not require a < b).
+
+    A zero-width x_span_width falls back to the unscaled atol rather than dividing by zero. That
+    case is not otherwise guarded against here -- a zero-width call currently fails earlier, in
+    build_Levin_data(), with a non-finite-theta-prime ValueError, before this function is ever
+    reached -- but the fallback keeps this function itself total, and it would be the mathematically
+    correct answer (fraction 1.0, since a zero-width original span can contain only a zero-width
+    region) if that earlier failure were ever relaxed.
+    """
+    if x_span_width == 0.0:
+        return atol
+    return atol * (np.fabs(b - a) / x_span_width)
+
+
 def _adaptive_levin(
     x_span: Tuple[float, float],
     f,
@@ -1391,6 +1413,10 @@ def _adaptive_levin(
 
     regions = [_levin_interval(start=x_span[0], end=x_span[1], depth=0)]
 
+    # Original interval width, used by _local_atol() to distribute atol across subregions in
+    # proportion to their share of it (rec 8, C3b) -- see that function's docstring.
+    x_span_width = np.fabs(x_span[1] - x_span[0])
+
     val = 0.0
     used_regions = []
     p_points = []
@@ -1447,6 +1473,12 @@ def _adaptive_levin(
         current_region = regions.pop()
         a = current_region.start
         b = current_region.end
+
+        # atol scaled by this region's share of the original interval (rec 8, C3b); used by the
+        # acceptance test, the relative-error denominator floor and the phase_limited guard below,
+        # in both the fallback and Levin branches. rtol is deliberately not scaled here -- see the
+        # module docstring and adaptive_levin_sincos()'s :param atol: note for why.
+        local_atol = _local_atol(atol, a, b, x_span_width)
 
         # updated here, unconditionally, rather than only on the branch that accepts a Levin
         # region: the direct-quadrature branch below `continue`s before reaching that branch, so
@@ -1543,12 +1575,12 @@ def _adaptive_levin(
             estimate = data["value"]
             abserr = data["abserr_direct"]
 
-            relerr_denom = max(np.fabs(estimate), atol)
+            relerr_denom = max(np.fabs(estimate), local_atol)
             relerr = abserr / relerr_denom
 
             phase_err = data.get("phase_err", 0.0) or 0.0
 
-            resolved = abserr < atol or relerr < rtol
+            resolved = abserr < local_atol or relerr < rtol
 
             # same precision-limited logic as the Levin branch below, adapted: a fallback region
             # has no step-(4) residual, so its own nested-pair abserr stands in for it. The
@@ -1560,7 +1592,7 @@ def _adaptive_levin(
             # and phase_limited would fire on every such region regardless of resolution.
             phase_limited = (
                 np.isfinite(phase_err)
-                and phase_err > atol
+                and phase_err > local_atol
                 and phase_err > rtol * relerr_denom
                 and abserr <= phase_err
             )
@@ -1665,9 +1697,10 @@ def _adaptive_levin(
         # and there min(|estimate|, |refined_estimate|) is arbitrarily small, so relerr blows up
         # even though the region is perfectly well resolved -- driving subdivision to depth_max for
         # no gain. Below the requested absolute tolerance a relative test is meaningless anyway, so
-        # floor the denominator at atol. (min() rather than max() of the two estimates is retained:
-        # it is the more conservative choice.)
-        relerr_denom = max(min(np.fabs(estimate), np.fabs(refined_estimate)), atol)
+        # floor the denominator at local_atol -- the same length-scaled tolerance the acceptance
+        # test below uses (rec 8, C3b), so the two stay self-consistent. (min() rather than max()
+        # of the two estimates is retained: it is the more conservative choice.)
+        relerr_denom = max(min(np.fabs(estimate), np.fabs(refined_estimate)), local_atol)
         relerr = abserr / relerr_denom
 
         # Round-off floor for this region, from the parent estimate: it is the parent's endpoints
@@ -1695,7 +1728,7 @@ def _adaptive_levin(
         # because its floor sits above atol, which would lose real accuracy.
         phase_limited = (
             np.isfinite(phase_err)
-            and phase_err > atol
+            and phase_err > local_atol
             and phase_err > rtol * relerr_denom
             and abserr <= phase_err
         )
@@ -1704,7 +1737,7 @@ def _adaptive_levin(
         # also admitted, and regions whose accuracy is set by phase rounding rather than by lack
         # of resolution are accepted rather than subdivided.
         # Terminate in any case if we exceed the specified number of bisections.
-        resolved = abserr < atol or relerr < rtol
+        resolved = abserr < local_atol or relerr < rtol
 
         # Only report the region as phase-limited if the floor actually capped it, i.e. the
         # tolerance was *not* otherwise met. Eq. (151) (_roundoff_floor()) is a worst-case bound
@@ -1816,11 +1849,14 @@ def _adaptive_levin(
     # guarded exactly as the per-region relative test is guarded, and for the same reason
     relerr_total = abserr_total / max(np.fabs(val), atol)
 
-    # Honest-aggregate check (rec 2, C3). Region acceptance at step (4) tests each region's own
-    # abserr/relerr against atol/rtol, so the *summed* abserr_total scales with the number of
-    # accepted regions and was never itself compared with what the caller actually asked for.
-    # Report whether the aggregate in fact meets the request; this does not change what gets
-    # accepted (that is prompt 05's distribute-atol-by-length change), only what gets reported.
+    # Honest-aggregate check (rec 2, C3). As of prompt 05, region acceptance at step (4) tests each
+    # region's residual against atol scaled by its own share of the original interval length
+    # (_local_atol()), so the *summed* abserr_total is bounded by atol by construction (the length
+    # fractions of a partition sum to one) -- converged should now almost always be True for a run
+    # that terminates normally. It can still be False: a region accepted unconverged at depth_max
+    # (the health check below), or a region whose round-off floor (Chen et al. eq. 151) exceeds its
+    # local_atol share, can each still push the sum over the top. Report whether the aggregate in
+    # fact meets the request; this is a report, not an additional acceptance criterion.
     requested_total = max(atol, rtol * np.fabs(val))
     converged = abserr_total <= requested_total
     if not converged:
@@ -1830,8 +1866,10 @@ def _adaptive_levin(
             f"(atol={atol:.3g}, rtol={rtol:.3g})"
         )
         print(
-            "   -- atol is currently a per-region tolerance, so the delivered error grows with "
-            "the number of accepted regions; consider a tighter atol/rtol"
+            "   -- atol is distributed across subintervals by length share, so this usually means "
+            "a region hit depth_max unresolved, or the round-off floor (Chen et al. eq. 151) "
+            "exceeds its share of atol; consider a tighter atol/rtol, a larger depth_max, or a "
+            "smaller chebyshev_order"
         )
 
     # Health check. If neither atol nor rtol is attainable -- typically because the caller has asked for
@@ -1892,9 +1930,11 @@ def _adaptive_levin(
         "abserr_resolution": float(abserr_resolution_total),
         "abserr_roundoff": float(abserr_roundoff_total),
         "abserr_fallback": float(abserr_fallback_total),
-        # True if the aggregate abserr actually meets max(atol, rtol*|value|). atol is currently
-        # a per-region tolerance (prompt 05 changes this), so this can be False even though every
-        # individual region met its own test -- see the warning printed above.
+        # True if the aggregate abserr actually meets max(atol, rtol*|value|). As of prompt 05,
+        # atol is distributed across subintervals by length share (_local_atol()), so this is
+        # usually True by construction for a run that terminates normally; see the warning printed
+        # above for the remaining ways it can be False (depth_max reached unresolved, or the
+        # round-off floor exceeding a region's share of atol).
         "converged": bool(converged),
         # True if at least one accepted region was limited by the round-off floor rather than by
         # resolution. When this is set, the requested tolerance was not attainable at this
@@ -2184,14 +2224,18 @@ def adaptive_levin_sincos(
             Nothing in LiouvilleGreen/ supplies this today; it ships unused by production callers
             pending phase_spline.py growing an accuracy API of its own (README Sec 6 of the
             levin-refactor campaign).
-    :param atol: requested absolute tolerance. Must be strictly positive: this module cannot
-        deliver a purely relative-error contract because its round-off error floor (Chen et al.
-        eq. 151) is absolute by construction. NOTE: atol is currently applied as a *per-region*
-        tolerance, and the returned "abserr" is a sum over accepted regions, so the delivered
-        accuracy degrades with the number of regions the driver needs. The returned "converged"
-        flag reports whether the aggregate in fact met max(atol, rtol*|value|); a future change
-        will distribute atol across regions so that "converged" is usually true by construction.
-    :param rtol: requested relative tolerance. Must be non-negative.
+    :param atol: requested absolute tolerance on the *summed* result. Must be strictly positive:
+        this module cannot deliver a purely relative-error contract because its round-off error
+        floor (Chen et al. eq. 151) is absolute by construction. As of prompt 05, each subregion's
+        acceptance test is against atol scaled by that region's share of the original x_span's
+        length (rec 8, C3b) rather than against atol directly, so the sum of accepted-region
+        residuals is bounded by atol by construction (the length fractions of a partition sum to
+        one) -- the returned "converged" flag is now usually True for a run that terminates
+        normally. It can still be False if a region is accepted unresolved at depth_max, or if a
+        region's round-off floor exceeds its length-scaled share of atol; see "converged" below.
+    :param rtol: requested relative tolerance. Must be non-negative. Unlike atol, rtol is applied
+        per region, unscaled: a relative tolerance is not additive over a partition the way an
+        absolute one is, so there is no length-proportional analogue that would mean anything.
     :param chebyshev_order: spectral order used for each Levin subregion collocation grid.
         Values below 8 are clamped up, with a warning.
     :param depth_max: maximum bisection depth. Must be non-negative.
@@ -2216,7 +2260,7 @@ def adaptive_levin_sincos(
             (a tighter atol/rtol) could still help; a large abserr_roundoff means it cannot.
           * "relerr" -- "abserr" divided by max(|value|, atol).
           * "converged" -- True if "abserr" <= max(atol, rtol*|value|), i.e. whether the request
-            was actually met in aggregate (see the atol caveat above).
+            was actually met in aggregate. Usually True as of prompt 05 (see the atol note above).
           * "phase_limited" -- True if at least one accepted region's achievable accuracy was set
             by the round-off floor rather than by lack of resolution; tightening atol/rtol will
             not help such regions -- see abserr_roundoff above.
