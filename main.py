@@ -57,7 +57,9 @@ from config.sharding import (
     shard_key_wavenumber_store_id,
     shard_key_type,
     read_table_config,
+    inventory_config,
 )
+from tools.inventory_report import format_inventory_report
 from utilities import grouper, format_time, WallclockTimer
 
 DEFAULT_LABEL = "SecondaryGWKit-test"
@@ -199,6 +201,18 @@ parser.add_argument(
     default=DEFAULT_RAY_ADDRESS,
     type=str,
     help="specify address of Ray cluster",
+)
+parser.add_argument(
+    "--inventory",
+    action="store_true",
+    default=False,
+    help="report the contents of the datastore, grouped by category, and exit without running any compute",
+)
+parser.add_argument(
+    "--inventory-verbose",
+    action="store_true",
+    default=False,
+    help="with --inventory, print full label/value lists instead of truncating them",
 )
 args = parser.parse_args()
 
@@ -2520,7 +2534,14 @@ with ShardedPool(
     prune_unvalidated=args.prune_unvalidated,
     drop_actions=drop_actions,
     read_table_config=read_table_config,
+    inventory_config=inventory_config,
 ) as pool:
+
+    if args.inventory:
+        print(
+            format_inventory_report(pool, args.database, verbose=args.inventory_verbose)
+        )
+        sys.exit()
 
     # set up LambdaCDM object representing a basic Planck2018 cosmology in Mpc units
 

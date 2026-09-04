@@ -2,7 +2,7 @@
 
 **Campaign:** [`README.md`](README.md) · **Source audit:** [`docs/backport-modules-audit.md`](../../docs/backport-modules-audit.md)
 **Baseline commit:** `79f0360` (`main`, clean)
-**Last updated:** 2026-09-04 — after prompt 08
+**Last updated:** 2026-09-04 — after prompt 09 (F2 complete end to end)
 
 > **Maintenance rule.** Every prompt updates this file *in its own commit*, before committing.
 > Set your row's status, fill in the commit SHA and the log link, and add or clear entries in
@@ -31,7 +31,7 @@ Legend: ⬜ not started · 🟡 in flight · ✅ complete · ⚠️ complete wit
 | 06 | [Inventory plumbing](06-inventory-plumbing.md) | F2a | ✅ | *(SHA intentionally not embedded — see §5 note 11)* | [log](logs/06-inventory-plumbing.md) |
 | 07 | [Replicated factories](07-inventory-replicated-factories.md) | F2b | ✅ | *(SHA intentionally not embedded — see §5 note 11)* | [log](logs/07-inventory-replicated-factories.md) |
 | 08 | [Sharded factories + merge config](08-inventory-sharded-factories.md) | F2c | ✅ | *(SHA intentionally not embedded — see §5 note 11)* | [log](logs/08-inventory-sharded-factories.md) |
-| 09 | [Inventory reporting](09-inventory-reporting.md) | F2d | ⬜ | — | — |
+| 09 | [Inventory reporting](09-inventory-reporting.md) | F2d | ✅ | *(SHA intentionally not embedded — see §5 note 11)* | [log](logs/09-inventory-reporting.md) |
 
 ### Close-out
 
@@ -39,7 +39,7 @@ Legend: ⬜ not started · 🟡 in flight · ✅ complete · ⚠️ complete wit
 |---|---|---|---|---|---|
 | 10 | [Verification pass](10-verification.md) | audit §8 + F2 | ⬜ | — | — |
 
-**Progress:** 8 / 10 complete.
+**Progress:** 9 / 10 complete. F2 (`inventory()` sub-campaign, prompts 06–09) is complete end to end.
 
 ---
 
@@ -64,7 +64,7 @@ Traceability from the audit's finding IDs to the prompt that discharges them.
 | F2a | Feature | `inventory()` plumbing: `Datastore`, `ShardedPool`, `_merge_queue`, numeric merge policies | 06 | ✅ |
 | F2b | Feature | `inventory()` on the 13 replicated-table factories | 07 | ✅ |
 | F2c | Feature | `inventory()` on the 15 sharded-table factories + `inventory_config` | 08 | ✅ |
-| F2d | Feature | Inventory reporting entry point | 09 | ⬜ |
+| F2d | Feature | Inventory reporting entry point | 09 | ✅ |
 
 **Explicitly not backported** (audit §5 — do not schedule these): X1, X2, X3, X4.
 **Out of scope:** F4 (licence headers — repo-wide or not at all; see `README.md` §6).
@@ -134,6 +134,21 @@ Traceability from the audit's finding IDs to the prompt that discharges them.
   `TkNumericIntegration`; a Group B flat class, e.g. `GkSourcePolicyData`; a Group C count-only
   class, e.g. `TkNumericValue`), confirming counts are summed and label lists/timestamp ranges span
   all shards, not just one.
+  **Partially closed by prompt 09** — building the real end-to-end reporting path required a real,
+  Ray-actor-backed, multi-shard `ShardedPool` anyway, and it turns out a local `ray.init()` (no
+  pre-existing cluster) is sufficient (see [log](logs/09-inventory-reporting.md) §State handed to the
+  next prompt — every earlier prompt's "no live Ray cluster available" framing was about connecting to
+  an *existing* cluster, not about whether one could be started locally). Against that real pool,
+  prompt 09 confirmed the **Group C count-only case live**: synthetic rows inserted directly into the
+  real `TkNumericValue` table across two genuine shard files, `pool.inventory("TkNumericValue")`
+  returning `{"count": 11}` via the real `ray.get([shard.inventory.remote(...) ...])` fan-out, cross-
+  checked against `SELECT COUNT(*)` summed by hand on each shard file (7 + 4 = 11). **Still
+  outstanding:** a live Group A (labelled, e.g. `TkNumericIntegration`) and Group B (flat-with-
+  timestamps, e.g. `GkSourcePolicyData`) class were only exercised against empty shards in prompt 09's
+  run (populating either for real needs actual physics compute, out of scope there) — prompt 10 can
+  close the remainder by inserting synthetic rows for one class in each of those two groups the same
+  way prompt 09 did for `TkNumericValue`, now that the harness pattern (local `ray.init()` + direct
+  shard-file SQL inserts + `pool.inventory(...)`) is established and confirmed to work.
 
 > Add an entry here whenever a prompt finishes with something unresolved: a verification step that
 > could not be run, an assumption that could not be confirmed, a deviation that a later prompt has
@@ -276,3 +291,29 @@ re-deriving.
     column (silently dropped by SQLAlchemy Core, confirmed harmless, not fixed — see the log's
     Observations section) — `OneLoopIntegral` correctly has no validated/unvalidated split despite
     that string appearing in the file.
+14. **F2 is complete end to end as of prompt 09 — see [log](logs/09-inventory-reporting.md) for the
+    full report contract.** `main.py --inventory` (with `--inventory-verbose` for untruncated
+    label/value lists) reports and exits without running any compute; the formatting logic lives in
+    `tools/inventory_report.py` (a new package — `tools/__init__.py` was added, since `tools/` had
+    none before). Two facts worth carrying into prompt 10:
+    - **`main.py` never passed `inventory_config` to `ShardedPool(...)` before this prompt** — prompt
+      06 added the constructor parameter and prompt 08 populated the config dict, but no prompt wired
+      the one production call site to actually use it. Fixed in prompt 09's own commit (it is the
+      first thing that calls `pool.inventory()` from `main.py` at all, so there was nothing to leave
+      alone). If any other config value is ever added to `ShardedPool.__init__`'s signature in a
+      future prompt, check `main.py`'s call site is updated in the *same* commit — this is the second
+      time a constructor parameter and its call-site wiring have landed in different commits (see
+      also `read_table_config`, which was wired correctly, for contrast).
+    - **A local `ray.init()` (no `address=`, no pre-existing cluster) successfully starts a real,
+      multi-actor Ray runtime in this environment** — prompts 01/04/05/06/08 all recorded "no live Ray
+      cluster available" and fell back to hand-simulated or non-Ray-wrapped verification. That was
+      true for *connecting to an existing cluster* but nobody had tried starting a fresh local one
+      until prompt 09, which used exactly that to build a real 2-shard `ShardedPool` and exercise the
+      genuine `ray.get([shard.X.remote(...) ...])` fan-out end to end. **This likely unblocks the
+      live-Ray verification steps still outstanding in the `[01-shard-key-persistence]`,
+      `[04-read-table-service]`, `[05-persist-handler-split]`, and (partially)
+      `[08-inventory-sharded-factories]` issues in §3** — prompt 10 should try a local `ray.init()`
+      before assuming any of those checks are out of reach. One caveat: `ShardedPool` registers its
+      broker actor under the fixed name `"SerialPoolBroker"`, so only one `ShardedPool` can exist per
+      Ray runtime at a time — building a second one in the same process needs `ray.shutdown()` /
+      fresh `ray.init()` first.
