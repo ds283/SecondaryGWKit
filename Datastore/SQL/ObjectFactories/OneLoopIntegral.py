@@ -248,6 +248,29 @@ class sqla_OneLoopIntegral_factory(SQLAFactoryBase):
 
         return obj
 
+    @staticmethod
+    def inventory(conn, table, tables, *args, **kwargs):
+        # despite store() passing a "validated" key when inserting, this
+        # table has no "validated" column in register() -- the key is
+        # silently dropped by SQLAlchemy Core's insert() (verified: an
+        # unmatched dict key raises no error), so there is no validated/
+        # unvalidated split to report here, unlike the compute-target
+        # tables. This table can be numerous, so we report a row count and
+        # timestamp range rather than a label list.
+        count = conn.execute(sqla.select(sqla.func.count()).select_from(table)).scalar()
+        earliest_timestamp = conn.execute(
+            sqla.select(sqla.func.min(table.c.timestamp))
+        ).scalar()
+        latest_timestamp = conn.execute(
+            sqla.select(sqla.func.max(table.c.timestamp))
+        ).scalar()
+
+        return {
+            "count": count,
+            "earliest_timestamp": earliest_timestamp,
+            "latest_timestamp": latest_timestamp,
+        }
+
 
 def read_batch(payload, conn, table, tables):
     model_proxy: ModelProxy = payload["model"]

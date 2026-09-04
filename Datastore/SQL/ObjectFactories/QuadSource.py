@@ -465,6 +465,42 @@ class sqla_QuadSource_factory(SQLAFactoryBase):
 
         return msgs
 
+    @staticmethod
+    def inventory(conn, table, tables, *args, **kwargs):
+        def _bucket(validated_value: bool):
+            condition = table.c.validated == validated_value
+
+            rows = conn.execute(
+                sqla.select(
+                    table.c.model_serial,
+                    table.c.q_wavenumber_exit_serial,
+                    table.c.r_wavenumber_exit_serial,
+                ).where(condition)
+            )
+            labels = [
+                f"model={row.model_serial}, q_wavenumber_exit={row.q_wavenumber_exit_serial}, "
+                f"r_wavenumber_exit={row.r_wavenumber_exit_serial}"
+                for row in rows
+            ]
+
+            earliest_timestamp = conn.execute(
+                sqla.select(sqla.func.min(table.c.timestamp)).where(condition)
+            ).scalar()
+            latest_timestamp = conn.execute(
+                sqla.select(sqla.func.max(table.c.timestamp)).where(condition)
+            ).scalar()
+
+            return {
+                "labels": labels,
+                "earliest_timestamp": earliest_timestamp,
+                "latest_timestamp": latest_timestamp,
+            }
+
+        return {
+            "validated": _bucket(True),
+            "unvalidated": _bucket(False),
+        }
+
 
 class sqla_QuadSourceValue_factory(SQLAFactoryBase):
     def __init__(self):
@@ -722,3 +758,13 @@ class sqla_QuadSourceValue_factory(SQLAFactoryBase):
         obj._q_exit = q
         obj._r_exit = r
         return obj
+
+    @staticmethod
+    def inventory(conn, table, tables, *args, **kwargs):
+        # registered "timestamp": False -- this is a high-volume child table
+        # (one row per (source, z) sample point), so the only meaningful
+        # inventory is a row count, computed with a SQL aggregate rather than
+        # by loading every row into the driver
+        count = conn.execute(sqla.select(sqla.func.count()).select_from(table)).scalar()
+
+        return {"count": count}

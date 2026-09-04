@@ -2,7 +2,7 @@
 
 **Campaign:** [`README.md`](README.md) · **Source audit:** [`docs/backport-modules-audit.md`](../../docs/backport-modules-audit.md)
 **Baseline commit:** `79f0360` (`main`, clean)
-**Last updated:** 2026-09-04 — after prompt 07
+**Last updated:** 2026-09-04 — after prompt 08
 
 > **Maintenance rule.** Every prompt updates this file *in its own commit*, before committing.
 > Set your row's status, fill in the commit SHA and the log link, and add or clear entries in
@@ -30,7 +30,7 @@ Legend: ⬜ not started · 🟡 in flight · ✅ complete · ⚠️ complete wit
 |---|---|---|---|---|---|
 | 06 | [Inventory plumbing](06-inventory-plumbing.md) | F2a | ✅ | *(SHA intentionally not embedded — see §5 note 11)* | [log](logs/06-inventory-plumbing.md) |
 | 07 | [Replicated factories](07-inventory-replicated-factories.md) | F2b | ✅ | *(SHA intentionally not embedded — see §5 note 11)* | [log](logs/07-inventory-replicated-factories.md) |
-| 08 | [Sharded factories + merge config](08-inventory-sharded-factories.md) | F2c | ⬜ | — | — |
+| 08 | [Sharded factories + merge config](08-inventory-sharded-factories.md) | F2c | ✅ | *(SHA intentionally not embedded — see §5 note 11)* | [log](logs/08-inventory-sharded-factories.md) |
 | 09 | [Inventory reporting](09-inventory-reporting.md) | F2d | ⬜ | — | — |
 
 ### Close-out
@@ -39,7 +39,7 @@ Legend: ⬜ not started · 🟡 in flight · ✅ complete · ⚠️ complete wit
 |---|---|---|---|---|---|
 | 10 | [Verification pass](10-verification.md) | audit §8 + F2 | ⬜ | — | — |
 
-**Progress:** 7 / 10 complete.
+**Progress:** 8 / 10 complete.
 
 ---
 
@@ -63,7 +63,7 @@ Traceability from the audit's finding IDs to the prompt that discharges them.
 | E1 | Feature | `store_handler` / `persist_handler` split in `RayWorkPool` — **confirmed wanted** | 05 | ✅ |
 | F2a | Feature | `inventory()` plumbing: `Datastore`, `ShardedPool`, `_merge_queue`, numeric merge policies | 06 | ✅ |
 | F2b | Feature | `inventory()` on the 13 replicated-table factories | 07 | ✅ |
-| F2c | Feature | `inventory()` on the 15 sharded-table factories + `inventory_config` | 08 | ⬜ |
+| F2c | Feature | `inventory()` on the 15 sharded-table factories + `inventory_config` | 08 | ✅ |
 | F2d | Feature | Inventory reporting entry point | 09 | ⬜ |
 
 **Explicitly not backported** (audit §5 — do not schedule these): X1, X2, X3, X4.
@@ -115,6 +115,25 @@ Traceability from the audit's finding IDs to the prompt that discharges them.
   prompt 10 should run at least one real (or minimal) Ray-backed `RayWorkPool` with default handlers
   and confirm results are stored identically to a pre-split baseline (or, if no baseline is
   practical, confirm the stored objects are correct against a direct datastore query).
+
+- **[08-inventory-sharded-factories]** *(opened by prompt 08, 2026-09-04)* — Verification step 5
+  (call `pool.inventory(...)` for one class from each of the three groups against a real multi-shard
+  datastore and confirm the merge produces sensible values, in particular that a `count` is summed
+  across shards) needs a live Ray cluster and was not exercised end-to-end through
+  `ShardedPool.inventory()` itself. It **was** exercised against the real `ShardedPool._merge_queue`
+  and the real per-shard `factory.inventory()` output, reproducing `ShardedPool.inventory()`'s
+  dispatch logic (label sniff, per-label merge) by hand against two independent in-memory SQLite
+  "shards" instead of `ray.get([shard.inventory.remote(...) ...])` — see
+  [log](logs/08-inventory-sharded-factories.md) §Verification item 5 for one class from each group,
+  including confirming `count` is genuinely summed (5 = 3+2, 11 = 7+4) rather than reflecting one
+  shard. **Impact:** behavioural confirmation of the full `ShardedPool.inventory()` fan-out
+  (`ray.get` over real shard actors) is outstanding — same class of gap as
+  `[01-shard-key-persistence]`, `[04-read-table-service]`, and `[05-persist-handler-split]` above.
+  **Next step:** prompt 10 should build a real (or minimal) multi-shard `ShardedPool` and call
+  `pool.inventory(...)` for at least one class per group (a Group A labelled class, e.g.
+  `TkNumericIntegration`; a Group B flat class, e.g. `GkSourcePolicyData`; a Group C count-only
+  class, e.g. `TkNumericValue`), confirming counts are summed and label lists/timestamp ranges span
+  all shards, not just one.
 
 > Add an entry here whenever a prompt finishes with something unresolved: a verification step that
 > could not be run, an assumption that could not be confirmed, a deviation that a later prompt has
@@ -243,3 +262,17 @@ re-deriving.
     `ShardedPool.inventory`'s replicated-class branch `ray.get`s and returns a **value**, not an
     `ObjectRef` (asymmetric with `read_table`) — prompt 09 can call `pool.inventory(...)` directly for
     either kind of class with no `ray.get` of its own.
+13. **`inventory()` on all 15 sharded factories (prompt 08) is complete, and `config/sharding.py`
+    now exports `inventory_config` for all 15 — see
+    [log](logs/08-inventory-sharded-factories.md) for the full contract.** Load-bearing facts for
+    prompt 09: every Group A/B class's `labels`/count fields carry **unresolved foreign-key
+    serials**, not human-readable values (e.g. `"wavenumber_exit=1, model=1, atol=1, rtol=1"`) —
+    resolving them to physical values is left to prompt 09 if it wants that, at the cost of one
+    query per distinct serial; Group A's `labels` lists are **not deduplicated** (one entry per row,
+    across all shards after merging), so `len(labels)` is a row count, not a distinct-configuration
+    count; Group B (`GkSourcePolicyData`, `QuadSourceIntegral`, `OneLoopIntegral`) carries no
+    `labels` field at all, only `count`/`earliest_timestamp`/`latest_timestamp`. Also:
+    `OneLoopIntegral.py`'s `store()` has a dead `"validated": False` insert key with no matching
+    column (silently dropped by SQLAlchemy Core, confirmed harmless, not fixed — see the log's
+    Observations section) — `OneLoopIntegral` correctly has no validated/unvalidated split despite
+    that string appearing in the file.
