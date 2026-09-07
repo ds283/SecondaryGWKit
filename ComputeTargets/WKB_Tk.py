@@ -49,7 +49,10 @@ def Tk_d_ln_omegaEff_dz(model: BackgroundModel, k: float, z: float) -> float:
     ) / one_plus_z
     C = (
         epsPrime / 2.0 * (3.0 * w - eps + 1.0)
-        + 3.0 / 2.0 * wPrime * (eps - 3.0 / 2.0 * (1.0 + w))
+        # the coefficient here is 3(1+w), not (3/2)(1+w): it collects (3/2)(1+eps) w' - (9/2)(1+w) w' - (3/2) w'
+        # from differentiating omega_eff^2. The handwritten notes (NUM 09 p.6) carry a (3/2) slip that
+        # propagated here; corrected 2026-09-07 (docs/spec/01-transfer-function.md R30).
+        + 3.0 / 2.0 * wPrime * (eps - 3.0 * (1.0 + w))
     ) / one_plus_z_2
     D = (
         -(

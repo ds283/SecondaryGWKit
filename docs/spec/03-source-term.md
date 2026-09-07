@@ -4,7 +4,7 @@ Transcribed 2026-09-07 from the handwritten notes listed below (spec-transcripti
 Group 3). This file records what is on the pages; it does not correct the physics and was
 written without reading the code.
 
-Sign-off: **Tier 1.1 (Green's-function normalisation) Tier 1.2 (numerical prefactor chain), Tier 1.3 (form of the one-loop integral) and Tier 1.4 (seed = $\zeta^*$) signed off by the author 2026-09-07; see §0. **All Tier 1 items closed.**
+Sign-off: **Tier 1.1 (Green's-function normalisation) Tier 1.2 (numerical prefactor chain), Tier 1.3 (form of the one-loop integral), Tier 1.4 (seed = $\zeta^*$), Tier 2.9, 2.10 and the Tier 3 notation items signed off by the author 2026-09-07; see §0. **All review-queue items for this file are closed.**
 Remaining Tier 1 and Tier 2 items: *pending author review.*
 
 ---
@@ -162,7 +162,28 @@ not need to be: only $P_\zeta$ enters $P^h_{22}$. At linear order on super-horiz
 adiabatic $\zeta$ and $\mathcal R$ coincide up to convention, so a $\mathcal R$ spectrum may be fed
 in equally.
 
-**All four Tier 1 items are now signed off for this file.** Tier 2 items: *pending author review.*
+**All four Tier 1 items are now signed off for this file.**
+
+### 0.5 Tier 2 and Tier 3 items — **signed off 2026-09-07**
+
+- **2.9 (p. 7, R28).** The denominator under the ink blot is $a_0^2H^2(z')$; both transcribers' reading confirmed.
+- **2.10 (p. 9, R34).** The struck factor outside the braces ($q^4_{\rm phys}/2$, possibly $/4$) is crossed
+  out and unused; the remaining expression is correct.
+- **Arguments of $f$ (Q3).** $f(z'\,|\,\mathbf q,\mathbf k-\mathbf q)$ throughout; the $(\mathbf k,\mathbf k-\mathbf q)$
+  form on pp. 5, 7 is a notational slip. `MAIN` 14's form is the correct one.
+- **$z$ vs $z'$ in $f$ (Q4).** $z'$, the source time integrated over, on pp. 9–10.
+- **$w_0$, $w^*$, $c_s^2$.** $w_0 = p_0/\rho_0$ is the background equation of state (code:
+  `wBackground(z)`, $\Lambda$ included), evaluated at the source time inside $f$; $w^*$ is $w_0$ at the
+  initial time; elsewhere $c_s^2 = w(z)$ of the perturbed fluid is intended (code: `wPerturbations(z)`,
+  $\Lambda$ unperturbed). See §0.2 and spec 01's Tier 3 block.
+- **Overloaded symbols** (confirmed as traps, not errors): $\epsilon$ = slow-roll parameter
+  $-\dot H/H^2$ and, in jump conditions, an infinitesimal; $\eta$ = conformal time and, in `NUM` 05 p.2
+  only, the second slow-roll parameter $d\ln\epsilon/dN$; $\omega_{\rm eff}$ = the Green's-function
+  frequency (spec 02 R22) and the transfer-function frequency (spec 01 R27), different functions;
+  $Q_s$ written with comoving $q$ (`MAIN` 14) or with $q_{\rm phys}=q/a_0$ (`NUM` 03 p.9), differing
+  by $a_0^{-2}$ (absorbed, spec 02 §0 item 1).
+
+All review-queue items for this file are closed.
 
 ---
 
@@ -478,6 +499,7 @@ $$h_s(\mathbf{k}) = 36\left(\frac{1+w^*}{5+3w^*}\right)^2\int\frac{d^3q}{(2\pi)^
 \zeta^*_{\mathbf{q}}\zeta^*_{\mathbf{k}-\mathbf{q}}\,I_s(z\,|\,\mathbf{k},\mathbf{q}).$$
 Confidence: high for the structure; **medium** for the denominator "$a_0^2H^2(z')$" — a small mark
 after $H^2$ could be read as a subscript "0", but $H(z')$ with an argument is the consistent reading.
+**Author sign-off (2026-09-07):** $a_0^2H^2(z')$ confirmed (Tier 2.9).
 
 **Author note (2026-09-07):** the $Q_s/a_0^2$ here is exactly cancelled by the $a_0^2$ that
 $dz'\,\bar G_k = (-a_0H\,d\eta')(-a_0H(z')\,{\rm Gr}_k)$ produces on conversion to conformal time, so
@@ -546,7 +568,8 @@ appears outside the braces on the first line; see §5). "1024" red-boxed, typed 
 the last brace, which appears to lack the prime on $z$.
 
 **Author sign-off (2026-09-07):** both red-boxed 1024s on this page are **1296**, i.e. the coefficient is $1296\pi$;
-the annotation "1292" is a typo for 1296 (§0.2). The argument of $f$ is $z'$ (Q4).
+the annotation "1292" is a typo for 1296 (§0.2). The argument of $f$ is $z'$ (Q4). The struck
+$q^4_{\rm phys}/2$ outside the braces is crossed out and unused; the remaining expression is correct (Tier 2.10).
 
 **R35** (`NUM` 03 p. 10). **Final formula of the document:**
 $$\langle h_s(\mathbf{k})h_{s'}(\mathbf{k}')\rangle = (2\pi)^3\delta(\mathbf{k}+\mathbf{k}')\,\delta_{ss'}\;512\pi^2\left(\frac{1+w^*}{5+3w^*}\right)^4
@@ -628,9 +651,11 @@ exists on the pages.
    $f(z'|\mathbf{q},\mathbf{k}-\mathbf{q})$ on pp. 6 and 9, and p. 8 states $I_s$ "should be regarded as
    a function of $\mathbf{q}$ and $\mathbf{k}-\mathbf{q}$". Read as a notational slip on pp. 5, 7; the
    $(\mathbf{q},\mathbf{k}-\mathbf{q})$ form is the one consistent with R22.
+   **Closed 2026-09-07:** $f(z'\,|\,\mathbf q,\mathbf k-\mathbf q)$; the other form is a slip (§0.5).
 4. **$z$ vs $z'$ in $f$.** In the last brace of R34 and in R35 the argument of $f$ appears as $z$
    (no prime) although it sits inside the $dz'$ integral. Almost certainly $z'$; flagged because the
    prime is genuinely absent or too faint to see.
+   **Closed 2026-09-07:** $z'$, the source time (§0.5).
 5. **Definition of $f$.** Never written as "$f = \dots$"; identified with the red-boxed bracket of
    R22 by consistency. Also, $w_0$ inside $f$ is the background $p_0/\rho_0$ from the derivation on
    pp. 2–3; whether it is to be evaluated at the source redshift $z'$ (i.e. $w_0 = w(z')$) is not

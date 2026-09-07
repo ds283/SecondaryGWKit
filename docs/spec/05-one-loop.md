@@ -8,7 +8,7 @@ The **build target** (README §2) is the endpoint of Step 6 of `MAIN` 14 (p.11),
 conversion to "Fabrikant form" in Step 7. It is marked `TARGET` below (R31). Steps 7 of `MAIN` 14
 (R32–R33) are transcribed so the audit can see what is **not** to be used.
 
-Sign-off: **Tier 1.1 (Green's-function normalisation), Tier 1.2 (numerical prefactor), Tier 1.3 (form of the one-loop integral) and Tier 1.4 (seed $S^* \equiv \zeta^*$) signed off by the author 2026-09-07; see §0. **All Tier 1 items closed.**
+Sign-off: **Tier 1.1 (Green's-function normalisation), Tier 1.2 (numerical prefactor), Tier 1.3 (form of the one-loop integral), Tier 1.4 (seed $S^* \equiv \zeta^*$), Tier 2.3, 2.4 and the Tier 3 notation items signed off by the author 2026-09-07; see §0. **All review-queue items for this file are closed.**
 Remaining Tier 1 and Tier 2 items: *pending author review.*
 
 ---
@@ -63,7 +63,36 @@ linear relation is $\phi = \tfrac{3(1+w^*)}{5+3w^*}\,T\,\zeta^*$ with $T \to 1$ 
 initial spectrum is supplied in $\zeta$ so that `PyTransport`/`CppTransport` output can be fed in. Sign
 convention immaterial (only $P_\zeta$ enters). Full statement in spec 03 §0.4.
 
-**All four Tier 1 items are now signed off for this file.** Tier 2 items: *pending author review.*
+**All four Tier 1 items are now signed off for this file.**
+
+### 0.4 Tier 2 and Tier 3 items — **signed off 2026-09-07**
+
+- **2.3 (MAIN 14 p.10–11).** The exponent of 2 was changed on the page from $2+3b$ to $2+2b$; $2^{2+2b}$ confirmed
+  (and forced by `NUM` 06's $\tfrac\pi2\,2^{3+2b}$).
+- **2.4 (MAIN 14 p.8 bottom, p.9, p.10).** The Bessel orders of the four-term $f$ are as read: the third
+  term is the $q\leftrightarrow r$ exchange of the second, $J_{5/2+b}(q\eta c_s)J_{3/2+b}(r\eta c_s)$. Every
+  $J_{5/2}$ on p.10 is $J_{5/2+b}$. **$k$-for-$r$:** the author could not locate this slip. The transcribers'
+  location (§5 table) is the *first* completed-square line on **p.9**, prefactor written
+  $(q\eta c_s)(k\eta c_s)\,J_{\frac12+b}(q\eta c_s)J_{\frac12+b}(r\eta c_s)$, where the second factor should
+  be $(r\eta c_s)$ and the next line has $r$; separately, on p.10 a $k$ in $(r\eta'c_s)^{-1/2-b}$ is
+  over-written to $r$ on the page (duplicate C4). Neither affects R28–R31.
+  **Resolved 2026-09-07:** the author has re-read p.9; the page reads $(r\eta c_s)$, as it should. The "$k$" was a
+  **transcription error**, not a slip on the page. The §5 table row for MAIN 14 p.9 is annotated accordingly.
+- **Tier 3, prime on the transfer function (Q1).** `MAIN` 11's $\Phi' = d\Phi/d\eta$ is an anomaly; treat it
+  as such. `MAIN` 14 and `NUM` 06 use $d/dx$, and the project converges on $T_k(z)$ in any case.
+- **Tier 3, arguments of $f$.** $f(\mathbf q,\mathbf k-\mathbf q,\eta')$ as written here is the correct form;
+  `NUM` 03's occasional $(\mathbf k,\mathbf k-\mathbf q)$ is the slip (spec 03 §0.5).
+- **$\eta_0$ / $z_{\rm init}$.** Not a spec constant: it is initial data in the numerical pipeline,
+  set per mode as the redshift a fixed number of e-folds before horizon exit
+  (`CosmologyConcepts/wavenumber.py`, `z_exit_suph_eN`). The spec records only the conditions it must
+  satisfy: (i) $w$ constant at $z_{\rm init}$ (so $w^*$ is defined, spec 03 §0.2); (ii) every mode
+  entering the calculation — $k$, $q$ and $r$ — is super-horizon there, so $T\to1$ and $\phi$ is
+  constant. The `MAIN` 14 target is insensitive to $\eta_0$: near $\eta'\to0$ its $Y$-kernel integrand
+  behaves as $(\eta')^{1}$ and its $J$-kernel integrand as $(\eta')^{2+2b}$, so the $\eta_0$-dependence
+  is $O((k\eta_0)^2)$ and the analytic formula may be read with $\eta_0\to0$; the code's
+  `analytic_integral` uses the finite $\eta_{\rm init}=\tau(z_{\rm init})$ in any case.
+
+All review-queue items for this file are closed.
 
 ---
 
@@ -384,6 +413,8 @@ $$
 $$
 Confidence: high, with two remarks: (i) the last factor of the Green's function runs off the right margin and is read as $J_{b+\frac12}(k\eta)$ by comparison with R21; (ii) on this line the last two Bessel orders are written $J_{5/2}$ (without "$+b$"); the following line and p.11 write $J_{\frac52+b}$, so the omission is an abbreviation/slip.
 
+**Author sign-off (2026-09-07):** $J_{\frac52+b}$ confirmed (Tier 2.4); see §0.4.
+
 **R30** — MAIN 14 p.10 (Step 6, second line). Pulling out the $\eta'$-independent factors:
 $$
 = \pi\,2^{2+2b}\,\frac{2+b}{(3+2b)^3}\,\Gamma\!\left(\tfrac52+b\right)^2\,\eta^{-\frac12-b}
@@ -481,7 +512,7 @@ Net: the recheck **confirms** MAIN 11's final formula (R14 ≡ R23) with no disc
 | MAIN 11 p.9 | "$\cos2\phi$" with a small mark after "cos" | — | Read as $\cos2\phi$ (confirmed MAIN 14 p.4). |
 | MAIN 14 p.5 | In the second-to-last display, a factor $Q_s(\mathbf k,\mathbf q)$ between $\delta(\mathbf k+\mathbf k')$ and $P_*(q)$ struck through | the $Q_s$ factors appear inside the braces instead | Braces form used (R22). |
 | MAIN 14 p.6 | $f(-\mathbf q,\,\text{[struck symbol]}\,\mathbf q-\mathbf k,\eta'')$ | struck symbol illegible (possibly a "$\mathbf k$" or "+") | $f(-\mathbf q,\mathbf q-\mathbf k,\eta'')$ used. |
-| MAIN 14 p.9 | First "completed-square" line: $(q\eta c_s)(k\eta c_s)J_{\frac12+b}(q\eta c_s)J_{\frac12+b}(r\eta c_s)$ | not corrected on the page; next line has $(r\eta c_s)$ | $r$ (R28). |
+| MAIN 14 p.9 | First "completed-square" line: $(q\eta c_s)(k\eta c_s)J_{\frac12+b}(q\eta c_s)J_{\frac12+b}(r\eta c_s)$ | not corrected on the page; next line has $(r\eta c_s)$ | $r$ (R28). **Author 2026-09-07: transcription error — the page reads $(r\eta c_s)$; there is no slip on the page.** |
 | MAIN 14 p.10 | Bessel orders $J_{5/2}$ in the first Step-6 line | not corrected on the page; next lines have $J_{\frac52+b}$ | $\frac52+b$ (R29–R31). |
 | MAIN 14 p.10 and p.11 | Exponent of 2 in $\pi\,2^{2+\cdots}$: something over-written with "$2b$" written above (original possibly "$3b$" or "$2b$" re-inked) | $2^{2+2b}$ | $2^{2+2b}$; arithmetically forced by $\frac\pi2\cdot2^{3+2b}$. Enters R30–R31 (`TARGET`) and R33. |
 | MAIN 14 p.12 | $I_{j,y}$ exponent "$(\eta')^{2\bar{+}b}$" ($+$ over-written) | $2-b$ | $2-b$ (consistent with R32). Fabrikant part only. |
@@ -493,6 +524,7 @@ Net: the recheck **confirms** MAIN 11's final formula (R14 ≡ R23) with no disc
 ## 6. Open questions
 
 1. **Meaning of the prime on $\Phi$ in MAIN 11 (pp.5–6).** MAIN 11's $f$ (R8) has no $q$, $r$ factors multiplying $\eta$, MAIN 14's (R18) does. Consistent only if MAIN 11's prime is $d/d\eta$. The author never comments. The build uses MAIN 14, where $\Phi'(x) = d\Phi/dx$ is explicit (R26).
+   **Closed 2026-09-07:** MAIN 11's prime is $d/d\eta$, an anomaly; the project uses $d/dx$ and, in the numerical branch, $T_k(z)$ (§0.4).
 2. **$S$ / $S^*$ is never defined** in either document. From R16 it is the quantity to which $\frac{5+3w}{3(1+w)}\phi_{\mathbf q}$ tends as $q\eta\to0$. Whether $S^*$ equals $\zeta$, $\mathcal R$, or $-\zeta$ etc. is not stated; nor is the relation of $P_*(q)$ to a primordial $\mathcal P_\zeta$. (MAIN 14 p.10 only says Domènech uses "$\Phi^*$ rather than $S^*$".) Presumably defined in `MAIN` 10/12 (Groups 1, 3).
    **Closed 2026-09-07:** $S^* \equiv \zeta^*$, the primordial curvature perturbation; $P_*(q) = P_\zeta(q)$; sign
    convention immaterial. See §0.3.

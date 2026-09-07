@@ -1,7 +1,7 @@
 # Spec 02: Tensor Green's function
 
 Transcribed 2026-09-07 from the handwritten notes listed below (spec-transcription campaign, Group 2).
-Sign-off: **Tier 1.1 (Green's-function normalisation) signed off by the author 2026-09-07; see §0.** Remaining Tier 1 and Tier 2 items: *pending author review.*
+Sign-off: **Tier 1.1 (Green's-function normalisation), Tier 2.6, 2.7, 2.8 and the Tier 3 notation items signed off by the author 2026-09-07; see §0. All review-queue items for this file are closed** (Tier 1.2–1.4 do not concern this file).
 
 Notation used in this file: `MAIN 13` = document 13 of the main line, `NUM nn` = document nn of the
 numerical-implementation folder; page references are of the form `NUM 05 p.3`. Results are numbered
@@ -81,7 +81,38 @@ equals $-Q_s/c^2$ times the `MAIN` 14 target (spec 05 R31), with $c^2 = (2+b)^2/
 `cross-spec-check.md` §2 found. **The three "differently normalised" Green's functions of the review
 queue are one object.**
 
-Remaining Tier 1 (1.2–1.4) and Tier 2 items for this file: *pending author review.*
+### 0.2 Tier 2 and Tier 3 items — **signed off 2026-09-07**
+
+- **2.6 (NUM 02 p.2, R13).** The $a(aH^2+a\dot H)\,(1+z)\,dG_k/dz$ term carries a **minus** sign, as
+  transcribed; this is what makes the friction coefficient collapse to $\epsilon$ overall (R15–R17).
+- **2.7 (MAIN 13 p.3, Q8).** The "$\alpha$" is the symbol $\propto$: "both sides are proportional to".
+  The $Y_{b+1/2}(k\eta')$ factor is temporarily suppressed and restored later; R9 is unaffected.
+- **2.8 (NUM 11 p.5–6, R38, Q10).** The intent is $\Theta-\Theta_i\sim\omega_{\rm eff}u$, so
+  $|Q|\to1$ for $u\gg1$. With the page's (and the code's) convention $d\Theta/dz=+\omega_{\rm eff}$
+  and $u=z_i-z$, the phase *decreases* with $u$ and the fixed point is $Q=-1$; "close to unity" is to
+  be read in magnitude. The code (`Quadrature/integrators/WKB_phase_function.py`, stage 2) implements
+  R38 verbatim, starts from $Q(0)=0$, and nothing in it assumes the sign of $Q$ (the supervisor only
+  records its extremes), so this is a wording point only. Spec statement: $Q\to-1$ under the
+  $+\omega_{\rm eff}$ convention; equivalently $Q\to+1$ with the lower sign of R33's $\pm$.
+- **Tier 3, $k$ vs $k_{\rm phys}$ (Q6).** The bare $k^2/H^2$ of NUM 05/10/11 is
+  $k_{\rm phys}^2/H^2=k^2/(a_0^2H^2)$, as NUM 02 writes it. Consistent with §0.1 item 1.
+- **$\eta_0$ / $z_{\rm init}$.** Not a spec constant: it is initial data in the numerical pipeline,
+  set per mode as the redshift a fixed number of e-folds before horizon exit
+  (`CosmologyConcepts/wavenumber.py`, `z_exit_suph_eN`). The spec records only the conditions it must
+  satisfy: (i) $w$ constant at $z_{\rm init}$ (so $w^*$ is defined, spec 03 §0.2); (ii) every mode
+  entering the calculation — $k$, $q$ and $r$ — is super-horizon there, so $T\to1$ and $\phi$ is
+  constant. The `MAIN` 14 target is insensitive to $\eta_0$: near $\eta'\to0$ its $Y$-kernel integrand
+  behaves as $(\eta')^{1}$ and its $J$-kernel integrand as $(\eta')^{2+2b}$, so the $\eta_0$-dependence
+  is $O((k\eta_0)^2)$ and the analytic formula may be read with $\eta_0\to0$; the code's
+  `analytic_integral` uses the finite $\eta_{\rm init}=\tau(z_{\rm init})$ in any case.
+- **Overloaded symbols** (confirmed as traps, not errors): $\epsilon$ = slow-roll parameter
+  $-\dot H/H^2$ and, in jump conditions, an infinitesimal; $\eta$ = conformal time and, in `NUM` 05 p.2
+  only, the second slow-roll parameter $d\ln\epsilon/dN$; $\omega_{\rm eff}$ = the Green's-function
+  frequency (spec 02 R22) and the transfer-function frequency (spec 01 R27), different functions;
+  $Q_s$ written with comoving $q$ (`MAIN` 14) or with $q_{\rm phys}=q/a_0$ (`NUM` 03 p.9), differing
+  by $a_0^{-2}$ (absorbed, spec 02 §0 item 1).
+
+All review-queue items for this file are closed.
 
 ---
 
@@ -138,6 +169,7 @@ red corrections. All are legible.
   $\epsilon' = d\epsilon/dz = -\epsilon\eta/(1+z)$. See Open questions Q4.
 - **NUM 02 p.4** uses $\epsilon$ a second time as an infinitesimal in the jump condition
   $[\,\cdot\,]_{z'-\epsilon}^{z'+\epsilon}$. This is unrelated to the slow-roll $\epsilon$ (Q5).
+  **Author note (2026-09-07):** confirmed; see the overloaded-symbols list in §0.2.
 
 ### 2.4 Scale-factor normalisation
 - **MAIN 13**: $a(\eta)\propto\eta^{1+b}$; no normalisation needed (only $a(\eta')/a(\eta)$ enters).
@@ -318,6 +350,8 @@ Confidence: **medium** — the sign of the third term is the subject of two red 
 (original "+", red circled "$-$" labelled "sign error" on the first version; a circled "$\oplus$"
 with a bar over it on the second version). The sign given here ($-$) is the one consistent with
 the "$\epsilon$ overall" annotation on p.3 and with R14. See §5.
+
+**Author sign-off (2026-09-07):** minus sign confirmed (Tier 2.6); see §0.2.
 
 **R14** (NUM 02 p.2–3). Transformation of the source: "the $\delta$-function transforms like a
 density", $\int d\eta\, f(\eta)\,\delta(\eta-\eta') = \int dz\, f(z)\,\delta(z-z')$ where $\eta'$ and
@@ -811,6 +845,7 @@ writes the mass term as $k_{\rm phys}^2/H^2$. NUM 05, NUM 10 and the Green's-fun
 NUM 11 write $k^2/H^2$ with no $a_0$ and no "phys" subscript. Inferred: $k$ there stands for
 $k/a_0$ (or $a_0 = 1$). Not stated on any page. In contrast the transfer-function part of NUM 11
 (p.7–8) keeps $a_0$ explicit ($k^2c_s^2/(a_0^2H^2)$).
+**Closed 2026-09-07:** $k$ means $k_{\rm phys}=k/a_0$ (§0.2).
 
 **Q7 — Support of the retarded Green's function in redshift.** MAIN 13 states $G_k = 0$ for
 $\eta<\eta'$. NUM 02 p.4 gives only continuity and jump at $z=z'$ and stops; it never states
@@ -822,6 +857,7 @@ $Y_{b+1/2}(k\eta')$ apparently in the numerator on the right-hand side; the firs
 $Y$ factor (the $Y_{b+1/2}(k\eta')$ from $\alpha$ cancels the $1/Y_{b+1/2}(k\eta')$ in $\beta$), so
 R9 does not inherit the omission, but the intermediate line R8 as written is inconsistent with
 R6. Flagged for the author; no change made.
+**Closed 2026-09-07:** the "$\alpha$" is $\propto$; the $Y$ factor is deliberately suppressed and restored later (§0.2).
 
 **Q9 — NUM 11 p.5, starred $\omega_{\rm eff}$ in the phase-shifted amplitude (R37).** All four
 occurrences of $\omega_{\rm eff}$ on p.5 are written $\omega_{\rm eff}^{*\,1/2}$ (or $\omega_{\rm eff}^*$
@@ -837,6 +873,8 @@ has, for constant $\omega_{\rm eff}$, the fixed point $Q = -1$, while the accomp
 $Q(u)$ "will be fairly close to unity when $u\gg1$". The $\pm$ kept in R33 would resolve this with
 the lower sign. Transcribed as written; flagged as an apparent inconsistency between the text and
 the displayed equation.
+**Closed 2026-09-07:** wording only. Under $d\Theta/dz=+\omega_{\rm eff}$ the fixed point is $Q=-1$ and "close to unity" means
+$|Q|\to1$; the code implements exactly this and does not depend on the sign of $Q$ (§0.2).
 
 **Q11 — Transfer-function content in NUM 11 (R39–R46).** $\phi$, $c_s^2$ and the early-time
 normalisation of the transfer function are not defined in NUM 11; the evolution equation R39 is

@@ -125,56 +125,56 @@ is immaterial because only $P_\zeta$ enters. Recorded in spec 03 §0.4, spec 05 
 
 ---
 
-## Tier 2 — single-glyph checks on intermediate lines
+## Tier 2 — single-glyph checks on intermediate lines — **all RESOLVED 2026-09-07**
 
-Each is a specific page location where either the two transcribers disagreed or the single
-transcriber flagged `medium`. None changes a final formula, but each should be settled so the
-spec can be signed off.
+Each was a specific page location where either the two transcribers disagreed or the single
+transcriber flagged `medium`. None changes a final formula. Author's readings, with the spec
+location where each is recorded:
 
-| # | Document, page | Question | Source |
+| # | Document, page | Resolution | Recorded |
 |---|---|---|---|
-| 2.1 | `NUM` 06 p.6 top (boxed "so $f=$"), p.6 foot, p.4 last term | Do the $J_{5/2}$ factors carry "$+b$"? Primary reads $+b$ (`high`), duplicate reads bare $\tfrac52$ (`medium`) at these three places only; both read $+b$ on p.5 and p.7. Almost certainly an omission on the page. | `diff-04.md` D1–D3 |
-| 2.2 | `NUM` 06 p.7 final display | Confirm the two cross-outs: struck prime after $\eta$ in $(qrc_s^2\eta)^{-1/2-b}$; kernel $Y_{b+1/2}(k\eta')$ over-written from $J$. Both read them the same way. | `diff-04.md` queue 2 |
-| 2.3 | `MAIN` 14 p.10–11 | Exponent of 2 over-written ($2^{2+3b}\to2^{2+2b}$); both read $2+2b$, and `NUM` 06's $\tfrac\pi2\cdot2^{3+2b}$ confirms it independently. Confirmation only. | `diff-05.md` queue 1 |
-| 2.4 | `MAIN` 14 p.8 bottom, p.9 | Over-written Bessel order in the third term of the four-term $f$ (read $J_{5/2+b}J_{3/2+b}$); $k$-for-$r$ slip; $J_{5/2}$ without $+b$. The completed square on p.9 depends on the p.8 reading. | `diff-05.md` queue 4–6 |
-| 2.5 | `NUM` 09 p.5 vs p.6 | Two coefficients in $2\omega_{\rm eff}\,d\omega_{\rm eff}/dz$ disagree between consecutive pages ($-\tfrac92(1+w)w'$ vs $-\tfrac94w'(1+w)$; presence of $-\epsilon\epsilon'/4$). The boxed final result follows p.6. Unmarked by the author. **Only unconfirmed formula on the transfer-function WKB path.** | spec 01 Q7 |
-| 2.6 | `NUM` 02 p.2 | Sign of the $a(aH^2+a\dot H)$ term under two red annotations. | spec 02 R13 |
-| 2.7 | `MAIN` 13 p.3 | Intermediate $\alpha$ drops the $Y_{b+1/2}(k\eta')$ factor present on p.2; final result consistent with keeping it. | spec 02 Q8 |
-| 2.8 | `NUM` 11 p.5–6 | $Q(u)$ representation: with $\Theta'=+\omega_{\rm eff}$ the fixed point is $Q=-1$ but the text says "close to unity". | spec 02 Q10 |
-| 2.9 | `NUM` 03 p.7 | Ink blot on the denominator $a_0^2H^2(z')$ of $I_s$; both read it the same. | `diff-03.md` queue 3 |
-| 2.10 | `NUM` 03 p.9 | Struck, unused factor $q^4_{\rm phys}/2$ vs $/4$. Irrelevant to results. | `diff-03.md` queue 5 |
-| 2.11 | `MAIN` 12 p.2 | RHS sign of the $ij$ equation appears negative but context requires positive. | spec 01 R3 |
+| 2.1 | `NUM` 06 p.6 top, p.6 foot, p.4 last term | $J_{5/2+b}$ everywhere; the bare $\tfrac52$ is an omission on the page. Primary reading stands. | spec 04 §0.2; `diff-04.md` D1–D3 |
+| 2.2 | `NUM` 06 p.7 final display | Both cross-outs confirmed: the prime after $\eta$ is struck (this $\eta$ is outside the $\eta'$ integral and cannot be its variable); the kernel $J$ is renamed $Y$. | spec 04 §0.2, C6–C7 |
+| 2.3 | `MAIN` 14 p.10–11 | Exponent changed on the page from $2+3b$ to $2+2b$. Confirmed. | spec 05 §0.4 |
+| 2.4 | `MAIN` 14 p.8 bottom, p.9, p.10 | Bessel orders as read; third term is the $q\leftrightarrow r$ exchange of the second; all $J_{5/2}\to J_{5/2+b}$. The "$k$-for-$r$ slip" on p.9 was a **transcription error**: the author re-read the page and it reads $(r\eta c_s)$. Nothing on the page to correct. | spec 05 §0.4 |
+| 2.5 | `NUM` 09 p.5 vs p.6 | **Genuine error on p.6, and it propagates.** $\frac{d}{dz}[-\tfrac94(1+w)^2]=-\tfrac92(1+w)w'$; p.5 is right. Corrected final term: $\tfrac32w'\big(\epsilon-3(1+w)\big)$, not $\tfrac32w'\big(\epsilon-\tfrac32(1+w)\big)$. The $\epsilon\epsilon'/4$ difference is not an error (p.6 is the simplified form). **Audit finding:** the p.6 slip is in `ComputeTargets/WKB_Tk.py` (`Tk_d_ln_omegaEff_dz`); see below. | spec 01 R30, Q7 |
+| 2.6 | `NUM` 02 p.2 | Minus sign, as transcribed; required for the friction term to collapse to $\epsilon$. | spec 02 §0.2, R13 |
+| 2.7 | `MAIN` 13 p.3 | The "$\alpha$" is $\propto$: the $Y$ factor is temporarily suppressed and restored later. | spec 02 §0.2, Q8 |
+| 2.8 | `NUM` 11 p.5–6 | Wording only. Intent is $\Theta-\Theta_i\sim\omega_{\rm eff}u$, i.e. $\lvert Q\rvert\to1$. Under the page's and the code's $d\Theta/dz=+\omega_{\rm eff}$ the fixed point is $Q=-1$; the code implements R38 verbatim and is independent of the sign of $Q$. | spec 02 §0.2, Q10 |
+| 2.9 | `NUM` 03 p.7 | $a_0^2H^2(z')$ confirmed. | spec 03 §0.5, R28 |
+| 2.10 | `NUM` 03 p.9 | Struck and unused; remaining expression correct. | spec 03 §0.5, R34 |
+| 2.11 | `MAIN` 12 p.2 | The equation is the diagonal $ij$ (pressure) equation, first display on p.2, whose RHS appears to read $-\delta p/M_P^2$; it is *not* the $\eta\eta$ equation carrying the 26 Apr 2023 annotations (those concern spec 01 R2 and are recorded in its §5). Read as positive; the p.1 form, the next line and R5 all require it. | spec 01 R3, Q2 |
+
+### Audit finding surfaced by 2.5
+
+`ComputeTargets/WKB_Tk.py`, function `Tk_d_ln_omegaEff_dz`, contains
+`3.0 / 2.0 * wPrime * (eps - 3.0 / 2.0 * (1.0 + w))`; the inner factor should be `3.0 * (1.0 + w)`.
+The function feeds (a) the WKB-validity diagnostic, harmless, and (b) `TkWKBIntegration.store()`,
+where it enters `raw_sin_coeff` and so shifts the Liouville–Green amplitude and phase of $T_k$ by a
+term proportional to $w'$. `WKB_Gk.py` is unaffected. **Fixed 2026-09-07**, in the same commit as this sign-off;
+the corrected derivative was re-verified symbolically against `Tk_omegaEff_sq`.
 
 ---
 
-## Tier 3 — notation to fix in the specs, not on the page
+## Tier 3 — notation to fix in the specs, not on the page — **all RESOLVED 2026-09-07**
 
-Confirm-and-annotate items. The transcribers were told not to fix the physics, so these are
-recorded as written; the author should say which reading later steps use so the spec can carry
-a one-line note.
-
-- **Prime on the transfer function.** `MAIN` 11 writes $\Phi'$ for $d/d\eta$; `MAIN` 14 uses
-  $d/dx$ with explicit chain-rule factors; `NUM` 06 confirms $d/dx$. The `MAIN` 11 notation is
-  the slip (`cross-spec-check.md` B4).
-- **$f$'s first argument** alternates between $(\mathbf k,\mathbf k-\mathbf q)$ and
-  $(\mathbf q,\mathbf k-\mathbf q)$ in `NUM` 03 pp.5–10 (both transcribers). The $q$ form is what
-  `MAIN` 14 uses.
-- **$z$ vs $z'$ inside $f$** on `NUM` 03 pp.9–10 (written unprimed; should be the source time).
-- **$w_0$ vs $w^*$ vs $w$.** `NUM` 03 uses $w^*$ (initial) in the prefactor and $w_0$ inside $f$;
-  the cross-spec agent's reading is $w_0 = w(z')$ at the source time. `NUM` 06 p.3 writes
-  "$1+w_0$" once with "$1+w$" on the line above. Confirm $w$ inside $f$ is evaluated at the
-  source time, and that $c_s^2 = w(z)$ is the closure used everywhere (spec 01 states
-  $c_s^2\equiv w$; for constant $w$ this equals the README's $(1-b)/(3(1+b))$).
-  **Partly resolved 2026-09-07 (see §1.2):** $w_0 = w(z')$ at the source time and $w^* = w(z_{\rm init})$ are
-  confirmed, and the code evaluates $w$ at the source redshift. The $c_s^2 = w(z)$ closure is still to be confirmed.
-- **$k$ vs $k_{\rm phys}=k/a_0$** in the $\omega^2_{\rm eff}$ of `NUM` 05/10/11 (bare $k^2/H^2$)
-  vs `NUM` 02 ($k^2_{\rm phys}/H^2$).
-- **$\eta_0$ / $z_{\rm init}$** never specified; whether the analytic target assumes
-  $\eta_0\to0$.
-- **Overloaded symbols** to note in the specs' convention sections: $\epsilon$ (slow-roll vs
-  infinitesimal), $\eta$ (conformal time vs second slow-roll parameter in `NUM` 05),
-  $\omega_{\rm eff}$ (for $G_k$ vs for $\vartheta$), $Q_s$ (with $q$ vs $q_{\rm phys}$, differing
-  by $1/a_0^2$).
+- **Prime on the transfer function.** `MAIN` 11's $\Phi' = d\Phi/d\eta$ is an anomaly; treat it as such.
+  `MAIN` 14 and `NUM` 06 use $d/dx$, and the project converges on $T_k(z)$. (spec 05 §0.4)
+- **$f$'s first argument.** $f(\mathbf q,\mathbf k-\mathbf q)$; `MAIN` 14 is correct, `NUM` 03's
+  $(\mathbf k,\mathbf k-\mathbf q)$ is a slip. (spec 03 §0.5)
+- **$z$ vs $z'$ inside $f$.** $z'$, the source time integrated over. (spec 03 §0.5)
+- **$w_0$ vs $w^*$ vs $w$.** $w_0 = p_0/\rho_0$ is the background equation of state ($\Lambda$ included;
+  code `wBackground`), evaluated at the source time inside $f$; $w^*$ is $w_0$ at the initial time;
+  elsewhere $c_s^2 = w(z)$ of the perturbed fluid is intended ($\Lambda$ unperturbed; code
+  `wPerturbations`). (spec 01 head block, spec 03 §0.5)
+- **$k$ vs $k_{\rm phys}$.** `NUM` 02's $k_{\rm phys}=k/a_0$ reading is correct for the bare $k^2/H^2$
+  of `NUM` 05/10/11. (spec 02 §0.2)
+- **$\eta_0$ / $z_{\rm init}$.** Need not be specified in the spec: they are initial data in the
+  pipeline (per mode, a fixed number of e-folds before horizon exit). The spec records only the
+  conditions on them: constant $w$ at $z_{\rm init}$, and all of $k$, $q$, $r$ super-horizon there.
+  The `MAIN` 14 target is insensitive to $\eta_0$ (corrections $O((k\eta_0)^2)$), so it may be read
+  with $\eta_0\to0$. (Tier 3 blocks in specs 01, 02, 04, 05)
+- **Overloaded symbols.** Confirmed and listed in the Tier 3 blocks of specs 01, 02 and 03.
 
 ---
 
@@ -190,3 +190,6 @@ remain open and are folded into the tiers above.
 
 When each tier-1 decision is made and each tier-2 glyph confirmed, add a sign-off line at the
 top of the corresponding spec file (README §7 step 3). The audit pass uses signed-off specs only.
+
+**Status 2026-09-07:** all Tier 1, Tier 2 and Tier 3 items are resolved and recorded in the spec files. The one
+audit finding surfaced (2.5, `WKB_Tk.py`) is fixed. **All five specs and their duplicates are signed off.**

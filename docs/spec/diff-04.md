@@ -72,6 +72,8 @@ No disagreement touches it.
 
 ### D1 — p.4, expanded form of $f$ (row 11; primary R11 first form / dup R10 expanded)
 
+**Author resolution 2026-09-07:** $J_{5/2+b}$ (the "$+b$" is omitted on the page); primary reading stands. `REVIEW-QUEUE.md` 2.1.
+
 Primary (confidence *high* for this display except at C3–C5, none of which is this factor):
 $$
 + \tfrac{(q c_s\eta)(r c_s\eta)}{(2+b)(1+b)}\, J_{\frac52+b}(q c_s\eta)\, J_{\frac52+b}(r c_s\eta)
@@ -85,6 +87,8 @@ Differing glyph: the order of the last Bessel factor (argument $rc_s\eta$), $\tf
 $\tfrac52$. All other terms of the display agree.
 
 ### D2 — p.6 top, boxed final form of the simplified source (row 16; primary R11 final / dup R12 p.6)
+
+**Author resolution 2026-09-07:** $J_{5/2+b}$ (the "$+b$" is omitted on the page); primary reading stands. `REVIEW-QUEUE.md` 2.1.
 
 Primary (confidence *high*: "orders $\tfrac12+b$ and $\tfrac52+b$ … are all clearly written"):
 $$
@@ -109,6 +113,8 @@ is derived from and from the p.7 lines derived from it, and the duplicate says s
 primary's reading is uniform across pp.4–7. Either way the p.7 final formula is agreed.
 
 ### D3 — p.6 foot, integral in $\eta$ before substituting the Green's function (row 18; primary R13 p.6 / dup R14 p.6)
+
+**Author resolution 2026-09-07:** $J_{5/2+b}$ (the "$+b$" is omitted on the page); primary reading stands. `REVIEW-QUEUE.md` 2.1.
 
 Primary:
 $$

@@ -4,8 +4,34 @@ Transcribed 2026-09-07 from the handwritten notes listed below (spec-transcripti
 Group 1). Transcription only: nothing here has been checked against the code, and the physics has
 not been "fixed". Page references are of the form "doc 12 p.3" (MAIN 12) or "NUM 01 p.3".
 
-Sign-off: **Tier 1.4 (identity of the seed) signed off by the author 2026-09-07; see the note in §2.8.**
-Remaining items (Tier 2.5, Tier 3): *pending author review.*
+Sign-off: **Tier 1.4 (identity of the seed), Tier 2.5 (NUM 09 coefficient), Tier 2.11 (MAIN 12 p.2 sign)
+and the Tier 3 notation items signed off by the author 2026-09-07. All review-queue items for this
+file are closed.** See the notes at R3/Q2, R30/Q7, §2.6 and the Tier 3 block below.
+
+**Author notes, Tier 3 (2026-09-07).**
+- **$c_s^2 = w(z)$.** Wherever this group writes $c_s^2$ it means $w(z)$ of the *perturbed* fluid:
+  $\delta p = c_s^2\delta\rho$ with $\Lambda$ unperturbed. In the code this is `wPerturbations(z)`
+  (radiation + matter, $\Lambda$ excluded), which is what `TkNumericIntegration.py` and `WKB_Tk.py`
+  use. It is distinct from the background $w_0 = p_0/\rho_0$ (`wBackground(z)`, $\Lambda$ included)
+  that enters the source term's $2/(3(1+w_0))$ (spec 03 §0.2). For a pure constant-$w$ epoch the two
+  coincide and equal the README's $(1-b)/(3(1+b))$.
+- **$k$ vs $k_{\rm phys}$.** A bare $k^2/H^2$ in NUM 05/08/09/10/11 means $k_{\rm phys}^2/H^2 = k^2/(a_0^2H^2)$,
+  as NUM 02 writes it; the code's stored wavenumber is $k/a_0$ (spec 02 §0 item 1).
+- **$\eta_0$ / $z_{\rm init}$.** Not a spec constant: it is initial data in the numerical pipeline,
+  set per mode as the redshift a fixed number of e-folds before horizon exit
+  (`CosmologyConcepts/wavenumber.py`, `z_exit_suph_eN`). The spec records only the conditions it must
+  satisfy: (i) $w$ constant at $z_{\rm init}$ (so $w^*$ is defined, spec 03 §0.2); (ii) every mode
+  entering the calculation — $k$, $q$ and $r$ — is super-horizon there, so $T\to1$ and $\phi$ is
+  constant. The `MAIN` 14 target is insensitive to $\eta_0$: near $\eta'\to0$ its $Y$-kernel integrand
+  behaves as $(\eta')^{1}$ and its $J$-kernel integrand as $(\eta')^{2+2b}$, so the $\eta_0$-dependence
+  is $O((k\eta_0)^2)$ and the analytic formula may be read with $\eta_0\to0$; the code's
+  `analytic_integral` uses the finite $\eta_{\rm init}=\tau(z_{\rm init})$ in any case.
+- **Overloaded symbols** (confirmed as traps, not errors): $\epsilon$ = slow-roll parameter
+  $-\dot H/H^2$ and, in jump conditions, an infinitesimal; $\eta$ = conformal time and, in `NUM` 05 p.2
+  only, the second slow-roll parameter $d\ln\epsilon/dN$; $\omega_{\rm eff}$ = the Green's-function
+  frequency (spec 02 R22) and the transfer-function frequency (spec 01 R27), different functions;
+  $Q_s$ written with comoving $q$ (`MAIN` 14) or with $q_{\rm phys}=q/a_0$ (`NUM` 03 p.9), differing
+  by $a_0^{-2}$ (absorbed, spec 02 §0 item 1).
 
 ---
 
@@ -96,6 +122,8 @@ record.)
   **$c_s^2$ means $w$** (adiabatic sound speed for constant $w$; NUM 01 p.4 says explicitly
   "from now on, avoid questions about the meaning of $c_s^2$ by using $w$ instead").
   NUM 09 p.4 sets $c_s^2 = w(z)$ for the $z$-dependent mixture.
+  **Author note (2026-09-07):** confirmed as the intended closure. In the code $c_s^2$ is `wPerturbations(z)`
+  ($\Lambda$ unperturbed), distinct from the background `wBackground(z)`; see the Tier 3 block at the head of this file.
 - $1+b = \frac{2}{1+3w}$ and $b = \frac{1-3w}{1+3w}$ (doc 12 p.3–4; "matches Eq. (2.16) of
   Domènech").
 - $1+3w = \frac{2}{1+b}$, $\;w = \frac{1}{3}\frac{1-b}{1+b}$, $\;1+w = \frac{2(2+b)}{3(1+b)}$
@@ -187,6 +215,12 @@ $$
 Confidence: **medium** — the first form on p.2 appears to read "$=-\delta p/M_P^2$", but both
 the Step 2 (B) equation on p.1 and the "so" line immediately below have a positive sign, and the
 positive sign is what makes the sum in R5 vanish. See Q2.
+
+**Author sign-off (2026-09-07):** positive (Tier 2.11). The equation in question is this one, the diagonal $ij$ (pressure) equation, first
+display on doc 12 p.2, where the right-hand side appears to read "$-\delta p/M_P^2$". It is *not* the
+$\eta\eta$ (density) equation carrying the 26 Apr 2023 annotations about a lost minus sign; those concern R2
+and are recorded in §5. The apparent minus here is read as a stray stroke: the p.1 form, the next line and R5
+all require $+$, and nothing downstream inherits it.
 
 **R4** (doc 12 p.2) — Closure:
 $$
@@ -524,6 +558,31 @@ follows the p.6 version. Confidence: **high** for the reading of each line; **th
 disagree with each other** — see Q7. In "$(3w - \epsilon + 1)$" a glyph after $\epsilon$ is
 struck.
 
+**Author sign-off (2026-09-07):** **the p.6 line carries a genuine error, and it propagates.** Differentiating R29:
+$\frac{d}{dz}\big[-\tfrac94(1+w)^2\big] = -\tfrac92(1+w)w'$, so p.5's $-\tfrac92$ is right and p.6's $-\tfrac94$ is
+wrong; nothing else in the bracket recombines with it. Collecting the $w'$ terms of the $(1+z)^{-2}$ bracket,
+$\tfrac32(1+\epsilon)w' - \tfrac92(1+w)w' - \tfrac32w' = \tfrac32w'\big(\epsilon - 3(1+w)\big)$. **The corrected final form is**
+$$
+2\omega_{\rm eff}\frac{d\omega_{\rm eff}}{dz}
+ = \frac{w'}{H^2}\frac{k^2}{a_0^2}
+ + \frac{1}{1+z}\Bigl(\frac32 w'' - \frac12\epsilon'' - 2\epsilon\,\frac{w}{H^2}\frac{k^2}{a_0^2}\Bigr)
+ + \frac{1}{(1+z)^2}\Bigl(\frac{\epsilon'}{2}\bigl(3w - \epsilon + 1\bigr)
+   + \frac32 w'\Bigl(\epsilon - 3(1+w)\Bigr)\Bigr)
+ - \frac{2}{(1+z)^3}\Bigl(\frac32(1+\epsilon)(1+w) - \frac{\epsilon}{2}\Bigl(3+\frac{\epsilon}{2}\Bigr) - \frac94(1+w)^2\Bigr),
+$$
+i.e. R30 as boxed with $\tfrac32(1+w)\to3(1+w)$ in the $w'$ term. The second discrepancy of Q7 (the
+$\epsilon\epsilon'/4$) is **not** an error: $\frac{d}{dz}\big[-\tfrac\epsilon2(3+\tfrac\epsilon2)\big] = -\tfrac{\epsilon'}{2}(3+\tfrac\epsilon2) - \tfrac{\epsilon\epsilon'}{4} = -\tfrac{\epsilon'}{2}(3+\epsilon)$,
+which is the p.6 form; p.5 merely shows it before simplification. The $\epsilon'$ terms then collect to
+$\tfrac{\epsilon'}{2}(3w-\epsilon+1)$ as boxed.
+
+**Audit finding.** The p.6 error is in the code: `ComputeTargets/WKB_Tk.py`, `Tk_d_ln_omegaEff_dz`, has
+`3.0 / 2.0 * wPrime * (eps - 3.0 / 2.0 * (1.0 + w))`; the factor `3.0 / 2.0 * (1.0 + w)` should be `3.0 * (1.0 + w)`.
+It is used (a) in the WKB-validity diagnostic (harmless) and (b) in `TkWKBIntegration.store()` to fix the
+Liouville–Green coefficients from the initial data (`raw_sin_coeff`), where it shifts the WKB amplitude and
+phase of $T_k$ by a term proportional to $w'$. The Green's-function analogue `WKB_Gk.py` has no $w$ and is
+unaffected. **Fixed 2026-09-07** (same commit as this sign-off): the factor now reads `3.0 * (1.0 + w)`, and the full
+derivative was re-verified symbolically against `Tk_omegaEff_sq`.
+
 **R31** (NUM 09 p.7) — Second derivative of $w(z)$ for the R28 background:
 $$
 w''(z) = -\frac{2w_r\Omega_r\Omega_m\,\Omega_r}{\bigl[\Omega_m+\Omega_r(1+z)\bigr]^3}
@@ -630,6 +689,7 @@ the author should confirm.
 whereas the p.1 version has $+M_P^{-2}\delta p\,\delta^i_j$ and the very next line has
 $+\frac{a^2\delta p}{2M_P^2}$. The positive sign is what R5 requires. Transcribed as positive;
 the apparent minus may be a stray stroke or part of the "=" glyph.
+**Closed 2026-09-07:** positive; see the note at R3.
 
 **Q3 — Struck term in $G^\eta{}_\eta$, doc 12 p.1 (R1).** Illegible struck term; the intended
 final expression is unambiguous from Step 2, but the original is not recoverable from the scan.
@@ -661,6 +721,8 @@ p.6 has only $-\frac{\epsilon'}{2}(3+\epsilon)$, and the final $\frac{\epsilon'}
 follows the p.6 version. The author did not mark either change as a correction. Transcribed
 both readings; the final form (R30) is the p.6 one. This needs the author's decision before R30
 is used as a build target.
+**Closed 2026-09-07:** (i) p.5 is right, p.6 wrong, corrected form at R30; (ii) not an error. The p.6 slip had
+propagated to `WKB_Tk.py` and is fixed; see the note at R30.
 
 **Q8 — $a$ vs $a_0$ in the $k^2$ term.** NUM 01 (R14) and NUM 08 (R21, R25) write
 $k^2c_s^2/((1+z)^2a^2H^2)$ with $a = a(z)$; NUM 09 p.5 (R29) rewrites this as

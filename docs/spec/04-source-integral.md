@@ -4,8 +4,7 @@ Transcribed from handwritten notes (D. Seery) as part of the spec-transcription 
 (`prompts/spec-transcription/README.md`, Group 4). Primary transcription. Nothing here has been
 checked against the code; page content was transcribed as written, not corrected.
 
-Sign-off: **Tier 1.1 (Green's-function normalisation) signed off by the author 2026-09-07; see §0.**
-Remaining Tier 1 and Tier 2 items: *pending author review.*
+Sign-off: **Tier 1.1 (Green's-function normalisation), Tier 2.1, 2.2 and the Tier 3 notation items signed off by the author 2026-09-07; see §0. All review-queue items for this file are closed** (Tier 1.2–1.4 do not concern this file).
 
 ---
 
@@ -80,7 +79,29 @@ equals $-Q_s/c^2$ times the `MAIN` 14 target (spec 05 R31), with $c^2 = (2+b)^2/
 `cross-spec-check.md` §2 found. **The three "differently normalised" Green's functions of the review
 queue are one object.**
 
-Remaining Tier 1 (1.2–1.4) and Tier 2 items for this file: *pending author review.*
+### 0.2 Tier 2 and Tier 3 items — **signed off 2026-09-07**
+
+- **2.1 (NUM 06 p.4 last term, p.6 top boxed "so $f=$", p.6 foot).** Every $J_{5/2}$ is $J_{5/2+b}$;
+  the bare $\tfrac52$ at these three places is an omission on the page. Primary reading stands
+  (`diff-04.md` D1–D3 resolved for the primary).
+- **2.2 (NUM 06 p.7 final display, R14; C6, C7).** Both cross-outs confirmed. The struck prime after
+  $\eta$ in $(qrc_s^2\eta)^{-1/2-b}$ is correct to strike: this $\eta$ stands outside the $\eta'$
+  integration and cannot refer to its variable. In the second integral the kernel is $Y_{b+1/2}(k\eta')$,
+  written over a struck $J$.
+- **Tier 3, $w$ vs $w_0$ (p.3, Q3).** Same quantity: the background $p_0/\rho_0$ at the source time
+  (spec 03 §0.2). **Prime on the transfer function**: $d/dx$ here and in `MAIN` 14; `MAIN` 11's $d/d\eta$
+  is the anomaly (spec 05 §0.4).
+- **$\eta_0$ / $z_{\rm init}$.** Not a spec constant: it is initial data in the numerical pipeline,
+  set per mode as the redshift a fixed number of e-folds before horizon exit
+  (`CosmologyConcepts/wavenumber.py`, `z_exit_suph_eN`). The spec records only the conditions it must
+  satisfy: (i) $w$ constant at $z_{\rm init}$ (so $w^*$ is defined, spec 03 §0.2); (ii) every mode
+  entering the calculation — $k$, $q$ and $r$ — is super-horizon there, so $T\to1$ and $\phi$ is
+  constant. The `MAIN` 14 target is insensitive to $\eta_0$: near $\eta'\to0$ its $Y$-kernel integrand
+  behaves as $(\eta')^{1}$ and its $J$-kernel integrand as $(\eta')^{2+2b}$, so the $\eta_0$-dependence
+  is $O((k\eta_0)^2)$ and the analytic formula may be read with $\eta_0\to0$; the code's
+  `analytic_integral` uses the finite $\eta_{\rm init}=\tau(z_{\rm init})$ in any case.
+
+All review-queue items for this file are closed.
 
 ---
 
@@ -578,10 +599,12 @@ Listed in page order. "Used later" states which version the subsequent lines on 
   struck. Used later: unprimed $\eta$ (this factor stands outside the $\eta'$ integrals, and the
   power counting $\sqrt{\eta\eta'}\,(\eta'/\eta)^{1+b}(\eta')^{-1-2b} = \eta^{-1/2-b}(\eta')^{1/2-b}$
   requires it).
+  **Confirmed by the author 2026-09-07 (Tier 2.2).**
 - **C7** — NUM 06 p.7, final display (R14), second integral: the Bessel function multiplying
   $(\eta')^{1/2-b}$ is written "$Y_{b+\frac12}(k\eta')$" with the $Y$ placed above a struck
   "$J$". Used later: $Y$ (required by R3: the term with $J_{b+1/2}(k\eta)$ outside carries
   $Y_{b+1/2}(k\eta')$ inside).
+  **Confirmed by the author 2026-09-07 (Tier 2.2): $J$ renamed to $Y$.**
 - **C8** — NUM 06 p.8: "so (now redefine $\tilde y \to y$)" — a relabelling, not a correction;
   recorded because the symbol $y$ changes meaning mid-page (R15).
 - **C9** — NUM 06 p.11, R20 intermediate line: the prefactor "$\tfrac12$" has its "2" struck

@@ -163,13 +163,13 @@ Legend: ⬜ not started · 🟡 in flight · ✅ written · 🔍 diffed / queued
 
 | Group | Output | Status | Notes |
 |---|---|---|---|
-| 1 | `01-transfer-function.md` | 🔍 | written and diffed 2026-09-07; Tier 1.4 signed off 2026-09-07 (note in §2.8); Tier 2.5 and Tier 3 items queued for author review |
-| 2 | `02-greens-function.md` | 🔍 | written and diffed 2026-09-07; Tier 1.1 signed off 2026-09-07 (see §0 / author note in file); remaining items queued for author review |
-| 3 | `03-source-term.md` | 🔍 | written and diffed 2026-09-07; all Tier 1 items (1.1–1.4) signed off 2026-09-07 (see §0 / author note in file); Tier 2 items queued for author review |
-| 3B | `03-source-term-B.md` | 🔍 | written and diffed 2026-09-07; all Tier 1 items (1.1–1.4) signed off 2026-09-07 (see §0 / author note in file); Tier 2 items queued for author review |
-| 4 | `04-source-integral.md` | 🔍 | written and diffed 2026-09-07; Tier 1.1 signed off 2026-09-07 (see §0 / author note in file); remaining items queued for author review |
-| 4B | `04-source-integral-B.md` | 🔍 | written and diffed 2026-09-07; Tier 1.1 signed off 2026-09-07 (see §0 / author note in file); remaining items queued for author review |
-| 5 | `05-one-loop.md` | 🔍 | written and diffed 2026-09-07; all Tier 1 items (1.1–1.4) signed off 2026-09-07 (see §0 / author note in file); Tier 2 items queued for author review |
-| 5B | `05-one-loop-B.md` | 🔍 | written and diffed 2026-09-07; all Tier 1 items (1.1–1.4) signed off 2026-09-07 (see §0 / author note in file); Tier 2 items queued for author review |
+| 1 | `01-transfer-function.md` | ✔ | written and diffed 2026-09-07; all queue items signed off 2026-09-07 (Tier 1.4, 2.5, 2.11, Tier 3; audit finding in `WKB_Tk.py` recorded at R30) |
+| 2 | `02-greens-function.md` | ✔ | written and diffed 2026-09-07; all queue items signed off 2026-09-07 (§0) |
+| 3 | `03-source-term.md` | ✔ | written and diffed 2026-09-07; all queue items signed off 2026-09-07 (§0) |
+| 3B | `03-source-term-B.md` | ✔ | written and diffed 2026-09-07; all queue items signed off 2026-09-07 (head note → primary §0) |
+| 4 | `04-source-integral.md` | ✔ | written and diffed 2026-09-07; all queue items signed off 2026-09-07 (§0) |
+| 4B | `04-source-integral-B.md` | ✔ | written and diffed 2026-09-07; all queue items signed off 2026-09-07 (head note → primary §0) |
+| 5 | `05-one-loop.md` | ✔ | written and diffed 2026-09-07; all queue items signed off 2026-09-07 (§0) |
+| 5B | `05-one-loop-B.md` | ✔ | written and diffed 2026-09-07; all queue items signed off 2026-09-07 (head note → primary §0) |
 | — | `diff-03.md`, `diff-04.md`, `diff-05.md`, `cross-spec-check.md` | ✅ | written 2026-09-07; no disagreement touches a final formula |
 | — | `REVIEW-QUEUE.md` | ✅ | written 2026-09-07; 4 tier-1 decisions, 11 tier-2 glyph checks |
