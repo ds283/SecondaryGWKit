@@ -1,5 +1,8 @@
 # 04 — Source time integral (independent duplicate transcription B)
 
+> **Author note (2026-09-07).** This is the independent duplicate transcription and is kept as written. For the definitive project convention on the normalisation of $a$ (the code absorbs $a_0$ into $k/a_0$ and $a_0\eta$; it does **not** set $a_0 = 1$) and on which Green's function the code computes (the unit-jump $\bar G_k$ of `NUM` 03, $= -a_0H(z')\,{\rm Gr}_k$), see §0 of the primary spec `04-source-integral.md`. Tier 1.1 of `REVIEW-QUEUE.md` was signed off on that basis.
+
+
 Transcribed 2026-09-07 from the page images only. This is the `-B` duplicate of Group 4; it
 covers `NUM` 06 only (not `NUM` 07). Not signed off.
 

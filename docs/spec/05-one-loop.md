@@ -8,6 +8,63 @@ The **build target** (README §2) is the endpoint of Step 6 of `MAIN` 14 (p.11),
 conversion to "Fabrikant form" in Step 7. It is marked `TARGET` below (R31). Steps 7 of `MAIN` 14
 (R32–R33) are transcribed so the audit can see what is **not** to be used.
 
+Sign-off: **Tier 1.1 (Green's-function normalisation), Tier 1.2 (numerical prefactor), Tier 1.3 (form of the one-loop integral) and Tier 1.4 (seed $S^* \equiv \zeta^*$) signed off by the author 2026-09-07; see §0. **All Tier 1 items closed.**
+Remaining Tier 1 and Tier 2 items: *pending author review.*
+
+---
+
+## 0. Author sign-off notes
+
+### 0.1 Tier 1.1 — Green's-function normalisation: **signed off 2026-09-07**
+
+Definitive project convention, fixed by what the code does (full statement and code references in
+`02-greens-function.md` §0 and `04-source-integral.md` §0):
+
+- **$a_0$ is absorbed, not set to one.** The code works in $k/a_0$ (physical wavenumber today) and
+  $a_0\eta$; every formula is written in these two $a_0$-invariant combinations. Where the notes
+  "drop" $a_0$ it is being held back to combine with a comoving momentum into a physical one. Any
+  comoving-variable expression must be invariant under $a_0 \to \lambda a_0$, comoving momenta
+  $\to \lambda\times$, $\eta \to \eta/\lambda$. Do **not** read an absent $a_0$ as $a_0 = 1$.
+- **The code's Green's function** (`ComputeTargets/GkNumericIntegration.py`) is the unit-jump
+  causal function for $\chi_s = a h_s$ in redshift: $G(z',z') = 0$, $dG/dz|_{z=z'} = +1$, zero for
+  $z > z'$, source $-\delta(z-z')$. It is $\bar G_k$ of `NUM` 03 (spec 03 R25) $= G_{\rm me}$ of
+  `NUM` 06 (spec 04 R1–R2), and
+  $G_{\rm code}(z,z') = -a_0H(z')\,{\rm Gr}_k(\eta(z),\eta(z'))$ for any $a_0$, where ${\rm Gr}_k$
+  is the retarded conformal-time function of `MAIN` 13/14 (spec 05 R18, R21; source
+  $+\delta(\eta-\eta')$).
+- **Signs.** `NUM` 02's $-\frac{1}{a_0H}\delta(z-z')$ is a convention paired with the orientation
+  of $\int dz'$, not a slip. The relative minus sign between the `NUM` 03/06 source integral and the
+  `MAIN` 14 target is the same convention and enters the one-loop result squared.
+- **$a_0$ hand-off.** `NUM` 06 R14's prefactor should be $a_0^2$ in comoving variables (the page
+  writes $a_0^1$; the power was absorbed in R2 while R13 kept it explicit). With $a_0^2$ the
+  $Q_s/a_0^2$ of spec 03 R28 cancels exactly and the `NUM` 03/06 source integral is
+  $-Q_s/c^2$ times the `MAIN` 14 target, $c^2 = (2+b)^2/(3+2b)^2$.
+
+### 0.2 Tier 1.2 and 1.3 — prefactor and form of the one-loop integral: **signed off 2026-09-07**
+
+- **Prefactor (1.2).** The 32 of R12/R14/R23 is $2\times4^2$ with $c^4 = \big(\tfrac{3(1+w)}{5+3w}\big)^4$
+  inside $f^2$. `NUM` 03 pulls $c_*^2$ outside $f$ and has $2\times(4c_*^2)^2 = 2592\big(\tfrac{1+w^*}{5+3w^*}\big)^4$;
+  $32\times81 = 2592$. Full chain and the two-$w$ decision in spec 03 §0.2.
+- **Form (1.3).** R23 is the loop integral before the measure is split. Splitting $d^3q$, inserting
+  $Q_\pm^2 = \tfrac12q^4\sin^4\theta\{\cos^2,\sin^2\}2\varphi$ and doing $\int d\varphi$ gives
+  $P^h_{22} = 8\pi^2\int_0^\infty q^3dq\int_0^\pi d\theta\,\sin^5\theta\,\mathcal P^*(q)\mathcal P^*(r)r^{-3}\,(\text{R31})^2$,
+  which is `NUM` 03 R35 with the corrected $648\pi^2$ exactly (spec 03 §0.3). **The build form is
+  `NUM` 03 R35 as completed in spec 03 §0.3**; R23/R31 here are its conformal-time, fixed-$w$
+  counterpart and the analytic check on it.
+- **Deliverable.** Per-polarisation $P^h_{22}(k)$ labelled by $s$ ("for any $s$", p. 6) is the stored
+  quantity. $\Omega_{\rm GW}$ is built in a separate, decoupled layer (spec 03 §0.3 for the reason).
+
+### 0.3 Tier 1.4 — identity of the primordial seed: **signed off 2026-09-07**
+
+The seed written $S^*$ in this transcription is $\zeta^*$, the primordial curvature perturbation,
+identical to the glyph `NUM` 03 p. 4 writes (spec 03 R20); the letter was mis-read from the
+handwriting (diff-05 D1 resolved in favour of the duplicate's $\zeta^*$). $P_*(q) = P_\zeta(q)$. The
+linear relation is $\phi = \tfrac{3(1+w^*)}{5+3w^*}\,T\,\zeta^*$ with $T \to 1$ at $z_{\rm init}$; the
+initial spectrum is supplied in $\zeta$ so that `PyTransport`/`CppTransport` output can be fed in. Sign
+convention immaterial (only $P_\zeta$ enters). Full statement in spec 03 §0.4.
+
+**All four Tier 1 items are now signed off for this file.** Tier 2 items: *pending author review.*
+
 ---
 
 ## 1. Source documents
@@ -35,7 +92,7 @@ their steps differently: MAIN 11 has Steps 1–5, MAIN 14 has Steps 1–7, and e
 | $\mathcal H$ vs $H$ | $\mathcal H = a'/a$, $H = \dot a/a = a'/a^2 = \mathcal H/a$. | MAIN 11 p.4 | |
 | Background | $3H^2 M_P^2 = 3\mathcal H^2 M_P^2/a^2 = \rho_0 \Rightarrow \mathcal H^2 M_P^2/a^2 = \rho_0/3$; $p_0 = w\rho_0$ used to get $2\mathcal H^2M_P^2/(a^2(\rho_0+p_0)) = 2/(3(1+w))$. | MAIN 11 p.4 | $M_P$ is the reduced Planck mass (inferred from $3H^2M_P^2=\rho_0$). |
 | Fixed-$w$ epoch | $\mathcal H = \dfrac{2}{1+3w}\dfrac{1}{\eta}$; hence $a(\eta')/a(\eta) = (\eta'/\eta)^{1+b}$ (used without comment). | MAIN 11 p.6; MAIN 14 p.1, p.10 | $\epsilon$ is not used. |
-| Scale-factor normalisation | Only the ratio $a(\eta')/a(\eta)$ ever appears. $a_0$ is never mentioned. | MAIN 11 p.7; MAIN 14 p.3, p.10 | Not stated; no normalisation is needed for the results. |
+| Scale-factor normalisation | Only the ratio $a(\eta')/a(\eta)$ ever appears. $a_0$ is never mentioned. | MAIN 11 p.7; MAIN 14 p.3, p.10 | Not stated; no normalisation is needed for the results. **Author note (2026-09-07):** the code matches this by absorbing $a_0$ into $k/a_0$ and $a_0\eta$, never by setting $a_0 = 1$ (§0). |
 | Green's function | For $\chi_s \equiv a\,h_s$: $\mathrm{Gr}_k''(\eta,\eta') + \big(k^2 - a''/a\big)\mathrm{Gr}_k(\eta,\eta') = +\delta(\eta-\eta')$. First argument $\eta$ = response time, second $\eta'$ = source time; retarded ($=0$ for $\eta<\eta'$). Explicit form R23. Depends only on $k=|\mathbf k|$ (so $\mathrm{Gr}_{\mathbf k} = \mathrm{Gr}_{-\mathbf k}$). | MAIN 14 p.3–4, p.6; MAIN 11 p.7–8 | $h_s = \int_{\eta_0}^{\eta} d\eta'\,\frac{a(\eta')}{a(\eta)}\mathrm{Gr}_k(\eta,\eta')\,[\text{source}]$. No "literature" Green's function is referenced. |
 | Equation of state | $w$; $b = \dfrac{1-3w}{1+3w}$; derived identities $1+3w = \dfrac{2}{1+b}$, $1+w = \dfrac{2(2+b)}{3(1+b)}$, $5+3w = \dfrac{2(3+2b)}{1+b}$. | MAIN 14 p.4, p.7 | $c_s$ appears in $\Phi(x)$ (MAIN 14 p.4, p.8) but is **not defined** in either document (no $c_s^2 = w$ or $c_s^2 = (1-b)/(3(1+b))$ is written). |
 | Fourier convention | $h_{ij}(\mathbf x) = \displaystyle\int\frac{d^3k}{(2\pi)^3}\, e^{i\mathbf k\cdot\mathbf x}\sum_s e^s_{ij}(\mathbf k)\, h_s(\mathbf k)$. | MAIN 11 p.2–3 | Same convention implied for $\phi_{\mathbf q}$ ($\int d^3q\,d^3r/(2\pi)^6\, e^{i\mathbf q\cdot\mathbf x}e^{i\mathbf r\cdot\mathbf x}$, MAIN 11 p.3). |
@@ -188,6 +245,9 @@ $$
 $$
 What: defines the transfer function $\Phi$ and its early-time normalisation; $S^*_{\mathbf q}$ is the seed variable (undefined; see Conventions). Confidence: high (the star is written as a superscript on $S$ and as a subscript on $P_*$).
 
+**Author sign-off (2026-09-07):** the seed letter is $\zeta^*$, the primordial curvature perturbation, as the duplicate
+transcription read it (diff-05 D1); $P_*(q) = P_\zeta(q)$. See §0.3 and spec 03 §0.4.
+
 **R17** — MAIN 14 p.1–2. Source in terms of $\Phi$, with chain-rule factors, "where $\mathbf r = \mathbf k-\mathbf q$":
 $$
 h_s'' + 2\mathcal H h_s' + k^2h_s = 4\int\frac{d^3q}{(2\pi)^3}\,Q_s(\mathbf k,\mathbf q)\,S^*_{\mathbf q}S^*_{\mathbf k-\mathbf q}
@@ -216,6 +276,12 @@ $$
 h_s = \int_{\eta_0}^{\eta}d\eta'\;4\,\frac{a(\eta')}{a(\eta)}\,\mathrm{Gr}_k(\eta,\eta')\int\frac{d^3q}{(2\pi)^3}\,Q_s(\mathbf k,\mathbf q)\,S^*_{\mathbf q}S^*_{\mathbf k-\mathbf q}\,f(q,r,\eta').
 $$
 (The factor $\mathrm{Gr}_k(\eta,\eta')$ is inserted with an arrow into the $h_s$ line.) What: source function $f$ in $w$-form, Green's function definition, formal solution. Confidence: high.
+
+**Author note (2026-09-07):** this $\mathrm{Gr}_k$ (defined here on p.2–3, explicit retarded form R21 on p.4;
+every later $\mathrm{Gr}_k$ in `MAIN` 14 is this object) is the project's reference Green's function. The code
+computes the redshift-space unit-jump function $G_{\rm code} = -a_0H(z')\,\mathrm{Gr}_k(\eta(z),\eta(z'))$
+(spec 03 R25, spec 04 R2); the factors $a(\eta')/a(\eta) = (1+z)/(1+z')$ and $d\eta' = -dz'/(a_0H)$ are
+supplied by the source-integral code. See §0.
 
 **R19** — MAIN 14 p.3–4 (Step 3 ①). Polarisation factors $Q_s(\mathbf k,\mathbf q) = e_s^{lm}(\mathbf k)q_lq_m$ with $e_\pm^{lm}$ as in R13 and $e_s^{lm}e_{s'\,lm} = \delta_{ss'}$:
 $$
@@ -268,6 +334,13 @@ $$
 \boxed{\;P^h_{22}(k) = 32\int\frac{d^3q}{(2\pi)^3}\,Q_s(\mathbf k,\mathbf q)^2\,P_*(q)\,P_*(|\mathbf k-\mathbf q|)\left(\int_{\eta_0}^{\eta}d\eta'\,\frac{a(\eta')}{a(\eta)}\,\mathrm{Gr}_k(\eta,\eta')\,f(\mathbf q,\mathbf k-\mathbf q,\eta')\right)^2\;}\qquad\text{"for any } s\text{."}
 $$
 (Box added by the transcriber for visibility; not boxed on the page.) p.7 note: "$\int\frac{d^3q}{(2\pi)^3}Q_s(\mathbf k,\mathbf q)Q_{s'}(\mathbf k,\mathbf q)\cdots\propto\delta_{ss'}$ from integration of the $\phi$ dependence over $2\pi$ *if* $f$ is independent of $\phi$." Confidence: high. This is the outer structure into which the `TARGET` time integral (R31) is inserted.
+
+**Author note (2026-09-07):** the 32 here is $2\times4^2$ with $c^4 = \big(\tfrac{3(1+w)}{5+3w}\big)^4$ hidden inside
+$f^2$ (R16–R18). `NUM` 03 pulls $c_*^2$ outside $f$ and correspondingly has $2\times(4c_*^2)^2 = 2592\big(\tfrac{1+w^*}{5+3w^*}\big)^4$;
+$32\times81 = 2592$, so the two agree. The single $w$ of `MAIN` 11/14 is the fixed-$w$ restriction stated on
+`MAIN` 14 p. 2; for a running background $w$ inside $f$ is $w(\eta')$ and $w$ in $c_*$ is $w(z_{\rm init})$.
+See spec 03 §0.2 (Tier 1.2, signed off). Splitting the measure here and doing the $\varphi$ integral gives
+`NUM` 03 R35 exactly; that is the build form, stored per polarisation $s$ (spec 03 §0.3, Tier 1.3, signed off).
 
 **R24** — MAIN 14 p.7 (Step 5). Identities for rewriting in terms of $b$:
 $$
@@ -421,6 +494,8 @@ Net: the recheck **confirms** MAIN 11's final formula (R14 ≡ R23) with no disc
 
 1. **Meaning of the prime on $\Phi$ in MAIN 11 (pp.5–6).** MAIN 11's $f$ (R8) has no $q$, $r$ factors multiplying $\eta$, MAIN 14's (R18) does. Consistent only if MAIN 11's prime is $d/d\eta$. The author never comments. The build uses MAIN 14, where $\Phi'(x) = d\Phi/dx$ is explicit (R26).
 2. **$S$ / $S^*$ is never defined** in either document. From R16 it is the quantity to which $\frac{5+3w}{3(1+w)}\phi_{\mathbf q}$ tends as $q\eta\to0$. Whether $S^*$ equals $\zeta$, $\mathcal R$, or $-\zeta$ etc. is not stated; nor is the relation of $P_*(q)$ to a primordial $\mathcal P_\zeta$. (MAIN 14 p.10 only says Domènech uses "$\Phi^*$ rather than $S^*$".) Presumably defined in `MAIN` 10/12 (Groups 1, 3).
+   **Closed 2026-09-07:** $S^* \equiv \zeta^*$, the primordial curvature perturbation; $P_*(q) = P_\zeta(q)$; sign
+   convention immaterial. See §0.3.
 3. **$c_s$ is never defined** in either document; it enters only through $\Phi(x)$ (R20, R26–R31). Presumably from `MAIN` 12 (Group 1).
 4. **$\eta_0$ is never defined**; all time integrals are $\int_{\eta_0}^{\eta}$.
 5. **Angular reduction not done.** Neither document reduces $\int d^3q/(2\pi)^3\,Q_s^2\,\cdots$ to scalar integrals; the final results (R14, R23, `TARGET` R31) are left with $\int d^3q$ and $Q_s^2 = \frac12q^4\sin^4\Theta\{\cos^2,\sin^2\}2\phi$. Any $(q,r)$, $(u,v)$ or $(\Theta,\phi)$ reduction in the code has no counterpart in these notes and must be audited against the build target R23+R31 as written.

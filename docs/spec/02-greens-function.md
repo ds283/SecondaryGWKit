@@ -1,12 +1,87 @@
 # Spec 02: Tensor Green's function
 
 Transcribed 2026-09-07 from the handwritten notes listed below (spec-transcription campaign, Group 2).
-Sign-off: *pending author review.*
+Sign-off: **Tier 1.1 (Green's-function normalisation) signed off by the author 2026-09-07; see §0.** Remaining Tier 1 and Tier 2 items: *pending author review.*
 
 Notation used in this file: `MAIN 13` = document 13 of the main line, `NUM nn` = document nn of the
 numerical-implementation folder; page references are of the form `NUM 05 p.3`. Results are numbered
 `R1, R2, …` continuously across the whole file. Confidence flags refer to the *reading* of the page,
 not to the physics.
+
+---
+
+## 0. Author sign-off notes
+
+### 0.1 Tier 1.1 — Green's-function normalisation: **signed off 2026-09-07**
+
+The review queue (`REVIEW-QUEUE.md` §1.1) asked which of three redshift-space Green's functions the
+code computes and whether the $a_0$ bookkeeping between `NUM` 03, `NUM` 06 and `MAIN` 14 closes.
+Both are settled below. What follows is the **definitive project convention**, fixed by what the
+code actually does. Later readers and agents should take it as authoritative over any wording in
+the handwritten notes or in the transcription sections of these spec files.
+
+**(1) Normalisation of the scale factor: $a_0$ is absorbed, not set to one.**
+The code's wavenumber variable is the physical wavenumber today, $k/a_0$
+(`CosmologyConcepts/wavenumber.py`, "the normalization $a_0$ of $a(z)$ is absorbed into
+$k/a_0 = k_{\rm phys}$"), and its conformal-time variable is $a_0\eta$
+(`ComputeTargets/BackgroundModel.py` integrates $d(a_0\eta)/dz = -1/H$). Every formula in the code
+is therefore written in the two $a_0$-invariant combinations $k/a_0$ and $a_0\eta$; their product
+$k\eta$ is what every Bessel function sees. The handwritten notes "drop" or "hold back" $a_0$ in
+exactly this sense: a power of $a_0$ is never discarded, it is understood to combine with a comoving
+momentum into a physical one. This is deliberate. It forces a check that no stray power of $a_0$
+survives in a physical result: *any expression written in comoving variables must be invariant under
+$a_0 \to \lambda a_0$ with $q, r, k \to \lambda q, \lambda r, \lambda k$ and
+$\eta, \eta' \to \eta/\lambda, \eta'/\lambda$ (physical momenta and $H(z)$ fixed).*
+**Do not read the absence of $a_0$ in the code, or in a formula, as the assumption $a_0 = 1$; and do
+not read a "missing" $a_0$ in a comoving-variable formula as an error until this covariance test has
+been applied.**
+
+**(2) The Green's function the code computes.** `ComputeTargets/GkNumericIntegration.py`
+integrates the homogeneous operator
+$$
+\frac{d^2G}{dz^2} + \frac{\epsilon}{1+z}\frac{dG}{dz}
++ \Big(\frac{k^2}{a_0^2H^2} - \frac{2-\epsilon}{(1+z)^2}\Big)G = 0
+$$
+from $z = z'$ downward (forward in time) with $G(z',z') = 0$ and $dG/dz\big|_{z=z'} = +1$; the
+function is zero for $z > z'$. This is the **unit-jump causal Green's function for $\chi_s = a\,h_s$
+in redshift**: the operator above acting on it gives $-\delta(z-z')$. It is exactly $\bar G_k$ of
+`NUM` 03 (spec 03 R25) and $G_{\rm me}$ of `NUM` 06 (spec 04 R1–R2). It is related to the retarded
+conformal-time Green's function ${\rm Gr}_k(\eta,\eta')$ of `MAIN` 13/14 (spec 02 R9, spec 05 R18,
+R21), which has source $+\delta(\eta-\eta')$ and unit jump in $d/d\eta$, by
+$$
+G_{\rm code}(z,z') = -\,a_0\,H(z')\;{\rm Gr}_k\big(\eta(z),\eta(z')\big),
+$$
+valid for **any** $a_0$. Because ${\rm Gr}_k \propto \sqrt{\eta\eta'}$, the right-hand side written
+in the code's variables is $-H(z')\,\frac{\pi}{2}\sqrt{\tau\tau'}\{\dots\}$ with $\tau = a_0\eta$ and
+no $a_0$ left over; that is what `ComputeTargets/analytic_Gk.py` evaluates, and it is the meaning of
+the code comment "$G_{\rm us} = -H(z')\,G_{\rm them}$". $G_{\rm code}$ is negative just after the
+source ($G_{\rm code} \approx z - z'$ for $z \lesssim z'$). First argument = response redshift,
+second = source redshift.
+
+**(3) Sign of the redshift Jacobian (`NUM` 02).** `NUM` 02 transforms $\delta(\eta-\eta')$ with
+$dz/d\eta = -a_0H$ *without* taking the absolute value, giving source $-\frac{1}{a_0H}\delta(z-z')$
+(spec 02 R17–R18). This is a convention, not a slip: it is paired with the orientation of the $z'$
+integration measure ($\int_{z_{\rm init}}^{z}dz'$), and the two together reproduce the same
+$\chi_s$. `NUM` 03 and `NUM` 06 later adopt the unit jump $dG/dz|_{z'} = +1$, with the source
+$-\delta(z-z')$ chosen so that the jump is natural for $z$ decreasing to the future; the code follows
+`NUM` 03/06. The relative minus sign between the code's source integral and the `MAIN` 14 target is
+this orientation convention; it enters the one-loop result squared.
+
+**(4) Consequence for `NUM` 06 R14 and the $a_0$ hand-off.** Under the covariance test in (1), the
+right-hand side of spec 04 R14 written in comoving variables scales as $\lambda^{-2}$
+($(qrc_s^2\eta)^{-1/2-b} \to \lambda^{-1/2-b}$, $\int d\eta'(\eta')^{1/2-b} \to \lambda^{-3/2+b}$),
+while the left-hand side is invariant. The prefactor must therefore be $a_0^2$, not the $a_0^1$
+written on the page. The dropped power enters through R2, which is written in the absorbed
+convention ($G_{\rm me} = -H(z')G_{\rm them}$ with $G_{\rm them}$ in the variable $a_0\eta$), while
+R13 keeps $a_0$ explicit ($dz' = -a_0H\,d\eta'$). In the code's variables `analytic_integral` in
+`ComputeTargets/QuadSourceIntegral.py` carries no $a_0$, which *is* the $a_0^2$ form. With $a_0^2$
+the source integral cancels the $Q_s/a_0^2$ of spec 03 R28 exactly (i.e. $Q_s$ is built from
+physical momenta), $h_s$ is $a_0$-independent as it must be, and the `NUM` 03/06 source integral
+equals $-Q_s/c^2$ times the `MAIN` 14 target (spec 05 R31), with $c^2 = (2+b)^2/(3+2b)^2$, as
+`cross-spec-check.md` §2 found. **The three "differently normalised" Green's functions of the review
+queue are one object.**
+
+Remaining Tier 1 (1.2–1.4) and Tier 2 items for this file: *pending author review.*
 
 ---
 
@@ -71,6 +146,8 @@ red corrections. All are legible.
   $1/(a_0 H)$; the author comments that this $a_0^{-1}$ "looks unusual" but reflects that the
   scale of the $\chi$ field depends on the normalisation of $a$, and "should disappear when we
   switch the $\chi$ Green's function for the $h$ Green's function" (p.3–4).
+  **Author note (2026-09-07):** $a_0$ is being held back, not set to one. In the final assembly
+  this $1/a_0$ combines with the comoving momenta in $Q_s$ into physical momenta (§0 items 1, 4).
 - **NUM 05, 10, 11 (Green's-function part)**: the mass term is written $k^2/H^2$ with no $a_0$ and
   no subscript "phys". Whether $k$ here means $k_{\rm phys}=k/a_0$ of NUM 02, or $a_0=1$ is
   assumed, is **not stated**; inferred to be $k/a_0$ (Q6).
@@ -285,6 +362,11 @@ $$
 $$
 Confidence: **high**. Here $\epsilon$ is an infinitesimal (Q5). The page ends here; no explicit
 statement of which side of $z'$ the Green's function vanishes on (Q7).
+
+**Author note (2026-09-07):** the minus sign in R17–R18 is a convention paired with the orientation of
+the $z'$ measure, not a missing absolute value (§0 item 3); Q3 is closed. The code does **not**
+implement R18. It implements the unit-jump condition $dG/dz|_{z=z'} = +1$ of spec 03 R25, so
+$G_{\rm code} = -a_0H(z')\,G_k^{\rm (R9)}$ (§0 item 2). Support in $z$: $G_{\rm code} = 0$ for $z > z'$ (Q7).
 
 ### 3.3 NUM 05 — WKB(J) approximation for Green's functions (8 pp., 26 Sep 2024)
 
@@ -711,6 +793,7 @@ value**, giving the negative source $-\frac{1}{a_0H}\delta(z-z')$ in R17 and the
 $-1/(a_0H(z'))$ in R18. This is transcribed exactly as written. Whether the sign is intended
 (it propagates directly into the normalisation of the numerically computed Green's function) is
 for the author to confirm.
+**Closed 2026-09-07:** a convention, not a slip (§0 item 3). It does not propagate into the code.
 
 **Q4 — NUM 05 p.2, "$\epsilon\eta$".** Read as the product of $\epsilon$ with a second slow-roll
 parameter $\eta \equiv d\ln\epsilon/dN$, because the text continues "if $\eta = d\ln\epsilon/dN = \epsilon^{-1}d\epsilon/(H\,dt)$"

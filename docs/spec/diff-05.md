@@ -122,6 +122,8 @@ expression.
 
 ### D1 — the seed-variable letter (p.1, and wherever the seed appears; rows 2, 4, 5, 7, 10, 15, 16, 28)
 
+**Author resolution 2026-09-07:** resolved in favour of the duplicate's reading, $\zeta^*$. See `REVIEW-QUEUE.md` §1.4.
+
 Primary (R16, p.1):
 ```latex
 \phi_{\mathbf q}(\eta) = \frac{3(1+w)}{5+3w}\,\Phi(q\eta)\,S^*_{\mathbf q},\qquad \Phi(q\eta)\to1 \text{ as } q\eta\to0

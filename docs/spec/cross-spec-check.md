@@ -98,6 +98,9 @@ convention was deduced, not written.
   does **not** propagate into NUM 03 or NUM 06. But **NUM 02 R18 is the boundary condition of the
   numerically integrated Green's function**; implemented literally it yields $-G_{\rm them}$ (as a
   function of $z$), not $G_{\rm them}$. Highest-priority item.
+  **Author resolution 2026-09-07:** the sign is a convention paired with the orientation of $\int dz'$, not a
+  slip, and R18 is not the code's boundary condition. The code imposes the unit jump of spec 03 R25.
+  See `REVIEW-QUEUE.md` §1.1 and spec 02 §0.
 - **B2 — $a_0$ in $G_{\rm me}=-H(z')G_{\rm them}$ (spec 04 R2) and the power of $a_0$ in spec 04 R14.**
   *[derived here]* From spec 03 R25 the unit-jump function satisfies $\bar G_{03}=-a_0H(z')G_{\rm them}$
   (both vanish for $z>z'$; $\bar G\approx z-z'$, $G_{\rm them}\approx(z'-z)/(a_0H)$). Spec 04's
@@ -109,6 +112,9 @@ convention was deduced, not written.
   right dependence on $a_0$") and what spec 02 §2.4 anticipates (the $a_0^{-1}$ "should disappear
   when we switch the $\chi$ Green's function for the $h$ Green's function"). With $a_0^1$ the
   combination $I_s$ would retain a stray $1/a_0$. Author slip in NUM 06 R2, or $a_0=1$ assumed there.
+  **Author resolution 2026-09-07:** the power $a_0^2$ is confirmed. The mechanism is neither a slip nor
+  $a_0 = 1$: the project convention absorbs $a_0$ into $k/a_0$ and $a_0\eta$, and R2 is written in that
+  convention while R13 is not. See `REVIEW-QUEUE.md` §1.1 and spec 04 §0.
 - **B3 — Three differently normalised "numerical" Green's functions.** NUM 02: jump
   $\mp1/(a_0H(z'))$ ⇒ $G_{02}=\mp G_{\rm them}$ (sign per B1). NUM 03: $\bar G_{03}$, jump $-1$
   ⇒ $\bar G_{03}=-a_0H(z')G_{\rm them}$. NUM 06: $G_{\rm me}=-H(z')G_{\rm them}$. They differ by
@@ -116,6 +122,9 @@ convention was deduced, not written.
   cancels the $1/H^2$) if the code's Green's function carries one power of $H(z')$, i.e. is of the
   NUM 03/06 type, not the NUM 02 type. Which one the code integrates is not decidable from the
   specs; see review queue item 1.
+  **Author resolution 2026-09-07:** the code integrates the NUM 03/06 unit-jump function,
+  $G_{\rm code} = -a_0H(z')G_{\rm them}$ for any $a_0$. The three rows of the H2 table are one object once
+  the absorbed-$a_0$ convention is applied. See `REVIEW-QUEUE.md` §1.1.
 - **B4 — Prime on $\Phi$ in MAIN 11 (spec 05 Q1).** MAIN 11 R8 has $\eta\,\Phi'\Phi$, MAIN 14 R18
   has $q\eta\,\Phi'\Phi$. Cross-check: spec 04 R6→R9→R11 starts from $T'=dT/d\eta$, converts with
   $dT/dx$ explicitly, and lands on the same Bessel form as spec 05 R28 (up to $c^2$, A5). So MAIN 14's
@@ -127,12 +136,17 @@ convention was deduced, not written.
   read two ways. Whether it is $\zeta$ or $S$ changes nothing algebraically (A8), but it changes
   whether the notes ever identify the seed with the curvature perturbation. Neither spec records a
   definition, or a sign, relating $S^*/\zeta^*$ to $\zeta$ or $\mathcal R$ (spec 05 Q2).
+  **Author resolution 2026-09-07:** same symbol, and it is $\zeta^*$, the primordial curvature perturbation;
+  $P_* = P_\zeta$, to be fed from `PyTransport`/`CppTransport`. Sign immaterial. See `REVIEW-QUEUE.md` §1.4, spec 03 §0.4.
 - **B6 — Coefficient chain 1024 → 2048 → 1024π → 512π² in NUM 03 pp.7–10 (spec 03 R30–R35, Q2).**
   The author's 2025 annotations propose 1296, 2592, "1292", "646". Cross-check against spec 05 R23
   (§2, H5) shows the outer structures agree **only** with $2\times36^2=2592$; the original
   $1024=32^2$ is inconsistent with MAIN 11/14. "1292" and "646" are then typos for 1296 and 648
   (as spec 03 already suspected). Type (b), resolved in favour of the annotations; author to confirm
   the two typos.
+  **Author resolution 2026-09-07:** confirmed. Chain $1296 \to 1296 \to 2592 \to 1296\pi \to 648\pi^2$; "1292" and
+  "646" are typos. The 32 of MAIN 11/14 has $c^2$ inside $f$; NUM 03's 36 $= 4\times3^2$ has $c_*^2$ outside. See
+  spec 03 §0.2 and `REVIEW-QUEUE.md` §1.2.
 - **B7 — Arguments of $f$** written $(\mathbf k,\mathbf k-\mathbf q)$ on NUM 03 pp.5, 7 (spec 03 Q3).
   Spec 05 uses $f(\mathbf q,\mathbf k-\mathbf q,\eta)$ / $f(q,r,\eta)$ throughout. Slip on pp.5, 7;
   resolved.
@@ -142,6 +156,9 @@ convention was deduced, not written.
   $2\mathcal H^2M_P^2/(a^2(\rho_0+p_0))$ (spec 05 R4) / $\frac{8M_P^2}{(\rho_0+p_0)a^2}$ (spec 03 R12)
   *inside* the source, i.e. under the $\eta'$ integral, so $\rho_0+p_0$ — hence $w_0$ — is the
   background at the **source** time; but no spec says so in words. Author to confirm.
+  **Author resolution 2026-09-07:** confirmed, $w_0 = w(z')$ at the source time; $w^*$ in the prefactor is
+  $w(z_{\rm init})$, which must lie in a constant-$w$ epoch. MAIN 11/14's single $w$ is their fixed-$w$ restriction.
+  `ComputeTargets/QuadSource.py` evaluates $w$ at the source redshift. See spec 03 §0.2.
 - **B9 — $k$ vs $k_{\rm phys}$ in NUM 05/10/11 GF part (spec 02 Q6).** NUM 02 and NUM 03 both use
   $k_{\rm phys}=k/a_0$ explicitly with the identical operator; the inference "$k$ means $k/a_0$" in
   NUM 05/10/11 is consistent with both. Low risk; confirm.
@@ -273,6 +290,8 @@ numerical Green's function (B2/B3). They cannot be declared to agree to the last
 author states which of the three $z$-Green's functions in the H2 table the code computes.
 
 ### H5 — Outer one-loop structure: spec 03 R28–R35 (NUM 03 pp.7–10, $z$) vs spec 05 R23 (MAIN 14 p.6, $\eta$) — item (iii)
+
+**Author resolution 2026-09-07:** the two are the same integral before and after the measure is split and the $\varphi$ integral done; with $648\pi^2$ they coincide exactly. The build form is spec 03 R35 completed with $\int_0^\infty dq/q\int_0^\pi d\theta$ and $r(\theta)$, stored per polarisation; $\Omega_{\rm GW}$ is a separate layer. See `REVIEW-QUEUE.md` §1.3 and spec 03 §0.3.
 
 As written:
 

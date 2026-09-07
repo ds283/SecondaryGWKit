@@ -4,7 +4,8 @@ Transcribed 2026-09-07 from the handwritten notes listed below (spec-transcripti
 Group 1). Transcription only: nothing here has been checked against the code, and the physics has
 not been "fixed". Page references are of the form "doc 12 p.3" (MAIN 12) or "NUM 01 p.3".
 
-Sign-off: *(pending author review)*
+Sign-off: **Tier 1.4 (identity of the seed) signed off by the author 2026-09-07; see the note in §2.8.**
+Remaining items (Tier 2.5, Tier 3): *pending author review.*
 
 ---
 
@@ -122,6 +123,10 @@ record.)
 
 - The variable evolved is the Newtonian potential $\phi$ (title of doc 12 says "$\Phi$", body
   uses lower-case $\phi$ throughout; NUM 01/08/09 use $\phi$). Not $\zeta$, not $\mathcal{R}$.
+  **Author note (2026-09-07, Tier 1.4):** consistent with the rest of the project. The seed of the one-loop
+  calculation is $\zeta^*$ (`MAIN` 14 p. 1, `NUM` 03 p. 4), and $\phi^*$ here is the early-time potential
+  $\phi^* = \tfrac{3(1+w^*)}{5+3w^*}\zeta^*$, so $T_k = \phi_k/\phi^*_k \to 1$ is the transfer function the code
+  integrates and the initial spectrum fed in is $P_\zeta$ (from `PyTransport`/`CppTransport`). See spec 03 §0.4.
 - Early-time normalisation (doc 12 p.6–7): the $Y$ solution is projected out and the $J$
   solution is normalised so that $\phi_k(\eta) \to \phi^*_k$ as $k c_s\eta \to 0$, giving R11.
 - A symbol "$T_k$" or an explicit definition "transfer function $= \phi_k(\eta)/\phi^*_k$" does

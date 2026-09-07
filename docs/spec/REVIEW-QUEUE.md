@@ -26,65 +26,102 @@ disagreements that exist are single glyphs in intermediate lines.
 These are not transcription questions. They are places where the notes, read faithfully, leave a
 choice open or contain a slip, and the code cannot be audited or built until the author decides.
 
-### 1.1 Which redshift-space Green's function is "the" Green's function
+### 1.1 Which redshift-space Green's function is "the" Green's function — **RESOLVED 2026-09-07**
 
-Three numerical-branch documents define a $z$-space Green's function with three different
-normalisations, and the analytic hand-off between `NUM` 06 and `MAIN` 14 does not close by a
-factor of $a_0$ (`cross-spec-check.md` §1 B1, B2; §2 hand-off (i)).
+**Decision (author).** The code computes the unit-jump causal Green's function for $\chi_s = a h_s$ in
+redshift: $G(z',z') = 0$, $dG/dz|_{z=z'} = +1$, zero for $z > z'$, i.e. source $-\delta(z-z')$
+(`ComputeTargets/GkNumericIntegration.py`). This is $\bar G_k$ of `NUM` 03 (spec 03 R25) and
+$G_{\rm me}$ of `NUM` 06 (spec 04 R1–R2), and it is the **definitive project convention**. Its relation
+to the retarded conformal-time function ${\rm Gr}_k$ of `MAIN` 13/14 is
+$G_{\rm code} = -a_0H(z')\,{\rm Gr}_k(\eta(z),\eta(z'))$ for any $a_0$. The full statement, with code
+references, is §0 of `02-greens-function.md` and `04-source-integral.md`; §0 of `03-source-term.md`
+and `05-one-loop.md` carry the compact form.
 
-| Document | Definition | Normalisation relative to $G_{\rm them}$ (the $\eta$-space retarded Green's function of `MAIN` 13/14) |
-|---|---|---|
-| `NUM` 02 p.3–4 (spec 02 R17–R18) | source $-\frac{1}{a_0 H}\delta(z-z')$, jump $[G_z] = -1/(a_0H(z'))$ | $-G_{\rm them}$ — **but** the cross-spec agent argues the Jacobian was applied without $\lvert\cdot\rvert$ and the sign should be $+$ |
-| `NUM` 03 p.5–6 (spec 03 R25) | $\bar G = -G$, $d\bar G/dz\vert_{z=z'} = +1$ | $-a_0 H(z')\,G_{\rm them}$ |
-| `NUM` 06 p.1 (spec 04 R2) | "$G_{\rm me} = -H(z')\,G_{\rm them}$", source $-\delta(z-z')$ | $-H(z')\,G_{\rm them}$ (no $a_0$) |
+**Corrections to the original queue entry.**
 
-**Consequence.** With $c^2 \equiv (2+b)^2/(3+2b)^2 = \big(3(1+w)/(5+3w)\big)^2$, the cross-spec
-agent finds
+- *Page reference.* `MAIN` 14 defines ${\rm Gr}_k$ on **p.2–3** (spec 05 R18) and gives its explicit
+  retarded form on **p.4** (spec 05 R21). p.11 is where the Step 6 build target lives, not where
+  ${\rm Gr}_k$ is defined. `NUM` 02 is about the tensor Green's function throughout (pp.1–4), not only
+  pp.3–4.
+- *"Three normalisations" — there is one.* `NUM` 02 R17 is ${\rm Gr}_k$ itself re-expressed in $z$: the
+  $-\frac{1}{a_0H}$ is the Jacobian, not a new normalisation. Its sign follows from transforming
+  $\delta(\eta-\eta')$ without $|\cdot|$, which is a convention paired with the orientation of
+  $\int_{z_{\rm init}}^{z}dz'$, not a slip (spec 02 Q3 closed). `NUM` 03 and `NUM` 06 drop the
+  Jacobian and impose a unit jump; they define the *same* object, which is what the code computes.
+- *$a_0$.* The code does **not** set $a_0 = 1$. It absorbs $a_0$ into $k/a_0$ (physical wavenumber
+  today) and $a_0\eta$; every formula is written in these two invariant combinations. `NUM` 06 R2
+  is written in that absorbed convention while R13 keeps $a_0$ explicit, which is why R14 shows $a_0^1$
+  where the covariance test ($a_0 \to \lambda a_0$, comoving momenta $\to \lambda\times$,
+  $\eta \to \eta/\lambda$, LHS invariant) requires $a_0^2$. With $a_0^2$, spec 04 R14 $= -a_0^2/c^2$
+  times the `MAIN` 14 target, the $a_0^2$ cancels the $Q_s/a_0^2$ of spec 03 R28, and $h_s$ is
+  $a_0$-independent. The cross-spec agent's B2 is confirmed as to the power, with the reading
+  "absorbed", not "$a_0 = 1$ assumed".
+- *Audit note.* The code's `analytic_integral` carries no $a_0$ because it is written in $k/a_0$,
+  $a_0\eta$; in those variables the $a_0^2$ form has no $a_0$. This is the correct normalisation, not
+  an omission. Nothing in the code needs to change for this item.
 
-$$\text{spec 04 R14 (NUM 06 p.7)} \;=\; -\frac{a_0}{c^2}\times\text{TARGET (MAIN 14 p.11)}.$$
+### 1.2 The numerical prefactor of the one-loop formula — **RESOLVED 2026-09-07**
 
-The $-1$ (bar convention) and the $1/c^2$ (placement of the $3(1+w)/(5+3w)$ factor inside $f$ in
-`MAIN` 14 vs outside in `NUM` 03/06) are reconciled. The power of $a_0$ is not: if $G_{\rm me}$ is
-`NUM` 03's $\bar G$, the relation should carry $a_0^2$, which would then cancel the $Q_s/a_0^2$
-in spec 03 R28. **Read:** `NUM` 02 p.3–4 (sign of the Jacobian), `NUM` 06 p.1 (whether the
-$G_{\rm me}$ relation was meant to carry $a_0$). **Decide:** which of the three the code should
-compute. *Audit note (not for the author to resolve from the notes): the code's `analytic_integral` carries no $a_0$ at all; whether that is a deliberate $a_0=1$ normalisation must be checked in the audit pass.*
+**Decision (author).** The red annotations of 10 July 2025 are right; "1292" and "646" are typos.
+Taking the $36\big(\tfrac{1+w^*}{5+3w^*}\big)^2$ of $h_s$ (spec 03 R26–R28) as correct, the chain on
+`NUM` 03 pp. 7–10 is
 
-### 1.2 The numerical prefactor of the one-loop formula
+$$1296 \;(\text{p.7, p.8}) \;\to\; 2592 \;(\text{p.9}) \;\to\; 1296\pi \;(\text{p.9, both boxes}) \;\to\; 648\pi^2 \;(\text{p.10}),$$
 
-`NUM` 03 pp.7–10 (spec 03 R30–R35, spec 03-B R21–R28) carry a chain of blue-ink prefactors
-$1024 \to 2048 \to 1024\pi \to 512\pi^2$ with typed red annotations dated 10 July 2025 reading
-$1296$, $2592$, "$1292$", "$646$". Both transcribers recorded the same originals and the same
-annotations, and both noted "$1292$"/"$646$" do not follow the chain (`diff-03.md` §3).
+so the final formula spec 03 R35 carries $648\pi^2\big(\tfrac{1+w^*}{5+3w^*}\big)^4$. The original
+1024 is $32^2$: the `MAIN` 11/14 coefficient squared. `MAIN` 11/14 keep the super-horizon factor
+$c^2 = \big(\tfrac{3(1+w)}{5+3w}\big)^2$ inside $f$ and so have $2\times4^2 = 32$; `NUM` 03 pulls
+$c_*^2$ outside and so has $2\times(4c_*^2)^2 = 2592\big(\tfrac{1+w^*}{5+3w^*}\big)^4$. The two
+agree ($32\times81 = 2592$); the cross-spec agent's B6 is confirmed. Full table, derivation and
+the code status are in spec 03 §0.2.
 
-The cross-spec agent finds that `MAIN` 14 p.6 (spec 05 R23, $32\int d^3q/(2\pi)^3\,Q_s^2\ldots$)
-agrees with the `NUM` 03 structure **only** with $2\times 36^2 = 2592$, i.e. the red corrections
-are right and the original $1024 = 32^2$ was the slip; "$1292$" and "$646$" are then typos for
-$1296$ and $648$ (`cross-spec-check.md` §1 B6, §2 hand-off (iii)).
+**Also settled here (was Tier 3, "$w_0$ vs $w^*$ vs $w$").** `NUM` 03 is right to distinguish
+$w_0 = w(z')$ inside $f$ (background at the source time) from $w^* = w(z_{\rm init})$ in the
+prefactor $c_*$ (adiabatic super-horizon relation at the initial time). `MAIN` 11/14 use a single
+$w$ because they assume a fixed-$w$ epoch (stated on `MAIN` 14 p. 2); that is a restriction, not an
+error. Build requirement: $z_{\rm init}$ deep inside an epoch of constant $w^*$. The code already
+evaluates $w$ at the source redshift in `ComputeTargets/QuadSource.py`. The $c_s^2 = w$ closure part
+of that Tier 3 bullet is **not** yet confirmed.
 
-**Read:** `NUM` 03 pp.7, 9, 10. **Confirm:** $1296 \to 2592 \to 1296\pi \to 648\pi^2$, and
-correct the two typos on the page or in the spec.
+**Code status.** `OneLoopIntegral.compute()` is a stub: the prefactor, the
+$\big(\tfrac{1+w^*}{5+3w^*}\big)^4$ and the $\theta$ integral are not implemented anywhere, so this
+item is a build specification rather than an audit finding.
 
-### 1.3 Which form of the one-loop integral the code should implement
+### 1.3 Which form of the one-loop integral the code should implement — **RESOLVED 2026-09-07**
 
-Two forms exist and neither document completes the angular reduction
-(`cross-spec-check.md` §2 hand-off (iii); both spec 05 transcribers flagged this independently):
+**Decision (author).** There is one form, not two. `MAIN` 14 p. 6 (spec 05 R23) is the loop
+integral before the measure is split; splitting $d^3q$, inserting the spin-2 projector factors and
+doing the azimuthal integral gives `NUM` 03 p. 10 (spec 03 R35) and nothing else happens in between.
+**The build spec is spec 03 R35 with $648\pi^2$ (Tier 1.2) and the measure completed:**
+$\int_0^\infty dq/q\int_0^\pi d\theta\,\sin^5\theta$, $r = \sqrt{k^2+q^2-2kq\cos\theta}$, $\theta$
+the angle between $\mathbf q$ and $\mathbf k$. Written out in full in spec 03 §0.3. Carrying the
+reduction out on spec 05 R23 reproduces it exactly for $w^* = w$, which also confirms 648
+independently. A $(u,v)$ or $(q,r)$ change of variables is an implementation choice.
 
-- `MAIN` 14 p.6 (spec 05 R23): $P^h_{22}(k) = 32\int\frac{d^3q}{(2\pi)^3}Q_s(\mathbf k,\mathbf q)^2P_*(q)P_*(|\mathbf k-\mathbf q|)\,\big(\int\ldots\big)^2$ — 3D loop measure, no angular reduction.
-- `NUM` 03 p.10 (spec 03 R35): $(2\pi)^3\delta\,\delta_{ss'}\,[648\pi^2]\big(\tfrac{1+w^*}{5+3w^*}\big)^4\int\frac{dq}{q}\sin^5\theta\,\mathcal P^*(q)\frac{\mathcal P^*(r)}{r^3}\{\ldots\}^2$ — azimuth done, but **no $d\theta$ written**, $r(\theta)$ not written, limits not written.
+**Deliverable.** The stored quantity is the **per-polarisation** $P^h_{22}(k)$, labelled by $s$.
+$\Omega_{\rm GW}$ is built in a **separate, decoupled layer**. Cosmological-collider-type models can
+give unequal power in the two polarisations; the present calculation does not handle that, and
+keeping the layers apart means a new compute layer for $P^h_{22,s}$ can be shipped later without
+touching the layer that builds the observable.
 
-**Decide:** which form is the build spec, and supply the missing $\theta$ integral (or the
-$(u,v)$ / $(q,r)$ change of variables if that is preferred) and whether the deliverable is
-per-polarisation $P^h_{22}$, summed over $s$, or $\Omega_{\rm GW}$. **Read:** `NUM` 03 pp.9–10.
+**Method (build question).** How the $q$ and $\theta$ integrals are performed is open; the
+Kohri–Terada resonance in the inner time integral has to be handled, possibly by stationary phase.
+`OneLoopIntegral.compute()` is a stub.
 
-### 1.4 Identity and normalisation of the primordial seed
+### 1.4 Identity and normalisation of the primordial seed — **RESOLVED 2026-09-07**
 
-The seed is written $\phi^*$ (spec 01), a "5-like glyph" read as $\zeta^*$ (spec 03, alternative
-$S^*$), $S^*$ (spec 05 primary) and $\zeta^*$ (spec 05 duplicate) — the one DISAGREE in pair 05
-(`diff-05.md` §3 D1). No coefficient depends on the letter, but $P_*$ is the spectrum of *this*
-variable and the code has to be fed the right one. **Read:** `MAIN` 14 p.1 and `NUM` 03 p.4 (the
-glyph). **State:** the definition of the seed relative to $\zeta$ or $\mathcal R$, its sign, and
-whether $P_*$ is $P_\zeta$.
+**Decision (author).** The seed is $\zeta^*$, the primordial curvature perturbation, on `MAIN` 14 p. 1
+and on `NUM` 03 p. 4 alike; the "5-like glyph" and the "$S^*$" are the same handwritten letter
+(diff-05 D1 resolved for the duplicate's $\zeta^*$). The linear relation is
+$\phi_{\mathbf k}(z) = \tfrac{3(1+w^*)}{5+3w^*}\,T_k(z)\,\zeta^*_{\mathbf k}$ with $T_k \to 1$ at
+$z_{\rm init}$, correct at linear order (§1.2 for the $w^*$ condition). Hence **$P_* = P_\zeta$** and
+$\mathcal P^* = \mathcal P_\zeta$, and the $\big(\tfrac{1+w^*}{5+3w^*}\big)^4$ in the build form
+(§1.3) is the $\zeta^*\to\phi$ translation. Spec 01's $\phi^*$ is the early-time potential
+$\tfrac{3(1+w^*)}{5+3w^*}\zeta^*$, not a different seed. The initial spectrum is specified in $\zeta$
+so that `PyTransport`/`CppTransport` output can be fed in directly. The sign convention for $\zeta$
+is immaterial because only $P_\zeta$ enters. Recorded in spec 03 §0.4, spec 05 §0.3, spec 01 §2.8.
+
+**All four Tier 1 decisions are now made.**
 
 ---
 
@@ -128,6 +165,8 @@ a one-line note.
   "$1+w_0$" once with "$1+w$" on the line above. Confirm $w$ inside $f$ is evaluated at the
   source time, and that $c_s^2 = w(z)$ is the closure used everywhere (spec 01 states
   $c_s^2\equiv w$; for constant $w$ this equals the README's $(1-b)/(3(1+b))$).
+  **Partly resolved 2026-09-07 (see §1.2):** $w_0 = w(z')$ at the source time and $w^* = w(z_{\rm init})$ are
+  confirmed, and the code evaluates $w$ at the source redshift. The $c_s^2 = w(z)$ closure is still to be confirmed.
 - **$k$ vs $k_{\rm phys}=k/a_0$** in the $\omega^2_{\rm eff}$ of `NUM` 05/10/11 (bare $k^2/H^2$)
   vs `NUM` 02 ($k^2_{\rm phys}/H^2$).
 - **$\eta_0$ / $z_{\rm init}$** never specified; whether the analytic target assumes

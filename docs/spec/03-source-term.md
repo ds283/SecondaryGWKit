@@ -4,6 +4,166 @@ Transcribed 2026-09-07 from the handwritten notes listed below (spec-transcripti
 Group 3). This file records what is on the pages; it does not correct the physics and was
 written without reading the code.
 
+Sign-off: **Tier 1.1 (Green's-function normalisation) Tier 1.2 (numerical prefactor chain), Tier 1.3 (form of the one-loop integral) and Tier 1.4 (seed = $\zeta^*$) signed off by the author 2026-09-07; see §0. **All Tier 1 items closed.**
+Remaining Tier 1 and Tier 2 items: *pending author review.*
+
+---
+
+## 0. Author sign-off notes
+
+### 0.1 Tier 1.1 — Green's-function normalisation: **signed off 2026-09-07**
+
+Definitive project convention, fixed by what the code does (full statement and code references in
+`02-greens-function.md` §0 and `04-source-integral.md` §0):
+
+- **$a_0$ is absorbed, not set to one.** The code works in $k/a_0$ (physical wavenumber today) and
+  $a_0\eta$; every formula is written in these two $a_0$-invariant combinations. Where the notes
+  "drop" $a_0$ it is being held back to combine with a comoving momentum into a physical one. Any
+  comoving-variable expression must be invariant under $a_0 \to \lambda a_0$, comoving momenta
+  $\to \lambda\times$, $\eta \to \eta/\lambda$. Do **not** read an absent $a_0$ as $a_0 = 1$.
+- **The code's Green's function** (`ComputeTargets/GkNumericIntegration.py`) is the unit-jump
+  causal function for $\chi_s = a h_s$ in redshift: $G(z',z') = 0$, $dG/dz|_{z=z'} = +1$, zero for
+  $z > z'$, source $-\delta(z-z')$. It is $\bar G_k$ of `NUM` 03 (spec 03 R25) $= G_{\rm me}$ of
+  `NUM` 06 (spec 04 R1–R2), and
+  $G_{\rm code}(z,z') = -a_0H(z')\,{\rm Gr}_k(\eta(z),\eta(z'))$ for any $a_0$, where ${\rm Gr}_k$
+  is the retarded conformal-time function of `MAIN` 13/14 (spec 05 R18, R21; source
+  $+\delta(\eta-\eta')$).
+- **Signs.** `NUM` 02's $-\frac{1}{a_0H}\delta(z-z')$ is a convention paired with the orientation
+  of $\int dz'$, not a slip. The relative minus sign between the `NUM` 03/06 source integral and the
+  `MAIN` 14 target is the same convention and enters the one-loop result squared.
+- **$a_0$ hand-off.** `NUM` 06 R14's prefactor should be $a_0^2$ in comoving variables (the page
+  writes $a_0^1$; the power was absorbed in R2 while R13 kept it explicit). With $a_0^2$ the
+  $Q_s/a_0^2$ of spec 03 R28 cancels exactly and the `NUM` 03/06 source integral is
+  $-Q_s/c^2$ times the `MAIN` 14 target, $c^2 = (2+b)^2/(3+2b)^2$.
+
+### 0.2 Tier 1.2 — numerical prefactor chain of `NUM` 03 pp. 7–10: **signed off 2026-09-07**
+
+**Decision (author).** The typed red annotations of 10 July 2025 are right and the blue-ink chain is a
+slip. Taking the prefactor $36\big(\tfrac{1+w^*}{5+3w^*}\big)^2$ of $h_s$ (R26–R28) as correct, the
+coefficients read:
+
+| Page (result) | Blue ink, as written | Red annotation | **Correct** | Step |
+|---|---|---|---|---|
+| p. 7 (R30) | 1024 | 1296 | **1296** | $36^2$ from the Wick contraction of two factors of $h_s$ |
+| p. 8 (R30, cont.) | 1024 | — | **1296** | carried |
+| p. 9 (R32) | 2048 | 2592 | **2592** | $\times 2$: the two Wick terms collapse by symmetry (R31) |
+| p. 9 (R34, both lines) | $1024\pi$ | "1292" (first line only) | **$1296\pi$** | $\times\tfrac12$ from $Q_\pm^2 = \tfrac12 q^4_{\rm phys}\sin^4\theta$; $\times\pi$ from $\int_0^{2\pi}d\varphi\cos^2 2\varphi$ |
+| p. 10 (R35) | $512\pi^2$ | "646" | **$648\pi^2$** | $\times\tfrac{\pi}{2}$ from $4\pi^4/(2\pi)^3$ on converting $P^*$ to $\mathcal P^*/q^3$ |
+
+"1292" and "646" are typos for 1296 and 648. **The final formula R35 is to be read with
+$648\pi^2\big(\tfrac{1+w^*}{5+3w^*}\big)^4$.** Open question Q2 is closed.
+
+**Origin of 36 versus 32.** `MAIN` 11/14 and `NUM` 03 start from the same field equation with the
+same leading factor 4. They differ only in where the super-horizon constant
+$c_* \equiv 3(1+w^*)/(5+3w^*)$ sits. `MAIN` 11 R7 and `MAIN` 14 R16 substitute
+$\phi = c\,\Phi\,S^*$ and fold $c^2$ into $f$, so the $h_s$ prefactor stays 4 and $\langle hh\rangle$
+carries $2\times4^2 = 32$ with $c^4$ hidden inside $f^2$. `NUM` 03 R22 pulls $c_*^2$ outside, so the
+$h_s$ prefactor is $4c_*^2 = 36\big(\tfrac{1+w^*}{5+3w^*}\big)^2$ (the 36 is $4\times3^2$, the 3 being
+the numerator of $c_*$) and $\langle hh\rangle$ carries $2\times(4c_*^2)^2 = 2592\big(\tfrac{1+w^*}{5+3w^*}\big)^4$.
+The two agree exactly: $32\times 81 = 2592$, i.e. $f_{14} = c^2 f_{03}$ (`cross-spec-check.md` A5).
+The 1024 of p. 7 is $32^2$: the `MAIN` 11 coefficient was copied and squared without noticing that in
+`NUM` 03 the $c^2$ is no longer inside $f$. (Consistent with the struck leading "4" recorded at R22.)
+
+**Two different $w$'s — `NUM` 03 is correct to separate them.**
+- $w_0$ inside $f$ (the $2/(3(1+w_0))$) comes from $2M_P^2\mathcal H^2/(a^2(\rho_0+p_0))$ in the
+  Einstein equation and is the background at the **source** time: $w_0 = w(z')$. The coefficient
+  $(5+3w)/(3(1+w))$ on $\phi\phi$ in `MAIN` 11 R6 / `MAIN` 14 R15 is the *same* $w$; it is what
+  appears when the complete square of R5 is expanded, not a second ingredient.
+- $w^*$ in $c_*$ (R20, $\phi_{\mathbf k} = c_*\,T_k(z)\,\zeta^*_{\mathbf k}$) is the adiabatic
+  super-horizon relation at the time the initial condition is set. It requires $w$ to be constant
+  at $z_{\rm init}$ for long enough that $\phi$ has settled to its constant value; with running $w$
+  it has no reason to equal $w(z')$. **Requirement for the build:** $z_{\rm init}$ must sit deep
+  inside an epoch of constant $w^*$. For radiation, $w^* = \tfrac13$, $c_* = \tfrac23$
+  (the standard $\phi = \tfrac23\zeta$, sign convention-dependent and irrelevant since only $P^*$
+  enters), $4c_*^2 = \tfrac{16}{9}$.
+- `MAIN` 11 p. 6 and `MAIN` 14 p. 2 both say "take $\mathcal H$ to correspond to an epoch of fixed
+  $w$", so their single $w$ is a restriction, not an error; it becomes wrong only when the formula
+  is carried to a time-varying background, which is the case the numerical branch is built for.
+- The normalisation $T_k \to 1$ at $z_{\rm init}$ is a normalisation of the transfer function only
+  and carries **no** information about which seed is intended; the $\zeta^*\to\phi^*$ translation
+  is the separate constant $c_*$ applied outside. (Identity of the seed: Tier 1.4, still open.)
+
+**Code status.** `ComputeTargets/QuadSource.py` (`source_function`) is the $f$ of R22 exactly: it is
+written in the expanded form $\tfrac{5+3w}{3(1+w)}T_qT_r + \tfrac{2}{3(1+w)}[-(1+z)(T_qT_r'+T_rT_q') + (1+z)^2T_q'T_r']$,
+which reduces algebraically to $T_qT_r + \tfrac{2}{3(1+w)}(T-(1+z)T')_q(T-(1+z)T')_r$, and it
+evaluates $w$ at the source sample redshift (`wBackground(z)`), i.e. $w_0 = w(z')$.
+`ComputeTargets/TkNumericIntegration.py` integrates $T_k$ from $T_k = 1$, $dT_k/dz = 0$ at
+$z_{\rm init}$. `ComputeTargets/OneLoopIntegral.py` `compute()` is a **stub**: the $648\pi^2$
+prefactor, the $\big(\tfrac{1+w^*}{5+3w^*}\big)^4$ factor and the $\theta$ integral are not yet
+implemented anywhere. For this item the corrected chain is therefore a **build specification**, not an
+audit finding. Everything that does exist (source $f$, $T_k$ normalisation, unit-jump $\bar G_k$)
+follows `NUM` 03's conventions.
+
+### 0.3 Tier 1.3 — form of the one-loop integral: **signed off 2026-09-07**
+
+**Decision (author).** There are not two forms. `MAIN` 14 R23 (spec 05) is the 3-D loop measure
+before anything has been done to it; to evaluate it one must split $d^3q = q^2dq\,\sin\theta\,d\theta\,d\varphi$,
+insert the spin-2 projector factors $Q_\pm^2 = \tfrac12q^4\sin^4\theta\{\cos^2,\sin^2\}2\varphi$ and do the
+$\varphi$ integral, and the result *is* `NUM` 03 R35. Nothing else happens between them. **The build
+form is `NUM` 03 R35 with the Tier 1.2 coefficient and the measure completed:**
+
+$$
+\langle h_s(\mathbf k)h_{s'}(\mathbf k')\rangle = (2\pi)^3\delta(\mathbf k+\mathbf k')\,\delta_{ss'}\,P^h_{22}(k),\qquad
+P^h_{22}(k) = 648\pi^2\left(\frac{1+w^*}{5+3w^*}\right)^4
+\int_0^\infty\frac{dq}{q}\int_0^\pi d\theta\,\sin^5\theta\;\mathcal P^*(q)\,\frac{\mathcal P^*(r)}{r^3}
+\left\{\int_z^{z_{\rm init}}dz'\,\bar G_k(z,z')\,\frac{1+z}{1+z'}\,\frac{q_{\rm phys}^2}{H(z')^2}\,f(z'\,|\,\mathbf q,\mathbf k-\mathbf q)\right\}^2,
+$$
+$$
+r = |\mathbf k-\mathbf q| = \sqrt{k^2+q^2-2kq\cos\theta},\qquad q_{\rm phys} = q/a_0,\qquad
+f(z'\,|\,\mathbf q,\mathbf k-\mathbf q) = T_qT_r + \frac{2}{3(1+w(z'))}\Big(T-(1+z')\frac{dT}{dz'}\Big)_q\Big(T-(1+z')\frac{dT}{dz'}\Big)_r .
+$$
+
+with $\theta$ the angle between $\mathbf q$ and $\mathbf k$, $\bar G_k$ the unit-jump Green's function
+of §0.1, $w^* = w(z_{\rm init})$ and $w(z')$ inside $f$ as in §0.2, and $T_k \to 1$ at $z_{\rm init}$.
+The $d\theta$, the limits and $r(\theta)$ were not written on p. 10; they are supplied here by the
+reduction. Any change of variables (e.g. $(u,v) = (q/k, r/k)$ or $(q,r)$) is an implementation choice
+and does not alter the spec.
+
+**Check** *[author-confirmed]*: carrying the same steps out on spec 05 R23 gives
+$P^h_{22} = 8\pi^2\int q^3dq\int d\theta\,\sin^5\theta\,\mathcal P^*(q)\mathcal P^*(r)r^{-3}\,(\text{TARGET})^2$
+with TARGET = spec 05 R31. Inserting $\big(\tfrac{1+w^*}{5+3w^*}\big)^4 = c_*^4/81$, $648/81 = 8$, and
+the §0.1 relation between the redshift brace and TARGET (the $q^2_{\rm phys}$ in the brace supplies the
+$q^4$), the two coincide exactly for $w^* = w$. The match requires the corrected 648, so it is an
+independent confirmation of §0.2. For a running background only the `NUM` 03 form applies.
+
+**Deliverable.** The stored quantity is the **per-polarisation** spectrum $P^h_{22}(k)$, labelled by
+$s$, exactly as both documents define it ("for any $s$", `MAIN` 14 p. 6). The observable
+$\Omega_{\rm GW}$ is built in a **separate layer** that consumes the per-polarisation spectra; for
+the present calculation the two polarisations carry equal power and the total tensor spectrum is the
+sum over $s$, but the layers are to be kept decoupled. Reason: cosmological-collider-type models can
+give unequal power in the two polarisations; the present calculation does not handle that case, and
+if it is needed later a new compute layer can be shipped for $P^h_{22,s}$ while the layer that builds
+the observable is kept unchanged.
+
+**Method (build question, not spec).** How the $q$ and $\theta$ integrals are actually performed is
+open. Any scheme has to handle the Kohri–Terada resonance in the inner time integral, possibly by a
+stationary-phase treatment. `ComputeTargets/OneLoopIntegral.py` is currently a stub.
+
+### 0.4 Tier 1.4 — identity and normalisation of the primordial seed: **signed off 2026-09-07**
+
+**Decision (author).** The seed is the primordial curvature perturbation $\zeta^*$ on both
+`MAIN` 14 p. 1 and `NUM` 03 p. 4. The "5-like glyph" of spec 03 and the "$S^*$" of spec 05 are the
+same handwritten $\zeta^*$; the transcribers had trouble with the handwriting. The linear relation is
+$$
+\phi_{\mathbf k}(z) = \frac{3(1+w^*)}{5+3w^*}\,T_k(z)\,\zeta^*_{\mathbf k},\qquad T_k \to 1 \text{ at } z_{\rm init},
+$$
+(`NUM` 03 R20), correct at linear order for adiabatic perturbations with $w = w^*$ constant at
+$z_{\rm init}$ (§0.2). Consequently **$P^*(q)$ is $P_\zeta(q)$ and $\mathcal P^*(q)$ is the dimensionless
+$\mathcal P_\zeta(q)$**, and the $\big(\tfrac{1+w^*}{5+3w^*}\big)^4$ in R35 is the translation from
+$\zeta^*$ to the potential, applied outside the transfer functions.
+
+**Why $\zeta$.** The initial spectrum is to be supplied in terms of $\zeta$ so that output from
+`PyTransport` or `CppTransport`, which compute the $\zeta$ two-point function, can be fed in
+directly. Spec 01's $\phi^*$ is not in conflict: it is the early-time value of the potential itself,
+$\phi^* = \tfrac{3(1+w^*)}{5+3w^*}\zeta^*$, and $T_k = \phi_k/\phi^*_k$.
+
+**Sign.** The sign convention relating $\zeta$ to the potential is not fixed by the notes and does
+not need to be: only $P_\zeta$ enters $P^h_{22}$. At linear order on super-horizon scales the
+adiabatic $\zeta$ and $\mathcal R$ coincide up to convention, so a $\mathcal R$ spectrum may be fed
+in equally.
+
+**All four Tier 1 items are now signed off for this file.** Tier 2 items: *pending author review.*
+
 ---
 
 ## 1. Source documents
@@ -244,6 +404,11 @@ a "5"-like character with subscript $\mathbf{k}$ and superscript $*$, read as $\
 perturbation); alternatives would be $S$ or $\mathcal{S}$. The same glyph appears in the dimension
 check on p. 6 ("$h_s$ and $\zeta$ should be dimensionless") and as $P^*$ on pp. 7–10, supporting $\zeta$.
 
+**Author note (2026-09-07):** $w^*$ is the value of $w$ at $z_{\rm init}$, which must lie deep inside an epoch of
+constant $w$; for radiation the prefactor is $\tfrac23$. It is distinct from $w_0 = w(z')$ inside $f$ (R22). The code's
+$T_k$ is normalised to 1 at $z_{\rm init}$, which is a normalisation of $T_k$ only and says nothing about the
+seed; the translation from the seed to $\phi^*$ is this prefactor. See §0.2. **The glyph is $\zeta^*$, the primordial curvature perturbation (Tier 1.4, signed off 2026-09-07, §0.4); $P^* = P_\zeta$.**
+
 **R21** (`NUM` 03 p. 4). Definition (under-brace on the page):
 $$Q_s(\mathbf{q}) \equiv e_s^{\ell m}(\mathbf{k})\,q_\ell q_m .$$
 On p. 7 it is also written $Q_s(\mathbf{k},\mathbf{q})$; on p. 9 the explicit $Q_\pm$ are written with
@@ -289,6 +454,11 @@ $$\frac{d\bar G_k}{dz}\Big|_{z=z'} = +1 .$$
 Note the $k^2/H^2$ in the operator is written without the subscript "phys" that R22 uses for the same
 term. Confidence: high.
 
+**Author note (2026-09-07):** $\bar G_k$ defined here is **the Green's function the code computes**
+(`ComputeTargets/GkNumericIntegration.py`: $G(z',z') = 0$, $dG/dz|_{z'} = +1$, zero for $z > z'$). The $k^2/H^2$
+is $k^2/(a_0^2H^2)$ with $a_0$ absorbed into $k/a_0$, not $a_0 = 1$. Relation to the conformal-time
+function of `MAIN` 13/14: $\bar G_k = -a_0H(z')\,{\rm Gr}_k$. See §0.
+
 **R26** (`NUM` 03 p. 6). **Final form of $h_s(z)$ with the causal Green's function** (sign of $\bar G$
 absorbed by reversing the limits):
 $$h_s(z) = 36\left(\frac{1+w^*}{5+3w^*}\right)^2\int_{z}^{z_{\rm init}}dz'\,\bar G_k(z,z')\,\frac{1+z}{1+z'}
@@ -308,6 +478,10 @@ $$h_s(\mathbf{k}) = 36\left(\frac{1+w^*}{5+3w^*}\right)^2\int\frac{d^3q}{(2\pi)^
 \zeta^*_{\mathbf{q}}\zeta^*_{\mathbf{k}-\mathbf{q}}\,I_s(z\,|\,\mathbf{k},\mathbf{q}).$$
 Confidence: high for the structure; **medium** for the denominator "$a_0^2H^2(z')$" — a small mark
 after $H^2$ could be read as a subscript "0", but $H(z')$ with an argument is the consistent reading.
+
+**Author note (2026-09-07):** the $Q_s/a_0^2$ here is exactly cancelled by the $a_0^2$ that
+$dz'\,\bar G_k = (-a_0H\,d\eta')(-a_0H(z')\,{\rm Gr}_k)$ produces on conversion to conformal time, so
+$I_s = -\dfrac{Q_s}{c^2}\times$ (`MAIN` 14 target, spec 05 R31) with $c^2 = (2+b)^2/(3+2b)^2$, independent of $a_0$ (§0).
 
 **R29** (`NUM` 03 p. 7). Remarks on $a_0$-dependence: $\dfrac{Q_s}{a_0^2H^2(z')} \propto \dfrac{q^2_{\rm phys}}{H^2(z')}$;
 "$\int d^3q\,\zeta^*_{\mathbf{q}}$ is independent of $a_0$"; "$\zeta^*_{\mathbf{k}-\mathbf{q}}$ gives $h_s(\mathbf{k})$
@@ -330,6 +504,9 @@ $$= (2\pi)^3\delta(\mathbf{k}+\mathbf{k}')\;1024\left(\frac{1+w^*}{5+3w^*}\right
 the prefactor of $h_s$ in R26–R28 is 36.) Confidence: high (the page's original is unambiguously
 1024).
 
+**Author sign-off (2026-09-07):** the annotation is right, **1296** on both p. 7 and p. 8. The 1024 is $32^2$, the
+`MAIN` 11 coefficient squared; see §0.2 for why `MAIN` 11/14 have 32 and `NUM` 03 has 36.
+
 **R31** (`NUM` 03 p. 8). Symmetry reduction of the two $I I$ terms. "$I_s$ should be regarded as a
 function of $\mathbf{q}$ and $\mathbf{k}-\mathbf{q}$, not $\mathbf{k}$ and $\mathbf{q}$ separately, except
 for the Green's function"; "the Green's function only depends on $k=|\mathbf{k}|=|\mathbf{k}'|$":
@@ -344,6 +521,8 @@ $$\langle h_s(\mathbf{k})h_s(\mathbf{k}')\rangle = (2\pi)^3\delta(\mathbf{k}+\ma
 \int\frac{d^3q}{(2\pi)^3}\,P^*(q)P^*(|\mathbf{k}-\mathbf{q}|)\,I_s(z\,|\,\mathbf{q},\mathbf{k}-\mathbf{q})^2 .$$
 "2048" red-boxed, typed annotation "DS 10 July 2025 should be 2592" ($=2\times1296$). The exponent on
 the bracket is written over a struck "2" and reads 4. Confidence: high.
+
+**Author sign-off (2026-09-07):** **2592** $= 2\times1296$, as annotated (§0.2).
 
 **R33** (`NUM` 03 p. 9). Explicit polarisation projections and azimuthal integrals:
 $$Q_+ = \frac{1}{\sqrt2}\,q^2_{\rm phys}\sin^2\theta\,\cos2\varphi,\qquad
@@ -366,6 +545,9 @@ appears outside the braces on the first line; see §5). "1024" red-boxed, typed 
 (i) the $d\theta$, which is not written ("$q^2\,dq\,\sin\theta$" only), and (ii) the argument of $f$ in
 the last brace, which appears to lack the prime on $z$.
 
+**Author sign-off (2026-09-07):** both red-boxed 1024s on this page are **1296**, i.e. the coefficient is $1296\pi$;
+the annotation "1292" is a typo for 1296 (§0.2). The argument of $f$ is $z'$ (Q4).
+
 **R35** (`NUM` 03 p. 10). **Final formula of the document:**
 $$\langle h_s(\mathbf{k})h_{s'}(\mathbf{k}')\rangle = (2\pi)^3\delta(\mathbf{k}+\mathbf{k}')\,\delta_{ss'}\;512\pi^2\left(\frac{1+w^*}{5+3w^*}\right)^4
 \int\frac{dq}{q}\,\sin^5\theta\;\mathcal{P}^*(q)\,\frac{\mathcal{P}^*(r)}{r^3}
@@ -375,6 +557,11 @@ is implicit (no $d\theta$ written); $r=|\mathbf{k}-\mathbf{q}|=\sqrt{k^2+q^2-2kq
 written out. Confidence: high for the coefficients and structure; **medium** for (i) whether the
 Green's function carries a bar ($\bar G_k$ as on p. 9, or $G_k$ as it appears to be written here),
 (ii) the missing $d\theta$, (iii) the argument of $f$, written $z$ rather than $z'$.
+
+**Author sign-off (2026-09-07):** the coefficient is **$648\pi^2$**; "646" is a typo for 648 (§0.2). The
+Green's function is the barred $\bar G_k$ (Q6; it is the function the code computes, §0.1) and the argument of
+$f$ is $z'$ (Q4). The missing $d\theta$, the $r(\theta)$ and the limits are supplied in §0.3 (Tier 1.3, signed off):
+$\int_0^\infty dq/q\int_0^\pi d\theta$, $r = \sqrt{k^2+q^2-2kq\cos\theta}$. **This, with $648\pi^2$, is the build form.**
 
 ---
 
@@ -435,6 +622,8 @@ exists on the pages.
    $648\pi^2$). Whether "1292" and "646" are typos, or whether the author intended a different
    correction, cannot be decided from the page. The original 1024 appears to arise from
    $32^2$ rather than $36^2$; the notes do not say where 32 would come from.
+   **Closed 2026-09-07:** typos for 1296 and 648; the 32 is the `MAIN` 11/14 coefficient, whose $c^2$ sits inside
+   $f$ rather than outside. Corrected chain and explanation in §0.2.
 3. **Arguments of $f$.** Written $f(z'|\mathbf{k},\mathbf{k}-\mathbf{q})$ on pp. 5 and 7, but
    $f(z'|\mathbf{q},\mathbf{k}-\mathbf{q})$ on pp. 6 and 9, and p. 8 states $I_s$ "should be regarded as
    a function of $\mathbf{q}$ and $\mathbf{k}-\mathbf{q}$". Read as a notational slip on pp. 5, 7; the
@@ -446,6 +635,8 @@ exists on the pages.
    R22 by consistency. Also, $w_0$ inside $f$ is the background $p_0/\rho_0$ from the derivation on
    pp. 2–3; whether it is to be evaluated at the source redshift $z'$ (i.e. $w_0 = w(z')$) is not
    stated.
+   **Closed 2026-09-07:** $w_0 = w(z')$ at the source time; $w^*$ in the prefactor is $w(z_{\rm init})$. The
+   $f$ identification with the R22 bracket is confirmed, and it is what `ComputeTargets/QuadSource.py` implements. See §0.2.
 6. **Bar on the Green's function, p. 10.** $\bar G_k$ (barred) on pp. 6, 7, 9; the p. 10 symbol looks
    unbarred. The limits $\int_z^{z_{\rm init}}$ are those of the barred form (R26), so $\bar G_k$
    is presumably meant.

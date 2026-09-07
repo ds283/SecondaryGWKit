@@ -1,5 +1,8 @@
 # Spec 05-B: One-loop (P22) induced tensor power spectrum — independent duplicate transcription of `MAIN` 14
 
+> **Author note (2026-09-07).** This is the independent duplicate transcription and is kept as written. For the definitive project convention on the normalisation of $a$ (the code absorbs $a_0$ into $k/a_0$ and $a_0\eta$; it does **not** set $a_0 = 1$) and on which Green's function the code computes (the unit-jump $\bar G_k$ of `NUM` 03, $= -a_0H(z')\,{\rm Gr}_k$), see §0 of the primary spec `05-one-loop.md`. Tier 1.1 of `REVIEW-QUEUE.md` was signed off on that basis. Tiers 1.2–1.4 were also signed off 2026-09-07; in particular this transcription's reading of the seed as $\zeta^*$ (diff-05 D1) is the correct one, and $P_* = P_\zeta$. See §0 of the primary spec.
+
+
 Transcription **B** (independent duplicate). Produced without sight of `docs/spec/05-one-loop.md`.
 Transcriber has not read `MAIN` 11, nor any code in the repository.
 
