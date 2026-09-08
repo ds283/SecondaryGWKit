@@ -122,7 +122,7 @@ Traceability from the audit's finding IDs to the prompt that discharges them.
   extend the GenericEOS `T(z)` spline below `DEFAULT_MIN_TEMPERATURE_Z_REDSHIFT = -0.2` and relax
   `DERIVATIVE_FIT_PAD_FLOOR`.
 
-- **[05-numeric-region-is-now-the-accuracy-floor]** *(opened by prompt 05, 2026-09-08)* — with
+- **[05-numeric-region-is-now-the-accuracy-floor]** *(opened by prompt 05, 2026-09-08; interpretation partially superseded by `docs/lg-phase-and-handover-followup-2026-09.md` — the residual is mostly a spline end-interval effect at the hand-over, and the LG phase-spline error grows linearly with $x$)* — with
   the new `TkSourceFunctions`, the Liouville-Green branch of $T_k$ reproduces an exact
   oscillation to 6.1e-06 of the local envelope on `main.py`'s 100-per-log10(1+z) grid (all of it
   phase-spline fit error, falling as $\Delta^4$ to 3.0e-08 at 300/decade, and bounded by the

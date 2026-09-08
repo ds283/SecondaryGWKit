@@ -7,6 +7,27 @@
 **Date:** 2026-09-08
 **Result:** COMPLETE WITH DEVIATIONS
 
+> **Partially superseded (2026-09-08, orchestrator review).** The measurements in this log are
+> correct, but two of their interpretations are not, and are replaced by
+> [`docs/lg-phase-and-handover-followup-2026-09.md`](../../../docs/lg-phase-and-handover-followup-2026-09.md):
+>
+> 1. The numeric-region midpoint residual quoted under deviation 7 and in §3 issue
+>    `[05-numeric-region-is-now-the-accuracy-floor]` (7.4e-06 in $T$, 2.7e-04 in $dT/dz$) is
+>    mostly a cubic-spline *end-interval* effect at the hand-over node, not grid-density fit error:
+>    the last two intervals carry 7.4e-06 and 2.9e-06 while the interior at the same node density
+>    is ~5e-07. The hand-over is therefore the worst point for a boundary reason, and the fix is an
+>    overlap past the stop point, not a denser grid (followup §1).
+> 2. "State handed to the next prompt" item 5 says the LG-branch phase floor is set by the phase
+>    range per chunk, not the total cycle count. That is wrong. The phase-spline error scales as
+>    $h^4 x/384$ and grows linearly with $x$ (measured 6.9e-07 at $x=10^3$, 6.2e-06 at $x=10^4$;
+>    ~1e-02 rad extrapolated to production $x\sim10^7$). Chunking protects floating-point precision,
+>    not interpolation error (followup §2). The same document records that `bessel_phase`, the
+>    "exact" oracle behind these fixtures, is itself accurate only to ~$x\times10^{-8}$ in phase
+>    (followup §2.4); prompts 07, 08 and 12 should read §4 of the followup before setting tolerances.
+>
+> The relaxed tolerances of deviation 7 were accepted by the user on 2026-09-08 with these two
+> issues deferred to a later remediation.
+
 ## What shipped
 
 - **new `ComputeTargets/TkSourceFunctions.py`** (447 lines, of which ~110 are the module
