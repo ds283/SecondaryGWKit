@@ -1,0 +1,132 @@
+{
+  "stage1_only": {
+    "k": 10000000.0,
+    "si": 100,
+    "sf": 1,
+    "rtol": 1e-08,
+    "atol": 1e-10,
+    "max_phase_error": 5.378356127579245e-05,
+    "end_phase_error": 5.378356127579245e-05,
+    "metadata": {
+      "phase_cycle_events": 990
+    },
+    "stage1_nfev": 64619,
+    "stage2_nfev": 0
+  },
+  "direct": [
+    {
+      "constant": false,
+      "coord": "z",
+      "rtol": 1e-08,
+      "max_phase_error": 0.009416762739419937,
+      "nfev": 650
+    },
+    {
+      "constant": false,
+      "coord": "z",
+      "rtol": 1e-12,
+      "max_phase_error": 2.384185791015625e-06,
+      "nfev": 1076
+    },
+    {
+      "constant": false,
+      "coord": "log1pz",
+      "rtol": 1e-08,
+      "max_phase_error": 0.01230082400189017,
+      "nfev": 161
+    },
+    {
+      "constant": false,
+      "coord": "log1pz",
+      "rtol": 1e-12,
+      "max_phase_error": 1.2448231777973545e-06,
+      "nfev": 368
+    },
+    {
+      "constant": true,
+      "coord": "z",
+      "rtol": 1e-08,
+      "max_phase_error": 2.3950697141117416e-06,
+      "nfev": 95
+    },
+    {
+      "constant": true,
+      "coord": "z",
+      "rtol": 1e-12,
+      "max_phase_error": 2.3950697141117416e-06,
+      "nfev": 95
+    },
+    {
+      "constant": true,
+      "coord": "log1pz",
+      "rtol": 1e-08,
+      "max_phase_error": 0.6368104754232604,
+      "nfev": 146
+    },
+    {
+      "constant": true,
+      "coord": "log1pz",
+      "rtol": 1e-12,
+      "max_phase_error": 0.00011924320315870318,
+      "nfev": 296
+    }
+  ],
+  "local_quadrature": [
+    {
+      "order": 2,
+      "global_midpoint_error": 0.0006500205015777271,
+      "local_midpoint_error": 4.655228275276292e-07
+    },
+    {
+      "order": 4,
+      "global_midpoint_error": 4.2264462647206535e-09,
+      "local_midpoint_error": 5.5725061196749435e-11
+    },
+    {
+      "order": 8,
+      "global_midpoint_error": 2.2442158643998184e-09,
+      "local_midpoint_error": 3.3186833467216566e-11
+    }
+  ],
+  "edges": {
+    "large_start_actual_run": "AssertionError: ",
+    "short_interval": {
+      "delta_z": 9.99911264898401e-12,
+      "exact_phase": -8.263729461977768,
+      "returned_phase": [
+        0.0
+      ],
+      "metadata": {
+        "initial_data_only": true
+      }
+    },
+    "coordinate_roundtrip": [
+      {
+        "zinit": 99.0,
+        "max_redshift_roundtrip_error": 7.105427357601002e-15,
+        "ulp_u": 1.4210854715202004e-14
+      },
+      {
+        "zinit": 1000000.0,
+        "max_redshift_roundtrip_error": 5.820766091346741e-11,
+        "ulp_u": 1.1641532182693481e-10
+      },
+      {
+        "zinit": 100000000.0,
+        "max_redshift_roundtrip_error": 7.450580596923828e-09,
+        "ulp_u": 1.4901161193847656e-08
+      },
+      {
+        "zinit": 1000000000000.0,
+        "max_redshift_roundtrip_error": 6.103515625e-05,
+        "ulp_u": 0.0001220703125
+      }
+    ],
+    "stage1_endpoint": "completed"
+  },
+  "varying_background": {
+    "max_phase_error": 0.0009816278744888332,
+    "reference_quad_error_estimate": 1.1226345303499692e-08,
+    "phase_span": 703434.0070281783
+  }
+}
