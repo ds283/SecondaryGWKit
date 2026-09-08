@@ -2,7 +2,7 @@
 
 **Campaign:** [`README.md`](README.md) · **Source audit:** [`docs/spec-code-audit-2026-09.md`](../../docs/spec-code-audit-2026-09.md)
 **Baseline commit:** `e9a43a2` (`main`, clean)
-**Last updated:** 2026-09-08 — prompt 03 complete.
+**Last updated:** 2026-09-08 — prompt 05 complete.
 
 > **Maintenance rule.** Every prompt updates this file *in its own commit*, before committing.
 > Set your row's status, fill in the commit SHA, model and log link, update the item-level table,
@@ -33,7 +33,7 @@ Legend: ⬜ not started · 🟡 in flight · ✅ complete · ⚠️ complete wit
 
 | # | Prompt | Items | Model | Status | Commit | Log |
 |---|---|---|---|---|---|---|
-| 05 | [`TkSourceFunctions`](05-tk-source-functions.md) | A2 (1/3) | Opus | ⬜ | | |
+| 05 | [`TkSourceFunctions`](05-tk-source-functions.md) | A2 (1/3) | Opus | ⚠️ | *"Add a two-region LG representation of T_k for source consumers"* (SHA not embedded, per prompt 01 log deviation 4) | [`logs/05-tk-source-functions.md`](logs/05-tk-source-functions.md) |
 | 06 | [`QuadSource` regions](06-quadsource-regions.md) | A3, A2 (2/3) | Opus | ⬜ | | |
 
 ### Workstream C — the source time integral
@@ -52,7 +52,7 @@ Legend: ⬜ not started · 🟡 in flight · ✅ complete · ⚠️ complete wit
 | 11 | [Spec annotations](11-spec-annotations.md) | audit §6 | Sonnet | ⬜ | | |
 | 12 | [Verification](12-verification.md) | audit §4; campaign | Opus | ⬜ | | |
 
-**Progress:** 3 / 12 complete.
+**Progress:** 4 / 12 complete.
 
 ---
 
@@ -63,7 +63,7 @@ Traceability from the audit's finding IDs to the prompt that discharges them.
 | ID | Severity | Description | Prompt | Status |
 |---|---|---|---|---|
 | A1 | **DEFECT, physics** | `LambdaCDM_GenericEOS.wPerturbations` divides by the total density incl. $\rho_\Lambda$ | 01 | ✅ |
-| A2 | **DEFECT, representation** | `QuadSource` splines the oscillating source; unusable beyond ~95 cycles | 05, 06, 08 | ⬜ |
+| A2 | **DEFECT, representation** | `QuadSource` splines the oscillating source; unusable beyond ~95 cycles | 05, 06, 08 | 🟡 (1/3: `TkSourceFunctions` shipped) |
 | A3 | **DEFECT, regression** | `compute_quad_source` walks the full grid against a both-ends-truncated $T_k$ grid → `IndexError` | 06 | ⬜ |
 | A4 | **DEFECT, known** | Levin call receives only $\theta_G$; no $T_q,T_r$ input to the Levin decision | 07, 08, 10 | ⬜ |
 | A5 | **DEFECT, known** | 92 % of scheduled $(k,q,r)$ triples are not triangles | 04 | ⬜ |
@@ -122,6 +122,21 @@ Traceability from the audit's finding IDs to the prompt that discharges them.
   extend the GenericEOS `T(z)` spline below `DEFAULT_MIN_TEMPERATURE_Z_REDSHIFT = -0.2` and relax
   `DERIVATIVE_FIT_PAD_FLOOR`.
 
+- **[05-numeric-region-is-now-the-accuracy-floor]** *(opened by prompt 05, 2026-09-08)* — with
+  the new `TkSourceFunctions`, the Liouville-Green branch of $T_k$ reproduces an exact
+  oscillation to 6.1e-06 of the local envelope on `main.py`'s 100-per-log10(1+z) grid (all of it
+  phase-spline fit error, falling as $\Delta^4$ to 3.0e-08 at 300/decade, and bounded by the
+  ~125-cycle chunk range rather than by the total cycle count). The *numeric* branch on the same
+  grid gives 7.4e-06 in $T$ and 2.7e-04 in $dT/dz$ between grid points at 3.5 e-folds
+  sub-horizon — one to two orders worse, and unimprovable without a denser grid, since the
+  numeric branch is by construction a spline through stored samples. **Impact:** prompt 06 (the
+  numeric region should be kept as short as LG validity allows, because its lower end is its
+  worst point), prompt 08's error budget, and prompt 12's tolerances. Also: comparing the LG
+  branch against `scipy.special.jv` rather than against `bessel_phase`'s own $m\sin\vartheta$
+  saturates at 2.0e-06 under refinement — that is `bessel_phase`'s phase-function error, out of
+  scope here (README §5 item 8). **Next step:** nothing required at the shipped resolution;
+  raising `source_samples_per_log10z` is the only lever, and it costs the numeric branch alone.
+
 > Add an entry here whenever a prompt finishes with something unresolved: a verification step that
 > could not be run, an assumption that could not be confirmed, a deviation that a later prompt has
 > to work around, a measured cost that changes a later prompt's decision. Format:
@@ -162,3 +177,8 @@ Traceability from the audit's finding IDs to the prompt that discharges them.
    $z$, so every stored phase is negative and decreasing** (audit §3.2). Composed phases
    $\theta_G\pm\theta_q\pm\theta_r$ inherit this. Nothing depends on the sign, but tests that
    assert monotonicity must assert the right direction.
+6. **`TkSourceFunctions` region boundaries are not a single point.** `WKB_region[0]` can sit up
+   to one grid step *below* `crossover_z`, because `main.py:695-697` truncates the WKB grid to
+   the largest grid point at or below `z_init` and `phase_spline` cannot be extrapolated.
+   Partition on `crossover_z`, but clamp quadrature nodes to `numeric_region`/`WKB_region`; every
+   accessor raises outside its own range. See `logs/05-tk-source-functions.md` deviation 3.

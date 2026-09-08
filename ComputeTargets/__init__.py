@@ -33,6 +33,9 @@ from .TkNumericIntegration import (
     TkNumericIntegration,
     TkNumericValue,
 )
+from .TkSourceFunctions import (
+    TkSourceFunctions,
+)
 from .TkWKBIntegration import (
     TkWKBIntegration,
     TkWKBValue,
