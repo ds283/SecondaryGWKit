@@ -112,7 +112,7 @@ class TkWKBIntegration(DatastoreObject):
             self._WKB_violation_z = None
             self._WKB_violation_efolds_subh = None
 
-            self._init_efolds_suph = None
+            self._init_efolds_subh = None
             self._metadata = None
 
             self._phase_solver = None
@@ -353,7 +353,7 @@ class TkWKBIntegration(DatastoreObject):
                 f"omega_WKB^2 must be non-negative at the initial time (k={self._k_exit.k.k_inv_Mpc}/Mpc, z_init={self._z_init:.5g}, omega_WKB^2={omega_WKB_sq_init:.5g})"
             )
 
-        WKB_criterion_init = d_ln_omega_WKB_init / sqrt(omega_WKB_sq_init)
+        WKB_criterion_init = fabs(d_ln_omega_WKB_init) / sqrt(omega_WKB_sq_init)
         if WKB_criterion_init > 1.0:
             print(f"!! Warning (TkWKBIntegration) k={self._k_exit.k.k_inv_Mpc:.5g}/Mpc")
             print(
@@ -629,11 +629,11 @@ class TkWKBValue(DatastoreObject):
 
     @property
     def analytic_T_w(self) -> Optional[float]:
-        return self._analytic_T_rad
+        return self._analytic_T_w
 
     @property
     def analytic_Tprime_w(self) -> Optional[float]:
-        return self._analytic_Tprime_rad
+        return self._analytic_Tprime_w
 
     @property
     def sin_coeff(self) -> Optional[float]:

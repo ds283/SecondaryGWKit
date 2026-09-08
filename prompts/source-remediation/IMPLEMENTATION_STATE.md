@@ -2,7 +2,7 @@
 
 **Campaign:** [`README.md`](README.md) · **Source audit:** [`docs/spec-code-audit-2026-09.md`](../../docs/spec-code-audit-2026-09.md)
 **Baseline commit:** `e9a43a2` (`main`, clean)
-**Last updated:** 2026-09-08 — prompt 01 complete.
+**Last updated:** 2026-09-08 — prompt 02 complete.
 
 > **Maintenance rule.** Every prompt updates this file *in its own commit*, before committing.
 > Set your row's status, fill in the commit SHA, model and log link, update the item-level table,
@@ -20,7 +20,7 @@ Legend: ⬜ not started · 🟡 in flight · ✅ complete · ⚠️ complete wit
 | # | Prompt | Items | Model | Status | Commit | Log |
 |---|---|---|---|---|---|---|
 | 01 | [GenericEOS sound speed](01-genericeos-sound-speed.md) | A1 | Opus | ⚠️ | *"Exclude Lambda from the GenericEOS perturbation sound speed"* (SHA not embedded, see log deviation 4) | [`logs/01-genericeos-sound-speed.md`](logs/01-genericeos-sound-speed.md) |
-| 02 | [WKB value hygiene](02-wkb-value-hygiene.md) | B1, B2, B3, B4, A6, B9, B10 | Sonnet | ⬜ | | |
+| 02 | [WKB value hygiene](02-wkb-value-hygiene.md) | B1, B2, B3, B4, A6, B9, B10 | Sonnet | ✅ | *"Fix WKB value, policy and label hygiene slips"* | [`logs/02-wkb-value-hygiene.md`](logs/02-wkb-value-hygiene.md) |
 | 03 | [Background derivative ends](03-background-derivative-ends.md) | A7 | Opus | ⬜ | | |
 
 ### Workstream D — scheduling
@@ -52,7 +52,7 @@ Legend: ⬜ not started · 🟡 in flight · ✅ complete · ⚠️ complete wit
 | 11 | [Spec annotations](11-spec-annotations.md) | audit §6 | Sonnet | ⬜ | | |
 | 12 | [Verification](12-verification.md) | audit §4; campaign | Opus | ⬜ | | |
 
-**Progress:** 1 / 12 complete.
+**Progress:** 2 / 12 complete.
 
 ---
 
@@ -67,18 +67,18 @@ Traceability from the audit's finding IDs to the prompt that discharges them.
 | A3 | **DEFECT, regression** | `compute_quad_source` walks the full grid against a both-ends-truncated $T_k$ grid → `IndexError` | 06 | ⬜ |
 | A4 | **DEFECT, known** | Levin call receives only $\theta_G$; no $T_q,T_r$ input to the Levin decision | 07, 08, 10 | ⬜ |
 | A5 | **DEFECT, known** | 92 % of scheduled $(k,q,r)$ triples are not triangles | 04 | ⬜ |
-| A6 | **DEFECT, policy** | `"WKB_minimal"` tests `numeric_clearance` | 02 | ⬜ |
+| A6 | **DEFECT, policy** | `"WKB_minimal"` tests `numeric_clearance` | 02 | ✅ |
 | A7 | **DEFECT, accuracy** | `_build_derivative` end bias (ε″ 30 % at the $z=0.1$ end for GenericEOS models) | 03 | ⬜ |
-| B1 | diagnostic | `TkWKBValue.analytic_*_w` return `_rad` | 02 | ⬜ |
-| B2 | diagnostic | `GkWKBValue.analytic_*_w` return `_rad` | 02 | ⬜ |
-| B3 | dead code | pre-flight WKB warnings omit `fabs` | 02 | ⬜ |
-| B4 | wrong exception | `_init_efolds_suph` typo (Tk and Gk WKB) | 02 | ⬜ |
+| B1 | diagnostic | `TkWKBValue.analytic_*_w` return `_rad` | 02 | ✅ |
+| B2 | diagnostic | `GkWKBValue.analytic_*_w` return `_rad` | 02 | ✅ |
+| B3 | dead code | pre-flight WKB warnings omit `fabs` | 02 | ✅ |
+| B4 | wrong exception | `_init_efolds_suph` typo (Tk and Gk WKB) | 02 | ✅ |
 | B5 | tolerance | `Y3` Levin call uses module constants, not passed tolerances | 09 | ⬜ |
 | B6 | tolerance | `analytic_integral` ignores its `atol`/`rtol` | 09 | ⬜ |
 | B7 | provenance | no `b` column on `QuadSourceIntegral` | 09 | ⬜ |
 | B8 | error bound | `total` has no error bound | 09 | ⬜ |
-| B9 | consistency | `Levin_z` θ-spline chunking differs from the evaluated spline | 02 (evaluate) | ⬜ |
-| B10 | cosmetic | `QuadSource` spline wrapper labelled `"T_k"` | 02 | ⬜ |
+| B9 | consistency | `Levin_z` θ-spline chunking differs from the evaluated spline | 02 (evaluate) | ✅ (left as-is, commented) |
+| B10 | cosmetic | `QuadSource` spline wrapper labelled `"T_k"` | 02 | ✅ |
 | B11 | robustness | region-nonempty guards use a ratio in $z$ not $1+z$ | 09 | ⬜ |
 | §4.1 | UNVERIFIED | continuity of $G$ at `crossover_z` | 12 | ⬜ |
 | §4.2 | UNVERIFIED | reachability of A6 | 12 | ⬜ |

@@ -301,7 +301,7 @@ class QuadSource(DatastoreObject):
         self._functions = QuadSourceFunctions(
             source=ZSplineWrapper(
                 source_spline,
-                "T_k",
+                "quadratic source",
                 self._z_sample.max.z,
                 self._z_sample.min.z,
                 log_z=True,

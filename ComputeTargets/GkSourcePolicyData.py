@@ -361,7 +361,7 @@ def _classify_crossover(source: GkSource, policy: GkSourcePolicy) -> dict:
                     "numeric_marginal": numeric_clearance > CLEARANCE_MARGINAL,
                     "WKB_marginal": WKB_clearance > CLEARANCE_MARGINAL,
                     "numeric_minimal": numeric_clearance > 0.0,
-                    "WKB_minimal": numeric_clearance > 0.0,
+                    "WKB_minimal": WKB_clearance > 0.0,
                 }
 
             # classify each value in the overlapping region
@@ -659,6 +659,11 @@ class GkSourcePolicyData(DatastoreObject):
                 theta_div_2pi_points = [v.WKB.theta_div_2pi for v in WKB_data]
                 theta_mod_2pi_points = [v.WKB.theta_mod_2pi for v in WKB_data]
 
+                # Deliberately chunked (chunk_logstep=125), unlike the single-chunk theta_spline
+                # built in _classify_Levin (:170) for the Levin_z threshold test. That construction
+                # needs a smooth derivative and specifically avoids chunk-boundary edge effects; this
+                # one is evaluated (mod 2pi) rather than differentiated, and chunking keeps the
+                # theta_div_2pi rebasing well-conditioned over many oscillation cycles. Audit B9.
                 WKB_theta_spline = phase_spline(
                     theta_log_x_points,
                     theta_div_2pi_points,

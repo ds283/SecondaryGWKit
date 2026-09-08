@@ -78,7 +78,7 @@ class GkWKBIntegration(DatastoreObject):
             self._WKB_violation_z = None
             self._WKB_violation_efolds_subh = None
 
-            self._init_efolds_suph = None
+            self._init_efolds_subh = None
             self._metadata = None
 
             self._solver = None
@@ -309,7 +309,7 @@ class GkWKBIntegration(DatastoreObject):
                 f"omega_WKB^2 must be non-negative at the initial time (k={self._k_exit.k.k_inv_Mpc}/Mpc, z_init={initial_z:.5g}, omega_WKB^2={omega_sq_init:.5g})"
             )
 
-        WKB_criterion_init = d_ln_omega_init / sqrt(omega_sq_init)
+        WKB_criterion_init = fabs(d_ln_omega_init) / sqrt(omega_sq_init)
         if WKB_criterion_init > 1.0:
             print(f"!! Warning (GkWKBIntegration) k={self._k_exit.k.k_inv_Mpc:.5g}/Mpc")
             print(
@@ -581,11 +581,11 @@ class GkWKBValue(DatastoreObject):
 
     @property
     def analytic_G_w(self) -> Optional[float]:
-        return self._analytic_G_rad
+        return self._analytic_G_w
 
     @property
     def analytic_Gprime_w(self) -> Optional[float]:
-        return self._analytic_Gprime_rad
+        return self._analytic_Gprime_w
 
     @property
     def sin_coeff(self) -> Optional[float]:
