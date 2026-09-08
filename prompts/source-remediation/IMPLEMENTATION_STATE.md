@@ -2,7 +2,7 @@
 
 **Campaign:** [`README.md`](README.md) · **Source audit:** [`docs/spec-code-audit-2026-09.md`](../../docs/spec-code-audit-2026-09.md)
 **Baseline commit:** `e9a43a2` (`main`, clean)
-**Last updated:** 2026-09-08 — prompt 05 complete.
+**Last updated:** 2026-09-08 — prompt 06 complete.
 
 > **Maintenance rule.** Every prompt updates this file *in its own commit*, before committing.
 > Set your row's status, fill in the commit SHA, model and log link, update the item-level table,
@@ -34,7 +34,7 @@ Legend: ⬜ not started · 🟡 in flight · ✅ complete · ⚠️ complete wit
 | # | Prompt | Items | Model | Status | Commit | Log |
 |---|---|---|---|---|---|---|
 | 05 | [`TkSourceFunctions`](05-tk-source-functions.md) | A2 (1/3) | Opus | ⚠️ | *"Add a two-region LG representation of T_k for source consumers"* (SHA not embedded, per prompt 01 log deviation 4) | [`logs/05-tk-source-functions.md`](logs/05-tk-source-functions.md) |
-| 06 | [`QuadSource` regions](06-quadsource-regions.md) | A3, A2 (2/3) | Opus | ⬜ | | |
+| 06 | [`QuadSource` regions](06-quadsource-regions.md) | A3, A2 (2/3) | Opus | ⚠️ | *"Restrict QuadSource to the region where both T_k are numeric"* (SHA not embedded, per prompt 01 log deviation 4) | [`logs/06-quadsource-regions.md`](logs/06-quadsource-regions.md) |
 
 ### Workstream C — the source time integral
 
@@ -52,7 +52,7 @@ Legend: ⬜ not started · 🟡 in flight · ✅ complete · ⚠️ complete wit
 | 11 | [Spec annotations](11-spec-annotations.md) | audit §6 | Sonnet | ⬜ | | |
 | 12 | [Verification](12-verification.md) | audit §4; campaign | Opus | ⬜ | | |
 
-**Progress:** 4 / 12 complete.
+**Progress:** 5 / 12 complete.
 
 ---
 
@@ -63,8 +63,8 @@ Traceability from the audit's finding IDs to the prompt that discharges them.
 | ID | Severity | Description | Prompt | Status |
 |---|---|---|---|---|
 | A1 | **DEFECT, physics** | `LambdaCDM_GenericEOS.wPerturbations` divides by the total density incl. $\rho_\Lambda$ | 01 | ✅ |
-| A2 | **DEFECT, representation** | `QuadSource` splines the oscillating source; unusable beyond ~95 cycles | 05, 06, 08 | 🟡 (1/3: `TkSourceFunctions` shipped) |
-| A3 | **DEFECT, regression** | `compute_quad_source` walks the full grid against a both-ends-truncated $T_k$ grid → `IndexError` | 06 | ⬜ |
+| A2 | **DEFECT, representation** | `QuadSource` splines the oscillating source; unusable beyond ~95 cycles | 05, 06, 08 | 🟡 (2/3: `TkSourceFunctions` shipped; `QuadSource` now splines $f$ only where both $T_k$ are numeric) |
+| A3 | **DEFECT, regression** | `compute_quad_source` walks the full grid against a both-ends-truncated $T_k$ grid → `IndexError` | 06 | ✅ |
 | A4 | **DEFECT, known** | Levin call receives only $\theta_G$; no $T_q,T_r$ input to the Levin decision | 07, 08, 10 | ⬜ |
 | A5 | **DEFECT, known** | 92 % of scheduled $(k,q,r)$ triples are not triangles | 04 | ⬜ |
 | A6 | **DEFECT, policy** | `"WKB_minimal"` tests `numeric_clearance` | 02 | ✅ |
@@ -137,6 +137,48 @@ Traceability from the audit's finding IDs to the prompt that discharges them.
   scope here (README §5 item 8). **Next step:** nothing required at the shipped resolution;
   raising `source_samples_per_log10z` is the only lever, and it costs the numeric branch alone.
 
+- **[06-source-spline-residual-vs-handover]** *(opened by prompt 06, 2026-09-08)* — with the
+  grid now truncated at the both-numeric hand-over, the spline of $f$ inside that region is
+  accurate to **4.5e-04 of the local oscillation envelope** at the realistic hand-over, and
+  degrades to $O(1)$ if the hand-over is allowed to fall to the bottom of `main.py`'s search
+  window. Measured on the exact analytic radiation source, $q=r=k$, 100 samples per
+  log10 z, region from 5 e-folds super-horizon down to the stated hand-over, error
+  normalised to the local envelope (the `QS_03_spline_error.py` measure). In radiation with
+  $a_0$ absorbed, $x = k c_s a_0\eta = e^N/\sqrt3$ at $N$ e-folds inside the horizon,
+  independently of $k$:
+
+  | hand-over | $x$ | cycles of $f$ | max err / envelope |
+  |---|---|---|---|
+  | `z_exit_subh_e3` (where `find_phase_minimum` normally stops) | 11.6 | 3.7 | **4.493e-04** |
+  | `z_exit_subh_e6` (window bottom) | 232.9 | 74.1 | 1.220e+00 |
+  | `0.85 · z_exit_subh_e6` (latest possible) | 272.1 | 86.6 | 1.129e+00 |
+
+  $f$ is quadratic in $T$ and so oscillates at *twice* the transfer-function phase, halving
+  the nodes per half-cycle; that is why this is one to two orders worse than either
+  `TkSourceFunctions` branch (6.1e-06 LG, 7.4e-06 numeric — issue
+  `[05-numeric-region-is-now-the-accuracy-floor]`). **Impact:** the all-smooth region, not the
+  oscillatory one, is now the dominant term in prompt 08's error budget; do not set a
+  tolerance there below ~1e-3, and prompt 12 should not read a residual of this size as a
+  physics defect. **Next step:** nothing at the shipped settings. If tighter agreement is ever
+  wanted the knobs are the `mode="stop"` search window
+  (`TkNumericIntegration.py:130-131`, `z_exit_subh_e3`/`z_exit_subh_e6`) — a hand-over closer
+  to horizon crossing shortens the oscillatory part of the smooth region — or
+  `source_samples_per_log10z`. Neither was touched here.
+
+- **[06-qsi-blocked-until-08]** *(opened by prompt 06, 2026-09-08)* — all three regions of
+  `compute_QuadSource_integral` read `source_f.source(log_z_source, z_is_log=True)`
+  (`QuadSourceIntegral.py:958, 1028, 1102`), and `ZSplineWrapper` raises `RuntimeError` more
+  than 1 % (in $\log(1+z)$) below its `min_z` (`spline_wrappers.py:50-53`). Before prompt 06
+  that call returned a meaningless spline value below the hand-over; it now raises. **Impact:**
+  between prompt 06 and prompt 08 the `--quad-source-integral-queue` stage cannot complete for
+  any $(k,q,r,z_{\rm resp})$ whose integration range reaches below
+  `QuadSource.numeric_region[1]` — i.e. essentially all of them at production settings. This is
+  README §4's stopping-point note for 06 made concrete, and it fails loudly rather than storing
+  a wrong number. `QuadSourceIntegral.py:1424` checks only `source.z_sample.max.z`, which the
+  truncation does not change, so the ingredient compatibility check still passes.
+  **Next step:** prompts 07 and 08, which assemble the region below the hand-over from
+  `TkSourceFunctions` instead of from a sampled $f$. Nothing else closes it.
+
 > Add an entry here whenever a prompt finishes with something unresolved: a verification step that
 > could not be run, an assumption that could not be confirmed, a deviation that a later prompt has
 > to work around, a measured cost that changes a later prompt's decision. Format:
@@ -165,7 +207,12 @@ Traceability from the audit's finding IDs to the prompt that discharges them.
    `LambdaCDM` datastores are unaffected; that class was always correct.
 2. **Datastores built before this campaign are stale after prompt 06** (`QuadSource` rows have
    fewer redshifts per pair) **and unreadable after prompt 09** (`QuadSourceIntegral` schema
-   change). The verification prompt rebuilds from scratch; do not try to migrate.
+   change). The verification prompt rebuilds from scratch; do not try to migrate. The
+   `QuadSource`/`QuadSourceValue` **schema is unchanged** by prompt 06, so old rows are still
+   *readable* — which is the hazard: a pre-06 row carries a value per source redshift, so
+   `QuadSource.numeric_region` reconstructed from it extends below the both-numeric hand-over
+   and the dense-output spline will happily be evaluated in the oscillatory region it cannot
+   represent. Prune or re-tag pre-06 `QuadSource` rows rather than reusing them.
 3. **Existing `BackgroundModel` rows built with a `GenericEOS`/QCD cosmology are stale after
    prompt 03** in the outermost few redshifts of `d_lnH_dz`, `d2_lnH_dz2`, `d3_lnH_dz3`,
    `d_wPerturbations_dz` and `d2_wPerturbations_dz2` (the change is ≤3e-08 relative and confined to
@@ -182,3 +229,14 @@ Traceability from the audit's finding IDs to the prompt that discharges them.
    the largest grid point at or below `z_init` and `phase_spline` cannot be extrapolated.
    Partition on `crossover_z`, but clamp quadrature nodes to `numeric_region`/`WKB_region`; every
    accessor raises outside its own range. See `logs/05-tk-source-functions.md` deviation 3.
+7. **`QuadSource` is now only the *smooth part* of the source term.** After prompt 06 its
+   stored values, its `z_sample` and its dense-output spline all cover exactly
+   `numeric_region = (z_source_sample.max.z, max(crossover_z_q, crossover_z_r, Tq_z_min, Tr_z_min))`
+   — the region where both $T_q$ and $T_r$ are still numeric, plus the exactly-known
+   super-horizon region above it. Read the region from `QuadSource.numeric_region` (or
+   `QuadSourceFunctions.numeric_region`; that namedtuple is now `("source", "numeric_region")`),
+   which survives a datastore round-trip. The individual hand-over redshifts
+   `crossover_z_q`/`crossover_z_r` are **not** persisted and come back `None`, so recompute them
+   with `ComputeTargets.QuadSource.numeric_crossover_z(Tk)` = `k_exit.z_exit - Tk.stop_deltaz_subh`.
+   `numeric_region[1]` can sit up to one grid step *above* `max(crossover_z_q, crossover_z_r)`;
+   trust the region, not the crossovers. See `logs/06-quadsource-regions.md` deviations 1-3.

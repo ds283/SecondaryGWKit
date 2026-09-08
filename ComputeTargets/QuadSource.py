@@ -1,6 +1,6 @@
 from collections import namedtuple
-from math import log
-from typing import Optional, List
+from math import log, fabs
+from typing import Optional, List, Tuple
 
 import ray
 from scipy.interpolate import make_interp_spline
@@ -15,9 +15,50 @@ from CosmologyConcepts import wavenumber, redshift_array, redshift, wavenumber_e
 from CosmologyModels.base import check_cosmology
 from Datastore import DatastoreObject
 from MetadataConcepts import store_tag
+from config.defaults import DEFAULT_FLOAT_PRECISION
 from utilities import WallclockTimer
 
-QuadSourceFunctions = namedtuple("QuadSourceFunctions", ["source"])
+# QuadSourceFunctions carries the dense-output representation of the *smooth part* of the
+# source term. "numeric_region" is the (z_max, z_min) pair over which the spline is defined:
+# the region where both Tq and Tr are described by their numeric representation (together
+# with the exactly-known super-horizon region above it). A consumer must not evaluate the
+# spline outside this range; below z_min at least one transfer function is oscillatory and
+# has to be handled from its Liouville-Green representation instead (see
+# ComputeTargets/TkSourceFunctions.py).
+QuadSourceFunctions = namedtuple("QuadSourceFunctions", ["source", "numeric_region"])
+
+
+def numeric_crossover_z(Tk: TkNumericIntegration) -> Optional[float]:
+    """
+    Compute the redshift at which a TkNumericIntegration hands over to its
+    Liouville-Green (WKB) continuation. This is defined exactly as main.py:694 defines the
+    initial redshift of the matching TkWKBIntegration,
+
+        z_crossover = k_exit.z_exit - Tk.stop_deltaz_subh
+
+    (and identically to ComputeTargets/TkSourceFunctions.py, which validates the same
+    identity against TkWKBIntegration.z_init).
+
+    Returns None if the integration was not run in "stop" mode, so that no hand-over
+    redshift is defined for it.
+    """
+    try:
+        stop_deltaz_subh = Tk.stop_deltaz_subh
+    except RuntimeError:
+        return None
+
+    if stop_deltaz_subh is None:
+        return None
+
+    return float(Tk.z_exit) - float(stop_deltaz_subh)
+
+
+def _z_above(z: float, limit: float) -> bool:
+    """
+    Test z >= limit, with a relative tolerance, so that a grid point that *is* the limit is
+    not excluded by floating-point noise.
+    """
+    return z >= limit - DEFAULT_FLOAT_PRECISION * max(1.0, fabs(limit))
 
 
 def source_function(
@@ -60,8 +101,50 @@ def compute_quad_source(
 ):
     model: BackgroundModel = model_proxy.get()
 
-    Tq_zsample = Tq.z_sample
-    Tr_zsample = Tr.z_sample
+    # Build a store_id -> value lookup for each transfer function, keyed off the redshift
+    # attached to each *stored value*. Note that Tk.z_sample is not a description of what was
+    # actually sampled: in "stop" mode a TkNumericIntegration holds fewer values than its
+    # z_sample (TkNumericIntegration.py:424-426), so the value list is the authoritative
+    # record of coverage.
+    Tq_map = {v.z.store_id: v for v in Tq.values}
+    Tr_map = {v.z.store_id: v for v in Tr.values}
+
+    if len(Tq_map) == 0:
+        raise RuntimeError("QuadSource: supplied Tq holds no sampled values")
+    if len(Tr_map) == 0:
+        raise RuntimeError("QuadSource: supplied Tr holds no sampled values")
+
+    Tq_z_max = max(v.z.z for v in Tq.values)
+    Tr_z_max = max(v.z.z for v in Tr.values)
+    Tq_z_min = min(v.z.z for v in Tq.values)
+    Tr_z_min = min(v.z.z for v in Tr.values)
+
+    # The source term is smooth, and therefore representable by a spline in z, only where
+    # *both* transfer functions are still described by their numeric representation. Below the
+    # larger of the two hand-over redshifts at least one factor is oscillatory, and the
+    # sampled-and-splined representation of f breaks down (audit A2). Meanwhile the numeric
+    # grids themselves stop at the hand-over (audit A3), so walking the full source grid runs
+    # off the end of the Tk data.
+    crossover_z_q = numeric_crossover_z(Tq)
+    crossover_z_r = numeric_crossover_z(Tr)
+
+    # The hand-over redshift is found by a root search inside a window whose lower end is the
+    # same place the integration terminates, so it can fall up to one grid step *below* the
+    # last stored sample. Clamp the region to the sampled coverage as well, so that the region
+    # we walk is always one on which both factors are genuinely available.
+    z_floor = max(Tq_z_min, Tr_z_min)
+    for crossover in (crossover_z_q, crossover_z_r):
+        if crossover is not None and crossover > z_floor:
+            z_floor = crossover
+
+    region = [z for z in z_sample if _z_above(z.z, z_floor)]
+
+    if len(region) == 0:
+        raise RuntimeError(
+            f"QuadSource: the both-numeric region is empty (z_floor={z_floor:.5g}, "
+            f"source grid spans z={z_sample.max.z:.5g} to z={z_sample.min.z:.5g}; "
+            f"crossover_z_q={crossover_z_q}, crossover_z_r={crossover_z_r})"
+        )
 
     source = []
     undiff = []
@@ -75,43 +158,43 @@ def compute_quad_source(
     analytic_undiff_w = []
     analytic_diff_w = []
 
-    q_idx = 0
-    r_idx = 0
+    def _lookup(z: redshift, label: str, value_map, grid_z_max: float):
+        """
+        Return the stored TkNumericValue at this redshift, or None if the redshift lies above
+        the start of this factor's numeric grid (in which case the caller substitutes the
+        exact super-horizon values T=1, T'=0). A redshift that is inside the grid's range but
+        absent from it is a pipeline error: the grids are supposed to be nested.
+        """
+        value = value_map.get(z.store_id, None)
+        if value is not None:
+            return value
+
+        if z.z > grid_z_max + DEFAULT_FLOAT_PRECISION * max(1.0, fabs(grid_z_max)):
+            # this redshift is earlier than the start of the numeric integration for this
+            # factor; the mode is still outside the horizon and T = 1, T' = 0 exactly
+            return None
+
+        raise RuntimeError(
+            f"QuadSource: redshift z={z.z:.8g} (store_id={z.store_id}) is missing from the "
+            f"sampled values of {label}, but lies inside its sampled range "
+            f"(z_max={grid_z_max:.8g}). The source and transfer-function grids are expected "
+            f"to be nested, so this is a gap in the {label} data."
+        )
 
     with WallclockTimer() as timer:
-        for i in range(len(z_sample)):
-            missing_q = False
-            missing_r = False
+        for z in region:
+            z: redshift
 
-            z: redshift = z_sample[i]
-            Tq_z: redshift = Tq_zsample[q_idx]
-            Tr_z: redshift = Tr_zsample[r_idx]
+            Tq_: Optional[TkNumericValue] = _lookup(z, "Tq", Tq_map, Tq_z_max)
+            Tr_: Optional[TkNumericValue] = _lookup(z, "Tr", Tr_map, Tr_z_max)
 
-            if Tq_z.store_id != z.store_id:
-                if q_idx > 0:
-                    raise RuntimeError(
-                        f"z_sample[{i}].store_id = {z.store_id}, but this redshift is missing from Tq.z_sample. Current Tq.z_sample[{q_idx}].store_id = {Tq_z.store_id}"
-                    )
-                missing_q = True
-
-            if Tr_z.store_id != z.store_id:
-                if r_idx > 0:
-                    raise RuntimeError(
-                        f"z_sample[{i}].store_id = {z.store_id}, but this redshift is missing from Tr.z_sample. Current Tr.z_sample[{r_idx}].store_id = {Tr_z.store_id}"
-                    )
-                missing_r = True
-
-            if not missing_q:
-                Tq_: TkNumericValue = Tq[q_idx]
-
+            if Tq_ is not None:
                 Tq_value = Tq_.T
                 Tq_prime = Tq_.Tprime
                 analytic_Tq_rad = Tq_.analytic_T_rad
                 analytic_Tq_prime_rad = Tq_.analytic_Tprime_rad
                 analytic_Tq_w = Tq_.analytic_T_w
                 analytic_Tq_prime_w = Tq_.analytic_Tprime_w
-
-                q_idx += 1
             else:
                 Tq_value = 1.0
                 Tq_prime = 0.0
@@ -120,17 +203,13 @@ def compute_quad_source(
                 analytic_Tq_w = 1.0
                 analytic_Tq_prime_w = 0.0
 
-            if not missing_r:
-                Tr_: TkNumericValue = Tr[r_idx]
-
+            if Tr_ is not None:
                 Tr_value = Tr_.T
                 Tr_prime = Tr_.Tprime
                 analytic_Tr_rad = Tr_.analytic_T_rad
                 analytic_Tr_prime_rad = Tr_.analytic_Tprime_rad
                 analytic_Tr_w = Tr_.analytic_T_w
                 analytic_Tr_prime_w = Tr_.analytic_Tprime_w
-
-                r_idx += 1
             else:
                 Tr_value = 1.0
                 Tr_prime = 0.0
@@ -175,6 +254,9 @@ def compute_quad_source(
 
     return {
         "compute_time": timer.elapsed,
+        "z_store_ids": [z.store_id for z in region],
+        "crossover_z_q": crossover_z_q,
+        "crossover_z_r": crossover_z_r,
         "source": source,
         "undiff": undiff,
         "diff": diff,
@@ -233,6 +315,12 @@ class QuadSource(DatastoreObject):
 
         self._functions = None
 
+        # hand-over redshifts of the two transfer functions. These are recomputable from the
+        # Tq/Tr TkNumericIntegration objects, and are therefore not persisted; they are None
+        # on an object recovered from the datastore. See the numeric_region property.
+        self._crossover_z_q = None
+        self._crossover_z_r = None
+
         self._compute_ref = None
 
     @property
@@ -258,6 +346,37 @@ class QuadSource(DatastoreObject):
     @property
     def z_sample(self) -> redshift_array:
         return self._z_sample
+
+    @property
+    def crossover_z_q(self) -> Optional[float]:
+        """
+        Hand-over redshift of the Tq transfer function, i.e. the redshift below which Tq is
+        described by its Liouville-Green representation rather than by its sampled numeric
+        values. None on an object recovered from the datastore (it is not persisted, but is
+        recomputable with numeric_crossover_z() from the Tq object).
+        """
+        return self._crossover_z_q
+
+    @property
+    def crossover_z_r(self) -> Optional[float]:
+        """
+        Hand-over redshift of the Tr transfer function. See crossover_z_q.
+        """
+        return self._crossover_z_r
+
+    @property
+    def numeric_region(self) -> Optional[Tuple[float, float]]:
+        """
+        The (z_max, z_min) region over which the stored values (and hence the dense-output
+        spline) are defined: the region where both Tq and Tr are in their numeric
+        representation, together with the exactly-known super-horizon region above it.
+        Unlike crossover_z_q/crossover_z_r this *is* recoverable after a datastore
+        round-trip, because the stored value list determines it.
+        """
+        if self._z_sample is None:
+            return None
+
+        return (self._z_sample.max.z, self._z_sample.min.z)
 
     @property
     def compute_time(self) -> float:
@@ -298,14 +417,20 @@ class QuadSource(DatastoreObject):
         source_x_data, source_y_data = zip(*source_data)
         source_spline = make_interp_spline(source_x_data, source_y_data)
 
+        # the spline covers exactly the region spanned by the stored values, which is the
+        # both-numeric region: the only region in which a spline of f is valid (audit A2)
+        z_max = self._z_sample.max.z
+        z_min = self._z_sample.min.z
+
         self._functions = QuadSourceFunctions(
             source=ZSplineWrapper(
                 source_spline,
                 "quadratic source",
-                self._z_sample.max.z,
-                self._z_sample.min.z,
+                z_max,
+                z_min,
                 log_z=True,
-            )
+            ),
+            numeric_region=(z_max, z_min),
         )
 
     def compute(self, payload, label: Optional[str] = None):
@@ -368,6 +493,27 @@ class QuadSource(DatastoreObject):
 
         self._compute_time = data["compute_time"]
 
+        self._crossover_z_q = data["crossover_z_q"]
+        self._crossover_z_r = data["crossover_z_r"]
+
+        # compute_quad_source() only walks the both-numeric region of the source grid, so the
+        # value list is shorter than the grid we were constructed with. Cut our own z_sample
+        # down to the region that was actually used, so that z_sample, values and the
+        # dense-output spline all describe the same range.
+        z_store_ids = data["z_store_ids"]
+        z_lookup = {z.store_id: z for z in self._z_sample}
+        region_z = []
+        for store_id in z_store_ids:
+            z = z_lookup.get(store_id, None)
+            if z is None:
+                raise RuntimeError(
+                    f"QuadSource: compute_quad_source() returned a redshift (store_id={store_id}) "
+                    f"that is not part of our own z_sample"
+                )
+            region_z.append(z)
+
+        self._z_sample = redshift_array(region_z)
+
         source = data["source"]
         undiff = data["undiff"]
         diff = data["diff"]
@@ -380,12 +526,18 @@ class QuadSource(DatastoreObject):
         analytic_undiff_w = data["analytic_undiff_w"]
         analytic_diff_w = data["analytic_diff_w"]
 
+        if len(source) != len(region_z):
+            raise RuntimeError(
+                f"QuadSource: compute_quad_source() returned {len(source)} source values for "
+                f"{len(region_z)} redshifts"
+            )
+
         self._values = []
         for i in range(len(source)):
             self._values.append(
                 QuadSourceValue(
                     None,
-                    self._z_sample[i],
+                    region_z[i],
                     source[i],
                     undiff[i],
                     diff[i],

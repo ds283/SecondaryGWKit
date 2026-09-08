@@ -902,6 +902,13 @@ def run_pipeline(
                     f"QuadSource builder: missing or incomplete source data for q={q.k.k_inv_Mpc}/Mpc, r={r.k.k_inv_Mpc}/Mpc"
                 )
 
+            # pass the full source grid: QuadSource truncates it internally to the region
+            # where *both* Tq and Tr are still described by their numeric representation
+            # (plus the exactly-known super-horizon region above it), so the values it
+            # stores end at the larger of the two Tk hand-over redshifts. Below that at
+            # least one transfer function is oscillatory and the source term cannot be
+            # represented by a spline through sampled values; that region is handled from
+            # the Liouville-Green representation instead.
             work_refs.append(
                 {
                     "ref": pool.object_get(
