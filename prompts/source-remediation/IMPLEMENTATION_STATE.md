@@ -2,7 +2,7 @@
 
 **Campaign:** [`README.md`](README.md) · **Source audit:** [`docs/spec-code-audit-2026-09.md`](../../docs/spec-code-audit-2026-09.md)
 **Baseline commit:** `e9a43a2` (`main`, clean)
-**Last updated:** 2026-09-08 — prompt 06 complete.
+**Last updated:** 2026-09-08 — prompt 07 complete.
 
 > **Maintenance rule.** Every prompt updates this file *in its own commit*, before committing.
 > Set your row's status, fill in the commit SHA, model and log link, update the item-level table,
@@ -40,7 +40,7 @@ Legend: ⬜ not started · 🟡 in flight · ✅ complete · ⚠️ complete wit
 
 | # | Prompt | Items | Model | Status | Commit | Log |
 |---|---|---|---|---|---|---|
-| 07 | [Phase-group algebra](07-phase-group-algebra.md) | A4 (1/3) | Fable | ⬜ | | |
+| 07 | [Phase-group algebra](07-phase-group-algebra.md) | A4 (1/3) | Fable | ⚠️ | *"Add the phase-group decomposition of the source integrand"* (SHA not embedded, per prompt 01 log deviation 4) | [`logs/07-phase-group-algebra.md`](logs/07-phase-group-algebra.md) |
 | 08 | [`QuadSourceIntegral` phase-group integration](08-qsi-phase-group-integration.md) | A4 (2/3), A2 (3/3) | Fable | ⬜ | | |
 | 09 | [Errors, schema, tolerances](09-qsi-errors-schema-tolerances.md) | B5, B6, B7, B8, B11 | Opus | ⬜ | | |
 | 10 | [`main.py` plumbing](10-qsi-main-plumbing.md) | A4 (3/3) | Opus | ⬜ | | |
@@ -52,7 +52,7 @@ Legend: ⬜ not started · 🟡 in flight · ✅ complete · ⚠️ complete wit
 | 11 | [Spec annotations](11-spec-annotations.md) | audit §6 | Sonnet | ⬜ | | |
 | 12 | [Verification](12-verification.md) | audit §4; campaign | Opus | ⬜ | | |
 
-**Progress:** 5 / 12 complete.
+**Progress:** 6 / 12 complete.
 
 ---
 
@@ -65,7 +65,7 @@ Traceability from the audit's finding IDs to the prompt that discharges them.
 | A1 | **DEFECT, physics** | `LambdaCDM_GenericEOS.wPerturbations` divides by the total density incl. $\rho_\Lambda$ | 01 | ✅ |
 | A2 | **DEFECT, representation** | `QuadSource` splines the oscillating source; unusable beyond ~95 cycles | 05, 06, 08 | 🟡 (2/3: `TkSourceFunctions` shipped; `QuadSource` now splines $f$ only where both $T_k$ are numeric) |
 | A3 | **DEFECT, regression** | `compute_quad_source` walks the full grid against a both-ends-truncated $T_k$ grid → `IndexError` | 06 | ✅ |
-| A4 | **DEFECT, known** | Levin call receives only $\theta_G$; no $T_q,T_r$ input to the Levin decision | 07, 08, 10 | ⬜ |
+| A4 | **DEFECT, known** | Levin call receives only $\theta_G$; no $T_q,T_r$ input to the Levin decision | 07, 08, 10 | 🟡 (1/3: `phase_groups` shipped — the $\theta_G\pm\theta_q\pm\theta_r$ decomposition exists and is verified; nothing consumes it yet) |
 | A5 | **DEFECT, known** | 92 % of scheduled $(k,q,r)$ triples are not triangles | 04 | ⬜ |
 | A6 | **DEFECT, policy** | `"WKB_minimal"` tests `numeric_clearance` | 02 | ✅ |
 | A7 | **DEFECT, accuracy** | `_build_derivative` end bias (ε″ 30 % at the $z=0.1$ end for GenericEOS models) | 03 | ✅ |
@@ -179,6 +179,40 @@ Traceability from the audit's finding IDs to the prompt that discharges them.
   **Next step:** prompts 07 and 08, which assemble the region below the hand-over from
   `TkSourceFunctions` instead of from a sampled $f$. Nothing else closes it.
 
+- **[07-lg-derivative-truncation-at-handover]** *(opened by prompt 07, 2026-09-08)* — the
+  derivative pieces `TkSourceFunctions` supplies in closed form, `omega = sqrt(Tk_omegaEff_sq)`
+  and the R23/R24 `dlnM_dz`, are the Liouville–Green frequency and amplitude derivative, and
+  differ from the exact $d\theta/dz$ and $d\ln M/dz$ by the LG truncation, $O(x^{-4})$ relative
+  (log 05 deviation 5 measured 8.5e-6 at $w=1/3$, 7.0e-5 at $w=0.2$ in $d\ln M/dz$ at the
+  hand-over). Because $f$ is dominated by $DT_qDT_r$ sub-horizon, this is the accuracy floor of
+  the *oscillatory* integrand $G f/H^2$ near the hand-over even when $M$ and $\theta$ are exact:
+  **7.0e-6 ($w=1/3$) and 1.4e-4 ($w=0.2$) of the envelope** at $x\approx20$ on the production
+  grid, falling to 3e-6 / 6.5e-6 for $x>100$, and grid-independent (6.3e-6 / 1.1e-4 at
+  300/decade). Replacing only `omega` and `dlnM_dz` by exact values drops it to 1.5e-6, which is
+  `bessel_phase`'s own floor. With the production-matched LG representation (amplitude and phase
+  also LG-truncated) the numeric↔LG seam mismatch of one factor is 4e-5 / 1e-3 at grid nodes.
+  **Impact:** prompt 08 — an exact-fixture comparison in the oscillatory regions cannot be
+  asserted below ~5e-4, and a region-boundary consistency check at the hand-over should allow
+  ~2e-3; prompt 12 — the same numbers are not physics defects. **Next step:** nothing for this
+  campaign. The floor falls as $x^{-4}$, so a hand-over deeper inside the horizon (the
+  `mode="stop"` search window, `TkNumericIntegration.py:130-131`) or the overlap of
+  `docs/lg-phase-and-handover-followup-2026-09.md` §1.4 would reduce it; both are out of scope
+  here.
+
+- **[07-phase-spline-chunking-precision]** *(opened by prompt 07, 2026-09-08)* — the rationale
+  for composing phases as a signed sum of `theta_mod_2pi` remainders rather than reducing the sum
+  of `raw_theta` (reconciliation document §3.1) holds only within `phase_spline`'s first two
+  chunks. `chunk_logstep=125` is geometric in the cycle count (`phase_spline.py:460-476`: chunk
+  boundaries at 0, 126, 11751, 1.1e6, … cycles), so above ~7e4 rad the rebased spline values are
+  as large as the raw phase and both routes round identically: measured 3.8e-8 rad at
+  $|\Psi|=2.2\times10^6$ rad on exact quadratic data, against 1.8e-15 rad for the remainder route
+  when the constituents' remainders are exact. **Impact:** none practical — 4e-8 rad is far below
+  the phase-spline *fit* error the followup document measures (§2), and `sin`/`cos` are unaffected
+  at any accuracy this pipeline reaches; but prompt 08 should not cite the remainder sum as a
+  precision guarantee, and the module's composition is not where any phase inaccuracy will come
+  from. **Next step:** if the guarantee is ever wanted, a linear `chunk_step` (or a log step
+  much smaller than 125) in `phase_spline`; `LiouvilleGreen/` is out of scope for this campaign.
+
 > Add an entry here whenever a prompt finishes with something unresolved: a verification step that
 > could not be run, an assumption that could not be confirmed, a deviation that a later prompt has
 > to work around, a measured cost that changes a later prompt's decision. Format:
@@ -240,3 +274,12 @@ Traceability from the audit's finding IDs to the prompt that discharges them.
    with `ComputeTargets.QuadSource.numeric_crossover_z(Tk)` = `k_exit.z_exit - Tk.stop_deltaz_subh`.
    `numeric_region[1]` can sit up to one grid step *above* `max(crossover_z_q, crossover_z_r)`;
    trust the region, not the crossovers. See `logs/06-quadsource-regions.md` deviations 1-3.
+8. **`ComputeTargets.phase_groups` is the only place the phase-group algebra lives.** Its
+   `build_phase_groups(regime, *, Gk, Tq, Tr, model_functions, w_background)` returns 1, 2 or 4
+   `PhaseGroup`s whose callables all take $\log(1+z')$, include $1/H^2$ but **not**
+   $(1+z_{\rm resp})$, and are scalar-only; a smooth $T$ is the same `TkSourceFunctions` object
+   with the regime flag `False`, a smooth $G$ is `Gk_f.numeric_Gk`. `g.levin_theta()` is the
+   `theta` dict for `adaptive_levin_sincos`; `evaluate_sum`/`evaluate_envelope` are for
+   consistency checks only. Do not re-derive or re-type the coefficients anywhere else — the
+   sympy script `ComputeTargets/tests/sympy_phase_groups.py` verifies this module's code path and
+   would not see a copy. See `logs/07-phase-group-algebra.md` "State handed to the next prompt".

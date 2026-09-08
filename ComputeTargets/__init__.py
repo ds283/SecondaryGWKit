@@ -25,6 +25,13 @@ from .QuadSource import (
     QuadSourceValue,
     QuadSourceFunctions,
 )
+from .phase_groups import (
+    PhaseGroup,
+    build_phase_groups,
+    evaluate_sum,
+    evaluate_envelope,
+    group_signs,
+)
 from .QuadSourceIntegral import (
     BesselPhaseProxy,
     QuadSourceIntegral,
