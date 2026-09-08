@@ -2,6 +2,7 @@ from collections import namedtuple
 from math import sqrt, fabs, log
 from typing import Optional, List, Union
 
+import numpy as np
 import ray
 from ray import ObjectRef
 from scipy.integrate import solve_ivp
@@ -19,6 +20,81 @@ from config.defaults import DEFAULT_ABS_TOLERANCE, DEFAULT_REL_TOLERANCE
 
 A0_TAU_INDEX = 0
 EXPECTED_SOL_LENGTH = 1
+
+# Settings for the private grid on which _build_derivative fits its splines when a cosmology model
+# supplies no analytic derivative. See the comment in compute_background().
+# - number of extra points added beyond each end of the production grid
+DERIVATIVE_FIT_PAD_POINTS = 12
+# - number of sub-intervals each production interval is divided into
+DERIVATIVE_FIT_REFINE = 3
+# - the low-end padding is never allowed to take 1+z below this multiple of 1+z_min. With z_min >= 0
+#   this keeps the padded grid at z >= -0.1, inside the range over which the GenericEOS models build
+#   their T(z) spline (DEFAULT_MIN_TEMPERATURE_Z_REDSHIFT = -0.2)
+DERIVATIVE_FIT_PAD_FLOOR = 0.9
+# - the padding at either end never extends the fitted range in log(1+z) by more than this fraction
+DERIVATIVE_FIT_PAD_FRACTION = 0.05
+# - degree of the interpolating spline that is differentiated
+DERIVATIVE_SPLINE_ORDER = 5
+
+
+def _build_derivative_fit_grid(z_sample: redshift_array):
+    """
+    Build the private, padded and refined grid in x = log(1+z) on which compute_background fits the
+    splines it differentiates.
+    Returns (fit_x, fit_z, fit_select, sample_order) where fit_x[fit_select][sample_order] are the
+    production redshifts in the order they appear in z_sample.
+    """
+    z_prod = np.array([z.z for z in z_sample], dtype=float)
+
+    # z_sample may run in either direction; fit on an ascending grid and record how to get back
+    ascending = np.argsort(z_prod)
+    sample_order = np.empty_like(ascending)
+    sample_order[ascending] = np.arange(len(z_prod))
+
+    x_prod = np.log1p(z_prod[ascending])
+
+    # refine: insert DERIVATIVE_FIT_REFINE-1 equally spaced points inside each production interval
+    refine = max(int(DERIVATIVE_FIT_REFINE), 1)
+    if refine > 1:
+        subdivided = x_prod[:-1, None] + (x_prod[1:, None] - x_prod[:-1, None]) * (
+            np.arange(refine)[None, :] / refine
+        )
+        x_core = np.concatenate([subdivided.reshape(-1), x_prod[-1:]])
+    else:
+        x_core = x_prod
+
+    # pad: extend beyond each end at the local grid spacing, clamping the low end so that
+    # 1+z cannot approach (or cross) zero on a coarse grid
+    pad = max(int(DERIVATIVE_FIT_PAD_POINTS), 0)
+    if pad > 0 and len(x_core) >= 2:
+        # on any sensibly dense grid the padding is pad grid spacings; the two caps only bite on a
+        # very coarse or very short grid, and mirror the 5% buffer LambdaCDM_GenericEOS uses
+        max_extension = DERIVATIVE_FIT_PAD_FRACTION * (x_core[-1] - x_core[0])
+        h_lo = min(
+            x_core[1] - x_core[0],
+            -log(DERIVATIVE_FIT_PAD_FLOOR) / pad,
+            max_extension / pad,
+        )
+        h_hi = min(x_core[-1] - x_core[-2], max_extension / pad)
+        lo = x_core[0] - h_lo * np.arange(pad, 0, -1)
+        hi = x_core[-1] + h_hi * np.arange(1, pad + 1)
+        fit_x = np.concatenate([lo, x_core, hi])
+    else:
+        pad = 0
+        fit_x = x_core
+
+    fit_select = pad + refine * np.arange(len(x_prod))
+
+    fit_z = np.expm1(fit_x)
+
+    # restore the production redshifts exactly at the points we will select, so that a cosmology
+    # supplying analytic derivatives is evaluated at exactly the requested z (no expm1(log1p(z))
+    # round trip) and its stored values are unchanged
+    fit_x[fit_select] = x_prod
+    fit_z[fit_select] = z_prod[ascending]
+
+    return fit_x, fit_z, fit_select, sample_order
+
 
 ModelFunctions = namedtuple(
     "ModelFunctions",
@@ -115,52 +191,70 @@ def compute_background(
     wPerturbations_sample = [cosmology.wPerturbations(z.z) for z in z_sample]
 
     # further, each BaseCosmology instance may provide methods to evaluate the derivatives of H(z) and w(z), but if it doesn't,
-    # we estimate these derivatives using a spline
+    # we estimate these derivatives using a spline.
+    #
+    # A spline fitted only on the production grid is badly biased at the two ends: the not-a-knot end
+    # condition has no data to constrain it, and each differentiation of a stacked derivative amplifies
+    # that error. To avoid this we fit on a *private* grid that is padded beyond both ends of the
+    # production grid and refined between its points, evaluate the derivative there, and select the
+    # production points only at the end. The padding has to be carried through the whole stack
+    # (d2_lnH_dz2 is built from d_lnH_dz, d3_lnH_dz3 from d2_lnH_dz2, ...), so every level of the stack
+    # is computed on the padded grid; only the returned samples are truncated.
+    # LambdaCDM_GenericEOS._build_T_z_spline already buffers its own grid for exactly this reason.
 
-    def _build_derivative(attr: str, f_to_diff=None, sample_to_diff=None):
-        if f_to_diff is None and sample_to_diff is None:
+    fit_x, fit_z, fit_select, sample_order = _build_derivative_fit_grid(z_sample)
+    fit_opz = fit_z + 1.0
+
+    # a not-a-knot quintic is used rather than the cubic of the original implementation: with the
+    # stacked derivatives the cubic's discontinuous third derivative is the dominant residual error
+    # once the end bias has been removed by padding
+    fit_k = DERIVATIVE_SPLINE_ORDER if len(fit_x) >= DERIVATIVE_SPLINE_ORDER + 1 else 3
+
+    def _build_derivative(attr: str, f_to_diff=None, fit_sample_to_diff=None):
+        """
+        Evaluate a derivative on the *padded fit grid*, either from the cosmology's own analytic
+        method, or by differentiating a spline through the supplied samples/function.
+        """
+        if f_to_diff is None and fit_sample_to_diff is None:
             raise RuntimeError(
-                "compute_background._build_derivative: f_to_diff and sample_to_diff cannot both be None"
+                "compute_background._build_derivative: f_to_diff and fit_sample_to_diff cannot both be None"
             )
 
         if hasattr(cosmology, attr):
-            return [getattr(cosmology, attr)(z.z) for z in z_sample]
+            method = getattr(cosmology, attr)
+            return np.array([method(z) for z in fit_z])
 
         if f_to_diff is not None:
-            data = [(log(1.0 + z.z), f_to_diff(z.z)) for z in z_sample]
+            y_data = np.array([f_to_diff(z) for z in fit_z])
         else:
-            data = [(log(1.0 + z.z), s) for z, s in zip(z_sample, sample_to_diff)]
+            y_data = np.asarray(fit_sample_to_diff)
 
-        data.sort(key=lambda pair: pair[0])
-        x_data, y_data = zip(*data)
+        deriv = make_interp_spline(fit_x, y_data, k=fit_k).derivative()
 
-        raw = make_interp_spline(x_data, y_data)
-        deriv = raw.derivative()
+        # the spline computes d/d(log(1+z)), so divide by 1+z to obtain the raw z-derivative
+        return np.asarray(deriv(fit_x)) / fit_opz
 
-        spline = ZSplineWrapper(
-            deriv,
-            label=attr,
-            min_z=z_sample.min.z,
-            max_z=z_sample.max.z,
-            log_z=True,
-            deriv=True,
-        )
+    def _truncate(fit_values) -> List[float]:
+        """Select the production grid points, restoring the ordering of z_sample."""
+        return [float(v) for v in np.asarray(fit_values)[fit_select][sample_order]]
 
-        return [spline(z.z) for z in z_sample]
-
-    d_lnH_dz_sample = _build_derivative(
+    d_lnH_dz_fit = _build_derivative(
         "d_lnH_dz", f_to_diff=lambda z: log(cosmology.Hubble(z))
     )
-    d2_lnH_dz2_sample = _build_derivative("d2_lnH_dz2", sample_to_diff=d_lnH_dz_sample)
-    d3_lnH_dz3_sample = _build_derivative(
-        "d3_lnH_dz3", sample_to_diff=d2_lnH_dz2_sample
+    d2_lnH_dz2_fit = _build_derivative("d2_lnH_dz2", fit_sample_to_diff=d_lnH_dz_fit)
+    d3_lnH_dz3_fit = _build_derivative("d3_lnH_dz3", fit_sample_to_diff=d2_lnH_dz2_fit)
+    d_wPerturbations_dz_fit = _build_derivative(
+        "d_wPerturbations_dz", f_to_diff=cosmology.wPerturbations
     )
-    d_wPerturbations_dz_sample = _build_derivative(
-        "d_wPerturbations_dz", sample_to_diff=wPerturbations_sample
+    d2_wPerturbations_dz2_fit = _build_derivative(
+        "d2_wPerturbations_dz2", fit_sample_to_diff=d_wPerturbations_dz_fit
     )
-    d2_wPerturbations_dz2_sample = _build_derivative(
-        "d2_wPerturbations_dz2", sample_to_diff=d_wPerturbations_dz_sample
-    )
+
+    d_lnH_dz_sample = _truncate(d_lnH_dz_fit)
+    d2_lnH_dz2_sample = _truncate(d2_lnH_dz2_fit)
+    d3_lnH_dz3_sample = _truncate(d3_lnH_dz3_fit)
+    d_wPerturbations_dz_sample = _truncate(d_wPerturbations_dz_fit)
+    d2_wPerturbations_dz2_sample = _truncate(d2_wPerturbations_dz2_fit)
 
     return {
         "data": IntegrationData(
