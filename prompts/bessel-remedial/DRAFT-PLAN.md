@@ -33,6 +33,7 @@ below come from measurements revision 1 did not make.
 | 9 | Revision 1's characterization of `raw_theta` as compatibility-only is **confirmed correct**, against an apparent contradiction in the Levin docstring. | §8.1 |
 | 10 | The performance argument is promoted from a caveat to a motivation: the existing construction is a documented scalability blocker. | §1, §4.7 |
 | 11 | New finding: the tail needs only **one** series. \(a_\nu\) follows from the phase series through the exact Wronskian, so DLMF 10.18.17 is not required. | §7.2 |
+| 12 | User decision: the high-order acceptance target is reduced from \(10^{-10}\) to \(10^{-6}\), making correct branch tracking rather than sample density the binding requirement above \(\nu=20.5\). | §10, §11 |
 
 ## 1. Recommendation
 
@@ -863,14 +864,34 @@ Engineering targets, not already-certified bounds:
 
 | Coverage | Initial acceptance target |
 |---|---|
-| Low orders \(1/2,3/2,7/4,5/2\), existing domain through \(10^7\) | \(E_\theta,E_A\le10^{-11}\), including endpoint checks |
-| Orders \(20.5,100.5,1000.5\), lower bound through \(\max(1000,10\nu)\) | \(E_\theta,E_A\le10^{-10}\), with adaptive refinement |
-| Ordinary phase derivative, orders \(\le20.5\) | Relative error \(\le10^{-9}\) against an independent reference |
-| Ordinary phase derivative, orders \(>20.5\) | Relative error \(\le10^{-9}\) **with order-dependent refinement in the turning-point interval**; §4.7 shows quintic at 250 per e-fold reaching only 8.1e-8 at \(\nu=100.5\), so the density is part of the criterion, not an implementation detail |
+| Low orders \(1/2,3/2,7/4,5/2\) — the orders production builds — existing domain through \(10^7\) | \(E_\theta,E_A\le10^{-11}\), including endpoint checks |
+| Ordinary phase derivative, low orders | Relative error \(\le10^{-9}\) against an independent reference. §4.7: quintic reaches 1.9e-13 to 8.1e-13 at 250 per e-fold, so this has margin |
+| Orders \(\ge20.5\), lower bound through \(\max(1000,10\nu)\) | \(E_\theta,E_A\le10^{-6}\) and phase derivative relative error \(\le10^{-6}\). **Accuracy is not the objective at these orders; correctness is** — see the row below |
+| Orders \(\ge20.5\), structural requirements | Construction succeeds or fails loudly; every sample passes the \(a_\nu\) plausibility band; branch tracking is *verified*, not assumed, with an explicit test that a fixed-density `unwrap` would fail at \(\nu=1000.5\) (§4.5) and that the shipped tracker does not |
 | Crossover to the closed-form tail | Near-region interpolant and series agree to the phase **and amplitude** budget at \(x_\star\); first omitted series term below budget; \(x_\star\) recorded |
 | Supported domain boundary | Construction fails loudly outside the declared \((\nu,x_{\max})\) domain; every sample passes the \(a_\nu\) plausibility band; no `-inf` or `-0j` reaches an interpolant |
 | Phase groups near derivative cancellation | Absolute derivative checks scaled to constituent frequencies, plus an independent group reference; no division by a vanishing group derivative |
 | Selected large arguments through \(10^{15}\) | Independent split-evaluation checks at identical supplied arguments; no claim of full-domain coverage from spot checks |
+
+**On the high-order target (user decision, 2026-09-08).** Revision 2 initially proposed
+\(10^{-10}\) for orders 20.5, 100.5 and 1000.5. That was reduced to \(10^{-6}\) deliberately.
+Production builds only \(\nu=1/2\) and \(5/2\) (`main.py:429-437`), the existing tests contract for
+only \(10^{-3}\) at high order and say so explicitly — "to catch garbage rather than to measure
+precision" (`test_bessel_phase.py:113`) — and §6.2 shows that reaching \(10^{-10}\) at
+\(\nu=1000.5\) needs of order 4000 samples per e-fold near the turning point. Paying that for orders
+nothing currently consumes would make the hardest part of the work also the least useful part.
+
+The consequence is worth stating, because it simplifies the implementation substantially: at
+\(10^{-6}\), §6.2's quintic at 250 samples per e-fold already delivers \(2.94\times10^{-9}\)
+(\(E_\theta\)) and \(1.04\times10^{-8}\) (\(E_A\)) at \(\nu=100.5\), and §4.7's derivative
+route delivers \(8.1\times10^{-8}\). So **at high order the binding requirement is correct branch
+tracking, not sample density** — the \(\nu=1000.5\) failure in §4.5 is a wrap that `unwrap` cannot
+detect, and no density fixes an incorrectly unwrapped sample. Order-dependent refinement is still
+required near the turning point, but it is sized by the branch-safety criterion of §7.3 rather than
+by an accuracy target.
+
+Accuracy at high order remains available later: it needs only a denser near region, with no change
+to the tail, the evaluation path or the consumers. §11 records it as deferred.
 
 These targets leave margin above the observed low-order prototype errors and require substantial
 improvement over the old representation. The implementation should expose requested accuracy and
@@ -912,6 +933,10 @@ O(1) in \(x_{\max}\) as designed, not whether it is faster.
 - **The `_build_log_chunks_positive` progress guard** (§4.6) is a latent robustness bug in
   `phase_spline`, unrelated to this work, affecting any caller that passes a small `chunk_logstep`.
 - Physical LG truncation error remains distinct from numerical Bessel representation error.
+- **Tightening the high-order accuracy target** beyond the \(10^{-6}\) of §10 — for instance for
+  non-Limber angular power spectra, the use case named in `test_bessel_phase.py:87-92` — is deferred.
+  It requires only a denser near region and a cost budget for the node counts in §6.2; the tail, the
+  evaluation path and the consumers are unaffected.
 - Extending the Bessel domain below the current lower bound, or extending supported orders, requires
   explicit validation and is not implied by replacing the constructor. §4.4 in particular means the
   supported domain is now a statement about SciPy's behaviour and must be revalidated when SciPy
