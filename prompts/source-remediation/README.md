@@ -6,6 +6,7 @@
 **Target branch:** `main` (clean at `e9a43a2` when this plan was written)
 **Status board:** [`IMPLEMENTATION_STATE.md`](IMPLEMENTATION_STATE.md)
 **Logs:** [`logs/`](logs/)
+**Orchestrator prompts:** [`orchestrator/`](orchestrator/)
 
 > **Folder name.** The user asked for this plan to be written into `prompts/backport-modules/`.
 > That folder holds the completed Ray/Datastore backport campaign, with its own README and status
@@ -207,6 +208,20 @@ C:            └─► 07 ─► 08 ─► 09 ─► 10 ◄──────�
 
 The campaign is designed to be run by an orchestrating agent that dispatches one fresh-context
 subagent per prompt, using the model in the tables above, and reviews between prompts.
+
+A ready-to-use orchestrator prompt exists for each workstream, in [`orchestrator/`](orchestrator/)
+(index: [`orchestrator/README.md`](orchestrator/README.md)):
+
+| Workstream | Prompts | Orchestrator prompt |
+|---|---|---|
+| A — correctness and hygiene fixes | 01, 02, 03 | [`orchestrator/workstream-A.md`](orchestrator/workstream-A.md) |
+| D — scheduling | 04 | [`orchestrator/workstream-D.md`](orchestrator/workstream-D.md) |
+| B — transfer-function LG representation and source grid | 05, 06 | [`orchestrator/workstream-B.md`](orchestrator/workstream-B.md) |
+| C — the source time integral | 07, 08, 09, 10 | [`orchestrator/workstream-C.md`](orchestrator/workstream-C.md) |
+| E — close-out | 11, 12 | [`orchestrator/workstream-E.md`](orchestrator/workstream-E.md) |
+
+Each one restates the procedure and stop conditions below with the prompt-specific checks (test
+commands, allowed files, thresholds) filled in.
 
 **Per prompt, the orchestrator:**
 
