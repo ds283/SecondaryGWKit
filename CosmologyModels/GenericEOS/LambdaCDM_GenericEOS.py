@@ -287,6 +287,6 @@ class LambdaCDM_GenericEOS(BaseCosmology):
         # constant to cluster with c_s=1?)
         # As for the background, matter has w=0 and drops out.
         numerator = self._eos.w(T) * rho["radiation"]
-        denominator = self.rho(z)
+        denominator = rho["matter"] + rho["radiation"]
 
         return numerator / denominator
