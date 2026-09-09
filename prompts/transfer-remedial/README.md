@@ -38,22 +38,59 @@ The two levels are worth keeping straight, because the prompts operate at the lo
 
 ### 0.1 Not to be confused with `prompts/source-remediation`
 
-That sibling campaign (11 of 12 complete) is where the transfer function's *own* code was
-remediated: its Workstream B built `TkSourceFunctions`, the two-region Liouville–Green
-representation of \(T_k\), and restricted `QuadSource` to the region where it is valid. So both
-folders are, in the broad sense, transfer-function remedial work.
+That sibling campaign (11 of 12 complete) rebuilds **`QuadSource` and `QuadSourceIntegral`** — the
+source term and the source time integral — plus independent fixes outside the source chain. **It does not change
+how \(T_k\) is calculated**, and it is worth being precise about that, because its Workstream B is
+labelled "transfer-function LG representation" and that label overstates what it did:
 
-The division of labour is by **layer**, and it is strict:
+- `ComputeTargets/TkNumericIntegration.py` was **never touched** by it.
+- `ComputeTargets/TkWKBIntegration.py` was touched only by its hygiene prompt 02: a typo on a
+  `None` initialisation, a missing `fabs` in a *warning* criterion, and two diagnostic accessors
+  returning the wrong field. No stored transfer-function value changes.
+- `ComputeTargets/TkSourceFunctions.py`, which its prompt 05 added, is a **non-persisted read
+  adapter** over rows those two classes had already computed. Its own module docstring says so:
+  "Nothing here is a new computed result: every number is a re-reading of stored
+  `TkNumericIntegration`/`TkWKBIntegration` values, plus closed-form model functions."
+
+The one place it does move \(T_k\)'s numbers is indirect: its prompt 01 fixed
+`LambdaCDM_GenericEOS.wPerturbations`, and \(c_s^2\) enters \(\omega_{\rm eff}\). That is a
+cosmology-model defect, not a change of method.
+
+So the division of labour is by **layer**, and it is strict:
 
 | | `prompts/source-remediation` | `prompts/transfer-remedial` (here) |
 |---|---|---|
 | Owns | `ComputeTargets/`, `main.py`'s source stages, `Datastore/` | `LiouvilleGreen/`, `main.py`'s Bessel stage |
-| Does | the \(T_k\) representation, the source grid, the source time integral | the Bessel oracle that representation is *tested against* |
+| Does | the source term and the source time integral; a read adapter over stored \(T_k\) | the Bessel oracle that stored \(T_k\) is *tested against* |
 | Forbidden from | `LiouvilleGreen/` (its README §5 item 8) | `ComputeTargets/` production code (§1.1) |
 
 Neither may edit the other's files, and §4.2 records the two places they meet. If you arrived here
-looking for `TkSourceFunctions`, the source grid, or the phase-group decomposition of the source
-integrand, you want `prompts/source-remediation`.
+looking for `QuadSource`, `QuadSourceIntegral`, the source grid, `TkSourceFunctions` or the
+phase-group decomposition of the source integrand, you want `prompts/source-remediation`.
+
+**Neither campaign changes how \(T_k\) itself is integrated.** That is a real gap rather than an
+oversight — see §0.2.
+
+### 0.2 What a transfer-function programme still does not cover
+
+If this folder is the transfer-function remedial programme, then on the evidence of §0.1 its scope
+so far is the *oracle* (here) and the *consumers* (the sibling). The calculation itself —
+`TkNumericIntegration` and `TkWKBIntegration` — has been audited but not remediated. Two known
+items sit there, both explicitly deferred by this campaign (§1.1, §7):
+
+1. **The numeric→WKB hand-over.** `docs/lg-phase-and-handover-followup-2026-09.md` §1 measures it;
+   this campaign's §1.1 defers it as "separate work". Unlike the Green's function there is no
+   overlap region — the hand-over is a single redshift per \(k\) — so it is a *choice* about where
+   to switch representation, and nothing currently validates that choice.
+2. **The stored WKB phase's own accuracy.** The follow-up document §2 finds the growing
+   interpolation error in stored cosmological phases, and
+   `docs/gk-wkb-numerical-review-2026-09.md` (`39ed7fc`) has since measured the Green's-function
+   analogue in detail and proposed a validation study for it (its §8). The transfer function has
+   the same construction and no equivalent study.
+
+Neither is scheduled here. They are recorded so that "the transfer-function remedial campaign" is
+not read as a claim to have covered them: this folder plans the Bessel oracle, and if the programme
+is to grow a second phase, these are the candidates.
 
 ---
 
