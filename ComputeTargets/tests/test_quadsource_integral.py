@@ -22,6 +22,7 @@ The code's own oracle is analytic_integral (spec 04 R14, audit QI-1); a second, 
 oracle is scipy.quad of the exact integrand on a short range.
 """
 
+import importlib
 import importlib.util
 import subprocess
 import tempfile
@@ -31,6 +32,7 @@ from pathlib import Path
 from unittest.mock import patch
 
 import numpy as np
+import sqlalchemy as sqla
 from scipy.integrate import quad
 from scipy.interpolate import make_interp_spline
 
@@ -38,12 +40,15 @@ from ComputeTargets.GkSourcePolicyData import GkSourceFunctions
 from ComputeTargets.QuadSource import QuadSourceFunctions, source_function
 from ComputeTargets.QuadSourceIntegral import (
     QuadSourceIntegral,
+    analytic_integral,
     evaluate_QuadSource_integral,
     phase_group_Levin_integral,
     build_partition,
     _ClampedTk,
     LEVIN_USE_THETA_DERIV,
     HANDOVER_CLAMP_MAX_GRID_STEPS,
+    MIN_SUBINTERVAL_LOG_WIDTH,
+    BESSEL_ORDER_CHECK_TOL,
 )
 from ComputeTargets.analytic_Gk import compute_analytic_G
 from ComputeTargets.analytic_Tk import compute_analytic_T, compute_analytic_Tprime
@@ -70,6 +75,11 @@ B_VALUES = (0.0, 0.2)
 PRE_COMMIT_SHA = "39ed7fc"
 
 REPO_ROOT = Path(__file__).resolve().parents[2]
+
+# the module itself, for the tolerance spies. `ComputeTargets.QuadSourceIntegral` as an attribute
+# of the package is the *class* (ComputeTargets/__init__.py re-exports it), so the module has to
+# be fetched explicitly.
+qsi_module = importlib.import_module("ComputeTargets.QuadSourceIntegral")
 
 
 def w_of_b(b: float) -> float:
@@ -1119,6 +1129,447 @@ class TestComputePayload(unittest.TestCase):
         for key in ("Tq_numeric", "Tq_WKB", "Tr_numeric", "Tr_WKB"):
             self.assertIn(key, message)
         self.assertNotIsInstance(ctx.exception, KeyError)
+
+
+# =============================================================================================
+# prompt 09: error bound, b provenance, tolerance plumbing, region guards, schema
+# =============================================================================================
+
+
+class TestErrorBound(unittest.TestCase):
+    """
+    B8/QI-11. `total_abserr` is the linear sum of every sub-interval's absolute error estimate
+    (scipy's on the all-smooth sub-intervals, the Levin driver's on the rest), already scaled by
+    (1 + z_response). It is a bound on the *quadrature* error and on nothing else: the error of
+    the ingredients -- the QuadSource spline of f, the Liouville-Green closed forms, the
+    re-splined phases, the hand-over clamp -- is not visible to either integrator, and neither
+    is analytic_rad's own phase/modulus-spline floor. So `total_abserr` does not bound
+    |total - analytic_rad|; the ratio is reported here and is ~1e0-1e4 (see the log). What is
+    asserted instead is what the number claims: re-running the same integral at a much tighter
+    rtol moves `total` by less than the two runs' bounds allow.
+    """
+
+    QUADRATURE_BOUND_FRACTION = 1.0e-5
+
+    def test_abserr_is_positive_sums_the_parts_and_is_small(self):
+        rows = []
+        worst_ratio = {"exact": 0.0, "realistic": 0.0}
+        worst_fraction = 0.0
+        not_converged = []
+        for exact in (True, False):
+            for b in B_VALUES:
+                for shape in SHAPES:
+                    for x_resp in X_RESP_VALUES:
+                        case = Case(b, shape, x_resp, exact=exact)
+                        out = case.run()
+                        err = out["total_abserr"]
+                        parts = (
+                            out["metadata"]["numeric_quad"]["abserr"]
+                            + out["metadata"]["WKB_Levin"]["abserr"]
+                        )
+                        dev = abs(out["total"] - out["analytic_rad"])
+                        ratio = dev / err
+                        fraction = err / abs(out["total"])
+                        key = "exact" if exact else "realistic"
+                        worst_ratio[key] = max(worst_ratio[key], ratio)
+                        worst_fraction = max(worst_fraction, fraction)
+                        if not out["total_converged"]:
+                            not_converged.append(case.label())
+                        rows.append(
+                            f"  {case.label():<40s} abserr={err:.3e} (quad {out['metadata']['numeric_quad']['abserr']:.2e} "
+                            f"+ Levin {out['metadata']['WKB_Levin']['abserr']:.2e}) = {fraction:.2e} of |total|; "
+                            f"|total-analytic|/abserr={ratio:.3e} converged={out['total_converged']} "
+                            f"phase_limited={out['total_phase_limited']}"
+                        )
+                        with self.subTest(case=case.label()):
+                            self.assertGreater(err, 0.0)
+                            self.assertAlmostEqual(err, parts, delta=1e-15 * parts)
+                            # the quadrature bound is a small fraction of the value: if it were
+                            # not, the integrator would be telling us it had failed
+                            self.assertLess(fraction, self.QUADRATURE_BOUND_FRACTION)
+                            self.assertIsInstance(out["total_converged"], bool)
+                            self.assertIsInstance(out["total_phase_limited"], bool)
+                            self.assertEqual(out["b"], b)
+        print(
+            f"\n[error bound] total_abserr: worst |total-analytic|/abserr {worst_ratio['exact']:.3e} (exact), "
+            f"{worst_ratio['realistic']:.3e} (realistic); worst abserr/|total| {worst_fraction:.3e}; "
+            f"{len(not_converged)} of 36 cases report total_converged=False:"
+        )
+        print("\n".join(rows))
+
+    def test_abserr_bounds_the_quadrature_error(self):
+        """
+        The meaning of the bound: |total(rtol=1e-8) - total(rtol=1e-11)| must be within the sum
+        of the two runs' reported bounds. Exact ingredients, so that only the integrators move.
+        """
+        rows = []
+        worst = 0.0
+        for b in B_VALUES:
+            for shape in SHAPES:
+                for x_resp in X_RESP_VALUES:
+                    case = Case(b, shape, x_resp, exact=True)
+                    loose = case.run(rtol=1e-8)
+                    tight = case.run(rtol=1e-11)
+                    dev = abs(loose["total"] - tight["total"])
+                    bound = loose["total_abserr"] + tight["total_abserr"]
+                    worst = max(worst, dev / bound)
+                    rows.append(
+                        f"  {case.label():<36s} |Delta total|={dev:.3e} bound={bound:.3e} ratio={dev / bound:.3e}"
+                    )
+                    with self.subTest(case=case.label()):
+                        self.assertLessEqual(dev, bound)
+        print(f"\n[error bound] rtol 1e-8 vs 1e-11, worst ratio {worst:.3e}:")
+        print("\n".join(rows))
+
+
+class TestTolerancePlumbing(unittest.TestCase):
+    """B5/QI-8 and B6/QI-9: every tolerance the analytic branch uses is the caller's."""
+
+    ATOL = 3.25e-23
+    RTOL = 7.5e-9
+
+    def _call(self, case):
+        B05, B25 = case.bessel_phase_data()
+        return analytic_integral(
+            case.model,
+            case.k.k,
+            case.q.k,
+            case.r.k,
+            FakeZ(case.z_resp),
+            max_z=FakeZ(case.z_source_max),
+            min_z=FakeZ(case.z_resp),
+            b=case.b,
+            Bessel_0pt5=B05,
+            Bessel_2pt5=B25,
+            rtol=self.RTOL,
+            atol=self.ATOL,
+        )
+
+    def test_analytic_integral_forwards_its_tolerances(self):
+        case = Case(0.0, SHAPES[0], 100.0, exact=True)
+        seen = []
+        real = qsi_module._three_bessel_integrals
+
+        def spy(*args, **kwargs):
+            seen.append((kwargs["nu_type"], kwargs["atol"], kwargs["rtol"]))
+            return real(*args, **kwargs)
+
+        with patch.object(qsi_module, "_three_bessel_integrals", spy):
+            self._call(case)
+
+        print(f"\n[tolerances] _three_bessel_integrals saw {seen}")
+        self.assertEqual(len(seen), 2)
+        self.assertEqual({nu for nu, _, _ in seen}, {"0pt5", "2pt5"})
+        for nu_type, atol, rtol in seen:
+            with self.subTest(nu_type=nu_type):
+                self.assertEqual(atol, self.ATOL)
+                self.assertEqual(rtol, self.RTOL)
+
+    def test_every_analytic_Levin_call_uses_the_same_tolerances(self):
+        """
+        The Y3 call used to pass the module constants LEVIN_ABSERR / LEVIN_RELERR while its
+        seven siblings passed the caller's, making the four cancelling phase groups' error bars
+        non-uniform. All eight now agree, and the constants are gone.
+        """
+        self.assertFalse(hasattr(qsi_module, "LEVIN_ABSERR"))
+        self.assertFalse(hasattr(qsi_module, "LEVIN_RELERR"))
+
+        case = Case(0.0, SHAPES[0], 100.0, exact=True)
+        seen = []
+        real = qsi_module.adaptive_levin_sincos
+
+        def spy(*args, **kwargs):
+            seen.append((kwargs["notify_label"], kwargs["atol"], kwargs["rtol"]))
+            return real(*args, **kwargs)
+
+        with patch.object(qsi_module, "adaptive_levin_sincos", spy):
+            self._call(case)
+
+        labels = sorted(label for label, _, _ in seen)
+        print(f"\n[tolerances] analytic Levin calls: {labels}")
+        # both three-Bessel calls take the Levin branch on this case, so all eight groups of
+        # each are exercised
+        self.assertEqual(len(seen), 16)
+        self.assertTrue(any(label.endswith("Y3") for label, _, _ in seen))
+        self.assertEqual(
+            {(atol, rtol) for _, atol, rtol in seen}, {(self.ATOL, self.RTOL)}
+        )
+
+
+class TestBesselOrderGuard(unittest.TestCase):
+    """
+    B7/QI-1: the Levin branch of the analytic oracle uses the caller's bessel_phase splines
+    while _three_bessel_quad recomputes jv(nu + b, .); they agree only if both were built at the
+    same b. bessel_phase() does not record its order, so the guard checks it numerically.
+    """
+
+    def test_splines_built_at_the_wrong_b_are_rejected(self):
+        # b = 0 splines, claimed as b = 0.2 (the run itself is a b = 0.2 configuration)
+        case = Case(0.2, SHAPES[0], 100.0, exact=True)
+        wrong = Case(0.0, SHAPES[0], 100.0, exact=True).bessel_phase_data()
+        case._bessel = wrong
+        with self.assertRaises(RuntimeError) as ctx:
+            case.run()
+        message = str(ctx.exception)
+        print(f"\n[b guard] {message[:220]}")
+        self.assertIn("Bessel", message)
+        self.assertIn("order", message)
+
+    def test_correctly_built_splines_are_accepted(self):
+        # the same configuration with its own splines runs (every other test relies on this)
+        case = Case(0.2, SHAPES[0], 100.0, exact=True)
+        out = case.run()
+        self.assertEqual(out["b"], 0.2)
+        self.assertGreater(BESSEL_ORDER_CHECK_TOL, 0.0)
+
+
+# --- lightweight stand-ins for the region guards (no bessel_phase, no integration) -----------
+
+
+class _MinimalGk:
+    """Only numeric_Gk is read for a type "numeric" policy."""
+
+    @staticmethod
+    def numeric_Gk(x, z_is_log=False):
+        return 1.0
+
+
+class _MinimalTk:
+    """
+    The region bookkeeping build_partition reads; no accessor is called. `crossover_z` is a
+    float in production (TkSourceFunctions.crossover_z = TkWKBIntegration.z_init), so a factor
+    that is smooth over the whole range is given a hand-over at the bottom of it.
+    """
+
+    def __init__(self, crossover_z: float):
+        self.crossover_z = crossover_z
+        self.numeric_region = (inf, crossover_z)
+        self.WKB_region = (crossover_z, 0.0)
+        self.phase = None
+
+
+class _MinimalSource:
+    store_id = 77
+
+    def __init__(self, z_max, z_min):
+        self.z_sample = FakeZSample(log_grid(1.0 + z_max, 1.0 + z_min, 100))
+        self.numeric_region = (z_max, z_min)
+        self.crossover_z_q = None
+        self.crossover_z_r = None
+
+
+class TestRegionGuards(unittest.TestCase):
+    """
+    B11/QI-4. The region-nonempty test is a width in the integration variable log(1+z'),
+    MIN_SUBINTERVAL_LOG_WIDTH, not a ratio in z: it means the same thing everywhere in the range
+    and it does not divide by zero at z_response = 0. A hand-over that falls inside that width is
+    merged into the sub-interval above it and recorded in metadata["partition"]["skipped"].
+    """
+
+    def _partition(self, z_top, z_bottom, crossover_q, crossover_r):
+        policy = FakeGkPolicy(_MinimalGk(), "numeric", None, (z_top, z_bottom), None)
+        return build_partition(
+            policy,
+            _MinimalTk(crossover_q),
+            _MinimalTk(crossover_r),
+            _MinimalSource(z_top, z_bottom),
+            z_bottom,
+            z_top,
+        )
+
+    def test_narrow_subinterval_is_skipped_and_recorded(self):
+        z_top, z_bottom = 1.0e5, 10.0
+        z_q = 1.0e3
+        # a hand-over 0.4 * MIN_SUBINTERVAL_LOG_WIDTH below the one above it: too narrow to
+        # integrate, so it is merged and recorded rather than dropped
+        z_r = exp(log(1.0 + z_q) - 0.4 * MIN_SUBINTERVAL_LOG_WIDTH) - 1.0
+        partition = self._partition(z_top, z_bottom, z_q, z_r)
+        metadata = partition["metadata"]
+        skipped = metadata["skipped"]
+        print(
+            f"\n[B11] hand-overs z={z_q:.10g} and z={z_r:.10g} "
+            f"(separation {log(1.0 + z_q) - log(1.0 + z_r):.3e} in log(1+z), "
+            f"MIN_SUBINTERVAL_LOG_WIDTH={MIN_SUBINTERVAL_LOG_WIDTH:.1e}): "
+            f"{len(metadata['subintervals'])} sub-intervals, skipped={skipped}"
+        )
+        self.assertEqual(len(skipped), 1)
+        self.assertEqual(skipped[0]["factor"], "Tr")
+        self.assertLess(skipped[0]["log_width"], MIN_SUBINTERVAL_LOG_WIDTH)
+        self.assertEqual(
+            metadata["min_subinterval_log_width"], MIN_SUBINTERVAL_LOG_WIDTH
+        )
+        # two sub-intervals, not three: both transfer functions turn oscillatory at the merged
+        # breakpoint
+        regimes = [tuple(item["regime"]) for item in metadata["subintervals"]]
+        self.assertEqual(regimes, [(False, False, False), (False, True, True)])
+
+    def test_well_separated_hand_overs_are_not_skipped(self):
+        partition = self._partition(1.0e5, 10.0, 1.0e3, 5.0e2)
+        metadata = partition["metadata"]
+        self.assertEqual(metadata["skipped"], [])
+        self.assertEqual(len(metadata["subintervals"]), 3)
+
+    def test_hand_over_within_the_width_of_the_response_redshift_is_not_a_breakpoint(
+        self,
+    ):
+        """
+        A hand-over closer than MIN_SUBINTERVAL_LOG_WIDTH to z_response would open a degenerate
+        region at the bottom of the range. It is classified as "never oscillatory here" and
+        recorded with inside_range False, and the last sub-interval ends exactly at z_response.
+        """
+        z_bottom = 10.0
+        z_r = exp(log(1.0 + z_bottom) + 0.4 * MIN_SUBINTERVAL_LOG_WIDTH) - 1.0
+        partition = self._partition(1.0e5, z_bottom, 1.0e3, z_r)
+        metadata = partition["metadata"]
+        self.assertEqual(metadata["skipped"], [])
+        record = {bp["factor"]: bp["inside_range"] for bp in metadata["breakpoints"]}
+        self.assertFalse(record["Tr"])
+        self.assertTrue(record["Tq"])
+        self.assertEqual(len(metadata["subintervals"]), 2)
+        self.assertAlmostEqual(
+            metadata["subintervals"][-1]["z_min"], z_bottom, delta=1e-12
+        )
+        self.assertFalse(metadata["subintervals"][-1]["regime"][2])
+
+    def test_z_response_zero_does_not_raise(self):
+        """
+        The retired guard divided get_z(max_z) by get_z(min_z); at z_response = 0 that is a
+        division by zero (unreachable at DEFAULT_ZEND = 0.1, but only by accident).
+        """
+        partition = self._partition(1.0e5, 0.0, 0.0, 0.0)
+        metadata = partition["metadata"]
+        print(
+            f"\n[B11] z_response = 0: {len(metadata['subintervals'])} sub-interval(s), "
+            f"method {metadata['subintervals'][0]['method']}"
+        )
+        self.assertEqual(len(metadata["subintervals"]), 1)
+        self.assertEqual(metadata["subintervals"][0]["method"], "quad")
+        self.assertEqual(metadata["subintervals"][0]["z_min"], 0.0)
+
+    def test_coincident_hand_overs_of_equal_wavenumbers_are_recorded(self):
+        """q = r: the two transfer functions hand over at exactly the same redshift."""
+        shape = Shape("q=r", k=1.1e4, q=1.0e4, r=1.0e4, G_cross_x=33.0)
+        partition = Case(0.0, shape, 100.0, exact=True).partition()
+        skipped = partition["metadata"]["skipped"]
+        print(f"\n[B11] q = r: skipped={skipped}")
+        self.assertEqual(len(skipped), 1)
+        self.assertEqual(skipped[0]["log_width"], 0.0)
+
+
+class TestPersistedSchema(unittest.TestCase):
+    """
+    The one schema change of the campaign: `b` (non-null), `total_abserr`, `total_converged`,
+    `total_phase_limited`. Checked against the factory's own table definition -- no datastore,
+    no Ray, no ShardedPool.
+    """
+
+    def _table(self):
+        from Datastore.SQL.ObjectFactories.QuadSourceIntegral import (
+            sqla_QuadSourceIntegral_factory,
+        )
+
+        columns = sqla_QuadSourceIntegral_factory.register()["columns"]
+        return sqla.Table("QuadSourceIntegral", sqla.MetaData(), *columns)
+
+    def test_new_columns_exist_with_the_intended_types(self):
+        table = self._table()
+        expected = {
+            "b": (sqla.Float, False),
+            "total_abserr": (sqla.Float, True),
+            "total_converged": (sqla.Boolean, True),
+            "total_phase_limited": (sqla.Boolean, True),
+        }
+        print(
+            "\n[schema] "
+            + ", ".join(
+                f"{name}: {table.c[name].type} nullable={table.c[name].nullable}"
+                for name in expected
+            )
+        )
+        for name, (type_, nullable) in expected.items():
+            with self.subTest(column=name):
+                self.assertIn(name, table.c)
+                self.assertIsInstance(table.c[name].type, type_)
+                self.assertEqual(table.c[name].nullable, nullable)
+
+    def test_WKB_quad_columns_are_kept(self):
+        """
+        WKB_quad has been identically 0.0 since prompt 08, but
+        extract_QuadSourceIntegral_data.py reads obj.WKB_quad and that script is out of scope
+        for this campaign, so the column (and its six timing siblings) stay.
+        """
+        table = self._table()
+        for name in (
+            "WKB_quad",
+            "WKB_quad_compute_time",
+            "WKB_quad_compute_steps",
+            "WKB_quad_RHS_evaluations",
+            "WKB_quad_mean_RHS_time",
+            "WKB_quad_max_RHS_time",
+            "WKB_quad_min_RHS_time",
+        ):
+            with self.subTest(column=name):
+                self.assertIn(name, table.c)
+
+    def test_object_round_trips_the_new_fields(self):
+        """
+        What the factory's build()/read_batch() do: hand the row's columns to the constructor as
+        a payload, and read them back off the properties.
+        """
+
+        class Tol:
+            tol = 1e-8
+            store_id = 1
+
+        class Policy:
+            store_id = 9
+
+        payload = {
+            "store_id": 4321,
+            "b": 0.25,
+            "total": 1.5e-10,
+            "total_abserr": 2.5e-18,
+            "total_converged": True,
+            "total_phase_limited": False,
+            "numeric_quad": 1.0e-10,
+            "WKB_quad": 0.0,
+            "WKB_Levin": 0.5e-10,
+            "analytic_rad": 1.4999e-10,
+            "eta_source_max": 1.0,
+            "eta_response": 2.0,
+            "numeric_quad_data": None,
+            "WKB_quad_data": None,
+            "WKB_Levin_data": None,
+            "WKB_phase_spline_chunks": 3,
+            "compute_time": 0.5,
+            "analytic_compute_time": 0.1,
+            "source_serial": 7,
+            "data_serial": 8,
+            "metadata": {},
+        }
+        common = dict(
+            model=None,
+            policy=Policy(),
+            z_response=FakeZ(10.0),
+            z_source_max=FakeZ(1e5),
+            k=FakeExitTime(1.0, 1, None),
+            q=FakeExitTime(1.0, 2, None),
+            r=FakeExitTime(1.0, 3, None),
+            atol=Tol(),
+            rtol=Tol(),
+        )
+        obj = QuadSourceIntegral(payload, **common)
+        self.assertEqual(obj.b, 0.25)
+        self.assertEqual(obj.total_abserr, 2.5e-18)
+        self.assertIs(obj.total_converged, True)
+        self.assertIs(obj.total_phase_limited, False)
+
+        # query-only object: the new fields default to None like every other value
+        empty = QuadSourceIntegral(None, **common)
+        for name in ("_b", "_total_abserr", "_total_converged", "_total_phase_limited"):
+            self.assertIsNone(getattr(empty, name))
+        with self.assertRaises(RuntimeError):
+            empty.b
 
 
 if __name__ == "__main__":

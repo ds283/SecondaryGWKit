@@ -58,8 +58,20 @@ LEVIN_MIN_PHASE_DIFF = LEVIN_MIN_2PI_CYCLES * 2.0 * pi
 # an "evidence supports choosing an order, not evidence of absolute accuracy" result -- the
 # self-consistency check cannot rule out an order-independent bias shared by every order tested.
 CHEBYSHEV_ORDER = 24
-LEVIN_RELERR = 1e-8
-LEVIN_ABSERR = 1e-23
+
+# The module constants LEVIN_RELERR = 1e-8 / LEVIN_ABSERR = 1e-23 were deleted by
+# prompts/source-remediation prompt 09 (audit B5/QI-8). Their only remaining use was the "Y3"
+# call of _three_bessel_Levin, which passed them where its seven siblings pass the caller's
+# atol/rtol; that asymmetry made the four cancelling phase groups' error bars non-uniform.
+# Every Levin call in this module now takes the tolerances it was given.
+
+# Relative tolerance of the Bessel-order guard _check_bessel_order below, as a fraction of the
+# local Liouville-Green envelope m = sqrt(J^2 + Y^2). bessel_phase() reconstructs J_nu to ~2e-8
+# of that envelope (audit QI-1), while an order wrong by delta shifts the phase by delta*pi/2
+# -- 0.31 rad for the smallest interesting mismatch, delta = 0.2 -- and so moves J by O(0.1) of
+# the envelope. 1e-3 sits five orders above the fit floor and two below the smallest defect it
+# has to catch.
+BESSEL_ORDER_CHECK_TOL = 1e-3
 
 # Whether the composed phase derivative d Psi/d log(1+z') (closed-form omega (1+z') for each
 # transfer function, the phase-spline log-derivative for the Green's function; see
@@ -80,7 +92,19 @@ LEVIN_USE_THETA_DERIV = True
 HANDOVER_CLAMP_MAX_GRID_STEPS = 1.5
 
 # A sub-interval narrower than this in log(1+z') is treated as empty (two breakpoints that
-# coincide, e.g. q = r, or a breakpoint landing on an end of the range).
+# coincide, e.g. q = r, or a breakpoint landing on an end of the range). This is audit B11's
+# fix (QI-4): before prompt 08 the region-nonempty guards compared get_z(max_z)/get_z(min_z)
+# against 1 + DEFAULT_QUADRATURE_RTOL, a ratio in z rather than in 1+z, so the smallest accepted
+# interval varied by orders of magnitude across the range and the test divided by zero at
+# z_response = 0. A width in the integration variable log(1+z') does neither.
+#
+# Value: DEFAULT_FLOAT_PRECISION = 1e-7 is the tolerance at which this codebase treats two
+# redshifts as the same, which is what a coincident breakpoint (q = r, or a hand-over landing on
+# an end of the range) is. It is also small enough to be numerically irrelevant: the production
+# range is log(1+1e5) - log(1+0.1) = 11.4 wide, so a discarded sub-interval carries at most
+# 1e-7/11.4 ~ 1e-8 of the integral -- at the quadrature rtol, below every representation floor
+# recorded on the campaign's status board. Discarded breakpoints are recorded in
+# metadata["partition"]["skipped"] rather than dropped silently.
 MIN_SUBINTERVAL_LOG_WIDTH = DEFAULT_FLOAT_PRECISION
 
 
@@ -349,20 +373,46 @@ def build_partition(
     r_log_break = log_break(r_mode, r_record)
 
     # --- edges: the range ends plus every breakpoint strictly inside, descending, deduplicated
+    # A breakpoint within MIN_SUBINTERVAL_LOG_WIDTH of the edge above it would open a sub-interval
+    # too narrow to carry any of the integral (see that constant); it is merged into that edge and
+    # recorded as skipped (audit B11), so that a reader of the stored metadata can tell a merged
+    # hand-over from one that never happened.
     edges = [log_top]
-    for value in sorted(
+    skipped = []
+    for value, label in sorted(
         (
-            b
-            for b in (G_log_break, q_log_break, r_log_break)
-            if log_bottom < b < log_top
+            (value, label)
+            for value, label in (
+                (G_log_break, "G"),
+                (q_log_break, "Tq"),
+                (r_log_break, "Tr"),
+            )
+            if log_bottom < value < log_top
         ),
         reverse=True,
     ):
         if edges[-1] - value > MIN_SUBINTERVAL_LOG_WIDTH:
             edges.append(value)
+        else:
+            skipped.append(
+                {
+                    "factor": label,
+                    "z": exp(value) - 1.0,
+                    "log_width": edges[-1] - value,
+                    "reason": "hand-over within MIN_SUBINTERVAL_LOG_WIDTH of the sub-interval above it",
+                }
+            )
     if edges[-1] - log_bottom > MIN_SUBINTERVAL_LOG_WIDTH:
         edges.append(log_bottom)
     else:
+        skipped.append(
+            {
+                "factor": None,
+                "z": exp(edges[-1]) - 1.0,
+                "log_width": edges[-1] - log_bottom,
+                "reason": "lowest hand-over within MIN_SUBINTERVAL_LOG_WIDTH of z_response; snapped to it",
+            }
+        )
         edges[-1] = log_bottom
 
     max_gap = HANDOVER_CLAMP_MAX_GRID_STEPS * _mean_source_grid_step(source)
@@ -490,6 +540,8 @@ def build_partition(
             get_z(GkPolicy.Levin_z) if GkPolicy.Levin_z is not None else None
         ),
         "max_clamp_gap_log1pz": max_gap,
+        "min_subinterval_log_width": MIN_SUBINTERVAL_LOG_WIDTH,
+        "skipped": skipped,
         "subintervals": records,
     }
 
@@ -570,6 +622,45 @@ def _aggregate_LevinData(items: Sequence[dict]) -> Optional[LevinData]:
 # the source time integral
 
 
+def _check_bessel_order(label: str, phase_data: dict, nu: float) -> None:
+    """
+    The Levin branch of the analytic oracle uses the caller-supplied bessel_phase splines while
+    _three_bessel_quad recomputes jv(nu + b, .) for itself; the two agree only if the splines
+    were built at the same b that is passed as `b` (audit QI-1: "correct at HEAD but an
+    unguarded invariant"). bessel_phase() does not record its own order -- its return dict
+    (LiouvilleGreen/bessel_phase.py) carries phase, mod, Q, phi, bessel_j, bessel_y, min_x,
+    max_x and no "nu" -- so the order is checked numerically instead: the spline's own
+    reconstruction J_nu = m sin(theta) is compared against scipy's J_nu, normalised by the local
+    envelope m (which is never zero, unlike J itself). An order wrong by delta puts the phase out
+    by delta*pi/2 -- 0.31 rad for delta = 0.2 -- so J moves by O(0.1) of the envelope, while the
+    reconstruction's own error is ~2e-8 of it (audit QI-1). LiouvilleGreen/ is out of scope for
+    this campaign, so nothing here asks bessel_phase to start recording its order.
+    """
+    min_x = phase_data["min_x"]
+    max_x = phase_data["max_x"]
+
+    # Two abscissae just inside the oscillatory region, x ~ 2 nu to 5 nu: far apart in phase, so
+    # that a wrong order cannot escape both by sitting at a node of the difference, but small
+    # enough that the phase spline is at its most accurate (its error grows with x, and
+    # production builds these splines out to x ~ 1e9). Deep inside the turning point, x << nu,
+    # the check would lose its sensitivity instead: there J is exponentially small compared with
+    # the envelope, so even a wrong order moves it by far less than the envelope.
+    x_lo = min(max(1.01 * min_x, 2.0 * max(nu, 0.5)), max_x)
+    for x_test in sorted({x_lo, min(2.5 * x_lo, max_x)}):
+        envelope = phase_data["mod"](x_test)
+        residual = abs(phase_data["bessel_j"](x_test) - jv(nu, x_test))
+        if residual > BESSEL_ORDER_CHECK_TOL * envelope:
+            raise RuntimeError(
+                f"compute_QuadSource_integral: the supplied {label} phase spline does not appear to be "
+                f"a Liouville-Green representation of the Bessel function of order nu={nu:.8g} required by "
+                f"b={nu - (0.5 if label == 'Bessel_0pt5' else 2.5):.8g}: at x={x_test:.5g} the spline gives "
+                f"J={phase_data['bessel_j'](x_test):.8g} against scipy's J_nu={jv(nu, x_test):.8g}, a "
+                f"discrepancy of {residual / envelope:.3e} of the local envelope m={envelope:.5g} (tolerance "
+                f"{BESSEL_ORDER_CHECK_TOL:.1e}). The Bessel phase splines must be built with the same b that "
+                f"is passed to the source time integral (audit QI-1)"
+            )
+
+
 def evaluate_QuadSource_integral(
     model: BackgroundModel,
     k: wavenumber_exit_time,
@@ -610,6 +701,10 @@ def evaluate_QuadSource_integral(
     Gk_f: GkSourceFunctions = GkPolicy.functions
 
     with WallclockTimer() as timer:
+        # the Bessel phase splines must have been built at this b (audit QI-1)
+        _check_bessel_order("Bessel_0pt5", Bessel_0pt5, 0.5 + b)
+        _check_bessel_order("Bessel_2pt5", Bessel_2pt5, 2.5 + b)
+
         # two-region (numeric + Liouville-Green) representations of the transfer functions
         Tq_f = Tk_functions_builder(model, q.k, Tq_numeric, Tq_WKB)
         Tr_f = Tk_functions_builder(model, r.k, Tr_numeric, Tr_WKB)
@@ -732,15 +827,35 @@ def evaluate_QuadSource_integral(
             atol=atol,
         )
 
-    # The persisted columns keep their names (the Datastore factory is prompt 09's), with these
-    # meanings since prompt 08:
+    # A bound on the error of "total" (audit B8/QI-11). Both contributions are absolute errors
+    # already scaled by (1 + z_response) -- numeric_quad_integral and phase_group_Levin_integral
+    # each scale their own "abserr" exactly as they scale their "value" -- so they are summed
+    # directly, and linearly rather than in quadrature: neighbouring sub-intervals share the same
+    # representation of every factor, so a representation error is a common drift and not
+    # independent noise (the same reasoning as the three-Bessel machinery below).
+    #
+    # This is an absolute bound and must stay one: numeric_quad and WKB_Levin cancel by up to 5x
+    # on the prompt-08 fixtures (logs/08-qsi-phase-group-integration.md observation 5), so a
+    # relative error scaled by |total| would understate the error of a cancelling case.
+    total_abserr = numeric_quad_abserr + WKB_Levin_abserr
+
+    # The persisted columns keep their names, with these meanings since prompt 08:
     #   numeric_quad  -- sum over the all-smooth sub-intervals (scipy.quad of the QuadSource spline)
     #   WKB_quad      -- identically 0.0: no sub-interval integrates an oscillatory factor by
-    #                    direct quadrature any more; prompt 09 decides whether to drop the column
+    #                    direct quadrature any more. The column is kept because
+    #                    extract_QuadSourceIntegral_data.py reads it (prompt 09 section 3)
     #   WKB_Levin     -- sum over every sub-interval with at least one oscillatory factor
     #   total         -- numeric_quad + WKB_Levin
+    #   total_abserr, total_converged, total_phase_limited -- the bound above and the Levin
+    #                    driver's flags, aggregated over every group of every sub-interval
+    #   b             -- the b these were computed at (audit B7): it fixes c_s, the Bessel orders
+    #                    and the eta' weight of analytic_rad
     return {
         "total": numeric_quad + WKB_Levin,
+        "total_abserr": total_abserr,
+        "total_converged": WKB_Levin_converged,
+        "total_phase_limited": WKB_Levin_phase_limited,
+        "b": b,
         "numeric_quad": numeric_quad,
         "WKB_quad": 0.0,
         "WKB_Levin": WKB_Levin,
@@ -758,8 +873,8 @@ def evaluate_QuadSource_integral(
         "compute_time": timer.elapsed,
         "analytic_compute_time": analytic_data["elapsed"],
         # Error bounds: the Levin sub-intervals' abserr (summed linearly across groups and
-        # sub-intervals) and the quad sub-intervals' scipy error estimates are both recorded
-        # here; folding them into a single bound on "total" is prompt 09's (audit B8).
+        # sub-intervals) and the quad sub-intervals' scipy error estimates. Their sum is the
+        # top-level "total_abserr" above; the per-part and per-sub-interval detail stays here.
         "metadata": {
             "analytic": {
                 **analytic_data["metadata"],
@@ -1208,8 +1323,8 @@ def _three_bessel_Levin(
         x_span,
         f=[lambda x: 0.0, lambda x: -Levin_f(x)],
         theta={"theta": phase3, "theta_mod_2pi": phase3_mod_2pi},
-        atol=LEVIN_ABSERR,
-        rtol=LEVIN_RELERR,
+        atol=atol,
+        rtol=rtol,
         chebyshev_order=CHEBYSHEV_ORDER,
         notify_label="analytic Y3",
     )
@@ -1409,6 +1524,12 @@ def analytic_integral(
 
     cs_sq = (1.0 - b) / (1.0 + b) / 3.0
 
+    # atol and rtol are the caller's -- i.e. the QuadSourceIntegral row's own atol_serial and
+    # rtol_serial. They used to be dead arguments here, with 1e-21 / 1e-8 hardwired on both
+    # calls, so the stored tolerance columns did not describe analytic_rad (audit B6/QI-9). The
+    # pipeline supplies DEFAULT_QUADRATURE_ATOL = 1e-25 and DEFAULT_QUADRATURE_RTOL = 1e-8, so
+    # the absolute tolerance is now 1e4 tighter than the retired literal; measured effect on
+    # analytic_rad and on runtime: prompts/source-remediation/logs/09-qsi-errors-schema-tolerances.md.
     data0pt5 = _three_bessel_integrals(
         k,
         q,
@@ -1418,8 +1539,8 @@ def analytic_integral(
         b=b,
         phase_data={"0pt5": Bessel_0pt5},
         nu_type="0pt5",
-        atol=1e-21,
-        rtol=1e-8,
+        atol=atol,
+        rtol=rtol,
     )
     data2pt5 = _three_bessel_integrals(
         k,
@@ -1430,8 +1551,8 @@ def analytic_integral(
         b=b,
         phase_data={"0pt5": Bessel_0pt5, "2pt5": Bessel_2pt5},
         nu_type="2pt5",
-        atol=1e-21,
-        rtol=1e-8,
+        atol=atol,
+        rtol=rtol,
     )
 
     metadata = {
@@ -1610,6 +1731,10 @@ class QuadSourceIntegral(DatastoreObject):
             DatastoreObject.__init__(self, None)
 
             self._total = None
+            self._total_abserr = None
+            self._total_converged = None
+            self._total_phase_limited = None
+            self._b = None
             self._numeric_quad = None
             self._WKB_quad = None
             self._WKB_Levin = None
@@ -1635,6 +1760,10 @@ class QuadSourceIntegral(DatastoreObject):
             DatastoreObject.__init__(self, payload["store_id"])
 
             self._total = payload["total"]
+            self._total_abserr = payload["total_abserr"]
+            self._total_converged = payload["total_converged"]
+            self._total_phase_limited = payload["total_phase_limited"]
+            self._b = payload["b"]
             self._numeric_quad = payload["numeric_quad"]
             self._WKB_quad = payload["WKB_quad"]
             self._WKB_Levin = payload["WKB_Levin"]
@@ -1695,6 +1824,52 @@ class QuadSourceIntegral(DatastoreObject):
             raise RuntimeError("value has not yet been populated")
 
         return self._total
+
+    @property
+    def total_abserr(self) -> Optional[float]:
+        """
+        Bound on the *quadrature* error of `total`: the linear sum of every sub-interval's
+        absolute error estimate, scipy's on the all-smooth sub-intervals and the Levin driver's
+        on the rest (audit B8). Absolute, deliberately: numeric_quad and WKB_Levin cancel, so do
+        not turn this into a relative error by dividing by |total|.
+
+        It does *not* include the error of the ingredients -- the QuadSource spline of f, the
+        Liouville-Green closed forms, the re-splined phases, the hand-over clamp -- which is
+        four to five orders larger at production settings and is recorded on the campaign's
+        status board (prompts/source-remediation/IMPLEMENTATION_STATE.md section 3, issue
+        [09-abserr-is-a-quadrature-bound]).
+        """
+        if self._total is None:
+            raise RuntimeError("value has not yet been populated")
+
+        return self._total_abserr
+
+    @property
+    def total_converged(self) -> Optional[bool]:
+        """Whether every phase group of every Levin sub-interval reported convergence."""
+        if self._total is None:
+            raise RuntimeError("value has not yet been populated")
+
+        return self._total_converged
+
+    @property
+    def total_phase_limited(self) -> Optional[bool]:
+        """Whether any phase group of any Levin sub-interval was phase-limited."""
+        if self._total is None:
+            raise RuntimeError("value has not yet been populated")
+
+        return self._total_phase_limited
+
+    @property
+    def b(self) -> Optional[float]:
+        """
+        The b at which this row was computed (audit B7): it fixes c_s^2 = (1-b)/(3(1+b)), the
+        Bessel orders 1/2 + b and 5/2 + b, and the eta' weight of `analytic_rad`.
+        """
+        if self._total is None:
+            raise RuntimeError("value has not yet been populated")
+
+        return self._b
 
     @property
     def numeric_quad(self) -> float:
@@ -1927,6 +2102,10 @@ class QuadSourceIntegral(DatastoreObject):
         self._compute_ref = None
 
         self._total = payload["total"]
+        self._total_abserr = payload["total_abserr"]
+        self._total_converged = payload["total_converged"]
+        self._total_phase_limited = payload["total_phase_limited"]
+        self._b = payload["b"]
         self._numeric_quad = payload["numeric_quad"]
         self._WKB_quad = payload["WKB_quad"]
         self._WKB_Levin = payload["WKB_Levin"]

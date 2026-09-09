@@ -2,7 +2,7 @@
 
 **Campaign:** [`README.md`](README.md) · **Source audit:** [`docs/spec-code-audit-2026-09.md`](../../docs/spec-code-audit-2026-09.md)
 **Baseline commit:** `e9a43a2` (`main`, clean)
-**Last updated:** 2026-09-09 — prompt 08 complete.
+**Last updated:** 2026-09-09 — prompt 09 complete.
 
 > **Maintenance rule.** Every prompt updates this file *in its own commit*, before committing.
 > Set your row's status, fill in the commit SHA, model and log link, update the item-level table,
@@ -42,7 +42,7 @@ Legend: ⬜ not started · 🟡 in flight · ✅ complete · ⚠️ complete wit
 |---|---|---|---|---|---|---|
 | 07 | [Phase-group algebra](07-phase-group-algebra.md) | A4 (1/3) | Fable | ⚠️ | *"Add the phase-group decomposition of the source integrand"* (SHA not embedded, per prompt 01 log deviation 4) | [`logs/07-phase-group-algebra.md`](logs/07-phase-group-algebra.md) |
 | 08 | [`QuadSourceIntegral` phase-group integration](08-qsi-phase-group-integration.md) | A4 (2/3), A2 (3/3) | Fable | ⚠️ | *"Partition the source time integral and Levin-integrate its phase groups"* (SHA not embedded, per prompt 01 log deviation 4) | [`logs/08-qsi-phase-group-integration.md`](logs/08-qsi-phase-group-integration.md) |
-| 09 | [Errors, schema, tolerances](09-qsi-errors-schema-tolerances.md) | B5, B6, B7, B8, B11 | Opus | ⬜ | | |
+| 09 | [Errors, schema, tolerances](09-qsi-errors-schema-tolerances.md) | B5, B6, B7, B8, B11 | Opus | ⚠️ | *"Record b, an error bound and honest tolerances on QuadSourceIntegral"* (SHA not embedded, per prompt 01 log deviation 4) | [`logs/09-qsi-errors-schema-tolerances.md`](logs/09-qsi-errors-schema-tolerances.md) |
 | 10 | [`main.py` plumbing](10-qsi-main-plumbing.md) | A4 (3/3) | Opus | ⬜ | | |
 
 ### Workstream E — close-out
@@ -52,7 +52,7 @@ Legend: ⬜ not started · 🟡 in flight · ✅ complete · ⚠️ complete wit
 | 11 | [Spec annotations](11-spec-annotations.md) | audit §6 | Sonnet | ⬜ | | |
 | 12 | [Verification](12-verification.md) | audit §4; campaign | Opus | ⬜ | | |
 
-**Progress:** 7 / 12 complete.
+**Progress:** 8 / 12 complete.
 
 ---
 
@@ -73,13 +73,13 @@ Traceability from the audit's finding IDs to the prompt that discharges them.
 | B2 | diagnostic | `GkWKBValue.analytic_*_w` return `_rad` | 02 | ✅ |
 | B3 | dead code | pre-flight WKB warnings omit `fabs` | 02 | ✅ |
 | B4 | wrong exception | `_init_efolds_suph` typo (Tk and Gk WKB) | 02 | ✅ |
-| B5 | tolerance | `Y3` Levin call uses module constants, not passed tolerances | 09 | ⬜ |
-| B6 | tolerance | `analytic_integral` ignores its `atol`/`rtol` | 09 | ⬜ |
-| B7 | provenance | no `b` column on `QuadSourceIntegral` | 09 | ⬜ |
-| B8 | error bound | `total` has no error bound | 09 | ⬜ |
+| B5 | tolerance | `Y3` Levin call uses module constants, not passed tolerances | 09 | ✅ (all eight analytic Levin calls take the caller's `atol`/`rtol`; `LEVIN_ABSERR`/`LEVIN_RELERR` deleted — no other user. No numerical change at the shipped tolerances, where the retired `LEVIN_RELERR` *was* `DEFAULT_QUADRATURE_RTOL`) |
+| B6 | tolerance | `analytic_integral` ignores its `atol`/`rtol` | 09 | ✅ (both `_three_bessel_integrals` calls forwarded; `analytic_rad` bit-identical on all 18 exact fixtures at `atol` 1e-21 → 1e-25, worst time ratio 1.05, so `atol_serial`/`rtol_serial` now describe `analytic_rad` for free) |
+| B7 | provenance | no `b` column on `QuadSourceIntegral` | 09 | ✅ (non-null `b` column, property, carried by the task result; plus a numerical guard that the supplied Bessel phase splines were built at that `b` — `bessel_phase()` records no order, so the check compares its own `bessel_j` against `scipy.jv` against the local envelope) |
+| B8 | error bound | `total` has no error bound | 09 | ✅ (`total_abserr` = linear sum of every sub-interval's absolute error, plus `total_converged`/`total_phase_limited`; **a quadrature bound only** — see `[09-abserr-is-a-quadrature-bound]`) |
 | B9 | consistency | `Levin_z` θ-spline chunking differs from the evaluated spline | 02 (evaluate) | ✅ (left as-is, commented) |
 | B10 | cosmetic | `QuadSource` spline wrapper labelled `"T_k"` | 02 | ✅ |
-| B11 | robustness | region-nonempty guards use a ratio in $z$ not $1+z$ | 09 | ⬜ (the original sites were rewritten by 08; the new partition guard is in $\log(1+z)$ — 09 confirms and closes) |
+| B11 | robustness | region-nonempty guards use a ratio in $z$ not $1+z$ | 09 | ✅ (confirmed: the guard is `MIN_SUBINTERVAL_LOG_WIDTH` = 1e-7 in $\log(1+z')$, its value now justified in the comment; merged hand-overs are recorded in `metadata["partition"]["skipped"]`; tested at $z_{\rm resp}=0$ exactly, where the retired ratio guard divided by zero) |
 | §4.1 | UNVERIFIED | continuity of $G$ at `crossover_z` | 12 | ⬜ |
 | §4.2 | UNVERIFIED | reachability of A6 | 12 | ⬜ |
 | §4.3 | UNVERIFIED | whether `has_WKB_violation` modes should be rejected | 12 (measure only) | ⬜ |
@@ -246,6 +246,36 @@ Traceability from the audit's finding IDs to the prompt that discharges them.
   closed-form `omega`/`dlnM_dz` inside `QuadSourceIntegral`'s clamp adapter (estimated ~100×
   smaller error; log 08 deviation 2). None is in prompts 09–10's scope.
 
+- **[09-abserr-is-a-quadrature-bound]** *(opened by prompt 09, 2026-09-09)* — the new
+  `total_abserr` column is the linear sum of the sub-intervals' quadrature error estimates
+  (scipy's, and the Levin driver's), and that is **all** it is: it measures 1.3e-11 to 1.5e-7 of
+  `|total|` on the 36 acceptance fixtures, while `|total − analytic_rad|` is 1e0–1.6e4 times
+  larger with exact ingredients (there the limit is `analytic_rad`'s own phase/modulus spline
+  floor, audit QI-1/QI-11) and up to 4.4e4 times larger with realistic ones (the QuadSource
+  spline of $f$, the LG closed forms, and above all the hand-over clamp of
+  `[08-handover-clamp-error]`). The bound *is* correct for what it claims: re-running each exact
+  case at `rtol = 1e-11` moves `total` by at most 0.65 of the two runs' summed bounds.
+  Relatedly, **`total_converged` is `False` on 14 of the 36 fixtures** — all realistic — because
+  the Levin driver cannot reach `rtol = 1e-8` against a re-splined phase; none is phase-limited.
+  **Impact:** prompt 12 must add the board's representation floors to `total_abserr` before
+  judging any residual, and must not read `total_converged = False` as a failure or a physics
+  defect; anyone querying the column should know it excludes representation error.
+  **Next step:** nothing for this campaign. A meaningful *total* error would need the
+  representation error propagated (the hand-over clamp first — `[08-handover-clamp-error]`
+  option (c) is the cheap one), which is upstream of this module.
+
+- **[09-WKB_quad-columns-are-vestigial]** *(opened by prompt 09, 2026-09-09)* — `WKB_quad` and
+  its six `WKB_quad_*` timing columns have been identically `0.0`/`None` since prompt 08 retired
+  direct quadrature of an oscillatory Green's function. Prompt 09 §3 asked for them to be dropped
+  "unless you find a reader": there is one, `extract_QuadSourceIntegral_data.py:181,278,293`
+  (`obj.WKB_quad`, feeding the `WKB numeric: [z, z]` annotation of `extract_common.py:327-345`
+  and a column of the exported table), and that script is out of scope (README §5 item 8). The
+  columns and the `WKB_quad`/`WKB_quad_data` properties therefore stay. `tools/` and
+  `useful_queries.sql` reference neither. **Impact:** the extract script still runs but its
+  `WKB numeric` annotation will never be drawn and its `WKB_quad` column will be all zeros;
+  seven columns of every row are dead weight. **Next step:** a later campaign that is allowed to
+  edit `extract_*.py` should delete the reader and then the columns, or repurpose them.
+
 > Add an entry here whenever a prompt finishes with something unresolved: a verification step that
 > could not be run, an assumption that could not be confirmed, a deviation that a later prompt has
 > to work around, a measured cost that changes a later prompt's decision. Format:
@@ -290,8 +320,12 @@ Traceability from the audit's finding IDs to the prompt that discharges them.
    all downstream rows. No migration is possible or attempted: those rows must be rebuilt. Plain
    `LambdaCDM` datastores are unaffected; that class was always correct.
 2. **Datastores built before this campaign are stale after prompt 06** (`QuadSource` rows have
-   fewer redshifts per pair) **and unreadable after prompt 09** (`QuadSourceIntegral` schema
-   change). The verification prompt rebuilds from scratch; do not try to migrate. The
+   fewer redshifts per pair) **and unreadable after prompt 09** — the `QuadSourceIntegral` table
+   gained four columns in prompt 09: `b` (Float, **non-null**), `total_abserr` (Float, nullable),
+   `total_converged` and `total_phase_limited` (Boolean, nullable). No migration is attempted;
+   the table must be rebuilt, which prompt 08's change of what `total` *means* already required.
+   `WKB_quad` and its six `WKB_quad_*` timing columns were kept
+   (`[09-WKB_quad-columns-are-vestigial]`). The verification prompt rebuilds from scratch; do not try to migrate. The
    `QuadSource`/`QuadSourceValue` **schema is unchanged** by prompt 06, so old rows are still
    *readable* — which is the hazard: a pre-06 row carries a value per source redshift, so
    `QuadSource.numeric_region` reconstructed from it extends below the both-numeric hand-over
@@ -343,3 +377,13 @@ Traceability from the audit's finding IDs to the prompt that discharges them.
    5× on the test fixtures, so bound `total`'s error by summing the parts' absolute errors, never
    by scaling a relative one. See `logs/08-qsi-phase-group-integration.md` "State handed to the
    next prompt".
+10. **Prompt 09 added four fields to the task's return dict and to the object**: `b`,
+    `total_abserr` (the sum of the parts' absolute errors — a *quadrature* bound, see
+    `[09-abserr-is-a-quadrature-bound]`), `total_converged` and `total_phase_limited`, each with
+    a matching column and property. `b` still arrives through `compute()`'s payload and is
+    carried out on the result. Every tolerance in the analytic branch is now the caller's, so
+    `atol_serial`/`rtol_serial` describe `analytic_rad`; `LEVIN_ABSERR`/`LEVIN_RELERR` are gone.
+    `evaluate_QuadSource_integral` now also rejects Bessel phase splines that were not built at
+    the payload's `b` (`_check_bessel_order`, tolerance `BESSEL_ORDER_CHECK_TOL = 1e-3` of the
+    local envelope), and `metadata["partition"]` carries `skipped` and
+    `min_subinterval_log_width`. See `logs/09-qsi-errors-schema-tolerances.md`.

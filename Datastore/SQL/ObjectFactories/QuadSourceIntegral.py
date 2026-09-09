@@ -166,8 +166,24 @@ class sqla_QuadSourceIntegral_factory(SQLAFactoryBase):
                     index=True,
                     nullable=False,
                 ),
+                # b fixes c_s^2 = (1-b)/(3(1+b)), the Bessel orders 1/2 + b and 5/2 + b, and the
+                # eta' weight of analytic_rad, so a row is not interpretable without it (audit
+                # B7/QI-10). Non-null: every row written since it existed has one.
+                sqla.Column("b", sqla.Float(64), nullable=False),
                 sqla.Column("total", sqla.Float(64), nullable=False),
+                # bound on the error of "total": the linear sum of the per-sub-interval absolute
+                # error estimates (audit B8/QI-11), and the Levin driver's flags aggregated over
+                # every phase group of every sub-interval. Nullable so that a row written by a
+                # future code path that cannot estimate them is still storable.
+                sqla.Column("total_abserr", sqla.Float(64), nullable=True),
+                sqla.Column("total_converged", sqla.Boolean, nullable=True),
+                sqla.Column("total_phase_limited", sqla.Boolean, nullable=True),
                 sqla.Column("numeric_quad", sqla.Float(64), nullable=False),
+                # WKB_quad and its six WKB_quad_* timing columns have been identically 0.0/None
+                # since prompts/source-remediation prompt 08 retired direct quadrature of an
+                # oscillatory Green's function. They are kept, not dropped, because
+                # extract_QuadSourceIntegral_data.py:181,278 reads obj.WKB_quad and that script
+                # is out of scope for this campaign (README section 5 item 8).
                 sqla.Column("WKB_quad", sqla.Float(64), nullable=False),
                 sqla.Column("WKB_Levin", sqla.Float(64), nullable=False),
                 sqla.Column("analytic_rad", sqla.Float(64), nullable=True),
@@ -234,7 +250,11 @@ class sqla_QuadSourceIntegral_factory(SQLAFactoryBase):
             table.c.label,
             table.c.metadata,
             table.c.source_serial,
+            table.c.b,
             table.c.total,
+            table.c.total_abserr,
+            table.c.total_converged,
+            table.c.total_phase_limited,
             table.c.numeric_quad,
             table.c.WKB_quad,
             table.c.WKB_Levin,
@@ -316,7 +336,11 @@ class sqla_QuadSourceIntegral_factory(SQLAFactoryBase):
         obj = QuadSourceIntegral(
             payload={
                 "store_id": row_data.serial,
+                "b": row_data.b,
                 "total": row_data.total,
+                "total_abserr": row_data.total_abserr,
+                "total_converged": row_data.total_converged,
+                "total_phase_limited": row_data.total_phase_limited,
                 "numeric_quad": row_data.numeric_quad,
                 "WKB_quad": row_data.WKB_quad,
                 "WKB_Levin": row_data.WKB_Levin,
@@ -406,7 +430,11 @@ class sqla_QuadSourceIntegral_factory(SQLAFactoryBase):
                     "data_serial": obj._data_serial,
                     "compute_time": obj.compute_time,
                     "analytic_compute_time": obj.analytic_compute_time,
+                    "b": obj._b,
                     "total": obj._total,
+                    "total_abserr": obj._total_abserr,
+                    "total_converged": obj._total_converged,
+                    "total_phase_limited": obj._total_phase_limited,
                     "numeric_quad": obj._numeric_quad,
                     "WKB_quad": obj._WKB_quad,
                     "WKB_Levin": obj._WKB_Levin,
@@ -568,7 +596,11 @@ class sqla_QuadSourceIntegral_factory(SQLAFactoryBase):
                 table.c.metadata,
                 table.c.source_serial,
                 table.c.data_serial,
+                table.c.b,
                 table.c.total,
+                table.c.total_abserr,
+                table.c.total_converged,
+                table.c.total_phase_limited,
                 table.c.numeric_quad,
                 table.c.WKB_quad,
                 table.c.WKB_Levin,
@@ -779,7 +811,11 @@ class sqla_QuadSourceIntegral_factory(SQLAFactoryBase):
             obj = QuadSourceIntegral(
                 payload={
                     "store_id": row.serial,
+                    "b": row.b,
                     "total": row.total,
+                    "total_abserr": row.total_abserr,
+                    "total_converged": row.total_converged,
+                    "total_phase_limited": row.total_phase_limited,
                     "numeric_quad": row.numeric_quad,
                     "WKB_quad": row.WKB_quad,
                     "WKB_Levin": row.WKB_Levin,
