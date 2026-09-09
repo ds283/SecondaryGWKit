@@ -2,9 +2,14 @@
 
 **Campaign:** [`README.md`](README.md) · **Source audit:** [`docs/spec-code-audit-2026-09.md`](../../docs/spec-code-audit-2026-09.md)
 **Baseline commit:** `e9a43a2` (`main`, clean)
-**Last updated:** 2026-09-09 — prompt 11 complete; the audit's three recommended spec edits and the
-disposition table are recorded. The pipeline is constructible again (untested end to end; prompt 12
-still pending).
+**Last updated:** 2026-09-09 — prompt 12 complete. **The campaign's twelve prompts are all
+landed and verified against a live scoped pipeline run** ([`docs/source-remediation-verification.md`](../../docs/source-remediation-verification.md)):
+every offline test passes, all four audit §4 items are closed, and `total` reproduces
+`analytic_rad` to 1e-6–1e-4 where the response redshift is a few oscillations inside the horizon.
+**The source integral is not yet fit for a production sweep**: prompt 12 found a run-blocking
+tolerance defect in prompt 08's region guard (§3 `[12-region-check-absolute-tolerance]`, 43 % of
+work items) and two accuracy items (`[12-atol-too-loose-for-the-source-integral]`,
+`[12-handover-clamp-error-in-production]`). None of the three may be fixed inside this campaign.
 
 > **Maintenance rule.** Every prompt updates this file *in its own commit*, before committing.
 > Set your row's status, fill in the commit SHA, model and log link, update the item-level table,
@@ -52,9 +57,9 @@ Legend: ⬜ not started · 🟡 in flight · ✅ complete · ⚠️ complete wit
 | # | Prompt | Items | Model | Status | Commit | Log |
 |---|---|---|---|---|---|---|
 | 11 | [Spec annotations](11-spec-annotations.md) | audit §6 | Sonnet | ✅ | *"Record the spec-code audit's three recommended annotations"* (SHA not embedded, per prompt 01 log deviation 4) | [`logs/11-spec-annotations.md`](logs/11-spec-annotations.md) |
-| 12 | [Verification](12-verification.md) | audit §4; campaign | Opus | ⬜ | | |
+| 12 | [Verification](12-verification.md) | audit §4; campaign | Opus | ⚠️ | *"Verify the source-remediation campaign against a live scoped run"* (SHA not embedded, per prompt 01 log deviation 4) | [`logs/12-verification.md`](logs/12-verification.md) |
 
-**Progress:** 11 / 12 complete.
+**Progress:** 12 / 12 complete.
 
 ---
 
@@ -65,9 +70,9 @@ Traceability from the audit's finding IDs to the prompt that discharges them.
 | ID | Severity | Description | Prompt | Status |
 |---|---|---|---|---|
 | A1 | **DEFECT, physics** | `LambdaCDM_GenericEOS.wPerturbations` divides by the total density incl. $\rho_\Lambda$ | 01 | ✅ |
-| A2 | **DEFECT, representation** | `QuadSource` splines the oscillating source; unusable beyond ~95 cycles | 05, 06, 08 | ✅ (3/3: `QuadSourceIntegral` reads the $f$ spline only on the both-numeric region and assembles the oscillatory region from `TkSourceFunctions` via `phase_groups`; nothing splines an oscillation any more) |
+| A2 | **DEFECT, representation** | `QuadSource` splines the oscillating source; unusable beyond ~95 cycles | 05, 06, 08 | ✅ (3/3: `QuadSourceIntegral` reads the $f$ spline only on the both-numeric region and assembles the oscillatory region from `TkSourceFunctions` via `phase_groups`; nothing splines an oscillation any more. **Verified live by prompt 12**: real `QuadSource` rows store 360–560 of the grid's 784 redshifts, their spline residual at the hand-over is 1.4e-04 of envelope, and `total` reproduces `analytic_rad` to 1.2e-06–1.4e-04 where the oracle is valid) |
 | A3 | **DEFECT, regression** | `compute_quad_source` walks the full grid against a both-ends-truncated $T_k$ grid → `IndexError` | 06 | ✅ |
-| A4 | **DEFECT, known** | Levin call receives only $\theta_G$; no $T_q,T_r$ input to the Levin decision | 07, 08, 10 | ✅ (3/3: `main.py`'s QuadSourceIntegral stage looks up `TkNumericIntegration`/`TkWKBIntegration` for every $q$ and $r$ once per batch and ships them as `Tq_numeric`/`Tq_WKB`/`Tr_numeric`/`Tr_WKB`, so the Levin decision sees the composed phase. No `QuadSourcePolicy.Levin_threshold` was reinstated — the user accepted prompt 08 §6's cost; see `[10-levin-wholesale-cc-fallback]`. **Not yet exercised end to end** — prompt 12) |
+| A4 | **DEFECT, known** | Levin call receives only $\theta_G$; no $T_q,T_r$ input to the Levin decision | 07, 08, 10 | ✅ (3/3: `main.py`'s QuadSourceIntegral stage looks up `TkNumericIntegration`/`TkWKBIntegration` for every $q$ and $r$ once per batch and ships them as `Tq_numeric`/`Tq_WKB`/`Tr_numeric`/`Tr_WKB`, so the Levin decision sees the composed phase. No `QuadSourcePolicy.Levin_threshold` was reinstated — the user accepted prompt 08 §6's cost; see `[10-levin-wholesale-cc-fallback]`. **Exercised end to end by prompt 12**: 1813 real work items computed through the production task on stored rows, six of the eight phase-group regimes reached — including "$T_q$ and $T_r$ with $G$ smooth" for the $q\approx r\gg k$ shape — and the two empty rows are unreachable by construction because `combinations_with_replacement` gives $q\le r$. The stage itself is blocked by `[12-region-check-absolute-tolerance]`) |
 | A5 | **DEFECT, known** | 92 % of scheduled $(k,q,r)$ triples are not triangles | 04 | ✅ |
 | A6 | **DEFECT, policy** | `"WKB_minimal"` tests `numeric_clearance` | 02 | ✅ |
 | A7 | **DEFECT, accuracy** | `_build_derivative` end bias (ε″ 30 % at the $z=0.1$ end for GenericEOS models) | 03 | ✅ |
@@ -82,10 +87,10 @@ Traceability from the audit's finding IDs to the prompt that discharges them.
 | B9 | consistency | `Levin_z` θ-spline chunking differs from the evaluated spline | 02 (evaluate) | ✅ (left as-is, commented) |
 | B10 | cosmetic | `QuadSource` spline wrapper labelled `"T_k"` | 02 | ✅ |
 | B11 | robustness | region-nonempty guards use a ratio in $z$ not $1+z$ | 09 | ✅ (confirmed: the guard is `MIN_SUBINTERVAL_LOG_WIDTH` = 1e-7 in $\log(1+z')$, its value now justified in the comment; merged hand-overs are recorded in `metadata["partition"]["skipped"]`; tested at $z_{\rm resp}=0$ exactly, where the retired ratio guard divided by zero) |
-| §4.1 | UNVERIFIED | continuity of $G$ at `crossover_z` | 12 | ⬜ |
-| §4.2 | UNVERIFIED | reachability of A6 | 12 | ⬜ |
-| §4.3 | UNVERIFIED | whether `has_WKB_violation` modes should be rejected | 12 (measure only) | ⬜ |
-| §4.4 | UNVERIFIED | A7 end bias on a real GenericEOS run | 12 | ⬜ |
+| §4.1 | UNVERIFIED | continuity of $G$ at `crossover_z` | 12 | ✅ (**closed, no step**: 40 of the 62 `mixed` policies of the live run evaluated, `\|G_num−G_WKB\|/max` median **7.4e-08**, worst **4.0e-06**; verification document §5.5) |
+| §4.2 | UNVERIFIED | reachability of A6 | 12 | ✅ (**closed, affirmative**: 1 of 462 policy rows is quality `minimal`, so A6 was a live defect, not a dead branch. Also 7 of 462 are type `fail`/`incomplete` — log 12 observation 1; verification document §5.5) |
+| §4.3 | UNVERIFIED | whether `has_WKB_violation` modes should be rejected | 12 (measure only) | ✅ (**moot in this configuration**: the flag is set on 0 of 7 `TkWKBIntegration` and 0 of 5488 `GkWKBIntegration` rows, so no comparison past a violation point was possible and no policy decision is forced. `T_WKB` vs `analytic_T_rad` on the rows that exist: median 7.1e-05–1.3e-03 of envelope, worst 5.8e-02; verification document §5.5) |
+| §4.4 | UNVERIFIED | A7 end bias on a real GenericEOS run | 12 | ✅ (**closed**: on a real `QCD_Cosmology` background over z ∈ [0.1, 1.0168e13], every end/interior ratio is inside prompt 03's 10× criterion — worst 8.45, and ≤ 0.76 with the most accurate finite-difference reference — against 3.0e-01/3.8e-01 before the fix. A1 also confirmed in stored data: `wPerturbations` is bit-identical to the Λ-free form; verification document §5.5) |
 | §6 | spec edits | close spec 02 Q9, record spec 04 Q7 convention, annotate spec 01 R16/Q4 | 11 | ✅ (three "Audit note (2026-09), not author sign-off" bullets added to specs 01/02/04 §0 blocks, plus a new §8 Disposition table in the audit document mapping every A/B finding to its commit) |
 
 **Out of scope (do not schedule):** Tier 2 LG output from `QuadSourceIntegral`; `OneLoopIntegral`;
@@ -138,6 +143,12 @@ Traceability from the audit's finding IDs to the prompt that discharges them.
   saturates at 2.0e-06 under refinement — that is `bessel_phase`'s phase-function error, out of
   scope here (README §5 item 8). **Next step:** nothing required at the shipped resolution;
   raising `source_samples_per_log10z` is the only lever, and it costs the numeric branch alone.
+  **Narrowed by prompt 12 (2026-09-09):** measured on real `TkWKBValue` rows, the LG branch is
+  *worse* than this fixture suggested at production $x$ — `T_WKB` against the exact
+  `analytic_T_rad` is a median 7.1e-05 to 1.3e-03 of envelope per mode (worst 5.8e-02), because the
+  production phase spline covers $x$ up to $2.7\times10^5$ with a few hundred samples and its fit
+  error grows linearly with $x$. See `docs/source-remediation-verification.md` §5.5 and
+  `[12-handover-clamp-error-in-production]`.
 
 - **[06-source-spline-residual-vs-handover]** *(opened by prompt 06, 2026-09-08)* — with the
   grid now truncated at the both-numeric hand-over, the spline of $f$ inside that region is
@@ -166,6 +177,11 @@ Traceability from the audit's finding IDs to the prompt that discharges them.
   (`TkNumericIntegration.py:130-131`, `z_exit_subh_e3`/`z_exit_subh_e6`) — a hand-over closer
   to horizon crossing shortens the oscillatory part of the smooth region — or
   `source_samples_per_log10z`. Neither was touched here.
+  **Narrowed by prompt 12 (2026-09-09):** measured on 12 real `QuadSource` rows, the residual at
+  log-midpoints in the lowest quarter of the region is **1.4e-05 to 1.4e-04** of envelope (node
+  residual 9.6e-06 to 1.3e-04), i.e. the realistic hand-over is nearer the first row of the table
+  above than the last, and the spline is not the limiting error inside the both-numeric region.
+  See `docs/source-remediation-verification.md` §5.7.
 
 - **[07-lg-derivative-truncation-at-handover]** *(opened by prompt 07, 2026-09-08)* — the
   derivative pieces `TkSourceFunctions` supplies in closed form, `omega = sqrt(Tk_omegaEff_sq)`
@@ -251,6 +267,11 @@ Traceability from the audit's finding IDs to the prompt that discharges them.
   (c) a first-order Taylor extension of the LG phase and amplitude across the gap using the
   closed-form `omega`/`dlnM_dz` inside `QuadSourceIntegral`'s clamp adapter (estimated ~100×
   smaller error; log 08 deviation 2). None is in prompts 09–10's scope.
+  **Confirmed and enlarged by prompt 12 (2026-09-09):** the gap is present on essentially every
+  production row (median 1.2e-02, max 2.2e-02 in $\log(1+z)$) and costs one to two orders more
+  than the 5.1e-03 measured here. Superseded for magnitude by
+  `[12-handover-clamp-error-in-production]`; the three remedies above are unchanged and are now
+  the campaign's main outstanding accuracy decision.
 
 - **[09-abserr-is-a-quadrature-bound]** *(opened by prompt 09, 2026-09-09)* — the new
   `total_abserr` column is the linear sum of the sub-intervals' quadrature error estimates
@@ -281,6 +302,67 @@ Traceability from the audit's finding IDs to the prompt that discharges them.
   `WKB numeric` annotation will never be drawn and its `WKB_quad` column will be all zeros;
   seven columns of every row are dead weight. **Next step:** a later campaign that is allowed to
   edit `extract_*.py` should delete the reader and then the columns, or repurpose them.
+
+- **[12-region-check-absolute-tolerance]** *(opened by prompt 12, 2026-09-09)* — **run-blocking.**
+  `QuadSourceIntegral._check_region_covers` (`:561-570`, added by prompt 08) compares a
+  sub-interval end against a factor's region boundary with an **absolute** tolerance,
+  `DEFAULT_FLOAT_PRECISION = 1e-7`, while `build_partition` recovers the end as
+  `z = exp(log(1+z)) − 1` (`:440`). At z ≈ 5e14 one ulp is 0.06, so the round trip moves `z` by
+  ~1e6 times the tolerance and the *sign* of that movement decides whether the guard fires. The
+  Green's-function region always ends exactly at `z_response`, so the last sub-interval's bottom
+  always coincides with a region boundary. Reproduction without a pipeline:
+  `exp(log(1+z)) − 1 < z − 1e-7` holds for **29 of the live run's 66 response redshifts (44 %)**
+  and 331 of its 784 source redshifts, the smallest tripping value being z = 6.93e07. Scheduled
+  item by item, **1372 of 3185 production work items (43 %) raise** — 875 on the `Gk numeric`
+  region, 497 on the `Gk WKB` region, over 28 distinct response redshifts — and no other failure
+  mode occurs. Because `RayWorkPool` propagates the first failure, **`main.py`'s
+  `--quad-source-integral-queue` stage aborts and stores nothing**; prompt 12's live run produced
+  zero `QuadSourceIntegral` rows and had to schedule the work itself
+  (`docs/source-remediation-verification/run_quadsource_integrals.py`). It fails loudly, so no
+  wrong number is at risk. This is the same class of defect as audit B11, in the guard next to the
+  one prompt 09 closed. **Impact:** no production sweep can complete. **Next step:** a relative
+  tolerance (`DEFAULT_FLOAT_PRECISION * max(1.0, |z|)`, or the comparison done in `log(1+z)` where
+  the partition already works) — one line, but production code, which prompt 12 may not touch.
+  See `docs/source-remediation-verification.md` §5.1.
+
+- **[12-atol-too-loose-for-the-source-integral]** *(opened by prompt 12, 2026-09-09)* — the
+  quantity the quadrature's `atol` is compared against is `total/(1 + z_response)`, and on the live
+  run that has median **3.6e-26**, p25 9.8e-30, max 7.3e-21: **1044 of 1813 completed work items
+  (58 %) have a raw integral smaller than `DEFAULT_QUADRATURE_ATOL = 1e-25`**, so their tolerance
+  is satisfied before any work is done. Consequences measured: `total_abserr` exceeds `|total|` on
+  276 rows (15 %); tightening `rtol` alone from 1e-8 to 1e-11 leaves **all 159** re-run values
+  *bit-identical*, because `atol` binds; tightening `atol` to 1e-32 (with `rtol = 1e-10`) leaves
+  `total` unchanged to 2.4e-08 at z = 8.4e11 but moves it by a median 1.7e-04 (max 1.9) at
+  z = 3.0e10, and there halves the residual against `analytic_rad` from 1.53e-03 to 7.6e-04. So at
+  pipeline tolerances the source integral is *absolute*-tolerance limited over most of the
+  production (k,q,r,z) range, and `atol_serial` does not describe a converged calculation.
+  **Impact:** anyone reading `total`, `total_abserr` or `total_converged` sub-horizon; and the
+  accuracy of every stored `total` at low z_response. **Next step:** the user's choice among
+  scaling `atol` with the integrand's own magnitude, making the source integral `rtol`-only, or
+  simply lowering `DEFAULT_QUADRATURE_ATOL` for this stage — all production changes, none of them
+  in prompt 12's scope. See `docs/source-remediation-verification.md` §5.4.
+
+- **[12-handover-clamp-error-in-production]** *(opened by prompt 12, 2026-09-09; supersedes the
+  magnitude estimate in `[08-handover-clamp-error]`)* — the hand-over clamp is present on
+  essentially every production row, and it costs one to two orders of magnitude more than prompt
+  08's single-factor fixture predicted. Measured gaps in $\log(1+z)$: `Tq` on 1666 sub-intervals
+  and `Tr` on 1798, median **1.2e-02**, max **2.2e-02** (≈ 1.0 mean source-grid step, against the
+  `HANDOVER_CLAMP_MAX_GRID_STEPS = 1.5` allowance); the `QuadSource` spline was clamped on 108.
+  Effect on `total` vs `analytic_rad` at z_response = 7.63e09, where the oracle's own fixed-w phase
+  deficit is a negligible 1.6e-4 rad: rows with **no** clamp gap agree to **6.2e-05**, rows with a
+  gap give **6.6e-02 – 4.6e-01**, and by regime 0 / 2 / 3 oscillatory factors give 6.2e-05 /
+  7.8e-03 / **2.7e-01** (the same ordering at z = 1.45e09). Log 08 measured 5.1e-03 for a
+  one-grid-step gap on a fixture with one clamped factor and $x_{\rm resp}\le980$; production has
+  two clamped factors and reaches $x_{\rm resp}\approx2.7\times10^5$. A third term is entangled
+  with it: on real rows `T_WKB` differs from the exact `analytic_T_rad` by a median 7.1e-05–1.3e-03
+  of envelope (worst 5.8e-02), against 6.1e-06 for log 05's fixture, because the production phase
+  spline covers $x$ to $2.7\times10^5$ with a few hundred samples. **Impact:** every stored `total`
+  whose integration range crosses a transfer-function hand-over — i.e. every sub-horizon row.
+  **Next step:** choose among `[08-handover-clamp-error]`'s three remedies (an LG sample at
+  `z_init`; the overlap of `docs/lg-phase-and-handover-followup-2026-09.md` §1.4; the first-order
+  Taylor extension of log 08 deviation 2), then re-run the harness and compare against
+  `docs/source-remediation-verification.md` §5.3. Separating the clamp from the LG phase error
+  needs one of those changes; it cannot be done by measurement alone at these $x$.
 
 > Add an entry here whenever a prompt finishes with something unresolved: a verification step that
 > could not be run, an assumption that could not be confirmed, a deviation that a later prompt has
@@ -439,3 +521,18 @@ Traceability from the audit's finding IDs to the prompt that discharges them.
     function from it with `ast` instead. No `QuadSourcePolicy` reaches the integrator, by decision
     (§4 `[08-levin-fallback-cost-ratio]`); `GkSourcePolicyData.Levin_z` and both
     `Levin_threshold` fields are diagnostic only. See `logs/10-qsi-main-plumbing.md`.
+12. **The campaign has been exercised live, and the harness that did it is committed** (prompt 12,
+    `docs/source-remediation-verification.md` and `docs/source-remediation-verification/`).
+    `scoped_pipeline_run.py` runs `main.py`'s own pipeline on a chosen wavenumber sample and
+    cosmology without editing production code (it patches `ray.init` to bootstrap a local
+    instance, optionally filters `build_model_list`, and substitutes the two hardcoded 50-point
+    `np.logspace` k grids in `main.py`'s source before `exec`ing it);
+    `run_quadsource_integrals.py` drives the production `compute_QuadSource_integral` over an
+    arbitrary work list at arbitrary `atol`/`rtol` and records failures instead of aborting; the
+    three `analyse_*.py` scripts reproduce every table of the verification document from a
+    datastore. **Anyone re-running the campaign after fixing
+    `[12-region-check-absolute-tolerance]` should re-run all five and compare.** Reference
+    numbers from the 2026-09-09 run (7 modes over 1e5–1e7 /Mpc, 100 samples per log10(1+z),
+    `zend = 1e7`, `LambdaCDM` Planck2018): 4.5 minutes and 66 MB for the whole pipeline through
+    `GkSourcePolicyData`; 0.095 s median per source-integral work item; `total` vs `analytic_rad`
+    1.2e-06–1.4e-04 for $x_{\rm resp}\lesssim10$.
