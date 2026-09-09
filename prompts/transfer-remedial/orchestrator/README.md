@@ -1,4 +1,4 @@
-# Orchestrator prompts — Bessel amplitude and phase campaign
+# Orchestrator prompts — transfer-function remedial campaign (Bessel phase)
 
 Four ready-to-use orchestrator prompts, one per workstream. Each restates the procedure and stop
 conditions of [`../README.md`](../README.md) §4.3 with the prompt-specific checks — test commands,
@@ -19,7 +19,7 @@ scheduling choice — every prompt from 03 onward consumes an interface the prev
 
 Start with:
 
-> Read `prompts/bessel-remedial/orchestrator/workstream-A.md` and follow it.
+> Read `prompts/transfer-remedial/orchestrator/workstream-A.md` and follow it.
 
 and move on only when that prompt's own completion criterion is met and the board shows its rows
 ✅ or ⚠️.

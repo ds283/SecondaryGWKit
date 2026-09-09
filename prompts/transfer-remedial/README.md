@@ -1,13 +1,59 @@
-# Implementation campaign: accurate Bessel amplitude and phase construction
+# Transfer-function remedial campaign — the Bessel amplitude and phase construction
 
 **Source documents:** [`DRAFT-PLAN.md`](DRAFT-PLAN.md) (revision 2, the design) and
 [`RECONCILIATION.md`](RECONCILIATION.md) (the plan checked against the tree — **read this second,
 and prefer it where the two disagree**)
 **Planned:** 2026-09-08
-**Target branch:** `bessel-remedial-plan` (planned against `c4c4905`; re-based to `95cc326`, see §0)
+**Target branch:** `transfer-remedial-plan` (planned against `c4c4905`; re-pointed to `95cc326` —
+see [`RECONCILIATION.md`](RECONCILIATION.md) §0)
 **Status board:** [`IMPLEMENTATION_STATE.md`](IMPLEMENTATION_STATE.md)
 **Logs:** [`logs/`](logs/)
 **Orchestrator prompts:** [`orchestrator/`](orchestrator/)
+
+---
+
+## 0. What this folder is called, and why
+
+**The campaign is the transfer-function remedial programme. This phase of it is the Bessel
+amplitude and phase construction.** The folder was originally `prompts/bessel-remedial`. That name
+proved confusing in practice — it names the part rather than the programme — so it was renamed on
+2026-09-09 along with the branch (`bessel-remedial-plan` → `transfer-remedial-plan`). Commits before
+`14fb9f6` carry the old name.
+
+The two levels are worth keeping straight, because the prompts operate at the lower one:
+
+- **Why this is transfer-function work.** `LiouvilleGreen/bessel_phase.py` is not a utility that
+  happens to live in this repository. For constant equation of state the transfer function *is* a
+  Bessel function — \(T=2^{3/2+b}\Gamma(\tfrac52+b)\,x^{-3/2-b}J_{3/2+b}(x)\) with
+  \(x=qc_sa_0\eta\) — so `bessel_phase` is simultaneously the **analytic oracle** for every
+  constant-\(w\) transfer-function fixture in the codebase and the object whose accuracy bounds
+  what those fixtures can establish. `docs/lg-phase-and-handover-followup-2026-09.md` §2.4 puts it
+  plainly: every "exact" constant-\(w\) fixture here inherits a phase floor of order
+  \(x\times10^{-8}\), so a test asserting agreement with such an oracle to better than that
+  sub-horizon "is asserting agreement between two errors". Fixing the oracle is therefore a
+  precondition for measuring the transfer function, not an adjacent improvement.
+- **What the nine prompts actually touch.** `LiouvilleGreen/` and its tests, plus the Bessel
+  construction stage of `main.py` and two diagnostics. They do **not** touch
+  `ComputeTargets/TkSourceFunctions.py`, `QuadSource.py` or `QuadSourceIntegral.py` — see §1.1.
+
+### 0.1 Not to be confused with `prompts/source-remediation`
+
+That sibling campaign (11 of 12 complete) is where the transfer function's *own* code was
+remediated: its Workstream B built `TkSourceFunctions`, the two-region Liouville–Green
+representation of \(T_k\), and restricted `QuadSource` to the region where it is valid. So both
+folders are, in the broad sense, transfer-function remedial work.
+
+The division of labour is by **layer**, and it is strict:
+
+| | `prompts/source-remediation` | `prompts/transfer-remedial` (here) |
+|---|---|---|
+| Owns | `ComputeTargets/`, `main.py`'s source stages, `Datastore/` | `LiouvilleGreen/`, `main.py`'s Bessel stage |
+| Does | the \(T_k\) representation, the source grid, the source time integral | the Bessel oracle that representation is *tested against* |
+| Forbidden from | `LiouvilleGreen/` (its README §5 item 8) | `ComputeTargets/` production code (§1.1) |
+
+Neither may edit the other's files, and §4.2 records the two places they meet. If you arrived here
+looking for `TkSourceFunctions`, the source grid, or the phase-group decomposition of the source
+integrand, you want `prompts/source-remediation`.
 
 ---
 
@@ -156,7 +202,7 @@ give a stronger model than Opus if one were available.
 
 | # | Prompt | Covers | Files | Difficulty | Model |
 |---|---|---|---|---|---|
-| 01 | [`01-reference-harness.md`](01-reference-harness.md) | plan §9 Stage 1; `RECONCILIATION.md` C1.3, C4 | new `LiouvilleGreen/tests/bessel_reference.py`, new `LiouvilleGreen/tests/test_bessel_reference.py`, new `docs/bessel-remedial/` diagnostic script | Medium; independent references and the metric definitions every later prompt scores against | **Opus** |
+| 01 | [`01-reference-harness.md`](01-reference-harness.md) | plan §9 Stage 1; `RECONCILIATION.md` C1.3, C4 | new `LiouvilleGreen/tests/bessel_reference.py`, new `LiouvilleGreen/tests/test_bessel_reference.py`, new `docs/transfer-remedial/` diagnostic script | Medium; independent references and the metric definitions every later prompt scores against | **Opus** |
 | 02 | [`02-domain-boundary-tests.md`](02-domain-boundary-tests.md) | plan §4.4; `RECONCILIATION.md` C1 | new `LiouvilleGreen/tests/test_scipy_bessel_domain.py` | Low–medium; pin two SciPy-version-dependent boundaries as tests | **Sonnet** |
 
 ### Workstream B — the two-region construction
@@ -179,7 +225,7 @@ give a stronger model than Opus if one were available.
 | # | Prompt | Covers | Files | Difficulty | Model |
 |---|---|---|---|---|---|
 | 08 | [`08-fixture-revalidation.md`](08-fixture-revalidation.md) | plan §8.3, §9 Stage 5, §10 | `LiouvilleGreen/tests/test_bessel_phase.py`, `test_3bessel_analytic.py`, `ComputeTargets/tests/test_tk_source_functions.py`, `test_phase_groups.py` (comments/tolerances only) | Medium; tighten to the §10 table, separate oracle gain from consumer re-spline floor | **Opus** |
-| 09 | [`09-benchmark-and-docs.md`](09-benchmark-and-docs.md) | plan §9 Stage 5, §11 | `docs/adaptive-levin-benchmark/levin_bench/bessel_tier.py`, `docs/lg-phase-and-handover-followup-2026-09.md`, new `docs/bessel-remedial-verification.md` | Low–medium; one benchmark run plus documentation | **Sonnet** |
+| 09 | [`09-benchmark-and-docs.md`](09-benchmark-and-docs.md) | plan §9 Stage 5, §11 | `docs/adaptive-levin-benchmark/levin_bench/bessel_tier.py`, `docs/lg-phase-and-handover-followup-2026-09.md`, new `docs/transfer-remedial-verification.md` | Low–medium; one benchmark run plus documentation | **Sonnet** |
 
 ---
 
@@ -323,7 +369,7 @@ place.
    *why* (what was wrong, what the change does, how it was verified), wrapped at ~80 columns; and
    the trailer `Co-Authored-By: Claude <model name> <noreply@anthropic.com>` naming the model that
    did the work (e.g. `Claude Opus 5`, `Claude Sonnet 5`).
-3. **Every prompt writes a log** to `prompts/bessel-remedial/logs/NN-<name>.md` using the template
+3. **Every prompt writes a log** to `prompts/transfer-remedial/logs/NN-<name>.md` using the template
    in §5.1, and the log is included in that prompt's commit.
 4. **Every prompt updates** [`IMPLEMENTATION_STATE.md`](IMPLEMENTATION_STATE.md) in the same
    commit: its own row, the mechanism-level table, and §3 (active issues).
@@ -370,7 +416,7 @@ Template:
 ```markdown
 # Log NN — <prompt title>
 
-**Prompt:** prompts/bessel-remedial/NN-<name>.md
+**Prompt:** prompts/transfer-remedial/NN-<name>.md
 **Commit:** <sha> — <subject>
 **Model:** <model that executed the prompt>
 **Date:** <YYYY-MM-DD>

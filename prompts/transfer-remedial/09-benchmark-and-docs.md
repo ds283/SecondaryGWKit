@@ -6,15 +6,15 @@
 **Depends on:** 08 (hard)
 **Recommended model:** Sonnet
 **Files you may touch:** `docs/adaptive-levin-benchmark/levin_bench/bessel_tier.py`,
-`docs/lg-phase-and-handover-followup-2026-09.md`, new `docs/bessel-remedial-verification.md`,
+`docs/lg-phase-and-handover-followup-2026-09.md`, new `docs/transfer-remedial-verification.md`,
 plus the log and the status board.
 **Do not touch:** any production module, any test. This is documentation plus one benchmark run.
 
 Read first: `RECONCILIATION.md` C1 and §3.2; `DRAFT-PLAN.md` §9 Stage 5 and §11;
 `docs/lg-phase-and-handover-followup-2026-09.md` §2.4 and §2.5;
-`docs/adaptive-levin-benchmark/levin_bench/bessel_tier.py:255-285`; `docs/bessel-remedial/baseline-2026-09.md`
+`docs/adaptive-levin-benchmark/levin_bench/bessel_tier.py:255-285`; `docs/transfer-remedial/baseline-2026-09.md`
 (prompt 01's baseline); and the "State handed to the next prompt" section of every log in
-`prompts/bessel-remedial/logs/`.
+`prompts/transfer-remedial/logs/`.
 
 ---
 
@@ -97,7 +97,7 @@ about the *cosmological* phases stand untouched and are explicitly out of scope 
 
 Edit in place with dated supersession notes. Do not rewrite the document's structure.
 
-## 4. `docs/bessel-remedial-verification.md`
+## 4. `docs/transfer-remedial-verification.md`
 
 The campaign's verification record, in the style of `docs/adaptive-levin-verification.md` and
 `docs/backport-modules-verification.md` — read one of them first and follow its shape.
@@ -144,13 +144,13 @@ the hand-off, and if it has since been recorded, say so and do not duplicate it.
 Record the hand-off in **two** places, because a finding in one campaign's docs is invisible to the
 other's agents:
 
-1. a section of `docs/bessel-remedial-verification.md`, with the line numbers, the missing
+1. a section of `docs/transfer-remedial-verification.md`, with the line numbers, the missing
    `theta_deriv`, the missing `theta_abserr`, and what prompt 07 did in the sibling module as the
    template;
 2. an entry in `prompts/source-remediation/IMPLEMENTATION_STATE.md` §3 (Active issues), in that
    file's existing format — `**[NN-shortname]** *(opened by …)* — description. **Impact:** …
    **Next step:** …`. Use a shortname that makes the origin obvious, e.g.
-   `[bessel-remedial-qsi-phase-groups]`. **This is the only edit this campaign makes to that
+   `[transfer-remedial-qsi-phase-groups]`. **This is the only edit this campaign makes to that
    folder**, it adds one entry and changes nothing else, and it must not alter that campaign's
    status rows, item table or standing notes.
 
@@ -164,7 +164,7 @@ design to invent.
 - `PYTHONPATH=. ./venv/bin/python -m unittest discover -s LiouvilleGreen/tests -t .` and
   `-s ComputeTargets/tests` still pass. Nothing here touches code, so a failure means something
   strayed.
-- Every commit SHA cited in `docs/bessel-remedial-verification.md` resolves
+- Every commit SHA cited in `docs/transfer-remedial-verification.md` resolves
   (`git cat-file -e <sha>`).
 - Every acceptance row in README §6 has an achieved value beside it, or an explicit "not met" with
   a reason.

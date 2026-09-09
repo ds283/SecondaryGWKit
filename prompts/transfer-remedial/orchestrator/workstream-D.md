@@ -1,7 +1,8 @@
 # Orchestrator prompt — Workstream D (prompts 08, 09)
 
-You are orchestrating Workstream D, the close-out of the Bessel amplitude-and-phase campaign in the
-repository at `/Users/ds283/Documents/Code/SecondaryGWKit` (branch `bessel-remedial-plan`). You do not
+You are orchestrating Workstream D, the close-out of the transfer-function remedial campaign's
+Bessel amplitude-and-phase phase (README §0), in the
+repository at `/Users/ds283/Documents/Code/SecondaryGWKit` (branch `transfer-remedial-plan`). You do not
 write code yourself. You dispatch one fresh-context subagent per prompt, review what it produced
 against fixed criteria, and either continue or stop and report to the user.
 
@@ -19,17 +20,19 @@ honest performance story rather than the one `DRAFT-PLAN.md` §4.7 tells.
 
 Read in full before dispatching:
 
-- `prompts/bessel-remedial/README.md` — §1.1, **§4.2 (the `ComputeTargets/tests/` hunk
+- `prompts/transfer-remedial/README.md` — §0.1 (the layer split against
+  `prompts/source-remediation`, which prompt 09 hands a finding to), §1.1, **§4.2 (the
+  `ComputeTargets/tests/` hunk
   discipline)**, §4.3, §5, §5.1, **§6**, §7 (deferred work).
-- `prompts/bessel-remedial/RECONCILIATION.md` — **C1 (the honest performance story) and §3.2 (the
+- `prompts/transfer-remedial/RECONCILIATION.md` — **C1 (the honest performance story) and §3.2 (the
   hand-off)**.
-- `prompts/bessel-remedial/IMPLEMENTATION_STATE.md` — the board, §3 (both planning-pass issues close
+- `prompts/transfer-remedial/IMPLEMENTATION_STATE.md` — the board, §3 (both planning-pass issues close
   or hand over here), §5 notes 3, 4 and 12.
-- `prompts/bessel-remedial/orchestrator/README.md` — the campaign-wide stop conditions.
-- **Every log** in `prompts/bessel-remedial/logs/`. Unlike the earlier workstreams, you need all of
+- `prompts/transfer-remedial/orchestrator/README.md` — the campaign-wide stop conditions.
+- **Every log** in `prompts/transfer-remedial/logs/`. Unlike the earlier workstreams, you need all of
   them: prompt 09 assembles a verification document from all eight, and your job is to check the
   numbers it cites actually appear in them.
-- `docs/bessel-remedial/baseline-2026-09.md` — prompt 01's pre-change baseline, which prompt 09
+- `docs/transfer-remedial/baseline-2026-09.md` — prompt 01's pre-change baseline, which prompt 09
   compares against.
 - `docs/lg-phase-and-handover-followup-2026-09.md` §2.4 and §2.5 — what prompt 09 must supersede.
 
@@ -57,10 +60,10 @@ adds **one entry** to its §3 and must change nothing else there.
 For prompt NN, launch a subagent with **exactly** this context:
 
 > You are the implementation agent for one prompt in a campaign. Read, in this order:
-> `prompts/bessel-remedial/README.md`, `prompts/bessel-remedial/RECONCILIATION.md`,
-> `prompts/bessel-remedial/IMPLEMENTATION_STATE.md`, then your prompt
-> `prompts/bessel-remedial/NN-<name>.md` and the `DRAFT-PLAN.md` sections it cites. Execute the
-> prompt exactly. Do not read any other prompt under `prompts/bessel-remedial/`. You **may** read
+> `prompts/transfer-remedial/README.md`, `prompts/transfer-remedial/RECONCILIATION.md`,
+> `prompts/transfer-remedial/IMPLEMENTATION_STATE.md`, then your prompt
+> `prompts/transfer-remedial/NN-<name>.md` and the `DRAFT-PLAN.md` sections it cites. Execute the
+> prompt exactly. Do not read any other prompt under `prompts/transfer-remedial/`. You **may** read
 > the logs your prompt names — prompt 09 may read all of them. Follow README §5 for the commit, the
 > log and the board update. When you finish, reply with: the commit SHA, the **Result** line from
 > your log, the "State handed to the next prompt" section verbatim, and a list of every deviation
@@ -149,7 +152,7 @@ Structural checks, plus:
    code, so a failure means something strayed.
 
 5. **Allowed files only:** `docs/adaptive-levin-benchmark/levin_bench/bessel_tier.py`,
-   `docs/lg-phase-and-handover-followup-2026-09.md`, `docs/bessel-remedial-verification.md`, the log,
+   `docs/lg-phase-and-handover-followup-2026-09.md`, `docs/transfer-remedial-verification.md`, the log,
    the board, **plus exactly one entry** in `prompts/source-remediation/IMPLEMENTATION_STATE.md`.
    Check that last one carefully:
    ```bash
@@ -217,7 +220,7 @@ Structural checks, plus:
 
 ## Completion criterion
 
-Rows 08 and 09 ✅ or ⚠️; the campaign marked complete; `docs/bessel-remedial-verification.md`
+Rows 08 and 09 ✅ or ⚠️; the campaign marked complete; `docs/transfer-remedial-verification.md`
 existing and self-contained; the benchmark result recorded; the follow-up document superseded in
 place; and the hand-off entry present in `prompts/source-remediation/IMPLEMENTATION_STATE.md` §3.
 
@@ -233,4 +236,4 @@ Then report to the user, as the campaign's final report:
 - the deferred list from `README.md` §7, so the user can see what was deliberately not done.
 
 Do not summarise the code changes in your own words. Point at the logs and at
-`docs/bessel-remedial-verification.md`.
+`docs/transfer-remedial-verification.md`.

@@ -1,7 +1,7 @@
-# Implementation state — Bessel amplitude and phase campaign
+# Implementation state — transfer-function remedial campaign (Bessel phase)
 
 **Campaign:** [`README.md`](README.md) · **Design:** [`DRAFT-PLAN.md`](DRAFT-PLAN.md) · **Reconciliation:** [`RECONCILIATION.md`](RECONCILIATION.md)
-**Baseline commit:** `95cc326` (`bessel-remedial-plan`, clean)
+**Baseline commit:** `95cc326` (`transfer-remedial-plan`, clean)
 **Last updated:** 2026-09-09 — campaign planned and committed; no prompt executed.
 **Planned against:** `c4c4905`; re-pointed to `95cc326` before commit (`RECONCILIATION.md` §0).
 

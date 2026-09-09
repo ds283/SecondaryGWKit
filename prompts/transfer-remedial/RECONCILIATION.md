@@ -1,7 +1,7 @@
 # Reconciliation of `DRAFT-PLAN.md` against the working tree
 
 **Date:** 2026-09-08
-**Tree:** branch `bessel-remedial-plan`, at `95cc326` (measured at `c4c4905`; see §0)
+**Tree:** branch `transfer-remedial-plan`, at `95cc326` (measured at `c4c4905`; see §0)
 **Plan reconciled:** [`DRAFT-PLAN.md`](DRAFT-PLAN.md) revision 2
 **Environment:** Python 3.12.14, SciPy 1.15.2, NumPy 2.2.4, mpmath 1.3.0, Darwin 25.5.0 (arm64)
 
@@ -18,7 +18,7 @@ Every measurement below was made from the repository root with
 ## 0. The tree moved after these measurements were taken
 
 Every measurement in this document was made against `c4c4905`. Six commits have since landed on
-`bessel-remedial-plan`, and the campaign documents were re-pointed at `95cc326` before being
+`transfer-remedial-plan`, and the campaign documents were re-pointed at `95cc326` before being
 committed:
 
 | commit | what it was |

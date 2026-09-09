@@ -153,7 +153,7 @@ This table is what `docs/` inherits in prompt 09, and it is the answer to the fo
   and within `ComputeTargets/tests/`, `git diff HEAD~1 -- ComputeTargets/tests/` shows only
   comment lines and numeric constants.
 - Record the suite wall-clock against prompt 01's baseline
-  (`docs/bessel-remedial/baseline-2026-09.md`). Tighter tolerances plus \(\nu=400.5\) and
+  (`docs/transfer-remedial/baseline-2026-09.md`). Tighter tolerances plus \(\nu=400.5\) and
   \(\nu=1000.5\) may make this suite substantially slower; if it exceeds ~30 minutes, say so
   prominently and propose (do not implement) what to skip by default.
 

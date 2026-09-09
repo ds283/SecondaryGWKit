@@ -1,7 +1,8 @@
 # Orchestrator prompt — Workstream C (prompts 06, 07)
 
-You are orchestrating Workstream C of the Bessel amplitude-and-phase campaign in the repository at
-`/Users/ds283/Documents/Code/SecondaryGWKit` (branch `bessel-remedial-plan`). You do not write code
+You are orchestrating Workstream C of the transfer-function remedial campaign — its Bessel
+amplitude-and-phase phase (README §0) — in the repository at
+`/Users/ds283/Documents/Code/SecondaryGWKit` (branch `transfer-remedial-plan`). You do not write code
 yourself. You dispatch one fresh-context subagent per prompt, review what it produced against fixed
 criteria, and either continue or stop and report to the user.
 
@@ -24,14 +25,16 @@ ratify it.
 
 Read these in full before dispatching:
 
-- `prompts/bessel-remedial/README.md` — §1.1 and **§4.2 (the scope boundary against the in-flight
+- `prompts/transfer-remedial/README.md` — **§0.1 (the layer split against
+  `prompts/source-remediation`; this workstream is the one that comes closest to its files)**,
+  §1.1 and **§4.2 (the scope boundary against the in-flight
   `source-remediation` campaign, and the `main.py` hunk discipline)**, §4.1, §4.3, §5, §5.1, §6.
-- `prompts/bessel-remedial/RECONCILIATION.md` — **C3 (`plot_besssel_phase.py` is already broken),
+- `prompts/transfer-remedial/RECONCILIATION.md` — **C3 (`plot_besssel_phase.py` is already broken),
   §1 (the Levin contract facts), §3.2 (why `QuadSourceIntegral.py` is excluded) and §3.3 (the
   complete consumer inventory)**.
-- `prompts/bessel-remedial/IMPLEMENTATION_STATE.md` — the board, §3 (both open issues are relevant
+- `prompts/transfer-remedial/IMPLEMENTATION_STATE.md` — the board, §3 (both open issues are relevant
   here), §5 notes 5, 6 and 11.
-- `prompts/bessel-remedial/orchestrator/README.md` — the campaign-wide stop conditions.
+- `prompts/transfer-remedial/orchestrator/README.md` — the campaign-wide stop conditions.
 - `logs/05-two-region-construction.md` — the object surface prompt 06 adapts. If its "State handed
   to the next prompt" does not give verbatim accessor signatures, **stop**: prompt 06 cannot write
   an adapter against a paraphrase.
@@ -70,10 +73,10 @@ rebase conflict is a stop condition, not something to resolve**.
 For prompt NN, launch a subagent with **exactly** this context:
 
 > You are the implementation agent for one prompt in a campaign. Read, in this order:
-> `prompts/bessel-remedial/README.md`, `prompts/bessel-remedial/RECONCILIATION.md`,
-> `prompts/bessel-remedial/IMPLEMENTATION_STATE.md`, then your prompt
-> `prompts/bessel-remedial/NN-<name>.md` and the `DRAFT-PLAN.md` sections it cites. Execute the
-> prompt exactly. Do not read any other prompt under `prompts/bessel-remedial/`. You **may** read
+> `prompts/transfer-remedial/README.md`, `prompts/transfer-remedial/RECONCILIATION.md`,
+> `prompts/transfer-remedial/IMPLEMENTATION_STATE.md`, then your prompt
+> `prompts/transfer-remedial/NN-<name>.md` and the `DRAFT-PLAN.md` sections it cites. Execute the
+> prompt exactly. Do not read any other prompt under `prompts/transfer-remedial/`. You **may** read
 > the "State handed to the next prompt" sections of the logs your prompt names, and only those.
 > Follow README §5 for the commit, the log and the board update. When you finish, reply with: the
 > commit SHA, the **Result** line from your log, the "State handed to the next prompt" section

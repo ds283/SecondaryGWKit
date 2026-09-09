@@ -7,7 +7,7 @@
 **Recommended model:** Opus
 **Files you may touch:** new `LiouvilleGreen/tests/bessel_reference.py`, new
 `LiouvilleGreen/tests/test_bessel_reference.py`, new `LiouvilleGreen/tests/bessel_reference_data.json`,
-new `docs/bessel-remedial/` (directory) containing `measure_bessel_phase.py` and its recorded
+new `docs/transfer-remedial/` (directory) containing `measure_bessel_phase.py` and its recorded
 output, plus the log and the status board.
 **Do not touch:** `LiouvilleGreen/bessel_phase.py` or any other production module. **This prompt
 changes no production code at all.**
@@ -135,7 +135,7 @@ Tests of the harness itself, because a harness nobody checks is worse than none:
 These must run in **under ~10 s** without touching `mpmath` (they read the cached JSON). Regenerating
 the cache is a separate, explicitly invoked function, not part of the test run.
 
-### 2.4 `docs/bessel-remedial/measure_bessel_phase.py`
+### 2.4 `docs/transfer-remedial/measure_bessel_phase.py`
 
 A diagnostic script — not a test — that measures the **current** implementation and records the
 baseline. `DRAFT-PLAN.md` §9 Stage 1 lists what it must report; all of it, per \((\nu,x_{\max})\)
@@ -155,7 +155,7 @@ Cases: \(\nu\in\{1/2,3/2,7/4,5/2,20.5,100.5\}\times x_{\max}\in\{10^3,10^7\}\) a
 `main.py:520-528` uses (`rtol=5e-14, atol=1e-25`). Then, separately, the **cost and cliff sweep**
 of §4 below.
 
-Commit the script *and* its output, as `docs/bessel-remedial/baseline-2026-09.md`, with the
+Commit the script *and* its output, as `docs/transfer-remedial/baseline-2026-09.md`, with the
 environment header of §2.2. Prompt 09 compares against this file; a baseline that lives only in a
 transcript is not a baseline.
 
@@ -201,7 +201,7 @@ the per-module times instead of waiting for the whole discovery run.
   including the pre-existing four tests in `test_bessel_phase.py`. **Nothing may regress: this
   commit changes no production code, so any failure is yours.**
 - `test_bessel_reference.py` passes in under ~10 s and does not import `mpmath` at test time.
-- `docs/bessel-remedial/baseline-2026-09.md` exists and contains every quantity §2.4 and §4 list.
+- `docs/transfer-remedial/baseline-2026-09.md` exists and contains every quantity §2.4 and §4 list.
 - The three reference tiers agree to \(10^{-14}\) where they overlap (§2.3 item 1) — quote the
   measured figure in the log.
 

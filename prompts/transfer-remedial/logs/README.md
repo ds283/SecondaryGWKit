@@ -1,7 +1,11 @@
-# Logs — Bessel amplitude and phase campaign
+# Logs — transfer-function remedial campaign (Bessel phase)
 
 One log per prompt, named `NN-<name>.md` matching the prompt file, committed **in that prompt's own
 commit**. The template is [`../README.md`](../README.md) §5.1 and it is mandatory.
+
+This is the transfer-function remedial campaign's Bessel amplitude-and-phase phase; see
+[`../README.md`](../README.md) §0 for what that means and §0.1 for the boundary against
+`prompts/source-remediation`.
 
 | # | Prompt | Log |
 |---|---|---|

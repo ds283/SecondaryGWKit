@@ -1,7 +1,8 @@
 # Orchestrator prompt — Workstream A (prompts 01, 02)
 
-You are orchestrating Workstream A of the Bessel amplitude-and-phase campaign in the repository at
-`/Users/ds283/Documents/Code/SecondaryGWKit` (branch `bessel-remedial-plan`). You do not write code
+You are orchestrating Workstream A of the transfer-function remedial campaign — its Bessel
+amplitude-and-phase phase (README §0) — in the repository at
+`/Users/ds283/Documents/Code/SecondaryGWKit` (branch `transfer-remedial-plan`). You do not write code
 yourself. You dispatch one fresh-context subagent per prompt, review what it produced against fixed
 criteria, and either continue or stop and report to the user.
 
@@ -16,22 +17,24 @@ every acceptance threshold in prompts 03 through 08.
 
 Read these in full before dispatching anything:
 
-- `prompts/bessel-remedial/README.md` — §1 (what the campaign does), §1.1 (out of scope),
+- `prompts/transfer-remedial/README.md` — **§0 and §0.1 (what this campaign is called and why,
+  and how it divides from `prompts/source-remediation` — read these first; the folder was renamed
+  because the old name misled)**, §1 (what the campaign does), §1.1 (out of scope),
   **§2 (the six design facts)**, §4 (dependencies), §4.3 (your procedure and stop conditions), §5,
   §5.1 (the log template), **§6 (the acceptance table and the error definitions)**.
-- `prompts/bessel-remedial/RECONCILIATION.md` — all of it. §1 is the list of plan claims that
+- `prompts/transfer-remedial/RECONCILIATION.md` — all of it. §1 is the list of plan claims that
   reproduced; §2 is the four corrections the prompts are built on; §3 is what the plan omits.
-- `prompts/bessel-remedial/IMPLEMENTATION_STATE.md` — the board, §3 (two issues already open before
+- `prompts/transfer-remedial/IMPLEMENTATION_STATE.md` — the board, §3 (two issues already open before
   any prompt runs) and §5 (standing notes; notes 7, 8 and 9 govern how references must be built).
-- `prompts/bessel-remedial/orchestrator/README.md` — the campaign-wide stop conditions.
+- `prompts/transfer-remedial/orchestrator/README.md` — the campaign-wide stop conditions.
 
-Read `prompts/bessel-remedial/01-reference-harness.md` only when you are about to dispatch it, and
+Read `prompts/transfer-remedial/01-reference-harness.md` only when you are about to dispatch it, and
 likewise 02. **Do not read prompts 03–09.**
 
 ## Preconditions
 
 Before the first dispatch, confirm: `git status` is clean; `git log -1` is at `95cc326` or a later
-commit on `bessel-remedial-plan`; `IMPLEMENTATION_STATE.md` shows rows 01 and 02 as ⬜. Confirm the
+commit on `transfer-remedial-plan`; `IMPLEMENTATION_STATE.md` shows rows 01 and 02 as ⬜. Confirm the
 environment works:
 
 ```bash
@@ -67,10 +70,10 @@ completion report (`README.md` §4.2).
 For prompt NN, launch a subagent with **exactly** this context and nothing more:
 
 > You are the implementation agent for one prompt in a campaign. Read, in this order:
-> `prompts/bessel-remedial/README.md`, `prompts/bessel-remedial/RECONCILIATION.md`,
-> `prompts/bessel-remedial/IMPLEMENTATION_STATE.md`, then your prompt
-> `prompts/bessel-remedial/NN-<name>.md` and the `DRAFT-PLAN.md` sections it cites. Execute the
-> prompt exactly. Do not read any other file under `prompts/bessel-remedial/`, except that if you
+> `prompts/transfer-remedial/README.md`, `prompts/transfer-remedial/RECONCILIATION.md`,
+> `prompts/transfer-remedial/IMPLEMENTATION_STATE.md`, then your prompt
+> `prompts/transfer-remedial/NN-<name>.md` and the `DRAFT-PLAN.md` sections it cites. Execute the
+> prompt exactly. Do not read any other file under `prompts/transfer-remedial/`, except that if you
 > are running prompt 02 you may read `logs/01-reference-harness.md` §"State handed to the next
 > prompt" for the reference API. Follow README §5 for the commit, the log and the board update.
 > When you finish, reply with: the commit SHA, the **Result** line from your log, the "State handed
@@ -106,7 +109,7 @@ Check these six things yourself. Do not take the subagent's word for any of them
    changes no production code, so any failure there is the agent's.
 5. **`git diff HEAD~1 --stat`** touches only: `LiouvilleGreen/tests/bessel_reference.py`,
    `LiouvilleGreen/tests/test_bessel_reference.py`,
-   `LiouvilleGreen/tests/bessel_reference_data.json`, files under `docs/bessel-remedial/`, the log
+   `LiouvilleGreen/tests/bessel_reference_data.json`, files under `docs/transfer-remedial/`, the log
    and the board. **`LiouvilleGreen/bessel_phase.py` must be untouched** — verify with
    `git diff HEAD~1 -- LiouvilleGreen/bessel_phase.py` returning empty. So must
    `LiouvilleGreen/tests/test_bessel_phase.py`.
@@ -195,7 +198,7 @@ as a failure.
 ## Completion criterion
 
 Workstream A is complete when rows 01 and 02 on the board are ✅ or ⚠️, both logs exist with
-`COMPLETE`-class results, and `docs/bessel-remedial/baseline-2026-09.md` exists and contains the
+`COMPLETE`-class results, and `docs/transfer-remedial/baseline-2026-09.md` exists and contains the
 baseline errors, the `phi` values, the cost-and-cliff sweep and the environment header.
 
 Then report to the user: "Workstream A complete; the tree is at `<SHA>`, ready for Workstream B
