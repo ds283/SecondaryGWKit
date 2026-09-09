@@ -243,6 +243,20 @@ if args.profile_db is not None:
     )
 
 
+def closes_triangle(
+    k: wavenumber_exit_time, q: wavenumber_exit_time, r: wavenumber_exit_time
+) -> bool:
+    """Return True if the physical wavenumbers (k, q, r) can close a triangle, |q-r| <= k <= q+r,
+    the condition for r = |k - q| to have a solution theta in [0, pi] in the source integrand of
+    spec 03 Sec 0.3; boundary points are kept using a relative tolerance of DEFAULT_FLOAT_PRECISION."""
+    k_val = k.k.k
+    q_val = q.k.k
+    r_val = r.k.k
+
+    tol = DEFAULT_FLOAT_PRECISION * max(k_val, q_val, r_val)
+    return (abs(q_val - r_val) - tol) <= k_val <= (q_val + r_val + tol)
+
+
 def run_pipeline(
     model_data: dict,
     source_k_sample: wavenumber_array,
@@ -2499,6 +2513,19 @@ def run_pipeline(
             response_k_exit_times,
         )
         qsi_work_items = [(z, k, q, r) for z, (q, r), k in qsi_work_items]
+
+        # a (k, q, r) triple has no theta in [0, pi] realizing r = |k - q| unless it closes a
+        # triangle (spec 03 Sec 0.3); computing QuadSourceIntegral for such a triple is pure waste
+        num_before_triangle_filter = len(qsi_work_items)
+        qsi_work_items = [
+            (z, k, q, r) for z, k, q, r in qsi_work_items if closes_triangle(k, q, r)
+        ]
+        num_after_triangle_filter = len(qsi_work_items)
+        print(
+            f"   @@ QuadSourceIntegral triangle filter: kept {num_after_triangle_filter} of "
+            f"{num_before_triangle_filter} (k,q,r) triples "
+            f"({100.0 * num_after_triangle_filter / num_before_triangle_filter:.2f}%)"
+        )
 
         # chunk size may need tuning for the cluster in use.
         # GkSource objects with about 2k z-sample points occupy about 1 Mb.

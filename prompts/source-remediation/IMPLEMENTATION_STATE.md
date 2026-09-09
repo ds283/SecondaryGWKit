@@ -2,7 +2,7 @@
 
 **Campaign:** [`README.md`](README.md) · **Source audit:** [`docs/spec-code-audit-2026-09.md`](../../docs/spec-code-audit-2026-09.md)
 **Baseline commit:** `e9a43a2` (`main`, clean)
-**Last updated:** 2026-09-09 — prompt 09 complete.
+**Last updated:** 2026-09-09 — prompt 09 complete; prompt 04 (Workstream D) serialised on top.
 
 > **Maintenance rule.** Every prompt updates this file *in its own commit*, before committing.
 > Set your row's status, fill in the commit SHA, model and log link, update the item-level table,
@@ -27,7 +27,7 @@ Legend: ⬜ not started · 🟡 in flight · ✅ complete · ⚠️ complete wit
 
 | # | Prompt | Items | Model | Status | Commit | Log |
 |---|---|---|---|---|---|---|
-| 04 | [Triangle filter](04-triangle-filter.md) | A5 | Sonnet | ⬜ | | |
+| 04 | [Triangle filter](04-triangle-filter.md) | A5 | Sonnet | ✅ | *"Filter QuadSourceIntegral work items to triangle-closing triples"* (serialised onto Workstream C after prompt 09) | [`logs/04-triangle-filter.md`](logs/04-triangle-filter.md) |
 
 ### Workstream B — transfer-function LG representation and the source grid
 
@@ -52,7 +52,7 @@ Legend: ⬜ not started · 🟡 in flight · ✅ complete · ⚠️ complete wit
 | 11 | [Spec annotations](11-spec-annotations.md) | audit §6 | Sonnet | ⬜ | | |
 | 12 | [Verification](12-verification.md) | audit §4; campaign | Opus | ⬜ | | |
 
-**Progress:** 8 / 12 complete.
+**Progress:** 9 / 12 complete.
 
 ---
 
@@ -66,7 +66,7 @@ Traceability from the audit's finding IDs to the prompt that discharges them.
 | A2 | **DEFECT, representation** | `QuadSource` splines the oscillating source; unusable beyond ~95 cycles | 05, 06, 08 | ✅ (3/3: `QuadSourceIntegral` reads the $f$ spline only on the both-numeric region and assembles the oscillatory region from `TkSourceFunctions` via `phase_groups`; nothing splines an oscillation any more) |
 | A3 | **DEFECT, regression** | `compute_quad_source` walks the full grid against a both-ends-truncated $T_k$ grid → `IndexError` | 06 | ✅ |
 | A4 | **DEFECT, known** | Levin call receives only $\theta_G$; no $T_q,T_r$ input to the Levin decision | 07, 08, 10 | 🟡 (2/3: `QuadSourceIntegral` partitions at every factor's hand-over and runs one Levin call per phase group; the $\theta_G$-only gates are gone. Remaining: `main.py` must supply the four `Tk` payload keys — prompt 10) |
-| A5 | **DEFECT, known** | 92 % of scheduled $(k,q,r)$ triples are not triangles | 04 | ⬜ |
+| A5 | **DEFECT, known** | 92 % of scheduled $(k,q,r)$ triples are not triangles | 04 | ✅ |
 | A6 | **DEFECT, policy** | `"WKB_minimal"` tests `numeric_clearance` | 02 | ✅ |
 | A7 | **DEFECT, accuracy** | `_build_derivative` end bias (ε″ 30 % at the $z=0.1$ end for GenericEOS models) | 03 | ✅ |
 | B1 | diagnostic | `TkWKBValue.analytic_*_w` return `_rad` | 02 | ✅ |
