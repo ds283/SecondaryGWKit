@@ -15,6 +15,12 @@ file are closed.** See the notes at R3/Q2, R30/Q7, §2.6 and the Tier 3 block be
   use. It is distinct from the background $w_0 = p_0/\rho_0$ (`wBackground(z)`, $\Lambda$ included)
   that enters the source term's $2/(3(1+w_0))$ (spec 03 §0.2). For a pure constant-$w$ epoch the two
   coincide and equal the README's $(1-b)/(3(1+b))$.
+  **Audit note (2026-09), not author sign-off — R16 / Q4.** The literal R16 denominator (with
+  $\Omega_{cc}$) had in fact been transcribed into `LambdaCDM_GenericEOS.wPerturbations`, dividing by
+  the total density including $\rho_\Lambda$; this is audit finding A1
+  (`docs/spec-code-audit-2026-09.md` §0.2), fixed in commit `0f50782` ("Exclude Lambda from the
+  GenericEOS perturbation sound speed"). This sign-off's "$\Lambda$ unperturbed" reading is the
+  binding one; `LambdaCDM.wPerturbations` had it right throughout and was never affected.
 - **$k$ vs $k_{\rm phys}$.** A bare $k^2/H^2$ in NUM 05/08/09/10/11 means $k_{\rm phys}^2/H^2 = k^2/(a_0^2H^2)$,
   as NUM 02 writes it; the code's stored wavenumber is $k/a_0$ (spec 02 §0 item 1).
 - **$\eta_0$ / $z_{\rm init}$.** Not a spec constant: it is initial data in the numerical pipeline,

@@ -91,6 +91,12 @@ queue are one object.**
 - **Tier 3, $w$ vs $w_0$ (p.3, Q3).** Same quantity: the background $p_0/\rho_0$ at the source time
   (spec 03 §0.2). **Prime on the transfer function**: $d/dx$ here and in `MAIN` 14; `MAIN` 11's $d/d\eta$
   is the anomaly (spec 05 §0.4).
+- **Audit note (2026-09), not author sign-off — Q7 (NUM 06 p.10 vs NUM 07 p.1, Liouville–Green
+  convention).** The code's analytic branch (`LiouvilleGreen/bessel_phase.py`) fixes the
+  unstated identification: $J_\nu = m\sin\vartheta$, $Y_\nu = -m\cos\vartheta$, i.e. `NUM` 07's R22
+  with $\gamma = \Theta - \pi/2$ relative to `NUM` 06 p.10's $\cos\gamma$. The code is self-consistent
+  in this convention and reproduces R14 to $10^{-8}$–$10^{-6}$ relative on seven configurations. Cite
+  `docs/spec-code-audit/QI-report.md` §1 row R17 and §3 note 6.
 - **$\eta_0$ / $z_{\rm init}$.** Not a spec constant: it is initial data in the numerical pipeline,
   set per mode as the redshift a fixed number of e-folds before horizon exit
   (`CosmologyConcepts/wavenumber.py`, `z_exit_suph_eN`). The spec records only the conditions it must

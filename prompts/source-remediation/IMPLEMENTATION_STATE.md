@@ -2,7 +2,9 @@
 
 **Campaign:** [`README.md`](README.md) · **Source audit:** [`docs/spec-code-audit-2026-09.md`](../../docs/spec-code-audit-2026-09.md)
 **Baseline commit:** `e9a43a2` (`main`, clean)
-**Last updated:** 2026-09-09 — prompt 10 complete; the pipeline is constructible again (untested end to end).
+**Last updated:** 2026-09-09 — prompt 11 complete; the audit's three recommended spec edits and the
+disposition table are recorded. The pipeline is constructible again (untested end to end; prompt 12
+still pending).
 
 > **Maintenance rule.** Every prompt updates this file *in its own commit*, before committing.
 > Set your row's status, fill in the commit SHA, model and log link, update the item-level table,
@@ -49,10 +51,10 @@ Legend: ⬜ not started · 🟡 in flight · ✅ complete · ⚠️ complete wit
 
 | # | Prompt | Items | Model | Status | Commit | Log |
 |---|---|---|---|---|---|---|
-| 11 | [Spec annotations](11-spec-annotations.md) | audit §6 | Sonnet | ⬜ | | |
+| 11 | [Spec annotations](11-spec-annotations.md) | audit §6 | Sonnet | ✅ | *"Record the spec-code audit's three recommended annotations"* (SHA not embedded, per prompt 01 log deviation 4) | [`logs/11-spec-annotations.md`](logs/11-spec-annotations.md) |
 | 12 | [Verification](12-verification.md) | audit §4; campaign | Opus | ⬜ | | |
 
-**Progress:** 10 / 12 complete.
+**Progress:** 11 / 12 complete.
 
 ---
 
@@ -84,7 +86,7 @@ Traceability from the audit's finding IDs to the prompt that discharges them.
 | §4.2 | UNVERIFIED | reachability of A6 | 12 | ⬜ |
 | §4.3 | UNVERIFIED | whether `has_WKB_violation` modes should be rejected | 12 (measure only) | ⬜ |
 | §4.4 | UNVERIFIED | A7 end bias on a real GenericEOS run | 12 | ⬜ |
-| §6 | spec edits | close spec 02 Q9, record spec 04 Q7 convention, annotate spec 01 R16/Q4 | 11 | ⬜ |
+| §6 | spec edits | close spec 02 Q9, record spec 04 Q7 convention, annotate spec 01 R16/Q4 | 11 | ✅ (three "Audit note (2026-09), not author sign-off" bullets added to specs 01/02/04 §0 blocks, plus a new §8 Disposition table in the audit document mapping every A/B finding to its commit) |
 
 **Out of scope (do not schedule):** Tier 2 LG output from `QuadSourceIntegral`; `OneLoopIntegral`;
 `csSquared(z)`; `z_response` averaging. See `README.md` §1.1.
