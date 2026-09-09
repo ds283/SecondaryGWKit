@@ -25,26 +25,36 @@ from config.defaults import (
 )
 from utilities import WallclockTimer
 
-# Retired as control flow by prompts/source-remediation prompt 08 (audit QI-6). Until then the
-# Levin quadrature of the source time integral was gated on the *Green's-function* phase alone:
-# GkSourcePolicyData.Levin_z (where |d theta_G/d log(1+z)| first exceeds Levin_threshold) and
-# the net phase change theta_G(z_response) - theta_G(Levin_z) > LEVIN_MIN_PHASE_DIFF. Neither
-# gate consulted T_q or T_r, so a region in which theta_q - theta_r turned over thousands of
-# cycles could be classified "not worth Levin" and handed to scipy.quad. Every sub-interval with
-# at least one oscillatory factor now goes to adaptive_levin_sincos, whose total-variation gate
-# (AdaptiveLevin/levin_quadrature.py, docs/adaptive-levin-verification.md section 4.2) routes
-# weakly oscillatory sub-regions to Clenshaw-Curtis itself. The constants are kept, unused,
-# pending prompt 10's decision on MetadataConcepts/QuadSourcePolicy.Levin_threshold; GkPolicy.Levin_z
-# is still read (it is persisted) and recorded in metadata["partition"], but drives nothing.
-LEVIN_MIN_2PI_CYCLES = 10
-LEVIN_MIN_PHASE_DIFF = LEVIN_MIN_2PI_CYCLES * 2.0 * pi
+# NO QUADRATURE GATE LIVES IN THIS MODULE. Until prompt 08 of prompts/source-remediation (audit
+# QI-6) the Levin quadrature of the source time integral was gated on the *Green's-function*
+# phase alone: GkSourcePolicyData.Levin_z (where |d theta_G/d log(1+z)| first exceeds
+# Levin_threshold) and the net phase change theta_G(z_response) - theta_G(Levin_z) >
+# LEVIN_MIN_PHASE_DIFF = 10 * 2 pi. Neither gate consulted T_q or T_r, so a region in which
+# theta_q - theta_r turned over thousands of cycles could be classified "not worth Levin" and
+# handed to scipy.quad. Every sub-interval with at least one oscillatory factor now goes to
+# adaptive_levin_sincos, whose total-variation gate (AdaptiveLevin/levin_quadrature.py,
+# docs/adaptive-levin-verification.md section 4.2) routes weakly oscillatory sub-regions to
+# Clenshaw-Curtis itself; GkPolicy.Levin_z is still read (it is persisted) and recorded in
+# metadata["partition"], but drives nothing.
+#
+# Prompt 10 removed the two retired constants (LEVIN_MIN_2PI_CYCLES, LEVIN_MIN_PHASE_DIFF) rather
+# than reviving them through MetadataConcepts/QuadSourcePolicy.Levin_threshold. Prompt 08 section 6
+# measured the weakly oscillatory case the old gate used to divert (theta_G turning over 3.5-5.4
+# cycles): the single-group Levin call is 2.65-3.56x slower in wall-clock than the old direct
+# quadrature while doing only 1.00-1.44x the integrand evaluations, i.e. the excess is the Levin
+# driver's per-region overhead once its own gate has already sent every region to Clenshaw-Curtis.
+# The author's decision was to accept that cost here and make the *driver* choose its fallback
+# better -- routing a weakly oscillatory integrand to Clenshaw-Curtis wholesale at the outset
+# instead of discovering it after many bisections -- which is work in AdaptiveLevin/, not a second
+# threshold duplicating the decision in this module. See prompts/source-remediation
+# logs/08-qsi-phase-group-integration.md (deviation 10) and logs/10-qsi-main-plumbing.md.
 
 # Retuned from 64 to 24 in prompts/levin-refactor's prompt 08 (see
 # prompts/levin-refactor/logs/08-order-and-sampling.md for the measurement). This module has no
 # analytic oracle, so the order was chosen by self-consistency against a synthetic problem built
 # directly from bessel_phase() with the same domain, amplitude form and phase contract (theta +
 # theta_mod_2pi, no theta_deriv) as this file's own nine call sites, swept across three
-# configurations spanning the phase magnitude the LEVIN_MIN_PHASE_DIFF gate below allows (a
+# configurations spanning the phase magnitude the then-current LEVIN_MIN_PHASE_DIFF gate allowed (a
 # near-threshold ~14-cycle case up to a ~4.5e6-cycle deep-sub-horizon case). Orders 12 through 64
 # agreed with each other to within their own round-off floor in every configuration -- the same
 # "accuracy is set by the phase/modulus splines, not the spectral order" finding that took
@@ -535,7 +545,7 @@ def build_partition(
         "crossover_z_q": Tq_f.crossover_z,
         "crossover_z_r": Tr_f.crossover_z,
         # persisted by GkSourcePolicyData, read here for the record only; not used (see the
-        # LEVIN_MIN_2PI_CYCLES comment at the top of this module)
+        # "no quadrature gate lives in this module" comment at the top of this module)
         "Levin_z_unused": (
             get_z(GkPolicy.Levin_z) if GkPolicy.Levin_z is not None else None
         ),

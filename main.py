@@ -248,13 +248,90 @@ def closes_triangle(
 ) -> bool:
     """Return True if the physical wavenumbers (k, q, r) can close a triangle, |q-r| <= k <= q+r,
     the condition for r = |k - q| to have a solution theta in [0, pi] in the source integrand of
-    spec 03 Sec 0.3; boundary points are kept using a relative tolerance of DEFAULT_FLOAT_PRECISION."""
+    spec 03 Sec 0.3; boundary points are kept using a relative tolerance of DEFAULT_FLOAT_PRECISION.
+    """
     k_val = k.k.k
     q_val = q.k.k
     r_val = r.k.k
 
     tol = DEFAULT_FLOAT_PRECISION * max(k_val, q_val, r_val)
     return (abs(q_val - r_val) - tol) <= k_val <= (q_val + r_val + tol)
+
+
+def build_QuadSourceIntegral_payload(
+    z_response: redshift,
+    k: wavenumber_exit_time,
+    q: wavenumber_exit_time,
+    r: wavenumber_exit_time,
+    Gk_cache: dict,
+    source_cache: dict,
+    Tk_numeric_cache: dict,
+    Tk_WKB_cache: dict,
+    b_value: float,
+    Bessel_0pt5_proxy: BesselPhaseProxy,
+    Bessel_2pt5_proxy: BesselPhaseProxy,
+) -> dict:
+    """Assemble the compute() payload for one QuadSourceIntegral work item (z_response, k, q, r)
+    from the per-batch lookup caches.
+
+    The four transfer-function objects are required by
+    QuadSourceIntegral.REQUIRED_PAYLOAD_KEYS: since prompt 08 of prompts/source-remediation the
+    integrand below the numeric/Liouville-Green hand-over of T_q or T_r is assembled from
+    ComputeTargets.TkSourceFunctions rather than read from the QuadSource spline (which now
+    carries only the smooth part of the source term), so the numeric and WKB representations of
+    both transfer functions have to travel with the work item (audit 2026-09 A2, A4).
+
+    Every cache is keyed by store_id: Gk_cache by (k, z_response), source_cache by (q, r), and
+    the two transfer-function caches by the wavenumber_exit_time of the mode. Raises RuntimeError,
+    after printing the same "!! MISSING DATA WARNING" lines the rest of this stage uses, if any
+    ingredient is not available."""
+    GkPolicy: GkSourcePolicyData = Gk_cache[(k.store_id, z_response.store_id)]
+    source: QuadSource = source_cache[(q.store_id, r.store_id)]
+
+    Tq_numeric: TkNumericIntegration = Tk_numeric_cache[q.store_id]
+    Tr_numeric: TkNumericIntegration = Tk_numeric_cache[r.store_id]
+    Tq_WKB: TkWKBIntegration = Tk_WKB_cache[q.store_id]
+    Tr_WKB: TkWKBIntegration = Tk_WKB_cache[r.store_id]
+
+    missing_data = False
+    if not GkPolicy.available:
+        missing_data = True
+        print(
+            f"!! MISSING DATA WARNING ({datetime.now().replace(microsecond=0).isoformat()}) when building QuadSourceIntegral: GkSource for for k={k.k.k_inv_Mpc:.5g}/Mpc, z_response={z_response.z:.5g}"
+        )
+    if not source.available:
+        missing_data = True
+        print(
+            f"!! MISSING DATA WARNING ({datetime.now().replace(microsecond=0).isoformat()}) when building QuadSourceIntegral: QuadSource for for q={q.k.k_inv_Mpc:.5g}/Mpc, r={r.k.k_inv_Mpc:.5g}/Mpc"
+        )
+    for obj_label, obj, mode_label, mode in [
+        ("TkNumericIntegration", Tq_numeric, "q", q),
+        ("TkWKBIntegration", Tq_WKB, "q", q),
+        ("TkNumericIntegration", Tr_numeric, "r", r),
+        ("TkWKBIntegration", Tr_WKB, "r", r),
+    ]:
+        if not obj.available:
+            missing_data = True
+            print(
+                f"!! MISSING DATA WARNING ({datetime.now().replace(microsecond=0).isoformat()}) when building QuadSourceIntegral: {obj_label} for {mode_label}={mode.k.k_inv_Mpc:.5g}/Mpc"
+            )
+
+    if missing_data:
+        raise RuntimeError(
+            f"QuadSourceIntegral builder: missing or incomplete source data for k={k.k.k_inv_Mpc:.5g}/Mpc, q={q.k.k_inv_Mpc:.5g}/Mpc, r={r.k.k_inv_Mpc:.5g}/Mpc"
+        )
+
+    return {
+        "GkPolicy": GkPolicy,
+        "source": source,
+        "b": b_value,
+        "Bessel_0pt5": Bessel_0pt5_proxy,
+        "Bessel_2pt5": Bessel_2pt5_proxy,
+        "Tq_numeric": Tq_numeric,
+        "Tq_WKB": Tq_WKB,
+        "Tr_numeric": Tr_numeric,
+        "Tr_WKB": Tr_WKB,
+    }
 
 
 def run_pipeline(
@@ -2416,6 +2493,100 @@ def run_pipeline(
         )
         QuadSource_lookup_queue.run()
 
+        # the source integral also needs the numeric and Liouville-Green (WKB) representations of
+        # the transfer functions for q and r. Since prompt 08 of prompts/source-remediation the
+        # part of the integration range below a transfer function's hand-over is assembled from
+        # ComputeTargets.TkSourceFunctions, because the QuadSource spline now covers only the
+        # region where both T_q and T_r are still numeric (audit 2026-09 A2, A4).
+        #
+        # The set of distinct wavenumbers involved is at most the 50-element source k-grid, so we
+        # look each one up once here and share it between all the work items that need it.
+        # (as elsewhere in this function, the set is frozen into a list so that we know the order
+        # the lookup results come back in)
+        missing_Tk_set = set(q for z_response, k, q, r in missing_labels)
+        missing_Tk_set.update(r for z_response, k, q, r in missing_labels)
+        missing_Tk = list(missing_Tk_set)
+
+        # note these lookups deliberately do *not* set "_do_not_populate": TkSourceFunctions reads
+        # the stored sample values of both objects (T, dT/dz for the numeric region;
+        # theta_div_2pi, theta_mod_2pi, friction for the WKB region), and the .values property
+        # raises if the object was deserialized without them
+        # (TkNumericIntegration.py:290-298, TkWKBIntegration.py:317-325).
+        Tk_numeric_lookup_batch = [
+            {
+                "model": model_proxy,
+                "z_sample": None,
+                "k": k_exit,
+                "z_init": None,
+                "atol": atol,
+                "rtol": rtol,
+                "tags": [
+                    TkProductionTag,
+                    SourceZGridSizeTag,
+                    OutsideHorizonEfoldsTag,
+                    LargestSourceZTag,
+                    SmallestSourceZTag,
+                    SourceSamplesPerLog10ZTag,
+                ],
+            }
+            for k_exit in missing_Tk
+        ]
+
+        Tk_numeric_lookup_queue = RayWorkPool(
+            pool,
+            Tk_numeric_lookup_batch,
+            task_builder=lambda x: pool.object_get("TkNumericIntegration", **x),
+            available_handler=None,
+            compute_handler=None,
+            store_handler=None,
+            persist_handler=None,
+            validation_handler=None,
+            label_builder=None,
+            title=None,
+            store_results=True,
+            create_batch_size=20,
+            process_batch_size=20,
+        )
+        Tk_numeric_lookup_queue.run()
+
+        Tk_WKB_lookup_batch = [
+            {
+                "solver_labels": [],
+                "model": model_proxy,
+                "z_sample": None,
+                "k": k_exit,
+                "z_init": None,
+                "atol": atol,
+                "rtol": rtol,
+                "tags": [
+                    TkProductionTag,
+                    SourceZGridSizeTag,
+                    OutsideHorizonEfoldsTag,
+                    LargestSourceZTag,
+                    SmallestSourceZTag,
+                    SourceSamplesPerLog10ZTag,
+                ],
+            }
+            for k_exit in missing_Tk
+        ]
+
+        Tk_WKB_lookup_queue = RayWorkPool(
+            pool,
+            Tk_WKB_lookup_batch,
+            task_builder=lambda x: pool.object_get("TkWKBIntegration", **x),
+            available_handler=None,
+            compute_handler=None,
+            store_handler=None,
+            persist_handler=None,
+            validation_handler=None,
+            label_builder=None,
+            title=None,
+            store_results=True,
+            create_batch_size=20,
+            process_batch_size=20,
+        )
+        Tk_WKB_lookup_queue.run()
+
         # process these retrieved items into simple look-up tables
         Gk_cache = {
             (k.store_id, z_response.store_id): obj
@@ -2426,6 +2597,14 @@ def run_pipeline(
             (q.store_id, r.store_id): obj
             for q, query_outcomes in zip(q_keys, QuadSource_lookup_queue.results)
             for r, obj in zip(missing_source[q], query_outcomes)
+        }
+        Tk_numeric_cache = {
+            k_exit.store_id: obj
+            for k_exit, obj in zip(missing_Tk, Tk_numeric_lookup_queue.results)
+        }
+        Tk_WKB_cache = {
+            k_exit.store_id: obj
+            for k_exit, obj in zip(missing_Tk, Tk_WKB_lookup_queue.results)
         }
 
         work_refs = []
@@ -2440,25 +2619,21 @@ def run_pipeline(
             #  Then we would not have to repeatedly seralize them when shipping out payloads for computation.
             #  However, the QuadSourceIntegral object has to inspect each Gk and source, so this isn't completely trivial.
             #  Maybe we need to retain a double cache.
-            GkPolicy: GkSourcePolicyData = Gk_cache[(k.store_id, z_response.store_id)]
-            source: QuadSource = source_cache[(q.store_id, r.store_id)]
-
-            missing_data = False
-            if not GkPolicy.available:
-                missing_data = True
-                print(
-                    f"!! MISSING DATA WARNING ({datetime.now().replace(microsecond=0).isoformat()}) when building QuadSourceIntegral: GkSource for for k={k.k.k_inv_Mpc:.5g}/Mpc, z_response={z_response.z:.5g}"
-                )
-            if not source.available:
-                missing_data = True
-                print(
-                    f"!! MISSING DATA WARNING ({datetime.now().replace(microsecond=0).isoformat()}) when building QuadSourceIntegral: QuadSource for for q={q.k.k_inv_Mpc:.5g}/Mpc, r={r.k.k_inv_Mpc:.5g}/Mpc"
-                )
-
-            if missing_data:
-                raise RuntimeError(
-                    f"QuadSourceIntegral builder: missing or incomplete source data for k={k.k.k_inv_Mpc:.5g}/Mpc, q={q.k.k_inv_Mpc:.5g}/Mpc, r={r.k.k_inv_Mpc:.5g}/Mpc"
-                )
+            #  (The four transfer-function objects now in the payload are shared between many more
+            #  work items than Gk or the source are, so they would benefit most from this.)
+            compute_payload = build_QuadSourceIntegral_payload(
+                z_response,
+                k,
+                q,
+                r,
+                Gk_cache,
+                source_cache,
+                Tk_numeric_cache,
+                Tk_WKB_cache,
+                b_value,
+                Bessel_0pt5_proxy,
+                Bessel_2pt5_proxy,
+            )
 
             work_refs.append(
                 {
@@ -2484,13 +2659,7 @@ def run_pipeline(
                             ResponseSparsenessZTag,
                         ],
                     ),
-                    "compute_payload": {
-                        "GkPolicy": GkPolicy,
-                        "source": source,
-                        "b": b_value,
-                        "Bessel_0pt5": Bessel_0pt5_proxy,
-                        "Bessel_2pt5": Bessel_2pt5_proxy,
-                    },
+                    "compute_payload": compute_payload,
                 }
             )
 

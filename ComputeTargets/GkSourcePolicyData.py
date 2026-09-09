@@ -47,6 +47,13 @@ def apply_GkSource_policy(source_proxy: GkSourceProxy, policy: GkSourcePolicy) -
     payload["crossover_z"] = crossover_data.get("crossover_z", None)
     payload["metadata"] = crossover_data["metadata"]
 
+    # Levin_z is DIAGNOSTIC ONLY since prompt 10 of prompts/source-remediation. It is still
+    # computed and persisted (dropping it would be a schema change for no gain, and the extract
+    # scripts still plot it), but no consumer routes on it: prompt 08 replaced the
+    # Green's-function-only Levin gate of QuadSourceIntegral with a partition at every factor's
+    # hand-over plus one adaptive_levin_sincos call per phase group (audit 2026-09 A4/QI-6), and
+    # QuadSourceIntegral now reads Levin_z only into metadata["partition"]["Levin_z_unused"].
+    # GkSourcePolicy.Levin_threshold, which sets it, is likewise diagnostic from here on.
     Levin_data = _classify_Levin(source, policy, crossover_data)
     payload["Levin_z"] = Levin_data["Levin_z"]
     payload["metadata"].update(Levin_data["metadata"])

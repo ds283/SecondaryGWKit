@@ -2,7 +2,7 @@
 
 **Campaign:** [`README.md`](README.md) · **Source audit:** [`docs/spec-code-audit-2026-09.md`](../../docs/spec-code-audit-2026-09.md)
 **Baseline commit:** `e9a43a2` (`main`, clean)
-**Last updated:** 2026-09-09 — prompt 09 complete; prompt 04 (Workstream D) serialised on top.
+**Last updated:** 2026-09-09 — prompt 10 complete; the pipeline is constructible again (untested end to end).
 
 > **Maintenance rule.** Every prompt updates this file *in its own commit*, before committing.
 > Set your row's status, fill in the commit SHA, model and log link, update the item-level table,
@@ -43,7 +43,7 @@ Legend: ⬜ not started · 🟡 in flight · ✅ complete · ⚠️ complete wit
 | 07 | [Phase-group algebra](07-phase-group-algebra.md) | A4 (1/3) | Fable | ⚠️ | *"Add the phase-group decomposition of the source integrand"* (SHA not embedded, per prompt 01 log deviation 4) | [`logs/07-phase-group-algebra.md`](logs/07-phase-group-algebra.md) |
 | 08 | [`QuadSourceIntegral` phase-group integration](08-qsi-phase-group-integration.md) | A4 (2/3), A2 (3/3) | Fable | ⚠️ | *"Partition the source time integral and Levin-integrate its phase groups"* (SHA not embedded, per prompt 01 log deviation 4) | [`logs/08-qsi-phase-group-integration.md`](logs/08-qsi-phase-group-integration.md) |
 | 09 | [Errors, schema, tolerances](09-qsi-errors-schema-tolerances.md) | B5, B6, B7, B8, B11 | Opus | ⚠️ | *"Record b, an error bound and honest tolerances on QuadSourceIntegral"* (SHA not embedded, per prompt 01 log deviation 4) | [`logs/09-qsi-errors-schema-tolerances.md`](logs/09-qsi-errors-schema-tolerances.md) |
-| 10 | [`main.py` plumbing](10-qsi-main-plumbing.md) | A4 (3/3) | Opus | ⬜ | | |
+| 10 | [`main.py` plumbing](10-qsi-main-plumbing.md) | A4 (3/3) | Opus | ⚠️ | *"Supply the transfer functions to the source integral stage"* (SHA not embedded, per prompt 01 log deviation 4) | [`logs/10-qsi-main-plumbing.md`](logs/10-qsi-main-plumbing.md) |
 
 ### Workstream E — close-out
 
@@ -52,7 +52,7 @@ Legend: ⬜ not started · 🟡 in flight · ✅ complete · ⚠️ complete wit
 | 11 | [Spec annotations](11-spec-annotations.md) | audit §6 | Sonnet | ⬜ | | |
 | 12 | [Verification](12-verification.md) | audit §4; campaign | Opus | ⬜ | | |
 
-**Progress:** 9 / 12 complete.
+**Progress:** 10 / 12 complete.
 
 ---
 
@@ -65,7 +65,7 @@ Traceability from the audit's finding IDs to the prompt that discharges them.
 | A1 | **DEFECT, physics** | `LambdaCDM_GenericEOS.wPerturbations` divides by the total density incl. $\rho_\Lambda$ | 01 | ✅ |
 | A2 | **DEFECT, representation** | `QuadSource` splines the oscillating source; unusable beyond ~95 cycles | 05, 06, 08 | ✅ (3/3: `QuadSourceIntegral` reads the $f$ spline only on the both-numeric region and assembles the oscillatory region from `TkSourceFunctions` via `phase_groups`; nothing splines an oscillation any more) |
 | A3 | **DEFECT, regression** | `compute_quad_source` walks the full grid against a both-ends-truncated $T_k$ grid → `IndexError` | 06 | ✅ |
-| A4 | **DEFECT, known** | Levin call receives only $\theta_G$; no $T_q,T_r$ input to the Levin decision | 07, 08, 10 | 🟡 (2/3: `QuadSourceIntegral` partitions at every factor's hand-over and runs one Levin call per phase group; the $\theta_G$-only gates are gone. Remaining: `main.py` must supply the four `Tk` payload keys — prompt 10) |
+| A4 | **DEFECT, known** | Levin call receives only $\theta_G$; no $T_q,T_r$ input to the Levin decision | 07, 08, 10 | ✅ (3/3: `main.py`'s QuadSourceIntegral stage looks up `TkNumericIntegration`/`TkWKBIntegration` for every $q$ and $r$ once per batch and ships them as `Tq_numeric`/`Tq_WKB`/`Tr_numeric`/`Tr_WKB`, so the Levin decision sees the composed phase. No `QuadSourcePolicy.Levin_threshold` was reinstated — the user accepted prompt 08 §6's cost; see `[10-levin-wholesale-cc-fallback]`. **Not yet exercised end to end** — prompt 12) |
 | A5 | **DEFECT, known** | 92 % of scheduled $(k,q,r)$ triples are not triangles | 04 | ✅ |
 | A6 | **DEFECT, policy** | `"WKB_minimal"` tests `numeric_clearance` | 02 | ✅ |
 | A7 | **DEFECT, accuracy** | `_build_derivative` end bias (ε″ 30 % at the $z=0.1$ end for GenericEOS models) | 03 | ✅ |
@@ -199,30 +199,34 @@ Traceability from the audit's finding IDs to the prompt that discharges them.
   from. **Next step:** if the guarantee is ever wanted, a linear `chunk_step` (or a log step
   much smaller than 125) in `phase_spline`; `LiouvilleGreen/` is out of scope for this campaign.
 
-- **[08-pipeline-non-runnable-until-10]** *(opened by prompt 08, 2026-09-09)* —
-  `QuadSourceIntegral.compute()` now requires the payload keys `Tq_numeric`, `Tq_WKB`,
-  `Tr_numeric`, `Tr_WKB` (the `TkNumericIntegration`/`TkWKBIntegration` objects for $q$ and $r$)
-  and raises `RuntimeError` naming any that are missing. `main.py:2474-2479` supplies only
-  `GkPolicy`, `source`, `b`, `Bessel_0pt5`, `Bessel_2pt5`. **Impact:** the
-  `--quad-source-integral-queue` stage cannot start between prompts 08 and 10. This replaces
-  `[06-qsi-blocked-until-08]` (now §4): the stage was already non-runnable, for a different
-  reason, since prompt 06. **Next step:** prompt 10 wires the four objects into the payload.
+- **[10-levin-wholesale-cc-fallback]** *(opened by prompt 10, 2026-09-09)* — the user's decision on
+  `[08-levin-fallback-cost-ratio]` (now §4) accepts prompt 08 §6's cost here and asks for the fix
+  in the Levin driver instead: *"make the Levin integrator more intelligent about choosing a
+  fallback, so that it routes the integrand [to] the Clenshaw–Curtis wholesale at the outset,
+  rather than finding that adaptive Levin needs many bisections which end up in Clenshaw–Curtis
+  anyway."* The measurement supports this reading — 2.65–3.56× the wall-clock for only 1.00–1.44×
+  the integrand evaluations, i.e. per-region overhead across the 20–28 Clenshaw–Curtis regions the
+  driver's own total-variation gate produced, not wasted integrand work. The lever is
+  `AdaptiveLevin/levin_quadrature.py` (log 08 observation 3: a coarser first bisection, or plain
+  adaptive quadrature when the *whole* call's phase span is below a few $2\pi$), which README §1.1
+  and §5 item 8 place outside this campaign. **Impact:** a wall-clock factor ≲3.6× on the weakly
+  oscillatory sub-intervals only (a few cycles of $\theta_G$ with both $T$ smooth); no accuracy or
+  stored-number consequence, so it does not block prompt 12 — but prompt 12's timings will include
+  it. **Next step:** a campaign allowed to edit `AdaptiveLevin/`. Nothing in
+  `QuadSourceIntegral`/`QuadSourcePolicy` should be changed for it: a threshold there would
+  re-decide from $\theta_G$ alone what the driver decides from the composed phase, which is defect
+  A4 in weaker form.
 
-- **[08-levin-fallback-cost-ratio]** *(opened by prompt 08, 2026-09-09)* — prompt 08 §6 measured
-  the case the retired `LEVIN_MIN_2PI_CYCLES = 10` gate used to send to direct quadrature ("$G$
-  oscillatory, both $T$ smooth", $\theta_G$ turning over 3.5–5.4 cycles, realistic fixtures,
-  `rtol = 1e-8`): the new single-group `adaptive_levin_sincos` call (total-variation gate →
-  Clenshaw–Curtis on every one of its 20–28 regions) is **2.65–3.56× slower in wall-clock** than
-  the old `WKB_quad_integral`, above the README §4.1 / prompt 08 §6 trigger of 3× on the three
-  $b=0$ rows (3.31, 3.51, 3.56; the $b=0.2$ rows give 3.19, 2.82, 2.65), while doing only
-  **1.00–1.44× the integrand evaluations** — the excess is the driver's per-region overhead on
-  cheap fixture integrands, and would shrink towards the evaluation ratio on production
-  integrands. Accuracy is the same (both at the fixture floor, 2e-5–1.6e-4). Full table: log 08
-  deviation 10. **Impact:** the orchestrator stops; the user decides whether prompt 10
-  reinstates a cycle-count threshold through `QuadSourcePolicy.Levin_threshold` (log 08 "State
-  handed to the next prompt" item 7 says where it would go and warns against reviving
-  `WKB_quad_integral`, which read $f$ from the spline below its range) or accepts the cost and
-  removes the dead threshold. **Next step:** the user's call, then prompt 10.
+- **[10-classify-levin-keyerror]** *(opened by prompt 10, 2026-09-09)* — latent, pre-existing, and
+  noticed while adding prompt 10 §4's comment: `GkSourcePolicyData._classify_Levin` (`:135-199`)
+  sets `payload["Levin_z"]` only inside its `for z_source` loop, so a Green's function whose
+  $|d\theta_G/d\log(1+z)|$ never exceeds `policy.Levin_threshold` anywhere in its WKB range makes
+  `apply_GkSource_policy:58` raise `KeyError: 'Levin_z'` instead of storing `None` (the
+  early-return path at `:154` does supply `None`). Not fixed: prompt 10 may only comment on that
+  file, and no row was available to test reachability. **Impact:** the `--gk-source-policy-queue`
+  stage would fail loudly, not silently, if such a mode exists; prompt 12 should recognise the
+  exception if it appears. **Next step:** a one-line `payload.setdefault("Levin_z", None)` in a
+  prompt that is allowed to edit `GkSourcePolicyData.py`.
 
 - **[08-handover-clamp-error]** *(opened by prompt 08, 2026-09-09)* — in production the WKB grid
   of each $T_k$ starts at the largest source-grid point *below* `z_init` (`main.py:695-697`;
@@ -288,6 +292,37 @@ Traceability from the audit's finding IDs to the prompt that discharges them.
 ---
 
 ## 4. Resolved issues
+
+- **[08-pipeline-non-runnable-until-10]** *(opened by prompt 08, 2026-09-09)* —
+  `QuadSourceIntegral.compute()` requires the payload keys `Tq_numeric`, `Tq_WKB`,
+  `Tr_numeric`, `Tr_WKB` (the `TkNumericIntegration`/`TkWKBIntegration` objects for $q$ and $r$)
+  and raises `RuntimeError` naming any that are missing, while `main.py` supplied only
+  `GkPolicy`, `source`, `b`, `Bessel_0pt5`, `Bessel_2pt5`. **Impact:** the
+  `--quad-source-integral-queue` stage could not start between prompts 08 and 10. This replaced
+  `[06-qsi-blocked-until-08]` below: the stage was already non-runnable, for a different reason,
+  since prompt 06.
+  **Resolved by prompt 10 (2026-09-09):** the QuadSourceIntegral stage of `main.py` now looks up
+  both transfer-function objects for every distinct $q$ and $r$ of the batch (two new
+  `RayWorkPool` queues, fully populated — no `_do_not_populate`), caches them by
+  `wavenumber_exit_time.store_id` and assembles the nine-key payload in the new module-level
+  `build_QuadSourceIntegral_payload`. **The path has not been executed**: no Ray cluster or
+  datastore was available, so prompt 12's live run is its first exercise.
+
+- **[08-levin-fallback-cost-ratio]** *(opened by prompt 08, 2026-09-09)* — prompt 08 §6 measured
+  the case the retired `LEVIN_MIN_2PI_CYCLES = 10` gate used to send to direct quadrature ("$G$
+  oscillatory, both $T$ smooth", $\theta_G$ turning over 3.5–5.4 cycles, realistic fixtures,
+  `rtol = 1e-8`): the new single-group `adaptive_levin_sincos` call (total-variation gate →
+  Clenshaw–Curtis on every one of its 20–28 regions) is **2.65–3.56× slower in wall-clock** than
+  the old `WKB_quad_integral`, above the README §4.1 / prompt 08 §6 trigger of 3× on the three
+  $b=0$ rows (3.31, 3.51, 3.56; the $b=0.2$ rows give 3.19, 2.82, 2.65), while doing only
+  **1.00–1.44× the integrand evaluations**. Accuracy is the same (both at the fixture floor,
+  2e-5–1.6e-4). Full table: log 08 deviation 10.
+  **Resolved by the user's decision, executed in prompt 10 (2026-09-09):** accept §6 as it stands.
+  No threshold is reinstated — `QuadSourcePolicy` stays persisted and threaded but read by nothing
+  (its new class docstring says why), and prompt 08's dead `LEVIN_MIN_2PI_CYCLES`/
+  `LEVIN_MIN_PHASE_DIFF` are deleted. The requested remedy — a driver that routes a weakly
+  oscillatory integrand to Clenshaw–Curtis wholesale at the outset — is
+  `[10-levin-wholesale-cc-fallback]` in §3, out of scope here.
 
 - **[06-qsi-blocked-until-08]** *(opened by prompt 06, 2026-09-08)* — all three regions of
   `compute_QuadSource_integral` read `source_f.source(log_z_source, z_is_log=True)`
@@ -387,3 +422,18 @@ Traceability from the audit's finding IDs to the prompt that discharges them.
     the payload's `b` (`_check_bessel_order`, tolerance `BESSEL_ORDER_CHECK_TOL = 1e-3` of the
     local envelope), and `metadata["partition"]` carries `skipped` and
     `min_subinterval_log_width`. See `logs/09-qsi-errors-schema-tolerances.md`.
+11. **`main.py`'s QuadSourceIntegral stage assembles its payload in one module-level function**,
+    `build_QuadSourceIntegral_payload(z_response, k, q, r, Gk_cache, source_cache,
+    Tk_numeric_cache, Tk_WKB_cache, b_value, Bessel_0pt5_proxy, Bessel_2pt5_proxy)` (prompt 10),
+    next to prompt 04's `closes_triangle`. It supplies all nine
+    `REQUIRED_PAYLOAD_KEYS` and raises after the stage's `!! MISSING DATA WARNING` prints if any
+    ingredient is unavailable. The stage requires **validated, fully populated**
+    `TkNumericIntegration` *and* `TkWKBIntegration` rows (no `_do_not_populate`: `TkSourceFunctions`
+    reads `.values`) with the six production tags for every mode appearing as $q$ or $r$ — a
+    scoped run must complete both Tk stages for all of them. The payload is ~15–30 % larger than
+    before and the four `Tk` objects are re-serialised per work item, which makes the object-store
+    TODO at `main.py:2618-2623` a better investment than it was. `main.py` cannot be imported;
+    `ComputeTargets/tests/test_main_plumbing.load_main_py_functions` extracts a named top-level
+    function from it with `ast` instead. No `QuadSourcePolicy` reaches the integrator, by decision
+    (§4 `[08-levin-fallback-cost-ratio]`); `GkSourcePolicyData.Levin_z` and both
+    `Levin_threshold` fields are diagnostic only. See `logs/10-qsi-main-plumbing.md`.
