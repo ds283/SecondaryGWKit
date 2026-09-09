@@ -4,7 +4,9 @@
 **Files:** `ComputeTargets/GkWKBIntegration.py`, `ComputeTargets/WKB_Gk.py`,
 `Quadrature/integrators/WKB_phase_function.py`, `LiouvilleGreen/WKBtools.py`,
 `LiouvilleGreen/phase_spline.py`; consumers `ComputeTargets/GkSource.py` (phase rectifier) and
-`ComputeTargets/GkSourcePolicyData.py:573-697`.
+`ComputeTargets/GkSourcePolicyData.py:587-711` (line numbers as on `main` at `d249baa`; 14 lower at `f06f587`). §12 extends the review to the transfer-function
+analogue: `ComputeTargets/TkWKBIntegration.py`, `ComputeTargets/WKB_Tk.py`, `TkNumericIntegration.py`
+and the consumer `ComputeTargets/TkSourceFunctions.py`.
 **Out of scope:** the numeric→WKB hand-over (where it sits, how wide the overlap is, continuity across
 it). Everything below starts inside the WKB regime with specified initial data.
 
@@ -22,6 +24,8 @@ $PY $D/t1_span.py; $PY $D/t2_solver.py; $PY $D/t3_dense.py; $PY $D/t4_primitive.
 $PY $D/t4b_production_real.py 1e5; $PY $D/t4b_production_real.py 3e8
 $PY $D/t5_spline.py; $PY $D/t6_sweep.py; $PY $D/t7_jitter.py; $PY $D/t8_qcd.py
 $PY $D/tn1_numeric_rad.py; $PY $D/tn2_numeric_real.py
+$PY $D/tk1_span_residual.py; $PY $D/tk2_production_real.py 1e5; $PY $D/tk2_production_real.py 3e8
+$PY $D/tk3_radiation_LG.py; $PY $D/tk5_numeric_rad.py; $PY $D/tk5b_atol.py; $PY $D/tk6_dense_real.py
 ```
 
 Python 3.12, SciPy 1.15.2, NumPy 2.2.4, mpmath 1.3.0. No Ray, no datastore: the production functions
@@ -76,6 +80,15 @@ directly with a duck-typed model. References are mpmath (40 digits) on the same 
    design and §7 is that design; its "optional" leading-term split turns out to be the whole
    answer once τ accuracy and residual size are measured, and the comparative ODE-versus-quadrature
    study it calls for is settled by the numbers in §2 and §7 (§11).
+
+8. **The transfer-function WKB shares the defects and the fix, with three adjustments** (§12). It uses
+   the same phase solver: 2.0 rad (k=1e5) and 5.1e3 rad (k=3e8) error at z=0.1 on the real background,
+   with a late-time jump that is stepping error of the Q equation itself. Its phase is the
+   sound-horizon integral k∫c_s dz/H to within −0.09 rad on both models, so a second k-independent
+   table replaces its solver, and a third replaces its friction ODE. Not shared: it is one object per
+   k (no cross-object stitching), its LG truncation floor is ~1e-4 of the envelope at the production
+   hand-over (Gk's is zero in radiation), and its numeric run is limited to 1e-5 of the envelope by
+   a mis-scaled absolute tolerance, not by the solver.
 
 Smaller findings: the `sin_coeff` "sign fix" is a provable no-op; the zero-length check compares a
 redshift to the ODE tolerance; stage 1's event restart passes a 1-element array into `math.fmod` and
@@ -254,7 +267,7 @@ Conclusions:
 - `_build_log_chunks_positive` has no progress guard: start=1 with `chunk_logstep` < 2 gives
   end=round(logstep+1)=2, next start=round(1.0)=1, forever (by inspection; production uses 125,
   which progresses).
-- The claim in log 05 of "≤125 cycles per chunk" and the comment at `GkSourcePolicyData.py:657-661`
+- The claim in log 05 of "≤125 cycles per chunk" and the comment at `GkSourcePolicyData.py:676-680`
   are both false. The `MINIMUM_SPLINE_DATA_POINTS` merge removes any bound on chunk span.
 
 Chunking should be removed (`chunk_step=None, chunk_logstep=None`), which makes `phase_spline` a
@@ -555,3 +568,170 @@ the ODE, because the leading term is smooth regardless. The T_k analogue (a soun
 
 In short: right design, wrong emphasis, and a study in place of a decision, because it stopped
 short of measuring the two quantities that settle the question.
+
+---
+
+## 12. The transfer-function analogue: `TkWKBIntegration`
+
+Added 2026-09-09. Scripts `tk1_span_residual.py`, `tk2_production_real.py`, `tk3_radiation_LG.py`,
+`tk5_numeric_rad.py`, `tk5b_atol.py`, `tk6_dense_real.py`.
+
+### 12.1 What is shared and what is not
+
+`TkWKBIntegration.compute()` calls the same `WKB_phase_function` as the Green's function, with
+`Tk_omegaEff_sq`/`Tk_d_ln_omegaEff_dz` in place of the Gk pair and one addition: a separate friction
+ODE, `integrate_friction_function`, integrating F' = (3/2)(1+c_s²)/(1+z). `store()` runs the same
+(B, δ) algebra with the friction term (ε − 3(1+c_s²))/(1+z) and the same `shift_theta_sample`, and
+forms T = √(H_i/(Hω)) e^F B sin(θ+δ). So stages 1 and 2, the resets, Q, the `t_eval` interpolation,
+the NumPy deprecation (§8.2), the no-op sign fix and the stale comments are all inherited verbatim.
+
+Structural differences: **one object per k**, not per (k, z_source), integrated from the numeric stop
+point (found at k/(aH) ≈ 27, i.e. x_T = k c_s/(aH) ≈ 15.5) down to z_end on the *source* grid
+(100/decade, 933–1280 samples). There is therefore no cross-object cycle stitching and no
+rectifier (§8.3 does not arise), and the total cost is 50 objects per model rather than ~65,000.
+
+Formulas. Removing the friction p = (ε − 3(1+w))/s from T'' + pT' + qT = 0 gives
+ω² = q − p'/2 − p²/4 = w k²/H² + (3w'/2 − ε'/2)/s + [a/2 + εa/2 − 3ε/2 − ε²/4 − a²/4]/s² with
+a = 3(1+w), which is term-for-term what `Tk_omegaEff_sq` evaluates; `Tk_d_ln_omegaEff_dz` agrees with a
+central finite difference of ½ln ω² to 3e-9–1e-8 relative at z = 1e9…0.5 (the difference is the
+finite-difference noise). Both confirm audit TK-report rows R23–R30.
+
+### 12.2 Production spans and the leading term (`tk1_span_residual.py`)
+
+With x_T = k c_s/(aH) and the split ω_T² = w k²/H² + C_T, θ_T = k[τ_s(z_i) − τ_s(z)] + ρ_T with the
+**sound-horizon primitive** τ_s = ∫c_s dz/H and ρ_T = ∫C_T/(ω_T + k c_s/H) dz. From the 3-e-fold
+point to z = 0.1:
+
+| model | k | θ_T span [rad] | ρ_T [rad] | F(0.1) | x_T at z=0.1 | ε·θ | 1e-8·θ |
+|---|---|---|---|---|---|---|---|
+| LambdaCDM | 1e5 | 6.175e7 | −0.0863 | 38.9 | 4.8e6 | 1.4e-8 | 0.6 |
+| LambdaCDM | 1e7 | 6.175e9 | −0.0863 | 48.1 | 4.8e8 | 1.4e-6 | 62 |
+| LambdaCDM | 3e8 | 1.852e11 | −0.0863 | 54.9 | 1.44e10 | 4.1e-5 | 1.9e3 |
+| QCD | 1e5 | 6.174e7 | −0.0887 | 39.1 | 4.8e6 | 1.4e-8 | 0.6 |
+| QCD | 1e8 | 6.174e10 | −0.0979 | 53.2 | 4.8e9 | 1.4e-5 | 620 |
+| QCD | 3e8 | 1.852e11 | −0.0933 | 55.4 | 1.44e10 | 4.1e-5 | 1.9e3 |
+
+The spans are 22× smaller than the Green's function's (c_s = 1/√3 in radiation, and c_s → 0.01 after
+equality, so x_T actually *falls* below z ≈ 1). The residual is the same −0.09 rad for every k: it is
+dominated by the radiation-era term, which in the exact radiation control (§12.4) is
+ρ_T = 1/x_i − 1/x, i.e. 0.05 rad from the 3-e-fold start, plus matter-era contributions. Unlike
+the Green's function's 1e-8 rad, ρ_T is not negligible, but it is smooth, k-independent to a few
+per cent, and cheap. The friction integral F is likewise a smooth **k-independent** function.
+
+### 12.3 The production path on the real background (`tk2_production_real.py`, `tk6_dense_real.py`)
+
+LambdaCDM, `WKB_phase_function` with the Tk frequency and `friction_RHS`, from z_e3 to z = 0.1 on
+the 100/decade source grid, production tolerances. Reference: mpmath quadrature of k c_s/H plus the
+rationalised residual.
+
+**k = 1e5/Mpc** (stage 1: 35,626 evaluations, 508 resets; stage 2: 1,061; friction: 1,811; 1.1 s):
+
+| z | x_T | θ_ref [rad] | phase error [rad] | relative | δF |
+|---|---|---|---|---|---|
+| 3.8e8 | 70 | −58.1 | 2.3e-8 | 4.0e-10 | 2.4e-9 |
+| 5.5e4 | 4.6e5 | −4.75e5 | 1.9e-4 | 4.0e-10 | −6.8e-8 |
+| 268 | 7.3e6 | −2.06e7 | 1.1e-2 | 5.2e-10 | −1.1e-7 |
+| 6.8 | 7.8e6 | −4.78e7 | −4.4e-2 | 9.3e-10 | −1.8e-7 |
+| 0.32 | 5.6e6 | −6.08e7 | **2.17** | 3.6e-8 | −1.8e-7 |
+| 0.1 | 4.8e6 | −6.17e7 | **2.01** | 3.3e-8 | −2.3e-7 |
+
+**k = 3e8/Mpc** (stage 1: 1,932,588 evaluations, 28,343 resets; stage 2: 1,697; 58 s):
+
+| z | x_T | θ_ref [rad] | phase error [rad] | relative |
+|---|---|---|---|---|
+| 3.0e6 | 2.7e7 | −2.71e7 | 1.7e-4 | 6.4e-12 |
+| 2.6e5 (end of stage 1) | 3.1e8 | −3.10e8 | 1.5e-5 | 4.9e-14 |
+| 2.2e4 (stage 2) | 3.1e9 | −3.33e9 | 0.42 | 1.2e-10 |
+| 169 | 2.3e10 | −7.18e10 | −105 | 1.5e-9 |
+| 13.8 | 2.4e10 | −1.28e11 | −193 | 1.5e-9 |
+| 0.1 | 1.4e10 | −1.85e11 | **5.1e3** | 2.8e-8 |
+
+Same picture as §4: stage 1 at 1e-9 falling to 5e-14 relative, stage 2 at 1e-9, and the phase
+unresolved below z ≈ 1e3 for the largest k. The friction integral carries a relative amplitude
+error of 2.3e-7 (k=1e5) to 4.1e-7 (k=3e8), set by `rtol`.
+
+**The late-time jump is the Q equation, not dense output.** Between z ≈ 2 and z ≈ 1.5 the error
+jumps from −0.8 to +2.0 rad (k=1e5) and by a factor 30 (k=3e8). Re-solving the stage-2 Q ODE with
+`dense_output=True` shows the 2.0 rad already present at the *accepted step endpoints*
+(z = 1.54, 0.80, 0.13), so it is stepping error, made in one or two long steps where c_s k/H turns
+over in the matter/Λ era. A direct θ' = −ω integration at the same tolerance gives −0.083 rad at the
+same points with fewer evaluations (788 vs 1139). This is §3's accuracy penalty of Q, here 25× in
+one step.
+
+### 12.4 The LG truncation floor for T (`tk3_radiation_LG.py`)
+
+Exact radiation (w = 1/3, H ∝ s², τ = 1/s), where the exact transfer function is
+T = 3(sin x − x cos x)/x³ and the LG frequency is ω² = k²/(3s⁴) − 2/s². The full `store()`
+reconstruction (exact initial data at x_i, the (B, δ) algebra, θ = ∫ω, F = 2 ln(s/s_i),
+√(H_i/(Hω))) against the exact T, relative to the envelope 3√(1+x²)/x³:
+
+| x_init | max |δT|/env over x_i…1e4 | frozen amplitude offset at x=1e4 | ρ_T = θ − (x_i − x) |
+|---|---|---|---|
+| 24 | **3.8e-5** | 1.5e-6 | 0.0416 (= 1/x_i − 1/x) |
+| 50 | 4.1e-6 | 1.0e-7 | 0.0199 |
+| 100 | 5.1e-7 | 3.7e-9 | 0.0099 |
+| 400 | 7.8e-9 | 1.3e-11 | 0.0024 |
+
+The error scales as x_i⁻³ and is largest at the start; matching at x_i also freezes in a relative
+amplitude offset of order x_i⁻⁴. The production hand-over is at x_T ≈ 15.5, where the x_i⁻³ law
+gives ~1.4e-4 (extrapolated). This is the transfer function's analogue of §6: where Gk's LG is exact
+in radiation, Tk's is not, and this floor is above everything the τ-primitive would leave. It is the
+regime the bessel-remedial campaign's exact θ = x + c_ν + r_ν(x) representation handles exactly for
+constant w; audit TK-8(e) measured the same effect (3.7e-4–5.6e-3 in T at 3 e-folds).
+
+### 12.5 The numeric region (`tk5_numeric_rad.py`, `tk5b_atol.py`)
+
+Exact radiation, T = 1, T' = 0 at 5 e-folds outside the horizon, production grid and stop window:
+
+| initial data | (atol, rtol) | RHS evals | max δT/env |
+|---|---|---|---|
+| T=1, T'=0 (production) | (1e-10, 1e-8) | 6476 | 1.1e-5 |
+| exact | (1e-10, 1e-8) | 6401 | **1.1e-5** |
+| exact | (1e-13, 1e-8) | 7379 | 3.6e-7 |
+| exact | (1e-16, 1e-8) | 7829 | 1.5e-7 |
+| T=1, T'=0 (production) | (1e-13, 1e-11) | 11777 | 2.5e-6 |
+| exact | (1e-13, 1e-11) | 11681 | 2.3e-8 |
+
+At production tolerances the Tk numeric run is 50× less accurate than Gk's (§10) and the cause is
+the **absolute tolerance**: T decays as 3/x², so |T| is 1.2e-2 at the stop point and ~1e-5 deeper in
+the window, and `atol = 1e-10` there is a 1e-5 *relative* tolerance. Dropping `atol` to 1e-13 buys a
+factor 30 for 15 % more evaluations. Once that is done the super-horizon initial condition becomes
+the floor at 2.5e-6 (audit TK-7), removable with the series T ≈ 1 − x²/10. `GkNumericIntegration`
+is unaffected because |G| is enormous in these units and `atol` never binds. The §10.2 cleanup
+items apply to the Tk integrator identically (same `numeric_with_phase_cut`, same per-RHS
+diagnostic, same log₁₀/ln slip).
+
+### 12.6 The consumer
+
+`TkSourceFunctions._build_WKB` splines the stored phase with `phase_spline(chunk_logstep=125)`, so
+§5 applies verbatim: no benefit, inflated ordinates, a switch discontinuity. Its interpolation error
+is h⁴x_T/384 in the local x_T: at 100/decade, 3.5e-3 rad at k=1e5 (x_T = 4.8e6 at z=0.1) and 10 rad
+at k=3e8 (1.4e10), extrapolated from the law measured to 1e7 in §5. Prompt 05's decision to supply
+ω in closed form rather than the spline derivative was the right one. It also splines F from the
+stored samples; with a tabulated F that spline disappears.
+
+### 12.7 Does one fix fit both?
+
+Yes, with three adjustments and one caveat.
+
+- **Two more k-independent tables.** The Green's function needs τ = ∫dz/H. The transfer function
+  needs τ_s = ∫c_s dz/H and F = (3/2)∫(1+c_s²)dz/(1+z). All three are smooth, non-oscillatory,
+  built once per model by the same Gauss–Legendre-on-the-grid machinery (§7), and evaluated off-grid
+  the same way. The friction ODE and its 2–4e-7 amplitude error go away.
+- **The residual is not negligible for T.** ρ_T ≈ −0.09 rad must be included; it is smooth,
+  O(0.1) with O(0.1) derivatives, so it can be splined or quadratured per k at negligible cost.
+  Whether a fixed-order Gauss rule for ρ_T converges across the QCD model's spline knots is the same
+  open test as for ρ_G (§7, §11).
+- **No stitching layer.** One object per k means `shift_theta_sample`'s rebase and the `GkSource`
+  rectifier have no Tk counterpart; the Tk path is simpler and the primitive drops straight in.
+- **Caveat: the physical floor differs.** Gk's LG is exact in radiation; Tk's is not, and at the
+  production hand-over x_T ≈ 15.5 its truncation error is ~1e-4 of the envelope (§12.4), with a
+  frozen amplitude offset of order 1e-5. Below that no numerical improvement is visible. The
+  remedies are the bessel-remedial exact constant-w representation for the radiation era, a
+  higher-order LG frequency, or a later hand-over (x_T = 50 gives 4e-6). This is a T_k-only decision.
+- **Phase groups.** θ_G ± θ_q ± θ_r = kτ ± qτ_s ± rτ_s. The leading terms of the two transfer
+  functions cancel exactly on wavenumbers; the Green's-function term uses a different primitive, so
+  G-versus-T cancellation is a difference of two floating-point-floor-accurate quantities rather than
+  exact. Since x_T ≤ 1.4e10 the floor on that difference is ≤ 4e-5 rad, well below ρ_T.
+
+Fix the `atol` scaling in the Tk numeric run independently; it is a one-constant change.
