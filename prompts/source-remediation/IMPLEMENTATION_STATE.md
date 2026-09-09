@@ -2,7 +2,7 @@
 
 **Campaign:** [`README.md`](README.md) · **Source audit:** [`docs/spec-code-audit-2026-09.md`](../../docs/spec-code-audit-2026-09.md)
 **Baseline commit:** `e9a43a2` (`main`, clean)
-**Last updated:** 2026-09-08 — prompt 07 complete.
+**Last updated:** 2026-09-09 — prompt 08 complete.
 
 > **Maintenance rule.** Every prompt updates this file *in its own commit*, before committing.
 > Set your row's status, fill in the commit SHA, model and log link, update the item-level table,
@@ -41,7 +41,7 @@ Legend: ⬜ not started · 🟡 in flight · ✅ complete · ⚠️ complete wit
 | # | Prompt | Items | Model | Status | Commit | Log |
 |---|---|---|---|---|---|---|
 | 07 | [Phase-group algebra](07-phase-group-algebra.md) | A4 (1/3) | Fable | ⚠️ | *"Add the phase-group decomposition of the source integrand"* (SHA not embedded, per prompt 01 log deviation 4) | [`logs/07-phase-group-algebra.md`](logs/07-phase-group-algebra.md) |
-| 08 | [`QuadSourceIntegral` phase-group integration](08-qsi-phase-group-integration.md) | A4 (2/3), A2 (3/3) | Fable | ⬜ | | |
+| 08 | [`QuadSourceIntegral` phase-group integration](08-qsi-phase-group-integration.md) | A4 (2/3), A2 (3/3) | Fable | ⚠️ | *"Partition the source time integral and Levin-integrate its phase groups"* (SHA not embedded, per prompt 01 log deviation 4) | [`logs/08-qsi-phase-group-integration.md`](logs/08-qsi-phase-group-integration.md) |
 | 09 | [Errors, schema, tolerances](09-qsi-errors-schema-tolerances.md) | B5, B6, B7, B8, B11 | Opus | ⬜ | | |
 | 10 | [`main.py` plumbing](10-qsi-main-plumbing.md) | A4 (3/3) | Opus | ⬜ | | |
 
@@ -52,7 +52,7 @@ Legend: ⬜ not started · 🟡 in flight · ✅ complete · ⚠️ complete wit
 | 11 | [Spec annotations](11-spec-annotations.md) | audit §6 | Sonnet | ⬜ | | |
 | 12 | [Verification](12-verification.md) | audit §4; campaign | Opus | ⬜ | | |
 
-**Progress:** 6 / 12 complete.
+**Progress:** 7 / 12 complete.
 
 ---
 
@@ -63,9 +63,9 @@ Traceability from the audit's finding IDs to the prompt that discharges them.
 | ID | Severity | Description | Prompt | Status |
 |---|---|---|---|---|
 | A1 | **DEFECT, physics** | `LambdaCDM_GenericEOS.wPerturbations` divides by the total density incl. $\rho_\Lambda$ | 01 | ✅ |
-| A2 | **DEFECT, representation** | `QuadSource` splines the oscillating source; unusable beyond ~95 cycles | 05, 06, 08 | 🟡 (2/3: `TkSourceFunctions` shipped; `QuadSource` now splines $f$ only where both $T_k$ are numeric) |
+| A2 | **DEFECT, representation** | `QuadSource` splines the oscillating source; unusable beyond ~95 cycles | 05, 06, 08 | ✅ (3/3: `QuadSourceIntegral` reads the $f$ spline only on the both-numeric region and assembles the oscillatory region from `TkSourceFunctions` via `phase_groups`; nothing splines an oscillation any more) |
 | A3 | **DEFECT, regression** | `compute_quad_source` walks the full grid against a both-ends-truncated $T_k$ grid → `IndexError` | 06 | ✅ |
-| A4 | **DEFECT, known** | Levin call receives only $\theta_G$; no $T_q,T_r$ input to the Levin decision | 07, 08, 10 | 🟡 (1/3: `phase_groups` shipped — the $\theta_G\pm\theta_q\pm\theta_r$ decomposition exists and is verified; nothing consumes it yet) |
+| A4 | **DEFECT, known** | Levin call receives only $\theta_G$; no $T_q,T_r$ input to the Levin decision | 07, 08, 10 | 🟡 (2/3: `QuadSourceIntegral` partitions at every factor's hand-over and runs one Levin call per phase group; the $\theta_G$-only gates are gone. Remaining: `main.py` must supply the four `Tk` payload keys — prompt 10) |
 | A5 | **DEFECT, known** | 92 % of scheduled $(k,q,r)$ triples are not triangles | 04 | ⬜ |
 | A6 | **DEFECT, policy** | `"WKB_minimal"` tests `numeric_clearance` | 02 | ✅ |
 | A7 | **DEFECT, accuracy** | `_build_derivative` end bias (ε″ 30 % at the $z=0.1$ end for GenericEOS models) | 03 | ✅ |
@@ -79,7 +79,7 @@ Traceability from the audit's finding IDs to the prompt that discharges them.
 | B8 | error bound | `total` has no error bound | 09 | ⬜ |
 | B9 | consistency | `Levin_z` θ-spline chunking differs from the evaluated spline | 02 (evaluate) | ✅ (left as-is, commented) |
 | B10 | cosmetic | `QuadSource` spline wrapper labelled `"T_k"` | 02 | ✅ |
-| B11 | robustness | region-nonempty guards use a ratio in $z$ not $1+z$ | 09 | ⬜ |
+| B11 | robustness | region-nonempty guards use a ratio in $z$ not $1+z$ | 09 | ⬜ (the original sites were rewritten by 08; the new partition guard is in $\log(1+z)$ — 09 confirms and closes) |
 | §4.1 | UNVERIFIED | continuity of $G$ at `crossover_z` | 12 | ⬜ |
 | §4.2 | UNVERIFIED | reachability of A6 | 12 | ⬜ |
 | §4.3 | UNVERIFIED | whether `has_WKB_violation` modes should be rejected | 12 (measure only) | ⬜ |
@@ -165,20 +165,6 @@ Traceability from the audit's finding IDs to the prompt that discharges them.
   to horizon crossing shortens the oscillatory part of the smooth region — or
   `source_samples_per_log10z`. Neither was touched here.
 
-- **[06-qsi-blocked-until-08]** *(opened by prompt 06, 2026-09-08)* — all three regions of
-  `compute_QuadSource_integral` read `source_f.source(log_z_source, z_is_log=True)`
-  (`QuadSourceIntegral.py:958, 1028, 1102`), and `ZSplineWrapper` raises `RuntimeError` more
-  than 1 % (in $\log(1+z)$) below its `min_z` (`spline_wrappers.py:50-53`). Before prompt 06
-  that call returned a meaningless spline value below the hand-over; it now raises. **Impact:**
-  between prompt 06 and prompt 08 the `--quad-source-integral-queue` stage cannot complete for
-  any $(k,q,r,z_{\rm resp})$ whose integration range reaches below
-  `QuadSource.numeric_region[1]` — i.e. essentially all of them at production settings. This is
-  README §4's stopping-point note for 06 made concrete, and it fails loudly rather than storing
-  a wrong number. `QuadSourceIntegral.py:1424` checks only `source.z_sample.max.z`, which the
-  truncation does not change, so the ingredient compatibility check still passes.
-  **Next step:** prompts 07 and 08, which assemble the region below the hand-over from
-  `TkSourceFunctions` instead of from a sampled $f$. Nothing else closes it.
-
 - **[07-lg-derivative-truncation-at-handover]** *(opened by prompt 07, 2026-09-08)* — the
   derivative pieces `TkSourceFunctions` supplies in closed form, `omega = sqrt(Tk_omegaEff_sq)`
   and the R23/R24 `dlnM_dz`, are the Liouville–Green frequency and amplitude derivative, and
@@ -213,6 +199,53 @@ Traceability from the audit's finding IDs to the prompt that discharges them.
   from. **Next step:** if the guarantee is ever wanted, a linear `chunk_step` (or a log step
   much smaller than 125) in `phase_spline`; `LiouvilleGreen/` is out of scope for this campaign.
 
+- **[08-pipeline-non-runnable-until-10]** *(opened by prompt 08, 2026-09-09)* —
+  `QuadSourceIntegral.compute()` now requires the payload keys `Tq_numeric`, `Tq_WKB`,
+  `Tr_numeric`, `Tr_WKB` (the `TkNumericIntegration`/`TkWKBIntegration` objects for $q$ and $r$)
+  and raises `RuntimeError` naming any that are missing. `main.py:2474-2479` supplies only
+  `GkPolicy`, `source`, `b`, `Bessel_0pt5`, `Bessel_2pt5`. **Impact:** the
+  `--quad-source-integral-queue` stage cannot start between prompts 08 and 10. This replaces
+  `[06-qsi-blocked-until-08]` (now §4): the stage was already non-runnable, for a different
+  reason, since prompt 06. **Next step:** prompt 10 wires the four objects into the payload.
+
+- **[08-levin-fallback-cost-ratio]** *(opened by prompt 08, 2026-09-09)* — prompt 08 §6 measured
+  the case the retired `LEVIN_MIN_2PI_CYCLES = 10` gate used to send to direct quadrature ("$G$
+  oscillatory, both $T$ smooth", $\theta_G$ turning over 3.5–5.4 cycles, realistic fixtures,
+  `rtol = 1e-8`): the new single-group `adaptive_levin_sincos` call (total-variation gate →
+  Clenshaw–Curtis on every one of its 20–28 regions) is **2.65–3.56× slower in wall-clock** than
+  the old `WKB_quad_integral`, above the README §4.1 / prompt 08 §6 trigger of 3× on the three
+  $b=0$ rows (3.31, 3.51, 3.56; the $b=0.2$ rows give 3.19, 2.82, 2.65), while doing only
+  **1.00–1.44× the integrand evaluations** — the excess is the driver's per-region overhead on
+  cheap fixture integrands, and would shrink towards the evaluation ratio on production
+  integrands. Accuracy is the same (both at the fixture floor, 2e-5–1.6e-4). Full table: log 08
+  deviation 10. **Impact:** the orchestrator stops; the user decides whether prompt 10
+  reinstates a cycle-count threshold through `QuadSourcePolicy.Levin_threshold` (log 08 "State
+  handed to the next prompt" item 7 says where it would go and warns against reviving
+  `WKB_quad_integral`, which read $f$ from the spline below its range) or accepts the cost and
+  removes the dead threshold. **Next step:** the user's call, then prompt 10.
+
+- **[08-handover-clamp-error]** *(opened by prompt 08, 2026-09-09)* — in production the WKB grid
+  of each $T_k$ starts at the largest source-grid point *below* `z_init` (`main.py:695-697`;
+  `TkWKBIntegration` stores no sample at `z_init`), so `TkSourceFunctions.WKB_region[0]` sits up
+  to one grid step below `crossover_z` and no accessor of that factor is evaluable in between
+  (§5 note 6). `QuadSourceIntegral` partitions at `crossover_z` and, as note 6 prescribes, clamps
+  the LG accessors to `WKB_region[0]` across the gap (allowed up to
+  `HANDOVER_CLAMP_MAX_GRID_STEPS = 1.5` mean grid steps; the gap is recorded in
+  `metadata["partition"]`). Measured on the production-shaped fixture
+  (`Fixture(drop_first_WKB_sample=True)`, $b=0$, $x_{\rm resp}=100$): a one-step gap
+  (2.3e-2 in $\log(1+z)$) changes `total` by **5.1e-3** — at $x\approx19$ the held phase is
+  wrong by up to 0.44 rad over the gap. The error scales as gap$^2$, so a uniformly distributed
+  gap averages ~1/3 of this. **This is now the largest single error term in the chain**, an order
+  of magnitude above the spline and LG floors (`[06-source-spline-residual-vs-handover]`,
+  `[07-lg-derivative-truncation-at-handover]`). **Impact:** every production
+  `QuadSourceIntegral`; prompt 12 must expect residuals of this size against `analytic_rad`
+  and should report the recorded `clamp_gaps_log1pz`. **Next step:** the user's choice among
+  (a) an LG sample at `z_init` (main.py / TkWKBIntegration — but `z_init` is not a stored
+  `redshift`), (b) the overlap of `docs/lg-phase-and-handover-followup-2026-09.md` §1.4, or
+  (c) a first-order Taylor extension of the LG phase and amplitude across the gap using the
+  closed-form `omega`/`dlnM_dz` inside `QuadSourceIntegral`'s clamp adapter (estimated ~100×
+  smaller error; log 08 deviation 2). None is in prompts 09–10's scope.
+
 > Add an entry here whenever a prompt finishes with something unresolved: a verification step that
 > could not be run, an assumption that could not be confirmed, a deviation that a later prompt has
 > to work around, a measured cost that changes a later prompt's decision. Format:
@@ -226,7 +259,24 @@ Traceability from the audit's finding IDs to the prompt that discharges them.
 
 ## 4. Resolved issues
 
-*(none yet)*
+- **[06-qsi-blocked-until-08]** *(opened by prompt 06, 2026-09-08)* — all three regions of
+  `compute_QuadSource_integral` read `source_f.source(log_z_source, z_is_log=True)`
+  (`QuadSourceIntegral.py:958, 1028, 1102`), and `ZSplineWrapper` raises `RuntimeError` more
+  than 1 % (in $\log(1+z)$) below its `min_z` (`spline_wrappers.py:50-53`). Before prompt 06
+  that call returned a meaningless spline value below the hand-over; it now raises. **Impact:**
+  between prompt 06 and prompt 08 the `--quad-source-integral-queue` stage cannot complete for
+  any $(k,q,r,z_{\rm resp})$ whose integration range reaches below
+  `QuadSource.numeric_region[1]` — i.e. essentially all of them at production settings. This is
+  README §4's stopping-point note for 06 made concrete, and it fails loudly rather than storing
+  a wrong number. `QuadSourceIntegral.py:1424` checks only `source.z_sample.max.z`, which the
+  truncation does not change, so the ingredient compatibility check still passes.
+  **Next step:** prompts 07 and 08, which assemble the region below the hand-over from
+  `TkSourceFunctions` instead of from a sampled $f$. Nothing else closes it.
+  **Resolved by prompt 08 (2026-09-09):** `compute_QuadSource_integral` now reads the
+  `QuadSource` spline only on `source.numeric_region` (clamped, see
+  `[08-handover-clamp-error]`) and assembles everything below the hand-over from
+  `TkSourceFunctions` through `phase_groups`. The stage is still non-runnable, for the payload
+  reason recorded in `[08-pipeline-non-runnable-until-10]`.
 
 ---
 
@@ -283,3 +333,13 @@ Traceability from the audit's finding IDs to the prompt that discharges them.
    consistency checks only. Do not re-derive or re-type the coefficients anywhere else — the
    sympy script `ComputeTargets/tests/sympy_phase_groups.py` verifies this module's code path and
    would not see a copy. See `logs/07-phase-group-algebra.md` "State handed to the next prompt".
+9. **`evaluate_QuadSource_integral` is the testable entry point of the source time integral**
+   (`ComputeTargets/QuadSourceIntegral.py`); the `@ray.remote` `compute_QuadSource_integral`
+   only resolves the proxies and calls it. `QuadSourceIntegral.compute()` requires the payload
+   keys in `QuadSourceIntegral.REQUIRED_PAYLOAD_KEYS` (the five old ones plus `Tq_numeric`,
+   `Tq_WKB`, `Tr_numeric`, `Tr_WKB`). `WKB_quad` is identically `0.0`; the per-part error
+   estimates are in `metadata["numeric_quad"]["abserr"]` and `metadata["WKB_Levin"]["abserr"]`,
+   the region record in `metadata["partition"]`. `numeric_quad` and `WKB_Levin` cancel by up to
+   5× on the test fixtures, so bound `total`'s error by summing the parts' absolute errors, never
+   by scaling a relative one. See `logs/08-qsi-phase-group-integration.md` "State handed to the
+   next prompt".
