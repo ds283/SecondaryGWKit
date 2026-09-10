@@ -2,16 +2,17 @@
 
 **Campaign:** [`README.md`](README.md) · **Design:** [`DRAFT-PLAN.md`](DRAFT-PLAN.md) · **Reconciliation:** [`RECONCILIATION.md`](RECONCILIATION.md)
 **Baseline commit:** `95cc326` (`transfer-remedial-plan`, clean)
-**Last updated:** 2026-09-10 — prompt 01 executed on `f17f2d4`.
+**Last updated:** 2026-09-10 — prompt 02 executed on `f71401d` (this commit; SHA not self-embedded).
 **Planned against:** `c4c4905`; re-pointed to `95cc326` before commit (`RECONCILIATION.md` §0).
-**Executing against:** `f17f2d4`, 16 commits after `95cc326` (the merge of `transfer-remedial-plan`
-into the working branch, `source-remediation` prompt 12's live verification, the Green-function WKB
-reviews and three independent fixes). **`LiouvilleGreen/` is untouched by all of them** —
-`git diff --stat 95cc326..f17f2d4 -- LiouvilleGreen/` is empty — so `RECONCILIATION.md` §1, §2 and
-§3.1 still apply verbatim, and prompt 01 re-confirmed nine of their measurements independently (log
-01 "Verification performed"). Note also that README §4.2's scheduling risk has **cleared**:
-`source-remediation` prompt 12 has run (`5b82149`), so Workstream B no longer risks changing the
-Bessel oracle underneath it.
+**Executing against:** `f71401d` (prompt 01's commit), 17 commits after `95cc326` (the merge of
+`transfer-remedial-plan` into the working branch, `source-remediation` prompt 12's live
+verification, the Green-function WKB reviews, three independent fixes, and prompt 01's new
+reference harness). **No previously existing `LiouvilleGreen/` file was touched by any of them** —
+`git diff --stat 95cc326..f17f2d4 -- LiouvilleGreen/` is empty, and prompt 01 only added new files —
+so `RECONCILIATION.md` §1, §2 and §3.1 still apply verbatim, and prompt 01 re-confirmed nine of
+their measurements independently (log 01 "Verification performed"). Note also that README §4.2's
+scheduling risk has **cleared**: `source-remediation` prompt 12 has run (`5b82149`), so Workstream B
+no longer risks changing the Bessel oracle underneath it.
 
 > **Maintenance rule.** Every prompt updates this file *in its own commit*, before committing.
 > Set your row's status, fill in the commit SHA, model and log link, update the mechanism-level
@@ -30,7 +31,7 @@ Legend: ⬜ not started · 🟡 in flight · ✅ complete · ⚠️ complete wit
 | # | Prompt | Covers | Model | Status | Commit | Log |
 |---|---|---|---|---|---|---|
 | 01 | [Reference harness](01-reference-harness.md) | plan §9 Stage 1 | Opus 5 | ⚠️ | *(this commit; SHA not self-embedded)* | [`01`](logs/01-reference-harness.md) |
-| 02 | [SciPy domain boundaries](02-domain-boundary-tests.md) | plan §4.4; recon C1 | Sonnet | ⬜ | | |
+| 02 | [SciPy domain boundaries](02-domain-boundary-tests.md) | plan §4.4; recon C1 | Sonnet | ✅ | *(this commit; SHA not self-embedded)* | [`02`](logs/02-domain-boundary-tests.md) |
 
 ### Workstream B — the two-region construction
 
@@ -54,7 +55,7 @@ Legend: ⬜ not started · 🟡 in flight · ✅ complete · ⚠️ complete wit
 | 08 | [Fixture revalidation](08-fixture-revalidation.md) | plan §8.3, §9 Stage 5, §10 | Opus | ⬜ | | |
 | 09 | [Benchmark and docs](09-benchmark-and-docs.md) | plan §9 Stage 5, §11 | Sonnet | ⬜ | | |
 
-**Progress:** 1 / 9 complete.
+**Progress:** 2 / 9 complete.
 
 ---
 
@@ -68,8 +69,8 @@ campaign; the plan section is the authority on each.
 | M1 | **DEFECT, accuracy** | \(Q=\theta/x\) ODE: \(\delta\theta=x\,\delta Q\), so a relative bound on \(Q\) gives no absolute phase bound (§4.1). The phase is a quadrature, not an ODE (§5.1) | 05 | ⬜ |
 | M2 | **DEFECT, spurious** | The `phi` root solve returns a non-zero offset at a match point where the phase is already exact; measured \(-4.836537\times10^{-8}\) at \(\nu=5/2\), and it **is** the whole tight-tolerance error (§4.3) | 05, 06 | ⬜ |
 | M3 | **DEFECT, accuracy** | Full-phase interpolation errs by \(h^4x/384\) — 6.7e-10 at \(x=10^3\), 6.7e-6 at \(10^7\) (§4.2); chunking has no measurable effect on it (§4.6) | 05 | ⬜ |
-| M4 | **DEFECT, silent failure** | `hankel1e` returns exactly `-0j` above 7.13e8 (\(\nu\gtrsim100\)) / 2.247e15 (all \(\nu\)); `isfinite` passes and `log(abs(·))` is `-inf` (§4.4) | 02, 03, 04 | ⬜ |
-| M5 | **DEFECT, hard limit** | `jv`/`yv` become O(1)-relatively noisy above \(x\approx2.5\times10^{15}\), the ODE right-hand side stops being \(1+O(\nu^2/x^2)\), and DOP853 at `rtol=5e-14` stalls — construction never returns (recon C1; **not in the plan**) | 02, 03, 05, 09 | ⬜ |
+| M4 | **DEFECT, silent failure** | `hankel1e` returns exactly `-0j` above 7.13e8 (\(\nu\gtrsim100\)) / 2.247e15 (all \(\nu\)); `isfinite` passes and `log(abs(·))` is `-inf` (§4.4) | 02, 03, 04 | 🟡 |
+| M5 | **DEFECT, hard limit** | `jv`/`yv` become O(1)-relatively noisy above \(x\approx2.5\times10^{15}\), the ODE right-hand side stops being \(1+O(\nu^2/x^2)\), and DOP853 at `rtol=5e-14` stalls — construction never returns (recon C1; **not in the plan**) | 02, 03, 05, 09 | 🟡 |
 | M6 | **REQUIREMENT** | Closed-form tail from DLMF 10.18.18, with \(a=(1+r')^{-1/2}\) from the Wronskian and a remainder-tested \(x_\star\). **Required, not deferred** (§1, §7.2) | 03, 05 | ⬜ |
 | M7 | **REQUIREMENT** | Branch tracking verified, not assumed: 3.685 rad per interval and ~90 wraps at \(\nu=1000.5\) defeat fixed-density `unwrap` (§4.5, recon C2) | 04 | ⬜ |
 | M8 | **REQUIREMENT** | Two-sided adaptivity — refine at the turning point, coarsen in the tail (§4.5) | 04 | ⬜ |
