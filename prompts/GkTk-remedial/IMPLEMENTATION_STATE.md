@@ -2,7 +2,7 @@
 
 **Campaign:** [`README.md`](README.md) · **Source review:** [`docs/gk-wkb-review-fable-2026-09-09.md`](../../docs/gk-wkb-review-fable-2026-09-09.md) · **Reconciliation:** [`RECONCILIATION.md`](RECONCILIATION.md)
 **Baseline commit:** `9ff59d5` (`main`, clean)
-**Last updated:** 2026-09-10 — campaign planned; no prompt executed.
+**Last updated:** 2026-09-10 — prompt 01 landed (references, prototype, baselines).
 
 > **Maintenance rule.** Every prompt updates this file *in its own commit*, before committing.
 > Set your row's status, fill in the commit SHA, model and log link, update the mechanism-level
@@ -20,7 +20,7 @@ Legend: ⬜ not started · 🟡 in flight · ✅ complete · ⚠️ complete wit
 
 | # | Prompt | Covers | Model | Status | Commit | Log |
 |---|---|---|---|---|---|---|
-| 01 | [Reference harness and prototype](01-reference-harness-and-prototype.md) | review §7, §13.3 | Opus | ⬜ | | |
+| 01 | [Reference harness and prototype](01-reference-harness-and-prototype.md) | review §7, §13.3 | Opus | ⚠️ | *"Add WKB phase references and a measured primitive prototype"* (SHA not embedded, per the campaign convention) | [`logs/01-reference-harness-and-prototype.md`](logs/01-reference-harness-and-prototype.md) |
 | 02 | [QCD residual convergence](02-qcd-residual-convergence.md) | review §11, §12.7 | Opus | ⬜ | | |
 
 ### Workstream B — the primitives in `BackgroundModel`
@@ -59,7 +59,7 @@ Legend: ⬜ not started · 🟡 in flight · ✅ complete · ⚠️ complete wit
 |---|---|---|---|---|---|---|
 | 13 | [Verification and docs](13-verification-and-docs.md) | review §4, §12.3, §13.5 | Opus | ⬜ | | |
 
-**Progress:** 0 / 13 complete.
+**Progress:** 1 / 13 complete.
 
 ---
 
@@ -92,7 +92,7 @@ campaign; the review section is the authority on each.
 | M20 | **DEFECT, comments + robustness** | The stop point is a maximum, not a minimum; the "fixed phase to avoid jitter" motivation is obsolete; `find_phase_minimum`'s $10^{-3}z$ step is safe only inside the window (§10.2) | 11 | ⬜ |
 | M21 | **DEFECT, misleading** | `0.85·z_e6` truncation requests samples never produced in stop mode (§10.2) — comment only | 11 | ⬜ |
 | M22 | **DEFECT, accuracy** | $T_k$ numeric run limited to $1.1\times10^{-5}$ of the envelope by `atol=1e-10` acting as a $10^{-5}$ relative tolerance (§12.5) | 12 | ⬜ |
-| M23 | **REQUIREMENT** | Independent references and error definitions; throughput of the interval accessor measured early (§13.3, §13.5) | 01 | ⬜ |
+| M23 | **REQUIREMENT** | Independent references and error definitions; throughput of the interval accessor measured early (§13.3, §13.5) | 01 | ⚠️ |
 | M24 | **REQUIREMENT** | Verification on both models against the references; scoped pipeline run; additive docs (§13.5) | 13 | ⬜ |
 
 **Out of scope (do not schedule):** the numeric→WKB hand-over (window, overlap, clamp,
@@ -106,6 +106,41 @@ README §0.2's `transfer-remedial` file list.
 ## 3. Active and unresolved issues
 
 Opened by the planning pass, 2026-09-10, before any prompt runs.
+
+- **[01-qcd-eos-branch-boundaries]** *(opened by prompt 01, 2026-09-10)* — no fixed-order
+  Gauss–Legendre rule converges on the two production intervals of `QCD_Cosmology` that contain a
+  `QCD_EOS.G(T)` **branch boundary**: `T_LO = 1e-5` GeV ($z=4.191\times10^7$) and
+  `T_120_MEV = 0.12` GeV ($z=8.579\times10^{11}$), where the Saikawa–Shirai fit is replaced by an
+  asymptotic constant. The per-interval relative error falls only as $N^{-2}$: 6.33e-5 (order 4),
+  1.69e-5 (8), 8.20e-6 (12), 3.47e-6 (20) — i.e. **4.78, 1.28, 0.62, 0.26 rad at $k=3\times10^8$**
+  for a phase difference straddling that interval. The tail (301 / 163 / 38 / 8 intervals of 1,731
+  above $10^{-12}$) is the 500-point $T(z)$ spline's knots, one every ~4 production intervals. The
+  review anticipated the knots (§7, §11) but not the branch boundaries, which are two orders
+  worse. **Impact:** prompt 02's decision (raising the order is not an option), and through it
+  prompts 03, 04 and 05 on `QCD_Cosmology`. **Next step:** prompt 02 chooses between adaptive
+  quadrature on the offending intervals and subdividing the table at the two known constants;
+  closes when it lands.
+
+- **[01-offgrid-accessor-cost-on-qcd]** *(opened by prompt 01, 2026-09-10)* — the interval
+  accessor costs **102.2 µs per call on `QCD_Cosmology` with both endpoints off-grid**, above
+  README §4.3's 50 µs stop threshold (47.7 µs with one endpoint off-grid, 16 and 8 Hubble
+  evaluations respectively at 8.7 µs each). The production case is on-grid at both ends — the
+  background model is built on the source grid (`main.py:476`) — where the call costs **4.39 µs
+  and zero Hubble evaluations**; only the per-object anchor $z_{\rm init}$ is off-grid.
+  **Impact:** prompt 03's design if a consumer ever evaluates off-grid in bulk (prompt 09's
+  Levin path is the candidate); the producers are unaffected. **Next step:** the orchestrator
+  reports the figures to the user; closes when prompt 09 confirms its evaluation pattern is
+  on-grid, or a caching partial is added.
+
+- **[01-lambdacdm-hubble-rounding-floor]** *(opened by prompt 01, 2026-09-10; inert)* — the
+  double-precision evaluation of `LambdaCDM.Hubble` carries 2–9e-15 relative near $z=1$–$10^6$,
+  which is the floor on $\Delta\tau$ over one production grid interval whatever the Gauss order
+  (4.687e-15 at order 4 and 4.525e-15 at order 20 on the same interval) and whatever the storage
+  width. In phase that is $3.8$–$6.1\times10^{-5}$ rad at $k=3\times10^8$ per interval.
+  **Impact:** a floor on what prompts 03 and 13 may assert for a single-interval $\Delta\tau$ on
+  LambdaCDM; it is *below* README §6's $5\times10^{-3}$ rad target and above the
+  $\varepsilon k\tau$ floor, and is a different error from either. **Next step:** none; recorded
+  so a later reader does not chase it.
 
 - **[00-tau-storage-decision]** *(planning, 2026-09-10)* — README §7 D1: the low-order limb of the
   τ, τ_s node tables is persisted as new `Float(64)` columns (`tau_lo_Mpc`, `cs_tau_Mpc`,
