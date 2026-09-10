@@ -2,13 +2,14 @@
 
 **Campaign:** [`README.md`](README.md) · **Design:** [`DRAFT-PLAN.md`](DRAFT-PLAN.md) · **Reconciliation:** [`RECONCILIATION.md`](RECONCILIATION.md)
 **Baseline commit:** `95cc326` (`transfer-remedial-plan`, clean)
-**Last updated:** 2026-09-10 — prompt 02 executed on `f71401d` (this commit; SHA not self-embedded).
+**Last updated:** 2026-09-10 — prompt 03 executed on `fe33e8e` (this commit; SHA not self-embedded).
 **Planned against:** `c4c4905`; re-pointed to `95cc326` before commit (`RECONCILIATION.md` §0).
-**Executing against:** `f71401d` (prompt 01's commit), 17 commits after `95cc326` (the merge of
+**Executing against:** `fe33e8e` (prompt 02's commit), 19 commits after `95cc326` (the merge of
 `transfer-remedial-plan` into the working branch, `source-remediation` prompt 12's live
 verification, the Green-function WKB reviews, three independent fixes, and prompt 01's new
-reference harness). **No previously existing `LiouvilleGreen/` file was touched by any of them** —
-`git diff --stat 95cc326..f17f2d4 -- LiouvilleGreen/` is empty, and prompt 01 only added new files —
+reference harness, plus prompts 01 and 02). **No previously existing `LiouvilleGreen/` file was
+touched by any of them** — `git diff --stat 95cc326..f17f2d4 -- LiouvilleGreen/` is empty, and
+prompts 01, 02 and 03 only added new files —
 so `RECONCILIATION.md` §1, §2 and §3.1 still apply verbatim, and prompt 01 re-confirmed nine of
 their measurements independently (log 01 "Verification performed"). Note also that README §4.2's
 scheduling risk has **cleared**: `source-remediation` prompt 12 has run (`5b82149`), so Workstream B
@@ -37,7 +38,7 @@ Legend: ⬜ not started · 🟡 in flight · ✅ complete · ⚠️ complete wit
 
 | # | Prompt | Covers | Model | Status | Commit | Log |
 |---|---|---|---|---|---|---|
-| 03 | [Closed-form tail](03-closed-form-tail.md) | plan §7.2 | Opus | ⬜ | | |
+| 03 | [Closed-form tail](03-closed-form-tail.md) | plan §7.2 | Opus 5 | ⚠️ | *(this commit; SHA not self-embedded)* | [`03`](logs/03-closed-form-tail.md) |
 | 04 | [Near-region sampler](04-near-region-sampler.md) | plan §7.1, §7.3, §4.5 | Opus | ⬜ | | |
 | 05 | [Two-region construction](05-two-region-construction.md) | plan §9 Stage 2, §7.4 | Opus | ⬜ | | |
 
@@ -55,7 +56,7 @@ Legend: ⬜ not started · 🟡 in flight · ✅ complete · ⚠️ complete wit
 | 08 | [Fixture revalidation](08-fixture-revalidation.md) | plan §8.3, §9 Stage 5, §10 | Opus | ⬜ | | |
 | 09 | [Benchmark and docs](09-benchmark-and-docs.md) | plan §9 Stage 5, §11 | Sonnet | ⬜ | | |
 
-**Progress:** 2 / 9 complete.
+**Progress:** 3 / 9 complete.
 
 ---
 
@@ -71,7 +72,7 @@ campaign; the plan section is the authority on each.
 | M3 | **DEFECT, accuracy** | Full-phase interpolation errs by \(h^4x/384\) — 6.7e-10 at \(x=10^3\), 6.7e-6 at \(10^7\) (§4.2); chunking has no measurable effect on it (§4.6) | 05 | ⬜ |
 | M4 | **DEFECT, silent failure** | `hankel1e` returns exactly `-0j` above 7.13e8 (\(\nu\gtrsim100\)) / 2.247e15 (all \(\nu\)); `isfinite` passes and `log(abs(·))` is `-inf` (§4.4) | 02, 03, 04 | 🟡 |
 | M5 | **DEFECT, hard limit** | `jv`/`yv` become O(1)-relatively noisy above \(x\approx2.5\times10^{15}\), the ODE right-hand side stops being \(1+O(\nu^2/x^2)\), and DOP853 at `rtol=5e-14` stalls — construction never returns (recon C1; **not in the plan**) | 02, 03, 05, 09 | 🟡 |
-| M6 | **REQUIREMENT** | Closed-form tail from DLMF 10.18.18, with \(a=(1+r')^{-1/2}\) from the Wronskian and a remainder-tested \(x_\star\). **Required, not deferred** (§1, §7.2) | 03, 05 | ⬜ |
+| M6 | **REQUIREMENT** | Closed-form tail from DLMF 10.18.18, with \(a=(1+r')^{-1/2}\) from the Wronskian and a remainder-tested \(x_\star\). **Required, not deferred** (§1, §7.2) | 03, 05 | 🟡 |
 | M7 | **REQUIREMENT** | Branch tracking verified, not assumed: 3.685 rad per interval and ~90 wraps at \(\nu=1000.5\) defeat fixed-density `unwrap` (§4.5, recon C2) | 04 | ⬜ |
 | M8 | **REQUIREMENT** | Two-sided adaptivity — refine at the turning point, coarsen in the tail (§4.5) | 04 | ⬜ |
 | M9 | **REQUIREMENT** | Two-sided \(a_\nu\) plausibility band, measured \([1.0000,\,3.546]\) over the near region (§4.4, recon §3.1) | 04 | ⬜ |
@@ -153,6 +154,27 @@ risks that the prompts inherit rather than create.
   narrows the order threshold if it is cheap to do so. Nothing outside `LiouvilleGreen/tests/` needs
   to change: no consumer in the tree evaluates `jv`/`yv` above 1e7 at high order.
 
+- **[03-draft-plan-tail-coefficient-wrong]** *(opened by prompt 03, 2026-09-10)* — the **third
+  coefficient of DLMF 10.18.18** as printed in `DRAFT-PLAN.md` §7.2, in prompt 03 §2 and in its §5
+  reproduction script has denominator **15360**; the correct denominator is **5120**, a factor of
+  three. Determined numerically, not guessed: with the first two (correct) terms subtracted from a
+  120-digit `mpmath` residual on its resolved branch, \((r_{\rm true}-r_2)x^5\) converges to
+  0.19999998 (\(\nu=3/2\)), −5.39999928 (5/2) and 864675.13 (20.5) against numerators 1024, −27648
+  and 4427136000 — ratio 5120.0 at all three — and Abramowitz & Stegun 9.2.29's grouping gives
+  \(32/(5\cdot8^5)=1/5120\) exactly, while its \(4/(3\cdot8^3)=1/384\) reproduces the plan's
+  *second* denominator. So the plan folded the wrong power of 8 into the third term only. The
+  fourth coefficient, obtained the same way, is **229376** (\(=7\cdot8^7/64\)). **Impact:** an
+  agent that takes the series from the plan text ships a "three-term" series that removes only one
+  third of the two-term error (measured 1.769e-10 → 1.179e-10 at \(\nu=5/2,x=125\), instead of
+  → 2.42e-14) and a crossover sized by an estimator that does not describe the remainder.
+  `LiouvilleGreen/bessel_tail.py` ships 5120/229376 and
+  `test_bessel_tail.test_coefficients_match_the_published_series` pins them; nothing else in the
+  tree is affected — `bessel_reference.tail_residual_series` carries only the first two
+  coefficients, 8 and 384, which are correct. **Next step:** prompts 04 and 05 must take
+  coefficients from `bessel_tail.tail_series_coefficients`, never from the plan text; prompt 09
+  records the correction in `docs/` alongside `[00-plan-vs-tree-corrections]`, which closes this.
+  `DRAFT-PLAN.md` is deliberately not edited (README §5 item 9).
+
 > Add an entry here whenever a prompt finishes with something unresolved: a verification step that
 > could not be run, an assumption that could not be confirmed, a deviation a later prompt has to
 > work around, a measured cost that changes a later prompt's decision. Format:
@@ -229,3 +251,21 @@ risks that the prompts inherit rather than create.
     two fits, measured at a **1.08e-4 rad phase jump and a 3.51e-8 relative derivative jump**, which
     a Levin consumer sees. Cite it in prompt 05's justification for removing `phase_spline` from
     `bessel_phase`; do not act on `phase_spline` itself.
+
+14. **Take the tail series coefficients from `LiouvilleGreen.bessel_tail.tail_series_coefficients`,
+    never from `DRAFT-PLAN.md` §7.2 or prompt 03 §2.** Both print 15360 for the third denominator;
+    it is 5120, and the fourth is 229376 (issue `[03-draft-plan-tail-coefficient-wrong]`). Prompt
+    03 also settled the crossover: three terms shipped with the fourth as the omitted-term
+    estimator, `safety = 0.25` on both budgets, and \(x_\star/\nu\) running from **4.4** (\(\nu=3/2\),
+    budget \(10^{-6}\)) to **58.1** (\(\nu=1000.5\), \(10^{-11}\)) — so the sampled near region is
+    1.5–4.1 e-folds, not `DRAFT-PLAN.md` §1's "fixed ≈4.6", and \(x_\star\) is **not** a fixed
+    multiple of \(\nu\). \(\nu=1/2\) returns \(x_\star=x_0\): the sampler must never run there.
+    The full table is in `logs/03-closed-form-tail.md`.
+
+15. **Above \(\nu=20.5\), SciPy `jv`/`yv` are not an adequate reference for series work**, well
+    below `scipy_reference_max_x(nu)`. Measured against 50-digit `mpmath` over
+    \(5\nu\le x\le100\nu\): \(\lvert\delta r\rvert\) up to 1.2e-12 at \(\nu=100.5\) and 8.4e-12 at
+    1000.5, \(\lvert\delta a/a\rvert\) up to 1.7e-11 — above the three-term tail series' own error
+    at those orders. Use the `mpmath` tier or the cached corners there; it costs under 10 ms per
+    point when \(x\gg\nu\). This is a *precision* floor, distinct from the silent-failure boundary
+    of `[01-scipy-jv-yv-high-order-boundary]`.

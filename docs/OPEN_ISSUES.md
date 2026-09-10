@@ -1,6 +1,6 @@
 # Open issues — project-wide index
 
-**Last updated:** 2026-09-10 · **22 open** across four campaigns.
+**Last updated:** 2026-09-10 · **23 open** across four campaigns.
 
 This file exists so that an issue opened by one campaign is not lost when that campaign closes.
 It is an **index, not a record**: one line per issue, pointing at the campaign status board that
@@ -93,6 +93,7 @@ Something was asserted statically or on a stand-in, and a live exercise is still
 | `[00-plan-vs-tree-corrections]` | transfer-remedial | Four `DRAFT-PLAN.md` claims that do not survive reconciliation against the tree; the prompts are built on the corrected versions. |
 | `[00-qsi-three-bessel-levin-excluded]` | transfer-remedial | `_three_bessel_Levin`'s eight `adaptive_levin_sincos` calls supply no `theta_deriv`, so Levin differentiates the raw phase spectrally there. |
 | `[01-scipy-jv-yv-high-order-boundary]` | transfer-remedial | The silent Amos boundary is order dependent and applies to `jv`/`yv`, not only `hankel1e`: 7.13e8 above $\nu\approx86$. Guarded in the harness; the order threshold is bracketed [85.5, 88.5], not pinned, and not yet a test. |
+| `[03-draft-plan-tail-coefficient-wrong]` | transfer-remedial | `DRAFT-PLAN.md` §7.2 and prompt 03 print 15360 for the third DLMF 10.18.18 denominator; it is 5120 (fourth: 229376). Shipped code is right and pins it; the plan text is not edited, so prompt 09 owes the correction in `docs/`. |
 
 ---
 
