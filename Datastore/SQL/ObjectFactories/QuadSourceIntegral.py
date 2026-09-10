@@ -166,9 +166,19 @@ class sqla_QuadSourceIntegral_factory(SQLAFactoryBase):
                     index=True,
                     nullable=False,
                 ),
+                # b fixes c_s^2 = (1-b)/(3(1+b)), the Bessel orders 1/2 + b and 5/2 + b, and the
+                # eta' weight of analytic_rad, so a row is not interpretable without it (audit
+                # B7/QI-10). Non-null: every row written since it existed has one.
+                sqla.Column("b", sqla.Float(64), nullable=False),
                 sqla.Column("total", sqla.Float(64), nullable=False),
+                # bound on the error of "total": the linear sum of the per-sub-interval absolute
+                # error estimates (audit B8/QI-11), and the Levin driver's flags aggregated over
+                # every phase group of every sub-interval. Nullable so that a row written by a
+                # future code path that cannot estimate them is still storable.
+                sqla.Column("total_abserr", sqla.Float(64), nullable=True),
+                sqla.Column("total_converged", sqla.Boolean, nullable=True),
+                sqla.Column("total_phase_limited", sqla.Boolean, nullable=True),
                 sqla.Column("numeric_quad", sqla.Float(64), nullable=False),
-                sqla.Column("WKB_quad", sqla.Float(64), nullable=False),
                 sqla.Column("WKB_Levin", sqla.Float(64), nullable=False),
                 sqla.Column("analytic_rad", sqla.Float(64), nullable=True),
                 sqla.Column("eta_source_max", sqla.Float(64), nullable=True),
@@ -183,12 +193,6 @@ class sqla_QuadSourceIntegral_factory(SQLAFactoryBase):
                 ),
                 sqla.Column("numeric_quad_max_RHS_time", sqla.Float(64), nullable=True),
                 sqla.Column("numeric_quad_min_RHS_time", sqla.Float(64), nullable=True),
-                sqla.Column("WKB_quad_compute_time", sqla.Float(64), nullable=True),
-                sqla.Column("WKB_quad_compute_steps", sqla.Integer, nullable=True),
-                sqla.Column("WKB_quad_RHS_evaluations", sqla.Integer, nullable=True),
-                sqla.Column("WKB_quad_mean_RHS_time", sqla.Float(64), nullable=True),
-                sqla.Column("WKB_quad_max_RHS_time", sqla.Float(64), nullable=True),
-                sqla.Column("WKB_quad_min_RHS_time", sqla.Float(64), nullable=True),
                 sqla.Column("WKB_Levin_num_regions", sqla.Integer, nullable=True),
                 sqla.Column("WKB_Levin_evaluations", sqla.Integer, nullable=True),
                 sqla.Column("WKB_Levin_simple_regions", sqla.Integer, nullable=True),
@@ -234,9 +238,11 @@ class sqla_QuadSourceIntegral_factory(SQLAFactoryBase):
             table.c.label,
             table.c.metadata,
             table.c.source_serial,
+            table.c.b,
             table.c.total,
-            table.c.numeric_quad,
-            table.c.WKB_quad,
+            table.c.total_abserr,
+            table.c.total_converged,
+            table.c.total_phase_limited,
             table.c.WKB_Levin,
             table.c.analytic_rad,
             table.c.eta_source_max,
@@ -248,12 +254,6 @@ class sqla_QuadSourceIntegral_factory(SQLAFactoryBase):
             table.c.numeric_quad_mean_RHS_time,
             table.c.numeric_quad_max_RHS_time,
             table.c.numeric_quad_min_RHS_time,
-            table.c.WKB_quad_compute_time,
-            table.c.WKB_quad_compute_steps,
-            table.c.WKB_quad_RHS_evaluations,
-            table.c.WKB_quad_mean_RHS_time,
-            table.c.WKB_quad_max_RHS_time,
-            table.c.WKB_quad_min_RHS_time,
             table.c.WKB_Levin_num_regions,
             table.c.WKB_Levin_evaluations,
             table.c.WKB_Levin_simple_regions,
@@ -316,9 +316,12 @@ class sqla_QuadSourceIntegral_factory(SQLAFactoryBase):
         obj = QuadSourceIntegral(
             payload={
                 "store_id": row_data.serial,
+                "b": row_data.b,
                 "total": row_data.total,
+                "total_abserr": row_data.total_abserr,
+                "total_converged": row_data.total_converged,
+                "total_phase_limited": row_data.total_phase_limited,
                 "numeric_quad": row_data.numeric_quad,
-                "WKB_quad": row_data.WKB_quad,
                 "WKB_Levin": row_data.WKB_Levin,
                 "analytic_rad": row_data.analytic_rad,
                 "eta_source_max": row_data.eta_source_max,
@@ -330,14 +333,6 @@ class sqla_QuadSourceIntegral_factory(SQLAFactoryBase):
                     mean_RHS_time=row_data.numeric_quad_mean_RHS_time,
                     max_RHS_time=row_data.numeric_quad_max_RHS_time,
                     min_RHS_time=row_data.numeric_quad_min_RHS_time,
-                ),
-                "WKB_quad_data": IntegrationData(
-                    compute_time=row_data.WKB_quad_compute_time,
-                    compute_steps=row_data.WKB_quad_compute_steps,
-                    RHS_evaluations=row_data.WKB_quad_RHS_evaluations,
-                    mean_RHS_time=row_data.WKB_quad_mean_RHS_time,
-                    max_RHS_time=row_data.WKB_quad_max_RHS_time,
-                    min_RHS_time=row_data.WKB_quad_min_RHS_time,
                 ),
                 "WKB_Levin_data": LevinData(
                     num_regions=row_data.WKB_Levin_num_regions,
@@ -385,7 +380,6 @@ class sqla_QuadSourceIntegral_factory(SQLAFactoryBase):
         inserters,
     ):
         numeric_quad_data = obj.numeric_quad_data
-        WKB_quad_data = obj.WKB_quad_data
         WKB_Levin_data = obj.WKB_Levin_data
 
         try:
@@ -406,9 +400,12 @@ class sqla_QuadSourceIntegral_factory(SQLAFactoryBase):
                     "data_serial": obj._data_serial,
                     "compute_time": obj.compute_time,
                     "analytic_compute_time": obj.analytic_compute_time,
+                    "b": obj._b,
                     "total": obj._total,
+                    "total_abserr": obj._total_abserr,
+                    "total_converged": obj._total_converged,
+                    "total_phase_limited": obj._total_phase_limited,
                     "numeric_quad": obj._numeric_quad,
-                    "WKB_quad": obj._WKB_quad,
                     "WKB_Levin": obj._WKB_Levin,
                     "analytic_rad": obj._analytic_rad,
                     "eta_source_max": obj._eta_source_max,
@@ -441,36 +438,6 @@ class sqla_QuadSourceIntegral_factory(SQLAFactoryBase):
                     "numeric_quad_min_RHS_time": (
                         numeric_quad_data.min_RHS_time
                         if numeric_quad_data is not None
-                        else None
-                    ),
-                    "WKB_quad_compute_time": (
-                        WKB_quad_data.compute_time
-                        if WKB_quad_data is not None
-                        else None
-                    ),
-                    "WKB_quad_compute_steps": (
-                        WKB_quad_data.compute_steps
-                        if WKB_quad_data is not None
-                        else None
-                    ),
-                    "WKB_quad_RHS_evaluations": (
-                        WKB_quad_data.RHS_evaluations
-                        if WKB_quad_data is not None
-                        else None
-                    ),
-                    "WKB_quad_mean_RHS_time": (
-                        WKB_quad_data.mean_RHS_time
-                        if WKB_quad_data is not None
-                        else None
-                    ),
-                    "WKB_quad_max_RHS_time": (
-                        WKB_quad_data.max_RHS_time
-                        if WKB_quad_data is not None
-                        else None
-                    ),
-                    "WKB_quad_min_RHS_time": (
-                        WKB_quad_data.min_RHS_time
-                        if WKB_quad_data is not None
                         else None
                     ),
                     "WKB_Levin_num_regions": (
@@ -568,9 +535,12 @@ class sqla_QuadSourceIntegral_factory(SQLAFactoryBase):
                 table.c.metadata,
                 table.c.source_serial,
                 table.c.data_serial,
+                table.c.b,
                 table.c.total,
+                table.c.total_abserr,
+                table.c.total_converged,
+                table.c.total_phase_limited,
                 table.c.numeric_quad,
-                table.c.WKB_quad,
                 table.c.WKB_Levin,
                 table.c.analytic_rad,
                 table.c.eta_source_max,
@@ -581,12 +551,6 @@ class sqla_QuadSourceIntegral_factory(SQLAFactoryBase):
                 table.c.numeric_quad_mean_RHS_time,
                 table.c.numeric_quad_max_RHS_time,
                 table.c.numeric_quad_min_RHS_time,
-                table.c.WKB_quad_compute_time,
-                table.c.WKB_quad_compute_steps,
-                table.c.WKB_quad_RHS_evaluations,
-                table.c.WKB_quad_mean_RHS_time,
-                table.c.WKB_quad_max_RHS_time,
-                table.c.WKB_quad_min_RHS_time,
                 table.c.WKB_Levin_num_regions,
                 table.c.WKB_Levin_evaluations,
                 table.c.WKB_Levin_simple_regions,
@@ -779,9 +743,12 @@ class sqla_QuadSourceIntegral_factory(SQLAFactoryBase):
             obj = QuadSourceIntegral(
                 payload={
                     "store_id": row.serial,
+                    "b": row.b,
                     "total": row.total,
+                    "total_abserr": row.total_abserr,
+                    "total_converged": row.total_converged,
+                    "total_phase_limited": row.total_phase_limited,
                     "numeric_quad": row.numeric_quad,
-                    "WKB_quad": row.WKB_quad,
                     "WKB_Levin": row.WKB_Levin,
                     "analytic_rad": row.analytic_rad,
                     "eta_source_max": row.eta_source_max,
@@ -793,14 +760,6 @@ class sqla_QuadSourceIntegral_factory(SQLAFactoryBase):
                         mean_RHS_time=row.numeric_quad_mean_RHS_time,
                         max_RHS_time=row.numeric_quad_max_RHS_time,
                         min_RHS_time=row.numeric_quad_min_RHS_time,
-                    ),
-                    "WKB_quad_data": IntegrationData(
-                        compute_time=row.WKB_quad_compute_time,
-                        compute_steps=row.WKB_quad_compute_steps,
-                        RHS_evaluations=row.WKB_quad_RHS_evaluations,
-                        mean_RHS_time=row.WKB_quad_mean_RHS_time,
-                        max_RHS_time=row.WKB_quad_max_RHS_time,
-                        min_RHS_time=row.WKB_quad_min_RHS_time,
                     ),
                     "WKB_Levin_data": LevinData(
                         num_regions=row.WKB_Levin_num_regions,

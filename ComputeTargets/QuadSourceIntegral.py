@@ -1,6 +1,6 @@
 import time
-from math import log, exp, pow, sqrt, pi, gamma
-from typing import Optional, List, Union
+from math import log, exp, pow, sqrt, pi, gamma, inf
+from typing import Optional, List, Union, Callable, Sequence, Tuple
 
 import ray
 from ray import ObjectRef
@@ -10,7 +10,9 @@ from AdaptiveLevin import adaptive_levin_sincos
 from ComputeTargets.BackgroundModel import BackgroundModel, ModelProxy, ModelFunctions
 from ComputeTargets.GkSource import GkSource
 from ComputeTargets.GkSourcePolicyData import GkSourcePolicyData, GkSourceFunctions
-from ComputeTargets.QuadSource import QuadSource, QuadSourceFunctions
+from ComputeTargets.QuadSource import QuadSource
+from ComputeTargets.TkSourceFunctions import TkSourceFunctions
+from ComputeTargets.phase_groups import build_phase_groups
 from CosmologyConcepts import wavenumber, wavenumber_exit_time, redshift
 from Datastore import DatastoreObject
 from MetadataConcepts import store_tag, tolerance, GkSourcePolicy
@@ -23,15 +25,36 @@ from config.defaults import (
 )
 from utilities import WallclockTimer
 
-LEVIN_MIN_2PI_CYCLES = 10
-LEVIN_MIN_PHASE_DIFF = LEVIN_MIN_2PI_CYCLES * 2.0 * pi
+# NO QUADRATURE GATE LIVES IN THIS MODULE. Until prompt 08 of prompts/source-remediation (audit
+# QI-6) the Levin quadrature of the source time integral was gated on the *Green's-function*
+# phase alone: GkSourcePolicyData.Levin_z (where |d theta_G/d log(1+z)| first exceeds
+# Levin_threshold) and the net phase change theta_G(z_response) - theta_G(Levin_z) >
+# LEVIN_MIN_PHASE_DIFF = 10 * 2 pi. Neither gate consulted T_q or T_r, so a region in which
+# theta_q - theta_r turned over thousands of cycles could be classified "not worth Levin" and
+# handed to scipy.quad. Every sub-interval with at least one oscillatory factor now goes to
+# adaptive_levin_sincos, whose total-variation gate (AdaptiveLevin/levin_quadrature.py,
+# docs/adaptive-levin-verification.md section 4.2) routes weakly oscillatory sub-regions to
+# Clenshaw-Curtis itself; GkPolicy.Levin_z is still read (it is persisted) and recorded in
+# metadata["partition"], but drives nothing.
+#
+# Prompt 10 removed the two retired constants (LEVIN_MIN_2PI_CYCLES, LEVIN_MIN_PHASE_DIFF) rather
+# than reviving them through MetadataConcepts/QuadSourcePolicy.Levin_threshold. Prompt 08 section 6
+# measured the weakly oscillatory case the old gate used to divert (theta_G turning over 3.5-5.4
+# cycles): the single-group Levin call is 2.65-3.56x slower in wall-clock than the old direct
+# quadrature while doing only 1.00-1.44x the integrand evaluations, i.e. the excess is the Levin
+# driver's per-region overhead once its own gate has already sent every region to Clenshaw-Curtis.
+# The author's decision was to accept that cost here and make the *driver* choose its fallback
+# better -- routing a weakly oscillatory integrand to Clenshaw-Curtis wholesale at the outset
+# instead of discovering it after many bisections -- which is work in AdaptiveLevin/, not a second
+# threshold duplicating the decision in this module. See prompts/source-remediation
+# logs/08-qsi-phase-group-integration.md (deviation 10) and logs/10-qsi-main-plumbing.md.
 
 # Retuned from 64 to 24 in prompts/levin-refactor's prompt 08 (see
 # prompts/levin-refactor/logs/08-order-and-sampling.md for the measurement). This module has no
 # analytic oracle, so the order was chosen by self-consistency against a synthetic problem built
 # directly from bessel_phase() with the same domain, amplitude form and phase contract (theta +
 # theta_mod_2pi, no theta_deriv) as this file's own nine call sites, swept across three
-# configurations spanning the phase magnitude the LEVIN_MIN_PHASE_DIFF gate below allows (a
+# configurations spanning the phase magnitude the then-current LEVIN_MIN_PHASE_DIFF gate allowed (a
 # near-threshold ~14-cycle case up to a ~4.5e6-cycle deep-sub-horizon case). Orders 12 through 64
 # agreed with each other to within their own round-off floor in every configuration -- the same
 # "accuracy is set by the phase/modulus splines, not the spectral order" finding that took
@@ -45,8 +68,54 @@ LEVIN_MIN_PHASE_DIFF = LEVIN_MIN_2PI_CYCLES * 2.0 * pi
 # an "evidence supports choosing an order, not evidence of absolute accuracy" result -- the
 # self-consistency check cannot rule out an order-independent bias shared by every order tested.
 CHEBYSHEV_ORDER = 24
-LEVIN_RELERR = 1e-8
-LEVIN_ABSERR = 1e-23
+
+# The module constants LEVIN_RELERR = 1e-8 / LEVIN_ABSERR = 1e-23 were deleted by
+# prompts/source-remediation prompt 09 (audit B5/QI-8). Their only remaining use was the "Y3"
+# call of _three_bessel_Levin, which passed them where its seven siblings pass the caller's
+# atol/rtol; that asymmetry made the four cancelling phase groups' error bars non-uniform.
+# Every Levin call in this module now takes the tolerances it was given.
+
+# Relative tolerance of the Bessel-order guard _check_bessel_order below, as a fraction of the
+# local Liouville-Green envelope m = sqrt(J^2 + Y^2). bessel_phase() reconstructs J_nu to ~2e-8
+# of that envelope (audit QI-1), while an order wrong by delta shifts the phase by delta*pi/2
+# -- 0.31 rad for the smallest interesting mismatch, delta = 0.2 -- and so moves J by O(0.1) of
+# the envelope. 1e-3 sits five orders above the fit floor and two below the smallest defect it
+# has to catch.
+BESSEL_ORDER_CHECK_TOL = 1e-3
+
+# Whether the composed phase derivative d Psi/d log(1+z') (closed-form omega (1+z') for each
+# transfer function, the phase-spline log-derivative for the Green's function; see
+# ComputeTargets/phase_groups.py) is handed to adaptive_levin_sincos as "theta_deriv". Without it
+# the driver differentiates the sampled raw phase spectrally, which loses precision in proportion
+# to |theta| / (phase change across the sub-region). Validated end-to-end in prompt 08 on the
+# exact constant-w fixtures (prompts/source-remediation/logs/08-qsi-phase-group-integration.md,
+# "theta_deriv decision"): see that log for the numbers behind this setting.
+LEVIN_USE_THETA_DERIV = True
+
+# A transfer function's hand-over redshift (TkSourceFunctions.crossover_z) need not be a grid
+# point: main.py truncates the WKB grid to the largest source-grid point at or below z_init, so
+# TkSourceFunctions.WKB_region[0] can sit up to one grid step below crossover_z, and no accessor
+# of that factor is evaluable in between (IMPLEMENTATION_STATE.md section 5 note 6). The
+# partition is made at crossover_z, and inside that gap the factor's accessors are evaluated at
+# the nearest end of their own range ("clamped"). The gap is allowed to be at most this many
+# mean source-grid steps (in log(1+z)) wide; anything larger is a data problem and raises.
+HANDOVER_CLAMP_MAX_GRID_STEPS = 1.5
+
+# A sub-interval narrower than this in log(1+z') is treated as empty (two breakpoints that
+# coincide, e.g. q = r, or a breakpoint landing on an end of the range). This is audit B11's
+# fix (QI-4): before prompt 08 the region-nonempty guards compared get_z(max_z)/get_z(min_z)
+# against 1 + DEFAULT_QUADRATURE_RTOL, a ratio in z rather than in 1+z, so the smallest accepted
+# interval varied by orders of magnitude across the range and the test divided by zero at
+# z_response = 0. A width in the integration variable log(1+z') does neither.
+#
+# Value: DEFAULT_FLOAT_PRECISION = 1e-7 is the tolerance at which this codebase treats two
+# redshifts as the same, which is what a coincident breakpoint (q = r, or a hand-over landing on
+# an end of the range) is. It is also small enough to be numerically irrelevant: the production
+# range is log(1+1e5) - log(1+0.1) = 11.4 wide, so a discarded sub-interval carries at most
+# 1e-7/11.4 ~ 1e-8 of the integral -- at the quadrature rtol, below every representation floor
+# recorded on the campaign's status board. Discarded breakpoints are recorded in
+# metadata["partition"]["skipped"] rather than dropped silently.
+MIN_SUBINTERVAL_LOG_WIDTH = DEFAULT_FLOAT_PRECISION
 
 
 class BesselPhaseProxy:
@@ -61,13 +130,816 @@ class BesselPhaseProxy:
 
 
 def get_z(z):
-    if isinstance(z, redshift):
+    # duck-typed: a redshift, or any stand-in exposing .z (as the audit's QI_* scripts use)
+    if isinstance(z, redshift) or hasattr(z, "z"):
         return z.z
 
     elif isinstance(z, float):
         return z
 
     return float(z)
+
+
+def _log1p_z(z) -> float:
+    return log(1.0 + get_z(z))
+
+
+# ------------------------------------------------------------------------------------------
+# clamping adapters
+#
+# phase_groups' factor adapters call the TkSourceFunctions accessors with log(1+z') and do not
+# clamp (logs/07 "State handed to the next prompt" item 1). Each sub-interval therefore wraps
+# its transfer functions in one of these, which pins the abscissa into the evaluable range of
+# the representation the regime selects. The permitted overhang is checked when the partition
+# is built (_check_gap), not here.
+
+
+class _ClampedPhase:
+    """phase_spline protocol (raw_theta, theta_mod_2pi, theta_deriv) with the abscissa clamped."""
+
+    def __init__(self, phase, clamp: Callable[[float], float]):
+        self._phase = phase
+        self._clamp = clamp
+
+    def raw_theta(self, x: float, x_is_log: bool = False) -> float:
+        return self._phase.raw_theta(self._clamp(_as_log(x, x_is_log)), x_is_log=True)
+
+    def theta_mod_2pi(self, x: float, x_is_log: bool = False) -> float:
+        return self._phase.theta_mod_2pi(
+            self._clamp(_as_log(x, x_is_log)), x_is_log=True
+        )
+
+    def theta_deriv(
+        self, x: float, x_is_log: bool = False, log_derivative: bool = False
+    ) -> float:
+        return self._phase.theta_deriv(
+            self._clamp(_as_log(x, x_is_log)),
+            x_is_log=True,
+            log_derivative=log_derivative,
+        )
+
+
+def _as_log(x: float, is_log: bool) -> float:
+    return x if is_log else log(1.0 + x)
+
+
+class _ClampedTk:
+    """
+    The TkSourceFunctions protocol phase_groups reads (T, dT_dz for a smooth factor; M, dlnM_dz,
+    omega, phase for an oscillatory one), with log(1+z') clamped into the evaluable range of
+    the representation in use: numeric_region for a smooth factor (open above, because T = 1
+    exactly above the numeric samples), WKB_region for an oscillatory one.
+    """
+
+    def __init__(self, functions, oscillatory: bool):
+        self._f = functions
+        self.oscillatory = oscillatory
+        if oscillatory:
+            z_max, z_min = functions.WKB_region
+            self._log_hi = log(1.0 + z_max)
+            self._log_lo = log(1.0 + z_min)
+            self.phase = _ClampedPhase(functions.phase, self._clamp)
+        else:
+            z_max, z_min = functions.numeric_region
+            self._log_hi = inf
+            self._log_lo = log(1.0 + z_min)
+            self.phase = None
+
+    def _clamp(self, log_z: float) -> float:
+        if log_z < self._log_lo:
+            return self._log_lo
+        if log_z > self._log_hi:
+            return self._log_hi
+        return log_z
+
+    # smooth protocol
+    def T(self, x: float, z_is_log: bool = False) -> float:
+        return self._f.T(self._clamp(_as_log(x, z_is_log)), z_is_log=True)
+
+    def dT_dz(self, x: float, z_is_log: bool = False) -> float:
+        return self._f.dT_dz(self._clamp(_as_log(x, z_is_log)), z_is_log=True)
+
+    # oscillatory protocol
+    def M(self, x: float, z_is_log: bool = False) -> float:
+        return self._f.M(self._clamp(_as_log(x, z_is_log)), z_is_log=True)
+
+    def dlnM_dz(self, x: float, z_is_log: bool = False) -> float:
+        return self._f.dlnM_dz(self._clamp(_as_log(x, z_is_log)), z_is_log=True)
+
+    def omega(self, x: float, z_is_log: bool = False) -> float:
+        return self._f.omega(self._clamp(_as_log(x, z_is_log)), z_is_log=True)
+
+
+class _ClampedSource:
+    """The QuadSource dense-output spline f(z') with log(1+z') clamped into its numeric_region."""
+
+    def __init__(self, source_f: Callable, numeric_region: Tuple[float, float]):
+        self._f = source_f
+        z_max, z_min = numeric_region
+        self._log_hi = log(1.0 + z_max)
+        self._log_lo = log(1.0 + z_min)
+
+    def __call__(self, x: float, z_is_log: bool = False) -> float:
+        log_z = _as_log(x, z_is_log)
+        if log_z < self._log_lo:
+            log_z = self._log_lo
+        elif log_z > self._log_hi:
+            log_z = self._log_hi
+        return self._f(log_z, z_is_log=True)
+
+
+# ------------------------------------------------------------------------------------------
+# the partition
+
+
+def _factor_breakpoint(
+    label: str, z_break: Optional[float], log_top: float, log_bottom: float
+):
+    """
+    Classify one factor's hand-over redshift against the integration range
+    [z_response, z_source_max]. Returns (mode, record) where mode is "smooth" (smooth over the
+    whole range), "oscillatory" (oscillatory over the whole range) or "split" (breakpoint
+    strictly inside the range), and record is the metadata["partition"]["breakpoints"] entry.
+    """
+    if z_break is None:
+        return "smooth", None
+
+    log_break = log(1.0 + z_break)
+    record = {"factor": label, "z": float(z_break), "inside_range": False}
+
+    if log_break >= log_top - MIN_SUBINTERVAL_LOG_WIDTH:
+        # hands over at or above the top of the range: oscillatory throughout
+        return "oscillatory", record
+    if log_break <= log_bottom + MIN_SUBINTERVAL_LOG_WIDTH:
+        # hands over at or below the response redshift: never oscillatory here
+        return "smooth", record
+
+    record["inside_range"] = True
+    return "split", record
+
+
+def _check_gap(
+    label: str,
+    gap: float,
+    max_gap: float,
+    z_max: float,
+    z_min: float,
+    detail: str,
+) -> float:
+    """
+    A representation is allowed to fall short of a sub-interval end by at most max_gap in
+    log(1+z) (see HANDOVER_CLAMP_MAX_GRID_STEPS); that shortfall is bridged by clamping.
+    Returns the (non-negative) gap, or raises if it is too large.
+    """
+    if gap <= 0.0:
+        return 0.0
+    if gap > max_gap:
+        raise RuntimeError(
+            f"compute_QuadSource_integral: {label} is not evaluable over the whole sub-interval "
+            f"z in ({z_max:.5g}, {z_min:.5g}): {detail}; the shortfall is {gap:.3e} in log(1+z), "
+            f"but at most {max_gap:.3e} ({HANDOVER_CLAMP_MAX_GRID_STEPS:g} mean source-grid steps) "
+            f"can be bridged by clamping"
+        )
+    return gap
+
+
+def _mean_source_grid_step(source: QuadSource) -> float:
+    """Mean spacing of the source redshift grid in log(1+z)."""
+    z_sample = source.z_sample
+    n = len(z_sample)
+    if n < 2:
+        raise RuntimeError(
+            f"compute_QuadSource_integral: QuadSource (store_id={source.store_id}) has fewer than two sampled redshifts"
+        )
+    return (_log1p_z(z_sample.max) - _log1p_z(z_sample.min)) / (n - 1)
+
+
+def build_partition(
+    GkPolicy: GkSourcePolicyData,
+    Tq_f,
+    Tr_f,
+    source: QuadSource,
+    z_response: float,
+    z_source_max: float,
+) -> dict:
+    """
+    Partition [z_response, z_source_max] at the hand-over redshifts of all three factors of the
+    integrand G_k(z, z') f(z' | q, r) / H(z')^2 (README section 6 of prompts/source-remediation/):
+
+        factor   smooth representation above   oscillatory (Liouville-Green) below   breakpoint
+        G        Gk_f.numeric_Gk               Gk_f.sin_amplitude, Gk_f.phase       GkPolicy.crossover_z (type "mixed";
+                                                                                     "numeric" = smooth throughout,
+                                                                                     "WKB" = oscillatory throughout)
+        T_q      Tq_f.T, Tq_f.dT_dz (T = 1 above its grid)   Tq_f.M, dlnM_dz, omega, phase   Tq_f.crossover_z
+        T_r      likewise                                     likewise                        Tr_f.crossover_z
+
+    Each sub-interval carries a regime (G_osc, q_osc, r_osc) and, for every factor, the
+    representation it uses is checked to be evaluable over the sub-interval up to a clamp gap
+    of at most HANDOVER_CLAMP_MAX_GRID_STEPS source-grid steps (see _ClampedTk).
+
+    :return: dict with "subintervals" (list of dicts, descending in z, each with z_max, z_min,
+        regime, method, clamp gaps and the clamped factor objects) and "metadata" (the JSON-able
+        record stored as metadata["partition"]).
+    """
+    Gk_f: GkSourceFunctions = GkPolicy.functions
+
+    log_top = log(1.0 + z_source_max)
+    log_bottom = log(1.0 + z_response)
+    if log_top - log_bottom <= MIN_SUBINTERVAL_LOG_WIDTH:
+        raise RuntimeError(
+            f"compute_QuadSource_integral: empty integration range z_source_max={z_source_max:.5g}, z_response={z_response:.5g}"
+        )
+
+    # --- G ---------------------------------------------------------------------------------
+    G_type = GkPolicy.type
+    if G_type == "numeric":
+        G_mode, G_record = "smooth", None
+    elif G_type == "WKB":
+        G_mode, G_record = "oscillatory", None
+    elif G_type == "mixed":
+        if GkPolicy.crossover_z is None:
+            raise RuntimeError(
+                f"compute_QuadSource_integral: GkSourcePolicyData (store_id={GkPolicy.store_id}) has type 'mixed' but no crossover_z"
+            )
+        G_mode, G_record = _factor_breakpoint(
+            "G", float(GkPolicy.crossover_z), log_top, log_bottom
+        )
+    else:
+        raise NotImplementedError(f"Gk {G_type} not implemented")
+
+    # --- T_q, T_r --------------------------------------------------------------------------
+    q_mode, q_record = _factor_breakpoint("Tq", Tq_f.crossover_z, log_top, log_bottom)
+    r_mode, r_record = _factor_breakpoint("Tr", Tr_f.crossover_z, log_top, log_bottom)
+
+    def log_break(mode, record):
+        if mode == "oscillatory":
+            return inf
+        if mode == "smooth":
+            return -inf
+        return log(1.0 + record["z"])
+
+    G_log_break = log_break(G_mode, G_record)
+    q_log_break = log_break(q_mode, q_record)
+    r_log_break = log_break(r_mode, r_record)
+
+    # --- edges: the range ends plus every breakpoint strictly inside, descending, deduplicated
+    # A breakpoint within MIN_SUBINTERVAL_LOG_WIDTH of the edge above it would open a sub-interval
+    # too narrow to carry any of the integral (see that constant); it is merged into that edge and
+    # recorded as skipped (audit B11), so that a reader of the stored metadata can tell a merged
+    # hand-over from one that never happened.
+    edges = [log_top]
+    skipped = []
+    for value, label in sorted(
+        (
+            (value, label)
+            for value, label in (
+                (G_log_break, "G"),
+                (q_log_break, "Tq"),
+                (r_log_break, "Tr"),
+            )
+            if log_bottom < value < log_top
+        ),
+        reverse=True,
+    ):
+        if edges[-1] - value > MIN_SUBINTERVAL_LOG_WIDTH:
+            edges.append(value)
+        else:
+            skipped.append(
+                {
+                    "factor": label,
+                    "z": exp(value) - 1.0,
+                    "log_width": edges[-1] - value,
+                    "reason": "hand-over within MIN_SUBINTERVAL_LOG_WIDTH of the sub-interval above it",
+                }
+            )
+    if edges[-1] - log_bottom > MIN_SUBINTERVAL_LOG_WIDTH:
+        edges.append(log_bottom)
+    else:
+        skipped.append(
+            {
+                "factor": None,
+                "z": exp(edges[-1]) - 1.0,
+                "log_width": edges[-1] - log_bottom,
+                "reason": "lowest hand-over within MIN_SUBINTERVAL_LOG_WIDTH of z_response; snapped to it",
+            }
+        )
+        edges[-1] = log_bottom
+
+    max_gap = HANDOVER_CLAMP_MAX_GRID_STEPS * _mean_source_grid_step(source)
+
+    source_region = source.numeric_region
+    if source_region is None:
+        raise RuntimeError(
+            f"compute_QuadSource_integral: QuadSource (store_id={source.store_id}) has no numeric_region"
+        )
+
+    subintervals = []
+    records = []
+    for log_hi, log_lo in zip(edges[:-1], edges[1:]):
+        z_hi = exp(log_hi) - 1.0
+        z_lo = exp(log_lo) - 1.0
+
+        # a factor is oscillatory on this sub-interval if the sub-interval lies below its breakpoint
+        regime = (
+            G_log_break >= log_hi - MIN_SUBINTERVAL_LOG_WIDTH,
+            q_log_break >= log_hi - MIN_SUBINTERVAL_LOG_WIDTH,
+            r_log_break >= log_hi - MIN_SUBINTERVAL_LOG_WIDTH,
+        )
+        G_osc, q_osc, r_osc = regime
+        gaps = {}
+
+        # Green's function: GkSourcePolicyData guarantees its regions cover the crossover with
+        # clearance, so no clamping is offered -- the checks are strict, as they were before.
+        if G_osc:
+            if (
+                Gk_f.sin_amplitude is None
+                or Gk_f.phase is None
+                or Gk_f.WKB_region is None
+            ):
+                raise RuntimeError(
+                    f"compute_QuadSource_integral: Green's function is oscillatory on z in ({z_hi:.5g}, {z_lo:.5g}) but has no WKB representation (type={G_type}, quality={GkPolicy.quality}, {_Gk_diagnostics(GkPolicy)})"
+                )
+            _check_region_covers("Gk WKB", Gk_f.WKB_region, log_hi, log_lo, z_hi, z_lo)
+        else:
+            if Gk_f.numeric_Gk is None or Gk_f.numeric_region is None:
+                raise RuntimeError(
+                    f"compute_QuadSource_integral: Green's function is smooth on z in ({z_hi:.5g}, {z_lo:.5g}) but has no numeric representation (type={G_type}, quality={GkPolicy.quality}, {_Gk_diagnostics(GkPolicy)})"
+                )
+            _check_region_covers(
+                "Gk numeric", Gk_f.numeric_region, log_hi, log_lo, z_hi, z_lo
+            )
+
+        # transfer functions: partition on crossover_z, clamp to the evaluable range
+        factors = {}
+        for label, functions, osc in (("Tq", Tq_f, q_osc), ("Tr", Tr_f, r_osc)):
+            if osc:
+                region_max, region_min = functions.WKB_region
+                if log(1.0 + region_min) > log_lo + MIN_SUBINTERVAL_LOG_WIDTH:
+                    raise RuntimeError(
+                        f"compute_QuadSource_integral: z_response={z_response:.5g} (sub-interval bottom z={z_lo:.5g}) lies below the lowest Liouville-Green sample z={region_min:.5g} of {label} (WKB region = ({region_max:.5g}, {region_min:.5g}))"
+                    )
+                gaps[label] = _check_gap(
+                    f"the Liouville-Green representation of {label}",
+                    log_hi - log(1.0 + region_max),
+                    max_gap,
+                    z_hi,
+                    z_lo,
+                    f"WKB region = ({region_max:.5g}, {region_min:.5g}), hand-over z={functions.crossover_z:.5g}",
+                )
+            else:
+                region_max, region_min = functions.numeric_region
+                gaps[label] = _check_gap(
+                    f"the numeric representation of {label}",
+                    log(1.0 + region_min) - log_lo,
+                    max_gap,
+                    z_hi,
+                    z_lo,
+                    f"numeric region = ({region_max:.5g}, {region_min:.5g}), hand-over z={functions.crossover_z:.5g}",
+                )
+            factors[label] = _ClampedTk(functions, osc)
+
+        if not any(regime):
+            # ordinary quadrature of the QuadSource spline of f, valid on source.numeric_region
+            source_max, source_min = source_region
+            if log(1.0 + source_max) < log_hi - DEFAULT_FLOAT_PRECISION:
+                raise RuntimeError(
+                    f"compute_QuadSource_integral: all-smooth sub-interval z in ({z_hi:.5g}, {z_lo:.5g}) starts above the QuadSource spline range ({source_max:.5g}, {source_min:.5g})"
+                )
+            gaps["source"] = _check_gap(
+                "the QuadSource spline of f",
+                log(1.0 + source_min) - log_lo,
+                max_gap,
+                z_hi,
+                z_lo,
+                f"QuadSource numeric region = ({source_max:.5g}, {source_min:.5g})",
+            )
+            method = "quad"
+        else:
+            method = "Levin"
+
+        subintervals.append(
+            {
+                "z_max": z_hi,
+                "z_min": z_lo,
+                "log_width": log_hi - log_lo,
+                "regime": regime,
+                "method": method,
+                "gaps": gaps,
+                "Tq": factors["Tq"],
+                "Tr": factors["Tr"],
+            }
+        )
+        records.append(
+            {
+                "z_max": z_hi,
+                "z_min": z_lo,
+                "regime": list(regime),
+                "method": method,
+                "clamp_gaps_log1pz": gaps,
+            }
+        )
+
+    metadata = {
+        "z_source_max": float(z_source_max),
+        "z_response": float(z_response),
+        "G_type": G_type,
+        "breakpoints": [r for r in (G_record, q_record, r_record) if r is not None],
+        "crossover_z_q": Tq_f.crossover_z,
+        "crossover_z_r": Tr_f.crossover_z,
+        # persisted by GkSourcePolicyData, read here for the record only; not used (see the
+        # "no quadrature gate lives in this module" comment at the top of this module)
+        "Levin_z_unused": (
+            get_z(GkPolicy.Levin_z) if GkPolicy.Levin_z is not None else None
+        ),
+        "max_clamp_gap_log1pz": max_gap,
+        "min_subinterval_log_width": MIN_SUBINTERVAL_LOG_WIDTH,
+        "skipped": skipped,
+        "subintervals": records,
+    }
+
+    return {"subintervals": subintervals, "metadata": metadata}
+
+
+def _check_region_covers(
+    label: str,
+    region,
+    log_z_max: float,
+    log_z_min: float,
+    z_max: float,
+    z_min: float,
+) -> None:
+    """
+    Check that a factor's region of validity covers a sub-interval, comparing in the integration
+    variable log(1+z') with MIN_SUBINTERVAL_LOG_WIDTH as the tolerance.
+
+    This comparison must not be made in z. build_partition carries its edges in log(1+z) and
+    recovers z for the quadrature by z = exp(log_z) - 1; at z ~ 5e14, log(1+z) ~ 32.3 exhausts the
+    ~16 significant digits of a double, so the recoverable 1+z has a granularity of ~0.02 -- five
+    orders of magnitude above DEFAULT_FLOAT_PRECISION. The information is gone in the log
+    representation and no amount of expm1 care recovers it. Because the Green's-function region
+    always ends exactly at z_response, the bottom of the lowest sub-interval always coincides with
+    a region boundary, and an absolute tolerance in z therefore let the sign of the round-trip
+    rounding decide whether the guard fired: 1372 of 3185 production work items raised
+    (docs/source-remediation-verification.md section 5.1). Converting the region bounds
+    z -> log(1+z) costs ~1 ulp of the log and does not amplify, so only that direction appears in
+    the decision path below; this is the shape the Tq/Tr branch of build_partition already used.
+
+    The error messages stay in z: they are for humans, and 5 significant figures is the right
+    resolution there.
+
+    Note this is a guard on an *equality-like* comparison. The same z_max/z_min are also passed on
+    as quadrature limits, where the round trip is harmless -- 0.02 absolute at z = 5e14 is 4e-17
+    relative -- so nothing about how those are computed should be "fixed" to match.
+    """
+    region_max_z, region_min_z = region
+
+    # log(1+z) needs z > -1. The pipeline never goes below DEFAULT_ZEND = 0.1 and z_response >= 0,
+    # so this is unreachable today, but the bounds arrive from the factor objects as plain floats.
+    if region_min_z <= -1.0 or region_max_z <= -1.0:
+        raise RuntimeError(
+            f"compute_QuadSource_integral: the {label} region ({region_max_z:.5g}, {region_min_z:.5g}) contains a redshift z <= -1, which has no log(1+z) [domain={z_max:.5g}, {z_min:.5g}]"
+        )
+
+    if log_z_max > log(1.0 + region_max_z) + MIN_SUBINTERVAL_LOG_WIDTH:
+        raise RuntimeError(
+            f"compute_QuadSource_integral: sub-interval top z={z_max:.5g} is out-of-bounds for the {label} region ({region_max_z:.5g}, {region_min_z:.5g}) [domain={z_max:.5g}, {z_min:.5g}]"
+        )
+    if log_z_min < log(1.0 + region_min_z) - MIN_SUBINTERVAL_LOG_WIDTH:
+        raise RuntimeError(
+            f"compute_QuadSource_integral: sub-interval bottom z={z_min:.5g} is out-of-bounds for the {label} region ({region_max_z:.5g}, {region_min_z:.5g}) [domain={z_max:.5g}, {z_min:.5g}]"
+        )
+
+
+def _Gk_diagnostics(GkPolicy) -> str:
+    """Best-effort description of the underlying GkSource for error messages."""
+    proxy = getattr(GkPolicy, "_source_proxy", None)
+    if proxy is None:
+        return "GkSource unavailable"
+    try:
+        Gk: GkSource = proxy.get()
+        return f"lowest numeric z={_extract_z(Gk._numeric_smallest_z)}, primary WKB largest z={_extract_z(Gk._primary_WKB_largest_z)}, z_crossover={_extract_z(GkPolicy.crossover_z)}, z_Levin={_extract_z(GkPolicy.Levin_z)}"
+    except Exception as e:  # diagnostics only; never mask the original error
+        return f"GkSource diagnostics unavailable ({type(e).__name__})"
+
+
+# ------------------------------------------------------------------------------------------
+# aggregation of per-sub-interval integration records
+
+
+def _aggregate_IntegrationData(
+    items: Sequence[IntegrationData],
+) -> Optional[IntegrationData]:
+    if len(items) == 0:
+        return None
+    evaluations = sum(item.RHS_evaluations for item in items)
+    if evaluations > 0:
+        mean_RHS_time = (
+            sum(item.mean_RHS_time * item.RHS_evaluations for item in items)
+            / evaluations
+        )
+    else:
+        mean_RHS_time = 0.0
+    return IntegrationData(
+        compute_time=sum(item.compute_time for item in items),
+        compute_steps=sum(item.compute_steps for item in items),
+        mean_RHS_time=mean_RHS_time,
+        max_RHS_time=max(item.max_RHS_time for item in items),
+        min_RHS_time=min(item.min_RHS_time for item in items),
+        RHS_evaluations=evaluations,
+    )
+
+
+def _aggregate_LevinData(items: Sequence[dict]) -> Optional[LevinData]:
+    """
+    Aggregate the adaptive_levin_sincos result dicts of every Levin call made for one integral:
+    counters are summed, chebyshev_min_order is the minimum, max_depth the maximum.
+    """
+    if len(items) == 0:
+        return None
+    return LevinData(
+        num_regions=sum(item["num_regions"] for item in items),
+        evaluations=sum(item["evaluations"] for item in items),
+        num_simple_regions=sum(item["num_simple_regions"] for item in items),
+        num_SVD_errors=sum(item["num_SVD_errors"] for item in items),
+        num_order_changes=sum(item["num_order_changes"] for item in items),
+        chebyshev_min_order=min(item["chebyshev_min_order"] for item in items),
+        max_depth=max(item["max_depth"] for item in items),
+        elapsed=sum(item["elapsed"] for item in items),
+    )
+
+
+# ------------------------------------------------------------------------------------------
+# the source time integral
+
+
+def _check_bessel_order(label: str, phase_data: dict, nu: float) -> None:
+    """
+    The Levin branch of the analytic oracle uses the caller-supplied bessel_phase splines while
+    _three_bessel_quad recomputes jv(nu + b, .) for itself; the two agree only if the splines
+    were built at the same b that is passed as `b` (audit QI-1: "correct at HEAD but an
+    unguarded invariant"). bessel_phase() does not record its own order -- its return dict
+    (LiouvilleGreen/bessel_phase.py) carries phase, mod, Q, phi, bessel_j, bessel_y, min_x,
+    max_x and no "nu" -- so the order is checked numerically instead: the spline's own
+    reconstruction J_nu = m sin(theta) is compared against scipy's J_nu, normalised by the local
+    envelope m (which is never zero, unlike J itself). An order wrong by delta puts the phase out
+    by delta*pi/2 -- 0.31 rad for delta = 0.2 -- so J moves by O(0.1) of the envelope, while the
+    reconstruction's own error is ~2e-8 of it (audit QI-1). LiouvilleGreen/ is out of scope for
+    this campaign, so nothing here asks bessel_phase to start recording its order.
+    """
+    min_x = phase_data["min_x"]
+    max_x = phase_data["max_x"]
+
+    # Two abscissae just inside the oscillatory region, x ~ 2 nu to 5 nu: far apart in phase, so
+    # that a wrong order cannot escape both by sitting at a node of the difference, but small
+    # enough that the phase spline is at its most accurate (its error grows with x, and
+    # production builds these splines out to x ~ 1e9). Deep inside the turning point, x << nu,
+    # the check would lose its sensitivity instead: there J is exponentially small compared with
+    # the envelope, so even a wrong order moves it by far less than the envelope.
+    x_lo = min(max(1.01 * min_x, 2.0 * max(nu, 0.5)), max_x)
+    for x_test in sorted({x_lo, min(2.5 * x_lo, max_x)}):
+        envelope = phase_data["mod"](x_test)
+        residual = abs(phase_data["bessel_j"](x_test) - jv(nu, x_test))
+        if residual > BESSEL_ORDER_CHECK_TOL * envelope:
+            raise RuntimeError(
+                f"compute_QuadSource_integral: the supplied {label} phase spline does not appear to be "
+                f"a Liouville-Green representation of the Bessel function of order nu={nu:.8g} required by "
+                f"b={nu - (0.5 if label == 'Bessel_0pt5' else 2.5):.8g}: at x={x_test:.5g} the spline gives "
+                f"J={phase_data['bessel_j'](x_test):.8g} against scipy's J_nu={jv(nu, x_test):.8g}, a "
+                f"discrepancy of {residual / envelope:.3e} of the local envelope m={envelope:.5g} (tolerance "
+                f"{BESSEL_ORDER_CHECK_TOL:.1e}). The Bessel phase splines must be built with the same b that "
+                f"is passed to the source time integral (audit QI-1)"
+            )
+
+
+def evaluate_QuadSource_integral(
+    model: BackgroundModel,
+    k: wavenumber_exit_time,
+    q: wavenumber_exit_time,
+    r: wavenumber_exit_time,
+    source: QuadSource,
+    GkPolicy: GkSourcePolicyData,
+    z_response: redshift,
+    z_source_max: redshift,
+    b: float,
+    Bessel_0pt5: dict,
+    Bessel_2pt5: dict,
+    Tq_numeric,
+    Tq_WKB,
+    Tr_numeric,
+    Tr_WKB,
+    atol: float = DEFAULT_QUADRATURE_ATOL,
+    rtol: float = DEFAULT_QUADRATURE_RTOL,
+    Tk_functions_builder=TkSourceFunctions,
+) -> dict:
+    """
+    The source time integral (spec 03 R28 with Q_s/a_0^2 stripped, audit section 3.1),
+
+        total = (1 + z_response) int d log(1+z') G_k(z_response, z') f(z' | q, r) / H(z')^2
+
+    over z' in [z_response, z_source_max], together with the analytic constant-w oracle
+    `analytic_rad`. The range is partitioned at the hand-over redshifts of G, T_q and T_r
+    (build_partition); an all-smooth sub-interval is integrated by scipy.quad of the QuadSource
+    spline (numeric_quad_integral), every other sub-interval by one adaptive_levin_sincos call
+    per phase group of ComputeTargets.phase_groups (phase_group_Levin_integral).
+
+    This is the body of the Ray task compute_QuadSource_integral, callable directly (no Ray
+    runtime needed) with the Bessel phase dicts rather than their proxies. Tk_functions_builder
+    exists so that tests can substitute an exact two-region representation of T_k for
+    TkSourceFunctions; production never passes it.
+    """
+    model_f: ModelFunctions = model.functions
+    Gk_f: GkSourceFunctions = GkPolicy.functions
+
+    with WallclockTimer() as timer:
+        # the Bessel phase splines must have been built at this b (audit QI-1)
+        _check_bessel_order("Bessel_0pt5", Bessel_0pt5, 0.5 + b)
+        _check_bessel_order("Bessel_2pt5", Bessel_2pt5, 2.5 + b)
+
+        # two-region (numeric + Liouville-Green) representations of the transfer functions
+        Tq_f = Tk_functions_builder(model, q.k, Tq_numeric, Tq_WKB)
+        Tr_f = Tk_functions_builder(model, r.k, Tr_numeric, Tr_WKB)
+
+        for label, functions, recorded in (
+            ("q", Tq_f, source.crossover_z_q),
+            ("r", Tr_f, source.crossover_z_r),
+        ):
+            if recorded is not None and abs(
+                functions.crossover_z - recorded
+            ) > DEFAULT_FLOAT_PRECISION * max(1.0, abs(recorded)):
+                raise RuntimeError(
+                    f"compute_QuadSource_integral: hand-over redshift of T_{label} from the supplied Tk objects is z={functions.crossover_z:.8g}, but the QuadSource (store_id={source.store_id}) records z={recorded:.8g}"
+                )
+
+        z_resp = get_z(z_response)
+        z_top = get_z(z_source_max)
+
+        partition = build_partition(GkPolicy, Tq_f, Tr_f, source, z_resp, z_top)
+        subintervals = partition["subintervals"]
+        total_log_width = sum(item["log_width"] for item in subintervals)
+
+        source_f = _ClampedSource(source.functions.source, source.numeric_region)
+
+        numeric_quad: float = 0.0
+        numeric_quad_abserr: float = 0.0
+        numeric_quad_items: List[IntegrationData] = []
+        numeric_quad_records = []
+
+        WKB_Levin: float = 0.0
+        WKB_Levin_abserr: float = 0.0
+        WKB_Levin_converged: bool = True
+        WKB_Levin_phase_limited: bool = False
+        WKB_Levin_items: List[dict] = []
+        WKB_Levin_records = []
+
+        for item in subintervals:
+            z_hi = item["z_max"]
+            z_lo = item["z_min"]
+            # the caller's atol bounds the whole integral; each sub-interval gets its share by
+            # length in log(1+z'), matching how adaptive_levin_sincos itself distributes atol
+            # over its sub-regions (prompts/levin-refactor prompt 05, audit C3)
+            atol_sub = atol * item["log_width"] / total_log_width
+
+            if item["method"] == "quad":
+                payload = numeric_quad_integral(
+                    model,
+                    k.k,
+                    q.k,
+                    r.k,
+                    source,
+                    GkPolicy,
+                    z_response,
+                    max_z=z_hi,
+                    min_z=z_lo,
+                    atol=atol_sub,
+                    rtol=rtol,
+                    source_f=source_f,
+                )
+                numeric_quad += payload["value"]
+                numeric_quad_abserr += payload["abserr"]
+                numeric_quad_items.append(payload["data"])
+                numeric_quad_records.append(
+                    {
+                        "z_max": z_hi,
+                        "z_min": z_lo,
+                        "value": payload["value"],
+                        "abserr": payload["abserr"],
+                    }
+                )
+            else:
+                payload = phase_group_Levin_integral(
+                    model,
+                    k.k,
+                    q.k,
+                    r.k,
+                    item["regime"],
+                    Gk_f,
+                    item["Tq"],
+                    item["Tr"],
+                    z_response,
+                    max_z=z_hi,
+                    min_z=z_lo,
+                    atol=atol_sub,
+                    rtol=rtol,
+                )
+                WKB_Levin += payload["value"]
+                WKB_Levin_abserr += payload["abserr"]
+                WKB_Levin_converged = WKB_Levin_converged and payload["converged"]
+                WKB_Levin_phase_limited = (
+                    WKB_Levin_phase_limited or payload["phase_limited"]
+                )
+                WKB_Levin_items.extend(payload["Levin_results"])
+                WKB_Levin_records.append(
+                    {
+                        "z_max": z_hi,
+                        "z_min": z_lo,
+                        "regime": list(item["regime"]),
+                        "value": payload["value"],
+                        "abserr": payload["abserr"],
+                        "converged": payload["converged"],
+                        "phase_limited": payload["phase_limited"],
+                        "groups": payload["groups"],
+                    }
+                )
+
+        # calculate analytic approximation for specified value of b using pre-supplied Bessel function splines
+        analytic_data = analytic_integral(
+            model,
+            k.k,
+            q.k,
+            r.k,
+            z_response,
+            max_z=z_source_max,
+            min_z=z_response,
+            b=b,
+            Bessel_0pt5=Bessel_0pt5,
+            Bessel_2pt5=Bessel_2pt5,
+            rtol=rtol,
+            atol=atol,
+        )
+
+    # A bound on the error of "total" (audit B8/QI-11). Both contributions are absolute errors
+    # already scaled by (1 + z_response) -- numeric_quad_integral and phase_group_Levin_integral
+    # each scale their own "abserr" exactly as they scale their "value" -- so they are summed
+    # directly, and linearly rather than in quadrature: neighbouring sub-intervals share the same
+    # representation of every factor, so a representation error is a common drift and not
+    # independent noise (the same reasoning as the three-Bessel machinery below).
+    #
+    # This is an absolute bound and must stay one: numeric_quad and WKB_Levin cancel by up to 5x
+    # on the prompt-08 fixtures (logs/08-qsi-phase-group-integration.md observation 5), so a
+    # relative error scaled by |total| would understate the error of a cancelling case.
+    total_abserr = numeric_quad_abserr + WKB_Levin_abserr
+
+    # The persisted columns keep their names, with these meanings since prompt 08:
+    #   numeric_quad  -- sum over the all-smooth sub-intervals (scipy.quad of the QuadSource spline)
+    #   WKB_Levin     -- sum over every sub-interval with at least one oscillatory factor
+    #   total         -- numeric_quad + WKB_Levin
+    #   total_abserr, total_converged, total_phase_limited -- the bound above and the Levin
+    #                    driver's flags, aggregated over every group of every sub-interval
+    #   b             -- the b these were computed at (audit B7): it fixes c_s, the Bessel orders
+    #                    and the eta' weight of analytic_rad
+    return {
+        "total": numeric_quad + WKB_Levin,
+        "total_abserr": total_abserr,
+        "total_converged": WKB_Levin_converged,
+        "total_phase_limited": WKB_Levin_phase_limited,
+        "b": b,
+        "numeric_quad": numeric_quad,
+        "WKB_Levin": WKB_Levin,
+        "GkPolicy_serial": GkPolicy.store_id,
+        "source_serial": source.store_id,
+        "numeric_quad_data": _aggregate_IntegrationData(numeric_quad_items),
+        "WKB_Levin_data": _aggregate_LevinData(WKB_Levin_items),
+        "WKB_phase_spline_chunks": (
+            getattr(Gk_f.phase, "num_chunks", None) if Gk_f.phase is not None else None
+        ),
+        "eta_source_max": model_f.tau(z_top),
+        "eta_response": model_f.tau(z_resp),
+        "analytic_rad": analytic_data["value"],
+        "compute_time": timer.elapsed,
+        "analytic_compute_time": analytic_data["elapsed"],
+        # Error bounds: the Levin sub-intervals' abserr (summed linearly across groups and
+        # sub-intervals) and the quad sub-intervals' scipy error estimates. Their sum is the
+        # top-level "total_abserr" above; the per-part and per-sub-interval detail stays here.
+        "metadata": {
+            "analytic": {
+                **analytic_data["metadata"],
+                "abserr": analytic_data["abserr"],
+                "converged": analytic_data["converged"],
+            },
+            "numeric_quad": {
+                "abserr": numeric_quad_abserr,
+                "subintervals": numeric_quad_records,
+            },
+            "WKB_Levin": {
+                "abserr": WKB_Levin_abserr,
+                "converged": WKB_Levin_converged,
+                "phase_limited": WKB_Levin_phase_limited,
+                "theta_deriv_supplied": LEVIN_USE_THETA_DERIV,
+                "subintervals": WKB_Levin_records,
+            },
+            "partition": partition["metadata"],
+        },
+    }
 
 
 @ray.remote
@@ -83,6 +955,10 @@ def compute_QuadSource_integral(
     b: float,
     Bessel_0pt5: BesselPhaseProxy,
     Bessel_2pt5: BesselPhaseProxy,
+    Tq_numeric,
+    Tq_WKB,
+    Tr_numeric,
+    Tr_WKB,
     atol: float = DEFAULT_QUADRATURE_ATOL,
     rtol: float = DEFAULT_QUADRATURE_RTOL,
 ) -> dict:
@@ -90,240 +966,113 @@ def compute_QuadSource_integral(
     # also that source and Gk have z_samples at least as far back as z_source_max
     model: BackgroundModel = model_proxy.get()
 
+    return evaluate_QuadSource_integral(
+        model,
+        k,
+        q,
+        r,
+        source,
+        GkPolicy,
+        z_response,
+        z_source_max,
+        b,
+        Bessel_0pt5.get(),
+        Bessel_2pt5.get(),
+        Tq_numeric,
+        Tq_WKB,
+        Tr_numeric,
+        Tr_WKB,
+        atol=atol,
+        rtol=rtol,
+    )
+
+
+def phase_group_Levin_integral(
+    model: BackgroundModel,
+    k: wavenumber,
+    q: wavenumber,
+    r: wavenumber,
+    regime: Tuple[bool, bool, bool],
+    Gk_f: GkSourceFunctions,
+    Tq_f,
+    Tr_f,
+    z_response: redshift,
+    max_z: float,
+    min_z: float,
+    atol: float,
+    rtol: float,
+) -> dict:
+    """
+    (1 + z_response) int_{log(1+min_z)}^{log(1+max_z)} G f / H^2 d log(1+z') over one sub-interval
+    on which at least one factor is oscillatory, as one adaptive_levin_sincos call per phase
+    group of build_phase_groups(regime, ...). Group values and error estimates are summed
+    linearly (the groups share a phase construction, so an inaccurate phase produces a common
+    drift, not independent noise -- the same reasoning as _three_bessel_Levin below).
+
+    atol is the absolute tolerance for this sub-interval; each group receives atol / n_groups so
+    that the linear sum of the groups' error bounds is bounded by atol. rtol is passed to every
+    group unchanged (a relative tolerance has no additive share).
+
+    :param Tq_f, Tr_f: TkSourceFunctions-protocol objects (normally _ClampedTk wrappers) whose
+        numeric accessors are read if the factor is smooth in `regime`, WKB accessors if not
+    :return: dict with "value", "abserr", "converged", "phase_limited", "groups" (per-group
+        metadata, values scaled by (1 + z_response) like "value") and "Levin_results" (the raw
+        driver result dicts, for aggregation into LevinData)
+    """
     model_f: ModelFunctions = model.functions
-    Gk_f: GkSourceFunctions = GkPolicy.functions
+    z_resp = get_z(z_response)
 
-    with WallclockTimer() as timer:
-        numeric_quad: float = 0.0
-        WKB_quad: float = 0.0
-        WKB_Levin: float = 0.0
+    groups = build_phase_groups(
+        regime,
+        Gk=Gk_f if regime[0] else Gk_f.numeric_Gk,
+        Tq=Tq_f,
+        Tr=Tr_f,
+        model_functions=model_f,
+        w_background=model_f.wBackground,
+    )
 
-        numeric_quad_data = None
-        WKB_quad_data = None
-        WKB_Levin_data = None
-        WKB_Levin_metadata = None
+    x_span = (log(1.0 + min_z), log(1.0 + max_z))
+    atol_group = atol / len(groups)
+    regime_label = "".join(name for name, flag in zip(("G", "q", "r"), regime) if flag)
 
-        if GkPolicy.type == "numeric":
-            max_z, min_z = Gk_f.numeric_region
-            if z_response.z < min_z:
-                raise RuntimeError(
-                    f"compute_QuadSource_integral: z_response={z_response.z:.5g}, but min_z for numeric region is min_z={min_z:.5g} for k={k.k.k_inv_Mpc:.5g}/Mpc (store_id={k.store_id}), q={q.k.k_inv_Mpc:.5g}/Mpc (store_id={q.store_id}), r={r.k.k_inv_Mpc:.5g}/Mpc (store_id={r.store_id}), GkSourcePolicyData store_id={GkPolicy.store_id}"
-                )
-            regions = [(z_source_max, z_response), (None, None), (None, None)]
-
-        elif GkPolicy.type == "WKB":
-            max_z, min_z = Gk_f.WKB_region
-            if z_response.z < min_z:
-                raise RuntimeError(
-                    f"compute_QuadSource_integral: z_response={z_response.z:.5g}, but min_z for WKB region is min_z={min_z:.5g} for k={k.k.k_inv_Mpc:.5g}/Mpc (store_id={k.store_id}), q={q.k.k_inv_Mpc:.5g}/Mpc (store_id={q.store_id}), r={r.k.k_inv_Mpc:.5g}/Mpc (store_id={r.store_id}), GkSourcePolicyData store_id={GkPolicy.store_id}"
-                )
-
-            Levin_z: Optional[float] = GkPolicy.Levin_z
-
-            if Levin_z is not None:
-                # unlikely to be worth doing Levin method (or that we will get an especially accurate result)
-                # unless the phase goes through enough cycles
-                phase_diff = Gk_f.phase.raw_theta(z_response.z) - Gk_f.phase.raw_theta(
-                    Levin_z
-                )
-                if phase_diff > LEVIN_MIN_PHASE_DIFF:
-                    regions = [
-                        (None, None),
-                        (z_source_max, Levin_z),
-                        (Levin_z, z_response),
-                    ]
-                else:
-                    regions = [(None, None), (z_source_max, z_response), (None, None)]
-            else:
-                regions = [(None, None), (z_source_max, z_response), (None, None)]
-
-        elif GkPolicy.type == "mixed":
-            crossover_z: Optional[float] = GkPolicy.crossover_z
-            Levin_z: Optional[float] = GkPolicy.Levin_z
-
-            # if Levin threshold occurs before the crossover point, move it up to the crossover point
-            if (
-                Levin_z is not None
-                and crossover_z is not None
-                and Levin_z > crossover_z
-            ):
-                Levin_z = crossover_z
-
-            if crossover_z is not None:
-                max_z, min_z = Gk_f.numeric_region
-                if crossover_z < min_z:
-                    raise RuntimeError(
-                        f"compute_QuadSource_integral: crossover_z={crossover_z:.5g}, but min_z for numeric region is min_z={min_z:.5g} for z_response={z_response.z:.5g} (store_id={z_response.store_id}), k={k.k.k_inv_Mpc:.5g}/Mpc (store_id={k.store_id}), q={q.k.k_inv_Mpc:.5g}/Mpc (store_id={q.store_id}), r={r.k.k_inv_Mpc:.5g}/Mpc (store_id={r.store_id}), GkSourcePolicyData store_id={GkPolicy.store_id}"
-                    )
-
-            if Levin_z is not None:
-                phase_diff = Gk_f.phase.raw_theta(z_response.z) - Gk_f.phase.raw_theta(
-                    Levin_z
-                )
-                if phase_diff > LEVIN_MIN_PHASE_DIFF:
-                    regions = [
-                        (z_source_max, crossover_z),
-                        (
-                            crossover_z if crossover_z is not None else z_source_max,
-                            Levin_z,
-                        ),
-                        (Levin_z, z_response),
-                    ]
-                else:
-                    regions = [
-                        (z_source_max, crossover_z),
-                        (
-                            crossover_z if crossover_z is not None else z_source_max,
-                            z_response,
-                        ),
-                        (None, None),
-                    ]
-            else:
-                regions = [
-                    (z_source_max, crossover_z),
-                    (
-                        crossover_z if crossover_z is not None else z_source_max,
-                        z_response,
-                    ),
-                    (None, None),
-                ]
-
-        else:
-            raise NotImplementedError(f"Gk {GkPolicy.type} not implemented")
-
-        # REGION 1: ORDINARY QUADRATURE OF NUMERICAL RESULT
-        max_z, min_z = regions.pop(0)
-        if (
-            max_z is not None
-            and min_z is not None
-            and get_z(max_z) / get_z(min_z) > 1.0 + DEFAULT_QUADRATURE_RTOL
-        ):
-            # now = time.time()
-            # print(
-            #     f"|  --  (source store_id={source.store_id}, k store_id={k.store_id}) running time={format_time(now - start_time)}, starting numerical quadrature part"
-            # )
-            payload = numeric_quad_integral(
-                model,
-                k.k,
-                q.k,
-                r.k,
-                source,
-                GkPolicy,
-                z_response,
-                max_z=get_z(max_z),
-                min_z=get_z(min_z),
-                atol=atol,
-                rtol=rtol,
-            )
-            numeric_quad = payload["value"]
-            numeric_quad_data = payload["data"]
-
-        # REGION 2: ORDINARY QUADRATURE OF WKB RESULTS
-        max_z, min_z = regions.pop(0)
-        if (
-            max_z is not None
-            and min_z is not None
-            and get_z(max_z) / get_z(min_z) > 1.0 + DEFAULT_QUADRATURE_RTOL
-        ):
-            # now = time.time()
-            # print(
-            #     f"|  --  (source store_id={source.store_id}, k store_id={k.store_id}) running time={format_time(now - start_time)}, starting WKB quadrature part"
-            # )
-            payload = WKB_quad_integral(
-                model,
-                k.k,
-                q.k,
-                r.k,
-                source,
-                GkPolicy,
-                z_response,
-                max_z=get_z(max_z),
-                min_z=get_z(min_z),
-                atol=atol,
-                rtol=rtol,
-            )
-            WKB_quad = payload["value"]
-            WKB_quad_data = payload["data"]
-
-        # REGION 3: LEVIN QUADRATURE
-        max_z, min_z = regions.pop(0)
-        if (
-            max_z is not None
-            and min_z is not None
-            and get_z(max_z) / get_z(min_z) > 1.0 + DEFAULT_QUADRATURE_RTOL
-        ):
-            # now = time.time()
-            # print(
-            #     f"|  --  (source store_id={source.store_id}, k store_id={k.store_id}) running time={format_time(now - start_time)}, starting WKB Levin part"
-            # )
-            payload = WKB_Levin_integral(
-                model,
-                k.k,
-                q.k,
-                r.k,
-                source,
-                GkPolicy,
-                z_response,
-                max_z=get_z(max_z),
-                min_z=get_z(min_z),
-                atol=atol,
-                rtol=rtol,
-            )
-            WKB_Levin = payload["value"]
-            WKB_Levin_data = payload["data"]
-            WKB_Levin_metadata = {
-                "abserr": payload["abserr"],
-                "converged": payload["converged"],
-                "phase_limited": payload["phase_limited"],
-            }
-
-        # calculate analytic approximation for specified value of b using pre-supplied Bessel function splines
-        analytic_data = analytic_integral(
-            model,
-            k.k,
-            q.k,
-            r.k,
-            z_response,
-            max_z=z_source_max,
-            min_z=z_response,
-            b=b,
-            Bessel_0pt5=Bessel_0pt5.get(),
-            Bessel_2pt5=Bessel_2pt5.get(),
+    results = []
+    for group in groups:
+        data = adaptive_levin_sincos(
+            x_span,
+            [group.f_sin, group.f_cos],
+            theta=group.levin_theta(include_deriv=LEVIN_USE_THETA_DERIV),
+            atol=atol_group,
             rtol=rtol,
-            atol=atol,
+            chebyshev_order=CHEBYSHEV_ORDER,
+            notify_label=f"k={k.k_inv_Mpc:.3g}/Mpc, q={q.k_inv_Mpc:.3g}/Mpc, r={r.k_inv_Mpc:.3g}/Mpc @ z_response={z_resp:.5g}, z in ({max_z:.5g}, {min_z:.5g}), regime {regime_label}, group {group.label}",
         )
+        results.append((group, data))
+
+    scale = 1.0 + z_resp
+    value = scale * sum(data["value"] for _, data in results)
+    # abserr is an absolute error, so it scales linearly under the same rescaling as "value"
+    abserr = scale * sum(data["abserr"] for _, data in results)
 
     return {
-        "total": numeric_quad + WKB_quad + WKB_Levin,
-        "numeric_quad": numeric_quad,
-        "WKB_quad": WKB_quad,
-        "WKB_Levin": WKB_Levin,
-        "GkPolicy_serial": GkPolicy.store_id,
-        "source_serial": source.store_id,
-        "numeric_quad_data": numeric_quad_data,
-        "WKB_quad_data": WKB_quad_data,
-        "WKB_Levin_data": WKB_Levin_data,
-        "WKB_phase_spline_chunks": (
-            Gk_f.phase.num_chunks if Gk_f.phase is not None else None
-        ),
-        "eta_source_max": model_f.tau(z_source_max.z),
-        "eta_response": model_f.tau(z_response.z),
-        "analytic_rad": analytic_data["value"],
-        "compute_time": timer.elapsed,
-        "analytic_compute_time": analytic_data["elapsed"],
-        # "abserr"/"converged" propagated from the Levin quadrature calls (prompts/levin-refactor's
-        # prompt 09). numeric_quad/WKB_quad's own reported errors are not folded in here -- that
-        # would give "total" a genuine combined error bound, but those two regions use plain
-        # scipy quadrature, not the Levin machinery this prompt is scoped to; see this prompt's log
-        # for the open issue this leaves.
-        "metadata": {
-            "analytic": {
-                **analytic_data["metadata"],
-                "abserr": analytic_data["abserr"],
-                "converged": analytic_data["converged"],
-            },
-            "WKB_Levin": WKB_Levin_metadata,
-        },
+        "value": value,
+        "abserr": abserr,
+        "converged": all(data["converged"] for _, data in results),
+        "phase_limited": any(data["phase_limited"] for _, data in results),
+        "groups": [
+            {
+                "label": group.label,
+                "value": scale * data["value"],
+                "abserr": scale * data["abserr"],
+                "converged": data["converged"],
+                "phase_limited": data["phase_limited"],
+                "regions": data["num_regions"],
+                "simple_regions": data["num_simple_regions"],
+                "evaluations": data["evaluations"],
+                "elapsed": data["elapsed"],
+            }
+            for group, data in results
+        ],
+        "Levin_results": [data for _, data in results],
     }
 
 
@@ -619,8 +1368,8 @@ def _three_bessel_Levin(
         x_span,
         f=[lambda x: 0.0, lambda x: -Levin_f(x)],
         theta={"theta": phase3, "theta_mod_2pi": phase3_mod_2pi},
-        atol=LEVIN_ABSERR,
-        rtol=LEVIN_RELERR,
+        atol=atol,
+        rtol=rtol,
         chebyshev_order=CHEBYSHEV_ORDER,
         notify_label="analytic Y3",
     )
@@ -820,6 +1569,12 @@ def analytic_integral(
 
     cs_sq = (1.0 - b) / (1.0 + b) / 3.0
 
+    # atol and rtol are the caller's -- i.e. the QuadSourceIntegral row's own atol_serial and
+    # rtol_serial. They used to be dead arguments here, with 1e-21 / 1e-8 hardwired on both
+    # calls, so the stored tolerance columns did not describe analytic_rad (audit B6/QI-9). The
+    # pipeline supplies DEFAULT_QUADRATURE_ATOL = 1e-25 and DEFAULT_QUADRATURE_RTOL = 1e-8, so
+    # the absolute tolerance is now 1e4 tighter than the retired literal; measured effect on
+    # analytic_rad and on runtime: prompts/source-remediation/logs/09-qsi-errors-schema-tolerances.md.
     data0pt5 = _three_bessel_integrals(
         k,
         q,
@@ -829,8 +1584,8 @@ def analytic_integral(
         b=b,
         phase_data={"0pt5": Bessel_0pt5},
         nu_type="0pt5",
-        atol=1e-21,
-        rtol=1e-8,
+        atol=atol,
+        rtol=rtol,
     )
     data2pt5 = _three_bessel_integrals(
         k,
@@ -841,8 +1596,8 @@ def analytic_integral(
         b=b,
         phase_data={"0pt5": Bessel_0pt5, "2pt5": Bessel_2pt5},
         nu_type="2pt5",
-        atol=1e-21,
-        rtol=1e-8,
+        atol=atol,
+        rtol=rtol,
     )
 
     metadata = {
@@ -919,10 +1674,23 @@ def numeric_quad_integral(
     min_z: float,
     atol: float,
     rtol: float,
+    source_f: Optional[Callable] = None,
 ) -> dict:
-    source_f: QuadSourceFunctions = source.functions
+    """
+    (1 + z_response) int_{log(1+min_z)}^{log(1+max_z)} G f / H^2 d log(1+z') by scipy.quad, on a
+    sub-interval where every factor is smooth: G from Gk_f.numeric_Gk and f from the QuadSource
+    dense-output spline (or `source_f`, a callable f(log(1+z'), z_is_log=True) standing in for it,
+    e.g. the clamped wrapper evaluate_QuadSource_integral builds). The measure is spec 03 R28 /
+    spec 04 R1 (audit QI-2): d log(1+z') supplies the 1/(1+z'), the post-multiplication the (1+z).
+
+    :return: dict with "value", "abserr" (scipy's estimate, scaled like "value") and "data"
+        (an IntegrationData record)
+    """
     Gk_f: GkSourceFunctions = GkPolicy.functions
     model_f: ModelFunctions = model.functions
+
+    if source_f is None:
+        source_f = source.functions.source
 
     if GkPolicy.type not in ["numeric", "mixed"]:
         raise RuntimeError(
@@ -930,23 +1698,39 @@ def numeric_quad_integral(
         )
 
     if Gk_f.numeric_Gk is None:
-        Gk: GkSource = GkPolicy._source_proxy.get()
         raise RuntimeError(
-            f"compute_QuadSource_integral: attempting to evaluate numerical quadrature, but Gk_f.numeric_Gk is absent (type={GkPolicy.type}, quality={GkPolicy.quality}, lowest numeric z={_extract_z(Gk._numeric_smallest_z)}, primary WKB largest z={_extract_z(Gk._primary_WKB_largest_z)}) [domain={max_z:.5g}, {min_z:.5g}]"
+            f"compute_QuadSource_integral: attempting to evaluate numerical quadrature, but Gk_f.numeric_Gk is absent (type={GkPolicy.type}, quality={GkPolicy.quality}, {_Gk_diagnostics(GkPolicy)}) [domain={max_z:.5g}, {min_z:.5g}]"
         )
 
     if Gk_f.numeric_region is None:
-        Gk: GkSource = GkPolicy._source_proxy.get()
         raise RuntimeError(
-            f"compute_QuadSource_integral: attempting to evaluate numerical quadrature, but Gk_f.numeric_region is absent (type={GkPolicy.type}, quality={GkPolicy.quality}, lowest numeric z={_extract_z(Gk._numeric_smallest_z)}, primary WKB largest z={_extract_z(Gk._primary_WKB_largest_z)}) [domain={max_z:.5g}, {min_z:.5g}]"
+            f"compute_QuadSource_integral: attempting to evaluate numerical quadrature, but Gk_f.numeric_region is absent (type={GkPolicy.type}, quality={GkPolicy.quality}, {_Gk_diagnostics(GkPolicy)}) [domain={max_z:.5g}, {min_z:.5g}]"
         )
 
+    log_min_z = log(1.0 + min_z)
+    log_max_z = log(1.0 + max_z)
+
+    # This duplicates the "Gk numeric" check build_partition already made on the same region over
+    # the same sub-interval (_check_region_covers), and it must be made in the same variable, for
+    # the same reason: min_z and max_z reach here as exp(log_z) - 1 (build_partition:439-440), and
+    # at z ~ 5e14 that round trip moves z by ~1e7 times DEFAULT_FLOAT_PRECISION. Comparing in z
+    # with an absolute tolerance let the sign of the rounding decide whether the guard fired, and
+    # because the Green's-function numeric region ends exactly at z_response the bottom of the
+    # lowest sub-interval always coincides with the region boundary. build_partition raised first
+    # and masked this copy: with that guard corrected, 771 of 3185 production work items raised
+    # here instead (prompts/source-remediation/logs/13-region-guard-tolerance.md). Recovering
+    # log(1+z) from the round-tripped z costs ~1 ulp of the log and is safe; it is only the other
+    # direction, log(1+z) -> z, that is lossy at large z.
     region_max_z, region_min_z = Gk_f.numeric_region
-    if max_z > region_max_z + DEFAULT_FLOAT_PRECISION:
+    if region_min_z <= -1.0 or region_max_z <= -1.0:
+        raise RuntimeError(
+            f"compute_QuadSource_integral: attempting to evaluate numerical quadrature, but the region ({region_max_z:.5g}, {region_min_z:.5g}) where a numerical solution is available contains a redshift z <= -1, which has no log(1+z) [domain={max_z:.5g}, {min_z:.5g}]"
+        )
+    if log_max_z > log(1.0 + region_max_z) + MIN_SUBINTERVAL_LOG_WIDTH:
         raise RuntimeError(
             f"compute_QuadSource_integral: attempting to evaluate numerical quadrature, but max_z={max_z:.5g} is out-of-bounds for the region ({region_max_z:.5g}, {region_min_z:.5g}) where a numerical solution is available [domain={max_z:.5g}, {min_z:.5g}]"
         )
-    if min_z < region_min_z - DEFAULT_FLOAT_PRECISION:
+    if log_min_z < log(1.0 + region_min_z) - MIN_SUBINTERVAL_LOG_WIDTH:
         raise RuntimeError(
             f"compute_QuadSource_integral: attempting to evaluate numerical quadrature, but min_z={min_z:.5g} is out-of-bounds for the region ({region_max_z:.5g}, {region_min_z:.5g}) where a numerical solution is available [domain={max_z:.5g}, {min_z:.5g}]"
         )
@@ -955,12 +1739,9 @@ def numeric_quad_integral(
         Green = Gk_f.numeric_Gk(log_z_source, z_is_log=True)
         H = model_f.Hubble(exp(log_z_source) - 1.0)
         H_sq = H * H
-        f = source_f.source(log_z_source, z_is_log=True)
+        f = source_f(log_z_source, z_is_log=True)
 
         return Green * f / H_sq
-
-    log_min_z = log(1.0 + min_z)
-    log_max_z = log(1.0 + max_z)
 
     data = simple_quadrature(
         integrand,
@@ -972,205 +1753,12 @@ def numeric_quad_integral(
         method="quad",
     )
 
-    data["value"] = (1.0 + z_response.z) * data["value"]
+    scale = 1.0 + get_z(z_response)
+    data["value"] = scale * data["value"]
+    # abserr is an absolute error, so it scales linearly under the same rescaling as "value"
+    data["abserr"] = scale * data["abserr"]
 
     return data
-
-
-def WKB_quad_integral(
-    model: BackgroundModel,
-    k: wavenumber,
-    q: wavenumber,
-    r: wavenumber,
-    source: QuadSource,
-    GkPolicy: GkSourcePolicyData,
-    z_response: redshift,
-    max_z: float,
-    min_z: float,
-    atol: float,
-    rtol: float,
-) -> dict:
-    source_f: QuadSourceFunctions = source.functions
-    Gk_f: GkSourceFunctions = GkPolicy.functions
-    model_f: ModelFunctions = model.functions
-
-    if GkPolicy.type not in ["WKB", "mixed"]:
-        raise RuntimeError(
-            f'compute_QuadSource_integral: attempting to evaluate WKB quadrature, but Gk object is not of "WKB" or "mixed" type [domain={max_z:.5g}, {min_z:.5g}]'
-        )
-
-    if Gk_f.WKB_Gk is None:
-        Gk: GkSource = GkPolicy._source_proxy.get()
-        raise RuntimeError(
-            f"compute_QuadSource_integral: attempting to evaluate WKB quadrature, but Gk_f.WKB_Gk is absent (type={GkPolicy.type}, quality={GkPolicy.quality}, lowest numeric z={_extract_z(Gk._numeric_smallest_z)}, primary WKB largest z={_extract_z(Gk._primary_WKB_largest_z)}, z_crossover={_extract_z(GkPolicy.crossover_z)}) [domain={max_z:.5g}, {min_z:.5g}]"
-        )
-
-    if Gk_f.WKB_region is None:
-        Gk: GkSource = GkPolicy._source_proxy.get()
-        raise RuntimeError(
-            f"compute_QuadSource_integral: attempting to evaluate WKB quadrature, but Gk_f.WKB_region is absent (type={GkPolicy.type}, quality={GkPolicy.quality}, lowest numeric z={_extract_z(Gk._numeric_smallest_z)}, primary WKB largest z={_extract_z(Gk._primary_WKB_largest_z)}), z_crossover={_extract_z(GkPolicy.crossover_z)} [domain={max_z:.5g}, {min_z:.5g}]"
-        )
-
-    region_max_z, region_min_z = Gk_f.WKB_region
-    if max_z > region_max_z + DEFAULT_FLOAT_PRECISION:
-        raise RuntimeError(
-            f"compute_QuadSource_integral: attempting to evaluate WKB quadrature, but max_z={max_z:.5g} is out-of-bounds for the region ({region_max_z:.5g}, {region_min_z:.5g}) where a WKB solution is available [domain={max_z:.5g}, {min_z:.5g}]"
-        )
-    if min_z < region_min_z - DEFAULT_FLOAT_PRECISION:
-        raise RuntimeError(
-            f"compute_QuadSource_integral: attempting to evaluate WKB quadrature, but min_z={min_z:.5g} is out-of-bounds for the region ({region_max_z:.5g}, {region_min_z:.5g}) where a WKB solution is available [domain={max_z:.5g}, {min_z:.5g}]"
-        )
-
-    def integrand(log_z_source) -> float:
-        Green = Gk_f.WKB_Gk(log_z_source, z_is_log=True)
-        H = model_f.Hubble(exp(log_z_source) - 1.0)
-        H_sq = H * H
-        f = source_f.source(log_z_source, z_is_log=True)
-
-        return Green * f / H_sq
-
-    log_min_z = log(1.0 + min_z)
-    log_max_z = log(1.0 + max_z)
-
-    data = simple_quadrature(
-        integrand,
-        a=log_min_z,
-        b=log_max_z,
-        atol=atol,
-        rtol=rtol,
-        label=f"WKB_quad_integral for k={k.k_inv_Mpc:.5g}/Mpc (store_id={k.store_id}), q={q.k_inv_Mpc:.5g}/Mpc (store_id={q.store_id}), r={r.k_inv_Mpc:.5g}/Mpc (store_id={r.store_id})",
-        method="quad",
-    )
-
-    data["value"] = (1.0 + z_response.z) * data["value"]
-
-    return data
-
-
-def WKB_Levin_integral(
-    model: BackgroundModel,
-    k: wavenumber,
-    q: wavenumber,
-    r: wavenumber,
-    source: QuadSource,
-    GkPolicy: GkSourcePolicyData,
-    z_response: redshift,
-    max_z: float,
-    min_z: float,
-    atol: float,
-    rtol: float,
-) -> dict:
-    source_f: QuadSourceFunctions = source.functions
-    Gk_f: GkSourceFunctions = GkPolicy.functions
-    model_f: ModelFunctions = model.functions
-
-    if GkPolicy.type not in ["WKB", "mixed"]:
-        raise RuntimeError(
-            f'compute_QuadSource_integral: attempting to evaluate WKB Levin quadrature, but Gk object is not of "WKB" or "mixed" type [domain={max_z:.5g}, {min_z:.5g}]'
-        )
-
-    if Gk_f.phase is None:
-        Gk: GkSource = GkPolicy._source_proxy.get()
-        raise RuntimeError(
-            f"compute_QuadSource_integral: attempting to evaluate WKB Levin quadrature, but Gk_f.phase is absent (type={GkPolicy.type}, quality={GkPolicy.quality}, lowest numeric z={_extract_z(Gk._numeric_smallest_z)}, primary WKB largest z={_extract_z(Gk._primary_WKB_largest_z)}, z_crossover={_extract_z(GkPolicy.crossover_z)}, z_Levin={_extract_z(GkPolicy.Levin_z)}) [domain={max_z:.5g}, {min_z:.5g}]"
-        )
-
-    if Gk_f.WKB_region is None:
-        Gk: GkSource = GkPolicy._source_proxy.get()
-        raise RuntimeError(
-            f"compute_QuadSource_integral: attempting to evaluate WKB Levin quadrature, but Gk_f.WKB_region is absent (type={GkPolicy.type}, quality={GkPolicy.quality}, lowest numeric z={_extract_z(Gk._numeric_smallest_z)}, primary WKB largest z={_extract_z(Gk._primary_WKB_largest_z)}, z_crossover={_extract_z(GkPolicy.crossover_z)}, z_Levin={_extract_z(GkPolicy.Levin_z)}) [domain={max_z:.5g}, {min_z:.5g}]"
-        )
-
-    region_max_z, region_min_z = Gk_f.WKB_region
-    if max_z > region_max_z + DEFAULT_FLOAT_PRECISION:
-        raise RuntimeError(
-            f"compute_QuadSource_integral: attempting to evaluate WKB Levin quadrature, but max_z={max_z:.5g} is out-of-bounds for the region ({region_max_z:.5g}, {region_min_z:.5g}) where a WKB solution is available [domain={max_z:.5g}, {min_z:.5g}]"
-        )
-    if min_z < region_min_z - DEFAULT_FLOAT_PRECISION:
-        raise RuntimeError(
-            f"compute_QuadSource_integral: attempting to evaluate WKB Levin quadrature, but min_z={min_z:.5g} is out-of-bounds for the region ({region_max_z:.5g}, {region_min_z:.5g}) where a WKB solution is available [domain={max_z:.5g}, {min_z:.5g}]"
-        )
-
-    log_min_z = log(1.0 + min_z)
-    log_max_z = log(1.0 + max_z)
-
-    x_span = (log_min_z, log_max_z)
-
-    def Levin_f(log_z_source: float) -> float:
-        H = model_f.Hubble(exp(log_z_source) - 1.0)
-        H_sq = H * H
-        f = source_f.source(log_z_source, z_is_log=True)
-        sin_ampl = Gk_f.sin_amplitude(log_z_source, z_is_log=True)
-
-        return sin_ampl * f / H_sq
-
-    def Levin_phase(log_z_source: float) -> float:
-        return Gk_f.phase.raw_theta(log_z_source, x_is_log=True)
-
-    def Levin_phase_mod_2pi(log_z_source: float) -> float:
-        return Gk_f.phase.theta_mod_2pi(log_z_source, x_is_log=True)
-
-    def Levin_deriv(log_z_source: float) -> float:
-        """
-        Returns dtheta/dlogz.
-        That's what we want here, because the integration is performed with respect to log_z
-        :param log_z_source:
-        :return:
-        """
-        return Gk_f.phase.theta_deriv(log_z_source, x_is_log=True, log_derivative=True)
-
-    data = adaptive_levin_sincos(
-        x_span,
-        [Levin_f, lambda x: 0.0],
-        theta={
-            "theta": Levin_phase,
-            "theta_mod_2pi": Levin_phase_mod_2pi,
-            # Disabled in ccbd369 (Nov 2024) as an experiment, to test whether spline derivatives were
-            # the cause of some very slow Levin integrations.
-            #
-            # Two later measurements bear on whether to re-enable it. (1) Cost: phase_spline.theta_deriv
-            # and .raw_theta are within 2% of each other (9.90 vs 10.04 us per call), and using
-            # theta_deriv also saves a matmul, so it is not plausibly the source of a slowdown.
-            # (2) Accuracy: obtaining theta' by spectral differentiation of the raw phase loses precision
-            # in proportion to theta/(phase change across the subinterval), because the sampled raw phase
-            # only has absolute resolution ~eps*theta. Measured against the exact Bessel phase derivative
-            # on 6*pi-wide subintervals, the spectral route gives relative errors of 4e-9 at x~1e5 and
-            # 1e-6 at x~1e7, where theta_deriv is flat at ~5e-10.
-            #
-            # LiouvilleGreen/three_bessel_integrals.py now supplies theta_deriv for exactly this reason.
-            # Re-enabling it here is likely a straight win, but has not been validated end-to-end against
-            # this pipeline, so it is left as it was.
-            # "theta_deriv": Levin_deriv,
-        },
-        atol=atol,
-        rtol=rtol,
-        chebyshev_order=CHEBYSHEV_ORDER,
-        notify_label=f"k={k.k_inv_Mpc:.3g}/Mpc, q={q.k_inv_Mpc:.3g}/Mpc, r={r.k_inv_Mpc:.3g}/Mpc @ z_response={z_response.z:.5g}",
-    )
-
-    # LevinData is a fixed namedtuple mapped onto explicit Datastore SQL columns (see
-    # Datastore/SQL/ObjectFactories/QuadSourceIntegral.py); adding a field there is a schema change
-    # and out of scope here (prompts/levin-refactor's prompt 09). "abserr"/"converged"/
-    # "phase_limited" are returned as siblings of "data" instead, for the caller to fold into the
-    # free-form "metadata" dict that is already persisted as JSON.
-    return {
-        "data": LevinData(
-            num_regions=data["num_regions"],
-            evaluations=data["evaluations"],
-            num_simple_regions=data["num_simple_regions"],
-            num_SVD_errors=data["num_SVD_errors"],
-            num_order_changes=data["num_order_changes"],
-            chebyshev_min_order=data["chebyshev_min_order"],
-            max_depth=data["max_depth"],
-            elapsed=data["elapsed"],
-        ),
-        "value": (1.0 + z_response.z) * data["value"],
-        # scaled by the same (1 + z_response.z) factor as "value": abserr is an absolute error, so
-        # it scales linearly under the same multiplicative rescaling
-        "abserr": (1.0 + z_response.z) * data["abserr"],
-        "converged": data["converged"],
-        "phase_limited": data["phase_limited"],
-    }
 
 
 class QuadSourceIntegral(DatastoreObject):
@@ -1203,12 +1791,14 @@ class QuadSourceIntegral(DatastoreObject):
             DatastoreObject.__init__(self, None)
 
             self._total = None
+            self._total_abserr = None
+            self._total_converged = None
+            self._total_phase_limited = None
+            self._b = None
             self._numeric_quad = None
-            self._WKB_quad = None
             self._WKB_Levin = None
 
             self._numeric_quad_data = None
-            self._WKB_quad_data = None
             self._WKB_Levin_data = None
             self._WKB_phase_spline_chunks = None
 
@@ -1228,8 +1818,11 @@ class QuadSourceIntegral(DatastoreObject):
             DatastoreObject.__init__(self, payload["store_id"])
 
             self._total = payload["total"]
+            self._total_abserr = payload["total_abserr"]
+            self._total_converged = payload["total_converged"]
+            self._total_phase_limited = payload["total_phase_limited"]
+            self._b = payload["b"]
             self._numeric_quad = payload["numeric_quad"]
-            self._WKB_quad = payload["WKB_quad"]
             self._WKB_Levin = payload["WKB_Levin"]
             self._WKB_phase_spline_chunks = payload["WKB_phase_spline_chunks"]
 
@@ -1241,7 +1834,6 @@ class QuadSourceIntegral(DatastoreObject):
             self._data_serial = payload["data_serial"]
 
             self._numeric_quad_data = payload["numeric_quad_data"]
-            self._WKB_quad_data = payload["WKB_quad_data"]
             self._WKB_Levin_data = payload["WKB_Levin_data"]
 
             self._compute_time = payload["compute_time"]
@@ -1290,18 +1882,57 @@ class QuadSourceIntegral(DatastoreObject):
         return self._total
 
     @property
+    def total_abserr(self) -> Optional[float]:
+        """
+        Bound on the *quadrature* error of `total`: the linear sum of every sub-interval's
+        absolute error estimate, scipy's on the all-smooth sub-intervals and the Levin driver's
+        on the rest (audit B8). Absolute, deliberately: numeric_quad and WKB_Levin cancel, so do
+        not turn this into a relative error by dividing by |total|.
+
+        It does *not* include the error of the ingredients -- the QuadSource spline of f, the
+        Liouville-Green closed forms, the re-splined phases, the hand-over clamp -- which is
+        four to five orders larger at production settings and is recorded on the campaign's
+        status board (prompts/source-remediation/IMPLEMENTATION_STATE.md section 3, issue
+        [09-abserr-is-a-quadrature-bound]).
+        """
+        if self._total is None:
+            raise RuntimeError("value has not yet been populated")
+
+        return self._total_abserr
+
+    @property
+    def total_converged(self) -> Optional[bool]:
+        """Whether every phase group of every Levin sub-interval reported convergence."""
+        if self._total is None:
+            raise RuntimeError("value has not yet been populated")
+
+        return self._total_converged
+
+    @property
+    def total_phase_limited(self) -> Optional[bool]:
+        """Whether any phase group of any Levin sub-interval was phase-limited."""
+        if self._total is None:
+            raise RuntimeError("value has not yet been populated")
+
+        return self._total_phase_limited
+
+    @property
+    def b(self) -> Optional[float]:
+        """
+        The b at which this row was computed (audit B7): it fixes c_s^2 = (1-b)/(3(1+b)), the
+        Bessel orders 1/2 + b and 5/2 + b, and the eta' weight of `analytic_rad`.
+        """
+        if self._total is None:
+            raise RuntimeError("value has not yet been populated")
+
+        return self._b
+
+    @property
     def numeric_quad(self) -> float:
         if self._total is None:
             raise RuntimeError("value has not yet been populated")
 
         return self._numeric_quad
-
-    @property
-    def WKB_quad(self) -> float:
-        if self._total is None:
-            raise RuntimeError("value has not yet been populated")
-
-        return self._WKB_quad
 
     @property
     def WKB_Levin(self) -> float:
@@ -1353,13 +1984,6 @@ class QuadSourceIntegral(DatastoreObject):
         return self._numeric_quad_data
 
     @property
-    def WKB_quad_data(self) -> Optional[IntegrationData]:
-        if self._total is None:
-            raise RuntimeError("value has not yet been populated")
-
-        return self._WKB_quad_data
-
-    @property
     def WKB_Levin_data(self) -> Optional[LevinData]:
         if self._total is None:
             raise RuntimeError("value has not yet been populated")
@@ -1395,10 +2019,33 @@ class QuadSourceIntegral(DatastoreObject):
     def tags(self) -> List[store_tag]:
         return self._tags
 
+    # payload keys compute() requires. The four Tk keys were added by prompts/source-remediation
+    # prompt 08 and are supplied by main.py from prompt 10 onwards; until then compute() fails
+    # loudly here rather than with a KeyError.
+    REQUIRED_PAYLOAD_KEYS = (
+        "source",
+        "GkPolicy",
+        "b",
+        "Bessel_0pt5",
+        "Bessel_2pt5",
+        "Tq_numeric",
+        "Tq_WKB",
+        "Tr_numeric",
+        "Tr_WKB",
+    )
+
     def compute(self, payload, label: Optional[str] = None):
         if self._total is not None:
             raise RuntimeError(
                 "QuadSourceIntegral: compute() called, but value has already been computed"
+            )
+
+        missing = [key for key in self.REQUIRED_PAYLOAD_KEYS if key not in payload]
+        if len(missing) > 0:
+            raise RuntimeError(
+                f"QuadSourceIntegral: compute() payload is missing the required key(s) {', '.join(repr(key) for key in missing)} "
+                f"(the transfer-function keys 'Tq_numeric', 'Tq_WKB', 'Tr_numeric', 'Tr_WKB' are the TkNumericIntegration and "
+                f"TkWKBIntegration objects for q and r, needed since prompts/source-remediation prompt 08)"
             )
 
         # replace label if specified
@@ -1446,6 +2093,19 @@ class QuadSourceIntegral(DatastoreObject):
                 f"QuadSourceIntegral: supplied QuadSource is evaluated for an r-mode that does not match the required value (supplied source is for r={source.r.k_inv_Mpc:.3g}/Mpc [store_id={source.r.store_id}], required value is k={self._r_exit.k.k_inv_Mpc:.3g}/Mpc [store_id={self._r_exit.k.store_id}])"
             )
 
+        # the transfer-function objects must describe the same q and r modes as the source
+        for key, required in (
+            ("Tq_numeric", self._q_exit),
+            ("Tq_WKB", self._q_exit),
+            ("Tr_numeric", self._r_exit),
+            ("Tr_WKB", self._r_exit),
+        ):
+            Tk = payload[key]
+            if Tk.k.store_id != required.k.store_id:
+                raise RuntimeError(
+                    f"QuadSourceIntegral: supplied {key} is evaluated for a mode that does not match the required value (supplied {key} is for k={Tk.k.k_inv_Mpc:.3g}/Mpc [store_id={Tk.k.store_id}], required value is k={required.k.k_inv_Mpc:.3g}/Mpc [store_id={required.k.store_id}])"
+                )
+
         self._compute_ref = compute_QuadSource_integral.remote(
             self._model_proxy,
             self._k_exit,
@@ -1458,6 +2118,10 @@ class QuadSourceIntegral(DatastoreObject):
             b=payload["b"],
             Bessel_0pt5=payload["Bessel_0pt5"],
             Bessel_2pt5=payload["Bessel_2pt5"],
+            Tq_numeric=payload["Tq_numeric"],
+            Tq_WKB=payload["Tq_WKB"],
+            Tr_numeric=payload["Tr_numeric"],
+            Tr_WKB=payload["Tr_WKB"],
             atol=self._atol.tol,
             rtol=self._rtol.tol,
         )
@@ -1480,8 +2144,11 @@ class QuadSourceIntegral(DatastoreObject):
         self._compute_ref = None
 
         self._total = payload["total"]
+        self._total_abserr = payload["total_abserr"]
+        self._total_converged = payload["total_converged"]
+        self._total_phase_limited = payload["total_phase_limited"]
+        self._b = payload["b"]
         self._numeric_quad = payload["numeric_quad"]
-        self._WKB_quad = payload["WKB_quad"]
         self._WKB_Levin = payload["WKB_Levin"]
 
         self._eta_source_max = payload["eta_source_max"]
@@ -1492,7 +2159,6 @@ class QuadSourceIntegral(DatastoreObject):
         self._source_serial = payload["source_serial"]
 
         self._numeric_quad_data = payload["numeric_quad_data"]
-        self._WKB_quad_data = payload["WKB_quad_data"]
         self._WKB_Levin_data = payload["WKB_Levin_data"]
         self._WKB_phase_spline_chunks = payload["WKB_phase_spline_chunks"]
 

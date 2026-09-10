@@ -12,8 +12,10 @@ from Units.base import UnitsLike
 from constants import RadiationConstant
 
 DEFAULT_MAX_TEMPERATURE_Z_REDSHIFT = 1e20
+# The T(z) tabulation extends a little into the future so that numerical derivatives at z = 0 are
+# accurate; see the comment where the spline is built. Four steps of 0.05 is where this value came
+# from, but nothing reads a step size any more.
 DEFAULT_MIN_TEMPERATURE_Z_REDSHIFT = -0.2
-DEFAULT_Z_DERIVATIVE_STEPSIZE = 0.05
 
 
 class LambdaCDM_GenericEOS(BaseCosmology):
@@ -180,9 +182,16 @@ class LambdaCDM_GenericEOS(BaseCosmology):
     def _build_T_z_spline(
         self, min_z: float, max_z: float, samples: int = 500
     ) -> ZSplineWrapper:
-        # add a 5% buffer to the min/max z range
-        min_z = 0.95 * min_z
-        max_z = 1.05 * max_z
+        # Add a 5% buffer to the min/max z range, so that a caller asking for exactly the
+        # requested bounds is inside the tabulated range rather than on its edge.
+        #
+        # The buffer has to be applied to 1+z, not to z. Scaling z itself works only while z is
+        # positive: with min_z = DEFAULT_MIN_TEMPERATURE_Z_REDSHIFT = -0.2, `0.95 * min_z` is
+        # -0.19, which moves the lower bound *inward* and shrinks the range by 5% instead of
+        # widening it -- so the model could not be evaluated at its own declared floor. 1+z is
+        # positive throughout (z > -1), so scaling that is correct at both ends.
+        min_z = 0.95 * (1.0 + min_z) - 1.0
+        max_z = 1.05 * (1.0 + max_z) - 1.0
 
         log_z_values = linspace(log(1.0 + min_z), log(1.0 + max_z), samples)
         T_values = [self._solve_T_z(exp(logz) - 1.0) for logz in log_z_values]

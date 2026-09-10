@@ -94,6 +94,14 @@ queue are one object.**
   R38 verbatim, starts from $Q(0)=0$, and nothing in it assumes the sign of $Q$ (the supervisor only
   records its extremes), so this is a wording point only. Spec statement: $Q\to-1$ under the
   $+\omega_{\rm eff}$ convention; equivalently $Q\to+1$ with the lower sign of R33's $\pm$.
+- **Audit note (2026-09), not author sign-off — R37 / Q9 (NUM 11 p.5, starred $\omega_{\rm eff}$).**
+  The code keeps $\omega_{\rm eff}(z)$ **unstarred** in the phase-shifted amplitude
+  (`GkWKBIntegration.py:458-459`), i.e. it follows the R34/R35/R46 form, not R37 as transcribed. The
+  spec-code audit (`docs/spec-code-audit/GK-report.md`, finding GK-4, script `GK_04_wkb_matching.py`)
+  showed that the starred form of R37 would drift the reconstruction by
+  $(\omega^*/\omega(z))^{1/2}\approx4$ over the test range, while the unstarred form the code uses
+  agrees with the exact solution to $3.8\times10^{-12}$ in radiation. Recommendation: close Q9 with
+  "the stars on `NUM` 11 p.5 are a slip". R37's transcription is left as it is; it records the page.
 - **Tier 3, $k$ vs $k_{\rm phys}$ (Q6).** The bare $k^2/H^2$ of NUM 05/10/11 is
   $k_{\rm phys}^2/H^2=k^2/(a_0^2H^2)$, as NUM 02 writes it. Consistent with §0.1 item 1.
 - **$\eta_0$ / $z_{\rm init}$.** Not a spec constant: it is initial data in the numerical pipeline,

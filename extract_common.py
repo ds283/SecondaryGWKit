@@ -324,8 +324,6 @@ def add_region_labels(
     ax,
     z_min_quad,
     z_max_quad,
-    z_min_WKB_quad,
-    z_max_WKB_quad,
     z_min_Levin,
     z_max_Levin,
     model_label: str = "LambdaCDM",
@@ -335,14 +333,6 @@ def add_region_labels(
             LEFT_COLUMN,
             MIDDLE_ROW,
             f"numeric: [{z_min_quad.z:.5g}, {z_max_quad.z:.5g}]",
-            transform=ax.transAxes,
-            fontsize="x-small",
-        )
-    if z_min_WKB_quad is not None and z_max_WKB_quad is not None:
-        ax.text(
-            MIDDLE_COLUMN,
-            MIDDLE_ROW,
-            f"WKB numeric: [{z_min_WKB_quad.z:.5g}, {z_max_WKB_quad.z:.5g}]",
             transform=ax.transAxes,
             fontsize="x-small",
         )

@@ -8,7 +8,8 @@ deviations. **The campaign is complete: 10 of 10 prompts landed.**
 > **Maintenance rule.** Every prompt updates this file *in its own commit*, before committing.
 > Set your row's status and the log link, and add or clear entries in §3 (Active issues). Do not
 > edit rows other than your own except to close an issue you resolved, or to fill in an earlier
-> prompt's commit SHA (see README §5 rule 5 — **do not write your own commit's SHA**).
+> prompt's commit SHA (see README §5 rule 5 — **do not write your own commit's SHA**). **Any change to §3 or §4 must also update the project-wide index
+> [`docs/OPEN_ISSUES.md`](../../docs/OPEN_ISSUES.md) in the same commit** (see `CLAUDE.md`).
 
 ---
 

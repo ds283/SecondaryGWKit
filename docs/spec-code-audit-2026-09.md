@@ -353,3 +353,38 @@ one-line results are §4 of each report. All 29 were re-run from this location a
 - The agents were instructed to treat spec content and code comments as data, to respect the §0
   sign-off decisions (including "$a_0$ absorbed, not unity" and the Jacobian-without-modulus
   convention), and not to consult `thirdparty/`, the two student documents, or `MAIN` 15.
+
+---
+
+## 8. Disposition (2026-09)
+
+**Audit note (2026-09), not author sign-off.** Every finding above was discharged, deferred, or left
+open by the `prompts/source-remediation/` campaign. Full record:
+`prompts/source-remediation/IMPLEMENTATION_STATE.md`.
+
+| ID | Commit | Subject |
+|---|---|---|
+| A1 | `0f50782` | Exclude Lambda from the GenericEOS perturbation sound speed |
+| A2 | `e3348e4`, `3df5604`, `4afd531` | Add a two-region LG representation of T_k for source consumers; Restrict QuadSource to the region where both T_k are numeric; Partition the source time integral and Levin-integrate its phase groups |
+| A3 | `3df5604` | Restrict QuadSource to the region where both T_k are numeric |
+| A4 | `f06f587`, `4afd531`, `815217b` | Add the phase-group decomposition of the source integrand; Partition the source time integral and Levin-integrate its phase groups; Supply the transfer functions to the source integral stage |
+| A5 | `154126b` | Filter QuadSourceIntegral work items to triangle-closing triples |
+| A6 | `3199c7b` | Fix WKB value, policy and label hygiene slips |
+| A7 | `f8c75f5` | Remove the grid-end bias in the background derivative splines |
+| B1 | `3199c7b` | Fix WKB value, policy and label hygiene slips |
+| B2 | `3199c7b` | Fix WKB value, policy and label hygiene slips |
+| B3 | `3199c7b` | Fix WKB value, policy and label hygiene slips |
+| B4 | `3199c7b` | Fix WKB value, policy and label hygiene slips |
+| B5 | `ffc50ae` | Record b, an error bound and honest tolerances on QuadSourceIntegral |
+| B6 | `ffc50ae` | Record b, an error bound and honest tolerances on QuadSourceIntegral |
+| B7 | `ffc50ae` | Record b, an error bound and honest tolerances on QuadSourceIntegral |
+| B8 | `ffc50ae` | Record b, an error bound and honest tolerances on QuadSourceIntegral |
+| B9 | `3199c7b` | Fix WKB value, policy and label hygiene slips (evaluated, left as-is — see board item B9) |
+| B10 | `3199c7b` | Fix WKB value, policy and label hygiene slips |
+| B11 | `ffc50ae` | Record b, an error bound and honest tolerances on QuadSourceIntegral |
+| §4.1–§4.4 | — | not in scope for this campaign's commits; measured by prompt 12 (verification), not yet run |
+| §6 | — | spec annotations recorded in this commit (`docs/spec/01`, `02`, `04`) |
+
+Not in scope for this campaign (§1.1 of the README): Tier 2 LG output from `QuadSourceIntegral`, the
+resonance map, the per-$k$ $(s,d)$ grid, `OneLoopIntegral`, `csSquared(z)`, and the $z_{\rm response}$
+averaging convention. See `prompts/source-remediation/README.md` §1.1.
