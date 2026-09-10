@@ -2,14 +2,18 @@
 
 **Campaign:** [`README.md`](README.md) · **Source audit:** [`docs/spec-code-audit-2026-09.md`](../../docs/spec-code-audit-2026-09.md)
 **Baseline commit:** `e9a43a2` (`main`, clean)
-**Last updated:** 2026-09-09 — prompt 12 complete. **The campaign's twelve prompts are all
+**Last updated:** 2026-09-10 — prompt 13 complete. **The campaign's twelve prompts are all
 landed and verified against a live scoped pipeline run** ([`docs/source-remediation-verification.md`](../../docs/source-remediation-verification.md)):
 every offline test passes, all four audit §4 items are closed, and `total` reproduces
 `analytic_rad` to 1e-6–1e-4 where the response redshift is a few oscillations inside the horizon.
-**The source integral is not yet fit for a production sweep**: prompt 12 found a run-blocking
-tolerance defect in prompt 08's region guard (§3 `[12-region-check-absolute-tolerance]`, 43 % of
-work items — now scheduled as **prompt 13**) and two accuracy items (`[12-atol-too-loose-for-the-source-integral]`,
-`[12-handover-clamp-error-in-production]`). None of the three may be fixed inside this campaign.
+**The source integral now completes at production redshifts.** Prompt 12 found a run-blocking
+tolerance defect in prompt 08's region guard (43 % of work items) and two accuracy items; prompt
+13 closed the run-blocker (§4 `[12-region-check-absolute-tolerance]`, and a second guard with the
+same defect that it was masking), and `main.py`'s `--quad-source-integral-queue` stage now computes
+and stores all 3185 work items of that configuration (verification document §5.1.1). The two
+accuracy items — `[12-atol-too-loose-for-the-source-integral]` and
+`[12-handover-clamp-error-in-production]` — **remain open** and may not be fixed inside this
+campaign.
 
 > **Maintenance rule.** Every prompt updates this file *in its own commit*, before committing.
 > Set your row's status, fill in the commit SHA, model and log link, update the item-level table,
@@ -65,9 +69,15 @@ Opened by prompt 12's findings. Not part of the original twelve.
 
 | # | Prompt | Items | Model | Status | Commit | Log |
 |---|---|---|---|---|---|---|
-| 13 | [Region-guard tolerance](13-region-guard-tolerance.md) | §3 `[12-region-check-absolute-tolerance]` | Opus | ⬜ | | |
+| 13 | [Region-guard tolerance](13-region-guard-tolerance.md) | §4 `[12-region-check-absolute-tolerance]` | Opus | ⚠️ | *"Compare the source-integral region guards in log(1+z)"* (SHA not embedded, per prompt 01 log deviation 4) | [`logs/13-region-guard-tolerance.md`](logs/13-region-guard-tolerance.md) |
 
-**Progress:** 12 of 13 complete; prompt 13 is scheduled and unstarted.
+**Progress:** 13 of 13 complete. **The source integral now runs to completion at production
+redshifts**: `main.py`'s own `--quad-source-integral-queue` stage computes and stores all 3185
+work items of the prompt 12 configuration (verification document §5.1.1). Prompt 13 found and
+fixed a *second* guard with the same units defect, which the first had been masking, so its
+commit exceeds its prompt's stated file scope by the user's decision (log 13 deviation 1). The two
+accuracy issues prompt 12 opened, `[12-atol-too-loose-for-the-source-integral]` and
+`[12-handover-clamp-error-in-production]`, remain open and are now measurable on 3185 items.
 
 ---
 
@@ -80,7 +90,7 @@ Traceability from the audit's finding IDs to the prompt that discharges them.
 | A1 | **DEFECT, physics** | `LambdaCDM_GenericEOS.wPerturbations` divides by the total density incl. $\rho_\Lambda$ | 01 | ✅ |
 | A2 | **DEFECT, representation** | `QuadSource` splines the oscillating source; unusable beyond ~95 cycles | 05, 06, 08 | ✅ (3/3: `QuadSourceIntegral` reads the $f$ spline only on the both-numeric region and assembles the oscillatory region from `TkSourceFunctions` via `phase_groups`; nothing splines an oscillation any more. **Verified live by prompt 12**: real `QuadSource` rows store 360–560 of the grid's 784 redshifts, their spline residual at the hand-over is 1.4e-04 of envelope, and `total` reproduces `analytic_rad` to 1.2e-06–1.4e-04 where the oracle is valid) |
 | A3 | **DEFECT, regression** | `compute_quad_source` walks the full grid against a both-ends-truncated $T_k$ grid → `IndexError` | 06 | ✅ |
-| A4 | **DEFECT, known** | Levin call receives only $\theta_G$; no $T_q,T_r$ input to the Levin decision | 07, 08, 10 | ✅ (3/3: `main.py`'s QuadSourceIntegral stage looks up `TkNumericIntegration`/`TkWKBIntegration` for every $q$ and $r$ once per batch and ships them as `Tq_numeric`/`Tq_WKB`/`Tr_numeric`/`Tr_WKB`, so the Levin decision sees the composed phase. No `QuadSourcePolicy.Levin_threshold` was reinstated — the user accepted prompt 08 §6's cost; see `[10-levin-wholesale-cc-fallback]`. **Exercised end to end by prompt 12**: 1813 real work items computed through the production task on stored rows, six of the eight phase-group regimes reached — including "$T_q$ and $T_r$ with $G$ smooth" for the $q\approx r\gg k$ shape — and the two empty rows are unreachable by construction because `combinations_with_replacement` gives $q\le r$. The stage itself is blocked by `[12-region-check-absolute-tolerance]`) |
+| A4 | **DEFECT, known** | Levin call receives only $\theta_G$; no $T_q,T_r$ input to the Levin decision | 07, 08, 10 | ✅ (3/3: `main.py`'s QuadSourceIntegral stage looks up `TkNumericIntegration`/`TkWKBIntegration` for every $q$ and $r$ once per batch and ships them as `Tq_numeric`/`Tq_WKB`/`Tr_numeric`/`Tr_WKB`, so the Levin decision sees the composed phase. No `QuadSourcePolicy.Levin_threshold` was reinstated — the user accepted prompt 08 §6's cost; see `[10-levin-wholesale-cc-fallback]`. **Exercised end to end by prompt 12**: 1813 real work items computed through the production task on stored rows, six of the eight phase-group regimes reached — including "$T_q$ and $T_r$ with $G$ smooth" for the $q\approx r\gg k$ shape — and the two empty rows are unreachable by construction because `combinations_with_replacement` gives $q\le r$. The stage itself was blocked by `[12-region-check-absolute-tolerance]` until prompt 13; it now completes and stores all 3185 items) |
 | A5 | **DEFECT, known** | 92 % of scheduled $(k,q,r)$ triples are not triangles | 04 | ✅ |
 | A6 | **DEFECT, policy** | `"WKB_minimal"` tests `numeric_clearance` | 02 | ✅ |
 | A7 | **DEFECT, accuracy** | `_build_derivative` end bias (ε″ 30 % at the $z=0.1$ end for GenericEOS models) | 03 | ✅ |
@@ -311,33 +321,6 @@ Traceability from the audit's finding IDs to the prompt that discharges them.
   seven columns of every row are dead weight. **Next step:** a later campaign that is allowed to
   edit `extract_*.py` should delete the reader and then the columns, or repurpose them.
 
-- **[12-region-check-absolute-tolerance]** *(opened by prompt 12, 2026-09-09)* — **run-blocking.**
-  `QuadSourceIntegral._check_region_covers` (`:561-570`, added by prompt 08) compares a
-  sub-interval end against a factor's region boundary with an **absolute** tolerance,
-  `DEFAULT_FLOAT_PRECISION = 1e-7`, while `build_partition` recovers the end as
-  `z = exp(log(1+z)) − 1` (`:440`). At z ≈ 5e14 one ulp is 0.06, so the round trip moves `z` by
-  ~1e6 times the tolerance and the *sign* of that movement decides whether the guard fires. The
-  Green's-function region always ends exactly at `z_response`, so the last sub-interval's bottom
-  always coincides with a region boundary. Reproduction without a pipeline:
-  `exp(log(1+z)) − 1 < z − 1e-7` holds for **29 of the live run's 66 response redshifts (44 %)**
-  and 331 of its 784 source redshifts, the smallest tripping value being z = 6.93e07. Scheduled
-  item by item, **1372 of 3185 production work items (43 %) raise** — 875 on the `Gk numeric`
-  region, 497 on the `Gk WKB` region, over 28 distinct response redshifts — and no other failure
-  mode occurs. Because `RayWorkPool` propagates the first failure, **`main.py`'s
-  `--quad-source-integral-queue` stage aborts and stores nothing**; prompt 12's live run produced
-  zero `QuadSourceIntegral` rows and had to schedule the work itself
-  (`docs/source-remediation-verification/run_quadsource_integrals.py`). It fails loudly, so no
-  wrong number is at risk. This is the same class of defect as audit B11, in the guard next to the
-  one prompt 09 closed. **Impact:** no production sweep can complete. **Next step:** **prompt 13**
-  ([`13-region-guard-tolerance.md`](13-region-guard-tolerance.md)), which does the comparison in
-  `log(1+z)` rather than widening the tolerance in $z$. Both were considered and are numerically
-  near-equivalent; the log comparison was chosen because it removes the lossy `log`→`z` round trip
-  from the guard's decision path instead of tolerating it (only `z`→`log` is safe at large $z$),
-  because a relative tolerance would be ~$10^9$ wider than needed and so would accept a genuine
-  overshoot of ~$5\times10^7$ in $z$ at the top of the grid, and because the transfer-function
-  branch of the same loop (`:475`) already compares in `log(1+z)` — the Green's-function guard is
-  the only holdout. See `docs/source-remediation-verification.md` §5.1.
-
 - **[12-atol-too-loose-for-the-source-integral]** *(opened by prompt 12, 2026-09-09)* — the
   quantity the quadrature's `atol` is compared against is `total/(1 + z_response)`, and on the live
   run that has median **3.6e-26**, p25 9.8e-30, max 7.3e-21: **1044 of 1813 completed work items
@@ -389,6 +372,36 @@ Traceability from the audit's finding IDs to the prompt that discharges them.
 ---
 
 ## 4. Resolved issues
+
+- **[12-region-check-absolute-tolerance]** *(opened by prompt 12, 2026-09-09; **closed by
+  prompt 13, 2026-09-10**)* — was **run-blocking**. `_check_region_covers` compared a sub-interval
+  end against a factor's region boundary with an **absolute** tolerance, `DEFAULT_FLOAT_PRECISION
+  = 1e-7`, while `build_partition` recovers that end as `z = exp(log(1+z)) − 1`; at z ≈ 5e14 one
+  ulp of `1+z` is ~0.06, so the *sign* of the round-trip rounding decided whether the guard fired,
+  and because the Green's-function region always ends exactly at `z_response` the bottom of the
+  lowest sub-interval always coincides with a region boundary. 1372 of 3185 production work items
+  raised, and `RayWorkPool` propagates the first failure, so `main.py`'s
+  `--quad-source-integral-queue` stage aborted and stored nothing.
+  **How it was closed:** both comparisons are now made in the integration variable `log(1+z)` with
+  `MIN_SUBINTERVAL_LOG_WIDTH` as the tolerance — the expression shape the `Tq`/`Tr` branch of the
+  same loop already used — converting only in the safe direction (z → log(1+z), ~1 ulp,
+  non-amplifying). Widening the tolerance in z was rejected: it keeps the lossy conversion and
+  would be ~$10^9\times$ wider than needed.
+  **The prompt's scope was one guard; there were two.** `numeric_quad_integral` re-checks the same
+  `Gk numeric` region over the same sub-interval, in z, with the same absolute tolerance, and
+  `build_partition` had been raising first and masking it — so fixing only the named guard took the
+  run from 1813 to 2414 of 3185, with 771 new failures there. On the user's decision prompt 13
+  fixed both in one commit (log 13 deviation 1).
+  **Verified live:** `run_quadsource_integrals.py` over the identical work list completes
+  **3185 of 3185 with zero failures**, the 1813 items prompt 12 had measured are **bit-identical**
+  (worst relative difference 0.000e+00 on `total`, `numeric_quad`, `WKB_Levin`, `total_abserr`,
+  `analytic_rad`), and `main.py`'s own stage on a fresh datastore reports
+  `ALL WORK ITEMS COMPLETE in time 1m 19.7s` over `3185 lookup / 3185 compute / 3185 store` and
+  leaves **3185 `QuadSourceIntegral` rows** with finite `total`. Four regression tests in
+  `ComputeTargets/tests/test_quadsource_integral.py::TestRegionCoverageTolerance` cover both
+  guards, in both directions, and assert that a region genuinely short of the sub-interval still
+  raises. See `docs/source-remediation-verification.md` §5.1 and §5.1.1 and
+  [`logs/13-region-guard-tolerance.md`](logs/13-region-guard-tolerance.md).
 
 - **[08-pipeline-non-runnable-until-10]** *(opened by prompt 08, 2026-09-09)* —
   `QuadSourceIntegral.compute()` requires the payload keys `Tq_numeric`, `Tq_WKB`,
@@ -548,4 +561,22 @@ Traceability from the audit's finding IDs to the prompt that discharges them.
     numbers from the 2026-09-09 run (7 modes over 1e5–1e7 /Mpc, 100 samples per log10(1+z),
     `zend = 1e7`, `LambdaCDM` Planck2018): 4.5 minutes and 66 MB for the whole pipeline through
     `GkSourcePolicyData`; 0.095 s median per source-integral work item; `total` vs `analytic_rad`
-    1.2e-06–1.4e-04 for $x_{\rm resp}\lesssim10$.
+    1.2e-06–1.4e-04 for $x_{\rm resp}\lesssim10$. **Prompt 13 re-ran two of the five** against the
+    same datastore, which is still readable and which the harness does not modify:
+    `run_quadsource_integrals.py` now completes 3185 of 3185 (was 1813) with the 1813 bit-identical,
+    and `scoped_pipeline_run.py` on a fresh path takes 5 minutes and 79 MB for the whole pipeline
+    *including* the source-integral stage (1 m 19.7 s for its 3185 items). The three `analyse_*.py`
+    scripts have not been re-run; §5.2–§5.8 of the verification document still stand as written,
+    now as a subset of a complete run.
+13. **Both region-coverage guards in `QuadSourceIntegral.py` compare in `log(1+z)`**, with
+    `MIN_SUBINTERVAL_LOG_WIDTH` as the tolerance (prompt 13; §4
+    `[12-region-check-absolute-tolerance]`). `_check_region_covers` takes the sub-interval ends as
+    *both* the `log(1+z)` values, which decide, and the `z` values, which only print;
+    `numeric_quad_integral` uses the `log_min_z`/`log_max_z` it already computes for the
+    quadrature. **A new region check must be written the same way.** `z -> log(1+z)` costs ~1 ulp
+    and does not amplify; `log(1+z) -> z` is irreducibly lossy above z ~ 1e8 (at z ~ 5e14 the
+    recoverable `1+z` has a granularity of ~0.02), so it must not appear in any equality-like
+    comparison. It remains harmless where the recovered `z` is used as a *quadrature limit*:
+    0.02 absolute at z = 5e14 is 4e-17 relative, far below every tolerance in the chain, so
+    `build_partition`'s `z_hi = exp(log_hi) - 1.0` is correct as it stands and should not be
+    "finished".

@@ -363,6 +363,45 @@ is in `log(1+z)`: the region-coverage guard next to it is not. It fails loudly, 
 is at risk, but **the stage cannot complete at production redshifts**. Board issue
 `[12-region-check-absolute-tolerance]`; per prompt 12's instruction it is reported, not fixed.
 
+#### 5.1.1 Re-run after prompt 13 (added 2026-09-10)
+
+**Additive note.** Everything above was measured on the tree prompt 12 ran on and is unchanged.
+Prompt 13 ([`prompts/source-remediation/logs/13-region-guard-tolerance.md`](../prompts/source-remediation/logs/13-region-guard-tolerance.md))
+made both region-coverage comparisons in `log(1+z)` with `MIN_SUBINTERVAL_LOG_WIDTH` as the
+tolerance, and the runs above were repeated against run A's own datastore, which was still on disk
+and is read-only to the harness.
+
+There turned out to be **two** guards with this defect, not one. `build_partition` raised first and
+masked the second, which is why this section could record that "no other failure mode occurred":
+
+| guard | before prompt 13 | prompt's guard fixed | both fixed |
+|---|---|---|---|
+| `_check_region_covers` (`build_partition`) | 1372 raise | **0** | **0** |
+| `numeric_quad_integral`'s copy, on the same `Gk numeric` region | 0 (masked) | 771 raise | **0** |
+| **completed of 3185** | 1813 | 2414 | **3185** |
+
+`numeric_quad_integral` re-checks the same region over the same sub-interval, and received its
+`max_z`/`min_z` as the same `exp(log_z) - 1` values, so it had the identical units defect; it is
+reached only on `method == "quad"` sub-intervals. Its 771 failures spanned 22 distinct response
+redshifts from z = 1.9151e+09 to 4.8682e+14.
+
+With both corrected, `run_quadsource_integrals.py` over the same work list completes **3185 of
+3185 with zero failures**. The 1372 newly completing items span the same 28 distinct response
+redshifts from 6.9312e+07 to 4.8682e+14 this section reported, and their sub-intervals reach six
+regimes (all-smooth 1113, `G` only 497, `G`+`T_r` 256, all three 415, `T_r` only 8, `T_q`+`T_r` 96).
+**The 1813 items §5.2–§5.8 measured are bit-identical** — worst relative difference 0.000e+00 on
+`total`, `numeric_quad`, `WKB_Levin`, `total_abserr` and `analytic_rad` — so every number in those
+sections still stands as written, now as a subset of a complete run.
+
+`main.py`'s own `--quad-source-integral-queue` stage was then run through `scoped_pipeline_run.py`
+on a fresh datastore path with run A's command verbatim: the stage reports
+`ALL WORK ITEMS COMPLETE in time 1m 19.7s` over `3185 lookup / 3185 compute / 3185 store` and the
+datastore holds **3185 `QuadSourceIntegral` rows** (against zero in run A), each with a finite
+`total`, bit-identical as a sorted multiset to the harness run's. Whole pipeline 5 minutes, 79 MB.
+
+`[12-atol-too-loose-for-the-source-integral]` and `[12-handover-clamp-error-in-production]` are
+untouched by that commit and remain open; both are now measurable on 3185 items rather than 1813.
+
 ### 5.2 `total` against `analytic_rad` (prompt 12 §2 item 1)
 
 1813 rows, all with `b = 0.0`, 49 distinct (k,q,r), 37 distinct response redshifts from 1e7 to

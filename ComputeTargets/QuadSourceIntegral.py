@@ -459,13 +459,15 @@ def build_partition(
                 raise RuntimeError(
                     f"compute_QuadSource_integral: Green's function is oscillatory on z in ({z_hi:.5g}, {z_lo:.5g}) but has no WKB representation (type={G_type}, quality={GkPolicy.quality}, {_Gk_diagnostics(GkPolicy)})"
                 )
-            _check_region_covers("Gk WKB", Gk_f.WKB_region, z_hi, z_lo)
+            _check_region_covers("Gk WKB", Gk_f.WKB_region, log_hi, log_lo, z_hi, z_lo)
         else:
             if Gk_f.numeric_Gk is None or Gk_f.numeric_region is None:
                 raise RuntimeError(
                     f"compute_QuadSource_integral: Green's function is smooth on z in ({z_hi:.5g}, {z_lo:.5g}) but has no numeric representation (type={G_type}, quality={GkPolicy.quality}, {_Gk_diagnostics(GkPolicy)})"
                 )
-            _check_region_covers("Gk numeric", Gk_f.numeric_region, z_hi, z_lo)
+            _check_region_covers(
+                "Gk numeric", Gk_f.numeric_region, log_hi, log_lo, z_hi, z_lo
+            )
 
         # transfer functions: partition on crossover_z, clamp to the evaluable range
         factors = {}
@@ -558,13 +560,51 @@ def build_partition(
     return {"subintervals": subintervals, "metadata": metadata}
 
 
-def _check_region_covers(label: str, region, z_max: float, z_min: float) -> None:
+def _check_region_covers(
+    label: str,
+    region,
+    log_z_max: float,
+    log_z_min: float,
+    z_max: float,
+    z_min: float,
+) -> None:
+    """
+    Check that a factor's region of validity covers a sub-interval, comparing in the integration
+    variable log(1+z') with MIN_SUBINTERVAL_LOG_WIDTH as the tolerance.
+
+    This comparison must not be made in z. build_partition carries its edges in log(1+z) and
+    recovers z for the quadrature by z = exp(log_z) - 1; at z ~ 5e14, log(1+z) ~ 32.3 exhausts the
+    ~16 significant digits of a double, so the recoverable 1+z has a granularity of ~0.02 -- five
+    orders of magnitude above DEFAULT_FLOAT_PRECISION. The information is gone in the log
+    representation and no amount of expm1 care recovers it. Because the Green's-function region
+    always ends exactly at z_response, the bottom of the lowest sub-interval always coincides with
+    a region boundary, and an absolute tolerance in z therefore let the sign of the round-trip
+    rounding decide whether the guard fired: 1372 of 3185 production work items raised
+    (docs/source-remediation-verification.md section 5.1). Converting the region bounds
+    z -> log(1+z) costs ~1 ulp of the log and does not amplify, so only that direction appears in
+    the decision path below; this is the shape the Tq/Tr branch of build_partition already used.
+
+    The error messages stay in z: they are for humans, and 5 significant figures is the right
+    resolution there.
+
+    Note this is a guard on an *equality-like* comparison. The same z_max/z_min are also passed on
+    as quadrature limits, where the round trip is harmless -- 0.02 absolute at z = 5e14 is 4e-17
+    relative -- so nothing about how those are computed should be "fixed" to match.
+    """
     region_max_z, region_min_z = region
-    if z_max > region_max_z + DEFAULT_FLOAT_PRECISION:
+
+    # log(1+z) needs z > -1. The pipeline never goes below DEFAULT_ZEND = 0.1 and z_response >= 0,
+    # so this is unreachable today, but the bounds arrive from the factor objects as plain floats.
+    if region_min_z <= -1.0 or region_max_z <= -1.0:
+        raise RuntimeError(
+            f"compute_QuadSource_integral: the {label} region ({region_max_z:.5g}, {region_min_z:.5g}) contains a redshift z <= -1, which has no log(1+z) [domain={z_max:.5g}, {z_min:.5g}]"
+        )
+
+    if log_z_max > log(1.0 + region_max_z) + MIN_SUBINTERVAL_LOG_WIDTH:
         raise RuntimeError(
             f"compute_QuadSource_integral: sub-interval top z={z_max:.5g} is out-of-bounds for the {label} region ({region_max_z:.5g}, {region_min_z:.5g}) [domain={z_max:.5g}, {z_min:.5g}]"
         )
-    if z_min < region_min_z - DEFAULT_FLOAT_PRECISION:
+    if log_z_min < log(1.0 + region_min_z) - MIN_SUBINTERVAL_LOG_WIDTH:
         raise RuntimeError(
             f"compute_QuadSource_integral: sub-interval bottom z={z_min:.5g} is out-of-bounds for the {label} region ({region_max_z:.5g}, {region_min_z:.5g}) [domain={z_max:.5g}, {z_min:.5g}]"
         )
@@ -1672,12 +1712,30 @@ def numeric_quad_integral(
             f"compute_QuadSource_integral: attempting to evaluate numerical quadrature, but Gk_f.numeric_region is absent (type={GkPolicy.type}, quality={GkPolicy.quality}, {_Gk_diagnostics(GkPolicy)}) [domain={max_z:.5g}, {min_z:.5g}]"
         )
 
+    log_min_z = log(1.0 + min_z)
+    log_max_z = log(1.0 + max_z)
+
+    # This duplicates the "Gk numeric" check build_partition already made on the same region over
+    # the same sub-interval (_check_region_covers), and it must be made in the same variable, for
+    # the same reason: min_z and max_z reach here as exp(log_z) - 1 (build_partition:439-440), and
+    # at z ~ 5e14 that round trip moves z by ~1e7 times DEFAULT_FLOAT_PRECISION. Comparing in z
+    # with an absolute tolerance let the sign of the rounding decide whether the guard fired, and
+    # because the Green's-function numeric region ends exactly at z_response the bottom of the
+    # lowest sub-interval always coincides with the region boundary. build_partition raised first
+    # and masked this copy: with that guard corrected, 771 of 3185 production work items raised
+    # here instead (prompts/source-remediation/logs/13-region-guard-tolerance.md). Recovering
+    # log(1+z) from the round-tripped z costs ~1 ulp of the log and is safe; it is only the other
+    # direction, log(1+z) -> z, that is lossy at large z.
     region_max_z, region_min_z = Gk_f.numeric_region
-    if max_z > region_max_z + DEFAULT_FLOAT_PRECISION:
+    if region_min_z <= -1.0 or region_max_z <= -1.0:
+        raise RuntimeError(
+            f"compute_QuadSource_integral: attempting to evaluate numerical quadrature, but the region ({region_max_z:.5g}, {region_min_z:.5g}) where a numerical solution is available contains a redshift z <= -1, which has no log(1+z) [domain={max_z:.5g}, {min_z:.5g}]"
+        )
+    if log_max_z > log(1.0 + region_max_z) + MIN_SUBINTERVAL_LOG_WIDTH:
         raise RuntimeError(
             f"compute_QuadSource_integral: attempting to evaluate numerical quadrature, but max_z={max_z:.5g} is out-of-bounds for the region ({region_max_z:.5g}, {region_min_z:.5g}) where a numerical solution is available [domain={max_z:.5g}, {min_z:.5g}]"
         )
-    if min_z < region_min_z - DEFAULT_FLOAT_PRECISION:
+    if log_min_z < log(1.0 + region_min_z) - MIN_SUBINTERVAL_LOG_WIDTH:
         raise RuntimeError(
             f"compute_QuadSource_integral: attempting to evaluate numerical quadrature, but min_z={min_z:.5g} is out-of-bounds for the region ({region_max_z:.5g}, {region_min_z:.5g}) where a numerical solution is available [domain={max_z:.5g}, {min_z:.5g}]"
         )
@@ -1689,9 +1747,6 @@ def numeric_quad_integral(
         f = source_f(log_z_source, z_is_log=True)
 
         return Green * f / H_sq
-
-    log_min_z = log(1.0 + min_z)
-    log_max_z = log(1.0 + max_z)
 
     data = simple_quadrature(
         integrand,

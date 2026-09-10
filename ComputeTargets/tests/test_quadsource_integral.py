@@ -45,6 +45,8 @@ from ComputeTargets.QuadSourceIntegral import (
     phase_group_Levin_integral,
     build_partition,
     _ClampedTk,
+    _check_region_covers,
+    numeric_quad_integral,
     LEVIN_USE_THETA_DERIV,
     HANDOVER_CLAMP_MAX_GRID_STEPS,
     MIN_SUBINTERVAL_LOG_WIDTH,
@@ -58,6 +60,7 @@ from ComputeTargets.phase_groups import (
     evaluate_envelope,
 )
 from ComputeTargets.spline_wrappers import ZSplineWrapper
+from config.defaults import DEFAULT_FLOAT_PRECISION
 import ComputeTargets.tests.test_tk_source_functions as tk_fixtures
 from ComputeTargets.tests.test_tk_source_functions import (
     Fixture,
@@ -1454,6 +1457,188 @@ class TestRegionGuards(unittest.TestCase):
         print(f"\n[B11] q = r: skipped={skipped}")
         self.assertEqual(len(skipped), 1)
         self.assertEqual(skipped[0]["log_width"], 0.0)
+
+
+class TestRegionCoverageTolerance(unittest.TestCase):
+    """
+    Prompt 13. `_check_region_covers` compares in log(1+z), the variable build_partition actually
+    carries its edges in, with MIN_SUBINTERVAL_LOG_WIDTH as the tolerance -- the shape the Tq/Tr
+    branch of build_partition already used. It used to compare z = exp(log_z) - 1 against the
+    region boundary with an absolute tolerance of DEFAULT_FLOAT_PRECISION = 1e-7; at z ~ 5e14 one
+    ulp of 1+z is ~0.06, so the sign of the round-trip rounding alone decided whether the guard
+    fired, and 1372 of 3185 production work items raised
+    (docs/source-remediation-verification.md section 5.1).
+
+    These two redshifts are the shape the live run hit: z_bottom round-trips *downward* by 1.19
+    and z_top round-trips *upward* by 1.13, so both ends of the retired comparison are exercised.
+    """
+
+    # z_source_max and z_response of a production-shaped sub-interval at the top of the grid
+    Z_TOP = 6.8e14
+    Z_BOTTOM = 4.8682e14
+
+    def _partition(self, region_min_z=None, region_max_z=None):
+        """
+        One all-smooth sub-interval spanning [Z_BOTTOM, Z_TOP], with the Green's function's
+        numeric region defaulting to exactly the range -- which is what production hands it,
+        because that region always ends exactly at z_response.
+        """
+        z_top, z_bottom = self.Z_TOP, self.Z_BOTTOM
+        policy = FakeGkPolicy(
+            _MinimalGk(),
+            "numeric",
+            None,
+            (
+                z_top if region_max_z is None else region_max_z,
+                z_bottom if region_min_z is None else region_min_z,
+            ),
+            None,
+        )
+        return build_partition(
+            policy,
+            _MinimalTk(z_bottom),
+            _MinimalTk(z_bottom),
+            _MinimalSource(z_top, z_bottom),
+            z_bottom,
+            z_top,
+        )
+
+    def test_region_ending_exactly_at_z_response_does_not_raise(self):
+        z_top, z_bottom = self.Z_TOP, self.Z_BOTTOM
+        rt_top = exp(log(1.0 + z_top)) - 1.0
+        rt_bottom = exp(log(1.0 + z_bottom)) - 1.0
+        print(
+            f"\n[13] log/exp round trip at the sub-interval ends: "
+            f"z_top {z_top:.6g} -> {rt_top:.6g} ({rt_top - z_top:+.4g}), "
+            f"z_bottom {z_bottom:.6g} -> {rt_bottom:.6g} ({rt_bottom - z_bottom:+.4g}); "
+            f"the retired absolute tolerance was {DEFAULT_FLOAT_PRECISION:.1e} in z"
+        )
+        # both ends move by ~1e7 times the retired tolerance, in opposite directions
+        self.assertGreater(rt_top - z_top, DEFAULT_FLOAT_PRECISION)
+        self.assertLess(rt_bottom - z_bottom, -DEFAULT_FLOAT_PRECISION)
+
+        partition = self._partition()
+        subintervals = partition["metadata"]["subintervals"]
+        self.assertEqual(len(subintervals), 1)
+        self.assertEqual(subintervals[0]["method"], "quad")
+
+    def test_a_region_short_of_the_subinterval_still_raises(self):
+        """
+        A fix that merely stops the guard complaining is not the fix. A region whose bottom sits
+        several source-grid steps above z_response must still raise, naming both the region and
+        the sub-interval.
+        """
+        z_top, z_bottom = self.Z_TOP, self.Z_BOTTOM
+        source = _MinimalSource(z_top, z_bottom)
+        step = (log(1.0 + z_top) - log(1.0 + z_bottom)) / (len(source.z_sample) - 1)
+        short_by = 5.0 * step
+        region_min_z = exp(log(1.0 + z_bottom) + short_by) - 1.0
+        print(
+            f"\n[13] region bottom raised {short_by:.4g} in log(1+z) "
+            f"(5 source-grid steps of {step:.4g}) to z={region_min_z:.6g}, "
+            f"against a sub-interval bottom of z={z_bottom:.6g}"
+        )
+        with self.assertRaises(RuntimeError) as ctx:
+            self._partition(region_min_z=region_min_z)
+        message = str(ctx.exception)
+        print(f"[13] raised: {message}")
+        self.assertIn("Gk numeric", message)
+        self.assertIn(f"{region_min_z:.5g}", message)
+        self.assertIn(f"{z_bottom:.5g}", message)
+
+        # ... and the same, several grid steps the other way at the top
+        region_max_z = exp(log(1.0 + z_top) - short_by) - 1.0
+        with self.assertRaises(RuntimeError) as ctx:
+            self._partition(region_max_z=region_max_z)
+        message = str(ctx.exception)
+        self.assertIn("sub-interval top", message)
+        self.assertIn(f"{region_max_z:.5g}", message)
+
+    def test_round_trip_reproduction_selects_nothing_the_log_comparison_rejects(self):
+        """
+        The pure-arithmetic reproduction of verification document section 5.1
+        (`exp(log(1+z)) - 1 < z - 1e-7`, and its upward counterpart) over a production-shaped
+        grid: every redshift it selects must now be accepted by _check_region_covers when the
+        region ends exactly there, which is what the Green's-function region always does.
+        """
+        # the grid the pipeline actually builds -- logspace in z, not in log(1+z), as
+        # wavenumber_exit_time.populate_z_sample does -- over run A's own endpoints
+        z_init, z_end = 6.8788e14, 1.0e7
+        n = int(
+            round(
+                PRODUCTION_SAMPLES_PER_LOG10Z * (np.log10(z_init) - np.log10(z_end))
+                + 0.5
+            )
+        )
+        grid = list(np.logspace(np.log10(z_init), np.log10(z_end), num=n))
+        down = [
+            z for z in grid if exp(log(1.0 + z)) - 1.0 < z - DEFAULT_FLOAT_PRECISION
+        ]
+        up = [z for z in grid if exp(log(1.0 + z)) - 1.0 > z + DEFAULT_FLOAT_PRECISION]
+        print(
+            f"\n[13] {len(grid)} redshifts at {PRODUCTION_SAMPLES_PER_LOG10Z} per log10(z) "
+            f"over z in [1e7, 6.8788e14]: the retired comparison selected "
+            f"{len(down)} downward ({100.0 * len(down) / len(grid):.0f} %) and "
+            f"{len(up)} upward ({100.0 * len(up) / len(grid):.0f} %)"
+        )
+        self.assertGreater(len(down), 0)
+        self.assertGreater(len(up), 0)
+
+        for z in grid:
+            log_z = log(1.0 + z)
+            round_trip = exp(log_z) - 1.0
+            # a region ending exactly at this redshift, checked against a sub-interval whose end
+            # is the same redshift in log(1+z) -- the production case
+            _check_region_covers("test", (z, z), log_z, log_z, round_trip, round_trip)
+
+    def test_the_quadrature_helper_makes_the_same_comparison(self):
+        """
+        `numeric_quad_integral` re-checks the same "Gk numeric" region over the same sub-interval,
+        and it received min_z/max_z as exp(log_z) - 1 too. build_partition raised first and masked
+        it: once the guard above was corrected, 771 of the 3185 production work items raised here
+        instead. It must accept a region ending exactly at the sub-interval bottom, and must still
+        reject one that falls short.
+        """
+        z_top, z_bottom = self.Z_TOP, self.Z_BOTTOM
+        log_top, log_bottom = log(1.0 + z_top), log(1.0 + z_bottom)
+        # exactly the round-tripped ends evaluate_QuadSource_integral hands on as limits
+        z_hi, z_lo = exp(log_top) - 1.0, exp(log_bottom) - 1.0
+
+        model = FakeModel(1.0 / 3.0)
+        k = FakeWavenumber(1.0e6, 1)
+
+        def run(region):
+            return numeric_quad_integral(
+                model,
+                k,
+                k,
+                k,
+                None,
+                FakeGkPolicy(_MinimalGk(), "numeric", None, region, None),
+                z_bottom,
+                max_z=z_hi,
+                min_z=z_lo,
+                atol=1.0e-25,
+                rtol=1.0e-10,
+                source_f=lambda x, z_is_log=False: 1.0,
+            )
+
+        payload = run((z_top, z_bottom))
+        print(
+            f"\n[13] numeric_quad_integral over the round-tripped limits "
+            f"({z_hi:.6g}, {z_lo:.6g}) against a region ({z_top:.6g}, {z_bottom:.6g}): "
+            f"value={payload['value']:.6g}"
+        )
+        self.assertTrue(np.isfinite(payload["value"]))
+
+        step = (log_top - log_bottom) / 15.0
+        short = exp(log_bottom + 5.0 * step) - 1.0
+        with self.assertRaises(RuntimeError) as ctx:
+            run((z_top, short))
+        message = str(ctx.exception)
+        print(f"[13] raised: {message}")
+        self.assertIn("min_z", message)
+        self.assertIn(f"{short:.5g}", message)
 
 
 class TestPersistedSchema(unittest.TestCase):
