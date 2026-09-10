@@ -203,7 +203,7 @@ Traceability from the audit's finding IDs to the prompt that discharges them.
   production phase spline covers $x$ up to $2.7\times10^5$ with a few hundred samples and its fit
   error grows linearly with $x$. See `docs/source-remediation-verification.md` §5.5 and
   `[12-handover-clamp-error-in-production]`.
-  **Assigned (2026-09-10):** the hand-over campaign, with `[08-handover-clamp-error]`, `[12-handover-clamp-error-in-production]` and `[12-phase-spline-error-grows-with-x]`. These are all the same seam and must be attacked together.
+  **Assigned (2026-09-10):** the hand-over campaign, with `[08-handover-clamp-error]`, `[12-handover-clamp-error-in-production]` and `[12-phase-spline-error-grows-with-x]`. These are all the same seam and must be attacked together. (*2026-09-10, later the same day:* `[12-phase-spline-error-grows-with-x]` was reassigned to `prompts/GkTk-remedial/` — see its own entry — since the re-spline term is fixed on the consumer side without moving the hand-over; the other two remain here.)
 
 - **[06-source-spline-residual-vs-handover]** *(opened by prompt 06, 2026-09-08)* — with the
   grid now truncated at the both-numeric hand-over, the spline of $f$ inside that region is
@@ -237,7 +237,7 @@ Traceability from the audit's finding IDs to the prompt that discharges them.
   residual 9.6e-06 to 1.3e-04), i.e. the realistic hand-over is nearer the first row of the table
   above than the last, and the spline is not the limiting error inside the both-numeric region.
   See `docs/source-remediation-verification.md` §5.7.
-  **Assigned (2026-09-10):** the hand-over campaign, with `[08-handover-clamp-error]`, `[12-handover-clamp-error-in-production]` and `[12-phase-spline-error-grows-with-x]`. These are all the same seam and must be attacked together.
+  **Assigned (2026-09-10):** the hand-over campaign, with `[08-handover-clamp-error]`, `[12-handover-clamp-error-in-production]` and `[12-phase-spline-error-grows-with-x]`. These are all the same seam and must be attacked together. (*2026-09-10, later the same day:* `[12-phase-spline-error-grows-with-x]` was reassigned to `prompts/GkTk-remedial/` — see its own entry — since the re-spline term is fixed on the consumer side without moving the hand-over; the other two remain here.)
 
 - **[07-lg-derivative-truncation-at-handover]** *(opened by prompt 07, 2026-09-08)* — the
   derivative pieces `TkSourceFunctions` supplies in closed form, `omega = sqrt(Tk_omegaEff_sq)`
@@ -258,7 +258,7 @@ Traceability from the audit's finding IDs to the prompt that discharges them.
   `mode="stop"` search window, `TkNumericIntegration.py:130-131`) or the overlap of
   `docs/lg-phase-and-handover-followup-2026-09.md` §1.4 would reduce it; both are out of scope
   here.
-  **Assigned (2026-09-10):** the hand-over campaign, with `[08-handover-clamp-error]`, `[12-handover-clamp-error-in-production]` and `[12-phase-spline-error-grows-with-x]`. These are all the same seam and must be attacked together.
+  **Assigned (2026-09-10):** the hand-over campaign, with `[08-handover-clamp-error]`, `[12-handover-clamp-error-in-production]` and `[12-phase-spline-error-grows-with-x]`. These are all the same seam and must be attacked together. (*2026-09-10, later the same day:* `[12-phase-spline-error-grows-with-x]` was reassigned to `prompts/GkTk-remedial/` — see its own entry — since the re-spline term is fixed on the consumer side without moving the hand-over; the other two remain here.)
 
 - **[12-phase-spline-error-grows-with-x]** *(measured in `docs/lg-phase-and-handover-followup-2026-09.md`
   §2, 2026-09-08; measured on real rows by prompt 12, 2026-09-09; **split out into its own issue
@@ -307,6 +307,14 @@ Traceability from the audit's finding IDs to the prompt that discharges them.
   cubic fit) rather than anything in `QuadSourceIntegral`. Note the oracle ceiling as well:
   `bessel_phase` itself is good to ~$x\times10^{-8}$ in phase (followup §2.4), so no fixture-based
   test can assert better than that sub-horizon.
+  **Assigned (2026-09-10):** to the **Gk/Tk WKB phase remedial campaign**
+  (`prompts/GkTk-remedial/`, mechanism M14, prompts 09 and 10), which replaces the store-and-re-spline
+  round trip by evaluating the leading term $k\,\Delta\tau$ from a per-model conformal-time table and
+  splining only the small residual — the "store enough to reconstruct it without a cubic fit" lever
+  named above. Reassigned from the hand-over campaign because that campaign's planning (review
+  §13.2, §13.3) showed the term is separable after all: it is fixed on the consumer side without
+  moving the hand-over. The clamp error `[12-handover-clamp-error-in-production]` stays with the
+  hand-over campaign.
 
 - **[10-levin-wholesale-cc-fallback]** *(opened by prompt 10, 2026-09-09)* — the user's decision on
   `[08-levin-fallback-cost-ratio]` (now §4) accepts prompt 08 §6's cost here and asks for the fix
