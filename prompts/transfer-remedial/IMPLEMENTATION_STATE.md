@@ -2,18 +2,21 @@
 
 **Campaign:** [`README.md`](README.md) · **Design:** [`DRAFT-PLAN.md`](DRAFT-PLAN.md) · **Reconciliation:** [`RECONCILIATION.md`](RECONCILIATION.md)
 **Baseline commit:** `95cc326` (`transfer-remedial-plan`, clean)
-**Last updated:** 2026-09-10 — prompt 04 executed on `ffbb36c` (this commit; SHA not self-embedded).
+**Last updated:** 2026-09-10 — prompt 05 executed on `bc31493` (this commit; SHA not self-embedded).
 **Planned against:** `c4c4905`; re-pointed to `95cc326` before commit (`RECONCILIATION.md` §0).
-**Executing against:** `ffbb36c` (prompt 03's commit), 20 commits after `95cc326` (the merge of
+**Executing against:** `bc31493` (prompt 04's commit), 21 commits after `95cc326` (the merge of
 `transfer-remedial-plan` into the working branch, `source-remediation` prompt 12's live
 verification, the Green-function WKB reviews, three independent fixes, and prompt 01's new
-reference harness, plus prompts 01, 02 and 03). **No previously existing `LiouvilleGreen/` file was
-touched by any of them** — `git diff --stat 95cc326..f17f2d4 -- LiouvilleGreen/` is empty, and
-prompts 01, 02, 03 and 04 only added new files —
-so `RECONCILIATION.md` §1, §2 and §3.1 still apply verbatim, and prompt 01 re-confirmed nine of
-their measurements independently (log 01 "Verification performed"). Note also that README §4.2's
-scheduling risk has **cleared**: `source-remediation` prompt 12 has run (`5b82149`), so Workstream B
-no longer risks changing the Bessel oracle underneath it.
+reference harness, plus prompts 01, 02, 03 and 04). None of those touched a previously existing
+`LiouvilleGreen/` file — prompts 01–04 only added new ones — so `RECONCILIATION.md` §1, §2 and §3.1
+applied verbatim to every prompt up to and including 04, and prompt 01 re-confirmed nine of their
+measurements independently (log 01 "Verification performed"). **Prompt 05 is the first commit to
+change a previously existing `LiouvilleGreen/` file**: it rewrites `bessel_phase.py`, so
+`RECONCILIATION.md` §1's measurements *of the old construction* (`phi`, the ODE cost, the chunk
+counts) are now historical rather than current. Its measurements of `hankel1e`, `jv`/`yv`, the tail
+series and the split evaluation are properties of SciPy and of the mathematics, and stand unchanged.
+Note also that README §4.2's scheduling risk has **cleared**: `source-remediation` prompt 12 has run
+(`5b82149`), so Workstream B no longer risks changing the Bessel oracle underneath it.
 
 > **Maintenance rule.** Every prompt updates this file *in its own commit*, before committing.
 > Set your row's status, fill in the commit SHA, model and log link, update the mechanism-level
@@ -40,7 +43,7 @@ Legend: ⬜ not started · 🟡 in flight · ✅ complete · ⚠️ complete wit
 |---|---|---|---|---|---|---|
 | 03 | [Closed-form tail](03-closed-form-tail.md) | plan §7.2 | Opus 5 | ⚠️ | *(this commit; SHA not self-embedded)* | [`03`](logs/03-closed-form-tail.md) |
 | 04 | [Near-region sampler](04-near-region-sampler.md) | plan §7.1, §7.3, §4.5 | Opus 5 | ⚠️ | *(this commit; SHA not self-embedded)* | [`04`](logs/04-near-region-sampler.md) |
-| 05 | [Two-region construction](05-two-region-construction.md) | plan §9 Stage 2, §7.4 | Opus | ⬜ | | |
+| 05 | [Two-region construction](05-two-region-construction.md) | plan §9 Stage 2, §7.4 | Opus 5 | ⚠️ | *(this commit; SHA not self-embedded)* | [`05`](logs/05-two-region-construction.md) |
 
 ### Workstream C — evaluation, compatibility and consumers
 
@@ -56,7 +59,7 @@ Legend: ⬜ not started · 🟡 in flight · ✅ complete · ⚠️ complete wit
 | 08 | [Fixture revalidation](08-fixture-revalidation.md) | plan §8.3, §9 Stage 5, §10 | Opus | ⬜ | | |
 | 09 | [Benchmark and docs](09-benchmark-and-docs.md) | plan §9 Stage 5, §11 | Sonnet | ⬜ | | |
 
-**Progress:** 4 / 9 complete.
+**Progress:** 5 / 9 complete.
 
 ---
 
@@ -67,19 +70,19 @@ campaign; the plan section is the authority on each.
 
 | ID | Severity | Description | Prompt | Status |
 |---|---|---|---|---|
-| M1 | **DEFECT, accuracy** | \(Q=\theta/x\) ODE: \(\delta\theta=x\,\delta Q\), so a relative bound on \(Q\) gives no absolute phase bound (§4.1). The phase is a quadrature, not an ODE (§5.1) | 05 | ⬜ |
-| M2 | **DEFECT, spurious** | The `phi` root solve returns a non-zero offset at a match point where the phase is already exact; measured \(-4.836537\times10^{-8}\) at \(\nu=5/2\), and it **is** the whole tight-tolerance error (§4.3) | 05, 06 | ⬜ |
-| M3 | **DEFECT, accuracy** | Full-phase interpolation errs by \(h^4x/384\) — 6.7e-10 at \(x=10^3\), 6.7e-6 at \(10^7\) (§4.2); chunking has no measurable effect on it (§4.6) | 05 | ⬜ |
+| M1 | **DEFECT, accuracy** | \(Q=\theta/x\) ODE: \(\delta\theta=x\,\delta Q\), so a relative bound on \(Q\) gives no absolute phase bound (§4.1). The phase is a quadrature, not an ODE (§5.1) | 05 | ✅ |
+| M2 | **DEFECT, spurious** | The `phi` root solve returns a non-zero offset at a match point where the phase is already exact; measured \(-4.836537\times10^{-8}\) at \(\nu=5/2\), and it **is** the whole tight-tolerance error (§4.3) | 05, 06 | 🟡 |
+| M3 | **DEFECT, accuracy** | Full-phase interpolation errs by \(h^4x/384\) — 6.7e-10 at \(x=10^3\), 6.7e-6 at \(10^7\) (§4.2); chunking has no measurable effect on it (§4.6) | 05 | ✅ |
 | M4 | **DEFECT, silent failure** | `hankel1e` returns exactly `-0j` above 7.13e8 (\(\nu\gtrsim100\)) / 2.247e15 (all \(\nu\)); `isfinite` passes and `log(abs(·))` is `-inf` (§4.4) | 02, 03, 04 | ✅ |
 | M5 | **DEFECT, hard limit** | `jv`/`yv` become O(1)-relatively noisy above \(x\approx2.5\times10^{15}\), the ODE right-hand side stops being \(1+O(\nu^2/x^2)\), and DOP853 at `rtol=5e-14` stalls — construction never returns (recon C1; **not in the plan**) | 02, 03, 05, 09 | 🟡 |
-| M6 | **REQUIREMENT** | Closed-form tail from DLMF 10.18.18, with \(a=(1+r')^{-1/2}\) from the Wronskian and a remainder-tested \(x_\star\). **Required, not deferred** (§1, §7.2) | 03, 05 | 🟡 |
+| M6 | **REQUIREMENT** | Closed-form tail from DLMF 10.18.18, with \(a=(1+r')^{-1/2}\) from the Wronskian and a remainder-tested \(x_\star\). **Required, not deferred** (§1, §7.2) | 03, 05 | ✅ |
 | M7 | **REQUIREMENT** | Branch tracking verified, not assumed: 3.685 rad per interval and ~90 wraps at \(\nu=1000.5\) defeat fixed-density `unwrap` (§4.5, recon C2) | 04 | ✅ |
 | M8 | **REQUIREMENT** | Two-sided adaptivity — refine at the turning point, coarsen in the tail (§4.5) | 04 | ✅ |
 | M9 | **REQUIREMENT** | Two-sided \(a_\nu\) plausibility band, measured \([1.0000,\,3.546]\) over the near region (§4.4, recon §3.1) | 04 | ✅ |
-| M10 | **REQUIREMENT** | \(\theta'=e^{-2\ell}\) as a value, plus the mandatory independent check against \(1+r_u/x\) and the reference, since the Wronskian becomes a tautology (§4.7, §7.3) | 04, 05 | 🟡 |
-| M11 | **REQUIREMENT** | Split sin/cos evaluation; naive `x+d` loses 4.7e-2 at \(x=10^{15}\) (§6.3, §7.4) | 05 | ⬜ |
-| M12 | **REQUIREMENT** | Bounded-angle accessor via `atan2`, and `raw_theta` documented as \(\varepsilon x\)-limited (§7.4) | 05, 06 | ⬜ |
-| M13 | **REQUIREMENT** | Declare `theta_abserr`; nothing supplies it today although `AdaptiveLevin` accepts it for exactly this case (§8.1) | 06, 07 | ⬜ |
+| M10 | **REQUIREMENT** | \(\theta'=e^{-2\ell}\) as a value, plus the mandatory independent check against \(1+r_u/x\) and the reference, since the Wronskian becomes a tautology (§4.7, §7.3) | 04, 05 | ✅ |
+| M11 | **REQUIREMENT** | Split sin/cos evaluation; naive `x+d` loses 4.7e-2 at \(x=10^{15}\) (§6.3, §7.4) | 05 | ✅ |
+| M12 | **REQUIREMENT** | Bounded-angle accessor via `atan2`, and `raw_theta` documented as \(\varepsilon x\)-limited (§7.4) | 05, 06 | 🟡 |
+| M13 | **REQUIREMENT** | Declare `theta_abserr`; nothing supplies it today although `AdaptiveLevin` accepts it for exactly this case (§8.1) | 05, 06, 07 | 🟡 |
 | M14 | **MIGRATION** | `Q` (pre-offset ODE state) and `phi` have no referent; `atol`/`rtol` describe ODE tolerances that no longer exist (§8.1) | 06 | ⬜ |
 | M15 | **MIGRATION** | Ray serialization of the new representation through `BesselPhaseProxy` (§8.1) | 06 | ⬜ |
 | M16 | **DEFECT, dead code** | `plot_besssel_phase.py` reads a nonexistent `x_min` key and calls a non-callable `phase`; it cannot run (recon C3) | 06 | ⬜ |
@@ -188,10 +191,53 @@ risks that the prompts inherit rather than create.
   6.6e-14–2.3e-13 contributor to it, and has not been re-measured since. **Impact:** prompt 05
   propagates these numbers into the Levin quadrature's `theta_abserr`, whose whole purpose is that
   the caller sees an honest number; if it does so unmodified it is asserting a bound on
-  interpolation, not on the representation. **Next step:** prompt 05 either adds a documented
-  sampling-floor term to what it publishes as `theta_abserr` or states the assumption explicitly;
-  a re-measurement of the post-fix `hankel1e` phase floor against `mpmath` would settle the size
-  of the term and is cheap.
+  interpolation, not on the representation.
+  **Narrowed (2026-09-10, prompt 05):** the published number is no longer unmodified.
+  `bessel_phase.SAMPLED_PHASE_FLOOR = SAMPLED_AMPLITUDE_FLOOR = 3e-13` — `DRAFT-PLAN.md` §4.4's
+  measured 2.96e-13 at \(\nu=1000.5\), rounded up and applied at every order — is added to the near
+  region's `achieved_*` values before they enter `theta_abserr`, alongside a new
+  `EVALUATION_FLOOR = 4\varepsilon` for the angle-addition arithmetic itself (without which
+  \(\nu=1/2\), where the representation is exact, declared 0.0 against a measured 1.11e-16).
+  `theta_abserr` is now measured to over-report the corner-scored error by 4× to 8000× at every
+  order from 1/2 to 1000.5 (log 05), and `test_bessel_two_region` asserts it never under-reports.
+  **What remains open** is only the *size* of the constant: it is a pre-prompt-04 measurement
+  carried forward, taken before the rotation-constant fix removed a 6.6e-14–2.3e-13 contributor to
+  it, and it is not binding — the tail series remainder (2.5e-12) dominates it by a factor 8 at
+  every order. **Next step:** re-measure the post-fix `hankel1e` phase floor against `mpmath` and
+  reduce the constant, or confirm it. Cheap, and nothing waits on it.
+
+- **[05-3bessel-analytic-not-run-to-completion]** *(opened by prompt 05, 2026-09-10)* — prompt 05's
+  §5 acceptance includes `unittest discover -s LiouvilleGreen/tests -t .`, and every module in it
+  passed except `test_3bessel_analytic.py`, which was started, made normal progress (tests passing,
+  no failures, only the expected `DeprecationWarning`s from its `atol`/`rtol` call sites) and was
+  **not seen to completion**. This is the pre-existing multi-hour module of `RECONCILIATION.md`
+  §3.4 — it did not finish within 50 minutes on the planning machine and 15 minutes on prompt 01's
+  — because it rebuilds `bessel_phase` objects per case over many cases. There is no evidence
+  prompt 05 makes it slower: construction is now ~2.5 ms rather than ~60–100 ms, and the two
+  sibling modules that exercise the same evaluation path both got faster (`test_bessel_phase`
+  1.2 s → 0.18 s, `test_three_bessel` 7.5 s → 4.1 s). **Impact:** its tolerance bands (1e-5/1e-6, and 1e-2/1e-3 near singularities) have not
+  been re-scored against the new oracle. `DRAFT-PLAN.md` §9 Stage 4 warns that an eight-order
+  improvement can *expose a different limiting error rather than simply pass more easily*, so a
+  failure there would be a finding rather than a nuisance. Every other consumer was run and passed:
+  `test_bessel_phase` (4), `test_three_bessel` (2), the five other `LiouvilleGreen` modules (69),
+  and `ComputeTargets` `test_tk_source_functions` + `test_phase_groups` (30). **Next step:** run
+  `PYTHONPATH=. ./venv/bin/python -m unittest LiouvilleGreen.tests.test_3bessel_analytic` on a
+  machine that can give it hours, before or as part of prompt 08, which owns those tolerances.
+
+- **[05-quadsource-order-check-docstring-stale]** *(opened by prompt 05, 2026-09-10)* — prompt 05
+  added a `"nu"` key to `bessel_phase`'s returned dict, for prompt 07's phase groups.
+  `ComputeTargets/QuadSourceIntegral.py:680` (`_check_bessel_order`) has a long docstring stating
+  that the dict "carries phase, mod, Q, phi, bessel_j, bessel_y, min_x, max_x and no `nu`", and
+  explaining that the order therefore has to be checked *numerically* — by comparing the spline's
+  own reconstruction against `jv`, normalised by the envelope. That reasoning is now obsolete.
+  **Impact:** none functional. The numeric check still runs and still passes
+  (`ComputeTargets.tests.test_quadsource_integral` was not re-run here, but
+  `test_tk_source_functions` and `test_phase_groups` were and are OK); only the docstring is wrong,
+  and it is wrong in the safe direction. `ComputeTargets/` is out of scope for this campaign
+  (README §4.2), so nothing was changed. **Next step:** hand to `prompts/source-remediation`
+  alongside `[00-qsi-three-bessel-levin-excluded]` when prompt 09 makes that hand-off; that
+  campaign can either correct the docstring or replace the numeric check with a direct comparison
+  against `phase_data["nu"]`.
 
 > Add an entry here whenever a prompt finishes with something unresolved: a verification step that
 > could not be run, an assumption that could not be confirmed, a deviation a later prompt has to
@@ -310,3 +356,41 @@ risks that the prompts inherit rather than create.
     `amplitude_rtol`, since \(\delta\theta'/\theta'=-2\,\delta\ell\) exactly. Do not reinstate the
     criterion; the two routes are measured to agree to 1.4e-13 at low order and 6.9e-11 at
     \(\nu=1000.5\), inside every budget.
+
+18. **`bessel_phase` now returns a much larger dict, and the four old members mean what they used
+    to.** `phase`, `mod`, `bessel_j`, `bessel_y`, `min_x`, `max_x` keep their names and calling
+    conventions; `Q` survives as `raw_theta(x)/x` (which *is* the old pre-offset ODE state, since
+    `phi` is now identically zero and there is no cycle rebasing); `phi` survives and is
+    **identically 0.0** at every order. Added: `nu`, `x_star`, `theta_abserr`, `amplitude_relerr`,
+    `theta_deriv_relerr`, `accuracy` (an 18-key breakdown), `accuracy_met`, `crossover` (prompt
+    03's `TailCrossover`) and `near_region` (prompt 04's `NearRegionData`, or **`None`** at
+    \(\nu=1/2\), which anything walking `log_x_nodes` must handle). Accessor signatures are in
+    log 05's "State handed to the next prompt", verbatim. Note the keyword names still differ
+    between the two objects deliberately: `phase.*` takes `x_is_log` and `mod.*` takes `is_log`,
+    matching what each replaced.
+
+19. **`theta_mod_2pi` now returns \((-\pi,\pi]\) from `atan2(sin,cos)` of the split pair**, where
+    the old one returned `fmod(theta, 2*pi)` in \((-2\pi,2\pi)\). Both are valid representatives;
+    every consumer checked takes only \(\sin\)/\(\cos\) of it (`levin_quadrature.py:1103-1105`,
+    `:1120-1121`; `three_bessel_integrals._phase_group`). **Never difference `raw_theta` values to
+    build a phase group** — it is \(\varepsilon\theta\)-limited by construction, 2.2e-1 rad at
+    \(x=10^{15}\). Prompt 07 should combine the leading coefficients and the `c_nu` constants
+    before multiplying by \(t\), and take \(R(t)\) from `phase.residual`, which exists for exactly
+    that. `phase.c_nu` and `phase.c_nu_reduced` are both exposed; the reduced one is what
+    \(\sin\)/\(\cos\) use, and it is the one to sum when only trigonometric values are needed.
+
+20. **`atol`/`rtol` are accepted, ignored and warned about; nothing translates them.** They named
+    tolerances of an ODE solve that no longer exists, so a mapping would be invented. Defaults are
+    `None`, so a caller that omits them gets no warning; the new arguments are `phase_atol`
+    (absolute radians) and `amplitude_rtol` (relative), both defaulting to `1e-11`, and they win if
+    both old and new are supplied. Six call sites in the tree still pass the old names and now emit
+    one `DeprecationWarning` each: `main.py:520-528` and `QuadSourceIntegral_debug` (prompt 06),
+    `test_three_bessel.py` and `test_3bessel_analytic.py` (prompt 08),
+    `docs/adaptive-levin-benchmark/levin_bench/bessel_tier.py` (prompt 09, and it already suppresses
+    warnings), plus the two `docs/` scripts, which nobody owns and which still run.
+
+21. **Construction cost is now flat in `max_x` and depends only on the order** — 0.0022–0.0034 s
+    for \(\nu=5/2\) from \(x_{\max}=10^3\) to \(10^{16}\), 0.043 s at \(\nu=1000.5\). The declared
+    ceiling is `MAX_SUPPORTED_X = 1e16`, and \(3\times10^{15}\) and \(8.6\times10^{15}\) — the two
+    arguments at which the old construction did not return — build in 2.5 ms. **Still do not claim
+    a speed-up ratio** (standing note 3): the result to claim is that a cliff was removed.

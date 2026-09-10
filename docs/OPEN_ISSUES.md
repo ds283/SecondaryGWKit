@@ -1,6 +1,6 @@
 # Open issues — project-wide index
 
-**Last updated:** 2026-09-10 · **24 open** across four campaigns.
+**Last updated:** 2026-09-10 · **26 open** across four campaigns.
 
 This file exists so that an issue opened by one campaign is not lost when that campaign closes.
 It is an **index, not a record**: one line per issue, pointing at the campaign status board that
@@ -94,7 +94,9 @@ Something was asserted statically or on a stand-in, and a live exercise is still
 | `[00-qsi-three-bessel-levin-excluded]` | transfer-remedial | `_three_bessel_Levin`'s eight `adaptive_levin_sincos` calls supply no `theta_deriv`, so Levin differentiates the raw phase spectrally there. |
 | `[01-scipy-jv-yv-high-order-boundary]` | transfer-remedial | The silent Amos boundary is order dependent and applies to `jv`/`yv`, not only `hankel1e`: 7.13e8 above $\nu\approx86$. Guarded in the harness; the order threshold is bracketed [85.5, 88.5], not pinned, and not yet a test. |
 | `[03-draft-plan-tail-coefficient-wrong]` | transfer-remedial | `DRAFT-PLAN.md` §7.2 and prompt 03 print 15360 for the third DLMF 10.18.18 denominator; it is 5120 (fourth: 229376). Shipped code is right and pins it; the plan text is not edited, so prompt 09 owes the correction in `docs/`. |
-| `[04-achieved-estimates-exclude-the-sampling-floor]` | transfer-remedial | `NearRegionData.achieved_*` resamples the same `hankel1e` it interpolates, so it estimates interpolation error only; over-reports by 1.3–4.8× against the 40-digit corners, but carries no `hankel1e` bias term for prompt 05 to publish as `theta_abserr`. |
+| `[04-achieved-estimates-exclude-the-sampling-floor]` | transfer-remedial | `NearRegionData.achieved_*` resamples the same `hankel1e` it interpolates, so it estimates interpolation error only. **Narrowed by prompt 05:** the published `theta_abserr` now adds a 3e-13 sampling floor and 4ε of evaluation arithmetic, and is tested never to under-report; only the size of the 3e-13 constant is still open. |
+| `[05-3bessel-analytic-not-run-to-completion]` | transfer-remedial | The pre-existing multi-hour `test_3bessel_analytic.py` was started under the new oracle and made normal progress, but was not seen to finish; its 1e-5/1e-6 and 1e-2/1e-3 bands are unscored against an eight-order-better oracle. Every other consumer ran and passed. |
+| `[05-quadsource-order-check-docstring-stale]` | transfer-remedial | `bessel_phase` now returns a `"nu"` key, so `QuadSourceIntegral._check_bessel_order`'s docstring (and its reason for checking the order numerically) is obsolete. No functional impact; hand to `source-remediation`. |
 
 ---
 
