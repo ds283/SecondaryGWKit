@@ -2,8 +2,15 @@
 
 **Campaign:** [`README.md`](README.md) · **Source audit:** [`docs/spec-code-audit-2026-09.md`](../../docs/spec-code-audit-2026-09.md)
 **Baseline commit:** `e9a43a2` (`main`, clean)
-**Last updated:** 2026-09-10 — prompt 13 complete. **The campaign's twelve prompts are all
-landed and verified against a live scoped pipeline run** ([`docs/source-remediation-verification.md`](../../docs/source-remediation-verification.md)):
+**Last updated:** 2026-09-10 — prompt 13 complete, plus a post-campaign tidy-up commit
+(`[10-classify-levin-keyerror]` closed; the three `analyse_*.py` scripts re-run over the complete
+3185-row run, verification document §5.1.2). **Twelve issues remain open in §3** — six measured
+accuracy floors with no action defined, three needing a module this campaign excluded
+(`LiouvilleGreen/`, `AdaptiveLevin/`, `extract_*.py`), and three accuracy decisions deferred to a
+later campaign (the hand-over clamp, twice, and the source integral's `atol`).
+
+**The campaign's twelve prompts are all landed and verified against a live scoped pipeline run**
+([`docs/source-remediation-verification.md`](../../docs/source-remediation-verification.md)):
 every offline test passes, all four audit §4 items are closed, and `total` reproduces
 `analytic_rad` to 1e-6–1e-4 where the response redshift is a few oscillations inside the horizon.
 **The source integral now completes at production redshifts.** Prompt 12 found a run-blocking
@@ -253,17 +260,6 @@ Traceability from the audit's finding IDs to the prompt that discharges them.
   re-decide from $\theta_G$ alone what the driver decides from the composed phase, which is defect
   A4 in weaker form.
 
-- **[10-classify-levin-keyerror]** *(opened by prompt 10, 2026-09-09)* — latent, pre-existing, and
-  noticed while adding prompt 10 §4's comment: `GkSourcePolicyData._classify_Levin` (`:135-199`)
-  sets `payload["Levin_z"]` only inside its `for z_source` loop, so a Green's function whose
-  $|d\theta_G/d\log(1+z)|$ never exceeds `policy.Levin_threshold` anywhere in its WKB range makes
-  `apply_GkSource_policy:58` raise `KeyError: 'Levin_z'` instead of storing `None` (the
-  early-return path at `:154` does supply `None`). Not fixed: prompt 10 may only comment on that
-  file, and no row was available to test reachability. **Impact:** the `--gk-source-policy-queue`
-  stage would fail loudly, not silently, if such a mode exists; prompt 12 should recognise the
-  exception if it appears. **Next step:** a one-line `payload.setdefault("Levin_z", None)` in a
-  prompt that is allowed to edit `GkSourcePolicyData.py`.
-
 - **[08-handover-clamp-error]** *(opened by prompt 08, 2026-09-09)* — in production the WKB grid
   of each $T_k$ starts at the largest source-grid point *below* `z_init` (`main.py:695-697`;
   `TkWKBIntegration` stores no sample at `z_init`), so `TkSourceFunctions.WKB_region[0]` sits up
@@ -372,6 +368,24 @@ Traceability from the audit's finding IDs to the prompt that discharges them.
 ---
 
 ## 4. Resolved issues
+
+- **[10-classify-levin-keyerror]** *(opened by prompt 10, 2026-09-09; **closed 2026-09-10** by
+  the post-campaign tidy-up commit, outside the numbered prompts)* — latent and pre-existing:
+  `GkSourcePolicyData._classify_Levin` assigned `payload["Levin_z"]` only inside its
+  `for z_source` loop, so a Green's function whose $|d\theta_G/d\log(1+z)|$ never exceeds
+  `policy.Levin_threshold` anywhere in its WKB range left the key absent and made
+  `apply_GkSource_policy:58` raise `KeyError: 'Levin_z'`, aborting the `--gk-source-policy-queue`
+  stage. Prompt 10 was not allowed to edit that file and no row was available to test
+  reachability. **How it was closed:** the payload is initialised as `{"Levin_z": None}`, so the
+  loop's non-crossing path reports what the function's own early-return path already reported.
+  `None` is the correct value, not a placeholder: `Levin_z` has been diagnostic-only since prompt
+  10, and no crossing means no Levin quadrature is indicated. **Reachability confirmed**, which
+  prompt 10 could not do: driving `_classify_Levin` through duck-typed stand-ins with a linear
+  phase of 50 rad per unit $\log(1+z)$ against `Levin_threshold = 1e4` raises
+  `KeyError: 'Levin_z'` on the pre-fix tree and returns `Levin_z = None` after. Three tests in the
+  new `ComputeTargets/tests/test_gk_source_policy.py` cover the non-crossing path, the crossing
+  path (unchanged: still reports the redshift and records `Levin_z_dtheta_dlogz`) and the three
+  early-return classifications, so the two ways of reporting "no `Levin_z`" cannot drift apart.
 
 - **[12-region-check-absolute-tolerance]** *(opened by prompt 12, 2026-09-09; **closed by
   prompt 13, 2026-09-10**)* — was **run-blocking**. `_check_region_covers` compared a sub-interval
@@ -565,9 +579,15 @@ Traceability from the audit's finding IDs to the prompt that discharges them.
     same datastore, which is still readable and which the harness does not modify:
     `run_quadsource_integrals.py` now completes 3185 of 3185 (was 1813) with the 1813 bit-identical,
     and `scoped_pipeline_run.py` on a fresh path takes 5 minutes and 79 MB for the whole pipeline
-    *including* the source-integral stage (1 m 19.7 s for its 3185 items). The three `analyse_*.py`
-    scripts have not been re-run; §5.2–§5.8 of the verification document still stand as written,
-    now as a subset of a complete run.
+    *including* the source-integral stage (1 m 19.7 s for its 3185 items). **The three
+    `analyse_*.py` scripts were then re-run too** (2026-09-10, verification document §5.1.2): all
+    five run unchanged and consume the datastore, and §5.2–§5.8 stand as written — over 3185 rows
+    the §5.2 residual distribution *improves* slightly (median 1.69e-04 against 4.8e-04; p90 0.570
+    against 0.58) because the newly unblocked items sit at the top of the redshift grid, and §5.5's
+    and §5.7's figures reproduce to the digit. **One trap:** `analyse_background.py` picks the
+    parametrized-EOS model out of `build_model_list` and, given a datastore that holds no
+    `GenericEOS` background (run A or run C, both `LambdaCDM`), prints a meaningless A1 line
+    without warning. Give it run B's `QCD_Cosmology` datastore.
 13. **Both region-coverage guards in `QuadSourceIntegral.py` compare in `log(1+z)`**, with
     `MIN_SUBINTERVAL_LOG_WIDTH` as the tolerance (prompt 13; §4
     `[12-region-check-absolute-tolerance]`). `_check_region_covers` takes the sub-interval ends as

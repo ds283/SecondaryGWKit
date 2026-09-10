@@ -402,6 +402,56 @@ datastore holds **3185 `QuadSourceIntegral` rows** (against zero in run A), each
 `[12-atol-too-loose-for-the-source-integral]` and `[12-handover-clamp-error-in-production]` are
 untouched by that commit and remain open; both are now measurable on 3185 items rather than 1813.
 
+#### 5.1.2 Analysis scripts re-run over the complete run (added 2026-09-10)
+
+**Additive note.** §5.2–§5.8 below were measured on the 1813 rows that completed before prompt 13.
+All three `analyse_*.py` scripts have since been re-run over the complete 3185-row run — both
+input paths of `analyse_quadsource_integral.py` (`--shards` against the stored table, `--jsonl`
+against the harness output), `analyse_greens_and_source.py` against the run C datastore, and
+`analyse_background.py` against run B's `QCD_Cosmology` background. **Every script runs unchanged
+and consumes the datastore**; nothing below is retracted.
+
+What the wider sample changes, and what it does not:
+
+| §5.2 statistic, residual / `max(|numeric_quad|, |WKB_Levin|, |analytic_rad|)` | 1813 rows | **3185 rows** |
+|---|---|---|
+| median | 4.8e-04 | **1.69e-04** |
+| p25 | 1.9e-05 | 1.65e-05 |
+| p75 | 0.15 | 0.126 |
+| p90 | 0.58 | 0.570 |
+| max | 1.97 | 1.978 |
+| by shape: q≈r≈k / q≈r≫k / q≪k≈r | 2.8e-04 / 2.3e-04 / 2.4e-02 | 1.42e-04 / 1.55e-04 / 9.09e-03 |
+
+The distribution **improves slightly and its tail is unchanged**: the 1372 items prompt 13
+unblocked sit at the top of the redshift grid (28 distinct response redshifts up to 4.87e14), where
+`x_resp` is small and the agreement is good, so they add mass to the low-residual end. §5.2's
+reading is unaffected — the tail is still the sub-horizon rows, and §5.3 still attributes it to the
+hand-over clamp.
+
+The other three sections' figures are reproduced essentially exactly on the wider sample:
+
+- **§5.5 / audit §4.1** — 62 `mixed` policy rows, 40 evaluated, `|G_num − G_WKB|/max` median
+  **7.44e-08**, worst **4.04e-06** (§5.5 recorded 7.4e-08 and 4.0e-06).
+- **§5.7** — worst `QuadSource` spline midpoint residual **1.391e-04** of envelope over 28 rows
+  (§5.7 recorded 1.4e-04).
+- **§5.6 / audit §4.4** — on run B, `wPerturbations` is bit-identical to the Λ-free form
+  (worst relative difference **0.000e+00**, against 1.663e+00 for the with-Λ form), and every
+  end/interior ratio is inside prompt 03's 10× criterion, worst **8.45** (`d2_wPerturbations_dz2`)
+  and **1.14** (`d3_lnH_dz3`) — the numbers §5.5 recorded.
+- **§5.6, the regime mix** — on all 3185 rows: 5617 sub-intervals over eight phase-group rows,
+  all-smooth 2324 (41.4 %), `G` only 1288, `G`+`T_r` 633, all three 1160, `T_q`+`T_r` 189,
+  `T_r` only 23, and `T_q` only / `G`+`T_q` **0** — confirming on the full work list that the two
+  empty rows are unreachable because `combinations_with_replacement` gives $q\le r$, not merely
+  unsampled.
+
+**One usage trap, recorded rather than fixed.** `analyse_background.py` takes only a shard glob and
+picks the parametrized-EOS model out of `build_model_list`. Pointed at a datastore that holds no
+`GenericEOS` background — run A or run C, which are `LambdaCDM` — it prints an A1 line comparing
+the stored `wPerturbations` against *both* candidate forms at a relative difference of 3.3e-01,
+which is meaningless, with no warning that the model it analyses is absent. It must be given run
+B's `QCD_Cosmology` datastore, as §4.1 does. Nothing about the script's output on the right input
+is in question.
+
 ### 5.2 `total` against `analytic_rad` (prompt 12 §2 item 1)
 
 1813 rows, all with `b = 0.0`, 49 distinct (k,q,r), 37 distinct response redshifts from 1e7 to
