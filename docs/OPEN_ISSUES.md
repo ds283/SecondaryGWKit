@@ -1,6 +1,6 @@
 # Open issues — project-wide index
 
-**Last updated:** 2026-09-10 · **22 open** across four campaigns.
+**Last updated:** 2026-09-10 · **21 open** across four campaigns.
 
 This file exists so that an issue opened by one campaign is not lost when that campaign closes.
 It is an **index, not a record**: one line per issue, pointing at the campaign status board that
@@ -25,7 +25,7 @@ Work is identified and owned; the issue is parked deliberately, not forgotten.
 
 ### 1.1 The hand-over campaign
 
-The numeric→Liouville–Green seam of $T_k$ and $G_k$. These five are **one place** and must be
+The numeric→Liouville–Green seam of $T_k$ and $G_k$. These six are **one place** and must be
 attacked together — prompt 12 of `source-remediation` could not separate their contributions by
 measurement alone at production $x$. Background reading:
 [`docs/lg-phase-and-handover-followup-2026-09.md`](lg-phase-and-handover-followup-2026-09.md).
@@ -79,7 +79,6 @@ No action defined. These are floors on what a test may *assert*, not on what the
 |---|---|---|
 | `[01-genericeos-tz-spline-floor]` | source-remediation | GenericEOS/QCD quantities inherit a 500-point `T(z)` spline: 1.3e-9 at `max_z=1e4`, 6.4e-7 at the default 1e20. Why prompt 01's test asserts 1e-8, not 1e-10. |
 | `[03-derivative-pad-clamp-on-coarse-grids]` | source-remediation | The background derivative-fit padding is clamped near $z=0$; harmless at the shipped 100 samples/decade, binds at 50. A trap only if `source_samples_log10z` is lowered. |
-| `[09-WKB_quad-columns-are-vestigial]` | source-remediation | Seven always-`0.0`/`None` columns on `QuadSourceIntegral`, kept because `extract_QuadSourceIntegral_data.py` still reads `WKB_quad`. Dead weight, not a defect. |
 
 ---
 

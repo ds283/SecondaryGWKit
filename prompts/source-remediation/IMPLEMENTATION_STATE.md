@@ -5,12 +5,12 @@
 **Last updated:** 2026-09-10 — prompt 13 complete, plus a post-campaign tidy-up commit
 (`[10-classify-levin-keyerror]` closed; the three `analyse_*.py` scripts re-run over the complete
 3185-row run, verification document §5.1.2) and a triage pass over §3.
-**Twelve issues remain open in §3**, all now assigned or classified — six to the **hand-over
+**Eleven issues remain open in §3**, all now assigned or classified — six to the **hand-over
 campaign** (`[08-handover-clamp-error]`, `[12-handover-clamp-error-in-production]`,
 `[12-phase-spline-error-grows-with-x]`, `[05-…]`, `[06-…]`, `[07-lg-derivative-truncation-…]`,
 which are one seam and cannot be separated by measurement), one to the **`AdaptiveLevin`
 Clenshaw–Curtis fallback** campaign, two error-bound completeness items awaiting that work, and
-three inert floors recorded so a later reader does not misread a residual. They are indexed
+two inert floors recorded so a later reader does not misread a residual. They are indexed
 project-wide in [`docs/OPEN_ISSUES.md`](../../docs/OPEN_ISSUES.md).
 
 **The campaign's twelve prompts are all landed and verified against a live scoped pipeline run**
@@ -143,6 +143,13 @@ Traceability from the audit's finding IDs to the prompt that discharges them.
   this campaign. If tighter agreement is ever wanted, `_build_T_z_spline`'s `samples=500` would
   have to become tunable, or `max_z` reduced (it cannot go below ~3500: the constructor solves
   for matter–radiation equality at $z=3403$ and the spline must cover it).
+  **Provenance (user, 2026-09-10):** the fixed 500-point grid was a quick hot-fix, put in with the
+  intention of returning to it. **Stays open deliberately** — it is the fixed sample count that is
+  the issue, not the interpolation as such — but no action is scheduled and it does not block
+  anything. A future fix should make the count (or the target accuracy) a parameter rather than a
+  literal; note that the sample density, not the spline order, is the whole lever here, because
+  the error scales as $h^4$ in the $\ln(1+z)$ spacing and $\rho_r\propto T^4$ amplifies it
+  fourfold.
 
 - **[03-derivative-pad-clamp-on-coarse-grids]** *(opened by prompt 03, 2026-09-08)* — the padded
   fit grid `compute_background` now uses for spline-derived background derivatives clamps its
@@ -350,18 +357,6 @@ Traceability from the audit's finding IDs to the prompt that discharges them.
   representation error propagated (the hand-over clamp first — `[08-handover-clamp-error]`
   option (c) is the cheap one), which is upstream of this module.
 
-- **[09-WKB_quad-columns-are-vestigial]** *(opened by prompt 09, 2026-09-09)* — `WKB_quad` and
-  its six `WKB_quad_*` timing columns have been identically `0.0`/`None` since prompt 08 retired
-  direct quadrature of an oscillatory Green's function. Prompt 09 §3 asked for them to be dropped
-  "unless you find a reader": there is one, `extract_QuadSourceIntegral_data.py:181,278,293`
-  (`obj.WKB_quad`, feeding the `WKB numeric: [z, z]` annotation of `extract_common.py:327-345`
-  and a column of the exported table), and that script is out of scope (README §5 item 8). The
-  columns and the `WKB_quad`/`WKB_quad_data` properties therefore stay. `tools/` and
-  `useful_queries.sql` reference neither. **Impact:** the extract script still runs but its
-  `WKB numeric` annotation will never be drawn and its `WKB_quad` column will be all zeros;
-  seven columns of every row are dead weight. **Next step:** a later campaign that is allowed to
-  edit `extract_*.py` should delete the reader and then the columns, or repurpose them.
-
 - **[12-atol-too-loose-for-the-source-integral]** *(opened by prompt 12, 2026-09-09)* — the
   quantity the quadrature's `atol` is compared against is `total/(1 + z_response)`, and on the live
   run that has median **3.6e-26**, p25 9.8e-30, max 7.3e-21: **1044 of 1813 completed work items
@@ -413,6 +408,33 @@ Traceability from the audit's finding IDs to the prompt that discharges them.
 ---
 
 ## 4. Resolved issues
+
+- **[09-WKB_quad-columns-are-vestigial]** *(opened by prompt 09, 2026-09-09; **closed
+  2026-09-10** by the post-campaign tidy-up, at the user's direction)* — `WKB_quad` and its six
+  `WKB_quad_*` timing columns had been identically `0.0`/`None` since prompt 08 retired direct
+  quadrature of an oscillatory Green's function. Prompt 09 asked for them to be dropped "unless
+  you find a reader"; there was one, `extract_QuadSourceIntegral_data.py`, which was out of scope
+  for the campaign (README §5 item 8), so they stayed.
+  **How it was closed**, reader first: `extract_QuadSourceIntegral_data.py` no longer accumulates
+  the `WKB_quad` redshift range, no longer draws the red `axvspan` for it, no longer emits the
+  `WKB_quad` CSV column, and `extract_common.add_region_labels` lost its `z_min_WKB_quad`/
+  `z_max_WKB_quad` parameters and the `"WKB numeric: [...]"` annotation (it had one caller). Then
+  the seven columns went from the factory's schema, both `SELECT` lists and both payload builders;
+  and `QuadSourceIntegral` lost the `WKB_quad`/`WKB_quad_data` properties, the two payload keys and
+  the four `_WKB_quad*` assignments. The registered schema is 40 columns, down from 47.
+  **Verified:** 88 `ComputeTargets` tests pass, with `test_WKB_quad_columns_are_kept` inverted to
+  `test_WKB_quad_columns_are_gone` (which also asserts the `numeric_quad_*`/`WKB_Levin_*` siblings
+  survived and that the properties are gone). A fresh scoped pipeline run stores **3185 of 3185**
+  `QuadSourceIntegral` rows, its sqlite table carries no `WKB_quad*` column, and its 3185 `total`
+  values are **bit-identical** to the pre-drop run's. `analyse_quadsource_integral.py --shards`
+  reproduces every statistic exactly, and `extract_QuadSourceIntegral_data.py` completes its
+  `LambdaCDM` pass, writing 408 files (286 plots) with no `WKB_quad` column in any CSV header.
+  **Migration:** `Datastore._ensure_tables` only creates a table that does not exist — there is no
+  column reconciliation — and the old `WKB_quad` column is `NOT NULL` with no default, so **an
+  insert into a datastore created before this commit will fail** with a not-null violation. Rebuild
+  with `--drop-actions quad-source-integral`, which drops `QuadSourceIntegral` and
+  `QuadSourceIntegral_tags` together. Rows had to be rebuilt since prompt 09 changed the schema
+  anyway.
 
 - **[07-phase-spline-chunking-precision]** *(opened by prompt 07, 2026-09-08; **closed WONTFIX
   2026-09-10** by the user's decision)* — the rationale for composing phases as a signed sum of

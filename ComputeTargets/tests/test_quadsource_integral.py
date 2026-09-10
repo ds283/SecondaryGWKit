@@ -767,8 +767,10 @@ class TestPartition(unittest.TestCase):
     def test_outputs_are_populated_as_specified(self):
         case = Case(0.0, SHAPES[0], 100.0, exact=True)
         out = case.run()
-        self.assertEqual(out["WKB_quad"], 0.0)
-        self.assertIsNone(out["WKB_quad_data"])
+        # WKB_quad / WKB_quad_data are gone from the payload as well as the schema
+        # (`[09-WKB_quad-columns-are-vestigial]`, closed 2026-09-10)
+        self.assertNotIn("WKB_quad", out)
+        self.assertNotIn("WKB_quad_data", out)
         self.assertAlmostEqual(
             out["total"], out["numeric_quad"] + out["WKB_Levin"], delta=0.0
         )
@@ -1677,11 +1679,13 @@ class TestPersistedSchema(unittest.TestCase):
                 self.assertIsInstance(table.c[name].type, type_)
                 self.assertEqual(table.c[name].nullable, nullable)
 
-    def test_WKB_quad_columns_are_kept(self):
+    def test_WKB_quad_columns_are_gone(self):
         """
-        WKB_quad has been identically 0.0 since prompt 08, but
-        extract_QuadSourceIntegral_data.py reads obj.WKB_quad and that script is out of scope
-        for this campaign, so the column (and its six timing siblings) stay.
+        Board issue `[09-WKB_quad-columns-are-vestigial]`, closed 2026-09-10. WKB_quad and its
+        six timing siblings were identically 0.0/None from prompt 08 onwards, and were kept only
+        because extract_QuadSourceIntegral_data.py read obj.WKB_quad. That reader has been
+        removed, so the columns are gone from the schema; the object no longer carries a
+        WKB_quad property or a WKB_quad_data record either.
         """
         table = self._table()
         for name in (
@@ -1694,7 +1698,22 @@ class TestPersistedSchema(unittest.TestCase):
             "WKB_quad_min_RHS_time",
         ):
             with self.subTest(column=name):
+                self.assertNotIn(name, table.c)
+
+        # the sibling columns that describe the surviving integrators must not have been caught
+        # by the same sweep
+        for name in (
+            "numeric_quad",
+            "numeric_quad_compute_time",
+            "numeric_quad_min_RHS_time",
+            "WKB_Levin",
+            "WKB_Levin_num_regions",
+        ):
+            with self.subTest(kept=name):
                 self.assertIn(name, table.c)
+
+        self.assertFalse(hasattr(QuadSourceIntegral, "WKB_quad"))
+        self.assertFalse(hasattr(QuadSourceIntegral, "WKB_quad_data"))
 
     def test_object_round_trips_the_new_fields(self):
         """

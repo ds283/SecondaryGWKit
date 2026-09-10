@@ -452,6 +452,39 @@ which is meaningless, with no warning that the model it analyses is absent. It m
 B's `QCD_Cosmology` datastore, as §4.1 does. Nothing about the script's output on the right input
 is in question.
 
+#### 5.1.3 The `WKB_quad` columns dropped (added 2026-09-10)
+
+**Additive note.** §5.4 and §5.9 record `WKB_quad` as `0.0` on all 54 stored and all 1813 computed
+rows, confirming `[09-WKB_quad-columns-are-vestigial]`; §7 records that the columns were kept
+because `extract_QuadSourceIntegral_data.py` read them. That issue is now **closed**: the reader
+was removed and then the seven columns (`WKB_quad` plus its six `WKB_quad_*` timing siblings), so
+the registered schema is 40 columns rather than 47, and `QuadSourceIntegral` no longer exposes a
+`WKB_quad` property or a `WKB_quad_data` record.
+
+Re-verified on a fresh scoped pipeline run with the reduced schema, run A's command verbatim:
+**3185 of 3185** `QuadSourceIntegral` rows stored (`ALL WORK ITEMS COMPLETE in time 1m 40s`), no
+`WKB_quad*` column in the sqlite table, and the 3185 `total` values **bit-identical** to the
+pre-drop run's. `analyse_quadsource_integral.py --shards` reproduces §5.1.2's statistics exactly
+(median 1.690e-04, p90 5.703e-01, 5617 sub-intervals over the same eight regime rows).
+`extract_QuadSourceIntegral_data.py` completes its `LambdaCDM` pass and writes 408 files, 286 of
+them plots, with no `WKB_quad` column in any CSV header and no "WKB numeric" annotation.
+
+**Migration.** `Datastore._ensure_tables` creates a table only if it does not exist and never
+reconciles columns, and the retired `WKB_quad` column was `NOT NULL` with no default, so an insert
+into a datastore created before this change fails with a not-null violation. Rebuild with
+`--drop-actions quad-source-integral`. Rows already had to be rebuilt because prompt 09 changed
+the schema.
+
+**One unrelated repair was needed to run the extract script at all**, and is recorded here because
+it was found this way rather than by design: `plot_QuadSourceIntegrand` takes `model_label` as its
+first parameter and the single call site omitted it, so every invocation raised
+`TypeError: missing a required argument: 'z_source_max'` from Ray's signature check. Pre-existing,
+unrelated to `WKB_quad`, and invisible until now because the script is excluded from the campaign
+(README §5 item 8). Fixed by passing `model_label`. Note the script still assumes the datastore
+holds a background for **every** model in `config.model_list`, so it raises
+`Could not locate suitable background model instance` on a datastore scoped to one cosmology after
+finishing the models it can do — which is what happens on these verification runs.
+
 ### 5.2 `total` against `analytic_rad` (prompt 12 §2 item 1)
 
 1813 rows, all with `b = 0.0`, 49 distinct (k,q,r), 37 distinct response redshifts from 1e7 to

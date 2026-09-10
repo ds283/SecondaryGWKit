@@ -891,9 +891,6 @@ def evaluate_QuadSource_integral(
 
     # The persisted columns keep their names, with these meanings since prompt 08:
     #   numeric_quad  -- sum over the all-smooth sub-intervals (scipy.quad of the QuadSource spline)
-    #   WKB_quad      -- identically 0.0: no sub-interval integrates an oscillatory factor by
-    #                    direct quadrature any more. The column is kept because
-    #                    extract_QuadSourceIntegral_data.py reads it (prompt 09 section 3)
     #   WKB_Levin     -- sum over every sub-interval with at least one oscillatory factor
     #   total         -- numeric_quad + WKB_Levin
     #   total_abserr, total_converged, total_phase_limited -- the bound above and the Levin
@@ -907,12 +904,10 @@ def evaluate_QuadSource_integral(
         "total_phase_limited": WKB_Levin_phase_limited,
         "b": b,
         "numeric_quad": numeric_quad,
-        "WKB_quad": 0.0,
         "WKB_Levin": WKB_Levin,
         "GkPolicy_serial": GkPolicy.store_id,
         "source_serial": source.store_id,
         "numeric_quad_data": _aggregate_IntegrationData(numeric_quad_items),
-        "WKB_quad_data": None,
         "WKB_Levin_data": _aggregate_LevinData(WKB_Levin_items),
         "WKB_phase_spline_chunks": (
             getattr(Gk_f.phase, "num_chunks", None) if Gk_f.phase is not None else None
@@ -1801,11 +1796,9 @@ class QuadSourceIntegral(DatastoreObject):
             self._total_phase_limited = None
             self._b = None
             self._numeric_quad = None
-            self._WKB_quad = None
             self._WKB_Levin = None
 
             self._numeric_quad_data = None
-            self._WKB_quad_data = None
             self._WKB_Levin_data = None
             self._WKB_phase_spline_chunks = None
 
@@ -1830,7 +1823,6 @@ class QuadSourceIntegral(DatastoreObject):
             self._total_phase_limited = payload["total_phase_limited"]
             self._b = payload["b"]
             self._numeric_quad = payload["numeric_quad"]
-            self._WKB_quad = payload["WKB_quad"]
             self._WKB_Levin = payload["WKB_Levin"]
             self._WKB_phase_spline_chunks = payload["WKB_phase_spline_chunks"]
 
@@ -1842,7 +1834,6 @@ class QuadSourceIntegral(DatastoreObject):
             self._data_serial = payload["data_serial"]
 
             self._numeric_quad_data = payload["numeric_quad_data"]
-            self._WKB_quad_data = payload["WKB_quad_data"]
             self._WKB_Levin_data = payload["WKB_Levin_data"]
 
             self._compute_time = payload["compute_time"]
@@ -1944,13 +1935,6 @@ class QuadSourceIntegral(DatastoreObject):
         return self._numeric_quad
 
     @property
-    def WKB_quad(self) -> float:
-        if self._total is None:
-            raise RuntimeError("value has not yet been populated")
-
-        return self._WKB_quad
-
-    @property
     def WKB_Levin(self) -> float:
         if self._total is None:
             raise RuntimeError("value has not yet been populated")
@@ -1998,13 +1982,6 @@ class QuadSourceIntegral(DatastoreObject):
             raise RuntimeError("value has not yet been populated")
 
         return self._numeric_quad_data
-
-    @property
-    def WKB_quad_data(self) -> Optional[IntegrationData]:
-        if self._total is None:
-            raise RuntimeError("value has not yet been populated")
-
-        return self._WKB_quad_data
 
     @property
     def WKB_Levin_data(self) -> Optional[LevinData]:
@@ -2172,7 +2149,6 @@ class QuadSourceIntegral(DatastoreObject):
         self._total_phase_limited = payload["total_phase_limited"]
         self._b = payload["b"]
         self._numeric_quad = payload["numeric_quad"]
-        self._WKB_quad = payload["WKB_quad"]
         self._WKB_Levin = payload["WKB_Levin"]
 
         self._eta_source_max = payload["eta_source_max"]
@@ -2183,7 +2159,6 @@ class QuadSourceIntegral(DatastoreObject):
         self._source_serial = payload["source_serial"]
 
         self._numeric_quad_data = payload["numeric_quad_data"]
-        self._WKB_quad_data = payload["WKB_quad_data"]
         self._WKB_Levin_data = payload["WKB_Levin_data"]
         self._WKB_phase_spline_chunks = payload["WKB_phase_spline_chunks"]
 

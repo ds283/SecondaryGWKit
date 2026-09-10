@@ -426,7 +426,6 @@ def main():
                         "total_phase_limited",
                         "b",
                         "numeric_quad",
-                        "WKB_quad",
                         "WKB_Levin",
                         "analytic_rad",
                         "compute_time",

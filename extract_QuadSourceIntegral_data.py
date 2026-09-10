@@ -153,8 +153,6 @@ def plot_QuadSourceIntegral(
 
     z_min_quad = None
     z_max_quad = None
-    z_min_WKB_quad = None
-    z_max_WKB_quad = None
     z_min_Levin = None
     z_max_Levin = None
 
@@ -178,12 +176,6 @@ def plot_QuadSourceIntegral(
             if z_max_quad is None or obj.z_response > z_max_quad:
                 z_max_quad = obj.z_response
 
-        if obj.WKB_quad is not None and fabs(obj.WKB_quad) > 1e-25:
-            if z_min_WKB_quad is None or obj.z_response < z_min_WKB_quad:
-                z_min_WKB_quad = obj.z_response
-            if z_max_WKB_quad is None or obj.z_response > z_max_WKB_quad:
-                z_max_WKB_quad = obj.z_response
-
         if obj.WKB_Levin is not None and fabs(obj.WKB_Levin) > 1e-25:
             if z_min_Levin is None or obj.z_response < z_min_Levin:
                 z_min_Levin = obj.z_response
@@ -204,14 +196,6 @@ def plot_QuadSourceIntegral(
         if z_min_quad is not None and z_max_quad is not None:
             ax.axvspan(xmin=z_min_quad.z, xmax=z_max_quad.z, color="b", alpha=0.15)
 
-        if z_min_WKB_quad is not None and z_max_WKB_quad is not None:
-            ax.axvspan(
-                xmin=z_min_WKB_quad.z,
-                xmax=z_max_WKB_quad.z,
-                color="r",
-                alpha=0.15,
-            )
-
         if z_min_Levin is not None and z_max_Levin is not None:
             ax.axvspan(xmin=z_min_Levin.z, xmax=z_max_Levin.z, color="g", alpha=0.15)
 
@@ -230,8 +214,6 @@ def plot_QuadSourceIntegral(
             ax,
             z_min_quad,
             z_max_quad,
-            z_min_WKB_quad,
-            z_max_WKB_quad,
             z_min_Levin,
             z_max_Levin,
             model_label,
@@ -275,7 +257,6 @@ def plot_QuadSourceIntegral(
     eta_source_max_column = [obj.eta_source_max for obj in integral_data]
     total_column = [obj.total for obj in integral_data]
     numeric_quad_column = [obj.numeric_quad for obj in integral_data]
-    WKB_quad_column = [obj.WKB_quad for obj in integral_data]
     WKB_Levin_column = [obj.WKB_Levin for obj in integral_data]
     analytic_rad_column = [obj.analytic_rad for obj in integral_data]
     metadata = [obj.metadata for obj in integral_data]
@@ -290,7 +271,6 @@ def plot_QuadSourceIntegral(
             "eta_source_max": eta_source_max_column,
             "total": total_column,
             "numeric_quad": numeric_quad_column,
-            "WKB_quad": WKB_quad_column,
             "WKB_Levin": WKB_Levin_column,
             "analytic_rad": analytic_rad_column,
             "metadata": metadata,
@@ -1134,6 +1114,7 @@ def run_pipeline(model_data):
                 model_label, k_exit, q_exit, r_exit, Policy_ref, Integral_ref
             ),
             plot_QuadSourceIntegrand.remote(
+                model_label,
                 k_exit,
                 q_exit,
                 r_exit,

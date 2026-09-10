@@ -57,7 +57,7 @@ def load_rows(pattern):
         for r in conn.execute(
             "select k_wavenumber_exit_serial, q_wavenumber_exit_serial, "
             "r_wavenumber_exit_serial, z_response_serial, b, total, total_abserr, "
-            "total_converged, total_phase_limited, numeric_quad, WKB_quad, WKB_Levin, "
+            "total_converged, total_phase_limited, numeric_quad, WKB_Levin, "
             "analytic_rad, compute_time, analytic_compute_time, WKB_Levin_num_regions, "
             "WKB_Levin_evaluations, WKB_Levin_simple_regions, WKB_Levin_SVD_errors, "
             "WKB_Levin_elapsed, WKB_phase_spline_chunks, metadata "
@@ -76,19 +76,18 @@ def load_rows(pattern):
                     "converged": r[7],
                     "phase_limited": r[8],
                     "numeric_quad": r[9],
-                    "WKB_quad": r[10],
-                    "WKB_Levin": r[11],
-                    "analytic_rad": r[12],
-                    "compute_time": r[13],
-                    "analytic_compute_time": r[14],
-                    "Levin_regions": r[15],
-                    "Levin_evaluations": r[16],
-                    "Levin_simple_regions": r[17],
-                    "Levin_SVD_errors": r[18],
-                    "Levin_elapsed": r[19],
-                    "phase_spline_chunks": r[20],
-                    "metadata_raw": r[21],
-                    "metadata": json.loads(r[21]) if r[21] else {},
+                    "WKB_Levin": r[10],
+                    "analytic_rad": r[11],
+                    "compute_time": r[12],
+                    "analytic_compute_time": r[13],
+                    "Levin_regions": r[14],
+                    "Levin_evaluations": r[15],
+                    "Levin_simple_regions": r[16],
+                    "Levin_SVD_errors": r[17],
+                    "Levin_elapsed": r[18],
+                    "phase_spline_chunks": r[19],
+                    "metadata_raw": r[20],
+                    "metadata": json.loads(r[20]) if r[20] else {},
                 }
             )
         conn.close()
@@ -316,9 +315,6 @@ def main():
     )
     print(
         f"   total_phase_limited True: {sum(1 for r in rows if r['phase_limited'])} of {len(rows)}"
-    )
-    print(
-        f"   WKB_quad non-zero: {sum(1 for r in rows if r['WKB_quad'])} of {len(rows)}"
     )
 
     # ------------------------------------------------------------------ cost
