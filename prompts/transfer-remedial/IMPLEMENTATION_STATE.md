@@ -2,7 +2,7 @@
 
 **Campaign:** [`README.md`](README.md) · **Design:** [`DRAFT-PLAN.md`](DRAFT-PLAN.md) · **Reconciliation:** [`RECONCILIATION.md`](RECONCILIATION.md)
 **Baseline commit:** `95cc326` (`transfer-remedial-plan`, clean)
-**Last updated:** 2026-09-10 — prompt 07 executed on `f9cc891` (this commit; SHA not self-embedded).
+**Last updated:** 2026-09-10 — prompt 08 executed on `69c37a9` (this commit; SHA not self-embedded).
 **Planned against:** `c4c4905`; re-pointed to `95cc326` before commit (`RECONCILIATION.md` §0).
 **Executing against:** `f9cc891` (prompt 06's commit), 23 commits after `95cc326` (the merge of
 `transfer-remedial-plan` into the working branch, `source-remediation` prompt 12's live
@@ -22,7 +22,13 @@ Note also that README §4.2's scheduling risk has **cleared**: `source-remediati
 back inside `LiouvilleGreen/` — `three_bessel_integrals.py` and its test — and it is the prompt that
 discovered `test_3bessel_analytic.py` has been **failing as a module since prompt 05**, because an
 `@unittest.expectedFailure` there now passes; see issue
-`[07-abserr-bounds-truth-is-now-an-unexpected-success]`, which is prompt 08's to close.
+`[07-abserr-bounds-truth-is-now-an-unexpected-success]`, which prompt 08 has closed. **Prompt 08
+touches no production code at all** — four test files, comments and tolerance constants only in
+the two `ComputeTargets` ones — and it is the first prompt to measure the campaign's effect
+*before and after* on identical grids, using detached worktrees at `f71401d` (prompt 01: the old
+phase-ODE construction plus prompt 01's reference module) and `f17f2d4` (the tree as the campaign
+found it). Its log carries the resulting attribution table, which is what prompt 09 puts in
+`docs/`.
 
 > **Maintenance rule.** Every prompt updates this file *in its own commit*, before committing.
 > Set your row's status, fill in the commit SHA, model and log link, update the mechanism-level
@@ -62,10 +68,10 @@ Legend: ⬜ not started · 🟡 in flight · ✅ complete · ⚠️ complete wit
 
 | # | Prompt | Covers | Model | Status | Commit | Log |
 |---|---|---|---|---|---|---|
-| 08 | [Fixture revalidation](08-fixture-revalidation.md) | plan §8.3, §9 Stage 5, §10 | Opus | ⬜ | | |
+| 08 | [Fixture revalidation](08-fixture-revalidation.md) | plan §8.3, §9 Stage 5, §10 | Opus 5 | ⚠️ | *(this commit; SHA not self-embedded)* | [`08`](logs/08-fixture-revalidation.md) |
 | 09 | [Benchmark and docs](09-benchmark-and-docs.md) | plan §9 Stage 5, §11 | Sonnet | ⬜ | | |
 
-**Progress:** 7 / 9 complete.
+**Progress:** 8 / 9 complete.
 
 ---
 
@@ -93,8 +99,8 @@ campaign; the plan section is the authority on each.
 | M15 | **MIGRATION** | Ray serialization of the new representation through `BesselPhaseProxy` (§8.1) | 06 | ✅ |
 | M16 | **DEFECT, dead code** | `plot_besssel_phase.py` reads a nonexistent `x_min` key and calls a non-callable `phase`; it cannot run (recon C3) | 06 | ✅ |
 | M17 | **REQUIREMENT** | Phase groups as \(Kt+C+R(t)\); combine leading coefficients before multiplying by \(t\) (§8.2) | 07 | ✅ |
-| M18 | **REQUIREMENT** | Tests that can see the improvement: 50 % and \(10^{-3}\) thresholds cannot (§9 Stage 1, §10) | 01, 08 | 🟡 |
-| M19 | **REQUIREMENT** | Separate the Bessel-oracle gain from the consumer re-spline floor and the physical LG truncation (§8.3) | 08 | ⬜ |
+| M18 | **REQUIREMENT** | Tests that can see the improvement: 50 % and \(10^{-3}\) thresholds cannot (§9 Stage 1, §10) | 01, 08 | ✅ |
+| M19 | **REQUIREMENT** | Separate the Bessel-oracle gain from the consumer re-spline floor and the physical LG truncation (§8.3) | 08 | ✅ |
 | M20 | **REQUIREMENT** | Re-run the capped benchmark tier at \(\kappa=1000\) and correct its note's diagnosis (§9 Stage 5, recon C1) | 09 | ⬜ |
 | M21 | **REQUIREMENT** | Update the follow-up document; remove the stale blanket \(x\times10^{-8}\) claim while retaining the historical measurements (§9 Stage 5) | 09 | ⬜ |
 
@@ -212,30 +218,6 @@ risks that the prompts inherit rather than create.
   every order. **Next step:** re-measure the post-fix `hankel1e` phase floor against `mpmath` and
   reduce the constant, or confirm it. Cheap, and nothing waits on it.
 
-- **[05-3bessel-analytic-not-run-to-completion]** *(opened by prompt 05, 2026-09-10)* — prompt 05's
-  §5 acceptance includes `unittest discover -s LiouvilleGreen/tests -t .`, and every module in it
-  passed except `test_3bessel_analytic.py`, which was started, made normal progress (tests passing,
-  no failures, only the expected `DeprecationWarning`s from its `atol`/`rtol` call sites) and was
-  **not seen to completion**. This is the pre-existing multi-hour module of `RECONCILIATION.md`
-  §3.4 — it did not finish within 50 minutes on the planning machine and 15 minutes on prompt 01's
-  — because it rebuilds `bessel_phase` objects per case over many cases. There is no evidence
-  prompt 05 makes it slower: construction is now ~2.5 ms rather than ~60–100 ms, and the two
-  sibling modules that exercise the same evaluation path both got faster (`test_bessel_phase`
-  1.2 s → 0.18 s, `test_three_bessel` 7.5 s → 4.1 s). **Impact:** its tolerance bands (1e-5/1e-6, and 1e-2/1e-3 near singularities) have not
-  been re-scored against the new oracle. `DRAFT-PLAN.md` §9 Stage 4 warns that an eight-order
-  improvement can *expose a different limiting error rather than simply pass more easily*, so a
-  failure there would be a finding rather than a nuisance. Every other consumer was run and passed:
-  `test_bessel_phase` (4), `test_three_bessel` (2), the five other `LiouvilleGreen` modules (69),
-  and `ComputeTargets` `test_tk_source_functions` + `test_phase_groups` (30). **Narrowed (2026-09-10, prompt 07):** three of its six tests have now been run individually
-  under the new oracle. `test_JJJ` and `test_YJJ` — the two that carry `ABS_TOLERANCE` and
-  `REL_TOLERANCE` — **pass**, in 6m41s together, at relative errors 2.3e-13 to 5.5e-10 on their
-  random draws; `test_abserr_bounds_truth` is an unexpected success, which is now its own issue
-  `[07-abserr-bounds-truth-is-now-an-unexpected-success]`. What is still unrun is the multi-hour
-  part: `test_YJJ_log_singularity` and `test_YJJ_log_scaling`, i.e. exactly the 1e-2/1e-3
-  singularity bands. **Next step:** run
-  `PYTHONPATH=. ./venv/bin/python -m unittest LiouvilleGreen.tests.test_3bessel_analytic` on a
-  machine that can give it hours, before or as part of prompt 08, which owns those tolerances.
-
 - **[05-quadsource-order-check-docstring-stale]** *(opened by prompt 05, 2026-09-10)* — prompt 05
   added a `"nu"` key to `bessel_phase`'s returned dict, for prompt 07's phase groups.
   `ComputeTargets/QuadSourceIntegral.py:680` (`_check_bessel_order`) has a long docstring stating
@@ -318,23 +300,69 @@ risks that the prompts inherit rather than create.
   Deliberately not done in prompt 07: the prompt prescribes handing the unreduced product to libm,
   and this is a second change to the same expression.
 
-- **[07-abserr-bounds-truth-is-now-an-unexpected-success]** *(opened by prompt 07, 2026-09-10)* —
-  `LiouvilleGreen/tests/test_3bessel_analytic.py::test_abserr_bounds_truth` is an
-  `@unittest.expectedFailure` asserting that `quad_JJJ`/`quad_YJJ`'s reported `abserr` does *not*
-  bound the true error against the analytic oracles. It now **passes**, so `unittest` reports
-  `FAILED (unexpected successes=1)` and the whole module fails. Measured on both trees: at
-  `bc31493` (prompt 04, before the oracle changed) it is `OK (expected failures=1)` with 5 of 7
-  oracles underbound by up to 11.5×; at `f9cc891` (prompt 06) it is an unexpected success with 7 of
-  7 bound, because prompt 05 dropped the true error by ~8 orders (3.0e-10 → 3.8e-14 on JJJ110)
-  while the reported `abserr` barely moved. **So this is prompt 05's consequence, discovered by
-  prompt 07** — nobody saw it earlier because that module takes hours and has never been run to
-  completion (`[05-3bessel-analytic-not-run-to-completion]`). Prompt 07 makes the reported `abserr`
-  0–1.9 % *larger*, which keeps it passing; it cannot and should not restore the failure.
-  **Impact:** `unittest discover -s LiouvilleGreen/tests -t .` cannot pass until this is addressed,
-  so prompt 07's acceptance item to that effect is unmet (log 07 Deviation 1). **Next step:** prompt
-  08 owns that file. The test's own docstring says closing it needs "`theta_abserr` wired up to
-  consume" a declared phase accuracy — that half is now done for this module, so the honest repair
-  is to drop the `@unittest.expectedFailure` and keep the assertion, not to weaken it.
+- **[08-3bessel-chebyshev-order-is-now-the-limit]** *(opened by prompt 08, 2026-09-10)* —
+  `LiouvilleGreen/three_bessel_integrals.py:88` sets `DEFAULT_3BESSEL_CHEBYSHEV_ORDER = 12`, and
+  the comment above it explains the choice by saying accuracy "is set by the phase and modulus
+  splines, not by the spectral order". Prompt 05 invalidated that: at
+  \(k,q,s=1.3,1.7,2.1\), \(x_{\max}=10^{12}\), `atol=1e-14`, `rtol=1e-10`, raising the order
+  from 12 to 20 moves **J000 from 1.397e-10 to 2.071e-13 and Y000 from 4.771e-11 to 3.508e-13** —
+  three orders each — so for the two \((0,0,0)\) oracles the spectral order is now the binding
+  term. It is **not** simply too low: the same change makes the other five *worse*, by 4x
+  (J110) to 1500x (Y022), and order 32 is worse again for four of them. So 12 is right for five
+  oracles and wrong for two, which is a per-integrand or convergence-checked choice rather than a
+  constant to bump. Measured on both trees; before prompt 05 all seven sat at 1e-8 to 5e-8 and the
+  order could not have been seen. **Impact:** it caps `test_3bessel_analytic.py`'s
+  `REL_TOLERANCE` at ~1e-9 for those two oracles, while the other five would support ~1e-12; the
+  shipped 1e-7 is sized by the worst over random draws (1.740e-09). It also caps what
+  `QuadSourceIntegral`'s analytic comparison branch can assert. **Next step:** decide whether the
+  order should be chosen per \((\mu,\nu,\sigma)\) or by a convergence check on two orders, and
+  where the higher-order conditioning loss comes from. `three_bessel_integrals.py` was prompt 07's
+  and is nobody's now; the finding is deliberately not acted on (prompt 08 §3 item 2 says so
+  explicitly).
+
+- **[08-tk-fixture-scipy-comparison-unasserted]** *(opened by prompt 08, 2026-09-10)* —
+  `ComputeTargets/tests/test_tk_source_functions.py`'s `err_scipy` is the one number in that
+  fixture that measured the Bessel oracle, and it is the one that moved: **1.985e-06 → 3.021e-08**
+  at \(w=1/3\) and 1.550e-06 → 2.234e-08 at \(w=0.2\), landing exactly on `err_T` (the
+  fixture's own phase re-spline error) to every printed digit. It is `print`ed and **not
+  asserted**, so nothing in the suite would notice if the oracle regressed by two orders. Prompt
+  08 could not add the assertion: README §4.2 and the prompt allow "tolerance constants and
+  comments only" in `ComputeTargets/tests/`, and "anything more is a stop condition".
+  **Impact:** the campaign's headline downstream result is documented but unguarded. **Next
+  step:** one `self.assertLess(err_scipy, 1.0e-7)` beside the existing `err_T` assertion, by
+  whoever is allowed to add an assertion to that file — the `source-remediation` campaign owns
+  it (README §4.2), so this is a hand-off candidate for prompt 09 alongside
+  `[05-quadsource-order-check-docstring-stale]`.
+
+- **[08-test-three-bessel-tolerances-unassigned]** *(opened by prompt 08, 2026-09-10)* — README §4
+  says "**07 before 08.** 08 re-tightens `test_three_bessel.py`'s and `test_3bessel_analytic.py`'s
+  tolerances, which 07 changes the accuracy of." But `test_three_bessel.py` is **not** in prompt
+  08's "Files you may touch", not in README §3's file column for prompt 08, and prompt 08 has no
+  section for it; its §6 acceptance says the diff must be "confined to the four test files", which
+  that file would make five. Prompt 08 therefore did not touch it (log 08 Deviation 1) — the
+  prompt file and README §3 agree against README §4's prose. **Impact:** that module's tolerances
+  are still the pre-campaign ones. It passes (prompt 07 ran it, 4.1 s), and its `atol`/`rtol` call
+  sites still emit one `DeprecationWarning` each (standing note 20), so nothing is broken; what is
+  missing is the re-tightening README §4 promised. **Next step:** either a short follow-up prompt
+  in this campaign, or fold it into prompt 09's documentation as explicitly deferred. It needs a
+  decision, not analysis.
+
+- **[08-3bessel-plot-cost-dominates-the-suite]** *(opened by prompt 08, 2026-09-10)* —
+  `test_3bessel_analytic.plot_and_compute_3Bessel` evaluates a **250-point `logspace` grid of full
+  three-Bessel integrals per case, purely to draw one figure**, and only then evaluates the single
+  integral the assertion uses. `test_YJJ_log_singularity` runs it 40 times (measured **21.2 min**
+  under the new oracle) and `test_YJJ_log_scaling`, which contains **no assertion at all**, does
+  40 more evaluations plus two figures per case. That is the whole of
+  `RECONCILIATION.md` §3.4's "did not complete within 50 minutes", and it is diagnostic cost, not
+  verification cost: prompt 05's construction made the *builds* 25x cheaper (~2.5 ms against
+  ~60-100 ms) and moved none of it. **Impact:** the per-commit `LiouvilleGreen/tests` discovery run
+  is dominated by figure drawing, so in practice nobody runs it, which is how
+  `[07-abserr-bounds-truth-is-now-an-unexpected-success]` survived three prompts unnoticed.
+  **Next step:** *proposed, not implemented* (prompt 08 §6 asks for a proposal only) — gate the
+  plot grid behind an environment variable or a module flag defaulting to off, so the assertions
+  run in seconds and the figures are opt-in; and decide whether `test_YJJ_log_scaling`, which
+  asserts nothing, belongs in `unittest` discovery or in `docs/` as a script. Neither changes a
+  tolerance or an assertion.
 
 > Add an entry here whenever a prompt finishes with something unresolved: a verification step that
 > could not be run, an assumption that could not be confirmed, a deviation a later prompt has to
@@ -349,7 +377,33 @@ risks that the prompts inherit rather than create.
 
 ## 4. Resolved issues
 
-*(none yet)*
+- **[05-3bessel-analytic-not-run-to-completion]** *(opened by prompt 05, narrowed by prompt 07,
+  **closed by prompt 08**, 2026-09-10)* — the pre-existing multi-hour `test_3bessel_analytic.py`
+  had never been seen to finish under the new oracle, so its 1e-5/1e-6 and 1e-2/1e-3 tolerance
+  bands were unscored. **Resolution:** prompt 08 ran every test in it. `test_JJJ` and `test_YJJ`
+  pass; `test_abserr_bounds_truth` passes as an ordinary test (see the entry below);
+  `test_YJJ_log_singularity` ran to completion in **21.2 min** across all 40 cases, worst
+  \(|{\rm relerr}|=2.794\times10^{-4}\) and \(|{\rm abserr}|=4.888\times10^{-3}\) at
+  \(Y022\), \(\epsilon=10^{-10}\); `test_YJJ_log_scaling` asserts nothing and runs as part of
+  the module discovery run recorded in log 08. `DRAFT-PLAN.md` §9 Stage 4's warning that an
+  eight-order improvement can expose a *different* limiting error was borne out twice: the
+  `expectedFailure` below, and `[08-3bessel-chebyshev-order-is-now-the-limit]`. The remaining cost
+  finding is `[08-3bessel-plot-cost-dominates-the-suite]`.
+
+- **[07-abserr-bounds-truth-is-now-an-unexpected-success]** *(opened by prompt 07, **closed by
+  prompt 08**, 2026-09-10)* — `test_3bessel_analytic.py::test_abserr_bounds_truth` was an
+  `@unittest.expectedFailure` asserting that `quad_JJJ`/`quad_YJJ`'s reported `abserr` does *not*
+  bound the true error; prompt 05 made it pass, so `unittest` reported
+  `FAILED (unexpected successes=1)` and the whole module failed. **Resolution:** the decorator was
+  removed and the assertion kept, which is what the test's own docstring said closing it would
+  need. Re-measured by prompt 08 on both trees: 2 of 7 oracles bounded before the campaign
+  (`true/reported` up to **11.47** on J231), 7 of 7 after, with `true/reported` between 9.8e-06
+  and 1.5e-04. The docstring now records that prompt 05's eight-order drop in the *true* error did
+  the work and prompt 07's declared `theta_abserr` added 0-1.9 % to the *reported* error, i.e. the
+  assertion holds for a slightly different reason than the `levin-refactor` campaign's predicted
+  cure. Prompt 09 hands the corresponding
+  `levin-refactor` entry `[09-abserr-does-not-bound-phase-spline-floor]` back as measured false on
+  this tree.
 
 ---
 
@@ -365,10 +419,15 @@ risks that the prompts inherit rather than create.
 3. **Never sell the campaign on construction speed.** The old build is ~0.1 s across the whole
    production range. The result is that a hard cliff at \(x\approx2.5\times10^{15}\) is removed
    (C1).
-4. **`test_phase_derivative` (`test_bessel_phase.py:139`) is the standing regression gate.** It
-   contracts \(\theta'\) to \(10^{-6}\) relative at \(\nu\in\{2.5,20.5,100.5\}\) and must pass from
-   prompt 05 onward. Prompt 08 tightens it; **nobody loosens it**, and loosening it is a stop
-   condition.
+4. **`test_phase_derivative` is the standing regression gate, and prompt 08 has tightened it.**
+   It now contracts \(\theta'\) to \(10^{-9}\) at \(\nu=2.5\) and \(10^{-6}\) at 20.5 and
+   100.5, **and it sweeps from \(x_0\) rather than from \(2x_0+1\)** — the exclusion
+   `RECONCILIATION.md` C4 flagged. That matters more than the number: on the pre-campaign tree the
+   same test with the turning-point interval included measures **2.894e-06 (\(\nu=20.5\)) and
+   6.388e-05 (100.5)**, i.e. it would have failed its own \(10^{-6}\) contract by up to 64x, so
+   the old lower bound was hiding a violation rather than merely being conservative. The new
+   construction measures 4.197e-14, 2.265e-14 and 3.643e-13. **Nobody loosens any of it**, and
+   loosening it is a stop condition.
 5. **`theta` is a required key of the Levin phase dict.** `_Basis_SinCos.__init__` raises without it
    (`levin_quadrature.py:948-952`). "`raw_theta` is compatibility-only" means Levin never
    *evaluates* it when `theta_mod_2pi` and `theta_deriv` are both supplied (`:1038`), not that the
@@ -495,6 +554,12 @@ risks that the prompts inherit rather than create.
     warnings), plus the two `docs/` scripts, which nobody owns and which still run, and
     `ComputeTargets/tests/test_quadsource_integral.py:482-483`, which
     `RECONCILIATION.md` §3.3 did not list and which prompt 06 added to the inventory (it passes).
+    **Prompt 08 migrated `test_3bessel_analytic.py`**, to `phase_atol = amplitude_rtol = 1e-11` —
+    the values the ignored arguments were already producing, so no number moved (checked: the seven
+    `test_abserr_bounds_truth` measurements reproduce to every printed digit). Its
+    `plot_and_compute_3Bessel` and `test_YJJ_log_scaling` keyword arguments are now `phase_atol`
+    and `amplitude_rtol`; `phase_rtol` no longer exists. **`test_three_bessel.py` was left alone**
+    — it is not in prompt 08's file list, issue `[08-test-three-bessel-tolerances-unassigned]`.
 
 21. **Construction cost is now flat in `max_x` and depends only on the order** — 0.0022–0.0034 s
     for \(\nu=5/2\) from \(x_{\max}=10^3\) to \(10^{16}\), 0.043 s at \(\nu=1000.5\). The declared
@@ -555,3 +620,23 @@ risks that the prompts inherit rather than create.
     1.4e-13 at \(K/\max(k,q,s)\sim10^{-10}\); \(\lvert\delta\,d\Theta/d\log x\rvert\) 3.1e-5 →
     1.0e-12; and **no change at all** for a non-resonant group, where both routes sit on one ulp of
     \(Kx\) (issue `[07-generic-K-product-rounding]`).
+
+26. **Separate the Bessel oracle from the consumer re-spline and from LG truncation, and use
+    prompt 08's table rather than re-deriving it.** Log 08's §5 attribution table has one row per
+    fixture comparison in the two `ComputeTargets` test modules and in the two `LiouvilleGreen`
+    ones, measured on `f71401d`/`f17f2d4` and on this tree with the same scripts. The short
+    version: the oracle improves by five to six orders wherever it is measured directly; the two
+    downstream fixtures move by **less than a factor 1.1** at every asserted threshold, because
+    what binds there is the \(h^4\) re-spline of the sampled fixture or the Liouville-Green
+    truncation of the closed-form \(\omega_{\rm eff}\) and \(d\ln M/dz\). The two exceptions
+    are `test_tk_source_functions`'s `err_scipy` (1.985e-06 → 3.021e-08, now exactly equal to the
+    re-spline term `err_T`) and `test_phase_groups`'s \(x_q>100\), 300/decade row at \(w=1/3\)
+    (1.661e-06 → 7.502e-09, a factor 221). Those two are the campaign's downstream evidence; do
+    not claim more.
+
+27. **`sin(pi - vartheta)` is not `sin(vartheta)` in double precision.**
+    `ComputeTargets/tests/test_tk_source_functions.theta_exact` rotates the Bessel phase by
+    \(\pi\), and forming `pi - vartheta` rounds at ~ulp(\(\vartheta\)) — measured
+    \(1.078\times10^{-14}\) at \(\vartheta\) up to 1000. It is a floor the *fixture*
+    introduces, not the oracle, and it is now stated in that docstring. Anything that rotates a
+    phase this way inherits it; the split-evaluation route (`phase.sin_cos_theta`) does not.

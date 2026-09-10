@@ -1,3 +1,42 @@
+"""
+Three-Bessel integrals against their closed forms.
+
+The tolerances here were set when `bessel_phase` built the phase by integrating Q = theta/x as an
+ODE, whose phase and modulus fits carried a ~2e-8 relative floor that these integrals inherited.
+That construction was replaced by the two-region amplitude-residual one
+(prompts/transfer-remedial, prompts 03-05) and the phase groups were rebuilt as K t + C + R(t)
+(prompt 07), so the tolerances were re-measured from scratch by prompt 08 rather than scaled.
+
+Measured at the fixed triple k, q, s = 1.3, 1.7, 2.1, max_x = 1e12, atol = 1e-14, rtol = 1e-10,
+on the tree immediately before the campaign (f17f2d4) and on the tree after prompt 07 -- relative
+error against the closed form:
+
+    oracle   before     after      gain
+    J000     1.625e-08  1.397e-10    116x
+    J110     4.615e-08  5.857e-12   7880x
+    J220     2.561e-08  2.521e-14    1.0e6x
+    J222     9.552e-09  3.504e-14    2.7e5x
+    J231     3.349e-08  1.491e-13    2.2e5x
+    Y000     2.156e-08  4.771e-11    452x
+    Y022     2.014e-08  1.543e-14    1.3e6x
+
+**What limits the two constants below is not the Bessel phase.** The J000 and Y000 residuals are
+set by DEFAULT_3BESSEL_CHEBYSHEV_ORDER = 12: raising it to 20 at the same triple moves J000 from
+1.397e-10 to 2.071e-13 and Y000 from 4.771e-11 to 3.508e-13, three orders in each case. That is a
+genuine finding and it is not prompt 08's to fix -- the constant is deliberately left alone; see
+prompts/transfer-remedial/IMPLEMENTATION_STATE.md
+[08-3bessel-chebyshev-order-is-now-the-limit], which also records that raising the order makes
+five of the seven oracles *worse*, so 12 is not simply too low. The five that are not (0,0,0) sit
+at 1e-12 to 1e-14 and would support tolerances four orders tighter than the ones set here.
+
+The tolerances are therefore sized by the worst oracle over random draws, not by the best. Over
+42 seeded draws from uniform(0.1, 5) -- the distribution `test_JJJ`, `test_YJJ` and
+`test_YJJ_log_singularity` sample from, unseeded -- the worst triangle relative error was
+1.740e-09 (Y000) and the worst non-triangle absolute error 4.056e-10 (J000). REL_TOLERANCE and
+ABS_TOLERANCE below are 100x tighter than before and keep a factor of 25 to 57 over those, which
+is the right margin for a test that draws its own wavenumbers on every run.
+"""
+
 import time
 import unittest
 from datetime import datetime
@@ -8,13 +47,33 @@ import numpy as np
 import seaborn as sns
 from matplotlib import pyplot as plt
 
-from LiouvilleGreen.bessel_phase import bessel_phase
+from LiouvilleGreen.bessel_phase import (
+    DEFAULT_AMPLITUDE_RTOL,
+    DEFAULT_PHASE_ATOL,
+    bessel_phase,
+)
 from LiouvilleGreen.three_bessel_integrals import quad_JJJ, quad_YJJ
 from utilities import format_time
 
-ABS_TOLERANCE = 1e-6
-REL_TOLERANCE = 1e-5
+ABS_TOLERANCE = 1e-8
+REL_TOLERANCE = 1e-7
 
+# Neither singularity band is tightened, and what limits them is genuine near-singular behaviour
+# rather than anything this campaign touched. `test_YJJ_log_singularity` walks s to within eps of
+# |k - q| and of k + q for eps down to 1e-10, where the closed forms carry
+# log|(k-q+s)(k+q-s) / ((k+q+s)(k-q-s))| and both the integral and its reference lose conditioning.
+# Measured over all 40 cases of one full run under the new oracle (21.2 min), |relerr| and |abserr|
+# grow monotonically as eps falls -- Y022 lo, for instance, runs 1.7e-10, 5.0e-11, 2.7e-10,
+# 2.0e-09, 6.1e-09, 3.8e-08, 3.1e-08, 2.2e-06, 5.1e-05, 2.8e-04 from eps = 0.1 to 1e-10. The worst
+# case of the run is |relerr| = 2.794e-04 and |abserr| = 4.888e-03, both at Y022, eps = 1e-10, s
+# near |k - q|.
+#
+# Two consequences. (1) A factor 36 of headroom on the relative band, over an error that grows by
+# an order for each order eps falls and over wavenumbers the test draws afresh on every run, is
+# not margin to spend: 1e-2 stays. (2) The `or` in the assertions is load-bearing, not belt and
+# braces -- at eps = 1e-10 the absolute error *exceeds* SINGULARITY_ABS_TOLERANCE (4.888e-03
+# against 1e-3) and the case passes on the relative band alone. So the absolute band cannot be
+# tightened either without the near-singular cases failing on it.
 SINGULARITY_ABS_TOLERANCE = 1e-3
 SINGULARITY_REL_TOLERANCE = 1e-2
 
@@ -39,19 +98,33 @@ def plot_and_compute_3Bessel(
     analytic_result: float,
     label: str,
     timestamp,
-    phase_atol=1e-25,
-    phase_rtol=5e-14,
+    phase_atol=DEFAULT_PHASE_ATOL,
+    amplitude_rtol=DEFAULT_AMPLITUDE_RTOL,
     quad_atol=1e-14,
     quad_rtol=1e-10,
 ):
+    # These used to be atol=1e-25, rtol=5e-14 -- tolerances of the phase ODE solve, which the
+    # two-region construction (prompts/transfer-remedial prompt 05) no longer performs. Those
+    # arguments are now accepted, ignored and warned about, so the builds here were *already*
+    # running at the defaults; passing the defaults explicitly changes no number and removes
+    # three DeprecationWarnings per case. See IMPLEMENTATION_STATE.md standing note 20.
     mu_phase = bessel_phase(
-        mu + 0.5, 1.075 * k * max_x, atol=phase_atol, rtol=phase_rtol
+        mu + 0.5,
+        1.075 * k * max_x,
+        phase_atol=phase_atol,
+        amplitude_rtol=amplitude_rtol,
     )
     nu_phase = bessel_phase(
-        nu + 0.5, 1.075 * q * max_x, atol=phase_atol, rtol=phase_rtol
+        nu + 0.5,
+        1.075 * q * max_x,
+        phase_atol=phase_atol,
+        amplitude_rtol=amplitude_rtol,
     )
     sigma_phase = bessel_phase(
-        sigma + 0.5, 1.075 * s * max_x, atol=phase_atol, rtol=phase_rtol
+        sigma + 0.5,
+        1.075 * s * max_x,
+        phase_atol=phase_atol,
+        amplitude_rtol=amplitude_rtol,
     )
 
     x_grid = np.logspace(np.log10(100.0), np.log10(max_x), 250)
@@ -464,27 +537,48 @@ class Test3BesselAnalytic(unittest.TestCase):
                         or abserr < SINGULARITY_ABS_TOLERANCE
                     )
 
-    @unittest.expectedFailure
     def test_abserr_bounds_truth(self):
         """
-        C12 (audit) / prompt 09: does the abserr quad_JJJ/quad_YJJ now report actually bound the
-        true error against the analytic oracle?
+        C12 (audit) / prompt 09: does the abserr quad_JJJ/quad_YJJ report actually bound the true
+        error against the analytic oracle?
 
-        Measured at the fixed triple (ABSERR_BOUNDS_K, ABSERR_BOUNDS_Q, ABSERR_BOUNDS_S) =
-        (1.3, 1.7, 2.1), max_x=1e12, atol=1e-14, rtol=1e-10 (prompts/levin-refactor/logs/
-        09-caller-propagation.md has the full seven-oracle table): reported abserr bounds the true
-        error on 2 of 7 oracles (J000, Y000) and underbounds it -- by up to ~11.5x -- on the other
-        5 (J110, J220, J222, J231, Y022). This is exactly the gap this module's own scoping note
-        predicts: "abserr" measures how accurately the Levin rule integrated the phase it was
-        *given*, not the accuracy of that phase itself, and LiouvilleGreen's phase/modulus splines
-        carry their own ~2e-8 relative fit floor that is invisible from inside the quadrature (see
-        BesselIntegralResult's docstring in three_bessel_integrals.py, and README Sec 6 of the
-        levin-refactor campaign). Marked xfail rather than weakened or removed -- this campaign's
-        rule is not to paper over a failing abserr-bounds-truth assertion. Closing this needs
-        LiouvilleGreen/phase_spline.py to report its own fit accuracy and
-        adaptive_levin_sincos's theta_abserr wired up to consume it; see
-        prompts/levin-refactor/IMPLEMENTATION_STATE.md Sec 3,
+        **It now does, and this test is no longer an expected failure.**
+
+        It used to be. Measured at the fixed triple (ABSERR_BOUNDS_K, ABSERR_BOUNDS_Q,
+        ABSERR_BOUNDS_S) = (1.3, 1.7, 2.1), max_x=1e12, atol=1e-14, rtol=1e-10 (the full
+        seven-oracle table is in prompts/levin-refactor/logs/09-caller-propagation.md), the
+        reported abserr bounded the true error on only 2 of 7 oracles (J000, Y000) and
+        underbounded it -- by up to ~11.5x -- on the other 5 (J110, J220, J222, J231, Y022). The
+        diagnosis in the levin-refactor campaign was right: "abserr" measures how accurately the
+        Levin rule integrated the phase it was *given*, not the accuracy of that phase itself, so
+        the ~2e-8 relative fit floor of the old phase and modulus splines was invisible from
+        inside the quadrature (see BesselIntegralResult's docstring in three_bessel_integrals.py,
+        and README Sec 6 of that campaign). Its stated cure was for the phase construction to
+        report its own fit accuracy and for adaptive_levin_sincos's theta_abserr to be wired up
+        to consume it -- prompts/levin-refactor/IMPLEMENTATION_STATE.md Sec 3,
         [09-abserr-does-not-bound-phase-spline-floor].
+
+        Both halves have since happened, for this module. prompts/transfer-remedial's prompt 05
+        made the construction declare theta_abserr, and its prompt 07 rebuilt these phase groups
+        so that every adaptive_levin_sincos call here passes it (summed linearly over the three
+        constituents at their own arguments). At the same triple the true error is now 2.5e-14 to
+        1.4e-10 relative and the reported abserr bounds it on 7 of 7, with true/reported between
+        1.0e-5 and 7.1e-5.
+
+        Note which half did the work. Prompt 05 dropped the *true* error by about eight orders
+        (3.0e-10 to 3.8e-14 absolute on J110) while the reported abserr barely moved, so this
+        stopped failing before prompt 07 declared anything: measured as an unexpected success on
+        the prompt-06 tree. Prompt 07's declaration then made the reported abserr 0-1.9 % larger,
+        which keeps it bounding. So the assertion holds for a slightly different reason than the
+        cure predicted -- the phase got better rather than merely more honest -- and both changes
+        push in the same direction.
+
+        The @unittest.expectedFailure was dropped rather than the assertion weakened: the
+        assertion is the thing worth having, and while it was decorated the whole module reported
+        FAILED (unexpected successes=1). See prompts/transfer-remedial/IMPLEMENTATION_STATE.md
+        [07-abserr-bounds-truth-is-now-an-unexpected-success], which this closes. If it ever
+        fails again, the honest reading is that the reported abserr has stopped covering the
+        phase error -- not that the tolerance is wrong.
         """
         k, q, s = ABSERR_BOUNDS_K, ABSERR_BOUNDS_Q, ABSERR_BOUNDS_S
         max_x = MAX_X
@@ -496,19 +590,29 @@ class Test3BesselAnalytic(unittest.TestCase):
         ]
 
         # gather every oracle's measurement before asserting, so a failure on an early oracle
-        # (expected -- see docstring) does not suppress the diagnostic print for the later ones;
-        # a single assertion at the end keeps this compatible with @unittest.expectedFailure, which
-        # expects exactly one failure from the whole test, not one per subTest
+        # does not suppress the diagnostic print for the later ones, and report all of them in
+        # one message. This shape was originally chosen for @unittest.expectedFailure, which
+        # expects exactly one failure from the whole test; the decorator is gone but the shape is
+        # still the right one, because "which oracles underbound, and by how much" is the finding
         failures = []
         for kind, evaluator, integral_class in cases:
             mu_phase = bessel_phase(
-                integral_class.mu + 0.5, 1.075 * k * max_x, atol=1e-25, rtol=5e-14
+                integral_class.mu + 0.5,
+                1.075 * k * max_x,
+                phase_atol=DEFAULT_PHASE_ATOL,
+                amplitude_rtol=DEFAULT_AMPLITUDE_RTOL,
             )
             nu_phase = bessel_phase(
-                integral_class.nu + 0.5, 1.075 * q * max_x, atol=1e-25, rtol=5e-14
+                integral_class.nu + 0.5,
+                1.075 * q * max_x,
+                phase_atol=DEFAULT_PHASE_ATOL,
+                amplitude_rtol=DEFAULT_AMPLITUDE_RTOL,
             )
             sigma_phase = bessel_phase(
-                integral_class.sigma + 0.5, 1.075 * s * max_x, atol=1e-25, rtol=5e-14
+                integral_class.sigma + 0.5,
+                1.075 * s * max_x,
+                phase_atol=DEFAULT_PHASE_ATOL,
+                amplitude_rtol=DEFAULT_AMPLITUDE_RTOL,
             )
 
             analytic = integral_class.analytic(k, q, s)
@@ -548,7 +652,9 @@ class Test3BesselAnalytic(unittest.TestCase):
             [],
             msg=(
                 "reported abserr did not bound the true error against the analytic oracle on "
-                f"{len(failures)}/{len(cases)} cases (expected -- see this test's docstring): "
+                f"{len(failures)}/{len(cases)} cases -- it did on 7 of 7 when this assertion was "
+                "last measured, so this is a regression in the declared phase error or in the "
+                "quadrature, not a tolerance to relax (see this test's docstring): "
                 + "; ".join(failures)
             ),
         )
@@ -556,8 +662,8 @@ class Test3BesselAnalytic(unittest.TestCase):
     def test_YJJ_log_scaling(
         self,
         max_x=MAX_X,
-        phase_atol=1e-25,
-        phase_rtol=5e-14,
+        phase_atol=DEFAULT_PHASE_ATOL,
+        amplitude_rtol=DEFAULT_AMPLITUDE_RTOL,
         quad_atol=1e-10,
         quad_rtol=1e-8,
     ):
@@ -570,10 +676,16 @@ class Test3BesselAnalytic(unittest.TestCase):
             q = uniform(0.1, 5.0)
 
             mu_phase = bessel_phase(
-                Y.mu + 0.5, 1.075 * k * max_x, atol=phase_atol, rtol=phase_rtol
+                Y.mu + 0.5,
+                1.075 * k * max_x,
+                phase_atol=phase_atol,
+                amplitude_rtol=amplitude_rtol,
             )
             nu_phase = bessel_phase(
-                Y.nu + 0.5, 1.075 * q * max_x, atol=phase_atol, rtol=phase_rtol
+                Y.nu + 0.5,
+                1.075 * q * max_x,
+                phase_atol=phase_atol,
+                amplitude_rtol=amplitude_rtol,
             )
 
             configs = [
@@ -601,8 +713,8 @@ class Test3BesselAnalytic(unittest.TestCase):
                     sigma_phase = bessel_phase(
                         Y.sigma + 0.5,
                         1.075 * s * max_x,
-                        atol=phase_atol,
-                        rtol=phase_rtol,
+                        phase_atol=phase_atol,
+                        amplitude_rtol=amplitude_rtol,
                     )
 
                     analytic = Y.analytic(k, q, s)

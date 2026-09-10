@@ -25,10 +25,22 @@ requires, plus the phase-composition and region-boundary checks:
       - "realistic" fixtures: real TkSourceFunctions objects from prompt 05's exact fixture
         (bessel_phase amplitude and phase, re-splined on the production grid) and a
         Green's-function stand-in whose phase is a real phase_spline through bessel_phase
-        samples. This carries bessel_phase's own accuracy (~x * 1e-8 in phase,
-        docs/lg-phase-and-handover-followup-2026-09.md section 2.4) and the phase re-spline
-        error, so it cannot reach 1e-8; its measured floor is what prompt 08 needs as an
-        acceptance threshold and is printed.
+        samples. This used to carry bessel_phase's own accuracy (~x * 1e-8 in phase,
+        docs/lg-phase-and-handover-followup-2026-09.md section 2.4) on top of the phase
+        re-spline error. **It no longer does**: prompts/transfer-remedial's prompt 05 replaced
+        that construction, and the object now declares 5e-12 rad of phase error at these
+        orders. What remains is the phase and friction re-spline on the production grid, plus
+        the Liouville-Green truncation of the closed-form omega and d ln M/dz that
+        TkSourceFunctions supplies -- and that is still far above 1e-8. Its measured floor is
+        printed and is the acceptance threshold below.
+
+Prompt 08 re-measured every number this module prints on the tree immediately before the
+campaign (f17f2d4) and on the tree after it. The improvement is visible in exactly one place:
+restricted to x_q > 100 at 300 samples/decade -- i.e. with the re-spline and the near-hand-over
+LG truncation both pushed down -- the w = 1/3 residual falls from 1.661e-06 to 7.502e-09, a
+factor 221. Every threshold asserted in this module is set by the re-spline or by LG truncation
+instead, and none of them moves by as much as a factor 1.1; the full table is in
+prompts/transfer-remedial/logs/08-fixture-revalidation.md.
 
 Stand-in background and transfer-function fixtures are imported from test_tk_source_functions.
 """
@@ -972,13 +984,22 @@ class TestOracle2Bessel(unittest.TestCase):
             )
 
     # The realistic fixtures cannot reach the 1e-8 of the exact stand-ins, and the reason is
-    # neither bessel_phase (~x * 1e-8 in phase, docs/lg-phase-and-handover-followup-2026-09.md
-    # section 2.4) nor the phase re-spline (~h^4 x/384): the residual is grid-independent. It is
-    # the Liouville-Green truncation of the *derivative* pieces that TkSourceFunctions supplies
-    # in closed form -- omega = sqrt(Tk_omegaEff_sq) and d ln M/dz -- which on the exact fixture
-    # differ from the exact d theta/dz and d ln M/dz by O(x^-4) relative near the hand-over
-    # (logs/05 deviation 5 measured 8.5e-6 at w = 1/3 and 7.0e-5 at w = 0.2 in d ln M/dz). Those
-    # pieces dominate f through DT_q DT_r. The threshold is the measured floor with headroom.
+    # neither bessel_phase nor the phase re-spline (~h^4 x/384): the residual is
+    # grid-independent. It is the Liouville-Green truncation of the *derivative* pieces that
+    # TkSourceFunctions supplies in closed form -- omega = sqrt(Tk_omegaEff_sq) and d ln M/dz --
+    # which on the exact fixture differ from the exact d theta/dz and d ln M/dz by O(x^-4)
+    # relative near the hand-over (logs/05 deviation 5 measured 8.5e-6 at w = 1/3 and 7.0e-5 at
+    # w = 0.2 in d ln M/dz). Those pieces dominate f through DT_q DT_r.
+    #
+    # The "not bessel_phase" clause used to rest on an inference; it is now measured twice over.
+    # (i) The oracle changed by eight orders across prompts/transfer-remedial's prompt 05 --
+    # ~x * 1e-8 in phase (that follow-up document's section 2.4) down to 5e-12 rad declared --
+    # and this threshold's own measurement moved from 1.376e-04 to 1.375e-04, i.e. not at all.
+    # (ii) The attribution test below isolates the derivative pieces directly. So the stale
+    # section-2.4 citation is gone from this comment, not merely re-worded: at these orders the
+    # Bessel oracle now sits eight orders under the term that binds.
+    #
+    # The threshold is the measured floor with headroom: 1.375e-04 at w = 0.2, 100/decade.
     REALISTIC_THRESHOLD = 5.0e-4
 
     def test_realistic_fixtures_vs_scipy(self):
@@ -1270,8 +1291,14 @@ class TestPhaseComposition(unittest.TestCase):
                     f"remainder route {out['mod']:.3e} rad; reduce-raw route {out['raw_route']:.3e} rad; "
                     f"raw phase {out['raw']:.3e} rad; theta_deriv vs FD {out['deriv']:.3e}"
                 )
-                self.assertLess(out["mod"], 1.0e-10)
-                self.assertLess(out["deriv"], 1.0e-8)
+                # tightened by prompt 08 of prompts/transfer-remedial. Nothing here involves
+                # bessel_phase -- the constituents are correctly rounded quadratic phases -- so
+                # what limits these is the composition arithmetic alone: measured 3.553e-15 rad
+                # at |Psi| ~ 2.2e5 and 1.776e-15 at 2.2e6, and 2.332e-12 on the derivative
+                # against the central difference at both scales (the difference's own O(h^2)
+                # truncation). Deterministic: `rng` is seeded. Set 28x and 43x above those
+                self.assertLess(out["mod"], 1.0e-13)
+                self.assertLess(out["deriv"], 1.0e-10)
 
     def test_composed_phase_through_phase_spline(self):
         """
@@ -1294,7 +1321,16 @@ class TestPhaseComposition(unittest.TestCase):
                 )
                 # the composition adds nothing beyond the constituents' own spline rounding
                 self.assertLess(out["mod"], 2.0 * out["raw"] + 1.0e-12)
+                # not tightened: this is phase_spline's own ~20 eps |theta| rounding, measured
+                # 3.782e-08 rad at |Psi| ~ 2.2e6 and identical before and after the
+                # transfer-remedial campaign. phase_spline is out of scope for that campaign
+                # (its README 1.1) and for this module, and the constant is deliberately left
+                # an order and a half above the measurement because the rebased chunk span, and
+                # so the rounding, depends on where geometric chunking puts the boundary
                 self.assertLess(out["mod"], 1.0e-6)
+                # not tightened, and it is the same phase_spline floor seen through the
+                # derivative: measured 1.343e-10 at |Psi| ~ 2.2e6 and 1.651e-10 at 2.2e5,
+                # unchanged by the campaign
                 self.assertLess(out["deriv"], 1.0e-8)
 
     def test_theta_deriv_uses_closed_form_omega_for_T(self):
@@ -1412,10 +1448,25 @@ class TestBoundaryConsistency(unittest.TestCase):
         """
         Exact-envelope fixture (exact M and theta; LG closed-form omega and d ln M/dz): at the
         extended spline's own nodes the residual is the LG truncation of the derivative pieces
-        (see TestOracle2Bessel.REALISTIC_THRESHOLD), plus the phase re-spline and bessel_phase
-        floors; between nodes the numeric dT/dz spline's fit error is added (board issue
-        [05-numeric-region-is-now-the-accuracy-floor]: 2.7e-4 of envelope between grid points at
-        the hand-over).
+        (see TestOracle2Bessel.REALISTIC_THRESHOLD); between nodes the numeric dT/dz spline's fit
+        error is added (board issue [05-numeric-region-is-now-the-accuracy-floor]: 2.7e-4 of
+        envelope between grid points at the hand-over).
+
+        This used to name "the phase re-spline and bessel_phase floors" together. They now differ
+        by six orders and must be separated. Measured, before and after
+        prompts/transfer-remedial's prompt 05 replaced the oracle:
+
+          * **LG truncation** of omega and d ln M/dz -- dominant. 1.514e-04 of envelope at the
+            nodes, w = 0.2, identical on both trees;
+          * **numeric dT/dz re-spline** -- dominant between nodes, 1.031e-03 at w = 1/3, again
+            identical on both trees;
+          * **phase re-spline** of the sampled fixture -- 3.0e-08, two to five orders below
+            either of the above;
+          * **Bessel oracle** -- was ~2e-06, is now 2.5e-12 measured / 5e-12 declared. It was
+            never the binding term here and it is now eight orders below the one that is.
+
+        So the thresholds are unchanged, and the reason they are unchanged is that this test
+        never measured bessel_phase.
         """
         for w in W_VALUES:
             with self.subTest(w=w):

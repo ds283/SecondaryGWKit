@@ -28,6 +28,18 @@ testing:
 They differ because the exact Bessel envelope is *not* the Liouville-Green amplitude: they
 differ by the LG truncation error, ~1e-5 in d ln M/dz at 3.5 e-folds sub-horizon (measured
 below, and grid-independent), which is far above the 1e-6 the identity check needs.
+
+Three error sources therefore sit under the numbers this module prints, and they must not be
+conflated (prompts/transfer-remedial/DRAFT-PLAN.md 8.3):
+
+  * the **Bessel oracle** -- how well `bessel_phase` reproduces J_nu and Y_nu. Until the
+    transfer-remedial campaign's prompt 05 this was ~x * 1e-8 in phase, and it was the largest
+    of the three below the hand-over; it is now 5e-12 rad declared (2.5e-12 measured at these
+    orders), so it no longer contributes to anything measured here;
+  * the **consumer re-spline** -- the h^4 cubic fit `TkSourceFunctions` puts through the sampled
+    (div 2pi, mod 2pi) phase and the friction samples on the production redshift grid. This
+    campaign does **not** improve it, and it is now the binding term in `err_T` below;
+  * the **LG truncation** -- physical, ~1e-5 in d ln M/dz, unchanged by any of this.
 """
 
 import unittest
@@ -246,7 +258,10 @@ class Fixture:
     def M_exact(self, z):
         """
         Exact envelope of the analytic transfer function: 2^nu Gamma(5/2+b) x^-nu m(x), with
-        m = sqrt(J^2 + Y^2) supplied by bessel_phase (bessel_phase.py:270-282: J = m sin theta).
+        m = sqrt(J^2 + Y^2) supplied by bessel_phase (its module docstring, bessel_phase.py:13:
+        J_nu = A_nu sin theta_nu, Y_nu = -A_nu cos theta_nu). The line reference used to be
+        bessel_phase.py:270-282, which prompt 05 of prompts/transfer-remedial rewrote; the
+        convention it named is unchanged.
         """
         x = self.x(z)
         return (
@@ -262,6 +277,27 @@ class Fixture:
         with x, hence decreases with z; theta = pi - vartheta therefore increases with z, as the
         code's d(theta)/dz = +omega_eff convention requires, and sin(theta) = sin(vartheta) keeps
         the amplitude positive.
+
+        Re-checked clause by clause against the two-region construction and its zero-point
+        c_nu = pi/4 - pi nu/2 (prompts/transfer-remedial prompt 08, log 08), because the whole
+        phase construction under `vartheta` was replaced:
+
+          * vartheta increases with x -- theta_deriv = a_nu^-2 >= 0.9959 over this fixture's
+            x in [18.5, 1000] at both w, and the sampled vartheta is strictly increasing;
+          * x = k c_s a0 tau(z) is strictly decreasing in z, so vartheta decreases with z;
+          * hence theta = pi - vartheta increases with z, confirmed on the stored z_WKB grid;
+          * d theta/dz is positive and agrees with +sqrt(Tk_omegaEff_sq) to 1.1e-5 (w = 1/3) and
+            1.9e-4 (w = 0.2) relative. That residual is the LG truncation of the closed-form
+            omega_eff, not a phase error: it is the same O(x^-4) quantity
+            `test_omega_matches_phase_derivative` measures at 4.2e-8 on the *LG* fixture, seen
+            here on the *exact* one where the two representations genuinely differ;
+          * sin(pi - vartheta) equals sin(vartheta) to 1.1e-14, which is the rounding of the
+            subtraction `pi - vartheta` itself (pi is a 53-bit approximation and vartheta reaches
+            1000), and is a floor introduced by this fixture's rotation rather than by
+            bessel_phase. It sits three orders below the re-spline term that dominates `err_T`.
+
+        The zero-point is exact: `phase.c_nu` equals pi/4 - pi nu/2 bit for bit at both orders,
+        and raw_theta(x) - (x + c_nu + residual(x)) is exactly 0.
         """
         return pi - self._bessel["phase"].raw_theta(self.x(z))
 
@@ -429,8 +465,16 @@ class TestExactLGFixture(unittest.TestCase):
                     / abs(f.M_exact(z))
                     for z in mid
                 )
-                # for the record: the same comparison against scipy's J_nu, which additionally
-                # carries bessel_phase's own phase-function error and so saturates near 2e-6
+                # The same comparison against scipy's J_nu, i.e. against a Bessel function this
+                # fixture never touched. It used to carry bessel_phase's own phase-function error
+                # on top of err_T and so saturated near 2e-6 -- measured 1.985e-06 (w = 1/3) and
+                # 1.550e-06 (w = 0.2) on the tree before prompts/transfer-remedial's prompt 05.
+                # It is now 3.021e-08 and 2.234e-08, i.e. equal to err_T to every printed digit:
+                # the oracle's contribution has dropped below the fixture's own phase re-spline
+                # error and this comparison no longer measures bessel_phase at all. Printed and
+                # not asserted, because adding an assertion here is outside prompt 08's remit
+                # (campaign README 4.2 allows comments and tolerance constants only in this file);
+                # board issue [08-tk-fixture-scipy-comparison-unasserted].
                 err_scipy = max(
                     abs(
                         functions.T_WKB(z)
@@ -446,7 +490,22 @@ class TestExactLGFixture(unittest.TestCase):
                     f"\n[exact LG fixture, w={w:.5g}] max |dM|/M = {err_M:.3e}; "
                     f"|T_WKB - M sin(theta)|/envelope = {err_T:.3e}; vs scipy J_nu = {err_scipy:.3e}"
                 )
-                self.assertLess(err_M, 1.0e-8)
+                # err_M is the amplitude path only: the friction samples are backed out from
+                # M_exact and re-splined, so the residual is the amplitude re-spline plus the
+                # arithmetic of the reconstruction. Measured 1.272e-13 (w = 1/3) and 7.843e-14
+                # (w = 0.2), essentially unchanged by the campaign (1.268e-13 and 7.708e-14
+                # before it) -- the old oracle's amplitude was already good to ~5e-14. Tightened
+                # from 1e-8 to 1e-12, about eight times the measured maximum.
+                self.assertLess(err_M, 1.0e-12)
+                # err_T is **not** tightened. What limits it is the consumer re-spline -- the
+                # h^4 cubic fit TkSourceFunctions puts through the sampled phase on this
+                # fixture's grid -- which this campaign does not touch: measured 3.021e-08
+                # (w = 1/3) and 2.234e-08 (w = 0.2), against 3.021e-08 and 2.215e-08 before it,
+                # and shown to be the re-spline rather than the oracle by
+                # test_spline_error_dominates_on_the_production_grid and by the [grid refinement]
+                # line, which moves by two orders (6.090e-06 -> 3.021e-08) when the grid is
+                # tripled. 1e-7 leaves a factor 3.3, which is the right margin for a fit error
+                # whose size depends on where the grid lands.
                 self.assertLess(err_T, 1.0e-7)
 
     def test_phase_convention(self):
@@ -458,6 +517,15 @@ class TestExactLGFixture(unittest.TestCase):
         # returns is congruent to theta mod 2pi but does not carry the stored samples' negative
         # sign convention. What must hold is that it is a remainder, and that its sine is the
         # sine of the exact phase.
+        #
+        # `functions.phase` is TkSourceFunctions' own phase_spline over the stored samples, not
+        # bessel_phase, so the 1e-6 below is limited by that re-spline and not by the Bessel
+        # oracle. Measured 7.342e-08 over mid[:20] (x ~ 19, just sub-hand-over, where the fit
+        # error is smallest) and 6.09e-06 over the whole grid, so the factor 13.6 of headroom
+        # here is the right margin for a fit error and 1e-6 is not tightened. Note also that
+        # bessel_phase's own theta_mod_2pi now returns (-pi, pi] rather than fmod(theta, 2 pi)
+        # (prompt 05); the bound asserted below is on the *consumer's* remainder, which is
+        # unaffected.
         for z in mid[:20]:
             remainder = functions.phase.theta_mod_2pi(z)
             self.assertLessEqual(abs(remainder), TWO_PI)
@@ -488,6 +556,10 @@ class TestExactLGFixture(unittest.TestCase):
             f"{PRODUCTION_SAMPLES_PER_LOG10Z}/decade {errors[PRODUCTION_SAMPLES_PER_LOG10Z]:.3e}, "
             f"{REFINED_SAMPLES_PER_LOG10Z}/decade {errors[REFINED_SAMPLES_PER_LOG10Z]:.3e}"
         )
+        # not tightened: this *is* the consumer re-spline floor, which the transfer-remedial
+        # campaign does not improve. Measured 6.090e-06 on both the pre-campaign tree and the
+        # current one, against 1e-5 -- a factor 1.6, which is as tight as a grid-dependent fit
+        # error should be asserted
         self.assertLess(errors[PRODUCTION_SAMPLES_PER_LOG10Z], 1.0e-5)
         self.assertLess(
             errors[REFINED_SAMPLES_PER_LOG10Z],
@@ -525,6 +597,11 @@ class TestClosedFormIdentities(unittest.TestCase):
                 print(
                     f"\n[LG fixture, w={w:.5g}] max d ln M/dz vs finite difference = {worst:.3e}"
                 )
+                # not tightened, and nothing here involves bessel_phase: the LG fixture's
+                # friction is the exact closed-form integral, so what limits this is the O(h^2)
+                # truncation of the central difference at h = 1e-5. Measured 6.355e-11
+                # (w = 1/3) and 8.323e-11 (w = 0.2), identical before and after the
+                # transfer-remedial campaign
                 self.assertLess(worst, 1.0e-6)
 
     def test_omega_matches_phase_derivative(self):
@@ -544,6 +621,12 @@ class TestClosedFormIdentities(unittest.TestCase):
                 print(
                     f"[LG fixture, w={w:.5g}] max omega vs phase.theta_deriv = {worst:.3e}"
                 )
+                # not tightened: measured 4.249e-08 (w = 1/3) and 2.163e-08 (w = 0.2), the same
+                # to four figures before and after the campaign, because `functions.phase` here
+                # is a phase_spline through the exact integral of omega_eff and the residual is
+                # that spline's derivative error -- a consumer floor, not the Bessel oracle. The
+                # factor 24 of headroom at w = 1/3 is the smallest in this class and is grid
+                # dependent, so it stays
                 self.assertLess(worst, 1.0e-6)
 
     def test_LG_truncation_error_of_the_exact_envelope(self):
