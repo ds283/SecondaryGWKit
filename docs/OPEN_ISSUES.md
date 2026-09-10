@@ -77,7 +77,7 @@ No action defined. These are floors on what a test may *assert*, not on what the
 
 | Issue | Board | Hook |
 |---|---|---|
-| `[01-genericeos-tz-spline-floor]` | source-remediation | GenericEOS/QCD quantities inherit a 500-point `T(z)` spline: 1.3e-9 at `max_z=1e4`, 6.4e-7 at the default 1e20. Why prompt 01's test asserts 1e-8, not 1e-10. |
+| `[01-genericeos-tz-spline-floor]` | source-remediation | Whether the `T(z)` spline grid is adequately defined. A hot-fix's fixed 500 points give 1.3e-9 at `max_z=1e4`, 6.4e-7 at the default 1e20; it is why prompt 01's test asserts 1e-8, not 1e-10. Two sign bugs in the grid's *range* were fixed 2026-09-10 and are not part of this. |
 | `[03-derivative-pad-clamp-on-coarse-grids]` | source-remediation | The background derivative-fit padding is clamped near $z=0$; harmless at the shipped 100 samples/decade, binds at 50. A trap only if `source_samples_log10z` is lowered. |
 
 ---

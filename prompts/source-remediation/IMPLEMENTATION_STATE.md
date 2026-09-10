@@ -144,12 +144,29 @@ Traceability from the audit's finding IDs to the prompt that discharges them.
   have to become tunable, or `max_z` reduced (it cannot go below ~3500: the constructor solves
   for matter–radiation equality at $z=3403$ and the spline must cover it).
   **Provenance (user, 2026-09-10):** the fixed 500-point grid was a quick hot-fix, put in with the
-  intention of returning to it. **Stays open deliberately** — it is the fixed sample count that is
-  the issue, not the interpolation as such — but no action is scheduled and it does not block
-  anything. A future fix should make the count (or the target accuracy) a parameter rather than a
-  literal; note that the sample density, not the spline order, is the whole lever here, because
-  the error scales as $h^4$ in the $\ln(1+z)$ spacing and $\rho_r\propto T^4$ amplifies it
-  fourfold.
+  intention of returning to it. **Stays open deliberately** — the open question is whether the
+  spline *grid* is adequately defined (its sample count and its range), not the interpolation as
+  such — but no action is scheduled and it does not block anything. A future fix should make the
+  count (or the target accuracy) a parameter rather than a literal; note that the sample density,
+  not the spline order, is the whole lever here, because the error scales as $h^4$ in the
+  $\ln(1+z)$ spacing and $\rho_r\propto T^4$ amplifies it fourfold.
+  **Two sign bugs in the grid's *range* were fixed on 2026-09-10** and are not part of what stays
+  open. (a) `_build_T_z_spline` applied its 5 % buffer to $z$ rather than to $1+z$; with
+  `min_z = DEFAULT_MIN_TEMPERATURE_Z_REDSHIFT = -0.2` that gave $-0.19$, *narrowing* the range at
+  the end where padding was wanted, so the model could not be evaluated at its own declared floor.
+  The buffer is now applied to $1+z$, which is positive throughout, giving $[-0.24, 1.05(1+z_{\max})-1]$.
+  (b) Both wrappers in `ComputeTargets/spline_wrappers.py` tested their reject-versus-clamp
+  threshold as `0.99 * min_log_z` / `1.01 * max_log_z`, which is only outward-going for a positive
+  bound; for the negative `min_log_z` of this spline it moved *inward* and rejected a band inside
+  the declared range. `_outward()` follows the sign of the bound and returns exactly the retired
+  expressions when the bound is positive — which every other spline in the repository has, so
+  nothing else changed. Effect on stored numbers: $T(z)$ over $z\in[0,10^4]$ moves by a median
+  **1.3e-10** and at most **3.5e-10** relative, an order of magnitude below this issue's own
+  interpolation floor. Note the padding is deliberate — the constructor needs $z=0$ for CMB
+  matching plus a margin below it for accurate numerical derivatives there — and the user has
+  confirmed nothing will ask for results below $z=0$. `DERIVATIVE_FIT_PAD_FLOOR = 0.9` keeps the
+  background derivative grid at $z\ge-0.1$, well inside both the old and the new floor, so
+  `[03-derivative-pad-clamp-on-coarse-grids]` is unaffected.
 
 - **[03-derivative-pad-clamp-on-coarse-grids]** *(opened by prompt 03, 2026-09-08)* — the padded
   fit grid `compute_background` now uses for spline-derived background derivatives clamps its

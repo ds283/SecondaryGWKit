@@ -6,6 +6,30 @@ from scipy.interpolate import UnivariateSpline
 from LiouvilleGreen.phase_spline import phase_spline
 
 
+# Fractional slack allowed outside a spline's declared range before an evaluation is rejected
+# rather than softly clamped.
+SPLINE_BOUND_SLACK = 0.01
+
+
+def _outward(bound: float, direction: int) -> float:
+    """
+    Move `bound` by SPLINE_BOUND_SLACK of its own magnitude: upward for direction=+1, downward
+    for direction=-1.
+
+    The multiplier has to follow the sign of the bound. The obvious `1.01 * bound` /
+    `0.99 * bound` is only "outward" while `bound > 0`, and log(1+z) is negative for z < 0: there,
+    scaling a lower bound by 0.99 moves the threshold *inward*, so the wrapper rejected a band
+    lying inside its own declared range. That is why a GenericEOS model, whose T(z) spline has a
+    negative min_z, could not be evaluated at its own declared floor. For a positive bound this
+    returns exactly `1.01 * bound` or `0.99 * bound` as before, so every other spline in this
+    repository -- all of which have positive bounds -- is unaffected.
+    """
+    factor = 1.0 + direction * SPLINE_BOUND_SLACK
+    if bound < 0.0:
+        factor = 1.0 - direction * SPLINE_BOUND_SLACK
+    return factor * bound
+
+
 class ZSplineWrapper:
     def __init__(
         self,
@@ -37,9 +61,9 @@ class ZSplineWrapper:
             raw_z = z
 
         # if some way out of bounds, reject
-        if log_z > 1.01 * self._max_log_z:
+        if log_z > _outward(self._max_log_z, +1):
             raise RuntimeError(
-                f"GkSource.function: evaluated {self._label} out of bounds @ z={raw_z:.5g} (max allowed z={self._max_z:.5g}, recommended limit is z <= {0.95 * self._max_z:.5g})"
+                f"GkSource.function: evaluated {self._label} out of bounds @ z={raw_z:.5g} (max allowed z={self._max_z:.5g}, recommended limit is z <= {_outward(self._max_z, -1):.5g})"
             )
 
         # otherwise, softly cushion the spline at the top end
@@ -47,9 +71,9 @@ class ZSplineWrapper:
             log_z = self._max_log_z
 
         # same at lower limit
-        if log_z < 0.99 * self._min_log_z:
+        if log_z < _outward(self._min_log_z, -1):
             raise RuntimeError(
-                f"GkSource.function: evaluated {self._label} out of bounds @ z={raw_z:.5g} (min allowed z={self._min_z:.5g}, recommended limit is z >= {1.05 * self._min_z:.5g})"
+                f"GkSource.function: evaluated {self._label} out of bounds @ z={raw_z:.5g} (min allowed z={self._min_z:.5g}, recommended limit is z >= {_outward(self._min_z, +1):.5g})"
             )
 
         if log_z < self._min_log_z:
@@ -96,9 +120,9 @@ class GkWKBSplineWrapper:
             raw_z = z
 
         # if some way out of bounds, reject
-        if log_z > 1.01 * self._max_log_z:
+        if log_z > _outward(self._max_log_z, +1):
             raise RuntimeError(
-                f"GkSource.function: evaluated {self._label} out of bounds @ z={raw_z:.5g} (max allowed z={self._max_z:.5g}, recommended limit is z <= {0.95 * self._max_z:.5g})"
+                f"GkSource.function: evaluated {self._label} out of bounds @ z={raw_z:.5g} (max allowed z={self._max_z:.5g}, recommended limit is z <= {_outward(self._max_z, -1):.5g})"
             )
 
         # otherwise, softly cushion the spline at the top end
@@ -106,9 +130,9 @@ class GkWKBSplineWrapper:
             log_z = self._max_log_z
 
         # same at lower limit
-        if log_z < 0.99 * self._min_log_z:
+        if log_z < _outward(self._min_log_z, -1):
             raise RuntimeError(
-                f"GkSource.function: evaluated {self._label} out of bounds @ z={raw_z:.5g} (min allowed z={self._min_z:.5g}, recommended limit is z >= {1.05 * self._min_z:.5g})"
+                f"GkSource.function: evaluated {self._label} out of bounds @ z={raw_z:.5g} (min allowed z={self._min_z:.5g}, recommended limit is z >= {_outward(self._min_z, +1):.5g})"
             )
 
         if log_z < self._min_log_z:
