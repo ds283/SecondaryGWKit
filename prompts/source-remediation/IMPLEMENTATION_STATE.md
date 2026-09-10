@@ -8,7 +8,7 @@ every offline test passes, all four audit §4 items are closed, and `total` repr
 `analytic_rad` to 1e-6–1e-4 where the response redshift is a few oscillations inside the horizon.
 **The source integral is not yet fit for a production sweep**: prompt 12 found a run-blocking
 tolerance defect in prompt 08's region guard (§3 `[12-region-check-absolute-tolerance]`, 43 % of
-work items) and two accuracy items (`[12-atol-too-loose-for-the-source-integral]`,
+work items — now scheduled as **prompt 13**) and two accuracy items (`[12-atol-too-loose-for-the-source-integral]`,
 `[12-handover-clamp-error-in-production]`). None of the three may be fixed inside this campaign.
 
 > **Maintenance rule.** Every prompt updates this file *in its own commit*, before committing.
@@ -59,7 +59,15 @@ Legend: ⬜ not started · 🟡 in flight · ✅ complete · ⚠️ complete wit
 | 11 | [Spec annotations](11-spec-annotations.md) | audit §6 | Sonnet | ✅ | *"Record the spec-code audit's three recommended annotations"* (SHA not embedded, per prompt 01 log deviation 4) | [`logs/11-spec-annotations.md`](logs/11-spec-annotations.md) |
 | 12 | [Verification](12-verification.md) | audit §4; campaign | Opus | ⚠️ | *"Verify the source-remediation campaign against a live scoped run"* (SHA not embedded, per prompt 01 log deviation 4) | [`logs/12-verification.md`](logs/12-verification.md) |
 
-**Progress:** 12 / 12 complete.
+### Workstream F — post-verification remediation
+
+Opened by prompt 12's findings. Not part of the original twelve.
+
+| # | Prompt | Items | Model | Status | Commit | Log |
+|---|---|---|---|---|---|---|
+| 13 | [Region-guard tolerance](13-region-guard-tolerance.md) | §3 `[12-region-check-absolute-tolerance]` | Opus | ⬜ | | |
+
+**Progress:** 12 of 13 complete; prompt 13 is scheduled and unstarted.
 
 ---
 
@@ -320,10 +328,15 @@ Traceability from the audit's finding IDs to the prompt that discharges them.
   zero `QuadSourceIntegral` rows and had to schedule the work itself
   (`docs/source-remediation-verification/run_quadsource_integrals.py`). It fails loudly, so no
   wrong number is at risk. This is the same class of defect as audit B11, in the guard next to the
-  one prompt 09 closed. **Impact:** no production sweep can complete. **Next step:** a relative
-  tolerance (`DEFAULT_FLOAT_PRECISION * max(1.0, |z|)`, or the comparison done in `log(1+z)` where
-  the partition already works) — one line, but production code, which prompt 12 may not touch.
-  See `docs/source-remediation-verification.md` §5.1.
+  one prompt 09 closed. **Impact:** no production sweep can complete. **Next step:** **prompt 13**
+  ([`13-region-guard-tolerance.md`](13-region-guard-tolerance.md)), which does the comparison in
+  `log(1+z)` rather than widening the tolerance in $z$. Both were considered and are numerically
+  near-equivalent; the log comparison was chosen because it removes the lossy `log`→`z` round trip
+  from the guard's decision path instead of tolerating it (only `z`→`log` is safe at large $z$),
+  because a relative tolerance would be ~$10^9$ wider than needed and so would accept a genuine
+  overshoot of ~$5\times10^7$ in $z$ at the top of the grid, and because the transfer-function
+  branch of the same loop (`:475`) already compares in `log(1+z)` — the Green's-function guard is
+  the only holdout. See `docs/source-remediation-verification.md` §5.1.
 
 - **[12-atol-too-loose-for-the-source-integral]** *(opened by prompt 12, 2026-09-09)* — the
   quantity the quadrature's `atol` is compared against is `total/(1 + z_response)`, and on the live
