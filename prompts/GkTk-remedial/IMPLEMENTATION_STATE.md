@@ -2,7 +2,7 @@
 
 **Campaign:** [`README.md`](README.md) · **Source review:** [`docs/gk-wkb-review-fable-2026-09-09.md`](../../docs/gk-wkb-review-fable-2026-09-09.md) · **Reconciliation:** [`RECONCILIATION.md`](RECONCILIATION.md)
 **Baseline commit:** `9ff59d5` (`main`, clean)
-**Last updated:** 2026-09-10 — prompt 01 landed (references, prototype, baselines).
+**Last updated:** 2026-09-10 — prompt 02 landed (Gauss orders all 4; break-point subdivision on QCD).
 
 > **Maintenance rule.** Every prompt updates this file *in its own commit*, before committing.
 > Set your row's status, fill in the commit SHA, model and log link, update the mechanism-level
@@ -21,7 +21,7 @@ Legend: ⬜ not started · 🟡 in flight · ✅ complete · ⚠️ complete wit
 | # | Prompt | Covers | Model | Status | Commit | Log |
 |---|---|---|---|---|---|---|
 | 01 | [Reference harness and prototype](01-reference-harness-and-prototype.md) | review §7, §13.3 | Opus | ⚠️ | *"Add WKB phase references and a measured primitive prototype"* (SHA not embedded, per the campaign convention) | [`logs/01-reference-harness-and-prototype.md`](logs/01-reference-harness-and-prototype.md) |
-| 02 | [QCD residual convergence](02-qcd-residual-convergence.md) | review §11, §12.7 | Opus | ⬜ | | |
+| 02 | [QCD residual convergence](02-qcd-residual-convergence.md) | review §11, §12.7 | Opus | ⚠️ | *"Measure Gauss-order convergence of the WKB primitives on both models"* (SHA not embedded, per the campaign convention) | [`logs/02-qcd-residual-convergence.md`](logs/02-qcd-residual-convergence.md) |
 
 ### Workstream B — the primitives in `BackgroundModel`
 
@@ -59,7 +59,7 @@ Legend: ⬜ not started · 🟡 in flight · ✅ complete · ⚠️ complete wit
 |---|---|---|---|---|---|---|
 | 13 | [Verification and docs](13-verification-and-docs.md) | review §4, §12.3, §13.5 | Opus | ⬜ | | |
 
-**Progress:** 1 / 13 complete.
+**Progress:** 2 / 13 complete.
 
 ---
 
@@ -78,7 +78,7 @@ campaign; the review section is the authority on each.
 | M6 | **REQUIREMENT** | Persist the low-order limb (`tau_lo_Mpc`, …); regeneration attached (§13.2; README §7 D1) | 03, 04 | ⬜ |
 | M7 | **REQUIREMENT** | Sound-horizon table $\tau_s$ and friction table $F$ per model; the friction ODE ($2.3$–$4.1\times10^{-7}$ relative error) goes (§12.2, §12.7) | 04, 07 | ⬜ |
 | M8 | **REQUIREMENT** | The residual $\rho$ carried explicitly: $\le1.5\times10^{-3}$ rad for $G_k$ on QCD, $\approx-0.09$ rad for $T_k$; formed without subtraction (§6, §12.2) | 05 | ⬜ |
-| M9 | **REQUIREMENT** | Gauss orders decided by measurement on `QCD_Cosmology` across its spline knots; adaptive fallback for $\rho$ alone if needed (§11) | 02, 05 | ⬜ |
+| M9 | **REQUIREMENT** | Gauss orders decided by measurement on `QCD_Cosmology` across its spline knots; adaptive fallback for $\rho$ alone if needed (§11) | 02, 05 | ⚠️ 02 done: all four orders are **4**, no adaptive fallback — but only with **break-point subdivision** on QCD (log 02) |
 | M10 | **DEFECT, dead logic** | `sin_coeff` sign fix is provably always $+1$ (§8.1) | 06, 07 | ⬜ |
 | M11 | **DEFECT, consistency** | `shift_theta_sample` rebases `div_2pi` to the first sample, producing ±1-cycle offsets between objects (§8.1, §8.3) | 06, 07 | ⬜ |
 | M12 | **DEFECT, hygiene** | Zero-length check compares a redshift to `atol`; 1-element array into `math.fmod` (NumPy deprecation); stale comments at `:262-264`, `:403` (§8.2) | 06 | ⬜ |
@@ -107,19 +107,42 @@ README §0.2's `transfer-remedial` file list.
 
 Opened by the planning pass, 2026-09-10, before any prompt runs.
 
-- **[01-qcd-eos-branch-boundaries]** *(opened by prompt 01, 2026-09-10)* — no fixed-order
-  Gauss–Legendre rule converges on the two production intervals of `QCD_Cosmology` that contain a
-  `QCD_EOS.G(T)` **branch boundary**: `T_LO = 1e-5` GeV ($z=4.191\times10^7$) and
-  `T_120_MEV = 0.12` GeV ($z=8.579\times10^{11}$), where the Saikawa–Shirai fit is replaced by an
-  asymptotic constant. The per-interval relative error falls only as $N^{-2}$: 6.33e-5 (order 4),
-  1.69e-5 (8), 8.20e-6 (12), 3.47e-6 (20) — i.e. **4.78, 1.28, 0.62, 0.26 rad at $k=3\times10^8$**
-  for a phase difference straddling that interval. The tail (301 / 163 / 38 / 8 intervals of 1,731
-  above $10^{-12}$) is the 500-point $T(z)$ spline's knots, one every ~4 production intervals. The
-  review anticipated the knots (§7, §11) but not the branch boundaries, which are two orders
-  worse. **Impact:** prompt 02's decision (raising the order is not an option), and through it
-  prompts 03, 04 and 05 on `QCD_Cosmology`. **Next step:** prompt 02 chooses between adaptive
-  quadrature on the offending intervals and subdividing the table at the two known constants;
-  closes when it lands.
+- **[02-cosmology-break-point-api]** *(opened by prompt 02, 2026-09-10)* — the table builders of
+  prompts 03–05 must split each production interval at the cosmology's break points, and there is
+  no public way to ask for them. `docs/gktk-remedial/residual_convergence.py` reads the $T(z)$
+  spline's knots as `cosmology._T_z_spline._spline.t` — acceptable in a `docs/` measurement script,
+  not in `ComputeTargets/cumulative_table.py`. The three temperature constants are public
+  (`QCD_EOS.T_LO`, `.EOS_T_LO`, `.T_120_MEV`) but the redshift of each crossing still has to be
+  solved for. **Impact:** prompt 03's design — it needs something like a
+  `cosmology.integration_break_points(z_lo, z_hi)` returning $u=\log(1+z)$ values, empty on
+  `LambdaCDM`, and a `GenericEOS` implementation. **Next step:** prompt 03 chooses the API and
+  implements it; closes when 03 lands.
+
+- **[02-qcd-reference-floor]** *(opened by prompt 02, 2026-09-10; inert)* — the QCD $\tau$ and
+  $\tau_s$ references in `wkb_reference_data.json` are themselves accurate only to
+  **1.88e-14 / 1.89e-14 relative**, measured as the disagreement between prompt 01's
+  per-production-interval `quad` and prompt 02's break-aware `quad`
+  (`convergence.models.QCDModel.*.json_vs_reference_max_rel`). The order-4 cumulative errors under
+  `branch+knots` are 1.89e-14 and 1.90e-14 — i.e. *at* that floor, not above it. **Impact:** a
+  floor on what prompts 03 and 13 may assert for QCD $\tau$ at the nodes; it is below README §6's
+  $2\times10^{-14}$ target but only just, and asserting tighter would be asserting agreement
+  between two references. LambdaCDM is unaffected (mpmath at 40 digits; its floor is
+  `[01-lambdacdm-hubble-rounding-floor]`). **Next step:** if 13 needs more headroom, regenerate the
+  QCD block of the JSON break-aware; otherwise none.
+
+- **[02-qcd-T-z-spline-node-tolerance]** *(opened by prompt 02, 2026-09-10; not this campaign's)* —
+  `LambdaCDM_GenericEOS._solve_T_z` solves $T\,g_S(T)^{1/3}=$ const with
+  `root_scalar(..., xtol=1e-6, rtol=1e-4)`, and the 500 node values of `QCD_Cosmology`'s $T(z)$
+  spline inherit that. Re-solving eight sampled nodes at `rtol=1e-15` moves the answer by up to
+  **2.08e-05 relative** (at $z=10^{13}$; 1.17e-05 at $z=4.2\times10^7$; 0 at $z\le10^5$), which is
+  $\sim4\times10^{-5}$ relative in $H$ in the radiation era. This is a property of the cosmology,
+  not of any quadrature — every table in this campaign converges to the integral of the function
+  the model actually defines — but it bounds what a QCD $\tau$ table *means* physically, and the
+  node-to-node scatter is not smooth. Distinct from `source-remediation`'s
+  `[01-genericeos-tz-spline-floor]`, which is about the *number* of spline points; this is about
+  the accuracy of each point. **Impact:** the physical interpretation of every QCD number in
+  prompts 03–07 and 13; no numerical target in this campaign is affected. **Next step:** a
+  decision by the author on `_solve_T_z`'s tolerances; not scheduled here.
 
 - **[01-offgrid-accessor-cost-on-qcd]** *(opened by prompt 01, 2026-09-10)* — the interval
   accessor costs **102.2 µs per call on `QCD_Cosmology` with both endpoints off-grid**, above
@@ -201,7 +224,21 @@ Opened by the planning pass, 2026-09-10, before any prompt runs.
 
 ## 4. Resolved issues
 
-*(none yet)*
+- **[01-qcd-eos-branch-boundaries]** *(opened by prompt 01, 2026-09-10; resolved by prompt 02,
+  2026-09-10)* — no fixed-order Gauss–Legendre rule converged on the production intervals of
+  `QCD_Cosmology` containing a `QCD_EOS.G(T)` branch boundary: 6.33e-5 relative per interval at
+  order 4, falling only as $N^{-2}$, i.e. 4.78 rad at $k=3\times10^8$. **Resolution:** neither of
+  the two options the issue named. Prompt 02 measured all three schemes and found (i) a third break
+  point, the `EOS_T_LO` clamp in `QCD_EOS.w`, which kinks $c_s^2$ at $z=1.187\times10^{10}$;
+  (ii) that **adaptive quadrature is not needed for $\rho$ at all** — $\rho$ is small enough that
+  even an unconverged rule delivers it to $10^{-9}$ rad, and what actually fails under `plain` is
+  the *leading* $\tau$ term; and (iii) that splitting each production interval at the three
+  temperature crossings **and the 404 $T(z)$-spline knots** puts order 4 at the floor everywhere —
+  $\tau$ 1.89e-14 relative, 0 of 1,731 intervals above $10^{-12}$ — for 24 % more integrand
+  evaluations. Splitting at the temperatures alone is not enough (1.81e-13, 25× the floor); the
+  knots are the load-bearing half. Orders: $N_\tau=N_{\tau_s}=N_F=N_\rho=4$.
+  See [`logs/02-qcd-residual-convergence.md`](logs/02-qcd-residual-convergence.md) and
+  [`docs/gktk-remedial/RESIDUAL-CONVERGENCE.md`](../../docs/gktk-remedial/RESIDUAL-CONVERGENCE.md).
 
 ---
 

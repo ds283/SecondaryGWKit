@@ -1,6 +1,6 @@
 # Open issues — project-wide index
 
-**Last updated:** 2026-09-10 · **30 open** across five campaigns.
+**Last updated:** 2026-09-10 · **32 open** across five campaigns.
 
 This file exists so that an issue opened by one campaign is not lost when that campaign closes.
 It is an **index, not a record**: one line per issue, pointing at the campaign status board that
@@ -53,7 +53,7 @@ measurement alone at production $x$. Background reading:
 ### 1.3 The $T_k$ / $G_k$ numerical-precision campaign
 
 Now running as [`prompts/GkTk-remedial/`](../prompts/GkTk-remedial/README.md) (2026-09-10; 13
-prompts, 1 executed). `[07-phase-spline-chunking-precision]` was closed WONTFIX on the
+prompts, 2 executed). `[07-phase-spline-chunking-precision]` was closed WONTFIX on the
 expectation that this campaign **removes** the chunked splines — its prompt 08 does; if that plan
 changes, reopen it.
 
@@ -64,7 +64,7 @@ changes, reopen it.
 | `[00-unresolved-osc-print-policy]` | GkTk-remedial | With its units fixed and evaluated on the caller's actual grid, `has_unresolved_osc` will fire on essentially every $G_k$ numeric object. Prompt 11 measures the rate; the user chooses the print policy. |
 | `[00-consumer-anchoring-floor]` | GkTk-remedial | `PrimitivePhase` reduces $k\Delta\tau$ against a global anchor, so `theta_mod_2pi` carries the $\varepsilon k\tau$ floor ($9\times10^{-4}$ rad at $k=3\times10^8$). Per-region anchoring is the follow-up. |
 | `[00-transfer-remedial-test-file-overlap]` | GkTk-remedial | Prompt 10 edits stand-in fixtures in `test_tk_source_functions.py`/`test_phase_groups.py`; `transfer-remedial` 08 edits tolerances in the same files. **Decided 2026-09-10:** Workstreams A–C, E run in parallel; D waits for the `transfer-remedial` merge. |
-| `[01-qcd-eos-branch-boundaries]` | GkTk-remedial | No fixed-order Gauss rule converges across `QCD_EOS.G(T)`'s two branch boundaries ($z=4.19\times10^7$, $8.58\times10^{11}$): 4.8 rad at $k=3\times10^8$ at order 4, still 0.26 rad at order 20. Prompt 02 must choose adaptive quadrature or a subdivided table. |
+| `[02-cosmology-break-point-api]` | GkTk-remedial | Prompt 02 decided that QCD tables must split each production interval at the cosmology's break points, but the $T(z)$ spline's 404 knots are reachable only as `cosmology._T_z_spline._spline.t`. Prompt 03 needs a public accessor. |
 | `[01-offgrid-accessor-cost-on-qcd]` | GkTk-remedial | The interval accessor costs 102 µs on `QCD_Cosmology` with both endpoints off-grid, above README §4.3's 50 µs stop threshold; the production case is on-grid at 4.4 µs and zero Hubble evaluations. |
 
 ---
@@ -93,6 +93,8 @@ No action defined. These are floors on what a test may *assert*, not on what the
 | `[03-derivative-pad-clamp-on-coarse-grids]` | source-remediation | The background derivative-fit padding is clamped near $z=0$; harmless at the shipped 100 samples/decade, binds at 50. A trap only if `source_samples_log10z` is lowered. |
 | `[00-tk-superhorizon-ic-series]` | GkTk-remedial | Once the $T_k$ numeric `atol` is fixed (prompt 12), the floor is the super-horizon initial condition $T=1,T'=0$ at $2.5\times10^{-6}$; removable with the series $T\approx1-x^2/10$, a spec-level decision. |
 | `[01-lambdacdm-hubble-rounding-floor]` | GkTk-remedial | `LambdaCDM.Hubble` carries 2–9e-15 relative in double precision, which floors $\Delta\tau$ over one grid interval at $4$–$6\times10^{-5}$ rad at $k=3\times10^8$ whatever the Gauss order or storage width. |
+| `[02-qcd-reference-floor]` | GkTk-remedial | The QCD $\tau$/$\tau_s$ references in `wkb_reference_data.json` are themselves good only to 1.9e-14 relative, which is exactly where prompt 02's order-4 tables land. Do not assert tighter for QCD $\tau$ at the nodes. |
+| `[02-qcd-T-z-spline-node-tolerance]` | GkTk-remedial | `_solve_T_z`'s `root_scalar(xtol=1e-6, rtol=1e-4)` leaves the $T(z)$ spline's node values up to 2.1e-5 relative from a tight re-solve ($\sim4\times10^{-5}$ in $H$). A model-fidelity bound, not a quadrature error; distinct from `[01-genericeos-tz-spline-floor]`, which is about the grid. |
 
 ---
 
