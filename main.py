@@ -2869,9 +2869,10 @@ with ShardedPool(
     # For a spike of power to produce a solar-mass PBH, we want the peak to be around k = 1E6/Mpc.
     # For asteroid-mass PBHs that could be the dark matter, the peak should be even higher.
     # We choose a mesh of k-values around this point (with a longer tail to the IR)
+    NUMBER_SOURCE_K_VALUES = 50
     source_k_array = ray.get(
         convert_to_wavenumbers(
-            np.logspace(np.log10(1e5), np.log10(3e8), 50),
+            np.logspace(np.log10(1e5), np.log10(3e8), NUMBER_SOURCE_K_VALUES),
             is_source=True,
             # np.logspace(np.log10(1e3), np.log10(5e7), 10), is_source=True
         )
@@ -2880,9 +2881,11 @@ with ShardedPool(
 
     # build array of k-sample points covering the region of the target power spectrum where we want to evaluate
     # the one-loop integral
+    NUMBER_RESPONSE_K_VALUES = NUMBER_SOURCE_K_VALUES
     response_k_array = ray.get(
         convert_to_wavenumbers(
-            np.logspace(np.log10(1e5), np.log10(3e8), 50), is_response=True
+            np.logspace(np.log10(1e5), np.log10(3e8), NUMBER_RESPONSE_K_VALUES),
+            is_response=True,
         )
     )
     response_k_sample = wavenumber_array(k_array=response_k_array)
