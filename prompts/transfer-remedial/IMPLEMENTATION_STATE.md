@@ -8,7 +8,8 @@
 > **Maintenance rule.** Every prompt updates this file *in its own commit*, before committing.
 > Set your row's status, fill in the commit SHA, model and log link, update the mechanism-level
 > table in §2, and add or clear entries in §3 (Active issues). Do not edit rows other than your own
-> except to close an issue you resolved.
+> except to close an issue you resolved. **Any change to §3 or §4 must also update the project-wide index
+> [`docs/OPEN_ISSUES.md`](../../docs/OPEN_ISSUES.md) in the same commit** (see `CLAUDE.md`).
 
 ---
 

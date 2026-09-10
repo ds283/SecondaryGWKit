@@ -4,10 +4,14 @@
 **Baseline commit:** `e9a43a2` (`main`, clean)
 **Last updated:** 2026-09-10 — prompt 13 complete, plus a post-campaign tidy-up commit
 (`[10-classify-levin-keyerror]` closed; the three `analyse_*.py` scripts re-run over the complete
-3185-row run, verification document §5.1.2). **Twelve issues remain open in §3** — six measured
-accuracy floors with no action defined, three needing a module this campaign excluded
-(`LiouvilleGreen/`, `AdaptiveLevin/`, `extract_*.py`), and three accuracy decisions deferred to a
-later campaign (the hand-over clamp, twice, and the source integral's `atol`).
+3185-row run, verification document §5.1.2) and a triage pass over §3.
+**Twelve issues remain open in §3**, all now assigned or classified — six to the **hand-over
+campaign** (`[08-handover-clamp-error]`, `[12-handover-clamp-error-in-production]`,
+`[12-phase-spline-error-grows-with-x]`, `[05-…]`, `[06-…]`, `[07-lg-derivative-truncation-…]`,
+which are one seam and cannot be separated by measurement), one to the **`AdaptiveLevin`
+Clenshaw–Curtis fallback** campaign, two error-bound completeness items awaiting that work, and
+three inert floors recorded so a later reader does not misread a residual. They are indexed
+project-wide in [`docs/OPEN_ISSUES.md`](../../docs/OPEN_ISSUES.md).
 
 **The campaign's twelve prompts are all landed and verified against a live scoped pipeline run**
 ([`docs/source-remediation-verification.md`](../../docs/source-remediation-verification.md)):
@@ -25,7 +29,8 @@ campaign.
 > **Maintenance rule.** Every prompt updates this file *in its own commit*, before committing.
 > Set your row's status, fill in the commit SHA, model and log link, update the item-level table,
 > and add or clear entries in §3 (Active issues). Do not edit rows other than your own except to
-> close an issue you resolved.
+> close an issue you resolved. **Any change to §3 or §4 must also update the project-wide index
+> [`docs/OPEN_ISSUES.md`](../../docs/OPEN_ISSUES.md) in the same commit** (see `CLAUDE.md`).
 
 ---
 
@@ -174,6 +179,7 @@ Traceability from the audit's finding IDs to the prompt that discharges them.
   production phase spline covers $x$ up to $2.7\times10^5$ with a few hundred samples and its fit
   error grows linearly with $x$. See `docs/source-remediation-verification.md` §5.5 and
   `[12-handover-clamp-error-in-production]`.
+  **Assigned (2026-09-10):** the hand-over campaign, with `[08-handover-clamp-error]`, `[12-handover-clamp-error-in-production]` and `[12-phase-spline-error-grows-with-x]`. These are all the same seam and must be attacked together.
 
 - **[06-source-spline-residual-vs-handover]** *(opened by prompt 06, 2026-09-08)* — with the
   grid now truncated at the both-numeric hand-over, the spline of $f$ inside that region is
@@ -207,6 +213,7 @@ Traceability from the audit's finding IDs to the prompt that discharges them.
   residual 9.6e-06 to 1.3e-04), i.e. the realistic hand-over is nearer the first row of the table
   above than the last, and the spline is not the limiting error inside the both-numeric region.
   See `docs/source-remediation-verification.md` §5.7.
+  **Assigned (2026-09-10):** the hand-over campaign, with `[08-handover-clamp-error]`, `[12-handover-clamp-error-in-production]` and `[12-phase-spline-error-grows-with-x]`. These are all the same seam and must be attacked together.
 
 - **[07-lg-derivative-truncation-at-handover]** *(opened by prompt 07, 2026-09-08)* — the
   derivative pieces `TkSourceFunctions` supplies in closed form, `omega = sqrt(Tk_omegaEff_sq)`
@@ -227,20 +234,55 @@ Traceability from the audit's finding IDs to the prompt that discharges them.
   `mode="stop"` search window, `TkNumericIntegration.py:130-131`) or the overlap of
   `docs/lg-phase-and-handover-followup-2026-09.md` §1.4 would reduce it; both are out of scope
   here.
+  **Assigned (2026-09-10):** the hand-over campaign, with `[08-handover-clamp-error]`, `[12-handover-clamp-error-in-production]` and `[12-phase-spline-error-grows-with-x]`. These are all the same seam and must be attacked together.
 
-- **[07-phase-spline-chunking-precision]** *(opened by prompt 07, 2026-09-08)* — the rationale
-  for composing phases as a signed sum of `theta_mod_2pi` remainders rather than reducing the sum
-  of `raw_theta` (reconciliation document §3.1) holds only within `phase_spline`'s first two
-  chunks. `chunk_logstep=125` is geometric in the cycle count (`phase_spline.py:460-476`: chunk
-  boundaries at 0, 126, 11751, 1.1e6, … cycles), so above ~7e4 rad the rebased spline values are
-  as large as the raw phase and both routes round identically: measured 3.8e-8 rad at
-  $|\Psi|=2.2\times10^6$ rad on exact quadratic data, against 1.8e-15 rad for the remainder route
-  when the constituents' remainders are exact. **Impact:** none practical — 4e-8 rad is far below
-  the phase-spline *fit* error the followup document measures (§2), and `sin`/`cos` are unaffected
-  at any accuracy this pipeline reaches; but prompt 08 should not cite the remainder sum as a
-  precision guarantee, and the module's composition is not where any phase inaccuracy will come
-  from. **Next step:** if the guarantee is ever wanted, a linear `chunk_step` (or a log step
-  much smaller than 125) in `phase_spline`; `LiouvilleGreen/` is out of scope for this campaign.
+- **[12-phase-spline-error-grows-with-x]** *(measured in `docs/lg-phase-and-handover-followup-2026-09.md`
+  §2, 2026-09-08; measured on real rows by prompt 12, 2026-09-09; **split out into its own issue
+  2026-09-10** — it was buried in `[05-numeric-region-is-now-the-accuracy-floor]`'s "Narrowed by
+  prompt 12" note, where it was easy to read as a closed floor)* — **the largest unquantified
+  accuracy term in the chain, and the only one whose size at the shipped configuration has not
+  been measured.**
+
+  A phase stored as `(theta_div_2pi, theta_mod_2pi)` on a $\log(1+z)$ grid and re-splined by the
+  consumer has an interpolation error that **grows linearly with the accumulated phase $x$**. With
+  $u=\log(1+z)$ and $x=kc_sa_0\eta$, $d\theta/du\simeq x$ in radiation, so every derivative of
+  $\theta(u)$ is $O(x)$ and the cubic-spline error is $\simeq h^4x/384$. Confirmed in both scalings
+  (followup §2.2): 6.9e-07 rad at $x=10^3$ and 6.2e-06 at $x=10^4$ against a prediction of 7.3e-07
+  and 7.3e-06, and $\times81$ smaller at 300 per decade. The last interval is a further order worse
+  (6.1e-06 and 6.0e-05) — that end effect is `[05-numeric-region-is-now-the-accuracy-floor]`.
+
+  **Prompt 05's contrary claim is wrong and is superseded here.** Log 05 states the floor is set by
+  `phase_spline`'s ~125-cycle chunk range rather than by the total cycle count. Chunking protects
+  *floating-point precision*, not interpolation error, so it does not bound this at all.
+
+  **Where it bites** (followup §2.3): the `TkSourceFunctions` WKB region; the identically
+  constructed `GkSourcePolicyData._create_functions` phase spline (`:657-671`), which every
+  `QuadSourceIntegral` region evaluating $G$ inherits; and the Levin phase input, since the phase
+  groups $\theta_G\pm\theta_q\pm\theta_r$ are sums of three such splines. **Not** the production
+  phase *solve* — `WKB_phase_function.stage_2_evolution` integrates $Q$ with
+  $\theta=\theta_{\rm init}+\omega_{\rm init}(1+u)Q$ precisely to avoid accumulating error in a
+  large $\theta$; the accuracy is lost afterwards, in the store-and-re-spline round trip.
+
+  **Why it is not closed as a floor.** The two measurements above stop at $x=10^4$ (the fixture's
+  $k$ puts $x=10^5$ below $z=0$). Prompt 12 reached $x\approx2.7\times10^5$ on real `TkWKBValue`
+  rows and found `T_WKB` against the exact `analytic_T_rad` at a median 7.1e-05–1.3e-03 of envelope
+  per mode, worst 5.8e-02. Extrapolating $h^4x/384$ to the **shipped** configuration
+  ($x\sim1.4\times10^7$ at `z_end` for the largest $k$, audit QS-5) gives $\sim10^{-2}$ rad, i.e.
+  $\sim1\%$ of envelope in $\sin\theta$ — followup §0 item 2 marks that an *inference*. And the
+  campaign's own live verification cannot bound it: **run A's largest $x$ was 4.63e+05**, because
+  it used `zend = 1e7` rather than the production `0.1` (verification document §4.1, §6 item 1).
+  Production therefore reaches ~30x further in $x$ than anything measured end to end.
+
+  **Impact:** every stored `total` sub-horizon, entangled with
+  `[12-handover-clamp-error-in-production]` — prompt 12 could not separate the two by measurement
+  alone at these $x$, and says so. Also every test tolerance in prompts 05/07/08 that cites 6e-6:
+  the right figure is $h^4x/384$ at the relevant $x$.
+  **Next step:** the hand-over campaign, alongside `[08-handover-clamp-error]` — the two must be
+  attacked together because they cannot be separated by measurement. The levers are the stored
+  representation (store $\theta$ at higher density, or store enough to reconstruct it without a
+  cubic fit) rather than anything in `QuadSourceIntegral`. Note the oracle ceiling as well:
+  `bessel_phase` itself is good to ~$x\times10^{-8}$ in phase (followup §2.4), so no fixture-based
+  test can assert better than that sub-horizon.
 
 - **[10-levin-wholesale-cc-fallback]** *(opened by prompt 10, 2026-09-09)* — the user's decision on
   `[08-levin-fallback-cost-ratio]` (now §4) accepts prompt 08 §6's cost here and asks for the fix
@@ -259,6 +301,9 @@ Traceability from the audit's finding IDs to the prompt that discharges them.
   `QuadSourceIntegral`/`QuadSourcePolicy` should be changed for it: a threshold there would
   re-decide from $\theta_G$ alone what the driver decides from the composed phase, which is defect
   A4 in weaker form.
+  **Assigned (2026-09-10):** the campaign that improves how `AdaptiveLevin` chooses its
+  Clenshaw-Curtis fallback. Nothing in this repository's source-integral layer should change
+  for it.
 
 - **[08-handover-clamp-error]** *(opened by prompt 08, 2026-09-09)* — in production the WKB grid
   of each $T_k$ starts at the largest source-grid point *below* `z_init` (`main.py:695-697`;
@@ -368,6 +413,25 @@ Traceability from the audit's finding IDs to the prompt that discharges them.
 ---
 
 ## 4. Resolved issues
+
+- **[07-phase-spline-chunking-precision]** *(opened by prompt 07, 2026-09-08; **closed WONTFIX
+  2026-09-10** by the user's decision)* — the rationale for composing phases as a signed sum of
+  `theta_mod_2pi` remainders rather than reducing the sum of `raw_theta` (reconciliation document
+  §3.1) holds only within `phase_spline`'s first two chunks. `chunk_logstep=125` is geometric in
+  the cycle count (`phase_spline.py:460-476`: chunk boundaries at 0, 126, 11751, 1.1e6, … cycles),
+  so above ~7e4 rad the rebased spline values are as large as the raw phase and both routes round
+  identically: measured 3.8e-8 rad at $|\Psi|=2.2\times10^6$ rad on exact quadratic data, against
+  1.8e-15 rad for the remainder route when the constituents' remainders are exact.
+  **Closed because there is nothing to fix and the mechanism is going away.** 4e-8 rad is far
+  below the phase-spline *fit* error of `[12-phase-spline-error-grows-with-x]`, and `sin`/`cos` are
+  unaffected at any accuracy this pipeline reaches — so no consumer is harmed today. The user
+  expects the chunked splines themselves to be **removed** as part of the work on the numerical
+  precision of the $T_k$ and $G_k$ calculations, which would retire `chunk_logstep` and this issue
+  with it; a linear `chunk_step` in `phase_spline` is therefore not worth doing as an interim.
+  **What survives as a standing caution** (§5 note 15): the remainder sum is not a precision
+  guarantee and must not be cited as one, and `phase_spline`'s composition is not where any phase
+  inaccuracy in this pipeline comes from — see `[12-phase-spline-error-grows-with-x]` for where it
+  does come from.
 
 - **[10-classify-levin-keyerror]** *(opened by prompt 10, 2026-09-09; **closed 2026-09-10** by
   the post-campaign tidy-up commit, outside the numbered prompts)* — latent and pre-existing:
@@ -600,3 +664,13 @@ Traceability from the audit's finding IDs to the prompt that discharges them.
     0.02 absolute at z = 5e14 is 4e-17 relative, far below every tolerance in the chain, so
     `build_partition`'s `z_hi = exp(log_hi) - 1.0` is correct as it stands and should not be
     "finished".
+14. **The verification runs never reached production $x$.** Run A used `zend = 1e7` to keep the
+    whole run inside radiation domination, where `analytic_rad` is a valid oracle, so its largest
+    accumulated phase was $x = 4.63\times10^5$ against $x\sim1.4\times10^7$ at the production
+    `zend = 0.1` for the largest $k$. Any statement of the form "verified live" in this campaign
+    carries that ceiling. `[12-phase-spline-error-grows-with-x]` is the term this matters most for,
+    because it grows linearly in $x$.
+15. **The signed sum of `theta_mod_2pi` remainders is not a precision guarantee** and must not be
+    cited as one (the surviving content of `[07-phase-spline-chunking-precision]`, closed WONTFIX).
+    `phase_spline`'s composition is not where phase inaccuracy in this pipeline comes from; the
+    store-and-re-spline round trip is — `[12-phase-spline-error-grows-with-x]`.
