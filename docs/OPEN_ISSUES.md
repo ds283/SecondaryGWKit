@@ -1,6 +1,6 @@
 # Open issues — project-wide index
 
-**Last updated:** 2026-09-10 · **29 open** across four campaigns.
+**Last updated:** 2026-09-10 · **31 open** across four campaigns.
 
 This file exists so that an issue opened by one campaign is not lost when that campaign closes.
 It is an **index, not a record**: one line per issue, pointing at the campaign status board that
@@ -100,6 +100,8 @@ Something was asserted statically or on a stand-in, and a live exercise is still
 | `[06-levin-theta-docstring-stale]` | transfer-remedial | `levin_quadrature.py:2750` says `theta` is always used to decide subdivision; it is not (`:1038`, `:1090`), and prompt 06 has direct evidence — a `theta` that raises gives bit-identical results. `AdaptiveLevin/` is forbidden here. |
 | `[06-measure-bessel-phase-num-chunks]` | transfer-remedial | Prompt 01's own diagnostic script reads `phase.num_chunks`, which prompt 05 removed, so its current-tree sections raise `AttributeError`. Prompt 09 owns `docs/`. |
 | `[06-three-bessel-plot-calls-a-non-callable-phase]` | transfer-remedial | `QuadSourceIntegral_debug.three_bessel_plot` calls the phase object directly; no phase class has ever defined `__call__`, so it is dead in the same way `plot_besssel_phase.py` was. Repair-or-delete, unowned. |
+| `[07-generic-K-product-rounding]` | transfer-remedial | A three-Bessel phase group still carries one rounding of the product $Kx$: 1.5e-5 rad at $K=0.1$, $x=10^{12}$, the same for the new and old routes, so a *non-resonant* group gains nothing from the $Kt+C+R$ restructure. A floor on prompt 08. |
+| `[07-abserr-bounds-truth-is-now-an-unexpected-success]` | transfer-remedial | `test_3bessel_analytic.test_abserr_bounds_truth` is an `expectedFailure` that now passes, so that module has been failing since prompt 05; measured on `bc31493` (5 of 7 underbound) against `f9cc891` (7 of 7 bound). Prompt 08 owns the file. |
 
 ---
 

@@ -2,9 +2,9 @@
 
 **Campaign:** [`README.md`](README.md) · **Design:** [`DRAFT-PLAN.md`](DRAFT-PLAN.md) · **Reconciliation:** [`RECONCILIATION.md`](RECONCILIATION.md)
 **Baseline commit:** `95cc326` (`transfer-remedial-plan`, clean)
-**Last updated:** 2026-09-10 — prompt 06 executed on `f6cbb29` (this commit; SHA not self-embedded).
+**Last updated:** 2026-09-10 — prompt 07 executed on `f9cc891` (this commit; SHA not self-embedded).
 **Planned against:** `c4c4905`; re-pointed to `95cc326` before commit (`RECONCILIATION.md` §0).
-**Executing against:** `f6cbb29` (prompt 05's commit), 22 commits after `95cc326` (the merge of
+**Executing against:** `f9cc891` (prompt 06's commit), 23 commits after `95cc326` (the merge of
 `transfer-remedial-plan` into the working branch, `source-remediation` prompt 12's live
 verification, the Green-function WKB reviews, three independent fixes, and prompt 01's new
 reference harness, plus prompts 01, 02, 03 and 04). None of those touched a previously existing
@@ -18,7 +18,11 @@ change a previously existing `LiouvilleGreen/` file** and prompt 06 is the first
 counts) are now historical rather than current. Its measurements of `hankel1e`, `jv`/`yv`, the tail
 series and the split evaluation are properties of SciPy and of the mathematics, and stand unchanged.
 Note also that README §4.2's scheduling risk has **cleared**: `source-remediation` prompt 12 has run
-(`5b82149`), so Workstream B no longer risks changing the Bessel oracle underneath it.
+(`5b82149`), so Workstream B no longer risks changing the Bessel oracle underneath it. Prompt 07 is
+back inside `LiouvilleGreen/` — `three_bessel_integrals.py` and its test — and it is the prompt that
+discovered `test_3bessel_analytic.py` has been **failing as a module since prompt 05**, because an
+`@unittest.expectedFailure` there now passes; see issue
+`[07-abserr-bounds-truth-is-now-an-unexpected-success]`, which is prompt 08's to close.
 
 > **Maintenance rule.** Every prompt updates this file *in its own commit*, before committing.
 > Set your row's status, fill in the commit SHA, model and log link, update the mechanism-level
@@ -52,7 +56,7 @@ Legend: ⬜ not started · 🟡 in flight · ✅ complete · ⚠️ complete wit
 | # | Prompt | Covers | Model | Status | Commit | Log |
 |---|---|---|---|---|---|---|
 | 06 | [Evaluation and compatibility](06-evaluation-and-compatibility.md) | plan §8.1, §9 Stage 3 | Opus 5 | ⚠️ | *(this commit; SHA not self-embedded)* | [`06`](logs/06-evaluation-and-compatibility.md) |
-| 07 | [Bessel phase groups](07-bessel-phase-groups.md) | plan §8.2, §9 Stage 4 | Opus | ⬜ | | |
+| 07 | [Bessel phase groups](07-bessel-phase-groups.md) | plan §8.2, §9 Stage 4 | Opus 5 | ⚠️ | *(this commit; SHA not self-embedded)* | [`07`](logs/07-bessel-phase-groups.md) |
 
 ### Workstream D — revalidation and close-out
 
@@ -61,7 +65,7 @@ Legend: ⬜ not started · 🟡 in flight · ✅ complete · ⚠️ complete wit
 | 08 | [Fixture revalidation](08-fixture-revalidation.md) | plan §8.3, §9 Stage 5, §10 | Opus | ⬜ | | |
 | 09 | [Benchmark and docs](09-benchmark-and-docs.md) | plan §9 Stage 5, §11 | Sonnet | ⬜ | | |
 
-**Progress:** 6 / 9 complete.
+**Progress:** 7 / 9 complete.
 
 ---
 
@@ -84,11 +88,11 @@ campaign; the plan section is the authority on each.
 | M10 | **REQUIREMENT** | \(\theta'=e^{-2\ell}\) as a value, plus the mandatory independent check against \(1+r_u/x\) and the reference, since the Wronskian becomes a tautology (§4.7, §7.3) | 04, 05 | ✅ |
 | M11 | **REQUIREMENT** | Split sin/cos evaluation; naive `x+d` loses 4.7e-2 at \(x=10^{15}\) (§6.3, §7.4) | 05 | ✅ |
 | M12 | **REQUIREMENT** | Bounded-angle accessor via `atan2`, and `raw_theta` documented as \(\varepsilon x\)-limited (§7.4) | 05, 06 | ✅ |
-| M13 | **REQUIREMENT** | Declare `theta_abserr`; nothing supplies it today although `AdaptiveLevin` accepts it for exactly this case (§8.1) | 05, 06, 07 | 🟡 |
+| M13 | **REQUIREMENT** | Declare `theta_abserr`; nothing supplies it today although `AdaptiveLevin` accepts it for exactly this case (§8.1) | 05, 06, 07 | ✅ |
 | M14 | **MIGRATION** | `Q` (pre-offset ODE state) and `phi` have no referent; `atol`/`rtol` describe ODE tolerances that no longer exist (§8.1) | 06 | ✅ |
 | M15 | **MIGRATION** | Ray serialization of the new representation through `BesselPhaseProxy` (§8.1) | 06 | ✅ |
 | M16 | **DEFECT, dead code** | `plot_besssel_phase.py` reads a nonexistent `x_min` key and calls a non-callable `phase`; it cannot run (recon C3) | 06 | ✅ |
-| M17 | **REQUIREMENT** | Phase groups as \(Kt+C+R(t)\); combine leading coefficients before multiplying by \(t\) (§8.2) | 07 | ⬜ |
+| M17 | **REQUIREMENT** | Phase groups as \(Kt+C+R(t)\); combine leading coefficients before multiplying by \(t\) (§8.2) | 07 | ✅ |
 | M18 | **REQUIREMENT** | Tests that can see the improvement: 50 % and \(10^{-3}\) thresholds cannot (§9 Stage 1, §10) | 01, 08 | 🟡 |
 | M19 | **REQUIREMENT** | Separate the Bessel-oracle gain from the consumer re-spline floor and the physical LG truncation (§8.3) | 08 | ⬜ |
 | M20 | **REQUIREMENT** | Re-run the capped benchmark tier at \(\kappa=1000\) and correct its note's diagnosis (§9 Stage 5, recon C1) | 09 | ⬜ |
@@ -222,7 +226,13 @@ risks that the prompts inherit rather than create.
   improvement can *expose a different limiting error rather than simply pass more easily*, so a
   failure there would be a finding rather than a nuisance. Every other consumer was run and passed:
   `test_bessel_phase` (4), `test_three_bessel` (2), the five other `LiouvilleGreen` modules (69),
-  and `ComputeTargets` `test_tk_source_functions` + `test_phase_groups` (30). **Next step:** run
+  and `ComputeTargets` `test_tk_source_functions` + `test_phase_groups` (30). **Narrowed (2026-09-10, prompt 07):** three of its six tests have now been run individually
+  under the new oracle. `test_JJJ` and `test_YJJ` — the two that carry `ABS_TOLERANCE` and
+  `REL_TOLERANCE` — **pass**, in 6m41s together, at relative errors 2.3e-13 to 5.5e-10 on their
+  random draws; `test_abserr_bounds_truth` is an unexpected success, which is now its own issue
+  `[07-abserr-bounds-truth-is-now-an-unexpected-success]`. What is still unrun is the multi-hour
+  part: `test_YJJ_log_singularity` and `test_YJJ_log_scaling`, i.e. exactly the 1e-2/1e-3
+  singularity bands. **Next step:** run
   `PYTHONPATH=. ./venv/bin/python -m unittest LiouvilleGreen.tests.test_3bessel_analytic` on a
   machine that can give it hours, before or as part of prompt 08, which owns those tolerances.
 
@@ -254,9 +264,16 @@ risks that the prompts inherit rather than create.
   Levin call with a `theta` that raises `AssertionError` and gets bit-identical `value` and
   `abserr`, on both a near-region and a tail span. **Impact:** a reader of that docstring will
   believe `raw_theta` must be accurate, which at \(x=10^{15}\) it cannot be (2.2e-1 rad); the code
-  is right and only the prose is wrong. **Next step:** correct the docstring in a future
-  `AdaptiveLevin` prompt. `AdaptiveLevin/` is forbidden to this campaign (README §5 item 8), so
-  nothing here can close it.
+  is right and only the prose is wrong. **Extended (2026-09-10, prompt 07):** a *second* docstring
+  in the same file is stale in the same way — `_sample_vectorized` (`levin_quadrature.py:898`) says
+  the `three_bessel_integrals.py` / `QuadSourceIntegral.py` phase and modulus callables "do not
+  [vectorize], as of this commit: their phase and modulus splines branch on a scalar argument".
+  Prompt 05's `BesselPhaseFunction` accessors are array-safe, and prompt 07 checked directly with
+  `_detect_vectorized` that all four of a phase group's callables — and the three the old route
+  supplied — are detected as vectorising, worth a measured 13.5 ms against 71.8 ms for 200
+  samplings of a 13-point grid. **Next step:** correct both docstrings in a future `AdaptiveLevin`
+  prompt. `AdaptiveLevin/` is forbidden to this campaign (README §5 item 8), so nothing here can
+  close it.
 
 - **[06-measure-bessel-phase-num-chunks]** *(opened by prompt 06, 2026-09-10)* —
   `docs/transfer-remedial/measure_bessel_phase.py` (prompt 01's diagnostic) reads
@@ -282,6 +299,42 @@ risks that the prompts inherit rather than create.
   phases it plots should now be built from `phase.residual` per prompt 07's decomposition rather
   than from raw phases) or delete the function. It is a repair-or-delete judgement like C3's and
   belongs to whoever next needs the plot.
+
+- **[07-generic-K-product-rounding]** *(opened by prompt 07, 2026-09-10)* — prompt 07's
+  \(Kt+C+R(t)\) assembly removes the cancellation error of a near-resonant group phase, but the
+  group phase is still one double, so it retains one rounding of the **product** \(Kx\). Prompt 07
+  §2's error model accounts for \(t\,\delta K\) and not for that, and it is what binds whenever
+  \(K\) is not small: measured at orders (1/2, 3/2, 5/2), signs \((+,-,-)\) and \(K=0.1\),
+  \(\lvert\delta\Theta\rvert=1.526\times10^{-5}\) rad at \(x=10^{12}\) — exactly one ulp of
+  \(Kx=10^{11}\) — for **both** the new and the old route, so a non-resonant group gains nothing
+  from the restructure. Near resonance it is irrelevant (\(Kx\) is small) and the new route
+  measures 1.4e-13 against the old 2.9e-5. **Impact:** it caps what a three-Bessel integral can
+  assert at large `max_x` for a generic triple. `test_3bessel_analytic.py` runs at
+  \(x_{\max}=10^{12}\) with a same-sign group of \(K=k+q+s\), so this is a floor on prompt 08's
+  re-tightening there, alongside the `MAX_X` truncation of log 07 observation 4. **Next step:**
+  either accept it and record it in `docs/` (prompt 09), or split \(K\cdot x\) into a two-product
+  \((hi, lo)\) — Dekker/Veltkamp, or `math.fma` on Python 3.13+ — and fold `lo` into the small
+  angle of `_PhaseGroup.sin_cos`, which would take the trigonometric path to ~1e-16 at any \(K\).
+  Deliberately not done in prompt 07: the prompt prescribes handing the unreduced product to libm,
+  and this is a second change to the same expression.
+
+- **[07-abserr-bounds-truth-is-now-an-unexpected-success]** *(opened by prompt 07, 2026-09-10)* —
+  `LiouvilleGreen/tests/test_3bessel_analytic.py::test_abserr_bounds_truth` is an
+  `@unittest.expectedFailure` asserting that `quad_JJJ`/`quad_YJJ`'s reported `abserr` does *not*
+  bound the true error against the analytic oracles. It now **passes**, so `unittest` reports
+  `FAILED (unexpected successes=1)` and the whole module fails. Measured on both trees: at
+  `bc31493` (prompt 04, before the oracle changed) it is `OK (expected failures=1)` with 5 of 7
+  oracles underbound by up to 11.5×; at `f9cc891` (prompt 06) it is an unexpected success with 7 of
+  7 bound, because prompt 05 dropped the true error by ~8 orders (3.0e-10 → 3.8e-14 on JJJ110)
+  while the reported `abserr` barely moved. **So this is prompt 05's consequence, discovered by
+  prompt 07** — nobody saw it earlier because that module takes hours and has never been run to
+  completion (`[05-3bessel-analytic-not-run-to-completion]`). Prompt 07 makes the reported `abserr`
+  0–1.9 % *larger*, which keeps it passing; it cannot and should not restore the failure.
+  **Impact:** `unittest discover -s LiouvilleGreen/tests -t .` cannot pass until this is addressed,
+  so prompt 07's acceptance item to that effect is unmet (log 07 Deviation 1). **Next step:** prompt
+  08 owns that file. The test's own docstring says closing it needs "`theta_abserr` wired up to
+  consume" a declared phase accuracy — that half is now done for this module, so the honest repair
+  is to drop the `@unittest.expectedFailure` and keep the assertion, not to weaken it.
 
 > Add an entry here whenever a prompt finishes with something unresolved: a verification step that
 > could not be run, an assumption that could not be confirmed, a deviation a later prompt has to
@@ -482,3 +535,23 @@ risks that the prompts inherit rather than create.
     lower than it was measured at, whenever the quantity under test is at the 1e-15 level. Use
     `TIER_MPMATH` or `TIER_EXACT` for anything that small; `mpmath` costs ~2.7 ms per point at
     \(x\le10^7\).
+
+25. **A three-Bessel phase group is now an object, and its four Levin keys must stay
+    array-clean.** `three_bessel_integrals._phase_group(...)` returns a `_PhaseGroup` carrying
+    \(K\), \(C\), \(C_{\rm reduced}\) (formed once, by `math.fsum`, from the supplied \(k,q,s\) and
+    the constituents' `c_nu`/`c_nu_reduced`) plus `residual`, `theta`, `sin_cos`, `theta_mod_2pi`,
+    `theta_deriv`, `theta_abserr` and `levin_theta()`. `levin_theta()` supplies **all four** keys,
+    so every `adaptive_levin_sincos` call in that module now declares its phase error — the sum,
+    linearly, of the three constituents' `theta_abserr_at` at their own arguments. Two constraints
+    on anyone editing it: (i) the per-point sums use ordinary addition on purpose, because
+    `levin_quadrature._detect_vectorized` only accepts an array-sampling path whose result is
+    *bit-identical* to the scalar one, and `math.fsum` cannot be applied to arrays — a scalar-only
+    `fsum` silently costs the array sampling of \(\theta'\) (measured 13.5 ms against 71.8 ms for
+    200 samplings of a 13-point grid); (ii) the group derivative is
+    \(Kx+\sum_i\epsilon_i\,dr_i/d\log x\), the *only* place in the campaign that uses
+    `residual_log_deriv` for a value — which is consistent with standing note 17, whose warning is
+    about using it as a refinement criterion. Measured, against 60-digit `mpmath` at the exact
+    products: \(\lvert\delta\Theta\rvert\) 2.9e-5 → 1.4e-13 at exact resonance and 7.6e-5 →
+    1.4e-13 at \(K/\max(k,q,s)\sim10^{-10}\); \(\lvert\delta\,d\Theta/d\log x\rvert\) 3.1e-5 →
+    1.0e-12; and **no change at all** for a non-resonant group, where both routes sit on one ulp of
+    \(Kx\) (issue `[07-generic-K-product-rounding]`).
