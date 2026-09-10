@@ -12,8 +12,10 @@ from Units.base import UnitsLike
 from constants import RadiationConstant
 
 DEFAULT_MAX_TEMPERATURE_Z_REDSHIFT = 1e20
+# The T(z) tabulation extends a little into the future so that numerical derivatives at z = 0 are
+# accurate; see the comment where the spline is built. Four steps of 0.05 is where this value came
+# from, but nothing reads a step size any more.
 DEFAULT_MIN_TEMPERATURE_Z_REDSHIFT = -0.2
-DEFAULT_Z_DERIVATIVE_STEPSIZE = 0.05
 
 
 class LambdaCDM_GenericEOS(BaseCosmology):
