@@ -2,14 +2,14 @@
 
 **Campaign:** [`README.md`](README.md) · **Design:** [`DRAFT-PLAN.md`](DRAFT-PLAN.md) · **Reconciliation:** [`RECONCILIATION.md`](RECONCILIATION.md)
 **Baseline commit:** `95cc326` (`transfer-remedial-plan`, clean)
-**Last updated:** 2026-09-10 — prompt 03 executed on `fe33e8e` (this commit; SHA not self-embedded).
+**Last updated:** 2026-09-10 — prompt 04 executed on `ffbb36c` (this commit; SHA not self-embedded).
 **Planned against:** `c4c4905`; re-pointed to `95cc326` before commit (`RECONCILIATION.md` §0).
-**Executing against:** `fe33e8e` (prompt 02's commit), 19 commits after `95cc326` (the merge of
+**Executing against:** `ffbb36c` (prompt 03's commit), 20 commits after `95cc326` (the merge of
 `transfer-remedial-plan` into the working branch, `source-remediation` prompt 12's live
 verification, the Green-function WKB reviews, three independent fixes, and prompt 01's new
-reference harness, plus prompts 01 and 02). **No previously existing `LiouvilleGreen/` file was
+reference harness, plus prompts 01, 02 and 03). **No previously existing `LiouvilleGreen/` file was
 touched by any of them** — `git diff --stat 95cc326..f17f2d4 -- LiouvilleGreen/` is empty, and
-prompts 01, 02 and 03 only added new files —
+prompts 01, 02, 03 and 04 only added new files —
 so `RECONCILIATION.md` §1, §2 and §3.1 still apply verbatim, and prompt 01 re-confirmed nine of
 their measurements independently (log 01 "Verification performed"). Note also that README §4.2's
 scheduling risk has **cleared**: `source-remediation` prompt 12 has run (`5b82149`), so Workstream B
@@ -39,7 +39,7 @@ Legend: ⬜ not started · 🟡 in flight · ✅ complete · ⚠️ complete wit
 | # | Prompt | Covers | Model | Status | Commit | Log |
 |---|---|---|---|---|---|---|
 | 03 | [Closed-form tail](03-closed-form-tail.md) | plan §7.2 | Opus 5 | ⚠️ | *(this commit; SHA not self-embedded)* | [`03`](logs/03-closed-form-tail.md) |
-| 04 | [Near-region sampler](04-near-region-sampler.md) | plan §7.1, §7.3, §4.5 | Opus | ⬜ | | |
+| 04 | [Near-region sampler](04-near-region-sampler.md) | plan §7.1, §7.3, §4.5 | Opus 5 | ⚠️ | *(this commit; SHA not self-embedded)* | [`04`](logs/04-near-region-sampler.md) |
 | 05 | [Two-region construction](05-two-region-construction.md) | plan §9 Stage 2, §7.4 | Opus | ⬜ | | |
 
 ### Workstream C — evaluation, compatibility and consumers
@@ -56,7 +56,7 @@ Legend: ⬜ not started · 🟡 in flight · ✅ complete · ⚠️ complete wit
 | 08 | [Fixture revalidation](08-fixture-revalidation.md) | plan §8.3, §9 Stage 5, §10 | Opus | ⬜ | | |
 | 09 | [Benchmark and docs](09-benchmark-and-docs.md) | plan §9 Stage 5, §11 | Sonnet | ⬜ | | |
 
-**Progress:** 3 / 9 complete.
+**Progress:** 4 / 9 complete.
 
 ---
 
@@ -70,13 +70,13 @@ campaign; the plan section is the authority on each.
 | M1 | **DEFECT, accuracy** | \(Q=\theta/x\) ODE: \(\delta\theta=x\,\delta Q\), so a relative bound on \(Q\) gives no absolute phase bound (§4.1). The phase is a quadrature, not an ODE (§5.1) | 05 | ⬜ |
 | M2 | **DEFECT, spurious** | The `phi` root solve returns a non-zero offset at a match point where the phase is already exact; measured \(-4.836537\times10^{-8}\) at \(\nu=5/2\), and it **is** the whole tight-tolerance error (§4.3) | 05, 06 | ⬜ |
 | M3 | **DEFECT, accuracy** | Full-phase interpolation errs by \(h^4x/384\) — 6.7e-10 at \(x=10^3\), 6.7e-6 at \(10^7\) (§4.2); chunking has no measurable effect on it (§4.6) | 05 | ⬜ |
-| M4 | **DEFECT, silent failure** | `hankel1e` returns exactly `-0j` above 7.13e8 (\(\nu\gtrsim100\)) / 2.247e15 (all \(\nu\)); `isfinite` passes and `log(abs(·))` is `-inf` (§4.4) | 02, 03, 04 | 🟡 |
+| M4 | **DEFECT, silent failure** | `hankel1e` returns exactly `-0j` above 7.13e8 (\(\nu\gtrsim100\)) / 2.247e15 (all \(\nu\)); `isfinite` passes and `log(abs(·))` is `-inf` (§4.4) | 02, 03, 04 | ✅ |
 | M5 | **DEFECT, hard limit** | `jv`/`yv` become O(1)-relatively noisy above \(x\approx2.5\times10^{15}\), the ODE right-hand side stops being \(1+O(\nu^2/x^2)\), and DOP853 at `rtol=5e-14` stalls — construction never returns (recon C1; **not in the plan**) | 02, 03, 05, 09 | 🟡 |
 | M6 | **REQUIREMENT** | Closed-form tail from DLMF 10.18.18, with \(a=(1+r')^{-1/2}\) from the Wronskian and a remainder-tested \(x_\star\). **Required, not deferred** (§1, §7.2) | 03, 05 | 🟡 |
-| M7 | **REQUIREMENT** | Branch tracking verified, not assumed: 3.685 rad per interval and ~90 wraps at \(\nu=1000.5\) defeat fixed-density `unwrap` (§4.5, recon C2) | 04 | ⬜ |
-| M8 | **REQUIREMENT** | Two-sided adaptivity — refine at the turning point, coarsen in the tail (§4.5) | 04 | ⬜ |
-| M9 | **REQUIREMENT** | Two-sided \(a_\nu\) plausibility band, measured \([1.0000,\,3.546]\) over the near region (§4.4, recon §3.1) | 04 | ⬜ |
-| M10 | **REQUIREMENT** | \(\theta'=e^{-2\ell}\) as a value, plus the mandatory independent check against \(1+r_u/x\) and the reference, since the Wronskian becomes a tautology (§4.7, §7.3) | 04, 05 | ⬜ |
+| M7 | **REQUIREMENT** | Branch tracking verified, not assumed: 3.685 rad per interval and ~90 wraps at \(\nu=1000.5\) defeat fixed-density `unwrap` (§4.5, recon C2) | 04 | ✅ |
+| M8 | **REQUIREMENT** | Two-sided adaptivity — refine at the turning point, coarsen in the tail (§4.5) | 04 | ✅ |
+| M9 | **REQUIREMENT** | Two-sided \(a_\nu\) plausibility band, measured \([1.0000,\,3.546]\) over the near region (§4.4, recon §3.1) | 04 | ✅ |
+| M10 | **REQUIREMENT** | \(\theta'=e^{-2\ell}\) as a value, plus the mandatory independent check against \(1+r_u/x\) and the reference, since the Wronskian becomes a tautology (§4.7, §7.3) | 04, 05 | 🟡 |
 | M11 | **REQUIREMENT** | Split sin/cos evaluation; naive `x+d` loses 4.7e-2 at \(x=10^{15}\) (§6.3, §7.4) | 05 | ⬜ |
 | M12 | **REQUIREMENT** | Bounded-angle accessor via `atan2`, and `raw_theta` documented as \(\varepsilon x\)-limited (§7.4) | 05, 06 | ⬜ |
 | M13 | **REQUIREMENT** | Declare `theta_abserr`; nothing supplies it today although `AdaptiveLevin` accepts it for exactly this case (§8.1) | 06, 07 | ⬜ |
@@ -175,6 +175,24 @@ risks that the prompts inherit rather than create.
   records the correction in `docs/` alongside `[00-plan-vs-tree-corrections]`, which closes this.
   `DRAFT-PLAN.md` is deliberately not edited (README §5 item 9).
 
+- **[04-achieved-estimates-exclude-the-sampling-floor]** *(opened by prompt 04, 2026-09-10)* —
+  `NearRegionData`'s three `achieved_*` numbers are measured by resampling `hankel1e` at points
+  interior to each panel and comparing against the interpolants there. Both sides of that
+  comparison come from the same function, so the estimate is of **interpolation error only**: a
+  systematic bias in `hankel1e`'s own phase or modulus cancels and would not be seen. Empirically
+  it does not matter yet — against the committed 40-digit corners the estimator *over*-reports the
+  measured error by 1.29x to 4.76x at every order from 3/2 to 1000.5, so it is conservative in the
+  direction prompt 05 needs — but the margin is not structural, and at \(\nu=1000.5\) it is within
+  a factor 5 of `DRAFT-PLAN.md` §4.4's 2.96e-13 `hankel1e` phase floor. That floor was itself
+  measured before prompt 04's rotation-constant fix (log 04 Deviation 5), which removed a
+  6.6e-14–2.3e-13 contributor to it, and has not been re-measured since. **Impact:** prompt 05
+  propagates these numbers into the Levin quadrature's `theta_abserr`, whose whole purpose is that
+  the caller sees an honest number; if it does so unmodified it is asserting a bound on
+  interpolation, not on the representation. **Next step:** prompt 05 either adds a documented
+  sampling-floor term to what it publishes as `theta_abserr` or states the assumption explicitly;
+  a re-measurement of the post-fix `hankel1e` phase floor against `mpmath` would settle the size
+  of the term and is cheap.
+
 > Add an entry here whenever a prompt finishes with something unresolved: a verification step that
 > could not be run, an assumption that could not be confirmed, a deviation a later prompt has to
 > work around, a measured cost that changes a later prompt's decision. Format:
@@ -269,3 +287,26 @@ risks that the prompts inherit rather than create.
     at those orders. Use the `mpmath` tier or the cached corners there; it costs under 10 ms per
     point when \(x\gg\nu\). This is a *precision* floor, distinct from the silent-failure boundary
     of `[01-scipy-jv-yv-high-order-boundary]`.
+
+16. **The near-region residual is on the tail-continuous branch, and `wraps_tracked` is a property
+    of the interval rather than of the order.** `bessel_near_region.build_near_region` anchors so
+    that \(r\to0\) as \(x\to\infty\) — the branch `bessel_tail`, `RECONCILIATION.md` C2 and
+    `bessel_reference_data.json` all use — by taking the *integer cycle only* from
+    `tail_residual(nu, x_star)`; the value is always the sampled \(\arg S_\nu\). So the crossover
+    comparison at \(x_\star\) is a direct subtraction with no \(2\pi\) bookkeeping, and
+    \(r(x_0)=570.820039\) at \(\nu=1000.5\) rather than \(-0.9498\). Consequently `wraps_tracked`
+    counts crossings over \([x_{\rm lo},x_\star]\): **89** at \(\nu=1000.5\) with the \(10^{-11}\)
+    crossover (\(x_\star=58.09\nu\)) and **83** with the \(10^{-6}\) one (\(11.22\nu\)).
+    `RECONCILIATION.md` C2's 90.05 is measured to \(100\nu\); a later test that re-asserts
+    \(90\pm1\) must say which build it means (log 04 Deviations 4 and 6).
+
+17. **The \(1+r_u/x\) derivative route is reported, not contracted.** `bessel_near_region` drives
+    refinement on the value accuracy of \(r\) and \(\ell\) plus two branch conditions, and
+    publishes the alternative route's measured agreement as `achieved_deriv_alt_relerr`. Using it
+    as a refinement criterion **diverges**: differentiating an interpolant amplifies the sampling
+    floor like \(N^2/h\), so bisection makes the estimate worse — measured, the failing-panel
+    count doubled every pass and the build reached 6193 panels at \(\nu=1000.5\) without
+    converging (log 04 Deviation 2). The shipped route \(\theta'=e^{-2\ell}\) is contracted by
+    `amplitude_rtol`, since \(\delta\theta'/\theta'=-2\,\delta\ell\) exactly. Do not reinstate the
+    criterion; the two routes are measured to agree to 1.4e-13 at low order and 6.9e-11 at
+    \(\nu=1000.5\), inside every budget.
