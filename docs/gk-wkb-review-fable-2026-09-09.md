@@ -737,3 +737,214 @@ Yes, with three adjustments and one caveat.
   exact. Since x_T ≤ 1.4e10 the floor on that difference is ≤ 4e-5 rad, well below ρ_T.
 
 Fix the `atol` scaling in the Tk numeric run independently; it is a one-constant change.
+
+---
+
+## 13. Addendum, 2026-09-10: clarifications carried into campaign planning
+
+**Author:** Claude Opus 5, in discussion with the repository author, on the same tree. **No
+measurement in §§1–12 is revised**, and nothing above is rewritten: this section is additive, per
+`CLAUDE.md`. It records four points that emerged while reading the review to scope a remediation
+campaign — one correction of author intent, two consequences for scope that §§1–12 state only
+implicitly, and one design constraint that is not in the review at all.
+
+Figures attributed to §§1–12 are that document's measurements. Figures introduced here are
+arithmetic on those measurements, or estimates, and are labelled as such.
+
+### 13.1 `has_unresolved_osc` is a live warning, not dead code
+
+§10.2 says the flag "is stored but no consumer reads it" and folds it into the recommendation to
+remove the per-RHS diagnostic. The first half is true only of *programmatic* consumers. Per the
+repository author, the printed warning **is** the intended consumer, and the flag's purpose is to
+tell a downstream caller that **the sample grid that caller supplied** is too coarse to resolve
+the oscillations the integrator stepped through. It is not a claim about the integrator's own
+accuracy, which §10.1 measures independently at 2e-7 of the envelope.
+
+The acceptance criterion for the §10.2 item is therefore:
+
+> Move the `Gk_omegaEff_sq` evaluation off the RHS **while preserving the printed warning and the
+> value of `has_unresolved_osc` on exit.**
+
+not "remove the diagnostic". A prompt written from §10.2 as it stands would delete a working
+warning.
+
+Two riders:
+
+- **The `delta_logz` unit slip is a precondition, not a separable nicety.** `main.py` passes
+  `1/source_samples_per_log10z` and `report_wavelength` forms `(1+z)·delta_logz` as though it were
+  a Δln spacing, understating the grid spacing by ln 10 and moving the trip point from the
+  intended x ≈ 273 to x ≈ 630. Until that is fixed the warning cannot fire where it was meant to,
+  so a change that preserves the flag's semantics without fixing the units preserves nothing
+  useful.
+- **Moving the test changes what it samples.** On the RHS it sees every internal step; evaluated
+  on the sample grid it sees only the output points. Since the subject of the test *is* the output
+  grid, the sample-grid version is arguably the more faithful one — but it can no longer catch a
+  wavelength minimum that falls between two output samples. Whoever implements this should state
+  which behaviour was chosen rather than rediscover the difference.
+
+This is one mechanism shared by both sectors, not two analogous ones:
+`GkNumericIntegration.RHS` and `TkNumericIntegration.RHS` call the same
+`NumericIntegrationSupervisor.report_wavelength`, and both object factories persist
+`has_unresolved_osc`, `unresolved_z` and `unresolved_efolds_subh`. Whatever is decided applies
+verbatim to Tk.
+
+### 13.2 `model.functions.tau` *is* the representation §7 rejects
+
+§7 measures a cubic spline of τ nodes at 1.4e-9 relative — 1.9 rad at k=1e5 — and rules it out;
+§11 credits the prior review for warning about splining `model.functions.tau`. Neither says
+plainly that the production accessor **is** exactly that. `BackgroundModel.compute_background`
+solves dτ/dz = −1/H with RK45, and `_create_functions`'s `_build_func("tau")` wraps the samples in
+a `make_interp_spline` at its default cubic order, in log(1+z). No cosmology defines an analytic
+`tau`, so `_build_func`'s `hasattr` shortcut never fires and every model takes that path.
+
+Three consequences for scope.
+
+**(a) The primitive belongs in `BackgroundModel`, as a replacement, not as new machinery inside
+the WKB code.** τ is the *only* state in `compute_background` (`EXPECTED_SOL_LENGTH = 1`,
+`A0_TAU_INDEX = 0`), so the `solve_ivp` there is replaceable wholesale by the Gauss–Legendre
+accumulation of §7. The T_k sound-horizon primitive is then a sibling built by the same machinery
+— `functions.cs_tau`, with c_s = √(`wPerturbations`) in the integrand — and the friction table F
+of §12.7 a third. This keeps one fixture per quantity rather than parallel implementations in the
+G_k and T_k paths.
+
+**(b) The validation oracles are downstream of this, and currently carry their own phase error.**
+`functions.tau` feeds `compute_analytic_G` / `compute_analytic_T` at `GkWKBIntegration.py:425,432`,
+`GkNumericIntegration.py:391,399` and the T_k pair, and the η limits at
+`QuadSourceIntegral.py:915-916,1565-1568`. Those oracles form k·(τ − τ_source) from two
+spline-evaluated τ. Working §7's cubic row through: 1.4e-9 relative on τ ≈ 1.4e4 Mpc is 2e-5 Mpc,
+which at k=1e5 is ≈ 2 rad of oracle phase error — the same order as the 13.9 rad this review
+attributes to the solver at that k.
+
+This review's own numbers are unaffected: §4 references mpmath, not the oracle. But any *in-tree*
+comparison of WKB output against `compute_analytic_G` is currently measuring the two against each
+other with ~2 rad of error on the reference side. That is an argument for sequencing the
+`BackgroundModel` work **before** the WKB replacement, so that the campaign's own acceptance tests
+are not taken against a contaminated reference.
+
+**(c) A cheap intermediate exists, and is worth considering on its own.** §7 measures a *quintic*
+spline of the same nodes at 1.8e-14 against the cubic's 1.4e-9 — five orders for a spline-order
+argument, no interface change, no extended precision. It gives 2.5e-5 rad at k=1e5 but still
+0.07 rad at k=3e8, so it does not reach the floor and is not a substitute for the primitive. It
+is a strict improvement for the existing consumers of `functions.tau` at near-zero cost, and it
+would remove most of the oracle contamination in (b) before the larger refactor lands.
+
+**Planning note: the persisted schema is a harder constraint than it looks.** τ is stored per
+background-model sample as `tau_Mpc`, a single `sqla.Float(64)`
+(`Datastore/SQL/ObjectFactories/BackgroundModel.py:605`), written as `value.tau / Mpc` (`:399`,
+`:680`) and read back as `row.tau_Mpc * Mpc` (`:288`, `:695`). Two consequences:
+
+- Changing how the nodes are computed changes stored values, so data regeneration is attached to
+  any of the above.
+- More importantly, the column **cannot carry the second limb that §13.3 shows is required**, and
+  the divide-then-multiply round-trip through `Mpc` costs a further rounding in each direction. A
+  node table that is double-double in memory but round-trips through this schema arrives back at
+  the single-double floor. Either the schema gains a low-order column, or the table is rebuilt
+  from the cosmology on load rather than read back. This is a decision the campaign must take
+  early, because it constrains the storage design rather than following from it.
+
+### 13.3 What an interval accessor entails, and the one constraint that is not optional
+
+§7 specifies the primitive as a node table plus "nearest node + local 8-point Gauss", and quotes
+its accuracy pointwise (2.1e-16 relative; 3e-7 rad at k=1e5, 8.6e-4 rad at k=3e8). What it does
+not say is that a **pointwise accessor cannot deliver those figures for a phase difference**, and
+that the fix is a storage decision rather than a quadrature one.
+
+**The problem.** The phase wants k[τ(z_s) − τ(z_r)]. τ at low z is the full conformal time,
+≈ 1.4e4 Mpc. An accessor accurate to 2.1e-16 *relative* has an absolute error of ≈ 3e-12 Mpc, so
+at k = 3e8 the difference carries ≈ 9e-4 rad **independent of how close z_s and z_r are**: the
+short-baseline difference inherits the floor of the absolute τ. That is §1's ε·θ floor arriving by
+a second route, and it is reached even if the quadrature is exact.
+
+**The decomposition.** With nodes n(a), n(b) bracketing the endpoints,
+
+    Δτ(z_a, z_b) = ∫[z_a → n(a)] + (τ_{n(b)} − τ_{n(a)}) + ∫[n(b) → z_b]
+
+The middle term is two table lookups; the ends are local Gauss over at most one grid interval
+each. A call therefore costs ≤ 16 Hubble evaluations whether the endpoints are adjacent or ten
+decades apart — nothing is re-quadratured over the range. If the node grid is the production
+sample grid, the common case (both endpoints on the grid) costs no quadrature at all.
+
+**The constraint.** The node table must be stored in more than double precision, or the
+decomposition gains nothing. Accumulating with `math.fsum` gives a correctly-rounded τ_n, but that
+is still half an ulp of τ_n ≈ 1.5e-12 Mpc; the difference of two such values reproduces the 9e-4
+rad floor exactly. Storing each node as a (hi, lo) pair and subtracting in double-double makes the
+error of the difference relative to Δτ rather than to τ (see §13.2 for the persistence
+constraint this places on the datastore schema). The residual limb comes out of `fsum` without a
+compensated-summation kernel:
+
+```python
+hi = math.fsum(terms)
+lo = math.fsum([*terms, -hi])   # exact residual, correctly rounded
+```
+
+Only the stored table is wide; both accessors return plain floats, so nothing downstream changes
+shape. This is not about making the quadrature more accurate — §7 measures Gauss order 4 as
+already at the floor — but about not discarding that accuracy in the accumulation.
+
+**Interface.** Two accessors on one table: `tau(z)` pointwise, for the existing consumers of
+§13.2(b); and an interval accessor, `tau.delta(z_a, z_b)` or equivalent, which the WKB phase calls
+and which must never be implemented as a subtraction of two absolute values. `cs_tau` takes the
+same pair.
+
+**Splining.** A spline cannot substitute for either. Its interpolation error e(z) is smooth but
+e′ does not vanish, so using one spline at both endpoints does not recover a short baseline; this
+is the same fact as §7's cubic row, seen from the difference side. Consumers that need a callable
+θ(z) do not need a global one — they anchor. Fixing z₀ per Levin region or per z_response makes
+the anchor-end partial a one-off, so each subsequent evaluation is a table difference plus one
+8-point partial at the moving end.
+
+**Cost, and what should be measured.** *(Estimate, not measured here.)* This moves cost from
+producer to consumer: roughly 8 Hubble evaluations per θ evaluation against a cubic-spline lookup,
+perhaps 50–100× per call, and worse on `QCD_Cosmology`, where a Hubble evaluation is itself a
+spline evaluation of T(z). Against the ~1e9 RHS evaluations per k that §4 measures for the ODE
+this should still be a large net win, but §7 measures *building* the table, not evaluating from it
+10⁷ times. A consumer-side throughput benchmark belongs early in the campaign; it is the one place
+in the §7 design that could disappoint.
+
+### 13.4 How the (div 2π, mod 2π) pair should be produced
+
+§7 says div/mod pairs "can still be emitted from the primitive if consumers need them" and stops
+there. They *are* needed — `AdaptiveLevin.levin_quadrature.eval_basis` prefers `theta_mod_2pi`
+when supplied, and `phase_spline._chunk_spline` builds ordinates from
+`(div_2pi − base)·2π + mod_2pi` — so how the pair is formed is part of the design.
+
+The house rules are settled and recorded in the module docstring of
+`LiouvilleGreen/range_reduce_mod_2pi.py`:
+
+- **Never pre-reduce before `sin`/`cos`.** `TWO_PI` is 2π rounded to a double; `fmod` faithfully
+  computes the remainder against the *wrong* modulus, with error growing in proportion to the
+  cycles removed. Measured on (x·Q) mod 2π for x = e²…e¹⁶, passing the unreduced argument to libm
+  was 2–3× more accurate than any pre-reduction scheme, at every magnitude.
+- **For a (cycle count, remainder) representation, use `simple_mod_2pi(big * small)`.** The
+  prime-factorisation scheme that previously avoided forming the rounded product was removed in
+  `b76570e`: measured against mpmath at 60 digits it was never more accurate than
+  `simple_mod_2pi(x*Q)`, worse in the majority of cases, and ~21× slower. The reason it does not
+  help is the same fact as §13.3 — the error is dominated by sensitivity to the *inputs*, which are
+  themselves doubles.
+
+The consequence for this design is the anchoring choice. Reducing k·Δτ where Δτ is an anchored
+difference makes the reduced product as small as the consumer allows: a global anchor reproduces
+the 9e-4 rad floor at k=3e8, while per-region anchoring gives a floor that scales with the
+region's own phase. This is the single-phase counterpart of the exact group cancellation §7 notes
+for θ_G ± θ_q ± θ_r, and it is not otherwise recorded.
+
+**Stale claim elsewhere.** `docs/adaptive-levin-benchmark/ADAPTIVE-LEVIN-REVIEW.md:139` still
+describes the prime-factor reducer as present and load-bearing. It was correct for the tree it was
+taken on; a dated note has been added there pointing at the measurements above. The rule itself is
+stated correctly in that campaign's `HANDOFF-PROVENANCE.md` §9.
+
+### 13.5 Summary of what this changes for planning
+
+1. The §10.2 diagnostic item is "move it off the RHS, keep the warning", not "delete it", and it
+   carries the `delta_logz` unit fix with it (§13.1).
+2. The τ primitive is a refactor of `BackgroundModel.functions.tau`, not new WKB-local machinery,
+   and it brings `cs_tau` and F with it (§13.2a).
+3. It should be sequenced **before** the WKB replacement, because the campaign's in-tree oracles
+   are built on the accessor being replaced and currently carry ~2 rad at k=1e5 (§13.2b).
+4. The node table must be stored in extended precision and exposed through an interval accessor;
+   a pointwise accessor at any accuracy cannot carry a short-baseline phase difference (§13.3).
+5. Consumer-side throughput of the primitive is unmeasured and should be benchmarked early
+   (§13.3).
+6. The persisted `tau_Mpc` column is a single double and cannot hold the low-order limb; the
+   storage decision (extra column, or rebuild on load) has to be taken before the table is
+   designed, and data regeneration is attached either way (§13.2).

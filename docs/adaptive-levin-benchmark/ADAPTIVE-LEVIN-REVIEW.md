@@ -143,6 +143,19 @@ at a time, so that `fmod` is never applied to a large number. The phase spline
 rebased to zero within each chunk. This is careful, unusual work, and it is the reason the code can be
 pointed at `MAX_X = 1e12` — the value used in the repository's own three-Bessel tests.
 
+> **Note added 2026-09-10 (Claude Opus 5).** The prime-factorisation scheme described in this
+> paragraph is no longer in the tree; it was removed in `b76570e`. Measured against mpmath at 60
+> digits for x = e²…e¹⁶ with O(1) multipliers, it was never more accurate than
+> `simple_mod_2pi(x*Q)`, worse in the majority of cases, and ~21× slower (it called
+> `sympy.factorint` on every evaluation), because the error is dominated by sensitivity to the
+> inputs rather than by how the multiplication is arranged. `WKB_product_mod_2pi` now routes
+> through `simple_mod_2pi`. The measurements and the standing rules — never pre-reduce before
+> `sin`/`cos`; reduce only when a (cycle count, bounded remainder) *representation* is genuinely
+> needed — are in the module docstring of `LiouvilleGreen/range_reduce_mod_2pi.py`, and also in
+> this campaign's `HANDOFF-PROVENANCE.md` §9. The rest of this paragraph stands: the
+> `theta_mod_2pi` option is still load-bearing, and the (div 2π, mod 2π) pair is still how large
+> arguments are carried.
+
 If you supply only `theta`, you get the naive path and you should not trust it beyond θ ~ 10⁶ or so.
 
 `theta_deriv` is supported but disabled at the one call site that defines it
@@ -194,6 +207,7 @@ integrals lives one directory over, and should be extracted with it.
 | `bessel_phase.py` | 289 | Liouville–Green phase/modulus for `J_ν`, `Y_ν` by the Bremer (2022, arXiv:2209.14561) modulus method: integrates `dQ/dlog x = (2/π)/(x m(x)) − Q` with `m = J² + Y²`, then fixes the additive phase offset by root-finding against `jv`. Returns `phase`, `mod`, `Q`, `bessel_j`, `bessel_y`, `min_x`, `max_x`. |
 | `phase_spline.py` | 686 | Chunked spline of `(div_2π, mod_2π)` with derivative support; keeps the residue near zero within each chunk to avoid catastrophic cancellation. |
 | `range_reduce_mod_2pi.py` | 79 | Prime-factor-assisted `big × small mod 2π`. Small and clever. |
+<!-- 2026-09-10: now 71 lines, and no longer prime-factor-assisted; see the note in §2.1. -->
 | `three_bessel_integrals.py` | 440 | `quad_JJJ` and `quad_YJJ`: **the Fabrikant integrals, numerically.** |
 
 ### 3.1 How the three-Bessel integral is done
@@ -264,6 +278,10 @@ behind the `emit_diagnostics` branch.
 **Python ≥ 3.12 is required** — `levin_quadrature.py:78` uses a nested-same-quote f-string (PEP 701).
 `LiouvilleGreen` additionally needs NumPy ≥ 2.0 (`np.pow`, `np.asin`) and `sympy` (for `factorint` in the
 range reduction). All are one-line fixes if a lower floor is wanted.
+
+> **Note added 2026-09-10 (Claude Opus 5).** The `sympy` dependency is gone: `factorint` was the
+> only production use, and it left the tree with the prime-factor reducer in `b76570e` (see §2.1).
+> `sympy` now appears only in `docs/spec-code-audit/scripts/`. The NumPy ≥ 2.0 requirement stands.
 
 **Estimated extraction effort: half a day** for `AdaptiveLevin` + helpers as a standalone package with
 its four unit tests; **two to three days** including the `LiouvilleGreen` phase-function layer, the
