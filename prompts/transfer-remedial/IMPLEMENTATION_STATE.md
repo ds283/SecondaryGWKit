@@ -2,8 +2,16 @@
 
 **Campaign:** [`README.md`](README.md) · **Design:** [`DRAFT-PLAN.md`](DRAFT-PLAN.md) · **Reconciliation:** [`RECONCILIATION.md`](RECONCILIATION.md)
 **Baseline commit:** `95cc326` (`transfer-remedial-plan`, clean)
-**Last updated:** 2026-09-09 — campaign planned and committed; no prompt executed.
+**Last updated:** 2026-09-10 — prompt 01 executed on `f17f2d4`.
 **Planned against:** `c4c4905`; re-pointed to `95cc326` before commit (`RECONCILIATION.md` §0).
+**Executing against:** `f17f2d4`, 16 commits after `95cc326` (the merge of `transfer-remedial-plan`
+into the working branch, `source-remediation` prompt 12's live verification, the Green-function WKB
+reviews and three independent fixes). **`LiouvilleGreen/` is untouched by all of them** —
+`git diff --stat 95cc326..f17f2d4 -- LiouvilleGreen/` is empty — so `RECONCILIATION.md` §1, §2 and
+§3.1 still apply verbatim, and prompt 01 re-confirmed nine of their measurements independently (log
+01 "Verification performed"). Note also that README §4.2's scheduling risk has **cleared**:
+`source-remediation` prompt 12 has run (`5b82149`), so Workstream B no longer risks changing the
+Bessel oracle underneath it.
 
 > **Maintenance rule.** Every prompt updates this file *in its own commit*, before committing.
 > Set your row's status, fill in the commit SHA, model and log link, update the mechanism-level
@@ -21,7 +29,7 @@ Legend: ⬜ not started · 🟡 in flight · ✅ complete · ⚠️ complete wit
 
 | # | Prompt | Covers | Model | Status | Commit | Log |
 |---|---|---|---|---|---|---|
-| 01 | [Reference harness](01-reference-harness.md) | plan §9 Stage 1 | Opus | ⬜ | | |
+| 01 | [Reference harness](01-reference-harness.md) | plan §9 Stage 1 | Opus 5 | ⚠️ | *(this commit; SHA not self-embedded)* | [`01`](logs/01-reference-harness.md) |
 | 02 | [SciPy domain boundaries](02-domain-boundary-tests.md) | plan §4.4; recon C1 | Sonnet | ⬜ | | |
 
 ### Workstream B — the two-region construction
@@ -46,7 +54,7 @@ Legend: ⬜ not started · 🟡 in flight · ✅ complete · ⚠️ complete wit
 | 08 | [Fixture revalidation](08-fixture-revalidation.md) | plan §8.3, §9 Stage 5, §10 | Opus | ⬜ | | |
 | 09 | [Benchmark and docs](09-benchmark-and-docs.md) | plan §9 Stage 5, §11 | Sonnet | ⬜ | | |
 
-**Progress:** 0 / 9 complete.
+**Progress:** 1 / 9 complete.
 
 ---
 
@@ -74,7 +82,7 @@ campaign; the plan section is the authority on each.
 | M15 | **MIGRATION** | Ray serialization of the new representation through `BesselPhaseProxy` (§8.1) | 06 | ⬜ |
 | M16 | **DEFECT, dead code** | `plot_besssel_phase.py` reads a nonexistent `x_min` key and calls a non-callable `phase`; it cannot run (recon C3) | 06 | ⬜ |
 | M17 | **REQUIREMENT** | Phase groups as \(Kt+C+R(t)\); combine leading coefficients before multiplying by \(t\) (§8.2) | 07 | ⬜ |
-| M18 | **REQUIREMENT** | Tests that can see the improvement: 50 % and \(10^{-3}\) thresholds cannot (§9 Stage 1, §10) | 01, 08 | ⬜ |
+| M18 | **REQUIREMENT** | Tests that can see the improvement: 50 % and \(10^{-3}\) thresholds cannot (§9 Stage 1, §10) | 01, 08 | 🟡 |
 | M19 | **REQUIREMENT** | Separate the Bessel-oracle gain from the consumer re-spline floor and the physical LG truncation (§8.3) | 08 | ⬜ |
 | M20 | **REQUIREMENT** | Re-run the capped benchmark tier at \(\kappa=1000\) and correct its note's diagnosis (§9 Stage 5, recon C1) | 09 | ⬜ |
 | M21 | **REQUIREMENT** | Update the follow-up document; remove the stale blanket \(x\times10^{-8}\) claim while retaining the historical measurements (§9 Stage 5) | 09 | ⬜ |
@@ -122,6 +130,27 @@ risks that the prompts inherit rather than create.
   `QuadSourceIntegral` will not inherit the campaign's improvement, and its accuracy after this
   campaign is unknown. **Next step:** prompt 09 hands it to `prompts/source-remediation` as an entry
   in that campaign's own §3. Nothing here closes it.
+
+- **[01-scipy-jv-yv-high-order-boundary]** *(opened by prompt 01, 2026-09-10)* — the silent Amos
+  failure boundary of `DRAFT-PLAN.md` §4.4 and `RECONCILIATION.md` §1 is **order dependent, and it
+  applies to `jv`/`yv`, not only to `hankel1e`**. That measurement covered `hankel1e` only, which
+  matters because `jv`/`yv` are what every reference and every existing test in this area is built
+  from — `bessel_reference.scipy_reference`, `test_bessel_phase.test_phase_derivative`
+  (`:134`), `test_high_order` (`:108-109`) and the plan's own §12.1 script. Measured with
+  \(a=\sqrt{\pi x/2}\,\lvert(J,Y)\rvert\), which is \(1+O(\nu^2/x^2)\) and so must be 1 to twelve
+  places over \(10^8\le x\le2\times10^{15}\): \(\max\lvert a-1\rvert\) is 4.4e-16 (\(\nu=2.5\)),
+  1.0e-14 (20.5), 6.4e-14 (50.5), 1.6e-13 (80.5), **1.8e-13 (85.5)** — and then **1.0 (88.5)**,
+  0.998 (89.5), 1.0 (90.5, 100.5, 1000.5). In \(x\), at \(\nu=100.5\), the transition is abrupt:
+  \(a\) = 0.9999999872 at \(x=7.108\times10^8\) and 0.0848 at \(7.188\times10^8\), reproducing
+  `RECONCILIATION.md` §1's 7.13e8 for `hankel1e` to three figures. The values are finite and
+  non-zero, so `isfinite` passes them. **Impact:** prompt 01 made
+  `bessel_reference.scipy_reference` refuse above `scipy_reference_max_x(nu)` — 7.13e8 for
+  \(\nu>85.5\), 2e15 otherwise — so nothing in this campaign can be scored against a wrong
+  reference. What is *not* settled is the order threshold, which is only bracketed between 85.5 and
+  88.5 and is set conservatively at the lower end; nor is any of it asserted as a test.
+  **Next step:** prompt 02 pins both boundaries for `jv`/`yv` as well as for `hankel1e`, and
+  narrows the order threshold if it is cheap to do so. Nothing outside `LiouvilleGreen/tests/` needs
+  to change: no consumer in the tree evaluates `jv`/`yv` above 1e7 at high order.
 
 > Add an entry here whenever a prompt finishes with something unresolved: a verification step that
 > could not be run, an assumption that could not be confirmed, a deviation a later prompt has to
