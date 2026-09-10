@@ -513,17 +513,29 @@ def run_pipeline(
         f"   @@ largest source k = {largest_source_k.k_inv_Mpc:.5g}/Mpc, latest tau = {largest_tau:.5g} (for z={zend:.5g}), largest x={largest_x:.5g}, largest x +7.5% clearance={largest_x_with_clearance:.5g}"
     )
 
-    # tight tolerances are needed to compute the Liouville-Green phase function to good accuracy up to large values
-    # of the Bessel function argument x. We compute the phase in the form x Q where Q -> 1 at large x, so getting the phase
-    # accurately means keeping Q very accurately close to 1 as the integration proceeds.
-    # Internally, the bessel_phase() function uses the Dormand-Prince 8,5(3) stepper to compute a high accuracy solution.
+    # we ask for an absolute phase accuracy of 1e-12 rad and a relative amplitude accuracy of
+    # 1e-12, an order tighter than the 1e-11 the transfer-remedial campaign accepts at these
+    # orders. The declared phase error is then 5.0e-13 rad for nu = 5/2 (8.9e-16 for nu = 1/2,
+    # where the representation is exact) and the declared relative amplitude error 3.0e-13, the
+    # latter limited by the scaled-Hankel sampling floor rather than by the request -- so asking
+    # for another order buys almost nothing and widens the sampled region.
+    # The construction is two-region -- a sampled, branch-tracked near region below
+    # x_star ~ 10-60 nu, and a closed-form asymptotic tail above it -- so its cost depends on the
+    # order alone and *not* on largest_x_with_clearance: nothing evaluates a Bessel routine in the
+    # tail, which is also why arguments above x ~ 2.5e15 are now reachable at all.
     Bessel_0pt5 = bessel_phase(
-        0.5 + b_value, largest_x_with_clearance, atol=1e-25, rtol=5e-14
+        0.5 + b_value,
+        largest_x_with_clearance,
+        phase_atol=1e-12,
+        amplitude_rtol=1e-12,
     )
     Bessel_0pt5_proxy = BesselPhaseProxy(Bessel_0pt5)
 
     Bessel_2pt5 = bessel_phase(
-        2.5 + b_value, largest_x_with_clearance, atol=1e-25, rtol=5e-14
+        2.5 + b_value,
+        largest_x_with_clearance,
+        phase_atol=1e-12,
+        amplitude_rtol=1e-12,
     )
     Bessel_2pt5_proxy = BesselPhaseProxy(Bessel_2pt5)
 

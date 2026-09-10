@@ -52,7 +52,6 @@ def bessel_function_plot(phase_data, b, timestamp):
         bessel_y = data["bessel_y"]
 
         phase = data["phase"]
-        Q = data["Q"]
 
         j_grid = [_safe_fabs(jv(nu + b, x)) for x in x_grid]
         j_approx_grid = [_safe_fabs(bessel_j(x)) for x in x_grid]
@@ -69,7 +68,13 @@ def bessel_function_plot(phase_data, b, timestamp):
         ]
 
         theta_grid = [_safe_fabs(phase.raw_theta(x)) for x in x_grid]
-        Q_grid = [Q(x) for x in x_grid]
+
+        # the phase residual r_nu = theta - x - c_nu, which replaces the old "Q" panel. Q was
+        # theta/x, the pre-offset state of a phase ODE that no longer exists; r_nu is the smooth
+        # quantity the two-region construction actually represents, and it is what has to be
+        # inspected if the phase looks wrong. See LiouvilleGreen/bessel_phase.py's module
+        # docstring, "What was removed, and why".
+        residual_grid = [phase.residual(x) for x in x_grid]
 
         fig = plt.figure()
         ax = plt.gca()
@@ -224,11 +229,11 @@ def bessel_function_plot(phase_data, b, timestamp):
         fig = plt.figure()
         ax = plt.gca()
 
-        ax.plot(x_grid, Q_grid, linestyle="solid", color="r", label="$Q$")
+        ax.plot(x_grid, residual_grid, linestyle="solid", color="r", label="$r_{\\nu}$")
 
         set_loglinear_axes(ax, inverted=False)
 
-        fig_path = base_path / nu_type / "Q.pdf"
+        fig_path = base_path / nu_type / "Bessel_residual.pdf"
         fig_path.parents[0].mkdir(exist_ok=True, parents=True)
         fig.savefig(fig_path)
         fig.savefig(fig_path.with_suffix(".png"))

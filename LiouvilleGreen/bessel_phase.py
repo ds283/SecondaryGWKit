@@ -59,6 +59,16 @@ the switch point (``docs/gk-wkb-numerical-review-2026-09.md`` §3, defect 3) -- 
 Levin consumer sees directly. Interpolating ``r_nu`` instead removes the growth: ``r_nu`` decays
 like ``1/x``, and above ``x_star`` it is not interpolated at all.
 
+*The ``Q = theta/x`` diagnostic.* ``Q`` was the *pre-offset* ODE state, and there is no ODE state to
+report. Keeping the key mapped to ``theta/x`` -- numerically the same thing once ``phi`` is zero --
+would leave a member whose documented meaning ("the quantity the solver advances") no longer
+describes anything, so the key is **removed** and reading it raises a ``KeyError`` naming its
+replacement rather than returning a value that means something else
+(``DRAFT-PLAN.md`` §8.1: "do not silently replace ``Q`` with a different diagnostic quantity under
+the same undocumented meaning"). The smooth quantity the construction now actually represents is the
+residual, and the diagnostic accessors for it are :meth:`BesselPhaseFunction.residual` and
+:meth:`BesselPhaseFunction.log_amplitude`.
+
 *The cycle-count-plus-remainder ``(div_2pi, mod_2pi)`` representation.* The reason is **not** that the
 residual is small. On the continuously tracked branch used here ``r_nu`` reaches 570.82 rad at the
 bottom of the domain for ``nu = 1000.5``, some 90 cycles (``RECONCILIATION.md`` C2, correcting
@@ -106,6 +116,7 @@ from .bessel_tail import (
     construction_min_x,
     tail_amplitude,
     tail_crossover,
+    tail_first_omitted_term,
     tail_residual,
     tail_residual_deriv,
     tail_residual_log_deriv,
@@ -185,6 +196,27 @@ SAMPLED_AMPLITUDE_FLOOR = 3.0e-13
 #: 1.11e-16 -- half an ulp of unity. Four ulps covers that at every order and is negligible against
 #: every other term wherever a near region exists.
 EVALUATION_FLOOR = 4.0 * float(np.finfo(float).eps)
+
+#: Margin applied to the tail series remainder **when it is declared as an error**, as opposed to
+#: when it sizes the crossover.
+#:
+#: :func:`LiouvilleGreen.bessel_tail.tail_first_omitted_term` is an *estimator* of an asymptotic
+#: remainder, not a bound on it: its own docstring records the true ``|delta r|`` as 0.98--1.02
+#: times it, measured against 60-digit ``mpmath``. That is fine for choosing ``x_star``, where
+#: ``bessel_tail.DEFAULT_CROSSOVER_SAFETY`` already buys a factor of four, but it is *not* fine for
+#: :attr:`BesselPhaseFunction.theta_abserr` and :meth:`BesselPhaseFunction.theta_abserr_at`, whose
+#: entire purpose is that the number cannot be optimistic
+#: (``AdaptiveLevin/levin_quadrature.py:2360``). Declaring the estimator 1:1 was measured over 1500
+#: points immediately above ``x_star`` at ``nu`` = 3/2, 7/4, 5/2, 20.5 and 100.5 to leave a margin
+#: of 0.006 % -- the worst measured/estimator ratio was 0.99994, i.e. always below 1 but with
+#: essentially nothing to spare, and the sign of that margin is not something a term-count or an
+#: order change is obliged to preserve (log 06).
+#:
+#: Two costs it against: the declared low-order phase error becomes 5.0e-12 rather than 2.5e-12,
+#: still a factor of two inside the 1e-11 the campaign accepts and inside the budget the caller
+#: requested; and nothing else in the module changes, because the crossover is placed by
+#: ``bessel_tail`` and this factor is applied nowhere near it.
+DECLARED_SERIES_SAFETY = 2.0
 
 #: Smallest initial panel width, in e-folds, that a ``sample_points`` request may ask for.
 MIN_INITIAL_PANEL_WIDTH = 1.0e-3
@@ -539,7 +571,9 @@ class BesselPhaseFunction:
         #: ``c_nu`` reduced mod ``2 pi``; what the split evaluation actually uses.
         self.c_nu_reduced = c_nu_reduced(self.nu)
 
-        #: Declared absolute phase error in radians, for ``AdaptiveLevin``'s ``theta_abserr``.
+        #: Declared absolute phase error in radians, valid over the whole domain. This is the
+        #: scalar form of ``AdaptiveLevin``'s ``theta_abserr``; :meth:`theta_abserr_at` is the
+        #: ``x``-dependent form, and is the one to hand to ``adaptive_levin_sincos``.
         self.theta_abserr = float(theta_abserr)
 
         self._corrections = corrections
@@ -567,6 +601,19 @@ class BesselPhaseFunction:
         """``dr_nu/d log x``. Used by the independent derivative check ``theta' = 1 + r_u/x``."""
         raw_x, log_x = self._resolve(x, x_is_log)
         return self._corrections.residual_log_deriv(raw_x, log_x)
+
+    def log_amplitude(self, x, x_is_log: bool = False):
+        """
+        ``ell(x) = log a_nu(x)``, the quantity the near region actually interpolates.
+
+        Exposed for diagnostics, as the amplitude counterpart of :meth:`residual`: together the two
+        are the smooth pair the construction represents, and they are what replaced the old ``Q``
+        diagnostic (module docstring, "What was removed, and why"). ``theta' = exp(-2 ell)`` exactly,
+        so this is also the quantity a reader wanting to see where the derivative comes from should
+        plot. The envelope itself is ``mod``: ``A_nu = sqrt(2/(pi x)) exp(ell)``.
+        """
+        raw_x, log_x = self._resolve(x, x_is_log)
+        return self._corrections.log_amplitude(raw_x, log_x)
 
     def sin_cos_theta(self, x, x_is_log: bool = False):
         """
@@ -676,6 +723,73 @@ class BesselPhaseFunction:
             return 1.0 + float(r_u) / raw_x
         return 1.0 + r_u / np.asarray(raw_x, dtype=float)
 
+    # -- the declared error --------------------------------------------------------------------
+
+    def theta_abserr_at(self, x, x_is_log: bool = False):
+        """
+        The declared absolute phase error **at** ``x``, in radians: the callable form of
+        ``theta_abserr`` that ``AdaptiveLevin`` accepts (``levin_quadrature.py:967-982`` takes a
+        scalar or a callable of ``x``).
+
+        Pass *this* to ``adaptive_levin_sincos`` as ``theta["theta_abserr"]`` in preference to the
+        scalar :attr:`theta_abserr`. The two regions have genuinely different errors and the tail's
+        is far smaller -- at ``nu = 5/2`` the near region declares 2.5e-12 while the tail at
+        ``x = 1e7`` declares 8.9e-16, a factor of 2800 -- and Levin applies the declared value as an
+        endpoint term on *every* region's round-off floor, so a single domain-wide scalar would
+        inflate the reported error of every far-tail region by that factor. The scalar remains the
+        honest domain-wide bound and is what the returned dict's ``theta_abserr`` key carries.
+
+        The model, term by term:
+
+        * **below** ``x_star``: the constant :attr:`theta_abserr`. Near-region interpolation error
+          is not resolved per panel (``NearRegionData`` reports one number for the whole region),
+          and it dominates every other term there, so there is nothing to gain from pretending to
+          an ``x`` dependence the measurement does not have.
+        * **at or above** ``x_star``: ``2 |c_n|/x^(2n+1) + 4 eps + eps |r_nu(x)|`` -- the first
+          omitted series term with the :data:`DECLARED_SERIES_SAFETY` margin, which is the tail's
+          only representation error; the angle-addition floor of :data:`EVALUATION_FLOOR`; and the
+          double-precision resolution of the residual that is added to ``c_nu`` inside
+          :meth:`sin_cos_theta`. These are **summed**, not maxed: they are independent
+          contributions, and maxing them was measured to under-report by 3 % at
+          ``nu = 20.5, x = 2050``, where the series remainder and the arithmetic floor are the same
+          size (log 06). The result is capped at :attr:`theta_abserr`, which is the maximum of this
+          model over the domain, so the cap is inert rather than binding.
+
+        Verified not to under-report the phase-pair error at every cached 40-digit corner of every
+        order the campaign covers, and on dense low-order sweeps of both regions; the measured
+        margin is 1.2x to 2.3e4x (log 06). An estimator that under-reports would be worse than
+        declaring nothing at all, which is why the inequality is asserted in
+        ``test_bessel_compatibility.py`` rather than assumed.
+        """
+        raw_x, log_x = self._resolve(x, x_is_log)
+        corrections = self._corrections
+        nu = corrections.nu
+        terms = corrections.tail_terms
+        eps = float(np.finfo(float).eps)
+
+        if _is_scalar(raw_x):
+            if raw_x < corrections.x_star and corrections.near is not None:
+                return self.theta_abserr
+            r = float(corrections.residual(raw_x, log_x))
+            series = float(tail_first_omitted_term(nu, raw_x, n_terms=terms))
+            return min(
+                self.theta_abserr,
+                DECLARED_SERIES_SAFETY * series + EVALUATION_FLOOR + eps * abs(r),
+            )
+
+        raw = np.asarray(raw_x, dtype=float)
+        r = np.asarray(corrections.residual(raw_x, log_x), dtype=float)
+        series = np.asarray(
+            tail_first_omitted_term(nu, raw, n_terms=terms), dtype=float
+        )
+        tail = np.minimum(
+            self.theta_abserr,
+            DECLARED_SERIES_SAFETY * series + EVALUATION_FLOOR + eps * np.abs(r),
+        )
+        if corrections.near is None:
+            return tail
+        return np.where(raw < corrections.x_star, self.theta_abserr, tail)
+
     # -- Bessel values -------------------------------------------------------------------------
 
     def bessel_j(self, x, is_log=False):
@@ -689,27 +803,39 @@ class BesselPhaseFunction:
         return -self._amplitude(x, is_log=is_log) * cos_theta
 
 
-class _DeprecatedQ(XSplineWrapper):
+#: Keys the returned mapping used to carry and deliberately no longer does, with the message a
+#: reader of one gets. Each entry has to say what to use instead: the failure mode this exists to
+#: prevent is a consumer silently receiving a *different* quantity under an old name, and the
+#: second-worst outcome is a bare ``KeyError: 'Q'`` that sends a reader to ``git log``.
+_REMOVED_KEYS = {
+    "Q": (
+        "bessel_phase: the 'Q' member has been removed. It was the *pre-offset* state of the "
+        "phase ODE dQ/dlog x = (2/pi)/(x m) - Q, and there is no ODE and no offset any more: the "
+        "phase is built as theta = x + c_nu + r_nu from a sampled near region and a closed-form "
+        "tail. theta/x is still computable as phase.raw_theta(x)/x, but it is no longer the "
+        "quantity 'Q' named, so it is not served under that key. For the smooth quantity the "
+        "construction actually represents, plot phase.residual(x) (the phase residual r_nu) and "
+        "phase.log_amplitude(x) (log a_nu); for the phase itself use phase.raw_theta(x), "
+        "phase.theta_mod_2pi(x) or phase.sin_cos_theta(x)."
+    ),
+}
+
+
+class _BesselPhaseData(dict):
     """
-    Compatibility stand-in for the old ``Q`` diagnostic, which was the pre-offset ODE state.
+    The mapping :func:`bessel_phase` returns: a ``dict``, plus a message for a removed key.
 
-    ``Q`` is ``theta/x``. In the old construction the returned phase differed from ``x Q`` by the
-    spurious offset ``phi`` and by cycle rebasing; with ``phi`` identically zero and no rebasing,
-    ``theta/x`` here *is* the quantity the diagnostic plotted, so the meaning is preserved rather
-    than silently replaced. It inherits ``raw_theta``'s ``eps * theta`` precision limit, which is
-    harmless for a plot and wrong for anything else.
-
-    ``ComputeTargets/QuadSourceIntegral_debug.py:55,72`` is the only live consumer; prompt 06 owns
-    its migration.
+    Subclassing ``dict`` rather than returning one keeps every consumer working unchanged --
+    ``BesselPhaseProxy`` puts the whole thing through ``ray.put``, and this pickles exactly as a
+    ``dict`` does because the class is module level and holds no state of its own. The only added
+    behaviour is :meth:`__missing__`, so that a consumer of a member this construction dropped is
+    told what to use instead at the point of the lookup, rather than getting ``KeyError: 'Q'``.
     """
 
-    def __init__(self, phase: BesselPhaseFunction, min_x: float, max_x: float):
-        super().__init__(None, min_x, max_x)
-        self._phase = phase
-
-    def __call__(self, x, is_log=False):
-        raw_x, _ = self._resolve(x, is_log)
-        return self._phase.raw_theta(raw_x) / raw_x
+    def __missing__(self, key):
+        if key in _REMOVED_KEYS:
+            raise KeyError(_REMOVED_KEYS[key])
+        raise KeyError(key)
 
 
 def _initial_panel_width(
@@ -785,6 +911,21 @@ def bessel_phase(
     be inventing a correspondence. Supplying either emits a ``DeprecationWarning`` naming the
     replacements, and the new defaults (or the new arguments, if supplied) are used. If old and new
     are supplied together the new ones win and the warning says so.
+
+    **The returned mapping.** A ``dict`` (a :class:`_BesselPhaseData`, which differs only in the
+    message it raises for a removed key) carrying ``phase``, ``mod``, ``phi``, ``bessel_j``,
+    ``bessel_y``, ``min_x``, ``max_x`` under their previous meanings, and ``nu``, ``x_star``,
+    ``theta_abserr``, ``amplitude_relerr``, ``theta_deriv_relerr``, ``accuracy``, ``accuracy_met``,
+    ``crossover`` and ``near_region`` as of the two-region construction. ``Q`` is **gone**; see
+    :data:`_REMOVED_KEYS`. A consumer assembling an ``AdaptiveLevin`` phase dictionary wants
+
+        {"theta": phase.raw_theta, "theta_mod_2pi": phase.theta_mod_2pi,
+         "theta_deriv": phase.theta_deriv, "theta_abserr": phase.theta_abserr_at}
+
+    -- all four, in that shape. ``theta`` is required even though it is never *evaluated* when the
+    other two accessors are present (``levin_quadrature.py:948-952`` and ``:1038``), and
+    ``theta_deriv`` carries double duty there: it conditions the basis *and* decides subdivision,
+    since ``phase_span`` is computed from it (``:1090``).
     """
     # ---- deprecated tolerance arguments ------------------------------------------------------
     deprecated_supplied = [
@@ -960,9 +1101,15 @@ def bessel_phase(
         else near.achieved_deriv_relerr + 2.0 * SAMPLED_AMPLITUDE_FLOOR
     )
 
-    tail_phase = crossover.first_omitted_at_x_star
-    tail_amplitude_err = crossover.amplitude_error_at_x_star
-    tail_deriv = 2.0 * crossover.amplitude_error_at_x_star
+    # The series remainder carries DECLARED_SERIES_SAFETY here and nowhere else: the estimator is
+    # 0.98-1.02 times the truth, which is a margin of 0.006% in the direction that matters, and a
+    # declared error is exactly the place where that is not good enough. The raw estimator is still
+    # reported, under its own name, in the accuracy dict below. Both terms are largest at x_star
+    # (each decays monotonically in x), so these are the maxima over the tail and hence the
+    # domain-wide bounds theta_abserr_at() is capped by.
+    tail_phase = DECLARED_SERIES_SAFETY * crossover.first_omitted_at_x_star
+    tail_amplitude_err = DECLARED_SERIES_SAFETY * crossover.amplitude_error_at_x_star
+    tail_deriv = 2.0 * tail_amplitude_err
 
     theta_abserr = max(
         near_phase,
@@ -999,8 +1146,11 @@ def bessel_phase(
         ),
         "sampled_phase_floor": 0.0 if near is None else SAMPLED_PHASE_FLOOR,
         "sampled_amplitude_floor": 0.0 if near is None else SAMPLED_AMPLITUDE_FLOOR,
-        "tail_first_omitted_at_x_star": tail_phase,
-        "tail_amplitude_at_x_star": tail_amplitude_err,
+        # the *raw* estimator, without DECLARED_SERIES_SAFETY, so that a reader can see both the
+        # measurement and the margin applied to it
+        "tail_first_omitted_at_x_star": crossover.first_omitted_at_x_star,
+        "tail_amplitude_at_x_star": crossover.amplitude_error_at_x_star,
+        "declared_series_safety": DECLARED_SERIES_SAFETY,
         "crossover_phase_agreement": crossover_phase_agreement,
         "crossover_amplitude_agreement": crossover_amplitude_agreement,
         "residual_resolution": residual_resolution,
@@ -1019,27 +1169,27 @@ def bessel_phase(
         amplitude=mod,
         theta_abserr=theta_abserr,
     )
-    Q = _DeprecatedQ(phase, min_x=min_x, max_x=max_x)
 
-    return {
-        "phase": phase,
-        "mod": mod,
-        "Q": Q,
-        # Identically zero, and reported rather than dropped: DRAFT-PLAN.md §4.3 shows the old
-        # root solve's offset was a pure artefact of its own loose tolerances, at a match point
-        # where the phase was already exact. There is no root solve here.
-        "phi": 0.0,
-        "bessel_j": phase.bessel_j,
-        "bessel_y": phase.bessel_y,
-        "min_x": min_x,
-        "max_x": max_x,
-        "nu": nu,
-        "x_star": x_star,
-        "theta_abserr": theta_abserr,
-        "amplitude_relerr": amplitude_relerr,
-        "theta_deriv_relerr": theta_deriv_relerr,
-        "accuracy": accuracy,
-        "accuracy_met": accuracy["accuracy_met"],
-        "crossover": crossover,
-        "near_region": near,
-    }
+    return _BesselPhaseData(
+        {
+            "phase": phase,
+            "mod": mod,
+            # Identically zero, and reported rather than dropped: DRAFT-PLAN.md §4.3 shows the old
+            # root solve's offset was a pure artefact of its own loose tolerances, at a match point
+            # where the phase was already exact. There is no root solve here.
+            "phi": 0.0,
+            "bessel_j": phase.bessel_j,
+            "bessel_y": phase.bessel_y,
+            "min_x": min_x,
+            "max_x": max_x,
+            "nu": nu,
+            "x_star": x_star,
+            "theta_abserr": theta_abserr,
+            "amplitude_relerr": amplitude_relerr,
+            "theta_deriv_relerr": theta_deriv_relerr,
+            "accuracy": accuracy,
+            "accuracy_met": accuracy["accuracy_met"],
+            "crossover": crossover,
+            "near_region": near,
+        }
+    )

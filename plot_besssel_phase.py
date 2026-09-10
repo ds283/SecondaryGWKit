@@ -12,14 +12,17 @@ sns.set_theme()
 
 def plot_bessel_phase(nu: float):
     data = bessel_phase(nu, 100.0)
-    min_x = max(0.1, data["x_min"])
+
+    # "min_x", not "x_min": bessel_phase() has never returned a key by the latter name, and this
+    # script read it -- so it raised KeyError on the first line of its body and had been dead for
+    # at least two interface changes before the transfer-remedial campaign repaired it.
+    min_x = max(0.1, data["min_x"])
     grid_J = np.linspace(min_x, 100.0, 250)
     grid_Y = np.linspace(min_x, 100.0, 250)
 
     phase = data["phase"]
     bessel_j = data["bessel_j"]
     bessel_y = data["bessel_y"]
-    Q = data["Q"]
 
     our_j_points = [bessel_j(x) for x in grid_J]
     their_j_points = [jv(nu, x) for x in grid_J]
@@ -27,8 +30,15 @@ def plot_bessel_phase(nu: float):
     our_y_points = [bessel_y(x) for x in grid_Y]
     their_y_points = [yv(nu, x) for x in grid_Y]
 
-    phase_points = [phase(x) for x in grid_J]
-    Q_points = [Q(x) for x in grid_J]
+    # the phase object is not callable, and never has been -- neither the phase_spline this script
+    # was written against nor the two-region BesselPhaseFunction that replaced it defines
+    # __call__. The accessor is raw_theta().
+    phase_points = [phase.raw_theta(x) for x in grid_J]
+
+    # the residual r_nu = theta - x - c_nu, in place of the old "Q" panel. Q was theta/x, the
+    # pre-offset state of a phase ODE that no longer exists; the residual is the smooth quantity
+    # the two-region construction represents.
+    residual_points = [phase.residual(x) for x in grid_J]
 
     # BESSEL PLOTS
 
@@ -91,17 +101,17 @@ def plot_bessel_phase(nu: float):
 
     plt.close()
 
-    # Q PLOT
+    # RESIDUAL PLOT
 
     fig = plt.figure()
     ax = plt.gca()
 
     ax.plot(
         grid_J,
-        Q_points,
+        residual_points,
         linestyle="solid",
         color="b",
-        label="$Q$",
+        label="Residual $r_{\\nu}(x)$",
     )
 
     ax.set_xscale("linear")
@@ -109,7 +119,7 @@ def plot_bessel_phase(nu: float):
     ax.legend(loc="best")
     ax.grid(True)
 
-    fig_path = Path(f"Q_plot_nu={nu:.3g}.pdf").resolve()
+    fig_path = Path(f"residual_plot_nu={nu:.3g}.pdf").resolve()
     fig_path.parents[0].mkdir(exist_ok=True, parents=True)
     fig.savefig(fig_path)
 

@@ -2,16 +2,18 @@
 
 **Campaign:** [`README.md`](README.md) · **Design:** [`DRAFT-PLAN.md`](DRAFT-PLAN.md) · **Reconciliation:** [`RECONCILIATION.md`](RECONCILIATION.md)
 **Baseline commit:** `95cc326` (`transfer-remedial-plan`, clean)
-**Last updated:** 2026-09-10 — prompt 05 executed on `bc31493` (this commit; SHA not self-embedded).
+**Last updated:** 2026-09-10 — prompt 06 executed on `f6cbb29` (this commit; SHA not self-embedded).
 **Planned against:** `c4c4905`; re-pointed to `95cc326` before commit (`RECONCILIATION.md` §0).
-**Executing against:** `bc31493` (prompt 04's commit), 21 commits after `95cc326` (the merge of
+**Executing against:** `f6cbb29` (prompt 05's commit), 22 commits after `95cc326` (the merge of
 `transfer-remedial-plan` into the working branch, `source-remediation` prompt 12's live
 verification, the Green-function WKB reviews, three independent fixes, and prompt 01's new
 reference harness, plus prompts 01, 02, 03 and 04). None of those touched a previously existing
 `LiouvilleGreen/` file — prompts 01–04 only added new ones — so `RECONCILIATION.md` §1, §2 and §3.1
 applied verbatim to every prompt up to and including 04, and prompt 01 re-confirmed nine of their
-measurements independently (log 01 "Verification performed"). **Prompt 05 is the first commit to
-change a previously existing `LiouvilleGreen/` file**: it rewrites `bessel_phase.py`, so
+measurements independently (log 01 "Verification performed"). **Prompt 05 was the first commit to
+change a previously existing `LiouvilleGreen/` file** and prompt 06 is the first to reach outside
+`LiouvilleGreen/` — it migrates `main.py`'s Bessel construction stage and the live
+`QuadSourceIntegral_debug` diagnostic. Prompt 05 rewrote `bessel_phase.py`, so
 `RECONCILIATION.md` §1's measurements *of the old construction* (`phi`, the ODE cost, the chunk
 counts) are now historical rather than current. Its measurements of `hankel1e`, `jv`/`yv`, the tail
 series and the split evaluation are properties of SciPy and of the mathematics, and stand unchanged.
@@ -49,7 +51,7 @@ Legend: ⬜ not started · 🟡 in flight · ✅ complete · ⚠️ complete wit
 
 | # | Prompt | Covers | Model | Status | Commit | Log |
 |---|---|---|---|---|---|---|
-| 06 | [Evaluation and compatibility](06-evaluation-and-compatibility.md) | plan §8.1, §9 Stage 3 | Opus | ⬜ | | |
+| 06 | [Evaluation and compatibility](06-evaluation-and-compatibility.md) | plan §8.1, §9 Stage 3 | Opus 5 | ⚠️ | *(this commit; SHA not self-embedded)* | [`06`](logs/06-evaluation-and-compatibility.md) |
 | 07 | [Bessel phase groups](07-bessel-phase-groups.md) | plan §8.2, §9 Stage 4 | Opus | ⬜ | | |
 
 ### Workstream D — revalidation and close-out
@@ -59,7 +61,7 @@ Legend: ⬜ not started · 🟡 in flight · ✅ complete · ⚠️ complete wit
 | 08 | [Fixture revalidation](08-fixture-revalidation.md) | plan §8.3, §9 Stage 5, §10 | Opus | ⬜ | | |
 | 09 | [Benchmark and docs](09-benchmark-and-docs.md) | plan §9 Stage 5, §11 | Sonnet | ⬜ | | |
 
-**Progress:** 5 / 9 complete.
+**Progress:** 6 / 9 complete.
 
 ---
 
@@ -71,7 +73,7 @@ campaign; the plan section is the authority on each.
 | ID | Severity | Description | Prompt | Status |
 |---|---|---|---|---|
 | M1 | **DEFECT, accuracy** | \(Q=\theta/x\) ODE: \(\delta\theta=x\,\delta Q\), so a relative bound on \(Q\) gives no absolute phase bound (§4.1). The phase is a quadrature, not an ODE (§5.1) | 05 | ✅ |
-| M2 | **DEFECT, spurious** | The `phi` root solve returns a non-zero offset at a match point where the phase is already exact; measured \(-4.836537\times10^{-8}\) at \(\nu=5/2\), and it **is** the whole tight-tolerance error (§4.3) | 05, 06 | 🟡 |
+| M2 | **DEFECT, spurious** | The `phi` root solve returns a non-zero offset at a match point where the phase is already exact; measured \(-4.836537\times10^{-8}\) at \(\nu=5/2\), and it **is** the whole tight-tolerance error (§4.3) | 05, 06 | ✅ |
 | M3 | **DEFECT, accuracy** | Full-phase interpolation errs by \(h^4x/384\) — 6.7e-10 at \(x=10^3\), 6.7e-6 at \(10^7\) (§4.2); chunking has no measurable effect on it (§4.6) | 05 | ✅ |
 | M4 | **DEFECT, silent failure** | `hankel1e` returns exactly `-0j` above 7.13e8 (\(\nu\gtrsim100\)) / 2.247e15 (all \(\nu\)); `isfinite` passes and `log(abs(·))` is `-inf` (§4.4) | 02, 03, 04 | ✅ |
 | M5 | **DEFECT, hard limit** | `jv`/`yv` become O(1)-relatively noisy above \(x\approx2.5\times10^{15}\), the ODE right-hand side stops being \(1+O(\nu^2/x^2)\), and DOP853 at `rtol=5e-14` stalls — construction never returns (recon C1; **not in the plan**) | 02, 03, 05, 09 | 🟡 |
@@ -81,11 +83,11 @@ campaign; the plan section is the authority on each.
 | M9 | **REQUIREMENT** | Two-sided \(a_\nu\) plausibility band, measured \([1.0000,\,3.546]\) over the near region (§4.4, recon §3.1) | 04 | ✅ |
 | M10 | **REQUIREMENT** | \(\theta'=e^{-2\ell}\) as a value, plus the mandatory independent check against \(1+r_u/x\) and the reference, since the Wronskian becomes a tautology (§4.7, §7.3) | 04, 05 | ✅ |
 | M11 | **REQUIREMENT** | Split sin/cos evaluation; naive `x+d` loses 4.7e-2 at \(x=10^{15}\) (§6.3, §7.4) | 05 | ✅ |
-| M12 | **REQUIREMENT** | Bounded-angle accessor via `atan2`, and `raw_theta` documented as \(\varepsilon x\)-limited (§7.4) | 05, 06 | 🟡 |
+| M12 | **REQUIREMENT** | Bounded-angle accessor via `atan2`, and `raw_theta` documented as \(\varepsilon x\)-limited (§7.4) | 05, 06 | ✅ |
 | M13 | **REQUIREMENT** | Declare `theta_abserr`; nothing supplies it today although `AdaptiveLevin` accepts it for exactly this case (§8.1) | 05, 06, 07 | 🟡 |
-| M14 | **MIGRATION** | `Q` (pre-offset ODE state) and `phi` have no referent; `atol`/`rtol` describe ODE tolerances that no longer exist (§8.1) | 06 | ⬜ |
-| M15 | **MIGRATION** | Ray serialization of the new representation through `BesselPhaseProxy` (§8.1) | 06 | ⬜ |
-| M16 | **DEFECT, dead code** | `plot_besssel_phase.py` reads a nonexistent `x_min` key and calls a non-callable `phase`; it cannot run (recon C3) | 06 | ⬜ |
+| M14 | **MIGRATION** | `Q` (pre-offset ODE state) and `phi` have no referent; `atol`/`rtol` describe ODE tolerances that no longer exist (§8.1) | 06 | ✅ |
+| M15 | **MIGRATION** | Ray serialization of the new representation through `BesselPhaseProxy` (§8.1) | 06 | ✅ |
+| M16 | **DEFECT, dead code** | `plot_besssel_phase.py` reads a nonexistent `x_min` key and calls a non-callable `phase`; it cannot run (recon C3) | 06 | ✅ |
 | M17 | **REQUIREMENT** | Phase groups as \(Kt+C+R(t)\); combine leading coefficients before multiplying by \(t\) (§8.2) | 07 | ⬜ |
 | M18 | **REQUIREMENT** | Tests that can see the improvement: 50 % and \(10^{-3}\) thresholds cannot (§9 Stage 1, §10) | 01, 08 | 🟡 |
 | M19 | **REQUIREMENT** | Separate the Bessel-oracle gain from the consumer re-spline floor and the physical LG truncation (§8.3) | 08 | ⬜ |
@@ -237,7 +239,49 @@ risks that the prompts inherit rather than create.
   (README §4.2), so nothing was changed. **Next step:** hand to `prompts/source-remediation`
   alongside `[00-qsi-three-bessel-levin-excluded]` when prompt 09 makes that hand-off; that
   campaign can either correct the docstring or replace the numeric check with a direct comparison
-  against `phase_data["nu"]`.
+  against `phase_data["nu"]`. **Extended (2026-09-10, prompt 06):** the same docstring is now wrong
+  twice over — it lists `Q` among the members the dict "carries", and prompt 06 removed `Q`. Still
+  no functional impact (`test_quadsource_integral` passes, 97 `ComputeTargets` tests green), and
+  still one docstring for that campaign to correct.
+
+- **[06-levin-theta-docstring-stale]** *(opened by prompt 06, 2026-09-10)* —
+  `AdaptiveLevin/levin_quadrature.py:2750` documents the `theta` key as "always used to decide
+  whether a subinterval is oscillatory enough for the Levin rule (via the total phase change across
+  it)". It is not: `phase_span` comes from `theta_prime_Cheb` (`:1090`) and `need_theta_Cheb` is
+  `False` whenever `theta_mod_2pi` and `theta_deriv` are both supplied (`:1038`). `DRAFT-PLAN.md`
+  §8.1 predicted the docstring was stale rather than the plan wrong, and prompt 06 now has direct
+  evidence: `test_bessel_compatibility.test_the_raw_phase_is_never_evaluated` re-runs a converged
+  Levin call with a `theta` that raises `AssertionError` and gets bit-identical `value` and
+  `abserr`, on both a near-region and a tail span. **Impact:** a reader of that docstring will
+  believe `raw_theta` must be accurate, which at \(x=10^{15}\) it cannot be (2.2e-1 rad); the code
+  is right and only the prose is wrong. **Next step:** correct the docstring in a future
+  `AdaptiveLevin` prompt. `AdaptiveLevin/` is forbidden to this campaign (README §5 item 8), so
+  nothing here can close it.
+
+- **[06-measure-bessel-phase-num-chunks]** *(opened by prompt 06, 2026-09-10)* —
+  `docs/transfer-remedial/measure_bessel_phase.py` (prompt 01's diagnostic) reads
+  `data["phase"].num_chunks` at `:276` and `:307`. That was a `phase_spline` member; prompt 05's
+  `BesselPhaseFunction` does not have it, so both of the script's *current-tree* sections now raise
+  `AttributeError`. Its historical-module section (`:130`, which loads the old `bessel_phase` out of
+  git) is unaffected, as is its `data["phi"]` read at `:283`. **Impact:** the campaign's own
+  before/after measurement script cannot be re-run against the new construction without an edit —
+  which matters because prompt 09 is the prompt that wants to. Nothing in production or in a test
+  reads `num_chunks`. **Next step:** prompt 09 owns `docs/`; either drop the column or replace it
+  with `near_region.n_panels`, which is the closest thing the new construction has.
+
+- **[06-three-bessel-plot-calls-a-non-callable-phase]** *(opened by prompt 06, 2026-09-10)* —
+  `ComputeTargets/QuadSourceIntegral_debug.three_bessel_plot` calls the phase object directly
+  (`phase_A(x1)`, `phase_B(x2)` at `:271-273`, `:315-317` and `:438-462`). Neither `phase_spline`
+  nor `BesselPhaseFunction` defines `__call__`, so that function has been dead since before this
+  campaign — the same defect as `RECONCILIATION.md` C3's `plot_besssel_phase.py`, in a file the
+  consumer inventory lists as a *live* diagnostic. Prompt 06 migrated `Q` in the sibling function
+  `bessel_function_plot` (which now runs end to end, 34 files) and was told to leave everything else
+  alone, so this was not touched. **Impact:** the three-Bessel integrand comparison plots cannot be
+  produced; nobody has noticed, which is itself information about how much the function is used.
+  **Next step:** either repair it (`.raw_theta` at each call site, plus a check that the summed
+  phases it plots should now be built from `phase.residual` per prompt 07's decomposition rather
+  than from raw phases) or delete the function. It is a repair-or-delete judgement like C3's and
+  belongs to whoever next needs the plot.
 
 > Add an entry here whenever a prompt finishes with something unresolved: a verification step that
 > could not be run, an assumption that could not be confirmed, a deviation a later prompt has to
@@ -359,13 +403,19 @@ risks that the prompts inherit rather than create.
 
 18. **`bessel_phase` now returns a much larger dict, and the four old members mean what they used
     to.** `phase`, `mod`, `bessel_j`, `bessel_y`, `min_x`, `max_x` keep their names and calling
-    conventions; `Q` survives as `raw_theta(x)/x` (which *is* the old pre-offset ODE state, since
-    `phi` is now identically zero and there is no cycle rebasing); `phi` survives and is
-    **identically 0.0** at every order. Added: `nu`, `x_star`, `theta_abserr`, `amplitude_relerr`,
-    `theta_deriv_relerr`, `accuracy` (an 18-key breakdown), `accuracy_met`, `crossover` (prompt
+    conventions; `phi` survives and is **identically 0.0** at every order. **`Q` was removed by
+    prompt 06** — `data["Q"]` raises a `KeyError` naming `phase.residual`, `phase.log_amplitude`
+    and `phase.raw_theta`, because `Q` meant the *pre-offset ODE state* and there is no ODE, no
+    offset and no state (`DRAFT-PLAN.md` §8.1 forbids serving a different quantity under the name).
+    The returned mapping is now a `_BesselPhaseData`, a module-level `dict` subclass whose only
+    added behaviour is that message; `isinstance(data, dict)` holds and both `pickle` and
+    `ray.cloudpickle` round-trip it. Added: `nu`, `x_star`, `theta_abserr`, `amplitude_relerr`,
+    `theta_deriv_relerr`, `accuracy` (a 19-key breakdown), `accuracy_met`, `crossover` (prompt
     03's `TailCrossover`) and `near_region` (prompt 04's `NearRegionData`, or **`None`** at
     \(\nu=1/2\), which anything walking `log_x_nodes` must handle). Accessor signatures are in
-    log 05's "State handed to the next prompt", verbatim. Note the keyword names still differ
+    log 05's "State handed to the next prompt" and log 06's, verbatim — prompt 06 added
+    `phase.log_amplitude(x, x_is_log=False)` (`ell = log a_nu`, the diagnostic partner of
+    `residual`) and `phase.theta_abserr_at(x, x_is_log=False)`. Note the keyword names still differ
     between the two objects deliberately: `phase.*` takes `x_is_log` and `mod.*` takes `is_log`,
     matching what each replaced.
 
@@ -383,14 +433,52 @@ risks that the prompts inherit rather than create.
     tolerances of an ODE solve that no longer exists, so a mapping would be invented. Defaults are
     `None`, so a caller that omits them gets no warning; the new arguments are `phase_atol`
     (absolute radians) and `amplitude_rtol` (relative), both defaulting to `1e-11`, and they win if
-    both old and new are supplied. Six call sites in the tree still pass the old names and now emit
-    one `DeprecationWarning` each: `main.py:520-528` and `QuadSourceIntegral_debug` (prompt 06),
-    `test_three_bessel.py` and `test_3bessel_analytic.py` (prompt 08),
+    both old and new are supplied. **`main.py` no longer uses the shim**: prompt 06 migrated both
+    production builds to `phase_atol=1e-12, amplitude_rtol=1e-12` (declared phase error 5.0e-13 at
+    \(\nu=5/2\), 8.9e-16 at \(\nu=1/2\); 1e-13 was measured and buys nothing because the
+    sampling floor binds). Five call sites in the tree still pass the old names and now emit
+    one `DeprecationWarning` each: `test_three_bessel.py` and `test_3bessel_analytic.py` (prompt 08),
     `docs/adaptive-levin-benchmark/levin_bench/bessel_tier.py` (prompt 09, and it already suppresses
-    warnings), plus the two `docs/` scripts, which nobody owns and which still run.
+    warnings), plus the two `docs/` scripts, which nobody owns and which still run, and
+    `ComputeTargets/tests/test_quadsource_integral.py:482-483`, which
+    `RECONCILIATION.md` §3.3 did not list and which prompt 06 added to the inventory (it passes).
 
 21. **Construction cost is now flat in `max_x` and depends only on the order** — 0.0022–0.0034 s
     for \(\nu=5/2\) from \(x_{\max}=10^3\) to \(10^{16}\), 0.043 s at \(\nu=1000.5\). The declared
     ceiling is `MAX_SUPPORTED_X = 1e16`, and \(3\times10^{15}\) and \(8.6\times10^{15}\) — the two
     arguments at which the old construction did not return — build in 2.5 ms. **Still do not claim
     a speed-up ratio** (standing note 3): the result to claim is that a cliff was removed.
+
+22. **`theta_abserr` is a scalar; `theta_abserr_at` is the callable, and the callable is what a
+    Levin consumer should pass.** `AdaptiveLevin` accepts either (`levin_quadrature.py:967-982`),
+    and it applies the declared value as an endpoint term on *every* region's round-off floor — so a
+    domain-wide scalar inflates the reported error of a far-tail region by the ratio of the two
+    regions' errors, measured at **262.7×** on a tail span at \(\nu=5/2\) (log 06). The four-key
+    dictionary to build is
+    `{"theta": phase.raw_theta, "theta_mod_2pi": phase.theta_mod_2pi, "theta_deriv":
+    phase.theta_deriv, "theta_abserr": phase.theta_abserr_at}`. Supplying it makes the reported
+    `abserr` **larger**, not smaller — 3.54e-13 → 2.54e-11 on a near-region span — and that is the
+    point: the phase construction, not the quadrature, is the limit there. A test that expects
+    `abserr` to shrink is expecting the wrong thing. For a phase *group*, sum the constituents'
+    `theta_abserr_at` at their own arguments; they are independent.
+
+23. **`DECLARED_SERIES_SAFETY = 2.0` is applied to the tail series remainder when it is *declared*
+    and nowhere else.** `bessel_tail.tail_first_omitted_term` is an estimator, not a bound: its
+    docstring records the truth as 0.98–1.02× it, and measured over 1500 points on
+    \([x_\star,3x_\star]\) at five orders the worst measured/estimator ratio was **0.99994** — below
+    1 everywhere, with 0.006 % to spare (log 06). Declaring that 1:1 is not a margin, and combining
+    the tail terms with `max()` rather than by summation under-reported outright by 3 % at
+    \(\nu=20.5,x=2050\). So the declared low-order `theta_abserr` is **5.0e-12**, not log 05's
+    2.5e-12, and the worst declared/measured ratio at any cached corner is 2.05. `x_star` is
+    unaffected: `bessel_tail.DEFAULT_CROSSOVER_SAFETY = 0.25` still sizes the crossover alone, and
+    the two factors must not be conflated. `accuracy["tail_first_omitted_at_x_star"]` reports the
+    **raw** estimator; multiply by `accuracy["declared_series_safety"]` for the declared term.
+
+24. **Above \(\nu=20.5\) is not the only place SciPy is too coarse to score a declaration
+    against.** Prompt 06's dense `theta_abserr` sweep failed against `scipy_reference` at
+    \(\nu=1/2,x=16.2576\) with a "measured" error of **1.07e-14** — where the representation is
+    exact (\(r\equiv0\), \(a\equiv1\)) and agrees with the closed form to an ulp, so the whole
+    1.07e-14 is Amos's. Standing note 15's precision floor therefore bites two orders of \(\nu\)
+    lower than it was measured at, whenever the quantity under test is at the 1e-15 level. Use
+    `TIER_MPMATH` or `TIER_EXACT` for anything that small; `mpmath` costs ~2.7 ms per point at
+    \(x\le10^7\).

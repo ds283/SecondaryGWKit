@@ -500,7 +500,6 @@ class TestStructure(unittest.TestCase):
         for key in (
             "phase",
             "mod",
-            "Q",
             "phi",
             "bessel_j",
             "bessel_y",
@@ -530,8 +529,9 @@ class TestStructure(unittest.TestCase):
             x * phase.theta_deriv(x),
             delta=1.0e-12,
         )
-        # Q is theta/x, the quantity the old diagnostic plotted
-        self.assertAlmostEqual(data["Q"](x), phase.raw_theta(x) / x, delta=1.0e-15)
+        # "Q" was removed by prompt 06 -- see test_bessel_compatibility.py, which owns the
+        # adapter surface and asserts the KeyError names its replacement.
+        self.assertNotIn("Q", data)
 
     def test_c_nu_and_its_reduction(self):
         for nu in LOW_ORDERS + HIGH_ORDERS:

@@ -1,6 +1,6 @@
 # Open issues — project-wide index
 
-**Last updated:** 2026-09-10 · **26 open** across four campaigns.
+**Last updated:** 2026-09-10 · **29 open** across four campaigns.
 
 This file exists so that an issue opened by one campaign is not lost when that campaign closes.
 It is an **index, not a record**: one line per issue, pointing at the campaign status board that
@@ -97,6 +97,9 @@ Something was asserted statically or on a stand-in, and a live exercise is still
 | `[04-achieved-estimates-exclude-the-sampling-floor]` | transfer-remedial | `NearRegionData.achieved_*` resamples the same `hankel1e` it interpolates, so it estimates interpolation error only. **Narrowed by prompt 05:** the published `theta_abserr` now adds a 3e-13 sampling floor and 4ε of evaluation arithmetic, and is tested never to under-report; only the size of the 3e-13 constant is still open. |
 | `[05-3bessel-analytic-not-run-to-completion]` | transfer-remedial | The pre-existing multi-hour `test_3bessel_analytic.py` was started under the new oracle and made normal progress, but was not seen to finish; its 1e-5/1e-6 and 1e-2/1e-3 bands are unscored against an eight-order-better oracle. Every other consumer ran and passed. |
 | `[05-quadsource-order-check-docstring-stale]` | transfer-remedial | `bessel_phase` now returns a `"nu"` key, so `QuadSourceIntegral._check_bessel_order`'s docstring (and its reason for checking the order numerically) is obsolete. No functional impact; hand to `source-remediation`. |
+| `[06-levin-theta-docstring-stale]` | transfer-remedial | `levin_quadrature.py:2750` says `theta` is always used to decide subdivision; it is not (`:1038`, `:1090`), and prompt 06 has direct evidence — a `theta` that raises gives bit-identical results. `AdaptiveLevin/` is forbidden here. |
+| `[06-measure-bessel-phase-num-chunks]` | transfer-remedial | Prompt 01's own diagnostic script reads `phase.num_chunks`, which prompt 05 removed, so its current-tree sections raise `AttributeError`. Prompt 09 owns `docs/`. |
+| `[06-three-bessel-plot-calls-a-non-callable-phase]` | transfer-remedial | `QuadSourceIntegral_debug.three_bessel_plot` calls the phase object directly; no phase class has ever defined `__call__`, so it is dead in the same way `plot_besssel_phase.py` was. Repair-or-delete, unowned. |
 
 ---
 
