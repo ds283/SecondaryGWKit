@@ -84,7 +84,7 @@ items sit there, both explicitly deferred by this campaign (§1.1, §7):
    to switch representation, and nothing currently validates that choice.
 2. **The stored WKB phase's own accuracy.** The follow-up document §2 finds the growing
    interpolation error in stored cosmological phases, and
-   `docs/gk-wkb-numerical-review-2026-09.md` (`39ed7fc`) has since measured the Green's-function
+   `docs/gk-wkb-review-astra-pathfinder-2026-09-08.md` (`39ed7fc`) has since measured the Green's-function
    analogue in detail and proposed a validation study for it (its §8). The transfer function has
    the same construction and no equivalent study.
 
@@ -152,7 +152,7 @@ never evaluates a Bessel routine there at all.
   is not itself changed.
 
   **The cosmological measurement this campaign deferred has since been made**, by
-  `docs/gk-wkb-numerical-review-2026-09.md` §3 (commit `39ed7fc`), and it is harsher than
+  `docs/gk-wkb-review-astra-pathfinder-2026-09-08.md` §3 (commit `39ed7fc`), and it is harsher than
   `DRAFT-PLAN.md` §4.6's "no measurable effect": for the Green's-function source geometry chunking
   has "no demonstrated numerical advantage at the tested scales and has demonstrated
   disadvantages". It found four defects beyond the progress guard — the 125 multiplier is not a

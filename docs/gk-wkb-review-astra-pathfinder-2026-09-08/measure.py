@@ -1,5 +1,5 @@
 """Offline numerical probes, no Ray cluster or datastore, no production mutations.
-Run: PYTHONPATH=. ./venv/bin/python docs/gk-wkb-review/measure.py
+Run: PYTHONPATH=. ./venv/bin/python docs/gk-wkb-review-astra-pathfinder-2026-09-08/measure.py
 """
 
 import json

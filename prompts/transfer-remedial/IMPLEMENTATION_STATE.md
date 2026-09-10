@@ -193,7 +193,7 @@ risks that the prompts inherit rather than create.
     and prefer per-module runs while iterating.
 
 12. **`phase_spline`'s cosmological chunking has now been measured**, by
-    `docs/gk-wkb-numerical-review-2026-09.md` §3 (`39ed7fc`) — the item README §1.1 deferred. Its
+    `docs/gk-wkb-review-astra-pathfinder-2026-09-08.md` §3 (`39ed7fc`) — the item README §1.1 deferred. Its
     verdict is harsher than `DRAFT-PLAN.md` §4.6's, and it found four further defects. One matters
     to this campaign as *extra evidence*, not extra scope: chunk selection is a hard switch between
     two fits, measured at a **1.08e-4 rad phase jump and a 3.51e-8 relative derivative jump**, which

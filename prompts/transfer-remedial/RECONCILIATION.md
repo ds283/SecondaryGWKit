@@ -23,7 +23,7 @@ committed:
 
 | commit | what it was |
 |---|---|
-| `39ed7fc` | `docs/gk-wkb-numerical-review-2026-09.md` — a numerical review of the tensor Green's-function WKB construction |
+| `39ed7fc` | `docs/gk-wkb-review-astra-pathfinder-2026-09-08.md` — a numerical review of the tensor Green's-function WKB construction |
 | `4afd531` | `source-remediation` prompt 08 — partition the source time integral, Levin-integrate its phase groups |
 | `ffc50ae` | its prompt 09 — `b`, an error bound and honest tolerances on `QuadSourceIntegral` |
 | `154126b` | its prompt 04 — triangle filter |
@@ -46,7 +46,7 @@ re-verified as still applying to the current tree. What moved:
    1.08e-4 rad that a Levin consumer sees — is an *additional* argument for prompt 05's removal of
    `phase_spline` from `bessel_phase`.
 
-Worth knowing: `docs/gk-wkb-numerical-review-2026-09.md:13` records that it read this campaign's
+Worth knowing: `docs/gk-wkb-review-astra-pathfinder-2026-09-08.md:21` records that it read this campaign's
 README and this document while they were still uncommitted, and its §7 endorses the scope split
 ("The Bessel campaign correctly leaves cosmological phase construction to separate work"). So the
 two documents are consistent by construction, not by luck.

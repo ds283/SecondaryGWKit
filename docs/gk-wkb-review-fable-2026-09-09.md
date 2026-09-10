@@ -1,6 +1,7 @@
 # Review of the Liouville–Green construction for the tensor Green's function
 
-**Date:** 2026-09-09. **Tree inspected:** `f06f587` (branch `claude/gk-wkb-integration-review-029104`).
+**Author:** Fable agent. **Date:** 2026-09-09. **Tree inspected:** `f06f587` (branch
+`claude/gk-wkb-integration-review-029104`).
 **Files:** `ComputeTargets/GkWKBIntegration.py`, `ComputeTargets/WKB_Gk.py`,
 `Quadrature/integrators/WKB_phase_function.py`, `LiouvilleGreen/WKBtools.py`,
 `LiouvilleGreen/phase_spline.py`; consumers `ComputeTargets/GkSource.py` (phase rectifier) and
@@ -10,8 +11,9 @@ and the consumer `ComputeTargets/TkSourceFunctions.py`.
 **Out of scope:** the numeric→WKB hand-over (where it sits, how wide the overlap is, continuity across
 it). Everything below starts inside the WKB regime with specified initial data.
 
-**Related prior work.** `docs/gk-wkb-numerical-review-2026-09.md` (commit `39ed7fc`, branch
-`bessel-remedial-plan`, 2026-09-08) reviewed the same code on an exact-radiation control. Its central
+**Related prior work.** `docs/gk-wkb-review-astra-pathfinder-2026-09-08.md` (author: OpenAI Astra
+agent; commit `39ed7fc`, branch `bessel-remedial-plan`, 2026-09-08) reviewed the same code on an
+exact-radiation control. This document supersedes it. Its central
 measurements are reproduced here (§2, §4, §5) and extended to the real Planck2018 background, to the
 production phase spans, to the QCD production model and to a concrete replacement measured on the real
 background (§7). Where this document differs from it, that is stated.
@@ -19,7 +21,7 @@ background (§7). Where this document differs from it, that is stated.
 Reproduction, from the repository root:
 
 ```sh
-export PYTHONPATH=.; PY=./venv/bin/python; D=docs/gk-wkb-scheme-review-2026-09
+export PYTHONPATH=.; PY=./venv/bin/python; D=docs/gk-wkb-review-fable-2026-09-09
 $PY $D/t1_span.py; $PY $D/t2_solver.py; $PY $D/t3_dense.py; $PY $D/t4_primitive.py
 $PY $D/t4b_production_real.py 1e5; $PY $D/t4b_production_real.py 3e8
 $PY $D/t5_spline.py; $PY $D/t6_sweep.py; $PY $D/t7_jitter.py; $PY $D/t8_qcd.py
@@ -521,7 +523,7 @@ orders.
 
 ## 11. Relation to the prior review's plan
 
-`docs/gk-wkb-numerical-review-2026-09.md` (commit `39ed7fc`) was read before any test here was run,
+`docs/gk-wkb-review-astra-pathfinder-2026-09-08.md` (commit `39ed7fc`) was read before any test here was run,
 so this review is not independent of it; several scripts exist to reproduce or falsify its claims.
 Its §6 proposes a per-(background, k) phase primitive F_k(z) built by local error-controlled
 quadrature, compensated accumulation, anchor-plus-local-integral evaluation, and reuse across

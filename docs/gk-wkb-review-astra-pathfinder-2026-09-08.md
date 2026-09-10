@@ -1,6 +1,14 @@
 # Numerical review of the tensor Green's-function WKB construction
 
-Review date: 2026-09-08. Production code inspected at `c4c49055cdb40dcb21499467225d8bc1aefc9a2b`.
+**Author:** OpenAI Astra agent. **Review date:** 2026-09-08. Production code inspected at
+`c4c49055cdb40dcb21499467225d8bc1aefc9a2b`.
+
+**Status: superseded.** This was the pathfinder review: it framed the problem and the candidate
+quadrature construction, but stopped short of a decision (§7-§8 below). The follow-up review,
+[`gk-wkb-review-fable-2026-09-09.md`](gk-wkb-review-fable-2026-09-09.md) (author: Fable agent,
+2026-09-09), measured the two quantities this document left open, settled the comparative study
+it called for, and is what remediation work now follows. Read that document first; this one is
+kept for its scope and reasoning, not as the current recommendation.
 
 **Conclusion:** the frequency and amplitude formulas implement the intended leading-order LG approximation, but the numerical machinery does not establish small **absolute phase error** over long evolutions. Stage-1 ODE phase resets do improve the solver's local error scale, and materially improved accuracy in the measured control. Stage 2 replaces these resets with `Q` rescaling, which improves cost but restores amplification of state error by the accumulated stage-2 phase. The separate, subsequent `phase_spline` chunking does not cure interpolation error and can make roundoff and continuity worse. A shared phase primitive built by local, error-controlled quadrature is a promising candidate, not yet a validated replacement. It should be compared with an improved rebased ODE method at matched accuracy before choosing remedial work.
 
@@ -15,12 +23,14 @@ Read the source-remediation campaign overview, workstream B orchestration prompt
 Reproduction:
 
 ```sh
-PYTHONPATH=. ./venv/bin/python docs/gk-wkb-review/measure.py
-PYTHONPATH=. ./venv/bin/python docs/gk-wkb-review/alternatives.py
+PYTHONPATH=. ./venv/bin/python docs/gk-wkb-review-astra-pathfinder-2026-09-08/measure.py
+PYTHONPATH=. ./venv/bin/python docs/gk-wkb-review-astra-pathfinder-2026-09-08/alternatives.py
 PYTHONPATH=. ./venv/bin/python docs/spec-code-audit/scripts/GK_02_sympy_omega.py
 ```
 
-The [main measurements](gk-wkb-review/measurements.json) and [alternative-method measurements](gk-wkb-review/alternatives.json) accompany the scripts. Python 3.12, SciPy 1.15.2, NumPy 2.2.4, mpmath 1.3.0 on Apple Silicon. The radiation phase reference uses 60-digit mpmath arithmetic on the actual floating-point inputs; NumPy `longdouble` is only float64 on this host. Constant-w Green's-function references use SciPy J/Y or scaled Hankel functions at arguments no larger than 1000, not the repository's `bessel_phase` oracle.
+The [main measurements](gk-wkb-review-astra-pathfinder-2026-09-08/measurements.json) and
+[alternative-method measurements](gk-wkb-review-astra-pathfinder-2026-09-08/alternatives.json)
+accompany the scripts. Python 3.12, SciPy 1.15.2, NumPy 2.2.4, mpmath 1.3.0 on Apple Silicon. The radiation phase reference uses 60-digit mpmath arithmetic on the actual floating-point inputs; NumPy `longdouble` is only float64 on this host. Constant-w Green's-function references use SciPy J/Y or scaled Hankel functions at arguments no larger than 1000, not the repository's `bessel_phase` oracle.
 
 The production functions `integrate_phase_function`, `stage_2_evolution` and `phase_spline` are exercised directly, without a Ray cluster or datastore. For the short-interval test, the Ray function's underlying implementation is called with only unit-compatibility checking mocked. The main propagation numbers isolate the phase solver rather than invoke `GkWKBIntegration.store()`. Its reconstruction is checked algebraically and used in the constant-w tests. These are controlled numerical experiments, not a survey of the cached production population or a full cosmological pipeline run.
 
