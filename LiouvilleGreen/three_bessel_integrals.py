@@ -26,7 +26,7 @@ class BesselIntegralResult(NamedTuple):
     declared error of the phase but not about anything else.
 
     **What it includes, as of prompts/transfer-remedial's prompt 07.** Each of the four Levin calls
-    is handed a "theta_abserr" for its group (_PhaseGroup.theta_abserr), so the phase construction's
+    is handed a "theta_abserr" for its group (BesselPhaseGroup.theta_abserr), so the phase construction's
     own declared error reaches the driver: it enters each region's achievable-accuracy floor
     (levin_quadrature._declared_endpoint_phase_err(), _roundoff_floor()) and therefore decides when
     a region is accepted as "phase_limited" rather than subdivided further. A tightening tolerance
@@ -42,7 +42,7 @@ class BesselIntegralResult(NamedTuple):
     closed forms are integrals to infinity, and the omitted tail is oscillatory with a slowly
     decaying envelope, which is the largest part of the residual disagreement for the lowest-order
     oracles. (iii) Uncertainty in k, q, s themselves: near resonance x delta K is a property of the
-    inputs, and no arithmetic in _PhaseGroup makes it smaller.
+    inputs, and no arithmetic in BesselPhaseGroup makes it smaller.
 
     **The floor, re-measured.** The uniform ~2e-8 relative accuracy this docstring used to record
     across all seven of test_3bessel_analytic.py's closed forms (see DEFAULT_3BESSEL_CHEBYSHEV_ORDER's
@@ -217,10 +217,20 @@ def _coefficient_sum(terms: Sequence[float]) -> float:
     return math.fsum(terms)
 
 
-class _PhaseGroup:
+class BesselPhaseGroup:
     """
     One sum-and-difference phase group, held as ``theta_group(x) = K x + C + R(x)`` rather than as
     a sum of three reconstructed phases.
+
+    Public since prompts/qsi-phase-groups' prompt 01, which routes ComputeTargets'
+    QuadSourceIntegral._three_bessel_Levin through it as well: that call site had the same
+    three-raw-phase summation this class replaced, and reimplementing it there would have been a
+    second copy of the same arithmetic. The name is spelled out because
+    ComputeTargets/phase_groups.py owns a *different* ``PhaseGroup`` -- a composition of
+    cosmological phase_spline objects over log(1+z), with no analytic leading term to split off,
+    for which summing raw phases is the correct construction. The Bessel leading term ``x`` is
+    what makes the K x + C + R(x) split possible here, and the two must not be unified.
+    ``_PhaseGroup`` remains bound to this class below, for the callers that used the private name.
 
     With ``theta_nu(y) = y + c_nu + r_nu(y)`` (LiouvilleGreen.bessel_phase, whose zero-point is
     ``c_nu = pi/4 - pi nu/2``),
@@ -436,11 +446,17 @@ class _PhaseGroup:
         }
 
 
+#: The name this class carried when it was introduced (prompts/transfer-remedial prompt 07), kept
+#: bound so that every existing caller and test continues to work unchanged. New code should use
+#: :class:`BesselPhaseGroup`.
+_PhaseGroup = BesselPhaseGroup
+
+
 def _phase_group(
     phase_mu, phase_nu, phase_sigma, k, q, s, e_nu, e_sigma
-) -> _PhaseGroup:
-    """Assemble the :class:`_PhaseGroup` for one sum-and-difference sign pair."""
-    return _PhaseGroup(
+) -> BesselPhaseGroup:
+    """Assemble the :class:`BesselPhaseGroup` for one sum-and-difference sign pair."""
+    return BesselPhaseGroup(
         phases=(phase_mu, phase_nu, phase_sigma),
         coefficients=(k, q, s),
         signs=(1.0, e_nu, e_sigma),

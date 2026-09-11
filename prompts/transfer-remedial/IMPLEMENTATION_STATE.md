@@ -172,28 +172,6 @@ close, plus one issue prompt 09 itself opened while re-running the benchmark tie
   every order. **Next step:** re-measure the post-fix `hankel1e` phase floor against `mpmath` and
   reduce the constant, or confirm it. Cheap, and nothing waits on it.
 
-- **[05-quadsource-order-check-docstring-stale]** *(opened by prompt 05, 2026-09-10)* — prompt 05
-  added a `"nu"` key to `bessel_phase`'s returned dict, for prompt 07's phase groups.
-  `ComputeTargets/QuadSourceIntegral.py:680` (`_check_bessel_order`) has a long docstring stating
-  that the dict "carries phase, mod, Q, phi, bessel_j, bessel_y, min_x, max_x and no `nu`", and
-  explaining that the order therefore has to be checked *numerically* — by comparing the spline's
-  own reconstruction against `jv`, normalised by the envelope. That reasoning is now obsolete.
-  **Impact:** none functional. The numeric check still runs and still passes
-  (`ComputeTargets.tests.test_quadsource_integral` was not re-run here, but
-  `test_tk_source_functions` and `test_phase_groups` were and are OK); only the docstring is wrong,
-  and it is wrong in the safe direction. `ComputeTargets/` is out of scope for this campaign
-  (README §4.2), so nothing was changed. **Next step:** hand to `prompts/source-remediation`
-  alongside `[00-qsi-three-bessel-levin-excluded]` when prompt 09 makes that hand-off; that
-  campaign can either correct the docstring or replace the numeric check with a direct comparison
-  against `phase_data["nu"]`. **Extended (2026-09-10, prompt 06):** the same docstring is now wrong
-  twice over — it lists `Q` among the members the dict "carries", and prompt 06 removed `Q`. Still
-  no functional impact (`test_quadsource_integral` passes, 97 `ComputeTargets` tests green), and
-  still one docstring for that campaign to correct.
-  **Assigned (2026-09-11):** `prompts/qsi-phase-groups` prompt 01 owns this — it edits the same
-  function's file for `[transfer-remedial-qsi-phase-groups]`, so the docstring is corrected there.
-  The *numeric* guard stays as it is: replacing it with a direct `phase_data["nu"]` comparison is a
-  behaviour change and is explicitly out of that prompt's scope.
-
 - **[06-levin-theta-docstring-stale]** *(opened by prompt 06, 2026-09-10)* —
   `AdaptiveLevin/levin_quadrature.py:2750` documents the `theta` key as "always used to decide
   whether a subinterval is oscillatory enough for the Levin rule (via the total phase change across
@@ -326,6 +304,38 @@ close, plus one issue prompt 09 itself opened while re-running the benchmark tie
 ---
 
 ## 4. Resolved issues
+
+- **[05-quadsource-order-check-docstring-stale]** *(opened by prompt 05, extended by prompt 06,
+  **closed 2026-09-11** by `prompts/qsi-phase-groups` prompt 01)* — prompt 05
+  added a `"nu"` key to `bessel_phase`'s returned dict, for prompt 07's phase groups.
+  `ComputeTargets/QuadSourceIntegral.py:680` (`_check_bessel_order`) has a long docstring stating
+  that the dict "carries phase, mod, Q, phi, bessel_j, bessel_y, min_x, max_x and no `nu`", and
+  explaining that the order therefore has to be checked *numerically* — by comparing the spline's
+  own reconstruction against `jv`, normalised by the envelope. That reasoning is now obsolete.
+  **Impact:** none functional. The numeric check still runs and still passes
+  (`ComputeTargets.tests.test_quadsource_integral` was not re-run here, but
+  `test_tk_source_functions` and `test_phase_groups` were and are OK); only the docstring is wrong,
+  and it is wrong in the safe direction. `ComputeTargets/` is out of scope for this campaign
+  (README §4.2), so nothing was changed. **Next step:** hand to `prompts/source-remediation`
+  alongside `[00-qsi-three-bessel-levin-excluded]` when prompt 09 makes that hand-off; that
+  campaign can either correct the docstring or replace the numeric check with a direct comparison
+  against `phase_data["nu"]`. **Extended (2026-09-10, prompt 06):** the same docstring is now wrong
+  twice over — it lists `Q` among the members the dict "carries", and prompt 06 removed `Q`. Still
+  no functional impact (`test_quadsource_integral` passes, 97 `ComputeTargets` tests green), and
+  still one docstring for that campaign to correct.
+  **Assigned (2026-09-11):** `prompts/qsi-phase-groups` prompt 01 owns this — it edits the same
+  function's file for `[transfer-remedial-qsi-phase-groups]`, so the docstring is corrected there.
+  The *numeric* guard stays as it is: replacing it with a direct `phase_data["nu"]` comparison is a
+  behaviour change and is explicitly out of that prompt's scope.
+
+  **Closed (2026-09-11)** by `prompts/qsi-phase-groups` prompt 01, the campaign this entry was
+  assigned to. `_check_bessel_order`'s docstring now says that the dict carries `"nu"` and no
+  longer carries `Q`, and states why the numeric check is kept anyway rather than resting on the
+  obsolete "`bessel_phase` does not record its own order". The numeric guard itself is untouched,
+  as the assignment required; the direct `phase_data["nu"]` comparison is recorded in that prompt's
+  log as an option deliberately not taken. `BESSEL_ORDER_CHECK_TOL`'s own comment, which quoted the
+  pre-prompt-05 ~2e-8 reconstruction floor, was corrected in the same commit. See
+  `prompts/qsi-phase-groups/logs/01-three-bessel-levin-phase-groups.md`.
 
 - **[05-3bessel-analytic-not-run-to-completion]** *(opened by prompt 05, narrowed by prompt 07,
   **closed by prompt 08**, 2026-09-10)* — the pre-existing multi-hour `test_3bessel_analytic.py`

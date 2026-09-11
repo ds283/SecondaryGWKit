@@ -15,6 +15,7 @@ from ComputeTargets.TkSourceFunctions import TkSourceFunctions
 from ComputeTargets.phase_groups import build_phase_groups
 from CosmologyConcepts import wavenumber, wavenumber_exit_time, redshift
 from Datastore import DatastoreObject
+from LiouvilleGreen.three_bessel_integrals import BesselPhaseGroup
 from MetadataConcepts import store_tag, tolerance, GkSourcePolicy
 from Quadrature.integration_metadata import IntegrationData, LevinData
 from Quadrature.simple_quadrature import simple_quadrature
@@ -76,11 +77,19 @@ CHEBYSHEV_ORDER = 24
 # Every Levin call in this module now takes the tolerances it was given.
 
 # Relative tolerance of the Bessel-order guard _check_bessel_order below, as a fraction of the
-# local Liouville-Green envelope m = sqrt(J^2 + Y^2). bessel_phase() reconstructs J_nu to ~2e-8
-# of that envelope (audit QI-1), while an order wrong by delta shifts the phase by delta*pi/2
-# -- 0.31 rad for the smallest interesting mismatch, delta = 0.2 -- and so moves J by O(0.1) of
-# the envelope. 1e-3 sits five orders above the fit floor and two below the smallest defect it
-# has to catch.
+# local Liouville-Green envelope m = sqrt(J^2 + Y^2). The ~2e-8 of that envelope this comment used
+# to quote (audit QI-1) was the floor of the bessel_phase() construction that prompts/transfer-
+# remedial's prompt 05 replaced. The phase object now *declares* its own absolute phase error --
+# BesselPhaseFunction.theta_abserr, 5e-12 rad at the orders used here (8.9e-16 at nu = 1/2
+# exactly, where the phase is closed-form) -- and is measured inside it: over the whole domain at
+# max_x = 1e5 the reconstruction J_nu = m sin(theta) tracks scipy's J_nu to at worst 2.1e-12 of
+# the envelope at nu = 1/2 + b and 2.4e-12 at nu = 5/2 + b, and to 2e-16 to 1e-14 at the two
+# abscissae this guard actually samples. An order wrong by delta still shifts the phase by
+# delta*pi/2 -- 0.31 rad for the smallest interesting mismatch, delta = 0.2 -- and so moves J by
+# O(0.1) of the envelope. 1e-3 therefore sits nine orders above the reconstruction floor (it was
+# five) and two below the smallest defect it has to catch; the reasoning that fixes it between
+# those two scales is unchanged, and the extra headroom only makes the guard safer against a false
+# positive.
 BESSEL_ORDER_CHECK_TOL = 1e-3
 
 # Whether the composed phase derivative d Psi/d log(1+z') (closed-form omega (1+z') for each
@@ -677,14 +686,24 @@ def _check_bessel_order(label: str, phase_data: dict, nu: float) -> None:
     The Levin branch of the analytic oracle uses the caller-supplied bessel_phase splines while
     _three_bessel_quad recomputes jv(nu + b, .) for itself; the two agree only if the splines
     were built at the same b that is passed as `b` (audit QI-1: "correct at HEAD but an
-    unguarded invariant"). bessel_phase() does not record its own order -- its return dict
-    (LiouvilleGreen/bessel_phase.py) carries phase, mod, Q, phi, bessel_j, bessel_y, min_x,
-    max_x and no "nu" -- so the order is checked numerically instead: the spline's own
-    reconstruction J_nu = m sin(theta) is compared against scipy's J_nu, normalised by the local
-    envelope m (which is never zero, unlike J itself). An order wrong by delta puts the phase out
-    by delta*pi/2 -- 0.31 rad for delta = 0.2 -- so J moves by O(0.1) of the envelope, while the
-    reconstruction's own error is ~2e-8 of it (audit QI-1). LiouvilleGreen/ is out of scope for
-    this campaign, so nothing here asks bessel_phase to start recording its order.
+    unguarded invariant"). The order is checked numerically: the spline's own reconstruction
+    J_nu = m sin(theta) is compared against scipy's J_nu, normalised by the local envelope m
+    (which is never zero, unlike J itself). An order wrong by delta puts the phase out by
+    delta*pi/2 -- 0.31 rad for delta = 0.2 -- so J moves by O(0.1) of the envelope, while the
+    reconstruction's own error is at worst ~2e-12 of it and 2e-16 to 1e-14 at the two abscissae
+    used below (see BESSEL_ORDER_CHECK_TOL).
+
+    The return dict this reads is the one described in LiouvilleGreen/bessel_phase.py. Two things
+    about it changed in prompts/transfer-remedial's prompt 05 and this docstring used to state
+    both of them backwards. It does now carry a "nu" key, and it no longer carries "Q" at all --
+    reading data["Q"] raises KeyError -- so the old justification for a numeric check ("bessel_phase()
+    does not record its own order") is false. The numeric check is kept anyway and deliberately:
+    replacing it with a direct comparison against phase_data["nu"] is a behaviour change (it would
+    reject a differently constructed but numerically correct phase object, and accept one whose
+    declared order disagreed with its own splines), and prompts/qsi-phase-groups' prompt 01, which
+    corrected this text, is scoped to the phase assembly rather than to the guard. What the check
+    actually tests is stronger than the label: it verifies that the supplied reconstruction *is*
+    J_{nu}, not merely that something in the dict says so.
     """
     min_x = phase_data["min_x"]
     max_x = phase_data["max_x"]
@@ -1251,32 +1270,54 @@ def _three_bessel_Levin(
 
         return A * B
 
-    def phase1(log_eta: float):
-        eta = exp(log_eta)
+    # The four sum-and-difference phase groups, with signs (+,+,+), (+,+,-), (+,-,+), (+,-,-) on
+    # (theta_Gk(k eta), theta_Tk(q cs eta), theta_Tk(r cs eta)). Each is used by one J call (the
+    # sin component) and one Y call (the cos component), so these four objects serve all eight
+    # adaptive_levin_sincos calls below.
+    #
+    # Until prompts/qsi-phase-groups' prompt 01 each group was assembled twice over by summation,
+    # once from three raw_theta values and once from three theta_mod_2pi values, and was handed to
+    # the driver with neither a theta_deriv nor a theta_abserr. Three things were wrong with that.
+    # (i) Each raw_theta is a double of size ~m eta carrying an absolute error ~eps m eta, and
+    # those errors do not cancel with the group's signs, so a group whose own phase is small --
+    # the near-resonant case this four-group decomposition exists to handle -- came back with the
+    # absolute error of its *largest* constituent. BesselPhaseGroup instead holds the group as
+    # K eta + C + R(eta) with K = k + e_q q cs + e_r r cs and C the signed sum of the zero-points,
+    # both formed once, before any multiplication by eta. (ii) The signed sum of three values in
+    # (-pi, pi] is not the bounded angle of the sum; the group takes atan2 of a split (sin, cos)
+    # pair instead. (iii) Without theta_deriv the driver obtains theta' by spectral differentiation
+    # of the raw phase, whose absolute resolution is ~eps theta, and sizes its subdivision from
+    # that (AdaptiveLevin/levin_quadrature.py:1038, :1090); without theta_abserr the reported
+    # abserr cannot see the phase construction's own error at all (:2360). The sibling module
+    # LiouvilleGreen/three_bessel_integrals.py, which owns this class, measured the group phase
+    # error fall from 2.86e-5 rad to 1.42e-13 at exact resonance and the group log-derivative from
+    # 3.05e-5 to 1.00e-12 (prompts/transfer-remedial/logs/07-bessel-phase-groups.md); the same
+    # measurement at this call site's own orders and coefficients is in
+    # ComputeTargets/tests/test_quadsource_integral.py's TestThreeBesselPhaseGroups.
+    #
+    # Note that "theta_mod_2pi" changes representative here: the route this replaced returned a
+    # signed sum of three values in (-pi, pi], which lies in (-3 pi, 3 pi], while the group returns
+    # atan2 of its split pair, which lies in (-pi, pi]. Both are valid and the change is invisible
+    # downstream, because every consumer takes only sin/cos of it (levin_quadrature.py:1103-1105,
+    # :1120-1121).
+    #
+    # ComputeTargets/phase_groups.py, used by phase_group_Levin_integral above, is a different
+    # object and is deliberately not used here: it composes *cosmological* phase_spline objects
+    # over log(1+z), which have no analytic leading term to split off, so summing their raw phases
+    # is the correct construction there. The Bessel leading term x is what makes this split
+    # possible.
+    group_phases = (phase_Gk, phase_Tk, phase_Tk)
+    group_coefficients = (k.k, q.k * cs, r.k * cs)
 
-        x1 = k.k * eta
-        x2 = q.k * cs * eta
-        x3 = r.k * cs * eta
-
-        return phase_Gk.raw_theta(x1) + phase_Tk.raw_theta(x2) + phase_Tk.raw_theta(x3)
-
-    def phase1_mod_2pi(log_eta: float):
-        eta = exp(log_eta)
-
-        x1 = k.k * eta
-        x2 = q.k * cs * eta
-        x3 = r.k * cs * eta
-
-        return (
-            phase_Gk.theta_mod_2pi(x1)
-            + phase_Tk.theta_mod_2pi(x2)
-            + phase_Tk.theta_mod_2pi(x3)
-        )
+    group1 = BesselPhaseGroup(group_phases, group_coefficients, (1.0, 1.0, 1.0))
+    group2 = BesselPhaseGroup(group_phases, group_coefficients, (1.0, 1.0, -1.0))
+    group3 = BesselPhaseGroup(group_phases, group_coefficients, (1.0, -1.0, 1.0))
+    group4 = BesselPhaseGroup(group_phases, group_coefficients, (1.0, -1.0, -1.0))
 
     J1_data = adaptive_levin_sincos(
         x_span,
         f=[Levin_f, lambda x: 0.0],
-        theta={"theta": phase1, "theta_mod_2pi": phase1_mod_2pi},
+        theta=group1.levin_theta(),
         atol=atol,
         rtol=rtol,
         chebyshev_order=CHEBYSHEV_ORDER,
@@ -1285,39 +1326,17 @@ def _three_bessel_Levin(
     Y1_data = adaptive_levin_sincos(
         x_span,
         f=[lambda x: 0.0, lambda x: -Levin_f(x)],
-        theta={"theta": phase1, "theta_mod_2pi": phase1_mod_2pi},
+        theta=group1.levin_theta(),
         atol=atol,
         rtol=rtol,
         chebyshev_order=CHEBYSHEV_ORDER,
         notify_label="analytic Y1",
     )
 
-    def phase2(log_eta: float):
-        eta = exp(log_eta)
-
-        x1 = k.k * eta
-        x2 = q.k * cs * eta
-        x3 = r.k * cs * eta
-
-        return phase_Gk.raw_theta(x1) + phase_Tk.raw_theta(x2) - phase_Tk.raw_theta(x3)
-
-    def phase2_mod_2pi(log_eta: float):
-        eta = exp(log_eta)
-
-        x1 = k.k * eta
-        x2 = q.k * cs * eta
-        x3 = r.k * cs * eta
-
-        return (
-            phase_Gk.theta_mod_2pi(x1)
-            + phase_Tk.theta_mod_2pi(x2)
-            - phase_Tk.theta_mod_2pi(x3)
-        )
-
     J2_data = adaptive_levin_sincos(
         x_span,
         f=[Levin_f, lambda x: 0.0],
-        theta={"theta": phase2, "theta_mod_2pi": phase2_mod_2pi},
+        theta=group2.levin_theta(),
         atol=atol,
         rtol=rtol,
         chebyshev_order=CHEBYSHEV_ORDER,
@@ -1326,39 +1345,17 @@ def _three_bessel_Levin(
     Y2_data = adaptive_levin_sincos(
         x_span,
         f=[lambda x: 0.0, lambda x: -Levin_f(x)],
-        theta={"theta": phase2, "theta_mod_2pi": phase2_mod_2pi},
+        theta=group2.levin_theta(),
         atol=atol,
         rtol=rtol,
         chebyshev_order=CHEBYSHEV_ORDER,
         notify_label="analytic Y2",
     )
 
-    def phase3(log_eta: float):
-        eta = exp(log_eta)
-
-        x1 = k.k * eta
-        x2 = q.k * cs * eta
-        x3 = r.k * cs * eta
-
-        return phase_Gk.raw_theta(x1) - phase_Tk.raw_theta(x2) + phase_Tk.raw_theta(x3)
-
-    def phase3_mod_2pi(log_eta: float):
-        eta = exp(log_eta)
-
-        x1 = k.k * eta
-        x2 = q.k * cs * eta
-        x3 = r.k * cs * eta
-
-        return (
-            phase_Gk.theta_mod_2pi(x1)
-            - phase_Tk.theta_mod_2pi(x2)
-            + phase_Tk.theta_mod_2pi(x3)
-        )
-
     J3_data = adaptive_levin_sincos(
         x_span,
         f=[Levin_f, lambda x: 0.0],
-        theta={"theta": phase3, "theta_mod_2pi": phase3_mod_2pi},
+        theta=group3.levin_theta(),
         atol=atol,
         rtol=rtol,
         chebyshev_order=CHEBYSHEV_ORDER,
@@ -1367,39 +1364,17 @@ def _three_bessel_Levin(
     Y3_data = adaptive_levin_sincos(
         x_span,
         f=[lambda x: 0.0, lambda x: -Levin_f(x)],
-        theta={"theta": phase3, "theta_mod_2pi": phase3_mod_2pi},
+        theta=group3.levin_theta(),
         atol=atol,
         rtol=rtol,
         chebyshev_order=CHEBYSHEV_ORDER,
         notify_label="analytic Y3",
     )
 
-    def phase4(log_eta: float):
-        eta = exp(log_eta)
-
-        x1 = k.k * eta
-        x2 = q.k * cs * eta
-        x3 = r.k * cs * eta
-
-        return phase_Gk.raw_theta(x1) - phase_Tk.raw_theta(x2) - phase_Tk.raw_theta(x3)
-
-    def phase4_mod_2pi(log_eta: float):
-        eta = exp(log_eta)
-
-        x1 = k.k * eta
-        x2 = q.k * cs * eta
-        x3 = r.k * cs * eta
-
-        return (
-            phase_Gk.theta_mod_2pi(x1)
-            - phase_Tk.theta_mod_2pi(x2)
-            - phase_Tk.theta_mod_2pi(x3)
-        )
-
     J4_data = adaptive_levin_sincos(
         x_span,
         f=[Levin_f, lambda x: 0.0],
-        theta={"theta": phase4, "theta_mod_2pi": phase4_mod_2pi},
+        theta=group4.levin_theta(),
         atol=atol,
         rtol=rtol,
         chebyshev_order=CHEBYSHEV_ORDER,
@@ -1408,7 +1383,7 @@ def _three_bessel_Levin(
     Y4_data = adaptive_levin_sincos(
         x_span,
         f=[lambda x: 0.0, lambda x: -Levin_f(x)],
-        theta={"theta": phase4, "theta_mod_2pi": phase4_mod_2pi},
+        theta=group4.levin_theta(),
         atol=atol,
         rtol=rtol,
         chebyshev_order=CHEBYSHEV_ORDER,

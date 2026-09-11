@@ -413,8 +413,22 @@ Traceability from the audit's finding IDs to the prompt that discharges them.
   `docs/source-remediation-verification.md` §5.3. Separating the clamp from the LG phase error
   needs one of those changes; it cannot be done by measurement alone at these $x$.
 
+> Add an entry here whenever a prompt finishes with something unresolved: a verification step that
+> could not be run, an assumption that could not be confirmed, a deviation that a later prompt has
+> to work around, a measured cost that changes a later prompt's decision. Format:
+>
+> - **[NN-shortname]** *(opened by prompt NN, YYYY-MM-DD)* — description. **Impact:** who is
+>   affected. **Next step:** what would close it.
+>
+> Move closed entries to §4 rather than deleting them.
+
+---
+
+## 4. Resolved issues
+
 - **[transfer-remedial-qsi-phase-groups]** *(opened by `prompts/transfer-remedial` prompt 09,
-  2026-09-10 — a hand-off from that campaign, not from a prompt of this one)* —
+  2026-09-10 — a hand-off from that campaign, not from a prompt of this one; **closed
+  2026-09-11** by `prompts/qsi-phase-groups` prompt 01)* —
   `ComputeTargets/QuadSourceIntegral.py`'s `_three_bessel_Levin` (`:1175-1442`) makes eight
   `adaptive_levin_sincos` calls whose phases are signed sums of three `bessel_phase` `raw_theta`
   values (`:1226, :1267, :1308, :1349`), supplying **no `theta_deriv`** and no `theta_abserr` — so
@@ -446,18 +460,15 @@ Traceability from the audit's finding IDs to the prompt that discharges them.
   than leave it on a closed board, a one-prompt campaign was opened for it. This entry stays open
   until that prompt lands, and is then closed by it.
 
-> Add an entry here whenever a prompt finishes with something unresolved: a verification step that
-> could not be run, an assumption that could not be confirmed, a deviation that a later prompt has
-> to work around, a measured cost that changes a later prompt's decision. Format:
->
-> - **[NN-shortname]** *(opened by prompt NN, YYYY-MM-DD)* — description. **Impact:** who is
->   affected. **Next step:** what would close it.
->
-> Move closed entries to §4 rather than deleting them.
-
----
-
-## 4. Resolved issues
+  **Closed (2026-09-11)** by `prompts/qsi-phase-groups` prompt 01, which is the campaign this
+  entry was assigned to. All eight calls now pass `BesselPhaseGroup.levin_theta()` — the four-key
+  dict — from `LiouvilleGreen/three_bessel_integrals.py`, the pattern the "Next step" above named.
+  Measured at this call site's own orders and coefficients, the group phase error falls from
+  5.15e-08 rad to 1.38e-12 and the group log-derivative from 2.28e-08 to 9.64e-12 at exact
+  resonance; `analytic_rad` moved by at most 1.02e-08 relative on the eighteen
+  `TestAnalyticOracle` fixtures, which pass unchanged at their existing thresholds. See
+  `prompts/qsi-phase-groups/logs/01-three-bessel-levin-phase-groups.md`. Nothing else on this
+  board changed.
 
 - **[09-WKB_quad-columns-are-vestigial]** *(opened by prompt 09, 2026-09-09; **closed
   2026-09-10** by the post-campaign tidy-up, at the user's direction)* — `WKB_quad` and its six

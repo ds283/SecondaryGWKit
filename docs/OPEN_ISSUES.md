@@ -1,6 +1,6 @@
 # Open issues — project-wide index
 
-**Last updated:** 2026-09-11 · **31 open** across five campaigns.
+**Last updated:** 2026-09-11 · **29 open** across five campaigns.
 
 This file exists so that an issue opened by one campaign is not lost when that campaign closes.
 It is an **index, not a record**: one line per issue, pointing at the campaign status board that
@@ -42,14 +42,13 @@ measurement alone at production $x$. Background reading:
 
 ### 1.2 The `QuadSourceIntegral` phase-groups campaign
 
-`prompts/qsi-phase-groups` — one prompt, opened 2026-09-11. `_three_bessel_Levin`'s eight Levin
-calls are the last Bessel-phase consumer in the tree assembled by summing raw phases.
+`prompts/qsi-phase-groups` — one prompt, opened and completed 2026-09-11. `_three_bessel_Levin`'s
+eight Levin calls were the last Bessel-phase consumer in the tree assembled by summing raw phases;
+they now pass `BesselPhaseGroup.levin_theta()`.
 
 | Issue | Board | Hook |
 |---|---|---|
-| `[transfer-remedial-qsi-phase-groups]` | source-remediation | `_three_bessel_Levin`'s eight `adaptive_levin_sincos` calls supply no `theta_deriv`/`theta_abserr` and sum three `raw_theta` values, unlike the sibling route in the same file. **Assigned (2026-09-11)** to `prompts/qsi-phase-groups` prompt 01. |
-| `[05-quadsource-order-check-docstring-stale]` | transfer-remedial | `_check_bessel_order`'s docstring says the phase dict carries `Q` and no `"nu"`; both are now the reverse. **Assigned (2026-09-11)** to the same prompt, docstring only — the numeric guard stays. |
-| `[00-orphaned-handoff]` | qsi-phase-groups | Why the above sat unowned: the hand-off was filed into a campaign already complete at 13/13, and indexed under §2 rather than §1 with an `Assigned` line. Process note; closed when prompt 01 lands. |
+| *(none open)* | | All three entries closed by prompt 01. The one thing it left behind is a *different* call site and is indexed in §2 below. |
 
 ### 1.3 The `AdaptiveLevin` Clenshaw–Curtis fallback campaign
 
@@ -80,6 +79,7 @@ bound the true error. Closing any of them properly needs the representation erro
 | `[12-atol-too-loose-for-the-source-integral]` | source-remediation | 58 % of work items have a raw integral below `DEFAULT_QUADRATURE_ATOL = 1e-25`, so their tolerance is met before any work is done. Needs a production decision: scale `atol` with the integrand, go `rtol`-only, or lower the default for this stage. |
 | `[09-abserr-does-not-bound-phase-spline-floor]` | levin-refactor | `quad_JJJ`/`quad_YJJ`'s `abserr` misses the true error against the analytic oracle by up to 11.5× on 5 of 7 three-Bessel closed forms. **Measured false on the current tree** (`transfer-remedial` prompt 08): 7 of 7 now bound, `true/reported` between 9.8e-06 and 1.5e-04. |
 | `[09-quadsource-total-error-incomplete]` | levin-refactor | Partly superseded: `source-remediation` prompt 09 added `total_abserr`. Re-read against the current tree before acting. |
+| `[01-cosmological-group-declares-no-phase-error]` | qsi-phase-groups | The ninth `adaptive_levin_sincos` call in `QuadSourceIntegral.py` — `phase_group_Levin_integral`'s, over cosmological `phase_spline` phases — still supplies three keys, not four; `phase_spline` reports no fit accuracy to declare. |
 
 ---
 
