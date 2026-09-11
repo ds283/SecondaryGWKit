@@ -1301,11 +1301,460 @@ class TestTolerancePlumbing(unittest.TestCase):
         )
 
 
+# =============================================================================================
+# the three-Bessel phase groups of _three_bessel_Levin (prompts/qsi-phase-groups prompt 01)
+#
+# The reference below is 60-digit mpmath evaluated at the *exact* products m_i eta, not at the
+# doubles fl(m_i eta), and that distinction is what makes the measurement mean anything. The true
+# group phase is
+#
+#     Theta(eta) = sum_i e_i theta_i(m_i . eta) = K eta + C + sum_i e_i r_i(m_i . eta),
+#
+# and a route that forms fl(m_i eta) for each leading term commits an error ~eps m_i eta with unit
+# sensitivity, because theta' -> 1. A reference taken at fl(m_i eta) would hide exactly the error
+# the restructure removes.
+#
+# Both helpers rely on |r| <= pi, which holds at the orders this call site uses (nu = 1/2 + b and
+# 5/2 + b, so r(x_0) <= 1.18 rad); the principal argument *is* the tail-continuous residual there.
+# Do not raise the orders without re-checking that -- the same standing note as
+# LiouvilleGreen/tests/test_three_bessel.py's phase-group block, which these helpers mirror.
+# =============================================================================================
+
+EPS = float(np.finfo(np.float64).eps)
+
+PHASE_GROUP_DPS = 60
+
+#: b = 0, so c_s = sqrt(1/3) and the orders are nu = 1/2 (the Green's function) and nu = 5/2 (both
+#: transfer functions, as the "2pt5" call of _three_bessel_integrals uses them).
+PHASE_GROUP_B = 0.0
+PHASE_GROUP_ORDERS = (0.5, 2.5, 2.5)
+
+#: The (+, -, -) group -- "group4" in _three_bessel_Levin -- whose K = k - q c_s - r c_s is the one
+#: that can cancel. The other three carry a K of order max(k, q c_s, r c_s) and are the "generic"
+#: case by construction.
+PHASE_GROUP_SIGNS = (1.0, -1.0, -1.0)
+
+#: The top of the sampling range in the Bessel argument. main.py builds these splines out to
+#: x ~ 1e9 in production (see _check_bessel_order's abscissa comment), so that is where the
+#: measurement is taken rather than at the 1e12 of the sibling module's own tests.
+PHASE_GROUP_X_MAX = 1.0e9
+
+
+def _phase_group_coefficients():
+    """
+    ``(label -> (k, q c_s, r c_s))`` for the two cases prompt 01 asks for, in the coefficient
+    triple _three_bessel_Levin itself forms.
+
+    The near-resonant triple is built by *choosing k to be the double* ``fl(q c_s + r c_s)``, which
+    is how a resonance actually arises here: q c_s and r c_s are already rounded products, so the
+    residual K = fl(a + b) - a - b is the rounding of their sum and nothing better is available.
+    For these two coefficients that sum happens to be exactly representable, so K comes out exactly
+    0.0 and the test asserts it; for a general pair it would be ~ulp(a + b), i.e. |K| / max ~ 1e-16,
+    and the measurement below is insensitive to which of the two it is.
+    """
+    cs = sqrt((1.0 - PHASE_GROUP_B) / (1.0 + PHASE_GROUP_B) / 3.0)
+
+    q_coeff = 1.0e4 * cs
+    r_coeff = 1.2e4 * cs
+    return {
+        "near-resonant": (q_coeff + r_coeff, q_coeff, r_coeff),
+        "generic": (1.0e4, q_coeff, r_coeff),
+    }
+
+
+def _phase_group_reference(coefficients, eta):
+    """
+    ``(Theta(eta), dTheta/dlog eta)`` as doubles, from 60-digit mpmath at the exact products.
+
+    ``theta = y + c_nu + r`` with ``r`` the principal value of ``atan2(J, -Y) - (y + c_nu)``;
+    ``theta' = (2/pi)/(y (J^2 + Y^2))`` is the exact Wronskian oracle, and
+    ``dTheta/dlog eta = sum_i e_i (m_i eta) theta_i'(m_i eta)``. At 60 digits the cancellation of
+    the leading terms costs a dozen digits out of sixty, so the reference does not have to be
+    clever in the way the object under test does.
+    """
+    import mpmath
+
+    with mpmath.workdps(PHASE_GROUP_DPS):
+        eta_mp = mpmath.mpf(float(eta))
+        theta = mpmath.mpf(0)
+        theta_log_deriv = mpmath.mpf(0)
+
+        for nu, coefficient, sign in zip(
+            PHASE_GROUP_ORDERS, coefficients, PHASE_GROUP_SIGNS
+        ):
+            y = mpmath.mpf(float(coefficient)) * eta_mp
+            J = mpmath.besselj(nu, y, maxterms=10**7, maxprec=10**6)
+            Y = mpmath.bessely(nu, y, maxterms=10**7, maxprec=10**6)
+
+            c_nu = mpmath.pi / 4 - mpmath.pi * mpmath.mpf(nu) / 2
+            residual = mpmath.atan2(J, -Y) - (y + c_nu)
+            residual = residual - 2 * mpmath.pi * mpmath.floor(
+                residual / (2 * mpmath.pi)
+            )
+            if residual > mpmath.pi:
+                residual = residual - 2 * mpmath.pi
+
+            theta = theta + sign * (y + c_nu + residual)
+            theta_log_deriv = theta_log_deriv + sign * (2 / mpmath.pi) / (J * J + Y * Y)
+
+        return float(theta), float(theta_log_deriv)
+
+
+def _legacy_qsi_group(phases, coefficients):
+    """
+    The route prompt 01 replaced, kept here verbatim in form so the improvement is re-measured on
+    every run rather than quoted from a log: the group phase as a signed sum of three independently
+    reconstructed ``raw_theta`` values, and its bounded angle as a signed sum of three bounded
+    angles. These are ``phase4`` / ``phase4_mod_2pi`` of _three_bessel_Levin as they stood before
+    that prompt.
+
+    ``theta_deriv`` has no pre-prompt counterpart at all -- the eight calls supplied none, so the
+    Levin driver spectrally differentiated the raw phase above. The legacy derivative returned here
+    is the signed sum of the three constituents' own log-derivatives, i.e. the best the old route
+    could have done had it supplied one, and it therefore *flatters* what was actually shipped.
+    """
+    (phase_Gk, phase_Tk_q, phase_Tk_r) = phases
+    (c1, c2, c3) = coefficients
+    (_, e_q, e_r) = PHASE_GROUP_SIGNS
+
+    def theta(log_eta):
+        eta = np.exp(log_eta)
+        return (
+            phase_Gk.raw_theta(c1 * eta)
+            + e_q * phase_Tk_q.raw_theta(c2 * eta)
+            + e_r * phase_Tk_r.raw_theta(c3 * eta)
+        )
+
+    def theta_mod_2pi(log_eta):
+        eta = np.exp(log_eta)
+        return (
+            phase_Gk.theta_mod_2pi(c1 * eta)
+            + e_q * phase_Tk_q.theta_mod_2pi(c2 * eta)
+            + e_r * phase_Tk_r.theta_mod_2pi(c3 * eta)
+        )
+
+    def theta_deriv(log_eta):
+        eta = np.exp(log_eta)
+        return (
+            phase_Gk.theta_deriv(c1 * eta, log_derivative=True)
+            + e_q * phase_Tk_q.theta_deriv(c2 * eta, log_derivative=True)
+            + e_r * phase_Tk_r.theta_deriv(c3 * eta, log_derivative=True)
+        )
+
+    return theta, theta_mod_2pi, theta_deriv
+
+
+class TestThreeBesselPhaseGroups(unittest.TestCase):
+    """
+    _three_bessel_Levin's phase assembly (prompts/qsi-phase-groups prompt 01).
+
+    Its eight adaptive_levin_sincos calls used to build each group twice over by summation -- once
+    from three raw_theta values, once from three theta_mod_2pi values -- and supplied neither a
+    theta_deriv nor a theta_abserr. They now pass LiouvilleGreen.three_bessel_integrals'
+    BesselPhaseGroup, which holds the group as K eta + C + R(eta).
+    """
+
+    def _build(self, coefficients):
+        """
+        The three phase objects as _three_bessel_Levin holds them -- one for the Green's function
+        and *one shared object* for both transfer factors, evaluated at two different coefficients
+        -- and the sampling grid in eta.
+        """
+        eta_max = PHASE_GROUP_X_MAX / max(coefficients)
+
+        phase_Gk = bessel_phase(PHASE_GROUP_ORDERS[0], 1.1 * coefficients[0] * eta_max)[
+            "phase"
+        ]
+        phase_Tk = bessel_phase(
+            PHASE_GROUP_ORDERS[1], 1.1 * max(coefficients[1], coefficients[2]) * eta_max
+        )["phase"]
+        phases = (phase_Gk, phase_Tk, phase_Tk)
+
+        # every factor must be inside its own domain, i.e. eta >= min_x_i / m_i
+        eta_lo = max(
+            phase.min_x / coefficient
+            for phase, coefficient in zip(phases, coefficients)
+        )
+        grid = np.logspace(np.log10(1.0001 * eta_lo), np.log10(eta_max), 31)
+        return phases, grid
+
+    # -- the four keys -------------------------------------------------------------------------
+
+    def test_every_analytic_Levin_call_supplies_all_four_phase_keys(self):
+        """
+        The test that would have caught the gap. Mirrors
+        TestTolerancePlumbing.test_every_analytic_Levin_call_uses_the_same_tolerances: the same
+        spy captures all sixteen calls (eight groups x two nu_types) of one analytic_integral.
+
+        "theta" stays in the dict even though the driver never evaluates it once "theta_mod_2pi"
+        and "theta_deriv" are both present (levin_quadrature.py:948-952, :1038) --
+        compatibility-only is not optional, and _Basis_SinCos raises without it.
+        """
+        case = Case(0.0, SHAPES[0], 100.0, exact=True)
+        B05, B25 = case.bessel_phase_data()
+
+        seen = []
+        real = qsi_module.adaptive_levin_sincos
+
+        def spy(*args, **kwargs):
+            seen.append((kwargs["notify_label"], frozenset(kwargs["theta"].keys())))
+            return real(*args, **kwargs)
+
+        with patch.object(qsi_module, "adaptive_levin_sincos", spy):
+            analytic_integral(
+                case.model,
+                case.k.k,
+                case.q.k,
+                case.r.k,
+                FakeZ(case.z_resp),
+                max_z=FakeZ(case.z_source_max),
+                min_z=FakeZ(case.z_resp),
+                b=case.b,
+                Bessel_0pt5=B05,
+                Bessel_2pt5=B25,
+                rtol=1.0e-8,
+                atol=1.0e-25,
+            )
+
+        expected = frozenset({"theta", "theta_mod_2pi", "theta_deriv", "theta_abserr"})
+        print(
+            f"\n[phase keys] {len(seen)} analytic Levin calls, key sets "
+            f"{sorted({tuple(sorted(keys)) for _, keys in seen})}"
+        )
+        self.assertEqual(len(seen), 16)
+        for label, keys in seen:
+            with self.subTest(call=label):
+                self.assertEqual(keys, expected)
+
+    # -- the improvement, measured -------------------------------------------------------------
+
+    def test_the_group_phase_and_derivative_beat_the_summed_route_at_resonance(self):
+        """
+        |delta Theta| and |delta dTheta/dlog eta| for the new and old assemblies, against 60-digit
+        mpmath at the exact products, for a near-resonant and a generic group.
+
+        The derivative is scored against max(k, q c_s, r c_s) eta and **never** against the group's
+        own derivative, which passes through zero near resonance: a relative-error assertion on it
+        would be a bug in the test even where it happened to pass. See
+        test_the_group_derivative_has_no_relative_scale_at_resonance.
+
+        The generic group carries no cancellation for the restructure to preserve, and what it is
+        asserted against is the floor model rather than a gain: each route is at one rounding of
+        its own leading scale. prompts/transfer-remedial's [07-generic-K-product-rounding]
+        measured 1.5e-5 rad for *both* routes at K = 0.1, x = 1e12, where K/max = 0.048; at this
+        call site's K/max = 0.27 the two floors differ by max/|K| rather than coinciding, so the
+        ratio is ~16 in the phase and 1.00 in the derivative. Neither number is the cancellation
+        gain, which is three to four orders larger.
+        """
+        cases = _phase_group_coefficients()
+        for label, coefficients in cases.items():
+            with self.subTest(case=label):
+                phases, grid = self._build(coefficients)
+                group = qsi_module.BesselPhaseGroup(
+                    phases, coefficients, PHASE_GROUP_SIGNS
+                )
+                legacy_theta, _, legacy_deriv = _legacy_qsi_group(phases, coefficients)
+                scale_coefficient = max(coefficients)
+
+                if label == "near-resonant":
+                    # k was chosen as fl(q c_s + r c_s), and for these two coefficients that sum
+                    # is exactly representable
+                    self.assertEqual(group.K, 0.0)
+
+                worst = {
+                    key: 0.0
+                    for key in ("theta_new", "theta_old", "deriv_new", "deriv_old")
+                }
+                at = dict(worst)
+                worst_scaled_new = worst_scaled_old = 0.0
+                worst_over_bound = 0.0
+
+                for eta in grid:
+                    log_eta = float(np.log(eta))
+                    eta_used = float(np.exp(log_eta))
+                    reference, reference_deriv = _phase_group_reference(
+                        coefficients, eta_used
+                    )
+                    scale = scale_coefficient * eta_used
+
+                    errors = {
+                        "theta_new": abs(group.theta(log_eta) - reference),
+                        "theta_old": abs(legacy_theta(log_eta) - reference),
+                        "deriv_new": abs(group.theta_deriv(log_eta) - reference_deriv),
+                        "deriv_old": abs(legacy_deriv(log_eta) - reference_deriv),
+                    }
+                    for key, value in errors.items():
+                        if value > worst[key]:
+                            worst[key], at[key] = value, eta_used
+
+                    worst_scaled_new = max(
+                        worst_scaled_new, errors["deriv_new"] / scale
+                    )
+                    worst_scaled_old = max(
+                        worst_scaled_old, errors["deriv_old"] / scale
+                    )
+
+                    # the group's own declaration, plus the one rounding of the product K eta that
+                    # no double-valued phase of that size can avoid
+                    bound = (
+                        group.theta_abserr(log_eta)
+                        + 2.0 * EPS * abs(group.K) * eta_used
+                    )
+                    self.assertLessEqual(
+                        errors["theta_new"],
+                        bound,
+                        msg=(
+                            f"{label}: |delta Theta| = {errors['theta_new']:.6e} at "
+                            f"eta = {eta_used:.6e} exceeds the declared "
+                            f"{group.theta_abserr(log_eta):.6e} plus the eps |K| eta product "
+                            f"floor (bound {bound:.6e})"
+                        ),
+                    )
+                    worst_over_bound = max(
+                        worst_over_bound, errors["theta_new"] / bound
+                    )
+
+                print(
+                    f"\n@@ QSI group ({label}): K={group.K!r}, |K|/max={abs(group.K) / scale_coefficient:.3e}\n"
+                    f"   |delta Theta|              new {worst['theta_new']:.4e} (eta={at['theta_new']:.5g}), "
+                    f"old {worst['theta_old']:.4e} (eta={at['theta_old']:.5g}), "
+                    f"ratio old/new {worst['theta_old'] / worst['theta_new']:.4g}; "
+                    f"worst error/declared-bound {worst_over_bound:.4g}\n"
+                    f"   |delta dTheta/dlog eta|    new {worst['deriv_new']:.4e} (eta={at['deriv_new']:.5g}), "
+                    f"old {worst['deriv_old']:.4e} (eta={at['deriv_old']:.5g}), "
+                    f"ratio old/new {worst['deriv_old'] / worst['deriv_new']:.4g}\n"
+                    f"   scaled by max(k,q cs,r cs) eta: new {worst_scaled_new:.4e}, old {worst_scaled_old:.4e}"
+                )
+
+                # the acceptance metric for the derivative is the scaled one (never a ratio
+                # against the group's own derivative)
+                self.assertLess(worst_scaled_new, 1.0e-11)
+
+                if label == "generic":
+                    # There is no cancellation to preserve here, so what is asserted is the floor
+                    # *model*, not a gain: each route is at one rounding of its own leading scale,
+                    # eps |K| eta for the group and eps max(m_i) eta for the sum of raw phases, and
+                    # the measured ratio is therefore just max / |K| = 3.7 times the three-term
+                    # summation. Measured it is ~16 in the phase and 1.00 in the derivative. That
+                    # is not the cancellation gain the resonant case shows and must not be read as
+                    # one -- see prompts/transfer-remedial [07-generic-K-product-rounding], whose
+                    # K/max = 0.048 case measured 1.00 for both.
+                    eta_max = PHASE_GROUP_X_MAX / scale_coefficient
+                    self.assertLessEqual(
+                        worst["theta_new"], 4.0 * EPS * abs(group.K) * eta_max
+                    )
+                else:
+                    self.assertLess(worst["theta_new"], 1.0e-9)
+                    self.assertGreater(worst["theta_old"], 1.0e-9)
+                    # measured 3.7e4 and 2.4e3; asserted an order below each, because the new
+                    # route's worst point is the interpolation floor at the *bottom* of the grid
+                    # and does not scale with eta_max the way the old route's does
+                    self.assertLess(worst["theta_new"], worst["theta_old"] / 1.0e3)
+                    self.assertLess(worst["deriv_new"], worst["deriv_old"] / 1.0e2)
+
+    def test_the_group_derivative_has_no_relative_scale_at_resonance(self):
+        """
+        The trap the scaled metric above exists to avoid, stated as a measurement.
+
+        At a near-resonant K the group log-derivative K eta + sum_i e_i dr_i/dlog eta is O(1) or
+        smaller while the constituent scale max(k, q c_s, r c_s) eta is ~1e9, so |delta| / |dTheta|
+        is not a metric: it is undefined at exact resonance and meaningless just short of it. The
+        old route gets that small number wrong by order 100 % of itself, which is invisible in any
+        relative measure and is exactly what Levin's subdivision (phase_span,
+        levin_quadrature.py:1090) consumes.
+        """
+        coefficients = _phase_group_coefficients()["near-resonant"]
+        phases, grid = self._build(coefficients)
+        group = qsi_module.BesselPhaseGroup(phases, coefficients, PHASE_GROUP_SIGNS)
+        _, _, legacy_deriv = _legacy_qsi_group(phases, coefficients)
+
+        top = float(np.log(grid[-1]))
+        eta_top = float(np.exp(top))
+        _, reference_deriv = _phase_group_reference(coefficients, eta_top)
+
+        new_error = abs(group.theta_deriv(top) - reference_deriv)
+        old_error = abs(legacy_deriv(top) - reference_deriv)
+        constituent_scale = max(coefficients) * eta_top
+
+        print(
+            f"\n@@ QSI group derivative at resonance, eta={eta_top:.5g}: "
+            f"dTheta/dlog eta = {reference_deriv:.6e} against a constituent scale of "
+            f"{constituent_scale:.3e}\n"
+            f"   relative error (the metric this test refuses to use): "
+            f"new {new_error / abs(reference_deriv):.3e}, old {old_error / abs(reference_deriv):.3e}"
+        )
+
+        self.assertLess(abs(group.theta_deriv(top)), 1.0e3)
+        self.assertLess(abs(reference_deriv) / constituent_scale, 1.0e-5)
+        self.assertLess(new_error, old_error)
+
+    # -- the declaration reaches the caller ----------------------------------------------------
+
+    def test_declaring_theta_abserr_enlarges_the_reported_abserr(self):
+        """
+        levin_quadrature.py:2360: a declared theta_abserr exists "so the caller sees an honest
+        number instead of an artificially small one". So the reported abserr must be allowed to
+        *rise*; a test expecting it to shrink would be expecting the wrong thing.
+
+        Every one of the sixteen analytic Levin calls is run twice here -- once as the module now
+        calls it, once with "theta_abserr" removed from the same dict and nothing else changed --
+        and the two reported abserrs are compared. The four-key result is the one returned, so the
+        integral itself is unaffected.
+        """
+        case = Case(0.0, SHAPES[0], 100.0, exact=True)
+        B05, B25 = case.bessel_phase_data()
+
+        rows = []
+        real = qsi_module.adaptive_levin_sincos
+
+        def spy(*args, **kwargs):
+            declared = real(*args, **kwargs)
+
+            stripped = dict(kwargs)
+            stripped["theta"] = {
+                key: value
+                for key, value in kwargs["theta"].items()
+                if key != "theta_abserr"
+            }
+            silent = real(*args, **stripped)
+
+            rows.append((kwargs["notify_label"], silent["abserr"], declared["abserr"]))
+            return declared
+
+        with patch.object(qsi_module, "adaptive_levin_sincos", spy):
+            analytic_integral(
+                case.model,
+                case.k.k,
+                case.q.k,
+                case.r.k,
+                FakeZ(case.z_resp),
+                max_z=FakeZ(case.z_source_max),
+                min_z=FakeZ(case.z_resp),
+                b=case.b,
+                Bessel_0pt5=B05,
+                Bessel_2pt5=B25,
+                rtol=1.0e-8,
+                atol=1.0e-25,
+            )
+
+        print("\n[declared phase error] reported abserr without / with theta_abserr:")
+        for label, silent, declared in rows:
+            ratio = declared / silent if silent > 0.0 else float("inf")
+            print(f"   {label:<12s} {silent:.6e} -> {declared:.6e}  (x{ratio:.4g})")
+
+        self.assertEqual(len(rows), 16)
+        self.assertTrue(
+            any(declared > silent for _, silent, declared in rows),
+            "declaring theta_abserr left every reported abserr unchanged or smaller",
+        )
+
+
 class TestBesselOrderGuard(unittest.TestCase):
     """
     B7/QI-1: the Levin branch of the analytic oracle uses the caller's bessel_phase splines
     while _three_bessel_quad recomputes jv(nu + b, .); they agree only if both were built at the
-    same b. bessel_phase() does not record its order, so the guard checks it numerically.
+    same b. The guard checks the order numerically, by reconstruction rather than by reading the
+    phase object's declared "nu" (see _check_bessel_order's docstring).
     """
 
     def test_splines_built_at_the_wrong_b_are_rejected(self):

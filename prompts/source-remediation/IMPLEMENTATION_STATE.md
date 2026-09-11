@@ -434,6 +434,50 @@ Traceability from the audit's finding IDs to the prompt that discharges them.
 
 ## 4. Resolved issues
 
+- **[transfer-remedial-qsi-phase-groups]** *(opened by `prompts/transfer-remedial` prompt 09,
+  2026-09-10 — a hand-off from that campaign, not from a prompt of this one; **closed
+  2026-09-11** by `prompts/qsi-phase-groups` prompt 01)* —
+  `ComputeTargets/QuadSourceIntegral.py`'s `_three_bessel_Levin` (`:1175-1442`) makes eight
+  `adaptive_levin_sincos` calls whose phases are signed sums of three `bessel_phase` `raw_theta`
+  values (`:1226, :1267, :1308, :1349`), supplying **no `theta_deriv`** and no `theta_abserr` — so
+  `need_theta_Cheb` is `True` there and Levin obtains $\theta'$ by spectral differentiation of the
+  raw phase, exactly the route `LiouvilleGreen/three_bessel_integrals.py`'s phase-group assembly
+  was rewritten to avoid (`prompts/transfer-remedial` prompt 07). The gap survived this campaign's
+  own rewrite of this file (prompts 08–10, `4afd531`/`ffc50ae`/`815217b`) and is now anomalous
+  within it: the sibling module's phase-group route passes `theta_deriv`
+  (`three_bessel_integrals.py:1008`, `LEVIN_USE_THETA_DERIV = True` at `:93`) while these eight
+  calls do not, and that module's own comment at `:74` notes they are the odd one out. Checked
+  against this board before filing: item B6 above (`atol`/`rtol` forwarding, prompt 09) is the only
+  existing record against these call sites — the missing derivative and the missing declared error
+  are not tracked anywhere else in this campaign. **Impact:** the analytic-branch comparison in
+  `QuadSourceIntegral` inherits none of `prompts/transfer-remedial`'s eight-order Bessel-oracle
+  improvement or its phase-group restructuring: its Levin phase input is as noisy near resonance as
+  before that campaign, and its reported `abserr` cannot see the phase construction's own accuracy.
+  **Next step:** there is a working pattern to copy rather than a design to invent —
+  `LiouvilleGreen/three_bessel_integrals.py` now supplies `theta_abserr` and assembles
+  $Kt+C+R(t)$ from the leading coefficients (formed once, before multiplying by $t$) plus
+  `phase.residual`; its `levin_theta()` is the four-key dict
+  (`theta`, `theta_mod_2pi`, `theta_deriv`, `theta_abserr`) to imitate for each of
+  `_three_bessel_Levin`'s eight calls, with `theta_deriv` from `phase.residual_log_deriv`/
+  `phase.theta_deriv` and `theta_abserr` from summing the three constituents'
+  `phase.theta_abserr_at` at their own arguments. Full detail, including the measured cancellation
+  numbers this pattern removes in the sibling module, is in
+  `docs/transfer-remedial-verification.md`.
+  **Assigned (2026-09-11):** `prompts/qsi-phase-groups` prompt 01 owns this. It was filed here when
+  this campaign was already complete at 13 of 13, so no prompt remained to discharge it; rather
+  than leave it on a closed board, a one-prompt campaign was opened for it. This entry stays open
+  until that prompt lands, and is then closed by it.
+
+  **Closed (2026-09-11)** by `prompts/qsi-phase-groups` prompt 01, which is the campaign this
+  entry was assigned to. All eight calls now pass `BesselPhaseGroup.levin_theta()` — the four-key
+  dict — from `LiouvilleGreen/three_bessel_integrals.py`, the pattern the "Next step" above named.
+  Measured at this call site's own orders and coefficients, the group phase error falls from
+  5.15e-08 rad to 1.38e-12 and the group log-derivative from 2.28e-08 to 9.64e-12 at exact
+  resonance; `analytic_rad` moved by at most 1.02e-08 relative on the eighteen
+  `TestAnalyticOracle` fixtures, which pass unchanged at their existing thresholds. See
+  `prompts/qsi-phase-groups/logs/01-three-bessel-levin-phase-groups.md`. Nothing else on this
+  board changed.
+
 - **[09-WKB_quad-columns-are-vestigial]** *(opened by prompt 09, 2026-09-09; **closed
   2026-09-10** by the post-campaign tidy-up, at the user's direction)* — `WKB_quad` and its six
   `WKB_quad_*` timing columns had been identically `0.0`/`None` since prompt 08 retired direct
