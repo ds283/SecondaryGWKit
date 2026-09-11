@@ -277,7 +277,12 @@ review those three most closely.
 | # | Prompt | Covers | Files | Difficulty | Model |
 |---|---|---|---|---|---|
 | 11 | [`11-numeric-diagnostics-and-units.md`](11-numeric-diagnostics-and-units.md) | review §10.2, §12.5, §13.1; fact (h) | `Quadrature/integrators/numeric_with_phase_cut.py`, `Quadrature/supervisors/numeric.py`, `LiouvilleGreen/integration_tools.py`, `ComputeTargets/{Gk,Tk}NumericIntegration.py`, two comment hunks of `main.py`; tests | Medium; one semantic decision the user must see (`[00-unresolved-osc-print-policy]`) | **Opus** |
+| 16 | [`16-unresolved-osc-print-policy.md`](16-unresolved-osc-print-policy.md) | §7 D2, decided; §3 `[00-unresolved-osc-print-policy]`; fact (h) | `Quadrature/integrators/numeric_with_phase_cut.py`, `ComputeTargets/{Gk,Tk}NumericIntegration.py`, `main.py`; tests | Low–medium; `main.py` plumbing whose failure mode is silent | **Opus** |
 | 12 | [`12-tk-numeric-atol.md`](12-tk-numeric-atol.md) | review §12.5 | `config/defaults.py`, `main.py` (every `TkNumericIntegration` `object_get`); tests | Low–medium; silent plumbing errors would make datastore lookups miss | **Opus** |
+
+> Row 16 is numbered last because the campaign's numbers are append-only, but it **runs between 11
+> and 12**: it is the follow-up §7 D2 anticipated, enacting the user's choice of option (ii) once
+> prompt 11 had measured the fire rate. Prompt 12 is unaffected by it.
 
 ### Workstream F — verification and close-out
 
@@ -576,8 +581,8 @@ evaluation) per task would dominate the millisecond producers this campaign crea
 regeneration is attached** either way (`tau_Mpc` values change); a datastore that predates 03 is not
 readable by the new factory and the factory says so. Issue `[00-tau-storage-decision]`.
 
-**D2 — the corrected `has_unresolved_osc` test will fire far more often (left to the user;
-measured by 11).** With the $\ln10$ slip fixed *and* the test evaluated against the actual spacing
+**D2 — the corrected `has_unresolved_osc` test fires far more often (measured by 11; decided by
+the user 2026-09-11 — option (ii), implemented by prompt 16).** With the $\ln10$ slip fixed *and* the test evaluated against the actual spacing
 of the caller's sample grid — which for `GkNumericIntegration` is the *response* grid, 12× sparser
 than the `delta_logz` `main.py` passes — the flag fires wherever
 $2\pi(1+z)/x<\Delta z_{\rm grid}$, i.e. above $x\approx22$ on the response grid: essentially every
@@ -587,6 +592,19 @@ implements the faithful test, keeps a single warning line per object as today, *
 rate on stand-ins with the production grids**, and the orchestrator stops so the user can choose
 between (i) keep the per-object line, (ii) store the flag and print a per-`k` summary in `main.py`,
 (iii) pass the intended grid explicitly. Issue `[00-unresolved-osc-print-policy]`.
+
+**Measured and decided.** Prompt 11 measured **2,149 of 2,149** $G_k$-like objects firing (first at
+$x=26.5$–$66.6$) and **0 of 6** $T_k$-like, which peak at 0.807–0.822 of the trip threshold — the
+$T_k$ case this decision was unsure of, now settled. The user chose **option (ii)** on 2026-09-11;
+**prompt 16** implements it. Option (iii) was rejected because it would suppress the signal by
+testing $G_k$ against a grid it is not sampled on, undoing prompt 11's faithful semantics. Note
+what the flag now detects: it trips at $x=19.74$ against $x=e^3=20.09$ at the stop-search window's
+floor, so it is `False` before the numeric→WKB hand-over window and `True` across all of it — the
+same condition as the hand-over campaign's `[05-numeric-region-is-now-the-accuracy-floor]` and
+`[06-source-spline-residual-vs-handover]`. **Prompt 16 settles only where that information is
+printed**; whether the response grid should resolve the mode through the seam is the hand-over
+campaign's (`docs/OPEN_ISSUES.md` §1.1), and the fire rate is an output of its design rather than
+a knob to tune here.
 
 **D3 — Gauss orders (taken by 02, not by planning).** Review §7 measures order 4 at the floor for
 $\tau$ on LambdaCDM; nothing is measured for $\tau_s$, $F$ or $\rho$ on `QCD_Cosmology`. Prompt 02

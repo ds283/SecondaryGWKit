@@ -139,7 +139,12 @@ Legend: ⬜ not started · 🟡 in flight · ✅ complete · ⚠️ complete wit
 | # | Prompt | Covers | Model | Status | Commit | Log |
 |---|---|---|---|---|---|---|
 | 11 | [Numeric diagnostics and units](11-numeric-diagnostics-and-units.md) | review §10.2, §12.5, §13.1 | Opus | ⚠️ | *"Test oscillation resolution on the sample grid, off the RHS"* (SHA not embedded, per the campaign convention) | [`logs/11-numeric-diagnostics-and-units.md`](logs/11-numeric-diagnostics-and-units.md) |
+| 16 | [Unresolved-osc print policy](16-unresolved-osc-print-policy.md) | §7 D2; §3 `[00-unresolved-osc-print-policy]` | Opus | ⬜ | | |
 | 12 | [Tk numeric `atol`](12-tk-numeric-atol.md) | review §12.5 | Opus | ⬜ | | |
+
+> Row 16 is numbered last because the campaign's numbers are append-only, but it **runs between 11
+> and 12** — the follow-up README §7 D2 anticipated, enacting the user's choice of option (ii)
+> (2026-09-11) once prompt 11 had measured the fire rate.
 
 ### Workstream F — verification
 
@@ -147,7 +152,7 @@ Legend: ⬜ not started · 🟡 in flight · ✅ complete · ⚠️ complete wit
 |---|---|---|---|---|---|---|
 | 13 | [Verification and docs](13-verification-and-docs.md) | review §4, §12.3, §13.5 | Opus | ⬜ | | |
 
-**Progress:** 13 / 15 complete.
+**Progress:** 13 / 16 complete.
 
 ---
 
@@ -281,6 +286,17 @@ Opened by the planning pass, 2026-09-10, before any prompt runs.
   per-$k$ summary in `main.py` / explicit grid; closes when the chosen policy lands (a follow-up
   prompt if not (i)). If (iii) is chosen, `NumericIntegrationSupervisor.report_wavelength` is
   retained, corrected and ready; if (ii), it should probably go.
+  **Decided by the user 2026-09-11: option (ii)** — store the flag, print a per-$k$ summary in
+  `main.py`. **Assigned (2026-09-11): prompt 16**, which gates the per-object print rather than
+  deleting it (README §2 (h)) and wires a `post_handler` summary onto both numeric work queues.
+  Option (iii) was rejected: it would test $G_k$ against a grid it is not sampled on, suppressing
+  the signal and undoing prompt 11's faithful semantics. **What prompt 16 does not settle:** the
+  flag trips at $x=19.74$ against $x=e^3=20.09$ at the stop-search window's floor, so it is
+  `False` before the numeric→WKB hand-over window and `True` across all of it — the same condition
+  as `[05-numeric-region-is-now-the-accuracy-floor]` and `[06-source-spline-residual-vs-handover]`
+  (`docs/OPEN_ISSUES.md` §1.1). Whether the response grid should resolve the mode through the seam
+  is the hand-over campaign's, and the fire rate is an output of its design; prompt 16 settles only
+  where the information is printed.
 
 - **[11-stop-point-root-tolerance]** *(opened by prompt 11, 2026-09-11)* — `find_phase_extremum`
   refines the sign change with `root_scalar(..., xtol=1e-6, rtol=1e-4)`, so the stop point is

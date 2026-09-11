@@ -12,11 +12,12 @@ prompt-specific checks — test commands, allowed files, thresholds — filled i
 | D — the consumers | 08, 09, 10 | [`workstream-D.md`](workstream-D.md) | The $h^4x/384$ cure. **Settle the `transfer-remedial` overlap before 10** |
 | — interim: `PrimitivePhase` rate | 15 | [`prompt-15.md`](prompt-15.md) | Not a workstream — a single prompt closing `[10-primitive-phase-leading-rate-is-hardcoded]`, dispatched after D closed and before E, at the user's request |
 | E — the numeric region | 11, 12 | [`workstream-E.md`](workstream-E.md) | Independent; can run at any point. **Always stops after 11** to put D2 to the user |
+| — interim: D2 print policy | 16 | [`prompt-16.md`](prompt-16.md) | Not a workstream — the follow-up §7 D2 anticipated, enacting the user's choice of option (ii). Runs between 11 and 12 |
 | F — verification | 13 | [`workstream-F.md`](workstream-F.md) | Measurements and documents; may surface findings that are not this campaign's to fix |
 
 ## Running the campaign
 
-Recommended order **A → B → C → D → 15 → E → F** (`../README.md` §4). E is independent and may be
+Recommended order **A → B → C → D → 15 → E (11 → 16 → 12) → F** (`../README.md` §4). E is independent and may be
 run first as a warm-up or interleaved with any of A–D and 15; nothing else may be reordered —
 every prompt from 03 onward consumes an interface the previous one defines.
 
