@@ -407,6 +407,52 @@ class QCDModel:
 
 
 # ---------------------------------------------------------------------------------------------
+# a closed-form stand-in for a ``TablePrimitive``
+# ---------------------------------------------------------------------------------------------
+
+
+class ClosedFormPrimitive:
+    """
+    A stand-in for ``BackgroundModel.TablePrimitive`` whose primitive is known in closed form:
+    ``__call__(z) = f(z)`` and ``delta(z_a, z_b) = f(z_b) - f(z_a)``, the same sign convention as
+    the real accessor (README §2 (c)).
+
+    **Why a difference of two pointwise values is acceptable here, and only here.** The whole
+    point of the production accessor is that it never forms ``delta`` that way: ``tau`` reaches
+    ~1.4e4 Mpc, so half an ulp of the primitive is 9e-4 rad of phase at ``k = 3e8/Mpc`` *however
+    short the interval*, and the campaign's node table is stored as (hi, lo) pairs precisely so
+    that a short baseline is not scored against the size of the whole primitive (review §13.3,
+    README §2 (c)). That failure is a *relative* one: the rounding of ``f(z_b) - f(z_a)`` is
+    ~1 ulp of ``max|f|``, i.e. ~1 ulp of the accumulated phase once multiplied by ``k``.
+
+    In a test fixture whose accumulated phase ``x = k c_s tau`` stays below ~1e4 rad, one ulp of
+    the phase is ~2e-12 rad, which is below every threshold such a fixture asserts and below the
+    spline error of the residual it is there to exhibit. (At ``x = 1e6``, where
+    ``test_tk_source_functions`` exercises the consumer decomposition, it is ~1.2e-10 rad --
+    still three orders below that test's 1e-7 rad bound, but no longer negligible against a
+    tighter one.) Do not use this class for anything that runs on the production background:
+    there ``x`` reaches 1.4e10 and the ulp is the dominant error.
+
+    :param f: the primitive, a callable of ``z``
+    :param label: a name, for error messages and diagnostics
+    """
+
+    def __init__(self, f, label: str = ""):
+        self._f = f
+        self._label = label
+
+    def __call__(self, z: float) -> float:
+        return float(self._f(float(z)))
+
+    def delta(self, z_a: float, z_b: float) -> float:
+        return float(self._f(float(z_b))) - float(self._f(float(z_a)))
+
+    @property
+    def label(self) -> str:
+        return self._label
+
+
+# ---------------------------------------------------------------------------------------------
 # error definitions (README §6; used unchanged by every later prompt)
 # ---------------------------------------------------------------------------------------------
 

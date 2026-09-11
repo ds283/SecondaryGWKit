@@ -405,7 +405,22 @@ class Case:
             }
             self.Tk_builder = lambda model, k, Tn, Tw: exact_functions[float(k)]
         else:
-            self.Tk_builder = tk_fixtures.TkSourceFunctions
+            # The stored `friction` samples captured above are backed out from the *exact*
+            # Bessel envelope, so the background they are consistent with is the one whose
+            # Liouville-Green friction integral is that envelope's -- `exact_envelope_model()`,
+            # which prompt 10 of prompts/GkTk-remedial added to the fixture for exactly this.
+            # Since TkSourceFunctions now reads the friction from `model.functions.friction_F`
+            # rather than splining the samples, handing it `self.model` (the constant-w closed
+            # form) would silently build the LG amplitude instead of the exact envelope; it
+            # refuses to, naming the ~6e-6 disagreement. Substitute the right model per
+            # wavenumber, as the `exact` branch above already does for the whole object.
+            envelope_models = {
+                float(shape.q): self.Fq.exact_envelope_model(),
+                float(shape.r): self.Fr.exact_envelope_model(),
+            }
+            self.Tk_builder = lambda model, k, Tn, Tw: tk_fixtures.TkSourceFunctions(
+                envelope_models[float(k)], k, Tn, Tw
+            )
 
         # source: the exact f, splined on the production grid over the both-numeric region
         z_floor = max(self.Fq.crossover_z, self.Fr.crossover_z)

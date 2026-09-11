@@ -27,26 +27,37 @@ Three regions, as z descends:
     log(1+z) through the stored `TkNumericValue.T`, `.Tprime` samples;
   * the *WKB* (Liouville-Green) region, where T = M(z) sin(theta(z)) and the consumer is given
     the amplitude M, its logarithmic derivative d ln M/dz (closed form; see below), the phase
-    theta as a `phase_spline`, and d(theta)/dz = omega_eff (closed form).
+    theta as a `PrimitivePhase`, and d(theta)/dz = omega_eff (closed form).
 
 Amplitude
 ---------
 
-From `TkWKBIntegration.store()` (`TkWKBIntegration.py:494-506`), with `cos_coeff = 0`
-(set at `TkWKBIntegration.py:458`),
+From `TkWKBIntegration.store()` (`TkWKBIntegration.py:491-503`), with `cos_coeff = 0`
+(set at `TkWKBIntegration.py:443`),
 
     M(z) = sin_coeff * sqrt(H_init / H(z)) * omega_eff(z)^(-1/2) * exp(F(z))
 
 with H_init = H(crossover_z) (the `H_ratio` stored per value is exactly H_init/H),
-omega_eff^2 = `WKB_Tk.Tk_omegaEff_sq(model, k, z)` and F the Liouville-Green friction integral
-stored per value as `friction`. Only F is splined here: the other factors are closed forms and
-are evaluated exactly, so the product is never splined and the amplitude's derivative never
-differentiates a spline.
+omega_eff^2 = `WKB_Tk.Tk_omegaEff_sq(model, k, z)` and F the Liouville-Green friction integral,
+which the background model tabulates once per cosmology as `model.functions.friction_F`. F is
+read from that table as
 
-The friction integrand is `TkWKBIntegration.friction_RHS` (`TkWKBIntegration.py:25-49`, the
-returned value at `:49`): dF/dz = (3/2)(1 + c_s^2)/(1+z), with c_s^2 = `wPerturbations(z)`.
-That is exactly the integrand of spec 01 R23. With d ln H/dz = epsilon/(1+z), R23/R24 give the
-closed form used by `dlnM_dz`:
+    F(z) = friction_F.delta(crossover_z, z),
+
+exact to ~1e-14 absolute (prompts/GkTk-remedial log 04) and **not splined**: every factor of M
+is now a closed form or a table lookup, so nothing in the amplitude or in its derivative
+differentiates a spline. The stored `friction` samples are still read, but only to cross-check
+the table at construction: they must agree to `FRICTION_CROSS_CHECK_RTOL` of the largest |F| on
+the sampled range, which they do bit-for-bit for a `TkWKBIntegration` written by prompt 07 of
+`prompts/GkTk-remedial`. A datastore written by the *retired* friction ODE disagrees by
+2.261e-07 absolute in F (log 04) and is refused with a message saying so.
+
+The friction integrand is dF/dz = (3/2)(1 + c_s^2)/(1+z) with c_s^2 = `wPerturbations(z)` --
+exactly the integrand of spec 01 R23. (It used to be the right-hand side of a per-object ODE in
+`TkWKBIntegration`, which prompt 07 retired; that right-hand side survives verbatim in
+`ComputeTargets/tests/test_background_cs_tau_friction.py`, where prompt 04's
+`TestFrictionODEComparison` measures what it cost.) With d ln H/dz = epsilon/(1+z),
+R23/R24 give the closed form used by `dlnM_dz`:
 
     d ln M / dz = - epsilon(z) / (2(1+z))
                   - (1/2) d ln omega_eff / dz
@@ -60,11 +71,36 @@ Phase
 
 The phase convention is the code's: d(theta)/dz = +omega_eff integrated towards *smaller* z
 from theta(z_init) = 0, so theta is negative and *decreasing* as z falls -- equivalently
-theta is an increasing function of z (audit `TK-report.md` TK-8(a)). The phase spline is
-therefore built with `increasing=True`, unlike `GkSourcePolicyData._create_functions()`
-(`:657-671`), where theta at fixed response redshift is a decreasing function of the *source*
-redshift. `omega()` returns the closed-form sqrt(Tk_omegaEff_sq) rather than the spline
-derivative, and equals `phase.theta_deriv(z)` up to spline error.
+theta is an increasing function of z (audit `TK-report.md` TK-8(a)).
+
+The phase is a `ComputeTargets.primitive_phase.PrimitivePhase`, not a cubic spline of the
+stored theta samples. A cubic spline of theta itself carries h^4 x_T/384 (review section 5, section
+12.6): 3.5e-3 rad at k = 1e5/Mpc and ~10 rad at k = 3e8/Mpc on the production 100-per-decade
+grid, because the phase it interpolates grows like x_T and reaches 1.4e10. Instead
+
+    theta(z) = + k * cs_tau.delta(z, z_init) + phi(z)
+
+with `cs_tau` the background model's sound-horizon table int c_s dz/H, evaluated through its
+double-double interval accessor, and phi the small remainder -- the phase residual
+rho_T ~ -0.09 rad (review section 12.2) plus the initial-data offset deltaTheta that
+`TkWKBIntegration.store()` folded into the stored samples. phi is O(0.1) rad and smooth, so a
+cubic spline of *it* is limited by h^4 |phi''''|/384 instead.
+
+`sign = +1` here, against -1 for the Green's function: `PrimitivePhase` measures the leading
+term from a fixed anchor, and the transfer function's anchor is `z_init` at the *top* of its
+WKB region (the Green's function's is the response redshift at the bottom), so
+theta = +k cs_tau.delta(z, z_init) = -k cs_tau.delta(z_init, z), which is what
+`TkWKBIntegration` stores. `increasing` is no longer a concept: there is no spline of theta to
+order, and the sign convention is explicit. It is checked at construction against the stored
+samples -- with the wrong sign the residual would be *twice* the leading term rather than
+negligible beside it.
+
+`PrimitivePhase` computes the leading part of d(theta)/dz in closed form as `sign * k / H_eff`,
+where H_eff is whatever rate makes d/dz[leading.delta(z, anchor)] = 1/H_eff. For the Green's
+function the leading primitive is tau and H_eff is H; for the sound horizon
+d(cs_tau)/dz = -c_s/H, so H_eff = H/c_s, and `_SoundHorizonRate` below supplies exactly that.
+`omega()` returns the closed-form sqrt(Tk_omegaEff_sq), and now equals `phase.theta_deriv(z)`
+to the accuracy of phi's spline derivative rather than to that of a spline of theta.
 
 `sin_coeff` is exposed as well: `M` already includes it (so `M` may be negative, and no
 absolute value is taken anywhere), but a consumer that wants T's sign convention needs it.
@@ -72,8 +108,16 @@ absolute value is taken anywhere), but a consumer that wants T's sign convention
 Duck-typed input protocol
 -------------------------
 
-The two integration objects are consumed through the following attributes only, so that tests
-and future callers can pass synthetic stand-ins:
+The background model and the two integration objects are consumed through the following
+attributes only, so that tests and future callers can pass synthetic stand-ins:
+
+  `model` (a `BackgroundModel`, or anything exposing `.functions` with):
+      `.Hubble`, `.epsilon`, `.wPerturbations`  -- callables of z, as before
+      `.cs_tau`     -- the sound-horizon primitive, with `delta(z_a, z_b) = cs_tau(z_b) -
+                       cs_tau(z_a)`; `BackgroundModel.TablePrimitive` in production
+      `.friction_F` -- the Liouville-Green friction primitive, same `delta` convention
+    Both are new requirements of this class (prompt 10 of `prompts/GkTk-remedial`); a stand-in
+    that leaves them at their `None` default is refused by name at construction.
 
   `Tk_numeric` (a `TkNumericIntegration`, or anything exposing):
       `.values`     -- list of samples, in any z order, each with `.z.z` (float redshift),
@@ -84,7 +128,10 @@ and future callers can pass synthetic stand-ins:
 
   `Tk_WKB` (a `TkWKBIntegration`, or anything exposing):
       `.values`     -- list of samples, in any z order, each with `.z.z`, `.theta_div_2pi`,
-                       `.theta_mod_2pi`, `.friction`
+                       `.theta_mod_2pi`, `.friction`. `.friction` is no longer *used* to build
+                       the amplitude -- it is cross-checked against `friction_F` and then
+                       discarded -- but it is still required, because that cross-check is what
+                       detects a datastore built by the retired friction ODE
       `.sin_coeff`, `.cos_coeff` -- floats; `cos_coeff` must vanish
       `.z_init`     -- float, the hand-over redshift
 
@@ -105,8 +152,9 @@ actually be evaluated, i.e. the *sampled* ranges clipped at `crossover_z`:
 so `WKB_region[0] <= crossover_z <= numeric_region[1]`, with equality in both places when the
 sampling grid happens to contain the hand-over point. In production the two grids are the same
 `z_source_sample` grid, so at most one grid step separates `WKB_region[0]` from
-`numeric_region[1]`; nothing is extrapolated into that interval, because `phase_spline` refuses
-to be evaluated outside its own sampled range. Consumers that partition an integral at the
+`numeric_region[1]`; nothing is extrapolated into that interval, because `PrimitivePhase` keeps
+the same range discipline the stored-phase spline it replaced had, and refuses to be evaluated
+outside the sampled range of its residual. Consumers that partition an integral at the
 hand-over should clamp their nodes to these two ranges.
 """
 
@@ -117,14 +165,29 @@ from scipy.interpolate import make_interp_spline
 
 from ComputeTargets.BackgroundModel import BackgroundModel
 from ComputeTargets.WKB_Tk import Tk_omegaEff_sq, Tk_d_ln_omegaEff_dz
+from ComputeTargets.primitive_phase import PrimitivePhase, build_phi_samples
 from ComputeTargets.spline_wrappers import ZSplineWrapper
-from LiouvilleGreen.phase_spline import phase_spline
+from LiouvilleGreen.constants import TWO_PI
 from config.defaults import DEFAULT_FLOAT_PRECISION
 
 MIN_SPLINE_DATA_POINTS = 5
 
-# chunking used for the phase spline; matches GkSourcePolicyData._create_functions (:664-671)
-PHASE_SPLINE_CHUNK_LOGSTEP = 125
+# PrimitivePhase measures the leading term from a fixed anchor. For the transfer function the
+# anchor is z_init, at the *top* of the WKB region, so
+#
+#     theta(z) = +k * cs_tau.delta(z, z_init) = -k * cs_tau.delta(z_init, z)
+#
+# which is what TkWKBIntegration stores. (GkSourcePolicyData anchors at the response redshift,
+# at the bottom of its range, and carries sign = -1.)
+TK_PHASE_SIGN = +1
+
+# The stored `friction` samples must agree with model.functions.friction_F to this fraction of
+# the largest |F| on the sampled range. Prompt 07 makes the two bit-equal; the retired friction
+# ODE it replaced disagrees by 2.261e-07 absolute in F (prompts/GkTk-remedial log 04), which is
+# ~4e-9 of the production max |F| = 55.07. The table's own accuracy is 1.42e-14 absolute, i.e.
+# ~3e-16 of the same scale, so any tolerance between ~1e-14 and ~1e-9 separates the two cases;
+# 1e-12 sits in the middle of that band.
+FRICTION_CROSS_CHECK_RTOL = 1.0e-12
 
 
 def _one_plus_z(z: float, z_is_log: bool) -> Tuple[float, float]:
@@ -135,6 +198,38 @@ def _one_plus_z(z: float, z_is_log: bool) -> Tuple[float, float]:
         return exp(z) - 1.0, z
 
     return z, log(1.0 + z)
+
+
+class _SoundHorizonRate:
+    """
+    The rate that plays the role of H(z) for the sound horizon.
+
+    `PrimitivePhase` evaluates the derivative of its leading term in closed form as
+    `sign * k / model_functions.Hubble(z)`, because for the Green's function the leading
+    primitive is tau with d(tau)/dz = -1/H. The transfer function's leading primitive is
+    cs_tau with d(cs_tau)/dz = -c_s/H, so what it needs there is
+
+        d/dz [k cs_tau.delta(z, z_anchor)] = + k c_s(z)/H(z) = k / (H(z)/c_s(z)).
+
+    This adapter therefore reports H(z)/c_s(z), with c_s^2 = `wPerturbations(z)` (the author's
+    convention: `wPerturbations` is c_s^2 in the transfer-function sector, `wBackground` is w_0).
+    It is the only thing `PrimitivePhase` reads from `model_functions`, so nothing else has to
+    be forwarded.
+    """
+
+    def __init__(self, functions):
+        self._functions = functions
+
+    def Hubble(self, z: float) -> float:
+        cs_sq = self._functions.wPerturbations(z)
+        if cs_sq <= 0.0:
+            raise RuntimeError(
+                f"TkSourceFunctions: the sound speed squared c_s^2 = wPerturbations(z) must be "
+                f"positive to evaluate the transfer-function phase derivative (got {cs_sq:.8g} "
+                f"at z={z:.8g})"
+            )
+
+        return self._functions.Hubble(z) / sqrt(cs_sq)
 
 
 class TkSourceFunctions:
@@ -162,6 +257,25 @@ class TkSourceFunctions:
         self._model = model
         self._k = k
         self._k_float = float(k)
+
+        # --- the two background tables this class now reads ------------------------------
+        # Both are prompt 04's TablePrimitive objects in production. A ModelFunctions built
+        # before prompt 04 leaves them at their None default, and a stand-in may simply not
+        # supply them; say which one is missing rather than failing later on None.delta.
+        for name in ("cs_tau", "friction_F"):
+            accessor = getattr(model.functions, name, None)
+            if accessor is None or not hasattr(accessor, "delta"):
+                raise RuntimeError(
+                    f"TkSourceFunctions: model.functions.{name} must be a primitive accessor "
+                    f"with an interval method delta(z_a, z_b) (got {accessor!r}). The transfer "
+                    f"function's phase and amplitude are read from the background model's "
+                    f"sound-horizon and Liouville-Green friction tables; a BackgroundModel "
+                    f"built before prompt 04 of prompts/GkTk-remedial does not carry them, and "
+                    f"its datastore must be regenerated."
+                )
+
+        self._cs_tau = model.functions.cs_tau
+        self._friction_F = model.functions.friction_F
 
         # --- hand-over redshift, and its cross-check -------------------------------------
         self._crossover_z = float(Tk_WKB.z_init)
@@ -256,31 +370,109 @@ class TkSourceFunctions:
         self._WKB_min_z = data[0].z.z
         self._WKB_max_z = data[-1].z.z
 
-        log_x = [log(1.0 + v.z.z) for v in data]
+        z_points = [v.z.z for v in data]
 
-        # F is smooth and monotone; it is the only part of the amplitude that needs a spline
-        self._friction_spline = ZSplineWrapper(
-            make_interp_spline(log_x, [v.friction for v in data]),
-            "T_k WKB friction",
-            self._WKB_max_z,
-            self._WKB_min_z,
-            log_z=True,
+        # F is no longer splined: it comes from the background table as
+        # friction_F.delta(crossover_z, z). The stored samples are read once, here, to confirm
+        # that the table and the datastore describe the same friction integral.
+        self._check_friction_samples(z_points, [v.friction for v in data])
+
+        # theta = +k cs_tau.delta(z, z_init) + phi, with phi the small residual splined in
+        # log(1+z). See the module docstring for why the growing part is not interpolated.
+        theta_points = [v.theta_div_2pi * TWO_PI + v.theta_mod_2pi for v in data]
+        phi_points = build_phi_samples(
+            self._k_float,
+            self._cs_tau,
+            self._crossover_z,
+            z_points,
+            theta_points,
+            sign=TK_PHASE_SIGN,
         )
+        self._check_phase_sign(z_points, theta_points, phi_points)
 
-        # theta is an increasing function of z under the code's convention (see the module
-        # docstring), hence increasing=True
-        self._phase = phase_spline(
-            log_x,
-            [v.theta_div_2pi for v in data],
-            [v.theta_mod_2pi for v in data],
-            x_is_log=True,
-            x_is_redshift=True,
-            chunk_step=None,
-            chunk_logstep=PHASE_SPLINE_CHUNK_LOGSTEP,
-            increasing=True,
+        self._phase = PrimitivePhase(
+            self._k_float,
+            self._cs_tau,
+            self._crossover_z,
+            z_points,
+            phi_points,
+            sign=TK_PHASE_SIGN,
+            model_functions=_SoundHorizonRate(self._model.functions),
+            label="T_k WKB phase",
         )
 
         self._H_init = self._model.functions.Hubble(self._crossover_z)
+
+    def _check_friction_samples(self, z_points, friction_points) -> None:
+        """
+        The stored `friction` samples must reproduce `friction_F.delta(crossover_z, z)`.
+
+        They are bit-equal for a `TkWKBIntegration` written by prompt 07 of
+        `prompts/GkTk-remedial`, which stores exactly that quantity; the retired friction ODE
+        they replaced carried ~2e-7 absolute in F (prompt 04's `TestFrictionODEComparison`).
+        The discrepancy is therefore a clean signal that the datastore and the background model
+        disagree -- most likely a datastore predating prompt 07 read against a table-built
+        model -- and refusing to build is better than silently using a table that does not
+        describe the stored amplitude.
+
+        The comparison is absolute, scaled by the largest |F| on the sampled range: F vanishes
+        at the hand-over by construction, so a per-sample relative test would divide by zero
+        there.
+        """
+        table = [self._friction_F.delta(self._crossover_z, z) for z in z_points]
+
+        scale = max(fabs(value) for value in table)
+        if scale <= 0.0:
+            return
+
+        worst = 0.0
+        worst_z = z_points[0]
+        for z, stored, expected in zip(z_points, friction_points, table):
+            err = fabs(float(stored) - expected)
+            if err > worst:
+                worst = err
+                worst_z = z
+
+        if worst > FRICTION_CROSS_CHECK_RTOL * scale:
+            raise RuntimeError(
+                f"TkSourceFunctions: the stored Liouville-Green friction samples disagree with "
+                f"model.functions.friction_F by {worst:.5g} ({worst/scale:.5g} of the largest "
+                f"|F| = {scale:.5g} on the sampled range, tolerance "
+                f"{FRICTION_CROSS_CHECK_RTOL:.5g}), worst at z={worst_z:.8g}. The amplitude is "
+                f"built from the table, so the two must describe the same integral: this "
+                f"normally means the TkWKBIntegration was written by the retired friction ODE "
+                f"(~2e-7 absolute in F) and its datastore must be regenerated."
+            )
+
+    def _check_phase_sign(self, z_points, theta_points, phi_points) -> None:
+        """
+        Confirm `TK_PHASE_SIGN` against the stored samples.
+
+        With the right sign the leading term is removed and phi is the small remainder; with
+        the wrong one it is *added*, and phi would span twice the leading term instead. So it
+        is enough to require that phi vary by less than the leading term does over the same
+        samples -- a test that cannot fail on correctly signed data (phi is O(0.1) rad against
+        a leading span of 1e4 to 1e10 rad) and cannot pass on data of the opposite sign.
+        """
+        if len(z_points) < 2:
+            return
+
+        phi_span = max(phi_points) - min(phi_points)
+        leading_span = fabs(
+            self._k_float * self._cs_tau.delta(max(z_points), min(z_points))
+        )
+
+        if phi_span >= leading_span:
+            theta_span = max(theta_points) - min(theta_points)
+            raise RuntimeError(
+                f"TkSourceFunctions: the stored phase samples are not consistent with the "
+                f"transfer-function sign convention theta(z) = +k cs_tau.delta(z, z_init) "
+                f"(TK_PHASE_SIGN = {TK_PHASE_SIGN:+d}): after removing the leading term the "
+                f"residual still spans {phi_span:.5g} rad against a leading span of "
+                f"{leading_span:.5g} rad (the stored phase spans {theta_span:.5g} rad). Either "
+                f"the samples carry the opposite sign convention, or they were not produced "
+                f"from this background model's sound horizon."
+            )
 
     # ------------------------------------------------------------------------------------
     # region bookkeeping
@@ -302,7 +494,7 @@ class TkSourceFunctions:
         return self._sin_coeff
 
     @property
-    def phase(self) -> phase_spline:
+    def phase(self) -> PrimitivePhase:
         return self._phase
 
     def _check_numeric(self, z: float) -> None:
@@ -363,11 +555,13 @@ class TkSourceFunctions:
 
     def friction(self, z: float, z_is_log: bool = False) -> float:
         """
-        The Liouville-Green friction integral F(z), splined from the stored samples.
+        The Liouville-Green friction integral F(z) = friction_F.delta(crossover_z, z), read
+        from the background model's table. No spline: this is exact to the table's own ~1e-14
+        absolute, and it is negative below the hand-over (`dF/dz > 0`).
         """
         raw_z, log_z = _one_plus_z(z, z_is_log)
         self._check_WKB(raw_z, "the T_k friction function")
-        return self._friction_spline(log_z, z_is_log=True)
+        return self._friction_F.delta(self._crossover_z, raw_z)
 
     def M(self, z: float, z_is_log: bool = False) -> float:
         """
@@ -383,7 +577,7 @@ class TkSourceFunctions:
         return (
             self._sin_coeff
             * sqrt(self._H_init / H / omega)
-            * exp(self._friction_spline(log_z, z_is_log=True))
+            * exp(self._friction_F.delta(self._crossover_z, raw_z))
         )
 
     def dlnM_dz(self, z: float, z_is_log: bool = False) -> float:

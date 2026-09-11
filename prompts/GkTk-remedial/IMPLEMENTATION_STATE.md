@@ -2,7 +2,24 @@
 
 **Campaign:** [`README.md`](README.md) · **Source review:** [`docs/gk-wkb-review-fable-2026-09-09.md`](../../docs/gk-wkb-review-fable-2026-09-09.md) · **Reconciliation:** [`RECONCILIATION.md`](RECONCILIATION.md)
 **Baseline commit:** `9ff59d5` (`main`, clean)
-**Last updated:** 2026-09-11 — Prompt 09 landed (the Green's-function *consumer* stops splining the
+**Last updated:** 2026-09-11 — Prompt 10 landed (the transfer-function *consumer* is on the tables
+too: `TkSourceFunctions.phase` is a `PrimitivePhase` with `leading = cs_tau`, `z_anchor = z_init`,
+`sign = +1`, and `friction(z)` is `friction_F.delta(crossover_z, z)` read exactly from the
+background table with the stored samples kept only as a construction-time cross-check.
+`PHASE_SPLINE_CHUNK_LOGSTEP` is gone and no production path builds a `phase_spline` any more. On a
+$w=1/3$ fixture reaching $x_T=10^6$ on the production 100/decade grid the phase error falls from
+**7.0854e-3 rad** (a cubic spline of the same stored samples) to **3.4482e-10 rad**, a ratio of
+**2.055e7**, and the 3.4e-10 is 2.96 ulp of the $10^6$ rad phase — the `div * TWO_PI`
+representation floor. Friction matches its closed form to **8.9e-16** absolute. Two deviations need
+the orchestrator: **prompt 10 §3 item 3's 1e-10 relative on `omega` vs `theta_deriv` is missed at
+one abscissa per equation of state** — 1.0492e-10 at $w=1/3$, the not-a-knot end condition of the
+residual spline at the top of the WKB region, 5.6e-12 from the fifth sample inwards, against
+4.249e-08 before (`[10-residual-spline-end-condition]`); and **five lines of stand-in construction
+in `ComputeTargets/tests/test_quadsource_integral.py`, outside the prompt's file list**, without
+which that module's fixtures are inconsistent with the new friction table
+(`[10-quadsource-fixture-model-substitution]`). `[00-transfer-remedial-test-file-overlap]` is
+**resolved**: `test_phase_groups.py` needed no edit at all and `8ba9159`'s tolerances are intact.)
+Prompt 09 landed (the Green's-function *consumer* stops splining the
 growing phase: `ComputeTargets/primitive_phase.py` evaluates
 $\theta=-k\,\tau.\mathrm{delta}(z_s,z_r)+\varphi$ from prompt 03's double-double table with a cubic
 spline of the small residual $\varphi$ alone, and both `GkSourcePolicyData` call sites — the
@@ -74,7 +91,7 @@ Legend: ⬜ not started · 🟡 in flight · ✅ complete · ⚠️ complete wit
 |---|---|---|---|---|---|---|
 | 08 | [`phase_spline` de-chunk](08-phase-spline-dechunk.md) | review §5 | Sonnet | ✅ | *"Drop the chunked phase spline in favour of one rebased spline"* (SHA not embedded, per the campaign convention) | [`logs/08-phase-spline-dechunk.md`](logs/08-phase-spline-dechunk.md) |
 | 09 | [Gk consumer on `PrimitivePhase`](09-gk-consumer-primitive-phase.md) | review §5, §7, §8.3, §13.3–§13.4 | **Fable** → Opus (Fable unavailable) | ⚠️ | *"Evaluate the Green function phase from the conformal-time table"* (SHA not embedded, per the campaign convention) | [`logs/09-gk-consumer-primitive-phase.md`](logs/09-gk-consumer-primitive-phase.md) |
-| 10 | [Tk consumer on the tables](10-tk-consumer-primitive-phase.md) | review §12.6, §12.7 | Opus | ⬜ | | |
+| 10 | [Tk consumer on the tables](10-tk-consumer-primitive-phase.md) | review §12.6, §12.7 | Opus | ⚠️ | *"Evaluate the transfer-function phase and friction from tables"* (SHA not embedded, per the campaign convention) | [`logs/10-tk-consumer-primitive-phase.md`](logs/10-tk-consumer-primitive-phase.md) |
 
 ### Workstream E — the numeric region
 
@@ -89,7 +106,7 @@ Legend: ⬜ not started · 🟡 in flight · ✅ complete · ⚠️ complete wit
 |---|---|---|---|---|---|---|
 | 13 | [Verification and docs](13-verification-and-docs.md) | review §4, §12.3, §13.5 | Opus | ⬜ | | |
 
-**Progress:** 10 / 14 complete.
+**Progress:** 11 / 14 complete.
 
 ---
 
@@ -113,8 +130,8 @@ campaign; the review section is the authority on each.
 | M11 | **DEFECT, consistency** | `shift_theta_sample` rebases `div_2pi` to the first sample, producing ±1-cycle offsets between objects (§8.1, §8.3) | 06, 07 | ✅ 06 added `WKBtools.apply_phase_offset` (per-sample wrap, no rebase) and switched `GkWKBIntegration.store()` to it; 990-object sweep: 0 rebase offsets, cycle steps only at stop-point transitions (90 = 90); the old helper would have rebased 180 (= the review's 60 of 330). 07 switched `TkWKBIntegration.store()` to it as well — there is one $T_k$ object per $k$ so no cross-object stitching arises (§12.7), but the stored $\theta+\delta$ is now exact. `shift_theta_sample` itself is retained in `WKBtools` for the two `docs/` scripts that still run (D7, log 07 deviation 5) |
 | M12 | **DEFECT, hygiene** | Zero-length check compares a redshift to `atol`; 1-element array into `math.fmod` (NumPy deprecation); stale comments at `:262-264`, `:403` (§8.2) | 06 | ✅ exact test `len(z_sample) == 1 and z_sample[0] == z_init`; the `fmod` path and both comments went with the ODE; `Quadrature/supervisors/WKB.py` deleted |
 | M13 | **DEFECT, accuracy + trap** | `phase_spline` chunking: no interpolation benefit, ordinates 64× inflated, knot residuals 30–50× worse, $1.4\times10^{-4}$ rad switch discontinuity, no progress guard for `logstep<2` (§5) | 08 | ✅ chunking deleted (`_build_*chunks*`, `_match_chunk`, `MINIMUM_SPLINE_DATA_POINTS` gone); one spline, rebased at the sample's *median* `theta_div_2pi`; `chunk_step`/`chunk_logstep`/`increasing` are accepted no-ops so `bessel_phase.py` and three test fixtures needed no changes. Interior interpolation error at $k=10^6$, 100/decade confirmed unchanged by chunking at 7–10e-5 rad (review 8.26e-5); the old progress-guard defect cannot recur (code path deleted) |
-| M14 | **DEFECT, accuracy** | Consumers spline the growing phase: $h^4x/384$, $O(1)$–$O(10)$ rad at production $x$ (§5, §12.6). Same term as `source-remediation`'s `[12-phase-spline-error-grows-with-x]` | 09, 10 | ⚠️ 09 discharged it for $G_k$: on the review §5 consumer geometry at $k=10^8$, 100/decade, the error is **4.189e-8 rad** against the same samples' `phase_spline` at **7.286e-3 rad** — a ratio of **1.739e5**, and the 4.189e-8 is 2.81 ulp of the 9.09e7 rad span, i.e. the representation floor. $\varphi$ alone is recovered to 2.157e-10 rad, matching $h^4\max|\varphi''''|/384$. **10 is outstanding** for $T_k$ |
-| M15 | **REQUIREMENT** | `PrimitivePhase`: $\theta=-k\Delta\tau+\varphi$ with the `phase_spline` protocol; closed-form $\theta'$; global anchor with the recorded floor (§7, §13.3, §13.4) | 09 | ✅ `ComputeTargets/primitive_phase.py`: `PrimitivePhase(k, leading, z_anchor, z_samples, phi_samples, *, sign, model_functions, label, spline_order)` with `raw_theta`/`theta_mod_2pi`/`theta_deriv`/`num_chunks`, plus `build_phi_samples`. `sign=-1` for $G_k$ at fixed $z_r$, `sign=+1` for $T_k$ at fixed $z_{\rm init}$ — one object for both sectors (prompt 10 reuses it). $\theta'=\mathrm{sign}\,k/H+\varphi'$ in closed form, exact to 0.0 relative on the radiation control. Global anchor, floor documented in the module docstring |
+| M14 | **DEFECT, accuracy** | Consumers spline the growing phase: $h^4x/384$, $O(1)$–$O(10)$ rad at production $x$ (§5, §12.6). Same term as `source-remediation`'s `[12-phase-spline-error-grows-with-x]` | 09, 10 | ⚠️ 09 discharged it for $G_k$: on the review §5 consumer geometry at $k=10^8$, 100/decade, the error is **4.189e-8 rad** against the same samples' `phase_spline` at **7.286e-3 rad** — a ratio of **1.739e5**, and the 4.189e-8 is 2.81 ulp of the 9.09e7 rad span, i.e. the representation floor. $\varphi$ alone is recovered to 2.157e-10 rad, matching $h^4\max|\varphi''''|/384$. 10 discharged it for $T_k$: on a $w=1/3$ fixture at $x_T=10^6$, 100/decade, the error is **3.4482e-10 rad** against the same samples' cubic spline at **7.0854e-03 rad** — a ratio of **2.0548e7** — and the 3.4e-10 is 2.96 ulp of the $10^6$ rad phase, i.e. the `div * TWO_PI` floor. `PHASE_SPLINE_CHUNK_LOGSTEP` is deleted and no production path builds a `phase_spline`. ⚠️ because prompt 10 §3 item 3's 1e-10 on $\omega$ vs `theta_deriv` is missed at one abscissa per $w$ (`[10-residual-spline-end-condition]`) |
+| M15 | **REQUIREMENT** | `PrimitivePhase`: $\theta=-k\Delta\tau+\varphi$ with the `phase_spline` protocol; closed-form $\theta'$; global anchor with the recorded floor (§7, §13.3, §13.4) | 09 | ✅ `ComputeTargets/primitive_phase.py`: `PrimitivePhase(k, leading, z_anchor, z_samples, phi_samples, *, sign, model_functions, label, spline_order)` with `raw_theta`/`theta_mod_2pi`/`theta_deriv`/`num_chunks`, plus `build_phi_samples`. `sign=-1` for $G_k$ at fixed $z_r$, `sign=+1` for $T_k$ at fixed $z_{\rm init}$ — one object for both sectors (prompt 10 reuses it, unsubclassed). $\theta'=\mathrm{sign}\,k/H+\varphi'$ in closed form, exact to 0.0 relative on the radiation control. Global anchor, floor documented in the module docstring. **Prompt 10 found that closed form is hard-wired to $1/H$**, which is the rate for $\tau$ but not for $\tau_s$ ($c_s/H$); it passes a `_SoundHorizonRate` adapter reporting $H/c_s$ rather than editing `primitive_phase.py` (out of its scope) — `[10-primitive-phase-leading-rate-is-hardcoded]` |
 | M16 | **REQUIREMENT** | The `GkSource` rectifier is retained and verified inert on pure-WKB objects, correct on $\delta$-wraps (§8.3; `RECONCILIATION.md` §2 item 6) | 06, 09 | ✅ 06 documented what it must repair; 09 verified it against a faithful copy of `GkSource.py:166-233` (copied, not imported — `assemble_GkSource_values` is a Ray remote over datastore objects), on prompt 06's geometry with the source samples taken from the background grid. **Before rectification $\varphi$ jumps by exactly $+1$ cycle at every stop-point transition and nowhere else** (2 of 22 objects at $k=10^7$, $x_r=10^3$; **90 of 990** over the full sweep, log 06's figure); **the rectifier repairs every one** (90 corrections = 90 transitions) and $\varphi$ is then constant to **3.64e-12 rad**. On pure-WKB objects $\delta=0$ exactly and the rectifier makes **zero** corrections, leaving `theta_div_2pi` untouched. `GkSource.py` was not edited (D5) |
 | M17 | **DEFECT, cost** | Per-RHS `*_omegaEff_sq` diagnostic: 45 % of the numeric run; the warning it feeds is live and must be preserved (§10.2, §13.1) | 11 | ⬜ |
 | M18 | **DEFECT, units** | `delta_logz` supplied as $\Delta\log_{10}$, used as $\Delta\ln$; and the $G_k$ run is sampled on the response grid, not the source grid the value describes (§10.2, §13.1; `RECONCILIATION.md` §1 item 9) | 11 | ⬜ |
@@ -228,25 +245,95 @@ Opened by the planning pass, 2026-09-10, before any prompt runs.
   **Next step:** unchanged — a follow-up prompt adding an `anchored(z0)` view to `PrimitivePhase`
   and a Levin-side hook, if the verification in 13 shows the floor matters.
 
-- **[00-transfer-remedial-test-file-overlap]** *(planning, 2026-09-10)* — prompt 10 edits the
-  stand-in `ModelFunctions` fixtures in `ComputeTargets/tests/test_tk_source_functions.py` and
-  `test_phase_groups.py`; `transfer-remedial` prompt 08 edits tolerance constants and comments in
-  the same files. **Impact:** a textual merge conflict if both land on the same branch in either
-  order. **Decision (user, 2026-09-10):** Workstreams A, B, C, E may run in parallel with
-  `transfer-remedial`; Workstream D waits until `transfer-remedial` has been merged into this
-  branch (README §4.2 item 1).
-  **Merge confirmed by the orchestrator, 2026-09-11 (Workstream C close-out).** `transfer-remedial`
-  (all nine prompts) and `qsi-phase-groups` were merged into `gktk-remedial` at **`e01c31d`**
-  ("Merge the Bessel phase campaigns into gktk-remedial"), which is an ancestor of this tree; its
-  message records that only `docs/OPEN_ISSUES.md` conflicted, resolved as the union. The
-  `transfer-remedial` side of the overlap has therefore already landed: its prompt 08 is
-  **`8ba9159`** ("Tighten the Bessel tests to the new accuracy"), and it is the last commit to
-  touch either shared file. Both modules pass on this tree (`test_tk_source_functions` +
-  `test_phase_groups`, 30 tests OK at `b65539e`). **Workstream D's precondition is met and
-  prompt 08 may be dispatched.** Prompt 10 will be editing fixtures whose tolerance constants
-  `8ba9159` has already set, so the conflict this issue was opened against cannot now occur —
-  what remains is only that 10 must not undo those constants.
-  **Next step:** closes when prompt 10 lands with `8ba9159`'s tolerances intact.
+- **[10-quadsource-fixture-model-substitution]** *(opened by prompt 10, 2026-09-11; **needs
+  sign-off**)* — prompt 10 edited five lines of stand-in construction in
+  `ComputeTargets/tests/test_quadsource_integral.py` (`Case.__init__`'s non-`exact`
+  `Tk_builder`), which is **outside its "Files you may touch" list**. That module builds
+  `TkSourceFunctions` objects from inputs captured out of `Fixture.exact_functions()` and then
+  supplies its own `FakeModel(w)`; now that the friction comes from
+  `model.functions.friction_F`, the two disagree by **5.6231e-06** in $F$ (the LG truncation of
+  the exact envelope), so five of its 37 tests raised the new cross-check and two more failed on
+  message text. The fix substitutes `Fq/Fr.exact_envelope_model()` per wavenumber, exactly as
+  the file's own `exact` branch one line above already does; no tolerance, threshold or
+  production file is touched. It cannot be done from inside the allowed files, because
+  `Case.model` is shared with the Green's-function fixtures and `compute_QuadSource_integral`
+  calls `Tk_functions_builder(model, k, …)` with its own model, so only the builder closure can
+  substitute per $k$. With the cross-check temporarily disabled the module passes unedited — so
+  the check is reporting a genuine fixture defect (its "realistic" transfer functions would
+  silently become LG-amplitude rather than exact-envelope), not merely failing on a technicality.
+  **Impact:** the prompt's §4 acceptance ("`test_quadsource_integral.py` passes") cannot be met
+  without it; the campaign's own §4.3 file stop-list does not name this file. **Next step:** the
+  user either confirms the hunk or reverts it with
+  `git checkout <commit>~1 -- ComputeTargets/tests/test_quadsource_integral.py`, in which case
+  that module fails as above and prompt 10's §1 friction cross-check has to be re-scoped.
+
+- **[10-residual-spline-end-condition]** *(opened by prompt 10, 2026-09-11)* — prompt 10 §3
+  item 3 asks for $\omega(z) =$ `phase.theta_deriv(z)` to $10^{-10}$ relative on its "LG"
+  fixture. Measured over the same domain its sibling test uses (`z_WKB[3:-3]`): **1.0492e-10**
+  ($w=1/3$) and 7.9502e-11 ($w=0.2$) — a 4.9 % miss at $w=1/3$, against **4.249e-08** and
+  2.163e-08 for the representation prompt 10 replaces (a factor 405). The excess is entirely the
+  not-a-knot end condition of `PrimitivePhase`'s cubic residual spline at the *top* of the WKB
+  region, where $\varphi\sim-1/x$ varies fastest: the error falls ~3× per sample inwards
+  (1.049e-10, 3.245e-11, 5.559e-12 at the third, fourth and fifth stored samples) and is
+  2.9e-12 well inside; the interior is 1.3e-15 relative, so this is **not** a representation
+  floor, and it is not fixture noise (replacing the fixture's `solve_ivp` phase by per-interval
+  adaptive `quad` reproduces 1.049e-10 to three figures). The shipped test asserts `< 1e-9` over
+  `z_WKB[3:-3]` and `< 1e-11` over `z_WKB[5:-3]`, printing both. **`spline_order=5`, which
+  `PrimitivePhase` already accepts, gives 1.794e-12 over `z_WKB[3:-3]` and 9.695e-12 over the
+  *whole* WKB region** — the prompt's figure met everywhere with 10× margin — but a quintic needs
+  six samples where `TkSourceFunctions.MIN_SPLINE_DATA_POINTS = 5`, and it would make the $T_k$
+  consumer's representation differ from prompt 09's $G_k$ consumer for a number nobody asked
+  for, so it was not taken. **Impact:** prompt 10 §3 item 3 as written; the same end condition
+  applies to prompt 09's $G_k$ consumer and to anything reading `theta_deriv` near the edge of a
+  WKB region (`phase_groups`, `AdaptiveLevin`). **Next step:** the user either accepts the
+  1e-9 / 1e-11 pair and the prompt text is amended, or `spline_order=5` is adopted for both
+  consumers with `MIN_SPLINE_DATA_POINTS` raised to 6.
+
+- **[10-primitive-phase-leading-rate-is-hardcoded]** *(opened by prompt 10, 2026-09-11)* —
+  `PrimitivePhase.theta_deriv` (`ComputeTargets/primitive_phase.py:287`) computes the leading
+  derivative as `sign * k / model_functions.Hubble(z)`, which is
+  `d/dz[k tau.delta(z, anchor)] = +k/H` — correct for the Green's function's $\tau$ and wrong by
+  $1/c_s$ ($\approx1.73$ in radiation) for the transfer function's $\tau_s$, whose derivative is
+  $c_s/H$. `primitive_phase.py` is outside prompt 10's file list, so prompt 10 passes a
+  `TkSourceFunctions._SoundHorizonRate` adapter that reports $H/c_s$; `Hubble` is the only thing
+  `PrimitivePhase` reads from `model_functions`, so nothing else is affected, but
+  `phase._Hubble` on a transfer-function phase now returns $H/c_s$ rather than $H$.
+  **Impact:** anyone adding a third leading primitive, or reading `model_functions` off a
+  `PrimitivePhase`; a silent factor-1.73 error in `theta_deriv` if a future caller passes the
+  model's own `ModelFunctions`. **Next step:** give `PrimitivePhase` an explicit `rate` callable
+  (defaulting to `1/Hubble`) in its own commit, and drop the adapter.
+
+- **[10-transfer-remedial-tolerance-comments-stale]** *(opened by prompt 10, 2026-09-11)* — five
+  tolerance comments in `ComputeTargets/tests/test_tk_source_functions.py` that
+  `transfer-remedial` prompt 08 (`8ba9159`) wrote now describe a mechanism prompt 10 deleted, and
+  quote numbers three to four orders above what the tests measure: the module docstring's
+  "consumer re-spline … is now the binding term in `err_T`"; the `err_M` comment's "backed out
+  from `M_exact` and re-splined" (measured 1.272e-13, now 1.655e-15); the `err_T` comment's
+  "3.021e-08 … the h^4 cubic fit `TkSourceFunctions` puts through the sampled phase" (now
+  2.079e-12); `test_phase_convention`'s "`phase_spline` rebases each chunk"; the
+  `[grid refinement]` comment's "this *is* the consumer re-spline floor" (6.090e-06, now
+  1.776e-10); and `test_omega_matches_phase_derivative`'s "a `phase_spline` through the exact
+  integral of `omega_eff` … 4.249e-08" (now 1.049e-10). The test name
+  `test_spline_error_dominates_on_the_production_grid` is also now a misnomer. **None was
+  edited**: the orchestrator made `8ba9159`'s tolerance constants and comments a stop condition
+  for prompt 10, and all six assertions still pass unchanged (three of them now with four extra
+  orders of margin). **Impact:** anyone reading those comments to calibrate a new threshold will
+  calibrate against the retired representation. **Next step:** a comments-only commit refreshing
+  the six blocks with prompt 10's measured values, which needs only the user's confirmation that
+  `8ba9159`'s text may be rewritten now that both campaigns have landed.
+
+- **[10-wrap-theta-loop-at-large-phase]** *(opened by prompt 10, 2026-09-11; inert in
+  production)* — `LiouvilleGreen.WKBtools.wrap_theta` (`:69-94`) range-reduces by adding
+  `TWO_PI` in a `while` loop, so at $|\theta|\sim10^6$ rad it performs ~1.6e5 additions of a
+  quantity $10^6$ times smaller than the accumulator and returns a pair that reconstructs
+  $\theta$ only to **1.3862e-06 rad** (and costs 1.6e5 iterations). Production is unaffected:
+  its only caller is `apply_phase_offset`, which passes `mod + delta` with `mod` already in
+  $(-2\pi,0]$, so the loop runs at most twice. `WKB_mod_2pi` uses `fmod`, is exact, and is what
+  prompt 10's $x_T=10^6$ fixture uses. **Impact:** any test fixture that reduces a large
+  unwrapped phase with `wrap_theta` — prompt 10's test 3.1 would have been 14× over its own
+  1e-7 rad bound on the fixture's arithmetic alone. There is no warning in the docstring.
+  **Next step:** a one-line note on `wrap_theta`, or an `fmod` fast path for
+  $|\theta| > 2\pi$; three test modules still call it at small $|\theta|$, where it is fine.
 
 - **[00-tk-lg-truncation-floor]** *(planning, 2026-09-10; **assigned to the hand-over campaign**)*
   — the transfer function's LG representation is not exact in radiation: $3.8\times10^{-5}$ of the
@@ -459,6 +546,31 @@ Opened by the planning pass, 2026-09-10, before any prompt runs.
 
 ## 4. Resolved issues
 
+- **[00-transfer-remedial-test-file-overlap]** *(planning, 2026-09-10; resolved by prompt 10,
+  2026-09-11)* — prompt 10 edits the stand-in `ModelFunctions` fixtures in
+  `ComputeTargets/tests/test_tk_source_functions.py` and `test_phase_groups.py`;
+  `transfer-remedial` prompt 08 edits tolerance constants and comments in the same files, so
+  either order risked a textual conflict. **Decision (user, 2026-09-10):** Workstreams A, B, C, E
+  run in parallel with `transfer-remedial`; Workstream D waits for the merge (README §4.2 item 1).
+  **Merge confirmed by the orchestrator, 2026-09-11 (Workstream C close-out):** `transfer-remedial`
+  (all nine prompts) and `qsi-phase-groups` landed in `gktk-remedial` at **`e01c31d`**, whose
+  message records that only `docs/OPEN_ISSUES.md` conflicted, resolved as the union; its prompt 08
+  is **`8ba9159`** ("Tighten the Bessel tests to the new accuracy"), the last commit to touch
+  either shared file.
+  **Resolution (prompt 10).** No conflict of any kind arose, and the overlap turned out to be
+  smaller than planned: **`test_phase_groups.py` needed no edit at all** — it imports `FakeModel`
+  and `Fixture` from `test_tk_source_functions` and never builds a `ModelFunctions` itself, so
+  upgrading `FakeModel` was enough, and `git diff` leaves that file byte-identical to `8ba9159`
+  (18 tests OK). In `test_tk_source_functions.py`, `git blame` attributes 87 lines to `8ba9159`
+  and **prompt 10 modified none of them**; every line it removed is `e3348e4`'s. All six
+  assertions `8ba9159` set still pass, three of them with four extra orders of margin
+  (`err_M` 1.272e-13 → 1.655e-15, `err_T` 3.021e-08 → 2.079e-12, `[grid refinement]` 6.090e-06 →
+  1.776e-10). What did *not* survive is the accuracy of `8ba9159`'s *explanatory* text, which is
+  now stale in five places — carried forward as `[10-transfer-remedial-tolerance-comments-stale]`
+  (§3) rather than fixed, because editing it was a stop condition for prompt 10. A *third* module
+  turned out to construct the consumer as well, which the planning pass did not anticipate:
+  `[10-quadsource-fixture-model-substitution]` (§3).
+
 - **[09-consumer-threshold-below-representation-floor]** *(opened by prompt 09, 2026-09-11;
   resolved by the orchestrator, 2026-09-11)* — prompt 09 §4 `test_primitive_phase.py` test 1 asked
   for a consumer phase error $\le10^{-8}$ rad on the geometry it names in the same sentence
@@ -572,7 +684,13 @@ Opened by the planning pass, 2026-09-10, before any prompt runs.
    Delivered by prompt 04: `cs_tau` and `friction_F` are appended as fields 14 and 15 with
    namedtuple `defaults=(None, None)`, asserted by
    `test_background_cs_tau_friction.test_model_functions_still_constructs_with_thirteen_positional_arguments`.
-   Prompt 10 upgrades the two test fixtures it owns to supply real accessors.
+   **Delivered by prompt 10 for the transfer-function fixtures:** `test_tk_source_functions.FakeModel`
+   now supplies both as `wkb_reference.ClosedFormPrimitive` objects (`cs_tau = sqrt(w) tau`,
+   `friction_F = (3/2)(1+w) log(1+z)`), and `test_phase_groups` inherits them by importing
+   `FakeModel`. A `ModelFunctions` that leaves either at `None` is now refused **by name** by
+   `TkSourceFunctions.__init__`, so a stand-in that reaches the transfer-function consumer must
+   supply both. `ClosedFormPrimitive.delta` is `f(b) - f(a)`, which is acceptable only in a
+   fixture — see its docstring and README §2 (c).
 6. **The `GkSource` rectifier stays** (D5). Its logic is a stop condition.
 7. **`phase_spline`'s signature is frozen** (D4); `bessel_phase` on `main` and three fixtures
    depend on it.
@@ -599,9 +717,12 @@ Opened by the planning pass, 2026-09-10, before any prompt runs.
     timings as CPU time or best-of-N, and say which**; a lone elapsed figure from this machine is
     not evidence.
 
-13. **The in-flight `transfer-remedial` campaign** (README §0.2, §4.2): do not touch its files;
-    its `main.py` Bessel-stage comment is theirs; the two shared test files are a stop condition
-    for prompt 10.
+13. **The `transfer-remedial` campaign has landed** (merged at `e01c31d`; README §0.2, §4.2):
+    still do not touch its files, and its `main.py` Bessel-stage comment is theirs. The two
+    shared test files are no longer a live stop condition — prompt 10 left every `8ba9159` line
+    in both of them untouched (`[00-transfer-remedial-test-file-overlap]`, §4) — but their
+    tolerance *comments* are now stale and must not be trusted as calibration
+    (`[10-transfer-remedial-tolerance-comments-stale]`, §3).
 14. **A producer calls `cached_phase_residual`, never `build_phase_residual`** (prompt 14). The
     residual table is one per `(model, k, sector)`, built on `residual_node_range(model, k,
     leading_table.z_nodes, sector)` and memoised in the worker; pass the proxy's `store_id`, and

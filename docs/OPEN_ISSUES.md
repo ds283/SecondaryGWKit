@@ -1,6 +1,6 @@
 # Open issues — project-wide index
 
-**Last updated:** 2026-09-11 · **48 open** across six campaigns.
+**Last updated:** 2026-09-11 · **52 open** across six campaigns.
 
 This file exists so that an issue opened by one campaign is not lost when that campaign closes.
 It is an **index, not a record**: one line per issue, pointing at the campaign status board that
@@ -64,7 +64,7 @@ they now pass `BesselPhaseGroup.levin_theta()`.
 ### 1.4 The $T_k$ / $G_k$ numerical-precision campaign
 
 Now running as [`prompts/GkTk-remedial/`](../prompts/GkTk-remedial/README.md) (2026-09-10; 13
-prompts plus a follow-up, 9 executed). `[07-phase-spline-chunking-precision]` was closed WONTFIX on
+prompts plus a follow-up, 11 executed). `[07-phase-spline-chunking-precision]` was closed WONTFIX on
 the expectation that this campaign **removes** the chunked splines — its prompt 08 has done so.
 
 | Issue | Board | Hook |
@@ -72,10 +72,14 @@ the expectation that this campaign **removes** the chunked splines — its promp
 | `[12-phase-spline-error-grows-with-x]` | source-remediation | Stored-phase re-spline error $\simeq h^4x/384$, growing **linearly in $x$**; ~1 % of envelope extrapolated to production. **Reassigned here from §1.1** (2026-09-10): the campaign's prompts 09–10 evaluate the leading term from a table and spline only the residual. |
 | `[00-unresolved-osc-print-policy]` | GkTk-remedial | With its units fixed and evaluated on the caller's actual grid, `has_unresolved_osc` will fire on essentially every $G_k$ numeric object. Prompt 11 measures the rate; the user chooses the print policy. |
 | `[00-consumer-anchoring-floor]` | GkTk-remedial | `PrimitivePhase` reduces $k\Delta\tau$ against a global anchor, so `theta_mod_2pi` carries the $\varepsilon k\tau$ floor ($9\times10^{-4}$ rad at $k=3\times10^8$). Per-region anchoring is the follow-up. **Measured by prompt 09:** the floor is now the whole error — 4.189e-8 rad = 2.81 ulp of the span at $k=10^8$, with $\varphi$ itself recovered to 2.157e-10 rad. |
-| `[00-transfer-remedial-test-file-overlap]` | GkTk-remedial | Prompt 10 edits stand-in fixtures in `test_tk_source_functions.py`/`test_phase_groups.py`; `transfer-remedial` 08 edits tolerances in the same files. **Decided 2026-09-10:** Workstreams A–C, E run in parallel; D waits for the `transfer-remedial` merge. **Merge confirmed 2026-09-11** at `e01c31d` (all nine prompts; its 08 is `8ba9159`), so D may start; closes when prompt 10 lands with those tolerances intact. |
 | `[01-offgrid-accessor-cost-on-qcd]` | GkTk-remedial | The interval accessor costs 102 µs on `QCD_Cosmology` with both endpoints off-grid, above README §4.3's 50 µs stop threshold. **Narrowed by prompt 03:** the shipped accessor is 52 µs both-off-grid, 26 µs one-off-grid, 0.33 µs on-grid (the production case). **Narrowed by prompt 06:** the producers only ever pair the off-grid anchor with an on-grid sample — 464 partial evaluations inside a 0.031 s object. **Narrowed by prompt 09, not closed:** the Levin consumer evaluates off-grid by construction, but always with exactly one off-grid endpoint (the anchor is a grid node), so the 26 µs figure applies and the 50 µs line is not crossed. |
 | `[07-tk-per-object-cost-is-all-setup]` | GkTk-remedial | A `TkWKBIntegration` object at $k=3\times10^8$ costs 0.049–0.052 s, straddling prompt 07 §3 item 6's 0.05 s; all of it is setup. 5,840 of its 11,376 integrand evaluations build a per-$k$ residual table that, at one object per $k$, nothing amortises, and 5,536 are the leading table's off-grid anchor panel recomputed once per sample — the split prompt 14 applied to $\rho$ but not to $\tau_s$. **Widened by prompt 09:** the same recomputation would hit any consumer with an off-grid anchor, which is prompt 10's $z_{\rm init}$. |
 | `[08-docs-scripts-reference-removed-chunking]` | GkTk-remedial | Two `docs/` reproduction scripts (`t5_spline.py`, `measure.py`) read `phase_spline` internals (`_chunk_list`, `_splines`, `_match_chunk`) that prompt 08 deleted with chunking; they documented the chunked tree they ran on and were not edited. |
+| `[10-quadsource-fixture-model-substitution]` | GkTk-remedial | **Needs sign-off.** Prompt 10 edited five lines of stand-in construction in `test_quadsource_integral.py`, outside its file list: that module pairs friction samples backed out of the exact Bessel envelope with a closed-form `FakeModel`, which the new construction-time cross-check refuses (5.6231e-06 in $F$). Revert is one hunk, after which the module fails. |
+| `[10-residual-spline-end-condition]` | GkTk-remedial | Prompt 10 §3 item 3's 1e-10 relative on $\omega$ vs `theta_deriv` is missed at one abscissa per equation of state — 1.0492e-10 at $w=1/3$, the not-a-knot end condition of the cubic residual spline at the top of the WKB region (5.6e-12 from the fifth sample inwards, 4.249e-08 before). `spline_order=5` gives 9.7e-12 over the whole region but needs six samples against `MIN_SPLINE_DATA_POINTS = 5`. |
+| `[10-primitive-phase-leading-rate-is-hardcoded]` | GkTk-remedial | `PrimitivePhase.theta_deriv` hard-wires the leading derivative to $k/H$, right for $\tau$ and wrong by $1/c_s$ for $\tau_s$; prompt 10 passes a `_SoundHorizonRate` adapter reporting $H/c_s$ rather than editing `primitive_phase.py`. An explicit `rate` callable is the fix. |
+| `[10-transfer-remedial-tolerance-comments-stale]` | GkTk-remedial | Five tolerance comments `8ba9159` wrote in `test_tk_source_functions.py` now describe the consumer re-spline prompt 10 deleted and quote numbers three to four orders above the new measurements. Not edited — `8ba9159`'s text was a stop condition for prompt 10 — and every assertion still passes. |
+| `[10-wrap-theta-loop-at-large-phase]` | GkTk-remedial | `wrap_theta` reduces by adding $2\pi$ in a loop, so at $|\theta|\sim10^6$ rad it takes ~1.6e5 iterations and reconstructs $\theta$ only to 1.39e-06 rad. Inert in production (its one caller passes `mod + delta`), a trap for fixtures; `WKB_mod_2pi` is exact. |
 
 ---
 
