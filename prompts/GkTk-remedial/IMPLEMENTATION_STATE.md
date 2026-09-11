@@ -2,7 +2,7 @@
 
 **Campaign:** [`README.md`](README.md) · **Source review:** [`docs/gk-wkb-review-fable-2026-09-09.md`](../../docs/gk-wkb-review-fable-2026-09-09.md) · **Reconciliation:** [`RECONCILIATION.md`](RECONCILIATION.md)
 **Baseline commit:** `9ff59d5` (`main`, clean)
-**Last updated:** 2026-09-11 — prompt 07 landed (the transfer-function phase and friction now come from the tables too: `friction_RHS` and its state index are gone from the producer and live only in prompt 04's test, `store()`'s no-op sign fix and its cross-sample rebase are gone, and the stored $\theta_T$ is 1.5e-8 rad at $k=10^5$ and 9.2e-5 rad at $3\times10^8$ against prompt 01's references, where the ODE was 2.01 rad and 5.1e3 rad. Review §12.4's LG truncation table reproduced to two figures. **Its cost, 0.049–0.052 s per object, straddles prompt 07 §3 item 6's 0.05 s** — `[07-tk-per-object-cost-is-all-setup]`.) Prompt 14 landed (the residual table is built once per $(model, k, sector)$ on the background grid and memoised in the worker: 142.5 (LambdaCDM) / 163.0 (QCD) residual-integrand evaluations per object over 50 objects of one $k$ against 6,924 / 7,908 — 49× — and 0.0010 s per object at $k=3\times10^8$ against 0.0309 s; $\theta$ bit-identical at every sample of fifteen (model, $k$, sector) cases). Prompt 06 landed (the Green's-function WKB phase is now $-[k\,\Delta\tau+\Delta\rho]$ from the tables: the two-stage phase ODE, the `Q` variable, the resets, the sign fix and the cross-sample rebase are gone; stored phases at the floor; `TkWKBIntegration.compute()` switched, its `store()` awaits 07).
+**Last updated:** 2026-09-11 — Workstream C closed; the `transfer-remedial` merge confirmed at `e01c31d`, so Workstream D may start (`[00-transfer-remedial-test-file-overlap]`). Prompt 07 landed (the transfer-function phase and friction now come from the tables too: `friction_RHS` and its state index are gone from the producer and live only in prompt 04's test, `store()`'s no-op sign fix and its cross-sample rebase are gone, and the stored $\theta_T$ is 1.5e-8 rad at $k=10^5$ and 9.2e-5 rad at $3\times10^8$ against prompt 01's references, where the ODE was 2.01 rad and 5.1e3 rad. Review §12.4's LG truncation table reproduced to two figures. **Its cost, 0.049–0.052 s per object, straddles prompt 07 §3 item 6's 0.05 s** — `[07-tk-per-object-cost-is-all-setup]`.) Prompt 14 landed (the residual table is built once per $(model, k, sector)$ on the background grid and memoised in the worker: 142.5 (LambdaCDM) / 163.0 (QCD) residual-integrand evaluations per object over 50 objects of one $k$ against 6,924 / 7,908 — 49× — and 0.0010 s per object at $k=3\times10^8$ against 0.0309 s; $\theta$ bit-identical at every sample of fifteen (model, $k$, sector) cases). Prompt 06 landed (the Green's-function WKB phase is now $-[k\,\Delta\tau+\Delta\rho]$ from the tables: the two-stage phase ODE, the `Q` variable, the resets, the sign fix and the cross-sample rebase are gone; stored phases at the floor; `TkWKBIntegration.compute()` switched, its `store()` awaits 07).
 
 > **Maintenance rule.** Every prompt updates this file *in its own commit*, before committing.
 > Set your row's status, fill in the commit SHA, model and log link, update the mechanism-level
@@ -191,8 +191,19 @@ Opened by the planning pass, 2026-09-10, before any prompt runs.
   the same files. **Impact:** a textual merge conflict if both land on the same branch in either
   order. **Decision (user, 2026-09-10):** Workstreams A, B, C, E may run in parallel with
   `transfer-remedial`; Workstream D waits until `transfer-remedial` has been merged into this
-  branch (README §4.2 item 1). **Next step:** the orchestrator confirms the merge before
-  dispatching 08; closes when both have landed and the merge is clean.
+  branch (README §4.2 item 1).
+  **Merge confirmed by the orchestrator, 2026-09-11 (Workstream C close-out).** `transfer-remedial`
+  (all nine prompts) and `qsi-phase-groups` were merged into `gktk-remedial` at **`e01c31d`**
+  ("Merge the Bessel phase campaigns into gktk-remedial"), which is an ancestor of this tree; its
+  message records that only `docs/OPEN_ISSUES.md` conflicted, resolved as the union. The
+  `transfer-remedial` side of the overlap has therefore already landed: its prompt 08 is
+  **`8ba9159`** ("Tighten the Bessel tests to the new accuracy"), and it is the last commit to
+  touch either shared file. Both modules pass on this tree (`test_tk_source_functions` +
+  `test_phase_groups`, 30 tests OK at `b65539e`). **Workstream D's precondition is met and
+  prompt 08 may be dispatched.** Prompt 10 will be editing fixtures whose tolerance constants
+  `8ba9159` has already set, so the conflict this issue was opened against cannot now occur —
+  what remains is only that 10 must not undo those constants.
+  **Next step:** closes when prompt 10 lands with `8ba9159`'s tolerances intact.
 
 - **[00-tk-lg-truncation-floor]** *(planning, 2026-09-10; **assigned to the hand-over campaign**)*
   — the transfer function's LG representation is not exact in radiation: $3.8\times10^{-5}$ of the
