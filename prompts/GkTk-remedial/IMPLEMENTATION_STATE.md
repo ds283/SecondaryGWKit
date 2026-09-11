@@ -2,7 +2,7 @@
 
 **Campaign:** [`README.md`](README.md) · **Source review:** [`docs/gk-wkb-review-fable-2026-09-09.md`](../../docs/gk-wkb-review-fable-2026-09-09.md) · **Reconciliation:** [`RECONCILIATION.md`](RECONCILIATION.md)
 **Baseline commit:** `9ff59d5` (`main`, clean)
-**Last updated:** 2026-09-11 — prompt 14 landed (the residual table is built once per $(model, k, sector)$ on the background grid and memoised in the worker: 142.5 (LambdaCDM) / 163.0 (QCD) residual-integrand evaluations per object over 50 objects of one $k$ against 6,924 / 7,908 — 49× — and 0.0010 s per object at $k=3\times10^8$ against 0.0309 s; $\theta$ bit-identical at every sample of fifteen (model, $k$, sector) cases). Prompt 06 landed (the Green's-function WKB phase is now $-[k\,\Delta\tau+\Delta\rho]$ from the tables: the two-stage phase ODE, the `Q` variable, the resets, the sign fix and the cross-sample rebase are gone; stored phases at the floor; `TkWKBIntegration.compute()` switched, its `store()` awaits 07).
+**Last updated:** 2026-09-11 — prompt 07 landed (the transfer-function phase and friction now come from the tables too: `friction_RHS` and its state index are gone from the producer and live only in prompt 04's test, `store()`'s no-op sign fix and its cross-sample rebase are gone, and the stored $\theta_T$ is 1.5e-8 rad at $k=10^5$ and 9.2e-5 rad at $3\times10^8$ against prompt 01's references, where the ODE was 2.01 rad and 5.1e3 rad. Review §12.4's LG truncation table reproduced to two figures. **Its cost, 0.049–0.052 s per object, straddles prompt 07 §3 item 6's 0.05 s** — `[07-tk-per-object-cost-is-all-setup]`.) Prompt 14 landed (the residual table is built once per $(model, k, sector)$ on the background grid and memoised in the worker: 142.5 (LambdaCDM) / 163.0 (QCD) residual-integrand evaluations per object over 50 objects of one $k$ against 6,924 / 7,908 — 49× — and 0.0010 s per object at $k=3\times10^8$ against 0.0309 s; $\theta$ bit-identical at every sample of fifteen (model, $k$, sector) cases). Prompt 06 landed (the Green's-function WKB phase is now $-[k\,\Delta\tau+\Delta\rho]$ from the tables: the two-stage phase ODE, the `Q` variable, the resets, the sign fix and the cross-sample rebase are gone; stored phases at the floor; `TkWKBIntegration.compute()` switched, its `store()` awaits 07).
 
 > **Maintenance rule.** Every prompt updates this file *in its own commit*, before committing.
 > Set your row's status, fill in the commit SHA, model and log link, update the mechanism-level
@@ -37,7 +37,7 @@ Legend: ⬜ not started · 🟡 in flight · ✅ complete · ⚠️ complete wit
 | 05 | [Phase residual](05-phase-residual.md) | review §6, §12.2, §12.4 | Opus | ⚠️ | *"Add the WKB phase residual as a per-k table"* (SHA not embedded, per the campaign convention) | [`logs/05-phase-residual.md`](logs/05-phase-residual.md) |
 | 06 | [Gk WKB phase from the primitive](06-gk-wkb-phase-from-primitive.md) | review §2–§4, §8, §13.4 | **Fable** | ⚠️ | *"Compute the Green function WKB phase from the conformal-time table"* (SHA not embedded, per the campaign convention) | [`logs/06-gk-wkb-phase-from-primitive.md`](logs/06-gk-wkb-phase-from-primitive.md) |
 | 14 | [Residual table reuse](14-residual-table-reuse.md) | §3 `[06-residual-table-per-object]` | Opus | ⚠️ | *"Build the WKB phase residual once per wavenumber"* (SHA not embedded, per the campaign convention) | [`logs/14-residual-table-reuse.md`](logs/14-residual-table-reuse.md) |
-| 07 | [Tk WKB phase from the primitive](07-tk-wkb-phase-from-primitive.md) | review §12.1–§12.4 | Opus | ⬜ | | |
+| 07 | [Tk WKB phase from the primitive](07-tk-wkb-phase-from-primitive.md) | review §12.1–§12.4 | Opus | ⚠️ | *"Compute the transfer-function WKB phase and friction from tables"* (SHA not embedded, per the campaign convention) | [`logs/07-tk-wkb-phase-from-primitive.md`](logs/07-tk-wkb-phase-from-primitive.md) |
 
 > Row 14 is numbered last because the campaign's numbers are append-only, but it **runs
 > between 06 and 07**: it removes the per-object residual-table build that 06 introduced,
@@ -64,7 +64,7 @@ Legend: ⬜ not started · 🟡 in flight · ✅ complete · ⚠️ complete wit
 |---|---|---|---|---|---|---|
 | 13 | [Verification and docs](13-verification-and-docs.md) | review §4, §12.3, §13.5 | Opus | ⬜ | | |
 
-**Progress:** 7 / 14 complete.
+**Progress:** 8 / 14 complete.
 
 ---
 
@@ -81,11 +81,11 @@ campaign; the review section is the authority on each.
 | M4 | **DEFECT, accuracy** | `functions.tau` is a cubic spline of RK45 nodes: $1.4\times10^{-9}$ relative, ~2 rad of *oracle* phase error at $k=10^5$ in `compute_analytic_G/T` and `QuadSourceIntegral`'s η-limits (§7, §13.2) | 03 | ✅ 3.8e-16 relative at the LambdaCDM nodes; the retired accessor measured 3.08 rad off at $k=10^5$ (log 03) |
 | M5 | **REQUIREMENT** | Double-double node table and an interval accessor `tau.delta`; a pointwise accessor carries the $\varepsilon\tau$ floor ($9\times10^{-4}$ rad at $3\times10^8$) on short baselines (§13.3) | 03 | ✅ `CumulativeTable` + `TablePrimitive`; one-interval Δτ ≤ 2.5e-16 (LambdaCDM), ≤ 9.4e-15 (QCD) relative |
 | M6 | **REQUIREMENT** | Persist the low-order limb (`tau_lo_Mpc`, …); regeneration attached (§13.2; README §7 D1) | 03, 04 | ✅ `tau_lo_Mpc` (03) and `cs_tau_Mpc`, `cs_tau_lo_Mpc`, `friction_F` (04); the factory refuses a datastore lacking any of the four by name |
-| M7 | **REQUIREMENT** | Sound-horizon table $\tau_s$ and friction table $F$ per model; the friction ODE ($2.3$–$4.1\times10^{-7}$ relative error) goes (§12.2, §12.7) | 04, 07 | ⚠️ 04 built both tables (LambdaCDM $\tau_s$ 2.5e-16, $F$ 3.3e-16 relative at the checkpoints; QCD 2.1e-14 / 3.3e-16) and measured the ODE it replaces at 2.261e-07 absolute in $F$; **07 still has to switch `TkWKBIntegration` onto them** and delete `friction_RHS` |
+| M7 | **REQUIREMENT** | Sound-horizon table $\tau_s$ and friction table $F$ per model; the friction ODE ($2.3$–$4.1\times10^{-7}$ relative error) goes (§12.2, §12.7) | 04, 07 | ✅ 04 built both tables (LambdaCDM $\tau_s$ 2.5e-16, $F$ 3.3e-16 relative at the checkpoints; QCD 2.1e-14 / 3.3e-16) and measured the ODE it replaces at 2.261e-07 absolute in $F$. 07 switched `TkWKBIntegration` onto them: `friction_RHS` and `FRICTION_INDEX` are gone from the producer (relocated verbatim into prompt 04's own test as `_friction_RHS`, where the 2.261e-07 measurement is unchanged), and `TkWKBValue.friction` is now bit-equal to `friction_F.delta(z_init, z)` — 6.5e-16 / 4.0e-16 / 2.7e-14 relative against prompt 01's references on (LambdaCDM $10^5$, LambdaCDM $3\times10^8$, QCD $3\times10^8$) |
 | M8 | **REQUIREMENT** | The residual $\rho$ carried explicitly: $\le1.5\times10^{-3}$ rad for $G_k$ on QCD, $\approx-0.09$ rad for $T_k$; formed without subtraction (§6, §12.2) | 05, 14 | ✅ `ComputeTargets/phase_residual.py`: `build_phase_residual(model, k, z_nodes, sector, order)` → `CumulativeTable`; the correction comes from `*_omegaEff_sq_correction`, never from a subtraction. Worst 3.61e-16 rad against prompt 01's references over all twelve (model, sector, $k$) cases; $\rho_G$ bit-exactly zero in radiation; $\rho_T$ = −0.086 (LambdaCDM) to −0.093 (QCD). 14 added `residual_node_range` (the grid cut at `RESIDUAL_WKB_REGION_MARGIN = 0.5` of the leading term) and `cached_phase_residual`, one table per $(model, k, sector)$: $\rho$ moves by $\le1.4\times10^{-17}$ rad and $\theta$ is bit-identical |
 | M9 | **REQUIREMENT** | Gauss orders decided by measurement on `QCD_Cosmology` across its spline knots; adaptive fallback for $\rho$ alone if needed (§11) | 02, 05 | ✅ 02 fixed all four orders at **4** with no adaptive fallback, but only under **break-point subdivision** on QCD; 05 consumes it — `RHO_GAUSS_ORDER = 4`, `RHO_ADAPTIVE_FALLBACK_REQUIRED = False`, and `build_phase_residual` applies the subdivision itself (1.22–1.23× the evaluations of `order × intervals` on QCD, exactly `order × intervals` on LambdaCDM) |
-| M10 | **DEFECT, dead logic** | `sin_coeff` sign fix is provably always $+1$ (§8.1) | 06, 07 | ⚠️ 06 deleted it from `GkWKBIntegration.store()` (`sin_coeff = B`); 206 $(G,G')$ cases incl. $G=0$, $G<0$ confirm the factor was $+1$ and $B>0$ reproduces the initial data to 3e-16. **07 deletes the copy in `TkWKBIntegration.store()`** |
-| M11 | **DEFECT, consistency** | `shift_theta_sample` rebases `div_2pi` to the first sample, producing ±1-cycle offsets between objects (§8.1, §8.3) | 06, 07 | ⚠️ 06 added `WKBtools.apply_phase_offset` (per-sample wrap, no rebase) and switched `GkWKBIntegration.store()` to it; 990-object sweep: 0 rebase offsets, cycle steps only at stop-point transitions (90 = 90); the old helper would have rebased 180 (= the review's 60 of 330). **`TkWKBIntegration.store()` still calls `shift_theta_sample` until 07** |
+| M10 | **DEFECT, dead logic** | `sin_coeff` sign fix is provably always $+1$ (§8.1) | 06, 07 | ✅ 06 deleted it from `GkWKBIntegration.store()` (`sin_coeff = B`); 206 $(G,G')$ cases incl. $G=0$, $G<0$ confirm the factor was $+1$ and $B>0$ reproduces the initial data to 3e-16. 07 deleted the copy in `TkWKBIntegration.store()`; 206 $(T,T')$ cases incl. $T=0$, $T<0$ give the factor $+1$ every time and $B>0$ reproduces $T_{\rm init}$ to 8.6e-15, and the shipped `store()` returns `sin_coeff == B > 0`, `cos_coeff == 0.0` exactly |
+| M11 | **DEFECT, consistency** | `shift_theta_sample` rebases `div_2pi` to the first sample, producing ±1-cycle offsets between objects (§8.1, §8.3) | 06, 07 | ✅ 06 added `WKBtools.apply_phase_offset` (per-sample wrap, no rebase) and switched `GkWKBIntegration.store()` to it; 990-object sweep: 0 rebase offsets, cycle steps only at stop-point transitions (90 = 90); the old helper would have rebased 180 (= the review's 60 of 330). 07 switched `TkWKBIntegration.store()` to it as well — there is one $T_k$ object per $k$ so no cross-object stitching arises (§12.7), but the stored $\theta+\delta$ is now exact. `shift_theta_sample` itself is retained in `WKBtools` for the two `docs/` scripts that still run (D7, log 07 deviation 5) |
 | M12 | **DEFECT, hygiene** | Zero-length check compares a redshift to `atol`; 1-element array into `math.fmod` (NumPy deprecation); stale comments at `:262-264`, `:403` (§8.2) | 06 | ✅ exact test `len(z_sample) == 1 and z_sample[0] == z_init`; the `fmod` path and both comments went with the ODE; `Quadrature/supervisors/WKB.py` deleted |
 | M13 | **DEFECT, accuracy + trap** | `phase_spline` chunking: no interpolation benefit, ordinates 64× inflated, knot residuals 30–50× worse, $1.4\times10^{-4}$ rad switch discontinuity, no progress guard for `logstep<2` (§5) | 08 | ⬜ |
 | M14 | **DEFECT, accuracy** | Consumers spline the growing phase: $h^4x/384$, $O(1)$–$O(10)$ rad at production $x$ (§5, §12.6). Same term as `source-remediation`'s `[12-phase-spline-error-grows-with-x]` | 09, 10 | ⬜ |
@@ -200,8 +200,14 @@ Opened by the planning pass, 2026-09-10, before any prompt runs.
   scaling as $x_i^{-3}$, with a frozen amplitude offset $\sim x_i^{-4}$ (review §12.4). Below it no
   numerical improvement in this campaign is visible. Remedies — later hand-over ($x_T=50$ gives
   $4\times10^{-6}$), higher-order LG frequency, or the Bessel exact representation in the radiation
-  era — are hand-over decisions. **Impact:** the $T_k$ value-level acceptance rows are floored here
-  (prompt 07 test 2 documents it). **Next step:** none here; recorded for the hand-over campaign.
+  era — are hand-over decisions. **Impact:** the $T_k$ value-level acceptance rows are floored here.
+  **Measured by prompt 07 (2026-09-11)**, reproducing review §12.4 to two significant figures with
+  the shipped `store()` on the exact radiation background: max $|\delta T|/\text{env}$ over
+  $x_i\le x\le10^4$ is **3.8118e-05** ($x_i=24$), **4.0663e-06** (50), **5.0628e-07** (100),
+  **7.7760e-09** (400), with frozen amplitude offsets 1.30e-05, 1.14e-06, 1.51e-07 and 2.39e-09 at
+  $x=10^4$, and a 24/400 ratio of **4902** against $(400/24)^3=4630$ — the $x_i^{-3}$ law, now
+  pinned by `test_tk_wkb_phase.TestRadiationValue`. **Next step:** none here; recorded for the
+  hand-over campaign.
 
 - **[00-tk-superhorizon-ic-series]** *(planning, 2026-09-10; inert)* — once prompt 12 lands, the
   $T_k$ numeric floor is the super-horizon initial condition $T=1,T'=0$ at $2.5\times10^{-6}$
@@ -328,6 +334,40 @@ Opened by the planning pass, 2026-09-10, before any prompt runs.
   `ImportError`/`AttributeError` rather than the old ODE. **Next step:** none; a dated note in
   the two review folders' READMEs if someone trips over it. `t6_sweep.py` and
   `GK_05_phase_reassembly.py` still run (D7).
+  **Widened by prompt 07 (2026-09-11):** two more scripts join them for a different removed
+  symbol. `docs/spec-code-audit/scripts/TK_04_WKB_reconstruction.py:27` and
+  `docs/gktk-remedial/baseline_k1e5.py:32` do `from ComputeTargets.TkWKBIntegration import
+  friction_RHS`, which prompt 07 deleted; the function itself is alive and verbatim as
+  `_friction_RHS` at `ComputeTargets/tests/test_background_cs_tau_friction.py:79`, so the one-line
+  repair for either script is to import it from there. Prose-only references at
+  `ComputeTargets/BackgroundModel.py:180`, `ComputeTargets/tests/wkb_reference.py:25` and
+  `ComputeTargets/TkSourceFunctions.py:46` (prompt 10's file) now name a symbol that has moved;
+  they break nothing.
+
+- **[07-tk-per-object-cost-is-all-setup]** *(opened by prompt 07, 2026-09-11)* — a
+  `TkWKBIntegration` object at $k=3\times10^8$ on LambdaCDM over the 1,384-sample source grid
+  costs **0.0494–0.0516 s** across seven timed runs, straddling prompt 07 §3 item 6's
+  $\le0.05$ s rather than clearing it (the ODE it replaces: 58 s). Essentially all of it is
+  setup, in two halves that are independently removable:
+  1. **5,840 of the 11,376 integrand evaluations (0.0321 s) build the per-$k$ residual table**,
+     and nothing amortises it. Prompt 14's cache is keyed on $(model, k, sector)$ and pays off
+     49× for $G_k$, where ~1,700 objects share a key; there is exactly **one**
+     `TkWKBIntegration` object per $k$ (`main.py:682-712`, review §12.1), so the $T_k$ sector
+     always pays the build in full. With the table cached the same call is **0.0178–0.0186 s**.
+  2. **5,536 evaluations are the *leading* table's off-grid anchor panel, recomputed once per
+     sample.** `WKB_phase_function` calls `leading.delta(z_init, z)` directly, so
+     `CumulativeTable._locate(z_init)` goes off-grid and re-integrates the identical order-4
+     panel 1,384 times. Prompt 14 split exactly this anchor off at `nearest_table_node` for the
+     residual table and did not do the same for the leading one. $G_k$ pays it too (464
+     evaluations on the 12×-sparser response grid, log 06).
+  **Impact:** prompt 07 §3 item 6's threshold, which is not met reliably; prompt 13's cost
+  measurements, which should quote both figures and say which is which; and the wall-clock of a
+  production $T_k$ stage (50 wavenumbers × 2 models ≈ 5 s, so this is a tidiness issue, not a
+  throughput one). **Next step:** apply prompt 14's `rho_anchor_node` split to the leading table
+  in `Quadrature/integrators/WKB_phase_function.py` — one `nearest_table_node` call and one
+  addition per sample, removing item 2 entirely and making the $T_k$ total ~0.034 s. Item 1 is
+  irreducible without changing where the residual table's nodes come from. Neither is in prompt
+  07's scope.
 
 > Add an entry here whenever a prompt finishes with something unresolved: a verification step that
 > could not be run, an assumption that could not be confirmed, a deviation a later prompt has to
@@ -448,4 +488,11 @@ Opened by the planning pass, 2026-09-10, before any prompt runs.
     leading_table.z_nodes, sector)` and memoised in the worker; pass the proxy's `store_id`, and
     nothing derived from the object. The object's anchor is off that grid: split it once at
     `nearest_table_node(rho, z_init)` and add `rho.delta(node, z)` per sample — calling
-    `rho.delta(z_init, z)` per sample costs a Gauss panel each time.
+    `rho.delta(z_init, z)` per sample costs a Gauss panel each time. The *leading* table's anchor
+    is **not** split this way, which is half of `[07-tk-per-object-cost-is-all-setup]`.
+15. **The retired friction ODE lives in a test** (prompt 07). `friction_RHS` and `FRICTION_INDEX`
+    are gone from `ComputeTargets/TkWKBIntegration.py`; the function is verbatim as
+    `_friction_RHS` at `ComputeTargets/tests/test_background_cs_tau_friction.py:79`, used only by
+    prompt 04's `TestFrictionODEComparison`. Producers read
+    `friction_F.delta(z_init, z) = F(z) - F(z_init) < 0` from the background table, with **no sign
+    flip**, and multiply the amplitude by `exp()` of it.

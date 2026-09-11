@@ -1,6 +1,6 @@
 # Open issues — project-wide index
 
-**Last updated:** 2026-09-11 · **46 open** across six campaigns.
+**Last updated:** 2026-09-11 · **47 open** across six campaigns.
 
 This file exists so that an issue opened by one campaign is not lost when that campaign closes.
 It is an **index, not a record**: one line per issue, pointing at the campaign status board that
@@ -64,7 +64,7 @@ they now pass `BesselPhaseGroup.levin_theta()`.
 ### 1.4 The $T_k$ / $G_k$ numerical-precision campaign
 
 Now running as [`prompts/GkTk-remedial/`](../prompts/GkTk-remedial/README.md) (2026-09-10; 13
-prompts plus a follow-up, 7 executed). `[07-phase-spline-chunking-precision]` was closed WONTFIX on the
+prompts plus a follow-up, 8 executed). `[07-phase-spline-chunking-precision]` was closed WONTFIX on the
 expectation that this campaign **removes** the chunked splines — its prompt 08 does; if that plan
 changes, reopen it.
 
@@ -75,6 +75,7 @@ changes, reopen it.
 | `[00-consumer-anchoring-floor]` | GkTk-remedial | `PrimitivePhase` reduces $k\Delta\tau$ against a global anchor, so `theta_mod_2pi` carries the $\varepsilon k\tau$ floor ($9\times10^{-4}$ rad at $k=3\times10^8$). Per-region anchoring is the follow-up. |
 | `[00-transfer-remedial-test-file-overlap]` | GkTk-remedial | Prompt 10 edits stand-in fixtures in `test_tk_source_functions.py`/`test_phase_groups.py`; `transfer-remedial` 08 edits tolerances in the same files. **Decided 2026-09-10:** Workstreams A–C, E run in parallel; D waits for the `transfer-remedial` merge. |
 | `[01-offgrid-accessor-cost-on-qcd]` | GkTk-remedial | The interval accessor costs 102 µs on `QCD_Cosmology` with both endpoints off-grid, above README §4.3's 50 µs stop threshold. **Narrowed by prompt 03:** the shipped accessor is 52 µs both-off-grid, 26 µs one-off-grid, 0.33 µs on-grid (the production case). **Narrowed by prompt 06:** the producers only ever pair the off-grid anchor with an on-grid sample — 464 partial evaluations inside a 0.031 s object. Closes when prompt 09 confirms its evaluation pattern is on-grid. |
+| `[07-tk-per-object-cost-is-all-setup]` | GkTk-remedial | A `TkWKBIntegration` object at $k=3\times10^8$ costs 0.049–0.052 s, straddling prompt 07 §3 item 6's 0.05 s; all of it is setup. 5,840 of its 11,376 integrand evaluations build a per-$k$ residual table that, at one object per $k$, nothing amortises, and 5,536 are the leading table's off-grid anchor panel recomputed once per sample — the split prompt 14 applied to $\rho$ but not to $\tau_s$. |
 
 ---
 
@@ -109,7 +110,7 @@ No action defined. These are floors on what a test may *assert*, not on what the
 | `[03-integrationsolver-stepping-minimum-lookup]` | GkTk-remedial | `IntegrationSolver` lookups match `stepping >= requested`; harmless while every table is order 4, but a second Gauss order under the label `cumulative-GL` could be served by the other order's row. |
 | `[04-background-rhs-evaluations-count]` | GkTk-remedial | `compute_background` builds three tables but `IntegrationData` has one counter, which prompt 03's test pins to the $\tau$ table alone; the other two counts are payload keys, so the persisted `RHS_evaluations` understates the build 3×. |
 | `[06-metadata-column-headroom]` | GkTk-remedial | The WKB integrations' `metadata` column is `String(256)`. **Narrowed by prompt 14:** with its `rho_reused` key the longest payload is 227 characters, so 29 remain; a test now asserts the length rather than letting it overflow. SQLite does not enforce it, PostgreSQL would. Count before adding a key. |
-| `[06-docs-scripts-reference-removed-ode]` | GkTk-remedial | Seven `docs/` reproduction scripts import the phase ODE (`integrate_phase_function`, `stage_*_evolution`, `DEFAULT_OMEGA_WKB_SQ_MAX`) that prompt 06 removed; they documented the tree they ran on and were not edited. |
+| `[06-docs-scripts-reference-removed-ode]` | GkTk-remedial | Nine `docs/` reproduction scripts import symbols the campaign removed: seven the phase ODE (`integrate_phase_function`, `stage_*_evolution`, `DEFAULT_OMEGA_WKB_SQ_MAX`, prompt 06), and `TK_04_WKB_reconstruction.py` and `baseline_k1e5.py` the friction ODE `friction_RHS` (prompt 07, relocated into prompt 04's test). They documented the tree they ran on and were not edited. |
 | `[14-residual-range-top-margin]` | GkTk-remedial | The residual table's nodes stop where the LG frequency falls below half its leading term, not at its turning point: on QCD the sign near the turning point is unresolved and a panel with two positive nodes can hold an abscissa with $\omega^2<0$. Inert: production anchors sit three e-folds inside the horizon and the cut at ~1.25, a margin of 1.74–16 e-folds over all twelve (model, sector, $k$) cases. **Corrected 2026-09-11:** log 14's stated reason — that the cut is above every criterion-satisfying node — is not general (QCD/`Gk`/$k=10^7$), and no test pins either statement; prompt 13 measures the margin. |
 | `[14-rhs-evaluations-depend-on-build-order]` | GkTk-remedial | The WKB integrations' `RHS_evaluations` now counts only what a call spent, so the first object of a $(model, k, sector)$ in a worker stores ~7,000 and every later one a few hundred; which is first depends on the scheduler. Payload data, part of no lookup key. |
 

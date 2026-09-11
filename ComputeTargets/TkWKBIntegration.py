@@ -8,54 +8,35 @@ from ComputeTargets.WKB_Tk import Tk_omegaEff_sq, Tk_d_ln_omegaEff_dz
 from ComputeTargets.analytic_Tk import compute_analytic_T, compute_analytic_Tprime
 from CosmologyConcepts import wavenumber_exit_time, redshift_array, wavenumber, redshift
 from Datastore import DatastoreObject
-from LiouvilleGreen.WKBtools import shift_theta_sample
+from LiouvilleGreen.WKBtools import apply_phase_offset
 from LiouvilleGreen.constants import TWO_PI
 from MetadataConcepts import tolerance, store_tag
 from Quadrature.integration_metadata import IntegrationData, IntegrationSolver
 from Quadrature.integrators.WKB_phase_function import WKB_phase_function
-from Quadrature.supervisors.base import RHS_timer
-from Quadrature.supervisors.numeric import NumericIntegrationSupervisor
 from Units import check_units
 from config.defaults import DEFAULT_FLOAT_PRECISION
-
-# friction_RHS below is no longer called: WKB_phase_function returns the friction integral from
-# the background model's friction_F table (prompts/GkTk-remedial prompt 06, §3.4), and prompt 07
-# deletes friction_RHS together with this constant. It used to be imported from
-# WKB_phase_function, where the ODE it indexed into no longer exists.
-FRICTION_INDEX = 0
-
-
-def friction_RHS(
-    z: float,
-    state: List[float],
-    model: BackgroundModel,
-    k_float: float,
-    supervisor: NumericIntegrationSupervisor,
-) -> List[float]:
-    """
-    k *must* be measured using the same units used for H(z) in the cosmology, otherwise we will not get
-    correct dimensionless ratios
-    """
-    with RHS_timer(supervisor) as timer:
-        if supervisor.notify_available:
-            f = state[FRICTION_INDEX]
-
-            supervisor.message(
-                z,
-                f"current state: friction_func = {f:.5g}",
-            )
-            supervisor.reset_notify_time()
-
-        one_plus_z = 1.0 + z
-        cs2 = model.functions.wPerturbations(z)
-
-        return [(3.0 / 2.0) * (1.0 + cs2) / one_plus_z]
 
 
 class TkWKBIntegration(DatastoreObject):
     """
     Encapsulates all sample points produced for a calculation of the Liouville-Green (WKB)
-    phase function for the transfer function
+    phase function for the transfer function.
+
+    Both of the redshift-dependent quantities this class stores come from the background
+    model's cumulative Gauss-Legendre tables (``prompts/GkTk-remedial``, prompts 03, 04, 06,
+    07), not from an ODE: the phase is
+    ``theta_T(z; z_init) = -[k cs_tau.delta(z_init, z) + rho_T.delta(z_init, z)]`` with
+    ``cs_tau`` the sound horizon ``int c_s dz/H``, and the Liouville-Green friction exponent is
+    ``friction_F.delta(z_init, z)`` with ``dF/dz = +(3/2)(1 + c_s^2)/(1+z)``, negative for
+    ``z < z_init``. The friction ODE that used to supply the latter -- a DOP853 solve of
+    ``dF/dz`` at the production tolerances, whose right-hand side lived in this module -- carried
+    2.3e-7 to 4.1e-7 of relative amplitude error set by ``rtol`` (review §12.3), where the table
+    is at 1e-14 absolute in ``F``. It survives only inside
+    ``ComputeTargets/tests/test_background_cs_tau_friction.py``, the test that measures what it
+    cost.
+
+    ``atol`` and ``rtol`` no longer have a referent in the computation. They are retained
+    because they are part of the datastore lookup key (``RECONCILIATION.md`` §2 item 10).
     """
 
     def __init__(
@@ -450,25 +431,35 @@ class TkWKBIntegration(DatastoreObject):
 
         # STEP 2. WRITE THE SOLUTION IN THE FORM
         #   B sin ( theta + deltaTheta )
+        # With deltaTheta = atan2(raw_cos, raw_sin) the sign of B sin(deltaTheta) is the sign of
+        # raw_cos, i.e. of T_init, so B > 0 already reproduces the initial data: the sign
+        # correction that used to follow here was provably +1 in every case (review §8.1, and
+        # the identical code in GkWKBIntegration.store() that prompt 06 removed) and has been
+        # removed.
         deltaTheta = atan2(raw_cos_coeff, raw_sin_coeff)
         B = sqrt(raw_cos_coeff * raw_cos_coeff + raw_sin_coeff * raw_sin_coeff)
 
-        # fix the sign of B by comparison with the original T
-        sin_deltaTheta = sin(deltaTheta)
-        sgn_sin_deltaTheta = +1 if sin_deltaTheta >= 0.0 else -1
-        sgn_T = +1 if self._T_init >= 0.0 else -1
-
         # evaluate the new coefficients of the sin and cos terms
         self._cos_coeff = 0.0
-        self._sin_coeff = sgn_sin_deltaTheta * sgn_T * B
+        self._sin_coeff = B
 
         # STEP 3. APPLY THE SHIFT TO THE PHASE FUNCTION
-        # change theta to theta + deltaTheta, and then update the result mod 2pi
-        theta_div_2pi_sample, theta_mod_2pi_sample = shift_theta_sample(
-            div_2pi_sample=data["theta_div_2pi_sample"],
-            mod_2pi_sample=data["theta_mod_2pi_sample"],
-            shift=deltaTheta,
+        # change theta to theta + deltaTheta per sample, wrapping each sample's remainder back
+        # into (-2pi, 0] and adding the resulting cycle shift to that sample's div 2pi. No
+        # cross-sample rebase (README §2 (e); review §8.1). There is only one TkWKBIntegration
+        # object per k, so the cross-object stitching the Green's function needs does not arise
+        # here (review §12.7); the exactness is still worth having, because the stored
+        # theta + deltaTheta is then the phase and nothing else.
+        theta_div_2pi_sample, theta_mod_2pi_sample = apply_phase_offset(
+            data["theta_div_2pi_sample"],
+            data["theta_mod_2pi_sample"],
+            deltaTheta,
         )
+
+        # friction_sample[i] is friction_F.delta(z_init, z_i) = F(z_i) - F(z_init), evaluated
+        # from the background model's friction_F table (prompt 04). It is negative for
+        # z_i < z_init, which is the sign exp() below needs; the retired ODE accumulated the
+        # same quantity from F(z_init) = 0.
         friction_sample = data["friction_sample"]
 
         # STEP 4. EVALUATE THE FULL LIOUVILLE-GREEN SOLUTIONS

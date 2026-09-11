@@ -2,8 +2,10 @@
 Tests for the two transfer-function primitives ``BackgroundModel`` tabulates alongside the
 conformal time (prompts/GkTk-remedial, prompt 04 §3): the sound horizon
 ``cs_tau = int c_s dz/H`` with ``c_s^2 = wPerturbations`` (review §12.2), and the Liouville-Green
-friction integral ``friction_F``, the primitive of ``TkWKBIntegration.friction_RHS``
-(``dF/dz = (3/2)(1 + c_s^2)/(1+z)``, review §12.7).
+friction integral ``friction_F``, the primitive of ``dF/dz = (3/2)(1 + c_s^2)/(1+z)``
+(review §12.7). Prompt 07 deleted that right-hand side from ``ComputeTargets/TkWKBIntegration.py``
+when the producer switched to the table, so the ODE now lives only here, as ``_friction_RHS``
+below, for the sole use of ``TestFrictionODEComparison`` -- the test that retires it.
 
 As in ``test_background_tau.py``, the undecorated ``compute_background`` is driven directly and
 the ``BackgroundModel`` is assembled offline through ``values_from_payload``, so what is exercised
@@ -40,6 +42,7 @@ Floors, so that nothing here is asserted below a reference's own accuracy:
 import time
 import unittest
 from math import sqrt, log1p, expm1, fabs
+from typing import List
 
 import numpy as np
 from scipy.integrate import quad, solve_ivp
@@ -53,7 +56,6 @@ from ComputeTargets.BackgroundModel import (
     FRICTION_F_GAUSS_ORDER,
     compute_background,
 )
-from ComputeTargets.TkWKBIntegration import friction_RHS
 from ComputeTargets.tests.wkb_reference import (
     difference_error,
     horizon_exit_z,
@@ -64,8 +66,44 @@ from ComputeTargets.tests.wkb_reference import (
 from CosmologyConcepts import wavenumber
 from CosmologyModels.GenericEOS.QCD_Cosmology import QCD_Cosmology
 from CosmologyModels.LambdaCDM import LambdaCDM, Planck2018
+from Quadrature.supervisors.base import RHS_timer
 from Quadrature.supervisors.numeric import NumericIntegrationSupervisor
 from Units import Mpc_units
+
+# The retired friction ODE, relocated here verbatim from ``ComputeTargets/TkWKBIntegration.py``
+# by prompt 07 of ``prompts/GkTk-remedial`` (its §2 item 1 deletes it from the producer, which
+# now reads ``friction_F.delta`` from the background table instead). It is dead everywhere in
+# the production path; it survives only in ``TestFrictionODEComparison`` below, the test that
+# measures what it cost, so that prompt 04's measurement keeps measuring exactly the same ODE.
+_FRICTION_INDEX = 0
+
+
+def _friction_RHS(
+    z: float,
+    state: List[float],
+    model: BackgroundModel,
+    k_float: float,
+    supervisor: NumericIntegrationSupervisor,
+) -> List[float]:
+    """
+    k *must* be measured using the same units used for H(z) in the cosmology, otherwise we will not get
+    correct dimensionless ratios
+    """
+    with RHS_timer(supervisor) as timer:
+        if supervisor.notify_available:
+            f = state[_FRICTION_INDEX]
+
+            supervisor.message(
+                z,
+                f"current state: friction_func = {f:.5g}",
+            )
+            supervisor.reset_notify_time()
+
+        one_plus_z = 1.0 + z
+        cs2 = model.functions.wPerturbations(z)
+
+        return [(3.0 / 2.0) * (1.0 + cs2) / one_plus_z]
+
 
 # prompt 04 §3 test 1: the exact-radiation control
 RADIATION_REL_TOL = 2.0e-15
@@ -755,8 +793,9 @@ class TestFrictionODEComparison(unittest.TestCase):
     """
     Prompt 04 §3 test 6: the friction ODE this table replaces is the inaccurate one.
 
-    ``TkWKBIntegration`` integrates ``friction_RHS`` with DOP853 at the production tolerances
-    from the numeric hand-over down the source grid, starting from ``F(z_init) = 0``. Review
+    ``TkWKBIntegration`` used to integrate ``_friction_RHS`` (relocated to the top of this
+    module by prompt 07) with DOP853 at the production tolerances from the numeric hand-over
+    down the source grid, starting from ``F(z_init) = 0``. Review
     §12.3 measures its error as 2.3e-7 (k = 1e5) to 4.1e-7 (k = 3e8) *of the amplitude*, i.e.
     absolute in F, set by ``rtol``. The table is at 1e-14 absolute (the tests above), so the
     difference measured here is the ODE's error.
@@ -781,7 +820,7 @@ class TestFrictionODEComparison(unittest.TestCase):
             k, z_init, z_samples[-1], "test_friction_ode", delta_logz=None
         ) as supervisor:
             sol = solve_ivp(
-                friction_RHS,
+                _friction_RHS,
                 method="DOP853",
                 t_span=(z_init, z_samples[-1]),
                 y0=[0.0],
@@ -801,7 +840,7 @@ class TestFrictionODEComparison(unittest.TestCase):
                 worst_rel = err / fabs(F_table) if F_table != 0.0 else 0.0
         print(
             f"\n[friction_F] LambdaCDM, k = {FRICTION_ODE_K_INV_MPC:.0e}/Mpc, z_init = z_e3 = "
-            f"{z_init:.5g} down to {z_samples[-1]}: DOP853 friction_RHS at "
+            f"{z_init:.5g} down to {z_samples[-1]}: DOP853 _friction_RHS at "
             f"(atol, rtol) = ({FRICTION_ODE_ATOL:.0e}, {FRICTION_ODE_RTOL:.0e}) differs from "
             f"friction_F.delta by {worst_abs:.3e} absolute in F -- i.e. relative in the "
             f"amplitude exp(F) -- at z = {worst_z:.4g} ({worst_rel:.3e} relative in F), "
