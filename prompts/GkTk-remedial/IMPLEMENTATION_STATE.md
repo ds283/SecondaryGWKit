@@ -2,7 +2,7 @@
 
 **Campaign:** [`README.md`](README.md) · **Source review:** [`docs/gk-wkb-review-fable-2026-09-09.md`](../../docs/gk-wkb-review-fable-2026-09-09.md) · **Reconciliation:** [`RECONCILIATION.md`](RECONCILIATION.md)
 **Baseline commit:** `9ff59d5` (`main`, clean)
-**Last updated:** 2026-09-11 — prompt 04 landed (the sound-horizon and friction tables; `cs_tau_Mpc`, `cs_tau_lo_Mpc` and `friction_F` columns; the regeneration prompt 03 attached now covers four new columns).
+**Last updated:** 2026-09-11 — prompt 05 landed (the phase residual as a per-`k` `CumulativeTable`, and the leading/correction split of the two `*_omegaEff_sq` modules; the stored `omega_WKB_sq` is bit-unchanged).
 
 > **Maintenance rule.** Every prompt updates this file *in its own commit*, before committing.
 > Set your row's status, fill in the commit SHA, model and log link, update the mechanism-level
@@ -34,7 +34,7 @@ Legend: ⬜ not started · 🟡 in flight · ✅ complete · ⚠️ complete wit
 
 | # | Prompt | Covers | Model | Status | Commit | Log |
 |---|---|---|---|---|---|---|
-| 05 | [Phase residual](05-phase-residual.md) | review §6, §12.2, §12.4 | Opus | ⬜ | | |
+| 05 | [Phase residual](05-phase-residual.md) | review §6, §12.2, §12.4 | Opus | ⚠️ | *"Add the WKB phase residual as a per-k table"* (SHA not embedded, per the campaign convention) | [`logs/05-phase-residual.md`](logs/05-phase-residual.md) |
 | 06 | [Gk WKB phase from the primitive](06-gk-wkb-phase-from-primitive.md) | review §2–§4, §8, §13.4 | **Fable** | ⬜ | | |
 | 07 | [Tk WKB phase from the primitive](07-tk-wkb-phase-from-primitive.md) | review §12.1–§12.4 | Opus | ⬜ | | |
 
@@ -59,7 +59,7 @@ Legend: ⬜ not started · 🟡 in flight · ✅ complete · ⚠️ complete wit
 |---|---|---|---|---|---|---|
 | 13 | [Verification and docs](13-verification-and-docs.md) | review §4, §12.3, §13.5 | Opus | ⬜ | | |
 
-**Progress:** 4 / 13 complete.
+**Progress:** 5 / 13 complete.
 
 ---
 
@@ -77,8 +77,8 @@ campaign; the review section is the authority on each.
 | M5 | **REQUIREMENT** | Double-double node table and an interval accessor `tau.delta`; a pointwise accessor carries the $\varepsilon\tau$ floor ($9\times10^{-4}$ rad at $3\times10^8$) on short baselines (§13.3) | 03 | ✅ `CumulativeTable` + `TablePrimitive`; one-interval Δτ ≤ 2.5e-16 (LambdaCDM), ≤ 9.4e-15 (QCD) relative |
 | M6 | **REQUIREMENT** | Persist the low-order limb (`tau_lo_Mpc`, …); regeneration attached (§13.2; README §7 D1) | 03, 04 | ✅ `tau_lo_Mpc` (03) and `cs_tau_Mpc`, `cs_tau_lo_Mpc`, `friction_F` (04); the factory refuses a datastore lacking any of the four by name |
 | M7 | **REQUIREMENT** | Sound-horizon table $\tau_s$ and friction table $F$ per model; the friction ODE ($2.3$–$4.1\times10^{-7}$ relative error) goes (§12.2, §12.7) | 04, 07 | ⚠️ 04 built both tables (LambdaCDM $\tau_s$ 2.5e-16, $F$ 3.3e-16 relative at the checkpoints; QCD 2.1e-14 / 3.3e-16) and measured the ODE it replaces at 2.261e-07 absolute in $F$; **07 still has to switch `TkWKBIntegration` onto them** and delete `friction_RHS` |
-| M8 | **REQUIREMENT** | The residual $\rho$ carried explicitly: $\le1.5\times10^{-3}$ rad for $G_k$ on QCD, $\approx-0.09$ rad for $T_k$; formed without subtraction (§6, §12.2) | 05 | ⬜ |
-| M9 | **REQUIREMENT** | Gauss orders decided by measurement on `QCD_Cosmology` across its spline knots; adaptive fallback for $\rho$ alone if needed (§11) | 02, 05 | ⚠️ 02 done: all four orders are **4**, no adaptive fallback — but only with **break-point subdivision** on QCD (log 02) |
+| M8 | **REQUIREMENT** | The residual $\rho$ carried explicitly: $\le1.5\times10^{-3}$ rad for $G_k$ on QCD, $\approx-0.09$ rad for $T_k$; formed without subtraction (§6, §12.2) | 05 | ✅ `ComputeTargets/phase_residual.py`: `build_phase_residual(model, k, z_nodes, sector, order)` → `CumulativeTable`; the correction comes from `*_omegaEff_sq_correction`, never from a subtraction. Worst 3.61e-16 rad against prompt 01's references over all twelve (model, sector, $k$) cases; $\rho_G$ bit-exactly zero in radiation; $\rho_T$ = −0.086 (LambdaCDM) to −0.093 (QCD) |
+| M9 | **REQUIREMENT** | Gauss orders decided by measurement on `QCD_Cosmology` across its spline knots; adaptive fallback for $\rho$ alone if needed (§11) | 02, 05 | ✅ 02 fixed all four orders at **4** with no adaptive fallback, but only under **break-point subdivision** on QCD; 05 consumes it — `RHO_GAUSS_ORDER = 4`, `RHO_ADAPTIVE_FALLBACK_REQUIRED = False`, and `build_phase_residual` applies the subdivision itself (1.22–1.23× the evaluations of `order × intervals` on QCD, exactly `order × intervals` on LambdaCDM) |
 | M10 | **DEFECT, dead logic** | `sin_coeff` sign fix is provably always $+1$ (§8.1) | 06, 07 | ⬜ |
 | M11 | **DEFECT, consistency** | `shift_theta_sample` rebases `div_2pi` to the first sample, producing ±1-cycle offsets between objects (§8.1, §8.3) | 06, 07 | ⬜ |
 | M12 | **DEFECT, hygiene** | Zero-length check compares a redshift to `atol`; 1-element array into `math.fmod` (NumPy deprecation); stale comments at `:262-264`, `:403` (§8.2) | 06 | ⬜ |
@@ -311,9 +311,16 @@ Opened by the planning pass, 2026-09-10, before any prompt runs.
    envelope for $T_k$ at the hand-over), and the $T_k$ initial condition ($2.5\times10^{-6}$).
    A test asserting below a floor is asserting agreement between two errors.
 3. **Never form $C=\omega^2-(k/H)^2$** by subtraction; use the correction functions prompt 05
-   exposes. Never form $\Delta\tau$ as `tau(b) - tau(a)`; use `tau.delta(a, b)`.
-4. **`*_omegaEff_sq` return values are stored columns** and must not move by a bit (prompt 05's
-   exact-equality test).
+   exposes — `Gk_omegaEff_sq_correction` / `Tk_omegaEff_sq_correction`, both $k$-independent, both
+   in `ComputeTargets/WKB_{Gk,Tk}.py`. Never form $\Delta\tau$ as `tau(b) - tau(a)`; use
+   `tau.delta(a, b)`.
+4. **`*_omegaEff_sq` return values are stored columns** and must not move by a bit. Delivered by
+   prompt 05, which kept the `A + B + C` summation order and asserts exact equality against
+   verbatim copies of the pre-refactor bodies
+   (`test_omega_eff_split.TestReturnValueUnchanged`). Note that `leading + correction` is **not**
+   bit-equal to `*_omegaEff_sq` — floating-point addition is not associative and the two differ
+   by one ulp on ~13 % of the production range (log 05, deviation 1) — so do not "simplify"
+   `*_omegaEff_sq` to that sum.
 5. **`ModelFunctions` stand-ins must keep constructing** with thirteen positional arguments.
    Delivered by prompt 04: `cs_tau` and `friction_F` are appended as fields 14 and 15 with
    namedtuple `defaults=(None, None)`, asserted by
