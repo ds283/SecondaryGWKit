@@ -372,6 +372,84 @@ raise. `test_missing_background_tables_are_refused_by_name`: a `ModelFunctions` 
   `primitive_phase.py`, outside this prompt's files. No timing was taken (the stand-in's
   `ClosedFormPrimitive` has no panels, so this fixture cannot measure it).
 
+### Addendum, 2026-09-11 — orchestrator's independent verification, and the two stops
+
+Added by the orchestrator (Workstream D), **additively**: the subsection above was correct for the
+tree and the moment it was written and is not edited (`CLAUDE.md`, README §5 rule 6). Run on
+`8ba58e7`.
+
+**The overlap discipline — the check this prompt existed to survive — holds completely.**
+
+- `git diff HEAD~1 -- ComputeTargets/tests/test_phase_groups.py` is **empty**, and the file is
+  **byte-identical** to the copy the orchestrator snapshotted at `a2ea069` before Workstream D
+  began (`diff -q`, no output). Deviation 3's claim that it needed no edit is right.
+- `test_tk_source_functions.py` removes exactly **seven** lines, and `git blame` on `HEAD~1`
+  attributes every one of them to **`e3348e4`** — not one line `8ba9159` wrote. Checked
+  line-by-line, not by the agent's report.
+- No tolerance literal that existed in that file before this commit has disappeared: the set of
+  `<digits>e-<digits>` literals in the pre-Workstream-D snapshot is a **subset** of the set in the
+  shipped file (`comm -23`, empty).
+
+So `[00-transfer-remedial-test-file-overlap]`'s condition — "closes when prompt 10 lands with
+`8ba9159`'s tolerances intact" — is met, and README §4.2 item 2's stop cannot fire.
+
+Suites re-run by the orchestrator:
+
+- `test_tk_source_functions` + `test_phase_groups` + `test_quadsource_integral` — **73 tests, OK**
+  (115.3 s).
+- `discover -s ComputeTargets/tests -t .` — **255 tests, OK** (134.5 s), against 249 at `c1c3717`
+  and 226 before Workstream D.
+- `grep -n "phase_spline\|PHASE_SPLINE_CHUNK_LOGSTEP\|friction_RHS" ComputeTargets/TkSourceFunctions.py`
+  empty; `black --check` clean on all four touched modules.
+
+Numbers reproduced from the orchestrator's own run (not quoted from the log):
+
+| quantity | measured | required |
+|---|---|---|
+| `PrimitivePhase` vs exact LG phase at $x_T=10^6$ | **3.4482e-10 rad** (4.5475e-13 at the samples) | prompt §3.1: ≤1e-7 ✅; README §6: ≤1e-6 ✅ |
+| cubic spline of the same samples | 7.0854e-03 rad | — |
+| **ratio** | **2.0548e+07** | >1e5 ✅ |
+| `friction` vs closed form | 8.8818e-16 ($w=1/3$), 1.7764e-15 ($w=0.2$) absolute | ≤1e-13 ✅ |
+| `omega` vs `theta_deriv`, $w=1/3$ | **1.0492e-10** relative over `z_WKB[3:-3]` | ≤1e-10 — **missed by 4.9 %** |
+| `omega` vs `theta_deriv`, $w=0.2$ | 7.9502e-11 relative | ≤1e-10 ✅ |
+| the same, over `z_WKB[5:-3]` | 5.5589e-12 / 3.7565e-12 | — |
+
+Read against the code: the module docstring's Phase and Amplitude paragraphs are truthful,
+including an explicit paragraph naming `_SoundHorizonRate` and why $H_{\rm eff}=H/c_s$ (so the
+adapter is documented, not hidden); `friction()` reads `friction_F.delta(crossover_z, z)` with no
+spline; `_check_friction_samples` exists, is called at construction, and is tested to raise.
+
+**Deviation 5 independently confirmed, by experiment.** The orchestrator restored
+`test_quadsource_integral.py` to its `HEAD~1` content in a scratch copy of the working tree and ran
+the module: it fails with `RuntimeError` from
+`TkSourceFunctions._check_friction_samples` (`TkSourceFunctions.py:437`) at four separate call
+sites, then the file was restored (`git status` clean). So the five-line fixture edit is **forced by
+the cross-check the prompt's own §1 mandates**, on a fixture whose stored friction is backed out of
+the exact Bessel envelope while its `FakeModel` supplies the constant-$w$ LG integral — a real
+inconsistency that was invisible while the consumer splined the samples. The agent's
+`STRUCTURALLY REQUIRED` tag is correct in substance.
+
+**Why the orchestrator stopped.** Two of README §4.3's conditions fire, both flagged by the agent
+rather than found by the review:
+
+1. **Check (v), allowed files.** `ComputeTargets/tests/test_quadsource_integral.py` is not in
+   prompt 10's list. (`ComputeTargets/tests/wkb_reference.py` *is* effectively listed — prompt 10 §2
+   names the file and the `ClosedFormPrimitive` helper to put in it — so the orchestrator does not
+   count that one.) The edit is five lines of stand-in construction, mirrors what the `exact` branch
+   one line above already does, and reverts as a single hunk; but it is outside the list, and
+   widening a prompt's blast radius is the user's call, not the orchestrator's.
+2. **A prompt threshold missed, narrowly.** §3 item 3 asks for 1e-10 relative; $w=1/3$ gives
+   1.0492e-10 over the window the sibling test uses. Unlike prompt 09's miss this is **not** a
+   floor: it is the not-a-knot end condition of the cubic $\varphi$ spline at the top of the WKB
+   region, 5.6e-12 from the fifth sample inwards and 1.3e-15 in the interior, against 4.249e-08
+   before this prompt — a 405× improvement that lands 4.9 % above a bound that is reachable in
+   principle (`spline_order=5` measures 9.695e-12 over the whole region, at the cost of six samples
+   against `MIN_SPLINE_DATA_POINTS = 5` and of diverging from prompt 09's $G_k$ consumer).
+
+Neither touches a design fact of README §2, the `GkSource` rectifier, a `*_omegaEff_sq` return
+value, a stored column, or a `transfer-remedial` file. Everything README §6 actually scores is met,
+the $T_k$ consumer row with a 20-million-fold margin.
+
 ## Observations not acted on
 
 1. **`8ba9159`'s tolerance comments in `test_tk_source_functions.py` are now stale in five
