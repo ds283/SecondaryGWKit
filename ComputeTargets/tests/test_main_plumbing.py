@@ -1,7 +1,8 @@
 """
-Structural tests for the payload plumbing of main.py: the QuadSourceIntegral stage, and (prompt 16
+Structural tests for the payload plumbing of main.py: the QuadSourceIntegral stage, (prompt 16
 of prompts/GkTk-remedial) the unresolved-oscillation summary the two numeric work queues now print
-in place of the per-object warning.
+in place of the per-object warning, and (prompt 12) the separate absolute tolerance every
+TkNumericIntegration lookup must carry.
 
 `main.py` is a script: importing it builds a `ShardedPool`, connects to Ray and starts running
 the pipeline, so it cannot be imported from a test. The two module-level helpers of its
@@ -475,3 +476,252 @@ class UnresolvedOscWiringTestCase(unittest.TestCase):
                 if isinstance(node, ast.Call) and isinstance(node.func, ast.Name)
             }
             self.assertIn("format_unresolved_osc_summary", calls, msg=title)
+
+
+# -------------------------------------------------------------------------------------------
+# prompt 12 of prompts/GkTk-remedial: the transfer function's numeric absolute tolerance
+#
+# `DEFAULT_TK_NUMERIC_ABS_TOLERANCE = 1e-13` is built into its own `tolerance` object,
+# `Tk_numeric_atol`, and every `TkNumericIntegration` lookup and work item must carry it --
+# because the tolerance is part of the datastore key (RECONCILIATION.md section 1 item 14). A
+# site left on the shared `atol` does not raise: the row is simply not found, so the pipeline
+# either recomputes the object or reports it missing. That is the silent failure this guards.
+#
+# The check is structural, on main.py's `ast`: the lookups are built inside `run_pipeline`, which
+# `load_main_py_functions` cannot extract (it takes module-level functions only), and a call that
+# reaches `object_get` as `**batch_dict` has no `atol` keyword of its own, so the dict literal
+# that feeds the queue is what has to be read.
+# -------------------------------------------------------------------------------------------
+
+# the tolerance every TkNumericIntegration object_get must carry, and the one every other
+# integration object_get must carry
+TK_NUMERIC_TOLERANCE_NAME = "Tk_numeric_atol"
+SHARED_TOLERANCE_NAME = "atol"
+
+# how many TkNumericIntegration object_get sites main.py is expected to have. A finder that
+# silently matched nothing would otherwise pass every assertion below.
+EXPECTED_TK_NUMERIC_SITES = 5
+
+
+def _own_nodes(scope):
+    """Every descendant of `scope` that is not inside a nested `def`.
+
+    Lambdas are *not* a boundary: a `task_builder=lambda x: pool.object_get(...)` belongs to the
+    scope that holds the batch it is dispatched over.
+    """
+    nodes = []
+    for child in ast.iter_child_nodes(scope):
+        if isinstance(child, (ast.FunctionDef, ast.AsyncFunctionDef)):
+            continue
+        nodes.append(child)
+        nodes.extend(_own_nodes(child))
+    return nodes
+
+
+def _object_get_calls(nodes):
+    """The `*.object_get(...)` / `*.object_get_vectorized(...)` calls among `nodes` whose first
+    positional argument is a string naming an integration class."""
+    found = []
+    for node in nodes:
+        if not isinstance(node, ast.Call):
+            continue
+        if not isinstance(node.func, ast.Attribute):
+            continue
+        if node.func.attr not in ("object_get", "object_get_vectorized"):
+            continue
+        if len(node.args) == 0:
+            continue
+        first = node.args[0]
+        if not (isinstance(first, ast.Constant) and isinstance(first.value, str)):
+            continue
+        if not first.value.endswith("Integration"):
+            continue
+        found.append(node)
+    return found
+
+
+def _atol_values_under(node):
+    """Every value bound to an `"atol"` key in any dict literal below `node`.
+
+    This reaches both the flat payload dicts (`{"k": ..., "atol": atol, ...}`) and the nested
+    ones `object_get_vectorized` is given (`{"shard_key": ..., "payload": [{..., "atol": atol}]}`).
+    """
+    values = []
+    for sub in ast.walk(node):
+        if not isinstance(sub, ast.Dict):
+            continue
+        for key, value in zip(sub.keys, sub.values):
+            if isinstance(key, ast.Constant) and key.value == "atol":
+                values.append(value)
+    return values
+
+
+def _name_of(node):
+    return node.id if isinstance(node, ast.Name) else ast.dump(node)
+
+
+def tk_numeric_tolerance_sites():
+    """Return `(sites, unclassified)` for main.py.
+
+    A *site* is `(class_name, atol_name, description)`, one per integration-class `object_get`.
+    The tolerance is read from the call's own `atol=` keyword where it has one, and otherwise
+    from the dict literal of the batch the enclosing `RayWorkPool` dispatches over.
+    `unclassified` holds any site whose tolerance could not be read at all -- a new spelling this
+    finder does not understand, which must fail the test rather than pass it silently.
+    """
+    tree = ast.parse(MAIN_PY.read_text(), filename=str(MAIN_PY))
+
+    scopes = [tree] + [
+        node
+        for node in ast.walk(tree)
+        if isinstance(node, (ast.FunctionDef, ast.AsyncFunctionDef))
+    ]
+
+    sites = []
+    unclassified = []
+    seen = set()
+
+    for scope in scopes:
+        own = _own_nodes(scope)
+        scope_label = getattr(scope, "name", "<module>")
+
+        # batch name -> the assigned expression(s), so that a `**batch` dispatch can be resolved
+        batches = {}
+        for node in own:
+            if not isinstance(node, ast.Assign):
+                continue
+            for target in node.targets:
+                if isinstance(target, ast.Name):
+                    batches.setdefault(target.id, []).append(node.value)
+
+        # calls reached through a RayWorkPool task_builder: the tolerance is in the batch
+        handled_by_queue = set()
+        for node in own:
+            if not (
+                isinstance(node, ast.Call)
+                and isinstance(node.func, ast.Name)
+                and node.func.id == "RayWorkPool"
+            ):
+                continue
+            builders = [kw.value for kw in node.keywords if kw.arg == "task_builder"]
+            calls = _object_get_calls(
+                [sub for builder in builders for sub in ast.walk(builder)]
+            )
+            if len(calls) == 0:
+                continue
+            batch_name = (
+                node.args[1].id
+                if len(node.args) > 1 and isinstance(node.args[1], ast.Name)
+                else None
+            )
+            values = [
+                value
+                for assigned in batches.get(batch_name, [])
+                for value in _atol_values_under(assigned)
+            ]
+            names = {_name_of(value) for value in values}
+            for call in calls:
+                handled_by_queue.add(id(call))
+                seen.add(id(call))
+                label = f"{scope_label}: RayWorkPool({batch_name}) line {call.lineno}"
+                if len(names) != 1:
+                    unclassified.append((call.args[0].value, sorted(names), label))
+                    continue
+                sites.append((call.args[0].value, names.pop(), label))
+
+        # direct calls
+        for call in _object_get_calls(own):
+            if id(call) in handled_by_queue:
+                continue
+            seen.add(id(call))
+            label = f"{scope_label}: direct call, line {call.lineno}"
+            keywords = [kw.value for kw in call.keywords if kw.arg == "atol"]
+            if len(keywords) != 1:
+                unclassified.append((call.args[0].value, [], label))
+                continue
+            sites.append((call.args[0].value, _name_of(keywords[0]), label))
+
+    # anything the scope walk never reached at all
+    for call in _object_get_calls(list(ast.walk(tree))):
+        if id(call) not in seen:
+            unclassified.append((call.args[0].value, [], f"line {call.lineno}"))
+
+    return sites, unclassified
+
+
+class TkNumericToleranceWiringTestCase(unittest.TestCase):
+    """`TkNumericIntegration` carries `Tk_numeric_atol`; everything else carries `atol`."""
+
+    @classmethod
+    def setUpClass(cls):
+        cls.sites, cls.unclassified = tk_numeric_tolerance_sites()
+
+    def test_every_integration_object_get_has_a_readable_tolerance(self):
+        self.assertEqual(
+            self.unclassified,
+            [],
+            msg="an integration object_get in main.py has no tolerance this test can read",
+        )
+
+    def test_the_tk_numeric_sites_are_all_found(self):
+        found = [site for site in self.sites if site[0] == "TkNumericIntegration"]
+        self.assertEqual(
+            len(found),
+            EXPECTED_TK_NUMERIC_SITES,
+            msg=f"TkNumericIntegration object_get sites found: {found}",
+        )
+
+    def test_every_tk_numeric_object_get_uses_the_tk_numeric_tolerance(self):
+        for class_name, atol_name, label in self.sites:
+            if class_name != "TkNumericIntegration":
+                continue
+            with self.subTest(site=label):
+                self.assertEqual(atol_name, TK_NUMERIC_TOLERANCE_NAME)
+
+    def test_every_other_integration_object_get_keeps_the_shared_tolerance(self):
+        for class_name, atol_name, label in self.sites:
+            if class_name == "TkNumericIntegration":
+                continue
+            with self.subTest(site=label, cls=class_name):
+                self.assertEqual(atol_name, SHARED_TOLERANCE_NAME)
+
+    def test_the_tolerance_object_is_built_from_the_defaults_constant(self):
+        """`Tk_numeric_atol` is a `tolerance` object built from
+        `DEFAULT_TK_NUMERIC_ABS_TOLERANCE`, and is not simply an alias of `atol`."""
+        tree = ast.parse(MAIN_PY.read_text(), filename=str(MAIN_PY))
+
+        targets = [
+            node
+            for node in ast.walk(tree)
+            if isinstance(node, ast.Assign)
+            and any(
+                isinstance(target, ast.Tuple)
+                and any(
+                    isinstance(element, ast.Name)
+                    and element.id == TK_NUMERIC_TOLERANCE_NAME
+                    for element in target.elts
+                )
+                for target in node.targets
+            )
+        ]
+        self.assertEqual(len(targets), 1)
+
+        assignment = targets[0]
+        target = [t for t in assignment.targets if isinstance(t, ast.Tuple)][0]
+        index = [
+            i
+            for i, element in enumerate(target.elts)
+            if isinstance(element, ast.Name) and element.id == TK_NUMERIC_TOLERANCE_NAME
+        ][0]
+
+        # ray.get([...]) returns the tolerances in the order they are requested
+        requests = [
+            node for node in ast.walk(assignment.value) if isinstance(node, ast.List)
+        ][0].elts
+        self.assertEqual(len(requests), len(target.elts))
+
+        request = requests[index]
+        self.assertEqual(request.args[0].value, "tolerance")
+        tol = [kw.value for kw in request.keywords if kw.arg == "tol"]
+        self.assertEqual(len(tol), 1)
+        self.assertEqual(tol[0].id, "DEFAULT_TK_NUMERIC_ABS_TOLERANCE")

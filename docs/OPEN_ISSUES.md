@@ -1,6 +1,6 @@
 # Open issues — project-wide index
 
-**Last updated:** 2026-09-12 · **50 open** across six campaigns.
+**Last updated:** 2026-09-12 · **51 open** across six campaigns.
 
 This file exists so that an issue opened by one campaign is not lost when that campaign closes.
 It is an **index, not a record**: one line per issue, pointing at the campaign status board that
@@ -77,6 +77,7 @@ the expectation that this campaign **removes** the chunked splines — its promp
 | `[08-docs-scripts-reference-removed-chunking]` | GkTk-remedial | Two `docs/` reproduction scripts (`t5_spline.py`, `measure.py`) read `phase_spline` internals (`_chunk_list`, `_splines`, `_match_chunk`) that prompt 08 deleted with chunking; they documented the chunked tree they ran on and were not edited. |
 | `[10-residual-spline-end-condition]` | GkTk-remedial | Prompt 10 §3 item 3's 1e-10 relative on $\omega$ vs `theta_deriv` is missed at one abscissa per equation of state — 1.0492e-10 at $w=1/3$, the not-a-knot end condition of the cubic residual spline at the top of the WKB region (5.6e-12 from the fifth sample inwards, 4.249e-08 before). `spline_order=5` gives 9.7e-12 over the whole region but needs six samples against `MIN_SPLINE_DATA_POINTS = 5`. **Assigned (2026-09-11): prompt 13**, to re-measure on the real background before anyone pays for the quintic. |
 | `[10-transfer-remedial-tolerance-comments-stale]` | GkTk-remedial | Five tolerance comments `8ba9159` wrote in `test_tk_source_functions.py` now describe the consumer re-spline prompt 10 deleted and quote numbers three to four orders above the new measurements. Not edited — `8ba9159`'s text was a stop condition for prompt 10 — and every assertion still passes. |
+| `[12-tk-numeric-atol-largest-k-excursion]` | GkTk-remedial | Prompt 12's `atol=1e-13` reaches the 2.5e-6 initial-condition floor at every $k$ swept on the radiation control except $k=3\times10^8$, where an isolated 2.56e-4-of-envelope excursion near $x\approx10.8$ remains; `atol=1e-16` removes it at fewer evaluations. Not measured on the production backgrounds. |
 | `[10-wrap-theta-loop-at-large-phase]` | GkTk-remedial | `wrap_theta` reduces by adding $2\pi$ in a loop, so at $|\theta|\sim10^6$ rad it takes ~1.6e5 iterations and reconstructs $\theta$ only to 1.39e-06 rad. Inert in production (its one caller passes `mod + delta`), a trap for fixtures; `WKB_mod_2pi` is exact. |
 
 ---

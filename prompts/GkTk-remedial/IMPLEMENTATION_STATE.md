@@ -2,7 +2,22 @@
 
 **Campaign:** [`README.md`](README.md) · **Source review:** [`docs/gk-wkb-review-fable-2026-09-09.md`](../../docs/gk-wkb-review-fable-2026-09-09.md) · **Reconciliation:** [`RECONCILIATION.md`](RECONCILIATION.md)
 **Baseline commit:** `9ff59d5` (`main`, clean)
-**Last updated:** 2026-09-12 — Prompt 16 landed (the unresolved-oscillation warning is
+**Last updated:** 2026-09-12 — Prompt 12 landed (the transfer function's numeric run has its own
+absolute tolerance: `config.defaults.DEFAULT_TK_NUMERIC_ABS_TOLERANCE = 1e-13`, built into a fifth
+`tolerance` object `Tk_numeric_atol` in `main.py` and threaded through **all five**
+`TkNumericIntegration` `object_get` sites — the existence query, the work item, the WKB stage's
+initial-condition lookup, and the two source-stage lookups — while `TkWKBIntegration`,
+`GkNumericIntegration` and `GkWKBIntegration` keep `atol`. On review §12.5's own geometry, which
+reproduces all four of its RHS-evaluation counts exactly at $k=10^6$, $\delta T/{\rm env}$ goes
+from **9.928e-6 to 2.534e-6** for **+14.3 %** evaluations (6476 → 7403), and the residue is the
+super-horizon initial condition, not the solver: with exact initial data the same run gives
+**3.275e-7**. $G_k$ is indifferent, as the review says — 8.538e-10 of the envelope and +0.35 %
+evaluations — so nothing about $G_k$ moves. **A fresh datastore is required**: the tolerance is
+part of every `TkNumericIntegration` row's lookup key. One structural repair came with it
+(deviation 1, log 12): `build_Tk_WKB_work`'s numeric lookup was dispatched over `query_batch` —
+the `TkWKBIntegration` query over the whole batch — with `payload_batch`, built over `missing`
+alone, unused since `8e96750`; the `GkWKBIntegration` twin passes `payload_batch`, and the two
+tolerances can no longer share one dict.) Prompt 16 landed (the unresolved-oscillation warning is
 **relocated, not deleted**, enacting README §7 **D2 option (ii)**, which the user took on
 2026-09-11 on prompt 11's measurement. `scan_sample_grid_for_unresolved_osc` gains a keyword-only
 `warn: bool = True` that gates **only** its two `print` calls — the test, which pair trips it and
@@ -158,7 +173,7 @@ Legend: ⬜ not started · 🟡 in flight · ✅ complete · ⚠️ complete wit
 |---|---|---|---|---|---|---|
 | 11 | [Numeric diagnostics and units](11-numeric-diagnostics-and-units.md) | review §10.2, §12.5, §13.1 | Opus | ⚠️ | *"Test oscillation resolution on the sample grid, off the RHS"* (SHA not embedded, per the campaign convention) | [`logs/11-numeric-diagnostics-and-units.md`](logs/11-numeric-diagnostics-and-units.md) |
 | 16 | [Unresolved-osc print policy](16-unresolved-osc-print-policy.md) | §7 D2; §3 `[00-unresolved-osc-print-policy]` | Opus | ✅ | *"Summarise unresolved-oscillation warnings per wavenumber"* (SHA not embedded, per the campaign convention) | [`logs/16-unresolved-osc-print-policy.md`](logs/16-unresolved-osc-print-policy.md) |
-| 12 | [Tk numeric `atol`](12-tk-numeric-atol.md) | review §12.5 | Opus | ⬜ | | |
+| 12 | [Tk numeric `atol`](12-tk-numeric-atol.md) | review §12.5 | Opus | ⚠️ | *"Give the transfer-function numeric run its own absolute tolerance"* (SHA not embedded, per the campaign convention) | [`logs/12-tk-numeric-atol.md`](logs/12-tk-numeric-atol.md) |
 
 > Row 16 is numbered last because the campaign's numbers are append-only, but it **runs between 11
 > and 12** — the follow-up README §7 D2 anticipated, enacting the user's choice of option (ii)
@@ -170,7 +185,7 @@ Legend: ⬜ not started · 🟡 in flight · ✅ complete · ⚠️ complete wit
 |---|---|---|---|---|---|---|
 | 13 | [Verification and docs](13-verification-and-docs.md) | review §4, §12.3, §13.5 | Opus | ⬜ | | |
 
-**Progress:** 14 / 16 complete.
+**Progress:** 15 / 16 complete.
 
 ---
 
@@ -202,7 +217,7 @@ campaign; the review section is the authority on each.
 | M19 | **DEFECT, dead path** | `mode.lower()` before the `None` check (§10.2) | 11 | ✅ the `None` test comes first; `mode=None` integrates the whole grid, `mode="STOP"` is accepted, `mode="x"` raises `ValueError` — three tests. The `mode != "stop"` branch is kept (`RECONCILIATION.md` §3) |
 | M20 | **DEFECT, comments + robustness** | The stop point is a maximum, not a minimum; the "fixed phase to avoid jitter" motivation is obsolete; `find_phase_minimum`'s $10^{-3}z$ step is safe only inside the window (§10.2) | 11 | ✅ renamed **`find_phase_extremum`** with `find_phase_minimum` kept as an alias; docstring and both integrators' comments now say maximum, and say the jitter motivation is obsolete because `store()` rotates $(G,G')$ into a pure sine. Steps $2\pi/(16\omega)$ where $\omega^2>0$, falling back to $10^{-3}z$: inside the window both steps find the same extremum, and at $x=6\times10^3$ — where the old step covers **0.955 of a cycle** — the phase step lands within 0.1 cycle of the first maximum while the old step skips more than a full cycle. Window **not** widened. The stop point moves by $\le1.04\times10^{-7}$ relative, inside `root_scalar`'s own tolerance (`[11-stop-point-root-tolerance]`) |
 | M21 | **DEFECT, misleading** | `0.85·z_e6` truncation requests samples never produced in stop mode (§10.2) — comment only | 11 | ✅ both `main.py` comments (`:604-611`, `:1178-1189`) rewritten to say the ODE terminates on the $z_{e6}$ event, the `expected_values` check is skipped in stop mode, and the samples between $z_{e6}$ and $0.85z_{e6}$ are never produced. The constant stays (hand-over decision). `git diff main.py` is comment-only; the 40-of-41 return is pinned by the bit-identity test |
-| M22 | **DEFECT, accuracy** | $T_k$ numeric run limited to $1.1\times10^{-5}$ of the envelope by `atol=1e-10` acting as a $10^{-5}$ relative tolerance (§12.5) | 12 | ⬜ |
+| M22 | **DEFECT, accuracy** | $T_k$ numeric run limited to $1.1\times10^{-5}$ of the envelope by `atol=1e-10` acting as a $10^{-5}$ relative tolerance (§12.5) | 12 | ⚠️ `DEFAULT_TK_NUMERIC_ABS_TOLERANCE = 1e-13` for the `TkNumericIntegration` run alone, carried by a separate `tolerance` object `Tk_numeric_atol` through all five of its `object_get` sites. On review §12.5's geometry (RadiationModel, $k=10^6$, production source grid, $T=1,T'=0$, `rtol=1e-8`, all four of the review's RHS-evaluation counts reproduced exactly): $\delta T/{\rm env}$ **9.928e-6 → 2.534e-6** (README §6 target $\le3\times10^{-6}$) for **+14.3 %** evaluations; with exact initial data **1.160e-5 → 3.275e-7**, so what remains is the $2.5\times10^{-6}$ initial-condition floor (`[00-tk-superhorizon-ic-series]`, out of scope). $G_k$ moves by 8.538e-10 of the envelope for +0.35 % evaluations and keeps `atol`. ⚠️ because at $k=3\times10^8$ the shipped tolerance leaves an isolated 2.56e-4 excursion near $x\approx10.8$ that `atol=1e-16` removes (`[12-tk-numeric-atol-largest-k-excursion]`), and because deviation 1 had to repair the batch `build_Tk_WKB_work`'s numeric lookup was dispatched over — `query_batch` (the `TkWKBIntegration` query, whole batch) rather than the unused `payload_batch` (the missing subset), which no longer works once the two carry different tolerances |
 | M23 | **REQUIREMENT** | Independent references and error definitions; throughput of the interval accessor measured early (§13.3, §13.5) | 01 | ⚠️ |
 | M24 | **REQUIREMENT** | Verification on both models against the references; scoped pipeline run; additive docs (§13.5) | 13 | ⬜ |
 
@@ -573,6 +588,24 @@ Opened by the planning pass, 2026-09-10, before any prompt runs.
   `nearest_table_node` split prompt 14 applied to $\rho$ is the same one-line remedy there.
   **Next step:** unchanged for item 1; for item 2, apply the split in `WKB_phase_function` and —
   if prompt 10 anchors off-grid — inside `PrimitivePhase`.
+
+- **[12-tk-numeric-atol-largest-k-excursion]** *(opened by prompt 12, 2026-09-12)* — the shipped
+  `DEFAULT_TK_NUMERIC_ABS_TOLERANCE = 1e-13` reaches the $2.5\times10^{-6}$ initial-condition floor
+  at every wavenumber swept on the exact radiation control **except $k=3\times10^8$, where the
+  maximum is 2.56e-4 of the envelope** — an isolated excursion over samples 340–350,
+  $x\approx9.8$–12.4, worth ~8e-6 in $T$ itself. It is not a monotone tolerance floor: at
+  $k=3\times10^8$ the looser `atol=1e-10` gives 1.17e-5, and at $k=10^8$ the pattern inverts
+  (3.15e-4 at 1e-10, 2.49e-6 at 1e-13). `atol=1e-16` gives 2.53e-6 at every $k$ swept
+  ($10^5$…$3\times10^8$) and at $k=3\times10^8$ costs **fewer** evaluations than 1e-13 (7265 against
+  8483). The mechanism is consistent with the second state component: $dT/dz\sim(x^2/A)\,dT/dx$ with
+  $A=k/\sqrt3$, so one absolute tolerance is a $k$-fold looser *relative* tolerance on the
+  derivative and step selection near $x\sim10$ becomes erratic. **Impact:** README §6's
+  $\le3\times10^{-6}$ row is met on review §12.5's geometry ($k=10^6$, 2.534e-6) and at $k=10^8$,
+  but not at the top of the production $k$-grid; prompt 13's verification should not assume one
+  number covers the range. Measured only on `RadiationModel` — the production backgrounds, whose
+  Hubble rates are splines, were not swept. **Next step:** prompt 13 re-measures on both production
+  models at $k=3\times10^8$; if it reproduces, the choice is `atol=1e-16` (no measured cost) or a
+  $k$-dependent tolerance, either of which is another datastore key change.
 
 > Add an entry here whenever a prompt finishes with something unresolved: a verification step that
 > could not be run, an assumption that could not be confirmed, a deviation a later prompt has to

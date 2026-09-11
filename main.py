@@ -49,6 +49,7 @@ from config.defaults import (
     DEFAULT_FLOAT_PRECISION,
     DEFAULT_QUADRATURE_RTOL,
     DEFAULT_QUADRATURE_ATOL,
+    DEFAULT_TK_NUMERIC_ABS_TOLERANCE,
 )
 from config.model_list import build_model_list
 from config.sharding import (
@@ -677,7 +678,10 @@ def run_pipeline(
                 "k": k_exit,
                 "z_sample": None,
                 "z_init": None,
-                "atol": atol,
+                # TkNumericIntegration alone carries Tk_numeric_atol (prompt 12 of
+                # prompts/GkTk-remedial, review §12.5); it is part of the datastore key, so the
+                # work item and every lookup have to agree on it
+                "atol": Tk_numeric_atol,
                 "rtol": rtol,
                 "tags": [
                     TkProductionTag,
@@ -745,7 +749,10 @@ def run_pipeline(
                     k=k_exit,
                     z_sample=source_zs,
                     z_init=source_zs.max,
-                    atol=atol,
+                    # TkNumericIntegration alone carries Tk_numeric_atol (prompt 12 of
+                    # prompts/GkTk-remedial, review §12.5); it is part of the datastore key, so
+                    # the work item and every lookup have to agree on it
+                    atol=Tk_numeric_atol,
                     rtol=rtol,
                     tags=[
                         TkProductionTag,
@@ -882,7 +889,10 @@ def run_pipeline(
                 "k": k_exit,
                 "z_sample": None,
                 "z_init": None,
-                "atol": atol,
+                # TkNumericIntegration alone carries Tk_numeric_atol (prompt 12 of
+                # prompts/GkTk-remedial, review §12.5); it is part of the datastore key, so the
+                # work item and every lookup have to agree on it
+                "atol": Tk_numeric_atol,
                 "rtol": rtol,
                 "tags": [
                     TkProductionTag,
@@ -899,7 +909,13 @@ def run_pipeline(
 
         lookup_queue = RayWorkPool(
             pool,
-            query_batch,
+            # payload_batch, not query_batch: query_batch is the TkWKBIntegration query over the
+            # whole batch, whereas this queue looks up the TkNumericIntegration initial condition
+            # for the missing subset alone -- which is what the zip below expects. Since prompt 12
+            # the two also carry different absolute tolerances, so dispatching query_batch here
+            # would query TkNumericIntegration under the Green's-function tolerance and find
+            # nothing
+            payload_batch,
             task_builder=lambda x: pool.object_get("TkNumericIntegration", **x),
             available_handler=None,
             compute_handler=None,
@@ -1080,7 +1096,10 @@ def run_pipeline(
                 "z_sample": None,
                 "k": k,
                 "z_init": None,
-                "atol": atol,
+                # TkNumericIntegration alone carries Tk_numeric_atol (prompt 12 of
+                # prompts/GkTk-remedial, review §12.5); it is part of the datastore key, so the
+                # work item and every lookup have to agree on it
+                "atol": Tk_numeric_atol,
                 "rtol": rtol,
                 "tags": [
                     TkProductionTag,
@@ -2688,7 +2707,10 @@ def run_pipeline(
                 "z_sample": None,
                 "k": k_exit,
                 "z_init": None,
-                "atol": atol,
+                # TkNumericIntegration alone carries Tk_numeric_atol (prompt 12 of
+                # prompts/GkTk-remedial, review §12.5); it is part of the datastore key, so the
+                # work item and every lookup have to agree on it
+                "atol": Tk_numeric_atol,
                 "rtol": rtol,
                 "tags": [
                     TkProductionTag,
@@ -2955,13 +2977,20 @@ with ShardedPool(
 
     ## DATASTORE OBJECTS
 
-    # build absolute and relative tolerances
-    atol, rtol, quad_atol, quad_rtol = ray.get(
+    # build absolute and relative tolerances.
+    #
+    # Tk_numeric_atol is the transfer function's numeric run alone (prompt 12 of
+    # prompts/GkTk-remedial, review §12.5): T decays as 3/x^2, so the shared atol = 1e-10 is a
+    # 1e-5 *relative* tolerance deep inside the horizon. Every TkNumericIntegration object_get --
+    # the work items and every lookup -- must use it, because the tolerance is part of the
+    # datastore key; everything else keeps atol.
+    atol, rtol, quad_atol, quad_rtol, Tk_numeric_atol = ray.get(
         [
             pool.object_get("tolerance", tol=DEFAULT_ABS_TOLERANCE),
             pool.object_get("tolerance", tol=DEFAULT_REL_TOLERANCE),
             pool.object_get("tolerance", tol=DEFAULT_QUADRATURE_ATOL),
             pool.object_get("tolerance", tol=DEFAULT_QUADRATURE_RTOL),
+            pool.object_get("tolerance", tol=DEFAULT_TK_NUMERIC_ABS_TOLERANCE),
         ]
     )
 
