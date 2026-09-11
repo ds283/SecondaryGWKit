@@ -491,6 +491,17 @@ Opened by the planning pass, 2026-09-10, before any prompt runs.
 11. **`main.py` cannot be imported**; extract functions with `ast` (`test_main_plumbing.load_main_py_functions`).
 12. **Redshift arithmetic** (`CLAUDE.md`): node lookup by exact `z`; a recovered $z$ from
     $\log(1+z)$ is only ever a quadrature endpoint.
+14. **Wall-clock durations on the development machine are unreliable; CPU time and best-of-N
+    are not.** It sleeps in transport, and `unittest`'s "Ran N tests in T s" is elapsed time: a
+    `LiouvilleGreen/tests` run at Workstream C close-out reported 1654.9 s against ~1080 s of CPU
+    (`ps -o pid,etime,time`), a 53 % overstatement. This bites **duration** figures — suite times,
+    build times, the `compute_time` a payload records. It does **not** bite the per-object **cost**
+    acceptance rows of README §6, which are best-of-N minima: a sleep can only inflate a sample,
+    never shrink it, so it cannot manufacture a pass, and the $T_k$ figure was reproduced as two
+    independent tight bands (0.0494–0.0516 s and 0.0505–0.0528 s). **Prompt 13 should take its
+    timings as CPU time or best-of-N, and say which**; a lone elapsed figure from this machine is
+    not evidence.
+
 13. **The in-flight `transfer-remedial` campaign** (README §0.2, §4.2): do not touch its files;
     its `main.py` Bessel-stage comment is theirs; the two shared test files are a stop condition
     for prompt 10.

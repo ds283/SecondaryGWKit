@@ -351,6 +351,21 @@ argument the subsection above gives — `2873e15` touches no file in any of the 
 `LiouvilleGreen` modules that prompt 06 put at risk were run and pass. Whoever next needs those
 three suites green should run them rather than cite this line.
 
+**Closed later the same day.** The orchestrator's sweep finished and is reproduced here from its
+own run, so the paragraph above is superseded (it is left standing, not edited): `LiouvilleGreen/tests`
+**Ran 133 tests, OK**; `CosmologyModels/tests` **Ran 11 tests, OK**; `AdaptiveLevin/tests`
+**Ran 32 tests, OK** — the implementing agent's 133 / 11 / 32 exactly. Nothing in prompt 07 is
+unverified.
+
+**A caveat on every wall-clock figure in this campaign.** That `LiouvilleGreen` run reported
+**1654.9 s** against roughly **1080 s of CPU** (`ps -o time`), because the development machine
+slept in transport mid-run. Elapsed-time figures taken on it can overstate by 50 % or more, and
+`unittest`'s own "Ran N tests in T s" is wall clock. The per-object **cost** measurements are not
+affected in their conclusion — a sleep produces one wild outlier, not the tight bands actually
+seen (orchestrator 0.0505–0.0528 s over five runs, agent 0.0494–0.0516 s over seven, two
+independent campaigns agreeing), and each is a best-of-3 minimum, which a sleep cannot pull
+*down*. But see `IMPLEMENTATION_STATE.md` §5 note 14 before quoting any duration.
+
 ### What was *not* run
 
 No production pipeline run and no datastore exercise. The datastore claims above are from the
