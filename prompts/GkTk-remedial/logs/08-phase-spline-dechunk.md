@@ -152,6 +152,54 @@ suites the campaign board already exempts (README §5 note 13), and does not req
 prompt's acceptance; `test_three_bessel` (which the prompt does ask for, with the ten-minute
 allowance) was run and passed well inside the limit, so no slow-suite skip was needed here.
 
+### Addendum, 2026-09-11 — orchestrator's independent verification
+
+Added by the orchestrator (Workstream D), **additively**: the subsection above was correct for the
+tree and the moment it was written and is not edited (`CLAUDE.md`, README §5 rule 6). Run on
+`bb6a4c8`.
+
+Every suite the prompt names was re-run by the orchestrator and passes:
+
+- `LiouvilleGreen.tests.test_phase_spline` — **8 tests, OK** (0.08 s).
+- `LiouvilleGreen.tests.test_bessel_phase` — **6 tests, OK**.
+- `ComputeTargets.tests.test_phase_groups test_tk_source_functions test_gk_source_policy
+  test_quadsource_integral` — **70 tests, OK** (104.9 s elapsed).
+- `LiouvilleGreen.tests.test_three_bessel` — **9 tests, OK** (7.6 s), inside the prompt's
+  ten-minute allowance.
+- Baseline for comparison, taken on `a2ea069` before dispatch: `ComputeTargets/tests` discovery →
+  **226 tests, OK** (127.5 s).
+
+Structural checks: `grep -n "_match_chunk\|_build_log_chunks\|MINIMUM_SPLINE_DATA_POINTS"
+LiouvilleGreen/phase_spline.py` is empty; `black --check` clean on both touched files;
+`git diff HEAD~1 --stat` touches `phase_spline.py`, the new test module, the log, the board and
+`docs/OPEN_ISSUES.md` and nothing else — no caller. The constructor signature is unchanged
+parameter-for-parameter against `git show HEAD~1:LiouvilleGreen/phase_spline.py` (the
+`chunk_step` default moved from the name `DEFAULT_CHUNK_SIZE` to the literal `200`, which is that
+constant's value on both sides), and the `chunk_logstep=125`, `chunk_step=200` and
+`chunk_step=None, chunk_logstep=None` builds return `num_chunks == 1` and agree in `raw_theta`
+**exactly** (max difference 0.0 rad over 50 points).
+
+**The number prompt 09 must beat, quoted.** README §5.1 asks every acceptance threshold for its
+measured value; the log's verification bullet above records test 1's *bracket* (`[7e-5, 1e-4]`) but
+not the value it measured, and the "State handed" section likewise. The orchestrator therefore ran
+test 1's own harness directly (`_build_gk_source_policy_geometry`, `_exact_radiation_theta` from
+`LiouvilleGreen/tests/test_phase_spline.py`) at $k=10^6$, 100 samples/decade, $s\in[10,10^4]$,
+`x_is_redshift=True`, `increasing=False`, error at 10 points per interval, outermost three
+intervals excluded at each end:
+
+| quantity | measured | review §5 | predicted $h^4x_{\max}/384$ |
+|---|---|---|---|
+| interior max $|\delta\theta|$ | **8.2566e-05 rad** (at $s=10.84$) | 8.26e-5 | 7.3e-5 |
+| including the excluded ends | **7.7062e-04 rad** | 7.7e-4 | — |
+
+Both reproduce review §5's table to three figures. **8.2566e-05 rad at $k=10^6$, 100/decade is the
+figure prompt 09's $\varphi$ representation must beat**, against README §6's $\le10^{-6}$ rad
+target for the consumer row.
+
+**Board typo, corrected in this commit.** `IMPLEMENTATION_STATE.md`'s header note gave this
+measurement's wavenumber as $k=10^5$; it is $k=10^6$, as the M13 row, the log and the review all
+say.
+
 ## Observations not acted on
 
 - **Two `docs/` reproduction scripts read now-deleted private internals of `phase_spline` and will

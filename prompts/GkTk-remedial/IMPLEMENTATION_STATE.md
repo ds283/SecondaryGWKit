@@ -6,8 +6,9 @@
 over the whole sample, rebased at the sample's median `theta_div_2pi` rather than selected between
 several by a hard switch; `chunk_step`/`chunk_logstep`/`increasing` are accepted no-ops, so
 `bessel_phase.py` and the three test fixtures that still pass `chunk_logstep=125` needed no edits;
-`num_chunks` always reports 1. The interior interpolation error the review measured, 7-10e-5 rad at
-$k=10^5$ on the `GkSourcePolicyData` geometry, is confirmed unchanged from before de-chunking —
+`num_chunks` always reports 1. The interior interpolation error the review measured, 8.2566e-05 rad at
+$k=10^6$ on the `GkSourcePolicyData` geometry (review §5: 8.26e-5), is confirmed unchanged from
+before de-chunking —
 chunking bought nothing and cost ordinates, knot residuals and a switch discontinuity, all now
 gone. Workstream D may proceed to prompt 09.) Workstream C closed; the `transfer-remedial` merge confirmed at `e01c31d`, so Workstream D may start (`[00-transfer-remedial-test-file-overlap]`). Prompt 07 landed (the transfer-function phase and friction now come from the tables too: `friction_RHS` and its state index are gone from the producer and live only in prompt 04's test, `store()`'s no-op sign fix and its cross-sample rebase are gone, and the stored $\theta_T$ is 1.5e-8 rad at $k=10^5$ and 9.2e-5 rad at $3\times10^8$ against prompt 01's references, where the ODE was 2.01 rad and 5.1e3 rad. Review §12.4's LG truncation table reproduced to two figures. **Its cost, 0.049–0.052 s per object, straddles prompt 07 §3 item 6's 0.05 s** — `[07-tk-per-object-cost-is-all-setup]`.) Prompt 14 landed (the residual table is built once per $(model, k, sector)$ on the background grid and memoised in the worker: 142.5 (LambdaCDM) / 163.0 (QCD) residual-integrand evaluations per object over 50 objects of one $k$ against 6,924 / 7,908 — 49× — and 0.0010 s per object at $k=3\times10^8$ against 0.0309 s; $\theta$ bit-identical at every sample of fifteen (model, $k$, sector) cases). Prompt 06 landed (the Green's-function WKB phase is now $-[k\,\Delta\tau+\Delta\rho]$ from the tables: the two-stage phase ODE, the `Q` variable, the resets, the sign fix and the cross-sample rebase are gone; stored phases at the floor; `TkWKBIntegration.compute()` switched, its `store()` awaits 07).
 
