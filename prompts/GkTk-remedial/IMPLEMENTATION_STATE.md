@@ -2,7 +2,14 @@
 
 **Campaign:** [`README.md`](README.md) · **Source review:** [`docs/gk-wkb-review-fable-2026-09-09.md`](../../docs/gk-wkb-review-fable-2026-09-09.md) · **Reconciliation:** [`RECONCILIATION.md`](RECONCILIATION.md)
 **Baseline commit:** `9ff59d5` (`main`, clean)
-**Last updated:** 2026-09-11 — Workstream C closed; the `transfer-remedial` merge confirmed at `e01c31d`, so Workstream D may start (`[00-transfer-remedial-test-file-overlap]`). Prompt 07 landed (the transfer-function phase and friction now come from the tables too: `friction_RHS` and its state index are gone from the producer and live only in prompt 04's test, `store()`'s no-op sign fix and its cross-sample rebase are gone, and the stored $\theta_T$ is 1.5e-8 rad at $k=10^5$ and 9.2e-5 rad at $3\times10^8$ against prompt 01's references, where the ODE was 2.01 rad and 5.1e3 rad. Review §12.4's LG truncation table reproduced to two figures. **Its cost, 0.049–0.052 s per object, straddles prompt 07 §3 item 6's 0.05 s** — `[07-tk-per-object-cost-is-all-setup]`.) Prompt 14 landed (the residual table is built once per $(model, k, sector)$ on the background grid and memoised in the worker: 142.5 (LambdaCDM) / 163.0 (QCD) residual-integrand evaluations per object over 50 objects of one $k$ against 6,924 / 7,908 — 49× — and 0.0010 s per object at $k=3\times10^8$ against 0.0309 s; $\theta$ bit-identical at every sample of fifteen (model, $k$, sector) cases). Prompt 06 landed (the Green's-function WKB phase is now $-[k\,\Delta\tau+\Delta\rho]$ from the tables: the two-stage phase ODE, the `Q` variable, the resets, the sign fix and the cross-sample rebase are gone; stored phases at the floor; `TkWKBIntegration.compute()` switched, its `store()` awaits 07).
+**Last updated:** 2026-09-11 — Prompt 08 landed (`phase_spline` chunking is gone: one cubic spline
+over the whole sample, rebased at the sample's median `theta_div_2pi` rather than selected between
+several by a hard switch; `chunk_step`/`chunk_logstep`/`increasing` are accepted no-ops, so
+`bessel_phase.py` and the three test fixtures that still pass `chunk_logstep=125` needed no edits;
+`num_chunks` always reports 1. The interior interpolation error the review measured, 7-10e-5 rad at
+$k=10^5$ on the `GkSourcePolicyData` geometry, is confirmed unchanged from before de-chunking —
+chunking bought nothing and cost ordinates, knot residuals and a switch discontinuity, all now
+gone. Workstream D may proceed to prompt 09.) Workstream C closed; the `transfer-remedial` merge confirmed at `e01c31d`, so Workstream D may start (`[00-transfer-remedial-test-file-overlap]`). Prompt 07 landed (the transfer-function phase and friction now come from the tables too: `friction_RHS` and its state index are gone from the producer and live only in prompt 04's test, `store()`'s no-op sign fix and its cross-sample rebase are gone, and the stored $\theta_T$ is 1.5e-8 rad at $k=10^5$ and 9.2e-5 rad at $3\times10^8$ against prompt 01's references, where the ODE was 2.01 rad and 5.1e3 rad. Review §12.4's LG truncation table reproduced to two figures. **Its cost, 0.049–0.052 s per object, straddles prompt 07 §3 item 6's 0.05 s** — `[07-tk-per-object-cost-is-all-setup]`.) Prompt 14 landed (the residual table is built once per $(model, k, sector)$ on the background grid and memoised in the worker: 142.5 (LambdaCDM) / 163.0 (QCD) residual-integrand evaluations per object over 50 objects of one $k$ against 6,924 / 7,908 — 49× — and 0.0010 s per object at $k=3\times10^8$ against 0.0309 s; $\theta$ bit-identical at every sample of fifteen (model, $k$, sector) cases). Prompt 06 landed (the Green's-function WKB phase is now $-[k\,\Delta\tau+\Delta\rho]$ from the tables: the two-stage phase ODE, the `Q` variable, the resets, the sign fix and the cross-sample rebase are gone; stored phases at the floor; `TkWKBIntegration.compute()` switched, its `store()` awaits 07).
 
 > **Maintenance rule.** Every prompt updates this file *in its own commit*, before committing.
 > Set your row's status, fill in the commit SHA, model and log link, update the mechanism-level
@@ -47,7 +54,7 @@ Legend: ⬜ not started · 🟡 in flight · ✅ complete · ⚠️ complete wit
 
 | # | Prompt | Covers | Model | Status | Commit | Log |
 |---|---|---|---|---|---|---|
-| 08 | [`phase_spline` de-chunk](08-phase-spline-dechunk.md) | review §5 | Sonnet | ⬜ | | |
+| 08 | [`phase_spline` de-chunk](08-phase-spline-dechunk.md) | review §5 | Sonnet | ✅ | *"Drop the chunked phase spline in favour of one rebased spline"* (SHA not embedded, per the campaign convention) | [`logs/08-phase-spline-dechunk.md`](logs/08-phase-spline-dechunk.md) |
 | 09 | [Gk consumer on `PrimitivePhase`](09-gk-consumer-primitive-phase.md) | review §5, §7, §8.3, §13.3–§13.4 | **Fable** | ⬜ | | |
 | 10 | [Tk consumer on the tables](10-tk-consumer-primitive-phase.md) | review §12.6, §12.7 | Opus | ⬜ | | |
 
@@ -64,7 +71,7 @@ Legend: ⬜ not started · 🟡 in flight · ✅ complete · ⚠️ complete wit
 |---|---|---|---|---|---|---|
 | 13 | [Verification and docs](13-verification-and-docs.md) | review §4, §12.3, §13.5 | Opus | ⬜ | | |
 
-**Progress:** 8 / 14 complete.
+**Progress:** 9 / 14 complete.
 
 ---
 
@@ -87,7 +94,7 @@ campaign; the review section is the authority on each.
 | M10 | **DEFECT, dead logic** | `sin_coeff` sign fix is provably always $+1$ (§8.1) | 06, 07 | ✅ 06 deleted it from `GkWKBIntegration.store()` (`sin_coeff = B`); 206 $(G,G')$ cases incl. $G=0$, $G<0$ confirm the factor was $+1$ and $B>0$ reproduces the initial data to 3e-16. 07 deleted the copy in `TkWKBIntegration.store()`; 206 $(T,T')$ cases incl. $T=0$, $T<0$ give the factor $+1$ every time and $B>0$ reproduces $T_{\rm init}$ to 8.6e-15, and the shipped `store()` returns `sin_coeff == B > 0`, `cos_coeff == 0.0` exactly |
 | M11 | **DEFECT, consistency** | `shift_theta_sample` rebases `div_2pi` to the first sample, producing ±1-cycle offsets between objects (§8.1, §8.3) | 06, 07 | ✅ 06 added `WKBtools.apply_phase_offset` (per-sample wrap, no rebase) and switched `GkWKBIntegration.store()` to it; 990-object sweep: 0 rebase offsets, cycle steps only at stop-point transitions (90 = 90); the old helper would have rebased 180 (= the review's 60 of 330). 07 switched `TkWKBIntegration.store()` to it as well — there is one $T_k$ object per $k$ so no cross-object stitching arises (§12.7), but the stored $\theta+\delta$ is now exact. `shift_theta_sample` itself is retained in `WKBtools` for the two `docs/` scripts that still run (D7, log 07 deviation 5) |
 | M12 | **DEFECT, hygiene** | Zero-length check compares a redshift to `atol`; 1-element array into `math.fmod` (NumPy deprecation); stale comments at `:262-264`, `:403` (§8.2) | 06 | ✅ exact test `len(z_sample) == 1 and z_sample[0] == z_init`; the `fmod` path and both comments went with the ODE; `Quadrature/supervisors/WKB.py` deleted |
-| M13 | **DEFECT, accuracy + trap** | `phase_spline` chunking: no interpolation benefit, ordinates 64× inflated, knot residuals 30–50× worse, $1.4\times10^{-4}$ rad switch discontinuity, no progress guard for `logstep<2` (§5) | 08 | ⬜ |
+| M13 | **DEFECT, accuracy + trap** | `phase_spline` chunking: no interpolation benefit, ordinates 64× inflated, knot residuals 30–50× worse, $1.4\times10^{-4}$ rad switch discontinuity, no progress guard for `logstep<2` (§5) | 08 | ✅ chunking deleted (`_build_*chunks*`, `_match_chunk`, `MINIMUM_SPLINE_DATA_POINTS` gone); one spline, rebased at the sample's *median* `theta_div_2pi`; `chunk_step`/`chunk_logstep`/`increasing` are accepted no-ops so `bessel_phase.py` and three test fixtures needed no changes. Interior interpolation error at $k=10^6$, 100/decade confirmed unchanged by chunking at 7–10e-5 rad (review 8.26e-5); the old progress-guard defect cannot recur (code path deleted) |
 | M14 | **DEFECT, accuracy** | Consumers spline the growing phase: $h^4x/384$, $O(1)$–$O(10)$ rad at production $x$ (§5, §12.6). Same term as `source-remediation`'s `[12-phase-spline-error-grows-with-x]` | 09, 10 | ⬜ |
 | M15 | **REQUIREMENT** | `PrimitivePhase`: $\theta=-k\Delta\tau+\varphi$ with the `phase_spline` protocol; closed-form $\theta'$; global anchor with the recorded floor (§7, §13.3, §13.4) | 09 | ⬜ |
 | M16 | **REQUIREMENT** | The `GkSource` rectifier is retained and verified inert on pure-WKB objects, correct on $\delta$-wraps (§8.3; `RECONCILIATION.md` §2 item 6) | 06, 09 | ⚠️ 06 did not touch the rectifier and documented what it must repair: in the production geometry (stop at a maximum, $\delta=+\pi/2$) the stored cycle count steps by $+1$ exactly where the stop point moves to the next maximum — 90 steps in 990 objects; $k=10^7$, $x_r=10^3$: between $z_s=316700\to324331$ and $401839\to411522$ (log 06). **09 verifies the rectifier on these** |
@@ -333,6 +340,20 @@ Opened by the planning pass, 2026-09-10, before any prompt runs.
   **Impact:** anyone reading the column as "the cost of this object"; prompt 13's timing of the
   scoped pipeline run should sum it over a $k$ rather than sample it. **Next step:** none, unless
   13 wants a per-object cost, in which case the table build belongs in its own counter.
+
+- **[08-docs-scripts-reference-removed-chunking]** *(opened by prompt 08, 2026-09-11; inert)* —
+  two `docs/` reproduction scripts read private internals of `phase_spline` that prompt 08 deleted
+  along with chunking: `docs/gk-wkb-review-fable-2026-09-09/t5_spline.py:26` reads
+  `spl._chunk_list`, `spl._splines` and calls `spl._match_chunk(...)`; `docs/gk-wkb-review-astra-pathfinder-2026-09-08/measure.py:163-164,174,176`
+  reads `spl._splines` and calls `spl._match_chunk(...)`. Both scripts measured the chunked tree
+  they ran on and the documents they support are correct for it; they were not edited (README §5
+  "verification documents are additive"), the same treatment prompt 06 gave the phase-ODE removal
+  (`[06-docs-scripts-reference-removed-ode]`, below). **Impact:** anyone re-running either script
+  gets an `AttributeError` rather than the chunked-vs-unchunked comparison it printed when the
+  review was written. `docs/gk-wkb-review-fable-2026-09-09/t7_jitter.py` and
+  `docs/spec-code-audit/scripts/GK_05_phase_reassembly.py` also construct `phase_spline` objects
+  but only through the public constructor and `raw_theta`/`theta_mod_2pi`, so they are unaffected.
+  **Next step:** none; a dated note in the two review folders' READMEs if someone trips over it.
 
 - **[06-docs-scripts-reference-removed-ode]** *(opened by prompt 06, 2026-09-11; inert)* — the
   reproduction scripts `docs/gk-wkb-review-fable-2026-09-09/{t2_solver,t4b_production_real,
