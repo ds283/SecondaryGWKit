@@ -60,9 +60,17 @@ from ComputeTargets.BackgroundModel import (
     _friction_integrand,
 )
 from ComputeTargets.WKB_Gk import Gk_d_ln_omegaEff_dz, Gk_omegaEff_sq
-from ComputeTargets.WKB_Tk import Tk_d_ln_omegaEff_dz, Tk_omegaEff_sq
+from ComputeTargets.WKB_Tk import (
+    Tk_d_ln_omegaEff_dz,
+    Tk_omegaEff_sq,
+    Tk_omegaEff_sq_leading,
+)
 from ComputeTargets.cumulative_table import CumulativeTable
-from ComputeTargets.phase_residual import RHO_GAUSS_ORDER
+from ComputeTargets.phase_residual import (
+    RESIDUAL_WKB_REGION_MARGIN,
+    RHO_GAUSS_ORDER,
+    residual_node_range,
+)
 from ComputeTargets.tests.wkb_reference import (
     PRODUCTION_Z_END,
     LambdaCDMModel,
@@ -88,7 +96,6 @@ from Quadrature.integrators.WKB_phase_function import (
     PHASE_SOLVER_LABEL_BASE,
     PHASE_SOLVER_STEPPING,
     WKB_phase_function,
-    residual_nodes,
 )
 from Units import Mpc_units
 
@@ -579,13 +586,42 @@ class TestOffGridAnchor(unittest.TestCase):
             payload["metadata"]["lead_evals"], TAU_GAUSS_ORDER * len(samples)
         )
 
-    def test_residual_nodes_put_the_anchor_on_top(self):
-        grid = np.array([10.0, 8.0, 6.0, 4.0, 2.0])
-        nodes = residual_nodes(grid, [6.0, 2.0], 7.0)
-        self.assertEqual(nodes.tolist(), [7.0, 6.0, 4.0, 2.0])
-        # an on-grid anchor is not duplicated; a sample off the grid is added
-        nodes = residual_nodes(grid, [5.0, 2.0], 8.0)
-        self.assertEqual(nodes.tolist(), [8.0, 6.0, 5.0, 4.0, 2.0])
+    def test_residual_node_range_is_the_grid_cut_at_the_wkb_region(self):
+        """Prompt 14 §2 item 1 replaces prompt 06's per-object ``residual_nodes(grid, z_sample,
+        z_init)`` by a range that depends only on ``(model, k, sector)``: the whole grid, cut at
+        the top where the Liouville-Green frequency stops keeping the fraction
+        ``RESIDUAL_WKB_REGION_MARGIN`` of its leading term. In exact radiation ``C = 0`` for the
+        Green's function, so ``omega^2 = (k/H)^2`` keeps all of it at every node and nothing is
+        cut; for the transfer function ``C_T = -2/s^2``, so
+        ``omega_T^2/omega_{T,0}^2 = 1 - 6 H0^2 s^2/k^2`` falls through one half at
+        ``s = k/(2 sqrt(3) H0)``, which the grid used here straddles."""
+        k = 1.0e7
+        grid = production_source_z_values(1.0e8, PRODUCTION_Z_END)
+        model = RadiationModel(RADIATION_H0)
+
+        nodes = residual_node_range(model, k, grid, "Gk")
+        self.assertEqual(nodes.tolist(), grid.tolist())
+
+        nodes = residual_node_range(model, k, grid, "Tk")
+        self.assertLess(nodes[0], grid[0])
+        self.assertEqual(nodes[-1], grid[-1])
+
+        def kept(z: float) -> float:
+            leading = Tk_omegaEff_sq_leading(model, k, z)
+            return Tk_omegaEff_sq(model, k, z) / leading
+
+        # the top is the highest node that keeps the margin, and every node below keeps it
+        j = int(np.argmax(grid == nodes[0]))
+        self.assertEqual(nodes.tolist(), grid[j:].tolist())
+        self.assertGreaterEqual(kept(float(grid[j])), RESIDUAL_WKB_REGION_MARGIN)
+        self.assertLess(kept(float(grid[j - 1])), RESIDUAL_WKB_REGION_MARGIN)
+        self.assertTrue(
+            all(kept(float(z)) >= RESIDUAL_WKB_REGION_MARGIN for z in nodes)
+        )
+        # and it sits at the analytic crossing s = k/(2 sqrt(3) H0)
+        self.assertLess(
+            fabs(nodes[0] + 1.0 - k / (2.0 * sqrt(3.0) * RADIATION_H0)) / nodes[0], 0.05
+        )
 
 
 # --------------------------------------------------------------------------------------------
@@ -908,6 +944,7 @@ class TestPayloadContract(unittest.TestCase):
             "N_lead",
             "rho_nodes",
             "rho_evals",
+            "rho_reused",
             "lead_partials",
             "lead_evals",
             "offgrid_init",

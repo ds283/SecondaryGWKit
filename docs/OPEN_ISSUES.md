@@ -1,6 +1,6 @@
 # Open issues — project-wide index
 
-**Last updated:** 2026-09-11 · **45 open** across six campaigns.
+**Last updated:** 2026-09-11 · **46 open** across six campaigns.
 
 This file exists so that an issue opened by one campaign is not lost when that campaign closes.
 It is an **index, not a record**: one line per issue, pointing at the campaign status board that
@@ -64,14 +64,13 @@ they now pass `BesselPhaseGroup.levin_theta()`.
 ### 1.4 The $T_k$ / $G_k$ numerical-precision campaign
 
 Now running as [`prompts/GkTk-remedial/`](../prompts/GkTk-remedial/README.md) (2026-09-10; 13
-prompts plus a follow-up, 6 executed). `[07-phase-spline-chunking-precision]` was closed WONTFIX on the
+prompts plus a follow-up, 7 executed). `[07-phase-spline-chunking-precision]` was closed WONTFIX on the
 expectation that this campaign **removes** the chunked splines — its prompt 08 does; if that plan
 changes, reopen it.
 
 | Issue | Board | Hook |
 |---|---|---|
 | `[12-phase-spline-error-grows-with-x]` | source-remediation | Stored-phase re-spline error $\simeq h^4x/384$, growing **linearly in $x$**; ~1 % of envelope extrapolated to production. **Reassigned here from §1.1** (2026-09-10): the campaign's prompts 09–10 evaluate the leading term from a table and spline only the residual. |
-| `[06-residual-table-per-object]` | GkTk-remedial | `WKB_phase_function` rebuilds the per-$k$ residual table on every object: 92 % of the new producer's 0.031 s at $k=3\times10^8$ (LambdaCDM), 82–255 ms per object on QCD. Noise against the ODE's 13 CPU-hours per $k$, but the dominant remaining cost. **Prompt 14** (written 2026-09-11) memoises per `(model, k, sector)`; it runs between 06 and 07. |
 | `[00-unresolved-osc-print-policy]` | GkTk-remedial | With its units fixed and evaluated on the caller's actual grid, `has_unresolved_osc` will fire on essentially every $G_k$ numeric object. Prompt 11 measures the rate; the user chooses the print policy. |
 | `[00-consumer-anchoring-floor]` | GkTk-remedial | `PrimitivePhase` reduces $k\Delta\tau$ against a global anchor, so `theta_mod_2pi` carries the $\varepsilon k\tau$ floor ($9\times10^{-4}$ rad at $k=3\times10^8$). Per-region anchoring is the follow-up. |
 | `[00-transfer-remedial-test-file-overlap]` | GkTk-remedial | Prompt 10 edits stand-in fixtures in `test_tk_source_functions.py`/`test_phase_groups.py`; `transfer-remedial` 08 edits tolerances in the same files. **Decided 2026-09-10:** Workstreams A–C, E run in parallel; D waits for the `transfer-remedial` merge. |
@@ -109,8 +108,10 @@ No action defined. These are floors on what a test may *assert*, not on what the
 | `[03-qcd-short-baseline-reference-endpoint-rounding]` | GkTk-remedial | The QCD short-baseline references in `wkb_reference_data.json` integrate between rounded `log1p(z)` endpoints and carry up to ulp(u)/W ≈ 1e-13 relative on the 37 % fractions; the shipped table agrees with an exact-endpoint `quad` to ≤ 8.8e-16. Assert README §6's 1e-13 for QCD short baselines, not the JSON's self-agreement. |
 | `[03-integrationsolver-stepping-minimum-lookup]` | GkTk-remedial | `IntegrationSolver` lookups match `stepping >= requested`; harmless while every table is order 4, but a second Gauss order under the label `cumulative-GL` could be served by the other order's row. |
 | `[04-background-rhs-evaluations-count]` | GkTk-remedial | `compute_background` builds three tables but `IntegrationData` has one counter, which prompt 03's test pins to the $\tau$ table alone; the other two counts are payload keys, so the persisted `RHS_evaluations` understates the build 3×. |
-| `[06-metadata-column-headroom]` | GkTk-remedial | The WKB integrations' `metadata` column is `String(256)`; the new payload's JSON is 206–233 characters. SQLite does not enforce it, PostgreSQL would. Count before adding a key. |
+| `[06-metadata-column-headroom]` | GkTk-remedial | The WKB integrations' `metadata` column is `String(256)`. **Narrowed by prompt 14:** with its `rho_reused` key the longest payload is 227 characters, so 29 remain; a test now asserts the length rather than letting it overflow. SQLite does not enforce it, PostgreSQL would. Count before adding a key. |
 | `[06-docs-scripts-reference-removed-ode]` | GkTk-remedial | Seven `docs/` reproduction scripts import the phase ODE (`integrate_phase_function`, `stage_*_evolution`, `DEFAULT_OMEGA_WKB_SQ_MAX`) that prompt 06 removed; they documented the tree they ran on and were not edited. |
+| `[14-residual-range-top-margin]` | GkTk-remedial | The residual table's nodes stop where the LG frequency falls below half its leading term, not at its turning point: on QCD the sign near the turning point is unresolved and a panel with two positive nodes can hold an abscissa with $\omega^2<0$. Inert — the cut lies above the highest node where the WKB criterion holds, which is already a hard guard at the anchor. |
+| `[14-rhs-evaluations-depend-on-build-order]` | GkTk-remedial | The WKB integrations' `RHS_evaluations` now counts only what a call spent, so the first object of a $(model, k, sector)$ in a worker stores ~7,000 and every later one a few hundred; which is first depends on the scheduler. Payload data, part of no lookup key. |
 
 ---
 

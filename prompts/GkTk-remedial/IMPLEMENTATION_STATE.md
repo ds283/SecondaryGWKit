@@ -2,7 +2,7 @@
 
 **Campaign:** [`README.md`](README.md) · **Source review:** [`docs/gk-wkb-review-fable-2026-09-09.md`](../../docs/gk-wkb-review-fable-2026-09-09.md) · **Reconciliation:** [`RECONCILIATION.md`](RECONCILIATION.md)
 **Baseline commit:** `9ff59d5` (`main`, clean)
-**Last updated:** 2026-09-11 — prompt 14 added (build the residual once per $(model, k, sector)$; runs between 06 and 07). Prompt 06 landed (the Green's-function WKB phase is now $-[k\,\Delta\tau+\Delta\rho]$ from the tables: the two-stage phase ODE, the `Q` variable, the resets, the sign fix and the cross-sample rebase are gone; stored phases at the floor, 0.03 s per object at $k=3\times10^8$ against 63.7 s; `TkWKBIntegration.compute()` switched, its `store()` awaits 07).
+**Last updated:** 2026-09-11 — prompt 14 landed (the residual table is built once per $(model, k, sector)$ on the background grid and memoised in the worker: 142.5 (LambdaCDM) / 163.0 (QCD) residual-integrand evaluations per object over 50 objects of one $k$ against 6,924 / 7,908 — 49× — and 0.0010 s per object at $k=3\times10^8$ against 0.0309 s; $\theta$ bit-identical at every sample of fifteen (model, $k$, sector) cases). Prompt 06 landed (the Green's-function WKB phase is now $-[k\,\Delta\tau+\Delta\rho]$ from the tables: the two-stage phase ODE, the `Q` variable, the resets, the sign fix and the cross-sample rebase are gone; stored phases at the floor; `TkWKBIntegration.compute()` switched, its `store()` awaits 07).
 
 > **Maintenance rule.** Every prompt updates this file *in its own commit*, before committing.
 > Set your row's status, fill in the commit SHA, model and log link, update the mechanism-level
@@ -36,7 +36,7 @@ Legend: ⬜ not started · 🟡 in flight · ✅ complete · ⚠️ complete wit
 |---|---|---|---|---|---|---|
 | 05 | [Phase residual](05-phase-residual.md) | review §6, §12.2, §12.4 | Opus | ⚠️ | *"Add the WKB phase residual as a per-k table"* (SHA not embedded, per the campaign convention) | [`logs/05-phase-residual.md`](logs/05-phase-residual.md) |
 | 06 | [Gk WKB phase from the primitive](06-gk-wkb-phase-from-primitive.md) | review §2–§4, §8, §13.4 | **Fable** | ⚠️ | *"Compute the Green function WKB phase from the conformal-time table"* (SHA not embedded, per the campaign convention) | [`logs/06-gk-wkb-phase-from-primitive.md`](logs/06-gk-wkb-phase-from-primitive.md) |
-| 14 | [Residual table reuse](14-residual-table-reuse.md) | §3 `[06-residual-table-per-object]` | Opus | ⬜ | | |
+| 14 | [Residual table reuse](14-residual-table-reuse.md) | §3 `[06-residual-table-per-object]` | Opus | ⚠️ | *"Build the WKB phase residual once per wavenumber"* (SHA not embedded, per the campaign convention) | [`logs/14-residual-table-reuse.md`](logs/14-residual-table-reuse.md) |
 | 07 | [Tk WKB phase from the primitive](07-tk-wkb-phase-from-primitive.md) | review §12.1–§12.4 | Opus | ⬜ | | |
 
 > Row 14 is numbered last because the campaign's numbers are append-only, but it **runs
@@ -64,7 +64,7 @@ Legend: ⬜ not started · 🟡 in flight · ✅ complete · ⚠️ complete wit
 |---|---|---|---|---|---|---|
 | 13 | [Verification and docs](13-verification-and-docs.md) | review §4, §12.3, §13.5 | Opus | ⬜ | | |
 
-**Progress:** 6 / 14 complete.
+**Progress:** 7 / 14 complete.
 
 ---
 
@@ -77,12 +77,12 @@ campaign; the review section is the authority on each.
 |---|---|---|---|---|
 | M1 | **DEFECT, accuracy** | Two-stage phase solver: error is a fixed fraction of the *accumulated* phase; 13.9 rad ($k=10^5$) and 7366 rad ($3\times10^8$) at $z=0.1$ on the real background (§2, §4) | 06 | ✅ the ODE is gone; $\theta=-[k\,\Delta\tau+\Delta\rho]$ from the tables. LambdaCDM $k=10^5$: 1.19e-7 rad against prompt 01's references (target 1e-5); $k=3\times10^8$: 9.77e-4 rad = one ulp of $4\times10^{12}$ rad, the representation floor (target 5e-3); QCD $3\times10^8$: 9.77e-4 (log 06) |
 | M2 | **DEFECT, accuracy** | The $Q$ variable is not "close to unity" ($-224$…$-11069$); the tolerance protects the wrong quantity; DOP853 dense output amplified by $\omega_i(1+u)$ — 0.33 rad on a linear phase (§3) | 06 | ✅ no $Q$, no dense output, no tolerances: `WKB_phase_function` has no `atol`/`rtol`. Radiation control $10^7$ rad span: 3.7e-9 rad (ODE 9.7e-3); $10^9$ rad: 3.6e-7 (ODE 0.98) |
-| M3 | **DEFECT, cost** | Stage 1 cost ∝ span: $2.5\times10^6$ RHS evaluations, 63.7 s per object at $k=3\times10^8$; ~13 CPU-hours per $k$ (§4) | 06 | ✅ **0.031 s and 6,000 integrand evaluations** per object at $k=3\times10^8$ on LambdaCDM over the full response grid (target 0.05 s); 92 % of it is the per-object residual-table build, `[06-residual-table-per-object]` |
+| M3 | **DEFECT, cost** | Stage 1 cost ∝ span: $2.5\times10^6$ RHS evaluations, 63.7 s per object at $k=3\times10^8$; ~13 CPU-hours per $k$ (§4) | 06, 14 | ✅ 06: **0.031 s and 6,000 integrand evaluations** per object at $k=3\times10^8$ on LambdaCDM over the full response grid (target 0.05 s), 92 % of it the per-object residual-table build. 14 removed that build: **0.0010 s and 468 evaluations** per object (4 residual + 464 leading partials), 142.5 residual evaluations per object amortised over 50 objects of one $k$ against 6,924 (LambdaCDM) and 163.0 against 7,908 (QCD) |
 | M4 | **DEFECT, accuracy** | `functions.tau` is a cubic spline of RK45 nodes: $1.4\times10^{-9}$ relative, ~2 rad of *oracle* phase error at $k=10^5$ in `compute_analytic_G/T` and `QuadSourceIntegral`'s η-limits (§7, §13.2) | 03 | ✅ 3.8e-16 relative at the LambdaCDM nodes; the retired accessor measured 3.08 rad off at $k=10^5$ (log 03) |
 | M5 | **REQUIREMENT** | Double-double node table and an interval accessor `tau.delta`; a pointwise accessor carries the $\varepsilon\tau$ floor ($9\times10^{-4}$ rad at $3\times10^8$) on short baselines (§13.3) | 03 | ✅ `CumulativeTable` + `TablePrimitive`; one-interval Δτ ≤ 2.5e-16 (LambdaCDM), ≤ 9.4e-15 (QCD) relative |
 | M6 | **REQUIREMENT** | Persist the low-order limb (`tau_lo_Mpc`, …); regeneration attached (§13.2; README §7 D1) | 03, 04 | ✅ `tau_lo_Mpc` (03) and `cs_tau_Mpc`, `cs_tau_lo_Mpc`, `friction_F` (04); the factory refuses a datastore lacking any of the four by name |
 | M7 | **REQUIREMENT** | Sound-horizon table $\tau_s$ and friction table $F$ per model; the friction ODE ($2.3$–$4.1\times10^{-7}$ relative error) goes (§12.2, §12.7) | 04, 07 | ⚠️ 04 built both tables (LambdaCDM $\tau_s$ 2.5e-16, $F$ 3.3e-16 relative at the checkpoints; QCD 2.1e-14 / 3.3e-16) and measured the ODE it replaces at 2.261e-07 absolute in $F$; **07 still has to switch `TkWKBIntegration` onto them** and delete `friction_RHS` |
-| M8 | **REQUIREMENT** | The residual $\rho$ carried explicitly: $\le1.5\times10^{-3}$ rad for $G_k$ on QCD, $\approx-0.09$ rad for $T_k$; formed without subtraction (§6, §12.2) | 05 | ✅ `ComputeTargets/phase_residual.py`: `build_phase_residual(model, k, z_nodes, sector, order)` → `CumulativeTable`; the correction comes from `*_omegaEff_sq_correction`, never from a subtraction. Worst 3.61e-16 rad against prompt 01's references over all twelve (model, sector, $k$) cases; $\rho_G$ bit-exactly zero in radiation; $\rho_T$ = −0.086 (LambdaCDM) to −0.093 (QCD) |
+| M8 | **REQUIREMENT** | The residual $\rho$ carried explicitly: $\le1.5\times10^{-3}$ rad for $G_k$ on QCD, $\approx-0.09$ rad for $T_k$; formed without subtraction (§6, §12.2) | 05, 14 | ✅ `ComputeTargets/phase_residual.py`: `build_phase_residual(model, k, z_nodes, sector, order)` → `CumulativeTable`; the correction comes from `*_omegaEff_sq_correction`, never from a subtraction. Worst 3.61e-16 rad against prompt 01's references over all twelve (model, sector, $k$) cases; $\rho_G$ bit-exactly zero in radiation; $\rho_T$ = −0.086 (LambdaCDM) to −0.093 (QCD). 14 added `residual_node_range` (the grid cut at `RESIDUAL_WKB_REGION_MARGIN = 0.5` of the leading term) and `cached_phase_residual`, one table per $(model, k, sector)$: $\rho$ moves by $\le1.4\times10^{-17}$ rad and $\theta$ is bit-identical |
 | M9 | **REQUIREMENT** | Gauss orders decided by measurement on `QCD_Cosmology` across its spline knots; adaptive fallback for $\rho$ alone if needed (§11) | 02, 05 | ✅ 02 fixed all four orders at **4** with no adaptive fallback, but only under **break-point subdivision** on QCD; 05 consumes it — `RHO_GAUSS_ORDER = 4`, `RHO_ADAPTIVE_FALLBACK_REQUIRED = False`, and `build_phase_residual` applies the subdivision itself (1.22–1.23× the evaluations of `order × intervals` on QCD, exactly `order × intervals` on LambdaCDM) |
 | M10 | **DEFECT, dead logic** | `sin_coeff` sign fix is provably always $+1$ (§8.1) | 06, 07 | ⚠️ 06 deleted it from `GkWKBIntegration.store()` (`sin_coeff = B`); 206 $(G,G')$ cases incl. $G=0$, $G<0$ confirm the factor was $+1$ and $B>0$ reproduces the initial data to 3e-16. **07 deletes the copy in `TkWKBIntegration.store()`** |
 | M11 | **DEFECT, consistency** | `shift_theta_sample` rebases `div_2pi` to the first sample, producing ±1-cycle offsets between objects (§8.1, §8.3) | 06, 07 | ⚠️ 06 added `WKBtools.apply_phase_offset` (per-sample wrap, no rebase) and switched `GkWKBIntegration.store()` to it; 990-object sweep: 0 rebase offsets, cycle steps only at stop-point transitions (90 = 90); the old helper would have rebased 180 (= the review's 60 of 330). **`TkWKBIntegration.store()` still calls `shift_theta_sample` until 07** |
@@ -261,27 +261,45 @@ Opened by the planning pass, 2026-09-10, before any prompt runs.
   misled. **Next step:** if the aggregate is wanted, relax that one assertion in
   `test_background_tau.py` and sum the three counters — a two-line change in its own commit.
 
-- **[06-residual-table-per-object]** *(opened by prompt 06, 2026-09-11)* — `WKB_phase_function`
-  builds the residual table `build_phase_residual(model, k, nodes, sector)` on every call,
-  although it depends only on `(model, k, sector)` (and on the anchor only through its top
-  node). Per object: 5,536 of the 6,000 integrand evaluations and ~92 % of the 0.031 s at
-  $k=3\times10^8$ on LambdaCDM; 5–7k evaluations and 82–255 ms on `QCD_Cosmology` (log 05),
-  times ~1,700 source redshifts per $k$ — roughly 0.5 min (LambdaCDM) to 4 h (QCD) of residual
-  rebuilds per model per run, against the ODE's 13 CPU-hours per $k$. **Impact:** the dominant
-  cost of the new producers; prompt 13's timing of the scoped pipeline run.
-  **Next step:** [prompt 14](14-residual-table-reuse.md), written 2026-09-11 and scheduled
-  to run between 06 and 07 — memoise the table per `(model, k, sector)` in the Ray worker,
-  anchored on the background grid rather than on the object's $z_{\rm init}$, so one table
-  serves every object of that $k$ and the anchor is reached through `delta`'s off-grid
-  partial. Not a correctness issue.
+- **[06-metadata-column-headroom]** *(opened by prompt 06, 2026-09-11; narrowed by prompt 14)* —
+  the `GkWKBIntegration`/`TkWKBIntegration` `metadata` column is
+  `sqla.String(DEFAULT_STRING_LENGTH)` = `String(256)` and holds `json.dumps(obj.metadata)`.
+  SQLite does not enforce the length; PostgreSQL would truncate or refuse. **Impact:** anyone
+  adding a metadata key (prompt 07's friction bookkeeping is the candidate).
+  **Narrowed by prompt 14 (2026-09-11):** with prompt 14's `rho_reused` key the longest payload
+  is **227 characters** (LambdaCDM, $k=3\times10^8$, `Gk`, the call that builds the table), so
+  **29 characters remain**; the four variants measure 226 / 222 (`Gk` built / reused) and
+  223 / 219 (`Tk`), and the `initial_data_only` payload is 82. Prompt 06's 206 was the same
+  payload without the key, so a key costs ~20 characters. The count is now asserted by
+  `test_residual_table_reuse.TestTableIsShared.test_metadata_still_fits_the_column`, which
+  fails rather than overflowing. **Next step:** count before adding; or widen the column in a
+  schema-touching commit.
 
-- **[06-metadata-column-headroom]** *(opened by prompt 06, 2026-09-11; inert)* — the
-  `GkWKBIntegration`/`TkWKBIntegration` `metadata` column is `sqla.String(DEFAULT_STRING_LENGTH)`
-  = `String(256)` and holds `json.dumps(obj.metadata)`. The new payload's metadata is **206
-  characters** (233 with `initial_data_only`), leaving 23–50. SQLite does not enforce the
-  length; PostgreSQL would truncate or refuse. **Impact:** anyone adding a metadata key (prompt
-  07's friction bookkeeping is the candidate). **Next step:** count before adding; or widen the
-  column in a schema-touching commit.
+- **[14-residual-range-top-margin]** *(opened by prompt 14, 2026-09-11; inert)* — the residual
+  table's node range is cut at the top where the Liouville–Green frequency stops keeping
+  `RESIDUAL_WKB_REGION_MARGIN = 0.5` of its leading term, not at its turning point. The bare
+  $\omega^2>0$ rule prompt 14 asked for does not work on `QCD_Cosmology`: the sign is not
+  monotone in $z$ (the Green's-function frequency is positive again at the top of the production
+  grid, $z\ge1.9\times10^{16}$), and a panel whose two nodes are both positive can hold a Gauss
+  abscissa where $\omega^2<0$ — measured at $z=3.6118639\times10^{15}$, $k=3\times10^8$, where
+  the ratio $\omega^2/\omega_0^2$ scatters over $\pm0.1$ between neighbouring nodes
+  (`[02-qcd-T-z-spline-node-tolerance]`). **Impact:** the table does not cover an anchor within
+  about one e-fold of horizon crossing, where `WKB_phase_function` would now raise a range error
+  rather than build a table. Inert because the cut lies *above*, in $z$, the highest node at
+  which the WKB criterion $|d\ln\omega/dz|/\omega\le1$ holds — measured on both models, both
+  sectors, at $k=10^5$ and $3\times10^8$ — and that criterion is already a hard guard at the
+  anchor. **Next step:** none; if a producer is ever refused, the margin is the constant to
+  revisit, with 80 builds over 20 wavenumbers × 2 sectors × 2 models as the acceptance.
+
+- **[14-rhs-evaluations-depend-on-build-order]** *(opened by prompt 14, 2026-09-11; inert)* —
+  prompt 14 §2 item 3 requires `stage_1_data.RHS_evaluations` to count only the integrand
+  evaluations a call actually spent, so the first object of a given $(model, k, sector)$ in a Ray
+  worker stores ~7,000 and every later one a few hundred. Which object is first depends on the
+  scheduler, so two runs over the same inputs can persist different `RHS_evaluations` for the
+  same object. The column is payload data and part of no lookup key, so nothing misses.
+  **Impact:** anyone reading the column as "the cost of this object"; prompt 13's timing of the
+  scoped pipeline run should sum it over a $k$ rather than sample it. **Next step:** none, unless
+  13 wants a per-object cost, in which case the table build belongs in its own counter.
 
 - **[06-docs-scripts-reference-removed-ode]** *(opened by prompt 06, 2026-09-11; inert)* — the
   reproduction scripts `docs/gk-wkb-review-fable-2026-09-09/{t2_solver,t4b_production_real,
@@ -307,6 +325,26 @@ Opened by the planning pass, 2026-09-10, before any prompt runs.
 ---
 
 ## 4. Resolved issues
+
+- **[06-residual-table-per-object]** *(opened by prompt 06, 2026-09-11; resolved by prompt 14,
+  2026-09-11)* — `WKB_phase_function` built the residual table on every call, although it depends
+  only on `(model, k, sector)`: 5,536 of the 6,000 integrand evaluations and ~92 % of the 0.031 s
+  per object at $k=3\times10^8$ on LambdaCDM, 5–7k evaluations and 82–255 ms on `QCD_Cosmology`,
+  times ~1,700 source redshifts per $k$. **Resolution:** `residual_node_range` fixes the nodes
+  from $(model, k, sector)$ alone — the background grid, cut at the top where the frequency stops
+  keeping half its leading term (`[14-residual-range-top-margin]`) — and `cached_phase_residual`
+  memoises one `CumulativeTable` per key in the worker (LRU, 256 entries, 0.395 MB each, ~40 MB
+  for a production run's 100 keys). The object's anchor is off that grid and is reached by one
+  `CumulativeTable.delta` partial **per object**, split at the nearest node, rather than per
+  sample. Measured over 50 objects of one $k$ at $k=3\times10^8$: **142.5 residual-integrand
+  evaluations per object on LambdaCDM against 6,924, and 163.0 on QCD against 7,908 — 49× on
+  both**; the second and every later object adds nothing to the build (exactly 0 for an on-grid
+  anchor, exactly 4 for an off-grid one), and wall time per object falls from 0.0309 s to
+  **0.0010 s**. Nothing moved: $\theta$ is **bit-identical** at every sample of fifteen
+  (model, $k$, sector) cases and $\rho$ moves by at most $1.4\times10^{-17}$ rad. Every §3.1
+  accuracy, cost and sweep threshold of prompt 06 passes at its published number. Prompt 07
+  inherits the reuse with no change. See
+  [`logs/14-residual-table-reuse.md`](logs/14-residual-table-reuse.md).
 
 - **[02-cosmology-break-point-api]** *(opened by prompt 02, 2026-09-10; resolved by prompt 03,
   2026-09-11)* — the table builders needed a public way to ask a cosmology for its break points.
@@ -389,3 +427,9 @@ Opened by the planning pass, 2026-09-10, before any prompt runs.
 13. **The in-flight `transfer-remedial` campaign** (README §0.2, §4.2): do not touch its files;
     its `main.py` Bessel-stage comment is theirs; the two shared test files are a stop condition
     for prompt 10.
+14. **A producer calls `cached_phase_residual`, never `build_phase_residual`** (prompt 14). The
+    residual table is one per `(model, k, sector)`, built on `residual_node_range(model, k,
+    leading_table.z_nodes, sector)` and memoised in the worker; pass the proxy's `store_id`, and
+    nothing derived from the object. The object's anchor is off that grid: split it once at
+    `nearest_table_node(rho, z_init)` and add `rho.delta(node, z)` per sample — calling
+    `rho.delta(z_init, z)` per sample costs a Gauss panel each time.

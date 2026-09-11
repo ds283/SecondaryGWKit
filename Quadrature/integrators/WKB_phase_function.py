@@ -14,8 +14,9 @@ the phase from the anchor ``z_init`` to a sample ``z`` is, exactly,
 
 where ``leading`` is ``model.functions.tau`` (``Gk``) or ``model.functions.cs_tau`` (``Tk``) --
 the double-double Gauss-Legendre tables ``compute_background`` builds once per model -- and
-``rho`` is the residual table ``build_phase_residual`` builds once per call from the non-leading
-terms of ``*_omegaEff_sq``, never as ``omega^2 - omega_0^2``. Every ``X.delta(z_a, z_b)`` is
+``rho`` is the residual table ``cached_phase_residual`` builds **once per**
+``(model, k, sector)`` from the non-leading terms of ``*_omegaEff_sq``, never as
+``omega^2 - omega_0^2``. Every ``X.delta(z_a, z_b)`` is
 ``X(z_b) - X(z_a)``, positive for ``z_b < z_a`` (``prompts/GkTk-remedial/README.md`` §2 (c)),
 so ``theta`` is negative and decreasing towards lower redshift, the author's convention.
 
@@ -37,9 +38,21 @@ double-precision floor in milliseconds. Nothing of the ODE remains: no ODE solve
 resets, no ``Q``, no supervisors.
 
 **The anchor is off the grid.** For numeric-initialised objects ``z_init`` is a ``root_scalar``
-root, not a node of the background grid (``RECONCILIATION.md`` §2 item 5). The leading table
-reaches it through ``delta``'s off-grid partial -- one local Gauss panel per sample -- and the
-residual table is built with ``z_init`` as its own top node, so ``rho.delta`` needs no partial.
+root, not a node of the background grid (``RECONCILIATION.md`` §2 item 5). Both tables reach it
+through ``delta``'s off-grid partial. The leading table pays one local Gauss panel per sample;
+the residual table pays *one per object*, because the anchor is split off at the table node
+nearest to it,
+
+    rho.delta(z_init, z) = rho.delta(z_init, n) + rho.delta(n, z),      n a node,
+
+so ``rho.delta(n, z)`` is free for an on-grid sample. Prompt 06 instead built the residual table
+with ``z_init`` as its own top node, which made the table per-object and cost 5,536 of the 6,000
+integrand evaluations of an object at ``k = 3e8`` on LambdaCDM
+(``[06-residual-table-per-object]``). Anchoring on the grid and splitting at ``n`` moves the
+residual by the rounding of one extra double-double difference of a quantity below 0.1 rad:
+measured against the per-object table over three models and three wavenumbers in both sectors,
+``rho`` moves by at most 1.4e-17 rad and ``theta`` itself is **bit-identical** at every sample
+(prompt 14).
 
 **Diagnostics.** The WKB-validity criterion ``|d ln omega/dz| / omega`` is evaluated at
 ``z_init`` (an error if it exceeds one, as before) and at every sample; ``has_WKB_violation``,
@@ -49,14 +62,15 @@ the solver's steps.
 """
 
 import time
-from math import fabs, log, sqrt
-from typing import List, Optional, Sequence
+from math import fabs, log, log1p, sqrt
+from typing import List, Optional
 
 import numpy as np
 import ray
 
 from ComputeTargets import BackgroundModel, ModelProxy
-from ComputeTargets.phase_residual import RHO_GAUSS_ORDER, build_phase_residual
+from ComputeTargets.cumulative_table import CumulativeTable
+from ComputeTargets.phase_residual import RHO_GAUSS_ORDER, cached_phase_residual
 from CosmologyConcepts import redshift_array, wavenumber, wavenumber_exit_time
 from LiouvilleGreen.WKBtools import WKB_mod_2pi
 from Quadrature.integration_metadata import IntegrationData
@@ -90,28 +104,31 @@ def _empty_integration_data() -> IntegrationData:
     )
 
 
-def residual_nodes(
-    grid: Sequence[float], z_sample: Sequence[float], z_init: float
-) -> np.ndarray:
+def nearest_table_node(table: CumulativeTable, z: float) -> float:
     """
-    The nodes the residual table is built on: the background model's own grid restricted to
-    ``[min(z_sample), z_init]``, together with every sample redshift and ``z_init`` itself,
-    strictly descending.
+    The redshift of the table node nearest to ``z`` in ``u = log(1+z)``, or ``z`` itself when it
+    is a node.
 
-    Building on the background grid (rather than on the sample grid, which for the Green's
-    function is the 12x sparser response grid) keeps the residual's Gauss panels at the width
-    prompt 02 measured order 4 at the floor on (``QCD_Cosmology`` in particular is split further
-    at its break points inside ``build_phase_residual``). Making ``z_init`` the top node puts the
-    anchor on-grid for ``rho``, so the only off-grid partials are the leading table's.
+    This mirrors ``CumulativeTable``'s own nearest-node rule, so that splitting an interval at
+    the returned node leaves a partial no wider than the one ``delta`` would have formed anyway.
+    Lookup of an exact node is by exact ``z`` (README §5 rule 9); only the off-grid branch goes
+    through ``log(1+z)``, where it is a quadrature endpoint and nothing more.
     """
-    grid = np.asarray(grid, dtype=float)
-    z_init = float(z_init)
-    z_min = min(float(z) for z in z_sample)
-    inside = grid[(grid >= z_min) & (grid <= z_init)]
-    nodes = set(inside.tolist())
-    nodes.update(float(z) for z in z_sample)
-    nodes.add(z_init)
-    return np.array(sorted(nodes, reverse=True), dtype=float)
+    z = float(z)
+    if table.node_index(z) is not None:
+        return z
+
+    u_asc = np.asarray(table.u_nodes)[::-1]
+    n = u_asc.size
+    u = log1p(z)
+    i = int(np.searchsorted(u_asc, u))
+    if i <= 0:
+        j = 0
+    elif i >= n:
+        j = n - 1
+    else:
+        j = i if (u_asc[i] - u) < (u - u_asc[i - 1]) else i - 1
+    return float(table.z_nodes[n - 1 - j])
 
 
 def _leading_primitive(model: BackgroundModel, sector: str, task_label: str):
@@ -159,7 +176,7 @@ def WKB_phase_function(
     :param sector: ``"Gk"`` (leading primitive ``tau``) or ``"Tk"`` (``cs_tau``)
     :param omega_sq: ``Gk_omegaEff_sq`` or ``Tk_omegaEff_sq``, used only for the WKB-criterion
         diagnostic; the phase itself is built from the split functions inside
-        ``build_phase_residual``
+        ``cached_phase_residual``
     :param d_ln_omega_dz: the matching ``*_d_ln_omegaEff_dz``, for the same diagnostic
     :param friction: if ``True`` (the ``Tk`` sector) also return
         ``friction_F.delta(z_init, z)`` for every sample, the exponent of the transfer function's
@@ -230,9 +247,43 @@ def WKB_phase_function(
     leading_table = leading.table
     metadata["N_lead"] = leading_table.order
 
-    # the residual table, anchored at z_init as its top node
-    nodes = residual_nodes(leading_table.z_nodes, z_sample_list, z_init)
-    rho = build_phase_residual(model, k_float, nodes, sector)
+    # the residual table: one per (model, k, sector), built on the background grid cut at the
+    # top of the WKB region and shared by every object of this wavenumber
+    rho, rho_reused = cached_phase_residual(
+        model,
+        k_float,
+        leading_table.z_nodes,
+        sector,
+        store_id=getattr(model_proxy, "store_id", None),
+    )
+    rho_evaluations_before = rho.total_evaluations if rho_reused else 0
+
+    # the anchor and every sample must lie inside the table's own range, so that delta only ever
+    # forms interior partials (CumulativeTable refuses an endpoint more than one grid interval
+    # beyond either end). Asserted rather than assumed.
+    rho_z_top = float(rho.z_nodes[0])
+    rho_z_bottom = float(rho.z_nodes[-1])
+    z_sample_max = max(z_sample_list)
+    z_sample_min = min(z_sample_list)
+    if (
+        z_init > rho_z_top
+        or z_init < rho_z_bottom
+        or z_sample_max > rho_z_top
+        or z_sample_min < rho_z_bottom
+    ):
+        raise RuntimeError(
+            f"{task_label}: the anchor z_init={z_init:.8g} and the samples "
+            f"[{z_sample_min:.8g}, {z_sample_max:.8g}] must lie inside the residual table's "
+            f"range [{rho_z_bottom:.8g}, {rho_z_top:.8g}] for k={k_wavenumber.k_inv_Mpc:.5g}/Mpc "
+            f"(sector {sector})"
+        )
+
+    # the anchor is split off at the nearest node, so the residual's off-grid partial is paid
+    # once per object rather than once per sample: rho.delta(z_init, z) = rho_anchor +
+    # rho.delta(rho_anchor_node, z), and the second term is free for an on-grid sample. Exactly
+    # zero, with no integrand call, when z_init is itself a node.
+    rho_anchor_node = nearest_table_node(rho, z_init)
+    rho_anchor = rho.delta(z_init, rho_anchor_node)
 
     # the phase at every sample, formed once and reduced once per sample; the leading table
     # supplies the partial panel at an off-grid anchor itself, and never differences two
@@ -241,8 +292,10 @@ def WKB_phase_function(
 
     sampled_theta_div_2pi: List[int] = []
     sampled_theta_mod_2pi: List[float] = []
+    rho_delta = 0.0
     for z in z_sample_list:
-        theta = -(k_float * leading.delta(z_init, z) + rho.delta(z_init, z))
+        rho_delta = rho_anchor + rho.delta(rho_anchor_node, z)
+        theta = -(k_float * leading.delta(z_init, z) + rho_delta)
         theta_div_2pi, theta_mod_2pi = WKB_mod_2pi(theta)
         sampled_theta_div_2pi.append(theta_div_2pi)
         sampled_theta_mod_2pi.append(theta_mod_2pi)
@@ -250,6 +303,7 @@ def WKB_phase_function(
     leading_partial_evaluations = (
         leading_table.total_evaluations - leading_evaluations_before
     )
+    rho_evaluations = rho.total_evaluations - rho_evaluations_before
 
     # the WKB-criterion diagnostic on the sample grid (the supervisors' semantics: the first
     # sample at which the criterion exceeds unity is recorded, and one warning is printed)
@@ -302,25 +356,26 @@ def WKB_phase_function(
     # column
     metadata.update(
         {
-            "rho_nodes": int(len(nodes)),
-            "rho_evals": int(rho.evaluations),
+            "rho_nodes": int(len(rho)),
+            "rho_evals": int(rho_evaluations),
+            "rho_reused": bool(rho_reused),
             "lead_partials": int(
                 len(z_sample_list) * anchor_off_grid + off_grid_samples
             ),
             "lead_evals": int(leading_partial_evaluations),
             "offgrid_init": bool(anchor_off_grid),
-            "rho_end": float(rho.delta(z_init, z_sample_list[-1])),
+            "rho_end": float(rho_delta),
         }
     )
 
-    # "stage_1_data" records the primitive's cost: the integrand evaluations spent building the
-    # residual table and on the leading table's off-grid partials, and the wall time of this
-    # call. There is no second stage; the per-evaluation timings the ODE supervisors measured
-    # have no counterpart here and are left None (the columns are nullable).
+    # "stage_1_data" records the primitive's cost *of this call*: the integrand evaluations spent
+    # building the residual table -- none when it was reused -- and on both tables' off-grid
+    # partials, plus the wall time. There is no second stage; the per-evaluation timings the ODE
+    # supervisors measured have no counterpart here and are left None (the columns are nullable).
     stage_1_data = IntegrationData(
         compute_time=elapsed,
         compute_steps=len(z_sample_list),
-        RHS_evaluations=int(rho.evaluations + leading_partial_evaluations),
+        RHS_evaluations=int(rho_evaluations + leading_partial_evaluations),
         mean_RHS_time=None,
         max_RHS_time=None,
         min_RHS_time=None,

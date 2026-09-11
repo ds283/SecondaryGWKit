@@ -54,12 +54,26 @@ the cosmology's break points -- the ``T(z)`` spline knots and the equation-of-st
 temperatures -- so the table is built with ``_cosmology_break_points`` exactly as
 ``compute_background`` builds ``tau``, ``cs_tau`` and ``friction_F``.
 
-No Ray and no datastore: this module holds the integrand and the table builder only. The
-producers (prompts 06 and 07) own the decision of which nodes to build over and where to anchor.
+**One table per wavenumber, not per object** (prompt 14). ``rho`` depends only on
+``(model, k, sector)``, so ``residual_node_range`` fixes a node range that serves *every* object
+of that wavenumber -- the background grid, cut at the top where the Liouville-Green frequency
+stops keeping ``RESIDUAL_WKB_REGION_MARGIN`` of its leading term, which is above every anchor a
+producer can accept -- and ``cached_phase_residual`` memoises the table on that key inside the
+worker process. Prompt 06 built it per object, anchored on the object's own ``z_init``, which
+cost 5,536 of 6,000 integrand evaluations and ~92 % of the 0.031 s per object at ``k = 3e8`` on
+LambdaCDM and 0.08-0.28 s per object on ``QCD_Cosmology``, repeated identically for each of the
+~1,700 source redshifts of that ``k``. The object's anchor is now off the table's grid and is
+reached through ``CumulativeTable.delta``'s off-grid partial -- which is the term that accessor
+exists for -- at ``order`` integrand evaluations once per object.
+
+No Ray and no datastore: this module holds the integrand, the table builder, the node-range rule
+and the cache only. The producers (prompts 06 and 07) own where to anchor.
 """
 
+import weakref
+from collections import OrderedDict
 from math import sqrt
-from typing import Callable, Sequence
+from typing import Callable, Optional, Sequence, Tuple
 
 import numpy as np
 
@@ -198,3 +212,239 @@ def build_phase_residual(
         break_points=break_points,
         label=f"rho_{sector}@k={float(k):.6e}",
     )
+
+
+# ---------------------------------------------------------------------------------------------
+# the node range one table serves, and the per-(model, k, sector) cache (prompt 14)
+# ---------------------------------------------------------------------------------------------
+
+
+# How far above its turning point the node range is allowed to reach: a node is retained only
+# where the frequency keeps at least this fraction of its leading term, ``omega^2 >= margin *
+# omega_0^2``. The bare condition ``omega^2 > 0`` is not usable. On ``QCD_Cosmology`` the sign of
+# the frequency near the turning point is not resolved by the background: at k = 3e8 the ratio
+# ``omega^2/omega_0^2`` scatters by +-0.1 between neighbouring nodes around z ~ 4e15
+# ([02-qcd-T-z-spline-node-tolerance]), the sign is not monotone in z -- the Green's-function
+# frequency is positive again at the top of the production grid, z >= 1.9e16 -- and a panel whose
+# two nodes are both positive can still hold an abscissa where omega^2 < 0, measured at
+# z = 3.61e15, where the build raises.
+#
+# One half is far above that scatter and far below any anchor a producer can hand in. The cut it
+# makes lies *above*, in z, the highest node at which the WKB validity criterion
+# |d ln omega/dz|/omega <= 1 holds -- measured on both production models, both sectors, at
+# k = 1e5 and 3e8 -- and ``WKB_phase_function`` refuses an anchor where that criterion is
+# violated. So the range covers every anchor the producer accepts, with margin: production
+# anchors are three e-folds inside the horizon, where the ratio exceeds 0.99.
+RESIDUAL_WKB_REGION_MARGIN = 0.5
+
+
+def residual_node_range(
+    model,
+    k: float,
+    z_grid: Sequence[float],
+    sector: str,
+    margin: float = RESIDUAL_WKB_REGION_MARGIN,
+) -> np.ndarray:
+    """
+    The nodes the residual table for one ``(model, k, sector)`` is built on: the background
+    model's own grid, restricted at the top to the **highest node at which the Liouville-Green
+    frequency is positive**, by the margin ``RESIDUAL_WKB_REGION_MARGIN`` of its leading term,
+    and at the bottom to the lowest grid node.
+
+    The range depends only on ``(model, k, sector)``, never on an object's anchor or sample set,
+    so one table serves every object of that wavenumber. The top must be *found*, not assumed:
+    ``phase_residual_integrand`` refuses to evaluate where ``omega^2 <= 0``, and how far up the
+    grid the frequency stays positive is ``k``-dependent and model-dependent (on ``LambdaCDM``
+    the Green's-function correction vanishes in the radiation era and nothing at all is cut; in
+    the transfer-function sector the cut removes 250-620 of the production grid's 1,732 nodes,
+    landing about 1.25 e-folds inside the horizon).
+
+    It is found by walking the grid **upwards from its lowest node** -- where the mode is deep
+    inside the horizon and the frequency is positive by construction -- and stopping at the first
+    node where ``leading < 0`` or ``leading + correction < margin * leading``, tested through the
+    same split functions the integrand uses so that the test and the integrand cannot disagree.
+    The range is therefore the largest run of nodes reaching the bottom of the grid, not merely
+    everything below the highest positive node: see ``RESIDUAL_WKB_REGION_MARGIN`` for why the
+    difference matters.
+
+    :param model: anything exposing ``.functions``
+    :param k: the comoving wavenumber, in the model's units
+    :param z_grid: the background model's grid, strictly descending in ``z``
+    :param sector: ``"Gk"`` or ``"Tk"``
+    :param margin: the fraction of the leading term the frequency must keep at a retained node
+    :return: the nodes, strictly descending in ``z``
+    :raises ValueError: if the lowest node of the grid already fails the test, or if fewer than
+        two nodes remain
+    """
+    _check_sector(sector)
+    leading_fn, correction_fn = _SECTOR_FUNCTIONS[sector]
+    k = float(k)
+    margin = float(margin)
+
+    z = np.asarray(z_grid, dtype=float)
+    if z.ndim != 1 or z.size < 2:
+        raise ValueError(
+            f"residual_node_range[{sector}]: at least two grid nodes are required "
+            f"(got {z.size})"
+        )
+    if not np.all(np.diff(z) < 0.0):
+        raise ValueError(
+            f"residual_node_range[{sector}]: the grid must be strictly descending in z"
+        )
+
+    z_list = z.tolist()
+    top = len(z_list)
+    for j in range(len(z_list) - 1, -1, -1):
+        z_node = z_list[j]
+        leading = leading_fn(model, k, z_node)
+        if leading < 0.0:
+            break
+        if leading + correction_fn(model, k, z_node) < margin * leading:
+            break
+        top = j
+
+    if top >= len(z_list):
+        raise ValueError(
+            f"residual_node_range[{sector}]: the Liouville-Green frequency does not keep the "
+            f"fraction {margin:.3g} of its leading term even at the lowest node of the grid, "
+            f"z = {z[-1]:.8g}, for k = {k:.8g}; no part of the grid lies inside the WKB region "
+            "for this wavenumber"
+        )
+
+    nodes = z[top:]
+    if nodes.size < 2:
+        raise ValueError(
+            f"residual_node_range[{sector}]: only {nodes.size} node(s) of the grid lie inside "
+            f"the WKB region for k = {k:.8g} (from z = {z[top]:.8g}); at least two are required"
+        )
+    return nodes
+
+
+# The cache is keyed on (model, k, sector, order) and holds one CumulativeTable per key. It lives
+# for the life of the worker process: Ray runs one task at a time in a worker, so no locking is
+# needed. Measured footprint of a 1,732-node table -- the numpy limbs, their Python-list copies,
+# the exact-node dict and the two u arrays -- is 0.395 MB (tracemalloc, ten tables on the
+# production grid). A production run builds one background model (main.py:471) over ~50
+# wavenumbers in two sectors, so 100 keys and ~40 MB per worker; the worst case of both
+# production models in one worker would be 200 keys and ~79 MB. The cap is set above that, so it
+# never binds in production and the reuse can never silently degrade into thrashing, while a
+# process that walks many more wavenumbers is still bounded at ~101 MB.
+RESIDUAL_CACHE_MAX_ENTRIES = 256
+
+
+class _ResidualCacheEntry:
+    """One cached table, with the means to confirm it belongs to the model asking for it.
+
+    A model with a datastore id is identified by that id. A model without one --
+    ``ModelProxy.store_id`` is ``None`` for an unavailable model, and every offline stand-in has
+    no id at all -- is identified by the identity of the model object itself, held as a *weak*
+    reference so that the cache neither keeps a dead model alive nor hands its table to a
+    different object that happens to have inherited its ``id()``.
+    """
+
+    __slots__ = ("table", "_ref", "_strong", "_by_identity")
+
+    def __init__(self, table: CumulativeTable, model, by_identity: bool):
+        self.table = table
+        self._by_identity = by_identity
+        self._ref = None
+        self._strong = None
+        if by_identity:
+            try:
+                self._ref = weakref.ref(model)
+            except TypeError:
+                # a model that cannot be weak-referenced is held strongly; the cap bounds it
+                self._strong = model
+
+    def serves(self, model) -> bool:
+        if not self._by_identity:
+            return True
+        if self._strong is not None:
+            return self._strong is model
+        return self._ref() is model
+
+
+_RESIDUAL_CACHE: "OrderedDict[tuple, _ResidualCacheEntry]" = OrderedDict()
+
+
+def phase_residual_cache_key(
+    model,
+    k: float,
+    sector: str,
+    store_id: Optional[int] = None,
+    order: int = RHO_GAUSS_ORDER,
+) -> tuple:
+    """
+    The cache key for one residual table.
+
+    ``store_id`` is the model's datastore id (``ModelProxy.store_id``), which is ``None`` for an
+    unavailable model and for every offline stand-in. A ``None`` id is **not** a key: two
+    different stand-ins in one process would then share a table. Identity takes its place, and
+    ``_ResidualCacheEntry.serves`` confirms it on every hit.
+    """
+    _check_sector(sector)
+    if store_id is not None:
+        return ("store", int(store_id), float(k), sector, int(order))
+    return ("obj", id(model), float(k), sector, int(order))
+
+
+def cached_phase_residual(
+    model,
+    k: float,
+    z_grid: Sequence[float],
+    sector: str,
+    order: int = RHO_GAUSS_ORDER,
+    store_id: Optional[int] = None,
+) -> Tuple[CumulativeTable, bool]:
+    """
+    The residual table for one ``(model, k, sector)``, built on ``residual_node_range`` the first
+    time it is asked for in this process and returned unchanged thereafter.
+
+    Transparent by construction: the nodes depend on nothing but ``(model, k, sector)``, so two
+    calls that differ only in the object's anchor or sample set get the *same table object*, and
+    a different wavenumber, sector or model does not. ``z_grid`` is a property of the model --
+    the background tables' own nodes -- and is therefore read only when the table is built, not
+    compared on a hit.
+
+    A cached table holds the integrand, which closes over ``model``, so an entry pins its model
+    in memory for as long as it lives; the weak reference in ``_ResidualCacheEntry`` is a
+    correctness guard on ``id()`` reuse, not a memory one. In production that pins one
+    ``BackgroundModel`` per worker, which the worker holds anyway.
+
+    :param model: anything exposing ``.functions`` (and optionally ``.cosmology``)
+    :param k: the comoving wavenumber, in the model's units
+    :param z_grid: the background model's grid, strictly descending in ``z``
+    :param sector: ``"Gk"`` or ``"Tk"``
+    :param order: Gauss-Legendre order per panel
+    :param store_id: the model's datastore id, or ``None``
+    :return: ``(table, reused)`` -- ``reused`` is ``True`` when the table came from the cache and
+        this call therefore spent no integrand evaluation building it
+    """
+    key = phase_residual_cache_key(model, k, sector, store_id=store_id, order=order)
+
+    entry = _RESIDUAL_CACHE.get(key)
+    if entry is not None and entry.serves(model):
+        _RESIDUAL_CACHE.move_to_end(key)
+        return entry.table, True
+
+    nodes = residual_node_range(model, k, z_grid, sector)
+    table = build_phase_residual(model, k, nodes, sector, order=order)
+
+    _RESIDUAL_CACHE[key] = _ResidualCacheEntry(
+        table, model, by_identity=store_id is None
+    )
+    _RESIDUAL_CACHE.move_to_end(key)
+    while len(_RESIDUAL_CACHE) > RESIDUAL_CACHE_MAX_ENTRIES:
+        _RESIDUAL_CACHE.popitem(last=False)
+
+    return table, False
+
+
+def clear_phase_residual_cache() -> None:
+    """Drop every cached table. For tests; production never needs it."""
+    _RESIDUAL_CACHE.clear()
+
+
+def phase_residual_cache_size() -> int:
+    """The number of tables currently cached."""
+    return len(_RESIDUAL_CACHE)
