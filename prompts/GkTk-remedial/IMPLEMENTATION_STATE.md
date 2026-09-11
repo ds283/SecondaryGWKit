@@ -2,7 +2,20 @@
 
 **Campaign:** [`README.md`](README.md) · **Source review:** [`docs/gk-wkb-review-fable-2026-09-09.md`](../../docs/gk-wkb-review-fable-2026-09-09.md) · **Reconciliation:** [`RECONCILIATION.md`](RECONCILIATION.md)
 **Baseline commit:** `9ff59d5` (`main`, clean)
-**Last updated:** 2026-09-11 — Prompt 08 landed (`phase_spline` chunking is gone: one cubic spline
+**Last updated:** 2026-09-11 — Prompt 09 landed (the Green's-function *consumer* stops splining the
+growing phase: `ComputeTargets/primitive_phase.py` evaluates
+$\theta=-k\,\tau.\mathrm{delta}(z_s,z_r)+\varphi$ from prompt 03's double-double table with a cubic
+spline of the small residual $\varphi$ alone, and both `GkSourcePolicyData` call sites — the
+`Levin_z` threshold test and `GkSourceFunctions.phase` — now build one. On the review §5 consumer
+geometry scaled to $k=10^8$ the error falls from **7.286e-3 rad** to **4.189e-8 rad**, a ratio of
+**1.739e5**, and the 4.189e-8 is 2.81 ulp of the 9.09e7 rad span — the $\varepsilon k\tau$
+representation floor, not the method's error; $\varphi$ itself is recovered to 2.157e-10 rad. The
+`GkSource` rectifier is verified on a faithful copy: 90 of 990 swept objects carry a $+1$-cycle
+step at a stop-point transition, the rectifier repairs every one, and after it $\varphi$ is
+constant to 3.6e-12 rad; on pure-WKB objects it makes **zero** corrections. **Prompt 09 §4 test
+1's 1e-8 rad threshold is below the double-precision floor of its own geometry** and was replaced
+by README §6's 1e-6 rad plus a 6-ulp bound — `[09-consumer-threshold-below-representation-floor]`.)
+Prompt 08 landed (`phase_spline` chunking is gone: one cubic spline
 over the whole sample, rebased at the sample's median `theta_div_2pi` rather than selected between
 several by a hard switch; `chunk_step`/`chunk_logstep`/`increasing` are accepted no-ops, so
 `bessel_phase.py` and the three test fixtures that still pass `chunk_logstep=125` needed no edits;
@@ -56,7 +69,7 @@ Legend: ⬜ not started · 🟡 in flight · ✅ complete · ⚠️ complete wit
 | # | Prompt | Covers | Model | Status | Commit | Log |
 |---|---|---|---|---|---|---|
 | 08 | [`phase_spline` de-chunk](08-phase-spline-dechunk.md) | review §5 | Sonnet | ✅ | *"Drop the chunked phase spline in favour of one rebased spline"* (SHA not embedded, per the campaign convention) | [`logs/08-phase-spline-dechunk.md`](logs/08-phase-spline-dechunk.md) |
-| 09 | [Gk consumer on `PrimitivePhase`](09-gk-consumer-primitive-phase.md) | review §5, §7, §8.3, §13.3–§13.4 | **Fable** | ⬜ | | |
+| 09 | [Gk consumer on `PrimitivePhase`](09-gk-consumer-primitive-phase.md) | review §5, §7, §8.3, §13.3–§13.4 | **Fable** → Opus (Fable unavailable) | ⚠️ | *"Evaluate the Green function phase from the conformal-time table"* (SHA not embedded, per the campaign convention) | [`logs/09-gk-consumer-primitive-phase.md`](logs/09-gk-consumer-primitive-phase.md) |
 | 10 | [Tk consumer on the tables](10-tk-consumer-primitive-phase.md) | review §12.6, §12.7 | Opus | ⬜ | | |
 
 ### Workstream E — the numeric region
@@ -72,7 +85,7 @@ Legend: ⬜ not started · 🟡 in flight · ✅ complete · ⚠️ complete wit
 |---|---|---|---|---|---|---|
 | 13 | [Verification and docs](13-verification-and-docs.md) | review §4, §12.3, §13.5 | Opus | ⬜ | | |
 
-**Progress:** 9 / 14 complete.
+**Progress:** 10 / 14 complete.
 
 ---
 
@@ -96,9 +109,9 @@ campaign; the review section is the authority on each.
 | M11 | **DEFECT, consistency** | `shift_theta_sample` rebases `div_2pi` to the first sample, producing ±1-cycle offsets between objects (§8.1, §8.3) | 06, 07 | ✅ 06 added `WKBtools.apply_phase_offset` (per-sample wrap, no rebase) and switched `GkWKBIntegration.store()` to it; 990-object sweep: 0 rebase offsets, cycle steps only at stop-point transitions (90 = 90); the old helper would have rebased 180 (= the review's 60 of 330). 07 switched `TkWKBIntegration.store()` to it as well — there is one $T_k$ object per $k$ so no cross-object stitching arises (§12.7), but the stored $\theta+\delta$ is now exact. `shift_theta_sample` itself is retained in `WKBtools` for the two `docs/` scripts that still run (D7, log 07 deviation 5) |
 | M12 | **DEFECT, hygiene** | Zero-length check compares a redshift to `atol`; 1-element array into `math.fmod` (NumPy deprecation); stale comments at `:262-264`, `:403` (§8.2) | 06 | ✅ exact test `len(z_sample) == 1 and z_sample[0] == z_init`; the `fmod` path and both comments went with the ODE; `Quadrature/supervisors/WKB.py` deleted |
 | M13 | **DEFECT, accuracy + trap** | `phase_spline` chunking: no interpolation benefit, ordinates 64× inflated, knot residuals 30–50× worse, $1.4\times10^{-4}$ rad switch discontinuity, no progress guard for `logstep<2` (§5) | 08 | ✅ chunking deleted (`_build_*chunks*`, `_match_chunk`, `MINIMUM_SPLINE_DATA_POINTS` gone); one spline, rebased at the sample's *median* `theta_div_2pi`; `chunk_step`/`chunk_logstep`/`increasing` are accepted no-ops so `bessel_phase.py` and three test fixtures needed no changes. Interior interpolation error at $k=10^6$, 100/decade confirmed unchanged by chunking at 7–10e-5 rad (review 8.26e-5); the old progress-guard defect cannot recur (code path deleted) |
-| M14 | **DEFECT, accuracy** | Consumers spline the growing phase: $h^4x/384$, $O(1)$–$O(10)$ rad at production $x$ (§5, §12.6). Same term as `source-remediation`'s `[12-phase-spline-error-grows-with-x]` | 09, 10 | ⬜ |
-| M15 | **REQUIREMENT** | `PrimitivePhase`: $\theta=-k\Delta\tau+\varphi$ with the `phase_spline` protocol; closed-form $\theta'$; global anchor with the recorded floor (§7, §13.3, §13.4) | 09 | ⬜ |
-| M16 | **REQUIREMENT** | The `GkSource` rectifier is retained and verified inert on pure-WKB objects, correct on $\delta$-wraps (§8.3; `RECONCILIATION.md` §2 item 6) | 06, 09 | ⚠️ 06 did not touch the rectifier and documented what it must repair: in the production geometry (stop at a maximum, $\delta=+\pi/2$) the stored cycle count steps by $+1$ exactly where the stop point moves to the next maximum — 90 steps in 990 objects; $k=10^7$, $x_r=10^3$: between $z_s=316700\to324331$ and $401839\to411522$ (log 06). **09 verifies the rectifier on these** |
+| M14 | **DEFECT, accuracy** | Consumers spline the growing phase: $h^4x/384$, $O(1)$–$O(10)$ rad at production $x$ (§5, §12.6). Same term as `source-remediation`'s `[12-phase-spline-error-grows-with-x]` | 09, 10 | ⚠️ 09 discharged it for $G_k$: on the review §5 consumer geometry at $k=10^8$, 100/decade, the error is **4.189e-8 rad** against the same samples' `phase_spline` at **7.286e-3 rad** — a ratio of **1.739e5**, and the 4.189e-8 is 2.81 ulp of the 9.09e7 rad span, i.e. the representation floor. $\varphi$ alone is recovered to 2.157e-10 rad, matching $h^4\max|\varphi''''|/384$. **10 is outstanding** for $T_k$ |
+| M15 | **REQUIREMENT** | `PrimitivePhase`: $\theta=-k\Delta\tau+\varphi$ with the `phase_spline` protocol; closed-form $\theta'$; global anchor with the recorded floor (§7, §13.3, §13.4) | 09 | ✅ `ComputeTargets/primitive_phase.py`: `PrimitivePhase(k, leading, z_anchor, z_samples, phi_samples, *, sign, model_functions, label, spline_order)` with `raw_theta`/`theta_mod_2pi`/`theta_deriv`/`num_chunks`, plus `build_phi_samples`. `sign=-1` for $G_k$ at fixed $z_r$, `sign=+1` for $T_k$ at fixed $z_{\rm init}$ — one object for both sectors (prompt 10 reuses it). $\theta'=\mathrm{sign}\,k/H+\varphi'$ in closed form, exact to 0.0 relative on the radiation control. Global anchor, floor documented in the module docstring |
+| M16 | **REQUIREMENT** | The `GkSource` rectifier is retained and verified inert on pure-WKB objects, correct on $\delta$-wraps (§8.3; `RECONCILIATION.md` §2 item 6) | 06, 09 | ✅ 06 documented what it must repair; 09 verified it against a faithful copy of `GkSource.py:166-233` (copied, not imported — `assemble_GkSource_values` is a Ray remote over datastore objects), on prompt 06's geometry with the source samples taken from the background grid. **Before rectification $\varphi$ jumps by exactly $+1$ cycle at every stop-point transition and nowhere else** (2 of 22 objects at $k=10^7$, $x_r=10^3$; **90 of 990** over the full sweep, log 06's figure); **the rectifier repairs every one** (90 corrections = 90 transitions) and $\varphi$ is then constant to **3.64e-12 rad**. On pure-WKB objects $\delta=0$ exactly and the rectifier makes **zero** corrections, leaving `theta_div_2pi` untouched. `GkSource.py` was not edited (D5) |
 | M17 | **DEFECT, cost** | Per-RHS `*_omegaEff_sq` diagnostic: 45 % of the numeric run; the warning it feeds is live and must be preserved (§10.2, §13.1) | 11 | ⬜ |
 | M18 | **DEFECT, units** | `delta_logz` supplied as $\Delta\log_{10}$, used as $\Delta\ln$; and the $G_k$ run is sampled on the response grid, not the source grid the value describes (§10.2, §13.1; `RECONCILIATION.md` §1 item 9) | 11 | ⬜ |
 | M19 | **DEFECT, dead path** | `mode.lower()` before the `None` check (§10.2) | 11 | ⬜ |
@@ -167,6 +180,17 @@ Opened by the planning pass, 2026-09-10, before any prompt runs.
   $k=3\times10^8$ on LambdaCDM; at most ~1,160 samples per `TkWKBIntegration` object on the
   source grid, i.e. $\le$ 30 ms on `QCD_Cosmology` at log 03's 26 µs. The residual table is
   built with $z_{\rm init}$ as a node and needs no partial. Still closes with prompt 09.
+  **Narrowed by prompt 09 (2026-09-11); does not close.** The consumer's pattern is *not*
+  on-grid: a Levin region evaluates the phase at Chebyshev abscissae, which are off-grid by
+  construction. What prompt 09 does establish is that it is always **one** off-grid endpoint,
+  never two — `PrimitivePhase`'s anchor is `z_response`, a background-grid node, so it costs
+  nothing — so the figure that applies is log 03's **26.1 µs one-endpoint-off-grid on
+  `QCD_Cosmology`** (4.6 µs on LambdaCDM), not the 52.0 µs both-off-grid number this issue was
+  opened against, and the 50 µs stop threshold is not crossed. Measured on the radiation
+  stand-in: `raw_theta` spends **0** integrand evaluations at a node and **exactly 4** (one
+  order-4 panel) off-grid; 3.11 µs / 5.85 µs per call, best of 3 over 20 x 286 calls.
+  **Next step:** closes if a Levin-side measurement on `QCD_Cosmology` (prompt 13) shows the
+  per-call cost acceptable in bulk, or if a cached anchor partial is added.
 
 - **[01-lambdacdm-hubble-rounding-floor]** *(opened by prompt 01, 2026-09-10; inert)* — the
   double-precision evaluation of `LambdaCDM.Hubble` carries 2–9e-15 relative near $z=1$–$10^6$,
@@ -190,8 +214,15 @@ Opened by the planning pass, 2026-09-10, before any prompt runs.
   `theta_mod_2pi` carries the $\varepsilon k\tau$ floor: $9\times10^{-4}$ rad at $k=3\times10^8$
   (review §13.4). Per-region anchoring would scale the floor with the region's own phase.
   **Impact:** Levin regions at the largest $k$; below the QCD LG floor, three to four orders below
-  today's consumer error. **Next step:** a follow-up prompt adding an `anchored(z0)` view to
-  `PrimitivePhase` and a Levin-side hook, if the verification in 13 shows the floor matters.
+  today's consumer error.
+  **Measured by prompt 09 (2026-09-11).** The floor is now the *whole* error: on the review §5
+  consumer geometry at $k=10^8$, $z_r=0.1$, $z_s\in[10,10^4]$, `raw_theta` is **4.189e-8 rad**
+  from a 50-digit reference, which is **2.81 ulp** of the 9.0899e7 rad span against an
+  $\varepsilon k\tau$ floor of 2.019e-8 rad and one ulp of 1.490e-8 rad; at the samples
+  themselves it is 3.681e-8 rad. The residual $\varphi$ alone is recovered to **2.157e-10 rad**,
+  so everything above the floor has been removed and re-anchoring is the only remaining lever.
+  **Next step:** unchanged — a follow-up prompt adding an `anchored(z0)` view to `PrimitivePhase`
+  and a Levin-side hook, if the verification in 13 shows the floor matters.
 
 - **[00-transfer-remedial-test-file-overlap]** *(planning, 2026-09-10)* — prompt 10 edits the
   stand-in `ModelFunctions` fixtures in `ComputeTargets/tests/test_tk_source_functions.py` and
@@ -401,6 +432,32 @@ Opened by the planning pass, 2026-09-10, before any prompt runs.
   addition per sample, removing item 2 entirely and making the $T_k$ total ~0.034 s. Item 1 is
   irreducible without changing where the residual table's nodes come from. Neither is in prompt
   07's scope.
+  **Widened to the consumer by prompt 09 (2026-09-11).** Item 2 is a property of
+  `CumulativeTable.delta`, not of the producer: it re-integrates an off-grid *endpoint*'s panel on
+  every call. `PrimitivePhase` escapes it only because its anchor is on-grid — `z_response` is a
+  background-grid node — so a consumer whose anchor is off the grid would pay one extra order-4
+  panel per evaluation on top of the abscissa's. **Prompt 10's $T_k$ anchor is $z_{\rm init}$, a
+  `root_scalar` root** (`RECONCILIATION.md` §2 item 5), so it is exactly that case, and the
+  `nearest_table_node` split prompt 14 applied to $\rho$ is the same one-line remedy there.
+  **Next step:** unchanged for item 1; for item 2, apply the split in `WKB_phase_function` and —
+  if prompt 10 anchors off-grid — inside `PrimitivePhase`.
+
+- **[09-consumer-threshold-below-representation-floor]** *(opened by prompt 09, 2026-09-11)* —
+  prompt 09 §4 `test_primitive_phase.py` test 1 asks for a consumer phase error $\le10^{-8}$ rad
+  on the geometry it names in the same sentence ($k=10^8$, $z_r=0.1$, $z_s\in[10,10^4]$, exact
+  radiation, 100/decade), and calls that "README §6's consumer row". It is not: README §6's row is
+  $\le10^{-6}$ rad, and $10^{-8}$ rad is **below the double-precision floor of the quantity being
+  asserted**. On that geometry $|\theta|$ reaches 9.0899e7 rad, one ulp of which is 1.490e-8 rad
+  and whose $\varepsilon k\tau$ floor is 2.019e-8 rad; the measured error is **4.189e-8 rad =
+  2.81 ulp**, and 3.681e-8 rad at the samples, where the spline contributes nothing. The prompt's
+  companion assertion — a ratio $>10^5$ against a `phase_spline` of the same samples — **passes as
+  written** at 1.739e5. Prompt 09 asserted README §6's $10^{-6}$ rad plus a floor-aware 6-ulp
+  bound instead, and said so in `test_primitive_phase.py`'s module docstring.
+  **Impact:** prompt 10, which should score its $T_k$ consumer against README §6 and not copy
+  09's number; prompt 13's verification document; and README §6's consumer row, whose "floor"
+  column already says $\varepsilon k\tau$ and is therefore consistent with the code and not with
+  the prompt. **Next step:** the user decides whether to correct prompt 09's §4 test 1 text;
+  nothing in the tree needs to change.
 
 > Add an entry here whenever a prompt finishes with something unresolved: a verification step that
 > could not be run, an assumption that could not be confirmed, a deviation a later prompt has to
