@@ -285,11 +285,27 @@ Opened by the planning pass, 2026-09-10, before any prompt runs.
   the ratio $\omega^2/\omega_0^2$ scatters over $\pm0.1$ between neighbouring nodes
   (`[02-qcd-T-z-spline-node-tolerance]`). **Impact:** the table does not cover an anchor within
   about one e-fold of horizon crossing, where `WKB_phase_function` would now raise a range error
-  rather than build a table. Inert because the cut lies *above*, in $z$, the highest node at
-  which the WKB criterion $|d\ln\omega/dz|/\omega\le1$ holds — measured on both models, both
-  sectors, at $k=10^5$ and $3\times10^8$ — and that criterion is already a hard guard at the
-  anchor. **Next step:** none; if a producer is ever refused, the margin is the constant to
-  revisit, with 80 builds over 20 wavenumbers × 2 sectors × 2 models as the acceptance.
+  rather than build a table.
+  **Corrected by the orchestrator (2026-09-11).** Log 14 and the commit body justify this as
+  "the cut lies above the highest node at which the WKB criterion $|d\ln\omega/dz|/\omega\le1$
+  holds … so no anchor a producer can accept lies outside the table". That generalises a
+  measurement taken at $k=10^5$ and $3\times10^8$ and **is not true in general**: at
+  `QCD_Cosmology`, sector `Gk`, $k=10^7$ the cut is at $z=4.83\times10^{13}$ while the highest
+  criterion-satisfying node is $z=3.05\times10^{14}$. The criterion is not monotone in $z$ on
+  QCD, so "highest node satisfying it" is not an envelope.
+  The invariant that does hold is a **margin between the cut and the production anchor**: every
+  producer anchors three e-folds inside the horizon, while the cut sits at ~1.25 e-folds. Over
+  all twelve (model, sector, $k$) combinations the ratio cut/anchor is 5.7–5.9× (1.74–1.78
+  e-folds) in the `Tk` sector and 103–8.9×10⁶ (4.6–16 e-folds) in `Gk`; the tightest is
+  LambdaCDM `Tk` at $k=3\times10^8$, **1.74 e-folds**. At the QCD/`Gk`/$k=10^7$ counterexample
+  the production anchor is 186× below the cut, so it is unreachable. The failure mode if it were
+  ever reached is a loud `RuntimeError` from `CumulativeTable`, not a wrong number.
+  **No test pins either statement** — neither the criterion ordering nor the 1.74-e-fold margin —
+  so a change to `RESIDUAL_WKB_REGION_MARGIN`, to the production grid, or to a cosmology would
+  not be caught until a producer crashed. **Next step:** prompt 13 measures the cut-to-anchor
+  margin across the production $k$ range on both models and both sectors as part of its
+  verification, and records it; if it is ever below ~1 e-fold, the margin constant is what to
+  revisit.
 
 - **[14-rhs-evaluations-depend-on-build-order]** *(opened by prompt 14, 2026-09-11; inert)* —
   prompt 14 §2 item 3 requires `stage_1_data.RHS_evaluations` to count only the integrand
