@@ -310,6 +310,70 @@ what this means for `[01-offgrid-accessor-cost-on-qcd]`.
 
 ---
 
+### Addendum, 2026-09-11 — orchestrator's independent verification, and the stop
+
+Added by the orchestrator (Workstream D), **additively**: the subsection above was correct for the
+tree and the moment it was written and is not edited (`CLAUDE.md`, README §5 rule 6). Run on
+`c1c3717`.
+
+**The five checks of README §4.3 all hold.** Exactly one new commit, message per §5 rule 2; the log
+follows §5.1 and classifies every deviation; the board row, M14/M15/M16 and §3 are updated in that
+commit with `docs/OPEN_ISSUES.md` beside them; the diff touches only the prompt's allowed files.
+`git diff HEAD~1 -- ComputeTargets/GkSource.py` is **empty** — D5 held.
+
+Suites re-run by the orchestrator:
+
+- `test_primitive_phase` + `test_gk_source_primitive_phase` + `test_gk_source_policy` — **26
+  tests, OK** (0.45 s).
+- `discover -s ComputeTargets/tests -t .` — **249 tests, OK** (125.1 s), against a pre-dispatch
+  baseline of 226 tests OK on `a2ea069`.
+- `git diff HEAD~1 -- ComputeTargets/tests/test_quadsource_integral.py
+  ComputeTargets/tests/test_phase_groups.py` is **empty**: both protocol consumers pass with their
+  own fixtures untouched, which is what makes this a protocol check rather than a co-adaptation.
+- `grep -n "phase_spline" ComputeTargets/GkSourcePolicyData.py` empty; `black --check` clean on all
+  six touched modules.
+
+Read against the code rather than the log: `raw_theta` (`:258-265`) forms the leading term through
+`self._leading.delta(raw_x, self._z_anchor)` and adds a spline of $\varphi$ — there is no spline of
+the full phase anywhere in the module; `theta_deriv` (`:273-292`) is closed-form
+`sign * k / H(z)` (times $(1+z)$ for the logarithmic form) plus $\varphi'$; `theta_mod_2pi`
+(`:267-271`) is `WKB_mod_2pi(raw_theta(...))[1]` and the module docstring names the D6 floor and
+points at `[00-consumer-anchoring-floor]`. `_build_phase` builds $\varphi$ from
+`v.WKB.theta_div_2pi`, the **rectified** count, and says why. `_classify_Levin` uses the same
+`_build_phase`, and the false chunking comment at the old `:666-670` is gone. `rectify()` in
+`test_gk_source_primitive_phase.py:90` was read line-by-line against `GkSource.py:166-233` and is
+faithful, including the first-sample rebase and the `theta > last_theta` branch condition.
+
+Numbers reproduced by the orchestrator's own run of the test modules:
+
+| quantity | measured | required |
+|---|---|---|
+| `PrimitivePhase` vs exact, $k=10^8$ | **4.189e-08 rad** (2.81 ulp; at $z_s=1730.75$) | prompt §4 test 1: ≤1e-8 — **missed**; README §6: ≤1e-6 — **met, 24×** |
+| `phase_spline` of the same samples | 7.286e-03 rad | — |
+| **ratio** | **1.739e+05** | >1e5 ✅ |
+| $\varphi$ alone (test 4) | 2.157e-10 rad | cubic law 2.19e-10 ✅ |
+| $\varphi$ after rectification, 22-object case | constant 929.911 rad, max $|\Delta\varphi|$ 2.27e-13 rad | <0.1 rad ✅ |
+| $\varphi$ before rectification | $2\pi$ at each of 2 stop-point transitions | asserted ✅ |
+| pure-WKB rectifier corrections | 0 | 0 ✅ |
+
+**The floor claim is independently confirmed.** At $k=10^8$, $z_r=0.1$, $z_s\le10^4$ in exact
+radiation, $|\theta|$ reaches 9.08991e+07 rad, whose ulp is **1.4901e-08 rad** and whose
+$\varepsilon k\tau$ is **2.0184e-08 rad**. The prompt's stated 1e-8 rad is **0.67 of one ulp** of
+the quantity it measures: no implementation in double precision can pass it, and asserting it would
+be the error `IMPLEMENTATION_STATE.md` §5 note 2 names ("a test asserting below a floor is
+asserting agreement between two errors"). The deviation's `STRUCTURALLY REQUIRED` tag is correct
+and the defect is in the prompt text, not the code.
+
+**Why the orchestrator stopped anyway.** README §4.3 and `orchestrator/README.md` make a missed
+numerical threshold *stated in the prompt* a stop condition "even narrowly", without an exception
+for a threshold that turns out to be unreachable, and rule 7 is "stop rather than repair". The
+work is not in question — every acceptance figure the campaign actually scores against is met,
+with margin. What the user is being asked is only whether README §6's 1e-6 rad row (met at
+4.189e-8) and the >1e5 ratio (met at 1.739e5) are the thresholds of record for this prompt, so
+that prompt 09 reads ✅/⚠️ rather than blocked, and whether prompt 10 should be given the corrected
+threshold before it is dispatched — prompt 10's §4 numbers were written by the same hand and may
+carry the same defect.
+
 ## Observations not acted on
 
 1. **`[01-offgrid-accessor-cost-on-qcd]` is narrowed, not closed.** The issue's next step reads
