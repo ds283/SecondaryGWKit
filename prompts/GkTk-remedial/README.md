@@ -279,10 +279,14 @@ review those three most closely.
 | 11 | [`11-numeric-diagnostics-and-units.md`](11-numeric-diagnostics-and-units.md) | review §10.2, §12.5, §13.1; fact (h) | `Quadrature/integrators/numeric_with_phase_cut.py`, `Quadrature/supervisors/numeric.py`, `LiouvilleGreen/integration_tools.py`, `ComputeTargets/{Gk,Tk}NumericIntegration.py`, two comment hunks of `main.py`; tests | Medium; one semantic decision the user must see (`[00-unresolved-osc-print-policy]`) | **Opus** |
 | 16 | [`16-unresolved-osc-print-policy.md`](16-unresolved-osc-print-policy.md) | §7 D2, decided; §3 `[00-unresolved-osc-print-policy]`; fact (h) | `Quadrature/integrators/numeric_with_phase_cut.py`, `ComputeTargets/{Gk,Tk}NumericIntegration.py`, `main.py`; tests | Low–medium; `main.py` plumbing whose failure mode is silent | **Opus** |
 | 12 | [`12-tk-numeric-atol.md`](12-tk-numeric-atol.md) | review §12.5 | `config/defaults.py`, `main.py` (every `TkNumericIntegration` `object_get`); tests | Low–medium; silent plumbing errors would make datastore lookups miss | **Opus** |
+| 17 | [`17-tk-numeric-atol-k-sweep.md`](17-tk-numeric-atol-k-sweep.md) | §3 `[12-tk-numeric-atol-largest-k-excursion]` | new `docs/gktk-remedial/tk_numeric_atol_sweep.py` and `TK-NUMERIC-ATOL-SWEEP.md` | Low–medium; **no production code** — the reference construction is the risk | **Opus** |
 
-> Row 16 is numbered last because the campaign's numbers are append-only, but it **runs between 11
-> and 12**: it is the follow-up §7 D2 anticipated, enacting the user's choice of option (ii) once
-> prompt 11 had measured the fire rate. Prompt 12 is unaffected by it.
+> Rows 16 and 17 are numbered last because the campaign's numbers are append-only. **16 runs
+> between 11 and 12** — the follow-up §7 D2 anticipated, enacting the user's choice of option
+> (ii) once prompt 11 had measured the fire rate; prompt 12 is unaffected by it. **17 runs
+> after 12 and before Workstream F**: prompt 12 set the $T_k$ numeric `atol` on evidence from
+> one $k$, and the tolerance is a datastore key, so the grid is measured before prompt 13
+> builds a datastore and a scoped pipeline run on top of it.
 
 ### Workstream F — verification and close-out
 

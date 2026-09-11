@@ -174,10 +174,14 @@ Legend: ⬜ not started · 🟡 in flight · ✅ complete · ⚠️ complete wit
 | 11 | [Numeric diagnostics and units](11-numeric-diagnostics-and-units.md) | review §10.2, §12.5, §13.1 | Opus | ⚠️ | *"Test oscillation resolution on the sample grid, off the RHS"* (SHA not embedded, per the campaign convention) | [`logs/11-numeric-diagnostics-and-units.md`](logs/11-numeric-diagnostics-and-units.md) |
 | 16 | [Unresolved-osc print policy](16-unresolved-osc-print-policy.md) | §7 D2; §3 `[00-unresolved-osc-print-policy]` | Opus | ✅ | *"Summarise unresolved-oscillation warnings per wavenumber"* (SHA not embedded, per the campaign convention) | [`logs/16-unresolved-osc-print-policy.md`](logs/16-unresolved-osc-print-policy.md) |
 | 12 | [Tk numeric `atol`](12-tk-numeric-atol.md) | review §12.5 | Opus | ⚠️ | *"Give the transfer-function numeric run its own absolute tolerance"* (SHA not embedded, per the campaign convention) | [`logs/12-tk-numeric-atol.md`](logs/12-tk-numeric-atol.md) |
+| 17 | [Tk numeric `atol` k-sweep](17-tk-numeric-atol-k-sweep.md) | §3 `[12-tk-numeric-atol-largest-k-excursion]` | Opus | ⬜ | | |
 
-> Row 16 is numbered last because the campaign's numbers are append-only, but it **runs between 11
-> and 12** — the follow-up README §7 D2 anticipated, enacting the user's choice of option (ii)
-> (2026-09-11) once prompt 11 had measured the fire rate.
+> Rows 16 and 17 are numbered last because the campaign's numbers are append-only. **16 runs
+> between 11 and 12** — the follow-up README §7 D2 anticipated, enacting the user's choice of
+> option (ii) (2026-09-11) once prompt 11 had measured the fire rate. **17 runs after 12**, a
+> measurement-only prompt approved by the user 2026-09-12: prompt 12 set the $T_k$ numeric
+> `atol` on evidence from one $k$, and the tolerance is a datastore key, so the grid is
+> measured before prompt 13 builds a datastore on top of it.
 
 ### Workstream F — verification
 
@@ -185,7 +189,7 @@ Legend: ⬜ not started · 🟡 in flight · ✅ complete · ⚠️ complete wit
 |---|---|---|---|---|---|---|
 | 13 | [Verification and docs](13-verification-and-docs.md) | review §4, §12.3, §13.5 | Opus | ⬜ | | |
 
-**Progress:** 15 / 16 complete.
+**Progress:** 15 / 17 complete.
 
 ---
 
@@ -610,9 +614,16 @@ Opened by the planning pass, 2026-09-10, before any prompt runs.
   $\le3\times10^{-6}$ row is met on review §12.5's geometry ($k=10^6$, 2.534e-6) and at $k=10^8$,
   but not at the top of the production $k$-grid; prompt 13's verification should not assume one
   number covers the range. Measured only on `RadiationModel` — the production backgrounds, whose
-  Hubble rates are splines, were not swept. **Next step:** prompt 13 re-measures on both production
-  models at $k=3\times10^8$; if it reproduces, the choice is `atol=1e-16` (no measured cost) or a
-  $k$-dependent tolerance, either of which is another datastore key change.
+  Hubble rates are splines, were not swept. **Next step: assigned (2026-09-12) to prompt 17**, a
+  measurement-only prompt approved by the user — not to prompt 13, as first recorded. It sweeps the
+  full production $k$-grid (50 values) on `LambdaCDMModel` and `QCDModel` as well as the control, at
+  `atol` $\in\{10^{-10},10^{-13},10^{-16}\}$, against a **converged run of the same integrator**
+  rather than an oracle, there being no closed-form $T$ on a real background. It reports maximum,
+  second-largest and median per $k$ — so an isolated spike is distinguishable from a raised level,
+  which is the open question here — and recommends; the user settles the constant. **It runs before
+  prompt 13, not as part of it**: the tolerance is a `TkNumericIntegration` row key, so a constant
+  settled after prompt 13 has built its datastore and run its scoped pipeline would invalidate both.
+  Prompt 17 changes no production code, so `1e-13` stands until the user says otherwise.
 
 > Add an entry here whenever a prompt finishes with something unresolved: a verification step that
 > could not be run, an assumption that could not be confirmed, a deviation a later prompt has to

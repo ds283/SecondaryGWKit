@@ -1,6 +1,7 @@
 # Orchestrator prompts — Gk/Tk WKB phase remedial campaign
 
-Six ready-to-use orchestrator prompts, one per workstream, plus one for a later interim prompt.
+Six ready-to-use orchestrator prompts, one per workstream, plus three for interim prompts
+(15, 16, 17) added as the campaign ran.
 Each restates the procedure and stop conditions of [`../README.md`](../README.md) §4.3 with the
 prompt-specific checks — test commands, allowed files, thresholds — filled in.
 
@@ -13,11 +14,12 @@ prompt-specific checks — test commands, allowed files, thresholds — filled i
 | — interim: `PrimitivePhase` rate | 15 | [`prompt-15.md`](prompt-15.md) | Not a workstream — a single prompt closing `[10-primitive-phase-leading-rate-is-hardcoded]`, dispatched after D closed and before E, at the user's request |
 | E — the numeric region | 11, 12 | [`workstream-E.md`](workstream-E.md) | Independent; can run at any point. **Always stops after 11** to put D2 to the user |
 | — interim: D2 print policy | 16 | [`prompt-16.md`](prompt-16.md) | Not a workstream — the follow-up §7 D2 anticipated, enacting the user's choice of option (ii). Runs between 11 and 12 |
+| — interim: $T_k$ `atol` sweep | 17 | [`prompt-17.md`](prompt-17.md) | Measurement only, no production code. Runs after 12, before Workstream F, because the tolerance is a datastore key |
 | F — verification | 13 | [`workstream-F.md`](workstream-F.md) | Measurements and documents; may surface findings that are not this campaign's to fix |
 
 ## Running the campaign
 
-Recommended order **A → B → C → D → 15 → E (11 → 16 → 12) → F** (`../README.md` §4). E is independent and may be
+Recommended order **A → B → C → D → 15 → E (11 → 16 → 12 → 17) → F** (`../README.md` §4). E is independent and may be
 run first as a warm-up or interleaved with any of A–D and 15; nothing else may be reordered —
 every prompt from 03 onward consumes an interface the previous one defines.
 
