@@ -1,5 +1,5 @@
 from math import fmod, floor, fabs
-from typing import Tuple
+from typing import List, Sequence, Tuple
 
 from LiouvilleGreen.constants import TWO_PI
 from LiouvilleGreen.range_reduce_mod_2pi import simple_mod_2pi
@@ -7,7 +7,11 @@ from config.defaults import DEFAULT_ABS_TOLERANCE
 
 
 # similar to LiouvilleGreen.range_reduce_mod_2pi.simple_mod_2pi, but with a specific
-# convention for the (mod 2pi) component: it should always be negative
+# convention for the (mod 2pi) component: it should always be negative.
+#
+# This is the (cycle count, remainder) representation the WKB producers store: the unreduced
+# phase is formed once and reduced once, here, per sample (README §2 (e) of
+# prompts/GkTk-remedial; the module docstring of LiouvilleGreen.range_reduce_mod_2pi).
 def WKB_mod_2pi(theta: float):
     theta_mod_2pi = fmod(theta, TWO_PI)
     theta_div_2pi = int(floor(fabs(theta) / TWO_PI))
@@ -26,15 +30,20 @@ def WKB_mod_2pi(theta: float):
 # Decompose the product big_number*small_number into a cycle count plus a remainder, using the
 # same phase convention as WKB_mod_2pi above. Also allows an offset mod_2pi_init.
 #
+# NOT USED BY PRODUCTION. Its only production consumer was stage 2 of the two-stage phase ODE
+# (theta = theta_i + omega_i (1+u) Q), which prompts/GkTk-remedial prompt 06 removed from
+# Quadrature/integrators/WKB_phase_function.py (review §3: the Q variable protected the wrong
+# quantity and the stored phase was wrong by cycles). It is retained, unchanged, for the
+# reproduction script docs/spec-code-audit/scripts/GK_05_phase_reassembly.py (README §7 D7).
+#
 # NOTE this used to call range_reduce_mod_2pi(), a prime-factorisation scheme that avoided forming
 # the rounded product big_number*small_number. That scheme was measured to be no more accurate
 # than the plain reduction used here -- worse in most cases -- and ~21x slower, so it has been
 # removed; see the docstring of LiouvilleGreen.range_reduce_mod_2pi for the measurements.
 #
-# The remainder produced here is only ever used as an *argument to sin/cos* via a phase spline. If
-# you find yourself wanting the phase itself, do not reconstruct it as div*TWO_PI + mod and reduce
-# again: pass the unreduced value to libm, which reduces more accurately than we can. See the
-# module docstring of LiouvilleGreen.range_reduce_mod_2pi.
+# If you find yourself wanting the phase itself, do not reconstruct it as div*TWO_PI + mod and
+# reduce again: pass the unreduced value to libm, which reduces more accurately than we can. See
+# the module docstring of LiouvilleGreen.range_reduce_mod_2pi.
 def WKB_product_mod_2pi(big_number: float, small_number: float, mod_2pi_init: float):
     # theta_div_2pi and theta_mod_2pi have the same sign as the product big_number*small_number
     theta_div_2pi, theta_mod_2pi = simple_mod_2pi(big_number * small_number)
@@ -85,7 +94,52 @@ def wrap_theta(theta: float) -> Tuple[int, float]:
     return 0, theta
 
 
+def apply_phase_offset(
+    div_2pi_sample: Sequence[int], mod_2pi_sample: Sequence[float], delta: float
+) -> Tuple[List[int], List[float]]:
+    """
+    Add ``delta`` to every sample's phase, keeping the ``(div 2pi, mod 2pi)`` representation:
+    ``wrap_theta(mod + delta)`` per sample, with the cycle shift it returns added to *that
+    sample's* ``div``. Nothing is rebased across samples, so for every sample
+
+        new_div * 2pi + new_mod == div * 2pi + mod + delta
+
+    up to the rounding of the sum, and two objects that share a physical phase store the same
+    cycle count (``prompts/GkTk-remedial/README.md`` §2 (e); ``RECONCILIATION.md`` §2 item 4).
+
+    This is what ``GkWKBIntegration.store()`` uses to attach the initial-data offset
+    ``deltaTheta`` to the phase returned by ``WKB_phase_function``. It replaces
+    ``shift_theta_sample`` below, whose subtraction of the first sample's shift from every
+    sample's ``div`` was constant within an object but differed between objects, which is what
+    manufactured the +-1-cycle offsets between neighbouring objects that ``GkSource``'s
+    rectifier then had to repair (review §8.1, §8.3).
+
+    :param div_2pi_sample: the cycle counts, one per sample
+    :param mod_2pi_sample: the remainders, one per sample, each in ``(-2pi, 0]``
+    :param delta: the offset to add, in radians
+    :return: ``(new_div_2pi_sample, new_mod_2pi_sample)`` as lists
+    """
+    delta = float(delta)
+    new_div: List[int] = []
+    new_mod: List[float] = []
+    for div, mod in zip(div_2pi_sample, mod_2pi_sample):
+        shift, wrapped = wrap_theta(float(mod) + delta)
+        new_div.append(int(div) + shift)
+        new_mod.append(wrapped)
+    return new_div, new_mod
+
+
 def shift_theta_sample(div_2pi_sample, mod_2pi_sample, shift):
+    # NOT USED BY THE GREEN'S-FUNCTION PRODUCTION PATH. GkWKBIntegration.store() switched to
+    # apply_phase_offset() above in prompts/GkTk-remedial prompt 06, because the rebase below
+    # (subtracting the first sample's shift from every sample) differs between objects and is the
+    # source of the +-1-cycle offsets between neighbouring GkWKBIntegration objects measured in
+    # review §8.3. TkWKBIntegration.store() still calls it until prompt 07 makes the same switch;
+    # after that it is retained only for the reproduction scripts
+    # docs/gk-wkb-review-fable-2026-09-09/t6_sweep.py and
+    # docs/spec-code-audit/scripts/GK_05_phase_reassembly.py (README §7 D7). Do not reintroduce
+    # it into a producer.
+
     # work out how the div_2pi, mod_2pi values should change when we add 'shift' to each
     # value in mod_2pi_sample
 

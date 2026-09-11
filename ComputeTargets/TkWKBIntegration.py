@@ -12,14 +12,17 @@ from LiouvilleGreen.WKBtools import shift_theta_sample
 from LiouvilleGreen.constants import TWO_PI
 from MetadataConcepts import tolerance, store_tag
 from Quadrature.integration_metadata import IntegrationData, IntegrationSolver
-from Quadrature.integrators.WKB_phase_function import (
-    WKB_phase_function,
-    FRICTION_INDEX,
-)
+from Quadrature.integrators.WKB_phase_function import WKB_phase_function
 from Quadrature.supervisors.base import RHS_timer
 from Quadrature.supervisors.numeric import NumericIntegrationSupervisor
 from Units import check_units
 from config.defaults import DEFAULT_FLOAT_PRECISION
+
+# friction_RHS below is no longer called: WKB_phase_function returns the friction integral from
+# the background model's friction_F table (prompts/GkTk-remedial prompt 06, §3.4), and prompt 07
+# deletes friction_RHS together with this constant. It used to be imported from
+# WKB_phase_function, where the ODE it indexed into no longer exists.
+FRICTION_INDEX = 0
 
 
 def friction_RHS(
@@ -361,16 +364,17 @@ class TkWKBIntegration(DatastoreObject):
             )
             print(f"     This may lead to meaningless results.")
 
+        # phase and friction both come from the background model's tables (sound horizon and
+        # friction_F); no tolerances. self._atol/self._rtol stay as datastore lookup keys.
         self._compute_ref = WKB_phase_function.remote(
             self._model_proxy,
             self._k_exit,
             self._z_init,
             self._z_sample,
+            sector="Tk",
             omega_sq=Tk_omegaEff_sq,
             d_ln_omega_dz=Tk_d_ln_omegaEff_dz,
-            friction=friction_RHS,
-            atol=self._atol.tol,
-            rtol=self._rtol.tol,
+            friction=True,
             task_label="compute_Tk_WKB_phase",
             object_label="T_k(z)",
         )

@@ -1,6 +1,6 @@
 # Open issues — project-wide index
 
-**Last updated:** 2026-09-11 · **42 open** across six campaigns.
+**Last updated:** 2026-09-11 · **45 open** across six campaigns.
 
 This file exists so that an issue opened by one campaign is not lost when that campaign closes.
 It is an **index, not a record**: one line per issue, pointing at the campaign status board that
@@ -64,17 +64,18 @@ they now pass `BesselPhaseGroup.levin_theta()`.
 ### 1.4 The $T_k$ / $G_k$ numerical-precision campaign
 
 Now running as [`prompts/GkTk-remedial/`](../prompts/GkTk-remedial/README.md) (2026-09-10; 13
-prompts, 3 executed). `[07-phase-spline-chunking-precision]` was closed WONTFIX on the
+prompts, 6 executed). `[07-phase-spline-chunking-precision]` was closed WONTFIX on the
 expectation that this campaign **removes** the chunked splines — its prompt 08 does; if that plan
 changes, reopen it.
 
 | Issue | Board | Hook |
 |---|---|---|
 | `[12-phase-spline-error-grows-with-x]` | source-remediation | Stored-phase re-spline error $\simeq h^4x/384$, growing **linearly in $x$**; ~1 % of envelope extrapolated to production. **Reassigned here from §1.1** (2026-09-10): the campaign's prompts 09–10 evaluate the leading term from a table and spline only the residual. |
+| `[06-residual-table-per-object]` | GkTk-remedial | `WKB_phase_function` rebuilds the per-$k$ residual table on every object: 92 % of the new producer's 0.031 s at $k=3\times10^8$ (LambdaCDM), 82–255 ms per object on QCD. Noise against the ODE's 13 CPU-hours per $k$; memoise per `(model, k, sector)` if prompt 13's timing says so. |
 | `[00-unresolved-osc-print-policy]` | GkTk-remedial | With its units fixed and evaluated on the caller's actual grid, `has_unresolved_osc` will fire on essentially every $G_k$ numeric object. Prompt 11 measures the rate; the user chooses the print policy. |
 | `[00-consumer-anchoring-floor]` | GkTk-remedial | `PrimitivePhase` reduces $k\Delta\tau$ against a global anchor, so `theta_mod_2pi` carries the $\varepsilon k\tau$ floor ($9\times10^{-4}$ rad at $k=3\times10^8$). Per-region anchoring is the follow-up. |
 | `[00-transfer-remedial-test-file-overlap]` | GkTk-remedial | Prompt 10 edits stand-in fixtures in `test_tk_source_functions.py`/`test_phase_groups.py`; `transfer-remedial` 08 edits tolerances in the same files. **Decided 2026-09-10:** Workstreams A–C, E run in parallel; D waits for the `transfer-remedial` merge. |
-| `[01-offgrid-accessor-cost-on-qcd]` | GkTk-remedial | The interval accessor costs 102 µs on `QCD_Cosmology` with both endpoints off-grid, above README §4.3's 50 µs stop threshold. **Narrowed by prompt 03:** the shipped accessor is 52 µs both-off-grid, 26 µs one-off-grid, 0.33 µs on-grid (the production case). Closes when prompt 09 confirms its evaluation pattern is on-grid. |
+| `[01-offgrid-accessor-cost-on-qcd]` | GkTk-remedial | The interval accessor costs 102 µs on `QCD_Cosmology` with both endpoints off-grid, above README §4.3's 50 µs stop threshold. **Narrowed by prompt 03:** the shipped accessor is 52 µs both-off-grid, 26 µs one-off-grid, 0.33 µs on-grid (the production case). **Narrowed by prompt 06:** the producers only ever pair the off-grid anchor with an on-grid sample — 464 partial evaluations inside a 0.031 s object. Closes when prompt 09 confirms its evaluation pattern is on-grid. |
 
 ---
 
@@ -108,6 +109,8 @@ No action defined. These are floors on what a test may *assert*, not on what the
 | `[03-qcd-short-baseline-reference-endpoint-rounding]` | GkTk-remedial | The QCD short-baseline references in `wkb_reference_data.json` integrate between rounded `log1p(z)` endpoints and carry up to ulp(u)/W ≈ 1e-13 relative on the 37 % fractions; the shipped table agrees with an exact-endpoint `quad` to ≤ 8.8e-16. Assert README §6's 1e-13 for QCD short baselines, not the JSON's self-agreement. |
 | `[03-integrationsolver-stepping-minimum-lookup]` | GkTk-remedial | `IntegrationSolver` lookups match `stepping >= requested`; harmless while every table is order 4, but a second Gauss order under the label `cumulative-GL` could be served by the other order's row. |
 | `[04-background-rhs-evaluations-count]` | GkTk-remedial | `compute_background` builds three tables but `IntegrationData` has one counter, which prompt 03's test pins to the $\tau$ table alone; the other two counts are payload keys, so the persisted `RHS_evaluations` understates the build 3×. |
+| `[06-metadata-column-headroom]` | GkTk-remedial | The WKB integrations' `metadata` column is `String(256)`; the new payload's JSON is 206–233 characters. SQLite does not enforce it, PostgreSQL would. Count before adding a key. |
+| `[06-docs-scripts-reference-removed-ode]` | GkTk-remedial | Seven `docs/` reproduction scripts import the phase ODE (`integrate_phase_function`, `stage_*_evolution`, `DEFAULT_OMEGA_WKB_SQ_MAX`) that prompt 06 removed; they documented the tree they ran on and were not edited. |
 
 ---
 

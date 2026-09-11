@@ -2,7 +2,7 @@
 
 **Campaign:** [`README.md`](README.md) · **Source review:** [`docs/gk-wkb-review-fable-2026-09-09.md`](../../docs/gk-wkb-review-fable-2026-09-09.md) · **Reconciliation:** [`RECONCILIATION.md`](RECONCILIATION.md)
 **Baseline commit:** `9ff59d5` (`main`, clean)
-**Last updated:** 2026-09-11 — prompt 05 landed (the phase residual as a per-`k` `CumulativeTable`, and the leading/correction split of the two `*_omegaEff_sq` modules; the stored `omega_WKB_sq` is bit-unchanged).
+**Last updated:** 2026-09-11 — prompt 06 landed (the Green's-function WKB phase is now $-[k\,\Delta\tau+\Delta\rho]$ from the tables: the two-stage phase ODE, the `Q` variable, the resets, the sign fix and the cross-sample rebase are gone; stored phases at the floor, 0.03 s per object at $k=3\times10^8$ against 63.7 s; `TkWKBIntegration.compute()` switched, its `store()` awaits 07).
 
 > **Maintenance rule.** Every prompt updates this file *in its own commit*, before committing.
 > Set your row's status, fill in the commit SHA, model and log link, update the mechanism-level
@@ -35,7 +35,7 @@ Legend: ⬜ not started · 🟡 in flight · ✅ complete · ⚠️ complete wit
 | # | Prompt | Covers | Model | Status | Commit | Log |
 |---|---|---|---|---|---|---|
 | 05 | [Phase residual](05-phase-residual.md) | review §6, §12.2, §12.4 | Opus | ⚠️ | *"Add the WKB phase residual as a per-k table"* (SHA not embedded, per the campaign convention) | [`logs/05-phase-residual.md`](logs/05-phase-residual.md) |
-| 06 | [Gk WKB phase from the primitive](06-gk-wkb-phase-from-primitive.md) | review §2–§4, §8, §13.4 | **Fable** | ⬜ | | |
+| 06 | [Gk WKB phase from the primitive](06-gk-wkb-phase-from-primitive.md) | review §2–§4, §8, §13.4 | **Fable** | ⚠️ | *"Compute the Green function WKB phase from the conformal-time table"* (SHA not embedded, per the campaign convention) | [`logs/06-gk-wkb-phase-from-primitive.md`](logs/06-gk-wkb-phase-from-primitive.md) |
 | 07 | [Tk WKB phase from the primitive](07-tk-wkb-phase-from-primitive.md) | review §12.1–§12.4 | Opus | ⬜ | | |
 
 ### Workstream D — the consumers
@@ -59,7 +59,7 @@ Legend: ⬜ not started · 🟡 in flight · ✅ complete · ⚠️ complete wit
 |---|---|---|---|---|---|---|
 | 13 | [Verification and docs](13-verification-and-docs.md) | review §4, §12.3, §13.5 | Opus | ⬜ | | |
 
-**Progress:** 5 / 13 complete.
+**Progress:** 6 / 13 complete.
 
 ---
 
@@ -70,22 +70,22 @@ campaign; the review section is the authority on each.
 
 | ID | Severity | Description | Prompt | Status |
 |---|---|---|---|---|
-| M1 | **DEFECT, accuracy** | Two-stage phase solver: error is a fixed fraction of the *accumulated* phase; 13.9 rad ($k=10^5$) and 7366 rad ($3\times10^8$) at $z=0.1$ on the real background (§2, §4) | 06 | ⬜ |
-| M2 | **DEFECT, accuracy** | The $Q$ variable is not "close to unity" ($-224$…$-11069$); the tolerance protects the wrong quantity; DOP853 dense output amplified by $\omega_i(1+u)$ — 0.33 rad on a linear phase (§3) | 06 | ⬜ |
-| M3 | **DEFECT, cost** | Stage 1 cost ∝ span: $2.5\times10^6$ RHS evaluations, 63.7 s per object at $k=3\times10^8$; ~13 CPU-hours per $k$ (§4) | 06 | ⬜ |
+| M1 | **DEFECT, accuracy** | Two-stage phase solver: error is a fixed fraction of the *accumulated* phase; 13.9 rad ($k=10^5$) and 7366 rad ($3\times10^8$) at $z=0.1$ on the real background (§2, §4) | 06 | ✅ the ODE is gone; $\theta=-[k\,\Delta\tau+\Delta\rho]$ from the tables. LambdaCDM $k=10^5$: 1.19e-7 rad against prompt 01's references (target 1e-5); $k=3\times10^8$: 9.77e-4 rad = one ulp of $4\times10^{12}$ rad, the representation floor (target 5e-3); QCD $3\times10^8$: 9.77e-4 (log 06) |
+| M2 | **DEFECT, accuracy** | The $Q$ variable is not "close to unity" ($-224$…$-11069$); the tolerance protects the wrong quantity; DOP853 dense output amplified by $\omega_i(1+u)$ — 0.33 rad on a linear phase (§3) | 06 | ✅ no $Q$, no dense output, no tolerances: `WKB_phase_function` has no `atol`/`rtol`. Radiation control $10^7$ rad span: 3.7e-9 rad (ODE 9.7e-3); $10^9$ rad: 3.6e-7 (ODE 0.98) |
+| M3 | **DEFECT, cost** | Stage 1 cost ∝ span: $2.5\times10^6$ RHS evaluations, 63.7 s per object at $k=3\times10^8$; ~13 CPU-hours per $k$ (§4) | 06 | ✅ **0.031 s and 6,000 integrand evaluations** per object at $k=3\times10^8$ on LambdaCDM over the full response grid (target 0.05 s); 92 % of it is the per-object residual-table build, `[06-residual-table-per-object]` |
 | M4 | **DEFECT, accuracy** | `functions.tau` is a cubic spline of RK45 nodes: $1.4\times10^{-9}$ relative, ~2 rad of *oracle* phase error at $k=10^5$ in `compute_analytic_G/T` and `QuadSourceIntegral`'s η-limits (§7, §13.2) | 03 | ✅ 3.8e-16 relative at the LambdaCDM nodes; the retired accessor measured 3.08 rad off at $k=10^5$ (log 03) |
 | M5 | **REQUIREMENT** | Double-double node table and an interval accessor `tau.delta`; a pointwise accessor carries the $\varepsilon\tau$ floor ($9\times10^{-4}$ rad at $3\times10^8$) on short baselines (§13.3) | 03 | ✅ `CumulativeTable` + `TablePrimitive`; one-interval Δτ ≤ 2.5e-16 (LambdaCDM), ≤ 9.4e-15 (QCD) relative |
 | M6 | **REQUIREMENT** | Persist the low-order limb (`tau_lo_Mpc`, …); regeneration attached (§13.2; README §7 D1) | 03, 04 | ✅ `tau_lo_Mpc` (03) and `cs_tau_Mpc`, `cs_tau_lo_Mpc`, `friction_F` (04); the factory refuses a datastore lacking any of the four by name |
 | M7 | **REQUIREMENT** | Sound-horizon table $\tau_s$ and friction table $F$ per model; the friction ODE ($2.3$–$4.1\times10^{-7}$ relative error) goes (§12.2, §12.7) | 04, 07 | ⚠️ 04 built both tables (LambdaCDM $\tau_s$ 2.5e-16, $F$ 3.3e-16 relative at the checkpoints; QCD 2.1e-14 / 3.3e-16) and measured the ODE it replaces at 2.261e-07 absolute in $F$; **07 still has to switch `TkWKBIntegration` onto them** and delete `friction_RHS` |
 | M8 | **REQUIREMENT** | The residual $\rho$ carried explicitly: $\le1.5\times10^{-3}$ rad for $G_k$ on QCD, $\approx-0.09$ rad for $T_k$; formed without subtraction (§6, §12.2) | 05 | ✅ `ComputeTargets/phase_residual.py`: `build_phase_residual(model, k, z_nodes, sector, order)` → `CumulativeTable`; the correction comes from `*_omegaEff_sq_correction`, never from a subtraction. Worst 3.61e-16 rad against prompt 01's references over all twelve (model, sector, $k$) cases; $\rho_G$ bit-exactly zero in radiation; $\rho_T$ = −0.086 (LambdaCDM) to −0.093 (QCD) |
 | M9 | **REQUIREMENT** | Gauss orders decided by measurement on `QCD_Cosmology` across its spline knots; adaptive fallback for $\rho$ alone if needed (§11) | 02, 05 | ✅ 02 fixed all four orders at **4** with no adaptive fallback, but only under **break-point subdivision** on QCD; 05 consumes it — `RHO_GAUSS_ORDER = 4`, `RHO_ADAPTIVE_FALLBACK_REQUIRED = False`, and `build_phase_residual` applies the subdivision itself (1.22–1.23× the evaluations of `order × intervals` on QCD, exactly `order × intervals` on LambdaCDM) |
-| M10 | **DEFECT, dead logic** | `sin_coeff` sign fix is provably always $+1$ (§8.1) | 06, 07 | ⬜ |
-| M11 | **DEFECT, consistency** | `shift_theta_sample` rebases `div_2pi` to the first sample, producing ±1-cycle offsets between objects (§8.1, §8.3) | 06, 07 | ⬜ |
-| M12 | **DEFECT, hygiene** | Zero-length check compares a redshift to `atol`; 1-element array into `math.fmod` (NumPy deprecation); stale comments at `:262-264`, `:403` (§8.2) | 06 | ⬜ |
+| M10 | **DEFECT, dead logic** | `sin_coeff` sign fix is provably always $+1$ (§8.1) | 06, 07 | ⚠️ 06 deleted it from `GkWKBIntegration.store()` (`sin_coeff = B`); 206 $(G,G')$ cases incl. $G=0$, $G<0$ confirm the factor was $+1$ and $B>0$ reproduces the initial data to 3e-16. **07 deletes the copy in `TkWKBIntegration.store()`** |
+| M11 | **DEFECT, consistency** | `shift_theta_sample` rebases `div_2pi` to the first sample, producing ±1-cycle offsets between objects (§8.1, §8.3) | 06, 07 | ⚠️ 06 added `WKBtools.apply_phase_offset` (per-sample wrap, no rebase) and switched `GkWKBIntegration.store()` to it; 990-object sweep: 0 rebase offsets, cycle steps only at stop-point transitions (90 = 90); the old helper would have rebased 180 (= the review's 60 of 330). **`TkWKBIntegration.store()` still calls `shift_theta_sample` until 07** |
+| M12 | **DEFECT, hygiene** | Zero-length check compares a redshift to `atol`; 1-element array into `math.fmod` (NumPy deprecation); stale comments at `:262-264`, `:403` (§8.2) | 06 | ✅ exact test `len(z_sample) == 1 and z_sample[0] == z_init`; the `fmod` path and both comments went with the ODE; `Quadrature/supervisors/WKB.py` deleted |
 | M13 | **DEFECT, accuracy + trap** | `phase_spline` chunking: no interpolation benefit, ordinates 64× inflated, knot residuals 30–50× worse, $1.4\times10^{-4}$ rad switch discontinuity, no progress guard for `logstep<2` (§5) | 08 | ⬜ |
 | M14 | **DEFECT, accuracy** | Consumers spline the growing phase: $h^4x/384$, $O(1)$–$O(10)$ rad at production $x$ (§5, §12.6). Same term as `source-remediation`'s `[12-phase-spline-error-grows-with-x]` | 09, 10 | ⬜ |
 | M15 | **REQUIREMENT** | `PrimitivePhase`: $\theta=-k\Delta\tau+\varphi$ with the `phase_spline` protocol; closed-form $\theta'$; global anchor with the recorded floor (§7, §13.3, §13.4) | 09 | ⬜ |
-| M16 | **REQUIREMENT** | The `GkSource` rectifier is retained and verified inert on pure-WKB objects, correct on $\delta$-wraps (§8.3; `RECONCILIATION.md` §2 item 6) | 06, 09 | ⬜ |
+| M16 | **REQUIREMENT** | The `GkSource` rectifier is retained and verified inert on pure-WKB objects, correct on $\delta$-wraps (§8.3; `RECONCILIATION.md` §2 item 6) | 06, 09 | ⚠️ 06 did not touch the rectifier and documented what it must repair: in the production geometry (stop at a maximum, $\delta=+\pi/2$) the stored cycle count steps by $+1$ exactly where the stop point moves to the next maximum — 90 steps in 990 objects; $k=10^7$, $x_r=10^3$: between $z_s=316700\to324331$ and $401839\to411522$ (log 06). **09 verifies the rectifier on these** |
 | M17 | **DEFECT, cost** | Per-RHS `*_omegaEff_sq` diagnostic: 45 % of the numeric run; the warning it feeds is live and must be preserved (§10.2, §13.1) | 11 | ⬜ |
 | M18 | **DEFECT, units** | `delta_logz` supplied as $\Delta\log_{10}$, used as $\Delta\ln$; and the $G_k$ run is sampled on the response grid, not the source grid the value describes (§10.2, §13.1; `RECONCILIATION.md` §1 item 9) | 11 | ⬜ |
 | M19 | **DEFECT, dead path** | `mode.lower()` before the `None` check (§10.2) | 11 | ⬜ |
@@ -148,6 +148,12 @@ Opened by the planning pass, 2026-09-10, before any prompt runs.
   52.0 µs both off-grid** on `QCD_Cosmology` (LambdaCDM 0.44 / 4.6 / 6.6 µs), 20,000 calls, best
   of 3 (log 03). Both-off-grid is still marginally above the 50 µs line; the cost is four
   `QCD_Cosmology.Hubble` evaluations at 7.35 µs each per off-grid endpoint.
+  **Narrowed by prompt 06 (2026-09-11):** the producers never evaluate both-off-grid. The
+  anchor $z_{\rm init}$ is the only off-grid endpoint and it is paired with an on-grid sample,
+  once per sample: 464 partial evaluations (4 × 116 samples) inside a 0.031 s object at
+  $k=3\times10^8$ on LambdaCDM; at most ~1,160 samples per `TkWKBIntegration` object on the
+  source grid, i.e. $\le$ 30 ms on `QCD_Cosmology` at log 03's 26 µs. The residual table is
+  built with $z_{\rm init}$ as a node and needs no partial. Still closes with prompt 09.
 
 - **[01-lambdacdm-hubble-rounding-floor]** *(opened by prompt 01, 2026-09-10; inert)* — the
   double-precision evaluation of `LambdaCDM.Hubble` carries 2–9e-15 relative near $z=1$–$10^6$,
@@ -249,6 +255,38 @@ Opened by the planning pass, 2026-09-10, before any prompt runs.
   of `BackgroundModel` understates the build by 3×; anyone reading it as the job's cost is
   misled. **Next step:** if the aggregate is wanted, relax that one assertion in
   `test_background_tau.py` and sum the three counters — a two-line change in its own commit.
+
+- **[06-residual-table-per-object]** *(opened by prompt 06, 2026-09-11)* — `WKB_phase_function`
+  builds the residual table `build_phase_residual(model, k, nodes, sector)` on every call,
+  although it depends only on `(model, k, sector)` (and on the anchor only through its top
+  node). Per object: 5,536 of the 6,000 integrand evaluations and ~92 % of the 0.031 s at
+  $k=3\times10^8$ on LambdaCDM; 5–7k evaluations and 82–255 ms on `QCD_Cosmology` (log 05),
+  times ~1,700 source redshifts per $k$ — roughly 0.5 min (LambdaCDM) to 4 h (QCD) of residual
+  rebuilds per model per run, against the ODE's 13 CPU-hours per $k$. **Impact:** the dominant
+  cost of the new producers; prompt 13's timing of the scoped pipeline run. **Next step:** if it
+  matters, memoise the table per `(model, k, sector)` — in the Ray worker, or built once next to
+  the background model — and pass it in; a table anchored at the grid node above $z_{\rm init}$
+  with one partial per call would serve every object of that $k$. Not a correctness issue.
+
+- **[06-metadata-column-headroom]** *(opened by prompt 06, 2026-09-11; inert)* — the
+  `GkWKBIntegration`/`TkWKBIntegration` `metadata` column is `sqla.String(DEFAULT_STRING_LENGTH)`
+  = `String(256)` and holds `json.dumps(obj.metadata)`. The new payload's metadata is **206
+  characters** (233 with `initial_data_only`), leaving 23–50. SQLite does not enforce the
+  length; PostgreSQL would truncate or refuse. **Impact:** anyone adding a metadata key (prompt
+  07's friction bookkeeping is the candidate). **Next step:** count before adding; or widen the
+  column in a schema-touching commit.
+
+- **[06-docs-scripts-reference-removed-ode]** *(opened by prompt 06, 2026-09-11; inert)* — the
+  reproduction scripts `docs/gk-wkb-review-fable-2026-09-09/{t2_solver,t4b_production_real,
+  t7_jitter,t9_warn}.py`, `docs/gktk-remedial/baseline_k1e5.py` and
+  `docs/gk-wkb-review-astra-pathfinder-2026-09-08/{measure,alternatives}.py` import
+  `integrate_phase_function`, `stage_1_evolution`, `stage_2_evolution` or
+  `DEFAULT_OMEGA_WKB_SQ_MAX`, none of which exists after prompt 06. They measured the tree they
+  ran on and the documents they support are correct for it; they were not edited (README §5
+  "verification documents are additive"). **Impact:** anyone re-running them gets an
+  `ImportError`/`AttributeError` rather than the old ODE. **Next step:** none; a dated note in
+  the two review folders' READMEs if someone trips over it. `t6_sweep.py` and
+  `GK_05_phase_reassembly.py` still run (D7).
 
 > Add an entry here whenever a prompt finishes with something unresolved: a verification step that
 > could not be run, an assumption that could not be confirmed, a deviation a later prompt has to

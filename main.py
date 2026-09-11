@@ -2817,6 +2817,7 @@ with ShardedPool(
         solve_ivp_BDF,
         solve_icp_LSODA,
         cumulative_GL_tau,
+        wkb_primitive_phase,
     ) = ray.get(
         [
             pool.object_get("IntegrationSolver", label="solve_ivp+RK45", stepping=0),
@@ -2831,6 +2832,15 @@ with ShardedPool(
                 label=BackgroundModel.TAU_SOLVER_LABEL_BASE,
                 stepping=BackgroundModel.TAU_GAUSS_ORDER,
             ),
+            # the WKB phase evaluated from those tables plus a per-k residual table
+            # (prompts/GkTk-remedial, prompt 06); "stepping" carries the residual's Gauss
+            # order. GkWKBIntegration and TkWKBIntegration record their phase (and friction)
+            # under this label.
+            pool.object_get(
+                "IntegrationSolver",
+                label=GkWKBIntegration.PHASE_SOLVER_LABEL_BASE,
+                stepping=GkWKBIntegration.PHASE_SOLVER_STEPPING,
+            ),
         ]
     )
     solvers = {
@@ -2840,6 +2850,7 @@ with ShardedPool(
         "solve_ivp+BDF-stepping0": solve_ivp_BDF,
         "solve_ivp+LSODA-stepping0": solve_icp_LSODA,
         BackgroundModel.TAU_SOLVER_LABEL: cumulative_GL_tau,
+        GkWKBIntegration.PHASE_SOLVER_LABEL: wkb_primitive_phase,
     }
 
     # create GkSource policies that we will apply later
