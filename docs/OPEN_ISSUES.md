@@ -64,14 +64,14 @@ they now pass `BesselPhaseGroup.levin_theta()`.
 ### 1.4 The $T_k$ / $G_k$ numerical-precision campaign
 
 Now running as [`prompts/GkTk-remedial/`](../prompts/GkTk-remedial/README.md) (2026-09-10; 13
-prompts, 6 executed). `[07-phase-spline-chunking-precision]` was closed WONTFIX on the
+prompts plus a follow-up, 6 executed). `[07-phase-spline-chunking-precision]` was closed WONTFIX on the
 expectation that this campaign **removes** the chunked splines — its prompt 08 does; if that plan
 changes, reopen it.
 
 | Issue | Board | Hook |
 |---|---|---|
 | `[12-phase-spline-error-grows-with-x]` | source-remediation | Stored-phase re-spline error $\simeq h^4x/384$, growing **linearly in $x$**; ~1 % of envelope extrapolated to production. **Reassigned here from §1.1** (2026-09-10): the campaign's prompts 09–10 evaluate the leading term from a table and spline only the residual. |
-| `[06-residual-table-per-object]` | GkTk-remedial | `WKB_phase_function` rebuilds the per-$k$ residual table on every object: 92 % of the new producer's 0.031 s at $k=3\times10^8$ (LambdaCDM), 82–255 ms per object on QCD. Noise against the ODE's 13 CPU-hours per $k$; memoise per `(model, k, sector)` if prompt 13's timing says so. |
+| `[06-residual-table-per-object]` | GkTk-remedial | `WKB_phase_function` rebuilds the per-$k$ residual table on every object: 92 % of the new producer's 0.031 s at $k=3\times10^8$ (LambdaCDM), 82–255 ms per object on QCD. Noise against the ODE's 13 CPU-hours per $k$, but the dominant remaining cost. **Prompt 14** (written 2026-09-11) memoises per `(model, k, sector)`; it runs between 06 and 07. |
 | `[00-unresolved-osc-print-policy]` | GkTk-remedial | With its units fixed and evaluated on the caller's actual grid, `has_unresolved_osc` will fire on essentially every $G_k$ numeric object. Prompt 11 measures the rate; the user chooses the print policy. |
 | `[00-consumer-anchoring-floor]` | GkTk-remedial | `PrimitivePhase` reduces $k\Delta\tau$ against a global anchor, so `theta_mod_2pi` carries the $\varepsilon k\tau$ floor ($9\times10^{-4}$ rad at $k=3\times10^8$). Per-region anchoring is the follow-up. |
 | `[00-transfer-remedial-test-file-overlap]` | GkTk-remedial | Prompt 10 edits stand-in fixtures in `test_tk_source_functions.py`/`test_phase_groups.py`; `transfer-remedial` 08 edits tolerances in the same files. **Decided 2026-09-10:** Workstreams A–C, E run in parallel; D waits for the `transfer-remedial` merge. |

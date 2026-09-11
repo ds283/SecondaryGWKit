@@ -2,7 +2,7 @@
 
 **Campaign:** [`README.md`](README.md) · **Source review:** [`docs/gk-wkb-review-fable-2026-09-09.md`](../../docs/gk-wkb-review-fable-2026-09-09.md) · **Reconciliation:** [`RECONCILIATION.md`](RECONCILIATION.md)
 **Baseline commit:** `9ff59d5` (`main`, clean)
-**Last updated:** 2026-09-11 — prompt 06 landed (the Green's-function WKB phase is now $-[k\,\Delta\tau+\Delta\rho]$ from the tables: the two-stage phase ODE, the `Q` variable, the resets, the sign fix and the cross-sample rebase are gone; stored phases at the floor, 0.03 s per object at $k=3\times10^8$ against 63.7 s; `TkWKBIntegration.compute()` switched, its `store()` awaits 07).
+**Last updated:** 2026-09-11 — prompt 14 added (build the residual once per $(model, k, sector)$; runs between 06 and 07). Prompt 06 landed (the Green's-function WKB phase is now $-[k\,\Delta\tau+\Delta\rho]$ from the tables: the two-stage phase ODE, the `Q` variable, the resets, the sign fix and the cross-sample rebase are gone; stored phases at the floor, 0.03 s per object at $k=3\times10^8$ against 63.7 s; `TkWKBIntegration.compute()` switched, its `store()` awaits 07).
 
 > **Maintenance rule.** Every prompt updates this file *in its own commit*, before committing.
 > Set your row's status, fill in the commit SHA, model and log link, update the mechanism-level
@@ -36,7 +36,12 @@ Legend: ⬜ not started · 🟡 in flight · ✅ complete · ⚠️ complete wit
 |---|---|---|---|---|---|---|
 | 05 | [Phase residual](05-phase-residual.md) | review §6, §12.2, §12.4 | Opus | ⚠️ | *"Add the WKB phase residual as a per-k table"* (SHA not embedded, per the campaign convention) | [`logs/05-phase-residual.md`](logs/05-phase-residual.md) |
 | 06 | [Gk WKB phase from the primitive](06-gk-wkb-phase-from-primitive.md) | review §2–§4, §8, §13.4 | **Fable** | ⚠️ | *"Compute the Green function WKB phase from the conformal-time table"* (SHA not embedded, per the campaign convention) | [`logs/06-gk-wkb-phase-from-primitive.md`](logs/06-gk-wkb-phase-from-primitive.md) |
+| 14 | [Residual table reuse](14-residual-table-reuse.md) | §3 `[06-residual-table-per-object]` | Opus | ⬜ | | |
 | 07 | [Tk WKB phase from the primitive](07-tk-wkb-phase-from-primitive.md) | review §12.1–§12.4 | Opus | ⬜ | | |
+
+> Row 14 is numbered last because the campaign's numbers are append-only, but it **runs
+> between 06 and 07**: it removes the per-object residual-table build that 06 introduced,
+> and 07 inherits the same producer.
 
 ### Workstream D — the consumers
 
@@ -59,7 +64,7 @@ Legend: ⬜ not started · 🟡 in flight · ✅ complete · ⚠️ complete wit
 |---|---|---|---|---|---|---|
 | 13 | [Verification and docs](13-verification-and-docs.md) | review §4, §12.3, §13.5 | Opus | ⬜ | | |
 
-**Progress:** 6 / 13 complete.
+**Progress:** 6 / 14 complete.
 
 ---
 
@@ -263,10 +268,12 @@ Opened by the planning pass, 2026-09-10, before any prompt runs.
   $k=3\times10^8$ on LambdaCDM; 5–7k evaluations and 82–255 ms on `QCD_Cosmology` (log 05),
   times ~1,700 source redshifts per $k$ — roughly 0.5 min (LambdaCDM) to 4 h (QCD) of residual
   rebuilds per model per run, against the ODE's 13 CPU-hours per $k$. **Impact:** the dominant
-  cost of the new producers; prompt 13's timing of the scoped pipeline run. **Next step:** if it
-  matters, memoise the table per `(model, k, sector)` — in the Ray worker, or built once next to
-  the background model — and pass it in; a table anchored at the grid node above $z_{\rm init}$
-  with one partial per call would serve every object of that $k$. Not a correctness issue.
+  cost of the new producers; prompt 13's timing of the scoped pipeline run.
+  **Next step:** [prompt 14](14-residual-table-reuse.md), written 2026-09-11 and scheduled
+  to run between 06 and 07 — memoise the table per `(model, k, sector)` in the Ray worker,
+  anchored on the background grid rather than on the object's $z_{\rm init}$, so one table
+  serves every object of that $k$ and the anchor is reached through `delta`'s off-grid
+  partial. Not a correctness issue.
 
 - **[06-metadata-column-headroom]** *(opened by prompt 06, 2026-09-11; inert)* — the
   `GkWKBIntegration`/`TkWKBIntegration` `metadata` column is `sqla.String(DEFAULT_STRING_LENGTH)`
