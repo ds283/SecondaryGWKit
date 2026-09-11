@@ -100,9 +100,23 @@ Exact radiation, closed-form `tau` accessor (a `CumulativeTable` on the producti
 $f=1/H$), $\varphi\equiv0$ samples, $k=10^8$, $z_s\in[10,10^4]$ at fixed $z_r=0.1$:
 
 1. `raw_theta` vs $\theta=k(1/s_r-1/s_s)$... (fix the sign against README §2 (c)): max error at
-   10 points per interval $\le10^{-8}$ rad **against $8.26\times10^{-3}$ for the `phase_spline`
-   of the same samples** (prompt 08's test 1 geometry, scaled to $k=10^8$ — build both and assert
-   the ratio $>10^5$). This is README §6's consumer row.
+   10 points per interval $\le10^{-6}$ rad — README §6's consumer row — **and $\le6$ ulp of the
+   span**, against $8.26\times10^{-3}$ for the `phase_spline` of the same samples (prompt 08's
+   test 1 geometry, scaled to $k=10^8$ — build both and assert the ratio $>10^5$).
+
+   > **Threshold corrected 2026-09-11, after the prompt ran.** This item originally asked for
+   > $\le10^{-8}$ rad. On this geometry $|\theta|$ reaches $9.09\times10^7$ rad, so one ulp is
+   > $1.49\times10^{-8}$ rad and the $\varepsilon k\tau$ floor (README §2 (d)) is
+   > $2.02\times10^{-8}$ rad: the stated threshold was **0.67 ulp** of the quantity it measures,
+   > and asserting it would be the error `IMPLEMENTATION_STATE.md` §5 note 2 names. The $10^{-8}$
+   > came from two places where it *is* reachable — prompt 08's test 1 is the same $z_s$ band at
+   > $k=10^6$ (86 ulp), and README §6's prompt-06 radiation control is at a $10^7$ rad span
+   > (5.4 ulp) — and the $k$ was scaled to $10^8$ here to reproduce the review's
+   > $8.26\times10^{-3}$ rad `phase_spline` figure while the tolerance was not. Prompt 09
+   > measured $4.189\times10^{-8}$ rad = 2.81 ulp and asserted the two bounds above instead;
+   > the 6-ulp bound is the load-bearing one, since it pins the result to the representation
+   > floor where $10^{-6}$ rad would not catch a regression. See
+   > `[09-consumer-threshold-below-representation-floor]` and log 09 deviation 1.
 2. `theta_deriv` (both `log_derivative` values) vs the closed form to $10^{-12}$ relative.
 3. `theta_mod_2pi ∈ (-2π, 0]` and equals `WKB_mod_2pi(raw_theta)`.
 4. With a non-zero smooth $\varphi$ (e.g. $\varphi=0.3\sin(u)$ sampled on the grid): recovered to

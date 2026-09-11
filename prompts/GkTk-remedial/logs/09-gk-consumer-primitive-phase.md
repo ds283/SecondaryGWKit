@@ -374,6 +374,56 @@ that prompt 09 reads ✅/⚠️ rather than blocked, and whether prompt 10 shoul
 threshold before it is dispatched — prompt 10's §4 numbers were written by the same hand and may
 carry the same defect.
 
+### Addendum, 2026-09-11 (second) — the stop is lifted
+
+The user commissioned an independent review of this prompt from Claude Fable 5.1 rather than ruling
+on the threshold directly. It is filed verbatim at
+[`../reviews/09-prompt-09-review-fable.md`](../reviews/09-prompt-09-review-fable.md) and its verdict
+is **accept**: "The implementation does not require improvement. The one missed number — prompt §4
+test 1's ≤1e-8 rad — is a defect in the prompt text, not in the code."
+
+What the review adds that neither the implementing agent nor the orchestrator had:
+
+- **The 2.81 ulp is accounted for.** Over 2,890 interior points, `TablePrimitive.delta`'s *double*
+  return carries up to 4.0e-16 relative error — the table, the off-grid Gauss partial and the
+  hi+lo→double rounding together — contributing **2.39 ulp** once multiplied by $k$; the product
+  `k*delta` adds **0.50 ulp**. Total budget 2.86 ulp, against 2.81 ulp shipped. The representation
+  is at its floor, and the floor is understood rather than merely asserted.
+- **"Unreachable in double precision" was a slight overstatement.** A correctly-rounded double
+  result would be 0.5 ulp = 7.45e-9 rad and *would* pass 1e-8 rad. Reaching it would need `delta`
+  to return a double-double and `PrimitivePhase` to form the product with a compensated
+  (Dekker/FMA) multiply — a change to `BackgroundModel.py`, prompt 03's file and not in prompt 09's
+  allowed list, chasing a number below the campaign's own $\varepsilon k\tau = 2.0\times10^{-8}$ rad
+  floor that §5 note 2 forbids targeting. The conclusion stands; the wording is corrected here.
+- **The defect's origin.** Prompt 08's test 1 is the same $z_s$ band at $k=10^6$, where 1e-8 rad is
+  86 ulp, and README §6's prompt-06 radiation control is at a $10^7$ rad span, where it is 5.4 ulp.
+  Both make 1e-8 look right. Prompt 09 scaled $k$ by 100 to reproduce the review's
+  $8.26\times10^{-3}$ rad `phase_spline` figure and did not scale the tolerance.
+- **The substituted assertion is endorsed**, with the 6-ulp bound named as the load-bearing half:
+  it pins the result to the representation floor where the 1e-6 rad bound would not catch a
+  regression.
+
+Every other item was re-verified independently by the reviewer and agreed: §2, §3 and §4 item by
+item, all seven deviation tags, the 26 tests, the 249-test suite, the untouched protocol files, the
+`black` and grep checks. Its three non-blocking observations are recorded under "Observations not
+acted on" below.
+
+**Actions taken by the orchestrator on this verdict**, in the commit that adds this addendum:
+
+1. Prompt 09 §4 test 1's threshold text corrected in place to $\le10^{-6}$ rad plus $\le6$ ulp,
+   with a dated block recording what it said before and why. **No code changed** — the shipped test
+   already asserts exactly these bounds.
+2. `[09-consumer-threshold-below-representation-floor]` moved to §4 (Resolved) with the review's
+   error decomposition, and its row deleted from `docs/OPEN_ISSUES.md` (49 → 48).
+3. The review filed under `prompts/GkTk-remedial/reviews/`.
+4. **Row 09 stays ⚠️, not ✅.** The review's recommendation says "mark prompt 09 ✅", but the board's
+   own legend reads ✅ as "complete" and ⚠️ as "complete with deviations", and this log's **Result**
+   is `COMPLETE WITH DEVIATIONS` with seven deviations, two of them `STRUCTURALLY REQUIRED` —
+   correcting the prompt text retires the *first* of those but not the other six, and every earlier
+   row in this campaign that carries deviations is ⚠️. Reading the glyph as "accepted" would put the
+   row at odds with its own log. Workstream D's completion criterion is "rows 08–10 ✅/⚠️", which
+   ⚠️ meets, so nothing downstream turns on it.
+
 ## Observations not acted on
 
 1. **`[01-offgrid-accessor-cost-on-qcd]` is narrowed, not closed.** The issue's next step reads

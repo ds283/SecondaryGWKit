@@ -13,8 +13,12 @@ representation floor, not the method's error; $\varphi$ itself is recovered to 2
 `GkSource` rectifier is verified on a faithful copy: 90 of 990 swept objects carry a $+1$-cycle
 step at a stop-point transition, the rectifier repairs every one, and after it $\varphi$ is
 constant to 3.6e-12 rad; on pure-WKB objects it makes **zero** corrections. **Prompt 09 §4 test
-1's 1e-8 rad threshold is below the double-precision floor of its own geometry** and was replaced
-by README §6's 1e-6 rad plus a 6-ulp bound — `[09-consumer-threshold-below-representation-floor]`.)
+1's 1e-8 rad threshold is below the double-precision floor of its own geometry** — 0.67 ulp — and
+was replaced by README §6's 1e-6 rad plus a 6-ulp bound. The orchestrator stopped on that, per
+README §4.3; an independent Fable review
+([`reviews/09-prompt-09-review-fable.md`](reviews/09-prompt-09-review-fable.md)) accepted the
+implementation, confirmed the arithmetic and recommended amending the prompt text, which was done —
+`[09-consumer-threshold-below-representation-floor]` is **resolved** (§4).)
 Prompt 08 landed (`phase_spline` chunking is gone: one cubic spline
 over the whole sample, rebased at the sample's median `theta_div_2pi` rather than selected between
 several by a hard switch; `chunk_step`/`chunk_logstep`/`increasing` are accepted no-ops, so
@@ -442,23 +446,6 @@ Opened by the planning pass, 2026-09-10, before any prompt runs.
   **Next step:** unchanged for item 1; for item 2, apply the split in `WKB_phase_function` and —
   if prompt 10 anchors off-grid — inside `PrimitivePhase`.
 
-- **[09-consumer-threshold-below-representation-floor]** *(opened by prompt 09, 2026-09-11)* —
-  prompt 09 §4 `test_primitive_phase.py` test 1 asks for a consumer phase error $\le10^{-8}$ rad
-  on the geometry it names in the same sentence ($k=10^8$, $z_r=0.1$, $z_s\in[10,10^4]$, exact
-  radiation, 100/decade), and calls that "README §6's consumer row". It is not: README §6's row is
-  $\le10^{-6}$ rad, and $10^{-8}$ rad is **below the double-precision floor of the quantity being
-  asserted**. On that geometry $|\theta|$ reaches 9.0899e7 rad, one ulp of which is 1.490e-8 rad
-  and whose $\varepsilon k\tau$ floor is 2.019e-8 rad; the measured error is **4.189e-8 rad =
-  2.81 ulp**, and 3.681e-8 rad at the samples, where the spline contributes nothing. The prompt's
-  companion assertion — a ratio $>10^5$ against a `phase_spline` of the same samples — **passes as
-  written** at 1.739e5. Prompt 09 asserted README §6's $10^{-6}$ rad plus a floor-aware 6-ulp
-  bound instead, and said so in `test_primitive_phase.py`'s module docstring.
-  **Impact:** prompt 10, which should score its $T_k$ consumer against README §6 and not copy
-  09's number; prompt 13's verification document; and README §6's consumer row, whose "floor"
-  column already says $\varepsilon k\tau$ and is therefore consistent with the code and not with
-  the prompt. **Next step:** the user decides whether to correct prompt 09's §4 test 1 text;
-  nothing in the tree needs to change.
-
 > Add an entry here whenever a prompt finishes with something unresolved: a verification step that
 > could not be run, an assumption that could not be confirmed, a deviation a later prompt has to
 > work around, a measured cost that changes a later prompt's decision. Format:
@@ -471,6 +458,37 @@ Opened by the planning pass, 2026-09-10, before any prompt runs.
 ---
 
 ## 4. Resolved issues
+
+- **[09-consumer-threshold-below-representation-floor]** *(opened by prompt 09, 2026-09-11;
+  resolved by the orchestrator, 2026-09-11)* — prompt 09 §4 `test_primitive_phase.py` test 1 asked
+  for a consumer phase error $\le10^{-8}$ rad on the geometry it names in the same sentence
+  ($k=10^8$, $z_r=0.1$, $z_s\in[10,10^4]$, exact radiation, 100/decade), and called that
+  "README §6's consumer row". It is not: README §6's row is $\le10^{-6}$ rad, and $10^{-8}$ rad is
+  **below the double-precision floor of the quantity being asserted**. On that geometry $|\theta|$
+  reaches 9.0899e7 rad, one ulp of which is 1.490e-8 rad and whose $\varepsilon k\tau$ floor is
+  2.019e-8 rad, so the threshold was **0.67 ulp**. The measured error is **4.189e-8 rad = 2.81
+  ulp** (3.681e-8 rad at the samples, where the spline contributes nothing); the companion ratio
+  assertion passed as written at **1.739e5** against the required $10^5$. Prompt 09 asserted
+  README §6's $10^{-6}$ rad plus a floor-aware 6-ulp bound instead and said so in the module
+  docstring.
+
+  **Resolution.** An independent review by Claude Fable 5.1
+  ([`reviews/09-prompt-09-review-fable.md`](reviews/09-prompt-09-review-fable.md), commissioned by
+  the user after the orchestrator stopped) confirmed the arithmetic, decomposed the achieved
+  2.81 ulp into 2.39 ulp from `TablePrimitive.delta`'s double return and 0.50 ulp from the
+  `k*delta` product, and traced the defect's origin: prompt 08's test 1 is the same $z_s$ band at
+  $k=10^6$ (where $10^{-8}$ rad is 86 ulp) and README §6's prompt-06 radiation control is at a
+  $10^7$ rad span (5.4 ulp), so both sources make $10^{-8}$ look right; prompt 09 scaled the $k$
+  by 100 to reproduce the review's $8.26\times10^{-3}$ rad `phase_spline` figure and did not scale
+  the tolerance. Its verdict was **accept, amend the prompt text**. The review also notes that
+  "unreachable in double precision" overstates slightly — a correctly-rounded double would be
+  0.5 ulp — but reaching that needs `delta` to return a double-double and a compensated product,
+  which is prompt 03's file and would be chasing a number below the campaign's own declared
+  $\varepsilon k\tau$ floor (§5 note 2). **Prompt 09's §4 test 1 text was therefore corrected in
+  place**, with a dated note recording what it said before and why it changed. No code changed:
+  the shipped test already asserts the corrected bounds. See
+  [`logs/09-gk-consumer-primitive-phase.md`](logs/09-gk-consumer-primitive-phase.md) deviation 1
+  and its orchestrator addendum.
 
 - **[06-residual-table-per-object]** *(opened by prompt 06, 2026-09-11; resolved by prompt 14,
   2026-09-11)* — `WKB_phase_function` built the residual table on every call, although it depends
