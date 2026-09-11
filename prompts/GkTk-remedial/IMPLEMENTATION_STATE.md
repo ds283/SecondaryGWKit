@@ -98,6 +98,10 @@ Legend: ⬜ not started · 🟡 in flight · ✅ complete · ⚠️ complete wit
 | 08 | [`phase_spline` de-chunk](08-phase-spline-dechunk.md) | review §5 | Sonnet | ✅ | *"Drop the chunked phase spline in favour of one rebased spline"* (SHA not embedded, per the campaign convention) | [`logs/08-phase-spline-dechunk.md`](logs/08-phase-spline-dechunk.md) |
 | 09 | [Gk consumer on `PrimitivePhase`](09-gk-consumer-primitive-phase.md) | review §5, §7, §8.3, §13.3–§13.4 | **Fable** → Opus (Fable unavailable) | ⚠️ | *"Evaluate the Green function phase from the conformal-time table"* (SHA not embedded, per the campaign convention) | [`logs/09-gk-consumer-primitive-phase.md`](logs/09-gk-consumer-primitive-phase.md) |
 | 10 | [Tk consumer on the tables](10-tk-consumer-primitive-phase.md) | review §12.6, §12.7 | Opus | ⚠️ | *"Evaluate the transfer-function phase and friction from tables"* (SHA not embedded, per the campaign convention) | [`logs/10-tk-consumer-primitive-phase.md`](logs/10-tk-consumer-primitive-phase.md) |
+| 15 | [`PrimitivePhase` explicit rate](15-primitive-phase-explicit-rate.md) | §3 `[10-primitive-phase-leading-rate-is-hardcoded]` | Sonnet | ⬜ | | |
+
+> Row 15 is numbered last because the campaign's numbers are append-only, but it belongs to
+> Workstream D — see README §3.
 
 ### Workstream E — the numeric region
 
@@ -112,7 +116,7 @@ Legend: ⬜ not started · 🟡 in flight · ✅ complete · ⚠️ complete wit
 |---|---|---|---|---|---|---|
 | 13 | [Verification and docs](13-verification-and-docs.md) | review §4, §12.3, §13.5 | Opus | ⬜ | | |
 
-**Progress:** 11 / 14 complete.
+**Progress:** 11 / 15 complete.
 
 ---
 
@@ -291,7 +295,8 @@ Opened by the planning pass, 2026-09-10, before any prompt runs.
   **Impact:** anyone adding a third leading primitive, or reading `model_functions` off a
   `PrimitivePhase`; a silent factor-1.73 error in `theta_deriv` if a future caller passes the
   model's own `ModelFunctions`. **Next step:** give `PrimitivePhase` an explicit `rate` callable
-  (defaulting to `1/Hubble`) in its own commit, and drop the adapter.
+  (defaulting to `1/Hubble`) in its own commit, and drop the adapter. **Assigned (2026-09-11):
+  prompt 15**, dispatched ahead of Workstream E at the user's request.
 
 - **[10-transfer-remedial-tolerance-comments-stale]** *(opened by prompt 10, 2026-09-11)* — five
   tolerance comments in `ComputeTargets/tests/test_tk_source_functions.py` that

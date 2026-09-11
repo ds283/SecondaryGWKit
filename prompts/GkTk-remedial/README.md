@@ -265,6 +265,12 @@ review those three most closely.
 | 08 | [`08-phase-spline-dechunk.md`](08-phase-spline-dechunk.md) | review §5; fact (g) | `LiouvilleGreen/phase_spline.py`; new `LiouvilleGreen/tests/test_phase_spline.py` | Low–medium; deletion with a preserved signature and a first test module | **Sonnet** |
 | 09 | [`09-gk-consumer-primitive-phase.md`](09-gk-consumer-primitive-phase.md) | review §5, §7, §8.3, §13.3–§13.4; facts (c), (e), (g) | new `ComputeTargets/primitive_phase.py`; `ComputeTargets/GkSourcePolicyData.py`; tests | **High**; the $\varphi$ decomposition, the rectifier interplay, the protocol every Levin consumer relies on | **Fable** |
 | 10 | [`10-tk-consumer-primitive-phase.md`](10-tk-consumer-primitive-phase.md) | review §12.6, §12.7 | `ComputeTargets/TkSourceFunctions.py`; fixtures in `test_tk_source_functions.py`, `test_phase_groups.py` | Medium–high; also the campaign's one file-overlap with `transfer-remedial` (§4.2) | **Opus** |
+| 15 | [`15-primitive-phase-explicit-rate.md`](15-primitive-phase-explicit-rate.md) | §3 `[10-primitive-phase-leading-rate-is-hardcoded]` | `ComputeTargets/primitive_phase.py`, `ComputeTargets/TkSourceFunctions.py`; tests | Low–medium; a signature change with a frozen default-path call site | **Sonnet** |
+
+> Row 15 is numbered last because the campaign's numbers are append-only, but it belongs to
+> Workstream D: it depends on 09 and 10, and gives `PrimitivePhase` an explicit `rate` callable in
+> place of prompt 10's `_SoundHorizonRate` adapter. Dispatched ahead of Workstream E at the user's
+> request (2026-09-11), since Workstream E does not touch either file it edits.
 
 ### Workstream E — the numeric region (independent)
 
@@ -287,9 +293,9 @@ review those three most closely.
 A:  01 ─► 02 ─┐
 B:            └► 03 ─► 04 ─┐
 C:                         └► 05 ─► 06 ─► 07 ─┐
-D:  08 ────────────────────────────────────────┼► 09 ─► 10 ─┐
-E:  11 ─► 12 ──────────────────────────────────┼────────────┼► 13
-                                               ┘            ┘
+D:  08 ────────────────────────────────────────┼► 09 ─► 10 ─► 15 ─┐
+E:  11 ─► 12 ──────────────────────────────────┼──────────────────┼► 13
+                                               ┘                  ┘
 ```
 
 **Hard dependencies**
@@ -307,14 +313,17 @@ E:  11 ─► 12 ─────────────────────
 - **08 before 09 and 10** is *not* a code dependency (09 and 10 stop using `phase_spline` for the
   phase) but is the sensible order: it is small, independent, and it is the commit that
   retires the `chunk_logstep` machinery every later fixture still names.
+- **09 and 10 before 15** (15 generalises `primitive_phase.py`'s closed-form derivative that 09
+  wrote and removes the `_SoundHorizonRate` adapter that 10 added around it).
 - **Everything before 13.**
 
 **Independent:** 11 and 12 touch only the numeric integrators, the supervisor,
 `integration_tools.py`, `config/defaults.py` and non-Bessel `main.py` hunks. They can run first,
 last, or between workstreams. Running them first is a reasonable warm-up on a tree nothing else
-has changed.
+has changed. 15 is likewise independent of 11 and 12 (disjoint files) and can run before, after or
+between them.
 
-**Recommended ordering: 01 → 02 → 03 → 04 → 05 → 06 → 07 → 08 → 09 → 10 → 11 → 12 → 13.**
+**Recommended ordering: 01 → 02 → 03 → 04 → 05 → 06 → 07 → 08 → 09 → 10 → 15 → 11 → 12 → 13.**
 
 ### 4.1 Natural stopping points
 
