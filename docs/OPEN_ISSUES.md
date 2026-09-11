@@ -1,6 +1,6 @@
 # Open issues — project-wide index
 
-**Last updated:** 2026-09-11 · **40 open** across six campaigns.
+**Last updated:** 2026-09-11 · **41 open** across six campaigns.
 
 This file exists so that an issue opened by one campaign is not lost when that campaign closes.
 It is an **index, not a record**: one line per issue, pointing at the campaign status board that
@@ -64,19 +64,17 @@ they now pass `BesselPhaseGroup.levin_theta()`.
 ### 1.4 The $T_k$ / $G_k$ numerical-precision campaign
 
 Now running as [`prompts/GkTk-remedial/`](../prompts/GkTk-remedial/README.md) (2026-09-10; 13
-prompts, 2 executed). `[07-phase-spline-chunking-precision]` was closed WONTFIX on the
+prompts, 3 executed). `[07-phase-spline-chunking-precision]` was closed WONTFIX on the
 expectation that this campaign **removes** the chunked splines — its prompt 08 does; if that plan
 changes, reopen it.
 
 | Issue | Board | Hook |
 |---|---|---|
 | `[12-phase-spline-error-grows-with-x]` | source-remediation | Stored-phase re-spline error $\simeq h^4x/384$, growing **linearly in $x$**; ~1 % of envelope extrapolated to production. **Reassigned here from §1.1** (2026-09-10): the campaign's prompts 09–10 evaluate the leading term from a table and spline only the residual. |
-| `[00-tau-storage-decision]` | GkTk-remedial | Persist the low-order limb of the τ/τ_s node tables as new `BackgroundModelValue` columns — **confirmed by the user 2026-09-10**; closes when prompt 03 lands. Regeneration attached. |
 | `[00-unresolved-osc-print-policy]` | GkTk-remedial | With its units fixed and evaluated on the caller's actual grid, `has_unresolved_osc` will fire on essentially every $G_k$ numeric object. Prompt 11 measures the rate; the user chooses the print policy. |
 | `[00-consumer-anchoring-floor]` | GkTk-remedial | `PrimitivePhase` reduces $k\Delta\tau$ against a global anchor, so `theta_mod_2pi` carries the $\varepsilon k\tau$ floor ($9\times10^{-4}$ rad at $k=3\times10^8$). Per-region anchoring is the follow-up. |
 | `[00-transfer-remedial-test-file-overlap]` | GkTk-remedial | Prompt 10 edits stand-in fixtures in `test_tk_source_functions.py`/`test_phase_groups.py`; `transfer-remedial` 08 edits tolerances in the same files. **Decided 2026-09-10:** Workstreams A–C, E run in parallel; D waits for the `transfer-remedial` merge. |
-| `[02-cosmology-break-point-api]` | GkTk-remedial | Prompt 02 decided that QCD tables must split each production interval at the cosmology's break points, but the $T(z)$ spline's 404 knots are reachable only as `cosmology._T_z_spline._spline.t`. Prompt 03 needs a public accessor. |
-| `[01-offgrid-accessor-cost-on-qcd]` | GkTk-remedial | The interval accessor costs 102 µs on `QCD_Cosmology` with both endpoints off-grid, above README §4.3's 50 µs stop threshold; the production case is on-grid at 4.4 µs and zero Hubble evaluations. |
+| `[01-offgrid-accessor-cost-on-qcd]` | GkTk-remedial | The interval accessor costs 102 µs on `QCD_Cosmology` with both endpoints off-grid, above README §4.3's 50 µs stop threshold. **Narrowed by prompt 03:** the shipped accessor is 52 µs both-off-grid, 26 µs one-off-grid, 0.33 µs on-grid (the production case). Closes when prompt 09 confirms its evaluation pattern is on-grid. |
 
 ---
 
@@ -107,6 +105,8 @@ No action defined. These are floors on what a test may *assert*, not on what the
 | `[01-lambdacdm-hubble-rounding-floor]` | GkTk-remedial | `LambdaCDM.Hubble` carries 2–9e-15 relative in double precision, which floors $\Delta\tau$ over one grid interval at $4$–$6\times10^{-5}$ rad at $k=3\times10^8$ whatever the Gauss order or storage width. |
 | `[02-qcd-reference-floor]` | GkTk-remedial | The QCD $\tau$/$\tau_s$ references in `wkb_reference_data.json` are themselves good only to 1.9e-14 relative, which is exactly where prompt 02's order-4 tables land. Do not assert tighter for QCD $\tau$ at the nodes. |
 | `[02-qcd-T-z-spline-node-tolerance]` | GkTk-remedial | `_solve_T_z`'s `root_scalar(xtol=1e-6, rtol=1e-4)` leaves the $T(z)$ spline's node values up to 2.1e-5 relative from a tight re-solve ($\sim4\times10^{-5}$ in $H$). A model-fidelity bound, not a quadrature error; distinct from `[01-genericeos-tz-spline-floor]`, which is about the grid. |
+| `[03-qcd-short-baseline-reference-endpoint-rounding]` | GkTk-remedial | The QCD short-baseline references in `wkb_reference_data.json` integrate between rounded `log1p(z)` endpoints and carry up to ulp(u)/W ≈ 1e-13 relative on the 37 % fractions; the shipped table agrees with an exact-endpoint `quad` to ≤ 8.8e-16. Assert README §6's 1e-13 for QCD short baselines, not the JSON's self-agreement. |
+| `[03-integrationsolver-stepping-minimum-lookup]` | GkTk-remedial | `IntegrationSolver` lookups match `stepping >= requested`; harmless while every table is order 4, but a second Gauss order under the label `cumulative-GL` could be served by the other order's row. |
 
 ---
 
@@ -126,6 +126,7 @@ Something was asserted statically or on a stand-in, and a live exercise is still
 | `[08-3bessel-chebyshev-order-is-now-the-limit]` | transfer-remedial | `DEFAULT_3BESSEL_CHEBYSHEV_ORDER = 12` now binds the two $(0,0,0)$ three-Bessel oracles — order 20 buys J000 and Y000 three orders — while making the other five 4×–1500× worse. A per-integrand or convergence-checked order, not a constant to bump. |
 | `[08-tk-fixture-scipy-comparison-unasserted]` | transfer-remedial | `test_tk_source_functions`'s `err_scipy` is the campaign's headline downstream number (1.985e-06 → 3.021e-08) and is printed, not asserted; prompt 08 may only change comments and tolerances in that file, and prompt 09's `source-remediation` hand-off is restricted to one entry, so this was not folded in either. |
 | `[08-3bessel-plot-cost-dominates-the-suite]` | transfer-remedial | `test_3bessel_analytic` spends its whole wall clock (21.2 min for one test) evaluating 250-point grids of three-Bessel integrals to draw figures, not on assertions — which is why a module-level failure survived three prompts. Proposal only; nothing implemented. |
+| `[03-backgroundmodelvalue-build-path]` | GkTk-remedial | `sqla_BackgroundModelValue_factory.build()`'s query-existing-row branch inserts with key `"wkb_serial"` (column is `model_serial`) and reads `row_data.Hubble` (select has `Hubble_GeV`); confirmed by prompt 03, never exercised by production, not repaired. |
 | `[09-bessel-tier-hardcoded-repo-path]` | transfer-remedial | `bessel_tier.py`'s hardcoded main-checkout `sys.path` entry silently shadows a worktree's own `LiouvilleGreen` package; a re-run from a worktree measures the wrong tree with no warning. Discovered while re-running the $\kappa=1000$ benchmark tier. |
 
 ---

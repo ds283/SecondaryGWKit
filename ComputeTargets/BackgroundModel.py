@@ -1,13 +1,13 @@
 from collections import namedtuple
-from math import sqrt, fabs, log
+from math import sqrt, log
 from typing import Optional, List, Union
 
 import numpy as np
 import ray
 from ray import ObjectRef
-from scipy.integrate import solve_ivp
 from scipy.interpolate import make_interp_spline
 
+from ComputeTargets.cumulative_table import CumulativeTable
 from ComputeTargets.spline_wrappers import ZSplineWrapper
 from CosmologyConcepts import redshift_array, redshift, wavenumber
 from CosmologyModels import BaseCosmology
@@ -18,8 +18,16 @@ from Quadrature.supervisors.base import RHS_timer, IntegrationSupervisor
 from Units.base import UnitsLike
 from config.defaults import DEFAULT_ABS_TOLERANCE, DEFAULT_REL_TOLERANCE
 
-A0_TAU_INDEX = 0
-EXPECTED_SOL_LENGTH = 1
+# Gauss-Legendre order per production interval for the conformal-time table. Fixed by measurement
+# in prompts/GkTk-remedial/logs/02-qcd-residual-convergence.md (N_tau = 4): order 4 is at the
+# double-precision floor on LambdaCDM (review §7) and, once every interval is split at the
+# cosmology's break points, on QCD_Cosmology as well. Raising it buys nothing.
+TAU_GAUSS_ORDER = 4
+
+# The IntegrationSolver label under which the table is registered in main.py; "stepping" carries
+# the Gauss order, following the existing "<label>-stepping<n>" convention.
+TAU_SOLVER_LABEL_BASE = "cumulative-GL"
+TAU_SOLVER_LABEL = f"{TAU_SOLVER_LABEL_BASE}-stepping{TAU_GAUSS_ORDER}"
 
 # Settings for the private grid on which _build_derivative fits its splines when a cosmology model
 # supplies no analytic derivative. See the comment in compute_background().
@@ -116,6 +124,22 @@ ModelFunctions = namedtuple(
 )
 
 
+def _cosmology_break_points(cosmology, z_lo: float, z_hi: float) -> np.ndarray:
+    """
+    The points in u = log(1+z), strictly inside (log(1+z_lo), log(1+z_hi)), at which the
+    cosmology's background quantities lose smoothness, as an ascending array; empty if the
+    cosmology declares none. Duck-typed like the analytic-derivative shortcuts below: a cosmology
+    that does not implement ``integration_break_points`` (LambdaCDM, the test stand-ins) is
+    treated as smooth. LambdaCDM_GenericEOS implements it (the T(z) spline knots and the
+    equation-of-state branch temperatures); see prompts/GkTk-remedial/logs/02 for why every
+    Gauss panel has to be split there.
+    """
+    method = getattr(cosmology, "integration_break_points", None)
+    if method is None:
+        return np.empty(0, dtype=float)
+    return np.asarray(method(z_lo, z_hi), dtype=float)
+
+
 @ray.remote
 def compute_background(
     cosmology: BaseCosmology,
@@ -123,64 +147,50 @@ def compute_background(
     atol: float = DEFAULT_ABS_TOLERANCE,
     rtol: float = DEFAULT_REL_TOLERANCE,
 ) -> dict:
-    z_init = float(z_sample.max)
-    z_stop = float(z_sample.min)
+    """
+    Tabulate the background quantities on ``z_sample``.
 
-    def RHS(z, state, supervisor) -> List[float]:
-        with RHS_timer(supervisor) as timer:
-            H = cosmology.Hubble(z)
-            da0_tau_dz = -1.0 / H
+    The conformal time tau = a_0 eta (with dtau/dz = -1/H) is *not* integrated as an ODE: it is
+    accumulated as a Gauss-Legendre cumulative table on the sample grid itself
+    (``ComputeTargets.cumulative_table.CumulativeTable``, order ``TAU_GAUSS_ORDER`` per interval,
+    split at the cosmology's break points), held as double-double (hi, lo) pairs so that
+    downstream phase differences ``k [tau(z_a) - tau(z_b)]`` over short baselines do not inherit
+    the rounding of the absolute tau (review §7, §13.2, §13.3). The absolute normalisation is the
+    author's radiation-era closed form ``tau_init = sqrt(3) M_P / sqrt(rho(z_init)) (1 + z_init)``
+    at the top of the grid, added to the table in double-double.
 
-            return [da0_tau_dz]
+    ``atol`` and ``rtol`` are accepted for signature compatibility with ``BackgroundModel.compute``
+    and because they remain part of the datastore lookup key; the table has no tolerances.
+    """
+    z_nodes = np.array(z_sample.as_float_list(), dtype=float)
+    z_init = float(z_nodes[0])
+    z_stop = float(z_nodes[-1])
+
+    break_points = _cosmology_break_points(cosmology, z_stop, z_init)
 
     with IntegrationSupervisor() as supervisor:
+
+        def inverse_Hubble(z: float) -> float:
+            with RHS_timer(supervisor):
+                return 1.0 / cosmology.Hubble(z)
+
+        table = CumulativeTable(
+            z_nodes,
+            inverse_Hubble,
+            TAU_GAUSS_ORDER,
+            break_points=break_points,
+            label="tau",
+        )
+
+        # the author's radiation-era asymptote for tau at the top of the grid; a convention, kept
         rho_init = cosmology.rho(z_init)
         tau_init = (
             sqrt(3.0) * cosmology.units.PlanckMass / sqrt(rho_init) * (1.0 + z_init)
         )
+        table = table.shifted(tau_init)
 
-        initial_state = [tau_init]
-
-        sol = solve_ivp(
-            RHS,
-            method="RK45",
-            t_span=(z_init, z_stop),
-            y0=initial_state,
-            t_eval=z_sample.as_float_list(),
-            atol=atol,
-            rtol=rtol,
-            args=(supervisor,),
-        )
-
-    if not sol.success:
-        raise RuntimeError(
-            f'compute_background: integration did not terminate successfully (z_init={z_init:.5g}, z_stop={z_stop:.5g}, error at z={sol.t[-1]:.5g}, "{sol.message}")'
-        )
-
-    sampled_z = sol.t
-    sampled_values = sol.y
-    if len(sampled_values) != EXPECTED_SOL_LENGTH:
-        raise RuntimeError(
-            f"compute_background: solution does not have expected number of members (expected {EXPECTED_SOL_LENGTH}, found {len(sampled_values)}; length of sol.t={len(z_sample)})"
-        )
-    a0_tau_sample = sampled_values[A0_TAU_INDEX]
-
-    returned_values = sampled_z.size
-    expected_values = len(z_sample)
-
-    if returned_values != expected_values:
-        raise RuntimeError(
-            f"compute_background: solve_ivp returned {returned_values} samples, but expected {expected_values}"
-        )
-
-    # validate that the samples of the solution correspond to the z-sample points that we specified.
-    # This really should be true, but there is no harm in being defensive.
-    for i in range(returned_values):
-        diff = sampled_z[i] - z_sample[i].z
-        if fabs(diff) > DEFAULT_ABS_TOLERANCE:
-            raise RuntimeError(
-                f"compute_background: solve_ivp returned sample points that differ from those requested (difference={diff} at i={i})"
-            )
+    tau_hi_sample = [float(v) for v in table.hi]
+    tau_lo_sample = [float(v) for v in table.lo]
 
     # each BaseCosmology instance provides methods to evaluate H(z), rho(z), and the value of the equation of state
     # for the background and perturbations
@@ -257,15 +267,19 @@ def compute_background(
     d2_wPerturbations_dz2_sample = _truncate(d2_wPerturbations_dz2_fit)
 
     return {
+        # compute_steps is the node count and RHS_evaluations the number of Hubble evaluations
+        # spent building the table (one per Gauss abscissa)
         "data": IntegrationData(
             compute_time=supervisor.integration_time,
-            compute_steps=int(sol.nfev),
+            compute_steps=len(table),
             RHS_evaluations=supervisor.RHS_evaluations,
             mean_RHS_time=supervisor.mean_RHS_time,
             max_RHS_time=supervisor.max_RHS_time,
             min_RHS_time=supervisor.min_RHS_time,
         ),
-        "a0_tau_sample": a0_tau_sample,
+        "tau_hi_sample": tau_hi_sample,
+        "tau_lo_sample": tau_lo_sample,
+        "tau_order": TAU_GAUSS_ORDER,
         "H_sample": H_sample,
         "rho_sample": rho_sample,
         "T_photon_sample": T_photon_sample,
@@ -276,18 +290,61 @@ def compute_background(
         "d3_lnH_dz3_sample": d3_lnH_dz3_sample,
         "d_wPerturbations_dz_sample": d_wPerturbations_dz_sample,
         "d2_wPerturbations_dz2_sample": d2_wPerturbations_dz2_sample,
-        "solver_label": "solve_ivp+RK45-stepping0",
+        "solver_label": TAU_SOLVER_LABEL,
     }
+
+
+class TablePrimitive:
+    """
+    A background primitive held as a ``CumulativeTable``: ``functions.tau`` (and, from prompt 04
+    of ``prompts/GkTk-remedial``, ``cs_tau`` and ``friction_F``).
+
+    Two accessors, both returning plain floats:
+
+    * ``primitive(z)`` -- the absolute value pointwise, for the existing consumers
+      (``compute_analytic_G/T``, the eta limits in ``QuadSourceIntegral``, main.py's Bessel
+      ``x_max``). Carries half an ulp of the primitive itself.
+    * ``primitive.delta(z_a, z_b) = primitive(z_b) - primitive(z_a)``, the interval accessor the
+      WKB phase uses. Formed from the double-double node table and local Gauss partials, never
+      as a difference of two pointwise values (README §2 (c); ``CumulativeTable.delta``).
+      For tau this is ``int_{z_b}^{z_a} dz/H``, positive when ``z_b < z_a``.
+    """
+
+    def __init__(self, table: CumulativeTable, label: str):
+        self._table = table
+        self._label = label
+
+    def __call__(self, z: float) -> float:
+        return self._table.value(float(z))
+
+    def delta(self, z_a: float, z_b: float) -> float:
+        return self._table.delta(float(z_a), float(z_b))
+
+    @property
+    def table(self) -> CumulativeTable:
+        return self._table
+
+    @property
+    def label(self) -> str:
+        return self._label
 
 
 class BackgroundModel(DatastoreObject):
     """
     Encapsulates the time history of a cosmological model.
-    This bakes-in all the quantities we need such as the conformal time \tau (for analytic
-    approximations to the transfer functions and Green's functions).
+    This bakes-in all the quantities we need such as the conformal time \tau (for the WKB phases,
+    and for analytic approximations to the transfer functions and Green's functions). \tau is
+    tabulated on the sample grid as a double-double Gauss-Legendre cumulative table rather than
+    integrated as an ODE, and ``functions.tau`` exposes it both pointwise, ``tau(z)``, and as an
+    interval, ``tau.delta(z_a, z_b)`` (see ``TablePrimitive``).
     It also means we have an explicit record in the database of the values of H(z), w(z), etc.,
     that yielded a particular set of results
     """
+
+    # the solver label compute_background reports, and the registration main.py must make
+    TAU_GAUSS_ORDER = TAU_GAUSS_ORDER
+    TAU_SOLVER_LABEL_BASE = TAU_SOLVER_LABEL_BASE
+    TAU_SOLVER_LABEL = TAU_SOLVER_LABEL
 
     def __init__(
         self,
@@ -401,7 +458,15 @@ class BackgroundModel(DatastoreObject):
                 log_z=True,
             )
 
-        tau_func = _build_func("tau")
+        # tau is reconstructed from the persisted (hi, lo) limbs with no quadrature; the integrand
+        # is needed only for off-grid partials (the per-object anchor z_init of a numeric hand-over,
+        # RECONCILIATION.md §2 item 5). No cosmology supplies an analytic tau, and a pointwise
+        # analytic tau could not supply delta at the required accuracy, so there is no
+        # hasattr(cosmology, "tau") shortcut here (RECONCILIATION.md §2 item 2). A cubic spline of
+        # the nodes -- the previous accessor -- is 1.4e-9 relative off-grid, ~2 rad of phase at
+        # k = 1e5/Mpc (review §7, §13.2).
+        tau_func = self._build_tau_primitive()
+
         T_photon_func = _build_func("T_photon")
         d_lnH_dz_func = _build_func("d_lnH_dz")
         d2_lnH_dz2_func = _build_func("d2_lnH_dz2")
@@ -458,6 +523,25 @@ class BackgroundModel(DatastoreObject):
             d2_wPerturbations_dz2=d2_wPerturbations_dz2_func,
         )
 
+    def _build_tau_primitive(self) -> TablePrimitive:
+        values = sorted(self.values, key=lambda v: v.z.z, reverse=True)
+        z_nodes = [v.z.z for v in values]
+        cosmology = self._cosmology
+
+        def inverse_Hubble(z: float) -> float:
+            return 1.0 / cosmology.Hubble(z)
+
+        table = CumulativeTable(
+            z_nodes,
+            inverse_Hubble,
+            TAU_GAUSS_ORDER,
+            hi=[v.tau for v in values],
+            lo=[v.tau_lo for v in values],
+            break_points=_cosmology_break_points(cosmology, z_nodes[-1], z_nodes[0]),
+            label="tau",
+        )
+        return TablePrimitive(table, label="tau")
+
     def compute(self, label: Optional[str] = None):
         if self._values is not None:
             raise RuntimeError("values has not yet been populated")
@@ -497,13 +581,26 @@ class BackgroundModel(DatastoreObject):
         self._compute_ref = None
 
         self._data = data["data"]
+        self._values = self.values_from_payload(self._z_sample, data)
+        self._solver = self._solver_labels[data["solver_label"]]
 
+        return True
+
+    @staticmethod
+    def values_from_payload(
+        z_sample: redshift_array, data: dict
+    ) -> List["BackgroundModelValue"]:
+        """
+        Build the per-redshift ``BackgroundModelValue`` list from a ``compute_background``
+        payload, in ``z_sample`` order. Shared by ``store()`` and the offline tests.
+        """
         H_sample = data["H_sample"]
         wB_sample = data["wBackground_sample"]
         wP_sample = data["wPerturbations_sample"]
         rho_sample = data["rho_sample"]
         T_photon_sample = data["T_photon_sample"]
-        tau_sample = data["a0_tau_sample"]
+        tau_hi_sample = data["tau_hi_sample"]
+        tau_lo_sample = data["tau_lo_sample"]
 
         d_lnH_ds_sample = data["d_lnH_dz_sample"]
         d2_lnH_dz2_sample = data["d2_lnH_dz2_sample"]
@@ -512,29 +609,27 @@ class BackgroundModel(DatastoreObject):
         d_wPerturbations_dz_sample = data["d_wPerturbations_dz_sample"]
         d2_wPerturbations_dz2_sample = data["d2_wPerturbations_dz2_sample"]
 
-        self._values = []
+        values = []
         for i in range(len(H_sample)):
-            self._values.append(
+            values.append(
                 BackgroundModelValue(
                     None,
-                    self._z_sample[i],
+                    z_sample[i],
                     Hubble=H_sample[i],
                     wBackground=wB_sample[i],
                     wPerturbations=wP_sample[i],
                     rho=rho_sample[i],
-                    tau=tau_sample[i],
+                    tau=tau_hi_sample[i],
                     T_photon=T_photon_sample[i],
                     d_lnH_dz=d_lnH_ds_sample[i],
                     d2_lnH_dz2=d2_lnH_dz2_sample[i],
                     d3_lnH_dz3=d3_lnH_dz3_sample[i],
                     d_wPerturbations_dz=d_wPerturbations_dz_sample[i],
                     d2_wPerturbations_dz2=d2_wPerturbations_dz2_sample[i],
+                    tau_lo=tau_lo_sample[i],
                 )
             )
-
-        self._solver = self._solver_labels[data["solver_label"]]
-
-        return True
+        return values
 
 
 class BackgroundModelValue(DatastoreObject):
@@ -553,7 +648,14 @@ class BackgroundModelValue(DatastoreObject):
         d3_lnH_dz3: Optional[float] = None,
         d_wPerturbations_dz: Optional[float] = None,
         d2_wPerturbations_dz2: Optional[float] = None,
+        tau_lo: float = 0.0,
     ):
+        """
+        ``tau`` is the high limb and ``tau_lo`` the low limb of the double-double conformal time
+        at this redshift (``tau + tau_lo`` is the value to ~1e-32 relative). ``tau_lo`` is a
+        keyword with a zero default so that stand-ins and the factory's ``build()`` path keep
+        constructing.
+        """
         DatastoreObject.__init__(self, store_id)
 
         self._z = z
@@ -564,6 +666,7 @@ class BackgroundModelValue(DatastoreObject):
 
         self._rho: float = rho
         self._tau: float = tau
+        self._tau_lo: float = tau_lo
         self._T_photon: float = T_photon
 
         self._d_lnH_dz: float = d_lnH_dz
@@ -595,7 +698,13 @@ class BackgroundModelValue(DatastoreObject):
 
     @property
     def tau(self) -> float:
+        """The high limb of the double-double conformal time at this redshift."""
         return self._tau
+
+    @property
+    def tau_lo(self) -> float:
+        """The low limb of the double-double conformal time at this redshift."""
+        return self._tau_lo
 
     @property
     def T_photon(self) -> float:

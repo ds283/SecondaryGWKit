@@ -154,6 +154,22 @@ class QCD_EOS(GenericEOSBase):
         # 0 is the unique ID for the LambdaCDM cosmology type
         return QCD_EOS_IDENTIFIER
 
+    @property
+    def break_temperatures_GeV(self) -> tuple:
+        """
+        Where this parametrization changes analytic form. G and Gs switch pieces at T_LO,
+        T_120_MEV and T_HI and the pieces do not join continuously (H(z) jumps by 4.4e-4 at T_LO
+        and 1.0e-4 at T_120_MEV on the production grid); w clamps its argument at EOS_T_LO, so
+        c_s^2 is continuous there but its slope is not. Measured in
+        docs/gktk-remedial/RESIDUAL-CONVERGENCE.md §2.
+        """
+        return (
+            QCD_EOS.T_LO,
+            QCD_EOS.EOS_T_LO,
+            QCD_EOS.T_120_MEV,
+            QCD_EOS.T_HI,
+        )
+
     # Complete effective degrees of freedom functions
     def G(self, T: float) -> float:
         """

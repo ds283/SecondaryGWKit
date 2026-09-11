@@ -2816,6 +2816,7 @@ with ShardedPool(
         solve_ivp_Radau,
         solve_ivp_BDF,
         solve_icp_LSODA,
+        cumulative_GL_tau,
     ) = ray.get(
         [
             pool.object_get("IntegrationSolver", label="solve_ivp+RK45", stepping=0),
@@ -2823,6 +2824,13 @@ with ShardedPool(
             pool.object_get("IntegrationSolver", label="solve_ivp+Radau", stepping=0),
             pool.object_get("IntegrationSolver", label="solve_ivp+BDF", stepping=0),
             pool.object_get("IntegrationSolver", label="solve_ivp+LSODA", stepping=0),
+            # the Gauss-Legendre cumulative table that BackgroundModel builds for the conformal
+            # time (prompts/GkTk-remedial, prompt 03); "stepping" carries the Gauss order
+            pool.object_get(
+                "IntegrationSolver",
+                label=BackgroundModel.TAU_SOLVER_LABEL_BASE,
+                stepping=BackgroundModel.TAU_GAUSS_ORDER,
+            ),
         ]
     )
     solvers = {
@@ -2831,6 +2839,7 @@ with ShardedPool(
         "solve_ivp+Radau-stepping0": solve_ivp_Radau,
         "solve_ivp+BDF-stepping0": solve_ivp_BDF,
         "solve_ivp+LSODA-stepping0": solve_icp_LSODA,
+        BackgroundModel.TAU_SOLVER_LABEL: cumulative_GL_tau,
     }
 
     # create GkSource policies that we will apply later

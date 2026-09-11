@@ -2,7 +2,7 @@
 
 **Campaign:** [`README.md`](README.md) · **Source review:** [`docs/gk-wkb-review-fable-2026-09-09.md`](../../docs/gk-wkb-review-fable-2026-09-09.md) · **Reconciliation:** [`RECONCILIATION.md`](RECONCILIATION.md)
 **Baseline commit:** `9ff59d5` (`main`, clean)
-**Last updated:** 2026-09-10 — prompt 02 landed (Gauss orders all 4; break-point subdivision on QCD).
+**Last updated:** 2026-09-11 — prompt 03 landed (τ as a double-double Gauss–Legendre table; `tau_lo_Mpc` column; datastore regeneration attached).
 
 > **Maintenance rule.** Every prompt updates this file *in its own commit*, before committing.
 > Set your row's status, fill in the commit SHA, model and log link, update the mechanism-level
@@ -27,7 +27,7 @@ Legend: ⬜ not started · 🟡 in flight · ✅ complete · ⚠️ complete wit
 
 | # | Prompt | Covers | Model | Status | Commit | Log |
 |---|---|---|---|---|---|---|
-| 03 | [τ primitive](03-tau-primitive.md) | review §7, §13.2, §13.3 | **Fable** | ⬜ | | |
+| 03 | [τ primitive](03-tau-primitive.md) | review §7, §13.2, §13.3 | **Fable** | ⚠️ | *"Build conformal time as a double-double Gauss-Legendre table"* (SHA not embedded, per the campaign convention) | [`logs/03-tau-primitive.md`](logs/03-tau-primitive.md) |
 | 04 | [Sound-horizon and friction tables](04-sound-horizon-and-friction-tables.md) | review §12.7 | Opus | ⬜ | | |
 
 ### Workstream C — the producers
@@ -59,7 +59,7 @@ Legend: ⬜ not started · 🟡 in flight · ✅ complete · ⚠️ complete wit
 |---|---|---|---|---|---|---|
 | 13 | [Verification and docs](13-verification-and-docs.md) | review §4, §12.3, §13.5 | Opus | ⬜ | | |
 
-**Progress:** 2 / 13 complete.
+**Progress:** 3 / 13 complete.
 
 ---
 
@@ -73,9 +73,9 @@ campaign; the review section is the authority on each.
 | M1 | **DEFECT, accuracy** | Two-stage phase solver: error is a fixed fraction of the *accumulated* phase; 13.9 rad ($k=10^5$) and 7366 rad ($3\times10^8$) at $z=0.1$ on the real background (§2, §4) | 06 | ⬜ |
 | M2 | **DEFECT, accuracy** | The $Q$ variable is not "close to unity" ($-224$…$-11069$); the tolerance protects the wrong quantity; DOP853 dense output amplified by $\omega_i(1+u)$ — 0.33 rad on a linear phase (§3) | 06 | ⬜ |
 | M3 | **DEFECT, cost** | Stage 1 cost ∝ span: $2.5\times10^6$ RHS evaluations, 63.7 s per object at $k=3\times10^8$; ~13 CPU-hours per $k$ (§4) | 06 | ⬜ |
-| M4 | **DEFECT, accuracy** | `functions.tau` is a cubic spline of RK45 nodes: $1.4\times10^{-9}$ relative, ~2 rad of *oracle* phase error at $k=10^5$ in `compute_analytic_G/T` and `QuadSourceIntegral`'s η-limits (§7, §13.2) | 03 | ⬜ |
-| M5 | **REQUIREMENT** | Double-double node table and an interval accessor `tau.delta`; a pointwise accessor carries the $\varepsilon\tau$ floor ($9\times10^{-4}$ rad at $3\times10^8$) on short baselines (§13.3) | 03 | ⬜ |
-| M6 | **REQUIREMENT** | Persist the low-order limb (`tau_lo_Mpc`, …); regeneration attached (§13.2; README §7 D1) | 03, 04 | ⬜ |
+| M4 | **DEFECT, accuracy** | `functions.tau` is a cubic spline of RK45 nodes: $1.4\times10^{-9}$ relative, ~2 rad of *oracle* phase error at $k=10^5$ in `compute_analytic_G/T` and `QuadSourceIntegral`'s η-limits (§7, §13.2) | 03 | ✅ 3.8e-16 relative at the LambdaCDM nodes; the retired accessor measured 3.08 rad off at $k=10^5$ (log 03) |
+| M5 | **REQUIREMENT** | Double-double node table and an interval accessor `tau.delta`; a pointwise accessor carries the $\varepsilon\tau$ floor ($9\times10^{-4}$ rad at $3\times10^8$) on short baselines (§13.3) | 03 | ✅ `CumulativeTable` + `TablePrimitive`; one-interval Δτ ≤ 2.5e-16 (LambdaCDM), ≤ 9.4e-15 (QCD) relative |
+| M6 | **REQUIREMENT** | Persist the low-order limb (`tau_lo_Mpc`, …); regeneration attached (§13.2; README §7 D1) | 03, 04 | ⚠️ 03 done (`tau_lo_Mpc`; factory refuses a pre-03 datastore by name); 04 pending |
 | M7 | **REQUIREMENT** | Sound-horizon table $\tau_s$ and friction table $F$ per model; the friction ODE ($2.3$–$4.1\times10^{-7}$ relative error) goes (§12.2, §12.7) | 04, 07 | ⬜ |
 | M8 | **REQUIREMENT** | The residual $\rho$ carried explicitly: $\le1.5\times10^{-3}$ rad for $G_k$ on QCD, $\approx-0.09$ rad for $T_k$; formed without subtraction (§6, §12.2) | 05 | ⬜ |
 | M9 | **REQUIREMENT** | Gauss orders decided by measurement on `QCD_Cosmology` across its spline knots; adaptive fallback for $\rho$ alone if needed (§11) | 02, 05 | ⚠️ 02 done: all four orders are **4**, no adaptive fallback — but only with **break-point subdivision** on QCD (log 02) |
@@ -106,17 +106,6 @@ README §0.2's `transfer-remedial` file list.
 ## 3. Active and unresolved issues
 
 Opened by the planning pass, 2026-09-10, before any prompt runs.
-
-- **[02-cosmology-break-point-api]** *(opened by prompt 02, 2026-09-10)* — the table builders of
-  prompts 03–05 must split each production interval at the cosmology's break points, and there is
-  no public way to ask for them. `docs/gktk-remedial/residual_convergence.py` reads the $T(z)$
-  spline's knots as `cosmology._T_z_spline._spline.t` — acceptable in a `docs/` measurement script,
-  not in `ComputeTargets/cumulative_table.py`. The three temperature constants are public
-  (`QCD_EOS.T_LO`, `.EOS_T_LO`, `.T_120_MEV`) but the redshift of each crossing still has to be
-  solved for. **Impact:** prompt 03's design — it needs something like a
-  `cosmology.integration_break_points(z_lo, z_hi)` returning $u=\log(1+z)$ values, empty on
-  `LambdaCDM`, and a `GenericEOS` implementation. **Next step:** prompt 03 chooses the API and
-  implements it; closes when 03 lands.
 
 - **[02-qcd-reference-floor]** *(opened by prompt 02, 2026-09-10; inert)* — the QCD $\tau$ and
   $\tau_s$ references in `wkb_reference_data.json` are themselves accurate only to
@@ -154,6 +143,11 @@ Opened by the planning pass, 2026-09-10, before any prompt runs.
   Levin path is the candidate); the producers are unaffected. **Next step:** the orchestrator
   reports the figures to the user; closes when prompt 09 confirms its evaluation pattern is
   on-grid, or a caching partial is added.
+  **Narrowed by prompt 03 (2026-09-11):** on the shipped `functions.tau` (order-4 partials, not the
+  prototype's order-8) the figures are **0.33 µs on-grid / 26.1 µs one endpoint off-grid /
+  52.0 µs both off-grid** on `QCD_Cosmology` (LambdaCDM 0.44 / 4.6 / 6.6 µs), 20,000 calls, best
+  of 3 (log 03). Both-off-grid is still marginally above the 50 µs line; the cost is four
+  `QCD_Cosmology.Hubble` evaluations at 7.35 µs each per off-grid endpoint.
 
 - **[01-lambdacdm-hubble-rounding-floor]** *(opened by prompt 01, 2026-09-10; inert)* — the
   double-precision evaluation of `LambdaCDM.Hubble` carries 2–9e-15 relative near $z=1$–$10^6$,
@@ -164,13 +158,6 @@ Opened by the planning pass, 2026-09-10, before any prompt runs.
   LambdaCDM; it is *below* README §6's $5\times10^{-3}$ rad target and above the
   $\varepsilon k\tau$ floor, and is a different error from either. **Next step:** none; recorded
   so a later reader does not chase it.
-
-- **[00-tau-storage-decision]** *(planning, 2026-09-10)* — README §7 D1: the low-order limb of the
-  τ, τ_s node tables is persisted as new `Float(64)` columns (`tau_lo_Mpc`, `cs_tau_Mpc`,
-  `cs_tau_lo_Mpc`, `friction_F`) on `BackgroundModelValue`; `tau_Mpc` becomes the high limb;
-  rebuild-on-load was rejected for per-task cost. **Confirmed by the user 2026-09-10**
-  ("`BackgroundModelValue` is the right place for this"). **Impact:** prompts 03, 04; every
-  datastore predating 03 must be regenerated. **Next step:** closes when 03 lands.
 
 - **[00-unresolved-osc-print-policy]** *(planning, 2026-09-10)* — README §7 D2: with the units fixed
   and the test evaluated on the caller's actual sample grid, `has_unresolved_osc` will fire on
@@ -211,6 +198,44 @@ Opened by the planning pass, 2026-09-10, before any prompt runs.
   needs the spec). **Impact:** a floor on what `test_tk_numeric_atol.py` may assert. **Next step:**
   a spec-level decision by the author; not scheduled.
 
+- **[03-backgroundmodelvalue-build-path]** *(opened by prompt 03, 2026-09-11; confirmed)* — the
+  `sqla_BackgroundModelValue_factory.build()` path has two latent defects on its
+  query-existing-row branch (`RECONCILIATION.md` §2 item 11): the fresh-insert dict uses the key
+  `"wkb_serial"` where the column is `model_serial`, and the consistency check reads
+  `row_data.Hubble` where the select provides `Hubble_GeV`. Production never takes this path —
+  values are inserted through `BackgroundModel.store()` — so neither has fired. Prompt 03 edited
+  the neighbouring lines (adding `tau_lo_Mpc`) and did not repair them. **Impact:** anyone who
+  calls `pool.object_get("BackgroundModelValue", …)` directly gets an `IntegrityError` (insert) or
+  an `AttributeError` (existing row). **Next step:** a two-line fix in its own commit, with a
+  test that exercises `build()` against an in-memory SQLite store.
+
+- **[03-qcd-short-baseline-reference-endpoint-rounding]** *(opened by prompt 03, 2026-09-11;
+  inert)* — the QCD short-baseline references in `wkb_reference_data.json` (`delta_tau_full`,
+  `delta_tau_fraction`) were computed by `quad` in $u=\log(1+z)$ between **rounded double
+  endpoints** `log1p(z)`, so each carries up to $\tfrac12{\rm ulp}(u_{\rm hi})+\tfrac12{\rm ulp}(u_{\rm lo})$
+  of endpoint error relative to the baseline width $W$: bounds 7.7e-14 / 2.1e-13 (full / 37 %
+  fraction at $z=10^6$), 3.9e-14 / 1.1e-13 ($z=10^2$), 9.7e-15 / 2.6e-14 ($z=1$). Measured
+  disagreement of the JSON against a `quad` in the exact-width parametrisation
+  $1+z=(1+z_{\rm lo})e^t$, $t\in[0,W]$: 4.4e-15 / 3.3e-14, 9.4e-15 / 2.0e-14, 1.9e-15 / 9.6e-15,
+  every one inside its bound; the shipped table agrees with the exact-width `quad` to ≤ 8.8e-16
+  on all six. The LambdaCDM references are mpmath at exact `mpf(float(z))` endpoints and do not
+  carry this. Distinct from `[02-qcd-reference-floor]`, which is the break-unaware/break-aware
+  disagreement on the *cumulative* values. **Impact:** a floor on what prompts 03, 04 and 13 may
+  assert for QCD short baselines — `test_background_tau.py` asserts README §6's $10^{-13}$, not
+  the JSON's recorded self-agreement (~1.6e-15). **Next step:** if 13 needs headroom, regenerate the
+  QCD short-baseline records in the exact-width parametrisation; otherwise none.
+
+- **[03-integrationsolver-stepping-minimum-lookup]** *(opened by prompt 03, 2026-09-11; inert)* —
+  `sqla_IntegrationSolver_factory` registers `"stepping": "minimum"` and `build()` matches
+  `label == label AND stepping >= stepping`, returning the first such row. Every solver registered
+  before this campaign has `stepping=0`, so it never mattered; the τ table registers
+  `("cumulative-GL", 4)` with the Gauss order as the stepping. If a second order is ever registered
+  under the same label, a query for the lower order can be served by the higher order's row (the
+  returned `IntegrationSolver` object still reports the requested stepping, but `solver_serial`
+  points elsewhere). **Impact:** none while every table uses order 4 (log 02); a trap for whoever
+  changes an order. **Next step:** if a second order is registered, either fold the order into the
+  label or query with an exact stepping match.
+
 > Add an entry here whenever a prompt finishes with something unresolved: a verification step that
 > could not be run, an assumption that could not be confirmed, a deviation a later prompt has to
 > work around, a measured cost that changes a later prompt's decision. Format:
@@ -223,6 +248,26 @@ Opened by the planning pass, 2026-09-10, before any prompt runs.
 ---
 
 ## 4. Resolved issues
+
+- **[02-cosmology-break-point-api]** *(opened by prompt 02, 2026-09-10; resolved by prompt 03,
+  2026-09-11)* — the table builders needed a public way to ask a cosmology for its break points.
+  **Resolution:** `LambdaCDM_GenericEOS.integration_break_points(z_lo, z_hi) -> np.ndarray` returns
+  the ascending $u=\log(1+z)$ values strictly inside the range at which any background quantity
+  loses smoothness: the interior knots of the $T(z)$ spline (kept at build as
+  `_T_z_spline_knots_log1pz`) plus the crossings of `GenericEOSBase.break_temperatures_GeV` (a new
+  property, `()` by default; `QCD_EOS` returns `(T_LO, EOS_T_LO, T_120_MEV, T_HI)`), each solved in
+  $u$ by `root_scalar` to `xtol=rtol=1e-15`. `compute_background` and `_create_functions` reach it
+  duck-typed through `_cosmology_break_points(cosmology, z_lo, z_hi)`, empty when the cosmology has
+  no such method (`LambdaCDM`, the stand-ins). On the production grid `QCD_Cosmology` reports 407
+  points (404 knots + 3 crossings), each crossing within 1e-9 of log 02's values. See
+  [`logs/03-tau-primitive.md`](logs/03-tau-primitive.md).
+
+- **[00-tau-storage-decision]** *(planning, 2026-09-10; confirmed by the user 2026-09-10; resolved
+  by prompt 03, 2026-09-11)* — README §7 D1 implemented: `BackgroundModelValue` gains
+  `tau_lo_Mpc` (`Float(64)`, `nullable=False`) after `tau_Mpc`, which is now the high limb; both
+  limbs round-trip exactly in `Mpc_units` (asserted for every node of both models). A datastore
+  lacking the column is refused by `sqla_BackgroundModelFactory.build()` with a message naming the
+  regeneration. The `cs_tau_Mpc`, `cs_tau_lo_Mpc`, `friction_F` columns are prompt 04's.
 
 - **[01-qcd-eos-branch-boundaries]** *(opened by prompt 01, 2026-09-10; resolved by prompt 02,
   2026-09-10)* — no fixed-order Gauss–Legendre rule converged on the production intervals of
@@ -260,8 +305,10 @@ Opened by the planning pass, 2026-09-10, before any prompt runs.
 6. **The `GkSource` rectifier stays** (D5). Its logic is a stop condition.
 7. **`phase_spline`'s signature is frozen** (D4); `bessel_phase` on `main` and three fixtures
    depend on it.
-8. **Solver labels must be registered in `main.py`** (`:2809-2821`) or `store()` raises `KeyError`
-   in production only.
+8. **Solver labels must be registered in `main.py`** (`:2810-2834` after the `transfer-remedial`
+   merge) or `store()` raises `KeyError` in production only. Prompt 03 registers the τ table as
+   `BackgroundModel.TAU_SOLVER_LABEL` = `"cumulative-GL-stepping4"` through the class attributes
+   `TAU_SOLVER_LABEL_BASE` / `TAU_GAUSS_ORDER`, so `main.py` needs no new import.
 9. **Tolerances are datastore lookup keys**; a missed `atol=` site makes lookups miss silently
    (prompt 12).
 10. **Author conventions** (README §5 rule 6): $a_0$ absorbed; $\tau=a_0\eta$; unit-jump $\bar G_k$;

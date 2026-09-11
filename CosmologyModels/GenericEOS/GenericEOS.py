@@ -53,6 +53,18 @@ class GenericEOSBase(ABC):
         """
         raise NotImplementedError
 
+    @property
+    def break_temperatures_GeV(self) -> tuple:
+        """
+        Temperatures, in GeV, at which G(T), Gs(T) or w(T) switch between analytic pieces and so
+        lose smoothness (a jump, or a kink). Quadratures of anything built from H(z) or c_s^2(z)
+        must not straddle a crossing of one of these temperatures: LambdaCDM_GenericEOS reports
+        the corresponding redshifts through integration_break_points(), and the cumulative tables
+        of ComputeTargets/BackgroundModel.py split their Gauss panels there
+        (prompts/GkTk-remedial, log 02). A smooth equation of state has none.
+        """
+        return ()
+
     def w(self, T: float) -> float:
         """
         Generic formula for equation of state parameter w(T) as a function of temperature T.
