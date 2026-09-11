@@ -1,6 +1,6 @@
 # Open issues — project-wide index
 
-**Last updated:** 2026-09-11 · **51 open** across six campaigns.
+**Last updated:** 2026-09-12 · **50 open** across six campaigns.
 
 This file exists so that an issue opened by one campaign is not lost when that campaign closes.
 It is an **index, not a record**: one line per issue, pointing at the campaign status board that
@@ -64,13 +64,12 @@ they now pass `BesselPhaseGroup.levin_theta()`.
 ### 1.4 The $T_k$ / $G_k$ numerical-precision campaign
 
 Now running as [`prompts/GkTk-remedial/`](../prompts/GkTk-remedial/README.md) (2026-09-10; 13
-prompts plus two follow-ups, 12 executed). `[07-phase-spline-chunking-precision]` was closed WONTFIX on
+prompts plus three follow-ups, 14 executed). `[07-phase-spline-chunking-precision]` was closed WONTFIX on
 the expectation that this campaign **removes** the chunked splines — its prompt 08 has done so.
 
 | Issue | Board | Hook |
 |---|---|---|
 | `[12-phase-spline-error-grows-with-x]` | source-remediation | Stored-phase re-spline error $\simeq h^4x/384$, growing **linearly in $x$**; ~1 % of envelope extrapolated to production. **Reassigned here from §1.1** (2026-09-10): the campaign's prompts 09–10 evaluate the leading term from a table and spline only the residual. |
-| `[00-unresolved-osc-print-policy]` | GkTk-remedial | With its units fixed and evaluated on the caller's actual grid, `has_unresolved_osc` fires on essentially every $G_k$ numeric object. **Measured by prompt 11:** 2,149 of 2,149 $G_k$-like objects flag (first at $x=26.5$–66.6) and 0 of 6 $T_k$-like runs, which peak at 0.807–0.822 of the trip threshold; today's rate is 0 of 2,155, so the per-object line would turn 0 printed lines into ~$1.3\times10^5$ per model. **Decided 2026-09-11: option (ii)**, a per-$k$ summary in `main.py`; **assigned to prompt 16**. The semantic half — whether the response grid should resolve the mode through the seam, the flag tripping at $x=19.74$ against $x=20.09$ at the hand-over window floor — rides with §1.1. |
 | `[11-stop-point-root-tolerance]` | GkTk-remedial | `find_phase_extremum`'s `root_scalar(xtol=1e-6, rtol=1e-4)` places the stop point only to $\sim10^{-4}z$, so $|G'|/(|G|\omega)$ there is 9.8e-6 (pre-prompt-11) to 6.5e-5, not the 1e-12 prompt 11 §3 asked to assert. Harmless downstream — `store()` rotates $(G,G')$ — but $z_{\rm init}$ is this root, so tightening it is a hand-over-campaign decision with a datastore regeneration attached. |
 | `[00-consumer-anchoring-floor]` | GkTk-remedial | `PrimitivePhase` reduces $k\Delta\tau$ against a global anchor, so `theta_mod_2pi` carries the $\varepsilon k\tau$ floor ($9\times10^{-4}$ rad at $k=3\times10^8$). Per-region anchoring is the follow-up. **Measured by prompt 09:** the floor is now the whole error — 4.189e-8 rad = 2.81 ulp of the span at $k=10^8$, with $\varphi$ itself recovered to 2.157e-10 rad. |
 | `[01-offgrid-accessor-cost-on-qcd]` | GkTk-remedial | The interval accessor costs 102 µs on `QCD_Cosmology` with both endpoints off-grid, above README §4.3's 50 µs stop threshold. **Narrowed by prompt 03:** the shipped accessor is 52 µs both-off-grid, 26 µs one-off-grid, 0.33 µs on-grid (the production case). **Narrowed by prompt 06:** the producers only ever pair the off-grid anchor with an on-grid sample — 464 partial evaluations inside a 0.031 s object. **Narrowed by prompt 09, not closed:** the Levin consumer evaluates off-grid by construction, but always with exactly one off-grid endpoint (the anchor is a grid node), so the 26 µs figure applies and the 50 µs line is not crossed. |

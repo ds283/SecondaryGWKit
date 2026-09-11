@@ -3,6 +3,13 @@ Tests for prompt 11 of ``prompts/GkTk-remedial``: the numeric region's oscillati
 diagnostic moved off the ODE right-hand side and on to the returned sample grid, the ``mode=None``
 guard, and the phase-stepping extremum search.
 
+Extended by prompt 16, which gates the per-object printed warning behind
+``scan_sample_grid_for_unresolved_osc(..., warn=)`` / ``numeric_with_phase_cut(...,
+warn_unresolved_osc=)`` and has the two production integrators opt out, ``main.py`` summarising
+the flag per wavenumber instead (README §7 decision D2). The flag itself does not move:
+:class:`TestUnresolvedOscillationWarningIsGated` asserts the returned dict is identical with the
+warning on and off.
+
 Nothing here needs Ray or a datastore: ``numeric_with_phase_cut`` is exercised through its
 undecorated ``_function`` with the ``ModelProxy`` / ``wavenumber_exit_time`` stand-ins of
 ``ComputeTargets/tests/wkb_reference.py`` (prompt 01), and the two production right-hand sides are
@@ -15,9 +22,11 @@ which is the parent of the commit that introduces this module, on exactly the ge
 says where.
 """
 
+import ast
 import io
 import unittest
 from contextlib import redirect_stdout
+from pathlib import Path
 from math import pi, sqrt, hypot, log
 from time import perf_counter
 
@@ -619,6 +628,152 @@ class TestUnresolvedOscillationFlag(unittest.TestCase):
         self.assertIsNone(payload["has_unresolved_osc"])
         self.assertIsNone(payload["unresolved_z"])
         self.assertIsNone(payload["unresolved_efolds_subh"])
+
+
+# ---------------------------------------------------------------------------------------------
+# prompt 16 / README §7 D2 option (ii): the warning is relocated, not deleted. The print is gated;
+# the flag, the three payload keys and which sample pair trips the test are untouched.
+# ---------------------------------------------------------------------------------------------
+
+
+class TestUnresolvedOscillationWarningIsGated(unittest.TestCase):
+    def _coarse_grid(self, model, geometry):
+        """The deliberately coarse grid of :meth:`TestUnresolvedOscillationFlag.
+        test_coarse_grid_sets_the_flag`: one sample per decade from the top of the search window.
+        """
+        z_top = geometry["z_e3"]
+        return to_redshift_array([z_top, z_top / 10.0, z_top / 100.0])
+
+    def test_flag_does_not_depend_on_the_warning(self):
+        """All three returned keys are equal with ``warn_unresolved_osc`` True and False: the
+        parameter gates the two ``print`` calls and nothing else."""
+        model = RadiationModel()
+        k = 1.0e7
+        geometry = _geometry(model, k)
+        coarse = self._coarse_grid(model, geometry)
+
+        loud, _ = _quiet(_run, model, k, geometry, coarse.max, coarse, "Gk", mode=None)
+        quiet, _ = _quiet(
+            _run,
+            model,
+            k,
+            geometry,
+            coarse.max,
+            coarse,
+            "Gk",
+            mode=None,
+            warn_unresolved_osc=False,
+        )
+
+        for key in ("has_unresolved_osc", "unresolved_z", "unresolved_efolds_subh"):
+            self.assertEqual(loud[key], quiet[key], msg=key)
+
+        # and the scan itself, called directly, is identical both ways
+        scan_loud, _ = _quiet(
+            scan_sample_grid_for_unresolved_osc,
+            model,
+            _Wavenumber(k, 1, UNITS),
+            k,
+            Gk_omegaEff_sq,
+            [float(z.z) for z in coarse],
+            "Gr_k(z, z')",
+        )
+        scan_quiet, _ = _quiet(
+            scan_sample_grid_for_unresolved_osc,
+            model,
+            _Wavenumber(k, 1, UNITS),
+            k,
+            Gk_omegaEff_sq,
+            [float(z.z) for z in coarse],
+            "Gr_k(z, z')",
+            warn=False,
+        )
+        self.assertEqual(scan_loud, scan_quiet)
+
+    def test_the_print_is_gated_both_ways(self):
+        """``warn=True`` prints the two warning lines; ``warn=False`` prints nothing at all; the
+        flag is True in both cases."""
+        model = RadiationModel()
+        k = 1.0e7
+        geometry = _geometry(model, k)
+        coarse = self._coarse_grid(model, geometry)
+
+        loud, printed_loud = _quiet(
+            _run, model, k, geometry, coarse.max, coarse, "Gk", mode=None
+        )
+        quiet, printed_quiet = _quiet(
+            _run,
+            model,
+            k,
+            geometry,
+            coarse.max,
+            coarse,
+            "Gk",
+            mode=None,
+            warn_unresolved_osc=False,
+        )
+
+        self.assertIs(loud["has_unresolved_osc"], True)
+        self.assertIs(quiet["has_unresolved_osc"], True)
+
+        # the warning is two lines, not one (README §7 D2 counts both)
+        self.assertEqual(
+            printed_loud.count("may have developed unresolved oscillations"), 1
+        )
+        self.assertIn("approximate wavelength Delta z", printed_loud)
+        self.assertEqual(len(printed_loud.strip().split("\n")), 2)
+
+        self.assertEqual(printed_quiet, "")
+
+    def test_production_geometry_Gk_run_is_silent_when_opted_out(self):
+        """A production-geometry Gk run with the integrators' own argument prints nothing and
+        still reports the flag."""
+        model = LambdaCDMModel()
+        k = 1.0e7
+        geometry = _geometry(model, k)
+
+        payload, printed = _quiet(
+            _run,
+            model,
+            k,
+            geometry,
+            geometry["source_grid"].max,
+            geometry["response_grid"],
+            "Gk",
+            warn_unresolved_osc=False,
+        )
+
+        self.assertIs(payload["has_unresolved_osc"], True)
+        self.assertIsNotNone(payload["unresolved_z"])
+        self.assertIsNotNone(payload["unresolved_efolds_subh"])
+        self.assertEqual(printed, "")
+
+    def test_both_integrators_pass_warn_unresolved_osc_False(self):
+        """The production call sites opt out. Read with ``ast``: neither integration module can be
+        imported without Ray, and the point is the argument, not the call."""
+        for module in (
+            "ComputeTargets/GkNumericIntegration.py",
+            "ComputeTargets/TkNumericIntegration.py",
+        ):
+            path = Path(__file__).parents[2] / module
+            tree = ast.parse(path.read_text(), filename=str(path))
+
+            calls = [
+                node
+                for node in ast.walk(tree)
+                if isinstance(node, ast.Call)
+                and isinstance(node.func, ast.Attribute)
+                and node.func.attr == "remote"
+                and isinstance(node.func.value, ast.Name)
+                and node.func.value.id == "numeric_with_phase_cut"
+            ]
+            self.assertEqual(len(calls), 1, msg=module)
+
+            keywords = {kw.arg: kw.value for kw in calls[0].keywords}
+            self.assertIn("warn_unresolved_osc", keywords, msg=module)
+            self.assertIs(
+                ast.literal_eval(keywords["warn_unresolved_osc"]), False, msg=module
+            )
 
 
 # ---------------------------------------------------------------------------------------------

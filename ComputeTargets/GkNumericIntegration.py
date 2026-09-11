@@ -352,6 +352,13 @@ class GkNumericIntegration(DatastoreObject):
             delta_logz=self._delta_logz,
             task_label="compute_Gk",
             object_label="Gr_k(z, z')",
+            # the per-object warning is suppressed here, not the test: has_unresolved_osc,
+            # unresolved_z and unresolved_efolds_subh are computed and returned exactly as
+            # before, and main.py accumulates them over the work queue and prints one summary
+            # per wavenumber (README section 7 decision D2, taken by the user 2026-09-11;
+            # prompt 16 of prompts/GkTk-remedial). A direct caller of numeric_with_phase_cut
+            # still gets the warning, which defaults to on.
+            warn_unresolved_osc=False,
             **payload,
         )
         return self._compute_ref

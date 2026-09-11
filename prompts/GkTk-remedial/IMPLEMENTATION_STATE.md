@@ -2,7 +2,25 @@
 
 **Campaign:** [`README.md`](README.md) · **Source review:** [`docs/gk-wkb-review-fable-2026-09-09.md`](../../docs/gk-wkb-review-fable-2026-09-09.md) · **Reconciliation:** [`RECONCILIATION.md`](RECONCILIATION.md)
 **Baseline commit:** `9ff59d5` (`main`, clean)
-**Last updated:** 2026-09-11 — Prompt 11 landed (the numeric region's oscillation-resolution
+**Last updated:** 2026-09-12 — Prompt 16 landed (the unresolved-oscillation warning is
+**relocated, not deleted**, enacting README §7 **D2 option (ii)**, which the user took on
+2026-09-11 on prompt 11's measurement. `scan_sample_grid_for_unresolved_osc` gains a keyword-only
+`warn: bool = True` that gates **only** its two `print` calls — the test, which pair trips it and
+all three returned values are bit-identical to prompt 11's — and `numeric_with_phase_cut` threads
+it as `warn_unresolved_osc: bool = True`, appended last in the signature so no positional index
+moved. Both production integrators pass `warn_unresolved_osc=False`; every other caller keeps
+today's behaviour by default. `main.py` gains two module-level functions,
+`record_unresolved_osc(summary, obj)` and `format_unresolved_osc_summary(summary, sector_label)
+-> List[str]`, and both numeric work queues gain
+`post_handler=lambda obj: record_unresolved_osc(<acc>, obj)` plus a summary printed after
+`.run()` — `post_handler` is the only seam, because both queues run `store_results=False` and
+retain no objects to sweep. Per flagging wavenumber the block gives the counts and the range of
+`unresolved_efolds_subh`; production goes from ~$1.3\times10^5$ printed lines per model to ~52.
+**Nothing stored changed**: the payload keys, the two Datastore factories and the persisted
+columns are untouched, and a datastore written before this commit is readable after it.
+`[00-unresolved-osc-print-policy]` is **resolved** (§4) — but only its *printing* half: whether
+the response grid should resolve the mode through the numeric→WKB seam belongs to the hand-over
+campaign.) Prompt 11 landed (the numeric region's oscillation-resolution
 diagnostic is off the ODE right-hand side: `numeric_with_phase_cut` takes an `omega_sq` callable,
 and `scan_sample_grid_for_unresolved_osc` runs the test **once, after the solve, on the returned
 sample grid** — the grid review §13.1 says the flag is about — instead of at every solver step
@@ -139,7 +157,7 @@ Legend: ⬜ not started · 🟡 in flight · ✅ complete · ⚠️ complete wit
 | # | Prompt | Covers | Model | Status | Commit | Log |
 |---|---|---|---|---|---|---|
 | 11 | [Numeric diagnostics and units](11-numeric-diagnostics-and-units.md) | review §10.2, §12.5, §13.1 | Opus | ⚠️ | *"Test oscillation resolution on the sample grid, off the RHS"* (SHA not embedded, per the campaign convention) | [`logs/11-numeric-diagnostics-and-units.md`](logs/11-numeric-diagnostics-and-units.md) |
-| 16 | [Unresolved-osc print policy](16-unresolved-osc-print-policy.md) | §7 D2; §3 `[00-unresolved-osc-print-policy]` | Opus | ⬜ | | |
+| 16 | [Unresolved-osc print policy](16-unresolved-osc-print-policy.md) | §7 D2; §3 `[00-unresolved-osc-print-policy]` | Opus | ✅ | *"Summarise unresolved-oscillation warnings per wavenumber"* (SHA not embedded, per the campaign convention) | [`logs/16-unresolved-osc-print-policy.md`](logs/16-unresolved-osc-print-policy.md) |
 | 12 | [Tk numeric `atol`](12-tk-numeric-atol.md) | review §12.5 | Opus | ⬜ | | |
 
 > Row 16 is numbered last because the campaign's numbers are append-only, but it **runs between 11
@@ -152,7 +170,7 @@ Legend: ⬜ not started · 🟡 in flight · ✅ complete · ⚠️ complete wit
 |---|---|---|---|---|---|---|
 | 13 | [Verification and docs](13-verification-and-docs.md) | review §4, §12.3, §13.5 | Opus | ⬜ | | |
 
-**Progress:** 13 / 16 complete.
+**Progress:** 14 / 16 complete.
 
 ---
 
@@ -179,8 +197,8 @@ campaign; the review section is the authority on each.
 | M14 | **DEFECT, accuracy** | Consumers spline the growing phase: $h^4x/384$, $O(1)$–$O(10)$ rad at production $x$ (§5, §12.6). Same term as `source-remediation`'s `[12-phase-spline-error-grows-with-x]` | 09, 10 | ⚠️ 09 discharged it for $G_k$: on the review §5 consumer geometry at $k=10^8$, 100/decade, the error is **4.189e-8 rad** against the same samples' `phase_spline` at **7.286e-3 rad** — a ratio of **1.739e5**, and the 4.189e-8 is 2.81 ulp of the 9.09e7 rad span, i.e. the representation floor. $\varphi$ alone is recovered to 2.157e-10 rad, matching $h^4\max|\varphi''''|/384$. 10 discharged it for $T_k$: on a $w=1/3$ fixture at $x_T=10^6$, 100/decade, the error is **3.4482e-10 rad** against the same samples' cubic spline at **7.0854e-03 rad** — a ratio of **2.0548e7** — and the 3.4e-10 is 2.96 ulp of the $10^6$ rad phase, i.e. the `div * TWO_PI` floor. `PHASE_SPLINE_CHUNK_LOGSTEP` is deleted and no production path builds a `phase_spline`. ⚠️ because prompt 10 §3 item 3's 1e-10 on $\omega$ vs `theta_deriv` is missed at one abscissa per $w$ (`[10-residual-spline-end-condition]`) |
 | M15 | **REQUIREMENT** | `PrimitivePhase`: $\theta=-k\Delta\tau+\varphi$ with the `phase_spline` protocol; closed-form $\theta'$; global anchor with the recorded floor (§7, §13.3, §13.4) | 09, 15 | ✅ `ComputeTargets/primitive_phase.py`: `PrimitivePhase(k, leading, z_anchor, z_samples, phi_samples, *, sign, model_functions, label, spline_order, rate=None)` with `raw_theta`/`theta_mod_2pi`/`theta_deriv`/`num_chunks`, plus `build_phi_samples`. `sign=-1` for $G_k$ at fixed $z_r$, `sign=+1` for $T_k$ at fixed $z_{\rm init}$ — one object for both sectors (prompt 10 reuses it, unsubclassed). $\theta'=\mathrm{sign}\,k\,\mathrm{rate}(z)+\varphi'$ in closed form, exact to 0.0 relative on the radiation control. Global anchor, floor documented in the module docstring. **Prompt 15 generalised the closed form**: `rate` is now an explicit, optional keyword-only parameter (default `1/H`, built from `model_functions.Hubble` exactly as before), and `TkSourceFunctions`' `_SoundHorizonRate` adapter — which made `model_functions.Hubble` silently return $H/c_s$ — is gone; `TkSourceFunctions` now passes the model's genuine `model_functions` plus `rate=c_s/H` explicitly. `[10-primitive-phase-leading-rate-is-hardcoded]` is **resolved** (§4) |
 | M16 | **REQUIREMENT** | The `GkSource` rectifier is retained and verified inert on pure-WKB objects, correct on $\delta$-wraps (§8.3; `RECONCILIATION.md` §2 item 6) | 06, 09 | ✅ 06 documented what it must repair; 09 verified it against a faithful copy of `GkSource.py:166-233` (copied, not imported — `assemble_GkSource_values` is a Ray remote over datastore objects), on prompt 06's geometry with the source samples taken from the background grid. **Before rectification $\varphi$ jumps by exactly $+1$ cycle at every stop-point transition and nowhere else** (2 of 22 objects at $k=10^7$, $x_r=10^3$; **90 of 990** over the full sweep, log 06's figure); **the rectifier repairs every one** (90 corrections = 90 transitions) and $\varphi$ is then constant to **3.64e-12 rad**. On pure-WKB objects $\delta=0$ exactly and the rectifier makes **zero** corrections, leaving `theta_div_2pi` untouched. `GkSource.py` was not edited (D5) |
-| M17 | **DEFECT, cost** | Per-RHS `*_omegaEff_sq` diagnostic: 45 % of the numeric run; the warning it feeds is live and must be preserved (§10.2, §13.1) | 11 | ✅ the call is gone from both `RHS` functions; `numeric_with_phase_cut` takes an `omega_sq` callable and runs `scan_sample_grid_for_unresolved_osc` once after the solve. **The warning survives verbatim** (two `print` lines, README §2 (h)) and all three payload fields are still populated. RHS evaluations bit-identical (12,770 / 6,611 / 12,854); LambdaCDM $G_k$ object 0.1299 s → **0.0773 s**, 40.5 % (review measured 0.13 → 0.09 s) |
-| M18 | **DEFECT, units** | `delta_logz` supplied as $\Delta\log_{10}$, used as $\Delta\ln$; and the $G_k$ run is sampled on the response grid, not the source grid the value describes (§10.2, §13.1; `RECONCILIATION.md` §1 item 9) | 11 | ✅ both cured at once: the test now uses the **actual spacing of consecutive returned samples**, so neither `delta_logz` nor which grid it describes enters it. `report_wavelength` is retained and its slip fixed in place (`(1+z) * delta_logz * LN_10`), with the parameter documented as $\Delta\log_{10}(1+z)$; it has no caller left. `main.py`'s `delta_logz=` arguments are untouched, as the prompt requires. The consequence is the D2 measurement in §3 |
+| M17 | **DEFECT, cost** | Per-RHS `*_omegaEff_sq` diagnostic: 45 % of the numeric run; the warning it feeds is live and must be preserved (§10.2, §13.1) | 11, 16 | ✅ the call is gone from both `RHS` functions; `numeric_with_phase_cut` takes an `omega_sq` callable and runs `scan_sample_grid_for_unresolved_osc` once after the solve. **The warning survives verbatim** (two `print` lines, README §2 (h)) and all three payload fields are still populated. RHS evaluations bit-identical (12,770 / 6,611 / 12,854); LambdaCDM $G_k$ object 0.1299 s → **0.0773 s**, 40.5 % (review measured 0.13 → 0.09 s). 16 **relocated** the warning as README §7 D2 option (ii) directs: the two `print` calls stay in `scan_sample_grid_for_unresolved_osc` and stay reachable, gated by a keyword-only `warn: bool = True` that defaults to on; the two production integrators pass `warn_unresolved_osc=False` and `main.py` prints one per-$k$ block per sector instead. The returned dict is asserted equal with the warning on and off |
+| M18 | **DEFECT, units** | `delta_logz` supplied as $\Delta\log_{10}$, used as $\Delta\ln$; and the $G_k$ run is sampled on the response grid, not the source grid the value describes (§10.2, §13.1; `RECONCILIATION.md` §1 item 9) | 11, 16 | ✅ both cured at once: the test now uses the **actual spacing of consecutive returned samples**, so neither `delta_logz` nor which grid it describes enters it. `report_wavelength` is retained and its slip fixed in place (`(1+z) * delta_logz * LN_10`), with the parameter documented as $\Delta\log_{10}(1+z)$; it has no caller left. `main.py`'s `delta_logz=` arguments are untouched — by 11 and by 16, which does not go near them. The consequence was the D2 measurement, and **16 discharges it**: the corrected test fires on essentially every $G_k$ object, so the flag is accumulated per wavenumber and reported once per sector rather than warned per object (§4 `[00-unresolved-osc-print-policy]`) |
 | M19 | **DEFECT, dead path** | `mode.lower()` before the `None` check (§10.2) | 11 | ✅ the `None` test comes first; `mode=None` integrates the whole grid, `mode="STOP"` is accepted, `mode="x"` raises `ValueError` — three tests. The `mode != "stop"` branch is kept (`RECONCILIATION.md` §3) |
 | M20 | **DEFECT, comments + robustness** | The stop point is a maximum, not a minimum; the "fixed phase to avoid jitter" motivation is obsolete; `find_phase_minimum`'s $10^{-3}z$ step is safe only inside the window (§10.2) | 11 | ✅ renamed **`find_phase_extremum`** with `find_phase_minimum` kept as an alias; docstring and both integrators' comments now say maximum, and say the jitter motivation is obsolete because `store()` rotates $(G,G')$ into a pure sine. Steps $2\pi/(16\omega)$ where $\omega^2>0$, falling back to $10^{-3}z$: inside the window both steps find the same extremum, and at $x=6\times10^3$ — where the old step covers **0.955 of a cycle** — the phase step lands within 0.1 cycle of the first maximum while the old step skips more than a full cycle. Window **not** widened. The stop point moves by $\le1.04\times10^{-7}$ relative, inside `root_scalar`'s own tolerance (`[11-stop-point-root-tolerance]`) |
 | M21 | **DEFECT, misleading** | `0.85·z_e6` truncation requests samples never produced in stop mode (§10.2) — comment only | 11 | ✅ both `main.py` comments (`:604-611`, `:1178-1189`) rewritten to say the ODE terminates on the $z_{e6}$ event, the `expected_values` check is skipped in stop mode, and the samples between $z_{e6}$ and $0.85z_{e6}$ are never produced. The constant stays (hand-over decision). `git diff main.py` is comment-only; the 40-of-41 return is pinned by the bit-identity test |
@@ -268,35 +286,6 @@ Opened by the planning pass, 2026-09-10, before any prompt runs.
   LambdaCDM; it is *below* README §6's $5\times10^{-3}$ rad target and above the
   $\varepsilon k\tau$ floor, and is a different error from either. **Next step:** none; recorded
   so a later reader does not chase it.
-
-- **[00-unresolved-osc-print-policy]** *(planning, 2026-09-10)* — README §7 D2: with the units fixed
-  and the test evaluated on the caller's actual sample grid, `has_unresolved_osc` will fire on
-  essentially every `GkNumericIntegration` object (response grid, $x\gtrsim22$). Faithful, but a
-  print storm. **Impact:** prompt 11 (implements and measures), production log volume.
-  **Measured by prompt 11 (2026-09-11), and the decision is now the user's.** The faithful test
-  ships, with today's per-object warning line unchanged — prompt 11 chose no policy. Over the full
-  production source-redshift band on both `RadiationModel` and `LambdaCDMModel` at
-  $k\in\{10^5,10^7,3\times10^8\}$: **2,149 of 2,149 $G_k$-like objects flag** (100 %), first at
-  $x=26.5$–66.6, against the response grid's predicted trip point $x\approx19.7$; **0 of 6
-  $T_k$-like runs flag**, peaking at **0.807–0.822** of the trip threshold ($x_T=223$–228 against
-  $\approx270$) because $T_k$ is sampled on the source grid itself and its frequency carries
-  $c_s=1/\sqrt3$ — the case README §7 D2 was unsure of, now settled. Today's rate is 0 of 2,155.
-  The warning is **two** printed lines, not one, so option (i) turns 0 lines into $\sim1.3\times10^5$
-  per model (~65,000 $G_k$ objects). **Next step:** unchanged — the user chooses per-object line /
-  per-$k$ summary in `main.py` / explicit grid; closes when the chosen policy lands (a follow-up
-  prompt if not (i)). If (iii) is chosen, `NumericIntegrationSupervisor.report_wavelength` is
-  retained, corrected and ready; if (ii), it should probably go.
-  **Decided by the user 2026-09-11: option (ii)** — store the flag, print a per-$k$ summary in
-  `main.py`. **Assigned (2026-09-11): prompt 16**, which gates the per-object print rather than
-  deleting it (README §2 (h)) and wires a `post_handler` summary onto both numeric work queues.
-  Option (iii) was rejected: it would test $G_k$ against a grid it is not sampled on, suppressing
-  the signal and undoing prompt 11's faithful semantics. **What prompt 16 does not settle:** the
-  flag trips at $x=19.74$ against $x=e^3=20.09$ at the stop-search window's floor, so it is
-  `False` before the numeric→WKB hand-over window and `True` across all of it — the same condition
-  as `[05-numeric-region-is-now-the-accuracy-floor]` and `[06-source-spline-residual-vs-handover]`
-  (`docs/OPEN_ISSUES.md` §1.1). Whether the response grid should resolve the mode through the seam
-  is the hand-over campaign's, and the fire rate is an output of its design; prompt 16 settles only
-  where the information is printed.
 
 - **[11-stop-point-root-tolerance]** *(opened by prompt 11, 2026-09-11)* — `find_phase_extremum`
   refines the sign change with `root_scalar(..., xtol=1e-6, rtol=1e-4)`, so the stop point is
@@ -597,6 +586,49 @@ Opened by the planning pass, 2026-09-10, before any prompt runs.
 ---
 
 ## 4. Resolved issues
+
+- **[00-unresolved-osc-print-policy]** *(planning, 2026-09-10; decided by the user 2026-09-11;
+  resolved by prompt 16, 2026-09-12)* — README §7 D2. With the $\ln10$ slip fixed and the test
+  evaluated against the caller's actual sample grid (prompt 11), `has_unresolved_osc` fires on
+  **2,149 of 2,149** $G_k$-like objects, first at $x=26.5$–66.6, and **0 of 6** $T_k$-like runs,
+  which peak at 0.807–0.822 of the trip threshold; today's rate is 0 of 2,155. The warning is
+  **two** printed lines, so keeping it per object would turn 0 printed lines into
+  $\sim1.3\times10^5$ per model (~65,000 `GkNumericIntegration` objects). **Decision (user,
+  2026-09-11): option (ii)** — store the flag, print a per-$k$ summary in `main.py`. Option (iii)
+  ("pass the intended grid explicitly") was rejected because it would test $G_k$ against a grid it
+  is not sampled on, suppressing the signal and undoing prompt 11's faithful semantics; option (i)
+  is the print storm.
+  **Resolution (prompt 16).** The warning is **relocated, not deleted** (README §2 (h)):
+  `scan_sample_grid_for_unresolved_osc` gains a keyword-only `warn: bool = True` gating **only**
+  its two `print` calls, and `numeric_with_phase_cut` a `warn_unresolved_osc: bool = True`
+  appended last in its signature; the test, the failing-pair rule and all three returned values
+  are bit-identical either way (asserted). Both production integrators pass
+  `warn_unresolved_osc=False`; every other caller — tests, the `docs/` reproduction scripts, a
+  future integrator — keeps today's behaviour by default. `main.py` gains module-level
+  `record_unresolved_osc(summary, obj)` and
+  `format_unresolved_osc_summary(summary, sector_label) -> List[str]`, and both numeric work
+  queues gain `post_handler=lambda obj: record_unresolved_osc(<acc>, obj)` — the only seam, since
+  both run `store_results=False` and retain no objects — plus a summary printed after `.run()`.
+  Per flagging wavenumber: the counts and the range of `unresolved_efolds_subh`, the depth inside
+  the horizon at which the grid first failed. Production prints ~52 lines per model instead of
+  ~$1.3\times10^5$; an `ast` guard in `test_main_plumbing.py` fails if a later edit drops either
+  `post_handler` or either formatter call, which is the silent failure this wiring is exposed to.
+  **Nothing stored changed**: payload keys, both Datastore factories and the persisted columns are
+  untouched, and a datastore written before the commit is readable after it.
+  **What this does *not* close.** Only *where the information is printed*. The **semantic**
+  question the flag now detects is untouched and is owned by the hand-over campaign
+  (`docs/OPEN_ISSUES.md` §1.1): the flag trips at $x=19.74$ against $x=e^3=20.09$ at the
+  stop-search window's floor, so it is `False` before the numeric→WKB hand-over window and `True`
+  across all of it — the same condition as `[05-numeric-region-is-now-the-accuracy-floor]` and
+  `[06-source-spline-residual-vs-handover]`. Whether the response grid should resolve the mode
+  through the seam is that campaign's question, and the fire rate is an output of its design, not
+  a knob to tune here.
+  **Loose end, recorded rather than opened.** `NumericIntegrationSupervisor.report_wavelength`
+  still has no caller. Prompt 11 kept it, corrected, because this issue owned the decision, noting
+  that under option (iii) it is where the per-step form goes back and that under option (ii) "it
+  should probably go". Option (ii) landed, but `Quadrature/supervisors/numeric.py` is outside
+  prompt 16's file list — a one-line deletion for prompt 13's clean-up or a later tidy, not a new
+  §3 row. See [`logs/16-unresolved-osc-print-policy.md`](logs/16-unresolved-osc-print-policy.md).
 
 - **[10-primitive-phase-leading-rate-is-hardcoded]** *(opened by prompt 10, 2026-09-11; resolved by
   prompt 15, 2026-09-11)* — `PrimitivePhase.theta_deriv` computed the leading derivative as

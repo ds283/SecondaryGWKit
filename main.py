@@ -334,6 +334,127 @@ def build_QuadSourceIntegral_payload(
     }
 
 
+def record_unresolved_osc(summary: dict, obj) -> None:
+    """Record one completed numeric-integration object into `summary`, keyed by wavenumber.
+
+    `summary` is a plain dict, created empty before a numeric work queue runs and handed to this
+    function by that queue's `post_handler`, which RayWorkPool calls once per completed object in
+    the driver process. Nothing is stored and nothing is returned: returning None is what keeps
+    this compatible with `store_results=False`, under which the objects themselves are not
+    retained and there is no list to sweep afterwards.
+
+    The accumulated flag replaces the per-object warning `numeric_with_phase_cut` used to print
+    (README section 7 decision D2, taken by the user 2026-09-11). With the corrected test of
+    prompt 11 it fires on essentially every GkNumericIntegration object, so the per-object line
+    would be ~1.3e5 lines per model; `format_unresolved_osc_summary` renders this dict as a few
+    lines per wavenumber instead.
+
+    Reporting must never be able to kill a run that computed correctly, so every accessor is
+    guarded: `has_unresolved_osc` raises RuntimeError until it has been populated, and an object
+    that arrives unpopulated is counted separately rather than allowed to propagate.
+    """
+    if obj is None:
+        return
+
+    try:
+        k_inv_Mpc = float(obj.k.k_inv_Mpc)
+    except (AttributeError, TypeError, ValueError):
+        # not an object we know how to key; count it nowhere rather than raising in a
+        # reporting path
+        return
+
+    record = summary.setdefault(
+        k_inv_Mpc,
+        {
+            "recorded": 0,
+            "flagged": 0,
+            "unpopulated": 0,
+            "efolds_min": None,
+            "efolds_max": None,
+        },
+    )
+    record["recorded"] = record["recorded"] + 1
+
+    try:
+        flagged = obj.has_unresolved_osc
+    except RuntimeError:
+        record["unpopulated"] = record["unpopulated"] + 1
+        return
+
+    if flagged is None:
+        record["unpopulated"] = record["unpopulated"] + 1
+        return
+
+    if not flagged:
+        return
+
+    record["flagged"] = record["flagged"] + 1
+
+    try:
+        efolds = obj.unresolved_efolds_subh
+    except RuntimeError:
+        efolds = None
+
+    if efolds is None:
+        return
+
+    efolds = float(efolds)
+    if record["efolds_min"] is None or efolds < record["efolds_min"]:
+        record["efolds_min"] = efolds
+    if record["efolds_max"] is None or efolds > record["efolds_max"]:
+        record["efolds_max"] = efolds
+
+
+def format_unresolved_osc_summary(summary: dict, sector_label: str) -> List[str]:
+    """Render `summary` as the lines to print, one per wavenumber that flagged plus a total.
+
+    Returns [] only when nothing was recorded at all -- the queue did not run. When objects were
+    recorded but none flagged, a single all-clear line is returned: a run that prints nothing is
+    indistinguishable from a run whose post_handler wiring was dropped, and that silent failure
+    is the one this reporting path is most exposed to.
+
+    The per-wavenumber line gives how many objects flagged out of how many were recorded, and the
+    range of `unresolved_efolds_subh` over them -- the depth inside the horizon at which the
+    sample grid first failed to resolve the mode, which is the quantity the hand-over campaign
+    wants (docs/OPEN_ISSUES.md section 1.1).
+    """
+    if len(summary) == 0:
+        return []
+
+    recorded_total = sum(record["recorded"] for record in summary.values())
+    flagged_total = sum(record["flagged"] for record in summary.values())
+    unpopulated_total = sum(record["unpopulated"] for record in summary.values())
+    flagged_k = [k for k in summary if summary[k]["flagged"] > 0]
+
+    lines = [f"-- UNRESOLVED-OSCILLATION SUMMARY | {sector_label}"]
+
+    if len(flagged_k) == 0:
+        lines.append(
+            f"|  no object reported unresolved oscillations ({recorded_total} objects over {len(summary)} wavenumbers)"
+        )
+    else:
+        for k_inv_Mpc in sorted(flagged_k):
+            record = summary[k_inv_Mpc]
+            if record["efolds_min"] is None:
+                efolds = "e-folds inside horizon unavailable"
+            else:
+                efolds = f"e-folds inside horizon at first unresolved sample: {record['efolds_min']:.3g} to {record['efolds_max']:.3g}"
+            lines.append(
+                f"|  k = {k_inv_Mpc:.5g}/Mpc: {record['flagged']} of {record['recorded']} objects flagged | {efolds}"
+            )
+
+        lines.append(
+            f"|  TOTAL: {flagged_total} of {recorded_total} objects flagged, over {len(flagged_k)} of {len(summary)} wavenumbers"
+        )
+
+    if unpopulated_total > 0:
+        lines.append(
+            f"|  ({unpopulated_total} objects reached the summary without a populated has_unresolved_osc flag)"
+        )
+
+    return lines
+
+
 def run_pipeline(
     model_data: dict,
     source_k_sample: wavenumber_array,
@@ -663,6 +784,12 @@ def run_pipeline(
             grouper(source_k_exit_times, n=50, incomplete="fill")
         )
 
+        # the integrators no longer print a per-object unresolved-oscillation warning; the flag
+        # is accumulated here instead and reported once per wavenumber after the queue drains
+        # (README section 7 decision D2). store_results=False means the objects are not retained,
+        # so post_handler -- called once per completed task, in the driver -- is the only seam.
+        Tk_unresolved_osc = {}
+
         Tk_numeric_queue = RayWorkPool(
             pool,
             Tk_numeric_work_batches,
@@ -670,6 +797,7 @@ def run_pipeline(
             compute_handler=compute_Tk_numeric_work,
             validation_handler=validate_Tk_numeric_work,
             label_builder=build_Tk_numeric_work_label,
+            post_handler=lambda obj: record_unresolved_osc(Tk_unresolved_osc, obj),
             title="CALCULATE NUMERICAL PART OF MATTER TRANSFER FUNCTIONS",
             store_results=False,
             create_batch_size=2,
@@ -679,6 +807,11 @@ def run_pipeline(
             notify_min_time_interval=MIN_NOTIFY_INTERVAL,
         )
         Tk_numeric_queue.run()
+
+        for line in format_unresolved_osc_summary(
+            Tk_unresolved_osc, "matter transfer functions, numerical part"
+        ):
+            print(line)
 
     ## STEP 3
     ## COMPUTE MATTER TRANSFER FUNCTIONS USING THE WKB APPROXIMATION FOR SOURCE TIMES INSIDE THE HORIZON
@@ -1240,6 +1373,10 @@ def run_pipeline(
             grouper(z_source_sample, n=50, incomplete="fill")
         )
 
+        # see the transfer-function queue above: the per-object warning is replaced by one
+        # accumulator per sector and a summary printed when the queue drains
+        Gk_unresolved_osc = {}
+
         Gk_numeric_queue = RayWorkPool(
             pool,
             Gk_numeric_work_batches,
@@ -1247,6 +1384,7 @@ def run_pipeline(
             compute_handler=compute_Gk_numeric_work,
             validation_handler=validate_Gk_numeric_work,
             label_builder=build_Gk_numeric_work_label,
+            post_handler=lambda obj: record_unresolved_osc(Gk_unresolved_osc, obj),
             title="CALCULATE NUMERICAL PART OF TENSOR GREEN FUNCTIONS",
             store_results=False,
             create_batch_size=2,
@@ -1256,6 +1394,11 @@ def run_pipeline(
             notify_min_time_interval=MIN_NOTIFY_INTERVAL,
         )
         Gk_numeric_queue.run()
+
+        for line in format_unresolved_osc_summary(
+            Gk_unresolved_osc, "tensor Green's functions, numerical part"
+        ):
+            print(line)
 
     ## STEP 6
     ## COMPUTE TENSOR GREEN'S FUNCTIONS USING THE WKB APPROXIMATION FOR RESPONSE TIMES INSIDE THE HORIZON

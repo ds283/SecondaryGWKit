@@ -31,6 +31,8 @@ def scan_sample_grid_for_unresolved_osc(
     omega_sq: Callable[[BackgroundModel, float, float], float],
     sampled_z: Sequence[float],
     object_label: str,
+    *,
+    warn: bool = True,
 ) -> dict:
     """
     Test whether the *returned sample grid* is fine enough to resolve the oscillations the
@@ -66,6 +68,15 @@ def scan_sample_grid_for_unresolved_osc(
     :param omega_sq: the sector's effective frequency, called as ``omega_sq(model, k_float, z)``
     :param sampled_z: the redshifts actually returned by the solver, in descending order
     :param object_label: label for the warning message
+    :param warn: keyword-only; when False the two ``print`` calls are suppressed, and *only*
+        those. Which pair fails, and the three returned values, do not depend on it. The
+        production integrators pass ``warn=False`` because ``main.py`` now accumulates the flag
+        over each work queue and prints one summary per wavenumber instead (prompt 16 of
+        ``prompts/GkTk-remedial``, enacting README section 7 decision D2): with the corrected
+        test of prompt 11 the flag fires on essentially every ``GkNumericIntegration`` object,
+        so the per-object line would be ~1.3e5 lines per model. The default stays ``True`` so
+        that any other caller -- a test, a script under ``docs/``, a future integrator -- keeps
+        today's behaviour and the warning remains one argument away.
     :return: dict with ``has_unresolved_osc``, ``unresolved_z`` and ``unresolved_efolds_subh``
     """
     for i in range(len(sampled_z) - 1):
@@ -81,12 +92,13 @@ def scan_sample_grid_for_unresolved_osc(
 
         if wavelength < grid_spacing:
             efolds_subh = log((1.0 + z) * k_float / model.functions.Hubble(z))
-            print(
-                f"!! WARNING: {object_label} integration for k = {k.k_inv_Mpc:.5g}/Mpc (store_id={k.store_id}) may have developed unresolved oscillations"
-            )
-            print(
-                f"|    current z={z:.5g}, e-folds inside horizon={efolds_subh:.3g} | approximate wavelength Delta z={wavelength:.5g}, approximate grid spacing at this z: {grid_spacing:.5g}"
-            )
+            if warn:
+                print(
+                    f"!! WARNING: {object_label} integration for k = {k.k_inv_Mpc:.5g}/Mpc (store_id={k.store_id}) may have developed unresolved oscillations"
+                )
+                print(
+                    f"|    current z={z:.5g}, e-folds inside horizon={efolds_subh:.3g} | approximate wavelength Delta z={wavelength:.5g}, approximate grid spacing at this z: {grid_spacing:.5g}"
+                )
             return {
                 "has_unresolved_osc": True,
                 "unresolved_z": z,
@@ -118,6 +130,7 @@ def numeric_with_phase_cut(
     stop_search_window_z_end: Optional[float] = None,
     task_label: str = "numeric_with_phase_cut",
     object_label: str = "(object)",
+    warn_unresolved_osc: bool = True,
 ) -> dict:
     k_wavenumber: wavenumber = k.k
     check_units(k_wavenumber, model_proxy)
@@ -322,6 +335,10 @@ def numeric_with_phase_cut(
     # the run (review §10.2); it is now done once, on the returned samples, which is the grid the
     # flag is actually about (review §13.1). See scan_sample_grid_for_unresolved_osc for the change
     # in what is sampled.
+    #
+    # warn_unresolved_osc gates the printed warning only -- never the test, and never the three
+    # values returned. The two production integrators pass False and main.py summarises the flag
+    # per wavenumber instead (README section 7 decision D2, taken by the user 2026-09-11).
     if omega_sq is not None:
         osc_diagnostic = scan_sample_grid_for_unresolved_osc(
             model,
@@ -330,6 +347,7 @@ def numeric_with_phase_cut(
             omega_sq,
             sampled_z,
             object_label,
+            warn=warn_unresolved_osc,
         )
     else:
         # no effective frequency supplied: the diagnostic was not requested, and the flag fields
