@@ -2,7 +2,8 @@
 
 **Campaign:** [`README.md`](README.md) · **Design:** [`DRAFT-PLAN.md`](DRAFT-PLAN.md) · **Reconciliation:** [`RECONCILIATION.md`](RECONCILIATION.md)
 **Baseline commit:** `95cc326` (`transfer-remedial-plan`, clean)
-**Last updated:** 2026-09-10 — prompt 08 executed on `69c37a9` (this commit; SHA not self-embedded).
+**Last updated:** 2026-09-10 — prompt 09 executed on this commit (SHA not self-embedded, per the
+same precedent prompts 01–08 set). **Campaign complete.**
 **Planned against:** `c4c4905`; re-pointed to `95cc326` before commit (`RECONCILIATION.md` §0).
 **Executing against:** `f9cc891` (prompt 06's commit), 23 commits after `95cc326` (the merge of
 `transfer-remedial-plan` into the working branch, `source-remediation` prompt 12's live
@@ -69,9 +70,11 @@ Legend: ⬜ not started · 🟡 in flight · ✅ complete · ⚠️ complete wit
 | # | Prompt | Covers | Model | Status | Commit | Log |
 |---|---|---|---|---|---|---|
 | 08 | [Fixture revalidation](08-fixture-revalidation.md) | plan §8.3, §9 Stage 5, §10 | Opus 5 | ⚠️ | *(this commit; SHA not self-embedded)* | [`08`](logs/08-fixture-revalidation.md) |
-| 09 | [Benchmark and docs](09-benchmark-and-docs.md) | plan §9 Stage 5, §11 | Sonnet | ⬜ | | |
+| 09 | [Benchmark and docs](09-benchmark-and-docs.md) | plan §9 Stage 5, §11 | Sonnet 5 | ⚠️ | *(this commit; SHA not self-embedded)* | [`09`](logs/09-benchmark-and-docs.md) |
 
-**Progress:** 8 / 9 complete.
+**Progress:** 9 / 9 complete. **Campaign complete** (2026-09-10) — see
+`docs/transfer-remedial-verification.md` for the closing record; nine commits, each independently
+revertible, none amended or squashed.
 
 ---
 
@@ -86,7 +89,7 @@ campaign; the plan section is the authority on each.
 | M2 | **DEFECT, spurious** | The `phi` root solve returns a non-zero offset at a match point where the phase is already exact; measured \(-4.836537\times10^{-8}\) at \(\nu=5/2\), and it **is** the whole tight-tolerance error (§4.3) | 05, 06 | ✅ |
 | M3 | **DEFECT, accuracy** | Full-phase interpolation errs by \(h^4x/384\) — 6.7e-10 at \(x=10^3\), 6.7e-6 at \(10^7\) (§4.2); chunking has no measurable effect on it (§4.6) | 05 | ✅ |
 | M4 | **DEFECT, silent failure** | `hankel1e` returns exactly `-0j` above 7.13e8 (\(\nu\gtrsim100\)) / 2.247e15 (all \(\nu\)); `isfinite` passes and `log(abs(·))` is `-inf` (§4.4) | 02, 03, 04 | ✅ |
-| M5 | **DEFECT, hard limit** | `jv`/`yv` become O(1)-relatively noisy above \(x\approx2.5\times10^{15}\), the ODE right-hand side stops being \(1+O(\nu^2/x^2)\), and DOP853 at `rtol=5e-14` stalls — construction never returns (recon C1; **not in the plan**) | 02, 03, 05, 09 | 🟡 |
+| M5 | **DEFECT, hard limit** | `jv`/`yv` become O(1)-relatively noisy above \(x\approx2.5\times10^{15}\), the ODE right-hand side stops being \(1+O(\nu^2/x^2)\), and DOP853 at `rtol=5e-14` stalls — construction never returns (recon C1; **not in the plan**) | 02, 03, 05, 09 | ✅ |
 | M6 | **REQUIREMENT** | Closed-form tail from DLMF 10.18.18, with \(a=(1+r')^{-1/2}\) from the Wronskian and a remainder-tested \(x_\star\). **Required, not deferred** (§1, §7.2) | 03, 05 | ✅ |
 | M7 | **REQUIREMENT** | Branch tracking verified, not assumed: 3.685 rad per interval and ~90 wraps at \(\nu=1000.5\) defeat fixed-density `unwrap` (§4.5, recon C2) | 04 | ✅ |
 | M8 | **REQUIREMENT** | Two-sided adaptivity — refine at the turning point, coarsen in the tail (§4.5) | 04 | ✅ |
@@ -101,8 +104,8 @@ campaign; the plan section is the authority on each.
 | M17 | **REQUIREMENT** | Phase groups as \(Kt+C+R(t)\); combine leading coefficients before multiplying by \(t\) (§8.2) | 07 | ✅ |
 | M18 | **REQUIREMENT** | Tests that can see the improvement: 50 % and \(10^{-3}\) thresholds cannot (§9 Stage 1, §10) | 01, 08 | ✅ |
 | M19 | **REQUIREMENT** | Separate the Bessel-oracle gain from the consumer re-spline floor and the physical LG truncation (§8.3) | 08 | ✅ |
-| M20 | **REQUIREMENT** | Re-run the capped benchmark tier at \(\kappa=1000\) and correct its note's diagnosis (§9 Stage 5, recon C1) | 09 | ⬜ |
-| M21 | **REQUIREMENT** | Update the follow-up document; remove the stale blanket \(x\times10^{-8}\) claim while retaining the historical measurements (§9 Stage 5) | 09 | ⬜ |
+| M20 | **REQUIREMENT** | Re-run the capped benchmark tier at \(\kappa=1000\) and correct its note's diagnosis (§9 Stage 5, recon C1) | 09 | ✅ |
+| M21 | **REQUIREMENT** | Update the follow-up document; remove the stale blanket \(x\times10^{-8}\) claim while retaining the historical measurements (§9 Stage 5) | 09 | ✅ |
 
 **Out of scope (do not schedule):** `ComputeTargets/QuadSourceIntegral.py` (in-flight
 `source-remediation` campaign — handed over in prompt 09); `phase_spline`'s chunking and its
@@ -114,39 +117,11 @@ high-order target beyond \(10^{-6}\); widening the supported \((\nu,x_{\max})\) 
 
 ## 3. Active and unresolved issues
 
-Two entries are opened by the planning pass, before any prompt runs, because they are decisions or
-risks that the prompts inherit rather than create.
-
-- **[00-plan-vs-tree-corrections]** *(opened by the planning pass, 2026-09-08)* — four claims in
-  `DRAFT-PLAN.md` do not survive reconciliation against the tree, and the prompts are built on the
-  corrected versions: **(C1)** the ODE build does not take >600 s at \(x_{\max}=10^{13}\) — it takes
-  0.09 s, is flat across five decades, and stalls only above \(x\approx2.5\times10^{15}\) because
-  Amos `jv`/`yv` noise defeats the adaptive stepper, so the performance motivation is "a cliff was
-  removed", not "a cost curve was removed"; **(C2)** the residual is **not** sub-cycle at high order
-  — it spans 565.82 rad ≈ 90 cycles at \(\nu=1000.5\), so the correct reason to drop `phase_spline`
-  from this module is \(\varepsilon\lvert r\rvert_{\max}\approx1.3\times10^{-13}\), not "never
-  exceeds a cycle"; **(C3)** `plot_besssel_phase.py` is already broken, so migrating it is a
-  repair-or-delete decision; **(C4)** `test_phase_derivative` already contracts \(\theta'\) to
-  \(10^{-6}\) and is the campaign's standing regression gate, which the plan does not mention.
-  **Impact:** prompts 01, 04, 05, 06, 09 each carry the relevant correction inline; an agent that
-  works from `DRAFT-PLAN.md` alone will write a false justification into a docstring or a commit
-  message. **Next step:** nothing — closed by prompt 09, which records the corrections in `docs/`.
-  `DRAFT-PLAN.md` is deliberately left unedited as the revision-2 review record.
-
-- **[00-qsi-three-bessel-levin-excluded]** *(opened by the planning pass, 2026-09-08; re-checked
-  2026-09-09 against `95cc326`)* — `ComputeTargets/QuadSourceIntegral.py:1175-1442`
-  (`_three_bessel_Levin`) makes eight `adaptive_levin_sincos` calls on signed sums of three
-  `bessel_phase` `raw_theta` values with **no `theta_deriv`** and no `theta_abserr`, so Levin obtains
-  \(\theta'\) by spectral differentiation of the raw phase there — the route
-  `three_bessel_integrals._phase_group`'s docstring exists to avoid — and it has the same
-  phase-group cancellation problem prompt 07 fixes in the sibling module. **The gap survived that
-  file's own rewrite** by `source-remediation` prompts 08–10, and is now anomalous within its own
-  file: the new phase-group route passes `theta_deriv` (`:1008`, `LEVIN_USE_THETA_DERIV = True` at
-  `:93`) while these eight calls do not. That campaign's board records only B6 (`atol`/`rtol`
-  forwarding) here, not the missing derivative. **Impact:** the analytic comparison branch of
-  `QuadSourceIntegral` will not inherit the campaign's improvement, and its accuracy after this
-  campaign is unknown. **Next step:** prompt 09 hands it to `prompts/source-remediation` as an entry
-  in that campaign's own §3. Nothing here closes it.
+The two entries the planning pass opened before any prompt ran —
+`[00-plan-vs-tree-corrections]` and `[00-qsi-three-bessel-levin-excluded]` — were both closed by
+prompt 09 (§4: the first by recording the corrections in `docs/`, the second by handing it off to
+`prompts/source-remediation`). What remains below is what is genuinely still open at campaign
+close, plus one issue prompt 09 itself opened while re-running the benchmark tier.
 
 - **[01-scipy-jv-yv-high-order-boundary]** *(opened by prompt 01, 2026-09-10)* — the silent Amos
   failure boundary of `DRAFT-PLAN.md` §4.4 and `RECONCILIATION.md` §1 is **order dependent, and it
@@ -168,27 +143,6 @@ risks that the prompts inherit rather than create.
   **Next step:** prompt 02 pins both boundaries for `jv`/`yv` as well as for `hankel1e`, and
   narrows the order threshold if it is cheap to do so. Nothing outside `LiouvilleGreen/tests/` needs
   to change: no consumer in the tree evaluates `jv`/`yv` above 1e7 at high order.
-
-- **[03-draft-plan-tail-coefficient-wrong]** *(opened by prompt 03, 2026-09-10)* — the **third
-  coefficient of DLMF 10.18.18** as printed in `DRAFT-PLAN.md` §7.2, in prompt 03 §2 and in its §5
-  reproduction script has denominator **15360**; the correct denominator is **5120**, a factor of
-  three. Determined numerically, not guessed: with the first two (correct) terms subtracted from a
-  120-digit `mpmath` residual on its resolved branch, \((r_{\rm true}-r_2)x^5\) converges to
-  0.19999998 (\(\nu=3/2\)), −5.39999928 (5/2) and 864675.13 (20.5) against numerators 1024, −27648
-  and 4427136000 — ratio 5120.0 at all three — and Abramowitz & Stegun 9.2.29's grouping gives
-  \(32/(5\cdot8^5)=1/5120\) exactly, while its \(4/(3\cdot8^3)=1/384\) reproduces the plan's
-  *second* denominator. So the plan folded the wrong power of 8 into the third term only. The
-  fourth coefficient, obtained the same way, is **229376** (\(=7\cdot8^7/64\)). **Impact:** an
-  agent that takes the series from the plan text ships a "three-term" series that removes only one
-  third of the two-term error (measured 1.769e-10 → 1.179e-10 at \(\nu=5/2,x=125\), instead of
-  → 2.42e-14) and a crossover sized by an estimator that does not describe the remainder.
-  `LiouvilleGreen/bessel_tail.py` ships 5120/229376 and
-  `test_bessel_tail.test_coefficients_match_the_published_series` pins them; nothing else in the
-  tree is affected — `bessel_reference.tail_residual_series` carries only the first two
-  coefficients, 8 and 384, which are correct. **Next step:** prompts 04 and 05 must take
-  coefficients from `bessel_tail.tail_series_coefficients`, never from the plan text; prompt 09
-  records the correction in `docs/` alongside `[00-plan-vs-tree-corrections]`, which closes this.
-  `DRAFT-PLAN.md` is deliberately not edited (README §5 item 9).
 
 - **[04-achieved-estimates-exclude-the-sampling-floor]** *(opened by prompt 04, 2026-09-10)* —
   `NearRegionData`'s three `achieved_*` numbers are measured by resampling `hankel1e` at points
@@ -282,24 +236,6 @@ risks that the prompts inherit rather than create.
   than from raw phases) or delete the function. It is a repair-or-delete judgement like C3's and
   belongs to whoever next needs the plot.
 
-- **[07-generic-K-product-rounding]** *(opened by prompt 07, 2026-09-10)* — prompt 07's
-  \(Kt+C+R(t)\) assembly removes the cancellation error of a near-resonant group phase, but the
-  group phase is still one double, so it retains one rounding of the **product** \(Kx\). Prompt 07
-  §2's error model accounts for \(t\,\delta K\) and not for that, and it is what binds whenever
-  \(K\) is not small: measured at orders (1/2, 3/2, 5/2), signs \((+,-,-)\) and \(K=0.1\),
-  \(\lvert\delta\Theta\rvert=1.526\times10^{-5}\) rad at \(x=10^{12}\) — exactly one ulp of
-  \(Kx=10^{11}\) — for **both** the new and the old route, so a non-resonant group gains nothing
-  from the restructure. Near resonance it is irrelevant (\(Kx\) is small) and the new route
-  measures 1.4e-13 against the old 2.9e-5. **Impact:** it caps what a three-Bessel integral can
-  assert at large `max_x` for a generic triple. `test_3bessel_analytic.py` runs at
-  \(x_{\max}=10^{12}\) with a same-sign group of \(K=k+q+s\), so this is a floor on prompt 08's
-  re-tightening there, alongside the `MAX_X` truncation of log 07 observation 4. **Next step:**
-  either accept it and record it in `docs/` (prompt 09), or split \(K\cdot x\) into a two-product
-  \((hi, lo)\) — Dekker/Veltkamp, or `math.fma` on Python 3.13+ — and fold `lo` into the small
-  angle of `_PhaseGroup.sin_cos`, which would take the trigonometric path to ~1e-16 at any \(K\).
-  Deliberately not done in prompt 07: the prompt prescribes handing the unreduced product to libm,
-  and this is a second change to the same expression.
-
 - **[08-3bessel-chebyshev-order-is-now-the-limit]** *(opened by prompt 08, 2026-09-10)* —
   `LiouvilleGreen/three_bessel_integrals.py:88` sets `DEFAULT_3BESSEL_CHEBYSHEV_ORDER = 12`, and
   the comment above it explains the choice by saying accuracy "is set by the phase and modulus
@@ -334,19 +270,6 @@ risks that the prompts inherit rather than create.
   it (README §4.2), so this is a hand-off candidate for prompt 09 alongside
   `[05-quadsource-order-check-docstring-stale]`.
 
-- **[08-test-three-bessel-tolerances-unassigned]** *(opened by prompt 08, 2026-09-10)* — README §4
-  says "**07 before 08.** 08 re-tightens `test_three_bessel.py`'s and `test_3bessel_analytic.py`'s
-  tolerances, which 07 changes the accuracy of." But `test_three_bessel.py` is **not** in prompt
-  08's "Files you may touch", not in README §3's file column for prompt 08, and prompt 08 has no
-  section for it; its §6 acceptance says the diff must be "confined to the four test files", which
-  that file would make five. Prompt 08 therefore did not touch it (log 08 Deviation 1) — the
-  prompt file and README §3 agree against README §4's prose. **Impact:** that module's tolerances
-  are still the pre-campaign ones. It passes (prompt 07 ran it, 4.1 s), and its `atol`/`rtol` call
-  sites still emit one `DeprecationWarning` each (standing note 20), so nothing is broken; what is
-  missing is the re-tightening README §4 promised. **Next step:** either a short follow-up prompt
-  in this campaign, or fold it into prompt 09's documentation as explicitly deferred. It needs a
-  decision, not analysis.
-
 - **[08-3bessel-plot-cost-dominates-the-suite]** *(opened by prompt 08, 2026-09-10)* —
   `test_3bessel_analytic.plot_and_compute_3Bessel` evaluates a **250-point `logspace` grid of full
   three-Bessel integrals per case, purely to draw one figure**, and only then evaluates the single
@@ -363,6 +286,29 @@ risks that the prompts inherit rather than create.
   run in seconds and the figures are opt-in; and decide whether `test_YJJ_log_scaling`, which
   asserts nothing, belongs in `unittest` discovery or in `docs/` as a script. Neither changes a
   tolerance or an assertion.
+
+- **[09-bessel-tier-hardcoded-repo-path]** *(opened by prompt 09, 2026-09-10)* —
+  `docs/adaptive-levin-benchmark/levin_bench/bessel_tier.py:40` hardcodes
+  `REPO = "/Users/ds283/Documents/Code/SecondaryGWKit"` (the main checkout's absolute path) and
+  inserts it into `sys.path`; its other `sys.path` entry,
+  `os.path.dirname(os.path.dirname(os.path.abspath(__file__)))`, resolves to
+  `docs/adaptive-levin-benchmark`, which contains no `LiouvilleGreen` package and so supplies
+  nothing to shadow `REPO` with. Running the script from a **worktree** — as every commit in this
+  campaign has been made from — therefore silently imports `LiouvilleGreen` from the **main
+  checkout** instead of the tree actually being measured. **Discovered while executing this
+  prompt**: the first attempt to re-run the $\kappa=1000$ tier reproduced the *old*, pre-campaign
+  `bessel_phase()` construction's cliff exactly (a `solve_ivp` stall, confirmed by interrupting the
+  process and reading the traceback), because the main checkout was on `main` at `9ff59d5`, which
+  predates this campaign entirely. **Impact:** any future re-run of this benchmark tier from a
+  worktree will silently measure the wrong tree's `LiouvilleGreen`, with no error or warning — the
+  import simply succeeds against a different package. **Next step:** either resolve `REPO` relative
+  to `__file__` (three `dirname` calls reach the repository root from
+  `docs/adaptive-levin-benchmark/levin_bench/bessel_tier.py`) or document the constraint
+  prominently in the module docstring; out of this prompt's scope ("one constant, one comment") and
+  not done here. The corrected measurement in
+  `docs/transfer-remedial-verification.md` §7 was obtained by pre-importing the three
+  `LiouvilleGreen` modules the script needs from this worktree before importing `bessel_tier`,
+  which pins them in `sys.modules` ahead of the hardcoded path.
 
 > Add an entry here whenever a prompt finishes with something unresolved: a verification step that
 > could not be run, an assumption that could not be confirmed, a deviation a later prompt has to
@@ -404,6 +350,71 @@ risks that the prompts inherit rather than create.
   cure. Prompt 09 hands the corresponding
   `levin-refactor` entry `[09-abserr-does-not-bound-phase-spline-floor]` back as measured false on
   this tree.
+
+- **[00-plan-vs-tree-corrections]** *(opened by the planning pass, 2026-09-08; closed by prompt 09,
+  2026-09-10)* — four claims in `DRAFT-PLAN.md` do not survive reconciliation against the tree:
+  **(C1)** the ODE build does not take >600 s at $x_{\max}=10^{13}$ — it takes 0.09 s, is flat
+  across five decades, and stalls only above $x\approx2.5\times10^{15}$ because Amos `jv`/`yv`
+  noise defeats the adaptive stepper, so the performance motivation is "a cliff was removed", not
+  "a cost curve was removed"; **(C2)** the residual is **not** sub-cycle at high order — it spans
+  565.82 rad ≈ 90 cycles at $\nu=1000.5$, so the correct reason to drop `phase_spline` from this
+  module is $\varepsilon\lvert r\rvert_{\max}\approx1.3\times10^{-13}$, not "never exceeds a
+  cycle"; **(C3)** `plot_besssel_phase.py` was already broken, so migrating it was a
+  repair-or-delete decision; **(C4)** `test_phase_derivative` already contracted $\theta'$ to
+  $10^{-6}$ and is the campaign's standing regression gate, which the plan does not mention.
+  **Resolution:** all four are recorded, with their measurements, in
+  `docs/transfer-remedial-verification.md` §3, and the stale blanket-floor claim `bessel_phase`
+  put under `docs/lg-phase-and-handover-followup-2026-09.md` §2.4 is marked superseded there (dated
+  supersession note, historical numbers retained per that document's own instruction).
+  `DRAFT-PLAN.md` itself remains unedited, as the revision-2 review record.
+
+- **[03-draft-plan-tail-coefficient-wrong]** *(opened by prompt 03, 2026-09-10; closed by prompt 09,
+  2026-09-10)* — the **third coefficient of DLMF 10.18.18** as printed in `DRAFT-PLAN.md` §7.2 and
+  in prompt 03's own text has denominator **15360**; the correct denominator, determined
+  numerically against a 120-digit `mpmath` residual and cross-checked against Abramowitz & Stegun
+  9.2.29's $(8x)^k$ grouping, is **5120** (fourth coefficient: **229376**). `LiouvilleGreen/bessel_tail.py`
+  ships the correct values and pins them with a test. **Resolution:** the correction is recorded,
+  with the numerical determination, in `docs/transfer-remedial-verification.md` §3, alongside
+  `[00-plan-vs-tree-corrections]`. `DRAFT-PLAN.md` remains unedited (README §5 item 9).
+
+- **[07-generic-K-product-rounding]** *(opened by prompt 07, 2026-09-10; closed by prompt 09,
+  2026-09-10 — accepted and documented, not fixed)* — prompt 07's $Kt+C+R(t)$ assembly removes
+  near-resonant cancellation but still carries one rounding of the product $Kx$: measured
+  $\lvert\delta\Theta\rvert=1.526\times10^{-5}$ rad at $K=0.1,\,x=10^{12}$ (one ulp of $Kx$), the
+  same for the new and the old route, so a non-resonant group gains nothing from the restructure.
+  **Resolution:** the issue's own two options were "accept it and record it in `docs/` (prompt 09),
+  or split $K\cdot x$ into a two-product $(hi,lo)$". Taken: recorded, with the measurement, in
+  `docs/transfer-remedial-verification.md` §8 ("Remaining floors"), as a named limitation of a
+  generic (non-resonant) three-Bessel phase group. Not fixed — the two-product split remains
+  available to a future prompt if a non-resonant group's accuracy at large `max_x` is ever binding.
+
+- **[08-test-three-bessel-tolerances-unassigned]** *(opened by prompt 08, 2026-09-10; closed by
+  prompt 09, 2026-09-10 — deferred, not fixed)* — README §4's prose said prompt 08 would re-tighten
+  `test_three_bessel.py`'s tolerances, but neither prompt 08's own file list nor README §3's
+  per-prompt file column include that file, and prompt 08's own acceptance criterion restricted its
+  diff to four files; the prompt text and README §3 agree with each other against README §4's
+  prose. `test_three_bessel.py`'s tolerances are therefore still the pre-campaign ones (the module
+  passes; its `atol`/`rtol` call sites still emit one `DeprecationWarning` each, standing note 20).
+  **Resolution:** the issue's own two options were "a short follow-up prompt in this campaign, or
+  fold it into prompt 09's documentation as explicitly deferred". Taken: recorded as an explicit,
+  reasoned deferral in `docs/transfer-remedial-verification.md` §10, rather than an oversight. A
+  future prompt may re-tighten it if the eight-order oracle improvement is judged to move its
+  accuracy the way it moved `test_3bessel_analytic.py`'s.
+
+- **[00-qsi-three-bessel-levin-excluded]** *(opened by the planning pass, 2026-09-08; re-checked
+  2026-09-09; closed by hand-off, prompt 09, 2026-09-10)* — `ComputeTargets/QuadSourceIntegral.py`'s
+  `_three_bessel_Levin` (`:1175-1442`) makes eight `adaptive_levin_sincos` calls on signed sums of
+  three `bessel_phase` `raw_theta` values with **no `theta_deriv`** and no `theta_abserr`, the same
+  cancellation problem prompt 07 fixed in the sibling module (`three_bessel_integrals.py`). This
+  campaign's rules forbid touching `ComputeTargets/QuadSourceIntegral.py` (README §1.1, §4.2), so
+  nothing here fixes the underlying gap — closing this entry records that **this campaign's
+  obligation regarding it is discharged**, not that the code defect is repaired.
+  **Resolution:** handed off, per README §1.1 and prompt 09's own instructions, as a new entry
+  `[transfer-remedial-qsi-phase-groups]` in `prompts/source-remediation/IMPLEMENTATION_STATE.md`
+  §3 (the only edit this campaign made to that file), and as a full section in
+  `docs/transfer-remedial-verification.md` §11, naming the working pattern
+  (`LiouvilleGreen/three_bessel_integrals.py`'s `_PhaseGroup`) to copy. The underlying gap remains
+  open, now tracked exclusively on `source-remediation`'s own board.
 
 ---
 
@@ -640,3 +651,14 @@ risks that the prompts inherit rather than create.
     \(1.078\times10^{-14}\) at \(\vartheta\) up to 1000. It is a floor the *fixture*
     introduces, not the oracle, and it is now stated in that docstring. Anything that rotates a
     phase this way inherits it; the split-evaluation route (`phase.sin_cos_theta`) does not.
+
+28. **The benchmark tier's \(\kappa=1000\) case now completes, in under 2 s for all seven oracles**
+    (prompt 09; `docs/adaptive-levin-benchmark/levin_bench/bessel_tier.py`'s `B1_KAPPA` now
+    includes 1000.0). Phase build is 0.0001–0.0081 s per oracle (three phases); the Levin
+    evaluation, not the phase layer, is what takes the remaining time (0.15–0.39 s). **A re-run of
+    that script from a worktree must be done carefully**: `bessel_tier.py:40` hardcodes the main
+    checkout's absolute path into `sys.path`, so importing it from a worktree silently measures the
+    *main checkout's* `LiouvilleGreen`, not the worktree's own — issue
+    `[09-bessel-tier-hardcoded-repo-path]`. Pre-import the three `LiouvilleGreen` modules the
+    script needs, from the worktree, before importing `levin_bench.bessel_tier`, or fix the path
+    resolution first.

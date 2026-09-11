@@ -206,9 +206,7 @@ def run_bessel_quad(kind, O, k, q, s, max_x, budget_seconds=60.0, panels_per_osc
         with warnings.catch_warnings():
             warnings.simplefilter("ignore")
             for lo, hi in zip(edges[:-1], edges[1:]):
-                total += quad(
-                    counted, lo, hi, epsabs=1e-14, epsrel=1e-12, limit=200
-                )[0]
+                total += quad(counted, lo, hi, epsabs=1e-14, epsrel=1e-12, limit=200)[0]
     except BudgetExceeded:
         status = "timeout"
         total = np.nan
@@ -272,9 +270,26 @@ def truncation_scan():
 # ---------------------------------------------------------------------------
 
 B1_MAX_X = 1.0e12
-# kappa=1000 (x_max ~ 8e15) does not complete a bessel_phase build within ~25 min:
-# the phase layer, not the Levin core, is the scalability limit.  Capped at 100.
-B1_KAPPA = [1.0, 10.0, 100.0]
+# Historical note (pre `prompts/transfer-remedial`): at kappa=1000, x_max for the phase build
+# reached ~2.3e15 for the largest momentum, and the old ODE-and-root-solve bessel_phase()
+# construction did not complete within ~25 min -- not because the phase build itself was
+# expensive (it was flat at ~0.1s across the whole range, RECONCILIATION.md C1), but because
+# SciPy/Amos jv/yv lose argument-reduction accuracy above x ~ 2.5e15, the ODE right-hand side
+# becomes O(1)-relatively noisy, and DOP853 at rtol=5e-14 cannot pass its error test on noise
+# and stalls. So "the phase layer is the scalability limit" was the right symptom but the wrong
+# mechanism: it was never a cost curve, it was a hard cliff in the old construction (see
+# docs/transfer-remedial-verification.md Sec. 6-7).
+#
+# `prompts/transfer-remedial`'s two-region replacement removed that cliff: it evaluates a SciPy
+# Bessel routine only below a remainder-tested crossover x_star ~ 100*nu, which stays three
+# decades below the Amos boundary at every order this campaign supports, and above x_star it
+# uses a closed-form asymptotic series instead. Re-measured against the current tree (2026-09-10):
+# kappa=1000 now completes, with the phase build essentially free (0.0001-0.0081 s per oracle,
+# three phases each) and the Levin evaluation itself dominant (0.15-0.39 s per oracle); all seven
+# oracles together take under 2 s wall clock, against "did not complete in ~25 min" before. The
+# scalability limit at this tier is therefore neither the phase layer nor (yet) the Levin core --
+# both are fast here -- it was the old phase construction's silent-failure boundary, which is gone.
+B1_KAPPA = [1.0, 10.0, 100.0, 1000.0]
 
 
 def production_scan():
@@ -334,9 +349,7 @@ def head_to_head(max_x=1.0e6, budget_seconds=60.0):
                 flush=True,
             )
 
-            r = run_bessel_quad(
-                kind, O, k, q, s, max_x, budget_seconds=budget_seconds
-            )
+            r = run_bessel_quad(kind, O, k, q, s, max_x, budget_seconds=budget_seconds)
             r["experiment"] = "B2_head_to_head"
             r["kappa"] = kappa
             rows.append(r)

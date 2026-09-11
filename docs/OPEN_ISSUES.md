@@ -1,6 +1,6 @@
 # Open issues — project-wide index
 
-**Last updated:** 2026-09-10 · **33 open** across four campaigns.
+**Last updated:** 2026-09-10 · **30 open** across four campaigns.
 
 This file exists so that an issue opened by one campaign is not lost when that campaign closes.
 It is an **index, not a record**: one line per issue, pointing at the campaign status board that
@@ -66,8 +66,9 @@ bound the true error. Closing any of them properly needs the representation erro
 |---|---|---|
 | `[09-abserr-is-a-quadrature-bound]` | source-remediation | `total_abserr` is the linear sum of quadrature estimates and nothing else; the true residual is up to 4.4e4× larger. `total_converged = False` is not a failure. |
 | `[12-atol-too-loose-for-the-source-integral]` | source-remediation | 58 % of work items have a raw integral below `DEFAULT_QUADRATURE_ATOL = 1e-25`, so their tolerance is met before any work is done. Needs a production decision: scale `atol` with the integrand, go `rtol`-only, or lower the default for this stage. |
-| `[09-abserr-does-not-bound-phase-spline-floor]` | levin-refactor | `quad_JJJ`/`quad_YJJ`'s `abserr` misses the true error against the analytic oracle by up to 11.5× on 5 of 7 three-Bessel closed forms. |
+| `[09-abserr-does-not-bound-phase-spline-floor]` | levin-refactor | `quad_JJJ`/`quad_YJJ`'s `abserr` misses the true error against the analytic oracle by up to 11.5× on 5 of 7 three-Bessel closed forms. **Measured false on the current tree** (`transfer-remedial` prompt 08): 7 of 7 now bound, `true/reported` between 9.8e-06 and 1.5e-04. |
 | `[09-quadsource-total-error-incomplete]` | levin-refactor | Partly superseded: `source-remediation` prompt 09 added `total_abserr`. Re-read against the current tree before acting. |
+| `[transfer-remedial-qsi-phase-groups]` | source-remediation | `_three_bessel_Levin`'s eight `adaptive_levin_sincos` calls supply no `theta_deriv`/`theta_abserr`, unlike the sibling module's phase-group route it now anomalously differs from. Hand-off from `transfer-remedial`; a working pattern to copy (`LiouvilleGreen/three_bessel_integrals.py`'s `_PhaseGroup`) exists. |
 
 ---
 
@@ -90,20 +91,16 @@ Something was asserted statically or on a stand-in, and a live exercise is still
 |---|---|---|
 | `[04-read-table-service]` | backport-modules | Audit §8 item 6; item 5 was closed live by prompt 10. |
 | `[05-persist-handler-split]` | backport-modules | Audit §8 item 7: a real driver run exercising the `store_handler`/`persist_handler` split end to end. |
-| `[00-plan-vs-tree-corrections]` | transfer-remedial | Four `DRAFT-PLAN.md` claims that do not survive reconciliation against the tree; the prompts are built on the corrected versions. |
-| `[00-qsi-three-bessel-levin-excluded]` | transfer-remedial | `_three_bessel_Levin`'s eight `adaptive_levin_sincos` calls supply no `theta_deriv`, so Levin differentiates the raw phase spectrally there. |
 | `[01-scipy-jv-yv-high-order-boundary]` | transfer-remedial | The silent Amos boundary is order dependent and applies to `jv`/`yv`, not only `hankel1e`: 7.13e8 above $\nu\approx86$. Guarded in the harness; the order threshold is bracketed [85.5, 88.5], not pinned, and not yet a test. |
-| `[03-draft-plan-tail-coefficient-wrong]` | transfer-remedial | `DRAFT-PLAN.md` §7.2 and prompt 03 print 15360 for the third DLMF 10.18.18 denominator; it is 5120 (fourth: 229376). Shipped code is right and pins it; the plan text is not edited, so prompt 09 owes the correction in `docs/`. |
 | `[04-achieved-estimates-exclude-the-sampling-floor]` | transfer-remedial | `NearRegionData.achieved_*` resamples the same `hankel1e` it interpolates, so it estimates interpolation error only. **Narrowed by prompt 05:** the published `theta_abserr` now adds a 3e-13 sampling floor and 4ε of evaluation arithmetic, and is tested never to under-report; only the size of the 3e-13 constant is still open. |
-| `[05-quadsource-order-check-docstring-stale]` | transfer-remedial | `bessel_phase` now returns a `"nu"` key, so `QuadSourceIntegral._check_bessel_order`'s docstring (and its reason for checking the order numerically) is obsolete. No functional impact; hand to `source-remediation`. |
+| `[05-quadsource-order-check-docstring-stale]` | transfer-remedial | `bessel_phase` now returns a `"nu"` key, so `QuadSourceIntegral._check_bessel_order`'s docstring (and its reason for checking the order numerically) is obsolete. No functional impact; not folded into prompt 09's `source-remediation` hand-off, which that prompt restricts to one entry. |
 | `[06-levin-theta-docstring-stale]` | transfer-remedial | `levin_quadrature.py:2750` says `theta` is always used to decide subdivision; it is not (`:1038`, `:1090`), and prompt 06 has direct evidence — a `theta` that raises gives bit-identical results. `AdaptiveLevin/` is forbidden here. |
-| `[06-measure-bessel-phase-num-chunks]` | transfer-remedial | Prompt 01's own diagnostic script reads `phase.num_chunks`, which prompt 05 removed, so its current-tree sections raise `AttributeError`. Prompt 09 owns `docs/`. |
+| `[06-measure-bessel-phase-num-chunks]` | transfer-remedial | Prompt 01's own diagnostic script reads `phase.num_chunks`, which prompt 05 removed, so its current-tree sections raise `AttributeError`. Not in prompt 09's file list, so left unfixed. |
 | `[06-three-bessel-plot-calls-a-non-callable-phase]` | transfer-remedial | `QuadSourceIntegral_debug.three_bessel_plot` calls the phase object directly; no phase class has ever defined `__call__`, so it is dead in the same way `plot_besssel_phase.py` was. Repair-or-delete, unowned. |
-| `[07-generic-K-product-rounding]` | transfer-remedial | A three-Bessel phase group still carries one rounding of the product $Kx$: 1.5e-5 rad at $K=0.1$, $x=10^{12}$, the same for the new and old routes, so a *non-resonant* group gains nothing from the $Kt+C+R$ restructure. A floor on prompt 08. |
 | `[08-3bessel-chebyshev-order-is-now-the-limit]` | transfer-remedial | `DEFAULT_3BESSEL_CHEBYSHEV_ORDER = 12` now binds the two $(0,0,0)$ three-Bessel oracles — order 20 buys J000 and Y000 three orders — while making the other five 4×–1500× worse. A per-integrand or convergence-checked order, not a constant to bump. |
-| `[08-tk-fixture-scipy-comparison-unasserted]` | transfer-remedial | `test_tk_source_functions`'s `err_scipy` is the campaign's headline downstream number (1.985e-06 → 3.021e-08) and is printed, not asserted; prompt 08 may only change comments and tolerances in that file. |
-| `[08-test-three-bessel-tolerances-unassigned]` | transfer-remedial | README §4 says prompt 08 re-tightens `test_three_bessel.py`; the prompt's own file list and README §3 exclude it, so it was not touched. Needs a decision, not analysis. |
+| `[08-tk-fixture-scipy-comparison-unasserted]` | transfer-remedial | `test_tk_source_functions`'s `err_scipy` is the campaign's headline downstream number (1.985e-06 → 3.021e-08) and is printed, not asserted; prompt 08 may only change comments and tolerances in that file, and prompt 09's `source-remediation` hand-off is restricted to one entry, so this was not folded in either. |
 | `[08-3bessel-plot-cost-dominates-the-suite]` | transfer-remedial | `test_3bessel_analytic` spends its whole wall clock (21.2 min for one test) evaluating 250-point grids of three-Bessel integrals to draw figures, not on assertions — which is why a module-level failure survived three prompts. Proposal only; nothing implemented. |
+| `[09-bessel-tier-hardcoded-repo-path]` | transfer-remedial | `bessel_tier.py`'s hardcoded main-checkout `sys.path` entry silently shadows a worktree's own `LiouvilleGreen` package; a re-run from a worktree measures the wrong tree with no warning. Discovered while re-running the $\kappa=1000$ benchmark tier. |
 
 ---
 

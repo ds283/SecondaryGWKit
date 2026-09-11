@@ -181,6 +181,16 @@ both confirmed. The fixture's $k$ puts $x=10^5$ below $z=0$, so nothing beyond $
 
 ### 2.4 `bessel_phase` as an oracle
 
+> **Superseded in part (2026-09-10, `prompts/transfer-remedial`).** Everything in this section
+> describes the ODE-and-root-solve construction that existed when this document was written —
+> integrate $Q$, solve for a phase offset `phi`, spline the full phase in chunks. That
+> construction was replaced outright (commit `f6cbb29`, "Rebuild the Bessel phase from a
+> two-region amplitude and residual", and the five commits after it) by a two-region
+> amplitude/residual representation: a sampled near region below a remainder-tested crossover
+> $x_\star$, and a closed-form asymptotic tail above it. The measurements below are **retained as
+> the historical record of the construction they describe** — they were correct measurements of
+> that construction — and are superseded by §2.4.1, which is the current state.
+
 `LiouvilleGreen/bessel_phase.py` integrates $Q$ in $\ln x$ (DOP853, `atol=1e-10`, `rtol=1e-8`
 from `config/defaults.py`), 250 samples per e-fold, then forms $\theta=xQ$, range-reduces, and
 splines it. Measured against `scipy.special.jv`/`yv` at 20,000 points, $\nu=3/2$:
@@ -195,17 +205,68 @@ splines it. Measured against `scipy.special.jv`/`yv` at 20,000 points, $\nu=3/2$
 The 250-per-e-fold spline predicts $\delta\theta\sim h^4x/384\approx7\times10^{-10}$ at
 $x=10^3$, two thousand times smaller than measured, so the spline is not the limit. An `rtol` of
 $10^{-8}$ on $Q\sim1$ gives $\delta\theta=x\,\delta Q\sim10^{-5}$ at $x=10^3$, the right order
-(*inference*; tightening `rtol` and re-measuring would settle it in minutes). Consequences:
+(*inference*; tightening `rtol` and re-measuring would settle it in minutes). Consequences
+(**historical — see §2.4.1; the blanket claim below is no longer true of the Bessel oracle
+itself**):
 
-- every "exact" constant-$w$ fixture in this codebase (prompt 05 tests, audit scripts `TK_03`,
+- ~~every "exact" constant-$w$ fixture in this codebase (prompt 05 tests, audit scripts `TK_03`,
   `TK_04`, `GK_03`, `QI_02`, `QI_05`, and whatever prompts 07/08 build) has a phase floor of order
   $x\times10^{-8}$; a test asserting agreement with such an oracle to better than that sub-horizon
-  is asserting agreement between two errors;
-- the 05 log's "vs scipy $J_\nu$" column (1.985e-06) is this floor, correctly identified there as
-  `bessel_phase`'s and not `TkSourceFunctions`'s;
-- `bessel_phase` is also the analytic-branch oracle for `QuadSourceIntegral.analytic_integral`
+  is asserting agreement between two errors~~;
+- ~~the 05 log's "vs scipy $J_\nu$" column (1.985e-06) is this floor, correctly identified there as
+  `bessel_phase`'s and not `TkSourceFunctions`'s~~;
+- ~~`bessel_phase` is also the analytic-branch oracle for `QuadSourceIntegral.analytic_integral`
   and `_three_bessel_Levin` (audit QI report), so the same floor sits under the analytic
-  comparison prompt 08 will lean on.
+  comparison prompt 08 will lean on~~.
+
+#### 2.4.1 The replacement, measured (2026-09-10)
+
+The `transfer-remedial` campaign's acceptance-table and attribution-table numbers are in
+`docs/transfer-remedial-verification.md`; the four points this document's readers need are:
+
+1. **Measured replacement accuracy.** The envelope-normalized phase-pair error $E_\theta$ at the
+   orders and arguments production builds falls from 2.0e-06 (fixture tolerances, $x\le10^3$) and
+   1.2e-08 (production tolerances, offset-dominated) to $\sim3\times10^{-14}$ — six to eight
+   orders. The most striking figure is a correctness one, not an accuracy one: at $x=10^{12}$ and
+   $10^{15}$, the old construction's $E_\theta$ was **1.509 and 1.512 — order unity** (`eps*theta`
+   rounding of `sin(x+d)` at large $x$ destroys the reconstruction entirely), against 1.110e-16
+   and 5.274e-16 for the split-evaluation replacement. `test_tk_source_functions`'s `err_scipy` —
+   the one number in that fixture that isolates the Bessel oracle from the fixture's own re-spline
+   — falls from 1.985e-06 to 3.021e-08 at $w=1/3$ (and 1.550e-06 to 2.234e-08 at $w=0.2$), landing
+   exactly on the fixture's own re-spline error `err_T`.
+2. **The offset finding.** `phi` was a pure artefact of a loose root solve (`xtol=1e-6,
+   rtol=1e-4`) at a match point where the phase was already exact — for every $\nu>1/2$ the match
+   point is the domain's initial node, where the phase is fixed exactly from the Bessel value
+   itself — and it **was** the whole tight-tolerance error: $\phi=-4.836537\times10^{-8}$ and
+   $E_\theta=4.873\times10^{-8}$ at $\nu=5/2$, agreeing to two significant figures. `phi` is now
+   identically `0.0` at every order (there is no root solve at all).
+3. **The fixture/production tolerance distinction.** The `bessel_phase` floor above was measured
+   at the fixture tolerances (`config/defaults.py`'s `rtol=1e-8, atol=1e-10`). Production
+   (`main.py`) used `rtol=5e-14, atol=1e-25` and the dominant error there was the constant `phi`
+   offset, not the $x\times10^{-8}$ interpolation floor — the two regimes had different
+   mechanisms. `main.py` now builds with `phase_atol=1e-12, amplitude_rtol=1e-12` (prompt 06),
+   arguments with a direct meaning under the new construction rather than translated ODE
+   tolerances.
+4. **The chunking measurement.** `phase_spline`'s chunking (`chunk_logstep=125`) had **no**
+   measurable effect on the Bessel phase's accuracy — identical to four significant figures at
+   every $x_{\max}$ tested — and `chunk_logstep=125` cannot, by construction, bound the splined
+   dynamic range; the shipped code also contradicted its own comment about what the constant did.
+   This is a statement about the *Bessel* phase specifically. The **cosmological** $\theta(u)$ this
+   document's §1–§3 concern is a different quantity and has since been measured on its own rows,
+   more harshly, by `docs/gk-wkb-numerical-review-2026-09.md` §3 (commit `39ed7fc`): "no
+   demonstrated numerical advantage at the tested scales and has demonstrated disadvantages" — a
+   hard chunk-switch discontinuity of 1.08e-4 rad phase and 3.51e-8 relative derivative (which a
+   Levin consumer sees), a rebase that can *enlarge* the stored ordinates (6.44e8 rad from a
+   9.99e6 rad span), knot-level accuracy degrading from 2.88e-9 to 2.28e-7, and inverted interval
+   keys from decreasing-phase merges. `phase_spline` itself was not touched by either finding;
+   both are arguments against its chunking, not fixes to it.
+
+The `bessel_phase` oracle's blanket $x\times10^{-8}$ floor is therefore gone; what stood under it
+in the two `ComputeTargets` fixture modules (`test_tk_source_functions.py`,
+`test_phase_groups.py`) is now, wherever it is not the oracle, the consumer's own $h^4$ re-spline
+of the sampled fixture, or physical Liouville–Green truncation — separately measured and named in
+`docs/transfer-remedial-verification.md`, and **not** removed by this replacement, since neither
+is a Bessel-oracle defect.
 
 ### 2.5 Remediation options
 
@@ -214,8 +275,17 @@ $10^{-8}$ on $Q\sim1$ gives $\delta\theta=x\,\delta Q\sim10^{-5}$ at $x=10^3$, t
   reconstructing $\theta$ at evaluation time turns the splined quantity into one whose $u$
   derivatives are $O(1)$, removing the factor $x$. This is a schema change on
   `TkWKBIntegration`/`GkWKBIntegration` values (or an additional column) and a consumer change in
-  `phase_spline`/`TkSourceFunctions`/`GkSourcePolicyData`. `bessel_phase` already keeps `Q` as a
-  spline (`"Q"` in its returned dict) and could evaluate $\theta=xQ$ from it directly.
+  `phase_spline`/`TkSourceFunctions`/`GkSourcePolicyData`.
+  **(2026-09-10: the supporting example no longer holds.)** `bessel_phase` no longer keeps a `Q`
+  member at all — prompt 06 of `prompts/transfer-remedial` removed it, because there is no ODE, no
+  offset and no state left for it to name (`data["Q"]` now raises `KeyError`). More importantly,
+  `DRAFT-PLAN.md` §4.2 (the design document behind that campaign) gives the reason this was never
+  the right general answer in the first place: evaluating a $Q=\theta/x$ spline directly still
+  multiplies its own state and interpolation error by $x$ at reconstruction, so it does not remove
+  the mechanism this section is about — it only relocates it. This bullet's general
+  recommendation (store a quantity whose derivatives stay $O(1)$, e.g. the residual against an
+  analytic leading term, as the Bessel replacement now does for the Bessel leading term $x$) is
+  unaffected; only the `bessel_phase`-`Q` illustration is retired.
 - **Evaluate $\theta$ by local integration of the closed-form $\omega_{\rm eff}$** from the
   nearest stored node: $\theta(u)=\theta_i+\int_{u_i}^{u}\omega\,(1+z)\,du'$ with a fixed-order
   Gauss rule. Removes the spline entirely at the cost of a few $\omega_{\rm eff}$ evaluations per
@@ -223,8 +293,15 @@ $10^{-8}$ on $Q\sim1$ gives $\delta\theta=x\,\delta Q\sim10^{-5}$ at $x=10^3$, t
   `Gk_omegaEff_sq`, also closed-form).
 - **Denser grid**: $h^4$ — 1000 per decade buys $10^4$, which is not enough at $x=10^7$ and
   costs every stage of the pipeline.
-- For `bessel_phase`: tighten `rtol`/`atol` (cheap; check first that this is the limit), and
-  state the oracle floor in every test that uses it.
+- ~~For `bessel_phase`: tighten `rtol`/`atol` (cheap; check first that this is the limit), and
+  state the oracle floor in every test that uses it.~~ **Done, by replacement rather than by
+  tightening** — see §2.4.1. Tightening `rtol`/`atol` on the old ODE would not have removed the
+  `phi` offset or the growing full-phase interpolation error, which were structural to that
+  construction, not artefacts of its tolerances.
+
+These last three bullets are about the **cosmological** transfer-function and Green's-function
+stored phases (this document's §1–§3), which remain out of scope for `prompts/transfer-remedial`
+(its README §1.1) and are unaffected by the Bessel oracle's replacement.
 
 ---
 
