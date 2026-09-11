@@ -7,8 +7,25 @@ errors, the late-time $Q$ jump), §12.4 (the LG truncation floor for $T$), §12.
 **Depends on:** 06 (the shared function already takes `sector="Tk", friction=True`), 04, 05.
 **Recommended model:** Opus
 **Files you may touch:** `ComputeTargets/TkWKBIntegration.py`, new
-`ComputeTargets/tests/test_tk_wkb_phase.py`, `main.py` solver registration hunk **only if** a
-distinct friction label is needed, plus the log and the status board.
+`ComputeTargets/tests/test_tk_wkb_phase.py`, `ComputeTargets/tests/test_background_cs_tau_friction.py`
+(**only** to relocate `friction_RHS` — see the decision below), `main.py` solver registration hunk
+**only if** a distinct friction label is needed, plus the log and the status board.
+
+> **Decision (user, 2026-09-11), after the executing agent stopped on it.** §2 item 1 below asks
+> for `friction_RHS` to be deleted and §4 asks for the `friction_RHS` grep to be empty, but
+> prompt 04's `ComputeTargets/tests/test_background_cs_tau_friction.py` imports it **at module
+> scope** (`:56`) and calls it as the DOP853 right-hand side in
+> `TestFrictionODEComparison.test_friction_ode_is_the_inaccurate_one` (`:784`), the test that
+> demonstrates the ODE the `friction_F` table replaces is the inaccurate one. Deleting the
+> function is an import-time failure that takes all 17 tests of that module with it. That file is
+> prompt 04's, and prompt 07's text predates it.
+>
+> **Resolution:** move `friction_RHS` **verbatim** into that test module as a module-private
+> `_friction_RHS`, so prompt 04's measurement keeps measuring exactly the same ODE, the §4 grep
+> empties and the suite stays green. Touch nothing else in that file beyond the relocation, the
+> import, and one sentence of docstring saying the ODE now lives only in the test that retires it.
+> Record it as a `STRUCTURALLY REQUIRED` deviation naming this decision.
+
 **Do not touch:** `TkSourceFunctions.py` (prompt 10), `TkNumericIntegration.py` (prompts 11, 12),
 the Datastore factories (verify nullable columns; no schema change).
 
