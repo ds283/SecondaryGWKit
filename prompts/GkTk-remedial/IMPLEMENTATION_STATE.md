@@ -2,7 +2,22 @@
 
 **Campaign:** [`README.md`](README.md) · **Source review:** [`docs/gk-wkb-review-fable-2026-09-09.md`](../../docs/gk-wkb-review-fable-2026-09-09.md) · **Reconciliation:** [`RECONCILIATION.md`](RECONCILIATION.md)
 **Baseline commit:** `9ff59d5` (`main`, clean)
-**Last updated:** 2026-09-11 — Prompt 10 landed (the transfer-function *consumer* is on the tables
+**Last updated:** 2026-09-11 — Prompt 15 landed (`PrimitivePhase` takes an explicit, optional
+keyword-only `rate` callable — `d/dz[leading.delta(z, z_anchor)]`'s magnitude — defaulting to
+`lambda z: 1.0 / model_functions.Hubble(z)` when omitted, so every pre-existing call site is
+unchanged; `theta_deriv`'s leading term is now `sign * k * rate(z)` rather than the hard-wired
+`sign * k / model_functions.Hubble(z)`. `TkSourceFunctions.py`'s `_SoundHorizonRate` adapter —
+which made `model_functions.Hubble` silently return $H/c_s$ — is gone; `TkSourceFunctions`
+now passes the model's real `ModelFunctions` as `model_functions` and a module-level
+`_sound_horizon_rate(functions)` closure, which carries the same positive-$c_s^2$
+`RuntimeError` guard, as `rate`. The reordered expression (`k * (sqrt(c_s^2)/H)` vs. the old
+`k / (H/sqrt(c_s^2))`) differs by **2.218e-16 relative** ($w=1/3$) and **2.191e-16** ($w=0.2$,
+measured directly at every stored sample) — six-plus orders below prompt 10 §3 item 3's
+1e-9/1e-11 window, which reproduces its own figures (1.0492e-10 / 5.559e-12 at $w=1/3$,
+7.9502e-11 / 3.757e-12 at $w=0.2$) unchanged to the last printed digit, confirming the
+reordering is invisible at that test's precision. `GkSourcePolicyData.py` needed no edit: its
+`PrimitivePhase(...)` call passes no `rate` and takes the new default unchanged.
+`[10-primitive-phase-leading-rate-is-hardcoded]` is **resolved** (§4).) Prompt 10 landed (the transfer-function *consumer* is on the tables
 too: `TkSourceFunctions.phase` is a `PrimitivePhase` with `leading = cs_tau`, `z_anchor = z_init`,
 `sign = +1`, and `friction(z)` is `friction_F.delta(crossover_z, z)` read exactly from the
 background table with the stored samples kept only as a construction-time cross-check.
@@ -98,7 +113,7 @@ Legend: ⬜ not started · 🟡 in flight · ✅ complete · ⚠️ complete wit
 | 08 | [`phase_spline` de-chunk](08-phase-spline-dechunk.md) | review §5 | Sonnet | ✅ | *"Drop the chunked phase spline in favour of one rebased spline"* (SHA not embedded, per the campaign convention) | [`logs/08-phase-spline-dechunk.md`](logs/08-phase-spline-dechunk.md) |
 | 09 | [Gk consumer on `PrimitivePhase`](09-gk-consumer-primitive-phase.md) | review §5, §7, §8.3, §13.3–§13.4 | **Fable** → Opus (Fable unavailable) | ⚠️ | *"Evaluate the Green function phase from the conformal-time table"* (SHA not embedded, per the campaign convention) | [`logs/09-gk-consumer-primitive-phase.md`](logs/09-gk-consumer-primitive-phase.md) |
 | 10 | [Tk consumer on the tables](10-tk-consumer-primitive-phase.md) | review §12.6, §12.7 | Opus | ⚠️ | *"Evaluate the transfer-function phase and friction from tables"* (SHA not embedded, per the campaign convention) | [`logs/10-tk-consumer-primitive-phase.md`](logs/10-tk-consumer-primitive-phase.md) |
-| 15 | [`PrimitivePhase` explicit rate](15-primitive-phase-explicit-rate.md) | §3 `[10-primitive-phase-leading-rate-is-hardcoded]` | Sonnet | ⬜ | | |
+| 15 | [`PrimitivePhase` explicit rate](15-primitive-phase-explicit-rate.md) | §3 `[10-primitive-phase-leading-rate-is-hardcoded]` | Sonnet | ✅ | *"Give PrimitivePhase an explicit leading-rate callable"* (SHA not embedded, per the campaign convention) | [`logs/15-primitive-phase-explicit-rate.md`](logs/15-primitive-phase-explicit-rate.md) |
 
 > Row 15 is numbered last because the campaign's numbers are append-only, but it belongs to
 > Workstream D — see README §3.
@@ -116,7 +131,7 @@ Legend: ⬜ not started · 🟡 in flight · ✅ complete · ⚠️ complete wit
 |---|---|---|---|---|---|---|
 | 13 | [Verification and docs](13-verification-and-docs.md) | review §4, §12.3, §13.5 | Opus | ⬜ | | |
 
-**Progress:** 11 / 15 complete.
+**Progress:** 12 / 15 complete.
 
 ---
 
@@ -141,7 +156,7 @@ campaign; the review section is the authority on each.
 | M12 | **DEFECT, hygiene** | Zero-length check compares a redshift to `atol`; 1-element array into `math.fmod` (NumPy deprecation); stale comments at `:262-264`, `:403` (§8.2) | 06 | ✅ exact test `len(z_sample) == 1 and z_sample[0] == z_init`; the `fmod` path and both comments went with the ODE; `Quadrature/supervisors/WKB.py` deleted |
 | M13 | **DEFECT, accuracy + trap** | `phase_spline` chunking: no interpolation benefit, ordinates 64× inflated, knot residuals 30–50× worse, $1.4\times10^{-4}$ rad switch discontinuity, no progress guard for `logstep<2` (§5) | 08 | ✅ chunking deleted (`_build_*chunks*`, `_match_chunk`, `MINIMUM_SPLINE_DATA_POINTS` gone); one spline, rebased at the sample's *median* `theta_div_2pi`; `chunk_step`/`chunk_logstep`/`increasing` are accepted no-ops so `bessel_phase.py` and three test fixtures needed no changes. Interior interpolation error at $k=10^6$, 100/decade confirmed unchanged by chunking at 7–10e-5 rad (review 8.26e-5); the old progress-guard defect cannot recur (code path deleted) |
 | M14 | **DEFECT, accuracy** | Consumers spline the growing phase: $h^4x/384$, $O(1)$–$O(10)$ rad at production $x$ (§5, §12.6). Same term as `source-remediation`'s `[12-phase-spline-error-grows-with-x]` | 09, 10 | ⚠️ 09 discharged it for $G_k$: on the review §5 consumer geometry at $k=10^8$, 100/decade, the error is **4.189e-8 rad** against the same samples' `phase_spline` at **7.286e-3 rad** — a ratio of **1.739e5**, and the 4.189e-8 is 2.81 ulp of the 9.09e7 rad span, i.e. the representation floor. $\varphi$ alone is recovered to 2.157e-10 rad, matching $h^4\max|\varphi''''|/384$. 10 discharged it for $T_k$: on a $w=1/3$ fixture at $x_T=10^6$, 100/decade, the error is **3.4482e-10 rad** against the same samples' cubic spline at **7.0854e-03 rad** — a ratio of **2.0548e7** — and the 3.4e-10 is 2.96 ulp of the $10^6$ rad phase, i.e. the `div * TWO_PI` floor. `PHASE_SPLINE_CHUNK_LOGSTEP` is deleted and no production path builds a `phase_spline`. ⚠️ because prompt 10 §3 item 3's 1e-10 on $\omega$ vs `theta_deriv` is missed at one abscissa per $w$ (`[10-residual-spline-end-condition]`) |
-| M15 | **REQUIREMENT** | `PrimitivePhase`: $\theta=-k\Delta\tau+\varphi$ with the `phase_spline` protocol; closed-form $\theta'$; global anchor with the recorded floor (§7, §13.3, §13.4) | 09 | ✅ `ComputeTargets/primitive_phase.py`: `PrimitivePhase(k, leading, z_anchor, z_samples, phi_samples, *, sign, model_functions, label, spline_order)` with `raw_theta`/`theta_mod_2pi`/`theta_deriv`/`num_chunks`, plus `build_phi_samples`. `sign=-1` for $G_k$ at fixed $z_r$, `sign=+1` for $T_k$ at fixed $z_{\rm init}$ — one object for both sectors (prompt 10 reuses it, unsubclassed). $\theta'=\mathrm{sign}\,k/H+\varphi'$ in closed form, exact to 0.0 relative on the radiation control. Global anchor, floor documented in the module docstring. **Prompt 10 found that closed form is hard-wired to $1/H$**, which is the rate for $\tau$ but not for $\tau_s$ ($c_s/H$); it passes a `_SoundHorizonRate` adapter reporting $H/c_s$ rather than editing `primitive_phase.py` (out of its scope) — `[10-primitive-phase-leading-rate-is-hardcoded]` |
+| M15 | **REQUIREMENT** | `PrimitivePhase`: $\theta=-k\Delta\tau+\varphi$ with the `phase_spline` protocol; closed-form $\theta'$; global anchor with the recorded floor (§7, §13.3, §13.4) | 09, 15 | ✅ `ComputeTargets/primitive_phase.py`: `PrimitivePhase(k, leading, z_anchor, z_samples, phi_samples, *, sign, model_functions, label, spline_order, rate=None)` with `raw_theta`/`theta_mod_2pi`/`theta_deriv`/`num_chunks`, plus `build_phi_samples`. `sign=-1` for $G_k$ at fixed $z_r$, `sign=+1` for $T_k$ at fixed $z_{\rm init}$ — one object for both sectors (prompt 10 reuses it, unsubclassed). $\theta'=\mathrm{sign}\,k\,\mathrm{rate}(z)+\varphi'$ in closed form, exact to 0.0 relative on the radiation control. Global anchor, floor documented in the module docstring. **Prompt 15 generalised the closed form**: `rate` is now an explicit, optional keyword-only parameter (default `1/H`, built from `model_functions.Hubble` exactly as before), and `TkSourceFunctions`' `_SoundHorizonRate` adapter — which made `model_functions.Hubble` silently return $H/c_s$ — is gone; `TkSourceFunctions` now passes the model's genuine `model_functions` plus `rate=c_s/H` explicitly. `[10-primitive-phase-leading-rate-is-hardcoded]` is **resolved** (§4) |
 | M16 | **REQUIREMENT** | The `GkSource` rectifier is retained and verified inert on pure-WKB objects, correct on $\delta$-wraps (§8.3; `RECONCILIATION.md` §2 item 6) | 06, 09 | ✅ 06 documented what it must repair; 09 verified it against a faithful copy of `GkSource.py:166-233` (copied, not imported — `assemble_GkSource_values` is a Ray remote over datastore objects), on prompt 06's geometry with the source samples taken from the background grid. **Before rectification $\varphi$ jumps by exactly $+1$ cycle at every stop-point transition and nowhere else** (2 of 22 objects at $k=10^7$, $x_r=10^3$; **90 of 990** over the full sweep, log 06's figure); **the rectifier repairs every one** (90 corrections = 90 transitions) and $\varphi$ is then constant to **3.64e-12 rad**. On pure-WKB objects $\delta=0$ exactly and the rectifier makes **zero** corrections, leaving `theta_div_2pi` untouched. `GkSource.py` was not edited (D5) |
 | M17 | **DEFECT, cost** | Per-RHS `*_omegaEff_sq` diagnostic: 45 % of the numeric run; the warning it feeds is live and must be preserved (§10.2, §13.1) | 11 | ⬜ |
 | M18 | **DEFECT, units** | `delta_logz` supplied as $\Delta\log_{10}$, used as $\Delta\ln$; and the $G_k$ run is sampled on the response grid, not the source grid the value describes (§10.2, §13.1; `RECONCILIATION.md` §1 item 9) | 11 | ⬜ |
@@ -282,21 +297,6 @@ Opened by the planning pass, 2026-09-10, before any prompt runs.
   `spline_order=5` for both consumers with `MIN_SPLINE_DATA_POINTS` raised to 6. It should also
   report the error at the second and third samples, not only the window maxima, since the end
   effect is what is in question.
-
-- **[10-primitive-phase-leading-rate-is-hardcoded]** *(opened by prompt 10, 2026-09-11)* —
-  `PrimitivePhase.theta_deriv` (`ComputeTargets/primitive_phase.py:287`) computes the leading
-  derivative as `sign * k / model_functions.Hubble(z)`, which is
-  `d/dz[k tau.delta(z, anchor)] = +k/H` — correct for the Green's function's $\tau$ and wrong by
-  $1/c_s$ ($\approx1.73$ in radiation) for the transfer function's $\tau_s$, whose derivative is
-  $c_s/H$. `primitive_phase.py` is outside prompt 10's file list, so prompt 10 passes a
-  `TkSourceFunctions._SoundHorizonRate` adapter that reports $H/c_s$; `Hubble` is the only thing
-  `PrimitivePhase` reads from `model_functions`, so nothing else is affected, but
-  `phase._Hubble` on a transfer-function phase now returns $H/c_s$ rather than $H$.
-  **Impact:** anyone adding a third leading primitive, or reading `model_functions` off a
-  `PrimitivePhase`; a silent factor-1.73 error in `theta_deriv` if a future caller passes the
-  model's own `ModelFunctions`. **Next step:** give `PrimitivePhase` an explicit `rate` callable
-  (defaulting to `1/Hubble`) in its own commit, and drop the adapter. **Assigned (2026-09-11):
-  prompt 15**, dispatched ahead of Workstream E at the user's request.
 
 - **[10-transfer-remedial-tolerance-comments-stale]** *(opened by prompt 10, 2026-09-11)* — five
   tolerance comments in `ComputeTargets/tests/test_tk_source_functions.py` that
@@ -540,6 +540,27 @@ Opened by the planning pass, 2026-09-10, before any prompt runs.
 ---
 
 ## 4. Resolved issues
+
+- **[10-primitive-phase-leading-rate-is-hardcoded]** *(opened by prompt 10, 2026-09-11; resolved by
+  prompt 15, 2026-09-11)* — `PrimitivePhase.theta_deriv` computed the leading derivative as
+  `sign * k / model_functions.Hubble(z)`, correct for the Green's function's $\tau$ but wrong by
+  $1/c_s$ for the transfer function's $\tau_s$; prompt 10 worked around it with a
+  `TkSourceFunctions._SoundHorizonRate` adapter that made `.Hubble` silently return $H/c_s$.
+  **Resolution:** `PrimitivePhase.__init__` gained an explicit, optional, keyword-only `rate`
+  parameter — `d/dz[leading.delta(z, z_anchor)]`'s magnitude — defaulting to `None`, in which
+  case `lambda z: 1.0 / model_functions.Hubble(z)` is built exactly as before, so every call site
+  that predates this parameter (`GkSourcePolicyData.py`'s two, confirmed unedited by `git diff`)
+  needs no change and sees the same value; `theta_deriv` now computes
+  `sign * k * rate(z) + phi'(z)`. `TkSourceFunctions._SoundHorizonRate` is deleted; a module-level
+  `_sound_horizon_rate(functions)` closure carries the same positive-$c_s^2$ `RuntimeError` guard
+  and is passed as `rate`, while `model_functions=self._model.functions` (the real one) is passed
+  unmodified, so `phase._Hubble` on a $T_k$ `PrimitivePhase` is now genuinely $H(z)$.
+  **Measured:** the reordered expression (`k*(c_s/H)` vs. the old `k/(H/c_s)`) differs by
+  **2.218e-16 relative** ($w=1/3$) and **2.191e-16** ($w=0.2$) at every stored sample of prompt
+  10's `test_omega_matches_phase_derivative_from_the_primitive` fixture — machine epsilon, six-plus
+  orders below its 1e-9/1e-11 window — and that test's own figures are unchanged to the last
+  printed digit (1.0492e-10 / 5.559e-12 at $w=1/3$, 7.9502e-11 / 3.757e-12 at $w=0.2$). See
+  [`logs/15-primitive-phase-explicit-rate.md`](logs/15-primitive-phase-explicit-rate.md).
 
 - **[10-quadsource-fixture-model-substitution]** *(opened by prompt 10, 2026-09-11; resolved by the
   user, 2026-09-11)* — prompt 10 edited five lines of stand-in construction in

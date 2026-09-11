@@ -39,13 +39,19 @@ formula because ``delta`` is antisymmetric (README Sec 2 (c):
 ``delta(z_a, z_b) = T(z_b) - T(z_a)``).
 
 **Derivative in closed form.** ``d/dz [leading.delta(z, z_anchor)] = -dT/dz = +f(z)``, since
-``CumulativeTable`` accumulates ``T(z) = int_z^{z_top} f``. For ``tau``, ``f = 1/H``, so
+``CumulativeTable`` accumulates ``T(z) = int_z^{z_top} f``. The magnitude of that rate is
+supplied by the ``rate`` constructor parameter, so
 
-    d theta / dz = sign * k / H(z) + phi'(z)
+    d theta / dz = sign * k * rate(z) + phi'(z)
 
-with no spectral differentiation of a sampled phase anywhere. (Exact-radiation check:
-``theta = -k(1/s_r - 1/s_s)``, ``d theta/d z_s = -k/s_s^2 = -k/H`` with ``H = H0 s^2``,
-``H0 = 1``.)
+with no spectral differentiation of a sampled phase anywhere. For ``tau``, ``rate = 1/H``,
+which is what ``rate`` defaults to when omitted (built from ``model_functions.Hubble``); for a
+leading primitive whose rate is not ``1/H`` -- the transfer function's sound horizon ``cs_tau``,
+``d(cs_tau)/dz = -c_s/H`` so ``rate = c_s/H`` -- the caller passes ``rate`` explicitly rather
+than making ``model_functions`` lie about ``Hubble`` (prompt 15 of the campaign; before it,
+``TkSourceFunctions`` passed a ``_SoundHorizonRate`` adapter whose ``.Hubble`` actually returned
+``H/c_s``). (Exact-radiation check: ``theta = -k(1/s_r - 1/s_s)``, ``d theta/d z_s = -k/s_s^2 =
+-k/H`` with ``H = H0 s^2``, ``H0 = 1``, i.e. ``rate = 1/H``.)
 
 **Anchoring, and the floor it implies** (README Sec 7 D6; review Sec 13.4). ``theta_mod_2pi``
 reduces ``raw_theta`` with ``WKB_mod_2pi`` -- one reduction of one unreduced value, per the house
@@ -75,7 +81,7 @@ wavenumber and a sample of ``phi``.
 """
 
 from math import expm1, log1p
-from typing import Optional, Sequence
+from typing import Callable, Optional, Sequence
 
 import numpy as np
 from scipy.interpolate import make_interp_spline
@@ -111,9 +117,16 @@ class PrimitivePhase:
     :param sign: ``-1`` (Green's function, fixed ``z_response``) or ``+1`` (transfer function,
         fixed ``z_init``)
     :param model_functions: the background model's ``ModelFunctions``; only ``.Hubble`` is
-        used, for the closed-form leading derivative
+        used, to build the default ``rate`` when none is supplied. Kept as a required
+        parameter (and still validated) even when ``rate`` is passed explicitly, so that
+        ``model_functions.Hubble`` always returns the genuine Hubble rate off this object,
+        never a repurposed one
     :param label: a name for error messages
     :param spline_order: the order of the ``phi`` spline (3, the default, or 5)
+    :param rate: ``d/dz [leading.delta(z, z_anchor)]``'s magnitude, e.g. ``1/H(z)`` for ``tau``
+        or ``c_s(z)/H(z)`` for ``cs_tau``. Defaults to ``None``, which builds
+        ``lambda z: 1.0 / model_functions.Hubble(z)`` -- the value every caller that predates
+        this parameter relied on, so omitting it changes nothing
     """
 
     def __init__(
@@ -128,6 +141,7 @@ class PrimitivePhase:
         model_functions,
         label: str = "",
         spline_order: int = 3,
+        rate: Optional[Callable[[float], float]] = None,
     ):
         self._label = label
 
@@ -158,6 +172,10 @@ class PrimitivePhase:
                 f"PrimitivePhase[{label}]: model_functions must supply Hubble(z)"
             )
         self._Hubble = model_functions.Hubble
+
+        # rate(z) is d/dz[leading.delta(z, z_anchor)]'s magnitude. When not supplied, build the
+        # default every caller before this parameter existed relied on: 1/H(z), for `tau`.
+        self._rate = rate if rate is not None else (lambda z: 1.0 / self._Hubble(z))
 
         z = np.asarray([float(v) for v in z_samples], dtype=float)
         phi = np.asarray([float(v) for v in phi_samples], dtype=float)
@@ -276,15 +294,15 @@ class PrimitivePhase:
         """
         ``d theta / dz`` (or ``d theta / d log(1+z) = (1+z) d theta/dz`` when
         ``log_derivative``), in closed form for the leading term:
-        ``sign * k / H(z) + phi'(z)``. The ``phi`` spline is built in ``u = log(1+z)``, so its
-        own derivative is already the logarithmic one.
+        ``sign * k * rate(z) + phi'(z)``. The ``phi`` spline is built in ``u = log(1+z)``, so
+        its own derivative is already the logarithmic one.
         """
         raw_x, log_x = self._get_x(x, x_is_log)
         u = self._clamped_u(raw_x, log_x)
 
         dphi_du = float(self._spline_deriv(u))
-        # d/dz leading.delta(z, z_anchor) = -d(leading)/dz = +f(z) = 1/H(z) for tau
-        dtheta_dz_leading = self._sign * self._k / self._Hubble(raw_x)
+        # d/dz leading.delta(z, z_anchor) = -d(leading)/dz = +f(z) = rate(z) (= 1/H(z) for tau)
+        dtheta_dz_leading = self._sign * self._k * self._rate(raw_x)
 
         if log_derivative:
             return dtheta_dz_leading * (1.0 + raw_x) + dphi_du

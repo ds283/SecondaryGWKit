@@ -455,7 +455,100 @@ class TestProtocol(unittest.TestCase):
 
 
 # ------------------------------------------------------------------------------------------------
-# 6. constructor contract
+# 6. an explicit `rate` (prompt 15)
+# ------------------------------------------------------------------------------------------------
+
+
+def _rate_double(z: float) -> float:
+    """A rate deliberately different from the default `1/Hubble(z)` -- twice it -- so that a
+    caller-supplied `rate` can be told apart from what `PrimitivePhase` builds on its own.
+    """
+    return 2.0 / _Hubble(z)
+
+
+class TestExplicitRate(unittest.TestCase):
+    """
+    Prompt 15: `PrimitivePhase.theta_deriv`'s leading term used to be hard-wired to
+    `sign * k / model_functions.Hubble(z)`, which is `d/dz[leading.delta(z, anchor)]`'s rate for
+    `tau` but wrong by `1/c_s` for a leading primitive such as the transfer function's sound
+    horizon. `rate` is now an explicit, optional constructor parameter; omitting it must give
+    exactly the old behaviour (test 1, the regression every other test in this module already
+    exercises implicitly), and supplying it must be honoured in place of `1/Hubble` (test 2) --
+    without repurposing what `model_functions.Hubble` itself returns (test 3), which is what the
+    retired `_SoundHorizonRate` adapter in `TkSourceFunctions.py` used to do.
+    """
+
+    @classmethod
+    def setUpClass(cls):
+        _Geometry.build()
+
+    def test_default_rate_is_unchanged(self):
+        """Every existing call site in this module omits `rate`; `theta_deriv`'s leading term
+        must still be `sign * k / Hubble(z)` to the same accuracy `TestClosedFormDerivative`
+        above measures (not bit-for-bit: `sign * k * (1.0 / H(z))`, the expression `rate`
+        evaluates, reorders the division against a hand-written `-k / H(z)` and can differ by a
+        rounding ulp, which is not what this test is protecting)."""
+        pp = _phase(np.zeros_like(_Geometry.z_samples))
+        worst = 0.0
+        for u in _Geometry.fine_abscissae(per_interval=3)[:20]:
+            z = expm1(float(u))
+            exact_dz = -K / _Hubble(z)  # sign=-1
+            got = pp.theta_deriv(float(u), x_is_log=True)
+            worst = max(worst, abs(got - exact_dz) / abs(exact_dz))
+        self.assertLessEqual(worst, DERIV_REL_TOL)
+
+    def test_explicit_rate_is_honoured(self):
+        """With `rate` set to twice the default `1/Hubble`, `theta_deriv`'s leading term must be
+        exactly twice what the default construction gives -- not `1/model_functions.Hubble(z)`
+        as the pre-prompt-15 code hard-wired. This is the case that would have caught
+        `[10-primitive-phase-leading-rate-is-hardcoded]` directly."""
+        z_s = _Geometry.z_samples
+        default_pp = _phase(np.zeros_like(z_s))
+        explicit_pp = PrimitivePhase(
+            K,
+            _Geometry.leading,
+            _Geometry.z_response,
+            z_s,
+            np.zeros_like(z_s),
+            sign=-1,
+            model_functions=_Functions,
+            rate=_rate_double,
+            label="explicit-rate",
+        )
+
+        z_probe = float(z_s[len(z_s) // 2])
+        default_deriv = default_pp.theta_deriv(z_probe)
+        explicit_deriv = explicit_pp.theta_deriv(z_probe)
+
+        self.assertAlmostEqual(explicit_deriv, 2.0 * default_deriv, delta=0.0)
+        self.assertNotAlmostEqual(explicit_deriv, default_deriv, delta=1.0e-3)
+
+    def test_model_functions_hubble_is_not_repurposed(self):
+        """A `PrimitivePhase` built with an explicit, non-`1/Hubble` `rate` must still return the
+        genuine Hubble rate from `model_functions.Hubble` -- the regression test for the impact
+        statement in `[10-primitive-phase-leading-rate-is-hardcoded]`, which is that a caller
+        reading `model_functions` off a `PrimitivePhase` must not get a rate-fudged function.
+        """
+        z_s = _Geometry.z_samples
+        pp = PrimitivePhase(
+            K,
+            _Geometry.leading,
+            _Geometry.z_response,
+            z_s,
+            np.zeros_like(z_s),
+            sign=-1,
+            model_functions=_Functions,
+            rate=_rate_double,
+            label="explicit-rate",
+        )
+        z_probe = float(z_s[len(z_s) // 2])
+        # _Hubble is what PrimitivePhase.__init__ stores from model_functions.Hubble; it must be
+        # the genuine rate, unaffected by `rate` having been supplied explicitly
+        self.assertEqual(pp._Hubble(z_probe), _Hubble(z_probe))
+
+
+# ------------------------------------------------------------------------------------------------
+# 7. constructor contract
 # ------------------------------------------------------------------------------------------------
 
 

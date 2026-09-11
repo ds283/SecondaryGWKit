@@ -95,12 +95,14 @@ order, and the sign convention is explicit. It is checked at construction agains
 samples -- with the wrong sign the residual would be *twice* the leading term rather than
 negligible beside it.
 
-`PrimitivePhase` computes the leading part of d(theta)/dz in closed form as `sign * k / H_eff`,
-where H_eff is whatever rate makes d/dz[leading.delta(z, anchor)] = 1/H_eff. For the Green's
-function the leading primitive is tau and H_eff is H; for the sound horizon
-d(cs_tau)/dz = -c_s/H, so H_eff = H/c_s, and `_SoundHorizonRate` below supplies exactly that.
-`omega()` returns the closed-form sqrt(Tk_omegaEff_sq), and now equals `phase.theta_deriv(z)`
-to the accuracy of phi's spline derivative rather than to that of a spline of theta.
+`PrimitivePhase` computes the leading part of d(theta)/dz in closed form as
+`sign * k * rate(z)`, where `rate(z)` is whatever makes d/dz[leading.delta(z, anchor)] =
+rate(z). For the Green's function the leading primitive is tau and rate = 1/H, which is
+`PrimitivePhase`'s own default; for the sound horizon d(cs_tau)/dz = -c_s/H, so
+rate = c_s/H, and `_sound_horizon_rate` below builds exactly that callable, passed to
+`PrimitivePhase` as its `rate` argument. `omega()` returns the closed-form
+sqrt(Tk_omegaEff_sq), and now equals `phase.theta_deriv(z)` to the accuracy of phi's spline
+derivative rather than to that of a spline of theta.
 
 `sin_coeff` is exposed as well: `M` already includes it (so `M` may be negative, and no
 absolute value is taken anywhere), but a consumer that wants T's sign convention needs it.
@@ -200,28 +202,28 @@ def _one_plus_z(z: float, z_is_log: bool) -> Tuple[float, float]:
     return z, log(1.0 + z)
 
 
-class _SoundHorizonRate:
+def _sound_horizon_rate(functions):
     """
-    The rate that plays the role of H(z) for the sound horizon.
+    Build the `rate(z)` callable `PrimitivePhase` needs for the sound-horizon leading term.
 
     `PrimitivePhase` evaluates the derivative of its leading term in closed form as
-    `sign * k / model_functions.Hubble(z)`, because for the Green's function the leading
-    primitive is tau with d(tau)/dz = -1/H. The transfer function's leading primitive is
-    cs_tau with d(cs_tau)/dz = -c_s/H, so what it needs there is
+    `sign * k * rate(z)` (its `rate` constructor parameter). For the Green's function the
+    leading primitive is tau with d(tau)/dz = -1/H, so `rate = 1/H` -- `PrimitivePhase`'s own
+    default. The transfer function's leading primitive is cs_tau with d(cs_tau)/dz = -c_s/H,
+    so what it needs here is
 
-        d/dz [k cs_tau.delta(z, z_anchor)] = + k c_s(z)/H(z) = k / (H(z)/c_s(z)).
+        d/dz [k cs_tau.delta(z, z_anchor)] = + k c_s(z)/H(z),
 
-    This adapter therefore reports H(z)/c_s(z), with c_s^2 = `wPerturbations(z)` (the author's
-    convention: `wPerturbations` is c_s^2 in the transfer-function sector, `wBackground` is w_0).
-    It is the only thing `PrimitivePhase` reads from `model_functions`, so nothing else has to
-    be forwarded.
+    i.e. `rate(z) = c_s(z)/H(z)`, with c_s^2 = `wPerturbations(z)` (the author's convention:
+    `wPerturbations` is c_s^2 in the transfer-function sector, `wBackground` is w_0). Unlike the
+    retired `_SoundHorizonRate` adapter this replaces, `functions` (the model's real
+    `ModelFunctions`) is passed to `PrimitivePhase` unmodified -- `rate` carries the c_s/H
+    correction on its own, so `model_functions.Hubble` on the resulting `PrimitivePhase` still
+    returns the genuine Hubble rate.
     """
 
-    def __init__(self, functions):
-        self._functions = functions
-
-    def Hubble(self, z: float) -> float:
-        cs_sq = self._functions.wPerturbations(z)
+    def rate(z: float) -> float:
+        cs_sq = functions.wPerturbations(z)
         if cs_sq <= 0.0:
             raise RuntimeError(
                 f"TkSourceFunctions: the sound speed squared c_s^2 = wPerturbations(z) must be "
@@ -229,7 +231,9 @@ class _SoundHorizonRate:
                 f"at z={z:.8g})"
             )
 
-        return self._functions.Hubble(z) / sqrt(cs_sq)
+        return sqrt(cs_sq) / functions.Hubble(z)
+
+    return rate
 
 
 class TkSourceFunctions:
@@ -397,7 +401,8 @@ class TkSourceFunctions:
             z_points,
             phi_points,
             sign=TK_PHASE_SIGN,
-            model_functions=_SoundHorizonRate(self._model.functions),
+            model_functions=self._model.functions,
+            rate=_sound_horizon_rate(self._model.functions),
             label="T_k WKB phase",
         )
 
