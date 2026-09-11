@@ -26,7 +26,7 @@ history, per the prompt's explicit instruction.
 structure and headings unchanged, no rewrite. §2.4 gets a new §2.4.1 ("The replacement, measured")
 covering the four required points — measured replacement accuracy, the `phi` offset finding, the
 fixture/production tolerance distinction, and the chunking measurement (with the harsher
-cosmological finding from `docs/gk-wkb-numerical-review-2026-09.md` §3 cited alongside it) — and
+cosmological finding from `docs/gk-wkb-review-astra-pathfinder-2026-09-08.md` §3 cited alongside it) — and
 the three stale "Consequences" bullets are struck through and annotated superseded rather than
 deleted. §2.5's first bullet (storing `Q` directly) is annotated: `bessel_phase` no longer has a
 `Q` member (prompt 06), and `DRAFT-PLAN.md` §4.2 explains why that was never the right general

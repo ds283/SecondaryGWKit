@@ -55,7 +55,7 @@ and 6.7e-6 at ``1e7``, both confirmed. Subtracting whole cycles changes the cons
 fourth derivative (§4.2), and chunking was measured to have no effect on it (§4.6). A second,
 independent reason has since been measured on the cosmological side: chunk selection is a hard
 switch between two fits, with a **1.08e-4 rad phase jump and a 3.51e-8 relative derivative jump** at
-the switch point (``docs/gk-wkb-numerical-review-2026-09.md`` §3, defect 3) -- a discontinuity a
+the switch point (``docs/gk-wkb-review-astra-pathfinder-2026-09-08.md`` §3, defect 3) -- a discontinuity a
 Levin consumer sees directly. Interpolating ``r_nu`` instead removes the growth: ``r_nu`` decays
 like ``1/x``, and above ``x_star`` it is not interpolated at all.
 

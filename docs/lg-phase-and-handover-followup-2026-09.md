@@ -253,7 +253,7 @@ The `transfer-remedial` campaign's acceptance-table and attribution-table number
    dynamic range; the shipped code also contradicted its own comment about what the constant did.
    This is a statement about the *Bessel* phase specifically. The **cosmological** $\theta(u)$ this
    document's §1–§3 concern is a different quantity and has since been measured on its own rows,
-   more harshly, by `docs/gk-wkb-numerical-review-2026-09.md` §3 (commit `39ed7fc`): "no
+   more harshly, by `docs/gk-wkb-review-astra-pathfinder-2026-09-08.md` §3 (commit `39ed7fc`): "no
    demonstrated numerical advantage at the tested scales and has demonstrated disadvantages" — a
    hard chunk-switch discontinuity of 1.08e-4 rad phase and 3.51e-8 relative derivative (which a
    Levin consumer sees), a rebase that can *enlarge* the stored ordinates (6.44e8 rad from a

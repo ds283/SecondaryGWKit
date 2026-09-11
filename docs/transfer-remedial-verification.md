@@ -319,7 +319,7 @@ From `README.md` §7, restated here as the closing record:
   node-count cost budget; the tail, the evaluation path and the consumers are unaffected.
 - `phase_spline`'s chunking on its own terms, and its `_build_log_chunks_positive` progress guard —
   both latent, unrelated to this campaign's replacement, and now measured harsher for the
-  cosmological case by `docs/gk-wkb-numerical-review-2026-09.md` §3.
+  cosmological case by `docs/gk-wkb-review-astra-pathfinder-2026-09-08.md` §3.
 - The `QuadSourceIntegral._three_bessel_Levin` phase-group and missing-`theta_deriv` findings —
   handed to `prompts/source-remediation` by this prompt; see §11.
 - A validated integer cycle-count algorithm. `wraps_tracked` is a diagnostic of the constructed
