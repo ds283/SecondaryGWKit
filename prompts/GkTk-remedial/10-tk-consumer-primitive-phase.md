@@ -8,7 +8,24 @@
 **Files you may touch:** `ComputeTargets/TkSourceFunctions.py`,
 `ComputeTargets/tests/test_tk_source_functions.py` (**stand-in fixtures and new assertions only**),
 `ComputeTargets/tests/test_phase_groups.py` (**the `FakeModel`/stand-in construction only**),
-plus the log and the status board.
+`ComputeTargets/tests/wkb_reference.py` (the `ClosedFormPrimitive` helper §2 asks for),
+`ComputeTargets/tests/test_quadsource_integral.py` (**stand-in model construction only** — added
+2026-09-11, see below), plus the log and the status board.
+
+> **File list extended 2026-09-11, after the prompt ran (user decision).**
+> `test_quadsource_integral.py` was not originally listed, and §4 nevertheless requires it to pass.
+> It builds its own `TkSourceFunctions` from inputs captured out of
+> `test_tk_source_functions.Fixture.exact_functions()` but pairs them with a closed-form
+> `FakeModel`, so once §1's friction cross-check exists that module **fails**: its stored
+> `friction` samples are backed out of the exact Bessel envelope and disagree with the constant-$w$
+> Liouville-Green integral by 5.6231e-06 in $F$. The orchestrator confirmed this by restoring the
+> file and re-running — four `RuntimeError`s from `_check_friction_samples`. The inconsistency was
+> real all along and merely invisible while the consumer splined the stored samples, so the
+> cross-check is doing its job. Prompt 10's five-line fix substitutes
+> `exact_envelope_model()` per wavenumber in the non-`exact` `Tk_builder`, exactly as that
+> fixture's `exact` branch one line above already does. `wkb_reference.py` is listed for the same
+> reason: §2 names the file and the helper to put in it, so it was always in scope in substance.
+> Still **stand-in construction only** in both: no tolerance constant, no production module.
 **Do not touch:** tolerance constants or comments in those two test files that the
 `transfer-remedial` campaign's prompt 08 owns (README §0.2, §4.2); `phase_groups.py`;
 `QuadSourceIntegral.py`.
@@ -70,6 +87,20 @@ and not in production (README §2 (c)). Do this with minimal edits and touch no 
    `transfer-remedial` 08's).
 3. `omega(z) == phase.theta_deriv(z)` to $10^{-10}$ relative on the "LG" fixture (the identity the
    module docstring promises; previously "up to spline error").
+
+   > **Measured 2026-09-11 at 1.0492e-10 relative ($w=1/3$) — 4.9 % above this bound, and the
+   > bound is deliberately NOT amended.** Unlike prompt 09's test 1 this threshold is reachable:
+   > the miss is the not-a-knot end condition of the cubic $\varphi$ spline at the top of the WKB
+   > region, 5.5589e-12 from the fifth sample inwards and 1.3e-15 in the interior, against
+   > 4.249e-08 before this prompt — a 405× improvement that lands just outside. A quintic
+   > $\varphi$ spline measures 9.695e-12 over the *whole* region and would meet $10^{-10}$
+   > outright, but needs six samples against `MIN_SPLINE_DATA_POINTS = 5` and would make the $T_k$
+   > consumer's spline order differ from prompt 09's $G_k$ one. **User decision, 2026-09-11:** take
+   > the shipped two-window assertion ($<10^{-9}$ on `z_WKB[3:-3]`, $<10^{-11}$ on `z_WKB[5:-3]`,
+   > both printed) for now and **leave `[10-residual-spline-end-condition]` open for prompt 13**,
+   > so the end effect is measured on the real background — where the samples are production grid
+   > nodes and $\varphi$ is not the closed-form residual of a constant-$w$ stand-in — before anyone
+   > pays for the quintic. Prompt 13 should re-measure this identity and then close or escalate.
 4. The construction-time friction cross-check raises on a deliberately inconsistent `friction`
    sample.
 

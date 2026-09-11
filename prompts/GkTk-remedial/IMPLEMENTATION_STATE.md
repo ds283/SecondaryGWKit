@@ -10,15 +10,21 @@ background table with the stored samples kept only as a construction-time cross-
 $w=1/3$ fixture reaching $x_T=10^6$ on the production 100/decade grid the phase error falls from
 **7.0854e-3 rad** (a cubic spline of the same stored samples) to **3.4482e-10 rad**, a ratio of
 **2.055e7**, and the 3.4e-10 is 2.96 ulp of the $10^6$ rad phase — the `div * TWO_PI`
-representation floor. Friction matches its closed form to **8.9e-16** absolute. Two deviations need
-the orchestrator: **prompt 10 §3 item 3's 1e-10 relative on `omega` vs `theta_deriv` is missed at
-one abscissa per equation of state** — 1.0492e-10 at $w=1/3$, the not-a-knot end condition of the
-residual spline at the top of the WKB region, 5.6e-12 from the fifth sample inwards, against
-4.249e-08 before (`[10-residual-spline-end-condition]`); and **five lines of stand-in construction
-in `ComputeTargets/tests/test_quadsource_integral.py`, outside the prompt's file list**, without
-which that module's fixtures are inconsistent with the new friction table
-(`[10-quadsource-fixture-model-substitution]`). `[00-transfer-remedial-test-file-overlap]` is
-**resolved**: `test_phase_groups.py` needed no edit at all and `8ba9159`'s tolerances are intact.)
+representation floor. Friction matches its closed form to **8.9e-16** absolute. Two deviations went to the
+user, and both are now settled. **Prompt 10 §3 item 3's 1e-10 relative on `omega` vs `theta_deriv`
+is missed at one abscissa per equation of state** — 1.0492e-10 at $w=1/3$, the not-a-knot end
+condition of the residual spline at the top of the WKB region, 5.6e-12 from the fifth sample
+inwards, against 4.249e-08 before: the shipped 1e-9 / 1e-11 window pair stands and
+`[10-residual-spline-end-condition]` is **left open and assigned to prompt 13**, which re-measures
+it on the real background before anyone pays for a quintic. **Five lines of stand-in construction
+in `ComputeTargets/tests/test_quadsource_integral.py`, outside the prompt's file list** are
+**accepted** — the orchestrator confirmed by restoring the file that §1's friction cross-check
+fails there on a genuinely inconsistent fixture — and the prompt's file list is extended in place
+with the reasoning (`[10-quadsource-fixture-model-substitution]` resolved, §4).
+`[00-transfer-remedial-test-file-overlap]` is **resolved**: `test_phase_groups.py` needed no edit
+at all — it is byte-identical to the pre-Workstream-D snapshot — and every line prompt 10 removed
+from `test_tk_source_functions.py` blames to `e3348e4`, not to `8ba9159`, so those tolerances are
+intact. **Workstream D is complete: the campaign's accuracy claims now hold end to end.**)
 Prompt 09 landed (the Green's-function *consumer* stops splining the
 growing phase: `ComputeTargets/primitive_phase.py` evaluates
 $\theta=-k\,\tau.\mathrm{delta}(z_s,z_r)+\varphi$ from prompt 03's double-double table with a cubic
@@ -245,28 +251,6 @@ Opened by the planning pass, 2026-09-10, before any prompt runs.
   **Next step:** unchanged — a follow-up prompt adding an `anchored(z0)` view to `PrimitivePhase`
   and a Levin-side hook, if the verification in 13 shows the floor matters.
 
-- **[10-quadsource-fixture-model-substitution]** *(opened by prompt 10, 2026-09-11; **needs
-  sign-off**)* — prompt 10 edited five lines of stand-in construction in
-  `ComputeTargets/tests/test_quadsource_integral.py` (`Case.__init__`'s non-`exact`
-  `Tk_builder`), which is **outside its "Files you may touch" list**. That module builds
-  `TkSourceFunctions` objects from inputs captured out of `Fixture.exact_functions()` and then
-  supplies its own `FakeModel(w)`; now that the friction comes from
-  `model.functions.friction_F`, the two disagree by **5.6231e-06** in $F$ (the LG truncation of
-  the exact envelope), so five of its 37 tests raised the new cross-check and two more failed on
-  message text. The fix substitutes `Fq/Fr.exact_envelope_model()` per wavenumber, exactly as
-  the file's own `exact` branch one line above already does; no tolerance, threshold or
-  production file is touched. It cannot be done from inside the allowed files, because
-  `Case.model` is shared with the Green's-function fixtures and `compute_QuadSource_integral`
-  calls `Tk_functions_builder(model, k, …)` with its own model, so only the builder closure can
-  substitute per $k$. With the cross-check temporarily disabled the module passes unedited — so
-  the check is reporting a genuine fixture defect (its "realistic" transfer functions would
-  silently become LG-amplitude rather than exact-envelope), not merely failing on a technicality.
-  **Impact:** the prompt's §4 acceptance ("`test_quadsource_integral.py` passes") cannot be met
-  without it; the campaign's own §4.3 file stop-list does not name this file. **Next step:** the
-  user either confirms the hunk or reverts it with
-  `git checkout <commit>~1 -- ComputeTargets/tests/test_quadsource_integral.py`, in which case
-  that module fails as above and prompt 10's §1 friction cross-check has to be re-scoped.
-
 - **[10-residual-spline-end-condition]** *(opened by prompt 10, 2026-09-11)* — prompt 10 §3
   item 3 asks for $\omega(z) =$ `phase.theta_deriv(z)` to $10^{-10}$ relative on its "LG"
   fixture. Measured over the same domain its sibling test uses (`z_WKB[3:-3]`): **1.0492e-10**
@@ -285,9 +269,15 @@ Opened by the planning pass, 2026-09-10, before any prompt runs.
   consumer's representation differ from prompt 09's $G_k$ consumer for a number nobody asked
   for, so it was not taken. **Impact:** prompt 10 §3 item 3 as written; the same end condition
   applies to prompt 09's $G_k$ consumer and to anything reading `theta_deriv` near the edge of a
-  WKB region (`phase_groups`, `AdaptiveLevin`). **Next step:** the user either accepts the
-  1e-9 / 1e-11 pair and the prompt text is amended, or `spline_order=5` is adopted for both
-  consumers with `MIN_SPLINE_DATA_POINTS` raised to 6.
+  WKB region (`phase_groups`, `AdaptiveLevin`). **Decision (user, 2026-09-11): left open for prompt 13.**
+  The shipped 1e-9 / 1e-11 pair stands for now and prompt 10 §3 item 3's text was **not** amended
+  — a dated note there records the measurement and points here — because every figure above is
+  from a constant-$w$ closed-form stand-in, where $\varphi$ is an analytic residual and the
+  samples are not production grid nodes. **Next step:** prompt 13 re-measures this identity on the
+  real background for both sectors and then either closes this issue at the cubic or escalates to
+  `spline_order=5` for both consumers with `MIN_SPLINE_DATA_POINTS` raised to 6. It should also
+  report the error at the second and third samples, not only the window maxima, since the end
+  effect is what is in question.
 
 - **[10-primitive-phase-leading-rate-is-hardcoded]** *(opened by prompt 10, 2026-09-11)* —
   `PrimitivePhase.theta_deriv` (`ComputeTargets/primitive_phase.py:287`) computes the leading
@@ -545,6 +535,33 @@ Opened by the planning pass, 2026-09-10, before any prompt runs.
 ---
 
 ## 4. Resolved issues
+
+- **[10-quadsource-fixture-model-substitution]** *(opened by prompt 10, 2026-09-11; resolved by the
+  user, 2026-09-11)* — prompt 10 edited five lines of stand-in construction in
+  `ComputeTargets/tests/test_quadsource_integral.py` (`Case.__init__`'s non-`exact`
+  `Tk_builder`), which is **outside its "Files you may touch" list**. That module builds
+  `TkSourceFunctions` objects from inputs captured out of `Fixture.exact_functions()` and then
+  supplies its own `FakeModel(w)`; now that the friction comes from
+  `model.functions.friction_F`, the two disagree by **5.6231e-06** in $F$ (the LG truncation of
+  the exact envelope), so five of its 37 tests raised the new cross-check and two more failed on
+  message text. The fix substitutes `Fq/Fr.exact_envelope_model()` per wavenumber, exactly as
+  the file's own `exact` branch one line above already does; no tolerance, threshold or
+  production file is touched. It cannot be done from inside the allowed files, because
+  `Case.model` is shared with the Green's-function fixtures and `compute_QuadSource_integral`
+  calls `Tk_functions_builder(model, k, …)` with its own model, so only the builder closure can
+  substitute per $k$. With the cross-check temporarily disabled the module passes unedited — so
+  the check is reporting a genuine fixture defect (its "realistic" transfer functions would
+  silently become LG-amplitude rather than exact-envelope), not merely failing on a technicality.
+  **Impact:** the prompt's §4 acceptance ("`test_quadsource_integral.py` passes") cannot be met
+  without it; the campaign's own §4.3 file stop-list does not name this file. **Resolution (user, 2026-09-11):** the hunk is
+  **accepted**. The orchestrator had confirmed the diagnosis independently by restoring the file
+  to its pre-prompt content and re-running the module — four `RuntimeError`s from
+  `_check_friction_samples` at `TkSourceFunctions.py:437` — so the alternative was to weaken a
+  cross-check the prompt's own §1 requires in order to protect a fixture that was quietly
+  inconsistent. Prompt 10's "Files you may touch" list was extended in place with a dated note
+  giving this reasoning, and `wkb_reference.py` was added to it at the same time, that file having
+  always been in scope in substance (§2 names both it and the `ClosedFormPrimitive` helper to put
+  there). Both remain **stand-in construction only**.
 
 - **[00-transfer-remedial-test-file-overlap]** *(planning, 2026-09-10; resolved by prompt 10,
   2026-09-11)* — prompt 10 edits the stand-in `ModelFunctions` fixtures in
