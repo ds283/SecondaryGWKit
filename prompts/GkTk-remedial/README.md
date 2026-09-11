@@ -525,6 +525,7 @@ the review's measurements on `f06f587`, reproduced in `RECONCILIATION.md` §1.
 | Cross-object cycle consistency (t6-style sweep) | 60–165 of 330 objects rebased −1 | 0 rebase offsets; rectifier repairs only $\delta$-wraps | — | 06, 09 |
 | $\theta_T$ at $z=0.1$, LambdaCDM, $k=10^5$ / $3\times10^8$ | 2.0 rad / $5.1\times10^3$ rad | $\le10^{-4}$ / $\le5\times10^{-3}$ rad | $1.4\times10^{-8}$ / $4\times10^{-5}$ rad | 07 |
 | $T_{\rm WKB}$ exact-radiation control from $x_i=24$ / $400$, envelope-relative | $3.8\times10^{-5}$ / $7.8\times10^{-9}$ (LG floor) | unchanged (this **is** the floor; assert $\le5\times10^{-5}$ / $\le2\times10^{-8}$) | LG truncation | 07 |
+| Cost per `TkWKBIntegration` object, $k=3\times10^8$ | 58 s, $1.94\times10^6$ RHS evaluations | **measured and recorded, per object and per stage** (see the note below) | — | 07 |
 | Consumer phase interpolation error at $x=10^7$, 100/decade | $8.3\times10^{-3}$ rad ($h^4x/384$) | $\le10^{-6}$ rad ($\varphi$ spline) | $\varepsilon k\tau$ | 09, 10 |
 | Chunk-switch discontinuity | $1.4\times10^{-4}$ rad, $3.3\times10^{-8}$ relative in $\theta'$ | none (single spline) | — | 08 |
 | Numeric RHS diagnostic overhead | 45 % of run time | 0 %; `has_unresolved_osc`, `unresolved_z`, `unresolved_efolds_subh` still populated | — | 11 |
@@ -536,6 +537,21 @@ difference in radians of the unwrapped phase against the reference at the suppli
 never against the absolute; **envelope-relative** error of $G$ or $T$ divides by the local LG
 envelope, not by the value. References are built at the supplied double (`mpf(float(z))`), never a
 re-derived argument.
+
+**The two cost rows are not the same quantity, and only the $G_k$ one is a per-object bound.**
+Added 2026-09-11, after prompt 07 measured a $T_k$ object at 0.049–0.053 s against the $\le0.05$ s
+the $G_k$ row carries — a figure prompt 07 §3 item 6 had borrowed, there being no $T_k$ row here at
+the time. The two sectors have different object counts: `GkWKBIntegration` is one object per
+$(k, z_{\rm source})$, ~65,000 per model, so a per-object second matters; `TkWKBIntegration` is
+**one object per $k$** (review §12.1), 50 per model, so the stage costs **~2.6 s per model against
+the ODE's ~48 minutes**. That ~1100× is what the row certifies. Nor can prompt 14's per-$(model, k,
+sector)$ residual cache amortise anything here — with one object per $k$ there is no second object
+to serve it, so 5,840 of a $T_k$ object's 11,376 integrand evaluations are its own table build, and
+a further 5,536 are the leading table's off-grid anchor panel recomputed once per sample
+(`[07-tk-per-object-cost-is-all-setup]`). Splitting that panel off once per object, as prompt 14
+did for $\rho$, would roughly halve the cost but would add ~1 ulp of the span (4.1e-5 rad at
+$k=3\times10^8$) to the double-double leading term that §2 (c) exists to protect, against a
+measured phase error of 9.2e-5 rad — so it is recorded as available, not scheduled.
 
 ---
 
