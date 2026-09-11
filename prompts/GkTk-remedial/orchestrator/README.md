@@ -44,6 +44,16 @@ or ⚠️.
 6. **Relay questions verbatim.** If a subagent asks something, do not answer it yourself.
 7. **Stop rather than repair.** If a check fails, do not fix it, revert it, or dispatch a follow-up
    agent to patch it. Report the specific check and what the log says.
+8. **The orchestrator commits too, so an agent must never assume `HEAD` is its own.** Between
+   prompts you land planning and correction commits on the same branch — Workstream C landed seven.
+   Rule 2 forbids amending across *prompts*; this forbids amending across *agents*, which rule 2
+   does not cover because an orchestration commit is not a prompt. Every dispatch tells the
+   subagent: before any `git commit --amend`, `git reset` or `git rebase`, check that `HEAD` is the
+   commit you created, and never rewrite one you did not author. An agent that finds it already has
+   must say so and stop — a `reset --hard` to "undo" it can silently drop a commit made in the
+   meantime, and reconstructing is your call, not the agent's. (Prompt 07's agent amended an
+   orchestration commit, caught it, and reset; nothing was lost, but only because of the order in
+   which the two commits fell.)
 
 ## The campaign-wide stop conditions
 

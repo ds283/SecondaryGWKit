@@ -53,7 +53,10 @@ For prompt NN, launch a subagent with **exactly** this context:
 > `docs/gk-wkb-review-fable-2026-09-09.md` it cites. Execute the prompt exactly. Do not read any
 > other prompt under `prompts/GkTk-remedial/`. You may read the "State handed to the next prompt"
 > sections of the logs your prompt names, and only those. Follow README §5 for the commit, the log,
-> the board update and `docs/OPEN_ISSUES.md`. When you finish, reply with: the commit SHA, the
+> the board update and `docs/OPEN_ISSUES.md`. Other commits may land on this branch while you
+> work: make exactly one commit, and do not amend, reset or rebase anything you did not create —
+> if you need to change a commit you already made and it is no longer `HEAD`, stop and say so
+> rather than rewriting. When you finish, reply with: the commit SHA, the
 > **Result** line from your log, the "State handed to the next prompt" section verbatim, and every
 > deviation with its classification tag.
 
