@@ -189,6 +189,10 @@ close, plus one issue prompt 09 itself opened while re-running the benchmark tie
   twice over — it lists `Q` among the members the dict "carries", and prompt 06 removed `Q`. Still
   no functional impact (`test_quadsource_integral` passes, 97 `ComputeTargets` tests green), and
   still one docstring for that campaign to correct.
+  **Assigned (2026-09-11):** `prompts/qsi-phase-groups` prompt 01 owns this — it edits the same
+  function's file for `[transfer-remedial-qsi-phase-groups]`, so the docstring is corrected there.
+  The *numeric* guard stays as it is: replacing it with a direct `phase_data["nu"]` comparison is a
+  behaviour change and is explicitly out of that prompt's scope.
 
 - **[06-levin-theta-docstring-stale]** *(opened by prompt 06, 2026-09-10)* —
   `AdaptiveLevin/levin_quadrature.py:2750` documents the `theta` key as "always used to decide

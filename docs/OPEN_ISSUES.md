@@ -1,6 +1,6 @@
 # Open issues — project-wide index
 
-**Last updated:** 2026-09-10 · **30 open** across four campaigns.
+**Last updated:** 2026-09-11 · **31 open** across five campaigns.
 
 This file exists so that an issue opened by one campaign is not lost when that campaign closes.
 It is an **index, not a record**: one line per issue, pointing at the campaign status board that
@@ -15,7 +15,8 @@ the two disagree, the board is right.
 **Boards.** [`source-remediation`](../prompts/source-remediation/IMPLEMENTATION_STATE.md) ·
 [`levin-refactor`](../prompts/levin-refactor/IMPLEMENTATION_STATE.md) ·
 [`backport-modules`](../prompts/backport-modules/IMPLEMENTATION_STATE.md) ·
-[`transfer-remedial`](../prompts/transfer-remedial/IMPLEMENTATION_STATE.md)
+[`transfer-remedial`](../prompts/transfer-remedial/IMPLEMENTATION_STATE.md) ·
+[`qsi-phase-groups`](../prompts/qsi-phase-groups/IMPLEMENTATION_STATE.md)
 
 ---
 
@@ -39,7 +40,18 @@ measurement alone at production $x$. Background reading:
 | `[06-source-spline-residual-vs-handover]` | source-remediation | $f$ oscillates at twice the transfer-function phase, so its spline is the worst of the three; 1.4e-04 of envelope on real rows, but $O(1)$ if the hand-over is allowed to fall to the bottom of `main.py`'s search window. |
 | `[07-lg-derivative-truncation-at-handover]` | source-remediation | The irreducible one: `omega`/`dlnM_dz` are LG quantities, off by $O(x^{-4})$. Grid-independent — only a deeper hand-over helps. |
 
-### 1.2 The `AdaptiveLevin` Clenshaw–Curtis fallback campaign
+### 1.2 The `QuadSourceIntegral` phase-groups campaign
+
+`prompts/qsi-phase-groups` — one prompt, opened 2026-09-11. `_three_bessel_Levin`'s eight Levin
+calls are the last Bessel-phase consumer in the tree assembled by summing raw phases.
+
+| Issue | Board | Hook |
+|---|---|---|
+| `[transfer-remedial-qsi-phase-groups]` | source-remediation | `_three_bessel_Levin`'s eight `adaptive_levin_sincos` calls supply no `theta_deriv`/`theta_abserr` and sum three `raw_theta` values, unlike the sibling route in the same file. **Assigned (2026-09-11)** to `prompts/qsi-phase-groups` prompt 01. |
+| `[05-quadsource-order-check-docstring-stale]` | transfer-remedial | `_check_bessel_order`'s docstring says the phase dict carries `Q` and no `"nu"`; both are now the reverse. **Assigned (2026-09-11)** to the same prompt, docstring only — the numeric guard stays. |
+| `[00-orphaned-handoff]` | qsi-phase-groups | Why the above sat unowned: the hand-off was filed into a campaign already complete at 13/13, and indexed under §2 rather than §1 with an `Assigned` line. Process note; closed when prompt 01 lands. |
+
+### 1.3 The `AdaptiveLevin` Clenshaw–Curtis fallback campaign
 
 | Issue | Board | Hook |
 |---|---|---|
@@ -49,7 +61,7 @@ measurement alone at production $x$. Background reading:
 | `[04-theta-abserr-cc-branch-proxy]` | levin-refactor | The endpoint term is exact on a Levin region but a 50/50 split of a lumped proxy on a Clenshaw–Curtis one, which has no Levin antiderivative to weight by. |
 | `[05-zero-width-span-raises]` | levin-refactor | `adaptive_levin_sincos((5.0, 5.0), …)` raises `ValueError` from `build_Levin_data()`; the early return the README describes does not exist. |
 
-### 1.3 The $T_k$ / $G_k$ numerical-precision campaign
+### 1.4 The $T_k$ / $G_k$ numerical-precision campaign
 
 | Issue | Board | Hook |
 |---|---|---|
@@ -68,7 +80,6 @@ bound the true error. Closing any of them properly needs the representation erro
 | `[12-atol-too-loose-for-the-source-integral]` | source-remediation | 58 % of work items have a raw integral below `DEFAULT_QUADRATURE_ATOL = 1e-25`, so their tolerance is met before any work is done. Needs a production decision: scale `atol` with the integrand, go `rtol`-only, or lower the default for this stage. |
 | `[09-abserr-does-not-bound-phase-spline-floor]` | levin-refactor | `quad_JJJ`/`quad_YJJ`'s `abserr` misses the true error against the analytic oracle by up to 11.5× on 5 of 7 three-Bessel closed forms. **Measured false on the current tree** (`transfer-remedial` prompt 08): 7 of 7 now bound, `true/reported` between 9.8e-06 and 1.5e-04. |
 | `[09-quadsource-total-error-incomplete]` | levin-refactor | Partly superseded: `source-remediation` prompt 09 added `total_abserr`. Re-read against the current tree before acting. |
-| `[transfer-remedial-qsi-phase-groups]` | source-remediation | `_three_bessel_Levin`'s eight `adaptive_levin_sincos` calls supply no `theta_deriv`/`theta_abserr`, unlike the sibling module's phase-group route it now anomalously differs from. Hand-off from `transfer-remedial`; a working pattern to copy (`LiouvilleGreen/three_bessel_integrals.py`'s `_PhaseGroup`) exists. |
 
 ---
 
@@ -93,7 +104,6 @@ Something was asserted statically or on a stand-in, and a live exercise is still
 | `[05-persist-handler-split]` | backport-modules | Audit §8 item 7: a real driver run exercising the `store_handler`/`persist_handler` split end to end. |
 | `[01-scipy-jv-yv-high-order-boundary]` | transfer-remedial | The silent Amos boundary is order dependent and applies to `jv`/`yv`, not only `hankel1e`: 7.13e8 above $\nu\approx86$. Guarded in the harness; the order threshold is bracketed [85.5, 88.5], not pinned, and not yet a test. |
 | `[04-achieved-estimates-exclude-the-sampling-floor]` | transfer-remedial | `NearRegionData.achieved_*` resamples the same `hankel1e` it interpolates, so it estimates interpolation error only. **Narrowed by prompt 05:** the published `theta_abserr` now adds a 3e-13 sampling floor and 4ε of evaluation arithmetic, and is tested never to under-report; only the size of the 3e-13 constant is still open. |
-| `[05-quadsource-order-check-docstring-stale]` | transfer-remedial | `bessel_phase` now returns a `"nu"` key, so `QuadSourceIntegral._check_bessel_order`'s docstring (and its reason for checking the order numerically) is obsolete. No functional impact; not folded into prompt 09's `source-remediation` hand-off, which that prompt restricts to one entry. |
 | `[06-levin-theta-docstring-stale]` | transfer-remedial | `levin_quadrature.py:2750` says `theta` is always used to decide subdivision; it is not (`:1038`, `:1090`), and prompt 06 has direct evidence — a `theta` that raises gives bit-identical results. `AdaptiveLevin/` is forbidden here. |
 | `[06-measure-bessel-phase-num-chunks]` | transfer-remedial | Prompt 01's own diagnostic script reads `phase.num_chunks`, which prompt 05 removed, so its current-tree sections raise `AttributeError`. Not in prompt 09's file list, so left unfixed. |
 | `[06-three-bessel-plot-calls-a-non-callable-phase]` | transfer-remedial | `QuadSourceIntegral_debug.three_bessel_plot` calls the phase object directly; no phase class has ever defined `__call__`, so it is dead in the same way `plot_besssel_phase.py` was. Repair-or-delete, unowned. |

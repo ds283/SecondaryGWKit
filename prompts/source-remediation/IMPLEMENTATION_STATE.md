@@ -441,6 +441,10 @@ Traceability from the audit's finding IDs to the prompt that discharges them.
   `phase.theta_abserr_at` at their own arguments. Full detail, including the measured cancellation
   numbers this pattern removes in the sibling module, is in
   `docs/transfer-remedial-verification.md`.
+  **Assigned (2026-09-11):** `prompts/qsi-phase-groups` prompt 01 owns this. It was filed here when
+  this campaign was already complete at 13 of 13, so no prompt remained to discharge it; rather
+  than leave it on a closed board, a one-prompt campaign was opened for it. This entry stays open
+  until that prompt lands, and is then closed by it.
 
 > Add an entry here whenever a prompt finishes with something unresolved: a verification step that
 > could not be run, an assumption that could not be confirmed, a deviation that a later prompt has
