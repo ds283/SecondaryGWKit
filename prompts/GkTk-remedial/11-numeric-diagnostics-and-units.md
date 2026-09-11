@@ -98,8 +98,20 @@ Undecorated `numeric_with_phase_cut` with the two RHS functions and stand-ins:
    returned `value_sample`, `deriv_sample` and the stop point agree **exactly** with a run of the
    pre-change code (capture the pre-change outputs in the test file as constants from a run at
    `HEAD~1`, with the commit SHA in a comment) — except the stop point, which item 2.3(2b) may move
-   by one root-bracketing step; assert the stop point is an extremum of the same sign with
-   $|G'|<10^{-12}\,|G|\omega$ and that $G_{\rm stop}/{\rm env}=+1$ to $10^{-6}$.
+   by one root-bracketing step; assert the stop point is an extremum of the same sign, that
+   $G_{\rm stop}/{\rm env}=+1$ to $10^{-6}$, and that $|G'|$ is within the bound `root_scalar`'s own
+   tolerance implies, $|G'|<|G|\,\omega^2\,(x_{\rm tol}+r_{\rm tol}z)$ with
+   $x_{\rm tol}=10^{-6}$, $r_{\rm tol}=10^{-4}$.
+
+   > **Amended 2026-09-12** (accepted by the user; the shipped code is unchanged). This item
+   > originally asked for $|G'|<10^{-12}|G|\omega$. That bound is unachievable and always was: the
+   > stop point is a `root_scalar(xtol=1e-6, rtol=1e-4)` root, so the residual derivative is
+   > $O(|G|\omega^2\cdot10^{-4}z)$. Measured on the **pre-change** code at `2ed3632`,
+   > $|G'|/(|G|\omega)$ is **9.7604e-06** for $G_k$ and **8.6791e-07** for $T_k$ — seven orders
+   > above $10^{-12}$ — so the prompt asked for something its own tree did not satisfy. The bound
+   > above is what the root tolerance permits, and is what shipped. Tightening the root is a
+   > hand-over-campaign decision, because $z_{\rm init}$ *is* this root and moving it carries a
+   > datastore regeneration: `[11-stop-point-root-tolerance]`.
 2. **The flag semantics.** A run whose sample grid is deliberately coarse (one sample per decade)
    sets `has_unresolved_osc=True` with `unresolved_z` at the first pair violating the test; a run
    on a grid finer than the wavelength everywhere sets `False`; the warning line is printed once

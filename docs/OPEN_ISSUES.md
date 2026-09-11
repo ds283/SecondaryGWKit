@@ -27,9 +27,11 @@ Work is identified and owned; the issue is parked deliberately, not forgotten.
 
 ### 1.1 The hand-over campaign
 
-The numeric→Liouville–Green seam of $T_k$ and $G_k$. These six are **one place** and must be
+The numeric→Liouville–Green seam of $T_k$ and $G_k$. These seven are **one place** and must be
 attacked together — prompt 12 of `source-remediation` could not separate their contributions by
-measurement alone at production $x$. Background reading:
+measurement alone at production $x$. (`[11-stop-point-root-tolerance]` joined them 2026-09-12: the
+numeric stop point $z_{\rm init}$ is a `root_scalar` root, so where the seam sits and how precisely
+it is located are the same decision.) Background reading:
 [`docs/lg-phase-and-handover-followup-2026-09.md`](lg-phase-and-handover-followup-2026-09.md).
 
 | Issue | Board | Hook |
@@ -40,6 +42,7 @@ measurement alone at production $x$. Background reading:
 | `[06-source-spline-residual-vs-handover]` | source-remediation | $f$ oscillates at twice the transfer-function phase, so its spline is the worst of the three; 1.4e-04 of envelope on real rows, but $O(1)$ if the hand-over is allowed to fall to the bottom of `main.py`'s search window. |
 | `[07-lg-derivative-truncation-at-handover]` | source-remediation | The irreducible one: `omega`/`dlnM_dz` are LG quantities, off by $O(x^{-4})$. Grid-independent — only a deeper hand-over helps. |
 | `[00-tk-lg-truncation-floor]` | GkTk-remedial | The $T_k$ LG representation is not exact even in radiation: ~$1.4\times10^{-4}$ of the envelope at the production hand-over $x_T\approx15.5$, scaling as $x_i^{-3}$. A later hand-over ($x_T=50$ gives $4\times10^{-6}$), a higher-order LG frequency, or the Bessel exact form are the levers. |
+| `[11-stop-point-root-tolerance]` | GkTk-remedial | `find_phase_extremum`'s `root_scalar(xtol=1e-6, rtol=1e-4)` places the stop point only to $\sim10^{-4}z$, so $|G'|/(|G|\omega)$ there is 9.8e-6 (pre-prompt-11) to 6.5e-5, not the 1e-12 prompt 11 §3 asked to assert. Harmless downstream — `store()` rotates $(G,G')$ — but $z_{\rm init}$ is this root, so tightening it is a hand-over-campaign decision with a datastore regeneration attached. |
 
 ### 1.2 The `QuadSourceIntegral` phase-groups campaign
 
@@ -70,7 +73,6 @@ the expectation that this campaign **removes** the chunked splines — its promp
 | Issue | Board | Hook |
 |---|---|---|
 | `[12-phase-spline-error-grows-with-x]` | source-remediation | Stored-phase re-spline error $\simeq h^4x/384$, growing **linearly in $x$**; ~1 % of envelope extrapolated to production. **Reassigned here from §1.1** (2026-09-10): the campaign's prompts 09–10 evaluate the leading term from a table and spline only the residual. |
-| `[11-stop-point-root-tolerance]` | GkTk-remedial | `find_phase_extremum`'s `root_scalar(xtol=1e-6, rtol=1e-4)` places the stop point only to $\sim10^{-4}z$, so $|G'|/(|G|\omega)$ there is 9.8e-6 (pre-prompt-11) to 6.5e-5, not the 1e-12 prompt 11 §3 asked to assert. Harmless downstream — `store()` rotates $(G,G')$ — but $z_{\rm init}$ is this root, so tightening it is a hand-over-campaign decision with a datastore regeneration attached. |
 | `[00-consumer-anchoring-floor]` | GkTk-remedial | `PrimitivePhase` reduces $k\Delta\tau$ against a global anchor, so `theta_mod_2pi` carries the $\varepsilon k\tau$ floor ($9\times10^{-4}$ rad at $k=3\times10^8$). Per-region anchoring is the follow-up. **Measured by prompt 09:** the floor is now the whole error — 4.189e-8 rad = 2.81 ulp of the span at $k=10^8$, with $\varphi$ itself recovered to 2.157e-10 rad. |
 | `[01-offgrid-accessor-cost-on-qcd]` | GkTk-remedial | The interval accessor costs 102 µs on `QCD_Cosmology` with both endpoints off-grid, above README §4.3's 50 µs stop threshold. **Narrowed by prompt 03:** the shipped accessor is 52 µs both-off-grid, 26 µs one-off-grid, 0.33 µs on-grid (the production case). **Narrowed by prompt 06:** the producers only ever pair the off-grid anchor with an on-grid sample — 464 partial evaluations inside a 0.031 s object. **Narrowed by prompt 09, not closed:** the Levin consumer evaluates off-grid by construction, but always with exactly one off-grid endpoint (the anchor is a grid node), so the 26 µs figure applies and the 50 µs line is not crossed. |
 | `[07-tk-per-object-cost-is-all-setup]` | GkTk-remedial | A `TkWKBIntegration` object at $k=3\times10^8$ costs 0.049–0.052 s, straddling prompt 07 §3 item 6's 0.05 s; all of it is setup. 5,840 of its 11,376 integrand evaluations build a per-$k$ residual table that, at one object per $k$, nothing amortises, and 5,536 are the leading table's off-grid anchor panel recomputed once per sample — the split prompt 14 applied to $\rho$ but not to $\tau_s$. **Widened by prompt 09:** the same recomputation would hit any consumer with an off-grid anchor, which is prompt 10's $z_{\rm init}$. |

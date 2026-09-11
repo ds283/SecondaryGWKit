@@ -315,6 +315,13 @@ Opened by the planning pass, 2026-09-10, before any prompt runs.
   input to the hand-over campaign, since $z_{\rm init}$ is this root. **Next step:** decide with the
   hand-over campaign whether to tighten the tolerances — doing so moves every stored $z_{\rm init}$
   and forces a datastore regeneration, so it is not a free change.
+  **Assigned (2026-09-12): the hand-over campaign** (`docs/OPEN_ISSUES.md` §1.1). The user accepted
+  the substituted bound: prompt 11's shipped assertion is
+  $|G'|<|G|\omega^2(x_{\rm tol}+r_{\rm tol}z)$, what the root tolerance permits, and **prompt 11
+  §3 item 1 has been amended in place** to ask for that instead of the unachievable $10^{-12}$,
+  with the pre-change measurements recorded there. No code changed. The issue stays open because
+  $z_{\rm init}$ *is* this root: whether to tighten it belongs with the other six seam decisions,
+  which must be taken together.
 
 - **[00-consumer-anchoring-floor]** *(planning, 2026-09-10)* — `PrimitivePhase` reduces
   $k\Delta\tau$ against a global anchor ($z_r$ for $G_k$, $z_{\rm init}$ for $T_k$), so its
