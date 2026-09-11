@@ -321,6 +321,36 @@ $z_{e3}$: 1,371 samples, 0.0511 s, 11,324 evaluations — the anchor choice does
 - `black` clean on all three touched files. (`black --check` over the whole repository reports 54
   pre-existing files it would reformat, none of them touched here; that predates this commit.)
 
+### Addendum, 2026-09-11 — orchestrator's independent verification
+
+Added by the orchestrator at Workstream C close-out, **additively**: the subsection above was
+correct for the tree and the moment it was written, and is not edited (`CLAUDE.md`, README §5
+rule 6). Run by the orchestrator on `b65539e`, which adds no code to `2873e15`:
+
+- `ComputeTargets/tests` → **Ran 226 tests, OK** (129.8 s). Reproduced twice.
+- `ComputeTargets.tests.test_tk_wkb_phase` → **17 tests, OK**, with every acceptance figure
+  reproduced: $\theta_T$ 1.4901e-08 / 9.1553e-05 / 2.4414e-04 rad, $F$ 6.5e-16 / 4.0e-16 /
+  2.7e-14 relative, the §12.4 table at 3.8118e-05 / 4.0663e-06 / 5.0628e-07 / 7.7760e-09 with an
+  $x_i^{-3}$ ratio of 4902.
+- `ComputeTargets.tests.test_background_cs_tau_friction` → **17 tests, OK**; the relocated
+  `_friction_RHS` still measures **2.261e-07**, bit-identical to log 04.
+- `ComputeTargets.tests.test_tk_source_functions` + `test_phase_groups` → **30 tests, OK** (the
+  two files shared with `transfer-remedial`).
+- `LiouvilleGreen.tests.test_range_reduce` + `test_bessel_phase` → **10 tests, OK**.
+- **Cost**, five runs: 0.0505, 0.0518, 0.0522, 0.0522, 0.0528 s — consistently above prompt 07 §3
+  item 6's 0.05 s, so the miss is real and not machine noise. Resolved not by widening anything but
+  by `b65539e`, which gives README §6 its own `TkWKBIntegration` cost row: the borrowed $G_k$
+  threshold was the wrong quantity, since there is one $T_k$ object per $k$ and the stage costs
+  ~2.6 s per model against the ODE's ~48 minutes.
+
+**Still outstanding at close-out.** The full `LiouvilleGreen/tests`, `CosmologyModels/tests` and
+`AdaptiveLevin/tests` sweep is reported by the implementing agent as 133 / 11 / 32 OK. The
+orchestrator's own confirming run had not finished when this addendum was written and those
+numbers are therefore **the agent's, not independently reproduced**. The risk is low on the
+argument the subsection above gives — `2873e15` touches no file in any of the three — and the two
+`LiouvilleGreen` modules that prompt 06 put at risk were run and pass. Whoever next needs those
+three suites green should run them rather than cite this line.
+
 ### What was *not* run
 
 No production pipeline run and no datastore exercise. The datastore claims above are from the
