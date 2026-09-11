@@ -450,6 +450,14 @@ Neither touches a design fact of README §2, the `GkSource` rectifier, a `*_omeg
 value, a stored column, or a `transfer-remedial` file. Everything README §6 actually scores is met,
 the $T_k$ consumer row with a 20-million-fold margin.
 
+**`LiouvilleGreen/tests` at Workstream D close-out: 141 tests, OK.** Run by the orchestrator on
+`0038f28` in the background while the close-out commit was written; 1546.7 s **elapsed**, which per
+`IMPLEMENTATION_STATE.md` §5 note 14 overstates CPU on this machine by roughly half, so read it as
+~1000 s of CPU and not as a timing measurement. This also discharges the item prompt 07's own
+orchestrator addendum left open — there the 133 OK figure was the implementing agent's and had not
+been independently reproduced. It is now reproduced, at 141 tests, prompt 08's new
+`test_phase_spline` module (8) accounting for the difference.
+
 ## Observations not acted on
 
 1. **`8ba9159`'s tolerance comments in `test_tk_source_functions.py` are now stale in five
