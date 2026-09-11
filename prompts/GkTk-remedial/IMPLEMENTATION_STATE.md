@@ -2,7 +2,7 @@
 
 **Campaign:** [`README.md`](README.md) · **Source review:** [`docs/gk-wkb-review-fable-2026-09-09.md`](../../docs/gk-wkb-review-fable-2026-09-09.md) · **Reconciliation:** [`RECONCILIATION.md`](RECONCILIATION.md)
 **Baseline commit:** `9ff59d5` (`main`, clean)
-**Last updated:** 2026-09-11 — prompt 03 landed (τ as a double-double Gauss–Legendre table; `tau_lo_Mpc` column; datastore regeneration attached).
+**Last updated:** 2026-09-11 — prompt 04 landed (the sound-horizon and friction tables; `cs_tau_Mpc`, `cs_tau_lo_Mpc` and `friction_F` columns; the regeneration prompt 03 attached now covers four new columns).
 
 > **Maintenance rule.** Every prompt updates this file *in its own commit*, before committing.
 > Set your row's status, fill in the commit SHA, model and log link, update the mechanism-level
@@ -28,7 +28,7 @@ Legend: ⬜ not started · 🟡 in flight · ✅ complete · ⚠️ complete wit
 | # | Prompt | Covers | Model | Status | Commit | Log |
 |---|---|---|---|---|---|---|
 | 03 | [τ primitive](03-tau-primitive.md) | review §7, §13.2, §13.3 | **Fable** | ⚠️ | *"Build conformal time as a double-double Gauss-Legendre table"* (SHA not embedded, per the campaign convention) | [`logs/03-tau-primitive.md`](logs/03-tau-primitive.md) |
-| 04 | [Sound-horizon and friction tables](04-sound-horizon-and-friction-tables.md) | review §12.7 | Opus | ⬜ | | |
+| 04 | [Sound-horizon and friction tables](04-sound-horizon-and-friction-tables.md) | review §12.7 | Opus | ⚠️ | *"Tabulate the sound horizon and the LG friction integral per model"* (SHA not embedded, per the campaign convention) | [`logs/04-sound-horizon-and-friction-tables.md`](logs/04-sound-horizon-and-friction-tables.md) |
 
 ### Workstream C — the producers
 
@@ -59,7 +59,7 @@ Legend: ⬜ not started · 🟡 in flight · ✅ complete · ⚠️ complete wit
 |---|---|---|---|---|---|---|
 | 13 | [Verification and docs](13-verification-and-docs.md) | review §4, §12.3, §13.5 | Opus | ⬜ | | |
 
-**Progress:** 3 / 13 complete.
+**Progress:** 4 / 13 complete.
 
 ---
 
@@ -75,8 +75,8 @@ campaign; the review section is the authority on each.
 | M3 | **DEFECT, cost** | Stage 1 cost ∝ span: $2.5\times10^6$ RHS evaluations, 63.7 s per object at $k=3\times10^8$; ~13 CPU-hours per $k$ (§4) | 06 | ⬜ |
 | M4 | **DEFECT, accuracy** | `functions.tau` is a cubic spline of RK45 nodes: $1.4\times10^{-9}$ relative, ~2 rad of *oracle* phase error at $k=10^5$ in `compute_analytic_G/T` and `QuadSourceIntegral`'s η-limits (§7, §13.2) | 03 | ✅ 3.8e-16 relative at the LambdaCDM nodes; the retired accessor measured 3.08 rad off at $k=10^5$ (log 03) |
 | M5 | **REQUIREMENT** | Double-double node table and an interval accessor `tau.delta`; a pointwise accessor carries the $\varepsilon\tau$ floor ($9\times10^{-4}$ rad at $3\times10^8$) on short baselines (§13.3) | 03 | ✅ `CumulativeTable` + `TablePrimitive`; one-interval Δτ ≤ 2.5e-16 (LambdaCDM), ≤ 9.4e-15 (QCD) relative |
-| M6 | **REQUIREMENT** | Persist the low-order limb (`tau_lo_Mpc`, …); regeneration attached (§13.2; README §7 D1) | 03, 04 | ⚠️ 03 done (`tau_lo_Mpc`; factory refuses a pre-03 datastore by name); 04 pending |
-| M7 | **REQUIREMENT** | Sound-horizon table $\tau_s$ and friction table $F$ per model; the friction ODE ($2.3$–$4.1\times10^{-7}$ relative error) goes (§12.2, §12.7) | 04, 07 | ⬜ |
+| M6 | **REQUIREMENT** | Persist the low-order limb (`tau_lo_Mpc`, …); regeneration attached (§13.2; README §7 D1) | 03, 04 | ✅ `tau_lo_Mpc` (03) and `cs_tau_Mpc`, `cs_tau_lo_Mpc`, `friction_F` (04); the factory refuses a datastore lacking any of the four by name |
+| M7 | **REQUIREMENT** | Sound-horizon table $\tau_s$ and friction table $F$ per model; the friction ODE ($2.3$–$4.1\times10^{-7}$ relative error) goes (§12.2, §12.7) | 04, 07 | ⚠️ 04 built both tables (LambdaCDM $\tau_s$ 2.5e-16, $F$ 3.3e-16 relative at the checkpoints; QCD 2.1e-14 / 3.3e-16) and measured the ODE it replaces at 2.261e-07 absolute in $F$; **07 still has to switch `TkWKBIntegration` onto them** and delete `friction_RHS` |
 | M8 | **REQUIREMENT** | The residual $\rho$ carried explicitly: $\le1.5\times10^{-3}$ rad for $G_k$ on QCD, $\approx-0.09$ rad for $T_k$; formed without subtraction (§6, §12.2) | 05 | ⬜ |
 | M9 | **REQUIREMENT** | Gauss orders decided by measurement on `QCD_Cosmology` across its spline knots; adaptive fallback for $\rho$ alone if needed (§11) | 02, 05 | ⚠️ 02 done: all four orders are **4**, no adaptive fallback — but only with **break-point subdivision** on QCD (log 02) |
 | M10 | **DEFECT, dead logic** | `sin_coeff` sign fix is provably always $+1$ (§8.1) | 06, 07 | ⬜ |
@@ -236,6 +236,20 @@ Opened by the planning pass, 2026-09-10, before any prompt runs.
   changes an order. **Next step:** if a second order is registered, either fold the order into the
   label or query with an exact stepping match.
 
+- **[04-background-rhs-evaluations-count]** *(opened by prompt 04, 2026-09-11; inert)* —
+  `compute_background` now builds three Gauss–Legendre tables, but `IntegrationData` is a fixed
+  namedtuple with a single evaluation counter and prompt 03's `test_background_tau.test_payload_shape`
+  asserts `RHS_evaluations == TAU_GAUSS_ORDER * (nodes - 1)` **exactly** on LambdaCDM. Prompt 04's
+  §2 item 1 asked for the new integrand evaluations to be added to the returned `IntegrationData`;
+  `test_background_tau.py` is not in prompt 04's "files you may touch", so instead
+  `RHS_evaluations` still counts the $\tau$ table alone (6,924 on LambdaCDM, 8,552 on QCD) and the
+  other two are reported as the payload keys `cs_tau_evaluations` and `friction_F_evaluations`
+  (the same numbers again on each model, 20,772 / 25,656 in total — log 02's figures).
+  `compute_time` does cover all three tables. **Impact:** the persisted `RHS_evaluations` column
+  of `BackgroundModel` understates the build by 3×; anyone reading it as the job's cost is
+  misled. **Next step:** if the aggregate is wanted, relax that one assertion in
+  `test_background_tau.py` and sum the three counters — a two-line change in its own commit.
+
 > Add an entry here whenever a prompt finishes with something unresolved: a verification step that
 > could not be run, an assumption that could not be confirmed, a deviation a later prompt has to
 > work around, a measured cost that changes a later prompt's decision. Format:
@@ -300,8 +314,11 @@ Opened by the planning pass, 2026-09-10, before any prompt runs.
    exposes. Never form $\Delta\tau$ as `tau(b) - tau(a)`; use `tau.delta(a, b)`.
 4. **`*_omegaEff_sq` return values are stored columns** and must not move by a bit (prompt 05's
    exact-equality test).
-5. **`ModelFunctions` stand-ins must keep constructing** with thirteen positional arguments
-   (namedtuple defaults, prompt 04).
+5. **`ModelFunctions` stand-ins must keep constructing** with thirteen positional arguments.
+   Delivered by prompt 04: `cs_tau` and `friction_F` are appended as fields 14 and 15 with
+   namedtuple `defaults=(None, None)`, asserted by
+   `test_background_cs_tau_friction.test_model_functions_still_constructs_with_thirteen_positional_arguments`.
+   Prompt 10 upgrades the two test fixtures it owns to supply real accessors.
 6. **The `GkSource` rectifier stays** (D5). Its logic is a stop condition.
 7. **`phase_spline`'s signature is frozen** (D4); `bessel_phase` on `main` and three fixtures
    depend on it.

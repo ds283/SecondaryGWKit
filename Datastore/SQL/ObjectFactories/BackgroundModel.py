@@ -1,13 +1,22 @@
 """
 Datastore factories for BackgroundModel and its per-redshift BackgroundModelValue rows.
 
-SCHEMA NOTE (prompts/GkTk-remedial, prompt 03). The conformal time is held as a double-double
-node table: "tau_Mpc" is the high limb and "tau_lo_Mpc" the low limb of tau(z) at each sample.
-A datastore whose BackgroundModelValue table lacks the "tau_lo_Mpc" column predates this change
-and must be regenerated; there is no migration. Its "tau_Mpc" values would in any case be the
-RK45 solution the table replaced, not the high limb of the Gauss-Legendre table, so reading them
-back would silently restore the 1.4e-9 relative error the change removes. build() below raises
-with that message rather than failing on the missing column.
+SCHEMA NOTE (prompts/GkTk-remedial, prompts 03 and 04). Three background primitives are held as
+Gauss-Legendre node tables rather than integrated as ODEs, and four columns of
+BackgroundModelValue carry them:
+
+  * "tau_Mpc" / "tau_lo_Mpc"       -- the high and low limbs of the double-double conformal time
+  * "cs_tau_Mpc" / "cs_tau_lo_Mpc" -- the two limbs of the sound horizon int c_s dz/H
+  * "friction_F"                   -- the Liouville-Green friction integral, dimensionless and
+                                      stored without a unit conversion; a single double suffices
+                                      (|F| <= 60, and it enters as exp(F - F_i))
+
+A datastore whose BackgroundModelValue table lacks any of them predates these changes and must be
+regenerated; there is no migration. Its "tau_Mpc" values would in any case be the RK45 solution
+the table replaced, not the high limb of the Gauss-Legendre table, so reading them back would
+silently restore the 1.4e-9 relative error the change removes, and it has no sound-horizon or
+friction samples at all. build() below raises with that message rather than failing on the
+missing column.
 """
 
 from math import fabs
@@ -256,6 +265,9 @@ class sqla_BackgroundModelFactory(SQLAFactoryBase):
                 value_table.c.rho_GeV,
                 value_table.c.tau_Mpc,
                 value_table.c.tau_lo_Mpc,
+                value_table.c.cs_tau_Mpc,
+                value_table.c.cs_tau_lo_Mpc,
+                value_table.c.friction_F,
                 value_table.c.T_photon_GeV,
                 # don't need to read redundant value of T_photon_Kelvin
                 value_table.c.d_lnH_dz,
@@ -277,12 +289,23 @@ class sqla_BackgroundModelFactory(SQLAFactoryBase):
         try:
             sample_rows = list(conn.execute(sample_query))
         except SQLAlchemyError as e:
-            if "tau_lo_Mpc" in str(e):
+            missing = [
+                column
+                for column in (
+                    "tau_lo_Mpc",
+                    "cs_tau_Mpc",
+                    "cs_tau_lo_Mpc",
+                    "friction_F",
+                )
+                if column in str(e)
+            ]
+            if len(missing) > 0:
                 raise RuntimeError(
                     "BackgroundModel.build(): the BackgroundModelValue table has no "
-                    '"tau_lo_Mpc" column. This datastore predates the double-double conformal-time '
-                    "table (prompts/GkTk-remedial, prompt 03) and must be regenerated; there is "
-                    "no migration."
+                    f'"{missing[0]}" column. This datastore predates the double-double '
+                    "conformal-time, sound-horizon and friction node tables "
+                    "(prompts/GkTk-remedial, prompts 03 and 04) and must be regenerated; there "
+                    "is no migration."
                 ) from e
             raise
 
@@ -318,6 +341,10 @@ class sqla_BackgroundModelFactory(SQLAFactoryBase):
                     d_wPerturbations_dz=row.d_wPerturbations_dz,
                     d2_wPerturbations_dz2=row.d2_wPerturbations_dz2,
                     tau_lo=row.tau_lo_Mpc * Mpc,
+                    cs_tau=row.cs_tau_Mpc * Mpc,
+                    cs_tau_lo=row.cs_tau_lo_Mpc * Mpc,
+                    # dimensionless: no unit conversion on the way in or out
+                    friction_F=row.friction_F,
                 )
             )
         imported_z_sample = redshift_array(z_points)
@@ -424,6 +451,9 @@ class sqla_BackgroundModelFactory(SQLAFactoryBase):
                     "wPerturbations": value.wPerturbations,
                     "tau_Mpc": value.tau / Mpc,
                     "tau_lo_Mpc": value.tau_lo / Mpc,
+                    "cs_tau_Mpc": value.cs_tau / Mpc,
+                    "cs_tau_lo_Mpc": value.cs_tau_lo / Mpc,
+                    "friction_F": value.friction_F,
                     "T_photon_GeV": value.T_photon / GeV,
                     "T_photon_Kelvin": value.T_photon / Kelvin,
                     "d_lnH_dz": value.d_lnH_dz,
@@ -631,6 +661,10 @@ class sqla_BackgroundModelValue_factory(SQLAFactoryBase):
                 sqla.Column("rho_GeV", sqla.Float(64), nullable=False),
                 sqla.Column("tau_Mpc", sqla.Float(64), nullable=False),
                 sqla.Column("tau_lo_Mpc", sqla.Float(64), nullable=False),
+                sqla.Column("cs_tau_Mpc", sqla.Float(64), nullable=False),
+                sqla.Column("cs_tau_lo_Mpc", sqla.Float(64), nullable=False),
+                # dimensionless, so no unit suffix and no conversion
+                sqla.Column("friction_F", sqla.Float(64), nullable=False),
                 sqla.Column("T_photon_GeV", sqla.Float(64), nullable=False),
                 sqla.Column("T_photon_Kelvin", sqla.Float(64), nullable=False),
                 sqla.Column("d_lnH_dz", sqla.Float(64), nullable=False),
@@ -655,6 +689,9 @@ class sqla_BackgroundModelValue_factory(SQLAFactoryBase):
         rho = payload["rho"]
         tau = payload["tau"]
         tau_lo = payload["tau_lo"]
+        cs_tau = payload["cs_tau"]
+        cs_tau_lo = payload["cs_tau_lo"]
+        friction_F = payload["friction_F"]
         T_photon = payload["T_photon"]
 
         d_lnH_dz = payload["d_lnH_dz"]
@@ -674,6 +711,9 @@ class sqla_BackgroundModelValue_factory(SQLAFactoryBase):
                     table.c.wPerturbations,
                     table.c.tau_Mpc,
                     table.c.tau_lo_Mpc,
+                    table.c.cs_tau_Mpc,
+                    table.c.cs_tau_lo_Mpc,
+                    table.c.friction_F,
                     table.c.T_photon_GeV,
                     # don't need to read redundant value of T_photon_Kelvin
                     table.c.d_lnH_dz,
@@ -709,6 +749,9 @@ class sqla_BackgroundModelValue_factory(SQLAFactoryBase):
                     "wPerturbations": wPerturbations,
                     "tau_Mpc": tau / Mpc,
                     "tau_lo_Mpc": tau_lo / Mpc,
+                    "cs_tau_Mpc": cs_tau / Mpc,
+                    "cs_tau_lo_Mpc": cs_tau_lo / Mpc,
+                    "friction_F": friction_F,
                     "T_photon_GeV": T_photon / GeV,
                     "T_photon_Kelvin": T_photon / Kelvin,
                     "d_lnH_dz": d_lnH_dz,
@@ -725,6 +768,9 @@ class sqla_BackgroundModelValue_factory(SQLAFactoryBase):
             rho = row_data.rho_GeV * GeV4
             tau = row_data.tau_Mpc * Mpc
             tau_lo = row_data.tau_lo_Mpc * Mpc
+            cs_tau = row_data.cs_tau_Mpc * Mpc
+            cs_tau_lo = row_data.cs_tau_lo_Mpc * Mpc
+            friction_F = row_data.friction_F
             T_photon = row_data.T_photon_GeV * GeV
 
             d_lnH_dz = row_data.d_lnH_dz
@@ -758,6 +804,9 @@ class sqla_BackgroundModelValue_factory(SQLAFactoryBase):
             d_wPerturbations_dz=d_wPerturbations_dz,
             d2_wPerturbations_dz2=d2_wPerturbations_dz2,
             tau_lo=tau_lo,
+            cs_tau=cs_tau,
+            cs_tau_lo=cs_tau_lo,
+            friction_F=friction_F,
         )
         obj._deserialized = True
         return obj

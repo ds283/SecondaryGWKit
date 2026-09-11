@@ -1,6 +1,6 @@
 # Open issues — project-wide index
 
-**Last updated:** 2026-09-11 · **41 open** across six campaigns.
+**Last updated:** 2026-09-11 · **42 open** across six campaigns.
 
 This file exists so that an issue opened by one campaign is not lost when that campaign closes.
 It is an **index, not a record**: one line per issue, pointing at the campaign status board that
@@ -107,6 +107,7 @@ No action defined. These are floors on what a test may *assert*, not on what the
 | `[02-qcd-T-z-spline-node-tolerance]` | GkTk-remedial | `_solve_T_z`'s `root_scalar(xtol=1e-6, rtol=1e-4)` leaves the $T(z)$ spline's node values up to 2.1e-5 relative from a tight re-solve ($\sim4\times10^{-5}$ in $H$). A model-fidelity bound, not a quadrature error; distinct from `[01-genericeos-tz-spline-floor]`, which is about the grid. |
 | `[03-qcd-short-baseline-reference-endpoint-rounding]` | GkTk-remedial | The QCD short-baseline references in `wkb_reference_data.json` integrate between rounded `log1p(z)` endpoints and carry up to ulp(u)/W ≈ 1e-13 relative on the 37 % fractions; the shipped table agrees with an exact-endpoint `quad` to ≤ 8.8e-16. Assert README §6's 1e-13 for QCD short baselines, not the JSON's self-agreement. |
 | `[03-integrationsolver-stepping-minimum-lookup]` | GkTk-remedial | `IntegrationSolver` lookups match `stepping >= requested`; harmless while every table is order 4, but a second Gauss order under the label `cumulative-GL` could be served by the other order's row. |
+| `[04-background-rhs-evaluations-count]` | GkTk-remedial | `compute_background` builds three tables but `IntegrationData` has one counter, which prompt 03's test pins to the $\tau$ table alone; the other two counts are payload keys, so the persisted `RHS_evaluations` understates the build 3×. |
 
 ---
 
