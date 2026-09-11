@@ -79,15 +79,14 @@ def RHS(
             * T
         )
 
-        omega_WKB_sq = Tk_omegaEff_sq(model, k_float, z)
-
-        # try to detect how many oscillations will fit into the log-z grid
-        # spacing
-        # If the grid spacing is smaller than the oscillation wavelength, then
-        # evidently we cannot resolve the oscillations
-        if omega_WKB_sq > 0.0:
-            wavelength = 2.0 * pi / sqrt(omega_WKB_sq)
-            supervisor.report_wavelength(z, wavelength, log((1.0 + z) * k_over_H))
+        # NOTE: the oscillation-resolution diagnostic used to live here, evaluating
+        # Tk_omegaEff_sq at every step of the solver in order to feed
+        # NumericIntegrationSupervisor.report_wavelength. That cost 45 % of the run
+        # (review §10.2, which applies to this integrator identically -- §12.5). The test is
+        # still performed, and still prints its warning, but it now runs once after the solve, on
+        # the returned sample grid -- which is the grid the flag is documented to be about
+        # (review §13.1). Tk_omegaEff_sq is handed to numeric_with_phase_cut as its omega_sq
+        # argument in compute(), below.
 
     return [dT_dz, dTprime_dz]
 
@@ -346,10 +345,14 @@ class TkNumericIntegration(DatastoreObject):
                 f"|    k/aH = {k_over_aH:.5g}, wavelength 2pi(H/k) = {wavelength:.5g}, e-folds outside horizon = {efolds_suph}, log(z_init/z_exit) = {log(self.z_init.z/self.z_exit)}"
             )
 
-        # set up limits for the search window used to obtain an initial condition for a subsequent WKB
-        # computation of the transfer function.
-        # this is done by always cutting at a point of fixed phase where T' = 0 at a minium, so we need to search
-        # for such a point, and that search should be performed within a fixed window.
+        # set up limits for the search window used to obtain an initial condition for a subsequent
+        # WKB computation of the transfer function.
+        # This is done by always cutting at a point of fixed phase where T' = 0. That point is a
+        # *maximum* of T -- T' passes from negative to positive as z decreases -- not the minimum
+        # the comment here used to claim (review §10.2). Which extremum it is does not matter:
+        # TkWKBIntegration.store() rotates arbitrary (T, T') initial data into a pure sine, so the
+        # phase does not depend on where in the cycle we cut. The search is performed within a
+        # fixed window.
         payload = {}
         if self._mode in ["stop"]:
             payload["mode"] = self._mode
@@ -376,6 +379,7 @@ class TkNumericIntegration(DatastoreObject):
             initial_value=1.0,
             initial_deriv=0.0,
             RHS=RHS,
+            omega_sq=Tk_omegaEff_sq,
             atol=self._atol.tol,
             rtol=self._rtol.tol,
             delta_logz=self._delta_logz,

@@ -604,7 +604,14 @@ def run_pipeline(
             # cut down zs at which we sample the transfer function, to those that are
             # (1) later than the initial time, taken to be 5 e-folds outside the horizon,
             # and (2) earlier than the 6-efolds-inside-the-horizon cut point used in "stop"
-            # mode (with a 15% tolerance)
+            # mode (with a 15% tolerance).
+            #
+            # The 15% tolerance is not what it appears. In "stop" mode the ODE terminates on an
+            # event at z_e6, and numeric_with_phase_cut skips its expected_values check in that
+            # mode, so the samples requested between z_e6 and 0.85*z_e6 are never produced: the
+            # returned sample list is silently shorter than source_zs. Consumers cope with the
+            # short list. The constant is left alone here because changing it is a hand-over
+            # decision (review §10.2).
             source_zs = z_source_sample.truncate(
                 k_exit.z_exit_suph_e5, keep="lower"
             ).truncate(0.85 * k_exit.z_exit_subh_e6, keep="higher-include")
@@ -1171,7 +1178,15 @@ def run_pipeline(
                 if z_source.z > k_exit.z_exit_subh_e4 - DEFAULT_FLOAT_PRECISION:
                     # cut down response zs, at which we sample the Green's function, to those that are
                     # (1) later than the source, and (2) earlier than the 6-efolds-inside-the-horizon
-                    # point (with a 15% tolerance)
+                    # point (with a 15% tolerance).
+                    #
+                    # As for the transfer function above, the 15% tolerance is not what it
+                    # appears: in "stop" mode the ODE terminates on an event at z_e6 and
+                    # numeric_with_phase_cut skips its expected_values check, so the samples
+                    # requested between z_e6 and 0.85*z_e6 are never produced. The returned
+                    # sample list is silently shorter than response_zs; consumers cope. The
+                    # constant is left alone because changing it is a hand-over decision
+                    # (review §10.2).
                     response_zs = z_response_sample.truncate(
                         z_source, keep="lower"
                     ).truncate(0.85 * k_exit.z_exit_subh_e6, keep="higher-include")

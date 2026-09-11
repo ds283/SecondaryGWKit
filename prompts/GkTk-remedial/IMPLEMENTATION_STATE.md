@@ -2,7 +2,23 @@
 
 **Campaign:** [`README.md`](README.md) · **Source review:** [`docs/gk-wkb-review-fable-2026-09-09.md`](../../docs/gk-wkb-review-fable-2026-09-09.md) · **Reconciliation:** [`RECONCILIATION.md`](RECONCILIATION.md)
 **Baseline commit:** `9ff59d5` (`main`, clean)
-**Last updated:** 2026-09-11 — Prompt 15 landed (`PrimitivePhase` takes an explicit, optional
+**Last updated:** 2026-09-11 — Prompt 11 landed (the numeric region's oscillation-resolution
+diagnostic is off the ODE right-hand side: `numeric_with_phase_cut` takes an `omega_sq` callable,
+and `scan_sample_grid_for_unresolved_osc` runs the test **once, after the solve, on the returned
+sample grid** — the grid review §13.1 says the flag is about — instead of at every solver step
+against a spacing reconstructed from `delta_logz`. `has_unresolved_osc`, `unresolved_z` and
+`unresolved_efolds_subh` are still populated and the two-line warning still prints, verbatim; the
+returned $G$, $G'$, $T$, $T'$ samples and the RHS-evaluation counts are **bit-identical**, and a
+LambdaCDM $G_k$ object costs 0.0773 s against 0.1299 s. `NumericIntegrationSupervisor.report_wavelength`
+is retained, documented as superseded, with its $\ln10$ slip fixed in place.
+`find_phase_minimum` is now `find_phase_extremum` (old name an alias), steps
+$2\pi/(16\omega)$ when a frequency is available, and its docstring and both integrators' comments
+say the stop point is a **maximum**. `mode.lower()` no longer precedes the `None` check, and
+`main.py`'s two `0.85 z_e6` comments now say the trailing samples are never produced in stop mode.
+**The D2 measurement the orchestrator must put to the user** (`[00-unresolved-osc-print-policy]`):
+the corrected test fires on **2,149 of 2,149** $G_k$-like objects — every one, first at $x=26.5$–66.6
+— and on **0 of 6** $T_k$-like runs, which peak at 0.807–0.822 of the trip threshold. Today the rate
+is 0 of 2,155.) Prompt 15 landed (`PrimitivePhase` takes an explicit, optional
 keyword-only `rate` callable — `d/dz[leading.delta(z, z_anchor)]`'s magnitude — defaulting to
 `lambda z: 1.0 / model_functions.Hubble(z)` when omitted, so every pre-existing call site is
 unchanged; `theta_deriv`'s leading term is now `sign * k * rate(z)` rather than the hard-wired
@@ -122,7 +138,7 @@ Legend: ⬜ not started · 🟡 in flight · ✅ complete · ⚠️ complete wit
 
 | # | Prompt | Covers | Model | Status | Commit | Log |
 |---|---|---|---|---|---|---|
-| 11 | [Numeric diagnostics and units](11-numeric-diagnostics-and-units.md) | review §10.2, §12.5, §13.1 | Opus | ⬜ | | |
+| 11 | [Numeric diagnostics and units](11-numeric-diagnostics-and-units.md) | review §10.2, §12.5, §13.1 | Opus | ⚠️ | *"Test oscillation resolution on the sample grid, off the RHS"* (SHA not embedded, per the campaign convention) | [`logs/11-numeric-diagnostics-and-units.md`](logs/11-numeric-diagnostics-and-units.md) |
 | 12 | [Tk numeric `atol`](12-tk-numeric-atol.md) | review §12.5 | Opus | ⬜ | | |
 
 ### Workstream F — verification
@@ -131,7 +147,7 @@ Legend: ⬜ not started · 🟡 in flight · ✅ complete · ⚠️ complete wit
 |---|---|---|---|---|---|---|
 | 13 | [Verification and docs](13-verification-and-docs.md) | review §4, §12.3, §13.5 | Opus | ⬜ | | |
 
-**Progress:** 12 / 15 complete.
+**Progress:** 13 / 15 complete.
 
 ---
 
@@ -158,11 +174,11 @@ campaign; the review section is the authority on each.
 | M14 | **DEFECT, accuracy** | Consumers spline the growing phase: $h^4x/384$, $O(1)$–$O(10)$ rad at production $x$ (§5, §12.6). Same term as `source-remediation`'s `[12-phase-spline-error-grows-with-x]` | 09, 10 | ⚠️ 09 discharged it for $G_k$: on the review §5 consumer geometry at $k=10^8$, 100/decade, the error is **4.189e-8 rad** against the same samples' `phase_spline` at **7.286e-3 rad** — a ratio of **1.739e5**, and the 4.189e-8 is 2.81 ulp of the 9.09e7 rad span, i.e. the representation floor. $\varphi$ alone is recovered to 2.157e-10 rad, matching $h^4\max|\varphi''''|/384$. 10 discharged it for $T_k$: on a $w=1/3$ fixture at $x_T=10^6$, 100/decade, the error is **3.4482e-10 rad** against the same samples' cubic spline at **7.0854e-03 rad** — a ratio of **2.0548e7** — and the 3.4e-10 is 2.96 ulp of the $10^6$ rad phase, i.e. the `div * TWO_PI` floor. `PHASE_SPLINE_CHUNK_LOGSTEP` is deleted and no production path builds a `phase_spline`. ⚠️ because prompt 10 §3 item 3's 1e-10 on $\omega$ vs `theta_deriv` is missed at one abscissa per $w$ (`[10-residual-spline-end-condition]`) |
 | M15 | **REQUIREMENT** | `PrimitivePhase`: $\theta=-k\Delta\tau+\varphi$ with the `phase_spline` protocol; closed-form $\theta'$; global anchor with the recorded floor (§7, §13.3, §13.4) | 09, 15 | ✅ `ComputeTargets/primitive_phase.py`: `PrimitivePhase(k, leading, z_anchor, z_samples, phi_samples, *, sign, model_functions, label, spline_order, rate=None)` with `raw_theta`/`theta_mod_2pi`/`theta_deriv`/`num_chunks`, plus `build_phi_samples`. `sign=-1` for $G_k$ at fixed $z_r$, `sign=+1` for $T_k$ at fixed $z_{\rm init}$ — one object for both sectors (prompt 10 reuses it, unsubclassed). $\theta'=\mathrm{sign}\,k\,\mathrm{rate}(z)+\varphi'$ in closed form, exact to 0.0 relative on the radiation control. Global anchor, floor documented in the module docstring. **Prompt 15 generalised the closed form**: `rate` is now an explicit, optional keyword-only parameter (default `1/H`, built from `model_functions.Hubble` exactly as before), and `TkSourceFunctions`' `_SoundHorizonRate` adapter — which made `model_functions.Hubble` silently return $H/c_s$ — is gone; `TkSourceFunctions` now passes the model's genuine `model_functions` plus `rate=c_s/H` explicitly. `[10-primitive-phase-leading-rate-is-hardcoded]` is **resolved** (§4) |
 | M16 | **REQUIREMENT** | The `GkSource` rectifier is retained and verified inert on pure-WKB objects, correct on $\delta$-wraps (§8.3; `RECONCILIATION.md` §2 item 6) | 06, 09 | ✅ 06 documented what it must repair; 09 verified it against a faithful copy of `GkSource.py:166-233` (copied, not imported — `assemble_GkSource_values` is a Ray remote over datastore objects), on prompt 06's geometry with the source samples taken from the background grid. **Before rectification $\varphi$ jumps by exactly $+1$ cycle at every stop-point transition and nowhere else** (2 of 22 objects at $k=10^7$, $x_r=10^3$; **90 of 990** over the full sweep, log 06's figure); **the rectifier repairs every one** (90 corrections = 90 transitions) and $\varphi$ is then constant to **3.64e-12 rad**. On pure-WKB objects $\delta=0$ exactly and the rectifier makes **zero** corrections, leaving `theta_div_2pi` untouched. `GkSource.py` was not edited (D5) |
-| M17 | **DEFECT, cost** | Per-RHS `*_omegaEff_sq` diagnostic: 45 % of the numeric run; the warning it feeds is live and must be preserved (§10.2, §13.1) | 11 | ⬜ |
-| M18 | **DEFECT, units** | `delta_logz` supplied as $\Delta\log_{10}$, used as $\Delta\ln$; and the $G_k$ run is sampled on the response grid, not the source grid the value describes (§10.2, §13.1; `RECONCILIATION.md` §1 item 9) | 11 | ⬜ |
-| M19 | **DEFECT, dead path** | `mode.lower()` before the `None` check (§10.2) | 11 | ⬜ |
-| M20 | **DEFECT, comments + robustness** | The stop point is a maximum, not a minimum; the "fixed phase to avoid jitter" motivation is obsolete; `find_phase_minimum`'s $10^{-3}z$ step is safe only inside the window (§10.2) | 11 | ⬜ |
-| M21 | **DEFECT, misleading** | `0.85·z_e6` truncation requests samples never produced in stop mode (§10.2) — comment only | 11 | ⬜ |
+| M17 | **DEFECT, cost** | Per-RHS `*_omegaEff_sq` diagnostic: 45 % of the numeric run; the warning it feeds is live and must be preserved (§10.2, §13.1) | 11 | ✅ the call is gone from both `RHS` functions; `numeric_with_phase_cut` takes an `omega_sq` callable and runs `scan_sample_grid_for_unresolved_osc` once after the solve. **The warning survives verbatim** (two `print` lines, README §2 (h)) and all three payload fields are still populated. RHS evaluations bit-identical (12,770 / 6,611 / 12,854); LambdaCDM $G_k$ object 0.1299 s → **0.0773 s**, 40.5 % (review measured 0.13 → 0.09 s) |
+| M18 | **DEFECT, units** | `delta_logz` supplied as $\Delta\log_{10}$, used as $\Delta\ln$; and the $G_k$ run is sampled on the response grid, not the source grid the value describes (§10.2, §13.1; `RECONCILIATION.md` §1 item 9) | 11 | ✅ both cured at once: the test now uses the **actual spacing of consecutive returned samples**, so neither `delta_logz` nor which grid it describes enters it. `report_wavelength` is retained and its slip fixed in place (`(1+z) * delta_logz * LN_10`), with the parameter documented as $\Delta\log_{10}(1+z)$; it has no caller left. `main.py`'s `delta_logz=` arguments are untouched, as the prompt requires. The consequence is the D2 measurement in §3 |
+| M19 | **DEFECT, dead path** | `mode.lower()` before the `None` check (§10.2) | 11 | ✅ the `None` test comes first; `mode=None` integrates the whole grid, `mode="STOP"` is accepted, `mode="x"` raises `ValueError` — three tests. The `mode != "stop"` branch is kept (`RECONCILIATION.md` §3) |
+| M20 | **DEFECT, comments + robustness** | The stop point is a maximum, not a minimum; the "fixed phase to avoid jitter" motivation is obsolete; `find_phase_minimum`'s $10^{-3}z$ step is safe only inside the window (§10.2) | 11 | ✅ renamed **`find_phase_extremum`** with `find_phase_minimum` kept as an alias; docstring and both integrators' comments now say maximum, and say the jitter motivation is obsolete because `store()` rotates $(G,G')$ into a pure sine. Steps $2\pi/(16\omega)$ where $\omega^2>0$, falling back to $10^{-3}z$: inside the window both steps find the same extremum, and at $x=6\times10^3$ — where the old step covers **0.955 of a cycle** — the phase step lands within 0.1 cycle of the first maximum while the old step skips more than a full cycle. Window **not** widened. The stop point moves by $\le1.04\times10^{-7}$ relative, inside `root_scalar`'s own tolerance (`[11-stop-point-root-tolerance]`) |
+| M21 | **DEFECT, misleading** | `0.85·z_e6` truncation requests samples never produced in stop mode (§10.2) — comment only | 11 | ✅ both `main.py` comments (`:604-611`, `:1178-1189`) rewritten to say the ODE terminates on the $z_{e6}$ event, the `expected_values` check is skipped in stop mode, and the samples between $z_{e6}$ and $0.85z_{e6}$ are never produced. The constant stays (hand-over decision). `git diff main.py` is comment-only; the 40-of-41 return is pinned by the bit-identity test |
 | M22 | **DEFECT, accuracy** | $T_k$ numeric run limited to $1.1\times10^{-5}$ of the envelope by `atol=1e-10` acting as a $10^{-5}$ relative tolerance (§12.5) | 12 | ⬜ |
 | M23 | **REQUIREMENT** | Independent references and error definitions; throughput of the interval accessor measured early (§13.3, §13.5) | 01 | ⚠️ |
 | M24 | **REQUIREMENT** | Verification on both models against the references; scoped pipeline run; additive docs (§13.5) | 13 | ⬜ |
@@ -251,9 +267,34 @@ Opened by the planning pass, 2026-09-10, before any prompt runs.
 - **[00-unresolved-osc-print-policy]** *(planning, 2026-09-10)* — README §7 D2: with the units fixed
   and the test evaluated on the caller's actual sample grid, `has_unresolved_osc` will fire on
   essentially every `GkNumericIntegration` object (response grid, $x\gtrsim22$). Faithful, but a
-  print storm. **Impact:** prompt 11 (implements and measures), production log volume. **Next
-  step:** prompt 11 reports the measured fire rates; the user chooses per-object line / per-$k$
-  summary / explicit grid; closes when the chosen policy lands (a follow-up prompt if not (i)).
+  print storm. **Impact:** prompt 11 (implements and measures), production log volume.
+  **Measured by prompt 11 (2026-09-11), and the decision is now the user's.** The faithful test
+  ships, with today's per-object warning line unchanged — prompt 11 chose no policy. Over the full
+  production source-redshift band on both `RadiationModel` and `LambdaCDMModel` at
+  $k\in\{10^5,10^7,3\times10^8\}$: **2,149 of 2,149 $G_k$-like objects flag** (100 %), first at
+  $x=26.5$–66.6, against the response grid's predicted trip point $x\approx19.7$; **0 of 6
+  $T_k$-like runs flag**, peaking at **0.807–0.822** of the trip threshold ($x_T=223$–228 against
+  $\approx270$) because $T_k$ is sampled on the source grid itself and its frequency carries
+  $c_s=1/\sqrt3$ — the case README §7 D2 was unsure of, now settled. Today's rate is 0 of 2,155.
+  The warning is **two** printed lines, not one, so option (i) turns 0 lines into $\sim1.3\times10^5$
+  per model (~65,000 $G_k$ objects). **Next step:** unchanged — the user chooses per-object line /
+  per-$k$ summary in `main.py` / explicit grid; closes when the chosen policy lands (a follow-up
+  prompt if not (i)). If (iii) is chosen, `NumericIntegrationSupervisor.report_wavelength` is
+  retained, corrected and ready; if (ii), it should probably go.
+
+- **[11-stop-point-root-tolerance]** *(opened by prompt 11, 2026-09-11)* — `find_phase_extremum`
+  refines the sign change with `root_scalar(..., xtol=1e-6, rtol=1e-4)`, so the stop point is
+  located only to $\sim10^{-4}z$ and the derivative there is $O(|G|\omega^2\cdot10^{-4}z)$, not
+  zero: measured $|G'|/(|G|\omega)=9.76\times10^{-6}$ before prompt 11 and $6.52\times10^{-5}$
+  after, against the $10^{-12}$ prompt 11 §3 item 1 asked to assert (deviation 1 of log 11 — the
+  pre-change code misses it by six orders, so it is a property of the root finder, not of the
+  change). Value/envelope is nevertheless $+1$ to $2.1\times10^{-9}$, and nothing downstream depends
+  on where in the cycle the cut falls because `store()` rotates $(G,G')$ into a pure sine.
+  **Impact:** the stop point is reproducible across a change of search step only to
+  $\sim10^{-7}$ relative, which is why prompt 11's bit-identity test exempts it; and it is one more
+  input to the hand-over campaign, since $z_{\rm init}$ is this root. **Next step:** decide with the
+  hand-over campaign whether to tighten the tolerances — doing so moves every stored $z_{\rm init}$
+  and forces a datastore regeneration, so it is not a free change.
 
 - **[00-consumer-anchoring-floor]** *(planning, 2026-09-10)* — `PrimitivePhase` reduces
   $k\Delta\tau$ against a global anchor ($z_r$ for $G_k$, $z_{\rm init}$ for $T_k$), so its

@@ -1,4 +1,4 @@
-from math import fabs, log, sqrt, pi
+from math import fabs, log, sqrt
 from typing import Optional, List
 
 import ray
@@ -65,15 +65,13 @@ def RHS(
             -eps * Gprime / one_plus_z - (k_over_H_2 + (eps - 2.0) / one_plus_z_2) * G
         )
 
-        # try to detect how many oscillations will fit into the log-z grid
-        # spacing
-        # If the grid spacing is smaller than the oscillation wavelength, then
-        # evidently we cannot resolve the oscillations
-        omega_WKB_sq = Gk_omegaEff_sq(model, k_float, z)
-
-        if omega_WKB_sq > 0.0:
-            wavelength = 2.0 * pi / sqrt(omega_WKB_sq)
-            supervisor.report_wavelength(z, wavelength, log((1.0 + z) * k_over_H))
+        # NOTE: the oscillation-resolution diagnostic used to live here, evaluating
+        # Gk_omegaEff_sq (three extra background calls) at every step of the solver in order to
+        # feed NumericIntegrationSupervisor.report_wavelength. That cost 45 % of the run
+        # (review §10.2). The test is still performed, and still prints its warning, but it now
+        # runs once after the solve, on the returned sample grid -- which is the grid the flag is
+        # documented to be about (review §13.1). Gk_omegaEff_sq is handed to
+        # numeric_with_phase_cut as its omega_sq argument in compute(), below.
 
     return [dG_dz, dGprime_dz]
 
@@ -309,9 +307,14 @@ class GkNumericIntegration(DatastoreObject):
         if label is not None:
             self._label = label
 
-        # set up limits for the search window used to obtain an initial condition for a subsequent WKB integral
-        # this is done by always cutting at a point of fixed phase where G' = 0 at a minium, so we need to search
-        # for such a point, and that search should be performed within a fixed window.
+        # set up limits for the search window used to obtain an initial condition for a subsequent
+        # WKB integral.
+        # This is done by always cutting at a point of fixed phase where G' = 0. That point is a
+        # *maximum* of G -- G' passes from negative to positive as z decreases, and review §10.1
+        # measures G/envelope = +1.000000 there in every run -- not the minimum the comment here
+        # used to claim. Which extremum it is does not matter: GkWKBIntegration.store() rotates
+        # arbitrary (G, G') initial data into a pure sine, so the phase does not depend on where in
+        # the cycle we cut. The search is performed within a fixed window.
         payload = {}
         if self._mode in ["stop"]:
             payload["mode"] = self._mode
@@ -343,6 +346,7 @@ class GkNumericIntegration(DatastoreObject):
             initial_value=0.0,
             initial_deriv=1.0,
             RHS=RHS,
+            omega_sq=Gk_omegaEff_sq,
             atol=self._atol.tol,
             rtol=self._rtol.tol,
             delta_logz=self._delta_logz,

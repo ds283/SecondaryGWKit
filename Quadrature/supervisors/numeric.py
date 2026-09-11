@@ -1,9 +1,15 @@
 import time
+from math import log
 from typing import Optional, Union
 
 from CosmologyConcepts import wavenumber, redshift
 from Quadrature.supervisors.base import IntegrationSupervisor, DEFAULT_UPDATE_INTERVAL
 from utilities import format_time
+
+
+# ``delta_logz`` is supplied as a spacing in log10(1+z); converting it to a spacing in
+# ln(1+z) -- which is what multiplying by (1+z) produces a Delta z from -- costs a factor ln 10
+LN_10 = log(10.0)
 
 
 class NumericIntegrationSupervisor(IntegrationSupervisor):
@@ -71,13 +77,34 @@ class NumericIntegrationSupervisor(IntegrationSupervisor):
         self._last_z = current_z
 
     def report_wavelength(self, z: float, wavelength: float, efolds_subh: float):
+        """
+        **Superseded.** Prompt 11 of ``prompts/GkTk-remedial`` moved the oscillation-resolution
+        test out of the ODE right-hand side and on to the *returned sample grid*, where
+        ``numeric_with_phase_cut`` now performs it after the solve
+        (``Quadrature/integrators/numeric_with_phase_cut.py``,
+        ``scan_sample_grid_for_unresolved_osc``). Neither ``GkNumericIntegration.RHS`` nor
+        ``TkNumericIntegration.RHS`` calls this method any more, and the flag those integrators
+        return no longer comes from this class.
+
+        The method is retained because it is the only per-step form of the test, and because
+        removing it would silently change any future caller that still uses it. Its unit slip is
+        fixed here: ``delta_logz`` is a spacing in ``log10(1+z)`` -- that is what ``main.py``
+        passes, ``1/source_samples_per_log10z`` at ``:630`` and ``:1199`` -- so the corresponding
+        spacing in z is ``(1+z) * delta_logz * ln(10)``, not ``(1+z) * delta_logz``. The missing
+        ``ln 10 = 2.303`` understated the grid spacing and moved the trip point from the intended
+        x ~ 273 to x ~ 630 (review §10.2, §13.1).
+
+        :param z: current redshift
+        :param wavelength: local oscillation wavelength, as a Delta z
+        :param efolds_subh: e-folds inside the horizon at this redshift
+        """
         if self._has_unresolved_osc:
             return
 
         if self._delta_logz is None:
             return
 
-        grid_spacing = (1.0 + z) * self._delta_logz
+        grid_spacing = (1.0 + z) * self._delta_logz * LN_10
         if wavelength < grid_spacing:
             print(
                 f"!! WARNING: {self._label} integration for k = {self._k.k_inv_Mpc:.5g}/Mpc (store_id={self._k.store_id}) may have developed unresolved oscillations"
