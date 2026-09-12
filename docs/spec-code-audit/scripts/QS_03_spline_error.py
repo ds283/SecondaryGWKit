@@ -1,5 +1,5 @@
 import os
-"""QS_03: quantify the F1 issue (docs/resonance-scaffolding/sigw-resonance-reconciliation.md
+"""QS_03: quantify the F1 issue (docs/resonance-scaffolding-v1/sigw-resonance-reconciliation.md
 section 0.2) -- QuadSource._create_functions (ComputeTargets/QuadSource.py:294-309)
 fits a plain cubic make_interp_spline through the *sampled* source values in
 log(1+z).  Measure how well that spline reproduces the exact analytic radiation
