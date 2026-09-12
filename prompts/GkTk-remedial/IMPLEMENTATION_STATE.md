@@ -2,7 +2,26 @@
 
 **Campaign:** [`README.md`](README.md) · **Source review:** [`docs/gk-wkb-review-fable-2026-09-09.md`](../../docs/gk-wkb-review-fable-2026-09-09.md) · **Reconciliation:** [`RECONCILIATION.md`](RECONCILIATION.md)
 **Baseline commit:** `9ff59d5` (`main`, clean)
-**Last updated:** 2026-09-12 — Prompt 12 landed (the transfer function's numeric run has its own
+**Last updated:** 2026-09-12 — Prompt 17 landed (measurement only, no production code: the
+transfer function's numeric absolute tolerance is measured across the **whole production
+$k$-grid** — 50 wavenumbers × 3 models × `atol` ∈ {1e-10, 1e-13, 1e-16} at `rtol = 1e-8`, each
+scored against a converged run of the same integrator, in 276 s. Prompt 12's two control figures
+reproduce to 0.02 % and 0.01 %. **The excursion is real off the radiation control and is not a
+large-$k$ effect**: at the shipped `atol = 1e-13`, **3 of 50** (Radiation), **13 of 50**
+(LambdaCDM) and **8 of 50** (QCD) wavenumbers exceed README §6's $3\times10^{-6}$, worst
+**8.64e-4** at $k=8.37\times10^5$ on LambdaCDM — and each is a *level*, not one bad sample: the
+median is lifted to 1.7e-5–5.8e-5 and the last returned sample is still wrong by up to 2.2e-4.
+**`atol = 1e-16` does not fix it** — LambdaCDM 13 → 10, two of the ten wavenumbers `1e-13`
+handles — and is not cheaper across a real background (15 of 50 $k$, grid total +0.5 %/+1.1 %);
+prompt 12's "cheaper" was one point on the control. Two diagnostics identify the lever: at fixed
+`atol = 1e-13`, one decade of **`rtol`** removes every excursion (8.64e-4 → 7.4e-8) for +23 %
+evaluations, and on both production backgrounds a **$10^{-6}$ change in $k$** removes it too, so
+it is an accident of the step sequence. **Recommendation: keep `1e-13`; prompt 13 may build its
+datastore on it.** Two limits are recorded rather than fixed: `QCD_Cosmology`'s discontinuous
+$H(z)$ stops any reference of this construction converging below ~6e-6 of the envelope at four
+QCD wavenumbers, and the $T=1,T'=0$ initial condition holds a $k$-independent 2.52e-6 floor,
+confirmed against the exact $T$ at all 50 $k$. `[12-tk-numeric-atol-largest-k-excursion]` is
+**narrowed, not closed** — the constant is the user's call.) Prompt 12 landed (the transfer function's numeric run has its own
 absolute tolerance: `config.defaults.DEFAULT_TK_NUMERIC_ABS_TOLERANCE = 1e-13`, built into a fifth
 `tolerance` object `Tk_numeric_atol` in `main.py` and threaded through **all five**
 `TkNumericIntegration` `object_get` sites — the existence query, the work item, the WKB stage's
@@ -174,7 +193,7 @@ Legend: ⬜ not started · 🟡 in flight · ✅ complete · ⚠️ complete wit
 | 11 | [Numeric diagnostics and units](11-numeric-diagnostics-and-units.md) | review §10.2, §12.5, §13.1 | Opus | ⚠️ | *"Test oscillation resolution on the sample grid, off the RHS"* (SHA not embedded, per the campaign convention) | [`logs/11-numeric-diagnostics-and-units.md`](logs/11-numeric-diagnostics-and-units.md) |
 | 16 | [Unresolved-osc print policy](16-unresolved-osc-print-policy.md) | §7 D2; §3 `[00-unresolved-osc-print-policy]` | Opus | ✅ | *"Summarise unresolved-oscillation warnings per wavenumber"* (SHA not embedded, per the campaign convention) | [`logs/16-unresolved-osc-print-policy.md`](logs/16-unresolved-osc-print-policy.md) |
 | 12 | [Tk numeric `atol`](12-tk-numeric-atol.md) | review §12.5 | Opus | ⚠️ | *"Give the transfer-function numeric run its own absolute tolerance"* (SHA not embedded, per the campaign convention) | [`logs/12-tk-numeric-atol.md`](logs/12-tk-numeric-atol.md) |
-| 17 | [Tk numeric `atol` k-sweep](17-tk-numeric-atol-k-sweep.md) | §3 `[12-tk-numeric-atol-largest-k-excursion]` | Opus | ⬜ | | |
+| 17 | [Tk numeric `atol` k-sweep](17-tk-numeric-atol-k-sweep.md) | §3 `[12-tk-numeric-atol-largest-k-excursion]` | Opus | ✅ | *"Measure the transfer-function numeric tolerance across the k-grid"* (SHA not embedded, per the campaign convention) | [`logs/17-tk-numeric-atol-k-sweep.md`](logs/17-tk-numeric-atol-k-sweep.md) |
 
 > Rows 16 and 17 are numbered last because the campaign's numbers are append-only. **16 runs
 > between 11 and 12** — the follow-up README §7 D2 anticipated, enacting the user's choice of
@@ -221,7 +240,7 @@ campaign; the review section is the authority on each.
 | M19 | **DEFECT, dead path** | `mode.lower()` before the `None` check (§10.2) | 11 | ✅ the `None` test comes first; `mode=None` integrates the whole grid, `mode="STOP"` is accepted, `mode="x"` raises `ValueError` — three tests. The `mode != "stop"` branch is kept (`RECONCILIATION.md` §3) |
 | M20 | **DEFECT, comments + robustness** | The stop point is a maximum, not a minimum; the "fixed phase to avoid jitter" motivation is obsolete; `find_phase_minimum`'s $10^{-3}z$ step is safe only inside the window (§10.2) | 11 | ✅ renamed **`find_phase_extremum`** with `find_phase_minimum` kept as an alias; docstring and both integrators' comments now say maximum, and say the jitter motivation is obsolete because `store()` rotates $(G,G')$ into a pure sine. Steps $2\pi/(16\omega)$ where $\omega^2>0$, falling back to $10^{-3}z$: inside the window both steps find the same extremum, and at $x=6\times10^3$ — where the old step covers **0.955 of a cycle** — the phase step lands within 0.1 cycle of the first maximum while the old step skips more than a full cycle. Window **not** widened. The stop point moves by $\le1.04\times10^{-7}$ relative, inside `root_scalar`'s own tolerance (`[11-stop-point-root-tolerance]`) |
 | M21 | **DEFECT, misleading** | `0.85·z_e6` truncation requests samples never produced in stop mode (§10.2) — comment only | 11 | ✅ both `main.py` comments (`:604-611`, `:1178-1189`) rewritten to say the ODE terminates on the $z_{e6}$ event, the `expected_values` check is skipped in stop mode, and the samples between $z_{e6}$ and $0.85z_{e6}$ are never produced. The constant stays (hand-over decision). `git diff main.py` is comment-only; the 40-of-41 return is pinned by the bit-identity test |
-| M22 | **DEFECT, accuracy** | $T_k$ numeric run limited to $1.1\times10^{-5}$ of the envelope by `atol=1e-10` acting as a $10^{-5}$ relative tolerance (§12.5) | 12 | ⚠️ `DEFAULT_TK_NUMERIC_ABS_TOLERANCE = 1e-13` for the `TkNumericIntegration` run alone, carried by a separate `tolerance` object `Tk_numeric_atol` through all five of its `object_get` sites. On review §12.5's geometry (RadiationModel, $k=10^6$, production source grid, $T=1,T'=0$, `rtol=1e-8`, all four of the review's RHS-evaluation counts reproduced exactly): $\delta T/{\rm env}$ **9.928e-6 → 2.534e-6** (README §6 target $\le3\times10^{-6}$) for **+14.3 %** evaluations; with exact initial data **1.160e-5 → 3.275e-7**, so what remains is the $2.5\times10^{-6}$ initial-condition floor (`[00-tk-superhorizon-ic-series]`, out of scope). $G_k$ moves by 8.538e-10 of the envelope for +0.35 % evaluations and keeps `atol`. ⚠️ because at $k=3\times10^8$ the shipped tolerance leaves an isolated 2.56e-4 excursion near $x\approx10.8$ that `atol=1e-16` removes (`[12-tk-numeric-atol-largest-k-excursion]`), and because deviation 1 had to repair the batch `build_Tk_WKB_work`'s numeric lookup was dispatched over — `query_batch` (the `TkWKBIntegration` query, whole batch) rather than the unused `payload_batch` (the missing subset), which no longer works once the two carry different tolerances |
+| M22 | **DEFECT, accuracy** | $T_k$ numeric run limited to $1.1\times10^{-5}$ of the envelope by `atol=1e-10` acting as a $10^{-5}$ relative tolerance (§12.5) | 12, 17 | ⚠️ `DEFAULT_TK_NUMERIC_ABS_TOLERANCE = 1e-13` for the `TkNumericIntegration` run alone, carried by a separate `tolerance` object `Tk_numeric_atol` through all five of its `object_get` sites. On review §12.5's geometry (RadiationModel, $k=10^6$, production source grid, $T=1,T'=0$, `rtol=1e-8`, all four of the review's RHS-evaluation counts reproduced exactly): $\delta T/{\rm env}$ **9.928e-6 → 2.534e-6** (README §6 target $\le3\times10^{-6}$) for **+14.3 %** evaluations; with exact initial data **1.160e-5 → 3.275e-7**, so what remains is the $2.5\times10^{-6}$ initial-condition floor (`[00-tk-superhorizon-ic-series]`, out of scope). $G_k$ moves by 8.538e-10 of the envelope for +0.35 % evaluations and keeps `atol`. ⚠️ because at $k=3\times10^8$ the shipped tolerance leaves an isolated 2.56e-4 excursion near $x\approx10.8$ that `atol=1e-16` removes (`[12-tk-numeric-atol-largest-k-excursion]`), and because deviation 1 had to repair the batch `build_Tk_WKB_work`'s numeric lookup was dispatched over — `query_batch` (the `TkWKBIntegration` query, whole batch) rather than the unused `payload_batch` (the missing subset), which no longer works once the two carry different tolerances. **Prompt 17 measured the whole production $k$-grid** (50 wavenumbers × `RadiationModel`, `LambdaCDMModel`, `QCDModel` × `atol` ∈ {1e-10, 1e-13, 1e-16} at `rtol=1e-8`, each against a converged run of the same integrator; `docs/gktk-remedial/TK-NUMERIC-ATOL-SWEEP.md`): the excursion is real off the control and is **not** a large-$k$ effect — at the shipped tolerance **3 / 13 / 8 of 50** wavenumbers exceed $3\times10^{-6}$, worst **8.64e-4** at $k=8.37\times10^5$ on LambdaCDM, every one of them a *level* (median 1.7e-5–5.8e-5, last sample up to 2.2e-4) rather than one bad sample. `atol=1e-16` does **not** fix it (LambdaCDM 13 → 10, two of them wavenumbers `1e-13` handles) and is not cheaper on a real background. The lever is `rtol`: at fixed `atol=1e-13`, `rtol` 1e-8 → 1e-9 removes every excursion (8.64e-4 → 7.4e-8) for +23 % evaluations, and on both production backgrounds a $10^{-6}$ change in $k$ removes it too. What `1e-13` buys is the *level*, uniformly: median-over-$k$ of the per-$k$ maximum 1.25e-5 → 3.8e-7, 1.19e-5 → 4.5e-7, 1.38e-5 → 1.0e-6 for +25–30 % evaluations. **Prompt 17 recommends keeping 1e-13**; the constant is the user's call and the ⚠️ stands until it is settled |
 | M23 | **REQUIREMENT** | Independent references and error definitions; throughput of the interval accessor measured early (§13.3, §13.5) | 01 | ⚠️ |
 | M24 | **REQUIREMENT** | Verification on both models against the references; scoped pipeline run; additive docs (§13.5) | 13 | ⬜ |
 
@@ -614,16 +633,56 @@ Opened by the planning pass, 2026-09-10, before any prompt runs.
   $\le3\times10^{-6}$ row is met on review §12.5's geometry ($k=10^6$, 2.534e-6) and at $k=10^8$,
   but not at the top of the production $k$-grid; prompt 13's verification should not assume one
   number covers the range. Measured only on `RadiationModel` — the production backgrounds, whose
-  Hubble rates are splines, were not swept. **Next step: assigned (2026-09-12) to prompt 17**, a
-  measurement-only prompt approved by the user — not to prompt 13, as first recorded. It sweeps the
-  full production $k$-grid (50 values) on `LambdaCDMModel` and `QCDModel` as well as the control, at
-  `atol` $\in\{10^{-10},10^{-13},10^{-16}\}$, against a **converged run of the same integrator**
-  rather than an oracle, there being no closed-form $T$ on a real background. It reports maximum,
-  second-largest and median per $k$ — so an isolated spike is distinguishable from a raised level,
-  which is the open question here — and recommends; the user settles the constant. **It runs before
-  prompt 13, not as part of it**: the tolerance is a `TkNumericIntegration` row key, so a constant
-  settled after prompt 13 has built its datastore and run its scoped pipeline would invalidate both.
-  Prompt 17 changes no production code, so `1e-13` stands until the user says otherwise.
+  Hubble rates are splines, were not swept. **Assigned (2026-09-12): prompt 17**, a
+  measurement-only prompt approved by the user — not prompt 13, as first recorded — run before
+  prompt 13 because the tolerance is a `TkNumericIntegration` row key.
+
+  **Narrowed by prompt 17 (2026-09-12), not closed** —
+  [`docs/gktk-remedial/TK-NUMERIC-ATOL-SWEEP.md`](../../docs/gktk-remedial/TK-NUMERIC-ATOL-SWEEP.md),
+  50 wavenumbers × three models × `atol` ∈ {1e-10, 1e-13, 1e-16} at `rtol=1e-8`, each scored
+  against a converged run of the same integrator; prompt 12's two control figures reproduce to
+  0.02 % and 0.01 %. Four things change in this issue's picture:
+
+  1. **It is not a large-$k$ effect and not confined to the control.** At the shipped tolerance
+     **3 of 50** (Radiation), **13 of 50** (LambdaCDM) and **8 of 50** (QCD) wavenumbers exceed
+     $3\times10^{-6}$; the worst is **8.64e-4 at $k=8.37\times10^5$, $x=17.4$** on LambdaCDM, not
+     at the top of the grid. Almost every excursion above $10^{-5}$ falls at $x\approx8$–18, an
+     e-fold above the stop window's $z_{e3}$ edge.
+  2. **They are levels, not isolated samples.** The median of an offending run is lifted to
+     1.7e-5–5.8e-5 (against 3e-8–7e-8 in a quiet run) and its last returned sample — what
+     `TkWKBIntegration` reads — is still wrong by 8.6e-6 to 2.2e-4. Prompt 12's reading of "an
+     isolated excursion" was the control's max/median ratio, not the level.
+  3. **`atol=1e-16` does not fix it, and is not cheaper.** LambdaCDM 13 → **10** offenders, two of
+     them wavenumbers `1e-13` handles perfectly, worst 4.78e-4; QCD 8 → 4, worst 2.49e-5 at a
+     wavenumber `1e-13` handles at 2.2e-6. It is cheaper than `1e-13` at 34 of 50 radiation
+     wavenumbers but only 15 of 50 on each real background, where the grid total is +0.5 % and
+     +1.1 % *higher*. Prompt 12's "fewer evaluations" was one point on the control.
+  4. **The lever is `rtol`, not `atol`.** At fixed `atol=1e-13`, `rtol` 1e-8 → 1e-9 removes the
+     excursion at the worst $k$ of every model — 8.64e-4 → 7.37e-8 (LambdaCDM), 2.50e-4 → 1.01e-7
+     (Radiation), 2.83e-4 → 9.80e-7 (QCD) — for +23 %–25 % evaluations; and on both production
+     backgrounds a **$10^{-6}$ relative change in $k$** removes it as well (8.64e-4 → 3.92e-7),
+     so it is an accident of the step sequence, not a property of a wavenumber. On the exact
+     radiation control it does *not* move under the same perturbation, because $H=H_0(1+z)^2$
+     makes the problem in $x$ $k$-independent and `atol` (acting on $T'$, whose size falls like
+     $1/k$) is the only thing that breaks the scaling — which is exactly why the control made the
+     excursion look like a function of $k$.
+
+  What `1e-13` does buy is the *level*, uniformly: median-over-$k$ of the per-$k$ maximum
+  1.25e-5 → 3.8e-7, 1.19e-5 → 4.5e-7, 1.38e-5 → 1.0e-6 for +24.7 %, +30.5 %, +25.0 %
+  evaluations, and `1e-16` improves none of the three by a factor of three. **Impact:** README
+  §6's $\le3\times10^{-6}$ row is met at the typical wavenumber on all three models but not at
+  all fifty, and prompt 13 must quote the grid distribution rather than one $k$. Two limits came
+  with the measurement: `QCD_Cosmology`'s discontinuous $H(z)$ (prompt 02, `RESIDUAL-CONVERGENCE.md`
+  §2) stops *any* reference of this construction converging below ~6e-6 of the envelope at
+  $k\in\{1.58\times10^7, 4.97\times10^7, 5.86\times10^7, 2.55\times10^8\}$, so nothing below
+  that is measurable there; and the $T=1,T'=0$ initial condition holds a **$k$-independent
+  2.52e-6 floor** — confirmed against the exact $T$ at all 50 $k$, and $k$-independent because the
+  grid starts five e-folds outside the horizon at every $k$ ($x_i=0.00389$).
+  **Next step:** the user settles the constant. Prompt 17 **recommends keeping `1e-13`** and says
+  prompt 13 may build its datastore on it; the follow-up this measurement points at is `rtol`,
+  which is one shared number keying every integration object (`main.py:2980-2998`) and therefore a
+  pipeline-wide decision rather than a $T_k$ one. Prompt 17 changed no production code, so `1e-13`
+  stands until the user says otherwise.
 
 > Add an entry here whenever a prompt finishes with something unresolved: a verification step that
 > could not be run, an assumption that could not be confirmed, a deviation a later prompt has to
