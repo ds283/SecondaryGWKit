@@ -114,8 +114,9 @@ pattern GkTk-remedial prompt 12 established for a single constant, with the same
 structural guard. The only prompt here that touches production code, and the one that invalidates
 the datastore.
 
-**05 — `QuadSourceIntegral`, read-only, and close-out.** The harness applied to the one target this
-campaign does not own, the campaign document, and the hand-off.
+**05 — `QuadSourceIntegral`, read-only, and the provenance note.** The harness applied to the one
+target this campaign does not own; the hand-off; and **`docs/TOLERANCE-PROVENANCE.md`**, the
+standing note (§1.2) that says where every tolerance constant in the pipeline came from.
 
 ### 1.1 Explicitly out of scope
 
@@ -123,6 +124,33 @@ Everything in §0.3–§0.5, plus: the datastore migration that prompt 04 implie
 user decision with a compute cost, §7 D2); any change to `GkSourcePolicy`, the rectifier, or the
 `*Value` schemas; and the question of whether `QuadSourceIntegral`'s per-sub-interval `atol`
 distribution is the right one, which is `levin-refactor`'s.
+
+### 1.2 The provenance note — the campaign's durable output
+
+A constant whose justification lives only in a campaign log is a constant the next reader will
+change by guesswork. The campaign's lasting deliverable is therefore not the numbers but
+**`docs/TOLERANCE-PROVENANCE.md`**: one page per tolerance constant in `config/defaults.py`, and for
+each of them —
+
+- **the value**, and the object types it keys;
+- **what measurement chose it** — model, wavenumber or grid, geometry, error measure, and the
+  numbers, with the reference's own drift beside them (§5 rule 5);
+- **what it is competing against**: the floor that would dominate if it were tightened further
+  (§2 (e)), so a later reader can see immediately whether there is anything left to buy;
+- **its cost**, in evaluations, at the setting chosen and one decade either side;
+- **the campaign, prompt and log** that established it, and the date.
+
+It must cover the constants this campaign does *not* set as well as those it does — the ones
+inherited from `source-remediation` (`DEFAULT_QUADRATURE_ATOL = 1e-32`,
+`DEFAULT_QUADRATURE_RTOL = 1e-8`) and from GkTk-remedial (`DEFAULT_TK_NUMERIC_ABS_TOLERANCE = 1e-13`,
+settled by the user 2026-09-12) — because the point is that *no* tolerance in the pipeline is
+unexplained when the campaign closes. Where the provenance of an existing constant cannot be
+established from the record, the note says so in those words rather than inventing one.
+
+The note is a *summary with citations*, not a second copy of the measurements: each entry points at
+the campaign document that holds the tables. `config/defaults.py`'s own comments stay the primary
+record at the point of use — `DEFAULT_TK_NUMERIC_ABS_TOLERANCE` and `DEFAULT_QUADRATURE_ATOL`
+already carry that standard and every constant this campaign touches must match it.
 
 ---
 
@@ -187,7 +215,7 @@ RHS evaluations, integrand evaluations or Hubble calls.
 | 02 | Audit the numeric sectors | §2 (c), (d), (e); review §10.1, §12.5 | new `docs/tolerance-convergence/numeric_sweep.py`, `NUMERIC-CONVERGENCE.md` | **No** | Opus |
 | 03 | Audit the WKB sectors | §2 (a); GkTk-remedial prompt 02's Gauss orders | new `docs/tolerance-convergence/wkb_order_sweep.py`, `WKB-CONVERGENCE.md` | **No** | Opus |
 | 04 | Decouple the tolerances | §2 (d), (f); §7 D1 once settled | `config/defaults.py`, `main.py` (every `object_get` of the retuned targets), the four `ComputeTargets/*Integration.py` constructors if a signature moves, `ComputeTargets/tests/test_main_plumbing.py` | **Yes — the only one** | Opus |
-| 05 | `QuadSourceIntegral` and close-out | §0.4, §2 (b) | new `docs/tolerance-convergence/TOLERANCE-CONVERGENCE.md`; `docs/OPEN_ISSUES.md` | **No** | Opus |
+| 05 | `QuadSourceIntegral`, close-out and the provenance note | §0.4, §1.2, §2 (b) | new `docs/tolerance-convergence/TOLERANCE-CONVERGENCE.md`, new **`docs/TOLERANCE-PROVENANCE.md`**; `docs/OPEN_ISSUES.md` | **No** | Opus |
 
 ### 3.1 Prompt 01 — the convergence harness
 
@@ -243,7 +271,7 @@ find it. Then the `main.py` plumbing: one `tolerance` object per sector in the s
 and fails when an unclassified one appears (§2 (f)). Expect the batch-dispatch hazard prompt 12
 hit; the guard exists because it is silent.
 
-### 3.5 Prompt 05 — `QuadSourceIntegral`, read-only, and close-out
+### 3.5 Prompt 05 — `QuadSourceIntegral`, close-out, and the provenance note
 
 Apply the harness to `QuadSourceIntegral` **without editing it or anything else in §0.4**: is it
 converged at `quad_atol = 1e-32`, `quad_rtol = 1e-8` on the production configuration, measured
@@ -251,6 +279,13 @@ against the analytic oracle the `source-remediation` campaign used? Report to `l
 `qsi-phase-groups` through `docs/OPEN_ISSUES.md` §1.2/§1.3 rather than acting. Then the campaign
 document: the five targets, the constants each ended at, the evidence, and the floors each is now
 limited by.
+
+Then **`docs/TOLERANCE-PROVENANCE.md`** to §1.2's specification — the deliverable the user asked for
+by name, and the one that outlives the campaign. It is written last because only then is every
+number in it measured; but prompts 02, 03 and 04 must each leave their log's "State handed to the
+next prompt" carrying the five fields §1.2 lists for every constant they touched, so that this
+prompt assembles rather than re-derives. A prompt that settles a constant without recording its
+provenance has not finished.
 
 ---
 
@@ -277,12 +312,13 @@ is a hard precondition (the QCD reference must converge before any tolerance is 
 it), and prompt 13 is a practical one: it builds a fresh datastore and runs a scoped pipeline, and
 prompt 04 here will invalidate the numeric-sector rows of whatever it built.
 
-That cost is accepted deliberately rather than by oversight. GkTk-remedial prompt 13's subject is
-the *phase representation*, whose accuracy no longer depends on any tolerance — prompt 06 removed
-the ODE — so its conclusions survive this campaign; only its numeric-sector rows need regenerating.
-Holding that campaign open instead, to run this one first, was judged the larger cost (2026-09-12).
-**If the datastore prompt 13 builds is meant to be the one kept in service, this ordering is wrong
-and the two campaigns must swap.** That is D2.
+That cost is accepted deliberately rather than by oversight, and the user confirmed the ordering on
+2026-09-12 (D2). GkTk-remedial prompt 13's subject is the *phase representation*, whose accuracy no
+longer depends on any tolerance — prompt 06 removed the ODE — so its conclusions survive this
+campaign; only its numeric-sector rows are superseded. **Growing the object count is the intended
+outcome here, not a regression**: the whole point is that each quantity carries its own tolerance
+pair, and distinct tolerances should produce distinct objects. No prompt may argue for a shared
+constant on the grounds that decoupling multiplies rows.
 
 ### 4.3 Orchestration
 
@@ -328,6 +364,12 @@ here only where this campaign adds something:
    was correct for the tree it was taken on.
 7. **No tolerance changes outside prompt 04.** Prompts 01, 02, 03 and 05 read the constants and
    measure; they do not edit `config/defaults.py`.
+8. **No constant without its provenance.** Any prompt that recommends or ships a tolerance records,
+   in its log's "State handed to the next prompt", the five fields §1.2 lists — value and the object
+   types it keys; the measurement that chose it; the floor it is competing against; its cost in
+   evaluations at that setting and one decade either side; and the prompt and log that established
+   it. Prompt 05 assembles `docs/TOLERANCE-PROVENANCE.md` from those entries. A number shipped
+   without them is an unfinished prompt, and the orchestrator treats it as one.
 
 ---
 
@@ -354,16 +396,22 @@ interval quantity, never to the absolute.
 
 ## 7. Decisions left to the user
 
-**D1 — the decoupled constants.** What `atol` and `rtol` each retuned target gets. Prompt 02
-recommends with evidence; prompt 04 may not start until this is settled. The likely shape, from
-§2 (c), is that `rtol` tightens by a decade in both numeric sectors at +23–25 % evaluations — a
-recurring compute cost on a sector with ~65,000 objects per model, which is why it is a decision
-and not a measurement.
+**D1 — the decoupled constants.** *Partly settled.* The user confirmed on 2026-09-12 that
+`DEFAULT_TK_NUMERIC_ABS_TOLERANCE` **stays at `1e-13`** — GkTk-remedial prompt 17's recommendation,
+accepted — so the $T_k$ absolute tolerance is not in question and no prompt here revisits it. What
+is open is every **`rtol`**, and `GkNumericIntegration`'s `atol`, neither of which has ever been
+measured on a grid. Prompt 02 recommends with evidence; prompt 04 may not start until the user
+accepts. The likely shape, from §2 (c), is that `rtol` tightens by a decade in both numeric sectors
+at +23–25 % evaluations — a recurring compute cost on a sector with ~65,000 objects per model,
+which is why it stays a decision and not a measurement.
 
-**D2 — the datastore, and the campaign ordering.** Prompt 04 makes every row of the retuned targets
-unreachable by key. If the datastore GkTk-remedial prompt 13 builds is meant to stay in service,
-this campaign must run *before* that prompt instead of after it, and GkTk-remedial stays open
-longer (§4.2). Settle before prompt 04, and ideally before GkTk-remedial 13.
+**D2 — the datastore. *Settled 2026-09-12: not a problem, and the ordering stands.*** Prompt 04
+makes every row of the retuned targets unreachable by its old key, so the store grows a parallel
+set of objects. The user has confirmed that this is the **intended outcome, not a cost to be
+minimised**: the point of the campaign is that each quantity ends up with its own `atol`/`rtol`
+pair whose provenance can be stated, and distinct tolerances *should* produce distinct objects. So
+this campaign runs after GkTk-remedial as §4.2 describes, and the numeric-sector rows of the
+datastore its prompt 13 builds are expected to be superseded.
 
 **D3 — the vestigial WKB key columns.** `GkWKBIntegration`/`TkWKBIntegration` carry `atol`/`rtol`
 columns that are part of the lookup key and describe nothing (§2 (a)). Keep (schema churn avoided,

@@ -80,9 +80,24 @@ the expectation that this campaign **removes** the chunked splines — its promp
 | `[08-docs-scripts-reference-removed-chunking]` | GkTk-remedial | Two `docs/` reproduction scripts (`t5_spline.py`, `measure.py`) read `phase_spline` internals (`_chunk_list`, `_splines`, `_match_chunk`) that prompt 08 deleted with chunking; they documented the chunked tree they ran on and were not edited. |
 | `[10-residual-spline-end-condition]` | GkTk-remedial | Prompt 10 §3 item 3's 1e-10 relative on $\omega$ vs `theta_deriv` is missed at one abscissa per equation of state — 1.0492e-10 at $w=1/3$, the not-a-knot end condition of the cubic residual spline at the top of the WKB region (5.6e-12 from the fifth sample inwards, 4.249e-08 before). `spline_order=5` gives 9.7e-12 over the whole region but needs six samples against `MIN_SPLINE_DATA_POINTS = 5`. **Assigned (2026-09-11): prompt 13**, to re-measure on the real background before anyone pays for the quintic. |
 | `[10-transfer-remedial-tolerance-comments-stale]` | GkTk-remedial | Five tolerance comments `8ba9159` wrote in `test_tk_source_functions.py` now describe the consumer re-spline prompt 10 deleted and quote numbers three to four orders above the new measurements. Not edited — `8ba9159`'s text was a stop condition for prompt 10 — and every assertion still passes. |
-| `[12-tk-numeric-atol-largest-k-excursion]` | GkTk-remedial | Prompt 12's `atol=1e-13` left a 2.56e-4-of-envelope excursion at $k=3\times10^8$ on the radiation control. **Measured across the production $k$-grid by prompt 17 (2026-09-12):** the excursion is real off the control and is not a large-$k$ effect — 3 / 13 / 8 of 50 wavenumbers above $3\times10^{-6}$ on Radiation / LambdaCDM / QCD, worst 8.64e-4 at $k=8.37\times10^5$, and each a raised level rather than one bad sample. `atol=1e-16` does not fix it and is not cheaper; the lever is `rtol` (one decade removes every excursion) and on the real backgrounds a $10^{-6}$ change in $k$ removes it too. **Next step:** prompt 17 recommends keeping `1e-13` and the user settles it. |
 | `[17-qcd-reference-not-converged]` | GkTk-remedial | Prompt 17's reference-convergence test fails on `QCDModel` at four wavenumbers (drift 1.6e-6–6.2e-6 of the envelope against a 3.4e-8 criterion), because `QCD_Cosmology`'s $H(z)$ jumps at the `QCD_EOS` branch boundaries and `numeric_with_phase_cut` integrates across them in one `solve_ivp` call, invalidating DOP853's embedded error estimator. The same failure is expected for $G_k$, which shares the driver and has never had a converged-reference measurement. **Assigned (2026-09-12): prompt 18**, which wires prompt 02's declaration protocol to the ODE; it runs before prompt 13. |
 | `[10-wrap-theta-loop-at-large-phase]` | GkTk-remedial | `wrap_theta` reduces by adding $2\pi$ in a loop, so at $|\theta|\sim10^6$ rad it takes ~1.6e5 iterations and reconstructs $\theta$ only to 1.39e-06 rad. Inert in production (its one caller passes `mod + delta`), a trap for fixtures; `WKB_mod_2pi` is exact. |
+
+---
+
+### 1.5 The tolerance and convergence campaign
+
+Planned as [`prompts/tolerance-convergence/`](../prompts/tolerance-convergence/README.md)
+(2026-09-12; five prompts, none executed). One reusable convergence test applied to all five
+compute targets on all three models, anchored to the constant-$w$ closed forms in
+`ComputeTargets/analytic_{Gk,Tk}.py`, and `atol`/`rtol` decoupled so each quantity carries its own
+justified pair. **Blocked on `prompts/GkTk-remedial` prompt 18** — until the numeric ODE is split
+at the cosmology's declared discontinuities, the reference on `QCDModel` does not converge at four
+wavenumbers, and a tolerance measured against an unconverged reference measures the reference.
+
+| Issue | Board | Hook |
+|---|---|---|
+| `[12-tk-numeric-atol-largest-k-excursion]` | GkTk-remedial → tolerance-convergence | Prompt 12's `atol=1e-13` left excursions above README §6's 3e-6 of the envelope that prompt 17 then measured across the production grid: 3 / 13 / 8 of 50 wavenumbers on Radiation / LambdaCDM / QCD, worst 8.64e-4, each a raised level rather than one bad sample. `atol=1e-16` does not fix it and is not cheaper. **The user settled the constant 2026-09-12: `1e-13` stays** — `atol` is not the lever. One decade of `rtol` removes every excursion for +23–25 % evaluations, and `rtol` is one shared number keying every integration object. **Assigned (2026-09-12): `prompts/tolerance-convergence`**, which sweeps it per sector and decouples the constants. | |
 
 ---
 

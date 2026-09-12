@@ -18,7 +18,7 @@ practical precondition. Nothing below may be dispatched before that campaign mer
 | 02 | Audit the numeric sectors | README §2 (c), (d), (e); review §10.1, §12.5 | Opus | ⬜ | | |
 | 03 | Audit the WKB sectors | README §2 (a) | Opus | ⬜ | | |
 | 04 | Decouple the tolerances | README §2 (d), (f); §7 D1 | Opus | ⬜ | | |
-| 05 | `QuadSourceIntegral` and close-out | README §0.4, §2 (b) | Opus | ⬜ | | |
+| 05 | `QuadSourceIntegral`, close-out, the provenance note | README §0.4, §1.2, §2 (b) | Opus | ⬜ | | |
 
 Status key: ⬜ not started · 🔄 in flight · ✅ complete · ⚠️ complete with a recorded caveat ·
 ❌ blocked.
@@ -40,6 +40,7 @@ was created by.
 | T5 | **DECISION** | The decoupled constants settled by the user (§7 D1) and shipped with the measurement that chose each, in `config/defaults.py` | 04 | ⬜ |
 | T6 | **PLUMBING** | Every `object_get` of a retuned target carries its own tolerance, with an `ast` guard that fails on an unclassified site | 04 | ⬜ |
 | T7 | **HAND-OFF** | `QuadSourceIntegral` measured read-only and reported to `levin-refactor` / `qsi-phase-groups` | 05 | ⬜ |
+| T8 | **PROVENANCE** | `docs/TOLERANCE-PROVENANCE.md` covers **every** tolerance constant in `config/defaults.py` — including the ones this campaign inherits and does not set — with value, choosing measurement, competing floor, cost and citation (README §1.2) | 05 | ⬜ |
 
 ---
 
@@ -52,8 +53,10 @@ count corrected.
 The issues this campaign was created *from* live on GkTk-remedial's board and stay there until it
 closes them:
 
-- `[12-tk-numeric-atol-largest-k-excursion]` — narrowed by that campaign's prompt 17; the `rtol`
-  finding inside it is this campaign's D1.
+- `[12-tk-numeric-atol-largest-k-excursion]` — measured by that campaign's prompt 17 and
+  **assigned here on 2026-09-12** (`docs/OPEN_ISSUES.md` §1.5). Its `atol` half is settled — the
+  user kept `1e-13` — and what remains is the `rtol` retuning, which is this campaign's D1. It
+  closes when prompt 04 ships a settled `rtol`.
 - `[17-qcd-reference-not-converged]` — assigned to that campaign's prompt 18, and a hard
   precondition here (README §0.3).
 
@@ -77,3 +80,12 @@ None yet.
    tighten the WKB tolerance has misread the tree; the knob there is Gauss order.
 5. **`QuadSourceIntegral` is read-only here** (README §0.4). Touching it, `QuadSource.py`,
    `phase_groups.py` or `AdaptiveLevin/` is a stop.
+6. **More datastore objects is the intended outcome, not a cost** (README §4.2, D2 settled
+   2026-09-12). Each quantity is meant to end with its own justified `atol`/`rtol` pair, and
+   distinct tolerances should produce distinct objects. No prompt may argue for keeping a shared
+   constant on the grounds that decoupling multiplies rows.
+7. **No constant without its provenance** (README §1.2, §5 rule 8). A tolerance recommended or
+   shipped without its five provenance fields in the log is an unfinished prompt.
+8. **`DEFAULT_TK_NUMERIC_ABS_TOLERANCE = 1e-13` is settled** (the user, 2026-09-12, on
+   GkTk-remedial prompt 17's recommendation). It is not reopened here; its provenance entry is
+   written from that campaign's record.
