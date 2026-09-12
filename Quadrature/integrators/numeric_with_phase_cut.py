@@ -1,10 +1,58 @@
-from math import fabs, log, pi, sqrt
-from typing import Callable, Optional, Sequence
+"""
+The shared numeric driver for the two sectors' ODEs: ``GkNumericIntegration`` and
+``TkNumericIntegration`` both integrate their second-order system through
+:func:`numeric_with_phase_cut`, which runs SciPy's DOP853 over the requested redshift grid and,
+in ``"stop"`` mode, cuts the result at a point of fixed phase.
 
+**Why the integration is split at the cosmology's declared discontinuities.**
+
+DOP853 chooses its step from an *embedded* error estimate: it forms two Runge-Kutta results of
+different order over the same step and takes their difference as the local error. That difference
+estimates the truncation error only while both Taylor expansions are valid over the step, which
+requires the right-hand side to be smooth across it. Step over a point where the right-hand side
+*jumps* and the estimate stops meaning anything: the method's effective order collapses from eight
+to one, so its error falls like ``h`` rather than ``h^8`` and a decade of tolerance shrinks the
+step by only ``10^(1/8) = 1.33``, buying about a quarter. Worse, *where* a step lands relative to
+the jump changes discontinuously with the tolerance, so refinement is not even monotone --
+tightening can make the answer worse. The remedy is not a tighter tolerance but a restart: end one
+integration at the jump and begin the next from its final state, so that no step straddles it and
+every step sees a smooth right-hand side. The restart is placed a hair on the *near* side of the
+jump rather than exactly on it, for a reason that turns out to matter by three orders of magnitude:
+see :data:`BREAK_POINT_STANDOFF`.
+
+**How this module learns where those points are.** It asks the cosmology, through
+``ComputeTargets.BackgroundModel._cosmology_break_points(..., kind=BREAK_POINT_DISCONTINUITY)``,
+and it asks for *jumps only*. No equation-of-state knowledge lives here: a cosmology that declares
+nothing -- every LambdaCDM model, ``RadiationModel``, every test stand-in -- is treated as smooth
+and takes the single-``solve_ivp`` path this module has always taken, reproducing its numbers bit
+for bit. The distinction between a jump and a kink is the cosmology's to make, and it matters here
+in a way it does not in a quadrature: a fixed-order Gauss-Legendre panel has to be split at *every*
+non-smooth point, kinks included, and on ``QCD_Cosmology``'s production range there are 404 of
+those (the ``T(z)`` spline knots) against 3 jumps. An adaptive stepper absorbs a C2 point at the
+cost of a few extra steps; restarting at all 407 would pay 408 startup transients to fix three.
+
+**How the failure was detected, and why the test could not see it before.** A run's distance from
+the converged answer is estimated by running the same integrator twice, a decade apart in
+tolerance, and taking the difference: valid exactly while refinement is monotone, which is what a
+jump destroys. On ``QCDModel`` that check failed at four of the fifty production wavenumbers, the
+"reference" moving by 1.6e-6 to 6.2e-6 of the envelope against a criterion of 3.4e-8 -- so the
+measurement was partly measuring its own reference, and no tolerance could have fixed it (SciPy
+clamps ``rtol`` at 100 eps = 2.22e-14). ``docs/gktk-remedial/TK-NUMERIC-ATOL-SWEEP.md`` §4 is that
+measurement and §9 is the same measurement after the split.
+"""
+
+from math import expm1, fabs, log, pi, sqrt
+from typing import Callable, List, Optional, Sequence
+
+import numpy as np
 import ray
 from scipy.integrate import solve_ivp
 
 from ComputeTargets import ModelProxy, BackgroundModel
+from ComputeTargets.BackgroundModel import (
+    BREAK_POINT_DISCONTINUITY,
+    _cosmology_break_points,
+)
 from CosmologyConcepts import wavenumber_exit_time, redshift, redshift_array, wavenumber
 from LiouvilleGreen.integration_tools import find_phase_extremum
 from Quadrature.integration_metadata import IntegrationData
@@ -22,6 +70,277 @@ from config.defaults import (
 VALUE_INDEX = 0
 DERIV_INDEX = 1
 EXPECTED_SOL_LENGTH = 2
+
+
+def declared_discontinuities_in_z(
+    model: BackgroundModel, z_lo: float, z_hi: float
+) -> List[float]:
+    """
+    The redshifts strictly inside ``(z_lo, z_hi)`` at which the model's cosmology declares that a
+    background quantity *jumps*, in descending order (the direction of integration).
+
+    Duck-typed throughout: a model with no ``cosmology`` attribute, or a cosmology that does not
+    implement ``integration_break_points``, or one whose equation of state declares no
+    discontinuity temperatures, all give an empty list and hence the unsplit code path.
+
+    The declaration is made in ``u = log(1+z)``, which is the campaign's integration variable, and
+    is converted here with ``expm1``. That direction is the lossy one (``CLAUDE.md``), but the
+    recovered ``z`` is used only as a limit of integration -- never in an equality-like comparison
+    -- which is exactly the case the rule permits.
+    """
+    cosmology = getattr(model, "cosmology", None)
+    if cosmology is None:
+        return []
+
+    u_points = _cosmology_break_points(
+        cosmology, z_lo, z_hi, kind=BREAK_POINT_DISCONTINUITY
+    )
+    if len(u_points) == 0:
+        return []
+
+    z_points = {float(expm1(float(u))) for u in u_points}
+    return sorted((z for z in z_points if z_lo < z < z_hi), reverse=True)
+
+
+# How far on the near side of a declared discontinuity a segment boundary is placed, as a
+# relative offset in (1+z) -- equivalently, an offset of this size in the campaign's integration
+# variable u = log(1+z).
+#
+# This is not cosmetic. An explicit Runge-Kutta method evaluates a stage at the far end of every
+# step, so a segment that *ends* exactly on the discontinuity evaluates its last stage exactly
+# there -- and which branch of the equation of state answers at that point is decided by floating
+# -point rounding of the cosmology's own internal lookup, which is a coin flip. When it lands on
+# the far branch, the final step of the departing segment is a straddling step again, with the
+# controller's full step size, and the split buys nothing.
+#
+# Measured on QCD_Cosmology's Tk run (prompts/GkTk-remedial, log 18): with the boundary placed
+# exactly on the crossing, the reference-convergence drift at k = 4.972e7/Mpc stays at 2.99e-06
+# of the envelope, against 4.6e-09 and 7.9e-09 at two neighbouring wavenumbers where the same
+# coin came up the other way; with this standoff it falls to 6.5e-09. Displacing the boundary to
+# the *far* side instead breaks those two neighbours symmetrically (4.6e-09 -> 5.9e-07,
+# 7.9e-09 -> 8.5e-08), which is what identifies the mechanism.
+#
+# The value has to clear the cosmology's own evaluation noise -- a relative 1e-16 or so, from
+# splines and root-solves -- by a wide margin, and has to be small enough that the sliver of the
+# far side swept by the arriving segment contributes nothing: 1e-12 is four orders above the
+# first and fourteen orders below the integration range in u. 1e-9 was measured to work equally
+# well, so the choice is not delicate.
+BREAK_POINT_STANDOFF = 1.0e-12
+
+
+def _standoff_boundary(z_break: float) -> float:
+    """
+    The redshift at which to end the segment above ``z_break`` and begin the segment below it:
+    :data:`BREAK_POINT_STANDOFF` on the near side, the near side being higher z because these
+    integrations always run downwards.
+    """
+    return z_break + BREAK_POINT_STANDOFF * (1.0 + z_break)
+
+
+class _SegmentedDenseOutput:
+    """
+    A dense-output callable assembled from one ``OdeSolution`` per segment, so that the stop-mode
+    root-find (``find_phase_extremum``) can search a window that straddles a segment boundary.
+
+    ``find_phase_extremum`` uses its ``sol`` argument only as ``sol(z) -> state vector``, so this
+    is the whole protocol. Segments are held in descending order of redshift; the first whose
+    lower bound lies at or below ``z`` is the one that contains it. The solution is continuous
+    across a boundary even though the right-hand side is not, so which side a boundary redshift is
+    evaluated on does not matter.
+    """
+
+    def __init__(self, segments):
+        # segments: list of (z_start, z_end, dense_output), descending in z_start
+        self._segments = segments
+
+    def __call__(self, z: float):
+        for _, z_end, dense in self._segments:
+            if z >= z_end:
+                return dense(z)
+
+        # below the last segment's floor: the integration terminated on its event before reaching
+        # it. Extrapolate from the final segment, which is what a single solve_ivp would do.
+        return self._segments[-1][2](z)
+
+
+class _SegmentedSolution:
+    """
+    The parts of a SciPy ``OdeResult`` that :func:`numeric_with_phase_cut` consumes, assembled
+    from a sequence of per-segment solves: the sample grid and state (``t``, ``y``), the aggregate
+    step count (``nfev``), the terminating ``status`` of the last segment executed, and the
+    composite dense output (``sol``).
+
+    ``success`` is always True: a failed segment raises inside :func:`_solve_segmented`, where the
+    segment index and its redshift range are still known.
+    """
+
+    def __init__(self, t, y, nfev: int, status: int, sol, num_segments: int):
+        self.t = t
+        self.y = y
+        self.nfev = nfev
+        self.status = status
+        self.success = True
+        self.message = "The solver successfully reached the end of every segment."
+        self.sol = sol
+        self.num_segments = num_segments
+
+
+def _solve_segmented(
+    RHS,
+    z_init: float,
+    z_min: float,
+    t_eval: Sequence[float],
+    y0,
+    break_z: Sequence[float],
+    events,
+    dense_output: bool,
+    atol: float,
+    rtol: float,
+    args,
+    task_label: str,
+    k_inv_Mpc: float,
+) -> _SegmentedSolution:
+    """
+    Integrate from ``z_init`` down to ``z_min`` in segments whose interior boundaries are the
+    declared discontinuities ``break_z`` (descending, strictly inside the range), carrying the
+    final state of each segment into the next as its initial condition.
+
+    The requested output points ``t_eval`` are distributed across the segments without being
+    moved: segment *j* takes the samples with ``z_end < s <= z_start``, and the lowest segment
+    also takes a sample sitting exactly on ``z_min``. Each non-final segment additionally asks for
+    its own lower boundary as an output point, purely so that the state there can be read off and
+    handed to the next segment; that point is then dropped, so **no break point is ever rounded on
+    to a sample** and the returned grid is exactly the grid requested.
+
+    The interior boundaries are placed a standoff of :data:`BREAK_POINT_STANDOFF` on the *near*
+    side of each declared discontinuity; :func:`_standoff_boundary` says why that is not a
+    cosmetic detail.
+    """
+    z_top = float(z_init)
+    z_bottom = float(z_min)
+
+    # the standoff can in principle push a boundary out of the range, if a declared
+    # discontinuity sits within it of an endpoint; such a boundary is simply dropped, which
+    # leaves the endpoint itself as the restart and costs nothing
+    interior = sorted(
+        {
+            boundary
+            for boundary in (_standoff_boundary(float(z)) for z in break_z)
+            if z_bottom < boundary < z_top
+        },
+        reverse=True,
+    )
+    boundaries = [z_top] + interior + [z_bottom]
+    num_segments = len(boundaries) - 1
+
+    samples = [float(z) for z in t_eval]
+    num_samples = len(samples)
+
+    # partition the requested output points by segment, preserving order
+    chunks = []
+    index = 0
+    for j in range(num_segments):
+        z_end = boundaries[j + 1]
+        start = index
+        if j == num_segments - 1:
+            while index < num_samples and samples[index] >= z_end:
+                index += 1
+        else:
+            while index < num_samples and samples[index] > z_end:
+                index += 1
+        chunks.append(samples[start:index])
+
+    if index != num_samples:
+        raise RuntimeError(
+            f"{task_label}: {num_samples - index} requested sample points lie below the end of "
+            f"the integration range (k={k_inv_Mpc}/Mpc, z_min={z_min}, first unassigned "
+            f"z={samples[index]})"
+        )
+
+    t_pieces = []
+    y_pieces = []
+    dense_segments = []
+    nfev = 0
+    status = 0
+    state = list(y0)
+
+    for j in range(num_segments):
+        z_start = boundaries[j]
+        z_end = boundaries[j + 1]
+        requested = chunks[j]
+        is_last = j == num_segments - 1
+
+        segment_t_eval = list(requested) if is_last else list(requested) + [z_end]
+
+        sol = solve_ivp(
+            RHS,
+            method="DOP853",
+            t_span=(z_start, z_end),
+            y0=state,
+            t_eval=segment_t_eval,
+            events=events,
+            dense_output=dense_output,
+            atol=atol,
+            rtol=rtol,
+            args=args,
+        )
+
+        if not sol.success:
+            reached = float(sol.t[-1]) if len(sol.t) > 0 else z_start
+            raise RuntimeError(
+                f"{task_label}: integration did not terminate successfully in segment "
+                f"{j + 1} of {num_segments}, z in ({z_end}, {z_start}) "
+                f'(k={k_inv_Mpc}/Mpc, z_source={z_init}, error at z={reached}, "{sol.message}")'
+            )
+
+        nfev += int(sol.nfev)
+        if dense_output:
+            dense_segments.append((z_start, z_end, sol.sol))
+
+        num_requested = len(requested)
+
+        # SciPy leaves sol.y as an empty *list* rather than an empty array when a solve with an
+        # explicit t_eval produces no output points at all, which happens here whenever a
+        # terminal event fires inside a segment before any of that segment's requested samples
+        # (or its boundary point) is reached. Normalise before slicing.
+        segment_t = np.asarray(sol.t, dtype=float).reshape(-1)
+        segment_y = np.asarray(sol.y, dtype=float)
+        if segment_y.size == 0:
+            segment_y = np.empty((EXPECTED_SOL_LENGTH, 0), dtype=float)
+
+        t_pieces.append(segment_t[:num_requested])
+        y_pieces.append(segment_y[:, :num_requested])
+
+        status = int(sol.status)
+        if status == 1:
+            # a terminal event fired inside this segment: the whole integration stops here, not
+            # merely this segment
+            break
+
+        if not is_last:
+            if len(segment_t) != num_requested + 1:
+                raise RuntimeError(
+                    f"{task_label}: segment {j + 1} of {num_segments} did not return the state "
+                    f"at its lower boundary z={z_end} (k={k_inv_Mpc}/Mpc; expected "
+                    f"{num_requested + 1} output points, got {len(segment_t)})"
+                )
+            state = list(segment_y[:, -1])
+
+    if len(t_pieces) == 0:
+        t = np.empty(0, dtype=float)
+        y = np.empty((EXPECTED_SOL_LENGTH, 0), dtype=float)
+    else:
+        t = np.concatenate(t_pieces)
+        y = np.concatenate(y_pieces, axis=1)
+
+    return _SegmentedSolution(
+        t=t,
+        y=y,
+        nfev=nfev,
+        status=status,
+        sol=_SegmentedDenseOutput(dense_segments) if dense_output else None,
+        num_segments=num_segments,
+    )
 
 
 def scan_sample_grid_for_unresolved_osc(
@@ -196,6 +515,14 @@ def numeric_with_phase_cut(
     k_float = k_wavenumber.k
     z_min = float(z_sample.min)
 
+    # Ask the cosmology where its background quantities *jump* inside the integration range, and
+    # integrate the pieces between those points in sequence rather than stepping across them: see
+    # this module's docstring for why an adaptive Runge-Kutta method cannot be trusted across a
+    # discontinuous right-hand side, and why kinks are deliberately not included. A cosmology
+    # declaring none -- every LambdaCDM model, RadiationModel, every test stand-in -- gives an
+    # empty list and the single-call path below, unchanged.
+    break_z = declared_discontinuities_in_z(model, z_min, z_init.z)
+
     # delta_logz is still accepted and still handed to the supervisor, so that callers (main.py)
     # need not change; but the oscillation-resolution diagnostic no longer uses it. It now runs
     # after the solve, against the actual spacing of the returned samples -- see
@@ -222,22 +549,43 @@ def numeric_with_phase_cut(
             events = None
             dense_output = False
 
-        sol = solve_ivp(
-            RHS,
-            method="DOP853",
-            t_span=(z_init.z, z_min),
-            y0=initial_state,
-            t_eval=z_sample.as_float_list(),
-            events=events,
-            dense_output=dense_output,
-            atol=atol,
-            rtol=rtol,
-            args=(
-                model,
-                k_float,
-                supervisor,
-            ),
-        )
+        if len(break_z) == 0:
+            sol = solve_ivp(
+                RHS,
+                method="DOP853",
+                t_span=(z_init.z, z_min),
+                y0=initial_state,
+                t_eval=z_sample.as_float_list(),
+                events=events,
+                dense_output=dense_output,
+                atol=atol,
+                rtol=rtol,
+                args=(
+                    model,
+                    k_float,
+                    supervisor,
+                ),
+            )
+        else:
+            sol = _solve_segmented(
+                RHS,
+                z_init.z,
+                z_min,
+                z_sample.as_float_list(),
+                initial_state,
+                break_z,
+                events,
+                dense_output,
+                atol,
+                rtol,
+                (
+                    model,
+                    k_float,
+                    supervisor,
+                ),
+                task_label,
+                k_wavenumber.k_inv_Mpc,
+            )
 
     # test whether the integration concluded successfully
     if not sol.success:

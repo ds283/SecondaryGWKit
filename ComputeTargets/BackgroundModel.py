@@ -11,6 +11,15 @@ from ComputeTargets.cumulative_table import CumulativeTable
 from ComputeTargets.spline_wrappers import ZSplineWrapper
 from CosmologyConcepts import redshift_array, redshift, wavenumber
 from CosmologyModels import BaseCosmology
+
+# the vocabulary of the cosmology's break-point declaration, re-exported so that a consumer of
+# _cosmology_break_points() need not import an equation-of-state module to name the kind of
+# non-smoothness it cares about (Quadrature/integrators/numeric_with_phase_cut.py does exactly
+# this). CosmologyModels/GenericEOS/GenericEOS.py is the authority on what they mean.
+from CosmologyModels.GenericEOS.GenericEOS import (
+    BREAK_POINT_ALL,
+    BREAK_POINT_DISCONTINUITY,
+)
 from Datastore import DatastoreObject
 from MetadataConcepts import tolerance, store_tag
 from Quadrature.integration_metadata import IntegrationSolver, IntegrationData
@@ -191,20 +200,29 @@ def _friction_integrand(cosmology):
     return f
 
 
-def _cosmology_break_points(cosmology, z_lo: float, z_hi: float) -> np.ndarray:
+def _cosmology_break_points(
+    cosmology, z_lo: float, z_hi: float, kind: str = BREAK_POINT_ALL
+) -> np.ndarray:
     """
     The points in u = log(1+z), strictly inside (log(1+z_lo), log(1+z_hi)), at which the
-    cosmology's background quantities lose smoothness, as an ascending array; empty if the
-    cosmology declares none. Duck-typed like the analytic-derivative shortcuts below: a cosmology
-    that does not implement ``integration_break_points`` (LambdaCDM, the test stand-ins) is
-    treated as smooth. LambdaCDM_GenericEOS implements it (the T(z) spline knots and the
-    equation-of-state branch temperatures); see prompts/GkTk-remedial/logs/02 for why every
+    cosmology's background quantities lose smoothness of the requested ``kind``, as an ascending
+    array; empty if the cosmology declares none. Duck-typed like the analytic-derivative shortcuts
+    below: a cosmology that does not implement ``integration_break_points`` (LambdaCDM, the test
+    stand-ins) is treated as smooth. LambdaCDM_GenericEOS implements it (the T(z) spline knots and
+    the equation-of-state branch temperatures); see prompts/GkTk-remedial/logs/02 for why every
     Gauss panel has to be split there.
+
+    ``kind`` is ``BREAK_POINT_ALL`` (every non-smooth point -- what a fixed-order quadrature panel
+    needs, and the default, so that every existing caller is unchanged) or
+    ``BREAK_POINT_DISCONTINUITY`` (the subset at which a quantity jumps -- what an adaptive ODE
+    solver needs; see Quadrature/integrators/numeric_with_phase_cut.py). The two names are
+    re-exported here so that a consumer outside CosmologyModels need not import an
+    equation-of-state module to name the kind it wants.
     """
     method = getattr(cosmology, "integration_break_points", None)
     if method is None:
         return np.empty(0, dtype=float)
-    return np.asarray(method(z_lo, z_hi), dtype=float)
+    return np.asarray(method(z_lo, z_hi, kind=kind), dtype=float)
 
 
 @ray.remote

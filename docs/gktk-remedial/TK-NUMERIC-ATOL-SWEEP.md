@@ -561,3 +561,491 @@ the excursion is what remains.
 ---
 
 *Runtime 276 s (QCD stand-in build 0.6 s of it); 50 wavenumbers x 3 models x 6-7 solves each, plus 14 per model for the diagnostics.*
+
+---
+
+## 9. After the split: prompt 18's measurement
+
+<!-- generated 2026-09-13 by
+     PYTHONPATH=. ./venv/bin/python docs/gktk-remedial/tk_numeric_atol_sweep.py --break-points
+     in 740 s; Python 3.12.14, NumPy 2.2.4, SciPy 1.15.2 -->
+
+`numeric_with_phase_cut` now asks the cosmology where its background quantities *jump* and
+integrates the pieces between those points in sequence, instead of stepping across them in one
+`solve_ivp` call (`prompts/GkTk-remedial` prompt 18). §§1–8 above were taken before that change
+and are not rewritten; this section is the same §2.1 convergence test after it, extended to the
+Green's-function sector, which had never been measured against a converged reference on any model.
+
+**The one-paragraph answer.** The jumps were most of the cause but not all of it. On `QCDModel`
+the transfer function's reference-convergence drift falls from 23 wavenumbers above the criterion
+to **3**, and from a worst of $6.17\times10^{-6}$ to $1.97\times10^{-7}$; all four wavenumbers §4
+names are fixed, by 347× to 5764×. $G_k$ **never had the failure** — its drift is
+$8.4\times10^{-9}$ on QCD with or without the split, and $2\times10^{-11}$ on both smooth models —
+so the failure is a $T_k$ phenomenon, consistent with review §12.5's observation that `atol` binds
+for $T_k$ and never for $G_k$. The two smooth models declare nothing, take the unsplit code path
+and reproduce §§3–4 exactly. The split costs **+1.38 %** ($T_k$) and **+0.39 %** ($G_k$) of the
+production right-hand-side evaluations on QCD. It **moves** the production answer on QCD by up to
+$2.8\times10^{-4}$ of the envelope, so a QCD datastore built before it is not reusable. What
+remains is the $T(z)$ spline's $C^2$ knots: splitting at all 407 declared break points rather than
+the 3 jumps closes the residue ($1.97\times10^{-7}\to4.65\times10^{-9}$) at **+219 % / +155 %** of
+the production evaluations — §9.7, and the user's decision.
+
+### 9.0 The control and the regression (prompt 18 §3 item 3)
+
+`RadiationModel` and `LambdaCDMModel` declare no discontinuities, so they take the single-call
+path and every figure of §§3–4 must reproduce *exactly*, not nearly. Prompt 12's two control
+figures, against the exact $T$:
+
+| control | prompt 12 | measured max dT/env | miss | at x | prompt 12 x | RHS evals |
+|---|---|---|---|---|---|---|
+| k=1e6 | 2.53e-06 | 2.534e-06 | 0.02% | 28.22 | -- | 7403 |
+| k=3e8 | 0.000256 | 0.000256 | 0.01% | 10.78 | 10.8 | 8483 |
+
+$2.534\times10^{-6}$ at $x = 28.22$ in **7403** right-hand-side evaluations and
+$2.56\times10^{-4}$ at $x = 10.78$ in **8483** — the same two numbers and the same two counts as
+§3, to the digit. §9.1's smooth rows likewise reproduce §4's: worst drift
+$4.21\times10^{-11}$ at $k = 3\times10^8$ on Radiation and $5.7\times10^{-11}$ at
+$k = 1.561\times10^8$ on LambdaCDM, with **1 segment** at every wavenumber. Separately,
+`ComputeTargets/tests/test_numeric_break_points.py` asserts that a LambdaCDM $G_k$ run reproduces
+an independently issued `solve_ivp` call **bit for bit** at every sample.
+
+### 9.1 Is the reference converged now?
+
+The criterion is prompt 17 §2.1's: the drift between the reference `(1e-18, 1e-12)` and a run one
+decade tighter must be at most a tenth of the smallest candidate difference the sweep reports on
+that model, i.e. $\le3.4\times10^{-8}$ of the envelope on QCD. "Max segments" is the number of
+integrations one object is cut into — 1 means the historic single call.
+
+| sector | model | max segments | worst drift, split | worst drift, unsplit | at k [1/Mpc] | median drift | k above 3e-08 | acceptance met? |
+|---|---|---|---|---|---|---|---|---|
+| Tk | RadiationModel | 1 | 4.21e-11 | -- | 3e+08 | 1.92e-11 | 0 | **yes** |
+| Tk | LambdaCDMModel | 1 | 5.7e-11 | -- | 1.561e+08 | 3.76e-11 | 0 | **yes** |
+| Tk | QCDModel | 2 | 1.97e-07 | 6.17e-06 | 4.287e+06 | 5.12e-09 | 3 | **no** |
+| Gk | RadiationModel | 1 | 1.94e-11 | -- | 1.561e+08 | 1.35e-11 | 0 | **yes** |
+| Gk | LambdaCDMModel | 1 | 2.1e-11 | -- | 2.197e+07 | 1.39e-11 | 0 | **yes** |
+| Gk | QCDModel | 2 | 8.41e-09 | 8.89e-09 | 6.034e+05 | 2.05e-09 | 0 | **yes** |
+
+### 9.2 The four wavenumbers §4 names
+
+The four §4 could not measure through. Every one is now below the criterion, and the improvement
+is 347× to 5764×. The $G_k$ rows are there to show that the same wavenumbers were never a problem
+in that sector: the "before" and "after" columns agree, because the split changes the step
+sequence but there was no error to remove.
+
+| sector | k [1/Mpc] | drift before | drift after | improvement | <= 3e-08? |
+|---|---|---|---|---|---|
+| Tk | 1.584e+07 | 1.6e-06 | 4.6e-09 | 347x | yes |
+| Tk | 4.972e+07 | 2.76e-06 | 6.48e-09 | 426x | yes |
+| Tk | 5.855e+07 | 6.17e-06 | 7.94e-09 | 777x | yes |
+| Tk | 2.548e+08 | 5.29e-06 | 9.18e-10 | 5764x | yes |
+| Gk | 1.584e+07 | 2.87e-09 | 2.25e-09 | 1x | yes |
+| Gk | 4.972e+07 | 2.32e-09 | 2.31e-09 | 1x | yes |
+| Gk | 5.855e+07 | 6.87e-09 | 6.86e-09 | 1x | yes |
+| Gk | 2.548e+08 | 1.54e-09 | 1.54e-09 | 1x | yes |
+
+### 9.3 What the split costs, in right-hand-side evaluations
+
+`T_120_MEV`'s crossing at $z = 8.64\times10^{11}$ is the only declared discontinuity inside any
+production numeric range — `T_LO`'s at $z = 4.25\times10^{7}$ is below every grid and `T_HI` is
+above the model's range — so every QCD object is cut into exactly two segments and pays one extra
+startup transient: about 130 right-hand-side evaluations in the $T_k$ sector and about 50 in the
+$G_k$ sector, against ~10k and ~13k per object.
+
+| sector | model | per object, unsplit | per object, split | grid total, unsplit | grid total, split | change |
+|---|---|---|---|---|---|---|
+| Tk | QCDModel | 9709 | 9843 | 485467 | 492158 | +1.38% |
+| Gk | QCDModel | 13268 | 13320 | 663403 | 666011 | +0.39% |
+
+### 9.4 How far the split moves the production answer on QCD
+
+The split changes what production computes on QCD, and this is by how much: the shipped-tolerance
+run before the split, scored against the converged reference after it. The worst $T_k$ shift,
+$2.8\times10^{-4}$ of the envelope, is two orders above README §6's $3\times10^{-6}$ row and 300×
+the median solver error at the same tolerance. **A `QCDModel` datastore built before this commit
+holds different numbers from one built after it, and `solver_serial` is not part of either numeric
+lookup key** (`Datastore/SQL/ObjectFactories/GkNumericIntegration.py:221-227` and
+`TkNumericIntegration.py:225-231` both filter on `wavenumber_exit_serial`, `model_serial`,
+`atol_serial` and `rtol_serial` only), so the two are indistinguishable by key —
+`[18-numeric-solver-not-in-lookup-key]`. `LambdaCDMModel` and `RadiationModel` rows are
+bit-identical and need no regeneration.
+
+| sector | model | worst shift | at k [1/Mpc] | median shift | smallest shift | median solver error at production tolerance |
+|---|---|---|---|---|---|---|
+| Tk | QCDModel | 0.000282 | 1.584e+07 | 8.53e-07 | 4.52e-08 | 8.35e-07 |
+| Gk | QCDModel | 1.77e-06 | 2.197e+07 | 1.92e-07 | 1.96e-09 | 9.37e-07 |
+
+### 9.5 Every wavenumber
+
+Per wavenumber, per sector, per model. `segments` is 1 wherever the cosmology declares nothing.
+
+#### Tk, RadiationModel
+
+| k [1/Mpc] | segments | drift after |
+|---|---|---|
+| 1e+05 | 1 | 1.1e-11 |
+| 1.178e+05 | 1 | 1.1e-11 |
+| 1.387e+05 | 1 | 1.1e-11 |
+| 1.633e+05 | 1 | 1.2e-11 |
+| 1.922e+05 | 1 | 1.2e-11 |
+| 2.264e+05 | 1 | 1.1e-11 |
+| 2.665e+05 | 1 | 1.2e-11 |
+| 3.139e+05 | 1 | 1.2e-11 |
+| 3.696e+05 | 1 | 1.2e-11 |
+| 4.352e+05 | 1 | 1.2e-11 |
+| 5.124e+05 | 1 | 1.2e-11 |
+| 6.034e+05 | 1 | 1.1e-11 |
+| 7.105e+05 | 1 | 1.3e-11 |
+| 8.366e+05 | 1 | 1.3e-11 |
+| 9.851e+05 | 1 | 1.4e-11 |
+| 1.16e+06 | 1 | 1.3e-11 |
+| 1.366e+06 | 1 | 1.4e-11 |
+| 1.608e+06 | 1 | 1.5e-11 |
+| 1.894e+06 | 1 | 1.6e-11 |
+| 2.23e+06 | 1 | 1.4e-11 |
+| 2.626e+06 | 1 | 1.6e-11 |
+| 3.092e+06 | 1 | 1.6e-11 |
+| 3.64e+06 | 1 | 1.7e-11 |
+| 4.287e+06 | 1 | 1.9e-11 |
+| 5.048e+06 | 1 | 1.9e-11 |
+| 5.943e+06 | 1 | 1.9e-11 |
+| 6.998e+06 | 1 | 2.1e-11 |
+| 8.241e+06 | 1 | 2.4e-11 |
+| 9.703e+06 | 1 | 2.7e-11 |
+| 1.143e+07 | 1 | 2.8e-11 |
+| 1.345e+07 | 1 | 2.9e-11 |
+| 1.584e+07 | 1 | 2.7e-11 |
+| 1.865e+07 | 1 | 2.8e-11 |
+| 2.197e+07 | 1 | 2.9e-11 |
+| 2.586e+07 | 1 | 3.1e-11 |
+| 3.045e+07 | 1 | 3.1e-11 |
+| 3.586e+07 | 1 | 3.1e-11 |
+| 4.223e+07 | 1 | 3.2e-11 |
+| 4.972e+07 | 1 | 3.4e-11 |
+| 5.855e+07 | 1 | 3.4e-11 |
+| 6.894e+07 | 1 | 3.3e-11 |
+| 8.118e+07 | 1 | 3.1e-11 |
+| 9.558e+07 | 1 | 3.1e-11 |
+| 1.126e+08 | 1 | 3.5e-11 |
+| 1.325e+08 | 1 | 3.7e-11 |
+| 1.561e+08 | 1 | 3.7e-11 |
+| 1.838e+08 | 1 | 3.6e-11 |
+| 2.164e+08 | 1 | 3.6e-11 |
+| 2.548e+08 | 1 | 3.5e-11 |
+| 3e+08 | 1 | 4.2e-11 |
+
+#### Tk, LambdaCDMModel
+
+| k [1/Mpc] | segments | drift after |
+|---|---|---|
+| 1e+05 | 1 | 3.8e-11 |
+| 1.178e+05 | 1 | 3.7e-11 |
+| 1.387e+05 | 1 | 3.8e-11 |
+| 1.633e+05 | 1 | 4.4e-11 |
+| 1.922e+05 | 1 | 3.5e-11 |
+| 2.264e+05 | 1 | 4.5e-11 |
+| 2.665e+05 | 1 | 3.8e-11 |
+| 3.139e+05 | 1 | 3.8e-11 |
+| 3.696e+05 | 1 | 4e-11 |
+| 4.352e+05 | 1 | 4e-11 |
+| 5.124e+05 | 1 | 3.6e-11 |
+| 6.034e+05 | 1 | 3.8e-11 |
+| 7.105e+05 | 1 | 3.6e-11 |
+| 8.366e+05 | 1 | 3.8e-11 |
+| 9.851e+05 | 1 | 3.6e-11 |
+| 1.16e+06 | 1 | 4.9e-11 |
+| 1.366e+06 | 1 | 3.6e-11 |
+| 1.608e+06 | 1 | 3.6e-11 |
+| 1.894e+06 | 1 | 3.7e-11 |
+| 2.23e+06 | 1 | 3.8e-11 |
+| 2.626e+06 | 1 | 3.6e-11 |
+| 3.092e+06 | 1 | 4e-11 |
+| 3.64e+06 | 1 | 3.7e-11 |
+| 4.287e+06 | 1 | 3.7e-11 |
+| 5.048e+06 | 1 | 3.4e-11 |
+| 5.943e+06 | 1 | 3.8e-11 |
+| 6.998e+06 | 1 | 3.7e-11 |
+| 8.241e+06 | 1 | 3.4e-11 |
+| 9.703e+06 | 1 | 3.6e-11 |
+| 1.143e+07 | 1 | 3.9e-11 |
+| 1.345e+07 | 1 | 3.9e-11 |
+| 1.584e+07 | 1 | 4.1e-11 |
+| 1.865e+07 | 1 | 4e-11 |
+| 2.197e+07 | 1 | 3.6e-11 |
+| 2.586e+07 | 1 | 3.8e-11 |
+| 3.045e+07 | 1 | 3.4e-11 |
+| 3.586e+07 | 1 | 3.6e-11 |
+| 4.223e+07 | 1 | 4e-11 |
+| 4.972e+07 | 1 | 3.7e-11 |
+| 5.855e+07 | 1 | 3.8e-11 |
+| 6.894e+07 | 1 | 3.9e-11 |
+| 8.118e+07 | 1 | 3.6e-11 |
+| 9.558e+07 | 1 | 4.2e-11 |
+| 1.126e+08 | 1 | 3.9e-11 |
+| 1.325e+08 | 1 | 3.6e-11 |
+| 1.561e+08 | 1 | 5.7e-11 |
+| 1.838e+08 | 1 | 3.5e-11 |
+| 2.164e+08 | 1 | 3.4e-11 |
+| 2.548e+08 | 1 | 5.3e-11 |
+| 3e+08 | 1 | 3.7e-11 |
+
+#### Tk, QCDModel
+
+| k [1/Mpc] | segments | drift after | drift before | production shift | RHS evals before -> after |
+|---|---|---|---|---|---|
+| 1e+05 | 2 | 5.1e-09 | 5.9e-09 | 4.6e-07 | 9956 -> 10042 |
+| 1.178e+05 | 2 | 5.6e-09 | 1.4e-07 | 8.4e-07 | 9974 -> 9970 |
+| 1.387e+05 | 2 | 1.3e-08 | 6.6e-09 | 7.3e-07 | 9782 -> 10153 |
+| 1.633e+05 | 2 | 2.6e-09 | 1.4e-07 | 5.1e-07 | 9911 -> 10006 |
+| 1.922e+05 | 2 | 1.6e-09 | 4.3e-08 | 6.5e-07 | 9893 -> 9811 |
+| 2.264e+05 | 2 | 5.2e-09 | 1.9e-08 | 3.2e-06 | 9830 -> 9928 |
+| 2.665e+05 | 2 | 5.3e-09 | 3.4e-08 | 9.7e-07 | 9842 -> 10219 |
+| 3.139e+05 | 2 | 4.7e-09 | 2.4e-08 | 8.7e-07 | 9854 -> 10180 |
+| 3.696e+05 | 2 | 6.1e-09 | 3.1e-09 | 9e-07 | 10079 -> 10177 |
+| 4.352e+05 | 2 | 4.4e-09 | 4.8e-08 | 1.1e-06 | 9923 -> 10159 |
+| 5.124e+05 | 2 | 9.7e-09 | 1.3e-07 | 9.5e-07 | 9842 -> 10105 |
+| 6.034e+05 | 2 | 5.6e-09 | 5.7e-09 | 6.2e-07 | 9977 -> 10216 |
+| 7.105e+05 | 2 | 1.6e-08 | 8.1e-09 | 2.8e-06 | 10049 -> 10057 |
+| 8.366e+05 | 2 | 6.1e-08 | 1.5e-08 | 4.9e-06 | 9581 -> 9970 |
+| 9.851e+05 | 2 | 7.3e-09 | 7.5e-09 | 2.4e-06 | 9974 -> 10270 |
+| 1.16e+06 | 2 | 8.9e-09 | 4.4e-08 | 7.6e-06 | 9728 -> 9991 |
+| 1.366e+06 | 2 | 8.7e-09 | 4.8e-08 | 5.2e-07 | 9935 -> 9997 |
+| 1.608e+06 | 2 | 1.1e-08 | 3.1e-08 | 9.9e-07 | 9902 -> 10231 |
+| 1.894e+06 | 2 | 9.8e-09 | 5.3e-08 | 2.8e-07 | 9686 -> 10102 |
+| 2.23e+06 | 2 | 3.5e-09 | 7.6e-09 | 9.6e-07 | 9788 -> 9886 |
+| 2.626e+06 | 2 | 2e-08 | 4.1e-09 | 8.3e-07 | 9941 -> 10093 |
+| 3.092e+06 | 2 | 1.8e-08 | 1.1e-07 | 2.8e-07 | 9935 -> 10090 |
+| 3.64e+06 | 2 | 8.1e-09 | 7.7e-09 | 5.7e-07 | 9875 -> 9943 |
+| 4.287e+06 | 2 | 2e-07 | 1e-08 | 6.6e-07 | 9713 -> 9931 |
+| 5.048e+06 | 2 | 5.1e-09 | 8.8e-07 | 9.6e-07 | 9737 -> 9847 |
+| 5.943e+06 | 2 | 6.2e-09 | 8.1e-07 | 1.2e-06 | 9644 -> 9874 |
+| 6.998e+06 | 2 | 4.4e-09 | 3.3e-07 | 6.2e-07 | 9767 -> 9832 |
+| 8.241e+06 | 2 | 1.2e-09 | 2.1e-07 | 9.8e-07 | 9647 -> 9649 |
+| 9.703e+06 | 2 | 4.9e-09 | 6e-09 | 9.9e-07 | 9626 -> 9844 |
+| 1.143e+07 | 2 | 2.8e-09 | 5.2e-07 | 4.7e-07 | 9818 -> 9793 |
+| 1.345e+07 | 2 | 1.4e-08 | 2.8e-08 | 5.6e-07 | 9704 -> 9829 |
+| 1.584e+07 | 2 | 4.6e-09 | 1.6e-06 | 0.00028 | 9701 -> 9751 |
+| 1.865e+07 | 2 | 3.6e-09 | 2.5e-08 | 2.7e-06 | 9392 -> 9622 |
+| 2.197e+07 | 2 | 3.7e-09 | 1.2e-06 | 3.4e-07 | 9665 -> 9853 |
+| 2.586e+07 | 2 | 3.1e-09 | 5.2e-09 | 8.3e-07 | 9473 -> 9634 |
+| 3.045e+07 | 2 | 3.8e-09 | 3.8e-09 | 2.9e-06 | 9659 -> 9526 |
+| 3.586e+07 | 2 | 2.8e-09 | 1.6e-06 | 1.9e-06 | 9584 -> 9664 |
+| 4.223e+07 | 2 | 3.5e-08 | 3e-08 | 9.1e-07 | 9644 -> 9550 |
+| 4.972e+07 | 2 | 6.5e-09 | 2.8e-06 | 9.3e-07 | 9215 -> 9313 |
+| 5.855e+07 | 2 | 7.9e-09 | 6.2e-06 | 5.7e-07 | 9596 -> 9595 |
+| 6.894e+07 | 2 | 2.5e-09 | 4.2e-09 | 6.8e-06 | 9335 -> 9457 |
+| 8.118e+07 | 2 | 2.1e-09 | 2e-09 | 6.4e-07 | 9242 -> 9328 |
+| 9.558e+07 | 2 | 1.2e-09 | 7.8e-09 | 4.7e-07 | 9242 -> 9391 |
+| 1.126e+08 | 2 | 3e-09 | 4.1e-09 | 3.9e-07 | 9407 -> 9577 |
+| 1.325e+08 | 2 | 2.9e-09 | 2.9e-09 | 2e-06 | 9539 -> 9511 |
+| 1.561e+08 | 2 | 8.9e-10 | 1.2e-07 | 1.3e-06 | 9542 -> 9544 |
+| 1.838e+08 | 2 | 7.3e-09 | 7.6e-09 | 2.6e-07 | 9461 -> 9571 |
+| 2.164e+08 | 2 | 4.7e-09 | 4.7e-09 | 3.6e-07 | 9656 -> 9667 |
+| 2.548e+08 | 2 | 9.2e-10 | 5.3e-06 | 4.4e-07 | 9740 -> 9784 |
+| 3e+08 | 2 | 3.8e-09 | 2.2e-08 | 4.5e-08 | 9461 -> 9625 |
+
+#### Gk, RadiationModel
+
+| k [1/Mpc] | segments | drift after |
+|---|---|---|
+| 1e+05 | 1 | 1.4e-11 |
+| 1.178e+05 | 1 | 1.1e-11 |
+| 1.387e+05 | 1 | 1.7e-11 |
+| 1.633e+05 | 1 | 9.3e-12 |
+| 1.922e+05 | 1 | 9.2e-12 |
+| 2.264e+05 | 1 | 1.2e-11 |
+| 2.665e+05 | 1 | 1.4e-11 |
+| 3.139e+05 | 1 | 1.1e-11 |
+| 3.696e+05 | 1 | 9.3e-12 |
+| 4.352e+05 | 1 | 1.9e-11 |
+| 5.124e+05 | 1 | 1e-11 |
+| 6.034e+05 | 1 | 1.4e-11 |
+| 7.105e+05 | 1 | 1.2e-11 |
+| 8.366e+05 | 1 | 1.5e-11 |
+| 9.851e+05 | 1 | 1.7e-11 |
+| 1.16e+06 | 1 | 1.5e-11 |
+| 1.366e+06 | 1 | 1.4e-11 |
+| 1.608e+06 | 1 | 1.6e-11 |
+| 1.894e+06 | 1 | 5e-12 |
+| 2.23e+06 | 1 | 1.7e-11 |
+| 2.626e+06 | 1 | 1.2e-11 |
+| 3.092e+06 | 1 | 1.9e-11 |
+| 3.64e+06 | 1 | 1.2e-11 |
+| 4.287e+06 | 1 | 1.7e-11 |
+| 5.048e+06 | 1 | 9.1e-12 |
+| 5.943e+06 | 1 | 5.7e-12 |
+| 6.998e+06 | 1 | 1.8e-11 |
+| 8.241e+06 | 1 | 6.8e-12 |
+| 9.703e+06 | 1 | 1.2e-11 |
+| 1.143e+07 | 1 | 9.1e-12 |
+| 1.345e+07 | 1 | 1.5e-11 |
+| 1.584e+07 | 1 | 1.3e-11 |
+| 1.865e+07 | 1 | 1.3e-11 |
+| 2.197e+07 | 1 | 1.9e-11 |
+| 2.586e+07 | 1 | 1.6e-11 |
+| 3.045e+07 | 1 | 1.9e-11 |
+| 3.586e+07 | 1 | 1.7e-11 |
+| 4.223e+07 | 1 | 1.6e-11 |
+| 4.972e+07 | 1 | 1.4e-11 |
+| 5.855e+07 | 1 | 1.6e-11 |
+| 6.894e+07 | 1 | 5.5e-12 |
+| 8.118e+07 | 1 | 7e-12 |
+| 9.558e+07 | 1 | 1.1e-11 |
+| 1.126e+08 | 1 | 1.9e-11 |
+| 1.325e+08 | 1 | 1.1e-11 |
+| 1.561e+08 | 1 | 1.9e-11 |
+| 1.838e+08 | 1 | 9.8e-12 |
+| 2.164e+08 | 1 | 6.5e-12 |
+| 2.548e+08 | 1 | 1.8e-11 |
+| 3e+08 | 1 | 6.1e-12 |
+
+#### Gk, LambdaCDMModel
+
+| k [1/Mpc] | segments | drift after |
+|---|---|---|
+| 1e+05 | 1 | 1e-11 |
+| 1.178e+05 | 1 | 7.9e-12 |
+| 1.387e+05 | 1 | 1.9e-11 |
+| 1.633e+05 | 1 | 1.7e-11 |
+| 1.922e+05 | 1 | 1e-11 |
+| 2.264e+05 | 1 | 1.8e-11 |
+| 2.665e+05 | 1 | 1.3e-11 |
+| 3.139e+05 | 1 | 4.5e-12 |
+| 3.696e+05 | 1 | 1.6e-11 |
+| 4.352e+05 | 1 | 1.9e-11 |
+| 5.124e+05 | 1 | 1.7e-11 |
+| 6.034e+05 | 1 | 2.1e-11 |
+| 7.105e+05 | 1 | 1.4e-11 |
+| 8.366e+05 | 1 | 8.5e-12 |
+| 9.851e+05 | 1 | 6.6e-12 |
+| 1.16e+06 | 1 | 7.3e-12 |
+| 1.366e+06 | 1 | 1.4e-11 |
+| 1.608e+06 | 1 | 1.4e-11 |
+| 1.894e+06 | 1 | 7.9e-12 |
+| 2.23e+06 | 1 | 1.4e-11 |
+| 2.626e+06 | 1 | 1.2e-11 |
+| 3.092e+06 | 1 | 2e-11 |
+| 3.64e+06 | 1 | 1.1e-11 |
+| 4.287e+06 | 1 | 7.3e-12 |
+| 5.048e+06 | 1 | 1.6e-11 |
+| 5.943e+06 | 1 | 1.7e-11 |
+| 6.998e+06 | 1 | 1e-11 |
+| 8.241e+06 | 1 | 1.5e-11 |
+| 9.703e+06 | 1 | 1.1e-11 |
+| 1.143e+07 | 1 | 4.2e-12 |
+| 1.345e+07 | 1 | 1.6e-11 |
+| 1.584e+07 | 1 | 1.8e-11 |
+| 1.865e+07 | 1 | 1.8e-11 |
+| 2.197e+07 | 1 | 2.1e-11 |
+| 2.586e+07 | 1 | 1.8e-11 |
+| 3.045e+07 | 1 | 9.9e-12 |
+| 3.586e+07 | 1 | 1.1e-11 |
+| 4.223e+07 | 1 | 7.7e-12 |
+| 4.972e+07 | 1 | 1.5e-11 |
+| 5.855e+07 | 1 | 1.6e-11 |
+| 6.894e+07 | 1 | 8.4e-12 |
+| 8.118e+07 | 1 | 1.1e-11 |
+| 9.558e+07 | 1 | 1.2e-11 |
+| 1.126e+08 | 1 | 2.1e-11 |
+| 1.325e+08 | 1 | 1.1e-11 |
+| 1.561e+08 | 1 | 1.1e-11 |
+| 1.838e+08 | 1 | 1.9e-11 |
+| 2.164e+08 | 1 | 1.5e-11 |
+| 2.548e+08 | 1 | 1.1e-11 |
+| 3e+08 | 1 | 1.4e-11 |
+
+#### Gk, QCDModel
+
+| k [1/Mpc] | segments | drift after | drift before | production shift | RHS evals before -> after |
+|---|---|---|---|---|---|
+| 1e+05 | 2 | 7.6e-10 | 1.8e-09 | 6.6e-07 | 12992 -> 13210 |
+| 1.178e+05 | 2 | 6.3e-09 | 8.9e-09 | 1.4e-06 | 12998 -> 13180 |
+| 1.387e+05 | 2 | 1.7e-09 | 3.8e-09 | 8.9e-07 | 13052 -> 13270 |
+| 1.633e+05 | 2 | 1.3e-09 | 1.3e-09 | 6e-07 | 13166 -> 13258 |
+| 1.922e+05 | 2 | 5.2e-09 | 5.3e-09 | 9.7e-07 | 13049 -> 13282 |
+| 2.264e+05 | 2 | 1e-09 | 2.5e-09 | 1.2e-06 | 13127 -> 13270 |
+| 2.665e+05 | 2 | 6.5e-09 | 7.3e-09 | 3.4e-07 | 13172 -> 13303 |
+| 3.139e+05 | 2 | 4.4e-09 | 4.2e-09 | 5.1e-07 | 13229 -> 13321 |
+| 3.696e+05 | 2 | 4.3e-09 | 3.6e-09 | 7.4e-07 | 13241 -> 13333 |
+| 4.352e+05 | 2 | 4.4e-09 | 4.6e-09 | 1.7e-06 | 13244 -> 13483 |
+| 5.124e+05 | 2 | 7.6e-09 | 7.8e-09 | 6.7e-07 | 13256 -> 13384 |
+| 6.034e+05 | 2 | 8.4e-09 | 8.9e-09 | 4.5e-07 | 13418 -> 13423 |
+| 7.105e+05 | 2 | 2.8e-09 | 2.7e-09 | 3.7e-07 | 13238 -> 13456 |
+| 8.366e+05 | 2 | 6.4e-10 | 1.9e-09 | 4.4e-07 | 13193 -> 13336 |
+| 9.851e+05 | 2 | 1.4e-09 | 3.2e-09 | 2.8e-07 | 13202 -> 13291 |
+| 1.16e+06 | 2 | 7.6e-09 | 4.2e-09 | 2.6e-07 | 13172 -> 13315 |
+| 1.366e+06 | 2 | 1e-09 | 1.4e-09 | 3.7e-07 | 13136 -> 13264 |
+| 1.608e+06 | 2 | 4.5e-09 | 4e-09 | 4.8e-07 | 13037 -> 13267 |
+| 1.894e+06 | 2 | 1.1e-09 | 1.8e-09 | 3.9e-07 | 13163 -> 13126 |
+| 2.23e+06 | 2 | 1.4e-09 | 1.3e-09 | 1.8e-07 | 13328 -> 13381 |
+| 2.626e+06 | 2 | 3e-09 | 2.9e-09 | 1.3e-07 | 13160 -> 13225 |
+| 3.092e+06 | 2 | 4.6e-09 | 3.5e-09 | 4.5e-07 | 13106 -> 13285 |
+| 3.64e+06 | 2 | 4.3e-09 | 4.6e-09 | 1.5e-07 | 13187 -> 13210 |
+| 4.287e+06 | 2 | 1.4e-09 | 1.2e-09 | 2.7e-08 | 13277 -> 13390 |
+| 5.048e+06 | 2 | 1.2e-09 | 7.8e-10 | 1.5e-07 | 13301 -> 13219 |
+| 5.943e+06 | 2 | 1.6e-09 | 1.5e-09 | 1.1e-07 | 13154 -> 13186 |
+| 6.998e+06 | 2 | 2e-09 | 2e-09 | 3.7e-07 | 13160 -> 13189 |
+| 8.241e+06 | 2 | 7.8e-10 | 7.4e-10 | 2.3e-07 | 13073 -> 13210 |
+| 9.703e+06 | 2 | 2e-09 | 2e-09 | 2.7e-07 | 13181 -> 13195 |
+| 1.143e+07 | 2 | 5.2e-09 | 5.2e-09 | 1.3e-07 | 13238 -> 13129 |
+| 1.345e+07 | 2 | 2.4e-09 | 2.4e-09 | 2.1e-07 | 13031 -> 13171 |
+| 1.584e+07 | 2 | 2.2e-09 | 2.9e-09 | 7.7e-08 | 13214 -> 13120 |
+| 1.865e+07 | 2 | 3.6e-09 | 3.5e-09 | 7.1e-08 | 13172 -> 13168 |
+| 2.197e+07 | 2 | 2.3e-09 | 2.4e-09 | 1.8e-06 | 12953 -> 13156 |
+| 2.586e+07 | 2 | 1.7e-09 | 1.7e-09 | 1.4e-07 | 13244 -> 13210 |
+| 3.045e+07 | 2 | 2e-09 | 2e-09 | 4.3e-08 | 13076 -> 13111 |
+| 3.586e+07 | 2 | 9.6e-10 | 9.6e-10 | 7.8e-09 | 13124 -> 13138 |
+| 4.223e+07 | 2 | 8.1e-10 | 7.4e-10 | 1.2e-08 | 13367 -> 13189 |
+| 4.972e+07 | 2 | 2.3e-09 | 2.3e-09 | 1.8e-07 | 13262 -> 13258 |
+| 5.855e+07 | 2 | 6.9e-09 | 6.9e-09 | 2e-08 | 13259 -> 13255 |
+| 6.894e+07 | 2 | 3.8e-09 | 3.8e-09 | 2.7e-09 | 13553 -> 13375 |
+| 8.118e+07 | 2 | 7.2e-09 | 7.2e-09 | 4.9e-09 | 13529 -> 13486 |
+| 9.558e+07 | 2 | 1.2e-09 | 1.2e-09 | 8.8e-09 | 13529 -> 13480 |
+| 1.126e+08 | 2 | 2.1e-09 | 2.1e-09 | 8.2e-08 | 13532 -> 13501 |
+| 1.325e+08 | 2 | 8.7e-10 | 8.7e-10 | 1.7e-08 | 13679 -> 13672 |
+| 1.561e+08 | 2 | 1.3e-09 | 1.3e-09 | 3.4e-08 | 13643 -> 13627 |
+| 1.838e+08 | 2 | 2.8e-09 | 2.8e-09 | 3.8e-08 | 13691 -> 13657 |
+| 2.164e+08 | 2 | 1.6e-09 | 1.6e-09 | 4.3e-08 | 13625 -> 13576 |
+| 2.548e+08 | 2 | 1.5e-09 | 1.5e-09 | 9.5e-08 | 13748 -> 13702 |
+| 3e+08 | 2 | 1.7e-09 | 1.7e-09 | 2e-09 | 13922 -> 13768 |
+
+### 9.6 Where the segment boundary is placed
+
+Splitting at the declared crossing is not by itself enough, and this is the measurement that says
+why. An explicit Runge-Kutta evaluates a stage at the far end of every step, so a segment ending
+exactly on the crossing evaluates its last stage exactly there — and which branch of the equation
+of state answers at that point is decided by the rounding of the cosmology's own $T(z)$ lookup, a
+coin flip. When it lands on the far branch, the departing segment's final step is a straddling
+step again, at the controller's full step size.
+
+The same `QCDModel` $T_k$ reference-convergence drift, differing only in where the *declared crossing* is reported, as a relative displacement in $z$. The shipped `BREAK_POINT_STANDOFF` of $+10^{-12}$ is applied on top of whatever is declared, so the columns read: **as shipped** = one standoff on the near (higher-$z$) side, the side the departing segment lives on; $-10^{-12}$ = the two cancel and the boundary sits *on* the crossing; $-10^{-9}$ = the boundary is on the *far* side; the two positive columns move further onto the near side.
+
+| k [1/Mpc] | as shipped | declared crossing +1e-12 | declared crossing -1e-12 | declared crossing +1e-09 | declared crossing -1e-09 |
+|---|---|---|---|---|---|
+| 1.5842e+07 | 4.6e-09 | 4.49e-09 | 4.8e-09 | 5.69e-09 | 5.84e-07 |
+| 4.9721e+07 | 6.48e-09 | 6.48e-09 | 2.99e-06 | 6.3e-09 | 2.99e-06 |
+| 5.8547e+07 | 7.94e-09 | 7.94e-09 | 7.94e-09 | 8.23e-09 | 8.5e-08 |
+
+### 9.7 Would splitting at the C2 spline knots as well close the gap?
+
+Prompt 18 §4 permits splitting at the 404 $C^2$ spline knots as well only if the cost is stated
+and the user is asked. It is stated here and **not done**: no code change was made either way, and
+the machinery is one argument. Note that an earlier run of this comparison, taken before the
+standoff of §9.6 was added, showed the all-breaks split making $k = 4.972\times10^7$ *worse*
+(7.06e-06); that was the boundary-placement effect, not the knots.
+
+Accuracy, at the wavenumbers §9.1 leaves above the criterion -- the reference-convergence drift with the ODE split at the 3 declared jumps, and with it split at all 407 declared break points:
+
+| k [1/Mpc] | drift, jumps only | drift, jumps + knots | reference evals, jumps only | reference evals, jumps + knots |
+|---|---|---|---|---|
+| 8.3657e+05 | 6.08e-08 | 6.89e-10 | 28420 | 47797 |
+| 4.2867e+06 | 1.97e-07 | 4.65e-09 | 28162 | 48100 |
+| 4.2226e+07 | 3.46e-08 | 2.3e-09 | 26977 | 48613 |
+
+Cost, at the **production** tolerances, over every fifth wavenumber of the grid — which is the figure that matters, because `GkNumericIntegration` is one object per $(k, z_{\rm source})$ and there are ~65,000 of them per model:
+
+| sector | k sampled | RHS evals, jumps only | jumps + knots | change |
+|---|---|---|---|---|
+| Tk | 10 | 98389 | 313698 | +218.8% |
+| Gk | 10 | 132874 | 338526 | +154.8% |
+
+*Runtime 740 s (QCD stand-in build 0.7 s of it); 50 wavenumbers x 3 models x 2 sectors, 3 solves each on a model that declares nothing and 6 on QCDModel.*

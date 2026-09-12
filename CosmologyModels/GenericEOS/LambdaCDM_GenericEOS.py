@@ -8,7 +8,13 @@ from scipy.optimize import root_scalar
 
 from ComputeTargets.spline_wrappers import ZSplineWrapper
 from CosmologyModels import BaseCosmology
-from CosmologyModels.GenericEOS.GenericEOS import GenericEOSBase, HIGH_T_GSTAR
+from CosmologyModels.GenericEOS.GenericEOS import (
+    BREAK_POINT_ALL,
+    BREAK_POINT_DISCONTINUITY,
+    BREAK_POINT_KINDS,
+    GenericEOSBase,
+    HIGH_T_GSTAR,
+)
 from Units.base import UnitsLike
 from constants import RadiationConstant
 
@@ -247,10 +253,15 @@ class LambdaCDM_GenericEOS(BaseCosmology):
             return None
         return u
 
-    def integration_break_points(self, z_lo: float, z_hi: float) -> np.ndarray:
+    def integration_break_points(
+        self, z_lo: float, z_hi: float, kind: str = BREAK_POINT_ALL
+    ) -> np.ndarray:
         """
         Every point in u = log(1+z), strictly inside (log(1+z_lo), log(1+z_hi)), at which
-        Hubble(z), rho(z), T_photon(z), wBackground(z) or wPerturbations(z) is not smooth:
+        Hubble(z), rho(z), T_photon(z), wBackground(z) or wPerturbations(z) loses smoothness of
+        the requested ``kind``.
+
+        With ``kind = BREAK_POINT_ALL`` (the default, and the historic behaviour) that is:
 
         * the interior knots of the T(z) spline, where everything built from T(z) is only C2;
         * the redshifts at which T(z) crosses one of the equation of state's
@@ -263,10 +274,26 @@ class LambdaCDM_GenericEOS(BaseCosmology):
         here and integrate the pieces separately. Splitting at the temperatures alone is not
         enough; the knots are the load-bearing half.
 
+        With ``kind = BREAK_POINT_DISCONTINUITY`` only the crossings of the equation of state's
+        discontinuity_temperatures_GeV are returned -- the points at which a quantity *jumps*.
+        The spline knots are deliberately not included: they are C2 points, which an adaptive ODE
+        stepper absorbs, and there are two orders of magnitude more of them (404 against 3 on the
+        production range of QCD_Cosmology). This is what
+        Quadrature/integrators/numeric_with_phase_cut.py asks for, and its module docstring says
+        why the distinction matters there and not in a quadrature.
+
         :param z_lo: lower redshift of the range (inclusive; a break exactly here is not returned)
         :param z_hi: upper redshift of the range
+        :param kind: BREAK_POINT_ALL for every non-smooth point, BREAK_POINT_DISCONTINUITY for
+            the subset at which a quantity jumps
         :return: an ascending numpy array of u values, empty if none fall inside the range
         """
+        if kind not in BREAK_POINT_KINDS:
+            raise ValueError(
+                f"LambdaCDM_GenericEOS.integration_break_points: unknown break-point kind "
+                f'"{kind}" (expected one of {", ".join(BREAK_POINT_KINDS)})'
+            )
+
         u_lo = log1p(z_lo)
         u_hi = log1p(z_hi)
         if not u_lo < u_hi:
@@ -275,11 +302,27 @@ class LambdaCDM_GenericEOS(BaseCosmology):
                 f"(got z_lo={z_lo:.6g}, z_hi={z_hi:.6g})"
             )
 
-        knots = self._T_z_spline_knots_log1pz
-        points = list(knots[(knots > u_lo) & (knots < u_hi)])
+        breaks = tuple(self._eos.break_temperatures_GeV)
+        jumps = tuple(self._eos.discontinuity_temperatures_GeV)
+        if not set(jumps).issubset(set(breaks)):
+            raise RuntimeError(
+                f"LambdaCDM_GenericEOS.integration_break_points: the equation of state "
+                f'"{self._eos.name}" declares discontinuity temperatures that are not among its '
+                f"break temperatures ({sorted(set(jumps) - set(breaks))} GeV). Every "
+                f"discontinuity is a break, so the quadrature path would not be split where the "
+                f"ODE path is."
+            )
+
+        if kind == BREAK_POINT_ALL:
+            knots = self._T_z_spline_knots_log1pz
+            points = list(knots[(knots > u_lo) & (knots < u_hi)])
+            temperatures = breaks
+        else:
+            points = []
+            temperatures = jumps
 
         GeV = self._units.GeV
-        for T_in_GeV in self._eos.break_temperatures_GeV:
+        for T_in_GeV in temperatures:
             u = self._temperature_crossing_log1pz(T_in_GeV * GeV, u_lo, u_hi)
             if u is not None:
                 points.append(u)

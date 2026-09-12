@@ -18,6 +18,28 @@ LOW_T_G_S_STAR = 3.94
 # so this value of G* includes N_eff from Planck, plus reheating of the photons but not the neutrinos
 
 
+# The two kinds of non-smoothness a consumer can ask a cosmology for; see
+# GenericEOSBase.break_temperatures_GeV and .discontinuity_temperatures_GeV, and
+# LambdaCDM_GenericEOS.integration_break_points, which takes one of these as its `kind` argument.
+#
+# BREAK_POINT_ALL is *every* point at which some background quantity loses smoothness, jump and
+# kink alike. It is what a fixed-order quadrature panel needs: a Gauss-Legendre rule converges only
+# as N^-2 across a point where the integrand is merely C2, so the cumulative tables of
+# ComputeTargets/BackgroundModel.py split their panels at all of them.
+#
+# BREAK_POINT_DISCONTINUITY is the strict subset at which a quantity *jumps*. It is what an
+# adaptive ODE solver needs, and only that: a C2 point does not invalidate an embedded
+# Runge-Kutta error estimator -- the step controller absorbs it, at worst paying a few extra steps
+# -- whereas a jump in the right-hand side makes the estimate meaningless. The two sets differ by
+# three orders of magnitude on the production range of QCD_Cosmology (404 spline knots against 3
+# temperature crossings), which is why they are asked for separately (prompts/GkTk-remedial,
+# prompt 18).
+BREAK_POINT_ALL = "all"
+BREAK_POINT_DISCONTINUITY = "discontinuity"
+
+BREAK_POINT_KINDS = (BREAK_POINT_ALL, BREAK_POINT_DISCONTINUITY)
+
+
 class GenericEOSBase(ABC):
 
     def __init__(self, units: UnitsLike):
@@ -62,6 +84,28 @@ class GenericEOSBase(ABC):
         the corresponding redshifts through integration_break_points(), and the cumulative tables
         of ComputeTargets/BackgroundModel.py split their Gauss panels there
         (prompts/GkTk-remedial, log 02). A smooth equation of state has none.
+        """
+        return ()
+
+    @property
+    def discontinuity_temperatures_GeV(self) -> tuple:
+        """
+        The subset of break_temperatures_GeV at which a quantity actually *jumps*, rather than
+        merely losing a derivative: the pieces of G(T), Gs(T) or w(T) that meet here do not join.
+
+        This is a strictly weaker declaration than break_temperatures_GeV and it exists for a
+        different consumer. A fixed-order quadrature panel has to be split at every break, jump or
+        kink alike, so it asks for break_temperatures_GeV; an *adaptive* ODE solver only has to be
+        split at a jump, because a C2 point does not invalidate an embedded Runge-Kutta error
+        estimator while a discontinuous right-hand side does. See
+        Quadrature/integrators/numeric_with_phase_cut.py for why that matters, and
+        LambdaCDM_GenericEOS.integration_break_points(..., kind=) for how the two are requested.
+
+        A smooth equation of state has none, which is also the default: an equation of state
+        written without any knowledge of this distinction declares nothing, and every consumer
+        then treats it as smooth and behaves exactly as it did before this method existed.
+
+        Must be a subset of break_temperatures_GeV; integration_break_points() checks.
         """
         return ()
 

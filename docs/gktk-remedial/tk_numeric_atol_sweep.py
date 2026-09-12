@@ -54,6 +54,16 @@ Output is a markdown fragment on stdout (the tables of
 ``docs/gktk-remedial/TK-NUMERIC-ATOL-SWEEP.md``, which is assembled from it by hand because that
 document is additive: a later re-run adds a section rather than rewriting this one) plus a progress
 log on stderr.
+
+**Second entry point, added by prompt 18** (this file is additive too; nothing above the
+``prompt 18`` banner near the bottom was changed):
+
+    PYTHONPATH=. ./venv/bin/python docs/gktk-remedial/tk_numeric_atol_sweep.py --break-points
+
+emits §9 of the same document -- the same reference-convergence test re-run after
+``numeric_with_phase_cut`` learned to split its integration at the cosmology's declared
+discontinuities, extended to the Green's-function sector, with the cost and the movement of the
+production answer on ``QCDModel``. See :func:`main_break_points`.
 """
 
 import platform
@@ -942,5 +952,737 @@ def main() -> None:
     log(f"** total runtime {elapsed:.1f} s")
 
 
+# =============================================================================================
+# prompt 18: does splitting the ODE at the cosmology's declared discontinuities fix the
+# reference convergence that §4 above could not demonstrate on QCDModel?
+#
+# Run with:
+#
+#     PYTHONPATH=. ./venv/bin/python docs/gktk-remedial/tk_numeric_atol_sweep.py --break-points
+#
+# This is an *additive* second entry point. It reuses everything above -- the stand-ins, the
+# geometry, the envelope-relative error, the control -- and emits the markdown of §9 of
+# TK-NUMERIC-ATOL-SWEEP.md. Nothing above is modified: §§1-8 were correct for the tree they were
+# taken on and are not rewritten (prompt 17 §3).
+#
+# What it measures, per prompt 18 §3:
+#
+#   1. the §2.1 convergence test on QCDModel at all 50 wavenumbers, before and after the split;
+#   2. the same test for G_k, on all three models, which has never been done;
+#   3. a regression on the two smooth models, which declare no discontinuities and must therefore
+#      reproduce §§3-4 exactly rather than nearly;
+#   4. the cost, in right-hand-side evaluations, on QCD;
+#   5. how far the split moves the *production* answer on QCD, in both sectors -- which is what
+#      tells prompt 13 whether a QCD datastore built before the split is still usable.
+# =============================================================================================
+
+from ComputeTargets.GkNumericIntegration import RHS as Gk_RHS
+from ComputeTargets.WKB_Gk import Gk_omegaEff_sq
+from ComputeTargets.tests.wkb_reference import production_response_grid
+from Quadrature.integrators.numeric_with_phase_cut import declared_discontinuities_in_z
+
+# prompt 17 §2.1's criterion, quantified for QCD by the smallest candidate difference the sweep
+# reports there (3.45e-7): the drift must be at most a tenth of it
+ACCEPTANCE_DRIFT = 3.4e-8
+
+# the four wavenumbers §4 above names as failing, as indices into PRODUCTION_K_GRID
+NAMED_FAILURES = (31, 38, 39, 48)
+
+# production tolerances for the "does anything else move" comparison (config/defaults.py, and
+# main.py's tolerance objects): G_k keeps atol, T_k has its own since prompt 12
+GK_PRODUCTION_ATOL = 1e-10
+TK_PRODUCTION_ATOL = 1e-13
+
+
+class _SmoothCosmology:
+    """
+    A cosmology that declares nothing, wrapping one that does.
+
+    This is how the "before" column is measured *after* the change: the physics is untouched --
+    every accessor is the real cosmology's, and the model's ``functions`` are the real ones -- but
+    ``_cosmology_break_points`` finds no ``integration_break_points`` to call, so
+    ``numeric_with_phase_cut`` takes its historic single-``solve_ivp`` path. Nothing is
+    monkeypatched and no production module is touched.
+    """
+
+    def __init__(self, inner):
+        object.__setattr__(self, "_inner", inner)
+
+    def __getattr__(self, name):
+        if name == "integration_break_points":
+            raise AttributeError(name)
+        return getattr(object.__getattribute__(self, "_inner"), name)
+
+
+class _UnsplitModel:
+    """A model view carrying the real ``functions`` but a cosmology that declares nothing."""
+
+    def __init__(self, model, cosmology):
+        self.name = f"{model.name} (unsplit)"
+        self.functions = model.functions
+        self.cosmology = _SmoothCosmology(cosmology)
+
+
+def gk_geometry(cosmology, k_inv_Mpc: float) -> dict:
+    """
+    ``main.py``'s ``build_Gk_numeric_work`` geometry for one object: the source redshift five
+    e-folds outside the horizon (the top of the universal source grid), the *response* grid --
+    ``winnow(12)`` of the source grid, which is what ``GkNumericIntegration`` is sampled on -- cut
+    to the source redshift above and to ``0.85 z_e6`` below, and the ``(z_e3, z_e6)`` stop window.
+
+    ``GkNumericIntegration`` is one object per ``(k, z_source)``; one source redshift per $k$ is
+    taken here, the outermost, which is the longest and therefore the least favourable run.
+    """
+    z_exit = horizon_exit_z(cosmology, k_inv_Mpc, 0.0)
+    z_e3 = horizon_exit_z(cosmology, k_inv_Mpc, 3.0)
+    z_e6 = horizon_exit_z(cosmology, k_inv_Mpc, 6.0)
+    z_source = horizon_exit_z(
+        cosmology, k_inv_Mpc, -float(PRODUCTION_SUPERHORIZON_EFOLDS)
+    )
+
+    source_grid = production_source_grid(z_source)
+    grid = (
+        production_response_grid(source_grid)
+        .truncate(source_grid.max, keep="lower")
+        .truncate(0.85 * z_e6, keep="higher-include")
+    )
+    return {"z_exit": z_exit, "z_e3": z_e3, "z_e6": z_e6, "grid": grid}
+
+
+def run_gk(model, k_inv_Mpc: float, geo: dict, atol: float, rtol: float) -> dict:
+    """One ``GkNumericIntegration`` solve through the undecorated ``numeric_with_phase_cut``."""
+    grid = geo["grid"]
+    z_init = grid.max
+    return numeric_with_phase_cut._function(
+        _Proxy(model, UNITS),
+        _KExit(k_inv_Mpc, UNITS, geo["z_exit"]),
+        z_init,
+        grid,
+        initial_value=0.0,
+        initial_deriv=1.0,
+        RHS=Gk_RHS,
+        omega_sq=Gk_omegaEff_sq,
+        atol=atol,
+        rtol=rtol,
+        delta_logz=PRODUCTION_DELTA_LOGZ,
+        mode="stop",
+        stop_search_window_z_begin=min(geo["z_e3"], z_init.z),
+        stop_search_window_z_end=geo["z_e6"],
+        task_label="gk_break_point_sweep",
+        object_label="Gr_k(z, z')",
+        warn_unresolved_osc=False,
+    )
+
+
+SECTORS = {
+    "Tk": {"geometry": geometry, "run": run, "omega_sq": Tk_omegaEff_sq},
+    "Gk": {"geometry": gk_geometry, "run": run_gk, "omega_sq": Gk_omegaEff_sq},
+}
+
+
+def sector_errors(sector: str, model, k_inv_Mpc: float, geo, candidate, reference):
+    """
+    :func:`sample_errors` for either sector: envelope-relative against the reference run, with
+    the sector's own effective frequency supplying the Liouville-Green envelope.
+    """
+    omega_sq_fn = SECTORS[sector]["omega_sq"]
+    out = []
+    for z, value, ref_value, ref_deriv in zip(
+        geo["grid"],
+        candidate["value_sample"],
+        reference["value_sample"],
+        reference["deriv_sample"],
+    ):
+        omega_sq = omega_sq_fn(model, k_inv_Mpc, z.z)
+        if omega_sq <= 0.0:
+            continue
+        envelope = hypot(ref_value, ref_deriv / sqrt(omega_sq))
+        out.append(
+            (
+                envelope_relative_error(value, ref_value, envelope),
+                z.z,
+                x_local(model, k_inv_Mpc, z.z),
+            )
+        )
+    return out
+
+
+def break_point_sweep(name: str, model, cosmology, sector: str, declares: bool) -> dict:
+    """
+    Per wavenumber: the reference-convergence drift with the split in force and, where the
+    cosmology declares anything, with it suppressed; the segment count; the reference cost; and
+    how far the split moves the answer at the production tolerance.
+
+    ``declares`` says whether this model has anything to declare. When it does not, the split and
+    unsplit paths are the *same code path*, so the unsplit columns are omitted rather than
+    measured twice.
+    """
+    unsplit_model = _UnsplitModel(model, cosmology) if declares else None
+    geometry_fn = SECTORS[sector]["geometry"]
+    run_fn = SECTORS[sector]["run"]
+    production_atol = TK_PRODUCTION_ATOL if sector == "Tk" else GK_PRODUCTION_ATOL
+
+    rows = []
+    t_model = time.perf_counter()
+    for index, k in enumerate(PRODUCTION_K_GRID):
+        k = float(k)
+        geo = geometry_fn(cosmology, k)
+
+        reference = run_fn(model, k, geo, REFERENCE_ATOL, REFERENCE_RTOL)
+        tightened = run_fn(model, k, geo, TIGHTENED_ATOL, TIGHTENED_RTOL)
+        drift = summarise(sector_errors(sector, model, k, geo, tightened, reference))
+
+        production = run_fn(model, k, geo, production_atol, PRODUCTION_RTOL)
+
+        entry = {
+            "k": k,
+            "segments": len(
+                declared_discontinuities_in_z(
+                    model, float(geo["grid"].min), geo["grid"].max.z
+                )
+            )
+            + 1,
+            "drift": drift,
+            "reference_evaluations": reference["data"].RHS_evaluations,
+            "production_evaluations": production["data"].RHS_evaluations,
+            "production_vs_reference": summarise(
+                sector_errors(sector, model, k, geo, production, reference)
+            )["max"],
+        }
+
+        if declares:
+            unsplit_reference = run_fn(
+                unsplit_model, k, geo, REFERENCE_ATOL, REFERENCE_RTOL
+            )
+            unsplit_tightened = run_fn(
+                unsplit_model, k, geo, TIGHTENED_ATOL, TIGHTENED_RTOL
+            )
+            entry["unsplit_drift"] = summarise(
+                sector_errors(
+                    sector, unsplit_model, k, geo, unsplit_tightened, unsplit_reference
+                )
+            )
+            entry["unsplit_reference_evaluations"] = unsplit_reference[
+                "data"
+            ].RHS_evaluations
+
+            unsplit_production = run_fn(
+                unsplit_model, k, geo, production_atol, PRODUCTION_RTOL
+            )
+            entry["unsplit_production_evaluations"] = unsplit_production[
+                "data"
+            ].RHS_evaluations
+            # how far the split moves the shipped answer, scored against the split reference
+            entry["production_shift"] = summarise(
+                sector_errors(sector, model, k, geo, unsplit_production, production)
+            )
+
+        rows.append(entry)
+        log(
+            f"   {sector} {name} [{index + 1:2d}/{len(PRODUCTION_K_GRID)}] k={k:.4g}: "
+            f"{entry['segments']} segment(s), drift {drift['max']:.2e}"
+            + (
+                f" (unsplit {entry['unsplit_drift']['max']:.2e}, shift "
+                f"{entry['production_shift']['max']:.2e})"
+                if declares
+                else ""
+            )
+        )
+
+    log(f"   {sector} {name} done in {time.perf_counter() - t_model:.1f} s")
+    return {"name": name, "sector": sector, "declares": declares, "rows": rows}
+
+
+def report_break_point_convergence(results) -> None:
+    emit("### 9.1 Is the reference converged now?")
+    emit()
+    rows = []
+    for result in results:
+        drifts = [row["drift"]["max"] for row in result["rows"]]
+        worst_index = max(range(len(drifts)), key=lambda i: drifts[i])
+        worst = result["rows"][worst_index]
+        offenders = sum(1 for d in drifts if d > ACCEPTANCE_DRIFT)
+        entry = [
+            result["sector"],
+            result["name"],
+            (
+                str(max(row["segments"] for row in result["rows"]))
+                if result["declares"]
+                else "1"
+            ),
+            g(max(drifts)),
+            f"{worst['k']:.4g}",
+            g(median(drifts)),
+            str(offenders),
+            "**yes**" if offenders == 0 else "**no**",
+        ]
+        if result["declares"]:
+            unsplit = [row["unsplit_drift"]["max"] for row in result["rows"]]
+            entry.insert(4, g(max(unsplit)))
+        else:
+            entry.insert(4, "--")
+        rows.append(entry)
+    table(
+        [
+            "sector",
+            "model",
+            "max segments",
+            "worst drift, split",
+            "worst drift, unsplit",
+            "at k [1/Mpc]",
+            "median drift",
+            f"k above {ACCEPTANCE_DRIFT:.1g}",
+            "acceptance met?",
+        ],
+        rows,
+    )
+
+
+def report_named_failures(results) -> None:
+    emit("### 9.2 The four wavenumbers §4 names")
+    emit()
+    rows = []
+    for result in results:
+        if not result["declares"]:
+            continue
+        for index in NAMED_FAILURES:
+            row = result["rows"][index]
+            rows.append(
+                [
+                    result["sector"],
+                    f"{row['k']:.4g}",
+                    g(row["unsplit_drift"]["max"]),
+                    g(row["drift"]["max"]),
+                    f"{row['unsplit_drift']['max'] / max(row['drift']['max'], 1e-30):.0f}x",
+                    "yes" if row["drift"]["max"] <= ACCEPTANCE_DRIFT else "**no**",
+                ]
+            )
+    table(
+        [
+            "sector",
+            "k [1/Mpc]",
+            "drift before",
+            "drift after",
+            "improvement",
+            f"<= {ACCEPTANCE_DRIFT:.1g}?",
+        ],
+        rows,
+    )
+
+
+def report_break_point_cost(results) -> None:
+    emit("### 9.3 What the split costs, in right-hand-side evaluations")
+    emit()
+    rows = []
+    for result in results:
+        if not result["declares"]:
+            continue
+        before = sum(row["unsplit_production_evaluations"] for row in result["rows"])
+        after = sum(row["production_evaluations"] for row in result["rows"])
+        per_object_before = before / len(result["rows"])
+        per_object_after = after / len(result["rows"])
+        rows.append(
+            [
+                result["sector"],
+                result["name"],
+                f"{per_object_before:.0f}",
+                f"{per_object_after:.0f}",
+                str(before),
+                str(after),
+                f"{after / before - 1.0:+.2%}",
+            ]
+        )
+    table(
+        [
+            "sector",
+            "model",
+            "per object, unsplit",
+            "per object, split",
+            "grid total, unsplit",
+            "grid total, split",
+            "change",
+        ],
+        rows,
+    )
+
+
+def report_production_shift(results) -> None:
+    emit("### 9.4 How far the split moves the production answer on QCD")
+    emit()
+    rows = []
+    for result in results:
+        if not result["declares"]:
+            continue
+        shifts = [row["production_shift"]["max"] for row in result["rows"]]
+        worst_index = max(range(len(shifts)), key=lambda i: shifts[i])
+        worst = result["rows"][worst_index]
+        rows.append(
+            [
+                result["sector"],
+                result["name"],
+                g(max(shifts)),
+                f"{worst['k']:.4g}",
+                g(median(shifts)),
+                g(min(shifts)),
+                g(median(row["production_vs_reference"] for row in result["rows"])),
+            ]
+        )
+    table(
+        [
+            "sector",
+            "model",
+            "worst shift",
+            "at k [1/Mpc]",
+            "median shift",
+            "smallest shift",
+            "median solver error at production tolerance",
+        ],
+        rows,
+    )
+
+
+def report_break_point_detail(result) -> None:
+    emit(f"#### {result['sector']}, {result['name']}")
+    emit()
+    header = ["k [1/Mpc]", "segments", "drift after"]
+    if result["declares"]:
+        header += ["drift before", "production shift", "RHS evals before -> after"]
+    rows = []
+    for row in result["rows"]:
+        entry = [f"{row['k']:.4g}", str(row["segments"]), g(row["drift"]["max"], 2)]
+        if result["declares"]:
+            entry += [
+                g(row["unsplit_drift"]["max"], 2),
+                g(row["production_shift"]["max"], 2),
+                f"{row['unsplit_production_evaluations']} -> {row['production_evaluations']}",
+            ]
+        rows.append(entry)
+    table(header, rows)
+
+
+# ---------------------------------------------------------------------------------------------
+# two follow-up diagnostics, neither in prompt 18's method, both load-bearing for a decision it
+# had to take. They cost ~60 solves.
+#
+#  (a) the standoff. numeric_with_phase_cut places its segment boundary BREAK_POINT_STANDOFF on
+#      the near side of the declared discontinuity rather than exactly on it. Moving it to the
+#      far side instead, or leaving it exactly on the crossing, shows why.
+#  (b) the knots. Prompt 18 §4 permits splitting at the C2 spline knots as well only if the cost
+#      is stated and the user is asked. This is the cost, and the accuracy it would buy.
+# ---------------------------------------------------------------------------------------------
+
+# the boundary placements compared in (a), as a relative displacement in z of the declared
+# crossing: 0 is "exactly on it", positive is the near (higher-z) side, negative the far side
+STANDOFF_PLACEMENTS = (0.0, 1e-12, -1e-12, 1e-9, -1e-9)
+
+# every fifth wavenumber, for (b)'s production-tolerance cost
+KNOT_COST_STRIDE = 5
+
+
+class _PlacedBreakCosmology:
+    """
+    Reports the declared discontinuities displaced by a fixed relative amount in z, so that the
+    effect of where the segment boundary is placed can be measured against placing it exactly on
+    the crossing. ``kind="all"`` is passed through untouched, so the quadrature path is unaffected.
+    """
+
+    def __init__(self, inner, relative: float):
+        object.__setattr__(self, "_inner", inner)
+        object.__setattr__(self, "_relative", float(relative))
+
+    def __getattr__(self, name):
+        return getattr(object.__getattribute__(self, "_inner"), name)
+
+    def integration_break_points(self, z_lo, z_hi, kind="all"):
+        points = object.__getattribute__(self, "_inner").integration_break_points(
+            z_lo, z_hi, kind=kind
+        )
+        relative = object.__getattribute__(self, "_relative")
+        if kind == "all" or relative == 0.0 or len(points) == 0:
+            return points
+        return np.asarray(
+            [np.log1p(np.expm1(float(u)) * (1.0 + relative)) for u in points]
+        )
+
+
+class _AllBreaksCosmology:
+    """Reports *every* break point -- spline knots included -- to the ODE as well."""
+
+    def __init__(self, inner):
+        object.__setattr__(self, "_inner", inner)
+
+    def __getattr__(self, name):
+        return getattr(object.__getattribute__(self, "_inner"), name)
+
+    def integration_break_points(self, z_lo, z_hi, kind="all"):
+        return object.__getattribute__(self, "_inner").integration_break_points(
+            z_lo, z_hi, kind="all"
+        )
+
+
+class _ViewWith:
+    """The model's real ``functions``, with a substituted cosmology."""
+
+    def __init__(self, model, cosmology, suffix: str):
+        self.name = f"{model.name} ({suffix})"
+        self.functions = model.functions
+        self.cosmology = cosmology
+
+
+def _drift_at(model, cosmology, sector: str, k: float) -> dict:
+    geometry_fn = SECTORS[sector]["geometry"]
+    run_fn = SECTORS[sector]["run"]
+    geo = geometry_fn(cosmology, k)
+    reference = run_fn(model, k, geo, REFERENCE_ATOL, REFERENCE_RTOL)
+    tightened = run_fn(model, k, geo, TIGHTENED_ATOL, TIGHTENED_RTOL)
+    summary = summarise(sector_errors(sector, model, k, geo, tightened, reference))
+    summary["evaluations"] = reference["data"].RHS_evaluations
+    return summary
+
+
+def standoff_experiment(model, cosmology, indices) -> list:
+    """(a): the same Tk run with the segment boundary placed five different ways."""
+    out = []
+    for index in indices:
+        k = float(PRODUCTION_K_GRID[index])
+        row = {"k": k, "placements": []}
+        for relative in STANDOFF_PLACEMENTS:
+            view = _ViewWith(
+                model, _PlacedBreakCosmology(cosmology, relative), f"{relative:+.0e}"
+            )
+            row["placements"].append(_drift_at(view, cosmology, "Tk", k)["max"])
+        out.append(row)
+        log(
+            f"   standoff k={k:.5g}: "
+            + ", ".join(f"{d:.2e}" for d in row["placements"])
+        )
+    return out
+
+
+def knot_split_experiment(model, cosmology, offenders) -> dict:
+    """(b): what splitting at the 404 C2 spline knots as well would buy, and what it would cost."""
+    all_breaks = _ViewWith(model, _AllBreaksCosmology(cosmology), "all breaks")
+
+    accuracy = []
+    for index in offenders:
+        k = float(PRODUCTION_K_GRID[index])
+        jumps = _drift_at(model, cosmology, "Tk", k)
+        every = _drift_at(all_breaks, cosmology, "Tk", k)
+        accuracy.append(
+            {
+                "k": k,
+                "jumps": jumps["max"],
+                "all": every["max"],
+                "jumps_evaluations": jumps["evaluations"],
+                "all_evaluations": every["evaluations"],
+            }
+        )
+        log(
+            f"   knots k={k:.5g}: jumps {jumps['max']:.2e} ({jumps['evaluations']}), "
+            f"all {every['max']:.2e} ({every['evaluations']})"
+        )
+
+    cost = []
+    indices = range(0, len(PRODUCTION_K_GRID), KNOT_COST_STRIDE)
+    for sector in ("Tk", "Gk"):
+        geometry_fn = SECTORS[sector]["geometry"]
+        run_fn = SECTORS[sector]["run"]
+        production_atol = TK_PRODUCTION_ATOL if sector == "Tk" else GK_PRODUCTION_ATOL
+        jumps_total = 0
+        all_total = 0
+        for index in indices:
+            k = float(PRODUCTION_K_GRID[index])
+            geo = geometry_fn(cosmology, k)
+            jumps_total += run_fn(model, k, geo, production_atol, PRODUCTION_RTOL)[
+                "data"
+            ].RHS_evaluations
+            all_total += run_fn(all_breaks, k, geo, production_atol, PRODUCTION_RTOL)[
+                "data"
+            ].RHS_evaluations
+        cost.append(
+            {
+                "sector": sector,
+                "k_count": len(list(indices)),
+                "jumps": jumps_total,
+                "all": all_total,
+            }
+        )
+        log(
+            f"   knots cost {sector}: jumps {jumps_total}, all {all_total} "
+            f"({all_total / jumps_total - 1.0:+.1%})"
+        )
+
+    return {"accuracy": accuracy, "cost": cost}
+
+
+def report_standoff(rows) -> None:
+    emit("### 9.6 Where the segment boundary is placed")
+    emit()
+    emit(
+        "The same `QCDModel` $T_k$ reference-convergence drift, differing only in where the "
+        "*declared crossing* is reported, as a relative displacement in $z$. The shipped "
+        "`BREAK_POINT_STANDOFF` of $+10^{-12}$ is applied on top of whatever is declared, so the "
+        "columns read: **as shipped** = one standoff on the near (higher-$z$) side, the side the "
+        "departing segment lives on; $-10^{-12}$ = the two cancel and the boundary sits *on* the "
+        "crossing; $-10^{-9}$ = the boundary is on the *far* side; the two positive columns move "
+        "further onto the near side."
+    )
+    emit()
+    table(
+        ["k [1/Mpc]"]
+        + [
+            ("as shipped" if r == 0.0 else f"declared crossing {r:+.0e}")
+            for r in STANDOFF_PLACEMENTS
+        ],
+        [[f"{row['k']:.5g}"] + [g(d, 3) for d in row["placements"]] for row in rows],
+    )
+
+
+def report_knot_split(result) -> None:
+    emit("### 9.7 Would splitting at the C2 spline knots as well close the gap?")
+    emit()
+    emit(
+        "Accuracy, at the wavenumbers §9.1 leaves above the criterion -- the reference-convergence "
+        "drift with the ODE split at the 3 declared jumps, and with it split at all 407 declared "
+        "break points:"
+    )
+    emit()
+    table(
+        [
+            "k [1/Mpc]",
+            "drift, jumps only",
+            "drift, jumps + knots",
+            "reference evals, jumps only",
+            "reference evals, jumps + knots",
+        ],
+        [
+            [
+                f"{row['k']:.5g}",
+                g(row["jumps"]),
+                g(row["all"]),
+                str(row["jumps_evaluations"]),
+                str(row["all_evaluations"]),
+            ]
+            for row in result["accuracy"]
+        ],
+    )
+    emit(
+        "Cost, at the **production** tolerances, over every fifth wavenumber of the grid — which "
+        "is the figure that matters, because `GkNumericIntegration` is one object per "
+        "$(k, z_{\\rm source})$ and there are ~65,000 of them per model:"
+    )
+    emit()
+    table(
+        ["sector", "k sampled", "RHS evals, jumps only", "jumps + knots", "change"],
+        [
+            [
+                row["sector"],
+                str(row["k_count"]),
+                str(row["jumps"]),
+                str(row["all"]),
+                f"{row['all'] / row['jumps'] - 1.0:+.1%}",
+            ]
+            for row in result["cost"]
+        ],
+    )
+
+
+def main_break_points() -> None:
+    t_start = time.perf_counter()
+
+    log("** building stand-in models")
+    radiation = RadiationModel()
+    lambda_cdm = LambdaCDMModel()
+    qcd_cosmology = QCD_Cosmology(
+        store_id=0, units=UNITS, params=Planck2018(), max_z=1e20
+    )
+    t0 = time.perf_counter()
+    qcd = QCDModel(
+        production_source_grid(
+            horizon_exit_z(
+                qcd_cosmology,
+                PRODUCTION_LARGEST_K_INV_MPC,
+                -float(PRODUCTION_SUPERHORIZON_EFOLDS),
+            )
+        ),
+        cosmology=qcd_cosmology,
+    )
+    qcd_build_seconds = time.perf_counter() - t0
+    log(f"   QCDModel built in {qcd_build_seconds:.2f} s")
+
+    log(
+        "** reproducing prompt 12's control (prompt 18 §3 item 3: it must be unchanged)"
+    )
+    control = reproduce_control(radiation)
+    for label, summary in control.items():
+        log(
+            f"   {label}: max dT/env = {summary['max']:.4g} at x = {summary['max_x']:.4g}, "
+            f"{summary['evaluations']} RHS evaluations"
+        )
+
+    models = (
+        ("RadiationModel", radiation, radiation, False),
+        ("LambdaCDMModel", lambda_cdm, lambda_cdm.cosmology, False),
+        ("QCDModel", qcd, qcd_cosmology, True),
+    )
+
+    log("** sweeping")
+    results = []
+    for sector in ("Tk", "Gk"):
+        for name, model, cosmology, declares in models:
+            results.append(break_point_sweep(name, model, cosmology, sector, declares))
+
+    log("** where the segment boundary is placed")
+    standoff = standoff_experiment(qcd, qcd_cosmology, NAMED_FAILURES[:3])
+
+    tk_qcd = next(r for r in results if r["sector"] == "Tk" and r["declares"])
+    offenders = [
+        index
+        for index, row in enumerate(tk_qcd["rows"])
+        if row["drift"]["max"] > ACCEPTANCE_DRIFT
+    ]
+    log(
+        f"** the C2 knots, at the {len(offenders)} wavenumber(s) still above the criterion"
+    )
+    knots = knot_split_experiment(qcd, qcd_cosmology, offenders)
+
+    elapsed = time.perf_counter() - t_start
+
+    emit("## 9. After the split: prompt 18's measurement")
+    emit()
+    emit(f"<!-- generated {date.today().isoformat()} by")
+    emit(
+        "     PYTHONPATH=. ./venv/bin/python docs/gktk-remedial/tk_numeric_atol_sweep.py "
+        "--break-points"
+    )
+    emit(
+        f"     in {elapsed:.0f} s; Python {platform.python_version()}, "
+        f"NumPy {np.__version__}, SciPy {scipy.__version__} -->"
+    )
+    emit()
+    report_control(control)
+    report_break_point_convergence(results)
+    report_named_failures(results)
+    report_break_point_cost(results)
+    report_production_shift(results)
+    emit("### 9.5 Every wavenumber")
+    emit()
+    for result in results:
+        report_break_point_detail(result)
+
+    report_standoff(standoff)
+    report_knot_split(knots)
+
+    emit(
+        f"*Runtime {elapsed:.0f} s (QCD stand-in build {qcd_build_seconds:.1f} s of it); "
+        f"{len(PRODUCTION_K_GRID)} wavenumbers x 3 models x 2 sectors, 3 solves each on a model "
+        f"that declares nothing and 6 on QCDModel.*"
+    )
+    log(f"** total runtime {elapsed:.1f} s")
+
+
 if __name__ == "__main__":
-    main()
+    if "--break-points" in sys.argv[1:]:
+        main_break_points()
+    else:
+        main()
