@@ -194,6 +194,7 @@ Legend: ⬜ not started · 🟡 in flight · ✅ complete · ⚠️ complete wit
 | 16 | [Unresolved-osc print policy](16-unresolved-osc-print-policy.md) | §7 D2; §3 `[00-unresolved-osc-print-policy]` | Opus | ✅ | *"Summarise unresolved-oscillation warnings per wavenumber"* (SHA not embedded, per the campaign convention) | [`logs/16-unresolved-osc-print-policy.md`](logs/16-unresolved-osc-print-policy.md) |
 | 12 | [Tk numeric `atol`](12-tk-numeric-atol.md) | review §12.5 | Opus | ⚠️ | *"Give the transfer-function numeric run its own absolute tolerance"* (SHA not embedded, per the campaign convention) | [`logs/12-tk-numeric-atol.md`](logs/12-tk-numeric-atol.md) |
 | 17 | [Tk numeric `atol` k-sweep](17-tk-numeric-atol-k-sweep.md) | §3 `[12-tk-numeric-atol-largest-k-excursion]` | Opus | ✅ | *"Measure the transfer-function numeric tolerance across the k-grid"* (SHA not embedded, per the campaign convention) | [`logs/17-tk-numeric-atol-k-sweep.md`](logs/17-tk-numeric-atol-k-sweep.md) |
+| 18 | [Numeric ODE break points](18-numeric-ode-break-points.md) | §3 `[17-qcd-reference-not-converged]` | Opus | ⬜ | | |
 
 > Rows 16 and 17 are numbered last because the campaign's numbers are append-only. **16 runs
 > between 11 and 12** — the follow-up README §7 D2 anticipated, enacting the user's choice of
@@ -683,6 +684,33 @@ Opened by the planning pass, 2026-09-10, before any prompt runs.
   which is one shared number keying every integration object (`main.py:2980-2998`) and therefore a
   pipeline-wide decision rather than a $T_k$ one. Prompt 17 changed no production code, so `1e-13`
   stands until the user says otherwise.
+
+- **[17-qcd-reference-not-converged]** *(opened by prompt 17, 2026-09-12)* — prompt 17's §2.1
+  convergence test **fails on `QCDModel`**: at $k\in\{1.58\times10^7, 4.97\times10^7,
+  5.86\times10^7, 2.55\times10^8\}$ two runs of the same integrator a decade apart in tolerance
+  differ by 1.6e-6–6.2e-6 of the envelope, against a smallest reported candidate difference of
+  3.45e-7 — so the criterion (drift $\le$ a tenth of that, i.e. $\le$3.4e-8) is missed by more
+  than an order of magnitude and the sweep is partly measuring its own reference there. **Cause:**
+  `QCD_Cosmology`'s $H(z)$ jumps at the `QCD_EOS` branch boundaries (4.4e-4 at `T_LO`, 1.0e-4 at
+  `T_120_MEV`; prompt 02, `RESIDUAL-CONVERGENCE.md` §2), and `numeric_with_phase_cut` integrates
+  straight across them in one `solve_ivp` call. DOP853's embedded error estimator is invalid across
+  a discontinuous RHS: the method drops to first order, so a decade of tolerance buys ~25 % and the
+  refinement is not even monotone (measured at $k=10^8$: `(1e-19,1e-13)` moves the reference by
+  1.03e-6, `(1e-20,1e-14)` by 7.6e-9), and SciPy clamps `rtol` at 2.22e-14. **Impact:** nothing
+  below ~1e-5 of the envelope is measurable on QCD at those $k$ by any tolerance; and because
+  `GkNumericIntegration` runs through the same driver, the same failure is expected for $G_k$,
+  where **no converged-reference measurement has ever been taken on any model** (prompt 12's $G_k$
+  figure was candidate-against-candidate on the radiation control; review §10.1 used the radiation
+  oracle on radiation and LambdaCDM). Prompt 17 reported with the drift carried as a per-$k$ column
+  and conclusions drawn only 57×–175× above it; the orchestrator stopped on it. **Next step:
+  assigned (2026-09-12) to prompt 18**, approved by the user — wire the declaration protocol prompt
+  02 already built (`GenericEOS.break_temperatures_GeV` → `integration_break_points` →
+  `_cosmology_break_points`, default "smooth", no equation-of-state knowledge in any consumer) to
+  the ODE, splitting only at **jumps**: the 404 $T(z)$ spline knots in range are $C^2$ points an
+  adaptive stepper absorbs, and only the 3 temperature crossings break the estimator, so the
+  declaration must distinguish the two kinds. Prompt 18 **runs before prompt 13**: it changes
+  computed values on QCD in both sectors, and `solver_serial` is not part of the
+  `GkNumericIntegration` lookup key.
 
 > Add an entry here whenever a prompt finishes with something unresolved: a verification step that
 > could not be run, an assumption that could not be confirmed, a deviation a later prompt has to

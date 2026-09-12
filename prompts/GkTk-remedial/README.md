@@ -280,13 +280,18 @@ review those three most closely.
 | 16 | [`16-unresolved-osc-print-policy.md`](16-unresolved-osc-print-policy.md) | §7 D2, decided; §3 `[00-unresolved-osc-print-policy]`; fact (h) | `Quadrature/integrators/numeric_with_phase_cut.py`, `ComputeTargets/{Gk,Tk}NumericIntegration.py`, `main.py`; tests | Low–medium; `main.py` plumbing whose failure mode is silent | **Opus** |
 | 12 | [`12-tk-numeric-atol.md`](12-tk-numeric-atol.md) | review §12.5 | `config/defaults.py`, `main.py` (every `TkNumericIntegration` `object_get`); tests | Low–medium; silent plumbing errors would make datastore lookups miss | **Opus** |
 | 17 | [`17-tk-numeric-atol-k-sweep.md`](17-tk-numeric-atol-k-sweep.md) | §3 `[12-tk-numeric-atol-largest-k-excursion]` | new `docs/gktk-remedial/tk_numeric_atol_sweep.py` and `TK-NUMERIC-ATOL-SWEEP.md` | Low–medium; **no production code** — the reference construction is the risk | **Opus** |
+| 18 | [`18-numeric-ode-break-points.md`](18-numeric-ode-break-points.md) | §3 `[17-qcd-reference-not-converged]` | `Quadrature/integrators/numeric_with_phase_cut.py`, the `CosmologyModels/GenericEOS` declaration, new `ComputeTargets/tests/test_numeric_break_points.py`, an additive section of `TK-NUMERIC-ATOL-SWEEP.md` | Medium–high; **production code shared by both numeric sectors**, and one `CosmologyModels` API decision | **Opus** |
 
-> Rows 16 and 17 are numbered last because the campaign's numbers are append-only. **16 runs
+> Rows 16, 17 and 18 are numbered last because the campaign's numbers are append-only. **16 runs
 > between 11 and 12** — the follow-up §7 D2 anticipated, enacting the user's choice of option
 > (ii) once prompt 11 had measured the fire rate; prompt 12 is unaffected by it. **17 runs
 > after 12 and before Workstream F**: prompt 12 set the $T_k$ numeric `atol` on evidence from
 > one $k$, and the tolerance is a datastore key, so the grid is measured before prompt 13
-> builds a datastore and a scoped pipeline run on top of it.
+> builds a datastore and a scoped pipeline run on top of it. **18 runs after 17 and before
+> Workstream F** for the same reason at one remove: it repairs the reference convergence that
+> prompt 17's check 6 failed on, it changes computed values on `QCDModel` in both numeric
+> sectors, and `solver_serial` is not part of the lookup key — so a QCD datastore built before
+> it would hold pre-split rows indistinguishable by key from post-split ones.
 
 ### Workstream F — verification and close-out
 
