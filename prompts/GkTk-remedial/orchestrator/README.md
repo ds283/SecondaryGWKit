@@ -1,7 +1,7 @@
 # Orchestrator prompts — Gk/Tk WKB phase remedial campaign
 
-Six ready-to-use orchestrator prompts, one per workstream, plus four for interim prompts
-(15, 16, 17, 18) added as the campaign ran.
+Six ready-to-use orchestrator prompts, one per workstream, plus five for interim prompts
+(15, 16, 17, 18, 19) added as the campaign ran.
 Each restates the procedure and stop conditions of [`../README.md`](../README.md) §4.3 with the
 prompt-specific checks — test commands, allowed files, thresholds — filled in.
 
@@ -16,11 +16,12 @@ prompt-specific checks — test commands, allowed files, thresholds — filled i
 | — interim: D2 print policy | 16 | [`prompt-16.md`](prompt-16.md) | Not a workstream — the follow-up §7 D2 anticipated, enacting the user's choice of option (ii). Runs between 11 and 12 |
 | — interim: $T_k$ `atol` sweep | 17 | [`prompt-17.md`](prompt-17.md) | Measurement only, no production code. Runs after 12, before Workstream F, because the tolerance is a datastore key |
 | — interim: ODE break points | 18 | [`prompt-18.md`](prompt-18.md) | The repair prompt 17's check 6 forced. **Production code shared by both numeric sectors.** Runs after 17, before Workstream F |
+| — interim: per-sector break-point policy | 19 | [`prompt-19.md`](prompt-19.md) | The decision prompt 18 §4 reserved for the user, taken 2026-09-13. The integrator takes the policy as an argument; $T_k$ splits at jumps and kinks, $G_k$ at jumps only. Runs after 18, before Workstream F |
 | F — verification | 13 | [`workstream-F.md`](workstream-F.md) | Measurements and documents; may surface findings that are not this campaign's to fix |
 
 ## Running the campaign
 
-Recommended order **A → B → C → D → 15 → E (11 → 16 → 12 → 17 → 18) → F** (`../README.md` §4). E is independent and may be
+Recommended order **A → B → C → D → 15 → E (11 → 16 → 12 → 17 → 18 → 19) → F** (`../README.md` §4). E is independent and may be
 run first as a warm-up or interleaved with any of A–D and 15; nothing else may be reordered —
 every prompt from 03 onward consumes an interface the previous one defines.
 

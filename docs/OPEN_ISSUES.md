@@ -67,8 +67,8 @@ they now pass `BesselPhaseGroup.levin_theta()`.
 ### 1.4 The $T_k$ / $G_k$ numerical-precision campaign
 
 Now running as [`prompts/GkTk-remedial/`](../prompts/GkTk-remedial/README.md) (2026-09-10; 13
-prompts plus five follow-ups — 14, 15, 16, 17, 18 — of which 17 are executed;
-prompt 13 remains). `[07-phase-spline-chunking-precision]` was closed WONTFIX on
+prompts plus six follow-ups — 14, 15, 16, 17, 18, 19 — of which 17 are executed;
+prompts 19 and 13 remain, in that order). `[07-phase-spline-chunking-precision]` was closed WONTFIX on
 the expectation that this campaign **removes** the chunked splines — its prompt 08 has done so.
 
 | Issue | Board | Hook |
@@ -80,7 +80,7 @@ the expectation that this campaign **removes** the chunked splines — its promp
 | `[08-docs-scripts-reference-removed-chunking]` | GkTk-remedial | Two `docs/` reproduction scripts (`t5_spline.py`, `measure.py`) read `phase_spline` internals (`_chunk_list`, `_splines`, `_match_chunk`) that prompt 08 deleted with chunking; they documented the chunked tree they ran on and were not edited. |
 | `[10-residual-spline-end-condition]` | GkTk-remedial | Prompt 10 §3 item 3's 1e-10 relative on $\omega$ vs `theta_deriv` is missed at one abscissa per equation of state — 1.0492e-10 at $w=1/3$, the not-a-knot end condition of the cubic residual spline at the top of the WKB region (5.6e-12 from the fifth sample inwards, 4.249e-08 before). `spline_order=5` gives 9.7e-12 over the whole region but needs six samples against `MIN_SPLINE_DATA_POINTS = 5`. **Assigned (2026-09-11): prompt 13**, to re-measure on the real background before anyone pays for the quintic. |
 | `[10-transfer-remedial-tolerance-comments-stale]` | GkTk-remedial | Five tolerance comments `8ba9159` wrote in `test_tk_source_functions.py` now describe the consumer re-spline prompt 10 deleted and quote numbers three to four orders above the new measurements. Not edited — `8ba9159`'s text was a stop condition for prompt 10 — and every assertion still passes. |
-| `[17-qcd-reference-not-converged]` | GkTk-remedial | Prompt 17's reference-convergence test fails on `QCDModel` at four wavenumbers (drift 1.6e-6–6.2e-6 of the envelope against a 3.4e-8 criterion), because `QCD_Cosmology`'s $H(z)$ jumps at the `QCD_EOS` branch boundaries and `numeric_with_phase_cut` integrates across them in one `solve_ivp` call, invalidating DOP853's embedded error estimator. **Narrowed by prompt 18 (2026-09-13), not closed:** the ODE now splits at the cosmology's declared *jumps* and all four named wavenumbers are fixed (347×–5764×), 23 QCD $T_k$ offenders becoming **3** (worst 1.97e-7); $G_k$ is shown **never** to have had the failure on any model. The residue is the $T(z)$ spline's $C^2$ knots, which would close it at **+219 % / +155 %** of the production evaluations — measured, and the user's call. **A QCD datastore built before prompt 18 may not be used** (values move by up to 2.82e-4). |
+| `[17-qcd-reference-not-converged]` | GkTk-remedial | Prompt 17's reference-convergence test fails on `QCDModel` at four wavenumbers (drift 1.6e-6–6.2e-6 of the envelope against a 3.4e-8 criterion), because `QCD_Cosmology`'s $H(z)$ jumps at the `QCD_EOS` branch boundaries and `numeric_with_phase_cut` integrates across them in one `solve_ivp` call, invalidating DOP853's embedded error estimator. **Narrowed by prompt 18 (2026-09-13), not closed:** the ODE now splits at the cosmology's declared *jumps* and all four named wavenumbers are fixed (347×–5764×), 23 QCD $T_k$ offenders becoming **3** (worst 1.97e-7); $G_k$ is shown **never** to have had the failure on any model. The residue is the $T(z)$ spline's $C^2$ knots, which would close it at **+219 % / +155 %** of the production evaluations. **Assigned (2026-09-13): prompt 19**, enacting the user's ruling that the cosmology declares everything and each consumer chooses: `numeric_with_phase_cut` takes the break-point policy as an argument, $T_k$ splitting at jumps *and* kinks (necessary by measurement, and ~34 s for the whole sector at 50 objects per model) and $G_k$ at jumps only (unnecessary by measurement — it converges at all 50 on every model — and ~65,000 objects per model). It runs before prompt 13. **A QCD datastore built before prompt 18 may not be used** (values move by up to 2.82e-4). |
 | `[18-numeric-solver-not-in-lookup-key]` | GkTk-remedial | `solver_serial` is stored by both numeric factories and matched by neither — `GkNumericIntegration.py:221-227` and `TkNumericIntegration.py:225-231` filter on the wavenumber, model, `atol` and `rtol` only — so a change in solver behaviour is invisible to the datastore: pre- and post-prompt-18 QCD rows are indistinguishable by key while differing by up to 2.82e-4 of the envelope. The solver label does not distinguish them either. Reported, not acted on: prompt 18 §3.1 reserves the key, the label and the factories to the user. |
 | `[10-wrap-theta-loop-at-large-phase]` | GkTk-remedial | `wrap_theta` reduces by adding $2\pi$ in a loop, so at $|\theta|\sim10^6$ rad it takes ~1.6e5 iterations and reconstructs $\theta$ only to 1.39e-06 rad. Inert in production (its one caller passes `mod + delta`), a trap for fixtures; `WKB_mod_2pi` is exact. |
 
@@ -98,7 +98,8 @@ reference converges at the four wavenumbers that blocked this campaign and at 47
 $G_k$ converges at all 50 on every model. The caveat is the remaining three QCD $T_k$ wavenumbers
 ($k = 8.366\times10^5$, $4.287\times10^6$, $4.223\times10^7$; worst drift 1.97e-7), where nothing
 below ~2e-7 of the envelope is measurable unless the ODE is also split at the $T(z)$ spline's
-$C^2$ knots — `[17-qcd-reference-not-converged]`.
+$C^2$ knots — which **prompt 19 is assigned to do for the $T_k$ sector**
+(`[17-qcd-reference-not-converged]`). Wait for it before measuring a $T_k$ tolerance on QCD.
 
 | Issue | Board | Hook |
 |---|---|---|

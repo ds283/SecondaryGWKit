@@ -225,13 +225,18 @@ Legend: ⬜ not started · 🟡 in flight · ✅ complete · ⚠️ complete wit
 | 12 | [Tk numeric `atol`](12-tk-numeric-atol.md) | review §12.5 | Opus | ⚠️ | *"Give the transfer-function numeric run its own absolute tolerance"* (SHA not embedded, per the campaign convention) | [`logs/12-tk-numeric-atol.md`](logs/12-tk-numeric-atol.md) |
 | 17 | [Tk numeric `atol` k-sweep](17-tk-numeric-atol-k-sweep.md) | §3 `[12-tk-numeric-atol-largest-k-excursion]` | Opus | ✅ | *"Measure the transfer-function numeric tolerance across the k-grid"* (SHA not embedded, per the campaign convention) | [`logs/17-tk-numeric-atol-k-sweep.md`](logs/17-tk-numeric-atol-k-sweep.md) |
 | 18 | [Numeric ODE break points](18-numeric-ode-break-points.md) | §3 `[17-qcd-reference-not-converged]` | Opus | ⚠️ | *"Split the numeric ODE at the cosmology's declared discontinuities"* (SHA not embedded, per the campaign convention) | [`logs/18-numeric-ode-break-points.md`](logs/18-numeric-ode-break-points.md) |
+| 19 | [Per-sector break-point policy](19-per-sector-break-point-policy.md) | §3 `[17-qcd-reference-not-converged]` | Opus | ⬜ | | |
 
 > Rows 16 and 17 are numbered last because the campaign's numbers are append-only. **16 runs
 > between 11 and 12** — the follow-up README §7 D2 anticipated, enacting the user's choice of
 > option (ii) (2026-09-11) once prompt 11 had measured the fire rate. **17 runs after 12**, a
 > measurement-only prompt approved by the user 2026-09-12: prompt 12 set the $T_k$ numeric
 > `atol` on evidence from one $k$, and the tolerance is a datastore key, so the grid is
-> measured before prompt 13 builds a datastore on top of it.
+> measured before prompt 13 builds a datastore on top of it. **18 runs after 17** — the
+> repair its check 6 forced — and **19 after 18**, enacting the decision prompt 18 §4
+> reserved for the user (taken 2026-09-13): the reusable integrator takes the break-point
+> policy as an argument, $T_k$ splitting at jumps and kinks and $G_k$ at jumps only, each
+> on the evidence of `TK-NUMERIC-ATOL-SWEEP.md` §9.
 
 ### Workstream F — verification
 
@@ -239,7 +244,7 @@ Legend: ⬜ not started · 🟡 in flight · ✅ complete · ⚠️ complete wit
 |---|---|---|---|---|---|---|
 | 13 | [Verification and docs](13-verification-and-docs.md) | review §4, §12.3, §13.5 | Opus | ⬜ | | |
 
-**Progress:** 16 / 17 complete.
+**Progress:** 17 / 19 complete.
 
 ---
 
