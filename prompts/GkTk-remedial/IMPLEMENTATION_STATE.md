@@ -2,7 +2,37 @@
 
 **Campaign:** [`README.md`](README.md) · **Source review:** [`docs/gk-wkb-review-fable-2026-09-09.md`](../../docs/gk-wkb-review-fable-2026-09-09.md) · **Reconciliation:** [`RECONCILIATION.md`](RECONCILIATION.md)
 **Baseline commit:** `9ff59d5` (`main`, clean)
-**Last updated:** 2026-09-13 — Prompt 19 landed (**which kind** of declared break point the numeric
+**Last updated:** 2026-09-13 — Prompt 20 landed (the numeric **break-point policy is now part of
+both numeric datastore lookup keys**, enacting the user's decision of 2026-09-13 to key the
+*configuration* and leave the solver as provenance. Each numeric compute target carries one
+declaration of its policy — `GkNumericIntegration.BREAK_POINT_KIND = BREAK_POINT_DISCONTINUITY`,
+`TkNumericIntegration.BREAK_POINT_KIND = BREAK_POINT_ALL`, in the shape prompt 06 used for
+`PHASE_SOLVER_LABEL_BASE` — and three uses read it: `compute()` passes it to
+`numeric_with_phase_cut` as `self.BREAK_POINT_KIND`, the factory's `store()` writes it, and the
+factory's `build()` **filters** on it. Both numeric tables gain a plain
+`String(DEFAULT_STRING_LENGTH)` column `break_point_kind`, `nullable=False`, placed after
+`rtol_serial`; the vocabulary is `CosmologyModels/GenericEOS`'s own, and no cosmology, temperature
+or equation of state enters `Datastore/`. **There is no migration and no default**: a datastore
+written before this commit raises a `RuntimeError` naming the prompt and demanding regeneration,
+on the `BackgroundModel` prompts 03/04 pattern, rather than silently returning a row computed
+under an unknown policy. **`main.py` is untouched** — the policy is not per-call configuration, so
+neither numeric `object_get` site needed anything. **Nothing computed moved**: a production QCD
+object in both sectors at $k=4.972\times10^7$/Mpc is **bit-identical** to `HEAD~1` (sha256
+`565e907…` over every sample as a hex float, 494 + 41 samples, 32,351 + 13,258 RHS evaluations),
+`Quadrature/`, `config/defaults.py`, `CosmologyModels/`, every tolerance and every `solver_serial`
+being untouched. Suite 328 → **339**, none removed; the one existing case whose expectation moved
+is *structural*, not numerical — prompt 19's `ast` call-site test now follows the call site to the
+class constant, with three assertions where it had two. **The §5 audit refutes the "no equivalent
+free parameter" expectation** for the other three targets: `TAU_GAUSS_ORDER`,
+`CS_TAU_GAUSS_ORDER`, `FRICTION_F_GAUSS_ORDER`, `RHO_GAUSS_ORDER` and
+`RESIDUAL_WKB_REGION_MARGIN` are in no lookup key, the last in no label or tag either
+(`[20-wkb-gauss-orders-not-in-lookup-key]`), and the WKB targets consume the numeric stop point
+while being keyed independently of it — covered in practice only because `z_init` is filtered as
+an absolute `1e-7` against $z\sim10^{12}$, and measured: the two policies move QCD $z_{\rm init}$
+by 4.59e5 at that wavenumber, so the lookup misses
+(`[20-wkb-rows-consume-numeric-initial-data]`). Both opened, neither acted on.
+`[18-numeric-solver-not-in-lookup-key]` is **resolved** (§4), its recorded next step corrected in
+place: adding `solver_serial` to the queries is a no-op.) Prompt 19 landed (**which kind** of declared break point the numeric
 ODE splits at is now the *caller's* choice, enacting the user's decision of 2026-09-13:
 `numeric_with_phase_cut` takes a `break_point_kind`, appended last in its signature and defaulting
 to `BREAK_POINT_DISCONTINUITY` — so every caller that does not name it, the four `docs/` scripts
@@ -255,7 +285,7 @@ Legend: ⬜ not started · 🟡 in flight · ✅ complete · ⚠️ complete wit
 | 17 | [Tk numeric `atol` k-sweep](17-tk-numeric-atol-k-sweep.md) | §3 `[12-tk-numeric-atol-largest-k-excursion]` | Opus | ✅ | *"Measure the transfer-function numeric tolerance across the k-grid"* (SHA not embedded, per the campaign convention) | [`logs/17-tk-numeric-atol-k-sweep.md`](logs/17-tk-numeric-atol-k-sweep.md) |
 | 18 | [Numeric ODE break points](18-numeric-ode-break-points.md) | §3 `[17-qcd-reference-not-converged]` | Opus | ⚠️ | *"Split the numeric ODE at the cosmology's declared discontinuities"* (SHA not embedded, per the campaign convention) | [`logs/18-numeric-ode-break-points.md`](logs/18-numeric-ode-break-points.md) |
 | 19 | [Per-sector break-point policy](19-per-sector-break-point-policy.md) | §3 `[17-qcd-reference-not-converged]` | Opus | ⚠️ | *"Let each numeric sector choose which declared break points it splits at"* (SHA not embedded, per the campaign convention) | [`logs/19-per-sector-break-point-policy.md`](logs/19-per-sector-break-point-policy.md) |
-| 20 | [Key the break-point policy](20-key-the-break-point-policy.md) | §3 `[18-numeric-solver-not-in-lookup-key]` | Opus | ⬜ | | |
+| 20 | [Key the break-point policy](20-key-the-break-point-policy.md) | §3 `[18-numeric-solver-not-in-lookup-key]` | Opus | ⚠️ | *"Put the numeric break-point policy in the datastore lookup key"* (SHA not embedded, per the campaign convention) | [`logs/20-key-the-break-point-policy.md`](logs/20-key-the-break-point-policy.md) |
 
 > Rows 16 and 17 are numbered last because the campaign's numbers are append-only. **16 runs
 > between 11 and 12** — the follow-up README §7 D2 anticipated, enacting the user's choice of
@@ -274,7 +304,7 @@ Legend: ⬜ not started · 🟡 in flight · ✅ complete · ⚠️ complete wit
 |---|---|---|---|---|---|---|
 | 13 | [Verification and docs](13-verification-and-docs.md) | review §4, §12.3, §13.5 | Opus | ⬜ | | |
 
-**Progress:** 18 / 20 complete.
+**Progress:** 19 / 20 complete.
 
 ---
 
@@ -306,7 +336,7 @@ campaign; the review section is the authority on each.
 | M19 | **DEFECT, dead path** | `mode.lower()` before the `None` check (§10.2) | 11 | ✅ the `None` test comes first; `mode=None` integrates the whole grid, `mode="STOP"` is accepted, `mode="x"` raises `ValueError` — three tests. The `mode != "stop"` branch is kept (`RECONCILIATION.md` §3) |
 | M20 | **DEFECT, comments + robustness** | The stop point is a maximum, not a minimum; the "fixed phase to avoid jitter" motivation is obsolete; `find_phase_minimum`'s $10^{-3}z$ step is safe only inside the window (§10.2) | 11 | ✅ renamed **`find_phase_extremum`** with `find_phase_minimum` kept as an alias; docstring and both integrators' comments now say maximum, and say the jitter motivation is obsolete because `store()` rotates $(G,G')$ into a pure sine. Steps $2\pi/(16\omega)$ where $\omega^2>0$, falling back to $10^{-3}z$: inside the window both steps find the same extremum, and at $x=6\times10^3$ — where the old step covers **0.955 of a cycle** — the phase step lands within 0.1 cycle of the first maximum while the old step skips more than a full cycle. Window **not** widened. The stop point moves by $\le1.04\times10^{-7}$ relative, inside `root_scalar`'s own tolerance (`[11-stop-point-root-tolerance]`) |
 | M21 | **DEFECT, misleading** | `0.85·z_e6` truncation requests samples never produced in stop mode (§10.2) — comment only | 11 | ✅ both `main.py` comments (`:604-611`, `:1178-1189`) rewritten to say the ODE terminates on the $z_{e6}$ event, the `expected_values` check is skipped in stop mode, and the samples between $z_{e6}$ and $0.85z_{e6}$ are never produced. The constant stays (hand-over decision). `git diff main.py` is comment-only; the 40-of-41 return is pinned by the bit-identity test |
-| M22 | **DEFECT, accuracy** | $T_k$ numeric run limited to $1.1\times10^{-5}$ of the envelope by `atol=1e-10` acting as a $10^{-5}$ relative tolerance (§12.5) | 12, 17 | ⚠️ `DEFAULT_TK_NUMERIC_ABS_TOLERANCE = 1e-13` for the `TkNumericIntegration` run alone, carried by a separate `tolerance` object `Tk_numeric_atol` through all five of its `object_get` sites. On review §12.5's geometry (RadiationModel, $k=10^6$, production source grid, $T=1,T'=0$, `rtol=1e-8`, all four of the review's RHS-evaluation counts reproduced exactly): $\delta T/{\rm env}$ **9.928e-6 → 2.534e-6** (README §6 target $\le3\times10^{-6}$) for **+14.3 %** evaluations; with exact initial data **1.160e-5 → 3.275e-7**, so what remains is the $2.5\times10^{-6}$ initial-condition floor (`[00-tk-superhorizon-ic-series]`, out of scope). $G_k$ moves by 8.538e-10 of the envelope for +0.35 % evaluations and keeps `atol`. **Confirmed by the user 2026-09-12 after prompt 17's grid sweep: `1e-13` stands.** ⚠️ because at $k=3\times10^8$ the shipped tolerance leaves an isolated 2.56e-4 excursion near $x\approx10.8$ that `atol=1e-16` removes (`[12-tk-numeric-atol-largest-k-excursion]`), and because deviation 1 had to repair the batch `build_Tk_WKB_work`'s numeric lookup was dispatched over — `query_batch` (the `TkWKBIntegration` query, whole batch) rather than the unused `payload_batch` (the missing subset), which no longer works once the two carry different tolerances. **Prompt 17 measured the whole production $k$-grid** (50 wavenumbers × `RadiationModel`, `LambdaCDMModel`, `QCDModel` × `atol` ∈ {1e-10, 1e-13, 1e-16} at `rtol=1e-8`, each against a converged run of the same integrator; `docs/gktk-remedial/TK-NUMERIC-ATOL-SWEEP.md`): the excursion is real off the control and is **not** a large-$k$ effect — at the shipped tolerance **3 / 13 / 8 of 50** wavenumbers exceed $3\times10^{-6}$, worst **8.64e-4** at $k=8.37\times10^5$ on LambdaCDM, every one of them a *level* (median 1.7e-5–5.8e-5, last sample up to 2.2e-4) rather than one bad sample. `atol=1e-16` does **not** fix it (LambdaCDM 13 → 10, two of them wavenumbers `1e-13` handles) and is not cheaper on a real background. The lever is `rtol`: at fixed `atol=1e-13`, `rtol` 1e-8 → 1e-9 removes every excursion (8.64e-4 → 7.4e-8) for +23 % evaluations, and on both production backgrounds a $10^{-6}$ change in $k$ removes it too. What `1e-13` buys is the *level*, uniformly: median-over-$k$ of the per-$k$ maximum 1.25e-5 → 3.8e-7, 1.19e-5 → 4.5e-7, 1.38e-5 → 1.0e-6 for +25–30 % evaluations. **Prompt 17 recommends keeping 1e-13**; the constant is the user's call and the ⚠️ stands until it is settled. **Prompt 18 repaired the reference those QCD figures were measured against**: `numeric_with_phase_cut` splits its integration at the cosmology's declared *discontinuities*, and on `QCDModel` the $T_k$ reference-convergence drift falls from **23 of 50** wavenumbers above the 3.4e-08 criterion (worst 6.17e-06) to **3** (worst 1.97e-07 at $k=4.287\times10^6$, median 5.12e-09), the four wavenumbers prompt 17 named improving **347×–5764×**. $G_k$ **never had the failure** on any model — 1.94e-11 / 2.1e-11 / 8.41e-09 worst over the grid on Radiation / LambdaCDM / QCD, the same split or unsplit — which is the first converged-reference measurement for that sector. Nothing about `atol` or `rtol` changed. The residue is the $T(z)$ spline's $C^2$ knots, which would close it at +219 % / +155 % of the production evaluations (log 18, `TK-NUMERIC-ATOL-SWEEP.md` §9.7). **Prompt 19 paid that price in the $T_k$ sector alone** (`TK-NUMERIC-ATOL-SWEEP.md` §10): the break-point policy is now the caller's, `TkNumericIntegration` asks for `BREAK_POINT_ALL` and `GkNumericIntegration` for `BREAK_POINT_DISCONTINUITY`, and on `QCDModel` the $T_k$ drift is below the criterion at **all 50** wavenumbers — worst **8.72e-09**, median 3.96e-09, zero offenders — for **+220.23 %** of the production evaluations (9843 → 31521 per object, ~49 s for the whole 50-object sector). $G_k$ is **bit-identical**: 8.41e-09 worst on QCD at the same wavenumber and 13320 evaluations per object, the same integers as §9. The reference is now converged in both sectors on all three models, so `[17-qcd-reference-not-converged]` is **resolved** and what remains under this ID is the `rtol` question `[12-tk-numeric-atol-largest-k-excursion]` carries to `prompts/tolerance-convergence` |
+| M22 | **DEFECT, accuracy** | $T_k$ numeric run limited to $1.1\times10^{-5}$ of the envelope by `atol=1e-10` acting as a $10^{-5}$ relative tolerance (§12.5) | 12, 17 | ⚠️ `DEFAULT_TK_NUMERIC_ABS_TOLERANCE = 1e-13` for the `TkNumericIntegration` run alone, carried by a separate `tolerance` object `Tk_numeric_atol` through all five of its `object_get` sites. On review §12.5's geometry (RadiationModel, $k=10^6$, production source grid, $T=1,T'=0$, `rtol=1e-8`, all four of the review's RHS-evaluation counts reproduced exactly): $\delta T/{\rm env}$ **9.928e-6 → 2.534e-6** (README §6 target $\le3\times10^{-6}$) for **+14.3 %** evaluations; with exact initial data **1.160e-5 → 3.275e-7**, so what remains is the $2.5\times10^{-6}$ initial-condition floor (`[00-tk-superhorizon-ic-series]`, out of scope). $G_k$ moves by 8.538e-10 of the envelope for +0.35 % evaluations and keeps `atol`. **Confirmed by the user 2026-09-12 after prompt 17's grid sweep: `1e-13` stands.** ⚠️ because at $k=3\times10^8$ the shipped tolerance leaves an isolated 2.56e-4 excursion near $x\approx10.8$ that `atol=1e-16` removes (`[12-tk-numeric-atol-largest-k-excursion]`), and because deviation 1 had to repair the batch `build_Tk_WKB_work`'s numeric lookup was dispatched over — `query_batch` (the `TkWKBIntegration` query, whole batch) rather than the unused `payload_batch` (the missing subset), which no longer works once the two carry different tolerances. **Prompt 17 measured the whole production $k$-grid** (50 wavenumbers × `RadiationModel`, `LambdaCDMModel`, `QCDModel` × `atol` ∈ {1e-10, 1e-13, 1e-16} at `rtol=1e-8`, each against a converged run of the same integrator; `docs/gktk-remedial/TK-NUMERIC-ATOL-SWEEP.md`): the excursion is real off the control and is **not** a large-$k$ effect — at the shipped tolerance **3 / 13 / 8 of 50** wavenumbers exceed $3\times10^{-6}$, worst **8.64e-4** at $k=8.37\times10^5$ on LambdaCDM, every one of them a *level* (median 1.7e-5–5.8e-5, last sample up to 2.2e-4) rather than one bad sample. `atol=1e-16` does **not** fix it (LambdaCDM 13 → 10, two of them wavenumbers `1e-13` handles) and is not cheaper on a real background. The lever is `rtol`: at fixed `atol=1e-13`, `rtol` 1e-8 → 1e-9 removes every excursion (8.64e-4 → 7.4e-8) for +23 % evaluations, and on both production backgrounds a $10^{-6}$ change in $k$ removes it too. What `1e-13` buys is the *level*, uniformly: median-over-$k$ of the per-$k$ maximum 1.25e-5 → 3.8e-7, 1.19e-5 → 4.5e-7, 1.38e-5 → 1.0e-6 for +25–30 % evaluations. **Prompt 17 recommends keeping 1e-13**; the constant is the user's call and the ⚠️ stands until it is settled. **Prompt 18 repaired the reference those QCD figures were measured against**: `numeric_with_phase_cut` splits its integration at the cosmology's declared *discontinuities*, and on `QCDModel` the $T_k$ reference-convergence drift falls from **23 of 50** wavenumbers above the 3.4e-08 criterion (worst 6.17e-06) to **3** (worst 1.97e-07 at $k=4.287\times10^6$, median 5.12e-09), the four wavenumbers prompt 17 named improving **347×–5764×**. $G_k$ **never had the failure** on any model — 1.94e-11 / 2.1e-11 / 8.41e-09 worst over the grid on Radiation / LambdaCDM / QCD, the same split or unsplit — which is the first converged-reference measurement for that sector. Nothing about `atol` or `rtol` changed. The residue is the $T(z)$ spline's $C^2$ knots, which would close it at +219 % / +155 % of the production evaluations (log 18, `TK-NUMERIC-ATOL-SWEEP.md` §9.7). **Prompt 19 paid that price in the $T_k$ sector alone** (`TK-NUMERIC-ATOL-SWEEP.md` §10): the break-point policy is now the caller's, `TkNumericIntegration` asks for `BREAK_POINT_ALL` and `GkNumericIntegration` for `BREAK_POINT_DISCONTINUITY`, and on `QCDModel` the $T_k$ drift is below the criterion at **all 50** wavenumbers — worst **8.72e-09**, median 3.96e-09, zero offenders — for **+220.23 %** of the production evaluations (9843 → 31521 per object, ~49 s for the whole 50-object sector). $G_k$ is **bit-identical**: 8.41e-09 worst on QCD at the same wavenumber and 13320 evaluations per object, the same integers as §9. The reference is now converged in both sectors on all three models, so `[17-qcd-reference-not-converged]` is **resolved** and what remains under this ID is the `rtol` question `[12-tk-numeric-atol-largest-k-excursion]` carries to `prompts/tolerance-convergence`. **Prompt 20 closed the datastore half that prompts 18 and 19 kept reporting**: `break_point_kind` is now a `nullable=False` string column on both numeric tables, filtered on in `build()` and written from the same class constant `compute()` passes to the integrator, so a row computed under one policy no longer answers a query for the other; an old-schema datastore raises rather than silently hitting; `main.py`, `Quadrature/`, `config/defaults.py` and every tolerance are untouched, and a production QCD object in both sectors is **bit-identical** to `HEAD~1`. `[18-numeric-solver-not-in-lookup-key]` is **resolved** (§4) |
 | M23 | **REQUIREMENT** | Independent references and error definitions; throughput of the interval accessor measured early (§13.3, §13.5) | 01 | ⚠️ |
 | M24 | **REQUIREMENT** | Verification on both models against the references; scoped pipeline run; additive docs (§13.5) | 13 | ⬜ |
 
@@ -755,49 +785,6 @@ Opened by the planning pass, 2026-09-10, before any prompt runs.
   of datastore objects is the **intended** outcome, each quantity carrying its own justified
   tolerance pair. This entry closes when that campaign settles `rtol`.
 
-- **[18-numeric-solver-not-in-lookup-key]** *(opened by prompt 18, 2026-09-13)* — `solver_serial`
-  is stored by both numeric factories and matched by neither.
-  `Datastore/SQL/ObjectFactories/GkNumericIntegration.py:221-227` and
-  `TkNumericIntegration.py:225-231` filter on `validated`, `wavenumber_exit_serial`,
-  `model_serial`, `atol_serial` and `rtol_serial` (plus the source/init redshift when supplied);
-  the solver row is selected and joined for its label only. Prompt 18 §3.1 asked for the
-  `TkNumericIntegration` half of this to be established: it is the same as the $G_k$ half. So a
-  change in solver *behaviour* is invisible to the datastore — rows computed before and after
-  prompt 18 are indistinguishable by key on `QCDModel` while differing by up to 2.82e-04 of the
-  envelope, exactly the hazard prompt 12 avoided by moving a key. The solver label
-  (`"solve_ivp+DOP853-stepping0"`) is unchanged by the split, so it does not distinguish them
-  either. **Impact:** any datastore spanning this commit on `QCDModel`; prompt 13 must build
-  fresh. **Not acted on:** §3.1 reserves the key, the label and the factories to the user, as a
-  datastore decision with its own migration.
-
-  **Second instance (prompt 19, 2026-09-13):** the per-sector break-point policy moves `QCDModel`
-  `TkNumericIntegration` values again, by up to 1.61e-04, invisibly to the key;
-  `GkNumericIntegration` rows are bit-identical across that commit on all three models.
-
-  **Diagnosis corrected, and the decision taken, 2026-09-13 (the user).** The entry's original
-  next step — "add `solver_serial` to the two queries" — **is a no-op**, and is recorded here so
-  that it is not re-proposed. The solver cannot vary: `numeric_with_phase_cut` hard-codes
-  `method="DOP853"` (lines 358 and 658), takes no solver or method argument and returns the
-  constant `"solve_ivp+DOP853-stepping0"` (line 823); `main.py:3033`'s `solvers` dict is never
-  indexed in `main.py`, only passed whole to six `object_get` sites and consumed *after* the
-  compute as `self._solver_labels[data["solver_label"]]`, so `RK45`, `Radau`, `BDF` and `LSODA`
-  are registered and unreachable. Every numeric row ever stored therefore points at one and the
-  same `IntegrationSolver` serial, and filtering on it would exclude nothing while making the
-  query read as though it were sound. Nor can `IntegrationSolver` carry the policy cheaply: its
-  own lookup is `label == label AND stepping >= stepping` (`integration_metadata.py:32`), so
-  `stepping` is an ordered *quality* parameter — which is why it holds a Gauss order — and a
-  break-point policy is categorical. **The solver is provenance, and the audit is wider than this
-  entry recorded:** no factory anywhere filters on a solver serial, and five compute targets store
-  one (`BackgroundModel`, both numeric targets, `GkWKBIntegration`, and `TkWKBIntegration` with
-  two).
-
-  What is actually unkeyed is the *configuration*: `break_point_kind`, a genuine degree of freedom
-  since prompt 19, honoured by the integrator, differing between the two sectors, and moving the
-  stored answer. **Next step: assigned (2026-09-13) to prompt 20** — key the configuration beside
-  `atol` and `rtol`, as prompt 12 did for the $T_k$ `atol`, and leave the solver alone. Prompt 20
-  §5 carries the user's "all five compute targets" scope decision as a report-only audit, four of
-  the five having no equivalent free parameter under this design. It runs before prompt 13.
-
 - **[19-cosmologymodels-docstrings-predate-per-sector-policy]** *(opened by prompt 19,
   2026-09-13)* — two `CosmologyModels/` docstrings state as fact what is now true of one numeric
   sector and not the other. `GenericEOS.py:97-101` says "an *adaptive* ODE solver only has to be
@@ -815,6 +802,50 @@ Opened by the planning pass, 2026-09-10, before any prompt runs.
   the kind is the consumer's choice and point at `TK-NUMERIC-ATOL-SWEEP.md` §10; a two-hunk
   comment-only change for whichever prompt next has that directory in scope.
 
+- **[20-wkb-gauss-orders-not-in-lookup-key]** *(opened by prompt 20, 2026-09-13)* — prompt 20 §5
+  asked whether the other three compute targets have "any configuration axis that can vary between
+  runs and is not in that key". They do. **`BackgroundModel`** keys `cosmology_type`,
+  `cosmology_serial`, `atol_serial`, `rtol_serial` and its three `store_tag`s — so the node grid
+  *is* keyed — but not `TAU_GAUSS_ORDER`, `CS_TAU_GAUSS_ORDER` or `FRICTION_F_GAUSS_ORDER`
+  (`ComputeTargets/BackgroundModel.py:34-43`, all `= 4`), nor the quadrature break-point scheme the
+  cumulative tables use. **`GkWKBIntegration`** and **`TkWKBIntegration`** key
+  `wavenumber_exit_serial`, `model_serial`, `atol_serial`, `rtol_serial`, `z_source_serial` and
+  `|z_init − z_init| < DEFAULT_FLOAT_PRECISION`, but not `RHO_GAUSS_ORDER = 4`
+  (`ComputeTargets/phase_residual.py:90`) or `RESIDUAL_WKB_REGION_MARGIN = 0.5` (`:238`). The
+  orders at least move `TAU_SOLVER_LABEL` / `PHASE_SOLVER_LABEL`, hence `solver_serial` — but no
+  factory anywhere filters on a solver serial, so that provenance is never consulted. **The margin
+  moves nothing at all**: no label, no tag, no column, so a change to it is invisible in every
+  row. Distinct from `[03-integrationsolver-stepping-minimum-lookup]`, which is about the
+  `IntegrationSolver` lookup itself rather than about who filters on its serial. **Impact:**
+  latent, not live — every order is 4 today, and prompt 14 measured the margin's effect at
+  $\le1.4\times10^{-17}$ rad in $\rho$ with $\theta$ bit-identical, so nothing in the tree is
+  currently mis-keyed. It becomes live the moment anyone re-measures an order or the margin, which
+  is exactly the situation prompts 18 and 19 created for the numeric sector.
+  **Next step:** the fix is prompt 20's, applied three more times — a `nullable=False` column
+  written from one class constant and filtered on in `build()` — or, for the orders alone, folding
+  the order into the solver *label* and filtering on `solver_serial`. Either way it carries a
+  datastore regeneration, so it belongs with whichever change first moves one of these constants.
+
+- **[20-wkb-rows-consume-numeric-initial-data]** *(opened by prompt 20, 2026-09-13)* — the WKB
+  stage takes its initial data from the numeric stop point —
+  `z_init = k_exit.z_exit − Tk.stop_deltaz_subh`, `T_init = Tk.stop_T`,
+  `Tprime_init = Tk.stop_Tprime` (`main.py:951-953`; the $G_k$ twin at `:1589`) — and the WKB rows
+  are keyed independently of the numeric row they came from: there is no foreign key, and
+  `T_init`/`Tprime_init` (`G_init`/`Gprime_init`) are stored `nullable=False` and **not** filtered
+  on. What does protect them is `z_init`, which *is* filtered, but as
+  `|z_init − stored| < DEFAULT_FLOAT_PRECISION = 1e-7` **absolute** against a $z_{\rm init}$ of
+  order $10^{11}$–$10^{13}$ — nineteen orders below its own ulp, so in production that comparison
+  is exact equality and any movement whatever in the stop point makes every downstream WKB lookup
+  miss. **Measured** on `QCD_Cosmology` at $k = 4.972\times10^7$/Mpc, `BREAK_POINT_ALL` against
+  `BREAK_POINT_DISCONTINUITY`: $z_{\rm init}$ moves by **4.59e+05** (4.4e-07 relative),
+  $T_{\rm init}$ by 3.84e-07 and $T'_{\rm init}$ by 1.37e-22 — so the lookup misses, correctly.
+  **Impact:** the protection is incidental, not designed. A change that moved the stop *values*
+  while leaving $z_{\rm init}$ bit-identical would be served a stale WKB row. For prompt 13 the
+  practical statement is unchanged: regenerate the whole QCD chain, which prompt 19's hand-off
+  already requires. **Next step:** either record the numeric row's serial on the WKB row and
+  filter on it, or filter on `G_init`/`T_init` as well as `z_init`; both carry a schema change and
+  a regeneration, and neither is urgent while `z_init` is compared exactly.
+
 > Add an entry here whenever a prompt finishes with something unresolved: a verification step that
 > could not be run, an assumption that could not be confirmed, a deviation a later prompt has to
 > work around, a measured cost that changes a later prompt's decision. Format:
@@ -827,6 +858,44 @@ Opened by the planning pass, 2026-09-10, before any prompt runs.
 ---
 
 ## 4. Resolved issues
+
+- **[18-numeric-solver-not-in-lookup-key]** *(opened by prompt 18, 2026-09-13; second instance
+  recorded by prompt 19; diagnosis corrected and the decision taken by the user 2026-09-13;
+  **resolved by prompt 20**, 2026-09-13)* — the two numeric lookup keys carried no record of *how*
+  the integration was done. `Datastore/SQL/ObjectFactories/GkNumericIntegration.py:221-227` and
+  `TkNumericIntegration.py:225-231` filtered on `validated`, `wavenumber_exit_serial`,
+  `model_serial`, `atol_serial` and `rtol_serial` (plus the source/init redshift when supplied) and
+  on nothing else, so a `QCDModel` row computed before prompt 18 was indistinguishable by key from
+  one computed after it while differing by up to 2.82e-04 of the envelope, and prompt 19's
+  per-sector policy moved `TkNumericIntegration` a further 1.61e-04, again invisibly.
+
+  **The entry's original next step was wrong, and is recorded here so that it is not
+  re-proposed.** Adding `solver_serial` to the two queries is a **no-op**: the solver cannot vary.
+  `numeric_with_phase_cut` hard-codes `method="DOP853"` (lines 358 and 658), takes no solver or
+  method argument and returns the constant label `"solve_ivp+DOP853-stepping0"` (line 823);
+  `main.py:3033`'s `solvers` dict is never indexed in `main.py`, only passed whole to six
+  `object_get` sites and consumed *after* the compute as
+  `self._solver_labels[data["solver_label"]]`, so `RK45`, `Radau`, `BDF` and `LSODA` are
+  registered and unreachable. Every numeric row ever stored therefore points at one and the same
+  `IntegrationSolver` serial, and filtering on it would exclude nothing while making the query
+  read as though it were sound. Nor can `IntegrationSolver` carry the policy: its own lookup is
+  `label == label AND stepping >= stepping` (`integration_metadata.py:32`), an ordered *quality*
+  comparison, and a break-point policy is categorical.
+
+  **What was unkeyed was the configuration, and prompt 20 keyed it.** Each numeric compute target
+  declares its policy once — `GkNumericIntegration.BREAK_POINT_KIND = BREAK_POINT_DISCONTINUITY`,
+  `TkNumericIntegration.BREAK_POINT_KIND = BREAK_POINT_ALL` — and `compute()`, `store()` and
+  `build()` all read that one declaration; both numeric tables gain a `nullable=False`
+  `break_point_kind` string column after `rtol_serial`, **filtered on** in `build()`. A row
+  computed under the other policy now misses. A datastore written before the commit has no such
+  column and raises a `RuntimeError` naming the prompt and demanding regeneration — no default, no
+  migration — on the `BackgroundModel.py:300-309` pattern prompts 03 and 04 set. The solver stays
+  as provenance, untouched. **No computed value moved**: a production QCD object in both sectors at
+  $k = 4.972\times10^7$/Mpc is bit-identical to `HEAD~1` (sha256 `565e907…`, 494 + 41 samples,
+  32,351 + 13,258 RHS evaluations), and `Quadrature/`, `main.py`, `config/defaults.py`,
+  `CosmologyModels/`, every tolerance and every `solver_serial` are untouched. The wider audit the
+  entry called for is `[20-wkb-gauss-orders-not-in-lookup-key]` and
+  `[20-wkb-rows-consume-numeric-initial-data]` in §3.
 
 - **[17-qcd-reference-not-converged]** *(opened by prompt 17, 2026-09-12; narrowed by prompt 18, 2026-09-13; **resolved by prompt 19**, 2026-09-13)* — prompt 17's §2.1
   convergence test **fails on `QCDModel`**: at $k\in\{1.58\times10^7, 4.97\times10^7,

@@ -91,6 +91,21 @@ class GkNumericIntegration(DatastoreObject):
     a function of the source redshift if we wish
     """
 
+    # The break-point policy this sector integrates under: which of the break points the cosmology
+    # declares the ODE is split at. This is the *single* declaration of that policy -- it is passed
+    # to numeric_with_phase_cut by compute(), written to the datastore by the factory's store(),
+    # and filtered on by the factory's build() -- because since prompt 19 it is a genuine degree of
+    # freedom that moves the stored answer, so three independent copies would be three chances to
+    # look up a row computed under a policy other than the one asked for (prompt 20 of
+    # prompts/GkTk-remedial, the user's decision of 2026-09-13).
+    #
+    # The value, and why it is this one rather than BREAK_POINT_ALL, is argued at the
+    # numeric_with_phase_cut call site in compute() below.
+    #
+    # This follows GkWKBIntegration.PHASE_SOLVER_LABEL_BASE and BackgroundModel.TAU_SOLVER_LABEL:
+    # a class constant, so that a caller which has only the class can read it.
+    BREAK_POINT_KIND = BREAK_POINT_DISCONTINUITY
+
     def __init__(
         self,
         payload,
@@ -189,6 +204,16 @@ class GkNumericIntegration(DatastoreObject):
     @property
     def model_proxy(self) -> ModelProxy:
         return self._model_proxy
+
+    @property
+    def break_point_kind(self) -> str:
+        """
+        The break-point policy this object was (or will be) integrated under. It is a property of
+        the sector, not of the instance, so it reads the class constant rather than any stored
+        state: an instance deserialized from the datastore was selected by build() on exactly this
+        value, so there is no second value it could carry.
+        """
+        return self.BREAK_POINT_KIND
 
     @property
     def k(self) -> wavenumber:
@@ -380,7 +405,11 @@ class GkNumericIntegration(DatastoreObject):
             # evaluations (§9.7), i.e. several core-hours per model. TkNumericIntegration, which
             # is 50 objects per model and does *not* converge with the jumps alone, asks for
             # every declared break point for exactly that reason.
-            break_point_kind=BREAK_POINT_DISCONTINUITY,
+            #
+            # Read from the class constant rather than written as a literal: since prompt 20 the
+            # same value is also stored in, and filtered on by, the datastore lookup key, and the
+            # three uses must not be able to drift apart.
+            break_point_kind=self.BREAK_POINT_KIND,
             **payload,
         )
         return self._compute_ref

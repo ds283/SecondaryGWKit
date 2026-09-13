@@ -63,8 +63,8 @@ from ComputeTargets.BackgroundModel import (
     ModelFunctions,
     _cosmology_break_points,
 )
-from ComputeTargets.GkNumericIntegration import RHS as Gk_RHS
-from ComputeTargets.TkNumericIntegration import RHS as Tk_RHS
+from ComputeTargets.GkNumericIntegration import RHS as Gk_RHS, GkNumericIntegration
+from ComputeTargets.TkNumericIntegration import RHS as Tk_RHS, TkNumericIntegration
 from ComputeTargets.WKB_Gk import Gk_omegaEff_sq
 from ComputeTargets.WKB_Tk import Tk_omegaEff_sq
 from ComputeTargets.tests.wkb_reference import (
@@ -1121,19 +1121,30 @@ class TestPerSectorPolicy(unittest.TestCase):
         because measurement says it must, Gk at the jumps alone because measurement says the rest
         would buy nothing at ~65,000 objects per model -- so both sites name their kind, the Gk
         one included even though it is the module default.
+
+        **Prompt 20 moved where the kind is named, and this test follows it.** When prompt 19
+        wrote it the call site carried the imported literal; since prompt 20 the same value is
+        also stored in and filtered on by the datastore lookup key, so each compute target holds
+        one declaration, ``BREAK_POINT_KIND``, and the call site passes that. What is checked is
+        unchanged in substance and slightly stronger: the site names its kind explicitly, and the
+        constant it names is the vocabulary value this sector's measurement chose.
+        ``test_numeric_break_point_key`` then checks that the stored value and the queried value
+        read the same declaration.
         """
         expected = {
             "ComputeTargets/TkNumericIntegration.py": (
+                TkNumericIntegration,
                 "BREAK_POINT_ALL",
                 BREAK_POINT_ALL,
             ),
             "ComputeTargets/GkNumericIntegration.py": (
+                GkNumericIntegration,
                 "BREAK_POINT_DISCONTINUITY",
                 BREAK_POINT_DISCONTINUITY,
             ),
         }
 
-        for module, (name, value) in expected.items():
+        for module, (cls, name, value) in expected.items():
             path = Path(__file__).parents[2] / module
             tree = ast.parse(path.read_text(), filename=str(path))
 
@@ -1151,12 +1162,31 @@ class TestPerSectorPolicy(unittest.TestCase):
             keywords = {kw.arg: kw.value for kw in calls[0].keywords}
             self.assertIn("break_point_kind", keywords, msg=module)
 
+            # the site passes the compute target's single declaration, self.BREAK_POINT_KIND
             argument = keywords["break_point_kind"]
-            self.assertIsInstance(argument, ast.Name, msg=module)
-            self.assertEqual(argument.id, name, msg=module)
+            self.assertIsInstance(argument, ast.Attribute, msg=module)
+            self.assertEqual(argument.attr, "BREAK_POINT_KIND", msg=module)
+            self.assertIsInstance(argument.value, ast.Name, msg=module)
+            self.assertEqual(argument.value.id, "self", msg=module)
 
-            # the name is imported from ComputeTargets.BackgroundModel, and it is the constant
-            # this test thinks it is
+            # and that declaration is the constant this test thinks it is: the class attribute
+            # carries the value, and the name it is written from is imported from
+            # ComputeTargets.BackgroundModel
+            self.assertEqual(cls.BREAK_POINT_KIND, value, msg=module)
+            self.assertIsInstance(value, str)
+
+            declarations = [
+                node
+                for node in ast.walk(tree)
+                if isinstance(node, ast.Assign)
+                and len(node.targets) == 1
+                and isinstance(node.targets[0], ast.Name)
+                and node.targets[0].id == "BREAK_POINT_KIND"
+            ]
+            self.assertEqual(len(declarations), 1, msg=module)
+            self.assertIsInstance(declarations[0].value, ast.Name, msg=module)
+            self.assertEqual(declarations[0].value.id, name, msg=module)
+
             imported = [
                 node
                 for node in ast.walk(tree)
@@ -1165,7 +1195,6 @@ class TestPerSectorPolicy(unittest.TestCase):
                 and any(alias.name == name for alias in node.names)
             ]
             self.assertEqual(len(imported), 1, msg=module)
-            self.assertIsInstance(value, str)
 
 
 class TestManyBreakPoints(unittest.TestCase):

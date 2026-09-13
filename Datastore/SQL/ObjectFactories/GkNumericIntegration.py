@@ -115,6 +115,23 @@ class sqla_GkNumericIntegration_factory(SQLAFactoryBase):
                     index=True,
                     nullable=False,
                 ),
+                # the break-point policy the ODE was integrated under. This sits beside atol and
+                # rtol because it is configuration in exactly the sense they are: it changes what
+                # the integrator computes (up to 2.8e-4 of the envelope on QCD_Cosmology --
+                # docs/gktk-remedial/TK-NUMERIC-ATOL-SWEEP.md §9.4, §10.5), it is not recoverable
+                # from anything else in the row, and two rows that differ only in it are different
+                # answers. Not nullable, and filtered on in build(): see prompt 20 of
+                # prompts/GkTk-remedial.
+                #
+                # The stored strings are the vocabulary of
+                # CosmologyModels/GenericEOS/GenericEOS.py (BREAK_POINT_ALL,
+                # BREAK_POINT_DISCONTINUITY), re-exported through ComputeTargets.BackgroundModel.
+                # No cosmology, equation of state or temperature appears here.
+                sqla.Column(
+                    "break_point_kind",
+                    sqla.String(DEFAULT_STRING_LENGTH),
+                    nullable=False,
+                ),
                 sqla.Column(
                     "solver_serial",
                     sqla.Integer,
@@ -224,6 +241,12 @@ class sqla_GkNumericIntegration_factory(SQLAFactoryBase):
                 table.c.model_serial == model_proxy.store_id,
                 table.c.atol_serial == atol.store_id,
                 table.c.rtol_serial == rtol.store_id,
+                # the break-point policy is part of the key, not merely recorded: a row computed
+                # under the other policy is a different answer and must miss (prompt 20 of
+                # prompts/GkTk-remedial). The value is read from the compute target's single
+                # declaration, which is the same object compute() passes to the integrator and
+                # store() writes to the row, so the three cannot disagree.
+                table.c.break_point_kind == GkNumericIntegration.BREAK_POINT_KIND,
             )
         )
 
@@ -253,6 +276,23 @@ class sqla_GkNumericIntegration_factory(SQLAFactoryBase):
                 f"!! GkNumericIntegration.build(): multiple results found when querying for GkNumericIntegration"
             )
             raise e
+        except SQLAlchemyError as e:
+            # a datastore written before prompt 20 has no break_point_kind column, and its rows
+            # were computed under a policy nobody recorded. There is no defensible default to
+            # supply, so this fails loudly rather than silently missing -- the defect being
+            # repaired is precisely a stale row that looked like a hit. This is the pattern
+            # prompts 03 and 04 set at
+            # Datastore/SQL/ObjectFactories/BackgroundModel.py:300-309.
+            if "break_point_kind" in str(e):
+                raise RuntimeError(
+                    "GkNumericIntegration.build(): the GkNumericIntegration table has no "
+                    '"break_point_kind" column. This datastore predates the numeric break-point '
+                    "policy becoming part of the lookup key (prompts/GkTk-remedial, prompt 20) "
+                    "and must be regenerated; there is no migration. Its rows were computed "
+                    "under a policy that was never recorded, and on QCD_Cosmology the policies "
+                    "differ by up to 2.8e-4 of the envelope."
+                ) from e
+            raise
 
         if row_data is None:
             # build and return an unpopulated object
@@ -411,6 +451,9 @@ class sqla_GkNumericIntegration_factory(SQLAFactoryBase):
                 "model_serial": obj.model_proxy.store_id,
                 "atol_serial": obj._atol.store_id,
                 "rtol_serial": obj._rtol.store_id,
+                # written from the same declaration build() filters on and compute() passes to
+                # the integrator (prompt 20 of prompts/GkTk-remedial)
+                "break_point_kind": obj.break_point_kind,
                 "solver_serial": obj._solver.store_id,
                 "z_source_serial": obj._z_source.store_id,
                 "z_min_serial": obj._z_sample.min.store_id,
