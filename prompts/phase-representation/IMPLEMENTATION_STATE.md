@@ -3,8 +3,8 @@
 **Campaign:** [`README.md`](README.md) · **Source measurements:**
 [`docs/gktk-remedial-verification.md`](../../docs/gktk-remedial-verification.md) §3.5, §3.6, §3.7
 **Baseline commit:** `9daa2cb` (`gktk-remedial`, clean — the `GkTk-remedial` close-out)
-**Last updated:** 2026-09-13 — **prompt 02 stopped; the campaign is at 1 / 2 and needs a user
-decision.** Prompt 01 landed: `WKB_mod_2pi` and `simple_mod_2pi` derive their cycle count from the
+**Last updated:** 2026-09-13 — **CLOSED at 1 / 2.** Prompt 01 resolved its defect; prompt 02
+stopped and the README §7 D2 decision it required has been taken (§1). Prompt 01 landed: `WKB_mod_2pi` and `simple_mod_2pi` derive their cycle count from the
 exact `fmod` remainder instead of a second rounded division, so on the production geometry
 LambdaCDM $G_k$ at $k=3\times10^8$ is **0 inconsistent of 77,975** (was 1), the
 $|\theta|\sim4\times10^{12}$ uniform control **0 of 400,000** (was 25), and that case's consumer
@@ -27,9 +27,22 @@ Legend: ⬜ not started · 🟡 in flight · ✅ complete · ⚠️ complete wit
 | 01 | [`WKB_mod_2pi` cycle count](01-wkb-mod-2pi-cycle-count.md) | `[13-wkb-mod-2pi-cycle-count-inconsistent]` | Opus | ✅ | *"Derive the WKB cycle count from the exact remainder"* (SHA not embedded, per the campaign convention) | [`logs/01-wkb-mod-2pi-cycle-count.md`](logs/01-wkb-mod-2pi-cycle-count.md) |
 | 02 | [`PrimitivePhase` break-point knots](02-primitive-phase-break-point-knots.md) | `[13-consumer-spline-crosses-eos-break-points]` — **not closed** | Opus | ⛔ | *"Stop prompt 02: the repeated-knot vector does not construct"* (SHA not embedded, per the campaign convention) | [`logs/02-primitive-phase-break-point-knots.md`](logs/02-primitive-phase-break-point-knots.md) |
 
-**Progress:** 1 / 2 complete, 1 blocked. The campaign cannot proceed without the README §7 D2
-decision, which is the user's; the three ways forward are ranked in log 02's "State handed to the
-next prompt" item 3.
+**Progress:** 1 / 2 complete, 1 blocked. **The campaign is CLOSED at 1 / 2** (orchestrator,
+2026-09-13; user decision the same day). It is not reopened: prompt 02's blocker is removed only by
+work in another campaign, and a campaign left open across intervening campaigns stops being a
+rollback boundary.
+
+The README §7 D2 decision was taken by the user on the evidence of
+[`docs/qcd-background-audit-2026-09.md`](../../docs/qcd-background-audit-2026-09.md), which
+establishes that **404 of the 407 `BREAK_POINT_ALL` points prompt 02 foundered on are knots of the
+`T(z)` spline** — an artefact of `CosmologyModels/GenericEOS/LambdaCDM_GenericEOS.py`'s auxiliary
+500-point interpolant, not a feature of the cosmology. None of log 02's three ranked options was
+taken: the fourth, which that log could not have seen, is to remove the artefact upstream, after
+which `BREAK_POINT_ALL` falls to the 3 genuine crossings and a knot vector constructs trivially.
+
+**Prompt 02's work is inherited, not discarded.** Its measurements are the starting point for the
+`qcd-background` campaign's grid and consumer prompts; its log is the record of what a knot vector
+does and does not buy, and of the three schemes that must never be scored at $k=10^5$ alone.
 
 ---
 
@@ -136,9 +149,9 @@ now says so. Issues **opened** by a prompt here are recorded in this section, wi
   own remainder convention. **Datastore:** `theta_div_2pi` is in no lookup key, so a pre-01
   datastore is served silently with the old count at the affected samples; no migration was
   invented and none is recommended (README §7 D3). The regeneration list is in the log's "State
-  handed to the next prompt"; `docs/gktk-remedial-verification.md` §8 is **not yet written** —
-  prompt 01 was the first to need it and, per its §5 item 2, left the document alone for the
-  close-out.
+  handed to the next prompt", and is reproduced in `docs/gktk-remedial-verification.md` **§8.1**,
+  written by the orchestrator at this campaign's close (2026-09-13). Nothing at or above §7 of that
+  document was edited.
 
 ---
 

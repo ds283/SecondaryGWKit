@@ -847,3 +847,93 @@ PYTHONPATH=. ./venv/bin/python -m unittest discover -s ComputeTargets/tests -t .
 PYTHONPATH=. ./venv/bin/python -m unittest discover -s LiouvilleGreen/tests -t .
     Ran 141 tests in 1065.977s     OK
 ```
+
+---
+
+## 8. Post-close-out: what the `phase-representation` campaign moved (2026-09-13)
+
+**Nothing at or above §7 is edited.** This section is appended by the orchestrator of
+[`prompts/phase-representation`](../prompts/phase-representation/README.md) at its close, per
+`CLAUDE.md` (verification documents are additive). §§1–7 remain the record of the tree at
+`ff9ee29`/`9daa2cb` and were correct for it.
+
+That campaign ran two prompts against the two defects §3.5 and §3.7 found and prompt 13 was
+forbidden to fix. **It closed at 1 / 2.**
+
+### 8.1 Prompt 01 — `WKB_mod_2pi`'s cycle count (`0c61799`)
+
+`[13-wkb-mod-2pi-cycle-count-inconsistent]` is **resolved**. The cycle count now comes from the
+exact `fmod` remainder, `int(round((fabs(theta) - fabs(theta_mod_2pi)) / TWO_PI))`, in both
+`WKB_mod_2pi` and `simple_mod_2pi`, each keeping its own remainder convention. Measured with
+`docs/gktk-remedial/verify_production_path.py`, unedited, before → after:
+
+| measurement | §3 / §3.7 value | after prompt 01 |
+|---|---|---|
+| `div*2π + mod == θ`, production $G_k$, LambdaCDM $k=3\times10^8$ | 1 of 77,975 | **0 of 77,975** |
+| the other eleven (model, sector, $k$) rows of §3.7 | 0 | 0 |
+| uniform control at $\|\theta\|\sim4\times10^{12}$ | 25 of 400,000 | **0 of 400,000** |
+| §3.5 consumer row, LambdaCDM $G_k$ $k=3\times10^8$ | 6.175 rad, 12,646 ulp, at $z=3.33\times10^4$ | **0.0000e+00 rad, 0.00 ulp** |
+| §3.6 `theta_deriv`, same case | 5.6245e-08 | **1.8060e-13** |
+| stored `theta_mod_2pi`, every model and $k$ | — | **bit-identical** |
+
+Nothing else in that script's output moved but wall-clock timings; the §3.6 row above is the same
+single sample seen through the spline's derivative, its $z=34{,}000$ maximum being the grid
+neighbour of the $z=33{,}226$ outlier. Cost 0.2254 → 0.2731 µs per reduction, once per stored
+sample. Suites at that commit: `ComputeTargets` 339 OK, `LiouvilleGreen` 141 → 148 OK.
+
+**Datastore regeneration.** `theta_div_2pi` is a stored `nullable=False` column on `GkWKBValue` and
+`TkWKBValue` and is in **no lookup key**, so unlike the columns §7 lists there is no schema change
+to raise a `RuntimeError` on: **a datastore written before `0c61799` is served silently with the
+old cycle count at the affected samples.** No migration was invented and none is recommended.
+
+| quantity | affected by a pre-`0c61799` datastore? |
+|---|---|
+| `theta_div_2pi` on `GkWKBValue` / `TkWKBValue` | **yes** — one cycle too many at the half-ulp samples |
+| the reconstructed unwrapped phase in `build_phi_samples` | **yes**, through `theta_div_2pi` |
+| `PrimitivePhase.raw_theta` and its spline of $\varphi$ | **yes**, plus the ±15 grid intervals a cubic spreads one bad ordinate over |
+| `QuadSourceIntegral`'s `_ClampedPhase` | **yes**, through `PrimitivePhase` |
+| `theta_mod_2pi` | **no** — it is the `fmod`, bit-identical |
+| every stored $G$ and $T$ (`G_WKB`, `T_WKB`) | **no** — built from the remainder |
+| `friction_F`, $\rho$, $\tau$, $c_s\tau$, every `BackgroundModel` column | **no** |
+
+### 8.2 Prompt 02 — `PrimitivePhase` break-point knots (`b3e3769`): stopped, no production change
+
+`[13-consumer-spline-crosses-eos-break-points]` **remains open**. Prompt 02 stopped on its own §2
+item 2 (README §7 D2: report rather than fall back silently) and **changed no production file** —
+its commit is documentation only, so §3.5's three QCD rows and §3.6's QCD columns stand exactly as
+printed above.
+
+What it established, which supersedes that issue's recorded remedy:
+
+- a multiplicity-3 knot vector at `BREAK_POINT_ALL` is **singular on all six production grids**
+  (226–325 break points across 1,016–1,401 samples; 1–3 segments hold no sample, so
+  Schoenberg–Whitney fails for any placement);
+- at `BREAK_POINT_DISCONTINUITY` it constructs and is **2× worse** — $G_k$ 1.907e-06 → 3.815e-06 rad
+  (8 → 16 ulp), $T_k$ 3.186e-06 → 6.790e-06 rad (428 → 911 ulp);
+- the kink at the declared discontinuity is **1.60e-08 / 1.44e-07 rad**, i.e. **1 % and 4 %** of the
+  1.907e-06 / 3.186e-06 rad §3.5 attributes to it;
+- §3.6's two failing rows (QCD $G_k$ at $10^7$ and $3\times10^8$) are **neither** the knots **nor**
+  `[02-qcd-T-z-spline-node-tolerance]`: the recovered $\varphi$ spans 6.0 and 2.0 ulp of the stored
+  phase there, so including its spline derivative is 3× and 10× *worse* than omitting $\varphi$
+  entirely. That is `[00-consumer-anchoring-floor]`, and it is opened as
+  `[02-consumer-phi-below-the-storage-granularity]`.
+
+### 8.3 A caveat that applies to §3.5 and §3.6 as printed
+
+`docs/qcd-background-audit-2026-09.md` (2026-09-13), written after prompt 02 stopped, establishes
+that the 407 `BREAK_POINT_ALL` points prompt 02 foundered on are **404 knots of the `T(z)` spline**
+— a uniform lattice of an auxiliary 500-point interpolant inside
+`CosmologyModels/GenericEOS/LambdaCDM_GenericEOS.py`, not a feature of the cosmology — and that the
+QCD background's `T(z)` carries a relative error of **3.461e-08** in $\int\mathrm{d}z/H$.
+
+**This matters for how the tables above are read.** §3.5 and §3.6 score a *consumer* against a
+*producer*, and both are built from the same `BackgroundModel`, hence the same $H$ and the same
+$\tau$. A background error is **common mode** and cancels exactly in that comparison. So those
+tables legitimately read 1.00 ulp while the background underneath both sides carries, at
+$k=3\times10^8$/Mpc, of order $10^5$ radians of systematic phase error. Nothing in §§1–7 is wrong;
+what they measure is self-consistency, and self-consistency is blind to this class of defect. The
+audit's §10 script is the first measurement in the tree that scores the background against an
+independent background.
+
+`[13-consumer-spline-crosses-eos-break-points]` therefore now belongs with that audit's work, not
+with a knot vector.

@@ -457,6 +457,22 @@ Opened by the planning pass, 2026-09-10, before any prompt runs.
   of §3.5 cannot show a fix routed through `GkSourcePolicyData`
   (`[02-verify-script-builds-its-own-Gk-consumer]`).
 
+  **Superseded (2026-09-13, orchestrator close-out of `prompts/phase-representation`).** None of
+  the three options above was taken, because
+  [`docs/qcd-background-audit-2026-09.md`](../../docs/qcd-background-audit-2026-09.md) identifies a
+  fourth that prompt 02 could not have seen: **404 of the 407 `BREAK_POINT_ALL` points are knots of
+  the `T(z)` spline itself** — the uniform lattice of an auxiliary 500-point interpolant in
+  `CosmologyModels/GenericEOS/LambdaCDM_GenericEOS.py:189`, spaced 4.04 grid intervals apart, not a
+  feature of the cosmology. Remove that artefact and `BREAK_POINT_ALL` falls to the **3** genuine
+  crossings, at which point item 1's Schoenberg–Whitney failure cannot occur and a $C^0$ knot
+  vector constructs trivially. This also revises item 3: the "±3 grid interval" structure prompt 02
+  attributed to $\varphi$ itself has the same 4.04-interval scale as that knot lattice, and the
+  audit measures the `T(z)` interpolation error that produces it at up to 7.18e-04 relative
+  (median 1.89e-07), so most of it is very likely `[02-qcd-T-z-spline-node-tolerance]` after all —
+  testable by rebuilding `T(z)` and re-measuring. **This entry now belongs to the
+  `qcd-background` campaign**, whose audit §8 schedules the re-run of prompt 02 after the
+  representation and the grid are fixed.
+
 - **[13-scoped-run-driver-k-grid-literal]** *(opened by prompt 13, 2026-09-13; not this campaign's
   file)* — `docs/source-remediation-verification/scoped_pipeline_run.py` substitutes `main.py`'s two
   wavenumber grids by exact text match on `np.logspace(np.log10(1e5), np.log10(3e8), 50)` and

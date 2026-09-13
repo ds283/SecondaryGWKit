@@ -115,7 +115,7 @@ numeric object is ~31.5k right-hand-side evaluations rather than ~9.8k (+220 %, 
 ### 1.6 The phase-representation campaign
 
 [`prompts/phase-representation/`](../prompts/phase-representation/README.md) (2026-09-13; two
-prompts, **01 executed, 02 blocked**). Both close a defect that `prompts/GkTk-remedial` prompt 13
+prompts, **01 executed, 02 blocked; CLOSED at 1 / 2 on 2026-09-13**). Both close a defect that `prompts/GkTk-remedial` prompt 13
 **measured and was forbidden to fix**, a verification prompt being barred from touching production
 code. Both are about how a WKB phase is represented and reconstructed for a consumer: one in the
 `(cycle count, remainder)` pair the producers store, one in the spline the consumers build. The
@@ -125,11 +125,15 @@ measurements are `docs/gktk-remedial-verification.md` §3.5, §3.6 and §3.7 and
 exact `fmod` remainder and the production geometry is 0 inconsistent of 77,975. **Prompt 02
 stopped** on its own §2 item 2 without changing production code: the remedy the remaining issue
 names does not construct, and the issue's own attribution did not survive measurement. The
-campaign needs the README §7 D2 decision before it can go further.
+README §7 D2 decision was then taken on the evidence of
+[`qcd-background-audit-2026-09.md`](qcd-background-audit-2026-09.md) — 404 of the 407
+`BREAK_POINT_ALL` points are knots of the `T(z)` spline, so the remedy is upstream — and the
+campaign was **closed**, its remaining issue passing to the `qcd-background` campaign. Close-out:
+`docs/gktk-remedial-verification.md` §8.
 
 | Issue | Board | Hook |
 |---|---|---|
-| `[13-consumer-spline-crosses-eos-break-points]` | GkTk-remedial → phase-representation | `PrimitivePhase`'s cubic spline of $\varphi$ uses default knots across `QCD_EOS`'s declared break points: 1.9e-6 / 3.2e-6 rad at $z=4.24\times10^7$ ($G_k$ / $T_k$, $k=10^5$) against 1 ulp elsewhere. **Narrowed by prompt 02 (2026-09-13), which stopped rather than fixing it:** a repeated-knot vector is singular on all six production grids at `BREAK_POINT_ALL` and 2× worse at `BREAK_POINT_DISCONTINUITY`, no break point coincides with a sample, and the kink itself is only 1.6e-8 / 1.4e-7 rad — 1 % and 4 % — of the error. Next step is the sample grid or the representation, not the knots. |
+| `[13-consumer-spline-crosses-eos-break-points]` | GkTk-remedial → phase-representation | `PrimitivePhase`'s cubic spline of $\varphi$ uses default knots across `QCD_EOS`'s declared break points: 1.9e-6 / 3.2e-6 rad at $z=4.24\times10^7$ ($G_k$ / $T_k$, $k=10^5$) against 1 ulp elsewhere. **Narrowed by prompt 02 (2026-09-13), which stopped rather than fixing it:** a repeated-knot vector is singular on all six production grids at `BREAK_POINT_ALL` and 2× worse at `BREAK_POINT_DISCONTINUITY`, no break point coincides with a sample, and the kink itself is only 1.6e-8 / 1.4e-7 rad — 1 % and 4 % — of the error. **Superseded 2026-09-13** by `qcd-background-audit-2026-09.md`: 404 of the 407 `BREAK_POINT_ALL` points are knots of the `T(z)` spline itself, not cosmology, so the fix is to remove that artefact upstream — after which the set falls to 3 and a knot vector constructs. Owned by the `qcd-background` campaign. |
 | `[02-consumer-phi-below-the-storage-granularity]` | phase-representation | $\varphi$ is recovered as a difference of two numbers of size $k\tau$, so on QCD $G_k$ its whole range is 6.0 ulp of the stored phase at $k=10^7$ and **2.0 ulp (3 distinct values over 1,377 samples)** at $3\times10^8$. Differentiating that staircase makes `theta_deriv` **3× and 10× worse than omitting $\varphi$ altogether**, and is what §3.6's two failing rows actually are. `[00-consumer-anchoring-floor]` seen in the derivative. |
 
 ---
