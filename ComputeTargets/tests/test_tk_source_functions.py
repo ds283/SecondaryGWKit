@@ -539,8 +539,11 @@ class AnalyticRadiationFixture:
         `wrap_theta` reduces by adding TWO_PI in a loop, so at theta ~ -1e6 rad it takes ~1.6e5
         additions and accumulates ~1.4e-06 rad of rounding -- fourteen times the bound this
         fixture's test asserts, and injected by the fixture rather than by anything under test.
-        `WKB_mod_2pi` uses `fmod`, which is exact, leaving only the ~1 ulp of `div * TWO_PI` in
-        the reconstruction (1.2e-10 rad at 1e6 rad).
+        `WKB_mod_2pi`'s *remainder* is an `fmod` and is exact -- its cycle count is not an
+        `fmod`, and used to be a separately rounded division that could be one cycle out
+        (`[13-wkb-mod-2pi-cycle-count-inconsistent]`, fixed by prompt 01 of
+        prompts/phase-representation, which derives the count from the remainder). That leaves
+        only the ~1 ulp of `div * TWO_PI` in the reconstruction (1.2e-10 rad at 1e6 rad).
         """
         z_init = self.crossover_z
         sin_coeff = self.M_exact(z_init) * sqrt(self.omega(z_init))

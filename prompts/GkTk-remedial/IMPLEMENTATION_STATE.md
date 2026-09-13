@@ -251,6 +251,16 @@ before de-chunking —
 chunking bought nothing and cost ordinates, knot residuals and a switch discontinuity, all now
 gone. Workstream D may proceed to prompt 09.) Workstream C closed; the `transfer-remedial` merge confirmed at `e01c31d`, so Workstream D may start (`[00-transfer-remedial-test-file-overlap]`). Prompt 07 landed (the transfer-function phase and friction now come from the tables too: `friction_RHS` and its state index are gone from the producer and live only in prompt 04's test, `store()`'s no-op sign fix and its cross-sample rebase are gone, and the stored $\theta_T$ is 1.5e-8 rad at $k=10^5$ and 9.2e-5 rad at $3\times10^8$ against prompt 01's references, where the ODE was 2.01 rad and 5.1e3 rad. Review §12.4's LG truncation table reproduced to two figures. **Its cost, 0.049–0.052 s per object, straddles prompt 07 §3 item 6's 0.05 s** — `[07-tk-per-object-cost-is-all-setup]`.) Prompt 14 landed (the residual table is built once per $(model, k, sector)$ on the background grid and memoised in the worker: 142.5 (LambdaCDM) / 163.0 (QCD) residual-integrand evaluations per object over 50 objects of one $k$ against 6,924 / 7,908 — 49× — and 0.0010 s per object at $k=3\times10^8$ against 0.0309 s; $\theta$ bit-identical at every sample of fifteen (model, $k$, sector) cases). Prompt 06 landed (the Green's-function WKB phase is now $-[k\,\Delta\tau+\Delta\rho]$ from the tables: the two-stage phase ODE, the `Q` variable, the resets, the sign fix and the cross-sample rebase are gone; stored phases at the floor; `TkWKBIntegration.compute()` switched, its `store()` awaits 07).
 
+**Post-close-out, 2026-09-13.** `[13-wkb-mod-2pi-cycle-count-inconsistent]` moved from §3 to §4:
+**resolved** by prompt 01 of
+[`prompts/phase-representation`](../phase-representation/IMPLEMENTATION_STATE.md), which derives
+`WKB_mod_2pi`'s (and `simple_mod_2pi`'s) cycle count from the exact `fmod` remainder. LambdaCDM
+$G_k$ at $k=3\times10^8$ is **0 inconsistent of 77,975** (was 1), the $|\theta|\sim4\times10^{12}$
+uniform control **0 of 400,000** (was 25), and that case's consumer row **0.0000e+00 rad** (was
+6.1748). The stored remainder is bit-identical, so no stored $G$ or $T$ moved. This board's
+narrative above, and `docs/gktk-remedial-verification.md` §§1–7, are the record of the tree at
+`ff9ee29`/`9daa2cb` and were **not** rewritten (`CLAUDE.md`: verification documents are additive).
+
 > **Maintenance rule.** Every prompt updates this file *in its own commit*, before committing.
 > Set your row's status, fill in the commit SHA, model and log link, update the mechanism-level
 > table in §2, and add or clear entries in §3 (Active issues). Do not edit rows other than your own
@@ -379,44 +389,6 @@ README §0.2's `transfer-remedial` file list.
 ## 3. Active and unresolved issues
 
 Opened by the planning pass, 2026-09-10, before any prompt runs.
-
-- **[13-wkb-mod-2pi-cycle-count-inconsistent]** *(opened by prompt 13, 2026-09-13; **live at the
-  largest wavenumbers**)* — `LiouvilleGreen/WKBtools.py:15-27` forms the stored pair as
-  `theta_mod_2pi = fmod(theta, TWO_PI)`, which is **exact**, and
-  `theta_div_2pi = int(floor(fabs(theta) / TWO_PI))`, which is a **rounded** division followed by
-  `floor`. When the exact quotient lies within half an ulp *below* an integer the division rounds up
-  across it, `floor` returns one cycle too many, and the pair no longer reconstructs its own phase:
-  `div * TWO_PI + mod == theta - 2*pi`. Worked example from the production consumer set:
-  `theta = -3832989103139.361`, exact quotient 610039162581.99994, `fabs(theta)/TWO_PI` rounds to
-  610039162582.0, `floor` gives 610039162582, reconstruction 6.283203125 rad low.
-  **The stored `theta_mod_2pi` is correct**, so no stored value of $G$ or $T$ moves — `G_WKB` and
-  `T_WKB` are built from the remainder. What is wrong is the cycle count, hence every consumer that
-  reconstructs the *unwrapped* phase, which since prompts 09 and 10 is both of them
-  (`build_phi_samples` → `PrimitivePhase.raw_theta`, and `QuadSourceIntegral._ClampedPhase` through
-  them). **Measured on the production geometry** (the whole source × response rectangle for $G_k$,
-  the source grid for $T_k$): **1 of 77,975** samples at LambdaCDM $k=3\times10^8$/Mpc, 0 in the
-  eleven other (model, sector, $k$) cases of 43,434–79,809 samples each; uniform controls over
-  400,000 draws give 0 at $|\theta|\sim10^9$, 0 at $10^{11}$ and **25 (6.25e-05) at
-  $4\times10^{12}$**, against a half-ulp width of 6.10e-05 cycles — so the rate is the half-ulp
-  width and scales linearly with $|\theta|$, i.e. with $k$. **Cost when it fires: 6.17 rad** in the
-  Green's-function consumer at LambdaCDM $k=3\times10^8$, against the 9.15e-04 rad
-  $\varepsilon k\tau$ floor every other point sits at; excluding fifteen grid intervals either side
-  of the offending sample the consumer's maximum is exactly 0.0 rad.
-  **The `GkSource` rectifier does not repair it**: its trigger (`GkSource.py:200`) is
-  `theta > last_theta`, a cycle count jumping *up* as the source redshift rises, and this defect
-  makes the stored phase one cycle *more negative*. This also corrects one clause of
-  `[10-wrap-theta-loop-at-large-phase]` below. **Impact:** the largest single error anywhere in the
-  chain after this campaign, and it grows with $k$, so a production run at $3\times10^8$ carries a
-  handful of 6-rad consumer excursions per model. It was invisible while the ODE was wrong by
-  thousands of radians. **Next step:** derive the cycle count from the exact remainder rather than
-  from a second division — `div = round((theta - mod) / TWO_PI)`, or equivalently adjust `div` by
-  one when `div * TWO_PI + mod` differs from `theta` by more than half a cycle — with a test that
-  sweeps $|\theta|$ up to $5\times10^{12}$. It moves a persisted column, so it carries a datastore
-  regeneration. Not fixed by prompt 13, which may not touch production code.
-  **Assigned (2026-09-13): `prompts/phase-representation` prompt 01.** It is that campaign's
-  first prompt because it is the only live accuracy defect this campaign left behind and its rate
-  grows with $k$. Closure — and the measured `0 of 77,975` — is recorded in §4 by that prompt,
-  not here.
 
 - **[13-consumer-spline-crosses-eos-break-points]** *(opened by prompt 13, 2026-09-13)* —
   `PrimitivePhase` splines the residual $\varphi$ with `make_interp_spline`'s default knots, which
@@ -551,8 +523,10 @@ Opened by the planning pass, 2026-09-10, before any prompt runs.
   its only caller is `apply_phase_offset`, which passes `mod + delta` with `mod` already in
   $(-2\pi,0]$, so the loop runs at most twice. `WKB_mod_2pi` uses `fmod`, is exact, and is what
   prompt 10's $x_T=10^6$ fixture uses — **corrected by prompt 13 (2026-09-13): its *remainder* is
-  exact, because that is the `fmod`; its *cycle count* is a separate rounded division and is not,
-  which is `[13-wkb-mod-2pi-cycle-count-inconsistent]` above. Everything else in this entry
+  exact, because that is the `fmod`; its *cycle count* was a separate rounded division and was not,
+  which is `[13-wkb-mod-2pi-cycle-count-inconsistent]`. That defect was fixed by prompt 01 of
+  `prompts/phase-representation` (2026-09-13, §4 below), so `WKB_mod_2pi` is now exact in both
+  halves and the fixture recommendation stands without qualification. Everything else in this entry
   stands.** **Impact:** any test fixture that reduces a large
   unwrapped phase with `wrap_theta` — prompt 10's test 3.1 would have been 14× over its own
   1e-7 rad bound on the fixture's arithmetic alone. There is no warning in the docstring.
@@ -868,6 +842,32 @@ Opened by the planning pass, 2026-09-10, before any prompt runs.
 ---
 
 ## 4. Resolved issues
+
+- **[13-wkb-mod-2pi-cycle-count-inconsistent]** *(opened by prompt 13, 2026-09-13; **resolved by
+  prompt 01 of [`prompts/phase-representation`](../phase-representation/IMPLEMENTATION_STATE.md)**,
+  2026-09-13)* — `LiouvilleGreen/WKBtools.py`'s `WKB_mod_2pi` took its remainder from an exact
+  `fmod` but its cycle count from `int(floor(fabs(theta) / TWO_PI))`, a correctly-rounded division:
+  when the exact quotient sat within half an ulp *below* an integer the division rounded up across
+  it, `floor` returned one cycle too many, and the stored pair reconstructed $\theta-2\pi$.
+  `simple_mod_2pi` shared the construction and the defect. **Fixed** by deriving the count from the
+  exact remainder — `int(round((fabs(theta) - fabs(theta_mod_2pi)) / TWO_PI))`, whose argument is
+  within $n\cdot2^{-52}$ of the true integer $n=\lfloor|\theta|/2\pi\rfloor$ and so rounds to it
+  exactly while $|\theta| < 2\pi\cdot2^{51}\approx1.4\times10^{16}$, against a production maximum of
+  $\approx5\times10^{12}$. Both functions keep their own (deliberately different) remainder
+  conventions, and the remainder itself is bit-identical, so **no stored $G$ or $T$ moved**.
+  **Measured**, `docs/gktk-remedial/verify_production_path.py` unedited, before → after: LambdaCDM
+  $G_k$ at $k=3\times10^8$ **1 → 0 inconsistent of 77,975**; the eleven other (model, sector, $k$)
+  rows 0 → 0; the uniform control at $|\theta|\sim4\times10^{12}$ **25 → 0 of 400,000**, emptying
+  the whole 6.104e-05-cycle half-ulp band. At the consumer, the LambdaCDM $k=3\times10^8$
+  Green's-function row falls from **6.1748 rad (12,646 ulp of the span) at $z=33{,}296$ to exactly
+  0.0000e+00 rad (0.00 ulp)**, and `theta_deriv` against $\omega$ on that case from 5.6245e-08 to
+  1.8060e-13. Nothing else in the script's output moved but wall-clock. Cost: 0.2254 → 0.2731 µs
+  per reduction (+48 ns), once per stored sample. **Datastore:** `theta_div_2pi` is
+  `nullable=False` and in no lookup key, so a pre-fix datastore is served silently with the old
+  count at the affected samples; no migration was invented and none is recommended — see
+  `prompts/phase-representation/logs/01-wkb-mod-2pi-cycle-count.md`, "State handed to the next
+  prompt", for the regeneration list. **This also corrected one clause of
+  `[10-wrap-theta-loop-at-large-phase]`**, in §3 above.
 
 - **[01-offgrid-accessor-cost-on-qcd]** *(opened by prompt 01, 2026-09-10; narrowed by prompts 03,
   06 and 09; **resolved by prompt 13**, 2026-09-13)* — the entry's recorded closing condition was

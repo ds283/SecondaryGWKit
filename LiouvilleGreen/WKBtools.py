@@ -1,4 +1,4 @@
-from math import fmod, floor, fabs
+from math import fmod, fabs
 from typing import List, Sequence, Tuple
 
 from LiouvilleGreen.constants import TWO_PI
@@ -14,7 +14,29 @@ from config.defaults import DEFAULT_ABS_TOLERANCE
 # prompts/GkTk-remedial; the module docstring of LiouvilleGreen.range_reduce_mod_2pi).
 def WKB_mod_2pi(theta: float):
     theta_mod_2pi = fmod(theta, TWO_PI)
-    theta_div_2pi = int(floor(fabs(theta) / TWO_PI))
+
+    # The cycle count must be derived from the *remainder*, not from a second, independently
+    # rounded division. fmod is exact, so |theta| - |theta_mod_2pi| is mathematically n*TWO_PI
+    # for the integer n = floor(|theta| / TWO_PI) we want; whereas fabs(theta) / TWO_PI is a
+    # correctly-rounded double division, and when the exact quotient sits within half an ulp
+    # *below* an integer that division rounds up across it and floor() returns n+1. The pair
+    # then reconstructs theta - 2*pi rather than theta
+    # ([13-wkb-mod-2pi-cycle-count-inconsistent]; measured 1 of 77,975 production Gk samples at
+    # k = 3e8/Mpc on LambdaCDM, docs/gktk-remedial-verification.md §3.7).
+    #
+    # Error budget for the expression below, with n ~ |theta| / (2 pi):
+    #   * the subtraction rounds by at most ulp(|theta|)/2 <= |theta| * 2^-53, i.e. n * 2^-53
+    #     cycles once divided by TWO_PI;
+    #   * the division itself rounds by at most n * 2^-53.
+    # So the argument of round() is within n * 2^-52 of the exact integer, and round-to-nearest
+    # recovers n exactly while n * 2^-52 < 1/2, i.e. while n < 2^51 -- that is
+    # |theta| < 2*pi*2^51 ~ 1.4e16, where ulp(theta) has itself grown to ~2 rad and the phase
+    # has no fractional information left. Every |theta| this code sees is <= ~5e12 (n ~ 8e11),
+    # where the bound is 1.8e-4 cycles.
+    #
+    # NOTE replacing floor() by round() on the OLD quotient does not fix this: it merely moves
+    # the failure from quotients just below an integer to quotients just above one.
+    theta_div_2pi = int(round((fabs(theta) - fabs(theta_mod_2pi)) / TWO_PI))
 
     if theta < 0.0:
         theta_div_2pi = -theta_div_2pi
