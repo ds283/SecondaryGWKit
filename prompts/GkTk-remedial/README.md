@@ -282,8 +282,9 @@ review those three most closely.
 | 17 | [`17-tk-numeric-atol-k-sweep.md`](17-tk-numeric-atol-k-sweep.md) | §3 `[12-tk-numeric-atol-largest-k-excursion]` | new `docs/gktk-remedial/tk_numeric_atol_sweep.py` and `TK-NUMERIC-ATOL-SWEEP.md` | Low–medium; **no production code** — the reference construction is the risk | **Opus** |
 | 18 | [`18-numeric-ode-break-points.md`](18-numeric-ode-break-points.md) | §3 `[17-qcd-reference-not-converged]` | `Quadrature/integrators/numeric_with_phase_cut.py`, the `CosmologyModels/GenericEOS` declaration, new `ComputeTargets/tests/test_numeric_break_points.py`, an additive section of `TK-NUMERIC-ATOL-SWEEP.md` | Medium–high; **production code shared by both numeric sectors**, and one `CosmologyModels` API decision | **Opus** |
 | 19 | [`19-per-sector-break-point-policy.md`](19-per-sector-break-point-policy.md) | §3 `[17-qcd-reference-not-converged]` | `Quadrature/integrators/numeric_with_phase_cut.py`, the break-point argument and its comment at both `ComputeTargets/{Gk,Tk}NumericIntegration.py` call sites, `ComputeTargets/tests/test_numeric_break_points.py`, an additive section of `TK-NUMERIC-ATOL-SWEEP.md` | Medium–high; **the same shared production integrator as 18**, with a policy that now differs between the two sectors | **Opus** |
+| 20 | [`20-key-the-break-point-policy.md`](20-key-the-break-point-policy.md) | §3 `[18-numeric-solver-not-in-lookup-key]` | `Datastore/SQL/ObjectFactories/{Gk,Tk}NumericIntegration.py`, the policy constant in `ComputeTargets/{Gk,Tk}NumericIntegration.py`, the two numeric `object_get` sites of `main.py`; tests | Medium–high; **production datastore code and a schema change with no migration** — but no computed value may move | **Opus** |
 
-> Rows 16, 17, 18 and 19 are numbered last because the campaign's numbers are append-only. **16 runs
+> Rows 16, 17, 18, 19 and 20 are numbered last because the campaign's numbers are append-only. **16 runs
 > between 11 and 12** — the follow-up §7 D2 anticipated, enacting the user's choice of option
 > (ii) once prompt 11 had measured the fire rate; prompt 12 is unaffected by it. **17 runs
 > after 12 and before Workstream F**: prompt 12 set the $T_k$ numeric `atol` on evidence from
@@ -296,7 +297,11 @@ review those three most closely.
 > and before Workstream F** for that same reason once more: it is the decision prompt 18 §4
 > reserved for the user, taken 2026-09-13 — the cosmology declares all of its non-smoothness and
 > each consumer chooses what to split at — and it moves computed `TkNumericIntegration` values on
-> `QCDModel` a second time.
+> `QCDModel` a second time. **20 runs after 19 and before Workstream F**, and is the datastore
+> half of what 18 and 19 kept reporting: the break-point policy is a real degree of freedom that
+> is in neither numeric lookup key, so it is keyed beside `atol` and `rtol` before prompt 13
+> builds a datastore on top of it. The user's decision of 2026-09-13 also corrected the issue's
+> recorded remedy — the solver is hard-coded, so filtering on `solver_serial` would be a no-op.
 
 ### Workstream F — verification and close-out
 

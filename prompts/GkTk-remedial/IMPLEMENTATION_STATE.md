@@ -255,6 +255,7 @@ Legend: ⬜ not started · 🟡 in flight · ✅ complete · ⚠️ complete wit
 | 17 | [Tk numeric `atol` k-sweep](17-tk-numeric-atol-k-sweep.md) | §3 `[12-tk-numeric-atol-largest-k-excursion]` | Opus | ✅ | *"Measure the transfer-function numeric tolerance across the k-grid"* (SHA not embedded, per the campaign convention) | [`logs/17-tk-numeric-atol-k-sweep.md`](logs/17-tk-numeric-atol-k-sweep.md) |
 | 18 | [Numeric ODE break points](18-numeric-ode-break-points.md) | §3 `[17-qcd-reference-not-converged]` | Opus | ⚠️ | *"Split the numeric ODE at the cosmology's declared discontinuities"* (SHA not embedded, per the campaign convention) | [`logs/18-numeric-ode-break-points.md`](logs/18-numeric-ode-break-points.md) |
 | 19 | [Per-sector break-point policy](19-per-sector-break-point-policy.md) | §3 `[17-qcd-reference-not-converged]` | Opus | ⚠️ | *"Let each numeric sector choose which declared break points it splits at"* (SHA not embedded, per the campaign convention) | [`logs/19-per-sector-break-point-policy.md`](logs/19-per-sector-break-point-policy.md) |
+| 20 | [Key the break-point policy](20-key-the-break-point-policy.md) | §3 `[18-numeric-solver-not-in-lookup-key]` | Opus | ⬜ | | |
 
 > Rows 16 and 17 are numbered last because the campaign's numbers are append-only. **16 runs
 > between 11 and 12** — the follow-up README §7 D2 anticipated, enacting the user's choice of
@@ -273,7 +274,7 @@ Legend: ⬜ not started · 🟡 in flight · ✅ complete · ⚠️ complete wit
 |---|---|---|---|---|---|---|
 | 13 | [Verification and docs](13-verification-and-docs.md) | review §4, §12.3, §13.5 | Opus | ⬜ | | |
 
-**Progress:** 18 / 19 complete.
+**Progress:** 18 / 20 complete.
 
 ---
 
@@ -767,8 +768,35 @@ Opened by the planning pass, 2026-09-10, before any prompt runs.
   (`"solve_ivp+DOP853-stepping0"`) is unchanged by the split, so it does not distinguish them
   either. **Impact:** any datastore spanning this commit on `QCDModel`; prompt 13 must build
   fresh. **Not acted on:** §3.1 reserves the key, the label and the factories to the user, as a
-  datastore decision with its own migration. **Next step:** the user's — either add
-  `solver_serial` to the two queries, or make the label carry the split and accept the recompute.
+  datastore decision with its own migration.
+
+  **Second instance (prompt 19, 2026-09-13):** the per-sector break-point policy moves `QCDModel`
+  `TkNumericIntegration` values again, by up to 1.61e-04, invisibly to the key;
+  `GkNumericIntegration` rows are bit-identical across that commit on all three models.
+
+  **Diagnosis corrected, and the decision taken, 2026-09-13 (the user).** The entry's original
+  next step — "add `solver_serial` to the two queries" — **is a no-op**, and is recorded here so
+  that it is not re-proposed. The solver cannot vary: `numeric_with_phase_cut` hard-codes
+  `method="DOP853"` (lines 358 and 658), takes no solver or method argument and returns the
+  constant `"solve_ivp+DOP853-stepping0"` (line 823); `main.py:3033`'s `solvers` dict is never
+  indexed in `main.py`, only passed whole to six `object_get` sites and consumed *after* the
+  compute as `self._solver_labels[data["solver_label"]]`, so `RK45`, `Radau`, `BDF` and `LSODA`
+  are registered and unreachable. Every numeric row ever stored therefore points at one and the
+  same `IntegrationSolver` serial, and filtering on it would exclude nothing while making the
+  query read as though it were sound. Nor can `IntegrationSolver` carry the policy cheaply: its
+  own lookup is `label == label AND stepping >= stepping` (`integration_metadata.py:32`), so
+  `stepping` is an ordered *quality* parameter — which is why it holds a Gauss order — and a
+  break-point policy is categorical. **The solver is provenance, and the audit is wider than this
+  entry recorded:** no factory anywhere filters on a solver serial, and five compute targets store
+  one (`BackgroundModel`, both numeric targets, `GkWKBIntegration`, and `TkWKBIntegration` with
+  two).
+
+  What is actually unkeyed is the *configuration*: `break_point_kind`, a genuine degree of freedom
+  since prompt 19, honoured by the integrator, differing between the two sectors, and moving the
+  stored answer. **Next step: assigned (2026-09-13) to prompt 20** — key the configuration beside
+  `atol` and `rtol`, as prompt 12 did for the $T_k$ `atol`, and leave the solver alone. Prompt 20
+  §5 carries the user's "all five compute targets" scope decision as a report-only audit, four of
+  the five having no equivalent free parameter under this design. It runs before prompt 13.
 
 - **[19-cosmologymodels-docstrings-predate-per-sector-policy]** *(opened by prompt 19,
   2026-09-13)* — two `CosmologyModels/` docstrings state as fact what is now true of one numeric
