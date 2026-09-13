@@ -2,7 +2,34 @@
 
 **Campaign:** [`README.md`](README.md) · **Source review:** [`docs/gk-wkb-review-fable-2026-09-09.md`](../../docs/gk-wkb-review-fable-2026-09-09.md) · **Reconciliation:** [`RECONCILIATION.md`](RECONCILIATION.md)
 **Baseline commit:** `9ff59d5` (`main`, clean)
-**Last updated:** 2026-09-13 — Prompt 20 landed (the numeric **break-point policy is now part of
+**Last updated:** 2026-09-13 — **Prompt 13 landed and the campaign is closed.** The verification
+document is [`docs/gktk-remedial-verification.md`](../../docs/gktk-remedial-verification.md), taken
+on `ff9ee29` and changing no production code. **Layer 1** re-measures review §4 and §12.3 through
+the production functions on both models at $k\in\{10^5,10^7,3\times10^8\}$: at $z=0.1$ on
+LambdaCDM, $\theta_G$ goes **13.9 rad → 0.0** ($k=10^5$) and **7366 → 9.77e-04 rad**
+($3\times10^8$, exactly one ulp of the 4.118e12 rad phase), $\theta_T$ **2.01 → 1.49e-08** and
+**5.1e3 → 9.16e-05 rad**; on `QCD_Cosmology`, which the review never measured, the same four are
+4.77e-07 / 4.88e-04 and 7.45e-08 / 2.44e-04 rad. Cost per object at $3\times10^8$: $G_k$ **0.0010 s
+and 468 integrand evaluations** against 63.7 s and 2.54e6, $T_k$ **0.0181 s and 5,540** cached
+(0.0511 / 11,376 cold) against 58 s and 1.93e6. The consumers at production $x$, scored at ten
+points per grid interval, are at **1.00 ulp of their span** in ten of twelve (model, $k$, sector)
+cases. **Layer 2** ran the pipeline on a fresh datastore per model through every stage; the stored
+`(theta_div_2pi, theta_mod_2pi)` of sampled rows is **bit-identical** to the offline producer put
+through the production `store()` algebra, the persisted limbs agree with an independent reference to
+2.6e-16 relative, and `WKB_phase_spline_chunks` is **1** on every row that populates it. **Three
+issues closed on measurements the board had assigned to this prompt**:
+`[01-offgrid-accessor-cost-on-qcd]` (29.3 µs per call in bulk on QCD, under the 50 µs threshold),
+`[14-residual-range-top-margin]` (worst cut-to-anchor margin 1.735 e-folds over the whole production
+$k$ range) and `[10-residual-spline-end-condition]` (on the real background the cubic meets the
+wider of prompt 10's two shipped windows and misses the tighter by 1.7×; `spline_order=5` is not
+taken, because it does not touch what actually dominates there). **Three opened**, none of them fixed here because prompt 13
+may not touch production code: `[13-wkb-mod-2pi-cycle-count-inconsistent]` — `WKB_mod_2pi` takes its
+remainder from an exact `fmod` but its cycle count from a *rounded* division, so the stored pair can
+reconstruct $\theta-2\pi$; 1 of 77,975 production $G_k$ samples at $k=3\times10^8$ on LambdaCDM, and
+it costs the consumer **6.17 rad** there, the largest single error left in the chain —
+`[13-consumer-spline-crosses-eos-break-points]` and `[13-scoped-run-driver-k-grid-literal]`.
+`docs/gk-wkb-review-fable-2026-09-09.md` gains an additive **§14** and `docs/spec/02-greens-function.md`
+§0.1 item (1) a dated parenthesis. Prompt 20 landed (the numeric **break-point policy is now part of
 both numeric datastore lookup keys**, enacting the user's decision of 2026-09-13 to key the
 *configuration* and leave the solver as provenance. Each numeric compute target carries one
 declaration of its policy — `GkNumericIntegration.BREAK_POINT_KIND = BREAK_POINT_DISCONTINUITY`,
@@ -302,9 +329,10 @@ Legend: ⬜ not started · 🟡 in flight · ✅ complete · ⚠️ complete wit
 
 | # | Prompt | Covers | Model | Status | Commit | Log |
 |---|---|---|---|---|---|---|
-| 13 | [Verification and docs](13-verification-and-docs.md) | review §4, §12.3, §13.5 | Opus | ⬜ | | |
+| 13 | [Verification and docs](13-verification-and-docs.md) | review §4, §12.3, §13.5 | Opus | ⚠️ | *"Verify the Gk/Tk WKB remediation against both background models"* (SHA not embedded, per the campaign convention) | [`logs/13-verification-and-docs.md`](logs/13-verification-and-docs.md) |
 
-**Progress:** 19 / 20 complete.
+**Progress:** 20 / 20 complete. **The campaign is closed**; its verification document is
+[`docs/gktk-remedial-verification.md`](../../docs/gktk-remedial-verification.md).
 
 ---
 
@@ -338,7 +366,7 @@ campaign; the review section is the authority on each.
 | M21 | **DEFECT, misleading** | `0.85·z_e6` truncation requests samples never produced in stop mode (§10.2) — comment only | 11 | ✅ both `main.py` comments (`:604-611`, `:1178-1189`) rewritten to say the ODE terminates on the $z_{e6}$ event, the `expected_values` check is skipped in stop mode, and the samples between $z_{e6}$ and $0.85z_{e6}$ are never produced. The constant stays (hand-over decision). `git diff main.py` is comment-only; the 40-of-41 return is pinned by the bit-identity test |
 | M22 | **DEFECT, accuracy** | $T_k$ numeric run limited to $1.1\times10^{-5}$ of the envelope by `atol=1e-10` acting as a $10^{-5}$ relative tolerance (§12.5) | 12, 17 | ⚠️ `DEFAULT_TK_NUMERIC_ABS_TOLERANCE = 1e-13` for the `TkNumericIntegration` run alone, carried by a separate `tolerance` object `Tk_numeric_atol` through all five of its `object_get` sites. On review §12.5's geometry (RadiationModel, $k=10^6$, production source grid, $T=1,T'=0$, `rtol=1e-8`, all four of the review's RHS-evaluation counts reproduced exactly): $\delta T/{\rm env}$ **9.928e-6 → 2.534e-6** (README §6 target $\le3\times10^{-6}$) for **+14.3 %** evaluations; with exact initial data **1.160e-5 → 3.275e-7**, so what remains is the $2.5\times10^{-6}$ initial-condition floor (`[00-tk-superhorizon-ic-series]`, out of scope). $G_k$ moves by 8.538e-10 of the envelope for +0.35 % evaluations and keeps `atol`. **Confirmed by the user 2026-09-12 after prompt 17's grid sweep: `1e-13` stands.** ⚠️ because at $k=3\times10^8$ the shipped tolerance leaves an isolated 2.56e-4 excursion near $x\approx10.8$ that `atol=1e-16` removes (`[12-tk-numeric-atol-largest-k-excursion]`), and because deviation 1 had to repair the batch `build_Tk_WKB_work`'s numeric lookup was dispatched over — `query_batch` (the `TkWKBIntegration` query, whole batch) rather than the unused `payload_batch` (the missing subset), which no longer works once the two carry different tolerances. **Prompt 17 measured the whole production $k$-grid** (50 wavenumbers × `RadiationModel`, `LambdaCDMModel`, `QCDModel` × `atol` ∈ {1e-10, 1e-13, 1e-16} at `rtol=1e-8`, each against a converged run of the same integrator; `docs/gktk-remedial/TK-NUMERIC-ATOL-SWEEP.md`): the excursion is real off the control and is **not** a large-$k$ effect — at the shipped tolerance **3 / 13 / 8 of 50** wavenumbers exceed $3\times10^{-6}$, worst **8.64e-4** at $k=8.37\times10^5$ on LambdaCDM, every one of them a *level* (median 1.7e-5–5.8e-5, last sample up to 2.2e-4) rather than one bad sample. `atol=1e-16` does **not** fix it (LambdaCDM 13 → 10, two of them wavenumbers `1e-13` handles) and is not cheaper on a real background. The lever is `rtol`: at fixed `atol=1e-13`, `rtol` 1e-8 → 1e-9 removes every excursion (8.64e-4 → 7.4e-8) for +23 % evaluations, and on both production backgrounds a $10^{-6}$ change in $k$ removes it too. What `1e-13` buys is the *level*, uniformly: median-over-$k$ of the per-$k$ maximum 1.25e-5 → 3.8e-7, 1.19e-5 → 4.5e-7, 1.38e-5 → 1.0e-6 for +25–30 % evaluations. **Prompt 17 recommends keeping 1e-13**; the constant is the user's call and the ⚠️ stands until it is settled. **Prompt 18 repaired the reference those QCD figures were measured against**: `numeric_with_phase_cut` splits its integration at the cosmology's declared *discontinuities*, and on `QCDModel` the $T_k$ reference-convergence drift falls from **23 of 50** wavenumbers above the 3.4e-08 criterion (worst 6.17e-06) to **3** (worst 1.97e-07 at $k=4.287\times10^6$, median 5.12e-09), the four wavenumbers prompt 17 named improving **347×–5764×**. $G_k$ **never had the failure** on any model — 1.94e-11 / 2.1e-11 / 8.41e-09 worst over the grid on Radiation / LambdaCDM / QCD, the same split or unsplit — which is the first converged-reference measurement for that sector. Nothing about `atol` or `rtol` changed. The residue is the $T(z)$ spline's $C^2$ knots, which would close it at +219 % / +155 % of the production evaluations (log 18, `TK-NUMERIC-ATOL-SWEEP.md` §9.7). **Prompt 19 paid that price in the $T_k$ sector alone** (`TK-NUMERIC-ATOL-SWEEP.md` §10): the break-point policy is now the caller's, `TkNumericIntegration` asks for `BREAK_POINT_ALL` and `GkNumericIntegration` for `BREAK_POINT_DISCONTINUITY`, and on `QCDModel` the $T_k$ drift is below the criterion at **all 50** wavenumbers — worst **8.72e-09**, median 3.96e-09, zero offenders — for **+220.23 %** of the production evaluations (9843 → 31521 per object, ~49 s for the whole 50-object sector). $G_k$ is **bit-identical**: 8.41e-09 worst on QCD at the same wavenumber and 13320 evaluations per object, the same integers as §9. The reference is now converged in both sectors on all three models, so `[17-qcd-reference-not-converged]` is **resolved** and what remains under this ID is the `rtol` question `[12-tk-numeric-atol-largest-k-excursion]` carries to `prompts/tolerance-convergence`. **Prompt 20 closed the datastore half that prompts 18 and 19 kept reporting**: `break_point_kind` is now a `nullable=False` string column on both numeric tables, filtered on in `build()` and written from the same class constant `compute()` passes to the integrator, so a row computed under one policy no longer answers a query for the other; an old-schema datastore raises rather than silently hitting; `main.py`, `Quadrature/`, `config/defaults.py` and every tolerance are untouched, and a production QCD object in both sectors is **bit-identical** to `HEAD~1`. `[18-numeric-solver-not-in-lookup-key]` is **resolved** (§4) |
 | M23 | **REQUIREMENT** | Independent references and error definitions; throughput of the interval accessor measured early (§13.3, §13.5) | 01 | ⚠️ |
-| M24 | **REQUIREMENT** | Verification on both models against the references; scoped pipeline run; additive docs (§13.5) | 13 | ⬜ |
+| M24 | **REQUIREMENT** | Verification on both models against the references; scoped pipeline run; additive docs (§13.5) | 13 | ⚠️ [`docs/gktk-remedial-verification.md`](../../docs/gktk-remedial-verification.md). **Layer 1** (`docs/gktk-remedial/verify_production_path.py`, 46 s, six sections, no Ray, no datastore): review §4 and §12.3 re-measured on both models at $k\in\{10^5,10^7,3\times10^8\}$ — at $z=0.1$ on LambdaCDM, $\theta_G$ **13.9 rad → 0.0** ($k=10^5$) and **7366 → 9.77e-04 rad** ($3\times10^8$, one ulp of 4.118e12 rad); $\theta_T$ **2.01 → 1.49e-08** and **5.1e3 → 9.16e-05 rad**; on QCD, where the review measured nothing, 4.77e-07 / 4.88e-04 and 7.45e-08 / 2.44e-04 rad. Cost per object at $3\times10^8$: $G_k$ **0.0010 s / 468 evaluations** (63.7 s / 2.54e6 before), $T_k$ **0.0181 s / 5,540** cached and 0.0511 / 11,376 cold (58 s / 1.93e6). Consumers at production $x$ (10 points per grid interval over the pure-WKB source band and the whole $T_k$ WKB region): **1.00 ulp of the span** in ten of twelve (model, $k$, sector) cases, the two exceptions being a QCD equation-of-state break point (`[13-consumer-spline-crosses-eos-break-points]`) and one whole-cycle sample (`[13-wkb-mod-2pi-cycle-count-inconsistent]`). Tables, $\rho$ and $F$ re-measured at the nodes and reproduce logs 03/04/05 to the printed digits. **Layer 2**: see the row above and the verification document §4. **Docs**: review §14 appended (nothing at or above §13 edited), `docs/spec/02-greens-function.md` §0.1 item (1) carries a dated parenthesis, `docs/OPEN_ISSUES.md` reconciled. ⚠️ because prompt 13 found a live defect it may not fix (`[13-wkb-mod-2pi-cycle-count-inconsistent]`) and because README §6's $T_k$ numeric row is still met only at the typical wavenumber (`[12-tk-numeric-atol-largest-k-excursion]`, owned by `prompts/tolerance-convergence`) |
 
 **Out of scope (do not schedule):** the numeric→WKB hand-over (window, overlap, clamp,
 $\sqrt{z_{e3}z_{e4}}$ limit — `docs/OPEN_ISSUES.md` §1.1); the $T_k$ LG truncation floor at the
@@ -351,6 +379,71 @@ README §0.2's `transfer-remedial` file list.
 ## 3. Active and unresolved issues
 
 Opened by the planning pass, 2026-09-10, before any prompt runs.
+
+- **[13-wkb-mod-2pi-cycle-count-inconsistent]** *(opened by prompt 13, 2026-09-13; **live at the
+  largest wavenumbers**)* — `LiouvilleGreen/WKBtools.py:15-27` forms the stored pair as
+  `theta_mod_2pi = fmod(theta, TWO_PI)`, which is **exact**, and
+  `theta_div_2pi = int(floor(fabs(theta) / TWO_PI))`, which is a **rounded** division followed by
+  `floor`. When the exact quotient lies within half an ulp *below* an integer the division rounds up
+  across it, `floor` returns one cycle too many, and the pair no longer reconstructs its own phase:
+  `div * TWO_PI + mod == theta - 2*pi`. Worked example from the production consumer set:
+  `theta = -3832989103139.361`, exact quotient 610039162581.99994, `fabs(theta)/TWO_PI` rounds to
+  610039162582.0, `floor` gives 610039162582, reconstruction 6.283203125 rad low.
+  **The stored `theta_mod_2pi` is correct**, so no stored value of $G$ or $T$ moves — `G_WKB` and
+  `T_WKB` are built from the remainder. What is wrong is the cycle count, hence every consumer that
+  reconstructs the *unwrapped* phase, which since prompts 09 and 10 is both of them
+  (`build_phi_samples` → `PrimitivePhase.raw_theta`, and `QuadSourceIntegral._ClampedPhase` through
+  them). **Measured on the production geometry** (the whole source × response rectangle for $G_k$,
+  the source grid for $T_k$): **1 of 77,975** samples at LambdaCDM $k=3\times10^8$/Mpc, 0 in the
+  eleven other (model, sector, $k$) cases of 43,434–79,809 samples each; uniform controls over
+  400,000 draws give 0 at $|\theta|\sim10^9$, 0 at $10^{11}$ and **25 (6.25e-05) at
+  $4\times10^{12}$**, against a half-ulp width of 6.10e-05 cycles — so the rate is the half-ulp
+  width and scales linearly with $|\theta|$, i.e. with $k$. **Cost when it fires: 6.17 rad** in the
+  Green's-function consumer at LambdaCDM $k=3\times10^8$, against the 9.15e-04 rad
+  $\varepsilon k\tau$ floor every other point sits at; excluding fifteen grid intervals either side
+  of the offending sample the consumer's maximum is exactly 0.0 rad.
+  **The `GkSource` rectifier does not repair it**: its trigger (`GkSource.py:200`) is
+  `theta > last_theta`, a cycle count jumping *up* as the source redshift rises, and this defect
+  makes the stored phase one cycle *more negative*. This also corrects one clause of
+  `[10-wrap-theta-loop-at-large-phase]` below. **Impact:** the largest single error anywhere in the
+  chain after this campaign, and it grows with $k$, so a production run at $3\times10^8$ carries a
+  handful of 6-rad consumer excursions per model. It was invisible while the ODE was wrong by
+  thousands of radians. **Next step:** derive the cycle count from the exact remainder rather than
+  from a second division — `div = round((theta - mod) / TWO_PI)`, or equivalently adjust `div` by
+  one when `div * TWO_PI + mod` differs from `theta` by more than half a cycle — with a test that
+  sweeps $|\theta|$ up to $5\times10^{12}$. It moves a persisted column, so it carries a datastore
+  regeneration. Not fixed by prompt 13, which may not touch production code.
+
+- **[13-consumer-spline-crosses-eos-break-points]** *(opened by prompt 13, 2026-09-13)* —
+  `PrimitivePhase` splines the residual $\varphi$ with `make_interp_spline`'s default knots, which
+  interpolate straight across the points where `QCD_EOS` stops being smooth. On `QCD_Cosmology` the
+  consumer's worst error is at $z=4.24\times10^7$ — the `T_LO` branch boundary, where $H(z)$ jumps
+  by 4.4e-04 (log 02) — in **both** sectors at $k=10^5$: **1.907e-06 rad** ($G_k$, 8 ulp of the
+  span) and **3.186e-06 rad** ($T_k$, 428 ulp), against 1.00 ulp everywhere else and at every other
+  wavenumber. The same non-smoothness is what makes `theta_deriv` miss $\omega$ by **2.3e-07 to
+  3.3e-04 relative across the QCD interior** — uniformly, not at the ends, which is why it is *not*
+  `[10-residual-spline-end-condition]` (that one is closed, §4). Contributing to the QCD figures is
+  `[02-qcd-T-z-spline-node-tolerance]`, which makes $\omega^2$ itself scatter between neighbouring
+  nodes at the top of the grid. **Impact:** a few $10^{-6}$ rad of consumer phase on QCD at the
+  smallest wavenumbers, against a $10^{-3}$ rad Liouville–Green truncation floor on that model, so
+  nothing downstream is limited by it today; it matters if anyone ever tightens the QCD phase
+  claims. **Next step:** give `PrimitivePhase` a knot vector that repeats a knot at each
+  `integration_break_points` value inside the sample range — the remedy prompts 02 and 03 built for
+  the quadrature and prompts 18 and 19 for the ODE, applied to the last consumer of a cosmology's
+  non-smoothness that does not use it. `ComputeTargets/primitive_phase.py`, one prompt.
+
+- **[13-scoped-run-driver-k-grid-literal]** *(opened by prompt 13, 2026-09-13; not this campaign's
+  file)* — `docs/source-remediation-verification/scoped_pipeline_run.py` substitutes `main.py`'s two
+  wavenumber grids by exact text match on `np.logspace(np.log10(1e5), np.log10(3e8), 50)` and
+  refuses to run unless it finds exactly two occurrences. Since `f17f2d4` `main.py` spells them
+  `…, NUMBER_SOURCE_K_VALUES)` and `…, NUMBER_RESPONSE_K_VALUES)` (`main.py:3094`, `:3106`), so the
+  script finds **zero** and raises `RuntimeError`. **Impact:** the `source-remediation` campaign's
+  Layer 2 is no longer reproducible by its own documented command. Prompt 13 copied the script to
+  `docs/gktk-remedial/scoped_pipeline_run.py` with the two current literals rather than editing
+  another campaign's verification driver, whose document quotes the runs it produced (log 13
+  deviation 1). **Next step:** a one-line fix in the original, for whoever next has
+  `docs/source-remediation-verification/` in scope — or make both copies match on the
+  `np.logspace(np.log10(1e5), np.log10(3e8),` prefix rather than on the whole call.
 
 - **[02-qcd-reference-floor]** *(opened by prompt 02, 2026-09-10; inert)* — the QCD $\tau$ and
   $\tau_s$ references in `wkb_reference_data.json` are themselves accurate only to
@@ -377,39 +470,6 @@ Opened by the planning pass, 2026-09-10, before any prompt runs.
   the accuracy of each point. **Impact:** the physical interpretation of every QCD number in
   prompts 03–07 and 13; no numerical target in this campaign is affected. **Next step:** a
   decision by the author on `_solve_T_z`'s tolerances; not scheduled here.
-
-- **[01-offgrid-accessor-cost-on-qcd]** *(opened by prompt 01, 2026-09-10)* — the interval
-  accessor costs **102.2 µs per call on `QCD_Cosmology` with both endpoints off-grid**, above
-  README §4.3's 50 µs stop threshold (47.7 µs with one endpoint off-grid, 16 and 8 Hubble
-  evaluations respectively at 8.7 µs each). The production case is on-grid at both ends — the
-  background model is built on the source grid (`main.py:476`) — where the call costs **4.39 µs
-  and zero Hubble evaluations**; only the per-object anchor $z_{\rm init}$ is off-grid.
-  **Impact:** prompt 03's design if a consumer ever evaluates off-grid in bulk (prompt 09's
-  Levin path is the candidate); the producers are unaffected. **Next step:** the orchestrator
-  reports the figures to the user; closes when prompt 09 confirms its evaluation pattern is
-  on-grid, or a caching partial is added.
-  **Narrowed by prompt 03 (2026-09-11):** on the shipped `functions.tau` (order-4 partials, not the
-  prototype's order-8) the figures are **0.33 µs on-grid / 26.1 µs one endpoint off-grid /
-  52.0 µs both off-grid** on `QCD_Cosmology` (LambdaCDM 0.44 / 4.6 / 6.6 µs), 20,000 calls, best
-  of 3 (log 03). Both-off-grid is still marginally above the 50 µs line; the cost is four
-  `QCD_Cosmology.Hubble` evaluations at 7.35 µs each per off-grid endpoint.
-  **Narrowed by prompt 06 (2026-09-11):** the producers never evaluate both-off-grid. The
-  anchor $z_{\rm init}$ is the only off-grid endpoint and it is paired with an on-grid sample,
-  once per sample: 464 partial evaluations (4 × 116 samples) inside a 0.031 s object at
-  $k=3\times10^8$ on LambdaCDM; at most ~1,160 samples per `TkWKBIntegration` object on the
-  source grid, i.e. $\le$ 30 ms on `QCD_Cosmology` at log 03's 26 µs. The residual table is
-  built with $z_{\rm init}$ as a node and needs no partial. Still closes with prompt 09.
-  **Narrowed by prompt 09 (2026-09-11); does not close.** The consumer's pattern is *not*
-  on-grid: a Levin region evaluates the phase at Chebyshev abscissae, which are off-grid by
-  construction. What prompt 09 does establish is that it is always **one** off-grid endpoint,
-  never two — `PrimitivePhase`'s anchor is `z_response`, a background-grid node, so it costs
-  nothing — so the figure that applies is log 03's **26.1 µs one-endpoint-off-grid on
-  `QCD_Cosmology`** (4.6 µs on LambdaCDM), not the 52.0 µs both-off-grid number this issue was
-  opened against, and the 50 µs stop threshold is not crossed. Measured on the radiation
-  stand-in: `raw_theta` spends **0** integrand evaluations at a node and **exactly 4** (one
-  order-4 panel) off-grid; 3.11 µs / 5.85 µs per call, best of 3 over 20 x 286 calls.
-  **Next step:** closes if a Levin-side measurement on `QCD_Cosmology` (prompt 13) shows the
-  per-call cost acceptable in bulk, or if a cached anchor partial is added.
 
 - **[01-lambdacdm-hubble-rounding-floor]** *(opened by prompt 01, 2026-09-10; inert)* — the
   double-precision evaluation of `LambdaCDM.Hubble` carries 2–9e-15 relative near $z=1$–$10^6$,
@@ -457,34 +517,6 @@ Opened by the planning pass, 2026-09-10, before any prompt runs.
   **Next step:** unchanged — a follow-up prompt adding an `anchored(z0)` view to `PrimitivePhase`
   and a Levin-side hook, if the verification in 13 shows the floor matters.
 
-- **[10-residual-spline-end-condition]** *(opened by prompt 10, 2026-09-11)* — prompt 10 §3
-  item 3 asks for $\omega(z) =$ `phase.theta_deriv(z)` to $10^{-10}$ relative on its "LG"
-  fixture. Measured over the same domain its sibling test uses (`z_WKB[3:-3]`): **1.0492e-10**
-  ($w=1/3$) and 7.9502e-11 ($w=0.2$) — a 4.9 % miss at $w=1/3$, against **4.249e-08** and
-  2.163e-08 for the representation prompt 10 replaces (a factor 405). The excess is entirely the
-  not-a-knot end condition of `PrimitivePhase`'s cubic residual spline at the *top* of the WKB
-  region, where $\varphi\sim-1/x$ varies fastest: the error falls ~3× per sample inwards
-  (1.049e-10, 3.245e-11, 5.559e-12 at the third, fourth and fifth stored samples) and is
-  2.9e-12 well inside; the interior is 1.3e-15 relative, so this is **not** a representation
-  floor, and it is not fixture noise (replacing the fixture's `solve_ivp` phase by per-interval
-  adaptive `quad` reproduces 1.049e-10 to three figures). The shipped test asserts `< 1e-9` over
-  `z_WKB[3:-3]` and `< 1e-11` over `z_WKB[5:-3]`, printing both. **`spline_order=5`, which
-  `PrimitivePhase` already accepts, gives 1.794e-12 over `z_WKB[3:-3]` and 9.695e-12 over the
-  *whole* WKB region** — the prompt's figure met everywhere with 10× margin — but a quintic needs
-  six samples where `TkSourceFunctions.MIN_SPLINE_DATA_POINTS = 5`, and it would make the $T_k$
-  consumer's representation differ from prompt 09's $G_k$ consumer for a number nobody asked
-  for, so it was not taken. **Impact:** prompt 10 §3 item 3 as written; the same end condition
-  applies to prompt 09's $G_k$ consumer and to anything reading `theta_deriv` near the edge of a
-  WKB region (`phase_groups`, `AdaptiveLevin`). **Decision (user, 2026-09-11): left open for prompt 13.**
-  The shipped 1e-9 / 1e-11 pair stands for now and prompt 10 §3 item 3's text was **not** amended
-  — a dated note there records the measurement and points here — because every figure above is
-  from a constant-$w$ closed-form stand-in, where $\varphi$ is an analytic residual and the
-  samples are not production grid nodes. **Next step:** prompt 13 re-measures this identity on the
-  real background for both sectors and then either closes this issue at the cubic or escalates to
-  `spline_order=5` for both consumers with `MIN_SPLINE_DATA_POINTS` raised to 6. It should also
-  report the error at the second and third samples, not only the window maxima, since the end
-  effect is what is in question.
-
 - **[10-transfer-remedial-tolerance-comments-stale]** *(opened by prompt 10, 2026-09-11)* — five
   tolerance comments in `ComputeTargets/tests/test_tk_source_functions.py` that
   `transfer-remedial` prompt 08 (`8ba9159`) wrote now describe a mechanism prompt 10 deleted, and
@@ -511,7 +543,10 @@ Opened by the planning pass, 2026-09-10, before any prompt runs.
   $\theta$ only to **1.3862e-06 rad** (and costs 1.6e5 iterations). Production is unaffected:
   its only caller is `apply_phase_offset`, which passes `mod + delta` with `mod` already in
   $(-2\pi,0]$, so the loop runs at most twice. `WKB_mod_2pi` uses `fmod`, is exact, and is what
-  prompt 10's $x_T=10^6$ fixture uses. **Impact:** any test fixture that reduces a large
+  prompt 10's $x_T=10^6$ fixture uses — **corrected by prompt 13 (2026-09-13): its *remainder* is
+  exact, because that is the `fmod`; its *cycle count* is a separate rounded division and is not,
+  which is `[13-wkb-mod-2pi-cycle-count-inconsistent]` above. Everything else in this entry
+  stands.** **Impact:** any test fixture that reduces a large
   unwrapped phase with `wrap_theta` — prompt 10's test 3.1 would have been 14× over its own
   1e-7 rad bound on the fixture's arithmetic alone. There is no warning in the docstring.
   **Next step:** a one-line note on `wrap_theta`, or an `fmod` fast path for
@@ -603,38 +638,6 @@ Opened by the planning pass, 2026-09-10, before any prompt runs.
   `test_residual_table_reuse.TestTableIsShared.test_metadata_still_fits_the_column`, which
   fails rather than overflowing. **Next step:** count before adding; or widen the column in a
   schema-touching commit.
-
-- **[14-residual-range-top-margin]** *(opened by prompt 14, 2026-09-11; inert)* — the residual
-  table's node range is cut at the top where the Liouville–Green frequency stops keeping
-  `RESIDUAL_WKB_REGION_MARGIN = 0.5` of its leading term, not at its turning point. The bare
-  $\omega^2>0$ rule prompt 14 asked for does not work on `QCD_Cosmology`: the sign is not
-  monotone in $z$ (the Green's-function frequency is positive again at the top of the production
-  grid, $z\ge1.9\times10^{16}$), and a panel whose two nodes are both positive can hold a Gauss
-  abscissa where $\omega^2<0$ — measured at $z=3.6118639\times10^{15}$, $k=3\times10^8$, where
-  the ratio $\omega^2/\omega_0^2$ scatters over $\pm0.1$ between neighbouring nodes
-  (`[02-qcd-T-z-spline-node-tolerance]`). **Impact:** the table does not cover an anchor within
-  about one e-fold of horizon crossing, where `WKB_phase_function` would now raise a range error
-  rather than build a table.
-  **Corrected by the orchestrator (2026-09-11).** Log 14 and the commit body justify this as
-  "the cut lies above the highest node at which the WKB criterion $|d\ln\omega/dz|/\omega\le1$
-  holds … so no anchor a producer can accept lies outside the table". That generalises a
-  measurement taken at $k=10^5$ and $3\times10^8$ and **is not true in general**: at
-  `QCD_Cosmology`, sector `Gk`, $k=10^7$ the cut is at $z=4.83\times10^{13}$ while the highest
-  criterion-satisfying node is $z=3.05\times10^{14}$. The criterion is not monotone in $z$ on
-  QCD, so "highest node satisfying it" is not an envelope.
-  The invariant that does hold is a **margin between the cut and the production anchor**: every
-  producer anchors three e-folds inside the horizon, while the cut sits at ~1.25 e-folds. Over
-  all twelve (model, sector, $k$) combinations the ratio cut/anchor is 5.7–5.9× (1.74–1.78
-  e-folds) in the `Tk` sector and 103–8.9×10⁶ (4.6–16 e-folds) in `Gk`; the tightest is
-  LambdaCDM `Tk` at $k=3\times10^8$, **1.74 e-folds**. At the QCD/`Gk`/$k=10^7$ counterexample
-  the production anchor is 186× below the cut, so it is unreachable. The failure mode if it were
-  ever reached is a loud `RuntimeError` from `CumulativeTable`, not a wrong number.
-  **No test pins either statement** — neither the criterion ordering nor the 1.74-e-fold margin —
-  so a change to `RESIDUAL_WKB_REGION_MARGIN`, to the production grid, or to a cosmology would
-  not be caught until a producer crashed. **Next step:** prompt 13 measures the cut-to-anchor
-  margin across the production $k$ range on both models and both sectors as part of its
-  verification, and records it; if it is ever below ~1 e-fold, the margin constant is what to
-  revisit.
 
 - **[14-rhs-evaluations-depend-on-build-order]** *(opened by prompt 14, 2026-09-11; inert)* —
   prompt 14 §2 item 3 requires `stage_1_data.RHS_evaluations` to count only the integrand
@@ -858,6 +861,87 @@ Opened by the planning pass, 2026-09-10, before any prompt runs.
 ---
 
 ## 4. Resolved issues
+
+- **[01-offgrid-accessor-cost-on-qcd]** *(opened by prompt 01, 2026-09-10; narrowed by prompts 03,
+  06 and 09; **resolved by prompt 13**, 2026-09-13)* — the entry's recorded closing condition was
+  "a Levin-side measurement on `QCD_Cosmology` (prompt 13) shows the per-call cost acceptable in
+  bulk". Measured: `PrimitivePhase.raw_theta` at **4,000 abscissae drawn uniformly in
+  $u=\log(1+z)$ across the production band** — the Levin evaluation pattern, off-grid by
+  construction — costs **29.3 µs per call and 4.27 integrand evaluations on `QCD_Cosmology`**
+  (6.86 µs / 4.00 on LambdaCDM), best of 3; on-grid it is **3.56 µs and exactly 0 evaluations**,
+  because the anchor `z_response` is a background-grid node and costs nothing. That is **below
+  README §4.3's 50 µs stop threshold**, and it is the one-endpoint-off-grid column prompt 09
+  predicted, not the both-off-grid 52–65 µs this issue was opened against. The shipped accessor's
+  three-way cost on QCD re-measured for the same document: **0.33 / 33.3 / 64.7 µs** (on-grid / one
+  off / both off), against log 03's 0.33 / 26.1 / 52.0. **Closed**: no production or consumer path
+  evaluates both endpoints off-grid, and the pattern that does evaluate off-grid is affordable in
+  bulk. See [`docs/gktk-remedial-verification.md`](../../docs/gktk-remedial-verification.md) §3.8.
+
+- **[14-residual-range-top-margin]** *(opened by prompt 14, 2026-09-11; corrected by the
+  orchestrator; **resolved by prompt 13**, 2026-09-13)* — the entry's recorded next step was
+  "prompt 13 measures the cut-to-anchor margin across the production $k$ range on both models and
+  both sectors as part of its verification, and records it; if it is ever below ~1 e-fold, the
+  margin constant is what to revisit". Measured over the **50-point production $k$ grid**,
+  $10^5$–$3\times10^8$/Mpc, both models, both sectors:
+
+  | model | sector | worst cut/anchor | e-folds | at $k$ [1/Mpc] | cut $z$ | anchor $z$ | fewest nodes |
+  |---|---|---|---|---|---|---|---|
+  | LambdaCDM | `Gk` | 2981 | 8.000 | 3.000e8 | 2.064e16 | 6.923e12 | 1732 |
+  | LambdaCDM | `Tk` | **5.668** | **1.735** | 9.704e6 | 1.269e12 | 2.239e11 | 1113 |
+  | QCD | `Gk` | 47.48 | 3.860 | 1.160e6 | 1.392e12 | 2.931e10 | 1243 |
+  | QCD | `Tk` | **5.666** | **1.735** | 3.696e5 | 5.286e10 | 9.329e9 | 1117 |
+
+  The tightest margin anywhere on the production grid is **1.735 e-folds**, in the `Tk` sector on
+  both models, so log 14's single-wavenumber 1.74 generalises and nothing approaches one e-fold.
+  **Closed**, with the figure recorded so that a change to `RESIDUAL_WKB_REGION_MARGIN`, to the
+  production grid or to a cosmology can be checked against it — which is what "no test pins either
+  statement" asked for. The measurement is reproducible as
+  `docs/gktk-remedial/verify_production_path.py --section margins` (4 s).
+
+- **[10-residual-spline-end-condition]** *(opened by prompt 10, 2026-09-11; left open for prompt 13
+  by the user, 2026-09-11; **resolved by prompt 13**, 2026-09-13, at the cubic)* — the entry's
+  recorded next step was "prompt 13 re-measures this identity on the real background for both
+  sectors and then either closes this issue at the cubic or escalates to `spline_order=5` for both
+  consumers with `MIN_SPLINE_DATA_POINTS` raised to 6. It should also report the error at the second
+  and third samples, not only the window maxima, since the end effect is what is in question."
+
+  **Measured on the real background**, $\omega(z)$ from `*_omegaEff_sq` against
+  `phase.theta_deriv(z)`, over each consumer's own production sample set:
+
+  | model | $k$ | sector | max, all | `[3:-3]` | `[3:-5]` | `[3:-8]` | deep interior |
+  |---|---|---|---|---|---|---|---|
+  | LambdaCDM | 1e5 | `Gk` | 5.503e-10 | 5.135e-10 | 4.904e-10 | 4.577e-10 | 4.371e-10 |
+  | LambdaCDM | 1e5 | `Tk` | 1.764e-08 | 3.031e-10 | **1.663e-11** | 1.020e-11 | 8.828e-12 |
+  | LambdaCDM | 1e7 | `Tk` | 1.681e-08 | 2.890e-10 | 1.580e-11 | 9.689e-12 | 8.389e-12 |
+  | LambdaCDM | 3e8 | `Tk` | 1.709e-08 | 2.938e-10 | 1.608e-11 | 9.865e-12 | 8.538e-12 |
+
+  The windows are the shipped test's, read in its sense: `z_WKB` is in redshift order, so `[3:-3]`
+  and `[5:-3]` trim 3 and 5 samples from the **high-$z$ (hand-over) end**, which is where the end
+  condition lives; the columns above trim 3 from the low-$z$ end throughout and $m$ from the high-$z$
+  end.
+
+  **The end effect is real and it decays as the issue says**: the last five `Tk` samples at the
+  hand-over end, where $\varphi\sim-1/x$ varies fastest, run **9.2e-11, 2.9e-10, 1.2e-09, 4.5e-09,
+  1.7e-08** — a factor ~3.8 per sample inwards, against the ~3× prompt 10 measured on its
+  closed-form fixture — and the deep interior is 8.5e-12. Against the two bounds prompt 10 shipped:
+  **`< 1e-9` over `[3:-3]` is met**, at 2.9–3.0e-10 (the fixture's 1.0492e-10 for the same window is
+  the 4.9 % miss of prompt 10 §3 item 3's 1e-10 this issue was opened for; the real background is 3×
+  larger there and comfortably inside the shipped bound). **`< 1e-11` over `[5:-3]` is missed by
+  1.7×** on the real background, at 1.66e-11; it is met from about the seventh sample in (1.02e-11
+  at `[3:-8]`), and the deep interior is 8.5e-12. The shipped assertion is on the *fixture*, where
+  it passes — the whole suite passes unchanged, 339 + 141 tests — so what this says is that the real
+  background's residual is a little less smooth near the hand-over than the constant-$w$ closed form
+  is, by under a factor two. **`spline_order=5` is not taken**: it would need six samples against
+  `TkSourceFunctions.MIN_SPLINE_DATA_POINTS = 5`, it would make the $T_k$ consumer's representation
+  differ from prompt 09's $G_k$ consumer, and — decisively — it does not touch the error that
+  actually dominates on the real background, which is the next paragraph.
+
+  **What the measurement did turn up is a different defect, and it is carried forward, not
+  closed**: on `QCD_Cosmology` the same identity is missed by 2.3e-07 to 3.3e-04 relative — but
+  **uniformly across the interior, not at the ends** (`[3:-3]`, `[3:-8]` and the deep interior are
+  the same number), so it is not an end condition and no spline order fixes it. It is the
+  cosmology's own non-smoothness reaching the residual spline, and it is
+  `[13-consumer-spline-crosses-eos-break-points]` in §3.
 
 - **[18-numeric-solver-not-in-lookup-key]** *(opened by prompt 18, 2026-09-13; second instance
   recorded by prompt 19; diagnosis corrected and the decision taken by the user 2026-09-13;

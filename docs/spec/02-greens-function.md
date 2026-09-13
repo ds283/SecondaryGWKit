@@ -24,7 +24,12 @@ the handwritten notes or in the transcription sections of these spec files.
 The code's wavenumber variable is the physical wavenumber today, $k/a_0$
 (`CosmologyConcepts/wavenumber.py`, "the normalization $a_0$ of $a(z)$ is absorbed into
 $k/a_0 = k_{\rm phys}$"), and its conformal-time variable is $a_0\eta$
-(`ComputeTargets/BackgroundModel.py` integrates $d(a_0\eta)/dz = -1/H$). Every formula in the code
+(`ComputeTargets/BackgroundModel.py` integrates $d(a_0\eta)/dz = -1/H$ — *since commit `83ef7c5`
+(2026-09-11, prompt 03 of `prompts/GkTk-remedial`) it does not integrate this as an ODE: $a_0\eta$
+is built as a per-interval Gauss–Legendre table over the model's own redshift grid and stored as a
+double-double (hi, lo) pair, with an interval accessor `tau.delta(z_a, z_b)`. The quantity and the
+convention $\tau = a_0\eta$ are unchanged; only how it is computed and persisted is. See
+[`docs/gktk-remedial-verification.md`](../gktk-remedial-verification.md)*). Every formula in the code
 is therefore written in the two $a_0$-invariant combinations $k/a_0$ and $a_0\eta$; their product
 $k\eta$ is what every Bessel function sees. The handwritten notes "drop" or "hold back" $a_0$ in
 exactly this sense: a power of $a_0$ is never discarded, it is understood to combine with a comoving

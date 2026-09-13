@@ -948,3 +948,52 @@ stated correctly in that campaign's `HANDOFF-PROVENANCE.md` §9.
 6. The persisted `tau_Mpc` column is a single double and cannot hold the low-order limb; the
    storage decision (extra column, or rebuild on load) has to be taken before the table is
    designed, and data regeneration is attached either way (§13.2).
+
+---
+
+## 14. Outcome, 2026-09-13 (additive; nothing above this line is edited)
+
+The remediation this review recommended was carried out as
+[`prompts/GkTk-remedial`](../prompts/GkTk-remedial/README.md), twenty prompts landing on branch
+`gktk-remedial` between 2026-09-10 and 2026-09-13. The close-out measurements, both layers, are in
+**[`docs/gktk-remedial-verification.md`](gktk-remedial-verification.md)**; this section records only
+the headline after-column against the before-column of §4 and §12.3 above, so that a reader who
+stops here is not left with the old numbers.
+
+Measured on the production path with the production functions, at the review's own $z=0.1$, against
+the independent references of the campaign's prompt 01 (LambdaCDM, the review's own model):
+
+| quantity | §4 / §12.3 (before) | after | the floor it now sits at |
+|---|---|---|---|
+| $\theta_G$, $k=10^5$/Mpc | **13.9 rad** | **0.0 rad** (max over the checkpoints 1.19e-7) | $\varepsilon k\tau$ = 3.05e-7 rad |
+| $\theta_G$, $k=3\times10^8$/Mpc | **7366 rad** | **9.77e-4 rad** | 9.15e-4 rad = 1 ulp of 4.1e12 rad |
+| $\theta_T$, $k=10^5$/Mpc | **2.01 rad** | **1.49e-8 rad** | 1.37e-8 rad |
+| $\theta_T$, $k=3\times10^8$/Mpc | **5.1e3 rad** | **9.16e-5 rad** | 4.11e-5 rad |
+| $G_k$ cost per object, $k=3\times10^8$ | **63.7 s, 2.54e6 RHS evaluations** | **0.0010 s, 468 integrand evaluations** | — |
+| $T_k$ cost per object, $k=3\times10^8$ | **58 s, 1.93e6** | **0.018 s, 5540** | — |
+| friction integral $F$, relative | 2.3e-7 – 4.1e-7 (`rtol`-limited ODE) | 4.0e-16 – 2.7e-14 | — |
+| consumer phase at production $x$ | 8.3e-3 rad at $x=10^7$ ($h^4x/384$) | 1 ulp of the span at every $k$ | $\varepsilon k\tau$ |
+
+On `QCD_Cosmology`, which §4 and §12.3 did not measure, the same four phase figures are 4.77e-7 /
+4.88e-4 rad ($\theta_G$) and 7.45e-8 / 2.44e-4 rad ($\theta_T$).
+
+**Every structural recommendation of §7, §13.2, §13.3 and §13.4 was implemented as written**: the
+two-stage ODE, the $Q$ variable, the resets and the per-object solves are gone; $\tau$, $\tau_s$ and
+$F$ are per-interval Gauss–Legendre tables on the background model's own grid, stored as
+double-double (hi, lo) pairs with an interval accessor; the residual $\rho$ is carried explicitly
+and formed from the non-leading terms of `*_omegaEff_sq`, never by subtraction; `phase_spline`'s
+chunking is deleted; and both consumers evaluate $-k\Delta\tau + \varphi$ through a new
+`PrimitivePhase` rather than splining the growing phase. §13.5's six planning points are discharged
+in the verification document's §5.
+
+**One thing this review did not find, and the verification did.**
+`LiouvilleGreen.WKBtools.WKB_mod_2pi` forms its cycle count as `int(floor(fabs(theta)/TWO_PI))` — a
+*rounded* division — while its remainder is an exact `fmod`, so at $|\theta|\sim4\times10^{12}$ rad
+the pair can disagree by a whole cycle and no longer reconstruct its own phase. It fires on 1 of
+77,975 production Green's-function samples at $k=3\times10^8$/Mpc and costs the consumer 6.17 rad
+there. It was invisible while the ODE was wrong by thousands of radians; it is now the largest
+single error in the chain. Board issue `[13-wkb-mod-2pi-cycle-count-inconsistent]`; not fixed by the
+verification prompt, which may not touch production code.
+
+**One `main.py` item this review listed is not this campaign's.** The stale Bessel-stage comment at
+`main.py:424-427` (now `:516-519`) belongs to `prompts/transfer-remedial` prompt 06.
