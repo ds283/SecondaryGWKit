@@ -203,7 +203,7 @@ Traceability from the audit's finding IDs to the prompt that discharges them.
   production phase spline covers $x$ up to $2.7\times10^5$ with a few hundred samples and its fit
   error grows linearly with $x$. See `docs/source-remediation-verification.md` §5.5 and
   `[12-handover-clamp-error-in-production]`.
-  **Assigned (2026-09-10):** the hand-over campaign, with `[08-handover-clamp-error]`, `[12-handover-clamp-error-in-production]` and `[12-phase-spline-error-grows-with-x]`. These are all the same seam and must be attacked together.
+  **Assigned (2026-09-10):** the hand-over campaign, with `[08-handover-clamp-error]`, `[12-handover-clamp-error-in-production]` and `[12-phase-spline-error-grows-with-x]`. These are all the same seam and must be attacked together. (*2026-09-10, later the same day:* `[12-phase-spline-error-grows-with-x]` was reassigned to `prompts/GkTk-remedial/` — see its own entry — since the re-spline term is fixed on the consumer side without moving the hand-over; the other two remain here.)
 
 - **[06-source-spline-residual-vs-handover]** *(opened by prompt 06, 2026-09-08)* — with the
   grid now truncated at the both-numeric hand-over, the spline of $f$ inside that region is
@@ -237,7 +237,7 @@ Traceability from the audit's finding IDs to the prompt that discharges them.
   residual 9.6e-06 to 1.3e-04), i.e. the realistic hand-over is nearer the first row of the table
   above than the last, and the spline is not the limiting error inside the both-numeric region.
   See `docs/source-remediation-verification.md` §5.7.
-  **Assigned (2026-09-10):** the hand-over campaign, with `[08-handover-clamp-error]`, `[12-handover-clamp-error-in-production]` and `[12-phase-spline-error-grows-with-x]`. These are all the same seam and must be attacked together.
+  **Assigned (2026-09-10):** the hand-over campaign, with `[08-handover-clamp-error]`, `[12-handover-clamp-error-in-production]` and `[12-phase-spline-error-grows-with-x]`. These are all the same seam and must be attacked together. (*2026-09-10, later the same day:* `[12-phase-spline-error-grows-with-x]` was reassigned to `prompts/GkTk-remedial/` — see its own entry — since the re-spline term is fixed on the consumer side without moving the hand-over; the other two remain here.)
 
 - **[07-lg-derivative-truncation-at-handover]** *(opened by prompt 07, 2026-09-08)* — the
   derivative pieces `TkSourceFunctions` supplies in closed form, `omega = sqrt(Tk_omegaEff_sq)`
@@ -258,7 +258,7 @@ Traceability from the audit's finding IDs to the prompt that discharges them.
   `mode="stop"` search window, `TkNumericIntegration.py:130-131`) or the overlap of
   `docs/lg-phase-and-handover-followup-2026-09.md` §1.4 would reduce it; both are out of scope
   here.
-  **Assigned (2026-09-10):** the hand-over campaign, with `[08-handover-clamp-error]`, `[12-handover-clamp-error-in-production]` and `[12-phase-spline-error-grows-with-x]`. These are all the same seam and must be attacked together.
+  **Assigned (2026-09-10):** the hand-over campaign, with `[08-handover-clamp-error]`, `[12-handover-clamp-error-in-production]` and `[12-phase-spline-error-grows-with-x]`. These are all the same seam and must be attacked together. (*2026-09-10, later the same day:* `[12-phase-spline-error-grows-with-x]` was reassigned to `prompts/GkTk-remedial/` — see its own entry — since the re-spline term is fixed on the consumer side without moving the hand-over; the other two remain here.)
 
 - **[12-phase-spline-error-grows-with-x]** *(measured in `docs/lg-phase-and-handover-followup-2026-09.md`
   §2, 2026-09-08; measured on real rows by prompt 12, 2026-09-09; **split out into its own issue
@@ -307,6 +307,14 @@ Traceability from the audit's finding IDs to the prompt that discharges them.
   cubic fit) rather than anything in `QuadSourceIntegral`. Note the oracle ceiling as well:
   `bessel_phase` itself is good to ~$x\times10^{-8}$ in phase (followup §2.4), so no fixture-based
   test can assert better than that sub-horizon.
+  **Assigned (2026-09-10):** to the **Gk/Tk WKB phase remedial campaign**
+  (`prompts/GkTk-remedial/`, mechanism M14, prompts 09 and 10), which replaces the store-and-re-spline
+  round trip by evaluating the leading term $k\,\Delta\tau$ from a per-model conformal-time table and
+  splining only the small residual — the "store enough to reconstruct it without a cubic fit" lever
+  named above. Reassigned from the hand-over campaign because that campaign's planning (review
+  §13.2, §13.3) showed the term is separable after all: it is fixed on the consumer side without
+  moving the hand-over. The clamp error `[12-handover-clamp-error-in-production]` stays with the
+  hand-over campaign.
 
 - **[10-levin-wholesale-cc-fallback]** *(opened by prompt 10, 2026-09-09)* — the user's decision on
   `[08-levin-fallback-cost-ratio]` (now §4) accepts prompt 08 §6's cost here and asks for the fix
@@ -425,6 +433,50 @@ Traceability from the audit's finding IDs to the prompt that discharges them.
 ---
 
 ## 4. Resolved issues
+
+- **[transfer-remedial-qsi-phase-groups]** *(opened by `prompts/transfer-remedial` prompt 09,
+  2026-09-10 — a hand-off from that campaign, not from a prompt of this one; **closed
+  2026-09-11** by `prompts/qsi-phase-groups` prompt 01)* —
+  `ComputeTargets/QuadSourceIntegral.py`'s `_three_bessel_Levin` (`:1175-1442`) makes eight
+  `adaptive_levin_sincos` calls whose phases are signed sums of three `bessel_phase` `raw_theta`
+  values (`:1226, :1267, :1308, :1349`), supplying **no `theta_deriv`** and no `theta_abserr` — so
+  `need_theta_Cheb` is `True` there and Levin obtains $\theta'$ by spectral differentiation of the
+  raw phase, exactly the route `LiouvilleGreen/three_bessel_integrals.py`'s phase-group assembly
+  was rewritten to avoid (`prompts/transfer-remedial` prompt 07). The gap survived this campaign's
+  own rewrite of this file (prompts 08–10, `4afd531`/`ffc50ae`/`815217b`) and is now anomalous
+  within it: the sibling module's phase-group route passes `theta_deriv`
+  (`three_bessel_integrals.py:1008`, `LEVIN_USE_THETA_DERIV = True` at `:93`) while these eight
+  calls do not, and that module's own comment at `:74` notes they are the odd one out. Checked
+  against this board before filing: item B6 above (`atol`/`rtol` forwarding, prompt 09) is the only
+  existing record against these call sites — the missing derivative and the missing declared error
+  are not tracked anywhere else in this campaign. **Impact:** the analytic-branch comparison in
+  `QuadSourceIntegral` inherits none of `prompts/transfer-remedial`'s eight-order Bessel-oracle
+  improvement or its phase-group restructuring: its Levin phase input is as noisy near resonance as
+  before that campaign, and its reported `abserr` cannot see the phase construction's own accuracy.
+  **Next step:** there is a working pattern to copy rather than a design to invent —
+  `LiouvilleGreen/three_bessel_integrals.py` now supplies `theta_abserr` and assembles
+  $Kt+C+R(t)$ from the leading coefficients (formed once, before multiplying by $t$) plus
+  `phase.residual`; its `levin_theta()` is the four-key dict
+  (`theta`, `theta_mod_2pi`, `theta_deriv`, `theta_abserr`) to imitate for each of
+  `_three_bessel_Levin`'s eight calls, with `theta_deriv` from `phase.residual_log_deriv`/
+  `phase.theta_deriv` and `theta_abserr` from summing the three constituents'
+  `phase.theta_abserr_at` at their own arguments. Full detail, including the measured cancellation
+  numbers this pattern removes in the sibling module, is in
+  `docs/transfer-remedial-verification.md`.
+  **Assigned (2026-09-11):** `prompts/qsi-phase-groups` prompt 01 owns this. It was filed here when
+  this campaign was already complete at 13 of 13, so no prompt remained to discharge it; rather
+  than leave it on a closed board, a one-prompt campaign was opened for it. This entry stays open
+  until that prompt lands, and is then closed by it.
+
+  **Closed (2026-09-11)** by `prompts/qsi-phase-groups` prompt 01, which is the campaign this
+  entry was assigned to. All eight calls now pass `BesselPhaseGroup.levin_theta()` — the four-key
+  dict — from `LiouvilleGreen/three_bessel_integrals.py`, the pattern the "Next step" above named.
+  Measured at this call site's own orders and coefficients, the group phase error falls from
+  5.15e-08 rad to 1.38e-12 and the group log-derivative from 2.28e-08 to 9.64e-12 at exact
+  resonance; `analytic_rad` moved by at most 1.02e-08 relative on the eighteen
+  `TestAnalyticOracle` fixtures, which pass unchanged at their existing thresholds. See
+  `prompts/qsi-phase-groups/logs/01-three-bessel-levin-phase-groups.md`. Nothing else on this
+  board changed.
 
 - **[09-WKB_quad-columns-are-vestigial]** *(opened by prompt 09, 2026-09-09; **closed
   2026-09-10** by the post-campaign tidy-up, at the user's direction)* — `WKB_quad` and its six

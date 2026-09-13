@@ -1,9 +1,13 @@
-from math import fabs, log, sqrt, pi
+from math import fabs, log, sqrt
 from typing import Optional, List
 
 import ray
 
-from ComputeTargets.BackgroundModel import BackgroundModel, ModelProxy
+from ComputeTargets.BackgroundModel import (
+    BREAK_POINT_DISCONTINUITY,
+    BackgroundModel,
+    ModelProxy,
+)
 from ComputeTargets.WKB_Gk import Gk_omegaEff_sq, Gk_d_ln_omegaEff_dz
 from ComputeTargets.analytic_Gk import compute_analytic_G, compute_analytic_Gprime
 from CosmologyConcepts import wavenumber, redshift, redshift_array, wavenumber_exit_time
@@ -65,15 +69,13 @@ def RHS(
             -eps * Gprime / one_plus_z - (k_over_H_2 + (eps - 2.0) / one_plus_z_2) * G
         )
 
-        # try to detect how many oscillations will fit into the log-z grid
-        # spacing
-        # If the grid spacing is smaller than the oscillation wavelength, then
-        # evidently we cannot resolve the oscillations
-        omega_WKB_sq = Gk_omegaEff_sq(model, k_float, z)
-
-        if omega_WKB_sq > 0.0:
-            wavelength = 2.0 * pi / sqrt(omega_WKB_sq)
-            supervisor.report_wavelength(z, wavelength, log((1.0 + z) * k_over_H))
+        # NOTE: the oscillation-resolution diagnostic used to live here, evaluating
+        # Gk_omegaEff_sq (three extra background calls) at every step of the solver in order to
+        # feed NumericIntegrationSupervisor.report_wavelength. That cost 45 % of the run
+        # (review §10.2). The test is still performed, and still prints its warning, but it now
+        # runs once after the solve, on the returned sample grid -- which is the grid the flag is
+        # documented to be about (review §13.1). Gk_omegaEff_sq is handed to
+        # numeric_with_phase_cut as its omega_sq argument in compute(), below.
 
     return [dG_dz, dGprime_dz]
 
@@ -88,6 +90,21 @@ class GkNumericIntegration(DatastoreObject):
     However, once these have been computed and cached, we can obtain the result as
     a function of the source redshift if we wish
     """
+
+    # The break-point policy this sector integrates under: which of the break points the cosmology
+    # declares the ODE is split at. This is the *single* declaration of that policy -- it is passed
+    # to numeric_with_phase_cut by compute(), written to the datastore by the factory's store(),
+    # and filtered on by the factory's build() -- because since prompt 19 it is a genuine degree of
+    # freedom that moves the stored answer, so three independent copies would be three chances to
+    # look up a row computed under a policy other than the one asked for (prompt 20 of
+    # prompts/GkTk-remedial, the user's decision of 2026-09-13).
+    #
+    # The value, and why it is this one rather than BREAK_POINT_ALL, is argued at the
+    # numeric_with_phase_cut call site in compute() below.
+    #
+    # This follows GkWKBIntegration.PHASE_SOLVER_LABEL_BASE and BackgroundModel.TAU_SOLVER_LABEL:
+    # a class constant, so that a caller which has only the class can read it.
+    BREAK_POINT_KIND = BREAK_POINT_DISCONTINUITY
 
     def __init__(
         self,
@@ -187,6 +204,16 @@ class GkNumericIntegration(DatastoreObject):
     @property
     def model_proxy(self) -> ModelProxy:
         return self._model_proxy
+
+    @property
+    def break_point_kind(self) -> str:
+        """
+        The break-point policy this object was (or will be) integrated under. It is a property of
+        the sector, not of the instance, so it reads the class constant rather than any stored
+        state: an instance deserialized from the datastore was selected by build() on exactly this
+        value, so there is no second value it could carry.
+        """
+        return self.BREAK_POINT_KIND
 
     @property
     def k(self) -> wavenumber:
@@ -309,9 +336,14 @@ class GkNumericIntegration(DatastoreObject):
         if label is not None:
             self._label = label
 
-        # set up limits for the search window used to obtain an initial condition for a subsequent WKB integral
-        # this is done by always cutting at a point of fixed phase where G' = 0 at a minium, so we need to search
-        # for such a point, and that search should be performed within a fixed window.
+        # set up limits for the search window used to obtain an initial condition for a subsequent
+        # WKB integral.
+        # This is done by always cutting at a point of fixed phase where G' = 0. That point is a
+        # *maximum* of G -- G' passes from negative to positive as z decreases, and review §10.1
+        # measures G/envelope = +1.000000 there in every run -- not the minimum the comment here
+        # used to claim. Which extremum it is does not matter: GkWKBIntegration.store() rotates
+        # arbitrary (G, G') initial data into a pure sine, so the phase does not depend on where in
+        # the cycle we cut. The search is performed within a fixed window.
         payload = {}
         if self._mode in ["stop"]:
             payload["mode"] = self._mode
@@ -343,11 +375,41 @@ class GkNumericIntegration(DatastoreObject):
             initial_value=0.0,
             initial_deriv=1.0,
             RHS=RHS,
+            omega_sq=Gk_omegaEff_sq,
             atol=self._atol.tol,
             rtol=self._rtol.tol,
             delta_logz=self._delta_logz,
             task_label="compute_Gk",
             object_label="Gr_k(z, z')",
+            # the per-object warning is suppressed here, not the test: has_unresolved_osc,
+            # unresolved_z and unresolved_efolds_subh are computed and returned exactly as
+            # before, and main.py accumulates them over the work queue and prints one summary
+            # per wavenumber (README section 7 decision D2, taken by the user 2026-09-11;
+            # prompt 16 of prompts/GkTk-remedial). A direct caller of numeric_with_phase_cut
+            # still gets the warning, which defaults to on.
+            warn_unresolved_osc=False,
+            # this sector splits its integration only where the cosmology declares that a
+            # background quantity *jumps*, not at the C2 knots of its T(z) spline. This is the
+            # module's default, but it is passed explicitly because it is a decision taken on
+            # measurement rather than a default inherited by omission (prompt 19 of
+            # prompts/GkTk-remedial, the user's decision of 2026-09-13).
+            #
+            # Unnecessary: this sector's reference-convergence drift is below the campaign's
+            # criterion at all 50 production wavenumbers on all three models with the jumps alone
+            # -- worst 8.41e-09 of the envelope on QCD against 3.4e-08, the same figure split or
+            # unsplit (docs/gktk-remedial/TK-NUMERIC-ATOL-SWEEP.md §9.1) -- so the knots would
+            # buy nothing.
+            #
+            # And expensive: GkNumericIntegration is one object per (k, z_source), ~65,000 per
+            # model, and splitting at the knots costs +155 % of the production right-hand-side
+            # evaluations (§9.7), i.e. several core-hours per model. TkNumericIntegration, which
+            # is 50 objects per model and does *not* converge with the jumps alone, asks for
+            # every declared break point for exactly that reason.
+            #
+            # Read from the class constant rather than written as a literal: since prompt 20 the
+            # same value is also stored in, and filtered on by, the datastore lookup key, and the
+            # three uses must not be able to drift apart.
+            break_point_kind=self.BREAK_POINT_KIND,
             **payload,
         )
         return self._compute_ref

@@ -26,7 +26,8 @@ treatment. Confusing them costs accuracy.
     remainder -- for instance to spline the remainder as a smooth O(1) function, as
     bessel_phase does, where the raw phase reaches ~1e15 and could not be splined directly
     without losing every significant digit. Here a reduction is unavoidable, and
-    simple_mod_2pi() below is the right tool: plain fmod plus a floor.
+    simple_mod_2pi() below is the right tool: an exact fmod, plus a cycle count
+    recovered from that remainder.
 
 HISTORICAL NOTE
 ---------------
@@ -48,7 +49,7 @@ additional rounding on top of that.
 Callers that need (big * small) mod 2pi should use simple_mod_2pi(big * small).
 """
 
-from math import floor, fabs, fmod
+from math import fabs, fmod
 
 from .constants import TWO_PI
 
@@ -62,7 +63,20 @@ def simple_mod_2pi(num):
     to shrink an argument before calling sin/cos -- see the module docstring.
     """
     mod_2pi = fmod(fabs(num), TWO_PI)
-    div_2pi = int(floor(fabs(num) / TWO_PI))
+
+    # The cycle count is derived from the *remainder*, which fmod makes exact, and not from a
+    # second, independently rounded division: fabs(num) / TWO_PI is correctly rounded, so when
+    # the exact quotient sits within half an ulp *below* an integer the division rounds up
+    # across it, floor() returns one cycle too many, and the pair reconstructs num - 2*pi
+    # instead of num, breaking this function's documented identity
+    # ([13-wkb-mod-2pi-cycle-count-inconsistent]; the same defect as, and fixed the same way as,
+    # LiouvilleGreen.WKBtools.WKB_mod_2pi, whose comment carries the error budget).
+    #
+    # In short: fabs(num) - mod_2pi is mathematically n*TWO_PI, the subtraction and the division
+    # each round by at most n * 2^-53, so round() recovers n exactly while n < 2^51, i.e. while
+    # |num| < 2*pi*2^51 ~ 1.4e16 -- beyond which ulp(num) ~ 2 rad and there is no fractional
+    # phase left to represent.
+    div_2pi = int(round((fabs(num) - mod_2pi) / TWO_PI))
 
     if num < 0.0:
         div_2pi = -div_2pi

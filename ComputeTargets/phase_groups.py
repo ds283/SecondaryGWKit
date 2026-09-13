@@ -115,7 +115,7 @@ the three callables the Levin driver uses, each as the signed sum of the constit
                         (-6 pi, 6 pi); sin/cos are periodic so no re-reduction is needed. This is
                         deliberately NOT "sum raw_theta and reduce", which would throw away the
                         precision the stored (div 2pi, mod 2pi) split exists to protect
-                        (`docs/resonance-scaffolding/sigw-resonance-reconciliation.md` section
+                        (`docs/resonance-scaffolding-v1/sigw-resonance-reconciliation.md` section
                         3.1, last paragraph). It is what `_three_bessel_Levin` does
                         (`QuadSourceIntegral.py:514-528`).
   * `theta_deriv`    -- signed sum of d theta_i / d log(1 + z'). For a transfer function this is

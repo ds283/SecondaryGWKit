@@ -6,10 +6,11 @@ import ray
 from scipy.interpolate import make_interp_spline
 
 from ComputeTargets.GkSource import GkSourceProxy, GkSource
+from ComputeTargets.primitive_phase import PrimitivePhase, build_phi_samples
 from ComputeTargets.spline_wrappers import ZSplineWrapper, GkWKBSplineWrapper
 from CosmologyConcepts import wavenumber_exit_time, redshift, wavenumber
 from Datastore import DatastoreObject
-from LiouvilleGreen.phase_spline import phase_spline
+from LiouvilleGreen.constants import TWO_PI
 from MetadataConcepts import GkSourcePolicy
 from config.defaults import DEFAULT_FLOAT_PRECISION
 
@@ -132,6 +133,69 @@ def _filter_values_from_range(
     return data
 
 
+# The Green's-function phase theta(z_response; z_source) is measured at a fixed response redshift
+# and becomes more negative as the source redshift rises, so the conformal-time primitive enters
+# with sign = -1 (campaign README Sec 2 (c), whose convention is
+# tau.delta(z_a, z_b) = tau(z_b) - tau(z_a)):
+#
+#     theta(z_s) = -k * tau.delta(z_s, z_r) + phi(z_s)
+GK_PHASE_SIGN = -1
+
+
+def _build_phase(source: GkSource, WKB_data, label: str) -> PrimitivePhase:
+    """
+    The phase of this Green's function over its WKB region, as a ``PrimitivePhase``: the leading
+    term ``-k tau.delta(z_s, z_response)`` evaluated from the background model's double-double
+    conformal-time table, plus a cubic spline of the small residual ``phi``.
+
+    This replaces the cubic spline of the stored phase that both consumers built until prompt 09
+    of ``prompts/GkTk-remedial`` (``ComputeTargets/primitive_phase.py``'s module docstring has the
+    full comparison). A cubic spline of ``theta`` itself carries
+    ``h^4 x_source / 384`` (review Sec 5), which is 8.3e-3 rad at ``x_source = 1e7`` and
+    O(1)-O(10) rad at the production ``x_source`` of 1e9-1e12: the phase it was interpolating is
+    not resolvable at any affordable sample density. ``phi`` is O(1) rad and smooth, so the same
+    cubic spline of *it* is six or more orders better, and the growing part of the phase is no
+    longer interpolated at all.
+
+    ``phi`` is built from the **rectified** cycle counts ``v.WKB.theta_div_2pi``, not from
+    ``v.WKB.raw_theta_div_2pi``. ``GkSource.assemble_GkSource_values`` (:166-233) repairs the 2pi
+    wraps of the initial-data offset that occur where the numeric stop point of a
+    ``GkWKBIntegration`` moves to the next extremum between neighbouring source redshifts; those
+    are genuine discontinuities of the *stored* phase, not of the physical one
+    (``RECONCILIATION.md`` Sec 2 item 6, campaign decision D5), and building ``phi`` from the raw
+    counts would spline straight through them.
+    """
+    model = source.model_proxy.get()
+
+    k_float = float(source.k.k)
+    z_anchor = source.z_response.z
+    leading = model.functions.tau
+
+    z_points = [v.z_source.z for v in WKB_data]
+    theta_points = [
+        v.WKB.theta_div_2pi * TWO_PI + v.WKB.theta_mod_2pi for v in WKB_data
+    ]
+    phi_points = build_phi_samples(
+        k_float,
+        leading,
+        z_anchor,
+        z_points,
+        theta_points,
+        sign=GK_PHASE_SIGN,
+    )
+
+    return PrimitivePhase(
+        k_float,
+        leading,
+        z_anchor,
+        z_points,
+        phi_points,
+        sign=GK_PHASE_SIGN,
+        model_functions=model.functions,
+        label=label,
+    )
+
+
 def _classify_Levin(source: GkSource, policy: GkSourcePolicy, data) -> dict:
     """
     Determine the point where we should enable Levin integration for this Green's function,
@@ -166,24 +230,11 @@ def _classify_Levin(source: GkSource, policy: GkSourcePolicy, data) -> dict:
         source, max_z=max_z, min_z=min_z, property_list="has_WKB"
     )
 
-    log_x_points = [log(1.0 + v.z_source.z) for v in WKB_data]
-    theta_div_2pi_points = [v.WKB.theta_div_2pi for v in WKB_data]
-    theta_mod_2pi_points = [v.WKB.theta_mod_2pi for v in WKB_data]
-
-    # setting chunk_step and chunk_logstep to None forces phase_spline to use a single chunk
-    # here, any benefit gained from chunking is offset by the risk of edge effects in the derivative
-    # near the chunk boundaries
-    theta_spline: phase_spline = phase_spline(
-        log_x_points,
-        theta_div_2pi_points,
-        theta_mod_2pi_points,
-        x_is_log=True,
-        x_is_redshift=True,
-        chunk_step=None,
-        # chunk_logstep=125,
-        chunk_logstep=None,
-        increasing=False,
-    )
+    # The threshold test below needs a smooth derivative. It is now available in closed form:
+    # d theta / d log(1+z_s) = -k (1 + z_s)/H(z_s) + d phi / d log(1+z_s), with only the second,
+    # small term coming from a spline (PrimitivePhase.theta_deriv). Previously the whole
+    # derivative was obtained by differentiating a cubic spline of the growing phase.
+    theta_phase: PrimitivePhase = _build_phase(source, WKB_data, "Levin classification")
 
     # note that we compute the logarithmic derivative of theta with respect to log(1+z)
 
@@ -195,12 +246,12 @@ def _classify_Levin(source: GkSource, policy: GkSourcePolicy, data) -> dict:
     for z_source in source.z_sample:
         if max_z >= z_source.z >= min_z:
             if (
-                fabs(theta_spline.theta_deriv(z_source.z, log_derivative=True))
+                fabs(theta_phase.theta_deriv(z_source.z, log_derivative=True))
                 > policy.Levin_threshold
             ):
                 payload["Levin_z"] = z_source
                 metadata["Levin_z_dtheta_dlogz"] = float(
-                    theta_spline.theta_deriv(z_source.z, log_derivative=True)
+                    theta_phase.theta_deriv(z_source.z, log_derivative=True)
                 )
                 break
 
@@ -631,7 +682,7 @@ class GkSourcePolicyData(DatastoreObject):
 
         WKB_region = None
         WKB_Gk = None
-        WKB_theta_spline = None
+        WKB_theta_phase = None
         WKB_sin_amplitude = None
 
         if source.primary_WKB_largest_z is not None:
@@ -669,28 +720,13 @@ class GkSourcePolicyData(DatastoreObject):
                     sin_amplitude_y,
                 )
 
-                theta_log_x_points = [log(1.0 + v.z_source.z) for v in WKB_data]
-                theta_div_2pi_points = [v.WKB.theta_div_2pi for v in WKB_data]
-                theta_mod_2pi_points = [v.WKB.theta_mod_2pi for v in WKB_data]
-
-                # Deliberately chunked (chunk_logstep=125), unlike the single-chunk theta_spline
-                # built in _classify_Levin (:170) for the Levin_z threshold test. That construction
-                # needs a smooth derivative and specifically avoids chunk-boundary edge effects; this
-                # one is evaluated (mod 2pi) rather than differentiated, and chunking keeps the
-                # theta_div_2pi rebasing well-conditioned over many oscillation cycles. Audit B9.
-                WKB_theta_spline = phase_spline(
-                    theta_log_x_points,
-                    theta_div_2pi_points,
-                    theta_mod_2pi_points,
-                    x_is_log=True,
-                    x_is_redshift=True,
-                    chunk_step=None,
-                    chunk_logstep=125,
-                    increasing=False,
-                )
+                # The phase is evaluated from the conformal-time table plus a spline of the small
+                # residual, not splined itself (see _build_phase). GkWKBSplineWrapper consumes it
+                # duck-typed, through theta_mod_2pi() alone.
+                WKB_theta_phase = _build_phase(source, WKB_data, "Gk WKB phase")
 
                 WKB_Gk = GkWKBSplineWrapper(
-                    WKB_theta_spline,
+                    WKB_theta_phase,
                     _sin_amplitude_spline,
                     None,
                     "Gk WKB",
@@ -708,7 +744,7 @@ class GkSourcePolicyData(DatastoreObject):
             numeric_Gk=numeric_Gk,
             WKB_region=WKB_region,
             WKB_Gk=WKB_Gk,
-            phase=WKB_theta_spline,
+            phase=WKB_theta_phase,
             sin_amplitude=WKB_sin_amplitude,
             type=self._type,
             quality=self._quality,

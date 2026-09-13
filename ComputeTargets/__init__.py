@@ -32,6 +32,10 @@ from .phase_groups import (
     evaluate_envelope,
     group_signs,
 )
+from .primitive_phase import (
+    PrimitivePhase,
+    build_phi_samples,
+)
 from .QuadSourceIntegral import (
     BesselPhaseProxy,
     QuadSourceIntegral,

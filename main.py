@@ -49,6 +49,7 @@ from config.defaults import (
     DEFAULT_FLOAT_PRECISION,
     DEFAULT_QUADRATURE_RTOL,
     DEFAULT_QUADRATURE_ATOL,
+    DEFAULT_TK_NUMERIC_ABS_TOLERANCE,
 )
 from config.model_list import build_model_list
 from config.sharding import (
@@ -334,6 +335,127 @@ def build_QuadSourceIntegral_payload(
     }
 
 
+def record_unresolved_osc(summary: dict, obj) -> None:
+    """Record one completed numeric-integration object into `summary`, keyed by wavenumber.
+
+    `summary` is a plain dict, created empty before a numeric work queue runs and handed to this
+    function by that queue's `post_handler`, which RayWorkPool calls once per completed object in
+    the driver process. Nothing is stored and nothing is returned: returning None is what keeps
+    this compatible with `store_results=False`, under which the objects themselves are not
+    retained and there is no list to sweep afterwards.
+
+    The accumulated flag replaces the per-object warning `numeric_with_phase_cut` used to print
+    (README section 7 decision D2, taken by the user 2026-09-11). With the corrected test of
+    prompt 11 it fires on essentially every GkNumericIntegration object, so the per-object line
+    would be ~1.3e5 lines per model; `format_unresolved_osc_summary` renders this dict as a few
+    lines per wavenumber instead.
+
+    Reporting must never be able to kill a run that computed correctly, so every accessor is
+    guarded: `has_unresolved_osc` raises RuntimeError until it has been populated, and an object
+    that arrives unpopulated is counted separately rather than allowed to propagate.
+    """
+    if obj is None:
+        return
+
+    try:
+        k_inv_Mpc = float(obj.k.k_inv_Mpc)
+    except (AttributeError, TypeError, ValueError):
+        # not an object we know how to key; count it nowhere rather than raising in a
+        # reporting path
+        return
+
+    record = summary.setdefault(
+        k_inv_Mpc,
+        {
+            "recorded": 0,
+            "flagged": 0,
+            "unpopulated": 0,
+            "efolds_min": None,
+            "efolds_max": None,
+        },
+    )
+    record["recorded"] = record["recorded"] + 1
+
+    try:
+        flagged = obj.has_unresolved_osc
+    except RuntimeError:
+        record["unpopulated"] = record["unpopulated"] + 1
+        return
+
+    if flagged is None:
+        record["unpopulated"] = record["unpopulated"] + 1
+        return
+
+    if not flagged:
+        return
+
+    record["flagged"] = record["flagged"] + 1
+
+    try:
+        efolds = obj.unresolved_efolds_subh
+    except RuntimeError:
+        efolds = None
+
+    if efolds is None:
+        return
+
+    efolds = float(efolds)
+    if record["efolds_min"] is None or efolds < record["efolds_min"]:
+        record["efolds_min"] = efolds
+    if record["efolds_max"] is None or efolds > record["efolds_max"]:
+        record["efolds_max"] = efolds
+
+
+def format_unresolved_osc_summary(summary: dict, sector_label: str) -> List[str]:
+    """Render `summary` as the lines to print, one per wavenumber that flagged plus a total.
+
+    Returns [] only when nothing was recorded at all -- the queue did not run. When objects were
+    recorded but none flagged, a single all-clear line is returned: a run that prints nothing is
+    indistinguishable from a run whose post_handler wiring was dropped, and that silent failure
+    is the one this reporting path is most exposed to.
+
+    The per-wavenumber line gives how many objects flagged out of how many were recorded, and the
+    range of `unresolved_efolds_subh` over them -- the depth inside the horizon at which the
+    sample grid first failed to resolve the mode, which is the quantity the hand-over campaign
+    wants (docs/OPEN_ISSUES.md section 1.1).
+    """
+    if len(summary) == 0:
+        return []
+
+    recorded_total = sum(record["recorded"] for record in summary.values())
+    flagged_total = sum(record["flagged"] for record in summary.values())
+    unpopulated_total = sum(record["unpopulated"] for record in summary.values())
+    flagged_k = [k for k in summary if summary[k]["flagged"] > 0]
+
+    lines = [f"-- UNRESOLVED-OSCILLATION SUMMARY | {sector_label}"]
+
+    if len(flagged_k) == 0:
+        lines.append(
+            f"|  no object reported unresolved oscillations ({recorded_total} objects over {len(summary)} wavenumbers)"
+        )
+    else:
+        for k_inv_Mpc in sorted(flagged_k):
+            record = summary[k_inv_Mpc]
+            if record["efolds_min"] is None:
+                efolds = "e-folds inside horizon unavailable"
+            else:
+                efolds = f"e-folds inside horizon at first unresolved sample: {record['efolds_min']:.3g} to {record['efolds_max']:.3g}"
+            lines.append(
+                f"|  k = {k_inv_Mpc:.5g}/Mpc: {record['flagged']} of {record['recorded']} objects flagged | {efolds}"
+            )
+
+        lines.append(
+            f"|  TOTAL: {flagged_total} of {recorded_total} objects flagged, over {len(flagged_k)} of {len(summary)} wavenumbers"
+        )
+
+    if unpopulated_total > 0:
+        lines.append(
+            f"|  ({unpopulated_total} objects reached the summary without a populated has_unresolved_osc flag)"
+        )
+
+    return lines
+
+
 def run_pipeline(
     model_data: dict,
     source_k_sample: wavenumber_array,
@@ -513,17 +635,29 @@ def run_pipeline(
         f"   @@ largest source k = {largest_source_k.k_inv_Mpc:.5g}/Mpc, latest tau = {largest_tau:.5g} (for z={zend:.5g}), largest x={largest_x:.5g}, largest x +7.5% clearance={largest_x_with_clearance:.5g}"
     )
 
-    # tight tolerances are needed to compute the Liouville-Green phase function to good accuracy up to large values
-    # of the Bessel function argument x. We compute the phase in the form x Q where Q -> 1 at large x, so getting the phase
-    # accurately means keeping Q very accurately close to 1 as the integration proceeds.
-    # Internally, the bessel_phase() function uses the Dormand-Prince 8,5(3) stepper to compute a high accuracy solution.
+    # we ask for an absolute phase accuracy of 1e-12 rad and a relative amplitude accuracy of
+    # 1e-12, an order tighter than the 1e-11 the transfer-remedial campaign accepts at these
+    # orders. The declared phase error is then 5.0e-13 rad for nu = 5/2 (8.9e-16 for nu = 1/2,
+    # where the representation is exact) and the declared relative amplitude error 3.0e-13, the
+    # latter limited by the scaled-Hankel sampling floor rather than by the request -- so asking
+    # for another order buys almost nothing and widens the sampled region.
+    # The construction is two-region -- a sampled, branch-tracked near region below
+    # x_star ~ 10-60 nu, and a closed-form asymptotic tail above it -- so its cost depends on the
+    # order alone and *not* on largest_x_with_clearance: nothing evaluates a Bessel routine in the
+    # tail, which is also why arguments above x ~ 2.5e15 are now reachable at all.
     Bessel_0pt5 = bessel_phase(
-        0.5 + b_value, largest_x_with_clearance, atol=1e-25, rtol=5e-14
+        0.5 + b_value,
+        largest_x_with_clearance,
+        phase_atol=1e-12,
+        amplitude_rtol=1e-12,
     )
     Bessel_0pt5_proxy = BesselPhaseProxy(Bessel_0pt5)
 
     Bessel_2pt5 = bessel_phase(
-        2.5 + b_value, largest_x_with_clearance, atol=1e-25, rtol=5e-14
+        2.5 + b_value,
+        largest_x_with_clearance,
+        phase_atol=1e-12,
+        amplitude_rtol=1e-12,
     )
     Bessel_2pt5_proxy = BesselPhaseProxy(Bessel_2pt5)
 
@@ -544,7 +678,10 @@ def run_pipeline(
                 "k": k_exit,
                 "z_sample": None,
                 "z_init": None,
-                "atol": atol,
+                # TkNumericIntegration alone carries Tk_numeric_atol (prompt 12 of
+                # prompts/GkTk-remedial, review §12.5); it is part of the datastore key, so the
+                # work item and every lookup have to agree on it
+                "atol": Tk_numeric_atol,
                 "rtol": rtol,
                 "tags": [
                     TkProductionTag,
@@ -592,7 +729,14 @@ def run_pipeline(
             # cut down zs at which we sample the transfer function, to those that are
             # (1) later than the initial time, taken to be 5 e-folds outside the horizon,
             # and (2) earlier than the 6-efolds-inside-the-horizon cut point used in "stop"
-            # mode (with a 15% tolerance)
+            # mode (with a 15% tolerance).
+            #
+            # The 15% tolerance is not what it appears. In "stop" mode the ODE terminates on an
+            # event at z_e6, and numeric_with_phase_cut skips its expected_values check in that
+            # mode, so the samples requested between z_e6 and 0.85*z_e6 are never produced: the
+            # returned sample list is silently shorter than source_zs. Consumers cope with the
+            # short list. The constant is left alone here because changing it is a hand-over
+            # decision (review §10.2).
             source_zs = z_source_sample.truncate(
                 k_exit.z_exit_suph_e5, keep="lower"
             ).truncate(0.85 * k_exit.z_exit_subh_e6, keep="higher-include")
@@ -605,7 +749,10 @@ def run_pipeline(
                     k=k_exit,
                     z_sample=source_zs,
                     z_init=source_zs.max,
-                    atol=atol,
+                    # TkNumericIntegration alone carries Tk_numeric_atol (prompt 12 of
+                    # prompts/GkTk-remedial, review §12.5); it is part of the datastore key, so
+                    # the work item and every lookup have to agree on it
+                    atol=Tk_numeric_atol,
                     rtol=rtol,
                     tags=[
                         TkProductionTag,
@@ -644,6 +791,12 @@ def run_pipeline(
             grouper(source_k_exit_times, n=50, incomplete="fill")
         )
 
+        # the integrators no longer print a per-object unresolved-oscillation warning; the flag
+        # is accumulated here instead and reported once per wavenumber after the queue drains
+        # (README section 7 decision D2). store_results=False means the objects are not retained,
+        # so post_handler -- called once per completed task, in the driver -- is the only seam.
+        Tk_unresolved_osc = {}
+
         Tk_numeric_queue = RayWorkPool(
             pool,
             Tk_numeric_work_batches,
@@ -651,6 +804,7 @@ def run_pipeline(
             compute_handler=compute_Tk_numeric_work,
             validation_handler=validate_Tk_numeric_work,
             label_builder=build_Tk_numeric_work_label,
+            post_handler=lambda obj: record_unresolved_osc(Tk_unresolved_osc, obj),
             title="CALCULATE NUMERICAL PART OF MATTER TRANSFER FUNCTIONS",
             store_results=False,
             create_batch_size=2,
@@ -660,6 +814,11 @@ def run_pipeline(
             notify_min_time_interval=MIN_NOTIFY_INTERVAL,
         )
         Tk_numeric_queue.run()
+
+        for line in format_unresolved_osc_summary(
+            Tk_unresolved_osc, "matter transfer functions, numerical part"
+        ):
+            print(line)
 
     ## STEP 3
     ## COMPUTE MATTER TRANSFER FUNCTIONS USING THE WKB APPROXIMATION FOR SOURCE TIMES INSIDE THE HORIZON
@@ -730,7 +889,10 @@ def run_pipeline(
                 "k": k_exit,
                 "z_sample": None,
                 "z_init": None,
-                "atol": atol,
+                # TkNumericIntegration alone carries Tk_numeric_atol (prompt 12 of
+                # prompts/GkTk-remedial, review §12.5); it is part of the datastore key, so the
+                # work item and every lookup have to agree on it
+                "atol": Tk_numeric_atol,
                 "rtol": rtol,
                 "tags": [
                     TkProductionTag,
@@ -747,7 +909,13 @@ def run_pipeline(
 
         lookup_queue = RayWorkPool(
             pool,
-            query_batch,
+            # payload_batch, not query_batch: query_batch is the TkWKBIntegration query over the
+            # whole batch, whereas this queue looks up the TkNumericIntegration initial condition
+            # for the missing subset alone -- which is what the zip below expects. Since prompt 12
+            # the two also carry different absolute tolerances, so dispatching query_batch here
+            # would query TkNumericIntegration under the Green's-function tolerance and find
+            # nothing
+            payload_batch,
             task_builder=lambda x: pool.object_get("TkNumericIntegration", **x),
             available_handler=None,
             compute_handler=None,
@@ -928,7 +1096,10 @@ def run_pipeline(
                 "z_sample": None,
                 "k": k,
                 "z_init": None,
-                "atol": atol,
+                # TkNumericIntegration alone carries Tk_numeric_atol (prompt 12 of
+                # prompts/GkTk-remedial, review §12.5); it is part of the datastore key, so the
+                # work item and every lookup have to agree on it
+                "atol": Tk_numeric_atol,
                 "rtol": rtol,
                 "tags": [
                     TkProductionTag,
@@ -1159,7 +1330,15 @@ def run_pipeline(
                 if z_source.z > k_exit.z_exit_subh_e4 - DEFAULT_FLOAT_PRECISION:
                     # cut down response zs, at which we sample the Green's function, to those that are
                     # (1) later than the source, and (2) earlier than the 6-efolds-inside-the-horizon
-                    # point (with a 15% tolerance)
+                    # point (with a 15% tolerance).
+                    #
+                    # As for the transfer function above, the 15% tolerance is not what it
+                    # appears: in "stop" mode the ODE terminates on an event at z_e6 and
+                    # numeric_with_phase_cut skips its expected_values check, so the samples
+                    # requested between z_e6 and 0.85*z_e6 are never produced. The returned
+                    # sample list is silently shorter than response_zs; consumers cope. The
+                    # constant is left alone because changing it is a hand-over decision
+                    # (review §10.2).
                     response_zs = z_response_sample.truncate(
                         z_source, keep="lower"
                     ).truncate(0.85 * k_exit.z_exit_subh_e6, keep="higher-include")
@@ -1213,6 +1392,10 @@ def run_pipeline(
             grouper(z_source_sample, n=50, incomplete="fill")
         )
 
+        # see the transfer-function queue above: the per-object warning is replaced by one
+        # accumulator per sector and a summary printed when the queue drains
+        Gk_unresolved_osc = {}
+
         Gk_numeric_queue = RayWorkPool(
             pool,
             Gk_numeric_work_batches,
@@ -1220,6 +1403,7 @@ def run_pipeline(
             compute_handler=compute_Gk_numeric_work,
             validation_handler=validate_Gk_numeric_work,
             label_builder=build_Gk_numeric_work_label,
+            post_handler=lambda obj: record_unresolved_osc(Gk_unresolved_osc, obj),
             title="CALCULATE NUMERICAL PART OF TENSOR GREEN FUNCTIONS",
             store_results=False,
             create_batch_size=2,
@@ -1229,6 +1413,11 @@ def run_pipeline(
             notify_min_time_interval=MIN_NOTIFY_INTERVAL,
         )
         Gk_numeric_queue.run()
+
+        for line in format_unresolved_osc_summary(
+            Gk_unresolved_osc, "tensor Green's functions, numerical part"
+        ):
+            print(line)
 
     ## STEP 6
     ## COMPUTE TENSOR GREEN'S FUNCTIONS USING THE WKB APPROXIMATION FOR RESPONSE TIMES INSIDE THE HORIZON
@@ -2518,7 +2707,10 @@ def run_pipeline(
                 "z_sample": None,
                 "k": k_exit,
                 "z_init": None,
-                "atol": atol,
+                # TkNumericIntegration alone carries Tk_numeric_atol (prompt 12 of
+                # prompts/GkTk-remedial, review §12.5); it is part of the datastore key, so the
+                # work item and every lookup have to agree on it
+                "atol": Tk_numeric_atol,
                 "rtol": rtol,
                 "tags": [
                     TkProductionTag,
@@ -2785,13 +2977,20 @@ with ShardedPool(
 
     ## DATASTORE OBJECTS
 
-    # build absolute and relative tolerances
-    atol, rtol, quad_atol, quad_rtol = ray.get(
+    # build absolute and relative tolerances.
+    #
+    # Tk_numeric_atol is the transfer function's numeric run alone (prompt 12 of
+    # prompts/GkTk-remedial, review §12.5): T decays as 3/x^2, so the shared atol = 1e-10 is a
+    # 1e-5 *relative* tolerance deep inside the horizon. Every TkNumericIntegration object_get --
+    # the work items and every lookup -- must use it, because the tolerance is part of the
+    # datastore key; everything else keeps atol.
+    atol, rtol, quad_atol, quad_rtol, Tk_numeric_atol = ray.get(
         [
             pool.object_get("tolerance", tol=DEFAULT_ABS_TOLERANCE),
             pool.object_get("tolerance", tol=DEFAULT_REL_TOLERANCE),
             pool.object_get("tolerance", tol=DEFAULT_QUADRATURE_ATOL),
             pool.object_get("tolerance", tol=DEFAULT_QUADRATURE_RTOL),
+            pool.object_get("tolerance", tol=DEFAULT_TK_NUMERIC_ABS_TOLERANCE),
         ]
     )
 
@@ -2804,6 +3003,8 @@ with ShardedPool(
         solve_ivp_Radau,
         solve_ivp_BDF,
         solve_icp_LSODA,
+        cumulative_GL_tau,
+        wkb_primitive_phase,
     ) = ray.get(
         [
             pool.object_get("IntegrationSolver", label="solve_ivp+RK45", stepping=0),
@@ -2811,6 +3012,22 @@ with ShardedPool(
             pool.object_get("IntegrationSolver", label="solve_ivp+Radau", stepping=0),
             pool.object_get("IntegrationSolver", label="solve_ivp+BDF", stepping=0),
             pool.object_get("IntegrationSolver", label="solve_ivp+LSODA", stepping=0),
+            # the Gauss-Legendre cumulative table that BackgroundModel builds for the conformal
+            # time (prompts/GkTk-remedial, prompt 03); "stepping" carries the Gauss order
+            pool.object_get(
+                "IntegrationSolver",
+                label=BackgroundModel.TAU_SOLVER_LABEL_BASE,
+                stepping=BackgroundModel.TAU_GAUSS_ORDER,
+            ),
+            # the WKB phase evaluated from those tables plus a per-k residual table
+            # (prompts/GkTk-remedial, prompt 06); "stepping" carries the residual's Gauss
+            # order. GkWKBIntegration and TkWKBIntegration record their phase (and friction)
+            # under this label.
+            pool.object_get(
+                "IntegrationSolver",
+                label=GkWKBIntegration.PHASE_SOLVER_LABEL_BASE,
+                stepping=GkWKBIntegration.PHASE_SOLVER_STEPPING,
+            ),
         ]
     )
     solvers = {
@@ -2819,6 +3036,8 @@ with ShardedPool(
         "solve_ivp+Radau-stepping0": solve_ivp_Radau,
         "solve_ivp+BDF-stepping0": solve_ivp_BDF,
         "solve_ivp+LSODA-stepping0": solve_icp_LSODA,
+        BackgroundModel.TAU_SOLVER_LABEL: cumulative_GL_tau,
+        GkWKBIntegration.PHASE_SOLVER_LABEL: wkb_primitive_phase,
     }
 
     # create GkSource policies that we will apply later

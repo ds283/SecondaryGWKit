@@ -4,7 +4,19 @@ Tests for ComputeTargets/GkSourcePolicyData.py.
 Offline: no Ray runtime, no datastore. `_classify_Levin` is a pure function of a GkSource-like
 object, a policy and the crossover classification, so it is driven directly through duck-typed
 stand-ins shaped like the attributes it reads (`source.values[i].z_source`/`.has_WKB`/`.WKB`,
-`source.z_sample`, `source.primary_WKB_largest_z`, `policy.Levin_threshold`).
+`source.z_sample`, `source.primary_WKB_largest_z`, `policy.Levin_threshold`, and -- since
+GkTk-remedial prompt 09 -- `source.k`, `source.z_response` and `source.model_proxy`).
+
+Since prompt 09 the threshold test is evaluated on a `ComputeTargets.primitive_phase.PrimitivePhase`
+rather than on a `phase_spline` of the stored phase, so the stand-in has to carry a background
+model: a wavenumber, a response redshift and a `functions.tau` interval accessor. The phase these
+fixtures describe is still exactly linear in `log(1+z)`, `theta = rate * log(1+z)`, so
+`|d theta/d log(1+z)| = rate` everywhere and every threshold answer below is unchanged. It stays
+exact because the decomposition is exact: `PrimitivePhase` evaluates
+`-k tau.delta(z_s, z_r) + phi` with `phi = theta_stored + k tau.delta(z_s, z_r)`, and with the
+small `k = 1/Mpc` used here the leading term and the part of `phi` that cancels it are both O(1e-4)
+and smooth, so their splined difference recovers `rate` to ~1e-7 -- ten orders below the
+thresholds these tests turn on.
 
 Board issue `[10-classify-levin-keyerror]`: `Levin_z` was only assigned inside the
 `for z_source` loop, so a Green's function whose |d theta_G / d log(1+z)| never crosses
@@ -17,7 +29,54 @@ and it is what the function's own early-return path already reported for the cas
 import unittest
 from math import log, exp, pi
 
+import numpy as np
+
+from ComputeTargets.BackgroundModel import TablePrimitive
 from ComputeTargets.GkSourcePolicyData import _classify_Levin
+from ComputeTargets.cumulative_table import CumulativeTable
+
+# a small wavenumber, so that the leading term of the decomposition is O(1e-4) on this geometry
+# and the fixtures' phase stays what it says it is (see the module docstring)
+FAKE_K = 1.0
+TAU_GAUSS_ORDER = 4
+
+
+def _Hubble(z: float) -> float:
+    """Exact radiation, `H = (1+z)^2`, so `tau = 1/(1+z)`."""
+    return (1.0 + z) * (1.0 + z)
+
+
+class FakeModelFunctions:
+    """The two fields the phase construction reads off a `ModelFunctions`."""
+
+    def __init__(self, z_nodes):
+        self.Hubble = _Hubble
+        self.tau = TablePrimitive(
+            CumulativeTable(
+                z_nodes, lambda z: 1.0 / _Hubble(z), TAU_GAUSS_ORDER, label="tau"
+            ),
+            "tau",
+        )
+
+
+class FakeModel:
+    def __init__(self, z_nodes):
+        self.functions = FakeModelFunctions(z_nodes)
+
+
+class FakeModelProxy:
+    def __init__(self, model):
+        self._model = model
+
+    def get(self):
+        return self._model
+
+
+class FakeWavenumber:
+    def __init__(self, k: float):
+        self.k = float(k)
+        self.k_inv_Mpc = float(k)
+        self.store_id = 1
 
 
 class FakeZ:
@@ -73,6 +132,16 @@ class FakeGkSource:
         self.z_sample = FakeZSample(zs)
         self.primary_WKB_largest_z = FakeZ(z_top, 0)
 
+        # prompt 09: the phase is now built from the background model's conformal-time table,
+        # anchored at the response redshift. The sample redshifts are the table's nodes, as in
+        # production (the background model is built on the source grid, main.py:476), and the
+        # response point is the bottom of the range.
+        self.k = FakeWavenumber(FAKE_K)
+        self.z_response = FakeZ(zs[0], 0)
+        self.model_proxy = FakeModelProxy(
+            FakeModel(np.array(sorted(zs, reverse=True), dtype=float))
+        )
+
 
 class FakePolicy:
     def __init__(self, Levin_threshold: float):
@@ -115,6 +184,13 @@ class TestClassifyLevin(unittest.TestCase):
         # descending z_sample, so the crossing is reported at the top of the WKB range
         self.assertAlmostEqual(payload["Levin_z"].z, 1.0e8, delta=1.0)
         self.assertGreater(abs(payload["metadata"]["Levin_z_dtheta_dlogz"]), 1.0e2)
+        # prompt 09: the closed-form leading term plus the splined residual recovers the
+        # fixture's exactly linear phase, so the recorded derivative is still `rate`
+        self.assertAlmostEqual(
+            abs(payload["metadata"]["Levin_z_dtheta_dlogz"]) / source.rate,
+            1.0,
+            places=9,
+        )
 
     def test_the_early_return_path_still_reports_None(self):
         """

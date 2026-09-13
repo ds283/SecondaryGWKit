@@ -154,6 +154,48 @@ class QCD_EOS(GenericEOSBase):
         # 0 is the unique ID for the LambdaCDM cosmology type
         return QCD_EOS_IDENTIFIER
 
+    @property
+    def break_temperatures_GeV(self) -> tuple:
+        """
+        Where this parametrization changes analytic form. G and Gs switch pieces at T_LO,
+        T_120_MEV and T_HI and the pieces do not join continuously (H(z) jumps by 4.4e-4 at T_LO
+        and 1.0e-4 at T_120_MEV on the production grid); w clamps its argument at EOS_T_LO, so
+        c_s^2 is continuous there but its slope is not. Measured in
+        docs/gktk-remedial/RESIDUAL-CONVERGENCE.md §2.
+        """
+        return (
+            QCD_EOS.T_LO,
+            QCD_EOS.EOS_T_LO,
+            QCD_EOS.T_120_MEV,
+            QCD_EOS.T_HI,
+        )
+
+    @property
+    def discontinuity_temperatures_GeV(self) -> tuple:
+        """
+        Which of the four break temperatures are *jumps*: T_LO, T_120_MEV and T_HI, where G and Gs
+        change analytic form and the pieces do not meet. EOS_T_LO is not one of them -- w clamps
+        its argument there, so w, and hence c_s^2, is continuous and only its slope is not.
+
+        Measured across each temperature at a relative separation of 1e-12 in T
+        (prompts/GkTk-remedial, log 18; the numbers below are that measurement, not the prose of
+        break_temperatures_GeV):
+
+            T_LO       G +8.88e-4, Gs +2.28e-3, w 0 (clamped)  -> H(z) jumps 4.44e-4 at z=4.25e7
+            EOS_T_LO   G 1.7e-14,  Gs 1.7e-14,  w 1.3e-15      -> continuous (a kink in w only)
+            T_120_MEV  G +2.08e-4, Gs +3.74e-4, w +7.46e-4     -> H(z) jumps 1.04e-4 at z=8.64e11
+            T_HI       G +1.45e-2, Gs +1.40e-2, w +2.34e-3     -> above the production redshift
+                                                                  range, but a jump nonetheless
+
+        At EOS_T_LO the differences scale linearly with the separation, which is what identifies
+        them as rounding of a continuous function rather than a step.
+        """
+        return (
+            QCD_EOS.T_LO,
+            QCD_EOS.T_120_MEV,
+            QCD_EOS.T_HI,
+        )
+
     # Complete effective degrees of freedom functions
     def G(self, T: float) -> float:
         """

@@ -1,13 +1,20 @@
-from math import exp, sqrt, log
-from typing import Mapping
+from math import exp, sqrt, log, log1p, expm1
+from typing import Mapping, Optional
 
+import numpy as np
 from numpy import linspace
 from scipy.interpolate import make_interp_spline
 from scipy.optimize import root_scalar
 
 from ComputeTargets.spline_wrappers import ZSplineWrapper
 from CosmologyModels import BaseCosmology
-from CosmologyModels.GenericEOS.GenericEOS import GenericEOSBase, HIGH_T_GSTAR
+from CosmologyModels.GenericEOS.GenericEOS import (
+    BREAK_POINT_ALL,
+    BREAK_POINT_DISCONTINUITY,
+    BREAK_POINT_KINDS,
+    GenericEOSBase,
+    HIGH_T_GSTAR,
+)
 from Units.base import UnitsLike
 from constants import RadiationConstant
 
@@ -197,6 +204,13 @@ class LambdaCDM_GenericEOS(BaseCosmology):
         T_values = [self._solve_T_z(exp(logz) - 1.0) for logz in log_z_values]
 
         spline = make_interp_spline(log_z_values, T_values)
+
+        # The knot vector, in log(1+z), is kept because the spline is only C2 at its knots:
+        # every quadrature of a quantity built from T(z) has to split its panels there
+        # (integration_break_points below). Recorded here, where the spline is built, so that
+        # nothing outside this class has to reach into the wrapper for it.
+        self._T_z_spline_knots_log1pz = np.unique(np.asarray(spline.t, dtype=float))
+
         return ZSplineWrapper(
             spline,
             label="T(z)",
@@ -204,6 +218,118 @@ class LambdaCDM_GenericEOS(BaseCosmology):
             max_z=max_z,
             log_z=True,
         )
+
+    def _temperature_crossing_log1pz(
+        self, T: float, u_lo: float, u_hi: float
+    ) -> Optional[float]:
+        """
+        The point u = log(1+z), strictly inside (u_lo, u_hi), at which T_photon(z) crosses the
+        dimensionful temperature T; None if it does not cross inside the range.
+
+        T_photon(z) is monotone in z, so the crossing is unique. It is solved for in u, which is
+        the campaign's integration variable, to xtol = rtol = 1e-15; the root is only ever used
+        as a Gauss panel edge. The expm1(u) inside q() is the lossy log(1+z) -> z direction
+        (CLAUDE.md), but T_photon takes log(1+z) again internally, so it costs ~1 ulp of u.
+        """
+        log_T = log(T)
+
+        def q(u: float) -> float:
+            return log(self.T_photon(expm1(u))) - log_T
+
+        q_lo = q(u_lo)
+        q_hi = q(u_hi)
+        if q_lo == 0.0 or q_hi == 0.0 or (q_lo > 0.0) == (q_hi > 0.0):
+            return None
+
+        root = root_scalar(q, bracket=(u_lo, u_hi), xtol=1e-15, rtol=1e-15)
+        if not root.converged:
+            raise RuntimeError(
+                f"LambdaCDM_GenericEOS.integration_break_points: root_scalar() did not converge "
+                f"for T = {T / self._units.GeV:.5g} GeV between u = {u_lo:.6g} and {u_hi:.6g}: "
+                f'"{root.flag}"'
+            )
+        u = float(root.root)
+        if not u_lo < u < u_hi:
+            return None
+        return u
+
+    def integration_break_points(
+        self, z_lo: float, z_hi: float, kind: str = BREAK_POINT_ALL
+    ) -> np.ndarray:
+        """
+        Every point in u = log(1+z), strictly inside (log(1+z_lo), log(1+z_hi)), at which
+        Hubble(z), rho(z), T_photon(z), wBackground(z) or wPerturbations(z) loses smoothness of
+        the requested ``kind``.
+
+        With ``kind = BREAK_POINT_ALL`` (the default, and the historic behaviour) that is:
+
+        * the interior knots of the T(z) spline, where everything built from T(z) is only C2;
+        * the redshifts at which T(z) crosses one of the equation of state's
+          break_temperatures_GeV, where G, Gs or w change analytic form (a jump in H(z) at a
+          G/Gs boundary, a kink in c_s^2 at a w clamp).
+
+        A fixed-order Gauss-Legendre panel that straddles one of these converges only as N^-2
+        (docs/gktk-remedial/RESIDUAL-CONVERGENCE.md, §3), so the cumulative tables of
+        ComputeTargets/BackgroundModel.py split every production interval at the points returned
+        here and integrate the pieces separately. Splitting at the temperatures alone is not
+        enough; the knots are the load-bearing half.
+
+        With ``kind = BREAK_POINT_DISCONTINUITY`` only the crossings of the equation of state's
+        discontinuity_temperatures_GeV are returned -- the points at which a quantity *jumps*.
+        The spline knots are deliberately not included: they are C2 points, which an adaptive ODE
+        stepper absorbs, and there are two orders of magnitude more of them (404 against 3 on the
+        production range of QCD_Cosmology). This is what
+        Quadrature/integrators/numeric_with_phase_cut.py asks for, and its module docstring says
+        why the distinction matters there and not in a quadrature.
+
+        :param z_lo: lower redshift of the range (inclusive; a break exactly here is not returned)
+        :param z_hi: upper redshift of the range
+        :param kind: BREAK_POINT_ALL for every non-smooth point, BREAK_POINT_DISCONTINUITY for
+            the subset at which a quantity jumps
+        :return: an ascending numpy array of u values, empty if none fall inside the range
+        """
+        if kind not in BREAK_POINT_KINDS:
+            raise ValueError(
+                f"LambdaCDM_GenericEOS.integration_break_points: unknown break-point kind "
+                f'"{kind}" (expected one of {", ".join(BREAK_POINT_KINDS)})'
+            )
+
+        u_lo = log1p(z_lo)
+        u_hi = log1p(z_hi)
+        if not u_lo < u_hi:
+            raise ValueError(
+                f"LambdaCDM_GenericEOS.integration_break_points: need z_lo < z_hi "
+                f"(got z_lo={z_lo:.6g}, z_hi={z_hi:.6g})"
+            )
+
+        breaks = tuple(self._eos.break_temperatures_GeV)
+        jumps = tuple(self._eos.discontinuity_temperatures_GeV)
+        if not set(jumps).issubset(set(breaks)):
+            raise RuntimeError(
+                f"LambdaCDM_GenericEOS.integration_break_points: the equation of state "
+                f'"{self._eos.name}" declares discontinuity temperatures that are not among its '
+                f"break temperatures ({sorted(set(jumps) - set(breaks))} GeV). Every "
+                f"discontinuity is a break, so the quadrature path would not be split where the "
+                f"ODE path is."
+            )
+
+        if kind == BREAK_POINT_ALL:
+            knots = self._T_z_spline_knots_log1pz
+            points = list(knots[(knots > u_lo) & (knots < u_hi)])
+            temperatures = breaks
+        else:
+            points = []
+            temperatures = jumps
+
+        GeV = self._units.GeV
+        for T_in_GeV in temperatures:
+            u = self._temperature_crossing_log1pz(T_in_GeV * GeV, u_lo, u_hi)
+            if u is not None:
+                points.append(u)
+
+        if len(points) == 0:
+            return np.empty(0, dtype=float)
+        return np.unique(np.asarray(points, dtype=float))
 
     def _rho_fluid(self, z: float) -> Mapping[str, float]:
         """

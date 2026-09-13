@@ -11,11 +11,16 @@ from ComputeTargets.analytic_Gk import (
 )
 from CosmologyConcepts import wavenumber_exit_time, redshift, redshift_array, wavenumber
 from Datastore import DatastoreObject
-from LiouvilleGreen.WKBtools import shift_theta_sample
+from LiouvilleGreen.WKBtools import apply_phase_offset
 from LiouvilleGreen.constants import TWO_PI
 from MetadataConcepts import tolerance, store_tag
 from Quadrature.integration_metadata import IntegrationSolver, IntegrationData
-from Quadrature.integrators.WKB_phase_function import WKB_phase_function
+from Quadrature.integrators.WKB_phase_function import (
+    PHASE_SOLVER_LABEL,
+    PHASE_SOLVER_LABEL_BASE,
+    PHASE_SOLVER_STEPPING,
+    WKB_phase_function,
+)
 from Units import check_units
 from config.defaults import (
     DEFAULT_FLOAT_PRECISION,
@@ -27,6 +32,14 @@ class GkWKBIntegration(DatastoreObject):
     Encapsulates all sample points produced for a calculation of the Liouville-Green (WKB)
     phase function for the tensor Green's function
     """
+
+    # The IntegrationSolver label the phase is recorded under, exposed here so that main.py can
+    # register it without a new import (the pattern of BackgroundModel.TAU_SOLVER_LABEL).
+    # "stepping" carries the residual's Gauss order. Shared with TkWKBIntegration, whose phase
+    # and friction both come from the same primitive.
+    PHASE_SOLVER_LABEL_BASE = PHASE_SOLVER_LABEL_BASE
+    PHASE_SOLVER_STEPPING = PHASE_SOLVER_STEPPING
+    PHASE_SOLVER_LABEL = PHASE_SOLVER_LABEL
 
     def __init__(
         self,
@@ -317,15 +330,18 @@ class GkWKBIntegration(DatastoreObject):
             )
             print(f"     This may lead to meaningless results.")
 
+        # The phase comes from the background model's conformal-time table and a residual table
+        # (Quadrature/integrators/WKB_phase_function.py), which have no tolerances. self._atol
+        # and self._rtol are kept because they are part of the datastore lookup key
+        # (RECONCILIATION.md §2 item 10); they are not passed here.
         self._compute_ref = WKB_phase_function.remote(
             self._model_proxy,
             self._k_exit,
             initial_z,
             self._z_sample,
+            sector="Gk",
             omega_sq=Gk_omegaEff_sq,
             d_ln_omega_dz=Gk_d_ln_omegaEff_dz,
-            atol=self._atol.tol,
-            rtol=self._rtol.tol,
             task_label="compute_Gk_WKB_phase",
             object_label="Gr_k(z, z')",
         )
@@ -397,24 +413,26 @@ class GkWKBIntegration(DatastoreObject):
 
         # STEP 2. WRITE THE SOLUTION IN THE FORM
         #   B sin ( theta + deltaTheta )
+        # With deltaTheta = atan2(raw_cos, raw_sin) the sign of B sin(deltaTheta) is the sign of
+        # raw_cos, i.e. of G_init, so B > 0 already reproduces the initial data: the sign
+        # correction that used to follow here was provably +1 in every case (review §8.1) and
+        # has been removed.
         deltaTheta = atan2(raw_cos_coeff, raw_sin_coeff)
         B = sqrt(raw_cos_coeff * raw_cos_coeff + raw_sin_coeff * raw_sin_coeff)
 
-        # fix the sign of B by comparison with the original G
-        sin_deltaTheta = sin(deltaTheta)
-        sgn_sin_deltaTheta = +1 if sin_deltaTheta >= 0.0 else -1
-        sgn_G = +1 if self._G_init >= 0.0 else -1
-
         # evaluate the new coefficients of the sin and cos terms
         self._cos_coeff = 0.0
-        self._sin_coeff = sgn_sin_deltaTheta * sgn_G * B
+        self._sin_coeff = B
 
         # STEP 3. APPLY THE SHIFT TO THE PHASE FUNCTION
-        # change theta to theta + deltaTheta, and then update the result mod 2pi
-        theta_div_2pi_sample, theta_mod_2pi_sample = shift_theta_sample(
-            div_2pi_sample=data["theta_div_2pi_sample"],
-            mod_2pi_sample=data["theta_mod_2pi_sample"],
-            shift=deltaTheta,
+        # change theta to theta + deltaTheta per sample, wrapping each sample's remainder back
+        # into (-2pi, 0] and adding the resulting cycle shift to that sample's div 2pi. No
+        # cross-sample rebase: the stored theta + deltaTheta is exact, so that neighbouring
+        # objects agree on their cycle counts (README §2 (e); review §8.1, §8.3).
+        theta_div_2pi_sample, theta_mod_2pi_sample = apply_phase_offset(
+            data["theta_div_2pi_sample"],
+            data["theta_mod_2pi_sample"],
+            deltaTheta,
         )
 
         # STEP 4. EVALUATE THE FULL LIOUVILLE-GREEN SOLUTIONS
