@@ -1,6 +1,6 @@
 # Open issues — project-wide index
 
-**Last updated:** 2026-09-13 · **55 open** across seven campaigns.
+**Last updated:** 2026-09-13 · **56 open** across eight campaigns.
 
 This file exists so that an issue opened by one campaign is not lost when that campaign closes.
 It is an **index, not a record**: one line per issue, pointing at the campaign status board that
@@ -18,7 +18,8 @@ the two disagree, the board is right.
 [`transfer-remedial`](../prompts/transfer-remedial/IMPLEMENTATION_STATE.md) ·
 [`GkTk-remedial`](../prompts/GkTk-remedial/IMPLEMENTATION_STATE.md) ·
 [`qsi-phase-groups`](../prompts/qsi-phase-groups/IMPLEMENTATION_STATE.md) ·
-[`phase-representation`](../prompts/phase-representation/IMPLEMENTATION_STATE.md)
+[`phase-representation`](../prompts/phase-representation/IMPLEMENTATION_STATE.md) ·
+[`qcd-background-audit`](../prompts/qcd-background-audit/IMPLEMENTATION_STATE.md)
 
 ---
 
@@ -81,7 +82,6 @@ prompt 13 left open.
 | `[07-tk-per-object-cost-is-all-setup]` | GkTk-remedial | A `TkWKBIntegration` object at $k=3\times10^8$ costs 0.049–0.052 s, straddling prompt 07 §3 item 6's 0.05 s; all of it is setup. 5,840 of its 11,376 integrand evaluations build a per-$k$ residual table that, at one object per $k$, nothing amortises, and 5,536 are the leading table's off-grid anchor panel recomputed once per sample — the split prompt 14 applied to $\rho$ but not to $\tau_s$. **Widened by prompt 09:** the same recomputation would hit any consumer with an off-grid anchor, which is prompt 10's $z_{\rm init}$. |
 | `[08-docs-scripts-reference-removed-chunking]` | GkTk-remedial | Two `docs/` reproduction scripts (`t5_spline.py`, `measure.py`) read `phase_spline` internals (`_chunk_list`, `_splines`, `_match_chunk`) that prompt 08 deleted with chunking; they documented the chunked tree they ran on and were not edited. |
 | `[10-transfer-remedial-tolerance-comments-stale]` | GkTk-remedial | Five tolerance comments `8ba9159` wrote in `test_tk_source_functions.py` now describe the consumer re-spline prompt 10 deleted and quote numbers three to four orders above the new measurements. Not edited — `8ba9159`'s text was a stop condition for prompt 10 — and every assertion still passes. |
-| `[19-cosmologymodels-docstrings-predate-per-sector-policy]` | GkTk-remedial | `GenericEOS.py:97-101` and `LambdaCDM_GenericEOS.py:277-283` say an adaptive ODE solver only has to be split at a jump, and that the jumps-only set is what `numeric_with_phase_cut` asks for. True when prompt 18 wrote them; prompt 19 measured the C2 knots costing an order of magnitude of reference convergence in the $T_k$ sector, which now asks for `BREAK_POINT_ALL`. Documentation only; `CosmologyModels/` was out of bounds for prompt 19. |
 | `[20-wkb-gauss-orders-not-in-lookup-key]` | GkTk-remedial | Prompt 20's §5 audit refutes "the other four compute targets have no equivalent free parameter": `TAU_GAUSS_ORDER`, `CS_TAU_GAUSS_ORDER`, `FRICTION_F_GAUSS_ORDER`, `RHO_GAUSS_ORDER` (all 4) and `RESIDUAL_WKB_REGION_MARGIN = 0.5` are configuration axes in no `BackgroundModel`, `GkWKBIntegration` or `TkWKBIntegration` lookup key. The orders at least move a solver label, which no factory filters on; the margin moves no label, tag or column at all. Latent, not live — prompt 14 measured the margin at $\le1.4\times10^{-17}$ rad in $\rho$ with $\theta$ bit-identical. |
 | `[20-wkb-rows-consume-numeric-initial-data]` | GkTk-remedial | `Gk`/`TkWKBIntegration` take $z_{\rm init}$, $G_{\rm init}$/$T_{\rm init}$ and the derivative from the numeric stop point and are keyed independently of the numeric row: no foreign key, and the initial values are stored `nullable=False` but never filtered. Covered in practice only because `z_init` is filtered as an absolute `1e-7` against $z\sim10^{12}$, i.e. exactly — measured on QCD at $k=4.972\times10^7$, the two break-point policies move $z_{\rm init}$ by 4.59e5 and the lookup misses. A change moving the stop *values* without moving $z_{\rm init}$ would be served a stale row. |
 | `[10-wrap-theta-loop-at-large-phase]` | GkTk-remedial | `wrap_theta` reduces by adding $2\pi$ in a loop, so at $|\theta|\sim10^6$ rad it takes ~1.6e5 iterations and reconstructs $\theta$ only to 1.39e-06 rad. Inert in production (its one caller passes `mod + delta`), a trap for fixtures. The companion defect in `WKB_mod_2pi`'s cycle count was fixed by `phase-representation` prompt 01 (2026-09-13), so that function is now exact in both halves; this loop is not. |
@@ -128,13 +128,39 @@ names does not construct, and the issue's own attribution did not survive measur
 README §7 D2 decision was then taken on the evidence of
 [`qcd-background-audit-2026-09.md`](qcd-background-audit-2026-09.md) — 404 of the 407
 `BREAK_POINT_ALL` points are knots of the `T(z)` spline, so the remedy is upstream — and the
-campaign was **closed**, its remaining issue passing to the `qcd-background` campaign. Close-out:
+campaign was **closed**, its remaining issue passing to the `qcd-background-audit` campaign (§1.7). Close-out:
 `docs/gktk-remedial-verification.md` §8.
 
 | Issue | Board | Hook |
 |---|---|---|
-| `[13-consumer-spline-crosses-eos-break-points]` | GkTk-remedial → phase-representation | `PrimitivePhase`'s cubic spline of $\varphi$ uses default knots across `QCD_EOS`'s declared break points: 1.9e-6 / 3.2e-6 rad at $z=4.24\times10^7$ ($G_k$ / $T_k$, $k=10^5$) against 1 ulp elsewhere. **Narrowed by prompt 02 (2026-09-13), which stopped rather than fixing it:** a repeated-knot vector is singular on all six production grids at `BREAK_POINT_ALL` and 2× worse at `BREAK_POINT_DISCONTINUITY`, no break point coincides with a sample, and the kink itself is only 1.6e-8 / 1.4e-7 rad — 1 % and 4 % — of the error. **Superseded 2026-09-13** by `qcd-background-audit-2026-09.md`: 404 of the 407 `BREAK_POINT_ALL` points are knots of the `T(z)` spline itself, not cosmology, so the fix is to remove that artefact upstream — after which the set falls to 3 and a knot vector constructs. Owned by the `qcd-background` campaign. |
 | `[02-consumer-phi-below-the-storage-granularity]` | phase-representation | $\varphi$ is recovered as a difference of two numbers of size $k\tau$, so on QCD $G_k$ its whole range is 6.0 ulp of the stored phase at $k=10^7$ and **2.0 ulp (3 distinct values over 1,377 samples)** at $3\times10^8$. Differentiating that staircase makes `theta_deriv` **3× and 10× worse than omitting $\varphi$ altogether**, and is what §3.6's two failing rows actually are. `[00-consumer-anchoring-floor]` seen in the derivative. |
+
+---
+
+### 1.7 The QCD background campaign
+
+[`prompts/qcd-background-audit/`](../prompts/qcd-background-audit/README.md) (2026-09-13; twelve
+prompts in four workstreams, **none executed**; prompts 10–12 gated on that README's §7 D7). It
+implements [`qcd-background-audit-2026-09.md`](qcd-background-audit-2026-09.md), which measured that
+`QCD_Cosmology`'s temperature is a cubic spline over 500 points solved to `rtol=1e-4`, built as $T$
+against $\log(1+z)$ and run across three points at which $T(z)$ genuinely **jumps** — so the
+background carries a systematic **3.461e-08** relative error in conformal time, worth of order
+**1.4e5 rad** at $k=3\times10^8$/Mpc against a 9.15e-04 rad floor. That error is **common mode
+between every producer and every consumer**, which is why no test in the tree can see it and why
+`docs/gktk-remedial-verification.md` §3.5 reads 1.00 ulp while §5 of the audit is true. The
+campaign replaces the representation with a segmented entropy-factor spline (prompts 04–06),
+collapses `BREAK_POINT_ALL` from 407 points to 3 (07–08) — **404 of the 407 are knots of that
+auxiliary interpolant, not cosmology** — and adds the background-against-background test that would
+have caught it (01). It is a **precondition for `prompts/tolerance-convergence`** (§1.5), whose QCD
+half would otherwise be measured against a background about to move.
+
+| Issue | Board | Hook |
+|---|---|---|
+| `[00-eos-branch-joins-do-not-match]` | qcd-background-audit | `QCD_EOS`'s branch joins at $10^{16}$, 0.12 and $10^{-5}$ GeV jump by +1.395e-02, −3.744e-04 and −2.284e-03 in $g_s$, forcing steps in $T(z)$; the join at 0.002 GeV matches to 1.751e-11, and that asymmetry is the evidence the other three are a transcription defect. Origin of the 4.4e-04 jump in $H(z)$ at $z=4.24\times10^7$ that `GkTk-remedial` log 02 measured without attribution. **Upstream data fixture; the campaign pins it in a test and does not repair it.** The question for its authors is that campaign's README §7 D6. |
+| `[02-qcd-T-z-spline-node-tolerance]` | GkTk-remedial → qcd-background-audit | `_solve_T_z`'s `root_scalar(xtol=1e-6, rtol=1e-4)` leaves the $T(z)$ spline's node values up to 2.1e-5 relative from a tight re-solve ($\sim4\times10^{-5}$ in $H$). A model-fidelity bound, not a quadrature error; distinct from `[01-genericeos-tz-spline-floor]`, which is about the grid. |
+| `[01-genericeos-tz-spline-floor]` | source-remediation → qcd-background-audit | Whether the `T(z)` spline grid is adequately defined. A hot-fix's fixed 500 points give 1.3e-9 at `max_z=1e4`, 6.4e-7 at the default 1e20; it is why prompt 01's test asserts 1e-8, not 1e-10. Two sign bugs in the grid's *range* were fixed 2026-09-10 and are not part of this. |
+| `[19-cosmologymodels-docstrings-predate-per-sector-policy]` | GkTk-remedial → qcd-background-audit | `GenericEOS.py:97-101` and `LambdaCDM_GenericEOS.py:277-283` say an adaptive ODE solver only has to be split at a jump, and that the jumps-only set is what `numeric_with_phase_cut` asks for. True when prompt 18 wrote them; prompt 19 measured the C2 knots costing an order of magnitude of reference convergence in the $T_k$ sector, which now asks for `BREAK_POINT_ALL`. Documentation only; `CosmologyModels/` was out of bounds for prompt 19. |
+| `[13-consumer-spline-crosses-eos-break-points]` | GkTk-remedial → qcd-background-audit | `PrimitivePhase`'s cubic spline of $\varphi$ uses default knots across `QCD_EOS`'s declared break points: 1.9e-6 / 3.2e-6 rad at $z=4.24\times10^7$ ($G_k$ / $T_k$, $k=10^5$) against 1 ulp elsewhere. **Narrowed by prompt 02 (2026-09-13), which stopped rather than fixing it:** a repeated-knot vector is singular on all six production grids at `BREAK_POINT_ALL` and 2× worse at `BREAK_POINT_DISCONTINUITY`, no break point coincides with a sample, and the kink itself is only 1.6e-8 / 1.4e-7 rad — 1 % and 4 % — of the error. **Superseded 2026-09-13** by `qcd-background-audit-2026-09.md`: 404 of the 407 `BREAK_POINT_ALL` points are knots of the `T(z)` spline itself, not cosmology, so the fix is to remove that artefact upstream — after which the set falls to 3 and a knot vector constructs. Owned by the `qcd-background-audit` campaign, prompt 10. |
 
 ---
 
@@ -159,12 +185,10 @@ No action defined. These are floors on what a test may *assert*, not on what the
 
 | Issue | Board | Hook |
 |---|---|---|
-| `[01-genericeos-tz-spline-floor]` | source-remediation | Whether the `T(z)` spline grid is adequately defined. A hot-fix's fixed 500 points give 1.3e-9 at `max_z=1e4`, 6.4e-7 at the default 1e20; it is why prompt 01's test asserts 1e-8, not 1e-10. Two sign bugs in the grid's *range* were fixed 2026-09-10 and are not part of this. |
 | `[03-derivative-pad-clamp-on-coarse-grids]` | source-remediation | The background derivative-fit padding is clamped near $z=0$; harmless at the shipped 100 samples/decade, binds at 50. A trap only if `source_samples_log10z` is lowered. |
 | `[00-tk-superhorizon-ic-series]` | GkTk-remedial | Once the $T_k$ numeric `atol` is fixed (prompt 12), the floor is the super-horizon initial condition $T=1,T'=0$ at $2.5\times10^{-6}$; removable with the series $T\approx1-x^2/10$, a spec-level decision. |
 | `[01-lambdacdm-hubble-rounding-floor]` | GkTk-remedial | `LambdaCDM.Hubble` carries 2–9e-15 relative in double precision, which floors $\Delta\tau$ over one grid interval at $4$–$6\times10^{-5}$ rad at $k=3\times10^8$ whatever the Gauss order or storage width. |
 | `[02-qcd-reference-floor]` | GkTk-remedial | The QCD $\tau$/$\tau_s$ references in `wkb_reference_data.json` are themselves good only to 1.9e-14 relative, which is exactly where prompt 02's order-4 tables land. Do not assert tighter for QCD $\tau$ at the nodes. |
-| `[02-qcd-T-z-spline-node-tolerance]` | GkTk-remedial | `_solve_T_z`'s `root_scalar(xtol=1e-6, rtol=1e-4)` leaves the $T(z)$ spline's node values up to 2.1e-5 relative from a tight re-solve ($\sim4\times10^{-5}$ in $H$). A model-fidelity bound, not a quadrature error; distinct from `[01-genericeos-tz-spline-floor]`, which is about the grid. |
 | `[03-qcd-short-baseline-reference-endpoint-rounding]` | GkTk-remedial | The QCD short-baseline references in `wkb_reference_data.json` integrate between rounded `log1p(z)` endpoints and carry up to ulp(u)/W ≈ 1e-13 relative on the 37 % fractions; the shipped table agrees with an exact-endpoint `quad` to ≤ 8.8e-16. Assert README §6's 1e-13 for QCD short baselines, not the JSON's self-agreement. |
 | `[03-integrationsolver-stepping-minimum-lookup]` | GkTk-remedial | `IntegrationSolver` lookups match `stepping >= requested`; harmless while every table is order 4, but a second Gauss order under the label `cumulative-GL` could be served by the other order's row. |
 | `[04-background-rhs-evaluations-count]` | GkTk-remedial | `compute_background` builds three tables but `IntegrationData` has one counter, which prompt 03's test pins to the $\tau$ table alone; the other two counts are payload keys, so the persisted `RHS_evaluations` understates the build 3×. |
