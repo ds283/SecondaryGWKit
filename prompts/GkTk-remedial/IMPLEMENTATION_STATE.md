@@ -413,6 +413,10 @@ Opened by the planning pass, 2026-09-10, before any prompt runs.
   one when `div * TWO_PI + mod` differs from `theta` by more than half a cycle — with a test that
   sweeps $|\theta|$ up to $5\times10^{12}$. It moves a persisted column, so it carries a datastore
   regeneration. Not fixed by prompt 13, which may not touch production code.
+  **Assigned (2026-09-13): `prompts/phase-representation` prompt 01.** It is that campaign's
+  first prompt because it is the only live accuracy defect this campaign left behind and its rate
+  grows with $k$. Closure — and the measured `0 of 77,975` — is recorded in §4 by that prompt,
+  not here.
 
 - **[13-consumer-spline-crosses-eos-break-points]** *(opened by prompt 13, 2026-09-13)* —
   `PrimitivePhase` splines the residual $\varphi$ with `make_interp_spline`'s default knots, which
@@ -431,6 +435,9 @@ Opened by the planning pass, 2026-09-10, before any prompt runs.
   `integration_break_points` value inside the sample range — the remedy prompts 02 and 03 built for
   the quadrature and prompts 18 and 19 for the ODE, applied to the last consumer of a cosmology's
   non-smoothness that does not use it. `ComputeTargets/primitive_phase.py`, one prompt.
+  **Assigned (2026-09-13): `prompts/phase-representation` prompt 02**, which must also separate
+  this issue's contribution to the `theta_deriv` miss from `[02-qcd-T-z-spline-node-tolerance]`'s
+  rather than report one number. Closure is recorded in §4 by that prompt, not here.
 
 - **[13-scoped-run-driver-k-grid-literal]** *(opened by prompt 13, 2026-09-13; not this campaign's
   file)* — `docs/source-remediation-verification/scoped_pipeline_run.py` substitutes `main.py`'s two

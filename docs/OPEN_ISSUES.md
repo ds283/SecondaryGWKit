@@ -1,6 +1,6 @@
 # Open issues — project-wide index
 
-**Last updated:** 2026-09-13 · **54 open** across six campaigns.
+**Last updated:** 2026-09-13 · **54 open** across seven campaigns.
 
 This file exists so that an issue opened by one campaign is not lost when that campaign closes.
 It is an **index, not a record**: one line per issue, pointing at the campaign status board that
@@ -17,7 +17,8 @@ the two disagree, the board is right.
 [`backport-modules`](../prompts/backport-modules/IMPLEMENTATION_STATE.md) ·
 [`transfer-remedial`](../prompts/transfer-remedial/IMPLEMENTATION_STATE.md) ·
 [`GkTk-remedial`](../prompts/GkTk-remedial/IMPLEMENTATION_STATE.md) ·
-[`qsi-phase-groups`](../prompts/qsi-phase-groups/IMPLEMENTATION_STATE.md)
+[`qsi-phase-groups`](../prompts/qsi-phase-groups/IMPLEMENTATION_STATE.md) ·
+[`phase-representation`](../prompts/phase-representation/IMPLEMENTATION_STATE.md)
 
 ---
 
@@ -84,8 +85,6 @@ prompt 13 left open.
 | `[20-wkb-gauss-orders-not-in-lookup-key]` | GkTk-remedial | Prompt 20's §5 audit refutes "the other four compute targets have no equivalent free parameter": `TAU_GAUSS_ORDER`, `CS_TAU_GAUSS_ORDER`, `FRICTION_F_GAUSS_ORDER`, `RHO_GAUSS_ORDER` (all 4) and `RESIDUAL_WKB_REGION_MARGIN = 0.5` are configuration axes in no `BackgroundModel`, `GkWKBIntegration` or `TkWKBIntegration` lookup key. The orders at least move a solver label, which no factory filters on; the margin moves no label, tag or column at all. Latent, not live — prompt 14 measured the margin at $\le1.4\times10^{-17}$ rad in $\rho$ with $\theta$ bit-identical. |
 | `[20-wkb-rows-consume-numeric-initial-data]` | GkTk-remedial | `Gk`/`TkWKBIntegration` take $z_{\rm init}$, $G_{\rm init}$/$T_{\rm init}$ and the derivative from the numeric stop point and are keyed independently of the numeric row: no foreign key, and the initial values are stored `nullable=False` but never filtered. Covered in practice only because `z_init` is filtered as an absolute `1e-7` against $z\sim10^{12}$, i.e. exactly — measured on QCD at $k=4.972\times10^7$, the two break-point policies move $z_{\rm init}$ by 4.59e5 and the lookup misses. A change moving the stop *values* without moving $z_{\rm init}$ would be served a stale row. |
 | `[10-wrap-theta-loop-at-large-phase]` | GkTk-remedial | `wrap_theta` reduces by adding $2\pi$ in a loop, so at $|\theta|\sim10^6$ rad it takes ~1.6e5 iterations and reconstructs $\theta$ only to 1.39e-06 rad. Inert in production (its one caller passes `mod + delta`), a trap for fixtures; `WKB_mod_2pi`'s *remainder* is exact, but its cycle count is not — `[13-wkb-mod-2pi-cycle-count-inconsistent]`. |
-| `[13-wkb-mod-2pi-cycle-count-inconsistent]` | GkTk-remedial | `WKB_mod_2pi` takes its remainder from an exact `fmod` but its cycle count from a **rounded** division, so at large $|\theta|$ the pair can reconstruct $\theta-2\pi$ instead of $\theta$. Measured on the production geometry: 1 of 77,975 Green's-function samples at $k=3\times10^8$ on LambdaCDM, costing the consumer **6.17 rad** against a 9.15e-4 rad floor; rate is the half-ulp width of $|\theta|/2\pi$ and grows with $k$. Stored `theta_mod_2pi` — and so every stored $G$, $T$ — is unaffected; the `GkSource` rectifier does not catch it, because its trigger is a cycle count jumping *up*. |
-| `[13-consumer-spline-crosses-eos-break-points]` | GkTk-remedial | `PrimitivePhase`'s cubic spline of $\varphi$ uses default knots and so interpolates across `QCD_EOS`'s declared break points, where $\varphi$ kinks: 1.9e-6 / 3.2e-6 rad at $z=4.24\times10^7$ ($G_k$ / $T_k$, $k=10^5$) against 1 ulp elsewhere, and a uniform 2.3e-7–3.3e-4 relative miss of $\omega$ by `theta_deriv` across the QCD interior. The remedy is the knot vector prompts 02/03/18/19 already built for the quadrature and the ODE. |
 | `[13-scoped-run-driver-k-grid-literal]` | GkTk-remedial | `docs/source-remediation-verification/scoped_pipeline_run.py` matches a `main.py` k-grid literal that `f17f2d4` renamed to `NUMBER_SOURCE_K_VALUES`/`NUMBER_RESPONSE_K_VALUES`, so it finds zero occurrences and raises rather than running. The `source-remediation` Layer 2 is not reproducible by its own documented command; prompt 13 copied the driver into `docs/gktk-remedial/` rather than editing another campaign's file. |
 
 ---
@@ -110,6 +109,24 @@ numeric object is ~31.5k right-hand-side evaluations rather than ~9.8k (+220 %, 
 | Issue | Board | Hook |
 |---|---|---|
 | `[12-tk-numeric-atol-largest-k-excursion]` | GkTk-remedial → tolerance-convergence | Prompt 12's `atol=1e-13` left excursions above README §6's 3e-6 of the envelope that prompt 17 then measured across the production grid: 3 / 13 / 8 of 50 wavenumbers on Radiation / LambdaCDM / QCD, worst 8.64e-4, each a raised level rather than one bad sample. `atol=1e-16` does not fix it and is not cheaper. **The user settled the constant 2026-09-12: `1e-13` stays** — `atol` is not the lever. One decade of `rtol` removes every excursion for +23–25 % evaluations, and `rtol` is one shared number keying every integration object. **Assigned (2026-09-12): `prompts/tolerance-convergence`**, which sweeps it per sector and decouples the constants. | |
+
+---
+
+### 1.6 The phase-representation campaign
+
+Planned as [`prompts/phase-representation/`](../prompts/phase-representation/README.md)
+(2026-09-13; two prompts, none executed). Both close a defect that `prompts/GkTk-remedial`
+prompt 13 **measured and was forbidden to fix**, a verification prompt being barred from touching
+production code. Both are about how a WKB phase is represented and reconstructed for a consumer:
+one in the `(cycle count, remainder)` pair the producers store, one in the spline the consumers
+build. The measurements are `docs/gktk-remedial-verification.md` §3.5, §3.6 and §3.7 and are
+re-runnable from `docs/gktk-remedial/verify_production_path.py`. Neither is urgent; the first is
+the only live accuracy defect the campaign left behind, and its rate grows with $k$.
+
+| Issue | Board | Hook |
+|---|---|---|
+| `[13-wkb-mod-2pi-cycle-count-inconsistent]` | GkTk-remedial → phase-representation | `WKB_mod_2pi` takes its remainder from an exact `fmod` but its cycle count from a **rounded** division, so at large $|\theta|$ the pair can reconstruct $\theta-2\pi$ instead of $\theta$. Measured on the production geometry: 1 of 77,975 Green's-function samples at $k=3\times10^8$ on LambdaCDM, costing the consumer **6.17 rad** against a 9.15e-4 rad floor; rate is the half-ulp width of $|\theta|/2\pi$ and grows with $k$. Stored `theta_mod_2pi` — and so every stored $G$, $T$ — is unaffected; the `GkSource` rectifier does not catch it, because its trigger is a cycle count jumping *up*. **Assigned (2026-09-13): `prompts/phase-representation`.** |
+| `[13-consumer-spline-crosses-eos-break-points]` | GkTk-remedial → phase-representation | `PrimitivePhase`'s cubic spline of $\varphi$ uses default knots and so interpolates across `QCD_EOS`'s declared break points, where $\varphi$ kinks: 1.9e-6 / 3.2e-6 rad at $z=4.24\times10^7$ ($G_k$ / $T_k$, $k=10^5$) against 1 ulp elsewhere, and a uniform 2.3e-7–3.3e-4 relative miss of $\omega$ by `theta_deriv` across the QCD interior. The remedy is the knot vector prompts 02/03/18/19 already built for the quadrature and the ODE. **Assigned (2026-09-13): `prompts/phase-representation`.** |
 
 ---
 
