@@ -1,6 +1,6 @@
 # Open issues — project-wide index
 
-**Last updated:** 2026-09-13 · **53 open** across seven campaigns.
+**Last updated:** 2026-09-13 · **55 open** across seven campaigns.
 
 This file exists so that an issue opened by one campaign is not lost when that campaign closes.
 It is an **index, not a record**: one line per issue, pointing at the campaign status board that
@@ -115,19 +115,22 @@ numeric object is ~31.5k right-hand-side evaluations rather than ~9.8k (+220 %, 
 ### 1.6 The phase-representation campaign
 
 [`prompts/phase-representation/`](../prompts/phase-representation/README.md) (2026-09-13; two
-prompts, **prompt 01 executed**). Both close a defect that `prompts/GkTk-remedial` prompt 13
+prompts, **01 executed, 02 blocked**). Both close a defect that `prompts/GkTk-remedial` prompt 13
 **measured and was forbidden to fix**, a verification prompt being barred from touching production
 code. Both are about how a WKB phase is represented and reconstructed for a consumer: one in the
 `(cycle count, remainder)` pair the producers store, one in the spline the consumers build. The
 measurements are `docs/gktk-remedial-verification.md` §3.5, §3.6 and §3.7 and are re-runnable from
 `docs/gktk-remedial/verify_production_path.py`. Prompt 01 closed
 `[13-wkb-mod-2pi-cycle-count-inconsistent]` on 2026-09-13 — the cycle count now comes from the
-exact `fmod` remainder and the production geometry is 0 inconsistent of 77,975 — leaving only the
-one below.
+exact `fmod` remainder and the production geometry is 0 inconsistent of 77,975. **Prompt 02
+stopped** on its own §2 item 2 without changing production code: the remedy the remaining issue
+names does not construct, and the issue's own attribution did not survive measurement. The
+campaign needs the README §7 D2 decision before it can go further.
 
 | Issue | Board | Hook |
 |---|---|---|
-| `[13-consumer-spline-crosses-eos-break-points]` | GkTk-remedial → phase-representation | `PrimitivePhase`'s cubic spline of $\varphi$ uses default knots and so interpolates across `QCD_EOS`'s declared break points, where $\varphi$ kinks: 1.9e-6 / 3.2e-6 rad at $z=4.24\times10^7$ ($G_k$ / $T_k$, $k=10^5$) against 1 ulp elsewhere, and a uniform 2.3e-7–3.3e-4 relative miss of $\omega$ by `theta_deriv` across the QCD interior. The remedy is the knot vector prompts 02/03/18/19 already built for the quadrature and the ODE. **Assigned (2026-09-13): `prompts/phase-representation`.** |
+| `[13-consumer-spline-crosses-eos-break-points]` | GkTk-remedial → phase-representation | `PrimitivePhase`'s cubic spline of $\varphi$ uses default knots across `QCD_EOS`'s declared break points: 1.9e-6 / 3.2e-6 rad at $z=4.24\times10^7$ ($G_k$ / $T_k$, $k=10^5$) against 1 ulp elsewhere. **Narrowed by prompt 02 (2026-09-13), which stopped rather than fixing it:** a repeated-knot vector is singular on all six production grids at `BREAK_POINT_ALL` and 2× worse at `BREAK_POINT_DISCONTINUITY`, no break point coincides with a sample, and the kink itself is only 1.6e-8 / 1.4e-7 rad — 1 % and 4 % — of the error. Next step is the sample grid or the representation, not the knots. |
+| `[02-consumer-phi-below-the-storage-granularity]` | phase-representation | $\varphi$ is recovered as a difference of two numbers of size $k\tau$, so on QCD $G_k$ its whole range is 6.0 ulp of the stored phase at $k=10^7$ and **2.0 ulp (3 distinct values over 1,377 samples)** at $3\times10^8$. Differentiating that staircase makes `theta_deriv` **3× and 10× worse than omitting $\varphi$ altogether**, and is what §3.6's two failing rows actually are. `[00-consumer-anchoring-floor]` seen in the derivative. |
 
 ---
 
@@ -185,6 +188,7 @@ Something was asserted statically or on a stand-in, and a live exercise is still
 | `[08-3bessel-plot-cost-dominates-the-suite]` | transfer-remedial | `test_3bessel_analytic` spends its whole wall clock (21.2 min for one test) evaluating 250-point grids of three-Bessel integrals to draw figures, not on assertions — which is why a module-level failure survived three prompts. Proposal only; nothing implemented. |
 | `[03-backgroundmodelvalue-build-path]` | GkTk-remedial | `sqla_BackgroundModelValue_factory.build()`'s query-existing-row branch inserts with key `"wkb_serial"` (column is `model_serial`) and reads `row_data.Hubble` (select has `Hubble_GeV`); confirmed by prompt 03, never exercised by production, not repaired. |
 | `[09-bessel-tier-hardcoded-repo-path]` | transfer-remedial | `bessel_tier.py`'s hardcoded main-checkout `sys.path` entry silently shadows a worktree's own `LiouvilleGreen` package; a re-run from a worktree measures the wrong tree with no warning. Discovered while re-running the $\kappa=1000$ benchmark tier. |
+| `[02-verify-script-builds-its-own-Gk-consumer]` | phase-representation | `docs/gktk-remedial/verify_production_path.py` calls `PrimitivePhase(...)` directly at `:557` and `:1173` instead of going through `GkSourcePolicyData._build_phase`, so six of §3.5's twelve rows and both `theta_deriv` $G_k$ columns are blind to anything the production $G_k$ call site passes. Its $T_k$ half does use `TkSourceFunctions`. Same class as `[13-scoped-run-driver-k-grid-literal]`. |
 
 ---
 

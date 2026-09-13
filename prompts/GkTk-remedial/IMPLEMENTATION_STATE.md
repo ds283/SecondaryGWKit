@@ -403,13 +403,59 @@ Opened by the planning pass, 2026-09-10, before any prompt runs.
   nodes at the top of the grid. **Impact:** a few $10^{-6}$ rad of consumer phase on QCD at the
   smallest wavenumbers, against a $10^{-3}$ rad Liouville–Green truncation floor on that model, so
   nothing downstream is limited by it today; it matters if anyone ever tightens the QCD phase
-  claims. **Next step:** give `PrimitivePhase` a knot vector that repeats a knot at each
-  `integration_break_points` value inside the sample range — the remedy prompts 02 and 03 built for
-  the quadrature and prompts 18 and 19 for the ODE, applied to the last consumer of a cosmology's
-  non-smoothness that does not use it. `ComputeTargets/primitive_phase.py`, one prompt.
-  **Assigned (2026-09-13): `prompts/phase-representation` prompt 02**, which must also separate
-  this issue's contribution to the `theta_deriv` miss from `[02-qcd-T-z-spline-node-tolerance]`'s
-  rather than report one number. Closure is recorded in §4 by that prompt, not here.
+  claims.
+
+  **Assigned (2026-09-13): `prompts/phase-representation` prompt 02.** **Narrowed and
+  re-attributed by that prompt, 2026-09-13, which stopped rather than fixing it** (`BLOCKED`; its
+  §2 item 2 and README §7 D2 reserve the decision). No production file changed. What it measured,
+  at the same production geometry as §3.5 and §3.6:
+
+  1. **The knot vector does not construct.** At `BREAK_POINT_ALL` — the kind the remedy named — a
+     multiplicity-`spline_order` knot vector is **singular on all six production grids**
+     (Schoenberg–Whitney fails at 3, 5, 9, 8, 10 and 14 sites), because that kind puts 226–325
+     break points inside a 1,016–1,401 sample range, one per 4.5 samples, and 1–3 of the resulting
+     segments hold **no sample at all**. At `BREAK_POINT_DISCONTINUITY` it constructs and is
+     **2.0× worse** on $G_k$ (1.907e-06 → 3.815e-06 rad, 8 → 16 ulp) and **2.1× worse** on $T_k$
+     (3.186e-06 → 6.790e-06 rad, 428 → 911 ulp) at $k=10^5$.
+  2. **Why, structurally.** No declared break point coincides with a sample on any of the six grids
+     (fractional position within its interval 0.0011–0.9999), and an interpolating knot vector has
+     a fixed length, so the three knots a repeated knot consumes must be removed **locally** —
+     Schoenberg–Whitney tolerates at most one net removal below any site. A $C^0$ knot at a break
+     therefore always coarsens the spline in the intervals adjacent to it, which is where
+     $\varphi$ is least smooth. The quadrature (prompts 02, 03) and the ODE (prompts 18, 19)
+     escaped this because they **choose their own abscissae**; an interpolating spline is stuck
+     with the samples it is given. That is the asymmetry this entry's original "next step" missed.
+  3. **The kink is 1–4 % of the error it was charged with.** Fitted from the dense reference on
+     each side of the `T_LO` crossing, one grid interval either side: $[\varphi'] = -5.55$e-06
+     ($G_k$) and $-4.99$e-05 ($T_k$), i.e. kink terms of **1.60e-08** and **1.44e-07 rad** against
+     the measured 1.907e-06 and 3.186e-06. The base spline's error near the break is a string of
+     arches decaying by ~0.7 per interval, not the $(\sqrt3-2)\approx0.27$ of a point kink: the
+     non-smoothness is spread over $\pm3$ grid intervals and is $\varphi$'s own structure, which
+     the production sample grid does not resolve.
+  4. **The `theta_deriv` separation this entry asked for, answered — and it is a third thing.** The
+     two rows that miss $10^{-6}$ are QCD $G_k$ at $10^7$ and $3\times10^8$, and at those
+     wavenumbers the recovered $\varphi$ spans **6.0** and **2.0 ulp** of the stored phase (7 and
+     **3** distinct values over 1,218 and 1,377 samples, every one an exact multiple of
+     ${\rm ulp}(\theta)$). Differentiating that staircase is **3× and 10× worse than contributing
+     nothing**: 5.9403e-06 and 1.7475e-04 with the $\varphi$ spline derivative, 1.9982e-06 and
+     1.7392e-05 without it. So the miss is neither the knots' (which recover at most 38 %, at
+     $k=10^5$ only, and only by doubling the phase error) nor
+     `[02-qcd-T-z-spline-node-tolerance]`'s — it is the $\varepsilon k\tau$ storage granularity of
+     $\varphi$, `[00-consumer-anchoring-floor]`, opened separately as
+     `[02-consumer-phi-below-the-storage-granularity]` on the
+     [`phase-representation` board](../phase-representation/IMPLEMENTATION_STATE.md) §3.
+
+  **Next step (rewritten):** not a knot vector. Either accept this as a property of the production
+  sample grid and mark it inert at the ~$10^{-3}$ rad QCD Liouville–Green truncation floor, 300×
+  above the worst figure; or attack the **grid** — split the production source grid at
+  `integration_break_points` so a break is resolved from both sides, which is a `main.py` /
+  `BackgroundModel` change and a different campaign; or take `[00-consumer-anchoring-floor]` first,
+  since item 4 shows it, not the knots, is what limits `theta_deriv` at $k\ge10^7$. Measurements
+  and the ranked options are in
+  [`prompts/phase-representation/logs/02-primitive-phase-break-point-knots.md`](../phase-representation/logs/02-primitive-phase-break-point-knots.md).
+  Note that `docs/gktk-remedial/verify_production_path.py` builds its own $G_k$ consumer, so half
+  of §3.5 cannot show a fix routed through `GkSourcePolicyData`
+  (`[02-verify-script-builds-its-own-Gk-consumer]`).
 
 - **[13-scoped-run-driver-k-grid-literal]** *(opened by prompt 13, 2026-09-13; not this campaign's
   file)* — `docs/source-remediation-verification/scoped_pipeline_run.py` substitutes `main.py`'s two
