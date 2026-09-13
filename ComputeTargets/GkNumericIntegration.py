@@ -3,7 +3,11 @@ from typing import Optional, List
 
 import ray
 
-from ComputeTargets.BackgroundModel import BackgroundModel, ModelProxy
+from ComputeTargets.BackgroundModel import (
+    BREAK_POINT_DISCONTINUITY,
+    BackgroundModel,
+    ModelProxy,
+)
 from ComputeTargets.WKB_Gk import Gk_omegaEff_sq, Gk_d_ln_omegaEff_dz
 from ComputeTargets.analytic_Gk import compute_analytic_G, compute_analytic_Gprime
 from CosmologyConcepts import wavenumber, redshift, redshift_array, wavenumber_exit_time
@@ -359,6 +363,24 @@ class GkNumericIntegration(DatastoreObject):
             # prompt 16 of prompts/GkTk-remedial). A direct caller of numeric_with_phase_cut
             # still gets the warning, which defaults to on.
             warn_unresolved_osc=False,
+            # this sector splits its integration only where the cosmology declares that a
+            # background quantity *jumps*, not at the C2 knots of its T(z) spline. This is the
+            # module's default, but it is passed explicitly because it is a decision taken on
+            # measurement rather than a default inherited by omission (prompt 19 of
+            # prompts/GkTk-remedial, the user's decision of 2026-09-13).
+            #
+            # Unnecessary: this sector's reference-convergence drift is below the campaign's
+            # criterion at all 50 production wavenumbers on all three models with the jumps alone
+            # -- worst 8.41e-09 of the envelope on QCD against 3.4e-08, the same figure split or
+            # unsplit (docs/gktk-remedial/TK-NUMERIC-ATOL-SWEEP.md §9.1) -- so the knots would
+            # buy nothing.
+            #
+            # And expensive: GkNumericIntegration is one object per (k, z_source), ~65,000 per
+            # model, and splitting at the knots costs +155 % of the production right-hand-side
+            # evaluations (§9.7), i.e. several core-hours per model. TkNumericIntegration, which
+            # is 50 objects per model and does *not* converge with the jumps alone, asks for
+            # every declared break point for exactly that reason.
+            break_point_kind=BREAK_POINT_DISCONTINUITY,
             **payload,
         )
         return self._compute_ref

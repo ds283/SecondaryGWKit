@@ -3,7 +3,11 @@ from typing import Optional, List
 
 import ray
 
-from ComputeTargets.BackgroundModel import BackgroundModel, ModelProxy
+from ComputeTargets.BackgroundModel import (
+    BREAK_POINT_ALL,
+    BackgroundModel,
+    ModelProxy,
+)
 from ComputeTargets.WKB_Tk import Tk_omegaEff_sq, Tk_d_ln_omegaEff_dz
 from ComputeTargets.analytic_Tk import compute_analytic_T, compute_analytic_Tprime
 from CosmologyConcepts import redshift_array, wavenumber, redshift, wavenumber_exit_time
@@ -392,6 +396,22 @@ class TkNumericIntegration(DatastoreObject):
             # prompt 16 of prompts/GkTk-remedial). A direct caller of numeric_with_phase_cut
             # still gets the warning, which defaults to on.
             warn_unresolved_osc=False,
+            # this sector splits its integration at *every* point the cosmology declares
+            # non-smooth -- the equation-of-state jumps and the C2 knots of its T(z) spline
+            # alike -- and that is a decision taken on measurement, not a default inherited by
+            # omission (prompt 19 of prompts/GkTk-remedial, the user's decision of 2026-09-13).
+            #
+            # Necessary: with the jumps alone, 3 of the 50 production wavenumbers stay above the
+            # campaign's reference-convergence criterion on QCD_Cosmology -- worst 1.97e-07 of
+            # the envelope against 3.4e-08 -- and adding the knots takes them to 4.65e-09 or
+            # better (docs/gktk-remedial/TK-NUMERIC-ATOL-SWEEP.md §9.7).
+            #
+            # Affordable here and only here: TkNumericIntegration is one object per wavenumber,
+            # 50 per model, so the +219 % in right-hand-side evaluations is ~34 s of compute for
+            # the whole sector on QCD. GkNumericIntegration, which is ~65,000 objects per model
+            # and converges at every wavenumber on every model with the jumps alone (worst
+            # 8.41e-09, §9.1), asks for the jumps only for exactly that reason.
+            break_point_kind=BREAK_POINT_ALL,
             **payload,
         )
         return self._compute_ref

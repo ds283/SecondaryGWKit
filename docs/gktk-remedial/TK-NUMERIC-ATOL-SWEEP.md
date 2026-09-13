@@ -1049,3 +1049,441 @@ Cost, at the **production** tolerances, over every fifth wavenumber of the grid 
 | Gk | 10 | 132874 | 338526 | +154.8% |
 
 *Runtime 740 s (QCD stand-in build 0.7 s of it); 50 wavenumbers x 3 models x 2 sectors, 3 solves each on a model that declares nothing and 6 on QCDModel.*
+
+---
+
+## 10. The per-sector policy: prompt 19's measurement
+
+<!-- generated 2026-09-13 by
+     PYTHONPATH=. ./venv/bin/python docs/gktk-remedial/tk_numeric_atol_sweep.py --per-sector
+     in 574 s; Python 3.12.14, NumPy 2.2.4, SciPy 1.15.2 -->
+
+Which kind of declared break point the numeric ODE splits at is no longer a property of the
+integrator: `numeric_with_phase_cut` takes a `break_point_kind`, and the two sectors that share it
+ask for different things (`prompts/GkTk-remedial` prompt 19, enacting the user's decision of
+2026-09-13). §§1–8 were taken before prompt 18 and §9 before this change; neither is rewritten.
+This section is §9's measurement once more, under the policy as it now stands.
+
+**The one-paragraph answer.** The acceptance test passes. On `QCDModel` the transfer function's
+reference-convergence drift is below the $3.4\times10^{-8}$ criterion at **all 50** production
+wavenumbers — worst $8.72\times10^{-9}$, median $3.96\times10^{-9}$, against a worst of
+$1.97\times10^{-7}$ and three offenders with the jumps alone — so §9.7's three-wavenumber
+measurement generalises and the other 47 are not disturbed by splitting at the knots. $G_k$, whose
+policy did not change, reproduces §9 **exactly**: 1.94e-11, 2.1e-11 and 8.41e-09 worst drift on
+Radiation, LambdaCDM and QCD, at the same wavenumbers, and 13320 right-hand-side evaluations per
+QCD object; at all 50 wavenumbers the run issued with the argument omitted is bit-identical to the
+run issued with it named, which is what establishes that the default *is* the old behaviour. The
+two smooth models take the single-`solve_ivp` path under **either** policy and are bit-identical
+between them at all 50 wavenumbers in both sectors, prompt 17's two control figures included
+(2.53e-06 in 7403 evaluations; 2.56e-04 in 8483). The cost is **+220 %** of the production
+evaluations for $T_k$ on QCD and **+0.00 %** for $G_k$ — the same integer, not merely the same to
+rounding. In seconds that is 0.98 s against 0.32 s per $T_k$ object, i.e. **49 s for the whole
+sector** at 50 objects per model, against the 3.8 core-hours per model the same proportional
+increase would have cost in $G_k$. The policy moves the $T_k$ answer on QCD a second time, by up
+to $1.6\times10^{-4}$ of the envelope, so `[18-numeric-solver-not-in-lookup-key]` bites again and a
+QCD datastore built before this commit is still not reusable.
+
+### 10.1 The policy, and the acceptance test
+
+`numeric_with_phase_cut` now takes a `break_point_kind`, defaulting to `BREAK_POINT_DISCONTINUITY` -- what it asked for unconditionally when §9 was measured. Both production integrators pass it explicitly: `TkNumericIntegration` asks for `BREAK_POINT_ALL` and `GkNumericIntegration` for `BREAK_POINT_DISCONTINUITY`. "Segments" below is the number of integrations one object is cut into under the sector's own policy, against the number the jumps alone would give.
+
+| sector | model | policy | segments, shipped / jumps only | worst drift, jumps only | worst drift, shipped | at k [1/Mpc] | median drift, shipped | k above 3e-08 | acceptance met? |
+|---|---|---|---|---|---|---|---|---|---|
+| Tk | RadiationModel | all | 1 / 1 | 4.21e-11 | 4.21e-11 | 3e+08 | 1.92e-11 | 0 | **yes** |
+| Tk | LambdaCDMModel | all | 1 / 1 | 5.7e-11 | 5.7e-11 | 1.561e+08 | 3.76e-11 | 0 | **yes** |
+| Tk | QCDModel | all | 128 / 2 | 1.97e-07 | 8.72e-09 | 1e+05 | 3.96e-09 | 0 | **yes** |
+| Gk | RadiationModel | discontinuity | 1 / 1 | 1.94e-11 | 1.94e-11 | 1.561e+08 | 1.35e-11 | 0 | **yes** |
+| Gk | LambdaCDMModel | discontinuity | 1 / 1 | 2.1e-11 | 2.1e-11 | 2.197e+07 | 1.39e-11 | 0 | **yes** |
+| Gk | QCDModel | discontinuity | 2 / 2 | 8.41e-09 | 8.41e-09 | 6.034e+05 | 2.05e-09 | 0 | **yes** |
+
+### 10.2 The $G_k$ regression: §9 reproduced, bit for bit
+
+$G_k$'s policy is unchanged by this prompt, so every §9 figure for that sector must come back unchanged -- and the driver itself was touched (a guard on the separation of segment boundaries), so this is the check that the sector which did not ask for a change did not get one. "default matches" is the same production run issued with `break_point_kind` omitted, compared sample by sample with `==`.
+
+| model | §9.1 worst drift | measured now | reproduces? | k above 3e-08 | RHS evals per object | default matches explicit policy |
+|---|---|---|---|---|---|---|
+| RadiationModel | 1.94e-11 | 1.94e-11 | **yes** | 0 | 12743 | all 50 |
+| LambdaCDMModel | 2.1e-11 | 2.1e-11 | **yes** | 0 | 12804 | all 50 |
+| QCDModel | 8.41e-09 | 8.41e-09 | **yes** | 0 | 13320 | all 50 |
+
+§9.3 gives 13320 right-hand-side evaluations per QCD $G_k$ object at the production tolerances; the table's QCD row is the same quantity.
+
+### 10.3 The smooth-model regression
+
+`RadiationModel` and `LambdaCDMModel` declare nothing, so both policies reach the same single-`solve_ivp` call. That is asserted twice over: the segment count is 1 under either policy at every wavenumber, and the production run issued under one policy is compared with the run issued under the other sample by sample with `==`.
+
+| sector | model | max segments, shipped policy | max segments, jumps only | worst drift | policies bit-identical |
+|---|---|---|---|---|---|
+| Tk | RadiationModel | 1 | 1 | 4.21e-11 | all 50 |
+| Tk | LambdaCDMModel | 1 | 1 | 5.7e-11 | all 50 |
+| Gk | RadiationModel | 1 | 1 | 1.94e-11 | n/a (same request) |
+| Gk | LambdaCDMModel | 1 | 1 | 2.1e-11 | n/a (same request) |
+
+And prompt 17's two control figures, against the exact $T$, under the jumps-only policy (§9's column) and under the transfer function's shipped policy:
+
+| control | prompt 12 | jumps only | RHS evals | shipped policy | RHS evals | identical? |
+|---|---|---|---|---|---|---|
+| k=1e6 | 2.53e-06 | 2.53e-06 | 7403 | 2.53e-06 | 7403 | yes |
+| k=3e8 | 0.000256 | 0.000256 | 8483 | 0.000256 | 8483 | yes |
+
+### 10.4 What the policy costs, in evaluations and in seconds
+
+Right-hand-side evaluation counts are the reproducible measure (§5 note 14): they do not depend on the machine. The seconds below them are for scoping only -- they are what make the decision legible, because it turned on the sector's *object count* rather than its per-object cost.
+
+| sector | model | policy | per object, jumps only | per object, shipped | grid total, jumps only | grid total, shipped | change |
+|---|---|---|---|---|---|---|---|
+| Tk | QCDModel | all | 9843 | 31521 | 492158 | 1576030 | +220.23% |
+| Gk | QCDModel | discontinuity | 13320 | 13320 | 666011 | 666011 | +0.00% |
+
+Wall time per object, best of 5 single-core runs at k = 4.972e+07/Mpc and the production tolerances. **The counts above are the measure; these seconds are for scoping.**
+
+| sector | model | policy | s per object, shipped | s per object, jumps only | objects per model | sector total, shipped |
+|---|---|---|---|---|---|---|
+| Tk | RadiationModel | all | 0.0481 | 0.0464 | 50 | 2.4 s |
+| Gk | RadiationModel | discontinuity | 0.0662 | 0.0658 | ~65,000 | 1.2 core-hours |
+| Tk | LambdaCDMModel | all | 0.0584 | 0.0594 | 50 | 2.9 s |
+| Gk | LambdaCDMModel | discontinuity | 0.0775 | 0.0803 | ~65,000 | 1.4 core-hours |
+| Tk | QCDModel | all | 0.9805 | 0.3188 | 50 | 49.0 s |
+| Gk | QCDModel | discontinuity | 0.2084 | 0.2093 | ~65,000 | 3.8 core-hours |
+
+### 10.5 How far the transfer function's answer moves on QCD, again
+
+The production-tolerance run under the jumps-only policy, scored against the converged reference under the shipped policy -- the same envelope-relative measure as §9.4. Prompt 18 already moved this sector's QCD values by up to 2.82e-04; this is the second move, on top of it.
+
+| sector | model | worst shift | at k [1/Mpc] | median shift | smallest shift |
+|---|---|---|---|---|---|
+| Tk | QCDModel | 0.000161 | 4.972e+07 | 8.27e-07 | 1.71e-07 |
+
+### 10.6 Every wavenumber
+
+#### Tk, RadiationModel
+
+| k [1/Mpc] | segments | drift, jumps only | drift, shipped | <= 3e-08? | production shift | RHS evals, jumps only -> shipped |
+|---|---|---|---|---|---|---|
+| 1e+05 | 1 | 1.1e-11 | 1.1e-11 | yes | 0 | 7262 -> 7262 |
+| 1.178e+05 | 1 | 1.1e-11 | 1.1e-11 | yes | 0 | 7184 -> 7184 |
+| 1.387e+05 | 1 | 1.1e-11 | 1.1e-11 | yes | 0 | 7169 -> 7169 |
+| 1.633e+05 | 1 | 1.2e-11 | 1.2e-11 | yes | 0 | 7094 -> 7094 |
+| 1.922e+05 | 1 | 1.2e-11 | 1.2e-11 | yes | 0 | 7151 -> 7151 |
+| 2.264e+05 | 1 | 1.1e-11 | 1.1e-11 | yes | 0 | 7136 -> 7136 |
+| 2.665e+05 | 1 | 1.2e-11 | 1.2e-11 | yes | 0 | 7106 -> 7106 |
+| 3.139e+05 | 1 | 1.2e-11 | 1.2e-11 | yes | 0 | 7175 -> 7175 |
+| 3.696e+05 | 1 | 1.2e-11 | 1.2e-11 | yes | 0 | 7058 -> 7058 |
+| 4.352e+05 | 1 | 1.2e-11 | 1.2e-11 | yes | 0 | 7031 -> 7031 |
+| 5.124e+05 | 1 | 1.2e-11 | 1.2e-11 | yes | 0 | 7049 -> 7049 |
+| 6.034e+05 | 1 | 1.1e-11 | 1.1e-11 | yes | 0 | 7103 -> 7103 |
+| 7.105e+05 | 1 | 1.3e-11 | 1.3e-11 | yes | 0 | 7136 -> 7136 |
+| 8.366e+05 | 1 | 1.3e-11 | 1.3e-11 | yes | 0 | 7175 -> 7175 |
+| 9.851e+05 | 1 | 1.4e-11 | 1.4e-11 | yes | 0 | 7352 -> 7352 |
+| 1.16e+06 | 1 | 1.3e-11 | 1.3e-11 | yes | 0 | 7670 -> 7670 |
+| 1.366e+06 | 1 | 1.4e-11 | 1.4e-11 | yes | 0 | 7976 -> 7976 |
+| 1.608e+06 | 1 | 1.5e-11 | 1.5e-11 | yes | 0 | 8138 -> 8138 |
+| 1.894e+06 | 1 | 1.6e-11 | 1.6e-11 | yes | 0 | 8210 -> 8210 |
+| 2.23e+06 | 1 | 1.4e-11 | 1.4e-11 | yes | 0 | 8234 -> 8234 |
+| 2.626e+06 | 1 | 1.6e-11 | 1.6e-11 | yes | 0 | 8246 -> 8246 |
+| 3.092e+06 | 1 | 1.6e-11 | 1.6e-11 | yes | 0 | 8321 -> 8321 |
+| 3.64e+06 | 1 | 1.7e-11 | 1.7e-11 | yes | 0 | 8357 -> 8357 |
+| 4.287e+06 | 1 | 1.9e-11 | 1.9e-11 | yes | 0 | 8396 -> 8396 |
+| 5.048e+06 | 1 | 1.9e-11 | 1.9e-11 | yes | 0 | 8432 -> 8432 |
+| 5.943e+06 | 1 | 1.9e-11 | 1.9e-11 | yes | 0 | 8444 -> 8444 |
+| 6.998e+06 | 1 | 2.1e-11 | 2.1e-11 | yes | 0 | 8369 -> 8369 |
+| 8.241e+06 | 1 | 2.4e-11 | 2.4e-11 | yes | 0 | 8390 -> 8390 |
+| 9.703e+06 | 1 | 2.7e-11 | 2.7e-11 | yes | 0 | 8387 -> 8387 |
+| 1.143e+07 | 1 | 2.8e-11 | 2.8e-11 | yes | 0 | 8363 -> 8363 |
+| 1.345e+07 | 1 | 2.9e-11 | 2.9e-11 | yes | 0 | 8366 -> 8366 |
+| 1.584e+07 | 1 | 2.7e-11 | 2.7e-11 | yes | 0 | 8405 -> 8405 |
+| 1.865e+07 | 1 | 2.8e-11 | 2.8e-11 | yes | 0 | 8519 -> 8519 |
+| 2.197e+07 | 1 | 2.9e-11 | 2.9e-11 | yes | 0 | 8444 -> 8444 |
+| 2.586e+07 | 1 | 3.1e-11 | 3.1e-11 | yes | 0 | 8456 -> 8456 |
+| 3.045e+07 | 1 | 3.1e-11 | 3.1e-11 | yes | 0 | 8459 -> 8459 |
+| 3.586e+07 | 1 | 3.1e-11 | 3.1e-11 | yes | 0 | 8645 -> 8645 |
+| 4.223e+07 | 1 | 3.2e-11 | 3.2e-11 | yes | 0 | 8534 -> 8534 |
+| 4.972e+07 | 1 | 3.4e-11 | 3.4e-11 | yes | 0 | 8573 -> 8573 |
+| 5.855e+07 | 1 | 3.4e-11 | 3.4e-11 | yes | 0 | 8561 -> 8561 |
+| 6.894e+07 | 1 | 3.3e-11 | 3.3e-11 | yes | 0 | 8570 -> 8570 |
+| 8.118e+07 | 1 | 3.1e-11 | 3.1e-11 | yes | 0 | 8630 -> 8630 |
+| 9.558e+07 | 1 | 3.1e-11 | 3.1e-11 | yes | 0 | 8657 -> 8657 |
+| 1.126e+08 | 1 | 3.5e-11 | 3.5e-11 | yes | 0 | 8516 -> 8516 |
+| 1.325e+08 | 1 | 3.7e-11 | 3.7e-11 | yes | 0 | 8528 -> 8528 |
+| 1.561e+08 | 1 | 3.7e-11 | 3.7e-11 | yes | 0 | 8495 -> 8495 |
+| 1.838e+08 | 1 | 3.6e-11 | 3.6e-11 | yes | 0 | 8552 -> 8552 |
+| 2.164e+08 | 1 | 3.6e-11 | 3.6e-11 | yes | 0 | 8660 -> 8660 |
+| 2.548e+08 | 1 | 3.5e-11 | 3.5e-11 | yes | 0 | 8486 -> 8486 |
+| 3e+08 | 1 | 4.2e-11 | 4.2e-11 | yes | 0 | 8507 -> 8507 |
+
+#### Tk, LambdaCDMModel
+
+| k [1/Mpc] | segments | drift, jumps only | drift, shipped | <= 3e-08? | production shift | RHS evals, jumps only -> shipped |
+|---|---|---|---|---|---|---|
+| 1e+05 | 1 | 3.8e-11 | 3.8e-11 | yes | 0 | 8567 -> 8567 |
+| 1.178e+05 | 1 | 3.7e-11 | 3.7e-11 | yes | 0 | 8528 -> 8528 |
+| 1.387e+05 | 1 | 3.8e-11 | 3.8e-11 | yes | 0 | 8462 -> 8462 |
+| 1.633e+05 | 1 | 4.4e-11 | 4.4e-11 | yes | 0 | 8639 -> 8639 |
+| 1.922e+05 | 1 | 3.5e-11 | 3.5e-11 | yes | 0 | 8738 -> 8738 |
+| 2.264e+05 | 1 | 4.5e-11 | 4.5e-11 | yes | 0 | 8714 -> 8714 |
+| 2.665e+05 | 1 | 3.8e-11 | 3.8e-11 | yes | 0 | 8435 -> 8435 |
+| 3.139e+05 | 1 | 3.8e-11 | 3.8e-11 | yes | 0 | 8648 -> 8648 |
+| 3.696e+05 | 1 | 4e-11 | 4e-11 | yes | 0 | 8654 -> 8654 |
+| 4.352e+05 | 1 | 4e-11 | 4e-11 | yes | 0 | 8468 -> 8468 |
+| 5.124e+05 | 1 | 3.6e-11 | 3.6e-11 | yes | 0 | 8429 -> 8429 |
+| 6.034e+05 | 1 | 3.8e-11 | 3.8e-11 | yes | 0 | 8564 -> 8564 |
+| 7.105e+05 | 1 | 3.6e-11 | 3.6e-11 | yes | 0 | 8585 -> 8585 |
+| 8.366e+05 | 1 | 3.8e-11 | 3.8e-11 | yes | 0 | 8633 -> 8633 |
+| 9.851e+05 | 1 | 3.6e-11 | 3.6e-11 | yes | 0 | 8690 -> 8690 |
+| 1.16e+06 | 1 | 4.9e-11 | 4.9e-11 | yes | 0 | 8597 -> 8597 |
+| 1.366e+06 | 1 | 3.6e-11 | 3.6e-11 | yes | 0 | 8501 -> 8501 |
+| 1.608e+06 | 1 | 3.6e-11 | 3.6e-11 | yes | 0 | 8702 -> 8702 |
+| 1.894e+06 | 1 | 3.7e-11 | 3.7e-11 | yes | 0 | 8480 -> 8480 |
+| 2.23e+06 | 1 | 3.8e-11 | 3.8e-11 | yes | 0 | 8549 -> 8549 |
+| 2.626e+06 | 1 | 3.6e-11 | 3.6e-11 | yes | 0 | 8651 -> 8651 |
+| 3.092e+06 | 1 | 4e-11 | 4e-11 | yes | 0 | 8648 -> 8648 |
+| 3.64e+06 | 1 | 3.7e-11 | 3.7e-11 | yes | 0 | 8624 -> 8624 |
+| 4.287e+06 | 1 | 3.7e-11 | 3.7e-11 | yes | 0 | 8531 -> 8531 |
+| 5.048e+06 | 1 | 3.4e-11 | 3.4e-11 | yes | 0 | 8612 -> 8612 |
+| 5.943e+06 | 1 | 3.8e-11 | 3.8e-11 | yes | 0 | 8624 -> 8624 |
+| 6.998e+06 | 1 | 3.7e-11 | 3.7e-11 | yes | 0 | 8507 -> 8507 |
+| 8.241e+06 | 1 | 3.4e-11 | 3.4e-11 | yes | 0 | 8621 -> 8621 |
+| 9.703e+06 | 1 | 3.6e-11 | 3.6e-11 | yes | 0 | 8549 -> 8549 |
+| 1.143e+07 | 1 | 3.9e-11 | 3.9e-11 | yes | 0 | 8588 -> 8588 |
+| 1.345e+07 | 1 | 3.9e-11 | 3.9e-11 | yes | 0 | 8408 -> 8408 |
+| 1.584e+07 | 1 | 4.1e-11 | 4.1e-11 | yes | 0 | 8651 -> 8651 |
+| 1.865e+07 | 1 | 4e-11 | 4e-11 | yes | 0 | 8588 -> 8588 |
+| 2.197e+07 | 1 | 3.6e-11 | 3.6e-11 | yes | 0 | 8612 -> 8612 |
+| 2.586e+07 | 1 | 3.8e-11 | 3.8e-11 | yes | 0 | 8627 -> 8627 |
+| 3.045e+07 | 1 | 3.4e-11 | 3.4e-11 | yes | 0 | 8609 -> 8609 |
+| 3.586e+07 | 1 | 3.6e-11 | 3.6e-11 | yes | 0 | 8504 -> 8504 |
+| 4.223e+07 | 1 | 4e-11 | 4e-11 | yes | 0 | 8612 -> 8612 |
+| 4.972e+07 | 1 | 3.7e-11 | 3.7e-11 | yes | 0 | 8687 -> 8687 |
+| 5.855e+07 | 1 | 3.8e-11 | 3.8e-11 | yes | 0 | 8732 -> 8732 |
+| 6.894e+07 | 1 | 3.9e-11 | 3.9e-11 | yes | 0 | 8432 -> 8432 |
+| 8.118e+07 | 1 | 3.6e-11 | 3.6e-11 | yes | 0 | 8561 -> 8561 |
+| 9.558e+07 | 1 | 4.2e-11 | 4.2e-11 | yes | 0 | 8558 -> 8558 |
+| 1.126e+08 | 1 | 3.9e-11 | 3.9e-11 | yes | 0 | 8588 -> 8588 |
+| 1.325e+08 | 1 | 3.6e-11 | 3.6e-11 | yes | 0 | 8444 -> 8444 |
+| 1.561e+08 | 1 | 5.7e-11 | 5.7e-11 | yes | 0 | 8564 -> 8564 |
+| 1.838e+08 | 1 | 3.5e-11 | 3.5e-11 | yes | 0 | 8603 -> 8603 |
+| 2.164e+08 | 1 | 3.4e-11 | 3.4e-11 | yes | 0 | 8501 -> 8501 |
+| 2.548e+08 | 1 | 5.3e-11 | 5.3e-11 | yes | 0 | 8711 -> 8711 |
+| 3e+08 | 1 | 3.7e-11 | 3.7e-11 | yes | 0 | 8648 -> 8648 |
+
+#### Tk, QCDModel
+
+| k [1/Mpc] | segments | drift, jumps only | drift, shipped | <= 3e-08? | production shift | RHS evals, jumps only -> shipped |
+|---|---|---|---|---|---|---|
+| 1e+05 | 128 | 5.1e-09 | 8.7e-09 | yes | 4.8e-07 | 10042 -> 29565 |
+| 1.178e+05 | 128 | 5.6e-09 | 8.1e-09 | yes | 1.4e-06 | 9970 -> 29859 |
+| 1.387e+05 | 127 | 1.3e-08 | 3.1e-09 | yes | 8.8e-07 | 10153 -> 29641 |
+| 1.633e+05 | 128 | 2.6e-09 | 8.6e-09 | yes | 7.4e-07 | 10006 -> 29859 |
+| 1.922e+05 | 128 | 1.6e-09 | 2.4e-09 | yes | 8.6e-07 | 9811 -> 30255 |
+| 2.264e+05 | 128 | 5.2e-09 | 3.2e-09 | yes | 3.1e-07 | 9928 -> 30303 |
+| 2.665e+05 | 128 | 5.3e-09 | 9.4e-10 | yes | 7.9e-07 | 10219 -> 30558 |
+| 3.139e+05 | 127 | 4.7e-09 | 2.7e-09 | yes | 3.7e-07 | 10180 -> 30663 |
+| 3.696e+05 | 128 | 6.1e-09 | 5e-09 | yes | 7.4e-07 | 10177 -> 30639 |
+| 4.352e+05 | 128 | 4.4e-09 | 5.1e-09 | yes | 7.5e-07 | 10159 -> 30705 |
+| 5.124e+05 | 128 | 9.7e-09 | 7.1e-09 | yes | 4.4e-07 | 10105 -> 30768 |
+| 6.034e+05 | 127 | 5.6e-09 | 1.3e-09 | yes | 7.8e-07 | 10216 -> 30727 |
+| 7.105e+05 | 127 | 1.6e-08 | 3e-09 | yes | 8.8e-07 | 10057 -> 30784 |
+| 8.366e+05 | 127 | 6.1e-08 | 6.9e-10 | yes | 1.6e-06 | 9970 -> 30799 |
+| 9.851e+05 | 127 | 7.3e-09 | 5.9e-10 | yes | 2.2e-06 | 10270 -> 31206 |
+| 1.16e+06 | 127 | 8.9e-09 | 7.8e-10 | yes | 2.1e-07 | 9991 -> 31039 |
+| 1.366e+06 | 127 | 8.7e-09 | 5.3e-09 | yes | 1.2e-06 | 9997 -> 30913 |
+| 1.608e+06 | 127 | 1.1e-08 | 2e-09 | yes | 5.5e-07 | 10231 -> 31228 |
+| 1.894e+06 | 127 | 9.8e-09 | 1.4e-09 | yes | 7.3e-07 | 10102 -> 31420 |
+| 2.23e+06 | 127 | 3.5e-09 | 1.9e-09 | yes | 1.2e-06 | 9886 -> 31497 |
+| 2.626e+06 | 127 | 2e-08 | 6.5e-09 | yes | 3.9e-07 | 10093 -> 31360 |
+| 3.092e+06 | 127 | 1.8e-08 | 6.3e-10 | yes | 5.7e-07 | 10090 -> 31318 |
+| 3.64e+06 | 127 | 8.1e-09 | 4.9e-09 | yes | 3.3e-06 | 9943 -> 31552 |
+| 4.287e+06 | 127 | 2e-07 | 4.7e-09 | yes | 4.6e-07 | 9931 -> 31618 |
+| 5.048e+06 | 127 | 5.1e-09 | 4.5e-09 | yes | 6.7e-07 | 9847 -> 31417 |
+| 5.943e+06 | 127 | 6.2e-09 | 6.1e-09 | yes | 1.9e-07 | 9874 -> 31723 |
+| 6.998e+06 | 127 | 4.4e-09 | 5e-09 | yes | 2.1e-06 | 9832 -> 31579 |
+| 8.241e+06 | 127 | 1.2e-09 | 4.9e-09 | yes | 1.8e-06 | 9649 -> 32014 |
+| 9.703e+06 | 127 | 4.9e-09 | 3.9e-09 | yes | 1e-06 | 9844 -> 31744 |
+| 1.143e+07 | 126 | 2.8e-09 | 3.6e-09 | yes | 7.6e-07 | 9793 -> 31751 |
+| 1.345e+07 | 126 | 1.4e-08 | 4e-09 | yes | 1.4e-06 | 9829 -> 31601 |
+| 1.584e+07 | 126 | 4.6e-09 | 5e-09 | yes | 2.1e-06 | 9751 -> 31838 |
+| 1.865e+07 | 127 | 3.6e-09 | 4.5e-09 | yes | 3.7e-05 | 9622 -> 31951 |
+| 2.197e+07 | 127 | 3.7e-09 | 4.5e-09 | yes | 5.1e-07 | 9853 -> 32131 |
+| 2.586e+07 | 126 | 3.1e-09 | 4.1e-09 | yes | 2.1e-06 | 9634 -> 32045 |
+| 3.045e+07 | 126 | 3.8e-09 | 4.7e-09 | yes | 2.6e-06 | 9526 -> 32150 |
+| 3.586e+07 | 127 | 2.8e-09 | 2.8e-09 | yes | 5.3e-07 | 9664 -> 32398 |
+| 4.223e+07 | 127 | 3.5e-08 | 2.3e-09 | yes | 6.2e-07 | 9550 -> 32200 |
+| 4.972e+07 | 126 | 6.5e-09 | 4e-09 | yes | 0.00016 | 9313 -> 32351 |
+| 5.855e+07 | 126 | 7.9e-09 | 3.1e-09 | yes | 1e-05 | 9595 -> 32483 |
+| 6.894e+07 | 126 | 2.5e-09 | 5.1e-09 | yes | 1.3e-05 | 9457 -> 32431 |
+| 8.118e+07 | 127 | 2.1e-09 | 4.3e-09 | yes | 7.9e-06 | 9328 -> 32506 |
+| 9.558e+07 | 126 | 1.2e-09 | 2.8e-09 | yes | 3.5e-07 | 9391 -> 32405 |
+| 1.126e+08 | 126 | 3e-09 | 2.3e-09 | yes | 3.1e-07 | 9577 -> 32483 |
+| 1.325e+08 | 126 | 2.9e-09 | 1.9e-09 | yes | 6.6e-07 | 9511 -> 32573 |
+| 1.561e+08 | 126 | 8.9e-10 | 4.2e-09 | yes | 9e-07 | 9544 -> 32758 |
+| 1.838e+08 | 126 | 7.3e-09 | 4.3e-09 | yes | 2.8e-06 | 9571 -> 32648 |
+| 2.164e+08 | 126 | 4.7e-09 | 3e-09 | yes | 9.8e-07 | 9667 -> 32801 |
+| 2.548e+08 | 126 | 9.2e-10 | 2.3e-09 | yes | 1.7e-07 | 9784 -> 32816 |
+| 3e+08 | 126 | 3.8e-09 | 2e-09 | yes | 1.4e-06 | 9625 -> 32957 |
+
+#### Gk, RadiationModel
+
+| k [1/Mpc] | segments | drift, jumps only | drift, shipped | <= 3e-08? | production shift | RHS evals, jumps only -> shipped |
+|---|---|---|---|---|---|---|
+| 1e+05 | 1 | 1.4e-11 | 1.4e-11 | yes | 0 | 12764 -> 12764 |
+| 1.178e+05 | 1 | 1.1e-11 | 1.1e-11 | yes | 0 | 12725 -> 12725 |
+| 1.387e+05 | 1 | 1.7e-11 | 1.7e-11 | yes | 0 | 12764 -> 12764 |
+| 1.633e+05 | 1 | 9.3e-12 | 9.3e-12 | yes | 0 | 12737 -> 12737 |
+| 1.922e+05 | 1 | 9.2e-12 | 9.2e-12 | yes | 0 | 12677 -> 12677 |
+| 2.264e+05 | 1 | 1.2e-11 | 1.2e-11 | yes | 0 | 12740 -> 12740 |
+| 2.665e+05 | 1 | 1.4e-11 | 1.4e-11 | yes | 0 | 12701 -> 12701 |
+| 3.139e+05 | 1 | 1.1e-11 | 1.1e-11 | yes | 0 | 12740 -> 12740 |
+| 3.696e+05 | 1 | 9.3e-12 | 9.3e-12 | yes | 0 | 12713 -> 12713 |
+| 4.352e+05 | 1 | 1.9e-11 | 1.9e-11 | yes | 0 | 12752 -> 12752 |
+| 5.124e+05 | 1 | 1e-11 | 1e-11 | yes | 0 | 12692 -> 12692 |
+| 6.034e+05 | 1 | 1.4e-11 | 1.4e-11 | yes | 0 | 12752 -> 12752 |
+| 7.105e+05 | 1 | 1.2e-11 | 1.2e-11 | yes | 0 | 12704 -> 12704 |
+| 8.366e+05 | 1 | 1.5e-11 | 1.5e-11 | yes | 0 | 12752 -> 12752 |
+| 9.851e+05 | 1 | 1.7e-11 | 1.7e-11 | yes | 0 | 12704 -> 12704 |
+| 1.16e+06 | 1 | 1.5e-11 | 1.5e-11 | yes | 0 | 12665 -> 12665 |
+| 1.366e+06 | 1 | 1.4e-11 | 1.4e-11 | yes | 0 | 12728 -> 12728 |
+| 1.608e+06 | 1 | 1.6e-11 | 1.6e-11 | yes | 0 | 12755 -> 12755 |
+| 1.894e+06 | 1 | 5e-12 | 5e-12 | yes | 0 | 12740 -> 12740 |
+| 2.23e+06 | 1 | 1.7e-11 | 1.7e-11 | yes | 0 | 12755 -> 12755 |
+| 2.626e+06 | 1 | 1.2e-11 | 1.2e-11 | yes | 0 | 12740 -> 12740 |
+| 3.092e+06 | 1 | 1.9e-11 | 1.9e-11 | yes | 0 | 12680 -> 12680 |
+| 3.64e+06 | 1 | 1.2e-11 | 1.2e-11 | yes | 0 | 12755 -> 12755 |
+| 4.287e+06 | 1 | 1.7e-11 | 1.7e-11 | yes | 0 | 12728 -> 12728 |
+| 5.048e+06 | 1 | 9.1e-12 | 9.1e-12 | yes | 0 | 12755 -> 12755 |
+| 5.943e+06 | 1 | 5.7e-12 | 5.7e-12 | yes | 0 | 12728 -> 12728 |
+| 6.998e+06 | 1 | 1.8e-11 | 1.8e-11 | yes | 0 | 12755 -> 12755 |
+| 8.241e+06 | 1 | 6.8e-12 | 6.8e-12 | yes | 0 | 12782 -> 12782 |
+| 9.703e+06 | 1 | 1.2e-11 | 1.2e-11 | yes | 0 | 12743 -> 12743 |
+| 1.143e+07 | 1 | 9.1e-12 | 9.1e-12 | yes | 0 | 12782 -> 12782 |
+| 1.345e+07 | 1 | 1.5e-11 | 1.5e-11 | yes | 0 | 12767 -> 12767 |
+| 1.584e+07 | 1 | 1.3e-11 | 1.3e-11 | yes | 0 | 12719 -> 12719 |
+| 1.865e+07 | 1 | 1.3e-11 | 1.3e-11 | yes | 0 | 12770 -> 12770 |
+| 2.197e+07 | 1 | 1.9e-11 | 1.9e-11 | yes | 0 | 12707 -> 12707 |
+| 2.586e+07 | 1 | 1.6e-11 | 1.6e-11 | yes | 0 | 12770 -> 12770 |
+| 3.045e+07 | 1 | 1.9e-11 | 1.9e-11 | yes | 0 | 12743 -> 12743 |
+| 3.586e+07 | 1 | 1.7e-11 | 1.7e-11 | yes | 0 | 12770 -> 12770 |
+| 4.223e+07 | 1 | 1.6e-11 | 1.6e-11 | yes | 0 | 12743 -> 12743 |
+| 4.972e+07 | 1 | 1.4e-11 | 1.4e-11 | yes | 0 | 12695 -> 12695 |
+| 5.855e+07 | 1 | 1.6e-11 | 1.6e-11 | yes | 0 | 12809 -> 12809 |
+| 6.894e+07 | 1 | 5.5e-12 | 5.5e-12 | yes | 0 | 12782 -> 12782 |
+| 8.118e+07 | 1 | 7e-12 | 7e-12 | yes | 0 | 12722 -> 12722 |
+| 9.558e+07 | 1 | 1.1e-11 | 1.1e-11 | yes | 0 | 12695 -> 12695 |
+| 1.126e+08 | 1 | 1.9e-11 | 1.9e-11 | yes | 0 | 12758 -> 12758 |
+| 1.325e+08 | 1 | 1.1e-11 | 1.1e-11 | yes | 0 | 12785 -> 12785 |
+| 1.561e+08 | 1 | 1.9e-11 | 1.9e-11 | yes | 0 | 12758 -> 12758 |
+| 1.838e+08 | 1 | 9.8e-12 | 9.8e-12 | yes | 0 | 12797 -> 12797 |
+| 2.164e+08 | 1 | 6.5e-12 | 6.5e-12 | yes | 0 | 12770 -> 12770 |
+| 2.548e+08 | 1 | 1.8e-11 | 1.8e-11 | yes | 0 | 12797 -> 12797 |
+| 3e+08 | 1 | 6.1e-12 | 6.1e-12 | yes | 0 | 12773 -> 12773 |
+
+#### Gk, LambdaCDMModel
+
+| k [1/Mpc] | segments | drift, jumps only | drift, shipped | <= 3e-08? | production shift | RHS evals, jumps only -> shipped |
+|---|---|---|---|---|---|---|
+| 1e+05 | 1 | 1e-11 | 1e-11 | yes | 0 | 12815 -> 12815 |
+| 1.178e+05 | 1 | 7.9e-12 | 7.9e-12 | yes | 0 | 12740 -> 12740 |
+| 1.387e+05 | 1 | 1.9e-11 | 1.9e-11 | yes | 0 | 12803 -> 12803 |
+| 1.633e+05 | 1 | 1.7e-11 | 1.7e-11 | yes | 0 | 12767 -> 12767 |
+| 1.922e+05 | 1 | 1e-11 | 1e-11 | yes | 0 | 12815 -> 12815 |
+| 2.264e+05 | 1 | 1.8e-11 | 1.8e-11 | yes | 0 | 12815 -> 12815 |
+| 2.665e+05 | 1 | 1.3e-11 | 1.3e-11 | yes | 0 | 12764 -> 12764 |
+| 3.139e+05 | 1 | 4.5e-12 | 4.5e-12 | yes | 0 | 12815 -> 12815 |
+| 3.696e+05 | 1 | 1.6e-11 | 1.6e-11 | yes | 0 | 12842 -> 12842 |
+| 4.352e+05 | 1 | 1.9e-11 | 1.9e-11 | yes | 0 | 12815 -> 12815 |
+| 5.124e+05 | 1 | 1.7e-11 | 1.7e-11 | yes | 0 | 12854 -> 12854 |
+| 6.034e+05 | 1 | 2.1e-11 | 2.1e-11 | yes | 0 | 12827 -> 12827 |
+| 7.105e+05 | 1 | 1.4e-11 | 1.4e-11 | yes | 0 | 12815 -> 12815 |
+| 8.366e+05 | 1 | 8.5e-12 | 8.5e-12 | yes | 0 | 12854 -> 12854 |
+| 9.851e+05 | 1 | 6.6e-12 | 6.6e-12 | yes | 0 | 12827 -> 12827 |
+| 1.16e+06 | 1 | 7.3e-12 | 7.3e-12 | yes | 0 | 12815 -> 12815 |
+| 1.366e+06 | 1 | 1.4e-11 | 1.4e-11 | yes | 0 | 12788 -> 12788 |
+| 1.608e+06 | 1 | 1.4e-11 | 1.4e-11 | yes | 0 | 12803 -> 12803 |
+| 1.894e+06 | 1 | 7.9e-12 | 7.9e-12 | yes | 0 | 12788 -> 12788 |
+| 2.23e+06 | 1 | 1.4e-11 | 1.4e-11 | yes | 0 | 12815 -> 12815 |
+| 2.626e+06 | 1 | 1.2e-11 | 1.2e-11 | yes | 0 | 12791 -> 12791 |
+| 3.092e+06 | 1 | 2e-11 | 2e-11 | yes | 0 | 12752 -> 12752 |
+| 3.64e+06 | 1 | 1.1e-11 | 1.1e-11 | yes | 0 | 12779 -> 12779 |
+| 4.287e+06 | 1 | 7.3e-12 | 7.3e-12 | yes | 0 | 12827 -> 12827 |
+| 5.048e+06 | 1 | 1.6e-11 | 1.6e-11 | yes | 0 | 12827 -> 12827 |
+| 5.943e+06 | 1 | 1.7e-11 | 1.7e-11 | yes | 0 | 12767 -> 12767 |
+| 6.998e+06 | 1 | 1e-11 | 1e-11 | yes | 0 | 12740 -> 12740 |
+| 8.241e+06 | 1 | 1.5e-11 | 1.5e-11 | yes | 0 | 12854 -> 12854 |
+| 9.703e+06 | 1 | 1.1e-11 | 1.1e-11 | yes | 0 | 12815 -> 12815 |
+| 1.143e+07 | 1 | 4.2e-12 | 4.2e-12 | yes | 0 | 12815 -> 12815 |
+| 1.345e+07 | 1 | 1.6e-11 | 1.6e-11 | yes | 0 | 12842 -> 12842 |
+| 1.584e+07 | 1 | 1.8e-11 | 1.8e-11 | yes | 0 | 12815 -> 12815 |
+| 1.865e+07 | 1 | 1.8e-11 | 1.8e-11 | yes | 0 | 12854 -> 12854 |
+| 2.197e+07 | 1 | 2.1e-11 | 2.1e-11 | yes | 0 | 12788 -> 12788 |
+| 2.586e+07 | 1 | 1.8e-11 | 1.8e-11 | yes | 0 | 12815 -> 12815 |
+| 3.045e+07 | 1 | 9.9e-12 | 9.9e-12 | yes | 0 | 12842 -> 12842 |
+| 3.586e+07 | 1 | 1.1e-11 | 1.1e-11 | yes | 0 | 12803 -> 12803 |
+| 4.223e+07 | 1 | 7.7e-12 | 7.7e-12 | yes | 0 | 12791 -> 12791 |
+| 4.972e+07 | 1 | 1.5e-11 | 1.5e-11 | yes | 0 | 12740 -> 12740 |
+| 5.855e+07 | 1 | 1.6e-11 | 1.6e-11 | yes | 0 | 12815 -> 12815 |
+| 6.894e+07 | 1 | 8.4e-12 | 8.4e-12 | yes | 0 | 12788 -> 12788 |
+| 8.118e+07 | 1 | 1.1e-11 | 1.1e-11 | yes | 0 | 12815 -> 12815 |
+| 9.558e+07 | 1 | 1.2e-11 | 1.2e-11 | yes | 0 | 12779 -> 12779 |
+| 1.126e+08 | 1 | 2.1e-11 | 2.1e-11 | yes | 0 | 12827 -> 12827 |
+| 1.325e+08 | 1 | 1.1e-11 | 1.1e-11 | yes | 0 | 12767 -> 12767 |
+| 1.561e+08 | 1 | 1.1e-11 | 1.1e-11 | yes | 0 | 12752 -> 12752 |
+| 1.838e+08 | 1 | 1.9e-11 | 1.9e-11 | yes | 0 | 12815 -> 12815 |
+| 2.164e+08 | 1 | 1.5e-11 | 1.5e-11 | yes | 0 | 12779 -> 12779 |
+| 2.548e+08 | 1 | 1.1e-11 | 1.1e-11 | yes | 0 | 12827 -> 12827 |
+| 3e+08 | 1 | 1.4e-11 | 1.4e-11 | yes | 0 | 12815 -> 12815 |
+
+#### Gk, QCDModel
+
+| k [1/Mpc] | segments | drift, jumps only | drift, shipped | <= 3e-08? | production shift | RHS evals, jumps only -> shipped |
+|---|---|---|---|---|---|---|
+| 1e+05 | 2 | 7.6e-10 | 7.6e-10 | yes | 0 | 13210 -> 13210 |
+| 1.178e+05 | 2 | 6.3e-09 | 6.3e-09 | yes | 0 | 13180 -> 13180 |
+| 1.387e+05 | 2 | 1.7e-09 | 1.7e-09 | yes | 0 | 13270 -> 13270 |
+| 1.633e+05 | 2 | 1.3e-09 | 1.3e-09 | yes | 0 | 13258 -> 13258 |
+| 1.922e+05 | 2 | 5.2e-09 | 5.2e-09 | yes | 0 | 13282 -> 13282 |
+| 2.264e+05 | 2 | 1e-09 | 1e-09 | yes | 0 | 13270 -> 13270 |
+| 2.665e+05 | 2 | 6.5e-09 | 6.5e-09 | yes | 0 | 13303 -> 13303 |
+| 3.139e+05 | 2 | 4.4e-09 | 4.4e-09 | yes | 0 | 13321 -> 13321 |
+| 3.696e+05 | 2 | 4.3e-09 | 4.3e-09 | yes | 0 | 13333 -> 13333 |
+| 4.352e+05 | 2 | 4.4e-09 | 4.4e-09 | yes | 0 | 13483 -> 13483 |
+| 5.124e+05 | 2 | 7.6e-09 | 7.6e-09 | yes | 0 | 13384 -> 13384 |
+| 6.034e+05 | 2 | 8.4e-09 | 8.4e-09 | yes | 0 | 13423 -> 13423 |
+| 7.105e+05 | 2 | 2.8e-09 | 2.8e-09 | yes | 0 | 13456 -> 13456 |
+| 8.366e+05 | 2 | 6.4e-10 | 6.4e-10 | yes | 0 | 13336 -> 13336 |
+| 9.851e+05 | 2 | 1.4e-09 | 1.4e-09 | yes | 0 | 13291 -> 13291 |
+| 1.16e+06 | 2 | 7.6e-09 | 7.6e-09 | yes | 0 | 13315 -> 13315 |
+| 1.366e+06 | 2 | 1e-09 | 1e-09 | yes | 0 | 13264 -> 13264 |
+| 1.608e+06 | 2 | 4.5e-09 | 4.5e-09 | yes | 0 | 13267 -> 13267 |
+| 1.894e+06 | 2 | 1.1e-09 | 1.1e-09 | yes | 0 | 13126 -> 13126 |
+| 2.23e+06 | 2 | 1.4e-09 | 1.4e-09 | yes | 0 | 13381 -> 13381 |
+| 2.626e+06 | 2 | 3e-09 | 3e-09 | yes | 0 | 13225 -> 13225 |
+| 3.092e+06 | 2 | 4.6e-09 | 4.6e-09 | yes | 0 | 13285 -> 13285 |
+| 3.64e+06 | 2 | 4.3e-09 | 4.3e-09 | yes | 0 | 13210 -> 13210 |
+| 4.287e+06 | 2 | 1.4e-09 | 1.4e-09 | yes | 0 | 13390 -> 13390 |
+| 5.048e+06 | 2 | 1.2e-09 | 1.2e-09 | yes | 0 | 13219 -> 13219 |
+| 5.943e+06 | 2 | 1.6e-09 | 1.6e-09 | yes | 0 | 13186 -> 13186 |
+| 6.998e+06 | 2 | 2e-09 | 2e-09 | yes | 0 | 13189 -> 13189 |
+| 8.241e+06 | 2 | 7.8e-10 | 7.8e-10 | yes | 0 | 13210 -> 13210 |
+| 9.703e+06 | 2 | 2e-09 | 2e-09 | yes | 0 | 13195 -> 13195 |
+| 1.143e+07 | 2 | 5.2e-09 | 5.2e-09 | yes | 0 | 13129 -> 13129 |
+| 1.345e+07 | 2 | 2.4e-09 | 2.4e-09 | yes | 0 | 13171 -> 13171 |
+| 1.584e+07 | 2 | 2.2e-09 | 2.2e-09 | yes | 0 | 13120 -> 13120 |
+| 1.865e+07 | 2 | 3.6e-09 | 3.6e-09 | yes | 0 | 13168 -> 13168 |
+| 2.197e+07 | 2 | 2.3e-09 | 2.3e-09 | yes | 0 | 13156 -> 13156 |
+| 2.586e+07 | 2 | 1.7e-09 | 1.7e-09 | yes | 0 | 13210 -> 13210 |
+| 3.045e+07 | 2 | 2e-09 | 2e-09 | yes | 0 | 13111 -> 13111 |
+| 3.586e+07 | 2 | 9.6e-10 | 9.6e-10 | yes | 0 | 13138 -> 13138 |
+| 4.223e+07 | 2 | 8.1e-10 | 8.1e-10 | yes | 0 | 13189 -> 13189 |
+| 4.972e+07 | 2 | 2.3e-09 | 2.3e-09 | yes | 0 | 13258 -> 13258 |
+| 5.855e+07 | 2 | 6.9e-09 | 6.9e-09 | yes | 0 | 13255 -> 13255 |
+| 6.894e+07 | 2 | 3.8e-09 | 3.8e-09 | yes | 0 | 13375 -> 13375 |
+| 8.118e+07 | 2 | 7.2e-09 | 7.2e-09 | yes | 0 | 13486 -> 13486 |
+| 9.558e+07 | 2 | 1.2e-09 | 1.2e-09 | yes | 0 | 13480 -> 13480 |
+| 1.126e+08 | 2 | 2.1e-09 | 2.1e-09 | yes | 0 | 13501 -> 13501 |
+| 1.325e+08 | 2 | 8.7e-10 | 8.7e-10 | yes | 0 | 13672 -> 13672 |
+| 1.561e+08 | 2 | 1.3e-09 | 1.3e-09 | yes | 0 | 13627 -> 13627 |
+| 1.838e+08 | 2 | 2.8e-09 | 2.8e-09 | yes | 0 | 13657 -> 13657 |
+| 2.164e+08 | 2 | 1.6e-09 | 1.6e-09 | yes | 0 | 13576 -> 13576 |
+| 2.548e+08 | 2 | 1.5e-09 | 1.5e-09 | yes | 0 | 13702 -> 13702 |
+| 3e+08 | 2 | 1.7e-09 | 1.7e-09 | yes | 0 | 13768 -> 13768 |
+
+*Runtime 574 s (QCD stand-in build 0.6 s of it); 50 wavenumbers x 3 models x 2 sectors.*

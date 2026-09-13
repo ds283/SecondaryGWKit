@@ -21,15 +21,33 @@ jump rather than exactly on it, for a reason that turns out to matter by three o
 see :data:`BREAK_POINT_STANDOFF`.
 
 **How this module learns where those points are.** It asks the cosmology, through
-``ComputeTargets.BackgroundModel._cosmology_break_points(..., kind=BREAK_POINT_DISCONTINUITY)``,
-and it asks for *jumps only*. No equation-of-state knowledge lives here: a cosmology that declares
-nothing -- every LambdaCDM model, ``RadiationModel``, every test stand-in -- is treated as smooth
-and takes the single-``solve_ivp`` path this module has always taken, reproducing its numbers bit
-for bit. The distinction between a jump and a kink is the cosmology's to make, and it matters here
-in a way it does not in a quadrature: a fixed-order Gauss-Legendre panel has to be split at *every*
-non-smooth point, kinks included, and on ``QCD_Cosmology``'s production range there are 404 of
-those (the ``T(z)`` spline knots) against 3 jumps. An adaptive stepper absorbs a C2 point at the
-cost of a few extra steps; restarting at all 407 would pay 408 startup transients to fix three.
+``ComputeTargets.BackgroundModel._cosmology_break_points``. No equation-of-state knowledge lives
+here: a cosmology that declares nothing -- every LambdaCDM model, ``RadiationModel``, every test
+stand-in -- is treated as smooth and takes the single-``solve_ivp`` path this module has always
+taken, reproducing its numbers bit for bit. The distinction between a jump and a kink is the
+cosmology's to make, and it matters here in a way it does not in a quadrature: a fixed-order
+Gauss-Legendre panel has to be split at *every* non-smooth point, kinks included, and on
+``QCD_Cosmology``'s production range there are 404 of those (the ``T(z)`` spline knots) against 3
+jumps. An adaptive stepper absorbs a C2 point at the cost of a few extra steps.
+
+**Which kind is asked for is the caller's decision, not this module's**
+(``break_point_kind``, prompt 19 of ``prompts/GkTk-remedial``; the user's decision of
+2026-09-13). The cosmology declares all of its potential non-smoothness and each consumer decides
+what to do with it, because the right answer differs between the two sectors that share this
+driver and it differs *on measurement*:
+
+* ``TkNumericIntegration`` asks for ``BREAK_POINT_ALL``. With the jumps alone, 3 of the 50
+  production wavenumbers stay above the campaign's reference-convergence criterion on
+  ``QCD_Cosmology`` (worst 1.97e-07 against 3.4e-08); adding the C2 knots takes them to
+  4.65e-09 or better. It is affordable there because that sector is one object per wavenumber,
+  50 per model.
+* ``GkNumericIntegration`` asks for ``BREAK_POINT_DISCONTINUITY``, which is also the default
+  here. That sector converges at all 50 wavenumbers on all three models with the jumps alone
+  (worst 8.41e-09 on QCD), so the knots would buy nothing -- and it is one object per
+  ``(k, z_source)``, ~65,000 per model, where the extra evaluations are core-hours.
+
+``docs/gktk-remedial/TK-NUMERIC-ATOL-SWEEP.md`` §9.1 and §9.7 are those measurements, and §10 is
+the measurement of the policy as it now stands.
 
 **How the failure was detected, and why the test could not see it before.** A run's distance from
 the converged answer is estimated by running the same integrator twice, a decade apart in
@@ -50,6 +68,7 @@ from scipy.integrate import solve_ivp
 
 from ComputeTargets import ModelProxy, BackgroundModel
 from ComputeTargets.BackgroundModel import (
+    BREAK_POINT_ALL,
     BREAK_POINT_DISCONTINUITY,
     _cosmology_break_points,
 )
@@ -73,15 +92,24 @@ EXPECTED_SOL_LENGTH = 2
 
 
 def declared_discontinuities_in_z(
-    model: BackgroundModel, z_lo: float, z_hi: float
+    model: BackgroundModel,
+    z_lo: float,
+    z_hi: float,
+    kind: str = BREAK_POINT_DISCONTINUITY,
 ) -> List[float]:
     """
-    The redshifts strictly inside ``(z_lo, z_hi)`` at which the model's cosmology declares that a
-    background quantity *jumps*, in descending order (the direction of integration).
+    The redshifts strictly inside ``(z_lo, z_hi)`` at which the model's cosmology declares a break
+    point of the requested ``kind``, in descending order (the direction of integration).
+
+    ``kind`` defaults to ``BREAK_POINT_DISCONTINUITY`` -- the points at which a background quantity
+    *jumps*, which is the minimum an adaptive Runge-Kutta method needs and what this module asked
+    for unconditionally before prompt 19. ``BREAK_POINT_ALL`` additionally returns the C2 points
+    (the ``T(z)`` spline knots); see this module's docstring for which sector asks for which, and
+    why that is a per-caller decision.
 
     Duck-typed throughout: a model with no ``cosmology`` attribute, or a cosmology that does not
-    implement ``integration_break_points``, or one whose equation of state declares no
-    discontinuity temperatures, all give an empty list and hence the unsplit code path.
+    implement ``integration_break_points``, or one whose equation of state declares nothing of the
+    requested kind, all give an empty list and hence the unsplit code path.
 
     The declaration is made in ``u = log(1+z)``, which is the campaign's integration variable, and
     is converted here with ``expm1``. That direction is the lossy one (``CLAUDE.md``), but the
@@ -92,9 +120,7 @@ def declared_discontinuities_in_z(
     if cosmology is None:
         return []
 
-    u_points = _cosmology_break_points(
-        cosmology, z_lo, z_hi, kind=BREAK_POINT_DISCONTINUITY
-    )
+    u_points = _cosmology_break_points(cosmology, z_lo, z_hi, kind=kind)
     if len(u_points) == 0:
         return []
 
@@ -135,6 +161,45 @@ def _standoff_boundary(z_break: float) -> float:
     integrations always run downwards.
     """
     return z_break + BREAK_POINT_STANDOFF * (1.0 + z_break)
+
+
+def _separated_boundaries(
+    interior: Sequence[float], z_top: float, z_bottom: float
+) -> List[float]:
+    """
+    Thin ``interior`` -- already descending, already strictly inside ``(z_bottom, z_top)`` -- so
+    that consecutive segment boundaries, and the two endpoints, are separated by at least
+    :data:`BREAK_POINT_STANDOFF` relative in ``(1+z)``. A boundary that does not clear its
+    predecessor is dropped; the one already accepted serves for both.
+
+    **Why this cannot be left to chance, and why it does not fire in production.** A caller asking
+    for ``BREAK_POINT_ALL`` gets ~125 boundaries inside one production numeric range on
+    ``QCD_Cosmology`` rather than the single jump the discontinuity policy yields, so "two declared
+    points closer together than the standoff" stops being hypothetical by inspection. If it
+    happened, the standoff would carry one boundary onto or past its neighbour and the segment
+    between them would be of zero or negative length -- a ``solve_ivp`` call over a degenerate
+    ``t_span``. Measured, it does not happen: the ``T(z)`` spline's knots are uniform in
+    ``u = log(1+z)`` at a spacing of **2.85e-02**, and the closest a declared temperature crossing
+    comes to a knot anywhere in ``(z = 0.1, 1e14)`` is **3.4e-03** -- nine orders above the 1e-12
+    standoff. The guard is therefore inert on every production geometry, and exists so that a
+    future equation of state declaring two nearby points degrades into one boundary instead of a
+    solver error.
+
+    Dropping rather than merging is deliberate: a break point is never moved on to a sample or on
+    to another break point (prompt 18 §2.3 item 1), so the only safe repairs are "keep it" and
+    "leave it out", and a pair this close is a pair an adaptive stepper cannot distinguish anyway.
+    """
+    kept = []
+    previous = z_top
+    for boundary in interior:
+        if previous - boundary <= BREAK_POINT_STANDOFF * (1.0 + boundary):
+            continue
+        if boundary - z_bottom <= BREAK_POINT_STANDOFF * (1.0 + z_bottom):
+            continue
+        kept.append(boundary)
+        previous = boundary
+
+    return kept
 
 
 class _SegmentedDenseOutput:
@@ -212,6 +277,14 @@ def _solve_segmented(
     handed to the next segment; that point is then dropped, so **no break point is ever rounded on
     to a sample** and the returned grid is exactly the grid requested.
 
+    A segment holding *no* requested sample is the ordinary case once a caller asks for every
+    declared break point rather than only the jumps: on ``QCD_Cosmology`` a production transfer
+    -function range carries ~125 boundaries against ~100 samples, so most segments contribute
+    nothing to the output and are integrated purely to carry the state across. Such a segment asks
+    for its lower boundary alone, contributes an empty slice to the assembled ``t``/``y``, and
+    still has to satisfy the "returned the state at my lower boundary" check with
+    ``num_requested = 0``.
+
     The interior boundaries are placed a standoff of :data:`BREAK_POINT_STANDOFF` on the *near*
     side of each declared discontinuity; :func:`_standoff_boundary` says why that is not a
     cosmetic detail.
@@ -230,6 +303,14 @@ def _solve_segmented(
         },
         reverse=True,
     )
+
+    # ... and two declared points closer to each other than the standoff would leave a segment of
+    # zero or negative length between them. That cannot happen on any production geometry -- see
+    # _separated_boundaries, which measures how far it is from happening -- but a caller asking
+    # for every declared break point gets ~125 boundaries in one numeric range rather than one,
+    # so the driver guards it rather than relying on the spacing of a particular cosmology
+    interior = _separated_boundaries(interior, z_top, z_bottom)
+
     boundaries = [z_top] + interior + [z_bottom]
     num_segments = len(boundaries) - 1
 
@@ -450,7 +531,26 @@ def numeric_with_phase_cut(
     task_label: str = "numeric_with_phase_cut",
     object_label: str = "(object)",
     warn_unresolved_osc: bool = True,
+    break_point_kind: str = BREAK_POINT_DISCONTINUITY,
 ) -> dict:
+    """
+    ``break_point_kind`` names which kind of declared non-smoothness this call splits its
+    integration at -- ``BREAK_POINT_DISCONTINUITY`` (the points at which a background quantity
+    jumps) or ``BREAK_POINT_ALL`` (those plus the C2 points, the ``T(z)`` spline knots). It is
+    handed straight to :func:`declared_discontinuities_in_z` and reaches the cosmology as its
+    ``kind``; this module never names a temperature, a model or an equation of state, and a
+    caller chooses a *kind*, never a point.
+
+    The default reproduces the behaviour of every call written before prompt 19 of
+    ``prompts/GkTk-remedial`` exactly, so a test, a reproduction script under ``docs/`` or a
+    future integrator keeps its numbers bit for bit. The two production integrators nevertheless
+    both pass it explicitly, because the two sectors made *different* decisions on *measurement*
+    and neither should look as though it inherited one by omission: see this module's docstring
+    and ``docs/gktk-remedial/TK-NUMERIC-ATOL-SWEEP.md`` §9.1, §9.7 and §10.
+
+    Appended last in the signature, as ``warn_unresolved_osc`` was, so that no positional index
+    moves.
+    """
     k_wavenumber: wavenumber = k.k
     check_units(k_wavenumber, model_proxy)
 
@@ -515,13 +615,16 @@ def numeric_with_phase_cut(
     k_float = k_wavenumber.k
     z_min = float(z_sample.min)
 
-    # Ask the cosmology where its background quantities *jump* inside the integration range, and
-    # integrate the pieces between those points in sequence rather than stepping across them: see
-    # this module's docstring for why an adaptive Runge-Kutta method cannot be trusted across a
-    # discontinuous right-hand side, and why kinks are deliberately not included. A cosmology
-    # declaring none -- every LambdaCDM model, RadiationModel, every test stand-in -- gives an
-    # empty list and the single-call path below, unchanged.
-    break_z = declared_discontinuities_in_z(model, z_min, z_init.z)
+    # Ask the cosmology where, inside the integration range, it declares non-smoothness of the
+    # kind this caller asked for, and integrate the pieces between those points in sequence rather
+    # than stepping across them: see this module's docstring for why an adaptive Runge-Kutta
+    # method cannot be trusted across a discontinuous right-hand side, and why the choice between
+    # jumps alone and jumps-plus-kinks is the caller's rather than this module's. A cosmology
+    # declaring nothing of that kind -- every LambdaCDM model, RadiationModel, every test stand-in
+    # -- gives an empty list and the single-call path below, unchanged.
+    break_z = declared_discontinuities_in_z(
+        model, z_min, z_init.z, kind=break_point_kind
+    )
 
     # delta_logz is still accepted and still handed to the supervisor, so that callers (main.py)
     # need not change; but the oscillation-resolution diagnostic no longer uses it. It now runs

@@ -64,6 +64,16 @@ emits §9 of the same document -- the same reference-convergence test re-run aft
 ``numeric_with_phase_cut`` learned to split its integration at the cosmology's declared
 discontinuities, extended to the Green's-function sector, with the cost and the movement of the
 production answer on ``QCDModel``. See :func:`main_break_points`.
+
+**Third entry point, added by prompt 19** (additive again; nothing above the ``prompt 19`` banner
+at the bottom was changed except that ``run``, ``run_gk`` and ``reproduce_control`` gained a
+``break_point_kind`` argument defaulting to what they did before):
+
+    PYTHONPATH=. ./venv/bin/python docs/gktk-remedial/tk_numeric_atol_sweep.py --per-sector
+
+emits §10 -- the same test again once the break-point policy became a *per-caller* choice, with
+``TkNumericIntegration`` asking for every declared break point and ``GkNumericIntegration`` for the
+jumps alone. See :func:`main_per_sector`.
 """
 
 import platform
@@ -91,6 +101,10 @@ from ComputeTargets.tests.wkb_reference import (
 )
 from CosmologyModels.GenericEOS.QCD_Cosmology import QCD_Cosmology
 from CosmologyModels.LambdaCDM import Planck2018
+from ComputeTargets.BackgroundModel import (
+    BREAK_POINT_ALL,
+    BREAK_POINT_DISCONTINUITY,
+)
 from Quadrature.integrators.numeric_with_phase_cut import numeric_with_phase_cut
 from Units import Mpc_units
 
@@ -202,13 +216,26 @@ def geometry(cosmology, k_inv_Mpc: float) -> dict:
     return {"z_exit": z_exit, "z_e3": z_e3, "z_e6": z_e6, "grid": grid}
 
 
-def run(model, k_inv_Mpc: float, geo: dict, atol: float, rtol: float, ic=None) -> dict:
+def run(
+    model,
+    k_inv_Mpc: float,
+    geo: dict,
+    atol: float,
+    rtol: float,
+    ic=None,
+    break_point_kind: str = BREAK_POINT_DISCONTINUITY,
+) -> dict:
     """
     One ``TkNumericIntegration`` solve through the undecorated ``numeric_with_phase_cut``.
 
     ``ic`` is ``(T, dT/dz)`` at the top of the grid; ``None`` means the production
     ``T = 1, T' = 0``. ``warn_unresolved_osc=False`` is what both production integrators now pass
     (prompt 16); it gates the printed warning and nothing else.
+
+    ``break_point_kind`` defaults to ``BREAK_POINT_DISCONTINUITY`` -- what ``numeric_with_phase_cut``
+    asked for unconditionally when §9 was measured, so that §9's entry point reproduces §9. The
+    production ``TkNumericIntegration`` call site passes ``BREAK_POINT_ALL`` since prompt 19, and
+    §10's entry point passes it here.
     """
     grid = geo["grid"]
     z_init = grid.max
@@ -232,6 +259,7 @@ def run(model, k_inv_Mpc: float, geo: dict, atol: float, rtol: float, ic=None) -
         task_label="tk_numeric_atol_sweep",
         object_label="Tk(z)",
         warn_unresolved_osc=False,
+        break_point_kind=break_point_kind,
     )
 
 
@@ -400,13 +428,19 @@ def g(value, digits: int = 3) -> str:
 # ---------------------------------------------------------------------------------------------
 
 
-def reproduce_control(radiation) -> dict:
+def reproduce_control(
+    radiation, break_point_kind: str = BREAK_POINT_DISCONTINUITY
+) -> dict:
     """
     Prompt 12's two figures on ``RadiationModel``, against the exact T: 2.534e-6 at k = 1e6 with
     ``atol = 1e-13``, and the 2.56e-4 excursion near x ~ 10.8 at k = 3e8 with the same tolerance.
 
     If either misses by more than :data:`CONTROL_TOLERANCE` the harness differs from prompt 12's
     and nothing downstream is comparable, so the script stops.
+
+    ``break_point_kind`` lets §10 run the control under the transfer function's *production*
+    policy; ``RadiationModel`` declares nothing, so the two policies must give the same two
+    figures and the same two evaluation counts, and §10 checks that they do.
     """
     results = {}
     for label, k, expected, expected_x in (
@@ -419,7 +453,9 @@ def reproduce_control(radiation) -> dict:
         ),
     ):
         geo = geometry(radiation, k)
-        payload = run(radiation, k, geo, 1e-13, PRODUCTION_RTOL)
+        payload = run(
+            radiation, k, geo, 1e-13, PRODUCTION_RTOL, break_point_kind=break_point_kind
+        )
         summary = summarise(exact_errors(radiation, k, geo, payload))
         summary["evaluations"] = payload["data"].RHS_evaluations
         summary["expected"] = expected
@@ -1049,8 +1085,20 @@ def gk_geometry(cosmology, k_inv_Mpc: float) -> dict:
     return {"z_exit": z_exit, "z_e3": z_e3, "z_e6": z_e6, "grid": grid}
 
 
-def run_gk(model, k_inv_Mpc: float, geo: dict, atol: float, rtol: float) -> dict:
-    """One ``GkNumericIntegration`` solve through the undecorated ``numeric_with_phase_cut``."""
+def run_gk(
+    model,
+    k_inv_Mpc: float,
+    geo: dict,
+    atol: float,
+    rtol: float,
+    break_point_kind: str = BREAK_POINT_DISCONTINUITY,
+) -> dict:
+    """
+    One ``GkNumericIntegration`` solve through the undecorated ``numeric_with_phase_cut``.
+
+    ``break_point_kind`` is the sector's production policy *and* the module default; it is named
+    here for the same reason the production call site names it (prompt 19).
+    """
     grid = geo["grid"]
     z_init = grid.max
     return numeric_with_phase_cut._function(
@@ -1071,6 +1119,7 @@ def run_gk(model, k_inv_Mpc: float, geo: dict, atol: float, rtol: float) -> dict
         task_label="gk_break_point_sweep",
         object_label="Gr_k(z, z')",
         warn_unresolved_osc=False,
+        break_point_kind=break_point_kind,
     )
 
 
@@ -1681,8 +1730,659 @@ def main_break_points() -> None:
     log(f"** total runtime {elapsed:.1f} s")
 
 
+# =============================================================================================
+# prompt 19 -- the per-sector break-point policy (section 10 of the generated document)
+#
+# This file is additive: nothing above this banner was changed except to give `run`, `run_gk` and
+# `reproduce_control` a `break_point_kind` argument that defaults to what they did before, so that
+# section 9's entry point still emits section 9.
+#
+#     PYTHONPATH=. ./venv/bin/python docs/gktk-remedial/tk_numeric_atol_sweep.py --per-sector
+#
+# Prompt 18 left the ODE splitting at the declared *jumps* in both sectors, and measured (section
+# 9.7) that splitting at the C2 spline knots as well would close the residual three-wavenumber
+# failure on QCDModel's transfer function at +219 % / +155 % of the production evaluations. The
+# user's decision of 2026-09-13 is that the cosmology declares everything and each consumer
+# chooses: TkNumericIntegration asks for BREAK_POINT_ALL, GkNumericIntegration for
+# BREAK_POINT_DISCONTINUITY. What has to be established here:
+#
+#   1. the acceptance test -- QCDModel Tk at all 50 wavenumbers under the new policy, section 9.7
+#      having measured only three;
+#   2. that G_k, whose policy did not change, reproduces section 9 *bit for bit*;
+#   3. that RadiationModel and LambdaCDMModel, which declare nothing, reproduce bit for bit under
+#      *either* policy, and take the single-call path under both;
+#   4. the cost, in right-hand-side evaluations and (secondarily) in seconds per object;
+#   5. how far the transfer function's answer moves on QCDModel a second time.
+# =============================================================================================
+
+# the shipped policy of each sector, matching ComputeTargets/{Tk,Gk}NumericIntegration.py
+SECTOR_POLICY = {"Tk": BREAK_POINT_ALL, "Gk": BREAK_POINT_DISCONTINUITY}
+
+# section 9's headline G_k figures, which item 2 requires to reproduce exactly. Quoted to the
+# three significant figures section 9.1 printed; the comparison below is against the *printed*
+# precision, and the per-sample bit-for-bit statement is made separately by re-running the same
+# policy with the argument omitted.
+SECTION_9_GK_DRIFT = {
+    "RadiationModel": 1.94e-11,
+    "LambdaCDMModel": 2.1e-11,
+    "QCDModel": 8.41e-09,
+}
+SECTION_9_GK_QCD_PER_OBJECT = 13320
+SECTION_9_PRINTED_DIGITS = 3
+
+# item 4's secondary measure: best-of-N single-core wall time per object, at one representative
+# wavenumber of the production grid (index 38 = 4.97e7/Mpc, the wavenumber section 9.6 turns on)
+TIMING_REPEATS = 5
+TIMING_K_INDEX = 38
+
+
+def _bitwise_equal(a: dict, b: dict) -> bool:
+    """
+    Two payloads of :func:`numeric_with_phase_cut` agree in every returned floating-point number
+    and in the evaluation count -- ``==`` on doubles, not ``isclose``. This is the check item 2
+    and item 3 are stated in: a shared driver that changed behaviour for a sector that did not ask
+    it to would show up here and nowhere else.
+    """
+    for field in ("value_sample", "deriv_sample"):
+        if len(a[field]) != len(b[field]):
+            return False
+        if any(float(x) != float(y) for x, y in zip(a[field], b[field])):
+            return False
+    for field in ("stop_value", "stop_deriv", "stop_deltaz_subh"):
+        if (a[field] is None) != (b[field] is None):
+            return False
+        if a[field] is not None and float(a[field]) != float(b[field]):
+            return False
+    return a["data"].RHS_evaluations == b["data"].RHS_evaluations
+
+
+def _matches_to_printed_precision(measured: float, printed: float) -> bool:
+    """``measured`` rounds to ``printed`` at the precision section 9 printed it to."""
+    return float(f"{measured:.{SECTION_9_PRINTED_DIGITS}g}") == float(
+        f"{printed:.{SECTION_9_PRINTED_DIGITS}g}"
+    )
+
+
+def per_sector_sweep(name: str, model, cosmology, sector: str, declares: bool) -> dict:
+    """
+    Every wavenumber, for one (model, sector), under that sector's shipped policy -- and, where
+    the two policies are not the same request, under the jumps-only policy as well, so that the
+    "before" column is measured on this tree rather than quoted from section 9.
+
+    For a model that declares nothing the two policies are the same *code path*, and what is
+    measured is that they are also the same *numbers*: the production run is issued twice and
+    compared bit for bit.
+
+    For a sector whose policy this prompt did not change, the production run is issued a second
+    time with ``break_point_kind`` omitted, which is what establishes that the module default
+    really is what the call site now names.
+    """
+    policy = SECTOR_POLICY[sector]
+    geometry_fn = SECTORS[sector]["geometry"]
+    run_fn = SECTORS[sector]["run"]
+    production_atol = TK_PRODUCTION_ATOL if sector == "Tk" else GK_PRODUCTION_ATOL
+
+    rows = []
+    t_model = time.perf_counter()
+    for index, k in enumerate(PRODUCTION_K_GRID):
+        k = float(k)
+        geo = geometry_fn(cosmology, k)
+        z_lo, z_hi = float(geo["grid"].min), geo["grid"].max.z
+
+        reference = run_fn(
+            model, k, geo, REFERENCE_ATOL, REFERENCE_RTOL, break_point_kind=policy
+        )
+        tightened = run_fn(
+            model, k, geo, TIGHTENED_ATOL, TIGHTENED_RTOL, break_point_kind=policy
+        )
+        production = run_fn(
+            model, k, geo, production_atol, PRODUCTION_RTOL, break_point_kind=policy
+        )
+        drift = summarise(sector_errors(sector, model, k, geo, tightened, reference))
+
+        entry = {
+            "k": k,
+            "segments": 1
+            + len(declared_discontinuities_in_z(model, z_lo, z_hi, kind=policy)),
+            "jumps_segments": 1
+            + len(
+                declared_discontinuities_in_z(
+                    model, z_lo, z_hi, kind=BREAK_POINT_DISCONTINUITY
+                )
+            ),
+            "drift": drift,
+            "reference_evaluations": reference["data"].RHS_evaluations,
+            "production_evaluations": production["data"].RHS_evaluations,
+        }
+
+        # the jumps-only comparison. For G_k that is the same request as the shipped policy, so
+        # the second run is issued with the argument *omitted* -- the default check -- and the
+        # before/after columns are the same numbers by construction.
+        if policy == BREAK_POINT_DISCONTINUITY:
+            default = run_fn(model, k, geo, production_atol, PRODUCTION_RTOL)
+            entry["default_is_the_policy"] = _bitwise_equal(default, production)
+            entry["jumps_drift"] = drift
+            entry["jumps_production_evaluations"] = entry["production_evaluations"]
+            entry["shift"] = 0.0
+        else:
+            jumps_production = run_fn(
+                model,
+                k,
+                geo,
+                production_atol,
+                PRODUCTION_RTOL,
+                break_point_kind=BREAK_POINT_DISCONTINUITY,
+            )
+            entry["jumps_production_evaluations"] = jumps_production[
+                "data"
+            ].RHS_evaluations
+
+            if declares:
+                jumps_reference = run_fn(
+                    model,
+                    k,
+                    geo,
+                    REFERENCE_ATOL,
+                    REFERENCE_RTOL,
+                    break_point_kind=BREAK_POINT_DISCONTINUITY,
+                )
+                jumps_tightened = run_fn(
+                    model,
+                    k,
+                    geo,
+                    TIGHTENED_ATOL,
+                    TIGHTENED_RTOL,
+                    break_point_kind=BREAK_POINT_DISCONTINUITY,
+                )
+                entry["jumps_drift"] = summarise(
+                    sector_errors(
+                        sector, model, k, geo, jumps_tightened, jumps_reference
+                    )
+                )
+                entry["shift"] = summarise(
+                    sector_errors(sector, model, k, geo, jumps_production, production)
+                )["max"]
+            else:
+                # declares nothing: the two policies must be the same numbers, not merely the
+                # same code path, and that is the statement -- not a drift comparison
+                entry["policy_identical"] = _bitwise_equal(jumps_production, production)
+                entry["jumps_drift"] = drift
+                entry["shift"] = 0.0
+
+        rows.append(entry)
+        log(
+            f"   {sector} {name} [{index + 1:2d}/{len(PRODUCTION_K_GRID)}] k={k:.4g}: "
+            f"{entry['segments']} segment(s) (jumps only: {entry['jumps_segments']}), "
+            f"drift {drift['max']:.2e}, {entry['production_evaluations']} evals"
+        )
+
+    log(f"   {sector} {name} done in {time.perf_counter() - t_model:.1f} s")
+    return {"name": name, "sector": sector, "declares": declares, "rows": rows}
+
+
+def timing_experiment(models) -> list:
+    """
+    Item 4's secondary measure. Best of :data:`TIMING_REPEATS` single-core wall-clock times for
+    one object at the production tolerances, per sector under its own shipped policy, with the
+    jumps-only time alongside. Best-of rather than mean because the quantity wanted is the cost of
+    the work, not of the machine's other tenants.
+    """
+    k = float(PRODUCTION_K_GRID[TIMING_K_INDEX])
+    out = []
+    for name, model, cosmology, declares in models:
+        for sector in ("Tk", "Gk"):
+            geometry_fn = SECTORS[sector]["geometry"]
+            run_fn = SECTORS[sector]["run"]
+            atol = TK_PRODUCTION_ATOL if sector == "Tk" else GK_PRODUCTION_ATOL
+            geo = geometry_fn(cosmology, k)
+
+            timings = {}
+            for label, kind in (
+                ("shipped", SECTOR_POLICY[sector]),
+                ("jumps", BREAK_POINT_DISCONTINUITY),
+            ):
+                best = None
+                evaluations = None
+                for _ in range(TIMING_REPEATS):
+                    t0 = time.perf_counter()
+                    payload = run_fn(
+                        model, k, geo, atol, PRODUCTION_RTOL, break_point_kind=kind
+                    )
+                    elapsed = time.perf_counter() - t0
+                    best = elapsed if best is None else min(best, elapsed)
+                    evaluations = payload["data"].RHS_evaluations
+                timings[label] = (best, evaluations)
+
+            out.append(
+                {
+                    "model": name,
+                    "sector": sector,
+                    "k": k,
+                    "policy": SECTOR_POLICY[sector],
+                    "shipped": timings["shipped"],
+                    "jumps": timings["jumps"],
+                }
+            )
+            log(
+                f"   timing {sector} {name}: shipped {timings['shipped'][0]:.4f} s "
+                f"({timings['shipped'][1]} evals), jumps-only {timings['jumps'][0]:.4f} s "
+                f"({timings['jumps'][1]} evals)"
+            )
+    return out
+
+
+def report_policy(results) -> None:
+    emit("### 10.1 The policy, and the acceptance test")
+    emit()
+    emit(
+        "`numeric_with_phase_cut` now takes a `break_point_kind`, defaulting to "
+        "`BREAK_POINT_DISCONTINUITY` -- what it asked for unconditionally when §9 was measured. "
+        "Both production integrators pass it explicitly: `TkNumericIntegration` asks for "
+        "`BREAK_POINT_ALL` and `GkNumericIntegration` for `BREAK_POINT_DISCONTINUITY`. "
+        '"Segments" below is the number of integrations one object is cut into under the '
+        "sector's own policy, against the number the jumps alone would give."
+    )
+    emit()
+    rows = []
+    for result in results:
+        drifts = [row["drift"]["max"] for row in result["rows"]]
+        before = [row["jumps_drift"]["max"] for row in result["rows"]]
+        worst = result["rows"][max(range(len(drifts)), key=lambda i: drifts[i])]
+        offenders = sum(1 for d in drifts if d > ACCEPTANCE_DRIFT)
+        rows.append(
+            [
+                result["sector"],
+                result["name"],
+                SECTOR_POLICY[result["sector"]],
+                f"{max(row['segments'] for row in result['rows'])} / "
+                f"{max(row['jumps_segments'] for row in result['rows'])}",
+                g(max(before)),
+                g(max(drifts)),
+                f"{worst['k']:.4g}",
+                g(median(drifts)),
+                str(offenders),
+                "**yes**" if offenders == 0 else "**no**",
+            ]
+        )
+    table(
+        [
+            "sector",
+            "model",
+            "policy",
+            "segments, shipped / jumps only",
+            "worst drift, jumps only",
+            "worst drift, shipped",
+            "at k [1/Mpc]",
+            "median drift, shipped",
+            f"k above {ACCEPTANCE_DRIFT:.1g}",
+            "acceptance met?",
+        ],
+        rows,
+    )
+
+
+def report_gk_regression(results) -> None:
+    emit("### 10.2 The $G_k$ regression: §9 reproduced, bit for bit")
+    emit()
+    emit(
+        "$G_k$'s policy is unchanged by this prompt, so every §9 figure for that sector must come "
+        "back unchanged -- and the driver itself was touched (a guard on the separation of "
+        "segment boundaries), so this is the check that the sector which did not ask for a change "
+        'did not get one. "default matches" is the same production run issued with '
+        "`break_point_kind` omitted, compared sample by sample with `==`."
+    )
+    emit()
+    rows = []
+    for result in results:
+        if result["sector"] != "Gk":
+            continue
+        drifts = [row["drift"]["max"] for row in result["rows"]]
+        per_object = sum(row["production_evaluations"] for row in result["rows"]) / len(
+            result["rows"]
+        )
+        expected = SECTION_9_GK_DRIFT[result["name"]]
+        rows.append(
+            [
+                result["name"],
+                g(expected),
+                g(max(drifts)),
+                (
+                    "**yes**"
+                    if _matches_to_printed_precision(max(drifts), expected)
+                    else "**NO**"
+                ),
+                str(sum(1 for d in drifts if d > ACCEPTANCE_DRIFT)),
+                f"{per_object:.0f}",
+                (
+                    "all 50"
+                    if all(row["default_is_the_policy"] for row in result["rows"])
+                    else "**NOT ALL**"
+                ),
+            ]
+        )
+    table(
+        [
+            "model",
+            "§9.1 worst drift",
+            "measured now",
+            "reproduces?",
+            f"k above {ACCEPTANCE_DRIFT:.1g}",
+            "RHS evals per object",
+            "default matches explicit policy",
+        ],
+        rows,
+    )
+    emit(
+        f"§9.3 gives {SECTION_9_GK_QCD_PER_OBJECT} right-hand-side evaluations per QCD $G_k$ "
+        "object at the production tolerances; the table's QCD row is the same quantity."
+    )
+    emit()
+
+
+def report_smooth_regression(results, control_jumps, control_shipped) -> None:
+    emit("### 10.3 The smooth-model regression")
+    emit()
+    emit(
+        "`RadiationModel` and `LambdaCDMModel` declare nothing, so both policies reach the same "
+        "single-`solve_ivp` call. That is asserted twice over: the segment count is 1 under "
+        "either policy at every wavenumber, and the production run issued under one policy is "
+        "compared with the run issued under the other sample by sample with `==`."
+    )
+    emit()
+    rows = []
+    for result in results:
+        if result["declares"]:
+            continue
+        identical = [row.get("policy_identical") for row in result["rows"]]
+        checked = [value for value in identical if value is not None]
+        rows.append(
+            [
+                result["sector"],
+                result["name"],
+                str(max(row["segments"] for row in result["rows"])),
+                str(max(row["jumps_segments"] for row in result["rows"])),
+                g(max(row["drift"]["max"] for row in result["rows"])),
+                (
+                    "n/a (same request)"
+                    if len(checked) == 0
+                    else (f"all {len(checked)}" if all(checked) else "**NOT ALL**")
+                ),
+            ]
+        )
+    table(
+        [
+            "sector",
+            "model",
+            "max segments, shipped policy",
+            "max segments, jumps only",
+            "worst drift",
+            "policies bit-identical",
+        ],
+        rows,
+    )
+    emit(
+        "And prompt 17's two control figures, against the exact $T$, under the jumps-only policy "
+        "(§9's column) and under the transfer function's shipped policy:"
+    )
+    emit()
+    table(
+        [
+            "control",
+            "prompt 12",
+            "jumps only",
+            "RHS evals",
+            "shipped policy",
+            "RHS evals",
+            "identical?",
+        ],
+        [
+            [
+                label,
+                g(control_jumps[label]["expected"]),
+                g(control_jumps[label]["max"]),
+                str(control_jumps[label]["evaluations"]),
+                g(control_shipped[label]["max"]),
+                str(control_shipped[label]["evaluations"]),
+                (
+                    "yes"
+                    if control_jumps[label]["max"] == control_shipped[label]["max"]
+                    and control_jumps[label]["evaluations"]
+                    == control_shipped[label]["evaluations"]
+                    else "**no**"
+                ),
+            ]
+            for label in control_jumps
+        ],
+    )
+
+
+def report_per_sector_cost(results, timings) -> None:
+    emit("### 10.4 What the policy costs, in evaluations and in seconds")
+    emit()
+    emit(
+        "Right-hand-side evaluation counts are the reproducible measure (§5 note 14): they do not "
+        "depend on the machine. The seconds below them are for scoping only -- they are what make "
+        "the decision legible, because it turned on the sector's *object count* rather than its "
+        "per-object cost."
+    )
+    emit()
+    rows = []
+    for result in results:
+        if not result["declares"]:
+            continue
+        before = sum(row["jumps_production_evaluations"] for row in result["rows"])
+        after = sum(row["production_evaluations"] for row in result["rows"])
+        rows.append(
+            [
+                result["sector"],
+                result["name"],
+                SECTOR_POLICY[result["sector"]],
+                f"{before / len(result['rows']):.0f}",
+                f"{after / len(result['rows']):.0f}",
+                str(before),
+                str(after),
+                f"{after / before - 1.0:+.2%}",
+            ]
+        )
+    table(
+        [
+            "sector",
+            "model",
+            "policy",
+            "per object, jumps only",
+            "per object, shipped",
+            "grid total, jumps only",
+            "grid total, shipped",
+            "change",
+        ],
+        rows,
+    )
+    emit(
+        f"Wall time per object, best of {TIMING_REPEATS} single-core runs at "
+        f"k = {float(PRODUCTION_K_GRID[TIMING_K_INDEX]):.4g}/Mpc and the production tolerances. "
+        "**The counts above are the measure; these seconds are for scoping.**"
+    )
+    emit()
+    table(
+        [
+            "sector",
+            "model",
+            "policy",
+            "s per object, shipped",
+            "s per object, jumps only",
+            "objects per model",
+            "sector total, shipped",
+        ],
+        [
+            [
+                row["sector"],
+                row["model"],
+                row["policy"],
+                f"{row['shipped'][0]:.4f}",
+                f"{row['jumps'][0]:.4f}",
+                "50" if row["sector"] == "Tk" else "~65,000",
+                (
+                    f"{50 * row['shipped'][0]:.1f} s"
+                    if row["sector"] == "Tk"
+                    else f"{65000 * row['shipped'][0] / 3600.0:.1f} core-hours"
+                ),
+            ]
+            for row in timings
+        ],
+    )
+
+
+def report_per_sector_shift(results) -> None:
+    emit("### 10.5 How far the transfer function's answer moves on QCD, again")
+    emit()
+    emit(
+        "The production-tolerance run under the jumps-only policy, scored against the converged "
+        "reference under the shipped policy -- the same envelope-relative measure as §9.4. Prompt "
+        "18 already moved this sector's QCD values by up to 2.82e-04; this is the second move, on "
+        "top of it."
+    )
+    emit()
+    rows = []
+    for result in results:
+        if not result["declares"] or result["sector"] != "Tk":
+            continue
+        shifts = [row["shift"] for row in result["rows"]]
+        worst = result["rows"][max(range(len(shifts)), key=lambda i: shifts[i])]
+        rows.append(
+            [
+                result["sector"],
+                result["name"],
+                g(max(shifts)),
+                f"{worst['k']:.4g}",
+                g(median(shifts)),
+                g(min(shifts)),
+            ]
+        )
+    table(
+        [
+            "sector",
+            "model",
+            "worst shift",
+            "at k [1/Mpc]",
+            "median shift",
+            "smallest shift",
+        ],
+        rows,
+    )
+
+
+def report_per_sector_detail(result) -> None:
+    emit(f"#### {result['sector']}, {result['name']}")
+    emit()
+    header = [
+        "k [1/Mpc]",
+        "segments",
+        "drift, jumps only",
+        "drift, shipped",
+        f"<= {ACCEPTANCE_DRIFT:.1g}?",
+        "production shift",
+        "RHS evals, jumps only -> shipped",
+    ]
+    rows = []
+    for row in result["rows"]:
+        rows.append(
+            [
+                f"{row['k']:.4g}",
+                str(row["segments"]),
+                g(row["jumps_drift"]["max"], 2),
+                g(row["drift"]["max"], 2),
+                "yes" if row["drift"]["max"] <= ACCEPTANCE_DRIFT else "**no**",
+                g(row["shift"], 2),
+                f"{row['jumps_production_evaluations']} -> {row['production_evaluations']}",
+            ]
+        )
+    table(header, rows)
+
+
+def main_per_sector() -> None:
+    t_start = time.perf_counter()
+
+    log("** building stand-in models")
+    radiation = RadiationModel()
+    lambda_cdm = LambdaCDMModel()
+    qcd_cosmology = QCD_Cosmology(
+        store_id=0, units=UNITS, params=Planck2018(), max_z=1e20
+    )
+    t0 = time.perf_counter()
+    qcd = QCDModel(
+        production_source_grid(
+            horizon_exit_z(
+                qcd_cosmology,
+                PRODUCTION_LARGEST_K_INV_MPC,
+                -float(PRODUCTION_SUPERHORIZON_EFOLDS),
+            )
+        ),
+        cosmology=qcd_cosmology,
+    )
+    qcd_build_seconds = time.perf_counter() - t0
+    log(f"   QCDModel built in {qcd_build_seconds:.2f} s")
+
+    log("** the control, under both policies")
+    control_jumps = reproduce_control(radiation, BREAK_POINT_DISCONTINUITY)
+    control_shipped = reproduce_control(radiation, SECTOR_POLICY["Tk"])
+    for label in control_jumps:
+        log(
+            f"   {label}: jumps only {control_jumps[label]['max']:.4g} "
+            f"({control_jumps[label]['evaluations']} evals), shipped "
+            f"{control_shipped[label]['max']:.4g} "
+            f"({control_shipped[label]['evaluations']} evals)"
+        )
+
+    models = (
+        ("RadiationModel", radiation, radiation, False),
+        ("LambdaCDMModel", lambda_cdm, lambda_cdm.cosmology, False),
+        ("QCDModel", qcd, qcd_cosmology, True),
+    )
+
+    log("** sweeping")
+    results = []
+    for sector in ("Tk", "Gk"):
+        for name, model, cosmology, declares in models:
+            results.append(per_sector_sweep(name, model, cosmology, sector, declares))
+
+    log("** wall time per object")
+    timings = timing_experiment(models)
+
+    elapsed = time.perf_counter() - t_start
+
+    emit("## 10. The per-sector policy: prompt 19's measurement")
+    emit()
+    emit(f"<!-- generated {date.today().isoformat()} by")
+    emit(
+        "     PYTHONPATH=. ./venv/bin/python docs/gktk-remedial/tk_numeric_atol_sweep.py "
+        "--per-sector"
+    )
+    emit(
+        f"     in {elapsed:.0f} s; Python {platform.python_version()}, "
+        f"NumPy {np.__version__}, SciPy {scipy.__version__} -->"
+    )
+    emit()
+    report_policy(results)
+    report_gk_regression(results)
+    report_smooth_regression(results, control_jumps, control_shipped)
+    report_per_sector_cost(results, timings)
+    report_per_sector_shift(results)
+    emit("### 10.6 Every wavenumber")
+    emit()
+    for result in results:
+        report_per_sector_detail(result)
+
+    emit(
+        f"*Runtime {elapsed:.0f} s (QCD stand-in build {qcd_build_seconds:.1f} s of it); "
+        f"{len(PRODUCTION_K_GRID)} wavenumbers x 3 models x 2 sectors.*"
+    )
+    log(f"** total runtime {elapsed:.1f} s")
+
+
 if __name__ == "__main__":
     if "--break-points" in sys.argv[1:]:
         main_break_points()
+    elif "--per-sector" in sys.argv[1:]:
+        main_per_sector()
     else:
         main()

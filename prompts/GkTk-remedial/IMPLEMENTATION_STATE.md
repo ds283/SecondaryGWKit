@@ -2,7 +2,36 @@
 
 **Campaign:** [`README.md`](README.md) · **Source review:** [`docs/gk-wkb-review-fable-2026-09-09.md`](../../docs/gk-wkb-review-fable-2026-09-09.md) · **Reconciliation:** [`RECONCILIATION.md`](RECONCILIATION.md)
 **Baseline commit:** `9ff59d5` (`main`, clean)
-**Last updated:** 2026-09-13 — Prompt 18 landed (the numeric ODE is **split at the cosmology's
+**Last updated:** 2026-09-13 — Prompt 19 landed (**which kind** of declared break point the numeric
+ODE splits at is now the *caller's* choice, enacting the user's decision of 2026-09-13:
+`numeric_with_phase_cut` takes a `break_point_kind`, appended last in its signature and defaulting
+to `BREAK_POINT_DISCONTINUITY` — so every caller that does not name it, the four `docs/` scripts
+and three test modules included, keeps its numbers bit for bit. **Both production integrators name
+it anyway**, because the asymmetry is a measured decision in each sector rather than one inherited
+by omission: `TkNumericIntegration` passes `BREAK_POINT_ALL` and `GkNumericIntegration`
+`BREAK_POINT_DISCONTINUITY`, each under a comment citing `TK-NUMERIC-ATOL-SWEEP.md` §9.1 and §9.7.
+**The acceptance test passes**: on `QCDModel` the $T_k$ reference-convergence drift is below the
+3.4e-08 criterion at **all 50** production wavenumbers — worst **8.72e-09**, median 3.96e-09,
+against 1.97e-07 and **3** offenders with the jumps alone — so §9.7's three-wavenumber measurement
+generalises and the other 47 are undisturbed. **$G_k$ reproduces §9 exactly**: 1.94e-11 / 2.1e-11 /
+8.41e-09 worst drift at the same wavenumbers, **13320** evaluations per QCD object (§9.3's integer),
+and at all 50 wavenumbers the run with the argument omitted is bit-identical to the run with it
+named. Both smooth models take the single-`solve_ivp` path under **either** policy and are
+bit-identical between them at all 50 wavenumbers in both sectors, prompt 17's two controls included
+(2.53e-06 / 7403; 2.56e-04 / 8483). Cost on QCD: $T_k$ 9843 → **31521** evaluations per object
+(**+220.23 %**, ~49 s for the whole 50-object sector), $G_k$ 13320 → 13320 (**+0.00 %**, the same
+integer — several core-hours per model *not* spent on a quantity already at 8.41e-09). One change
+was forced on the shared driver — `_separated_boundaries` drops a segment boundary that does not
+clear its predecessor or an endpoint by `BREAK_POINT_STANDOFF`, because asking for every declared
+break point cuts a production $T_k$ object at ~127 boundaries rather than one; it is **inert on
+every production geometry** (the measured minimum separation of declared points on `QCD_Cosmology`
+is 3.4e-03 in $\log(1+z)$, nine orders above the 1e-12 standoff, and the closest approach of a break
+to a requested sample is 1.88e-06) and the exact $G_k$ regression is what proves it. No tolerance,
+no `CosmologyModels/` declaration, no `Datastore/` factory and no lookup key was touched. **The QCD
+$T_k$ answer moves a second time**, by up to **1.61e-04** of the envelope on top of prompt 18's
+2.82e-04, so `[18-numeric-solver-not-in-lookup-key]` bites again and a pre-commit QCD datastore is
+still unusable for that sector — but **`GkNumericIntegration` rows are bit-identical across this
+commit on all three models**. `[17-qcd-reference-not-converged]` is **resolved** (§4).) Prompt 18 landed (the numeric ODE is **split at the cosmology's
 declared discontinuities**. `GenericEOSBase` gains `discontinuity_temperatures_GeV`, default `()`
 — "a smooth equation of state has none" — and `QCD_EOS` declares `(T_LO, T_120_MEV, T_HI)`,
 *measured* rather than transcribed: $G$ and $G_s$ step by 2.1e-4–1.5e-2 there and are continuous
@@ -225,7 +254,7 @@ Legend: ⬜ not started · 🟡 in flight · ✅ complete · ⚠️ complete wit
 | 12 | [Tk numeric `atol`](12-tk-numeric-atol.md) | review §12.5 | Opus | ⚠️ | *"Give the transfer-function numeric run its own absolute tolerance"* (SHA not embedded, per the campaign convention) | [`logs/12-tk-numeric-atol.md`](logs/12-tk-numeric-atol.md) |
 | 17 | [Tk numeric `atol` k-sweep](17-tk-numeric-atol-k-sweep.md) | §3 `[12-tk-numeric-atol-largest-k-excursion]` | Opus | ✅ | *"Measure the transfer-function numeric tolerance across the k-grid"* (SHA not embedded, per the campaign convention) | [`logs/17-tk-numeric-atol-k-sweep.md`](logs/17-tk-numeric-atol-k-sweep.md) |
 | 18 | [Numeric ODE break points](18-numeric-ode-break-points.md) | §3 `[17-qcd-reference-not-converged]` | Opus | ⚠️ | *"Split the numeric ODE at the cosmology's declared discontinuities"* (SHA not embedded, per the campaign convention) | [`logs/18-numeric-ode-break-points.md`](logs/18-numeric-ode-break-points.md) |
-| 19 | [Per-sector break-point policy](19-per-sector-break-point-policy.md) | §3 `[17-qcd-reference-not-converged]` | Opus | ⬜ | | |
+| 19 | [Per-sector break-point policy](19-per-sector-break-point-policy.md) | §3 `[17-qcd-reference-not-converged]` | Opus | ⚠️ | *"Let each numeric sector choose which declared break points it splits at"* (SHA not embedded, per the campaign convention) | [`logs/19-per-sector-break-point-policy.md`](logs/19-per-sector-break-point-policy.md) |
 
 > Rows 16 and 17 are numbered last because the campaign's numbers are append-only. **16 runs
 > between 11 and 12** — the follow-up README §7 D2 anticipated, enacting the user's choice of
@@ -244,7 +273,7 @@ Legend: ⬜ not started · 🟡 in flight · ✅ complete · ⚠️ complete wit
 |---|---|---|---|---|---|---|
 | 13 | [Verification and docs](13-verification-and-docs.md) | review §4, §12.3, §13.5 | Opus | ⬜ | | |
 
-**Progress:** 17 / 19 complete.
+**Progress:** 18 / 19 complete.
 
 ---
 
@@ -276,7 +305,7 @@ campaign; the review section is the authority on each.
 | M19 | **DEFECT, dead path** | `mode.lower()` before the `None` check (§10.2) | 11 | ✅ the `None` test comes first; `mode=None` integrates the whole grid, `mode="STOP"` is accepted, `mode="x"` raises `ValueError` — three tests. The `mode != "stop"` branch is kept (`RECONCILIATION.md` §3) |
 | M20 | **DEFECT, comments + robustness** | The stop point is a maximum, not a minimum; the "fixed phase to avoid jitter" motivation is obsolete; `find_phase_minimum`'s $10^{-3}z$ step is safe only inside the window (§10.2) | 11 | ✅ renamed **`find_phase_extremum`** with `find_phase_minimum` kept as an alias; docstring and both integrators' comments now say maximum, and say the jitter motivation is obsolete because `store()` rotates $(G,G')$ into a pure sine. Steps $2\pi/(16\omega)$ where $\omega^2>0$, falling back to $10^{-3}z$: inside the window both steps find the same extremum, and at $x=6\times10^3$ — where the old step covers **0.955 of a cycle** — the phase step lands within 0.1 cycle of the first maximum while the old step skips more than a full cycle. Window **not** widened. The stop point moves by $\le1.04\times10^{-7}$ relative, inside `root_scalar`'s own tolerance (`[11-stop-point-root-tolerance]`) |
 | M21 | **DEFECT, misleading** | `0.85·z_e6` truncation requests samples never produced in stop mode (§10.2) — comment only | 11 | ✅ both `main.py` comments (`:604-611`, `:1178-1189`) rewritten to say the ODE terminates on the $z_{e6}$ event, the `expected_values` check is skipped in stop mode, and the samples between $z_{e6}$ and $0.85z_{e6}$ are never produced. The constant stays (hand-over decision). `git diff main.py` is comment-only; the 40-of-41 return is pinned by the bit-identity test |
-| M22 | **DEFECT, accuracy** | $T_k$ numeric run limited to $1.1\times10^{-5}$ of the envelope by `atol=1e-10` acting as a $10^{-5}$ relative tolerance (§12.5) | 12, 17 | ⚠️ `DEFAULT_TK_NUMERIC_ABS_TOLERANCE = 1e-13` for the `TkNumericIntegration` run alone, carried by a separate `tolerance` object `Tk_numeric_atol` through all five of its `object_get` sites. On review §12.5's geometry (RadiationModel, $k=10^6$, production source grid, $T=1,T'=0$, `rtol=1e-8`, all four of the review's RHS-evaluation counts reproduced exactly): $\delta T/{\rm env}$ **9.928e-6 → 2.534e-6** (README §6 target $\le3\times10^{-6}$) for **+14.3 %** evaluations; with exact initial data **1.160e-5 → 3.275e-7**, so what remains is the $2.5\times10^{-6}$ initial-condition floor (`[00-tk-superhorizon-ic-series]`, out of scope). $G_k$ moves by 8.538e-10 of the envelope for +0.35 % evaluations and keeps `atol`. **Confirmed by the user 2026-09-12 after prompt 17's grid sweep: `1e-13` stands.** ⚠️ because at $k=3\times10^8$ the shipped tolerance leaves an isolated 2.56e-4 excursion near $x\approx10.8$ that `atol=1e-16` removes (`[12-tk-numeric-atol-largest-k-excursion]`), and because deviation 1 had to repair the batch `build_Tk_WKB_work`'s numeric lookup was dispatched over — `query_batch` (the `TkWKBIntegration` query, whole batch) rather than the unused `payload_batch` (the missing subset), which no longer works once the two carry different tolerances. **Prompt 17 measured the whole production $k$-grid** (50 wavenumbers × `RadiationModel`, `LambdaCDMModel`, `QCDModel` × `atol` ∈ {1e-10, 1e-13, 1e-16} at `rtol=1e-8`, each against a converged run of the same integrator; `docs/gktk-remedial/TK-NUMERIC-ATOL-SWEEP.md`): the excursion is real off the control and is **not** a large-$k$ effect — at the shipped tolerance **3 / 13 / 8 of 50** wavenumbers exceed $3\times10^{-6}$, worst **8.64e-4** at $k=8.37\times10^5$ on LambdaCDM, every one of them a *level* (median 1.7e-5–5.8e-5, last sample up to 2.2e-4) rather than one bad sample. `atol=1e-16` does **not** fix it (LambdaCDM 13 → 10, two of them wavenumbers `1e-13` handles) and is not cheaper on a real background. The lever is `rtol`: at fixed `atol=1e-13`, `rtol` 1e-8 → 1e-9 removes every excursion (8.64e-4 → 7.4e-8) for +23 % evaluations, and on both production backgrounds a $10^{-6}$ change in $k$ removes it too. What `1e-13` buys is the *level*, uniformly: median-over-$k$ of the per-$k$ maximum 1.25e-5 → 3.8e-7, 1.19e-5 → 4.5e-7, 1.38e-5 → 1.0e-6 for +25–30 % evaluations. **Prompt 17 recommends keeping 1e-13**; the constant is the user's call and the ⚠️ stands until it is settled. **Prompt 18 repaired the reference those QCD figures were measured against**: `numeric_with_phase_cut` splits its integration at the cosmology's declared *discontinuities*, and on `QCDModel` the $T_k$ reference-convergence drift falls from **23 of 50** wavenumbers above the 3.4e-08 criterion (worst 6.17e-06) to **3** (worst 1.97e-07 at $k=4.287\times10^6$, median 5.12e-09), the four wavenumbers prompt 17 named improving **347×–5764×**. $G_k$ **never had the failure** on any model — 1.94e-11 / 2.1e-11 / 8.41e-09 worst over the grid on Radiation / LambdaCDM / QCD, the same split or unsplit — which is the first converged-reference measurement for that sector. Nothing about `atol` or `rtol` changed. The residue is the $T(z)$ spline's $C^2$ knots, which would close it at +219 % / +155 % of the production evaluations (log 18, `TK-NUMERIC-ATOL-SWEEP.md` §9.7) |
+| M22 | **DEFECT, accuracy** | $T_k$ numeric run limited to $1.1\times10^{-5}$ of the envelope by `atol=1e-10` acting as a $10^{-5}$ relative tolerance (§12.5) | 12, 17 | ⚠️ `DEFAULT_TK_NUMERIC_ABS_TOLERANCE = 1e-13` for the `TkNumericIntegration` run alone, carried by a separate `tolerance` object `Tk_numeric_atol` through all five of its `object_get` sites. On review §12.5's geometry (RadiationModel, $k=10^6$, production source grid, $T=1,T'=0$, `rtol=1e-8`, all four of the review's RHS-evaluation counts reproduced exactly): $\delta T/{\rm env}$ **9.928e-6 → 2.534e-6** (README §6 target $\le3\times10^{-6}$) for **+14.3 %** evaluations; with exact initial data **1.160e-5 → 3.275e-7**, so what remains is the $2.5\times10^{-6}$ initial-condition floor (`[00-tk-superhorizon-ic-series]`, out of scope). $G_k$ moves by 8.538e-10 of the envelope for +0.35 % evaluations and keeps `atol`. **Confirmed by the user 2026-09-12 after prompt 17's grid sweep: `1e-13` stands.** ⚠️ because at $k=3\times10^8$ the shipped tolerance leaves an isolated 2.56e-4 excursion near $x\approx10.8$ that `atol=1e-16` removes (`[12-tk-numeric-atol-largest-k-excursion]`), and because deviation 1 had to repair the batch `build_Tk_WKB_work`'s numeric lookup was dispatched over — `query_batch` (the `TkWKBIntegration` query, whole batch) rather than the unused `payload_batch` (the missing subset), which no longer works once the two carry different tolerances. **Prompt 17 measured the whole production $k$-grid** (50 wavenumbers × `RadiationModel`, `LambdaCDMModel`, `QCDModel` × `atol` ∈ {1e-10, 1e-13, 1e-16} at `rtol=1e-8`, each against a converged run of the same integrator; `docs/gktk-remedial/TK-NUMERIC-ATOL-SWEEP.md`): the excursion is real off the control and is **not** a large-$k$ effect — at the shipped tolerance **3 / 13 / 8 of 50** wavenumbers exceed $3\times10^{-6}$, worst **8.64e-4** at $k=8.37\times10^5$ on LambdaCDM, every one of them a *level* (median 1.7e-5–5.8e-5, last sample up to 2.2e-4) rather than one bad sample. `atol=1e-16` does **not** fix it (LambdaCDM 13 → 10, two of them wavenumbers `1e-13` handles) and is not cheaper on a real background. The lever is `rtol`: at fixed `atol=1e-13`, `rtol` 1e-8 → 1e-9 removes every excursion (8.64e-4 → 7.4e-8) for +23 % evaluations, and on both production backgrounds a $10^{-6}$ change in $k$ removes it too. What `1e-13` buys is the *level*, uniformly: median-over-$k$ of the per-$k$ maximum 1.25e-5 → 3.8e-7, 1.19e-5 → 4.5e-7, 1.38e-5 → 1.0e-6 for +25–30 % evaluations. **Prompt 17 recommends keeping 1e-13**; the constant is the user's call and the ⚠️ stands until it is settled. **Prompt 18 repaired the reference those QCD figures were measured against**: `numeric_with_phase_cut` splits its integration at the cosmology's declared *discontinuities*, and on `QCDModel` the $T_k$ reference-convergence drift falls from **23 of 50** wavenumbers above the 3.4e-08 criterion (worst 6.17e-06) to **3** (worst 1.97e-07 at $k=4.287\times10^6$, median 5.12e-09), the four wavenumbers prompt 17 named improving **347×–5764×**. $G_k$ **never had the failure** on any model — 1.94e-11 / 2.1e-11 / 8.41e-09 worst over the grid on Radiation / LambdaCDM / QCD, the same split or unsplit — which is the first converged-reference measurement for that sector. Nothing about `atol` or `rtol` changed. The residue is the $T(z)$ spline's $C^2$ knots, which would close it at +219 % / +155 % of the production evaluations (log 18, `TK-NUMERIC-ATOL-SWEEP.md` §9.7). **Prompt 19 paid that price in the $T_k$ sector alone** (`TK-NUMERIC-ATOL-SWEEP.md` §10): the break-point policy is now the caller's, `TkNumericIntegration` asks for `BREAK_POINT_ALL` and `GkNumericIntegration` for `BREAK_POINT_DISCONTINUITY`, and on `QCDModel` the $T_k$ drift is below the criterion at **all 50** wavenumbers — worst **8.72e-09**, median 3.96e-09, zero offenders — for **+220.23 %** of the production evaluations (9843 → 31521 per object, ~49 s for the whole 50-object sector). $G_k$ is **bit-identical**: 8.41e-09 worst on QCD at the same wavenumber and 13320 evaluations per object, the same integers as §9. The reference is now converged in both sectors on all three models, so `[17-qcd-reference-not-converged]` is **resolved** and what remains under this ID is the `rtol` question `[12-tk-numeric-atol-largest-k-excursion]` carries to `prompts/tolerance-convergence` |
 | M23 | **REQUIREMENT** | Independent references and error definitions; throughput of the interval accessor measured early (§13.3, §13.5) | 01 | ⚠️ |
 | M24 | **REQUIREMENT** | Verification on both models against the references; scoped pipeline run; additive docs (§13.5) | 13 | ⬜ |
 
@@ -725,7 +754,53 @@ Opened by the planning pass, 2026-09-10, before any prompt runs.
   of datastore objects is the **intended** outcome, each quantity carrying its own justified
   tolerance pair. This entry closes when that campaign settles `rtol`.
 
-- **[17-qcd-reference-not-converged]** *(opened by prompt 17, 2026-09-12)* — prompt 17's §2.1
+- **[18-numeric-solver-not-in-lookup-key]** *(opened by prompt 18, 2026-09-13)* — `solver_serial`
+  is stored by both numeric factories and matched by neither.
+  `Datastore/SQL/ObjectFactories/GkNumericIntegration.py:221-227` and
+  `TkNumericIntegration.py:225-231` filter on `validated`, `wavenumber_exit_serial`,
+  `model_serial`, `atol_serial` and `rtol_serial` (plus the source/init redshift when supplied);
+  the solver row is selected and joined for its label only. Prompt 18 §3.1 asked for the
+  `TkNumericIntegration` half of this to be established: it is the same as the $G_k$ half. So a
+  change in solver *behaviour* is invisible to the datastore — rows computed before and after
+  prompt 18 are indistinguishable by key on `QCDModel` while differing by up to 2.82e-04 of the
+  envelope, exactly the hazard prompt 12 avoided by moving a key. The solver label
+  (`"solve_ivp+DOP853-stepping0"`) is unchanged by the split, so it does not distinguish them
+  either. **Impact:** any datastore spanning this commit on `QCDModel`; prompt 13 must build
+  fresh. **Not acted on:** §3.1 reserves the key, the label and the factories to the user, as a
+  datastore decision with its own migration. **Next step:** the user's — either add
+  `solver_serial` to the two queries, or make the label carry the split and accept the recompute.
+
+- **[19-cosmologymodels-docstrings-predate-per-sector-policy]** *(opened by prompt 19,
+  2026-09-13)* — two `CosmologyModels/` docstrings state as fact what is now true of one numeric
+  sector and not the other. `GenericEOS.py:97-101` says "an *adaptive* ODE solver only has to be
+  split at a jump, because a C2 point does not invalidate an embedded Runge-Kutta error
+  estimator"; `LambdaCDM_GenericEOS.py:277-283` says the jumps-only set "is what
+  `Quadrature/integrators/numeric_with_phase_cut.py` asks for". Both were accurate when prompt 18
+  wrote them. Prompt 19's measurement is that on `QCD_Cosmology` the C2 knots cost about an order
+  of magnitude of reference convergence in the $T_k$ sector (1.97e-07 -> 8.72e-09 worst over the
+  grid), so `TkNumericIntegration` now asks for `BREAK_POINT_ALL`: a C2 point does not invalidate
+  the estimator but it does degrade it, and which set the ODE path wants is no longer a single
+  answer. **Impact:** documentation only — no behaviour depends on either sentence, and
+  `integration_break_points`'s contract is unchanged. A later reader following the docstring would
+  conclude the $T_k$ call site is a mistake. **Not acted on:** prompt 19 §1 puts `CosmologyModels/`
+  out of bounds ("the declaration is finished"). **Next step:** reword both docstrings to say that
+  the kind is the consumer's choice and point at `TK-NUMERIC-ATOL-SWEEP.md` §10; a two-hunk
+  comment-only change for whichever prompt next has that directory in scope.
+
+> Add an entry here whenever a prompt finishes with something unresolved: a verification step that
+> could not be run, an assumption that could not be confirmed, a deviation a later prompt has to
+> work around, a measured cost that changes a later prompt's decision. Format:
+>
+> - **[NN-shortname]** *(opened by prompt NN, YYYY-MM-DD)* — description. **Impact:** who is
+>   affected. **Next step:** what would close it.
+>
+> Move closed entries to §4 rather than deleting them, and update `docs/OPEN_ISSUES.md`.
+
+---
+
+## 4. Resolved issues
+
+- **[17-qcd-reference-not-converged]** *(opened by prompt 17, 2026-09-12; narrowed by prompt 18, 2026-09-13; **resolved by prompt 19**, 2026-09-13)* — prompt 17's §2.1
   convergence test **fails on `QCDModel`**: at $k\in\{1.58\times10^7, 4.97\times10^7,
   5.86\times10^7, 2.55\times10^8\}$ two runs of the same integrator a decade apart in tolerance
   differ by 1.6e-6–6.2e-6 of the envelope, against a smallest reported candidate difference of
@@ -788,34 +863,35 @@ Opened by the planning pass, 2026-09-10, before any prompt runs.
   **Next step:** the user decides whether to split at the $C^2$ knots as well. Closes if they do,
   or if they accept a 1.97e-07 floor at three QCD wavenumbers.
 
-- **[18-numeric-solver-not-in-lookup-key]** *(opened by prompt 18, 2026-09-13)* — `solver_serial`
-  is stored by both numeric factories and matched by neither.
-  `Datastore/SQL/ObjectFactories/GkNumericIntegration.py:221-227` and
-  `TkNumericIntegration.py:225-231` filter on `validated`, `wavenumber_exit_serial`,
-  `model_serial`, `atol_serial` and `rtol_serial` (plus the source/init redshift when supplied);
-  the solver row is selected and joined for its label only. Prompt 18 §3.1 asked for the
-  `TkNumericIntegration` half of this to be established: it is the same as the $G_k$ half. So a
-  change in solver *behaviour* is invisible to the datastore — rows computed before and after
-  prompt 18 are indistinguishable by key on `QCDModel` while differing by up to 2.82e-04 of the
-  envelope, exactly the hazard prompt 12 avoided by moving a key. The solver label
-  (`"solve_ivp+DOP853-stepping0"`) is unchanged by the split, so it does not distinguish them
-  either. **Impact:** any datastore spanning this commit on `QCDModel`; prompt 13 must build
-  fresh. **Not acted on:** §3.1 reserves the key, the label and the factories to the user, as a
-  datastore decision with its own migration. **Next step:** the user's — either add
-  `solver_serial` to the two queries, or make the label carry the split and accept the recompute.
+  **Resolution (prompt 19, 2026-09-13)** —
+  [`docs/gktk-remedial/TK-NUMERIC-ATOL-SWEEP.md`](../../docs/gktk-remedial/TK-NUMERIC-ATOL-SWEEP.md)
+  §10, 50 wavenumbers x three models x both sectors in 574 s. The user ruled (2026-09-13) that the
+  cosmology declares all of its potential non-smoothness and each consumer decides what to do with
+  it, so `numeric_with_phase_cut` gained a `break_point_kind` and the two sectors ask for different
+  things: **$T_k$ for `BREAK_POINT_ALL`, $G_k$ for `BREAK_POINT_DISCONTINUITY`**, each on its own
+  measurement and each named at the call site so that neither looks inherited by omission.
 
-> Add an entry here whenever a prompt finishes with something unresolved: a verification step that
-> could not be run, an assumption that could not be confirmed, a deviation a later prompt has to
-> work around, a measured cost that changes a later prompt's decision. Format:
->
-> - **[NN-shortname]** *(opened by prompt NN, YYYY-MM-DD)* — description. **Impact:** who is
->   affected. **Next step:** what would close it.
->
-> Move closed entries to §4 rather than deleting them, and update `docs/OPEN_ISSUES.md`.
+  1. **The criterion is met at all 50 QCD $T_k$ wavenumbers.** Worst drift **8.72e-09** (at
+     $k=10^5$), median 3.96e-09, **zero** above 3.4e-08 — against 1.97e-07 and three offenders
+     with the jumps alone. §9.7 had measured only the three offenders; the other 47 are not
+     disturbed, and the three reproduce §9.7's figures exactly (6.89e-10, 4.65e-09, 2.30e-09).
+  2. **$G_k$ is bit-identical**, which is what says the shared driver did not change behaviour for
+     the sector that did not ask: 1.94e-11 / 2.1e-11 / 8.41e-09 worst drift at the same
+     wavenumbers as §9.1, **13320** evaluations per QCD object (§9.3's integer), +0.00 % over the
+     grid, and at all 50 wavenumbers the run with the argument omitted equals the run with it
+     named sample for sample.
+  3. **The cost is where the decision put it.** $T_k$ on QCD 9843 -> **31521** evaluations per
+     object (**+220.23 %**), which at 50 objects per model is ~49 s for the whole sector; $G_k$
+     unchanged, so the ~65,000 objects per model pay nothing.
+  4. **The price is a second movement of the QCD $T_k$ answer**, up to **1.61e-04** of the
+     envelope on top of prompt 18's 2.82e-04 — `[18-numeric-solver-not-in-lookup-key]`, which
+     stays open and stays the user's. `GkNumericIntegration` rows are bit-identical on all three
+     models and need no regeneration.
 
----
-
-## 4. Resolved issues
+  **Closed**, on the first branch of prompt 18's "closes if they do": the user chose to split at
+  the $C^2$ knots, in the sector where measurement said it was necessary. `prompts/tolerance-convergence`
+  is unblocked without a QCD caveat — both sectors now converge at all 50 wavenumbers on all three
+  models.
 
 - **[00-unresolved-osc-print-policy]** *(planning, 2026-09-10; decided by the user 2026-09-11;
   resolved by prompt 16, 2026-09-12)* — README §7 D2. With the $\ln10$ slip fixed and the test

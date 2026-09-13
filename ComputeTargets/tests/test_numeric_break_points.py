@@ -22,6 +22,18 @@ Three things are tested, in the order the prompt states them:
    ``QCD_Cosmology`` at k = 4.97e7/Mpc, split and unsplit, and requires the split to converge
    where the unsplit does not.
 
+Prompt 19 then made *which kind* of declared break point is split at a per-caller choice, and adds
+a fifth group:
+
+5. **The policy is the caller's.** ``numeric_with_phase_cut`` takes a ``break_point_kind``;
+   :class:`TestPerSectorPolicy` checks that it selects the segmentation on a stand-in declaring
+   both a jump and a kink, that its default is bit-for-bit today's jumps-only behaviour, that a
+   cosmology declaring nothing takes the single-call path under either policy, and -- read with
+   ``ast``, as prompt 16's call-site test is -- that each production integrator passes the kind its
+   sector decided on. :class:`TestManyBreakPoints` then exercises what ~400 boundaries expose that
+   one did not: segments holding no requested sample, boundaries closer to one another than
+   ``BREAK_POINT_STANDOFF``, and ``mode="stop"`` with the event far down a long chain of segments.
+
 **Why item 4 is not done on the synthetic fixture.** It was tried. Across frequency ratios from
 1.0001 to 10, grids from 20 to 800 points and tolerances from (1e-10, 1e-8) to (1e-16, 1e-13), the
 split and unsplit runs of the synthetic oscillator agree to within a factor of two and sometimes
@@ -37,8 +49,10 @@ undecorated ``_function`` with the stand-in pattern of ``ComputeTargets/tests/wk
 (prompt 01) and of ``ComputeTargets/tests/test_numeric_phase_cut.py`` (prompt 11).
 """
 
+import ast
 import unittest
 from math import cos, expm1, fabs, hypot, log1p, log10, sin, sqrt
+from pathlib import Path
 
 import numpy as np
 from scipy.integrate import solve_ivp
@@ -68,8 +82,10 @@ from CosmologyModels.GenericEOS.QCD_Cosmology import QCD_Cosmology
 from CosmologyModels.GenericEOS.QCD_EOS import QCD_EOS
 from CosmologyModels.LambdaCDM import Planck2018
 from Quadrature.integrators.numeric_with_phase_cut import (
+    BREAK_POINT_STANDOFF,
     DERIV_INDEX,
     VALUE_INDEX,
+    _solve_segmented,
     declared_discontinuities_in_z,
     numeric_with_phase_cut,
 )
@@ -178,6 +194,41 @@ class _TwoJumpCosmology:
         self, z_lo: float, z_hi: float, kind: str = BREAK_POINT_ALL
     ) -> np.ndarray:
         inside = [log1p(z) for z in (self.z_upper, self.z_lower) if z_lo < z < z_hi]
+        if len(inside) == 0:
+            return np.empty(0, dtype=float)
+        return np.unique(np.asarray(inside, dtype=float))
+
+
+class _ManyBreakCosmology:
+    """
+    Declares one jump and ``count`` further break points that are **not** jumps, spread uniformly
+    in ``u = log(1+z)`` across the range, plus -- when ``coincident`` is set -- a pair of extra
+    kinks placed closer to an existing one than ``BREAK_POINT_STANDOFF``.
+
+    This is what a caller asking for ``BREAK_POINT_ALL`` on ``QCD_Cosmology`` gets: ~125 declared
+    points inside one production numeric range against ~100 requested samples, so most segments
+    carry no output point at all. The underlying right-hand side is smooth at every one of the
+    kinks, which is the point -- splitting there must change the answer by no more than the
+    integration tolerance, and must not disturb the returned grid.
+    """
+
+    def __init__(
+        self, z_jump: float, z_lo: float, z_hi: float, count: int, coincident=()
+    ):
+        self.z_jump = float(z_jump)
+        u = np.linspace(log1p(float(z_lo)), log1p(float(z_hi)), count + 2)[1:-1]
+        self.z_kinks = [float(expm1(value)) for value in u]
+        self.z_coincident = [float(z) for z in coincident]
+
+    def integration_break_points(
+        self, z_lo: float, z_hi: float, kind: str = BREAK_POINT_ALL
+    ) -> np.ndarray:
+        points = [self.z_jump]
+        if kind == BREAK_POINT_ALL:
+            points.extend(self.z_kinks)
+            points.extend(self.z_coincident)
+
+        inside = [log1p(z) for z in points if z_lo < z < z_hi]
         if len(inside) == 0:
             return np.empty(0, dtype=float)
         return np.unique(np.asarray(inside, dtype=float))
@@ -894,6 +945,392 @@ class TestQCDReferenceConvergence(unittest.TestCase):
             split,
             self.ACCEPTANCE_DRIFT,
             msg=f"split {split:.4g} against unsplit {unsplit:.4g}",
+        )
+
+
+# ---------------------------------------------------------------------------------------------
+# 5. the policy is the caller's (prompt 19)
+# ---------------------------------------------------------------------------------------------
+
+# how many non-jump break points the "many boundaries" fixture declares, against JUMP_SAMPLES=200
+# requested samples over the same range: twice as many boundaries as samples, so that a majority
+# of segments hold none. On QCD_Cosmology the production ratio is ~125 boundaries to ~100 samples
+# in the transfer function's numeric range, so this is the same regime, exaggerated.
+MANY_BREAK_COUNT = 400
+
+
+def _segmented_solve(model, grid, kind: str, events=None, dense_output: bool = False):
+    """
+    Drive :func:`_solve_segmented` directly, which is the only way to see the *number of segments*
+    a policy produces -- ``numeric_with_phase_cut``'s payload deliberately does not carry it, and
+    this prompt does not add a field to a dict two datastore factories consume.
+    """
+    break_z = declared_discontinuities_in_z(
+        model, float(grid.min), grid.max.z, kind=kind
+    )
+    with NumericIntegrationSupervisor(
+        _Wavenumber(1.0, 1, UNITS), grid.max, grid.min, "y(z)"
+    ) as supervisor:
+        return _solve_segmented(
+            _jump_RHS,
+            grid.max.z,
+            float(grid.min),
+            grid.as_float_list(),
+            [JUMP_INITIAL_VALUE, JUMP_INITIAL_DERIV],
+            break_z,
+            events,
+            dense_output,
+            PRODUCTION_ATOL,
+            PRODUCTION_RTOL,
+            (model, 1.0, supervisor),
+            "test_segmented_solve",
+            1.0,
+        )
+
+
+def _payloads_are_bit_identical(a: dict, b: dict) -> bool:
+    """Every returned floating-point number equal under ``==``, and the same evaluation count."""
+    for field in ("value_sample", "deriv_sample"):
+        if len(a[field]) != len(b[field]):
+            return False
+        if any(float(x) != float(y) for x, y in zip(a[field], b[field])):
+            return False
+    for field in ("stop_value", "stop_deriv", "stop_deltaz_subh"):
+        if (a[field] is None) != (b[field] is None):
+            return False
+        if a[field] is not None and float(a[field]) != float(b[field]):
+            return False
+    return a["data"].RHS_evaluations == b["data"].RHS_evaluations
+
+
+class TestPerSectorPolicy(unittest.TestCase):
+    """
+    ``break_point_kind`` is a choice the caller makes, not a change of behaviour for everyone.
+    """
+
+    def setUp(self):
+        self.grid = _jump_grid()
+        self.model = _JumpModel(
+            JUMP_Z, JUMP_OMEGA_HI, JUMP_OMEGA_LO, z_kink=JUMP_Z_KINK, declare=True
+        )
+        self.smooth = _JumpModel(
+            JUMP_Z, JUMP_OMEGA_HI, JUMP_OMEGA_LO, z_kink=JUMP_Z_KINK, declare=False
+        )
+
+    def test_the_parameter_selects_the_number_of_segments(self):
+        """
+        The stand-in declares one jump and one kink. Asking for the jumps alone cuts the range in
+        two; asking for every declared break point cuts it in three.
+        """
+        self.assertEqual(
+            len(
+                declared_discontinuities_in_z(
+                    self.model, JUMP_Z_END, JUMP_Z_INIT, kind=BREAK_POINT_DISCONTINUITY
+                )
+            ),
+            1,
+        )
+        self.assertEqual(
+            len(
+                declared_discontinuities_in_z(
+                    self.model, JUMP_Z_END, JUMP_Z_INIT, kind=BREAK_POINT_ALL
+                )
+            ),
+            2,
+        )
+
+        self.assertEqual(
+            _segmented_solve(
+                self.model, self.grid, BREAK_POINT_DISCONTINUITY
+            ).num_segments,
+            2,
+        )
+        self.assertEqual(
+            _segmented_solve(self.model, self.grid, BREAK_POINT_ALL).num_segments, 3
+        )
+
+    def test_the_default_reproduces_the_jumps_only_result_exactly(self):
+        """
+        Every caller written before this prompt -- the tests, the reproduction scripts under
+        ``docs/``, a future integrator -- keeps the numbers it had, bit for bit.
+        """
+        omitted = _run_jump(self.model, self.grid, PRODUCTION_ATOL, PRODUCTION_RTOL)
+        explicit = _run_jump(
+            self.model,
+            self.grid,
+            PRODUCTION_ATOL,
+            PRODUCTION_RTOL,
+            break_point_kind=BREAK_POINT_DISCONTINUITY,
+        )
+        self.assertTrue(_payloads_are_bit_identical(omitted, explicit))
+
+        # and the other policy really is a different integration, so the check above is not
+        # comparing two identical code paths
+        every = _run_jump(
+            self.model,
+            self.grid,
+            PRODUCTION_ATOL,
+            PRODUCTION_RTOL,
+            break_point_kind=BREAK_POINT_ALL,
+        )
+        self.assertFalse(_payloads_are_bit_identical(omitted, every))
+
+    def test_a_cosmology_declaring_nothing_takes_the_single_call_path_either_way(self):
+        """
+        Reachable two ways since this prompt, so asserted two ways: the declaration is empty under
+        both policies, and the two runs agree bit for bit.
+        """
+        for model in (RadiationModel(), LambdaCDMModel(), self.smooth):
+            for kind in (BREAK_POINT_DISCONTINUITY, BREAK_POINT_ALL):
+                self.assertEqual(
+                    declared_discontinuities_in_z(model, 0.1, 1e14, kind=kind),
+                    [],
+                    msg=f"{model.name}, kind={kind}",
+                )
+
+        self.assertEqual(
+            _segmented_solve(self.smooth, self.grid, BREAK_POINT_ALL).num_segments, 1
+        )
+        self.assertTrue(
+            _payloads_are_bit_identical(
+                _run_jump(
+                    self.smooth,
+                    self.grid,
+                    PRODUCTION_ATOL,
+                    PRODUCTION_RTOL,
+                    break_point_kind=BREAK_POINT_DISCONTINUITY,
+                ),
+                _run_jump(
+                    self.smooth,
+                    self.grid,
+                    PRODUCTION_ATOL,
+                    PRODUCTION_RTOL,
+                    break_point_kind=BREAK_POINT_ALL,
+                ),
+            )
+        )
+
+    def test_each_production_call_site_passes_the_kind_its_sector_decided_on(self):
+        """
+        Read with ``ast``, following
+        ``test_numeric_phase_cut.test_both_integrators_pass_warn_unresolved_osc_False``: neither
+        integration module can be imported without Ray, and the point is the argument, not the
+        call.
+
+        The asymmetry is the substance of this prompt -- Tk splits at every declared break point
+        because measurement says it must, Gk at the jumps alone because measurement says the rest
+        would buy nothing at ~65,000 objects per model -- so both sites name their kind, the Gk
+        one included even though it is the module default.
+        """
+        expected = {
+            "ComputeTargets/TkNumericIntegration.py": (
+                "BREAK_POINT_ALL",
+                BREAK_POINT_ALL,
+            ),
+            "ComputeTargets/GkNumericIntegration.py": (
+                "BREAK_POINT_DISCONTINUITY",
+                BREAK_POINT_DISCONTINUITY,
+            ),
+        }
+
+        for module, (name, value) in expected.items():
+            path = Path(__file__).parents[2] / module
+            tree = ast.parse(path.read_text(), filename=str(path))
+
+            calls = [
+                node
+                for node in ast.walk(tree)
+                if isinstance(node, ast.Call)
+                and isinstance(node.func, ast.Attribute)
+                and node.func.attr == "remote"
+                and isinstance(node.func.value, ast.Name)
+                and node.func.value.id == "numeric_with_phase_cut"
+            ]
+            self.assertEqual(len(calls), 1, msg=module)
+
+            keywords = {kw.arg: kw.value for kw in calls[0].keywords}
+            self.assertIn("break_point_kind", keywords, msg=module)
+
+            argument = keywords["break_point_kind"]
+            self.assertIsInstance(argument, ast.Name, msg=module)
+            self.assertEqual(argument.id, name, msg=module)
+
+            # the name is imported from ComputeTargets.BackgroundModel, and it is the constant
+            # this test thinks it is
+            imported = [
+                node
+                for node in ast.walk(tree)
+                if isinstance(node, ast.ImportFrom)
+                and node.module == "ComputeTargets.BackgroundModel"
+                and any(alias.name == name for alias in node.names)
+            ]
+            self.assertEqual(len(imported), 1, msg=module)
+            self.assertIsInstance(value, str)
+
+
+class TestManyBreakPoints(unittest.TestCase):
+    """
+    What ~400 boundaries expose that prompt 18's single production boundary could not.
+
+    The fixture declares one genuine jump and :data:`MANY_BREAK_COUNT` further break points at
+    which the right-hand side is in fact smooth, so the closed-form solution is unchanged by
+    splitting at them and any damage the segmentation does shows up directly.
+    """
+
+    def setUp(self):
+        self.grid = _jump_grid()
+        self.model = _JumpModel(JUMP_Z, JUMP_OMEGA_HI, JUMP_OMEGA_LO)
+        self.model.cosmology = _ManyBreakCosmology(
+            JUMP_Z, JUMP_Z_END, JUMP_Z_INIT, MANY_BREAK_COUNT
+        )
+
+    def test_most_segments_hold_no_requested_sample(self):
+        """
+        §2.3 item 1. With more boundaries than samples the ``num_requested == 0`` branch is the
+        common case, and the assembled grid must still be exactly the grid requested, in order.
+        """
+        solution = _segmented_solve(self.model, self.grid, BREAK_POINT_ALL)
+
+        self.assertEqual(solution.num_segments, MANY_BREAK_COUNT + 2)
+        self.assertGreater(solution.num_segments, 2 * len(self.grid) * 0.9)
+
+        requested = self.grid.as_float_list()
+        self.assertEqual(len(solution.t), len(requested))
+        for i, (returned, asked) in enumerate(zip(solution.t, requested)):
+            self.assertEqual(float(returned), float(asked), msg=f"sample {i}")
+        self.assertEqual(solution.y.shape, (2, len(requested)))
+
+    def test_splitting_where_the_right_hand_side_is_smooth_changes_nothing_material(
+        self,
+    ):
+        """
+        The kinks are declared but the coefficient is continuous there, so the extra 400 restarts
+        must cost evaluations and not accuracy.
+        """
+        jumps = _run_jump(
+            self.model,
+            self.grid,
+            PRODUCTION_ATOL,
+            PRODUCTION_RTOL,
+            break_point_kind=BREAK_POINT_DISCONTINUITY,
+        )
+        every = _run_jump(
+            self.model,
+            self.grid,
+            PRODUCTION_ATOL,
+            PRODUCTION_RTOL,
+            break_point_kind=BREAK_POINT_ALL,
+        )
+
+        self.assertLess(_jump_error(self.model, self.grid, every), 1e-6)
+        self.assertGreater(every["data"].RHS_evaluations, jumps["data"].RHS_evaluations)
+
+        # the diagnostic and the accounting aggregate over all of them, not over the last
+        self.assertEqual(every["has_unresolved_osc"], jumps["has_unresolved_osc"])
+        self.assertGreater(every["data"].max_RHS_time, 0.0)
+        self.assertGreater(every["data"].compute_steps, jumps["data"].compute_steps)
+
+    def test_boundaries_closer_than_the_standoff_collapse(self):
+        """
+        §2.3 item 2. Two declared points closer to each other than ``BREAK_POINT_STANDOFF`` would,
+        after the standoff is applied, leave a segment of zero or negative length. The driver drops
+        the offending boundary instead. This cannot arise on any production geometry -- the T(z)
+        spline's knots are 2.85e-02 apart in log(1+z), and the closest a declared temperature
+        crossing comes to a knot is 3.4e-03, nine orders above the 1e-12 standoff -- so it is
+        constructed here.
+        """
+        base = _ManyBreakCosmology(JUMP_Z, JUMP_Z_END, JUMP_Z_INIT, MANY_BREAK_COUNT)
+        crowded = _ManyBreakCosmology(
+            JUMP_Z,
+            JUMP_Z_END,
+            JUMP_Z_INIT,
+            MANY_BREAK_COUNT,
+            coincident=[
+                base.z_kinks[7]
+                + offset * BREAK_POINT_STANDOFF * (1.0 + base.z_kinks[7])
+                for offset in (0.1, 0.2)
+            ],
+        )
+
+        model = _JumpModel(JUMP_Z, JUMP_OMEGA_HI, JUMP_OMEGA_LO)
+        model.cosmology = crowded
+
+        # the cosmology declares two more points than the base fixture ...
+        self.assertEqual(
+            len(
+                declared_discontinuities_in_z(
+                    model, JUMP_Z_END, JUMP_Z_INIT, kind=BREAK_POINT_ALL
+                )
+            ),
+            MANY_BREAK_COUNT + 3,
+        )
+        # ... and the driver emits the same number of segments as if it had not, because the
+        # three mutually unresolvable boundaries collapse to one
+        self.assertEqual(
+            _segmented_solve(model, self.grid, BREAK_POINT_ALL).num_segments,
+            MANY_BREAK_COUNT + 2,
+        )
+
+        payload = _run_jump(
+            model,
+            self.grid,
+            PRODUCTION_ATOL,
+            PRODUCTION_RTOL,
+            break_point_kind=BREAK_POINT_ALL,
+        )
+        self.assertEqual(len(payload["value_sample"]), len(self.grid))
+        self.assertLess(_jump_error(model, self.grid, payload), 1e-6)
+
+    def test_stop_mode_survives_a_long_chain_of_segments(self):
+        """
+        §2.3 item 3. The terminal event must stop the *whole* integration, and
+        ``find_phase_extremum`` must still find its extremum through a composite dense output of
+        hundreds of segments rather than two.
+        """
+        payload = _run_jump(
+            self.model,
+            self.grid,
+            PRODUCTION_ATOL,
+            PRODUCTION_RTOL,
+            mode="stop",
+            stop_search_window_z_begin=1.8,
+            stop_search_window_z_end=1.3,
+            break_point_kind=BREAK_POINT_ALL,
+        )
+
+        returned = len(payload["value_sample"])
+        self.assertGreater(returned, 0)
+        self.assertLess(returned, len(self.grid))
+        self.assertGreaterEqual(min(z.z for z in self.grid[:returned]), 1.3 - 1e-6)
+
+        # _KExit is constructed with z_exit = 1.0, and stop_deltaz_subh = z_exit - z_stop
+        z_stop = 1.0 - payload["stop_deltaz_subh"]
+        self.assertGreater(z_stop, 1.3)
+        self.assertLess(z_stop, 1.8)
+
+        y_exact, yp_exact = self.model.exact(
+            z_stop, JUMP_Z_INIT, JUMP_INITIAL_VALUE, JUMP_INITIAL_DERIV
+        )
+        envelope = hypot(y_exact, yp_exact / self.model.omega(z_stop))
+        self.assertLess(
+            fabs(payload["stop_value"] - y_exact) / envelope,
+            1e-6,
+            msg=f"z_stop={z_stop:.8g}",
+        )
+
+        # and it is the same extremum the jumps-only policy finds
+        jumps = _run_jump(
+            self.model,
+            self.grid,
+            PRODUCTION_ATOL,
+            PRODUCTION_RTOL,
+            mode="stop",
+            stop_search_window_z_begin=1.8,
+            stop_search_window_z_end=1.3,
+            break_point_kind=BREAK_POINT_DISCONTINUITY,
+        )
+        self.assertAlmostEqual(
+            payload["stop_deltaz_subh"], jumps["stop_deltaz_subh"], places=6
         )
 
 
