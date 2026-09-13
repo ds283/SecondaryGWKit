@@ -281,8 +281,9 @@ review those three most closely.
 | 12 | [`12-tk-numeric-atol.md`](12-tk-numeric-atol.md) | review §12.5 | `config/defaults.py`, `main.py` (every `TkNumericIntegration` `object_get`); tests | Low–medium; silent plumbing errors would make datastore lookups miss | **Opus** |
 | 17 | [`17-tk-numeric-atol-k-sweep.md`](17-tk-numeric-atol-k-sweep.md) | §3 `[12-tk-numeric-atol-largest-k-excursion]` | new `docs/gktk-remedial/tk_numeric_atol_sweep.py` and `TK-NUMERIC-ATOL-SWEEP.md` | Low–medium; **no production code** — the reference construction is the risk | **Opus** |
 | 18 | [`18-numeric-ode-break-points.md`](18-numeric-ode-break-points.md) | §3 `[17-qcd-reference-not-converged]` | `Quadrature/integrators/numeric_with_phase_cut.py`, the `CosmologyModels/GenericEOS` declaration, new `ComputeTargets/tests/test_numeric_break_points.py`, an additive section of `TK-NUMERIC-ATOL-SWEEP.md` | Medium–high; **production code shared by both numeric sectors**, and one `CosmologyModels` API decision | **Opus** |
+| 19 | [`19-per-sector-break-point-policy.md`](19-per-sector-break-point-policy.md) | §3 `[17-qcd-reference-not-converged]` | `Quadrature/integrators/numeric_with_phase_cut.py`, the break-point argument and its comment at both `ComputeTargets/{Gk,Tk}NumericIntegration.py` call sites, `ComputeTargets/tests/test_numeric_break_points.py`, an additive section of `TK-NUMERIC-ATOL-SWEEP.md` | Medium–high; **the same shared production integrator as 18**, with a policy that now differs between the two sectors | **Opus** |
 
-> Rows 16, 17 and 18 are numbered last because the campaign's numbers are append-only. **16 runs
+> Rows 16, 17, 18 and 19 are numbered last because the campaign's numbers are append-only. **16 runs
 > between 11 and 12** — the follow-up §7 D2 anticipated, enacting the user's choice of option
 > (ii) once prompt 11 had measured the fire rate; prompt 12 is unaffected by it. **17 runs
 > after 12 and before Workstream F**: prompt 12 set the $T_k$ numeric `atol` on evidence from
@@ -291,7 +292,11 @@ review those three most closely.
 > Workstream F** for the same reason at one remove: it repairs the reference convergence that
 > prompt 17's check 6 failed on, it changes computed values on `QCDModel` in both numeric
 > sectors, and `solver_serial` is not part of the lookup key — so a QCD datastore built before
-> it would hold pre-split rows indistinguishable by key from post-split ones.
+> it would hold pre-split rows indistinguishable by key from post-split ones. **19 runs after 18
+> and before Workstream F** for that same reason once more: it is the decision prompt 18 §4
+> reserved for the user, taken 2026-09-13 — the cosmology declares all of its non-smoothness and
+> each consumer chooses what to split at — and it moves computed `TkNumericIntegration` values on
+> `QCDModel` a second time.
 
 ### Workstream F — verification and close-out
 
