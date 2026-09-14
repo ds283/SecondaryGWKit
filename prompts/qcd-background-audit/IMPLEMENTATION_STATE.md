@@ -3,7 +3,7 @@
 **Campaign:** [`README.md`](README.md) · **Source document:**
 [`docs/qcd-background-audit-2026-09.md`](../../docs/qcd-background-audit-2026-09.md)
 **Baseline commit:** `e8f746d` (`qcd-background-audit`, clean; identical to `main`)
-**Last updated:** 2026-09-14 — **prompt 01 complete; 1 / 12.** Twelve prompts in four workstreams.
+**Last updated:** 2026-09-14 — **prompt 02 complete; 2 / 12.** Twelve prompts in four workstreams.
 Every figure below is the audit's, and prompt 01 re-measured the representation, the branch joins,
 the jump locations and the conformal-time error **from the test tree** on `2a5e0fa`: all of them
 reproduce the audit to every digit it quotes. The audit's script
@@ -21,7 +21,7 @@ Legend: ⬜ not started · 🟡 in flight · ✅ complete · ⚠️ complete wit
 | # | Prompt | Model | Status | Commit | Log |
 |---|---|---|---|---|---|
 | 01 | [The background-against-background harness](01-background-reference-harness.md) | Opus | ⚠️ | *"Add a background-against-background test for the QCD temperature"* (SHA not embedded, per the campaign convention) | [`logs/01-background-reference-harness.md`](logs/01-background-reference-harness.md) |
-| 02 | [Make the QCD reference fixture regenerable](02-regenerable-qcd-references.md) | Sonnet | ⬜ | | |
+| 02 | [Make the QCD reference fixture regenerable](02-regenerable-qcd-references.md) | Sonnet | ⚠️ | *"Make the QCD reference fixture regenerable before the background moves"* (SHA not embedded, per the campaign convention) | [`logs/02-regenerable-qcd-references.md`](logs/02-regenerable-qcd-references.md) |
 | 03 | [Key the `T(z)` representation](03-key-the-representation.md) | Opus | ⬜ | | |
 | 04 | [Tighten `_solve_T_z` (T2)](04-tighten-node-solve.md) | Sonnet | ⬜ | | |
 | 05 | [Spline the entropy factor (T3)](05-entropy-factor-representation.md) | Opus | ⬜ | | |
@@ -48,7 +48,7 @@ Legend: ⬜ not started · 🟡 in flight · ✅ complete · ⚠️ complete wit
 | 11 | [A cosmology-aware source grid](11-cosmology-aware-source-grid.md) | Opus | ⬜ | | |
 | 12 | [A measured grid-density criterion](12-grid-density-criterion.md) | Opus | ⬜ | | |
 
-**Progress:** 1 / 12 complete (1 / 9 in the ungated chain 01–09).
+**Progress:** 2 / 12 complete (2 / 9 in the ungated chain 01–09).
 
 **Prompt 01 landed `COMPLETE WITH DEVIATIONS`** — no production file changed; two new modules,
 `CosmologyModels/tests/T_z_reference.py` and `CosmologyModels/tests/test_T_z_representation.py`,
@@ -58,6 +58,22 @@ two that matter to later prompts are (2) the jump height is **7.6229229003969e-0
 **7.625829e-04** in $T$, the audit's 7.614e-04 being §1's *linearised* figure, and (3) a
 `root_scalar` bracket on $T(z)-T_{\rm break}$ reports `converged` and returns a **non-root** —
 which is audit §2's claim confirmed, in the second of the two forms prompt 01 allowed for.
+
+**Prompt 02 landed `COMPLETE WITH DEVIATIONS`** — no production file changed, no test changed, and
+`ComputeTargets/tests/wkb_reference_data.json` is untouched (`git status --porcelain` empty before
+and after). Two new files: `docs/qcd-background-audit/generate_qcd_references.py` (the
+QCD-only reduction of `docs/gktk-remedial/generate_references.py`; `--dry-run` reproduces the
+shipped QCD block's science content bit for bit in 112.3 s, no Ray, no datastore) and
+`docs/qcd-background-audit/REFERENCE-FIXTURE.md` (the map: 45 QCD-dependent test methods across
+the eleven `ComputeTargets/tests/` modules plus `CosmologyModels/tests/test_T_z_representation.py`,
+classified by what they are scored against and which of {node, shape, breaks, none} would move
+them). Two findings opened as new issues below: the JSON's separate top-level `convergence` block
+(written by `docs/gktk-remedial/residual_convergence.py`, not this prompt's generator) also carries
+QCD-specific figures that prompts 04–08 must account for explicitly; and two existing test
+assertions (`test_kind_selects_knots_or_jumps`, `test_qcd_break_points`) are pinned to today's
+~404-knot artefact and will need editing, not just re-measuring, once prompt 07 lands. Suite counts
+unchanged: `CosmologyModels` 18, `ComputeTargets` 339, `LiouvilleGreen` 143/143 on the fast set
+(`test_3bessel_analytic` excluded; see the log).
 
 **The representation version.** `T_Z_REPRESENTATION_VERSION` is introduced by prompt 03 and bumped
 by **04, 05, 06 and 07**. Its value at each prompt boundary is recorded here as the campaign runs,
@@ -126,6 +142,34 @@ Opened by this campaign's planning, 2026-09-13:
   means the fixture changed — not that the code regressed — and that the campaign's segment edges
   must then be re-derived. Measurements: audit §1 and §2, reproducible in 1.0 s, and re-measured
   by prompt 01 in 0.11 s as part of the `CosmologyModels` suite.
+
+- **[01-convergence-block-has-a-separate-generator]** *(prompt 02, 2026-09-14)* —
+  `ComputeTargets/tests/wkb_reference_data.json`'s top-level `convergence` block (node/interval
+  geometry, per-Gauss-order convergence figures, `decision.N_tau`/`N_cs_tau`/`N_F`/`N_rho`,
+  `decision.rho_adaptive_fallback_required`) is written by a **different** script,
+  `docs/gktk-remedial/residual_convergence.py`, not by prompt 02's
+  `docs/qcd-background-audit/generate_qcd_references.py`. Five tests read it directly
+  (`docs/qcd-background-audit/REFERENCE-FIXTURE.md` §1, §4): `test_qcd_nodes_against_adaptive_reference`,
+  `test_qcd_checkpoints`, `test_qcd_short_baselines_including_the_transitions`,
+  `test_qcd_break_points` and `test_no_adaptive_fallback_was_required`. **Impact:** a prompt that
+  regenerates only the QCD block of the JSON (04, 05, 06) leaves this block stale; its figures
+  (floors, `T_spline_knots_in_range`, `branch_boundaries` interval indices) silently disagree with
+  the representation actually in the tree until something re-runs `residual_convergence.py`.
+  **Next step:** prompt 08's charter ("re-derive `integration_break_points`... and re-measure the
+  per-sector break-point policy") is exactly what that script computes, so it is the natural place
+  to close this — but 04–07 should not assume it is regenerated in the meantime, and should say so
+  in their own logs if a `convergence`-scored test's accuracy figure (not just its break-point
+  count) moves.
+- **[02-fixture-tests-pinned-to-todays-break-point-artefact]** *(prompt 02, 2026-09-14)* — two
+  test assertions hard-code today's ~404-knot `BREAK_POINT_ALL` count and will be **false**, not
+  merely inaccurate, once prompt 07 collapses it to 3: `test_numeric_break_points.py::TestDeclaration::test_kind_selects_knots_or_jumps`
+  (`self.assertGreater(len(every), 100)`) and `test_background_tau.py::TestBackgroundTau::test_qcd_break_points`
+  (`expected = T_spline_knots_in_range + len(branch_boundaries)`, read from the `convergence`
+  block above — see `[01-convergence-block-has-a-separate-generator]` for why that field itself
+  may be stale). **Impact:** prompt 07's stated acceptance test (`BREAK_POINT_ALL` falls to 3)
+  cannot pass with the suite green unless these two assertions are rewritten in the same commit.
+  **Next step:** prompt 07 edits both (`docs/qcd-background-audit/REFERENCE-FIXTURE.md` §5 names
+  them explicitly); not done here because prompt 02 changes no number and these are not yet false.
 
 Inherited, and **assigned to this campaign** (each is owned by the board named, which holds its
 measurements and its history; the closure is recorded there):
