@@ -2,7 +2,7 @@
 
 **Campaign:** [`README.md`](README.md) · **Source review:** [`docs/gk-wkb-review-fable-2026-09-09.md`](../../docs/gk-wkb-review-fable-2026-09-09.md) · **Reconciliation:** [`RECONCILIATION.md`](RECONCILIATION.md)
 **Baseline commit:** `9ff59d5` (`main`, clean)
-**Last updated:** 2026-09-14 — `[02-qcd-reference-floor]` and `[03-qcd-short-baseline-reference-endpoint-rounding]` re-measured (narrowed, neither closed) by `prompts/qcd-background-audit/` prompt 06. Previously 2026-09-13 — **Prompt 13 landed and the campaign is closed.** The verification
+**Last updated:** 2026-09-14 — `[13-consumer-spline-crosses-eos-break-points]` **narrowed again** by `prompts/qcd-background-audit/` prompt 09: re-measured on the corrected background its two §3.5 rows are **4.25× and 4.39× larger**, because the old `T(z)` spline was smearing the equation of state's step rather than causing the error, and this entry's supersession paragraph's prediction is falsified. Previously 2026-09-14 — `[02-qcd-reference-floor]` and `[03-qcd-short-baseline-reference-endpoint-rounding]` re-measured (narrowed, neither closed) by `prompts/qcd-background-audit/` prompt 06. Previously 2026-09-13 — **Prompt 13 landed and the campaign is closed.** The verification
 document is [`docs/gktk-remedial-verification.md`](../../docs/gktk-remedial-verification.md), taken
 on `ff9ee29` and changing no production code. **Layer 1** re-measures review §4 and §12.3 through
 the production functions on both models at $k\in\{10^5,10^7,3\times10^8\}$: at $z=0.1$ on
@@ -492,6 +492,49 @@ Opened by the planning pass, 2026-09-10, before any prompt runs.
   interpolation error that produced it is gone (`T(z)` max 7.18e-04 → 6.807e-11, prompt 06), so
   whatever remains at the `T_LO` crossing is $\varphi$'s own. **Owned by
   `prompts/qcd-background-audit` prompt 10**, which is now unblocked.
+
+  **Narrowed again, and the numbers are larger than the ones above
+  (`prompts/qcd-background-audit` prompt 09, 2026-09-14).** The close-out re-ran
+  `docs/gktk-remedial/verify_production_path.py` unedited at the campaign base and at the corrected
+  background. **This entry's own two rows rose**, and they are now the campaign's one
+  un-discharged consequence:
+
+  | | this entry / §3.5 | after the corrected background | |
+  |---|---|---|---|
+  | $G_k$, $k=10^5$, at $z=4.24\times10^7$ | 1.907e-06 rad (8.00 ulp) | **8.1062e-06 rad (34.00 ulp)** | 4.25× |
+  | $T_k$, $k=10^5$, at $z=4.24\times10^7$ | 3.186e-06 rad (427.60 ulp) | **1.3982e-05 rad (1876.61 ulp)** | 4.39× |
+  | `theta_deriv`, $G_k$, $k=10^5$ | 5.128e-07 | **1.0232e-06** | 2.00× |
+  | `theta_deriv`, $T_k$, $k=10^5$ | 1.100e-06 | **3.0630e-06** | 2.79× |
+
+  **The supersession paragraph's testable prediction is falsified, and the right way round.** It
+  said the "±3 grid interval" structure was "very likely `[02-qcd-T-z-spline-node-tolerance]` after
+  all — testable by rebuilding `T(z)` and re-measuring". `T(z)` has been rebuilt (max 7.18e-04 →
+  6.807e-11, $\int\mathrm{d}z/H$ now bit-identical to an independent exact background) and the
+  error **went up**, because the old representation was *hiding* the defect rather than causing it.
+  Measured with `docs/qcd-background-audit/consumer_break_point_profile.py` on both trees, the
+  equation of state's step in $\mathrm{d}\ln H/\mathrm{d}u$ at the `T_LO` crossing:
+
+  | on production-grid spacing, 25 intervals | pre-campaign | corrected |
+  |---|---|---|
+  | peak deviation from the local median | +3.071237e-02 | **+8.544581e-02** |
+  | total $\sum\lvert$deviation$\rvert$ | 1.201851e-01 | **8.557937e-02** |
+  | share inside the crossing's own interval | **25.55 %** | **99.84 %** |
+  | intervals carrying > 10 % of the peak | **8** | **1** |
+
+  The 500-node order-3 `T`-against-`u` spline's knot spacing was 4.04× the production grid, so it
+  smeared the genuine step over about four grid intervals and presented only a quarter of it inside
+  any one of them, with ±3e-03 of its own scatter either side. The corrected background delivers a
+  step 2.78× taller with 99.84 % of it inside the single interval the consumer's cubic must span.
+  So item 3's "±3 grid interval" structure was the knot lattice's after all — but removing it makes
+  the *consumer* worse, not better, because what is left is the cosmology's own discontinuity
+  undiluted. **Item 3's kink fit (1.60e-08 / 1.44e-07 rad, 1 % and 4 % of the error) should be
+  re-taken by prompt 10 before it designs anything**: it was fitted on the smeared step.
+
+  Still 70–120× below the ~1e-03 rad QCD Liouville–Green truncation floor, where it was 300–500×
+  below; still above README §6's 1e-06 rad consumer target, as it was before. Prompt 09 is a
+  verification prompt and repaired nothing. Record:
+  [`docs/qcd-background-verification.md`](../../docs/qcd-background-verification.md) §3.3 and
+  [`prompts/qcd-background-audit/logs/09-close-out-verification.md`](../qcd-background-audit/logs/09-close-out-verification.md).
 
 - **[13-scoped-run-driver-k-grid-literal]** *(opened by prompt 13, 2026-09-13; not this campaign's
   file)* — `docs/source-remediation-verification/scoped_pipeline_run.py` substitutes `main.py`'s two

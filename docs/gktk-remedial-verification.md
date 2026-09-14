@@ -937,3 +937,124 @@ independent background.
 
 `[13-consumer-spline-crosses-eos-break-points]` therefore now belongs with that audit's work, not
 with a knot vector.
+
+---
+
+## 9. Post-close-out: what the `qcd-background-audit` campaign moved (2026-09-14)
+
+**Nothing at or above §8 is edited.** This section is appended by the close-out of
+[`prompts/qcd-background-audit`](../prompts/qcd-background-audit/README.md), per `CLAUDE.md`
+(verification documents are additive). §§1–7 remain the record of the tree at `ff9ee29`/`9daa2cb`
+and §8 the record of `0c61799`/`b3e3769`; all were correct for the trees they were taken on.
+
+**The full record is [`qcd-background-verification.md`](qcd-background-verification.md).** What
+follows is only what moved *here*, re-measured with `docs/gktk-remedial/verify_production_path.py`
+run **unedited** at the campaign base `e8f746d` and at its close. (The base run was taken at
+`2a5e0fa`, the campaign's planning commit, which differs from `e8f746d` in 21 files all of them
+under `docs/` or `prompts/` — no Python file, no fixture, and not that script — so the two trees are
+numerically identical.)
+
+### 9.1 What §8.3 warned about has happened
+
+§8.3 records that §3.5 and §3.6 score a consumer against a producer built from the same
+`BackgroundModel`, so a background error is common mode and cancels in them — and that the QCD
+background's `T(z)` carried a relative **3.461e-08** in $\int\mathrm{d}z/H$, worth $10^5$ radians at
+$k=3\times10^8$/Mpc, which those tables could not see. **That error is now zero**: the shipped
+background's $\int\mathrm{d}z/H$ over $z\in[10^2,10^{12}]$ is bit-identical to the same integral
+over an independently root-solved exact background, `1.3320002507788795e+03` at all 17 digits, and
+the equivalent phase is 0.000e+00 rad at all three production wavenumbers.
+
+**So the figures in §§1–7 were correct for the tree they were taken on, and the background
+underneath them has since changed.** That is precisely the fact §6 could not have seen, because no
+measurement in this document scores the background against an independent background. The 407
+`BREAK_POINT_ALL` points §8.2 and §8.3 discuss are now **3**, none of them a knot of any
+interpolant.
+
+### 9.2 §3.5 — six rows bit-identical, four unchanged in value, **two worse**
+
+| model | $k$ | sector | §3.5 / base [rad] | now [rad] | |
+|---|---|---|---|---|---|
+| LambdaCDM | all three | $G_k$, $T_k$ | — | **bit-identical**, all six rows | |
+| QCD | 1e5 | $G_k$ | 1.907e-6 (8.00 ulp) | **8.1062e-6 (34.00 ulp)** | **4.25× worse** |
+| QCD | 1e5 | $T_k$ | 3.186e-6 (427.60 ulp) | **1.3982e-5 (1876.61 ulp)** | **4.39× worse** |
+| QCD | 1e7 / 3e8 | $G_k$, $T_k$ | 1.526e-5 / 4.883e-4 / 9.537e-7 / 3.052e-5 | unchanged, 1.00 ulp | |
+
+Both risen rows have their maximum at $z=4.24\times10^7$ — the same `T_LO` branch boundary §3.5
+already attributes them to — and the cause is measured in
+[`qcd-background-verification.md`](qcd-background-verification.md) §3.3: **the corrected background
+presents a sharper feature there.** The old 500-node `T(z)` spline had a knot spacing 4.04× the
+production grid, so it smeared the equation of state's genuine step over about four grid intervals
+and presented only **25.55 %** of the total deviation in $\mathrm{d}\ln H/\mathrm{d}u$ inside
+any one of them; the corrected background puts **99.84 % of a
+step 2.78× taller inside the single interval** containing the crossing. §3.5's attribution was
+right and its magnitude was an under-reading: it is `[13-consumer-spline-crosses-eos-break-points]`,
+seen without the background's smoothing on top.
+
+### 9.3 §3.6 — `theta_deriv`
+
+All six LambdaCDM rows bit-identical, decay ladders included. On QCD:
+
+| $k$ | sector | §3.6 / base (max / `[3:-3]` / deep) | now |
+|---|---|---|---|
+| 1e5 | $G_k$ | 5.128e-7 / 2.312e-7 / 2.312e-7 | **1.0232e-6 / 1.0232e-6 / 1.0232e-6** (worse, at the `T_LO` node) |
+| 1e5 | $T_k$ | 1.100e-6 / 1.100e-6 / 1.100e-6 | **3.0630e-6** throughout (worse, same node) |
+| 1e7 | $G_k$ | 1.098e-5 / 7.043e-6 / 6.084e-6 | 1.0969e-5 / 6.7435e-6 / 6.0229e-6 |
+| **1e7** | **$T_k$** | 4.890e-7 / 4.890e-7 / 4.329e-7 | **1.8853e-8 / 3.4112e-10 / 3.0630e-10** — **1,413× better** |
+| 3e8 | $G_k$ | 3.309e-4 / 3.309e-4 / 1.748e-4 | 2.5418e-4 throughout |
+| 3e8 | $T_k$ | 8.419e-6 throughout | 7.3236e-6 throughout |
+
+§3.6 concludes that on `QCD_Cosmology` the identity "is missed by orders, and not at the ends …
+driven by the same `T(z)` spline knots and equation-of-state branch boundaries as §3.5". **The
+$T_k$ row at $k=10^7$ separates those two causes and settles them**: with the `T(z)` representation
+corrected, its last five samples at the hand-over become a clean geometric ladder rising ~3.8× per
+sample inwards — `8.63e-11 3.41e-10 1.29e-09 4.94e-09 1.89e-08`, which is `[10-residual-spline-end-condition]`'s
+signature and matches LambdaCDM at the same $k$ to within 20 % — where before they were flat and the
+size of the interior. What §3.6 measured on that row was the representation; what is left is the end
+condition, and §3.6's closure of `[10-residual-spline-end-condition]` at the cubic stands.
+
+The two QCD $G_k$ rows at $k\ge10^7$ barely moved, which is `prompts/phase-representation` prompt
+02's finding confirmed: they are `[02-consumer-phi-below-the-storage-granularity]` and not the
+knots.
+
+### 9.4 Elsewhere in this document
+
+- **§3.1** — QCD `tau` 2.104e-14 → **2.254e-15** and `cs_tau` 2.108e-14 → **2.212e-15**, from above
+  their references' own 1.88e-14 floor to an order below it; `friction_F` and $\Delta\tau$
+  unchanged; `rho` worst 3.608e-16 → 2.248e-15 rad against a 1e-6 rad target, both at the round-off
+  floor of the quantity, its reference having been regenerated.
+- **§3.2, §3.3** — all six QCD $\theta_G$ and $\theta_T$ rows improved; all six were above the
+  script's printed `eps*|theta|_max` floor at the base (1.07× to 5.94×) and three are now below it
+  with the other three within 11 % of it, i.e. 1.5–2 ulp of the accumulated phase. LambdaCDM
+  unchanged.
+- **§3.7** — unchanged: 0 inconsistent samples in all twelve rows and 0 of 400,000 in each of the
+  three uniform controls. §8.1's repair holds.
+- **§3.9 / §5** — QCD per-object build costs fall: $G_k$ 8,380 → **6,892** integrand evaluations,
+  $T_k$ 12,896 → **11,532**, with both LambdaCDM rows and all four cached-evaluation counts exactly
+  unchanged; the QCD off-grid `raw_theta` accessor needs **4.00** integrand evaluations per call
+  where it needed 4.27. The QCD `BackgroundModel` cumulative tables fall 16,580 → **6,936**
+  evaluations each, 0.17 % above LambdaCDM's break-free 6,924.
+- **§4** — the residual-table cut-to-anchor margin moves on QCD, 47.48 → 14.88 (3.860 → 2.700
+  e-folds) for $G_k$ and 5.666 → 4.677 for $T_k$, at different wavenumbers in each case: with the
+  corrected background the top of the residual region is pinned at production grid node 439,
+  $z=8.384\times10^{11}$, 1.33 grid intervals below the `T_120_MEV` crossing, rather than wandering
+  with the old representation's scatter. Both remain far above the ~1 e-fold that would make
+  `RESIDUAL_WKB_REGION_MARGIN` worth revisiting; the LambdaCDM rows are unchanged.
+- **§5's acceptance table** — the consumer row's two QCD $k=10^5$ entries become 8.1e-6 and 1.4e-5
+  rad against its $\le10^{-6}$ rad target; the row's own stated geometry ($x=10^7$, 100/decade) is
+  still met at 2.4e-7 and 7.5e-9 rad on LambdaCDM. No other verdict in that table changes.
+
+### 9.5 The standing caveat of §8.3 is discharged; one is added
+
+§8.3 said the audit's script was "the first measurement in the tree that scores the background
+against an independent background". It is now a **test** in the tree:
+`CosmologyModels/tests/test_T_z_representation.py`, scored against
+`CosmologyModels/tests/T_z_reference.py`, with `CosmologyModels` rising 11 → 30 across the campaign
+and `ComputeTargets` 339 → 359. Nothing in this document's numbers can drift out from under a
+corrected background again without a test failing.
+
+**Added:** `QCD_EOS`'s branch joins are still unrepaired — `[00-eos-branch-joins-do-not-match]` —
+and the $10^{-5}$ GeV join is the origin both of §3.5's worst QCD errors and of the 4.4e-4 jump in
+$H(z)$ at $z=4.24\times10^7$ that `GkTk-remedial` log 02 measured without attribution. This campaign
+deliberately did not repair it: it is an upstream data fixture, and a segmented representation
+reproduces a discontinuous fixture exactly. All four joins are now pinned in a test so that a later
+correction announces itself.
