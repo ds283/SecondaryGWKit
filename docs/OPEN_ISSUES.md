@@ -1,6 +1,6 @@
 # Open issues — project-wide index
 
-**Last updated:** 2026-09-13 · **56 open** across eight campaigns.
+**Last updated:** 2026-09-14 · **56 open** across eight campaigns.
 
 This file exists so that an issue opened by one campaign is not lost when that campaign closes.
 It is an **index, not a record**: one line per issue, pointing at the campaign status board that
@@ -140,7 +140,7 @@ campaign was **closed**, its remaining issue passing to the `qcd-background-audi
 ### 1.7 The QCD background campaign
 
 [`prompts/qcd-background-audit/`](../prompts/qcd-background-audit/README.md) (2026-09-13; twelve
-prompts in four workstreams, **none executed**; prompts 10–12 gated on that README's §7 D7). It
+prompts in four workstreams, **1 executed**; prompts 10–12 gated on that README's §7 D7). It
 implements [`qcd-background-audit-2026-09.md`](qcd-background-audit-2026-09.md), which measured that
 `QCD_Cosmology`'s temperature is a cubic spline over 500 points solved to `rtol=1e-4`, built as $T$
 against $\log(1+z)$ and run across three points at which $T(z)$ genuinely **jumps** — so the
@@ -154,9 +154,14 @@ auxiliary interpolant, not cosmology** — and adds the background-against-backg
 have caught it (01). It is a **precondition for `prompts/tolerance-convergence`** (§1.5), whose QCD
 half would otherwise be measured against a background about to move.
 
+**Prompt 01 landed 2026-09-14** and that test now exists:
+`CosmologyModels/tests/test_T_z_representation.py`, scored against
+`CosmologyModels/tests/T_z_reference.py`, seven cases, no production file touched. It reproduces
+the audit's 3.4605e-08 in conformal time in 0.013 s, and pins the branch joins below.
+
 | Issue | Board | Hook |
 |---|---|---|
-| `[00-eos-branch-joins-do-not-match]` | qcd-background-audit | `QCD_EOS`'s branch joins at $10^{16}$, 0.12 and $10^{-5}$ GeV jump by +1.395e-02, −3.744e-04 and −2.284e-03 in $g_s$, forcing steps in $T(z)$; the join at 0.002 GeV matches to 1.751e-11, and that asymmetry is the evidence the other three are a transcription defect. Origin of the 4.4e-04 jump in $H(z)$ at $z=4.24\times10^7$ that `GkTk-remedial` log 02 measured without attribution. **Upstream data fixture; the campaign pins it in a test and does not repair it.** The question for its authors is that campaign's README §7 D6. |
+| `[00-eos-branch-joins-do-not-match]` | qcd-background-audit | `QCD_EOS`'s branch joins at $10^{16}$, 0.12 and $10^{-5}$ GeV jump by +1.395e-02, −3.744e-04 and −2.284e-03 in $g_s$, forcing steps in $T(z)$; the join at 0.002 GeV matches to 1.751e-11, and that asymmetry is the evidence the other three are a transcription defect. Origin of the 4.4e-04 jump in $H(z)$ at $z=4.24\times10^7$ that `GkTk-remedial` log 02 measured without attribution. **Upstream data fixture; pinned in a test by prompt 01 (2026-09-14), which confirmed every figure here to the digits quoted; not repaired.** The question for its authors is that campaign's README §7 D6. |
 | `[02-qcd-T-z-spline-node-tolerance]` | GkTk-remedial → qcd-background-audit | `_solve_T_z`'s `root_scalar(xtol=1e-6, rtol=1e-4)` leaves the $T(z)$ spline's node values up to 2.1e-5 relative from a tight re-solve ($\sim4\times10^{-5}$ in $H$). A model-fidelity bound, not a quadrature error; distinct from `[01-genericeos-tz-spline-floor]`, which is about the grid. |
 | `[01-genericeos-tz-spline-floor]` | source-remediation → qcd-background-audit | Whether the `T(z)` spline grid is adequately defined. A hot-fix's fixed 500 points give 1.3e-9 at `max_z=1e4`, 6.4e-7 at the default 1e20; it is why prompt 01's test asserts 1e-8, not 1e-10. Two sign bugs in the grid's *range* were fixed 2026-09-10 and are not part of this. |
 | `[19-cosmologymodels-docstrings-predate-per-sector-policy]` | GkTk-remedial → qcd-background-audit | `GenericEOS.py:97-101` and `LambdaCDM_GenericEOS.py:277-283` say an adaptive ODE solver only has to be split at a jump, and that the jumps-only set is what `numeric_with_phase_cut` asks for. True when prompt 18 wrote them; prompt 19 measured the C2 knots costing an order of magnitude of reference convergence in the $T_k$ sector, which now asks for `BREAK_POINT_ALL`. Documentation only; `CosmologyModels/` was out of bounds for prompt 19. |
