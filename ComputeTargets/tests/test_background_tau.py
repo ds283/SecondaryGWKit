@@ -101,6 +101,12 @@ LAMBDACDM_BUILD_SECONDS = 0.5
 # *right* answer to the last bit -- it agrees with T_z_reference.jump_locations, which bisects the
 # monotone T(z) independently, to 3 ulp. Same root cause, same fix: prompt 08 re-runs
 # residual_convergence.py and takes this back.
+#
+# prompt 07 re-measured it and it did not move: 1.418851e-04 at T_120_MEV again, to every digit,
+# with 1.728034e-05 at T_LO and 1.060594e-06 at EOS_T_LO. The break points prompt 07 declares are
+# the *bisected* crossings rather than the root-found ones, and the two differ by ~1e-14 in u, so
+# the whole of this figure is the age of the convergence block and none of it is the
+# representation. The tolerance is left where prompt 06 set it, unchanged, for prompt 08.
 QCD_BREAK_POINT_ALIGNMENT_TOL = 1.5e-04
 
 # prompt 01's throughput benchmark, re-run against the production object
@@ -341,36 +347,33 @@ class TestBackgroundTau(unittest.TestCase):
 
     def test_qcd_break_points(self):
         """
-        The build scheme of log 02: the three equation-of-state temperature crossings inside the
-        production range plus the interior knots of the T(z) spline, in u = log(1+z); LambdaCDM
-        declares none.
+        The three equation-of-state temperature crossings inside the production range, in
+        u = log(1+z), and **nothing else**; LambdaCDM declares none.
+
+        Rewritten by prompts/qcd-background-audit/ prompt 07, which is what
+        [02-fixture-tests-pinned-to-todays-break-point-artefact] said would be needed. The set was
+        "every interior knot of the T(z) tabulation plus the crossings" -- 404 points at 500 nodes,
+        2,414 once prompt 06 raised the tabulation to 3,000 -- and the knots are now gone from it
+        (finding G1 of the audit). The tabulation still *has* its knots, and that they are not
+        declared is asserted directly rather than inferred from the count.
         """
         z_lo, z_hi = self.s.grid.min.z, self.s.grid.max.z
         breaks = self.s.qcd.integration_break_points(z_lo, z_hi)
         geometry = self.s.references["convergence"]["geometry"]["QCDModel"]
 
-        # The knot count is taken from the tabulation in the tree rather than from the JSON's
-        # convergence block, which records 404 -- the figure for the 500-node tabulation that
-        # prompts/qcd-background-audit/ prompt 06 replaced by a segmented 3,000-node one. That
-        # block is written by docs/gktk-remedial/residual_convergence.py, which no prompt in this
-        # campaign has re-run ([01-convergence-block-has-a-separate-generator]), so scoring the
-        # count against it measures the block's age rather than the break-point set. What the
-        # test is for is the *structure* of the set -- every interior knot of the T(z) tabulation,
-        # plus the equation-of-state crossings, and nothing else -- and that is asserted here
-        # against the tabulation itself. Prompt 07 collapses the set to the three crossings and
-        # rewrites this again ([02-fixture-tests-pinned-to-todays-break-point-artefact]).
         knots = self.s.qcd._T_z_spline_knots_log1pz
         knots_in_range = int(
             np.sum((knots > np.log1p(z_lo)) & (knots < np.log1p(z_hi)))
         )
-        expected = knots_in_range + len(geometry["branch_boundaries"])
+        expected = len(geometry["branch_boundaries"])
         print(
             f"[tau] QCD break points in ({z_lo:.3g}, {z_hi:.3g}): {len(breaks)} "
-            f"({knots_in_range} knots + {len(geometry['branch_boundaries'])} "
-            f"temperature crossings; the convergence block still records "
-            f"{geometry['T_spline_knots_in_range']} knots)"
+            f"(= {expected} temperature crossings, 0 of the tabulation's {knots_in_range} "
+            f"interior knots in range; the convergence block still records "
+            f"{geometry['T_spline_knots_in_range']} knots, from before prompt 06)"
         )
         self.assertEqual(len(breaks), expected)
+        self.assertEqual(len(np.intersect1d(breaks, knots)), 0)
         self.assertTrue(np.all(np.diff(breaks) > 0.0))
         self.assertTrue(np.all((breaks > np.log1p(z_lo)) & (breaks < np.log1p(z_hi))))
         for boundary in geometry["branch_boundaries"]:

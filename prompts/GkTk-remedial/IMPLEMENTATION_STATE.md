@@ -473,6 +473,26 @@ Opened by the planning pass, 2026-09-10, before any prompt runs.
   `qcd-background` campaign**, whose audit §8 schedules the re-run of prompt 02 after the
   representation and the grid are fixed.
 
+  **Narrowed — the blocker is gone (`prompts/qcd-background-audit` prompt 07, 2026-09-14). The
+  defect is not.** `integration_break_points` no longer declares the `T(z)` tabulation's knots:
+  `BREAK_POINT_ALL` on the production source grid is **3** and `BREAK_POINT_DISCONTINUITY` **2**,
+  and none of them is a knot of anything. Item 1's Schoenberg–Whitney failure is therefore
+  **measured to be gone**: a multiplicity-`spline_order` knot vector **constructs on all six** of
+  the (sector, $k$) geometries prompt 02 measured as singular, and the same construction with the
+  knot lattice restored still raises `LinAlgError` on all six — both asserted, in the tree, by
+  `ComputeTargets/tests/test_numeric_break_points.py::TestConsumerKnotVectorConstructs`, which also
+  carries the six bands and the local-payment knot construction prompt 10 needs.
+
+  What this does **not** settle is whether a $C^0$ knot at a break is the right representation for
+  $\varphi$, which is the substance of items 2–4 and the reason prompt 02 stopped: items 3 and 4
+  stand as measured, and item 4's finding — that the $k\ge10^7$ `theta_deriv` miss is the storage
+  granularity of $\varphi$ and not the knots — is untouched by anything the background campaign
+  does. Prompt 07 also removes the second half of item 3's supersession argument: the "±3 grid
+  interval" structure can no longer be attributed to a 4.04-interval knot lattice, because the
+  interpolation error that produced it is gone (`T(z)` max 7.18e-04 → 6.807e-11, prompt 06), so
+  whatever remains at the `T_LO` crossing is $\varphi$'s own. **Owned by
+  `prompts/qcd-background-audit` prompt 10**, which is now unblocked.
+
 - **[13-scoped-run-driver-k-grid-literal]** *(opened by prompt 13, 2026-09-13; not this campaign's
   file)* — `docs/source-remediation-verification/scoped_pipeline_run.py` substitutes `main.py`'s two
   wavenumber grids by exact text match on `np.logspace(np.log10(1e5), np.log10(3e8), 50)` and
@@ -841,23 +861,6 @@ Opened by the planning pass, 2026-09-10, before any prompt runs.
   of datastore objects is the **intended** outcome, each quantity carrying its own justified
   tolerance pair. This entry closes when that campaign settles `rtol`.
 
-- **[19-cosmologymodels-docstrings-predate-per-sector-policy]** *(opened by prompt 19,
-  2026-09-13)* — two `CosmologyModels/` docstrings state as fact what is now true of one numeric
-  sector and not the other. `GenericEOS.py:97-101` says "an *adaptive* ODE solver only has to be
-  split at a jump, because a C2 point does not invalidate an embedded Runge-Kutta error
-  estimator"; `LambdaCDM_GenericEOS.py:277-283` says the jumps-only set "is what
-  `Quadrature/integrators/numeric_with_phase_cut.py` asks for". Both were accurate when prompt 18
-  wrote them. Prompt 19's measurement is that on `QCD_Cosmology` the C2 knots cost about an order
-  of magnitude of reference convergence in the $T_k$ sector (1.97e-07 -> 8.72e-09 worst over the
-  grid), so `TkNumericIntegration` now asks for `BREAK_POINT_ALL`: a C2 point does not invalidate
-  the estimator but it does degrade it, and which set the ODE path wants is no longer a single
-  answer. **Impact:** documentation only — no behaviour depends on either sentence, and
-  `integration_break_points`'s contract is unchanged. A later reader following the docstring would
-  conclude the $T_k$ call site is a mistake. **Not acted on:** prompt 19 §1 puts `CosmologyModels/`
-  out of bounds ("the declaration is finished"). **Next step:** reword both docstrings to say that
-  the kind is the consumer's choice and point at `TK-NUMERIC-ATOL-SWEEP.md` §10; a two-hunk
-  comment-only change for whichever prompt next has that directory in scope.
-
 - **[20-wkb-gauss-orders-not-in-lookup-key]** *(opened by prompt 20, 2026-09-13)* — prompt 20 §5
   asked whether the other three compute targets have "any configuration axis that can vary between
   runs and is not in that key". They do. **`BackgroundModel`** keys `cosmology_type`,
@@ -914,6 +917,32 @@ Opened by the planning pass, 2026-09-10, before any prompt runs.
 ---
 
 ## 4. Resolved issues
+
+- **[19-cosmologymodels-docstrings-predate-per-sector-policy]** *(opened by prompt 19,
+  2026-09-13; not this campaign's to fix; **resolved by `prompts/qcd-background-audit` prompt 07**,
+  2026-09-14)* — two `CosmologyModels/` docstrings stated as fact what prompt 19 had measured to be
+  true of one numeric sector and not the other: `GenericEOS.py`'s
+  `discontinuity_temperatures_GeV` said "an *adaptive* ODE solver only has to be split at a jump,
+  because a C2 point does not invalidate an embedded Runge-Kutta error estimator", and
+  `LambdaCDM_GenericEOS.integration_break_points` said the jumps-only set "is what
+  `Quadrature/integrators/numeric_with_phase_cut.py` asks for". Prompt 19 had measured that the C2
+  knots cost about an order of magnitude of reference convergence in the $T_k$ sector
+  (1.97e-07 → 8.72e-09 worst over the grid), so `TkNumericIntegration` asks for `BREAK_POINT_ALL`:
+  a C2 point does not invalidate the estimator but it does degrade it. Documentation only
+  throughout; prompt 19 §1 put `CosmologyModels/` out of bounds.
+
+  **Rewritten by prompt 07 of the `qcd-background-audit` campaign**, which had that directory in
+  scope because it was changing the declaration itself. Both texts now say that the *kind* is the
+  consumer's choice, taken on measurement rather than on principle, and point at
+  `numeric_with_phase_cut.py`'s module docstring for which sector asks for which. Four further
+  texts were corrected in the same pass for the same reason — the `BREAK_POINT_*` comment block and
+  `break_temperatures_GeV` in `GenericEOS.py`, `_cosmology_break_points` in
+  `ComputeTargets/BackgroundModel.py`, and three paragraphs of `numeric_with_phase_cut.py` — all of
+  which described the `T(z)` spline's knot lattice as part of what the cosmology declares. It is
+  not, as of that prompt: `BREAK_POINT_ALL` is **3** points on `QCD_Cosmology`'s production range
+  and `BREAK_POINT_DISCONTINUITY` **2**, both crossings of an equation-of-state branch temperature.
+  Every rewritten text carries that prompt's own measurement. Full record:
+  [`prompts/qcd-background-audit/logs/07-rederive-break-points.md`](../qcd-background-audit/logs/07-rederive-break-points.md).
 
 - **[02-qcd-T-z-spline-node-tolerance]** *(opened by prompt 02, 2026-09-10; not this campaign's;
   **resolved by `prompts/qcd-background-audit` prompt 04**, 2026-09-14)* —

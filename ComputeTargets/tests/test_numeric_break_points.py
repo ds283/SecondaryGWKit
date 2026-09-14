@@ -7,8 +7,11 @@ Three things are tested, in the order the prompt states them:
 1. **The declaration.** ``GenericEOSBase.discontinuity_temperatures_GeV`` defaults to "smooth";
    ``QCD_EOS`` overrides it with the subset of its break temperatures at which G, Gs or w really
    do jump, and that subset is *measured* here rather than taken from the docstring;
-   ``integration_break_points(..., kind=)`` returns the spline knots for the quadrature path and
-   only the temperature crossings for the ODE path.
+   ``integration_break_points(..., kind=)`` returns every temperature crossing for the quadrature
+   path and only the jumps for the ODE path (3 points and 2 on the production range, since prompt
+   07 of ``prompts/qcd-background-audit/``; it used to hand the quadrature path the ``T(z)``
+   tabulation's knots as well, and ``test_no_declared_break_point_is_a_knot`` guards that it does
+   not).
 2. **The unsplit path is untouched.** A cosmology declaring no discontinuities produces exactly
    the samples a single ``solve_ivp`` call with the same arguments produces -- bit for bit, not
    nearly.
@@ -33,6 +36,9 @@ a fifth group:
    sector decided on. :class:`TestManyBreakPoints` then exercises what ~400 boundaries expose that
    one did not: segments holding no requested sample, boundaries closer to one another than
    ``BREAK_POINT_STANDOFF``, and ``mode="stop"`` with the event far down a long chain of segments.
+   Since prompt 07 no production cosmology declares ~400 points; that fixture is retained because
+   it is the only thing in the tree that exercises the standoff guard, which stays for a future
+   equation of state.
 
 **Why item 4 is not done on the synthetic fixture.** It was tried. Across frequency ratios from
 1.0001 to 10, grids from 20 to 800 points and tolerances from (1e-10, 1e-8) to (1e-16, 1e-13), the
@@ -55,7 +61,9 @@ from math import cos, expm1, fabs, hypot, log1p, log10, sin, sqrt
 from pathlib import Path
 
 import numpy as np
+from numpy.linalg import LinAlgError
 from scipy.integrate import solve_ivp
+from scipy.interpolate import make_interp_spline
 
 from ComputeTargets.BackgroundModel import (
     BREAK_POINT_ALL,
@@ -73,6 +81,7 @@ from ComputeTargets.tests.wkb_reference import (
     RadiationModel,
     envelope_relative_error,
     horizon_exit_z,
+    load_references,
     production_response_grid,
     production_source_grid,
     to_redshift_array,
@@ -199,17 +208,36 @@ class _TwoJumpCosmology:
         return np.unique(np.asarray(inside, dtype=float))
 
 
+# prompts/qcd-background-audit/ prompt 07. A redshift range wide enough to contain every one of
+# QCD_EOS's break-temperature crossings -- wider than the production source grid, whose top node is
+# z ~ 2e16 -- and the three segment edges prompt 06 bisected, to 17 digits. The edges are
+# transcribed from that prompt's log rather than re-derived, so that a re-derivation which drifts
+# is caught here rather than absorbed.
+WHOLE_RANGE_Z_LO = 0.1
+WHOLE_RANGE_Z_HI = 1.0e20
+PROMPT_06_SEGMENT_EDGES_LOG1PZ = [
+    17.565806941870026,
+    23.197460552819653,
+    27.485391822044257,
+]
+
+
 class _ManyBreakCosmology:
     """
     Declares one jump and ``count`` further break points that are **not** jumps, spread uniformly
     in ``u = log(1+z)`` across the range, plus -- when ``coincident`` is set -- a pair of extra
     kinks placed closer to an existing one than ``BREAK_POINT_STANDOFF``.
 
-    This is what a caller asking for ``BREAK_POINT_ALL`` on ``QCD_Cosmology`` gets: ~125 declared
-    points inside one production numeric range against ~100 requested samples, so most segments
-    carry no output point at all. The underlying right-hand side is smooth at every one of the
-    kinks, which is the point -- splitting there must change the answer by no more than the
-    integration tolerance, and must not disturb the returned grid.
+    This is what a caller asking for ``BREAK_POINT_ALL`` on ``QCD_Cosmology`` used to get: ~125
+    declared points inside one production numeric range against ~100 requested samples, so most
+    segments carried no output point at all. Prompt 07 of ``prompts/qcd-background-audit/`` took
+    that set down to the 3 equation-of-state crossings, so **no production cosmology has this
+    geometry any more** -- but the fixture stays, and the class is kept deliberately. The guard in
+    ``_separated_boundaries`` exists for a future equation of state that declares two nearby branch
+    temperatures, and this is the only thing in the tree that exercises it. The underlying
+    right-hand side is smooth at every one of the kinks, which is the point -- splitting there must
+    change the answer by no more than the integration tolerance, and must not disturb the returned
+    grid.
     """
 
     def __init__(
@@ -497,17 +525,31 @@ class TestDeclaration(unittest.TestCase):
                     step / jump, 1.0, delta=0.05, msg=f"T = {T_in_GeV} GeV"
                 )
 
-    def test_kind_selects_knots_or_jumps(self):
+    def test_kind_selects_the_kink_or_only_the_jumps(self):
+        """
+        ``BREAK_POINT_ALL`` is the crossings of ``break_temperatures_GeV`` and
+        ``BREAK_POINT_DISCONTINUITY`` the crossings of ``discontinuity_temperatures_GeV``, and on
+        this range that is 3 points against 2 -- the same points, less ``EOS_T_LO``, which is the
+        one join where ``w`` kinks but ``g_s`` does not step.
+
+        **This assertion used to read ``assertGreater(len(every), 100)``.** Until prompt 07 of
+        ``prompts/qcd-background-audit/`` the quadrature path was also handed every interior knot
+        of the ``T(z)`` tabulation -- 404 of them at 500 nodes, 2,414 once prompt 06 raised the
+        count to 3,000 -- which is finding G1 of the audit. A knot lattice is a property of the
+        approximation and not of the cosmology, and at order 5 the first discontinuous derivative
+        of the interpolant is the fifth, three levels below the deepest derivative anything in the
+        tree builds. ``test_no_declared_break_point_is_a_knot`` below is the standing guard.
+        """
         z_lo, z_hi = 0.1, 1e14
         every = _cosmology_break_points(self.cosmology, z_lo, z_hi)
         jumps = _cosmology_break_points(
             self.cosmology, z_lo, z_hi, kind=BREAK_POINT_DISCONTINUITY
         )
 
-        # two of the four declared temperatures cross inside this range, and both are jumps;
-        # everything else `every` carries is a T(z) spline knot
+        # three of the four declared temperatures cross inside this range, and two of the three
+        # are jumps; nothing else is declared
+        self.assertEqual(len(every), 3)
         self.assertEqual(len(jumps), 2)
-        self.assertGreater(len(every), 100)
         self.assertTrue(np.all(np.isin(jumps, every)))
 
         # and the quadrature path is unchanged: kind defaults to "all"
@@ -523,6 +565,169 @@ class TestDeclaration(unittest.TestCase):
     def test_unknown_kind_is_rejected(self):
         with self.assertRaises(ValueError):
             self.cosmology.integration_break_points(0.1, 1e14, kind="jumps-please")
+
+    def test_no_declared_break_point_is_a_knot(self):
+        """
+        Finding G1 of ``docs/qcd-background-audit-2026-09.md``, as a standing assertion: **none**
+        of the declared break points is a knot of the ``T(z)`` tabulation, under either kind, on
+        the production source grid as well as on this class's range. The tabulation still has
+        2,411 interior knots in range -- the representation needs them -- and the cosmology
+        declares none of them.
+        """
+        knots = self.cosmology._T_z_spline_knots_log1pz
+        for z_lo, z_hi in ((0.1, 1e14), (WHOLE_RANGE_Z_LO, WHOLE_RANGE_Z_HI)):
+            in_range = knots[(knots > log1p(z_lo)) & (knots < log1p(z_hi))]
+            self.assertGreater(
+                len(in_range), 1000, msg="the tabulation still has knots"
+            )
+            for kind in (BREAK_POINT_ALL, BREAK_POINT_DISCONTINUITY):
+                points = self.cosmology.integration_break_points(z_lo, z_hi, kind=kind)
+                self.assertEqual(
+                    len(np.intersect1d(points, in_range)),
+                    0,
+                    msg=f"{kind} on ({z_lo}, {z_hi})",
+                )
+
+    def test_the_declared_points_are_prompt_06s_segment_edges(self):
+        """
+        The break points are the *bisected* crossings, not a root solve on
+        ``T_photon(z) - T_break`` (``prompts/qcd-background-audit/`` README §2 (b)). They are
+        therefore bit-identical to the segment edges at which prompt 06 split the representation,
+        and this asserts it against both the edges the representation carries and prompt 06's
+        17-digit handover.
+        """
+        z_lo, z_hi = WHOLE_RANGE_Z_LO, WHOLE_RANGE_Z_HI
+        points = list(self.cosmology.integration_break_points(z_lo, z_hi))
+
+        self.assertEqual(points, list(self.cosmology._T_z_spline.segment_edges))
+        self.assertEqual(points, PROMPT_06_SEGMENT_EDGES_LOG1PZ)
+
+
+# ---------------------------------------------------------------------------------------------
+# 1b. the blocker prompts/phase-representation prompt 02 stopped on
+# ---------------------------------------------------------------------------------------------
+
+# The six production geometries that prompt were measured as singular
+# (prompts/phase-representation/logs/02-primitive-phase-break-point-knots.md §1): the consumer
+# bands of docs/gktk-remedial-verification.md §3.5, each of which is the lowest `samples` nodes of
+# the production source grid. The `discontinuities` column is that log's own DISC column, and it is
+# asserted here so that the band reconstruction is checked rather than assumed -- it is the only
+# part of the geometry this module re-derives.
+PROMPT_02_BANDS = (
+    ("Gk", 1.0e5, 1016, 1),
+    ("Tk", 1.0e5, 1040, 1),
+    ("Gk", 1.0e7, 1218, 1),
+    ("Tk", 1.0e7, 1242, 1),
+    ("Gk", 3.0e8, 1377, 2),
+    ("Tk", 3.0e8, 1401, 2),
+)
+
+# PrimitivePhase splines phi with this order (ComputeTargets/WKB_Gk.py, WKB_Tk.py); a knot of
+# multiplicity `order` is a C0 knot, which is what a break point wants.
+CONSUMER_SPLINE_ORDER = 3
+
+
+def _repeated_knot_vector(sites: np.ndarray, breaks, order: int) -> np.ndarray:
+    """
+    The interpolating knot vector for ``sites`` with a multiplicity-``order`` knot at each break.
+
+    Starts from ``make_interp_spline``'s shipped default for an odd order -- knots at the data
+    sites, ``t = sites[order // 2 + 1 : -(order // 2 + 1)]`` between ``order + 1`` repeats at each
+    end -- and pays for each repeated knot **locally**, by dropping the ``order`` default knots
+    nearest the break. Prompt 02 measured that local payment is the only placement that can work:
+    the vector has a fixed length, and Schoenberg-Whitney tolerates at most one net removal below
+    any site and one above, so knots taken from the smooth interior fail at dozens of sites.
+    """
+    half = order // 2 + 1
+    interior = list(sites[half:-half])
+    for b in sorted(float(x) for x in breaks):
+        nearest = sorted(range(len(interior)), key=lambda i: abs(interior[i] - b))
+        drop = set(nearest[:order])
+        interior = [t for i, t in enumerate(interior) if i not in drop]
+        interior.extend([b] * order)
+        interior.sort()
+    ends = [float(sites[0])] * (order + 1), [float(sites[-1])] * (order + 1)
+    return np.asarray(ends[0] + interior + ends[1], dtype=float)
+
+
+class TestConsumerKnotVectorConstructs(unittest.TestCase):
+    """
+    ``prompts/phase-representation`` prompt 02 stopped without changing production code because a
+    repeated-knot vector for ``PrimitivePhase`` is **singular on all six production grids**:
+    ``BREAK_POINT_ALL`` returned one break point per 4.5 samples, so consecutive breaks had no
+    sample between them, the B-spline supported on ``[b_j, b_{j+1}]`` saw no interpolation
+    condition, and Schoenberg-Whitney failed for *any* placement of the remaining knots. That is
+    structural, not a placement that could be improved, and it is the blocker prompt 07 of
+    ``prompts/qcd-background-audit/`` removes.
+
+    This asserts **construction only**. Whether a repeated-knot vector is the right representation
+    for ``varphi``, and what it buys, is prompt 10's question and
+    ``[13-consumer-spline-crosses-eos-break-points]``'s; nothing here builds a consumer spline or
+    scores a phase.
+    """
+
+    @classmethod
+    def setUpClass(cls):
+        cls.cosmology = QCD_Cosmology(
+            store_id=0, units=Mpc_units(), params=Planck2018(), max_z=1e20
+        )
+        grid = production_source_grid(
+            load_references()["models"]["LambdaCDMModel"]["grid"]["z_init"]
+        )
+        cls.u = np.sort(np.log1p(np.asarray([z.z for z in grid])))
+
+    def _band(self, samples: int):
+        sites = self.u[:samples]
+        return sites, float(expm1(sites[0])), float(expm1(sites[-1]))
+
+    def test_the_six_bands_are_the_ones_prompt_02_measured(self):
+        """The band reconstruction, checked against prompt 02's own discontinuity counts."""
+        for sector, k, samples, discontinuities in PROMPT_02_BANDS:
+            with self.subTest(sector=sector, k=k):
+                sites, z_lo, z_hi = self._band(samples)
+                declared = self.cosmology.integration_break_points(
+                    z_lo, z_hi, kind=BREAK_POINT_DISCONTINUITY
+                )
+                self.assertEqual(len(declared), discontinuities)
+
+    def test_a_repeated_knot_vector_constructs_on_all_six(self):
+        for sector, k, samples, _ in PROMPT_02_BANDS:
+            with self.subTest(sector=sector, k=k):
+                sites, z_lo, z_hi = self._band(samples)
+                breaks = self.cosmology.integration_break_points(
+                    z_lo, z_hi, kind=BREAK_POINT_ALL
+                )
+                self.assertLessEqual(len(breaks), 3)
+                t = _repeated_knot_vector(sites, breaks, CONSUMER_SPLINE_ORDER)
+                self.assertEqual(len(t), len(sites) + CONSUMER_SPLINE_ORDER + 1)
+                # any smooth data will do: what is being tested is the colocation matrix
+                make_interp_spline(sites, np.sin(sites), k=CONSUMER_SPLINE_ORDER, t=t)
+
+    def test_the_same_vector_is_singular_when_the_knot_lattice_is_declared(self):
+        """
+        The other half of the statement, so that this reads as a measurement rather than as an
+        assertion that nothing went wrong: restore the T(z) tabulation's interior knots to the
+        declared set, exactly as the tree did before prompt 07, and the same construction raises
+        ``LinAlgError: Colocation matrix is singular`` on every one of the six.
+        """
+        knots = self.cosmology._T_z_spline_knots_log1pz
+        for sector, k, samples, _ in PROMPT_02_BANDS:
+            with self.subTest(sector=sector, k=k):
+                sites, z_lo, z_hi = self._band(samples)
+                breaks = self.cosmology.integration_break_points(
+                    z_lo, z_hi, kind=BREAK_POINT_ALL
+                )
+                restored = np.unique(
+                    np.concatenate(
+                        [breaks, knots[(knots > sites[0]) & (knots < sites[-1])]]
+                    )
+                )
+                self.assertGreater(len(restored), 300)
+                t = _repeated_knot_vector(sites, restored, CONSUMER_SPLINE_ORDER)
+                with self.assertRaises(LinAlgError):
+                    make_interp_spline(
+                        sites, np.sin(sites), k=CONSUMER_SPLINE_ORDER, t=t
+                    )
 
 
 # ---------------------------------------------------------------------------------------------

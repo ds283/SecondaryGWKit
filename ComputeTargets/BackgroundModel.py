@@ -208,9 +208,14 @@ def _cosmology_break_points(
     cosmology's background quantities lose smoothness of the requested ``kind``, as an ascending
     array; empty if the cosmology declares none. Duck-typed like the analytic-derivative shortcuts
     below: a cosmology that does not implement ``integration_break_points`` (LambdaCDM, the test
-    stand-ins) is treated as smooth. LambdaCDM_GenericEOS implements it (the T(z) spline knots and
-    the equation-of-state branch temperatures); see prompts/GkTk-remedial/logs/02 for why every
-    Gauss panel has to be split there.
+    stand-ins) is treated as smooth. LambdaCDM_GenericEOS implements it, and what it declares is
+    the redshifts at which T(z) crosses one of its equation of state's branch temperatures -- 3 of
+    them on QCD_Cosmology's production range, 2 of which are genuine jumps. See
+    prompts/GkTk-remedial/logs/02 for why every Gauss panel has to be split there. Until prompt 07
+    of prompts/qcd-background-audit/ it also declared every interior knot of its own T(z)
+    tabulation (404 points, and 2,414 once the tabulation was refined); those are an artefact of
+    the approximation rather than a feature of the cosmology, and the measurement that a panel
+    edge at one of them now buys nothing is in that method's docstring.
 
     ``kind`` is ``BREAK_POINT_ALL`` (every non-smooth point -- what a fixed-order quadrature panel
     needs, and the default, so that every existing caller is unchanged) or

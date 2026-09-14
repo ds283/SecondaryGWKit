@@ -80,19 +80,26 @@ RHO_T_MIN = -0.12
 RHO_T_MAX = -0.06
 
 # prompt 05 §2 test 4: with no break points the build costs exactly RHO_GAUSS_ORDER evaluations
-# per interval; QCD_Cosmology's break-point subdivision (log 02) costs 24 % more.
+# per interval; QCD_Cosmology's break-point subdivision costs a little more.
 #
-# Loosened 1.30 -> 2.40 by prompts/qcd-background-audit/ prompt 06, measured 2.337. This is a
-# real cost, not a stale figure: the T(z) tabulation went from 500 nodes to 3,000 (segmenting the
-# representation at the jumps is what buys the accuracy, but the node count is what buys the p90
-# and the median), every interior knot of it is declared by integration_break_points, and every
-# Gauss panel is split at each one. BREAK_POINT_ALL on the production source grid is 2,414 where
-# it was 407, so a panel is now split roughly every 0.7 grid intervals rather than every 4.
-# **Prompt 07 removes the knots from that set entirely** -- they are an artefact of the
-# representation and not of the cosmology, which is finding G1 of the audit -- and this factor
-# should then come back below its original 1.30 rather than merely to it, because what will be
-# left is three genuine crossings ([05-break-point-set-grew-with-the-node-count]).
-COST_BREAK_POINT_FACTOR = 2.40
+# History, because the figure has moved three times and each move means something different.
+# 1.30 was the original bound, on a measured 1.24: the T(z) tabulation carried 500 nodes, 404 of
+# its interior knots fell inside the production range, and integration_break_points declared every
+# one of them, so a Gauss panel was split every ~4 grid intervals. prompts/qcd-background-audit/
+# prompt 06 raised the tabulation to 3,000 nodes for accuracy, which took the declared set to
+# 2,414 and the cost to a measured 2.337, and the bound was loosened to 2.40
+# ([05-break-point-set-grew-with-the-node-count]).
+#
+# **Prompt 07 removed the knots from the declared set** -- a knot lattice is an artefact of the
+# approximation and not a feature of the cosmology, which is finding G1 of the audit -- leaving
+# the 3 equation-of-state temperature crossings. Measured on the six production (model, sector, k)
+# builds: **1.002** at worst, against 2.337 with the knots and 1.24 with the old 404. That is
+# three extra Gauss panels in ~1,400 intervals, which is what "the cosmology has three break
+# points" costs, and the bound comes back to 1.01 -- far below the original 1.30 rather than
+# merely to it, which is what prompt 06 predicted. The strict `> baseline` assertion below still
+# holds (4,160 evaluations against 4,144 at k = 1e5), and it is the assertion that the crossings
+# are still declared.
+COST_BREAK_POINT_FACTOR = 1.01
 
 
 def _nodes_at_or_below(z_nodes: np.ndarray, z_anchor: float) -> np.ndarray:
@@ -377,8 +384,8 @@ class TestCost(unittest.TestCase):
                 # no break points: exactly one Gauss panel per interval
                 self.assertEqual(table.evaluations, baseline)
             else:
-                # QCD_Cosmology splits every panel at the T(z) spline knots and the
-                # equation-of-state branch temperatures (log 02): 24 % more evaluations
+                # QCD_Cosmology splits a panel at each of the three equation-of-state
+                # temperature crossings inside the range: 0.2 % more evaluations
                 self.assertLessEqual(
                     table.evaluations, COST_BREAK_POINT_FACTOR * baseline
                 )

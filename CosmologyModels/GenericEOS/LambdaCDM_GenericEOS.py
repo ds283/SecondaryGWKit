@@ -44,7 +44,9 @@ DEFAULT_MIN_TEMPERATURE_Z_REDSHIFT = -0.2
 #
 # (the first five rows are prompt 05's, the last three prompt 06's, measured the same way on the
 # same probe set. "knots" is the tabulation's unique knots, "in range" those of them that fall
-# inside the production source grid and are therefore declared as break points.)
+# inside the production source grid. Until prompt 07 the "in range" column was also the number of
+# break points the cosmology declared; it is not any more, and that is the point of the paragraph
+# below.)
 #
 # 3000 / k = 5 is the audit's recommendation (docs/qcd-background-audit-2026-09.md §4,
 # prompts/qcd-background-audit/ README §7 D3) and is what is shipped. Unsegmented, the maximum
@@ -57,10 +59,16 @@ DEFAULT_MIN_TEMPERATURE_Z_REDSHIFT = -0.2
 # is what buys the p90: a cubic would need ~25,000 nodes to reach 1e-14 there, and every node is
 # a declared break point.
 #
-# The nodes are paid for in declared break points: every interior knot is returned by
-# integration_break_points below, and every quadrature and every ODE in the tree splits a panel
-# at each of them. That is prompt 07's to remove, and it is the reason this constant could not be
-# raised before the representation was segmented.
+# The nodes used to be paid for in declared break points: every interior knot was returned by
+# integration_break_points below, so every quadrature and every ODE in the tree split a panel at
+# each of them, and raising this constant from 500 to 3,000 took the declared set from 404 points
+# on the production source grid to 2,414. **Prompt 07 of prompts/qcd-background-audit/ removed
+# the knots from that set** (finding G1 of the audit), on the measurement recorded at
+# integration_break_points: at k = 5 the first discontinuous derivative of F is the fifth, three
+# levels below the deepest derivative anything in the tree builds, and the observable residual
+# across a knot is 6.3e-12 in H against the 2.1e-04 the old 500-node k = 3 lattice carried. The
+# node count is therefore now free of the break-point set, and this constant can be raised on
+# accuracy alone.
 DEFAULT_T_Z_SPLINE_SAMPLES = 3000
 DEFAULT_T_Z_SPLINE_ORDER = 5
 
@@ -95,9 +103,11 @@ class SegmentedEntropyFactor:
     the edge is the hot branch's, and the two are one ulp apart.
 
     ``t`` is the concatenation of the segments' knot vectors, so that this object stands in for a
-    single ``BSpline`` wherever one was read for its knots -- ``integration_break_points`` below,
-    and ``docs/gktk-remedial/residual_convergence.py``, which reaches into
-    ``cosmology._T_z_spline._spline.t``. Callers take ``np.unique`` of it.
+    single ``BSpline`` wherever one is read for its knots -- ``_build_T_z_spline``, which records
+    them as ``_T_z_spline_knots_log1pz``, and ``docs/gktk-remedial/residual_convergence.py``,
+    which reaches into ``cosmology._T_z_spline._spline.t``. Callers take ``np.unique`` of it.
+    Since prompt 07 those knots are *not* what ``integration_break_points`` declares; they are
+    read only to measure that they need not be.
     """
 
     __slots__ = ("_edges", "_splines", "t")
@@ -373,8 +383,9 @@ class LambdaCDM_GenericEOS(BaseCosmology):
     #      2    |   04   | _solve_T_z tightened from xtol=1e-6, rtol=1e-4 to xtol=1e-300, rtol=1e-14
     #      3    |   05   | the entropy factor F(u) is splined, not T itself; T = T_CMB (1+z) e^F
     #      4    |   06   | F is splined per branch, edges bisected onto the jumps; 3000 nodes, k=5
+    #      5    |   07   | integration_break_points declares the EOS crossings alone, not the knots
     #
-    # (prompt 07 appends a row here as it lands.)
+    # (prompt 08 appends a row here if it moves a per-sector break-point policy.)
     #
     # Why this is not optional. Without it the same cosmology row is returned under the same
     # serial when the representation changes; every BackgroundModel keyed on that serial is found
@@ -387,7 +398,7 @@ class LambdaCDM_GenericEOS(BaseCosmology):
     #
     # This follows TkNumericIntegration.BREAK_POINT_KIND: a single declaration, readable from the
     # class without an instance, so that the factory can filter on it before any model is built.
-    T_Z_REPRESENTATION_VERSION: int = 4
+    T_Z_REPRESENTATION_VERSION: int = 5
 
     def __init__(
         self,
@@ -446,6 +457,13 @@ class LambdaCDM_GenericEOS(BaseCosmology):
         self._G_S_CMB = eos.Gs(self._T_CMB)
         self._G_CMB_pow13 = pow(self._G_CMB, 1.0 / 3.0)
         self._G_S_CMB_pow13 = pow(self._G_S_CMB, 1.0 / 3.0)
+
+        # Locate, once, the redshift at which T(z) reaches each of the equation of state's break
+        # temperatures. These are the *only* points integration_break_points declares, and they
+        # are also where _build_T_z_spline segments the entropy factor, so they are bisected here
+        # -- before there is a representation to evaluate -- and both consumers read this one
+        # cache. See _build_break_point_crossings_log1pz.
+        self._break_point_crossings_log1pz = self._build_break_point_crossings_log1pz()
 
         # Build the spline used to map z to a temperature, given the specified equation of state.
         # We need to go all the way to z=0 so that we can compute the radiation temperature today
@@ -600,12 +618,32 @@ class LambdaCDM_GenericEOS(BaseCosmology):
             order=order,
         )
 
-        # The knot vector, in log(1+z), is kept because the spline is only C(k-1) at its knots:
-        # every quadrature of a quantity built from T(z) has to split its panels there
-        # (integration_break_points below). Recorded here, where the spline is built, so that
-        # nothing outside this class has to reach into the representation for it. A segmented
-        # representation contributes the knots of every segment, and its segment edges are among
-        # them -- which is right, since those are the points at which T(z) actually jumps.
+        # The knot vector, in log(1+z). It is NOT a break-point declaration and has not been one
+        # since prompt 07 of prompts/qcd-background-audit/: integration_break_points below returns
+        # the equation of state's temperature crossings and nothing else. It is kept because the
+        # *measurement* that the knots are not worth declaring has to be repeatable -- the
+        # statement "none of the declared break points is a knot of an interpolant" is only
+        # checkable if the knots are still knowable from outside -- and because
+        # docs/qcd-background-audit/measure_T_z_representation.py §5 and
+        # ComputeTargets/tests/test_background_tau.py::test_qcd_break_points both read it to make
+        # exactly that check. Recorded here, where the spline is built, so that nothing outside
+        # this class has to reach into the representation for it; a segmented representation
+        # contributes the knots of every segment.
+        #
+        # Why the knots stopped being declared (prompt 07 §2 item 1, measured): an order-k
+        # interpolating spline through simple interior knots is C(k-1) there, so at k = 5 the
+        # first genuinely discontinuous derivative of F is the *fifth* -- measured, d1 to d4 jump
+        # by at most 1.3e-13, 7.1e-12, 5.0e-10 and 6.2e-08 absolute (floating-point noise of a
+        # one-sided evaluation; the continuity is exact by construction) while d5 jumps by 26 %
+        # relative. The deepest derivative anything in the tree actually builds is d3_lnH_dz3
+        # (ComputeTargets/BackgroundModel.py), three levels below that. The observable agrees:
+        # across a knot the step in d ln H/du is 8.3e-11 at worst and |H/H_exact - 1| in a knot's
+        # neighbourhood is 6.3e-12. The 500-node k = 3 lattice this replaced was C2, so its third
+        # derivative -- the one d3_lnH_dz3 reads -- jumped by a median 74 % relative, the step in
+        # d ln H/du reached 6.3e-07 and the residual against the exact background reached
+        # 2.1e-04. That is the 1e-4-level defect the old lattice carried, and why splitting a
+        # Gauss panel at every one of its knots was buying something; there is nothing left at a
+        # knot of this representation to buy.
         self._T_z_spline_knots_log1pz = np.unique(np.asarray(spline.t, dtype=float))
 
         return TemperatureRepresentation(
@@ -638,8 +676,13 @@ class LambdaCDM_GenericEOS(BaseCosmology):
         of the equation of state's ``break_temperatures_GeV``, ascending -- the edges at which
         ``_build_T_z_spline`` segments the entropy factor.
 
-        These are the same crossings ``integration_break_points`` declares, but they are **not**
-        found the same way and must not be: see :meth:`_bisect_temperature_crossing_log1pz`.
+        These are the same crossings ``integration_break_points`` declares, and since prompt 07 of
+        ``prompts/qcd-background-audit/`` they are literally the same numbers: both read
+        :attr:`_break_point_crossings_log1pz`, which is bisected once in ``__init__``. They were
+        once found two different ways -- here by bisection, there by a root solve on
+        ``T_photon(z) - T_break`` -- and that is exactly the arrangement README §2 (b) warns
+        against, since the two methods disagree by ~1e-12 in ``u`` and the segment padding is
+        1e-12. See :meth:`_bisect_temperature_crossing_log1pz`.
 
         All four break temperatures are used, not only the subset at which ``g_s`` jumps
         (``discontinuity_temperatures_GeV``). Segmenting where the equation of state is in fact
@@ -653,15 +696,47 @@ class LambdaCDM_GenericEOS(BaseCosmology):
         :param u_hi: upper end of the tabulated range in ``u``
         :return: an ascending list of ``u`` values, possibly empty
         """
+        return sorted(
+            u for u in self._break_point_crossings_log1pz.values() if u_lo < u < u_hi
+        )
+
+    def _build_break_point_crossings_log1pz(self) -> Mapping[float, float]:
+        """
+        The ``u = log(1+z)`` at which ``T(z)`` reaches each of the equation of state's
+        ``break_temperatures_GeV``, keyed by that temperature in GeV; temperatures not crossed
+        inside :meth:`_bisect_temperature_crossing_log1pz`'s search bracket are absent.
+
+        **This is the single definition of where the cosmology's break points are.** Both
+        consumers read it: :meth:`_entropy_segment_edges_log1pz`, which segments the entropy
+        factor at these redshifts, and :meth:`integration_break_points`, which declares them to
+        every quadrature and every ODE in the tree. One definition is not a tidiness point. Until
+        prompt 07 of ``prompts/qcd-background-audit/`` the two were computed by different methods
+        -- bisection here, a ``root_scalar`` bracket on ``T_photon(z) - T_break`` there -- and
+        they disagreed by ~1e-12 in ``u``, which is the same size as the padding that holds each
+        segment's nodes inside its own branch. Declaring a panel edge on the wrong side of a jump
+        by that margin is precisely the silent failure README §2 (b) exists to prevent.
+
+        Called from ``__init__`` *before* the temperature representation is built, because the
+        representation needs the edges. It therefore cannot use ``T_photon``; it bisects
+        ``_solve_T_z`` directly, which is the defining equation at ``rtol = 1e-14`` and is the
+        only temperature available at that point in construction. That is also why the result is
+        independent of the representation: the crossings are a property of the equation of state.
+
+        Cost: one bisection per break temperature, ~1.5 ms each, ~6 ms for the production four.
+        Paid once per cosmology instead of on every ``integration_break_points`` call, which used
+        to root-solve the crossings afresh each time it was asked.
+
+        :return: a mapping from break temperature in GeV to ``u = log(1+z)``
+        """
         GeV = self._units.GeV
 
-        edges = []
+        crossings = {}
         for T_break_GeV in sorted(set(self._eos.break_temperatures_GeV)):
             u = self._bisect_temperature_crossing_log1pz(T_break_GeV * GeV)
-            if u is not None and u_lo < u < u_hi:
-                edges.append(u)
+            if u is not None:
+                crossings[T_break_GeV] = u
 
-        return sorted(edges)
+        return crossings
 
     def _bisect_temperature_crossing_log1pz(
         self,
@@ -736,13 +811,32 @@ class LambdaCDM_GenericEOS(BaseCosmology):
         self, T: float, u_lo: float, u_hi: float
     ) -> Optional[float]:
         """
-        The point u = log(1+z), strictly inside (u_lo, u_hi), at which T_photon(z) crosses the
-        dimensionful temperature T; None if it does not cross inside the range.
+        An *approximate* location for the point u = log(1+z), strictly inside (u_lo, u_hi), at
+        which T_photon(z) reaches the dimensionful temperature T; None if it does not cross inside
+        the range.
 
-        T_photon(z) is monotone in z, so the crossing is unique. It is solved for in u, which is
-        the campaign's integration variable, to xtol = rtol = 1e-15; the root is only ever used
-        as a Gauss panel edge. The expm1(u) inside q() is the lossy log(1+z) -> z direction
-        (CLAUDE.md), but T_photon takes log(1+z) again internally, so it costs ~1 ulp of u.
+        **Nothing in production calls this, and nothing may put it back on the break-point path.**
+        Until prompt 07 of prompts/qcd-background-audit/ it was how integration_break_points
+        located the equation-of-state crossings; that method now returns the bisected
+        _break_point_crossings_log1pz, which is where the crossings actually are. The reason is
+        README §2 (b): since prompt 06 the representation is segmented at exactly these
+        temperatures, so T_photon genuinely *jumps* there, and log T_photon(z) - log T need not
+        have a root at all. A bracketing solver applied to it reports converged and returns a
+        non-root whose offset depends on its tolerances -- measured at +1.126e-12 in u at
+        root_scalar's defaults, which is further from the jump than the 1e-12 by which each
+        segment's nodes are held inside their own branch. CosmologyModels/tests/
+        test_T_z_representation.py::test_a_segment_edge_bisected_and_one_root_found_disagree is
+        the standing demonstration.
+
+        It survives as a measurement probe: ComputeTargets/tests/test_numeric_break_points.py::
+        test_hubble_jumps_at_the_declared_crossings_and_not_at_the_kink uses it to find a
+        neighbourhood of a crossing, which is a use its ~1e-12 offset does not disturb, and it is
+        the documented illustration of why a bracket is the wrong tool here.
+
+        T_photon(z) is monotone in z, so the crossing is unique where it exists. It is solved for
+        in u, which is the campaign's integration variable, to xtol = rtol = 1e-15. The expm1(u)
+        inside q() is the lossy log(1+z) -> z direction (CLAUDE.md), but T_photon takes log(1+z)
+        again internally, so it costs ~1 ulp of u.
         """
         log_T = log(T)
 
@@ -757,7 +851,7 @@ class LambdaCDM_GenericEOS(BaseCosmology):
         root = root_scalar(q, bracket=(u_lo, u_hi), xtol=1e-15, rtol=1e-15)
         if not root.converged:
             raise RuntimeError(
-                f"LambdaCDM_GenericEOS.integration_break_points: root_scalar() did not converge "
+                f"LambdaCDM_GenericEOS._temperature_crossing_log1pz: root_scalar() did not converge "
                 f"for T = {T / self._units.GeV:.5g} GeV between u = {u_lo:.6g} and {u_hi:.6g}: "
                 f'"{root.flag}"'
             )
@@ -774,28 +868,41 @@ class LambdaCDM_GenericEOS(BaseCosmology):
         Hubble(z), rho(z), T_photon(z), wBackground(z) or wPerturbations(z) loses smoothness of
         the requested ``kind``.
 
-        With ``kind = BREAK_POINT_ALL`` (the default, and the historic behaviour) that is:
+        Both kinds return crossings of an equation-of-state temperature and nothing else:
 
-        * the interior knots of the T(z) spline, where everything built from T(z) is only C2;
-        * the redshifts at which T(z) crosses one of the equation of state's
-          break_temperatures_GeV, where G, Gs or w change analytic form (a jump in H(z) at a
-          G/Gs boundary, a kink in c_s^2 at a w clamp).
+        * ``kind = BREAK_POINT_ALL`` (the default) gives the redshifts at which T(z) reaches one
+          of break_temperatures_GeV, where G, Gs or w change analytic form -- a jump in H(z) at a
+          G/Gs boundary, a kink in c_s^2 at a w clamp. On the production range of QCD_Cosmology
+          that is **3** points.
+        * ``kind = BREAK_POINT_DISCONTINUITY`` gives the subset at which a quantity actually
+          *jumps*, the crossings of discontinuity_temperatures_GeV: **2** on the same range.
 
-        A fixed-order Gauss-Legendre panel that straddles one of these converges only as N^-2
+        A fixed-order Gauss-Legendre panel that straddles a break converges only as N^-2
         (docs/gktk-remedial/RESIDUAL-CONVERGENCE.md, §3), so the cumulative tables of
         ComputeTargets/BackgroundModel.py split every production interval at the points returned
-        here and integrate the pieces separately. Splitting at the temperatures alone is not
-        enough; the knots are the load-bearing half.
+        here and integrate the pieces separately; an adaptive ODE stepper absorbs a merely C2
+        point and asks for the jumps alone (Quadrature/integrators/numeric_with_phase_cut.py,
+        whose module docstring says why the distinction matters there and not in a quadrature).
 
-        With ``kind = BREAK_POINT_DISCONTINUITY`` only the crossings of the equation of state's
-        discontinuity_temperatures_GeV are returned -- the points at which a quantity *jumps*.
-        The spline knots are deliberately not included: they are C2 points, which an adaptive ODE
-        stepper absorbs, and there are three orders of magnitude more of them (2,411 against 3 on
-        the production range of QCD_Cosmology, where prompt 05 left 404 -- the tabulation now
-        carries 3,000 nodes rather than 500, because the segmented representation spends them on
-        accuracy instead of on a discontinuity it cannot represent). This is what
-        Quadrature/integrators/numeric_with_phase_cut.py asks for, and its module docstring says
-        why the distinction matters there and not in a quadrature.
+        **The interior knots of the T(z) tabulation are not returned, and have not been since
+        prompt 07 of prompts/qcd-background-audit/ (finding G1 of the audit).** They were: the set
+        was 404 points on the production source grid when the tabulation carried 500 nodes, and
+        2,414 when prompt 06 raised it to 3,000 -- a Gauss panel split roughly every 0.67 grid
+        intervals for the node lattice of an auxiliary interpolant, and the sole cause of
+        prompts/phase-representation prompt 02's Schoenberg-Whitney failure. A knot lattice is a
+        property of the approximation, not of the cosmology, and this method's contract is the
+        cosmology's non-smoothness.
+
+        What made that defensible once, and does not now, is smoothness at a knot, and prompt 07
+        measured it rather than asserting it. An order-k interpolating spline through simple
+        interior knots is C(k-1) there, so at the shipped k = 5 the first genuinely discontinuous
+        derivative of F is the fifth (d1 to d4 agree across a knot to 1.3e-13, 7.1e-12, 5.0e-10
+        and 6.2e-08 absolute, which is the noise of a one-sided evaluation; d5 jumps by 26 %
+        relative). The deepest derivative anything in the tree builds is d3_lnH_dz3. The
+        observable says the same: across a knot the step in d ln H/du is at most 8.3e-11 and
+        |H/H_exact - 1| near a knot at most 6.3e-12, against 6.3e-07 and 2.1e-04 for the 500-node
+        k = 3 lattice that used to be declared. There is nothing left at a knot for a panel edge
+        to protect against.
 
         :param z_lo: lower redshift of the range (inclusive; a break exactly here is not returned)
         :param z_hi: upper redshift of the range
@@ -828,18 +935,15 @@ class LambdaCDM_GenericEOS(BaseCosmology):
                 f"ODE path is."
             )
 
-        if kind == BREAK_POINT_ALL:
-            knots = self._T_z_spline_knots_log1pz
-            points = list(knots[(knots > u_lo) & (knots < u_hi)])
-            temperatures = breaks
-        else:
-            points = []
-            temperatures = jumps
+        temperatures = breaks if kind == BREAK_POINT_ALL else jumps
 
-        GeV = self._units.GeV
+        # The crossings were bisected once, in __init__, and are read here rather than solved for
+        # again: _build_break_point_crossings_log1pz says why there is exactly one definition of
+        # where they are, and why a root solve on T_photon(z) - T_break is not it.
+        points = []
         for T_in_GeV in temperatures:
-            u = self._temperature_crossing_log1pz(T_in_GeV * GeV, u_lo, u_hi)
-            if u is not None:
+            u = self._break_point_crossings_log1pz.get(T_in_GeV)
+            if u is not None and u_lo < u < u_hi:
                 points.append(u)
 
         if len(points) == 0:

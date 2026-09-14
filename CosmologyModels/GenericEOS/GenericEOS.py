@@ -27,13 +27,24 @@ LOW_T_G_S_STAR = 3.94
 # as N^-2 across a point where the integrand is merely C2, so the cumulative tables of
 # ComputeTargets/BackgroundModel.py split their panels at all of them.
 #
-# BREAK_POINT_DISCONTINUITY is the strict subset at which a quantity *jumps*. It is what an
-# adaptive ODE solver needs, and only that: a C2 point does not invalidate an embedded
-# Runge-Kutta error estimator -- the step controller absorbs it, at worst paying a few extra steps
-# -- whereas a jump in the right-hand side makes the estimate meaningless. The two sets differ by
-# three orders of magnitude on the production range of QCD_Cosmology (404 spline knots against 3
-# temperature crossings), which is why they are asked for separately (prompts/GkTk-remedial,
-# prompt 18).
+# BREAK_POINT_DISCONTINUITY is the subset at which a quantity *jumps*. It is what an adaptive ODE
+# solver needs, and only that: a C2 point does not invalidate an embedded Runge-Kutta error
+# estimator -- the step controller absorbs it, at worst paying a few extra steps -- whereas a jump
+# in the right-hand side makes the estimate meaningless. The two are asked for separately
+# (prompts/GkTk-remedial, prompt 18) because the right answer differs between the two sectors that
+# share the numeric driver, and it differs on measurement rather than on principle.
+#
+# What the two sets are, measured on the production range of QCD_Cosmology
+# (prompts/qcd-background-audit/, prompt 07): BREAK_POINT_ALL is the **3** redshifts at which T(z)
+# reaches one of break_temperatures_GeV, and BREAK_POINT_DISCONTINUITY the **2** of those at which
+# g_s actually steps. Both are crossings of an equation-of-state temperature, and the difference
+# between them is one kink, not three orders of magnitude. It used to be three orders of
+# magnitude: LambdaCDM_GenericEOS also declared every interior knot of its own T(z) tabulation as
+# a break point, 404 of them at 500 nodes and 2,414 at 3,000, which is finding G1 of
+# docs/qcd-background-audit-2026-09.md. A knot lattice is a property of an approximation and not
+# of a cosmology, and at the shipped order-5 tabulation the first discontinuous derivative of the
+# interpolant is the fifth -- three levels below the deepest derivative anything in the tree
+# builds. See LambdaCDM_GenericEOS.integration_break_points for the measurement.
 BREAK_POINT_ALL = "all"
 BREAK_POINT_DISCONTINUITY = "discontinuity"
 
@@ -84,6 +95,13 @@ class GenericEOSBase(ABC):
         the corresponding redshifts through integration_break_points(), and the cumulative tables
         of ComputeTargets/BackgroundModel.py split their Gauss panels there
         (prompts/GkTk-remedial, log 02). A smooth equation of state has none.
+
+        **This declaration is the whole of what the cosmology reports.** Since prompt 07 of
+        prompts/qcd-background-audit/, integration_break_points(kind=BREAK_POINT_ALL) returns the
+        crossings of these temperatures and nothing else -- 3 of QCD_EOS's 4 fall inside the
+        production range. It used to return the interior knots of the T(z) tabulation as well,
+        which is why a "break point" and "a crossing of one of these temperatures" were once
+        different things and are now the same thing.
         """
         return ()
 
@@ -93,13 +111,21 @@ class GenericEOSBase(ABC):
         The subset of break_temperatures_GeV at which a quantity actually *jumps*, rather than
         merely losing a derivative: the pieces of G(T), Gs(T) or w(T) that meet here do not join.
 
-        This is a strictly weaker declaration than break_temperatures_GeV and it exists for a
-        different consumer. A fixed-order quadrature panel has to be split at every break, jump or
-        kink alike, so it asks for break_temperatures_GeV; an *adaptive* ODE solver only has to be
-        split at a jump, because a C2 point does not invalidate an embedded Runge-Kutta error
-        estimator while a discontinuous right-hand side does. See
-        Quadrature/integrators/numeric_with_phase_cut.py for why that matters, and
-        LambdaCDM_GenericEOS.integration_break_points(..., kind=) for how the two are requested.
+        This is a weaker declaration than break_temperatures_GeV and it exists for a different
+        consumer. A fixed-order quadrature panel has to be split at every break, jump or kink
+        alike, so it asks for break_temperatures_GeV; an *adaptive* ODE solver is in principle
+        troubled only by a jump, because a C2 point does not invalidate an embedded Runge-Kutta
+        error estimator while a discontinuous right-hand side does.
+
+        That principle is not, by itself, what the numeric sectors go by, and this docstring used
+        to say it was. GkTk-remedial prompt 19 *measured* the question and found that the Tk
+        numeric sector did better with more than the jumps, so the choice of kind is a per-caller
+        decision taken on measurement: Quadrature/integrators/numeric_with_phase_cut.py's module
+        docstring records which sector asks for which and why, and
+        LambdaCDM_GenericEOS.integration_break_points(..., kind=) is how the two are requested.
+        On QCD_Cosmology's production range the two sets are 3 points and 2 -- the same
+        temperature crossings, less the one join at which g_s does not actually step
+        (prompts/qcd-background-audit/, prompt 07).
 
         A smooth equation of state has none, which is also the default: an equation of state
         written without any knowledge of this distinction declares nothing, and every consumer
