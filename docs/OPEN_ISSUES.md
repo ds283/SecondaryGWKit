@@ -1,6 +1,6 @@
 # Open issues — project-wide index
 
-**Last updated:** 2026-09-14 · **58 open** across eight campaigns.
+**Last updated:** 2026-09-14 · **59 open** across eight campaigns.
 
 This file exists so that an issue opened by one campaign is not lost when that campaign closes.
 It is an **index, not a record**: one line per issue, pointing at the campaign status board that
@@ -168,6 +168,7 @@ the audit's 3.4605e-08 in conformal time in 0.013 s, and pins the branch joins b
 | `[13-consumer-spline-crosses-eos-break-points]` | GkTk-remedial → qcd-background-audit | `PrimitivePhase`'s cubic spline of $\varphi$ uses default knots across `QCD_EOS`'s declared break points: 1.9e-6 / 3.2e-6 rad at $z=4.24\times10^7$ ($G_k$ / $T_k$, $k=10^5$) against 1 ulp elsewhere. **Narrowed by prompt 02 (2026-09-13), which stopped rather than fixing it:** a repeated-knot vector is singular on all six production grids at `BREAK_POINT_ALL` and 2× worse at `BREAK_POINT_DISCONTINUITY`, no break point coincides with a sample, and the kink itself is only 1.6e-8 / 1.4e-7 rad — 1 % and 4 % — of the error. **Superseded 2026-09-13** by `qcd-background-audit-2026-09.md`: 404 of the 407 `BREAK_POINT_ALL` points are knots of the `T(z)` spline itself, not cosmology, so the fix is to remove that artefact upstream — after which the set falls to 3 and a knot vector constructs. Owned by the `qcd-background-audit` campaign, prompt 10. |
 | `[01-convergence-block-has-a-separate-generator]` | qcd-background-audit | `wkb_reference_data.json`'s top-level `convergence` block (geometry, per-order convergence, `decision.N_*`) is written by `docs/gktk-remedial/residual_convergence.py`, not by prompt 02's QCD-only regenerator; five tests read it directly. Stale the moment 04–06 move the QCD block unless something re-runs it. **Next step:** prompt 08, whose charter already re-takes this measurement. |
 | `[02-fixture-tests-pinned-to-todays-break-point-artefact]` | qcd-background-audit | Two assertions hard-code today's ~404-knot `BREAK_POINT_ALL` count and go **false**, not just stale, once prompt 07 collapses it to 3: `test_numeric_break_points.py::test_kind_selects_knots_or_jumps` (`len(every) > 100`) and `test_background_tau.py::test_qcd_break_points`. **Next step:** prompt 07 rewrites both in its own commit. |
+| `[03-qcd-inventory-does-not-report-the-representation]` | qcd-background-audit | `sqla_QCDCosmology_factory.inventory()` and `tools/inventory_report.py` show QCD cosmology rows without the `T_z_representation` column prompt 03 added, so from prompt 04 rows differing only in their representation render as indistinguishable duplicates to the only tool that inspects a datastore. One line in `inventory()`; out of scope for prompt 03, whose §2 item 4 fixes the key and nothing else. |
 
 ---
 

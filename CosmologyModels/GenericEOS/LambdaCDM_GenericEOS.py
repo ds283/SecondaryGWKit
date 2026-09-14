@@ -30,6 +30,48 @@ class LambdaCDM_GenericEOS(BaseCosmology):
     Construct a datastore
     """
 
+    # The identity of the T(z) representation this class builds its background from. It is part of
+    # the QCD cosmology's datastore lookup key
+    # (Datastore/SQL/ObjectFactories/QCD_Cosmology.py), and it exists because nothing else in that
+    # key can see the representation: build() matches on the seven parameter values and
+    # log10_max_z, every one of which is an *input* to the model rather than a property of how
+    # T(z) is approximated from those inputs.
+    #
+    # What it identifies -- everything about the background that the parameter key does not
+    # otherwise capture:
+    #
+    #   * the tolerance to which _solve_T_z root-solves each node of the tabulation;
+    #   * the quantity that is tabulated and splined -- T itself, or the entropy factor
+    #     F(u) = log(T / [T_CMB (1+z)]) whose ramp is known in closed form;
+    #   * the number of nodes and the order of the spline through them;
+    #   * whether the representation is segmented at the redshifts where T(z) genuinely jumps, and
+    #     where those segment edges are placed;
+    #   * the set of points integration_break_points declares, because every quadrature and every
+    #     ODE in the tree splits its panels there, so a BackgroundModel built against a different
+    #     set is a different background.
+    #
+    # Every prompt in prompts/qcd-background-audit/ that changes any of those bumps this constant,
+    # and a bump is the only signal a datastore ever gets:
+    #
+    #   version | prompt | what changed
+    #   --------+--------+-----------------------------------------------------------------------
+    #      1    |   03   | nothing numerically; the key exists
+    #
+    # (prompts 04, 05, 06 and 07 each append a row here as they land.)
+    #
+    # Why this is not optional. Without it the same cosmology row is returned under the same
+    # serial when the representation changes; every BackgroundModel keyed on that serial is found
+    # and deserialised; its tau, cs_tau and friction_F limbs are the *old* background's; and every
+    # Gk/Tk numeric and WKB row built on it is served against a background that no longer exists
+    # in the code. There is no exception, no warning and no column that differs -- a stale row is
+    # otherwise undetectable, which is the whole reason this constant exists. The discrepancy the
+    # campaign removes is 3.461e-08 relative in conformal time, which is of order 1.4e5 radians of
+    # oscillation phase at k = 3e8/Mpc, so a stale row is not a small inaccuracy.
+    #
+    # This follows TkNumericIntegration.BREAK_POINT_KIND: a single declaration, readable from the
+    # class without an instance, so that the factory can filter on it before any model is built.
+    T_Z_REPRESENTATION_VERSION: int = 1
+
     def __init__(
         self,
         store_id: int,

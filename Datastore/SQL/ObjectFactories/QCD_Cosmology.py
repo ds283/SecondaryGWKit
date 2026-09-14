@@ -1,6 +1,27 @@
+"""
+Datastore factory for QCD_Cosmology.
+
+SCHEMA NOTE (prompts/qcd-background-audit, prompt 03). The lookup key carries a
+"T_z_representation" column beside the seven parameter values and log10_max_z. It holds
+LambdaCDM_GenericEOS.T_Z_REPRESENTATION_VERSION, which identifies how T(z) is represented -- the
+node solve's tolerance, the quantity splined, the node count, the spline order, the segmentation,
+and the break-point set -- none of which the parameter values can see.
+
+Without it, a datastore written before a representation change is served back under the same
+serial: the same cosmology row matches, every BackgroundModel keyed on that serial deserialises,
+and its tau, cs_tau and friction_F limbs are the old background's, with no exception and no column
+that differs. A datastore whose QCD_Cosmology table lacks the column predates prompt 03 and its
+QCD half must be regenerated; there is no migration, because the rows record no representation
+and there is no defensible value to assume for them. Datastore._ensure_tables() creates missing
+tables but never alters an existing one, so the mismatch surfaces when SQLite executes build()'s
+select ("no such column"); build() below catches that and raises with this message rather than
+letting a SQLAlchemy error a reader cannot interpret escape.
+"""
+
 from math import log10
 
 import sqlalchemy as sqla
+from sqlalchemy.exc import SQLAlchemyError
 
 from CosmologyModels.GenericEOS.QCD_Cosmology import QCD_Cosmology
 from Datastore.SQL.ObjectFactories.base import SQLAFactoryBase
@@ -25,6 +46,12 @@ class sqla_QCDCosmology_factory(SQLAFactoryBase):
                 sqla.Column("T_CMB_Kelvin", sqla.Float(64)),
                 sqla.Column("Neff", sqla.Float(64)),
                 sqla.Column("log10_max_z", sqla.Float(64)),
+                # the identity of the T(z) representation (module docstring above). An integer
+                # identifier, not a measured quantity: it is compared for equality and
+                # DEFAULT_FLOAT_PRECISION has no business near it.
+                sqla.Column(
+                    "T_z_representation", sqla.Integer, index=True, nullable=False
+                ),
             ],
         }
 
@@ -45,23 +72,49 @@ class sqla_QCDCosmology_factory(SQLAFactoryBase):
         T_CMB_Kelvin = params.T_CMB_Kelvin
         Neff = params.Neff
 
-        store_id = conn.execute(
-            sqla.select(table.c.serial).filter(
-                sqla.and_(
-                    sqla.func.abs(table.c.omega_m - omega_m) < DEFAULT_FLOAT_PRECISION,
-                    sqla.func.abs(table.c.omega_cc - omega_cc)
-                    < DEFAULT_FLOAT_PRECISION,
-                    sqla.func.abs(table.c.h - h) < DEFAULT_FLOAT_PRECISION,
-                    sqla.func.abs(table.c.f_baryon - f_baryon)
-                    < DEFAULT_FLOAT_PRECISION,
-                    sqla.func.abs(table.c.T_CMB_Kelvin - T_CMB_Kelvin)
-                    < DEFAULT_FLOAT_PRECISION,
-                    sqla.func.abs(table.c.Neff - Neff) < DEFAULT_FLOAT_PRECISION,
-                    sqla.func.abs(table.c.log10_max_z - log10_max_z)
-                    < DEFAULT_FLOAT_PRECISION,
-                )
+        # the representation is read from its single declaration on the model class, never written
+        # out as a literal here: a literal would stop tracking the constant the moment a later
+        # prompt bumps it, which is the exact failure this key exists to prevent.
+        T_z_representation = QCD_Cosmology.T_Z_REPRESENTATION_VERSION
+
+        query = sqla.select(table.c.serial).filter(
+            sqla.and_(
+                sqla.func.abs(table.c.omega_m - omega_m) < DEFAULT_FLOAT_PRECISION,
+                sqla.func.abs(table.c.omega_cc - omega_cc) < DEFAULT_FLOAT_PRECISION,
+                sqla.func.abs(table.c.h - h) < DEFAULT_FLOAT_PRECISION,
+                sqla.func.abs(table.c.f_baryon - f_baryon) < DEFAULT_FLOAT_PRECISION,
+                sqla.func.abs(table.c.T_CMB_Kelvin - T_CMB_Kelvin)
+                < DEFAULT_FLOAT_PRECISION,
+                sqla.func.abs(table.c.Neff - Neff) < DEFAULT_FLOAT_PRECISION,
+                sqla.func.abs(table.c.log10_max_z - log10_max_z)
+                < DEFAULT_FLOAT_PRECISION,
+                # an equality, alongside -- not instead of -- the parameter key that was already
+                # here: a row built under a different T(z) representation is a different
+                # background and must miss.
+                table.c.T_z_representation == T_z_representation,
             )
-        ).scalar()
+        )
+
+        try:
+            store_id = conn.execute(query).scalar()
+        except SQLAlchemyError as e:
+            # a datastore written before prompt 03 has no T_z_representation column, and its rows
+            # record no representation at all. There is no defensible default to supply, so this
+            # fails loudly rather than silently matching -- the defect being repaired is precisely
+            # a stale row that looked like a hit. This is the pattern prompts 03 and 04 of
+            # prompts/GkTk-remedial set at
+            # Datastore/SQL/ObjectFactories/BackgroundModel.py:300-309.
+            if "T_z_representation" in str(e):
+                raise RuntimeError(
+                    "QCD_Cosmology.build(): the QCD_Cosmology table has no "
+                    '"T_z_representation" column. This datastore predates the T(z) '
+                    "representation becoming part of the cosmology lookup key "
+                    "(prompts/qcd-background-audit, prompt 03) and its QCD half must be "
+                    "regenerated; there is no migration. Its rows record no representation, so "
+                    "the BackgroundModel, Gk and Tk rows hanging from them cannot be told apart "
+                    "from rows computed against the background now in the code."
+                ) from e
+            raise
 
         # if not present, create a new id using the provided inserter
         if store_id is None:
@@ -74,6 +127,7 @@ class sqla_QCDCosmology_factory(SQLAFactoryBase):
                 "T_CMB_Kelvin": T_CMB_Kelvin,
                 "Neff": Neff,
                 "log10_max_z": log10_max_z,
+                "T_z_representation": T_z_representation,
             }
             if "serial" in payload:
                 insert_data["serial"] = payload["serial"]

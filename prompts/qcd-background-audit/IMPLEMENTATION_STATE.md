@@ -3,7 +3,7 @@
 **Campaign:** [`README.md`](README.md) · **Source document:**
 [`docs/qcd-background-audit-2026-09.md`](../../docs/qcd-background-audit-2026-09.md)
 **Baseline commit:** `e8f746d` (`qcd-background-audit`, clean; identical to `main`)
-**Last updated:** 2026-09-14 — **prompt 02 complete; 2 / 12.** Twelve prompts in four workstreams.
+**Last updated:** 2026-09-14 — **prompt 03 complete; 3 / 12.** Twelve prompts in four workstreams.
 Every figure below is the audit's, and prompt 01 re-measured the representation, the branch joins,
 the jump locations and the conformal-time error **from the test tree** on `2a5e0fa`: all of them
 reproduce the audit to every digit it quotes. The audit's script
@@ -22,7 +22,7 @@ Legend: ⬜ not started · 🟡 in flight · ✅ complete · ⚠️ complete wit
 |---|---|---|---|---|---|
 | 01 | [The background-against-background harness](01-background-reference-harness.md) | Opus | ⚠️ | *"Add a background-against-background test for the QCD temperature"* (SHA not embedded, per the campaign convention) | [`logs/01-background-reference-harness.md`](logs/01-background-reference-harness.md) |
 | 02 | [Make the QCD reference fixture regenerable](02-regenerable-qcd-references.md) | Sonnet | ⚠️ | *"Make the QCD reference fixture regenerable before the background moves"* (SHA not embedded, per the campaign convention) | [`logs/02-regenerable-qcd-references.md`](logs/02-regenerable-qcd-references.md) |
-| 03 | [Key the `T(z)` representation](03-key-the-representation.md) | Opus | ⬜ | | |
+| 03 | [Key the `T(z)` representation](03-key-the-representation.md) | Opus | ⚠️ | *"Key the QCD cosmology on its temperature representation"* (SHA not embedded, per the campaign convention) | [`logs/03-key-the-representation.md`](logs/03-key-the-representation.md) |
 | 04 | [Tighten `_solve_T_z` (T2)](04-tighten-node-solve.md) | Sonnet | ⬜ | | |
 | 05 | [Spline the entropy factor (T3)](05-entropy-factor-representation.md) | Opus | ⬜ | | |
 | 06 | [Segment at the jumps (T4)](06-segment-at-the-jumps.md) | Opus | ⬜ | | |
@@ -48,7 +48,7 @@ Legend: ⬜ not started · 🟡 in flight · ✅ complete · ⚠️ complete wit
 | 11 | [A cosmology-aware source grid](11-cosmology-aware-source-grid.md) | Opus | ⬜ | | |
 | 12 | [A measured grid-density criterion](12-grid-density-criterion.md) | Opus | ⬜ | | |
 
-**Progress:** 2 / 12 complete (2 / 9 in the ungated chain 01–09).
+**Progress:** 3 / 12 complete (3 / 9 in the ungated chain 01–09).
 
 **Prompt 01 landed `COMPLETE WITH DEVIATIONS`** — no production file changed; two new modules,
 `CosmologyModels/tests/T_z_reference.py` and `CosmologyModels/tests/test_T_z_representation.py`,
@@ -75,14 +75,37 @@ assertions (`test_kind_selects_knots_or_jumps`, `test_qcd_break_points`) are pin
 unchanged: `CosmologyModels` 18, `ComputeTargets` 339, `LiouvilleGreen` 143/143 on the fast set
 (`test_3bessel_analytic` excluded; see the log).
 
+**Prompt 03 landed `COMPLETE WITH DEVIATIONS`** — **no number moved**, demonstrated rather than
+asserted: `T_photon`, `Hubble` and `rho` as exact `float.hex()` on 4,001 points over
+$z\in[0,10^{19}]$ for `QCD_Cosmology`, `LambdaCDM` and `LambdaCDM_GenericEOS(PureRadiationEOS)` are
+**byte-identical** to `3478ae3` (12,003 lines, MD5 `022cbbc1faf075233f54f84d5d0959f8`), and
+`generate_qcd_references.py --dry-run` reports no change in all 12 science keys. README §7 **D1
+option (i)** was taken, unchanged: `LambdaCDM_GenericEOS.T_Z_REPRESENTATION_VERSION = 1`
+(`LambdaCDM_GenericEOS.py:73`, inherited by `QCD_Cosmology`, not shadowed) and a
+`T_z_representation` integer column on the QCD cosmology table, filtered on as an equality in
+`build()` and written by `insert_data`. A pre-prompt-03 datastore raises `RuntimeError` from
+`sqla_QCDCosmology_factory.build()` naming this campaign and demanding regeneration — the mismatch
+reaches `build()` as SQLite's `no such column`, **not** as a missing attribute, because
+`Datastore._build_schema()` builds the `Table` from the code while `_ensure_tables()` never alters
+an existing table. One new module, `ComputeTargets/tests/test_cosmology_representation_key.py`,
+15 tests in 0.19 s; `ComputeTargets` 339 → 354. Five deviations, all in
+[its log](logs/03-key-the-representation.md); the only `STRUCTURALLY REQUIRED` one is that the
+prompt's named precedent (`test_numeric_break_point_key.py`) stands up **no** in-memory datastore —
+it compiles queries against a stand-in connection — so the tests create an SQLite engine directly
+and prompt §3 items 1 and 3 are scored against real SQL rather than a compiled query. None touches
+a README §2 design fact.
+
 **The representation version.** `T_Z_REPRESENTATION_VERSION` is introduced by prompt 03 and bumped
 by **04, 05, 06 and 07**. Its value at each prompt boundary is recorded here as the campaign runs,
-because it is the only thing that tells a datastore that its QCD rows are stale.
+because it is the only thing that tells a datastore that its QCD rows are stale. **Bump it on
+`LambdaCDM_GenericEOS`, not on `QCD_Cosmology`**, and add a row to the table in the comment block
+above the declaration.
 
 | After prompt | `T_Z_REPRESENTATION_VERSION` | What changed |
 |---|---|---|
 | 01 | *(does not exist)* | no production file touched |
-| 03 | 1 | nothing numerically; the key exists |
+| 02 | *(does not exist)* | no production file touched |
+| 03 | **1** | nothing numerically; the key exists |
 | 04 | *(to be recorded)* | node solve tightened |
 | 05 | *(to be recorded)* | entropy-factor representation |
 | 06 | *(to be recorded)* | segmented at the jumps |
@@ -170,6 +193,21 @@ Opened by this campaign's planning, 2026-09-13:
   cannot pass with the suite green unless these two assertions are rewritten in the same commit.
   **Next step:** prompt 07 edits both (`docs/qcd-background-audit/REFERENCE-FIXTURE.md` §5 names
   them explicitly); not done here because prompt 02 changes no number and these are not yet false.
+- **[03-qcd-inventory-does-not-report-the-representation]** *(prompt 03, 2026-09-14)* —
+  `sqla_QCDCosmology_factory.inventory()`
+  (`Datastore/SQL/ObjectFactories/QCD_Cosmology.py`) reports `name`, `omega_m`, `omega_cc`, `h`
+  and `log10_max_z` per row, and `tools/inventory_report.py:46` lists `QCD_Cosmology` among the
+  tables it summarises. Neither shows the new `T_z_representation` column. **Impact:** from prompt
+  04 onward a datastore can legitimately hold several QCD cosmology rows differing **only** in
+  their representation — same name, same seven parameters, same `log10_max_z` — and the only tool
+  that inspects a datastore will render them as indistinguishable duplicates, which is precisely
+  the confusion the column exists to remove, moved one layer out. Low severity: no computation
+  reads `inventory()`, and the lookup key itself is correct. **Next step:** add
+  `"T_z_representation": row.T_z_representation` to the `values` list in `inventory()` and to the
+  selected columns above it. Not done in prompt 03 because its §2 item 4 is explicit that the
+  commit changes the key and nothing else, and `inventory()` is not part of the key. Worth doing
+  before prompt 09, which is the first prompt likely to look at a datastore holding rows at two
+  representations.
 
 Inherited, and **assigned to this campaign** (each is owned by the board named, which holds its
 measurements and its history; the closure is recorded there):
@@ -222,8 +260,13 @@ Re-measured but **not owned** here (they stay where they are; a prompt that move
    different quantity, 0.15 % away. Log 01 deviation 2.
 5. **The improved representation is cheaper per call**, not more expensive: 2.19–2.21 µs against
    2.26–2.44 µs. A reported regression means something other than the measured design was built.
-6. **Every number this campaign moves is invisible to the datastore's lookup key** until prompt 03
-   lands. That is why prompt 03 comes before prompt 04 and not after.
+6. **Every number this campaign moves was invisible to the datastore's lookup key** until prompt
+   03 landed. That is why prompt 03 came before prompt 04 and not after. **As of prompt 03 the key
+   can see it, but only if the prompt that moves the number bumps
+   `LambdaCDM_GenericEOS.T_Z_REPRESENTATION_VERSION`** (`LambdaCDM_GenericEOS.py:73`) in the same
+   commit. Bumping it is the whole of what is required and is required of every one of 04, 05, 06
+   and 07; the column, the filter and the insert all read that single declaration, and
+   `ComputeTargets/tests/test_cosmology_representation_key.py` fails if the link is broken.
 7. **The QCD half of `wkb_reference_data.json` is built from the shipped `T(z)`** and moves with it
    (README §2 (e)). Ten test modules assert against it. Prompt 02 is the map.
 8. **`BREAK_POINT_ALL` is load-bearing today.** `GkTk-remedial` prompt 19 measured that the $T_k$
