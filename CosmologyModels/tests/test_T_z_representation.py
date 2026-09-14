@@ -65,22 +65,32 @@ PRODUCTION_MAX_Z = 1.0e20
 # ------------------------------------------------------------------------------------------
 
 # case 1 -- T_photon against the defining equation, audit §3 / README §6.1.
-# Tightened by prompt 04 (p90 -> 2.0e-07, achieved 1.936e-07; median -> 1.1e-07, achieved
-# 1.071e-07). The max is *not* tightened here: accurate nodes fix the p90, not the max, which
-# stays pinned near the jump height until prompt 06 segments the representation -- it in fact
-# moves slightly worse, 7.177e-04 -> 7.26e-04 (achieved 7.2615e-04), because a different set of
-# nodes now bracket the jump. This is README §6.1's "After 04" column, measured, not a regression:
-# prompt 05 (median -> 3.0e-10) and prompt 06 (max -> 1e-10, p90 -> 1e-14, median -> 1e-15)
-# tighten the rest.
-T_PHOTON_MAX = 7.27e-04
-T_PHOTON_P90 = 2.0e-07
-T_PHOTON_MEDIAN = 1.1e-07
+# Tightened by prompt 05 to README §6.1's "After 05" column: the splined quantity is now the
+# entropy factor F(u) = log(T / [T_CMB (1+z)]) rather than T itself, so the interpolant no longer
+# spends its degrees of freedom on the (1+z) ramp. Median -> 3.0e-10 (achieved 2.599e-10, a
+# factor of 412 below prompt 04's 1.071e-07) and p90 -> 9.0e-08 (achieved 8.912e-08).
+#
+# The max barely moves, 7.2615e-04 -> 7.236e-04, and it is tightened only to the "After 05"
+# figure rather than to anything meaningful: it is pinned at the height of the jump in T(z),
+# which no node count and no choice of splined quantity touches, because a single spline is
+# being run straight across a genuine discontinuity. **That is prompt 06's**, which segments the
+# representation at the jumps and tightens max -> 1e-10, p90 -> 1e-14, median -> 1e-15.
+T_PHOTON_MAX = 7.24e-04
+T_PHOTON_P90 = 9.0e-08
+T_PHOTON_MEDIAN = 3.0e-10
 
 # case 2 -- the node solve's own rtol = 1e-4, audit §3 (T2). Tightened by prompt 04 to 1e-14
 # (achieved: bit-identical to the rtol=1e-14 reference on the probe set, so exactly 0.0).
 NODE_SOLVE_MAX = 1.0e-14
 
 # case 3 -- the T1 guard, audit §5 / README §6.2. Tightened by prompt 06 to 1e-15.
+#
+# **Not tightened by prompt 05, but measured**: 3.4605e-08 (prompt 01) -> 3.4509e-08 (prompt 04)
+# -> 5.4264e-10 here, a factor of 64 from the entropy factor alone. Most of the conformal-time
+# error was never the jump -- the jump is a set of measure zero in the integral -- but the
+# interpolation error carried across the whole range, which is what the median measures and what
+# this prompt fixes. The remaining 5.4e-10 is 0.74 rad at k = 1e5/Mpc against a 3.05e-07 rad
+# floor, so T1 is not closed: prompt 06 owns this threshold and takes it to 1e-15.
 CONFORMAL_TIME_REL = 4.0e-08
 CONFORMAL_TIME_Z_LO = 1.0e2
 CONFORMAL_TIME_Z_HI = 1.0e12
@@ -113,8 +123,14 @@ LINEARISED_JUMP_TOL = 2.0e-06
 BRANCH_FLATNESS = 1.0e-12
 
 # case 6 -- a constant-gs equation of state is an exact ramp, README §2 (g).
-# Tightened by prompt 05, where the new representation should be exact to a few ulp.
-EXACT_RAMP_MAX = 2.0e-07
+# Tightened by prompt 05 from 2.0e-07 to 1.0e-15: with g_s constant, F(u) is identically zero,
+# the interpolating spline of a constant is that constant, and the representation returns
+# T_CMB (1+z) * exp(0) -- the closed-form answer, not an approximation to it. Achieved 2.928e-16,
+# about 1.3 ulp, against the 1.9e-07 the T-against-u spline managed on the same model. This is
+# the cleanest demonstration available that the new shape is doing what it claims: the two other
+# representation defects (node accuracy, segmentation) are both switched off on this equation of
+# state, so what is left is T3 alone.
+EXACT_RAMP_MAX = 1.0e-15
 EXACT_RAMP_NODE_MAX = 1.0e-15
 
 # case 7 -- the segment-edge trap, README §2 (b). A relative residual this far above machine
@@ -450,9 +466,16 @@ class TestConstantEntropyEquationOfState(unittest.TestCase):
     def test_a_constant_gs_equation_of_state_is_an_exact_ramp(self):
         """
         With ``g_s`` constant the defining equation is linear in ``T``, so ``_solve_T_z`` is exact
-        to round-off even at ``rtol = 1e-4`` -- and the shipped *spline* over those exact nodes is
-        still wrong by 1.9e-07, because it spends 500 points in ``u`` re-deriving a ``(1+z)`` ramp
-        that is known in closed form. That is finding T3 with the other two defects switched off.
+        to round-off even at ``rtol = 1e-4``. The *spline* over those exact nodes was nevertheless
+        wrong by 1.9e-07, because it spent 500 points in ``u`` re-deriving a ``(1+z)`` ramp that is
+        known in closed form: that was finding T3 with the other two defects switched off.
+
+        Since prompt 05 the splined quantity is ``F(u) = log(T / [T_CMB (1+z)])``, which on this
+        equation of state is identically zero. The interpolating spline of a constant is that
+        constant, so the representation returns ``T_CMB (1+z)`` in closed form and the measured
+        error is 2.9e-16 -- round-off, about 1.3 ulp, rather than interpolation. The
+        representation is **exact** on a constant-``g_s`` model, not merely accurate
+        (README §2 (g)).
 
         The equation of state declares no break temperatures, so ``jump_locations`` is empty and
         the model takes the unchanged code path throughout the campaign.

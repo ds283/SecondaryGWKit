@@ -6,7 +6,7 @@ from numpy import linspace
 from scipy.interpolate import make_interp_spline
 from scipy.optimize import root_scalar
 
-from ComputeTargets.spline_wrappers import ZSplineWrapper
+from ComputeTargets.spline_wrappers import _outward
 from CosmologyModels import BaseCosmology
 from CosmologyModels.GenericEOS.GenericEOS import (
     BREAK_POINT_ALL,
@@ -23,6 +23,112 @@ DEFAULT_MAX_TEMPERATURE_Z_REDSHIFT = 1e20
 # accurate; see the comment where the spline is built. Four steps of 0.05 is where this value came
 # from, but nothing reads a step size any more.
 DEFAULT_MIN_TEMPERATURE_Z_REDSHIFT = -0.2
+
+# Number of tabulation nodes, and the order of the spline through them, used by
+# _build_T_z_spline. Measured on the audit's 640-point probe set
+# (CosmologyModels/tests/T_z_reference.py, probe_set()) against the defining equation root-solved
+# to rtol = 1e-14, with the entropy factor as the splined quantity:
+#
+#   nodes   order      max        p90      median    build     interior knots
+#   ------  -----  ---------  ---------  ---------  -------  ----------------
+#     500     3    7.236e-04  8.912e-08  2.599e-10   12.4 ms       498
+#     500     5    7.226e-04  2.022e-08  8.099e-13   11.9 ms       496
+#    2000     3    5.066e-05  2.508e-10  1.476e-13   50.5 ms      1998
+#    2000     5    5.580e-05  9.002e-14  2.320e-16   48.7 ms      1996
+#    3000     5    3.730e-04  7.062e-15  1.943e-16   71.9 ms      2996
+#
+# 500 / k = 3 is kept deliberately (prompts/qcd-background-audit/, prompt 05, README §7 D3). The
+# max is pinned at the height of the jump in T(z) at every node count -- it is set by the fact
+# that one spline runs straight across a genuine discontinuity, which is prompt 06's segmentation
+# and nothing else -- so extra nodes here buy only the p90 and the median, and they are paid for
+# in break points: every interior knot is declared by integration_break_points below, and every
+# quadrature and every ODE in the tree splits a panel at each of them. Holding the node count
+# fixed keeps that set at exactly what it was, so that this prompt moves one thing (the quantity
+# splined) and prompt 06 moves the next.
+DEFAULT_T_Z_SPLINE_SAMPLES = 500
+DEFAULT_T_Z_SPLINE_ORDER = 3
+
+
+class TemperatureRepresentation:
+    """
+    ``T(z)`` for a ``LambdaCDM_GenericEOS``: the closed-form ``(1+z)`` ramp times the exponential
+    of an interpolated *entropy factor*.
+
+    Entropy conservation gives ``T g_s(T)^(1/3) = T_CMB g_s(T_CMB)^(1/3) (1+z)``, so
+
+        T(z) = T_CMB (1+z) exp F(u),    F(u) = log( T / [T_CMB (1+z)] )
+                                             = -(1/3) log( g_s(T) / g_s(T_CMB) ),
+
+    with ``u = log(1+z)``. Only ``F`` is interpolated. It is bounded, ``O(1)``, and *exactly
+    constant* wherever ``g_s`` is -- which is most of the range -- whereas ``T`` itself is
+    dominated over twenty decades by the ramp, which is known in closed form. Splining ``T``
+    against ``u`` spends the interpolant's degrees of freedom re-deriving something exact; at 500
+    nodes that costs a factor of 400 in the median error (1.071e-07 against 2.599e-10). This is
+    finding T3 of ``docs/qcd-background-audit-2026-09.md`` §3.
+
+    The range logic -- the hard rejection outside ``SPLINE_BOUND_SLACK`` of the tabulated range
+    and the soft clamp inside it -- is ``ZSplineWrapper``'s, reproduced here rather than delegated
+    to because the ramp has to be clamped along with the interpolant: a wrapper that clamped only
+    ``F`` would let the ``(1+z)`` factor run away above ``max_z``. ``_outward`` is imported rather
+    than re-derived, so there is one definition of "outward" in the repository, and the
+    ``RuntimeError`` text is kept verbatim (prefix included) so that nothing that reads it changes.
+    """
+
+    def __init__(
+        self,
+        spline,
+        T_CMB: float,
+        label: str,
+        min_z: float,
+        max_z: float,
+    ):
+        # The SciPy BSpline of F(u). Deliberately named `_spline`, as in ZSplineWrapper:
+        # docs/gktk-remedial/residual_convergence.py reads `cosmology._T_z_spline._spline.t` to
+        # recover the tabulation's knots, and that script is the generator of the reference
+        # fixture's `convergence` block. Its knot vector is unchanged by this class -- F is
+        # tabulated at the same nodes, to the same order, as T used to be.
+        self._spline = spline
+        self._T_CMB = T_CMB
+        self._label = label
+
+        self._min_z = min_z
+        self._max_z = max_z
+
+        self._min_log_z = log(1.0 + min_z)
+        self._max_log_z = log(1.0 + max_z)
+
+    def __call__(self, z: float, z_is_log: bool = False) -> float:
+        if z_is_log:
+            log_z = z
+            raw_z = exp(z) - 1.0
+        else:
+            log_z = log(1.0 + z)
+            raw_z = z
+
+        # if some way out of bounds, reject
+        if log_z > _outward(self._max_log_z, +1):
+            raise RuntimeError(
+                f"GkSource.function: evaluated {self._label} out of bounds @ z={raw_z:.5g} (max allowed z={self._max_z:.5g}, recommended limit is z <= {_outward(self._max_z, -1):.5g})"
+            )
+
+        # otherwise, softly cushion the representation at the top end. The ramp is clamped with
+        # the interpolant, so the value returned is T(max_z) exactly as it was when T itself was
+        # the splined quantity.
+        if log_z > self._max_log_z:
+            log_z = self._max_log_z
+            raw_z = self._max_z
+
+        # same at lower limit
+        if log_z < _outward(self._min_log_z, -1):
+            raise RuntimeError(
+                f"GkSource.function: evaluated {self._label} out of bounds @ z={raw_z:.5g} (min allowed z={self._min_z:.5g}, recommended limit is z >= {_outward(self._min_z, +1):.5g})"
+            )
+
+        if log_z < self._min_log_z:
+            log_z = self._min_log_z
+            raw_z = self._min_z
+
+        return np.float64(self._T_CMB * (1.0 + raw_z) * exp(float(self._spline(log_z))))
 
 
 class LambdaCDM_GenericEOS(BaseCosmology):
@@ -57,8 +163,9 @@ class LambdaCDM_GenericEOS(BaseCosmology):
     #   --------+--------+-----------------------------------------------------------------------
     #      1    |   03   | nothing numerically; the key exists
     #      2    |   04   | _solve_T_z tightened from xtol=1e-6, rtol=1e-4 to xtol=1e-300, rtol=1e-14
+    #      3    |   05   | the entropy factor F(u) is splined, not T itself; T = T_CMB (1+z) e^F
     #
-    # (prompts 05, 06 and 07 each append a row here as they land.)
+    # (prompts 06 and 07 each append a row here as they land.)
     #
     # Why this is not optional. Without it the same cosmology row is returned under the same
     # serial when the representation changes; every BackgroundModel keyed on that serial is found
@@ -71,7 +178,7 @@ class LambdaCDM_GenericEOS(BaseCosmology):
     #
     # This follows TkNumericIntegration.BREAK_POINT_KIND: a single declaration, readable from the
     # class without an instance, so that the factory can filter on it before any model is built.
-    T_Z_REPRESENTATION_VERSION: int = 2
+    T_Z_REPRESENTATION_VERSION: int = 3
 
     def __init__(
         self,
@@ -240,8 +347,12 @@ class LambdaCDM_GenericEOS(BaseCosmology):
         return root.root
 
     def _build_T_z_spline(
-        self, min_z: float, max_z: float, samples: int = 500
-    ) -> ZSplineWrapper:
+        self,
+        min_z: float,
+        max_z: float,
+        samples: int = DEFAULT_T_Z_SPLINE_SAMPLES,
+        order: int = DEFAULT_T_Z_SPLINE_ORDER,
+    ) -> TemperatureRepresentation:
         # Add a 5% buffer to the min/max z range, so that a caller asking for exactly the
         # requested bounds is inside the tabulated range rather than on its edge.
         #
@@ -254,22 +365,42 @@ class LambdaCDM_GenericEOS(BaseCosmology):
         max_z = 1.05 * (1.0 + max_z) - 1.0
 
         log_z_values = linspace(log(1.0 + min_z), log(1.0 + max_z), samples)
-        T_values = [self._solve_T_z(exp(logz) - 1.0) for logz in log_z_values]
 
-        spline = make_interp_spline(log_z_values, T_values)
+        # What is tabulated is the *entropy factor*
+        #
+        #     F(u) = log( T(z) / [T_CMB (1+z)] ) = -(1/3) log( g_s(T) / g_s(T_CMB) ),
+        #
+        # not T itself, and TemperatureRepresentation multiplies the ramp back in on evaluation.
+        # The class docstring says why: F is bounded, O(1) and exactly constant wherever g_s is,
+        # while T over this range is almost entirely the (1+z) ramp, which is exact in closed
+        # form and needs no interpolant at all.
+        #
+        # There is no second root solve. The same _solve_T_z call that used to supply the node
+        # value of T supplies the node value of F, and the division below is written with
+        # (1.0 + z) -- exactly the factor the evaluation multiplies back -- so that the
+        # representation reproduces its own node values to the last bit rather than to within a
+        # rounding of exp(u) against 1+z.
+        z_values = [exp(logz) - 1.0 for logz in log_z_values]
+        F_values = [
+            log(self._solve_T_z(z) / (self._T_CMB * (1.0 + z))) for z in z_values
+        ]
+
+        spline = make_interp_spline(log_z_values, F_values, k=order)
 
         # The knot vector, in log(1+z), is kept because the spline is only C2 at its knots:
         # every quadrature of a quantity built from T(z) has to split its panels there
         # (integration_break_points below). Recorded here, where the spline is built, so that
-        # nothing outside this class has to reach into the wrapper for it.
+        # nothing outside this class has to reach into the representation for it. Tabulating F
+        # rather than T does not move a single knot: the nodes and the order are unchanged, so
+        # the declared break-point set is exactly the set it was.
         self._T_z_spline_knots_log1pz = np.unique(np.asarray(spline.t, dtype=float))
 
-        return ZSplineWrapper(
+        return TemperatureRepresentation(
             spline,
+            T_CMB=self._T_CMB,
             label="T(z)",
             min_z=min_z,
             max_z=max_z,
-            log_z=True,
         )
 
     def _temperature_crossing_log1pz(

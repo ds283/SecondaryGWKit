@@ -846,6 +846,12 @@ class TestQCDReferenceConvergence(unittest.TestCase):
     campaign's reference-convergence estimate is meaningless there
     (``docs/gktk-remedial/TK-NUMERIC-ATOL-SWEEP.md`` §4). After it, they converge.
 
+    **That description was measured on a background whose ``T(z)`` carried a 1e-07-level
+    interpolation error throughout**, and most of the unsplit run's drift turned out to be that
+    rather than the jump: since ``prompts/qcd-background-audit/`` prompt 05 the unsplit run also
+    converges at this wavenumber. See ``test_split_converges_where_unsplit_does_not`` for the
+    numbers, and README §7 D5 for why that does not by itself retire the split.
+
     k = 4.97e7/Mpc is chosen because it is the wavenumber at which the *standoff* of the segment
     boundary matters: with the boundary placed exactly on the crossing rather than a hair above
     it, this is the one of §4's four named failures that does not recover
@@ -858,6 +864,15 @@ class TestQCDReferenceConvergence(unittest.TestCase):
     # prompt 17 §2.1's criterion for QCD: a tenth of the smallest candidate difference the sweep
     # reports there, 3.45e-7
     ACCEPTANCE_DRIFT = 3.4e-8
+
+    # How much better the split run has to be than the unsplit one. See
+    # test_split_converges_where_unsplit_does_not, which used to assert `unsplit > 1e-6` -- that
+    # the unsplit run *fails* ACCEPTANCE_DRIFT outright. That premise was falsified by
+    # prompts/qcd-background-audit/ prompt 05 and the test now asserts the weaker, true statement
+    # that splitting still buys the better part of an order of magnitude. Measured 7.65x; 5.0
+    # leaves room for the arithmetic to move without letting a genuine loss of the split's value
+    # through.
+    UNSPLIT_PENALTY_FACTOR = 5.0
 
     REFERENCE = (1e-18, 1e-12)
     TIGHTENED = (1e-19, 1e-13)
@@ -929,26 +944,71 @@ class TestQCDReferenceConvergence(unittest.TestCase):
         # prompts/qcd-background-audit/ prompt 04 tightened _solve_T_z's node solve, which moves
         # the T(z) spline this crossing is solved against (README §2 (d)): 8.64355463e11 ->
         # 8.64366999e11, a 1.335e-05 relative shift -- not a new physical crossing, the same
-        # T_120_MEV branch located slightly more accurately.
+        # T_120_MEV branch located slightly more accurately. Prompt 05 moves it once more, for
+        # the same reason -- the splined quantity became the entropy factor, so the spline moved
+        # again -- by a further 1.712e-05 relative: 8.64366999e11 -> 8.6438180e11. Still the same
+        # branch, still the same physics; `places` is unchanged.
         points = declared_discontinuities_in_z(
             self.model, float(self.grid.min), self.grid.max.z
         )
         self.assertEqual(len(points), 1)
-        self.assertAlmostEqual(points[0] / 8.64366999e11, 1.0, places=6)
+        self.assertAlmostEqual(points[0] / 8.6438180e11, 1.0, places=6)
 
     def test_split_converges_where_unsplit_does_not(self):
+        """
+        **The method name records the measurement as it stood when the test was written, and that
+        measurement no longer holds.** It asserted ``unsplit > 1e-6`` -- that a run which does not
+        split at the declared discontinuity *fails* ``ACCEPTANCE_DRIFT`` outright. Measured on
+        this wavenumber, at the two commits either side of
+        ``prompts/qcd-background-audit/`` prompt 05:
+
+            prompt 04 (tightened nodes, T splined against u):  split 2.2136e-09
+                                                               unsplit 1.0213e-06  (fails 3.4e-08,
+                                                                                    and cleared
+                                                                                    the 1e-6 bound
+                                                                                    by only 2 %)
+            prompt 05 (entropy factor splined):                split 2.9753e-09
+                                                               unsplit 2.2767e-08  (passes 3.4e-08)
+
+        The unsplit run improved by a factor of 45 while the split run barely moved, so most of
+        what the split was rescuing was never the jump in ``H(z)`` at the ``T_120_MEV`` crossing:
+        it was the interpolation noise the old representation carried across the whole range,
+        which the entropy factor removes (audit §3, T3).
+
+        **Whether that means ``BREAK_POINT_ALL`` has stopped being load-bearing is README §7 D5's
+        question, and it is not decided here.** This is one wavenumber of fifty, in the ``T_k``
+        sector alone; ``TkNumericIntegration.BREAK_POINT_KIND`` is in a datastore lookup key; and
+        the campaign's README §2 (f) makes an unmeasured collapse of the break-point set a stop
+        condition. Prompt 08 re-takes ``GkTk-remedial`` prompt 19's measurement across all fifty
+        wavenumbers and reports; the board issue is
+        ``[04-unsplit-tk-run-now-meets-the-criterion]``.
+
+        What is asserted instead is what is still true and still worth guarding: the split run
+        meets the criterion, and splitting still buys the better part of an order of magnitude
+        (measured 7.65x).
+        """
         split = self._drift(self.model)
         unsplit = self._drift(self.unsplit)
 
-        self.assertGreater(
-            unsplit,
-            1e-6,
-            msg=f"the unsplit run is expected to fail the criterion; measured {unsplit:.4g}",
+        print(
+            f"[break points] k = {self.K_INV_MPC:.4g}/Mpc: split drift {split:.4e}, "
+            f"unsplit {unsplit:.4e} ({unsplit / split:.2f}x), criterion "
+            f"{self.ACCEPTANCE_DRIFT:.3e}"
         )
+
         self.assertLess(
             split,
             self.ACCEPTANCE_DRIFT,
             msg=f"split {split:.4g} against unsplit {unsplit:.4g}",
+        )
+        self.assertGreater(
+            unsplit,
+            self.UNSPLIT_PENALTY_FACTOR * split,
+            msg=(
+                f"splitting at the discontinuity no longer buys a factor of "
+                f"{self.UNSPLIT_PENALTY_FACTOR:g}: split {split:.4g}, unsplit {unsplit:.4g}. "
+                "See README §7 D5 and [04-unsplit-tk-run-now-meets-the-criterion]"
+            ),
         )
 
 

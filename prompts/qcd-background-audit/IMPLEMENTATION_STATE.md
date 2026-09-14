@@ -3,7 +3,7 @@
 **Campaign:** [`README.md`](README.md) · **Source document:**
 [`docs/qcd-background-audit-2026-09.md`](../../docs/qcd-background-audit-2026-09.md)
 **Baseline commit:** `e8f746d` (`qcd-background-audit`, clean; identical to `main`)
-**Last updated:** 2026-09-14 — **prompt 04 complete; 4 / 12.** Twelve prompts in four workstreams.
+**Last updated:** 2026-09-14 — **prompt 05 complete; 5 / 12.** Twelve prompts in four workstreams.
 Every figure below is the audit's, and prompt 01 re-measured the representation, the branch joins,
 the jump locations and the conformal-time error **from the test tree** on `2a5e0fa`: all of them
 reproduce the audit to every digit it quotes. The audit's script
@@ -24,7 +24,7 @@ Legend: ⬜ not started · 🟡 in flight · ✅ complete · ⚠️ complete wit
 | 02 | [Make the QCD reference fixture regenerable](02-regenerable-qcd-references.md) | Sonnet | ⚠️ | *"Make the QCD reference fixture regenerable before the background moves"* (SHA not embedded, per the campaign convention) | [`logs/02-regenerable-qcd-references.md`](logs/02-regenerable-qcd-references.md) |
 | 03 | [Key the `T(z)` representation](03-key-the-representation.md) | Opus | ⚠️ | *"Key the QCD cosmology on its temperature representation"* (SHA not embedded, per the campaign convention) | [`logs/03-key-the-representation.md`](logs/03-key-the-representation.md) |
 | 04 | [Tighten `_solve_T_z` (T2)](04-tighten-node-solve.md) | Sonnet | ⚠️ | *"Solve the T(z) spline nodes to a useful tolerance"* (SHA not embedded, per the campaign convention) | [`logs/04-tighten-node-solve.md`](logs/04-tighten-node-solve.md) |
-| 05 | [Spline the entropy factor (T3)](05-entropy-factor-representation.md) | Opus | ⬜ | | |
+| 05 | [Spline the entropy factor (T3)](05-entropy-factor-representation.md) | Opus | ⚠️ | *"Spline the entropy factor rather than the temperature itself"* (SHA not embedded, per the campaign convention) | [`logs/05-entropy-factor-representation.md`](logs/05-entropy-factor-representation.md) |
 | 06 | [Segment at the jumps (T4)](06-segment-at-the-jumps.md) | Opus | ⬜ | | |
 
 ### Workstream B — the break-point set (prompts 07–08)
@@ -48,7 +48,7 @@ Legend: ⬜ not started · 🟡 in flight · ✅ complete · ⚠️ complete wit
 | 11 | [A cosmology-aware source grid](11-cosmology-aware-source-grid.md) | Opus | ⬜ | | |
 | 12 | [A measured grid-density criterion](12-grid-density-criterion.md) | Opus | ⬜ | | |
 
-**Progress:** 4 / 12 complete (4 / 9 in the ungated chain 01–09).
+**Progress:** 5 / 12 complete (5 / 9 in the ungated chain 01–09).
 
 **Prompt 01 landed `COMPLETE WITH DEVIATIONS`** — no production file changed; two new modules,
 `CosmologyModels/tests/T_z_reference.py` and `CosmologyModels/tests/test_T_z_representation.py`,
@@ -119,6 +119,35 @@ to `1.4e-05` (`[01-convergence-block-has-a-separate-generator]`, not a new defec
 `[02-qcd-T-z-spline-node-tolerance]` on the `GkTk-remedial` board (§4 there). Full record:
 [`logs/04-tighten-node-solve.md`](logs/04-tighten-node-solve.md).
 
+**Prompt 05 landed `COMPLETE WITH DEVIATIONS`** — `_build_T_z_spline` now tabulates the **entropy
+factor** $F(u)=\log\big(T/[T_{\rm CMB}(1+z)]\big)$ rather than $T$ itself, from the *same*
+`_solve_T_z` call (no second solve), and a new `TemperatureRepresentation` class in
+`LambdaCDM_GenericEOS.py` multiplies the closed-form ramp back in on evaluation
+(README §7 **D2**, shape (ii): the range logic and the representation in one place, which is what
+prompt 06 segments; `ComputeTargets/spline_wrappers.py` was *not* touched — `_outward` is
+imported). **`T_Z_REPRESENTATION_VERSION` is 3.** README §7 **D3**: **500 nodes at $k=3$ kept**,
+deliberately — the max is pinned at the jump height at 500, 1,000, 2,000 and 3,000 nodes alike, so
+extra nodes buy only the p90 and the median and are paid for one-for-one in declared break points;
+holding the count fixed leaves `BREAK_POINT_ALL` at **407** (404 knots + 3 crossings) and
+`BREAK_POINT_DISCONTINUITY` at **2**, exactly as prompt 07 inherits them. On the audit's 640-point
+probe set the representation goes **7.2615e-04 / 1.936e-07 / 1.071e-07** →
+**7.236e-04 / 8.912e-08 / 2.599e-10** (max / p90 / median), reproducing audit §4's entropy-factor
+row to the digit; a constant-$g_s$ equation of state is now **exact** (2.928e-16, ~1.3 ulp, against
+1.940e-07). Two results beyond the prompt's targets: the **T1 guard fell 3.4509e-08 → 5.4264e-10**,
+a factor of 64 from the entropy factor alone (the threshold stays at 4.0e-08 — prompt 06 owns it —
+with the measurement recorded in its comment), and $H(z)$ on the probe set reads
+1.280e-03 / 1.923e-07 / 5.430e-10. Costs *fell*: `T_photon` 2.240 µs/call, `_build_T_z_spline`
+13.3 ms. LambdaCDM and `RadiationModel` are **byte-identical** to `71b842a` (6,008 `float.hex()`
+lines, MD5 `cb93a1a382c822a8077d025572faf5b1`). The QCD fixture was regenerated in this commit
+(largest relative move: `rho_G` 7.475e-03). **Three tolerances had to loosen** — one more than
+prompt §2 item 6 allows, so the prompt **stopped and asked**, and the user chose to land it: all
+three are `[01-convergence-block-has-a-separate-generator]` and nothing else, and prompt 08 should
+take them all back. A fourth assertion's **premise was falsified** and is the new
+`[04-unsplit-tk-run-now-meets-the-criterion]` below. Suites: `CosmologyModels` 18,
+`ComputeTargets` 354, `LiouvilleGreen` 143/143 fast set — none falls. Narrows
+`[01-genericeos-tz-spline-floor]` on the `source-remediation` board. Full record:
+[`logs/05-entropy-factor-representation.md`](logs/05-entropy-factor-representation.md).
+
 **The representation version.** `T_Z_REPRESENTATION_VERSION` is introduced by prompt 03 and bumped
 by **04, 05, 06 and 07**. Its value at each prompt boundary is recorded here as the campaign runs,
 because it is the only thing that tells a datastore that its QCD rows are stale. **Bump it on
@@ -131,7 +160,7 @@ above the declaration.
 | 02 | *(does not exist)* | no production file touched |
 | 03 | **1** | nothing numerically; the key exists |
 | 04 | **2** | `_solve_T_z` tightened from `xtol=1e-6, rtol=1e-4` to `xtol=1e-300, rtol=1e-14` |
-| 05 | *(to be recorded)* | entropy-factor representation |
+| 05 | **3** | `F(u) = log(T / [T_CMB (1+z)])` is splined, not `T`; 500 nodes at `k=3` unchanged |
 | 06 | *(to be recorded)* | segmented at the jumps |
 | 07 | *(to be recorded)* | break-point set collapsed |
 
@@ -143,7 +172,7 @@ above the declaration.
 |---|---|---|---|---|
 | **T1** | **DEFECT, critical** | 3.461e-08 relative in $\int\mathrm{d}z/H$ — of order 47.5 / 4.75e3 / 1.43e5 rad at $k=10^5/10^7/3\times10^8$ against 1-ulp floors of 3.05e-7 / 3.05e-5 / 9.15e-4 rad. **Common mode** between producer and consumer, so invisible to every test in the tree. | 01, 04, 05, 06 | 🟡 |
 | **T2** | **DEFECT, high** | `_solve_T_z` root-solves each spline node to `rtol=1e-4`; neighbouring nodes carry uncorrelated errors up to 2.496e-05. The root of `[02-qcd-T-z-spline-node-tolerance]`, and (measured, not asserted) of the $\pm0.1$ scatter in $\omega^2/\omega_0^2$ that `RESIDUAL_WKB_REGION_MARGIN = 0.5` exists to survive (`ComputeTargets/phase_residual.py:220`). | 04 | ⚠️ |
-| **T3** | **DEFECT, medium** | $T$ is splined against $u$, spending resolution on the $(1+z)$ ramp known in closed form. Splining $F(u)=\log(T/[T_{\rm CMB}(1+z)])$ instead improves the median 400× at the same node count (1.071e-07 → 2.599e-10). | 05 | ⬜ |
+| **T3** | **DEFECT, medium** | $T$ was splined against $u$, spending resolution on the $(1+z)$ ramp known in closed form. **Fixed by prompt 05:** `TemperatureRepresentation` splines $F(u)=\log(T/[T_{\rm CMB}(1+z)])$ and multiplies the ramp back in, improving the median 412× at the same 500 nodes (1.071e-07 → **2.599e-10**) and the p90 2.2× (1.936e-07 → **8.912e-08**) at *lower* cost per call (2.240 µs). Exact on a constant-$g_s$ equation of state (2.928e-16). | 05 | ⚠️ |
 | **T4** | **DEFECT, high** | One global spline across three points at which $T(z)$ genuinely **jumps** (7.614e-04 at $z_c=4.25337\times10^7$). The max error is pinned near the jump height at 500, 2,000 and 5,000 nodes alike. | 06 | ⬜ |
 | **G1** | **DEFECT, high** | 404 of the 407 `BREAK_POINT_ALL` points are knots of the auxiliary interpolant: a Gauss panel split every 4.04 grid intervals throughout `BackgroundModel`, and the sole cause of `prompts/phase-representation` prompt 02's Schoenberg–Whitney failure. | 07, 08 | ⬜ |
 | **P2** | **DEFECT, accuracy** | Inherited `[13-consumer-spline-crosses-eos-break-points]`: `PrimitivePhase` splines $\varphi$ with default knots across the declared break points. 1.907e-6 rad ($G_k$, 8 ulp) and 3.186e-6 rad ($T_k$, 428 ulp) at $z=4.24\times10^7$. Blocked until G1 is gone. | 10 | ⬜ |
@@ -153,8 +182,12 @@ above the declaration.
 `CosmologyModels/tests/test_T_z_representation.py::test_conformal_time_matches_the_exact_background`
 in the tree: $\int\mathrm{d}z/H$ over $z\in[10^2,10^{12}]$ computed twice from the same cosmology,
 once as shipped and once with the temperature replaced by the accurate root solve, so that nothing
-cancels. It measures **3.4605051e-08**, against the audit's 3.461e-08, in 0.013 s. Prompt 06
-tightens its threshold from 4.0e-08 to 1e-15.
+cancels. It measured **3.4605051e-08** on prompt 01's tree, against the audit's 3.461e-08, in
+0.013 s. Prompt 04 left it at 3.4509e-08; **prompt 05 took it to 5.4264e-10**, a factor of 64,
+which says that most of the conformal-time error was never the jump — a jump is a set of measure
+zero in an integral — but the interpolation error carried across the whole range, which is what
+the median measures. The remaining 5.4e-10 is still 0.74 rad at $k=10^5$/Mpc against a 3.05e-07
+rad floor, so T1 is not closed. The threshold is still 4.0e-08; prompt 06 tightens it to 1e-15.
 
 **Out of scope (do not schedule here):** `[00-consumer-anchoring-floor]` and
 `[02-consumer-phi-below-the-storage-granularity]` — per-region anchoring, untouched by background
@@ -207,6 +240,27 @@ Opened by this campaign's planning, 2026-09-13:
   to close this — but 04–07 should not assume it is regenerated in the meantime, and should say so
   in their own logs if a `convergence`-scored test's accuracy figure (not just its break-point
   count) moves.
+  **Escalated by prompt 05 (2026-09-14): it is now the sole cause of three loosened tolerances,
+  and prompt 08 should take all three back in the commit that re-runs the script.** Prompt 04 had
+  loosened one; prompt 05 regenerated the QCD block a second time and had to loosen three, which
+  is one more than its own §2 item 6 allows — the prompt **stopped and asked**, and the user
+  authorised landing them (option (a)). Each is a figure measured on the entropy-factor background
+  scored against a floor recorded on the $T$-against-$u$ one:
+
+  | constant | module | was | now | measured |
+  |---|---|---|---|---|
+  | `QCD_BREAK_POINT_ALIGNMENT_TOL` | `test_background_tau.py` | 1.4e-05 | **3.1e-05** | 3.046858e-05 (`T_120_MEV`) |
+  | `QCD_FLOOR_FACTOR` | `test_background_tau.py` | 3.0 | **3.2** | 5.8348e-14 / 1.879e-14 = 3.106 |
+  | `QCD_FLOOR_FACTOR` | `test_background_cs_tau_friction.py` | 3.0 | **8.3** | 1.5501e-13 / 1.887e-14 = 8.213 |
+
+  The two `QCD_FLOOR_FACTOR`s multiply `json_vs_reference_max_rel` from the stale block, and the
+  quantity scored against it is the same kind of thing one level down — model-against-JSON, where
+  the floor is JSON-against-adaptive-reference — so both sides are floors, at the 1e-13 level, a
+  few hundred ulp of a cumulative quadrature over twenty decades. The worst point moved from
+  $z=1.005\times10^7$ to $z=1.007\times10^{11}$. **Prompt 08 must re-measure all three after
+  re-running the script and put them back to 1e-9 / 3.0 / 3.0 if they will go**; if one will not,
+  that is a finding about the representation rather than about the block's age, and it should be
+  said so explicitly.
 - **[02-fixture-tests-pinned-to-todays-break-point-artefact]** *(prompt 02, 2026-09-14)* — two
   test assertions hard-code today's ~404-knot `BREAK_POINT_ALL` count and will be **false**, not
   merely inaccurate, once prompt 07 collapses it to 3: `test_numeric_break_points.py::TestDeclaration::test_kind_selects_knots_or_jumps`
@@ -233,13 +287,39 @@ Opened by this campaign's planning, 2026-09-13:
   before prompt 09, which is the first prompt likely to look at a datastore holding rows at two
   representations.
 
+- **[04-unsplit-tk-run-now-meets-the-criterion]** *(prompt 05, 2026-09-14; **assigned to prompt
+  08**)* — `ComputeTargets/tests/test_numeric_break_points.py::TestQCDReferenceConvergence::test_split_converges_where_unsplit_does_not`
+  asserted `unsplit > 1e-6`: that a $T_k$ numeric run which does **not** split at the declared
+  `T_120_MEV` discontinuity fails `GkTk-remedial` prompt 17 §2.1's convergence criterion
+  (3.4e-08) at $k=4.972\times10^7$/Mpc. **That premise is now false.** Measured directly, on the
+  two trees either side of this commit, by driving the test class's own `_drift`:
+
+  | tree | split drift | unsplit drift | criterion |
+  |---|---|---|---|
+  | prompt 04 (`71b842a`) | 2.2136e-09 | **1.0213e-06** — fails, and cleared the `1e-6` bound by 2 % | 3.4e-08 |
+  | prompt 05 (this commit) | 2.9753e-09 | **2.2767e-08** — passes | 3.4e-08 |
+
+  The unsplit run improved **45×** while the split run barely moved, which says most of what the
+  split was rescuing was never the jump in $H(z)$ at all: it was the $10^{-7}$-level interpolation
+  noise the $T$-against-$u$ spline carried across the whole range, and the entropy factor removes
+  it (audit §3, T3). **Impact:** this is the first measured evidence that
+  `TkNumericIntegration.BREAK_POINT_KIND = BREAK_POINT_ALL` may no longer be load-bearing, which
+  is README §2 (f) and §7 **D5** — and `BREAK_POINT_KIND` is in a datastore lookup key, so moving
+  it is a production decision with a regeneration attached. It is **one** wavenumber of fifty, in
+  one sector, and prompt 05 deliberately did not decide it. **Next step:** prompt 08, whose
+  charter is exactly to re-take `GkTk-remedial` prompt 19's measurement across all fifty QCD
+  wavenumbers against the new representation; it should read this row before it starts, and
+  README §6.3's "≤ 3.4e-08 without them, else stop" is the test. Meanwhile the test asserts the
+  weaker true statement that splitting still buys a factor (`UNSPLIT_PENALTY_FACTOR = 5.0`,
+  measured 7.65×), and its docstring carries both measurements above.
+
 Inherited, and **assigned to this campaign** (each is owned by the board named, which holds its
 measurements and its history; the closure is recorded there):
 
 | Issue | Owning board | Closed by | Note |
 |---|---|---|---|
 | `[13-consumer-spline-crosses-eos-break-points]` | GkTk-remedial | prompt 10 | Assigned 2026-09-13 by `prompts/phase-representation`'s close-out. Blocked until prompt 07 |
-| `[01-genericeos-tz-spline-floor]` | source-remediation | prompts 05, 06 | "Whether the `T(z)` spline grid is adequately defined." The answer is in audit §3 and §4 |
+| `[01-genericeos-tz-spline-floor]` | source-remediation | prompts 05, 06 | "Whether the `T(z)` spline grid is adequately defined." The answer is in audit §3 and §4. **Narrowed by prompt 05** on that board with the measured figures: the node values (04) and the splined quantity (05) are fixed, the max is all that is left, and the sample count is *not* the lever this entry assumed — segmentation is, so prompt 06 closes it |
 | `[19-cosmologymodels-docstrings-predate-per-sector-policy]` | GkTk-remedial | prompt 07 | The two docstrings are exactly the text prompt 07 rewrites |
 
 Re-measured but **not owned** here (they stay where they are; a prompt that moves one says so):

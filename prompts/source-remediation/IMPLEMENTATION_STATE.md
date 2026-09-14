@@ -167,6 +167,29 @@ Traceability from the audit's finding IDs to the prompt that discharges them.
   confirmed nothing will ask for results below $z=0$. `DERIVATIVE_FIT_PAD_FLOOR = 0.9` keeps the
   background derivative grid at $z\ge-0.1$, well inside both the old and the new floor, so
   `[03-derivative-pad-clamp-on-coarse-grids]` is unaffected.
+  **Narrowed by `prompts/qcd-background-audit/` prompts 04 and 05 (2026-09-14).** The audit
+  (`docs/qcd-background-audit-2026-09.md` §3) separated this issue into three independent defects,
+  and two of them are now closed, both without changing the sample count:
+  (i) the node *values* were root-solved to `rtol=1e-4`, so neighbouring nodes carried
+  uncorrelated errors up to 2.496e-05 — prompt 04 tightened `_solve_T_z` to
+  `xtol=1e-300, rtol=1e-14` and the node solve is now bit-identical to the defining equation;
+  (ii) the *quantity* tabulated was $T$ itself, which over twenty decades is almost entirely the
+  $(1+z)$ ramp known in closed form — prompt 05 tabulates the entropy factor
+  $F(u)=\log\big(T/[T_{\rm CMB}(1+z)]\big)$ instead and multiplies the ramp back in on evaluation.
+  On the audit's 640-point probe set at the production `max_z = 1e20`, the relative error in
+  $T(z)$ goes **7.177e-04 / 1.323e-05 / 1.890e-07** (max / p90 / median) →
+  **7.236e-04 / 8.912e-08 / 2.599e-10**, and on a constant-$g_s$ equation of state the
+  representation is now **exact** — 2.928e-16, about 1.3 ulp, against 1.940e-07 — because $F$ is
+  identically zero there and the spline of a constant is that constant. That is what moved
+  `test_temperature_spline.py`'s `INTERPOLATION_FLOOR` from 1.3e-9 to 1.0e-15.
+  **What is left of this issue** is the max, which is untouched by either fix and untouched by the
+  sample count (measured at 500, 1,000, 2,000 and 3,000 nodes): one spline is being run straight
+  across the three redshifts at which $T(z)$ genuinely *jumps*, so its worst error is pinned near
+  the jump height whatever the density. The sample count is therefore **not** the lever this entry
+  assumed — segmentation is — and that is `qcd-background-audit` prompt 06. The count is now
+  reachable as `DEFAULT_T_Z_SPLINE_SAMPLES` / `DEFAULT_T_Z_SPLINE_ORDER` with the measured
+  accuracy of each candidate tabulated beside it, which answers the "make the count or the target
+  accuracy a parameter rather than a literal" half of the note above.
 
 - **[03-derivative-pad-clamp-on-coarse-grids]** *(opened by prompt 03, 2026-09-08)* — the padded
   fit grid `compute_background` now uses for spline-derived background derivatives clamps its

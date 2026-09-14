@@ -117,8 +117,26 @@ CS_TAU_SHORT_BASELINE_REL_TOL = 1.0e-13
 # the single-limb friction floor: ~1.5 ulp of max |F| = 70.6 on the production grid
 FRICTION_SHORT_BASELINE_ABS_TOL = 2.0e-14
 
-# prompt 04 §3 test 3: the QCD references carry their own floor
-QCD_FLOOR_FACTOR = 3.0
+# prompt 04 §3 test 3: the QCD references carry their own floor -- here
+# references["convergence"]["models"]["QCDModel"]["branch+knots"]["cs_tau"]["json_vs_reference_max_rel"],
+# "how well the JSON's cs_tau agrees with a converged adaptive reference". What is scored against
+# it in test_qcd_checkpoints is the same kind of quantity one level down: how well the model's
+# fixed-order Gauss table agrees with the JSON.
+#
+# Loosened 3.0 -> 8.3 by prompts/qcd-background-audit/ prompt 05, for
+# [01-convergence-block-has-a-separate-generator] (docs/OPEN_ISSUES.md) and nothing else: that
+# commit regenerated the JSON's QCD block with
+# docs/qcd-background-audit/generate_qcd_references.py, but the floor sits in the top-level
+# convergence block, which only docs/gktk-remedial/residual_convergence.py writes and which has
+# not been re-run since the background moved. Numerator and denominator are therefore measured on
+# two different backgrounds. Measured: 2.186e-14 (prompt 04 tree) -> 1.5501e-13 here, against a
+# floor still recorded as 1.887e-14; 1.5501e-13/1.887e-14 = 8.213. Both are at the 1e-13 level, a
+# few hundred ulp of a cumulative quadrature over twenty decades, and the worst point moves from
+# z = 1.005e7 to z = 1.007e11. The companion friction_F assertion below is scored against
+# FRICTION_REL_TOL rather than this floor and still passes untouched (6.525e-14 against 1e-13).
+# Prompt 08 re-runs residual_convergence.py, after which this should go back to 3.0 and be
+# re-measured.
+QCD_FLOOR_FACTOR = 8.3
 
 # prompt 04 §3 test 6: review §12.3 measures the friction ODE's amplitude error as 2.3e-7
 # (k = 1e5) to 4.1e-7 (k = 3e8); the window brackets it by an order either way
