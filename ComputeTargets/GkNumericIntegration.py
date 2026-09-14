@@ -389,22 +389,27 @@ class GkNumericIntegration(DatastoreObject):
             # still gets the warning, which defaults to on.
             warn_unresolved_osc=False,
             # this sector splits its integration only where the cosmology declares that a
-            # background quantity *jumps*, not at the C2 knots of its T(z) spline. This is the
-            # module's default, but it is passed explicitly because it is a decision taken on
-            # measurement rather than a default inherited by omission (prompt 19 of
-            # prompts/GkTk-remedial, the user's decision of 2026-09-13).
+            # background quantity *jumps*, not at its kinks. This is the module's default, but it
+            # is passed explicitly because it is a decision taken on measurement rather than a
+            # default inherited by omission (prompt 19 of prompts/GkTk-remedial, the user's
+            # decision of 2026-09-13).
             #
-            # Unnecessary: this sector's reference-convergence drift is below the campaign's
-            # criterion at all 50 production wavenumbers on all three models with the jumps alone
-            # -- worst 8.41e-09 of the envelope on QCD against 3.4e-08, the same figure split or
-            # unsplit (docs/gktk-remedial/TK-NUMERIC-ATOL-SWEEP.md §9.1) -- so the knots would
-            # buy nothing.
+            # Unnecessary, and prompt 19's reason still holds with better numbers. That prompt
+            # measured this sector below the campaign's convergence criterion at all 50 production
+            # wavenumbers on all three models with the jumps alone -- worst 8.41e-09 of the
+            # envelope on QCD against 3.4e-08 (docs/gktk-remedial/TK-NUMERIC-ATOL-SWEEP.md §9.1,
+            # §10.1). Re-measured on the background prompts 04-07 corrected, and this time under
+            # *both* policies rather than only this one (prompt 08 of
+            # prompts/qcd-background-audit, docs/qcd-background-audit/PER-SECTOR-POLICY.md §2):
+            # worst 3.67e-09 on QCD under either policy, at the same wavenumber, none of the 50
+            # above the criterion. The other policy buys nothing here, exactly as it did not
+            # before.
             #
-            # And expensive: GkNumericIntegration is one object per (k, z_source), ~65,000 per
-            # model, and splitting at the knots costs +155 % of the production right-hand-side
-            # evaluations (§9.7), i.e. several core-hours per model. TkNumericIntegration, which
-            # is 50 objects per model and does *not* converge with the jumps alone, asks for
-            # every declared break point for exactly that reason.
+            # And it is no longer expensive, which is worth recording because the cost was half of
+            # prompt 19's argument: asking for the kinks as well is +0.57 % of the production
+            # right-hand-side evaluations (13,343 -> 13,419 per object), where it was +155 % when
+            # the T(z) spline's knots were declared. At ~65,000 objects per model that was several
+            # core-hours; it is now minutes. The decision stands on the accuracy measurement alone.
             #
             # Read from the class constant rather than written as a literal: since prompt 20 the
             # same value is also stored in, and filtered on by, the datastore lookup key, and the

@@ -3,8 +3,8 @@
 **Campaign:** [`README.md`](README.md) · **Source document:**
 [`docs/qcd-background-audit-2026-09.md`](../../docs/qcd-background-audit-2026-09.md)
 **Baseline commit:** `e8f746d` (`qcd-background-audit`, clean; identical to `main`)
-**Last updated:** 2026-09-14 — **prompt 07 complete; 7 / 12. T1 and G1 are closed.** Twelve
-prompts in four workstreams.
+**Last updated:** 2026-09-14 — **prompt 08 complete; 8 / 12. T1 and G1 are closed, and G1's
+per-sector question is answered.** Twelve prompts in four workstreams.
 Every figure below is the audit's, and prompt 01 re-measured the representation, the branch joins,
 the jump locations and the conformal-time error **from the test tree** on `2a5e0fa`: all of them
 reproduce the audit to every digit it quotes. The audit's script
@@ -33,7 +33,7 @@ Legend: ⬜ not started · 🟡 in flight · ✅ complete · ⚠️ complete wit
 | # | Prompt | Model | Status | Commit | Log |
 |---|---|---|---|---|---|
 | 07 | [Re-derive `integration_break_points` (G1)](07-rederive-break-points.md) | Opus | ⚠️ | *"Declare only the cosmology's own break points, not the spline's knots"* (SHA not embedded, per the campaign convention) | [`logs/07-rederive-break-points.md`](logs/07-rederive-break-points.md) |
-| 08 | [Re-measure the per-sector break-point policy](08-per-sector-policy-remeasure.md) | Opus | ⬜ | | |
+| 08 | [Re-measure the per-sector break-point policy](08-per-sector-policy-remeasure.md) | Opus | ⚠️ | *"Re-measure the numeric break-point policy on the corrected background"* (SHA not embedded, per the campaign convention) | [`logs/08-per-sector-policy-remeasure.md`](logs/08-per-sector-policy-remeasure.md) |
 
 ### Workstream C — close-out (prompt 09)
 
@@ -49,7 +49,7 @@ Legend: ⬜ not started · 🟡 in flight · ✅ complete · ⚠️ complete wit
 | 11 | [A cosmology-aware source grid](11-cosmology-aware-source-grid.md) | Opus | ⬜ | | |
 | 12 | [A measured grid-density criterion](12-grid-density-criterion.md) | Opus | ⬜ | | |
 
-**Progress:** 7 / 12 complete (7 / 9 in the ungated chain 01–09).
+**Progress:** 8 / 12 complete (8 / 9 in the ungated chain 01–09).
 
 **Prompt 01 landed `COMPLETE WITH DEVIATIONS`** — no production file changed; two new modules,
 `CosmologyModels/tests/T_z_reference.py` and `CosmologyModels/tests/test_T_z_representation.py`,
@@ -250,6 +250,44 @@ validated against its own `DISC` column. Suites: `CosmologyModels` 30, `ComputeT
 `[13-consumer-spline-crosses-eos-break-points]`. Full record:
 [`logs/07-rederive-break-points.md`](logs/07-rederive-break-points.md).
 
+**Prompt 08 landed `COMPLETE WITH DEVIATIONS` — and found state (a).** Prompt §1 named three
+possible states of the world and the measurement picks the first: *the knots were a proxy for the
+representation's own defect*. On the corrected background QCD $T_k$ converges at **all 50**
+production wavenumbers under **either** policy — worst reference-convergence drift **7.08e-09**
+under `BREAK_POINT_ALL` and **8.85e-09** under `BREAK_POINT_DISCONTINUITY`, median 1.96e-09 either
+way, zero above the 3.4e-08 criterion in both — where `GkTk-remedial` prompt 19 measured 1.97e-07
+and **three** offenders with the jumps alone. The three wavenumbers prompt 19's decision actually
+turned on read **8.89e-10 / 2.03e-09 / 5.60e-10** with the jumps alone, against 6.1e-08 / 2.0e-07 /
+3.5e-08 then — factors of 69, 98 and 63 with no change to the integrator. State (b) is excluded
+(no wavenumber in either sector needs more than the cosmology declares, so G1's claim does not
+narrow) and state (c) is excluded ($G_k$ moved **downwards**: worst 8.41e-09 → **3.67e-09**, median
+2.05e-09 → 2.16e-10, and 6.0e-11 at prompt 19's own worst wavenumber). **Neither `BREAK_POINT_KIND`
+was touched and `T_Z_REPRESENTATION_VERSION` stays at 5** — nothing in the commit moves a number.
+The two models that declare nothing are **bit-identical between the policies at all 50 wavenumbers
+in both sectors** and reproduce prompt 19's grid totals as exact integers (401,677 / 429,178 /
+637,138 / 640,213), prompt 17's two control figures included (2.53e-06 in 7,403 evaluations;
+2.56e-04 in 8,483). **The cost collapsed with the set prompt 07 removed:** a QCD $T_k$ object under
+`BREAK_POINT_ALL` is **8,986** right-hand-side evaluations where prompt 19 measured **31,521**
+(3.51×), and the wider policy now costs **+0.99 %** over the jumps alone rather than +220 %; $G_k$
+is +0.57 % rather than +155 %. Wall time was taken on a machine that had been under load all day
+and is reported as a *ratio* against a same-process null control (smooth-model rows 1.028 / 0.985 /
+1.024 / 1.024; QCD 1.001 and 0.984) — no conclusion rests on it.
+
+**Beyond what the prompt asked, one column decides more than the two policies do.** With the
+cosmology's declaration suppressed *altogether*, QCD $T_k$ is above the criterion at **19 of 50**
+wavenumbers, worst **9.61e-06** — so splitting at the equation of state's genuine **jumps** is
+emphatically still load-bearing and prompt 18's result stands; only the distinction between the two
+*kinds* has become vestigial. That narrows rather than closes
+`[04-unsplit-tk-run-now-meets-the-criterion]`, whose single wavenumber is one of the 31 that now
+pass. **README §7 D5 is reported, not decided** (the prompt's instruction): keeping
+`BREAK_POINT_ALL` costs +0.99 %, changing it would move every stored QCD $T_k$ value by up to
+**2.86e-04** of the envelope and demand a regeneration, so log 08 recommends leaving both constants
+where they are and leaves the decision with the user. `docs/gktk-remedial/tk_numeric_atol_sweep.py`
+was **copied, not edited**; the reduction is `docs/qcd-background-audit/per_sector_policy_remeasure.py`
+and its output `docs/qcd-background-audit/PER-SECTOR-POLICY.md` (one command, 744 s, no Ray, no
+datastore). Suites: `CosmologyModels` 30, `ComputeTargets` 359, `LiouvilleGreen` 143/143 fast set —
+none falls. Full record: [`logs/08-per-sector-policy-remeasure.md`](logs/08-per-sector-policy-remeasure.md).
+
 **The representation version.** `T_Z_REPRESENTATION_VERSION` is introduced by prompt 03 and bumped
 by **04, 05, 06 and 07**. Its value at each prompt boundary is recorded here as the campaign runs,
 because it is the only thing that tells a datastore that its QCD rows are stale. **Bump it on
@@ -265,6 +303,7 @@ above the declaration.
 | 05 | **3** | `F(u) = log(T / [T_CMB (1+z)])` is splined, not `T`; 500 nodes at `k=3` unchanged |
 | 06 | **4** | `F` splined per branch, edges bisected onto the jumps; 500 / `k=3` → 3000 / `k=5` |
 | 07 | **5** | `integration_break_points` declares the EOS crossings alone, not the knots |
+| 08 | **5** | unchanged — no `BREAK_POINT_KIND` value moved, so no number moved |
 
 ---
 
@@ -276,7 +315,7 @@ above the declaration.
 | **T2** | **DEFECT, high** | `_solve_T_z` root-solves each spline node to `rtol=1e-4`; neighbouring nodes carry uncorrelated errors up to 2.496e-05. The root of `[02-qcd-T-z-spline-node-tolerance]`, and (measured, not asserted) of the $\pm0.1$ scatter in $\omega^2/\omega_0^2$ that `RESIDUAL_WKB_REGION_MARGIN = 0.5` exists to survive (`ComputeTargets/phase_residual.py:220`). | 04 | ⚠️ |
 | **T3** | **DEFECT, medium** | $T$ was splined against $u$, spending resolution on the $(1+z)$ ramp known in closed form. **Fixed by prompt 05:** `TemperatureRepresentation` splines $F(u)=\log(T/[T_{\rm CMB}(1+z)])$ and multiplies the ramp back in, improving the median 412× at the same 500 nodes (1.071e-07 → **2.599e-10**) and the p90 2.2× (1.936e-07 → **8.912e-08**) at *lower* cost per call (2.240 µs). Exact on a constant-$g_s$ equation of state (2.928e-16). | 05 | ⚠️ |
 | **T4** | **DEFECT, high** | One global spline across three points at which $T(z)$ genuinely **jumps** (7.625829e-04 in $T$ at $z_c=4.25337\times10^7$). The max error was pinned near the jump height at 500, 2,000 and 5,000 nodes alike. **Fixed by prompt 06:** `SegmentedEntropyFactor` interpolates $F$ one spline per branch with the edges *bisected* onto the jumps, and the max falls **7.236e-04 → 6.807e-11** while the step itself is reproduced to six figures on both sides. An edge misplaced by one node restores 7.054e-04, and a test asserts that it does. | 06 | ⚠️ |
-| **G1** | **DEFECT, high** | 404 of the 407 `BREAK_POINT_ALL` points were knots of the auxiliary interpolant — 2,411 of 2,414 after prompt 06's node count — a Gauss panel split every 0.67 grid intervals throughout `BackgroundModel`, and the sole cause of `prompts/phase-representation` prompt 02's Schoenberg–Whitney failure. **Fixed by prompt 07:** `integration_break_points` declares the equation of state's temperature crossings and nothing else, **3** and **2** on the production grid with **0** knots, measured rather than asserted (at order 5 the first discontinuous derivative of $F$ is the fifth, three levels below `d3_lnH_dz3`; the observable residual across a knot is 6.3e-12 in $H$ against 2.1e-04 for the old cubic lattice). The QCD build falls 16,580 → **6,936** integrand evaluations and 0.959 → **0.599 s**; the references do not move at all; `cs_tau` and `friction_F` score against them unchanged to every digit printed and `tau` moves 2.104e-15 → 2.254e-15, at 12 % of its floor; and a repeated-knot vector constructs on all six grids. Prompt 08 re-takes `GkTk-remedial` prompt 19's per-sector policy measurement against the new set. | 07, 08 | ⚠️ |
+| **G1** | **DEFECT, high** | 404 of the 407 `BREAK_POINT_ALL` points were knots of the auxiliary interpolant — 2,411 of 2,414 after prompt 06's node count — a Gauss panel split every 0.67 grid intervals throughout `BackgroundModel`, and the sole cause of `prompts/phase-representation` prompt 02's Schoenberg–Whitney failure. **Fixed by prompt 07:** `integration_break_points` declares the equation of state's temperature crossings and nothing else, **3** and **2** on the production grid with **0** knots, measured rather than asserted (at order 5 the first discontinuous derivative of $F$ is the fifth, three levels below `d3_lnH_dz3`; the observable residual across a knot is 6.3e-12 in $H$ against 2.1e-04 for the old cubic lattice). The QCD build falls 16,580 → **6,936** integrand evaluations and 0.959 → **0.599 s**; the references do not move at all; `cs_tau` and `friction_F` score against them unchanged to every digit printed and `tau` moves 2.104e-15 → 2.254e-15, at 12 % of its floor; and a repeated-knot vector constructs on all six grids. **Prompt 08 re-took `GkTk-remedial` prompt 19's per-sector policy measurement against the new set and found state (a):** the $T_k$ sector converges at all 50 QCD wavenumbers under *either* policy (7.08e-09 / 8.85e-09 worst, zero offenders, against 1.97e-07 and three offenders then), so the 404 knots were standing in for the representation's defect and not for anything the integrator needed; $G_k$ improved to 3.67e-09 under both policies; the smooth models are bit-identical between the policies and reproduce prompt 19's grid totals as exact integers. Neither `BREAK_POINT_KIND` was changed — README §7 D5 is reported, not decided. | 07, 08 | ⚠️ |
 | **P2** | **DEFECT, accuracy** | Inherited `[13-consumer-spline-crosses-eos-break-points]`: `PrimitivePhase` splines $\varphi$ with default knots across the declared break points. 1.907e-6 rad ($G_k$, 8 ulp) and 3.186e-6 rad ($T_k$, 428 ulp) at $z=4.24\times10^7$. **Unblocked by prompt 07** — the knot vector now constructs on all six grids, asserted in `TestConsumerKnotVectorConstructs` — but the defect is untouched and whether a $C^0$ knot is the right representation for $\varphi$ is still open. | 10 | ⬜ |
 | **G2** | **DESIGN** | The source grid never consults the cosmology: `populate_z_sample` is a bare `logspace`, `winnow` a blind stride `[::-n]`, and the tag `SourceRedshiftGrid_{len}` labels size only, so two different grids of equal length collide in the datastore. | 11, 12 | ⬜ |
 
@@ -382,6 +421,18 @@ Opened by this campaign's planning, 2026-09-13:
   are the *bisected* crossings rather than the root-found ones and the two differ by ~1e-14 in $u$,
   so the whole of this figure remains the age of the block. `QCD_BREAK_POINT_ALIGNMENT_TOL` is left
   at **1.5e-04**, untouched, and the other two constants are still at 3.0.
+
+  **Prompt 08 could not take it, and re-points it at prompt 09** (2026-09-14). The entry named
+  prompt 08 as the natural place to re-run `docs/gktk-remedial/residual_convergence.py`, but that
+  prompt's "Files you may touch" is `docs/qcd-background-audit/`, the two `BREAK_POINT_KIND`
+  comment blocks, the log, the board and `docs/OPEN_ISSUES.md` — it includes neither
+  `ComputeTargets/tests/wkb_reference_data.json` nor `ComputeTargets/tests/test_background_tau.py`,
+  and its §4 acceptance table carries no tolerance row. Regenerating the block and taking
+  `QCD_BREAK_POINT_ALIGNMENT_TOL` back would have been scope creep (README §5 rule 5), so it was
+  not done and the figure is unchanged, prompt 08 having moved no number at all.
+  **Next step:** prompt 09, the close-out, which re-scores the consumers and is the first prompt
+  after this one with the JSON and that test module naturally in scope.
+  `[02-qcd-reference-floor]` on the `GkTk-remedial` board waits on the same run.
 - **[03-qcd-inventory-does-not-report-the-representation]** *(prompt 03, 2026-09-14)* —
   `sqla_QCDCosmology_factory.inventory()`
   (`Datastore/SQL/ObjectFactories/QCD_Cosmology.py`) reports `name`, `omega_m`, `omega_cc`, `h`
@@ -428,6 +479,41 @@ Opened by this campaign's planning, 2026-09-13:
   touched. Meanwhile the test asserts the
   weaker true statement that splitting still buys a factor (`UNSPLIT_PENALTY_FACTOR = 5.0`,
   measured 7.65×), and its docstring carries both measurements above.
+
+  **Prompt 08 took the column across all fifty wavenumbers and the answer is "at that one $k$,
+  yes; in general, emphatically no"** (2026-09-14; `docs/qcd-background-audit/PER-SECTOR-POLICY.md`
+  §2b). With `integration_break_points` suppressed altogether, QCD $T_k$ is above the 3.4e-08
+  criterion at **19 of the 50** production wavenumbers, worst **9.61e-06** at
+  $k = 4.223\times10^7$/Mpc, median 1.80e-08. At this entry's own wavenumber
+  ($k = 4.972\times10^7$) the unsplit run reads **2.91e-08** on prompt 07's tree and passes —
+  confirming the entry's measurement and prompt 05's 2.2767e-08 — but that wavenumber is one of
+  the 31 that pass, and it is **not representative**. So: splitting at the equation of state's
+  genuine **jumps** is still load-bearing and prompt 18's result stands undisturbed; what prompt 08
+  measured to be vestigial is only the distinction between the two *kinds*
+  (`BREAK_POINT_ALL` 7.08e-09 against `BREAK_POINT_DISCONTINUITY` 8.85e-09, zero offenders either
+  way). **This narrows the entry rather than closing it**, because the assertion in the tree is
+  still pinned to a wavenumber at which the original, stronger statement is false.
+  **Next step:** whoever next has `ComputeTargets/tests/test_numeric_break_points.py` in scope can
+  restore the original statement by re-pointing `test_split_converges_where_unsplit_does_not` at
+  $k = 4.223\times10^7$/Mpc, where unsplit reads 9.61e-06 against a split 5.60e-10 — a factor of
+  17,000, against the 7.65× the weakened assertion now measures. Prompt 08 did not do it: that
+  module is not among the files its prompt may touch. README §7 **D5** is meanwhile **reported and
+  not decided**, which is what prompt 08 was asked to do.
+
+- **[08-gk-declared-split-buys-nothing-measurably]** *(prompt 08, 2026-09-14)* — the $G_k$
+  numeric sector splits at the cosmology's declared jumps (`BREAK_POINT_DISCONTINUITY`,
+  `GkNumericIntegration.BREAK_POINT_KIND`), and prompt 08 measured what that buys: on QCD, worst
+  reference-convergence drift **3.67e-09** split against **3.52e-09** unsplit over the 50
+  production wavenumbers, with zero above the 3.4e-08 criterion in both cases and 13,343 against
+  13,320 right-hand-side evaluations per object
+  (`docs/qcd-background-audit/PER-SECTOR-POLICY.md` §2, §2b). The split is, within the noise of the
+  measure, buying nothing in this sector — unlike $T_k$, where suppressing it puts **19 of 50**
+  wavenumbers above the criterion. **Impact:** none today. It costs 0.17 % of the evaluations, it
+  is the same mechanism $T_k$ genuinely needs, and `BREAK_POINT_KIND` is in a datastore lookup key,
+  so there is no case for removing it and prompt 08 makes none. It is recorded because no document
+  previously said what the $G_k$ split is worth, and a later reader weighing README §7 D5 should
+  not have to re-derive it. **Next step:** none proposed; re-measure if the equation of state or
+  the response grid changes.
 
 - **[06-t-photon-call-cost-needs-a-quiet-machine]** *(prompt 06, 2026-09-14)* — README §6.2 and
   prompt 06 §4 set `T_photon` at **≤ 2.5 µs/call** and make a regression a stop (README §2 (c)).
@@ -580,14 +666,20 @@ Re-measured but **not owned** here (they stay where they are; a prompt that move
    `ComputeTargets/tests/test_cosmology_representation_key.py` fails if the link is broken.
 7. **The QCD half of `wkb_reference_data.json` is built from the shipped `T(z)`** and moves with it
    (README §2 (e)). Ten test modules assert against it. Prompt 02 is the map.
-8. **`BREAK_POINT_ALL` was load-bearing, and prompt 07 changed what it *is*.** `GkTk-remedial`
-   prompt 19 measured that the $T_k$ numeric sector needed it: 3 of 50 QCD wavenumbers missed the
-   criterion with jumps alone. That measurement was taken against knots carrying a $10^{-4}$-level
-   defect. **As of prompt 07 the set is 3 points, not 2,414**, and `BREAK_POINT_ALL` differs from
-   `BREAK_POINT_DISCONTINUITY` by a single kink (`EOS_T_LO`) rather than by a knot lattice — so
-   prompt 19's question narrows to that one crossing. Prompt 08 re-takes the measurement; neither
-   `BREAK_POINT_KIND` has been touched, and moving one is still a production decision with a
-   datastore regeneration attached (README §2 (f), §7 D5).
+8. **`BREAK_POINT_ALL` was load-bearing; prompt 07 changed what it *is* and prompt 08 measured
+   that it no longer is.** `GkTk-remedial` prompt 19 measured that the $T_k$ numeric sector needed
+   it: 3 of 50 QCD wavenumbers missed the criterion with jumps alone, worst 1.97e-07. That
+   measurement was taken against knots carrying a $10^{-4}$-level defect. As of prompt 07 the set
+   is 3 points, not 2,414, and the two kinds differ by a single kink (`EOS_T_LO`).
+   **Prompt 08 re-took the measurement and found state (a)**: both policies converge at all 50
+   wavenumbers (7.08e-09 / 8.85e-09 worst, zero offenders), the per-sector distinction is
+   vestigial on today's cosmology, and the wider policy costs +0.99 % rather than +220 %.
+   **Neither `BREAK_POINT_KIND` has been touched**, both are still in a datastore lookup key, and
+   moving one is still a production decision with a regeneration attached, now quantified: up to
+   2.86e-04 of the envelope on every stored QCD $T_k$ object (README §2 (f), §7 D5 — the user's,
+   and log 08 recommends leaving both where they are). **What is still load-bearing is the
+   *jumps*:** suppress the declaration altogether and 19 of 50 QCD $T_k$ wavenumbers go above the
+   criterion, worst 9.61e-06.
 9. **LambdaCDM has no `T(z)` spline** — `CosmologyModels/LambdaCDM/LambdaCDM.py:129` returns
    $T_{\rm CMB}(1+z)$ in closed form and the class declares no break points. Every LambdaCDM,
    `RadiationModel` and stand-in number is bit-identical across this entire campaign. So is a

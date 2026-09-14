@@ -1,6 +1,6 @@
 # Open issues — project-wide index
 
-**Last updated:** 2026-09-14 · **60 open** across eight campaigns.
+**Last updated:** 2026-09-14 · **61 open** across eight campaigns.
 
 This file exists so that an issue opened by one campaign is not lost when that campaign closes.
 It is an **index, not a record**: one line per issue, pointing at the campaign status board that
@@ -140,7 +140,7 @@ campaign was **closed**, its remaining issue passing to the `qcd-background-audi
 ### 1.7 The QCD background campaign
 
 [`prompts/qcd-background-audit/`](../prompts/qcd-background-audit/README.md) (2026-09-13; twelve
-prompts in four workstreams, **7 executed**; prompts 10–12 gated on that README's §7 D7). It
+prompts in four workstreams, **8 executed**; prompts 10–12 gated on that README's §7 D7). It
 implements [`qcd-background-audit-2026-09.md`](qcd-background-audit-2026-09.md), which measured that
 `QCD_Cosmology`'s temperature is a cubic spline over 500 points solved to `rtol=1e-4`, built as $T$
 against $\log(1+z)$ and run across three points at which $T(z)$ genuinely **jumps** — so the
@@ -181,16 +181,35 @@ build falls from 16,580 integrand evaluations to **6,936** — 0.17 % above Lamb
 6,924 — with the references unmoved (they are adaptive quadratures and never saw the panel
 structure), `cs_tau` and `friction_F` scoring against them unchanged to every digit printed and
 `tau` moving 2.104e-15 → 2.254e-15, at 12 % of its 1.879e-14 floor.
-`T_Z_REPRESENTATION_VERSION` is **5**. What is left of the ungated chain is prompt 08's
-per-sector policy re-measurement and prompt 09's consumer close-out.
+`T_Z_REPRESENTATION_VERSION` is **5**.
+
+**Prompt 08 landed 2026-09-14 and found "state (a)": the $T_k$ sector no longer needs
+`BREAK_POINT_ALL`.** `GkTk-remedial` prompt 19 chose it on measurement — 3 of 50 QCD wavenumbers
+above the 3.4e-08 convergence criterion with the jumps alone, worst 1.97e-07 — against knots
+carrying the $10^{-4}$-level defect prompts 04–07 have since removed. Re-taken across the full
+matrix (50 wavenumbers × 2 sectors × 2 policies × 3 models, 744 s,
+[`per_sector_policy_remeasure.py`](qcd-background-audit/per_sector_policy_remeasure.py) →
+[`PER-SECTOR-POLICY.md`](qcd-background-audit/PER-SECTOR-POLICY.md)): QCD $T_k$ converges at **all
+50** under *either* policy (**7.08e-09** under `BREAK_POINT_ALL`, **8.85e-09** under
+`BREAK_POINT_DISCONTINUITY`, zero offenders in both), $G_k$ improved to **3.67e-09** under both,
+and the two models that declare nothing are **bit-identical between the policies** with prompt 19's
+grid totals reproduced as exact integers. The wider policy now costs **+0.99 %** of the $T_k$
+evaluations rather than +220 % — a QCD object is 8,986 where prompt 19 measured 31,521.
+**Neither `BREAK_POINT_KIND` was changed**: they are in a datastore lookup key and the two policies
+still differ by up to 2.86e-04 of the envelope on QCD, so that is README §7 **D5**, reported to the
+user and not decided, with the recommendation to leave both alone. What *is* still load-bearing is
+the **jumps**: with the declaration suppressed altogether, 19 of 50 QCD $T_k$ wavenumbers go above
+the criterion, worst 9.61e-06. What is left of the ungated chain is prompt 09's consumer
+close-out.
 
 | Issue | Board | Hook |
 |---|---|---|
 | `[00-eos-branch-joins-do-not-match]` | qcd-background-audit | `QCD_EOS`'s branch joins at $10^{16}$, 0.12 and $10^{-5}$ GeV jump by +1.395e-02, −3.744e-04 and −2.284e-03 in $g_s$, forcing steps in $T(z)$; the join at 0.002 GeV matches to 1.751e-11, and that asymmetry is the evidence the other three are a transcription defect. Origin of the 4.4e-04 jump in $H(z)$ at $z=4.24\times10^7$ that `GkTk-remedial` log 02 measured without attribution. **Upstream data fixture; pinned in a test by prompt 01 (2026-09-14), which confirmed every figure here to the digits quoted; not repaired.** The question for its authors is that campaign's README §7 D6. |
 | `[13-consumer-spline-crosses-eos-break-points]` | GkTk-remedial → qcd-background-audit | `PrimitivePhase`'s cubic spline of $\varphi$ uses default knots across `QCD_EOS`'s declared break points: 1.9e-6 / 3.2e-6 rad at $z=4.24\times10^7$ ($G_k$ / $T_k$, $k=10^5$) against 1 ulp elsewhere. **Narrowed by prompt 02 (2026-09-13), which stopped rather than fixing it**, and **again by `qcd-background-audit` prompt 07 (2026-09-14), which removed its blocker**: `BREAK_POINT_ALL` is now **3** points, none of them a knot of anything, and a multiplicity-`spline_order` knot vector **constructs on all six** of the grids prompt 02 measured as singular (asserted in `test_numeric_break_points.py::TestConsumerKnotVectorConstructs`, which also fails the old set). What is *not* settled is whether a $C^0$ knot is the right representation for $\varphi$ — prompt 02's items 2–4 stand, and its item 4 attributes the $k\ge10^7$ `theta_deriv` miss to the storage granularity of $\varphi$ rather than to the knots. **Next step:** prompt 10, now unblocked. |
-| `[01-convergence-block-has-a-separate-generator]` | qcd-background-audit | `wkb_reference_data.json`'s top-level `convergence` block (geometry, per-order convergence, `decision.N_*`) is written by `docs/gktk-remedial/residual_convergence.py`, not by prompt 02's QCD-only regenerator; five tests read it directly. Stale the moment 04–06 move the QCD block unless something re-runs it. **Next step:** prompt 08, whose charter already re-takes this measurement. |
+| `[01-convergence-block-has-a-separate-generator]` | qcd-background-audit | `wkb_reference_data.json`'s top-level `convergence` block (geometry, per-order convergence, `decision.N_*`) is written by `docs/gktk-remedial/residual_convergence.py`, not by prompt 02's QCD-only regenerator; five tests read it directly. Stale since 04–06 moved the QCD block. One tolerance is still owed on its account: `QCD_BREAK_POINT_ALIGNMENT_TOL = 1.5e-04` in `test_background_tau.py`, measured 1.418851e-04. **Prompt 08 could not take it** (2026-09-14): its file list includes neither the JSON nor that test module, and it moved no number. **Next step:** prompt 09, the close-out, which re-scores the consumers and has both naturally in scope. |
 | `[03-qcd-inventory-does-not-report-the-representation]` | qcd-background-audit | `sqla_QCDCosmology_factory.inventory()` and `tools/inventory_report.py` show QCD cosmology rows without the `T_z_representation` column prompt 03 added, so from prompt 04 rows differing only in their representation render as indistinguishable duplicates to the only tool that inspects a datastore. One line in `inventory()`; out of scope for prompt 03, whose §2 item 4 fixes the key and nothing else. |
-| `[04-unsplit-tk-run-now-meets-the-criterion]` | qcd-background-audit | `test_split_converges_where_unsplit_does_not` asserted that an unsplit $T_k$ numeric run *fails* the 3.4e-08 criterion at $k=4.972\times10^7$/Mpc. False since prompt 05: unsplit drift 1.0213e-06 → **2.2767e-08** (45× better) while the split run barely moved, so most of what the split rescued was the old representation's interpolation noise, not the jump in $H(z)$. First measured evidence that `BREAK_POINT_KIND = BREAK_POINT_ALL` may no longer be load-bearing — README §2 (f), §7 **D5**, and `BREAK_POINT_KIND` is in a datastore lookup key. One wavenumber of fifty; **not decided by prompt 05**. **Next step:** prompt 08, which re-takes the measurement across all fifty. |
+| `[04-unsplit-tk-run-now-meets-the-criterion]` | qcd-background-audit | `test_split_converges_where_unsplit_does_not` asserted that an unsplit $T_k$ numeric run *fails* the 3.4e-08 criterion at $k=4.972\times10^7$/Mpc. False since prompt 05: unsplit drift 1.0213e-06 → **2.2767e-08** (45× better) while the split run barely moved, so most of what the split rescued was the old representation's interpolation noise, not the jump in $H(z)$. First measured evidence that `BREAK_POINT_KIND = BREAK_POINT_ALL` may no longer be load-bearing — README §2 (f), §7 **D5**, and `BREAK_POINT_KIND` is in a datastore lookup key. One wavenumber of fifty; **not decided by prompt 05**. **Prompt 08 took the column across all fifty** (2026-09-14): unsplit, QCD $T_k$ is above the criterion at **19 of 50** wavenumbers, worst **9.61e-06** at $k=4.223\times10^7$ — this entry's own $k$ reads 2.91e-08 and passes, but it is not representative, so splitting at the **jumps** is still load-bearing and only the `ALL`-vs-`DISCONTINUITY` distinction is vestigial (7.08e-09 against 8.85e-09, zero offenders either way). **Narrowed, not closed:** the assertion in the tree is still pinned to a $k$ at which its original statement is false. **Next step:** re-point `test_split_converges_where_unsplit_does_not` at $k=4.223\times10^7$, where unsplit is 9.61e-06 against a split 5.60e-10; out of bounds for prompt 08. |
+| `[08-gk-declared-split-buys-nothing-measurably]` | qcd-background-audit | The $G_k$ numeric sector splits at the declared jumps; prompt 08 measured what that buys on QCD — worst reference-convergence drift **3.67e-09** split against **3.52e-09** unsplit over 50 wavenumbers, zero above the criterion either way, 13,343 against 13,320 evaluations per object. Within the noise of the measure it buys nothing, unlike $T_k$ where suppressing the split puts 19 of 50 above the criterion. No action proposed: it costs 0.17 %, it is the mechanism $T_k$ needs, and `BREAK_POINT_KIND` is in a lookup key. Recorded so a later reader weighing README §7 D5 need not re-derive it. |
 | `[06-t-photon-call-cost-needs-a-quiet-machine]` | qcd-background-audit | `T_photon` measured **2.53 µs/call** on a quiet machine against README §6.2's ≤ 2.5 µs, before the segment dispatch was inlined; after the inline, ratios on a loaded machine put the segmentation at ~1.00–1.05× the unsegmented cost and the whole excess over prompt 05 at the order-5 spline evaluation (1.09–1.13×). A scaled estimate is ~2.4 µs but that is an inference. **Next step:** re-run log 06 deviation 5's three-candidate comparison on a quiet machine. |
 | `[07-t-photon-range-logic-recomputes-its-bounds]` | qcd-background-audit | `TemperatureRepresentation.__call__` and `ZSplineWrapper.__call__` evaluate `_outward(bound, ±1)` on every call, though both bounds are fixed at construction: 0.056 µs each, measured, of a ~2.5 µs call. Hoisting them into `__init__` is numerically null. Out of scope for prompt 06, whose prompt did not cover prompt 05's range logic. |
 | `[08-temperature-crossing-solver-is-test-only]` | qcd-background-audit | `LambdaCDM_GenericEOS._temperature_crossing_log1pz` has no production caller since prompt 07 took `integration_break_points` onto the bisected `_break_point_crossings_log1pz`. It is kept as the probe `test_hubble_jumps_at_the_declared_crossings_and_not_at_the_kink` uses and as the documented illustration of the trap README §2 (b) is about, with a docstring that says both — but a private method on a production class whose only callers are tests is a trap for a later reader. **Next step:** move it into `CosmologyModels/tests/T_z_reference.py`, or delete it and have that one test bisect, for whichever prompt next has both files in scope. |
