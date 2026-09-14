@@ -56,8 +56,9 @@ class LambdaCDM_GenericEOS(BaseCosmology):
     #   version | prompt | what changed
     #   --------+--------+-----------------------------------------------------------------------
     #      1    |   03   | nothing numerically; the key exists
+    #      2    |   04   | _solve_T_z tightened from xtol=1e-6, rtol=1e-4 to xtol=1e-300, rtol=1e-14
     #
-    # (prompts 04, 05, 06 and 07 each append a row here as they land.)
+    # (prompts 05, 06 and 07 each append a row here as they land.)
     #
     # Why this is not optional. Without it the same cosmology row is returned under the same
     # serial when the representation changes; every BackgroundModel keyed on that serial is found
@@ -70,7 +71,7 @@ class LambdaCDM_GenericEOS(BaseCosmology):
     #
     # This follows TkNumericIntegration.BREAK_POINT_KIND: a single declaration, readable from the
     # class without an instance, so that the factory can filter on it before any model is built.
-    T_Z_REPRESENTATION_VERSION: int = 1
+    T_Z_REPRESENTATION_VERSION: int = 2
 
     def __init__(
         self,
@@ -217,8 +218,18 @@ class LambdaCDM_GenericEOS(BaseCosmology):
                 f"Could not bracket target temperature T(z) at z={z:.4g}, bracket_lo={bracket_lo:.5g}, bracket_hi={bracket_hi:.5g}"
             )
 
+        # This solve fixes one node of the T(z) spline built in _build_T_z_spline, so its cost is
+        # paid once per node at build time (~500 nodes, 8.3 us each -- a few ms total), never at
+        # evaluation time. Each node converges independently, so a loose tolerance here does not
+        # give a uniformly-scaled error: it gives an *uncorrelated scatter* between neighbouring
+        # nodes, and a cubic spline through scattered nodes has a scattered derivative too
+        # (prompts/qcd-background-audit/, prompt 04; audit §3, T2). rtol=1e-14 sits just above
+        # Brent's own floor of ~4*eps=8.9e-16, so it is the tightest tolerance root_scalar can
+        # actually resolve; xtol=1e-300 disables the absolute component entirely -- T spans twenty
+        # decades over the tabulated range, so any finite absolute tolerance binds at the cold end
+        # long before the hot end is resolved, and the previous xtol=1e-6 did exactly that.
         root = root_scalar(
-            T_equation, bracket=(bracket_lo, bracket_hi), xtol=1e-6, rtol=1e-4
+            T_equation, bracket=(bracket_lo, bracket_hi), xtol=1e-300, rtol=1e-14
         )
 
         if not root.converged:

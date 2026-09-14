@@ -3,7 +3,7 @@
 **Campaign:** [`README.md`](README.md) · **Source document:**
 [`docs/qcd-background-audit-2026-09.md`](../../docs/qcd-background-audit-2026-09.md)
 **Baseline commit:** `e8f746d` (`qcd-background-audit`, clean; identical to `main`)
-**Last updated:** 2026-09-14 — **prompt 03 complete; 3 / 12.** Twelve prompts in four workstreams.
+**Last updated:** 2026-09-14 — **prompt 04 complete; 4 / 12.** Twelve prompts in four workstreams.
 Every figure below is the audit's, and prompt 01 re-measured the representation, the branch joins,
 the jump locations and the conformal-time error **from the test tree** on `2a5e0fa`: all of them
 reproduce the audit to every digit it quotes. The audit's script
@@ -23,7 +23,7 @@ Legend: ⬜ not started · 🟡 in flight · ✅ complete · ⚠️ complete wit
 | 01 | [The background-against-background harness](01-background-reference-harness.md) | Opus | ⚠️ | *"Add a background-against-background test for the QCD temperature"* (SHA not embedded, per the campaign convention) | [`logs/01-background-reference-harness.md`](logs/01-background-reference-harness.md) |
 | 02 | [Make the QCD reference fixture regenerable](02-regenerable-qcd-references.md) | Sonnet | ⚠️ | *"Make the QCD reference fixture regenerable before the background moves"* (SHA not embedded, per the campaign convention) | [`logs/02-regenerable-qcd-references.md`](logs/02-regenerable-qcd-references.md) |
 | 03 | [Key the `T(z)` representation](03-key-the-representation.md) | Opus | ⚠️ | *"Key the QCD cosmology on its temperature representation"* (SHA not embedded, per the campaign convention) | [`logs/03-key-the-representation.md`](logs/03-key-the-representation.md) |
-| 04 | [Tighten `_solve_T_z` (T2)](04-tighten-node-solve.md) | Sonnet | ⬜ | | |
+| 04 | [Tighten `_solve_T_z` (T2)](04-tighten-node-solve.md) | Sonnet | ⚠️ | *"Solve the T(z) spline nodes to a useful tolerance"* (SHA not embedded, per the campaign convention) | [`logs/04-tighten-node-solve.md`](logs/04-tighten-node-solve.md) |
 | 05 | [Spline the entropy factor (T3)](05-entropy-factor-representation.md) | Opus | ⬜ | | |
 | 06 | [Segment at the jumps (T4)](06-segment-at-the-jumps.md) | Opus | ⬜ | | |
 
@@ -48,7 +48,7 @@ Legend: ⬜ not started · 🟡 in flight · ✅ complete · ⚠️ complete wit
 | 11 | [A cosmology-aware source grid](11-cosmology-aware-source-grid.md) | Opus | ⬜ | | |
 | 12 | [A measured grid-density criterion](12-grid-density-criterion.md) | Opus | ⬜ | | |
 
-**Progress:** 3 / 12 complete (3 / 9 in the ungated chain 01–09).
+**Progress:** 4 / 12 complete (4 / 9 in the ungated chain 01–09).
 
 **Prompt 01 landed `COMPLETE WITH DEVIATIONS`** — no production file changed; two new modules,
 `CosmologyModels/tests/T_z_reference.py` and `CosmologyModels/tests/test_T_z_representation.py`,
@@ -95,6 +95,30 @@ it compiles queries against a stand-in connection — so the tests create an SQL
 and prompt §3 items 1 and 3 are scored against real SQL rather than a compiled query. None touches
 a README §2 design fact.
 
+**Prompt 04 landed `COMPLETE WITH DEVIATIONS`** — one production line changed:
+`_solve_T_z`'s `root_scalar(..., xtol=1e-6, rtol=1e-4)` is now `xtol=1e-300, rtol=1e-14`
+(`LambdaCDM_GenericEOS.py:220`), `T_Z_REPRESENTATION_VERSION` is **2**. The node solve is now
+bit-identical to the `rtol=1e-14` defining-equation reference on the audit's 640-point probe set
+(max relative error **2.496e-05 → 0.0**), and $H(z)$ built from the node solve alone follows it to
+**0.0**. The full `T(z)` spline (still one global, un-segmented spline; T3/T4 are prompts 05/06)
+improves max/p90/median from **7.177e-04/1.323e-05/1.890e-07** to
+**7.2615e-04/1.936e-07/1.071e-07** — the p90 falls as the audit's §4 table predicts, the max is
+untouched (and nudges very slightly worse) because it is pinned at the un-segmented jump height,
+not set by node accuracy. **The $\pm0.1$-scale $\omega^2/\omega_0^2$ scatter
+`ComputeTargets/phase_residual.py:226` attributes to this issue survives essentially unchanged**
+(measured span $[-0.0713,+0.2336]\to[-0.0676,+0.2376]$ over 11 production nodes near
+$z\sim4\times10^{15}$, $k=3\times10^8$, Gk sector — 0.1 % different): **this narrows, rather than
+closes, the question of what causes it**, and `RESIDUAL_WKB_REGION_MARGIN = 0.5` is untouched, as
+the prompt requires. The QCD reference fixture was regenerated in this commit (largest relative
+move: `rho_G` 1.10e-02); every one of the 45 tests prompt 02 mapped re-scored green except two
+whose expected values were pinned to the shipped nodes' branch-crossing location — a hardcoded
+literal in `test_numeric_break_points.py` and an alignment tolerance in `test_background_tau.py`
+against the JSON's separate, not-regenerated-here `convergence` block, loosened once from `1e-9`
+to `1.4e-05` (`[01-convergence-block-has-a-separate-generator]`, not a new defect). `CosmologyModels`
+18, `ComputeTargets` 354, `LiouvilleGreen` 143/143 fast set — all unchanged. Closes
+`[02-qcd-T-z-spline-node-tolerance]` on the `GkTk-remedial` board (§4 there). Full record:
+[`logs/04-tighten-node-solve.md`](logs/04-tighten-node-solve.md).
+
 **The representation version.** `T_Z_REPRESENTATION_VERSION` is introduced by prompt 03 and bumped
 by **04, 05, 06 and 07**. Its value at each prompt boundary is recorded here as the campaign runs,
 because it is the only thing that tells a datastore that its QCD rows are stale. **Bump it on
@@ -106,7 +130,7 @@ above the declaration.
 | 01 | *(does not exist)* | no production file touched |
 | 02 | *(does not exist)* | no production file touched |
 | 03 | **1** | nothing numerically; the key exists |
-| 04 | *(to be recorded)* | node solve tightened |
+| 04 | **2** | `_solve_T_z` tightened from `xtol=1e-6, rtol=1e-4` to `xtol=1e-300, rtol=1e-14` |
 | 05 | *(to be recorded)* | entropy-factor representation |
 | 06 | *(to be recorded)* | segmented at the jumps |
 | 07 | *(to be recorded)* | break-point set collapsed |
@@ -118,7 +142,7 @@ above the declaration.
 | ID | Severity | Description | Prompt | Status |
 |---|---|---|---|---|
 | **T1** | **DEFECT, critical** | 3.461e-08 relative in $\int\mathrm{d}z/H$ — of order 47.5 / 4.75e3 / 1.43e5 rad at $k=10^5/10^7/3\times10^8$ against 1-ulp floors of 3.05e-7 / 3.05e-5 / 9.15e-4 rad. **Common mode** between producer and consumer, so invisible to every test in the tree. | 01, 04, 05, 06 | 🟡 |
-| **T2** | **DEFECT, high** | `_solve_T_z` root-solves each spline node to `rtol=1e-4`; neighbouring nodes carry uncorrelated errors up to 2.496e-05. The root of `[02-qcd-T-z-spline-node-tolerance]`, and (measured, not asserted) of the $\pm0.1$ scatter in $\omega^2/\omega_0^2$ that `RESIDUAL_WKB_REGION_MARGIN = 0.5` exists to survive (`ComputeTargets/phase_residual.py:220`). | 04 | ⬜ |
+| **T2** | **DEFECT, high** | `_solve_T_z` root-solves each spline node to `rtol=1e-4`; neighbouring nodes carry uncorrelated errors up to 2.496e-05. The root of `[02-qcd-T-z-spline-node-tolerance]`, and (measured, not asserted) of the $\pm0.1$ scatter in $\omega^2/\omega_0^2$ that `RESIDUAL_WKB_REGION_MARGIN = 0.5` exists to survive (`ComputeTargets/phase_residual.py:220`). | 04 | ⚠️ |
 | **T3** | **DEFECT, medium** | $T$ is splined against $u$, spending resolution on the $(1+z)$ ramp known in closed form. Splining $F(u)=\log(T/[T_{\rm CMB}(1+z)])$ instead improves the median 400× at the same node count (1.071e-07 → 2.599e-10). | 05 | ⬜ |
 | **T4** | **DEFECT, high** | One global spline across three points at which $T(z)$ genuinely **jumps** (7.614e-04 at $z_c=4.25337\times10^7$). The max error is pinned near the jump height at 500, 2,000 and 5,000 nodes alike. | 06 | ⬜ |
 | **G1** | **DEFECT, high** | 404 of the 407 `BREAK_POINT_ALL` points are knots of the auxiliary interpolant: a Gauss panel split every 4.04 grid intervals throughout `BackgroundModel`, and the sole cause of `prompts/phase-representation` prompt 02's Schoenberg–Whitney failure. | 07, 08 | ⬜ |
@@ -215,7 +239,6 @@ measurements and its history; the closure is recorded there):
 | Issue | Owning board | Closed by | Note |
 |---|---|---|---|
 | `[13-consumer-spline-crosses-eos-break-points]` | GkTk-remedial | prompt 10 | Assigned 2026-09-13 by `prompts/phase-representation`'s close-out. Blocked until prompt 07 |
-| `[02-qcd-T-z-spline-node-tolerance]` | GkTk-remedial | prompt 04 | T2 is this issue at its root; prompt 04 must also re-measure the $\omega^2$ scatter it causes |
 | `[01-genericeos-tz-spline-floor]` | source-remediation | prompts 05, 06 | "Whether the `T(z)` spline grid is adequately defined." The answer is in audit §3 and §4 |
 | `[19-cosmologymodels-docstrings-predate-per-sector-policy]` | GkTk-remedial | prompt 07 | The two docstrings are exactly the text prompt 07 rewrites |
 
@@ -232,7 +255,13 @@ Re-measured but **not owned** here (they stay where they are; a prompt that move
 
 ## 4. Resolved issues
 
-*(none yet — the campaign has not started)*
+- **[02-qcd-T-z-spline-node-tolerance]** *(GkTk-remedial, opened 2026-09-10; **closed by prompt
+  04**, 2026-09-14)* — T2 at its root. `_solve_T_z`'s `root_scalar(xtol=1e-6, rtol=1e-4)` is now
+  `xtol=1e-300, rtol=1e-14`; the node solve is bit-identical to the `rtol=1e-14` defining-equation
+  reference on the audit's probe set (max error 2.496e-05 → 0.0). Full record, including the
+  re-measured $\omega^2/\omega_0^2$ scatter (essentially unchanged — this issue is not its cause),
+  is on the `GkTk-remedial` board's §4 and in
+  [`logs/04-tighten-node-solve.md`](logs/04-tighten-node-solve.md).
 
 ---
 

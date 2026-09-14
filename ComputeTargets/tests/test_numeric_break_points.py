@@ -926,11 +926,15 @@ class TestQCDReferenceConvergence(unittest.TestCase):
         return worst
 
     def test_the_branch_crossing_is_inside_the_range(self):
+        # prompts/qcd-background-audit/ prompt 04 tightened _solve_T_z's node solve, which moves
+        # the T(z) spline this crossing is solved against (README §2 (d)): 8.64355463e11 ->
+        # 8.64366999e11, a 1.335e-05 relative shift -- not a new physical crossing, the same
+        # T_120_MEV branch located slightly more accurately.
         points = declared_discontinuities_in_z(
             self.model, float(self.grid.min), self.grid.max.z
         )
         self.assertEqual(len(points), 1)
-        self.assertAlmostEqual(points[0] / 8.64355463e11, 1.0, places=6)
+        self.assertAlmostEqual(points[0] / 8.64366999e11, 1.0, places=6)
 
     def test_split_converges_where_unsplit_does_not(self):
         split = self._drift(self.model)

@@ -498,20 +498,6 @@ Opened by the planning pass, 2026-09-10, before any prompt runs.
   `[01-lambdacdm-hubble-rounding-floor]`). **Next step:** if 13 needs more headroom, regenerate the
   QCD block of the JSON break-aware; otherwise none.
 
-- **[02-qcd-T-z-spline-node-tolerance]** *(opened by prompt 02, 2026-09-10; not this campaign's)* —
-  `LambdaCDM_GenericEOS._solve_T_z` solves $T\,g_S(T)^{1/3}=$ const with
-  `root_scalar(..., xtol=1e-6, rtol=1e-4)`, and the 500 node values of `QCD_Cosmology`'s $T(z)$
-  spline inherit that. Re-solving eight sampled nodes at `rtol=1e-15` moves the answer by up to
-  **2.08e-05 relative** (at $z=10^{13}$; 1.17e-05 at $z=4.2\times10^7$; 0 at $z\le10^5$), which is
-  $\sim4\times10^{-5}$ relative in $H$ in the radiation era. This is a property of the cosmology,
-  not of any quadrature — every table in this campaign converges to the integral of the function
-  the model actually defines — but it bounds what a QCD $\tau$ table *means* physically, and the
-  node-to-node scatter is not smooth. Distinct from `source-remediation`'s
-  `[01-genericeos-tz-spline-floor]`, which is about the *number* of spline points; this is about
-  the accuracy of each point. **Impact:** the physical interpretation of every QCD number in
-  prompts 03–07 and 13; no numerical target in this campaign is affected. **Next step:** a
-  decision by the author on `_solve_T_z`'s tolerances; not scheduled here.
-
 - **[01-lambdacdm-hubble-rounding-floor]** *(opened by prompt 01, 2026-09-10; inert)* — the
   double-precision evaluation of `LambdaCDM.Hubble` carries 2–9e-15 relative near $z=1$–$10^6$,
   which is the floor on $\Delta\tau$ over one production grid interval whatever the Gauss order
@@ -904,6 +890,38 @@ Opened by the planning pass, 2026-09-10, before any prompt runs.
 ---
 
 ## 4. Resolved issues
+
+- **[02-qcd-T-z-spline-node-tolerance]** *(opened by prompt 02, 2026-09-10; not this campaign's;
+  **resolved by `prompts/qcd-background-audit` prompt 04**, 2026-09-14)* —
+  `LambdaCDM_GenericEOS._solve_T_z` solved $T\,g_S(T)^{1/3}=$ const with
+  `root_scalar(..., xtol=1e-6, rtol=1e-4)`, and the 500 node values of `QCD_Cosmology`'s $T(z)$
+  spline inherited that: adjacent nodes converged independently, so the interpolant scattered
+  between them. **Fixed** by tightening to `xtol=1e-300, rtol=1e-14` — one line, build-time cost
+  only (`~13.4 ms` for 500 nodes, against a 100 ms stop threshold; `T_photon`'s per-call cost is
+  unchanged at 2.408 µs, since the evaluation path is untouched). **Measured, before → after**, on
+  the audit's 640-point probe set (`docs/qcd-background-audit-2026-09.md` §3;
+  `CosmologyModels/tests/T_z_reference.py`): node solve against the `rtol=1e-14` defining-equation
+  oracle, max **2.496e-05 → 0.0** (bit-identical — the shipped solve now uses the same tolerance
+  and algorithm as the reference); $H(z)$ built from the node solve alone (not the spline), same
+  probe set, max **7.016e-05 → 0.0**. The full `T(z)` spline (500 pts, still one global spline —
+  T3/T4 are prompts 05/06) improves from max/p90/median **7.177e-04/1.323e-05/1.890e-07** to
+  **7.2615e-04/1.936e-07/1.071e-07**: accurate nodes fix the p90 as the audit's §4 table predicts;
+  the max is untouched (even nudges up slightly) because it is pinned at the un-segmented jump
+  height, not by node accuracy. **The $\pm0.1$-scale $\omega^2/\omega_0^2$ scatter this issue was
+  blamed for in `ComputeTargets/phase_residual.py:226`'s comment (`RESIDUAL_WKB_REGION_MARGIN`'s
+  reason for existing) survives essentially unchanged**: 11 production nodes near $z\sim4\times
+  10^{15}$ at $k=3\times10^8$ (Green's function) span $\omega^2/\omega_0^2\in[-0.0713,+0.2336]$
+  before and $[-0.0676,+0.2376]$ after — the same span to 0.1 %. **So this issue is not (or not
+  primarily) the scatter's cause**; `RESIDUAL_WKB_REGION_MARGIN = 0.5` is not narrowed by this
+  prompt and `[20-wkb-gauss-orders-not-in-lookup-key]` is untouched. The QCD reference fixture was
+  regenerated in the same commit (largest relative move: `rho_G` 1.10e-02, `rho_T` 3.01e-03,
+  `tau_minus_top`/`cs_tau_minus_top` ~1.8e-05, `friction_F_minus_top` 2.05e-08); every dependent
+  test re-scored green except two whose expected values were pinned to the shipped nodes'
+  crossing location and were updated in the same commit (a hardcoded closed-form-style literal in
+  `test_numeric_break_points.py`, and an alignment tolerance against the JSON's separate
+  `convergence` block in `test_background_tau.py`, loosened from 1e-9 to 1.4e-05 — attributable to
+  `[01-convergence-block-has-a-separate-generator]` on the `qcd-background-audit` board, not a new
+  defect). See `prompts/qcd-background-audit/logs/04-tighten-node-solve.md`.
 
 - **[13-wkb-mod-2pi-cycle-count-inconsistent]** *(opened by prompt 13, 2026-09-13; **resolved by
   prompt 01 of [`prompts/phase-representation`](../phase-representation/IMPLEMENTATION_STATE.md)**,
