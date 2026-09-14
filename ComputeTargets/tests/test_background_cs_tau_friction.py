@@ -134,9 +134,15 @@ FRICTION_SHORT_BASELINE_ABS_TOL = 2.0e-14
 # few hundred ulp of a cumulative quadrature over twenty decades, and the worst point moves from
 # z = 1.005e7 to z = 1.007e11. The companion friction_F assertion below is scored against
 # FRICTION_REL_TOL rather than this floor and still passes untouched (6.525e-14 against 1e-13).
-# Prompt 08 re-runs residual_convergence.py, after which this should go back to 3.0 and be
-# re-measured.
-QCD_FLOOR_FACTOR = 8.3
+# **Taken back to 3.0 by prompt 06, one prompt earlier than expected**, and not because the block
+# was regenerated -- it still has not been -- but because segmenting the representation at the
+# jumps moved the numerator by two orders: 1.5501e-13 -> 2.212e-15, measured at z = 1.005e+07
+# against the same recorded floor of 1.887e-14. The model's fixed-order table now agrees with the
+# JSON an order *below* the floor recorded for the JSON itself, where prompt 05 sat eight times
+# above it. Prompt 08 still re-runs residual_convergence.py and re-measures both sides;
+# QCD_BREAK_POINT_ALIGNMENT_TOL in test_background_tau.py is the one figure of the three that
+# prompt 05 loosened that this prompt could not take back.
+QCD_FLOOR_FACTOR = 3.0
 
 # prompt 04 §3 test 6: review §12.3 measures the friction ODE's amplitude error as 2.3e-7
 # (k = 1e5) to 4.1e-7 (k = 3e8); the window brackets it by an order either way

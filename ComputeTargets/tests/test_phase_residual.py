@@ -80,8 +80,19 @@ RHO_T_MIN = -0.12
 RHO_T_MAX = -0.06
 
 # prompt 05 §2 test 4: with no break points the build costs exactly RHO_GAUSS_ORDER evaluations
-# per interval; QCD_Cosmology's break-point subdivision (log 02) costs 24 % more
-COST_BREAK_POINT_FACTOR = 1.30
+# per interval; QCD_Cosmology's break-point subdivision (log 02) costs 24 % more.
+#
+# Loosened 1.30 -> 2.40 by prompts/qcd-background-audit/ prompt 06, measured 2.337. This is a
+# real cost, not a stale figure: the T(z) tabulation went from 500 nodes to 3,000 (segmenting the
+# representation at the jumps is what buys the accuracy, but the node count is what buys the p90
+# and the median), every interior knot of it is declared by integration_break_points, and every
+# Gauss panel is split at each one. BREAK_POINT_ALL on the production source grid is 2,414 where
+# it was 407, so a panel is now split roughly every 0.7 grid intervals rather than every 4.
+# **Prompt 07 removes the knots from that set entirely** -- they are an artefact of the
+# representation and not of the cosmology, which is finding G1 of the audit -- and this factor
+# should then come back below its original 1.30 rather than merely to it, because what will be
+# left is three genuine crossings ([05-break-point-set-grew-with-the-node-count]).
+COST_BREAK_POINT_FACTOR = 2.40
 
 
 def _nodes_at_or_below(z_nodes: np.ndarray, z_anchor: float) -> np.ndarray:

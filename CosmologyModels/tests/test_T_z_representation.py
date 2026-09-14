@@ -14,34 +14,49 @@ the defining equation root-solved to ``rtol = 1e-14``, in ``CosmologyModels/test
 -- and it scores the conformal time the shipped background produces against the conformal time the
 exact background produces.
 
-**On 2026-09-13 this is a characterisation harness, not a pass/fail accuracy guard.** Every
-threshold below is set at the value the tree *currently* achieves, and each carries a comment
-naming the campaign prompt that tightens it (README §6.1, §6.2). The transition from
-characterisation to guard is meant to be a one-line threshold edit in each case and nothing else.
+**Written on 2026-09-13 as a characterisation harness; since prompt 06 it is a guard.** Each
+threshold was set at the value the tree achieved when the case was written and carries a comment
+naming the campaign prompt that tightened it (README §6.1, §6.2); prompts 04, 05 and 06 have taken
+them to README §6.1's final column, and the conformal-time case now reads at zero -- the shipped
+background and the exact background give the same ``int dz/H`` to the last bit.
 
-Two of the seven cases are not accuracy measurements at all:
+Three of the cases are not accuracy measurements at all:
 
 * ``test_the_branch_joins_are_where_the_fixture_puts_them`` pins an upstream data fixture this
   campaign deliberately does not repair (README §0.5, §7 D6);
-* ``test_a_segment_edge_bisected_and_one_root_found_disagree`` pins the one implementation trap
-  prompt 06 has to avoid (README §2 (b)).
+* ``test_a_segment_edge_bisected_and_one_root_found_disagree`` pins the implementation trap
+  prompt 06 had to avoid (README §2 (b)), and
+  ``test_an_edge_misplaced_by_one_node_restores_the_error`` is the same trap the other way round:
+  it builds the representation prompt 06 would have built had it fallen for it, and requires the
+  error to come back. The failure mode is silent -- every other statistic still improves -- so it
+  is guarded rather than argued.
 
 No Ray and no datastore is needed.
 """
 
 import unittest
-from math import expm1, log1p
+from math import expm1, log, log1p, sin
 
 import numpy as np
+from scipy.interpolate import BSpline, make_interp_spline
 from scipy.optimize import root_scalar
 
-from CosmologyModels.GenericEOS.LambdaCDM_GenericEOS import LambdaCDM_GenericEOS
+from CosmologyModels.GenericEOS.LambdaCDM_GenericEOS import (
+    DEFAULT_T_Z_SPLINE_ORDER,
+    DEFAULT_T_Z_SPLINE_SAMPLES,
+    SEGMENT_EDGE_PAD_LOG1PZ,
+    LambdaCDM_GenericEOS,
+    SegmentedEntropyFactor,
+    TemperatureRepresentation,
+    build_segmented_entropy_spline,
+)
 from CosmologyModels.GenericEOS.QCD_Cosmology import QCD_Cosmology
 from CosmologyModels.GenericEOS.QCD_EOS import QCD_EOS
 from CosmologyModels.LambdaCDM import Planck2018
 from CosmologyModels.tests.T_z_reference import (
     PRODUCTION_FLOOR_RAD,
     PRODUCTION_SPANS_RAD,
+    Hubble_with,
     Stats,
     accurate_T,
     entropy_factor,
@@ -65,33 +80,46 @@ PRODUCTION_MAX_Z = 1.0e20
 # ------------------------------------------------------------------------------------------
 
 # case 1 -- T_photon against the defining equation, audit §3 / README §6.1.
-# Tightened by prompt 05 to README §6.1's "After 05" column: the splined quantity is now the
-# entropy factor F(u) = log(T / [T_CMB (1+z)]) rather than T itself, so the interpolant no longer
-# spends its degrees of freedom on the (1+z) ramp. Median -> 3.0e-10 (achieved 2.599e-10, a
-# factor of 412 below prompt 04's 1.071e-07) and p90 -> 9.0e-08 (achieved 8.912e-08).
-#
-# The max barely moves, 7.2615e-04 -> 7.236e-04, and it is tightened only to the "After 05"
-# figure rather than to anything meaningful: it is pinned at the height of the jump in T(z),
-# which no node count and no choice of splined quantity touches, because a single spline is
-# being run straight across a genuine discontinuity. **That is prompt 06's**, which segments the
-# representation at the jumps and tightens max -> 1e-10, p90 -> 1e-14, median -> 1e-15.
-T_PHOTON_MAX = 7.24e-04
-T_PHOTON_P90 = 9.0e-08
-T_PHOTON_MEDIAN = 3.0e-10
+# Tightened by prompt 06 to README §6.1's "After 06" column, which is the end of the road for
+# this table: the entropy factor is now splined one segment per branch of the equation of state,
+# with the segment edges bisected onto the redshifts at which T(z) genuinely jumps, at 3,000
+# nodes of order 5. The max falls seven orders, 7.236e-04 -> 6.807e-11, because it was never an
+# accuracy at all -- it was the height of the jump, carried by a single spline that ran straight
+# across a step and could not do otherwise at any node count. With the step removed the node
+# count buys the p90 and the median in the ordinary way: 8.912e-08 -> 3.237e-15 and
+# 2.599e-10 -> 1.765e-16, both at the audit's §4 figures (3.123e-15, 1.773e-16).
+T_PHOTON_MAX = 1.0e-10
+T_PHOTON_P90 = 1.0e-14
+T_PHOTON_MEDIAN = 1.0e-15
+
+# case 1b -- H(z) on the production source grid, audit §5 / README §6.2. rho_r = a g(T) T^4 and
+# H ~ sqrt(rho), so a relative error eps in T reaches H at roughly 2 eps in the radiation era,
+# and that is what is measured: 1.690e-10 / 6.276e-15 / 2.804e-16 against the audit's
+# 1.690e-10 / 6.314e-15 / 2.803e-16, from 1.278e-03 / 2.895e-05 / 3.424e-07 before the campaign.
+# Introduced by prompt 06; the harness (Hubble_with) has been in T_z_reference since prompt 01.
+HUBBLE_MAX = 2.0e-10
+HUBBLE_P90 = 1.0e-14
+HUBBLE_MEDIAN = 1.0e-15
 
 # case 2 -- the node solve's own rtol = 1e-4, audit §3 (T2). Tightened by prompt 04 to 1e-14
 # (achieved: bit-identical to the rtol=1e-14 reference on the probe set, so exactly 0.0).
 NODE_SOLVE_MAX = 1.0e-14
 
-# case 3 -- the T1 guard, audit §5 / README §6.2. Tightened by prompt 06 to 1e-15.
+# case 3 -- the T1 guard, audit §5 / README §6.2, and the campaign's headline measurement.
 #
-# **Not tightened by prompt 05, but measured**: 3.4605e-08 (prompt 01) -> 3.4509e-08 (prompt 04)
-# -> 5.4264e-10 here, a factor of 64 from the entropy factor alone. Most of the conformal-time
-# error was never the jump -- the jump is a set of measure zero in the integral -- but the
-# interpolation error carried across the whole range, which is what the median measures and what
-# this prompt fixes. The remaining 5.4e-10 is 0.74 rad at k = 1e5/Mpc against a 3.05e-07 rad
-# floor, so T1 is not closed: prompt 06 owns this threshold and takes it to 1e-15.
-CONFORMAL_TIME_REL = 4.0e-08
+# 3.4605e-08 (prompt 01) -> 3.4509e-08 (prompt 04) -> 5.4264e-10 (prompt 05) -> **0.0** here:
+# on this tree the segmented representation gives an int dz/H that is *bit-identical* to the one
+# the exact background gives, at all 17 digits, which is what audit §5's "improved" row reports.
+# The threshold is README §6.2's 1e-15 rather than an equality, because the identity is the last
+# bit of a sum of a few hundred quadrature panels and is not something to assert on; the test
+# prints whether it holds, and the phase floors below are asserted instead.
+#
+# Prompt 05 took the factor of 64 by removing the interpolation error the T-against-u spline
+# carried across the whole range; what this prompt removes is the rest. Note that the jump itself
+# is a set of measure zero in an integral, so it is not the jump that is being paid for here but
+# the interpolation error a spline makes *near* a step it cannot represent, which is spread over
+# the neighbouring node intervals and is not small.
+CONFORMAL_TIME_REL = 1.0e-15
 CONFORMAL_TIME_Z_LO = 1.0e2
 CONFORMAL_TIME_Z_HI = 1.0e12
 
@@ -137,8 +165,34 @@ EXACT_RAMP_NODE_MAX = 1.0e-15
 # epsilon means the bracketing solver did not find a root; it reported one anyway.
 NON_ROOT_RESIDUAL = 1.0e-08
 # the padding the audit's segmented build uses to keep each branch's nodes inside its own segment
-# (docs/qcd-background-audit/measure_T_z_representation.py, build_segmented)
+# (docs/qcd-background-audit/measure_T_z_representation.py, build_segmented). Since prompt 06 the
+# production representation uses the same number, declared as SEGMENT_EDGE_PAD_LOG1PZ, and the
+# two are asserted equal below.
 SEGMENT_PAD = 1.0e-12
+
+# ------------------------------------------------------------------------------------------
+# prompt 06's own constants -- the segmentation
+# ------------------------------------------------------------------------------------------
+
+# case 8 -- where the production segment edges are. They are scored against
+# T_z_reference.jump_locations, which bisects independently; the two agree to 0, 1 and 0 ulp of u
+# at the three production crossings. The tolerance is in ulp of u rather than relative, because
+# what matters about an edge is which side of a step it falls on, and that question is asked one
+# bit at a time.
+EDGE_AGREEMENT_ULP = 2.0
+
+# case 9 -- an edge misplaced by one node of its own segment. The audit measured 5.7e-04 on a
+# first attempt that root-found instead of bisecting; the guard asserts that the probe-set
+# maximum comes back to the 1e-4 regime, which is four orders above what prompt 06 achieves and
+# is the whole of what segmentation buys.
+MISPLACED_EDGE_MIN_MAX = 1.0e-05
+
+# case 10 -- the step, reproduced rather than smoothed. Either side of an edge the representation
+# has to agree with the defining equation to the same floor it reaches anywhere else, with the
+# full relative step in T between the two. The step at the lowest crossing is
+# expm1(7.6229229003969e-04) = 7.625829e-04 (log 01 deviation 2); the third crossing's is
+# measured here and is the +1.0108e-04 that `T_120_MEV` forces.
+STEP_FLOOR = 1.0e-10
 
 
 def _qcd_cosmology():
@@ -246,7 +300,10 @@ class TestQCDTemperatureRepresentation(unittest.TestCase):
         )
         print(f"  shipped background = {shipped:.16e}")
         print(f"  exact   background = {exact:.16e}")
-        print(f"  relative error in tau = {rel:.4e}")
+        print(
+            f"  relative error in tau = {rel:.4e}"
+            f"   (bit-identical: {shipped == exact})"
+        )
         for k, span in PRODUCTION_SPANS_RAD.items():
             print(
                 f"    k = {k:9.3g} /Mpc:  {rel * span:10.3e} rad   "
@@ -254,6 +311,13 @@ class TestQCDTemperatureRepresentation(unittest.TestCase):
             )
 
         self.assertLessEqual(rel, CONFORMAL_TIME_REL)
+
+        # audit §5's phase columns: theta = -[k dtau + drho], so a relative error in tau is a
+        # phase error proportional to k tau. Before this campaign these read 47.5 / 4.75e3 /
+        # 1.43e5 radians against floors of 3.05e-07 / 3.05e-05 / 9.15e-04.
+        for k, span in PRODUCTION_SPANS_RAD.items():
+            with self.subTest(k=k):
+                self.assertLessEqual(rel * span, PRODUCTION_FLOOR_RAD[k])
 
     def test_the_branch_joins_are_where_the_fixture_puts_them(self):
         """
@@ -440,6 +504,224 @@ class TestQCDTemperatureRepresentation(unittest.TestCase):
             "  so a misplaced edge is invisible to any grid-scale comparison"
         )
 
+    # ---------------------------------------------------------------------------------------
+    # prompt 06 -- the segmentation
+    # ---------------------------------------------------------------------------------------
+
+    def test_H_z_matches_the_exact_background(self):
+        """
+        ``H(z)`` on the production source grid, against the same cosmology with its temperature
+        replaced by ``accurate_T`` (audit §5, README §6.2).
+
+        ``rho_r = a g(T) T^4`` and ``H ~ sqrt(rho)``, so this is the error in ``T`` arriving at
+        roughly twice its size in the radiation era -- and it is the quantity the conformal-time
+        guard below integrates. Measured on the production grid rather than on the probe set
+        because that is where the audit measured it and where every cumulative table is built.
+        """
+        z_dense = np.sort(production_source_z_values())
+        z_dense = z_dense[(z_dense > 1.0) & (z_dense < 1.0e16)]
+
+        shipped = np.array(
+            [self.cosmology.Hubble(float(z)) for z in z_dense], dtype=float
+        )
+        exact = Hubble_with(
+            self.cosmology, lambda z: accurate_T(self.cosmology, z), z_dense
+        )
+        stats = Stats.of(relative(shipped, exact))
+
+        print(f"\n[H(z)] {len(z_dense)} production grid nodes")
+        print("  " + stats.format("shipped Hubble against the exact background"))
+
+        self.assertLessEqual(stats.max, HUBBLE_MAX)
+        self.assertLessEqual(stats.p90, HUBBLE_P90)
+        self.assertLessEqual(stats.median, HUBBLE_MEDIAN)
+
+    def test_the_segment_edges_are_bisected_onto_the_jumps(self):
+        """
+        The production segment edges are the jumps, to the last bit.
+
+        Two independent statements, and the second is the one that matters:
+
+        * the edges agree with ``T_z_reference.jump_locations`` -- a separate implementation,
+          written by prompt 01 against the defining equation rather than against ``_solve_T_z`` --
+          to within :data:`EDGE_AGREEMENT_ULP` ulp of ``u``;
+        * each edge is *the crossing itself*: ``T(edge) >= T_break`` and ``T(edge - 1 ulp) <
+          T_break``, so the edge is the first representable ``u`` at or above the step and the
+          point one ulp below it is on the other branch. That is a first-principles check on a
+          monotone function, and it is what licenses
+          :class:`SegmentedEntropyFactor`'s dispatch, which places an ``u`` exactly equal to an
+          edge in the segment *above* it.
+
+        A bracketing solver on ``T(z) - T_break`` passes the first of these (it lands 4 to 317 ulp
+        away, which is well inside any relative tolerance one would think to write) and fails the
+        second at the tolerances it would plausibly be given -- see
+        ``test_a_segment_edge_bisected_and_one_root_found_disagree``.
+        """
+        edges = self.cosmology._T_z_spline.segment_edges
+        GeV = self.cosmology.units.GeV
+
+        # T(z) is increasing, so the k-th edge is the crossing of the k-th coldest break
+        # temperature that is reached at all inside the tabulated range. T_HI = 1e16 GeV is not:
+        # it is reached at z ~ 1e28, far above max_z.
+        u_top = tabulated_u_range(self.cosmology)[1]
+        T_top = accurate_T(self.cosmology, expm1(u_top))
+        crossings = [
+            T_GeV
+            for T_GeV in sorted(set(self.cosmology._eos.break_temperatures_GeV))
+            if T_GeV * GeV < T_top
+        ]
+
+        self.assertEqual(len(edges), len(self.jumps))
+        self.assertEqual(len(edges), len(crossings))
+        self.assertEqual(
+            len(edges), 3, "the production QCD model crosses three of the four"
+        )
+
+        print("\n[segment edges] production against T_z_reference.jump_locations")
+        for edge, reference in zip(edges, self.jumps):
+            ulp = float(np.spacing(edge))
+            with self.subTest(edge=edge):
+                print(
+                    f"  u = {edge!r} ({edge.hex()})   z = {expm1(edge):.9e}   "
+                    f"reference - production = {(reference - edge) / ulp:+.1f} ulp"
+                )
+                self.assertLessEqual(abs(edge - reference), EDGE_AGREEMENT_ULP * ulp)
+
+        # and each edge is the crossing itself, to the last bit
+        for edge, T_GeV in zip(edges, crossings):
+            T_break = T_GeV * GeV
+            ulp = float(np.spacing(edge))
+            at = accurate_T(self.cosmology, expm1(edge)) / T_break - 1.0
+            below = accurate_T(self.cosmology, expm1(edge - ulp)) / T_break - 1.0
+            with self.subTest(T_GeV=T_GeV):
+                print(
+                    f"  T_break = {T_GeV:>10g} GeV:  (T - T_break)/T_break = {at:+.6e} at the "
+                    f"edge, {below:+.6e} one ulp below"
+                )
+                self.assertGreaterEqual(at, 0.0)
+                self.assertLess(below, 0.0)
+
+        self.assertEqual(SEGMENT_EDGE_PAD_LOG1PZ, SEGMENT_PAD)
+
+    def test_an_edge_misplaced_by_one_node_restores_the_error(self):
+        """
+        **The audit's 5.7e-04, turned into a guard** (README §2 (b), prompt 06 §3 test 3).
+
+        The failure mode this whole design exists to prevent is silent: an edge that misses its
+        jump by one node leaves the full jump-height error in place while every other statistic in
+        the representation still improves. Here the lowest edge is moved deliberately up by one
+        node of its own segment -- so that segment's topmost nodes are taken from the branch above
+        the step, and the spline through them interpolates across it -- and the probe-set maximum
+        is required to come back to the 1e-4 regime it was at before this prompt.
+
+        The move is one node, not something visible: the production source grid's spacing in ``u``
+        is 2.3e-02, and one node of the lowest segment is 1.5e-02, so the misplaced edge is at a
+        redshift a *couple of per cent* away from the right one. Nothing that compares redshifts
+        at grid resolution would see it.
+        """
+        edges = list(self.cosmology._T_z_spline.segment_edges)
+        u_lo, u_hi = tabulated_u_range(self.cosmology)
+
+        bounds = np.array([u_lo] + edges + [u_hi], dtype=float)
+        widths = np.diff(bounds)
+        nodes_0 = max(
+            DEFAULT_T_Z_SPLINE_ORDER + 1,
+            int(round(DEFAULT_T_Z_SPLINE_SAMPLES * widths[0] / widths.sum())),
+        )
+        spacing = (edges[0] - SEGMENT_EDGE_PAD_LOG1PZ - u_lo) / (nodes_0 - 1)
+
+        moved = [edges[0] + spacing] + edges[1:]
+        misplaced = TemperatureRepresentation(
+            build_segmented_entropy_spline(
+                self.cosmology._entropy_factor_log1pz,
+                moved,
+                u_lo,
+                u_hi,
+                samples=DEFAULT_T_Z_SPLINE_SAMPLES,
+                order=DEFAULT_T_Z_SPLINE_ORDER,
+            ),
+            T_CMB=self.cosmology._T_CMB,
+            label="T(z) [edge moved by one node]",
+            min_z=self.cosmology._T_z_spline._min_z,
+            max_z=self.cosmology._T_z_spline._max_z,
+        )
+
+        stats = Stats.of(
+            relative(np.array([misplaced(float(z)) for z in self.probe_z]), self.T_ref)
+        )
+        print(
+            f"\n[misplaced edge] lowest edge moved up by one node of its own segment "
+            f"({spacing:.4e} in u, {nodes_0} nodes below the jump)"
+        )
+        print(f"  z_edge {expm1(edges[0]):.6e} -> {expm1(moved[0]):.6e}")
+        print("  " + stats.format("segmented, one edge one node too high"))
+
+        self.assertGreaterEqual(stats.max, MISPLACED_EDGE_MIN_MAX)
+
+        # and, in the window between the true jump and the edge it was moved to, the full
+        # jump-height error is back: those redshifts are on the hot branch, but they dispatch to
+        # the segment below, whose spline was fitted through nodes that are mostly on the cold
+        # one. The audit's 5.7e-04 is this. Note that the probe set above does not sample this
+        # window -- its spacing in u is 5.8e-02 against the window's 1.5e-02 -- which is exactly
+        # why a statistic over a grid is not enough to catch a misplaced edge.
+        window = [edges[0] + f * spacing for f in (0.25, 0.5, 0.75)]
+        worst = 0.0
+        for u in window:
+            error = abs(
+                float(misplaced(u, z_is_log=True))
+                - accurate_T(self.cosmology, expm1(u))
+            ) / accurate_T(self.cosmology, expm1(u))
+            worst = max(worst, error)
+            print(f"  inside the displaced window, z = {expm1(u):.6e}: {error:.3e}")
+        self.assertGreaterEqual(worst, 1.0e-04)
+
+    def test_the_step_is_reproduced_on_both_sides_of_each_edge(self):
+        """
+        The representation reproduces each step rather than smoothing it (prompt 06 §3 test 4).
+
+        Immediately either side of every edge -- one ulp of ``u`` below, and at the edge itself --
+        the representation is required to agree with ``accurate_T`` to the same floor it reaches
+        anywhere else, and the relative step between the two values is quoted. A representation
+        that smoothed the step by even one node interval would fail on the lower side, because
+        the value there would carry a fraction of the jump.
+        """
+        edges = self.cosmology._T_z_spline.segment_edges
+
+        print("\n[the step] evaluated one ulp of u either side of each edge")
+        for edge in edges:
+            ulp = float(np.spacing(edge))
+            below_u, above_u = edge - ulp, edge
+
+            with self.subTest(edge=edge):
+                # evaluated on u directly rather than through T_photon(expm1(u)): which side of
+                # the step a point is on is a last-bit question, and a round trip through z would
+                # be asking it of a recovered redshift (CLAUDE.md, README §2 (i))
+                values = {}
+                for label, u in (("below", below_u), ("at the edge", above_u)):
+                    shipped = float(self.cosmology._T_z_spline(u, z_is_log=True))
+                    exact = accurate_T(self.cosmology, expm1(u))
+                    values[label] = (shipped, exact)
+                    error = abs(shipped - exact) / abs(exact)
+                    print(
+                        f"  z = {expm1(u):.9e} ({label:<11s}): T = {shipped:.12e}, "
+                        f"relative error against the defining equation {error:.3e}"
+                    )
+                    self.assertLessEqual(error, STEP_FLOOR)
+
+                step = values["at the edge"][0] / values["below"][0] - 1.0
+                exact_step = values["at the edge"][1] / values["below"][1] - 1.0
+                print(
+                    f"    step in T across the edge: {step:+.6e} "
+                    f"(the defining equation gives {exact_step:+.6e})"
+                )
+                if abs(exact_step) > STEP_FLOOR:
+                    self.assertAlmostEqual(step / exact_step, 1.0, delta=1.0e-06)
+                else:
+                    # EOS_T_LO = 0.002 GeV, where g_s is continuous to 1.751e-11 and only w
+                    # kinks: there is no step to reproduce, and the two segments meeting there
+                    # have to agree to the floor instead (README §7 D4)
+                    self.assertLessEqual(abs(step), STEP_FLOOR)
+
 
 class TestConstantEntropyEquationOfState(unittest.TestCase):
     """
@@ -500,12 +782,187 @@ class TestConstantEntropyEquationOfState(unittest.TestCase):
         print("  " + shipped_stats.format("shipped T_photon (the spline)"))
 
         self.assertEqual(jump_locations(self.cosmology), [])
+        # and the representation knows it: no break temperatures, one segment, and the object
+        # inside TemperatureRepresentation is a plain BSpline rather than a SegmentedEntropyFactor
+        self.assertEqual(self.cosmology._T_z_spline.segment_edges, ())
+        self.assertIsInstance(self.cosmology._T_z_spline._spline, BSpline)
         # the reference is exact on an exactly-linear equation, which is a check on the reference
         self.assertLessEqual(reference_stats.max, EXACT_RAMP_NODE_MAX)
         # so is the shipped node solve: brentq lands on a linear root regardless of rtol
         self.assertLessEqual(node_stats.max, EXACT_RAMP_NODE_MAX)
         # the interpolation on top of it is not
         self.assertLessEqual(shipped_stats.max, EXACT_RAMP_MAX)
+
+    def test_the_single_segment_path_is_prompt_05s_path_bit_for_bit(self):
+        """
+        **A cosmology that declares no break temperatures takes the unchanged code path**
+        (README §2 (g), prompt 06 §3 test 6).
+
+        Not "close to prompt 05's", but the same arithmetic: ``build_segmented_entropy_spline``
+        with no edges lays down ``linspace(u_lo, u_hi, samples)`` and calls ``make_interp_spline``
+        on it, which is what prompt 05's ``_build_T_z_spline`` did in line. The comparison here
+        rebuilds prompt 05's construction explicitly, from the same ``_solve_T_z``, and requires
+        the two to agree **bit for bit** over 2,000 probes -- not to a tolerance, which would hide
+        exactly the kind of drift this is here to exclude.
+
+        The node count and the order have to be passed explicitly, because the shipped defaults
+        moved with this prompt (500 / k = 3 to 3,000 / k = 5) and a model with no jumps would
+        otherwise be compared against a different tabulation rather than against a different code
+        path.
+        """
+        representation = self.cosmology._T_z_spline
+        min_z, max_z = representation._min_z, representation._max_z
+        u_lo, u_hi = log(1.0 + min_z), log(1.0 + max_z)
+
+        prompt_05_nodes = np.linspace(u_lo, u_hi, 500)
+        prompt_05_spline = make_interp_spline(
+            prompt_05_nodes,
+            [self.cosmology._entropy_factor_log1pz(float(u)) for u in prompt_05_nodes],
+            k=3,
+        )
+        prompt_05 = TemperatureRepresentation(
+            prompt_05_spline,
+            T_CMB=self.cosmology._T_CMB,
+            label="T(z)",
+            min_z=min_z,
+            max_z=max_z,
+        )
+        prompt_06 = TemperatureRepresentation(
+            build_segmented_entropy_spline(
+                self.cosmology._entropy_factor_log1pz,
+                [],
+                u_lo,
+                u_hi,
+                samples=500,
+                order=3,
+            ),
+            T_CMB=self.cosmology._T_CMB,
+            label="T(z)",
+            min_z=min_z,
+            max_z=max_z,
+        )
+
+        probes = np.concatenate([[0.0], np.logspace(-3, 16, 2000)])
+        identical = sum(
+            float(prompt_05(float(z))) == float(prompt_06(float(z))) for z in probes
+        )
+        print(
+            f"\n[single segment] {identical} of {len(probes)} probes bit-identical between "
+            f"prompt 05's construction and this one at the same 500 nodes, k = 3"
+        )
+        self.assertEqual(identical, len(probes))
+        self.assertEqual(
+            list(np.asarray(prompt_05_spline.t)), list(np.asarray(prompt_06._spline.t))
+        )
+
+
+class TestSegmentGeometry(unittest.TestCase):
+    """
+    Degenerate segment geometry (prompt 06 §3 test 5).
+
+    Every case here must either work or raise something that names the problem. **None may
+    produce a silently wrong representation** -- a segment fitted through nodes from the wrong
+    branch is the failure mode the whole design exists to prevent, and it is invisible: the
+    representation keeps working, keeps being smooth, and carries the full jump-height error.
+
+    The quantity tabulated is a smooth analytic function rather than a cosmology's entropy
+    factor, because what is under test is the geometry rather than the physics: these are
+    assertions about ``build_segmented_entropy_spline``, which is the production function the
+    cosmology calls.
+    """
+
+    U_LO = 0.0
+    U_HI = 10.0
+    ORDER = 5
+    SAMPLES = 200
+
+    @staticmethod
+    def F(u: float) -> float:
+        return 0.1 * sin(u)
+
+    def build(self, edges, samples=None, order=None, **kwargs):
+        return build_segmented_entropy_spline(
+            self.F,
+            edges,
+            self.U_LO,
+            self.U_HI,
+            samples=self.SAMPLES if samples is None else samples,
+            order=self.ORDER if order is None else order,
+            **kwargs,
+        )
+
+    def test_an_edge_outside_the_range_raises(self):
+        for edges in ([self.U_HI + 1.0], [-1.0], [2.0, self.U_HI + 1.0]):
+            with self.subTest(edges=edges):
+                with self.assertRaises(RuntimeError) as caught:
+                    self.build(edges)
+                self.assertIn("ascending", str(caught.exception))
+
+    def test_an_edge_exactly_at_a_tabulation_bound_raises(self):
+        for edges in ([self.U_LO], [self.U_HI], [self.U_LO, 5.0], [5.0, self.U_HI]):
+            with self.subTest(edges=edges):
+                with self.assertRaises(RuntimeError):
+                    self.build(edges)
+
+    def test_edges_out_of_order_or_repeated_raise(self):
+        for edges in ([5.0, 3.0], [4.0, 4.0]):
+            with self.subTest(edges=edges):
+                with self.assertRaises(RuntimeError):
+                    self.build(edges)
+
+    def test_two_edges_closer_than_a_node_spacing_still_build(self):
+        """
+        A segment narrower than the node spacing the proportional share would give it gets
+        ``order + 1`` nodes -- the fewest an interpolating spline of that order can be built
+        through -- rather than a lower-order fit, and the representation is still accurate.
+        """
+        edges = [5.0, 5.0 + 1.0e-06]
+        representation = self.build(edges)
+        self.assertIsInstance(representation, SegmentedEntropyFactor)
+        self.assertEqual(representation.segment_edges, tuple(edges))
+
+        middle = representation._splines[1]
+        self.assertEqual(len(middle.c), self.ORDER + 1)
+
+        worst = max(
+            abs(float(representation(u)) - self.F(u))
+            for u in np.linspace(self.U_LO + 1.0e-09, self.U_HI - 1.0e-09, 5000)
+        )
+        print(f"\n[segment geometry] two edges 1e-06 apart: worst |error| {worst:.3e}")
+        self.assertLessEqual(worst, 1.0e-10)
+
+    def test_a_segment_that_cannot_hold_its_nodes_raises(self):
+        """
+        Two failures are possible and both are caught: a segment narrower than twice the padding
+        that holds its nodes inside their own branch, and a segment wide enough to pad but too
+        narrow for ``order + 1`` distinct floats.
+        """
+        with self.assertRaises(RuntimeError) as caught:
+            self.build([5.0, 5.0 + 1.0e-13])
+        self.assertIn("padding", str(caught.exception))
+
+        with self.assertRaises(RuntimeError) as caught:
+            self.build([5.0, 5.0 + 1.0e-15], pad=0.0)
+        self.assertIn("distinct nodes", str(caught.exception))
+
+    def test_no_edges_returns_a_plain_spline(self):
+        representation = self.build([])
+        self.assertIsInstance(representation, BSpline)
+
+    def test_a_range_with_no_crossings_inside_it_segments_at_nothing(self):
+        """
+        The production edge finder returns only the crossings strictly inside the tabulated range,
+        so a cosmology (or a range) that contains none builds one segment and is unchanged. This
+        is the same filter that drops ``T_HI = 1e16`` GeV, whose crossing is at ``z ~ 1e28``.
+        """
+        cosmology = _qcd_cosmology()
+        self.assertEqual(
+            cosmology._entropy_segment_edges_log1pz(log1p(1.0), log1p(1.0e3)), []
+        )
+        self.assertEqual(
+            len(cosmology._entropy_segment_edges_log1pz(*tabulated_u_range(cosmology))),
+            3,
+        )
 
 
 if __name__ == "__main__":

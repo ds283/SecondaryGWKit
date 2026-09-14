@@ -468,10 +468,19 @@ class TestDeclaration(unittest.TestCase):
         H(z) steps across T_LO and T_120_MEV and is continuous across EOS_T_LO.
         """
         u_lo, u_hi = log1p(0.1), log1p(1e14)
+        # Re-scored by prompts/qcd-background-audit/ prompt 06, which segmented the T(z)
+        # representation at these crossings. The figures here were 4.4e-4 and 1.0e-4, and they
+        # were the jumps a *smoothed* representation showed: T(z) itself was splined straight
+        # across the step, so evaluating H a relative 1e-12 in u either side of the crossing moved
+        # T continuously and picked up only the branch jump in g(T) at fixed T. What is measured
+        # now is the whole of it, dH/H = 2 dT/T + (1/2) dg/g: at T_LO, 2(7.626e-04) +
+        # (1/2)(8.876e-04) = 1.97e-03, and at T_120_MEV, 2(1.011e-04) + (1/2)(-2.075e-04) =
+        # 1.38e-04. GkTk-remedial log 02's "4.4e-4 jump in H(z) at z = 4.24e7" is therefore the
+        # old representation's figure, not the cosmology's.
         expected = {
-            QCD_EOS.T_LO: 4.4e-4,
+            QCD_EOS.T_LO: 1.97e-3,
             QCD_EOS.EOS_T_LO: None,
-            QCD_EOS.T_120_MEV: 1.0e-4,
+            QCD_EOS.T_120_MEV: 1.38e-4,
         }
         for T_in_GeV, jump in expected.items():
             u = self.cosmology._temperature_crossing_log1pz(
@@ -948,11 +957,19 @@ class TestQCDReferenceConvergence(unittest.TestCase):
         # the same reason -- the splined quantity became the entropy factor, so the spline moved
         # again -- by a further 1.712e-05 relative: 8.64366999e11 -> 8.6438180e11. Still the same
         # branch, still the same physics; `places` is unchanged.
+        #
+        # Prompt 06 moves it a third and final time, by 1.114e-04 relative, to 8.6447811e11 --
+        # and this one is not an artefact of a spline that moved underneath it. The
+        # representation is now segmented at this crossing, so T(z) genuinely jumps there, and the
+        # location agrees to 3 ulp of u with CosmologyModels/tests/T_z_reference.py's
+        # jump_locations, which bisects the monotone T(z) against T_120_MEV independently of any
+        # representation. Every earlier value in this comment was the redshift at which a smooth
+        # interpolant happened to pass through 0.12 GeV.
         points = declared_discontinuities_in_z(
             self.model, float(self.grid.min), self.grid.max.z
         )
         self.assertEqual(len(points), 1)
-        self.assertAlmostEqual(points[0] / 8.6438180e11, 1.0, places=6)
+        self.assertAlmostEqual(points[0] / 8.6447811e11, 1.0, places=6)
 
     def test_split_converges_where_unsplit_does_not(self):
         """

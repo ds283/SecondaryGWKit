@@ -2,7 +2,7 @@
 
 **Campaign:** [`README.md`](README.md) · **Source review:** [`docs/gk-wkb-review-fable-2026-09-09.md`](../../docs/gk-wkb-review-fable-2026-09-09.md) · **Reconciliation:** [`RECONCILIATION.md`](RECONCILIATION.md)
 **Baseline commit:** `9ff59d5` (`main`, clean)
-**Last updated:** 2026-09-13 — **Prompt 13 landed and the campaign is closed.** The verification
+**Last updated:** 2026-09-14 — `[02-qcd-reference-floor]` and `[03-qcd-short-baseline-reference-endpoint-rounding]` re-measured (narrowed, neither closed) by `prompts/qcd-background-audit/` prompt 06. Previously 2026-09-13 — **Prompt 13 landed and the campaign is closed.** The verification
 document is [`docs/gktk-remedial-verification.md`](../../docs/gktk-remedial-verification.md), taken
 on `ff9ee29` and changing no production code. **Layer 1** re-measures review §4 and §12.3 through
 the production functions on both models at $k\in\{10^5,10^7,3\times10^8\}$: at $z=0.1$ on
@@ -497,6 +497,21 @@ Opened by the planning pass, 2026-09-10, before any prompt runs.
   between two references. LambdaCDM is unaffected (mpmath at 40 digits; its floor is
   `[01-lambdacdm-hubble-rounding-floor]`). **Next step:** if 13 needs more headroom, regenerate the
   QCD block of the JSON break-aware; otherwise none.
+  **Re-measured by `prompts/qcd-background-audit/` prompt 06 (2026-09-14): narrowed, not closed.**
+  The half of this issue that was *circularity* is gone. The JSON's QCD block was regenerated in
+  that commit against a representation that now reproduces the defining equation to 6.807e-11 max
+  and 1.765e-16 median, so the `rtol=1e-14` root solve is a genuine higher-precision oracle for the
+  background the references are built on, and the block's `method` string says so instead of the
+  old "H(z) here is itself a spline evaluation of T(z), so no higher-precision reference exists".
+  What moved, measured: the model's order-4 cumulative table now agrees with the JSON at
+  **2.104e-15** ($\tau$) and **2.212e-15** ($\tau_s$) -- an order *below* this issue's recorded
+  1.88e-14 / 1.89e-14 floor, where before prompt 06 it sat above it -- and the JSON's own
+  self-agreement (`models.QCDModel.reference_floor`, which that campaign's generator does write) is
+  `quad_epsrel_1e-12` **0.0** for both and `gauss40_bisect` 1.9875e-15 / 2.4488e-14. Both
+  `QCD_FLOOR_FACTOR`s in `ComputeTargets/tests/` went back to **3.0** as a result. **The issue's own
+  number cannot be re-measured without `docs/gktk-remedial/residual_convergence.py`, which writes
+  the `convergence` block and which only `qcd-background-audit` prompt 08 is scoped to run
+  (`[01-convergence-block-has-a-separate-generator]` on that board). Next step: that run.**
 
 - **[01-lambdacdm-hubble-rounding-floor]** *(opened by prompt 01, 2026-09-10; inert)* — the
   double-precision evaluation of `LambdaCDM.Hubble` carries 2–9e-15 relative near $z=1$–$10^6$,
@@ -628,6 +643,15 @@ Opened by the planning pass, 2026-09-10, before any prompt runs.
   assert for QCD short baselines — `test_background_tau.py` asserts README §6's $10^{-13}$, not
   the JSON's recorded self-agreement (~1.6e-15). **Next step:** if 13 needs headroom, regenerate the
   QCD short-baseline records in the exact-width parametrisation; otherwise none.
+  **Re-measured by `prompts/qcd-background-audit/` prompt 06 (2026-09-14): unchanged in kind, and
+  not closable by a better background.** The cause is the *parametrisation of the quadrature
+  limits* -- the references integrate between rounded `log1p(z)` endpoints -- so it is untouched by
+  how accurately $T(z)$ is represented, and the regenerated QCD block confirms it: the three
+  `short_baseline` `agreement_full` / `agreement_fraction` pairs read 1.4537e-15 / 1.3192e-15,
+  1.9903e-16 / 5.3991e-16 and 0.0 / 1.6863e-16, the last two bit-identical to the values before the
+  background moved. `test_background_tau`'s QCD short baselines read 4.200e-15, 9.155e-15 and
+  1.746e-15 against README §6's 1e-13. **Next step: unchanged** -- regenerate the records in the
+  exact-width parametrisation if headroom is ever needed.
 
 - **[03-integrationsolver-stepping-minimum-lookup]** *(opened by prompt 03, 2026-09-11; inert)* —
   `sqla_IntegrationSolver_factory` registers `"stepping": "minimum"` and `build()` matches

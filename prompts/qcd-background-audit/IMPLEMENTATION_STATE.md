@@ -3,7 +3,8 @@
 **Campaign:** [`README.md`](README.md) · **Source document:**
 [`docs/qcd-background-audit-2026-09.md`](../../docs/qcd-background-audit-2026-09.md)
 **Baseline commit:** `e8f746d` (`qcd-background-audit`, clean; identical to `main`)
-**Last updated:** 2026-09-14 — **prompt 05 complete; 5 / 12.** Twelve prompts in four workstreams.
+**Last updated:** 2026-09-14 — **prompt 06 complete; 6 / 12. T1 is closed.** Twelve prompts in
+four workstreams.
 Every figure below is the audit's, and prompt 01 re-measured the representation, the branch joins,
 the jump locations and the conformal-time error **from the test tree** on `2a5e0fa`: all of them
 reproduce the audit to every digit it quotes. The audit's script
@@ -25,7 +26,7 @@ Legend: ⬜ not started · 🟡 in flight · ✅ complete · ⚠️ complete wit
 | 03 | [Key the `T(z)` representation](03-key-the-representation.md) | Opus | ⚠️ | *"Key the QCD cosmology on its temperature representation"* (SHA not embedded, per the campaign convention) | [`logs/03-key-the-representation.md`](logs/03-key-the-representation.md) |
 | 04 | [Tighten `_solve_T_z` (T2)](04-tighten-node-solve.md) | Sonnet | ⚠️ | *"Solve the T(z) spline nodes to a useful tolerance"* (SHA not embedded, per the campaign convention) | [`logs/04-tighten-node-solve.md`](logs/04-tighten-node-solve.md) |
 | 05 | [Spline the entropy factor (T3)](05-entropy-factor-representation.md) | Opus | ⚠️ | *"Spline the entropy factor rather than the temperature itself"* (SHA not embedded, per the campaign convention) | [`logs/05-entropy-factor-representation.md`](logs/05-entropy-factor-representation.md) |
-| 06 | [Segment at the jumps (T4)](06-segment-at-the-jumps.md) | Opus | ⬜ | | |
+| 06 | [Segment at the jumps (T4)](06-segment-at-the-jumps.md) | Opus | ⚠️ | *"Segment the QCD temperature at its genuine discontinuities"* (SHA not embedded, per the campaign convention) | [`logs/06-segment-at-the-jumps.md`](logs/06-segment-at-the-jumps.md) |
 
 ### Workstream B — the break-point set (prompts 07–08)
 
@@ -48,7 +49,7 @@ Legend: ⬜ not started · 🟡 in flight · ✅ complete · ⚠️ complete wit
 | 11 | [A cosmology-aware source grid](11-cosmology-aware-source-grid.md) | Opus | ⬜ | | |
 | 12 | [A measured grid-density criterion](12-grid-density-criterion.md) | Opus | ⬜ | | |
 
-**Progress:** 5 / 12 complete (5 / 9 in the ungated chain 01–09).
+**Progress:** 6 / 12 complete (6 / 9 in the ungated chain 01–09).
 
 **Prompt 01 landed `COMPLETE WITH DEVIATIONS`** — no production file changed; two new modules,
 `CosmologyModels/tests/T_z_reference.py` and `CosmologyModels/tests/test_T_z_representation.py`,
@@ -148,6 +149,50 @@ take them all back. A fourth assertion's **premise was falsified** and is the ne
 `[01-genericeos-tz-spline-floor]` on the `source-remediation` board. Full record:
 [`logs/05-entropy-factor-representation.md`](logs/05-entropy-factor-representation.md).
 
+**Prompt 06 landed `COMPLETE WITH DEVIATIONS` — and closes T1.** `_build_T_z_spline` now tabulates
+the entropy factor **one spline per branch**, with the segment edges placed on the redshifts at
+which $T(z)$ genuinely jumps and located by **bisecting the monotone $T(z)$** — never by
+root-finding on $T(z)-T_{\rm break}$ (README §2 (b); log 06 enumerates every `root_scalar` in the
+file and shows none of them is on the edge path). New in
+`CosmologyModels/GenericEOS/LambdaCDM_GenericEOS.py`: `SegmentedEntropyFactor`,
+`build_segmented_entropy_spline(...)`, `LambdaCDM_GenericEOS._entropy_factor_log1pz`,
+`._entropy_segment_edges_log1pz` and `._bisect_temperature_crossing_log1pz`, plus
+`SEGMENT_EDGE_PAD_LOG1PZ = 1e-12`. **`T_Z_REPRESENTATION_VERSION` is 4.** README §7 **D3**:
+**3,000 nodes at $k=5$**, the audit's recommendation, measured against a segmented 2,000 / $k=5$
+(which reaches the same median and the same bit-identical conformal time but misses the max by
+four orders and the p90 by 4.5×) and a segmented 500 / $k=3$ (which misses everything, including
+the T1 row). README §7 **D4**: **`break_temperatures_GeV`**, all four, three of them in range.
+
+On the audit's 640-point probe set the representation goes **7.236e-04 / 8.912e-08 / 2.599e-10** →
+**6.807e-11 / 3.237e-15 / 1.765e-16** (max / p90 / median), and $H(z)$ on the production grid
+**1.280e-03 / 1.923e-07 / 5.430e-10** → **1.690e-10 / 6.276e-15 / 2.804e-16** — both the audit's §4
+and §5 rows to the digit. **The T1 guard reads `0.0`**: $\int\mathrm{d}z/H$ from the shipped
+background is *bit-identical* to the same integral from the exact background,
+`1.3320002507788795e+03` at all 17 digits, and the equivalent phase is `0.000e+00` rad at all three
+production wavenumbers. The segment edges, to 17 digits, are `17.565806941870026`,
+`23.197460552819653` and `27.485391822044257` in $u$, each verified to be the crossing itself
+($T(\text{edge})\ge T_{\rm break}$, $T(\text{edge}-1\,\text{ulp}) < T_{\rm break}$) and agreeing
+with `T_z_reference.jump_locations` to 0, 1 and 0 ulp. An edge deliberately misplaced by **one
+node** puts the full **7.054e-04** back inside the displaced window while leaving the p90 and the
+median untouched — the silent failure, now a standing guard.
+
+**`BREAK_POINT_ALL` is 2,414** on the production source grid (2,411 knots + 3 crossings), up from
+407, with median spacing 0.67× the grid rather than 4.04×; `BREAK_POINT_DISCONTINUITY` is **2**.
+That is the node count's price and it is **prompt 07's to remove** — it is also why
+`COST_BREAK_POINT_FACTOR` had to go 1.30 → 2.40 (`[05-break-point-set-grew-with-the-node-count]`).
+`LambdaCDM` and `RadiationModel` are **byte-identical** to `8d6e913` (7,014 `float.hex` lines, MD5
+`78f633c20adcf05528e3141ea06d62a1`), and the single-segment code path reproduces prompt 05's
+construction **bit for bit** on 2,001 of 2,001 probes at the same nodes and order. The QCD fixture
+was regenerated in this commit (186.2 s; largest move `rho_G` at $k=3\times10^8$, **1.613e-01**
+relative) and its `method` string now records that the reference is no longer circular. **Two of
+prompt 05's three loosened tolerances were taken back to 3.0**; one new tolerance loosened
+(`COST_BREAK_POINT_FACTOR`) and one moved again for the known staleness
+(`QCD_BREAK_POINT_ALIGNMENT_TOL` → 1.5e-04). **`T_photon`'s cost per call is a possible miss** of
+the ≤ 2.5 µs row and is `[06-t-photon-call-cost-needs-a-quiet-machine]`. Suites:
+`CosmologyModels` 18 → **30**, `ComputeTargets` 354, `LiouvilleGreen` 143/143 fast set. Closes
+`[01-genericeos-tz-spline-floor]` on the `source-remediation` board. Full record:
+[`logs/06-segment-at-the-jumps.md`](logs/06-segment-at-the-jumps.md).
+
 **The representation version.** `T_Z_REPRESENTATION_VERSION` is introduced by prompt 03 and bumped
 by **04, 05, 06 and 07**. Its value at each prompt boundary is recorded here as the campaign runs,
 because it is the only thing that tells a datastore that its QCD rows are stale. **Bump it on
@@ -161,7 +206,7 @@ above the declaration.
 | 03 | **1** | nothing numerically; the key exists |
 | 04 | **2** | `_solve_T_z` tightened from `xtol=1e-6, rtol=1e-4` to `xtol=1e-300, rtol=1e-14` |
 | 05 | **3** | `F(u) = log(T / [T_CMB (1+z)])` is splined, not `T`; 500 nodes at `k=3` unchanged |
-| 06 | *(to be recorded)* | segmented at the jumps |
+| 06 | **4** | `F` splined per branch, edges bisected onto the jumps; 500 / `k=3` → 3000 / `k=5` |
 | 07 | *(to be recorded)* | break-point set collapsed |
 
 ---
@@ -170,15 +215,15 @@ above the declaration.
 
 | ID | Severity | Description | Prompt | Status |
 |---|---|---|---|---|
-| **T1** | **DEFECT, critical** | 3.461e-08 relative in $\int\mathrm{d}z/H$ — of order 47.5 / 4.75e3 / 1.43e5 rad at $k=10^5/10^7/3\times10^8$ against 1-ulp floors of 3.05e-7 / 3.05e-5 / 9.15e-4 rad. **Common mode** between producer and consumer, so invisible to every test in the tree. | 01, 04, 05, 06 | 🟡 |
+| **T1** | **DEFECT, critical** | Was 3.461e-08 relative in $\int\mathrm{d}z/H$ — of order 47.5 / 4.75e3 / 1.43e5 rad at $k=10^5/10^7/3\times10^8$ against 1-ulp floors of 3.05e-7 / 3.05e-5 / 9.15e-4 rad, **common mode** between producer and consumer and so invisible to every test in the tree. **Closed by prompt 06:** the guard reads **0.0** — the shipped background's $\int\mathrm{d}z/H$ is bit-identical to the exact background's at all 17 digits — and the equivalent phase is 0.000e+00 rad at all three wavenumbers. Prompt 09 scores the *consumers* under the corrected background (README §6.4); that is verification, not the fix. | 01, 04, 05, 06 | ⚠️ |
 | **T2** | **DEFECT, high** | `_solve_T_z` root-solves each spline node to `rtol=1e-4`; neighbouring nodes carry uncorrelated errors up to 2.496e-05. The root of `[02-qcd-T-z-spline-node-tolerance]`, and (measured, not asserted) of the $\pm0.1$ scatter in $\omega^2/\omega_0^2$ that `RESIDUAL_WKB_REGION_MARGIN = 0.5` exists to survive (`ComputeTargets/phase_residual.py:220`). | 04 | ⚠️ |
 | **T3** | **DEFECT, medium** | $T$ was splined against $u$, spending resolution on the $(1+z)$ ramp known in closed form. **Fixed by prompt 05:** `TemperatureRepresentation` splines $F(u)=\log(T/[T_{\rm CMB}(1+z)])$ and multiplies the ramp back in, improving the median 412× at the same 500 nodes (1.071e-07 → **2.599e-10**) and the p90 2.2× (1.936e-07 → **8.912e-08**) at *lower* cost per call (2.240 µs). Exact on a constant-$g_s$ equation of state (2.928e-16). | 05 | ⚠️ |
-| **T4** | **DEFECT, high** | One global spline across three points at which $T(z)$ genuinely **jumps** (7.614e-04 at $z_c=4.25337\times10^7$). The max error is pinned near the jump height at 500, 2,000 and 5,000 nodes alike. | 06 | ⬜ |
+| **T4** | **DEFECT, high** | One global spline across three points at which $T(z)$ genuinely **jumps** (7.625829e-04 in $T$ at $z_c=4.25337\times10^7$). The max error was pinned near the jump height at 500, 2,000 and 5,000 nodes alike. **Fixed by prompt 06:** `SegmentedEntropyFactor` interpolates $F$ one spline per branch with the edges *bisected* onto the jumps, and the max falls **7.236e-04 → 6.807e-11** while the step itself is reproduced to six figures on both sides. An edge misplaced by one node restores 7.054e-04, and a test asserts that it does. | 06 | ⚠️ |
 | **G1** | **DEFECT, high** | 404 of the 407 `BREAK_POINT_ALL` points are knots of the auxiliary interpolant: a Gauss panel split every 4.04 grid intervals throughout `BackgroundModel`, and the sole cause of `prompts/phase-representation` prompt 02's Schoenberg–Whitney failure. | 07, 08 | ⬜ |
 | **P2** | **DEFECT, accuracy** | Inherited `[13-consumer-spline-crosses-eos-break-points]`: `PrimitivePhase` splines $\varphi$ with default knots across the declared break points. 1.907e-6 rad ($G_k$, 8 ulp) and 3.186e-6 rad ($T_k$, 428 ulp) at $z=4.24\times10^7$. Blocked until G1 is gone. | 10 | ⬜ |
 | **G2** | **DESIGN** | The source grid never consults the cosmology: `populate_z_sample` is a bare `logspace`, `winnow` a blind stride `[::-n]`, and the tag `SourceRedshiftGrid_{len}` labels size only, so two different grids of equal length collide in the datastore. | 11, 12 | ⬜ |
 
-**T1 is 🟡 because its guard exists but its fix does not.** Prompt 01 put
+**T1 is closed, and the record of how it fell is the point.** Prompt 01 put
 `CosmologyModels/tests/test_T_z_representation.py::test_conformal_time_matches_the_exact_background`
 in the tree: $\int\mathrm{d}z/H$ over $z\in[10^2,10^{12}]$ computed twice from the same cosmology,
 once as shipped and once with the temperature replaced by the accurate root solve, so that nothing
@@ -186,8 +231,10 @@ cancels. It measured **3.4605051e-08** on prompt 01's tree, against the audit's 
 0.013 s. Prompt 04 left it at 3.4509e-08; **prompt 05 took it to 5.4264e-10**, a factor of 64,
 which says that most of the conformal-time error was never the jump — a jump is a set of measure
 zero in an integral — but the interpolation error carried across the whole range, which is what
-the median measures. The remaining 5.4e-10 is still 0.74 rad at $k=10^5$/Mpc against a 3.05e-07
-rad floor, so T1 is not closed. The threshold is still 4.0e-08; prompt 06 tightens it to 1e-15.
+the median measures. **Prompt 06 took the remaining 5.4e-10 (0.74 rad at $k=10^5$/Mpc) to zero**:
+the two integrals are now bit-identical, `1.3320002507788795e+03` both, and `CONFORMAL_TIME_REL`
+is 1e-15 — asserted as a threshold rather than as an equality, because the identity is the last bit
+of a sum over a few hundred quadrature panels; the three phase floors are asserted alongside it.
 
 **Out of scope (do not schedule here):** `[00-consumer-anchoring-floor]` and
 `[02-consumer-phi-below-the-storage-granularity]` — per-region anchoring, untouched by background
@@ -261,6 +308,17 @@ Opened by this campaign's planning, 2026-09-13:
   re-running the script and put them back to 1e-9 / 3.0 / 3.0 if they will go**; if one will not,
   that is a finding about the representation rather than about the block's age, and it should be
   said so explicitly.
+
+  **Two of the three came back at prompt 06 (2026-09-14), one prompt early**, because segmenting
+  the representation moved the numerators by two orders: `QCD_FLOOR_FACTOR` is **3.0** again in
+  both modules (`tau` 5.8348e-14 → **2.104e-15**, `cs_tau` 1.5501e-13 → **2.212e-15**, against
+  floors still recorded as 1.879e-14 and 1.887e-14 — the model's fixed-order table now agrees with
+  the JSON an *order below* the floor recorded for the JSON itself). The third moved **further**:
+  `QCD_BREAK_POINT_ALIGNMENT_TOL` 3.1e-05 → **1.5e-04**, measured 1.418851e-04 at `T_120_MEV`,
+  because the crossing `_temperature_crossing_log1pz` finds is now on the genuine jump
+  ($u = 27.485391822$, within 3 ulp of the independent bisection) while the block still records
+  where a smooth interpolant passed through 0.12 GeV ($u = 27.485249937$). **Prompt 08 inherits one
+  figure, not three, and should expect the tree's to be the right one.**
 - **[02-fixture-tests-pinned-to-todays-break-point-artefact]** *(prompt 02, 2026-09-14)* — two
   test assertions hard-code today's ~404-knot `BREAK_POINT_ALL` count and will be **false**, not
   merely inaccurate, once prompt 07 collapses it to 3: `test_numeric_break_points.py::TestDeclaration::test_kind_selects_knots_or_jumps`
@@ -271,6 +329,14 @@ Opened by this campaign's planning, 2026-09-13:
   cannot pass with the suite green unless these two assertions are rewritten in the same commit.
   **Next step:** prompt 07 edits both (`docs/qcd-background-audit/REFERENCE-FIXTURE.md` §5 names
   them explicitly); not done here because prompt 02 changes no number and these are not yet false.
+  **Half of it arrived at prompt 06 instead (2026-09-14):** raising the node count to 3,000 made
+  `test_background_tau.py::test_qcd_break_points` **false** rather than merely stale (2,414 against
+  the block's 404 + 3), so that assertion now takes its knot count from
+  `cosmology._T_z_spline_knots_log1pz` — the tabulation in the tree — and keeps the JSON only for
+  the three `branch_boundaries` and for the stale figure it prints beside it. The substance is
+  unchanged: the break set is every interior knot plus the crossings and nothing else. The other
+  assertion, `test_kind_selects_knots_or_jumps`'s `assertGreater(len(every), 100)`, is still true
+  (2,414 > 100) and is still prompt 07's to rewrite when the set falls to 3.
 - **[03-qcd-inventory-does-not-report-the-representation]** *(prompt 03, 2026-09-14)* —
   `sqla_QCDCosmology_factory.inventory()`
   (`Datastore/SQL/ObjectFactories/QCD_Cosmology.py`) reports `name`, `omega_m`, `omega_cc`, `h`
@@ -313,13 +379,56 @@ Opened by this campaign's planning, 2026-09-13:
   weaker true statement that splitting still buys a factor (`UNSPLIT_PENALTY_FACTOR = 5.0`,
   measured 7.65×), and its docstring carries both measurements above.
 
+- **[05-break-point-set-grew-with-the-node-count]** *(prompt 06, 2026-09-14; **assigned to prompt
+  07**)* — `BREAK_POINT_ALL` on the production source grid is **2,414** where prompt 05 handed over
+  407: 2,411 interior knots of the `T(z)` tabulation plus the 3 equation-of-state crossings. The
+  node count had to go 500 → 3,000 to reach README §6.1's p90 and median (segmented at 500 / `k=3`
+  the representation reads max 1.013e-05 / p90 6.544e-08 and the T1 guard reads 3.8391e-13, missing
+  the row whose miss is a stop), and every node is declared as a break point. Median spacing is now
+  **0.67×** the grid spacing, against 4.04× before. **Impact, measured:** the `rho` residual table
+  on QCD costs **2.337×** the order×intervals baseline where it cost 1.24×, so
+  `COST_BREAK_POINT_FACTOR` in `test_phase_residual.py` had to go **1.30 → 2.40**; the QCD
+  `BackgroundModel` cumulative build takes 16,580 `Hubble` evaluations and 0.683 s against
+  LambdaCDM's 6,924 and 0.166 s. Nothing is *wrong* — the panels are split at more points than they
+  need to be, which costs time and not accuracy. **Next step:** prompt 07, which removes the knots
+  from the declared set entirely (finding G1); `COST_BREAK_POINT_FACTOR` should then come back
+  *below* its original 1.30, not merely to it, because what will be left is three genuine
+  crossings.
+
+- **[06-t-photon-call-cost-needs-a-quiet-machine]** *(prompt 06, 2026-09-14)* — README §6.2 and
+  prompt 06 §4 set `T_photon` at **≤ 2.5 µs/call** and make a regression a stop (README §2 (c)).
+  Measured on a **quiet** machine before the dispatch was inlined: prompt 05's shape 2.21 µs,
+  unsegmented 3,000 / `k=5` 2.40 µs, segmented 3,000 / `k=5` **2.53 µs** — a ~1 % miss. The
+  dispatch was then moved in line into `TemperatureRepresentation.__call__`, which on a **loaded**
+  machine (load average 11–15, every candidate reading ~20 % high) takes the shipped-to-unsegmented
+  ratio from ~1.05 to **1.00–1.05** — i.e. the segmentation is now free — leaving the
+  shipped-to-prompt-05 ratio at **1.09–1.13**, which is the order-5 spline evaluation and nothing
+  else. Order 5 is not optional: a cubic needs ~25,000 nodes to reach the required p90. Scaling the
+  quiet-machine 2.21 µs by the measured 1.09 gives ~2.4 µs, inside the target, but **that is an
+  inference and not a measurement**. **Impact:** one row of prompt 06 §4 is unresolved; nothing
+  downstream is affected, since `T_photon` costs ~2.5 µs inside a ~10 µs `Hubble` call.
+  **Next step:** re-run the three-candidate `timeit` comparison in log 06 deviation 5 on a quiet
+  machine and record the absolute figure; if it is above 2.5 µs, `[07-...]` below is 0.11 µs of it.
+
+- **[07-t-photon-range-logic-recomputes-its-bounds]** *(prompt 06, 2026-09-14)* —
+  `TemperatureRepresentation.__call__` (`LambdaCDM_GenericEOS.py:302`) evaluates
+  `_outward(self._max_log_z, +1)` and `_outward(self._min_log_z, -1)` on **every call**. Both are
+  loop-invariant: the bounds are set in `__init__` and never mutated. Measured at **0.056 µs each**
+  on the quiet machine, i.e. ~0.11 µs of a ~2.5 µs call, and hoisting them into `__init__` is
+  numerically null (the same two floats, compared the same way). `ZSplineWrapper.__call__`
+  (`ComputeTargets/spline_wrappers.py:64`) has the same shape and is on many more hot paths.
+  **Impact:** ~4 % of every `T_photon` call and of every wrapped spline evaluation in the tree.
+  Not done in prompt 06 because the range logic is prompt 05's code and outside what prompt 06 was
+  asked to change (README §5 rule 5). **Next step:** hoist both, in whichever prompt next has
+  reason to touch that method; re-measure `[06-...]` afterwards.
+
 Inherited, and **assigned to this campaign** (each is owned by the board named, which holds its
 measurements and its history; the closure is recorded there):
 
 | Issue | Owning board | Closed by | Note |
 |---|---|---|---|
 | `[13-consumer-spline-crosses-eos-break-points]` | GkTk-remedial | prompt 10 | Assigned 2026-09-13 by `prompts/phase-representation`'s close-out. Blocked until prompt 07 |
-| `[01-genericeos-tz-spline-floor]` | source-remediation | prompts 05, 06 | "Whether the `T(z)` spline grid is adequately defined." The answer is in audit §3 and §4. **Narrowed by prompt 05** on that board with the measured figures: the node values (04) and the splined quantity (05) are fixed, the max is all that is left, and the sample count is *not* the lever this entry assumed — segmentation is, so prompt 06 closes it |
+| `[01-genericeos-tz-spline-floor]` | source-remediation | prompts 05, 06 | **Closed by prompt 06**, 2026-09-14, in that board's §4: all three of the audit's defects are fixed and the entry's own question — whether the fixed 500-point grid is adequately defined — is answered with 6.807e-11 / 3.237e-15 / 1.765e-16 at a tunable 3,000 / `k=5`. The row is deleted from `docs/OPEN_ISSUES.md` |
 | `[19-cosmologymodels-docstrings-predate-per-sector-policy]` | GkTk-remedial | prompt 07 | The two docstrings are exactly the text prompt 07 rewrites |
 
 Re-measured but **not owned** here (they stay where they are; a prompt that moves one says so):

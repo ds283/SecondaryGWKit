@@ -68,9 +68,13 @@ SHORT_BASELINE_REL_TOL = 1.0e-13
 # denominator on the T-against-u one. Measured: 2.194e-14 (prompt 04 tree) -> 5.8348e-14 here,
 # against a floor still recorded as 1.879e-14; 5.8348e-14/1.879e-14 = 3.106. Both sides are at
 # the 1e-14 level -- a few hundred ulp of a cumulative quadrature over twenty decades -- so this
-# is a floor-against-floor comparison, not an accuracy claim. Prompt 08 re-runs
-# residual_convergence.py, after which this should go back to 3.0 and be re-measured.
-QCD_FLOOR_FACTOR = 3.2
+# is a floor-against-floor comparison, not an accuracy claim.
+#
+# **Taken back to 3.0 by prompt 06**, which segmented the representation at the jumps: the
+# numerator falls 5.8348e-14 -> 2.104e-15 against the same recorded floor of 1.879e-14, so the
+# model's order-4 cumulative table now agrees with the JSON an order below the floor recorded for
+# the JSON itself. Prompt 08 still re-runs residual_convergence.py and re-measures both sides.
+QCD_FLOOR_FACTOR = 3.0
 
 # prompt 03 §6 test 5
 LAMBDACDM_BUILD_SECONDS = 0.5
@@ -88,7 +92,16 @@ LAMBDACDM_BUILD_SECONDS = 0.5
 # on whatever spline is in the tree. Measured worst case 3.046858e-05 (T_120_MEV again). The
 # figure it is compared against is still the one residual_convergence.py recorded before either
 # move, so what is being measured here is the age of that block and nothing else.
-QCD_BREAK_POINT_ALIGNMENT_TOL = 3.1e-05
+#
+# prompt 06 moves it a third time, and for a fourth-order-larger reason: the representation is now
+# segmented at the jumps, so T(z) is *genuinely* discontinuous where it used to be smoothed over a
+# node interval, and the crossing _temperature_crossing_log1pz finds has moved onto the jump
+# itself. Measured worst case 1.418851e-04 (T_120_MEV again): the freshly-computed break point is
+# at u = 27.485391822 against the block's recorded 27.485249937, and the fresh one is now the
+# *right* answer to the last bit -- it agrees with T_z_reference.jump_locations, which bisects the
+# monotone T(z) independently, to 3 ulp. Same root cause, same fix: prompt 08 re-runs
+# residual_convergence.py and takes this back.
+QCD_BREAK_POINT_ALIGNMENT_TOL = 1.5e-04
 
 # prompt 01's throughput benchmark, re-run against the production object
 THROUGHPUT_CALLS = 20_000
@@ -335,13 +348,27 @@ class TestBackgroundTau(unittest.TestCase):
         z_lo, z_hi = self.s.grid.min.z, self.s.grid.max.z
         breaks = self.s.qcd.integration_break_points(z_lo, z_hi)
         geometry = self.s.references["convergence"]["geometry"]["QCDModel"]
-        expected = geometry["T_spline_knots_in_range"] + len(
-            geometry["branch_boundaries"]
+
+        # The knot count is taken from the tabulation in the tree rather than from the JSON's
+        # convergence block, which records 404 -- the figure for the 500-node tabulation that
+        # prompts/qcd-background-audit/ prompt 06 replaced by a segmented 3,000-node one. That
+        # block is written by docs/gktk-remedial/residual_convergence.py, which no prompt in this
+        # campaign has re-run ([01-convergence-block-has-a-separate-generator]), so scoring the
+        # count against it measures the block's age rather than the break-point set. What the
+        # test is for is the *structure* of the set -- every interior knot of the T(z) tabulation,
+        # plus the equation-of-state crossings, and nothing else -- and that is asserted here
+        # against the tabulation itself. Prompt 07 collapses the set to the three crossings and
+        # rewrites this again ([02-fixture-tests-pinned-to-todays-break-point-artefact]).
+        knots = self.s.qcd._T_z_spline_knots_log1pz
+        knots_in_range = int(
+            np.sum((knots > np.log1p(z_lo)) & (knots < np.log1p(z_hi)))
         )
+        expected = knots_in_range + len(geometry["branch_boundaries"])
         print(
             f"[tau] QCD break points in ({z_lo:.3g}, {z_hi:.3g}): {len(breaks)} "
-            f"({geometry['T_spline_knots_in_range']} knots + {len(geometry['branch_boundaries'])} "
-            "temperature crossings)"
+            f"({knots_in_range} knots + {len(geometry['branch_boundaries'])} "
+            f"temperature crossings; the convergence block still records "
+            f"{geometry['T_spline_knots_in_range']} knots)"
         )
         self.assertEqual(len(breaks), expected)
         self.assertTrue(np.all(np.diff(breaks) > 0.0))

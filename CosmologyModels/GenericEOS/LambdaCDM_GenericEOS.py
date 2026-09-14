@@ -1,5 +1,6 @@
+from bisect import bisect_right
 from math import exp, sqrt, log, log1p, expm1
-from typing import Mapping, Optional
+from typing import Callable, List, Mapping, Optional, Sequence
 
 import numpy as np
 from numpy import linspace
@@ -24,29 +25,201 @@ DEFAULT_MAX_TEMPERATURE_Z_REDSHIFT = 1e20
 # from, but nothing reads a step size any more.
 DEFAULT_MIN_TEMPERATURE_Z_REDSHIFT = -0.2
 
-# Number of tabulation nodes, and the order of the spline through them, used by
-# _build_T_z_spline. Measured on the audit's 640-point probe set
-# (CosmologyModels/tests/T_z_reference.py, probe_set()) against the defining equation root-solved
-# to rtol = 1e-14, with the entropy factor as the splined quantity:
+# Total number of tabulation nodes, and the order of the spline through them, used by
+# _build_T_z_spline. The nodes are shared out between the segments in proportion to each
+# segment's width in u, so this is a total and not a per-segment count. Measured on the audit's
+# 640-point probe set (CosmologyModels/tests/T_z_reference.py, probe_set()) against the defining
+# equation root-solved to rtol = 1e-14, with the entropy factor as the splined quantity:
 #
-#   nodes   order      max        p90      median    build     interior knots
-#   ------  -----  ---------  ---------  ---------  -------  ----------------
-#     500     3    7.236e-04  8.912e-08  2.599e-10   12.4 ms       498
-#     500     5    7.226e-04  2.022e-08  8.099e-13   11.9 ms       496
-#    2000     3    5.066e-05  2.508e-10  1.476e-13   50.5 ms      1998
-#    2000     5    5.580e-05  9.002e-14  2.320e-16   48.7 ms      1996
-#    3000     5    3.730e-04  7.062e-15  1.943e-16   71.9 ms      2996
+#   nodes  order  segmented     max        p90      median    build   knots  in range
+#   -----  -----  ---------  ---------  ---------  ---------  ------  -----  --------
+#     500    3       no      7.236e-04  8.912e-08  2.599e-10  12.4ms    498      404
+#     500    5       no      7.226e-04  2.022e-08  8.099e-13  11.9ms    496
+#    2000    3       no      5.066e-05  2.508e-10  1.476e-13  50.5ms   1998
+#    2000    5       no      5.580e-05  9.002e-14  2.320e-16  48.7ms   1996
+#    3000    5       no      3.730e-04  7.062e-15  1.943e-16  71.9ms   2996
+#     500    3      yes      1.013e-05  6.544e-08  9.018e-12  18.8ms    492      398
+#    2000    5      yes      1.292e-09  4.481e-14  2.374e-16  61.4ms   1984     1604
+#    3000    5      yes      6.807e-11  3.237e-15  1.765e-16  88.2ms   2983     2411
 #
-# 500 / k = 3 is kept deliberately (prompts/qcd-background-audit/, prompt 05, README §7 D3). The
-# max is pinned at the height of the jump in T(z) at every node count -- it is set by the fact
-# that one spline runs straight across a genuine discontinuity, which is prompt 06's segmentation
-# and nothing else -- so extra nodes here buy only the p90 and the median, and they are paid for
-# in break points: every interior knot is declared by integration_break_points below, and every
-# quadrature and every ODE in the tree splits a panel at each of them. Holding the node count
-# fixed keeps that set at exactly what it was, so that this prompt moves one thing (the quantity
-# splined) and prompt 06 moves the next.
-DEFAULT_T_Z_SPLINE_SAMPLES = 500
-DEFAULT_T_Z_SPLINE_ORDER = 3
+# (the first five rows are prompt 05's, the last three prompt 06's, measured the same way on the
+# same probe set. "knots" is the tabulation's unique knots, "in range" those of them that fall
+# inside the production source grid and are therefore declared as break points.)
+#
+# 3000 / k = 5 is the audit's recommendation (docs/qcd-background-audit-2026-09.md §4,
+# prompts/qcd-background-audit/ README §7 D3) and is what is shipped. Unsegmented, the maximum
+# error is pinned near the height of the jump in T(z) at every node count, because one spline is
+# being run straight across a genuine discontinuity; segmented, it falls by seven orders and the
+# node count buys the p90 and the median in the ordinary way. The cheaper 2000 / k = 5 was
+# measured too, and it is not enough: it reaches the same median and the same (bit-identical)
+# conformal time, but sits an order above on the p90 and four orders above on the max, missing
+# two of the four accuracy rows README §6.1 sets for this representation. Order 5 rather than 3
+# is what buys the p90: a cubic would need ~25,000 nodes to reach 1e-14 there, and every node is
+# a declared break point.
+#
+# The nodes are paid for in declared break points: every interior knot is returned by
+# integration_break_points below, and every quadrature and every ODE in the tree splits a panel
+# at each of them. That is prompt 07's to remove, and it is the reason this constant could not be
+# raised before the representation was segmented.
+DEFAULT_T_Z_SPLINE_SAMPLES = 3000
+DEFAULT_T_Z_SPLINE_ORDER = 5
+
+# How far inside its own branch each segment's node set is held, in u = log(1+z). The segment
+# edges are the redshifts at which T(z) *jumps*, so a node placed on the far side of one is a
+# node from the wrong branch and the discontinuity is interpolated across after all -- which is
+# the whole of what segmentation exists to prevent. 1e-12 is the audit's value
+# (docs/qcd-background-audit/measure_T_z_representation.py, build_segmented); at the production
+# edges, u ~ 17.6 to 27.5, it is a few hundred ulp, and the spline it excludes is extrapolated
+# over that distance instead, which costs ~1e-17 relative on an F whose slope is O(1e-5) per unit
+# u. CosmologyModels/tests/test_T_z_representation.py's SEGMENT_PAD is the same number.
+SEGMENT_EDGE_PAD_LOG1PZ = 1.0e-12
+
+
+class SegmentedEntropyFactor:
+    """
+    The entropy factor ``F(u)``, interpolated **one spline per branch** of the equation of state,
+    with the segment edges placed exactly at the redshifts where ``T(z)`` jumps.
+
+    ``T(z)`` is genuinely discontinuous at those redshifts, not merely kinked
+    (``docs/qcd-background-audit-2026-09.md`` §2): ``g_s`` steps across an equation-of-state branch
+    join, so ``F = -(1/3) log(g_s(T)/g_s(T_CMB))`` steps with it -- by 7.6229229003969e-04 at the
+    lowest crossing, between two values each flat to twelve decimals. No single smooth approximant
+    represents a step at any node count, which is why the maximum error of the unsegmented
+    representation was pinned near the jump height at 500, 2,000 and 3,000 nodes alike. One spline
+    per branch reproduces it exactly.
+
+    Callable on ``u = log(1+z)``, dispatching on ``u`` alone -- never on a recovered ``z``, which
+    is irreducibly lossy at large ``z`` (``CLAUDE.md``, README §2 (i)). ``bisect_right`` places an
+    ``u`` exactly equal to an edge in the segment **above** it, which is the branch the bisected
+    edge itself belongs to: the last representable ``u`` below the crossing is the cold branch's,
+    the edge is the hot branch's, and the two are one ulp apart.
+
+    ``t`` is the concatenation of the segments' knot vectors, so that this object stands in for a
+    single ``BSpline`` wherever one was read for its knots -- ``integration_break_points`` below,
+    and ``docs/gktk-remedial/residual_convergence.py``, which reaches into
+    ``cosmology._T_z_spline._spline.t``. Callers take ``np.unique`` of it.
+    """
+
+    __slots__ = ("_edges", "_splines", "t")
+
+    def __init__(self, edges: Sequence[float], splines: Sequence):
+        if len(splines) != len(edges) + 1:
+            raise RuntimeError(
+                f"SegmentedEntropyFactor: {len(splines)} splines for {len(edges)} interior "
+                f"edges (expected {len(edges) + 1})"
+            )
+
+        self._edges = list(edges)
+        self._splines = list(splines)
+        self.t = np.concatenate([np.asarray(s.t, dtype=float) for s in splines])
+
+    @property
+    def segment_edges(self) -> tuple:
+        """The interior segment edges, ascending, in ``u = log(1+z)``."""
+        return tuple(self._edges)
+
+    @property
+    def splines(self) -> tuple:
+        """
+        The per-branch splines, in the same order as :attr:`segment_edges` separates them: the
+        spline for ``u`` is ``splines[bisect_right(segment_edges, u)]``.
+
+        Public because ``TemperatureRepresentation.__call__`` does that indexing in line rather
+        than calling this object, to save a Python-level call on the hot path.
+        """
+        return tuple(self._splines)
+
+    def __call__(self, u: float):
+        return self._splines[bisect_right(self._edges, u)](u)
+
+
+def build_segmented_entropy_spline(
+    F_of_u: Callable[[float], float],
+    edges: Sequence[float],
+    u_lo: float,
+    u_hi: float,
+    samples: int,
+    order: int,
+    pad: float = SEGMENT_EDGE_PAD_LOG1PZ,
+):
+    """
+    Tabulate ``F_of_u`` over ``[u_lo, u_hi]`` as one interpolating spline per segment, the segments
+    separated by ``edges``.
+
+    ``samples`` is a **total**: each segment receives a share in proportion to its width in ``u``,
+    and never fewer than ``order + 1`` nodes, which is the fewest an order-``order`` interpolating
+    spline can be built through. Each segment's nodes are held ``pad`` inside its own edges so that
+    no segment interpolates across a discontinuity.
+
+    With ``edges`` empty this returns the plain ``BSpline`` over the whole range -- the
+    unsegmented representation, unchanged, which is what every cosmology that declares no break
+    temperatures gets (``LambdaCDM``, ``RadiationModel``, the test stand-ins, and any
+    ``GenericEOSBase`` with a constant ``g_s``).
+
+    Degenerate geometry raises rather than quietly producing a lower-order or cross-branch fit:
+    that failure is silent and expensive, and it is the one this whole design exists to prevent.
+
+    :param F_of_u: the quantity to tabulate, evaluated at ``u = log(1+z)``
+    :param edges: interior segment edges in ``u``, strictly ascending and strictly inside the range
+    :param u_lo: lower end of the tabulated range in ``u``
+    :param u_hi: upper end of the tabulated range in ``u``
+    :param samples: total number of nodes across all segments
+    :param order: spline order ``k``
+    :param pad: how far inside its own edges each segment's node set is held, in ``u``
+    :return: a ``BSpline`` if ``edges`` is empty, otherwise a :class:`SegmentedEntropyFactor`
+    """
+    if not u_lo < u_hi:
+        raise RuntimeError(
+            f"build_segmented_entropy_spline: empty tabulation range "
+            f"u in [{u_lo!r}, {u_hi!r}]"
+        )
+
+    edges = [float(u) for u in edges]
+    for previous, current in zip([u_lo] + edges, edges + [u_hi]):
+        if not previous < current:
+            raise RuntimeError(
+                f"build_segmented_entropy_spline: segment edges {edges} are not strictly "
+                f"ascending and strictly inside the tabulated range "
+                f"u in [{u_lo!r}, {u_hi!r}]"
+            )
+
+    bounds = [u_lo] + edges + [u_hi]
+    widths = np.diff(np.asarray(bounds, dtype=float))
+    fractions = widths / widths.sum()
+
+    splines = []
+    for i in range(len(bounds) - 1):
+        lo, hi = bounds[i], bounds[i + 1]
+
+        # The outermost ends of the tabulation are the range itself, and are used as they are.
+        # Every interior end is a jump in the quantity being tabulated, and the node set is held
+        # `pad` inside it: a node taken from the far side of a jump belongs to the other branch,
+        # and one such node puts the discontinuity back inside a single spline.
+        lo_in = lo + pad if i > 0 else lo
+        hi_in = hi - pad if i + 2 < len(bounds) else hi
+
+        nodes = max(order + 1, int(round(samples * fractions[i])))
+        if not lo_in < hi_in:
+            raise RuntimeError(
+                f"build_segmented_entropy_spline: segment {i + 1} of {len(bounds) - 1} spans "
+                f"u in [{lo!r}, {hi!r}], which is narrower than twice the {pad:.1e} padding "
+                f"that keeps its nodes inside their own branch"
+            )
+
+        us = linspace(lo_in, hi_in, nodes)
+        if not np.all(np.diff(us) > 0.0):
+            raise RuntimeError(
+                f"build_segmented_entropy_spline: segment {i + 1} of {len(bounds) - 1} spans "
+                f"u in [{lo!r}, {hi!r}] and cannot hold {nodes} distinct nodes -- its node "
+                f"spacing is below the representable resolution of u there"
+            )
+
+        splines.append(make_interp_spline(us, [F_of_u(float(u)) for u in us], k=order))
+
+    if len(edges) == 0:
+        return splines[0]
+
+    return SegmentedEntropyFactor(edges, splines)
 
 
 class TemperatureRepresentation:
@@ -66,6 +239,14 @@ class TemperatureRepresentation:
     nodes that costs a factor of 400 in the median error (1.071e-07 against 2.599e-10). This is
     finding T3 of ``docs/qcd-background-audit-2026-09.md`` §3.
 
+    ``F`` is interpolated **per branch** of the equation of state, by
+    :class:`SegmentedEntropyFactor`, because ``T(z)`` genuinely jumps where ``g_s`` does (audit §2,
+    finding T4). The segment edges are located by *bisecting the monotone* ``T(z)``, never by
+    root-finding on ``T(z) - T_break``: at a discontinuity that difference has no root, and a
+    bracketing solver reports convergence onto a point beside the jump whose offset depends on its
+    tolerances. A cosmology that declares no break temperatures gets a single ``BSpline`` over the
+    whole range and is numerically unchanged from prompt 05's representation.
+
     The range logic -- the hard rejection outside ``SPLINE_BOUND_SLACK`` of the tabulated range
     and the soft clamp inside it -- is ``ZSplineWrapper``'s, reproduced here rather than delegated
     to because the ramp has to be clamped along with the interpolant: a wrapper that clamped only
@@ -82,12 +263,23 @@ class TemperatureRepresentation:
         min_z: float,
         max_z: float,
     ):
-        # The SciPy BSpline of F(u). Deliberately named `_spline`, as in ZSplineWrapper:
+        # F(u): a SciPy BSpline where the cosmology declares no break temperatures, and a
+        # SegmentedEntropyFactor -- one BSpline per branch, with the same call signature and the
+        # same `t` -- where it does. Deliberately named `_spline`, as in ZSplineWrapper:
         # docs/gktk-remedial/residual_convergence.py reads `cosmology._T_z_spline._spline.t` to
         # recover the tabulation's knots, and that script is the generator of the reference
-        # fixture's `convergence` block. Its knot vector is unchanged by this class -- F is
-        # tabulated at the same nodes, to the same order, as T used to be.
+        # fixture's `convergence` block.
         self._spline = spline
+
+        # The segment dispatch is done in line in __call__ rather than by calling the
+        # SegmentedEntropyFactor, because a Python-level call costs about as much as the bisect
+        # and the dispatch itself put together on this hot path. These two are that object's
+        # `segment_edges` and `splines`, hoisted; for an unsegmented representation `_edges` is
+        # empty and __call__ takes the branch that evaluates `_spline` exactly as it did before
+        # this class learned to segment.
+        self._edges = list(getattr(spline, "segment_edges", ()))
+        self._splines = list(getattr(spline, "splines", ()))
+
         self._T_CMB = T_CMB
         self._label = label
 
@@ -96,6 +288,14 @@ class TemperatureRepresentation:
 
         self._min_log_z = log(1.0 + min_z)
         self._max_log_z = log(1.0 + max_z)
+
+    @property
+    def segment_edges(self) -> tuple:
+        """
+        The interior segment edges in ``u = log(1+z)``, ascending; empty for a cosmology whose
+        equation of state declares no break temperatures.
+        """
+        return tuple(self._edges)
 
     def __call__(self, z: float, z_is_log: bool = False) -> float:
         if z_is_log:
@@ -128,7 +328,15 @@ class TemperatureRepresentation:
             log_z = self._min_log_z
             raw_z = self._min_z
 
-        return np.float64(self._T_CMB * (1.0 + raw_z) * exp(float(self._spline(log_z))))
+        # dispatch on u against the ascending edge list -- never on a recovered z, which is
+        # irreducibly lossy at large z (CLAUDE.md). bisect_right puts a u exactly equal to an edge
+        # in the segment *above* it, which is the branch the bisected edge itself belongs to.
+        if self._edges:
+            spline = self._splines[bisect_right(self._edges, log_z)]
+        else:
+            spline = self._spline
+
+        return np.float64(self._T_CMB * (1.0 + raw_z) * exp(float(spline(log_z))))
 
 
 class LambdaCDM_GenericEOS(BaseCosmology):
@@ -164,8 +372,9 @@ class LambdaCDM_GenericEOS(BaseCosmology):
     #      1    |   03   | nothing numerically; the key exists
     #      2    |   04   | _solve_T_z tightened from xtol=1e-6, rtol=1e-4 to xtol=1e-300, rtol=1e-14
     #      3    |   05   | the entropy factor F(u) is splined, not T itself; T = T_CMB (1+z) e^F
+    #      4    |   06   | F is splined per branch, edges bisected onto the jumps; 3000 nodes, k=5
     #
-    # (prompts 06 and 07 each append a row here as they land.)
+    # (prompt 07 appends a row here as it lands.)
     #
     # Why this is not optional. Without it the same cosmology row is returned under the same
     # serial when the representation changes; every BackgroundModel keyed on that serial is found
@@ -178,7 +387,7 @@ class LambdaCDM_GenericEOS(BaseCosmology):
     #
     # This follows TkNumericIntegration.BREAK_POINT_KIND: a single declaration, readable from the
     # class without an instance, so that the factory can filter on it before any model is built.
-    T_Z_REPRESENTATION_VERSION: int = 3
+    T_Z_REPRESENTATION_VERSION: int = 4
 
     def __init__(
         self,
@@ -364,7 +573,7 @@ class LambdaCDM_GenericEOS(BaseCosmology):
         min_z = 0.95 * (1.0 + min_z) - 1.0
         max_z = 1.05 * (1.0 + max_z) - 1.0
 
-        log_z_values = linspace(log(1.0 + min_z), log(1.0 + max_z), samples)
+        u_lo, u_hi = log(1.0 + min_z), log(1.0 + max_z)
 
         # What is tabulated is the *entropy factor*
         #
@@ -375,24 +584,28 @@ class LambdaCDM_GenericEOS(BaseCosmology):
         # while T over this range is almost entirely the (1+z) ramp, which is exact in closed
         # form and needs no interpolant at all.
         #
-        # There is no second root solve. The same _solve_T_z call that used to supply the node
-        # value of T supplies the node value of F, and the division below is written with
-        # (1.0 + z) -- exactly the factor the evaluation multiplies back -- so that the
-        # representation reproduces its own node values to the last bit rather than to within a
-        # rounding of exp(u) against 1+z.
-        z_values = [exp(logz) - 1.0 for logz in log_z_values]
-        F_values = [
-            log(self._solve_T_z(z) / (self._T_CMB * (1.0 + z))) for z in z_values
-        ]
+        # It is tabulated one spline per branch, with the segment edges bisected onto the
+        # redshifts at which T(z) jumps (_entropy_segment_edges_log1pz below). A single spline
+        # across a genuine discontinuity carries the height of the jump as its maximum error at
+        # every node count -- 7.2e-04 at 500, 2,000 and 3,000 nodes alike -- and that error is
+        # 3.5e-08 of the conformal time, which is 1.4e5 radians of oscillation phase at
+        # k = 3e8/Mpc. Segmenting removes it: on each branch F is a smooth function of u with
+        # nothing left to resolve but g_s itself.
+        spline = build_segmented_entropy_spline(
+            self._entropy_factor_log1pz,
+            self._entropy_segment_edges_log1pz(u_lo, u_hi),
+            u_lo,
+            u_hi,
+            samples=samples,
+            order=order,
+        )
 
-        spline = make_interp_spline(log_z_values, F_values, k=order)
-
-        # The knot vector, in log(1+z), is kept because the spline is only C2 at its knots:
+        # The knot vector, in log(1+z), is kept because the spline is only C(k-1) at its knots:
         # every quadrature of a quantity built from T(z) has to split its panels there
         # (integration_break_points below). Recorded here, where the spline is built, so that
-        # nothing outside this class has to reach into the representation for it. Tabulating F
-        # rather than T does not move a single knot: the nodes and the order are unchanged, so
-        # the declared break-point set is exactly the set it was.
+        # nothing outside this class has to reach into the representation for it. A segmented
+        # representation contributes the knots of every segment, and its segment edges are among
+        # them -- which is right, since those are the points at which T(z) actually jumps.
         self._T_z_spline_knots_log1pz = np.unique(np.asarray(spline.t, dtype=float))
 
         return TemperatureRepresentation(
@@ -402,6 +615,122 @@ class LambdaCDM_GenericEOS(BaseCosmology):
             min_z=min_z,
             max_z=max_z,
         )
+
+    def _entropy_factor_log1pz(self, u: float) -> float:
+        """
+        ``F(u) = log( T(z) / [T_CMB (1+z)] )`` at ``u = log(1+z)``, from the node solve.
+
+        There is no second root solve: this is the same ``_solve_T_z`` call that used to supply
+        the node value of ``T``. The division is written with ``(1.0 + z)`` for exactly the
+        ``z = exp(u) - 1`` that ``TemperatureRepresentation.__call__`` recovers, and multiplies
+        back, so that the representation reproduces its own node values to the last bit rather
+        than to within a rounding of ``exp(u)`` against ``1+z``.
+
+        :param u: ``log(1+z)``
+        :return: the entropy factor at ``u``, dimensionless
+        """
+        z = exp(u) - 1.0
+        return log(self._solve_T_z(z) / (self._T_CMB * (1.0 + z)))
+
+    def _entropy_segment_edges_log1pz(self, u_lo: float, u_hi: float) -> List[float]:
+        """
+        The points ``u = log(1+z)`` strictly inside ``(u_lo, u_hi)`` at which ``T(z)`` crosses one
+        of the equation of state's ``break_temperatures_GeV``, ascending -- the edges at which
+        ``_build_T_z_spline`` segments the entropy factor.
+
+        These are the same crossings ``integration_break_points`` declares, but they are **not**
+        found the same way and must not be: see :meth:`_bisect_temperature_crossing_log1pz`.
+
+        All four break temperatures are used, not only the subset at which ``g_s`` jumps
+        (``discontinuity_temperatures_GeV``). Segmenting where the equation of state is in fact
+        continuous costs nothing -- the two branches agree there to 1.8e-11 and the pair of
+        splines reproduces one smooth function -- while failing to segment at a genuine jump costs
+        the whole of the error this design removes. ``QCD_EOS``'s join at ``EOS_T_LO = 0.002`` GeV
+        is the continuous one (audit §1); it is segmented at anyway
+        (``prompts/qcd-background-audit/README.md`` §7 D4).
+
+        :param u_lo: lower end of the tabulated range in ``u``
+        :param u_hi: upper end of the tabulated range in ``u``
+        :return: an ascending list of ``u`` values, possibly empty
+        """
+        GeV = self._units.GeV
+
+        edges = []
+        for T_break_GeV in sorted(set(self._eos.break_temperatures_GeV)):
+            u = self._bisect_temperature_crossing_log1pz(T_break_GeV * GeV)
+            if u is not None and u_lo < u < u_hi:
+                edges.append(u)
+
+        return sorted(edges)
+
+    def _bisect_temperature_crossing_log1pz(
+        self,
+        T_break: float,
+        z_lo: float = 1.0e-6,
+        z_hi: float = 1.0e19,
+        rtol: float = 1.0e-15,
+    ) -> Optional[float]:
+        """
+        The ``u = log(1+z)`` at which the monotone ``T(z)`` reaches ``T_break``, by **geometric
+        bisection**; ``None`` if the crossing is not inside ``[z_lo, z_hi]``.
+
+        **This may not be replaced by a root solve on** ``T(z) - T_break``
+        (``prompts/qcd-background-audit/README.md`` §2 (b), audit §2). ``T(z)`` *jumps* at exactly
+        these points, so that difference need not have a root at all: at the lowest QCD crossing
+        it steps from ``-7.53e-04`` to ``+8.84e-06`` relative across a single ulp of ``u``,
+        never passing through zero. A bracketing solver applied to it nevertheless reports
+        ``converged`` and returns a non-root, at a place that depends on its tolerances --
+        measured at ``+1.126e-12`` in ``u`` at ``root_scalar``'s defaults over the tabulated
+        range, which is *further* from the jump than the 1e-12 by which the segments' nodes are
+        held inside their branches. The segment below the jump would then be fitted through a node
+        taken from the branch above it, the discontinuity would be interpolated across after all,
+        and every other number in the representation would still improve: the audit records a
+        first attempt that did exactly this and measured 5.7e-04, the full error, still in place.
+        ``CosmologyModels/tests/T_z_reference.py``'s ``jump_locations`` is the independent
+        implementation this one is scored against, and
+        ``test_a_segment_edge_bisected_and_one_root_found_disagree`` is the standing demonstration
+        of the trap.
+
+        Bisection has no such freedom. It brackets the crossing between one ``z`` whose
+        temperature is below ``T_break`` and one whose temperature is not, and replaces one end by
+        the geometric mean of the two until they are a relative ``rtol`` apart -- which at
+        ``rtol = 1e-15`` is the representable floor, so the returned ``u`` is good to the last bit
+        or two. The test at each step is an inequality against a monotone function, which a
+        discontinuity does not disturb.
+
+        The bisection is geometric in ``z`` rather than in ``1+z``, which is the one place in this
+        campaign where ``z`` rather than ``u`` is carried: it mirrors ``jump_locations`` step for
+        step, so the two agree bit for bit and the test that scores this against it is an equality
+        rather than a tolerance. The crossings are at ``z ~ 4e7`` and above, where the two
+        geometries differ by 1e-8 of a bracket width in the early iterations and by nothing at
+        all in the last ones; ``log1p`` is taken of the final bracket, and no recovered ``z`` ever
+        reaches an equality-like comparison (``CLAUDE.md``).
+
+        ``_solve_T_z`` is the temperature here, not the spline being built: the edges have to be
+        known before there is a representation to evaluate. Each call costs a root solve at
+        ``rtol = 1e-14``, and about 57 halvings are needed to cross twenty-five decades, so an
+        edge costs ~1.5 ms and the whole set ~6 ms of the build.
+
+        :param T_break: the dimensionful temperature to cross
+        :param z_lo: lower end of the search bracket, in ``z``
+        :param z_hi: upper end of the search bracket, in ``z``
+        :param rtol: relative width in ``1+z`` at which the bisection stops
+        :return: the crossing in ``u = log(1+z)``, or ``None``
+        """
+        if not self._solve_T_z(z_lo) < T_break < self._solve_T_z(z_hi):
+            return None
+
+        lo, hi = z_lo, z_hi
+        for _ in range(200):
+            mid = sqrt(lo * hi)
+            if self._solve_T_z(mid) < T_break:
+                lo = mid
+            else:
+                hi = mid
+            if hi / lo - 1.0 < rtol:
+                break
+
+        return log1p(0.5 * (lo + hi))
 
     def _temperature_crossing_log1pz(
         self, T: float, u_lo: float, u_hi: float
@@ -461,8 +790,10 @@ class LambdaCDM_GenericEOS(BaseCosmology):
         With ``kind = BREAK_POINT_DISCONTINUITY`` only the crossings of the equation of state's
         discontinuity_temperatures_GeV are returned -- the points at which a quantity *jumps*.
         The spline knots are deliberately not included: they are C2 points, which an adaptive ODE
-        stepper absorbs, and there are two orders of magnitude more of them (404 against 3 on the
-        production range of QCD_Cosmology). This is what
+        stepper absorbs, and there are three orders of magnitude more of them (2,411 against 3 on
+        the production range of QCD_Cosmology, where prompt 05 left 404 -- the tabulation now
+        carries 3,000 nodes rather than 500, because the segmented representation spends them on
+        accuracy instead of on a discontinuity it cannot represent). This is what
         Quadrature/integrators/numeric_with_phase_cut.py asks for, and its module docstring says
         why the distinction matters there and not in a quadrature.
 

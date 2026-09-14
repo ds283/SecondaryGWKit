@@ -2,10 +2,11 @@
 
 **Campaign:** [`README.md`](README.md) · **Source audit:** [`docs/spec-code-audit-2026-09.md`](../../docs/spec-code-audit-2026-09.md)
 **Baseline commit:** `e9a43a2` (`main`, clean)
-**Last updated:** 2026-09-10 — prompt 13 complete, plus a post-campaign tidy-up commit
+**Last updated:** 2026-09-14 — `[01-genericeos-tz-spline-floor]` closed by
+`prompts/qcd-background-audit/` prompt 06 (moved to §4). Previously: 2026-09-10, prompt 13 complete, plus a post-campaign tidy-up commit
 (`[10-classify-levin-keyerror]` closed; the three `analyse_*.py` scripts re-run over the complete
 3185-row run, verification document §5.1.2) and a triage pass over §3.
-**Eleven issues remain open in §3**, all now assigned or classified — six to the **hand-over
+**Ten issues remain open in §3**, all now assigned or classified — six to the **hand-over
 campaign** (`[08-handover-clamp-error]`, `[12-handover-clamp-error-in-production]`,
 `[12-phase-spline-error-grows-with-x]`, `[05-…]`, `[06-…]`, `[07-lg-derivative-truncation-…]`,
 which are one seam and cannot be separated by measurement), one to the **`AdaptiveLevin`
@@ -129,67 +130,6 @@ Traceability from the audit's finding IDs to the prompt that discharges them.
 ---
 
 ## 3. Active and unresolved issues
-
-- **[01-genericeos-tz-spline-floor]** *(opened by prompt 01, 2026-09-08)* — every quantity a
-  `LambdaCDM_GenericEOS`/QCD model returns inherits the interpolation error of the 500-point
-  `T(z)` spline built in `_build_T_z_spline`. Measured against the exact closed form for a
-  pure-radiation EOS: ~1.3e-9 relative at `max_z = 1e4`, ~6.6e-9 at `1e6`, ~6.4e-7 at the class
-  default `max_z = 1e20` (the error scales as `h^4` in the `ln(1+z)` grid spacing, amplified
-  fourfold by `rho_r ∝ T^4`). This is why prompt 01's regression test asserts 1e-8 rather than
-  the 1e-10 its prompt requested. **Impact:** any later test or verification that compares a
-  GenericEOS/QCD model against a closed form — prompt 12 in particular — must not set a
-  tolerance below this, nor read a residual of that size as a physics defect. Prompt 05's tests
-  use a constant-$w$ stand-in, so they are unaffected. **Next step:** nothing is required for
-  this campaign. If tighter agreement is ever wanted, `_build_T_z_spline`'s `samples=500` would
-  have to become tunable, or `max_z` reduced (it cannot go below ~3500: the constructor solves
-  for matter–radiation equality at $z=3403$ and the spline must cover it).
-  **Provenance (user, 2026-09-10):** the fixed 500-point grid was a quick hot-fix, put in with the
-  intention of returning to it. **Stays open deliberately** — the open question is whether the
-  spline *grid* is adequately defined (its sample count and its range), not the interpolation as
-  such — but no action is scheduled and it does not block anything. A future fix should make the
-  count (or the target accuracy) a parameter rather than a literal; note that the sample density,
-  not the spline order, is the whole lever here, because the error scales as $h^4$ in the
-  $\ln(1+z)$ spacing and $\rho_r\propto T^4$ amplifies it fourfold.
-  **Two sign bugs in the grid's *range* were fixed on 2026-09-10** and are not part of what stays
-  open. (a) `_build_T_z_spline` applied its 5 % buffer to $z$ rather than to $1+z$; with
-  `min_z = DEFAULT_MIN_TEMPERATURE_Z_REDSHIFT = -0.2` that gave $-0.19$, *narrowing* the range at
-  the end where padding was wanted, so the model could not be evaluated at its own declared floor.
-  The buffer is now applied to $1+z$, which is positive throughout, giving $[-0.24, 1.05(1+z_{\max})-1]$.
-  (b) Both wrappers in `ComputeTargets/spline_wrappers.py` tested their reject-versus-clamp
-  threshold as `0.99 * min_log_z` / `1.01 * max_log_z`, which is only outward-going for a positive
-  bound; for the negative `min_log_z` of this spline it moved *inward* and rejected a band inside
-  the declared range. `_outward()` follows the sign of the bound and returns exactly the retired
-  expressions when the bound is positive — which every other spline in the repository has, so
-  nothing else changed. Effect on stored numbers: $T(z)$ over $z\in[0,10^4]$ moves by a median
-  **1.3e-10** and at most **3.5e-10** relative, an order of magnitude below this issue's own
-  interpolation floor. Note the padding is deliberate — the constructor needs $z=0$ for CMB
-  matching plus a margin below it for accurate numerical derivatives there — and the user has
-  confirmed nothing will ask for results below $z=0$. `DERIVATIVE_FIT_PAD_FLOOR = 0.9` keeps the
-  background derivative grid at $z\ge-0.1$, well inside both the old and the new floor, so
-  `[03-derivative-pad-clamp-on-coarse-grids]` is unaffected.
-  **Narrowed by `prompts/qcd-background-audit/` prompts 04 and 05 (2026-09-14).** The audit
-  (`docs/qcd-background-audit-2026-09.md` §3) separated this issue into three independent defects,
-  and two of them are now closed, both without changing the sample count:
-  (i) the node *values* were root-solved to `rtol=1e-4`, so neighbouring nodes carried
-  uncorrelated errors up to 2.496e-05 — prompt 04 tightened `_solve_T_z` to
-  `xtol=1e-300, rtol=1e-14` and the node solve is now bit-identical to the defining equation;
-  (ii) the *quantity* tabulated was $T$ itself, which over twenty decades is almost entirely the
-  $(1+z)$ ramp known in closed form — prompt 05 tabulates the entropy factor
-  $F(u)=\log\big(T/[T_{\rm CMB}(1+z)]\big)$ instead and multiplies the ramp back in on evaluation.
-  On the audit's 640-point probe set at the production `max_z = 1e20`, the relative error in
-  $T(z)$ goes **7.177e-04 / 1.323e-05 / 1.890e-07** (max / p90 / median) →
-  **7.236e-04 / 8.912e-08 / 2.599e-10**, and on a constant-$g_s$ equation of state the
-  representation is now **exact** — 2.928e-16, about 1.3 ulp, against 1.940e-07 — because $F$ is
-  identically zero there and the spline of a constant is that constant. That is what moved
-  `test_temperature_spline.py`'s `INTERPOLATION_FLOOR` from 1.3e-9 to 1.0e-15.
-  **What is left of this issue** is the max, which is untouched by either fix and untouched by the
-  sample count (measured at 500, 1,000, 2,000 and 3,000 nodes): one spline is being run straight
-  across the three redshifts at which $T(z)$ genuinely *jumps*, so its worst error is pinned near
-  the jump height whatever the density. The sample count is therefore **not** the lever this entry
-  assumed — segmentation is — and that is `qcd-background-audit` prompt 06. The count is now
-  reachable as `DEFAULT_T_Z_SPLINE_SAMPLES` / `DEFAULT_T_Z_SPLINE_ORDER` with the measured
-  accuracy of each candidate tabulated beside it, which answers the "make the count or the target
-  accuracy a parameter rather than a literal" half of the note above.
 
 - **[03-derivative-pad-clamp-on-coarse-grids]** *(opened by prompt 03, 2026-09-08)* — the padded
   fit grid `compute_background` now uses for spline-derived background derivatives clamps its
@@ -456,6 +396,84 @@ Traceability from the audit's finding IDs to the prompt that discharges them.
 ---
 
 ## 4. Resolved issues
+
+- **[01-genericeos-tz-spline-floor]** *(opened by prompt 01, 2026-09-08; **closed 2026-09-14** by `prompts/qcd-background-audit/` prompt 06 — the closure is the last paragraph of this entry)* — every quantity a
+  `LambdaCDM_GenericEOS`/QCD model returns inherits the interpolation error of the 500-point
+  `T(z)` spline built in `_build_T_z_spline`. Measured against the exact closed form for a
+  pure-radiation EOS: ~1.3e-9 relative at `max_z = 1e4`, ~6.6e-9 at `1e6`, ~6.4e-7 at the class
+  default `max_z = 1e20` (the error scales as `h^4` in the `ln(1+z)` grid spacing, amplified
+  fourfold by `rho_r ∝ T^4`). This is why prompt 01's regression test asserts 1e-8 rather than
+  the 1e-10 its prompt requested. **Impact:** any later test or verification that compares a
+  GenericEOS/QCD model against a closed form — prompt 12 in particular — must not set a
+  tolerance below this, nor read a residual of that size as a physics defect. Prompt 05's tests
+  use a constant-$w$ stand-in, so they are unaffected. **Next step:** nothing is required for
+  this campaign. If tighter agreement is ever wanted, `_build_T_z_spline`'s `samples=500` would
+  have to become tunable, or `max_z` reduced (it cannot go below ~3500: the constructor solves
+  for matter–radiation equality at $z=3403$ and the spline must cover it).
+  **Provenance (user, 2026-09-10):** the fixed 500-point grid was a quick hot-fix, put in with the
+  intention of returning to it. **Stays open deliberately** — the open question is whether the
+  spline *grid* is adequately defined (its sample count and its range), not the interpolation as
+  such — but no action is scheduled and it does not block anything. A future fix should make the
+  count (or the target accuracy) a parameter rather than a literal; note that the sample density,
+  not the spline order, is the whole lever here, because the error scales as $h^4$ in the
+  $\ln(1+z)$ spacing and $\rho_r\propto T^4$ amplifies it fourfold.
+  **Two sign bugs in the grid's *range* were fixed on 2026-09-10** and are not part of what stays
+  open. (a) `_build_T_z_spline` applied its 5 % buffer to $z$ rather than to $1+z$; with
+  `min_z = DEFAULT_MIN_TEMPERATURE_Z_REDSHIFT = -0.2` that gave $-0.19$, *narrowing* the range at
+  the end where padding was wanted, so the model could not be evaluated at its own declared floor.
+  The buffer is now applied to $1+z$, which is positive throughout, giving $[-0.24, 1.05(1+z_{\max})-1]$.
+  (b) Both wrappers in `ComputeTargets/spline_wrappers.py` tested their reject-versus-clamp
+  threshold as `0.99 * min_log_z` / `1.01 * max_log_z`, which is only outward-going for a positive
+  bound; for the negative `min_log_z` of this spline it moved *inward* and rejected a band inside
+  the declared range. `_outward()` follows the sign of the bound and returns exactly the retired
+  expressions when the bound is positive — which every other spline in the repository has, so
+  nothing else changed. Effect on stored numbers: $T(z)$ over $z\in[0,10^4]$ moves by a median
+  **1.3e-10** and at most **3.5e-10** relative, an order of magnitude below this issue's own
+  interpolation floor. Note the padding is deliberate — the constructor needs $z=0$ for CMB
+  matching plus a margin below it for accurate numerical derivatives there — and the user has
+  confirmed nothing will ask for results below $z=0$. `DERIVATIVE_FIT_PAD_FLOOR = 0.9` keeps the
+  background derivative grid at $z\ge-0.1$, well inside both the old and the new floor, so
+  `[03-derivative-pad-clamp-on-coarse-grids]` is unaffected.
+  **Narrowed by `prompts/qcd-background-audit/` prompts 04 and 05 (2026-09-14).** The audit
+  (`docs/qcd-background-audit-2026-09.md` §3) separated this issue into three independent defects,
+  and two of them are now closed, both without changing the sample count:
+  (i) the node *values* were root-solved to `rtol=1e-4`, so neighbouring nodes carried
+  uncorrelated errors up to 2.496e-05 — prompt 04 tightened `_solve_T_z` to
+  `xtol=1e-300, rtol=1e-14` and the node solve is now bit-identical to the defining equation;
+  (ii) the *quantity* tabulated was $T$ itself, which over twenty decades is almost entirely the
+  $(1+z)$ ramp known in closed form — prompt 05 tabulates the entropy factor
+  $F(u)=\log\big(T/[T_{\rm CMB}(1+z)]\big)$ instead and multiplies the ramp back in on evaluation.
+  On the audit's 640-point probe set at the production `max_z = 1e20`, the relative error in
+  $T(z)$ goes **7.177e-04 / 1.323e-05 / 1.890e-07** (max / p90 / median) →
+  **7.236e-04 / 8.912e-08 / 2.599e-10**, and on a constant-$g_s$ equation of state the
+  representation is now **exact** — 2.928e-16, about 1.3 ulp, against 1.940e-07 — because $F$ is
+  identically zero there and the spline of a constant is that constant. That is what moved
+  `test_temperature_spline.py`'s `INTERPOLATION_FLOOR` from 1.3e-9 to 1.0e-15.
+  **What is left of this issue** is the max, which is untouched by either fix and untouched by the
+  sample count (measured at 500, 1,000, 2,000 and 3,000 nodes): one spline is being run straight
+  across the three redshifts at which $T(z)$ genuinely *jumps*, so its worst error is pinned near
+  the jump height whatever the density. The sample count is therefore **not** the lever this entry
+  assumed — segmentation is — and that is `qcd-background-audit` prompt 06. The count is now
+  reachable as `DEFAULT_T_Z_SPLINE_SAMPLES` / `DEFAULT_T_Z_SPLINE_ORDER` with the measured
+  accuracy of each candidate tabulated beside it, which answers the "make the count or the target
+  accuracy a parameter rather than a literal" half of the note above.
+  **Closed by `prompts/qcd-background-audit/` prompt 06, 2026-09-14.** The third and last defect
+  was that a single spline ran straight across the three redshifts at which $T(z)$ genuinely
+  *jumps*, which pinned the maximum error near the jump height at every node count. The entropy
+  factor is now interpolated **one spline per branch**, with the segment edges located by
+  *bisecting the monotone* $T(z)$ (never by root-finding on $T(z)-T_{\rm break}$, which has no root
+  at a discontinuity), at 3,000 nodes of order 5. On the audit's 640-point probe set at the
+  production `max_z = 1e20` the relative error in $T(z)$ is **6.807e-11 / 3.237e-15 / 1.765e-16**
+  (max / p90 / median), from 7.177e-04 / 1.323e-05 / 1.890e-07 when this entry was opened, and
+  $H(z)$ on the production grid is **1.690e-10 / 6.276e-15 / 2.804e-16**. The entry's own question
+  — whether the fixed 500-point grid is adequately defined — is answered twice over: the count and
+  the order are now `DEFAULT_T_Z_SPLINE_SAMPLES` / `DEFAULT_T_Z_SPLINE_ORDER` with eight measured
+  candidates tabulated beside them, so the "make the count or the target accuracy a parameter
+  rather than a literal" note is met; and the *density* turned out not to be the lever this entry
+  assumed — segmentation was. The price is that the tabulation now declares 2,411 break points
+  instead of 404, which is `qcd-background-audit`'s
+  `[05-break-point-set-grew-with-the-node-count]` and prompt 07's to remove. Full record:
+  `prompts/qcd-background-audit/logs/06-segment-at-the-jumps.md`.
 
 - **[transfer-remedial-qsi-phase-groups]** *(opened by `prompts/transfer-remedial` prompt 09,
   2026-09-10 — a hand-off from that campaign, not from a prompt of this one; **closed
