@@ -42,7 +42,12 @@ import numpy as np
 from scipy.interpolate import make_interp_spline
 from scipy.optimize import root_scalar
 
-from ComputeTargets.BackgroundModel import ModelFunctions, compute_background
+from ComputeTargets.BackgroundModel import (
+    ModelFunctions,
+    _cosmology_break_points,
+    build_stored_sample_spline,
+    compute_background,
+)
 from ComputeTargets.spline_wrappers import ZSplineWrapper
 from CosmologyConcepts import redshift, redshift_array
 from CosmologyModels.GenericEOS.QCD_Cosmology import QCD_Cosmology
@@ -281,10 +286,18 @@ def _model_functions_from_background(
 
     ``tau`` is left as ``None``: nothing in the reference harness uses the production pointwise
     accessor, and prompt 03 replaces it.
+
+    The spline itself is **not** re-implemented here: ``build_stored_sample_spline`` is the
+    production site, called with the same break points ``_create_functions`` would compute. Until
+    prompt 13 of ``prompts/qcd-background-audit/`` this function carried its own copy of those
+    three lines, and the copy is what made the duplication dangerous -- segmenting the production
+    site at the cosmology's declared crossings left the harness fitting one cubic straight across
+    them, so the harness scored a repaired background as a partial failure (log 13, deviation 1).
     """
     z_values = [v.z for v in z_sample]
     min_z = min(z_values)
     max_z = max(z_values)
+    break_points = _cosmology_break_points(cosmology, min_z, max_z)
 
     def _build(attr: str, samples):
         if hasattr(cosmology, attr):
@@ -292,12 +305,13 @@ def _model_functions_from_background(
 
         data = sorted(zip((log1p(z) for z in z_values), samples), key=lambda p: p[0])
         x_data, y_data = zip(*data)
-        return ZSplineWrapper(
-            make_interp_spline(x_data, y_data),
-            label=attr,
+        return build_stored_sample_spline(
+            attr,
+            x_data,
+            y_data,
             min_z=min_z,
             max_z=max_z,
-            log_z=True,
+            break_points=break_points,
         )
 
     d_lnH_dz = _build("d_lnH_dz", payload["d_lnH_dz_sample"])

@@ -1,6 +1,6 @@
 # Open issues — project-wide index
 
-**Last updated:** 2026-09-15 · **63 open** across eight campaigns.
+**Last updated:** 2026-09-15 · **64 open** across eight campaigns.
 
 This file exists so that an issue opened by one campaign is not lost when that campaign closes.
 It is an **index, not a record**: one line per issue, pointing at the campaign status board that
@@ -140,8 +140,10 @@ campaign was **closed**, its remaining issue passing to the `qcd-background-audi
 ### 1.7 The QCD background campaign
 
 [`prompts/qcd-background-audit/`](../prompts/qcd-background-audit/README.md) (2026-09-13; twelve
-prompts in four workstreams, **CLOSED at 12 / 12, 2026-09-15** — the ungated chain 01–09 completed
-2026-09-14 and workstream D's prompts 10, 11 and 12 ran on 2026-09-15). It
+prompts in four workstreams, closed at 12 / 12 on 2026-09-15 and **reopened the same day as
+workstream E**, three more prompts, of which **13 has landed and 14 and 15 have not** — the ungated
+chain 01–09 completed 2026-09-14, workstream D's prompts 10, 11 and 12 ran on 2026-09-15, and
+prompt 13 closed the defect prompt 12 was forbidden to act on). It
 implements [`qcd-background-audit-2026-09.md`](qcd-background-audit-2026-09.md), which measured that
 `QCD_Cosmology`'s temperature is a cubic spline over 500 points solved to `rtol=1e-4`, built as $T$
 against $\log(1+z)$ and run across three points at which $T(z)$ genuinely **jumps** — so the
@@ -296,12 +298,39 @@ campaign, and the decision is the user's. Record:
 no Ray, no datastore) → [`qcd-background-verification.md`](qcd-background-verification.md) §10.
 Suites 30 / 380 / 143 (fast set), unchanged.
 
-**Opened by prompt 12**, which closed the campaign:
+**Prompt 13 landed 2026-09-15 and closed the defect prompt 12 opened.** `BackgroundModel` splined
+background quantities at **two** sites — `compute_background`'s order-5 fit of $\log H$ over a
+padded, 3× refined copy of the source grid, and `_create_functions`'s cubic through the *stored*
+samples — and neither was split at `integration_break_points`, while $H$ genuinely **steps** at two
+of the three declared crossings. Both now fit **one spline per branch**, dispatching on
+$u=\log(1+z)$ and refusing a branch too narrow for `order + 1` nodes rather than dropping the order
+or fitting across the step. `epsilon` against a central difference of the cosmology's own `Hubble`
+on the production grid: `T_LO` **2.036e-02 → 1.931e-09**, `T_120_MEV` **1.034e-03 → 4.070e-09**,
+both inside the 3.907e-09 that holds away from a crossing, and the `EOS_T_LO` control
+**1.609e-09 → 1.609e-09**, the same float. **Neither site is redundant** — the fit alone leaves
+1.91e-04 at `T_120_MEV`. `BREAK_POINT_ALL` rather than the two jumps, on measurement:
+`d_wPerturbations_dz` at `EOS_T_LO` is **346 % wrong** without the third crossing and 7.8e-04 with
+it. The production configuration of the four-way table goes **2.4859e-05 → 5.8437e-08 rad** at QCD
+$T_k$, $k=10^5$ (**425×**), the background's grid has stopped mattering (four cells agreeing to four
+digits where they spanned 300×), and the maximum has left the crossing.
+`T_Z_REPRESENTATION_VERSION` is **6**; the QCD fixture was regenerated (`rho_G` 7.278e-02 largest
+relative move) while `tau`, `cs_tau` and `friction_F` did not move by a bit; integrand counts are
+exactly unchanged; and every cosmology that declares nothing is **byte-identical**. Suites
+30 / 380 → **392** / 148 (full set).
+
+**Opened by prompt 13**, which closed `[12-background-derivative-fit-grid-rings-at-a-step]`:
+
+| Issue | Board | Hook |
+|---|---|---|
+| `[13-segmenting-costs-accuracy-on-a-grid-that-does-not-resolve-the-crossing]` | qcd-background-audit | A segment edge creates two *interior* spline ends that **cannot be padded** — beyond an edge lies the other branch, and the cosmology exposes no continuation past the crossing; at the stored-sample site the node set *is* the grid, so there is nothing to pad with. Accuracy at a crossing is therefore set by how close the nearest samples are, and on a grid that does not resolve one a cut is worse than the smooth fit it replaces: at the `EOS_T_LO` control `epsilon` goes **1.889e-09 → 8.190e-08** on the uniform base grid, **43× worse**, while on prompt 11's production grid it is the same float. Harmless today. **But `[12-source-grid-density-…]`'s cap-2× column is coarser than the base grid everywhere** and its §10.5 table was taken on a tree in which no spline was segmented. **Next step:** whoever takes prompt 12's recommendation re-takes log 13 §1's three-crossing row on the candidate grid and reports it beside the sample count; the neighbourhood refinement is a separate lever and can be kept while the background density falls. |
+| `[13-crossing-neighbourhood-refinement-was-sized-at-k-1e5]` | qcd-background-audit | `SOURCE_GRID_BREAK_HALF_WIDTH = 5` and `SOURCE_GRID_BREAK_REFINEMENT = 2` were fixed by prompt 10's ladder at $k=10^5$, and prompt 10's "the crossing is a $k=10^5$ phenomenon" was scored against $\varphi$ recovered from a **stored** $\theta$, whose granularity at $k=10^7$ is 3.05e-05 rad — larger than the effect. Against prompt 12's residual oracle the production configuration at QCD $T_k$, $k=10^7$ reads **5.6892e-05 rad near a crossing**, **59.7 ulp** of the band's span against 0.008 ulp away from one ($G_k$ is 1.59 ulp, at the floor). It improved **7.9×** in prompt 13 and is in the same regime as the 65.78 ulp prompt 11 shipped and called a success, so not a regression — the statement is that the neighbourhood was sized for one wavenumber. **Next step:** re-run prompt 10's ±$n$ × $m$ ladder at $k=10^7$ against the residual oracle, and say whether the half-width should depend on the band; belongs with prompt 15, which owns the grid. |
+
+**Opened by prompt 12**, which closed the campaign before workstream E reopened it (its second
+issue, `[12-background-derivative-fit-grid-rings-at-a-step]`, was closed by prompt 13):
 
 | Issue | Board | Hook |
 |---|---|---|
 | `[12-source-grid-density-is-uniform-over-a-curvature-that-spans-eight-orders]` | qcd-background-audit | **The recommendation, and the decision is the user's.** `source_samples_per_log10z = 100` is uniform over a $\varphi$ curvature that spans eight orders inside a single Liouville–Green band: the consumer's cubic misses the storage floor by **7.86×/7.84×** in the top decade of the $T_k$ band at $k=10^5$ and has up to **2.1e+19** of headroom at the bottom. $h^4\|\varphi''''\|/384 \le \varepsilon$, with $\varphi' = -(1+z)C/(\omega+\omega_0)$ from $H$, $c_s^2$ and $k$ alone, is computable **before** the grid exists and predicts the realised error to **±2 %**; one envelope grid gives QCD 1,761 samples (against 1,773) with every row at 0.14× its target, or 1,015 at 1.75× fewer, and LambdaCDM 1,634 or 842. Equidistributing $\varphi$ itself is refuted at 114,281 samples. **Four bounds:** the saving and `[03-derivative-pad-clamp-on-coarse-grids]` are the same lever (the clamp binds at the first coarsening step); the grid also carries the numeric ODE, four cumulative tables and `QuadSourceIntegral`, none of whose requirements is measured, so this is a lower bound on the density; §5's production-$x$ caveat applies in full, since **no pipeline has run on any grid measured here, including the one that ships**; and above $k\approx10^7$ none of it is visible. **Cost of acting: a full regeneration of eight stored object types.** No next step proposed — that is deliberate. |
-| `[12-background-derivative-fit-grid-rings-at-a-step]` | qcd-background-audit | `QCD_Cosmology` supplies no `d_lnH_dz`, so `compute_background` splines $\log H$ over `_build_derivative_fit_grid(z_sample)` — a refinement of **the source grid**, *not* split at `integration_break_points` — and stacks `d2`/`d3` on it. $H$ steps at two declared crossings, so `epsilon` and its derivatives ring there: **3.66e-02** relative at `T_LO` and **6.48e-03** at `T_120_MEV`, against 3.9e-09 away from a crossing, with `EOS_T_LO` (where $g_s$ is continuous and only $w$ kinks) the control at 1.6e-09. **Prompt 11 measured with the background held on the base grid; production rebuilds it on the new one**, and then the consumer's $\varphi$ error at `T_LO` reads 2.4859e-05 rad where prompt 11's configuration reads 3.9744e-07 — 1.77× worse than the base grid, not 35× better, because refining at a step makes the ringing narrower faster than smaller. Away from a crossing prompt 11's grid is better on all six QCD rows, so this narrows rather than overturns it, and **no density criterion can reach it**. **Next step:** fit one spline per branch, as prompt 06 did for $F(u)$ — a `T_Z_REPRESENTATION_VERSION` bump with a regeneration attached. |
 
 **Opened by prompt 11**, which closed the issue that released workstream D:
 

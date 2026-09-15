@@ -1,6 +1,6 @@
 {
  "schema_version": 1,
- "generated": "2026-09-14",
+ "generated": "2026-09-15",
  "generator": "docs/gktk-remedial/generate_references.py",
  "campaign": "prompts/GkTk-remedial (prompt 01)",
  "environment": {
@@ -914,42 +914,42 @@
      {
       "index": 931,
       "z": 10049433.576645004,
-      "value": -0.0005402881891830144
+      "value": -0.0005399545700930031
      },
      {
       "index": 1031,
       "z": 1004324.1040406098,
-      "value": -0.0005403304526294679
+      "value": -0.0005399968335394565
      },
      {
       "index": 1231,
       "z": 10030.867413238584,
-      "value": -0.0005404104705390372
+      "value": -0.0005400768514490258
      },
      {
       "index": 1331,
       "z": 1002.4686317608628,
-      "value": -0.0005404341553808134
+      "value": -0.000540100536290802
      },
      {
       "index": 1431,
       "z": 100.18509030816094,
-      "value": -0.0005404426934808993
+      "value": -0.0005401090743908879
      },
      {
       "index": 1531,
       "z": 10.01233555051399,
-      "value": -0.0005404453533788816
+      "value": -0.0005401117342888702
      },
      {
       "index": 1631,
       "z": 1.0006165874356605,
-      "value": -0.0005404464099974703
+      "value": -0.0005401127909074589
      },
      {
       "index": 1731,
       "z": 0.1,
-      "value": -0.0005404472506079544
+      "value": -0.000540113631517943
      }
     ],
     "1.000000e+07": [
@@ -961,47 +961,47 @@
      {
       "index": 731,
       "z": 1006183010.6197172,
-      "value": 3.0453365127621173e-05
+      "value": 3.0453350198846963e-05
      },
      {
       "index": 931,
       "z": 10049433.576645004,
-      "value": 2.983962372403038e-05
+      "value": 2.984294445161401e-05
      },
      {
       "index": 1031,
       "z": 1004324.1040406098,
-      "value": 2.983920108956585e-05
+      "value": 2.9842521817149474e-05
      },
      {
       "index": 1231,
       "z": 10030.867413238584,
-      "value": 2.9838400910470154e-05
+      "value": 2.984172163805378e-05
      },
      {
       "index": 1331,
       "z": 1002.4686317608628,
-      "value": 2.9838164062052394e-05
+      "value": 2.9841484789636018e-05
      },
      {
       "index": 1431,
       "z": 100.18509030816094,
-      "value": 2.9838078681051537e-05
+      "value": 2.984139940863516e-05
      },
      {
       "index": 1531,
       "z": 10.01233555051399,
-      "value": 2.9838052082071713e-05
+      "value": 2.9841372809655337e-05
      },
      {
       "index": 1631,
       "z": 1.0006165874356605,
-      "value": 2.9838041515885823e-05
+      "value": 2.984136224346945e-05
      },
      {
       "index": 1731,
       "z": 0.1,
-      "value": 2.9838033109780984e-05
+      "value": 2.9841353837364608e-05
      }
     ],
     "3.000000e+08": [
@@ -1013,52 +1013,52 @@
      {
       "index": 531,
       "z": 100742419275.51031,
-      "value": -0.0013727870772822575
+      "value": -0.0012729062964899668
      },
      {
       "index": 731,
       "z": 1006183010.6197172,
-      "value": -0.001372341497630054
+      "value": -0.001272460717335389
      },
      {
       "index": 931,
       "z": 10049433.576645004,
-      "value": -0.001372361955676831
+      "value": -0.0012724810641936226
      },
      {
       "index": 1031,
       "z": 1004324.1040406098,
-      "value": -0.0013723619697646465
+      "value": -0.001272481078281438
      },
      {
       "index": 1231,
       "z": 10030.867413238584,
-      "value": -0.001372361996437283
+      "value": -0.0012724811049540745
      },
      {
       "index": 1331,
       "z": 1002.4686317608628,
-      "value": -0.0013723620043322303
+      "value": -0.0012724811128490218
      },
      {
       "index": 1431,
       "z": 100.18509030816094,
-      "value": -0.0013723620071782636
+      "value": -0.001272481115695055
      },
      {
       "index": 1531,
       "z": 10.01233555051399,
-      "value": -0.0013723620080648962
+      "value": -0.0012724811165816879
      },
      {
       "index": 1631,
       "z": 1.0006165874356605,
-      "value": -0.0013723620084171025
+      "value": -0.001272481116933894
      },
      {
       "index": 1731,
       "z": 0.1,
-      "value": -0.001372362008697306
+      "value": -0.0012724811172140976
      }
     ]
    },
@@ -1072,42 +1072,42 @@
      {
       "index": 931,
       "z": 10049433.576645004,
-      "value": -0.08828959825992792
+      "value": -0.08829105829554475
      },
      {
       "index": 1031,
       "z": 1004324.1040406098,
-      "value": -0.08862752107181308
+      "value": -0.08862898110742991
      },
      {
       "index": 1231,
       "z": 10030.867413238584,
-      "value": -0.08866495012119152
+      "value": -0.08866641015680835
      },
      {
       "index": 1331,
       "z": 1002.4686317608628,
-      "value": -0.08866545732013086
+      "value": -0.08866691735574768
      },
      {
       "index": 1431,
       "z": 100.18509030816094,
-      "value": -0.08866567801879102
+      "value": -0.08866713805440785
      },
      {
       "index": 1531,
       "z": 10.01233555051399,
-      "value": -0.0886658661184577
+      "value": -0.08866732615407452
      },
      {
       "index": 1631,
       "z": 1.0006165874356605,
-      "value": -0.0886660176074298
+      "value": -0.08866747764304662
      },
      {
       "index": 1731,
       "z": 0.1,
-      "value": -0.08866609127422102
+      "value": -0.08866755130983785
      }
     ],
     "1.000000e+07": [
@@ -1119,47 +1119,47 @@
      {
       "index": 731,
       "z": 1006183010.6197172,
-      "value": -0.08866024310183873
+      "value": -0.08866024282479175
      },
      {
       "index": 931,
       "z": 10049433.576645004,
-      "value": -0.0890219958288809
+      "value": -0.0890220101549462
      },
      {
       "index": 1031,
       "z": 1004324.1040406098,
-      "value": -0.08902537505691169
+      "value": -0.08902538938297698
      },
      {
       "index": 1231,
       "z": 10030.867413238584,
-      "value": -0.08902574934740538
+      "value": -0.08902576367347068
      },
      {
       "index": 1331,
       "z": 1002.4686317608628,
-      "value": -0.08902575441939478
+      "value": -0.08902576874546007
      },
      {
       "index": 1431,
       "z": 100.18509030816094,
-      "value": -0.08902575662638139
+      "value": -0.08902577095244668
      },
      {
       "index": 1531,
       "z": 10.01233555051399,
-      "value": -0.08902575850737805
+      "value": -0.08902577283344335
      },
      {
       "index": 1631,
       "z": 1.0006165874356605,
-      "value": -0.08902576002226777
+      "value": -0.08902577434833306
      },
      {
       "index": 1731,
       "z": 0.1,
-      "value": -0.08902576075893569
+      "value": -0.08902577508500098
      }
     ],
     "3.000000e+08": [
@@ -1171,52 +1171,52 @@
      {
       "index": 531,
       "z": 100742419275.51031,
-      "value": -0.09231445637545882
+      "value": -0.09212192529443186
      },
      {
       "index": 731,
       "z": 1006183010.6197172,
-      "value": -0.09345160422102217
+      "value": -0.09325907313076044
      },
      {
       "index": 931,
       "z": 10049433.576645004,
-      "value": -0.09346366264499492
+      "value": -0.09327113204150363
      },
      {
       "index": 1031,
       "z": 1004324.1040406098,
-      "value": -0.0934637752859293
+      "value": -0.093271244682438
      },
      {
       "index": 1231,
       "z": 10030.867413238584,
-      "value": -0.09346378776227908
+      "value": -0.09327125715878778
      },
      {
       "index": 1331,
       "z": 1002.4686317608628,
-      "value": -0.0934637879313454
+      "value": -0.0932712573278541
      },
      {
       "index": 1431,
       "z": 100.18509030816094,
-      "value": -0.0934637880049116
+      "value": -0.09327125740142031
      },
      {
       "index": 1531,
       "z": 10.01233555051399,
-      "value": -0.09346378806761149
+      "value": -0.09327125746412021
      },
      {
       "index": 1631,
       "z": 1.0006165874356605,
-      "value": -0.09346378811810782
+      "value": -0.09327125751461653
      },
      {
       "index": 1731,
       "z": 0.1,
-      "value": -0.09346378814266341
+      "value": -0.09327125753917212
      }
     ]
    },
@@ -1337,79 +1337,79 @@
     },
     "rho_G[1.000000e+05]": {
      "agreement": {
-      "quad_epsrel_1e-12": 9.829989215788935e-15,
-      "gauss40_bisect": 2.7990025641891555e-09
+      "quad_epsrel_1e-12": 0.0,
+      "gauss40_bisect": 1.1749074537747236e-12
      },
      "diagnostics": {
-      "quad_max_reported_abserr": 3.337932554376001e-19,
-      "quad_intervals_with_warnings": 104,
+      "quad_max_reported_abserr": 1.5789603113935025e-19,
+      "quad_intervals_with_warnings": 122,
       "quad_intervals": 1040,
-      "gauss40_worst_interval_relative_change": 1.0183826500056392e-05,
+      "gauss40_worst_interval_relative_change": 4.695457168970407e-06,
       "gauss40_worst_level": 8
      }
     },
     "rho_T[1.000000e+05]": {
      "agreement": {
-      "quad_epsrel_1e-12": 0.0,
-      "gauss40_bisect": 1.1902993239348182e-11
+      "quad_epsrel_1e-12": 1.5651484227099308e-16,
+      "gauss40_bisect": 4.298946218204686e-11
      },
      "diagnostics": {
       "quad_max_reported_abserr": 2.1711329554882723e-17,
-      "quad_intervals_with_warnings": 2,
+      "quad_intervals_with_warnings": 1,
       "quad_intervals": 1040,
-      "gauss40_worst_interval_relative_change": 9.267221239707007e-08,
+      "gauss40_worst_interval_relative_change": 3.3042764300578847e-07,
       "gauss40_worst_level": 8
      }
     },
     "rho_G[1.000000e+07]": {
      "agreement": {
-      "quad_epsrel_1e-12": 2.157464728136678e-15,
-      "gauss40_bisect": 5.069748014613516e-10
+      "quad_epsrel_1e-12": 4.541525572174133e-16,
+      "gauss40_bisect": 4.2686139467282584e-11
      },
      "diagnostics": {
       "quad_max_reported_abserr": 1.0291628592964167e-19,
-      "quad_intervals_with_warnings": 105,
+      "quad_intervals_with_warnings": 122,
       "quad_intervals": 1242,
-      "gauss40_worst_interval_relative_change": 1.018414952421982e-05,
+      "gauss40_worst_interval_relative_change": 4.6954571688591276e-06,
       "gauss40_worst_level": 8
      }
     },
     "rho_T[1.000000e+07]": {
      "agreement": {
-      "quad_epsrel_1e-12": 1.2470806372903938e-15,
-      "gauss40_bisect": 1.1831677546292612e-13
+      "quad_epsrel_1e-12": 1.5588505457620643e-16,
+      "gauss40_bisect": 2.260333291354993e-14
      },
      "diagnostics": {
       "quad_max_reported_abserr": 2.2152552006399156e-17,
-      "quad_intervals_with_warnings": 2,
+      "quad_intervals_with_warnings": 1,
       "quad_intervals": 1242,
-      "gauss40_worst_interval_relative_change": 9.267241895912939e-08,
+      "gauss40_worst_interval_relative_change": 3.304268049536227e-07,
       "gauss40_worst_level": 8
      }
     },
     "rho_G[3.000000e+08]": {
      "agreement": {
       "quad_epsrel_1e-12": 0.0,
-      "gauss40_bisect": 1.2885835669128783e-10
+      "gauss40_bisect": 2.664731574035965e-07
      },
      "diagnostics": {
-      "quad_max_reported_abserr": 4.890721374376996e-19,
-      "quad_intervals_with_warnings": 108,
+      "quad_max_reported_abserr": 1.8759215786538753e-19,
+      "quad_intervals_with_warnings": 122,
       "quad_intervals": 1401,
-      "gauss40_worst_interval_relative_change": 1.0184149555507795e-05,
+      "gauss40_worst_interval_relative_change": 0.00018959081332994756,
       "gauss40_worst_level": 8
      }
     },
     "rho_T[3.000000e+08]": {
      "agreement": {
       "quad_epsrel_1e-12": 0.0,
-      "gauss40_bisect": 3.484971294402612e-11
+      "gauss40_bisect": 7.829675210368195e-09
      },
      "diagnostics": {
       "quad_max_reported_abserr": 2.1642191455197625e-17,
-      "quad_intervals_with_warnings": 2,
+      "quad_intervals_with_warnings": 0,
       "quad_intervals": 1401,
-      "gauss40_worst_interval_relative_change": 9.267241900784827e-08,
+      "gauss40_worst_interval_relative_change": 1.740064412095851e-05,
       "gauss40_worst_level": 8
      }
     }
@@ -1477,9 +1477,9 @@
      "z": 0.1
     }
    ],
-   "method": "converged adaptive quadrature of the double-precision integrand: SciPy quad in u = log(1+z) per production interval at epsabs=0, epsrel=1.5e-14, summed with math.fsum; cross-checked against the same at epsrel=1e-12 and against composite Gauss-Legendre order 40 with uniform bisection to rtol=1e-14 (max 8 levels). H(z) here is a spline evaluation of T(z), but since prompts/qcd-background-audit/ prompt 06 that representation is segmented at the redshifts where T(z) jumps and reproduces the defining equation T gs(T)^(1/3) = T_CMB gs(T_CMB)^(1/3) (1+z), root-solved to rtol=1e-14, to 6.807e-11 max / 3.237e-15 p90 / 1.765e-16 median on the audit's 640-point probe set (H(z) itself to 1.690e-10 / 6.276e-15 / 2.804e-16 on the production grid): this reference is therefore no longer circular, and the accurate root solve is a genuine higher-precision oracle for the background it is built on. | regenerated by docs/qcd-background-audit/generate_qcd_references.py on 2026-09-14, T_Z_REPRESENTATION_VERSION=2 | regenerated by docs/qcd-background-audit/generate_qcd_references.py on 2026-09-14, T_Z_REPRESENTATION_VERSION=3 | regenerated by docs/qcd-background-audit/generate_qcd_references.py on 2026-09-14, T_Z_REPRESENTATION_VERSION=4",
-   "build_time_seconds": 0.9152025829534978,
-   "generation_time_seconds": 185.2614778331481
+   "method": "converged adaptive quadrature of the double-precision integrand: SciPy quad in u = log(1+z) per production interval at epsabs=0, epsrel=1.5e-14, summed with math.fsum; cross-checked against the same at epsrel=1e-12 and against composite Gauss-Legendre order 40 with uniform bisection to rtol=1e-14 (max 8 levels). H(z) here is a spline evaluation of T(z), but since prompts/qcd-background-audit/ prompt 06 that representation is segmented at the redshifts where T(z) jumps and reproduces the defining equation T gs(T)^(1/3) = T_CMB gs(T_CMB)^(1/3) (1+z), root-solved to rtol=1e-14, to 6.807e-11 max / 3.237e-15 p90 / 1.765e-16 median on the audit's 640-point probe set (H(z) itself to 1.690e-10 / 6.276e-15 / 2.804e-16 on the production grid): this reference is therefore no longer circular, and the accurate root solve is a genuine higher-precision oracle for the background it is built on. | regenerated by docs/qcd-background-audit/generate_qcd_references.py on 2026-09-14, T_Z_REPRESENTATION_VERSION=2 | regenerated by docs/qcd-background-audit/generate_qcd_references.py on 2026-09-14, T_Z_REPRESENTATION_VERSION=3 | regenerated by docs/qcd-background-audit/generate_qcd_references.py on 2026-09-14, T_Z_REPRESENTATION_VERSION=4 | regenerated by docs/qcd-background-audit/generate_qcd_references.py on 2026-09-15, T_Z_REPRESENTATION_VERSION=6",
+   "build_time_seconds": 0.6238617501221597,
+   "generation_time_seconds": 196.98894400009885
   }
  },
  "baselines": {

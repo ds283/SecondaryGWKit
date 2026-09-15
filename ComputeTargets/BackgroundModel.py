@@ -1,6 +1,7 @@
+from bisect import bisect_right
 from collections import namedtuple
 from math import sqrt, log
-from typing import Optional, List, Union
+from typing import Optional, List, Sequence, Union
 
 import numpy as np
 import ray
@@ -61,6 +62,11 @@ DERIVATIVE_FIT_PAD_FLOOR = 0.9
 DERIVATIVE_FIT_PAD_FRACTION = 0.05
 # - degree of the interpolating spline that is differentiated
 DERIVATIVE_SPLINE_ORDER = 5
+# - degree of the interpolating spline BackgroundModel._create_functions fits through the *stored*
+#   samples of any quantity the cosmology does not supply as a method. A cubic, which is what
+#   make_interp_spline defaults to and what this site has always used; named here only so that the
+#   degeneracy check below can quote the number of nodes a branch has to hold.
+STORED_SAMPLE_SPLINE_ORDER = 3
 
 
 def _build_derivative_fit_grid(z_sample: redshift_array):
@@ -120,6 +126,157 @@ def _build_derivative_fit_grid(z_sample: redshift_array):
     fit_z[fit_select] = z_prod[ascending]
 
     return fit_x, fit_z, fit_select, sample_order
+
+
+class SegmentedSpline:
+    """
+    One interpolating spline per branch of a cosmology that declares itself non-smooth, dispatching
+    on ``u = log(1+z)`` alone.
+
+    This is ``CosmologyModels/GenericEOS/LambdaCDM_GenericEOS.SegmentedEntropyFactor`` applied one
+    level further out. Prompt 06 of ``prompts/qcd-background-audit/`` segmented the entropy factor
+    ``F(u)`` at the redshifts where ``T(z)`` jumps, and prompt 07 split every cumulative table's
+    Gauss panels at the same points; the lattice this module fits its *derivative* splines on was
+    the last place in the tree where a smooth interpolant still ran straight across a point the
+    cosmology declares it is not smooth at. ``ln H`` genuinely **steps** at two of the three
+    crossings ``QCD_Cosmology`` declares, so a quintic through samples either side of one rings:
+    2.04e-02 relative in ``epsilon`` at ``T_LO`` and 1.03e-03 at ``T_120_MEV`` against 3.9e-09 away
+    from a crossing (``docs/qcd-background-verification.md`` §10.4).
+
+    Dispatch is ``bisect_right`` on ``u``, never on a recovered ``z`` (``CLAUDE.md``; README §2
+    (i)): ``log(1+z) -> z`` is irreducibly lossy at large ``z`` and must never appear in an
+    equality-like comparison, which a segment-edge test is. ``bisect_right`` places a ``u`` exactly
+    equal to an edge in the segment **above** it, which is the branch the bisected edge itself
+    belongs to -- the same convention, and for the same reason, as ``SegmentedEntropyFactor``.
+
+    With no edges the callers below build a plain ``BSpline`` instead, so every cosmology that
+    declares nothing (``LambdaCDM``, ``RadiationModel``, every test stand-in, any ``GenericEOSBase``
+    with a constant ``g_s``) takes a code path that is not merely equivalent to the unsegmented one
+    but is *literally* it.
+    """
+
+    __slots__ = ("_edges", "_splines")
+
+    def __init__(self, edges: Sequence[float], splines: Sequence):
+        if len(splines) != len(edges) + 1:
+            raise RuntimeError(
+                f"SegmentedSpline: {len(splines)} splines for {len(edges)} interior edges "
+                f"(expected {len(edges) + 1})"
+            )
+
+        self._edges = [float(u) for u in edges]
+        self._splines = list(splines)
+
+    @property
+    def segment_edges(self) -> tuple:
+        """The interior segment edges, ascending, in ``u = log(1+z)``."""
+        return tuple(self._edges)
+
+    @property
+    def splines(self) -> tuple:
+        """The per-branch splines, in the order :attr:`segment_edges` separates them."""
+        return tuple(self._splines)
+
+    def __call__(self, u):
+        return self._splines[bisect_right(self._edges, float(u))](u)
+
+
+def _segment_slices(x: np.ndarray, edges: Sequence[float]) -> List[slice]:
+    """
+    Partition the ascending array ``x`` into one contiguous slice per branch, the branches
+    separated by the interior ``edges`` (also in ``u = log(1+z)``, also ascending).
+
+    ``side="left"`` is what makes this partition agree with :class:`SegmentedSpline`'s
+    ``bisect_right`` dispatch: an ``x`` exactly equal to an edge begins the segment above it, so
+    the sample that sits *on* a declared crossing is fitted with the branch whose value it carries
+    (the bisected edge is the first ``u`` at or above the crossing; see
+    ``LambdaCDM_GenericEOS._bisect_temperature_crossing_log1pz``).
+    """
+    if len(edges) == 0:
+        return [slice(0, len(x))]
+
+    cuts = [int(c) for c in np.searchsorted(x, np.asarray(edges, dtype=float), "left")]
+    bounds = [0] + cuts + [len(x)]
+    return [slice(bounds[i], bounds[i + 1]) for i in range(len(bounds) - 1)]
+
+
+def _refuse_degenerate_segment(
+    site: str, index: int, count: int, lo: float, hi: float, nodes: int, order: int
+):
+    """
+    Refuse a branch that cannot hold an order-``order`` interpolating spline.
+
+    The two alternatives are both silent and both wrong: dropping to a lower order changes the
+    accuracy of a *stored* background quantity without saying so, and merging the branch with its
+    neighbour puts the discontinuity back inside a single spline, which is the whole of what
+    segmentation exists to prevent. ``build_segmented_entropy_spline`` refuses the analogous
+    geometry for the same reason.
+    """
+    raise RuntimeError(
+        f"{site}: segment {index + 1} of {count} spans u in [{lo!r}, {hi!r}] and holds "
+        f"{nodes} node(s), fewer than the {order + 1} an order-{order} interpolating spline "
+        f"needs. The segment edges are the redshifts at which the cosmology declares it is not "
+        f"smooth (BackgroundModel._cosmology_break_points); a grid that does not resolve one of "
+        f"them cannot carry a background at all, and dropping the order or fitting across the "
+        f"break instead would hide that rather than fix it"
+    )
+
+
+def build_stored_sample_spline(
+    attr: str,
+    x_data,
+    y_data,
+    min_z: float,
+    max_z: float,
+    break_points: Sequence[float] = (),
+):
+    """
+    The interpolant ``BackgroundModel._create_functions`` fits through the **stored** samples of a
+    background quantity: an order-``STORED_SAMPLE_SPLINE_ORDER`` interpolating spline in
+    ``x = log(1+z)``, one per branch of the cosmology, wrapped in the usual ``ZSplineWrapper`` for
+    its range check and soft clamp.
+
+    ``x_data`` must be ascending and ``break_points`` the cosmology's declared non-smooth points in
+    the same variable (``_cosmology_break_points``), ascending and strictly inside the range. With
+    ``break_points`` empty this is the single unsegmented spline this site has always built, built
+    by the same call with the same defaulted order.
+
+    It is a module-level function, and not a closure inside ``_create_functions`` where it used to
+    live, because ``ComputeTargets/tests/wkb_reference.py`` builds a ``ModelFunctions`` from a
+    ``compute_background`` payload and its docstring undertakes to reproduce this site exactly.
+    While the two were separate implementations of the same three lines they could -- and did --
+    disagree the moment one of them changed: prompt 13's whole measurement is taken through that
+    harness, and an unsegmented copy of this function there would have scored the production change
+    as a partial failure. One implementation, two callers.
+    """
+    segments = _segment_slices(np.asarray(x_data, dtype=float), break_points)
+    if len(segments) == 1:
+        spline = make_interp_spline(x_data, y_data)
+    else:
+        splines = []
+        for i, sl in enumerate(segments):
+            if sl.stop - sl.start < STORED_SAMPLE_SPLINE_ORDER + 1:
+                _refuse_degenerate_segment(
+                    f'build_stored_sample_spline("{attr}")',
+                    i,
+                    len(segments),
+                    x_data[sl.start] if sl.stop > sl.start else None,
+                    x_data[sl.stop - 1] if sl.stop > sl.start else None,
+                    sl.stop - sl.start,
+                    STORED_SAMPLE_SPLINE_ORDER,
+                )
+            splines.append(
+                make_interp_spline(x_data[sl], y_data[sl], k=STORED_SAMPLE_SPLINE_ORDER)
+            )
+        spline = SegmentedSpline(break_points, splines)
+
+    return ZSplineWrapper(
+        spline,
+        label=attr,
+        min_z=min_z,
+        max_z=max_z,
+        log_z=True,
+    )
 
 
 ModelFunctions = namedtuple(
@@ -345,6 +502,44 @@ def compute_background(
     # once the end bias has been removed by padding
     fit_k = DERIVATIVE_SPLINE_ORDER if len(fit_x) >= DERIVATIVE_SPLINE_ORDER + 1 else 3
 
+    # ...and it is fitted one spline per branch of the cosmology, not one across the whole grid.
+    # ln H genuinely *steps* at two of the three crossings QCD_Cosmology declares, so a single
+    # quintic through samples either side of one rings: 2.04e-02 relative in epsilon at T_LO and
+    # 1.03e-03 at T_120_MEV against 3.9e-09 away from a crossing, with EOS_T_LO -- where g_s is
+    # continuous and only w kinks -- the control at 1.6e-09
+    # (docs/qcd-background-verification.md §10.4; prompt 13 of prompts/qcd-background-audit/).
+    #
+    # The break points are taken over the *padded* range rather than over z_sample's own, so that
+    # a crossing lying in the padding is split too; on any cosmology that declares nothing the
+    # list is empty, _segment_slices returns the single whole-grid slice, and the spline built
+    # below is bit-for-bit the one this code built before segmentation existed.
+    #
+    # PADDING (prompt 13 §2 item 4). The pad above extends the *outer* ends of the fit grid,
+    # because a not-a-knot end has no data beyond it to constrain it. A segment edge is not an
+    # outer end and cannot be padded the same way: what lies beyond it is the other branch, whose
+    # values are exactly what must not enter this fit, and the cosmology exposes no analytic
+    # continuation of one branch past the crossing (its own T(z) representation dispatches on u
+    # and would hand back the other branch's value). Each branch therefore keeps the two interior
+    # ends it inherits from the cut, unpadded, and the fit grid is not modified. That is a
+    # deliberate decision and it was measured, not assumed: with it, the ringing at both genuine
+    # steps falls to the away-from-a-crossing regime (log 13 §"Verification performed"), which is
+    # the whole of what the padding at the outer ends exists to deliver.
+    fit_break_points = _cosmology_break_points(
+        cosmology, float(fit_z[0]), float(fit_z[-1])
+    )
+    fit_segments = _segment_slices(fit_x, fit_break_points)
+    for i, sl in enumerate(fit_segments):
+        if sl.stop - sl.start < fit_k + 1:
+            _refuse_degenerate_segment(
+                "compute_background._build_derivative",
+                i,
+                len(fit_segments),
+                float(fit_x[sl.start]) if sl.stop > sl.start else None,
+                float(fit_x[sl.stop - 1]) if sl.stop > sl.start else None,
+                sl.stop - sl.start,
+                fit_k,
+            )
+
     def _build_derivative(attr: str, f_to_diff=None, fit_sample_to_diff=None):
         """
         Evaluate a derivative on the *padded fit grid*, either from the cosmology's own analytic
@@ -364,10 +559,15 @@ def compute_background(
         else:
             y_data = np.asarray(fit_sample_to_diff)
 
-        deriv = make_interp_spline(fit_x, y_data, k=fit_k).derivative()
+        # one spline per branch; with no declared break points fit_segments is the single
+        # whole-grid slice and this is exactly the unsegmented fit it replaces
+        d_du = np.empty(len(fit_x), dtype=float)
+        for sl in fit_segments:
+            deriv = make_interp_spline(fit_x[sl], y_data[sl], k=fit_k).derivative()
+            d_du[sl] = np.asarray(deriv(fit_x[sl]))
 
         # the spline computes d/d(log(1+z)), so divide by 1+z to obtain the raw z-derivative
-        return np.asarray(deriv(fit_x)) / fit_opz
+        return d_du / fit_opz
 
     def _truncate(fit_values) -> List[float]:
         """Select the production grid points, restoring the ordering of z_sample."""
@@ -581,6 +781,18 @@ class BackgroundModel(DatastoreObject):
         return self._functions
 
     def _create_functions(self):
+        # the second of the two sites at which this module fits a smooth interpolant across the
+        # sample grid, and it carries the same defect as compute_background's derivative fit: the
+        # *stored* samples of any quantity the cosmology does not supply as a method are splined
+        # here, and at a declared crossing they step. Fixing compute_background alone would make
+        # the stored d_lnH_dz right and then ring a cubic through it, so both are segmented
+        # (prompt 13 §2 item 2 of prompts/qcd-background-audit/; the separate contribution of each
+        # site is in log 13). Empty on any cosmology that declares nothing, in which case the
+        # spline built is literally the one this code built before.
+        stored_break_points = _cosmology_break_points(
+            self._cosmology, self.z_sample.min.z, self.z_sample.max.z
+        )
+
         def _build_func(attr: str):
             if hasattr(self._cosmology, attr):
                 return getattr(self._cosmology, attr)
@@ -589,13 +801,13 @@ class BackgroundModel(DatastoreObject):
             data.sort(key=lambda pair: pair[0])
 
             x_data, y_data = zip(*data)
-            spline = make_interp_spline(x_data, y_data)
-            return ZSplineWrapper(
-                spline,
-                label=attr,
+            return build_stored_sample_spline(
+                attr,
+                x_data,
+                y_data,
                 min_z=self.z_sample.min.z,
                 max_z=self.z_sample.max.z,
-                log_z=True,
+                break_points=stored_break_points,
             )
 
         # tau is reconstructed from the persisted (hi, lo) limbs with no quadrature; the integrand

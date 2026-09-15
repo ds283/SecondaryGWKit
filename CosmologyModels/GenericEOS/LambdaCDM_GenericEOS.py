@@ -384,8 +384,21 @@ class LambdaCDM_GenericEOS(BaseCosmology):
     #      3    |   05   | the entropy factor F(u) is splined, not T itself; T = T_CMB (1+z) e^F
     #      4    |   06   | F is splined per branch, edges bisected onto the jumps; 3000 nodes, k=5
     #      5    |   07   | integration_break_points declares the EOS crossings alone, not the knots
+    #      6    |   13   | BackgroundModel splines its derivative fields one per branch, not across
+    #           |        | the declared crossings; every stored omega_eff, and so every stored
+    #           |        | phase, moves
     #
-    # (prompt 08 appends a row here if it moves a per-sector break-point policy.)
+    # (prompt 08 appends a row here if it moves a per-sector break-point policy; it did not.)
+    #
+    # Version 6 is not a change to this class at all -- it is a change to
+    # ComputeTargets/BackgroundModel.py, which is what makes the constant's *scope* worth stating.
+    # It keys the background a cosmology yields, not the cosmology's own parameters: the list above
+    # is what the parameter key does not capture, and "the lattice the background's derivative
+    # fields are splined on, and whether it is split where this cosmology says it is not smooth"
+    # belongs on it for exactly the reason the break-point set does. A datastore written before
+    # prompt 13 holds BackgroundModel rows whose epsilon, d_epsilon_dz and d2_epsilon_dz2 ring at
+    # two of the three crossings declared here -- 2.04e-02 relative at T_LO on the production grid
+    # (docs/qcd-background-verification.md section 10.4) -- and nothing else in the key would say so.
     #
     # Why this is not optional. Without it the same cosmology row is returned under the same
     # serial when the representation changes; every BackgroundModel keyed on that serial is found
@@ -398,7 +411,7 @@ class LambdaCDM_GenericEOS(BaseCosmology):
     #
     # This follows TkNumericIntegration.BREAK_POINT_KIND: a single declaration, readable from the
     # class without an instance, so that the factory can filter on it before any model is built.
-    T_Z_REPRESENTATION_VERSION: int = 5
+    T_Z_REPRESENTATION_VERSION: int = 6
 
     def __init__(
         self,

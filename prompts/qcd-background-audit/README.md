@@ -448,6 +448,17 @@ needs `BREAK_POINT_ALL`, changing it is a production decision with a regeneratio
 measures that the sector *still* needs the knots, the new representation must declare some and the
 campaign's G1 claim narrows. Either way prompt 08 **reports and does not decide**.
 
+> **Settled, 2026-09-15: the user's decision is to keep both values as they are** —
+> `TkNumericIntegration.BREAK_POINT_ALL` and `GkNumericIntegration.BREAK_POINT_DISCONTINUITY` —
+> which is prompt 08's recommendation. Prompt 08 measured that the $T_k$ sector converges at all 50
+> production wavenumbers under either policy on the corrected background, so the distinction has
+> become vestigial; keeping the wider one costs **+0.99 %** in right-hand-side evaluations, while
+> changing it would move every stored QCD $T_k$ value by up to 2.86e-04 of the envelope and demand
+> a full regeneration. Recorded by prompt 13, which changed no value. Splitting at the equation of
+> state's genuine **jumps** remains emphatically load-bearing in both sectors (suppress the
+> declaration altogether and 19 of 50 QCD $T_k$ wavenumbers miss the criterion); it is only the
+> choice *between* the two kinds that no longer decides anything.
+
 **D6 — the question for the equation of state's authors (independent of everything here).** From
 audit §1, verbatim:
 
