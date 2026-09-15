@@ -422,20 +422,43 @@ class TkNumericIntegration(DatastoreObject):
             # still gets the warning, which defaults to on.
             warn_unresolved_osc=False,
             # this sector splits its integration at *every* point the cosmology declares
-            # non-smooth -- the equation-of-state jumps and the C2 knots of its T(z) spline
-            # alike -- and that is a decision taken on measurement, not a default inherited by
-            # omission (prompt 19 of prompts/GkTk-remedial, the user's decision of 2026-09-13).
+            # non-smooth -- the equation-of-state jumps and its kinks alike -- rather than at the
+            # jumps alone. Since prompt 07 of prompts/qcd-background-audit those two requests
+            # differ by a single point on this cosmology: EOS_T_LO = 0.002 GeV, the branch join at
+            # which w changes analytic form while the entropy factor does not step. Before it they
+            # differed by four hundred, and the reason the value is what it is has changed
+            # completely.
             #
-            # Necessary: with the jumps alone, 3 of the 50 production wavenumbers stay above the
-            # campaign's reference-convergence criterion on QCD_Cosmology -- worst 1.97e-07 of
-            # the envelope against 3.4e-08 -- and adding the knots takes them to 4.65e-09 or
-            # better (docs/gktk-remedial/TK-NUMERIC-ATOL-SWEEP.md §9.7).
+            # Prompt 19 of prompts/GkTk-remedial chose BREAK_POINT_ALL because it was *necessary*:
+            # with the jumps alone, 3 of the 50 production wavenumbers stayed above the campaign's
+            # reference-convergence criterion on QCD_Cosmology -- worst 1.97e-07 of the envelope
+            # against 3.4e-08 -- and declaring the 404 interior knots of the T(z) spline as well
+            # took them to 4.65e-09 or better (docs/gktk-remedial/TK-NUMERIC-ATOL-SWEEP.md §9.7,
+            # §10.1). Those knots were an artefact of a temperature representation that carried a
+            # 1e-04-level error at them; prompts 04-06 removed the error and prompt 07 removed the
+            # knots from the declaration.
             #
-            # Affordable here and only here: TkNumericIntegration is one object per wavenumber,
-            # 50 per model, so the +219 % in right-hand-side evaluations is ~34 s of compute for
-            # the whole sector on QCD. GkNumericIntegration, which is ~65,000 objects per model
-            # and converges at every wavenumber on every model with the jumps alone (worst
-            # 8.41e-09, §9.1), asks for the jumps only for exactly that reason.
+            # Re-measured on the corrected background (prompt 08 of prompts/qcd-background-audit,
+            # docs/qcd-background-audit/PER-SECTOR-POLICY.md §2, §2b, §3): this sector converges at
+            # all 50 production wavenumbers under *either* policy. Worst drift 7.08e-09 under
+            # BREAK_POINT_ALL and 8.85e-09 under BREAK_POINT_DISCONTINUITY, none above the
+            # criterion, median 1.96e-09 either way; and the three wavenumbers prompt 19's decision
+            # turned on read 8.89e-10, 2.03e-09 and 5.60e-10 with the jumps alone, against
+            # 6.1e-08, 2.0e-07 and 3.5e-08 then. **What the knots were standing in for was the
+            # representation's own defect, not anything this integrator needed.**
+            #
+            # So the value is retained, but not for prompt 19's reason. It is retained because it
+            # now costs essentially nothing -- 8,897 -> 8,986 right-hand-side evaluations per
+            # object, +0.99 %, against +220 % when the knot lattice was declared -- and because
+            # the mechanism must exist for an equation of state that declares more non-smooth
+            # points than this one does. The per-sector distinction is, on today's cosmology,
+            # vestigial.
+            #
+            # It is not free to *change*, which is why prompt 08 reported rather than decided: the
+            # two policies still give different numbers on QCD, by up to 2.86e-04 of the envelope,
+            # and this value is in the datastore lookup key (prompt 20 below), so moving it has a
+            # regeneration attached. That is prompts/qcd-background-audit/README.md §7 D5, and it
+            # is the user's.
             #
             # Read from the class constant rather than written as a literal: since prompt 20 the
             # same value is also stored in, and filtered on by, the datastore lookup key, and the

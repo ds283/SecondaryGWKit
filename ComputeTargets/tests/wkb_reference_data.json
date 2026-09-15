@@ -1,6 +1,6 @@
 {
  "schema_version": 1,
- "generated": "2026-09-10",
+ "generated": "2026-09-15",
  "generator": "docs/gktk-remedial/generate_references.py",
  "campaign": "prompts/GkTk-remedial (prompt 01)",
  "environment": {
@@ -861,204 +861,204 @@
   "QCDModel": {
    "tau_minus_top": [
     0.0,
-    6.947296150348801e-10,
-    6.921541162859048e-08,
-    5.255161873281516e-06,
-    0.0004950487721734122,
-    0.046172096724216835,
-    0.46137522893356425,
-    42.85245882879997,
-    298.47174915687486,
-    1330.5747056846203,
-    4522.719327447015,
-    10763.720510095116,
-    13728.148710755544
+    6.947420394888503e-10,
+    6.921632934729523e-08,
+    5.2551681466583466e-06,
+    0.0004950523924321699,
+    0.046172681078437666,
+    0.4613757287033827,
+    42.85245171435609,
+    298.4717201907771,
+    1330.5746596012484,
+    4522.719274975692,
+    10763.72045586514,
+    13728.148656362368
    ],
    "cs_tau_minus_top": [
     0.0,
-    3.979290762306303e-10,
-    3.92581845407879e-08,
-    2.9180232104736947e-06,
-    0.00028579559105555957,
-    0.02666466533442845,
-    0.2662450883562619,
-    22.98442535680135,
-    116.37605215382867,
-    278.71182243445617,
-    450.96686317662335,
-    581.5424395888036,
-    617.4474978554648
+    3.9793613363406913e-10,
+    3.925869664918546e-08,
+    2.9180271755804753e-06,
+    0.00028579768231889877,
+    0.026665002790100447,
+    0.2662453770947061,
+    22.98442219315459,
+    116.3760515317044,
+    278.7118486918832,
+    450.9669241565639,
+    581.5425277902306,
+    617.4475933429277
    ],
    "friction_F_minus_top": [
     -0.0,
-    -6.020752376760761,
-    -15.175759738584823,
-    -24.118925348905364,
-    -33.331681649233516,
-    -42.54597421261373,
-    -47.15167755640769,
-    -56.221313524775766,
-    -60.232203932434714,
-    -63.78810739001039,
-    -67.12803708117454,
-    -69.68769872707435,
-    -70.58504877781748
+    -6.020752254630318,
+    -15.175759459962995,
+    -24.118925802118408,
+    -33.33168210664302,
+    -42.54597466575453,
+    -47.15167801016992,
+    -56.221314030650014,
+    -60.23220454579529,
+    -63.78810804399435,
+    -67.12803774051046,
+    -69.68769938696514,
+    -70.5850494377619
    ],
    "rho_G": {
     "1.000000e+05": [
      {
       "index": 731,
       "z": 1006183010.6197172,
-      "value": -0.0004842831485959537
+      "value": -0.00047891376973333065
      },
      {
       "index": 931,
       "z": 10049433.576645004,
-      "value": -0.000541872536300931
+      "value": -0.0005399545700930031
      },
      {
       "index": 1031,
       "z": 1004324.1040406098,
-      "value": -0.0005419136504299455
+      "value": -0.0005399968335394565
      },
      {
       "index": 1231,
       "z": 10030.867413238584,
-      "value": -0.0005419936873296566
+      "value": -0.0005400768514490258
      },
      {
       "index": 1331,
       "z": 1002.4686317608628,
-      "value": -0.000542017372679023
+      "value": -0.000540100536290802
      },
      {
       "index": 1431,
       "z": 100.18509030816094,
-      "value": -0.000542025910789157
+      "value": -0.0005401090743908879
      },
      {
       "index": 1531,
       "z": 10.01233555051399,
-      "value": -0.0005420285706880512
+      "value": -0.0005401117342888702
      },
      {
       "index": 1631,
       "z": 1.0006165874356605,
-      "value": -0.0005420296273066944
+      "value": -0.0005401127909074589
      },
      {
       "index": 1731,
       "z": 0.1,
-      "value": -0.0005420304679171773
+      "value": -0.000540113631517943
      }
     ],
     "1.000000e+07": [
      {
       "index": 531,
       "z": 100742419275.51031,
-      "value": 1.7328251029228722e-05
+      "value": 1.708599261950025e-05
      },
      {
       "index": 731,
       "z": 1006183010.6197172,
-      "value": 3.060925783508174e-05
+      "value": 3.0453350198846963e-05
      },
      {
       "index": 931,
       "z": 10049433.576645004,
-      "value": 3.003336611743856e-05
+      "value": 2.984294445161401e-05
      },
      {
       "index": 1031,
       "z": 1004324.1040406098,
-      "value": 3.0032954976148415e-05
+      "value": 2.9842521817149474e-05
      },
      {
       "index": 1231,
       "z": 10030.867413238584,
-      "value": 3.0032154607151303e-05
+      "value": 2.984172163805378e-05
      },
      {
       "index": 1331,
       "z": 1002.4686317608628,
-      "value": 3.003191775365764e-05
+      "value": 2.9841484789636018e-05
      },
      {
       "index": 1431,
       "z": 100.18509030816094,
-      "value": 3.00318323725563e-05
+      "value": 2.984139940863516e-05
      },
      {
       "index": 1531,
       "z": 10.01233555051399,
-      "value": 3.0031805773567357e-05
+      "value": 2.9841372809655337e-05
      },
      {
       "index": 1631,
       "z": 1.0006165874356605,
-      "value": 3.0031795207380925e-05
+      "value": 2.984136224346945e-05
      },
      {
       "index": 1731,
       "z": 0.1,
-      "value": 3.0031786801276096e-05
+      "value": 2.9841353837364608e-05
      }
     ],
     "3.000000e+08": [
      {
       "index": 331,
       "z": 10086669059569.818,
-      "value": -9.789007865659842e-06
+      "value": -9.83718590069099e-06
      },
      {
       "index": 531,
       "z": 100742419275.51031,
-      "value": -0.0011806298648192731
+      "value": -0.0012729062964899668
      },
      {
       "index": 731,
       "z": 1006183010.6197172,
-      "value": -0.0011801871639278603
+      "value": -0.001272460717335389
      },
      {
       "index": 931,
       "z": 10049433.576645004,
-      "value": -0.0011802063603184411
+      "value": -0.0012724810641936226
      },
      {
       "index": 1031,
       "z": 1004324.1040406098,
-      "value": -0.0011802063740231508
+      "value": -0.001272481078281438
      },
      {
       "index": 1231,
       "z": 10030.867413238584,
-      "value": -0.0011802064007021174
+      "value": -0.0012724811049540745
      },
      {
       "index": 1331,
       "z": 1002.4686317608628,
-      "value": -0.0011802064085972338
+      "value": -0.0012724811128490218
      },
      {
       "index": 1431,
       "z": 100.18509030816094,
-      "value": -0.0011802064114432706
+      "value": -0.001272481115695055
      },
      {
       "index": 1531,
       "z": 10.01233555051399,
-      "value": -0.0011802064123299036
+      "value": -0.0012724811165816879
      },
      {
       "index": 1631,
       "z": 1.0006165874356605,
-      "value": -0.0011802064126821097
+      "value": -0.001272481116933894
      },
      {
       "index": 1731,
       "z": 0.1,
-      "value": -0.0011802064129623133
+      "value": -0.0012724811172140976
      }
     ]
    },
@@ -1067,179 +1067,179 @@
      {
       "index": 731,
       "z": 1006183010.6197172,
-      "value": -0.0521152019538003
+      "value": -0.05210645236574842
      },
      {
       "index": 931,
       "z": 10049433.576645004,
-      "value": -0.08829533173545497
+      "value": -0.08829105829554475
      },
      {
       "index": 1031,
       "z": 1004324.1040406098,
-      "value": -0.08863325245967124
+      "value": -0.08862898110742991
      },
      {
       "index": 1231,
       "z": 10030.867413238584,
-      "value": -0.08867068153342196
+      "value": -0.08866641015680835
      },
      {
       "index": 1331,
       "z": 1002.4686317608628,
-      "value": -0.08867118873332847
+      "value": -0.08866691735574768
      },
      {
       "index": 1431,
       "z": 100.18509030816094,
-      "value": -0.08867140943206478
+      "value": -0.08866713805440785
      },
      {
       "index": 1531,
       "z": 10.01233555051399,
-      "value": -0.08867159753177661
+      "value": -0.08866732615407452
      },
      {
       "index": 1631,
       "z": 1.0006165874356605,
-      "value": -0.08867174902078206
+      "value": -0.08866747764304662
      },
      {
       "index": 1731,
       "z": 0.1,
-      "value": -0.08867182268758814
+      "value": -0.08866755130983785
      }
     ],
     "1.000000e+07": [
      {
       "index": 531,
       "z": 100742419275.51031,
-      "value": -0.05453856024449471
+      "value": -0.054538974387946804
      },
      {
       "index": 731,
       "z": 1006183010.6197172,
-      "value": -0.08866000334585923
+      "value": -0.08866024282479175
      },
      {
       "index": 931,
       "z": 10049433.576645004,
-      "value": -0.08902172597453793
+      "value": -0.0890220101549462
      },
      {
       "index": 1031,
       "z": 1004324.1040406098,
-      "value": -0.08902510518169203
+      "value": -0.08902538938297698
      },
      {
       "index": 1231,
       "z": 10030.867413238584,
-      "value": -0.08902547947242945
+      "value": -0.08902576367347068
      },
      {
       "index": 1331,
       "z": 1002.4686317608628,
-      "value": -0.08902548454442852
+      "value": -0.08902576874546007
      },
      {
       "index": 1431,
       "z": 100.18509030816094,
-      "value": -0.08902548675141587
+      "value": -0.08902577095244668
      },
      {
       "index": 1531,
       "z": 10.01233555051399,
-      "value": -0.089025488632413
+      "value": -0.08902577283344335
      },
      {
       "index": 1631,
       "z": 1.0006165874356605,
-      "value": -0.08902549014730304
+      "value": -0.08902577434833306
      },
      {
       "index": 1731,
       "z": 0.1,
-      "value": -0.0890254908839711
+      "value": -0.08902577508500098
      }
     ],
     "3.000000e+08": [
      {
       "index": 331,
       "z": 10086669059569.818,
-      "value": -0.0012584487790411603
+      "value": -0.001262232601268648
      },
      {
       "index": 531,
       "z": 100742419275.51031,
-      "value": -0.09195380925209766
+      "value": -0.09212192529443186
      },
      {
       "index": 731,
       "z": 1006183010.6197172,
-      "value": -0.0930909629057466
+      "value": -0.09325907313076044
      },
      {
       "index": 931,
       "z": 10049433.576645004,
-      "value": -0.0931030203264408
+      "value": -0.09327113204150363
      },
      {
       "index": 1031,
       "z": 1004324.1040406098,
-      "value": -0.09310313296667927
+      "value": -0.093271244682438
      },
      {
       "index": 1231,
       "z": 10030.867413238584,
-      "value": -0.09310314544303717
+      "value": -0.09327125715878778
      },
      {
       "index": 1331,
       "z": 1002.4686317608628,
-      "value": -0.09310314561210381
+      "value": -0.0932712573278541
      },
      {
       "index": 1431,
       "z": 100.18509030816094,
-      "value": -0.09310314568567006
+      "value": -0.09327125740142031
      },
      {
       "index": 1531,
       "z": 10.01233555051399,
-      "value": -0.09310314574836996
+      "value": -0.09327125746412021
      },
      {
       "index": 1631,
       "z": 1.0006165874356605,
-      "value": -0.0931031457988663
+      "value": -0.09327125751461653
      },
      {
       "index": 1731,
       "z": 0.1,
-      "value": -0.0931031458234219
+      "value": -0.09327125753917212
      }
     ]
    },
    "rho_anchor_z": {
-    "1.000000e+05": 2494440753.9406724,
-    "1.000000e+07": 259819570977.761,
-    "3.000000e+08": 10235011165104.672
+    "1.000000e+05": 2494432229.67555,
+    "1.000000e+07": 259819577240.36722,
+    "3.000000e+08": 10235454453232.715
    },
    "primitives_at_rho_anchor": {
     "1.000000e+05": {
-     "tau_minus_top": 0.00020274997870366372,
-     "cs_tau_minus_top": 0.00011697641818386949,
-     "friction_F_minus_top": -31.51555548907776
+     "tau_minus_top": 0.00020275501867790316,
+     "cs_tau_minus_top": 0.00011697932941215499,
+     "friction_F_minus_top": -31.51556278232834
     },
     "1.000000e+07": {
-     "tau_minus_top": 2.1396508041743824e-06,
-     "cs_tau_minus_top": 1.1631790365458453e-06,
-     "friction_F_minus_top": -22.249520413619756
+     "tau_minus_top": 2.139654960834537e-06,
+     "cs_tau_minus_top": 1.1631817869096735e-06,
+     "friction_F_minus_top": -22.249520806538325
     },
     "3.000000e+08": {
-     "tau_minus_top": 6.823100409106208e-08,
-     "cs_tau_minus_top": 3.8706810068391335e-08,
-     "friction_F_minus_top": -15.14698992974411
+     "tau_minus_top": 6.822898035665005e-08,
+     "cs_tau_minus_top": 3.870567464587685e-08,
+     "friction_F_minus_top": -15.146904305170755
     }
    },
    "short_baseline": [
@@ -1249,15 +1249,15 @@
      "z_node_lo": 981456.8466782179,
      "z_fraction_offset": 0.37,
      "z_fraction": 995801.773808043,
-     "delta_tau_full": 0.010739684803814917,
-     "delta_tau_fraction": 0.003944932127406753,
+     "delta_tau_full": 0.010739680872821376,
+     "delta_tau_fraction": 0.003944930781478832,
      "agreement_full": {
       "quad_epsrel_1e-12": 0.0,
-      "gauss40_bisect": 1.6152461712475996e-15
+      "gauss40_bisect": 1.4537220862215218e-15
      },
      "agreement_fraction": {
       "quad_epsrel_1e-12": 0.0,
-      "gauss40_bisect": 1.319204047079878e-15
+      "gauss40_bisect": 1.319204497164723e-15
      }
     },
     {
@@ -1266,15 +1266,15 @@
      "z_node_lo": 97.90399575438673,
      "z_fraction_offset": 0.37,
      "z_fraction": 99.33501727843415,
-     "delta_tau_full": 17.850225276552734,
-     "delta_tau_fraction": 6.580199954000602,
+     "delta_tau_full": 17.850225087391493,
+     "delta_tau_fraction": 6.580199886469151,
      "agreement_full": {
       "quad_epsrel_1e-12": 0.0,
-      "gauss40_bisect": 3.9805813358189807e-16
+      "gauss40_bisect": 1.9902906890008687e-16
      },
      "agreement_fraction": {
       "quad_epsrel_1e-12": 0.0,
-      "gauss40_bisect": 4.0493226311160997e-16
+      "gauss40_bisect": 5.399096896898129e-16
      }
     },
     {
@@ -1283,139 +1283,137 @@
      "z_node_lo": 0.977833745787319,
      "z_fraction_offset": 0.37,
      "z_fraction": 0.9921565087376699,
-     "delta_tau_full": 56.9766239919491,
-     "delta_tau_fraction": 21.0683151601332,
+     "delta_tau_full": 56.97662398340371,
+     "delta_tau_fraction": 21.06831515667223,
      "agreement_full": {
       "quad_epsrel_1e-12": 0.0,
       "gauss40_bisect": 0.0
      },
      "agreement_fraction": {
       "quad_epsrel_1e-12": 0.0,
-      "gauss40_bisect": 1.6862827671778762e-16
+      "gauss40_bisect": 1.686282767454888e-16
      }
     }
    ],
-   "method": "converged adaptive quadrature of the double-precision integrand: SciPy quad in u = log(1+z) per production interval at epsabs=0, epsrel=1.5e-14, summed with math.fsum; cross-checked against the same at epsrel=1e-12 and against composite Gauss-Legendre order 40 with uniform bisection to rtol=1e-14 (max 8 levels). H(z) here is itself a spline evaluation of T(z), so no higher-precision reference exists.",
    "reference_floor": {
     "tau_minus_top": {
      "agreement": {
       "quad_epsrel_1e-12": 0.0,
-      "gauss40_bisect": 3.975021195947723e-16
+      "gauss40_bisect": 1.9875106058487044e-15
      },
      "diagnostics": {
-      "quad_max_reported_abserr": 7.562493329764017e-13,
-      "quad_intervals_with_warnings": 29,
+      "quad_max_reported_abserr": 7.562493329604182e-13,
+      "quad_intervals_with_warnings": 1,
       "quad_intervals": 1731,
-      "gauss40_worst_interval_relative_change": 5.345107827917267e-08,
+      "gauss40_worst_interval_relative_change": 3.2816107832057417e-07,
       "gauss40_worst_level": 8
      }
     },
     "cs_tau_minus_top": {
      "agreement": {
-      "quad_epsrel_1e-12": 2.025362835352379e-15,
-      "gauss40_bisect": 6.2602124001800815e-15
+      "quad_epsrel_1e-12": 0.0,
+      "gauss40_bisect": 2.4488474131240408e-14
      },
      "diagnostics": {
-      "quad_max_reported_abserr": 3.676337449404114e-14,
-      "quad_intervals_with_warnings": 30,
+      "quad_max_reported_abserr": 1.9420757531488702e-14,
+      "quad_intervals_with_warnings": 1,
       "quad_intervals": 1731,
-      "gauss40_worst_interval_relative_change": 5.344681835414966e-08,
+      "gauss40_worst_interval_relative_change": 3.2813489028105264e-07,
       "gauss40_worst_level": 8
      }
     },
     "friction_F_minus_top": {
      "agreement": {
-      "quad_epsrel_1e-12": 4.0265906055923848e-16,
-      "gauss40_bisect": 1.4447407092865475e-12
+      "quad_epsrel_1e-12": 0.0,
+      "gauss40_bisect": 2.5156124573237847e-12
      },
      "diagnostics": {
-      "quad_max_reported_abserr": 8.260682575525674e-16,
-      "quad_intervals_with_warnings": 1,
+      "quad_max_reported_abserr": 5.115063196918295e-16,
+      "quad_intervals_with_warnings": 0,
       "quad_intervals": 1731,
-      "gauss40_worst_interval_relative_change": 3.5795937959673063e-09,
+      "gauss40_worst_interval_relative_change": 1.9834012553379487e-08,
       "gauss40_worst_level": 8
      }
     },
     "rho_G[1.000000e+05]": {
      "agreement": {
-      "quad_epsrel_1e-12": 5.000651423948973e-15,
-      "gauss40_bisect": 2.1218484085620544e-10
+      "quad_epsrel_1e-12": 0.0,
+      "gauss40_bisect": 1.1749074537747236e-12
      },
      "diagnostics": {
-      "quad_max_reported_abserr": 2.705079651365794e-19,
-      "quad_intervals_with_warnings": 53,
+      "quad_max_reported_abserr": 1.5789603113935025e-19,
+      "quad_intervals_with_warnings": 122,
       "quad_intervals": 1040,
-      "gauss40_worst_interval_relative_change": 1.707915991482217e-07,
+      "gauss40_worst_interval_relative_change": 4.695457168970407e-06,
       "gauss40_worst_level": 8
      }
     },
     "rho_T[1.000000e+05]": {
      "agreement": {
-      "quad_epsrel_1e-12": 1.0955511199647306e-15,
-      "gauss40_bisect": 6.9758435027239965e-12
+      "quad_epsrel_1e-12": 1.5651484227099308e-16,
+      "gauss40_bisect": 4.298946218204686e-11
      },
      "diagnostics": {
-      "quad_max_reported_abserr": 2.9954415510708734e-17,
-      "quad_intervals_with_warnings": 19,
+      "quad_max_reported_abserr": 2.1711329554882723e-17,
+      "quad_intervals_with_warnings": 1,
       "quad_intervals": 1040,
-      "gauss40_worst_interval_relative_change": 4.404951776598894e-08,
+      "gauss40_worst_interval_relative_change": 3.3042764300578847e-07,
       "gauss40_worst_level": 8
      }
     },
     "rho_G[1.000000e+07]": {
      "agreement": {
-      "quad_epsrel_1e-12": 1.8050910184928376e-15,
-      "gauss40_bisect": 3.8299631503060436e-11
+      "quad_epsrel_1e-12": 4.541525572174133e-16,
+      "gauss40_bisect": 4.2686139467282584e-11
      },
      "diagnostics": {
-      "quad_max_reported_abserr": 1.0463327165715313e-19,
-      "quad_intervals_with_warnings": 61,
+      "quad_max_reported_abserr": 1.0291628592964167e-19,
+      "quad_intervals_with_warnings": 122,
       "quad_intervals": 1242,
-      "gauss40_worst_interval_relative_change": 1.7079156343244887e-07,
+      "gauss40_worst_interval_relative_change": 4.6954571688591276e-06,
       "gauss40_worst_level": 8
      }
     },
     "rho_T[1.000000e+07]": {
      "agreement": {
-      "quad_epsrel_1e-12": 6.547193193103207e-15,
-      "gauss40_bisect": 6.734255855763299e-14
+      "quad_epsrel_1e-12": 1.5588505457620643e-16,
+      "gauss40_bisect": 2.260333291354993e-14
      },
      "diagnostics": {
-      "quad_max_reported_abserr": 2.215573139191064e-17,
-      "quad_intervals_with_warnings": 25,
+      "quad_max_reported_abserr": 2.2152552006399156e-17,
+      "quad_intervals_with_warnings": 1,
       "quad_intervals": 1242,
-      "gauss40_worst_interval_relative_change": 4.404944743576504e-08,
+      "gauss40_worst_interval_relative_change": 3.304268049536227e-07,
       "gauss40_worst_level": 8
      }
     },
     "rho_G[3.000000e+08]": {
      "agreement": {
-      "quad_epsrel_1e-12": 8.819085154550168e-15,
-      "gauss40_bisect": 8.063491660840011e-11
+      "quad_epsrel_1e-12": 0.0,
+      "gauss40_bisect": 2.664731574035965e-07
      },
      "diagnostics": {
-      "quad_max_reported_abserr": 6.042165815809893e-19,
-      "quad_intervals_with_warnings": 68,
+      "quad_max_reported_abserr": 1.8759215786538753e-19,
+      "quad_intervals_with_warnings": 122,
       "quad_intervals": 1401,
-      "gauss40_worst_interval_relative_change": 1.7079156364144107e-07,
+      "gauss40_worst_interval_relative_change": 0.00018959081332994756,
       "gauss40_worst_level": 8
      }
     },
     "rho_T[3.000000e+08]": {
      "agreement": {
-      "quad_epsrel_1e-12": 1.4905820512375458e-16,
-      "gauss40_bisect": 9.603820156123508e-13
+      "quad_epsrel_1e-12": 0.0,
+      "gauss40_bisect": 7.829675210368195e-09
      },
      "diagnostics": {
-      "quad_max_reported_abserr": 2.1638469682294332e-17,
-      "quad_intervals_with_warnings": 28,
+      "quad_max_reported_abserr": 2.1642191455197625e-17,
+      "quad_intervals_with_warnings": 0,
       "quad_intervals": 1401,
-      "gauss40_worst_interval_relative_change": 4.404944746101022e-08,
+      "gauss40_worst_interval_relative_change": 1.740064412095851e-05,
       "gauss40_worst_level": 8
      }
     }
    },
-   "build_time_seconds": 0.19197216699831188,
    "grid": {
     "z_init": 2.0636395964161516e+16,
     "z_end": 0.1,
@@ -1479,7 +1477,9 @@
      "z": 0.1
     }
    ],
-   "generation_time_seconds": 148.5209337079432
+   "method": "converged adaptive quadrature of the double-precision integrand: SciPy quad in u = log(1+z) per production interval at epsabs=0, epsrel=1.5e-14, summed with math.fsum; cross-checked against the same at epsrel=1e-12 and against composite Gauss-Legendre order 40 with uniform bisection to rtol=1e-14 (max 8 levels). H(z) here is a spline evaluation of T(z), but since prompts/qcd-background-audit/ prompt 06 that representation is segmented at the redshifts where T(z) jumps and reproduces the defining equation T gs(T)^(1/3) = T_CMB gs(T_CMB)^(1/3) (1+z), root-solved to rtol=1e-14, to 6.807e-11 max / 3.237e-15 p90 / 1.765e-16 median on the audit's 640-point probe set (H(z) itself to 1.690e-10 / 6.276e-15 / 2.804e-16 on the production grid): this reference is therefore no longer circular, and the accurate root solve is a genuine higher-precision oracle for the background it is built on. | regenerated by docs/qcd-background-audit/generate_qcd_references.py on 2026-09-14, T_Z_REPRESENTATION_VERSION=2 | regenerated by docs/qcd-background-audit/generate_qcd_references.py on 2026-09-14, T_Z_REPRESENTATION_VERSION=3 | regenerated by docs/qcd-background-audit/generate_qcd_references.py on 2026-09-14, T_Z_REPRESENTATION_VERSION=4 | regenerated by docs/qcd-background-audit/generate_qcd_references.py on 2026-09-15, T_Z_REPRESENTATION_VERSION=6",
+   "build_time_seconds": 0.6238617501221597,
+   "generation_time_seconds": 196.98894400009885
   }
  },
  "baselines": {

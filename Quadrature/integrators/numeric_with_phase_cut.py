@@ -25,10 +25,14 @@ see :data:`BREAK_POINT_STANDOFF`.
 here: a cosmology that declares nothing -- every LambdaCDM model, ``RadiationModel``, every test
 stand-in -- is treated as smooth and takes the single-``solve_ivp`` path this module has always
 taken, reproducing its numbers bit for bit. The distinction between a jump and a kink is the
-cosmology's to make, and it matters here in a way it does not in a quadrature: a fixed-order
-Gauss-Legendre panel has to be split at *every* non-smooth point, kinks included, and on
-``QCD_Cosmology``'s production range there are 404 of those (the ``T(z)`` spline knots) against 3
-jumps. An adaptive stepper absorbs a C2 point at the cost of a few extra steps.
+cosmology's to make: a fixed-order Gauss-Legendre panel has to be split at *every* non-smooth
+point, kinks included, while an adaptive stepper absorbs a C2 point at the cost of a few extra
+steps. On ``QCD_Cosmology``'s production range the two sets are now **3** points and **2** -- the
+redshifts at which ``T(z)`` reaches an equation-of-state branch temperature, and the subset of
+those at which ``g_s`` actually steps. They were 404 and 3 when the cosmology also declared the
+knots of its own ``T(z)`` tabulation, and 2,414 and 3 after that tabulation was refined;
+``prompts/qcd-background-audit/`` prompt 07 removed the knots from the declaration, on the
+measurement recorded at ``LambdaCDM_GenericEOS.integration_break_points``.
 
 **Which kind is asked for is the caller's decision, not this module's**
 (``break_point_kind``, prompt 19 of ``prompts/GkTk-remedial``; the user's decision of
@@ -103,9 +107,10 @@ def declared_discontinuities_in_z(
 
     ``kind`` defaults to ``BREAK_POINT_DISCONTINUITY`` -- the points at which a background quantity
     *jumps*, which is the minimum an adaptive Runge-Kutta method needs and what this module asked
-    for unconditionally before prompt 19. ``BREAK_POINT_ALL`` additionally returns the C2 points
-    (the ``T(z)`` spline knots); see this module's docstring for which sector asks for which, and
-    why that is a per-caller decision.
+    for unconditionally before prompt 19. ``BREAK_POINT_ALL`` additionally returns the points at
+    which a quantity is merely kinked, which on ``QCD_Cosmology`` is the single equation-of-state
+    join where ``w`` changes analytic form without ``g_s`` stepping: 3 points against 2. See this
+    module's docstring for which sector asks for which, and why that is a per-caller decision.
 
     Duck-typed throughout: a model with no ``cosmology`` attribute, or a cosmology that does not
     implement ``integration_break_points``, or one whose equation of state declares nothing of the
@@ -172,18 +177,24 @@ def _separated_boundaries(
     :data:`BREAK_POINT_STANDOFF` relative in ``(1+z)``. A boundary that does not clear its
     predecessor is dropped; the one already accepted serves for both.
 
-    **Why this cannot be left to chance, and why it does not fire in production.** A caller asking
-    for ``BREAK_POINT_ALL`` gets ~125 boundaries inside one production numeric range on
-    ``QCD_Cosmology`` rather than the single jump the discontinuity policy yields, so "two declared
-    points closer together than the standoff" stops being hypothetical by inspection. If it
-    happened, the standoff would carry one boundary onto or past its neighbour and the segment
-    between them would be of zero or negative length -- a ``solve_ivp`` call over a degenerate
-    ``t_span``. Measured, it does not happen: the ``T(z)`` spline's knots are uniform in
-    ``u = log(1+z)`` at a spacing of **2.85e-02**, and the closest a declared temperature crossing
-    comes to a knot anywhere in ``(z = 0.1, 1e14)`` is **3.4e-03** -- nine orders above the 1e-12
-    standoff. The guard is therefore inert on every production geometry, and exists so that a
-    future equation of state declaring two nearby points degrades into one boundary instead of a
-    solver error.
+    **Why this cannot be left to chance, and why it does not fire in production.** If two declared
+    points were closer together than the standoff, the standoff would carry one boundary onto or
+    past its neighbour and the segment between them would be of zero or negative length -- a
+    ``solve_ivp`` call over a degenerate ``t_span``.
+
+    Measured, it does not happen, and since ``prompts/qcd-background-audit/`` prompt 07 it cannot
+    come close to happening. Every point either ``kind`` declares on ``QCD_Cosmology`` is a
+    crossing of an equation-of-state branch temperature, and there are 3 of them in
+    ``(z = 0.1, 1e14)``: ``u = 17.5658``, ``23.1975`` and ``27.4854``. The closest pair is
+    **4.288** apart in ``u``, a factor of 72.8 in ``(1+z)``, against a standoff of a relative
+    **1e-12** -- thirteen orders of margin -- and no numeric range holds more than three of them.
+    The figures this paragraph used to quote (~125 boundaries in one range, a closest approach of
+    3.4e-03 between a crossing and a knot) were about the ``T(z)`` tabulation's knot lattice, which
+    is no longer declared.
+
+    The guard nevertheless stays. It exists so that a future equation of state declaring two
+    nearby branch temperatures degrades into one boundary instead of a solver error, and that is
+    a property of the *equation of state*, which this module does not control.
 
     Dropping rather than merging is deliberate: a break point is never moved on to a sample or on
     to another break point (prompt 18 §2.3 item 1), so the only safe repairs are "keep it" and
@@ -536,7 +547,7 @@ def numeric_with_phase_cut(
     """
     ``break_point_kind`` names which kind of declared non-smoothness this call splits its
     integration at -- ``BREAK_POINT_DISCONTINUITY`` (the points at which a background quantity
-    jumps) or ``BREAK_POINT_ALL`` (those plus the C2 points, the ``T(z)`` spline knots). It is
+    jumps) or ``BREAK_POINT_ALL`` (those plus the points at which one is merely kinked). It is
     handed straight to :func:`declared_discontinuities_in_z` and reaches the cosmology as its
     ``kind``; this module never names a temperature, a model or an equation of state, and a
     caller chooses a *kind*, never a point.

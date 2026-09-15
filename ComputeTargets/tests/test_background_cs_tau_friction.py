@@ -117,7 +117,31 @@ CS_TAU_SHORT_BASELINE_REL_TOL = 1.0e-13
 # the single-limb friction floor: ~1.5 ulp of max |F| = 70.6 on the production grid
 FRICTION_SHORT_BASELINE_ABS_TOL = 2.0e-14
 
-# prompt 04 §3 test 3: the QCD references carry their own floor
+# prompt 04 §3 test 3: the QCD references carry their own floor -- here
+# references["convergence"]["models"]["QCDModel"]["branch+knots"]["cs_tau"]["json_vs_reference_max_rel"],
+# "how well the JSON's cs_tau agrees with a converged adaptive reference". What is scored against
+# it in test_qcd_checkpoints is the same kind of quantity one level down: how well the model's
+# fixed-order Gauss table agrees with the JSON.
+#
+# Loosened 3.0 -> 8.3 by prompts/qcd-background-audit/ prompt 05, for
+# [01-convergence-block-has-a-separate-generator] (docs/OPEN_ISSUES.md) and nothing else: that
+# commit regenerated the JSON's QCD block with
+# docs/qcd-background-audit/generate_qcd_references.py, but the floor sits in the top-level
+# convergence block, which only docs/gktk-remedial/residual_convergence.py writes and which has
+# not been re-run since the background moved. Numerator and denominator are therefore measured on
+# two different backgrounds. Measured: 2.186e-14 (prompt 04 tree) -> 1.5501e-13 here, against a
+# floor still recorded as 1.887e-14; 1.5501e-13/1.887e-14 = 8.213. Both are at the 1e-13 level, a
+# few hundred ulp of a cumulative quadrature over twenty decades, and the worst point moves from
+# z = 1.005e7 to z = 1.007e11. The companion friction_F assertion below is scored against
+# FRICTION_REL_TOL rather than this floor and still passes untouched (6.525e-14 against 1e-13).
+# **Taken back to 3.0 by prompt 06, one prompt earlier than expected**, and not because the block
+# was regenerated -- it still has not been -- but because segmenting the representation at the
+# jumps moved the numerator by two orders: 1.5501e-13 -> 2.212e-15, measured at z = 1.005e+07
+# against the same recorded floor of 1.887e-14. The model's fixed-order table now agrees with the
+# JSON an order *below* the floor recorded for the JSON itself, where prompt 05 sat eight times
+# above it. Prompt 08 still re-runs residual_convergence.py and re-measures both sides;
+# QCD_BREAK_POINT_ALIGNMENT_TOL in test_background_tau.py is the one figure of the three that
+# prompt 05 loosened that this prompt could not take back.
 QCD_FLOOR_FACTOR = 3.0
 
 # prompt 04 §3 test 6: review §12.3 measures the friction ODE's amplitude error as 2.3e-7

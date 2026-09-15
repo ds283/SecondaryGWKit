@@ -36,12 +36,17 @@ from ComputeTargets.QuadSourceIntegral import QuadSourceIntegral
 MAIN_PY = Path(__file__).parents[2] / "main.py"
 
 
-def load_main_py_functions(names: Iterable[str]) -> dict:
+def load_main_py_functions(names: Iterable[str], extra_globals: dict = None) -> dict:
     """
     Compile the named top-level functions of main.py in isolation and return the namespace they
     were executed in. Only `datetime` and the names used in the extracted signatures'
     annotations are provided; if a function ever comes to need anything else from main.py's
     globals, this will fail with a NameError rather than silently test something else.
+
+    `extra_globals` supplies the rest for a function whose *body* needs a name from main.py's
+    import list -- `numpy`, say, or `_cosmology_break_points`. Pass the real object: the point of
+    this loader is to exercise main.py's own code, so a stub here would defeat it. It is used by
+    `test_source_grid.py` for the two grid helpers of prompt 11.
     """
     names = list(names)
     tree = ast.parse(MAIN_PY.read_text(), filename=str(MAIN_PY))
@@ -74,6 +79,8 @@ def load_main_py_functions(names: Iterable[str]) -> dict:
         "TkNumericIntegration": object,
         "TkWKBIntegration": object,
     }
+    if extra_globals is not None:
+        namespace.update(extra_globals)
     exec(code, namespace)
 
     return namespace

@@ -1,7 +1,20 @@
-from .redshift import redshift, redshift_array
+from .redshift import redshift, redshift_array, redshift_grid_digest
 from .wavenumber import (
     wavenumber,
     wavenumber_array,
     wavenumber_exit_time,
     wavenumber_exit_time_array,
+    SourceGrid,
+    build_z_sample,
+    SOURCE_GRID_BREAK_STANDOFF,
+    SOURCE_GRID_BREAK_HALF_WIDTH,
+    SOURCE_GRID_BREAK_REFINEMENT,
+    SOURCE_GRID_CONSUMER_TARGET_RAD,
+    SOURCE_GRID_CROSSING_MASK_U,
+    SOURCE_GRID_CUBIC_ERROR_CONST,
+    SOURCE_GRID_CURVATURE_FD_STEP_U,
+    SOURCE_GRID_CURVATURE_STEP_U,
+    SOURCE_GRID_MAX_SPACING_FACTOR,
+    SOURCE_GRID_SPLINE_EDGE_FACTOR,
+    SOURCE_GRID_SPLINE_EDGE_INTERVALS,
 )

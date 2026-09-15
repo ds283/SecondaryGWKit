@@ -28,6 +28,11 @@ from ComputeTargets import (
     BesselPhaseProxy,
     TkWKBIntegration,
 )
+from ComputeTargets.BackgroundModel import _cosmology_break_points
+from ComputeTargets.phase_residual import (
+    phase_residual_integrand,
+    residual_node_range,
+)
 from CosmologyConcepts import (
     wavenumber,
     redshift,
@@ -35,7 +40,17 @@ from CosmologyConcepts import (
     wavenumber_exit_time,
     wavenumber_exit_time_array,
     redshift_array,
+    redshift_grid_digest,
+    build_z_sample,
+    SOURCE_GRID_CONSUMER_TARGET_RAD,
+    SOURCE_GRID_CROSSING_MASK_U,
+    SOURCE_GRID_CUBIC_ERROR_CONST,
+    SOURCE_GRID_CURVATURE_FD_STEP_U,
+    SOURCE_GRID_CURVATURE_STEP_U,
+    SOURCE_GRID_SPLINE_EDGE_FACTOR,
+    SOURCE_GRID_SPLINE_EDGE_INTERVALS,
 )
+from CosmologyConcepts.wavenumber import SOURCE_GRID_CONSTRUCTION_VERSION
 from Datastore.SQL.ProfileAgent import ProfileAgent
 from Datastore.SQL.ShardedPool import ShardedPool
 from LiouvilleGreen.bessel_phase import bessel_phase
@@ -60,6 +75,7 @@ from config.sharding import (
     read_table_config,
     inventory_config,
 )
+from extract_common import run_label_tag, source_grid_construction_tag
 from tools.inventory_report import format_inventory_report
 from utilities import grouper, format_time, WallclockTimer
 
@@ -70,6 +86,21 @@ DEFAULT_RAY_ADDRESS = "auto"
 DEFAULT_SOURCE_SAMPLES_PER_LOG10_Z = 100
 DEFAULT_RESPONSE_SAMPLES_SPARSENESS = 12
 DEFAULT_ZEND = 0.1
+
+# The name of a run, when the user does not supply one (prompt 14 of
+# prompts/qcd-background-audit). It is carried as a store_tag by everything the run writes, and it
+# is also a *selection criterion*: every tagged lookup below filters on it, in the manner of
+# TkProductionTag / GkProductionTag, so that a run's objects are exactly the objects tagged with
+# its name.
+#
+# **It is deliberately a fixed string and not a generated unique one.** Because the label is in
+# the lookup key, a label that changed from run to run would make every unlabelled run miss every
+# object in the store and recompute a pipeline whose measured cost is 15,020 objects for a
+# single-model 5x5-wavenumber run (log 11 section 5). A fixed default instead means that
+# unlabelled runs all extend one run, which is the behaviour every run before prompt 14 had;
+# naming a run is then something the user opts into, and reusing a name deliberately -- to
+# complete or extend a run that was interrupted -- is the same gesture as not naming one at all.
+DEFAULT_RUN_LABEL = "default"
 
 MIN_NOTIFY_INTERVAL = 5 * 60
 
@@ -99,6 +130,17 @@ parser.add_argument(
     help="specify a label for this job (used to identify integrations and other numerical products)",
 )
 parser.add_argument(
+    "--run-label",
+    type=str,
+    default=DEFAULT_RUN_LABEL,
+    help=(
+        "name this run. The name is carried as a tag by every object the run writes and is part "
+        "of every lookup it makes, so a new name starts a new run and computes it from scratch, "
+        "while re-using a name extends the run of that name. extract_*.py selects on it with "
+        "--run-label"
+    ),
+)
+parser.add_argument(
     "--shards",
     type=int,
     default=DEFAULT_SHARDS,
@@ -120,7 +162,13 @@ parser.add_argument(
     "--source-samples-log10z",
     type=int,
     default=DEFAULT_SOURCE_SAMPLES_PER_LOG10_Z,
-    help="specify number of z-sample points per log10(z) for the source term",
+    help=(
+        "specify the base number of z-sample points per log10(z) for the source term; "
+        "the curvature criterion of docs/qcd-background-verification.md §10 may refine "
+        "individual intervals above this density, capped so that no interval is ever "
+        "coarser than this uniform lattice would have made it "
+        "(SOURCE_GRID_MAX_SPACING_FACTOR)"
+    ),
 )
 parser.add_argument(
     "--response-sparseness",
@@ -456,6 +504,325 @@ def format_unresolved_osc_summary(summary: dict, sector_label: str) -> List[str]
     return lines
 
 
+def cosmology_feature_redshifts(cosmology, z_end: float, z_init: float):
+    """
+    The redshifts in ``(z_end, z_init)`` that the source grid should be built around, as
+    ``(break_z, feature_z)``: the points at which the background loses smoothness, and the points
+    that are merely physically distinguished.
+
+    ``break_z`` are the crossings of the equation of state's branch temperatures, taken from
+    ``ComputeTargets.BackgroundModel._cosmology_break_points`` -- which is duck-typed, so a
+    cosmology that declares no ``integration_break_points`` (every LambdaCDM model,
+    RadiationModel, every test stand-in) gets an empty array. They are returned in u = log(1+z)
+    and converted to z here; that is the lossy direction (CLAUDE.md), but the recovered value is
+    only a sample *location*, never an equality comparison, and the straddling standoff
+    ``CosmologyConcepts.wavenumber.SOURCE_GRID_BREAK_STANDOFF`` clears the recovery granularity
+    (~ulp(u) = 3.6e-15 relative) by twelve orders of magnitude.
+
+    ``feature_z`` are matter-radiation and matter-Lambda equality, recomputed here from the
+    public ``omega_m`` / ``omega_r`` / ``omega_cc`` rather than imported from the model, which
+    computes them in its constructor and discards them (``LambdaCDM.py:73``,
+    ``LambdaCDM_GenericEOS.py:483``) -- and which prompt 11 may not modify. The closed form
+    agrees with ``LambdaCDM_GenericEOS``'s own root solve to 4e-13 relative in z on
+    ``QCD_Cosmology`` at production parameters, which is far below a grid interval; the samples
+    are markers of an epoch, not a claim about where equality is.
+
+    **``feature_z`` is empty when ``break_z`` is.** A cosmology that declares no non-smoothness
+    takes the unchanged code path entirely and gets the grid it has always had, element for
+    element (``prompts/qcd-background-audit/README.md`` section 0.5, section 2 (g): every
+    LambdaCDM, RadiationModel and stand-in number bit-identical is a campaign stop condition).
+    Adding two equality samples to those grids would cost 2 samples in 1,732 for no measured
+    accuracy -- the background is perfectly smooth at either equality -- and would break that
+    invariant, so the whole cosmology-aware path is gated on the cosmology declaring something.
+    """
+    break_u = _cosmology_break_points(cosmology, z_end, z_init)
+    break_z = [float(np.expm1(float(u))) for u in break_u]
+
+    if len(break_z) == 0:
+        return [], []
+
+    feature_z = []
+    omega_m = getattr(cosmology, "omega_m", None)
+    omega_r = getattr(cosmology, "omega_r", None)
+    omega_cc = getattr(cosmology, "omega_cc", None)
+    if omega_m is not None and omega_r is not None and omega_r > 0.0:
+        feature_z.append(float(omega_m / omega_r - 1.0))
+    if omega_cc is not None and omega_m is not None and omega_m > 0.0:
+        feature_z.append(float(pow(omega_cc / omega_m, 1.0 / 3.0) - 1.0))
+
+    return break_z, feature_z
+
+
+def pre_grid_background_proxy(cosmology):
+    """
+    A stand-in for ``BackgroundModel`` that exposes only the five accessors the Liouville-Green
+    phase residual needs, every one of them built from the cosmology *pointwise*.
+
+    ``populate_z_sample`` runs before any ``BackgroundModel`` exists -- a background model is
+    built **on** the source grid -- so a criterion that sets the grid's density may use only what
+    the cosmology supplies at a point. It supplies enough:
+    ``Hubble`` and ``wPerturbations`` are closed form on every production cosmology, and
+    ``epsilon = d ln H / du``, ``d_epsilon_dz`` and ``d_wPerturbations_dz`` are taken from the
+    cosmology's own closed forms where it has them (``LambdaCDM`` has all of them) and by central
+    differences in ``u = log(1+z)`` where it does not (``QCD_Cosmology`` has none of them).
+
+    **The substitution is measured, not assumed.** docs/qcd-background-verification.md section
+    10.1: ``epsilon`` from a central difference of the cosmology's pointwise ``Hubble`` agrees
+    with ``epsilon`` as a ``BackgroundModel`` supplies it -- a spline over the grid's own samples
+    on ``QCD_Cosmology`` -- to max 2.5e-09 (LambdaCDM), 3.9e-09 (QCD), median 8.1e-10, away from a
+    declared crossing. Inside a few stencil widths of a crossing it agrees with nothing, because
+    ``H`` genuinely steps there and no derivative of it exists; that neighbourhood is masked out
+    of the criterion (``SOURCE_GRID_CROSSING_MASK_U``) and is prompt 11's business instead.
+
+    Every accessor is memoised on its argument. The stencils below evaluate the same handful of
+    redshifts for every wavenumber and both sectors, so the cosmology is asked once and the
+    fifty-wavenumber envelope costs no more than the first case does.
+
+    :param cosmology: any object with ``Hubble(z)`` and ``wPerturbations(z)``
+    :return: an object with ``.cosmology`` and ``.functions``, duck-typed for
+        ``ComputeTargets.phase_residual``
+    """
+
+    def memoise(f):
+        cache = {}
+
+        def wrapper(z):
+            value = cache.get(z)
+            if value is None:
+                value = cache[z] = f(z)
+            return value
+
+        return wrapper
+
+    d = SOURCE_GRID_CURVATURE_FD_STEP_U
+
+    Hubble = memoise(cosmology.Hubble)
+    wPerturbations = memoise(cosmology.wPerturbations)
+
+    if hasattr(cosmology, "d_lnH_dz"):
+
+        def epsilon(z: float) -> float:
+            return (1.0 + z) * cosmology.d_lnH_dz(z)
+
+    else:
+
+        def epsilon(z: float) -> float:
+            u = np.log1p(z)
+            return (
+                np.log(Hubble(float(np.expm1(u + d))))
+                - np.log(Hubble(float(np.expm1(u - d))))
+            ) / (2.0 * d)
+
+    epsilon = memoise(epsilon)
+
+    if hasattr(cosmology, "d_lnH_dz") and hasattr(cosmology, "d2_lnH_dz2"):
+
+        def d_epsilon_dz(z: float) -> float:
+            return cosmology.d_lnH_dz(z) + (1.0 + z) * cosmology.d2_lnH_dz2(z)
+
+    else:
+
+        def d_epsilon_dz(z: float) -> float:
+            u = np.log1p(z)
+            de_du = (
+                epsilon(float(np.expm1(u + d))) - epsilon(float(np.expm1(u - d)))
+            ) / (2.0 * d)
+            return de_du / (1.0 + z)
+
+    if hasattr(cosmology, "d_wPerturbations_dz"):
+        d_wPerturbations_dz = cosmology.d_wPerturbations_dz
+    else:
+
+        def d_wPerturbations_dz(z: float) -> float:
+            u = np.log1p(z)
+            dw_du = (
+                wPerturbations(float(np.expm1(u + d)))
+                - wPerturbations(float(np.expm1(u - d)))
+            ) / (2.0 * d)
+            return dw_du / (1.0 + z)
+
+    class _Functions:
+        pass
+
+    functions = _Functions()
+    functions.Hubble = Hubble
+    functions.epsilon = epsilon
+    functions.d_epsilon_dz = memoise(d_epsilon_dz)
+    functions.wPerturbations = wPerturbations
+    functions.d_wPerturbations_dz = memoise(d_wPerturbations_dz)
+
+    class _Proxy:
+        pass
+
+    proxy = _Proxy()
+    proxy.cosmology = cosmology
+    proxy.functions = functions
+    return proxy
+
+
+def source_grid_spacing_profile(
+    cosmology, base_z_values, k_values, sectors=("Gk", "Tk")
+):
+    """
+    The base density of the source grid, as ``(u_profile, h_profile)``: at each sample of
+    ``u = log(1+z)``, the largest spacing in ``u`` the consumer's phase spline can tolerate there.
+
+    **The criterion is fourth-derivative equidistribution**, measured and chosen in
+    docs/qcd-background-verification.md section 10.3:
+
+        h(u)^4 |phi''''(u)| / 384 <= eps,
+        phi'(u) = -(1+z) C(z) / (omega + omega_0),   omega_0^2 = w (k/H)^2
+
+    with ``w = 1`` in the Green's-function sector and ``w = c_s^2`` in the transfer-function
+    sector, ``C`` the non-leading part of the Liouville-Green frequency
+    (``ComputeTargets.phase_residual.phase_residual_integrand``, used here unmodified), and
+    ``phi''''`` the third derivative of that closed form by the five-point stencil of
+    ``SOURCE_GRID_CURVATURE_STEP_U``. In the transfer-function sector this predicts the realised
+    interpolation error to +-2 % over 500-odd production intervals, on both production models, at
+    all three reference wavenumbers, with the textbook constant and no fitting.
+
+    ``main.py`` builds **one universal source grid**, so the profile is the envelope -- the
+    smallest spacing any case asks for -- over every wavenumber the run serves and both sectors.
+    Each case constrains only its own Liouville-Green band, found by
+    ``residual_node_range`` exactly as the producers find it, and is tuned to its own target
+    ``min(1 ulp of the k tau span, 1e-06 rad)``: below the first nothing the consumer stores can
+    see it (``[02-consumer-phi-below-the-storage-granularity]``), and the second is prompt 10
+    section 5's consumer target. Above the highest band nothing constrains anything and the
+    profile is unconstrained, which the cap in ``build_z_sample`` then resolves.
+
+    The ``k tau`` span is taken by the trapezium rule on the profile's own nodes. It sets an
+    *ulp*, so a per-cent error in it is invisible; nothing here needs the converged quadrature a
+    ``CumulativeTable`` would give, and nothing here could have one, because that is a
+    ``BackgroundModel``.
+
+    :param cosmology: any object with ``Hubble(z)`` and ``wPerturbations(z)``
+    :param base_z_values: the uniform base grid, descending in z
+    :param k_values: the wavenumbers the grid must serve, in the cosmology's units
+    :param sectors: the Liouville-Green sectors to envelope over
+    :return: ``(u_profile, h_profile)``, ascending in u
+    """
+    base = np.asarray([float(z) for z in base_z_values], dtype=float)
+    u_profile = np.log1p(base[::-1])
+
+    proxy = pre_grid_background_proxy(cosmology)
+    breaks_u = np.asarray(
+        [
+            float(u)
+            for u in _cosmology_break_points(
+                cosmology, float(base.min()), float(base.max())
+            )
+        ],
+        dtype=float,
+    )
+
+    delta = SOURCE_GRID_CURVATURE_STEP_U
+    h_envelope = np.full(len(u_profile), np.inf)
+
+    for k in sorted({float(k) for k in k_values}):
+        for sector in sectors:
+            try:
+                nodes = residual_node_range(proxy, k, base, sector)
+            except ValueError:
+                # no part of the grid lies inside the Liouville-Green region for this wavenumber
+                # in this sector, so it constrains no spacing anywhere
+                continue
+
+            u_lo = float(np.log1p(nodes[-1]))
+            u_hi = float(np.log1p(nodes[0]))
+            inside = (u_profile >= u_lo) & (u_profile <= u_hi)
+            if int(inside.sum()) < 4:
+                continue
+
+            integrand = phase_residual_integrand(proxy, k, sector)
+
+            def dphi_du(u: float) -> float:
+                z = float(np.expm1(u))
+                return -(1.0 + z) * integrand(z)
+
+            # the leading primitive's span, and therefore the storage granularity this
+            # wavenumber sits on: k tau (Gk) or k tau_s (Tk), by trapezium in u
+            u_band = u_profile[inside]
+            z_band = np.expm1(u_band)
+            leading = (1.0 + z_band) / np.array(
+                [proxy.functions.Hubble(float(z)) for z in z_band], dtype=float
+            )
+            if sector != "Gk":
+                leading = leading * np.sqrt(
+                    np.array(
+                        [proxy.functions.wPerturbations(float(z)) for z in z_band],
+                        dtype=float,
+                    )
+                )
+            span = abs(k * float(np.trapezoid(leading, u_band)))
+            target = min(float(np.spacing(span)), SOURCE_GRID_CONSUMER_TARGET_RAD)
+
+            # |phi''''| on the band. The stencil is slid inwards at the two ends rather than made
+            # one-sided, and the neighbourhood of every declared crossing is dropped and filled in
+            # by log-interpolation from either side: H steps there, so no derivative of it means
+            # anything, and prompt 11 owns that neighbourhood.
+            d4 = np.zeros(len(u_profile))
+            usable = np.zeros(len(u_profile), dtype=bool)
+            for i in np.flatnonzero(inside):
+                u = min(
+                    max(float(u_profile[i]), u_lo + 2.0 * delta), u_hi - 2.0 * delta
+                )
+                value = abs(
+                    (
+                        -dphi_du(u - 2.0 * delta)
+                        + 2.0 * dphi_du(u - delta)
+                        - 2.0 * dphi_du(u + delta)
+                        + dphi_du(u + 2.0 * delta)
+                    )
+                    / (2.0 * delta**3)
+                )
+                d4[i] = value
+                usable[i] = value > 0.0
+            for u_break in breaks_u:
+                usable &= np.abs(u_profile - u_break) > SOURCE_GRID_CROSSING_MASK_U
+            if int(usable.sum()) < 2:
+                continue
+            filled = np.exp(np.interp(u_profile, u_profile[usable], np.log(d4[usable])))
+
+            # the error target, tightened over the outermost intervals of the band, where the
+            # interpolating cubic's not-a-knot end condition raises its error constant by the
+            # measured factors in SOURCE_GRID_SPLINE_EDGE_FACTOR's comment
+            eps = np.full(len(u_profile), target)
+            band = np.flatnonzero(inside)
+            edge = int(SOURCE_GRID_SPLINE_EDGE_INTERVALS)
+            if edge > 0:
+                eps[band[:edge]] = target / SOURCE_GRID_SPLINE_EDGE_FACTOR
+                eps[band[-edge:]] = target / SOURCE_GRID_SPLINE_EDGE_FACTOR
+
+            h = (
+                eps / (SOURCE_GRID_CUBIC_ERROR_CONST * np.maximum(filled, 1.0e-300))
+            ) ** 0.25
+            h_envelope = np.where(inside, np.minimum(h_envelope, h), h_envelope)
+
+    return u_profile, h_envelope
+
+
+def build_grid_tag_labels(source_z_values, response_z_values):
+    """
+    The labels of the two grid tags, as ``(source_label, response_label)``.
+
+    They used to be ``SourceRedshiftGrid_{len}`` and ``ResponseRedshiftGrid_{len}``, which label
+    **size only** (audit section 7). That was safe while the grid was a pure function of
+    ``(z_init, z_end, samples_per_log10z)`` -- two runs agreeing on the length then agreed on
+    every sample -- and it stops being safe the moment the grid also depends on what the
+    cosmology declares, because two different grids of equal length then carry the same tag and
+    every lookup filtered on it silently serves one for the other. The digest closes that: it is
+    taken over the exact bits of the grid's own values, so two grids differing in any sample --
+    including in the protected set alone -- get different tags.
+
+    **Changing these labels makes every object carrying the old ones unfindable.** Log 11 of
+    prompts/qcd-background-audit quantifies what that invalidates and what regenerating it costs.
+    """
+    return (
+        f"SourceRedshiftGrid_{len(source_z_values)}_{redshift_grid_digest(source_z_values)}",
+        f"ResponseRedshiftGrid_{len(response_z_values)}_{redshift_grid_digest(response_z_values)}",
+    )
+
+
 def run_pipeline(
     model_data: dict,
     source_k_sample: wavenumber_array,
@@ -527,49 +894,110 @@ def run_pipeline(
         f"   @@ earliest horizon exit/re-entry time is {k_exit_earliest.k.k_inv_Mpc:.5g}/Mpc with z_exit={k_exit_earliest.z_exit:.5g}"
     )
 
-    # build a log-spaced universal grid of source sample times
+    # build the universal grid of source sample times, around the features this cosmology
+    # declares (audit section 7; prompt 11 of prompts/qcd-background-audit) and at the density the
+    # consumer's phase spline needs (prompt 15). A cosmology that declares no break points still
+    # gets no protected points and no break neighbourhoods; it does get the density, because the
+    # density is not a question about the equation of state.
+    z_init_grid = k_exit_earliest.z_exit_suph_e5
+    break_z, feature_z = cosmology_feature_redshifts(model_cosmology, zend, z_init_grid)
 
-    source_z_grid = k_exit_earliest.populate_z_sample(
+    # the base density is no longer the caller's uniform samples_per_log10z: it is set by the
+    # measured curvature criterion of docs/qcd-background-verification.md §10, capped so that no
+    # interval is ever wider than the uniform lattice would have put there
+    # (SOURCE_GRID_MAX_SPACING_FACTOR). This runs before any BackgroundModel exists and consults
+    # nothing but the cosmology's own Hubble and wPerturbations -- see
+    # source_grid_spacing_profile.
+    base_z_grid = build_z_sample(
+        z_init=z_init_grid,
+        z_end=zend,
+        samples_per_log10z=source_samples_per_log10z,
+    ).z_values
+    with WallclockTimer() as spacing_timer:
+        spacing = source_grid_spacing_profile(
+            model_cosmology,
+            base_z_grid,
+            [float(k_exit.k) for k_exit in full_k_exit_times],
+        )
+
+    source_grid = k_exit_earliest.populate_source_grid(
         outside_horizon_efolds=5,
         samples_per_log10z=source_samples_per_log10z,
         z_end=zend,
+        break_z=break_z,
+        feature_z=feature_z,
+        spacing=spacing,
     )
+    source_z_grid = source_grid.z_values
+    print(
+        f"   @@ the curvature criterion took {format_time(spacing_timer.elapsed)} over "
+        f"{len(full_k_exit_times)} wavenumbers in 2 sectors; the source grid carries "
+        f"{len(source_z_grid)} samples against the {len(base_z_grid)} a uniform "
+        f"{source_samples_per_log10z} per decade of z would have given"
+    )
+    if len(source_grid.protected_z) > 0:
+        print(
+            f"   @@ cosmology declares {len(source_grid.breaks)} break point(s) and "
+            f"{len(source_grid.features)} feature redshift(s) in range; the source grid carries "
+            f"{len(source_z_grid)} samples, {len(source_grid.protected_z)} of them protected "
+            f"from the response winnow"
+        )
 
     # embed these redshift lists into the database
     z_source_array = ray.get(convert_to_redshifts(source_z_grid, is_source=True))
     z_source_sample = redshift_array(z_array=z_source_array)
 
+    # the protected points have to be recovered as redshift objects, so that winnow can match
+    # them on store_id rather than on a float comparison
+    z_protected_sample = ray.get(
+        convert_to_redshifts(source_grid.protected_z, is_source=True)
+    )
+
     # we need the response sample to be a subset of the source sample, otherwise we won't have
     # source data for the Green's functions right the way down to the response time.
     # We need to re-query the database for these redshifts, so that they get the correct is_response flag
     # set correctly.
-    _z_response_sample = z_source_sample.winnow(sparseness=response_sparseness)
+    _z_response_sample = z_source_sample.winnow(
+        sparseness=response_sparseness, protect=z_protected_sample
+    )
     z_response_array = ray.get(
         convert_to_redshifts([z.z for z in _z_response_sample], is_response=True)
     )
     z_response_sample = redshift_array(z_array=z_response_array)
 
+    # the grid tags carry a digest of the grid itself, not merely its length: see
+    # build_grid_tag_labels
+    source_grid_label, response_grid_label = build_grid_tag_labels(
+        z_source_sample.as_float_list(), z_response_sample.as_float_list()
+    )
+
     # build tags and other labels, based on these sample grids
     (
         TkProductionTag,
         GkProductionTag,
-        SourceZGridSizeTag,  # labels size of the z_source sample grid
-        ResponseZGridSizeTag,  # labels size of the z_response sample grid
+        RunLabelTag,  # names this run (--run-label); carried by, and filtered on for, everything the run writes
+        SourceGridConstructionTag,  # identifies the algorithm that built the source grid, not the grid itself
+        SourceZGridSizeTag,  # identifies the z_source sample grid: its size and a digest of its values
+        ResponseZGridSizeTag,  # identifies the z_response sample grid, likewise
         OutsideHorizonEfoldsTag,  # labels number of e-folds outside the horizon at which we begin Tk numeric integrations
         LargestSourceZTag,  # labels largest z in the global grid
         SmallestSourceZTag,  # labels smallest z in the global grid
-        SourceSamplesPerLog10ZTag,  # labels number of redshifts per log10 interval of 1+z in the source grid
         ResponseSparsenessZTag,  # labels number of redshifts per log10 interval of 1+z in the response grid
     ) = ray.get(
         [
             pool.object_get("store_tag", label="TkOneLoopDensity"),
             pool.object_get("store_tag", label="GkOneLoopDensity"),
+            # the run's name and the grid's generation. Both are read from their single
+            # declarations -- the command line and
+            # CosmologyConcepts.wavenumber.SOURCE_GRID_CONSTRUCTION_VERSION -- and never written
+            # out as literals, so a bump of either follows through to every lookup below.
+            pool.object_get("store_tag", label=run_label_tag(run_label)),
             pool.object_get(
-                "store_tag", label=f"SourceRedshiftGrid_{len(z_source_sample)}"
+                "store_tag",
+                label=source_grid_construction_tag(SOURCE_GRID_CONSTRUCTION_VERSION),
             ),
-            pool.object_get(
-                "store_tag", label=f"ResponseRedshiftGrid_{len(z_response_sample)}"
-            ),
+            pool.object_get("store_tag", label=source_grid_label),
+            pool.object_get("store_tag", label=response_grid_label),
             pool.object_get("store_tag", label=f"OutsideHorizonEfolds_e3"),
             pool.object_get(
                 "store_tag", label=f"LargestSourceRedshift_{z_source_sample.max.z:.5g}"
@@ -578,13 +1006,15 @@ def run_pipeline(
                 "store_tag", label=f"SmallestSourceRedshift_{z_source_sample.min.z:.5g}"
             ),
             pool.object_get(
-                "store_tag", label=f"SourceSamplesPerLog10Z_{source_samples_per_log10z}"
-            ),
-            pool.object_get(
                 "store_tag",
                 label=f"ResponseSparsenessZ_{response_sparseness}",
             ),
         ]
+    )
+
+    print(
+        f'   @@ this run is named "{run_label}" (--run-label); its source grid was built by '
+        f"construction version {SOURCE_GRID_CONSTRUCTION_VERSION} and tagged {source_grid_label}"
     )
 
     ## STEP 1
@@ -598,7 +1028,12 @@ def run_pipeline(
             z_sample=z_source_sample,
             atol=atol,
             rtol=rtol,
-            tags=[LargestSourceZTag, SmallestSourceZTag, SourceSamplesPerLog10ZTag],
+            tags=[
+                RunLabelTag,
+                SourceGridConstructionTag,
+                LargestSourceZTag,
+                SmallestSourceZTag,
+            ],
         )
     )
     if not bg_model.available:
@@ -685,11 +1120,12 @@ def run_pipeline(
                 "rtol": rtol,
                 "tags": [
                     TkProductionTag,
+                    RunLabelTag,
+                    SourceGridConstructionTag,
                     SourceZGridSizeTag,
                     OutsideHorizonEfoldsTag,
                     LargestSourceZTag,
                     SmallestSourceZTag,
-                    SourceSamplesPerLog10ZTag,
                 ],
                 "_do_not_populate": True,
             }
@@ -756,13 +1192,13 @@ def run_pipeline(
                     rtol=rtol,
                     tags=[
                         TkProductionTag,
+                        RunLabelTag,
+                        SourceGridConstructionTag,
                         SourceZGridSizeTag,
                         OutsideHorizonEfoldsTag,
                         LargestSourceZTag,
                         SmallestSourceZTag,
-                        SourceSamplesPerLog10ZTag,
                     ],
-                    delta_logz=1.0 / float(source_samples_per_log10z),
                     mode="stop",
                     _do_not_populate=True,  # ignored if object does not already exist in database, so does not spoil work scheduling
                 )
@@ -842,11 +1278,12 @@ def run_pipeline(
                 "rtol": rtol,
                 "tags": [
                     TkProductionTag,
+                    RunLabelTag,
+                    SourceGridConstructionTag,
                     SourceZGridSizeTag,
                     OutsideHorizonEfoldsTag,
                     LargestSourceZTag,
                     SmallestSourceZTag,
-                    SourceSamplesPerLog10ZTag,
                 ],
                 "_do_not_populate": True,
             }
@@ -896,11 +1333,12 @@ def run_pipeline(
                 "rtol": rtol,
                 "tags": [
                     TkProductionTag,
+                    RunLabelTag,
+                    SourceGridConstructionTag,
                     SourceZGridSizeTag,
                     OutsideHorizonEfoldsTag,
                     LargestSourceZTag,
                     SmallestSourceZTag,
-                    SourceSamplesPerLog10ZTag,
                 ],
                 "_do_not_populate": True,
             }
@@ -968,11 +1406,12 @@ def run_pipeline(
                     rtol=rtol,
                     tags=[
                         TkProductionTag,
+                        RunLabelTag,
+                        SourceGridConstructionTag,
                         SourceZGridSizeTag,
                         OutsideHorizonEfoldsTag,
                         LargestSourceZTag,
                         SmallestSourceZTag,
-                        SourceSamplesPerLog10ZTag,
                     ],
                     _do_not_populate=True,
                 )
@@ -1043,11 +1482,12 @@ def run_pipeline(
                         "rtol": rtol,
                         "tags": [
                             TkProductionTag,
+                            RunLabelTag,
+                            SourceGridConstructionTag,
                             SourceZGridSizeTag,
                             OutsideHorizonEfoldsTag,
                             LargestSourceZTag,
                             SmallestSourceZTag,
-                            SourceSamplesPerLog10ZTag,
                         ],
                         "_do_not_populate": True,
                     }
@@ -1103,11 +1543,12 @@ def run_pipeline(
                 "rtol": rtol,
                 "tags": [
                     TkProductionTag,
+                    RunLabelTag,
+                    SourceGridConstructionTag,
                     SourceZGridSizeTag,
                     OutsideHorizonEfoldsTag,
                     LargestSourceZTag,
                     SmallestSourceZTag,
-                    SourceSamplesPerLog10ZTag,
                 ],
             }
             for k in missing_Tk
@@ -1181,11 +1622,12 @@ def run_pipeline(
                         r=r,
                         tags=[
                             TkProductionTag,
+                            RunLabelTag,
+                            SourceGridConstructionTag,
                             SourceZGridSizeTag,
                             OutsideHorizonEfoldsTag,
                             LargestSourceZTag,
                             SmallestSourceZTag,
-                            SourceSamplesPerLog10ZTag,
                         ],
                     ),
                     "compute_payload": {"Tq": Tq, "Tr": Tr},
@@ -1261,11 +1703,12 @@ def run_pipeline(
                         "rtol": rtol,
                         "tags": [
                             GkProductionTag,
+                            RunLabelTag,
+                            SourceGridConstructionTag,
                             SourceZGridSizeTag,  # restrict query to integrations with the correct source grid size
                             ResponseZGridSizeTag,  # restrict query to integrations with the correct response grid size
                             LargestSourceZTag,
                             SmallestSourceZTag,
-                            SourceSamplesPerLog10ZTag,
                             ResponseSparsenessZTag,
                         ],
                         "_do_not_populate": True,
@@ -1356,14 +1799,14 @@ def run_pipeline(
                                 rtol=rtol,
                                 tags=[
                                     GkProductionTag,
+                                    RunLabelTag,
+                                    SourceGridConstructionTag,
                                     SourceZGridSizeTag,
                                     ResponseZGridSizeTag,
                                     LargestSourceZTag,
                                     SmallestSourceZTag,
-                                    SourceSamplesPerLog10ZTag,
                                     ResponseSparsenessZTag,
                                 ],
-                                delta_logz=1.0 / float(source_samples_per_log10z),
                                 mode="stop",
                                 _do_not_populate=True,  # ignored if object does not already exist in database, so does not spoil work scheduling
                             )
@@ -1443,11 +1886,12 @@ def run_pipeline(
                         "rtol": rtol,
                         "tags": [
                             GkProductionTag,
+                            RunLabelTag,
+                            SourceGridConstructionTag,
                             SourceZGridSizeTag,  # restrict query to integrations with the correct source grid size
                             ResponseZGridSizeTag,  # restrict query to integrations with the correct response grid size
                             LargestSourceZTag,
                             SmallestSourceZTag,
-                            SourceSamplesPerLog10ZTag,
                             ResponseSparsenessZTag,
                         ],
                         "_do_not_populate": True,
@@ -1509,11 +1953,12 @@ def run_pipeline(
                         "rtol": rtol,
                         "tags": [
                             GkProductionTag,
+                            RunLabelTag,
+                            SourceGridConstructionTag,
                             SourceZGridSizeTag,
                             ResponseZGridSizeTag,
                             LargestSourceZTag,
                             SmallestSourceZTag,
-                            SourceSamplesPerLog10ZTag,
                             ResponseSparsenessZTag,
                         ],
                     }
@@ -1618,11 +2063,12 @@ def run_pipeline(
                                 rtol=rtol,
                                 tags=[
                                     GkProductionTag,
+                                    RunLabelTag,
+                                    SourceGridConstructionTag,
                                     SourceZGridSizeTag,
                                     ResponseZGridSizeTag,
                                     LargestSourceZTag,
                                     SmallestSourceZTag,
-                                    SourceSamplesPerLog10ZTag,
                                     ResponseSparsenessZTag,
                                 ],
                                 _do_not_populate=True,
@@ -1666,11 +2112,12 @@ def run_pipeline(
                             rtol=rtol,
                             tags=[
                                 GkProductionTag,
+                                RunLabelTag,
+                                SourceGridConstructionTag,
                                 SourceZGridSizeTag,
                                 ResponseZGridSizeTag,
                                 LargestSourceZTag,
                                 SmallestSourceZTag,
-                                SourceSamplesPerLog10ZTag,
                                 ResponseSparsenessZTag,
                             ],
                         )
@@ -1745,11 +2192,12 @@ def run_pipeline(
                         "rtol": rtol,
                         "tags": [
                             GkProductionTag,
+                            RunLabelTag,
+                            SourceGridConstructionTag,
                             SourceZGridSizeTag,
                             ResponseZGridSizeTag,
                             LargestSourceZTag,
                             SmallestSourceZTag,
-                            SourceSamplesPerLog10ZTag,
                             ResponseSparsenessZTag,
                         ],
                         "_do_not_populate": True,
@@ -1815,11 +2263,12 @@ def run_pipeline(
                     "rtol": rtol,
                     "tags": [
                         GkProductionTag,
+                        RunLabelTag,
+                        SourceGridConstructionTag,
                         SourceZGridSizeTag,
                         ResponseZGridSizeTag,
                         LargestSourceZTag,
                         SmallestSourceZTag,
-                        SourceSamplesPerLog10ZTag,
                         ResponseSparsenessZTag,
                     ],
                 },
@@ -1923,11 +2372,12 @@ def run_pipeline(
                             z_sample=z_source_pool[z_response.store_id],
                             tags=[
                                 GkProductionTag,
+                                RunLabelTag,
+                                SourceGridConstructionTag,
                                 SourceZGridSizeTag,
                                 ResponseZGridSizeTag,
                                 LargestSourceZTag,
                                 SmallestSourceZTag,
-                                SourceSamplesPerLog10ZTag,
                                 ResponseSparsenessZTag,
                             ],
                         ),
@@ -2074,11 +2524,12 @@ def run_pipeline(
                         "rtol": rtol,
                         "tags": [
                             GkProductionTag,
+                            RunLabelTag,
+                            SourceGridConstructionTag,
                             SourceZGridSizeTag,
                             ResponseZGridSizeTag,
                             LargestSourceZTag,
                             SmallestSourceZTag,
-                            SourceSamplesPerLog10ZTag,
                             ResponseSparsenessZTag,
                         ],
                     }
@@ -2172,11 +2623,12 @@ def run_pipeline(
                         "rtol": rtol,
                         "tags": [
                             GkProductionTag,
+                            RunLabelTag,
+                            SourceGridConstructionTag,
                             SourceZGridSizeTag,
                             ResponseZGridSizeTag,
                             LargestSourceZTag,
                             SmallestSourceZTag,
-                            SourceSamplesPerLog10ZTag,
                             ResponseSparsenessZTag,
                         ],
                         "_do_not_populate": True,
@@ -2299,11 +2751,12 @@ def run_pipeline(
                         "rtol": rtol,
                         "tags": [
                             GkProductionTag,
+                            RunLabelTag,
+                            SourceGridConstructionTag,
                             SourceZGridSizeTag,
                             ResponseZGridSizeTag,
                             LargestSourceZTag,
                             SmallestSourceZTag,
-                            SourceSamplesPerLog10ZTag,
                             ResponseSparsenessZTag,
                         ],
                     }
@@ -2476,11 +2929,12 @@ def run_pipeline(
                         "tags": [
                             GkProductionTag,
                             TkProductionTag,
+                            RunLabelTag,
+                            SourceGridConstructionTag,
                             SourceZGridSizeTag,
                             ResponseZGridSizeTag,
                             LargestSourceZTag,
                             SmallestSourceZTag,
-                            SourceSamplesPerLog10ZTag,
                             ResponseSparsenessZTag,
                         ],
                     }
@@ -2566,11 +3020,12 @@ def run_pipeline(
                         "rtol": rtol,
                         "tags": [
                             GkProductionTag,
+                            RunLabelTag,
+                            SourceGridConstructionTag,
                             SourceZGridSizeTag,
                             ResponseZGridSizeTag,
                             LargestSourceZTag,
                             SmallestSourceZTag,
-                            SourceSamplesPerLog10ZTag,
                             ResponseSparsenessZTag,
                         ],
                     }
@@ -2650,11 +3105,12 @@ def run_pipeline(
                         "r": r,
                         "tags": [
                             TkProductionTag,
+                            RunLabelTag,
+                            SourceGridConstructionTag,
                             SourceZGridSizeTag,
                             OutsideHorizonEfoldsTag,
                             LargestSourceZTag,
                             SmallestSourceZTag,
-                            SourceSamplesPerLog10ZTag,
                         ],
                     }
                     for r in missing_source_b[q]
@@ -2714,11 +3170,12 @@ def run_pipeline(
                 "rtol": rtol,
                 "tags": [
                     TkProductionTag,
+                    RunLabelTag,
+                    SourceGridConstructionTag,
                     SourceZGridSizeTag,
                     OutsideHorizonEfoldsTag,
                     LargestSourceZTag,
                     SmallestSourceZTag,
-                    SourceSamplesPerLog10ZTag,
                 ],
             }
             for k_exit in missing_Tk
@@ -2752,11 +3209,12 @@ def run_pipeline(
                 "rtol": rtol,
                 "tags": [
                     TkProductionTag,
+                    RunLabelTag,
+                    SourceGridConstructionTag,
                     SourceZGridSizeTag,
                     OutsideHorizonEfoldsTag,
                     LargestSourceZTag,
                     SmallestSourceZTag,
-                    SourceSamplesPerLog10ZTag,
                 ],
             }
             for k_exit in missing_Tk
@@ -2843,11 +3301,12 @@ def run_pipeline(
                         tags=[
                             TkProductionTag,
                             GkProductionTag,
+                            RunLabelTag,
+                            SourceGridConstructionTag,
                             SourceZGridSizeTag,
                             ResponseZGridSizeTag,
                             LargestSourceZTag,
                             SmallestSourceZTag,
-                            SourceSamplesPerLog10ZTag,
                             ResponseSparsenessZTag,
                         ],
                     ),
@@ -2943,6 +3402,7 @@ with ShardedPool(
     zend = args.zend
     source_samples_per_log10z = args.source_samples_log10z
     response_sparseness = args.response_sparseness
+    run_label = args.run_label
 
     units = Mpc_units()
 

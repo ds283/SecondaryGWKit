@@ -52,10 +52,62 @@ from Units import Mpc_units
 # README §6 rows for tau (prompt 03)
 LAMBDACDM_NODE_REL_TOL = 2.0e-14
 SHORT_BASELINE_REL_TOL = 1.0e-13
+
+# QCD_FLOOR_FACTOR multiplies the QCD block's own recorded agreement floor,
+# references["convergence"]["models"]["QCDModel"]["branch+knots"]["tau"]["json_vs_reference_max_rel"]
+# -- "how well the JSON's tau agrees with a converged adaptive reference". The quantity scored
+# against it, worst in test_qcd_nodes_against_adaptive_reference, is the same kind of thing: how
+# well the model's fixed-order Gauss table agrees with the JSON.
+#
+# Loosened 3.0 -> 3.2 by prompts/qcd-background-audit/ prompt 05, and the reason is
+# [01-convergence-block-has-a-separate-generator] (docs/OPEN_ISSUES.md): the JSON's QCD block was
+# regenerated in that commit by docs/qcd-background-audit/generate_qcd_references.py, but the
+# floor lives in the top-level convergence block, which only
+# docs/gktk-remedial/residual_convergence.py writes and which no prompt has re-run since the
+# background moved. So the numerator is measured on the entropy-factor background and the
+# denominator on the T-against-u one. Measured: 2.194e-14 (prompt 04 tree) -> 5.8348e-14 here,
+# against a floor still recorded as 1.879e-14; 5.8348e-14/1.879e-14 = 3.106. Both sides are at
+# the 1e-14 level -- a few hundred ulp of a cumulative quadrature over twenty decades -- so this
+# is a floor-against-floor comparison, not an accuracy claim.
+#
+# **Taken back to 3.0 by prompt 06**, which segmented the representation at the jumps: the
+# numerator falls 5.8348e-14 -> 2.104e-15 against the same recorded floor of 1.879e-14, so the
+# model's order-4 cumulative table now agrees with the JSON an order below the floor recorded for
+# the JSON itself. Prompt 08 still re-runs residual_convergence.py and re-measures both sides.
 QCD_FLOOR_FACTOR = 3.0
 
 # prompt 03 §6 test 5
 LAMBDACDM_BUILD_SECONDS = 0.5
+
+# prompts/qcd-background-audit/ prompt 04: the branch-boundary "u" figures in the JSON's
+# convergence block (docs/gktk-remedial/residual_convergence.py, not this campaign's generator)
+# were measured against the shipped (sloppy) T(z) nodes. Tightening _solve_T_z moves the spline
+# the crossing is solved against, so the freshly-computed break point no longer lands on the
+# stale figure to 1e-9: measured worst case 1.334557e-05 (T_120_MEV). This is
+# [01-convergence-block-has-a-separate-generator] (docs/OPEN_ISSUES.md), not a new defect; it is
+# closed when prompt 08 re-runs residual_convergence.py. Loosened there, once, from 1e-9.
+#
+# prompt 05 moves it again and for the same reason: splining the entropy factor rather than T
+# moves the spline a second time, and _temperature_crossing_log1pz solves T_photon(z) - T_break
+# on whatever spline is in the tree. Measured worst case 3.046858e-05 (T_120_MEV again). The
+# figure it is compared against is still the one residual_convergence.py recorded before either
+# move, so what is being measured here is the age of that block and nothing else.
+#
+# prompt 06 moves it a third time, and for a fourth-order-larger reason: the representation is now
+# segmented at the jumps, so T(z) is *genuinely* discontinuous where it used to be smoothed over a
+# node interval, and the crossing _temperature_crossing_log1pz finds has moved onto the jump
+# itself. Measured worst case 1.418851e-04 (T_120_MEV again): the freshly-computed break point is
+# at u = 27.485391822 against the block's recorded 27.485249937, and the fresh one is now the
+# *right* answer to the last bit -- it agrees with T_z_reference.jump_locations, which bisects the
+# monotone T(z) independently, to 3 ulp. Same root cause, same fix: prompt 08 re-runs
+# residual_convergence.py and takes this back.
+#
+# prompt 07 re-measured it and it did not move: 1.418851e-04 at T_120_MEV again, to every digit,
+# with 1.728034e-05 at T_LO and 1.060594e-06 at EOS_T_LO. The break points prompt 07 declares are
+# the *bisected* crossings rather than the root-found ones, and the two differ by ~1e-14 in u, so
+# the whole of this figure is the age of the convergence block and none of it is the
+# representation. The tolerance is left where prompt 06 set it, unchanged, for prompt 08.
+QCD_BREAK_POINT_ALIGNMENT_TOL = 1.5e-04
 
 # prompt 01's throughput benchmark, re-run against the production object
 THROUGHPUT_CALLS = 20_000
@@ -295,27 +347,40 @@ class TestBackgroundTau(unittest.TestCase):
 
     def test_qcd_break_points(self):
         """
-        The build scheme of log 02: the three equation-of-state temperature crossings inside the
-        production range plus the interior knots of the T(z) spline, in u = log(1+z); LambdaCDM
-        declares none.
+        The three equation-of-state temperature crossings inside the production range, in
+        u = log(1+z), and **nothing else**; LambdaCDM declares none.
+
+        Rewritten by prompts/qcd-background-audit/ prompt 07, which is what
+        [02-fixture-tests-pinned-to-todays-break-point-artefact] said would be needed. The set was
+        "every interior knot of the T(z) tabulation plus the crossings" -- 404 points at 500 nodes,
+        2,414 once prompt 06 raised the tabulation to 3,000 -- and the knots are now gone from it
+        (finding G1 of the audit). The tabulation still *has* its knots, and that they are not
+        declared is asserted directly rather than inferred from the count.
         """
         z_lo, z_hi = self.s.grid.min.z, self.s.grid.max.z
         breaks = self.s.qcd.integration_break_points(z_lo, z_hi)
         geometry = self.s.references["convergence"]["geometry"]["QCDModel"]
-        expected = geometry["T_spline_knots_in_range"] + len(
-            geometry["branch_boundaries"]
+
+        knots = self.s.qcd._T_z_spline_knots_log1pz
+        knots_in_range = int(
+            np.sum((knots > np.log1p(z_lo)) & (knots < np.log1p(z_hi)))
         )
+        expected = len(geometry["branch_boundaries"])
         print(
             f"[tau] QCD break points in ({z_lo:.3g}, {z_hi:.3g}): {len(breaks)} "
-            f"({geometry['T_spline_knots_in_range']} knots + {len(geometry['branch_boundaries'])} "
-            "temperature crossings)"
+            f"(= {expected} temperature crossings, 0 of the tabulation's {knots_in_range} "
+            f"interior knots in range; the convergence block still records "
+            f"{geometry['T_spline_knots_in_range']} knots, from before prompt 06)"
         )
         self.assertEqual(len(breaks), expected)
+        self.assertEqual(len(np.intersect1d(breaks, knots)), 0)
         self.assertTrue(np.all(np.diff(breaks) > 0.0))
         self.assertTrue(np.all((breaks > np.log1p(z_lo)) & (breaks < np.log1p(z_hi))))
         for boundary in geometry["branch_boundaries"]:
             nearest = breaks[np.argmin(np.abs(breaks - boundary["u"]))]
-            self.assertLessEqual(abs(nearest - boundary["u"]), 1.0e-9)
+            self.assertLessEqual(
+                abs(nearest - boundary["u"]), QCD_BREAK_POINT_ALIGNMENT_TOL
+            )
         self.assertFalse(hasattr(self.s.lambdacdm, "integration_break_points"))
         self.assertEqual(
             self.s.qcd_model.functions.tau.table.break_points.size, expected

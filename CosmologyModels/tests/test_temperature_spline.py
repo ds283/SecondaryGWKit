@@ -12,9 +12,13 @@ The negative end exists because the model needs z = 0 to match the CMB temperatu
 below it so that numerical derivatives at z = 0 are accurate (the comment in the constructor).
 Nothing in the pipeline asks for results below z = 0; this is padding, not a physics range.
 
-Board issue `[01-genericeos-tz-spline-floor]` stays open: whether a fixed 500-point grid over
-[min_z, max_z] is adequately defined is a separate question from the sign of this buffer, and the
-grid was a hot-fix.
+Board issue `[01-genericeos-tz-spline-floor]` stays open, but is narrower than it was: whether a
+fixed 500-point grid over [min_z, max_z] is adequately defined is a separate question from the
+sign of this buffer, and the grid was a hot-fix. Two of the three things wrong with that grid have
+since been measured and fixed -- the node values were root-solved to rtol = 1e-4
+(prompts/qcd-background-audit/ prompt 04) and the quantity tabulated on it was T rather than the
+entropy factor (prompt 05) -- and what remains is that one spline runs straight across the three
+redshifts at which T(z) genuinely jumps, which is prompt 06's.
 
 No Ray and no datastore is needed.
 """
@@ -34,9 +38,17 @@ from Units import Mpc_units
 
 MAX_Z = 1.0e4
 
-# The spline's own interpolation error at MAX_Z, from `[01-genericeos-tz-spline-floor]`. Any
-# consequence of moving the buffer has to be below this to count as numerically invisible.
-INTERPOLATION_FLOOR = 1.3e-9
+# The representation's own error at MAX_Z on this model, from `[01-genericeos-tz-spline-floor]`.
+# Any consequence of moving the buffer has to be below this to count as numerically invisible.
+#
+# 1.3e-9 while T itself was splined against u = log(1+z); tightened to 1.0e-15 by
+# prompts/qcd-background-audit/ prompt 05, which splines the entropy factor
+# F(u) = log(T / [T_CMB (1+z)]) instead. `PureRadiationEOS` has constant g_s, so F is identically
+# zero and the representation reproduces T_CMB (1+z) in closed form: this is no longer an
+# interpolation floor on this model but a round-off floor. Measured on this tree: the buffer's
+# effect over z in [0, MAX_Z] is max 5.646e-16 (median exactly 0), and the worst departure from
+# T_CMB (1+z) is 1.110e-16.
+INTERPOLATION_FLOOR = 1.0e-15
 
 
 class TestTemperatureSplineRange(unittest.TestCase):
