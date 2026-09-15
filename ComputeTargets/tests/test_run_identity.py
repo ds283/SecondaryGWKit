@@ -6,9 +6,9 @@ Three things had gone wrong together, and they share a root -- nothing recorded 
 object belonged to:
 
 1. ``sqla_BackgroundModel_factory.build()`` filtered on ``(cosmology_type, cosmology_serial,
-   atol_serial, rtol_serial)`` plus ``LargestSourceZTag`` / ``SmallestSourceZTag`` /
-   ``SourceSamplesPerLog10ZTag``, every one of which is **unchanged** when the grid's shape
-   changes; and it never filtered on ``z_sample`` at all. So when prompt 11 gave the QCD grid 41
+   atol_serial, rtol_serial)`` plus ``LargestSourceZTag`` / ``SmallestSourceZTag`` / (until
+   prompt 16 retired it) ``SourceSamplesPerLog10ZTag``, every one of which is **unchanged** when
+   the grid's shape changes; and it never filtered on ``z_sample`` at all. So when prompt 11 gave the QCD grid 41
    extra samples, a pre-prompt-11 datastore went on serving its 1,732-node background for the new
    1,773-node grid. It was the one surviving row in a store whose every compute target the grid
    tag had already invalidated, which makes it worse than a miss: the next run finds it, uses it,

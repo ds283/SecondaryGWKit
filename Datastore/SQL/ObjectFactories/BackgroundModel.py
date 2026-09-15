@@ -25,8 +25,9 @@ algorithm that built it (CosmologyConcepts.wavenumber.SOURCE_GRID_CONSTRUCTION_V
 
 Without them this factory keyed on (cosmology_type, cosmology_serial, atol_serial, rtol_serial)
 plus whatever tags the caller supplied -- in main.py, LargestSourceZTag, SmallestSourceZTag and
-SourceSamplesPerLog10ZTag. Every one of those is unchanged when the grid's *shape* changes, and
-the factory never filters on z_sample at all: it reads the stored sample set back out of
+(until prompts/qcd-background-audit prompt 16 retired it) SourceSamplesPerLog10ZTag. Every one of
+those is unchanged when the grid's *shape* changes, and the factory never filters on z_sample at
+all: it reads the stored sample set back out of
 BackgroundModelValue and populates the returned object from it. So when prompt 11 gave the QCD
 grid 41 extra samples around the equation of state's crossings, a pre-prompt-11 datastore went on
 serving its 1,732-node background for the new 1,773-node grid, and the next run tabulated a

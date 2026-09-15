@@ -162,7 +162,13 @@ parser.add_argument(
     "--source-samples-log10z",
     type=int,
     default=DEFAULT_SOURCE_SAMPLES_PER_LOG10_Z,
-    help="specify number of z-sample points per log10(z) for the source term",
+    help=(
+        "specify the base number of z-sample points per log10(z) for the source term; "
+        "the curvature criterion of docs/qcd-background-verification.md §10 may refine "
+        "individual intervals above this density, capped so that no interval is ever "
+        "coarser than this uniform lattice would have made it "
+        "(SOURCE_GRID_MAX_SPACING_FACTOR)"
+    ),
 )
 parser.add_argument(
     "--response-sparseness",
@@ -976,7 +982,6 @@ def run_pipeline(
         OutsideHorizonEfoldsTag,  # labels number of e-folds outside the horizon at which we begin Tk numeric integrations
         LargestSourceZTag,  # labels largest z in the global grid
         SmallestSourceZTag,  # labels smallest z in the global grid
-        SourceSamplesPerLog10ZTag,  # labels number of redshifts per log10 interval of 1+z in the source grid
         ResponseSparsenessZTag,  # labels number of redshifts per log10 interval of 1+z in the response grid
     ) = ray.get(
         [
@@ -999,9 +1004,6 @@ def run_pipeline(
             ),
             pool.object_get(
                 "store_tag", label=f"SmallestSourceRedshift_{z_source_sample.min.z:.5g}"
-            ),
-            pool.object_get(
-                "store_tag", label=f"SourceSamplesPerLog10Z_{source_samples_per_log10z}"
             ),
             pool.object_get(
                 "store_tag",
@@ -1031,7 +1033,6 @@ def run_pipeline(
                 SourceGridConstructionTag,
                 LargestSourceZTag,
                 SmallestSourceZTag,
-                SourceSamplesPerLog10ZTag,
             ],
         )
     )
@@ -1125,7 +1126,6 @@ def run_pipeline(
                     OutsideHorizonEfoldsTag,
                     LargestSourceZTag,
                     SmallestSourceZTag,
-                    SourceSamplesPerLog10ZTag,
                 ],
                 "_do_not_populate": True,
             }
@@ -1198,9 +1198,7 @@ def run_pipeline(
                         OutsideHorizonEfoldsTag,
                         LargestSourceZTag,
                         SmallestSourceZTag,
-                        SourceSamplesPerLog10ZTag,
                     ],
-                    delta_logz=1.0 / float(source_samples_per_log10z),
                     mode="stop",
                     _do_not_populate=True,  # ignored if object does not already exist in database, so does not spoil work scheduling
                 )
@@ -1286,7 +1284,6 @@ def run_pipeline(
                     OutsideHorizonEfoldsTag,
                     LargestSourceZTag,
                     SmallestSourceZTag,
-                    SourceSamplesPerLog10ZTag,
                 ],
                 "_do_not_populate": True,
             }
@@ -1342,7 +1339,6 @@ def run_pipeline(
                     OutsideHorizonEfoldsTag,
                     LargestSourceZTag,
                     SmallestSourceZTag,
-                    SourceSamplesPerLog10ZTag,
                 ],
                 "_do_not_populate": True,
             }
@@ -1416,7 +1412,6 @@ def run_pipeline(
                         OutsideHorizonEfoldsTag,
                         LargestSourceZTag,
                         SmallestSourceZTag,
-                        SourceSamplesPerLog10ZTag,
                     ],
                     _do_not_populate=True,
                 )
@@ -1493,7 +1488,6 @@ def run_pipeline(
                             OutsideHorizonEfoldsTag,
                             LargestSourceZTag,
                             SmallestSourceZTag,
-                            SourceSamplesPerLog10ZTag,
                         ],
                         "_do_not_populate": True,
                     }
@@ -1555,7 +1549,6 @@ def run_pipeline(
                     OutsideHorizonEfoldsTag,
                     LargestSourceZTag,
                     SmallestSourceZTag,
-                    SourceSamplesPerLog10ZTag,
                 ],
             }
             for k in missing_Tk
@@ -1635,7 +1628,6 @@ def run_pipeline(
                             OutsideHorizonEfoldsTag,
                             LargestSourceZTag,
                             SmallestSourceZTag,
-                            SourceSamplesPerLog10ZTag,
                         ],
                     ),
                     "compute_payload": {"Tq": Tq, "Tr": Tr},
@@ -1717,7 +1709,6 @@ def run_pipeline(
                             ResponseZGridSizeTag,  # restrict query to integrations with the correct response grid size
                             LargestSourceZTag,
                             SmallestSourceZTag,
-                            SourceSamplesPerLog10ZTag,
                             ResponseSparsenessZTag,
                         ],
                         "_do_not_populate": True,
@@ -1814,10 +1805,8 @@ def run_pipeline(
                                     ResponseZGridSizeTag,
                                     LargestSourceZTag,
                                     SmallestSourceZTag,
-                                    SourceSamplesPerLog10ZTag,
                                     ResponseSparsenessZTag,
                                 ],
-                                delta_logz=1.0 / float(source_samples_per_log10z),
                                 mode="stop",
                                 _do_not_populate=True,  # ignored if object does not already exist in database, so does not spoil work scheduling
                             )
@@ -1903,7 +1892,6 @@ def run_pipeline(
                             ResponseZGridSizeTag,  # restrict query to integrations with the correct response grid size
                             LargestSourceZTag,
                             SmallestSourceZTag,
-                            SourceSamplesPerLog10ZTag,
                             ResponseSparsenessZTag,
                         ],
                         "_do_not_populate": True,
@@ -1971,7 +1959,6 @@ def run_pipeline(
                             ResponseZGridSizeTag,
                             LargestSourceZTag,
                             SmallestSourceZTag,
-                            SourceSamplesPerLog10ZTag,
                             ResponseSparsenessZTag,
                         ],
                     }
@@ -2082,7 +2069,6 @@ def run_pipeline(
                                     ResponseZGridSizeTag,
                                     LargestSourceZTag,
                                     SmallestSourceZTag,
-                                    SourceSamplesPerLog10ZTag,
                                     ResponseSparsenessZTag,
                                 ],
                                 _do_not_populate=True,
@@ -2132,7 +2118,6 @@ def run_pipeline(
                                 ResponseZGridSizeTag,
                                 LargestSourceZTag,
                                 SmallestSourceZTag,
-                                SourceSamplesPerLog10ZTag,
                                 ResponseSparsenessZTag,
                             ],
                         )
@@ -2213,7 +2198,6 @@ def run_pipeline(
                             ResponseZGridSizeTag,
                             LargestSourceZTag,
                             SmallestSourceZTag,
-                            SourceSamplesPerLog10ZTag,
                             ResponseSparsenessZTag,
                         ],
                         "_do_not_populate": True,
@@ -2285,7 +2269,6 @@ def run_pipeline(
                         ResponseZGridSizeTag,
                         LargestSourceZTag,
                         SmallestSourceZTag,
-                        SourceSamplesPerLog10ZTag,
                         ResponseSparsenessZTag,
                     ],
                 },
@@ -2395,7 +2378,6 @@ def run_pipeline(
                                 ResponseZGridSizeTag,
                                 LargestSourceZTag,
                                 SmallestSourceZTag,
-                                SourceSamplesPerLog10ZTag,
                                 ResponseSparsenessZTag,
                             ],
                         ),
@@ -2548,7 +2530,6 @@ def run_pipeline(
                             ResponseZGridSizeTag,
                             LargestSourceZTag,
                             SmallestSourceZTag,
-                            SourceSamplesPerLog10ZTag,
                             ResponseSparsenessZTag,
                         ],
                     }
@@ -2648,7 +2629,6 @@ def run_pipeline(
                             ResponseZGridSizeTag,
                             LargestSourceZTag,
                             SmallestSourceZTag,
-                            SourceSamplesPerLog10ZTag,
                             ResponseSparsenessZTag,
                         ],
                         "_do_not_populate": True,
@@ -2777,7 +2757,6 @@ def run_pipeline(
                             ResponseZGridSizeTag,
                             LargestSourceZTag,
                             SmallestSourceZTag,
-                            SourceSamplesPerLog10ZTag,
                             ResponseSparsenessZTag,
                         ],
                     }
@@ -2956,7 +2935,6 @@ def run_pipeline(
                             ResponseZGridSizeTag,
                             LargestSourceZTag,
                             SmallestSourceZTag,
-                            SourceSamplesPerLog10ZTag,
                             ResponseSparsenessZTag,
                         ],
                     }
@@ -3048,7 +3026,6 @@ def run_pipeline(
                             ResponseZGridSizeTag,
                             LargestSourceZTag,
                             SmallestSourceZTag,
-                            SourceSamplesPerLog10ZTag,
                             ResponseSparsenessZTag,
                         ],
                     }
@@ -3134,7 +3111,6 @@ def run_pipeline(
                             OutsideHorizonEfoldsTag,
                             LargestSourceZTag,
                             SmallestSourceZTag,
-                            SourceSamplesPerLog10ZTag,
                         ],
                     }
                     for r in missing_source_b[q]
@@ -3200,7 +3176,6 @@ def run_pipeline(
                     OutsideHorizonEfoldsTag,
                     LargestSourceZTag,
                     SmallestSourceZTag,
-                    SourceSamplesPerLog10ZTag,
                 ],
             }
             for k_exit in missing_Tk
@@ -3240,7 +3215,6 @@ def run_pipeline(
                     OutsideHorizonEfoldsTag,
                     LargestSourceZTag,
                     SmallestSourceZTag,
-                    SourceSamplesPerLog10ZTag,
                 ],
             }
             for k_exit in missing_Tk
@@ -3333,7 +3307,6 @@ def run_pipeline(
                             ResponseZGridSizeTag,
                             LargestSourceZTag,
                             SmallestSourceZTag,
-                            SourceSamplesPerLog10ZTag,
                             ResponseSparsenessZTag,
                         ],
                     ),

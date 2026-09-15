@@ -3,7 +3,7 @@
 **Campaign:** [`README.md`](README.md) · **Source document:**
 [`docs/qcd-background-audit-2026-09.md`](../../docs/qcd-background-audit-2026-09.md)
 **Baseline commit:** `e8f746d` (`qcd-background-audit`, clean; identical to `main`)
-**Last updated:** 2026-09-15 — **15 / 15: workstream E is complete and the campaign is closed again.**
+**Last updated:** 2026-09-15 — **16 / 16: workstream E is complete and the campaign is closed again.**
 
 > **The campaign reopened after it closed.** Prompt 12 measured a defect it was forbidden to act on
 > — `BackgroundModel` splined `d_lnH_dz` over a padded refinement of the source grid that was
@@ -39,6 +39,29 @@
 > column rather than smaller, because that column's cap was a single scalar over a lattice that is
 > uniform in $\log_{10}z$ and not in $u$ (log 15 deviation 1). `SOURCE_GRID_CONSTRUCTION_VERSION`
 > is **2**; `T_Z_REPRESENTATION_VERSION` is still **6** and no background value moves.
+>
+> **Prompt 16 has now retired the samples-per-decade tag that prompt 15 left false.**
+> `SourceSamplesPerLog10ZTag` labelled stored objects `SourceSamplesPerLog10Z_100` as though the
+> grid had 100 samples per decade of z, when it now merely bounds a density the curvature
+> criterion sets; the tag is gone from its one declaration, its one label construction and all 27
+> `tags=[...]` uses in `main.py`, and so are the two vestigial `delta_logz=` arguments it fed
+> (established as unused by anything since prompt 11 of `prompts/GkTk-remedial` — the
+> oscillation-resolution diagnostic now scores the returned sample grid, not a nominal spacing).
+> **`--source-samples-log10z` stays**, its help text corrected to say it sets the base lattice the
+> cap is measured against, per the user's decision (prompt 16 §1). Measured, not assumed: every
+> tagged `object_get` in the tree joins once per *requested* tag with no check that a row carries
+> only those tags, so dropping a tag from the list can only broaden a query — a pre-prompt-16 row,
+> which still carries `SourceSamplesPerLog10ZTag` as harmless history, still resolves against the
+> shorter post-prompt-16 list. **This commit carries no datastore regeneration.**
+> `SOURCE_GRID_CONSTRUCTION_VERSION` stays **2** and `T_Z_REPRESENTATION_VERSION` stays **6** —
+> nothing about the grid's construction or the background changes, only what main.py says about
+> the grid's density. `docs/source-remediation-verification/run_quadsource_integrals.py` is left
+> untouched: it already predates prompts 11/14 of this campaign (no `RunLabelTag`, no
+> `SourceGridConstructionTag`, the pre-prompt-11 size-only `SourceRedshiftGrid_{len}` tag), so
+> editing out one tag among six would misrepresent a script that is already several tagging
+> generations behind main.py as though it had been kept current. Closes the *tag* half of
+> `[15-the-grid-now-depends-on-the-wavenumber-sample-and-no-tag-says-so]`; its *wavenumber-set*
+> half stands as the user's explicit no-action decision (§3 below).
 
 The record of the original twelve follows. **12 / 12: that chain is closed.** The ungated chain 01–09 is complete; T1 and G1 are closed and verified,
 G1's per-sector question is answered, and **P2 is answered, though not in the way the plan
@@ -115,15 +138,16 @@ Legend: ⬜ not started · 🟡 in flight · ✅ complete · ⚠️ complete wit
 | 11 | [A cosmology-aware source grid](11-cosmology-aware-source-grid.md) | Opus | ⚠️ | *"Build the source grid around the features the cosmology declares"* (SHA not embedded, per the campaign convention) | [`logs/11-cosmology-aware-source-grid.md`](logs/11-cosmology-aware-source-grid.md) |
 | 12 | [A measured grid-density criterion](12-grid-density-criterion.md) | Opus | ⚠️ | *"Measure what the source grid's density buys and what it wastes"* (SHA not embedded, per the campaign convention) | [`logs/12-grid-density-criterion.md`](logs/12-grid-density-criterion.md) |
 
-### Workstream E — the background's own derivative lattice, and the grid's identity (prompts 13–15)
+### Workstream E — the background's own derivative lattice, and the grid's identity (prompts 13–16)
 
 | # | Prompt | Model | Status | Commit | Log |
 |---|---|---|---|---|---|
 | 13 | [Segment every background spline at the cosmology's break points](13-segment-background-derivative-splines.md) | Opus | ⚠️ | *"Segment the background derivative splines at the declared break points"* (SHA not embedded, per the campaign convention) | [`logs/13-segment-background-derivative-splines.md`](logs/13-segment-background-derivative-splines.md) |
 | 14 | [Key the source-grid construction](14-key-the-source-grid-construction.md) | Opus | ⚠️ | *"Name a run at write time and verify it at read time"* (SHA not embedded, per the campaign convention) | [`logs/14-key-the-source-grid-construction.md`](logs/14-key-the-source-grid-construction.md) |
 | 15 | [Equidistribute the source grid](15-equidistribute-the-source-grid.md) | Opus | ⚠️ | *"Equidistribute the source grid on the phase residual's curvature"* (SHA not embedded, per the campaign convention) | [`logs/15-equidistribute-the-source-grid.md`](logs/15-equidistribute-the-source-grid.md) |
+| 16 | [Retire the samples-per-decade tag](16-retire-the-samples-per-decade-tag.md) | Sonnet | ⚠️ | *"Retire the samples-per-decade tag the grid no longer obeys"* (SHA not embedded, per the campaign convention) | [`logs/16-retire-the-samples-per-decade-tag.md`](logs/16-retire-the-samples-per-decade-tag.md) |
 
-**Progress:** **15 / 15 complete.** (12 / 12 in the original campaign; 3 / 3 in workstream E, which
+**Progress:** **16 / 16 complete.** (12 / 12 in the original campaign; 4 / 4 in workstream E, which
 reopened it.) The line below describes the original twelve. (9 / 9 in the ungated chain 01–09;
 workstream D released and all three of 10, 11 and 12 have run.) Prompt 12 **measures and
 recommends and changes nothing**, which is what its §4 asks for: the `Result` is `COMPLETE` when
@@ -972,20 +996,22 @@ Opened by **prompt 15**, 2026-09-15:
   +242).
 
 - **[15-the-grid-now-depends-on-the-wavenumber-sample-and-no-tag-says-so]** *(opened by prompt 15,
-  2026-09-15)* — the source grid was a pure function of
+  2026-09-15; narrowed by prompt 16, 2026-09-15)* — the source grid was a pure function of
   $(z_{\rm init}, z_{\rm end}, \texttt{samples\_per\_log10z})$; prompt 15's envelope is taken over
   every wavenumber the run serves, so it is now also a function of the **wavenumber sample**. Two
   runs differing only in `NUMBER_SOURCE_K_VALUES` — a hard-coded 50 at `main.py:3292`, not a
   command-line argument — get different grids. **That is caught**, by prompt 11's content digest
   and prompt 14's construction version: the grids get different tags and `BackgroundModel` refuses
-  the mixture. What is missing is that nothing *says* so: `SourceSamplesPerLog10ZTag` still labels
-  the base density as though it were the density, no tag records the wavenumber set, and a reader
-  of a store sees two digests with no way to tell which knob moved. **Impact:** none on
-  correctness. **Next step:** either a `SourceKSampleTag` beside the others, or — cheaper and
-  arguably more honest — fold the wavenumber envelope's own digest into the construction version's
-  neighbourhood, for whichever prompt next has `main.py`'s tagging hunk in scope. Note that
-  `SourceSamplesPerLog10ZTag`'s third consumer, `delta_logz` at `main.py:916` and `:1533`, was
-  already established as vestigial by prompt 14.
+  the mixture. **Prompt 16 closed the tag half**: `SourceSamplesPerLog10ZTag`, which used to
+  mislabel the base density as though it were the density, is retired outright (declaration,
+  label construction and all 27 `tags=[...]` uses), so it no longer misdescribes anything. **The
+  wavenumber-set half stands, by the user's explicit decision** (prompt 16 §1, quoted): *"we have
+  to go further back for small `k`. I don't think there is anything we need to do about this; we
+  just need to bear it in mind when we're doing a concrete calculation."* No `SourceKSampleTag` is
+  to be added and the wavenumber envelope's digest is not to be folded into the construction
+  version; a reader of a store still sees two digests with no way to tell which knob moved, and
+  that is accepted. **Impact:** none on correctness. **Next step:** none — recorded so a later
+  reader does not reopen this as an oversight.
 
 Opened by **prompt 14**, 2026-09-15:
 
