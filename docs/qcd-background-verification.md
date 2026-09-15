@@ -1068,3 +1068,380 @@ that no longer exists — precisely the silent staleness the digest is for. Drop
 The `LiouvilleGreen` figure is the fast set, as prompts 02–08 and 10 used; the full set is 148
 (prompt 09 ran it) and this commit touches no `LiouvilleGreen` file. The +19 are
 `ComputeTargets/tests/test_source_grid.py`. `black` is clean on every file in the diff.
+
+---
+
+## 10. Prompt 12 — what the grid's density buys, and what a criterion on $\varphi$'s curvature would buy (2026-09-15)
+
+**Added by prompt 12 of `prompts/qcd-background-audit/`; §§1–9 above are untouched** (`CLAUDE.md`:
+verification documents are additive). **No production file is in this prompt's diff**, and
+`T_Z_REPRESENTATION_VERSION` is **5** before and after. Reproduction, one command, **88 s**, no Ray
+and no datastore, at load average 4.6–7.3:
+
+```bash
+PYTHONPATH=. ./venv/bin/python docs/qcd-background-audit/grid_density_criterion.py
+PYTHONPATH=. ./venv/bin/python docs/qcd-background-audit/grid_density_criterion.py \
+    --models QCDModel --k 1e5 --sections A B     # a narrower slice
+```
+
+Every figure below was taken twice on this tree and is **bit-identical between the two runs** apart
+from wall clocks.
+
+### 10.0 The recommendation, and the ceiling it carries
+
+**Read this paragraph with `docs/OPEN_ISSUES.md` §5 in front of you.** *The verification runs never
+reached production $x$*: `source-remediation`'s run A used `zend = 1e7` to stay inside radiation
+domination, so its largest accumulated phase was $x = 4.63\times10^5$ against $x\sim1.4\times10^7$
+at the production `zend = 0.1` for the largest $k$. **This section is measured at production
+`zend = 0.1` and production `z_init`**, against an oracle that is a Gauss-quadrature table rather
+than a pipeline run, so it is not itself limited by that ceiling — but **no pipeline has ever been
+run on any grid discussed here, including the one that ships**, and the §5 caveat therefore applies
+in full to any claim that a re-gridded run would behave as these numbers predict.
+
+Three statements, in the order of their confidence:
+
+1. **Away from the equation of state's declared crossings, the shipped grid is adequate at
+   $k\ge10^7$ and misses by 7.9× at $k=10^5$ in the transfer-function sector.** The one place it is
+   under-resolved is the **top decade of each Liouville–Green band**, just inside horizon entry;
+   everywhere below that it is over-resolved, by up to **$10^{19}$** in error at the bottom of the
+   range. A uniform density over a curvature that spans twenty orders is wrong in both directions
+   at once, and §10.2 is that statement in numbers.
+2. **The criterion that works is fourth-derivative equidistribution,
+   $h(u)^4\,|\varphi''''(u)|/384 \le \varepsilon$, and it is computable before the grid exists**
+   from $H$, $c_s^2$ and $k$ alone (§10.1, §10.3). At the **same** sample count it puts every
+   production row inside its floor where the shipped grid misses two of them; at the **same**
+   accuracy it needs **1.75×** fewer samples on QCD and **2.06×** fewer on LambdaCDM (§10.5).
+3. **The saving and `[03-derivative-pad-clamp-on-coarse-grids]` are the same lever.** The whole of
+   the saving is coarsening at low $z$, and the derivative-fit padding clamps the moment the lowest
+   grid interval exceeds $-\log(0.9)/12 = 8.7800\times10^{-3}$ in $u$ — which is exactly when the
+   coarsening begins. At the "never coarser than today" cap the clamp does not bind and the saving
+   is 1 %; at every coarser cap the clamp binds. **A density change is therefore not free of that
+   issue, it is the thing that triggers it.**
+
+**What is not measured here, and bounds all three.** The source grid carries far more than
+$\varphi$: the numeric ODE's sample points, the four `CumulativeTable`s' Gauss panels, and the
+abscissae `QuadSource` and `QuadSourceIntegral` integrate the source over. **None of those
+requirements is measured in this section**, and a criterion derived from $\varphi$ alone is a lower
+bound on the density, never an upper one. That is why §10.5 reports a *cap ladder* rather than a
+single number: the cap is where the unmeasured consumers would have to be let in.
+
+**The decision is the user's**, and it costs a full datastore regeneration — eight stored object
+types, quantified in §9.6 — because every one of them is keyed on the grid tag.
+
+### 10.1 The oracle, and why it is not the stored phase
+
+Prompts 10 and 11 scored $\varphi$ recovered from a **stored** $\theta$, which carries the
+$\epsilon k\tau$ rounding of `[02-consumer-phi-below-the-storage-granularity]`. That floor is
+precisely what a *density* measurement has to see past. So the reference here is the phase residual
+itself,
+
+$$\varphi(z) \;=\; \rho(z) + \text{const},\qquad \rho(z)=\int_z^{z_{\rm top}}\frac{C}{\omega+\omega_0}\,\mathrm{d}z',$$
+
+read off `ComputeTargets.phase_residual.build_phase_residual`'s `CumulativeTable`, whose `delta`
+does genuine Gauss quadrature between arbitrary endpoints rather than interpolating. `PrimitivePhase`'s
+own module docstring is the warrant: $\varphi$ is $\rho$ plus the producer's constant offsets, and a
+constant is invisible to an interpolation error. The storage floor then enters only where it
+belongs — as the line below which no grid decision is visible.
+
+**The criterion's inputs are pre-grid, which is the whole point.** `populate_z_sample` runs before
+any `BackgroundModel` exists, so a criterion may use only what the *cosmology* supplies pointwise.
+It supplies enough:
+
+$$\frac{\mathrm{d}\varphi}{\mathrm{d}u} \;=\; -(1+z)\,\frac{C(z)}{\omega(z,k)+\omega_0(z,k)},\qquad u=\log(1+z)$$
+
+with $\omega_0^2 = w\,(k/H)^2$ ($w=1$ in the $G_k$ sector, $w=c_s^2$ in $T_k$) and $C$ built from
+$H$, $c_s^2$ and their $z$-derivatives. Two checks license it:
+
+| check | result |
+|---|---|
+| the closed form against the table's own numerical derivative, mid-band, twelve (model, sector, $k$) | agrees to **2.4e-11 … 1.2e-05** relative, the larger figures being the central difference's own noise where $\varphi'\sim10^{-11}$ |
+| $\epsilon$ as the **model** supplies it (a spline over the grid's own samples on QCD) against $\epsilon$ from a central difference of the cosmology's pointwise `Hubble` — what a pre-grid criterion would have to use | **max 2.5e-09 (LambdaCDM), 3.9e-09 (QCD)**, median 8.1e-10, away from a declared crossing |
+
+So a criterion evaluated from finite differences of the cosmology's own $H$ and $c_s^2$ is, away
+from a crossing, the same criterion measured here to nine digits. It costs $5N$ closed-form
+evaluations for an $N$-point profile: **0.01–0.27 s** for the production profile, against the
+**0.599 s** a QCD `compute_background` takes (§4.2).
+
+### 10.2 Sub-question 1 — what the shipped grid delivers, per decade
+
+Interpolation error of a cubic of $\varphi$ on the grid prompt 11 ships, scored at four points
+inside every production interval. "floor" is 1 ulp of the $k\tau$ span; "away" excludes 0.15 in $u$
+either side of a declared crossing, because those neighbourhoods are prompt 11's local mechanism and
+not a density.
+
+| model | sector | $k$ | band samples | max, all | max, away | floor (1 ulp) | away / floor |
+|---|---|---|---|---|---|---|---|
+| LambdaCDM | $G_k$ | 1e5 | 1,732 | 2.7680e-12 | 2.7680e-12 | 2.3842e-07 | 1.16e-05 |
+| LambdaCDM | $G_k$ | 1e7 | 1,732 | 2.7458e-14 | 2.7458e-14 | 1.5259e-05 | 1.80e-09 |
+| LambdaCDM | $G_k$ | 3e8 | 1,732 | 9.1527e-16 | 9.1527e-16 | 4.8828e-04 | 1.87e-12 |
+| LambdaCDM | $T_k$ | 1e5 | 1,113 | 5.8576e-08 | 5.8576e-08 | 7.4506e-09 | **7.86** |
+| LambdaCDM | $T_k$ | 1e7 | 1,313 | 5.9076e-08 | 5.9076e-08 | 9.5367e-07 | 6.19e-02 |
+| LambdaCDM | $T_k$ | 3e8 | 1,460 | 5.3192e-08 | 5.3192e-08 | 3.0518e-05 | 1.74e-03 |
+| QCD | $G_k$ | 1e5 | 1,271 | 1.4356e-05 | 1.6782e-08 | 2.3842e-07 | 7.04e-02 |
+| QCD | $G_k$ | 1e7 | 1,509 | 2.1574e-04 | 9.1102e-10 | 1.5259e-05 | 5.97e-05 |
+| QCD | $G_k$ | 3e8 | 1,644 | 7.1558e-06 | 5.1456e-10 | 4.8828e-04 | 1.05e-06 |
+| QCD | $T_k$ | 1e5 | 1,145 | 2.4859e-05 | 5.8437e-08 | 7.4506e-09 | **7.84** |
+| QCD | $T_k$ | 1e7 | 1,360 | 4.4783e-04 | 1.5453e-08 | 9.5367e-07 | 1.62e-02 |
+| QCD | $T_k$ | 3e8 | 1,520 | 1.3272e-05 | 5.8675e-08 | 3.0518e-05 | 1.92e-03 |
+
+**Two rows miss, and they are the same row on both models**: the transfer-function sector at
+$k=10^5$, **7.86** and **7.84** ulp, and in both the maximum sits in the **top decade of the band**
+($z=1.32\times10^{10}$ and $1.46\times10^{10}$), within a few grid intervals of horizon entry. Every
+other row is inside its floor, most of them by many orders.
+
+**Where the error lives, and why a uniform grid is wrong in both directions.** Per decade, QCD
+$T_k$ at $k=10^5$ (the spacing $h_u$ is the grid's own, and "headroom" is floor / max-away):
+
+| decade of $z$ | $h_u$ | max away | headroom |
+|---|---|---|---|
+| −1 | 5.4866e-03 | 3.3307e-16 | 2.24e+07 |
+| 0 … 3 | 1.75e-02 … 2.30e-02 | 2.2e-16 … 5.6e-16 | 1.3e+07 … 3.4e+07 |
+| 4 | 2.3031e-02 | 2.5535e-15 | 2.92e+06 |
+| 5 | 2.3032e-02 | 2.5202e-14 | 2.96e+05 |
+| 6 | 2.3032e-02 | 2.5180e-13 | 2.96e+04 |
+| 7 | 2.3032e-02 | 4.6224e-10 | 1.61e+01 |
+| 8 | 2.3032e-02 | 2.2879e-11 | 3.26e+02 |
+| 9 | 2.3032e-02 | 9.1955e-10 | 8.10e+00 |
+| 10 | 1.1516e-02 | **5.8437e-08** | **1.27e-01** |
+
+The error falls by about one order per decade downwards and spans **eight orders within a single
+band**, while the spacing is constant to four digits over fourteen of those decades. Below $z\sim1$
+the grid is additionally *finer* in $u$ — 5.49e-03 against 2.30e-02, because `populate_z_sample` is
+log-spaced in $z$ and not in $1+z$ — so the density is at its highest exactly where the curvature is
+at its lowest. On LambdaCDM $G_k$ the whole band has headroom between **8.6e+04** and **2.1e+19**:
+$\varphi$ there is the residual of an equation of state that is radiation to a part in $10^4$, and
+**no sample density is doing any work at all**.
+
+**Where the criterion stops meaning anything.** The floor grows like $k$ (it is
+$\epsilon\,k\tau$) while $\varphi$ and all its derivatives fall like $1/k$ (the residual is
+$\int C/(\omega+\omega_0)$ and the denominator is $\sim 2k/H$ at large $k$), so the requirement and
+the floor move apart by $k^2$. That is visible in the table: the $T_k$ "away / floor" column reads
+**7.84** at $k=10^5$, **1.62e-02** at $10^7$ and **1.92e-03** at $3\times10^8$. Prompt 10 measured
+the other end of the same fact — the recovered $\varphi$ spans **6.0 ulp** of the stored phase at
+$k=10^7$ and **2.0 ulp** (three distinct values over 1,377 samples) at $3\times10^8$. **A density
+criterion derived at $k=3\times10^8$ would be fitting rounding.** Everything below is derived at
+$k=10^5$, where $\varphi$ has dynamic range, and the honest statement of its reach is: **above
+$k\approx10^7$ the grid's density is not what limits the consumer, and no grid decision is visible
+there.**
+
+### 10.3 Sub-question 2 — the criterion, and whether it predicts
+
+$$\boxed{\;h(u)^4\,\frac{|\varphi''''(u)|}{384}\;\le\;\varepsilon\;}\qquad
+\varphi'(u) = -(1+z)\frac{C(z)}{\omega+\omega_0},\quad \varphi''''=\left(\varphi'\right)'''$$
+
+with the third derivative taken by a five-point central stencil of step $10^{-3}$ in $u$ on the
+closed form — four evaluations of $H$, $c_s^2$ and their $z$-derivatives per point, no grid, no
+stored phase, no `BackgroundModel`.
+
+Realised error against predicted, per production interval, away from a declared crossing and above
+the 1e-15 rad at which the oracle itself runs out:
+
+| model | sector | $k$ | intervals | p10 | median | p90 | spread |
+|---|---|---|---|---|---|---|---|
+| LambdaCDM | $G_k$ | 1e5 | 313 | 0.003 | 0.010 | 0.046 | 15.3× |
+| LambdaCDM | $G_k$ | 1e7 | 119 | 0.003 | 0.011 | 0.052 | 16.2× |
+| LambdaCDM | $G_k$ | 3e8 | — | *fewer than ten usable intervals* | | | |
+| LambdaCDM | $T_k$ | 1e5 | 551 | 0.921 | **0.923** | 0.934 | **1.0×** |
+| LambdaCDM | $T_k$ | 1e7 | 551 | 0.922 | **0.923** | 0.932 | **1.0×** |
+| LambdaCDM | $T_k$ | 3e8 | 549 | 0.922 | **0.923** | 0.933 | **1.0×** |
+| QCD | $G_k$ | 1e5 | 365 | 0.952 | 1.247 | 9.457 | 9.9× |
+| QCD | $G_k$ | 1e7 | 520 | 0.948 | 1.054 | 10.396 | 11.0× |
+| QCD | $G_k$ | 3e8 | 442 | 0.949 | 1.016 | 3.241 | 3.4× |
+| QCD | $T_k$ | 1e5 | 529 | 0.922 | **0.928** | 0.943 | **1.0×** |
+| QCD | $T_k$ | 1e7 | 517 | 0.923 | **0.928** | 0.955 | **1.0×** |
+| QCD | $T_k$ | 3e8 | 529 | 0.922 | **0.927** | 0.954 | **1.0×** |
+
+**In the transfer-function sector the indicator predicts the realised error to ±2 % over 500-odd
+intervals, on both models, at all three wavenumbers, with the textbook constant $1/384$ and no
+fitting.** In the QCD Green's-function sector the median is right and the tail reaches 10×. On
+LambdaCDM $G_k$ the indicator **over**-predicts by about 100× and that is the stencil, not the
+criterion: $\varphi'\sim10^{-8}$ there and the third difference divides by $2\delta^3 = 2\times10^{-9}$,
+so $|\varphi''''|$ is roundoff-dominated. It errs towards asking for *more* samples than are needed,
+which is the safe direction; a larger stencil step or an analytic third derivative would remove it,
+and neither is needed for a criterion whose answer on that row is "any density will do".
+
+**A second candidate, and it is refuted.** `SLOPE` — equidistribute $\varphi$ itself,
+$h(u)\,|\varphi'(u)| = \delta$, one derivative and no numerical differentiation at all — is the
+cheap alternative, and it does not work. It places density where $\varphi$ *moves* rather than where
+it *bends*: on the production envelope it needs **113,000–114,000** samples against the shipped
+1,773 (§10.5) and still misses two rows, and per case it fails outright on QCD $G_k$ at $k=10^5$ and
+$3\times10^8$ ("never meets the target at any scale") while needing 15,463 samples for QCD $T_k$ at
+$k=10^5$ where `CURV` needs 295. It is recorded because "equidistribute the function" is the obvious
+first thing to try and the measurement says not to.
+
+### 10.4 The crossings are excluded, and why — a finding prompt 11 could not have seen
+
+Every table above separates the 0.15 in $u$ either side of a declared crossing. That is not
+bookkeeping. On `QCD_Cosmology`, `epsilon`, `d_epsilon_dz` and `d2_epsilon_dz2` are **not** cosmology
+methods: `BackgroundModel._create_functions` finds no `d_lnH_dz` on the cosmology and builds one as a
+quintic spline of $\log H$ over `_build_derivative_fit_grid(z_sample)` — a padded, 3× refined copy of
+**the source grid**, which is **not** split at the equation of state's break points. So $\omega_{\rm eff}$
+itself is a function of the source grid, and at a genuine step in $H$ that spline rings.
+
+$\epsilon$ from the model against $\epsilon$ from a central difference of the cosmology's own
+`Hubble`, at offsets from each declared crossing, on the background built on the **base** 1,732-point
+grid and on the one built on the **shipped** 1,773-point grid:
+
+| crossing | worst relative disagreement, base-grid background | shipped-grid background |
+|---|---|---|
+| `T_LO`, $u=17.565806942$ ($z=4.25\times10^7$) | **3.66e-02** at $\mathrm{d}u=-0.005$ | **2.04e-02** at $+0.005$ |
+| `EOS_T_LO`, $u=23.197460553$ ($z=1.19\times10^{10}$) | 1.9e-09 | 1.6e-09 |
+| `T_120_MEV`, $u=27.485391822$ ($z=8.64\times10^{11}$) | **6.48e-03** at $+0.005$ | **1.03e-03** at $-0.005$ |
+
+The middle row is the control and it is the campaign's own physics: `EOS_T_LO` is where $g_s$ is
+continuous to 1.8e-11 and only $w$ kinks (README §7 D4), so $H$ does not step and nothing rings.
+At the two genuine steps the ringing is real, and prompt 11's refinement **improves its amplitude by
+1.8× and 6.3×**.
+
+**But the amplitude is not what the consumer's spline sees.** Four combinations of
+(background built on which grid) × (samples taken from which grid), QCD $T_k$ at $k=10^5$, and the
+same pattern in all six QCD cases:
+
+| background built on | samples from | band $n$ | max | near a crossing | away from one |
+|---|---|---|---|---|---|
+| base | base | 1,117 | 1.4055e-05 | 1.4055e-05 | 1.0523e-07 |
+| base | **shipped** | 1,145 | **3.9744e-07** | 3.9744e-07 | 5.8439e-08 |
+| **shipped** | base | 1,117 | 1.1851e-04 | 1.1851e-04 | 5.9047e-08 |
+| **shipped** | **shipped** | 1,145 | **2.4859e-05** | 2.4859e-05 | 5.8437e-08 |
+
+Row 2 is **prompt 11's configuration** — that prompt added samples to the consumer's set while its
+`qcd_model_with_tables` was built on `production_source_grid`, the base grid — and it reproduces
+prompt 11's result on a completely different oracle: **1.4055e-05 → 3.9744e-07**, against §9.2's
+1.3982e-05 → 4.9012e-07 (1876.61 → 65.78 ulp). The two starting values agree to **0.5 %** and the
+two end values to **23 %**, a factor of 35.4 here against 28.5 there — close enough that the two
+measurements are of the same thing, and different enough to say that they are independent.
+**Row 4 is what production will do**, because `main.py` passes
+`z_sample=z_source_sample` to `BackgroundModel` and prompt 11 changed that grid: 1.41e-05 →
+**2.49e-05**, i.e. **1.77× worse, not 35× better**. The mechanism is that refining the lattice at a
+step makes the ringing lower **and narrower**, and a cubic through samples half a base interval apart
+resolves a narrower feature worse; the stacked `d2_lnH_dz2` and `d3_lnH_dz3` amplify what `d_lnH_dz`
+leaves behind.
+
+**What is unambiguous, and holds in every case, is the "away" column**: 1.05e-07 → 5.84e-08 here,
+3.67e-07 → 9.11e-10 for QCD $G_k$ at $k=10^7$. **Away from a crossing prompt 11's grid is better on
+every row.** This section makes no claim that prompt 11 should have done something else — its
+neighbourhood refinement is what §10.5's criterion also asks for, and it was measured correctly for
+the configuration it measured. It says that the residue at a crossing is **the background's own
+derivative fields**, not the sample density, and that no density criterion can reach it. That is
+`[12-background-derivative-fit-grid-rings-at-a-step]` below.
+
+### 10.5 Sub-question 3 — what it would cost, and what it would save
+
+`main.py` builds **one universal source grid**, so a criterion has to be the envelope over every
+(sector, $k$) it serves: each case is tuned to its own target
+$\min(1\ \text{ulp},\ 10^{-6}\ \text{rad})$ on its own band, and the grid takes the smallest spacing
+any case asks for. Above the highest band no case constrains anything and the spacing is the cap.
+The march is a forward Euler on $\mathrm{d}u/\mathrm{d}i = h(u)$ — what a practical
+`populate_z_sample` would do, not an optimal grid — so the counts are the simple implementation's,
+and the ratios below are non-monotone in the cap for that reason.
+
+**QCD, `CURV`, all six cases scored on one grid:**
+
+| cap on $h$ | grid | vs shipped 1,773 | worst row / target | which row | `[03-derivative-pad-…]` |
+|---|---|---|---|---|---|
+| **1× today** | **1,761** | 1.01× | **0.14** | $T_k$ 1e5 | **does not bind** |
+| 2× | **1,015** | **1.75×** | **0.21** | $T_k$ 1e5 | BINDS |
+| 4× | 703 | 2.52× | 1.65 ✗ | $T_k$ 1e5 | BINDS |
+| 8× | 588 | 3.02× | 0.92 | $T_k$ 1e5 | BINDS |
+| 32× | 521 | 3.40× | 4.17 ✗ | $T_k$ 1e5 | BINDS |
+
+**LambdaCDM, `CURV`:**
+
+| cap on $h$ | grid | vs shipped 1,732 | worst row / target | which row | `[03-derivative-pad-…]` |
+|---|---|---|---|---|---|
+| **1× today** | **1,634** | 1.06× | **0.34** | $T_k$ 1e5 | **does not bind** |
+| 2× | **842** | **2.06×** | 1.09 ✗ (9 %) | $T_k$ 1e5 | BINDS |
+| 4× | 471 | 3.68× | 5.09 ✗ | $T_k$ 1e7 | BINDS |
+| 8× | 307 | 5.64× | 1.06 ✗ | $T_k$ 1e7 | BINDS |
+| 32× | 218 | 7.94× | 1.35 ✗ | $T_k$ 1e7 | BINDS |
+
+**`SLOPE` on the same envelope: 114,281 samples (QCD) and 4,229 (LambdaCDM) at the 1× cap**, 64×
+and 2.4× *more* than the grids they replace, and above the 4× cap it misses by up to 1,723× (QCD
+$G_k$, $3\times10^8$). Refuted.
+
+**Accuracy at a fixed sample count**, per case, `CURV` tuned to the shipped band count:
+
+| model | sector | $k$ | shipped $n$ | shipped max | `CURV` at the same $n$ | ratio |
+|---|---|---|---|---|---|---|
+| LambdaCDM | $T_k$ | 1e5 | 1,113 | 5.8576e-08 | 1,113 → **2.1427e-12** | 27,337× |
+| LambdaCDM | $T_k$ | 1e7 | 1,313 | 5.9076e-08 | 1,313 → **2.0728e-13** | 285,009× |
+| QCD | $G_k$ | 1e5 | 1,271 | 1.4356e-05 | 1,272 → **1.4881e-11** | 964,709× |
+| QCD | $T_k$ | 1e5 | 1,145 | 2.4859e-05 | 1,145 → **1.0849e-11** | 2,291,320× |
+| QCD | $T_k$ | 1e7 | 1,360 | 4.4783e-04 | 1,360 → **9.7801e-11** | 4,578,986× |
+
+(The shipped-grid figures in that table include the crossing residue of §10.4, which `CURV` at the
+same count does not have to carry because it is scored away from a crossing; the honest comparison
+of the *density* alone is the envelope table above.)
+
+**Samples at a fixed accuracy**, per case, against the two uniform controls:
+
+| model | sector | $k$ | shipped $n$ | `CURV` | uniform in $u$ | uniform in $\log_{10} z$ |
+|---|---|---|---|---|---|---|
+| LambdaCDM | $G_k$ | all three | 1,732 | 164 (cap-limited) | 8 | 8 |
+| LambdaCDM | $T_k$ | 1e5 | 1,113 | **204** | 1,720 | 1,898 |
+| LambdaCDM | $T_k$ | 1e7 | 1,313 | **128** | 580 | 629 |
+| LambdaCDM | $T_k$ | 3e8 | 1,460 | **144** | 625 | 673 |
+| QCD | $G_k$ | 1e5 | 1,271 | **295** | 548 | 706 |
+| QCD | $G_k$ | 1e7 | 1,509 | **221** | 841 | 838 |
+| QCD | $G_k$ | 3e8 | 1,644 | **226** | 399 | 387 |
+| QCD | $T_k$ | 1e5 | 1,145 | **295** | 1,730 | 1,908 |
+| QCD | $T_k$ | 1e7 | 1,360 | **173** | 859 | 932 |
+| QCD | $T_k$ | 3e8 | 1,520 | **182** | 650 | 699 |
+
+The two $T_k$ rows at $k=10^5$ are the ones that matter: **uniform in $\log_{10} z$ needs 1,898 and
+1,908 band samples to reach the floor where the grid has 1,113 and 1,145** — i.e. today's
+`source_samples_per_log10z = 100` would have to become about **167** to meet it uniformly, against
+**204 and 295** samples for the whole band under the criterion.
+
+### 10.6 The two constraints the answer had to respect
+
+**The response grid stays a decimation of the source grid.** It is built by a blind stride
+`[::-n]`, which is a subset of *any* source grid by construction; it was checked on every candidate
+grid in §10.5 and is `True` in all twenty. The counts scale with the source grid: QCD's response
+grid goes 147 (cap 1×) → 85 (2×) → 44 (32×) against the 148 a blind stride gives on the shipped
+grid (production is 156 with prompt 11's `protect=`). **A response grid of 44 samples over twenty
+decades is almost certainly not usable**, which is a second reason the cap ladder stops well short
+of its coarse end — and it is not a $\varphi$ question, so this section does not answer it.
+
+**The large-$k$ floor.** §10.2's last paragraph, restated here because it bounds the criterion:
+above $k\approx10^7$ the recovered $\varphi$ spans 6.0 ulp of the stored phase and at
+$3\times10^8$ it spans 2.0 ulp, so the measured "error" there is quantisation. Every scale in §10.5
+is set by the $k=10^5$ rows, and the $10^7$ and $3\times10^8$ rows are carried along, never binding.
+
+### 10.7 The $k\tau$ oscillation, written down so it is not forgotten again
+
+Audit §9's fourth bullet: *"The response grid and the $k\tau$ oscillation an $\Omega_{\rm GW}$
+post-processing step would need to resolve in order to fit an RMS amplitude. Not yet designed;
+noted so it is not forgotten."* Measured, on the shipped grids, response grid by a blind stride of
+12:
+
+| model | $k$ | $k\tau$ over the whole range | per response interval, median | per response interval, max | response samples for 4 per cycle | shortfall |
+|---|---|---|---|---|---|---|
+| LambdaCDM | 1e5 | 1.3728e+09 rad | 2.9562e+02 | 8.1634e+07 | 8.740e+08 | **6.03e+06×** |
+| LambdaCDM | 1e7 | 1.3728e+11 | 2.9562e+04 | 8.1634e+09 | 8.740e+10 | **6.03e+08×** |
+| LambdaCDM | 3e8 | 4.1184e+12 | 8.8687e+05 | 2.4490e+11 | 2.622e+12 | **1.81e+10×** |
+| QCD | 1e5 | 1.3728e+09 | 1.8536e+02 | 8.1630e+07 | 8.740e+08 | **5.91e+06×** |
+| QCD | 1e7 | 1.3728e+11 | 1.8536e+04 | 8.1630e+09 | 8.740e+10 | **5.91e+08×** |
+| QCD | 3e8 | 4.1184e+12 | 5.5608e+05 | 2.4489e+11 | 2.622e+12 | **1.77e+10×** |
+
+**The conclusion is not a grid size; it is that no grid size exists.** Even at the *smallest*
+production wavenumber and the *median* response interval, the phase advances **185–296 radians**
+— some 30 to 47 complete cycles — between neighbouring response samples, and resolving the
+oscillation pointwise at four samples per cycle would need between $6\times10^6$ and
+$1.8\times10^{10}$ times the response samples the grid carries. **An $\Omega_{\rm GW}$
+post-processing step must therefore obtain its RMS amplitude analytically — from the phase object
+and an oscillatory quadrature, which is what `AdaptiveLevin` already does upstream — and can never
+obtain it by sampling the response grid more finely.** Any future grid decision should be taken with
+that in view: the response grid's density is set by what the *envelope* of $\Omega_{\rm GW}$ needs,
+never by its oscillation, and nothing in this campaign has measured the envelope's requirement.
+
+### 10.8 Suites
+
+| suite | before (`4f725c0`) | after | command |
+|---|---|---|---|
+| `CosmologyModels/tests` | 30 OK | **30 OK** (0.576 s) | `discover -s CosmologyModels/tests -t .` |
+| `ComputeTargets/tests` | 380 OK | **380 OK** (153.568 s) | `discover -s ComputeTargets/tests -t .` |
+| `LiouvilleGreen/tests` | 143 OK (fast set) | **143 OK** (13.923 s, at load average 9.7) | every module except `test_3bessel_analytic` |
+
+No production file, no test file and no fixture is in this prompt's diff, so "before" and "after"
+are the same tree for everything but `docs/`. `black` is clean on the one new file.

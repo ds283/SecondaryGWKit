@@ -1,6 +1,6 @@
 # Open issues — project-wide index
 
-**Last updated:** 2026-09-15 · **61 open** across eight campaigns.
+**Last updated:** 2026-09-15 · **63 open** across eight campaigns.
 
 This file exists so that an issue opened by one campaign is not lost when that campaign closes.
 It is an **index, not a record**: one line per issue, pointing at the campaign status board that
@@ -140,8 +140,8 @@ campaign was **closed**, its remaining issue passing to the `qcd-background-audi
 ### 1.7 The QCD background campaign
 
 [`prompts/qcd-background-audit/`](../prompts/qcd-background-audit/README.md) (2026-09-13; twelve
-prompts in four workstreams, **CLOSED at 9 / 12, 2026-09-14** — the ungated chain 01–09 is complete
-and prompts 10–12 are gated on that README's §7 D7). It
+prompts in four workstreams, **CLOSED at 12 / 12, 2026-09-15** — the ungated chain 01–09 completed
+2026-09-14 and workstream D's prompts 10, 11 and 12 ran on 2026-09-15). It
 implements [`qcd-background-audit-2026-09.md`](qcd-background-audit-2026-09.md), which measured that
 `QCD_Cosmology`'s temperature is a cubic spline over 500 points solved to `rtol=1e-4`, built as $T$
 against $\log(1+z)$ and run across three points at which $T(z)$ genuinely **jumps** — so the
@@ -269,6 +269,39 @@ tags carry a digest of the grid's own values, which closes the equal-length coll
 **invalidates every stored object of eight types** -- the bill is quantified in log 11 §5 and
 [`qcd-background-verification.md`](qcd-background-verification.md) §9.6. Suites 30 / 361 → **380** /
 143 (fast set).
+
+**Prompt 12 landed 2026-09-15 and closed the campaign, by measuring and recommending rather than
+by changing anything.** No production file is in its diff, `T_Z_REPRESENTATION_VERSION` is **5**
+before and after, and no grid was changed. The uniform `source_samples_per_log10z = 100` is wrong
+in **both** directions: scored against the phase residual itself — not against $\varphi$ recovered
+from a stored $\theta$, which is floor-limited by
+`[02-consumer-phi-below-the-storage-granularity]` — the consumer's cubic misses the storage floor
+by **7.86×** and **7.84×** in the top decade of the $T_k$ band at $k=10^5$ on LambdaCDM and QCD,
+and has up to **2.1e+19** of headroom at the bottom of the range, the spacing being constant to
+four digits across fourteen decades. The criterion that fixes it,
+$h^4|\varphi''''|/384 \le \varepsilon$ with $\varphi' = -(1+z)C/(\omega+\omega_0)$, is
+**computable before the grid exists** from $H$, $c_s^2$ and $k$ (0.01–0.27 s against
+`compute_background`'s 0.599 s) and predicts the realised error **to ±2 %** over 500-odd intervals
+in the $T_k$ sector on both models at all three wavenumbers. One universal envelope grid gives QCD
+1,773 → **1,761** samples with every row at 0.14× its target, or **1,015** (1.75× fewer) at twice
+today's spacing; LambdaCDM 1,732 → **1,634** or **842** (2.06× fewer). A second candidate —
+equidistributing $\varphi$ itself — is **refuted** at 114,281 samples. Above $k\approx10^7$ none of
+this is visible, the floor growing like $k$ while $\varphi$ falls like $1/k$. Audit §9's $k\tau$
+bullet is discharged and the answer is that **no grid size exists**: the median response interval
+advances 30 to 47 complete cycles at the smallest production $k$, and four samples per cycle would
+need $6\times10^6$ to $1.8\times10^{10}$ times the response samples the grid carries. The two
+issues below are prompt 12's; the first **is** the recommendation, recorded so that it outlives the
+campaign, and the decision is the user's. Record:
+[`grid_density_criterion.py`](qcd-background-audit/grid_density_criterion.py) (one command, 88.4 s,
+no Ray, no datastore) → [`qcd-background-verification.md`](qcd-background-verification.md) §10.
+Suites 30 / 380 / 143 (fast set), unchanged.
+
+**Opened by prompt 12**, which closed the campaign:
+
+| Issue | Board | Hook |
+|---|---|---|
+| `[12-source-grid-density-is-uniform-over-a-curvature-that-spans-eight-orders]` | qcd-background-audit | **The recommendation, and the decision is the user's.** `source_samples_per_log10z = 100` is uniform over a $\varphi$ curvature that spans eight orders inside a single Liouville–Green band: the consumer's cubic misses the storage floor by **7.86×/7.84×** in the top decade of the $T_k$ band at $k=10^5$ and has up to **2.1e+19** of headroom at the bottom. $h^4\|\varphi''''\|/384 \le \varepsilon$, with $\varphi' = -(1+z)C/(\omega+\omega_0)$ from $H$, $c_s^2$ and $k$ alone, is computable **before** the grid exists and predicts the realised error to **±2 %**; one envelope grid gives QCD 1,761 samples (against 1,773) with every row at 0.14× its target, or 1,015 at 1.75× fewer, and LambdaCDM 1,634 or 842. Equidistributing $\varphi$ itself is refuted at 114,281 samples. **Four bounds:** the saving and `[03-derivative-pad-clamp-on-coarse-grids]` are the same lever (the clamp binds at the first coarsening step); the grid also carries the numeric ODE, four cumulative tables and `QuadSourceIntegral`, none of whose requirements is measured, so this is a lower bound on the density; §5's production-$x$ caveat applies in full, since **no pipeline has run on any grid measured here, including the one that ships**; and above $k\approx10^7$ none of it is visible. **Cost of acting: a full regeneration of eight stored object types.** No next step proposed — that is deliberate. |
+| `[12-background-derivative-fit-grid-rings-at-a-step]` | qcd-background-audit | `QCD_Cosmology` supplies no `d_lnH_dz`, so `compute_background` splines $\log H$ over `_build_derivative_fit_grid(z_sample)` — a refinement of **the source grid**, *not* split at `integration_break_points` — and stacks `d2`/`d3` on it. $H$ steps at two declared crossings, so `epsilon` and its derivatives ring there: **3.66e-02** relative at `T_LO` and **6.48e-03** at `T_120_MEV`, against 3.9e-09 away from a crossing, with `EOS_T_LO` (where $g_s$ is continuous and only $w$ kinks) the control at 1.6e-09. **Prompt 11 measured with the background held on the base grid; production rebuilds it on the new one**, and then the consumer's $\varphi$ error at `T_LO` reads 2.4859e-05 rad where prompt 11's configuration reads 3.9744e-07 — 1.77× worse than the base grid, not 35× better, because refining at a step makes the ringing narrower faster than smaller. Away from a crossing prompt 11's grid is better on all six QCD rows, so this narrows rather than overturns it, and **no density criterion can reach it**. **Next step:** fit one spline per branch, as prompt 06 did for $F(u)$ — a `T_Z_REPRESENTATION_VERSION` bump with a regeneration attached. |
 
 **Opened by prompt 11**, which closed the issue that released workstream D:
 
