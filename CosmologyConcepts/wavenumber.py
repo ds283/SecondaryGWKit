@@ -22,6 +22,34 @@ from utilities import WallclockTimer
 # the cosmology-aware source grid (prompt 11 of prompts/qcd-background-audit, audit section 7)
 # ---------------------------------------------------------------------------------------------
 
+# The identity of the *algorithm* that builds the source grid: everything in this section, plus
+# build_z_sample below and the way wavenumber_exit_time.populate_source_grid calls it.
+#
+# **What it identifies, and what it does not.** It names the construction, not the grid. Two runs
+# at the same version can still produce different grids -- a different z_end, a different
+# samples_per_log10z, a different cosmology -- and the content digest
+# (CosmologyConcepts.redshift.redshift_grid_digest, prompt 11) is what separates those. The pair
+# answers two different questions, and neither substitutes for the other: the digest says
+# *which exact grid*, and cannot be inverted or range-queried; this integer says *which
+# generation of the algorithm*, and is the only thing that can be compared across grids whose
+# values legitimately differ.
+#
+# **A bump is the only signal a datastore gets.** Nothing about how a grid was constructed is
+# recoverable from the stored samples, so an unbumped change to the code in this section serves
+# objects computed under the old construction as if they were the new one -- which is the failure
+# Datastore/SQL/ObjectFactories/QCD_Cosmology.py's module docstring describes one level in, for
+# the T(z) representation. **Any prompt that changes how the grid is constructed bumps this**,
+# and records what it changed in the table below.
+#
+#   version 1 (prompt 11 of prompts/qcd-background-audit, recorded by prompt 14) -- a uniform
+#     logspace base grid at the caller's samples_per_log10z, plus, for a cosmology that declares
+#     integration_break_points: a pair straddling each declared crossing at
+#     SOURCE_GRID_BREAK_STANDOFF = 0.25 of a base interval, the
+#     SOURCE_GRID_BREAK_HALF_WIDTH = 5 intervals either side of it refined by
+#     SOURCE_GRID_BREAK_REFINEMENT = 2, and the two equality redshifts. A cosmology that declares
+#     nothing gets the bare logspace, element for element.
+SOURCE_GRID_CONSTRUCTION_VERSION = 1
+
 # The standoff at which the pair of samples straddling a declared break point is placed, **as a
 # fraction of the grid's own spacing**: the pair goes at
 #

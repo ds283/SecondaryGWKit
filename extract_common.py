@@ -1,9 +1,215 @@
+"""
+Shared services for the extract_*.py data-product scripts -- plot furniture, and (prompt 14 of
+prompts/qcd-background-audit) the naming and selection of *runs*.
+
+The run-naming convention lives here rather than in main.py because main.py cannot be imported
+(it parses sys.argv, opens a Ray connection and a ShardedPool at module scope: CLAUDE.md), so a
+constant declared there could only reach these scripts as a second copy. main.py imports
+``run_label_tag`` and ``source_grid_construction_tag`` from this module, which makes the writer
+and the seven readers agree on the tag spelling by construction rather than by a test.
+
+**Why the scripts need any of this.** Before prompt 14 all seven passed *zero* tags, against
+main.py's eight-plus tagged call sites. That was a reasonable development choice: while a store
+held exactly one complete run, a tagless query needed no adjustment whenever the compute
+configuration changed. It stops being safe the moment a store holds two generations -- what a
+partial regeneration, or an archived store read beside a current one, produces -- because the
+scripts cannot tell them apart and will mix silently or pick arbitrarily.
+
+The mechanism here preserves the ergonomic property that made the tagless design pleasant:
+
+  * **select** on the run label, which is the only thing a user should have to type;
+  * if no label is given and the store holds exactly one run, use it and *say which*;
+  * only an ambiguous store requires the user to choose, and then the refusal names the
+    candidates;
+  * a store written before prompt 14 carries no run labels at all. That is **not** an error: its
+    rows are an unknown generation, and they stay queryable and plottable, because a superseded
+    datastore keeps its archival value long after it can no longer serve as a numerical base.
+
+**Verification** -- that everything pulled under one label really is one generation -- is not done
+here. It is done by ``Datastore/SQL/ObjectFactories/BackgroundModel.py``'s ``build()``, which is
+the first lookup every one of these scripts makes and the only object that carries the grid's
+identity as columns rather than as a tag; it refuses, naming every generation it found, rather
+than returning a mixture. ``describe_background_generation`` below renders what it found.
+"""
+
 from math import fabs
-from typing import Optional
+from typing import List, NamedTuple, Optional, Sequence
+
+import ray
 
 from ComputeTargets import GkSource, GkSourcePolicyData
 from ComputeTargets.GkSourcePolicyData import GkSourceFunctions
 from CosmologyConcepts import wavenumber_exit_time, redshift
+
+# ---------------------------------------------------------------------------------------------
+# run identity (prompt 14 of prompts/qcd-background-audit)
+# ---------------------------------------------------------------------------------------------
+
+# A run's name reaches the datastore as a store_tag, in the manner of main.py's TkProductionTag /
+# GkProductionTag ("TkOneLoopDensity", "GkOneLoopDensity"): a hand-chosen label string, written
+# with everything the run produces and filtered on when looking those objects up again. The
+# prefix is what lets a reader recover the set of runs a store holds from the store_tag table
+# alone, which is the only table a reader can enumerate without a lookup key.
+RUN_LABEL_TAG_PREFIX = "Run_"
+
+# ... and the generation of the grid-construction algorithm that produced the run's sample grid,
+# CosmologyConcepts.wavenumber.SOURCE_GRID_CONSTRUCTION_VERSION. It is carried as a tag beside the
+# grid's content digest because the two answer different questions: the digest says *which exact
+# grid*, and cannot be inverted or range-queried; this says *which generation*, and is the only
+# thing comparable across grids whose values legitimately differ (two cosmologies in one run have
+# different grids and the same construction).
+SOURCE_GRID_CONSTRUCTION_TAG_PREFIX = "SourceGridConstruction_"
+
+
+def run_label_tag(run_label: str) -> str:
+    """The store_tag label under which a run of name ``run_label`` records itself."""
+    return f"{RUN_LABEL_TAG_PREFIX}{run_label}"
+
+
+def source_grid_construction_tag(version: int) -> str:
+    """The store_tag label recording which grid-construction algorithm built a run's grid."""
+    return f"{SOURCE_GRID_CONSTRUCTION_TAG_PREFIX}{version}"
+
+
+class RunSelection(NamedTuple):
+    """
+    Which run an extract_*.py script is reading.
+
+    ``label`` is the run's name, or None when the datastore records no runs at all -- a store
+    written before prompt 14, whose rows are an unknown generation and are read exactly as they
+    were before. ``tags`` is what to hand every ``pool.object_get`` as ``tags=``; it is empty in
+    the unknown case, which reproduces the pre-prompt-14 query verbatim. ``description`` is one
+    line for the script to print, so that a reader of the output knows what was selected and
+    whether the script chose it or the user did.
+    """
+
+    label: Optional[str]
+    tags: list
+    description: str
+
+
+def add_run_selection_argument(parser) -> None:
+    """Add the one argument a reader should ever have to type."""
+    parser.add_argument(
+        "--run-label",
+        type=str,
+        default=None,
+        help=(
+            "read the run of this name (main.py --run-label). If omitted, and the datastore "
+            "holds exactly one run, that run is used and named in the output; a datastore "
+            "holding more than one run must be disambiguated"
+        ),
+    )
+
+
+def available_run_labels(pool) -> List[str]:
+    """
+    The names of the runs this datastore holds, in sorted order.
+
+    store_tag is a replicated table and its inventory() reports every label, so this needs no
+    lookup key and no knowledge of what the store contains -- which is the property that makes
+    the "exactly one run" case answerable without the user saying anything.
+    """
+    inventory = pool.inventory("store_tag")
+    labels = inventory.get("values", []) if isinstance(inventory, dict) else []
+
+    return sorted(
+        {
+            label[len(RUN_LABEL_TAG_PREFIX) :]
+            for label in labels
+            if isinstance(label, str) and label.startswith(RUN_LABEL_TAG_PREFIX)
+        }
+    )
+
+
+def choose_run_label(
+    available: Sequence[str], requested: Optional[str]
+) -> RunSelection:
+    """
+    Decide which run to read, from the names a datastore holds and what the user asked for.
+
+    Pure: it takes the label set rather than the pool, so the four cases below can be tested
+    without a datastore. It returns a RunSelection whose ``tags`` is empty -- materialising the
+    store_tag objects needs the pool and is :func:`resolve_run_selection`'s job.
+    """
+    available = list(available)
+
+    if requested is not None:
+        if requested not in available:
+            known = (
+                ", ".join(available)
+                if len(available) > 0
+                else "none (this datastore records no runs)"
+            )
+            raise RuntimeError(
+                f'extract: this datastore holds no run named "{requested}". Runs present: '
+                f"{known}."
+            )
+        return RunSelection(
+            label=requested,
+            tags=[],
+            description=f'reading run "{requested}" (selected with --run-label)',
+        )
+
+    if len(available) == 0:
+        # a datastore written before prompt 14. Not an error: it is read exactly as it was read
+        # before, and what it holds is reported as unknown rather than guessed at.
+        return RunSelection(
+            label=None,
+            tags=[],
+            description=(
+                "this datastore records no run labels: reading it as a single unnamed run of "
+                "unknown generation (it predates prompts/qcd-background-audit prompt 14)"
+            ),
+        )
+
+    if len(available) == 1:
+        return RunSelection(
+            label=available[0],
+            tags=[],
+            description=(
+                f'reading run "{available[0]}", the only run in this datastore (no --run-label '
+                f"given)"
+            ),
+        )
+
+    raise RuntimeError(
+        "extract: this datastore holds more than one run and none was selected. Runs present: "
+        f"{', '.join(available)}. Choose one with --run-label."
+    )
+
+
+def resolve_run_selection(pool, requested: Optional[str]) -> RunSelection:
+    """
+    :func:`choose_run_label` against the runs this datastore actually holds, with the chosen
+    run's store_tag materialised so that it can be passed straight to ``pool.object_get``.
+    """
+    selection = choose_run_label(available_run_labels(pool), requested)
+
+    if selection.label is None:
+        return selection
+
+    tag = ray.get(pool.object_get("store_tag", label=run_label_tag(selection.label)))
+
+    return selection._replace(tags=[tag])
+
+
+def describe_background_generation(model) -> str:
+    """
+    Which generation of the source grid a BackgroundModel row belongs to, as a printable string.
+
+    ``_source_grid_identity`` is set by Datastore/SQL/ObjectFactories/BackgroundModel.py's
+    build(). It is None for a datastore whose BackgroundModel table predates prompt 14 and
+    therefore records nothing about the grid -- which is reported as unknown rather than
+    defaulted, because there is no defensible value to assume.
+    """
+    identity = getattr(model, "_source_grid_identity", None)
+    if identity is None:
+        return "grid generation unknown (this datastore predates prompt 14)"
+
+    construction, digest = identity
+    return f"source grid construction version {construction}, digest {digest}"
+
 
 TEXT_DISPLACEMENT_MULTIPLIER = 0.85
 

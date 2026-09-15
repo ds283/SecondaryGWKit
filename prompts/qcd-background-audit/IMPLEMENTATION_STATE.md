@@ -3,7 +3,7 @@
 **Campaign:** [`README.md`](README.md) · **Source document:**
 [`docs/qcd-background-audit-2026-09.md`](../../docs/qcd-background-audit-2026-09.md)
 **Baseline commit:** `e8f746d` (`qcd-background-audit`, clean; identical to `main`)
-**Last updated:** 2026-09-15 — **13 / 15: the campaign reopened as workstream E and prompt 13 has landed.**
+**Last updated:** 2026-09-15 — **14 / 15: workstream E's second prompt has landed; only prompt 15 remains.**
 
 > **The campaign reopened after it closed.** Prompt 12 measured a defect it was forbidden to act on
 > — `BackgroundModel` splined `d_lnH_dz` over a padded refinement of the source grid that was
@@ -15,7 +15,17 @@
 > `_cosmology_break_points`, the ringing reads **1.9e-09 / 1.6e-09 / 4.1e-09** at the three
 > crossings against the 3.9e-09 that holds away from one, and the production row is **5.8437e-08
 > rad** — **425× better** and 6.8× inside the acceptance. `T_Z_REPRESENTATION_VERSION` is **6**.
-> Prompts 14 and 15 are planned and **have not run**.
+>
+> **Prompt 14 has now closed the other thing prompt 11 left behind: nothing recorded *which run* an
+> object belonged to.** A run is named at write time (`main.py --run-label`, a `store_tag` carried
+> by and filtered on for everything the run writes, in `TkProductionTag`'s manner), the grid's
+> construction algorithm is named by `SOURCE_GRID_CONSTRUCTION_VERSION = 1` beside prompt 11's
+> content digest, `BackgroundModel`'s lookup key carries both the digest and the version, and all
+> six `extract_*.py` select on the run label and refuse a mixture rather than picking. **A store
+> written before prompt 14 cannot be computed into and can still be read** — two different answers,
+> deliberately. The production grid is **byte-identical** to prompt 11's (3,814 `float.hex()` lines,
+> MD5 `d5ecc0aa85f38578d8c57c051d3f11e0`) and `T_Z_REPRESENTATION_VERSION` is still **6**.
+> **Prompt 15 is planned and has not run.**
 
 The record of the original twelve follows. **12 / 12: that chain is closed.** The ungated chain 01–09 is complete; T1 and G1 are closed and verified,
 G1's per-sector question is answered, and **P2 is answered, though not in the way the plan
@@ -97,10 +107,10 @@ Legend: ⬜ not started · 🟡 in flight · ✅ complete · ⚠️ complete wit
 | # | Prompt | Model | Status | Commit | Log |
 |---|---|---|---|---|---|
 | 13 | [Segment every background spline at the cosmology's break points](13-segment-background-derivative-splines.md) | Opus | ⚠️ | *"Segment the background derivative splines at the declared break points"* (SHA not embedded, per the campaign convention) | [`logs/13-segment-background-derivative-splines.md`](logs/13-segment-background-derivative-splines.md) |
-| 14 | [Key the source-grid construction](14-key-the-source-grid-construction.md) | Opus | ⬜ | — | — |
+| 14 | [Key the source-grid construction](14-key-the-source-grid-construction.md) | Opus | ⚠️ | *"Name a run at write time and verify it at read time"* (SHA not embedded, per the campaign convention) | [`logs/14-key-the-source-grid-construction.md`](logs/14-key-the-source-grid-construction.md) |
 | 15 | [Equidistribute the source grid](15-equidistribute-the-source-grid.md) | Opus | ⬜ | — | — |
 
-**Progress:** **13 / 15 complete.** (12 / 12 in the original campaign; 1 / 3 in workstream E, which
+**Progress:** **14 / 15 complete.** (12 / 12 in the original campaign; 2 / 3 in workstream E, which
 reopened it.) The line below describes the original twelve. (9 / 9 in the ungated chain 01–09;
 workstream D released and all three of 10, 11 and 12 have run.) Prompt 12 **measures and
 recommends and changes nothing**, which is what its §4 asks for: the `Result` is `COMPLETE` when
@@ -707,6 +717,70 @@ stored-$\theta$ floor there is 3.05e-05 rad. New module
 none falls. **Closes `[12-background-derivative-fit-grid-rings-at-a-step]`** (§4). Full record:
 [`logs/13-segment-background-derivative-splines.md`](logs/13-segment-background-derivative-splines.md).
 
+**Prompt 14 landed `COMPLETE WITH DEVIATIONS` — and a run now has a name.** No background number
+moves; `T_Z_REPRESENTATION_VERSION` is **6** before and after, and the production source grid is
+**byte-identical** to prompt 11's — 3,814 `float.hex()` lines over both models' source, response and
+protected sets, MD5 `d5ecc0aa85f38578d8c57c051d3f11e0`, identical at `HEAD` and in a detached
+worktree at `9d57ff3`, with all four of log 11 §5's tag labels reproduced to the character (QCD
+1,773 / `303f9ce7` / 156 / `197b46de`; LambdaCDM 1,732 / `0960e169` / 145 / `69050b4c`). **Ten**
+production files: `CosmologyConcepts/wavenumber.py` (the new constant alone),
+`Datastore/SQL/ObjectFactories/BackgroundModel.py`, `main.py`'s argument, tag and tagging hunks,
+`extract_common.py` and all six `extract_*.py` — **the exclusion on `extract_*.py` was lifted for
+this prompt only**, by the user, and remains in force for prompt 15.
+
+**A human-readable handle plus a derived check, which is the campaign's house style one level out.**
+`main.py --run-label` names a run; the name becomes a `store_tag` (`Run_<label>`) carried by, and
+**filtered on for**, everything the run writes — `TkProductionTag`'s mechanism, as prompt §2 item 1
+required, at the `BackgroundModel` lookup and the **26** further tag lists that name a
+production tag.
+`SOURCE_GRID_CONSTRUCTION_VERSION = 1` (`CosmologyConcepts/wavenumber.py`) names the *algorithm*
+that built the grid and travels beside it as `SourceGridConstruction_1`; prompt 11's content digest
+says which exact grid, and the two are not substitutable — a digest cannot be inverted or
+range-queried, and two cosmologies in one run legitimately have different grids at the same
+construction. `sqla_BackgroundModelFactory` gains `source_grid_digest` and
+`source_grid_construction` columns, both read from their single declarations and **never written as
+literals** (asserted by `ast`, prompt 03's test of the same name), so
+`[11-background-model-not-keyed-on-the-source-grid]` — the one surviving row in a store every
+compute target of which prompt 11 had already invalidated — is closed.
+
+**The two paths give different answers to a pre-prompt-14 datastore, and that is the prompt's
+archival requirement rather than an inconsistency.** The compute path supplies `z_sample`, filters
+on both columns, and on a store that lacks them raises a `RuntimeError` naming this campaign,
+"regenerated" and "no migration", with SQLite's `OperationalError` preserved as `__cause__`. The
+read path supplies `z_sample=None` — it is asking which grid was used, not asserting one — selects
+the two columns instead, falls back to the pre-prompt-14 query when they are absent, and reports
+the rows as an **unknown generation** that stays queryable and plottable. Where the tags it was
+given match more than one generation it **refuses, naming every `(construction, digest)` it
+found** and pointing at `--run-label`; it never picks. All six scripts select on the label, and the
+single-run ergonomics survive: no label plus exactly one run in the store uses it and says which,
+and only an ambiguous store requires the user to choose.
+
+**Three choices a later reader may want to disagree with, all argued in the log.** The default run
+label is the fixed string `"default"` rather than a generated unique one, because the label is a
+*selection criterion*: a label that changed per run would make every unlabelled run miss everything
+and pay log 11 §5's 15,020-object bill. Verification is "one generation **per lookup**" rather than
+"one digest per label", because a production run holds two models whose grids legitimately differ.
+And it lives in the factory rather than in `extract_common.py`, because only the factory can see a
+column. **`source_samples_per_log10z` was traced rather than assumed** (prompt §2 item 5): it feeds
+the grid density, `SourceSamplesPerLog10ZTag`, and `delta_logz` at `main.py:916` and `:1533` — and
+that third is **vestigial**, accepted by `numeric_with_phase_cut` only "so that callers need not
+change" and consumed by nothing since `GkTk-remedial` prompt 11, so prompt 15 can retire the tag
+without a numerical consequence. **No extract script was executed**: each needs a populated
+datastore, so their query construction is asserted by `ast` and the read path itself is exercised
+against real SQLite. One new module,
+`ComputeTargets/tests/test_run_identity.py` (30 tests, 0.3 s), which runs the production `store()`,
+`validate()` and `build()` against an in-memory database built from the factories' own
+`register()`. Suites: `CosmologyModels` 30, `ComputeTargets` 392 → **424**, `LiouvilleGreen` 148 on
+the full set — none falls. Closes `[11-background-model-not-keyed-on-the-source-grid]` (§4), opens
+`[14-archival-read-stops-at-the-pre-gktk-value-columns]` and
+`[14-no-archive-of-grid-construction-algorithms]` (§3), and widens
+`[03-qcd-inventory-does-not-report-the-representation]`. **The archival guarantee has a measured
+limit:** run against the one datastore in the tree, the prompt-14 fallback fires and finds the
+background row, and then the *pre-existing* `GkTk-remedial` 03/04 refusal on
+`BackgroundModelValue.tau_lo_Mpc` stops it — metadata never recorded can be defaulted to
+"unknown", values never computed cannot. Full record:
+[`logs/14-key-the-source-grid-construction.md`](logs/14-key-the-source-grid-construction.md).
+
 **The representation version.** `T_Z_REPRESENTATION_VERSION` is introduced by prompt 03 and bumped
 by **04, 05, 06, 07 and 13**. Its value at each prompt boundary is recorded here as the campaign runs,
 because it is the only thing that tells a datastore that its QCD rows are stale. **Bump it on
@@ -728,6 +802,22 @@ above the declaration.
 | 11 | **5** | unchanged — the source grid moves, the cosmology does not; no `CosmologyModels/` file is in the diff |
 | 12 | **5** | unchanged — a measurement and a recommendation; no production file is in the diff at all |
 | 13 | **6** | `BackgroundModel` splines its derivative fields **one per branch**, at both sites, so no smooth interpolant runs across a declared crossing; every stored QCD $\omega_{\rm eff}$, and therefore every stored phase, moves |
+| 14 | **6** | unchanged — no `CosmologyModels/` file is in the diff and no background number moves; what changes is which objects a query matches and what a row records about itself |
+
+**The source-grid construction version.** `SOURCE_GRID_CONSTRUCTION_VERSION`
+(`CosmologyConcepts/wavenumber.py`) is introduced by prompt 14 and is the same kind of thing one
+level out: an integer naming the *algorithm* that builds the source grid, whose bump is the only
+signal a datastore gets that the algorithm has moved. **Prompt 15 must bump it in the same commit
+that changes how the grid is built**, and add a row to the table in the comment block above the
+declaration. `ComputeTargets/tests/test_source_grid.py::TestTheConstructionVersionNamesThisAlgorithm`
+pins version 1 to its three constants and to both production grids' digests, and will fail if
+either moves without the bump — deliberately.
+
+| After prompt | `SOURCE_GRID_CONSTRUCTION_VERSION` | What the algorithm is |
+|---|---|---|
+| 11 | *(does not exist)* | the construction itself lands: the straddling pair, the ±5 × 2 neighbourhood, the equality redshifts |
+| 12, 13 | *(does not exist)* | the grid does not move |
+| 14 | **1** | nothing numerically; the version exists and `BackgroundModel` is keyed on it and on the grid's digest |
 
 ---
 
@@ -741,7 +831,7 @@ above the declaration.
 | **T4** | **DEFECT, high** | One global spline across three points at which $T(z)$ genuinely **jumps** (7.625829e-04 in $T$ at $z_c=4.25337\times10^7$). The max error was pinned near the jump height at 500, 2,000 and 5,000 nodes alike. **Fixed by prompt 06:** `SegmentedEntropyFactor` interpolates $F$ one spline per branch with the edges *bisected* onto the jumps, and the max falls **7.236e-04 → 6.807e-11** while the step itself is reproduced to six figures on both sides. An edge misplaced by one node restores 7.054e-04, and a test asserts that it does. | 06 | ⚠️ |
 | **G1** | **DEFECT, high** | 404 of the 407 `BREAK_POINT_ALL` points were knots of the auxiliary interpolant — 2,411 of 2,414 after prompt 06's node count — a Gauss panel split every 0.67 grid intervals throughout `BackgroundModel`, and the sole cause of `prompts/phase-representation` prompt 02's Schoenberg–Whitney failure. **Fixed by prompt 07:** `integration_break_points` declares the equation of state's temperature crossings and nothing else, **3** and **2** on the production grid with **0** knots, measured rather than asserted (at order 5 the first discontinuous derivative of $F$ is the fifth, three levels below `d3_lnH_dz3`; the observable residual across a knot is 6.3e-12 in $H$ against 2.1e-04 for the old cubic lattice). The QCD build falls 16,580 → **6,936** integrand evaluations and 0.959 → **0.599 s**; the references do not move at all; `cs_tau` and `friction_F` score against them unchanged to every digit printed and `tau` moves 2.104e-15 → 2.254e-15, at 12 % of its floor; and a repeated-knot vector constructs on all six grids. **Prompt 08 re-took `GkTk-remedial` prompt 19's per-sector policy measurement against the new set and found state (a):** the $T_k$ sector converges at all 50 QCD wavenumbers under *either* policy (7.08e-09 / 8.85e-09 worst, zero offenders, against 1.97e-07 and three offenders then), so the 404 knots were standing in for the representation's defect and not for anything the integrator needed; $G_k$ improved to 3.67e-09 under both policies; the smooth models are bit-identical between the policies and reproduce prompt 19's grid totals as exact integers. Neither `BREAK_POINT_KIND` was changed — README §7 D5 is reported, not decided. **Prompt 09 re-measured the cost on the production path:** QCD per-object build costs fall $G_k$ 8,380 → **6,892** and $T_k$ 12,896 → **11,532** integrand evaluations, the off-grid `raw_theta` accessor needs **4.00** evaluations per call where it needed 4.27, and every LambdaCDM and every cached-evaluation count is exactly unchanged. | 07, 08, 09 | ⚠️ |
 | **P2** | **DEFECT, accuracy** | Inherited `[13-consumer-spline-crosses-eos-break-points]`: `PrimitivePhase` splines $\varphi$ with default knots across the declared break points. 1.907e-6 rad ($G_k$, 8 ulp) and 3.186e-6 rad ($T_k$, 428 ulp) at $z=4.24\times10^7$ at the campaign base; **4.3× larger on the corrected background** (prompt 09: 8.107e-6 / 1.398e-5 rad, 34 / 1877 ulp), because the old representation was smearing the equation of state's step over ~4 grid intervals (25.55 % of it inside the crossing's own interval, against 99.84 % of a step 2.78× taller now). **Answered by prompt 10, and not as the plan expected: the knots are not the remedy.** Nine schemes scored over all twelve production rows on the corrected background — the repeated multiplicity-`spline_order` ($C^0$) knot vector is **2.09×/2.10× worse**, per-segment splines **5.00×/5.06× worse**, the best non-$C^0$ control 1.21× better, the ten rows at 1.00 ulp unmoved by all nine, and LambdaCDM identical throughout. Prompt 02's kink fit, re-taken, is still **window-dependent** ($[\varphi']$ moves two orders and changes sign between 1-, 2- and 3-interval windows), which is smooth-but-unresolved data and not a corner a $C^0$ knot can turn. **The production source grid is the limit**: ±5 grid intervals at 2× — 10 extra samples in 1,016 — give **1.64 ulp** and **74.60 ulp**, both inside the 1e-06 rad target, while refining the crossing's own interval alone stalls at 1.96×. `PrimitivePhase` keeps its default knots, `T_Z_REPRESENTATION_VERSION` stays 5, `num_chunks` stays 1, and no production file changed. The entry closes on the `GkTk-remedial` board §4 and the unfixed accuracy defect re-opens as `[10-consumer-phi-unresolved-at-the-eos-crossing]` (§3), **assigned to prompt 11**. | 10 | ⚠️ |
-| **G2** | **DESIGN** | The source grid never consulted the cosmology: `populate_z_sample` was a bare `logspace`, `winnow` a blind stride `[::-n]`, and the tag `SourceRedshiftGrid_{len}` labelled size only, so two different grids of equal length collided in the datastore. **Prompt 11 landed the mechanical half.** `build_z_sample` takes the points the cosmology declares — values, not a cosmology object, and no equation-of-state import in `CosmologyConcepts/` — and gives each a **pair straddling it** at a quarter of a grid interval plus the **±5 intervals refined by 2** that prompt 10 measured; `winnow(sparseness, protect=...)` retains them, matching on `store_id` so nothing compares a recovered redshift for equality; and the tags carry a `blake2b` digest of the grid's own values. QCD 1,732 → **1,773** samples (+2.37 %), LambdaCDM **bit-identical**, and the two consumer rows prompt 09 recorded as a miss go 34.11 → **1.61 ulp** and 1876.61 → **65.78 ulp**, both inside the 1e-06 rad target. **The prompt's own remedy — two straddling samples — buys only 1.96×/1.98× on its own**; the neighbourhood is what carries it. The tag change invalidates eight stored object types and the bill is quantified in log 11 §5. **Prompt 12 answered the density half and changed nothing, which is what its §4 asks for.** The uniform `samples_per_log10z = 100` is wrong in **both** directions: measured against the phase residual itself (not against $\varphi$ recovered from a stored $\theta$, which is floor-limited), the consumer's cubic misses the storage floor by **7.86×** and **7.84×** in the top decade of the $T_k$ band at $k=10^5$ on LambdaCDM and QCD, and has up to **2.1e+19** of headroom at the bottom of the range, with the spacing constant to four digits across fourteen decades of it. The criterion that fixes it is $h^4|\varphi''''|/384 \le \varepsilon$ with $\varphi' = -(1+z)C/(\omega+\omega_0)$ — **computable before the grid exists** from $H$, $c_s^2$ and $k$, at $5N$ closed-form evaluations (0.01–0.27 s against `compute_background`'s 0.599 s) — and it predicts the realised error to **±2 %** over 500-odd intervals in the $T_k$ sector on both models at all three wavenumbers. One universal envelope grid: at the same sample count (1,761 against 1,773 on QCD, 1,634 against 1,732 on LambdaCDM) every row is inside its target where the shipped grid misses two; at the same accuracy it needs **1.75×** and **2.06×** fewer. The second candidate, equidistributing $\varphi$ itself, is **refuted** (114,281 samples and still missing two rows). **The saving and `[03-derivative-pad-clamp-on-coarse-grids]` are the same lever** — the clamp binds at the first coarsening step — and the grid also carries the numeric ODE, four cumulative tables and `QuadSourceIntegral`, **none of whose requirements is measured**, so the criterion is a lower bound on the density and never an upper one. | 11, 12 | ⚠️ |
+| **G2** | **DESIGN** | The source grid never consulted the cosmology: `populate_z_sample` was a bare `logspace`, `winnow` a blind stride `[::-n]`, and the tag `SourceRedshiftGrid_{len}` labelled size only, so two different grids of equal length collided in the datastore. **Prompt 11 landed the mechanical half.** `build_z_sample` takes the points the cosmology declares — values, not a cosmology object, and no equation-of-state import in `CosmologyConcepts/` — and gives each a **pair straddling it** at a quarter of a grid interval plus the **±5 intervals refined by 2** that prompt 10 measured; `winnow(sparseness, protect=...)` retains them, matching on `store_id` so nothing compares a recovered redshift for equality; and the tags carry a `blake2b` digest of the grid's own values. QCD 1,732 → **1,773** samples (+2.37 %), LambdaCDM **bit-identical**, and the two consumer rows prompt 09 recorded as a miss go 34.11 → **1.61 ulp** and 1876.61 → **65.78 ulp**, both inside the 1e-06 rad target. **The prompt's own remedy — two straddling samples — buys only 1.96×/1.98× on its own**; the neighbourhood is what carries it. The tag change invalidates eight stored object types and the bill is quantified in log 11 §5. **Prompt 12 answered the density half and changed nothing, which is what its §4 asks for.** The uniform `samples_per_log10z = 100` is wrong in **both** directions: measured against the phase residual itself (not against $\varphi$ recovered from a stored $\theta$, which is floor-limited), the consumer's cubic misses the storage floor by **7.86×** and **7.84×** in the top decade of the $T_k$ band at $k=10^5$ on LambdaCDM and QCD, and has up to **2.1e+19** of headroom at the bottom of the range, with the spacing constant to four digits across fourteen decades of it. The criterion that fixes it is $h^4|\varphi''''|/384 \le \varepsilon$ with $\varphi' = -(1+z)C/(\omega+\omega_0)$ — **computable before the grid exists** from $H$, $c_s^2$ and $k$, at $5N$ closed-form evaluations (0.01–0.27 s against `compute_background`'s 0.599 s) — and it predicts the realised error to **±2 %** over 500-odd intervals in the $T_k$ sector on both models at all three wavenumbers. One universal envelope grid: at the same sample count (1,761 against 1,773 on QCD, 1,634 against 1,732 on LambdaCDM) every row is inside its target where the shipped grid misses two; at the same accuracy it needs **1.75×** and **2.06×** fewer. The second candidate, equidistributing $\varphi$ itself, is **refuted** (114,281 samples and still missing two rows). **The saving and `[03-derivative-pad-clamp-on-coarse-grids]` are the same lever** — the clamp binds at the first coarsening step — and the grid also carries the numeric ODE, four cumulative tables and `QuadSourceIntegral`, **none of whose requirements is measured**, so the criterion is a lower bound on the density and never an upper one. **Prompt 14 closed the identity half.** The digest told two grids apart but nothing recorded *which run* an object belonged to, `BackgroundModel` was keyed on neither the grid nor its construction, and all seven `extract_*.py` passed zero tags against `main.py`'s eight-plus tagged call sites — safe while a store held one run, and silent the moment it held two. Now: `main.py --run-label` names a run and the name is a `store_tag` carried by and filtered on for everything the run writes; `SOURCE_GRID_CONSTRUCTION_VERSION = 1` names the algorithm beside the digest that names the grid; `sqla_BackgroundModelFactory` filters on `source_grid_digest` and `source_grid_construction` on the compute path and **refuses a mixture, naming every generation it found**, on the read path; and a pre-prompt-14 store, which cannot be computed into, is still **read** and reported as an unknown generation. The grid itself is byte-identical. | 11, 12, 14 | ⚠️ |
 | **B1** | **DEFECT, accuracy** | *(workstream E, opened by prompt 12 as `[12-background-derivative-fit-grid-rings-at-a-step]`)* `QCD_Cosmology` supplies no `d_lnH_dz`, so `BackgroundModel` built one — and then splined the **stored** result again in `_create_functions` — with neither lattice split at `integration_break_points`, while $H$ genuinely **steps** at two of the three declared crossings. `epsilon`, `d_epsilon_dz` and `d2_epsilon_dz2` rang: **2.04e-02** relative at `T_LO` and **1.03e-03** at `T_120_MEV` on the production grid against **3.9e-09 max / 8.1e-10 median** away from a crossing, with `EOS_T_LO` (where only $w$ kinks) the control at 1.6e-09. It is why prompt 11's fix did not reach production: in the configuration `main.py` uses, the consumer's phase at the crossing read 2.4859e-05 rad against the 3.9744e-07 prompt 11 measured with the background held on the base grid. **Fixed by prompt 13:** both sites fit one spline per branch, the two genuine steps read **1.931e-09** and **4.070e-09**, the control is the same float to the bit, and the production row is **5.8437e-08 rad**, 425× better and with its maximum no longer at a crossing. The four cells of the background×samples table now agree to four digits where they spanned 300×. `BREAK_POINT_ALL` rather than the two jumps, measured: `d_wPerturbations_dz` at `EOS_T_LO` is 346 % wrong without the third crossing and 7.8e-04 with it. Integrand counts exactly unchanged; every cosmology that declares nothing byte-identical. | 12, 13 | ⚠️ |
 
 **T1 is closed, and the record of how it fell is the point.** Prompt 01 put
@@ -766,6 +856,44 @@ orders (`prompts/tolerance-convergence`); the `QCD_EOS` fitting coefficients and
 ---
 
 ## 3. Active and unresolved issues
+
+Opened by **prompt 14**, 2026-09-15:
+
+- **[14-archival-read-stops-at-the-pre-gktk-value-columns]** *(opened by prompt 14, 2026-09-15)* —
+  prompt 14's read path makes a datastore that predates **prompt 14** readable: `build()` catches
+  the missing `source_grid_digest` / `source_grid_construction` columns, re-issues the query
+  without them, and reports the row as an unknown generation. It does **not** make a store
+  readable that predates `GkTk-remedial` prompts 03/04, whose refusal on
+  `BackgroundModelValue.tau_lo_Mpc` is unconditional on both paths. **Measured** against
+  `physics-test-n20-lambdacdm-zend0p1-shard0000.sqlite`, the only datastore in the tree: the
+  prompt-14 fallback fires and finds the background row, `store_tag` yields nine labels and zero
+  runs, `choose_run_label` reports the unnamed-run case correctly — and then `build()` raises the
+  `tau_lo_Mpc` message. **Impact:** the user's requirement that a superseded datastore keep
+  archival value holds for stores written after `GkTk-remedial` prompt 04 and not for anything
+  older, and there is no store in the tree on which the happy path can be demonstrated end to end.
+  The two guards are not the same kind of thing — a grid identity is metadata the old store never
+  *recorded*, while `tau_lo_Mpc` / `cs_tau_Mpc` / `cs_tau_lo_Mpc` / `friction_F` are values it
+  never *computed* — so softening the second would mean fabricating background values and was not
+  considered. **Next step:** if the archival case is wanted for the oldest stores, it needs a
+  reader that stops at `BackgroundModel` and never asks for the value rows (or a `BackgroundModel`
+  that can be deserialised without them). That is a design, not a patch, and nobody has asked for
+  it.
+
+- **[14-no-archive-of-grid-construction-algorithms]** *(opened by prompt 14, 2026-09-15, in the
+  user's framing; **nothing was built towards it**)* — the user has noted that **an archive of
+  grid-construction algorithms may be wanted later**: a datastore records which construction built
+  its grid (`SOURCE_GRID_CONSTRUCTION_VERSION`, carried as a `store_tag` and as a
+  `BackgroundModel` column), but the *code* of a superseded construction lives only in git
+  history, so a run written under version 1 cannot be reproduced once version 2 has replaced
+  `build_z_sample`. **Impact:** none today — there is one construction. It bites the first time a
+  grid algorithm is superseded and someone wants to re-derive, rather than merely re-read, an
+  archived run; that is prompt 15, which will make version 1 unreachable from the tree.
+  **Prompt 14 deliberately built nothing towards this** beyond the version integer that would be
+  its key (prompt §2 item 6): an archive is a design with a maintenance cost — every retired
+  constructor kept alive and tested forever — and the decision is the user's. **Next step:** none
+  proposed. If it is taken, the shape is a registry keyed on the version integer, and the thing to
+  decide first is whether a retired construction has to keep *running* or only has to be
+  *readable*, because the two have very different prices.
 
 Opened by **prompt 13**, 2026-09-15:
 
@@ -887,31 +1015,6 @@ recommendation, recorded here so that it outlives the campaign:
   them. If it is taken, the cap-1× column is the one to take first: it costs nothing in samples and
   removes the only miss.
 
-Opened by **prompt 11**, 2026-09-15:
-
-- **[11-background-model-not-keyed-on-the-source-grid]** *(opened by prompt 11, 2026-09-15)* —
-  `sqla_BackgroundModel_factory.build()` filters on `(cosmology_type, cosmology_serial,
-  atol_serial, rtol_serial)` plus whatever tags it is given, and `main.py` gives it
-  `LargestSourceZTag`, `SmallestSourceZTag` and `SourceSamplesPerLog10ZTag`. **All three are
-  unchanged when the source grid changes**, because the grid's endpoints and its samples-per-decade
-  are unchanged; and the factory does not filter on `z_sample` at all — it reads the stored sample
-  set back out of `BackgroundModelValue` and populates the returned object from it. **Impact:** a
-  pre-prompt-11 datastore returns its **1,732-node** `BackgroundModel` for the new **1,773-node**
-  QCD grid. It is the *one surviving row* in a store whose every compute target the grid-tag change
-  has just invalidated, so the hazard is not theoretical: the next run finds it, uses it, and
-  tabulates a 1,773-sample pipeline against a background sampled on the 1,732 points that omit the
-  break neighbourhoods. Benign in **value** — prompt 07 split the cumulative tables at the equation
-  of state's break points, so a 1,732-node background is accurate, merely coarser at the crossing —
-  and `CosmologyConcepts.redshift.check_zsample`, which exists precisely to assert that two objects
-  share a grid, **has no callers anywhere in the tree**. Not fixed in prompt 11: adding a tag to
-  `BackgroundModel`'s lookup is a further datastore-key change with its own regeneration attached,
-  and that `object_get` is outside the `main.py:520-590` hunk prompt 11 may touch (README §5
-  rule 5). **Next step:** add `SourceZGridSizeTag` to the `BackgroundModel` `object_get`'s tag list
-  in whichever prompt has that call in scope, and say in its log that doing so invalidates stored
-  `BackgroundModel` rows as well; or give `check_zsample` a caller at the point where
-  `ModelProxy` is built.
-
-
 Opened by this campaign's planning, 2026-09-13:
 
 - **[00-eos-branch-joins-do-not-match]** *(planning, 2026-09-13; **pinned in a test by prompt 01,
@@ -1029,6 +1132,17 @@ Opened by this campaign's planning, 2026-09-13:
   commit changes the key and nothing else, and `inventory()` is not part of the key. Worth doing
   before prompt 09, which is the first prompt likely to look at a datastore holding rows at two
   representations.
+
+  **Widened by prompt 14 (2026-09-15): the same defect now exists one level out, on
+  `BackgroundModel`.** `sqla_BackgroundModelFactory.inventory()` reports labels and timestamps
+  bucketed by `validated`, and says nothing about `source_grid_digest` or
+  `source_grid_construction`. From prompt 14 a datastore can legitimately hold several background
+  rows for the same cosmology and tolerances differing **only** in the grid they were tabulated on,
+  and `tools/inventory_report.py` will render them as indistinguishable duplicates — precisely the
+  confusion the columns exist to remove. Same severity and same reason for not acting: prompt 14 §2
+  item 3 is about the key, and `inventory()` is not part of it. **Next step, extended:** add
+  `T_z_representation` to `sqla_QCDCosmology_factory.inventory()` *and* the two grid columns to
+  `sqla_BackgroundModelFactory.inventory()`'s per-bucket report, in one commit.
 
 - **[04-unsplit-tk-run-now-meets-the-criterion]** *(prompt 05, 2026-09-14; **assigned to prompt
   08**)* — `ComputeTargets/tests/test_numeric_break_points.py::TestQCDReferenceConvergence::test_split_converges_where_unsplit_does_not`
@@ -1189,6 +1303,37 @@ Re-measured but **not owned** here (they stay where they are; a prompt that move
 ---
 
 ## 4. Resolved issues
+
+- **[11-background-model-not-keyed-on-the-source-grid]** *(prompt 11, 2026-09-15; **closed by
+  prompt 14**, 2026-09-15)* — `sqla_BackgroundModelFactory.build()` filtered on
+  `(cosmology_type, cosmology_serial, atol_serial, rtol_serial)` plus whatever tags it was given,
+  and `main.py` gave it `LargestSourceZTag`, `SmallestSourceZTag` and `SourceSamplesPerLog10ZTag`
+  — **all three unchanged when the grid's shape changes**, because the endpoints and the
+  samples-per-decade do not change — while the factory never filtered on `z_sample` at all. So a
+  pre-prompt-11 datastore served its **1,732-node** background for the new **1,773-node** QCD grid:
+  the *one surviving row* in a store whose every compute target the grid-tag change had already
+  invalidated, which made it worse than a miss.
+
+  **The fix is a content digest and a construction version, as columns.** `source_grid_digest`
+  (`z_sample.digest()`, prompt 11's `blake2b` over the grid's exact bits) and
+  `source_grid_construction` (`CosmologyConcepts.wavenumber.SOURCE_GRID_CONSTRUCTION_VERSION`) are
+  registered on the `BackgroundModel` table, written by `store()` and filtered on by `build()` —
+  both read from their single declarations, **never as literals**, asserted by `ast` in the shape
+  of prompt 03's `test_the_filter_is_not_a_literal`. The two are not substitutable and the log says
+  why: a digest cannot be inverted or range-queried, and two cosmologies in one run legitimately
+  have different grids at the same construction.
+
+  **The prompt-11 "next step" was `SourceZGridSizeTag` on the lookup, and that is *not* what
+  shipped.** A tag would have keyed the background on the grid's *label*; a column keys it on the
+  grid's *values*, which is the thing that was wrong, and it also lets the read path — which
+  passes `z_sample=None` and therefore cannot filter on a digest it does not have — **select** the
+  two columns and refuse a mixture, naming every `(construction, digest)` it found, instead of
+  picking one. That asymmetry is the closure's substance: the compute path cannot write into a
+  pre-prompt-14 store (a `RuntimeError` naming the campaign, "regenerated", "no migration"), and
+  the read path still reads one, reporting it as an **unknown generation**, because a superseded
+  datastore keeps its archival value. `check_zsample` still has no callers and is now redundant
+  rather than merely unused; nothing was deleted. Record:
+  [`logs/14-key-the-source-grid-construction.md`](logs/14-key-the-source-grid-construction.md).
 
 - **[12-background-derivative-fit-grid-rings-at-a-step]** *(prompt 12, 2026-09-15; **closed by
   prompt 13**, 2026-09-15)* — `BackgroundModel` splined background quantities at **two** sites and

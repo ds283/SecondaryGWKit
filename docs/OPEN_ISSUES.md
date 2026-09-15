@@ -1,6 +1,6 @@
 # Open issues — project-wide index
 
-**Last updated:** 2026-09-15 · **64 open** across eight campaigns.
+**Last updated:** 2026-09-15 · **65 open** across eight campaigns.
 
 This file exists so that an issue opened by one campaign is not lost when that campaign closes.
 It is an **index, not a record**: one line per issue, pointing at the campaign status board that
@@ -318,6 +318,30 @@ relative move) while `tau`, `cs_tau` and `friction_F` did not move by a bit; int
 exactly unchanged; and every cosmology that declares nothing is **byte-identical**. Suites
 30 / 380 → **392** / 148 (full set).
 
+**Prompt 14 landed 2026-09-15 and closed the other thing prompt 11 left behind** —
+`[11-background-model-not-keyed-on-the-source-grid]`, deleted from this index. A run is now **named
+at write time** (`main.py --run-label`; a `store_tag` carried by and filtered on for everything the
+run writes, in `TkProductionTag`'s manner) and **verified at read time**:
+`SOURCE_GRID_CONSTRUCTION_VERSION = 1` names the grid's *algorithm* beside prompt 11's content
+digest, `sqla_BackgroundModelFactory` gains `source_grid_digest` and `source_grid_construction`
+columns and filters on both, and all six `extract_*.py` — whose exclusion the user lifted **for that
+prompt only** — select on the run label and **refuse a mixture, naming every generation found**,
+rather than picking. A pre-prompt-14 store cannot be computed into (a `RuntimeError` naming the
+campaign, "regenerated", "no migration") and can still be **read**, reported as an unknown
+generation — the archival requirement, with the measured limit recorded below. No background
+number moves:
+`T_Z_REPRESENTATION_VERSION` is **6** before and after and the production grid is **byte-identical**
+(3,814 `float.hex()` lines, MD5 `d5ecc0aa85f38578d8c57c051d3f11e0`). Suites 30 / 392 → **424** / 148
+(full set).
+
+**Opened by prompt 14** — the first from a measurement it made in passing, the second in the
+user's framing with nothing built towards it:
+
+| Issue | Board | Hook |
+|---|---|---|
+| `[14-archival-read-stops-at-the-pre-gktk-value-columns]` | qcd-background-audit | Prompt 14's read path makes a **pre-prompt-14** store readable — the missing grid-identity columns are caught, the query re-issued without them, the row reported as an unknown generation. It does **not** make a **pre-`GkTk-remedial` 03/04** store readable: that refusal, on `BackgroundModelValue.tau_lo_Mpc`, is unconditional on both paths. Measured on the only datastore in the tree, which is exactly that old: the prompt-14 fallback fires and finds the row, then the `tau_lo_Mpc` message stops it. The two guards differ in kind — a grid identity is metadata never *recorded*, `tau_lo_Mpc` a value never *computed* — so softening the second means fabricating background values. **Next step:** if the oldest stores must stay archival, it needs a reader that stops at `BackgroundModel` and never asks for the value rows. A design, not a patch; nobody has asked for it. |
+| `[14-no-archive-of-grid-construction-algorithms]` | qcd-background-audit | A datastore records *which* construction built its grid, but the **code** of a superseded construction lives only in git history, so a run written under version 1 cannot be re-derived once version 2 has replaced `build_z_sample` — which prompt 15 will do. Harmless today (there is one construction); it bites the first time someone wants to reproduce, rather than merely re-read, an archived run. Prompt 14 built nothing beyond the version integer that would be its key, deliberately: an archive means every retired constructor kept alive and tested forever. **Next step:** none proposed — the decision is the user's, and the first thing to settle is whether a retired construction must keep *running* or only be *readable*. |
+
 **Opened by prompt 13**, which closed `[12-background-derivative-fit-grid-rings-at-a-step]`:
 
 | Issue | Board | Hook |
@@ -331,12 +355,6 @@ issue, `[12-background-derivative-fit-grid-rings-at-a-step]`, was closed by prom
 | Issue | Board | Hook |
 |---|---|---|
 | `[12-source-grid-density-is-uniform-over-a-curvature-that-spans-eight-orders]` | qcd-background-audit | **The recommendation, and the decision is the user's.** `source_samples_per_log10z = 100` is uniform over a $\varphi$ curvature that spans eight orders inside a single Liouville–Green band: the consumer's cubic misses the storage floor by **7.86×/7.84×** in the top decade of the $T_k$ band at $k=10^5$ and has up to **2.1e+19** of headroom at the bottom. $h^4\|\varphi''''\|/384 \le \varepsilon$, with $\varphi' = -(1+z)C/(\omega+\omega_0)$ from $H$, $c_s^2$ and $k$ alone, is computable **before** the grid exists and predicts the realised error to **±2 %**; one envelope grid gives QCD 1,761 samples (against 1,773) with every row at 0.14× its target, or 1,015 at 1.75× fewer, and LambdaCDM 1,634 or 842. Equidistributing $\varphi$ itself is refuted at 114,281 samples. **Four bounds:** the saving and `[03-derivative-pad-clamp-on-coarse-grids]` are the same lever (the clamp binds at the first coarsening step); the grid also carries the numeric ODE, four cumulative tables and `QuadSourceIntegral`, none of whose requirements is measured, so this is a lower bound on the density; §5's production-$x$ caveat applies in full, since **no pipeline has run on any grid measured here, including the one that ships**; and above $k\approx10^7$ none of it is visible. **Cost of acting: a full regeneration of eight stored object types.** No next step proposed — that is deliberate. |
-
-**Opened by prompt 11**, which closed the issue that released workstream D:
-
-| Issue | Board | Hook |
-|---|---|---|
-| `[11-background-model-not-keyed-on-the-source-grid]` | qcd-background-audit | `BackgroundModel`'s datastore lookup filters on `(cosmology, atol, rtol)` plus `LargestSourceZTag`, `SmallestSourceZTag` and `SourceSamplesPerLog10ZTag` -- **all three unchanged when the source grid changes**, because the grid's endpoints and its samples-per-decade are unchanged -- and its factory does not filter on `z_sample`. Prompt 11 made that matter: a pre-prompt-11 datastore returns its **1,732-node** `BackgroundModel` for the new **1,773-node** QCD grid, the one surviving row in a store every compute target of which the grid-tag change has invalidated. Benign in value -- the cumulative tables are already split at the equation of state's break points -- but it is exactly the silent staleness the campaign's key work exists to prevent, and `check_zsample` has no callers. **Next step:** add the source grid tag to `BackgroundModel`'s lookup, in whichever prompt has its `object_get` in scope; that is a further key change with its own regeneration attached. |
 
 **Opened by this campaign and owned by no prompt of it.** The chain is closed, so each of these
 waits on a prompt that has the right files in scope; the board holds the measurements.

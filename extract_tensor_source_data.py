@@ -41,6 +41,9 @@ from config.sharding import (
     read_table_config,
 )
 from extract_common import (
+    add_run_selection_argument,
+    describe_background_generation,
+    resolve_run_selection,
     add_zexit_lines,
     safe_fabs,
     set_loglog_axes,
@@ -77,6 +80,7 @@ parser.add_argument(
     type=str,
     help="specify folder for output files",
 )
+add_run_selection_argument(parser)
 args = parser.parse_args()
 
 if args.database is None:
@@ -300,15 +304,23 @@ def run_pipeline(model_data):
             BackgroundModel,
             solver_labels=[],
             cosmology=model_cosmology,
+            # z_sample=None asks the store which grid was used rather than asserting one, so the
+            # factory cannot filter on the grid digest here; it selects the digest and the
+            # construction version instead, and refuses -- naming every generation it found -- if
+            # these tags match rows from more than one
             z_sample=None,
             atol=atol,
             rtol=rtol,
+            tags=run_selection.tags,
         )
     )
     if not model.available:
         raise RuntimeError(
             "Could not locate suitable background model instance in the datastore"
         )
+    print(
+        f"   @@ {model_label} background model: {describe_background_generation(model)}"
+    )
 
     # set up a proxy object to avoid having to repeatedly serialize the model instance and ship it out
     model_proxy = ModelProxy(model)
@@ -356,6 +368,7 @@ def run_pipeline(model_data):
             z_sample=None,
             q=q,
             r=r,
+            tags=run_selection.tags,
         )
 
         return plot_tensor_source.remote(model_label, Tsource_ref)
@@ -397,6 +410,13 @@ with ShardedPool(
     prune_unvalidated=False,
     read_table_config=read_table_config,
 ) as pool:
+
+    # which run is being read? Every lookup below selects on it, so it is resolved once, before
+    # any model is considered: extract_common.resolve_run_selection says what happens when no
+    # --run-label is given, and why a datastore that records no runs at all is read rather than
+    # refused.
+    run_selection = resolve_run_selection(pool, args.run_label)
+    print(f"\n** {run_selection.description}")
 
     # get list of models we want to extract transfer functions for
     units = Mpc_units()

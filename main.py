@@ -38,6 +38,7 @@ from CosmologyConcepts import (
     redshift_array,
     redshift_grid_digest,
 )
+from CosmologyConcepts.wavenumber import SOURCE_GRID_CONSTRUCTION_VERSION
 from Datastore.SQL.ProfileAgent import ProfileAgent
 from Datastore.SQL.ShardedPool import ShardedPool
 from LiouvilleGreen.bessel_phase import bessel_phase
@@ -62,6 +63,7 @@ from config.sharding import (
     read_table_config,
     inventory_config,
 )
+from extract_common import run_label_tag, source_grid_construction_tag
 from tools.inventory_report import format_inventory_report
 from utilities import grouper, format_time, WallclockTimer
 
@@ -72,6 +74,21 @@ DEFAULT_RAY_ADDRESS = "auto"
 DEFAULT_SOURCE_SAMPLES_PER_LOG10_Z = 100
 DEFAULT_RESPONSE_SAMPLES_SPARSENESS = 12
 DEFAULT_ZEND = 0.1
+
+# The name of a run, when the user does not supply one (prompt 14 of
+# prompts/qcd-background-audit). It is carried as a store_tag by everything the run writes, and it
+# is also a *selection criterion*: every tagged lookup below filters on it, in the manner of
+# TkProductionTag / GkProductionTag, so that a run's objects are exactly the objects tagged with
+# its name.
+#
+# **It is deliberately a fixed string and not a generated unique one.** Because the label is in
+# the lookup key, a label that changed from run to run would make every unlabelled run miss every
+# object in the store and recompute a pipeline whose measured cost is 15,020 objects for a
+# single-model 5x5-wavenumber run (log 11 section 5). A fixed default instead means that
+# unlabelled runs all extend one run, which is the behaviour every run before prompt 14 had;
+# naming a run is then something the user opts into, and reusing a name deliberately -- to
+# complete or extend a run that was interrupted -- is the same gesture as not naming one at all.
+DEFAULT_RUN_LABEL = "default"
 
 MIN_NOTIFY_INTERVAL = 5 * 60
 
@@ -99,6 +116,17 @@ parser.add_argument(
     "--job-name",
     default=DEFAULT_LABEL,
     help="specify a label for this job (used to identify integrations and other numerical products)",
+)
+parser.add_argument(
+    "--run-label",
+    type=str,
+    default=DEFAULT_RUN_LABEL,
+    help=(
+        "name this run. The name is carried as a tag by every object the run writes and is part "
+        "of every lookup it makes, so a new name starts a new run and computes it from scratch, "
+        "while re-using a name extends the run of that name. extract_*.py selects on it with "
+        "--run-label"
+    ),
 )
 parser.add_argument(
     "--shards",
@@ -654,6 +682,8 @@ def run_pipeline(
     (
         TkProductionTag,
         GkProductionTag,
+        RunLabelTag,  # names this run (--run-label); carried by, and filtered on for, everything the run writes
+        SourceGridConstructionTag,  # identifies the algorithm that built the source grid, not the grid itself
         SourceZGridSizeTag,  # identifies the z_source sample grid: its size and a digest of its values
         ResponseZGridSizeTag,  # identifies the z_response sample grid, likewise
         OutsideHorizonEfoldsTag,  # labels number of e-folds outside the horizon at which we begin Tk numeric integrations
@@ -665,6 +695,15 @@ def run_pipeline(
         [
             pool.object_get("store_tag", label="TkOneLoopDensity"),
             pool.object_get("store_tag", label="GkOneLoopDensity"),
+            # the run's name and the grid's generation. Both are read from their single
+            # declarations -- the command line and
+            # CosmologyConcepts.wavenumber.SOURCE_GRID_CONSTRUCTION_VERSION -- and never written
+            # out as literals, so a bump of either follows through to every lookup below.
+            pool.object_get("store_tag", label=run_label_tag(run_label)),
+            pool.object_get(
+                "store_tag",
+                label=source_grid_construction_tag(SOURCE_GRID_CONSTRUCTION_VERSION),
+            ),
             pool.object_get("store_tag", label=source_grid_label),
             pool.object_get("store_tag", label=response_grid_label),
             pool.object_get("store_tag", label=f"OutsideHorizonEfolds_e3"),
@@ -684,6 +723,11 @@ def run_pipeline(
         ]
     )
 
+    print(
+        f'   @@ this run is named "{run_label}" (--run-label); its source grid was built by '
+        f"construction version {SOURCE_GRID_CONSTRUCTION_VERSION} and tagged {source_grid_label}"
+    )
+
     ## STEP 1
     ## BAKE THE BACKGROUND COSMOLOGY INTO A BACKGROUND MODEL OBJECT
 
@@ -695,7 +739,13 @@ def run_pipeline(
             z_sample=z_source_sample,
             atol=atol,
             rtol=rtol,
-            tags=[LargestSourceZTag, SmallestSourceZTag, SourceSamplesPerLog10ZTag],
+            tags=[
+                RunLabelTag,
+                SourceGridConstructionTag,
+                LargestSourceZTag,
+                SmallestSourceZTag,
+                SourceSamplesPerLog10ZTag,
+            ],
         )
     )
     if not bg_model.available:
@@ -782,6 +832,8 @@ def run_pipeline(
                 "rtol": rtol,
                 "tags": [
                     TkProductionTag,
+                    RunLabelTag,
+                    SourceGridConstructionTag,
                     SourceZGridSizeTag,
                     OutsideHorizonEfoldsTag,
                     LargestSourceZTag,
@@ -853,6 +905,8 @@ def run_pipeline(
                     rtol=rtol,
                     tags=[
                         TkProductionTag,
+                        RunLabelTag,
+                        SourceGridConstructionTag,
                         SourceZGridSizeTag,
                         OutsideHorizonEfoldsTag,
                         LargestSourceZTag,
@@ -939,6 +993,8 @@ def run_pipeline(
                 "rtol": rtol,
                 "tags": [
                     TkProductionTag,
+                    RunLabelTag,
+                    SourceGridConstructionTag,
                     SourceZGridSizeTag,
                     OutsideHorizonEfoldsTag,
                     LargestSourceZTag,
@@ -993,6 +1049,8 @@ def run_pipeline(
                 "rtol": rtol,
                 "tags": [
                     TkProductionTag,
+                    RunLabelTag,
+                    SourceGridConstructionTag,
                     SourceZGridSizeTag,
                     OutsideHorizonEfoldsTag,
                     LargestSourceZTag,
@@ -1065,6 +1123,8 @@ def run_pipeline(
                     rtol=rtol,
                     tags=[
                         TkProductionTag,
+                        RunLabelTag,
+                        SourceGridConstructionTag,
                         SourceZGridSizeTag,
                         OutsideHorizonEfoldsTag,
                         LargestSourceZTag,
@@ -1140,6 +1200,8 @@ def run_pipeline(
                         "rtol": rtol,
                         "tags": [
                             TkProductionTag,
+                            RunLabelTag,
+                            SourceGridConstructionTag,
                             SourceZGridSizeTag,
                             OutsideHorizonEfoldsTag,
                             LargestSourceZTag,
@@ -1200,6 +1262,8 @@ def run_pipeline(
                 "rtol": rtol,
                 "tags": [
                     TkProductionTag,
+                    RunLabelTag,
+                    SourceGridConstructionTag,
                     SourceZGridSizeTag,
                     OutsideHorizonEfoldsTag,
                     LargestSourceZTag,
@@ -1278,6 +1342,8 @@ def run_pipeline(
                         r=r,
                         tags=[
                             TkProductionTag,
+                            RunLabelTag,
+                            SourceGridConstructionTag,
                             SourceZGridSizeTag,
                             OutsideHorizonEfoldsTag,
                             LargestSourceZTag,
@@ -1358,6 +1424,8 @@ def run_pipeline(
                         "rtol": rtol,
                         "tags": [
                             GkProductionTag,
+                            RunLabelTag,
+                            SourceGridConstructionTag,
                             SourceZGridSizeTag,  # restrict query to integrations with the correct source grid size
                             ResponseZGridSizeTag,  # restrict query to integrations with the correct response grid size
                             LargestSourceZTag,
@@ -1453,6 +1521,8 @@ def run_pipeline(
                                 rtol=rtol,
                                 tags=[
                                     GkProductionTag,
+                                    RunLabelTag,
+                                    SourceGridConstructionTag,
                                     SourceZGridSizeTag,
                                     ResponseZGridSizeTag,
                                     LargestSourceZTag,
@@ -1540,6 +1610,8 @@ def run_pipeline(
                         "rtol": rtol,
                         "tags": [
                             GkProductionTag,
+                            RunLabelTag,
+                            SourceGridConstructionTag,
                             SourceZGridSizeTag,  # restrict query to integrations with the correct source grid size
                             ResponseZGridSizeTag,  # restrict query to integrations with the correct response grid size
                             LargestSourceZTag,
@@ -1606,6 +1678,8 @@ def run_pipeline(
                         "rtol": rtol,
                         "tags": [
                             GkProductionTag,
+                            RunLabelTag,
+                            SourceGridConstructionTag,
                             SourceZGridSizeTag,
                             ResponseZGridSizeTag,
                             LargestSourceZTag,
@@ -1715,6 +1789,8 @@ def run_pipeline(
                                 rtol=rtol,
                                 tags=[
                                     GkProductionTag,
+                                    RunLabelTag,
+                                    SourceGridConstructionTag,
                                     SourceZGridSizeTag,
                                     ResponseZGridSizeTag,
                                     LargestSourceZTag,
@@ -1763,6 +1839,8 @@ def run_pipeline(
                             rtol=rtol,
                             tags=[
                                 GkProductionTag,
+                                RunLabelTag,
+                                SourceGridConstructionTag,
                                 SourceZGridSizeTag,
                                 ResponseZGridSizeTag,
                                 LargestSourceZTag,
@@ -1842,6 +1920,8 @@ def run_pipeline(
                         "rtol": rtol,
                         "tags": [
                             GkProductionTag,
+                            RunLabelTag,
+                            SourceGridConstructionTag,
                             SourceZGridSizeTag,
                             ResponseZGridSizeTag,
                             LargestSourceZTag,
@@ -1912,6 +1992,8 @@ def run_pipeline(
                     "rtol": rtol,
                     "tags": [
                         GkProductionTag,
+                        RunLabelTag,
+                        SourceGridConstructionTag,
                         SourceZGridSizeTag,
                         ResponseZGridSizeTag,
                         LargestSourceZTag,
@@ -2020,6 +2102,8 @@ def run_pipeline(
                             z_sample=z_source_pool[z_response.store_id],
                             tags=[
                                 GkProductionTag,
+                                RunLabelTag,
+                                SourceGridConstructionTag,
                                 SourceZGridSizeTag,
                                 ResponseZGridSizeTag,
                                 LargestSourceZTag,
@@ -2171,6 +2255,8 @@ def run_pipeline(
                         "rtol": rtol,
                         "tags": [
                             GkProductionTag,
+                            RunLabelTag,
+                            SourceGridConstructionTag,
                             SourceZGridSizeTag,
                             ResponseZGridSizeTag,
                             LargestSourceZTag,
@@ -2269,6 +2355,8 @@ def run_pipeline(
                         "rtol": rtol,
                         "tags": [
                             GkProductionTag,
+                            RunLabelTag,
+                            SourceGridConstructionTag,
                             SourceZGridSizeTag,
                             ResponseZGridSizeTag,
                             LargestSourceZTag,
@@ -2396,6 +2484,8 @@ def run_pipeline(
                         "rtol": rtol,
                         "tags": [
                             GkProductionTag,
+                            RunLabelTag,
+                            SourceGridConstructionTag,
                             SourceZGridSizeTag,
                             ResponseZGridSizeTag,
                             LargestSourceZTag,
@@ -2573,6 +2663,8 @@ def run_pipeline(
                         "tags": [
                             GkProductionTag,
                             TkProductionTag,
+                            RunLabelTag,
+                            SourceGridConstructionTag,
                             SourceZGridSizeTag,
                             ResponseZGridSizeTag,
                             LargestSourceZTag,
@@ -2663,6 +2755,8 @@ def run_pipeline(
                         "rtol": rtol,
                         "tags": [
                             GkProductionTag,
+                            RunLabelTag,
+                            SourceGridConstructionTag,
                             SourceZGridSizeTag,
                             ResponseZGridSizeTag,
                             LargestSourceZTag,
@@ -2747,6 +2841,8 @@ def run_pipeline(
                         "r": r,
                         "tags": [
                             TkProductionTag,
+                            RunLabelTag,
+                            SourceGridConstructionTag,
                             SourceZGridSizeTag,
                             OutsideHorizonEfoldsTag,
                             LargestSourceZTag,
@@ -2811,6 +2907,8 @@ def run_pipeline(
                 "rtol": rtol,
                 "tags": [
                     TkProductionTag,
+                    RunLabelTag,
+                    SourceGridConstructionTag,
                     SourceZGridSizeTag,
                     OutsideHorizonEfoldsTag,
                     LargestSourceZTag,
@@ -2849,6 +2947,8 @@ def run_pipeline(
                 "rtol": rtol,
                 "tags": [
                     TkProductionTag,
+                    RunLabelTag,
+                    SourceGridConstructionTag,
                     SourceZGridSizeTag,
                     OutsideHorizonEfoldsTag,
                     LargestSourceZTag,
@@ -2940,6 +3040,8 @@ def run_pipeline(
                         tags=[
                             TkProductionTag,
                             GkProductionTag,
+                            RunLabelTag,
+                            SourceGridConstructionTag,
                             SourceZGridSizeTag,
                             ResponseZGridSizeTag,
                             LargestSourceZTag,
@@ -3040,6 +3142,7 @@ with ShardedPool(
     zend = args.zend
     source_samples_per_log10z = args.source_samples_log10z
     response_sparseness = args.response_sparseness
+    run_label = args.run_label
 
     units = Mpc_units()
 

@@ -44,7 +44,10 @@ from CosmologyConcepts import (
     redshift_array,
     redshift_grid_digest,
 )
-from CosmologyConcepts.wavenumber import SOURCE_GRID_MIN_SEPARATION
+from CosmologyConcepts.wavenumber import (
+    SOURCE_GRID_CONSTRUCTION_VERSION,
+    SOURCE_GRID_MIN_SEPARATION,
+)
 from CosmologyModels.LambdaCDM import Planck2018
 from CosmologyModels.GenericEOS.QCD_Cosmology import QCD_Cosmology
 from Units import Mpc_units
@@ -487,6 +490,53 @@ class TestTheStandoffIsRefused(unittest.TestCase):
                 break_z=[expm1(QCD_CROSSINGS_LOG1PZ[0])],
                 standoff=1.0e-12,
             )
+
+
+class TestTheConstructionVersionNamesThisAlgorithm(unittest.TestCase):
+    """
+    Prompt 14 of ``prompts/qcd-background-audit``. ``SOURCE_GRID_CONSTRUCTION_VERSION`` names the
+    *algorithm* that builds the grid, and a bump is the only signal a datastore gets that the
+    algorithm has moved: nothing about how a grid was constructed is recoverable from the stored
+    samples. Version 1 is prompt 11's construction, and the three constants below are what it is.
+
+    **A prompt that changes one of these and not the version breaks here.** That is the point: it
+    is cheaper to update this test deliberately than to discover, later, that objects computed by
+    two different constructions were served for one another. The digest cannot catch it, because
+    two constructions can agree on a grid for one cosmology and differ for another.
+    """
+
+    def test_version_1_is_prompt_11s_construction(self):
+        self.assertEqual(SOURCE_GRID_CONSTRUCTION_VERSION, 1)
+        self.assertEqual(SOURCE_GRID_BREAK_STANDOFF, 0.25)
+        self.assertEqual(SOURCE_GRID_BREAK_HALF_WIDTH, 5)
+        self.assertEqual(SOURCE_GRID_BREAK_REFINEMENT, 2)
+
+    def test_the_production_grids_are_the_ones_the_campaign_recorded(self):
+        """
+        The two production grids, by length and by digest over their exact bits. These are log
+        11 §5's four tag labels; nothing since has moved a sample, and prompt 14 must not either.
+        """
+        cosmology = QCD_Cosmology(
+            store_id=0, units=Mpc_units(), params=Planck2018(), max_z=1e20
+        )
+        break_z, feature_z = cosmology_feature_redshifts(
+            cosmology, PRODUCTION_Z_END, PRODUCTION_Z_INIT
+        )
+        qcd = build_z_sample(
+            PRODUCTION_Z_INIT,
+            PRODUCTION_Z_END,
+            PRODUCTION_SAMPLES_PER_LOG10Z,
+            break_z=break_z,
+            feature_z=feature_z,
+        )
+        self.assertEqual(len(qcd.z_values), 1773)
+        self.assertEqual(redshift_grid_digest(qcd.z_values), "303f9ce7")
+
+        smooth = build_z_sample(
+            PRODUCTION_Z_INIT, PRODUCTION_Z_END, PRODUCTION_SAMPLES_PER_LOG10Z
+        )
+        self.assertEqual(len(smooth.z_values), PRODUCTION_NUM_NODES)
+        self.assertEqual(redshift_grid_digest(smooth.z_values), "0960e169")
 
 
 if __name__ == "__main__":
