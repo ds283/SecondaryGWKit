@@ -1,12 +1,37 @@
 # Implementation state — tolerance and convergence campaign
 
-**Campaign:** [`README.md`](README.md) · **Logs:** [`logs/`](logs/)
-**Last updated:** 2026-09-12 · **Status: planned, not started.**
+**Campaign:** [`README.md`](README.md) · **Rebase record:** [`RECONCILIATION.md`](RECONCILIATION.md)
+· **Logs:** [`logs/`](logs/)
+**Planned:** 2026-09-12 at `622b84b` · **Rebased:** 2026-09-16 at `acd5b8e`
+**Baseline commit:** `acd5b8e` (`tolerance-convergence`, cut from `main`, clean; suites green —
+`ComputeTargets` 447, `CosmologyModels` 30)
+**Last updated:** 2026-09-16 · **Status: planned and rebased, not started.**
 
-This campaign is **blocked on `prompts/GkTk-remedial`** (README §0.3, §4.2): its prompt 18 must
-land before any tolerance is measured here, because until it does the reference on `QCDModel` does
-not converge at four wavenumbers (`[17-qcd-reference-not-converged]`), and its prompt 13 is the
-practical precondition. Nothing below may be dispatched before that campaign merges to `main`.
+> **The campaign is unblocked.** The 2026-09-12 plan was blocked on `prompts/GkTk-remedial` prompt
+> 18, because until it landed the reference on `QCDModel` did not converge at four wavenumbers.
+> That campaign closed at 20 / 20 and merged (`e8f746d`); `prompts/qcd-background-audit` then ran
+> to 16 / 16 and merged (`acd5b8e`). `[17-qcd-reference-not-converged]` is **closed**, and the
+> worst QCD reference-convergence drift is now 7.08e-09 ($T_k$) and 3.67e-09 ($G_k$) against the
+> 3.4e-08 criterion, zero offenders at all 50 production wavenumbers.
+>
+> **It is also rebased, and the rebase changed the subject.** The plan counted five compute targets
+> sharing two constants across four object types. Measured at `acd5b8e`, **eight** object types are
+> keyed on an accuracy parameter; the shared pair keys **six** of them and `rtol` alone keys a
+> seventh; and of the six, **only one actually uses the value it is given**. Two targets the plan
+> never mentioned — `wavenumber_exit_time`, a live `root_scalar` that fixes where every grid
+> begins, and `BackgroundModel`, whose three Gauss orders are the largest instance of the
+> integer-order case — are now in scope. `RECONCILIATION.md` scores every claim of the old plan and
+> is the document to read before trusting any figure inherited from it.
+>
+> **Three further things the plan assumed are no longer true.** (i) The production source grid has
+> been rebuilt twice and the test tree holds **three disagreeing reproductions** of it, none of
+> which is the one `main.py` builds — so every published figure in README §6 was taken on a
+> superseded grid. (ii) The cost that D1 turns on was measured in the wrong sector: one decade of
+> `rtol` is free across 50 $T_k$ objects per model and is the entire compute decision across
+> ~65,000 $G_k$ objects per model, which has never been swept. (iii) The Gauss orders' evidence
+> predates two replacements of the background and the removal of the break-point set it was scored
+> against; `decision.recommended_scheme` in the fixture still reads `"branch+knots"` and the knots
+> do not exist.
 
 ---
 
@@ -14,14 +39,21 @@ practical precondition. Nothing below may be dispatched before that campaign mer
 
 | # | Prompt | Covers | Model | Status | Commit | Log |
 |---|---|---|---|---|---|---|
-| 01 | The convergence harness | README §2 (g); the method of GkTk-remedial `[17-qcd-reference-not-converged]` | Opus | ⬜ | | |
-| 02 | Audit the numeric sectors | README §2 (c), (d), (e); review §10.1, §12.5 | Opus | ⬜ | | |
-| 03 | Audit the WKB sectors | README §2 (a) | Opus | ⬜ | | |
-| 04 | Decouple the tolerances | README §2 (d), (f); §7 D1 | Opus | ⬜ | | |
-| 05 | `QuadSourceIntegral`, close-out, the provenance note | README §0.4, §1.2, §2 (b) | Opus | ⬜ | | |
+| 01 | The convergence harness and one production grid | README §2 (b), (h); `[00-three-production-grid-reproductions]` | Opus | ⬜ | | |
+| 02 | The accuracy-parameter inventory | README §2 (a), (c), (g); `RECONCILIATION.md` §2.1 | Opus | ⬜ | | |
+| 03 | Audit the adaptive solvers | README §2 (d), (e), (f); review §10.1, §12.5 | Opus | ⬜ | | |
+| 04 | Audit the order-governed targets | README §2 (a); §7 D5 | Opus | ⬜ | | |
+| 05 | Decouple | README §2 (a), (g); §7 D1, D3 | Opus | ⬜ | | |
+| 06 | `QuadSourceIntegral`, close-out, the provenance note | README §0.4, §1.2 | Opus | ⬜ | | |
 
 Status key: ⬜ not started · 🔄 in flight · ✅ complete · ⚠️ complete with a recorded caveat ·
 ❌ blocked.
+
+**The 2026-09-12 board carried five prompts.** The mapping, so that a reader of the old plan is not
+lost: old 01 → new 01 (widened by the grid); old 02 → new 03 (widened by `wavenumber_exit_time` and
+by $G_k$ becoming the centre); old 03 → new 04 (widened by `BackgroundModel` and by the stale
+fixture); old 04 → new 05; old 05 → new 06. **New 02 has no predecessor** — it is the inventory the
+old plan assumed and got wrong.
 
 ---
 
@@ -29,36 +61,91 @@ Status key: ⬜ not started · 🔄 in flight · ✅ complete · ⚠️ complete
 
 One row per thing the campaign claims to establish. Filled in as prompts land; a row whose evidence
 is a single wavenumber or a single model is **not** ✅, which is the specific failure this campaign
-was created by.
+was created by. A row whose evidence does not say which source-grid generation it was taken on is
+not ✅ either, which is the specific failure the rebase found.
 
 | Item | Kind | Statement | Prompt | Status |
 |---|---|---|---|---|
-| T1 | **MACHINERY** | One reusable convergence facility, in the test tree, covering all five targets and calibrated against the constant-$w$ anchors at every use | 01 | ⬜ |
-| T2 | **MEASUREMENT** | `TkNumericIntegration` characterised over the production $k$-grid on three models in both `atol` and `rtol` | 02 | ⬜ |
-| T3 | **MEASUREMENT** | `GkNumericIntegration` likewise — no grid sweep, no QCD figure and no drift figure exists today (README §6) | 02 | ⬜ |
-| T4 | **MEASUREMENT** | Gauss orders $N_\tau$, $N_{c_s\tau}$, $N_F$, $N_\rho$ audited at every production $k$ rather than at the one each was chosen on | 03 | ⬜ |
-| T5 | **DECISION** | The decoupled constants settled by the user (§7 D1) and shipped with the measurement that chose each, in `config/defaults.py` | 04 | ⬜ |
-| T6 | **PLUMBING** | Every `object_get` of a retuned target carries its own tolerance, with an `ast` guard that fails on an unclassified site | 04 | ⬜ |
-| T7 | **HAND-OFF** | `QuadSourceIntegral` measured read-only and reported to `levin-refactor` / `qsi-phase-groups` | 05 | ⬜ |
-| T8 | **PROVENANCE** | `docs/TOLERANCE-PROVENANCE.md` covers **every** tolerance constant in `config/defaults.py` — including the ones this campaign inherits and does not set — with value, choosing measurement, competing floor, cost and citation (README §1.2) | 05 | ⬜ |
+| T1 | **MACHINERY** | One reusable convergence facility, in the test tree, covering every target and calibrated against the constant-$w$ anchors at every use, with "one step tighter" meaning a decade for a tolerance and one order for a Gauss order | 01 | ⬜ |
+| T2 | **MACHINERY** | **One** reproduction of the production source grid at `SOURCE_GRID_CONSTRUCTION_VERSION = 2`, with the version-0 and version-1 constructions retained and named rather than silently re-scored | 01 | ⬜ |
+| T3 | **MEASUREMENT** | The accuracy-parameter inventory: every parameter, what it keys, whether it reaches a solver, what the real knob is, and the object count of the sector it keys | 02 | ⬜ |
+| T4 | **MEASUREMENT** | `GkNumericIntegration` characterised over the production response grid on three models in both `atol` and `rtol`, against the consumer-spline floor — the sector with ~65,000 objects per model, never swept, and where the campaign's compute decision actually lives | 03 | ⬜ |
+| T5 | **MEASUREMENT** | `TkNumericIntegration` likewise, re-taken on the version-2 grid and under its own `BREAK_POINT_ALL` policy | 03 | ⬜ |
+| T6 | **MEASUREMENT** | `wavenumber_exit_time`'s root solve measured at all — nothing in the record says what `xtol = 1e-10`, `rtol = 1e-8` in $\log(1+z)$ buys or costs | 03 | ⬜ |
+| T7 | **MEASUREMENT** | $N_\tau$, $N_{c_s\tau}$, $N_F$, $N_\rho$ and `RESIDUAL_WKB_REGION_MARGIN` audited at every production $k$ on the corrected background and the 3-point break set, replacing evidence generated 2026-09-10 | 04 | ⬜ |
+| T8 | **DECISION** | The decoupled tolerance pairs settled by the user (§7 D1) and shipped with the measurement that chose each, in `config/defaults.py` | 05 | ⬜ |
+| T9 | **DECISION** | What replaces the vestigial `atol`/`rtol` key columns on the three order-governed targets (§7 D3) — the user's stated target for the campaign | 05 | ⬜ |
+| T10 | **PLUMBING** | Every `object_get` of a retuned target carries its own parameter, with an `ast` guard whose predicate reaches all eight targets and fails on an unclassified site | 05 | ⬜ |
+| T11 | **HAND-OFF** | `QuadSourceIntegral` measured read-only and reported to `levin-refactor` / `qsi-phase-groups` | 06 | ⬜ |
+| T12 | **PROVENANCE** | `docs/TOLERANCE-PROVENANCE.md` covers **every** accuracy parameter in the pipeline — including the ones this campaign inherits and does not set, and the ones nobody has ever chosen — with value, choosing measurement and its grid generation, competing floor, cost times object count, and citation (README §1.2) | 06 | ⬜ |
 
 ---
 
 ## 3. Active and unresolved issues
 
-None yet — the campaign has not started. Issues opened here must be added to
-[`docs/OPEN_ISSUES.md`](../../docs/OPEN_ISSUES.md) **in the same commit** (`CLAUDE.md`), with the
-count corrected.
+Issues opened here must be added to [`docs/OPEN_ISSUES.md`](../../docs/OPEN_ISSUES.md) **in the
+same commit** (`CLAUDE.md`), with the count corrected.
 
-The issues this campaign was created *from* live on GkTk-remedial's board and stay there until it
-closes them:
+Opened by the **2026-09-16 rebase**:
 
-- `[12-tk-numeric-atol-largest-k-excursion]` — measured by that campaign's prompt 17 and
-  **assigned here on 2026-09-12** (`docs/OPEN_ISSUES.md` §1.5). Its `atol` half is settled — the
-  user kept `1e-13` — and what remains is the `rtol` retuning, which is this campaign's D1. It
-  closes when prompt 04 ships a settled `rtol`.
-- `[17-qcd-reference-not-converged]` — assigned to that campaign's prompt 18, and a hard
-  precondition here (README §0.3).
+- **[00-three-production-grid-reproductions]** *(rebase, 2026-09-16; assigned to prompt 01)* — the
+  test tree holds three constructions each called "the production source grid" and they are three
+  different grids. `ComputeTargets/tests/wkb_reference.py:152` is a bare `np.logspace` reproducing
+  `populate_z_sample` and citing `main.py:410-419` — **version 0**, what production built before
+  `qcd-background-audit` prompt 11. `ComputeTargets/tests/test_background_segmentation.py:90`
+  passes `break_z` and `feature_z` but no `spacing` profile — **version 1**, prompt 11's grid.
+  `main.py:911-930` passes the curvature spacing profile — **version 2**,
+  `SOURCE_GRID_CONSTRUCTION_VERSION = 2`, 1,996 samples on QCD and 1,778 on LambdaCDM against
+  version 0's 1,732. **Impact:** every figure in README §6 and every figure in
+  `docs/gktk-remedial/TK-NUMERIC-ATOL-SWEEP.md` was scored on version 0, because
+  `tk_numeric_atol_sweep.py:215` imports the first of the three; a tolerance chosen from those
+  figures would be chosen for a grid production does not use. Not a wrong *number* — each was
+  correct for the tree it was taken on — but an unmarked one, which is why README §5 rule 6 now
+  requires the generation beside the figure. **Next step:** prompt 01 builds one reproduction at
+  version 2, lifting `source_grid_spacing_profile` and `cosmology_feature_redshifts` from `main.py`
+  with `load_main_py_functions`, and has the other sites import it. Keep versions 0 and 1
+  constructible and named: prompt 17's figures and
+  `test_background_segmentation`'s assertions are scored on them and must not be silently
+  re-based.
+
+- **[00-gk-numeric-never-swept-and-carries-the-cost]** *(rebase, 2026-09-16; assigned to prompt
+  03)* — the campaign's central prior, "the error is set by `rtol`", is one clean measurement and
+  one diagonal. `GkTk-remedial` prompt 17 holds `atol = 1e-13` and moves `rtol` alone, so it
+  separates the axes — in the sector that is **one object per $k$, 50 per model**
+  (`main.py:1180`). Review §10.1 on $G_k$ moves `(1e-10, 1e-8)` → `(1e-13, 1e-11)`, a diagonal, at
+  four source redshifts on two models
+  (`docs/gk-wkb-review-fable-2026-09-09.md:469-474`) — in the sector that is one object per
+  $(k, z_{\rm source})$, ~65,000 per model. **Impact:** the +23–25 % evaluations one decade of
+  `rtol` costs is free where it was measured and is the campaign's entire compute decision where it
+  was not; and README §7 D1 attaches the ~65,000 object count to the wrong sector. Worse, the same
+  review paragraph says the consumer's cubic spline of the numeric $G$ carries 1e-5 to 1e-4 near
+  the hand-over, "the larger error by two orders" — so the honest outcome may be that $G_k$'s
+  `rtol` should not move at all. **Next step:** prompt 03 sweeps $G_k$ in both axes on three models
+  over the production response grid and measures the consumer-spline floor beside it, before any
+  `rtol` is recommended for either sector.
+
+Assigned to this campaign from other boards (each stays on the board that holds its measurements;
+the closure is recorded there):
+
+| Issue | Owning board | Assigned to | Why here |
+|---|---|---|---|
+| `[12-tk-numeric-atol-largest-k-excursion]` | GkTk-remedial | prompts 03, 05 | Assigned 2026-09-12. Its `atol` half is settled — the user kept `1e-13` — and what remains is the `rtol` retuning, which is D1. It closes when prompt 05 ships a settled `rtol`. **Its cost figures in `docs/OPEN_ISSUES.md` §1.5 were corrected at the rebase** (`RECONCILIATION.md` §2.4): the QCD $T_k$ object is 8,986 right-hand-side evaluations, not ~31.5k |
+| `[01-convergence-block-has-a-separate-generator]` | qcd-background-audit | prompt 04 | **Assigned 2026-09-16.** The `convergence` block of `ComputeTargets/tests/wkb_reference_data.json` records $N_\tau = N_{c_s\tau} = N_F = N_\rho = 4$, was generated 2026-09-10, and its `decision.recommended_scheme` is `"branch+knots"` — a knot set `qcd-background-audit` prompt 07 removed. Prompts 08 and 09 of that campaign each declined it on scope. Prompt 04 here is the first prompt anywhere whose charter is the orders themselves, so it cannot avoid re-running the generator; that it must then write a fixture and edit `test_background_tau.py` is README §7 **D5** |
+| `[20-wkb-gauss-orders-not-in-lookup-key]` | GkTk-remedial | prompts 04, 05 | **Assigned 2026-09-16.** `TAU_GAUSS_ORDER`, `CS_TAU_GAUSS_ORDER`, `FRICTION_F_GAUSS_ORDER`, `RHO_GAUSS_ORDER` and `RESIDUAL_WKB_REGION_MARGIN` are configuration axes in no lookup key, while the `atol`/`rtol` columns that *are* in the key describe nothing. That is README §7 **D3**, and D3 is the user's stated target for the campaign: for a Liouville–Green-type representation the key should carry an order |
+
+Recorded by the rebase, **not owned here** and not scheduled (README §0.5):
+
+- `[11-stop-point-root-tolerance]` (hand-over campaign, `docs/OPEN_ISSUES.md` §1.1) —
+  `find_phase_extremum`'s `root_scalar(xtol=1e-6, rtol=1e-4)`,
+  `LiouvilleGreen/integration_tools.py:95`. It appears in prompt 02's inventory and in
+  `docs/TOLERANCE-PROVENANCE.md`, and it is not retuned here.
+- `LambdaCDM_GenericEOS.py:1008` — a second `root_scalar(xtol=1e-6, rtol=1e-4)`, on `match_rho`,
+  with no provenance in any campaign record. Prompt 02 records what it is and what it feeds; if it
+  turns out to matter, that is an issue for whoever owns that file and not a repair to make in
+  passing.
+- `ComputeTargets/QuadSourceIntegral.py:1550` still says "the pipeline supplies
+  `DEFAULT_QUADRATURE_ATOL = 1e-25`"; the constant has been 1e-32 since `source-remediation`
+  prompt 12. A stale comment in a file README §0.4 puts out of bounds.
 
 ---
 
@@ -73,19 +160,30 @@ None yet.
 1. **A number without its reference's drift beside it is not a measurement** (README §5 rule 5).
    Every figure quoted against a converged reference carries that reference's drift, and no
    conclusion is drawn from a signal that does not exceed it.
-2. **The floors are not targets** (README §2 (e)). An agent reporting an accuracy below a declared
-   floor has made an error, and it is a campaign-wide stop — not a caveat, not a footnote.
-3. **Counts, not wall time** (README §2 (h)): this machine's elapsed times overstate by up to 53 %.
-4. **Two of the five targets have no tolerance to converge** (README §2 (a)). An agent proposing to
-   tighten the WKB tolerance has misread the tree; the knob there is Gauss order.
-5. **`QuadSourceIntegral` is read-only here** (README §0.4). Touching it, `QuadSource.py`,
+2. **A number without its grid generation beside it is not comparable** (README §5 rule 6, new at
+   the rebase). Version 0, 1 or 2 — say which. The two campaigns that closed before this one are
+   full of figures from all three, and nothing in the record distinguishes them.
+3. **The floors are not targets** (README §2 (f)). An agent reporting an accuracy below a declared
+   floor has made an error, and it is a campaign-wide stop — not a caveat, not a footnote. **The
+   QCD $H(z)$ discontinuity floor is no longer one of them**: `qcd-background-audit` prompts 04–06
+   removed it and the equivalent phase error is 0.000e+00 rad.
+4. **Cost is a per-object count times an object count** (README §2 (c)). $T_k$ numeric is 50
+   objects per model; $G_k$ numeric and both WKB sectors are ~65,000. A percentage without the
+   multiplier is not a cost.
+5. **Counts, not wall time** (README §2 (i)): this machine's elapsed times overstate by up to 53 %.
+6. **Four of the eight keyed targets have no tolerance to converge** (README §2 (a)). An agent
+   proposing to tighten a WKB or `BackgroundModel` tolerance has misread the tree; the knob there
+   is an integer order.
+7. **`QuadSourceIntegral` is read-only here** (README §0.4). Touching it, `QuadSource.py`,
    `phase_groups.py` or `AdaptiveLevin/` is a stop.
-6. **More datastore objects is the intended outcome, not a cost** (README §4.2, D2 settled
-   2026-09-12). Each quantity is meant to end with its own justified `atol`/`rtol` pair, and
-   distinct tolerances should produce distinct objects. No prompt may argue for keeping a shared
-   constant on the grounds that decoupling multiplies rows.
-7. **No constant without its provenance** (README §1.2, §5 rule 8). A tolerance recommended or
-   shipped without its five provenance fields in the log is an unfinished prompt.
-8. **`DEFAULT_TK_NUMERIC_ABS_TOLERANCE = 1e-13` is settled** (the user, 2026-09-12, on
-   GkTk-remedial prompt 17's recommendation). It is not reopened here; its provenance entry is
-   written from that campaign's record.
+8. **More datastore objects is the intended outcome, not a cost** (README §4.2, D2 settled
+   2026-09-12 and restated campaign-independently by `qcd-background-audit` `21d80b2`). No prompt
+   may argue for keeping a shared constant on the grounds that decoupling multiplies rows.
+9. **No parameter without its provenance** (README §1.2, §5 rule 9). One recommended or shipped
+   without its five provenance fields in the log is an unfinished prompt.
+10. **`DEFAULT_TK_NUMERIC_ABS_TOLERANCE = 1e-13` is settled** (the user, 2026-09-12, on
+    `GkTk-remedial` prompt 17's recommendation). It is not reopened here; its provenance entry is
+    written from that campaign's record.
+11. **`BREAK_POINT_KIND`, the source grid and `RESIDUAL_WKB_REGION_MARGIN`'s value are held fixed**
+    (README §0.5). Prompt 04 measures what the margin is worth, because nobody has; changing any of
+    the three is another campaign's decision and touching one is a stop.

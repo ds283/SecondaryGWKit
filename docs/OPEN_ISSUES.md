@@ -1,6 +1,6 @@
 # Open issues — project-wide index
 
-**Last updated:** 2026-09-15 · **66 open** across eight campaigns.
+**Last updated:** 2026-09-16 · **68 open** across nine campaigns.
 
 This file exists so that an issue opened by one campaign is not lost when that campaign closes.
 It is an **index, not a record**: one line per issue, pointing at the campaign status board that
@@ -19,7 +19,8 @@ the two disagree, the board is right.
 [`GkTk-remedial`](../prompts/GkTk-remedial/IMPLEMENTATION_STATE.md) ·
 [`qsi-phase-groups`](../prompts/qsi-phase-groups/IMPLEMENTATION_STATE.md) ·
 [`phase-representation`](../prompts/phase-representation/IMPLEMENTATION_STATE.md) ·
-[`qcd-background-audit`](../prompts/qcd-background-audit/IMPLEMENTATION_STATE.md)
+[`qcd-background-audit`](../prompts/qcd-background-audit/IMPLEMENTATION_STATE.md) ·
+[`tolerance-convergence`](../prompts/tolerance-convergence/IMPLEMENTATION_STATE.md)
 
 ---
 
@@ -82,7 +83,6 @@ prompt 13 left open.
 | `[07-tk-per-object-cost-is-all-setup]` | GkTk-remedial | A `TkWKBIntegration` object at $k=3\times10^8$ costs 0.049–0.052 s, straddling prompt 07 §3 item 6's 0.05 s; all of it is setup. 5,840 of its 11,376 integrand evaluations build a per-$k$ residual table that, at one object per $k$, nothing amortises, and 5,536 are the leading table's off-grid anchor panel recomputed once per sample — the split prompt 14 applied to $\rho$ but not to $\tau_s$. **Widened by prompt 09:** the same recomputation would hit any consumer with an off-grid anchor, which is prompt 10's $z_{\rm init}$. |
 | `[08-docs-scripts-reference-removed-chunking]` | GkTk-remedial | Two `docs/` reproduction scripts (`t5_spline.py`, `measure.py`) read `phase_spline` internals (`_chunk_list`, `_splines`, `_match_chunk`) that prompt 08 deleted with chunking; they documented the chunked tree they ran on and were not edited. |
 | `[10-transfer-remedial-tolerance-comments-stale]` | GkTk-remedial | Five tolerance comments `8ba9159` wrote in `test_tk_source_functions.py` now describe the consumer re-spline prompt 10 deleted and quote numbers three to four orders above the new measurements. Not edited — `8ba9159`'s text was a stop condition for prompt 10 — and every assertion still passes. |
-| `[20-wkb-gauss-orders-not-in-lookup-key]` | GkTk-remedial | Prompt 20's §5 audit refutes "the other four compute targets have no equivalent free parameter": `TAU_GAUSS_ORDER`, `CS_TAU_GAUSS_ORDER`, `FRICTION_F_GAUSS_ORDER`, `RHO_GAUSS_ORDER` (all 4) and `RESIDUAL_WKB_REGION_MARGIN = 0.5` are configuration axes in no `BackgroundModel`, `GkWKBIntegration` or `TkWKBIntegration` lookup key. The orders at least move a solver label, which no factory filters on; the margin moves no label, tag or column at all. Latent, not live — prompt 14 measured the margin at $\le1.4\times10^{-17}$ rad in $\rho$ with $\theta$ bit-identical. |
 | `[20-wkb-rows-consume-numeric-initial-data]` | GkTk-remedial | `Gk`/`TkWKBIntegration` take $z_{\rm init}$, $G_{\rm init}$/$T_{\rm init}$ and the derivative from the numeric stop point and are keyed independently of the numeric row: no foreign key, and the initial values are stored `nullable=False` but never filtered. Covered in practice only because `z_init` is filtered as an absolute `1e-7` against $z\sim10^{12}$, i.e. exactly — measured on QCD at $k=4.972\times10^7$, the two break-point policies move $z_{\rm init}$ by 4.59e5 and the lookup misses. A change moving the stop *values* without moving $z_{\rm init}$ would be served a stale row. |
 | `[10-wrap-theta-loop-at-large-phase]` | GkTk-remedial | `wrap_theta` reduces by adding $2\pi$ in a loop, so at $|\theta|\sim10^6$ rad it takes ~1.6e5 iterations and reconstructs $\theta$ only to 1.39e-06 rad. Inert in production (its one caller passes `mod + delta`), a trap for fixtures. The companion defect in `WKB_mod_2pi`'s cycle count was fixed by `phase-representation` prompt 01 (2026-09-13), so that function is now exact in both halves; this loop is not. |
 | `[13-scoped-run-driver-k-grid-literal]` | GkTk-remedial | `docs/source-remediation-verification/scoped_pipeline_run.py` matches a `main.py` k-grid literal that `f17f2d4` renamed to `NUMBER_SOURCE_K_VALUES`/`NUMBER_RESPONSE_K_VALUES`, so it finds zero occurrences and raises rather than running. The `source-remediation` Layer 2 is not reproducible by its own documented command; prompt 13 copied the driver into `docs/gktk-remedial/` rather than editing another campaign's file. |
@@ -92,23 +92,42 @@ prompt 13 left open.
 ### 1.5 The tolerance and convergence campaign
 
 Planned as [`prompts/tolerance-convergence/`](../prompts/tolerance-convergence/README.md)
-(2026-09-12; five prompts, none executed). One reusable convergence test applied to all five
-compute targets on all three models, anchored to the constant-$w$ closed forms in
-`ComputeTargets/analytic_{Gk,Tk}.py`, and `atol`/`rtol` decoupled so each quantity carries its own
-justified pair. **Unblocked, without a caveat, by `prompts/GkTk-remedial` prompts 18 and 19
-(2026-09-13)** — the numeric ODE is now split at the cosmology's declared non-smoothness, and
-*which* kind is the caller's choice: the $T_k$ integrator asks for every declared break point, the
-$G_k$ integrator for the jumps alone, each on measurement. **Both sectors now converge at all 50
-production wavenumbers on all three models** — worst reference-convergence drift on `QCDModel`
-8.72e-09 ($T_k$) and 8.41e-09 ($G_k$) against the 3.4e-08 criterion, where prompt 18 still left
-three $T_k$ wavenumbers at up to 1.97e-07. `[17-qcd-reference-not-converged]` is **closed**, and a
-$T_k$ tolerance may now be measured on QCD. Note the cost this campaign inherits: a QCD $T_k$
-numeric object is ~31.5k right-hand-side evaluations rather than ~9.8k (+220 %, ~49 s for the
-50-object sector per model); $G_k$ is unchanged at ~13.3k.
+(2026-09-12; **rebased 2026-09-16 at `acd5b8e` — six prompts, none executed**). One reusable
+convergence test applied to every accuracy parameter in the pipeline on all three models, anchored
+to the constant-$w$ closed forms in `ComputeTargets/analytic_{Gk,Tk}.py`, and the parameters
+decoupled so each quantity carries its own justified one. **Unblocked** by `prompts/GkTk-remedial`
+prompts 18 and 19 (2026-09-13): the numeric ODE is split at the cosmology's declared
+non-smoothness, *which* kind is the sector's choice, and `[17-qcd-reference-not-converged]` is
+**closed**. `prompts/qcd-background-audit` then improved the same figures again — worst QCD
+reference-convergence drift **7.08e-09** ($T_k$) and **3.67e-09** ($G_k$) against the 3.4e-08
+criterion, zero offenders at all 50 production wavenumbers
+(`docs/qcd-background-audit/PER-SECTOR-POLICY.md` §2, §4).
+
+**The rebase changed the campaign's subject**
+([`RECONCILIATION.md`](../prompts/tolerance-convergence/RECONCILIATION.md) scores every claim of the
+2026-09-12 plan against the tree). The plan counted five compute targets sharing two constants
+across four object types; measured, **eight** object types are keyed on an accuracy parameter, the
+shared pair keys six of them, and of those six **only one uses the value it is given**. Two targets
+the plan never mentioned are now in scope: `wavenumber_exit_time`, a live `root_scalar` in
+$\log(1+z)$ that fixes where every grid begins, and `BackgroundModel`, whose three Gauss orders are
+the largest instance of the case where the knob is an integer order rather than a tolerance.
+
+**Two cost figures this index previously carried were wrong and are corrected here.** (i) A QCD
+$T_k$ numeric object is **8,986** right-hand-side evaluations under its own `BREAK_POINT_ALL`
+policy, not ~31.5k: `qcd-background-audit` prompt 07 took the ~404 spline knots out of
+`integration_break_points`, so the wider policy costs **+0.99 %** rather than +220 %
+(`PER-SECTOR-POLICY.md` §5). (ii) The ~65,000-objects-per-model sector is $G_k$, not $T_k$:
+`TkNumericIntegration` is one object per $k$, 50 per model. One decade of `rtol` at +23–25 %
+evaluations is therefore free where it was measured and is the campaign's whole compute decision
+where it was not.
 
 | Issue | Board | Hook |
 |---|---|---|
-| `[12-tk-numeric-atol-largest-k-excursion]` | GkTk-remedial → tolerance-convergence | Prompt 12's `atol=1e-13` left excursions above README §6's 3e-6 of the envelope that prompt 17 then measured across the production grid: 3 / 13 / 8 of 50 wavenumbers on Radiation / LambdaCDM / QCD, worst 8.64e-4, each a raised level rather than one bad sample. `atol=1e-16` does not fix it and is not cheaper. **The user settled the constant 2026-09-12: `1e-13` stays** — `atol` is not the lever. One decade of `rtol` removes every excursion for +23–25 % evaluations, and `rtol` is one shared number keying every integration object. **Assigned (2026-09-12): `prompts/tolerance-convergence`**, which sweeps it per sector and decouples the constants. | |
+| `[00-three-production-grid-reproductions]` | tolerance-convergence | Three constructions in the test tree are each called "the production source grid" and are three different grids: `wkb_reference.py:152` (a bare `logspace`, v0), `test_background_segmentation.py:90` (v1), `main.py:911-930` (**v2**, `SOURCE_GRID_CONSTRUCTION_VERSION = 2`). Every published tolerance figure was scored on v0, because `tk_numeric_atol_sweep.py:215` imports the first. Assigned to prompt 01. |
+| `[00-gk-numeric-never-swept-and-carries-the-cost]` | tolerance-convergence | "The error is set by `rtol`" is one clean measurement in the 50-object sector and one `(atol, rtol)` diagonal in the 65,000-object one. $G_k$ numeric has never been swept in either axis, and review §10.1 puts the consumer spline that reads it two orders above its solver error — so the honest answer may be "tighten nothing". Assigned to prompt 03. |
+| `[12-tk-numeric-atol-largest-k-excursion]` | GkTk-remedial → tolerance-convergence | Prompt 12's `atol=1e-13` left excursions above README §6's 3e-6 of the envelope that prompt 17 measured across the production grid: 3 / 13 / 8 of 50 wavenumbers on Radiation / LambdaCDM / QCD, worst 8.64e-4. **The user settled the constant 2026-09-12: `1e-13` stays** — `atol` is not the lever. What remains is the `rtol` retuning. **Assigned (2026-09-12): `prompts/tolerance-convergence`**; its cost figures corrected at the 2026-09-16 rebase, and its sweep re-taken on the v2 grid. |
+| `[01-convergence-block-has-a-separate-generator]` | qcd-background-audit → tolerance-convergence | `wkb_reference_data.json`'s `convergence` block records $N_\tau = N_{c_s\tau} = N_F = N_\rho = 4$, was generated 2026-09-10, and names `"branch+knots"` as its winning scheme — a knot set `qcd-background-audit` prompt 07 removed. One tolerance is owed on its account (`QCD_BREAK_POINT_ALIGNMENT_TOL = 1.5e-04`). Declined on scope by prompts 08 and 09 of that campaign. **Assigned (2026-09-16): `prompts/tolerance-convergence` prompt 04**, the first prompt anywhere whose charter is the orders themselves. |
+| `[20-wkb-gauss-orders-not-in-lookup-key]` | GkTk-remedial → tolerance-convergence | `TAU_GAUSS_ORDER`, `CS_TAU_GAUSS_ORDER`, `FRICTION_F_GAUSS_ORDER`, `RHO_GAUSS_ORDER` (all 4) and `RESIDUAL_WKB_REGION_MARGIN = 0.5` are configuration axes in no `BackgroundModel`, `GkWKBIntegration` or `TkWKBIntegration` lookup key, while the `atol`/`rtol` columns that *are* in the key describe nothing. **Assigned (2026-09-16): `prompts/tolerance-convergence` prompts 04 and 05** — putting the order in the key instead of the tolerance is the campaign's stated target (README §7 D3). |
 
 ---
 
@@ -141,10 +160,11 @@ campaign was **closed**, its remaining issue passing to the `qcd-background-audi
 
 [`prompts/qcd-background-audit/`](../prompts/qcd-background-audit/README.md) (2026-09-13; twelve
 prompts in four workstreams, closed at 12 / 12 on 2026-09-15 and **reopened the same day as
-workstream E**, three more prompts, **all three of which have now landed: 15 / 15** — the ungated
+workstream E**, four more prompts, **all four of which have now landed: 16 / 16** — the ungated
 chain 01–09 completed 2026-09-14, workstream D's prompts 10, 11 and 12 ran on 2026-09-15, prompt 13
 closed the defect prompt 12 was forbidden to act on, prompt 14 gave a run a name and the grid's
-construction a version, and prompt 15 took prompt 12's density recommendation). It
+construction a version, prompt 15 took prompt 12's density recommendation and prompt 16 retired the
+samples-per-decade tag it left false). It
 implements [`qcd-background-audit-2026-09.md`](qcd-background-audit-2026-09.md), which measured that
 `QCD_Cosmology`'s temperature is a cubic spline over 500 points solved to `rtol=1e-4`, built as $T$
 against $\log(1+z)$ and run across three points at which $T(z)$ genuinely **jumps** — so the
@@ -156,8 +176,9 @@ campaign replaces the representation with a segmented entropy-factor spline (pro
 collapses `BREAK_POINT_ALL` to 3 (07–08) — it was 407 when the audit was written and prompt 06's
 node count took it to 2,414, **all but three of them knots of that auxiliary interpolant rather
 than cosmology** — and adds the background-against-background test that would
-have caught it (01). It is a **precondition for `prompts/tolerance-convergence`** (§1.5), whose QCD
-half would otherwise be measured against a background about to move.
+have caught it (01). It was a **precondition for `prompts/tolerance-convergence`** (§1.5), whose
+QCD half would otherwise have been measured against a background about to move; the campaign closed
+and merged (`acd5b8e`) and that campaign was rebased on its result on 2026-09-16.
 
 **Prompt 01 landed 2026-09-14** and that test now exists:
 `CosmologyModels/tests/test_T_z_representation.py`, scored against
@@ -370,7 +391,6 @@ waits on a prompt that has the right files in scope; the board holds the measure
 | Issue | Board | Hook |
 |---|---|---|
 | `[00-eos-branch-joins-do-not-match]` | qcd-background-audit | `QCD_EOS`'s branch joins at $10^{16}$, 0.12 and $10^{-5}$ GeV jump by +1.395e-02, −3.744e-04 and −2.284e-03 in $g_s$, forcing steps in $T(z)$; the join at 0.002 GeV matches to 1.751e-11, and that asymmetry is the evidence the other three are a transcription defect. Origin of the 4.4e-04 jump in $H(z)$ at $z=4.24\times10^7$ that `GkTk-remedial` log 02 measured without attribution. **Upstream data fixture; pinned in a test by prompt 01 (2026-09-14), which confirmed every figure here to the digits quoted; not repaired.** The question for its authors is that campaign's README §7 D6. |
-| `[01-convergence-block-has-a-separate-generator]` | qcd-background-audit | `wkb_reference_data.json`'s top-level `convergence` block (geometry, per-order convergence, `decision.N_*`) is written by `docs/gktk-remedial/residual_convergence.py`, not by prompt 02's QCD-only regenerator; five tests read it directly. Stale since 04–06 moved the QCD block. One tolerance is still owed on its account: `QCD_BREAK_POINT_ALIGNMENT_TOL = 1.5e-04` in `test_background_tau.py`, measured 1.418851e-04. **Prompt 08 could not take it** (2026-09-14): its file list includes neither the JSON nor that test module, and it moved no number. **Nor could prompt 09** (2026-09-14): its file list is `docs/` plus its own log, board and this index, and its "do not touch" is *any production file* — regenerating the block and taking the tolerance back would have been scope creep, so it was not done and the figure is unchanged. **Next step:** whichever prompt next has `ComputeTargets/tests/wkb_reference_data.json` and `test_background_tau.py` in scope; it is no longer assigned to this campaign's chain, which is closed. |
 | `[03-qcd-inventory-does-not-report-the-representation]` | qcd-background-audit | `sqla_QCDCosmology_factory.inventory()` and `tools/inventory_report.py` show QCD cosmology rows without the `T_z_representation` column prompt 03 added, so from prompt 04 rows differing only in their representation render as indistinguishable duplicates to the only tool that inspects a datastore. One line in `inventory()`; out of scope for prompt 03, whose §2 item 4 fixes the key and nothing else, and out of scope for prompt 09, which opens no datastore and may not touch a production file. |
 | `[04-unsplit-tk-run-now-meets-the-criterion]` | qcd-background-audit | `test_split_converges_where_unsplit_does_not` asserted that an unsplit $T_k$ numeric run *fails* the 3.4e-08 criterion at $k=4.972\times10^7$/Mpc. False since prompt 05: unsplit drift 1.0213e-06 → **2.2767e-08** (45× better) while the split run barely moved, so most of what the split rescued was the old representation's interpolation noise, not the jump in $H(z)$. First measured evidence that `BREAK_POINT_KIND = BREAK_POINT_ALL` may no longer be load-bearing — README §2 (f), §7 **D5**, and `BREAK_POINT_KIND` is in a datastore lookup key. One wavenumber of fifty; **not decided by prompt 05**. **Prompt 08 took the column across all fifty** (2026-09-14): unsplit, QCD $T_k$ is above the criterion at **19 of 50** wavenumbers, worst **9.61e-06** at $k=4.223\times10^7$ — this entry's own $k$ reads 2.91e-08 and passes, but it is not representative, so splitting at the **jumps** is still load-bearing and only the `ALL`-vs-`DISCONTINUITY` distinction is vestigial (7.08e-09 against 8.85e-09, zero offenders either way). **Narrowed, not closed:** the assertion in the tree is still pinned to a $k$ at which its original statement is false. **Next step:** re-point `test_split_converges_where_unsplit_does_not` at $k=4.223\times10^7$, where unsplit is 9.61e-06 against a split 5.60e-10; out of bounds for prompt 08. |
 | `[08-gk-declared-split-buys-nothing-measurably]` | qcd-background-audit | The $G_k$ numeric sector splits at the declared jumps; prompt 08 measured what that buys on QCD — worst reference-convergence drift **3.67e-09** split against **3.52e-09** unsplit over 50 wavenumbers, zero above the criterion either way, 13,343 against 13,320 evaluations per object. Within the noise of the measure it buys nothing, unlike $T_k$ where suppressing the split puts 19 of 50 above the criterion. No action proposed: it costs 0.17 %, it is the mechanism $T_k$ needs, and `BREAK_POINT_KIND` is in a lookup key. Recorded so a later reader weighing README §7 D5 need not re-derive it. |

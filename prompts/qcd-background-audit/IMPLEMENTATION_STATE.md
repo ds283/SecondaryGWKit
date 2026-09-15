@@ -1215,6 +1215,17 @@ Opened by this campaign's planning, 2026-09-13:
   **Next step:** whichever prompt next has that JSON and that test module in scope, which is *not*
   a prompt of this campaign's ungated chain — the chain is closed. `[02-qcd-reference-floor]` on the
   `GkTk-remedial` board waits on the same run.
+
+  **Assigned (2026-09-16): `prompts/tolerance-convergence`, prompt 04.** That campaign's rebase
+  (`prompts/tolerance-convergence/RECONCILIATION.md` §5) found the block's staleness to be wider
+  than a tolerance owed: `decision.recommended_scheme` is `"branch+knots"`, and prompt 07 of this
+  campaign removed the knots, so **the evidence for `N_tau = N_cs_tau = N_F = N_rho = 4` names a
+  break-point scheme that no longer exists** and was measured on the `T(z)` representation prompts
+  04-06 replaced. Its prompt 04's charter is the Gauss orders themselves, so it cannot avoid
+  re-running the generator; that this makes an audit prompt write a fixture and edit
+  `test_background_tau.py` is that campaign's README §7 **D5**, put to the user rather than
+  assumed. Re-running the script also needs its scheme sweep updated, since one of its three
+  schemes is gone. `[02-qcd-reference-floor]` still waits on the same run.
 - **[03-qcd-inventory-does-not-report-the-representation]** *(prompt 03, 2026-09-14)* —
   `sqla_QCDCosmology_factory.inventory()`
   (`Datastore/SQL/ObjectFactories/QCD_Cosmology.py`) reports `name`, `omega_m`, `omega_cc`, `h`

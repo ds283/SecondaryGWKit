@@ -781,6 +781,13 @@ Opened by the planning pass, 2026-09-10, before any prompt runs.
   written from one class constant and filtered on in `build()` — or, for the orders alone, folding
   the order into the solver *label* and filtering on `solver_serial`. Either way it carries a
   datastore regeneration, so it belongs with whichever change first moves one of these constants.
+  **Assigned (2026-09-16): `prompts/tolerance-convergence`, prompts 04 and 05.** That campaign was
+  rebased on 2026-09-16 and its stated target is exactly this entry's remedy: for a
+  Liouville-Green-type representation the lookup key should carry the *order*, not an `atol`/`rtol`
+  pair that reaches no solver. Its prompt 04 measures the four orders and the margin on the
+  corrected background; its prompt 05 moves the key columns, which is that campaign's README §7 D3
+  and the user's decision. The "becomes live the moment anyone re-measures an order" condition is
+  therefore about to be met deliberately.
 
 - **[20-wkb-rows-consume-numeric-initial-data]** *(opened by prompt 20, 2026-09-13)* — the WKB
   stage takes its initial data from the numeric stop point —
