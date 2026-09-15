@@ -250,11 +250,31 @@ knots, on measurement, and the defect moves to the source grid. Record:
 [`qcd-background-verification.md`](qcd-background-verification.md) §8. Suites 30 / 339 → **361** /
 143 (fast set).
 
-**Owned by workstream D**, and the reason to release it:
+**Prompt 11 landed 2026-09-15 and closed it.** The production source grid now carries what the
+cosmology declares: a pair straddling each of `QCD_Cosmology`'s three equation-of-state crossings at
+a quarter of a grid interval, the eleven intervals around each refined by two, and the two equality
+redshifts -- **41 extra samples in 1,732 (2.37 %)**, taking the two rows to **1.61 ulp**
+(3.8296e-07 rad, $G_k$) and **65.78 ulp** (4.9012e-07 rad, $T_k$), both inside the 1e-06 rad
+consumer target and both better than the campaign base. **The two straddling samples are not the
+remedy on their own**: measured alone they buy 1.96× and 1.98× and leave both rows outside the
+target, which is prompt 10's "the feature is three to five grid intervals wide" confirmed on the
+grid actually built. The standoff was scored from 1/2 of an interval down to 1e-4 of one and is a
+*fraction of the grid spacing*, not an absolute number -- below ~1/32 the pair saturates 1.5×--1.7×
+**worse** than no pair at all, because the slope it implies drowns in
+`[02-consumer-phi-below-the-storage-granularity]`'s storage granularity, which is why
+`BREAK_POINT_STANDOFF = 1e-12` must not be borrowed for a sample location. LambdaCDM's grid is
+**bit-identical, element for element**, and `main.py` gates the whole path on the cosmology
+declaring something so that it stays that way. `winnow` now retains a protected set, and the grid
+tags carry a digest of the grid's own values, which closes the equal-length collision and
+**invalidates every stored object of eight types** -- the bill is quantified in log 11 §5 and
+[`qcd-background-verification.md`](qcd-background-verification.md) §9.6. Suites 30 / 361 → **380** /
+143 (fast set).
+
+**Opened by prompt 11**, which closed the issue that released workstream D:
 
 | Issue | Board | Hook |
 |---|---|---|
-| `[10-consumer-phi-unresolved-at-the-eos-crossing]` | qcd-background-audit | The production source grid does not resolve $\varphi$ at `QCD_EOS`'s `T_LO` crossing, and that -- not `PrimitivePhase`'s knot placement -- is what costs **8.1062e-06 rad** ($G_k$, 34.00 ulp) and **1.3982e-05 rad** ($T_k$, 1876.61 ulp) at $k=10^5$. Replaces `[13-consumer-spline-crosses-eos-break-points]`, **closed by prompt 10 (2026-09-15)** on that board's §4 after measuring every constructible break-point scheme: the repeated $C^0$ knot vector is **2.09×/2.10× worse**, per-segment splines **5.00×/5.06× worse**, the best control 1.21× better against a 4.25× rise, and the ten rows at 1.00 ulp unmoved by all nine. What works is samples: ±5 grid intervals around the crossing at 2× -- **10 extra samples in 1,016** -- gives **1.64 ulp** and **74.60 ulp**, both inside the 1e-06 rad consumer target. The feature is 3--5 grid intervals wide, so refining the crossing's own interval alone buys 1.96× and stalls. **Next step:** prompt 11, which owns the source grid (**G2**); the ladder and the re-taken kink fit are in [`consumer_knot_scheme_scan.py`](qcd-background-audit/consumer_knot_scheme_scan.py) and `qcd-background-verification.md` §8. |
+| `[11-background-model-not-keyed-on-the-source-grid]` | qcd-background-audit | `BackgroundModel`'s datastore lookup filters on `(cosmology, atol, rtol)` plus `LargestSourceZTag`, `SmallestSourceZTag` and `SourceSamplesPerLog10ZTag` -- **all three unchanged when the source grid changes**, because the grid's endpoints and its samples-per-decade are unchanged -- and its factory does not filter on `z_sample`. Prompt 11 made that matter: a pre-prompt-11 datastore returns its **1,732-node** `BackgroundModel` for the new **1,773-node** QCD grid, the one surviving row in a store every compute target of which the grid-tag change has invalidated. Benign in value -- the cumulative tables are already split at the equation of state's break points -- but it is exactly the silent staleness the campaign's key work exists to prevent, and `check_zsample` has no callers. **Next step:** add the source grid tag to `BackgroundModel`'s lookup, in whichever prompt has its `object_get` in scope; that is a further key change with its own regeneration attached. |
 
 **Opened by this campaign and owned by no prompt of it.** The chain is closed, so each of these
 waits on a prompt that has the right files in scope; the board holds the measurements.

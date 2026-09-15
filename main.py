@@ -28,6 +28,7 @@ from ComputeTargets import (
     BesselPhaseProxy,
     TkWKBIntegration,
 )
+from ComputeTargets.BackgroundModel import _cosmology_break_points
 from CosmologyConcepts import (
     wavenumber,
     redshift,
@@ -35,6 +36,7 @@ from CosmologyConcepts import (
     wavenumber_exit_time,
     wavenumber_exit_time_array,
     redshift_array,
+    redshift_grid_digest,
 )
 from Datastore.SQL.ProfileAgent import ProfileAgent
 from Datastore.SQL.ShardedPool import ShardedPool
@@ -456,6 +458,77 @@ def format_unresolved_osc_summary(summary: dict, sector_label: str) -> List[str]
     return lines
 
 
+def cosmology_feature_redshifts(cosmology, z_end: float, z_init: float):
+    """
+    The redshifts in ``(z_end, z_init)`` that the source grid should be built around, as
+    ``(break_z, feature_z)``: the points at which the background loses smoothness, and the points
+    that are merely physically distinguished.
+
+    ``break_z`` are the crossings of the equation of state's branch temperatures, taken from
+    ``ComputeTargets.BackgroundModel._cosmology_break_points`` -- which is duck-typed, so a
+    cosmology that declares no ``integration_break_points`` (every LambdaCDM model,
+    RadiationModel, every test stand-in) gets an empty array. They are returned in u = log(1+z)
+    and converted to z here; that is the lossy direction (CLAUDE.md), but the recovered value is
+    only a sample *location*, never an equality comparison, and the straddling standoff
+    ``CosmologyConcepts.wavenumber.SOURCE_GRID_BREAK_STANDOFF`` clears the recovery granularity
+    (~ulp(u) = 3.6e-15 relative) by twelve orders of magnitude.
+
+    ``feature_z`` are matter-radiation and matter-Lambda equality, recomputed here from the
+    public ``omega_m`` / ``omega_r`` / ``omega_cc`` rather than imported from the model, which
+    computes them in its constructor and discards them (``LambdaCDM.py:73``,
+    ``LambdaCDM_GenericEOS.py:483``) -- and which prompt 11 may not modify. The closed form
+    agrees with ``LambdaCDM_GenericEOS``'s own root solve to 4e-13 relative in z on
+    ``QCD_Cosmology`` at production parameters, which is far below a grid interval; the samples
+    are markers of an epoch, not a claim about where equality is.
+
+    **``feature_z`` is empty when ``break_z`` is.** A cosmology that declares no non-smoothness
+    takes the unchanged code path entirely and gets the grid it has always had, element for
+    element (``prompts/qcd-background-audit/README.md`` section 0.5, section 2 (g): every
+    LambdaCDM, RadiationModel and stand-in number bit-identical is a campaign stop condition).
+    Adding two equality samples to those grids would cost 2 samples in 1,732 for no measured
+    accuracy -- the background is perfectly smooth at either equality -- and would break that
+    invariant, so the whole cosmology-aware path is gated on the cosmology declaring something.
+    """
+    break_u = _cosmology_break_points(cosmology, z_end, z_init)
+    break_z = [float(np.expm1(float(u))) for u in break_u]
+
+    if len(break_z) == 0:
+        return [], []
+
+    feature_z = []
+    omega_m = getattr(cosmology, "omega_m", None)
+    omega_r = getattr(cosmology, "omega_r", None)
+    omega_cc = getattr(cosmology, "omega_cc", None)
+    if omega_m is not None and omega_r is not None and omega_r > 0.0:
+        feature_z.append(float(omega_m / omega_r - 1.0))
+    if omega_cc is not None and omega_m is not None and omega_m > 0.0:
+        feature_z.append(float(pow(omega_cc / omega_m, 1.0 / 3.0) - 1.0))
+
+    return break_z, feature_z
+
+
+def build_grid_tag_labels(source_z_values, response_z_values):
+    """
+    The labels of the two grid tags, as ``(source_label, response_label)``.
+
+    They used to be ``SourceRedshiftGrid_{len}`` and ``ResponseRedshiftGrid_{len}``, which label
+    **size only** (audit section 7). That was safe while the grid was a pure function of
+    ``(z_init, z_end, samples_per_log10z)`` -- two runs agreeing on the length then agreed on
+    every sample -- and it stops being safe the moment the grid also depends on what the
+    cosmology declares, because two different grids of equal length then carry the same tag and
+    every lookup filtered on it silently serves one for the other. The digest closes that: it is
+    taken over the exact bits of the grid's own values, so two grids differing in any sample --
+    including in the protected set alone -- get different tags.
+
+    **Changing these labels makes every object carrying the old ones unfindable.** Log 11 of
+    prompts/qcd-background-audit quantifies what that invalidates and what regenerating it costs.
+    """
+    return (
+        f"SourceRedshiftGrid_{len(source_z_values)}_{redshift_grid_digest(source_z_values)}",
+        f"ResponseRedshiftGrid_{len(response_z_values)}_{redshift_grid_digest(response_z_values)}",
+    )
+
+
 def run_pipeline(
     model_data: dict,
     source_k_sample: wavenumber_array,
@@ -527,34 +600,62 @@ def run_pipeline(
         f"   @@ earliest horizon exit/re-entry time is {k_exit_earliest.k.k_inv_Mpc:.5g}/Mpc with z_exit={k_exit_earliest.z_exit:.5g}"
     )
 
-    # build a log-spaced universal grid of source sample times
-
-    source_z_grid = k_exit_earliest.populate_z_sample(
+    # build a log-spaced universal grid of source sample times, built around the features this
+    # cosmology declares (audit section 7; prompt 11 of prompts/qcd-background-audit). A
+    # cosmology that declares no break points gets the bare logspace it has always got.
+    break_z, feature_z = cosmology_feature_redshifts(
+        model_cosmology, zend, k_exit_earliest.z_exit_suph_e5
+    )
+    source_grid = k_exit_earliest.populate_source_grid(
         outside_horizon_efolds=5,
         samples_per_log10z=source_samples_per_log10z,
         z_end=zend,
+        break_z=break_z,
+        feature_z=feature_z,
     )
+    source_z_grid = source_grid.z_values
+    if len(source_grid.protected_z) > 0:
+        print(
+            f"   @@ cosmology declares {len(source_grid.breaks)} break point(s) and "
+            f"{len(source_grid.features)} feature redshift(s) in range; the source grid carries "
+            f"{len(source_z_grid)} samples, {len(source_grid.protected_z)} of them protected "
+            f"from the response winnow"
+        )
 
     # embed these redshift lists into the database
     z_source_array = ray.get(convert_to_redshifts(source_z_grid, is_source=True))
     z_source_sample = redshift_array(z_array=z_source_array)
 
+    # the protected points have to be recovered as redshift objects, so that winnow can match
+    # them on store_id rather than on a float comparison
+    z_protected_sample = ray.get(
+        convert_to_redshifts(source_grid.protected_z, is_source=True)
+    )
+
     # we need the response sample to be a subset of the source sample, otherwise we won't have
     # source data for the Green's functions right the way down to the response time.
     # We need to re-query the database for these redshifts, so that they get the correct is_response flag
     # set correctly.
-    _z_response_sample = z_source_sample.winnow(sparseness=response_sparseness)
+    _z_response_sample = z_source_sample.winnow(
+        sparseness=response_sparseness, protect=z_protected_sample
+    )
     z_response_array = ray.get(
         convert_to_redshifts([z.z for z in _z_response_sample], is_response=True)
     )
     z_response_sample = redshift_array(z_array=z_response_array)
 
+    # the grid tags carry a digest of the grid itself, not merely its length: see
+    # build_grid_tag_labels
+    source_grid_label, response_grid_label = build_grid_tag_labels(
+        z_source_sample.as_float_list(), z_response_sample.as_float_list()
+    )
+
     # build tags and other labels, based on these sample grids
     (
         TkProductionTag,
         GkProductionTag,
-        SourceZGridSizeTag,  # labels size of the z_source sample grid
-        ResponseZGridSizeTag,  # labels size of the z_response sample grid
+        SourceZGridSizeTag,  # identifies the z_source sample grid: its size and a digest of its values
+        ResponseZGridSizeTag,  # identifies the z_response sample grid, likewise
         OutsideHorizonEfoldsTag,  # labels number of e-folds outside the horizon at which we begin Tk numeric integrations
         LargestSourceZTag,  # labels largest z in the global grid
         SmallestSourceZTag,  # labels smallest z in the global grid
@@ -564,12 +665,8 @@ def run_pipeline(
         [
             pool.object_get("store_tag", label="TkOneLoopDensity"),
             pool.object_get("store_tag", label="GkOneLoopDensity"),
-            pool.object_get(
-                "store_tag", label=f"SourceRedshiftGrid_{len(z_source_sample)}"
-            ),
-            pool.object_get(
-                "store_tag", label=f"ResponseRedshiftGrid_{len(z_response_sample)}"
-            ),
+            pool.object_get("store_tag", label=source_grid_label),
+            pool.object_get("store_tag", label=response_grid_label),
             pool.object_get("store_tag", label=f"OutsideHorizonEfolds_e3"),
             pool.object_get(
                 "store_tag", label=f"LargestSourceRedshift_{z_source_sample.max.z:.5g}"

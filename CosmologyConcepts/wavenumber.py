@@ -1,7 +1,8 @@
 from functools import total_ordering
 from math import log10, log, fabs, exp
-from typing import Iterable, Optional, Mapping, List
+from typing import Iterable, Optional, Mapping, List, NamedTuple, Sequence
 
+import numpy as np
 import ray
 from numpy import logspace
 from scipy.optimize import root_scalar
@@ -10,8 +11,288 @@ from CosmologyModels import BaseCosmology
 from Datastore import DatastoreObject
 from MetadataConcepts import tolerance
 from Units import check_units
-from config.defaults import DEFAULT_ABS_TOLERANCE, DEFAULT_REL_TOLERANCE
+from config.defaults import (
+    DEFAULT_ABS_TOLERANCE,
+    DEFAULT_REL_TOLERANCE,
+    DEFAULT_REDSHIFT_RELATIVE_PRECISION,
+)
 from utilities import WallclockTimer
+
+# ---------------------------------------------------------------------------------------------
+# the cosmology-aware source grid (prompt 11 of prompts/qcd-background-audit, audit section 7)
+# ---------------------------------------------------------------------------------------------
+
+# The standoff at which the pair of samples straddling a declared break point is placed, **as a
+# fraction of the grid's own spacing**: the pair goes at
+#
+#     z_break -+ SOURCE_GRID_BREAK_STANDOFF * (base grid's relative step in z) * (1 + z_break),
+#
+# which is a relative standoff in (1+z), sized by the grid rather than by an absolute constant.
+#
+# **This is not Quadrature/integrators/numeric_with_phase_cut.BREAK_POINT_STANDOFF = 1e-12, and
+# must not be set from it.** That constant places an ODE *restart* boundary: nothing is
+# interpolated there, nothing is stored there, and its only requirement is to clear the
+# cosmology's ~1e-16 evaluation noise, which is why it can be that small and why its own
+# docstring says the choice "is not delicate". The number here is a *sample* location -- a
+# datastore row, an interpolation site for the consumer's cubic, and an ordinate carrying the
+# consumer's storage granularity -- and its choice is delicate. Four constraints bracket it, the
+# last two of which are why an absolute 1e-12, or even 1e-5, is the wrong answer:
+#
+#  * **Above 1e-7 relative, by the datastore.** Datastore/SQL/ObjectFactories/redshift.py matches
+#    an existing row with |z_stored - z| / z < DEFAULT_REDSHIFT_RELATIVE_PRECISION = 1e-7, so a
+#    pair closer than that is *one row*: the two samples would silently collapse into a single
+#    redshift object and the straddle would not exist. build_z_sample refuses such a standoff
+#    rather than let it happen quietly.
+#  * **Far above 3.6e-15 relative, by the redshift arithmetic.** A cosmology declares its break
+#    points in u = log(1+z) (LambdaCDM_GenericEOS.integration_break_points), so the value
+#    reaching this module has been through the lossy u -> z direction (CLAUDE.md). The recovered
+#    (1+z) is good to ~ulp(u) = 3.6e-15 relative on the production range, so any standoff well
+#    above that provably brackets the true crossing and no equality-like comparison is needed.
+#  * **Above the consumer's own noise floor.** This is the binding constraint and it is not
+#    obvious. PrimitivePhase is handed phi values whose granularity is that of the stored phase
+#    -- about 1 ulp of the phase span, and `[02-consumer-phi-below-the-storage-granularity]` is
+#    the standing record that this is real. Two samples a distance d apart therefore carry a
+#    *slope* uncertainty ~2 ulp / d, and a cubic through them propagates it to the neighbouring
+#    intervals. Measured at QCD k=1e5 (log 11 section 3): a pair at 1e-5 relative leaves the
+#    consumer at 2.52 / 123.45 ulp where the neighbourhood refinement alone reaches 1.64 / 74.60,
+#    a factor of 1.5 to 1.7 *worse*; the damage disappears once the pair is a fixed fraction of a
+#    grid interval apart. Tying the standoff to the grid spacing is what keeps it above this
+#    floor at any grid density, which an absolute constant cannot do.
+#  * **Below the grid spacing**, or the pair is not straddling anything in particular.
+#
+# A quarter of a grid interval satisfies all four with room, and it was **scored** from 1/2 down
+# to 1/10000 of an interval on both QCD k=1e5 consumer rows (log 11 section 3). It is the only
+# value in that scan that beats the neighbourhood refinement alone on *both* rows -- 1.61 ulp
+# against 1.64 (G_k) and 65.78 against 74.60 (T_k) -- and below ~1/32 the pair stops helping and
+# then hurts, reaching a plateau 1.5x to 1.7x worse than no pair at all as the slope it implies
+# drowns in the consumer's storage granularity. Geometrically it is also the natural value: the
+# neighbourhood is refined by SOURCE_GRID_BREAK_REFINEMENT = 2, so the local spacing is half an
+# interval and the pair sits half a *refined* interval either side of the break.
+#
+# On the production grid it is 5.82e-03 relative in (1+z): 5.8e4 times the datastore's
+# resolution, 1.6e12 times the redshift-recovery granularity, and 4 times tighter than the base
+# samples either side.
+SOURCE_GRID_BREAK_STANDOFF = 0.25
+
+# Number of base grid intervals either side of a declared break point whose spacing is refined,
+# and the factor by which they are refined.
+#
+# **These are prompt 10's measurement, not a guess** (logs/10-primitive-phase-break-points.md
+# section 4, and docs/qcd-background-verification.md section 8). The consumer's error at
+# QCD_EOS's T_LO crossing is *not* confined to the break's own interval: four extra samples
+# inside that interval alone buy 1.96x and then stall, while refining +-5 intervals by 2x --
+# 10 extra samples in 1,016, 1.0 % -- takes QCD k=1e5 from 34.11 to 1.64 ulp (G_k) and from
+# 1876.61 to 74.60 ulp (T_k). The feature is three to five grid intervals wide, so a grid design
+# that protects only the declared point does not work, and the straddling pair above is necessary
+# but on its own nowhere near sufficient.
+SOURCE_GRID_BREAK_HALF_WIDTH = 5
+SOURCE_GRID_BREAK_REFINEMENT = 2
+
+# The closest two samples of the grid are ever allowed to be, relative in (1+z). This is a
+# *degeneracy guard*, not a spacing policy: its only job is to keep any two samples further apart
+# than DEFAULT_REDSHIFT_RELATIVE_PRECISION = 1e-7, the tolerance with which
+# Datastore/SQL/ObjectFactories/redshift.py identifies an existing redshift row, so that no two
+# grid points can silently become the same redshift object. Ten times that leaves a margin and is
+# still 4.3e-05 of a production grid interval.
+SOURCE_GRID_MIN_SEPARATION = 10.0 * DEFAULT_REDSHIFT_RELATIVE_PRECISION
+
+# ... and the second half of the guard, which *is* about spacing: no candidate may be placed
+# closer than this fraction of the straddling standoff to a sample already accepted. Without it
+# the grid is only as well conditioned as the accident of where a break falls inside its interval
+# -- a break a quarter of an interval from a base point would put a pair member exactly on that
+# point. With it, the tightest gap anywhere near a break is a quarter of the standoff and the
+# widest is the refined spacing, so the local mesh ratio is bounded by 8 whatever the accident.
+# On the production QCD grid it fires on nothing: the closest a base sample comes to a pair
+# member is 0.108 of an interval, against the 0.0625 this permits (log 11 section 3).
+SOURCE_GRID_MESH_GUARD = 0.25
+
+
+class SourceGrid(NamedTuple):
+    """
+    The source sample grid, together with the record of which of its points are there because the
+    cosmology asked for them.
+
+    ``z_values`` is what ``populate_z_sample`` has always returned: a descending array of
+    redshifts. ``protected_z`` is the subset that must survive any later decimation -- the pair
+    straddling each break point, and each feature redshift -- as a descending array;
+    ``breaks`` and ``features`` are the declared points themselves, restricted to the grid's range.
+    A cosmology that declares nothing gives ``z_values`` bit-identical to today's ``logspace`` and
+    three empty arrays.
+    """
+
+    z_values: np.ndarray
+    protected_z: np.ndarray
+    breaks: np.ndarray
+    features: np.ndarray
+
+
+def _relative_separation(z: float, others: np.ndarray) -> float:
+    """
+    The smallest separation between ``z`` and ``others``, relative in (1+z). Infinite if
+    ``others`` is empty.
+
+    Relative in (1+z) rather than in z because that is the coordinate every tolerance in this
+    campaign is expressed in, and because it stays meaningful as z -> 0. Note that a separation
+    of eps relative in (1+z) is *at least* eps relative in z, which is the direction that matters
+    for staying clear of the datastore's DEFAULT_REDSHIFT_RELATIVE_PRECISION.
+    """
+    if len(others) == 0:
+        return float("inf")
+    return float(np.min(np.abs(others - z) / (1.0 + np.minimum(others, z))))
+
+
+def build_z_sample(
+    z_init: float,
+    z_end: float,
+    samples_per_log10z: int,
+    *,
+    break_z: Sequence[float] = (),
+    feature_z: Sequence[float] = (),
+    standoff: float = SOURCE_GRID_BREAK_STANDOFF,
+    half_width: int = SOURCE_GRID_BREAK_HALF_WIDTH,
+    refinement: int = SOURCE_GRID_BREAK_REFINEMENT,
+) -> SourceGrid:
+    """
+    Build the source sample grid: the log-spaced lattice this function has always returned, plus
+    whatever the cosmology has asked to be resolved.
+
+    ``break_z`` are redshifts at which the background loses smoothness -- in practice the
+    crossings of an equation of state's branch temperatures, which is what
+    ``ComputeTargets.BackgroundModel._cosmology_break_points`` returns. Each one in range gets
+
+      * a **pair of samples straddling it** at ``standoff`` relative in (1+z), so that the
+        consumer's spline has a data point on each side of the step and never has to bridge it,
+        and so that no equality-like comparison on a recovered z is needed to say which side a
+        sample is on (CLAUDE.md's redshift rule); and
+      * a **refinement of the ``half_width`` intervals either side** by ``refinement``, because
+        prompt 10 measured that the feature is three to five grid intervals wide and that
+        protecting the crossing alone stalls at a factor of two.
+
+    ``feature_z`` are redshifts that merely have to be *present* -- matter-radiation and
+    matter-Lambda equality -- where the background is perfectly smooth and one sample is enough.
+
+    **No cosmology object reaches this function and no equation-of-state module is imported
+    here.** It takes values, following ``_cosmology_break_points``'s own duck-typed precedent, so
+    that a cosmology declaring nothing (every LambdaCDM model, RadiationModel, every test
+    stand-in) takes the early return below and gets exactly the array it gets today, element for
+    element. ``ComputeTargets/tests/test_source_grid.py`` asserts that bit-identity.
+
+    :param z_init: the highest redshift in the grid
+    :param z_end: the lowest redshift in the grid
+    :param samples_per_log10z: base density, in samples per decade of z
+    :param break_z: redshifts at which the background is not smooth (descending or ascending)
+    :param feature_z: redshifts that must appear in the grid
+    :param standoff: standoff for the straddling pair, as a fraction of a base grid interval
+    :param half_width: number of base intervals either side of a break that are refined
+    :param refinement: factor by which those intervals are refined
+    """
+    num = int(round(samples_per_log10z * (log10(z_init) - log10(z_end)) + 0.5, 0))
+
+    # the base grid, computed exactly as it has always been computed
+    base = logspace(log10(z_init), log10(z_end), num=num)
+
+    breaks = np.array(
+        sorted((float(z) for z in break_z if z_end < z < z_init), reverse=True),
+        dtype=float,
+    )
+    features = np.array(
+        sorted((float(z) for z in feature_z if z_end < z < z_init), reverse=True),
+        dtype=float,
+    )
+
+    empty = np.empty(0, dtype=float)
+    if len(breaks) == 0 and len(features) == 0:
+        # nothing was declared: this is today's grid, and it is today's array object
+        return SourceGrid(
+            z_values=base, protected_z=empty, breaks=empty, features=empty
+        )
+
+    if refinement < 1 or half_width < 0:
+        raise ValueError(
+            f"build_z_sample: refinement must be >= 1 and half_width >= 0 "
+            f"(got {refinement}, {half_width})"
+        )
+
+    # the exponents logspace itself used, so that a refinement point is placed in the base grid's
+    # own coordinate rather than in a recovered one
+    t = np.linspace(log10(z_init), log10(z_end), num)
+
+    # the grid's own relative step in z, and the standoff it sets
+    delta_log10 = fabs(float(t[0] - t[1]))
+    standoff_rel = standoff * (pow(10.0, delta_log10) - 1.0)
+    if standoff_rel <= SOURCE_GRID_MIN_SEPARATION:
+        raise ValueError(
+            f"build_z_sample: a break-point standoff of {standoff:.3g} of a grid interval is "
+            f"{standoff_rel:.3g} relative on this grid, at or below the minimum separation "
+            f"{SOURCE_GRID_MIN_SEPARATION:.3g} the datastore's redshift resolution imposes; the "
+            f"two samples straddling a break would be the same redshift row"
+        )
+
+    # two tolerances, because two different things are being guarded against. Everything must
+    # clear SOURCE_GRID_MIN_SEPARATION, or two samples become one datastore row; anything near a
+    # straddling pair must additionally clear mesh_tol, or the pair's own conditioning is only as
+    # good as the accident of where the break fell inside its interval.
+    mesh_tol = max(SOURCE_GRID_MIN_SEPARATION, SOURCE_GRID_MESH_GUARD * standoff_rel)
+
+    def _admits(z: float, pairs: np.ndarray, others: np.ndarray) -> bool:
+        return (
+            _relative_separation(z, pairs) > mesh_tol
+            and _relative_separation(z, others) > SOURCE_GRID_MIN_SEPARATION
+        )
+
+    # ---- highest priority: the pair straddling each break ----
+    pairs: List[float] = []
+    pairs_arr = np.empty(0, dtype=float)
+    for z_break in breaks:
+        for sign in (+1.0, -1.0):
+            z_new = float(z_break) + sign * standoff_rel * (1.0 + float(z_break))
+            if _relative_separation(z_new, pairs_arr) > SOURCE_GRID_MIN_SEPARATION:
+                pairs.append(z_new)
+                pairs_arr = np.array(pairs, dtype=float)
+
+    # ---- then the feature redshifts, which need to be present but need no pair ----
+    others: List[float] = []
+    others_arr = np.empty(0, dtype=float)
+    for z in features:
+        if _admits(float(z), pairs_arr, others_arr):
+            others.append(float(z))
+            others_arr = np.array(others, dtype=float)
+
+    protected = sorted(pairs + others, reverse=True)
+
+    # ---- then the base grid ----
+    accepted = list(protected)
+    for z in base:
+        if _admits(float(z), pairs_arr, others_arr):
+            accepted.append(float(z))
+    accepted_arr = np.array(sorted(accepted), dtype=float)
+
+    # ---- then the refinement of the neighbourhood of each break ----
+    z_asc = base[::-1]
+    t_asc = t[::-1]
+    n = len(z_asc)
+    for z_break in breaks:
+        j = int(np.searchsorted(z_asc, float(z_break)))
+        first = max(j - half_width, 1)
+        last = min(j + half_width, n - 1)
+        for i in range(first, last + 1):
+            for m in range(1, refinement):
+                frac = float(m) / float(refinement)
+                z_new = float(
+                    np.power(10.0, t_asc[i - 1] + frac * (t_asc[i] - t_asc[i - 1]))
+                )
+                if _admits(z_new, pairs_arr, accepted_arr):
+                    accepted.append(z_new)
+                    accepted_arr = np.array(sorted(accepted), dtype=float)
+
+    z_values = np.array(sorted(accepted, reverse=True), dtype=float)
+
+    return SourceGrid(
+        z_values=z_values,
+        protected_z=np.array(protected, dtype=float),
+        breaks=breaks,
+        features=features,
+    )
 
 
 @total_ordering
@@ -252,11 +533,40 @@ class wavenumber_exit_time(DatastoreObject):
         samples_per_log10z: int = 50,
         z_end: float = 0.1,
         outside_horizon_efolds: int = 3,
+        **kwargs,
     ):
         """
         Build a set of z sample points, with specified density per log_10(z), and ending at the specified z_end.
         The initial time is taken to be the horizon re-entry time for this k-mode, or possibly offset by a specified
         number of e-folds in/outside the horizon, specified in 'outside_horizon_efolds'
+
+        Keyword arguments are forwarded to :func:`build_z_sample`; with none of them supplied
+        this returns exactly the ``logspace`` it has always returned. Use
+        :meth:`populate_source_grid` instead when the protected subset is needed as well.
+        :param samples_per_log10z:
+        :param z_end:
+        :param outside_horizon_efolds:
+        :return:
+        """
+        return self.populate_source_grid(
+            samples_per_log10z=samples_per_log10z,
+            z_end=z_end,
+            outside_horizon_efolds=outside_horizon_efolds,
+            **kwargs,
+        ).z_values
+
+    def populate_source_grid(
+        self,
+        samples_per_log10z: int = 50,
+        z_end: float = 0.1,
+        outside_horizon_efolds: int = 3,
+        **kwargs,
+    ) -> SourceGrid:
+        """
+        As :meth:`populate_z_sample`, but returning the whole :class:`SourceGrid` -- the sample
+        values together with the subset that the cosmology asked for and that must therefore
+        survive ``redshift_array.winnow``.
+
         :param samples_per_log10z:
         :param z_end:
         :param outside_horizon_efolds:
@@ -284,12 +594,14 @@ class wavenumber_exit_time(DatastoreObject):
             )
 
         # now we want to build a set of sample points for redshifts between z_init and
-        # the final point z = z_final, using the specified number of redshift sample points
-        num_z_sample = int(
-            round(samples_per_log10z * (log10(z_init) - log10(z_end)) + 0.5, 0)
+        # the final point z = z_final, using the specified number of redshift sample points,
+        # plus whatever the cosmology has asked to have resolved (audit section 7)
+        return build_z_sample(
+            z_init=z_init,
+            z_end=z_end,
+            samples_per_log10z=samples_per_log10z,
+            **kwargs,
         )
-
-        return logspace(log10(z_init), log10(z_end), num=num_z_sample)
 
 
 # create accessors

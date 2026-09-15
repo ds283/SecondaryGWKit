@@ -3,12 +3,13 @@
 **Campaign:** [`README.md`](README.md) · **Source document:**
 [`docs/qcd-background-audit-2026-09.md`](../../docs/qcd-background-audit-2026-09.md)
 **Baseline commit:** `e8f746d` (`qcd-background-audit`, clean; identical to `main`)
-**Last updated:** 2026-09-15 — **10 / 12 (workstream D released for prompt 10; 11–12 still gated
-on README §7 D7).** The ungated chain 01–09 is complete; T1 and G1 are closed and verified, G1's
-per-sector question is answered, and **P2 is answered, though not in the way the plan expected**:
-prompt 10 measured every constructible break-point knot scheme against the corrected background and
-**none of them helps**, so `PrimitivePhase` keeps its default knots and the defect moves to the
-source grid, which is prompts 11–12's. Twelve prompts in four workstreams.
+**Last updated:** 2026-09-15 — **11 / 12 (workstream D released for prompts 10 and 11; 12 still
+gated on README §7 D7).** The ungated chain 01–09 is complete; T1 and G1 are closed and verified,
+G1's per-sector question is answered, and **P2 is answered, though not in the way the plan
+expected**: prompt 10 measured every constructible break-point knot scheme against the corrected
+background and **none of them helps**, so `PrimitivePhase` keeps its default knots and the defect
+moved to the source grid — where **prompt 11 has now fixed it**, by building the grid around the
+points the cosmology declares. Twelve prompts in four workstreams.
 
 > **What a reader should conclude.** The QCD background is now correct — its $\int\mathrm{d}z/H$ is
 > *bit-identical* to an independently root-solved exact background where it carried 3.461e-08, and
@@ -17,7 +18,12 @@ source grid, which is prompts 11–12's. Twelve prompts in four workstreams.
 > equation of state's genuine step undiluted where the old representation smeared three quarters of
 > it over the neighbouring grid intervals. That is
 > `[13-consumer-spline-crosses-eos-break-points]`, it is **prompt 10's**, and it is the one reason
-> to release workstream D. **Prompt 10 ran and re-attributed it** (2026-09-15): the consumer's knot
+> to release workstream D. **Prompts 10 and 11 have now closed it.** Prompt 10 re-attributed it and
+> prompt 11 fixed it where the attribution pointed: the production source grid carries the
+> cosmology's declared crossings, 41 extra samples in 1,732, and the two rows read **1.61 ulp**
+> and **65.78 ulp** — better than the campaign base and inside the 1e-06 rad consumer target. What
+> follows is prompt 10's re-attribution, which is why the fix is in the grid and not in the spline.
+> **Prompt 10 ran and re-attributed it** (2026-09-15): the consumer's knot
 > placement cannot recover it at all — the $C^0$ repeated knot is 2.09× worse and per-segment
 > splines 5.00× worse — while **10 extra samples in 1,016**, placed over the ±5 grid intervals
 > around the crossing, bring both rows inside the 1e-06 rad consumer target. The feature is three
@@ -65,11 +71,11 @@ Legend: ⬜ not started · 🟡 in flight · ✅ complete · ⚠️ complete wit
 | # | Prompt | Model | Status | Commit | Log |
 |---|---|---|---|---|---|
 | 10 | [`PrimitivePhase` on the 3-point break set](10-primitive-phase-break-points.md) | Opus | ⚠️ | *"Measure the consumer phase spline against the cosmology's break points"* (SHA not embedded, per the campaign convention) | [`logs/10-primitive-phase-break-points.md`](logs/10-primitive-phase-break-points.md) |
-| 11 | [A cosmology-aware source grid](11-cosmology-aware-source-grid.md) | Opus | ⬜ | | |
+| 11 | [A cosmology-aware source grid](11-cosmology-aware-source-grid.md) | Opus | ⚠️ | *"Build the source grid around the features the cosmology declares"* (SHA not embedded, per the campaign convention) | [`logs/11-cosmology-aware-source-grid.md`](logs/11-cosmology-aware-source-grid.md) |
 | 12 | [A measured grid-density criterion](12-grid-density-criterion.md) | Opus | ⬜ | | |
 
-**Progress:** 10 / 12 complete (**9 / 9 in the ungated chain 01–09 — the chain is closed**; prompt
-10 of workstream D has run, 11 and 12 remain gated on README §7 D7).
+**Progress:** 11 / 12 complete (**9 / 9 in the ungated chain 01–09 — the chain is closed**; prompts
+10 and 11 of workstream D have run, 12 remains gated on README §7 D7).
 
 **Prompt 01 landed `COMPLETE WITH DEVIATIONS`** — no production file changed; two new modules,
 `CosmologyModels/tests/T_z_reference.py` and `CosmologyModels/tests/test_T_z_representation.py`,
@@ -435,6 +441,77 @@ of the log argues that choice and says how to reverse it). Suites: `CosmologyMod
 `ComputeTargets` 359 → **361**, `LiouvilleGreen` 143/143 fast set — none falls. Full record:
 [`logs/10-primitive-phase-break-points.md`](logs/10-primitive-phase-break-points.md).
 
+**Prompt 11 landed `COMPLETE WITH DEVIATIONS` — and the source grid now knows the cosmology.**
+`T_Z_REPRESENTATION_VERSION` is **5** before and after; no `CosmologyModels/` file and no compute
+target is in the diff, and **no background value moves** — only which redshifts are sampled. Three
+production files: `CosmologyConcepts/wavenumber.py` (`build_z_sample`, `SourceGrid`,
+`populate_source_grid`, and the four constants), `CosmologyConcepts/redshift.py`
+(`winnow(sparseness, protect=...)`, `redshift_grid_digest`) and `main.py`'s grid-construction and
+tag hunks alone, plus two new module-level helpers there (`cosmology_feature_redshifts`,
+`build_grid_tag_labels`) so that `load_main_py_functions` can **execute** them rather than assert
+against their text.
+
+**The production grid.** QCD 1,732 → **1,773** samples (+41, **+2.37 %**): per declared crossing, a
+**pair straddling it** at a quarter of a grid interval plus the **eleven intervals from −5 to +5
+refined by 2**, and the two equality redshifts. No base sample is displaced, the grid is strictly
+descending, and its closest approach between neighbouring samples is **1.028e-03** relative in
+$(1+z)$ — four orders above the 1e-07 at which the datastore would treat two samples as one row.
+**LambdaCDM's grid is bit-identical, element for element** (1,732, and its response grid 145): the
+whole cosmology-aware path is gated in `main.py` on the cosmology declaring some non-smoothness, so
+every LambdaCDM model, `RadiationModel` and stand-in takes the unchanged code path — README §0.5 and
+§2 (g), a stop condition rather than an expectation.
+
+**The two rows prompt 09 recorded as a miss are recovered, and the prompt's own remedy is not what
+recovers them.** At QCD $k=10^5$, against 8.1062e-06 rad (34.11 ulp, $G_k$) and 1.3982e-05 rad
+(1876.61 ulp, $T_k$): the shipped grid gives **3.8296e-07 rad (1.61 ulp)** and **4.9012e-07 rad
+(65.78 ulp)** — **21.2× and 28.5×**, both inside prompt 10 §5's 1e-06 rad target, $G_k$ inside its
+2-ulp one, and both better than the campaign base (1.9073e-06 / 3.1859e-06). **The straddling pair
+alone buys 1.96× and 1.98×** — 17.43 and 949.24 ulp, still far outside the target — so prompt §2
+item 2 is necessary and nowhere near sufficient, and what carries the rows is prompt 10's ±5 × 2
+neighbourhood (1.64 / 74.60 on its own). The pair adds a further 2 % and 12 % on top of it. All
+three wavenumbers were scored, in both sectors, because that is the trap prompts 02 and 10 both
+warn about: $k=10^7$ and $3\times10^8$ are unmoved (QCD $T_k$ at $10^7$ improves 0.15 → **0.01 ulp**
+near the break), with **one row moving the wrong way** — QCD $T_k$ at $3\times10^8$, 3.8674e-05 →
+3.8999e-05 rad, **+0.84 %**, 1.27 → 1.28 ulp of the span, not at the crossing and at the floor ten
+of the twelve rows already sit at. Recorded, not argued away.
+
+**The standoff was scored, not assumed, and it is a fraction of the grid spacing.**
+`SOURCE_GRID_BREAK_STANDOFF = 0.25` of a base interval (5.82e-03 relative in $(1+z)$ on the
+production grid) is the only value in a scan from 1/2 down to 1e-4 of an interval that beats the
+no-pair column on **both** rows. Below ~1/32 the pair stops helping and saturates **1.5×–1.7× worse
+than no pair at all**, because a pair a distance $d$ apart implies a slope carrying
+$\sim2\,\mathrm{ulp}/d$ of `[02-consumer-phi-below-the-storage-granularity]`'s storage granularity.
+**That is why `numeric_with_phase_cut.BREAK_POINT_STANDOFF = 1e-12` must not be borrowed here** —
+it places an ODE restart, where nothing is interpolated and nothing is stored — and `build_z_sample`
+**refuses** a standoff below the datastore's redshift resolution rather than silently making the two
+samples one row.
+
+**The grid tag now identifies the grid, and that invalidates a datastore.**
+`SourceRedshiftGrid_{len}` labelled size alone; it is now `SourceRedshiftGrid_{len}_{digest}`
+(`blake2b` over the grid's exact bits). Eight `pool.object_get` call sites across **seven stored
+object types** filter on the grid tags — `TkNumericIntegration`, `TkWKBIntegration`, `QuadSource`,
+`GkNumericIntegration`, `GkWKBIntegration`, `GkSource`, `QuadSourceIntegral` — and their factories
+treat the sample grid as *"a target rather than a selection criterion"*, so the tag is the **only**
+record of which grid an object was computed on; `GkSourcePolicyData` goes with them transitively,
+making eight. From the only measured production-shaped run in the tree
+(`docs/gktk-remedial-verification.md` §4.2, one model, 5×5 wavenumbers, 1,584 nodes): **15,020
+objects, 6 m 35 s plus a `QuadSourceIntegral` stage that did not finish 3,300 objects in three
+hours**. Production is ×10 in each wavenumber sample and two models (×85 on `QuadSource`, of order
+×850 on `QuadSourceIntegral`) — an extrapolation, labelled as one. **The QCD half was invalidated
+anyway** (its grid length changed, and prompt 03's key had already invalidated its cosmology row);
+**the LambdaCDM half is invalidated by the tag change alone**, and because `store_tag` is keyed on
+its label a LambdaCDM-only datastore can be carried across by relabelling two rows instead of
+recomputing — log 11 §5 gives the SQL and the reason it must not be run on a store that also holds
+pre-prompt-11 QCD objects.
+
+`[03-derivative-pad-clamp-on-coarse-grids]` was **measured and does not bind**: `h_lo` is the same
+float (2.115878e-03) on both grids, the lowest protected sample is 48.19 base intervals above
+$z_{\rm end}$, and the bottom 40 samples are element-for-element the base grid's. Nothing was
+changed there. Suites: `CosmologyModels` 30, `ComputeTargets` 361 → **380**, `LiouvilleGreen`
+143/143 fast set — none falls. **Closes `[10-consumer-phi-unresolved-at-the-eos-crossing]`** (§4)
+and opens `[11-background-model-not-keyed-on-the-source-grid]` (§3). Full record:
+[`logs/11-cosmology-aware-source-grid.md`](logs/11-cosmology-aware-source-grid.md).
+
 **The representation version.** `T_Z_REPRESENTATION_VERSION` is introduced by prompt 03 and bumped
 by **04, 05, 06 and 07**. Its value at each prompt boundary is recorded here as the campaign runs,
 because it is the only thing that tells a datastore that its QCD rows are stale. **Bump it on
@@ -453,6 +530,7 @@ above the declaration.
 | 08 | **5** | unchanged — no `BREAK_POINT_KIND` value moved, so no number moved |
 | 09 | **5** | unchanged — a verification prompt; no production file is in the diff |
 | 10 | **5** | unchanged — the measurement says change nothing; no production file is in the diff |
+| 11 | **5** | unchanged — the source grid moves, the cosmology does not; no `CosmologyModels/` file is in the diff |
 
 ---
 
@@ -466,7 +544,7 @@ above the declaration.
 | **T4** | **DEFECT, high** | One global spline across three points at which $T(z)$ genuinely **jumps** (7.625829e-04 in $T$ at $z_c=4.25337\times10^7$). The max error was pinned near the jump height at 500, 2,000 and 5,000 nodes alike. **Fixed by prompt 06:** `SegmentedEntropyFactor` interpolates $F$ one spline per branch with the edges *bisected* onto the jumps, and the max falls **7.236e-04 → 6.807e-11** while the step itself is reproduced to six figures on both sides. An edge misplaced by one node restores 7.054e-04, and a test asserts that it does. | 06 | ⚠️ |
 | **G1** | **DEFECT, high** | 404 of the 407 `BREAK_POINT_ALL` points were knots of the auxiliary interpolant — 2,411 of 2,414 after prompt 06's node count — a Gauss panel split every 0.67 grid intervals throughout `BackgroundModel`, and the sole cause of `prompts/phase-representation` prompt 02's Schoenberg–Whitney failure. **Fixed by prompt 07:** `integration_break_points` declares the equation of state's temperature crossings and nothing else, **3** and **2** on the production grid with **0** knots, measured rather than asserted (at order 5 the first discontinuous derivative of $F$ is the fifth, three levels below `d3_lnH_dz3`; the observable residual across a knot is 6.3e-12 in $H$ against 2.1e-04 for the old cubic lattice). The QCD build falls 16,580 → **6,936** integrand evaluations and 0.959 → **0.599 s**; the references do not move at all; `cs_tau` and `friction_F` score against them unchanged to every digit printed and `tau` moves 2.104e-15 → 2.254e-15, at 12 % of its floor; and a repeated-knot vector constructs on all six grids. **Prompt 08 re-took `GkTk-remedial` prompt 19's per-sector policy measurement against the new set and found state (a):** the $T_k$ sector converges at all 50 QCD wavenumbers under *either* policy (7.08e-09 / 8.85e-09 worst, zero offenders, against 1.97e-07 and three offenders then), so the 404 knots were standing in for the representation's defect and not for anything the integrator needed; $G_k$ improved to 3.67e-09 under both policies; the smooth models are bit-identical between the policies and reproduce prompt 19's grid totals as exact integers. Neither `BREAK_POINT_KIND` was changed — README §7 D5 is reported, not decided. **Prompt 09 re-measured the cost on the production path:** QCD per-object build costs fall $G_k$ 8,380 → **6,892** and $T_k$ 12,896 → **11,532** integrand evaluations, the off-grid `raw_theta` accessor needs **4.00** evaluations per call where it needed 4.27, and every LambdaCDM and every cached-evaluation count is exactly unchanged. | 07, 08, 09 | ⚠️ |
 | **P2** | **DEFECT, accuracy** | Inherited `[13-consumer-spline-crosses-eos-break-points]`: `PrimitivePhase` splines $\varphi$ with default knots across the declared break points. 1.907e-6 rad ($G_k$, 8 ulp) and 3.186e-6 rad ($T_k$, 428 ulp) at $z=4.24\times10^7$ at the campaign base; **4.3× larger on the corrected background** (prompt 09: 8.107e-6 / 1.398e-5 rad, 34 / 1877 ulp), because the old representation was smearing the equation of state's step over ~4 grid intervals (25.55 % of it inside the crossing's own interval, against 99.84 % of a step 2.78× taller now). **Answered by prompt 10, and not as the plan expected: the knots are not the remedy.** Nine schemes scored over all twelve production rows on the corrected background — the repeated multiplicity-`spline_order` ($C^0$) knot vector is **2.09×/2.10× worse**, per-segment splines **5.00×/5.06× worse**, the best non-$C^0$ control 1.21× better, the ten rows at 1.00 ulp unmoved by all nine, and LambdaCDM identical throughout. Prompt 02's kink fit, re-taken, is still **window-dependent** ($[\varphi']$ moves two orders and changes sign between 1-, 2- and 3-interval windows), which is smooth-but-unresolved data and not a corner a $C^0$ knot can turn. **The production source grid is the limit**: ±5 grid intervals at 2× — 10 extra samples in 1,016 — give **1.64 ulp** and **74.60 ulp**, both inside the 1e-06 rad target, while refining the crossing's own interval alone stalls at 1.96×. `PrimitivePhase` keeps its default knots, `T_Z_REPRESENTATION_VERSION` stays 5, `num_chunks` stays 1, and no production file changed. The entry closes on the `GkTk-remedial` board §4 and the unfixed accuracy defect re-opens as `[10-consumer-phi-unresolved-at-the-eos-crossing]` (§3), **assigned to prompt 11**. | 10 | ⚠️ |
-| **G2** | **DESIGN** | The source grid never consults the cosmology: `populate_z_sample` is a bare `logspace`, `winnow` a blind stride `[::-n]`, and the tag `SourceRedshiftGrid_{len}` labels size only, so two different grids of equal length collide in the datastore. | 11, 12 | ⬜ |
+| **G2** | **DESIGN** | The source grid never consulted the cosmology: `populate_z_sample` was a bare `logspace`, `winnow` a blind stride `[::-n]`, and the tag `SourceRedshiftGrid_{len}` labelled size only, so two different grids of equal length collided in the datastore. **Prompt 11 landed the mechanical half.** `build_z_sample` takes the points the cosmology declares — values, not a cosmology object, and no equation-of-state import in `CosmologyConcepts/` — and gives each a **pair straddling it** at a quarter of a grid interval plus the **±5 intervals refined by 2** that prompt 10 measured; `winnow(sparseness, protect=...)` retains them, matching on `store_id` so nothing compares a recovered redshift for equality; and the tags carry a `blake2b` digest of the grid's own values. QCD 1,732 → **1,773** samples (+2.37 %), LambdaCDM **bit-identical**, and the two consumer rows prompt 09 recorded as a miss go 34.11 → **1.61 ulp** and 1876.61 → **65.78 ulp**, both inside the 1e-06 rad target. **The prompt's own remedy — two straddling samples — buys only 1.96×/1.98× on its own**; the neighbourhood is what carries it. The tag change invalidates eight stored object types and the bill is quantified in log 11 §5. **What remains is prompt 12's**: the density is still a uniform `samples_per_log10z`, set by a command-line number rather than by a measured criterion on $\varphi$'s curvature. | 11, 12 | 🟡 |
 
 **T1 is closed, and the record of how it fell is the point.** Prompt 01 put
 `CosmologyModels/tests/test_T_z_representation.py::test_conformal_time_matches_the_exact_background`
@@ -491,62 +569,30 @@ orders (`prompts/tolerance-convergence`); the `QCD_EOS` fitting coefficients and
 
 ## 3. Active and unresolved issues
 
-Opened by **prompt 10**, 2026-09-15, replacing the issue it closes:
+Opened by **prompt 11**, 2026-09-15:
 
-- **[10-consumer-phi-unresolved-at-the-eos-crossing]** *(opened by prompt 10, 2026-09-15;
-  **assigned to prompt 11**)* — the production source grid does not resolve $\varphi$ at `QCD_EOS`'s
-  `T_LO` crossing ($u = 17.565806941870026$, $z_c = 4.253368543\times10^{7}$), and *that*, not
-  `PrimitivePhase`'s knot placement, is what costs the consumer **8.1062e-06 rad** ($G_k$, 34.00 ulp
-  of the span) and **1.3982e-05 rad** ($T_k$, 1876.61 ulp) at $k=10^5$, against 1.00 ulp in ten of
-  the twelve production rows. **This replaces
-  `[13-consumer-spline-crosses-eos-break-points]`**, closed by prompt 10 on the `GkTk-remedial`
-  board §4: that entry named the consumer spline's knots as both the mechanism and the remedy, and
-  prompt 10 measured every constructible member of that family on the corrected background —
-  repeated multiplicity-`spline_order` ($C^0$) knot vectors at both kinds, per-segment splines at
-  both kinds, and multiplicity-1 and -2 controls — over all twelve (model, sector, $k$) rows:
+- **[11-background-model-not-keyed-on-the-source-grid]** *(opened by prompt 11, 2026-09-15)* —
+  `sqla_BackgroundModel_factory.build()` filters on `(cosmology_type, cosmology_serial,
+  atol_serial, rtol_serial)` plus whatever tags it is given, and `main.py` gives it
+  `LargestSourceZTag`, `SmallestSourceZTag` and `SourceSamplesPerLog10ZTag`. **All three are
+  unchanged when the source grid changes**, because the grid's endpoints and its samples-per-decade
+  are unchanged; and the factory does not filter on `z_sample` at all — it reads the stored sample
+  set back out of `BackgroundModelValue` and populates the returned object from it. **Impact:** a
+  pre-prompt-11 datastore returns its **1,732-node** `BackgroundModel` for the new **1,773-node**
+  QCD grid. It is the *one surviving row* in a store whose every compute target the grid-tag change
+  has just invalidated, so the hazard is not theoretical: the next run finds it, uses it, and
+  tabulates a 1,773-sample pipeline against a background sampled on the 1,732 points that omit the
+  break neighbourhoods. Benign in **value** — prompt 07 split the cumulative tables at the equation
+  of state's break points, so a 1,732-node background is accurate, merely coarser at the crossing —
+  and `CosmologyConcepts.redshift.check_zsample`, which exists precisely to assert that two objects
+  share a grid, **has no callers anywhere in the tree**. Not fixed in prompt 11: adding a tag to
+  `BackgroundModel`'s lookup is a further datastore-key change with its own regeneration attached,
+  and that `object_get` is outside the `main.py:520-590` hunk prompt 11 may touch (README §5
+  rule 5). **Next step:** add `SourceZGridSizeTag` to the `BackgroundModel` `object_get`'s tag list
+  in whichever prompt has that call in scope, and say in its log that doing so invalidates stored
+  `BackgroundModel` rows as well; or give `check_zsample` a caller at the point where
+  `ModelProxy` is built.
 
-  | at QCD $k=10^5$ | $G_k$ | $T_k$ |
-  |---|---|---|
-  | shipped default knots | 8.1062e-06 (34.00 ulp) | 1.3982e-05 (1876.61 ulp) |
-  | $C^0$ repeated knot | 1.6928e-05 (71.00) — **2.09× worse** | 2.9315e-05 (3934.6) — **2.10× worse** |
-  | per-segment splines | 4.0531e-05 (170.0) — **5.00× worse** | 7.0770e-05 (9498.6) — **5.06× worse** |
-  | best control (mult. 1 or 2) | 6.6757e-06 (28.00) — 1.21× better | 1.1528e-05 (1547.2) — 1.21× better |
-
-  All six LambdaCDM rows and the ten rows at 1.00 ulp are unmoved by all nine schemes. Prompt 02's
-  kink fit, re-taken on the corrected background, is **window-dependent** — $[\varphi']$ is
-  $+7.52$e-05, $-3.00$e-03, $-6.15$e-03 ($G_k$) over 1-, 2- and 3-interval windows, and
-  $-2.17$e-04, $+5.19$e-03, $+1.06$e-02 ($T_k$) — so there is no resolved corner for a $C^0$ knot to
-  turn, and the non-smoothness is $\varphi$'s own on a ±3-to-±5-interval scale, exactly as prompt 02
-  first read it.
-
-  **What the measurement says to do instead, with numbers.** A plain cubic of the same $\varphi$ —
-  default knots, no break-point treatment — given more *samples*:
-
-  | samples | extra | $G_k$ $k=10^5$ | $T_k$ $k=10^5$ |
-  |---|---|---|---|
-  | the production grid (shipped) | — | 34.11 ulp | 1876.61 ulp |
-  | +4 inside the crossing's own interval alone | 4 | 17.42 | 960.11 |
-  | refine ±3 intervals by 5× | 24 | 2.29 | 170.86 |
-  | **refine ±5 intervals by 2×** | **10 (1.0 %)** | **1.64** (3.9121e-07 rad) | **74.60** (5.5584e-07 rad) |
-  | refine ±5 intervals by 5× | 40 | 1.64 | **26.97** (2.0096e-07 rad) |
-  | uniform 2× | 1,014 | 1.48 | 72.76 |
-
-  **Impact:** a few $10^{-6}$ to $10^{-5}$ rad of consumer phase on QCD at the smallest wavenumbers,
-  70–120× below the ~1e-03 rad QCD Liouville–Green truncation floor that bounds any phase claim on
-  that model, so nothing downstream is limited by it today; it is above README §6's 1e-06 rad
-  consumer target, as it was at the campaign base. At $k=10^7$ and $3\times10^8$ the crossing
-  contributes **0.00 ulp** in both sectors at every sample density — this is a $k=10^5$ phenomenon,
-  and the `theta_deriv` misses at the larger wavenumbers are
-  `[02-consumer-phi-below-the-storage-granularity]`'s, measured at 100 % there.
-
-  **Next step: prompt 11**, which owns `populate_z_sample` and the source grid (**G2**). The design
-  point it must respect is that **refining the crossing's own interval is not enough** — the feature
-  is three to five grid intervals wide, and protecting only the declared point buys 1.96× and
-  stalls. Reproduction, one command, ~120 s, no Ray, no datastore:
-  `PYTHONPATH=. ./venv/bin/python docs/qcd-background-audit/consumer_knot_scheme_scan.py`; the
-  tables are in [`docs/qcd-background-verification.md`](../../docs/qcd-background-verification.md)
-  §8 and the rule is asserted in the tree by
-  `ComputeTargets/tests/test_primitive_phase.py::TestBreakPointKnotsBuyWhatTheSamplesResolve`.
 
 Opened by this campaign's planning, 2026-09-13:
 
@@ -825,6 +871,36 @@ Re-measured but **not owned** here (they stay where they are; a prompt that move
 ---
 
 ## 4. Resolved issues
+
+- **[10-consumer-phi-unresolved-at-the-eos-crossing]** *(prompt 10, 2026-09-15; **closed by
+  prompt 11**, 2026-09-15)* — the production source grid did not resolve $\varphi$ at `QCD_EOS`'s
+  `T_LO` crossing ($u = 17.565806941870026$), which cost the consumer **8.1062e-06 rad**
+  ($G_k$, 34.11 ulp of the span) and **1.3982e-05 rad** ($T_k$, 1876.61 ulp) at $k=10^5$ against
+  1.00 ulp in ten of the twelve production rows. **It does now.** `build_z_sample` gives each
+  declared crossing a pair of samples straddling it at a quarter of a grid interval *and* refines
+  the eleven intervals from $-5$ to $+5$ around it by two — **41 extra samples in 1,732, 2.37 %** —
+  and the two rows read **3.8296e-07 rad (1.61 ulp)** and **4.9012e-07 rad (65.78 ulp)**, both
+  inside prompt 10 §5's 1e-06 rad target, $G_k$ inside its 2-ulp one, and both better than the
+  campaign base as well as than `HEAD` (21.2× and 28.5×).
+
+  **The entry's own design point held, and it decided the design.** Its warning that *refining the
+  crossing's own interval is not enough* was re-measured on the grid actually built: the straddling
+  pair alone — which is all prompt 11 §2 item 2 asks for — buys **1.96× and 1.98×** (17.43 and
+  949.24 ulp) and leaves both rows outside the target, while the ±5 × 2 neighbourhood alone reaches
+  1.64 / 74.60 and the two together 1.61 / 65.78. The feature is three to five grid intervals wide,
+  as prompt 10 said.
+
+  **What the closure also established.** The standoff is a *fraction of the grid spacing* (1/4 of an
+  interval), scored from 1/2 down to 1e-4 of one: below ~1/32 the pair saturates 1.5×–1.7× **worse
+  than no pair at all**, because the slope it implies drowns in
+  `[02-consumer-phi-below-the-storage-granularity]`'s storage granularity — so
+  `numeric_with_phase_cut.BREAK_POINT_STANDOFF = 1e-12` is the right number for an ODE restart and
+  the wrong one for a sample. All three wavenumbers were scored in both sectors: $k=10^7$ and
+  $3\times10^8$ are unmoved, with one row **+0.84 %** the wrong way (QCD $T_k$ at $3\times10^8$,
+  1.27 → 1.28 ulp, away from the crossing), against the 1.70× the $C^0$ knot schemes moved it.
+  LambdaCDM's grid is bit-identical. Record:
+  [`logs/11-cosmology-aware-source-grid.md`](logs/11-cosmology-aware-source-grid.md) and
+  [`docs/qcd-background-verification.md`](../../docs/qcd-background-verification.md) §9.
 
 - **[02-fixture-tests-pinned-to-todays-break-point-artefact]** *(prompt 02, 2026-09-14; **closed by
   prompt 07**, 2026-09-14)* — the two assertions that hard-coded the knot-lattice era of

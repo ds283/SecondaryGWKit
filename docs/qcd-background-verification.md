@@ -865,3 +865,206 @@ constructor is an `argsort`, a `log1p` and one `make_interp_spline`.
 **Suites** at this commit: `CosmologyModels` **30**, `ComputeTargets` 359 → **361** (the two new
 tests), `LiouvilleGreen` **143/143** on the fast set (`test_3bessel_analytic` excluded; the full set
 is 148 and no file it touches is in this diff).
+
+---
+
+## 9. Prompt 11 — a source grid that knows the cosmology it samples (2026-09-15)
+
+**Added by prompt 11 of `prompts/qcd-background-audit/`; §§1–8 above are untouched** (`CLAUDE.md`:
+verification documents are additive). Reproduction, one command, ~32 s, no Ray and no datastore:
+
+```bash
+PYTHONPATH=. ./venv/bin/python docs/qcd-background-audit/source_grid_consumer_check.py
+PYTHONPATH=. ./venv/bin/python docs/qcd-background-audit/source_grid_consumer_check.py \
+    --k 1e5 1e7 3e8 --no-standoff-scan          # the all-three-wavenumbers control, ~110 s
+```
+
+That script does **not** re-implement §8's measurement. It imports `build_cases` and
+`resolution_ladder` from `consumer_knot_scheme_scan.py` unchanged, and asserts on every run that
+its own scoring closure reproduces `resolution_ladder`'s shipped row bit for bit before printing
+anything; what it adds is the ability to score an *arbitrary* extra sample set, which is what is
+needed to score the grid `CosmologyConcepts.wavenumber.build_z_sample` actually produces rather
+than a ladder rung.
+
+### 9.1 The grid
+
+| | LambdaCDM | `QCD_Cosmology` |
+|---|---|---|
+| declared break points in range (`BREAK_POINT_ALL`) | 0 | **3** |
+| feature redshifts (matter–radiation, matter–$\Lambda$) | 0 — see below | **2** |
+| source grid | **1,732, bit-identical to today's `logspace`** | 1,732 → **1,773** (+41, **+2.37 %**) |
+| protected samples | 0 | **8** (a pair per break, plus each feature) |
+| response grid (`winnow(12)`) | **145**, unchanged | 148 under a blind stride → **156** |
+| source tag | `SourceRedshiftGrid_1732` → `SourceRedshiftGrid_1732_0960e169` | `SourceRedshiftGrid_1773_303f9ce7` |
+| response tag | `ResponseRedshiftGrid_145` → `ResponseRedshiftGrid_145_69050b4c` | `ResponseRedshiftGrid_156_197b46de` |
+
+The 41 extra QCD samples are $3\times(2+11)+2$: per break, the **pair straddling it** at a quarter
+of a grid interval, and the **11 intervals from $-5$ to $+5$ around it refined by 2**. No base
+sample is displaced (`set(base) ⊆ set(new)`), the grid is strictly descending, and its closest
+approach between neighbouring samples is **1.028e-03** relative in $(1+z)$ — four orders above the
+1e-07 at which `Datastore/SQL/ObjectFactories/redshift.py` would treat two samples as the same row.
+
+**LambdaCDM gets no feature samples, deliberately.** It has equality redshifts; nothing asks for
+them. `main.py`'s `cosmology_feature_redshifts` returns an empty protected set for any cosmology
+that declares no break points, so every LambdaCDM model, `RadiationModel` and test stand-in takes
+the unchanged code path and its grid is bit-identical — README §0.5 and §2 (g), which are a stop
+condition rather than an expectation. Two equality samples in 1,732 would buy no measured accuracy,
+because the background is perfectly smooth at either equality.
+
+### 9.2 The consumer at the crossing — and what the prompt's letter would have bought alone
+
+`max |\varphi_{\rm spline} - \varphi_{\rm ref}|` at ten points per production interval, scored by
+§8's scorer, at QCD $k=10^5$ where the `T_LO` crossing lives. The 1e-06 rad target is prompt 10 §5's.
+
+| samples given to the production consumer | $G_k$ | $T_k$ |
+|---|---|---|
+| the production grid (shipped) | 8.1329e-06 rad, **34.11 ulp** | 1.3982e-05 rad, **1876.61 ulp** |
+| **the straddling pair alone** — prompt §2 item 2's letter | 4.1563e-06, **17.43** — 1.96× | 7.0724e-06, **949.24** — 1.98× |
+| the ±5 × 2 neighbourhood alone — prompt 10's row | 3.9121e-07, **1.64** | 5.5584e-07, **74.60** |
+| **what this prompt ships: pair + ±5 × 2** | **3.8296e-07 rad, 1.61 ulp** | **4.9012e-07 rad, 65.78 ulp** |
+
+**Two samples straddling each break are necessary and nowhere near sufficient**, and the second row
+is the number that says so: on its own the pair buys **1.96× / 1.98×** and leaves both rows outside
+the target, which is the same factor prompt 10 measured for four extra samples inside the break's
+own interval. The feature is three to five grid intervals wide; a grid design that protects only
+the declared point does not work, and this is that statement re-measured on the grid actually
+built rather than on a ladder rung.
+
+Both shipped rows are **inside the 1e-06 rad target**, $G_k$ also inside its 2-ulp one, and both
+are better than the campaign base (1.9073e-06 / 3.1859e-06 rad) as well as than `HEAD`.
+
+### 9.3 The standoff, scored rather than assumed
+
+Fraction of a base grid interval; the shipped value is **0.25**, i.e. 5.82e-03 relative in $(1+z)$
+on the production grid.
+
+| standoff | $G_k$ $k=10^5$ | $T_k$ $k=10^5$ |
+|---|---|---|
+| 1/2 | 1.83 ulp | 74.35 ulp |
+| **1/4 (shipped)** | **1.61** | **65.78** |
+| 1/8 | 1.86 | 88.64 |
+| 1/16 | 1.61 | 76.16 |
+| 1/32 | 1.67 | 81.77 |
+| 1/64 | 1.98 | 96.38 |
+| 1e-3 | 2.53 | 123.65 |
+| 1e-4 | 2.52 | 123.34 |
+| *(no pair at all)* | *1.64* | *74.60* |
+
+**1/4 is the only value that beats the no-pair column on both rows.** Below ~1/32 the pair stops
+helping and then hurts, saturating 1.5×–1.7× worse than no pair at all: a pair a distance $d$ apart
+implies a slope with an uncertainty $\sim2\,\mathrm{ulp}/d$ from the consumer's storage
+granularity (`[02-consumer-phi-below-the-storage-granularity]`), and a cubic through it propagates
+that to the neighbours. **That is why
+`Quadrature/integrators/numeric_with_phase_cut.BREAK_POINT_STANDOFF = 1e-12` must not be borrowed
+here**: it places an ODE restart, where nothing is interpolated and nothing is stored, and the
+plateau at the bottom of this table is what it would deliver. Tying the standoff to the grid
+spacing, rather than fixing it absolutely, is what keeps it above that floor at any grid density —
+which matters for prompt 12, whose question is the density.
+
+### 9.4 All three wavenumbers, both sectors — the trap prompts 02 and 10 both warn about
+
+`--k 1e5 1e7 3e8`. "near break" is the worst within three grid intervals of the crossing.
+
+| model | $k$ | sector | shipped grid | cosmology-aware grid |
+|---|---|---|---|---|
+| QCD | 1e5 | $G_k$ | 8.1329e-06 (34.11 ulp; near 34.11) | **3.8296e-07 (1.61; near 1.61)** |
+| QCD | 1e5 | $T_k$ | 1.3982e-05 (1876.61; near 1876.61) | **4.9012e-07 (65.78; near 65.78)** |
+| QCD | 1e7 | $G_k$ | 1.4251e-05 (0.93; near 0.00) | 1.4251e-05 (0.93; near 0.00) — identical |
+| QCD | 1e7 | $T_k$ | 1.2028e-06 (1.26; near 0.15) | 1.2028e-06 (1.26; **near 0.01**) |
+| QCD | 3e8 | $G_k$ | 3.2200e-04 (0.66; near 0.00) | 3.2200e-04 (0.66; near 0.00) — identical |
+| QCD | 3e8 | $T_k$ | 3.8674e-05 (1.27; near 0.00) | 3.8999e-05 (**1.28**; near 0.00) |
+| LambdaCDM | all three | both | — | **bit-identical grid, so bit-identical rows** |
+
+**One row moves the wrong way and it is recorded rather than argued away**: QCD $T_k$ at
+$3\times10^8$ goes 3.8674e-05 → 3.8999e-05 rad, **+0.84 %**, 1.27 → 1.28 ulp of the span. It is not
+at the crossing (`near break` is 0.00 both times, and the pair-alone column reproduces it exactly,
+so it is the pair), and 1 ulp of the span is the floor ten of the twelve production rows already
+sit at. For scale, the $C^0$ knot schemes prompt 10 scored moved this same row by **1.70×**.
+
+### 9.5 `[03-derivative-pad-clamp-on-coarse-grids]` — measured, and it does not bind
+
+Prompt §2 item 5. `_derivative_fit_grid`'s low-end padding is `h_lo = min(x[1]-x[0],
+-log(0.9)/12, 0.05 (x[-1]-x[0])/12)` in $x=\log(1+z)$, and the clamp binds when the first term is
+not the smallest.
+
+| grid | first $x$ interval | floor cap | fraction cap | `h_lo` | binds |
+|---|---|---|---|---|---|
+| base (1,732) | 2.115878e-03 | 8.780043e-03 | 1.561272e-01 | 2.115878e-03 | no |
+| cosmology-aware (1,773) | 2.115878e-03 | 8.780043e-03 | 1.561272e-01 | 2.115878e-03 | no |
+
+The two are the same float. The lowest protected sample is matter–$\Lambda$ equality at
+$z=0.3034$, **48.19 base intervals above** $z_{\rm end}=0.1$, and the bottom 40 samples of the
+cosmology-aware grid are element-for-element the base grid's, so neither $z_{\rm min}$ nor the
+spacing at either end moves. Nothing was changed, as the prompt requires.
+
+### 9.6 The grid tag, and what changing it invalidates
+
+`SourceRedshiftGrid_{len}` labelled size alone; it is now `SourceRedshiftGrid_{len}_{digest}`, the
+digest being `blake2b` over the exact bits of the grid's own values (8 hex characters).
+`ResponseRedshiftGrid_` likewise. Two grids of equal length that differ in any sample — including
+in the protected set alone — now get different tags, which is the collision the audit §7 names.
+
+**The bill.** Eight `pool.object_get` call sites in `main.py` filter on these tags, across **seven
+stored object types**: `TkNumericIntegration`, `TkWKBIntegration` and `QuadSource` (source tag
+only); `GkNumericIntegration`, `GkWKBIntegration` (two sites), `GkSource` and `QuadSourceIntegral`
+(both tags). Their factories treat the sample grid as *"a target rather than a selection
+criterion"* (`Datastore/SQL/ObjectFactories/GkNumericIntegration.py:200`), so **the tag is the only
+thing that identifies which grid an object was computed on**, and every stored object of those
+seven types under the old labels becomes unfindable. `GkSourcePolicyData` carries no grid tag but
+is keyed on `GkSource`, so it goes with them. `BackgroundModel`, `wavenumber_exit_time`,
+`redshift`, `bessel_phase`, `tolerance`, `IntegrationSolver` and `store_tag` are **not** filtered
+on these tags and survive — which for `BackgroundModel` is a hazard in its own right, recorded as
+`[11-background-model-not-keyed-on-the-source-grid]`.
+
+What that costs, from the only measured production-shaped run in the tree
+(`docs/gktk-remedial-verification.md` §4.2: LambdaCDM, 5 source and 5 response wavenumbers, a
+1,584-node grid):
+
+| type | objects | wall |
+|---|---|---|
+| `TkNumericIntegration` | 5 | 1.15 s |
+| `TkWKBIntegration` | 5 | 0.669 s |
+| `QuadSource` | 15 | 0.714 s |
+| `GkNumericIntegration` | 2,455 | 54.9 s |
+| `GkWKBIntegration` | 7,920 | 3 m 59.9 s |
+| `GkSource` | 660 | 1 m 18.2 s |
+| `GkSourcePolicyData` (transitive) | 660 | 19.2 s |
+| `QuadSourceIntegral` | 3,300 | **stopped after ~3 h, incomplete** |
+| **total** | **15,020** | **6 m 35 s plus an unfinished `QuadSourceIntegral` stage** |
+
+Production is **50 source and 50 response wavenumbers**, ten times that run in each, and two
+models. The per-$k$ stages scale ×10; `QuadSource` runs over unordered pairs, $\binom{51}{2}=1275$
+against 15, so ×85; `QuadSourceIntegral` scales with the pairs *and* the response wavenumbers, of
+order ×850 on a stage that already failed to finish 3,300 objects in three hours. **This is an
+extrapolation from a measured run, not a measurement**; the honest summary is that a pre-prompt-11
+datastore is regenerated from `TkNumericIntegration` downwards for both models, and that the
+`QuadSourceIntegral` stage is what the bill is made of.
+
+**One of the two halves of that bill is avoidable, and the reader should know it.** The QCD half
+was invalidated anyway — its grid is 1,773 samples where it was 1,732, so the old tag would not
+have matched on length alone even without the digest, and prompt 03's `T_z_representation` key had
+already invalidated its cosmology row for a different reason. The **LambdaCDM half is invalidated
+by the tag change and by nothing else**: its grid is bit-identical. Because `store_tag` is keyed on
+its label and is a replicated table, a datastore holding **only** LambdaCDM objects can be carried
+across by relabelling in place rather than recomputing:
+
+```sql
+UPDATE store_tag SET label='SourceRedshiftGrid_1732_0960e169'  WHERE label='SourceRedshiftGrid_1732';
+UPDATE store_tag SET label='ResponseRedshiftGrid_145_69050b4c' WHERE label='ResponseRedshiftGrid_145';
+```
+
+**Do not run that on a datastore that also holds pre-prompt-11 QCD objects**: they share the
+`SourceRedshiftGrid_1732` row, and relabelling it would re-validate QCD objects computed on a grid
+that no longer exists — precisely the silent staleness the digest is for. Drop them first.
+
+### 9.7 Suites
+
+| suite | before | after | command |
+|---|---|---|---|
+| `CosmologyModels/tests` | 30 OK | **30 OK** (0.55 s) | `discover -s CosmologyModels/tests -t .` |
+| `ComputeTargets/tests` | 361 OK | **380 OK** (151.3 s) | `discover -s ComputeTargets/tests -t .` |
+| `LiouvilleGreen/tests` | 143 OK (fast set) | **143 OK** (14.5 s) | every module except `test_3bessel_analytic` |
+
+The `LiouvilleGreen` figure is the fast set, as prompts 02–08 and 10 used; the full set is 148
+(prompt 09 ran it) and this commit touches no `LiouvilleGreen` file. The +19 are
+`ComputeTargets/tests/test_source_grid.py`. `black` is clean on every file in the diff.
