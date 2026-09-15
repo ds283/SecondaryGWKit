@@ -1,6 +1,6 @@
 from functools import total_ordering
 from math import log10, log, fabs, exp
-from typing import Iterable, Optional, Mapping, List, NamedTuple, Sequence
+from typing import Iterable, Optional, Mapping, List, NamedTuple, Sequence, Tuple
 
 import numpy as np
 import ray
@@ -48,7 +48,17 @@ from utilities import WallclockTimer
 #     SOURCE_GRID_BREAK_HALF_WIDTH = 5 intervals either side of it refined by
 #     SOURCE_GRID_BREAK_REFINEMENT = 2, and the two equality redshifts. A cosmology that declares
 #     nothing gets the bare logspace, element for element.
-SOURCE_GRID_CONSTRUCTION_VERSION = 1
+#   version 2 (prompt 15 of prompts/qcd-background-audit) -- version 1, plus a *base density* set
+#     by the measured curvature criterion of docs/qcd-background-verification.md section 10:
+#     every base interval that the fourth-derivative equidistribution condition
+#     h^4 |phi''''| / 384 <= eps finds too wide is subdivided, in the base grid's own coordinate,
+#     by the smallest integer that satisfies it. The criterion reaches build_z_sample as a
+#     `spacing` profile computed by the caller (main.source_grid_spacing_profile), so no cosmology
+#     object reaches this module; SOURCE_GRID_MAX_SPACING_FACTOR = 1.0 is the cap, and at that
+#     value the construction may only ever *refine*. A cosmology that declares nothing no longer
+#     gets the bare logspace from a production run -- it gets the bare logspace refined -- though
+#     build_z_sample called without a `spacing` still reproduces it element for element.
+SOURCE_GRID_CONSTRUCTION_VERSION = 2
 
 # The standoff at which the pair of samples straddling a declared break point is placed, **as a
 # fraction of the grid's own spacing**: the pair goes at
@@ -135,6 +145,105 @@ SOURCE_GRID_MIN_SEPARATION = 10.0 * DEFAULT_REDSHIFT_RELATIVE_PRECISION
 SOURCE_GRID_MESH_GUARD = 0.25
 
 
+# ---------------------------------------------------------------------------------------------
+# the curvature criterion that sets the base density (prompt 15; verification document section 10)
+# ---------------------------------------------------------------------------------------------
+
+# **The cap: the coarsest the grid is allowed to be, as a multiple of the spacing today's uniform
+# `samples_per_log10z` lattice puts at the same place.** At 1.0 the criterion may only ever
+# *refine*: no interval of the grid this module builds is wider than the base interval that
+# contains it, on any cosmology, anywhere.
+#
+# **This is a decision, and the saving it declines is measured.**
+# docs/qcd-background-verification.md section 10.5 costs a ladder of caps: at a cap of 2 the
+# criterion needs 1.75x fewer samples on QCD_Cosmology and 2.06x fewer on LambdaCDM at the *same*
+# accuracy, and the ladder goes on to 3.4x and 7.9x. The whole of that saving is coarsening at low
+# z, where the phase residual's curvature is smaller than the grid's density by up to 1e19 in
+# error -- so it is real. It is declined, on the user's instruction (prompt 15 section 1):
+#
+#     "This is a science code. We want to use compute resource sensibly, efficiently, and without
+#      extravagance, but not take any short cuts or risks: there is no reward for doing so. The
+#      only thing we get is an unreliable published result. I would much rather have the grid
+#      slightly more dense than needed, than have it underdense."
+#
+# Three things the criterion cannot see stand behind that instruction, and each of them lives on
+# this grid: the numeric ODE's own sample points, the four CumulativeTables' Gauss panels, and the
+# abscissae QuadSource and QuadSourceIntegral integrate the source over. A criterion derived from
+# the consumer's phase alone is a lower bound on the density and never an upper one (section
+# 10.0). The fourth is measured: [03-derivative-pad-clamp-on-coarse-grids] clamps
+# BackgroundModel._build_derivative_fit_grid's padding the moment the lowest grid interval exceeds
+# -log(0.9)/12 = 8.7800e-03 in u, which is exactly where the coarsening would begin.
+#
+# **Moving it is not a change of a number.** Raising this above 1.0 does not by itself coarsen
+# anything: the construction below only ever subdivides a base interval, so a cap above 1 would
+# additionally need a code path that *drops* base samples, and writing that path is the
+# deliberate act this constant exists to force.
+SOURCE_GRID_MAX_SPACING_FACTOR = 1.0
+
+# The largest subdivision of a single base interval the criterion is allowed to ask for before the
+# construction refuses. On the production envelope -- both models, both sectors, all fifty
+# production wavenumbers -- the largest it asks for is 4. A criterion that asks for far more has
+# either met a cosmology nothing here has been measured on or gone wrong, and a grid of unknown
+# size is worse than a refusal.
+SOURCE_GRID_MAX_REFINEMENT = 32
+
+# The finite stand-in for "this part of the profile constrains nothing", in u. Larger than the
+# whole production range (u runs to ~37.6), so it can never bind, and finite so that the profile
+# can be interpolated.
+_SPACING_UNCONSTRAINED = 1.0e6
+
+# The cubic interpolation error constant, max|e| ~ CONST * h^4 |f''''| on an interval of width h.
+# 1/384 is the textbook bound for a local cubic through four equally spaced points, and section
+# 10.3 measures it rather than assuming it: in the transfer-function sector the indicator predicts
+# the realised error to +-2 % over 500-odd production intervals, on both models, at all three
+# reference wavenumbers, with this constant and no fitting.
+SOURCE_GRID_CUBIC_ERROR_CONST = 1.0 / 384.0
+
+# Step in u = log(1+z) for the five-point stencil that takes the third derivative of the
+# closed-form phi'. Prompt 12's value, unchanged: roundoff in the stencil is ~ eps|g|/(2 delta^3)
+# ~ 5e-08 |g| and truncation ~ delta^2 |g^(5)|, both far below anything a density criterion
+# resolves.
+SOURCE_GRID_CURVATURE_STEP_U = 1.0e-3
+
+# Step in u for the finite differences that supply epsilon, d_epsilon_dz and d_wPerturbations_dz
+# from a cosmology that does not compute them in closed form. Section 10.1 licenses this: epsilon
+# from a central difference of the cosmology's own pointwise Hubble agrees with epsilon as a
+# BackgroundModel supplies it to max 2.5e-09 (LambdaCDM) and 3.9e-09 (QCD_Cosmology), median
+# 8.1e-10, away from a declared crossing.
+SOURCE_GRID_CURVATURE_FD_STEP_U = 1.0e-4
+
+# How far either side of a declared crossing the curvature is not evaluated, in u. H has a genuine
+# *step* there, so no derivative of it means anything within a few stencil widths of one, and the
+# criterion is log-interpolated across the gap. What happens inside the gap is prompt 11's
+# mechanism -- a straddling pair and a refined neighbourhood placed on a rule -- and not a density
+# set by a curvature. Six stencil steps, as prompt 12 masked it.
+SOURCE_GRID_CROSSING_MASK_U = 6.0 * SOURCE_GRID_CURVATURE_STEP_U
+
+# prompt 10 section 5's consumer target, the ceiling on the per-case error target
+SOURCE_GRID_CONSUMER_TARGET_RAD = 1.0e-6
+
+# **The end condition, and why the criterion alone is not enough.** SOURCE_GRID_CUBIC_ERROR_CONST
+# is the constant of an interpolating cubic in its *interior*. scipy's make_interp_spline closes
+# the system with a not-a-knot condition at each end, whose error constant in the outermost
+# intervals is much larger, and the two rows section 10.2 records as a miss are exactly there --
+# in the topmost interval of the Liouville-Green band, within a few grid intervals of horizon
+# entry. Measured, realised/predicted per interval on the production grid:
+#
+#     interval from the band edge      1st      2nd      3rd      interior
+#     LambdaCDM Tk k = 1e5            9.897    4.292    1.230    p50 0.923, p90 0.934
+#     QCD       Tk k = 1e5            9.792    4.189    ~1       p50 0.928, p90 0.941
+#     QCD       Gk k = 1e5            9.327    4.546    1.379    p50 1.223
+#
+# So the error target is divided by SOURCE_GRID_SPLINE_EDGE_FACTOR over the outermost
+# SOURCE_GRID_SPLINE_EDGE_INTERVALS intervals at each end of each band, which asks for a spacing
+# smaller there by 10^(1/4) = 1.78. It is applied at the *edges only* rather than as a global
+# safety factor because the same measurement shows the interior constant is right: a global factor
+# of ten would refine 560 production intervals instead of 226, all of them where the realised
+# error is 1e-12 against a 1e-07 floor.
+SOURCE_GRID_SPLINE_EDGE_INTERVALS = 3
+SOURCE_GRID_SPLINE_EDGE_FACTOR = 10.0
+
+
 class SourceGrid(NamedTuple):
     """
     The source sample grid, together with the record of which of its points are there because the
@@ -179,6 +288,7 @@ def build_z_sample(
     standoff: float = SOURCE_GRID_BREAK_STANDOFF,
     half_width: int = SOURCE_GRID_BREAK_HALF_WIDTH,
     refinement: int = SOURCE_GRID_BREAK_REFINEMENT,
+    spacing: Optional[Tuple[Sequence[float], Sequence[float]]] = None,
 ) -> SourceGrid:
     """
     Build the source sample grid: the log-spaced lattice this function has always returned, plus
@@ -199,11 +309,23 @@ def build_z_sample(
     ``feature_z`` are redshifts that merely have to be *present* -- matter-radiation and
     matter-Lambda equality -- where the background is perfectly smooth and one sample is enough.
 
+    ``spacing`` is the **base density**, as ``(u_profile, h_profile)``: ascending samples of
+    ``u = log(1+z)`` and, at each of them, the largest spacing in ``u`` that the consumer's phase
+    spline can tolerate there. Every base interval wider than the profile allows is subdivided, in
+    the base grid's own coordinate, by the smallest integer that satisfies it, and
+    ``SOURCE_GRID_MAX_SPACING_FACTOR`` caps how coarse the result may be against the base lattice
+    -- at its shipped value of 1.0 the subdivision is by at least 1, i.e. the construction may
+    only ever refine. The profile is computed by ``main.source_grid_spacing_profile`` from the
+    cosmology's ``Hubble`` and ``wPerturbations`` alone; the criterion it implements, and the
+    measurement that chose it, are docs/qcd-background-verification.md section 10.
+
     **No cosmology object reaches this function and no equation-of-state module is imported
-    here.** It takes values, following ``_cosmology_break_points``'s own duck-typed precedent, so
-    that a cosmology declaring nothing (every LambdaCDM model, RadiationModel, every test
-    stand-in) takes the early return below and gets exactly the array it gets today, element for
-    element. ``ComputeTargets/tests/test_source_grid.py`` asserts that bit-identity.
+    here.** It takes values -- break redshifts, feature redshifts and a spacing profile --
+    following ``_cosmology_break_points``'s own duck-typed precedent. With none of them supplied
+    it takes the early return below and reproduces ``numpy.logspace`` element for element, which
+    is what ``ComputeTargets/tests/test_source_grid.py`` asserts; a *production* grid now always
+    carries a spacing profile, on every cosmology, because the density question is not a question
+    about the equation of state.
 
     :param z_init: the highest redshift in the grid
     :param z_end: the lowest redshift in the grid
@@ -213,6 +335,7 @@ def build_z_sample(
     :param standoff: standoff for the straddling pair, as a fraction of a base grid interval
     :param half_width: number of base intervals either side of a break that are refined
     :param refinement: factor by which those intervals are refined
+    :param spacing: ``(u_profile, h_profile)``, the largest spacing in ``u`` the criterion permits
     """
     num = int(round(samples_per_log10z * (log10(z_init) - log10(z_end)) + 0.5, 0))
 
@@ -229,8 +352,9 @@ def build_z_sample(
     )
 
     empty = np.empty(0, dtype=float)
-    if len(breaks) == 0 and len(features) == 0:
-        # nothing was declared: this is today's grid, and it is today's array object
+    if len(breaks) == 0 and len(features) == 0 and spacing is None:
+        # nothing was declared and no density was asked for: this is today's grid, and it is
+        # today's array object
         return SourceGrid(
             z_values=base, protected_z=empty, breaks=empty, features=empty
         )
@@ -306,6 +430,59 @@ def build_z_sample(
         for i in range(first, last + 1):
             for m in range(1, refinement):
                 frac = float(m) / float(refinement)
+                z_new = float(
+                    np.power(10.0, t_asc[i - 1] + frac * (t_asc[i] - t_asc[i - 1]))
+                )
+                if _admits(z_new, pairs_arr, accepted_arr):
+                    accepted.append(z_new)
+                    accepted_arr = np.array(sorted(accepted), dtype=float)
+
+    # ---- and last, the base density the curvature criterion asks for ----
+    #
+    # This runs after the break-point work, not before it, so that every sample prompt 11 places
+    # is placed exactly where prompt 11 placed it: the mesh guards see the same accepted set they
+    # saw before, and a grid built with a spacing profile is a strict *superset* of the one built
+    # without. That is what makes "never coarser than today, anywhere" a property of the
+    # construction rather than a number to be checked afterwards.
+    if spacing is not None:
+        u_prof = np.asarray(spacing[0], dtype=float)
+        h_prof = np.asarray(spacing[1], dtype=float)
+        if u_prof.ndim != 1 or h_prof.shape != u_prof.shape or u_prof.size < 2:
+            raise ValueError(
+                "build_z_sample: spacing must be a pair of one-dimensional arrays of equal "
+                f"length >= 2 (got shapes {u_prof.shape} and {h_prof.shape})"
+            )
+        if not np.all(np.diff(u_prof) > 0.0):
+            raise ValueError(
+                "build_z_sample: the spacing profile must be strictly ascending in u = log(1+z)"
+            )
+        # an unconstrained stretch of the profile carries +inf; the cap bounds it anyway, and a
+        # finite value is what numpy.interp needs
+        h_prof = np.where(np.isfinite(h_prof), h_prof, _SPACING_UNCONSTRAINED)
+
+        t_asc = t[::-1]
+        u_asc = np.log1p(base[::-1])
+        h_at = np.interp(u_asc, u_prof, h_prof)
+        for i in range(1, len(u_asc)):
+            h_base = float(u_asc[i] - u_asc[i - 1])
+            if h_base <= 0.0:
+                continue
+            h_allow = min(
+                float(h_at[i - 1]),
+                float(h_at[i]),
+                SOURCE_GRID_MAX_SPACING_FACTOR * h_base,
+            )
+            m = max(1, int(np.ceil(h_base / h_allow)))
+            if m > SOURCE_GRID_MAX_REFINEMENT:
+                raise ValueError(
+                    f"build_z_sample: the spacing profile asks for a subdivision of {m} in the "
+                    f"base interval z = {base[::-1][i - 1]:.6g} .. {base[::-1][i]:.6g}, above "
+                    f"the SOURCE_GRID_MAX_REFINEMENT = {SOURCE_GRID_MAX_REFINEMENT} this "
+                    "construction will build; the largest asked for on the production envelope "
+                    "is 4"
+                )
+            for j in range(1, m):
+                frac = float(j) / float(m)
                 z_new = float(
                     np.power(10.0, t_asc[i - 1] + frac * (t_asc[i] - t_asc[i - 1]))
                 )

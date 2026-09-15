@@ -1,6 +1,6 @@
 # Open issues — project-wide index
 
-**Last updated:** 2026-09-15 · **65 open** across eight campaigns.
+**Last updated:** 2026-09-15 · **66 open** across eight campaigns.
 
 This file exists so that an issue opened by one campaign is not lost when that campaign closes.
 It is an **index, not a record**: one line per issue, pointing at the campaign status board that
@@ -141,9 +141,10 @@ campaign was **closed**, its remaining issue passing to the `qcd-background-audi
 
 [`prompts/qcd-background-audit/`](../prompts/qcd-background-audit/README.md) (2026-09-13; twelve
 prompts in four workstreams, closed at 12 / 12 on 2026-09-15 and **reopened the same day as
-workstream E**, three more prompts, of which **13 has landed and 14 and 15 have not** — the ungated
-chain 01–09 completed 2026-09-14, workstream D's prompts 10, 11 and 12 ran on 2026-09-15, and
-prompt 13 closed the defect prompt 12 was forbidden to act on). It
+workstream E**, three more prompts, **all three of which have now landed: 15 / 15** — the ungated
+chain 01–09 completed 2026-09-14, workstream D's prompts 10, 11 and 12 ran on 2026-09-15, prompt 13
+closed the defect prompt 12 was forbidden to act on, prompt 14 gave a run a name and the grid's
+construction a version, and prompt 15 took prompt 12's density recommendation). It
 implements [`qcd-background-audit-2026-09.md`](qcd-background-audit-2026-09.md), which measured that
 `QCD_Cosmology`'s temperature is a cubic spline over 500 points solved to `rtol=1e-4`, built as $T$
 against $\log(1+z)$ and run across three points at which $T(z)$ genuinely **jumps** — so the
@@ -334,6 +335,20 @@ number moves:
 (3,814 `float.hex()` lines, MD5 `d5ecc0aa85f38578d8c57c051d3f11e0`). Suites 30 / 392 → **424** / 148
 (full set).
 
+**Opened by prompt 15**, which closed
+`[12-source-grid-density-is-uniform-over-a-curvature-that-spans-eight-orders]` — the user took
+prompt 12's recommendation and the source grid's base density is now set by the measured curvature
+criterion, under the cap `SOURCE_GRID_MAX_SPACING_FACTOR = 1.0` ("never coarser than the uniform
+lattice puts there, anywhere"). QCD 1,773 → **1,996**, LambdaCDM 1,732 → **1,778**, the two rows
+that missed their storage floor **7.86 → 0.69** and **7.84 → 0.11** ulp in the production
+configuration, `SOURCE_GRID_CONSTRUCTION_VERSION` **1 → 2**, `T_Z_REPRESENTATION_VERSION` still 6
+and no background value moved. Suites 30 / 424 → **439** / 143 (fast set):
+
+| Issue | Board | Hook |
+|---|---|---|
+| `[15-the-edge-factor-is-applied-at-the-band-edge-not-at-the-consumers-own-end]` | qcd-background-audit | The criterion uses the cubic's *interior* error constant; prompt 15 measured the realised constant at the outermost intervals of a band at **9.9× / 4.3× / 1.2×** that (the not-a-knot end condition), and tightens the target there with `SOURCE_GRID_SPLINE_EDGE_INTERVALS = 3`, `SOURCE_GRID_SPLINE_EDGE_FACTOR = 10.0`. But a production `PrimitivePhase` spline ends at its object's own anchor, *inside* the band, where the same amplification applies and no tightening does — so such an end can carry up to 10ε where the criterion promises ε. Not measured in either direction. **Next step:** score one QCD $T_k$ object at $k=10^5$ at its own anchor against the residual oracle; log 15 deviation 3 costs both remedies. |
+| `[15-the-grid-now-depends-on-the-wavenumber-sample-and-no-tag-says-so]` | qcd-background-audit | The grid was a pure function of $(z_{\rm init}, z_{\rm end}, \texttt{samples\_per\_log10z})$; the criterion's envelope is taken over every wavenumber the run serves, so it now also depends on the wavenumber sample — a hard-coded `NUMBER_SOURCE_K_VALUES = 50` at `main.py:3292`. Caught by the content digest and the construction version (different grids get different tags and `BackgroundModel` refuses the mixture), but nothing *says* so: no tag records the wavenumber set. Correctness unaffected. **Next step:** a `SourceKSampleTag`, or fold the envelope's digest in beside the grid's, for whichever prompt next has `main.py`'s tagging hunk in scope. |
+
 **Opened by prompt 14** — the first from a measurement it made in passing, the second in the
 user's framing with nothing built towards it:
 
@@ -346,15 +361,8 @@ user's framing with nothing built towards it:
 
 | Issue | Board | Hook |
 |---|---|---|
-| `[13-segmenting-costs-accuracy-on-a-grid-that-does-not-resolve-the-crossing]` | qcd-background-audit | A segment edge creates two *interior* spline ends that **cannot be padded** — beyond an edge lies the other branch, and the cosmology exposes no continuation past the crossing; at the stored-sample site the node set *is* the grid, so there is nothing to pad with. Accuracy at a crossing is therefore set by how close the nearest samples are, and on a grid that does not resolve one a cut is worse than the smooth fit it replaces: at the `EOS_T_LO` control `epsilon` goes **1.889e-09 → 8.190e-08** on the uniform base grid, **43× worse**, while on prompt 11's production grid it is the same float. Harmless today. **But `[12-source-grid-density-…]`'s cap-2× column is coarser than the base grid everywhere** and its §10.5 table was taken on a tree in which no spline was segmented. **Next step:** whoever takes prompt 12's recommendation re-takes log 13 §1's three-crossing row on the candidate grid and reports it beside the sample count; the neighbourhood refinement is a separate lever and can be kept while the background density falls. |
-| `[13-crossing-neighbourhood-refinement-was-sized-at-k-1e5]` | qcd-background-audit | `SOURCE_GRID_BREAK_HALF_WIDTH = 5` and `SOURCE_GRID_BREAK_REFINEMENT = 2` were fixed by prompt 10's ladder at $k=10^5$, and prompt 10's "the crossing is a $k=10^5$ phenomenon" was scored against $\varphi$ recovered from a **stored** $\theta$, whose granularity at $k=10^7$ is 3.05e-05 rad — larger than the effect. Against prompt 12's residual oracle the production configuration at QCD $T_k$, $k=10^7$ reads **5.6892e-05 rad near a crossing**, **59.7 ulp** of the band's span against 0.008 ulp away from one ($G_k$ is 1.59 ulp, at the floor). It improved **7.9×** in prompt 13 and is in the same regime as the 65.78 ulp prompt 11 shipped and called a success, so not a regression — the statement is that the neighbourhood was sized for one wavenumber. **Next step:** re-run prompt 10's ±$n$ × $m$ ladder at $k=10^7$ against the residual oracle, and say whether the half-width should depend on the band; belongs with prompt 15, which owns the grid. |
-
-**Opened by prompt 12**, which closed the campaign before workstream E reopened it (its second
-issue, `[12-background-derivative-fit-grid-rings-at-a-step]`, was closed by prompt 13):
-
-| Issue | Board | Hook |
-|---|---|---|
-| `[12-source-grid-density-is-uniform-over-a-curvature-that-spans-eight-orders]` | qcd-background-audit | **The recommendation, and the decision is the user's.** `source_samples_per_log10z = 100` is uniform over a $\varphi$ curvature that spans eight orders inside a single Liouville–Green band: the consumer's cubic misses the storage floor by **7.86×/7.84×** in the top decade of the $T_k$ band at $k=10^5$ and has up to **2.1e+19** of headroom at the bottom. $h^4\|\varphi''''\|/384 \le \varepsilon$, with $\varphi' = -(1+z)C/(\omega+\omega_0)$ from $H$, $c_s^2$ and $k$ alone, is computable **before** the grid exists and predicts the realised error to **±2 %**; one envelope grid gives QCD 1,761 samples (against 1,773) with every row at 0.14× its target, or 1,015 at 1.75× fewer, and LambdaCDM 1,634 or 842. Equidistributing $\varphi$ itself is refuted at 114,281 samples. **Four bounds:** the saving and `[03-derivative-pad-clamp-on-coarse-grids]` are the same lever (the clamp binds at the first coarsening step); the grid also carries the numeric ODE, four cumulative tables and `QuadSourceIntegral`, none of whose requirements is measured, so this is a lower bound on the density; §5's production-$x$ caveat applies in full, since **no pipeline has run on any grid measured here, including the one that ships**; and above $k\approx10^7$ none of it is visible. **Cost of acting: a full regeneration of eight stored object types.** No next step proposed — that is deliberate. |
+| `[13-segmenting-costs-accuracy-on-a-grid-that-does-not-resolve-the-crossing]` | qcd-background-audit | A segment edge creates two *interior* spline ends that **cannot be padded** — beyond an edge lies the other branch, and the cosmology exposes no continuation past the crossing; at the stored-sample site the node set *is* the grid, so there is nothing to pad with. Accuracy at a crossing is therefore set by how close the nearest samples are, and on a grid that does not resolve one a cut is worse than the smooth fit it replaces: at the `EOS_T_LO` control `epsilon` goes **1.889e-09 → 8.190e-08** on the uniform base grid, **43× worse**, while on prompt 11's production grid it is the same float. Harmless today. **But `[12-source-grid-density-…]`'s cap-2× column is coarser than the base grid everywhere** and its §10.5 table was taken on a tree in which no spline was segmented. **Priced by prompt 15 and it did not bind** (2026-09-15): the cap that shipped only ever refines, so the production grid is a strict superset of the one this was measured on and the three-crossing row is 1.6896e-09 / 1.9824e-09 / 4.0453e-09, identical to the shipped grid's at two crossings and better at the third. **Open, narrowed:** the statement is still true and still unguarded. **Next step:** a test that pins that row, so a later coarsening announces itself. |
+| `[13-crossing-neighbourhood-refinement-was-sized-at-k-1e5]` | qcd-background-audit | `SOURCE_GRID_BREAK_HALF_WIDTH = 5` and `SOURCE_GRID_BREAK_REFINEMENT = 2` were fixed by prompt 10's ladder at $k=10^5$, and prompt 10's "the crossing is a $k=10^5$ phenomenon" was scored against $\varphi$ recovered from a **stored** $\theta$, whose granularity at $k=10^7$ is 3.05e-05 rad — larger than the effect. Against prompt 12's residual oracle the production configuration at QCD $T_k$, $k=10^7$ reads **5.6892e-05 rad near a crossing**, **59.7 ulp** of the band's span against 0.008 ulp away from one ($G_k$ is 1.59 ulp, at the floor). It improved **7.9×** in prompt 13 and is in the same regime as the 65.78 ulp prompt 11 shipped and called a success, so not a regression — the statement is that the neighbourhood was sized for one wavenumber. **Prompt 15 did not take it** (2026-09-15): its §2 item 3 requires prompt 11's neighbourhoods to survive unchanged and its criterion masks the neighbourhood of every crossing out, so the density change cannot reach this figure. **Next step:** re-run prompt 10's ±$n$ × $m$ ladder at $k=10^7$ against the residual oracle, and say whether the half-width should depend on the band; it is a separate lever from the base density and sits beside it in `build_z_sample`. |
 
 **Opened by this campaign and owned by no prompt of it.** The chain is closed, so each of these
 waits on a prompt that has the right files in scope; the board holds the measurements.

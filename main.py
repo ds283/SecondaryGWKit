@@ -29,6 +29,10 @@ from ComputeTargets import (
     TkWKBIntegration,
 )
 from ComputeTargets.BackgroundModel import _cosmology_break_points
+from ComputeTargets.phase_residual import (
+    phase_residual_integrand,
+    residual_node_range,
+)
 from CosmologyConcepts import (
     wavenumber,
     redshift,
@@ -37,6 +41,14 @@ from CosmologyConcepts import (
     wavenumber_exit_time_array,
     redshift_array,
     redshift_grid_digest,
+    build_z_sample,
+    SOURCE_GRID_CONSUMER_TARGET_RAD,
+    SOURCE_GRID_CROSSING_MASK_U,
+    SOURCE_GRID_CUBIC_ERROR_CONST,
+    SOURCE_GRID_CURVATURE_FD_STEP_U,
+    SOURCE_GRID_CURVATURE_STEP_U,
+    SOURCE_GRID_SPLINE_EDGE_FACTOR,
+    SOURCE_GRID_SPLINE_EDGE_INTERVALS,
 )
 from CosmologyConcepts.wavenumber import SOURCE_GRID_CONSTRUCTION_VERSION
 from Datastore.SQL.ProfileAgent import ProfileAgent
@@ -535,6 +547,254 @@ def cosmology_feature_redshifts(cosmology, z_end: float, z_init: float):
     return break_z, feature_z
 
 
+def pre_grid_background_proxy(cosmology):
+    """
+    A stand-in for ``BackgroundModel`` that exposes only the five accessors the Liouville-Green
+    phase residual needs, every one of them built from the cosmology *pointwise*.
+
+    ``populate_z_sample`` runs before any ``BackgroundModel`` exists -- a background model is
+    built **on** the source grid -- so a criterion that sets the grid's density may use only what
+    the cosmology supplies at a point. It supplies enough:
+    ``Hubble`` and ``wPerturbations`` are closed form on every production cosmology, and
+    ``epsilon = d ln H / du``, ``d_epsilon_dz`` and ``d_wPerturbations_dz`` are taken from the
+    cosmology's own closed forms where it has them (``LambdaCDM`` has all of them) and by central
+    differences in ``u = log(1+z)`` where it does not (``QCD_Cosmology`` has none of them).
+
+    **The substitution is measured, not assumed.** docs/qcd-background-verification.md section
+    10.1: ``epsilon`` from a central difference of the cosmology's pointwise ``Hubble`` agrees
+    with ``epsilon`` as a ``BackgroundModel`` supplies it -- a spline over the grid's own samples
+    on ``QCD_Cosmology`` -- to max 2.5e-09 (LambdaCDM), 3.9e-09 (QCD), median 8.1e-10, away from a
+    declared crossing. Inside a few stencil widths of a crossing it agrees with nothing, because
+    ``H`` genuinely steps there and no derivative of it exists; that neighbourhood is masked out
+    of the criterion (``SOURCE_GRID_CROSSING_MASK_U``) and is prompt 11's business instead.
+
+    Every accessor is memoised on its argument. The stencils below evaluate the same handful of
+    redshifts for every wavenumber and both sectors, so the cosmology is asked once and the
+    fifty-wavenumber envelope costs no more than the first case does.
+
+    :param cosmology: any object with ``Hubble(z)`` and ``wPerturbations(z)``
+    :return: an object with ``.cosmology`` and ``.functions``, duck-typed for
+        ``ComputeTargets.phase_residual``
+    """
+
+    def memoise(f):
+        cache = {}
+
+        def wrapper(z):
+            value = cache.get(z)
+            if value is None:
+                value = cache[z] = f(z)
+            return value
+
+        return wrapper
+
+    d = SOURCE_GRID_CURVATURE_FD_STEP_U
+
+    Hubble = memoise(cosmology.Hubble)
+    wPerturbations = memoise(cosmology.wPerturbations)
+
+    if hasattr(cosmology, "d_lnH_dz"):
+
+        def epsilon(z: float) -> float:
+            return (1.0 + z) * cosmology.d_lnH_dz(z)
+
+    else:
+
+        def epsilon(z: float) -> float:
+            u = np.log1p(z)
+            return (
+                np.log(Hubble(float(np.expm1(u + d))))
+                - np.log(Hubble(float(np.expm1(u - d))))
+            ) / (2.0 * d)
+
+    epsilon = memoise(epsilon)
+
+    if hasattr(cosmology, "d_lnH_dz") and hasattr(cosmology, "d2_lnH_dz2"):
+
+        def d_epsilon_dz(z: float) -> float:
+            return cosmology.d_lnH_dz(z) + (1.0 + z) * cosmology.d2_lnH_dz2(z)
+
+    else:
+
+        def d_epsilon_dz(z: float) -> float:
+            u = np.log1p(z)
+            de_du = (
+                epsilon(float(np.expm1(u + d))) - epsilon(float(np.expm1(u - d)))
+            ) / (2.0 * d)
+            return de_du / (1.0 + z)
+
+    if hasattr(cosmology, "d_wPerturbations_dz"):
+        d_wPerturbations_dz = cosmology.d_wPerturbations_dz
+    else:
+
+        def d_wPerturbations_dz(z: float) -> float:
+            u = np.log1p(z)
+            dw_du = (
+                wPerturbations(float(np.expm1(u + d)))
+                - wPerturbations(float(np.expm1(u - d)))
+            ) / (2.0 * d)
+            return dw_du / (1.0 + z)
+
+    class _Functions:
+        pass
+
+    functions = _Functions()
+    functions.Hubble = Hubble
+    functions.epsilon = epsilon
+    functions.d_epsilon_dz = memoise(d_epsilon_dz)
+    functions.wPerturbations = wPerturbations
+    functions.d_wPerturbations_dz = memoise(d_wPerturbations_dz)
+
+    class _Proxy:
+        pass
+
+    proxy = _Proxy()
+    proxy.cosmology = cosmology
+    proxy.functions = functions
+    return proxy
+
+
+def source_grid_spacing_profile(
+    cosmology, base_z_values, k_values, sectors=("Gk", "Tk")
+):
+    """
+    The base density of the source grid, as ``(u_profile, h_profile)``: at each sample of
+    ``u = log(1+z)``, the largest spacing in ``u`` the consumer's phase spline can tolerate there.
+
+    **The criterion is fourth-derivative equidistribution**, measured and chosen in
+    docs/qcd-background-verification.md section 10.3:
+
+        h(u)^4 |phi''''(u)| / 384 <= eps,
+        phi'(u) = -(1+z) C(z) / (omega + omega_0),   omega_0^2 = w (k/H)^2
+
+    with ``w = 1`` in the Green's-function sector and ``w = c_s^2`` in the transfer-function
+    sector, ``C`` the non-leading part of the Liouville-Green frequency
+    (``ComputeTargets.phase_residual.phase_residual_integrand``, used here unmodified), and
+    ``phi''''`` the third derivative of that closed form by the five-point stencil of
+    ``SOURCE_GRID_CURVATURE_STEP_U``. In the transfer-function sector this predicts the realised
+    interpolation error to +-2 % over 500-odd production intervals, on both production models, at
+    all three reference wavenumbers, with the textbook constant and no fitting.
+
+    ``main.py`` builds **one universal source grid**, so the profile is the envelope -- the
+    smallest spacing any case asks for -- over every wavenumber the run serves and both sectors.
+    Each case constrains only its own Liouville-Green band, found by
+    ``residual_node_range`` exactly as the producers find it, and is tuned to its own target
+    ``min(1 ulp of the k tau span, 1e-06 rad)``: below the first nothing the consumer stores can
+    see it (``[02-consumer-phi-below-the-storage-granularity]``), and the second is prompt 10
+    section 5's consumer target. Above the highest band nothing constrains anything and the
+    profile is unconstrained, which the cap in ``build_z_sample`` then resolves.
+
+    The ``k tau`` span is taken by the trapezium rule on the profile's own nodes. It sets an
+    *ulp*, so a per-cent error in it is invisible; nothing here needs the converged quadrature a
+    ``CumulativeTable`` would give, and nothing here could have one, because that is a
+    ``BackgroundModel``.
+
+    :param cosmology: any object with ``Hubble(z)`` and ``wPerturbations(z)``
+    :param base_z_values: the uniform base grid, descending in z
+    :param k_values: the wavenumbers the grid must serve, in the cosmology's units
+    :param sectors: the Liouville-Green sectors to envelope over
+    :return: ``(u_profile, h_profile)``, ascending in u
+    """
+    base = np.asarray([float(z) for z in base_z_values], dtype=float)
+    u_profile = np.log1p(base[::-1])
+
+    proxy = pre_grid_background_proxy(cosmology)
+    breaks_u = np.asarray(
+        [
+            float(u)
+            for u in _cosmology_break_points(
+                cosmology, float(base.min()), float(base.max())
+            )
+        ],
+        dtype=float,
+    )
+
+    delta = SOURCE_GRID_CURVATURE_STEP_U
+    h_envelope = np.full(len(u_profile), np.inf)
+
+    for k in sorted({float(k) for k in k_values}):
+        for sector in sectors:
+            try:
+                nodes = residual_node_range(proxy, k, base, sector)
+            except ValueError:
+                # no part of the grid lies inside the Liouville-Green region for this wavenumber
+                # in this sector, so it constrains no spacing anywhere
+                continue
+
+            u_lo = float(np.log1p(nodes[-1]))
+            u_hi = float(np.log1p(nodes[0]))
+            inside = (u_profile >= u_lo) & (u_profile <= u_hi)
+            if int(inside.sum()) < 4:
+                continue
+
+            integrand = phase_residual_integrand(proxy, k, sector)
+
+            def dphi_du(u: float) -> float:
+                z = float(np.expm1(u))
+                return -(1.0 + z) * integrand(z)
+
+            # the leading primitive's span, and therefore the storage granularity this
+            # wavenumber sits on: k tau (Gk) or k tau_s (Tk), by trapezium in u
+            u_band = u_profile[inside]
+            z_band = np.expm1(u_band)
+            leading = (1.0 + z_band) / np.array(
+                [proxy.functions.Hubble(float(z)) for z in z_band], dtype=float
+            )
+            if sector != "Gk":
+                leading = leading * np.sqrt(
+                    np.array(
+                        [proxy.functions.wPerturbations(float(z)) for z in z_band],
+                        dtype=float,
+                    )
+                )
+            span = abs(k * float(np.trapezoid(leading, u_band)))
+            target = min(float(np.spacing(span)), SOURCE_GRID_CONSUMER_TARGET_RAD)
+
+            # |phi''''| on the band. The stencil is slid inwards at the two ends rather than made
+            # one-sided, and the neighbourhood of every declared crossing is dropped and filled in
+            # by log-interpolation from either side: H steps there, so no derivative of it means
+            # anything, and prompt 11 owns that neighbourhood.
+            d4 = np.zeros(len(u_profile))
+            usable = np.zeros(len(u_profile), dtype=bool)
+            for i in np.flatnonzero(inside):
+                u = min(
+                    max(float(u_profile[i]), u_lo + 2.0 * delta), u_hi - 2.0 * delta
+                )
+                value = abs(
+                    (
+                        -dphi_du(u - 2.0 * delta)
+                        + 2.0 * dphi_du(u - delta)
+                        - 2.0 * dphi_du(u + delta)
+                        + dphi_du(u + 2.0 * delta)
+                    )
+                    / (2.0 * delta**3)
+                )
+                d4[i] = value
+                usable[i] = value > 0.0
+            for u_break in breaks_u:
+                usable &= np.abs(u_profile - u_break) > SOURCE_GRID_CROSSING_MASK_U
+            if int(usable.sum()) < 2:
+                continue
+            filled = np.exp(np.interp(u_profile, u_profile[usable], np.log(d4[usable])))
+
+            # the error target, tightened over the outermost intervals of the band, where the
+            # interpolating cubic's not-a-knot end condition raises its error constant by the
+            # measured factors in SOURCE_GRID_SPLINE_EDGE_FACTOR's comment
+            eps = np.full(len(u_profile), target)
+            band = np.flatnonzero(inside)
+            edge = int(SOURCE_GRID_SPLINE_EDGE_INTERVALS)
+            if edge > 0:
+                eps[band[:edge]] = target / SOURCE_GRID_SPLINE_EDGE_FACTOR
+                eps[band[-edge:]] = target / SOURCE_GRID_SPLINE_EDGE_FACTOR
+
+            h = (
+                eps / (SOURCE_GRID_CUBIC_ERROR_CONST * np.maximum(filled, 1.0e-300))
+            ) ** 0.25
+            h_envelope = np.where(inside, np.minimum(h_envelope, h), h_envelope)
+
+    return u_profile, h_envelope
+
+
 def build_grid_tag_labels(source_z_values, response_z_values):
     """
     The labels of the two grid tags, as ``(source_label, response_label)``.
@@ -628,20 +888,47 @@ def run_pipeline(
         f"   @@ earliest horizon exit/re-entry time is {k_exit_earliest.k.k_inv_Mpc:.5g}/Mpc with z_exit={k_exit_earliest.z_exit:.5g}"
     )
 
-    # build a log-spaced universal grid of source sample times, built around the features this
-    # cosmology declares (audit section 7; prompt 11 of prompts/qcd-background-audit). A
-    # cosmology that declares no break points gets the bare logspace it has always got.
-    break_z, feature_z = cosmology_feature_redshifts(
-        model_cosmology, zend, k_exit_earliest.z_exit_suph_e5
-    )
+    # build the universal grid of source sample times, around the features this cosmology
+    # declares (audit section 7; prompt 11 of prompts/qcd-background-audit) and at the density the
+    # consumer's phase spline needs (prompt 15). A cosmology that declares no break points still
+    # gets no protected points and no break neighbourhoods; it does get the density, because the
+    # density is not a question about the equation of state.
+    z_init_grid = k_exit_earliest.z_exit_suph_e5
+    break_z, feature_z = cosmology_feature_redshifts(model_cosmology, zend, z_init_grid)
+
+    # the base density is no longer the caller's uniform samples_per_log10z: it is set by the
+    # measured curvature criterion of docs/qcd-background-verification.md §10, capped so that no
+    # interval is ever wider than the uniform lattice would have put there
+    # (SOURCE_GRID_MAX_SPACING_FACTOR). This runs before any BackgroundModel exists and consults
+    # nothing but the cosmology's own Hubble and wPerturbations -- see
+    # source_grid_spacing_profile.
+    base_z_grid = build_z_sample(
+        z_init=z_init_grid,
+        z_end=zend,
+        samples_per_log10z=source_samples_per_log10z,
+    ).z_values
+    with WallclockTimer() as spacing_timer:
+        spacing = source_grid_spacing_profile(
+            model_cosmology,
+            base_z_grid,
+            [float(k_exit.k) for k_exit in full_k_exit_times],
+        )
+
     source_grid = k_exit_earliest.populate_source_grid(
         outside_horizon_efolds=5,
         samples_per_log10z=source_samples_per_log10z,
         z_end=zend,
         break_z=break_z,
         feature_z=feature_z,
+        spacing=spacing,
     )
     source_z_grid = source_grid.z_values
+    print(
+        f"   @@ the curvature criterion took {format_time(spacing_timer.elapsed)} over "
+        f"{len(full_k_exit_times)} wavenumbers in 2 sectors; the source grid carries "
+        f"{len(source_z_grid)} samples against the {len(base_z_grid)} a uniform "
+        f"{source_samples_per_log10z} per decade of z would have given"
+    )
     if len(source_grid.protected_z) > 0:
         print(
             f"   @@ cosmology declares {len(source_grid.breaks)} break point(s) and "
