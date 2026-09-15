@@ -27,10 +27,12 @@ from math import log10, log1p, expm1
 
 import mpmath as mp
 import numpy as np
+from scipy.interpolate import make_interp_spline
 
 from ComputeTargets.BackgroundModel import TablePrimitive
 from ComputeTargets.cumulative_table import CumulativeTable
 from ComputeTargets.primitive_phase import PrimitivePhase, build_phi_samples
+from ComputeTargets.tests.test_numeric_break_points import _repeated_knot_vector
 from LiouvilleGreen.WKBtools import WKB_mod_2pi
 from LiouvilleGreen.constants import TWO_PI
 from LiouvilleGreen.phase_spline import phase_spline
@@ -631,6 +633,124 @@ class TestConstructor(unittest.TestCase):
         self.assertLessEqual(worst, 1.0e-7)
         # phi is the constant offset, recovered
         self.assertAlmostEqual(float(np.mean(phi)), 3.0 * TWO_PI, places=6)
+
+
+# ------------------------------------------------------------------------------------------------
+# 8. why the phi spline keeps make_interp_spline's default knots (qcd-background-audit prompt 10)
+# ------------------------------------------------------------------------------------------------
+
+
+class TestBreakPointKnotsBuyWhatTheSamplesResolve(unittest.TestCase):
+    """
+    `PrimitivePhase` splines `phi` with `make_interp_spline`'s **default** knots, and
+    `[13-consumer-spline-crosses-eos-break-points]` proposed giving it a knot of multiplicity
+    `spline_order` -- a C0 knot -- at each of the cosmology's declared break points, so that a
+    cubic could turn the corner `QCD_EOS`'s discontinuities put in `phi`.
+
+    Prompt 10 of `prompts/qcd-background-audit/` measured that on the production geometry and
+    found it **2.1x worse** in consumer phase, on the corrected background, at both sectors of
+    k = 1e5 (per-segment splines: 5.0x worse); the same scheme was 2.0x worse on the *defective*
+    background when `prompts/phase-representation` prompt 02 measured it. What decides it is not
+    the knots but whether the production sample grid resolves the feature at the crossing: at
+    twice the grid density a plain cubic of the same `phi` goes 34.11 -> 1.48 ulp (G_k) and
+    1876.6 -> 72.8 ulp (T_k), where no knot placement moves either figure the right way.
+
+    These two tests are that statement at the scale of one grid interval, so that a future
+    attempt has the rule in the tree rather than only in a log:
+
+      * a slope discontinuity the samples **do** resolve is exactly what a C0 knot is for, and it
+        recovers it essentially perfectly;
+      * a feature whose width is the sample spacing is not recovered by any knot placement, and
+        is recovered by sampling.
+
+    `docs/qcd-background-audit/consumer_knot_scheme_scan.py` is the production-geometry version.
+    """
+
+    # the break sits strictly inside a sample interval, as every declared break point does on the
+    # production grid (measured: fractional position 0.32-0.64, never a sample)
+    BREAK_FRACTION = 0.6424
+    KINK_SLOPE = 0.5
+    BUMP_AMPLITUDE = 1.0e-3
+
+    def setUp(self):
+        _Geometry.build()
+        self.u = np.log1p(np.asarray(_Geometry.z_samples, dtype=float))
+        self.h = float(np.median(np.diff(self.u)))
+        mid = len(self.u) // 2
+        self.u_break = float(
+            self.u[mid] + self.BREAK_FRACTION * (self.u[mid + 1] - self.u[mid])
+        )
+        # ten interior points per sample interval, the verification script's scoring density
+        self.u_fine = np.array(
+            [
+                self.u[i] + (self.u[i + 1] - self.u[i]) * j / 11.0
+                for i in range(3, len(self.u) - 4)
+                for j in range(1, 11)
+            ]
+        )
+
+    def _score(self, phi_of_u, u_nodes=None, knots=None) -> float:
+        """Worst |spline(phi) - phi| over the fine abscissae, for a spline built on `u_nodes`
+        (the production samples by default) with `knots` (the default knot vector by default).
+        """
+        u_nodes = self.u if u_nodes is None else u_nodes
+        spline = make_interp_spline(u_nodes, phi_of_u(u_nodes), k=3, t=knots)
+        return float(np.max(np.abs(spline(self.u_fine) - phi_of_u(self.u_fine))))
+
+    def _c0_knots(self, u_nodes=None):
+        u_nodes = self.u if u_nodes is None else u_nodes
+        return _repeated_knot_vector(u_nodes, [self.u_break], 3)
+
+    def test_a_C0_knot_recovers_a_kink_the_samples_resolve(self):
+        """
+        The positive control, and the reason the scheme was proposed at all: `phi` is a genuine
+        piecewise-linear kink at the break, on a scale the samples resolve completely. A C0 knot
+        puts that function inside the spline space, so the interpolant is exact; the default
+        C2 cubic cannot turn the corner and carries the whole kink term.
+        """
+
+        def phi(u):
+            return self.KINK_SLOPE * np.abs(np.asarray(u, dtype=float) - self.u_break)
+
+        default = self._score(phi)
+        with_knot = self._score(phi, knots=self._c0_knots())
+        print(
+            f"[prompt 10] resolved kink: default knots {default:.4e}, C0 knot at the break "
+            f"{with_knot:.4e} ({default / max(with_knot, 1e-300):.3g}x)"
+        )
+        self.assertGreater(default, 1.0e-3)
+        self.assertLess(with_knot, default / 1.0e3)
+
+    def test_neither_knot_nor_segment_recovers_a_feature_the_samples_do_not(self):
+        """
+        The production case. `phi` carries a feature whose width is one sample interval -- the
+        equation of state's step, delivered to a grid that knows nothing about it -- and the node
+        values simply do not contain it. A C0 knot at the break buys nothing (it is not a slope
+        discontinuity, and the multiplicity is paid for by dropping the three default knots
+        nearest the break, which coarsens the spline exactly where `phi` is least smooth), while
+        doubling the sample density recovers it.
+        """
+
+        def phi(u):
+            x = (np.asarray(u, dtype=float) - self.u_break) / self.h
+            return self.BUMP_AMPLITUDE * np.exp(-x * x)
+
+        default = self._score(phi)
+        with_knot = self._score(phi, knots=self._c0_knots())
+
+        # the same phi, sampled twice as densely -- default knots, no break-point treatment
+        u_dense = np.sort(np.concatenate([self.u, 0.5 * (self.u[:-1] + self.u[1:])]))
+        denser = self._score(phi, u_nodes=u_dense)
+
+        print(
+            f"[prompt 10] unresolved feature of width h: default knots {default:.4e}, "
+            f"C0 knot {with_knot:.4e} ({default / with_knot:.3g}x), "
+            f"2x samples and default knots {denser:.4e} ({default / denser:.3g}x)"
+        )
+        # the knot buys nothing: not better by even 10 %
+        self.assertGreater(with_knot, default / 1.1)
+        # the samples buy an order of magnitude
+        self.assertLess(denser, default / 10.0)
 
 
 if __name__ == "__main__":
