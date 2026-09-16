@@ -7,7 +7,7 @@
 **Baseline commit:** `f023eb8` — suites green and re-run at planning time:
 `CosmologyModels` **30**, `ComputeTargets` **447**
 **Target branch:** `background-solver-robustness`, cut from `f023eb8` (README §4)
-**Last updated:** 2026-09-16 · **Status: planned, not started.**
+**Last updated:** 2026-09-16 · **Status: workstream A in progress — prompt 01 complete.**
 
 > **The impact is zero change to any computed quantity, and that is the point.** `AUDIT.md` §5 and
 > README §0.2 are the campaign's framing: the two redshifts `_find_rho_equality` produces are
@@ -35,7 +35,7 @@
 
 | # | Prompt | Workstream | Covers | Model | Status | Commit | Log |
 |---|---|---|---|---|---|---|---|
-| 01 | [Equality-solve characterisation test](01-equality-solve-characterisation.md) | A | README §2 (a), (d) | Opus | ⬜ | | |
+| 01 | [Equality-solve characterisation test](01-equality-solve-characterisation.md) | A | README §2 (a), (d) | Opus | ⚠️ | *"Characterise the equality solve before bracketing it"* (SHA not embedded, per the campaign convention) | [`logs/01-equality-solve-characterisation.md`](logs/01-equality-solve-characterisation.md) |
 | 02 | [Bracket the equality solve](02-bracket-the-equality-solve.md) | A | README §2 (b), (c), (e); audit §4.2 | Opus | ⬜ | | |
 | 03 | [What the equality redshifts feed](03-equality-redshift-consumers.md) | B | README §2 (f); §7 D2 | Opus | ⬜ | | |
 | 04 | [Relocate the crossing probe](04-relocate-the-crossing-probe.md) | B | README §2 (g) | Sonnet | ⬜ | | |
@@ -62,10 +62,10 @@ decades apart and nothing about one of them predicts the other.
 
 | Item | Kind | Statement | Prompt | Status |
 |---|---|---|---|---|
-| (a) | **MACHINERY** | The two equality redshifts, on `QCD_Cosmology` and the pure-radiation stand-in, both pairs, scored against an independent `brentq` at Brent's own $4\varepsilon$ floor — to ≤ 2 ulp, in a test that needs no Ray and no datastore | 01 | ⬜ |
+| (a) | **MACHINERY** | The two equality redshifts, on `QCD_Cosmology` and the pure-radiation stand-in, both pairs, scored against an independent `brentq` at Brent's own $4\varepsilon$ floor — ~~to ≤ 2 ulp~~ **to ≤ 4 ulp**, in a test that needs no Ray and no datastore | 01 | ⚠️ |
 | (b) | **FIX** | `_find_rho_equality` is bracketed and Brent, at `xtol=1e-300, rtol=1e-14`, with the comment that chose the values at the point of use and to the standard of `:569-583` | 02 | ⬜ |
 | (c) | **FIX** | A failure to bracket raises `_find_rho_equality`'s own `RuntimeError` naming the species pair and the range searched — not a `ValueError` and not a `TemperatureRepresentation` bounds error from two frames down | 02 | ⬜ |
-| (d) | **MEASUREMENT** | The monotonicity the bracket rests on is a standing test, not a paragraph in an audit: $\rho_m/\rho_r$ strictly decreasing on $z\in[33,3.4\times10^5]$, $\rho_m/\rho_\Lambda$ strictly increasing on $z\in[0,10]$ | 01 | ⬜ |
+| (d) | **MEASUREMENT** | The monotonicity the bracket rests on is a standing test, not a paragraph in an audit: $\rho_m/\rho_r$ strictly decreasing on $z\in[33,3.4\times10^5]$, $\rho_m/\rho_\Lambda$ strictly increasing on $z\in[0,10]$ | 01 | ✅ |
 | (e) | **DISCIPLINE** | Every behaviour-change assertion is shown **failing on `HEAD~1`**, with the output quoted in the log | 02 | ⬜ |
 | (f) | **MEASUREMENT** | What the equality redshifts actually feed, written down: three closed-form sites scored against each other and against the corrected solve on three models, the chain from `feature_z` to the `BackgroundModel` lookup key, and `main.py:526`'s stale 4e-13 corrected | 03 | ⬜ |
 | (g) | **HYGIENE** | `_temperature_crossing_log1pz` is test machinery in the test tree, with its docstring and its `xtol=1e-15, rtol=1e-15` carried across unchanged | 04 | ⬜ |
@@ -126,14 +126,23 @@ Opened by the **2026-09-16 planning commit**:
 Also opened by the planning commit, found while reconciling (`RECONCILIATION.md` §9.3) and
 **measured by prompt 01**, which has the file open for another reason:
 
-- **[01-agreement-threshold-comment-predates-the-representation]** *(planning; measured by prompt
-  01, assigned to prompt 08, gated)* — `CosmologyModels/tests/test_wPerturbations.py:34-41` describes
-  the $T(z)$ inversion as a "500-point spline" and quotes ~1.3e-9 and ~4e-7 to justify
+- **[01-agreement-threshold-comment-predates-the-representation]** *(planning; **measured by prompt
+  01** 2026-09-16; assigned to prompt 08, gated)* — `CosmologyModels/tests/test_wPerturbations.py:34-41`
+  describes the $T(z)$ inversion as a "500-point spline" and quotes ~1.3e-9 and ~4e-7 to justify
   `AGREEMENT_RTOL = 1.0e-8`. Since `qcd-background-audit` prompts 05 and 06 the representation is a
   segmented entropy factor at **3,000 nodes of order 5** and what is tabulated is not $T$.
-  **Impact:** none — every assertion passes and the threshold is a ceiling. Same class as
-  `[10-transfer-remedial-tolerance-comments-stale]`. **Next step:** prompt 08, if README §7 D3
-  opens workstream D.
+  **Measured at `3e820eb`** (log 01 §4.3), on exactly what `test_agrees_with_LambdaCDM` compares —
+  the `PureRadiationEOS` stand-in against `LambdaCDM.wPerturbations` over that test's own probe set
+  $z\in\{0,0.5,1,2,10,10^3\}$: the worst relative disagreement is **8.8818e-16** at
+  `max_z = 1e4` (claimed ~1.3e-9) and **6.6613e-16** at `max_z = 1e20` (claimed ~4e-7) — **seven to
+  nine orders tighter, and the `max_z` dependence has gone entirely**. On a constant-$g_*$ equation
+  of state the tabulated entropy factor is exactly constant, so $T(z) = T_{\rm CMB}(1+z)$ is
+  recovered to rounding at any `max_z`; the old figures describe a representation that no longer
+  exists. **Impact:** none — every assertion passes and `AGREEMENT_RTOL` is now a ceiling eight
+  orders above what the code delivers. Same class as
+  `[10-transfer-remedial-tolerance-comments-stale]`. **Next step:** prompt 08 rewrites the comment
+  and may retighten the constant, if README §7 D3 opens workstream D. Prompt 01 was forbidden to
+  edit that file and did not.
 
 ### 3.1 Adopted from other boards
 
@@ -196,3 +205,13 @@ Written by prompt 06. Empty until then.
    is that they do not change.
 6. **An agent must never assume `HEAD` is its own.** Planning and orchestration commits land on the
    same branch.
+7. **"≤ 2 ulp" in README §6 and prompt 01 §5 is arithmetically incompatible with the audit's own
+   figures, and the shipped threshold is 4 ulp** (log 01, deviation D1). `AUDIT.md` §2.2's
+   **−4.00e-16** at $z = 3406.67$ *is* −3.0 ulp — one ulp there is $1.335\times10^{-16}$ relative —
+   and `RECONCILIATION.md` §6's −9.34e-16 for the closed form is 7 ulp. Measured separations from
+   the bracketed reference at `3e820eb`: solve **3 / 2 / 1 / 2 ulp**, $\Lambda$ closed form
+   **2 / 2**, matter–radiation closed form **7** (QCD) and **1** (stand-in). The test module ships
+   `SOLVE_VS_REFERENCE_ULP = 4`, `LAMBDA_CLOSED_FORM_ULP = 2` and
+   `MATTER_RADIATION_CLOSED_FORM_ULP = 8`; the fourth ulp is the **reference's own** bracket
+   sensitivity, measured, not slack for the solve. **A later prompt converting a relative figure in
+   `AUDIT.md` or `RECONCILIATION.md` into ulp must do the arithmetic rather than copy the "2".**
