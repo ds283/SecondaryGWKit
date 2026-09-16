@@ -60,8 +60,11 @@ PYTHONPATH=. ./venv/bin/python -m unittest discover -s ComputeTargets/tests -t .
 ./venv/bin/python -m black --check $(git diff --name-only HEAD~1 HEAD -- '*.py')
 ```
 
-- `ComputeTargets` must read **447, OK** at every commit of this campaign. Nothing in that package
-  reads `_find_rho_equality`; a move there means something changed that nobody intended.
+- `ComputeTargets` must read **449, OK** from prompt 09 onwards, and **447** at every commit before
+  it. Nothing in that package reads `_find_rho_equality`, so a count that *falls* still means
+  something changed that nobody intended; the rise at 09 is the two `test_source_grid.py` tests that
+  prompt says it adds (board standing note 3, amended there). **A later orchestrator checking for
+  447 after prompt 09 would stop on a healthy tree.**
 - `CosmologyModels` may only **rise**.
 - Plus: `grep -n "T_Z_REPRESENTATION_VERSION" CosmologyModels/GenericEOS/LambdaCDM_GenericEOS.py`
   must read **6** at every commit.
