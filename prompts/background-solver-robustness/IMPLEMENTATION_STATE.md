@@ -7,7 +7,7 @@
 **Baseline commit:** `f023eb8` — suites green and re-run at planning time:
 `CosmologyModels` **30**, `ComputeTargets` **447**
 **Target branch:** `background-solver-robustness`, cut from `f023eb8` (README §4)
-**Last updated:** 2026-09-16 · **Status: workstream A in progress — prompt 01 complete.**
+**Last updated:** 2026-09-16 · **Status: workstream A complete — prompts 01 and 02 done.**
 
 > **The impact is zero change to any computed quantity, and that is the point.** `AUDIT.md` §5 and
 > README §0.2 are the campaign's framing: the two redshifts `_find_rho_equality` produces are
@@ -36,7 +36,7 @@
 | # | Prompt | Workstream | Covers | Model | Status | Commit | Log |
 |---|---|---|---|---|---|---|---|
 | 01 | [Equality-solve characterisation test](01-equality-solve-characterisation.md) | A | README §2 (a), (d) | Opus | ⚠️ | *"Characterise the equality solve before bracketing it"* (SHA not embedded, per the campaign convention) | [`logs/01-equality-solve-characterisation.md`](logs/01-equality-solve-characterisation.md) |
-| 02 | [Bracket the equality solve](02-bracket-the-equality-solve.md) | A | README §2 (b), (c), (e); audit §4.2 | Opus | ⬜ | | |
+| 02 | [Bracket the equality solve](02-bracket-the-equality-solve.md) | A | README §2 (b), (c), (e); audit §4.2 | Opus | ⚠️ | *"Bracket the equality solve and make its guard reachable"* (SHA not embedded, per the campaign convention) | [`logs/02-bracket-the-equality-solve.md`](logs/02-bracket-the-equality-solve.md) |
 | 03 | [What the equality redshifts feed](03-equality-redshift-consumers.md) | B | README §2 (f); §7 D2 | Opus | ⬜ | | |
 | 04 | [Relocate the crossing probe](04-relocate-the-crossing-probe.md) | B | README §2 (g) | Sonnet | ⬜ | | |
 | 05 | [Hoist the range logic](05-hoist-the-range-logic.md) | C | README §2 (h); §7 D4 | Opus | ⬜ | | |
@@ -63,10 +63,10 @@ decades apart and nothing about one of them predicts the other.
 | Item | Kind | Statement | Prompt | Status |
 |---|---|---|---|---|
 | (a) | **MACHINERY** | The two equality redshifts, on `QCD_Cosmology` and the pure-radiation stand-in, both pairs, scored against an independent `brentq` at Brent's own $4\varepsilon$ floor — ~~to ≤ 2 ulp~~ **to ≤ 4 ulp**, in a test that needs no Ray and no datastore | 01 | ⚠️ |
-| (b) | **FIX** | `_find_rho_equality` is bracketed and Brent, at `xtol=1e-300, rtol=1e-14`, with the comment that chose the values at the point of use and to the standard of `:569-583` | 02 | ⬜ |
-| (c) | **FIX** | A failure to bracket raises `_find_rho_equality`'s own `RuntimeError` naming the species pair and the range searched — not a `ValueError` and not a `TemperatureRepresentation` bounds error from two frames down | 02 | ⬜ |
+| (b) | **FIX** | `_find_rho_equality` is bracketed and Brent, at `xtol=1e-300`, ~~`rtol=1e-14`~~ **`rtol=8.9e-16`** (the user's amended README §7 D1, 2026-09-16; log 02 D1), with the comment that chose the values at the point of use and to the standard of `:569-583` | 02 | ⚠️ |
+| (c) | **FIX** | A failure to bracket raises `_find_rho_equality`'s own `RuntimeError` naming the species pair and the range searched — not a `ValueError` and not a `TemperatureRepresentation` bounds error from two frames down | 02 | ✅ |
 | (d) | **MEASUREMENT** | The monotonicity the bracket rests on is a standing test, not a paragraph in an audit: $\rho_m/\rho_r$ strictly decreasing on $z\in[33,3.4\times10^5]$, $\rho_m/\rho_\Lambda$ strictly increasing on $z\in[0,10]$ | 01 | ✅ |
-| (e) | **DISCIPLINE** | Every behaviour-change assertion is shown **failing on `HEAD~1`**, with the output quoted in the log | 02 | ⬜ |
+| (e) | **DISCIPLINE** | Every behaviour-change assertion is shown **failing on `HEAD~1`**, with the output quoted in the log | 02 | ✅ |
 | (f) | **MEASUREMENT** | What the equality redshifts actually feed, written down: three closed-form sites scored against each other and against the corrected solve on three models, the chain from `feature_z` to the `BackgroundModel` lookup key, and `main.py:526`'s stale 4e-13 corrected | 03 | ⬜ |
 | (g) | **HYGIENE** | `_temperature_crossing_log1pz` is test machinery in the test tree, with its docstring and its `xtol=1e-15, rtol=1e-15` carried across unchanged | 04 | ⬜ |
 | (h) | **MEASUREMENT** | The four loop-invariant `_outward` bounds hoisted in all three classes, **bit-identical** returns and character-identical messages demonstrated, and the `T_photon` cost row closed at ≤ 2.5 µs or escalated to the user | 05 | ⬜ |
@@ -79,21 +79,29 @@ decades apart and nothing about one of them predicts the other.
 Issues opened here must be added to [`docs/OPEN_ISSUES.md`](../../docs/OPEN_ISSUES.md) **in the
 same commit** (`CLAUDE.md`), with the count corrected.
 
-Opened by the **2026-09-16 planning commit**:
+Opened by **prompt 02** (2026-09-16):
 
-- **[00-equality-solve-is-unbracketed-and-loose]** *(planning; assigned to prompt 02)* —
-  `LambdaCDM_GenericEOS._find_rho_equality:1013` runs `root_scalar(match_rho, x0=init_z,
-  xtol=1e-6, rtol=1e-4)`: an unbracketed secant at tolerances two orders looser than the file's
-  other two solves, with no provenance in any campaign record. **Measured** (`AUDIT.md` §2.2,
-  reproduced at `f023eb8`): it returns the right answer to **−4.00e-16** relative in 1 to 3
-  evaluations, because the analytic guess its caller supplies **is** the root to rounding wherever
-  $g_*$ is flat — which is a property of this equation of state at this redshift, not of the code.
-  **Impact:** none today; both results are printed with `:.4g` and discarded. The defect is that
-  the solve is correct by accident, that its failure mode escapes its own guard — at a guess
-  displaced −30 % it raises `ValueError`, at −50 % a `TemperatureRepresentation` bounds error from
-  negative $z$, and **neither is `converged=False`**, so the guard at `:1015` is dead on every path
-  that fails — and that `xtol` is an absolute tolerance in $z$ serving two roots four decades apart.
-  **Next step:** prompt 02. Both roots are trivially bracketable (`AUDIT.md` §4.1).
+- **[02-bracketed-reference-is-not-the-exact-root]** *(prompt 02; measured; no prompt assigned)* —
+  README §3.1 makes the bracketed `brentq` reference "the anchor every measurement is scored
+  against" and item (a) is written as agreement with it. On the one pair where an exact oracle
+  exists, **the anchor is the less accurate of the two things being compared.** `match_rho` for
+  matter = $\Lambda$ is exactly $\rho_{m0}(1+z)^3-\rho_\Lambda$, with no temperature dependence, so
+  the root follows in closed form from the model's own float constants. Evaluated at 60 decimal
+  digits from `QCD_Cosmology`'s `rho_m0 = 6.894224419906764e+105` and
+  `rho_cc = 1.52665741011693e+106`, the exact root is `0.303423032996407410561312801228`. The
+  closed form, and the solve at both `7fdc49b` and this commit, give `0.30342303299640738` —
+  **−0.506 ulp, the nearest double**. `bracketed_reference` gives `0.30342303299640749` —
+  **+1.494 ulp, the second-nearest, on the wrong side**. So `LAMBDA_CLOSED_FORM_ULP = 2` is
+  measuring the reference's own error, and the "−2.0 ulp" that prompt 01 and prompt 02 both report
+  for that pair is the reference being wrong, not the solve.
+  **Impact:** none on anything asserted — every test passes, and the direction of the finding is
+  that the shipped answer is *better* than what scores it. It matters because three more prompts
+  score figures in ulp against this anchor. **Next step:** prompt 03 must read this before scoring
+  the three closed-form sites; whether README §3.1 and item (a) should be re-worded around an
+  exact oracle for the $\Lambda$ pair is a planning question and a decision for the user, since
+  changing the reference would change what prompt 01's four tests assert.
+
+Opened by the **2026-09-16 planning commit**:
 
 - **[00-equality-redshift-closed-form-is-duplicated-three-times]** *(planning; measured by prompt
   03; the decision is README §7 D2 and the user's)* — $1+z_{\rm eq}=\Omega_m/\Omega_r$ and
@@ -180,7 +188,34 @@ deleted from `docs/OPEN_ISSUES.md`.
 
 ## 4. Resolved issues
 
-None yet.
+- **[00-equality-solve-is-unbracketed-and-loose]** — **RESOLVED by prompt 02, 2026-09-16.**
+  `LambdaCDM_GenericEOS._find_rho_equality` no longer runs an unbracketed secant. It clamps the
+  guess into the $T(z)$ representation's tabulated range, expands a bracket about it
+  multiplicatively in $1+z$ by $\sqrt2$ (capped at 140 steps, clamped to the representation's own
+  bounds at both ends) until the residual changes sign, and calls
+  `root_scalar(..., bracket=..., xtol=1e-300, rtol=8.9e-16)`. The `converged` guard is kept and
+  now names the species pair and the bracket, and a **failure to bracket** raises the method's own
+  `RuntimeError` naming both species, the guess, the clamped guess, both endpoints and both
+  residuals. The comment at the point of use carries the value, the competing floor, the measured
+  cost and `AUDIT.md` §2.3's finding, to the standard of `:569-583`.
+
+  **The tolerance is `rtol=8.9e-16`, Brent's own $4\varepsilon$ floor, not README §7 D1's
+  `rtol=1e-14`** — the user's amended D1 decision of 2026-09-16, taken on prompt 02's measurement
+  (log 02, D1): the residual is a cancellation between two densities of order $10^{112}$, so the
+  root is a band a few ulp wide and `rtol=1e-14` (75 ulp of slack at $z\sim3.4\times10^3$) stopped
+  **7 ulp** from the independent reference and **failed prompt 01's test**. The same decision
+  amended prompt 02 §4's first acceptance row from "bit-identical / ≤ 1 ulp" — which is
+  unattainable by any solver here — to "≤ 4 ulp against prompt 01's reference".
+
+  **What moved:** the two matter–radiation roots, by **+3 ulp** (`QCD_Cosmology`,
+  `3406.6689742499498` → `3406.6689742499511`) and **+1 ulp** (stand-in, `3403.1059638279453` →
+  `3403.1059638279457`), **both onto** the independent reference they previously sat below. Both
+  matter–$\Lambda$ roots are **bit-identical**. Both printed banner lines are character-identical.
+  Cost: **3, 1, 1, 1 → 23, 25, 21, 25** `_rho_fluid` evaluations, twice per model construction;
+  `AUDIT.md` §3.1's "+6 to +9" is for tightening the secant and does not survive bracketing.
+  Pinned by three new tests in `CosmologyModels/tests/test_rho_equality.py`, all three shown
+  failing on `7fdc49b` with the output in the log. Suites `CosmologyModels` 34 → **37**,
+  `ComputeTargets` **447** unchanged, `T_Z_REPRESENTATION_VERSION` **6**.
 
 ---
 
@@ -215,3 +250,24 @@ Written by prompt 06. Empty until then.
    `MATTER_RADIATION_CLOSED_FORM_ULP = 8`; the fourth ulp is the **reference's own** bracket
    sensitivity, measured, not slack for the solve. **A later prompt converting a relative figure in
    `AUDIT.md` or `RECONCILIATION.md` into ulp must do the arithmetic rather than copy the "2".**
+   Prompt 02 did not widen any of the three.
+8. **Two of the four equality redshifts moved at prompt 02, and log 02's table is the current
+   one.** `QCD_Cosmology` matter = radiation is `3406.6689742499511` (`0x1.a9d5683cafad0p+11`) and
+   the stand-in's is `3403.1059638279457` (`0x1.a963640e40f2cp+11`), both **+3 and +1 ulp above**
+   log 01's values and both **on** the bracketed reference. The two matter–$\Lambda$ roots did not
+   move. **Prompt 03 scores the three closed-form sites against log 02's table, not log 01's** —
+   in particular `main.py:526`'s correction, since the QCD matter–radiation closed form now sits
+   7 ulp below the solve.
+9. **Bit-identity is not a property this solve can have** (log 02, D1). The residual is a
+   cancellation between two densities of order $10^{112}$, quantised at ~$7\times10^{100}$ near the
+   root, so its sign change spans several floats: on `QCD_Cosmology` at matter–radiation equality
+   it is exactly zero one ulp above the closed form, non-zero either side, and changes sign six to
+   seven ulp higher; on the matter–$\Lambda$ pair it is exactly zero across five consecutive
+   floats. A later prompt must not write "bit-identical" as an acceptance for anything downstream
+   of this root without re-taking that measurement.
+10. **This machine was not quiet at prompt 02.** Ten orphaned `while :; do :; done` shells from a
+    12:55 loaded-machine benchmark were still saturating every core at 14:20; the
+    `ComputeTargets` suite took 215 s against log 01's 181 s on the same tree. No pass/fail or
+    float is affected. **Prompt 05 must check for them before it measures `T_photon`**, because
+    `[06-t-photon-call-cost-needs-a-quiet-machine]` is a five-run mean on a quiet machine and
+    README §7 **D4** turns on 4 % (log 02, "Observations not acted on" item 4).

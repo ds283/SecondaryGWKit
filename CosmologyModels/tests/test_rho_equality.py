@@ -97,6 +97,20 @@ MATTER_RADIATION_CLOSED_FORM_ULP = 8
 MATTER_RADIATION_PROBES = (33.0, 339.0, 1702.0, 3406.0, 6814.0, 34075.0, 340766.0)
 MATTER_LAMBDA_PROBES = (0.0, 0.1, 0.303, 0.5, 1.0, 3.0, 10.0)
 
+# Fractions of the analytic guess at which AUDIT.md §3.2 measured the shipped secant failing or
+# silently returning a wrong answer: -20 % returned converged=True with 2.7e-9 relative error,
+# -30 % raised ValueError, and -50 % and -80 % walked to negative z and raised a
+# TemperatureRepresentation bounds error from inside _rho_fluid. All four are recorded verbatim in
+# logs/01-equality-solve-characterisation.md §4.1.
+DISPLACED_GUESS_FRACTIONS = (0.8, 0.7, 0.5, 0.2)
+
+# max_z for a model whose tabulated range cannot contain its own matter/radiation equality
+# redshift, which is at z ~ 3.4e3 on these parameters. This is the only way to reach
+# _find_rho_equality's bracketing failure: with the bracket clamped to the tabulated range and
+# both density ratios monotone across it, no displacement of the *guess* can fail any more, which
+# is the point of the change. 100 puts the representation's ceiling at 1.05 * 101 - 1 = 105.05.
+TRUNCATED_MAX_Z = 100.0
+
 
 def species_of(pair: str):
     """The two ``_rho_fluid`` keys ``_find_rho_equality`` is called with."""
@@ -159,6 +173,34 @@ def bracketed_reference(model, pair: str) -> float:
 def ulps_between(got: float, reference: float) -> float:
     """Signed separation of ``got`` from ``reference``, in ulp of the reference."""
     return (float(got) - float(reference)) / np.spacing(abs(float(reference)))
+
+
+def solve_recording_evaluations(model, pair: str, init_z: float):
+    """
+    Call ``_find_rho_equality`` and return ``(root, [every z at which _rho_fluid was evaluated])``.
+
+    ``match_rho`` looks ``self._rho_fluid`` up at call time, so shadowing it on the instance
+    records every evaluation the solve makes -- the guess, both endpoints of every expansion step,
+    and every Brent iterate. That is what makes "the bracket does not leave the tabulated range" a
+    direct assertion about the z values reached rather than a parse of the failure message, which
+    is prose and will be reworded.
+    """
+    A, B = species_of(pair)
+    evaluations = []
+    underlying = model._rho_fluid
+
+    def recording(z: float):
+        evaluations.append(float(z))
+        return underlying(z)
+
+    model._rho_fluid = recording
+    try:
+        root = float(model._find_rho_equality(A, B, init_z=init_z))
+    finally:
+        # remove the instance attribute, exposing the class's own method again
+        del model._rho_fluid
+
+    return root, evaluations
 
 
 class TestRhoEquality(unittest.TestCase):
@@ -361,6 +403,130 @@ class TestRhoEquality(unittest.TestCase):
                     f"{reference!r}, separation = "
                     f"{ulps_between(closed_form, reference):+.3f} ulp, "
                     f"budget = {MATTER_RADIATION_CLOSED_FORM_ULP} ulp",
+                )
+
+    # ------------------------------------------------------------------------------------------
+    # The three tests below are the ones that distinguish the trees. Everything above passes both
+    # before and after the bracketing change, by design; these fail on the tree that ships the
+    # unbracketed secant, and the failure output is quoted in
+    # prompts/background-solver-robustness/logs/02-bracket-the-equality-solve.md.
+    # ------------------------------------------------------------------------------------------
+
+    def test_a_displaced_guess_now_finds_the_root_instead_of_failing(self):
+        """
+        The solve finds the root from a guess that is merely in the right region, which is what
+        "bracketed" buys and what the shipped secant did not have.
+
+        AUDIT.md §3.2 walked the matter/radiation guess down and measured the shipped solve
+        breaking in three different ways within 30 % of the answer: at -20 % it reported
+        converged=True with a root 2.7e-9 relative away -- a silently wrong answer well inside the
+        rtol=1e-4 it asked for -- at -30 % it raised ValueError from a negative argument to a
+        power, and at -50 % and beyond it had iterated to negative z, below the T(z) tabulation's
+        floor, and raised a bounds error from two frames inside _rho_fluid.
+
+        A bracket expanded about the guess and clamped to the tabulated range removes all four
+        cases at once: the residual is monotone across the range its root lives in
+        (test_the_density_ratios_are_monotone_where_their_roots_live above), so the expansion
+        straddles and Brent converges on the same root whatever the guess was.
+        """
+        reference = bracketed_reference(self.qcd, "matter_radiation")
+        z_guess = closed_form_guess(self.qcd, "matter_radiation")
+        for fraction in DISPLACED_GUESS_FRACTIONS:
+            with self.subTest(fraction=fraction):
+                got, _ = solve_recording_evaluations(
+                    self.qcd, "matter_radiation", fraction * z_guess
+                )
+                self.assertLessEqual(
+                    abs(got - reference),
+                    SOLVE_VS_REFERENCE_ULP * np.spacing(abs(reference)),
+                    msg=f"a guess displaced to {fraction:g} x the analytic value "
+                    f"({fraction * z_guess!r}) did not recover the matter/radiation equality "
+                    f"redshift: solve = {got!r}, reference = {reference!r}, separation = "
+                    f"{ulps_between(got, reference):+.3f} ulp, "
+                    f"budget = {SOLVE_VS_REFERENCE_ULP} ulp",
+                )
+
+    def test_a_failure_to_bracket_raises_the_methods_own_error(self):
+        """
+        When there is genuinely no root to find, the error is _find_rho_equality's own and it
+        names the species pair -- not a TemperatureRepresentation bounds error from two frames
+        down.
+
+        This is the guard at the end of the bracket expansion. The old `if not root.converged`
+        guard was dead on every path that actually failed (log 01 §4.1: root.converged was True at
+        every offset that returned at all, and every offset that did not returned raised from
+        inside _rho_fluid), so a constructor that died this way reported a temperature-spline
+        problem to a user whose actual mistake was a cosmology whose equality redshift is outside
+        its own tabulated range. That is exactly the cosmology built here.
+
+        The assertion is on the species names and the method name, never on the whole message,
+        which is prose. What it must *not* contain is asserted separately, because "raises
+        RuntimeError" alone is true on both trees.
+        """
+        with self.assertRaises(RuntimeError) as caught:
+            LambdaCDM_GenericEOS(
+                store_id=12,
+                eos=PureRadiationEOS(self.units, lambdaCDM_gstar(self.params.Neff)),
+                units=self.units,
+                params=self.params,
+                max_z=TRUNCATED_MAX_Z,
+            )
+
+        message = str(caught.exception)
+        print(f"\n  failure to bracket:\n    {message}")
+
+        for expected in ("_find_rho_equality", "matter", "radiation"):
+            self.assertIn(
+                expected,
+                message,
+                msg=f"a failure to bracket the equality redshift must name {expected!r}; the "
+                f"message was: {message}",
+            )
+        self.assertNotIn(
+            "TemperatureRepresentation",
+            message,
+            msg="a failure to bracket the equality redshift is being reported as a temperature "
+            "representation bounds error, which means the solve reached _rho_fluid outside the "
+            f"tabulated range instead of stopping at it. The message was: {message}",
+        )
+
+    def test_the_bracket_does_not_leave_the_tabulated_range(self):
+        """
+        Every z at which the solve evaluates _rho_fluid is inside the T(z) representation's own
+        tabulated range, for guesses displaced far below and far above the root.
+
+        This is the direct statement of the defect the bracket removes. The shipped secant, handed
+        a guess 50 % low, iterated to z = -0.25719 and then to z = -0.38344 -- below the
+        representation's floor of z = -0.24 -- and the only reason that was visible at all is that
+        the representation rejects out-of-range arguments. Asserting it on the *arguments* rather
+        than on the exception is what makes this test independent of what the representation
+        chooses to do when it is asked out of range.
+        """
+        z_floor = self.qcd._T_z_spline._min_z
+        z_ceil = self.qcd._T_z_spline._max_z
+        z_guess = closed_form_guess(self.qcd, "matter_radiation")
+
+        # 1 % of the analytic guess is far enough below the root that the expansion reaches the
+        # floor before it straddles, so the clamp is exercised rather than merely present; 10x the
+        # tabulated ceiling exercises the clamp applied to the guess itself.
+        for init_z in (0.01 * z_guess, 10.0 * z_ceil):
+            with self.subTest(init_z=init_z):
+                _, evaluations = solve_recording_evaluations(
+                    self.qcd, "matter_radiation", init_z
+                )
+                self.assertGreaterEqual(
+                    min(evaluations),
+                    z_floor,
+                    msg=f"from init_z={init_z!r} the solve evaluated _rho_fluid at "
+                    f"z={min(evaluations)!r}, below the tabulated floor z={z_floor!r}; the "
+                    "bracket has left the range the representation is defined on",
+                )
+                self.assertLessEqual(
+                    max(evaluations),
+                    z_ceil,
+                    msg=f"from init_z={init_z!r} the solve evaluated _rho_fluid at "
+                    f"z={max(evaluations)!r}, above the tabulated ceiling z={z_ceil!r}; the "
+                    "bracket has left the range the representation is defined on",
                 )
 
 

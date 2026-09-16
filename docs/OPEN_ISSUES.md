@@ -400,7 +400,8 @@ waits on a prompt that has the right files in scope; the board holds the measure
 ### 1.8 The background solver robustness campaign
 
 Planned as [`prompts/background-solver-robustness/`](../prompts/background-solver-robustness/README.md)
-(2026-09-16 at `f023eb8`; **eight prompts in four workstreams, prompt 01 executed 2026-09-16**;
+(2026-09-16 at `f023eb8`; **eight prompts in four workstreams, prompts 01 and 02 executed
+2026-09-16, so workstream A is complete**;
 workstream D, two of the eight, is gated on that campaign's README §7 D3). It implements
 [`AUDIT.md`](../prompts/background-solver-robustness/AUDIT.md), which measured that
 `LambdaCDM_GenericEOS._find_rho_equality` is an **unbracketed secant** at `xtol=1e-6, rtol=1e-4` —
@@ -414,6 +415,16 @@ guard, and provenance `docs/TOLERANCE-PROVENANCE.md` can state — which is why
 [`AUDIT.md`](../prompts/background-solver-robustness/AUDIT.md) §7 wants it to land **before**
 `prompts/tolerance-convergence` prompt 02 runs, and that campaign has not started.
 
+**Prompt 02 shipped that fix on 2026-09-16** and closed `[00-equality-solve-is-unbracketed-and-loose]`
+on that board's §4: a $\sqrt2$ geometric bracket in $1+z$, clamped to the $T(z)$ representation's
+own bounds at both ends and at the guess, then Brent at `xtol=1e-300, rtol=8.9e-16` — Brent's own
+$4\varepsilon$ floor, and **not** the campaign's original `rtol=1e-14`, which was measured to stop
+7 ulp from the independent reference because the residual is a cancellation between two densities
+of order $10^{112}$ whose sign change spans several floats (the user amended that campaign's
+README §7 **D1** on the measurement). The two matter–radiation roots moved **+3 and +1 ulp, onto**
+the reference; the two matter–$\Lambda$ roots are bit-identical; both printed banner lines are
+unchanged; `T_Z_REPRESENTATION_VERSION` stays 6.
+
 [`RECONCILIATION.md`](../prompts/background-solver-robustness/RECONCILIATION.md) scores the audit
 against the tree at `f023eb8`: **every figure reproduces to the digit**, and one conclusion does
 not. Audit §2.1's *"the blast radius of this solve is two banner lines"* is true of the **solve**
@@ -422,11 +433,16 @@ closed forms and forces them into the production source grid, whose content dige
 `BackgroundModel` lookup-key column, so on `QCD_Cosmology` they are production sample locations
 inside a datastore identity.
 
+**Opened by prompt 02 (2026-09-16):**
+
+| Issue | Board | Hook |
+|---|---|---|
+| `[02-bracketed-reference-is-not-the-exact-root]` | background-solver-robustness | README §3.1 makes the bracketed `brentq` reference "the anchor every measurement is scored against", and on the one pair where an exact oracle exists the anchor is the less accurate of the two. `match_rho` for matter = $\Lambda$ is exactly $\rho_{m0}(1+z)^3-\rho_\Lambda$, so the root follows in closed form from the model's own floats: at 60 digits it is `0.303423032996407410561312801228`. The closed form and the solve give `0.30342303299640738` (**−0.506 ulp, the nearest double**); `bracketed_reference` gives `0.30342303299640749` (**+1.494 ulp, the second-nearest, on the wrong side**). So `LAMBDA_CLOSED_FORM_ULP = 2` measures the reference's own error and the "−2.0 ulp" both logs report for that pair is the anchor, not the solve. Harmless — every assertion passes and the shipped answer is the better of the two — but three more prompts score in ulp against this anchor. **Next step:** prompt 03 reads it before scoring the three closed-form sites; re-wording README §3.1 around an exact oracle is a planning question and the user's, since it would change what prompt 01's tests assert. |
+
 **Opened by the planning commit:**
 
 | Issue | Board | Hook |
 |---|---|---|
-| `[00-equality-solve-is-unbracketed-and-loose]` | background-solver-robustness | The audit's subject. `_find_rho_equality:1013` is `root_scalar(match_rho, x0=init_z, xtol=1e-6, rtol=1e-4)`: unbracketed, an *absolute* `xtol` in $z$ serving two roots four decades apart ($z\sim3.4\times10^3$ and $z\sim0.3$), a `rtol` that would permit $\pm0.34$ and never binds, and a `converged` guard that is dead on every path that actually fails. Correct today only because $g_*$ is flat at $z_{\rm eq}$, so $1+z=\Omega_m/\Omega_r$ is the closed solution and the caller passes it. Both roots are trivially bracketable (audit §4.1, monotonicity measured). **Next step:** prompt 02. |
 | `[00-equality-redshift-closed-form-is-duplicated-three-times]` | background-solver-robustness | $1+z_{\rm eq}=\Omega_m/\Omega_r$ is computed at `LambdaCDM_GenericEOS.py:501-506` (a solver guess feeding two prints), `LambdaCDM/LambdaCDM.py:73-74` (two prints) and `main.py:549-551` — and the third becomes `feature_z`, is forced into the source grid at `CosmologyConcepts/wavenumber.py:350`, and enters a `BackgroundModel` lookup key via the grid digest. Unifying them, which is what audit §6 observation 2 gestures at, would invalidate every stored object of eight types if it moved either value by one ulp. `main.py:522-528` records the duplication as `qcd-background-audit` prompt 11's deliberate, scoped choice. **Next step:** prompt 03 measures and prices three options; the decision is that campaign's README §7 **D2** and the user's. |
 | `[00-main-py-equality-agreement-figure-is-stale]` | background-solver-robustness | `main.py:525-527` claims the closed form agrees with the model's root solve "to 4e-13 relative in z on `QCD_Cosmology` at production parameters". Measured at `f023eb8`: **−9.34e-16** and **−3.66e-16** against an independent `brentq` at Brent's $4\varepsilon$ floor — three orders tighter. Harmless (a safe over-estimate arguing "far below a grid interval"), but an unverified figure justifying a production grid choice. **Next step:** prompt 03 re-takes it against the corrected solve. |
 | `[01-agreement-threshold-comment-predates-the-representation]` | background-solver-robustness | `CosmologyModels/tests/test_wPerturbations.py:34-41` describes the $T(z)$ inversion as a "500-point spline" and quotes ~1.3e-9 and ~4e-7 to justify `AGREEMENT_RTOL = 1.0e-8`; since `qcd-background-audit` prompts 05 and 06 the representation is a **segmented entropy factor at 3,000 nodes of order 5** and what is tabulated is not $T$. Every assertion still passes and the threshold is a ceiling. Same class as `[10-transfer-remedial-tolerance-comments-stale]`. **Measured by prompt 01** at `3e820eb`, on exactly what `test_agrees_with_LambdaCDM` compares: worst **8.8818e-16** at `max_z = 1e4` and **6.6613e-16** at `max_z = 1e20` — seven to nine orders tighter than the quoted figures, with the `max_z` dependence gone entirely, because on a constant-$g_*$ equation of state the tabulated entropy factor is exactly constant. **Next step:** prompt 08 rewrites the comment if workstream D is authorised. |
