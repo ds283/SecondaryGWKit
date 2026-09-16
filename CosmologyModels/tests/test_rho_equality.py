@@ -39,6 +39,8 @@ that anything changed at all.
 No Ray and no datastore is needed.
 """
 
+import builtins
+import math
 import unittest
 from math import pow
 
@@ -47,7 +49,7 @@ from scipy.optimize import brentq
 
 from CosmologyModels.GenericEOS.LambdaCDM_GenericEOS import LambdaCDM_GenericEOS
 from CosmologyModels.GenericEOS.QCD_Cosmology import QCD_Cosmology
-from CosmologyModels.LambdaCDM import Planck2018
+from CosmologyModels.LambdaCDM import LambdaCDM, Planck2018
 from CosmologyModels.tests.test_wPerturbations import PureRadiationEOS, lambdaCDM_gstar
 from Units import Mpc_units
 
@@ -127,6 +129,58 @@ def closed_form_guess(model, pair: str) -> float:
     if pair == "matter_radiation":
         return model.omega_m / model.omega_r - 1.0
     return pow(model.omega_cc / model.omega_m, 1.0 / 3.0) - 1.0
+
+
+# ----------------------------------------------------------------------------------------------
+# The three sites at which 1 + z_eq = omega_m/omega_r and 1 + z_Lambda = (omega_cc/omega_m)^(1/3)
+# are computed, each transcribed exactly as it is written in its own file -- including which
+# ``pow`` is in scope there, which is the only way the three could differ at all:
+#
+#   main.py:553, :555                    builtin ``pow``  (main.py does ``from math import sqrt``)
+#     -- inside cosmology_feature_redshifts; :549/:551 before prompt 03 corrected the docstring
+#        four lines above them, so a citation of :549 in an older document means these
+#   LambdaCDM_GenericEOS.py:502, :507    builtin ``pow``  (that module imports exp, sqrt, log,
+#                                                          log1p and expm1 from math -- not pow)
+#   LambdaCDM.py:73, :74                 ``math.pow``     (``from math import sqrt, pow``)
+#
+# ``test_the_three_closed_form_sites_agree`` below is the guard that makes it safe to leave all
+# three in place, which is what README §7 D2 option (i) of
+# prompts/background-solver-robustness/ recommends: an edit to any one of them announces itself.
+# ``main.py`` is deliberately NOT imported -- CLAUDE.md says it cannot be, since it parses
+# sys.argv and opens a Ray connection at module scope -- so its expression is mirrored here and
+# the comment above is what ties the mirror to the original.
+# ----------------------------------------------------------------------------------------------
+
+
+def main_py_closed_form(cosmology, pair: str) -> float:
+    """``main.py:548-555``'s expression, written the same way it is written there."""
+    omega_m = getattr(cosmology, "omega_m", None)
+    omega_r = getattr(cosmology, "omega_r", None)
+    omega_cc = getattr(cosmology, "omega_cc", None)
+    if pair == "matter_radiation":
+        return float(omega_m / omega_r - 1.0)
+    return float(builtins.pow(omega_cc / omega_m, 1.0 / 3.0) - 1.0)
+
+
+def generic_eos_closed_form(model, pair: str) -> float:
+    """``LambdaCDM_GenericEOS.__init__:501-508``'s initial guess, as written there."""
+    if pair == "matter_radiation":
+        return model.omega_m / model.omega_r - 1.0
+    return builtins.pow(model.omega_cc / model.omega_m, 1.0 / 3.0) - 1.0
+
+
+def lambdaCDM_closed_form(model, pair: str) -> float:
+    """``LambdaCDM.__init__:73-74``'s diagnostic, as written there."""
+    if pair == "matter_radiation":
+        return model.omega_m / model.omega_r - 1.0
+    return math.pow(model.omega_cc / model.omega_m, 1.0 / 3.0) - 1.0
+
+
+CLOSED_FORM_SITES = (
+    ("main.py:553/:555", main_py_closed_form),
+    ("LambdaCDM_GenericEOS.py:502/:507", generic_eos_closed_form),
+    ("LambdaCDM.py:73/:74", lambdaCDM_closed_form),
+)
 
 
 def match_rho(model, pair: str):
@@ -235,6 +289,12 @@ class TestRhoEquality(unittest.TestCase):
             ("QCD_Cosmology", cls.qcd),
             ("pure-radiation stand-in", cls.radiation),
         )
+
+        # LambdaCDM carries the third closed-form site (LambdaCDM.py:73-74) and is the model that
+        # site actually runs on. It has no equation of state, no _rho_fluid and no
+        # _find_rho_equality, so it can be scored for site agreement but not against a bracketed
+        # reference; test_the_three_closed_form_sites_agree says so where it uses it.
+        cls.lambdaCDM = LambdaCDM(store_id=13, units=cls.units, params=cls.params)
 
     def test_equality_redshifts_match_a_bracketed_reference(self):
         """
@@ -404,6 +464,79 @@ class TestRhoEquality(unittest.TestCase):
                     f"{ulps_between(closed_form, reference):+.3f} ulp, "
                     f"budget = {MATTER_RADIATION_CLOSED_FORM_ULP} ulp",
                 )
+
+    def test_the_three_closed_form_sites_agree(self):
+        """
+        The three sites that compute the two equality redshifts produce the *same float*, and each
+        is the root to within the closed form's measured budget.
+
+        WHY THIS TEST EXISTS, WHICH IS NOT "THE NUMBERS ARE INTERESTING". The closed forms are
+        written out three times, in three packages
+        (``[00-equality-redshift-closed-form-is-duplicated-three-times]``), and **the third copy
+        is load-bearing**: ``main.py:553``/``:555`` becomes ``feature_z``, which
+        ``CosmologyConcepts/wavenumber.py:350`` forces into the production source grid, whose
+        content digest is a ``BackgroundModel`` lookup-key column
+        (``Datastore/SQL/ObjectFactories/BackgroundModel.py:182``, ``:225``, ``:251``). A one-ulp
+        move at that site therefore moves a grid sample, moves the digest, and invalidates every
+        stored object of eight types -- measured: replacing the closed form there with the solve's
+        answer, 7 ulp away, takes the QCD source-grid digest from ``a2c32f67`` to ``4849552b``
+        with the sample count unchanged at 1,996.
+
+        Leaving the duplication in place is the recommendation, and this test is what makes that
+        safe: it is the thing that notices when the three stop agreeing. The only way they *can*
+        disagree is the ``pow`` each file has in scope -- ``math.pow`` in ``LambdaCDM.py``, the
+        builtin in the other two -- and the two agree bit for bit on these arguments today.
+        (``closed_form_guess`` above reaches ``math.pow`` through this module's own
+        ``from math import pow``, which is why it is a faithful stand-in for ``__init__``'s
+        builtin one; this test is also the statement of that.)
+
+        The budgets are the module's own measured constants, **not** the "within 2 ulp" of the
+        prompt: the matter-radiation closed form is 7 ulp from the reference on ``QCD_Cosmology``,
+        which is the -9.34e-16 that ``RECONCILIATION.md`` §6 reports, so 2 ulp is arithmetically
+        unreachable there (board standing note 7).
+        """
+        print("\n  the three closed-form sites (17 digits):")
+        for label, model in self.models + (("LambdaCDM(Planck2018)", self.lambdaCDM),):
+            for pair, budget in (
+                ("matter_radiation", MATTER_RADIATION_CLOSED_FORM_ULP),
+                ("matter_lambda", LAMBDA_CLOSED_FORM_ULP),
+            ):
+                with self.subTest(model=label, pair=pair):
+                    values = {
+                        name: float(site(model, pair))
+                        for name, site in CLOSED_FORM_SITES
+                    }
+                    for name, value in values.items():
+                        print(f"    {label:>24} {pair:>17} {name:>34}: {value!r}")
+
+                    distinct = set(values.values())
+                    self.assertEqual(
+                        len(distinct),
+                        1,
+                        msg=f"{label}, {pair}: the three closed-form sites no longer produce the "
+                        f"same float -- "
+                        + ", ".join(f"{n} = {v!r}" for n, v in values.items())
+                        + ". main.py:553/:555 is a production sample location inside the "
+                        "BackgroundModel lookup key, so a site that has drifted from the others "
+                        "either has moved the source grid or is about to.",
+                    )
+
+                    if not hasattr(model, "_rho_fluid"):
+                        # LambdaCDM has no equation of state and no residual to bracket, so there
+                        # is no reference to score against; the agreement above is the whole test
+                        # for it.
+                        continue
+
+                    reference = bracketed_reference(model, pair)
+                    for name, value in values.items():
+                        self.assertLessEqual(
+                            abs(value - reference),
+                            budget * np.spacing(abs(reference)),
+                            msg=f"{label}, {pair}, {name}: the closed form {value!r} is no "
+                            f"longer the equality redshift to within its measured budget; "
+                            f"bracketed reference = {reference!r}, separation = "
+                            f"{ulps_between(value, reference):+.3f} ulp, budget = {budget} ulp",
+                        )
 
     # ------------------------------------------------------------------------------------------
     # The three tests below are the ones that distinguish the trees. Everything above passes both

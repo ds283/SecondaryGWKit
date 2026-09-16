@@ -522,10 +522,14 @@ def cosmology_feature_redshifts(cosmology, z_end: float, z_init: float):
     ``feature_z`` are matter-radiation and matter-Lambda equality, recomputed here from the
     public ``omega_m`` / ``omega_r`` / ``omega_cc`` rather than imported from the model, which
     computes them in its constructor and discards them (``LambdaCDM.py:73``,
-    ``LambdaCDM_GenericEOS.py:483``) -- and which prompt 11 may not modify. The closed form
-    agrees with ``LambdaCDM_GenericEOS``'s own root solve to 4e-13 relative in z on
-    ``QCD_Cosmology`` at production parameters, which is far below a grid interval; the samples
-    are markers of an epoch, not a claim about where equality is.
+    ``LambdaCDM_GenericEOS.py:483``) -- and which prompt 11 may not modify. Measured at 921f41c
+    on ``QCD_Cosmology`` at production parameters, the closed form agrees with
+    ``LambdaCDM_GenericEOS``'s own (now bracketed) root solve to **-9.3e-16 relative in z**, i.e.
+    7 ulp, at matter-radiation equality and to **the same float** at matter-Lambda equality,
+    where neither side sees T(z) at all; the 4e-13 this sentence used to quote was never wrong,
+    only unverified -- a safe over-estimate, cited only to make the "far below a grid interval"
+    argument that the measured figures make three orders more comfortably. The samples are
+    markers of an epoch, not a claim about where equality is.
 
     **``feature_z`` is empty when ``break_z`` is.** A cosmology that declares no non-smoothness
     takes the unchanged code path entirely and gets the grid it has always had, element for

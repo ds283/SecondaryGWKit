@@ -400,8 +400,8 @@ waits on a prompt that has the right files in scope; the board holds the measure
 ### 1.8 The background solver robustness campaign
 
 Planned as [`prompts/background-solver-robustness/`](../prompts/background-solver-robustness/README.md)
-(2026-09-16 at `f023eb8`; **eight prompts in four workstreams, prompts 01 and 02 executed
-2026-09-16, so workstream A is complete**;
+(2026-09-16 at `f023eb8`; **eight prompts in four workstreams, prompts 01, 02 and 03 executed
+2026-09-16, so workstream A is complete and workstream B is under way**;
 workstream D, two of the eight, is gated on that campaign's README §7 D3). It implements
 [`AUDIT.md`](../prompts/background-solver-robustness/AUDIT.md), which measured that
 `LambdaCDM_GenericEOS._find_rho_equality` is an **unbracketed secant** at `xtol=1e-6, rtol=1e-4` —
@@ -428,10 +428,21 @@ unchanged; `T_Z_REPRESENTATION_VERSION` stays 6.
 [`RECONCILIATION.md`](../prompts/background-solver-robustness/RECONCILIATION.md) scores the audit
 against the tree at `f023eb8`: **every figure reproduces to the digit**, and one conclusion does
 not. Audit §2.1's *"the blast radius of this solve is two banner lines"* is true of the **solve**
-and false of the **quantity** — `main.py:549-551` recomputes both equality redshifts from the same
-closed forms and forces them into the production source grid, whose content digest is a
-`BackgroundModel` lookup-key column, so on `QCD_Cosmology` they are production sample locations
-inside a datastore identity.
+and false of the **quantity** — `main.py:553-555` (`:549-551` before prompt 03) recomputes both
+equality redshifts from the same closed forms and forces them into the production source grid,
+whose content digest is a `BackgroundModel` lookup-key column, so on `QCD_Cosmology` they are
+production sample locations inside a datastore identity.
+
+**Prompt 03 wrote that down on 2026-09-16**, changing no production behaviour: one docstring
+sentence in `main.py` and one new test. It measured the **three closed-form sites identical bit for
+bit** on `QCD_Cosmology`, the pure-radiation stand-in and `LambdaCDM(Planck2018)`, on both pairs,
+despite `LambdaCDM.py` reaching `math.pow` where the other two get the builtin; the production
+source-grid digests are `a2c32f67` (QCD, 1,996 samples) and `60a3205a` (LambdaCDM, 1,778),
+**identical at `7fdc49b`, `921f41c` and prompt 03's commit**; and README §7 **D2** option (iii) is
+priced at a single measured number — substituting the solve's answer for the closed form in
+`feature_z` takes the QCD digest to `4849552b` on a 7-ulp move in one sample of 1,996, invalidating
+eight stored object types. The recommendation is **(i) leave all three and keep the new test as the
+guard**, and the decision is the user's.
 
 **Opened by prompt 02 (2026-09-16):**
 
@@ -439,12 +450,17 @@ inside a datastore identity.
 |---|---|---|
 | `[02-bracketed-reference-is-not-the-exact-root]` | background-solver-robustness | README §3.1 makes the bracketed `brentq` reference "the anchor every measurement is scored against", and on the one pair where an exact oracle exists the anchor is the less accurate of the two. `match_rho` for matter = $\Lambda$ is exactly $\rho_{m0}(1+z)^3-\rho_\Lambda$, so the root follows in closed form from the model's own floats: at 60 digits it is `0.303423032996407410561312801228`. The closed form and the solve give `0.30342303299640738` (**−0.506 ulp, the nearest double**); `bracketed_reference` gives `0.30342303299640749` (**+1.494 ulp, the second-nearest, on the wrong side**). So `LAMBDA_CLOSED_FORM_ULP = 2` measures the reference's own error and the "−2.0 ulp" both logs report for that pair is the anchor, not the solve. Harmless — every assertion passes and the shipped answer is the better of the two — but three more prompts score in ulp against this anchor. **Next step:** prompt 03 reads it before scoring the three closed-form sites; re-wording README §3.1 around an exact oracle is a planning question and the user's, since it would change what prompt 01's tests assert. |
 
+**Opened by prompt 03 (2026-09-16):**
+
+| Issue | Board | Hook |
+|---|---|---|
+| `[03-main-py-cites-a-stale-line-for-the-equality-solve]` | background-solver-robustness | `main.py:524-525`'s docstring cites ``LambdaCDM_GenericEOS.py:483`` as where the model computes and discards the two equality redshifts; the constructor's two `_find_rho_equality` calls are at `:501-508` and `:483` is now inside the break-point-crossing cache assignment. The companion citation ``LambdaCDM.py:73`` is still correct. Harmless — it is a pointer in prose, nothing parses it — but it sends a reader of the one docstring that justifies a production grid choice to the wrong method. Prompt 03 was permitted **one** docstring sentence (`:525-527`) and this citation is in the sentence before it, so it was left. **Next step:** one line, in whichever prompt next has `main.py` in scope. |
+
 **Opened by the planning commit:**
 
 | Issue | Board | Hook |
 |---|---|---|
-| `[00-equality-redshift-closed-form-is-duplicated-three-times]` | background-solver-robustness | $1+z_{\rm eq}=\Omega_m/\Omega_r$ is computed at `LambdaCDM_GenericEOS.py:501-506` (a solver guess feeding two prints), `LambdaCDM/LambdaCDM.py:73-74` (two prints) and `main.py:549-551` — and the third becomes `feature_z`, is forced into the source grid at `CosmologyConcepts/wavenumber.py:350`, and enters a `BackgroundModel` lookup key via the grid digest. Unifying them, which is what audit §6 observation 2 gestures at, would invalidate every stored object of eight types if it moved either value by one ulp. `main.py:522-528` records the duplication as `qcd-background-audit` prompt 11's deliberate, scoped choice. **Next step:** prompt 03 measures and prices three options; the decision is that campaign's README §7 **D2** and the user's. |
-| `[00-main-py-equality-agreement-figure-is-stale]` | background-solver-robustness | `main.py:525-527` claims the closed form agrees with the model's root solve "to 4e-13 relative in z on `QCD_Cosmology` at production parameters". Measured at `f023eb8`: **−9.34e-16** and **−3.66e-16** against an independent `brentq` at Brent's $4\varepsilon$ floor — three orders tighter. Harmless (a safe over-estimate arguing "far below a grid interval"), but an unverified figure justifying a production grid choice. **Next step:** prompt 03 re-takes it against the corrected solve. |
+| `[00-equality-redshift-closed-form-is-duplicated-three-times]` | background-solver-robustness | $1+z_{\rm eq}=\Omega_m/\Omega_r$ and $1+z_\Lambda=(\Omega_\Lambda/\Omega_m)^{1/3}$ are computed at `LambdaCDM_GenericEOS.py:502`/`:507` (a solver guess feeding two prints), `LambdaCDM/LambdaCDM.py:73-74` (two prints) and `main.py:553`/`:555` (`:549`/`:551` before prompt 03) — and the third becomes `feature_z`, is forced into the source grid at `CosmologyConcepts/wavenumber.py:408-413`, and enters a `BackgroundModel` lookup key via the grid digest. `main.py:522-532` records the duplication as `qcd-background-audit` prompt 11's deliberate, scoped choice. **Narrowed by prompt 03 (2026-09-16), measured and priced:** the three sites are the **same float** on `QCD_Cosmology`, the pure-radiation stand-in and `LambdaCDM(Planck2018)`, on both pairs, although `LambdaCDM.py` uses `math.pow` where the other two use the builtin; the closed form and the corrected solve differ by **7 ulp** (QCD, matter–radiation), **1 ulp** (stand-in) and **not at all** at matter–$\Lambda$. Option (i) leave all three, cost **zero**, now guarded by `CosmologyModels/tests/test_rho_equality.test_the_three_closed_form_sites_agree`, which a one-ulp edit at any site fails on all three models; option (ii) unify on the closed form, safe only while the spellings agree bit for bit and it makes `main.py` import a cosmology model; option (iii) unify on the solve, **measured** to take the QCD production grid digest `a2c32f67` → `4849552b` and invalidate eight stored object types. **Recommendation (i).** **Next step:** the decision is that campaign's README §7 **D2** and the user's; **nothing may unify them on an agent's judgement.** |
 | `[01-agreement-threshold-comment-predates-the-representation]` | background-solver-robustness | `CosmologyModels/tests/test_wPerturbations.py:34-41` describes the $T(z)$ inversion as a "500-point spline" and quotes ~1.3e-9 and ~4e-7 to justify `AGREEMENT_RTOL = 1.0e-8`; since `qcd-background-audit` prompts 05 and 06 the representation is a **segmented entropy factor at 3,000 nodes of order 5** and what is tabulated is not $T$. Every assertion still passes and the threshold is a ceiling. Same class as `[10-transfer-remedial-tolerance-comments-stale]`. **Measured by prompt 01** at `3e820eb`, on exactly what `test_agrees_with_LambdaCDM` compares: worst **8.8818e-16** at `max_z = 1e4` and **6.6613e-16** at `max_z = 1e20` — seven to nine orders tighter than the quoted figures, with the `max_z` dependence gone entirely, because on a constant-$g_*$ equation of state the tabulated entropy factor is exactly constant. **Next step:** prompt 08 rewrites the comment if workstream D is authorised. |
 
 **Adopted from `qcd-background-audit`** — each named "whichever prompt next has these files in

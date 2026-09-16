@@ -7,7 +7,8 @@
 **Baseline commit:** `f023eb8` — suites green and re-run at planning time:
 `CosmologyModels` **30**, `ComputeTargets` **447**
 **Target branch:** `background-solver-robustness`, cut from `f023eb8` (README §4)
-**Last updated:** 2026-09-16 · **Status: workstream A complete — prompts 01 and 02 done.**
+**Last updated:** 2026-09-16 · **Status: workstream A complete; workstream B under way — prompts
+01, 02 and 03 done.**
 
 > **The impact is zero change to any computed quantity, and that is the point.** `AUDIT.md` §5 and
 > README §0.2 are the campaign's framing: the two redshifts `_find_rho_equality` produces are
@@ -37,7 +38,7 @@
 |---|---|---|---|---|---|---|---|
 | 01 | [Equality-solve characterisation test](01-equality-solve-characterisation.md) | A | README §2 (a), (d) | Opus | ⚠️ | *"Characterise the equality solve before bracketing it"* (SHA not embedded, per the campaign convention) | [`logs/01-equality-solve-characterisation.md`](logs/01-equality-solve-characterisation.md) |
 | 02 | [Bracket the equality solve](02-bracket-the-equality-solve.md) | A | README §2 (b), (c), (e); audit §4.2 | Opus | ⚠️ | *"Bracket the equality solve and make its guard reachable"* (SHA not embedded, per the campaign convention) | [`logs/02-bracket-the-equality-solve.md`](logs/02-bracket-the-equality-solve.md) |
-| 03 | [What the equality redshifts feed](03-equality-redshift-consumers.md) | B | README §2 (f); §7 D2 | Opus | ⬜ | | |
+| 03 | [What the equality redshifts feed](03-equality-redshift-consumers.md) | B | README §2 (f); §7 D2 | Opus | ⚠️ | *"Write down what the equality redshifts actually feed"* (SHA not embedded, per the campaign convention) | [`logs/03-equality-redshift-consumers.md`](logs/03-equality-redshift-consumers.md) |
 | 04 | [Relocate the crossing probe](04-relocate-the-crossing-probe.md) | B | README §2 (g) | Sonnet | ⬜ | | |
 | 05 | [Hoist the range logic](05-hoist-the-range-logic.md) | C | README §2 (h); §7 D4 | Opus | ⬜ | | |
 | 06 | [Provenance and close-out](06-provenance-and-close-out.md) | C | README §2 (i); §0.4 | Opus | ⬜ | | |
@@ -67,7 +68,7 @@ decades apart and nothing about one of them predicts the other.
 | (c) | **FIX** | A failure to bracket raises `_find_rho_equality`'s own `RuntimeError` naming the species pair and the range searched — not a `ValueError` and not a `TemperatureRepresentation` bounds error from two frames down | 02 | ✅ |
 | (d) | **MEASUREMENT** | The monotonicity the bracket rests on is a standing test, not a paragraph in an audit: $\rho_m/\rho_r$ strictly decreasing on $z\in[33,3.4\times10^5]$, $\rho_m/\rho_\Lambda$ strictly increasing on $z\in[0,10]$ | 01 | ✅ |
 | (e) | **DISCIPLINE** | Every behaviour-change assertion is shown **failing on `HEAD~1`**, with the output quoted in the log | 02 | ✅ |
-| (f) | **MEASUREMENT** | What the equality redshifts actually feed, written down: three closed-form sites scored against each other and against the corrected solve on three models, the chain from `feature_z` to the `BackgroundModel` lookup key, and `main.py:526`'s stale 4e-13 corrected | 03 | ⬜ |
+| (f) | **MEASUREMENT** | What the equality redshifts actually feed, written down: three closed-form sites scored against each other and against the corrected solve on three models — ~~`RadiationModel`~~ **the pure-radiation stand-in, `RadiationModel` exposing no $\Omega$s at all (log 03, D1)** — the chain from `feature_z` to the `BackgroundModel` lookup key, and `main.py:526`'s stale 4e-13 corrected | 03 | ✅ |
 | (g) | **HYGIENE** | `_temperature_crossing_log1pz` is test machinery in the test tree, with its docstring and its `xtol=1e-15, rtol=1e-15` carried across unchanged | 04 | ⬜ |
 | (h) | **MEASUREMENT** | The four loop-invariant `_outward` bounds hoisted in all three classes, **bit-identical** returns and character-identical messages demonstrated, and the `T_photon` cost row closed at ≤ 2.5 µs or escalated to the user | 05 | ⬜ |
 | (i) | **PROVENANCE** | An entry for **all three** `root_scalar` sites in `LambdaCDM_GenericEOS.py` — value, method, what it sets, call count, choosing measurement **and its commit**, competing floor, cost, citation — in the shape `docs/TOLERANCE-PROVENANCE.md` will want | 06 | ⬜ |
@@ -78,6 +79,20 @@ decades apart and nothing about one of them predicts the other.
 
 Issues opened here must be added to [`docs/OPEN_ISSUES.md`](../../docs/OPEN_ISSUES.md) **in the
 same commit** (`CLAUDE.md`), with the count corrected.
+
+Opened by **prompt 03** (2026-09-16):
+
+- **[03-main-py-cites-a-stale-line-for-the-equality-solve]** *(prompt 03; no prompt assigned)* —
+  `main.py:524-525`'s docstring says the two equality redshifts are computed and discarded by the
+  model's constructor and cites ``LambdaCDM.py:73`` and ``LambdaCDM_GenericEOS.py:483``. The first
+  is right; the second is not. The constructor's two `_find_rho_equality` calls are at
+  **`:501-508`**, and `:483` is now inside the `_break_point_crossings_log1pz` cache assignment,
+  eighteen lines above them.
+  **Impact:** none mechanically — it is a pointer in prose and nothing parses it — but it is in the
+  one docstring that justifies a production grid choice, and it sends a reader looking for the
+  solve to the wrong method. Prompt 03's file list permits **one** docstring sentence, `:525-527`,
+  and this citation is in the sentence before it; fixing it would have been out of scope
+  (README §5 rule 5). **Next step:** one line, in whichever prompt next has `main.py` in scope.
 
 Opened by **prompt 02** (2026-09-16):
 
@@ -118,18 +133,22 @@ Opened by the **2026-09-16 planning commit**:
   gestures at, would move a grid sample if it moved either value by one ulp, and invalidate every
   stored object of the eight types `qcd-background-audit` log 11 §5 prices. `main.py:522-528`
   records the duplication as a deliberate, scoped choice by that campaign's prompt 11.
-  **Next step:** prompt 03 measures the three sites against each other and prices the three
-  options; README §7 **D2** is the user's decision. **Nothing may unify them on an agent's
-  judgement.**
-
-- **[00-main-py-equality-agreement-figure-is-stale]** *(planning; assigned to prompt 03)* —
-  `main.py:525-527` claims the closed form agrees with the model's root solve *"to 4e-13 relative
-  in z on `QCD_Cosmology` at production parameters"*. Measured at `f023eb8`
-  (`RECONCILIATION.md` §6): **−9.34e-16** (matter = radiation) and **−3.66e-16** (matter = $\Lambda$)
-  against an independent `brentq` at `xtol=1e-300, rtol=8.9e-16` — three orders tighter.
-  **Impact:** none. It is a safe over-estimate used only to argue "far below a grid interval". It is
-  an unverified figure in a docstring justifying a production grid choice. **Next step:** prompt 03
-  re-takes it against the corrected solve and corrects the sentence.
+  **Narrowed by prompt 03 (2026-09-16), measured and priced — it does not close.** The three sites
+  are the **same float** on `QCD_Cosmology`, the pure-radiation stand-in and `LambdaCDM(Planck2018)`,
+  on both pairs, although `LambdaCDM.py` reaches `math.pow` through `from math import sqrt, pow`
+  where the other two get the builtin; the closed form and the corrected solve differ by **7 ulp**
+  (QCD, matter–radiation), **1 ulp** (stand-in) and **not at all** at matter–$\Lambda$ on either
+  model. The three options, priced (log 03 §3 item 3): **(i)** leave all three — **cost zero**, and
+  now guarded by `CosmologyModels/tests/test_rho_equality.test_the_three_closed_form_sites_agree`,
+  which a one-ulp edit at any site fails on all three models; **(ii)** unify on the closed form —
+  safe only while the spellings agree bit for bit, which is measured but not guaranteed by the
+  language, and it makes `main.py` import a cosmology model, the coupling prompt 11 avoided;
+  **(iii)** unify on the solve — **measured** to take the `QCD_Cosmology` production grid digest
+  from `a2c32f67` to `4849552b` on a 7-ulp move in one sample of 1,996, invalidating every stored
+  object of the eight types log 11 §5 prices. **The campaign's recommendation is (i).**
+  **Next step:** README §7 **D2** is the user's decision. **Nothing may unify them on an agent's
+  judgement.** Line numbers re-anchored by prompt 03: the sites are `LambdaCDM_GenericEOS.py:502`
+  and `:507`, `LambdaCDM.py:73-74`, and `main.py:553` and `:555`.
 
 Also opened by the planning commit, found while reconciling (`RECONCILIATION.md` §9.3) and
 **measured by prompt 01**, which has the file open for another reason:
@@ -187,6 +206,28 @@ deleted from `docs/OPEN_ISSUES.md`.
 ---
 
 ## 4. Resolved issues
+
+- **[00-main-py-equality-agreement-figure-is-stale]** — **RESOLVED by prompt 03, 2026-09-16.**
+  `main.py`'s `cosmology_feature_redshifts` docstring no longer claims the closed form agrees with
+  the model's root solve *"to 4e-13 relative in z"*. Re-taken at `921f41c` against **prompt 02's
+  corrected solve** rather than against the secant `RECONCILIATION.md` §6 measured:
+
+  | Model | Pair | closed form | corrected solve | relative | ulp |
+  |---|---|---|---|---|---|
+  | `QCD_Cosmology` | matter = radiation | `3406.668974249948` | `3406.668974249951` | **−9.344e-16** | −7.0 |
+  | `QCD_Cosmology` | matter = $\Lambda$ | `0.3034230329964074` | `0.3034230329964074` | **+0.000e+00** | 0.0 |
+  | pure-radiation stand-in | matter = radiation | `3403.1059638279453` | `3403.1059638279457` | **−1.336e-16** | −1.0 |
+  | pure-radiation stand-in | matter = $\Lambda$ | `0.3034230329964074` | `0.3034230329964074` | **+0.000e+00** | 0.0 |
+
+  The sentence now quotes **−9.3e-16 (7 ulp)** and **the same float**, names `921f41c` as the tree
+  they were taken on, and says that 4e-13 was a safe over-estimate — unverified rather than wrong,
+  cited only to make the "far below a grid interval" argument that the measured figures make three
+  orders more comfortably. The matter–$\Lambda$ figure has gone to *exactly zero* because prompt 02
+  moved the solve onto the closed form's float; it is the `brentq` reference that now sits 2 ulp
+  away, which is `[02-bracketed-reference-is-not-the-exact-root]`.
+
+  **Zero executable lines of `main.py` are in the diff.** The correction is four lines longer than
+  the sentence it replaces, so everything below it shifts by +4 — see standing note 11.
 
 - **[00-equality-solve-is-unbracketed-and-loose]** — **RESOLVED by prompt 02, 2026-09-16.**
   `LambdaCDM_GenericEOS._find_rho_equality` no longer runs an unbracketed secant. It clamps the
@@ -271,3 +312,22 @@ Written by prompt 06. Empty until then.
     float is affected. **Prompt 05 must check for them before it measures `T_photon`**, because
     `[06-t-photon-call-cost-needs-a-quiet-machine]` is a five-run mean on a quiet machine and
     README §7 **D4** turns on 4 % (log 02, "Observations not acted on" item 4).
+11. **`main.py`'s line numbers moved at prompt 03, by +4 below `:528`.** The corrected docstring
+    sentence is four lines longer than the one it replaced. Re-anchored: the two closed-form
+    expressions are **`:553`** and **`:555`** (were `:549`, `:551`); the early return is `:545-546`;
+    the `getattr` block is `:549-551`; `break_z, feature_z = cosmology_feature_redshifts(...)` is
+    **`:907`** (was `:903`); `feature_z=feature_z` is **`:932`** (was `:928`); the corrected
+    sentence itself is `:525-531`. `AUDIT.md`, `RECONCILIATION.md` §5 and README §0.3 all cite the
+    old numbers and are left as written — they were correct for the trees they were taken on
+    (`CLAUDE.md`) — so a prompt following one of those citations must add 4.
+12. **The production source-grid digests are `a2c32f67` (`QCD_Cosmology`, 1,996 samples) and
+    `60a3205a` (`LambdaCDM(Planck2018)`, 1,778)**, measured identical at `7fdc49b`, `921f41c` and
+    prompt 03's commit. Any later prompt in workstreams A–C that moves either has left its scope.
+    Reproduce with `ComputeTargets/tests/test_source_grid._production_grid(cosmology)` and
+    `_to_redshift_array(grid.z_values).digest()`; `QCD_Cosmology` must be built at the production
+    `max_z = 1e20`, not at the test modules' `1e12`, or the spacing profile leaves the tabulated
+    range.
+13. **The three closed-form sites are one float, and that is now a test.**
+    `CosmologyModels/tests/test_rho_equality.test_the_three_closed_form_sites_agree` asserts it on
+    three models and both pairs. A prompt that edits any of `main.py:553`/`:555`,
+    `LambdaCDM_GenericEOS.py:502`/`:507` or `LambdaCDM.py:73-74` will hear about it there first.
