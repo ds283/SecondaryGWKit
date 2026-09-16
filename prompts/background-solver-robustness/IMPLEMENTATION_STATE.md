@@ -403,9 +403,10 @@ measurement.
 ### 5.1 The result
 
 **Seven of nine prompts landed. Amended 2026-09-16 (additively, §5 rule 6): the other two were
-not authorised *at the time this section was written*, and the user opened README §7 D3's gate
-immediately afterwards.** Workstream D is running; this subsection is the close-out as prompt 06
-correctly took it, and is left standing for that reason.**
+not authorised *at the time this section was written*.** The user opened README §7 D3's gate
+immediately afterwards and **07 and 08 have both since landed, so all nine are in.** This
+subsection is the close-out as prompt 06 correctly took it, and is left standing for that reason;
+the D row below and §5.6's D3 row carry the outcome.
 
 | Workstream | Prompts | Status |
 |---|---|---|
@@ -415,9 +416,12 @@ correctly took it, and is left standing for that reason.**
 | D — housekeeping | 07, 08 | **not authorised** *at the time this row was written.* README §7 **D3** was never answered, and "no, leave them indexed" is the answer the plan says costs nothing. `[03-qcd-inventory-does-not-report-the-representation]` (prompt 07) stays on the `qcd-background-audit` board assigned here and indexed in `docs/OPEN_ISSUES.md` §1.8; `[01-agreement-threshold-comment-predates-the-representation]` (prompt 08) stays on this board's §3, **measured by prompt 01** so that whoever does take it need not re-measure. **Amended additively, 2026-09-16: D3 opened and both prompts have since landed** — see §1's board row and §3.1 above. Prompt 07 closed only the `QCD_Cosmology` half of `[03-…]`; the `BackgroundModel` half stays open on the `qcd-background-audit` board, unassigned. Prompt 08 closed `[01-agreement-threshold-comment-predates-the-representation]` in full — see board §4. **Workstream D is complete.** |
 | E — make the model authoritative | 09 | **complete.** Added 2026-09-16 on the user's §7 D2 decision; not in the original plan |
 
-**Final state.** `CosmologyModels` **39**, `ComputeTargets` **449**, both OK, re-run at this commit.
+**Final state.** *(Amended 2026-09-16 after workstream D landed; prompt 06 correctly recorded
+`ComputeTargets` **449** and eleven Python files for the tree it closed on.)* `CosmologyModels`
+**39**, `ComputeTargets` **452**, both OK, re-run at this commit — the rise being the three
+`ComputeTargets/tests/test_qcd_cosmology_inventory.py` tests prompt 07 added.
 `T_Z_REPRESENTATION_VERSION` **6** at every commit of the campaign. `black --check` clean over all
-eleven Python files in `f023eb8..HEAD`. The `QCD_Cosmology` production source-grid digest is
+**fourteen** Python files in `f023eb8..HEAD`. The `QCD_Cosmology` production source-grid digest is
 **`4849552b`** at 1,996 samples and `LambdaCDM(Planck2018)`'s is **`60a3205a`** at 1,778.
 
 ### 5.2 `AUDIT.md` §5's claim — **held where it was scoped, and deliberately superseded outside it**
