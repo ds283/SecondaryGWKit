@@ -1242,6 +1242,12 @@ Opened by this campaign's planning, 2026-09-13:
   before prompt 09, which is the first prompt likely to look at a datastore holding rows at two
   representations.
 
+  **Assigned (2026-09-16): `prompts/background-solver-robustness` prompt 07** — that campaign is
+  the first to have `Datastore/SQL/ObjectFactories/QCD_Cosmology.py` and `tools/inventory_report.py`
+  in scope, and the issue has been declined twice here on exactly that ground. It sits in that
+  campaign's **workstream D**, which is gated on its README §7 D3 — it is not that campaign's
+  subject either, only its nearest owner.
+
   **Widened by prompt 14 (2026-09-15): the same defect now exists one level out, on
   `BackgroundModel`.** `sqla_BackgroundModelFactory.inventory()` reports labels and timestamps
   bucketed by `validated`, and says nothing about `source_grid_digest` or
@@ -1349,6 +1355,13 @@ Opened by this campaign's planning, 2026-09-13:
   is what to put to the user, since the accuracy it buys is not negotiable and `T_photon` is
   ~2.6 µs inside a ~10 µs `Hubble` call.
 
+  **Assigned (2026-09-16): `prompts/background-solver-robustness` prompt 05.** That prompt takes
+  the hoist this entry's next step names, across all three classes, and then applies a stated
+  decision rule: at ≤ 2.5 µs mean over five runs on a quiet machine the row **closes**; above it
+  the row itself goes to the user as that campaign's README §7 **D4**, with the two honest
+  options being that the target was set ~4 % too tight or that the cost is accepted. The prompt
+  explicitly forbids looking for a third.
+
 - **[07-t-photon-range-logic-recomputes-its-bounds]** *(prompt 06, 2026-09-14)* —
   `TemperatureRepresentation.__call__` (`LambdaCDM_GenericEOS.py:302`) evaluates
   `_outward(self._max_log_z, +1)` and `_outward(self._min_log_z, -1)` on **every call**. Both are
@@ -1360,6 +1373,12 @@ Opened by this campaign's planning, 2026-09-13:
   Not done in prompt 06 because the range logic is prompt 05's code and outside what prompt 06 was
   asked to change (README §5 rule 5). **Next step:** hoist both, in whichever prompt next has
   reason to touch that method; re-measure `[06-...]` afterwards.
+
+  **Assigned (2026-09-16): `prompts/background-solver-robustness` prompt 05**, which has that
+  method in scope for `[06-...]`. Note that the hoist is **four** values per class, not two —
+  the comparisons use the log bounds and the messages use the raw bounds — and that
+  `GkWKBSplineWrapper` has the same shape, so all three classes move together. Its acceptance is
+  bit-identical returns and character-identical messages, demonstrated rather than argued.
 
 - **[08-temperature-crossing-solver-is-test-only]** *(prompt 07, 2026-09-14)* —
   `LambdaCDM_GenericEOS._temperature_crossing_log1pz` (`:810`) has no production caller. Prompt 07
@@ -1378,6 +1397,14 @@ Opened by this campaign's planning, 2026-09-13:
   files in scope. Not done in prompt 07 because `T_z_reference.py` is not among the files that
   prompt may touch.
 
+  **Assigned (2026-09-16): `prompts/background-solver-robustness` prompt 04**, the first prompt
+  anywhere with `LambdaCDM_GenericEOS.py` and `CosmologyModels/tests/T_z_reference.py` both in
+  scope. It moves the method rather than deleting it, carries the docstring across whole, and may
+  not change a character of the `xtol=1e-15, rtol=1e-15` this campaign chose. The one open choice
+  — whether `ComputeTargets/tests/test_numeric_break_points.py` imports it cross-package or uses
+  the production locator instead — is written out in that prompt with the criterion that decides
+  it, and the answer is recorded as an `IMPLEMENTATION CHOICE`.
+
 - **[09-audit-script-section-5-prose-counts-the-wrong-set]** *(prompt 07, 2026-09-14)* —
   `docs/qcd-background-audit/measure_T_z_representation.py:401-405` prints, beneath its §5 table,
   "Of the BREAK_POINT_ALL points, {n} are knots of the T(z) spline itself". It never computes that
@@ -1390,6 +1417,11 @@ Opened by this campaign's planning, 2026-09-13:
   knots. **Next step:** intersect `knots` with the declared points before printing, and reword.
   Not done in prompt 07: its §3 item 6 requires the script to run **unedited**, and the script is
   not among the files that prompt may touch.
+
+  **Assigned (2026-09-16): `prompts/background-solver-robustness` prompt 05**, which re-runs
+  `measure_T_z_representation.py` for its own §6 cost row and therefore has
+  `docs/qcd-background-audit/` in scope. It corrects the sentence only; §2–§4 and the §5 table
+  above it must print unchanged, which is one of that prompt's acceptance rows.
 
 Inherited, and **assigned to this campaign** (each is owned by the board named, which holds its
 measurements and its history; the closure is recorded there):

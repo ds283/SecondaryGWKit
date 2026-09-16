@@ -2,7 +2,8 @@
 Measurements behind AUDIT.md -- the ``_find_rho_equality`` root solve at
 ``CosmologyModels/GenericEOS/LambdaCDM_GenericEOS.py:1008``.
 
-Run from the repository root:
+Run from the repository root (the ``PYTHONPATH=.`` is required; without it the imports below
+fail -- see RECONCILIATION.md R0):
 
     PYTHONPATH=. ./venv/bin/python prompts/background-solver-robustness/measure_rho_equality.py
 
