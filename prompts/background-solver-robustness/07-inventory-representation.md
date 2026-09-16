@@ -63,7 +63,7 @@ The index calls it *"One line in `inventory()`"*. Confirm that before assuming i
 | `inventory()` reports the representation | demonstrated against a table with two rows differing only in that column, which must render distinguishably |
 | Anything that **writes** | unchanged; `build()` not in the diff |
 | The lookup key | unchanged |
-| `ComputeTargets` suite | **447 → 447**, OK |
+| `ComputeTargets` suite | **449 → 449**, OK (447 before prompt 09, which added two `test_source_grid.py` tests) |
 | `CosmologyModels` suite | unchanged, OK |
 | Whatever suite covers `Datastore/` | count and result quoted before and after |
 | `black --check` | clean |

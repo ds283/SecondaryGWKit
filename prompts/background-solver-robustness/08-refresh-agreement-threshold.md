@@ -82,7 +82,7 @@ this is handled: measure, re-word, tighten only as far as the measurement suppor
 | `AGREEMENT_RTOL` | tightened or unchanged, never loosened; the margin stated |
 | Assertion bodies | **unchanged**; `git diff` shows only the comment and the constant |
 | `CosmologyModels` suite | unchanged count, OK |
-| `ComputeTargets` suite | **447 → 447**, OK |
+| `ComputeTargets` suite | **449 → 449**, OK (447 before prompt 09, which added two `test_source_grid.py` tests) |
 | `black --check` | clean |
 
 ## 4. Stop conditions
