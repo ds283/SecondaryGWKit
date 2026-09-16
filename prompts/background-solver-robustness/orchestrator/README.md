@@ -1,6 +1,6 @@
 # Orchestrator prompts — the background solver robustness campaign
 
-Four prompts, one per workstream. Each dispatches one fresh-context subagent per campaign prompt,
+Five prompts, one per workstream. Each dispatches one fresh-context subagent per campaign prompt,
 reviews between them against fixed criteria, and either continues or stops and reports to the user.
 
 | Workstream | Prompts | File | Character |
@@ -9,6 +9,7 @@ reviews between them against fixed criteria, and either continues or stops and r
 | **B** — what the redshifts feed | 03–04 | [`workstream-B-what-the-redshifts-feed.md`](workstream-B-what-the-redshifts-feed.md) | Widest blast radius, and **prompt 03 ends in a decision you put to the user**. A datastore identity is downstream of the thing being measured |
 | **C** — cost and close-out | 05–06 | [`workstream-C-cost-and-close-out.md`](workstream-C-cost-and-close-out.md) | One timing prompt with a stop-or-escalate rule, one close-out that may not touch production code — and that rule is the review |
 | **D** — housekeeping | 07–08 | [`workstream-D-housekeeping.md`](workstream-D-housekeeping.md) | **Gated on README §7 D3.** Two orphaned one-liners. Do not start without the user's go-ahead |
+| **E** — make the model authoritative | 09 | [`workstream-E-make-the-solve-authoritative.md`](workstream-E-make-the-solve-authoritative.md) | **Added 2026-09-16 when the user decided D2 as (iii).** The only workstream that moves a stored identity on purpose, so README §0.2 does not apply to it. It has a digest to **land on**, measured before the change existed |
 
 ## Running one
 
@@ -20,8 +21,10 @@ Start with, for example:
 **Take the baselines the workstream names before dispatching anything.** They cannot be
 reconstructed after the fact, and every review in this campaign is a diff against one of them.
 
-Run **A → B → C** in order. Each workstream's preconditions include the previous one's completion
-criterion. D is independent and gated.
+Run **A → B → E → C** in order. Each workstream's preconditions include the previous one's
+completion criterion. **E sits before C**: it moves the source-grid digest, and prompt 06 is the
+campaign close-out, which would be stale the moment 09 landed behind it. D is independent and
+gated.
 
 ## The rules that bind the orchestrator
 
@@ -46,7 +49,7 @@ workstream file:
    important review step in this campaign, because the campaign's *other* stop condition is
    "nothing moved" — and "nothing moved" is exactly what a test that tests nothing also reports.
 
-## The three checks that apply after every prompt in A, B and C
+## The three checks that apply after every prompt in A, B, C and E
 
 Run these yourself, at the subagent's commit, before dispatching the next one. They are cheap and
 they are the campaign's whole safety net.
@@ -86,12 +89,28 @@ README §3 names:
 > of `T_Z_REPRESENTATION_VERSION` at your commit, both suite counts, and every deviation with its
 > classification tag.
 
+### The one amendment, for workstream E only
+
+The sentence **"This campaign's central claim is that no computed quantity moves ... stop and say
+so rather than moving it"** is true of workstreams A–D and **false of E**. Prompt 09 exists to move
+one, deliberately, to a value measured before the change existed. Dispatching 09 with the template
+above unamended would make it halt on its own acceptance. **For prompt 09, and only prompt 09,
+replace that sentence with:**
+
+> **This prompt moves exactly one computed quantity, on purpose**: the `QCD_Cosmology`
+> matter–radiation feature redshift, and with it the production source-grid digest, from
+> `a2c32f67` to `4849552b` at 1,996 samples. That is the acceptance, not a deviation — your prompt
+> §3 states it. **Nothing else may move**: `LambdaCDM`'s digest, the matter–$\Lambda$ feature, both
+> equality redshifts as the solve reports them, and the two banner lines all stay where they are.
+> If a second sample moves, or the digest lands anywhere other than `4849552b`, stop and say so
+> rather than adjusting anything to make it fit.
+
 ## When to stop and ask the user
 
 Beyond each workstream's own list:
 
-- **README §7 D2** — prompt 03's report on the three copies of the equality closed form. This is a
-  decision with a datastore attached and it is not yours or the subagent's.
+- ~~**README §7 D2**~~ — **answered 2026-09-16: (iii)**, and workstream E implements it. Kept here
+  so a reader of this list does not re-ask it.
 - **README §7 D4** — prompt 05's cost row, if the hoist does not clear 2.5 µs.
 - **README §7 D3** — before workstream D runs at all.
 - Any subagent that reports `PARTIAL`, `BLOCKED`, or an `UNINTENDED DRIFT` it kept.

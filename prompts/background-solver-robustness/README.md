@@ -197,6 +197,13 @@ $z$ directly, at $z\sim3.4\times10^3$ and $z\sim0.3$, where this does not bite �
 bracket-expansion policy written in $u$ would have to justify itself, and prompt 02's log must say
 which variable it chose and why.**
 
+**(l) The model is authoritative for its own equality redshifts** (README §7 D2 as decided, and
+§2 (f) is what measured it). `BaseCosmology` declares `z_matter_radiation_equality` and
+`z_matter_lambda_equality`; `LambdaCDM` answers with the closed form, which is **exact** for a model
+with no equation of state; `LambdaCDM_GenericEOS` answers with the solve its constructor already
+runs and currently discards; `main.py` asks and computes nothing, **with no fallback**. Prompt 09,
+workstream E.
+
 **(k) Author conventions are conventions, not defects** (`CLAUDE.md`). $a_0$ is absorbed, never
 "set to 1". Do not "correct" them.
 
@@ -204,8 +211,10 @@ which variable it chose and why.**
 
 ## 3. The prompts
 
-Eight prompts in four workstreams. **Workstream D is gated** — do not start it without the user's
-go-ahead (§7 D3).
+Nine prompts in five workstreams. **Workstream D is gated** — do not start it without the user's
+go-ahead (§7 D3). **Workstream E was added on 2026-09-16**, when the user decided §7 **D2** as
+option (iii); it is not part of the original plan and it is the only workstream that moves a stored
+identity on purpose.
 
 | # | Prompt | Workstream | Covers | Model | Why that model |
 |---|---|---|---|---|---|
@@ -217,6 +226,7 @@ go-ahead (§7 D3).
 | 06 | [Provenance and close-out](06-provenance-and-close-out.md) | C | §2 (i) | **Opus** | Provenance prose for three solves, a cross-campaign board amendment, and the close-out verification. May not touch production code, and that rule is the review |
 | 07 | [Report the representation in the inventory](07-inventory-representation.md) | D (gated) | — | **Sonnet** | Two lines and a test, in files no other prompt here touches |
 | 08 | [Refresh the stale agreement threshold](08-refresh-agreement-threshold.md) | D (gated) | — | **Sonnet** | One measurement, one comment, one constant, in one test file |
+| 09 | [Make the model authoritative](09-make-the-model-authoritative.md) | **E** | §2 (l) | **Opus** | Changes an inheritance contract across three cosmology classes and moves a datastore identity deliberately, with a digest it must **land on** rather than merely report. The one thing it must not do — fall back to the closed form when a model cannot answer — is the thing that looks most careful |
 
 ### 3.1 The anchors every measurement is scored against
 
@@ -395,6 +405,16 @@ deliberate — **the campaign's recommendation**; (ii) unify on the closed form,
 one-ulp-stable only if the expression is written character-for-character identically at every site;
 (iii) unify on the solve and accept a regeneration. **Prompt 03 measures and reports; it does not
 decide.** Do not let an agent take (ii) or (iii) on its own judgement.
+
+> **Answered 2026-09-16: (iii).** Recorded here additively, per §5 rule 6 — the paragraph above is
+> the plan as written and was correct for the tree it was written on. The user's reason is that the
+> closed form is right at `main.py` only because `QCD_Cosmology`'s $g_*$ structure sits twelve
+> orders above $z_{\rm eq}$, which is an accident of this equation of state and not a property of
+> the code; a cosmology with late entropy injection breaks it silently. Regeneration is not a cost
+> in the build phase (board standing note 13), so (iii)'s price does not weigh against it.
+> **The mechanism differs from this paragraph's wording:** `main.py` does not import
+> `_find_rho_equality`; the model answers for itself through `BaseCosmology` properties. Prompt 09
+> and the board's `[00-equality-redshift-closed-form-is-duplicated-three-times]` entry carry it.
 
 **D3 — whether workstream D runs at all.** Prompts 07 and 08 clear two orphaned one-liners that no
 campaign owns and that this one happens to be adjacent to. Neither is this campaign's subject.
