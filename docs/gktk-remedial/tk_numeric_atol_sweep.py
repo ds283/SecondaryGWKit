@@ -80,14 +80,22 @@ import platform
 import sys
 import time
 from datetime import date
-from math import cos, fabs, hypot, log10, sin, sqrt
+from math import cos, fabs, log10, sin, sqrt
 from statistics import median
 
 import numpy as np
 import scipy
 
-from ComputeTargets.TkNumericIntegration import RHS as Tk_RHS
 from ComputeTargets.WKB_Tk import Tk_omegaEff_sq
+from ComputeTargets.tests.convergence_reference import (
+    UNITS,
+    V0_PER_K_GRID,
+    sector_errors,
+    summarise,
+    tk_geometry,
+    tk_run as run,
+    x_local,
+)
 from ComputeTargets.tests.wkb_reference import (
     LambdaCDMModel,
     PRODUCTION_LARGEST_K_INV_MPC,
@@ -105,14 +113,10 @@ from ComputeTargets.BackgroundModel import (
     BREAK_POINT_ALL,
     BREAK_POINT_DISCONTINUITY,
 )
-from Quadrature.integrators.numeric_with_phase_cut import numeric_with_phase_cut
-from Units import Mpc_units
 
 # ---------------------------------------------------------------------------------------------
 # configuration
 # ---------------------------------------------------------------------------------------------
-
-UNITS = Mpc_units()
 
 # main.py:3090-3099 -- NUMBER_SOURCE_K_VALUES = 50, and TkNumericIntegration is one object per k
 NUMBER_SOURCE_K_VALUES = 50
@@ -134,9 +138,6 @@ REFERENCE_ATOL = 1e-18
 REFERENCE_RTOL = 1e-12
 TIGHTENED_ATOL = 1e-19
 TIGHTENED_RTOL = 1e-13
-
-# main.py:630, :1199 -- still part of the call, no longer part of the diagnostic (prompt 11)
-PRODUCTION_DELTA_LOGZ = 1.0 / 100.0
 
 # README section 6's row, and README section 2 (d)'s floor
 TARGET_ERROR = 3.0e-6
@@ -160,36 +161,19 @@ def log(message: str) -> None:
 
 
 # ---------------------------------------------------------------------------------------------
-# stand-ins (the pattern of ComputeTargets/tests/test_tk_numeric_atol.py, prompt 12)
+# stand-ins, geometry, solves and error sampling
+#
+# All of it moved to ComputeTargets/tests/convergence_reference.py at prompt 01 of
+# prompts/tolerance-convergence, so that the second sector, the second campaign and prompt 04's
+# integer orders share one implementation instead of copying this one. Nothing about the method
+# changed: the names below are that module's, and this script's published figures are unmoved,
+# which is that prompt's own acceptance test.
+#
+# The `_Wavenumber` / `_KExit` / `_Proxy` stand-ins are the pattern of
+# ComputeTargets/tests/test_tk_numeric_atol.py (prompt 12) and live there now; `run`, `run_gk`,
+# `x_local`, `summarise` and `sector_errors` are imported above and `geometry` / `gk_geometry`
+# below name the source-grid generation they are built on.
 # ---------------------------------------------------------------------------------------------
-
-
-class _Wavenumber:
-    def __init__(self, k: float, store_id: int, units):
-        self.k = float(k)
-        self.k_inv_Mpc = float(k)
-        self.store_id = store_id
-        self.units = units
-
-
-class _KExit:
-    """A ``wavenumber_exit_time`` stand-in: ``.k`` and ``.z_exit``."""
-
-    def __init__(self, k: float, units, z_exit: float, store_id: int = 1):
-        self.k = _Wavenumber(k, store_id, units)
-        self.z_exit = z_exit
-
-
-class _Proxy:
-    """A ``ModelProxy`` stand-in: ``.get()`` and ``.units`` (for ``check_units``)."""
-
-    def __init__(self, model, units):
-        self._model = model
-        self.units = units
-
-    def get(self):
-        return self._model
-
 
 # ---------------------------------------------------------------------------------------------
 # the production geometry of a TkNumericIntegration work item, and the runs on it
@@ -198,143 +182,34 @@ class _Proxy:
 
 def geometry(cosmology, k_inv_Mpc: float) -> dict:
     """
-    ``main.py``'s ``build_Tk_numeric_work`` geometry for one wavenumber: the production source
-    grid (100 samples per decade of z) from five e-folds outside the horizon, truncated below at
-    ``0.85 z_e6``, with the ``(z_e3, z_e6)`` stop window.
+    ``main.py``'s ``build_Tk_numeric_work`` geometry for one wavenumber, **on the version-0 source
+    grid**: one bare ``logspace`` per wavenumber from five e-folds outside the horizon, truncated
+    below at ``0.85 z_e6``, with the ``(z_e3, z_e6)`` stop window.
+
+    Every figure this script publishes is scored on that grid, and it is not the one ``main.py``
+    builds -- production has been at ``SOURCE_GRID_CONSTRUCTION_VERSION = 2`` since prompt 15 of
+    ``prompts/qcd-background-audit``. The generation is named here rather than assumed
+    (``prompts/tolerance-convergence`` README §5 rule 6, ``[00-three-production-grid-reproductions]``):
+    the figures stay comparable with the ones already published, and a reader can see which grid
+    they belong to.
 
     ``cosmology`` is anything with ``Hubble(z)`` and ``H0`` -- the ``RadiationModel`` stand-in
     itself, or the real cosmology behind ``LambdaCDMModel`` / ``QCDModel``.
     """
-    z_exit = horizon_exit_z(cosmology, k_inv_Mpc, 0.0)
-    z_e3 = horizon_exit_z(cosmology, k_inv_Mpc, 3.0)
-    z_e6 = horizon_exit_z(cosmology, k_inv_Mpc, 6.0)
-    z_source = horizon_exit_z(
-        cosmology, k_inv_Mpc, -float(PRODUCTION_SUPERHORIZON_EFOLDS)
-    )
-
-    grid = production_source_grid(z_source).truncate(0.85 * z_e6, keep="higher-include")
-    return {"z_exit": z_exit, "z_e3": z_e3, "z_e6": z_e6, "grid": grid}
+    return tk_geometry(cosmology, k_inv_Mpc, V0_PER_K_GRID.build(cosmology))
 
 
-def run(
-    model,
-    k_inv_Mpc: float,
-    geo: dict,
-    atol: float,
-    rtol: float,
-    ic=None,
-    break_point_kind: str = BREAK_POINT_DISCONTINUITY,
-) -> dict:
+def sample_errors(model, k_inv_Mpc: float, geo: dict, candidate: dict, reference: dict):
     """
-    One ``TkNumericIntegration`` solve through the undecorated ``numeric_with_phase_cut``.
-
-    ``ic`` is ``(T, dT/dz)`` at the top of the grid; ``None`` means the production
-    ``T = 1, T' = 0``. ``warn_unresolved_osc=False`` is what both production integrators now pass
-    (prompt 16); it gates the printed warning and nothing else.
-
-    ``break_point_kind`` defaults to ``BREAK_POINT_DISCONTINUITY`` -- what ``numeric_with_phase_cut``
-    asked for unconditionally when §9 was measured, so that §9's entry point reproduces §9. The
-    production ``TkNumericIntegration`` call site passes ``BREAK_POINT_ALL`` since prompt 19, and
-    §10's entry point passes it here.
+    Envelope-relative error of ``candidate`` against ``reference``, sample by sample: the
+    transfer-function sector of ``convergence_reference.sector_errors``.
     """
-    grid = geo["grid"]
-    z_init = grid.max
-    value, deriv = (1.0, 0.0) if ic is None else ic
-
-    return numeric_with_phase_cut._function(
-        _Proxy(model, UNITS),
-        _KExit(k_inv_Mpc, UNITS, geo["z_exit"]),
-        z_init,
-        grid,
-        initial_value=value,
-        initial_deriv=deriv,
-        RHS=Tk_RHS,
-        omega_sq=Tk_omegaEff_sq,
-        atol=atol,
-        rtol=rtol,
-        delta_logz=PRODUCTION_DELTA_LOGZ,
-        mode="stop",
-        stop_search_window_z_begin=min(geo["z_e3"], z_init.z),
-        stop_search_window_z_end=geo["z_e6"],
-        task_label="tk_numeric_atol_sweep",
-        object_label="Tk(z)",
-        warn_unresolved_osc=False,
-        break_point_kind=break_point_kind,
-    )
+    return sector_errors("Tk", model, k_inv_Mpc, geo, candidate, reference)
 
 
 # ---------------------------------------------------------------------------------------------
 # the phase variable, the envelope, and the errors
 # ---------------------------------------------------------------------------------------------
-
-
-def x_local(model, k_inv_Mpc: float, z: float) -> float:
-    """
-    The transfer function's dimensionless phase variable, ``x = k c_s (1+z)/H``.
-
-    In exact radiation this is ``k c_s tau`` identically (``tau = 1/(H0(1+z))``), which is the
-    ``x`` of review section 12.4-12.5 and of prompt 12's measurements; on a real background it is
-    the same quantity evaluated locally, and the two agree to the matter fraction deep in the
-    radiation era. It is used only to *label* where an error falls.
-    """
-    functions = model.functions
-    c_s = sqrt(functions.wPerturbations(z))
-    return k_inv_Mpc * c_s * (1.0 + z) / functions.Hubble(z)
-
-
-def sample_errors(model, k_inv_Mpc: float, geo: dict, candidate: dict, reference: dict):
-    """
-    Envelope-relative error of ``candidate`` against ``reference``, sample by sample.
-
-    README section 6: the denominator is the local Liouville-Green envelope
-    ``hypot(T, T'/omega)`` of the reference run, with ``omega = sqrt(Tk_omegaEff_sq)``; samples
-    where ``omega^2 <= 0`` are skipped, the mode not being oscillatory there.
-
-    :return: list of ``(error, z, x)``, in the returned (descending z) order
-    """
-    out = []
-    for z, value, ref_value, ref_deriv in zip(
-        geo["grid"],
-        candidate["value_sample"],
-        reference["value_sample"],
-        reference["deriv_sample"],
-    ):
-        omega_sq = Tk_omegaEff_sq(model, k_inv_Mpc, z.z)
-        if omega_sq <= 0.0:
-            continue
-        envelope = hypot(ref_value, ref_deriv / sqrt(omega_sq))
-        out.append(
-            (
-                envelope_relative_error(value, ref_value, envelope),
-                z.z,
-                x_local(model, k_inv_Mpc, z.z),
-            )
-        )
-    return out
-
-
-def summarise(errors) -> dict:
-    """
-    Maximum (and where it fell), second-largest, median, and the value at the **last** returned
-    sample, of a list of ``(error, z, x)``.
-
-    The terminal value is not in the prompt's list. It is here because it is what separates "one
-    bad sample" from "one bad step whose consequence is carried to the end of the integration":
-    the samples are in descending z, so the last entry is the deepest point reached, and it is
-    the part of the run ``TkWKBIntegration`` reads as its initial condition.
-    """
-    ordered = sorted(errors, key=lambda e: e[0], reverse=True)
-    worst = ordered[0]
-    return {
-        "max": worst[0],
-        "max_z": worst[1],
-        "max_x": worst[2],
-        "second": ordered[1][0],
-        "median": median(e[0] for e in errors),
-        "terminal": errors[-1][0],
-        "terminal_x": errors[-1][2],
-        "samples": len(errors),
-    }
 
 
 # ---------------------------------------------------------------------------------------------
@@ -1012,9 +887,9 @@ def main() -> None:
 #      tells prompt 13 whether a QCD datastore built before the split is still usable.
 # =============================================================================================
 
-from ComputeTargets.GkNumericIntegration import RHS as Gk_RHS
 from ComputeTargets.WKB_Gk import Gk_omegaEff_sq
-from ComputeTargets.tests.wkb_reference import production_response_grid
+from ComputeTargets.tests.convergence_reference import gk_geometry as _gk_geometry
+from ComputeTargets.tests.convergence_reference import gk_run as run_gk
 from Quadrature.integrators.numeric_with_phase_cut import declared_discontinuities_in_z
 
 # prompt 17 §2.1's criterion, quantified for QCD by the smallest candidate difference the sweep
@@ -1061,99 +936,25 @@ class _UnsplitModel:
 
 def gk_geometry(cosmology, k_inv_Mpc: float) -> dict:
     """
-    ``main.py``'s ``build_Gk_numeric_work`` geometry for one object: the source redshift five
-    e-folds outside the horizon (the top of the universal source grid), the *response* grid --
-    ``winnow(12)`` of the source grid, which is what ``GkNumericIntegration`` is sampled on -- cut
-    to the source redshift above and to ``0.85 z_e6`` below, and the ``(z_e3, z_e6)`` stop window.
+    ``main.py``'s ``build_Gk_numeric_work`` geometry for one object, **on the version-0 source
+    grid** (see :func:`geometry`): the source redshift five e-folds outside the horizon, the
+    *response* grid -- ``winnow(12)`` of the source grid, which is what ``GkNumericIntegration``
+    is sampled on -- cut to the source redshift above and to ``0.85 z_e6`` below, and the
+    ``(z_e3, z_e6)`` stop window.
 
-    ``GkNumericIntegration`` is one object per ``(k, z_source)``; one source redshift per $k$ is
+    ``GkNumericIntegration`` is one object per ``(k, z_source)``; one source redshift per k is
     taken here, the outermost, which is the longest and therefore the least favourable run.
+
+    The construction is ``convergence_reference.gk_geometry``; ``run_gk`` is that module's
+    ``gk_run``, imported above under its historic name.
     """
-    z_exit = horizon_exit_z(cosmology, k_inv_Mpc, 0.0)
-    z_e3 = horizon_exit_z(cosmology, k_inv_Mpc, 3.0)
-    z_e6 = horizon_exit_z(cosmology, k_inv_Mpc, 6.0)
-    z_source = horizon_exit_z(
-        cosmology, k_inv_Mpc, -float(PRODUCTION_SUPERHORIZON_EFOLDS)
-    )
-
-    source_grid = production_source_grid(z_source)
-    grid = (
-        production_response_grid(source_grid)
-        .truncate(source_grid.max, keep="lower")
-        .truncate(0.85 * z_e6, keep="higher-include")
-    )
-    return {"z_exit": z_exit, "z_e3": z_e3, "z_e6": z_e6, "grid": grid}
-
-
-def run_gk(
-    model,
-    k_inv_Mpc: float,
-    geo: dict,
-    atol: float,
-    rtol: float,
-    break_point_kind: str = BREAK_POINT_DISCONTINUITY,
-) -> dict:
-    """
-    One ``GkNumericIntegration`` solve through the undecorated ``numeric_with_phase_cut``.
-
-    ``break_point_kind`` is the sector's production policy *and* the module default; it is named
-    here for the same reason the production call site names it (prompt 19).
-    """
-    grid = geo["grid"]
-    z_init = grid.max
-    return numeric_with_phase_cut._function(
-        _Proxy(model, UNITS),
-        _KExit(k_inv_Mpc, UNITS, geo["z_exit"]),
-        z_init,
-        grid,
-        initial_value=0.0,
-        initial_deriv=1.0,
-        RHS=Gk_RHS,
-        omega_sq=Gk_omegaEff_sq,
-        atol=atol,
-        rtol=rtol,
-        delta_logz=PRODUCTION_DELTA_LOGZ,
-        mode="stop",
-        stop_search_window_z_begin=min(geo["z_e3"], z_init.z),
-        stop_search_window_z_end=geo["z_e6"],
-        task_label="gk_break_point_sweep",
-        object_label="Gr_k(z, z')",
-        warn_unresolved_osc=False,
-        break_point_kind=break_point_kind,
-    )
+    return _gk_geometry(cosmology, k_inv_Mpc, V0_PER_K_GRID.build(cosmology))
 
 
 SECTORS = {
     "Tk": {"geometry": geometry, "run": run, "omega_sq": Tk_omegaEff_sq},
     "Gk": {"geometry": gk_geometry, "run": run_gk, "omega_sq": Gk_omegaEff_sq},
 }
-
-
-def sector_errors(sector: str, model, k_inv_Mpc: float, geo, candidate, reference):
-    """
-    :func:`sample_errors` for either sector: envelope-relative against the reference run, with
-    the sector's own effective frequency supplying the Liouville-Green envelope.
-    """
-    omega_sq_fn = SECTORS[sector]["omega_sq"]
-    out = []
-    for z, value, ref_value, ref_deriv in zip(
-        geo["grid"],
-        candidate["value_sample"],
-        reference["value_sample"],
-        reference["deriv_sample"],
-    ):
-        omega_sq = omega_sq_fn(model, k_inv_Mpc, z.z)
-        if omega_sq <= 0.0:
-            continue
-        envelope = hypot(ref_value, ref_deriv / sqrt(omega_sq))
-        out.append(
-            (
-                envelope_relative_error(value, ref_value, envelope),
-                z.z,
-                x_local(model, k_inv_Mpc, z.z),
-            )
-        )
-    return out
 
 
 def break_point_sweep(name: str, model, cosmology, sector: str, declares: bool) -> dict:

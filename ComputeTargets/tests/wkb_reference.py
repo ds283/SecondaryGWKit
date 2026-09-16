@@ -49,7 +49,7 @@ from ComputeTargets.BackgroundModel import (
     compute_background,
 )
 from ComputeTargets.spline_wrappers import ZSplineWrapper
-from CosmologyConcepts import redshift, redshift_array
+from CosmologyConcepts import build_z_sample, redshift, redshift_array
 from CosmologyModels.GenericEOS.QCD_Cosmology import QCD_Cosmology
 from CosmologyModels.LambdaCDM import LambdaCDM, Planck2018
 from Units import Mpc_units
@@ -70,6 +70,24 @@ PRODUCTION_LARGEST_K_INV_MPC = 3.0e8
 # main.py:411 -- the universal source grid starts 5 e-folds *outside* the horizon for the
 # earliest-exiting (largest) k
 PRODUCTION_SUPERHORIZON_EFOLDS = 5
+
+# main.py:3292 -- the production source and response wavenumber arrays are the same fifty
+# logspaced values, and one universal source grid has to serve every one of them. The spacing
+# profile of the version-2 construction is the envelope over all of them.
+PRODUCTION_NUMBER_K_VALUES = 50
+PRODUCTION_K_GRID_INV_MPC = np.logspace(
+    log10(PRODUCTION_SMALLEST_K_INV_MPC),
+    log10(PRODUCTION_LARGEST_K_INV_MPC),
+    PRODUCTION_NUMBER_K_VALUES,
+)
+
+# the top of the universal source grid on both production cosmologies: the
+# ``z_exit_suph_e5`` of the earliest-exiting wavenumber, k = 3e8/Mpc. It is a *measured*
+# constant, recorded here because the grid generations below have to agree on where the grid
+# starts before they can be compared; ``wkb_reference_data.json``'s ``grid.z_init`` for
+# LambdaCDMModel and QCDModel carries the same digits, and so does
+# ``ComputeTargets/tests/test_source_grid.py``.
+PRODUCTION_Z_INIT = 2.0636395964161516e16
 
 # the wavenumbers at which the JSON carries residual references
 REFERENCE_K_VALUES = (1.0e5, 1.0e7, 3.0e8)
@@ -154,7 +172,18 @@ def production_source_grid(
     z_end: float = PRODUCTION_Z_END,
     samples_per_log10z: int = PRODUCTION_SOURCE_SAMPLES_PER_LOG10Z,
 ) -> redshift_array:
-    """The production source grid as a ``redshift_array`` (main.py:410-419)."""
+    """
+    **The version-0 source grid**, as a ``redshift_array``: the bare ``logspace`` that
+    ``populate_z_sample`` returned before prompt 11 of ``prompts/qcd-background-audit``.
+
+    *This name is kept, and its behaviour is unchanged, because roughly twenty call sites in the
+    test tree and in ``docs/`` scripts import it and every published figure they carry was scored
+    on this construction* (``prompts/tolerance-convergence`` prompt 01;
+    ``[00-three-production-grid-reproductions]``). It is **not** "the production grid" and has not
+    been since ``SOURCE_GRID_CONSTRUCTION_VERSION`` reached 1. New callers name a generation:
+    :func:`source_grid`, :func:`source_grid_z_values` or :func:`source_grid_redshifts` with one of
+    :data:`SOURCE_GRID_V0`, :data:`SOURCE_GRID_V1`, :data:`SOURCE_GRID_V2`.
+    """
     return to_redshift_array(
         production_source_z_values(z_init, z_end, samples_per_log10z)
     )
@@ -166,6 +195,216 @@ def production_response_grid(
 ) -> redshift_array:
     """The production response grid: ``source_grid.winnow(sparseness)`` (main.py:424)."""
     return source_grid.winnow(sparseness=sparseness)
+
+
+# ---------------------------------------------------------------------------------------------
+# the three source-grid generations, named
+#
+# prompts/tolerance-convergence prompt 01, board item T2. The test tree held four reproductions
+# of "the production source grid" and they are not the same grid: every figure in the record was
+# scored on one of them and almost none of them says which. The generations are named here so
+# that a caller has to *say*, and so that the version-2 construction -- which existed only as a
+# private helper inside ComputeTargets/tests/test_source_grid.py -- is reachable from the
+# measurement scripts that need it.
+#
+# This is a hoist, not a rewrite: source_grid(SOURCE_GRID_V2, ...) is bit-identical to that
+# module's ``_production_grid``, source_grid(SOURCE_GRID_V1, ...) to
+# ``test_background_segmentation.production_source_grid``, and source_grid(SOURCE_GRID_V0, ...)
+# to :func:`production_source_z_values` above.
+# ---------------------------------------------------------------------------------------------
+
+#: the bare ``np.logspace`` lattice: what ``populate_z_sample`` built before prompt 11 of
+#: ``prompts/qcd-background-audit``. 1,732 samples at production geometry on every cosmology.
+SOURCE_GRID_V0 = "v0"
+
+#: prompt 11's cosmology-aware grid: the lattice plus a straddling pair at each declared
+#: crossing, the neighbourhood of each refined, and each declared feature redshift present.
+#: 1,773 samples on QCD, unchanged at 1,732 on LambdaCDM, which declares nothing.
+SOURCE_GRID_V1 = "v1"
+
+#: prompt 15's grid, and what ``main.py`` builds today: version 1 plus the curvature-equidistributed
+#: base density. 1,996 samples on QCD and 1,778 on LambdaCDM.
+SOURCE_GRID_V2 = "v2"
+
+SOURCE_GRID_GENERATIONS = (SOURCE_GRID_V0, SOURCE_GRID_V1, SOURCE_GRID_V2)
+
+#: the value of ``CosmologyConcepts.wavenumber.SOURCE_GRID_CONSTRUCTION_VERSION`` that
+#: :data:`SOURCE_GRID_V2` reproduces. It is **cross-checked** against production rather than
+#: asserted (``ComputeTargets/tests/test_convergence_reference.py``): when production moves to
+#: version 3 the test tree says so, instead of quietly calling a stale construction "production".
+SOURCE_GRID_V2_REPRODUCES_VERSION = 2
+
+_MAIN_PY_GRID_HELPERS = {}
+
+
+def main_py_grid_helpers() -> dict:
+    """
+    ``main.py``'s own ``cosmology_feature_redshifts`` and ``source_grid_spacing_profile``, lifted
+    with ``ComputeTargets.tests.test_main_plumbing.load_main_py_functions`` (``main.py`` cannot be
+    imported -- ``CLAUDE.md``). Cached: the lift parses ``main.py``.
+
+    **The imports are deliberately function-local.** This module's header states that it imports
+    nothing from ``ComputeTargets/phase_residual.py``, because a reference built from the object
+    under test conceals common error. That invariant is about the *reference values*, and it is
+    unaffected here: the phase residual enters only as the criterion that sets the source grid's
+    **density**, which is a property of the geometry every candidate and every reference share.
+    Keeping the import inside this function keeps the module-level statement true and makes the
+    one place that needs it say why.
+    """
+    if len(_MAIN_PY_GRID_HELPERS) == 0:
+        from ComputeTargets.phase_residual import (
+            phase_residual_integrand,
+            residual_node_range,
+        )
+        from ComputeTargets.tests.test_main_plumbing import load_main_py_functions
+        from CosmologyConcepts import (
+            SOURCE_GRID_CONSUMER_TARGET_RAD,
+            SOURCE_GRID_CROSSING_MASK_U,
+            SOURCE_GRID_CUBIC_ERROR_CONST,
+            SOURCE_GRID_CURVATURE_FD_STEP_U,
+            SOURCE_GRID_CURVATURE_STEP_U,
+            SOURCE_GRID_SPLINE_EDGE_FACTOR,
+            SOURCE_GRID_SPLINE_EDGE_INTERVALS,
+        )
+
+        _MAIN_PY_GRID_HELPERS.update(
+            load_main_py_functions(
+                [
+                    "cosmology_feature_redshifts",
+                    "pre_grid_background_proxy",
+                    "source_grid_spacing_profile",
+                ],
+                extra_globals={
+                    "np": np,
+                    "_cosmology_break_points": _cosmology_break_points,
+                    "phase_residual_integrand": phase_residual_integrand,
+                    "residual_node_range": residual_node_range,
+                    "SOURCE_GRID_CONSUMER_TARGET_RAD": SOURCE_GRID_CONSUMER_TARGET_RAD,
+                    "SOURCE_GRID_CROSSING_MASK_U": SOURCE_GRID_CROSSING_MASK_U,
+                    "SOURCE_GRID_CUBIC_ERROR_CONST": SOURCE_GRID_CUBIC_ERROR_CONST,
+                    "SOURCE_GRID_CURVATURE_FD_STEP_U": SOURCE_GRID_CURVATURE_FD_STEP_U,
+                    "SOURCE_GRID_CURVATURE_STEP_U": SOURCE_GRID_CURVATURE_STEP_U,
+                    "SOURCE_GRID_SPLINE_EDGE_FACTOR": SOURCE_GRID_SPLINE_EDGE_FACTOR,
+                    "SOURCE_GRID_SPLINE_EDGE_INTERVALS": SOURCE_GRID_SPLINE_EDGE_INTERVALS,
+                },
+            )
+        )
+
+    return _MAIN_PY_GRID_HELPERS
+
+
+def cosmology_grid_features(
+    cosmology,
+    z_end: float = PRODUCTION_Z_END,
+    z_init: float = PRODUCTION_Z_INIT,
+):
+    """
+    ``main.py``'s ``cosmology_feature_redshifts``: ``(break_z, feature_z)`` for this cosmology.
+
+    A cosmology that declares no ``integration_break_points`` gets ``([], [])`` and therefore the
+    unchanged lattice. **A cosmology that declares break points but cannot answer
+    ``z_matter_radiation_equality`` / ``z_matter_lambda_equality`` raises ``RuntimeError``,
+    deliberately and with no fallback** (``prompts/background-solver-robustness`` prompt 09); a
+    stand-in that hits it is built wrongly, and that is not a finding about the grid.
+    """
+    return main_py_grid_helpers()["cosmology_feature_redshifts"](
+        cosmology, z_end, z_init
+    )
+
+
+def source_grid_spacing(
+    cosmology,
+    base_z_values,
+    k_inv_Mpc: Sequence[float] = PRODUCTION_K_GRID_INV_MPC,
+):
+    """
+    ``main.py``'s ``source_grid_spacing_profile`` at production geometry: the ``(u, h)`` envelope
+    over all fifty production wavenumbers in both Liouville-Green sectors.
+
+    ``cosmology`` needs only ``Hubble(z)`` and ``wPerturbations(z)``; the derivatives are taken
+    from its own closed forms where it has them and by central differences where it does not.
+    """
+    return main_py_grid_helpers()["source_grid_spacing_profile"](
+        cosmology,
+        base_z_values,
+        [float(k) / Mpc_units().Mpc for k in k_inv_Mpc],
+    )
+
+
+def source_grid(
+    generation: str,
+    z_init: float = PRODUCTION_Z_INIT,
+    z_end: float = PRODUCTION_Z_END,
+    samples_per_log10z: int = PRODUCTION_SOURCE_SAMPLES_PER_LOG10Z,
+    *,
+    cosmology=None,
+    k_inv_Mpc: Sequence[float] = PRODUCTION_K_GRID_INV_MPC,
+):
+    """
+    The source grid of a **named** generation, as the ``SourceGrid`` that ``build_z_sample``
+    returns (``z_values``, ``protected_z``, ``breaks``, ``features``).
+
+    There is no default generation and there will not be one: a figure that does not say which
+    grid it was taken on cannot be compared with any other figure in the record
+    (``prompts/tolerance-convergence/README.md`` §5 rule 6).
+
+    :param generation: one of :data:`SOURCE_GRID_V0`, :data:`SOURCE_GRID_V1`,
+        :data:`SOURCE_GRID_V2`
+    :param z_init: the top of the grid; the production value is :data:`PRODUCTION_Z_INIT`
+    :param cosmology: required for :data:`SOURCE_GRID_V1` and :data:`SOURCE_GRID_V2`, which ask
+        it what it declares; rejected for :data:`SOURCE_GRID_V0`, which asks nothing
+    :param k_inv_Mpc: the wavenumbers the version-2 density criterion must serve
+    """
+    if generation not in SOURCE_GRID_GENERATIONS:
+        raise ValueError(
+            f"source_grid: unknown generation {generation!r}; the named generations are "
+            f"{', '.join(repr(g) for g in SOURCE_GRID_GENERATIONS)}"
+        )
+
+    if generation == SOURCE_GRID_V0:
+        if cosmology is not None:
+            raise ValueError(
+                "source_grid: the version-0 construction is a bare logspace and consults no "
+                "cosmology; passing one means version 1 or version 2 was intended"
+            )
+        return build_z_sample(z_init, z_end, samples_per_log10z)
+
+    if cosmology is None:
+        raise ValueError(
+            f"source_grid: generation {generation!r} is built around what the cosmology declares, "
+            "so a cosmology is required"
+        )
+
+    break_z, feature_z = cosmology_grid_features(cosmology, z_end, z_init)
+
+    if generation == SOURCE_GRID_V1:
+        return build_z_sample(
+            z_init,
+            z_end,
+            samples_per_log10z,
+            break_z=break_z,
+            feature_z=feature_z,
+        )
+
+    base = build_z_sample(z_init, z_end, samples_per_log10z).z_values
+    return build_z_sample(
+        z_init,
+        z_end,
+        samples_per_log10z,
+        break_z=break_z,
+        feature_z=feature_z,
+        spacing=source_grid_spacing(cosmology, base, k_inv_Mpc),
+    )
+
+
+def source_grid_z_values(generation: str, *args, **kwargs) -> np.ndarray:
+    """:func:`source_grid`'s descending array of redshifts."""
+    return source_grid(generation, *args, **kwargs).z_values
+
+
+def source_grid_redshifts(generation: str, *args, **kwargs) -> redshift_array:
+    """:func:`source_grid` as a ``redshift_array``."""
+    return to_redshift_array(source_grid(generation, *args, **kwargs).z_values)
 
 
 # ---------------------------------------------------------------------------------------------

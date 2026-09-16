@@ -8,11 +8,13 @@
 re-run for the re-anchor and green — `ComputeTargets` **452**, `CosmologyModels` **39**)
 **Superseded baseline:** `acd5b8e`, `ComputeTargets` 447, `CosmologyModels` 30 — the anchor of any
 figure in this campaign's documents dated before 2026-09-16 19:32
-**Last updated:** 2026-09-16 · **Status: planned, rebased and re-anchored; not started.**
+**Last updated:** 2026-09-16 · **Status: in progress — 1 / 6.**
 **Every user decision needed to start is settled** — D1 and D3 are post-audit gates by design, D2
 settled 2026-09-12, D4 settled by README §0.4, **D5 settled yes 2026-09-16**.
 **Prompts 01 and 02 are written, with their orchestrator prompts; 03–06 are deliberately held**
-until 02's inventory lands (§1 below). The campaign is ready to dispatch prompt 01.
+until 02's inventory lands (§1 below). **Prompt 01 has landed**: the convergence facility is
+`ComputeTargets/tests/convergence_reference.py` and the source-grid generations are named in
+`ComputeTargets/tests/wkb_reference.py`. Every later prompt measures through them.
 
 > **The campaign is unblocked.** The 2026-09-12 plan was blocked on `prompts/GkTk-remedial` prompt
 > 18, because until it landed the reference on `QCDModel` did not converge at four wavenumbers.
@@ -63,7 +65,7 @@ until 02's inventory lands (§1 below). The campaign is ready to dispatch prompt
 
 | # | Prompt | Covers | Model | Written? | Status | Commit | Log |
 |---|---|---|---|---|---|---|---|
-| 01 | The convergence harness and one production grid | README §2 (b), (h); `[00-three-production-grid-reproductions]` | Opus | ✍️ [`01-…`](01-convergence-harness-and-grid.md) | ⬜ | | |
+| 01 | The convergence harness and one production grid | README §2 (b), (h); `[00-three-production-grid-reproductions]` | Opus | ✍️ [`01-…`](01-convergence-harness-and-grid.md) | ✅ | *"Build the convergence harness and name the source-grid generations"* (SHA not embedded, per the convention `prompts/background-solver-robustness` uses) | [`logs/01-…`](logs/01-convergence-harness-and-grid.md) |
 | 02 | The accuracy-parameter inventory | README §2 (a), (c), (g); `RECONCILIATION.md` §2.1 | Opus | ✍️ [`02-…`](02-accuracy-parameter-inventory.md) | ⬜ | | |
 | 03 | Audit the adaptive solvers | README §2 (d), (e), (f); review §10.1, §12.5 | Opus | ⏸️ **held** | ⬜ | | |
 | 04 | Audit the order-governed targets | README §2 (a); §7 D5 **(settled yes)** | Opus | ⏸️ **held** | ⬜ | | |
@@ -105,8 +107,8 @@ not ✅ either, which is the specific failure the rebase found.
 
 | Item | Kind | Statement | Prompt | Status |
 |---|---|---|---|---|
-| T1 | **MACHINERY** | One reusable convergence facility, in the test tree, covering every target and calibrated against the constant-$w$ anchors at every use, with "one step tighter" meaning a decade for a tolerance and one order for a Gauss order | 01 | ⬜ |
-| T2 | **MACHINERY** | **One** reproduction of the production source grid at `SOURCE_GRID_CONSTRUCTION_VERSION = 2`, with the version-0 and version-1 constructions retained and named rather than silently re-scored | 01 | ⬜ |
+| T1 | **MACHINERY** | One reusable convergence facility, in the test tree, covering every target and calibrated against the constant-$w$ anchors at every use, with "one step tighter" meaning a decade for a tolerance and one order for a Gauss order | 01 | ✅ `convergence_reference.py`: `TolerancePair` / `GaussOrder`, `reference_drift` → `DriftVerdict` (the criterion evaluated, never just reported), `radiation_anchors` over all eleven closed forms, the two numeric sectors folded in from `tk_numeric_atol_sweep.py` |
+| T2 | **MACHINERY** | **One** reproduction of the production source grid at `SOURCE_GRID_CONSTRUCTION_VERSION = 2`, with the version-0 and version-1 constructions retained and named rather than silently re-scored | 01 | ⚠️ `wkb_reference.source_grid(SOURCE_GRID_V0/_V1/_V2, …)`, no default generation, bit-identical to all three constructions it replaces. **Caveat:** `production_source_grid` keeps its historic behaviour because 28 call sites in 20 files outside prompt 01's scope import it; it is documented as version 0 rather than made to fail loudly |
 | T3 | **MEASUREMENT** | The accuracy-parameter inventory: every parameter, what it keys, whether it reaches a solver, what the real knob is, and the object count of the sector it keys | 02 | ⬜ |
 | T4 | **MEASUREMENT** | `GkNumericIntegration` characterised over the production response grid on three models in both `atol` and `rtol`, against the consumer-spline floor — the sector with ~65,000 objects per model, never swept, and where the campaign's compute decision actually lives | 03 | ⬜ |
 | T5 | **MEASUREMENT** | `TkNumericIntegration` likewise, re-taken on the version-2 grid and under its own `BREAK_POINT_ALL` policy | 03 | ⬜ |
@@ -163,6 +165,31 @@ Opened by the **2026-09-16 rebase**:
   > the stand-in prompt 01 lifts it against must answer both (`RECONCILIATION.md` §7.4);
   > `test_source_grid.py:189` already carries one that does.
 
+  > **Narrowed again by prompt 01, 2026-09-16** (additively). The hoist is done and is
+  > bit-identical: `ComputeTargets/tests/wkb_reference.py` now carries
+  > `source_grid(generation, …)` over three **named** generations — `SOURCE_GRID_V0`,
+  > `SOURCE_GRID_V1`, `SOURCE_GRID_V2` — with **no default**, tagged
+  > `SOURCE_GRID_V2_REPRODUCES_VERSION = 2` and cross-checked against production's own
+  > `SOURCE_GRID_CONSTRUCTION_VERSION` rather than asserting it. `test_source_grid.py:127`,
+  > `test_background_segmentation.py:90` and `tk_numeric_atol_sweep.py`'s two geometries are
+  > repointed, the last of them naming version 0 explicitly; `test_source_grid.py:152`
+  > `_production_base_grid` is left alone, as it should be. Verified: 1,732 / `0960e169` (v0),
+  > 1,773 / `81c6e682` (v1 QCD), 1,996 / `4849552b` (v2 QCD), 1,778 / `60a3205a` (v2 LambdaCDM),
+  > every one bit-identical to the construction it replaces, and
+  > `tk_numeric_atol_sweep.py`'s entire 294-line output unchanged but for the wall clock it prints
+  > about itself.
+  >
+  > **What is left, and it is the whole reason this is a narrowing and not a closure:**
+  > `wkb_reference.production_source_grid` still exists with its historic behaviour, because
+  > **28 call sites in 20 files** import it — 11 test modules under `ComputeTargets/tests/` and 9
+  > scripts under `docs/gktk-remedial/` and `docs/qcd-background-audit/` — and none of those files
+  > was in prompt 01's scope. They are all version 0 and all correct; what they do not do is *say
+  > so*. The prompt asked that the bare name "fail loudly rather than default", which cannot be
+  > done without editing all twenty (log 01, deviation 1). Its docstring now opens "**The
+  > version-0 source grid**". **Next step:** a prompt given those twenty files repoints them at
+  > `source_grid(SOURCE_GRID_V0, …)` and deletes the alias. It is mechanical and every call is
+  > bit-identical; it is scope, not difficulty.
+
 - **[00-gk-numeric-never-swept-and-carries-the-cost]** *(rebase, 2026-09-16; assigned to prompt
   03)* — the campaign's central prior, "the error is set by `rtol`", is one clean measurement and
   one diagonal. `GkTk-remedial` prompt 17 holds `atol = 1e-13` and moves `rtol` alone, so it
@@ -178,6 +205,32 @@ Opened by the **2026-09-16 rebase**:
   `rtol` should not move at all. **Next step:** prompt 03 sweeps $G_k$ in both axes on three models
   over the production response grid and measures the consumer-spline floor beside it, before any
   `rtol` is recommended for either sector.
+
+Opened by **prompt 01**, 2026-09-16:
+
+- **[01-v2-density-raises-at-the-qcd-production-anchor]** *(prompt 01, 2026-09-16; unassigned)* —
+  `main.source_grid_spacing_profile` **raises** on `QCD_Cosmology` when the source grid is anchored
+  where a QCD production run anchors it. `main.py:944` starts the universal grid at
+  `k_exit_earliest.z_exit_suph_e5`; run directly, production's own
+  `CosmologyConcepts.wavenumber._solve_horizon_exit(QCD_Cosmology, k = 3e8, -5)` returns
+  **3.30033444460513e+16**, and `build_z_sample` with the version-2 spacing profile at that
+  `z_init` raises `ValueError: phase_residual[Gk]: the Liouville-Green frequency is not positive at
+  z = 8.6447769e+11 for k = 266544.64` — the cosmology's own third declared crossing, at the
+  smallest production wavenumber. The **version-1** grid builds there without complaint (1,793
+  samples), so it is the density criterion alone, and the failure depends on where the base
+  lattice's nodes fall relative to `SOURCE_GRID_CROSSING_MASK_U`. **Impact:** two things. (i)
+  Whether a QCD production run can build its source grid at all is an open question — this prompt
+  could not answer it, because answering it means running `main.py`. (ii) **Every recorded
+  version-2 QCD figure is anchored at LambdaCDM's `z_init`**, 2.0636395964161516e+16, not QCD's:
+  `test_source_grid.py`'s 1,996 samples and digest `4849552b`, `RECONCILIATION.md` §2.7's "1,996
+  samples on QCD", and `docs/qcd-background-verification.md` §10's density measurements. Those
+  numbers are not wrong — each is correct for the grid it was taken on — but "the production QCD
+  grid" in the record is not the grid a QCD run would build, which is the same species of defect as
+  `[00-three-production-grid-reproductions]` itself. **Next step:** establish whether `main.py`
+  reaches the raise in a real QCD run; if it does, the fix is in `main.source_grid_spacing_profile`
+  or `ComputeTargets/phase_residual.residual_node_range` and belongs to whoever owns the source
+  grid (`prompts/qcd-background-audit`, README §0.5 holds it fixed here), not to this campaign. If
+  it does not, the record still needs the LambdaCDM anchor marked on every version-2 QCD figure.
 
 Assigned to this campaign from other boards (each stays on the board that holds its measurements;
 the closure is recorded there):
@@ -280,7 +333,15 @@ None yet.
     T7 have oracles, not only self-convergence**, and a drift quoted for any of them without the
     oracle error beside it is uncalibrated.
 
-14. **The baseline is `bc6dc97`, not `acd5b8e`** (`RECONCILIATION.md` §7, 2026-09-16).
+14. **Every measurement in this campaign goes through the facility** (prompt 01, board item T1).
+    `ComputeTargets/tests/convergence_reference.py` is the one implementation of the convergence
+    test, and it is shaped so that notes 1 and 2 are the easy path: `reference_drift` has no
+    default for the smallest difference the caller will report and returns the verdict with the
+    numbers, and a geometry cannot be built without naming its source-grid generation. A prompt
+    that writes its own drift statistic has stepped around both rules, and the reviewer should ask
+    why.
+
+15. **The baseline is `bc6dc97`, not `acd5b8e`** (`RECONCILIATION.md` §7, 2026-09-16).
     `ComputeTargets` **452**, `CosmologyModels` **39**. A prompt quoting a suite count, a file
     line number or a "what the tree does" claim from a document dated before the re-anchor must
     re-resolve it: `main.py` alone gained 42 lines above its citation sites, and §7.6 tabulates

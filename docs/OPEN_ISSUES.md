@@ -1,6 +1,6 @@
 # Open issues — project-wide index
 
-**Last updated:** 2026-09-16 · **68 open** across ten campaigns.
+**Last updated:** 2026-09-16 · **69 open** across ten campaigns.
 
 This file exists so that an issue opened by one campaign is not lost when that campaign closes.
 It is an **index, not a record**: one line per issue, pointing at the campaign status board that
@@ -94,8 +94,8 @@ prompt 13 left open.
 
 Planned as [`prompts/tolerance-convergence/`](../prompts/tolerance-convergence/README.md)
 (2026-09-12; **rebased 2026-09-16 at `acd5b8e`, re-anchored the same day at `bc6dc97` onto the
-tree `prompts/background-solver-robustness` left — six prompts, none executed, and the prompt files
-not yet written**). One reusable
+tree `prompts/background-solver-robustness` left — six prompts, 01 executed, 02 written, 03–06
+deliberately held until 02's inventory lands**). One reusable
 convergence test applied to every accuracy parameter in the pipeline on all three models, anchored
 to the constant-$w$ closed forms in `ComputeTargets/analytic_{Gk,Tk}.py`, and the parameters
 decoupled so each quantity carries its own justified one. **Unblocked** by `prompts/GkTk-remedial`
@@ -126,7 +126,8 @@ where it was not.
 
 | Issue | Board | Hook |
 |---|---|---|
-| `[00-three-production-grid-reproductions]` | tolerance-convergence | **Four** constructions in the test tree are each called "the production source grid" and are different grids: `wkb_reference.py:152` (a bare `logspace`, v0), `test_background_segmentation.py:90` (v1), `test_source_grid.py:127` (**v2**, complete but private), `test_source_grid.py:152` (a v0 base, deliberate and named). Production is `main.py:944-963`, `SOURCE_GRID_CONSTRUCTION_VERSION = 2`. Every published tolerance figure was scored on v0, because `tk_numeric_atol_sweep.py:215` imports the first. **Narrowed 2026-09-16 at the re-anchor**: prompt 01 hoists the existing v2 rather than building one. |
+| `[00-three-production-grid-reproductions]` | tolerance-convergence | **Four** constructions in the test tree were each called "the production source grid" and are different grids. **Narrowed again by prompt 01, 2026-09-16**: the generations are now named and bit-identically hoisted into `wkb_reference.source_grid(SOURCE_GRID_V0/_V1/_V2, …)`, with no default, and the four sites repointed. What is left is the bare `production_source_grid` name, which **28 call sites in 20 files** outside that prompt's scope still import; all are v0 and correct, none says so. |
+| `[01-v2-density-raises-at-the-qcd-production-anchor]` | tolerance-convergence | `main.source_grid_spacing_profile` raises on `QCD_Cosmology` at the `z_exit_suph_e5` a QCD production run anchors the grid at (3.300e16), at the cosmology's own third declared crossing; the v1 grid builds there. Every recorded v2 QCD figure — 1,996 samples, digest `4849552b` — is anchored at **LambdaCDM's** 2.064e16 instead. Whether `main.py` reaches the raise in a real QCD run is unestablished. |
 | `[00-gk-numeric-never-swept-and-carries-the-cost]` | tolerance-convergence | "The error is set by `rtol`" is one clean measurement in the 50-object sector and one `(atol, rtol)` diagonal in the 65,000-object one. $G_k$ numeric has never been swept in either axis, and review §10.1 puts the consumer spline that reads it two orders above its solver error — so the honest answer may be "tighten nothing". Assigned to prompt 03. |
 | `[12-tk-numeric-atol-largest-k-excursion]` | GkTk-remedial → tolerance-convergence | Prompt 12's `atol=1e-13` left excursions above README §6's 3e-6 of the envelope that prompt 17 measured across the production grid: 3 / 13 / 8 of 50 wavenumbers on Radiation / LambdaCDM / QCD, worst 8.64e-4. **The user settled the constant 2026-09-12: `1e-13` stays** — `atol` is not the lever. What remains is the `rtol` retuning. **Assigned (2026-09-12): `prompts/tolerance-convergence`**; its cost figures corrected at the 2026-09-16 rebase, and its sweep re-taken on the v2 grid. |
 | `[01-convergence-block-has-a-separate-generator]` | qcd-background-audit → tolerance-convergence | `wkb_reference_data.json`'s `convergence` block records $N_\tau = N_{c_s\tau} = N_F = N_\rho = 4$, was generated 2026-09-10, and names `"branch+knots"` as its winning scheme — a knot set `qcd-background-audit` prompt 07 removed. One tolerance is owed on its account (`QCD_BREAK_POINT_ALIGNMENT_TOL = 1.5e-04`). Declined on scope by prompts 08 and 09 of that campaign. **Assigned (2026-09-16): `prompts/tolerance-convergence` prompt 04**, the first prompt anywhere whose charter is the orders themselves. |

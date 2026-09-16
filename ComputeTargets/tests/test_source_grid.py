@@ -49,6 +49,11 @@ from ComputeTargets.phase_residual import (
     residual_node_range,
 )
 from ComputeTargets.tests.test_main_plumbing import load_main_py_functions
+from ComputeTargets.tests.wkb_reference import (
+    SOURCE_GRID_V1,
+    SOURCE_GRID_V2,
+    source_grid,
+)
 from CosmologyConcepts import (
     SOURCE_GRID_BREAK_HALF_WIDTH,
     SOURCE_GRID_BREAK_REFINEMENT,
@@ -125,27 +130,24 @@ source_grid_spacing_profile = _main["source_grid_spacing_profile"]
 
 
 def _production_grid(cosmology, with_spacing: bool = True):
-    """The grid ``main.py`` builds for this cosmology, at production geometry."""
-    base = _production_base_grid()
-    break_z, feature_z = cosmology_feature_redshifts(
-        cosmology, PRODUCTION_Z_END, PRODUCTION_Z_INIT
-    )
-    spacing = (
-        source_grid_spacing_profile(
-            cosmology,
-            base,
-            [k / Mpc_units().Mpc for k in PRODUCTION_K_INV_MPC],
-        )
-        if with_spacing
-        else None
-    )
-    return build_z_sample(
+    """
+    The grid ``main.py`` builds for this cosmology, at production geometry.
+
+    The construction itself now lives in ``ComputeTargets/tests/wkb_reference.py`` as the named
+    generations :data:`SOURCE_GRID_V2` (with the density) and :data:`SOURCE_GRID_V1` (without):
+    prompt 01 of ``prompts/tolerance-convergence`` hoisted it out of this module so that the
+    measurement scripts can reach it, since the version-0 copy they were importing had been the
+    production construction for neither of the last two campaigns
+    (``[00-three-production-grid-reproductions]``). The hoist is bit-identical -- the grids below
+    still carry the lengths and digests this module has always asserted.
+    """
+    return source_grid(
+        SOURCE_GRID_V2 if with_spacing else SOURCE_GRID_V1,
         PRODUCTION_Z_INIT,
         PRODUCTION_Z_END,
         PRODUCTION_SAMPLES_PER_LOG10Z,
-        break_z=break_z,
-        feature_z=feature_z,
-        spacing=spacing,
+        cosmology=cosmology,
+        k_inv_Mpc=PRODUCTION_K_INV_MPC,
     )
 
 
