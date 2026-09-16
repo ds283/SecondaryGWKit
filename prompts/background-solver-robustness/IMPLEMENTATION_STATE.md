@@ -7,9 +7,11 @@
 **Baseline commit:** `f023eb8` — suites green and re-run at planning time:
 `CosmologyModels` **30**, `ComputeTargets` **447**
 **Target branch:** `background-solver-robustness`, cut from `f023eb8` (README §4)
-**Last updated:** 2026-09-16 · **Status: CLOSED. Workstreams A, B, C and E complete — prompts 01,
-02, 03, 04, 05, 06 and 09 all landed. Workstream D (07, 08) was never authorised and its two rows
-stay indexed. Prompt 06 wrote [`PROVENANCE.md`](PROVENANCE.md) for all three of the file's
+**Last updated:** 2026-09-16 · **Status: REOPENED for workstream D. Workstreams A, B, C and E
+complete — prompts 01, 02, 03, 04, 05, 06 and 09 all landed, and prompt 06 closed the campaign.
+**The user then opened README §7 D3's gate on 2026-09-16, after that close-out**, so 07 and 08 are
+authorised and in flight; §5.6's D3 row and §5.1 are amended to match. Prompt 06 wrote
+[`PROVENANCE.md`](PROVENANCE.md) for all three of the file's
 `root_scalar` sites, pointed `prompts/tolerance-convergence`'s board and README §3.2 at it, and
 took the close-out verification in §5 below. Final suites `CosmologyModels` **39**,
 `ComputeTargets` **449**, both OK; `T_Z_REPRESENTATION_VERSION` **6** at every commit.**
@@ -46,8 +48,8 @@ took the close-out verification in §5 below. Final suites `CosmologyModels` **3
 | 04 | [Relocate the crossing probe](04-relocate-the-crossing-probe.md) | B | README §2 (g) | Sonnet | ✅ | *"Relocate the crossing probe to test machinery"* (SHA not embedded, per the campaign convention) | [`logs/04-relocate-the-crossing-probe.md`](logs/04-relocate-the-crossing-probe.md) |
 | 05 | [Hoist the range logic](05-hoist-the-range-logic.md) | C | README §2 (h); §7 D4 | Opus | ⚠️ | *"Hoist the range logic out of the spline wrappers' hot path"* (SHA not embedded, per the campaign convention) | [`logs/05-hoist-the-range-logic.md`](logs/05-hoist-the-range-logic.md) |
 | 06 | [Provenance and close-out](06-provenance-and-close-out.md) | C | README §2 (i); §0.4 | Opus | ⚠️ | *"Settle the provenance of the file's three root solves"* (SHA not embedded, per the campaign convention) | [`logs/06-provenance-and-close-out.md`](logs/06-provenance-and-close-out.md) |
-| 07 | [Report the representation in the inventory](07-inventory-representation.md) | **D — gated** | — | Sonnet | 🔒 | | |
-| 08 | [Refresh the agreement threshold](08-refresh-agreement-threshold.md) | **D — gated** | — | Sonnet | 🔒 | | |
+| 07 | [Report the representation in the inventory](07-inventory-representation.md) | **D — authorised 2026-09-16** | — | Sonnet | ⬜ | | |
+| 08 | [Refresh the agreement threshold](08-refresh-agreement-threshold.md) | **D — authorised 2026-09-16** | — | Sonnet | ⬜ | | |
 | 09 | [Make the model authoritative](09-make-the-model-authoritative.md) | **E** | README §2 (l); §7 D2 as decided | Opus | ⚠️ | *"Make the cosmology authoritative for its equality redshifts"* (SHA not embedded, per the campaign convention) | [`logs/09-make-the-model-authoritative.md`](logs/09-make-the-model-authoritative.md) |
 
 Status key: ⬜ not started · 🔄 in flight · ✅ complete · ⚠️ complete with a recorded caveat ·
@@ -377,7 +379,10 @@ measurement.
 
 ### 5.1 The result
 
-**Seven of nine prompts landed; the other two were never authorised.**
+**Seven of nine prompts landed. Amended 2026-09-16 (additively, §5 rule 6): the other two were
+not authorised *at the time this section was written*, and the user opened README §7 D3's gate
+immediately afterwards.** Workstream D is running; this subsection is the close-out as prompt 06
+correctly took it, and is left standing for that reason.**
 
 | Workstream | Prompts | Status |
 |---|---|---|
@@ -476,8 +481,8 @@ carries it to 449 from prompt 09.
 | `[05-black-check-is-not-clean-at-the-repository-root]` | this board §3 | 54 `docs/` scratch files. A decision for the user: fix the tree or narrow the convention |
 | `[09-retire-tag-test-docstring-cites-a-superseded-digest]` | this board §3 | One word in a `ComputeTargets` test docstring, stale since prompt 09's digest move |
 | `[02-bracketed-reference-is-not-the-exact-root]` | this board §3 | A planning question: whether README §3.1's anchor should be an exact oracle on the $\Lambda$ pair. Changing it changes what prompt 01's tests assert, so it is the user's |
-| `[01-agreement-threshold-comment-predates-the-representation]` | this board §3 | **Workstream D was not authorised.** Measured by prompt 01; prompt 08 is where it gets fixed if D ever opens |
-| `[03-qcd-inventory-does-not-report-the-representation]` | `qcd-background-audit` board | **Workstream D was not authorised.** Assigned here 2026-09-16 and still assigned; one line in `inventory()` |
+| `[01-agreement-threshold-comment-predates-the-representation]` | this board §3 | **Workstream D authorised by the user 2026-09-16, after the close-out.** Measured by prompt 01; prompt 08 fixes it |
+| `[03-qcd-inventory-does-not-report-the-representation]` | `qcd-background-audit` board | **Workstream D authorised by the user 2026-09-16, after the close-out.** Assigned here and still assigned; one line in `inventory()`, prompt 07 |
 | `[11-stop-point-root-tolerance]` | the hand-over campaign | Never this campaign's. `AUDIT.md` §4.3 and README §0.5 forbade absorbing it, and no prompt here touched it |
 
 Nothing is left in flight. **No regeneration is outstanding** (note 14): the digest prompt 09 moved
@@ -489,7 +494,7 @@ is the acceptance, not a debt.
 |---|---|---|
 | **D1** | The tolerance pair for `_find_rho_equality` | **Taken, by the user, 2026-09-16 — and against the campaign's own recommendation.** The plan recommended `xtol=1e-300, rtol=1e-14`; prompt 02 measured that it stops 7 ulp from the independent reference and fails a test prompt 01 had already shipped, and the user amended D1 to **`rtol=8.9e-16`**, Brent's $4\varepsilon$ floor, and amended prompt 02's acceptance from bit-identity to ≤ 4 ulp. [`PROVENANCE.md`](PROVENANCE.md) §3 holds the entry |
 | **D2** | The three copies of the equality closed form | **Taken, by the user, 2026-09-16, as option (iii)** — again against the campaign's recommendation, which was (i), and the recommendation was wrong. Implemented by **prompt 09**: `BaseCosmology` declares the two equality redshifts, each model answers for itself, `main.py` computes nothing and has no fallback. There are now **two** closed-form sites, not three (note 18) |
-| **D3** | Whether workstream D runs at all | **Outstanding, and closing the campaign does not force it.** The gate was never opened; both rows stay indexed, which §7 D3 says is a perfectly good answer that costs nothing. Either can be picked up by any later prompt with the files in scope |
+| **D3** | Whether workstream D runs at all | **Taken, by the user, 2026-09-16 — *after* this close-out was written, which is why the rows above still read as though it were outstanding.** The gate is open and both prompts are authorised: 07 then 08. This row supersedes the "outstanding" wording elsewhere in §5 |
 | **D4** | Whether `[06-t-photon-call-cost-needs-a-quiet-machine]` closes or is accepted | **Not invoked.** Prompt 05's hoist landed the row at **2.4854 µs** against its ≤ 2.5 µs target, so the issue closed on the `qcd-background-audit` board's §4 and the user was never asked. The margin is 0.6 % (§5.3) |
 
 ### 5.7 The paragraph a later reader needs

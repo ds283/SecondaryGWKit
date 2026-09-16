@@ -433,6 +433,12 @@ campaign owns and that this one happens to be adjacent to. Neither is this campa
 They are gated: the orchestrator asks before starting D, and "no, leave them indexed" is a
 perfectly good answer that costs nothing — the rows stay in `docs/OPEN_ISSUES.md` where they are.
 
+> **Answered 2026-09-16: yes, run both.** Recorded here additively, per §5 rule 6 — the paragraph
+> above is the plan as written and was correct for the tree it was written on. The gate was opened
+> **after prompt 06 had already written the close-out**, which therefore records D3 as outstanding
+> and workstream D as never authorised; `IMPLEMENTATION_STATE.md`'s header, §5.1, §5.5 and §5.6 are
+> amended in the same commit as this note. Prompts 07 and 08 run in that order.
+
 **D4 — whether `[06-t-photon-call-cost-needs-a-quiet-machine]` closes or is accepted.** Prompt 05
 hoists the loop-invariant work and re-measures. If the result is still above `qcd-background-audit`
 README §6.2's 2.5 µs target, **the row itself is what to put to the user** — that is the issue's own

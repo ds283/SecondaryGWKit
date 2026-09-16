@@ -402,8 +402,8 @@ waits on a prompt that has the right files in scope; the board holds the measure
 Planned as [`prompts/background-solver-robustness/`](../prompts/background-solver-robustness/README.md)
 (2026-09-16 at `f023eb8`; grown to **nine prompts in five workstreams** when the user decided
 README §7 D2 — **and closed on 2026-09-16 with all seven authorised prompts landed**, 01–06 and 09;
-workstream D, prompts 07 and 08, was never authorised and remains gated on that campaign's
-README §7 D3). It implements
+workstream D, prompts 07 and 08, was **authorised by the user on 2026-09-16, after that
+close-out**, and is running). It implements
 [`AUDIT.md`](../prompts/background-solver-robustness/AUDIT.md), which measured that
 `LambdaCDM_GenericEOS._find_rho_equality` is an **unbracketed secant** at `xtol=1e-6, rtol=1e-4` —
 two orders looser than the file's other two solves, which `prompts/qcd-background-audit` tightened —
@@ -456,8 +456,9 @@ moved from `a2c32f67` on **exactly one** sample (index 1540, +7 ulp) — the val
 predicted — and `LambdaCDM(Planck2018)` is `60a3205a` at 1,778, unmoved. No regeneration follows
 (the user, 2026-09-16: this is the build phase).
 
-**Prompt 06 closed the campaign on 2026-09-16.** All seven authorised prompts landed (01–06 and
-09); workstream D (07, 08) was **not authorised** and its two rows stay indexed where they are.
+**Prompt 06 closed the campaign on 2026-09-16.** All seven prompts authorised at that point
+landed (01–06 and 09). **The user then opened README §7 D3's gate on 2026-09-16**, so workstream D
+(07, 08) is authorised and running; its two rows leave this index as those prompts land.
 [`PROVENANCE.md`](../prompts/background-solver-robustness/PROVENANCE.md) settles all three of the
 file's `root_scalar` sites in the shape `docs/TOLERANCE-PROVENANCE.md` will want, and
 `prompts/tolerance-convergence`'s board and README §3.2 now point at it instead of carrying an
