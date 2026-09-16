@@ -10,11 +10,16 @@
 **Last updated:** 2026-09-16 · **Status: REOPENED for workstream D. Workstreams A, B, C and E
 complete — prompts 01, 02, 03, 04, 05, 06 and 09 all landed, and prompt 06 closed the campaign.
 **The user then opened README §7 D3's gate on 2026-09-16, after that close-out**, so 07 and 08 are
-authorised and in flight; §5.6's D3 row and §5.1 are amended to match. Prompt 06 wrote
+authorised; §5.6's D3 row and §5.1 are amended to match. Prompt 06 wrote
 [`PROVENANCE.md`](PROVENANCE.md) for all three of the file's
 `root_scalar` sites, pointed `prompts/tolerance-convergence`'s board and README §3.2 at it, and
-took the close-out verification in §5 below. Final suites `CosmologyModels` **39**,
-`ComputeTargets` **449**, both OK; `T_Z_REPRESENTATION_VERSION` **6** at every commit.**
+took the close-out verification in §5 below. **Prompt 07 has now landed** (08 still in flight): it
+closed the `QCD_Cosmology` half of the `qcd-background-audit` board's
+`[03-qcd-inventory-does-not-report-the-representation]`, adding a new test module to
+`ComputeTargets/tests/` — the nearest existing home for datastore-factory tests, since no
+`Datastore/tests/` package exists — which moves `ComputeTargets` to **452**. Final suites at
+prompt 06's close-out were `CosmologyModels` **39**, `ComputeTargets` **449**, both OK;
+`T_Z_REPRESENTATION_VERSION` **6** at every commit, prompt 07 included.**
 
 > **The impact is zero change to any computed quantity, and that is the point.** `AUDIT.md` §5 and
 > README §0.2 are the campaign's framing: the two redshifts `_find_rho_equality` produces are
@@ -48,7 +53,7 @@ took the close-out verification in §5 below. Final suites `CosmologyModels` **3
 | 04 | [Relocate the crossing probe](04-relocate-the-crossing-probe.md) | B | README §2 (g) | Sonnet | ✅ | *"Relocate the crossing probe to test machinery"* (SHA not embedded, per the campaign convention) | [`logs/04-relocate-the-crossing-probe.md`](logs/04-relocate-the-crossing-probe.md) |
 | 05 | [Hoist the range logic](05-hoist-the-range-logic.md) | C | README §2 (h); §7 D4 | Opus | ⚠️ | *"Hoist the range logic out of the spline wrappers' hot path"* (SHA not embedded, per the campaign convention) | [`logs/05-hoist-the-range-logic.md`](logs/05-hoist-the-range-logic.md) |
 | 06 | [Provenance and close-out](06-provenance-and-close-out.md) | C | README §2 (i); §0.4 | Opus | ⚠️ | *"Settle the provenance of the file's three root solves"* (SHA not embedded, per the campaign convention) | [`logs/06-provenance-and-close-out.md`](logs/06-provenance-and-close-out.md) |
-| 07 | [Report the representation in the inventory](07-inventory-representation.md) | **D — authorised 2026-09-16** | — | Sonnet | ⬜ | | |
+| 07 | [Report the representation in the inventory](07-inventory-representation.md) | **D — authorised 2026-09-16** | — | Sonnet | ⚠️ | *"Report the T(z) representation in the QCD cosmology inventory"* (SHA not embedded, per the campaign convention) | [`logs/07-inventory-representation.md`](logs/07-inventory-representation.md) |
 | 08 | [Refresh the agreement threshold](08-refresh-agreement-threshold.md) | **D — authorised 2026-09-16** | — | Sonnet | ⬜ | | |
 | 09 | [Make the model authoritative](09-make-the-model-authoritative.md) | **E** | README §2 (l); §7 D2 as decided | Opus | ⚠️ | *"Make the cosmology authoritative for its equality redshifts"* (SHA not embedded, per the campaign convention) | [`logs/09-make-the-model-authoritative.md`](logs/09-make-the-model-authoritative.md) |
 
@@ -211,7 +216,7 @@ deleted from `docs/OPEN_ISSUES.md`.
 | ~~`[07-t-photon-range-logic-recomputes-its-bounds]`~~ | qcd-background-audit | prompt **05** | **Closed by prompt 05, 2026-09-16** — hoisted in all three classes, four bounds each, bit-identical returns and character-identical messages demonstrated; resolved entry on the `qcd-background-audit` board's §4, row deleted from `docs/OPEN_ISSUES.md` |
 | ~~`[06-t-photon-call-cost-needs-a-quiet-machine]`~~ | qcd-background-audit | prompt **05** | **Closed by prompt 05, 2026-09-16** — **2.4854 µs** mean over five runs at `HEAD` (range 2.418–2.546) against 2.6744 at `HEAD~1`, ratio **0.9293**, controls within ±2 %: **inside README §6.2's ≤ 2.5 µs**. README §7 **D4 is not invoked.** Resolved on the `qcd-background-audit` board's §4, row deleted from the index |
 | ~~`[09-audit-script-section-5-prose-counts-the-wrong-set]`~~ | qcd-background-audit | prompt **05** | **Closed by prompt 05, 2026-09-16** — the sentence now intersects the knots with the declared set and prints **0 of 3**; §5's table and the whole of §2–§4 print byte-identically. Resolved on the `qcd-background-audit` board's §4, row deleted from the index |
-| `[03-qcd-inventory-does-not-report-the-representation]` | qcd-background-audit | prompt **07** (gated) | Orphaned by two prompts of that campaign on scope. Not this campaign's subject either, which is why it is behind README §7 **D3** |
+| ~~`[03-qcd-inventory-does-not-report-the-representation]`~~ (`QCD_Cosmology` half only) | qcd-background-audit | prompt **07** | **Closed in part by prompt 07, 2026-09-16** — `sqla_QCDCosmology_factory.inventory()` now reports `T_z_representation`; resolved entry on the `qcd-background-audit` board's §4, row deleted from `docs/OPEN_ISSUES.md` §1.8. **The `BackgroundModel` half prompt 14 of that campaign widened it with is out of prompt 07's files-may-touch list and stays open**, narrowed, under the same ID on that board's §3 — see this board's §3 below |
 
 ### 3.2 Recorded, **not owned here**, and not scheduled (README §0.5)
 
@@ -389,7 +394,7 @@ correctly took it, and is left standing for that reason.**
 | A — the equality solve | 01, 02 | **complete** |
 | B — what the redshifts feed | 03, 04 | **complete** |
 | C — cost and close-out | 05, 06 | **complete** |
-| D — housekeeping | 07, 08 | **not authorised.** README §7 **D3** was never answered, and "no, leave them indexed" is the answer the plan says costs nothing. `[03-qcd-inventory-does-not-report-the-representation]` (prompt 07) stays on the `qcd-background-audit` board assigned here and indexed in `docs/OPEN_ISSUES.md` §1.8; `[01-agreement-threshold-comment-predates-the-representation]` (prompt 08) stays on this board's §3, **measured by prompt 01** so that whoever does take it need not re-measure |
+| D — housekeeping | 07, 08 | **not authorised** *at the time this row was written.* README §7 **D3** was never answered, and "no, leave them indexed" is the answer the plan says costs nothing. `[03-qcd-inventory-does-not-report-the-representation]` (prompt 07) stays on the `qcd-background-audit` board assigned here and indexed in `docs/OPEN_ISSUES.md` §1.8; `[01-agreement-threshold-comment-predates-the-representation]` (prompt 08) stays on this board's §3, **measured by prompt 01** so that whoever does take it need not re-measure. **Amended additively, 2026-09-16: D3 opened and prompt 07 has since landed** — see §1's board row and §3.1 above. It closed only the `QCD_Cosmology` half of `[03-…]`; the `BackgroundModel` half stays open on the `qcd-background-audit` board, unassigned. |
 | E — make the model authoritative | 09 | **complete.** Added 2026-09-16 on the user's §7 D2 decision; not in the original plan |
 
 **Final state.** `CosmologyModels` **39**, `ComputeTargets` **449**, both OK, re-run at this commit.
@@ -482,7 +487,7 @@ carries it to 449 from prompt 09.
 | `[09-retire-tag-test-docstring-cites-a-superseded-digest]` | this board §3 | One word in a `ComputeTargets` test docstring, stale since prompt 09's digest move |
 | `[02-bracketed-reference-is-not-the-exact-root]` | this board §3 | A planning question: whether README §3.1's anchor should be an exact oracle on the $\Lambda$ pair. Changing it changes what prompt 01's tests assert, so it is the user's |
 | `[01-agreement-threshold-comment-predates-the-representation]` | this board §3 | **Workstream D authorised by the user 2026-09-16, after the close-out.** Measured by prompt 01; prompt 08 fixes it |
-| `[03-qcd-inventory-does-not-report-the-representation]` | `qcd-background-audit` board | **Workstream D authorised by the user 2026-09-16, after the close-out.** Assigned here and still assigned; one line in `inventory()`, prompt 07 |
+| ~~`[03-qcd-inventory-does-not-report-the-representation]`~~ | `qcd-background-audit` board | **Closed in part by prompt 07, 2026-09-16** (the `QCD_Cosmology` half). The `BackgroundModel` half prompt 14 of that campaign widened it with was out of prompt 07's files-may-touch list and stays open, unassigned, on the `qcd-background-audit` board's §3 |
 | `[11-stop-point-root-tolerance]` | the hand-over campaign | Never this campaign's. `AUDIT.md` §4.3 and README §0.5 forbade absorbing it, and no prompt here touched it |
 
 Nothing is left in flight. **No regeneration is outstanding** (note 14): the digest prompt 09 moved

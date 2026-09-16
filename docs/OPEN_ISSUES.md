@@ -379,6 +379,12 @@ user's framing with nothing built towards it:
 | `[14-archival-read-stops-at-the-pre-gktk-value-columns]` | qcd-background-audit | Prompt 14's read path makes a **pre-prompt-14** store readable — the missing grid-identity columns are caught, the query re-issued without them, the row reported as an unknown generation. It does **not** make a **pre-`GkTk-remedial` 03/04** store readable: that refusal, on `BackgroundModelValue.tau_lo_Mpc`, is unconditional on both paths. Measured on the only datastore in the tree, which is exactly that old: the prompt-14 fallback fires and finds the row, then the `tau_lo_Mpc` message stops it. The two guards differ in kind — a grid identity is metadata never *recorded*, `tau_lo_Mpc` a value never *computed* — so softening the second means fabricating background values. **Next step:** if the oldest stores must stay archival, it needs a reader that stops at `BackgroundModel` and never asks for the value rows. A design, not a patch; nobody has asked for it. |
 | `[14-no-archive-of-grid-construction-algorithms]` | qcd-background-audit | A datastore records *which* construction built its grid, but the **code** of a superseded construction lives only in git history, so a run written under version 1 cannot be re-derived once version 2 has replaced `build_z_sample` — which prompt 15 will do. Harmless today (there is one construction); it bites the first time someone wants to reproduce, rather than merely re-read, an archived run. Prompt 14 built nothing beyond the version integer that would be its key, deliberately: an archive means every retired constructor kept alive and tested forever. **Next step:** none proposed — the decision is the user's, and the first thing to settle is whether a retired construction must keep *running* or only be *readable*. |
 
+**Narrowed by `background-solver-robustness` prompt 07 (2026-09-16):**
+
+| Issue | Board | Hook |
+|---|---|---|
+| `[03-qcd-inventory-does-not-report-the-representation]` | qcd-background-audit | Originally both `sqla_QCDCosmology_factory.inventory()` and (from prompt 14) `sqla_BackgroundModelFactory.inventory()` omitted their tables' identity columns. **The `QCD_Cosmology` half is resolved** — `background-solver-robustness` prompt 07 added `T_z_representation` to the former, demonstrated against two rows differing only in it. **The `BackgroundModel` half is not**: prompt 07's files-may-touch list did not include `BackgroundModel.py`, and its own stop condition treats a second reporting site with the same gap as a new issue to record, not fix. `sqla_BackgroundModelFactory.inventory()` still says nothing about `source_grid_digest` or `source_grid_construction`. **Next step:** add both columns to its per-bucket report, in whichever prompt next has `Datastore/SQL/ObjectFactories/BackgroundModel.py` in scope. Not assigned. |
+
 **Opened by prompt 13**, which closed `[12-background-derivative-fit-grid-rings-at-a-step]`:
 
 | Issue | Board | Hook |
@@ -503,15 +509,13 @@ sample of 1,996 on purpose. `T_Z_REPRESENTATION_VERSION` is 6 at every commit; f
 **Adopted from `qcd-background-audit`** — each named "whichever prompt next has these files in
 scope" as its next step, and this is the first campaign that does
 ([`RECONCILIATION.md`](../prompts/background-solver-robustness/RECONCILIATION.md) §9.2). Each is
-still that board's issue and closes on **its** §4. Four of the five have: `[08-…]` by prompt 04,
-and `[07-t-photon-range-logic-recomputes-its-bounds]`,
+still that board's issue and closes on **its** §4. **All five have**: `[08-…]` by prompt 04,
+`[07-t-photon-range-logic-recomputes-its-bounds]`,
 `[06-t-photon-call-cost-needs-a-quiet-machine]` and
-`[09-audit-script-section-5-prose-counts-the-wrong-set]` by prompt 05. **One remains**, and it is
-gated on that campaign's README §7 D3.
-
-| Issue | Board | Hook |
-|---|---|---|
-| `[03-qcd-inventory-does-not-report-the-representation]` | qcd-background-audit | `sqla_QCDCosmology_factory.inventory()` and `tools/inventory_report.py` show QCD cosmology rows without the `T_z_representation` column prompt 03 added, so from prompt 04 rows differing only in their representation render as indistinguishable duplicates to the only tool that inspects a datastore. One line in `inventory()`; out of scope for prompt 03, whose §2 item 4 fixes the key and nothing else, and out of scope for prompt 09, which opens no datastore and may not touch a production file. **Assigned (2026-09-16): `prompts/background-solver-robustness` prompt 07** — the first campaign with these files in scope. Gated on that campaign's README §7 D3. |
+`[09-audit-script-section-5-prose-counts-the-wrong-set]` by prompt 05, and
+`[03-qcd-inventory-does-not-report-the-representation]`'s `QCD_Cosmology` half by prompt 07 —
+whose `BackgroundModel` half prompt 14 of that campaign widened it with stays open, narrowed, in
+§1.7 above, unassigned (prompt 07's files-may-touch list did not extend there).
 
 ---
 
