@@ -7,9 +7,11 @@
 **Baseline commit:** `f023eb8` — suites green and re-run at planning time:
 `CosmologyModels` **30**, `ComputeTargets` **447**
 **Target branch:** `background-solver-robustness`, cut from `f023eb8` (README §4)
-**Last updated:** 2026-09-16 · **Status: workstream A complete; workstream B complete — prompts
-01, 02, 03 and 04 done. README §7 **D2 decided by the user: option (iii)**, the solve is
-authoritative at `main.py` — which adds **prompt 09** and **workstream E** (§1, §3).**
+**Last updated:** 2026-09-16 · **Status: workstreams A, B and E complete — prompts 01, 02, 03, 04
+and 09 done. README §7 D2 is implemented: the model is authoritative for its own equality
+redshifts, `main.py` computes nothing, and the `QCD_Cosmology` production source-grid digest has
+moved `a2c32f67` → **`4849552b`** on exactly one sample, on purpose (§6 note 15). Workstream C
+(05, 06) is next.**
 
 > **The impact is zero change to any computed quantity, and that is the point.** `AUDIT.md` §5 and
 > README §0.2 are the campaign's framing: the two redshifts `_find_rho_equality` produces are
@@ -45,7 +47,7 @@ authoritative at `main.py` — which adds **prompt 09** and **workstream E** (§
 | 06 | [Provenance and close-out](06-provenance-and-close-out.md) | C | README §2 (i); §0.4 | Opus | ⬜ | | |
 | 07 | [Report the representation in the inventory](07-inventory-representation.md) | **D — gated** | — | Sonnet | 🔒 | | |
 | 08 | [Refresh the agreement threshold](08-refresh-agreement-threshold.md) | **D — gated** | — | Sonnet | 🔒 | | |
-| 09 | [Make the model authoritative](09-make-the-model-authoritative.md) | **E** | README §2 (l); §7 D2 as decided | Opus | ⬜ | | |
+| 09 | [Make the model authoritative](09-make-the-model-authoritative.md) | **E** | README §2 (l); §7 D2 as decided | Opus | ⚠️ | *"Make the cosmology authoritative for its equality redshifts"* (SHA not embedded, per the campaign convention) | [`logs/09-make-the-model-authoritative.md`](logs/09-make-the-model-authoritative.md) |
 
 Status key: ⬜ not started · 🔄 in flight · ✅ complete · ⚠️ complete with a recorded caveat ·
 ❌ blocked · 🔒 gated on README §7 D3.
@@ -76,7 +78,7 @@ decades apart and nothing about one of them predicts the other.
 | (f) | **MEASUREMENT** | What the equality redshifts actually feed, written down: three closed-form sites scored against each other and against the corrected solve on three models — ~~`RadiationModel`~~ **the pure-radiation stand-in, `RadiationModel` exposing no $\Omega$s at all (log 03, D1)** — the chain from `feature_z` to the `BackgroundModel` lookup key, and `main.py:526`'s stale 4e-13 corrected | 03 | ✅ |
 | (g) | **HYGIENE** | `_temperature_crossing_log1pz` is test machinery in the test tree, with its docstring and its `xtol=1e-15, rtol=1e-15` carried across unchanged | 04 | ✅ |
 | (h) | **MEASUREMENT** | The four loop-invariant `_outward` bounds hoisted in all three classes, **bit-identical** returns and character-identical messages demonstrated, and the `T_photon` cost row closed at ≤ 2.5 µs or escalated to the user | 05 | ⬜ |
-| (l) | **FIX** | The model is authoritative for its own equality redshifts: `BaseCosmology` declares them, `LambdaCDM` answers with the closed form (exact for it), `LambdaCDM_GenericEOS` answers with the solve its constructor already runs, `main.py` computes nothing and has **no fallback** — QCD digest `a2c32f67` → `4849552b` on exactly one moved sample, `LambdaCDM` unmoved | 09 | ⬜ |
+| (l) | **FIX** | The model is authoritative for its own equality redshifts: `BaseCosmology` declares them, `LambdaCDM` answers with the closed form (exact for it), `LambdaCDM_GenericEOS` answers with the solve its constructor already runs, `main.py` computes nothing and has **no fallback** — QCD digest `a2c32f67` → `4849552b` on exactly one moved sample (index 1540, +7 ulp), `LambdaCDM` unmoved — **and the QCD break-point-only grid `303f9ce7` → `81c6e682`, which the prompt did not name and which carries the same one sample (log 09, D1)** | 09 | ✅ |
 | (i) | **PROVENANCE** | An entry for **all three** `root_scalar` sites in `LambdaCDM_GenericEOS.py` — value, method, what it sets, call count, choosing measurement **and its commit**, competing floor, cost, citation — in the shape `docs/TOLERANCE-PROVENANCE.md` will want | 06 | ⬜ |
 
 ---
@@ -86,19 +88,24 @@ decades apart and nothing about one of them predicts the other.
 Issues opened here must be added to [`docs/OPEN_ISSUES.md`](../../docs/OPEN_ISSUES.md) **in the
 same commit** (`CLAUDE.md`), with the count corrected.
 
-Opened by **prompt 03** (2026-09-16):
+Opened by **prompt 09** (2026-09-16):
 
-- **[03-main-py-cites-a-stale-line-for-the-equality-solve]** *(prompt 03; no prompt assigned)* —
-  `main.py:524-525`'s docstring says the two equality redshifts are computed and discarded by the
-  model's constructor and cites ``LambdaCDM.py:73`` and ``LambdaCDM_GenericEOS.py:483``. The first
-  is right; the second is not. The constructor's two `_find_rho_equality` calls are at
-  **`:501-508`**, and `:483` is now inside the `_break_point_crossings_log1pz` cache assignment,
-  eighteen lines above them.
-  **Impact:** none mechanically — it is a pointer in prose and nothing parses it — but it is in the
-  one docstring that justifies a production grid choice, and it sends a reader looking for the
-  solve to the wrong method. Prompt 03's file list permits **one** docstring sentence, `:525-527`,
-  and this citation is in the sentence before it; fixing it would have been out of scope
-  (README §5 rule 5). **Next step:** one line, in whichever prompt next has `main.py` in scope.
+- **[09-retire-tag-test-docstring-cites-a-superseded-digest]** *(prompt 09; no prompt assigned)* —
+  `ComputeTargets/tests/test_retire_samples_per_decade_tag.py:29-32`'s module docstring says that
+  `test_source_grid.py::TestTheConstructionVersionNamesThisAlgorithm` *"pins the production grids
+  to 1,996 samples / digest `a2c32f67` (QCD) and 1,778 / `60a3205a` (LambdaCDM)"*. Since prompt 09
+  the QCD digest is **`4849552b`**; the `LambdaCDM` half is still right, and so is the sample
+  count.
+  **Impact:** none mechanically. That file asserts only `SOURCE_GRID_CONSTRUCTION_VERSION` and
+  `T_Z_REPRESENTATION_VERSION` — the digest appears in prose explaining *why* it does not need to
+  assert the grid — and the whole `ComputeTargets` suite is green at 449. It is a stale figure in
+  a docstring that argues a prompt moved no grid, which is the class of thing this project does
+  not leave standing. The file is not in prompt 09's permitted list (README §5 rule 5).
+  **Next step:** one word, in whichever prompt next has
+  `ComputeTargets/tests/test_retire_samples_per_decade_tag.py` in scope.
+
+Opened by **prompt 03** (2026-09-16) and **resolved by prompt 09** — moved to §4:
+`[03-main-py-cites-a-stale-line-for-the-equality-solve]`.
 
 Opened by **prompt 02** (2026-09-16):
 
@@ -122,74 +129,9 @@ Opened by **prompt 02** (2026-09-16):
   exact oracle for the $\Lambda$ pair is a planning question and a decision for the user, since
   changing the reference would change what prompt 01's four tests assert.
 
-Opened by the **2026-09-16 planning commit**:
-
-- **[00-equality-redshift-closed-form-is-duplicated-three-times]** *(planning; measured by prompt
-  03; the decision is README §7 D2 and the user's)* — $1+z_{\rm eq}=\Omega_m/\Omega_r$ and
-  $1+z_\Lambda=(\Omega_\Lambda/\Omega_m)^{1/3}$ are computed at three sites in three packages:
-  `LambdaCDM_GenericEOS.py:501-506` (as a solver guess, feeding two prints),
-  `CosmologyModels/LambdaCDM/LambdaCDM.py:73-74` (two prints), and `main.py:549-551`. **The third
-  is load-bearing:** it becomes `feature_z`, is forced into the production source grid by
-  `CosmologyConcepts/wavenumber.py:350`, and the grid's content digest is a `BackgroundModel`
-  lookup-key column (`Datastore/SQL/ObjectFactories/BackgroundModel.py:182`, `:225`, `:251`). So on
-  `QCD_Cosmology` the two equality redshifts are **production sample locations inside a datastore
-  identity**, reached by a duplicated closed form rather than by `_find_rho_equality` — which is
-  why `AUDIT.md` §2.1's grep found nothing and concluded the blast radius was two banner lines.
-  **Impact:** unifying the three, which is the obvious tidy and what `AUDIT.md` §6 observation 2
-  gestures at, would move a grid sample if it moved either value by one ulp, and invalidate every
-  stored object of the eight types `qcd-background-audit` log 11 §5 prices. `main.py:522-528`
-  records the duplication as a deliberate, scoped choice by that campaign's prompt 11.
-  **Narrowed by prompt 03 (2026-09-16), measured and priced — it does not close.** The three sites
-  are the **same float** on `QCD_Cosmology`, the pure-radiation stand-in and `LambdaCDM(Planck2018)`,
-  on both pairs, although `LambdaCDM.py` reaches `math.pow` through `from math import sqrt, pow`
-  where the other two get the builtin; the closed form and the corrected solve differ by **7 ulp**
-  (QCD, matter–radiation), **1 ulp** (stand-in) and **not at all** at matter–$\Lambda$ on either
-  model. The three options, priced (log 03 §3 item 3): **(i)** leave all three — **cost zero**, and
-  now guarded by `CosmologyModels/tests/test_rho_equality.test_the_three_closed_form_sites_agree`,
-  which a one-ulp edit at any site fails on all three models; **(ii)** unify on the closed form —
-  safe only while the spellings agree bit for bit, which is measured but not guaranteed by the
-  language, and it makes `main.py` import a cosmology model, the coupling prompt 11 avoided;
-  **(iii)** unify on the solve — **measured** to take the `QCD_Cosmology` production grid digest
-  from `a2c32f67` to `4849552b` on a 7-ulp move in one sample of 1,996, invalidating every stored
-  object of the eight types log 11 §5 prices. **The campaign's recommendation is (i).**
-  Line numbers re-anchored by prompt 03: the sites are `LambdaCDM_GenericEOS.py:502`
-  and `:507`, `LambdaCDM.py:73-74`, and `main.py:553` and `:555`.
-
-  **README §7 D2 — decided by the user, 2026-09-16: option (iii), the solve is authoritative at
-  `main.py`.** Against the campaign's recommendation, and the campaign's recommendation was wrong.
-  The user's argument: $\Omega_r$ is a **present-day** density parameter, so
-  $1+z_{\rm eq}=\Omega_m/\Omega_r$ is exact only while $\rho_r\propto(1+z)^4$ holds from today back
-  to equality. On `QCD_Cosmology` it does, to 7 ulp, for one reason — all the $g_*(T)$ structure
-  sits at $z\sim10^{12}$, twelve orders above $z_{\rm eq}$. A cosmology with entropy injection below
-  $z_{\rm eq}$, a decaying species, or extra relativistic species appearing late breaks it **by far
-  more than ulps, and silently**. The accuracy at that site is a property of where the QCD
-  transition happens to sit, not of the code — which is, in terms, the argument **prompt 02 already
-  wrote into the solve** when it refused to short-circuit on a guess that is already the root. The
-  campaign's recommendation of (i) was inconsistent with its own workstream A.
-
-  **The mechanism is not D2 option (iii)'s wording.** `main.py` does not import
-  `_find_rho_equality`. The distinction that matters is not *has a solver* but *is the closed form
-  valid for this model*, and only the model knows: in base `LambdaCDM` the closed form **is** the
-  answer, since that model has no equation of state and $\rho_r\propto(1+z)^4$ holds by
-  construction; in `LambdaCDM_GenericEOS` it may not be. So `BaseCosmology` declares two
-  properties, each model answers for itself, and `main.py` asks. **The contract, in the user's
-  words:** it is the cosmology's business to supply the correct value, and if a subclass chooses to
-  do something incoherent, that is its problem. `BaseCosmology` declares the obligation; it does
-  not police it.
-
-  Three consequences, all carried by prompt 09: the two **initial guesses** at `:502`/`:507`
-  **stay closed forms** (the user: $z_{\rm eq}$ cannot move by a large factor without wrecking the
-  CMB, so radiation domination is a sound guess — and prompt 02's bracketing makes a wrong guess
-  harmless); there must be **no fallback** to the closed form in `main.py`, which is the one mistake
-  that would look like care; and prompt 03's `test_the_three_closed_form_sites_agree`, shipped to
-  guard option (i), is **reworked rather than deleted**, since "`LambdaCDM`'s closed form is the
-  root" is now a correctness claim and not merely a consistency one.
-
-  **Next step:** **prompt 09**, workstream **E**, which closes this issue. It moves the
-  `QCD_Cosmology` production grid digest `a2c32f67` → `4849552b` on exactly one sample — the
-  matter–radiation feature, 7 ulp — with `LambdaCDM`'s `60a3205a` unmoved and matter–$\Lambda$ the
-  same double from either route. **Until 09 runs the issue stays open**, and nothing may change the
-  three sites other than by 09.
+Opened by the **2026-09-16 planning commit** and **resolved by prompt 09** — moved to §4:
+`[00-equality-redshift-closed-form-is-duplicated-three-times]`. Its measurement, the three priced
+options and the user's D2 decision are carried there verbatim.
 
 Also opened by the planning commit, found while reconciling (`RECONCILIATION.md` §9.3) and
 **measured by prompt 01**, which has the file open for another reason:
@@ -247,6 +189,90 @@ deleted from `docs/OPEN_ISSUES.md`.
 ---
 
 ## 4. Resolved issues
+
+- **[00-equality-redshift-closed-form-is-duplicated-three-times]** — **RESOLVED by prompt 09,
+  2026-09-16**, by implementing README §7 **D2** as the user decided it.
+
+  **What the issue was.** $1+z_{\rm eq}=\Omega_m/\Omega_r$ and
+  $1+z_\Lambda=(\Omega_\Lambda/\Omega_m)^{1/3}$ were computed at three sites in three packages:
+  `LambdaCDM_GenericEOS.py:502`/`:507` (a solver guess, feeding two prints),
+  `LambdaCDM/LambdaCDM.py:73-74` (two prints) and `main.py:553`/`:555`. **The third was
+  load-bearing:** it became `feature_z`, was forced into the production source grid by
+  `CosmologyConcepts/wavenumber.py:350`, and the grid's content digest is a `BackgroundModel`
+  lookup-key column (`Datastore/SQL/ObjectFactories/BackgroundModel.py:182`, `:225`, `:251`). On
+  `QCD_Cosmology` the two equality redshifts were therefore **production sample locations inside a
+  datastore identity**, reached by a duplicated closed form rather than by `_find_rho_equality` —
+  which is why `AUDIT.md` §2.1's grep found nothing and concluded the blast radius was two banner
+  lines. `main.py:522-528` recorded the duplication as `qcd-background-audit` prompt 11's
+  deliberate, scoped choice.
+
+  **What prompt 03 measured, and the three options it priced** (log 03 §3 item 3). The three sites
+  were the **same float** on `QCD_Cosmology`, the pure-radiation stand-in and
+  `LambdaCDM(Planck2018)`, on both pairs, although `LambdaCDM.py` reaches `math.pow` through
+  `from math import sqrt, pow` where the other two get the builtin; the closed form and the
+  corrected solve differed by **7 ulp** (QCD, matter–radiation), **1 ulp** (stand-in) and **not at
+  all** at matter–$\Lambda$ on either model. **(i)** leave all three — cost zero, guarded by a new
+  test; **(ii)** unify on the closed form — safe only while the spellings agree bit for bit, which
+  is measured but not guaranteed by the language, and it makes `main.py` import a cosmology model;
+  **(iii)** unify on the solve — measured to take the `QCD_Cosmology` production grid digest from
+  `a2c32f67` to `4849552b` on a 7-ulp move in one sample of 1,996. **The campaign's recommendation
+  was (i).**
+
+  **README §7 D2 — decided by the user, 2026-09-16: option (iii).** Against the campaign's
+  recommendation, and the campaign's recommendation was wrong. $\Omega_r$ is a **present-day**
+  density parameter, so $1+z_{\rm eq}=\Omega_m/\Omega_r$ is exact only while
+  $\rho_r\propto(1+z)^4$ holds from today back to equality. On `QCD_Cosmology` it does, to 7 ulp,
+  for one reason — all the $g_*(T)$ structure sits at $z\sim10^{12}$, twelve orders above
+  $z_{\rm eq}$. A cosmology with entropy injection below $z_{\rm eq}$, a decaying species, or extra
+  relativistic species appearing late breaks it **by far more than ulps, and silently**. The
+  accuracy at that site was a property of where the QCD transition happens to sit, not of the code
+  — which is, in terms, the argument **prompt 02 already wrote into the solve** when it refused to
+  short-circuit on a guess that is already the root.
+
+  **The mechanism is not D2 option (iii)'s wording, and prompt 09 shipped the mechanism.**
+  `main.py` does not import `_find_rho_equality`. The distinction that matters is not *has a
+  solver* but *is the closed form valid for this model*, and only the model knows.
+  `CosmologyModels/base.py` now declares two abstract properties,
+  **`z_matter_radiation_equality`** and **`z_matter_lambda_equality`**; `LambdaCDM` implements them
+  with the closed form, which for a model with no equation of state is the exact root and not an
+  approximation to it, and its `:73-74` banner is now a *use* of them; `LambdaCDM_GenericEOS`
+  implements them from the two `_find_rho_equality` calls its constructor already ran and used to
+  discard; and `cosmology_feature_redshifts` reads them and computes nothing. **The contract, in
+  the user's words:** it is the cosmology's business to supply the correct value, and if a subclass
+  chooses to do something incoherent, that is its problem. `BaseCosmology` declares the obligation;
+  it does not police it.
+
+  **All three of the decision's consequences were carried.** The two **initial guesses** at
+  `:502`/`:507` are **character-identical** and stay closed forms; there is **no fallback** in
+  `main.py` — a cosmology that declares break points but cannot answer raises a `RuntimeError`
+  naming it, its class, which of the two was missing and the attribute it was looked for under,
+  and `_BrokenCosmology` in `test_source_grid.py` (which *has* the $\Omega$s, so a fallback would
+  have succeeded on it) asserts that; and prompt 03's guard was **reworked, not deleted**, as
+  `test_the_remaining_closed_form_sites_agree`, which now also asserts that `LambdaCDM`'s property
+  returns exactly the expression the module transcribes (log 09, D2 and D3).
+
+  **What moved, on purpose** (README §0.2 is scoped to workstreams A–C; this is E, §6 note 15).
+  `QCD_Cosmology` production grid digest **`a2c32f67` → `4849552b`**, 1,996 samples unchanged, on
+  **exactly one** sample — index **1540**, the matter–radiation feature, **+7.0 ulp**,
+  `3406.668974249948` → `3406.668974249951`. matter–$\Lambda$ is the same double from either route
+  (`0x1.36b4870e4a718p-2`). `LambdaCDM(Planck2018)` is **`60a3205a`** at 1,778, **unmoved** — its
+  closed form is its answer and it never reaches the feature path, declaring no break points. The
+  QCD break-point-only grid (no spacing profile) moved with it, `303f9ce7` → **`81c6e682`** at
+  1,773, which the prompt did not name (log 09, D1). **There is no regeneration to do** (§6 note
+  14). `T_Z_REPRESENTATION_VERSION` **6**; suites `CosmologyModels` 38 → **39**, `ComputeTargets`
+  447 → **449**, both OK. The two new behaviour tests were shown **failing on `6f3cd8e`** with the
+  output in log 09 §2.
+
+- **[03-main-py-cites-a-stale-line-for-the-equality-solve]** — **RESOLVED by prompt 09,
+  2026-09-16**, incidentally and within scope. The citation lived in the sentence of
+  `cosmology_feature_redshifts`'s docstring that said the two equality redshifts are *"recomputed
+  here … rather than imported from the model, which computes them in its constructor and discards
+  them (``LambdaCDM.py:73``, ``LambdaCDM_GenericEOS.py:483``)"*. Prompt 09's §2.5 required that
+  whole paragraph to be rewritten — the model no longer discards them and `main.py` no longer
+  recomputes anything — so the sentence carrying the wrong line number is gone rather than
+  corrected. Neither citation survives, and the replacement paragraph names no line numbers at all,
+  which is why this cannot go stale the same way again. Prompt 03 was right to leave it: the fix
+  really was one line, and it belonged to the prompt that had the paragraph in scope.
 
 - **[00-main-py-equality-agreement-figure-is-stale]** — **RESOLVED by prompt 03, 2026-09-16.**
   `main.py`'s `cosmology_feature_redshifts` docstring no longer claims the closed form agrees with
@@ -315,11 +341,19 @@ Written by prompt 06. Empty until then.
 2. **`T_Z_REPRESENTATION_VERSION` is 6 at every commit of this campaign.** A prompt that changes it
    has left its scope.
 3. **`ComputeTargets` is 447 at every commit.** Nothing in that package reads `_find_rho_equality`;
-   a move there means something else changed.
+   a move there means something else changed. **Amended by prompt 09: it is 449 from that commit
+   on.** 09 added the two `test_source_grid.py` tests that assert `feature_z` is the model's own
+   answer and that a cosmology which cannot answer raises (README §2 (l)). The rule is unchanged in
+   substance — a count that *falls* is still a stop, and a rise must be a test a prompt says it
+   added.
 4. **A figure without the tree it was taken on is not a measurement** (README §5 rule 9).
 5. **The two printed banner lines at `LambdaCDM_GenericEOS.py:516-517` are character-identical
    throughout.** They are the user-visible surface of the whole campaign, and the campaign's claim
-   is that they do not change.
+   is that they do not change. **Still true at prompt 09, and re-anchored by it to `:527-530`:**
+   09 made the two values instance attributes rather than locals, so the `print` calls now read
+   `self._z_matter_radiation_equality` and `self._z_matter_lambda_equality` and `black` split the
+   first over three source lines. **The text they emit is unchanged, and so is `LambdaCDM.py`'s
+   pair, now at `:83-84` (was `:81-82`).**
 6. **An agent must never assume `HEAD` is its own.** Planning and orchestration commits land on the
    same branch.
 7. **"≤ 2 ulp" in README §6 and prompt 01 §5 is arithmetically incompatible with the audit's own
@@ -361,6 +395,8 @@ Written by prompt 06. Empty until then.
     sentence itself is `:525-531`. `AUDIT.md`, `RECONCILIATION.md` §5 and README §0.3 all cite the
     old numbers and are left as written — they were correct for the trees they were taken on
     (`CLAUDE.md`) — so a prompt following one of those citations must add 4.
+    **Superseded by note 16: prompt 09 moved them again, and there is no longer a closed-form
+    expression in `main.py` to anchor.**
 12. **The production source-grid digests are `a2c32f67` (`QCD_Cosmology`, 1,996 samples) and
     `60a3205a` (`LambdaCDM(Planck2018)`, 1,778)**, measured identical at `7fdc49b`, `921f41c` and
     prompt 03's commit. Any later prompt in workstreams A–C that moves either has left its scope
@@ -368,13 +404,15 @@ Written by prompt 06. Empty until then.
     Reproduce with `ComputeTargets/tests/test_source_grid._production_grid(cosmology)` and
     `_to_redshift_array(grid.z_values).digest()`; `QCD_Cosmology` must be built at the production
     `max_z = 1e20`, not at the test modules' `1e12`, or the spacing profile leaves the tabulated
-    range.
+    range. **Superseded for `QCD_Cosmology` by note 17: prompt 09 moved it to `4849552b`, on
+    purpose. `LambdaCDM`'s `60a3205a` is unchanged and this note still binds there**, as does the
+    reproduction recipe, which is unchanged.
 13. **The three closed-form sites are one float, and that is now a test.**
     `CosmologyModels/tests/test_rho_equality.test_the_three_closed_form_sites_agree` asserts it on
     three models and both pairs. A prompt that edits any of `main.py:553`/`:555`,
     `LambdaCDM_GenericEOS.py:502`/`:507` or `LambdaCDM.py:73-74` will hear about it there first. **Prompt
     09 reworks it** — after 09, `main.py` has no closed-form site and the test's subject is the two
-    that remain; it may not simply be deleted.
+    that remain; it may not simply be deleted. **Done — superseded by note 18.**
 14. **Datastore regeneration is not a cost in this project's current phase** (the user,
     2026-09-16): this is the build phase of a science code, there is no legacy data to curate, and
     what matters is a code that does the right thing. **This changes the calculus of several
@@ -387,4 +425,37 @@ Written by prompt 06. Empty until then.
 15. **Workstream E is outside README §0.2.** Prompt 09 moves the `QCD_Cosmology` source-grid digest
     `a2c32f67` → `4849552b` **on purpose**, on exactly one sample. Note 12's "any later prompt that
     moves either has left its scope" is scoped to A–C and does not bind 09; `LambdaCDM`'s
-    `60a3205a` is unmoved by 09 and note 12 still binds there.
+    `60a3205a` is unmoved by 09 and note 12 still binds there. **Done, and it landed on the
+    predicted digest** — see notes 17 and 18.
+16. **`main.py`'s line numbers moved again at prompt 09, by +29 below `:558`** (note 11 is
+    superseded). `cosmology_feature_redshifts` is `:507-586` (was `:507-557`): the rewritten
+    docstring paragraph is longer, and the body now raises rather than computing. Re-anchored:
+    the early return is **`:563-564`**; the property loop is **`:566-584`**;
+    `pre_grid_background_proxy` is **`:589`** (was `:560`);
+    `break_z, feature_z = cosmology_feature_redshifts(...)` is **`:936`** (was `:907`);
+    `feature_z=feature_z` is **`:961`** (was `:932`). **There is no closed-form expression in
+    `main.py` any more**, so note 11's `:553`/`:555` anchors have no successor — a document citing
+    them is citing something that was removed, not something that moved. In
+    `LambdaCDM_GenericEOS.py` the two `init_z=` guesses are **`:513`** and **`:518`** (were `:502`,
+    `:507`) and the two new properties are at **`:549`** and **`:566`**; in `LambdaCDM.py` the two
+    closed forms are now inside properties, at **`:121`** and **`:132`** (were `:73`, `:74`).
+17. **The production source-grid digests are `4849552b` (`QCD_Cosmology`, 1,996 samples) and
+    `60a3205a` (`LambdaCDM(Planck2018)`, 1,778)** from prompt 09's commit. The QCD value was
+    `a2c32f67` at `7fdc49b`, `921f41c`, prompt 03's commit and `6f3cd8e`; it moved on **exactly
+    one** sample, index **1540**, **+7.0 ulp**, when `feature_z[0]` became the model's own solve.
+    The QCD **break-point-only** grid — `build_z_sample` with `break_z` and `feature_z` and no
+    spacing profile — moved with it, `303f9ce7` → **`81c6e682`** at 1,773 samples; both literals
+    are asserted in `ComputeTargets/tests/test_source_grid.py`. The bare lattice (`0960e169`,
+    1,732) and both `LambdaCDM` grids are untouched. Reproduction is note 12's, unchanged.
+18. **There are two closed-form sites, not three, and the test is renamed.** `main.py` computes
+    neither redshift; `LambdaCDM_GenericEOS.py:513`/`:518` (the solver's initial guesses) and
+    `LambdaCDM.py:121`/`:132` (that model's answer) are what remain, and
+    `CosmologyModels/tests/test_rho_equality.`**`test_the_remaining_closed_form_sites_agree`**
+    asserts they are one float on three models and both pairs — plus, on `LambdaCDM`, that its
+    property returns exactly that expression. `main_py_closed_form` and its `CLOSED_FORM_SITES`
+    entry are gone. The companion is
+    **`test_each_model_answers_for_its_own_equality_redshifts`**, which asserts that
+    `LambdaCDM_GenericEOS` answers with its solve and that on `QCD_Cosmology` that is **not** the
+    closed form (7 ulp). A prompt editing either site, or either model's properties, hears about it
+    in those two tests and in `test_source_grid.py`'s
+    `TestTheModelIsAuthoritativeForItsEqualityRedshifts`.

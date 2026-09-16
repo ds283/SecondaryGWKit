@@ -497,11 +497,22 @@ class LambdaCDM_GenericEOS(BaseCosmology):
         gram_per_m3 = units.Gram / (units.Metre * units.Metre * units.Metre)
         rho_today_gram_m3 = rho_today / gram_per_m3
 
-        # solve for epochs of matter/radiation and matter/Lambda equality
-        matter_radiation_equality = self._find_rho_equality(
+        # Solve for epochs of matter/radiation and matter/Lambda equality. These used to be
+        # printed in the banner below and discarded; they are now what z_matter_radiation_equality
+        # and z_matter_lambda_equality return, and on a cosmology that declares break points they
+        # are production source-grid sample locations (main.py's cosmology_feature_redshifts).
+        # Nothing about the solve changes: same two calls, same closed-form initial guesses, same
+        # bracket and tolerances.
+        #
+        # The guesses stay closed forms deliberately. 1 + z_eq = Omega_m/Omega_r is only a *guess*
+        # here -- it is exact solely where g_* is flat at equality, which is the accident this
+        # method's own comment refuses to build on -- but it is a sound one, since z_eq cannot
+        # move by a large factor without wrecking the CMB, and the bracketing below makes a wrong
+        # guess harmless rather than fatal.
+        self._z_matter_radiation_equality = self._find_rho_equality(
             "matter", "radiation", init_z=self.omega_m / self.omega_r - 1.0
         )
-        matter_cc_equality = self._find_rho_equality(
+        self._z_matter_lambda_equality = self._find_rho_equality(
             "matter",
             "lambda",
             init_z=pow(self.omega_cc / self.omega_m, 1.0 / 3.0) - 1.0,
@@ -513,8 +524,10 @@ class LambdaCDM_GenericEOS(BaseCosmology):
         print(f"|  Omega_cc = {self.omega_cc:.4g}")
         print(f"|  Omega_r = {self.omega_r:.4g}")
         print(f"|  present-day energy density = {rho_today_gram_m3:.4g} g/m^3")
-        print(f"|  matter-radiation equality at z = {matter_radiation_equality:.4g}")
-        print(f"|  matter-Lambda equality at z = {matter_cc_equality:.4g}")
+        print(
+            f"|  matter-radiation equality at z = {self._z_matter_radiation_equality:.4g}"
+        )
+        print(f"|  matter-Lambda equality at z = {self._z_matter_lambda_equality:.4g}")
 
     @property
     def type_id(self) -> int:
@@ -532,6 +545,37 @@ class LambdaCDM_GenericEOS(BaseCosmology):
     @property
     def H0(self) -> float:
         return self._H0
+
+    @property
+    def z_matter_radiation_equality(self) -> float:
+        """
+        The equality redshift ``__init__`` located with :meth:`_find_rho_equality`, on this
+        model's *own* rho_r = RadiationConstant G(T(z)) T(z)^4.
+
+        This is the solve and not ``Omega_m/Omega_r - 1``. The two agree to 7 ulp on
+        ``QCD_Cosmology`` at production parameters, but only because all of that equation of
+        state's g_*(T) structure sits at z ~ 1e12, twelve orders above equality; that is a
+        property of where the QCD transition happens to fall and not of this class, which is
+        parametrized by an arbitrary equation of state. See
+        ``CosmologyModels.base.BaseCosmology.z_matter_radiation_equality``.
+
+        :return: the matter-radiation equality redshift
+        """
+        return self._z_matter_radiation_equality
+
+    @property
+    def z_matter_lambda_equality(self) -> float:
+        """
+        The matter-Lambda equality redshift, likewise from ``__init__``'s solve.
+
+        Here the closed form is exact on any equation of state -- rho_m/rho_Lambda has no
+        temperature dependence -- and the solve is measured to return the same double on both
+        production models. It is still the solve that answers, so that this class has one route
+        to both numbers rather than two.
+
+        :return: the matter-Lambda equality redshift
+        """
+        return self._z_matter_lambda_equality
 
     def T_photon(self, z: float) -> float:
         return self._T_z_spline(z)

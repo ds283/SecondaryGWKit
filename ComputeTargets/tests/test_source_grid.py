@@ -171,13 +171,34 @@ def _to_redshift_array(z_values) -> redshift_array:
 class _SmoothCosmology:
     """
     A cosmology that declares nothing -- the duck type of every LambdaCDM model, RadiationModel
-    and test stand-in. It has Omega values, so it would have equality redshifts if anything asked
-    for them; the point of the first test below is that nothing does.
+    and test stand-in. It carries Omega values and **no** equality-redshift properties, which
+    since prompt 09 of ``prompts/background-solver-robustness`` is the only surface
+    ``cosmology_feature_redshifts`` will read; the point of the first test below is that it never
+    gets that far, because the whole cosmology-aware path is gated on declaring non-smoothness.
     """
 
     omega_m = 0.3111
     omega_r = 9.139e-05
     omega_cc = 0.6889
+
+
+class _BrokenCosmology:
+    """
+    A cosmology that declares non-smoothness but cannot say where its own equality redshifts are.
+
+    It is deliberately not a ``BaseCosmology`` -- ``cosmology_feature_redshifts`` duck-types
+    everything it touches, and an abstract property cannot be left unimplemented on a real
+    subclass anyway -- so this is the shape a nonstandard cosmology would actually arrive in.
+    """
+
+    name = "a cosmology that cannot answer"
+
+    omega_m = 0.3111
+    omega_r = 9.139e-05
+    omega_cc = 0.6889
+
+    def integration_break_points(self, z_lo: float, z_hi: float, kind: str = ""):
+        return [float(u) for u in QCD_CROSSINGS_LOG1PZ]
 
 
 class TestACosmologyThatDeclaresNothingDeclaresNothing(unittest.TestCase):
@@ -282,6 +303,113 @@ class TestACosmologyThatDeclaresNothingDeclaresNothing(unittest.TestCase):
         self.assertGreater(len(grid.z_values), PRODUCTION_NUM_NODES)
 
 
+class TestTheModelIsAuthoritativeForItsEqualityRedshifts(unittest.TestCase):
+    """
+    ``feature_z`` is what the *cosmology* says its equality redshifts are, and nothing else.
+
+    Prompt 09 of ``prompts/background-solver-robustness``, implementing that campaign's README
+    section 7 D2 as the user decided it. Until then ``cosmology_feature_redshifts`` recomputed
+    both from ``omega_m`` / ``omega_r`` / ``omega_cc``. Omega_r is a *present-day* density
+    parameter, so ``1 + z_eq = Omega_m/Omega_r`` is exact only while rho_r ~ (1+z)^4 holds from
+    today back to equality -- true on ``QCD_Cosmology`` to 7 ulp for the single reason that all
+    of that equation of state's g_*(T) structure sits twelve orders above z_eq, and false, by far
+    more than ulps and silently, on a cosmology with late entropy injection. Only the model knows
+    whether the closed form is valid for it, so ``BaseCosmology`` declares the obligation and each
+    model answers.
+
+    The two tests below are the ones that distinguish the trees: both fail on the tree that
+    computed the closed form here, and the failure output is quoted in
+    ``prompts/background-solver-robustness/logs/09-make-the-model-authoritative.md``.
+    """
+
+    @classmethod
+    def setUpClass(cls):
+        cls.cosmology = QCD_Cosmology(
+            store_id=0, units=Mpc_units(), params=Planck2018(), max_z=1e20
+        )
+        cls.break_z, cls.feature_z = cosmology_feature_redshifts(
+            cls.cosmology, PRODUCTION_Z_END, PRODUCTION_Z_INIT
+        )
+
+    def test_feature_z_is_the_models_answer_and_not_the_closed_form(self):
+        """
+        Each entry of ``feature_z`` is the model's property **as the same float**, and the
+        matter-radiation entry is *not* the closed form.
+
+        The second half is what gives this test teeth. The two agree to 7 ulp on this cosmology,
+        which is 3.2e-12 in z and far inside a grid interval, so every assertion that compares
+        them at any tolerance a human would write passes either way; only bit-identity can tell
+        which quantity actually reached the grid. That distinction is not cosmetic -- it is one
+        sample of 1,996 and therefore a different ``BackgroundModel`` source-grid digest.
+        """
+        self.assertEqual(len(self.feature_z), 2)
+
+        for index, attribute in (
+            (0, "z_matter_radiation_equality"),
+            (1, "z_matter_lambda_equality"),
+        ):
+            with self.subTest(attribute=attribute):
+                supplied = float(getattr(self.cosmology, attribute))
+                self.assertEqual(
+                    self.feature_z[index].hex(),
+                    supplied.hex(),
+                    msg=f"feature_z[{index}] = {self.feature_z[index]!r} is not the model's own "
+                    f"{attribute} = {supplied!r}; something is computing this redshift instead "
+                    "of asking for it",
+                )
+
+        closed_form = float(self.cosmology.omega_m / self.cosmology.omega_r - 1.0)
+        self.assertNotEqual(
+            self.feature_z[0].hex(),
+            closed_form.hex(),
+            msg=f"feature_z[0] = {self.feature_z[0]!r} is the radiation-domination closed form "
+            f"Omega_m/Omega_r - 1 = {closed_form!r}, not the model's own solve. The two differ "
+            "by 7 ulp on this cosmology and the closed form is the one that is only accidentally "
+            "right.",
+        )
+        self.assertAlmostEqual(
+            (self.feature_z[0] - closed_form) / np.spacing(closed_form), 7.0, places=6
+        )
+
+        # the matter-Lambda pair is the same double from either route -- rho_m/rho_Lambda has no
+        # temperature dependence at all -- which is why exactly one sample of the grid moves
+        self.assertEqual(
+            self.feature_z[1].hex(),
+            float(
+                pow(self.cosmology.omega_cc / self.cosmology.omega_m, 1.0 / 3.0) - 1.0
+            ).hex(),
+        )
+
+    def test_a_cosmology_that_cannot_answer_raises_instead_of_falling_back(self):
+        """
+        A cosmology that declares break points but supplies no equality redshift **raises**, and
+        the error names it and says which of the two was missing.
+
+        ``_BrokenCosmology`` carries ``omega_m``, ``omega_r`` and ``omega_cc``, so a fallback to
+        the closed form would succeed here and hand the grid a number nothing has vouched for.
+        That is the one mistake this change exists to prevent, and it is the one that looks most
+        like care, so it is asserted rather than left to review.
+        """
+        with self.assertRaises(RuntimeError) as caught:
+            cosmology_feature_redshifts(
+                _BrokenCosmology(), PRODUCTION_Z_END, PRODUCTION_Z_INIT
+            )
+
+        message = str(caught.exception)
+        print(f"\n  a cosmology that cannot answer:\n    {message}")
+        for expected in (
+            "a cosmology that cannot answer",
+            "_BrokenCosmology",
+            "z_matter_radiation_equality",
+        ):
+            self.assertIn(
+                expected,
+                message,
+                msg=f"a cosmology that cannot supply its equality redshifts must be named in the "
+                f"error, along with what it could not supply; expected {expected!r} in: {message}",
+            )
+
+
 class TestTheProtectedSetOnQCD(unittest.TestCase):
     """The production QCD grid, built the way ``main.py`` builds it."""
 
@@ -312,10 +440,13 @@ class TestTheProtectedSetOnQCD(unittest.TestCase):
         for z_break, u_expected in zip(self.break_z, QCD_CROSSINGS_LOG1PZ):
             self.assertAlmostEqual(np.log1p(z_break), u_expected, places=13)
 
-        # and the two equality redshifts, which the model computes in its constructor and throws
-        # away; the closed form agrees with its own root solve far inside a grid interval
+        # and the two equality redshifts, which the *model* supplies -- z_matter_radiation_equality
+        # and z_matter_lambda_equality, answered from the bracketed solve its constructor runs
+        # (prompt 09 of prompts/background-solver-robustness). The matter-radiation literal is
+        # that solve's value and not the Omega_m/Omega_r closed form, which sits 7 ulp below it;
+        # the matter-Lambda pair is the same double either way, since neither side sees T(z).
         self.assertEqual(len(self.feature_z), 2)
-        self.assertAlmostEqual(self.feature_z[0], 3406.668974249948, places=6)
+        self.assertAlmostEqual(self.feature_z[0], 3406.6689742499511, places=6)
         self.assertAlmostEqual(self.feature_z[1], 0.3034230329964074, places=12)
 
     def test_every_protected_point_is_in_the_grid(self):
@@ -933,7 +1064,12 @@ class TestTheConstructionVersionNamesThisAlgorithm(unittest.TestCase):
             feature_z=feature_z,
         )
         self.assertEqual(len(qcd.z_values), 1773)
-        self.assertEqual(redshift_grid_digest(qcd.z_values), "303f9ce7")
+        # 303f9ce7 until prompt 09 of prompts/background-solver-robustness made the model
+        # authoritative for its own equality redshifts: feature_z[0] is now the constructor's
+        # bracketed solve rather than Omega_m/Omega_r - 1, 7 ulp above it, which moves exactly one
+        # sample of this grid and therefore its digest. Nothing else about the grid changed --
+        # same length, same break points, same lattice.
+        self.assertEqual(redshift_grid_digest(qcd.z_values), "81c6e682")
 
         smooth = build_z_sample(
             PRODUCTION_Z_INIT, PRODUCTION_Z_END, PRODUCTION_SAMPLES_PER_LOG10Z
@@ -943,7 +1079,10 @@ class TestTheConstructionVersionNamesThisAlgorithm(unittest.TestCase):
 
         production_qcd = _production_grid(cosmology)
         self.assertEqual(len(production_qcd.z_values), 1996)
-        self.assertEqual(redshift_grid_digest(production_qcd.z_values), "a2c32f67")
+        # a2c32f67 until prompt 09, for the same single moved sample as above; the count is
+        # unchanged, and LambdaCDM's digest below is unchanged, because its closed form *is* its
+        # answer and it never reaches the feature path at all
+        self.assertEqual(redshift_grid_digest(production_qcd.z_values), "4849552b")
 
         production_lcdm = _production_grid(
             LambdaCDM(store_id=0, units=Mpc_units(), params=Planck2018())

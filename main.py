@@ -519,17 +519,35 @@ def cosmology_feature_redshifts(cosmology, z_end: float, z_init: float):
     ``CosmologyConcepts.wavenumber.SOURCE_GRID_BREAK_STANDOFF`` clears the recovery granularity
     (~ulp(u) = 3.6e-15 relative) by twelve orders of magnitude.
 
-    ``feature_z`` are matter-radiation and matter-Lambda equality, recomputed here from the
-    public ``omega_m`` / ``omega_r`` / ``omega_cc`` rather than imported from the model, which
-    computes them in its constructor and discards them (``LambdaCDM.py:73``,
-    ``LambdaCDM_GenericEOS.py:483``) -- and which prompt 11 may not modify. Measured at 921f41c
-    on ``QCD_Cosmology`` at production parameters, the closed form agrees with
-    ``LambdaCDM_GenericEOS``'s own (now bracketed) root solve to **-9.3e-16 relative in z**, i.e.
-    7 ulp, at matter-radiation equality and to **the same float** at matter-Lambda equality,
-    where neither side sees T(z) at all; the 4e-13 this sentence used to quote was never wrong,
-    only unverified -- a safe over-estimate, cited only to make the "far below a grid interval"
-    argument that the measured figures make three orders more comfortably. The samples are
-    markers of an epoch, not a claim about where equality is.
+    ``feature_z`` are matter-radiation and matter-Lambda equality, **asked of the cosmology**:
+    ``BaseCosmology`` declares ``z_matter_radiation_equality`` and ``z_matter_lambda_equality``
+    and each model answers for itself. Nothing is computed here. Base ``LambdaCDM`` answers with
+    ``Omega_m/Omega_r - 1``, which for a model with no equation of state is not an approximation
+    but the exact root; ``LambdaCDM_GenericEOS`` answers with the bracketed solve its constructor
+    already runs against its own rho_r = RadiationConstant G(T(z)) T(z)^4.
+
+    This function used to recompute both from the public ``omega_m`` / ``omega_r`` / ``omega_cc``
+    -- a duplicate of the closed form, and a deliberate one, because prompt 11 of
+    ``prompts/qcd-background-audit`` could not modify the models. **Omega_r is a present-day
+    density parameter**, so that form is exact only while rho_r ~ (1+z)^4 holds from today back
+    to equality; on ``QCD_Cosmology`` it does, to 7 ulp, for the single reason that all of that
+    equation of state's g_*(T) structure sits at z ~ 1e12, twelve orders above z_eq. A cosmology
+    with entropy injection below z_eq, a decaying species or extra relativistic species appearing
+    late breaks it silently and by far more than ulps. The accuracy was a property of where the
+    QCD transition happens to sit, not of this code, which is why the model is now authoritative
+    (``prompts/background-solver-robustness`` README section 7 D2, decided by the user
+    2026-09-16; prompt 09).
+
+    The measured agreement between the two routes survives as a statement about the **initial
+    guess** the model's solve is seeded with, which is still that closed form: at 921f41c, on
+    ``QCD_Cosmology`` at production parameters, the guess sits **-9.3e-16 relative in z** (7 ulp)
+    from the solve at matter-radiation equality and is **the same float** at matter-Lambda
+    equality, where neither side sees T(z) at all. It is the solve, not the guess, that reaches
+    this function. The samples are markers of an epoch, not a claim about where equality is.
+
+    **There is deliberately no fallback.** A cosmology that declares break points but cannot
+    supply either redshift raises: silently substituting the closed form would reinstate exactly
+    the defect above, on precisely the models least likely to satisfy it.
 
     **``feature_z`` is empty when ``break_z`` is.** A cosmology that declares no non-smoothness
     takes the unchanged code path entirely and gets the grid it has always had, element for
@@ -546,13 +564,24 @@ def cosmology_feature_redshifts(cosmology, z_end: float, z_init: float):
         return [], []
 
     feature_z = []
-    omega_m = getattr(cosmology, "omega_m", None)
-    omega_r = getattr(cosmology, "omega_r", None)
-    omega_cc = getattr(cosmology, "omega_cc", None)
-    if omega_m is not None and omega_r is not None and omega_r > 0.0:
-        feature_z.append(float(omega_m / omega_r - 1.0))
-    if omega_cc is not None and omega_m is not None and omega_m > 0.0:
-        feature_z.append(float(pow(omega_cc / omega_m, 1.0 / 3.0) - 1.0))
+    for description, attribute in (
+        ("matter-radiation equality", "z_matter_radiation_equality"),
+        ("matter-Lambda equality", "z_matter_lambda_equality"),
+    ):
+        try:
+            feature_z.append(float(getattr(cosmology, attribute)))
+        except AttributeError as exc:
+            raise RuntimeError(
+                f"cosmology_feature_redshifts: the cosmology "
+                f"'{getattr(cosmology, 'name', '<unnamed>')}' "
+                f"({type(cosmology).__name__}) declares break points, so the source grid is "
+                f"built around the features it declares, but it does not supply "
+                f"{description} as '{attribute}'. BaseCosmology declares that obligation and "
+                f"every production cosmology answers it. There is no fallback to "
+                f"1 + z_eq = Omega_m/Omega_r here on purpose -- see this function's docstring -- "
+                f"so a cosmology that declares non-smoothness and cannot say where its own "
+                f"equality redshifts are is a broken cosmology, not a grid to build anyway."
+            ) from exc
 
     return break_z, feature_z
 

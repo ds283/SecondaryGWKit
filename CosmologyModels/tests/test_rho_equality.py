@@ -132,55 +132,60 @@ def closed_form_guess(model, pair: str) -> float:
 
 
 # ----------------------------------------------------------------------------------------------
-# The three sites at which 1 + z_eq = omega_m/omega_r and 1 + z_Lambda = (omega_cc/omega_m)^(1/3)
-# are computed, each transcribed exactly as it is written in its own file -- including which
-# ``pow`` is in scope there, which is the only way the three could differ at all:
+# The sites at which 1 + z_eq = omega_m/omega_r and 1 + z_Lambda = (omega_cc/omega_m)^(1/3) are
+# still written out, each transcribed exactly as it is written in its own file -- including which
+# ``pow`` is in scope there, which is the only way the two could differ at all:
 #
-#   main.py:553, :555                    builtin ``pow``  (main.py does ``from math import sqrt``)
-#     -- inside cosmology_feature_redshifts; :549/:551 before prompt 03 corrected the docstring
-#        four lines above them, so a citation of :549 in an older document means these
-#   LambdaCDM_GenericEOS.py:502, :507    builtin ``pow``  (that module imports exp, sqrt, log,
-#                                                          log1p and expm1 from math -- not pow)
-#   LambdaCDM.py:73, :74                 ``math.pow``     (``from math import sqrt, pow``)
+#   LambdaCDM_GenericEOS.py, __init__    builtin ``pow``  (that module imports exp, sqrt, log,
+#     -- the two *initial guesses* of                      log1p and expm1 from math -- not pow)
+#        the bracketed solve, and nothing else
+#   LambdaCDM.py, z_matter_*_equality    ``math.pow``     (``from math import sqrt, pow``)
+#     -- that model's *answer*: it has no
+#        equation of state, so the closed
+#        form is exact rather than close
 #
-# ``test_the_three_closed_form_sites_agree`` below is the guard that makes it safe to leave all
-# three in place, which is what README §7 D2 option (i) of
-# prompts/background-solver-robustness/ recommends: an edit to any one of them announces itself.
-# ``main.py`` is deliberately NOT imported -- CLAUDE.md says it cannot be, since it parses
-# sys.argv and opens a Ray connection at module scope -- so its expression is mirrored here and
-# the comment above is what ties the mirror to the original.
+# **There is no longer a site in main.py.** ``cosmology_feature_redshifts`` used to compute the
+# two redshifts itself, which made it a production sample location inside a BackgroundModel
+# lookup key reached by a duplicated closed form; since prompt 09 of
+# prompts/background-solver-robustness it reads BaseCosmology.z_matter_radiation_equality and
+# BaseCosmology.z_matter_lambda_equality and computes nothing, so the model is authoritative and
+# ``main.py`` holds no copy to drift. What reaches the grid on QCD_Cosmology is the bracketed
+# solve, 7 ulp above the closed form; that substitution is what took the production source-grid
+# digest from a2c32f67 to 4849552b on one sample of 1,996, and it is asserted in
+# ComputeTargets/tests/test_source_grid.py, which can drive main.py's own function through
+# load_main_py_functions (CLAUDE.md: main.py cannot be imported).
+#
+# ``test_the_remaining_closed_form_sites_agree`` below is what notices if the two that remain
+# stop agreeing, and -- since LambdaCDM's is now an *answer* and not a diagnostic -- that its
+# property still returns exactly what its expression says.
 # ----------------------------------------------------------------------------------------------
 
 
-def main_py_closed_form(cosmology, pair: str) -> float:
-    """``main.py:548-555``'s expression, written the same way it is written there."""
-    omega_m = getattr(cosmology, "omega_m", None)
-    omega_r = getattr(cosmology, "omega_r", None)
-    omega_cc = getattr(cosmology, "omega_cc", None)
-    if pair == "matter_radiation":
-        return float(omega_m / omega_r - 1.0)
-    return float(builtins.pow(omega_cc / omega_m, 1.0 / 3.0) - 1.0)
-
-
 def generic_eos_closed_form(model, pair: str) -> float:
-    """``LambdaCDM_GenericEOS.__init__:501-508``'s initial guess, as written there."""
+    """``LambdaCDM_GenericEOS.__init__``'s initial guess, as written there."""
     if pair == "matter_radiation":
         return model.omega_m / model.omega_r - 1.0
     return builtins.pow(model.omega_cc / model.omega_m, 1.0 / 3.0) - 1.0
 
 
 def lambdaCDM_closed_form(model, pair: str) -> float:
-    """``LambdaCDM.__init__:73-74``'s diagnostic, as written there."""
+    """``LambdaCDM.z_matter_radiation_equality`` / ``z_matter_lambda_equality``, as written."""
     if pair == "matter_radiation":
         return model.omega_m / model.omega_r - 1.0
     return math.pow(model.omega_cc / model.omega_m, 1.0 / 3.0) - 1.0
 
 
 CLOSED_FORM_SITES = (
-    ("main.py:553/:555", main_py_closed_form),
-    ("LambdaCDM_GenericEOS.py:502/:507", generic_eos_closed_form),
-    ("LambdaCDM.py:73/:74", lambdaCDM_closed_form),
+    ("LambdaCDM_GenericEOS.py guess", generic_eos_closed_form),
+    ("LambdaCDM.py property", lambdaCDM_closed_form),
 )
+
+
+def model_property(model, pair: str) -> float:
+    """The model's own answer, through the ``BaseCosmology`` surface prompt 09 declares."""
+    if pair == "matter_radiation":
+        return float(model.z_matter_radiation_equality)
+    return float(model.z_matter_lambda_equality)
 
 
 def match_rho(model, pair: str):
@@ -465,37 +470,42 @@ class TestRhoEquality(unittest.TestCase):
                     f"budget = {MATTER_RADIATION_CLOSED_FORM_ULP} ulp",
                 )
 
-    def test_the_three_closed_form_sites_agree(self):
+    def test_the_remaining_closed_form_sites_agree(self):
         """
-        The three sites that compute the two equality redshifts produce the *same float*, and each
-        is the root to within the closed form's measured budget.
+        The sites that still write the closed forms out produce the *same float*, and each is the
+        root to within the closed form's measured budget.
 
-        WHY THIS TEST EXISTS, WHICH IS NOT "THE NUMBERS ARE INTERESTING". The closed forms are
-        written out three times, in three packages
-        (``[00-equality-redshift-closed-form-is-duplicated-three-times]``), and **the third copy
-        is load-bearing**: ``main.py:553``/``:555`` becomes ``feature_z``, which
-        ``CosmologyConcepts/wavenumber.py:350`` forces into the production source grid, whose
-        content digest is a ``BackgroundModel`` lookup-key column
-        (``Datastore/SQL/ObjectFactories/BackgroundModel.py:182``, ``:225``, ``:251``). A one-ulp
-        move at that site therefore moves a grid sample, moves the digest, and invalidates every
-        stored object of eight types -- measured: replacing the closed form there with the solve's
-        answer, 7 ulp away, takes the QCD source-grid digest from ``a2c32f67`` to ``4849552b``
-        with the sample count unchanged at 1,996.
+        WHY THIS TEST EXISTS, AND WHY ITS SUBJECT CHANGED. It shipped with prompt 03 as
+        ``test_the_three_closed_form_sites_agree``, to make it safe to leave three copies of
+        ``1 + z_eq = Omega_m/Omega_r`` standing, because the third -- ``main.py``'s -- was
+        load-bearing: it became ``feature_z``, which ``CosmologyConcepts/wavenumber.py`` forces
+        into the production source grid, whose content digest is a ``BackgroundModel`` lookup-key
+        column. The user decided against that option
+        (``[00-equality-redshift-closed-form-is-duplicated-three-times]``, README section 7 D2),
+        and prompt 09 removed the ``main.py`` copy: the model now answers for itself and the
+        consumer asks. Two sites remain, and **neither is load-bearing in the same way** -- one is
+        a solver's initial guess, the other is ``LambdaCDM``'s own answer.
 
-        Leaving the duplication in place is the recommendation, and this test is what makes that
-        safe: it is the thing that notices when the three stop agreeing. The only way they *can*
-        disagree is the ``pow`` each file has in scope -- ``math.pow`` in ``LambdaCDM.py``, the
-        builtin in the other two -- and the two agree bit for bit on these arguments today.
-        (``closed_form_guess`` above reaches ``math.pow`` through this module's own
-        ``from math import pow``, which is why it is a faithful stand-in for ``__init__``'s
-        builtin one; this test is also the statement of that.)
+        IT IS NOT THE SAME GUARD, AND IT IS NOT A WEAKER ONE. ``LambdaCDM``'s expression was a
+        banner diagnostic when this test was written; it is now the value that model returns from
+        ``z_matter_radiation_equality``, so "the closed form equals the root" has stopped being a
+        consistency claim about three transcriptions and become a *correctness* claim about one
+        model's answer. That is what is asserted here, together with the check that the property
+        really does return the expression below it.
 
-        The budgets are the module's own measured constants, **not** the "within 2 ulp" of the
-        prompt: the matter-radiation closed form is 7 ulp from the reference on ``QCD_Cosmology``,
-        which is the -9.34e-16 that ``RECONCILIATION.md`` §6 reports, so 2 ulp is arithmetically
-        unreachable there (board standing note 7).
+        The only way the two remaining sites *can* disagree is the ``pow`` each file has in scope
+        -- ``math.pow`` in ``LambdaCDM.py``, the builtin in ``LambdaCDM_GenericEOS.py`` -- and
+        they agree bit for bit on these arguments today. (``closed_form_guess`` above reaches
+        ``math.pow`` through this module's own ``from math import pow``, which is why it is a
+        faithful stand-in for ``__init__``'s builtin one; this test is also the statement of
+        that.)
+
+        The budgets are the module's own measured constants, **not** "within 2 ulp": the
+        matter-radiation closed form is 7 ulp from the reference on ``QCD_Cosmology``, which is
+        the -9.34e-16 that ``RECONCILIATION.md`` §6 reports, so 2 ulp is arithmetically
+        unreachable there (board standing note 7). Neither was widened by prompt 09.
         """
-        print("\n  the three closed-form sites (17 digits):")
+        print("\n  the remaining closed-form sites (17 digits):")
         for label, model in self.models + (("LambdaCDM(Planck2018)", self.lambdaCDM),):
             for pair, budget in (
                 ("matter_radiation", MATTER_RADIATION_CLOSED_FORM_ULP),
@@ -513,18 +523,29 @@ class TestRhoEquality(unittest.TestCase):
                     self.assertEqual(
                         len(distinct),
                         1,
-                        msg=f"{label}, {pair}: the three closed-form sites no longer produce the "
-                        f"same float -- "
+                        msg=f"{label}, {pair}: the remaining closed-form sites no longer produce "
+                        f"the same float -- "
                         + ", ".join(f"{n} = {v!r}" for n, v in values.items())
-                        + ". main.py:553/:555 is a production sample location inside the "
-                        "BackgroundModel lookup key, so a site that has drifted from the others "
-                        "either has moved the source grid or is about to.",
+                        + ". One of them is LambdaCDM's own answer for this redshift and the "
+                        "other is the guess LambdaCDM_GenericEOS seeds its solve with, so a site "
+                        "that has drifted from the other is either wrong or about to be.",
                     )
 
                     if not hasattr(model, "_rho_fluid"):
                         # LambdaCDM has no equation of state and no residual to bracket, so there
-                        # is no reference to score against; the agreement above is the whole test
-                        # for it.
+                        # is no reference to score against. What can be said about it, and is,
+                        # is that the property it answers with really is the expression above:
+                        # prompt 09 made that expression its answer rather than a diagnostic
+                        # printed beside one.
+                        self.assertEqual(
+                            model_property(model, pair).hex(),
+                            values["LambdaCDM.py property"].hex(),
+                            msg=f"{label}, {pair}: the model's own property returns "
+                            f"{model_property(model, pair)!r}, which is not the closed form "
+                            f"{values['LambdaCDM.py property']!r} this test transcribes. For a "
+                            "model with no equation of state the closed form is exact, so the "
+                            "property must be it and not an approximation to it.",
+                        )
                         continue
 
                     reference = bracketed_reference(model, pair)
@@ -538,11 +559,71 @@ class TestRhoEquality(unittest.TestCase):
                             f"{ulps_between(value, reference):+.3f} ulp, budget = {budget} ulp",
                         )
 
+    def test_each_model_answers_for_its_own_equality_redshifts(self):
+        """
+        The ``BaseCosmology`` surface prompt 09 declares: each model supplies both equality
+        redshifts, and *how* it supplies them is the model's business.
+
+        ``LambdaCDM`` answers with the closed form, which for a model with no equation of state is
+        the exact root rather than an approximation to it -- rho_r is rho_r0 (1+z)^4 identically,
+        so 1 + z = Omega_m/Omega_r solves rho_m = rho_r with nothing left over.
+        ``LambdaCDM_GenericEOS`` answers with the bracketed solve its constructor runs against its
+        own rho_r = RadiationConstant G(T(z)) T(z)^4, and on ``QCD_Cosmology`` that is **not** the
+        closed form: the two are 7 ulp apart, and which of them the model returns is what decides
+        the production source grid's digest.
+
+        The separation is asserted as an inequality of *bits*, not as a tolerance. 7 ulp is
+        3.2e-12 in z; any tolerance loose enough to be worth writing would be satisfied by either
+        quantity, which is exactly why the distinction went unnoticed until it was measured.
+        """
+        for label, model in self.models:
+            for pair in ("matter_radiation", "matter_lambda"):
+                with self.subTest(model=label, pair=pair):
+                    A, B = species_of(pair)
+                    solve = float(
+                        model._find_rho_equality(
+                            A, B, init_z=closed_form_guess(model, pair)
+                        )
+                    )
+                    self.assertEqual(
+                        model_property(model, pair).hex(),
+                        solve.hex(),
+                        msg=f"{label}, {pair}: the model answers {model_property(model, pair)!r}, "
+                        f"which is not what _find_rho_equality returns ({solve!r}). A "
+                        "LambdaCDM_GenericEOS must answer with its own solve, because the "
+                        "radiation-domination closed form is exact for it only where g_* happens "
+                        "to be flat at equality.",
+                    )
+
+        # LambdaCDM, where the closed form *is* the answer, on both pairs
+        for pair in ("matter_radiation", "matter_lambda"):
+            with self.subTest(model="LambdaCDM(Planck2018)", pair=pair):
+                self.assertEqual(
+                    model_property(self.lambdaCDM, pair).hex(),
+                    float(lambdaCDM_closed_form(self.lambdaCDM, pair)).hex(),
+                )
+
+        # and the distinction that matters: on QCD_Cosmology the model's answer is not the closed
+        # form, by the 7 ulp log 03 measured
+        closed_form = float(closed_form_guess(self.qcd, "matter_radiation"))
+        answer = model_property(self.qcd, "matter_radiation")
+        self.assertNotEqual(
+            answer.hex(),
+            closed_form.hex(),
+            msg=f"QCD_Cosmology answers {answer!r} for matter-radiation equality, which is the "
+            f"closed form Omega_m/Omega_r - 1 rather than its own solve. The two agree here only "
+            "because all of this equation of state's g_*(T) structure sits twelve orders above "
+            "z_eq, which is a property of the equation of state and not of the code.",
+        )
+        self.assertAlmostEqual(ulps_between(answer, closed_form), 7.0, places=6)
+
     # ------------------------------------------------------------------------------------------
     # The three tests below are the ones that distinguish the trees. Everything above passes both
     # before and after the bracketing change, by design; these fail on the tree that ships the
     # unbracketed secant, and the failure output is quoted in
     # prompts/background-solver-robustness/logs/02-bracket-the-equality-solve.md.
+    # (``test_each_model_answers_for_its_own_equality_redshifts`` above is prompt 09's equivalent:
+    # it fails on the tree where BaseCosmology declares no such surface.)
     # ------------------------------------------------------------------------------------------
 
     def test_a_displaced_guess_now_finds_the_root_instead_of_failing(self):
