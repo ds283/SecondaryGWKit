@@ -1380,31 +1380,6 @@ Opened by this campaign's planning, 2026-09-13:
   `GkWKBSplineWrapper` has the same shape, so all three classes move together. Its acceptance is
   bit-identical returns and character-identical messages, demonstrated rather than argued.
 
-- **[08-temperature-crossing-solver-is-test-only]** *(prompt 07, 2026-09-14)* —
-  `LambdaCDM_GenericEOS._temperature_crossing_log1pz` (`:810`) has no production caller. Prompt 07
-  took `integration_break_points` onto the bisected `_break_point_crossings_log1pz`, which is what
-  README §2 (b) requires now that `T_photon` genuinely jumps at exactly these temperatures, and the
-  `root_scalar` bracket that used to locate them is left behind. It is deliberately kept: it is the
-  probe `ComputeTargets/tests/test_numeric_break_points.py::test_hubble_jumps_at_the_declared_crossings_and_not_at_the_kink`
-  uses to find a *neighbourhood* of a crossing (a use its ~1e-12 offset does not disturb), it is
-  cited by name in `CosmologyModels/tests/T_z_reference.py:45` for the redshift-arithmetic rule, and
-  it is the documented illustration of the trap, sitting next to the bisector that replaced it. Its
-  docstring now opens "Nothing in production calls this, and nothing may put it back on the
-  break-point path." **Impact:** none numerically; a private method on a production class whose only
-  callers are tests is a maintenance trap, and README §2 (b) makes the specific trap it embodies a
-  stop condition. **Next step:** move it into `CosmologyModels/tests/T_z_reference.py` beside
-  `jump_locations`, or delete it and have that one test bisect, for whichever prompt next has both
-  files in scope. Not done in prompt 07 because `T_z_reference.py` is not among the files that
-  prompt may touch.
-
-  **Assigned (2026-09-16): `prompts/background-solver-robustness` prompt 04**, the first prompt
-  anywhere with `LambdaCDM_GenericEOS.py` and `CosmologyModels/tests/T_z_reference.py` both in
-  scope. It moves the method rather than deleting it, carries the docstring across whole, and may
-  not change a character of the `xtol=1e-15, rtol=1e-15` this campaign chose. The one open choice
-  — whether `ComputeTargets/tests/test_numeric_break_points.py` imports it cross-package or uses
-  the production locator instead — is written out in that prompt with the criterion that decides
-  it, and the answer is recorded as an `IMPLEMENTATION CHOICE`.
-
 - **[09-audit-script-section-5-prose-counts-the-wrong-set]** *(prompt 07, 2026-09-14)* —
   `docs/qcd-background-audit/measure_T_z_representation.py:401-405` prints, beneath its §5 table,
   "Of the BREAK_POINT_ALL points, {n} are knots of the T(z) spline itself". It never computes that
@@ -1444,6 +1419,31 @@ Re-measured but **not owned** here (they stay where they are; a prompt that move
 ---
 
 ## 4. Resolved issues
+
+- **[08-temperature-crossing-solver-is-test-only]** *(prompt 07, 2026-09-14; **assigned
+  2026-09-16 and closed by `prompts/background-solver-robustness` prompt 04**, 2026-09-16)* —
+  `LambdaCDM_GenericEOS._temperature_crossing_log1pz` had no production caller since prompt 07 took
+  `integration_break_points` onto the bisected `_break_point_crossings_log1pz`, and a private method
+  on a production class whose only callers were tests was a maintenance trap. Prompt 04 moved it,
+  whole, to `CosmologyModels/tests/T_z_reference.temperature_crossing_log1pz` as a module-level
+  function taking the cosmology as its first argument — its `root_scalar` line is
+  character-identical, `xtol=1e-15, rtol=1e-15` untouched. `ComputeTargets/tests/
+  test_numeric_break_points.py`'s one caller (`:514`) now imports it from
+  `CosmologyModels.tests.T_z_reference` (option (a) of the prompt's open choice: the import works
+  cleanly under both `discover -s ComputeTargets/tests -t .` and `-s CosmologyModels/tests -t .`,
+  confirmed by running both). The docstring's opening sentence now states plainly that this is test
+  machinery kept for two reasons — the neighbourhood probe and the illustration of the trap — rather
+  than "nothing in production calls this", and a closing sentence records that it lived on
+  `LambdaCDM_GenericEOS` until this campaign moved it. `LambdaCDM_GenericEOS.py`'s
+  `_build_break_point_crossings_log1pz` docstring, which contrasted bisection against "a
+  `root_scalar` bracket ... there", now names the new home instead of an implicit self-reference.
+  **Nothing numeric moved:** `test_hubble_jumps_at_the_declared_crossings_and_not_at_the_kink`'s
+  three measured steps are unchanged (1.969955e-03 at `T_LO` against the test's 1.97e-3, 9.27e-11 at
+  `EOS_T_LO` against its `< 1e-8`, 1.377111e-04 at `T_120_MEV` against 1.38e-4), `CosmologyModels`
+  tests 38 → 38 OK and `ComputeTargets` tests 447 → 447 OK, and `T_Z_REPRESENTATION_VERSION` stayed
+  **6**. Full record:
+  [`logs/04-relocate-the-crossing-probe.md`](../background-solver-robustness/logs/04-relocate-the-crossing-probe.md)
+  on the `background-solver-robustness` board.
 
 - **[12-source-grid-density-is-uniform-over-a-curvature-that-spans-eight-orders]** *(prompt 12,
   2026-09-15; **the user decided to take the recommendation, and prompt 15 implemented it**,

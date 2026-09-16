@@ -729,10 +729,12 @@ class LambdaCDM_GenericEOS(BaseCosmology):
         factor at these redshifts, and :meth:`integration_break_points`, which declares them to
         every quadrature and every ODE in the tree. One definition is not a tidiness point. Until
         prompt 07 of ``prompts/qcd-background-audit/`` the two were computed by different methods
-        -- bisection here, a ``root_scalar`` bracket on ``T_photon(z) - T_break`` there -- and
-        they disagreed by ~1e-12 in ``u``, which is the same size as the padding that holds each
-        segment's nodes inside its own branch. Declaring a panel edge on the wrong side of a jump
-        by that margin is precisely the silent failure README §2 (b) exists to prevent.
+        -- bisection here, a ``root_scalar`` bracket on ``T_photon(z) - T_break`` in what is now
+        ``CosmologyModels.tests.T_z_reference.temperature_crossing_log1pz`` (moved out of this
+        class by ``prompts/background-solver-robustness/`` prompt 04) -- and they disagreed by
+        ~1e-12 in ``u``, which is the same size as the padding that holds each segment's nodes
+        inside its own branch. Declaring a panel edge on the wrong side of a jump by that margin
+        is precisely the silent failure README §2 (b) exists to prevent.
 
         Called from ``__init__`` *before* the temperature representation is built, because the
         representation needs the edges. It therefore cannot use ``T_photon``; it bisects
@@ -824,59 +826,6 @@ class LambdaCDM_GenericEOS(BaseCosmology):
                 break
 
         return log1p(0.5 * (lo + hi))
-
-    def _temperature_crossing_log1pz(
-        self, T: float, u_lo: float, u_hi: float
-    ) -> Optional[float]:
-        """
-        An *approximate* location for the point u = log(1+z), strictly inside (u_lo, u_hi), at
-        which T_photon(z) reaches the dimensionful temperature T; None if it does not cross inside
-        the range.
-
-        **Nothing in production calls this, and nothing may put it back on the break-point path.**
-        Until prompt 07 of prompts/qcd-background-audit/ it was how integration_break_points
-        located the equation-of-state crossings; that method now returns the bisected
-        _break_point_crossings_log1pz, which is where the crossings actually are. The reason is
-        README §2 (b): since prompt 06 the representation is segmented at exactly these
-        temperatures, so T_photon genuinely *jumps* there, and log T_photon(z) - log T need not
-        have a root at all. A bracketing solver applied to it reports converged and returns a
-        non-root whose offset depends on its tolerances -- measured at +1.126e-12 in u at
-        root_scalar's defaults, which is further from the jump than the 1e-12 by which each
-        segment's nodes are held inside their own branch. CosmologyModels/tests/
-        test_T_z_representation.py::test_a_segment_edge_bisected_and_one_root_found_disagree is
-        the standing demonstration.
-
-        It survives as a measurement probe: ComputeTargets/tests/test_numeric_break_points.py::
-        test_hubble_jumps_at_the_declared_crossings_and_not_at_the_kink uses it to find a
-        neighbourhood of a crossing, which is a use its ~1e-12 offset does not disturb, and it is
-        the documented illustration of why a bracket is the wrong tool here.
-
-        T_photon(z) is monotone in z, so the crossing is unique where it exists. It is solved for
-        in u, which is the campaign's integration variable, to xtol = rtol = 1e-15. The expm1(u)
-        inside q() is the lossy log(1+z) -> z direction (CLAUDE.md), but T_photon takes log(1+z)
-        again internally, so it costs ~1 ulp of u.
-        """
-        log_T = log(T)
-
-        def q(u: float) -> float:
-            return log(self.T_photon(expm1(u))) - log_T
-
-        q_lo = q(u_lo)
-        q_hi = q(u_hi)
-        if q_lo == 0.0 or q_hi == 0.0 or (q_lo > 0.0) == (q_hi > 0.0):
-            return None
-
-        root = root_scalar(q, bracket=(u_lo, u_hi), xtol=1e-15, rtol=1e-15)
-        if not root.converged:
-            raise RuntimeError(
-                f"LambdaCDM_GenericEOS._temperature_crossing_log1pz: root_scalar() did not converge "
-                f"for T = {T / self._units.GeV:.5g} GeV between u = {u_lo:.6g} and {u_hi:.6g}: "
-                f'"{root.flag}"'
-            )
-        u = float(root.root)
-        if not u_lo < u < u_hi:
-            return None
-        return u
 
     def integration_break_points(
         self, z_lo: float, z_hi: float, kind: str = BREAK_POINT_ALL

@@ -7,8 +7,8 @@
 **Baseline commit:** `f023eb8` — suites green and re-run at planning time:
 `CosmologyModels` **30**, `ComputeTargets` **447**
 **Target branch:** `background-solver-robustness`, cut from `f023eb8` (README §4)
-**Last updated:** 2026-09-16 · **Status: workstream A complete; workstream B under way — prompts
-01, 02 and 03 done. README §7 **D2 decided by the user: option (iii)**, the solve is
+**Last updated:** 2026-09-16 · **Status: workstream A complete; workstream B complete — prompts
+01, 02, 03 and 04 done. README §7 **D2 decided by the user: option (iii)**, the solve is
 authoritative at `main.py` — which adds **prompt 09** and **workstream E** (§1, §3).**
 
 > **The impact is zero change to any computed quantity, and that is the point.** `AUDIT.md` §5 and
@@ -40,7 +40,7 @@ authoritative at `main.py` — which adds **prompt 09** and **workstream E** (§
 | 01 | [Equality-solve characterisation test](01-equality-solve-characterisation.md) | A | README §2 (a), (d) | Opus | ⚠️ | *"Characterise the equality solve before bracketing it"* (SHA not embedded, per the campaign convention) | [`logs/01-equality-solve-characterisation.md`](logs/01-equality-solve-characterisation.md) |
 | 02 | [Bracket the equality solve](02-bracket-the-equality-solve.md) | A | README §2 (b), (c), (e); audit §4.2 | Opus | ⚠️ | *"Bracket the equality solve and make its guard reachable"* (SHA not embedded, per the campaign convention) | [`logs/02-bracket-the-equality-solve.md`](logs/02-bracket-the-equality-solve.md) |
 | 03 | [What the equality redshifts feed](03-equality-redshift-consumers.md) | B | README §2 (f); §7 D2 | Opus | ⚠️ | *"Write down what the equality redshifts actually feed"* (SHA not embedded, per the campaign convention) | [`logs/03-equality-redshift-consumers.md`](logs/03-equality-redshift-consumers.md) |
-| 04 | [Relocate the crossing probe](04-relocate-the-crossing-probe.md) | B | README §2 (g) | Sonnet | ⬜ | | |
+| 04 | [Relocate the crossing probe](04-relocate-the-crossing-probe.md) | B | README §2 (g) | Sonnet | ✅ | *"Relocate the crossing probe to test machinery"* (SHA not embedded, per the campaign convention) | [`logs/04-relocate-the-crossing-probe.md`](logs/04-relocate-the-crossing-probe.md) |
 | 05 | [Hoist the range logic](05-hoist-the-range-logic.md) | C | README §2 (h); §7 D4 | Opus | ⬜ | | |
 | 06 | [Provenance and close-out](06-provenance-and-close-out.md) | C | README §2 (i); §0.4 | Opus | ⬜ | | |
 | 07 | [Report the representation in the inventory](07-inventory-representation.md) | **D — gated** | — | Sonnet | 🔒 | | |
@@ -74,7 +74,7 @@ decades apart and nothing about one of them predicts the other.
 | (d) | **MEASUREMENT** | The monotonicity the bracket rests on is a standing test, not a paragraph in an audit: $\rho_m/\rho_r$ strictly decreasing on $z\in[33,3.4\times10^5]$, $\rho_m/\rho_\Lambda$ strictly increasing on $z\in[0,10]$ | 01 | ✅ |
 | (e) | **DISCIPLINE** | Every behaviour-change assertion is shown **failing on `HEAD~1`**, with the output quoted in the log | 02 | ✅ |
 | (f) | **MEASUREMENT** | What the equality redshifts actually feed, written down: three closed-form sites scored against each other and against the corrected solve on three models — ~~`RadiationModel`~~ **the pure-radiation stand-in, `RadiationModel` exposing no $\Omega$s at all (log 03, D1)** — the chain from `feature_z` to the `BackgroundModel` lookup key, and `main.py:526`'s stale 4e-13 corrected | 03 | ✅ |
-| (g) | **HYGIENE** | `_temperature_crossing_log1pz` is test machinery in the test tree, with its docstring and its `xtol=1e-15, rtol=1e-15` carried across unchanged | 04 | ⬜ |
+| (g) | **HYGIENE** | `_temperature_crossing_log1pz` is test machinery in the test tree, with its docstring and its `xtol=1e-15, rtol=1e-15` carried across unchanged | 04 | ✅ |
 | (h) | **MEASUREMENT** | The four loop-invariant `_outward` bounds hoisted in all three classes, **bit-identical** returns and character-identical messages demonstrated, and the `T_photon` cost row closed at ≤ 2.5 µs or escalated to the user | 05 | ⬜ |
 | (l) | **FIX** | The model is authoritative for its own equality redshifts: `BaseCosmology` declares them, `LambdaCDM` answers with the closed form (exact for it), `LambdaCDM_GenericEOS` answers with the solve its constructor already runs, `main.py` computes nothing and has **no fallback** — QCD digest `a2c32f67` → `4849552b` on exactly one moved sample, `LambdaCDM` unmoved | 09 | ⬜ |
 | (i) | **PROVENANCE** | An entry for **all three** `root_scalar` sites in `LambdaCDM_GenericEOS.py` — value, method, what it sets, call count, choosing measurement **and its commit**, competing floor, cost, citation — in the shape `docs/TOLERANCE-PROVENANCE.md` will want | 06 | ⬜ |
@@ -221,7 +221,7 @@ deleted from `docs/OPEN_ISSUES.md`.
 
 | Issue | Owning board | Assigned to | Why here |
 |---|---|---|---|
-| `[08-temperature-crossing-solver-is-test-only]` | qcd-background-audit | prompt **04** | Needs `LambdaCDM_GenericEOS.py` and `CosmologyModels/tests/` in scope together. Prompt 04 has both, and the method is one of the three `root_scalar` sites prompt 06 must write provenance for |
+| ~~`[08-temperature-crossing-solver-is-test-only]`~~ | qcd-background-audit | prompt **04** | **Closed by prompt 04, 2026-09-16** — moved to `CosmologyModels/tests/T_z_reference.temperature_crossing_log1pz`; resolved entry on the `qcd-background-audit` board's §4, row deleted from `docs/OPEN_ISSUES.md` |
 | `[07-t-photon-range-logic-recomputes-its-bounds]` | qcd-background-audit | prompt **05** | Out of scope for that campaign's prompt 06, whose prompt did not cover prompt 05's range logic. Numerically null; 0.056 µs × 2 of a ~2.5 µs call |
 | `[06-t-photon-call-cost-needs-a-quiet-machine]` | qcd-background-audit | prompt **05** | Its own next step **is** the hoist above. Confirmed miss at 2.596 µs against a 2.5 µs target; predicted landing ~2.49 µs. If it does not clear, README §7 **D4** puts the row to the user |
 | `[09-audit-script-section-5-prose-counts-the-wrong-set]` | qcd-background-audit | prompt **05** | Needs `docs/qcd-background-audit/` in scope; prompt 05 re-runs `measure_T_z_representation.py` for its §6 cost row and so has it |
