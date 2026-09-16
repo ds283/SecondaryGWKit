@@ -1,6 +1,6 @@
 # Open issues — project-wide index
 
-**Last updated:** 2026-09-16 · **68 open** across ten campaigns.
+**Last updated:** 2026-09-16 · **69 open** across ten campaigns.
 
 This file exists so that an issue opened by one campaign is not lost when that campaign closes.
 It is an **index, not a record**: one line per issue, pointing at the campaign status board that
@@ -400,9 +400,10 @@ waits on a prompt that has the right files in scope; the board holds the measure
 ### 1.8 The background solver robustness campaign
 
 Planned as [`prompts/background-solver-robustness/`](../prompts/background-solver-robustness/README.md)
-(2026-09-16 at `f023eb8`; **eight prompts in four workstreams, prompts 01, 02 and 03 executed
-2026-09-16, so workstream A is complete and workstream B is under way**;
-workstream D, two of the eight, is gated on that campaign's README §7 D3). It implements
+(2026-09-16 at `f023eb8`; grown to **nine prompts in five workstreams** when the user decided
+README §7 D2 — **and closed on 2026-09-16 with all seven authorised prompts landed**, 01–06 and 09;
+workstream D, prompts 07 and 08, was never authorised and remains gated on that campaign's
+README §7 D3). It implements
 [`AUDIT.md`](../prompts/background-solver-robustness/AUDIT.md), which measured that
 `LambdaCDM_GenericEOS._find_rho_equality` is an **unbracketed secant** at `xtol=1e-6, rtol=1e-4` —
 two orders looser than the file's other two solves, which `prompts/qcd-background-audit` tightened —
@@ -454,6 +455,25 @@ fallback**. The `QCD_Cosmology` production source-grid digest is **`4849552b`** 
 moved from `a2c32f67` on **exactly one** sample (index 1540, +7 ulp) — the value prompt 03
 predicted — and `LambdaCDM(Planck2018)` is `60a3205a` at 1,778, unmoved. No regeneration follows
 (the user, 2026-09-16: this is the build phase).
+
+**Prompt 06 closed the campaign on 2026-09-16.** All seven authorised prompts landed (01–06 and
+09); workstream D (07, 08) was **not authorised** and its two rows stay indexed where they are.
+[`PROVENANCE.md`](../prompts/background-solver-robustness/PROVENANCE.md) settles all three of the
+file's `root_scalar` sites in the shape `docs/TOLERANCE-PROVENANCE.md` will want, and
+`prompts/tolerance-convergence`'s board and README §3.2 now point at it instead of carrying an
+unowned bullet. **`AUDIT.md` §5's "fixing this changes no computed quantity in the pipeline" held
+for workstreams A–C and was deliberately superseded by workstream E**, which the user added after
+the audit was written: nothing moved through prompt 05 except the two matter–radiation equality
+redshifts by +3 and +1 ulp *onto* the independent reference (both printed with `:.4g`, both banner
+lines character-identical), and prompt 09 then moved the `QCD_Cosmology` source-grid digest on one
+sample of 1,996 on purpose. `T_Z_REPRESENTATION_VERSION` is 6 at every commit; final suites
+`CosmologyModels` **39**, `ComputeTargets` **449**, both OK.
+
+**Opened by prompt 06 (2026-09-16):**
+
+| Issue | Board | Hook |
+|---|---|---|
+| `[06-node-solve-comment-quotes-a-superseded-node-count]` | background-solver-robustness | `CosmologyModels/GenericEOS/LambdaCDM_GenericEOS.py:627`, inside the comment that justifies `_solve_T_z`'s `xtol=1e-300, rtol=1e-14`, says the solve is "paid once per node at build time (~500 nodes, 8.3 us each -- a few ms total)". `DEFAULT_T_Z_SPLINE_SAMPLES` has been **3,000** since `qcd-background-audit` prompt 06, and the measured count is **3,176** calls per `QCD_Cosmology(max_z=1e12)` construction — about **6×** the quoted figure, and the "a few ms" arithmetic follows it. Harmless: the figure is an aside inside an argument about *uncorrelated node scatter*, which the node count does not affect, and the tolerance is right for the reason the rest of the comment gives. But it is a stale figure inside a tolerance justification, which is the class of thing `prompts/tolerance-convergence` exists to remove. **Next step:** two numbers, in whichever prompt next has that file in scope; `prompts/background-solver-robustness/PROVENANCE.md` §1 already carries the measured count. |
 
 **Opened by prompt 05 (2026-09-16):**
 

@@ -362,28 +362,40 @@ costs, and the exact command that reproduces each figure.>
 
 A prompt is ✅ only when its row is true **and its log quotes the measured value**.
 
-| # | Acceptance | Threshold |
-|---|---|---|
-| 01 | Both equality redshifts reproduce the bracketed reference | ≤ 2 ulp on both models, both pairs |
-| 01 | Both density ratios monotone over the range their own root lives in | strict, at every probe of audit §4.1 |
-| 01 | New test module needs no Ray and no datastore | runs under `discover -s CosmologyModels/tests` |
-| 01 | Suites | `CosmologyModels` 30 → 30 + *n*, `ComputeTargets` 447 unchanged |
-| 02 | The two roots after the change, against prompt 01's reference | **bit-identical**, or ≤ 1 ulp with both floats quoted at 17 digits |
-| 02 | A guess displaced enough to break the shipped solve now raises `_find_rho_equality`'s own `RuntimeError` | naming the species pair **and** the range searched |
-| 02 | That assertion fails on `HEAD~1` | failure output quoted in the log |
-| 02 | Evaluation count at the production call sites | quoted before and after; audit §3.1 predicts +6 to +9 |
-| 02 | `T_Z_REPRESENTATION_VERSION` | **6** before and after |
-| 03 | Closed form vs. the corrected solve, three production models, both pairs | measured and tabulated; `main.py:526`'s figure corrected to what is measured |
-| 03 | Production files changed | **none** except the one `main.py` docstring sentence |
-| 03 | The production source grid | **byte-identical**, demonstrated by digest |
-| 04 | Every number in the three affected suites | unchanged, and the counts unchanged |
-| 04 | `_temperature_crossing_log1pz` | no longer a member of `LambdaCDM_GenericEOS` |
-| 05 | Every value `TemperatureRepresentation`, `ZSplineWrapper`, `GkWKBSplineWrapper` return | **bit-identical**, demonstrated over a probe set |
-| 05 | `T_photon` cost, quiet machine, five runs | mean and range quoted; ≤ 2.5 µs **closes** `[06-…]`, otherwise **escalate** |
-| 05 | `measure_T_z_representation.py` §5 prose | counts the intersection with the declared set (**0**), not the knots in range |
-| 06 | Provenance entry | all three solves; value, choosing measurement + its commit, competing floor, cost × call count, citation |
-| 06 | Production files in the diff | **none** |
-| 06 | `prompts/tolerance-convergence/IMPLEMENTATION_STATE.md` §3 | the `:1008` bullet replaced by the settled result |
+**The `Measured` column was added by prompt 06 at close-out**, from each prompt's own log; the
+`Threshold` column is the plan as written and is not edited (§5 rule 6). Where a threshold was
+amended by the user or by a measurement, the row says so and names the deviation.
+
+| # | Acceptance | Threshold | **Measured** |
+|---|---|---|---|
+| 01 | Both equality redshifts reproduce the bracketed reference | ≤ 2 ulp on both models, both pairs | **3 / 2 / 1 / 2 ulp**; shipped at `SOLVE_VS_REFERENCE_ULP = 4`. The threshold is arithmetically incompatible with audit §2.2's own −4.00e-16, which *is* −3.0 ulp (log 01 D1; board note 7) ⚠️ |
+| 01 | Both density ratios monotone over the range their own root lives in | strict, at every probe of audit §4.1 | **strict, 6 intervals × 2 pairs × 2 models** ✅ |
+| 01 | New test module needs no Ray and no datastore | runs under `discover -s CosmologyModels/tests` | **Ran 4 tests in 0.083 s, OK** ✅ |
+| 01 | Suites | `CosmologyModels` 30 → 30 + *n*, `ComputeTargets` 447 unchanged | **30 → 34** (*n* = 4); **447 → 447** ✅ |
+| 02 | The two roots after the change, against prompt 01's reference | **bit-identical**, or ≤ 1 ulp with both floats quoted at 17 digits | **0 / −2 / 0 / −2 ulp** against that reference. Bit-identity is **not a property this root has** — the residual's sign change spans several floats (log 02 D1, board note 9) — so the user amended the row to "≤ 4 ulp" on 2026-09-16 ⚠️ |
+| 02 | A guess displaced enough to break the shipped solve now raises `_find_rho_equality`'s own `RuntimeError` | naming the species pair **and** the range searched | **No displacement can break the bracketed solve** (×0.01 to ×100 all recover the root to ±1 ulp), so the guard is reached instead by a cosmology whose tabulated range cannot contain its own root; the message names both species, the guess, the clamp, both endpoints and both residuals (log 02 D2) ✅ |
+| 02 | That assertion fails on `HEAD~1` | failure output quoted in the log | **2 failures, 5 errors** at `7fdc49b`, quoted; `assertRaises(RuntimeError)` alone would have passed on both trees ✅ |
+| 02 | Evaluation count at the production call sites | quoted before and after; audit §3.1 predicts +6 to +9 | **3, 1, 1, 1 → 23, 25, 21, 25** (+20 to +24). The audit's +6 to +9 is for *tightening the secant* and does not survive bracketing ✅ |
+| 02 | `T_Z_REPRESENTATION_VERSION` | **6** before and after | **6 → 6** ✅ |
+| 03 | Closed form vs. the corrected solve, three production models, both pairs | measured and tabulated; `main.py:526`'s figure corrected to what is measured | **−9.344e-16 (−7 ulp)** and **+0.000e+00** on `QCD_Cosmology`; **−1.336e-16 (−1 ulp)** and **+0.000e+00** on the stand-in; the docstring now quotes both and names `921f41c`. The third model is the pure-radiation stand-in, not `RadiationModel`, which exposes no $\Omega$s (log 03 D1) ✅ |
+| 03 | Production files changed | **none** except the one `main.py` docstring sentence | **one hunk, 0 executable lines** ✅ |
+| 03 | The production source grid | **byte-identical**, demonstrated by digest | **`a2c32f67` / 1,996 and `60a3205a` / 1,778, identical at `7fdc49b`, `921f41c` and prompt 03's commit** ✅ |
+| 04 | Every number in the three affected suites | unchanged, and the counts unchanged | **38 / 447 at both ends**; the three measured $H$ steps **1.969955e-03, 9.272151e-11, 1.377111e-04**, the figures the board's issue entry records ✅ |
+| 04 | `_temperature_crossing_log1pz` | no longer a member of `LambdaCDM_GenericEOS` | **`grep -rn "self\._temperature_crossing_log1pz"` → no matches** ✅ |
+| 05 | Every value `TemperatureRepresentation`, `ZSplineWrapper`, `GkWKBSplineWrapper` return | **bit-identical**, demonstrated over a probe set | **3,979 `float.hex()` values, MD5 `7c16ba…7bb2` at both trees; 37 in-probe rejections identical in position and text; all six messages character-identical** ✅ |
+| 05 | `T_photon` cost, quiet machine, five runs | mean and range quoted; ≤ 2.5 µs **closes** `[06-…]`, otherwise **escalate** | **2.4854 µs**, range **2.418–2.546**, against `HEAD~1`'s 2.6744 — ratio **0.9293**, controls within ±2 %. **Closes** `[06-…]`; §7 **D4 not invoked**. Margin 0.6 %, one run of five above target ⚠️ |
+| 05 | `measure_T_z_representation.py` §5 prose | counts the intersection with the declared set (**0**), not the knots in range | **prints "0 of those 3 BREAK_POINT_ALL points are also knots"**; §5's table and everything above §6 byte-identical ✅ |
+| 06 | Provenance entry | all three solves; value, choosing measurement + its commit, competing floor, cost × call count, citation | **[`PROVENANCE.md`](PROVENANCE.md), three entries, every field present.** Two corrections the prompt did not anticipate: solve 2's tolerance was chosen by **`GkTk-remedial` prompt 03 (`83ef7c5`)**, not by `qcd-background-audit` 06/07, and has **no** choosing measurement; solve 3 ships **`rtol=8.9e-16`**, not `1e-14` (log 06 D1, D2) ✅ |
+| 06 | Production files in the diff | **none** | **zero production and zero test files**; `git diff --name-only` in log 06 ✅ |
+| 06 | `prompts/tolerance-convergence/IMPLEMENTATION_STATE.md` §3 | the `:1008` bullet replaced by the settled result | **replaced; the `[11-stop-point-root-tolerance]` and `QuadSourceIntegral.py:1550` bullets untouched, demonstrated by diff** ✅ |
+
+**Prompt 09 has no row here, and that is not an omission.** Workstream E was added on 2026-09-16,
+after this table was written, when the user decided §7 **D2** as option (iii). Its acceptance is in
+[`09-make-the-model-authoritative.md`](09-make-the-model-authoritative.md) §5 and its measured
+values are in board item (l) and [`logs/09-make-the-model-authoritative.md`](logs/09-make-the-model-authoritative.md);
+the headline is that the `QCD_Cosmology` production source-grid digest **`a2c32f67` → `4849552b`**
+on exactly one sample of 1,996, which the prompt required it to **land on** rather than report, and
+it did.
 
 ---
 

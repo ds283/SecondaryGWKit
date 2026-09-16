@@ -7,13 +7,12 @@
 **Baseline commit:** `f023eb8` — suites green and re-run at planning time:
 `CosmologyModels` **30**, `ComputeTargets` **447**
 **Target branch:** `background-solver-robustness`, cut from `f023eb8` (README §4)
-**Last updated:** 2026-09-16 · **Status: workstreams A, B and E complete and C under way — prompts
-01, 02, 03, 04, 05 and 09 done. README §7 D2 is implemented: the model is authoritative for its own
-equality redshifts, `main.py` computes nothing, and the `QCD_Cosmology` production source-grid
-digest has moved `a2c32f67` → **`4849552b`** on exactly one sample, on purpose (§6 note 15). Prompt
-05 hoisted the range logic in all three classes, bit-identically, and **closed
-`[06-t-photon-call-cost-needs-a-quiet-machine]` at 2.4854 µs** against its ≤ 2.5 µs target, so
-README §7 **D4 needs no answer from the user**. Prompt 06, the close-out, is all that remains.**
+**Last updated:** 2026-09-16 · **Status: CLOSED. Workstreams A, B, C and E complete — prompts 01,
+02, 03, 04, 05, 06 and 09 all landed. Workstream D (07, 08) was never authorised and its two rows
+stay indexed. Prompt 06 wrote [`PROVENANCE.md`](PROVENANCE.md) for all three of the file's
+`root_scalar` sites, pointed `prompts/tolerance-convergence`'s board and README §3.2 at it, and
+took the close-out verification in §5 below. Final suites `CosmologyModels` **39**,
+`ComputeTargets` **449**, both OK; `T_Z_REPRESENTATION_VERSION` **6** at every commit.**
 
 > **The impact is zero change to any computed quantity, and that is the point.** `AUDIT.md` §5 and
 > README §0.2 are the campaign's framing: the two redshifts `_find_rho_equality` produces are
@@ -46,7 +45,7 @@ README §7 **D4 needs no answer from the user**. Prompt 06, the close-out, is al
 | 03 | [What the equality redshifts feed](03-equality-redshift-consumers.md) | B | README §2 (f); §7 D2 | Opus | ⚠️ | *"Write down what the equality redshifts actually feed"* (SHA not embedded, per the campaign convention) | [`logs/03-equality-redshift-consumers.md`](logs/03-equality-redshift-consumers.md) |
 | 04 | [Relocate the crossing probe](04-relocate-the-crossing-probe.md) | B | README §2 (g) | Sonnet | ✅ | *"Relocate the crossing probe to test machinery"* (SHA not embedded, per the campaign convention) | [`logs/04-relocate-the-crossing-probe.md`](logs/04-relocate-the-crossing-probe.md) |
 | 05 | [Hoist the range logic](05-hoist-the-range-logic.md) | C | README §2 (h); §7 D4 | Opus | ⚠️ | *"Hoist the range logic out of the spline wrappers' hot path"* (SHA not embedded, per the campaign convention) | [`logs/05-hoist-the-range-logic.md`](logs/05-hoist-the-range-logic.md) |
-| 06 | [Provenance and close-out](06-provenance-and-close-out.md) | C | README §2 (i); §0.4 | Opus | ⬜ | | |
+| 06 | [Provenance and close-out](06-provenance-and-close-out.md) | C | README §2 (i); §0.4 | Opus | ⚠️ | *"Settle the provenance of the file's three root solves"* (SHA not embedded, per the campaign convention) | [`logs/06-provenance-and-close-out.md`](logs/06-provenance-and-close-out.md) |
 | 07 | [Report the representation in the inventory](07-inventory-representation.md) | **D — gated** | — | Sonnet | 🔒 | | |
 | 08 | [Refresh the agreement threshold](08-refresh-agreement-threshold.md) | **D — gated** | — | Sonnet | 🔒 | | |
 | 09 | [Make the model authoritative](09-make-the-model-authoritative.md) | **E** | README §2 (l); §7 D2 as decided | Opus | ⚠️ | *"Make the cosmology authoritative for its equality redshifts"* (SHA not embedded, per the campaign convention) | [`logs/09-make-the-model-authoritative.md`](logs/09-make-the-model-authoritative.md) |
@@ -81,7 +80,7 @@ decades apart and nothing about one of them predicts the other.
 | (g) | **HYGIENE** | `_temperature_crossing_log1pz` is test machinery in the test tree, with its docstring and its `xtol=1e-15, rtol=1e-15` carried across unchanged | 04 | ✅ |
 | (h) | **MEASUREMENT** | The four loop-invariant `_outward` bounds hoisted in all three classes — **3,979 `float.hex()` values bit-identical**, 37 in-probe rejections and all six messages character-identical, and the whole of `measure_T_z_representation.py` above §6 byte-identical at both trees — and the `T_photon` cost row **closed at 2.4854 µs** (mean of five runs, range 2.418–2.546, ratio **0.9293**), so README §7 **D4 is not invoked**. The margin is 0.6 % and one run of five was above target (log 05 §3.2) | 05 | ⚠️ |
 | (l) | **FIX** | The model is authoritative for its own equality redshifts: `BaseCosmology` declares them, `LambdaCDM` answers with the closed form (exact for it), `LambdaCDM_GenericEOS` answers with the solve its constructor already runs, `main.py` computes nothing and has **no fallback** — QCD digest `a2c32f67` → `4849552b` on exactly one moved sample (index 1540, +7 ulp), `LambdaCDM` unmoved — **and the QCD break-point-only grid `303f9ce7` → `81c6e682`, which the prompt did not name and which carries the same one sample (log 09, D1)** | 09 | ✅ |
-| (i) | **PROVENANCE** | An entry for **all three** `root_scalar` sites in `LambdaCDM_GenericEOS.py` — value, method, what it sets, call count, choosing measurement **and its commit**, competing floor, cost, citation — in the shape `docs/TOLERANCE-PROVENANCE.md` will want | 06 | ⬜ |
+| (i) | **PROVENANCE** | An entry for **all three** `root_scalar` sites — ~~in `LambdaCDM_GenericEOS.py`~~ **two of them there and one, since prompt 04, in `CosmologyModels/tests/T_z_reference.py`** — value, method, what it sets, call count, choosing measurement **and its commit**, competing floor, cost, citation, in the shape `docs/TOLERANCE-PROVENANCE.md` will want. Shipped as [`PROVENANCE.md`](PROVENANCE.md). **One of the three has no choosing measurement and the entry says so in those words** (`prompts/tolerance-convergence` README §1.2's requirement for a provenance that cannot be established): the crossing probe's `xtol=rtol=1e-15` was introduced by **`GkTk-remedial` prompt 03** (`83ef7c5`), not by `qcd-background-audit` 06/07 as prompt 06 assumed, and nothing ever chose it against a criterion (log 06, D1) | 06 | ⚠️ |
 
 ---
 
@@ -89,6 +88,28 @@ decades apart and nothing about one of them predicts the other.
 
 Issues opened here must be added to [`docs/OPEN_ISSUES.md`](../../docs/OPEN_ISSUES.md) **in the
 same commit** (`CLAUDE.md`), with the count corrected.
+
+Opened by **prompt 06** (2026-09-16):
+
+- **[06-node-solve-comment-quotes-a-superseded-node-count]** *(prompt 06; measured; no prompt
+  assigned)* — `CosmologyModels/GenericEOS/LambdaCDM_GenericEOS.py:627`, inside the comment that
+  justifies `_solve_T_z`'s `xtol=1e-300, rtol=1e-14`, says the solve is *"paid once per node at
+  build time (~500 nodes, 8.3 us each -- a few ms total)"*. `DEFAULT_T_Z_SPLINE_SAMPLES` (`:72`)
+  has been **3,000** since `qcd-background-audit` prompt 06 (`a1d667a`), and the count **measured
+  at this commit** is **3,176** calls per `QCD_Cosmology(max_z=1e12)` construction and **3,175** at
+  `max_z=1e20` — the 3,000 sample nodes plus the segmented representation's per-branch padding.
+  About **6×** the quoted figure, and the "a few ms total" arithmetic follows it; log 04 of
+  `qcd-background-audit` measured `_build_T_z_spline` at **13.4 ms**.
+  **Impact:** none on any number. The figure is an aside inside an argument about *uncorrelated
+  scatter between neighbouring nodes*, which is independent of how many nodes there are, and the
+  tolerance is right for the reason the rest of the comment gives. What is wrong is a stale count
+  inside a tolerance justification — the class of thing `prompts/tolerance-convergence` exists to
+  remove, and the same class as `[01-agreement-threshold-comment-predates-the-representation]`.
+  Prompt 06 may not touch a production file for any reason (its own §7), and `_solve_T_z` is out of
+  this campaign's scope entirely (README §0.5), so it is recorded rather than fixed.
+  **Next step:** two numbers, in whichever prompt next has `LambdaCDM_GenericEOS.py:626-635` in
+  scope. [`PROVENANCE.md`](PROVENANCE.md) §1 already carries the measured count, so the fix needs
+  no new measurement.
 
 Opened by **prompt 05** (2026-09-16):
 
@@ -350,7 +371,156 @@ deleted from `docs/OPEN_ISSUES.md`.
 
 ## 5. Close-out
 
-Written by prompt 06. Empty until then.
+Written by prompt 06, 2026-09-16, at the campaign's final commit. Every figure here was **re-run by
+prompt 06**, not lifted from a log, except where a log is named as the source of a historical
+measurement.
+
+### 5.1 The result
+
+**Seven of nine prompts landed; the other two were never authorised.**
+
+| Workstream | Prompts | Status |
+|---|---|---|
+| A — the equality solve | 01, 02 | **complete** |
+| B — what the redshifts feed | 03, 04 | **complete** |
+| C — cost and close-out | 05, 06 | **complete** |
+| D — housekeeping | 07, 08 | **not authorised.** README §7 **D3** was never answered, and "no, leave them indexed" is the answer the plan says costs nothing. `[03-qcd-inventory-does-not-report-the-representation]` (prompt 07) stays on the `qcd-background-audit` board assigned here and indexed in `docs/OPEN_ISSUES.md` §1.8; `[01-agreement-threshold-comment-predates-the-representation]` (prompt 08) stays on this board's §3, **measured by prompt 01** so that whoever does take it need not re-measure |
+| E — make the model authoritative | 09 | **complete.** Added 2026-09-16 on the user's §7 D2 decision; not in the original plan |
+
+**Final state.** `CosmologyModels` **39**, `ComputeTargets` **449**, both OK, re-run at this commit.
+`T_Z_REPRESENTATION_VERSION` **6** at every commit of the campaign. `black --check` clean over all
+eleven Python files in `f023eb8..HEAD`. The `QCD_Cosmology` production source-grid digest is
+**`4849552b`** at 1,996 samples and `LambdaCDM(Planck2018)`'s is **`60a3205a`** at 1,778.
+
+### 5.2 `AUDIT.md` §5's claim — **held where it was scoped, and deliberately superseded outside it**
+
+This is the campaign's central statement and it needs saying plainly rather than scored.
+
+> *"Fixing this changes no computed quantity in the pipeline."* — `AUDIT.md` §5
+
+**It held for workstreams A, B and C — the fix the audit was written about.** The evidence, all four
+pieces §4 item 5 of prompt 06 asks for:
+
+1. **The four equality redshifts.** Two moved, and only at prompt 02: `QCD_Cosmology`
+   matter–radiation **+3 ulp** (`3406.6689742499498` → `3406.6689742499511`) and the stand-in's
+   **+1 ulp** (`3403.1059638279453` → `3403.1059638279457`), **both onto** the independent
+   bracketed reference they previously sat below. Both matter–$\Lambda$ roots are bit-identical
+   throughout at `0x1.36b4870e4a718p-2`. Prompts 03, 04, 05 and 09 moved no bit of any of the four.
+   **These are the quantities the audit called diagnostics, they are printed with `:.4g`, and both
+   banner lines are character-identical at every commit** (note 5).
+2. **The grid digest.** `a2c32f67` (QCD, 1,996) and `60a3205a` (`LambdaCDM`, 1,778), measured
+   identical at `7fdc49b`, `921f41c`, prompt 03's commit and `6f3cd8e` (log 03 §2.3, log 09 §1).
+   **Unmoved through the whole of A, B and C.**
+3. **`T_Z_REPRESENTATION_VERSION` = 6** at every commit, re-read at this one.
+4. **`ComputeTargets` 447** at every commit through prompt 04, and **449** from prompt 09 on, the
+   rise being the two tests prompt 09 says it added. No count fell anywhere.
+
+**It did not hold campaign-wide, because workstream E moved a computed quantity on purpose.**
+Prompt 09 took the `QCD_Cosmology` production source-grid digest **`a2c32f67` → `4849552b`** on
+exactly one sample of 1,996 (index 1540, +7 ulp), and the QCD break-point-only grid `303f9ce7` →
+`81c6e682` with it. **That is not a failure of the audit's claim; it is the user overruling the
+premise the claim rested on.** README §0.2 scopes the claim to workstreams A–C, note 15 records the
+exception, and README §7 D2's answer of 2026-09-16 states the reason: $1+z_{\rm eq}=\Omega_m/\Omega_r$
+is exact at `main.py` only because `QCD_Cosmology`'s $g_*$ structure sits twelve orders above
+$z_{\rm eq}$, which is an accident of this equation of state and not a property of the code. **The
+audit could not have known this** — workstream E did not exist when it was written, and §2.1's
+correct grep is precisely why (`RECONCILIATION.md` §5). A later reader taking `AUDIT.md` §5 or
+README §0.2 as the campaign's outcome should read this subsection first.
+
+### 5.3 The acceptance table, measured
+
+README §6 now carries a **Measured** column, filled from each prompt's log and marked ✅ or ⚠️ per
+row. Three rows are ⚠️ and none of the three is a threshold quietly widened to accommodate a
+failure:
+
+- **01, "≤ 2 ulp"** — arithmetically incompatible with `AUDIT.md` §2.2's own headline −4.00e-16,
+  which *is* −3.0 ulp at $z = 3406.67$. Shipped at 4 ulp with 3 / 2 / 1 / 2 measured, the fourth
+  ulp being the reference's own bracket sensitivity, measured (note 7).
+- **02, "bit-identical or ≤ 1 ulp"** — **not a property this root has.** The residual is a
+  cancellation between two densities of order $10^{112}$ and its sign change spans several floats
+  (note 9). The user amended the row to ≤ 4 ulp on 2026-09-16, and the shipped solve achieves
+  0 / −2 / 0 / −2 against the reference.
+- **05, "≤ 2.5 µs"** — met at **2.4854 µs**, but by **0.6 %**, with one run of five at 2.546. The
+  row closes on the rule as written (the mean of five); the straddle is on the record so the next
+  person to measure is not surprised.
+
+**Every acceptance threshold in the campaign has a measured value in its own prompt's log**, which
+is prompt 06 §7's second stop condition, and it is not invoked.
+
+### 5.4 The suite counts reconcile across every log
+
+Prompt 06 §7's first stop condition, checked rather than asserted. Re-run at this commit:
+`CosmologyModels` **39**, OK, 0.682 s; `ComputeTargets` **449**, OK, 160.6 s.
+
+| Prompt | Commit subject | `CosmologyModels` | `ComputeTargets` |
+|---|---|---|---|
+| — | baseline `f023eb8` (`RECONCILIATION.md` §10) | 30 | 447 |
+| 01 | *Characterise the equality solve…* | 30 → **34** (+4) | 447 |
+| 02 | *Bracket the equality solve…* | 34 → **37** (+3) | 447 |
+| 03 | *Write down what the equality redshifts feed* | 37 → **38** (+1) | 447 |
+| 04 | *Relocate the crossing probe…* | 38 → **38** | 447 |
+| 09 | *Make the cosmology authoritative…* | 38 → **39** (+1) | 447 → **449** (+2) |
+| 05 | *Hoist the range logic…* | 39 → **39** | 449 |
+| 06 | *this commit* | 39 | 449 |
+
+**Every hand-off matches**, and every rise is a test the prompt that made it says it added
+(+4 prompt 01, +3 prompt 02, +1 prompt 03, +1 and +2 prompt 09). No count falls anywhere in the
+chain. Board note 3's "447 at every commit" binds through prompt 04 and note 3's own amendment
+carries it to 449 from prompt 09.
+
+### 5.5 What remains open, and who owns it
+
+| Issue | Owner | Why it is still open |
+|---|---|---|
+| `[06-node-solve-comment-quotes-a-superseded-node-count]` | this board §3 | Opened by prompt 06. `_solve_T_z`'s comment quotes ~500 nodes against a measured 3,176. Out of scope twice over: prompt 06 may touch no production file, and README §0.5 puts `_solve_T_z` out of bounds |
+| `[05-black-check-is-not-clean-at-the-repository-root]` | this board §3 | 54 `docs/` scratch files. A decision for the user: fix the tree or narrow the convention |
+| `[09-retire-tag-test-docstring-cites-a-superseded-digest]` | this board §3 | One word in a `ComputeTargets` test docstring, stale since prompt 09's digest move |
+| `[02-bracketed-reference-is-not-the-exact-root]` | this board §3 | A planning question: whether README §3.1's anchor should be an exact oracle on the $\Lambda$ pair. Changing it changes what prompt 01's tests assert, so it is the user's |
+| `[01-agreement-threshold-comment-predates-the-representation]` | this board §3 | **Workstream D was not authorised.** Measured by prompt 01; prompt 08 is where it gets fixed if D ever opens |
+| `[03-qcd-inventory-does-not-report-the-representation]` | `qcd-background-audit` board | **Workstream D was not authorised.** Assigned here 2026-09-16 and still assigned; one line in `inventory()` |
+| `[11-stop-point-root-tolerance]` | the hand-over campaign | Never this campaign's. `AUDIT.md` §4.3 and README §0.5 forbade absorbing it, and no prompt here touched it |
+
+Nothing is left in flight. **No regeneration is outstanding** (note 14): the digest prompt 09 moved
+is the acceptance, not a debt.
+
+### 5.6 README §7's four decisions
+
+| # | Subject | Status |
+|---|---|---|
+| **D1** | The tolerance pair for `_find_rho_equality` | **Taken, by the user, 2026-09-16 — and against the campaign's own recommendation.** The plan recommended `xtol=1e-300, rtol=1e-14`; prompt 02 measured that it stops 7 ulp from the independent reference and fails a test prompt 01 had already shipped, and the user amended D1 to **`rtol=8.9e-16`**, Brent's $4\varepsilon$ floor, and amended prompt 02's acceptance from bit-identity to ≤ 4 ulp. [`PROVENANCE.md`](PROVENANCE.md) §3 holds the entry |
+| **D2** | The three copies of the equality closed form | **Taken, by the user, 2026-09-16, as option (iii)** — again against the campaign's recommendation, which was (i), and the recommendation was wrong. Implemented by **prompt 09**: `BaseCosmology` declares the two equality redshifts, each model answers for itself, `main.py` computes nothing and has no fallback. There are now **two** closed-form sites, not three (note 18) |
+| **D3** | Whether workstream D runs at all | **Outstanding, and closing the campaign does not force it.** The gate was never opened; both rows stay indexed, which §7 D3 says is a perfectly good answer that costs nothing. Either can be picked up by any later prompt with the files in scope |
+| **D4** | Whether `[06-t-photon-call-cost-needs-a-quiet-machine]` closes or is accepted | **Not invoked.** Prompt 05's hoist landed the row at **2.4854 µs** against its ≤ 2.5 µs target, so the issue closed on the `qcd-background-audit` board's §4 and the user was never asked. The margin is 0.6 % (§5.3) |
+
+### 5.7 The paragraph a later reader needs
+
+This campaign took a solve that was **correct by accident** and made it correct by construction.
+`LambdaCDM_GenericEOS._find_rho_equality` ran an unbracketed secant at tolerances two orders looser
+than anything else in its file, and returned the double-precision answer only because its caller
+handed it the closed-form root — a property of *this* equation of state at *this* redshift, checked
+by nothing. It is now Brent on a $\sqrt2$ bracket clamped to the $T(z)$ representation's own bounds,
+at Brent's own convergence floor; a failure to bracket raises the method's own error naming the
+species pair, the guess and the range searched, where before it died inside `_rho_fluid` at negative
+$z$ with the convergence guard never firing. The monotonicity the bracket rests on, the four roots,
+the failure surface and the two remaining closed-form sites are all standing tests rather than
+paragraphs in an audit. Alongside that, the campaign cleared four issues the project-wide index had
+been holding for "whichever prompt next has these files in scope", took the last `T_photon` cost row
+below its target, and left [`PROVENANCE.md`](PROVENANCE.md) so that
+`prompts/tolerance-convergence` lifts three settled entries instead of recording one unestablished
+one.
+
+**What it did not do:** re-open `_solve_T_z` or the crossing probe's tolerances, touch
+`find_phase_extremum`, change `_rho_fluid`, the $T(z)$ representation or `T_Z_REPRESENTATION_VERSION`,
+or move a stored number in workstreams A, B or C.
+
+**What it proved, and the one thing it disproved.** It proved that the fix costs nothing: 20 to 24
+extra spline evaluations, twice per model construction, unmeasurable against the tabulation build,
+and no computed quantity moved. It **disproved** `AUDIT.md` §2.1's *"the blast radius of this solve
+is two banner lines"* — true of the solve, false of the quantity — and the correction turned out to
+matter more than the fix. Chasing it produced the reconciliation, prompt 03's measurement, the
+user's D2 decision and prompt 09, which is the one change here that deliberately moves a datastore
+identity. **A reader who stops at the audit will get the scope of this campaign wrong**; §5.2 is
+where the campaign's own answer to its central claim is written down.
 
 ---
 
@@ -498,3 +668,29 @@ Written by prompt 06. Empty until then.
     entropy-factor, segmented and accurate-root candidates, none of which goes through
     `TemperatureRepresentation.__call__` — are the quietness test, and a run in which one of them
     moves by more than the measurement's own spread is void.
+21. **`LambdaCDM_GenericEOS.py`'s line numbers moved once more, at prompt 05, by +9 below `:306`.**
+    Prompt 05 added eight hoisted lines plus a blank to `TemperatureRepresentation.__init__`
+    (`:307-314`) and note 16's anchors below that point were not re-taken. Re-anchored at prompt
+    06, by reading the file: the two `_find_rho_equality` calls are **`:521`** and **`:524`** (their
+    `init_z=` guesses at **`:522`** and **`:527`**, note 16's `:513`/`:518`); the two banner
+    `print`s are **`:536-539`** (note 5's `:527-530`), the first split over three source lines by
+    `black`; the two properties are at **`:558`** and **`:575`**; `T_Z_REPRESENTATION_VERSION` is
+    **`:428`**; `_solve_T_z` is **`:592`** with its `root_scalar` at **`:636`** and its tolerance
+    comment at **`:626-635`**; `_bisect_temperature_crossing_log1pz` is **`:814`**;
+    `_find_rho_equality` is **`:1001`** with its `root_scalar` at **`:1137`** and its tolerance
+    comment at **`:1103-1136`**. Notes 5 and 16 are correct for the trees they were taken on
+    (`CLAUDE.md`) and are left as written; **a prompt following one of them below `:306` must add
+    9.** `main.py` and `LambdaCDM.py` are untouched by prompt 05, so note 16 still binds there and
+    `LambdaCDM.py`'s banner pair remains at `:83-84`.
+22. **The provenance of all three solves is [`PROVENANCE.md`](PROVENANCE.md), and the code comments
+    are still the primary record.** If the two disagree the code is right. The document exists
+    because `AUDIT.md` §7 says the cheap moment to settle these is before
+    `prompts/tolerance-convergence` prompt 02 takes its inventory; that campaign's board §3 and
+    README §3.2 now point here, and its prompt 02 should **lift** the three entries rather than
+    re-derive them. **Prompt 06 deliberately did not create `docs/TOLERANCE-PROVENANCE.md`** — that
+    file is another campaign's prompt 06's to create, and this campaign does not own it.
+    Two things in there that a reader of the plan will not expect: the crossing probe's
+    `xtol=rtol=1e-15` was chosen by **`GkTk-remedial` prompt 03** (`83ef7c5`) and has **no** choosing
+    measurement, and `_find_rho_equality`'s "what it sets" field is **not** simply "diagnostic" any
+    more (PROVENANCE.md §3.1) — since prompt 09 the value it returns is `feature_z[0]` on
+    `QCD_Cosmology` and therefore sits inside a `BackgroundModel` lookup key.

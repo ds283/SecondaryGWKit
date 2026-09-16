@@ -139,10 +139,21 @@ Recorded by the rebase, **not owned here** and not scheduled (README §0.5):
   `find_phase_extremum`'s `root_scalar(xtol=1e-6, rtol=1e-4)`,
   `LiouvilleGreen/integration_tools.py:95`. It appears in prompt 02's inventory and in
   `docs/TOLERANCE-PROVENANCE.md`, and it is not retuned here.
-- `LambdaCDM_GenericEOS.py:1008` — a second `root_scalar(xtol=1e-6, rtol=1e-4)`, on `match_rho`,
-  with no provenance in any campaign record. Prompt 02 records what it is and what it feeds; if it
-  turns out to matter, that is an issue for whoever owns that file and not a repair to make in
-  passing.
+- `LambdaCDM_GenericEOS.py:1008` — **settled 2026-09-16 by `prompts/background-solver-robustness`,
+  which is "whoever owns that file". It is no longer an unbracketed secant and no longer at
+  `:1008`.** It is `_find_rho_equality`'s `root_scalar` at **`:1137`** (`def` at `:1001`), Brent on
+  a $\sqrt2$ bracket expanded in $1+z$ about the caller's guess and clamped to the $T(z)$
+  representation's own bounds, at **`xtol=1e-300, rtol=8.9e-16`** — Brent's own $4\varepsilon$
+  floor, decided by the user on that campaign's README §7 **D1** as amended, because `rtol=1e-14`
+  was measured to stop 7 ulp from an independent reference. **Its provenance is
+  [`prompts/background-solver-robustness/PROVENANCE.md`](../background-solver-robustness/PROVENANCE.md)
+  §3, which is written in the shape `docs/TOLERANCE-PROVENANCE.md` will want: prompt 02 here should
+  lift that entry rather than re-derive it.** Two further things prompt 02's inventory needs and
+  the old bullet could not have known: the *quantity* is **not** a diagnostic — since that
+  campaign's prompt 09 the model answers for its own equality redshifts and they are production
+  source-grid sample locations inside a `BackgroundModel` lookup key (PROVENANCE.md §3.1) — and the
+  same document's §1 and §2 settle the file's **other two** solves, so all three of `:579`, `:864`
+  and `:1008` in README §3.2's list arrive here already established.
 - `ComputeTargets/QuadSourceIntegral.py:1550` still says "the pipeline supplies
   `DEFAULT_QUADRATURE_ATOL = 1e-25`"; the constant has been 1e-32 since `source-remediation`
   prompt 12. A stale comment in a file README §0.4 puts out of bounds.
