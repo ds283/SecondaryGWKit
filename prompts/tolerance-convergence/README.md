@@ -4,10 +4,13 @@
 review [`docs/gk-wkb-review-fable-2026-09-09.md`](../../docs/gk-wkb-review-fable-2026-09-09.md)
 §10.1 and §12.5.
 **Planned:** 2026-09-12 at `622b84b`. **Rebased:** 2026-09-16 at `acd5b8e`, on the tree left by
-`GkTk-remedial` (20 / 20) and `qcd-background-audit` (16 / 16). **Not yet started.**
-**Branch:** `tolerance-convergence`, cut from `main` at `acd5b8e`.
-**What the rebase changed, and why:** [`RECONCILIATION.md`](RECONCILIATION.md) — read it before
-believing any figure quoted here against the older documents.
+`GkTk-remedial` (20 / 20) and `qcd-background-audit` (16 / 16). **Re-anchored:** 2026-09-16 at
+`bc6dc97`, on the tree left by `background-solver-robustness` (9 / 9), which ran on this branch.
+**Not yet started.**
+**Branch:** `tolerance-convergence`, cut from `main` at `acd5b8e`, now 25 commits ahead of it.
+**What the rebase and the re-anchor changed, and why:** [`RECONCILIATION.md`](RECONCILIATION.md) —
+§§1–6 for the rebase, **§7 for the re-anchor** — read it before believing any figure quoted here
+against the older documents.
 **Status board:** [`IMPLEMENTATION_STATE.md`](IMPLEMENTATION_STATE.md) · **Logs:** [`logs/`](logs/)
 
 ---
@@ -85,6 +88,28 @@ re-derive:
 - **Nothing in either campaign moved a tolerance.** `config/defaults.py` is byte-identical to the
   file the plan was written against.
 
+**Re-anchored 2026-09-16 at `bc6dc97`** (additively, §5 rule 7). A third campaign has since run —
+`prompts/background-solver-robustness`, 9 / 9, planned and merged **on this branch** after the
+rebase above was written. It is not a precondition; it is a campaign that happened to land on one
+of this campaign's own subjects. `RECONCILIATION.md` **§7** scores it. The four things a prompt
+here must know:
+
+- **The baseline moved.** `bc6dc97`, 25 commits ahead of `main`. Suites re-run for the re-anchor:
+  `ComputeTargets` **452**, `CosmologyModels` **39**, both OK. The five results above all still
+  hold, and `config/defaults.py` is *still* byte-identical — now across three campaigns and two
+  rebases.
+- **The three `LambdaCDM_GenericEOS.py` root solves are settled, by the campaign that owns that
+  file.** Prompt 02 **lifts**
+  [`background-solver-robustness/PROVENANCE.md`](../background-solver-robustness/PROVENANCE.md)
+  rather than re-deriving them; §3.2 says so and its line numbers are confirmed at `bc6dc97`.
+- **The version-2 grid reproduction already exists**, privately, in
+  `ComputeTargets/tests/test_source_grid.py`. There are **four** reproductions in the test tree,
+  not three, and prompt 01's job is to *hoist* one rather than build it (§3.1, and
+  `RECONCILIATION.md` §7.3).
+- **`cosmology_feature_redshifts` no longer computes the equality redshifts** — it asks the
+  cosmology, and raises with no fallback if the cosmology cannot answer. Prompt 01 lifts that
+  function, so its stand-in must answer (`RECONCILIATION.md` §7.4).
+
 ### 0.4 Boundary with `AdaptiveLevin` and `QuadSourceIntegral`
 
 `ComputeTargets/QuadSourceIntegral.py`, `QuadSource.py`, `phase_groups.py` and `AdaptiveLevin/`
@@ -122,7 +147,7 @@ prompt here finds it must change one of those files to proceed, that is a stop.
 
 ## 1. What this campaign does
 
-Six prompts. The first four change **no production code**, with one exception stated in §7 D5; the
+Six prompts. The first four change **no production code**, with one exception settled in §7 D5; the
 fifth is the only one that touches `main.py` and `config/defaults.py`.
 
 **01 — the harness, and one production grid.** One reusable convergence facility in the test tree,
@@ -219,16 +244,20 @@ no tolerances. The columns stay… and the payload `metadata` records the Gauss 
 used"). **A prompt that proposes to "tighten the WKB tolerance" has misread the tree.**
 
 **(b) Every published figure was taken on a grid production no longer builds, and so is the test
-tree's reproduction.** Three reproductions disagree: `ComputeTargets/tests/wkb_reference.py:152`
-(a bare `np.logspace`, version 0), `ComputeTargets/tests/test_background_segmentation.py:90`
-(version 1 — break and feature points, no spacing profile), and `main.py:911-930`
-(**version 2**, the curvature-equidistributed grid, `SOURCE_GRID_CONSTRUCTION_VERSION = 2`).
+tree's reproduction.** *Corrected at the 2026-09-16 re-anchor: four reproductions, not three, and
+one of them is already version 2 — `RECONCILIATION.md` §7.3.* They disagree:
+`ComputeTargets/tests/wkb_reference.py:151` (a bare `np.logspace`, version 0),
+`ComputeTargets/tests/test_background_segmentation.py:90` (version 1 — break and feature points, no
+spacing profile), `ComputeTargets/tests/test_source_grid.py:126` (**version 2**, the full
+construction, but private to that module) and `:151` (a version-0 base, deliberate and named).
+Production builds it at `main.py:944-963` — the curvature-equidistributed grid,
+`SOURCE_GRID_CONSTRUCTION_VERSION = 2`.
 `docs/gktk-remedial/tk_numeric_atol_sweep.py:215` imports the first. **A figure in this campaign
 carries the generation it was measured on, or it is not a measurement** — and prompt 01 exists so
 that there is one right answer to import.
 
 **(c) Cost is a per-object count times an object count, and the two sectors differ by three orders
-of magnitude.** `TkNumericIntegration` is one object per $k$ — **50 per model** (`main.py:1180`,
+of magnitude.** `TkNumericIntegration` is one object per $k$ — **50 per model** (`main.py:1215`,
 inside the $k$ loop alone). `GkNumericIntegration` is one per $(k, z_{\rm source})$
 (`main.py:1770-1791`), the same shape as `GkWKBIntegration`, whose production count is ~65,000 per
 model (`GkTk-remedial` README §6). **The decade of `rtol` prompt 17 recommends is free in the
@@ -296,7 +325,7 @@ right-hand-side evaluations, integrand evaluations or Hubble calls.
 | 01 | The convergence harness and one production grid | §2 (b), (h); `[00-three-production-grid-reproductions]` | new `ComputeTargets/tests/convergence_reference.py` + its test; `ComputeTargets/tests/wkb_reference.py` (the grid helpers only); folds in `docs/gktk-remedial/tk_numeric_atol_sweep.py` | **No** (test tree only) | Opus |
 | 02 | The accuracy-parameter inventory | §2 (a), (c), (g); `RECONCILIATION.md` §2.1 | new `docs/tolerance-convergence/TOLERANCE-INVENTORY.md` and its script | **No** | Opus |
 | 03 | Audit the adaptive solvers | §2 (d), (e), (f); review §10.1, §12.5; `[00-gk-numeric-never-swept-and-carries-the-cost]` | new `docs/tolerance-convergence/solver_sweep.py`, `SOLVER-CONVERGENCE.md` | **No** | Opus |
-| 04 | Audit the order-governed targets | §2 (a); `[01-convergence-block-has-a-separate-generator]`; `[20-wkb-gauss-orders-not-in-lookup-key]` | `docs/gktk-remedial/residual_convergence.py`, `ComputeTargets/tests/wkb_reference_data.json`, `ComputeTargets/tests/test_background_tau.py`; new `docs/tolerance-convergence/ORDER-CONVERGENCE.md` | **No, but it writes a fixture and a test — §7 D5** | Opus |
+| 04 | Audit the order-governed targets | §2 (a); `[01-convergence-block-has-a-separate-generator]`; `[20-wkb-gauss-orders-not-in-lookup-key]` | `docs/gktk-remedial/residual_convergence.py`, `ComputeTargets/tests/wkb_reference_data.json`, `ComputeTargets/tests/test_background_tau.py`; new `docs/tolerance-convergence/ORDER-CONVERGENCE.md` | **No, but it writes a fixture and a test — §7 D5, settled yes 2026-09-16** | Opus |
 | 05 | Decouple | §2 (a), (e), (g); §7 D1 and D3 once settled | `config/defaults.py`, `main.py`, the `ComputeTargets/*Integration.py` and `BackgroundModel.py` constructors, the matching `Datastore/SQL/ObjectFactories/`, the six `extract_*.py` readers, `ComputeTargets/tests/test_main_plumbing.py` | **Yes — the only one** | Opus |
 | 06 | `QuadSourceIntegral`, close-out and the provenance note | §0.4, §1.2, §2 (a) | new `docs/tolerance-convergence/TOLERANCE-CONVERGENCE.md`, new **`docs/TOLERANCE-PROVENANCE.md`**; `docs/OPEN_ISSUES.md` | **No** | Opus |
 
@@ -365,14 +394,34 @@ $1 + z < k/(\sqrt6\,H_0)$ — the mode must be sub-horizon — and `_rho_T_primi
 than returning a complex root. A prompt that walks an anchor outside that bound has chosen its
 $z_{\rm init}$ wrongly; it is not a finding about the representation.
 
-**The grid.** There are three reproductions of "the production source grid" in the tree and they
-disagree by construction generation (§2 (b)). Reduce them to one, at version 2, and have the other
-sites import it. `main.source_grid_spacing_profile` and `main.cosmology_feature_redshifts` are the
-functions that build it and `main.py` cannot be imported, so lift them with
-`ComputeTargets/tests/test_main_plumbing.load_main_py_functions`, the mechanism
-`test_background_segmentation.py:84` already uses for the second of the two. Keep the version-0 and
-version-1 constructions available and *named* — prompt 17's figures were taken on version 0 and
-`test_background_segmentation`'s assertions on version 1, and neither should be silently re-scored.
+**The grid.** *Amended at the 2026-09-16 re-anchor (additively, §5 rule 7); the paragraph below
+replaces a version that said "three" and "build".* There are **four** reproductions of "the
+production source grid" in the tree and they disagree by construction generation (§2 (b)):
+
+| # | Site | Generation |
+|---|---|---|
+| 1 | `ComputeTargets/tests/wkb_reference.py:151` `production_source_grid` | **v0** — bare `logspace`, citing a `main.py:410-419` that has not been the grid code for two campaigns |
+| 2 | `ComputeTargets/tests/test_background_segmentation.py:90` `production_source_grid` | **v1** — `break_z` / `feature_z`, no `spacing` |
+| 3 | `ComputeTargets/tests/test_source_grid.py:126` `_production_grid` | **v2** — the full production construction, already correct, already under the suite, and **private** |
+| 4 | `ComputeTargets/tests/test_source_grid.py:151` `_production_base_grid` | v0, deliberately and named — it mirrors `main.py:944`'s own base-grid step, which the spacing profile is measured on |
+
+**So the task is to hoist, not to build.** #3 is the version-2 grid and nothing outside its own
+module can reach it; that is now the whole defect. Move it into a module the other sites can
+import, and repoint #1 and `docs/gktk-remedial/tk_numeric_atol_sweep.py:215` at it. #4 stays where
+it is, named, because `main.py:944-963` has the same two-stage structure — a base grid, then a
+spacing profile measured on it, then `populate_source_grid`.
+
+`main.source_grid_spacing_profile` and `main.cosmology_feature_redshifts` are the functions that
+build it and `main.py` cannot be imported, so lift them with
+`ComputeTargets/tests/test_main_plumbing.load_main_py_functions` — the mechanism #2 and #3 both
+already use, and #3's `extra_globals` block is the worked example of the twelve module-level
+constants that lift needs. **`cosmology_feature_redshifts` changed under the re-anchor**: it asks
+the cosmology for `z_matter_radiation_equality` and `z_matter_lambda_equality` and raises
+`RuntimeError` if either is missing, with no fallback and on purpose. A stand-in that cannot answer
+both will hit that raise; `test_source_grid.py:189` already carries one that can, and prompt 01
+reuses it rather than writing a second. Keep the version-0 and version-1 constructions available
+and *named* — prompt 17's figures were taken on version 0 and `test_background_segmentation`'s
+assertions on version 1, and neither should be silently re-scored.
 
 **Acceptance, in two parts.** (i) The harness reproduces `GkTk-remedial` prompt 17's published
 $T_k$ drift figures **exactly, on prompt 17's version-0 grid** — that is the construction check,
@@ -391,7 +440,7 @@ Enumerate, **by reading the tree rather than the documents**, every accuracy par
 a numerical method or a lookup key: the five `config/defaults.py` constants, the five
 `*_GAUSS_ORDER`/margin constants, and every hard-coded `atol=`/`rtol=`/`xtol=` literal in
 production code (`LiouvilleGreen/integration_tools.py:95`,
-`CosmologyModels/GenericEOS/LambdaCDM_GenericEOS.py:579`, `:864`, `:1008`, `main.py:1086`, `:1094`,
+`CosmologyModels/GenericEOS/LambdaCDM_GenericEOS.py:579`, `:864`, `:1008`, `main.py:1119`, `:1127`,
 `AdaptiveLevin/`). For each: which object types it keys; whether the value reaches a solver, a
 lookup key, both or neither; what kind of method consumes it; the object count of the sector; and
 where its provenance is recorded, or that it is not.
@@ -588,7 +637,9 @@ here only where this campaign adds something:
    was correct for the tree it was taken on.
 8. **No parameter changes outside prompt 05.** Prompts 01, 02, 03, 04 and 06 read the constants and
    measure; they do not edit `config/defaults.py` or `main.py`. Prompt 04's fixture regeneration is
-   the one carve-out and it is §7 D5, not a precedent.
+   the one carve-out; **§7 D5 settled it yes at the 2026-09-16 re-anchor**, and it covers
+   `residual_convergence.py`, `wkb_reference_data.json` and `test_background_tau.py` only. It is
+   not a precedent.
 9. **No parameter without its provenance.** Any prompt that recommends or ships one records, in its
    log's "State handed to the next prompt", the five fields §1.2 lists. Prompt 06 assembles
    `docs/TOLERANCE-PROVENANCE.md` from those entries. A number shipped without them is an
@@ -715,7 +766,14 @@ nothing, so there is no order to put there.
 campaigns own those files. If it should instead be retuned here, that has to be agreed with those
 campaigns first, and prompt 06 changes character entirely.
 
-**D5 — may prompt 04 write a fixture and edit a test?** *New at the 2026-09-16 rebase.* The
+**D5 — may prompt 04 write a fixture and edit a test? *Settled 2026-09-16 at the re-anchor:
+YES.*** The user accepted it: prompt 04 **may** re-run
+`docs/gktk-remedial/residual_convergence.py`, write `ComputeTargets/tests/wkb_reference_data.json`,
+and re-measure `QCD_BREAK_POINT_ALIGNMENT_TOL` in `ComputeTargets/tests/test_background_tau.py`.
+§5 rule 8's carve-out is live rather than proposed, and
+`[01-convergence-block-has-a-separate-generator]` has for the first time a prompt allowed to close
+it. **The carve-out is exactly those three files and no others**; anything further is a stop under
+§4.3. The argument that was put, and accepted, follows. The
 Gauss orders' evidence is stale and the only way to take it back is to re-run
 `docs/gktk-remedial/residual_convergence.py`, write
 `ComputeTargets/tests/wkb_reference_data.json`, and re-measure `QCD_BREAK_POINT_ALIGNMENT_TOL` in

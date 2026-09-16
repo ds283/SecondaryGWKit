@@ -93,7 +93,9 @@ prompt 13 left open.
 ### 1.5 The tolerance and convergence campaign
 
 Planned as [`prompts/tolerance-convergence/`](../prompts/tolerance-convergence/README.md)
-(2026-09-12; **rebased 2026-09-16 at `acd5b8e` — six prompts, none executed**). One reusable
+(2026-09-12; **rebased 2026-09-16 at `acd5b8e`, re-anchored the same day at `bc6dc97` onto the
+tree `prompts/background-solver-robustness` left — six prompts, none executed, and the prompt files
+not yet written**). One reusable
 convergence test applied to every accuracy parameter in the pipeline on all three models, anchored
 to the constant-$w$ closed forms in `ComputeTargets/analytic_{Gk,Tk}.py`, and the parameters
 decoupled so each quantity carries its own justified one. **Unblocked** by `prompts/GkTk-remedial`
@@ -124,7 +126,7 @@ where it was not.
 
 | Issue | Board | Hook |
 |---|---|---|
-| `[00-three-production-grid-reproductions]` | tolerance-convergence | Three constructions in the test tree are each called "the production source grid" and are three different grids: `wkb_reference.py:152` (a bare `logspace`, v0), `test_background_segmentation.py:90` (v1), `main.py:911-930` (**v2**, `SOURCE_GRID_CONSTRUCTION_VERSION = 2`). Every published tolerance figure was scored on v0, because `tk_numeric_atol_sweep.py:215` imports the first. Assigned to prompt 01. |
+| `[00-three-production-grid-reproductions]` | tolerance-convergence | **Four** constructions in the test tree are each called "the production source grid" and are different grids: `wkb_reference.py:151` (a bare `logspace`, v0), `test_background_segmentation.py:90` (v1), `test_source_grid.py:126` (**v2**, complete but private), `test_source_grid.py:151` (a v0 base, deliberate and named). Production is `main.py:944-963`, `SOURCE_GRID_CONSTRUCTION_VERSION = 2`. Every published tolerance figure was scored on v0, because `tk_numeric_atol_sweep.py:215` imports the first. **Narrowed 2026-09-16 at the re-anchor**: prompt 01 hoists the existing v2 rather than building one. |
 | `[00-gk-numeric-never-swept-and-carries-the-cost]` | tolerance-convergence | "The error is set by `rtol`" is one clean measurement in the 50-object sector and one `(atol, rtol)` diagonal in the 65,000-object one. $G_k$ numeric has never been swept in either axis, and review §10.1 puts the consumer spline that reads it two orders above its solver error — so the honest answer may be "tighten nothing". Assigned to prompt 03. |
 | `[12-tk-numeric-atol-largest-k-excursion]` | GkTk-remedial → tolerance-convergence | Prompt 12's `atol=1e-13` left excursions above README §6's 3e-6 of the envelope that prompt 17 measured across the production grid: 3 / 13 / 8 of 50 wavenumbers on Radiation / LambdaCDM / QCD, worst 8.64e-4. **The user settled the constant 2026-09-12: `1e-13` stays** — `atol` is not the lever. What remains is the `rtol` retuning. **Assigned (2026-09-12): `prompts/tolerance-convergence`**; its cost figures corrected at the 2026-09-16 rebase, and its sweep re-taken on the v2 grid. |
 | `[01-convergence-block-has-a-separate-generator]` | qcd-background-audit → tolerance-convergence | `wkb_reference_data.json`'s `convergence` block records $N_\tau = N_{c_s\tau} = N_F = N_\rho = 4$, was generated 2026-09-10, and names `"branch+knots"` as its winning scheme — a knot set `qcd-background-audit` prompt 07 removed. One tolerance is owed on its account (`QCD_BREAK_POINT_ALIGNMENT_TOL = 1.5e-04`). Declined on scope by prompts 08 and 09 of that campaign. **Assigned (2026-09-16): `prompts/tolerance-convergence` prompt 04**, the first prompt anywhere whose charter is the orders themselves. |
@@ -420,7 +422,9 @@ its own `converged` guard entirely. **The campaign changes no computed quantity*
 printed with `:.4g` and discarded. What it buys is a solve correct by construction, a reachable
 guard, and provenance `docs/TOLERANCE-PROVENANCE.md` can state — which is why
 [`AUDIT.md`](../prompts/background-solver-robustness/AUDIT.md) §7 wants it to land **before**
-`prompts/tolerance-convergence` prompt 02 runs, and that campaign has not started.
+`prompts/tolerance-convergence` prompt 02 runs, and that campaign has not started. **It did land
+first**, and that campaign's 2026-09-16 re-anchor records the three solves as arriving already
+settled, with provenance prompt 02 lifts rather than re-derives.
 
 **Prompt 02 shipped that fix on 2026-09-16** and closed `[00-equality-solve-is-unbracketed-and-loose]`
 on that board's §4: a $\sqrt2$ geometric bracket in $1+z$, clamped to the $T(z)$ representation's

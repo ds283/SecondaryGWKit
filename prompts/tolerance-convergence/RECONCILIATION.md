@@ -253,3 +253,124 @@ the JSON and editing a test module. That is README §7 **D5**, and it is the use
 | `[01-convergence-block-has-a-separate-generator]` | **Assigned** to prompt 04 of this campaign (§5) | stays on the `qcd-background-audit` board, which holds its measurements |
 | `[20-wkb-gauss-orders-not-in-lookup-key]` | **Assigned** to prompt 05 of this campaign | stays on the `GkTk-remedial` board |
 | `[12-tk-numeric-atol-largest-k-excursion]` | Already assigned here 2026-09-12; its cost figures corrected per §2.4 | stays on the `GkTk-remedial` board |
+
+---
+
+## 7. Re-anchor, 2026-09-16 at `bc6dc97` — `background-solver-robustness`
+
+**Additive, per README §5 rule 7.** §§1–6 above were correct for the tree at `acd5b8e` and are not
+rewritten. This section records what moved between `acd5b8e` and `bc6dc97`, and scores only the
+claims that section changes.
+
+`prompts/background-solver-robustness` was planned, run to 9 / 9 and merged **on this campaign's
+own branch** after the `acd5b8e` rebase was written (`f023eb8`, planned 11:28; merged `bc6dc97`,
+19:32). It was not a campaign this plan waited on — it did not exist when the plan was written —
+and its subject was one of the three `root_scalar` sites README §3.2 lists for prompt 02's
+inventory. The branch is now **25 commits ahead of `main`**, and `main` is unchanged at `acd5b8e`.
+
+### 7.1 The new baseline
+
+| | `acd5b8e` (the rebase) | `bc6dc97` (this re-anchor) |
+|---|---|---|
+| `ComputeTargets` suite | 447 | **452**, OK (164 s) |
+| `CosmologyModels` suite | 30 | **39**, OK |
+| `SOURCE_GRID_CONSTRUCTION_VERSION` | 2 | 2 — unchanged |
+| `T_Z_REPRESENTATION_VERSION` | 6 | 6 — unchanged |
+| `config/defaults.py` | untouched since the plan | **still untouched** |
+
+Thirteen files changed outside `prompts/`, +1,495 / −120 lines. The suites were re-run for this
+re-anchor, not inherited.
+
+### 7.2 What it moved that this campaign cares about
+
+| What | Verdict for this campaign |
+|---|---|
+| The three `LambdaCDM_GenericEOS.py` root solves | **Settled elsewhere, and prompt 02 lifts rather than derives.** README §3.2's amendment of 2026-09-16 is confirmed at `bc6dc97`: `:636` and `:1137` are the two surviving production solves and `T_z_reference.py:285` is the third, now in the test tree |
+| `cosmology_feature_redshifts` **stopped computing the equality redshifts** and now asks the cosmology, with no fallback (`main.py:507-587`) | **Changes prompt 01's construction** — see §7.4 |
+| `BaseCosmology` grew `z_matter_radiation_equality` / `z_matter_lambda_equality` (`CosmologyModels/base.py:54`, `:78`) | The two equality redshifts are now production source-grid sample locations inside a `BackgroundModel` lookup key, not diagnostics. Prompt 02's inventory says so |
+| `ComputeTargets/spline_wrappers.py` — range logic hoisted out of the hot path | Touches evaluation cost, not accuracy. **No tolerance moved**; §2.4's per-object evaluation counts stand, but prompt 03 re-takes its own cost figures on this tree rather than quoting `acd5b8e`'s |
+| `ComputeTargets/tests/test_source_grid.py` grew 153 lines | **Changes `[00-three-production-grid-reproductions]`** — see §7.3 |
+
+**Nothing in it moved a tolerance that this campaign sets.** `config/defaults.py` is still
+byte-identical to the file the 2026-09-12 plan was written against, which is now true across three
+campaigns and two rebases.
+
+### 7.3 `[00-three-production-grid-reproductions]` — **NARROWED: four, and one of them is already version 2**
+
+The issue as opened at the rebase says the test tree holds three constructions. It holds **four**,
+and the fourth was already there at `acd5b8e` — the rebase missed it:
+
+| # | Site | Generation | Built how |
+|---|---|---|---|
+| 1 | `ComputeTargets/tests/wkb_reference.py:151` `production_source_grid` | **v0** | bare `logspace`; its docstring cites `main.py:410-419`, a location that has not been the grid code for two campaigns |
+| 2 | `ComputeTargets/tests/test_background_segmentation.py:90` `production_source_grid` | **v1** | `break_z` / `feature_z`, no `spacing` |
+| 3 | `ComputeTargets/tests/test_source_grid.py:126` `_production_grid` | **v2** | lifts `cosmology_feature_redshifts` **and** `source_grid_spacing_profile` from `main.py` with `load_main_py_functions` — the full production construction |
+| 4 | `ComputeTargets/tests/test_source_grid.py:151` `_production_base_grid` | v0, **deliberately and named** | transcribes `populate_z_sample` "as it stood before prompt 11"; it mirrors `main.py:944`'s own base-grid step, which the spacing profile is measured on, so it is not a stray |
+
+**Impact on prompt 01.** Its grid task is no longer *build* the version-2 reproduction — that
+exists and is under the suite. It is **hoist** #3 out of `test_source_grid.py` into a module the
+other sites can import, and repoint #1 and `tk_numeric_atol_sweep.py:215` at it. #3 is private
+(`_production_grid`) and lives in a test module, which is why nothing else uses it; that is the
+whole defect now. #4 stays, named, because `main.py` has the same two-stage structure. The
+acceptance in README §3.1 is unchanged: version 0 and version 1 must remain constructible and
+named.
+
+This is a **narrowing, not a closure** — the issue's statement of impact is untouched. Every figure
+in README §6 and in `docs/gktk-remedial/TK-NUMERIC-ATOL-SWEEP.md` was still scored on version 0,
+because `tk_numeric_atol_sweep.py:215` still imports #1.
+
+### 7.4 `cosmology_feature_redshifts` no longer duck-types a bare `omega_m` / `omega_r`
+
+Prompt 01 lifts this function into the test tree (README §3.1). At `acd5b8e` it recomputed both
+equality redshifts from the public `omega_*` attributes, so any object carrying three floats
+served. At `bc6dc97` it calls `z_matter_radiation_equality` and `z_matter_lambda_equality` on the
+cosmology and **raises `RuntimeError` if either is absent — deliberately, with no fallback**, on
+the argument that the closed form is exact only while $\rho_r \propto (1+z)^4$ holds back to
+equality, which is a property of where the QCD transition sits and not of the code.
+
+**What prompt 01 must do about it:** a stand-in cosmology used to exercise the lifted grid code has
+to answer both attributes. `test_source_grid.py:189` already carries such a stand-in and says in
+terms that it is deliberately not a `BaseCosmology`; prompt 01 reuses it rather than writing a
+second one. A prompt that hits that `RuntimeError` has built its stand-in wrongly — it is not a
+finding about the grid.
+
+### 7.5 What did **not** change, and must not be re-derived
+
+The five results of README §0.3 all stand at `bc6dc97`: `[17-qcd-reference-not-converged]` closed;
+the QCD background correct and its $H(z)$ discontinuity floor gone; `integration_break_points`
+declaring 3 crossings; the source grid at version 2; and no tolerance moved. §§2.1–2.9 of this
+document are unaffected except as §7.3 narrows §2.7.
+
+### 7.6 Line-number drift
+
+`main.py` gained 42 lines above its citation sites. Every citation in this campaign's documents was
+re-resolved against `bc6dc97`; the ones that moved:
+
+| Cited as | Now | What it is |
+|---|---|---|
+| `main.py:911-930` | **`main.py:944-963`** | the version-2 grid construction — base grid, spacing profile, `populate_source_grid` |
+| `main.py:924` | **`main.py:957`** | inside that call |
+| `main.py:1086`, `:1094` | **`main.py:1119`, `:1127`** | `phase_atol=1e-12`, `amplitude_rtol=1e-12` in the Bessel phase construction — prompt 02's inventory |
+| `main.py:1180` | **`main.py:1215`** | the `TkNumericIntegration` `object_get`, the 50-objects-per-model sector |
+| `LambdaCDM_GenericEOS.py:579` | **`:636`** | already corrected in README §3.2; re-confirmed here |
+| `LambdaCDM_GenericEOS.py:1008` | **`:1137`** | already corrected on the board; re-confirmed here |
+
+`main.py:410-419` is left as it stands in `wkb_reference.py`'s own docstring: the point of quoting
+it is that the file says something stale, and prompt 01 fixes the file, not this document.
+
+### 7.7 Decision recorded
+
+**D5 is accepted.** The user accepted it on 2026-09-16 at this re-anchor: prompt 04 **may** re-run
+`docs/gktk-remedial/residual_convergence.py`, write `ComputeTargets/tests/wkb_reference_data.json`
+and re-measure `QCD_BREAK_POINT_ALIGNMENT_TOL` in `ComputeTargets/tests/test_background_tau.py`.
+README §5 rule 8's carve-out is now live rather than proposed, and
+`[01-convergence-block-has-a-separate-generator]` has, for the first time, a prompt that is allowed
+to close it.
+
+### 7.8 Issues this re-anchor opens or moves
+
+| Issue | Action | Where |
+|---|---|---|
+| `[00-three-production-grid-reproductions]` | **Narrowed** (§7.3): four reproductions, one already at version 2; prompt 01 hoists rather than builds | board §3 |
+
+No issue is opened or closed by this re-anchor, so `docs/OPEN_ISSUES.md`'s count is unchanged.
