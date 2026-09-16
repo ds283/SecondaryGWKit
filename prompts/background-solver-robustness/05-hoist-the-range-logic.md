@@ -136,7 +136,7 @@ recomputation, not about the target, and the hoist discharges it regardless of w
 | The three control rows of §6 | move by less than the measurement spread |
 | `measure_T_z_representation.py` §5 | prints the intersection (**0**), new line quoted; §2–§4 and §6 output otherwise unchanged |
 | `CosmologyModels` suite | unchanged count, OK |
-| `ComputeTargets` suite | **447 → 447**, OK (`test_spline_wrappers.py` is the guard on `_outward`) |
+| `ComputeTargets` suite | **449 → 449**, OK (447 before prompt 09, which added two `test_source_grid.py` tests; `test_spline_wrappers.py` is the guard on `_outward`) |
 | `T_Z_REPRESENTATION_VERSION` | **6** before and after |
 | `black --check` | clean |
 

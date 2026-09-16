@@ -29,7 +29,7 @@ Baselines:
 ```bash
 git rev-parse HEAD
 PYTHONPATH=. ./venv/bin/python -m unittest discover -s CosmologyModels/tests -t .
-PYTHONPATH=. ./venv/bin/python -m unittest discover -s ComputeTargets/tests -t .     # 447, OK
+PYTHONPATH=. ./venv/bin/python -m unittest discover -s ComputeTargets/tests -t .     # 449, OK (447 pre-09)
 PYTHONPATH=. ./venv/bin/python docs/qcd-background-audit/measure_T_z_representation.py
 ```
 
@@ -55,7 +55,7 @@ Dispatch with the template. Model: **Opus**.
 | 7 | §4's decision rule was applied as written | ≤ 2.5 µs closes `[06-…]`; above it **escalates**. If the log shows an extra optimisation attempted to get under the line, that is a stop |
 | 8 | The §5 prose now prints the intersection with the **declared** set (0), and §2–§4 and §6 output are otherwise unchanged | Diff your §1 capture against the new run |
 | 9 | `[07-…]` and `[09-…]` closed on the **`qcd-background-audit`** board's §4, rows deleted from the index | They are that board's issues |
-| 10 | `ComputeTargets` 447, `T_Z_REPRESENTATION_VERSION` 6 | the three checks |
+| 10 | `ComputeTargets` **449**, `T_Z_REPRESENTATION_VERSION` 6 | the three checks |
 
 ### Then, if the mean is above 2.5 µs, stop and put README §7 D4 to the user
 
@@ -91,7 +91,7 @@ arose, has been put to the user.**
 | 6 | The agent **re-ran** the close-out checks rather than quoting the logs | §4 of the prompt requires it; the log must show the commands and their output |
 | 7 | The suite counts **reconcile across every log** | Add them up yourself. A discrepancy is a finding, and the prompt forbids fixing it silently |
 | 8 | `measure_rho_equality.py` was run **unedited** | `git diff HEAD~1 HEAD -- prompts/background-solver-robustness/measure_rho_equality.py` is empty. Its §2.2 evaluation counts will have changed (secant → Brent) and its roots must not |
-| 9 | `AUDIT.md` §5's claim is stated as held or not held, with four pieces of evidence | the four redshifts, the grid digest, the version at 6, `ComputeTargets` at 447 |
+| 9 | `AUDIT.md` §5's claim is stated as held or not held, with four pieces of evidence | the four redshifts, the grid digest, the version at 6, `ComputeTargets` at 447 through prompt 04 and **449** from prompt 09 |
 | 10 | Board §5 close-out is written, and README §6's acceptance table has a measured value in every row | Read both |
 
 ### Stop and report if
@@ -108,7 +108,8 @@ arose, has been put to the user.**
 - 01–06 all ✅ with SHAs and logs.
 - `PROVENANCE.md` exists with three complete entries.
 - `prompts/tolerance-convergence/IMPLEMENTATION_STATE.md` §3 records the settled result.
-- `CosmologyModels` risen and OK; `ComputeTargets` **447** at every commit; `black --check` clean.
+- `CosmologyModels` risen and OK; `ComputeTargets` **447** at every commit through prompt 04 and
+  **449** from prompt 09 on; `black --check` clean.
 - `T_Z_REPRESENTATION_VERSION` **6** at every commit.
 - `docs/OPEN_ISSUES.md` reconciles: three issues opened by the campaign closed or narrowed, four
   adopted issues closed on the `qcd-background-audit` board, the count and date correct.

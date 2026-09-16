@@ -107,8 +107,9 @@ restructure that campaign's README; `be21f5c` wrote it four commits ago and it i
 **Run these yourself and quote the output.** Do not take them from the logs.
 
 1. Both suites at the campaign's final commit: `CosmologyModels` and `ComputeTargets`. Compare with
-   §10 of `RECONCILIATION.md` (30 and 447) and with each prompt's recorded count. **A count that
-   does not add up across the logs is a finding, not an arithmetic slip to fix silently.**
+   §10 of `RECONCILIATION.md` (30 and 447 at the pre-campaign baseline `f023eb8`; `ComputeTargets`
+   is **449** from prompt 09 on) and with each prompt's recorded count. **A count that does not add
+   up across the logs is a finding, not an arithmetic slip to fix silently.**
 2. `PYTHONPATH=. ./venv/bin/python prompts/background-solver-robustness/measure_rho_equality.py` —
    **unedited**. Its §2.2 table is now measuring a bracketed Brent solve rather than a secant, so
    the evaluation counts will differ and the roots must not. Quote the whole table and say which
@@ -118,7 +119,8 @@ restructure that campaign's README; `be21f5c` wrote it four commits ago and it i
 5. **The audit's own claim**, re-stated against the shipped tree: `AUDIT.md` §5's *"fixing this
    changes no computed quantity in the pipeline"*. Say whether it held, with the evidence: the four
    equality redshifts across the campaign, the grid digest from log 03, `T_Z_REPRESENTATION_VERSION`
-   at 6 throughout, and `ComputeTargets` at 447 at every commit.
+   at 6 throughout, and `ComputeTargets` at 447 at every commit through prompt 04 and **449**
+   from prompt 09 on.
 
 ## 5. The close-out section of the board
 
