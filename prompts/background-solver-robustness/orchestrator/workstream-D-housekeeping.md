@@ -40,7 +40,7 @@ harness.
 ```bash
 git rev-parse HEAD
 PYTHONPATH=. ./venv/bin/python -m unittest discover -s CosmologyModels/tests -t .
-PYTHONPATH=. ./venv/bin/python -m unittest discover -s ComputeTargets/tests -t .     # 449, OK (447 pre-09)
+PYTHONPATH=. ./venv/bin/python -m unittest discover -s ComputeTargets/tests -t .     # 452, OK (449 pre-07, 447 pre-09)
 ls Datastore/tests 2>/dev/null || echo "no Datastore test package"
 ```
 
@@ -57,7 +57,7 @@ Dispatch with the template. Model: **Sonnet**.
 | 3 | The column name is the one in the table, not one inferred from the constant | Check it against the factory's table definition yourself |
 | 4 | Two rows differing only in the representation render distinguishably | The log must demonstrate it, not assert it |
 | 5 | If no test was written, the reason is recorded and an issue opened | Prompt §2 item 4 permits this outcome explicitly; an unrecorded gap does not |
-| 6 | `ComputeTargets` **449**, `CosmologyModels` unchanged | the three checks |
+| 6 | `ComputeTargets` **449 → 452** at prompt 07 (its three new tests), **452** at 08, `CosmologyModels` unchanged | the three checks |
 | 7 | `[03-…]` closed on the **`qcd-background-audit`** board's §4, row deleted from the index | It is that board's issue |
 
 ### Stop and report if
