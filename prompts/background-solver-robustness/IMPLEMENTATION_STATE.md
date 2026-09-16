@@ -7,19 +7,24 @@
 **Baseline commit:** `f023eb8` — suites green and re-run at planning time:
 `CosmologyModels` **30**, `ComputeTargets` **447**
 **Target branch:** `background-solver-robustness`, cut from `f023eb8` (README §4)
-**Last updated:** 2026-09-16 · **Status: REOPENED for workstream D. Workstreams A, B, C and E
-complete — prompts 01, 02, 03, 04, 05, 06 and 09 all landed, and prompt 06 closed the campaign.
-**The user then opened README §7 D3's gate on 2026-09-16, after that close-out**, so 07 and 08 are
-authorised; §5.6's D3 row and §5.1 are amended to match. Prompt 06 wrote
+**Last updated:** 2026-09-16 · **Status: ALL NINE PROMPTS LANDED. Workstreams A, B, C, D and E
+complete — prompts 01, 02, 03, 04, 05, 06, 07, 08 and 09 all landed.** Prompt 06 closed the
+campaign; **the user then opened README §7 D3's gate on 2026-09-16, after that close-out**, so 07
+and 08 were authorised; §5.6's D3 row and §5.1 record that. Prompt 06 wrote
 [`PROVENANCE.md`](PROVENANCE.md) for all three of the file's
 `root_scalar` sites, pointed `prompts/tolerance-convergence`'s board and README §3.2 at it, and
-took the close-out verification in §5 below. **Prompt 07 has now landed** (08 still in flight): it
-closed the `QCD_Cosmology` half of the `qcd-background-audit` board's
+took the close-out verification in §5 below. **Prompt 07 landed**: it closed the `QCD_Cosmology`
+half of the `qcd-background-audit` board's
 `[03-qcd-inventory-does-not-report-the-representation]`, adding a new test module to
 `ComputeTargets/tests/` — the nearest existing home for datastore-factory tests, since no
-`Datastore/tests/` package exists — which moves `ComputeTargets` to **452**. Final suites at
-prompt 06's close-out were `CosmologyModels` **39**, `ComputeTargets` **449**, both OK;
-`T_Z_REPRESENTATION_VERSION` **6** at every commit, prompt 07 included.**
+`Datastore/tests/` package exists — which moved `ComputeTargets` to **452**. **Prompt 08 has now
+landed**, closing this board's own
+`[01-agreement-threshold-comment-predates-the-representation]`: it re-measured
+`test_wPerturbations.py`'s agreement figures (unchanged from prompt 01's measurement, confirming
+nothing moved), re-worded the module comment to describe the segmented entropy-factor
+representation, and tightened `AGREEMENT_RTOL` from `1.0e-8` to `1.0e-14`. Final suites are
+`CosmologyModels` **39**, `ComputeTargets` **452**, both OK; `T_Z_REPRESENTATION_VERSION` **6** at
+every commit, prompts 07 and 08 included. **Nothing remains gated or outstanding on this board.**
 
 > **The impact is zero change to any computed quantity, and that is the point.** `AUDIT.md` §5 and
 > README §0.2 are the campaign's framing: the two redshifts `_find_rho_equality` produces are
@@ -54,7 +59,7 @@ prompt 06's close-out were `CosmologyModels` **39**, `ComputeTargets` **449**, b
 | 05 | [Hoist the range logic](05-hoist-the-range-logic.md) | C | README §2 (h); §7 D4 | Opus | ⚠️ | *"Hoist the range logic out of the spline wrappers' hot path"* (SHA not embedded, per the campaign convention) | [`logs/05-hoist-the-range-logic.md`](logs/05-hoist-the-range-logic.md) |
 | 06 | [Provenance and close-out](06-provenance-and-close-out.md) | C | README §2 (i); §0.4 | Opus | ⚠️ | *"Settle the provenance of the file's three root solves"* (SHA not embedded, per the campaign convention) | [`logs/06-provenance-and-close-out.md`](logs/06-provenance-and-close-out.md) |
 | 07 | [Report the representation in the inventory](07-inventory-representation.md) | **D — authorised 2026-09-16** | — | Sonnet | ⚠️ | *"Report the T(z) representation in the QCD cosmology inventory"* (SHA not embedded, per the campaign convention) | [`logs/07-inventory-representation.md`](logs/07-inventory-representation.md) |
-| 08 | [Refresh the agreement threshold](08-refresh-agreement-threshold.md) | **D — authorised 2026-09-16** | — | Sonnet | ⬜ | | |
+| 08 | [Refresh the agreement threshold](08-refresh-agreement-threshold.md) | **D — authorised 2026-09-16** | — | Sonnet | ✅ | *"Refresh the stale agreement threshold in test_wPerturbations.py"* (SHA not embedded, per the campaign convention) | [`logs/08-refresh-agreement-threshold.md`](logs/08-refresh-agreement-threshold.md) |
 | 09 | [Make the model authoritative](09-make-the-model-authoritative.md) | **E** | README §2 (l); §7 D2 as decided | Opus | ⚠️ | *"Make the cosmology authoritative for its equality redshifts"* (SHA not embedded, per the campaign convention) | [`logs/09-make-the-model-authoritative.md`](logs/09-make-the-model-authoritative.md) |
 
 Status key: ⬜ not started · 🔄 in flight · ✅ complete · ⚠️ complete with a recorded caveat ·
@@ -182,26 +187,9 @@ Opened by the **2026-09-16 planning commit** and **resolved by prompt 09** — m
 `[00-equality-redshift-closed-form-is-duplicated-three-times]`. Its measurement, the three priced
 options and the user's D2 decision are carried there verbatim.
 
-Also opened by the planning commit, found while reconciling (`RECONCILIATION.md` §9.3) and
-**measured by prompt 01**, which has the file open for another reason:
-
-- **[01-agreement-threshold-comment-predates-the-representation]** *(planning; **measured by prompt
-  01** 2026-09-16; assigned to prompt 08, gated)* — `CosmologyModels/tests/test_wPerturbations.py:34-41`
-  describes the $T(z)$ inversion as a "500-point spline" and quotes ~1.3e-9 and ~4e-7 to justify
-  `AGREEMENT_RTOL = 1.0e-8`. Since `qcd-background-audit` prompts 05 and 06 the representation is a
-  segmented entropy factor at **3,000 nodes of order 5** and what is tabulated is not $T$.
-  **Measured at `3e820eb`** (log 01 §4.3), on exactly what `test_agrees_with_LambdaCDM` compares —
-  the `PureRadiationEOS` stand-in against `LambdaCDM.wPerturbations` over that test's own probe set
-  $z\in\{0,0.5,1,2,10,10^3\}$: the worst relative disagreement is **8.8818e-16** at
-  `max_z = 1e4` (claimed ~1.3e-9) and **6.6613e-16** at `max_z = 1e20` (claimed ~4e-7) — **seven to
-  nine orders tighter, and the `max_z` dependence has gone entirely**. On a constant-$g_*$ equation
-  of state the tabulated entropy factor is exactly constant, so $T(z) = T_{\rm CMB}(1+z)$ is
-  recovered to rounding at any `max_z`; the old figures describe a representation that no longer
-  exists. **Impact:** none — every assertion passes and `AGREEMENT_RTOL` is now a ceiling eight
-  orders above what the code delivers. Same class as
-  `[10-transfer-remedial-tolerance-comments-stale]`. **Next step:** prompt 08 rewrites the comment
-  and may retighten the constant, if README §7 D3 opens workstream D. Prompt 01 was forbidden to
-  edit that file and did not.
+Opened by the planning commit, found while reconciling (`RECONCILIATION.md` §9.3), **measured by
+prompt 01** and **resolved by prompt 08** — moved to §4:
+`[01-agreement-threshold-comment-predates-the-representation]`.
 
 ### 3.1 Adopted from other boards
 
@@ -238,6 +226,36 @@ deleted from `docs/OPEN_ISSUES.md`.
 ---
 
 ## 4. Resolved issues
+
+- **[01-agreement-threshold-comment-predates-the-representation]** — **RESOLVED by prompt 08,
+  2026-09-16.**
+
+  **What the issue was.** `CosmologyModels/tests/test_wPerturbations.py:34-41` described the
+  $T(z)$ inversion as a "500-point spline" and quoted ~1.3e-9 relative agreement at `max_z = 1e4`
+  and ~4e-7 at `max_z = 1e20` to justify `AGREEMENT_RTOL = 1.0e-8`. Since `qcd-background-audit`
+  prompts 05 and 06 the representation is a segmented entropy-factor interpolant at 3,000 nodes of
+  order 5, and what is tabulated is not $T$ at all — both the description and both figures
+  predated the tree by two replacements, though every assertion still passed and the threshold was
+  a ceiling rather than a binding constraint.
+
+  **What prompt 01 measured, and prompt 08 re-took unchanged.** On exactly what
+  `test_agrees_with_LambdaCDM` compares — the `PureRadiationEOS` stand-in against
+  `LambdaCDM.wPerturbations` over $z\in\{0,0.5,1,2,10,10^3\}$ — the worst relative departure is
+  **8.8818e-16** (4 ulp of 1.0) at `max_z = 1e4` and **6.6613e-16** (3 ulp) at `max_z = 1e20`: the
+  same order of magnitude at both, unlike the old comment's three-order spread, which is the
+  signature of a double-precision rounding floor rather than an interpolation error tied to
+  `max_z`. Re-measured at prompt 08's commit and identical to the digit against prompt 01's figures
+  — **nothing moved between the two prompts**.
+
+  **What shipped.** The comment now describes the segmented entropy-factor representation, names
+  `qcd-background-audit` prompts 05/06 as what replaced the old one and this campaign's prompt 08
+  as what re-took the figures, and keeps the sentence explaining that the representation (not the
+  physics) sets the floor. `AGREEMENT_RTOL` tightened from `1.0e-8` to **`1.0e-14`** — about eleven
+  times the measured worst case, and still roughly thirteen orders below the 0.69 relative
+  discrepancy the A1 defect produced. No assertion body, stand-in or other module was touched;
+  `git diff --stat` shows one file, 18 insertions / 8 deletions, all inside the comment and the one
+  constant. Suites: `CosmologyModels` **39 → 39**, `ComputeTargets` **452 → 452**, both OK.
+  `T_Z_REPRESENTATION_VERSION` **6 → 6**.
 
 - **[00-equality-redshift-closed-form-is-duplicated-three-times]** — **RESOLVED by prompt 09,
   2026-09-16**, by implementing README §7 **D2** as the user decided it.
@@ -394,7 +412,7 @@ correctly took it, and is left standing for that reason.**
 | A — the equality solve | 01, 02 | **complete** |
 | B — what the redshifts feed | 03, 04 | **complete** |
 | C — cost and close-out | 05, 06 | **complete** |
-| D — housekeeping | 07, 08 | **not authorised** *at the time this row was written.* README §7 **D3** was never answered, and "no, leave them indexed" is the answer the plan says costs nothing. `[03-qcd-inventory-does-not-report-the-representation]` (prompt 07) stays on the `qcd-background-audit` board assigned here and indexed in `docs/OPEN_ISSUES.md` §1.8; `[01-agreement-threshold-comment-predates-the-representation]` (prompt 08) stays on this board's §3, **measured by prompt 01** so that whoever does take it need not re-measure. **Amended additively, 2026-09-16: D3 opened and prompt 07 has since landed** — see §1's board row and §3.1 above. It closed only the `QCD_Cosmology` half of `[03-…]`; the `BackgroundModel` half stays open on the `qcd-background-audit` board, unassigned. |
+| D — housekeeping | 07, 08 | **not authorised** *at the time this row was written.* README §7 **D3** was never answered, and "no, leave them indexed" is the answer the plan says costs nothing. `[03-qcd-inventory-does-not-report-the-representation]` (prompt 07) stays on the `qcd-background-audit` board assigned here and indexed in `docs/OPEN_ISSUES.md` §1.8; `[01-agreement-threshold-comment-predates-the-representation]` (prompt 08) stays on this board's §3, **measured by prompt 01** so that whoever does take it need not re-measure. **Amended additively, 2026-09-16: D3 opened and both prompts have since landed** — see §1's board row and §3.1 above. Prompt 07 closed only the `QCD_Cosmology` half of `[03-…]`; the `BackgroundModel` half stays open on the `qcd-background-audit` board, unassigned. Prompt 08 closed `[01-agreement-threshold-comment-predates-the-representation]` in full — see board §4. **Workstream D is complete.** |
 | E — make the model authoritative | 09 | **complete.** Added 2026-09-16 on the user's §7 D2 decision; not in the original plan |
 
 **Final state.** `CosmologyModels` **39**, `ComputeTargets` **449**, both OK, re-run at this commit.
@@ -486,7 +504,7 @@ carries it to 449 from prompt 09.
 | `[05-black-check-is-not-clean-at-the-repository-root]` | this board §3 | 54 `docs/` scratch files. A decision for the user: fix the tree or narrow the convention |
 | `[09-retire-tag-test-docstring-cites-a-superseded-digest]` | this board §3 | One word in a `ComputeTargets` test docstring, stale since prompt 09's digest move |
 | `[02-bracketed-reference-is-not-the-exact-root]` | this board §3 | A planning question: whether README §3.1's anchor should be an exact oracle on the $\Lambda$ pair. Changing it changes what prompt 01's tests assert, so it is the user's |
-| `[01-agreement-threshold-comment-predates-the-representation]` | this board §3 | **Workstream D authorised by the user 2026-09-16, after the close-out.** Measured by prompt 01; prompt 08 fixes it |
+| ~~`[01-agreement-threshold-comment-predates-the-representation]`~~ | this board §4 | **Resolved by prompt 08, 2026-09-16** — re-measured (unchanged from prompt 01's figures), the comment rewritten to describe the segmented entropy-factor representation, `AGREEMENT_RTOL` tightened `1.0e-8` → `1.0e-14`. See board §4 |
 | ~~`[03-qcd-inventory-does-not-report-the-representation]`~~ | `qcd-background-audit` board | **Closed in part by prompt 07, 2026-09-16** (the `QCD_Cosmology` half). The `BackgroundModel` half prompt 14 of that campaign widened it with was out of prompt 07's files-may-touch list and stays open, unassigned, on the `qcd-background-audit` board's §3 |
 | `[11-stop-point-root-tolerance]` | the hand-over campaign | Never this campaign's. `AUDIT.md` §4.3 and README §0.5 forbade absorbing it, and no prompt here touched it |
 
@@ -499,7 +517,7 @@ is the acceptance, not a debt.
 |---|---|---|
 | **D1** | The tolerance pair for `_find_rho_equality` | **Taken, by the user, 2026-09-16 — and against the campaign's own recommendation.** The plan recommended `xtol=1e-300, rtol=1e-14`; prompt 02 measured that it stops 7 ulp from the independent reference and fails a test prompt 01 had already shipped, and the user amended D1 to **`rtol=8.9e-16`**, Brent's $4\varepsilon$ floor, and amended prompt 02's acceptance from bit-identity to ≤ 4 ulp. [`PROVENANCE.md`](PROVENANCE.md) §3 holds the entry |
 | **D2** | The three copies of the equality closed form | **Taken, by the user, 2026-09-16, as option (iii)** — again against the campaign's recommendation, which was (i), and the recommendation was wrong. Implemented by **prompt 09**: `BaseCosmology` declares the two equality redshifts, each model answers for itself, `main.py` computes nothing and has no fallback. There are now **two** closed-form sites, not three (note 18) |
-| **D3** | Whether workstream D runs at all | **Taken, by the user, 2026-09-16 — *after* this close-out was written, which is why the rows above still read as though it were outstanding.** The gate is open and both prompts are authorised: 07 then 08. This row supersedes the "outstanding" wording elsewhere in §5 |
+| **D3** | Whether workstream D runs at all | **Taken, by the user, 2026-09-16 — *after* this close-out was written, which is why the rows above still read as though it were outstanding.** The gate is open and both prompts are authorised: 07 then 08, and (amended again, 2026-09-16) both have now landed. This row supersedes the "outstanding" wording elsewhere in §5 |
 | **D4** | Whether `[06-t-photon-call-cost-needs-a-quiet-machine]` closes or is accepted | **Not invoked.** Prompt 05's hoist landed the row at **2.4854 µs** against its ≤ 2.5 µs target, so the issue closed on the `qcd-background-audit` board's §4 and the user was never asked. The margin is 0.6 % (§5.3) |
 
 ### 5.7 The paragraph a later reader needs

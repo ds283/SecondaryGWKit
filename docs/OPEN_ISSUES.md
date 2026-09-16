@@ -1,6 +1,6 @@
 # Open issues — project-wide index
 
-**Last updated:** 2026-09-16 · **69 open** across ten campaigns.
+**Last updated:** 2026-09-16 · **68 open** across ten campaigns.
 
 This file exists so that an issue opened by one campaign is not lost when that campaign closes.
 It is an **index, not a record**: one line per issue, pointing at the campaign status board that
@@ -409,7 +409,7 @@ Planned as [`prompts/background-solver-robustness/`](../prompts/background-solve
 (2026-09-16 at `f023eb8`; grown to **nine prompts in five workstreams** when the user decided
 README §7 D2 — **and closed on 2026-09-16 with all seven authorised prompts landed**, 01–06 and 09;
 workstream D, prompts 07 and 08, was **authorised by the user on 2026-09-16, after that
-close-out**, and is running). It implements
+close-out, and has since landed in full — all nine prompts are now complete**). It implements
 [`AUDIT.md`](../prompts/background-solver-robustness/AUDIT.md), which measured that
 `LambdaCDM_GenericEOS._find_rho_equality` is an **unbracketed secant** at `xtol=1e-6, rtol=1e-4` —
 two orders looser than the file's other two solves, which `prompts/qcd-background-audit` tightened —
@@ -464,7 +464,7 @@ predicted — and `LambdaCDM(Planck2018)` is `60a3205a` at 1,778, unmoved. No re
 
 **Prompt 06 closed the campaign on 2026-09-16.** All seven prompts authorised at that point
 landed (01–06 and 09). **The user then opened README §7 D3's gate on 2026-09-16**, so workstream D
-(07, 08) is authorised and running; its two rows leave this index as those prompts land.
+(07, 08) was authorised, and both prompts have since landed.
 [`PROVENANCE.md`](../prompts/background-solver-robustness/PROVENANCE.md) settles all three of the
 file's `root_scalar` sites in the shape `docs/TOLERANCE-PROVENANCE.md` will want, and
 `prompts/tolerance-convergence`'s board and README §3.2 now point at it instead of carrying an
@@ -473,8 +473,16 @@ for workstreams A–C and was deliberately superseded by workstream E**, which t
 the audit was written: nothing moved through prompt 05 except the two matter–radiation equality
 redshifts by +3 and +1 ulp *onto* the independent reference (both printed with `:.4g`, both banner
 lines character-identical), and prompt 09 then moved the `QCD_Cosmology` source-grid digest on one
-sample of 1,996 on purpose. `T_Z_REPRESENTATION_VERSION` is 6 at every commit; final suites
-`CosmologyModels` **39**, `ComputeTargets` **449**, both OK.
+sample of 1,996 on purpose.
+
+**Prompt 07 landed on 2026-09-16**, reporting `T_z_representation` in the QCD cosmology inventory
+(see §1.7 above) and moving `ComputeTargets` to 452. **Prompt 08 landed on 2026-09-16**, the last
+prompt on this board: it re-measured `test_wPerturbations.py`'s agreement figures (unchanged from
+prompt 01), rewrote the module comment to describe the segmented entropy-factor representation
+that replaced the 500-point $T(z)$ spline it used to describe, and tightened `AGREEMENT_RTOL` from
+`1.0e-8` to `1.0e-14`. **Nothing on this board remains open or gated.**
+`T_Z_REPRESENTATION_VERSION` is 6 at every commit; final suites `CosmologyModels` **39**,
+`ComputeTargets` **452**, both OK.
 
 **Opened by prompt 06 (2026-09-16):**
 
@@ -499,12 +507,6 @@ sample of 1,996 on purpose. `T_Z_REPRESENTATION_VERSION` is 6 at every commit; f
 | Issue | Board | Hook |
 |---|---|---|
 | `[02-bracketed-reference-is-not-the-exact-root]` | background-solver-robustness | README §3.1 makes the bracketed `brentq` reference "the anchor every measurement is scored against", and on the one pair where an exact oracle exists the anchor is the less accurate of the two. `match_rho` for matter = $\Lambda$ is exactly $\rho_{m0}(1+z)^3-\rho_\Lambda$, so the root follows in closed form from the model's own floats: at 60 digits it is `0.303423032996407410561312801228`. The closed form and the solve give `0.30342303299640738` (**−0.506 ulp, the nearest double**); `bracketed_reference` gives `0.30342303299640749` (**+1.494 ulp, the second-nearest, on the wrong side**). So `LAMBDA_CLOSED_FORM_ULP = 2` measures the reference's own error and the "−2.0 ulp" both logs report for that pair is the anchor, not the solve. Harmless — every assertion passes and the shipped answer is the better of the two — but three more prompts score in ulp against this anchor. **Next step:** prompt 03 reads it before scoring the three closed-form sites; re-wording README §3.1 around an exact oracle is a planning question and the user's, since it would change what prompt 01's tests assert. |
-
-**Opened by the planning commit:**
-
-| Issue | Board | Hook |
-|---|---|---|
-| `[01-agreement-threshold-comment-predates-the-representation]` | background-solver-robustness | `CosmologyModels/tests/test_wPerturbations.py:34-41` describes the $T(z)$ inversion as a "500-point spline" and quotes ~1.3e-9 and ~4e-7 to justify `AGREEMENT_RTOL = 1.0e-8`; since `qcd-background-audit` prompts 05 and 06 the representation is a **segmented entropy factor at 3,000 nodes of order 5** and what is tabulated is not $T$. Every assertion still passes and the threshold is a ceiling. Same class as `[10-transfer-remedial-tolerance-comments-stale]`. **Measured by prompt 01** at `3e820eb`, on exactly what `test_agrees_with_LambdaCDM` compares: worst **8.8818e-16** at `max_z = 1e4` and **6.6613e-16** at `max_z = 1e20` — seven to nine orders tighter than the quoted figures, with the `max_z` dependence gone entirely, because on a constant-$g_*$ equation of state the tabulated entropy factor is exactly constant. **Next step:** prompt 08 rewrites the comment if workstream D is authorised. |
 
 **Adopted from `qcd-background-audit`** — each named "whichever prompt next has these files in
 scope" as its next step, and this is the first campaign that does
