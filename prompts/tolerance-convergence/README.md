@@ -6,12 +6,14 @@ review [`docs/gk-wkb-review-fable-2026-09-09.md`](../../docs/gk-wkb-review-fable
 **Planned:** 2026-09-12 at `622b84b`. **Rebased:** 2026-09-16 at `acd5b8e`, on the tree left by
 `GkTk-remedial` (20 / 20) and `qcd-background-audit` (16 / 16). **Re-anchored:** 2026-09-16 at
 `bc6dc97`, on the tree left by `background-solver-robustness` (9 / 9), which ran on this branch.
-**Not yet started.**
+**Not yet started** — prompts 01 and 02 written 2026-09-16, **03–06 deliberately held** until 02's
+inventory lands (board §1).
 **Branch:** `tolerance-convergence`, cut from `main` at `acd5b8e`, now 25 commits ahead of it.
 **What the rebase and the re-anchor changed, and why:** [`RECONCILIATION.md`](RECONCILIATION.md) —
 §§1–6 for the rebase, **§7 for the re-anchor** — read it before believing any figure quoted here
 against the older documents.
 **Status board:** [`IMPLEMENTATION_STATE.md`](IMPLEMENTATION_STATE.md) · **Logs:** [`logs/`](logs/)
+· **Orchestrator:** [`orchestrator/`](orchestrator/)
 
 ---
 
@@ -246,9 +248,9 @@ used"). **A prompt that proposes to "tighten the WKB tolerance" has misread the 
 **(b) Every published figure was taken on a grid production no longer builds, and so is the test
 tree's reproduction.** *Corrected at the 2026-09-16 re-anchor: four reproductions, not three, and
 one of them is already version 2 — `RECONCILIATION.md` §7.3.* They disagree:
-`ComputeTargets/tests/wkb_reference.py:151` (a bare `np.logspace`, version 0),
+`ComputeTargets/tests/wkb_reference.py:152` (a bare `np.logspace`, version 0),
 `ComputeTargets/tests/test_background_segmentation.py:90` (version 1 — break and feature points, no
-spacing profile), `ComputeTargets/tests/test_source_grid.py:126` (**version 2**, the full
+spacing profile), `ComputeTargets/tests/test_source_grid.py:127` (**version 2**, the full
 construction, but private to that module) and `:151` (a version-0 base, deliberate and named).
 Production builds it at `main.py:944-963` — the curvature-equidistributed grid,
 `SOURCE_GRID_CONSTRUCTION_VERSION = 2`.
@@ -400,10 +402,10 @@ production source grid" in the tree and they disagree by construction generation
 
 | # | Site | Generation |
 |---|---|---|
-| 1 | `ComputeTargets/tests/wkb_reference.py:151` `production_source_grid` | **v0** — bare `logspace`, citing a `main.py:410-419` that has not been the grid code for two campaigns |
+| 1 | `ComputeTargets/tests/wkb_reference.py:152` `production_source_grid` | **v0** — bare `logspace`, citing a `main.py:410-419` that has not been the grid code for two campaigns |
 | 2 | `ComputeTargets/tests/test_background_segmentation.py:90` `production_source_grid` | **v1** — `break_z` / `feature_z`, no `spacing` |
-| 3 | `ComputeTargets/tests/test_source_grid.py:126` `_production_grid` | **v2** — the full production construction, already correct, already under the suite, and **private** |
-| 4 | `ComputeTargets/tests/test_source_grid.py:151` `_production_base_grid` | v0, deliberately and named — it mirrors `main.py:944`'s own base-grid step, which the spacing profile is measured on |
+| 3 | `ComputeTargets/tests/test_source_grid.py:127` `_production_grid` | **v2** — the full production construction, already correct, already under the suite, and **private** |
+| 4 | `ComputeTargets/tests/test_source_grid.py:152` `_production_base_grid` | v0, deliberately and named — it mirrors `main.py:944`'s own base-grid step, which the spacing profile is measured on |
 
 **So the task is to hoist, not to build.** #3 is the version-2 grid and nothing outside its own
 module can reach it; that is now the whole defect. Move it into a module the other sites can

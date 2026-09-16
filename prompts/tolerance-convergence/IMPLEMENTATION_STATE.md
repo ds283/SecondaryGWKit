@@ -1,7 +1,7 @@
 # Implementation state — tolerance and convergence campaign
 
 **Campaign:** [`README.md`](README.md) · **Rebase record:** [`RECONCILIATION.md`](RECONCILIATION.md)
-· **Logs:** [`logs/`](logs/)
+· **Logs:** [`logs/`](logs/) · **Orchestrator:** [`orchestrator/`](orchestrator/)
 **Planned:** 2026-09-12 at `622b84b` · **Rebased:** 2026-09-16 at `acd5b8e` ·
 **Re-anchored:** 2026-09-16 at `bc6dc97` (`RECONCILIATION.md` §7)
 **Baseline commit:** `bc6dc97` (`tolerance-convergence`, 25 commits ahead of `main`, clean; suites
@@ -10,8 +10,9 @@ re-run for the re-anchor and green — `ComputeTargets` **452**, `CosmologyModel
 figure in this campaign's documents dated before 2026-09-16 19:32
 **Last updated:** 2026-09-16 · **Status: planned, rebased and re-anchored; not started.**
 **Every user decision needed to start is settled** — D1 and D3 are post-audit gates by design, D2
-settled 2026-09-12, D4 settled by README §0.4, **D5 settled yes 2026-09-16**. What is outstanding
-is the six prompt files and `orchestrator/`, neither of which exists yet.
+settled 2026-09-12, D4 settled by README §0.4, **D5 settled yes 2026-09-16**.
+**Prompts 01 and 02 are written, with their orchestrator prompts; 03–06 are deliberately held**
+until 02's inventory lands (§1 below). The campaign is ready to dispatch prompt 01.
 
 > **The campaign is unblocked.** The 2026-09-12 plan was blocked on `prompts/GkTk-remedial` prompt
 > 18, because until it landed the reference on `QCDModel` did not converge at four wavenumbers.
@@ -60,17 +61,32 @@ is the six prompt files and `orchestrator/`, neither of which exists yet.
 
 ## 1. The board
 
-| # | Prompt | Covers | Model | Status | Commit | Log |
-|---|---|---|---|---|---|---|
-| 01 | The convergence harness and one production grid | README §2 (b), (h); `[00-three-production-grid-reproductions]` | Opus | ⬜ | | |
-| 02 | The accuracy-parameter inventory | README §2 (a), (c), (g); `RECONCILIATION.md` §2.1 | Opus | ⬜ | | |
-| 03 | Audit the adaptive solvers | README §2 (d), (e), (f); review §10.1, §12.5 | Opus | ⬜ | | |
-| 04 | Audit the order-governed targets | README §2 (a); §7 D5 | Opus | ⬜ | | |
-| 05 | Decouple | README §2 (a), (g); §7 D1, D3 | Opus | ⬜ | | |
-| 06 | `QuadSourceIntegral`, close-out, the provenance note | README §0.4, §1.2 | Opus | ⬜ | | |
+| # | Prompt | Covers | Model | Written? | Status | Commit | Log |
+|---|---|---|---|---|---|---|---|
+| 01 | The convergence harness and one production grid | README §2 (b), (h); `[00-three-production-grid-reproductions]` | Opus | ✍️ [`01-…`](01-convergence-harness-and-grid.md) | ⬜ | | |
+| 02 | The accuracy-parameter inventory | README §2 (a), (c), (g); `RECONCILIATION.md` §2.1 | Opus | ✍️ [`02-…`](02-accuracy-parameter-inventory.md) | ⬜ | | |
+| 03 | Audit the adaptive solvers | README §2 (d), (e), (f); review §10.1, §12.5 | Opus | ⏸️ **held** | ⬜ | | |
+| 04 | Audit the order-governed targets | README §2 (a); §7 D5 **(settled yes)** | Opus | ⏸️ **held** | ⬜ | | |
+| 05 | Decouple | README §2 (a), (g); §7 D1, D3 | Opus | ⏸️ **held** | ⬜ | | |
+| 06 | `QuadSourceIntegral`, close-out, the provenance note | README §0.4, §1.2 | Opus | ⏸️ **held** | ⬜ | | |
 
 Status key: ⬜ not started · 🔄 in flight · ✅ complete · ⚠️ complete with a recorded caveat ·
-❌ blocked.
+❌ blocked. Written key: ✍️ prompt file exists · ⏸️ deliberately held.
+
+> **Prompts 03–06 are held back by decision, 2026-09-16 — this is not an unfinished plan.**
+> README §3 fixes each prompt's charter and §6 fixes its acceptance, so what is held is the
+> **method**, not the commitment; the campaign is fully specified and partly written. The reason is
+> §4's own dependency graph: *"02 must precede both audits: it is what says which targets 03 and 04
+> each own, and the old plan's allocation was wrong."* Writing 03 and 04 now would allocate their
+> targets from the same unverified inventory that prompt 02 exists to replace — the error the
+> 2026-09-12 plan made, and the reason new 02 has no predecessor. 05's content **is** D1 and D3,
+> which do not exist until 03 and 04 report; 06 assembles from the earlier logs.
+>
+> **The staging:** 01 and 02 now; **03 and 04 written after 02 lands**, against its table rather
+> than against a guess at it; 05 after the user settles D1 and D3; 06 last. This costs nothing in
+> elapsed time — §4.1 already declares a stop after each of 02, 03 and 04, where the user is in the
+> loop anyway. Orchestrator prompts are staged with them
+> ([`orchestrator/README.md`](orchestrator/README.md)).
 
 **The 2026-09-12 board carried five prompts.** The mapping, so that a reader of the old plan is not
 lost: old 01 → new 01 (widened by the grid); old 02 → new 03 (widened by `wavenumber_exit_time` and
@@ -133,12 +149,12 @@ Opened by the **2026-09-16 rebase**:
 
   > **Narrowed at the re-anchor, 2026-09-16** (additively; `RECONCILIATION.md` §7.3). It is
   > **four** constructions, not three, and the rebase missed the fourth — which was already there
-  > at `acd5b8e`. `ComputeTargets/tests/test_source_grid.py:126` `_production_grid` **is the
+  > at `acd5b8e`. `ComputeTargets/tests/test_source_grid.py:127` `_production_grid` **is the
   > version-2 construction**, complete, under the suite, and lifting both `main.py` functions the
   > way the next step above prescribes; and `:151` `_production_base_grid` is a v0 base that is
   > deliberate and named, mirroring `main.py:944`'s own base-grid step. **The corrected next step:
   > prompt 01 *hoists* `_production_grid` out of that test module into something the other sites
-  > can import, and repoints `wkb_reference.py:151` and `tk_numeric_atol_sweep.py:215` at it.** It
+  > can import, and repoints `wkb_reference.py:152` and `tk_numeric_atol_sweep.py:215` at it.** It
   > is private and it is in a test module; that is now the whole defect. The **impact is
   > unchanged** — every figure in README §6 and in `docs/gktk-remedial/TK-NUMERIC-ATOL-SWEEP.md` is
   > still scored on version 0, because `tk_numeric_atol_sweep.py:215` still imports the v0 one. One

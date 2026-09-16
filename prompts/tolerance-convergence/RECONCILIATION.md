@@ -302,10 +302,10 @@ and the fourth was already there at `acd5b8e` — the rebase missed it:
 
 | # | Site | Generation | Built how |
 |---|---|---|---|
-| 1 | `ComputeTargets/tests/wkb_reference.py:151` `production_source_grid` | **v0** | bare `logspace`; its docstring cites `main.py:410-419`, a location that has not been the grid code for two campaigns |
+| 1 | `ComputeTargets/tests/wkb_reference.py:152` `production_source_grid` | **v0** | bare `logspace`; its docstring cites `main.py:410-419`, a location that has not been the grid code for two campaigns |
 | 2 | `ComputeTargets/tests/test_background_segmentation.py:90` `production_source_grid` | **v1** | `break_z` / `feature_z`, no `spacing` |
-| 3 | `ComputeTargets/tests/test_source_grid.py:126` `_production_grid` | **v2** | lifts `cosmology_feature_redshifts` **and** `source_grid_spacing_profile` from `main.py` with `load_main_py_functions` — the full production construction |
-| 4 | `ComputeTargets/tests/test_source_grid.py:151` `_production_base_grid` | v0, **deliberately and named** | transcribes `populate_z_sample` "as it stood before prompt 11"; it mirrors `main.py:944`'s own base-grid step, which the spacing profile is measured on, so it is not a stray |
+| 3 | `ComputeTargets/tests/test_source_grid.py:127` `_production_grid` | **v2** | lifts `cosmology_feature_redshifts` **and** `source_grid_spacing_profile` from `main.py` with `load_main_py_functions` — the full production construction |
+| 4 | `ComputeTargets/tests/test_source_grid.py:152` `_production_base_grid` | v0, **deliberately and named** | transcribes `populate_z_sample` "as it stood before prompt 11"; it mirrors `main.py:944`'s own base-grid step, which the spacing profile is measured on, so it is not a stray |
 
 **Impact on prompt 01.** Its grid task is no longer *build* the version-2 reproduction — that
 exists and is under the suite. It is **hoist** #3 out of `test_source_grid.py` into a module the
