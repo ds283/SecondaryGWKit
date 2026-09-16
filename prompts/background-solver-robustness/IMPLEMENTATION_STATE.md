@@ -8,7 +8,7 @@
 `CosmologyModels` **30**, `ComputeTargets` **447**
 **Target branch:** `background-solver-robustness`, cut from `f023eb8` (README §4)
 **Last updated:** 2026-09-16 · **Status: workstream A complete; workstream B under way — prompts
-01, 02 and 03 done.**
+01, 02 and 03 done; README §7 D2 answered by the user — option (ii), §3.**
 
 > **The impact is zero change to any computed quantity, and that is the point.** `AUDIT.md` §5 and
 > README §0.2 are the campaign's framing: the two redshifts `_find_rho_equality` produces are
@@ -146,9 +146,25 @@ Opened by the **2026-09-16 planning commit**:
   **(iii)** unify on the solve — **measured** to take the `QCD_Cosmology` production grid digest
   from `a2c32f67` to `4849552b` on a 7-ulp move in one sample of 1,996, invalidating every stored
   object of the eight types log 11 §5 prices. **The campaign's recommendation is (i).**
-  **Next step:** README §7 **D2** is the user's decision. **Nothing may unify them on an agent's
-  judgement.** Line numbers re-anchored by prompt 03: the sites are `LambdaCDM_GenericEOS.py:502`
+  Line numbers re-anchored by prompt 03: the sites are `LambdaCDM_GenericEOS.py:502`
   and `:507`, `LambdaCDM.py:73-74`, and `main.py:553` and `:555`.
+
+  **README §7 D2 — decided by the user, 2026-09-16: option (ii), unify on the closed form.**
+  Put to them by the workstream B orchestrator on prompt 03's report, against the campaign's
+  recommendation of (i), which is the user's to overrule. What (ii) means here is fixed by prompt
+  03's measurement and not by an agent's judgement: the resulting float must be **bit-identical to
+  what `main.py:553`/`:555` produce today** — `3406.668974249948` and `0.3034230329964074` on
+  `QCD_Cosmology` at production parameters — and the QCD production source-grid digest must stay
+  **`a2c32f67`** at 1,996 samples, with `60a3205a` at 1,778 for `LambdaCDM(Planck2018)`. The helper
+  must therefore keep the arithmetic *spelling* of the three sites — `omega_m / omega_r - 1.0` and
+  `pow(omega_cc / omega_m, 1.0 / 3.0) - 1.0` — not an algebraically equal rewrite; log 03 §3 item 3
+  names `(omega_m - omega_r)/omega_r`, `expm1(log(...)/3)` and `**` as forms that would move the
+  grid. `test_the_three_closed_form_sites_agree` becomes the test that the unified helper still
+  reproduces all three sites, and the two digests are the acceptance.
+  **Next step:** **a new prompt, not an amendment to 03** (orchestrator
+  `workstream-B-what-the-redshifts-feed.md` §2). It is not one of this campaign's eight, and it is
+  not scheduled; it needs a home and a slot before anything writes the helper. **Until that prompt
+  runs the issue stays open, and nothing may unify the three sites.**
 
 Also opened by the planning commit, found while reconciling (`RECONCILIATION.md` §9.3) and
 **measured by prompt 01**, which has the file open for another reason:
