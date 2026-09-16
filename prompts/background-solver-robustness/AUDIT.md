@@ -249,12 +249,22 @@ stall.
 Recorded here because they were found while taking the measurements above, not because this audit
 proposes to fix them. Each would need its own decision.
 
-1. **`TemperatureRepresentation.__call__` raises with the wrong class name.** Both bounds errors,
-   at `:321` and `:333`, are formatted
-   `f"GkSource.function: evaluated {self._label} out of bounds @ z=…"` — a label copied from an
-   unrelated class. Every out-of-bounds $T(z)$ failure in the tree therefore reports itself as a
-   `GkSource` problem. Visible in §3.2's table. One-line fix, but it is a different file region
-   from `_find_rho_equality` and it should be a separate commit.
+1. **~~`TemperatureRepresentation.__call__` raises with the wrong class name.~~** *Corrected and
+   closed 2026-09-16 — see the note below; this entry as originally written was wrong about both
+   the cause and the scope.* The two bounds errors at `:321` and `:334` were formatted
+   `f"GkSource.function: evaluated {self._label} out of bounds @ z=…"`, so every out-of-bounds
+   $T(z)$ failure reported itself as a `GkSource` problem (visible in §3.2's table). **This audit
+   described it as a label copied from an unrelated class and a one-line fix. Both were wrong.**
+   The prefix appeared at **six** sites across **three** classes — `ZSplineWrapper` and
+   `GkWKBSplineWrapper` in `ComputeTargets/spline_wrappers.py`, and `TemperatureRepresentation`
+   here — and the `TemperatureRepresentation` docstring recorded the duplication as **deliberate**:
+   *"the `RuntimeError` text is kept verbatim (prefix included) so that nothing that reads it
+   changes."* Changing the two sites in this file alone would have contradicted that documented
+   intent and broken the one-text property it asserts. The fix applied instead replaces the literal
+   with `type(self).__name__` at all six sites, so the three classes still share one expression
+   while each names itself, and amends the docstring sentence. Nothing parses the message — there
+   is no `assertRaisesRegex` against it anywhere in the tree, and no campaign README or
+   `docs/OPEN_ISSUES.md` row claims `spline_wrappers.py`.
 2. **`_find_rho_equality`'s `init_z` is computed by the caller, not the method.** Both call sites
    derive the closed-form guess inline at `:496-503`. Since the guess *is* the root whenever
    $g_*$ is flat (§2.3), a method that derived its own guess could also assert that property and

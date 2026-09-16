@@ -262,7 +262,12 @@ class TemperatureRepresentation:
     to because the ramp has to be clamped along with the interpolant: a wrapper that clamped only
     ``F`` would let the ``(1+z)`` factor run away above ``max_z``. ``_outward`` is imported rather
     than re-derived, so there is one definition of "outward" in the repository, and the
-    ``RuntimeError`` text is kept verbatim (prefix included) so that nothing that reads it changes.
+    ``RuntimeError`` text is kept character-for-character identical to ``ZSplineWrapper``'s so that
+    nothing that reads it changes. The prefix was literally ``GkSource.function:`` at all six sites
+    across the three classes until 2026-09-16, which meant every out-of-bounds ``T(z)`` reported
+    itself as a ``GkSource`` failure; it is now ``type(self).__name__``, so the three classes still
+    share one expression while each names itself. Nothing parses the message -- there is no
+    ``assertRaisesRegex`` against it anywhere in the tree.
     """
 
     def __init__(
@@ -318,7 +323,7 @@ class TemperatureRepresentation:
         # if some way out of bounds, reject
         if log_z > _outward(self._max_log_z, +1):
             raise RuntimeError(
-                f"GkSource.function: evaluated {self._label} out of bounds @ z={raw_z:.5g} (max allowed z={self._max_z:.5g}, recommended limit is z <= {_outward(self._max_z, -1):.5g})"
+                f"{type(self).__name__}: evaluated {self._label} out of bounds @ z={raw_z:.5g} (max allowed z={self._max_z:.5g}, recommended limit is z <= {_outward(self._max_z, -1):.5g})"
             )
 
         # otherwise, softly cushion the representation at the top end. The ramp is clamped with
@@ -331,7 +336,7 @@ class TemperatureRepresentation:
         # same at lower limit
         if log_z < _outward(self._min_log_z, -1):
             raise RuntimeError(
-                f"GkSource.function: evaluated {self._label} out of bounds @ z={raw_z:.5g} (min allowed z={self._min_z:.5g}, recommended limit is z >= {_outward(self._min_z, +1):.5g})"
+                f"{type(self).__name__}: evaluated {self._label} out of bounds @ z={raw_z:.5g} (min allowed z={self._min_z:.5g}, recommended limit is z >= {_outward(self._min_z, +1):.5g})"
             )
 
         if log_z < self._min_log_z:

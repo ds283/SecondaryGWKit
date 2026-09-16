@@ -63,7 +63,7 @@ class ZSplineWrapper:
         # if some way out of bounds, reject
         if log_z > _outward(self._max_log_z, +1):
             raise RuntimeError(
-                f"GkSource.function: evaluated {self._label} out of bounds @ z={raw_z:.5g} (max allowed z={self._max_z:.5g}, recommended limit is z <= {_outward(self._max_z, -1):.5g})"
+                f"{type(self).__name__}: evaluated {self._label} out of bounds @ z={raw_z:.5g} (max allowed z={self._max_z:.5g}, recommended limit is z <= {_outward(self._max_z, -1):.5g})"
             )
 
         # otherwise, softly cushion the spline at the top end
@@ -73,7 +73,7 @@ class ZSplineWrapper:
         # same at lower limit
         if log_z < _outward(self._min_log_z, -1):
             raise RuntimeError(
-                f"GkSource.function: evaluated {self._label} out of bounds @ z={raw_z:.5g} (min allowed z={self._min_z:.5g}, recommended limit is z >= {_outward(self._min_z, +1):.5g})"
+                f"{type(self).__name__}: evaluated {self._label} out of bounds @ z={raw_z:.5g} (min allowed z={self._min_z:.5g}, recommended limit is z >= {_outward(self._min_z, +1):.5g})"
             )
 
         if log_z < self._min_log_z:
@@ -122,7 +122,7 @@ class GkWKBSplineWrapper:
         # if some way out of bounds, reject
         if log_z > _outward(self._max_log_z, +1):
             raise RuntimeError(
-                f"GkSource.function: evaluated {self._label} out of bounds @ z={raw_z:.5g} (max allowed z={self._max_z:.5g}, recommended limit is z <= {_outward(self._max_z, -1):.5g})"
+                f"{type(self).__name__}: evaluated {self._label} out of bounds @ z={raw_z:.5g} (max allowed z={self._max_z:.5g}, recommended limit is z <= {_outward(self._max_z, -1):.5g})"
             )
 
         # otherwise, softly cushion the spline at the top end
@@ -132,7 +132,7 @@ class GkWKBSplineWrapper:
         # same at lower limit
         if log_z < _outward(self._min_log_z, -1):
             raise RuntimeError(
-                f"GkSource.function: evaluated {self._label} out of bounds @ z={raw_z:.5g} (min allowed z={self._min_z:.5g}, recommended limit is z >= {_outward(self._min_z, +1):.5g})"
+                f"{type(self).__name__}: evaluated {self._label} out of bounds @ z={raw_z:.5g} (min allowed z={self._min_z:.5g}, recommended limit is z >= {_outward(self._min_z, +1):.5g})"
             )
 
         if log_z < self._min_log_z:
