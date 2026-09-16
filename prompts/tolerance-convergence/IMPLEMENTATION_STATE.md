@@ -71,8 +71,8 @@ not ✅ either, which is the specific failure the rebase found.
 | T3 | **MEASUREMENT** | The accuracy-parameter inventory: every parameter, what it keys, whether it reaches a solver, what the real knob is, and the object count of the sector it keys | 02 | ⬜ |
 | T4 | **MEASUREMENT** | `GkNumericIntegration` characterised over the production response grid on three models in both `atol` and `rtol`, against the consumer-spline floor — the sector with ~65,000 objects per model, never swept, and where the campaign's compute decision actually lives | 03 | ⬜ |
 | T5 | **MEASUREMENT** | `TkNumericIntegration` likewise, re-taken on the version-2 grid and under its own `BREAK_POINT_ALL` policy | 03 | ⬜ |
-| T6 | **MEASUREMENT** | `wavenumber_exit_time`'s root solve measured at all — nothing in the record says what `xtol = 1e-10`, `rtol = 1e-8` in $\log(1+z)$ buys or costs | 03 | ⬜ |
-| T7 | **MEASUREMENT** | $N_\tau$, $N_{c_s\tau}$, $N_F$, $N_\rho$ and `RESIDUAL_WKB_REGION_MARGIN` audited at every production $k$ on the corrected background and the 3-point break set, replacing evidence generated 2026-09-10 | 04 | ⬜ |
+| T6 | **MEASUREMENT** | `wavenumber_exit_time`'s root solve measured at all — nothing in the record says what `xtol = 1e-10`, `rtol = 1e-8` in $\log(1+z)$ buys or costs. **Scored against the exact $z_{\rm exit}$ on `RadiationModel` first** (README §3.1): $1 + z = k/(H_0 e^{N})$, confirmed at the rebase to 2.3e-16 relative or better | 03 | ⬜ |
+| T7 | **MEASUREMENT** | $N_\tau$, $N_{c_s\tau}$, $N_F$, $N_\rho$ and `RESIDUAL_WKB_REGION_MARGIN` audited at every production $k$ on the corrected background and the 3-point break set, replacing evidence generated 2026-09-10. **Every one of the four orders has a closed-form anchor on `RadiationModel`** (README §3.1), including $\rho_G \equiv 0$, which makes the $N_\rho$ measurement pure quadrature error with no reference to build | 04 | ⬜ |
 | T8 | **DECISION** | The decoupled tolerance pairs settled by the user (§7 D1) and shipped with the measurement that chose each, in `config/defaults.py` | 05 | ⬜ |
 | T9 | **DECISION** | What replaces the vestigial `atol`/`rtol` key columns on the three order-governed targets (§7 D3) — the user's stated target for the campaign | 05 | ⬜ |
 | T10 | **PLUMBING** | Every `object_get` of a retuned target carries its own parameter, with an `ast` guard whose predicate reaches all eight targets and fails on an unclassified site | 05 | ⬜ |
@@ -163,10 +163,24 @@ None yet.
 2. **A number without its grid generation beside it is not comparable** (README §5 rule 6, new at
    the rebase). Version 0, 1 or 2 — say which. The two campaigns that closed before this one are
    full of figures from all three, and nothing in the record distinguishes them.
-3. **The floors are not targets** (README §2 (f)). An agent reporting an accuracy below a declared
-   floor has made an error, and it is a campaign-wide stop — not a caveat, not a footnote. **The
-   QCD $H(z)$ discontinuity floor is no longer one of them**: `qcd-background-audit` prompts 04–06
-   removed it and the equivalent phase error is 0.000e+00 rad.
+3. **The floors are not targets, and the target rule says how one becomes the other**
+   (README §2 (f) and **§6.1**). An agent reporting an accuracy below a declared floor has made an
+   error, and it is a campaign-wide stop — not a caveat, not a footnote. **The QCD $H(z)$
+   discontinuity floor is no longer one of them**: `qcd-background-audit` prompts 04–06 removed it
+   and the equivalent phase error is 0.000e+00 rad. **§6.1 rule 5 is the one qualification**: a
+   prompt may *re-measure* a floor and supersede an inherited figure, and for $G_k$'s consumer
+   spline it must; the stop is a claim below the floor the prompt has itself just measured.
+12. **The target is the loosest setting that clears the measured floor** (README §6.1), swept
+    loose-to-tight, scored at the **maximum** over the whole production grid on all three models,
+    with the cost at that setting and one step either side. Where the error is already below the
+    floor the target is the word `unchanged` and the row records the dominating factor — that is a
+    result. Recommending a setting two decades tighter than the one that first clears is the same
+    kind of error as recommending one that misses.
+13. **The constant-$w$ anchors cover more than $G_k$ and $T_k$** (README §3.1). `RadiationModel`
+    carries exact closed forms for $\tau$, $c_s\tau$, $F$, $\theta_G$, $\rho_G \equiv 0$ and
+    $\rho_T$, and $z_{\rm exit}$ is the elementary inversion $1 + z = k/(H_0 e^{N})$ — so **T6 and
+    T7 have oracles, not only self-convergence**, and a drift quoted for any of them without the
+    oracle error beside it is uncalibrated.
 4. **Cost is a per-object count times an object count** (README §2 (c)). $T_k$ numeric is 50
    objects per model; $G_k$ numeric and both WKB sectors are ~65,000. A percentage without the
    multiplier is not a cost.

@@ -106,7 +106,8 @@ prompt here finds it must change one of those files to proceed, that is a stop.
   *parameter* change and is in scope; replacing a quadrature rule is not.
 - **Does not revisit the initial conditions.** The $T=1,T'=0$ super-horizon condition holds a
   2.52e-6-of-envelope floor (`[00-tk-superhorizon-ic-series]`); it is a *floor to measure against*,
-  never a target to beat. Claiming an accuracy below a declared floor is a campaign-wide stop.
+  never a target to beat. Claiming an accuracy below a declared floor is a campaign-wide stop
+  (§2 (f), qualified by §6.1 rule 5); this particular floor is not one a prompt here re-measures.
 - **Does not move the numeric→WKB hand-over**, which is `docs/OPEN_ISSUES.md` §1.1's — including
   `[11-stop-point-root-tolerance]`, the `root_scalar(xtol=1e-6, rtol=1e-4)` at
   `LiouvilleGreen/integration_tools.py:95`. It is **recorded** in prompt 02's inventory and in the
@@ -258,7 +259,10 @@ Phase: $\varepsilon k\tau$, 3e-7 rad at $k=10^5$ to 9e-4 rad at $3\times10^8$. $
 consumer's cubic spline of the numeric $G$, **1e-5 to 1e-4 of the value near the hand-over** and
 "the larger error by two orders" (review §10.1) — the floor that decides whether tightening $G_k$'s
 `rtol` buys anything at all. **On `QCDModel` there is no longer a background floor** (§0.3). **An
-agent that reports an accuracy below a floor has made an error, and it is a campaign-wide stop.**
+agent that reports an accuracy below a floor has made an error, and it is a campaign-wide stop** —
+with the one qualification §6.1 rule 5 states. A prompt *may* re-measure a floor and supersede an
+inherited figure, and for $G_k$'s consumer spline it must (§3.3); what is a stop is a claim below a
+floor the prompt has itself just measured, which is an arithmetic error and never a discovery.
 
 **(g) Decoupling is a datastore change, and the plumbing is the risky half.** Every accuracy
 parameter is part of its object's lookup key, so a new one makes every existing row of that type
@@ -311,10 +315,55 @@ properly, in `ComputeTargets/tests/` beside `wkb_reference.py` (so it is importa
   measure — with the criterion (drift $\le\frac1{10}$ of the smallest difference to be reported)
   evaluated, not just reported. "One step" is a decade for a tolerance pair and **one order** for a
   Gauss order, so the same facility serves prompt 04;
-- the **anchor** comparison against `compute_analytic_{G,T}{,prime}` wherever the model is
-  constant-$w$, so the drift statistic is calibrated at every use and not only in prompt 17;
+- the **anchor** comparison against every closed form the tree already provides, wherever the
+  model is constant-$w$, so that the drift statistic is calibrated at every use and not only in
+  prompt 17. **The anchors are not only `compute_analytic_{G,T}{,prime}`** — see the table below,
+  which the 2026-09-12 plan did not have and which is why prompts 03 and 04 were scheduled as
+  self-convergence work when three of their five quantities have an oracle;
 - the envelope-relative, phase and difference error measures, reusing `wkb_reference`'s definitions
   rather than restating them.
+
+**The anchors, in full.** `RadiationModel` (`ComputeTargets/tests/wkb_reference.py:176`) is an
+exact $w = c_s^2 = \tfrac13$, $\epsilon = 2$, $H = H_0(1+z)^2$ control, and **every primitive this
+campaign audits has a closed form on it**. The harness exposes all of them as anchors, not just the
+two solution oracles, and a prompt that reports a self-convergence drift for a quantity in this
+table without the oracle error beside it has not calibrated its measurement (§5 rule 5).
+
+| Quantity | Closed form on `RadiationModel` ($s = 1+z$, $a = kc_s/H_0$) | Where | Audited by |
+|---|---|---|---|
+| $T_k$, $T_k'$ | $2^{n}\Gamma(n+1)(kc_s\tau)^{-n}J_{n}(kc_s\tau)$, $n = \tfrac32 + b$; $3(\sin x - x\cos x)/x^3$ at $w=\tfrac13$ | `analytic_Tk.py:5`, `:19` | 03 (T5) |
+| $G_k$, $G_k'$ | `compute_analytic_G`, `compute_analytic_Gprime`, both constant-$w$ | `analytic_Gk.py:5`, `:27` | 03 (T4) |
+| $\tau$ | $\tau(z) = 1/(H_0 s)$, and $\Delta\tau(z_a, z_b) = (z_a - z_b)/(H_0 s_a s_b)$ in factored form — the difference of two $\tau$ values loses a digit per decade of baseline ratio, which is the fact the double-double node table exists to defeat | `wkb_reference.py:220`, `:223` | **04 (T7), $N_\tau$** |
+| $c_s\tau$ | $\tau(z)/\sqrt3$, with the same factored delta | `wkb_reference.py:236`, `:239` | **04 (T7), $N_{c_s\tau}$** |
+| $F$ | $F(z) - F(z_{\rm ref}) = 2\log\big((1+z)/(1+z_{\rm ref})\big)$, evaluated through `log1p` | `wkb_reference.py:243` | **04 (T7), $N_F$** |
+| $\theta_G$ | $k\,(1/s_i - 1/s)$ | `wkb_reference.py:247` | 04 (T7) |
+| $\rho_G$ | $\equiv 0$: $C = 0$ identically in exact radiation, so the WKB residual **vanishes** — the sharpest possible test of $N_\rho$, since any non-zero answer is pure quadrature error | `wkb_reference.py:251` | **04 (T7), $N_\rho$** |
+| $\rho_T$ | $g(s) - g(s_i)$, $g(s) = -2s/\big(\sqrt{a^2 - 2s^2} + a\big) + \sqrt2\,\arcsin\big(\sqrt2\,s/a\big)$, exact | `wkb_reference.py:255`, `:266` | **04 (T7), $N_\rho$** |
+| $z_{\rm exit}$ | $1 + z = k/(H_0 e^{N})$ for $N$ e-folds inside the horizon — **elementary**, because $k(1+z)/H = k/(H_0 s)$ when $H \propto s^2$ | *new*; cf. `wkb_reference.py:88` | **03 (T6)** |
+
+Three consequences the prompts must act on, and none of them is optional:
+
+1. **$N_\rho$ has a two-sided oracle.** $\rho_G \equiv 0$ makes the $G_k$ residual a pure error
+   measurement with no reference to build, and $\rho_T$ is exact in closed form. Prompt 04 scores
+   $N_\rho$ against both before it scores it against a converged reference on any spline model.
+2. **$N_\tau$, $N_{c_s\tau}$ and $N_F$ each have an exact primitive and an exact interval
+   quantity.** The interval form is the one that matters — §6's error definitions make
+   **difference error** relative to the interval, never the absolute — and `tau_delta` /
+   `cs_tau_delta` already supply it to ~1e-16 against ~5e-15 for the naive difference. Prompt 04
+   uses the delta accessors, not differences of primitives.
+3. **`wavenumber_exit_time` has an oracle, and T6 said it had none.** The board records T6 as
+   "never measured"; the reason it was never measured is that nobody noticed the radiation case is
+   a one-line inversion. Prompt 03 scores the production `root_scalar` in $\log(1+z)$
+   (`CosmologyConcepts/wavenumber.py:979-984`) against $k/(H_0 e^{N}) - 1$ directly, at every
+   production $k$ and at each `efolds_subh` the pipeline asks for, **before** it reports anything
+   about `xtol = 1e-10, rtol = 1e-8`. Confirmed at the rebase: `horizon_exit_z` agrees with the
+   closed form to 2.3e-16 relative or better over $k \in [10^3, 3\times10^8]$ and
+   $N \in \{-3, 0, 4\}$.
+
+**The one validity bound.** $\rho_T$'s primitive requires $\omega_T^2 > 0$, i.e.
+$1 + z < k/(\sqrt6\,H_0)$ — the mode must be sub-horizon — and `_rho_T_primitive` raises rather
+than returning a complex root. A prompt that walks an anchor outside that bound has chosen its
+$z_{\rm init}$ wrongly; it is not a finding about the representation.
 
 **The grid.** There are three reproductions of "the production source grid" in the tree and they
 disagree by construction generation (§2 (b)). Reduce them to one, at version 2, and have the other
@@ -546,6 +595,59 @@ A prompt that invents a target for its own row has skipped the decision.
 Every "now" figure carries the **grid generation** it was measured on (§2 (b)). Three of the eight
 rows are figures taken on a grid production no longer builds; re-scoring them is part of the work,
 not a preliminary to it.
+
+### 6.1 The target rule — how a floor becomes a target
+
+A target is not invented, but neither is it free: **the rule below fixes it, and a prompt applies
+the rule rather than choosing a number.** This is what §6's empty Target column is waiting for, and
+it exists because the two statements "below the floor is an error" (§2 (f)) and "at the floor is
+enough" are not the same, and the campaign previously wrote down only the first. `GkTk-remedial`
+§6 made the choice implicitly and inconsistently — $T_k$ numeric at 3e-6 against a 2.5e-6 floor
+($1.2\times$), $\theta_G$ at 1e-5 rad against a 3e-7 floor ($33\times$) — and labelled the whole
+table "engineering targets… not certified bounds". That precedent is not guidance; this is.
+
+**The rule.** For each row:
+
+1. **Measure the dominating floor first**, on the tree the campaign is actually running on, and
+   report it with its own uncertainty. Do not inherit it from a review paragraph — see rule 5
+   below.
+2. **The target is the loosest setting whose error is at or below that floor**, measured over the
+   whole production grid on all three models, not at a representative $k$. "At or below" means the
+   row's own error measure (§6's definitions: envelope-relative, phase in radians, difference
+   relative to the interval), scored at the **maximum** over the grid, not the median — prompt 17
+   established that a single $k$ is not characteristic and that the distribution has a tail three
+   orders above its centre.
+3. **Loosest, not tightest.** The parameter is swept from loose to tight and the target is the
+   *first* setting that clears the floor, with the cost recorded **at that setting and one step
+   either side** (§1.2). A setting two decades tighter than the one that first clears buys nothing
+   and costs the sector's object count; recommending it is an error of the same kind as
+   recommending one that misses.
+4. **Where the error is already below the floor, the target is `unchanged`** — written in the cell
+   in that word — and the row records **the factor by which the floor dominates**. This is a
+   *result*, not a non-result, and it is the expected outcome for `GkNumericIntegration` if review
+   §10.1's two-order claim survives prompt 03's re-measurement. No prompt may tighten a parameter
+   whose error the floor already swamps, however cheap the tightening looks.
+5. **A floor may be re-measured; only a claim against a *freshly measured* floor is a stop.**
+   §2 (f) declares an accuracy below a declared floor a campaign-wide stop. That rule is about
+   *claims*, not about floors: a prompt is expressly permitted — and for $G_k$'s consumer spline,
+   required (§3.3) — to measure a floor itself and supersede the inherited figure, recording both.
+   What remains a stop is reporting an accuracy below the floor the prompt has *just measured*,
+   because that is an arithmetic error in the measurement and never a discovery. The inherited
+   floors of §2 (f) are quoted with their provenance in the Floor column so that a reader can see
+   which have been re-taken on this tree and which have not.
+6. **Where no floor can be established, there is no target, and the row says so in those words.**
+   `wavenumber_exit_time` may be such a row: its consumer is the grid construction rather than a
+   value, so what bounds it is a displacement the grid can absorb, not an error in a quantity.
+   Prompt 03 states what that bound is, or states that it could not establish one — and in the
+   second case the parameter is left where it is and the provenance note records *unestablished*
+   rather than inventing a justification (§1.2's closing rule).
+
+**The rule does not decide cost.** A target that clears the floor but moves a sector's total by
+more than a factor of two is still a compute-budget decision for the user (§4.3), and the prompt
+recommends without deciding. The rule fixes what "good enough" means; it does not fix what the
+campaign can afford.
+
+### 6.2 The table
 
 | Target | Parameter today | Accuracy now, and where it was measured | Floor (§2 (f)) | Target | Prompt |
 |---|---|---|---|---|---|
