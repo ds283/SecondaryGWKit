@@ -304,6 +304,15 @@ class TemperatureRepresentation:
         self._min_log_z = log(1.0 + min_z)
         self._max_log_z = log(1.0 + max_z)
 
+        # Loop invariants of a hot path: the two thresholds __call__ compares against (in
+        # log(1+z)) and the two bounds its messages quote (raw z). `_outward` of a bound that is
+        # never mutated after construction, so hoisting is numerically null.
+        # [07-t-photon-range-logic-recomputes-its-bounds], prompts/background-solver-robustness 05.
+        self._reject_above_log_z = _outward(self._max_log_z, +1)
+        self._reject_below_log_z = _outward(self._min_log_z, -1)
+        self._recommended_max_z = _outward(self._max_z, -1)
+        self._recommended_min_z = _outward(self._min_z, +1)
+
     @property
     def segment_edges(self) -> tuple:
         """
@@ -321,9 +330,9 @@ class TemperatureRepresentation:
             raw_z = z
 
         # if some way out of bounds, reject
-        if log_z > _outward(self._max_log_z, +1):
+        if log_z > self._reject_above_log_z:
             raise RuntimeError(
-                f"{type(self).__name__}: evaluated {self._label} out of bounds @ z={raw_z:.5g} (max allowed z={self._max_z:.5g}, recommended limit is z <= {_outward(self._max_z, -1):.5g})"
+                f"{type(self).__name__}: evaluated {self._label} out of bounds @ z={raw_z:.5g} (max allowed z={self._max_z:.5g}, recommended limit is z <= {self._recommended_max_z:.5g})"
             )
 
         # otherwise, softly cushion the representation at the top end. The ramp is clamped with
@@ -334,9 +343,9 @@ class TemperatureRepresentation:
             raw_z = self._max_z
 
         # same at lower limit
-        if log_z < _outward(self._min_log_z, -1):
+        if log_z < self._reject_below_log_z:
             raise RuntimeError(
-                f"{type(self).__name__}: evaluated {self._label} out of bounds @ z={raw_z:.5g} (min allowed z={self._min_z:.5g}, recommended limit is z >= {_outward(self._min_z, +1):.5g})"
+                f"{type(self).__name__}: evaluated {self._label} out of bounds @ z={raw_z:.5g} (min allowed z={self._min_z:.5g}, recommended limit is z >= {self._recommended_min_z:.5g})"
             )
 
         if log_z < self._min_log_z:

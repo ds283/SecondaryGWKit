@@ -7,11 +7,13 @@
 **Baseline commit:** `f023eb8` — suites green and re-run at planning time:
 `CosmologyModels` **30**, `ComputeTargets` **447**
 **Target branch:** `background-solver-robustness`, cut from `f023eb8` (README §4)
-**Last updated:** 2026-09-16 · **Status: workstreams A, B and E complete — prompts 01, 02, 03, 04
-and 09 done. README §7 D2 is implemented: the model is authoritative for its own equality
-redshifts, `main.py` computes nothing, and the `QCD_Cosmology` production source-grid digest has
-moved `a2c32f67` → **`4849552b`** on exactly one sample, on purpose (§6 note 15). Workstream C
-(05, 06) is next.**
+**Last updated:** 2026-09-16 · **Status: workstreams A, B and E complete and C under way — prompts
+01, 02, 03, 04, 05 and 09 done. README §7 D2 is implemented: the model is authoritative for its own
+equality redshifts, `main.py` computes nothing, and the `QCD_Cosmology` production source-grid
+digest has moved `a2c32f67` → **`4849552b`** on exactly one sample, on purpose (§6 note 15). Prompt
+05 hoisted the range logic in all three classes, bit-identically, and **closed
+`[06-t-photon-call-cost-needs-a-quiet-machine]` at 2.4854 µs** against its ≤ 2.5 µs target, so
+README §7 **D4 needs no answer from the user**. Prompt 06, the close-out, is all that remains.**
 
 > **The impact is zero change to any computed quantity, and that is the point.** `AUDIT.md` §5 and
 > README §0.2 are the campaign's framing: the two redshifts `_find_rho_equality` produces are
@@ -43,7 +45,7 @@ moved `a2c32f67` → **`4849552b`** on exactly one sample, on purpose (§6 note 
 | 02 | [Bracket the equality solve](02-bracket-the-equality-solve.md) | A | README §2 (b), (c), (e); audit §4.2 | Opus | ⚠️ | *"Bracket the equality solve and make its guard reachable"* (SHA not embedded, per the campaign convention) | [`logs/02-bracket-the-equality-solve.md`](logs/02-bracket-the-equality-solve.md) |
 | 03 | [What the equality redshifts feed](03-equality-redshift-consumers.md) | B | README §2 (f); §7 D2 | Opus | ⚠️ | *"Write down what the equality redshifts actually feed"* (SHA not embedded, per the campaign convention) | [`logs/03-equality-redshift-consumers.md`](logs/03-equality-redshift-consumers.md) |
 | 04 | [Relocate the crossing probe](04-relocate-the-crossing-probe.md) | B | README §2 (g) | Sonnet | ✅ | *"Relocate the crossing probe to test machinery"* (SHA not embedded, per the campaign convention) | [`logs/04-relocate-the-crossing-probe.md`](logs/04-relocate-the-crossing-probe.md) |
-| 05 | [Hoist the range logic](05-hoist-the-range-logic.md) | C | README §2 (h); §7 D4 | Opus | ⬜ | | |
+| 05 | [Hoist the range logic](05-hoist-the-range-logic.md) | C | README §2 (h); §7 D4 | Opus | ⚠️ | *"Hoist the range logic out of the spline wrappers' hot path"* (SHA not embedded, per the campaign convention) | [`logs/05-hoist-the-range-logic.md`](logs/05-hoist-the-range-logic.md) |
 | 06 | [Provenance and close-out](06-provenance-and-close-out.md) | C | README §2 (i); §0.4 | Opus | ⬜ | | |
 | 07 | [Report the representation in the inventory](07-inventory-representation.md) | **D — gated** | — | Sonnet | 🔒 | | |
 | 08 | [Refresh the agreement threshold](08-refresh-agreement-threshold.md) | **D — gated** | — | Sonnet | 🔒 | | |
@@ -77,7 +79,7 @@ decades apart and nothing about one of them predicts the other.
 | (e) | **DISCIPLINE** | Every behaviour-change assertion is shown **failing on `HEAD~1`**, with the output quoted in the log | 02 | ✅ |
 | (f) | **MEASUREMENT** | What the equality redshifts actually feed, written down: three closed-form sites scored against each other and against the corrected solve on three models — ~~`RadiationModel`~~ **the pure-radiation stand-in, `RadiationModel` exposing no $\Omega$s at all (log 03, D1)** — the chain from `feature_z` to the `BackgroundModel` lookup key, and `main.py:526`'s stale 4e-13 corrected | 03 | ✅ |
 | (g) | **HYGIENE** | `_temperature_crossing_log1pz` is test machinery in the test tree, with its docstring and its `xtol=1e-15, rtol=1e-15` carried across unchanged | 04 | ✅ |
-| (h) | **MEASUREMENT** | The four loop-invariant `_outward` bounds hoisted in all three classes, **bit-identical** returns and character-identical messages demonstrated, and the `T_photon` cost row closed at ≤ 2.5 µs or escalated to the user | 05 | ⬜ |
+| (h) | **MEASUREMENT** | The four loop-invariant `_outward` bounds hoisted in all three classes — **3,979 `float.hex()` values bit-identical**, 37 in-probe rejections and all six messages character-identical, and the whole of `measure_T_z_representation.py` above §6 byte-identical at both trees — and the `T_photon` cost row **closed at 2.4854 µs** (mean of five runs, range 2.418–2.546, ratio **0.9293**), so README §7 **D4 is not invoked**. The margin is 0.6 % and one run of five was above target (log 05 §3.2) | 05 | ⚠️ |
 | (l) | **FIX** | The model is authoritative for its own equality redshifts: `BaseCosmology` declares them, `LambdaCDM` answers with the closed form (exact for it), `LambdaCDM_GenericEOS` answers with the solve its constructor already runs, `main.py` computes nothing and has **no fallback** — QCD digest `a2c32f67` → `4849552b` on exactly one moved sample (index 1540, +7 ulp), `LambdaCDM` unmoved — **and the QCD break-point-only grid `303f9ce7` → `81c6e682`, which the prompt did not name and which carries the same one sample (log 09, D1)** | 09 | ✅ |
 | (i) | **PROVENANCE** | An entry for **all three** `root_scalar` sites in `LambdaCDM_GenericEOS.py` — value, method, what it sets, call count, choosing measurement **and its commit**, competing floor, cost, citation — in the shape `docs/TOLERANCE-PROVENANCE.md` will want | 06 | ⬜ |
 
@@ -87,6 +89,25 @@ decades apart and nothing about one of them predicts the other.
 
 Issues opened here must be added to [`docs/OPEN_ISSUES.md`](../../docs/OPEN_ISSUES.md) **in the
 same commit** (`CLAUDE.md`), with the count corrected.
+
+Opened by **prompt 05** (2026-09-16):
+
+- **[05-black-check-is-not-clean-at-the-repository-root]** *(prompt 05; measured; no prompt
+  assigned)* — README §5 rule 7 and `CLAUDE.md` both say the tree is clean under
+  `black --check`. It is not, and was not before this prompt:
+  `./venv/bin/python -m black --check .` reports **54 files would be reformatted**, every one under
+  `docs/` in a per-review or per-benchmark scratch directory —
+  `docs/gk-wkb-review-fable-2026-09-09/` (`common.py`, `t1_span.py`, `t2_solver.py`, `realbg.py`,
+  …), `docs/adaptive-levin-benchmark/levin_bench/`, and others. **Impact:** none on any production
+  file or on any file a campaign has touched — the three files in prompt 05's diff, including
+  `docs/qcd-background-audit/measure_T_z_representation.py`, are clean, and so is everything under
+  `ComputeTargets/`, `CosmologyModels/`, `LiouvilleGreen/`, `Datastore/` and `CosmologyConcepts/`.
+  What is wrong is the *statement*: a later agent running the rule as written sees 54 failures it
+  did not cause and either reformats them (swamping its own diff) or learns to ignore the rule.
+  **Next step:** either run `black` over `docs/` once in a prompt whose whole job that is, or
+  narrow README §5 rule 7 and `CLAUDE.md` to the packages the convention actually governs. A
+  decision for the user; prompt 05 did neither, because reformatting 54 unrelated files is exactly
+  the scope creep README §5 rule 5 forbids.
 
 Opened by **prompt 09** (2026-09-16):
 
@@ -164,9 +185,9 @@ deleted from `docs/OPEN_ISSUES.md`.
 | Issue | Owning board | Assigned to | Why here |
 |---|---|---|---|
 | ~~`[08-temperature-crossing-solver-is-test-only]`~~ | qcd-background-audit | prompt **04** | **Closed by prompt 04, 2026-09-16** — moved to `CosmologyModels/tests/T_z_reference.temperature_crossing_log1pz`; resolved entry on the `qcd-background-audit` board's §4, row deleted from `docs/OPEN_ISSUES.md` |
-| `[07-t-photon-range-logic-recomputes-its-bounds]` | qcd-background-audit | prompt **05** | Out of scope for that campaign's prompt 06, whose prompt did not cover prompt 05's range logic. Numerically null; 0.056 µs × 2 of a ~2.5 µs call |
-| `[06-t-photon-call-cost-needs-a-quiet-machine]` | qcd-background-audit | prompt **05** | Its own next step **is** the hoist above. Confirmed miss at 2.596 µs against a 2.5 µs target; predicted landing ~2.49 µs. If it does not clear, README §7 **D4** puts the row to the user |
-| `[09-audit-script-section-5-prose-counts-the-wrong-set]` | qcd-background-audit | prompt **05** | Needs `docs/qcd-background-audit/` in scope; prompt 05 re-runs `measure_T_z_representation.py` for its §6 cost row and so has it |
+| ~~`[07-t-photon-range-logic-recomputes-its-bounds]`~~ | qcd-background-audit | prompt **05** | **Closed by prompt 05, 2026-09-16** — hoisted in all three classes, four bounds each, bit-identical returns and character-identical messages demonstrated; resolved entry on the `qcd-background-audit` board's §4, row deleted from `docs/OPEN_ISSUES.md` |
+| ~~`[06-t-photon-call-cost-needs-a-quiet-machine]`~~ | qcd-background-audit | prompt **05** | **Closed by prompt 05, 2026-09-16** — **2.4854 µs** mean over five runs at `HEAD` (range 2.418–2.546) against 2.6744 at `HEAD~1`, ratio **0.9293**, controls within ±2 %: **inside README §6.2's ≤ 2.5 µs**. README §7 **D4 is not invoked.** Resolved on the `qcd-background-audit` board's §4, row deleted from the index |
+| ~~`[09-audit-script-section-5-prose-counts-the-wrong-set]`~~ | qcd-background-audit | prompt **05** | **Closed by prompt 05, 2026-09-16** — the sentence now intersects the knots with the declared set and prints **0 of 3**; §5's table and the whole of §2–§4 print byte-identically. Resolved on the `qcd-background-audit` board's §4, row deleted from the index |
 | `[03-qcd-inventory-does-not-report-the-representation]` | qcd-background-audit | prompt **07** (gated) | Orphaned by two prompts of that campaign on scope. Not this campaign's subject either, which is why it is behind README §7 **D3** |
 
 ### 3.2 Recorded, **not owned here**, and not scheduled (README §0.5)
@@ -459,3 +480,21 @@ Written by prompt 06. Empty until then.
     closed form (7 ulp). A prompt editing either site, or either model's properties, hears about it
     in those two tests and in `test_source_grid.py`'s
     `TestTheModelIsAuthoritativeForItsEqualityRedshifts`.
+19. **The range logic's four bounds are hoisted, and nothing guards the hoist.** Since prompt 05,
+    `ZSplineWrapper`, `GkWKBSplineWrapper` and `TemperatureRepresentation` each set
+    `_reject_above_log_z`, `_reject_below_log_z` (the `log(1+z)` comparison thresholds) and
+    `_recommended_max_z`, `_recommended_min_z` (the raw-`z` bounds their messages quote) in
+    `__init__`, and `__call__` reads them. They are correct only because `_min_z` / `_max_z` /
+    `_min_log_z` / `_max_log_z` are never mutated after construction. **A prompt that adds a setter
+    for any of those four must recompute all four hoisted values**, in all three classes; there is
+    no test that would catch it, only the comment at each `__init__` site. `_outward` itself is
+    untouched and is still the single definition of "outward" in the repository.
+20. **This machine reads ~3 % high on `measure_T_z_representation.py` §6.** Prompt 05's `HEAD~1`
+    mean of **2.6744 µs** is the *same code* that `[06-t-photon-call-cost-needs-a-quiet-machine]`
+    recorded at **2.596 µs** on the machine that took the confirmed miss. The **ratio** is
+    machine-independent and is what prompt 05's decision rests on alongside the absolute; a later
+    prompt comparing a µs figure from this board against one from the `qcd-background-audit` board
+    must either use ratios or re-take both ends itself. The three control rows of §6 — the
+    entropy-factor, segmented and accurate-root candidates, none of which goes through
+    `TemperatureRepresentation.__call__` — are the quietness test, and a run in which one of them
+    moves by more than the measurement's own spread is void.

@@ -1,6 +1,6 @@
 # Open issues — project-wide index
 
-**Last updated:** 2026-09-16 · **70 open** across ten campaigns.
+**Last updated:** 2026-09-16 · **68 open** across ten campaigns.
 
 This file exists so that an issue opened by one campaign is not lost when that campaign closes.
 It is an **index, not a record**: one line per issue, pointing at the campaign status board that
@@ -455,6 +455,12 @@ moved from `a2c32f67` on **exactly one** sample (index 1540, +7 ulp) — the val
 predicted — and `LambdaCDM(Planck2018)` is `60a3205a` at 1,778, unmoved. No regeneration follows
 (the user, 2026-09-16: this is the build phase).
 
+**Opened by prompt 05 (2026-09-16):**
+
+| Issue | Board | Hook |
+|---|---|---|
+| `[05-black-check-is-not-clean-at-the-repository-root]` | background-solver-robustness | `CLAUDE.md` and every campaign README say the tree is clean under `black --check`. It is not, and was not before prompt 05: `./venv/bin/python -m black --check .` reports **54 files would be reformatted**, all of them under `docs/` in per-review or per-benchmark scratch directories (`docs/gk-wkb-review-fable-2026-09-09/`, `docs/adaptive-levin-benchmark/levin_bench/`, …). No production file and no file any campaign has touched is among them — including `docs/qcd-background-audit/measure_T_z_representation.py`, which prompt 05 edited and which is clean. What is wrong is the statement: an agent running the rule as written sees 54 failures it did not cause, and either reformats them or learns to ignore the rule. **Next step:** either run `black` over `docs/` in a prompt whose whole job that is, or narrow the convention to the packages it actually governs — a decision for the user. |
+
 **Opened by prompt 09 (2026-09-16):**
 
 | Issue | Board | Hook |
@@ -476,13 +482,14 @@ predicted — and `LambdaCDM(Planck2018)` is `60a3205a` at 1,778, unmoved. No re
 **Adopted from `qcd-background-audit`** — each named "whichever prompt next has these files in
 scope" as its next step, and this is the first campaign that does
 ([`RECONCILIATION.md`](../prompts/background-solver-robustness/RECONCILIATION.md) §9.2). Each is
-still that board's issue and closes on **its** §4.
+still that board's issue and closes on **its** §4. Four of the five have: `[08-…]` by prompt 04,
+and `[07-t-photon-range-logic-recomputes-its-bounds]`,
+`[06-t-photon-call-cost-needs-a-quiet-machine]` and
+`[09-audit-script-section-5-prose-counts-the-wrong-set]` by prompt 05. **One remains**, and it is
+gated on that campaign's README §7 D3.
 
 | Issue | Board | Hook |
 |---|---|---|
-| `[07-t-photon-range-logic-recomputes-its-bounds]` | qcd-background-audit | `TemperatureRepresentation.__call__` and `ZSplineWrapper.__call__` evaluate `_outward(bound, ±1)` on every call, though both bounds are fixed at construction: 0.056 µs each, measured, of a ~2.5 µs call. Hoisting them into `__init__` is numerically null. Out of scope for prompt 06, whose prompt did not cover prompt 05's range logic. **Assigned (2026-09-16): `prompts/background-solver-robustness` prompt 05.** `GkWKBSplineWrapper` has the same recomputation; all three classes move together. |
-| `[06-t-photon-call-cost-needs-a-quiet-machine]` | qcd-background-audit | `T_photon` measured **2.53 µs/call** on a quiet machine against README §6.2's ≤ 2.5 µs, before the segment dispatch was inlined; after the inline, ratios on a loaded machine put the segmentation at ~1.00–1.05× the unsegmented cost and the whole excess over prompt 05 at the order-5 spline evaluation (1.09–1.13×). A scaled estimate was ~2.4 µs, and it was optimistic. **Measured, and it is a confirmed miss** (quiet machine, after prompt 06; restated by prompt 09): **2.596 µs mean, range 2.505–2.671 over five runs**, with the audit script's own controls back in their baseline band — about **3.8 % over** the target. All of the excess is the order-5 `BSpline.__call__`, and order 5 is not optional (a cubic needs ~25,000 nodes for the required p90). **Next step:** hoist the two loop-invariant `_outward` calls (`[07-...]`, a measured 0.11 µs, numerically null), which lands at ~2.49 µs; if that does not clear it, the row itself is what to put to the user. **Assigned (2026-09-16): `prompts/background-solver-robustness` prompt 05**, which takes the hoist its next step names and then closes or escalates the row (that campaign's README §7 D4). |
-| `[09-audit-script-section-5-prose-counts-the-wrong-set]` | qcd-background-audit | `docs/qcd-background-audit/measure_T_z_representation.py` §5 prints "Of the BREAK_POINT_ALL points, 2411 are knots of the T(z) spline itself" — it counts the tabulation's knots inside the production range, never the intersection with the declared set, which is now **0**. Harmless when the two coincided; a mis-statement since prompt 07. The table above it is correct (3 / 2). Prompt 07 §3 item 6 requires the script to run **unedited** and does not list it among the files it may touch. **Next step:** intersect `knots` with the declared points before printing, in whichever prompt next has `docs/qcd-background-audit/` in scope. **Assigned (2026-09-16): `prompts/background-solver-robustness` prompt 05**, which re-runs that script for its own §6 cost row. |
 | `[03-qcd-inventory-does-not-report-the-representation]` | qcd-background-audit | `sqla_QCDCosmology_factory.inventory()` and `tools/inventory_report.py` show QCD cosmology rows without the `T_z_representation` column prompt 03 added, so from prompt 04 rows differing only in their representation render as indistinguishable duplicates to the only tool that inspects a datastore. One line in `inventory()`; out of scope for prompt 03, whose §2 item 4 fixes the key and nothing else, and out of scope for prompt 09, which opens no datastore and may not touch a production file. **Assigned (2026-09-16): `prompts/background-solver-robustness` prompt 07** — the first campaign with these files in scope. Gated on that campaign's README §7 D3. |
 
 ---

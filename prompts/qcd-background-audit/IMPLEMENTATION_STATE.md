@@ -3,7 +3,16 @@
 **Campaign:** [`README.md`](README.md) · **Source document:**
 [`docs/qcd-background-audit-2026-09.md`](../../docs/qcd-background-audit-2026-09.md)
 **Baseline commit:** `e8f746d` (`qcd-background-audit`, clean; identical to `main`)
-**Last updated:** 2026-09-15 — **16 / 16: workstream E is complete and the campaign is closed again.**
+**Last updated:** 2026-09-16 — **16 / 16: workstream E is complete and the campaign is closed
+again.** Four of this board's §3 issues have since been closed *by another campaign*:
+`prompts/background-solver-robustness` adopted them under its `RECONCILIATION.md` §9.2, because
+each named "whichever prompt next has these files in scope" as its next step. Its prompt 04 closed
+`[08-temperature-crossing-solver-is-test-only]`, and its prompt 05 closed
+`[07-t-photon-range-logic-recomputes-its-bounds]`,
+`[06-t-photon-call-cost-needs-a-quiet-machine]` — **README §6.2's ≤ 2.5 µs `T_photon` row now
+holds, at 2.4854 µs** — and `[09-audit-script-section-5-prose-counts-the-wrong-set]`. All four are
+in §4 below; the measurements are in that campaign's logs and the entries say so. Nothing in this
+campaign's own work was re-opened.
 
 > **The campaign reopened after it closed.** Prompt 12 measured a defect it was forbidden to act on
 > — `BackgroundModel` splined `d_lnH_dz` over a padded refinement of the source grid that was
@@ -1325,79 +1334,6 @@ Opened by this campaign's planning, 2026-09-13:
   not have to re-derive it. **Next step:** none proposed; re-measure if the equation of state or
   the response grid changes.
 
-- **[06-t-photon-call-cost-needs-a-quiet-machine]** *(prompt 06, 2026-09-14)* — README §6.2 and
-  prompt 06 §4 set `T_photon` at **≤ 2.5 µs/call** and make a regression a stop (README §2 (c)).
-  Measured on a **quiet** machine before the dispatch was inlined: prompt 05's shape 2.21 µs,
-  unsegmented 3,000 / `k=5` 2.40 µs, segmented 3,000 / `k=5` **2.53 µs** — a ~1 % miss. The
-  dispatch was then moved in line into `TemperatureRepresentation.__call__`, which on a **loaded**
-  machine (load average 11–15, every candidate reading ~20 % high) takes the shipped-to-unsegmented
-  ratio from ~1.05 to **1.00–1.05** — i.e. the segmentation is now free — leaving the
-  shipped-to-prompt-05 ratio at **1.09–1.13**, which is the order-5 spline evaluation and nothing
-  else. Order 5 is not optional: a cubic needs ~25,000 nodes to reach the required p90. Scaling the
-  quiet-machine 2.21 µs by the measured 1.09 gives ~2.4 µs, inside the target, but **that is an
-  inference and not a measurement**. **Impact:** one row of prompt 06 §4 is unresolved; nothing
-  downstream is affected, since `T_photon` costs ~2.5 µs inside a ~10 µs `Hubble` call.
-  **Measured, and it is a confirmed miss** (2026-09-14, after prompt 06 committed; re-stated by
-  prompt 09). On a quiet machine the shipped representation reads **2.596 µs mean, range
-  2.505–2.671 over five runs**, with the audit script's own internal controls back inside their
-  baseline band — **about 3.8 % above README §6.2's ≤ 2.5 µs**. Prompt 09's single run of
-  `measure_T_z_representation.py` at load average ~5 reads 2.596 µs with its three controls +0.9 %
-  to +4.1 % of their base values, corroborating it. This entry's original "next step" — take the
-  measurement on a quiet machine — is therefore **discharged**; the scaled ~2.4 µs inference in the
-  paragraph above is superseded by the direct figure and was optimistic. The 2.53 µs in log 06
-  deviation 5 is the *pre-inline* code and does not contradict this: the inline moved the segment
-  dispatch, not the spline evaluation. **What remains is the miss itself**, whose whole content is
-  the order-5 `BSpline.__call__`, and order 5 is not optional (a cubic needs ~25,000 nodes for
-  README §6.1's p90, and at 3,000/5 the representation reaches 6.807e-11 / 3.237e-15 / 1.765e-16).
-  **Next step:** hoist the two loop-invariant `_outward` calls
-  (`[07-t-photon-range-logic-recomputes-its-bounds]`, a measured 0.11 µs, numerically null) and
-  re-measure — that lands at ~2.49 µs, inside the target. If it does not clear it, the row itself
-  is what to put to the user, since the accuracy it buys is not negotiable and `T_photon` is
-  ~2.6 µs inside a ~10 µs `Hubble` call.
-
-  **Assigned (2026-09-16): `prompts/background-solver-robustness` prompt 05.** That prompt takes
-  the hoist this entry's next step names, across all three classes, and then applies a stated
-  decision rule: at ≤ 2.5 µs mean over five runs on a quiet machine the row **closes**; above it
-  the row itself goes to the user as that campaign's README §7 **D4**, with the two honest
-  options being that the target was set ~4 % too tight or that the cost is accepted. The prompt
-  explicitly forbids looking for a third.
-
-- **[07-t-photon-range-logic-recomputes-its-bounds]** *(prompt 06, 2026-09-14)* —
-  `TemperatureRepresentation.__call__` (`LambdaCDM_GenericEOS.py:302`) evaluates
-  `_outward(self._max_log_z, +1)` and `_outward(self._min_log_z, -1)` on **every call**. Both are
-  loop-invariant: the bounds are set in `__init__` and never mutated. Measured at **0.056 µs each**
-  on the quiet machine, i.e. ~0.11 µs of a ~2.5 µs call, and hoisting them into `__init__` is
-  numerically null (the same two floats, compared the same way). `ZSplineWrapper.__call__`
-  (`ComputeTargets/spline_wrappers.py:64`) has the same shape and is on many more hot paths.
-  **Impact:** ~4 % of every `T_photon` call and of every wrapped spline evaluation in the tree.
-  Not done in prompt 06 because the range logic is prompt 05's code and outside what prompt 06 was
-  asked to change (README §5 rule 5). **Next step:** hoist both, in whichever prompt next has
-  reason to touch that method; re-measure `[06-...]` afterwards.
-
-  **Assigned (2026-09-16): `prompts/background-solver-robustness` prompt 05**, which has that
-  method in scope for `[06-...]`. Note that the hoist is **four** values per class, not two —
-  the comparisons use the log bounds and the messages use the raw bounds — and that
-  `GkWKBSplineWrapper` has the same shape, so all three classes move together. Its acceptance is
-  bit-identical returns and character-identical messages, demonstrated rather than argued.
-
-- **[09-audit-script-section-5-prose-counts-the-wrong-set]** *(prompt 07, 2026-09-14)* —
-  `docs/qcd-background-audit/measure_T_z_representation.py:401-405` prints, beneath its §5 table,
-  "Of the BREAK_POINT_ALL points, {n} are knots of the T(z) spline itself". It never computes that
-  intersection: `n` is `len(knots[(knots > u_min) & (knots < u_max)])`, the tabulation's interior
-  knots inside the production range, which is **2,411** and has nothing to do with the declared set
-  any more. The table above it is correct — `all 3 points in range`, `discontinuity 2 points in
-  range` — so the script does reproduce prompt 07's result; only the sentence is wrong. It was true
-  while the two sets coincided, which is the whole history of this script until this commit.
-  **Impact:** a reader running the campaign's own reproduction is told that 2,411 of 3 points are
-  knots. **Next step:** intersect `knots` with the declared points before printing, and reword.
-  Not done in prompt 07: its §3 item 6 requires the script to run **unedited**, and the script is
-  not among the files that prompt may touch.
-
-  **Assigned (2026-09-16): `prompts/background-solver-robustness` prompt 05**, which re-runs
-  `measure_T_z_representation.py` for its own §6 cost row and therefore has
-  `docs/qcd-background-audit/` in scope. It corrects the sentence only; §2–§4 and the §5 table
-  above it must print unchanged, which is one of that prompt's acceptance rows.
-
 Inherited, and **assigned to this campaign** (each is owned by the board named, which holds its
 measurements and its history; the closure is recorded there):
 
@@ -1419,6 +1355,91 @@ Re-measured but **not owned** here (they stay where they are; a prompt that move
 ---
 
 ## 4. Resolved issues
+
+- **[07-t-photon-range-logic-recomputes-its-bounds]** *(prompt 06, 2026-09-14; **assigned
+  2026-09-16 and closed by `prompts/background-solver-robustness` prompt 05**, 2026-09-16)* —
+  `TemperatureRepresentation.__call__`, `ZSplineWrapper.__call__` and
+  `GkWKBSplineWrapper.__call__` each evaluated `_outward(bound, ±1)` on **every call**, twice for
+  the comparisons and twice more inside the two f-strings, although all four bounds are fixed at
+  construction. Prompt 05 hoisted **four** values per class — `_reject_above_log_z` and
+  `_reject_below_log_z` (the `log(1+z)` thresholds the comparisons use) and `_recommended_max_z`
+  and `_recommended_min_z` (the raw-`z` bounds the messages quote) — into each `__init__`, with a
+  comment at each site saying they are loop invariants of a hot path. `_outward` itself,
+  `SPLINE_BOUND_SLACK`, the `type(self).__name__` prefix `f023eb8` settled, the message text, the
+  segment dispatch and the spline order and node count are untouched.
+
+  **Demonstrated numerically null, not argued.** Eight wrapper constructions spanning the three
+  classes — four `ZSplineWrapper` geometries including the negative `min_z` that is
+  `test_spline_wrappers.py`'s discriminating case, two `GkWKBSplineWrapper`, and
+  `TemperatureRepresentation` on the production `QCD_Cosmology` and on the pure-radiation stand-in
+  — probed over the full tabulated range of each plus both slack bands and points outside them,
+  through both entry points: **3,979 returned values bit-identical by `float.hex()`**, 37 in-probe
+  rejections identical in position, and all **six** `RuntimeError` messages character-identical by
+  diff. Independently, the whole of `measure_T_z_representation.py`'s output above §6 — §0's
+  accuracy table, §1, §2, §3, §4's $H(z)$ and $\int\mathrm{d}z/H$ figures and §5 — is
+  **byte-identical across all ten timing runs at both trees**. The cost it buys is the row below.
+  Full figures in that campaign's [log 05](../background-solver-robustness/logs/05-hoist-the-range-logic.md).
+
+- **[06-t-photon-call-cost-needs-a-quiet-machine]** *(prompt 06, 2026-09-14; **assigned
+  2026-09-16 and closed by `prompts/background-solver-robustness` prompt 05**, 2026-09-16)* —
+  README §6.2 and prompt 06 §4 set `T_photon` at **≤ 2.5 µs/call**, and the row was a
+  **confirmed miss at 2.596 µs** (mean, range 2.505–2.671 over five runs on a quiet machine after
+  prompt 06, restated by prompt 09) — about 3.8 % over, with the whole of the excess in the order-5
+  `BSpline.__call__` and order 5 not optional. This entry's own next step was to hoist the two
+  loop-invariant `_outward` calls of `[07-…]` and re-measure, with a predicted landing at ~2.49 µs.
+
+  **Measured after the hoist, and it clears.** Same instrument
+  (`docs/qcd-background-audit/measure_T_z_representation.py` §6, the 200-point probe set, best of
+  3, the *same file* at both trees), five runs at each tree alternating, on a settled machine
+  (load average 2.83–3.88, 10 cores, no orphaned busy shells):
+
+  | Row | pre-hoist mean | range | post-hoist mean | range | ratio |
+  |---|---|---|---|---|---|
+  | **shipped spline** (`T_photon`) | **2.6744** | 2.532–2.856 | **2.4854** | 2.418–2.546 | **0.9293** |
+  | entropy factor, 2000 pts *(control)* | 2.1716 | 2.081–2.263 | 2.1608 | 2.110–2.206 | 0.9950 |
+  | segmented entropy factor *(control)* | 2.3412 | 2.233–2.474 | 2.2960 | 2.226–2.340 | 0.9807 |
+  | accurate root solve *(control)* | 8.5056 | 8.139–8.860 | 8.5332 | 8.404–8.629 | 1.0032 |
+
+  (µs/call.) The three controls — none of which goes through `TemperatureRepresentation.__call__`
+  — move by −0.50 %, −1.93 % and +0.32 %, well inside per-tree spreads of 4–10 %, so the run
+  stands by its own quietness test. A first ten-run pass at load average 4.5–5.3 had the
+  entropy-factor control moving +2.0 % and **is void**; no figure from it is used.
+
+  **$\bar t = 2.4854$ µs ≤ 2.5 µs, so this row closes**, and
+  `prompts/background-solver-robustness` README §7 **D4 is not invoked** — the row does not go to
+  the user. Two caveats, recorded because the margin is small and the next person to measure should
+  not be surprised: the margin is **0.6 %**, and one of the five post-hoist runs (2.546) is above
+  target on its own; and this machine reads **+3.0 % high** on this instrument (its pre-hoist
+  2.6744 is the same code as this entry's 2.596), so the ratio 0.9293 is the more portable figure.
+  The saving, **0.189 µs**, is 1.7× the 0.11 µs `[07-…]` costed, because what was removed is two
+  Python function calls rather than two arithmetic operations.
+
+- **[09-audit-script-section-5-prose-counts-the-wrong-set]** *(prompt 07, 2026-09-14; **assigned
+  2026-09-16 and closed by `prompts/background-solver-robustness` prompt 05**, 2026-09-16)* —
+  `docs/qcd-background-audit/measure_T_z_representation.py` §5 printed *"Of the BREAK_POINT_ALL
+  points, 2411 are knots of the T(z) spline itself"*, having computed the tabulation's interior
+  knots inside the production range instead of the intersection with the declared set. Prompt 05,
+  which re-ran the script for its own §6 cost row and so had the file in scope, replaced
+  `knots[(knots > u_nodes.min()) & (knots < u_nodes.max())]` with
+  `np.intersect1d(all_points, knots)`, `all_points` being
+  `integration_break_points(z_lo, z_hi, kind=BREAK_POINT_ALL)` — the declared set the sentence is
+  about. It now prints
+
+  ```
+     0 of those 3 BREAK_POINT_ALL points are also knots of the T(z)
+     tabulation. A representation that forces its own interpolation lattice into the
+     break-point set contributes knots here, which are an artefact of how T(z) is
+     approximated and not a feature of the cosmology; a representation that does not,
+     contributes none, leaving only the genuine crossings of section 2.
+  ```
+
+  which is **0**, as prompt 07 made it, and reads correctly at 0 as well as at a positive count.
+  The rewritten sentence also drops the description of the tabulation as "a uniform lattice of an
+  auxiliary 500-point interpolant", which has been wrong since prompts 05 and 06 made it a
+  segmented entropy factor at 3,000 nodes of order 5; it quotes no node count at all, so it cannot
+  go stale the same way (that campaign's log 05, deviation D2). **§5's table above it and the whole
+  of §0–§4 print byte-identically** to the unedited script — verified by diffing the two scripts'
+  full output, where the only difference is these five lines against the four they replace.
 
 - **[08-temperature-crossing-solver-is-test-only]** *(prompt 07, 2026-09-14; **assigned
   2026-09-16 and closed by `prompts/background-solver-robustness` prompt 04**, 2026-09-16)* —
