@@ -1,6 +1,6 @@
 # Open issues — project-wide index
 
-**Last updated:** 2026-09-16 · **68 open** across nine campaigns.
+**Last updated:** 2026-09-16 · **68 open** across ten campaigns.
 
 This file exists so that an issue opened by one campaign is not lost when that campaign closes.
 It is an **index, not a record**: one line per issue, pointing at the campaign status board that
@@ -20,7 +20,8 @@ the two disagree, the board is right.
 [`qsi-phase-groups`](../prompts/qsi-phase-groups/IMPLEMENTATION_STATE.md) ·
 [`phase-representation`](../prompts/phase-representation/IMPLEMENTATION_STATE.md) ·
 [`qcd-background-audit`](../prompts/qcd-background-audit/IMPLEMENTATION_STATE.md) ·
-[`tolerance-convergence`](../prompts/tolerance-convergence/IMPLEMENTATION_STATE.md)
+[`tolerance-convergence`](../prompts/tolerance-convergence/IMPLEMENTATION_STATE.md) ·
+[`background-solver-robustness`](../prompts/background-solver-robustness/IMPLEMENTATION_STATE.md)
 
 ---
 
@@ -378,6 +379,12 @@ user's framing with nothing built towards it:
 | `[14-archival-read-stops-at-the-pre-gktk-value-columns]` | qcd-background-audit | Prompt 14's read path makes a **pre-prompt-14** store readable — the missing grid-identity columns are caught, the query re-issued without them, the row reported as an unknown generation. It does **not** make a **pre-`GkTk-remedial` 03/04** store readable: that refusal, on `BackgroundModelValue.tau_lo_Mpc`, is unconditional on both paths. Measured on the only datastore in the tree, which is exactly that old: the prompt-14 fallback fires and finds the row, then the `tau_lo_Mpc` message stops it. The two guards differ in kind — a grid identity is metadata never *recorded*, `tau_lo_Mpc` a value never *computed* — so softening the second means fabricating background values. **Next step:** if the oldest stores must stay archival, it needs a reader that stops at `BackgroundModel` and never asks for the value rows. A design, not a patch; nobody has asked for it. |
 | `[14-no-archive-of-grid-construction-algorithms]` | qcd-background-audit | A datastore records *which* construction built its grid, but the **code** of a superseded construction lives only in git history, so a run written under version 1 cannot be re-derived once version 2 has replaced `build_z_sample` — which prompt 15 will do. Harmless today (there is one construction); it bites the first time someone wants to reproduce, rather than merely re-read, an archived run. Prompt 14 built nothing beyond the version integer that would be its key, deliberately: an archive means every retired constructor kept alive and tested forever. **Next step:** none proposed — the decision is the user's, and the first thing to settle is whether a retired construction must keep *running* or only be *readable*. |
 
+**Narrowed by `background-solver-robustness` prompt 07 (2026-09-16):**
+
+| Issue | Board | Hook |
+|---|---|---|
+| `[03-qcd-inventory-does-not-report-the-representation]` | qcd-background-audit | Originally both `sqla_QCDCosmology_factory.inventory()` and (from prompt 14) `sqla_BackgroundModelFactory.inventory()` omitted their tables' identity columns. **The `QCD_Cosmology` half is resolved** — `background-solver-robustness` prompt 07 added `T_z_representation` to the former, demonstrated against two rows differing only in it. **The `BackgroundModel` half is not**: prompt 07's files-may-touch list did not include `BackgroundModel.py`, and its own stop condition treats a second reporting site with the same gap as a new issue to record, not fix. `sqla_BackgroundModelFactory.inventory()` still says nothing about `source_grid_digest` or `source_grid_construction`. **Next step:** add both columns to its per-bucket report, in whichever prompt next has `Datastore/SQL/ObjectFactories/BackgroundModel.py` in scope. Not assigned. |
+
 **Opened by prompt 13**, which closed `[12-background-derivative-fit-grid-rings-at-a-step]`:
 
 | Issue | Board | Hook |
@@ -391,13 +398,126 @@ waits on a prompt that has the right files in scope; the board holds the measure
 | Issue | Board | Hook |
 |---|---|---|
 | `[00-eos-branch-joins-do-not-match]` | qcd-background-audit | `QCD_EOS`'s branch joins at $10^{16}$, 0.12 and $10^{-5}$ GeV jump by +1.395e-02, −3.744e-04 and −2.284e-03 in $g_s$, forcing steps in $T(z)$; the join at 0.002 GeV matches to 1.751e-11, and that asymmetry is the evidence the other three are a transcription defect. Origin of the 4.4e-04 jump in $H(z)$ at $z=4.24\times10^7$ that `GkTk-remedial` log 02 measured without attribution. **Upstream data fixture; pinned in a test by prompt 01 (2026-09-14), which confirmed every figure here to the digits quoted; not repaired.** The question for its authors is that campaign's README §7 D6. |
-| `[03-qcd-inventory-does-not-report-the-representation]` | qcd-background-audit | `sqla_QCDCosmology_factory.inventory()` and `tools/inventory_report.py` show QCD cosmology rows without the `T_z_representation` column prompt 03 added, so from prompt 04 rows differing only in their representation render as indistinguishable duplicates to the only tool that inspects a datastore. One line in `inventory()`; out of scope for prompt 03, whose §2 item 4 fixes the key and nothing else, and out of scope for prompt 09, which opens no datastore and may not touch a production file. |
 | `[04-unsplit-tk-run-now-meets-the-criterion]` | qcd-background-audit | `test_split_converges_where_unsplit_does_not` asserted that an unsplit $T_k$ numeric run *fails* the 3.4e-08 criterion at $k=4.972\times10^7$/Mpc. False since prompt 05: unsplit drift 1.0213e-06 → **2.2767e-08** (45× better) while the split run barely moved, so most of what the split rescued was the old representation's interpolation noise, not the jump in $H(z)$. First measured evidence that `BREAK_POINT_KIND = BREAK_POINT_ALL` may no longer be load-bearing — README §2 (f), §7 **D5**, and `BREAK_POINT_KIND` is in a datastore lookup key. One wavenumber of fifty; **not decided by prompt 05**. **Prompt 08 took the column across all fifty** (2026-09-14): unsplit, QCD $T_k$ is above the criterion at **19 of 50** wavenumbers, worst **9.61e-06** at $k=4.223\times10^7$ — this entry's own $k$ reads 2.91e-08 and passes, but it is not representative, so splitting at the **jumps** is still load-bearing and only the `ALL`-vs-`DISCONTINUITY` distinction is vestigial (7.08e-09 against 8.85e-09, zero offenders either way). **Narrowed, not closed:** the assertion in the tree is still pinned to a $k$ at which its original statement is false. **Next step:** re-point `test_split_converges_where_unsplit_does_not` at $k=4.223\times10^7$, where unsplit is 9.61e-06 against a split 5.60e-10; out of bounds for prompt 08. |
 | `[08-gk-declared-split-buys-nothing-measurably]` | qcd-background-audit | The $G_k$ numeric sector splits at the declared jumps; prompt 08 measured what that buys on QCD — worst reference-convergence drift **3.67e-09** split against **3.52e-09** unsplit over 50 wavenumbers, zero above the criterion either way, 13,343 against 13,320 evaluations per object. Within the noise of the measure it buys nothing, unlike $T_k$ where suppressing the split puts 19 of 50 above the criterion. No action proposed: it costs 0.17 %, it is the mechanism $T_k$ needs, and `BREAK_POINT_KIND` is in a lookup key. Recorded so a later reader weighing README §7 D5 need not re-derive it. |
-| `[06-t-photon-call-cost-needs-a-quiet-machine]` | qcd-background-audit | `T_photon` measured **2.53 µs/call** on a quiet machine against README §6.2's ≤ 2.5 µs, before the segment dispatch was inlined; after the inline, ratios on a loaded machine put the segmentation at ~1.00–1.05× the unsegmented cost and the whole excess over prompt 05 at the order-5 spline evaluation (1.09–1.13×). A scaled estimate was ~2.4 µs, and it was optimistic. **Measured, and it is a confirmed miss** (quiet machine, after prompt 06; restated by prompt 09): **2.596 µs mean, range 2.505–2.671 over five runs**, with the audit script's own controls back in their baseline band — about **3.8 % over** the target. All of the excess is the order-5 `BSpline.__call__`, and order 5 is not optional (a cubic needs ~25,000 nodes for the required p90). **Next step:** hoist the two loop-invariant `_outward` calls (`[07-...]`, a measured 0.11 µs, numerically null), which lands at ~2.49 µs; if that does not clear it, the row itself is what to put to the user. |
-| `[07-t-photon-range-logic-recomputes-its-bounds]` | qcd-background-audit | `TemperatureRepresentation.__call__` and `ZSplineWrapper.__call__` evaluate `_outward(bound, ±1)` on every call, though both bounds are fixed at construction: 0.056 µs each, measured, of a ~2.5 µs call. Hoisting them into `__init__` is numerically null. Out of scope for prompt 06, whose prompt did not cover prompt 05's range logic. |
-| `[08-temperature-crossing-solver-is-test-only]` | qcd-background-audit | `LambdaCDM_GenericEOS._temperature_crossing_log1pz` has no production caller since prompt 07 took `integration_break_points` onto the bisected `_break_point_crossings_log1pz`. It is kept as the probe `test_hubble_jumps_at_the_declared_crossings_and_not_at_the_kink` uses and as the documented illustration of the trap README §2 (b) is about, with a docstring that says both — but a private method on a production class whose only callers are tests is a trap for a later reader. **Next step:** move it into `CosmologyModels/tests/T_z_reference.py`, or delete it and have that one test bisect, for whichever prompt next has both files in scope. |
-| `[09-audit-script-section-5-prose-counts-the-wrong-set]` | qcd-background-audit | `docs/qcd-background-audit/measure_T_z_representation.py` §5 prints "Of the BREAK_POINT_ALL points, 2411 are knots of the T(z) spline itself" — it counts the tabulation's knots inside the production range, never the intersection with the declared set, which is now **0**. Harmless when the two coincided; a mis-statement since prompt 07. The table above it is correct (3 / 2). Prompt 07 §3 item 6 requires the script to run **unedited** and does not list it among the files it may touch. **Next step:** intersect `knots` with the declared points before printing, in whichever prompt next has `docs/qcd-background-audit/` in scope. |
+
+---
+
+### 1.8 The background solver robustness campaign
+
+Planned as [`prompts/background-solver-robustness/`](../prompts/background-solver-robustness/README.md)
+(2026-09-16 at `f023eb8`; grown to **nine prompts in five workstreams** when the user decided
+README §7 D2 — **and closed on 2026-09-16 with all seven authorised prompts landed**, 01–06 and 09;
+workstream D, prompts 07 and 08, was **authorised by the user on 2026-09-16, after that
+close-out, and has since landed in full — all nine prompts are now complete**). It implements
+[`AUDIT.md`](../prompts/background-solver-robustness/AUDIT.md), which measured that
+`LambdaCDM_GenericEOS._find_rho_equality` is an **unbracketed secant** at `xtol=1e-6, rtol=1e-4` —
+two orders looser than the file's other two solves, which `prompts/qcd-background-audit` tightened —
+that returns the right answer to **−4.00e-16** relative in one to three evaluations **because its
+caller hands it the closed-form root**, not because its tolerances are adequate; and whose failure
+mode (`ValueError` at −30 % of the guess, a `T(z)` bounds error from negative $z$ at −50 %) escapes
+its own `converged` guard entirely. **The campaign changes no computed quantity**: both results are
+printed with `:.4g` and discarded. What it buys is a solve correct by construction, a reachable
+guard, and provenance `docs/TOLERANCE-PROVENANCE.md` can state — which is why
+[`AUDIT.md`](../prompts/background-solver-robustness/AUDIT.md) §7 wants it to land **before**
+`prompts/tolerance-convergence` prompt 02 runs, and that campaign has not started.
+
+**Prompt 02 shipped that fix on 2026-09-16** and closed `[00-equality-solve-is-unbracketed-and-loose]`
+on that board's §4: a $\sqrt2$ geometric bracket in $1+z$, clamped to the $T(z)$ representation's
+own bounds at both ends and at the guess, then Brent at `xtol=1e-300, rtol=8.9e-16` — Brent's own
+$4\varepsilon$ floor, and **not** the campaign's original `rtol=1e-14`, which was measured to stop
+7 ulp from the independent reference because the residual is a cancellation between two densities
+of order $10^{112}$ whose sign change spans several floats (the user amended that campaign's
+README §7 **D1** on the measurement). The two matter–radiation roots moved **+3 and +1 ulp, onto**
+the reference; the two matter–$\Lambda$ roots are bit-identical; both printed banner lines are
+unchanged; `T_Z_REPRESENTATION_VERSION` stays 6.
+
+[`RECONCILIATION.md`](../prompts/background-solver-robustness/RECONCILIATION.md) scores the audit
+against the tree at `f023eb8`: **every figure reproduces to the digit**, and one conclusion does
+not. Audit §2.1's *"the blast radius of this solve is two banner lines"* is true of the **solve**
+and false of the **quantity** — `main.py:553-555` (`:549-551` before prompt 03) recomputes both
+equality redshifts from the same closed forms and forces them into the production source grid,
+whose content digest is a `BackgroundModel` lookup-key column, so on `QCD_Cosmology` they are
+production sample locations inside a datastore identity.
+
+**Prompt 03 wrote that down on 2026-09-16**, changing no production behaviour: one docstring
+sentence in `main.py` and one new test. It measured the **three closed-form sites identical bit for
+bit** on `QCD_Cosmology`, the pure-radiation stand-in and `LambdaCDM(Planck2018)`, on both pairs,
+despite `LambdaCDM.py` reaching `math.pow` where the other two get the builtin; the production
+source-grid digests are `a2c32f67` (QCD, 1,996 samples) and `60a3205a` (LambdaCDM, 1,778),
+**identical at `7fdc49b`, `921f41c` and prompt 03's commit**; and README §7 **D2** option (iii) is
+priced at a single measured number — substituting the solve's answer for the closed form in
+`feature_z` takes the QCD digest to `4849552b` on a 7-ulp move in one sample of 1,996, invalidating
+eight stored object types. The campaign recommended **(i)**; **the user decided (iii)** on
+2026-09-16, since regeneration is not a cost in the build phase and the closed form at that site is
+only accidentally right. That adds **prompt 09 and workstream E** to the campaign — nine prompts in
+five workstreams.
+
+**Prompt 09 shipped it on 2026-09-16 and closed the issue.** `BaseCosmology` now declares
+`z_matter_radiation_equality` and `z_matter_lambda_equality`; `LambdaCDM` answers with the closed
+form, which is exact for a model with no equation of state; `LambdaCDM_GenericEOS` answers with the
+bracketed solve its constructor already ran; `main.py` asks and computes nothing, with **no
+fallback**. The `QCD_Cosmology` production source-grid digest is **`4849552b`** at 1,996 samples,
+moved from `a2c32f67` on **exactly one** sample (index 1540, +7 ulp) — the value prompt 03
+predicted — and `LambdaCDM(Planck2018)` is `60a3205a` at 1,778, unmoved. No regeneration follows
+(the user, 2026-09-16: this is the build phase).
+
+**Prompt 06 closed the campaign on 2026-09-16.** All seven prompts authorised at that point
+landed (01–06 and 09). **The user then opened README §7 D3's gate on 2026-09-16**, so workstream D
+(07, 08) was authorised, and both prompts have since landed.
+[`PROVENANCE.md`](../prompts/background-solver-robustness/PROVENANCE.md) settles all three of the
+file's `root_scalar` sites in the shape `docs/TOLERANCE-PROVENANCE.md` will want, and
+`prompts/tolerance-convergence`'s board and README §3.2 now point at it instead of carrying an
+unowned bullet. **`AUDIT.md` §5's "fixing this changes no computed quantity in the pipeline" held
+for workstreams A–C and was deliberately superseded by workstream E**, which the user added after
+the audit was written: nothing moved through prompt 05 except the two matter–radiation equality
+redshifts by +3 and +1 ulp *onto* the independent reference (both printed with `:.4g`, both banner
+lines character-identical), and prompt 09 then moved the `QCD_Cosmology` source-grid digest on one
+sample of 1,996 on purpose.
+
+**Prompt 07 landed on 2026-09-16**, reporting `T_z_representation` in the QCD cosmology inventory
+(see §1.7 above) and moving `ComputeTargets` to 452. **Prompt 08 landed on 2026-09-16**, the last
+prompt on this board: it re-measured `test_wPerturbations.py`'s agreement figures (unchanged from
+prompt 01), rewrote the module comment to describe the segmented entropy-factor representation
+that replaced the 500-point $T(z)$ spline it used to describe, and tightened `AGREEMENT_RTOL` from
+`1.0e-8` to `1.0e-14`. **Nothing on this board remains open or gated.**
+`T_Z_REPRESENTATION_VERSION` is 6 at every commit; final suites `CosmologyModels` **39**,
+`ComputeTargets` **452**, both OK.
+
+**Opened by prompt 06 (2026-09-16):**
+
+| Issue | Board | Hook |
+|---|---|---|
+| `[06-node-solve-comment-quotes-a-superseded-node-count]` | background-solver-robustness | `CosmologyModels/GenericEOS/LambdaCDM_GenericEOS.py:627`, inside the comment that justifies `_solve_T_z`'s `xtol=1e-300, rtol=1e-14`, says the solve is "paid once per node at build time (~500 nodes, 8.3 us each -- a few ms total)". `DEFAULT_T_Z_SPLINE_SAMPLES` has been **3,000** since `qcd-background-audit` prompt 06, and the measured count is **3,176** calls per `QCD_Cosmology(max_z=1e12)` construction — about **6×** the quoted figure, and the "a few ms" arithmetic follows it. Harmless: the figure is an aside inside an argument about *uncorrelated node scatter*, which the node count does not affect, and the tolerance is right for the reason the rest of the comment gives. But it is a stale figure inside a tolerance justification, which is the class of thing `prompts/tolerance-convergence` exists to remove. **Next step:** two numbers, in whichever prompt next has that file in scope; `prompts/background-solver-robustness/PROVENANCE.md` §1 already carries the measured count. |
+
+**Opened by prompt 05 (2026-09-16):**
+
+| Issue | Board | Hook |
+|---|---|---|
+| `[05-black-check-is-not-clean-at-the-repository-root]` | background-solver-robustness | `CLAUDE.md` and every campaign README say the tree is clean under `black --check`. It is not, and was not before prompt 05: `./venv/bin/python -m black --check .` reports **54 files would be reformatted**, all of them under `docs/` in per-review or per-benchmark scratch directories (`docs/gk-wkb-review-fable-2026-09-09/`, `docs/adaptive-levin-benchmark/levin_bench/`, …). No production file and no file any campaign has touched is among them — including `docs/qcd-background-audit/measure_T_z_representation.py`, which prompt 05 edited and which is clean. What is wrong is the statement: an agent running the rule as written sees 54 failures it did not cause, and either reformats them or learns to ignore the rule. **Next step:** either run `black` over `docs/` in a prompt whose whole job that is, or narrow the convention to the packages it actually governs — a decision for the user. |
+
+**Opened by prompt 09 (2026-09-16):**
+
+| Issue | Board | Hook |
+|---|---|---|
+| `[09-retire-tag-test-docstring-cites-a-superseded-digest]` | background-solver-robustness | `ComputeTargets/tests/test_retire_samples_per_decade_tag.py:29-32`'s module docstring says `test_source_grid.py` pins the production grids to "1,996 samples / digest `a2c32f67` (QCD) and 1,778 / `60a3205a` (LambdaCDM)". Since prompt 09 the QCD digest is `4849552b`; the count and the `LambdaCDM` half are still right. Harmless — that file asserts only `SOURCE_GRID_CONSTRUCTION_VERSION` and `T_Z_REPRESENTATION_VERSION`, the digest appears in prose explaining why it need not assert the grid, and the suite is green at 449 — but it is a stale figure in a docstring arguing that a prompt moved no grid. The file is not in prompt 09's permitted list. **Next step:** one word, in whichever prompt next has that file in scope. |
+
+**Opened by prompt 02 (2026-09-16):**
+
+| Issue | Board | Hook |
+|---|---|---|
+| `[02-bracketed-reference-is-not-the-exact-root]` | background-solver-robustness | README §3.1 makes the bracketed `brentq` reference "the anchor every measurement is scored against", and on the one pair where an exact oracle exists the anchor is the less accurate of the two. `match_rho` for matter = $\Lambda$ is exactly $\rho_{m0}(1+z)^3-\rho_\Lambda$, so the root follows in closed form from the model's own floats: at 60 digits it is `0.303423032996407410561312801228`. The closed form and the solve give `0.30342303299640738` (**−0.506 ulp, the nearest double**); `bracketed_reference` gives `0.30342303299640749` (**+1.494 ulp, the second-nearest, on the wrong side**). So `LAMBDA_CLOSED_FORM_ULP = 2` measures the reference's own error and the "−2.0 ulp" both logs report for that pair is the anchor, not the solve. Harmless — every assertion passes and the shipped answer is the better of the two — but three more prompts score in ulp against this anchor. **Next step:** prompt 03 reads it before scoring the three closed-form sites; re-wording README §3.1 around an exact oracle is a planning question and the user's, since it would change what prompt 01's tests assert. |
+
+**Adopted from `qcd-background-audit`** — each named "whichever prompt next has these files in
+scope" as its next step, and this is the first campaign that does
+([`RECONCILIATION.md`](../prompts/background-solver-robustness/RECONCILIATION.md) §9.2). Each is
+still that board's issue and closes on **its** §4. **All five have**: `[08-…]` by prompt 04,
+`[07-t-photon-range-logic-recomputes-its-bounds]`,
+`[06-t-photon-call-cost-needs-a-quiet-machine]` and
+`[09-audit-script-section-5-prose-counts-the-wrong-set]` by prompt 05, and
+`[03-qcd-inventory-does-not-report-the-representation]`'s `QCD_Cosmology` half by prompt 07 —
+whose `BackgroundModel` half prompt 14 of that campaign widened it with stays open, narrowed, in
+§1.7 above, unassigned (prompt 07's files-may-touch list did not extend there).
 
 ---
 

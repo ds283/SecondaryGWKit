@@ -32,14 +32,24 @@ from Units import Mpc_units
 # (these tests do not touch the datastore); it only has to be a stable integer.
 TEST_EOS_TYPE_ID = 900001
 
-# The T(z) inversion inside LambdaCDM_GenericEOS is tabulated on a 500-point spline in
-# log(1+z) spanning [DEFAULT_MIN_TEMPERATURE_Z_REDSHIFT, max_z]. That spline, not the
-# physics, sets the floor on how exactly the GenericEOS model can reproduce the closed-form
-# LambdaCDM expressions: measured ~1.3e-9 relative with max_z = 1e4 and ~4e-7 with the
-# default max_z = 1e20. 1e-8 is therefore the tightest robust threshold at max_z = 1e4, and
-# is still seven orders of magnitude below the 0.69 relative discrepancy the A1 defect
-# produced at z = 0.
-AGREEMENT_RTOL = 1.0e-8
+# The T(z) inversion inside LambdaCDM_GenericEOS is no longer a 500-point spline in T: since
+# qcd-background-audit prompts 05 and 06 it is a segmented entropy-factor interpolant -- the
+# (1+z) ramp is closed form and only the entropy factor F is tabulated, on
+# DEFAULT_T_Z_SPLINE_SAMPLES = 3,000 nodes of DEFAULT_T_Z_SPLINE_ORDER = 5, segmented at the
+# equation of state's branch temperatures. On PureRadiationEOS, g_* = g_{S,*} is constant, so
+# F is identically constant, and an order-5 B-spline through 3,000 equal values reproduces a
+# constant to the double-precision floor rather than to any interpolation error: re-measured
+# (background-solver-robustness prompt 08, at 662bba5) on exactly the probe set
+# test_agrees_with_LambdaCDM compares, z in {0, 0.5, 1, 2, 10, 1e3}, the worst relative
+# departure from LambdaCDM.wPerturbations is 8.8818e-16 (4 ulp of 1.0) at max_z = 1e4 and
+# 6.6613e-16 (3 ulp) at max_z = 1e20 -- the same order of magnitude at both, which is what a
+# rounding floor looks like and what an interpolation error tied to max_z would not (the
+# figures this comment used to quote, ~1.3e-9 and ~4e-7, described a representation that no
+# longer exists). 1e-14 is therefore the floor of this *comparison*, not of the physics, with
+# about an order of magnitude of margin over the measured worst case, and it is still roughly
+# thirteen orders of magnitude below the 0.69 relative discrepancy the A1 defect produced at
+# z = 0.
+AGREEMENT_RTOL = 1.0e-14
 
 # redshift at which the T(z) spline is built for the "agreement" model
 AGREEMENT_MAX_Z = 1.0e4

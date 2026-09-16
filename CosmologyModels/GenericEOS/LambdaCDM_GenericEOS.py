@@ -304,6 +304,15 @@ class TemperatureRepresentation:
         self._min_log_z = log(1.0 + min_z)
         self._max_log_z = log(1.0 + max_z)
 
+        # Loop invariants of a hot path: the two thresholds __call__ compares against (in
+        # log(1+z)) and the two bounds its messages quote (raw z). `_outward` of a bound that is
+        # never mutated after construction, so hoisting is numerically null.
+        # [07-t-photon-range-logic-recomputes-its-bounds], prompts/background-solver-robustness 05.
+        self._reject_above_log_z = _outward(self._max_log_z, +1)
+        self._reject_below_log_z = _outward(self._min_log_z, -1)
+        self._recommended_max_z = _outward(self._max_z, -1)
+        self._recommended_min_z = _outward(self._min_z, +1)
+
     @property
     def segment_edges(self) -> tuple:
         """
@@ -321,9 +330,9 @@ class TemperatureRepresentation:
             raw_z = z
 
         # if some way out of bounds, reject
-        if log_z > _outward(self._max_log_z, +1):
+        if log_z > self._reject_above_log_z:
             raise RuntimeError(
-                f"{type(self).__name__}: evaluated {self._label} out of bounds @ z={raw_z:.5g} (max allowed z={self._max_z:.5g}, recommended limit is z <= {_outward(self._max_z, -1):.5g})"
+                f"{type(self).__name__}: evaluated {self._label} out of bounds @ z={raw_z:.5g} (max allowed z={self._max_z:.5g}, recommended limit is z <= {self._recommended_max_z:.5g})"
             )
 
         # otherwise, softly cushion the representation at the top end. The ramp is clamped with
@@ -334,9 +343,9 @@ class TemperatureRepresentation:
             raw_z = self._max_z
 
         # same at lower limit
-        if log_z < _outward(self._min_log_z, -1):
+        if log_z < self._reject_below_log_z:
             raise RuntimeError(
-                f"{type(self).__name__}: evaluated {self._label} out of bounds @ z={raw_z:.5g} (min allowed z={self._min_z:.5g}, recommended limit is z >= {_outward(self._min_z, +1):.5g})"
+                f"{type(self).__name__}: evaluated {self._label} out of bounds @ z={raw_z:.5g} (min allowed z={self._min_z:.5g}, recommended limit is z >= {self._recommended_min_z:.5g})"
             )
 
         if log_z < self._min_log_z:
@@ -497,11 +506,22 @@ class LambdaCDM_GenericEOS(BaseCosmology):
         gram_per_m3 = units.Gram / (units.Metre * units.Metre * units.Metre)
         rho_today_gram_m3 = rho_today / gram_per_m3
 
-        # solve for epochs of matter/radiation and matter/Lambda equality
-        matter_radiation_equality = self._find_rho_equality(
+        # Solve for epochs of matter/radiation and matter/Lambda equality. These used to be
+        # printed in the banner below and discarded; they are now what z_matter_radiation_equality
+        # and z_matter_lambda_equality return, and on a cosmology that declares break points they
+        # are production source-grid sample locations (main.py's cosmology_feature_redshifts).
+        # Nothing about the solve changes: same two calls, same closed-form initial guesses, same
+        # bracket and tolerances.
+        #
+        # The guesses stay closed forms deliberately. 1 + z_eq = Omega_m/Omega_r is only a *guess*
+        # here -- it is exact solely where g_* is flat at equality, which is the accident this
+        # method's own comment refuses to build on -- but it is a sound one, since z_eq cannot
+        # move by a large factor without wrecking the CMB, and the bracketing below makes a wrong
+        # guess harmless rather than fatal.
+        self._z_matter_radiation_equality = self._find_rho_equality(
             "matter", "radiation", init_z=self.omega_m / self.omega_r - 1.0
         )
-        matter_cc_equality = self._find_rho_equality(
+        self._z_matter_lambda_equality = self._find_rho_equality(
             "matter",
             "lambda",
             init_z=pow(self.omega_cc / self.omega_m, 1.0 / 3.0) - 1.0,
@@ -513,8 +533,10 @@ class LambdaCDM_GenericEOS(BaseCosmology):
         print(f"|  Omega_cc = {self.omega_cc:.4g}")
         print(f"|  Omega_r = {self.omega_r:.4g}")
         print(f"|  present-day energy density = {rho_today_gram_m3:.4g} g/m^3")
-        print(f"|  matter-radiation equality at z = {matter_radiation_equality:.4g}")
-        print(f"|  matter-Lambda equality at z = {matter_cc_equality:.4g}")
+        print(
+            f"|  matter-radiation equality at z = {self._z_matter_radiation_equality:.4g}"
+        )
+        print(f"|  matter-Lambda equality at z = {self._z_matter_lambda_equality:.4g}")
 
     @property
     def type_id(self) -> int:
@@ -532,6 +554,37 @@ class LambdaCDM_GenericEOS(BaseCosmology):
     @property
     def H0(self) -> float:
         return self._H0
+
+    @property
+    def z_matter_radiation_equality(self) -> float:
+        """
+        The equality redshift ``__init__`` located with :meth:`_find_rho_equality`, on this
+        model's *own* rho_r = RadiationConstant G(T(z)) T(z)^4.
+
+        This is the solve and not ``Omega_m/Omega_r - 1``. The two agree to 7 ulp on
+        ``QCD_Cosmology`` at production parameters, but only because all of that equation of
+        state's g_*(T) structure sits at z ~ 1e12, twelve orders above equality; that is a
+        property of where the QCD transition happens to fall and not of this class, which is
+        parametrized by an arbitrary equation of state. See
+        ``CosmologyModels.base.BaseCosmology.z_matter_radiation_equality``.
+
+        :return: the matter-radiation equality redshift
+        """
+        return self._z_matter_radiation_equality
+
+    @property
+    def z_matter_lambda_equality(self) -> float:
+        """
+        The matter-Lambda equality redshift, likewise from ``__init__``'s solve.
+
+        Here the closed form is exact on any equation of state -- rho_m/rho_Lambda has no
+        temperature dependence -- and the solve is measured to return the same double on both
+        production models. It is still the solve that answers, so that this class has one route
+        to both numbers rather than two.
+
+        :return: the matter-Lambda equality redshift
+        """
+        return self._z_matter_lambda_equality
 
     def T_photon(self, z: float) -> float:
         return self._T_z_spline(z)
@@ -729,10 +782,12 @@ class LambdaCDM_GenericEOS(BaseCosmology):
         factor at these redshifts, and :meth:`integration_break_points`, which declares them to
         every quadrature and every ODE in the tree. One definition is not a tidiness point. Until
         prompt 07 of ``prompts/qcd-background-audit/`` the two were computed by different methods
-        -- bisection here, a ``root_scalar`` bracket on ``T_photon(z) - T_break`` there -- and
-        they disagreed by ~1e-12 in ``u``, which is the same size as the padding that holds each
-        segment's nodes inside its own branch. Declaring a panel edge on the wrong side of a jump
-        by that margin is precisely the silent failure README §2 (b) exists to prevent.
+        -- bisection here, a ``root_scalar`` bracket on ``T_photon(z) - T_break`` in what is now
+        ``CosmologyModels.tests.T_z_reference.temperature_crossing_log1pz`` (moved out of this
+        class by ``prompts/background-solver-robustness/`` prompt 04) -- and they disagreed by
+        ~1e-12 in ``u``, which is the same size as the padding that holds each segment's nodes
+        inside its own branch. Declaring a panel edge on the wrong side of a jump by that margin
+        is precisely the silent failure README §2 (b) exists to prevent.
 
         Called from ``__init__`` *before* the temperature representation is built, because the
         representation needs the edges. It therefore cannot use ``T_photon``; it bisects
@@ -824,59 +879,6 @@ class LambdaCDM_GenericEOS(BaseCosmology):
                 break
 
         return log1p(0.5 * (lo + hi))
-
-    def _temperature_crossing_log1pz(
-        self, T: float, u_lo: float, u_hi: float
-    ) -> Optional[float]:
-        """
-        An *approximate* location for the point u = log(1+z), strictly inside (u_lo, u_hi), at
-        which T_photon(z) reaches the dimensionful temperature T; None if it does not cross inside
-        the range.
-
-        **Nothing in production calls this, and nothing may put it back on the break-point path.**
-        Until prompt 07 of prompts/qcd-background-audit/ it was how integration_break_points
-        located the equation-of-state crossings; that method now returns the bisected
-        _break_point_crossings_log1pz, which is where the crossings actually are. The reason is
-        README §2 (b): since prompt 06 the representation is segmented at exactly these
-        temperatures, so T_photon genuinely *jumps* there, and log T_photon(z) - log T need not
-        have a root at all. A bracketing solver applied to it reports converged and returns a
-        non-root whose offset depends on its tolerances -- measured at +1.126e-12 in u at
-        root_scalar's defaults, which is further from the jump than the 1e-12 by which each
-        segment's nodes are held inside their own branch. CosmologyModels/tests/
-        test_T_z_representation.py::test_a_segment_edge_bisected_and_one_root_found_disagree is
-        the standing demonstration.
-
-        It survives as a measurement probe: ComputeTargets/tests/test_numeric_break_points.py::
-        test_hubble_jumps_at_the_declared_crossings_and_not_at_the_kink uses it to find a
-        neighbourhood of a crossing, which is a use its ~1e-12 offset does not disturb, and it is
-        the documented illustration of why a bracket is the wrong tool here.
-
-        T_photon(z) is monotone in z, so the crossing is unique where it exists. It is solved for
-        in u, which is the campaign's integration variable, to xtol = rtol = 1e-15. The expm1(u)
-        inside q() is the lossy log(1+z) -> z direction (CLAUDE.md), but T_photon takes log(1+z)
-        again internally, so it costs ~1 ulp of u.
-        """
-        log_T = log(T)
-
-        def q(u: float) -> float:
-            return log(self.T_photon(expm1(u))) - log_T
-
-        q_lo = q(u_lo)
-        q_hi = q(u_hi)
-        if q_lo == 0.0 or q_hi == 0.0 or (q_lo > 0.0) == (q_hi > 0.0):
-            return None
-
-        root = root_scalar(q, bracket=(u_lo, u_hi), xtol=1e-15, rtol=1e-15)
-        if not root.converged:
-            raise RuntimeError(
-                f"LambdaCDM_GenericEOS._temperature_crossing_log1pz: root_scalar() did not converge "
-                f"for T = {T / self._units.GeV:.5g} GeV between u = {u_lo:.6g} and {u_hi:.6g}: "
-                f'"{root.flag}"'
-            )
-        u = float(root.root)
-        if not u_lo < u < u_hi:
-            return None
-        return u
 
     def integration_break_points(
         self, z_lo: float, z_hi: float, kind: str = BREAK_POINT_ALL
@@ -1000,21 +1002,148 @@ class LambdaCDM_GenericEOS(BaseCosmology):
         self, species_A: str, species_B: str, init_z: float
     ) -> float:
         """
-        Determine the redshift at which the energy density in species A equals the energy density in species B
-        :param species_A:
-        :param species_B:
-        :return:
+        Determine the redshift at which the energy density in species A equals the energy density
+        in species B.
+
+        ``init_z`` is a starting *guess*, not an answer: the bracket is expanded about it until
+        the residual changes sign, and Brent is run on that bracket. It used to be handed straight
+        to an unbracketed secant, which is why it mattered that the callers' guesses happen to be
+        the closed-form roots; see the comment at the solve.
+
+        :param species_A: a key of :meth:`_rho_fluid`
+        :param species_B: a key of :meth:`_rho_fluid`
+        :param init_z: a starting guess for the equality redshift
+        :return: the redshift at which the two densities are equal
         """
 
         def match_rho(z: float) -> float:
             rho = self._rho_fluid(z)
             return rho[species_A] - rho[species_B]
 
-        root = root_scalar(match_rho, x0=init_z, xtol=1e-6, rtol=1e-4)
+        # The bracket is expanded multiplicatively in 1+z, never additively in z. 1+z is positive
+        # throughout the tabulated range (z > -1), so a multiplicative step is scale-free: one
+        # policy serves both roots this method is called for -- matter/radiation at z ~ 3.4e3 and
+        # matter/Lambda at z ~ 0.30, four decades apart -- and it can never propose 1+z <= 0,
+        # which is how the secant this replaced reached negative z. It is also the same argument
+        # _build_T_z_spline makes above for applying its 5% buffer to 1+z rather than to z.
+        #
+        # sqrt(2) per step, capped at 140 steps: sqrt(2)**140 = 2**70 = 1.2e21, which carries 1+z
+        # from the representation's floor (0.76, at the default min_z = -0.2) past its ceiling at
+        # the default max_z = 1e20 in a single direction, so the cap can never bind before the
+        # clamp below does. In practice the loop runs once: the callers' analytic guesses are the
+        # roots to a few ulp on every production model, so the first expansion already straddles.
+        BRACKET_EXPANSION_FACTOR = sqrt(2.0)
+        BRACKET_EXPANSION_MAX_STEPS = 140
+
+        # The expansion is clamped to the tabulated range of T(z), which is the widest interval on
+        # which _rho_fluid can be evaluated at all. Clamping there and then failing to bracket is
+        # the intended behaviour, and it is what this change buys: the old solve walked past the
+        # floor to negative z and died inside _rho_fluid two frames below this method's own guard,
+        # reporting a temperature-spline bounds error to a caller whose actual mistake was a
+        # cosmology whose equality redshift is not in its own tabulated range.
+        z_floor = self._T_z_spline._min_z
+        z_ceil = self._T_z_spline._max_z
+
+        # The guess is clamped into that range before it is evaluated, not only the endpoints
+        # expanded from it. A caller can hand this method a guess that is itself outside the
+        # tabulated range -- __init__ does, on any cosmology whose max_z is below its own equality
+        # redshift -- and evaluating it would raise the same TemperatureRepresentation bounds
+        # error from inside _rho_fluid that this method exists to stop reporting. Clamped, the
+        # expansion below runs, fails to bracket, and says which pair it was looking for.
+        z_guess = min(max(init_z, z_floor), z_ceil)
+        one_plus_z_guess = 1.0 + z_guess
+
+        # The guess is evaluated first, and its residual is used only in the failure message.
+        # There is deliberately NO short-circuit returning it when the residual is small. That the
+        # guess is already the root to rounding is a property of this equation of state at this
+        # redshift (prompts/background-solver-robustness/AUDIT.md §2.3), not of the code, and
+        # writing it in would make permanent the very accident this change exists to remove.
+        f_guess = match_rho(z_guess)
+
+        scale = 1.0
+        bracket_lo = bracket_hi = z_guess
+        f_lo = f_hi = f_guess
+        bracketed = False
+
+        for _ in range(BRACKET_EXPANSION_MAX_STEPS):
+            scale *= BRACKET_EXPANSION_FACTOR
+
+            bracket_lo = max(one_plus_z_guess / scale - 1.0, z_floor)
+            bracket_hi = min(one_plus_z_guess * scale - 1.0, z_ceil)
+
+            f_lo = match_rho(bracket_lo)
+            f_hi = match_rho(bracket_hi)
+
+            # Compare signs rather than testing f_lo * f_hi <= 0, as _solve_T_z does at :568. The
+            # residual there is a difference of temperatures and is O(1); here it is a difference
+            # of energy densities, which reach ~1e183 at the top of the default tabulated range,
+            # and their product overflows to +inf -- a sign change that the product test would
+            # then silently fail to see.
+            if f_lo == 0.0 or f_hi == 0.0 or (f_lo < 0.0) != (f_hi < 0.0):
+                bracketed = True
+                break
+
+            # Both ends are against the tabulated range and the residual has not changed sign, so
+            # no further expansion is possible and there is no root to find.
+            if bracket_lo <= z_floor and bracket_hi >= z_ceil:
+                break
+
+        if not bracketed:
+            raise RuntimeError(
+                f"LambdaCDM_GenericEOS._find_rho_equality: could not bracket the redshift at "
+                f"which rho[{species_A}] = rho[{species_B}]. Expanding multiplicatively in 1+z "
+                f"about the initial guess z={init_z:.5g}, clamped to z={z_guess:.5g} "
+                f"(residual {f_guess:.5g}), reached "
+                f"z_lo={bracket_lo:.5g} (residual {f_lo:.5g}) and z_hi={bracket_hi:.5g} "
+                f"(residual {f_hi:.5g}), which have the same sign, so no root is enclosed. The "
+                f"search is clamped to the tabulated range of T(z), z in [{z_floor:.5g}, "
+                f"{z_ceil:.5g}]."
+            )
+
+        # rtol=8.9e-16 is Brent's own convergence floor of 4*eps = 8.881784e-16 -- scipy rejects
+        # anything smaller outright -- so it is the tightest relative tolerance root_scalar can
+        # resolve. xtol=1e-300 disables the absolute component deliberately, for the reason
+        # _solve_T_z gives at :574-582: this method serves two roots four decades apart, so any
+        # finite absolute tolerance in z is meaningless at z ~ 3.4e3 and is the only thing acting
+        # at z ~ 0.30. The xtol=1e-6, rtol=1e-4 this replaces did both at once, and neither bound
+        # the error nor predicted it.
+        #
+        # The floor, and not the rtol=1e-14 that _solve_T_z uses at :584. That was this campaign's
+        # recommendation (prompts/background-solver-robustness/ README §7 D1) until it was
+        # measured: the residual here is a cancellation between two densities of order 1e112,
+        # quantised at ~7e100 near the root, so the sign change is not localised to a single
+        # float. On QCD_Cosmology at matter/radiation equality the residual is exactly zero one
+        # ulp above the closed form, non-zero either side of it, and changes sign six to seven ulp
+        # higher -- the root is a band a few ulp wide, and where a solver stops inside it is set
+        # by rtol. rtol=1e-14 is 75 ulp of slack at z ~ 3.4e3 and Brent stopped 7 ulp away from an
+        # independent reference; at the floor it lands on it. The user took that decision on
+        # 2026-09-16 (README §7 D1; prompt 02 §2 of that campaign holds the measurement).
+        #
+        # Cost, measured rather than predicted: the four production calls go from 3, 1, 1, 1
+        # evaluations of match_rho to 23, 25, 21, 25 -- between +20 and +24 each, paid twice per
+        # model construction, each one spline evaluation. (AUDIT.md §3.1 predicted +6 to +9; that
+        # figure is for tightening the secant, and it does not survive bracketing, which buys the
+        # two bracket endpoints and Brent's bisection steps as well.)
+        #
+        # Why this is worth doing at all, which is the finding of AUDIT.md §2.3: until this change
+        # the solve was accurate because its caller handed it the closed-form root, not because
+        # its tolerances were adequate. g_* is flat at z_eq, so rho_r ~ (1+z)^4 exactly there and
+        # 1+z = Omega_m/Omega_r is the closed solution -- which is exactly what __init__ passes in
+        # as init_z, so the secant confirmed it in one to three evaluations and stopped. That is a
+        # property of this equation of state at this redshift, and nothing checked it. The bracket
+        # is what makes the solve correct by construction on an equation of state where g_* is
+        # *not* flat at equality, and what makes a failure to find the root say so in its own
+        # words instead of dying inside _rho_fluid.
+        root = root_scalar(
+            match_rho, bracket=(bracket_lo, bracket_hi), xtol=1e-300, rtol=8.9e-16
+        )
 
         if not root.converged:
             raise RuntimeError(
-                f'root_scalar() did not converge to a solution: iterations={root.iterations}, method={root.method}: "{root.flag}"'
+                f"LambdaCDM_GenericEOS._find_rho_equality: root_scalar() did not converge to the "
+                f"redshift at which rho[{species_A}] = rho[{species_B}]: "
+                f"z_bracket=({bracket_lo:.5g}, {bracket_hi:.5g}), "
+                f'iterations={root.iterations}, method={root.method}: "{root.flag}"'
             )
 
         return root.root

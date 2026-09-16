@@ -70,8 +70,10 @@ class LambdaCDM(BaseCosmology):
         gram_per_m3 = units.Gram / (units.Metre * units.Metre * units.Metre)
         rho_today_gram_m3 = rho_today / gram_per_m3
 
-        matter_radiation_equality = self.omega_m / self.omega_r - 1.0
-        matter_cc_equality = pow(self.omega_cc / self.omega_m, 1.0 / 3.0) - 1.0
+        # the banner is a *use* of the two properties below, not a fourth transcription of their
+        # expressions
+        matter_radiation_equality = self.z_matter_radiation_equality
+        matter_cc_equality = self.z_matter_lambda_equality
 
         print(f'@@ LambdaCDM model "{self._name}"')
         print(f"|  Omega_m = {self.omega_m:.4g}")
@@ -97,6 +99,37 @@ class LambdaCDM(BaseCosmology):
     @property
     def H0(self) -> float:
         return self._H0
+
+    @property
+    def z_matter_radiation_equality(self) -> float:
+        """
+        For this model the radiation-domination closed form is not an approximation to the
+        equality redshift -- it *is* the equality redshift.
+
+        LambdaCDM carries no equation of state: rho_r is rho_r0 (1+z)^4 and rho_m is
+        rho_m0 (1+z)^3 identically, at every redshift, by the definition of :meth:`rho` above. So
+        rho_m = rho_r has the exact solution 1 + z = rho_m0/rho_r0 = Omega_m/Omega_r, with no
+        g_*(T) anywhere in it and nothing to check. There is no root solve here because there is
+        no root to solve for.
+
+        (The same is not true of :class:`LambdaCDM_GenericEOS`, which answers from its own solve:
+        there rho_r carries G(T(z)) and the closed form is exact only where g_* happens to be flat
+        at equality. See ``CosmologyModels.base.BaseCosmology.z_matter_radiation_equality``.)
+
+        :return: the matter-radiation equality redshift
+        """
+        return self.omega_m / self.omega_r - 1.0
+
+    @property
+    def z_matter_lambda_equality(self) -> float:
+        """
+        Exact for the same reason, and for one more: rho_m/rho_Lambda is rho_m0 (1+z)^3 over the
+        constant rho_cc, so neither side sees a temperature at all. This form is exact on *any*
+        equation of state, not only on this model.
+
+        :return: the matter-Lambda equality redshift
+        """
+        return pow(self.omega_cc / self.omega_m, 1.0 / 3.0) - 1.0
 
     def rho(self, z: float) -> float:
         one_plus_z = 1.0 + z

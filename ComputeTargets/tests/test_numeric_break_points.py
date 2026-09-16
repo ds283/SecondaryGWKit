@@ -90,6 +90,7 @@ from CosmologyModels.GenericEOS.GenericEOS import GenericEOSBase
 from CosmologyModels.GenericEOS.QCD_Cosmology import QCD_Cosmology
 from CosmologyModels.GenericEOS.QCD_EOS import QCD_EOS
 from CosmologyModels.LambdaCDM import Planck2018
+from CosmologyModels.tests.T_z_reference import temperature_crossing_log1pz
 from Quadrature.integrators.numeric_with_phase_cut import (
     BREAK_POINT_STANDOFF,
     DERIV_INDEX,
@@ -511,8 +512,8 @@ class TestDeclaration(unittest.TestCase):
             QCD_EOS.T_120_MEV: 1.38e-4,
         }
         for T_in_GeV, jump in expected.items():
-            u = self.cosmology._temperature_crossing_log1pz(
-                T_in_GeV * self.units.GeV, u_lo, u_hi
+            u = temperature_crossing_log1pz(
+                self.cosmology, T_in_GeV * self.units.GeV, u_lo, u_hi
             )
             self.assertIsNotNone(u, msg=f"T = {T_in_GeV} GeV does not cross in range")
             H_minus = self.cosmology.Hubble(expm1(u * (1.0 - 1e-12)))

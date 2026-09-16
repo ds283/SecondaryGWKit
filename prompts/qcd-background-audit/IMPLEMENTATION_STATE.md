@@ -3,7 +3,20 @@
 **Campaign:** [`README.md`](README.md) · **Source document:**
 [`docs/qcd-background-audit-2026-09.md`](../../docs/qcd-background-audit-2026-09.md)
 **Baseline commit:** `e8f746d` (`qcd-background-audit`, clean; identical to `main`)
-**Last updated:** 2026-09-15 — **16 / 16: workstream E is complete and the campaign is closed again.**
+**Last updated:** 2026-09-16 — **16 / 16: workstream E is complete and the campaign is closed
+again.** Four of this board's §3 issues have since been closed *by another campaign*:
+`prompts/background-solver-robustness` adopted them under its `RECONCILIATION.md` §9.2, because
+each named "whichever prompt next has these files in scope" as its next step. Its prompt 04 closed
+`[08-temperature-crossing-solver-is-test-only]`, and its prompt 05 closed
+`[07-t-photon-range-logic-recomputes-its-bounds]`,
+`[06-t-photon-call-cost-needs-a-quiet-machine]` — **README §6.2's ≤ 2.5 µs `T_photon` row now
+holds, at 2.4854 µs** — and `[09-audit-script-section-5-prose-counts-the-wrong-set]`. All four are
+in §4 below; the measurements are in that campaign's logs and the entries say so. **Its prompt 07
+has now landed too, and closed half a fifth**: `[03-qcd-inventory-does-not-report-the-representation]`'s
+`QCD_Cosmology` half is in §4; the `BackgroundModel` half prompt 14 widened that issue with is
+**not** in that campaign's files-may-touch list, so it stays open here, narrowed, under the same
+ID. Nothing in this
+campaign's own work was re-opened.
 
 > **The campaign reopened after it closed.** Prompt 12 measured a defect it was forbidden to act on
 > — `BackgroundModel` splined `d_lnH_dz` over a padded refinement of the source grid that was
@@ -1226,32 +1239,32 @@ Opened by this campaign's planning, 2026-09-13:
   `test_background_tau.py` is that campaign's README §7 **D5**, put to the user rather than
   assumed. Re-running the script also needs its scheme sweep updated, since one of its three
   schemes is gone. `[02-qcd-reference-floor]` still waits on the same run.
-- **[03-qcd-inventory-does-not-report-the-representation]** *(prompt 03, 2026-09-14)* —
-  `sqla_QCDCosmology_factory.inventory()`
-  (`Datastore/SQL/ObjectFactories/QCD_Cosmology.py`) reports `name`, `omega_m`, `omega_cc`, `h`
-  and `log10_max_z` per row, and `tools/inventory_report.py:46` lists `QCD_Cosmology` among the
-  tables it summarises. Neither shows the new `T_z_representation` column. **Impact:** from prompt
-  04 onward a datastore can legitimately hold several QCD cosmology rows differing **only** in
-  their representation — same name, same seven parameters, same `log10_max_z` — and the only tool
-  that inspects a datastore will render them as indistinguishable duplicates, which is precisely
-  the confusion the column exists to remove, moved one layer out. Low severity: no computation
-  reads `inventory()`, and the lookup key itself is correct. **Next step:** add
-  `"T_z_representation": row.T_z_representation` to the `values` list in `inventory()` and to the
-  selected columns above it. Not done in prompt 03 because its §2 item 4 is explicit that the
-  commit changes the key and nothing else, and `inventory()` is not part of the key. Worth doing
-  before prompt 09, which is the first prompt likely to look at a datastore holding rows at two
-  representations.
+- **[03-qcd-inventory-does-not-report-the-representation]** *(prompt 03, 2026-09-14; **narrowed
+  2026-09-16** — the `QCD_Cosmology` half is resolved, in §4)* — originally,
+  `sqla_QCDCosmology_factory.inventory()` (`Datastore/SQL/ObjectFactories/QCD_Cosmology.py`)
+  reported `name`, `omega_m`, `omega_cc`, `h` and `log10_max_z` per row, and
+  `tools/inventory_report.py:46` listed `QCD_Cosmology` among the tables it summarises, but neither
+  showed the new `T_z_representation` column, so from prompt 04 on a datastore could legitimately
+  hold several QCD cosmology rows differing **only** in their representation and the only tool that
+  inspects a datastore would render them as indistinguishable duplicates. **That half is resolved —
+  see §4.**
 
-  **Widened by prompt 14 (2026-09-15): the same defect now exists one level out, on
-  `BackgroundModel`.** `sqla_BackgroundModelFactory.inventory()` reports labels and timestamps
-  bucketed by `validated`, and says nothing about `source_grid_digest` or
+  **Widened by prompt 14 (2026-09-15), and this half is still open.** The same defect exists one
+  level out, on `BackgroundModel`: `sqla_BackgroundModelFactory.inventory()` reports labels and
+  timestamps bucketed by `validated`, and says nothing about `source_grid_digest` or
   `source_grid_construction`. From prompt 14 a datastore can legitimately hold several background
   rows for the same cosmology and tolerances differing **only** in the grid they were tabulated on,
   and `tools/inventory_report.py` will render them as indistinguishable duplicates — precisely the
   confusion the columns exist to remove. Same severity and same reason for not acting: prompt 14 §2
-  item 3 is about the key, and `inventory()` is not part of it. **Next step, extended:** add
-  `T_z_representation` to `sqla_QCDCosmology_factory.inventory()` *and* the two grid columns to
-  `sqla_BackgroundModelFactory.inventory()`'s per-bucket report, in one commit.
+  item 3 is about the key, and `inventory()` is not part of it.
+
+  **`prompts/background-solver-robustness` prompt 07 (2026-09-16) declined to extend to this half**:
+  its files-may-touch list named `Datastore/SQL/ObjectFactories/QCD_Cosmology.py` and
+  `tools/inventory_report.py` only, not `BackgroundModel.py`, and its own stop condition (§4 item 3
+  of that prompt) is explicit that a second reporting site with the same gap is recorded, not fixed,
+  in the prompt that finds it. **Next step:** add `source_grid_digest` and `source_grid_construction`
+  to `sqla_BackgroundModelFactory.inventory()`'s per-bucket report, in whichever prompt next has
+  `Datastore/SQL/ObjectFactories/BackgroundModel.py` in scope. Not assigned to any campaign.
 
 - **[04-unsplit-tk-run-now-meets-the-criterion]** *(prompt 05, 2026-09-14; **assigned to prompt
   08**)* — `ComputeTargets/tests/test_numeric_break_points.py::TestQCDReferenceConvergence::test_split_converges_where_unsplit_does_not`
@@ -1319,78 +1332,6 @@ Opened by this campaign's planning, 2026-09-13:
   not have to re-derive it. **Next step:** none proposed; re-measure if the equation of state or
   the response grid changes.
 
-- **[06-t-photon-call-cost-needs-a-quiet-machine]** *(prompt 06, 2026-09-14)* — README §6.2 and
-  prompt 06 §4 set `T_photon` at **≤ 2.5 µs/call** and make a regression a stop (README §2 (c)).
-  Measured on a **quiet** machine before the dispatch was inlined: prompt 05's shape 2.21 µs,
-  unsegmented 3,000 / `k=5` 2.40 µs, segmented 3,000 / `k=5` **2.53 µs** — a ~1 % miss. The
-  dispatch was then moved in line into `TemperatureRepresentation.__call__`, which on a **loaded**
-  machine (load average 11–15, every candidate reading ~20 % high) takes the shipped-to-unsegmented
-  ratio from ~1.05 to **1.00–1.05** — i.e. the segmentation is now free — leaving the
-  shipped-to-prompt-05 ratio at **1.09–1.13**, which is the order-5 spline evaluation and nothing
-  else. Order 5 is not optional: a cubic needs ~25,000 nodes to reach the required p90. Scaling the
-  quiet-machine 2.21 µs by the measured 1.09 gives ~2.4 µs, inside the target, but **that is an
-  inference and not a measurement**. **Impact:** one row of prompt 06 §4 is unresolved; nothing
-  downstream is affected, since `T_photon` costs ~2.5 µs inside a ~10 µs `Hubble` call.
-  **Measured, and it is a confirmed miss** (2026-09-14, after prompt 06 committed; re-stated by
-  prompt 09). On a quiet machine the shipped representation reads **2.596 µs mean, range
-  2.505–2.671 over five runs**, with the audit script's own internal controls back inside their
-  baseline band — **about 3.8 % above README §6.2's ≤ 2.5 µs**. Prompt 09's single run of
-  `measure_T_z_representation.py` at load average ~5 reads 2.596 µs with its three controls +0.9 %
-  to +4.1 % of their base values, corroborating it. This entry's original "next step" — take the
-  measurement on a quiet machine — is therefore **discharged**; the scaled ~2.4 µs inference in the
-  paragraph above is superseded by the direct figure and was optimistic. The 2.53 µs in log 06
-  deviation 5 is the *pre-inline* code and does not contradict this: the inline moved the segment
-  dispatch, not the spline evaluation. **What remains is the miss itself**, whose whole content is
-  the order-5 `BSpline.__call__`, and order 5 is not optional (a cubic needs ~25,000 nodes for
-  README §6.1's p90, and at 3,000/5 the representation reaches 6.807e-11 / 3.237e-15 / 1.765e-16).
-  **Next step:** hoist the two loop-invariant `_outward` calls
-  (`[07-t-photon-range-logic-recomputes-its-bounds]`, a measured 0.11 µs, numerically null) and
-  re-measure — that lands at ~2.49 µs, inside the target. If it does not clear it, the row itself
-  is what to put to the user, since the accuracy it buys is not negotiable and `T_photon` is
-  ~2.6 µs inside a ~10 µs `Hubble` call.
-
-- **[07-t-photon-range-logic-recomputes-its-bounds]** *(prompt 06, 2026-09-14)* —
-  `TemperatureRepresentation.__call__` (`LambdaCDM_GenericEOS.py:302`) evaluates
-  `_outward(self._max_log_z, +1)` and `_outward(self._min_log_z, -1)` on **every call**. Both are
-  loop-invariant: the bounds are set in `__init__` and never mutated. Measured at **0.056 µs each**
-  on the quiet machine, i.e. ~0.11 µs of a ~2.5 µs call, and hoisting them into `__init__` is
-  numerically null (the same two floats, compared the same way). `ZSplineWrapper.__call__`
-  (`ComputeTargets/spline_wrappers.py:64`) has the same shape and is on many more hot paths.
-  **Impact:** ~4 % of every `T_photon` call and of every wrapped spline evaluation in the tree.
-  Not done in prompt 06 because the range logic is prompt 05's code and outside what prompt 06 was
-  asked to change (README §5 rule 5). **Next step:** hoist both, in whichever prompt next has
-  reason to touch that method; re-measure `[06-...]` afterwards.
-
-- **[08-temperature-crossing-solver-is-test-only]** *(prompt 07, 2026-09-14)* —
-  `LambdaCDM_GenericEOS._temperature_crossing_log1pz` (`:810`) has no production caller. Prompt 07
-  took `integration_break_points` onto the bisected `_break_point_crossings_log1pz`, which is what
-  README §2 (b) requires now that `T_photon` genuinely jumps at exactly these temperatures, and the
-  `root_scalar` bracket that used to locate them is left behind. It is deliberately kept: it is the
-  probe `ComputeTargets/tests/test_numeric_break_points.py::test_hubble_jumps_at_the_declared_crossings_and_not_at_the_kink`
-  uses to find a *neighbourhood* of a crossing (a use its ~1e-12 offset does not disturb), it is
-  cited by name in `CosmologyModels/tests/T_z_reference.py:45` for the redshift-arithmetic rule, and
-  it is the documented illustration of the trap, sitting next to the bisector that replaced it. Its
-  docstring now opens "Nothing in production calls this, and nothing may put it back on the
-  break-point path." **Impact:** none numerically; a private method on a production class whose only
-  callers are tests is a maintenance trap, and README §2 (b) makes the specific trap it embodies a
-  stop condition. **Next step:** move it into `CosmologyModels/tests/T_z_reference.py` beside
-  `jump_locations`, or delete it and have that one test bisect, for whichever prompt next has both
-  files in scope. Not done in prompt 07 because `T_z_reference.py` is not among the files that
-  prompt may touch.
-
-- **[09-audit-script-section-5-prose-counts-the-wrong-set]** *(prompt 07, 2026-09-14)* —
-  `docs/qcd-background-audit/measure_T_z_representation.py:401-405` prints, beneath its §5 table,
-  "Of the BREAK_POINT_ALL points, {n} are knots of the T(z) spline itself". It never computes that
-  intersection: `n` is `len(knots[(knots > u_min) & (knots < u_max)])`, the tabulation's interior
-  knots inside the production range, which is **2,411** and has nothing to do with the declared set
-  any more. The table above it is correct — `all 3 points in range`, `discontinuity 2 points in
-  range` — so the script does reproduce prompt 07's result; only the sentence is wrong. It was true
-  while the two sets coincided, which is the whole history of this script until this commit.
-  **Impact:** a reader running the campaign's own reproduction is told that 2,411 of 3 points are
-  knots. **Next step:** intersect `knots` with the declared points before printing, and reword.
-  Not done in prompt 07: its §3 item 6 requires the script to run **unedited**, and the script is
-  not among the files that prompt may touch.
-
 Inherited, and **assigned to this campaign** (each is owned by the board named, which holds its
 measurements and its history; the closure is recorded there):
 
@@ -1412,6 +1353,139 @@ Re-measured but **not owned** here (they stay where they are; a prompt that move
 ---
 
 ## 4. Resolved issues
+
+- **[07-t-photon-range-logic-recomputes-its-bounds]** *(prompt 06, 2026-09-14; **assigned
+  2026-09-16 and closed by `prompts/background-solver-robustness` prompt 05**, 2026-09-16)* —
+  `TemperatureRepresentation.__call__`, `ZSplineWrapper.__call__` and
+  `GkWKBSplineWrapper.__call__` each evaluated `_outward(bound, ±1)` on **every call**, twice for
+  the comparisons and twice more inside the two f-strings, although all four bounds are fixed at
+  construction. Prompt 05 hoisted **four** values per class — `_reject_above_log_z` and
+  `_reject_below_log_z` (the `log(1+z)` thresholds the comparisons use) and `_recommended_max_z`
+  and `_recommended_min_z` (the raw-`z` bounds the messages quote) — into each `__init__`, with a
+  comment at each site saying they are loop invariants of a hot path. `_outward` itself,
+  `SPLINE_BOUND_SLACK`, the `type(self).__name__` prefix `f023eb8` settled, the message text, the
+  segment dispatch and the spline order and node count are untouched.
+
+  **Demonstrated numerically null, not argued.** Eight wrapper constructions spanning the three
+  classes — four `ZSplineWrapper` geometries including the negative `min_z` that is
+  `test_spline_wrappers.py`'s discriminating case, two `GkWKBSplineWrapper`, and
+  `TemperatureRepresentation` on the production `QCD_Cosmology` and on the pure-radiation stand-in
+  — probed over the full tabulated range of each plus both slack bands and points outside them,
+  through both entry points: **3,979 returned values bit-identical by `float.hex()`**, 37 in-probe
+  rejections identical in position, and all **six** `RuntimeError` messages character-identical by
+  diff. Independently, the whole of `measure_T_z_representation.py`'s output above §6 — §0's
+  accuracy table, §1, §2, §3, §4's $H(z)$ and $\int\mathrm{d}z/H$ figures and §5 — is
+  **byte-identical across all ten timing runs at both trees**. The cost it buys is the row below.
+  Full figures in that campaign's [log 05](../background-solver-robustness/logs/05-hoist-the-range-logic.md).
+
+- **[06-t-photon-call-cost-needs-a-quiet-machine]** *(prompt 06, 2026-09-14; **assigned
+  2026-09-16 and closed by `prompts/background-solver-robustness` prompt 05**, 2026-09-16)* —
+  README §6.2 and prompt 06 §4 set `T_photon` at **≤ 2.5 µs/call**, and the row was a
+  **confirmed miss at 2.596 µs** (mean, range 2.505–2.671 over five runs on a quiet machine after
+  prompt 06, restated by prompt 09) — about 3.8 % over, with the whole of the excess in the order-5
+  `BSpline.__call__` and order 5 not optional. This entry's own next step was to hoist the two
+  loop-invariant `_outward` calls of `[07-…]` and re-measure, with a predicted landing at ~2.49 µs.
+
+  **Measured after the hoist, and it clears.** Same instrument
+  (`docs/qcd-background-audit/measure_T_z_representation.py` §6, the 200-point probe set, best of
+  3, the *same file* at both trees), five runs at each tree alternating, on a settled machine
+  (load average 2.83–3.88, 10 cores, no orphaned busy shells):
+
+  | Row | pre-hoist mean | range | post-hoist mean | range | ratio |
+  |---|---|---|---|---|---|
+  | **shipped spline** (`T_photon`) | **2.6744** | 2.532–2.856 | **2.4854** | 2.418–2.546 | **0.9293** |
+  | entropy factor, 2000 pts *(control)* | 2.1716 | 2.081–2.263 | 2.1608 | 2.110–2.206 | 0.9950 |
+  | segmented entropy factor *(control)* | 2.3412 | 2.233–2.474 | 2.2960 | 2.226–2.340 | 0.9807 |
+  | accurate root solve *(control)* | 8.5056 | 8.139–8.860 | 8.5332 | 8.404–8.629 | 1.0032 |
+
+  (µs/call.) The three controls — none of which goes through `TemperatureRepresentation.__call__`
+  — move by −0.50 %, −1.93 % and +0.32 %, well inside per-tree spreads of 4–10 %, so the run
+  stands by its own quietness test. A first ten-run pass at load average 4.5–5.3 had the
+  entropy-factor control moving +2.0 % and **is void**; no figure from it is used.
+
+  **$\bar t = 2.4854$ µs ≤ 2.5 µs, so this row closes**, and
+  `prompts/background-solver-robustness` README §7 **D4 is not invoked** — the row does not go to
+  the user. Two caveats, recorded because the margin is small and the next person to measure should
+  not be surprised: the margin is **0.6 %**, and one of the five post-hoist runs (2.546) is above
+  target on its own; and this machine reads **+3.0 % high** on this instrument (its pre-hoist
+  2.6744 is the same code as this entry's 2.596), so the ratio 0.9293 is the more portable figure.
+  The saving, **0.189 µs**, is 1.7× the 0.11 µs `[07-…]` costed, because what was removed is two
+  Python function calls rather than two arithmetic operations.
+
+- **[09-audit-script-section-5-prose-counts-the-wrong-set]** *(prompt 07, 2026-09-14; **assigned
+  2026-09-16 and closed by `prompts/background-solver-robustness` prompt 05**, 2026-09-16)* —
+  `docs/qcd-background-audit/measure_T_z_representation.py` §5 printed *"Of the BREAK_POINT_ALL
+  points, 2411 are knots of the T(z) spline itself"*, having computed the tabulation's interior
+  knots inside the production range instead of the intersection with the declared set. Prompt 05,
+  which re-ran the script for its own §6 cost row and so had the file in scope, replaced
+  `knots[(knots > u_nodes.min()) & (knots < u_nodes.max())]` with
+  `np.intersect1d(all_points, knots)`, `all_points` being
+  `integration_break_points(z_lo, z_hi, kind=BREAK_POINT_ALL)` — the declared set the sentence is
+  about. It now prints
+
+  ```
+     0 of those 3 BREAK_POINT_ALL points are also knots of the T(z)
+     tabulation. A representation that forces its own interpolation lattice into the
+     break-point set contributes knots here, which are an artefact of how T(z) is
+     approximated and not a feature of the cosmology; a representation that does not,
+     contributes none, leaving only the genuine crossings of section 2.
+  ```
+
+  which is **0**, as prompt 07 made it, and reads correctly at 0 as well as at a positive count.
+  The rewritten sentence also drops the description of the tabulation as "a uniform lattice of an
+  auxiliary 500-point interpolant", which has been wrong since prompts 05 and 06 made it a
+  segmented entropy factor at 3,000 nodes of order 5; it quotes no node count at all, so it cannot
+  go stale the same way (that campaign's log 05, deviation D2). **§5's table above it and the whole
+  of §0–§4 print byte-identically** to the unedited script — verified by diffing the two scripts'
+  full output, where the only difference is these five lines against the four they replace.
+
+- **[08-temperature-crossing-solver-is-test-only]** *(prompt 07, 2026-09-14; **assigned
+  2026-09-16 and closed by `prompts/background-solver-robustness` prompt 04**, 2026-09-16)* —
+  `LambdaCDM_GenericEOS._temperature_crossing_log1pz` had no production caller since prompt 07 took
+  `integration_break_points` onto the bisected `_break_point_crossings_log1pz`, and a private method
+  on a production class whose only callers were tests was a maintenance trap. Prompt 04 moved it,
+  whole, to `CosmologyModels/tests/T_z_reference.temperature_crossing_log1pz` as a module-level
+  function taking the cosmology as its first argument — its `root_scalar` line is
+  character-identical, `xtol=1e-15, rtol=1e-15` untouched. `ComputeTargets/tests/
+  test_numeric_break_points.py`'s one caller (`:514`) now imports it from
+  `CosmologyModels.tests.T_z_reference` (option (a) of the prompt's open choice: the import works
+  cleanly under both `discover -s ComputeTargets/tests -t .` and `-s CosmologyModels/tests -t .`,
+  confirmed by running both). The docstring's opening sentence now states plainly that this is test
+  machinery kept for two reasons — the neighbourhood probe and the illustration of the trap — rather
+  than "nothing in production calls this", and a closing sentence records that it lived on
+  `LambdaCDM_GenericEOS` until this campaign moved it. `LambdaCDM_GenericEOS.py`'s
+  `_build_break_point_crossings_log1pz` docstring, which contrasted bisection against "a
+  `root_scalar` bracket ... there", now names the new home instead of an implicit self-reference.
+  **Nothing numeric moved:** `test_hubble_jumps_at_the_declared_crossings_and_not_at_the_kink`'s
+  three measured steps are unchanged (1.969955e-03 at `T_LO` against the test's 1.97e-3, 9.27e-11 at
+  `EOS_T_LO` against its `< 1e-8`, 1.377111e-04 at `T_120_MEV` against 1.38e-4), `CosmologyModels`
+  tests 38 → 38 OK and `ComputeTargets` tests 447 → 447 OK, and `T_Z_REPRESENTATION_VERSION` stayed
+  **6**. Full record:
+  [`logs/04-relocate-the-crossing-probe.md`](../background-solver-robustness/logs/04-relocate-the-crossing-probe.md)
+  on the `background-solver-robustness` board.
+
+- **[03-qcd-inventory-does-not-report-the-representation]** *(prompt 03, 2026-09-14; **the
+  `QCD_Cosmology` half closed by `prompts/background-solver-robustness` prompt 07**, 2026-09-16 —
+  **the `BackgroundModel` half prompt 14 widened it with is not resolved and stays open in §3
+  under the same ID**)* — `sqla_QCDCosmology_factory.inventory()`
+  (`Datastore/SQL/ObjectFactories/QCD_Cosmology.py:150`) now selects and reports
+  `T_z_representation`, placed immediately before `log10_max_z` rather than appended at the end:
+  the two of them describe how a row's background was computed and over what range, which
+  `name`/`omega_m`/`omega_cc`/`h` do not. `tools/inventory_report.py` needed no change — it renders
+  every `values` entry generically by `str()`, naming no column — confirmed by reading it rather
+  than assumed. **Demonstrated, not argued:** a new test,
+  `ComputeTargets/tests/test_qcd_cosmology_inventory.py` (3 tests), builds an in-memory SQLite
+  table from the factory's own `register()` (the pattern
+  `ComputeTargets/tests/test_cosmology_representation_key.py` already uses for this same factory)
+  and inserts two rows sharing every other reported field but differing only in
+  `T_z_representation`: they now render as two distinct label dicts, `{4, 6}`, rather than one
+  indistinguishable pair. `build()`, the lookup key and the table schema are untouched; neither is
+  in the diff. **The `BackgroundModel` half is out of scope** — prompt 07's files-may-touch list
+  named only `QCD_Cosmology.py` and `tools/inventory_report.py`, and its own stop condition treats a
+  second reporting site with the same gap as a new issue to record, not fix — so it remains open in
+  §3 above, narrowed to that half and unassigned. Full record:
+  [`logs/07-inventory-representation.md`](../background-solver-robustness/logs/07-inventory-representation.md)
+  on the `background-solver-robustness` board.
 
 - **[12-source-grid-density-is-uniform-over-a-curvature-that-spans-eight-orders]** *(prompt 12,
   2026-09-15; **the user decided to take the recommendation, and prompt 15 implemented it**,

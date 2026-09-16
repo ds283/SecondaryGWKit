@@ -396,6 +396,16 @@ production code (`LiouvilleGreen/integration_tools.py:95`,
 lookup key, both or neither; what kind of method consumes it; the object count of the sector; and
 where its provenance is recorded, or that it is not.
 
+> **Amended 2026-09-16 (additively, §5 rule 6): the three `LambdaCDM_GenericEOS.py` anchors above
+> are stale and all three sites are already settled.** `prompts/background-solver-robustness` ran
+> on that file: `:579` is now `:636` (unchanged at `xtol=1e-300, rtol=1e-14`), `:864` **left
+> production code entirely** for `CosmologyModels/tests/T_z_reference.py:285`, and `:1008` is now
+> `:1137` at `xtol=1e-300, rtol=8.9e-16`, bracketed. Provenance for all three, in this section's
+> own shape, is
+> [`prompts/background-solver-robustness/PROVENANCE.md`](../background-solver-robustness/PROVENANCE.md) —
+> **lift it rather than re-derive it**, and note that it records the crossing probe's tolerance as
+> one nobody ever chose, which §1.2 asks be said in those words.
+
 Answer explicitly: **is §2 (a)'s table complete and right?** Which parameters are live, which are
 vestigial, and which are vestigial *in the computation* but load-bearing *in the key*? Produce
 `docs/tolerance-convergence/TOLERANCE-INVENTORY.md` and the script that regenerates it, so that a

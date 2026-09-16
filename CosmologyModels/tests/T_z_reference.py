@@ -42,7 +42,7 @@ the acceptance table in README §6.1 comparable from one prompt to the next.
 
 **Redshift arithmetic.** Everything is carried in ``u = log(1+z)``. The ``expm1(u)`` calls below
 are the lossy direction (``CLAUDE.md``), and are tolerable for exactly the reason
-``_temperature_crossing_log1pz`` gives for its own: the recovered ``z`` is only a probe location
+``temperature_crossing_log1pz`` gives for its own: the recovered ``z`` is only a probe location
 or a quadrature limit, and the very next thing done with it is to take ``log1p`` again. No
 equality-like comparison is ever made on a recovered ``z``.
 
@@ -224,6 +224,75 @@ def jump_locations(cosmology, rtol: float = 1.0e-14) -> list:
             out.append(u)
 
     return sorted(out)
+
+
+def temperature_crossing_log1pz(
+    cosmology, T: float, u_lo: float, u_hi: float
+) -> Optional[float]:
+    """
+    An *approximate* location for the point u = log(1+z), strictly inside (u_lo, u_hi), at
+    which T_photon(z) reaches the dimensionful temperature T; None if it does not cross inside
+    the range.
+
+    **This is test machinery, not a production solver: nothing in production calls it, and
+    nothing may put it back on the break-point path.** It is kept, not deleted, because it is
+    two things at once -- the neighbourhood probe
+    ComputeTargets/tests/test_numeric_break_points.py::
+    test_hubble_jumps_at_the_declared_crossings_and_not_at_the_kink uses to find a neighbourhood
+    of a crossing, and the documented illustration of the trap README §2 (b) of
+    prompts/qcd-background-audit/ is about. Until prompt 07 of prompts/qcd-background-audit/ it
+    was how integration_break_points located the equation-of-state crossings; that method now
+    returns the bisected _break_point_crossings_log1pz, which is where the crossings actually
+    are. The reason is README §2 (b): since prompt 06 the representation is segmented at exactly
+    these temperatures, so T_photon genuinely *jumps* there, and log T_photon(z) - log T need not
+    have a root at all. A bracketing solver applied to it reports converged and returns a
+    non-root whose offset depends on its tolerances -- measured at +1.126e-12 in u at
+    root_scalar's defaults, which is further from the jump than the 1e-12 by which each
+    segment's nodes are held inside their own branch. CosmologyModels/tests/
+    test_T_z_representation.py::test_a_segment_edge_bisected_and_one_root_found_disagree is
+    the standing demonstration.
+
+    It survives as a measurement probe: ComputeTargets/tests/test_numeric_break_points.py::
+    test_hubble_jumps_at_the_declared_crossings_and_not_at_the_kink uses it to find a
+    neighbourhood of a crossing, which is a use its ~1e-12 offset does not disturb, and it is
+    the documented illustration of why a bracket is the wrong tool here.
+
+    T_photon(z) is monotone in z, so the crossing is unique where it exists. It is solved for
+    in u, which is the campaign's integration variable, to xtol = rtol = 1e-15. The expm1(u)
+    inside q() is the lossy log(1+z) -> z direction (CLAUDE.md), but T_photon takes log(1+z)
+    again internally, so it costs ~1 ulp of u.
+
+    It lived as a private method on LambdaCDM_GenericEOS until
+    prompts/background-solver-robustness/ prompt 04 moved it here, character-identical in its
+    root_scalar call.
+
+    :param cosmology: a ``LambdaCDM_GenericEOS`` (or subclass)
+    :param T: the dimensionful temperature to cross
+    :param u_lo: lower end of the search bracket, in ``u = log(1+z)``
+    :param u_hi: upper end of the search bracket, in ``u = log(1+z)``
+    :return: the crossing in ``u``, or ``None``
+    """
+    log_T = log(T)
+
+    def q(u: float) -> float:
+        return log(cosmology.T_photon(expm1(u))) - log_T
+
+    q_lo = q(u_lo)
+    q_hi = q(u_hi)
+    if q_lo == 0.0 or q_hi == 0.0 or (q_lo > 0.0) == (q_hi > 0.0):
+        return None
+
+    root = root_scalar(q, bracket=(u_lo, u_hi), xtol=1e-15, rtol=1e-15)
+    if not root.converged:
+        raise RuntimeError(
+            f"T_z_reference.temperature_crossing_log1pz: root_scalar() did not converge "
+            f"for T = {T / cosmology._units.GeV:.5g} GeV between u = {u_lo:.6g} and {u_hi:.6g}: "
+            f'"{root.flag}"'
+        )
+    u = float(root.root)
+    if not u_lo < u < u_hi:
+        return None
+    return u
 
 
 # ---------------------------------------------------------------------------------------------
