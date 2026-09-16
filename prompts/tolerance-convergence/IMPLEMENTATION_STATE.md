@@ -232,6 +232,64 @@ Opened by **prompt 01**, 2026-09-16:
   grid (`prompts/qcd-background-audit`, README §0.5 holds it fixed here), not to this campaign. If
   it does not, the record still needs the LambdaCDM anchor marked on every version-2 QCD figure.
 
+  > **Root cause narrowed by the orchestrator's review, 2026-09-16.** The proximate defect is an
+  > **ordering** one in `main.source_grid_spacing_profile` (`main.py:796-814`): the five-point
+  > stencil calls `dphi_du` four times for **every** node of `inside`, and the declared-crossing
+  > mask `usable &= |u_profile - u_break| > SOURCE_GRID_CROSSING_MASK_U` is applied only **after**
+  > that loop. A crossing neighbourhood is therefore dropped from the log-interpolation *fit* but
+  > not from the *evaluation*, so a node the mask would have discarded is still evaluated. With
+  > `SOURCE_GRID_CROSSING_MASK_U = 6e-3` and a stencil reach of
+  > `2 * SOURCE_GRID_CURVATURE_STEP_U = 2e-3`, measured against the third QCD crossing at
+  > `u = 27.485391822044257`: at **QCD's own anchor** the nearest base-lattice node is
+  > `u = 27.485831`, **4.39e-04** away — inside the mask *and* within stencil reach, so an arm
+  > lands essentially on the crossing (the raise is at `u = 27.485391334913157`, 4.9e-07 from it);
+  > at **LambdaCDM's anchor** the nearest node is **9.11e-03** away, outside both, and nothing is
+  > evaluated near it. That is the whole of why one anchor escapes and the other does not.
+  > Reordering the mask ahead of the loop would clear this failure but is **not** established as
+  > sufficient — `RESIDUAL_WKB_REGION_MARGIN`'s own comment records a second case on QCD at
+  > `z = 3.61e15`, away from any declared crossing, which no crossing mask would catch. See
+  > `[01-density-criterion-imposed-outside-the-wkb-region]`, which is the deeper defect: the band
+  > this loop runs over had no business reaching that far in the first place.
+
+- **[01-density-criterion-imposed-outside-the-wkb-region]** *(orchestrator review of prompt 01,
+  2026-09-16; unassigned — candidate for **T7**)* — `main.source_grid_spacing_profile` imposes the
+  fourth-derivative equidistribution criterion over the band `residual_node_range` returns, and
+  that band reaches **1.5 to 2.1 e-folds outside the horizon**, where the Liouville-Green phase
+  spline the criterion exists to protect is never evaluated. The horizon condition is
+  `k/aH = omega_0 (1+z) = 1`, with `leading = omega_0^2 = (k/H)^2` and `H` the ordinary Hubble
+  rate: **`omega_0 = 1` is not horizon crossing** and misreads the band by five orders of
+  magnitude in z. Measured on `QCD_Cosmology` at its own anchor, `Gk` sector:
+
+  | $k$ [1/Mpc] | $z$ at $k = aH$ | band top | $k/aH$ there | e-folds outside |
+  |---|---|---|---|---|
+  | 1e+05 | 5.08e+10 | 2.67e+11 | 0.196 | 1.63 |
+  | 1.39e+05 | 7.04e+10 | 3.21e+11 | 0.228 | 1.48 |
+  | 1.92e+05 | 9.77e+10 | 8.25e+11 | 0.128 | 2.06 |
+  | 2.26e+05 | 1.15e+11 | 8.44e+11 | 0.147 | 1.92 |
+
+  `RESIDUAL_WKB_REGION_MARGIN`'s own comment states that production anchors sit **three e-folds
+  inside** the horizon, so the criterion is imposed roughly **five e-folds beyond the last place
+  its consumer exists**. At the raise point of
+  `[01-v2-density-raises-at-the-qcd-production-anchor]` the mode is **1.78 e-folds outside** the
+  horizon and `|C| / omega_0^2 = 5.9e+04` — the "correction" is 59,000x the leading term, so the
+  expansion being differentiated has stopped meaning anything, and the criterion is in effect
+  chasing its own breakdown. The cause is a **reuse**, not a coding error: that margin was designed
+  as a *permissive* bound so the band never excludes a producer's anchor ("the range covers every
+  anchor the producer accepts, with margin"), and the spacing profile reuses it as an upper bound
+  on where the spline needs resolving. **Impact:** of the samples version 2 adds over version 1, at
+  the LambdaCDM anchor — **QCD 154 of 223 (69%)** lie above horizon crossing for the smallest
+  production $k$ and **36 (16%)** above crossing for *every* production $k$; **LambdaCDM 14 of 46
+  (30%)** and **0 (0%)**. In that region the consumer is `GkNumericIntegration` /
+  `TkNumericIntegration`, whose accuracy is governed by `atol` / `rtol` and the solver's own step
+  control, not by a spline-interpolation bound. Because `SOURCE_GRID_MAX_SPACING_FACTOR = 1.0` the
+  criterion may only ever *refine*, so these samples corrupt no result — they are **unjustified
+  rather than wrong**, and 223 in 1,996 is not a cost problem; the sharp consequence is the sibling
+  issue's hard failure. **Next step:** decide whether the spacing profile should run over a
+  horizon-based band of its own rather than over `residual_node_range`'s anchor-coverage band. That
+  is a production change to the source grid, which README §0.5 holds fixed here; item **T7**
+  already audits `RESIDUAL_WKB_REGION_MARGIN` at every production $k$, so prompt 04's charter is
+  the natural home for it when that prompt is written.
+
 Assigned to this campaign from other boards (each stays on the board that holds its measurements;
 the closure is recorded there):
 
