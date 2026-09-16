@@ -8,13 +8,21 @@
 re-run for the re-anchor and green — `ComputeTargets` **452**, `CosmologyModels` **39**)
 **Superseded baseline:** `acd5b8e`, `ComputeTargets` 447, `CosmologyModels` 30 — the anchor of any
 figure in this campaign's documents dated before 2026-09-16 19:32
-**Last updated:** 2026-09-16 · **Status: in progress — 1 / 6.**
+**Last updated:** 2026-09-16 · **Status: in progress — 2 / 6.**
 **Every user decision needed to start is settled** — D1 and D3 are post-audit gates by design, D2
 settled 2026-09-12, D4 settled by README §0.4, **D5 settled yes 2026-09-16**.
 **Prompts 01 and 02 are written, with their orchestrator prompts; 03–06 are deliberately held**
 until 02's inventory lands (§1 below). **Prompt 01 has landed**: the convergence facility is
 `ComputeTargets/tests/convergence_reference.py` and the source-grid generations are named in
 `ComputeTargets/tests/wkb_reference.py`. Every later prompt measures through them.
+**Prompt 02 has landed**: `docs/tolerance-convergence/TOLERANCE-INVENTORY.md` is the inventory and
+`inventory.py` regenerates its tables. **Prompts 03 and 04 take their target lists from log 02's
+"State handed to the next prompt", not from README §2 (a).** README §2 (a)'s eight rows are each
+confirmed against the tree; what is *not* confirmed is the count — there is a **ninth** keyed
+object type, `OneLoopIntegral`, which prompt 02 §8 makes a stop and which is left for the user
+(§3 below). README **§0.1's summary sentence** — "of those six only one actually uses it" — is
+also wrong: **two** of the six live `(atol, rtol)` sharers use the value, `GkNumericIntegration`
+and `wavenumber_exit_time`. §2 (a)'s table says so on both rows; prompt 06 reconciles the README.
 
 > **The campaign is unblocked.** The 2026-09-12 plan was blocked on `prompts/GkTk-remedial` prompt
 > 18, because until it landed the reference on `QCDModel` did not converge at four wavenumbers.
@@ -66,7 +74,7 @@ until 02's inventory lands (§1 below). **Prompt 01 has landed**: the convergenc
 | # | Prompt | Covers | Model | Written? | Status | Commit | Log |
 |---|---|---|---|---|---|---|---|
 | 01 | The convergence harness and one production grid | README §2 (b), (h); `[00-three-production-grid-reproductions]` | Opus | ✍️ [`01-…`](01-convergence-harness-and-grid.md) | ✅ | *"Build the convergence harness and name the source-grid generations"* (SHA not embedded, per the convention `prompts/background-solver-robustness` uses) | [`logs/01-…`](logs/01-convergence-harness-and-grid.md) |
-| 02 | The accuracy-parameter inventory | README §2 (a), (c), (g); `RECONCILIATION.md` §2.1 | Opus | ✍️ [`02-…`](02-accuracy-parameter-inventory.md) | ⬜ | | |
+| 02 | The accuracy-parameter inventory | README §2 (a), (c), (g); `RECONCILIATION.md` §2.1 | Opus | ✍️ [`02-…`](02-accuracy-parameter-inventory.md) | ⚠️ | *"Inventory every accuracy parameter in the pipeline"* (SHA not embedded, per the convention `prompts/background-solver-robustness` uses) | [`logs/02-…`](logs/02-accuracy-parameter-inventory.md) |
 | 03 | Audit the adaptive solvers | README §2 (d), (e), (f); review §10.1, §12.5 | Opus | ⏸️ **held** | ⬜ | | |
 | 04 | Audit the order-governed targets | README §2 (a); §7 D5 **(settled yes)** | Opus | ⏸️ **held** | ⬜ | | |
 | 05 | Decouple | README §2 (a), (g); §7 D1, D3 | Opus | ⏸️ **held** | ⬜ | | |
@@ -109,7 +117,7 @@ not ✅ either, which is the specific failure the rebase found.
 |---|---|---|---|---|
 | T1 | **MACHINERY** | One reusable convergence facility, in the test tree, covering every target and calibrated against the constant-$w$ anchors at every use, with "one step tighter" meaning a decade for a tolerance and one order for a Gauss order | 01 | ✅ `convergence_reference.py`: `TolerancePair` / `GaussOrder`, `reference_drift` → `DriftVerdict` (the criterion evaluated, never just reported), `radiation_anchors` over all eleven closed forms, the two numeric sectors folded in from `tk_numeric_atol_sweep.py` |
 | T2 | **MACHINERY** | **One** reproduction of the production source grid at `SOURCE_GRID_CONSTRUCTION_VERSION = 2`, with the version-0 and version-1 constructions retained and named rather than silently re-scored | 01 | ⚠️ `wkb_reference.source_grid(SOURCE_GRID_V0/_V1/_V2, …)`, no default generation, bit-identical to all three constructions it replaces. **Caveat:** `production_source_grid` keeps its historic behaviour because 28 call sites in 20 files outside prompt 01's scope import it; it is documented as version 0 rather than made to fail loudly |
-| T3 | **MEASUREMENT** | The accuracy-parameter inventory: every parameter, what it keys, whether it reaches a solver, what the real knob is, and the object count of the sector it keys | 02 | ⬜ |
+| T3 | **MEASUREMENT** | The accuracy-parameter inventory: every parameter, what it keys, whether it reaches a solver, what the real knob is, and the object count of the sector it keys | 02 | ⚠️ `docs/tolerance-convergence/TOLERANCE-INVENTORY.md` + `inventory.py`: **12 keyed tables** derived from `Datastore/SQL/Datastore.py`'s `_factories` by `ast`, **39 parameter rows** in nine columns, **10 hard-coded literals** in production. README §2 (a)'s eight rows are each **confirmed**. **Caveat:** there is a **ninth** keyed object type, `OneLoopIntegral` — prompt 02 §8's stop condition, left unassigned for the user |
 | T4 | **MEASUREMENT** | `GkNumericIntegration` characterised over the production response grid on three models in both `atol` and `rtol`, against the consumer-spline floor — the sector with ~65,000 objects per model, never swept, and where the campaign's compute decision actually lives | 03 | ⬜ |
 | T5 | **MEASUREMENT** | `TkNumericIntegration` likewise, re-taken on the version-2 grid and under its own `BREAK_POINT_ALL` policy | 03 | ⬜ |
 | T6 | **MEASUREMENT** | `wavenumber_exit_time`'s root solve measured at all — nothing in the record says what `xtol = 1e-10`, `rtol = 1e-8` in $\log(1+z)$ buys or costs. **Scored against the exact $z_{\rm exit}$ on `RadiationModel` first** (README §3.1): $1 + z = k/(H_0 e^{N})$, confirmed at the rebase to 2.3e-16 relative or better | 03 | ⬜ |
@@ -290,6 +298,83 @@ Opened by **prompt 01**, 2026-09-16:
   already audits `RESIDUAL_WKB_REGION_MARGIN` at every production $k$, so prompt 04's charter is
   the natural home for it when that prompt is written.
 
+Opened by **prompt 02**, 2026-09-16:
+
+- **[02-oneloopintegral-is-a-ninth-keyed-object-type]** *(prompt 02, 2026-09-16; **unassigned —
+  prompt 02 §8's stop condition, the user decides where it goes**)* — README §2 (a) counts eight
+  object types keyed on an accuracy parameter. There are **nine**.
+  `Datastore/SQL/ObjectFactories/OneLoopIntegral.py:101-116` declares `atol_serial` and
+  `rtol_serial` as indexed, non-nullable foreign keys into `tolerance`, exactly as the other eight
+  do, and `build()` filters on both at `:153-154`. The table is registered
+  (`Datastore/SQL/Datastore.py:120`), sharded on `k` (`config/sharding.py:34`), given a
+  client-pool budget (`ClientPool.py:43`) and given a drop action (`Datastore.py:130`).
+  **`main.py` never builds one** — its only `OneLoop` strings are two `store_tag` labels at
+  `:1021-1022` — and `ComputeTargets/OneLoopIntegral.py`'s `compute()` (`:94-112`) does nothing
+  but replace a label, so the object count of the sector is **0**. Two defects inside that stub,
+  folded in here rather than opened separately: `:105-107` raises "value haa already been
+  computed" when `self._value is **None**` (inverted condition, and the typo), and `store()`'s
+  first `raise` at `:116` is followed by an unreachable comment. **Impact:** small today and
+  structural tomorrow. Nothing is stored, so nothing is wrong in the datastore; but the campaign's
+  count of its own subject is wrong by one for the second time, prompt 05's `ast` guard must
+  enumerate **nine** targets rather than eight if this one is in scope, and a target whose schema
+  is already keyed on the shared pair will inherit whatever prompt 05 decides **unless someone
+  decides otherwise on purpose**. **Next step: the user decides.** It is not obviously prompt 03's
+  (no solver to sweep) nor prompt 04's (no order); it may be the cheap moment for prompt 05,
+  before any row exists to invalidate, or it may be premature to decouple a target that computes
+  nothing. Prompt 02 measured it and stopped there, as §8 requires. Evidence:
+  `docs/tolerance-convergence/TOLERANCE-INVENTORY.md` §2.1.
+
+- **[02-wavenumber-exit-time-tolerance-is-an-inequality-key]** *(prompt 02, 2026-09-16; candidate
+  for prompts 03 and 05)* — README §2 (g) says "every accuracy parameter is part of its object's
+  lookup key, so a new one makes every existing row of that type unreachable". True of eight of the
+  nine; **false of `wavenumber_exit_time`**. Its query
+  (`Datastore/SQL/ObjectFactories/wavenumber.py:242-254`) joins the `tolerance` table twice and
+  filters `stored.log10_tol - requested.log10_tol <= DEFAULT_FLOAT_PRECISION` on each — accept any
+  row **at least as tight as** the request — then orders by `log10_tol` **descending** and takes
+  `one_or_none()`, i.e. the **loosest** qualifying row. It does the same with
+  `stepping >= target_stepping`. **Impact:** tightening misses and recomputes, as an equality key
+  would; **loosening hits a tighter stored row and returns its `z_exit`**, and the object's own
+  `atol`/`rtol` properties (`CosmologyConcepts/wavenumber.py:729-734`) then report the *stored*
+  pair, not the requested one. A tolerance sweep run through the datastore would therefore be
+  served the same answer at several of its points and would measure nothing.
+  `MultipleResultsFound` is caught at `:260`, so two qualifying rows raise rather than choosing.
+  This is deliberate "best available" behaviour and is **not proposed for change here**.
+  **Next step:** prompt 03 sweeps this target by calling
+  `CosmologyConcepts.wavenumber._solve_horizon_exit` directly and never through `object_get`;
+  prompt 05's `ast` guard must not assume equality semantics at this site. Evidence:
+  `docs/tolerance-convergence/TOLERANCE-INVENTORY.md` §2.3.
+
+- **[02-shared-atol-doubles-as-a-float-comparison-epsilon]** *(prompt 02, 2026-09-16; candidate for
+  prompt 05)* — `DEFAULT_ABS_TOLERANCE` is not only the shared solver tolerance. It is also a bare
+  float-comparison epsilon at **seven** sites with no connection to the Green's-function ODE:
+  `ComputeTargets/GkSource.py:96`, `:104`, `:275`;
+  `Quadrature/integrators/numeric_with_phase_cut.py:618`, `:737`, `:790`;
+  `LiouvilleGreen/WKBtools.py:83`. All seven are `fabs(a - b) < DEFAULT_ABS_TOLERANCE`-shaped
+  guards — a redshift-equality check, a residual check, a phase-modulo check. **Impact:** prompt 05
+  is chartered to retune or split this constant, and the moment it does, all seven comparison
+  thresholds move with it, silently and in modules that are not in that prompt's file list. At
+  `1e-10` none of them is near its margin, so nothing is wrong today; the hazard is entirely in the
+  change. **Next step:** prompt 05 gives these seven sites a constant of their own — or states, in
+  its log, that it has checked each one against the new value. Evidence:
+  `docs/tolerance-convergence/TOLERANCE-INVENTORY.md` §4, closing paragraph.
+
+- **[02-extract-tkwkb-queries-tk-numeric-under-the-shared-atol]** *(prompt 02, 2026-09-16;
+  unassigned; prompt 05 touches the same six files)* — `extract_TkWKB_data.py:433-445` builds one
+  `query_payload` with `"atol": atol` where `atol = DEFAULT_ABS_TOLERANCE` (`:364`) and uses it for
+  **both** `TkNumericIntegration` and `TkWKBIntegration`. `main.py` writes every
+  `TkNumericIntegration` under `DEFAULT_TK_NUMERIC_ABS_TOLERANCE = 1e-13` — its own comment at
+  `main.py:3475-3479` says "every `TkNumericIntegration` `object_get` — the work items and **every
+  lookup** — must use it" — and that target's lookup filters `atol_serial ==`. **So this query
+  cannot match a production row.** None of the six `extract_*.py` readers imports
+  `DEFAULT_TK_NUMERIC_ABS_TOLERANCE` at all. **Impact:** an extraction script that has been unable
+  to plot the numeric limb of $T_k$ since `GkTk-remedial` prompt 12 shipped the split constant.
+  Not verified by running it — that needs a datastore, which prompt 02 may not stand up — so what
+  is established is that the key cannot match, not what the script does next. **Next step:** the
+  one-line fix is to import the constant and pass it for the numeric target only; prompt 05 already
+  has to revisit all six readers when it splits the constants further, and this is the same edit.
+  Evidence: `docs/tolerance-convergence/TOLERANCE-INVENTORY.md` §5.1 (the derived
+  `atol_serial ==` predicate) and log 02, observation 1.
+
 Assigned to this campaign from other boards (each stays on the board that holds its measurements;
 the closure is recorded there):
 
@@ -404,3 +489,22 @@ None yet.
     line number or a "what the tree does" claim from a document dated before the re-anchor must
     re-resolve it: `main.py` alone gained 42 lines above its citation sites, and §7.6 tabulates
     the ones this campaign's documents used. The five results of README §0.3 are unaffected.
+
+16. **The suite counts moved when prompt 01 landed, and one `ComputeTargets` test fails on this
+    machine** (prompt 02, 2026-09-16). `ComputeTargets` is **484**, not the 452 of the `bc6dc97`
+    re-anchor: prompt 01 added a test module. `CosmologyModels` is still **39, OK**. Of the 484,
+    **483 pass**; `test_tk_wkb_phase.TestCost.test_wall_time_per_object` fails at
+    `cold = 0.0605 s` against its `0.06 s` limit, reproducibly, **with no `.py` file changed**.
+    It is already attributed to `[07-tk-per-object-cost-is-all-setup]` on the `GkTk-remedial`
+    board by `prompts/phase-representation` log 02 observation 5, which saw 0.0638–0.0979 s on
+    this machine four runs of four. **A prompt here that sees this failure has not caused it**;
+    note 5 (counts, not wall time) is why. No issue is opened for it here.
+
+17. **There are nine keyed object types, not eight, and `wavenumber_exit_time`'s key is an
+    inequality** (prompt 02, 2026-09-16; note 6 is unchanged and still correct about the four).
+    The ninth is `OneLoopIntegral`, which production never builds. And README §2 (g)'s "a new
+    accuracy parameter makes every existing row of that type unreachable" holds for eight of the
+    nine: `wavenumber_exit_time` accepts any stored row at least as tight as the request and
+    returns the loosest such, so **loosening silently reuses a tighter row**. A sweep of that
+    target must bypass the datastore entirely. Both are §3 issues above, with the evidence in
+    `docs/tolerance-convergence/TOLERANCE-INVENTORY.md` §2.1 and §2.3.

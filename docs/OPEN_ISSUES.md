@@ -1,6 +1,6 @@
 # Open issues — project-wide index
 
-**Last updated:** 2026-09-16 · **70 open** across ten campaigns.
+**Last updated:** 2026-09-16 · **74 open** across ten campaigns.
 
 This file exists so that an issue opened by one campaign is not lost when that campaign closes.
 It is an **index, not a record**: one line per issue, pointing at the campaign status board that
@@ -94,8 +94,8 @@ prompt 13 left open.
 
 Planned as [`prompts/tolerance-convergence/`](../prompts/tolerance-convergence/README.md)
 (2026-09-12; **rebased 2026-09-16 at `acd5b8e`, re-anchored the same day at `bc6dc97` onto the
-tree `prompts/background-solver-robustness` left — six prompts, 01 executed, 02 written, 03–06
-deliberately held until 02's inventory lands**). One reusable
+tree `prompts/background-solver-robustness` left — six prompts, 01 and 02 executed, 03–06 written
+next, against 02's inventory rather than against a guess at it**). One reusable
 convergence test applied to every accuracy parameter in the pipeline on all three models, anchored
 to the constant-$w$ closed forms in `ComputeTargets/analytic_{Gk,Tk}.py`, and the parameters
 decoupled so each quantity carries its own justified one. **Unblocked** by `prompts/GkTk-remedial`
@@ -115,6 +115,17 @@ the plan never mentioned are now in scope: `wavenumber_exit_time`, a live `root_
 $\log(1+z)$ that fixes where every grid begins, and `BackgroundModel`, whose three Gauss orders are
 the largest instance of the case where the knob is an integer order rather than a tolerance.
 
+**Prompt 02 took that count against the tree, 2026-09-16, and it is off by one in the same
+direction.** [`docs/tolerance-convergence/TOLERANCE-INVENTORY.md`](tolerance-convergence/TOLERANCE-INVENTORY.md)
+derives the keyed tables from `Datastore/SQL/Datastore.py`'s factory map rather than from any
+document: **nine** object types are keyed on an `atol`/`rtol` pair, not eight — the ninth,
+`OneLoopIntegral`, is a schema with no computation behind it — and two policy tables are keyed on
+`Levin_threshold` besides. Every row of README §2 (a) is **confirmed**; what is wrong is the
+count, and the campaign's own one-sentence summary, which says one of the six `(atol, rtol)`
+sharers uses the value when **two** do. Seventeen accuracy parameters set the accuracy of a stored
+quantity and sit in no lookup key at all, of which `[20-wkb-gauss-orders-not-in-lookup-key]` names
+five.
+
 **Two cost figures this index previously carried were wrong and are corrected here.** (i) A QCD
 $T_k$ numeric object is **8,986** right-hand-side evaluations under its own `BREAK_POINT_ALL`
 policy, not ~31.5k: `qcd-background-audit` prompt 07 took the ~404 spline knots out of
@@ -129,6 +140,10 @@ where it was not.
 | `[00-three-production-grid-reproductions]` | tolerance-convergence | **Four** constructions in the test tree were each called "the production source grid" and are different grids. **Narrowed again by prompt 01, 2026-09-16**: the generations are now named and bit-identically hoisted into `wkb_reference.source_grid(SOURCE_GRID_V0/_V1/_V2, …)`, with no default, and the four sites repointed. What is left is the bare `production_source_grid` name, which **28 call sites in 20 files** outside that prompt's scope still import; all are v0 and correct, none says so. |
 | `[01-v2-density-raises-at-the-qcd-production-anchor]` | tolerance-convergence | `main.source_grid_spacing_profile` raises on `QCD_Cosmology` at the `z_exit_suph_e5` a QCD production run anchors the grid at (3.300e16), at the cosmology's own third declared crossing; the v1 grid builds there. Every recorded v2 QCD figure — 1,996 samples, digest `4849552b` — is anchored at **LambdaCDM's** 2.064e16 instead. Whether `main.py` reaches the raise in a real QCD run is unestablished. **Root cause narrowed by the orchestrator review, 2026-09-16:** the crossing mask in `source_grid_spacing_profile` is applied *after* the stencil loop that raises, so a masked node is still evaluated; reordering is not established as sufficient. |
 | `[01-density-criterion-imposed-outside-the-wkb-region]` | tolerance-convergence | `source_grid_spacing_profile` imposes the fourth-derivative spline criterion over `residual_node_range`'s band, which reaches **1.5–2.1 e-folds outside the horizon** — ~5 e-folds beyond the phase spline it protects, where the consumer is the direct numeric integration. 69% of the samples v2 adds on QCD lie above horizon crossing for the smallest production $k$. Unjustified rather than wrong (the criterion may only refine); candidate for **T7**. |
+| `[02-oneloopintegral-is-a-ninth-keyed-object-type]` | tolerance-convergence | **README §2 (a) counts eight keyed object types; there are nine.** `OneLoopIntegral` carries `atol_serial`/`rtol_serial` as indexed non-nullable foreign keys into `tolerance` and filters on both, is registered, sharded and budgeted — and `main.py` never builds one, its `compute()` being a label-replacing stub with an inverted guard. Object count 0. Prompt 02 §8's stop condition: **unassigned, the user decides** whether prompt 05 decouples it, before any row exists to invalidate, or whether decoupling a target that computes nothing is premature. |
+| `[02-wavenumber-exit-time-tolerance-is-an-inequality-key]` | tolerance-convergence | README §2 (g)'s "a new accuracy parameter makes every existing row unreachable" is true of eight of the nine. `wavenumber_exit_time`'s lookup filters `stored.log10_tol − requested <= DEFAULT_FLOAT_PRECISION` and orders descending, so it takes the **loosest row at least as tight as the request**: tightening misses, **loosening silently reuses a tighter row** and the object then reports the stored pair, not the requested one. Prompt 03 must sweep it through `_solve_horizon_exit` and never through the datastore. |
+| `[02-shared-atol-doubles-as-a-float-comparison-epsilon]` | tolerance-convergence | `DEFAULT_ABS_TOLERANCE` is also a bare `fabs(a − b) <` epsilon at seven sites with no connection to the $G_k$ ODE (`GkSource.py:96`, `:104`, `:275`; `numeric_with_phase_cut.py:618`, `:737`, `:790`; `WKBtools.py:83`). Nothing is wrong at 1e-10; the hazard is that prompt 05 retunes or splits the constant and all seven move with it, in modules outside that prompt's file list. |
+| `[02-extract-tkwkb-queries-tk-numeric-under-the-shared-atol]` | tolerance-convergence | `extract_TkWKB_data.py:433-445` queries `TkNumericIntegration` with `atol = DEFAULT_ABS_TOLERANCE` while `main.py` writes it under `DEFAULT_TK_NUMERIC_ABS_TOLERANCE`, and that target's lookup filters `atol_serial ==` — so the query cannot match a production row. None of the six `extract_*.py` readers imports the split constant. Live since `GkTk-remedial` prompt 12; prompt 05 revisits all six readers anyway. |
 | `[00-gk-numeric-never-swept-and-carries-the-cost]` | tolerance-convergence | "The error is set by `rtol`" is one clean measurement in the 50-object sector and one `(atol, rtol)` diagonal in the 65,000-object one. $G_k$ numeric has never been swept in either axis, and review §10.1 puts the consumer spline that reads it two orders above its solver error — so the honest answer may be "tighten nothing". Assigned to prompt 03. |
 | `[12-tk-numeric-atol-largest-k-excursion]` | GkTk-remedial → tolerance-convergence | Prompt 12's `atol=1e-13` left excursions above README §6's 3e-6 of the envelope that prompt 17 measured across the production grid: 3 / 13 / 8 of 50 wavenumbers on Radiation / LambdaCDM / QCD, worst 8.64e-4. **The user settled the constant 2026-09-12: `1e-13` stays** — `atol` is not the lever. What remains is the `rtol` retuning. **Assigned (2026-09-12): `prompts/tolerance-convergence`**; its cost figures corrected at the 2026-09-16 rebase, and its sweep re-taken on the v2 grid. |
 | `[01-convergence-block-has-a-separate-generator]` | qcd-background-audit → tolerance-convergence | `wkb_reference_data.json`'s `convergence` block records $N_\tau = N_{c_s\tau} = N_F = N_\rho = 4$, was generated 2026-09-10, and names `"branch+knots"` as its winning scheme — a knot set `qcd-background-audit` prompt 07 removed. One tolerance is owed on its account (`QCD_BREAK_POINT_ALIGNMENT_TOL = 1.5e-04`). Declined on scope by prompts 08 and 09 of that campaign. **Assigned (2026-09-16): `prompts/tolerance-convergence` prompt 04**, the first prompt anywhere whose charter is the orders themselves. |
