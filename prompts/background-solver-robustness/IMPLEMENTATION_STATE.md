@@ -380,8 +380,10 @@ Written by prompt 06. Empty until then.
     what matters is a code that does the right thing. **This changes the calculus of several
     entries written before it.** README §0.2's "no prompt moves a stored number or implies a
     regeneration", and every board entry that prices an option by how many object types it
-    invalidates, were weighing a cost the user does not have. A later prompt must not treat
-    "it would require a regeneration" as an argument against doing the correct thing.
+    invalidates, were weighing a cost the user does not have. **There is no regeneration to do**:
+    no prompt here should schedule one, hedge for one, or carry an outstanding action for one. A
+    later prompt must not treat "it would require a regeneration" as an argument against doing the
+    correct thing.
 15. **Workstream E is outside README §0.2.** Prompt 09 moves the `QCD_Cosmology` source-grid digest
     `a2c32f67` → `4849552b` **on purpose**, on exactly one sample. Note 12's "any later prompt that
     moves either has left its scope" is scoped to A–C and does not bind 09; `LambdaCDM`'s

@@ -80,5 +80,6 @@ prompt 09 halt on its own acceptance; the replacement paragraph is in that secti
   `docs/OPEN_ISSUES.md`, count corrected.
 
 Report to the user: the two digests before and after, the one sample that moved with its `hex()`
-either side, and the confirmation that `HEAD~1` fails §4.2 test 1. **Tell them the regeneration is
-theirs to run** — prompt 09 does not attempt it and adds no migration.
+either side, and the confirmation that `HEAD~1` fails §4.2 test 1. **There is no regeneration to
+report** — board standing note 14: there is no stored data to curate, so the digest move costs
+nothing and needs no follow-up.

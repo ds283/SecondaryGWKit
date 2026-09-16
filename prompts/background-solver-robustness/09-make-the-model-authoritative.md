@@ -171,9 +171,11 @@ Build the grids with `ComputeTargets/tests/test_source_grid._production_grid`, w
 `main.py`'s own functions through `load_main_py_functions` (`CLAUDE.md`: `main.py` cannot be
 imported). Record `HEAD~1` and `HEAD` for both models.
 
-**The datastore regeneration is not part of this prompt.** It is an operational step and it is the
-user's to run; board standing note 13 records that regeneration is not a cost in this project's
-current phase. Do not attempt it, and do not add a migration.
+**There is no regeneration to do** (the user, 2026-09-16; board standing note 14). This is the
+build phase of a science code and there is no stored data to curate, so "invalidates eight object
+types" is a statement about lookup keys and not a cost anyone pays. Do not attempt a regeneration,
+do not add a migration, and **do not hedge the change in the log as though a cost were outstanding**
+— the digest moves, that is the acceptance, and nothing further follows from it.
 
 ## 4. The tests
 
