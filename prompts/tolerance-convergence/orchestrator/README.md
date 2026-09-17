@@ -10,7 +10,7 @@ continues or stops and reports to the user.
 | 02 | The accuracy-parameter inventory | [`prompt-02.md`](prompt-02.md) | **yes** | Documents only. Ends in a **stop**: prompts 03 and 04 take their scope from its table, and the user reads it first |
 | 02a | Make the source grid buildable | [`prompt-02a.md`](prompt-02a.md) | **yes** | The first production change, under a **widened §0.5 boundary** (campaign README §7 D6). Acceptance is **bit-identity** with two published digests, not improvement. Ends in a **hand-back**: prompts 03 and 04 are written from 02's output and 02a's together |
 | 03 | `GkNumericIntegration`, and the floor that decides whether it matters | [`prompt-03.md`](prompt-03.md) | **yes** | The sector **D1** turns on: ~65,000 objects per model, never swept. Acceptance is a **matrix**, not a diagonal, and `unchanged` is a result. Ends in a **hand-back**: D1 is the user's |
-| 03a | `TkNumericIntegration` and `wavenumber_exit_time` | — | **held** | Written after 03 lands, so the $T_k$ re-take knows what the $G_k$ sweep found about the axes (campaign README §7 **D7**) |
+| 03a | `TkNumericIntegration` and `wavenumber_exit_time` | [`prompt-03a.md`](prompt-03a.md) | **yes** | Two targets that fail differently, and the one that **closes D1**. The $T_k$ re-take is under the sector's own `BREAK_POINT_ALL`, which has never been swept; `wavenumber_exit_time` is a **location, not a value**, and is the campaign's likeliest §6.1 **rule 6** row. Ends in a **hand-back**: D1 closes on the user's acceptance |
 | 04 | Audit the order-governed targets | — | **held** | Likewise. D5 is settled yes, so it may write the fixture |
 | 05 | Decouple | — | **held** | Its content *is* D1 and D3, which do not exist until 03 and 04 report |
 | 06 | `QuadSourceIntegral`, close-out, the provenance note | — | **held** | Assembles from the earlier logs |
@@ -44,16 +44,20 @@ Start with, for example:
 **Take the baselines the prompt names before dispatching anything.** They cannot be reconstructed
 after the fact.
 
-Run **01 → 02 → 02a → 03 → stop**. 02, 02a and 03 each end in a hand-back, and **03a and 04–06 are
-written from what has landed** (user decision, 2026-09-17): 02 says which targets the audits own,
-02a settles the anchor question that **T6** — now prompt 03a's row — turns on, and 03 settles
-whether the two tolerance axes separate in the sector that carries the cost.
+Run **01 → 02 → 02a → 03 → 03a → stop**. 02, 02a, 03 and 03a each end in a hand-back, and
+**04–06 are written from what has landed** (user decision, 2026-09-17): 02 says which targets the
+audits own, 02a settles the anchor question that **T6** — prompt 03a's row — turns on, and 03
+settled whether the two tolerance axes separate in the sector that carries the cost. **03a was
+written on 2026-09-17, after 03 landed and after the user accepted D1's $G_k$ half**, which is what
+§7 D7 asked for: the $T_k$ re-take is chartered knowing what the $G_k$ sweep found about the axes,
+and explicitly forbidden from borrowing its conclusions (prompt 03a §4.3).
 
 02a recommends nothing, so it is not a stopping point in campaign README §4.1's sense; it is a stop
-because the next prompt was not yet written. **03 is a stopping point in §4.1's own sense**: it ends
-in a recommendation the user must accept under **D1**, and **D1 is not settled until 03a has
-reported too**, since `wavenumber_exit_time`'s pair is part of it. Each prompt's **§1 baseline must
-be taken before dispatch** and cannot be reconstructed afterwards.
+because the next prompt was not yet written. **03 and 03a are stopping points in §4.1's own sense**:
+each ends in a recommendation the user must accept under **D1**. The user accepted the
+`GkNumericIntegration` half on **2026-09-17**; **D1 does not close until 03a's two targets are
+accepted as well**, and prompt 05 unblocks only then. Each prompt's **§1 baseline must be taken
+before dispatch** and cannot be reconstructed afterwards.
 
 ## The rules that bind the orchestrator
 

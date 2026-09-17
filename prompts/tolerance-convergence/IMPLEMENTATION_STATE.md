@@ -8,10 +8,10 @@
 re-run for the re-anchor and green — `ComputeTargets` **452**, `CosmologyModels` **39**)
 **Superseded baseline:** `acd5b8e`, `ComputeTargets` 447, `CosmologyModels` 30 — the anchor of any
 figure in this campaign's documents dated before 2026-09-16 19:32
-**Last updated:** 2026-09-17 · **Status: in progress — 3 / 6, plus the insertion 02a landed; 03a written next, 04–06 held.**
+**Last updated:** 2026-09-17 · **Status: in progress — 3 / 6, plus the insertion 02a landed; 03a written and dispatchable, 04–06 held.**
 **Every user decision needed to start is settled** — D1 and D3 are post-audit gates by design, D2
 settled 2026-09-12, D4 settled by README §0.4, **D5 settled yes 2026-09-16**.
-**Prompts 01, 02, 02a and 03 have all landed; 03a is written next, 04–06 are held** (§7 **D7** split §3.3's charter on 2026-09-17: **03** takes `GkNumericIntegration` and the consumer-spline floor, **T4**; **03a** takes `TkNumericIntegration` and `wavenumber_exit_time`, **T5** and **T6**, and is written after 03 lands) (§1 below; the 2026-09-17
+**Prompts 01, 02, 02a and 03 have all landed; 03a is written and dispatchable, 04–06 are held** (§7 **D7** split §3.3's charter on 2026-09-17: **03** takes `GkNumericIntegration` and the consumer-spline floor, **T4**; **03a** takes `TkNumericIntegration` and `wavenumber_exit_time`, **T5** and **T6**, and is written after 03 lands) (§1 below; the 2026-09-17
 decision — 02's table says which targets the audits own, and 02a settles the anchor that **T6**,
 prompt 03a's row since §7 **D7**, turns on). **Prompt 02a has landed** (README §3.2a, authorised by §7 **D6**,
 2026-09-17): `main.source_grid_spacing_profile` now guards the stencil evaluation where the
@@ -102,7 +102,7 @@ and `wavenumber_exit_time`. §2 (a)'s table says so on both rows; prompt 06 reco
 | 02 | The accuracy-parameter inventory | README §2 (a), (c), (g); `RECONCILIATION.md` §2.1 | Opus | ✍️ [`02-…`](02-accuracy-parameter-inventory.md) | ⚠️ | *"Inventory every accuracy parameter in the pipeline"* (SHA not embedded, per the convention `prompts/background-solver-robustness` uses) | [`logs/02-…`](logs/02-accuracy-parameter-inventory.md) |
 | 02a | Make the grid buildable at every production anchor | README §3.2a, §7 **D6**; `[01-v2-density-raises-at-the-qcd-production-anchor]` | Opus | ✍️ [`02a-…`](02a-source-grid-density-guard.md) | ⚠️ | *"Guard the source grid density criterion off-node"* (SHA not embedded, per the convention `prompts/background-solver-robustness` uses) | [`logs/02a-…`](logs/02a-source-grid-density-guard.md) |
 | 03 | `GkNumericIntegration`, and the floor that decides whether it matters | README §2 (d), (e), (f); §7 **D7**; review §10.1, §12.5; `[00-gk-numeric-never-swept-and-carries-the-cost]` | Opus | ✍️ [`03-…`](03-gk-numeric-and-its-floor.md) | ⚠️ | *"Sweep the Gk numeric tolerance matrix against its floor"* (SHA not embedded, per the convention `prompts/background-solver-robustness` uses) | [`logs/03-…`](logs/03-gk-numeric-and-its-floor.md) |
-| 03a | `TkNumericIntegration` and `wavenumber_exit_time` | README §3.3a, §7 **D7**; `[02-wavenumber-exit-time-tolerance-is-an-inequality-key]` | Opus | ⏸️ **held** — written after 03 lands | ⬜ | | |
+| 03a | `TkNumericIntegration` and `wavenumber_exit_time` | README §3.3a, §7 **D7**; `[02-wavenumber-exit-time-tolerance-is-an-inequality-key]`, `[12-tk-numeric-atol-largest-k-excursion]`, `[02a-grid-digest-not-reproducible]` | Opus | ✍️ [`03a-…`](03a-tk-numeric-and-exit-time.md) — **written 2026-09-17**, dispatchable | ⬜ | | |
 | 04 | Audit the order-governed targets | README §2 (a); §7 D5 **(settled yes)** | Opus | ⏸️ **held** | ⬜ | | |
 | 05 | Decouple | README §2 (a), (g); §7 D1, D3 | Opus | ⏸️ **held** | ⬜ | | |
 | 06 | `QuadSourceIntegral`, close-out, the provenance note | README §0.4, §1.2 | Opus | ⏸️ **held** | ⬜ | | |
