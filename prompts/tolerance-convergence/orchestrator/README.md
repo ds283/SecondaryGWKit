@@ -8,7 +8,7 @@ continues or stops and reports to the user.
 |---|---|---|---|---|
 | 01 | The convergence harness and one production grid | [`prompt-01.md`](prompt-01.md) | **yes** | Test-tree only. The review is whether a published measurement survived being moved — §4.1's two rows are the whole safety net |
 | 02 | The accuracy-parameter inventory | [`prompt-02.md`](prompt-02.md) | **yes** | Documents only. Ends in a **stop**: prompts 03 and 04 take their scope from its table, and the user reads it first |
-| 02a | Make the source grid buildable | [`prompt-02a.md`](prompt-02a.md) | **yes** | The first production change, under a **widened §0.5 boundary** (campaign README §7 D6). Acceptance is **bit-identity** with two published digests, not improvement; **not** a stopping point |
+| 02a | Make the source grid buildable | [`prompt-02a.md`](prompt-02a.md) | **yes** | The first production change, under a **widened §0.5 boundary** (campaign README §7 D6). Acceptance is **bit-identity** with two published digests, not improvement. Ends in a **hand-back**: prompts 03 and 04 are written from 02's output and 02a's together |
 | 03 | Audit the adaptive solvers | — | **held** | Its target list is prompt 02's output |
 | 04 | Audit the order-governed targets | — | **held** | Likewise. D5 is settled yes, so it may write the fixture |
 | 05 | Decouple | — | **held** | Its content *is* D1 and D3, which do not exist until 03 and 04 report |
@@ -24,7 +24,8 @@ anchor, the defect prompt 01 exists to close.
 **Prompts 03–06 are deliberately not written yet**, and that is a decision of 2026-09-16, not an
 omission — README §3 fixes each one's charter and §6 fixes its acceptance, so what is held back is
 the *method*, not the commitment. Writing 03 and 04 against an inventory that prompt 02 exists to
-establish would repeat the error the 2026-09-12 plan made. Board §1 records which are written.
+establish would repeat the error the 2026-09-12 plan made. **Since 2026-09-17 the precondition is
+02 and 02a together**, for the reason "Running one" gives. Board §1 records which are written.
 
 ## Running one
 
@@ -35,13 +36,14 @@ Start with, for example:
 **Take the baselines the prompt names before dispatching anything.** They cannot be reconstructed
 after the fact.
 
-Run **01 → 02 → stop**. Prompt 02's completion is a hand-back to the user (README §4.1), and
-prompts 03–06 do not exist until then.
+Run **01 → 02 → 02a → stop**. Both 02 and 02a end in a hand-back, and **prompts 03–06 are written
+from the two together** (user decision, 2026-09-17): 02 says which targets 03 and 04 own, and 02a
+settles the anchor question that **T6** — prompt 03's own row — turns on. A prompt 03 written after
+02 but before 02a would be written without half of what it needs.
 
-**02a runs after that stop and before 03**, once the user has settled prompt 02's hand-back and 03
-has been written. It is **not** itself a stopping point: it recommends nothing, so when its checks
-pass you continue. Its own §1 baseline must be taken before dispatch and cannot be reconstructed
-afterwards.
+02a recommends nothing, so it is not a stopping point in campaign README §4.1's sense; it is a stop
+because it is the last written prompt. Its **§1 baseline must be taken before dispatch** and cannot
+be reconstructed afterwards.
 
 ## The rules that bind the orchestrator
 

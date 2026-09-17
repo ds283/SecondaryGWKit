@@ -11,8 +11,9 @@ figure in this campaign's documents dated before 2026-09-16 19:32
 **Last updated:** 2026-09-17 · **Status: in progress — 2 / 6, plus the insertion 02a written.**
 **Every user decision needed to start is settled** — D1 and D3 are post-audit gates by design, D2
 settled 2026-09-12, D4 settled by README §0.4, **D5 settled yes 2026-09-16**.
-**Prompts 01 and 02 are written, with their orchestrator prompts; 03–06 are deliberately held**
-until 02's inventory lands (§1 below). **Prompt 02a is now written, with its orchestrator prompt, and inserted ahead of 03**
+**Prompts 01, 02 and 02a are written, with their orchestrator prompts; 03–06 are deliberately held**
+until **both 02 and 02a** have landed (§1 below; the 2026-09-17 decision — 02's table says which
+targets the audits own, and 02a settles the anchor that **T6**, prompt 03's own row, turns on). **Prompt 02a is now written, with its orchestrator prompt, and is dispatched next, ahead of 03**
 (README §3.2a, authorised by §7 **D6**, 2026-09-17): the version-2 source grid cannot be built on
 `QCD_Cosmology` at the anchor a QCD production run uses, and 03, 04 and 06 are each chartered to
 measure over the production grids on all three models, so without it every one of them must measure
@@ -97,11 +98,14 @@ Status key: ⬜ not started · 🔄 in flight · ✅ complete · ⚠️ complete
 > 2026-09-12 plan made, and the reason new 02 has no predecessor. 05's content **is** D1 and D3,
 > which do not exist until 03 and 04 report; 06 assembles from the earlier logs.
 >
-> **The staging:** 01 and 02 now; **03 and 04 written after 02 lands**, against its table rather
-> than against a guess at it; 05 after the user settles D1 and D3; 06 last. This costs nothing in
-> elapsed time — §4.1 already declares a stop after each of 02, 03 and 04, where the user is in the
-> loop anyway. Orchestrator prompts are staged with them
-> ([`orchestrator/README.md`](orchestrator/README.md)).
+> **The staging, as revised 2026-09-17:** 01, 02 and **02a** now; **03 and 04 written after 02 and
+> 02a have both landed**, against 02's table and 02a's hand-off rather than against a guess at
+> either; 05 after the user settles D1 and D3; 06 last. 02a joins the precondition because **T6 is
+> prompt 03's own row** and 02a is what settles the anchor it turns on — a prompt 03 drafted from 02
+> alone would allocate `wavenumber_exit_time` without the measurement that changes its charter. This
+> costs nothing in elapsed time — §4.1 already declares a stop after each of 02, 03 and 04, and 02a
+> ends in a hand-back for the same reason, so the user is in the loop anyway. Orchestrator prompts
+> are staged with them ([`orchestrator/README.md`](orchestrator/README.md)).
 
 > **02a is an insertion, not a renumbering.** It carries a letter so that the charters of README
 > §3.3–§3.6, the acceptance rows of §6.2 and the T-numbers of §2 keep the numbers every other

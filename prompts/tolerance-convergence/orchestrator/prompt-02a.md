@@ -13,9 +13,11 @@ boundary that permits it is campaign README §7 **D6**, settled 2026-09-17, and 
 narrow: `main.source_grid_spacing_profile` and nothing else in `main.py`. Two of this orchestrator
 prompt's checks exist only to hold that line.
 
-**It is not a stopping point** (campaign README §4.1). 02a recommends nothing and decides nothing.
-When it lands and the checks pass, dispatch prompt 03 — which by then must have been written, since
-prompt 02's hand-back is what it is written from.
+**It recommends nothing and decides nothing**, so it is not a stopping point in §4.1's sense — but
+it is currently the **last written prompt**, so the orchestrator stops after it by exhaustion.
+Prompts 03 and 04 are written from prompt 02's hand-off and 02a's **together** (user decision,
+2026-09-17): 02a settles the anchor question that **T6** — prompt 03's own subject — turns on, so a
+prompt 03 written before 02a lands would be written without it.
 
 ---
 
@@ -181,7 +183,25 @@ by D6** for this prompt only, to the carve-out of §2 above:
 
 ## 6. After it lands
 
-Not a hand-back. Confirm the two digests to the user in one line, with the QCD sample and
-guarded-node counts and the refusal threshold, then continue to prompt 03 — which must exist by
-then, written against prompt 02's hand-off (campaign README §4). If prompt 03 has not been written,
-**that** is the stop, and it is the user's to resolve, not yours.
+**Hand back to the user, because prompt 03 does not exist yet and is written from this prompt as
+well as from 02.** Do not treat that as a failure of sequencing: it is the 2026-09-17 decision, and
+the reason is that 02a produces three things prompt 03's and prompt 04's charters need.
+
+Report, in this order:
+
+1. **The two digests**, unchanged, with the QCD sample count and guarded-node count at QCD's own
+   anchor and the refusal threshold with its margin. One line each; this is the acceptance.
+2. **The guarded-node count per cosmology and per sector**, with the band size beside it. This is
+   what prompt 04's **T7** charter is written from —
+   `[01-density-criterion-imposed-outside-the-wkb-region]` has been waiting for a measure of how far
+   the band overreaches, and this is it.
+3. **The per-cosmology anchor constants** by name, since prompts 03, 04 and 06 must be able to say
+   which anchor a figure was taken at, as §2 (b) makes them say which grid generation.
+4. **Anything the prompt found about the anchor solve** that bears on **T6**. 02a may not touch
+   `_solve_horizon_exit`, but it works at the anchor, and `[02a-grid-digest-not-reproducible]`
+   already records that the binding term is `rtol·|u| ≈ 3.8e-7` rather than the `xtol = 1e-10` that
+   README §6.2's `wavenumber_exit_time` row and prompt 02's inventory both name. If the agent
+   confirms, contradicts or sharpens that, it belongs in the hand-back, because prompt 03 is
+   written next and that row is its.
+
+Then stop. Do not draft prompt 03 yourself (rule 1), and do not dispatch anything further.

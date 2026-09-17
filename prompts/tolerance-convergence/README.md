@@ -624,6 +624,14 @@ first, since D1 is the decision with a compute cost attached. 05 must not start 
 are settled — it is the prompt that invalidates the datastore, and settling a parameter afterwards
 would invalidate it twice.
 
+**03 and 04 are written after 02a, not merely after 02.** The 2026-09-17 decision is that both
+audits are written from 02's inventory and 02a's hand-off together. 02's table says which targets
+each of them owns; 02a settles the anchor — which grid each figure is taken at, and what
+`_solve_horizon_exit`'s convergence criterion actually is — and **T6 is prompt 03's own row**. A
+prompt 03 drafted from 02 alone would allocate `wavenumber_exit_time` without the one measurement
+that changes its charter, which is the same error, one level down, that §4's first paragraph records
+about the 2026-09-12 plan.
+
 **Two pieces of work are deliberately placed downstream of 03 rather than in 02a**, and
 `[02a-grid-digest-not-reproducible]` is the record of why. The grid tag digests the exact bits of
 the grid's values, while `z_init` is a root-solve output whose convergence criterion is
@@ -639,9 +647,11 @@ in 02a, whose acceptance is bit-identity with the published digests.
 
 After **02**, **03** and **04**, always: each ends in a recommendation the user must accept before
 anything is changed. After **05**, because the datastore regeneration is a compute decision
-(§7 D2). **02a is not a stopping point** — it recommends nothing and decides nothing; its
-acceptance is mechanical (§3.2a), and it either reproduces the two published digests or it is a
-stop under §4.3.
+(§7 D2). **02a recommends nothing and decides nothing** — its acceptance is mechanical (§3.2a), and
+it either reproduces the two published digests or it is a stop under §4.3. It nonetheless **ends in
+a hand-back**, because it is the last written prompt and because **prompts 03 and 04 are written
+from prompt 02's output and 02a's together** (user decision, 2026-09-17): 02 says which targets each
+audit owns, and 02a settles the anchor question **T6** turns on.
 
 ### 4.2 Relationship to the campaigns that closed before it
 
