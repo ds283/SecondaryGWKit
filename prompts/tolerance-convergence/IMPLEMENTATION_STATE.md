@@ -8,7 +8,7 @@
 re-run for the re-anchor and green — `ComputeTargets` **452**, `CosmologyModels` **39**)
 **Superseded baseline:** `acd5b8e`, `ComputeTargets` 447, `CosmologyModels` 30 — the anchor of any
 figure in this campaign's documents dated before 2026-09-16 19:32
-**Last updated:** 2026-09-17 · **Status: in progress — 4 / 6, plus the insertion 02a landed; 04–06 held.**
+**Last updated:** 2026-09-17 · **Status: in progress — 5 / 6, plus the insertion 02a landed; 04 written and not yet run; 05–06 held.**
 **Every user decision needed to start is settled** — **D1 closed 2026-09-17** (all four pairs
 accepted), D3 remains a post-audit gate on prompt 04, D2 settled 2026-09-12, D4 settled by
 README §0.4, **D5 settled yes 2026-09-16**.
@@ -114,7 +114,12 @@ and `wavenumber_exit_time`. §2 (a)'s table says so on both rows; prompt 06 reco
 > **D5 is settled yes** (README §7), so prompt 04 may re-run `residual_convergence.py`, write
 > `ComputeTargets/tests/wkb_reference_data.json` and edit `test_background_tau.py` —
 > `[01-convergence-block-has-a-separate-generator]` has, for the first time, a prompt allowed to
-> close it.
+> close it. **Prompt 04 was written on 2026-09-17 and found that the carve-out is one file short of
+> the work**: `test_background_cs_tau_friction.py` and `test_phase_residual.py` also read the
+> `convergence` block, the first of them using a recorded floor as a **threshold** — *production
+> error ≤ 3 × floor* — so a regenerated, tighter floor can fail a test D5 does not reach. Prompt 04
+> §2 makes that a stop rather than a licence, and tells its agent to determine the four orders
+> **before** writing the fixture, so that a tree it may not repair is never left red.
 
 ---
 
@@ -127,7 +132,7 @@ and `wavenumber_exit_time`. §2 (a)'s table says so on both rows; prompt 06 reco
 | 02a | Make the grid buildable at every production anchor | README §3.2a, §7 **D6**; `[01-v2-density-raises-at-the-qcd-production-anchor]` | Opus | ✍️ [`02a-…`](02a-source-grid-density-guard.md) | ⚠️ | *"Guard the source grid density criterion off-node"* (SHA not embedded, per the convention `prompts/background-solver-robustness` uses) | [`logs/02a-…`](logs/02a-source-grid-density-guard.md) |
 | 03 | `GkNumericIntegration`, and the floor that decides whether it matters | README §2 (d), (e), (f); §7 **D7**; review §10.1, §12.5; `[00-gk-numeric-never-swept-and-carries-the-cost]` | Opus | ✍️ [`03-…`](03-gk-numeric-and-its-floor.md) | ⚠️ | *"Sweep the Gk numeric tolerance matrix against its floor"* (SHA not embedded, per the convention `prompts/background-solver-robustness` uses) | [`logs/03-…`](logs/03-gk-numeric-and-its-floor.md) |
 | 03a | `TkNumericIntegration` and `wavenumber_exit_time` | README §3.3a, §7 **D7**; `[02-wavenumber-exit-time-tolerance-is-an-inequality-key]`, `[12-tk-numeric-atol-largest-k-excursion]`, `[02a-grid-digest-not-reproducible]` | Opus | ✍️ [`03a-…`](03a-tk-numeric-and-exit-time.md) | ⚠️ | *"Sweep the Tk numeric and exit-time tolerances against their floors"* (SHA not embedded, per the convention `prompts/background-solver-robustness` uses) | [`logs/03a-…`](logs/03a-tk-numeric-and-exit-time.md) |
-| 04 | Audit the order-governed targets | README §2 (a); §7 D5 **(settled yes)** | Opus | ⏸️ **held** | ⬜ | | |
+| 04 | Audit the order-governed targets | README §2 (a), §3.4; §7 **D5** (settled yes) and **D3**; `[01-convergence-block-has-a-separate-generator]`, `[20-wkb-gauss-orders-not-in-lookup-key]`, `[01-density-criterion-imposed-outside-the-wkb-region]` | Opus | ✍️ [`04-…`](04-order-governed-targets.md) | ⬜ | | |
 | 05 | Decouple | README §2 (a), (g); §7 D1, D3 | Opus | ⏸️ **held** | ⬜ | | |
 | 06 | `QuadSourceIntegral`, close-out, the provenance note | README §0.4, §1.2 | Opus | ⏸️ **held** | ⬜ | | |
 

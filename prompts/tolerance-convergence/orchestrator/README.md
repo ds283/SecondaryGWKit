@@ -11,7 +11,7 @@ continues or stops and reports to the user.
 | 02a | Make the source grid buildable | [`prompt-02a.md`](prompt-02a.md) | **yes** | The first production change, under a **widened §0.5 boundary** (campaign README §7 D6). Acceptance is **bit-identity** with two published digests, not improvement. Ends in a **hand-back**: prompts 03 and 04 are written from 02's output and 02a's together |
 | 03 | `GkNumericIntegration`, and the floor that decides whether it matters | [`prompt-03.md`](prompt-03.md) | **yes** | The sector **D1** turns on: ~65,000 objects per model, never swept. Acceptance is a **matrix**, not a diagonal, and `unchanged` is a result. Ends in a **hand-back**: D1 is the user's |
 | 03a | `TkNumericIntegration` and `wavenumber_exit_time` | [`prompt-03a.md`](prompt-03a.md) | **yes** | Two targets that fail differently, and the one that **closes D1**. The $T_k$ re-take is under the sector's own `BREAK_POINT_ALL`, which has never been swept; `wavenumber_exit_time` is a **location, not a value**, and is the campaign's likeliest §6.1 **rule 6** row. Ends in a **hand-back**: D1 closes on the user's acceptance |
-| 04 | Audit the order-governed targets | — | **held** | Likewise. D5 is settled yes, so it may write the fixture |
+| 04 | Audit the order-governed targets | [`prompt-04.md`](prompt-04.md) | **yes** | The first prompt to write a fixture other prompts' tests read. D5 gives it three files; **three test modules read the block and only one of them is inside that carve-out**, which is what the review is for. Ends in a **hand-back**: D3 is the user's and prompt 05 waits on it |
 | 05 | Decouple | — | **held** | Its content *is* D1 and D3, which do not exist until 03 and 04 report |
 | 06 | `QuadSourceIntegral`, close-out, the provenance note | — | **held** | Assembles from the earlier logs |
 
@@ -22,7 +22,7 @@ QCD production run uses, and prompts 03, 04 and 06 are each chartered to measure
 grids on **all three models** — so without it every one of them must measure QCD at LambdaCDM's
 anchor, the defect prompt 01 exists to close.
 
-**Prompts 03a and 04–06 are deliberately not written yet**, and that is a decision of 2026-09-16,
+**Prompts 05 and 06 are deliberately not written yet**, and that is a decision of 2026-09-16,
 not an omission — README §3 fixes each one's charter and §6 fixes its acceptance, so what is held
 back is the *method*, not the commitment. Writing them against an inventory that prompt 02 exists to
 establish would repeat the error the 2026-09-12 plan made. **Since 2026-09-17 the precondition is
@@ -44,7 +44,7 @@ Start with, for example:
 **Take the baselines the prompt names before dispatching anything.** They cannot be reconstructed
 after the fact.
 
-Run **01 → 02 → 02a → 03 → 03a → stop**. 02, 02a, 03 and 03a each end in a hand-back, and
+Run **01 → 02 → 02a → 03 → 03a → 04 → stop**. 02, 02a, 03 and 03a each end in a hand-back, and
 **04–06 are written from what has landed** (user decision, 2026-09-17): 02 says which targets the
 audits own, 02a settles the anchor question that **T6** — prompt 03a's row — turns on, and 03
 settled whether the two tolerance axes separate in the sector that carries the cost. **03a was
@@ -192,3 +192,12 @@ And, for this batch specifically:
   exercise.
 - **Prompt 02a reporting a moved grid digest** for either published grid. A stop even if the new
   grid looks better; see [`prompt-02a.md`](prompt-02a.md) §3.2 for the likely cause.
+
+**Prompt 04 was written on 2026-09-17, after 03a landed and after the user closed D1.** D1's closure
+does not gate it — no tolerance in prompt 04 is one D1 settled — but it changes what the prompt is
+for: **D3 is now the only decision prompt 05 is still waiting on**, and prompt 04's §6 is where it
+comes from. The prompt is written against the tree rather than the plan in one respect the plan did
+not anticipate: `RECONCILIATION.md` §5 said the re-run needs three files, and reading the tree shows
+that **`test_background_cs_tau_friction.py` and `test_phase_residual.py` also read the block** and
+are outside D5's grant. That collision is prompt 04 §2 and orchestrator §5's first stop, and it is
+the reason the prompt tells its agent to determine the orders *before* writing the fixture.
