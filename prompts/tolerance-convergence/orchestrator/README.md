@@ -8,10 +8,18 @@ continues or stops and reports to the user.
 |---|---|---|---|---|
 | 01 | The convergence harness and one production grid | [`prompt-01.md`](prompt-01.md) | **yes** | Test-tree only. The review is whether a published measurement survived being moved — §4.1's two rows are the whole safety net |
 | 02 | The accuracy-parameter inventory | [`prompt-02.md`](prompt-02.md) | **yes** | Documents only. Ends in a **stop**: prompts 03 and 04 take their scope from its table, and the user reads it first |
+| 02a | Make the source grid buildable | [`prompt-02a.md`](prompt-02a.md) | **yes** | The first production change, under a **widened §0.5 boundary** (campaign README §7 D6). Acceptance is **bit-identity** with two published digests, not improvement; **not** a stopping point |
 | 03 | Audit the adaptive solvers | — | **held** | Its target list is prompt 02's output |
 | 04 | Audit the order-governed targets | — | **held** | Likewise. D5 is settled yes, so it may write the fixture |
 | 05 | Decouple | — | **held** | Its content *is* D1 and D3, which do not exist until 03 and 04 report |
 | 06 | `QuadSourceIntegral`, close-out, the provenance note | — | **held** | Assembles from the earlier logs |
+
+**02a is an insertion, not a renumbering** (campaign README §3.2a, §7 D6, 2026-09-17). It carries a
+letter so that §§3.3–3.6's charters and §6.2's acceptance rows keep the numbers the rest of the tree
+cites. It exists because the version-2 source grid cannot be built on `QCD_Cosmology` at the anchor a
+QCD production run uses, and prompts 03, 04 and 06 are each chartered to measure over the production
+grids on **all three models** — so without it every one of them must measure QCD at LambdaCDM's
+anchor, the defect prompt 01 exists to close.
 
 **Prompts 03–06 are deliberately not written yet**, and that is a decision of 2026-09-16, not an
 omission — README §3 fixes each one's charter and §6 fixes its acceptance, so what is held back is
@@ -27,8 +35,13 @@ Start with, for example:
 **Take the baselines the prompt names before dispatching anything.** They cannot be reconstructed
 after the fact.
 
-Run **01 → 02 → stop**. Prompt 02's completion is a hand-back to the user (README §4.1), and the
-next orchestrator prompt does not exist until then.
+Run **01 → 02 → stop**. Prompt 02's completion is a hand-back to the user (README §4.1), and
+prompts 03–06 do not exist until then.
+
+**02a runs after that stop and before 03**, once the user has settled prompt 02's hand-back and 03
+has been written. It is **not** itself a stopping point: it recommends nothing, so when its checks
+pass you continue. Its own §1 baseline must be taken before dispatch and cannot be reconstructed
+afterwards.
 
 ## The rules that bind the orchestrator
 
@@ -70,8 +83,8 @@ PYTHONPATH=. ./venv/bin/python -m unittest discover -s CosmologyModels/tests -t 
   campaign document written before 2026-09-16 19:32 will say 447 and 30; those are the
   `acd5b8e` figures and an orchestrator checking for them would stop on a healthy tree.
 - `ComputeTargets` may **rise** at prompt 01 (it adds a test module) and must **not fall**.
-- `CosmologyModels` must read **39** at every commit of prompts 01 and 02 — neither touches that
-  package, so any movement at all is unintended.
+- `CosmologyModels` must read **39** at every commit of prompts 01, 02 and 02a — none of the three
+  touches that package, so any movement at all is unintended.
 - Both suites print model banners on stdout, so **`| tail -5` will not show the verdict**. Capture
   to a file and grep it, or use `tail -40`.
 - `ComputeTargets` takes ~164 s. That is normal, not a hang.
@@ -84,10 +97,23 @@ git diff --stat HEAD~1 HEAD -- . ':!prompts' ':!docs/tolerance-convergence'
 
 must be **empty**.
 
+And for **prompt 02a only** — it is the one prompt before 05 that changes production code, and D6
+bounds what it may change:
+
+```bash
+git diff --stat HEAD~1 HEAD -- . ':!prompts' ':!docs'
+```
+
+must list **only** `main.py`, `ComputeTargets/tests/wkb_reference.py` and
+`ComputeTargets/tests/test_source_grid.py`; and `git diff HEAD~1 HEAD -- main.py` must touch
+`source_grid_spacing_profile` and no other function. See [`prompt-02a.md`](prompt-02a.md) §3.1.
+
 ## The dispatch template
 
 For prompt NN, launch a subagent with **exactly** this context, with the model the campaign
-README §3 names (**Opus** for both 01 and 02):
+README §3 names (**Opus** for 01, 02 and 02a). **For 02a the template's parameter-freeze sentence is
+replaced**, because §7 D6 permits it one function; the replacement text is in
+[`prompt-02a.md`](prompt-02a.md) §2 and must be used verbatim rather than paraphrased:
 
 > You are the implementation agent for one prompt in a campaign. Read, in this order:
 > `prompts/tolerance-convergence/README.md`,
@@ -120,7 +146,10 @@ README §4.3's list, which applies to every prompt in this campaign:
 - an agent touches `QuadSourceIntegral.py`, `QuadSource.py`, `phase_groups.py`, `AdaptiveLevin/`
   (§0.4) or a file on `GkTk-remedial` §0.2's `transfer-remedial` list;
 - an agent proposes to change `BREAK_POINT_KIND`, the source grid, or
-  `RESIDUAL_WKB_REGION_MARGIN`'s value (§0.5);
+  `RESIDUAL_WKB_REGION_MARGIN`'s value (§0.5) — **amended by §7 D6 for prompt 02a only**, whose
+  carve-out is `main.source_grid_spacing_profile` alone; 02a touching the band, the margin,
+  `build_z_sample`, `_solve_horizon_exit` or the digest is still a stop, and so is **any** prompt
+  reporting a moved grid digest;
 - a convergence test **fails to converge** and the prompt continues anyway — the error prompt 17
   made, and the reason this campaign exists;
 - prompt 03 or 04 finds that the recommended parameters would change production cost by more than a
@@ -134,3 +163,5 @@ And, for this batch specifically:
 - **Any subagent that reports `PARTIAL`, `BLOCKED`, or an `UNINTENDED DRIFT` it kept.**
 - **Prompt 01 reporting that §4.1's two rows did not reproduce.** That is a stop, not a tuning
   exercise.
+- **Prompt 02a reporting a moved grid digest** for either published grid. A stop even if the new
+  grid looks better; see [`prompt-02a.md`](prompt-02a.md) §3.2 for the likely cause.

@@ -12,7 +12,7 @@ figure in this campaign's documents dated before 2026-09-16 19:32
 **Every user decision needed to start is settled** — D1 and D3 are post-audit gates by design, D2
 settled 2026-09-12, D4 settled by README §0.4, **D5 settled yes 2026-09-16**.
 **Prompts 01 and 02 are written, with their orchestrator prompts; 03–06 are deliberately held**
-until 02's inventory lands (§1 below). **Prompt 02a is now written and inserted ahead of 03**
+until 02's inventory lands (§1 below). **Prompt 02a is now written, with its orchestrator prompt, and inserted ahead of 03**
 (README §3.2a, authorised by §7 **D6**, 2026-09-17): the version-2 source grid cannot be built on
 `QCD_Cosmology` at the anchor a QCD production run uses, and 03, 04 and 06 are each chartered to
 measure over the production grids on all three models, so without it every one of them must measure
