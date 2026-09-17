@@ -8,11 +8,15 @@
 re-run for the re-anchor and green — `ComputeTargets` **452**, `CosmologyModels` **39**)
 **Superseded baseline:** `acd5b8e`, `ComputeTargets` 447, `CosmologyModels` 30 — the anchor of any
 figure in this campaign's documents dated before 2026-09-16 19:32
-**Last updated:** 2026-09-16 · **Status: in progress — 2 / 6.**
+**Last updated:** 2026-09-17 · **Status: in progress — 2 / 6, plus the insertion 02a written.**
 **Every user decision needed to start is settled** — D1 and D3 are post-audit gates by design, D2
 settled 2026-09-12, D4 settled by README §0.4, **D5 settled yes 2026-09-16**.
 **Prompts 01 and 02 are written, with their orchestrator prompts; 03–06 are deliberately held**
-until 02's inventory lands (§1 below). **Prompt 01 has landed**: the convergence facility is
+until 02's inventory lands (§1 below). **Prompt 02a is now written and inserted ahead of 03**
+(README §3.2a, authorised by §7 **D6**, 2026-09-17): the version-2 source grid cannot be built on
+`QCD_Cosmology` at the anchor a QCD production run uses, and 03, 04 and 06 are each chartered to
+measure over the production grids on all three models, so without it every one of them must measure
+QCD at LambdaCDM's anchor — the defect prompt 01 exists to close. **Prompt 01 has landed**: the convergence facility is
 `ComputeTargets/tests/convergence_reference.py` and the source-grid generations are named in
 `ComputeTargets/tests/wkb_reference.py`. Every later prompt measures through them.
 **Prompt 02 has landed**: `docs/tolerance-convergence/TOLERANCE-INVENTORY.md` is the inventory and
@@ -75,6 +79,7 @@ and `wavenumber_exit_time`. §2 (a)'s table says so on both rows; prompt 06 reco
 |---|---|---|---|---|---|---|---|
 | 01 | The convergence harness and one production grid | README §2 (b), (h); `[00-three-production-grid-reproductions]` | Opus | ✍️ [`01-…`](01-convergence-harness-and-grid.md) | ✅ | *"Build the convergence harness and name the source-grid generations"* (SHA not embedded, per the convention `prompts/background-solver-robustness` uses) | [`logs/01-…`](logs/01-convergence-harness-and-grid.md) |
 | 02 | The accuracy-parameter inventory | README §2 (a), (c), (g); `RECONCILIATION.md` §2.1 | Opus | ✍️ [`02-…`](02-accuracy-parameter-inventory.md) | ⚠️ | *"Inventory every accuracy parameter in the pipeline"* (SHA not embedded, per the convention `prompts/background-solver-robustness` uses) | [`logs/02-…`](logs/02-accuracy-parameter-inventory.md) |
+| 02a | Make the grid buildable at every production anchor | README §3.2a, §7 **D6**; `[01-v2-density-raises-at-the-qcd-production-anchor]` | Opus | ✍️ [`02a-…`](02a-source-grid-density-guard.md) | ⬜ | | |
 | 03 | Audit the adaptive solvers | README §2 (d), (e), (f); review §10.1, §12.5 | Opus | ⏸️ **held** | ⬜ | | |
 | 04 | Audit the order-governed targets | README §2 (a); §7 D5 **(settled yes)** | Opus | ⏸️ **held** | ⬜ | | |
 | 05 | Decouple | README §2 (a), (g); §7 D1, D3 | Opus | ⏸️ **held** | ⬜ | | |
@@ -97,6 +102,13 @@ Status key: ⬜ not started · 🔄 in flight · ✅ complete · ⚠️ complete
 > elapsed time — §4.1 already declares a stop after each of 02, 03 and 04, where the user is in the
 > loop anyway. Orchestrator prompts are staged with them
 > ([`orchestrator/README.md`](orchestrator/README.md)).
+
+> **02a is an insertion, not a renumbering.** It carries a letter so that the charters of README
+> §3.3–§3.6, the acceptance rows of §6.2 and the T-numbers of §2 keep the numbers every other
+> document in the tree cites. It is the first production change this campaign makes; §7 D6 records
+> the widened §0.5 boundary that permits it, and the carve-out is
+> `main.source_grid_spacing_profile` alone. Its acceptance is **bit-identity** with the two
+> published grid digests, not improvement — a moved digest is a stop under README §4.3.
 
 **The 2026-09-12 board carried five prompts.** The mapping, so that a reader of the old plan is not
 lost: old 01 → new 01 (widened by the grid); old 02 → new 03 (widened by `wavenumber_exit_time` and
@@ -127,6 +139,7 @@ not ✅ either, which is the specific failure the rebase found.
 | T10 | **PLUMBING** | Every `object_get` of a retuned target carries its own parameter, with an `ast` guard whose predicate reaches all eight targets and fails on an unclassified site | 05 | ⬜ |
 | T11 | **HAND-OFF** | `QuadSourceIntegral` measured read-only and reported to `levin-refactor` / `qsi-phase-groups` | 06 | ⬜ |
 | T12 | **PROVENANCE** | `docs/TOLERANCE-PROVENANCE.md` covers **every** accuracy parameter in the pipeline — including the ones this campaign inherits and does not set, and the ones nobody has ever chosen — with value, choosing measurement and its grid generation, competing floor, cost times object count, and citation (README §1.2) | 06 | ⬜ |
+| T13 | **MACHINERY** | The version-2 source grid **builds at every production anchor on every production cosmology**, with a node at which the Liouville–Green expansion does not exist marked unusable and *counted* rather than raising, a refusal above a measured fraction of the band, and QCD's own anchor named in the test tree. Acceptance is bit-identity with the two published digests (1996 / `4849552b`, 1778 / `60a3205a`), not accuracy | 02a | ⬜ |
 
 ---
 
@@ -216,7 +229,7 @@ Opened by the **2026-09-16 rebase**:
 
 Opened by **prompt 01**, 2026-09-16:
 
-- **[01-v2-density-raises-at-the-qcd-production-anchor]** *(prompt 01, 2026-09-16; unassigned)* —
+- **[01-v2-density-raises-at-the-qcd-production-anchor]** *(prompt 01, 2026-09-16; **assigned 2026-09-17 to prompt 02a**)* —
   `main.source_grid_spacing_profile` **raises** on `QCD_Cosmology` when the source grid is anchored
   where a QCD production run anchors it. `main.py:944` starts the universal grid at
   `k_exit_earliest.z_exit_suph_e5`; run directly, production's own
@@ -259,8 +272,34 @@ Opened by **prompt 01**, 2026-09-16:
   > `[01-density-criterion-imposed-outside-the-wkb-region]`, which is the deeper defect: the band
   > this loop runs over had no business reaching that far in the first place.
 
+  > **Both open questions answered, and the issue assigned, 2026-09-17.** Re-run at `main.py`'s own
+  > configuration — `z_init` from `_solve_horizon_exit(QCD, k = 3e8, -5)`, **all fifty** wavenumbers
+  > of `main.py:3587` in both sectors, `zend = 0.1`, 100 per decade — the version-2 grid **raises**
+  > and the version-1 grid builds (1793). So **`main.py` does reach the raise**: a QCD production
+  > run cannot build its source grid, and the first of the two consequences above is no longer an
+  > open question. Nor is it the accident of one float: perturbing `z_init` relatively, the
+  > construction raises at `1e-16`, `1e-14`, `1e-12`, `1e-10` and `1e-8` and first builds at `1e-6`,
+  > a band no re-solve of the anchor escapes.
+  >
+  > **The mechanism is not the crossing mask, and reordering is not the fix.**
+  > `residual_node_range` establishes its band by testing `omega^2` at the grid's **nodes**, and is
+  > correct there; the stencil then evaluates `dphi_du` **off-node**, at `u ± delta` and
+  > `u ± 2*delta`. Where `H` steps, `omega^2` can be negative *between* two nodes that both pass the
+  > margin test — which is why the `z = 3.61e15` case survives any reordering, and why the ordering
+  > defect explains only *which* anchor trips, not the failure itself.
+  >
+  > **Assigned (2026-09-17):** prompt **02a** of this campaign, under README §7 **D6**. The fix is
+  > to mark a node at which the expansion does not exist `usable = False` — the criterion already
+  > carries that mask and a log-interpolation fill for it — and to count and report the guarded
+  > nodes rather than absorb them silently. Probed: QCD at its own anchor then builds with **2034
+  > samples** and **53 guarded nodes**, and both published grids are **bit-identical** (1996 /
+  > `4849552b`, 1778 / `60a3205a`, zero guarded), so the guard is inert on every figure in the
+  > record. 02a does **not** reorder the mask: that changes which nodes are evaluated, hence
+  > `usable`, hence the fit, so it could move a published grid and nothing has measured whether it
+  > does.
+
 - **[01-density-criterion-imposed-outside-the-wkb-region]** *(orchestrator review of prompt 01,
-  2026-09-16; unassigned — candidate for **T7**)* — `main.source_grid_spacing_profile` imposes the
+  2026-09-16; **narrowed 2026-09-17, no longer blocking**; unassigned — candidate for **T7**)* — `main.source_grid_spacing_profile` imposes the
   fourth-derivative equidistribution criterion over the band `residual_node_range` returns, and
   that band reaches **1.5 to 2.1 e-folds outside the horizon**, where the Liouville-Green phase
   spline the criterion exists to protect is never evaluated. The horizon condition is
@@ -297,6 +336,66 @@ Opened by **prompt 01**, 2026-09-16:
   is a production change to the source grid, which README §0.5 holds fixed here; item **T7**
   already audits `RESIDUAL_WKB_REGION_MARGIN` at every production $k$, so prompt 04's charter is
   the natural home for it when that prompt is written.
+
+  > **Narrowed 2026-09-17, and no longer blocking.** Prompt **02a** (README §3.2a, §7 D6) makes the
+  > grid buildable without touching the band, so this issue stops being a hard failure and becomes
+  > what it always was underneath: unjustified refinement with a measurable cost. The mechanism is
+  > now stated — the band is established **node-wise** and the criterion is evaluated **off-node**,
+  > so the expansion's non-existence is reached at `u ± delta` between two nodes that both pass the
+  > margin test. 02a's **guarded-node count is the evidence this issue has been waiting for**: 53
+  > nodes at QCD's own anchor, zero at either published anchor, which is a direct measure of how far
+  > the band overreaches and where. **Still unassigned as a decision, still a candidate for T7**:
+  > whether the spacing profile should run over a horizon-based band of its own is prompt 04's to
+  > recommend, and 02a is explicitly forbidden from pre-empting it.
+
+Opened by the **orchestrator's review of prompt 02a's charter**, 2026-09-17:
+
+- **[02a-grid-digest-not-reproducible]** *(2026-09-17; assigned — **T6** / prompt 03 for the
+  prerequisite, prompt **05** for the fix)* — the source and response grid tags digest the **exact
+  bits** of the grid's values (`CosmologyConcepts.redshift.redshift_grid_digest`, `main.py:854`),
+  but `z_init` is a root-solve output, so the tag is not reproducible across machines, library
+  versions, or any change that forces the anchor to be re-derived. **The binding number is not the
+  one the record quotes.** `_solve_horizon_exit` calls `root_scalar(..., xtol=atol, rtol=rtol)` in
+  `u = log(1+z)` (`CosmologyConcepts/wavenumber.py:979`) and Brent stops at `xtol + rtol*|u|`; with
+  `rtol = DEFAULT_REL_TOLERANCE = 1e-8` at `u ≈ 37.6` that is **3.8e-7 relative**, not the
+  `xtol = 1e-10` README §6.2's `wavenumber_exit_time` row and prompt 02's inventory both name. The
+  `xtol` term never binds. Measured against a converged re-solve (`xtol=1e-300, rtol=1e-14`, the
+  tolerance `_solve_T_z` already uses): the shipped anchor is **3.6e-13** off on LambdaCDM and
+  **2.5e-9** off on QCD, and neither is bounded by better than 3.8e-7.
+  **Impact.** 3.8e-7 is *coarser* than `DEFAULT_REDSHIFT_RELATIVE_PRECISION = 1e-7`, the tolerance
+  at which `Datastore/SQL/ObjectFactories/redshift.py:40` matches an existing redshift row. So the
+  two invalidation criteria in the pipeline disagree by six orders of magnitude, and the failure
+  mode is silent total cache invalidation rather than corruption: measured across two anchors 3.6e-13
+  apart, **all 1778 samples differ bitwise and zero of them exceed 1e-7**, so every redshift row is
+  re-matched and reused with its old `store_id` while the grid tag turns over completely and every
+  lookup filtered on `SourceZGridSizeTag` misses — in the `Gk` sector, ~65,000 objects per model
+  recomputed against rows that were already correct. This is the *inverse* of the collision the
+  digest was introduced to prevent (`main.py:837`), so the digest is not wrong; it is quantised
+  finer than anything upstream of it is determined to.
+  **Not a datastore defect, and not reached by a plain re-run.** `wavenumber_exit_time.build()`
+  reads `z_exit_suph_e5` back from a `Float(64)` column when the row exists
+  (`Datastore/SQL/ObjectFactories/wavenumber.py:197`, `:292`), so within one datastore lineage the
+  anchor is bit-stable and the grid is reproducible — which is the regime every figure in this
+  campaign has been taken in, and why nothing has tripped over it. It bites when the anchor is
+  *re-derived*: a fresh or dropped store, another machine or libm, or a change of the cosmology row,
+  which is what `qcd-background-audit` did twice.
+  **Next step, in two parts.** (i) **T6 / prompt 03** measures `wavenumber_exit_time`'s pair and
+  recommends the tightening; at `rtol = 1e-14` the anchor is pinned to 3.8e-13, measured. (ii)
+  **Prompt 05** defines one design tolerance and applies it to *both* the redshift row match and the
+  digest quantisation, so that the tag can never distinguish two grids the datastore cannot. With
+  the anchor tightened the wobble budget is 3.8e-13 (anchor), ~1e-14 (break redshifts, already at
+  Brent's floor), 3.6e-15 (the `u → z` recovery) and ~1e-15 (libm `pow`/`log10`/`log1p`), so a
+  design tolerance around **1e-11** sits two orders above the worst contributor. Carry the coupling
+  with it: `SOURCE_GRID_MIN_SEPARATION = 10.0 * DEFAULT_REDSHIFT_RELATIVE_PRECISION`
+  (`CosmologyConcepts/wavenumber.py:135`) only *relaxes*, but the four-constraint argument above
+  `SOURCE_GRID_BREAK_STANDOFF` (`:79`) loses its first bullet and needs rewriting, not just
+  retuning. **Rounding buys a margin, not a proof** — straddle probability ~ `N * wobble / quantum`,
+  ~2e-4 per grid at these numbers; the exact alternative is to digest the *determining data*
+  (snapped `z_init`, `z_end`, `samples_per_log10z`, construction version, snapped break and feature
+  lists, and the integer subdivision vector, whose ties are a measured 6e-3 clear), which prompt 05
+  should record as considered even if it ships the quantised-values version.
+  **Explicitly not prompt 02a's** (README §4, §7 D6): 02a's acceptance is bit-identity with the
+  published digests, and tightening the anchor would move both.
 
 Opened by **prompt 02**, 2026-09-16:
 

@@ -142,6 +142,13 @@ prompt here finds it must change one of those files to proceed, that is a stop.
 - **Does not change the source grid**, the break-point policy, or `RESIDUAL_WKB_REGION_MARGIN`'s
   value. Prompt 04 measures what the margin is worth, because
   `[20-wkb-gauss-orders-not-in-lookup-key]` says nobody has; changing it is a separate decision.
+  **Amended 2026-09-17 by §7 D6, and narrowly.** Prompt **02a** may change
+  `main.source_grid_spacing_profile` for the single purpose of making the grid *buildable* at every
+  production anchor, because as the boundary was originally written this campaign could not measure
+  QCD at QCD's own anchor at all (`[01-v2-density-raises-at-the-qcd-production-anchor]`). The
+  carve-out is that one function, and it does not extend to the band, the margin, the break-point
+  policy, `build_z_sample`, or the digest. Where the criterion *applies* remains out of scope and
+  remains prompt 04's to recommend.
 - **Does not re-decide the break-point kinds.** `qcd-background-audit` README §7 D5 is open and is
   that campaign's; this one reads `BREAK_POINT_KIND` and holds it fixed.
 
@@ -149,8 +156,9 @@ prompt here finds it must change one of those files to proceed, that is a stop.
 
 ## 1. What this campaign does
 
-Six prompts. The first four change **no production code**, with one exception settled in §7 D5; the
-fifth is the only one that touches `main.py` and `config/defaults.py`.
+Six prompts and one insertion. The audits change **no production code**, with two exceptions, both
+settled by the user: §7 D5 (prompt 04's fixture) and §7 **D6** (prompt **02a**, below). Prompt 05
+remains the only prompt that retunes a parameter in `config/defaults.py`.
 
 **01 — the harness, and one production grid.** One reusable convergence facility in the test tree,
 and — because there are currently three disagreeing reproductions of "the production grid" there —
@@ -160,6 +168,12 @@ and — because there are currently three disagreeing reproductions of "the prod
 keys, whether it reaches a solver at all, and what the real knob is where it does not. The old plan
 assumed this and got it wrong (`RECONCILIATION.md` §2.1); nothing else here is safe until it is
 measured. **Stops for the user.**
+
+**02a — make the grid buildable.** An insertion, not a renumbering (§7 D6). The version-2 source
+grid **raises** on `QCD_Cosmology` at the anchor a QCD production run uses, so there is no QCD
+production grid for 03, 04 or 06 to measure on; each would have to use LambdaCDM's anchor, which is
+the defect prompt 01 exists to close. Guards the one evaluation that raises, keeps both published
+grids bit-identical, and hands prompt 04 the guarded-node count as evidence.
 
 **03 — audit the adaptive solvers.** `GkNumericIntegration`, `TkNumericIntegration` and
 `wavenumber_exit_time`, over the production grids on all three models, across an `atol`×`rtol`
@@ -463,6 +477,47 @@ vestigial, and which are vestigial *in the computation* but load-bearing *in the
 later reader can re-run it rather than re-read `main.py`. No measurement of accuracy here — this
 prompt establishes what there is to measure, and prompts 03 and 04 measure it.
 
+### 3.2a Prompt 02a — make the grid buildable at every production anchor
+
+**An insertion, authorised by §7 D6.** Numbered `02a` rather than taking the number 3 so that the
+charters §3.3–§3.6 and the acceptance rows of §6.2 keep the numbers every other document cites.
+
+The version-2 source grid raises on `QCD_Cosmology` at the anchor a QCD production run uses:
+`_solve_horizon_exit(QCD, k = 3e8, -5)` returns **3.30033444460513e+16**, and
+`source_grid_spacing_profile` there raises *"the Liouville-Green frequency is not positive at
+z = 8.6447769e+11 for k = 266544.64"*. The version-1 grid builds at the same anchor, so it is the
+density criterion alone. Perturbing `z_init` the construction raises at every relative offset from
+`1e-16` to `1e-8` and first builds at `1e-6`, so this is not the accident of one float that the
+original entry allowed for: **a QCD production run cannot build its source grid.**
+
+**The mechanism is not the crossing mask.** `residual_node_range` establishes its band by testing
+$\omega^2$ at the grid's *nodes*, and is right there; the stencil then evaluates `dphi_du`
+off-node, at $u\pm\delta$ and $u\pm2\delta$. Where $H$ steps, $\omega^2$ can be negative between
+two nodes that both pass the margin test — which is why the second case recorded in
+`RESIDUAL_WKB_REGION_MARGIN`'s comment, at $z = 3.61\times10^{15}$ and away from any declared
+crossing, would survive any reordering of the mask.
+
+**What it does.** Guards the stencil evaluation so that a node where the expansion does not exist is
+marked `usable = False` — which is what the criterion's existing mask and log-interpolation fill are
+for — **counts** the guarded nodes and reports them, and refuses above a measured fraction of the
+band so that the guard cannot silently absorb an arbitrarily wrong one. Names QCD's own anchor in
+the test tree, since `wkb_reference.PRODUCTION_Z_INIT`'s comment claims one constant serves both
+production cosmologies and it does not.
+
+**Its acceptance is bit-identity, not improvement.** QCD at LambdaCDM's anchor must stay 1996
+samples / `4849552b` and LambdaCDM at its own anchor 1778 / `60a3205a`, both with zero nodes
+guarded; QCD at its own anchor must build. A moved digest is a stop (§4.3). The probe measured 2034
+samples and 53 guarded nodes at QCD's own anchor.
+
+**What it does not do.** It does not decide where the criterion should *apply*: the band reaches
+1.5–2.1 e-folds outside the horizon and that is
+`[01-density-criterion-imposed-outside-the-wkb-region]`, **T7**, prompt 04 — for which 02a's
+guarded-node count is the evidence. It does not reorder the crossing mask, because that would change
+which nodes are evaluated and could move a published grid. It does not touch the anchor solve or the
+digest (§4).
+
+---
+
 ### 3.3 Prompt 03 — audit the adaptive solvers
 
 The three targets whose parameter reaches an adaptive method, over a matrix in `atol` and `rtol` —
@@ -556,21 +611,37 @@ provenance has not finished.
 ## 4. Dependencies and ordering
 
 ```
-01 ──▶ 02 ──▶ 03 ──▶ [user settles D1] ──┐
-          └──▶ 04 ──▶ [user settles D3] ──┴──▶ 05 ──▶ 06
+01 ──▶ 02 ──▶ 02a ──▶ 03 ──▶ [user settles D1] ──┐
+                 └──▶ 04 ──▶ [user settles D3] ──┴──▶ 05 ──▶ 06
 ```
 
 02 must precede both audits: it is what says which targets 03 and 04 each own, and the old plan's
-allocation was wrong (`RECONCILIATION.md` §2.1). 03 and 04 are otherwise independent; run 03 first,
-since D1 is the decision with a compute cost attached. 05 must not start until both D1 and D3 are
-settled — it is the prompt that invalidates the datastore, and settling a parameter afterwards would
-invalidate it twice.
+allocation was wrong (`RECONCILIATION.md` §2.1). **02a must precede both audits too, for a
+different reason:** 03, 04 and 06 are all chartered to measure over the production grids on all
+three models, and until 02a lands there is no version-2 QCD grid at QCD's own anchor to measure on
+(`[01-v2-density-raises-at-the-qcd-production-anchor]`). 03 and 04 are otherwise independent; run 03
+first, since D1 is the decision with a compute cost attached. 05 must not start until both D1 and D3
+are settled — it is the prompt that invalidates the datastore, and settling a parameter afterwards
+would invalidate it twice.
+
+**Two pieces of work are deliberately placed downstream of 03 rather than in 02a**, and
+`[02a-grid-digest-not-reproducible]` is the record of why. The grid tag digests the exact bits of
+the grid's values, while `z_init` is a root-solve output whose convergence criterion is
+`xtol + rtol · |u|` — with `rtol = 1e-8` at `u ≈ 37.6` that is `3.8e-7` relative, *coarser* than the
+`1e-7` at which the redshift table matches a row. So the tag can turn over while every redshift row
+is re-matched and reused, and no accuracy this campaign sets can be applied consistently to both
+until the anchor is pinned. Tightening the anchor solve is **T6**, prompt 03's own subject; applying
+one design tolerance to the row match and the digest together is prompt **05**, which already
+invalidates the datastore and can therefore absorb the tag change at no extra cost. Neither belongs
+in 02a, whose acceptance is bit-identity with the published digests.
 
 ### 4.1 Natural stopping points
 
 After **02**, **03** and **04**, always: each ends in a recommendation the user must accept before
 anything is changed. After **05**, because the datastore regeneration is a compute decision
-(§7 D2).
+(§7 D2). **02a is not a stopping point** — it recommends nothing and decides nothing; its
+acceptance is mechanical (§3.2a), and it either reproduces the two published digests or it is a
+stop under §4.3.
 
 ### 4.2 Relationship to the campaigns that closed before it
 
@@ -604,7 +675,12 @@ and additionally when:
 - an agent touches a file of §0.4 (`QuadSourceIntegral.py`, `QuadSource.py`, `phase_groups.py`,
   `AdaptiveLevin/`) or of `GkTk-remedial`'s §0.2 `transfer-remedial` list;
 - an agent proposes to change `BREAK_POINT_KIND`, the source grid, or
-  `RESIDUAL_WKB_REGION_MARGIN`'s value (§0.5);
+  `RESIDUAL_WKB_REGION_MARGIN`'s value (§0.5) — **except** prompt 02a inside D6's carve-out, which
+  is `main.source_grid_spacing_profile` alone; 02a proposing to touch the band, the margin,
+  `build_z_sample` or the digest is still a stop;
+- **prompt 02a reports a changed digest** for either published grid (§3.2a acceptance 2) — that is
+  a stop even if the agent argues the new grid is better, because the claim 02a exists to make is
+  that the guard is inert on everything already measured;
 - a convergence test **fails to converge** and the prompt continues anyway — the error prompt 17
   made, and the reason this campaign exists;
 - prompt 03 or 04 finds that the recommended parameters would change production cost by more than a
@@ -721,6 +797,7 @@ campaign can afford.
 | `TkWKBIntegration` | none live (§2 (a)); $N_\rho = 4$ | $T_{\rm WKB}$ radiation control 3.8e-5 of envelope from $x_i=24$ (`GkTk-remedial` prompt 07) | LG truncation | — | 04 |
 | `GkWKBIntegration` | none live (§2 (a)); $N_\rho = 4$ | $\theta_G$ 13.9 rad at $k=10^5$ and 7366 rad at $3\times10^8$ against target ≤1e-5 / ≤5e-3 rad (`GkTk-remedial` README §6, pre-remediation baseline) | $\varepsilon k\tau$ | — | 04 |
 | `GkSource` | `atol`/`rtol` stored, never read | n/a — it assembles | — | — | 02 |
+| the source grid itself | `SOURCE_GRID_*`, construction version 2 | **not buildable on QCD at QCD's own anchor** (`[01-v2-density-raises-at-the-qcd-production-anchor]`); 1996 / `4849552b` and 1778 / `60a3205a` are the two grids in the record, the first of them at LambdaCDM's anchor on a QCD cosmology | n/a — the acceptance is bit-identity, not accuracy | buildable at every production anchor, both published digests unmoved | **02a** |
 | `QuadSourceIntegral` | `quad_atol = 1e-32`, `quad_rtol = 1e-8`, decoupled already | `atol` chosen against an analytic oracle by `source-remediation` log 12; `rtol` confirmed non-binding (1e-8 → 1e-11 bit-identical on 159 items) | — | read-only | 06 |
 
 Error definitions are `GkTk-remedial` README §6's, unchanged and deliberately: **envelope-relative**
@@ -785,3 +862,37 @@ alternative — audit the orders against evidence known to be two representation
 not an alternative. `[01-convergence-block-has-a-separate-generator]` has already been declined by
 two prompts of another campaign on exactly this scope argument, and it will keep being declined
 until some prompt is given the files.
+
+**D6 — may a prompt change `main.source_grid_spacing_profile`? *Settled 2026-09-17: YES, narrowly.***
+The user accepted the carve-out §0.5 now records: prompt **02a** may change
+`main.source_grid_spacing_profile`, and nothing else in `main.py`, for the single purpose of making
+the source grid *buildable* at every production anchor.
+
+The argument that was put, and accepted. §0.5 as first written held the source grid fixed, and the
+reason was sound — the grid is another campaign's subject and moving it re-scores every figure in
+the record. What that boundary did not anticipate is that the grid **cannot be built at all** on
+`QCD_Cosmology` at the anchor a QCD production run uses: `source_grid_spacing_profile` raises, the
+version-1 grid does not, and the failure survives every relative perturbation of `z_init` from
+`1e-16` to `1e-8`, so it is not an artefact of one float
+(`[01-v2-density-raises-at-the-qcd-production-anchor]`, narrowed by prompt 02a's own measurement).
+Prompts 03, 04 and 06 are each chartered to measure over the production grids on **all three
+models**. Held to the original boundary, every one of them must measure QCD at **LambdaCDM's**
+anchor and label it "the production QCD grid" — which is precisely
+`[00-three-production-grid-reproductions]`, the defect prompt 01 was written to close. The boundary
+as drawn would have made this campaign commit, three more times, the error it exists to stop.
+
+**The carve-out is one function and one purpose.** It does not extend to the band
+`residual_node_range` returns, to `RESIDUAL_WKB_REGION_MARGIN`, to the break-point policy, to
+`build_z_sample`, to `_solve_horizon_exit`, or to the grid digest. Where the density criterion
+*applies* is `[01-density-criterion-imposed-outside-the-wkb-region]` and stays prompt 04's to
+recommend (**T7**); 02a's contribution to it is a measured guarded-node count, not a decision. And
+02a's acceptance is **bit-identity** with the two published digests rather than a claim of
+improvement, which is what keeps a buildability fix from becoming a grid change by degrees.
+
+**The two pieces it is explicitly not allowed to take** are in §4: tightening `_solve_horizon_exit`
+(**T6**, prompt 03) and applying one design tolerance to both the redshift row match and the grid
+digest (prompt 05). `[02a-grid-digest-not-reproducible]` records the measurement behind that
+split — the anchor is pinned only to `3.8e-7` relative, *coarser* than the `1e-7` at which the
+redshift table matches a row, so the tag can turn over while every row is re-matched and reused.
+That is a real defect with a real cost, and it is a tolerance decision, which is this campaign's
+subject; it is not a buildability fix, which is 02a's.
