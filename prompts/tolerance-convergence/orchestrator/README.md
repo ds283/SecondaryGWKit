@@ -9,7 +9,8 @@ continues or stops and reports to the user.
 | 01 | The convergence harness and one production grid | [`prompt-01.md`](prompt-01.md) | **yes** | Test-tree only. The review is whether a published measurement survived being moved — §4.1's two rows are the whole safety net |
 | 02 | The accuracy-parameter inventory | [`prompt-02.md`](prompt-02.md) | **yes** | Documents only. Ends in a **stop**: prompts 03 and 04 take their scope from its table, and the user reads it first |
 | 02a | Make the source grid buildable | [`prompt-02a.md`](prompt-02a.md) | **yes** | The first production change, under a **widened §0.5 boundary** (campaign README §7 D6). Acceptance is **bit-identity** with two published digests, not improvement. Ends in a **hand-back**: prompts 03 and 04 are written from 02's output and 02a's together |
-| 03 | Audit the adaptive solvers | — | **held** | Its target list is prompt 02's output |
+| 03 | `GkNumericIntegration`, and the floor that decides whether it matters | [`prompt-03.md`](prompt-03.md) | **yes** | The sector **D1** turns on: ~65,000 objects per model, never swept. Acceptance is a **matrix**, not a diagonal, and `unchanged` is a result. Ends in a **hand-back**: D1 is the user's |
+| 03a | `TkNumericIntegration` and `wavenumber_exit_time` | — | **held** | Written after 03 lands, so the $T_k$ re-take knows what the $G_k$ sweep found about the axes (campaign README §7 **D7**) |
 | 04 | Audit the order-governed targets | — | **held** | Likewise. D5 is settled yes, so it may write the fixture |
 | 05 | Decouple | — | **held** | Its content *is* D1 and D3, which do not exist until 03 and 04 report |
 | 06 | `QuadSourceIntegral`, close-out, the provenance note | — | **held** | Assembles from the earlier logs |
@@ -21,11 +22,18 @@ QCD production run uses, and prompts 03, 04 and 06 are each chartered to measure
 grids on **all three models** — so without it every one of them must measure QCD at LambdaCDM's
 anchor, the defect prompt 01 exists to close.
 
-**Prompts 03–06 are deliberately not written yet**, and that is a decision of 2026-09-16, not an
-omission — README §3 fixes each one's charter and §6 fixes its acceptance, so what is held back is
-the *method*, not the commitment. Writing 03 and 04 against an inventory that prompt 02 exists to
+**Prompts 03a and 04–06 are deliberately not written yet**, and that is a decision of 2026-09-16,
+not an omission — README §3 fixes each one's charter and §6 fixes its acceptance, so what is held
+back is the *method*, not the commitment. Writing them against an inventory that prompt 02 exists to
 establish would repeat the error the 2026-09-12 plan made. **Since 2026-09-17 the precondition is
 02 and 02a together**, for the reason "Running one" gives. Board §1 records which are written.
+
+**03 is split from 03a, not renumbered** (campaign README §7 **D7**, 2026-09-17). Prompt 03 takes
+`GkNumericIntegration` and the consumer-spline floor — board item **T4** — and 03a takes
+`TkNumericIntegration` and `wavenumber_exit_time`, **T5** and **T6**. No item is renumbered. The
+split exists because §5 rule 1 makes the commit the rollback boundary and the three targets are not
+comparable in weight: one is ~65,000 objects per model and has never been swept, the other two are a
+re-take and a small new measurement.
 
 ## Running one
 
@@ -36,14 +44,16 @@ Start with, for example:
 **Take the baselines the prompt names before dispatching anything.** They cannot be reconstructed
 after the fact.
 
-Run **01 → 02 → 02a → stop**. Both 02 and 02a end in a hand-back, and **prompts 03–06 are written
-from the two together** (user decision, 2026-09-17): 02 says which targets 03 and 04 own, and 02a
-settles the anchor question that **T6** — prompt 03's own row — turns on. A prompt 03 written after
-02 but before 02a would be written without half of what it needs.
+Run **01 → 02 → 02a → 03 → stop**. 02, 02a and 03 each end in a hand-back, and **03a and 04–06 are
+written from what has landed** (user decision, 2026-09-17): 02 says which targets the audits own,
+02a settles the anchor question that **T6** — now prompt 03a's row — turns on, and 03 settles
+whether the two tolerance axes separate in the sector that carries the cost.
 
 02a recommends nothing, so it is not a stopping point in campaign README §4.1's sense; it is a stop
-because it is the last written prompt. Its **§1 baseline must be taken before dispatch** and cannot
-be reconstructed afterwards.
+because the next prompt was not yet written. **03 is a stopping point in §4.1's own sense**: it ends
+in a recommendation the user must accept under **D1**, and **D1 is not settled until 03a has
+reported too**, since `wavenumber_exit_time`'s pair is part of it. Each prompt's **§1 baseline must
+be taken before dispatch** and cannot be reconstructed afterwards.
 
 ## The rules that bind the orchestrator
 
@@ -85,7 +95,7 @@ PYTHONPATH=. ./venv/bin/python -m unittest discover -s CosmologyModels/tests -t 
   campaign document written before 2026-09-16 19:32 will say 447 and 30; those are the
   `acd5b8e` figures and an orchestrator checking for them would stop on a healthy tree.
 - `ComputeTargets` may **rise** at prompt 01 (it adds a test module) and must **not fall**.
-- `CosmologyModels` must read **39** at every commit of prompts 01, 02 and 02a — none of the three
+- `CosmologyModels` must read **39** at every commit of prompts 01, 02, 02a and 03 — none of them
   touches that package, so any movement at all is unintended.
 - Both suites print model banners on stdout, so **`| tail -5` will not show the verdict**. Capture
   to a file and grep it, or use `tail -40`.
@@ -110,10 +120,21 @@ must list **only** `main.py`, `ComputeTargets/tests/wkb_reference.py` and
 `ComputeTargets/tests/test_source_grid.py`; and `git diff HEAD~1 HEAD -- main.py` must touch
 `source_grid_spacing_profile` and no other function. See [`prompt-02a.md`](prompt-02a.md) §3.1.
 
+And for **prompt 03 only** — it is the first prompt permitted to touch prompt 01's facility, and
+only additively:
+
+```bash
+git diff --numstat HEAD~1 HEAD -- ComputeTargets/tests/convergence_reference.py
+```
+
+must show **zero deletions**, and
+`PYTHONPATH=. ./venv/bin/python -m unittest ComputeTargets.tests.test_convergence_reference` must
+read the same count as before the dispatch. See [`prompt-03.md`](prompt-03.md) §3.5.
+
 ## The dispatch template
 
 For prompt NN, launch a subagent with **exactly** this context, with the model the campaign
-README §3 names (**Opus** for 01, 02 and 02a). **For 02a the template's parameter-freeze sentence is
+README §3 names (**Opus** for 01, 02, 02a and 03). **For 02a the template's parameter-freeze sentence is
 replaced**, because §7 D6 permits it one function; the replacement text is in
 [`prompt-02a.md`](prompt-02a.md) §2 and must be used verbatim rather than paraphrased:
 
