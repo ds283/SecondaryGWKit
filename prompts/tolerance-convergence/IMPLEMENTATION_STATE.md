@@ -8,12 +8,12 @@
 re-run for the re-anchor and green — `ComputeTargets` **452**, `CosmologyModels` **39**)
 **Superseded baseline:** `acd5b8e`, `ComputeTargets` 447, `CosmologyModels` 30 — the anchor of any
 figure in this campaign's documents dated before 2026-09-16 19:32
-**Last updated:** 2026-09-17 · **Status: in progress — 2 / 6, plus the insertion 02a landed.**
+**Last updated:** 2026-09-17 · **Status: in progress — 2 / 6, plus the insertion 02a landed; 03 written, 03a and 04–06 held.**
 **Every user decision needed to start is settled** — D1 and D3 are post-audit gates by design, D2
 settled 2026-09-12, D4 settled by README §0.4, **D5 settled yes 2026-09-16**.
-**Prompts 01, 02 and 02a have all landed; 03–06 may now be written** (§1 below; the 2026-09-17
+**Prompts 01, 02 and 02a have all landed; prompt 03 is written and dispatchable, 03a and 04–06 are held** (§7 **D7** split §3.3's charter on 2026-09-17: **03** takes `GkNumericIntegration` and the consumer-spline floor, **T4**; **03a** takes `TkNumericIntegration` and `wavenumber_exit_time`, **T5** and **T6**, and is written after 03 lands) (§1 below; the 2026-09-17
 decision — 02's table says which targets the audits own, and 02a settles the anchor that **T6**,
-prompt 03's own row, turns on). **Prompt 02a has landed** (README §3.2a, authorised by §7 **D6**,
+prompt 03a's row since §7 **D7**, turns on). **Prompt 02a has landed** (README §3.2a, authorised by §7 **D6**,
 2026-09-17): `main.source_grid_spacing_profile` now guards the stencil evaluation where the
 Liouville–Green expansion does not exist, so **the version-2 source grid builds at every production
 anchor on every production cosmology**. QCD at its own anchor is **2034 samples / `21ffc126`, 53
@@ -85,7 +85,8 @@ and `wavenumber_exit_time`. §2 (a)'s table says so on both rows; prompt 06 reco
 | 01 | The convergence harness and one production grid | README §2 (b), (h); `[00-three-production-grid-reproductions]` | Opus | ✍️ [`01-…`](01-convergence-harness-and-grid.md) | ✅ | *"Build the convergence harness and name the source-grid generations"* (SHA not embedded, per the convention `prompts/background-solver-robustness` uses) | [`logs/01-…`](logs/01-convergence-harness-and-grid.md) |
 | 02 | The accuracy-parameter inventory | README §2 (a), (c), (g); `RECONCILIATION.md` §2.1 | Opus | ✍️ [`02-…`](02-accuracy-parameter-inventory.md) | ⚠️ | *"Inventory every accuracy parameter in the pipeline"* (SHA not embedded, per the convention `prompts/background-solver-robustness` uses) | [`logs/02-…`](logs/02-accuracy-parameter-inventory.md) |
 | 02a | Make the grid buildable at every production anchor | README §3.2a, §7 **D6**; `[01-v2-density-raises-at-the-qcd-production-anchor]` | Opus | ✍️ [`02a-…`](02a-source-grid-density-guard.md) | ⚠️ | *"Guard the source grid density criterion off-node"* (SHA not embedded, per the convention `prompts/background-solver-robustness` uses) | [`logs/02a-…`](logs/02a-source-grid-density-guard.md) |
-| 03 | Audit the adaptive solvers | README §2 (d), (e), (f); review §10.1, §12.5 | Opus | ⏸️ **held** | ⬜ | | |
+| 03 | `GkNumericIntegration`, and the floor that decides whether it matters | README §2 (d), (e), (f); §7 **D7**; review §10.1, §12.5; `[00-gk-numeric-never-swept-and-carries-the-cost]` | Opus | ✍️ [`03-…`](03-gk-numeric-and-its-floor.md) | ⬜ | | |
+| 03a | `TkNumericIntegration` and `wavenumber_exit_time` | README §3.3a, §7 **D7**; `[02-wavenumber-exit-time-tolerance-is-an-inequality-key]` | Opus | ⏸️ **held** — written after 03 lands | ⬜ | | |
 | 04 | Audit the order-governed targets | README §2 (a); §7 D5 **(settled yes)** | Opus | ⏸️ **held** | ⬜ | | |
 | 05 | Decouple | README §2 (a), (g); §7 D1, D3 | Opus | ⏸️ **held** | ⬜ | | |
 | 06 | `QuadSourceIntegral`, close-out, the provenance note | README §0.4, §1.2 | Opus | ⏸️ **held** | ⬜ | | |
@@ -102,13 +103,15 @@ Status key: ⬜ not started · 🔄 in flight · ✅ complete · ⚠️ complete
 > 2026-09-12 plan made, and the reason new 02 has no predecessor. 05's content **is** D1 and D3,
 > which do not exist until 03 and 04 report; 06 assembles from the earlier logs.
 >
-> **The staging, as revised 2026-09-17:** 01, 02 and **02a** now; **03 and 04 written after 02 and
-> 02a have both landed**, against 02's table and 02a's hand-off rather than against a guess at
-> either; 05 after the user settles D1 and D3; 06 last. 02a joins the precondition because **T6 is
-> prompt 03's own row** and 02a is what settles the anchor it turns on — a prompt 03 drafted from 02
-> alone would allocate `wavenumber_exit_time` without the measurement that changes its charter. This
-> costs nothing in elapsed time — §4.1 already declares a stop after each of 02, 03 and 04, and 02a
-> ends in a hand-back for the same reason, so the user is in the loop anyway. Orchestrator prompts
+> **The staging, as revised 2026-09-17:** 01, 02 and **02a** landed; **03 written after 02 and 02a
+> both landed**, against 02's table and 02a's hand-off rather than against a guess at either; **03a
+> and 04 after 03 lands**; 05 after the user settles D1 and D3; 06 last. 02a joined the precondition
+> because **T6 turns on the anchor 02a settles** — a prompt drafted from 02 alone would allocate
+> `wavenumber_exit_time` without the measurement that changes its charter. **Since §7 D7, T6 is
+> prompt 03a's**, and 03a is written after 03 so the $T_k$ re-take knows what the $G_k$ sweep found
+> about the axes. This costs nothing in elapsed time — §4.1 already declares a stop after each of
+> 02, 03, 03a and 04, and 02a ends in a hand-back for the same reason, so the user is in the loop
+> anyway. Orchestrator prompts
 > are staged with them ([`orchestrator/README.md`](orchestrator/README.md)).
 
 > **02a is an insertion, not a renumbering.** It carries a letter so that the charters of README
@@ -139,8 +142,8 @@ not ✅ either, which is the specific failure the rebase found.
 | T2 | **MACHINERY** | **One** reproduction of the production source grid at `SOURCE_GRID_CONSTRUCTION_VERSION = 2`, with the version-0 and version-1 constructions retained and named rather than silently re-scored | 01 | ⚠️ `wkb_reference.source_grid(SOURCE_GRID_V0/_V1/_V2, …)`, no default generation, bit-identical to all three constructions it replaces. **Caveat:** `production_source_grid` keeps its historic behaviour because 28 call sites in 20 files outside prompt 01's scope import it; it is documented as version 0 rather than made to fail loudly |
 | T3 | **MEASUREMENT** | The accuracy-parameter inventory: every parameter, what it keys, whether it reaches a solver, what the real knob is, and the object count of the sector it keys | 02 | ⚠️ `docs/tolerance-convergence/TOLERANCE-INVENTORY.md` + `inventory.py`: **12 keyed tables** derived from `Datastore/SQL/Datastore.py`'s `_factories` by `ast`, **39 parameter rows** in nine columns, **10 hard-coded literals** in production. README §2 (a)'s eight rows are each **confirmed**. **Caveat:** there is a **ninth** keyed object type, `OneLoopIntegral` — prompt 02 §8's stop condition, left unassigned for the user |
 | T4 | **MEASUREMENT** | `GkNumericIntegration` characterised over the production response grid on three models in both `atol` and `rtol`, against the consumer-spline floor — the sector with ~65,000 objects per model, never swept, and where the campaign's compute decision actually lives | 03 | ⬜ |
-| T5 | **MEASUREMENT** | `TkNumericIntegration` likewise, re-taken on the version-2 grid and under its own `BREAK_POINT_ALL` policy | 03 | ⬜ |
-| T6 | **MEASUREMENT** | `wavenumber_exit_time`'s root solve measured at all — nothing in the record says what `xtol = 1e-10`, `rtol = 1e-8` in $\log(1+z)$ buys or costs. **Scored against the exact $z_{\rm exit}$ on `RadiationModel` first** (README §3.1): $1 + z = k/(H_0 e^{N})$, confirmed at the rebase to 2.3e-16 relative or better | 03 | ⬜ |
+| T5 | **MEASUREMENT** | `TkNumericIntegration` likewise, re-taken on the version-2 grid and under its own `BREAK_POINT_ALL` policy | 03a | ⬜ |
+| T6 | **MEASUREMENT** | `wavenumber_exit_time`'s root solve measured at all — nothing in the record says what `xtol = 1e-10`, `rtol = 1e-8` in $\log(1+z)$ buys or costs. **Scored against the exact $z_{\rm exit}$ on `RadiationModel` first** (README §3.1): $1 + z = k/(H_0 e^{N})$, confirmed at the rebase to 2.3e-16 relative or better | 03a | ⬜ |
 | T7 | **MEASUREMENT** | $N_\tau$, $N_{c_s\tau}$, $N_F$, $N_\rho$ and `RESIDUAL_WKB_REGION_MARGIN` audited at every production $k$ on the corrected background and the 3-point break set, replacing evidence generated 2026-09-10. **Every one of the four orders has a closed-form anchor on `RadiationModel`** (README §3.1), including $\rho_G \equiv 0$, which makes the $N_\rho$ measurement pure quadrature error with no reference to build | 04 | ⬜ |
 | T8 | **DECISION** | The decoupled tolerance pairs settled by the user (§7 D1) and shipped with the measurement that chose each, in `config/defaults.py` | 05 | ⬜ |
 | T9 | **DECISION** | What replaces the vestigial `atol`/`rtol` key columns on the three order-governed targets (§7 D3) — the user's stated target for the campaign | 05 | ⬜ |

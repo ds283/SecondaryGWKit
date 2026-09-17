@@ -518,32 +518,49 @@ digest (§4).
 
 ---
 
-### 3.3 Prompt 03 — audit the adaptive solvers
+### 3.3 Prompt 03 — `GkNumericIntegration`, and the floor that decides whether it matters
 
 The three targets whose parameter reaches an adaptive method, over a matrix in `atol` and `rtol` —
 the point being that prompt 17 held `rtol` fixed and so could only see one axis, and that review
 §10.1 moved both at once and so could not separate them.
 
+**Originally one prompt; split by the user on 2026-09-17 (§7 D7).** `GkNumericIntegration` carries
+~65,000 objects per model and is where **D1** turns, so it gets its own commit and its own review
+rather than sharing a rollback boundary with a re-take and a small new measurement. The split is
+along the board items, which do not move: **T4** is prompt 03, **T5** and **T6** are prompt 03a.
+
+**What both prompts report**, per (target, model, $k$, `atol`, `rtol`): maximum, second-largest and
+median error in the target's own measure, the location of the maximum, and the evaluation count;
+and per (target, model) the distribution over the grid, since prompt 17 established that a single
+$k$ is not characteristic. Every figure carries its reference's drift, its grid generation and —
+since 02a — the **anchor** it was taken at. Both recommend; neither decides (§7 D1).
+
 - **`GkNumericIntegration`**, three models, the production response grids. This is the sector that
-  has never been swept and carries ~65,000 objects per model (§2 (c)), so it is the prompt's
-  centre of gravity, not its second half. Measure the consumer-spline floor of §2 (f) alongside the
+  has never been swept and carries ~65,000 objects per model (§2 (c)), so it is the campaign's
+  centre of gravity. Measure the consumer-spline floor of §2 (f) alongside the
   solver error: if the spline dominates by two orders, the recommendation is "do not tighten", and
   that is a result.
+- **The floor itself**, freshly measured rather than inherited from review §10.1's paragraph —
+  §6.1 rule 1 requires it and rule 5 permits the supersession. The consumer is the numeric-region
+  spline of `GkSourcePolicyData.py:325-336`, whose error is a property of the response grid's
+  density and not of `atol` or `rtol`, which is why it can dominate.
+
+Answer explicitly: **is §2 (d)'s prior right in the $G_k$ sector?** What does the target cost at
+the setting that first reaches its floor, in evaluations **times objects**? And what would the
+decoupled pair be, with the evidence?
+
+### 3.3a Prompt 03a — `TkNumericIntegration` and `wavenumber_exit_time`
+
 - **`TkNumericIntegration`**, three models, the production source grids, re-taken on the version-2
   grid, under the sector's own `BREAK_POINT_ALL` policy — prompt 17's sweep ran at the module
   default, `BREAK_POINT_DISCONTINUITY`, which is the *other* sector's.
 - **`wavenumber_exit_time`**, whose `root_scalar` in $\log(1+z)$ nobody has measured. It fixes
   where every grid begins and every horizon-relative cut sits; a misplaced $z_{\rm exit}$ moves the
-  grid, not just a value.
+  grid, not just a value. Its lookup is an **inequality** (`[02-wavenumber-exit-time-tolerance-is-an-inequality-key]`),
+  so the sweep must go through `_solve_horizon_exit` directly and never through the datastore.
 
-Report per (target, model, $k$, `atol`, `rtol`): maximum, second-largest and median error in the
-target's own measure, the location of the maximum, and the evaluation count; and per (target,
-model) the distribution over the grid, since prompt 17 established that a single $k$ is not
-characteristic. Every figure carries its reference's drift and its grid generation.
-
-Answer explicitly: **is §2 (d)'s prior right in the $G_k$ sector?** What does each target cost at
-the setting that first reaches its floor, in evaluations **times objects**? And what would the
-decoupled pairs be, with the evidence? Recommend; do not decide (§7 D1).
+03a is written after 03 has landed, so that the $T_k$ re-take is taken knowing what the $G_k$ sweep
+found about the two axes.
 
 ### 3.4 Prompt 04 — audit the order-governed targets
 
@@ -611,25 +628,27 @@ provenance has not finished.
 ## 4. Dependencies and ordering
 
 ```
-01 ──▶ 02 ──▶ 02a ──▶ 03 ──▶ [user settles D1] ──┐
-                 └──▶ 04 ──▶ [user settles D3] ──┴──▶ 05 ──▶ 06
+01 ──▶ 02 ──▶ 02a ──▶ 03 ──▶ 03a ──▶ [user settles D1] ──┐
+                 └──▶ 04 ──────────▶ [user settles D3] ──┴──▶ 05 ──▶ 06
 ```
 
 02 must precede both audits: it is what says which targets 03 and 04 each own, and the old plan's
 allocation was wrong (`RECONCILIATION.md` §2.1). **02a must precede both audits too, for a
 different reason:** 03, 04 and 06 are all chartered to measure over the production grids on all
 three models, and until 02a lands there is no version-2 QCD grid at QCD's own anchor to measure on
-(`[01-v2-density-raises-at-the-qcd-production-anchor]`). 03 and 04 are otherwise independent; run 03
-first, since D1 is the decision with a compute cost attached. 05 must not start until both D1 and D3
-are settled — it is the prompt that invalidates the datastore, and settling a parameter afterwards
+(`[01-v2-density-raises-at-the-qcd-production-anchor]`). 03, 03a and 04 are otherwise independent;
+run 03 first, since D1 is the decision with a compute cost attached, and **03a after it** so that
+the $T_k$ re-take knows what the $G_k$ sweep found about the axes (§3.3, §7 D7). D1 is settled once
+**both** 03 and 03a have reported, since `wavenumber_exit_time`'s pair is part of it. 05 must not
+start until both D1 and D3 are settled — it is the prompt that invalidates the datastore, and settling a parameter afterwards
 would invalidate it twice.
 
-**03 and 04 are written after 02a, not merely after 02.** The 2026-09-17 decision is that both
+**03, 03a and 04 are written after 02a, not merely after 02.** The 2026-09-17 decision is that both
 audits are written from 02's inventory and 02a's hand-off together. 02's table says which targets
 each of them owns; 02a settles the anchor — which grid each figure is taken at, and what
-`_solve_horizon_exit`'s convergence criterion actually is — and **T6 is prompt 03's own row**. A
-prompt 03 drafted from 02 alone would allocate `wavenumber_exit_time` without the one measurement
-that changes its charter, which is the same error, one level down, that §4's first paragraph records
+`_solve_horizon_exit`'s convergence criterion actually is — and **T6 is prompt 03a's row**
+(prompt 03's, until §7 **D7** split the charter on 2026-09-17). A prompt drafted from 02 alone would
+allocate `wavenumber_exit_time` without the one measurement that changes its charter, which is the same error, one level down, that §4's first paragraph records
 about the 2026-09-12 plan.
 
 **Two pieces of work are deliberately placed downstream of 03 rather than in 02a**, and
@@ -638,18 +657,18 @@ the grid's values, while `z_init` is a root-solve output whose convergence crite
 `xtol + rtol · |u|` — with `rtol = 1e-8` at `u ≈ 37.6` that is `3.8e-7` relative, *coarser* than the
 `1e-7` at which the redshift table matches a row. So the tag can turn over while every redshift row
 is re-matched and reused, and no accuracy this campaign sets can be applied consistently to both
-until the anchor is pinned. Tightening the anchor solve is **T6**, prompt 03's own subject; applying
+until the anchor is pinned. Tightening the anchor solve is **T6**, prompt 03a's subject (§7 D7); applying
 one design tolerance to the row match and the digest together is prompt **05**, which already
 invalidates the datastore and can therefore absorb the tag change at no extra cost. Neither belongs
 in 02a, whose acceptance is bit-identity with the published digests.
 
 ### 4.1 Natural stopping points
 
-After **02**, **03** and **04**, always: each ends in a recommendation the user must accept before
+After **02**, **03**, **03a** and **04**, always: each ends in a recommendation the user must accept before
 anything is changed. After **05**, because the datastore regeneration is a compute decision
 (§7 D2). **02a recommends nothing and decides nothing** — its acceptance is mechanical (§3.2a), and
 it either reproduces the two published digests or it is a stop under §4.3. It nonetheless **ends in
-a hand-back**, because it is the last written prompt and because **prompts 03 and 04 are written
+a hand-back**, because it is the last written prompt and because **prompts 03, 03a and 04 are written
 from prompt 02's output and 02a's together** (user decision, 2026-09-17): 02 says which targets each
 audit owns, and 02a settles the anchor question **T6** turns on.
 
@@ -801,8 +820,8 @@ campaign can afford.
 | Target | Parameter today | Accuracy now, and where it was measured | Floor (§2 (f)) | Target | Prompt |
 |---|---|---|---|---|---|
 | `GkNumericIntegration` | `atol = 1e-10`, `rtol = 1e-8` | 2.3e-7 of envelope — **radiation and LambdaCDM only, at four source redshifts, on an `(atol, rtol)` diagonal** (review §10.1, **v0**). No QCD, no grid sweep, no drift figure at production tolerances. **The sector with ~65,000 objects per model has never been swept** | consumer spline of numeric $G$, 1e-5–1e-4 near the hand-over (review §10.1) | — | 03 |
-| `TkNumericIntegration` | `atol = 1e-13`, `rtol = 1e-8` | 3 / 13 / 8 of 50 $k$ above 3e-6 of envelope on Radiation / LambdaCDM / QCD; worst 8.64e-4; median-of-per-$k$-maxima 3.8e-7 / 4.5e-7 / 1.0e-6 (`GkTk-remedial` prompt 17, all 50 $k$, three models, **v0**, and under `BREAK_POINT_DISCONTINUITY` rather than the sector's own `BREAK_POINT_ALL`) | 2.52e-6, initial condition | — | 03 |
-| `wavenumber_exit_time` | `xtol = 1e-10`, `rtol = 1e-8` in $\log(1+z)$ | **never measured** | — | — | 03 |
+| `TkNumericIntegration` | `atol = 1e-13`, `rtol = 1e-8` | 3 / 13 / 8 of 50 $k$ above 3e-6 of envelope on Radiation / LambdaCDM / QCD; worst 8.64e-4; median-of-per-$k$-maxima 3.8e-7 / 4.5e-7 / 1.0e-6 (`GkTk-remedial` prompt 17, all 50 $k$, three models, **v0**, and under `BREAK_POINT_DISCONTINUITY` rather than the sector's own `BREAK_POINT_ALL`) | 2.52e-6, initial condition | — | 03a |
+| `wavenumber_exit_time` | `xtol = 1e-10`, `rtol = 1e-8` in $\log(1+z)$ | **never measured** | — | — | 03a |
 | `BackgroundModel` | `atol`/`rtol` vestigial; $N_\tau = N_{c_s\tau} = N_F = 4$ | $\tau$ 2.611e-16, $\tau_s$ 2.204e-16, $F$ 2.440e-16 relative at three nodes of one scoped LambdaCDM run (`docs/gktk-remedial-verification.md` §4.3). The **orders** were chosen on a background and a break-point set that no longer exist (`RECONCILIATION.md` §5) | double-precision accumulation over the grid | — | 04 |
 | `TkWKBIntegration` | none live (§2 (a)); $N_\rho = 4$ | $T_{\rm WKB}$ radiation control 3.8e-5 of envelope from $x_i=24$ (`GkTk-remedial` prompt 07) | LG truncation | — | 04 |
 | `GkWKBIntegration` | none live (§2 (a)); $N_\rho = 4$ | $\theta_G$ 13.9 rad at $k=10^5$ and 7366 rad at $3\times10^8$ against target ≤1e-5 / ≤5e-3 rad (`GkTk-remedial` README §6, pre-remediation baseline) | $\varepsilon k\tau$ | — | 04 |
@@ -906,3 +925,21 @@ split — the anchor is pinned only to `3.8e-7` relative, *coarser* than the `1e
 redshift table matches a row, so the tag can turn over while every row is re-matched and reused.
 That is a real defect with a real cost, and it is a tolerance decision, which is this campaign's
 subject; it is not a buildability fix, which is 02a's.
+
+**D7 — is prompt 03 one prompt or two? *Settled 2026-09-17: two.*** The user split §3.3's
+charter: prompt **03** takes `GkNumericIntegration` and the consumer-spline floor (**T4**), prompt
+**03a** takes `TkNumericIntegration` and `wavenumber_exit_time` (**T5**, **T6**).
+
+The argument that was put, and accepted. §5 rule 1 makes the commit the rollback boundary, and
+§3.3 as first written put three separate measurement campaigns behind one. They are not
+comparable in weight: `GkNumericIntegration` is ~65,000 objects per model, has never been swept in
+either axis, and is the sector **D1** actually turns on, while `TkNumericIntegration` is a re-take
+of `GkTk-remedial` prompt 17's sweep on the version-2 grid and `wavenumber_exit_time` is a new but
+small measurement. Sharing a boundary means a failed check on the smallest reverts the largest.
+The split follows **02a**'s precedent in carrying a letter rather than renumbering, so §§3.4–3.6's
+charters, §6.2's rows and the board's T-numbers keep the numbers every other document cites: **T4**
+stays prompt 03's and **T5**/**T6** become prompt 03a's, with no item renumbered.
+
+**03a is written after 03 has landed**, for the reason §4 gives: the $T_k$ re-take should be taken
+knowing what the $G_k$ sweep found about whether the axes separate. **D1 is settled only once both
+have reported**, since `wavenumber_exit_time`'s pair is part of it.
