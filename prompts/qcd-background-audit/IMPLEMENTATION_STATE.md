@@ -1239,6 +1239,35 @@ Opened by this campaign's planning, 2026-09-13:
   `test_background_tau.py` is that campaign's README §7 **D5**, put to the user rather than
   assumed. Re-running the script also needs its scheme sweep updated, since one of its three
   schemes is gone. `[02-qcd-reference-floor]` still waits on the same run.
+
+  **Prompt 04 of `prompts/tolerance-convergence` ran the generator on 2026-09-17 and could not
+  write the block either — but for a new reason, and the reason is measured.** Everything the
+  entry asks for is now established: the four orders are **unchanged at 4** on the corrected
+  background and the 3-point break set, `decision.recommended_scheme` becomes **`branch`** (the
+  knots are retained as a control and are measured to buy nothing — `branch` 4.835e-16 against
+  `branch+knots` 6.011e-16 on QCD's $\tau$ at order 4, confirming prompt 07 at the quadrature
+  level), and **`QCD_BREAK_POINT_ALIGNMENT_TOL` would go to 1.421085e-14** — ten orders tighter
+  than the 1.4e-05 this entry hoped for, which settles beyond doubt that the whole of the present
+  1.418851e-04 is the block's age and none of it is the representation.
+
+  **What blocks the write is the two `QCD_FLOOR_FACTOR` sites this entry already names.** The
+  regenerated `json_vs_reference_max_rel` is **3.223619e-16** ($\tau$) and **4.354138e-16**
+  ($c_s\tau$) against the recorded 1.878541e-14 and 1.886653e-14 — 58x and 43x tighter, because
+  prompts 04–06 of this campaign replaced the representation under the JSON's own QCD reference
+  values. The quantity scored against them does not move at all: **2.254e-15** and **2.212e-15**,
+  the same figures prompt 06 recorded. So *production error ≤ 3 × floor* fails by **6.99×** and
+  **5.08×**, and one of the two modules (`test_background_cs_tau_friction.py`) is outside that
+  campaign's D5 carve-out. This entry's own prediction — "if one will not go back, that is a
+  finding about the representation rather than about the block's age" — resolves the other way:
+  **the tolerances go back, and it is the *test construction* that does not survive**, because it
+  divides the model's accuracy by the reference's and the two have stopped being the same size.
+
+  **Next step, and it is a decision rather than a scope question:** give the two tests a bound
+  that is not the reference's floor, or raise both `QCD_FLOOR_FACTOR`s past 7; then regenerate the
+  block and take `QCD_BREAK_POINT_ALIGNMENT_TOL` to just above 1.421085e-14 **in the same
+  commit**. Tracked as `[04-convergence-floor-used-as-a-test-threshold]` on the
+  `tolerance-convergence` board, which holds the measurements. Evidence:
+  `docs/tolerance-convergence/ORDER-AUDIT.md` §1, §9.
 - **[03-qcd-inventory-does-not-report-the-representation]** *(prompt 03, 2026-09-14; **narrowed
   2026-09-16** — the `QCD_Cosmology` half is resolved, in §4)* — originally,
   `sqla_QCDCosmology_factory.inventory()` (`Datastore/SQL/ObjectFactories/QCD_Cosmology.py`)
