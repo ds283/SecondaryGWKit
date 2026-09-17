@@ -8,10 +8,10 @@
 re-run for the re-anchor and green — `ComputeTargets` **452**, `CosmologyModels` **39**)
 **Superseded baseline:** `acd5b8e`, `ComputeTargets` 447, `CosmologyModels` 30 — the anchor of any
 figure in this campaign's documents dated before 2026-09-16 19:32
-**Last updated:** 2026-09-17 · **Status: in progress — 2 / 6, plus the insertion 02a landed; 03 written, 03a and 04–06 held.**
+**Last updated:** 2026-09-17 · **Status: in progress — 3 / 6, plus the insertion 02a landed; 03a written next, 04–06 held.**
 **Every user decision needed to start is settled** — D1 and D3 are post-audit gates by design, D2
 settled 2026-09-12, D4 settled by README §0.4, **D5 settled yes 2026-09-16**.
-**Prompts 01, 02 and 02a have all landed; prompt 03 is written and dispatchable, 03a and 04–06 are held** (§7 **D7** split §3.3's charter on 2026-09-17: **03** takes `GkNumericIntegration` and the consumer-spline floor, **T4**; **03a** takes `TkNumericIntegration` and `wavenumber_exit_time`, **T5** and **T6**, and is written after 03 lands) (§1 below; the 2026-09-17
+**Prompts 01, 02, 02a and 03 have all landed; 03a is written next, 04–06 are held** (§7 **D7** split §3.3's charter on 2026-09-17: **03** takes `GkNumericIntegration` and the consumer-spline floor, **T4**; **03a** takes `TkNumericIntegration` and `wavenumber_exit_time`, **T5** and **T6**, and is written after 03 lands) (§1 below; the 2026-09-17
 decision — 02's table says which targets the audits own, and 02a settles the anchor that **T6**,
 prompt 03a's row since §7 **D7**, turns on). **Prompt 02a has landed** (README §3.2a, authorised by §7 **D6**,
 2026-09-17): `main.source_grid_spacing_profile` now guards the stencil evaluation where the
@@ -24,6 +24,17 @@ separately** — `wkb_reference.PRODUCTION_Z_INIT_LAMBDACDM` and `PRODUCTION_Z_I
 generation. **Prompt 01 has landed**: the convergence facility is
 `ComputeTargets/tests/convergence_reference.py` and the source-grid generations are named in
 `ComputeTargets/tests/wkb_reference.py`. Every later prompt measures through them.
+**Prompt 03 has landed**: `docs/tolerance-convergence/GK-NUMERIC-SWEEP.md` is the $G_k$ numeric
+matrix and `gk_numeric_sweep.py` regenerates it. **Its answer is `unchanged`** — `atol` is inert
+over four decades and `rtol` is the whole lever, but the consumer's own spline of the numeric $G$
+carries **1.6e-04 to 9.4e-03** of the envelope near and below the hand-over against **2.6e-07** for
+the solver, so tightening buys nothing (**T4**; README §6.1 rule 4). **D1's compute question in
+this sector is therefore "spend nothing", which is the reverse of what §7 D1 expected.** Two
+things in prompt 03's own charter did not hold and are §3 issues: the outermost $z_{\rm source}$ is
+**not** the least favourable (so the sweep characterises the sector rather than bounding it), and
+the consumer splines the **source** grid, not the response grid the prompt named. The sector's
+object count on the version-2 grid is **29,290 / 38,105 / 58,350** per model, not the ~65,000
+README §2 (c) quotes from version 0.
 **Prompt 02 has landed**: `docs/tolerance-convergence/TOLERANCE-INVENTORY.md` is the inventory and
 `inventory.py` regenerates its tables. **Prompts 03 and 04 take their target lists from log 02's
 "State handed to the next prompt", not from README §2 (a).** README §2 (a)'s eight rows are each
@@ -85,7 +96,7 @@ and `wavenumber_exit_time`. §2 (a)'s table says so on both rows; prompt 06 reco
 | 01 | The convergence harness and one production grid | README §2 (b), (h); `[00-three-production-grid-reproductions]` | Opus | ✍️ [`01-…`](01-convergence-harness-and-grid.md) | ✅ | *"Build the convergence harness and name the source-grid generations"* (SHA not embedded, per the convention `prompts/background-solver-robustness` uses) | [`logs/01-…`](logs/01-convergence-harness-and-grid.md) |
 | 02 | The accuracy-parameter inventory | README §2 (a), (c), (g); `RECONCILIATION.md` §2.1 | Opus | ✍️ [`02-…`](02-accuracy-parameter-inventory.md) | ⚠️ | *"Inventory every accuracy parameter in the pipeline"* (SHA not embedded, per the convention `prompts/background-solver-robustness` uses) | [`logs/02-…`](logs/02-accuracy-parameter-inventory.md) |
 | 02a | Make the grid buildable at every production anchor | README §3.2a, §7 **D6**; `[01-v2-density-raises-at-the-qcd-production-anchor]` | Opus | ✍️ [`02a-…`](02a-source-grid-density-guard.md) | ⚠️ | *"Guard the source grid density criterion off-node"* (SHA not embedded, per the convention `prompts/background-solver-robustness` uses) | [`logs/02a-…`](logs/02a-source-grid-density-guard.md) |
-| 03 | `GkNumericIntegration`, and the floor that decides whether it matters | README §2 (d), (e), (f); §7 **D7**; review §10.1, §12.5; `[00-gk-numeric-never-swept-and-carries-the-cost]` | Opus | ✍️ [`03-…`](03-gk-numeric-and-its-floor.md) | ⬜ | | |
+| 03 | `GkNumericIntegration`, and the floor that decides whether it matters | README §2 (d), (e), (f); §7 **D7**; review §10.1, §12.5; `[00-gk-numeric-never-swept-and-carries-the-cost]` | Opus | ✍️ [`03-…`](03-gk-numeric-and-its-floor.md) | ⚠️ | *"Sweep the Gk numeric tolerance matrix against its floor"* (SHA not embedded, per the convention `prompts/background-solver-robustness` uses) | [`logs/03-…`](logs/03-gk-numeric-and-its-floor.md) |
 | 03a | `TkNumericIntegration` and `wavenumber_exit_time` | README §3.3a, §7 **D7**; `[02-wavenumber-exit-time-tolerance-is-an-inequality-key]` | Opus | ⏸️ **held** — written after 03 lands | ⬜ | | |
 | 04 | Audit the order-governed targets | README §2 (a); §7 D5 **(settled yes)** | Opus | ⏸️ **held** | ⬜ | | |
 | 05 | Decouple | README §2 (a), (g); §7 D1, D3 | Opus | ⏸️ **held** | ⬜ | | |
@@ -141,7 +152,7 @@ not ✅ either, which is the specific failure the rebase found.
 | T1 | **MACHINERY** | One reusable convergence facility, in the test tree, covering every target and calibrated against the constant-$w$ anchors at every use, with "one step tighter" meaning a decade for a tolerance and one order for a Gauss order | 01 | ✅ `convergence_reference.py`: `TolerancePair` / `GaussOrder`, `reference_drift` → `DriftVerdict` (the criterion evaluated, never just reported), `radiation_anchors` over all eleven closed forms, the two numeric sectors folded in from `tk_numeric_atol_sweep.py` |
 | T2 | **MACHINERY** | **One** reproduction of the production source grid at `SOURCE_GRID_CONSTRUCTION_VERSION = 2`, with the version-0 and version-1 constructions retained and named rather than silently re-scored | 01 | ⚠️ `wkb_reference.source_grid(SOURCE_GRID_V0/_V1/_V2, …)`, no default generation, bit-identical to all three constructions it replaces. **Caveat:** `production_source_grid` keeps its historic behaviour because 28 call sites in 20 files outside prompt 01's scope import it; it is documented as version 0 rather than made to fail loudly |
 | T3 | **MEASUREMENT** | The accuracy-parameter inventory: every parameter, what it keys, whether it reaches a solver, what the real knob is, and the object count of the sector it keys | 02 | ⚠️ `docs/tolerance-convergence/TOLERANCE-INVENTORY.md` + `inventory.py`: **12 keyed tables** derived from `Datastore/SQL/Datastore.py`'s `_factories` by `ast`, **39 parameter rows** in nine columns, **10 hard-coded literals** in production. README §2 (a)'s eight rows are each **confirmed**. **Caveat:** there is a **ninth** keyed object type, `OneLoopIntegral` — prompt 02 §8's stop condition, left unassigned for the user |
-| T4 | **MEASUREMENT** | `GkNumericIntegration` characterised over the production response grid on three models in both `atol` and `rtol`, against the consumer-spline floor — the sector with ~65,000 objects per model, never swept, and where the campaign's compute decision actually lives | 03 | ⬜ |
+| T4 | **MEASUREMENT** | `GkNumericIntegration` characterised over the production response grid on three models in both `atol` and `rtol`, against the consumer-spline floor — the sector with ~65,000 objects per model, never swept, and where the campaign's compute decision actually lives | 03 | ⚠️ `docs/tolerance-convergence/GK-NUMERIC-SWEEP.md` + `gk_numeric_sweep.py`: 50 $k$ × 3 models × 15 `(atol, rtol)` cells, **version-2 grid at each cosmology's own anchor**, `BREAK_POINT_DISCONTINUITY`, reference `(1e-18, 1e-12)` converged **50/50 on all three**. **§2 (d)'s prior is confirmed**: four decades of `atol` move the maximum by ≤1.2 %, four decades of `rtol` by ×13,300, and the corners agree to three significant figures — `atol` cannot bind, $\lvert G\rvert$ being 2.1e+12–2.9e+18 in `Mpc_units`. **The floor is freshly measured and dominates**: the consumer's `numeric_Gk` spline carries 1.6e-04/1.7e-04/1.9e-04 of the envelope three e-folds inside the horizon and up to **9.4e-03** at four, against 2.6e-07 for the solver — ×631 to ×37,700, confirming review §10.1. **Target: `unchanged`** (§6.1 rule 4). Objects per model on the v2 grid are **29,290 / 38,105 / 58,350**, not the ~65,000 README §2 (c) quotes from version 0. **Caveat:** §2.2's premise fails — the outermost $z_{\rm source}$ is **not** the least favourable at any of nine probes (≤×1.45), so the sweep characterises the sector rather than bounding it; and the prompt's §5 names the wrong lattice for the consumer's spline (it is the **source** grid, 12× finer). Both are §3 issues |
 | T5 | **MEASUREMENT** | `TkNumericIntegration` likewise, re-taken on the version-2 grid and under its own `BREAK_POINT_ALL` policy | 03a | ⬜ |
 | T6 | **MEASUREMENT** | `wavenumber_exit_time`'s root solve measured at all — nothing in the record says what `xtol = 1e-10`, `rtol = 1e-8` in $\log(1+z)$ buys or costs. **Scored against the exact $z_{\rm exit}$ on `RadiationModel` first** (README §3.1): $1 + z = k/(H_0 e^{N})$, confirmed at the rebase to 2.3e-16 relative or better | 03a | ⬜ |
 | T7 | **MEASUREMENT** | $N_\tau$, $N_{c_s\tau}$, $N_F$, $N_\rho$ and `RESIDUAL_WKB_REGION_MARGIN` audited at every production $k$ on the corrected background and the 3-point break set, replacing evidence generated 2026-09-10. **Every one of the four orders has a closed-form anchor on `RadiationModel`** (README §3.1), including $\rho_G \equiv 0$, which makes the $N_\rho$ measurement pure quadrature error with no reference to build | 04 | ⬜ |
@@ -431,6 +442,66 @@ Opened by the **orchestrator's review of prompt 02a's charter**, 2026-09-17:
   should record as considered even if it ships the quantised-values version.
   **Explicitly not prompt 02a's** (README §4, §7 D6): 02a's acceptance is bit-identity with the
   published digests, and tightening the anchor would move both.
+
+Opened by **prompt 03**, 2026-09-17:
+
+- **[03-numeric-g-consumer-spline-is-the-dominant-error-near-the-hand-over]** *(prompt 03,
+  2026-09-17; unassigned — the source grid's owner, `prompts/qcd-background-audit`, or the
+  hand-over campaign, `docs/OPEN_ISSUES.md` §1.1)* — the consumer of `GkNumericIntegration` is the
+  `numeric_Gk` spline of `ComputeTargets/GkSourcePolicyData.py:654-680`: a cubic
+  `make_interp_spline` in $\log(1+z_{\rm source})$ over the **source-grid** nodes that carry
+  numeric data, at fixed $z_{\rm response}$. Measured at all fifty production wavenumbers on all
+  three models, **source-grid generation version 2 at each cosmology's own anchor**, against a
+  direct solve at the midpoint of each interval:
+
+  | rung ($z_{\rm source}$, e-folds inside the horizon) | +4 | +3 | +2 | +1 | 0 | −2 |
+  |---|---|---|---|---|---|---|
+  | RadiationModel, max over $k$ | 4.57e-04 | 1.64e-04 | 3.39e-06 | 3.08e-08 | 4.93e-08 | 2.24e-08 |
+  | LambdaCDMModel, max over $k$ | **9.35e-03** | 1.73e-04 | 3.63e-06 | 3.26e-08 | 1.01e-07 | 3.01e-08 |
+  | QCDModel, max over $k$ | **7.79e-03** | 1.86e-04 | 3.61e-06 | 2.20e-06 | 1.96e-07 | 3.90e-08 |
+
+  Floor uncertainty **0.00 %** under a further decade of solver tolerance; on the radiation control
+  the probe that supplies the spline's nodes is within **1.0e-12 to 5.6e-12** of the exact
+  `compute_analytic_G`, of the same envelope. **Impact.** Near the hand-over the numeric Green's
+  function is delivered to `QuadSourceIntegral` with **1e-04 to 9e-03** of its envelope of
+  *interpolation* error — between ×631 and ×37,700 the solver error at the production
+  `(1e-10, 1e-8)`, and larger than every floor in README §2 (f) except the WKB LG truncation. The
+  cause is spacing, not tolerance: the source lattice carries up to **1.24 rad** of $G$'s
+  oscillation in $z_{\rm source}$ per interval at the bottom of the numeric region, and a cubic
+  interpolant's error over such an interval is $(h\,\mathrm{d}\theta/\mathrm{d}u)^4/384$. **It
+  confirms review §10.1's inherited "1e-5 to 1e-4 of the value near the hand-over" and shows it
+  understates the dominance.** The density that sets it is the version-2 criterion's, which is
+  sized for the phase-residual spline (`SOURCE_GRID_CONSUMER_TARGET_RAD`) and not for $G$.
+  **Next step:** unassigned, and it is a design decision rather than a tuning one — either the
+  density criterion gains $G$'s own oscillation as a second consumer, or the hand-over moves
+  deeper, or `GkSourcePolicyData` stops splining $G$ itself and splines its Liouville–Green
+  amplitude and phase as the WKB limb already does. All three are outside this campaign
+  (README §0.5 holds the source grid fixed, and §0.4 puts the consumer's own sector elsewhere); it
+  sits beside `[05-numeric-region-is-now-the-accuracy-floor]`, which is the same spline's *end*
+  effect rather than its interior spacing. Evidence:
+  `docs/tolerance-convergence/GK-NUMERIC-SWEEP.md` §7, §8.
+
+- **[03-outermost-z-source-is-not-the-least-favourable]** *(prompt 03, 2026-09-17; **unassigned —
+  prompt 03 §2.2's stop condition, the user decides**)* — `gk_geometry`
+  (`ComputeTargets/tests/convergence_reference.py`) takes one source redshift per wavenumber, the
+  outermost, "which is the longest and therefore the least favourable run", and prompt 03 §2.2
+  makes that claim the premise on which fifty runs per model *bound* a sector of ~29,000–58,000
+  objects. Measured at three wavenumbers per model at seven source redshifts from five e-folds
+  outside the horizon to three inside, at the production setting, each against its own converged
+  reference (drift 8.3e-12 to 5.1e-10): **the outermost is not the worst at any of the nine
+  probes**, the excess running from ×1.01 to ×1.45. The maximum envelope-relative error is **flat**
+  in $z_{\rm source}$ — 1.09e-07 to 2.39e-07 across the whole table, with no trend — while the
+  *median* rises monotonically with e-folds inside the horizon and the evaluation count falls.
+  **Impact:** every figure in `GK-NUMERIC-SWEEP.md` characterises the sector to about a factor of
+  1.5 and none of them bounds it; README §6.2's `GkNumericIntegration` row must say "over fifty
+  wavenumbers at the outermost source redshift" rather than "over the sector". Nothing this prompt
+  concludes turns on a factor of 1.5 — the floor above dominates the solver by two to four and a
+  half orders — so the failure is of the word "bound", not of the sweep. **Next step: the user
+  decides.** Either a bound over the $(k, z_{\rm source})$ plane is wanted, which is a much larger
+  measurement and a different prompt, or the characterisation is enough and §2.2's wording and
+  `gk_geometry`'s docstring should say "representative". Prompt 03 was forbidden to widen the sweep
+  to compensate (§2.2) and did not. Evidence: `docs/tolerance-convergence/GK-NUMERIC-SWEEP.md` §6;
+  log 03, deviation 8.
 
 Opened by **prompt 02**, 2026-09-16:
 

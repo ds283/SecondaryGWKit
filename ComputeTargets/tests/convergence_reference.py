@@ -835,6 +835,39 @@ def gk_geometry(cosmology, k_inv_Mpc: float, grid: BuiltSourceGrid) -> dict:
     return geo
 
 
+def gk_geometry_at_source(
+    cosmology, k_inv_Mpc: float, grid: BuiltSourceGrid, z_source: float
+) -> dict:
+    """
+    :func:`gk_geometry` at a source redshift the **caller** supplies, instead of the outermost one.
+
+    ``GkNumericIntegration`` is one object per ``(k, z_source)``, and :func:`gk_geometry` takes one
+    source redshift per wavenumber -- the outermost, five e-folds outside the horizon -- on the
+    stated grounds that it is the longest and therefore the least favourable run. That is a
+    *claim*, and prompt 03 of ``prompts/tolerance-convergence`` (§2.2) is required to test it
+    rather than inherit it: if it holds, the whole ~65,000-object sector is bounded by fifty runs
+    per model, which is a stronger result than any sub-sample of the second axis would give.
+
+    Everything else is :func:`gk_geometry`'s, including the horizon geometry and the
+    ``(z_e3, z_e6)`` stop window, which do not depend on ``z_source``; only the top of the response
+    grid moves. ``z_source`` is expected to lie on the source grid, as production's does
+    (``main.py:1770-1791`` iterates over the source-grid redshifts), but nothing here requires it.
+
+    :param z_source: the source redshift, in the interval where ``main.py`` builds this target --
+        above ``z_exit_subh_e4`` and at or below the outermost source redshift
+    """
+    geo = _horizon_geometry(cosmology, k_inv_Mpc)
+    geo["z_source"] = float(z_source)
+    source = grid.for_wavenumber(geo["z_source"])
+    geo["grid"] = (
+        source.winnow(sparseness=PRODUCTION_RESPONSE_SPARSENESS)
+        .truncate(source.max, keep="lower")
+        .truncate(0.85 * geo["z_e6"], keep="higher-include")
+    )
+    geo["grid_spec"] = grid
+    return geo
+
+
 def _numeric_run(
     model,
     k_inv_Mpc: float,
