@@ -50,7 +50,10 @@ from CosmologyConcepts import (
     SOURCE_GRID_SPLINE_EDGE_FACTOR,
     SOURCE_GRID_SPLINE_EDGE_INTERVALS,
 )
-from CosmologyConcepts.wavenumber import SOURCE_GRID_CONSTRUCTION_VERSION
+from CosmologyConcepts.wavenumber import (
+    SOURCE_GRID_CONSTRUCTION_VERSION,
+    SOURCE_GRID_MAX_GUARDED_FRACTION,
+)
 from Datastore.SQL.ProfileAgent import ProfileAgent
 from Datastore.SQL.ShardedPool import ShardedPool
 from LiouvilleGreen.bessel_phase import bessel_phase
@@ -694,7 +697,7 @@ def pre_grid_background_proxy(cosmology):
 
 
 def source_grid_spacing_profile(
-    cosmology, base_z_values, k_values, sectors=("Gk", "Tk")
+    cosmology, base_z_values, k_values, sectors=("Gk", "Tk"), report=None
 ):
     """
     The base density of the source grid, as ``(u_profile, h_profile)``: at each sample of
@@ -728,10 +731,32 @@ def source_grid_spacing_profile(
     ``CumulativeTable`` would give, and nothing here could have one, because that is a
     ``BackgroundModel``.
 
+    **The band is established node-wise and the stencil is evaluated off-node**, so a node at
+    which the expansion does not exist can lie between two nodes that both pass
+    ``residual_node_range``'s margin test: where ``H`` steps, ``omega^2`` can be negative at
+    ``u +- delta`` with both neighbouring nodes inside the region. Such a node is marked unusable
+    and filled by log-interpolation exactly as a declared crossing's neighbourhood is -- it is a
+    node with no fourth derivative to equidistribute, which is what that mask is for -- and the
+    guarded nodes are **counted**, because the count measures how far the band overreaches and is
+    the evidence ``[01-density-criterion-imposed-outside-the-wkb-region]`` is waiting for. Before
+    this guard existed the whole construction raised, and a QCD production run could not build its
+    source grid at all (``[01-v2-density-raises-at-the-qcd-production-anchor]``, prompt 02a of
+    ``prompts/tolerance-convergence``). The guard is **inert** on both published grids: QCD at
+    LambdaCDM's anchor is 1,996 samples / ``4849552b`` and LambdaCDM at its own is 1,778 /
+    ``60a3205a``, each with zero nodes guarded, so no figure in the record moves.
+
+    Where this prompt does **not** go: the band stays exactly as ``residual_node_range`` returns
+    it, and whether the criterion should run over a horizon-based band of its own instead is item
+    T7's to decide, not this function's.
+
     :param cosmology: any object with ``Hubble(z)`` and ``wPerturbations(z)``
     :param base_z_values: the uniform base grid, descending in z
     :param k_values: the wavenumbers the grid must serve, in the cosmology's units
     :param sectors: the Liouville-Green sectors to envelope over
+    :param report: optional dict, filled with the guarded-node census -- ``guarded``, ``band``,
+        ``fraction`` and a per-``(k, sector)`` ``detail`` list. The return value is unchanged
+        whether or not it is supplied, because every caller passes the result straight to
+        ``build_z_sample`` as its ``spacing``.
     :return: ``(u_profile, h_profile)``, ascending in u
     """
     base = np.asarray([float(z) for z in base_z_values], dtype=float)
@@ -750,6 +775,10 @@ def source_grid_spacing_profile(
 
     delta = SOURCE_GRID_CURVATURE_STEP_U
     h_envelope = np.full(len(u_profile), np.inf)
+
+    guarded_total = 0
+    band_total = 0
+    guarded_detail = []
 
     for k in sorted({float(k) for k in k_values}):
         for sector in sectors:
@@ -795,21 +824,53 @@ def source_grid_spacing_profile(
             # anything, and prompt 11 owns that neighbourhood.
             d4 = np.zeros(len(u_profile))
             usable = np.zeros(len(u_profile), dtype=bool)
+            guarded = 0
             for i in np.flatnonzero(inside):
                 u = min(
                     max(float(u_profile[i]), u_lo + 2.0 * delta), u_hi - 2.0 * delta
                 )
-                value = abs(
-                    (
-                        -dphi_du(u - 2.0 * delta)
-                        + 2.0 * dphi_du(u - delta)
-                        - 2.0 * dphi_du(u + delta)
-                        + dphi_du(u + 2.0 * delta)
+                try:
+                    value = abs(
+                        (
+                            -dphi_du(u - 2.0 * delta)
+                            + 2.0 * dphi_du(u - delta)
+                            - 2.0 * dphi_du(u + delta)
+                            + dphi_du(u + 2.0 * delta)
+                        )
+                        / (2.0 * delta**3)
                     )
-                    / (2.0 * delta**3)
-                )
+                except ValueError:
+                    # the Liouville-Green expansion does not exist at one of the four stencil
+                    # arms, so there is no fourth derivative of it to equidistribute here. That
+                    # is exactly a node to mark unusable and fill by log-interpolation from
+                    # either side, which is what the mask below the loop already does for the
+                    # declared crossings -- see the block comment above.
+                    #
+                    # Only ValueError: that is what phase_residual_integrand raises when
+                    # omega^2 <= 0 (ComputeTargets/phase_residual.py). A TypeError or a
+                    # KeyError here is a defect, not a region boundary, and must not be
+                    # swallowed.
+                    guarded += 1
+                    continue
                 d4[i] = value
                 usable[i] = value > 0.0
+            band_size = int(inside.sum())
+            guarded_total += guarded
+            band_total += band_size
+            if guarded > 0:
+                guarded_detail.append((k, sector, guarded, band_size))
+            if guarded > SOURCE_GRID_MAX_GUARDED_FRACTION * band_size:
+                # the guard may fill a boundary effect; it may not absorb a misplaced band. See
+                # SOURCE_GRID_MAX_GUARDED_FRACTION, which carries the measurement that fixes it.
+                raise ValueError(
+                    f"source_grid_spacing_profile[{sector}]: the Liouville-Green expansion does "
+                    f"not exist at {guarded} of the {band_size} band node(s) for k = {k:.8g} "
+                    f"({guarded / band_size:.3e} of the band), which exceeds "
+                    f"SOURCE_GRID_MAX_GUARDED_FRACTION = "
+                    f"{SOURCE_GRID_MAX_GUARDED_FRACTION:.3g}; the band this criterion was handed "
+                    f"is not one the expansion it differentiates is defined on, and filling that "
+                    f"many nodes by log-interpolation would conceal it"
+                )
             for u_break in breaks_u:
                 usable &= np.abs(u_profile - u_break) > SOURCE_GRID_CROSSING_MASK_U
             if int(usable.sum()) < 2:
@@ -830,6 +891,25 @@ def source_grid_spacing_profile(
                 eps / (SOURCE_GRID_CUBIC_ERROR_CONST * np.maximum(filled, 1.0e-300))
             ) ** 0.25
             h_envelope = np.where(inside, np.minimum(h_envelope, h), h_envelope)
+
+    if report is not None:
+        report["guarded"] = guarded_total
+        report["band"] = band_total
+        report["fraction"] = guarded_total / band_total if band_total > 0 else 0.0
+        report["detail"] = list(guarded_detail)
+
+    if guarded_total > 0:
+        # Not a warning to be ignored: this count is the direct measure of how far
+        # residual_node_range's band overreaches the region where the Liouville-Green expansion
+        # exists, and [01-density-criterion-imposed-outside-the-wkb-region] is the decision it
+        # feeds. Zero on both published grids, 53 on QCD at QCD's own anchor.
+        print(
+            f"   @@ the curvature criterion guarded {guarded_total} node(s) of {band_total} "
+            f"band-node evaluation(s) ({guarded_total / band_total:.3e}) where the "
+            f"Liouville-Green expansion does not exist at a stencil arm, over "
+            f"{len(guarded_detail)} (k, sector) case(s); each was filled by log-interpolation "
+            f"from either side"
+        )
 
     return u_profile, h_envelope
 

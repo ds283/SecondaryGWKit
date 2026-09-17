@@ -50,6 +50,8 @@ from ComputeTargets.phase_residual import (
 )
 from ComputeTargets.tests.test_main_plumbing import load_main_py_functions
 from ComputeTargets.tests.wkb_reference import (
+    PRODUCTION_Z_INIT_LAMBDACDM,
+    PRODUCTION_Z_INIT_QCD,
     SOURCE_GRID_V1,
     SOURCE_GRID_V2,
     source_grid,
@@ -73,6 +75,7 @@ from CosmologyConcepts import (
 )
 from CosmologyConcepts.wavenumber import (
     SOURCE_GRID_CONSTRUCTION_VERSION,
+    SOURCE_GRID_MAX_GUARDED_FRACTION,
     SOURCE_GRID_MAX_REFINEMENT,
     SOURCE_GRID_MIN_SEPARATION,
 )
@@ -119,6 +122,7 @@ _main = load_main_py_functions(
         "SOURCE_GRID_CUBIC_ERROR_CONST": SOURCE_GRID_CUBIC_ERROR_CONST,
         "SOURCE_GRID_CURVATURE_FD_STEP_U": SOURCE_GRID_CURVATURE_FD_STEP_U,
         "SOURCE_GRID_CURVATURE_STEP_U": SOURCE_GRID_CURVATURE_STEP_U,
+        "SOURCE_GRID_MAX_GUARDED_FRACTION": SOURCE_GRID_MAX_GUARDED_FRACTION,
         "SOURCE_GRID_SPLINE_EDGE_FACTOR": SOURCE_GRID_SPLINE_EDGE_FACTOR,
         "SOURCE_GRID_SPLINE_EDGE_INTERVALS": SOURCE_GRID_SPLINE_EDGE_INTERVALS,
     },
@@ -1091,6 +1095,187 @@ class TestTheConstructionVersionNamesThisAlgorithm(unittest.TestCase):
         )
         self.assertEqual(len(production_lcdm.z_values), 1778)
         self.assertEqual(redshift_grid_digest(production_lcdm.z_values), "60a3205a")
+
+
+class TestTheCriterionBuildsAtEveryProductionAnchor(unittest.TestCase):
+    """
+    Prompt 02a of ``prompts/tolerance-convergence``, board item T13.
+
+    ``source_grid_spacing_profile`` used to **raise** on ``QCD_Cosmology`` at the anchor a QCD
+    production run actually uses, so a QCD run could not build its source grid at all
+    (``[01-v2-density-raises-at-the-qcd-production-anchor]``). The mechanism is not the crossing
+    mask: ``residual_node_range`` establishes its band by testing ``omega^2`` **at the grid's
+    nodes** and is right there, while the stencil evaluates ``dphi_du`` **off-node**, so where
+    ``H`` steps the expansion can fail between two nodes that both pass the margin test. A node
+    like that is one to mark unusable and log-interpolate across, which is what the criterion's
+    existing mask is for.
+
+    **The load-bearing assertion here is bit-identity, not improvement.** The two grids already in
+    the record must not move, and must guard nothing -- that is what says the guard is inert on
+    every figure ever measured. QCD at its own anchor building at all is the new capability, and
+    the guarded count is the evidence item T7 needs for
+    ``[01-density-criterion-imposed-outside-the-wkb-region]``.
+    """
+
+    def setUp(self):
+        self.qcd = QCD_Cosmology(
+            store_id=1,
+            units=Mpc_units(),
+            params=Planck2018(),
+        )
+        self.lcdm = LambdaCDM(store_id=0, units=Mpc_units(), params=Planck2018())
+        self.k_values = [float(k) / Mpc_units().Mpc for k in PRODUCTION_K_INV_MPC]
+
+    def _census(self, cosmology, z_init):
+        base = build_z_sample(
+            z_init, PRODUCTION_Z_END, PRODUCTION_SAMPLES_PER_LOG10Z
+        ).z_values
+        report = {}
+        source_grid_spacing_profile(cosmology, base, self.k_values, report=report)
+        return report
+
+    def test_the_two_anchors_are_named_and_are_not_the_same(self):
+        # PRODUCTION_Z_INIT's comment used to claim one constant served both production
+        # cosmologies. It does not: this module's own anchor is LambdaCDM's.
+        self.assertEqual(PRODUCTION_Z_INIT, PRODUCTION_Z_INIT_LAMBDACDM)
+        self.assertNotEqual(PRODUCTION_Z_INIT_QCD, PRODUCTION_Z_INIT_LAMBDACDM)
+        self.assertGreater(PRODUCTION_Z_INIT_QCD, PRODUCTION_Z_INIT_LAMBDACDM)
+
+    def test_the_published_grids_are_bit_identical_and_guard_nothing(self):
+        for label, cosmology, samples, digest in (
+            ("QCD at LambdaCDM's anchor", self.qcd, 1996, "4849552b"),
+            ("LambdaCDM at its own anchor", self.lcdm, 1778, "60a3205a"),
+        ):
+            with self.subTest(label):
+                census = self._census(cosmology, PRODUCTION_Z_INIT_LAMBDACDM)
+                self.assertEqual(
+                    census["guarded"],
+                    0,
+                    f"{label}: the guard is not inert on a grid already in the record",
+                )
+                grid = _production_grid(cosmology)
+                self.assertEqual(len(grid.z_values), samples)
+                self.assertEqual(redshift_grid_digest(grid.z_values), digest)
+
+    def test_qcd_builds_at_its_own_anchor(self):
+        grid = source_grid(
+            SOURCE_GRID_V2,
+            PRODUCTION_Z_INIT_QCD,
+            PRODUCTION_Z_END,
+            PRODUCTION_SAMPLES_PER_LOG10Z,
+            cosmology=self.qcd,
+            k_inv_Mpc=PRODUCTION_K_INV_MPC,
+        )
+        z = grid.z_values
+
+        # strictly descending, duplicate-free, and no closer anywhere than the datastore can
+        # resolve -- the same three properties the published grids are held to above
+        self.assertTrue(np.all(np.diff(z) < 0.0))
+        self.assertEqual(len(np.unique(z)), len(z))
+        separation = -np.diff(z) / z[:-1]
+        self.assertGreater(float(separation.min()), SOURCE_GRID_MIN_SEPARATION)
+
+        # the figures prompt 02a measured, and which the board's probe also reports
+        self.assertEqual(len(z), 2034)
+
+    def test_the_guarded_nodes_are_counted_and_attributed(self):
+        census = self._census(self.qcd, PRODUCTION_Z_INIT_QCD)
+
+        self.assertEqual(census["guarded"], 53)
+        self.assertEqual(sum(g for _, _, g, _ in census["detail"]), 53)
+
+        # 34 in the Green's-function sector and 19 in the transfer-function sector, over 53 of the
+        # 100 (k, sector) cases -- exactly one node each, which is what says this is the band
+        # reaching past where the expansion exists and not a region of breakdown
+        by_sector = {"Gk": 0, "Tk": 0}
+        for _, sector, guarded, _ in census["detail"]:
+            by_sector[sector] += guarded
+            self.assertEqual(guarded, 1)
+        self.assertEqual(by_sector, {"Gk": 34, "Tk": 19})
+        self.assertEqual(len(census["detail"]), 53)
+
+    def test_the_worst_production_band_is_far_below_the_refusal(self):
+        census = self._census(self.qcd, PRODUCTION_Z_INIT_QCD)
+        worst = max(g / b for _, _, g, b in census["detail"])
+
+        # 7.716e-04, and SOURCE_GRID_MAX_GUARDED_FRACTION is 0.05: the margin the constant's
+        # comment claims is 64.8x, and this is the assertion that keeps that claim honest if
+        # either the band or the constant ever moves
+        self.assertLess(worst, 1.0e-3)
+        self.assertGreater(SOURCE_GRID_MAX_GUARDED_FRACTION / worst, 50.0)
+
+    def test_a_band_the_expansion_is_not_defined_on_is_refused(self):
+        """
+        The guard may fill a boundary effect; it may not absorb a misplaced band.
+
+        The synthetic case **misplaces the band** rather than editing the production constant: the
+        stand-in ``residual_node_range`` hands the criterion the whole grid instead of the band
+        the margin test establishes, so most of its nodes lie far outside the Liouville-Green
+        region and have no expansion to differentiate. That is the shape of the failure the
+        ceiling exists to catch, and it is the shape a band chosen on the wrong condition would
+        have -- which is the live question
+        (``[01-density-criterion-imposed-outside-the-wkb-region]``, item T7), and the reason the
+        guard must not be able to absorb it quietly.
+
+        Widening the stencil instead does **not** work, and the reason is worth recording: the
+        arms are clamped to ``[u_lo + 2 delta, u_hi - 2 delta]``, so however large ``delta`` is
+        they never reach past the band's own ends.
+        """
+
+        def _whole_grid_is_the_band(proxy, k, base_z, sector):
+            return np.asarray(base_z, dtype=float)
+
+        misplaced = load_main_py_functions(
+            ["pre_grid_background_proxy", "source_grid_spacing_profile"],
+            extra_globals={
+                "np": np,
+                "_cosmology_break_points": _cosmology_break_points,
+                "phase_residual_integrand": phase_residual_integrand,
+                "residual_node_range": _whole_grid_is_the_band,
+                "SOURCE_GRID_CONSUMER_TARGET_RAD": SOURCE_GRID_CONSUMER_TARGET_RAD,
+                "SOURCE_GRID_CROSSING_MASK_U": SOURCE_GRID_CROSSING_MASK_U,
+                "SOURCE_GRID_CUBIC_ERROR_CONST": SOURCE_GRID_CUBIC_ERROR_CONST,
+                "SOURCE_GRID_CURVATURE_FD_STEP_U": SOURCE_GRID_CURVATURE_FD_STEP_U,
+                "SOURCE_GRID_CURVATURE_STEP_U": SOURCE_GRID_CURVATURE_STEP_U,
+                "SOURCE_GRID_MAX_GUARDED_FRACTION": SOURCE_GRID_MAX_GUARDED_FRACTION,
+                "SOURCE_GRID_SPLINE_EDGE_FACTOR": SOURCE_GRID_SPLINE_EDGE_FACTOR,
+                "SOURCE_GRID_SPLINE_EDGE_INTERVALS": SOURCE_GRID_SPLINE_EDGE_INTERVALS,
+            },
+        )["source_grid_spacing_profile"]
+
+        base = build_z_sample(
+            PRODUCTION_Z_INIT_QCD, PRODUCTION_Z_END, PRODUCTION_SAMPLES_PER_LOG10Z
+        ).z_values
+        with self.assertRaises(ValueError) as caught:
+            misplaced(self.qcd, base, self.k_values)
+
+        message = str(caught.exception)
+        self.assertIn("SOURCE_GRID_MAX_GUARDED_FRACTION", message)
+        self.assertIn("the Liouville-Green expansion does not exist at", message)
+        self.assertIn("band node(s) for k =", message)
+
+    def test_only_a_value_error_is_guarded(self):
+        """
+        A ``TypeError`` from the integrand is a defect, not a region boundary, and must escape.
+        """
+
+        class _Sabotaged:
+            """``QCD_Cosmology``'s surface, with a Hubble rate that cannot be arithmetic on."""
+
+            def __init__(self, inner):
+                self._inner = inner
+
+            def __getattr__(self, name):
+                return getattr(self._inner, name)
+
+            def Hubble(self, z):
+                return None
+
+        base = build_z_sample(
+            PRODUCTION_Z_INIT_QCD, PRODUCTION_Z_END, PRODUCTION_SAMPLES_PER_LOG10Z
+        ).z_values
+        with self.assertRaises(TypeError):
+            source_grid_spacing_profile(_Sabotaged(self.qcd), base, self.k_values)
 
 
 if __name__ == "__main__":

@@ -243,6 +243,38 @@ SOURCE_GRID_CONSUMER_TARGET_RAD = 1.0e-6
 SOURCE_GRID_SPLINE_EDGE_INTERVALS = 3
 SOURCE_GRID_SPLINE_EDGE_FACTOR = 10.0
 
+# **The ceiling on what the density criterion's guard may absorb**, as a fraction of one
+# (k, sector) band's nodes. Prompt 02a of prompts/tolerance-convergence.
+#
+# The band is established node-wise by residual_node_range and the stencil is evaluated off-node,
+# at u +- delta and u +- 2 delta, so where H steps omega^2 can be negative between two nodes that
+# both pass the margin test. Such a node has no fourth derivative to equidistribute and is marked
+# unusable and log-interpolated across, exactly as a declared crossing's neighbourhood is. Before
+# that guard existed the construction raised outright and a QCD production run could not build its
+# source grid at all ([01-v2-density-raises-at-the-qcd-production-anchor]).
+#
+# A guard with no ceiling is the worse defect, because the raise at least stops: it would let an
+# arbitrarily misplaced band be absorbed silently, and the profile would then be a log-interpolation
+# through whatever few nodes survived. So the guard refuses above this fraction and names the count.
+#
+# Measured, at production geometry -- fifty wavenumbers, both sectors, 100 samples per decade of z:
+#
+#     cosmology / anchor                       guarded    band    worst single band
+#     QCD at LambdaCDM's anchor (1996 samples)       0   136492            0
+#     LambdaCDM at its own anchor (1778)             0   150932            0
+#     QCD at its own anchor (2034)                  53   136453     7.716e-04
+#
+# The only production case that guards anything reaches **7.716e-04** of a band -- one node of
+# 1,304, on 53 of the 100 (k, sector) cases -- and that figure is stable at every relative
+# perturbation of z_init from 1e-16 to 1e-8, so it is not one float's accident. 0.05 sits **64.8x**
+# above it. The margin is deliberately large in that direction and small in the other: at 5% of a
+# band, 95% of its nodes remain to fit the log-interpolation from, so anything that trips this
+# ceiling is a misplaced band rather than a boundary effect, which is the distinction the constant
+# exists to draw. Whether the criterion should run over a horizon-based band of its own instead is
+# [01-density-criterion-imposed-outside-the-wkb-region], and the guarded counts above are its
+# evidence, not this constant's business.
+SOURCE_GRID_MAX_GUARDED_FRACTION = 0.05
+
 
 class SourceGrid(NamedTuple):
     """

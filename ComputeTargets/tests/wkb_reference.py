@@ -81,13 +81,32 @@ PRODUCTION_K_GRID_INV_MPC = np.logspace(
     PRODUCTION_NUMBER_K_VALUES,
 )
 
-# the top of the universal source grid on both production cosmologies: the
-# ``z_exit_suph_e5`` of the earliest-exiting wavenumber, k = 3e8/Mpc. It is a *measured*
-# constant, recorded here because the grid generations below have to agree on where the grid
-# starts before they can be compared; ``wkb_reference_data.json``'s ``grid.z_init`` for
-# LambdaCDMModel and QCDModel carries the same digits, and so does
-# ``ComputeTargets/tests/test_source_grid.py``.
-PRODUCTION_Z_INIT = 2.0636395964161516e16
+# the top of the universal source grid: the ``z_exit_suph_e5`` of the earliest-exiting
+# wavenumber, k = 3e8/Mpc, which ``main.py:944`` uses as ``z_init``. These are *measured*
+# constants, recorded here because the grid generations below have to agree on where the grid
+# starts before they can be compared.
+#
+# **There is one anchor per cosmology, not one for both.** This constant's comment used to say
+# it was "the top of the universal source grid on both production cosmologies", and that was
+# false: the value is LambdaCDM's. QCD's own anchor is 60% higher, and the difference is not
+# cosmetic -- the version-2 density criterion guards 53 nodes at QCD's anchor and none at
+# LambdaCDM's, and before prompt 02a of ``prompts/tolerance-convergence`` it raised outright, so
+# a QCD production run could not build its source grid
+# (``[01-v2-density-raises-at-the-qcd-production-anchor]``). Prompts 03, 04 and 06 are chartered
+# to measure "over the production grids on all three models" and must be able to *say* which
+# anchor a figure was taken at, the same way README §2 (b) makes them say which grid generation.
+#
+# Both are ``_solve_horizon_exit(cosmology, k = 3e8/Mpc, -5)`` at the production tolerances, and
+# both reproduce to the digits below on this tree. ``wkb_reference_data.json``'s ``grid.z_init``
+# for LambdaCDMModel and QCDModel carries the LambdaCDM value, and so does
+# ``ComputeTargets/tests/test_source_grid.py``; that is what makes every version-2 QCD figure in
+# the record a figure at *LambdaCDM's* anchor.
+PRODUCTION_Z_INIT_LAMBDACDM = 2.0636395964161516e16
+PRODUCTION_Z_INIT_QCD = 3.30033444460513e16
+
+#: the LambdaCDM anchor, under its historic name. Every existing caller means this one and stays
+#: bit-identical; a caller that means QCD's says :data:`PRODUCTION_Z_INIT_QCD`.
+PRODUCTION_Z_INIT = PRODUCTION_Z_INIT_LAMBDACDM
 
 # the wavenumbers at which the JSON carries residual references
 REFERENCE_K_VALUES = (1.0e5, 1.0e7, 3.0e8)
@@ -266,6 +285,7 @@ def main_py_grid_helpers() -> dict:
             SOURCE_GRID_SPLINE_EDGE_FACTOR,
             SOURCE_GRID_SPLINE_EDGE_INTERVALS,
         )
+        from CosmologyConcepts.wavenumber import SOURCE_GRID_MAX_GUARDED_FRACTION
 
         _MAIN_PY_GRID_HELPERS.update(
             load_main_py_functions(
@@ -284,6 +304,7 @@ def main_py_grid_helpers() -> dict:
                     "SOURCE_GRID_CUBIC_ERROR_CONST": SOURCE_GRID_CUBIC_ERROR_CONST,
                     "SOURCE_GRID_CURVATURE_FD_STEP_U": SOURCE_GRID_CURVATURE_FD_STEP_U,
                     "SOURCE_GRID_CURVATURE_STEP_U": SOURCE_GRID_CURVATURE_STEP_U,
+                    "SOURCE_GRID_MAX_GUARDED_FRACTION": SOURCE_GRID_MAX_GUARDED_FRACTION,
                     "SOURCE_GRID_SPLINE_EDGE_FACTOR": SOURCE_GRID_SPLINE_EDGE_FACTOR,
                     "SOURCE_GRID_SPLINE_EDGE_INTERVALS": SOURCE_GRID_SPLINE_EDGE_INTERVALS,
                 },

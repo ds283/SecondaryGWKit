@@ -8,16 +8,20 @@
 re-run for the re-anchor and green — `ComputeTargets` **452**, `CosmologyModels` **39**)
 **Superseded baseline:** `acd5b8e`, `ComputeTargets` 447, `CosmologyModels` 30 — the anchor of any
 figure in this campaign's documents dated before 2026-09-16 19:32
-**Last updated:** 2026-09-17 · **Status: in progress — 2 / 6, plus the insertion 02a written.**
+**Last updated:** 2026-09-17 · **Status: in progress — 2 / 6, plus the insertion 02a landed.**
 **Every user decision needed to start is settled** — D1 and D3 are post-audit gates by design, D2
 settled 2026-09-12, D4 settled by README §0.4, **D5 settled yes 2026-09-16**.
-**Prompts 01, 02 and 02a are written, with their orchestrator prompts; 03–06 are deliberately held**
-until **both 02 and 02a** have landed (§1 below; the 2026-09-17 decision — 02's table says which
-targets the audits own, and 02a settles the anchor that **T6**, prompt 03's own row, turns on). **Prompt 02a is now written, with its orchestrator prompt, and is dispatched next, ahead of 03**
-(README §3.2a, authorised by §7 **D6**, 2026-09-17): the version-2 source grid cannot be built on
-`QCD_Cosmology` at the anchor a QCD production run uses, and 03, 04 and 06 are each chartered to
-measure over the production grids on all three models, so without it every one of them must measure
-QCD at LambdaCDM's anchor — the defect prompt 01 exists to close. **Prompt 01 has landed**: the convergence facility is
+**Prompts 01, 02 and 02a have all landed; 03–06 may now be written** (§1 below; the 2026-09-17
+decision — 02's table says which targets the audits own, and 02a settles the anchor that **T6**,
+prompt 03's own row, turns on). **Prompt 02a has landed** (README §3.2a, authorised by §7 **D6**,
+2026-09-17): `main.source_grid_spacing_profile` now guards the stencil evaluation where the
+Liouville–Green expansion does not exist, so **the version-2 source grid builds at every production
+anchor on every production cosmology**. QCD at its own anchor is **2034 samples / `21ffc126`, 53
+guarded nodes**; both published grids are **bit-identical** (1996 / `4849552b`, 1778 / `60a3205a`,
+zero guarded), so no figure in the record moves. **The two production anchors are now named
+separately** — `wkb_reference.PRODUCTION_Z_INIT_LAMBDACDM` and `PRODUCTION_Z_INIT_QCD` — and prompts
+03, 04 and 06 must say which one a figure was taken at, exactly as §2 (b) makes them say which grid
+generation. **Prompt 01 has landed**: the convergence facility is
 `ComputeTargets/tests/convergence_reference.py` and the source-grid generations are named in
 `ComputeTargets/tests/wkb_reference.py`. Every later prompt measures through them.
 **Prompt 02 has landed**: `docs/tolerance-convergence/TOLERANCE-INVENTORY.md` is the inventory and
@@ -80,7 +84,7 @@ and `wavenumber_exit_time`. §2 (a)'s table says so on both rows; prompt 06 reco
 |---|---|---|---|---|---|---|---|
 | 01 | The convergence harness and one production grid | README §2 (b), (h); `[00-three-production-grid-reproductions]` | Opus | ✍️ [`01-…`](01-convergence-harness-and-grid.md) | ✅ | *"Build the convergence harness and name the source-grid generations"* (SHA not embedded, per the convention `prompts/background-solver-robustness` uses) | [`logs/01-…`](logs/01-convergence-harness-and-grid.md) |
 | 02 | The accuracy-parameter inventory | README §2 (a), (c), (g); `RECONCILIATION.md` §2.1 | Opus | ✍️ [`02-…`](02-accuracy-parameter-inventory.md) | ⚠️ | *"Inventory every accuracy parameter in the pipeline"* (SHA not embedded, per the convention `prompts/background-solver-robustness` uses) | [`logs/02-…`](logs/02-accuracy-parameter-inventory.md) |
-| 02a | Make the grid buildable at every production anchor | README §3.2a, §7 **D6**; `[01-v2-density-raises-at-the-qcd-production-anchor]` | Opus | ✍️ [`02a-…`](02a-source-grid-density-guard.md) | ⬜ | | |
+| 02a | Make the grid buildable at every production anchor | README §3.2a, §7 **D6**; `[01-v2-density-raises-at-the-qcd-production-anchor]` | Opus | ✍️ [`02a-…`](02a-source-grid-density-guard.md) | ⚠️ | *"Guard the source grid density criterion off-node"* (SHA not embedded, per the convention `prompts/background-solver-robustness` uses) | [`logs/02a-…`](logs/02a-source-grid-density-guard.md) |
 | 03 | Audit the adaptive solvers | README §2 (d), (e), (f); review §10.1, §12.5 | Opus | ⏸️ **held** | ⬜ | | |
 | 04 | Audit the order-governed targets | README §2 (a); §7 D5 **(settled yes)** | Opus | ⏸️ **held** | ⬜ | | |
 | 05 | Decouple | README §2 (a), (g); §7 D1, D3 | Opus | ⏸️ **held** | ⬜ | | |
@@ -143,7 +147,7 @@ not ✅ either, which is the specific failure the rebase found.
 | T10 | **PLUMBING** | Every `object_get` of a retuned target carries its own parameter, with an `ast` guard whose predicate reaches all eight targets and fails on an unclassified site | 05 | ⬜ |
 | T11 | **HAND-OFF** | `QuadSourceIntegral` measured read-only and reported to `levin-refactor` / `qsi-phase-groups` | 06 | ⬜ |
 | T12 | **PROVENANCE** | `docs/TOLERANCE-PROVENANCE.md` covers **every** accuracy parameter in the pipeline — including the ones this campaign inherits and does not set, and the ones nobody has ever chosen — with value, choosing measurement and its grid generation, competing floor, cost times object count, and citation (README §1.2) | 06 | ⬜ |
-| T13 | **MACHINERY** | The version-2 source grid **builds at every production anchor on every production cosmology**, with a node at which the Liouville–Green expansion does not exist marked unusable and *counted* rather than raising, a refusal above a measured fraction of the band, and QCD's own anchor named in the test tree. Acceptance is bit-identity with the two published digests (1996 / `4849552b`, 1778 / `60a3205a`), not accuracy | 02a | ⬜ |
+| T13 | **MACHINERY** | The version-2 source grid **builds at every production anchor on every production cosmology**, with a node at which the Liouville–Green expansion does not exist marked unusable and *counted* rather than raising, a refusal above a measured fraction of the band, and QCD's own anchor named in the test tree. Acceptance is bit-identity with the two published digests (1996 / `4849552b`, 1778 / `60a3205a`), not accuracy | 02a | ⚠️ QCD at its own anchor builds: **2034 / `21ffc126`, 53 guarded nodes** (Gk 34, Tk 19, 53 of 100 (k, sector) cases, exactly one node each). Both published grids **bit-identical with zero guarded**, so the `except` branch is never entered on either and the guard is provably inert on every figure in the record. Refusal ceiling `SOURCE_GRID_MAX_GUARDED_FRACTION = 0.05`, **64.8x** the worst measured band (7.716e-04). **Caveat:** the constant's only proper home is `CosmologyConcepts/wavenumber.py`, a file the prompt's own file list forbade; the agent stopped rather than editing it, and the **user amended the scope on 2026-09-17** to permit that one append-only definition (log 02a, deviation 1) |
 
 ---
 
@@ -233,77 +237,8 @@ Opened by the **2026-09-16 rebase**:
 
 Opened by **prompt 01**, 2026-09-16:
 
-- **[01-v2-density-raises-at-the-qcd-production-anchor]** *(prompt 01, 2026-09-16; **assigned 2026-09-17 to prompt 02a**)* —
-  `main.source_grid_spacing_profile` **raises** on `QCD_Cosmology` when the source grid is anchored
-  where a QCD production run anchors it. `main.py:944` starts the universal grid at
-  `k_exit_earliest.z_exit_suph_e5`; run directly, production's own
-  `CosmologyConcepts.wavenumber._solve_horizon_exit(QCD_Cosmology, k = 3e8, -5)` returns
-  **3.30033444460513e+16**, and `build_z_sample` with the version-2 spacing profile at that
-  `z_init` raises `ValueError: phase_residual[Gk]: the Liouville-Green frequency is not positive at
-  z = 8.6447769e+11 for k = 266544.64` — the cosmology's own third declared crossing, at the
-  smallest production wavenumber. The **version-1** grid builds there without complaint (1,793
-  samples), so it is the density criterion alone, and the failure depends on where the base
-  lattice's nodes fall relative to `SOURCE_GRID_CROSSING_MASK_U`. **Impact:** two things. (i)
-  Whether a QCD production run can build its source grid at all is an open question — this prompt
-  could not answer it, because answering it means running `main.py`. (ii) **Every recorded
-  version-2 QCD figure is anchored at LambdaCDM's `z_init`**, 2.0636395964161516e+16, not QCD's:
-  `test_source_grid.py`'s 1,996 samples and digest `4849552b`, `RECONCILIATION.md` §2.7's "1,996
-  samples on QCD", and `docs/qcd-background-verification.md` §10's density measurements. Those
-  numbers are not wrong — each is correct for the grid it was taken on — but "the production QCD
-  grid" in the record is not the grid a QCD run would build, which is the same species of defect as
-  `[00-three-production-grid-reproductions]` itself. **Next step:** establish whether `main.py`
-  reaches the raise in a real QCD run; if it does, the fix is in `main.source_grid_spacing_profile`
-  or `ComputeTargets/phase_residual.residual_node_range` and belongs to whoever owns the source
-  grid (`prompts/qcd-background-audit`, README §0.5 holds it fixed here), not to this campaign. If
-  it does not, the record still needs the LambdaCDM anchor marked on every version-2 QCD figure.
-
-  > **Root cause narrowed by the orchestrator's review, 2026-09-16.** The proximate defect is an
-  > **ordering** one in `main.source_grid_spacing_profile` (`main.py:796-814`): the five-point
-  > stencil calls `dphi_du` four times for **every** node of `inside`, and the declared-crossing
-  > mask `usable &= |u_profile - u_break| > SOURCE_GRID_CROSSING_MASK_U` is applied only **after**
-  > that loop. A crossing neighbourhood is therefore dropped from the log-interpolation *fit* but
-  > not from the *evaluation*, so a node the mask would have discarded is still evaluated. With
-  > `SOURCE_GRID_CROSSING_MASK_U = 6e-3` and a stencil reach of
-  > `2 * SOURCE_GRID_CURVATURE_STEP_U = 2e-3`, measured against the third QCD crossing at
-  > `u = 27.485391822044257`: at **QCD's own anchor** the nearest base-lattice node is
-  > `u = 27.485831`, **4.39e-04** away — inside the mask *and* within stencil reach, so an arm
-  > lands essentially on the crossing (the raise is at `u = 27.485391334913157`, 4.9e-07 from it);
-  > at **LambdaCDM's anchor** the nearest node is **9.11e-03** away, outside both, and nothing is
-  > evaluated near it. That is the whole of why one anchor escapes and the other does not.
-  > Reordering the mask ahead of the loop would clear this failure but is **not** established as
-  > sufficient — `RESIDUAL_WKB_REGION_MARGIN`'s own comment records a second case on QCD at
-  > `z = 3.61e15`, away from any declared crossing, which no crossing mask would catch. See
-  > `[01-density-criterion-imposed-outside-the-wkb-region]`, which is the deeper defect: the band
-  > this loop runs over had no business reaching that far in the first place.
-
-  > **Both open questions answered, and the issue assigned, 2026-09-17.** Re-run at `main.py`'s own
-  > configuration — `z_init` from `_solve_horizon_exit(QCD, k = 3e8, -5)`, **all fifty** wavenumbers
-  > of `main.py:3587` in both sectors, `zend = 0.1`, 100 per decade — the version-2 grid **raises**
-  > and the version-1 grid builds (1793). So **`main.py` does reach the raise**: a QCD production
-  > run cannot build its source grid, and the first of the two consequences above is no longer an
-  > open question. Nor is it the accident of one float: perturbing `z_init` relatively, the
-  > construction raises at `1e-16`, `1e-14`, `1e-12`, `1e-10` and `1e-8` and first builds at `1e-6`,
-  > a band no re-solve of the anchor escapes.
-  >
-  > **The mechanism is not the crossing mask, and reordering is not the fix.**
-  > `residual_node_range` establishes its band by testing `omega^2` at the grid's **nodes**, and is
-  > correct there; the stencil then evaluates `dphi_du` **off-node**, at `u ± delta` and
-  > `u ± 2*delta`. Where `H` steps, `omega^2` can be negative *between* two nodes that both pass the
-  > margin test — which is why the `z = 3.61e15` case survives any reordering, and why the ordering
-  > defect explains only *which* anchor trips, not the failure itself.
-  >
-  > **Assigned (2026-09-17):** prompt **02a** of this campaign, under README §7 **D6**. The fix is
-  > to mark a node at which the expansion does not exist `usable = False` — the criterion already
-  > carries that mask and a log-interpolation fill for it — and to count and report the guarded
-  > nodes rather than absorb them silently. Probed: QCD at its own anchor then builds with **2034
-  > samples** and **53 guarded nodes**, and both published grids are **bit-identical** (1996 /
-  > `4849552b`, 1778 / `60a3205a`, zero guarded), so the guard is inert on every figure in the
-  > record. 02a does **not** reorder the mask: that changes which nodes are evaluated, hence
-  > `usable`, hence the fit, so it could move a published grid and nothing has measured whether it
-  > does.
-
 - **[01-density-criterion-imposed-outside-the-wkb-region]** *(orchestrator review of prompt 01,
-  2026-09-16; **narrowed 2026-09-17, no longer blocking**; unassigned — candidate for **T7**)* — `main.source_grid_spacing_profile` imposes the
+  2026-09-16; **narrowed 2026-09-17, no longer blocking; measured by prompt 02a, 2026-09-17**; unassigned — candidate for **T7**)* — `main.source_grid_spacing_profile` imposes the
   fourth-derivative equidistribution criterion over the band `residual_node_range` returns, and
   that band reaches **1.5 to 2.1 e-folds outside the horizon**, where the Liouville-Green phase
   spline the criterion exists to protect is never evaluated. The horizon condition is
@@ -351,6 +286,30 @@ Opened by **prompt 01**, 2026-09-16:
   > the band overreaches and where. **Still unassigned as a decision, still a candidate for T7**:
   > whether the spacing profile should run over a horizon-based band of its own is prompt 04's to
   > recommend, and 02a is explicitly forbidden from pre-empting it.
+
+  > **Measured by prompt 02a, 2026-09-17** (additively). The guarded-node census is the direct
+  > measure of the overreach this issue asserts, and it is the evidence the issue has been
+  > waiting for. At production geometry, **source-grid generation version 2**, fifty wavenumbers,
+  > both sectors:
+  >
+  > | cosmology / anchor | guarded | band-node evaluations | fraction | Gk | Tk | cases | worst single band |
+  > |---|---|---|---|---|---|---|---|
+  > | QCD at LambdaCDM's, 2.0636395964161516e+16 | 0 | 136492 | 0 | 0 | 0 | 0 / 100 | 0 |
+  > | LambdaCDM at its own | 0 | 150932 | 0 | 0 | 0 | 0 / 100 | 0 |
+  > | **QCD at its own, 3.30033444460513e+16** | **53** | **136453** | **3.884e-04** | **34** | **19** | **53 / 100** | **7.716e-04** |
+  >
+  > **The shape matters as much as the total: every affected case guards exactly one node.** So
+  > the band reaches *just* past the edge of the region at a single lattice node, rather than
+  > running for a stretch through a region of breakdown — which is a different claim from the
+  > 69%-of-added-samples figure above, and a narrower one. Both are true and they measure
+  > different things: that one counts samples the criterion *added* above horizon crossing, this
+  > one counts nodes at which the expansion it differentiates **does not exist at all**.
+  >
+  > **Still unassigned as a decision, still a candidate for T7.** Prompt 02a was forbidden to
+  > touch the band and did not: `residual_node_range` returns exactly what it returned before.
+  > `SOURCE_GRID_MAX_GUARDED_FRACTION = 0.05` now caps what the guard may absorb, at 64.8x the
+  > worst measured band, so a *materially* worse band refuses rather than being filled silently —
+  > but the ceiling is an acceptance bound, not an answer to where the criterion should apply.
 
 Opened by the **orchestrator's review of prompt 02a's charter**, 2026-09-17:
 
@@ -516,7 +475,32 @@ Recorded by the rebase, **not owned here** and not scheduled (README §0.5):
 
 ## 4. Resolved issues
 
-None yet.
+Closed by **prompt 02a**, 2026-09-17:
+
+- **[01-v2-density-raises-at-the-qcd-production-anchor]** — **CLOSED.** The version-2 source
+  grid now builds at every production anchor on every production cosmology. The stencil
+  evaluation in `main.source_grid_spacing_profile` is guarded where the Liouville-Green
+  expansion does not exist: such a node is marked `usable = False` and filled by the
+  log-interpolation the criterion already applies to a declared crossing's neighbourhood, and
+  the guarded nodes are **counted** rather than absorbed silently.
+
+  **What closed it, measured.** `_solve_horizon_exit(QCD, k = 3e8/Mpc, -5)` =
+  **3.30033444460513e+16**, reproducing the board's figure to 15 digits. The construction
+  raised there at every relative `z_init` perturbation from **1e-16 to 1e-8** and first built
+  clean at **1e-6**, with a *stable* 53 guarded nodes across the whole trip band — so this was
+  never one float's accident, and `main.py` genuinely could not build a QCD source grid. QCD at
+  its own anchor now builds at **2034 samples / `21ffc126`, 53 guarded nodes**.
+
+  **The acceptance was bit-identity and it held.** QCD at LambdaCDM's anchor is **1996 /
+  `4849552b`** and LambdaCDM at its own is **1778 / `60a3205a`**, each with **zero** guarded
+  nodes — so the `except` branch is never entered on either and the guard is provably inert on
+  every figure in the record. Neither digest moved.
+
+  **What it did not do**, and whose each piece is: the band is exactly as `residual_node_range`
+  returns it (**T7**, prompt 04); the crossing mask is not reordered, because that changes which
+  nodes are evaluated and could move a published grid; the anchor solve is not tightened (**T6**,
+  prompt 03); the digest is untouched (prompt 05). Evidence:
+  [`logs/02a-source-grid-density-guard.md`](logs/02a-source-grid-density-guard.md).
 
 ---
 
@@ -611,3 +595,22 @@ None yet.
     returns the loosest such, so **loosening silently reuses a tighter row**. A sweep of that
     target must bypass the datastore entirely. Both are §3 issues above, with the evidence in
     `docs/tolerance-convergence/TOLERANCE-INVENTORY.md` §2.1 and §2.3.
+
+18. **A number without its *anchor* beside it is not comparable either** (prompt 02a, 2026-09-17;
+    the same species as note 2, one level down). The two production cosmologies do **not** share a
+    `z_init`: `wkb_reference.PRODUCTION_Z_INIT_LAMBDACDM = 2.0636395964161516e16` and
+    `PRODUCTION_Z_INIT_QCD = 3.30033444460513e16`, and `PRODUCTION_Z_INIT` is an alias of the
+    first. The constant's comment used to claim one value served both, and that claim is why
+    **every version-2 QCD figure previously in the record was taken at LambdaCDM's anchor** —
+    including `test_source_grid.py`'s 1996 / `4849552b`, `RECONCILIATION.md` §2.7's "1,996 samples
+    on QCD" and `docs/qcd-background-verification.md` §10's density measurements. None of those is
+    wrong; each is at the other anchor. **The QCD production grid at QCD's own anchor is 2034
+    samples / `21ffc126`**, and it is anchor-sensitive to far below the anchor solve's own 3.8e-7
+    convergence (`[02a-grid-digest-not-reproducible]`), so quote the anchor with the digest.
+
+19. **`SOURCE_GRID_MAX_GUARDED_FRACTION = 0.05` bounds what the density guard may absorb**
+    (prompt 02a, 2026-09-17). It is in no lookup key and cannot change a grid that builds — it can
+    only convert a build into a refusal — so it invalidates nothing. It exists because a guard with
+    no ceiling would let an arbitrarily misplaced band be filled by log-interpolation in silence,
+    which is worse than the raise it replaced. The worst production band reaches **7.716e-04**;
+    the ceiling is **64.8x** that.
