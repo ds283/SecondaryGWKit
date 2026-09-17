@@ -819,9 +819,9 @@ campaign can afford.
 
 | Target | Parameter today | Accuracy now, and where it was measured | Floor (§2 (f)) | Target | Prompt |
 |---|---|---|---|---|---|
-| `GkNumericIntegration` | `atol = 1e-10`, `rtol = 1e-8` | 2.3e-7 of envelope — **radiation and LambdaCDM only, at four source redshifts, on an `(atol, rtol)` diagonal** (review §10.1, **v0**). No QCD, no grid sweep, no drift figure at production tolerances. **The sector with ~65,000 objects per model has never been swept** | consumer spline of numeric $G$, 1e-5–1e-4 near the hand-over (review §10.1) | — | 03 |
-| `TkNumericIntegration` | `atol = 1e-13`, `rtol = 1e-8` | 3 / 13 / 8 of 50 $k$ above 3e-6 of envelope on Radiation / LambdaCDM / QCD; worst 8.64e-4; median-of-per-$k$-maxima 3.8e-7 / 4.5e-7 / 1.0e-6 (`GkTk-remedial` prompt 17, all 50 $k$, three models, **v0**, and under `BREAK_POINT_DISCONTINUITY` rather than the sector's own `BREAK_POINT_ALL`) | 2.52e-6, initial condition | — | 03a |
-| `wavenumber_exit_time` | `xtol = 1e-10`, `rtol = 1e-8` in $\log(1+z)$ | **never measured** | — | — | 03a |
+| `GkNumericIntegration` | `atol = 1e-10`, `rtol = 1e-8` | 2.3e-7 of envelope — **radiation and LambdaCDM only, at four source redshifts, on an `(atol, rtol)` diagonal** (review §10.1, **v0**). No QCD, no grid sweep, no drift figure at production tolerances. **The sector with ~65,000 objects per model has never been swept** | consumer spline of numeric $G$, 1e-5–1e-4 near the hand-over (review §10.1); **re-measured by prompt 03 at 1.6e-4–9.4e-3 of the envelope**, ×631–×37,700 the solver's error | **`unchanged`** (§6.1 rule 4), accepted 2026-09-17 | 03 |
+| `TkNumericIntegration` | `atol = 1e-13`, `rtol = 1e-8` | 3 / 13 / 8 of 50 $k$ above 3e-6 of envelope on Radiation / LambdaCDM / QCD; worst 8.64e-4; median-of-per-$k$-maxima 3.8e-7 / 4.5e-7 / 1.0e-6 (`GkTk-remedial` prompt 17, all 50 $k$, three models, **v0**, and under `BREAK_POINT_DISCONTINUITY` rather than the sector's own `BREAK_POINT_ALL`) | 2.52e-6, initial condition; **re-measured by prompt 03a at 2.39e-6–2.64e-6** on the v2 grid under `BREAK_POINT_ALL` | **`rtol = 3e-11`** (§6.1 rules 2 and 3), `atol` unchanged at 1e-13; accepted 2026-09-17, **with the non-monotonicity caveat** `[03a-tk-numeric-excursion-is-sporadic-in-rtol]` | 03a |
+| `wavenumber_exit_time` | `xtol = 1e-10`, `rtol = 1e-8` in $\log(1+z)$ | **measured by prompt 03a**: `xtol` binds at 0 of 150 (k, offset) pairs on every model; worst achieved displacement 7.86e-8 in $u$ against a guarantee of 3.8e-7 | `DEFAULT_REDSHIFT_RELATIVE_PRECISION = 1e-7` for the row match; **none for the grid digest** (bit-identity — §6.1 rule 6) | **`rtol = 1e-9`**, `xtol` unchanged at 1e-10; accepted 2026-09-17 **on the guarantee reading** rather than the achieved one | 03a |
 | `BackgroundModel` | `atol`/`rtol` vestigial; $N_\tau = N_{c_s\tau} = N_F = 4$ | $\tau$ 2.611e-16, $\tau_s$ 2.204e-16, $F$ 2.440e-16 relative at three nodes of one scoped LambdaCDM run (`docs/gktk-remedial-verification.md` §4.3). The **orders** were chosen on a background and a break-point set that no longer exist (`RECONCILIATION.md` §5) | double-precision accumulation over the grid | — | 04 |
 | `TkWKBIntegration` | none live (§2 (a)); $N_\rho = 4$ | $T_{\rm WKB}$ radiation control 3.8e-5 of envelope from $x_i=24$ (`GkTk-remedial` prompt 07) | LG truncation | — | 04 |
 | `GkWKBIntegration` | none live (§2 (a)); $N_\rho = 4$ | $\theta_G$ 13.9 rad at $k=10^5$ and 7366 rad at $3\times10^8$ against target ≤1e-5 / ≤5e-3 rad (`GkTk-remedial` README §6, pre-remediation baseline) | $\varepsilon k\tau$ | — | 04 |
@@ -847,10 +847,30 @@ revisits it. **Settled further on 2026-09-17: `GkNumericIntegration` keeps
 prompt 05 decouples to, and the sector's cost does not move. The two halves ship on different
 evidence and their comments must say so: the `rtol` half is **chosen**, by
 `docs/tolerance-convergence/GK-NUMERIC-SWEEP.md` §5.2 and §7; the `atol` half is **inert and
-unchosen**, and §1.2's closing rule governs its note. What remains open is
-`TkNumericIntegration`'s `rtol` and `wavenumber_exit_time`'s pair, both **prompt 03a's**, neither
-yet measured on a grid. Prompt 03a recommends with evidence; **prompt 05 may not start until those
-are accepted too**.
+unchosen**, and §1.2's closing rule governs its note.
+
+**Settled in full on 2026-09-17, and D1 is closed.** The user accepted prompt 03a's two
+recommendations as well: `TkNumericIntegration` moves to **`rtol = 3e-11`** with
+`atol` staying at `1e-13`, and `wavenumber_exit_time` to **`(xtol, rtol) = (1e-10, 1e-9)`**. So all
+four of the campaign's open tolerance questions are answered and **prompt 05 is unblocked**. The
+provenance of each half differs and §1.2's five fields must carry the difference:
+`DEFAULT_TK_NUMERIC_REL_TOLERANCE = 3e-11` is **chosen**, by
+`docs/tolerance-convergence/TK-NUMERIC-AND-EXIT-TIME.md` §4.1 and §5, at +39.4 % of a 50-object
+sector; `DEFAULT_TK_NUMERIC_ABS_TOLERANCE = 1e-13` is **unchanged and re-characterised** — measured
+there to select *which* wavenumber excurses rather than to set the level, which is not the same as
+the $G_k$ sector's "inert"; `DEFAULT_HEXIT_REL_TOLERANCE = 1e-9` is **chosen**, by §7.6, against
+`DEFAULT_REDSHIFT_RELATIVE_PRECISION = 1e-7`; and `DEFAULT_HEXIT_ABS_TOLERANCE = 1e-10` is **inert
+and unchosen** at that setting and **coupled** — it floors the pair at 1e-10 relative below
+`rtol ≈ 2.6e-12` — so §1.2's closing rule governs its note too.
+
+**Two caveats were accepted with the numbers and prompt 05 must ship them, not drop them.** The
+$T_k$ maximum is **not monotone** in `rtol`, so `3e-11` is the loosest setting that clears the floor
+*in that sweep* and not a bound over the sector
+(`[03a-tk-numeric-excursion-is-sporadic-in-rtol]`, which the acceptance does **not** close); and the
+exit-time answer applies §6.1's rule to Brent's **guarantee** rather than to the achieved
+displacement, which is the reading the user took — on the achieved reading the same measurement
+gives `unchanged` (log 03a, deviation 4). A provenance note that records `3e-11` or `1e-9` without
+the reading it rests on has not recorded the decision.
 
 **The likely shape has changed since 2026-09-12** and the change is the point. From §2 (d), one
 decade of `rtol` costs +23–25 % evaluations. In the $T_k$ sector that is 50 objects per model and
