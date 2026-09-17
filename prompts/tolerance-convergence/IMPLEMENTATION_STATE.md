@@ -29,7 +29,12 @@ matrix and `gk_numeric_sweep.py` regenerates it. **Its answer is `unchanged`** �
 over four decades and `rtol` is the whole lever, but the consumer's own spline of the numeric $G$
 carries **1.6e-04 to 9.4e-03** of the envelope near and below the hand-over against **2.6e-07** for
 the solver, so tightening buys nothing (**T4**; README §6.1 rule 4). **D1's compute question in
-this sector is therefore "spend nothing", which is the reverse of what §7 D1 expected.** Two
+this sector is therefore "spend nothing", which is the reverse of what §7 D1 expected.**
+**The user accepted that recommendation on 2026-09-17**, so `GkNumericIntegration`'s pair is
+settled at `(1e-10, 1e-8)` and prompt 05 decouples to it; **D1 as a whole is not settled** until
+prompt 03a reports `TkNumericIntegration`'s `rtol` and `wavenumber_exit_time`'s pair and the user
+accepts those too. The consumer-spline floor the answer rests on is **assigned out of this
+campaign** to the hand-over campaign on the same decision (§3, `docs/OPEN_ISSUES.md` §1.1). Two
 things in prompt 03's own charter did not hold and are §3 issues: the outermost $z_{\rm source}$ is
 **not** the least favourable (so the sweep characterises the sector rather than bounding it), and
 the consumer splines the **source** grid, not the response grid the prompt named. The sector's
@@ -156,7 +161,7 @@ not ✅ either, which is the specific failure the rebase found.
 | T5 | **MEASUREMENT** | `TkNumericIntegration` likewise, re-taken on the version-2 grid and under its own `BREAK_POINT_ALL` policy | 03a | ⬜ |
 | T6 | **MEASUREMENT** | `wavenumber_exit_time`'s root solve measured at all — nothing in the record says what `xtol = 1e-10`, `rtol = 1e-8` in $\log(1+z)$ buys or costs. **Scored against the exact $z_{\rm exit}$ on `RadiationModel` first** (README §3.1): $1 + z = k/(H_0 e^{N})$, confirmed at the rebase to 2.3e-16 relative or better | 03a | ⬜ |
 | T7 | **MEASUREMENT** | $N_\tau$, $N_{c_s\tau}$, $N_F$, $N_\rho$ and `RESIDUAL_WKB_REGION_MARGIN` audited at every production $k$ on the corrected background and the 3-point break set, replacing evidence generated 2026-09-10. **Every one of the four orders has a closed-form anchor on `RadiationModel`** (README §3.1), including $\rho_G \equiv 0$, which makes the $N_\rho$ measurement pure quadrature error with no reference to build | 04 | ⬜ |
-| T8 | **DECISION** | The decoupled tolerance pairs settled by the user (§7 D1) and shipped with the measurement that chose each, in `config/defaults.py` | 05 | ⬜ |
+| T8 | **DECISION** | The decoupled tolerance pairs settled by the user (§7 D1) and shipped with the measurement that chose each, in `config/defaults.py` | 05 | ⬜ — **the `GkNumericIntegration` half is decided**: the user accepted prompt 03's `unchanged` on 2026-09-17, so `DEFAULT_GK_NUMERIC_ABS_TOLERANCE = 1e-10` (inert and unchosen) and `DEFAULT_GK_NUMERIC_REL_TOLERANCE = 1e-8` (chosen, `GK-NUMERIC-SWEEP.md` §5.2, §7). `TkNumericIntegration`'s `rtol` and `wavenumber_exit_time`'s pair await 03a. Shipping is still 05's |
 | T9 | **DECISION** | What replaces the vestigial `atol`/`rtol` key columns on the three order-governed targets (§7 D3) — the user's stated target for the campaign | 05 | ⬜ |
 | T10 | **PLUMBING** | Every `object_get` of a retuned target carries its own parameter, with an `ast` guard whose predicate reaches all eight targets and fails on an unclassified site | 05 | ⬜ |
 | T11 | **HAND-OFF** | `QuadSourceIntegral` measured read-only and reported to `levin-refactor` / `qsi-phase-groups` | 06 | ⬜ |
@@ -446,8 +451,8 @@ Opened by the **orchestrator's review of prompt 02a's charter**, 2026-09-17:
 Opened by **prompt 03**, 2026-09-17:
 
 - **[03-numeric-g-consumer-spline-is-the-dominant-error-near-the-hand-over]** *(prompt 03,
-  2026-09-17; unassigned — the source grid's owner, `prompts/qcd-background-audit`, or the
-  hand-over campaign, `docs/OPEN_ISSUES.md` §1.1)* — the consumer of `GkNumericIntegration` is the
+  2026-09-17; **assigned 2026-09-17 — the hand-over campaign**, `docs/OPEN_ISSUES.md` §1.1)* —
+  the consumer of `GkNumericIntegration` is the
   `numeric_Gk` spline of `ComputeTargets/GkSourcePolicyData.py:654-680`: a cubic
   `make_interp_spline` in $\log(1+z_{\rm source})$ over the **source-grid** nodes that carry
   numeric data, at fixed $z_{\rm response}$. Measured at all fifty production wavenumbers on all
@@ -472,7 +477,13 @@ Opened by **prompt 03**, 2026-09-17:
   confirms review §10.1's inherited "1e-5 to 1e-4 of the value near the hand-over" and shows it
   understates the dominance.** The density that sets it is the version-2 criterion's, which is
   sized for the phase-residual spline (`SOURCE_GRID_CONSUMER_TARGET_RAD`) and not for $G$.
-  **Next step:** unassigned, and it is a design decision rather than a tuning one — either the
+  **Assigned (2026-09-17): the hand-over campaign** (`docs/OPEN_ISSUES.md` §1.1), by the user's
+  decision on accepting **D1** — the source grid's spacing at the hand-over is to be looked at
+  **after this campaign**, not inside it. It goes there rather than to the source grid's owner
+  because every lever below is a seam decision, and §1.1's entries are the ones that "must be
+  attacked together": it sits directly beside `[05-numeric-region-is-now-the-accuracy-floor]`,
+  which is the same spline's *end* effect rather than its interior spacing.
+  **Next step:** a design decision rather than a tuning one — either the
   density criterion gains $G$'s own oscillation as a second consumer, or the hand-over moves
   deeper, or `GkSourcePolicyData` stops splining $G$ itself and splines its Liouville–Green
   amplitude and phase as the WKB limb already does. All three are outside this campaign

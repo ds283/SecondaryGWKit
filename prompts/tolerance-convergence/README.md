@@ -841,9 +841,16 @@ interval quantity, never to the absolute.
 **D1 — the decoupled tolerance pairs.** *Partly settled.* The user confirmed on 2026-09-12 that
 `DEFAULT_TK_NUMERIC_ABS_TOLERANCE` **stays at `1e-13`** — `GkTk-remedial` prompt 17's
 recommendation, accepted — so the $T_k$ absolute tolerance is not in question and no prompt here
-revisits it. What is open is every **`rtol`**, `GkNumericIntegration`'s `atol`, and
-`wavenumber_exit_time`'s pair, none of which has ever been measured on a grid. Prompt 03 recommends
-with evidence; prompt 05 may not start until the user accepts.
+revisits it. **Settled further on 2026-09-17: `GkNumericIntegration` keeps
+`(atol, rtol) = (1e-10, 1e-8)`** — prompt 03's recommendation, accepted by the user — so
+`DEFAULT_GK_NUMERIC_ABS_TOLERANCE = 1e-10` and `DEFAULT_GK_NUMERIC_REL_TOLERANCE = 1e-8` are what
+prompt 05 decouples to, and the sector's cost does not move. The two halves ship on different
+evidence and their comments must say so: the `rtol` half is **chosen**, by
+`docs/tolerance-convergence/GK-NUMERIC-SWEEP.md` §5.2 and §7; the `atol` half is **inert and
+unchosen**, and §1.2's closing rule governs its note. What remains open is
+`TkNumericIntegration`'s `rtol` and `wavenumber_exit_time`'s pair, both **prompt 03a's**, neither
+yet measured on a grid. Prompt 03a recommends with evidence; **prompt 05 may not start until those
+are accepted too**.
 
 **The likely shape has changed since 2026-09-12** and the change is the point. From §2 (d), one
 decade of `rtol` costs +23–25 % evaluations. In the $T_k$ sector that is 50 objects per model and
@@ -851,6 +858,16 @@ free. In the $G_k$ sector it is ~65,000 objects per model — and $G_k$'s solver
 two orders below the consumer spline that reads it (§2 (f)), in which case the right answer is to
 tighten nothing and say so with the measurement in hand. **That is the decision prompt 03 exists to
 inform, and it is the reverse of the one the 2026-09-12 plan expected.**
+
+**Measured, and the reversal is confirmed (2026-09-17).** Prompt 03 swept both axes over the
+production grids on three models: `atol` is inert to within 1.2 % across four decades, `rtol` moves
+the error by 10.1 per decade, and the consumer's spline of the numeric $G$ carries **×631 to
+×37,700** the solver's error at `(1e-10, 1e-8)`. §6.1 rule 4 therefore applies and the $G_k$ answer
+is **`unchanged`**, so the campaign's compute question in the sector that carries the cost settles
+at **zero**. Every `rtol` still open is in a 50-object sector, where a decade is free. The
+consumer-spline floor itself is not a tolerance question and has left this campaign:
+`[03-numeric-g-consumer-spline-is-the-dominant-error-near-the-hand-over]`, assigned 2026-09-17 to
+the hand-over campaign.
 
 **D2 — the datastore. *Settled 2026-09-12: not a problem, and the ordering stands.*** Prompt 05
 makes every row of the retuned targets unreachable by its old key, so the store grows a parallel
