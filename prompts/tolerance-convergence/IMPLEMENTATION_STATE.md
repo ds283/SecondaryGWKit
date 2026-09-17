@@ -147,7 +147,7 @@ not ✅ either, which is the specific failure the rebase found.
 | T10 | **PLUMBING** | Every `object_get` of a retuned target carries its own parameter, with an `ast` guard whose predicate reaches all eight targets and fails on an unclassified site | 05 | ⬜ |
 | T11 | **HAND-OFF** | `QuadSourceIntegral` measured read-only and reported to `levin-refactor` / `qsi-phase-groups` | 06 | ⬜ |
 | T12 | **PROVENANCE** | `docs/TOLERANCE-PROVENANCE.md` covers **every** accuracy parameter in the pipeline — including the ones this campaign inherits and does not set, and the ones nobody has ever chosen — with value, choosing measurement and its grid generation, competing floor, cost times object count, and citation (README §1.2) | 06 | ⬜ |
-| T13 | **MACHINERY** | The version-2 source grid **builds at every production anchor on every production cosmology**, with a node at which the Liouville–Green expansion does not exist marked unusable and *counted* rather than raising, a refusal above a measured fraction of the band, and QCD's own anchor named in the test tree. Acceptance is bit-identity with the two published digests (1996 / `4849552b`, 1778 / `60a3205a`), not accuracy | 02a | ⚠️ QCD at its own anchor builds: **2034 / `21ffc126`, 53 guarded nodes** (Gk 34, Tk 19, 53 of 100 (k, sector) cases, exactly one node each). Both published grids **bit-identical with zero guarded**, so the `except` branch is never entered on either and the guard is provably inert on every figure in the record. Refusal ceiling `SOURCE_GRID_MAX_GUARDED_FRACTION = 0.05`, **64.8x** the worst measured band (7.716e-04). **Caveat:** the constant's only proper home is `CosmologyConcepts/wavenumber.py`, a file the prompt's own file list forbade; the agent stopped rather than editing it, and the **user amended the scope on 2026-09-17** to permit that one append-only definition (log 02a, deviation 1) |
+| T13 | **MACHINERY** | The version-2 source grid **builds at every production anchor on every production cosmology**, with a node at which the Liouville–Green expansion does not exist marked unusable and *counted* rather than raising, a refusal above a measured fraction of the band, and QCD's own anchor named in the test tree. Acceptance is bit-identity with the two published digests (1996 / `4849552b`, 1778 / `60a3205a`), not accuracy | 02a | ⚠️ QCD at its own anchor builds: **2034 / `21ffc126`, 53 guarded `(k, sector)` evaluations of ONE base-lattice node** (Gk 34, Tk 19, 53 of 100 cases, all hitting $z = 8.63614\times10^{11}$). Both published grids **bit-identical with zero guarded**, so the `except` branch is never entered on either. **Corrected 2026-09-17 (log 02a §7):** the guard is inert more strongly than first claimed — that node lies 1.0e-03 in $u$ from a **declared** break, inside the 6.0e-03 crossing mask, so it is discarded anyway and the guard can change no profile — but the two published zeros are **lattice alignment, not construction**, so a change to `z_init` or `samples_per_log10z` could start guarding. Refusal ceiling `SOURCE_GRID_MAX_GUARDED_FRACTION = 0.05`, **64.8x** the worst measured band (7.716e-04). **Caveat:** the constant's only proper home is `CosmologyConcepts/wavenumber.py`, a file the prompt's own file list forbade; the agent stopped rather than editing it, and the **user amended the scope on 2026-09-17** to permit that one append-only definition (log 02a, deviation 1) |
 
 ---
 
@@ -310,6 +310,75 @@ Opened by **prompt 01**, 2026-09-16:
   > `SOURCE_GRID_MAX_GUARDED_FRACTION = 0.05` now caps what the guard may absorb, at 64.8x the
   > worst measured band, so a *materially* worse band refuses rather than being filled silently —
   > but the ceiling is an acceptance bound, not an answer to where the criterion should apply.
+
+  > **CORRECTED 2026-09-17 — the block above misreads its own census, and the correction matters
+  > because prompt 04's charter is written from this text.** Re-derived at `effb70b` by replicating
+  > `source_grid_spacing_profile`'s `(k, sector)` loop (53 reproduced exactly, so the replication is
+  > faithful). **The counts stand; the claim that they measure this issue does not, and is
+  > withdrawn.**
+  >
+  > | claimed above | re-derived |
+  > |---|---|
+  > | 53 guarded **nodes** | 53 `(k, sector)` evaluations of **one** node, $z = 863613639675.2578$. Distinct guarded redshifts: **1** |
+  > | the band reaches **just past the edge** of the region | the node is **interior** — rank **1293** from the band's bottom against band sizes **1296–1567**, i.e. **2 to 273 nodes below the top edge** |
+  > | a **direct measure of the overreach** past the horizon | **42 of the 53 cases are sub-horizon there.** $k(1+z)/H$ runs **0.1695 to 71.58**; only **11** are outside the horizon at all |
+  >
+  > **This issue is about the band reaching 1.5–2.1 e-folds *outside the horizon*, and the census
+  > does not measure that.** It measures something else entirely: the node sits **1.000e-03** in $u$
+  > from the cosmology's **third declared break** ($z = 864478111114.07$, the redshift the original
+  > `ValueError` quoted), which is inside the stencil's 2.0e-03 reach and well inside the 6.0e-03
+  > crossing mask that discards it after the loop. That is
+  > `[02a-stencil-reaches-across-a-declared-break-before-the-mask]`, opened below, and it is where
+  > the census belongs.
+  >
+  > **So this issue is still without a measurement**, and prompt 04 must not be written believing
+  > otherwise. The 69%-of-added-samples figure in the body above remains the only evidence for it,
+  > and it is prompt 01's, not 02a's. **Still unassigned, still a candidate for T7.**
+
+Opened by **prompt 02a's correction**, 2026-09-17:
+
+- **[02a-stencil-reaches-across-a-declared-break-before-the-mask]** *(prompt 02a correction,
+  2026-09-17; unassigned — the source grid's owner, `prompts/qcd-background-audit`, or prompt 04
+  if it opens the spacing profile anyway)* — **this is what prompt 02a's guarded-node census
+  actually measures**, and it is not the band overreach the census was first attributed to.
+
+  `source_grid_spacing_profile` evaluates its five-point stencil at $u \pm \delta$ and
+  $u \pm 2\delta$ with `SOURCE_GRID_CURVATURE_STEP_U = 1.0e-3`, a reach of **2.0e-03** in $u$,
+  and applies the declared-crossing mask
+  `usable &= |u_profile - u_break| > SOURCE_GRID_CROSSING_MASK_U` (**6.0e-03**) **only after that
+  loop has run**. So a node inside the mask's gap — one the criterion has already decided to
+  discard — is still evaluated, and its arms can land across the declared break, where $H$ steps
+  and $\omega^2$ goes non-positive. That is the whole of what was crashing before prompt 02a.
+
+  **Measured at `effb70b`**, QCD at its own anchor, production geometry, version-2 grid: all **53**
+  guarded `(k, sector)` evaluations are the **same** base-lattice node, $z = 863613639675.2578$,
+  which lies **1.000493e-03** in $u$ from the third declared break at $z = 864478111114.07$ —
+  **twice inside** the stencil's reach and **six times inside** the mask. It is interior to the band
+  (rank 1293 of 1296–1567; 2 to 273 nodes below the top edge) and **sub-horizon in 42 of the 53
+  cases** ($k(1+z)/H$ from 0.1695 to 71.58). The physics is the QCD crossover the break declares:
+  `wBackground` falls 0.306035 → 0.288406 → 0.264299 across $z = 6\times10^{11}$, the node, and
+  $z = 1.2\times10^{12}$.
+
+  **Impact, and it is mostly favourable.** Because every guarded node is inside the mask, the guard
+  changes **no `usable` outcome** and `d4[i]` is only read through `d4[usable]` — so prompt 02a's
+  guard cannot alter any profile, only allow one to be computed. That is a *stronger* inertness
+  claim than bit-identity on two grids. What is left is two things. (i) The criterion does work it
+  has already decided to throw away, which is wasted evaluation and was a hard crash until
+  `effb70b`. (ii) **The two published grids guard nothing by lattice alignment, not by
+  construction**: QCD's anchor puts a node 1.000e-03 from the break, LambdaCDM's straddles it at
+  7.582e-03, outside both the reach and the mask. **A change to `z_init` or `samples_per_log10z`
+  could start guarding without anything else changing** — and `z_init` is a root-solve output
+  (`[02a-grid-digest-not-reproducible]`), so this is not hypothetical.
+
+  **Next step:** move the mask ahead of the stencil loop, which on this evidence would have
+  prevented every one of the 53. **Prompt 02a was right not to do it, but not for the reason its
+  log first gave**: reordering changes which nodes are evaluated, hence `usable`, hence the
+  log-interpolation fit, hence the profile — so it could move a published digest and **nothing has
+  measured whether it does**. Whoever takes it must measure both published grids across the change.
+  Note that the *undeclared* steep-step case in `RESIDUAL_WKB_REGION_MARGIN`'s comment
+  ($z = 3.61\times10^{15}$) is real, would survive any reordering, and **does not arise at either
+  production anchor** — so it is not an argument against reordering, only against calling it a
+  complete fix. Evidence: `logs/02a-source-grid-density-guard.md` §7.
 
 Opened by the **orchestrator's review of prompt 02a's charter**, 2026-09-17:
 
@@ -487,9 +556,11 @@ Closed by **prompt 02a**, 2026-09-17:
   **What closed it, measured.** `_solve_horizon_exit(QCD, k = 3e8/Mpc, -5)` =
   **3.30033444460513e+16**, reproducing the board's figure to 15 digits. The construction
   raised there at every relative `z_init` perturbation from **1e-16 to 1e-8** and first built
-  clean at **1e-6**, with a *stable* 53 guarded nodes across the whole trip band — so this was
-  never one float's accident, and `main.py` genuinely could not build a QCD source grid. QCD at
-  its own anchor now builds at **2034 samples / `21ffc126`, 53 guarded nodes**.
+  clean at **1e-6**, with a *stable* 53 guarded evaluations across the whole trip band — so this
+  was never one float's accident, and `main.py` genuinely could not build a QCD source grid. QCD
+  at its own anchor now builds at **2034 samples / `21ffc126`, 53 guarded `(k, sector)`
+  evaluations of one base-lattice node** (corrected 2026-09-17; they are not 53 distinct nodes —
+  log 02a §7, and `[02a-stencil-reaches-across-a-declared-break-before-the-mask]`).
 
   **The acceptance was bit-identity and it held.** QCD at LambdaCDM's anchor is **1996 /
   `4849552b`** and LambdaCDM at its own is **1778 / `60a3205a`**, each with **zero** guarded
