@@ -1,6 +1,6 @@
 # Open issues — project-wide index
 
-**Last updated:** 2026-09-18 · **80 open** across ten campaigns.
+**Last updated:** 2026-09-18 · **81 open** across eleven campaigns.
 
 This file exists so that an issue opened by one campaign is not lost when that campaign closes.
 It is an **index, not a record**: one line per issue, pointing at the campaign status board that
@@ -21,7 +21,8 @@ the two disagree, the board is right.
 [`phase-representation`](../prompts/phase-representation/IMPLEMENTATION_STATE.md) ·
 [`qcd-background-audit`](../prompts/qcd-background-audit/IMPLEMENTATION_STATE.md) ·
 [`tolerance-convergence`](../prompts/tolerance-convergence/IMPLEMENTATION_STATE.md) ·
-[`background-solver-robustness`](../prompts/background-solver-robustness/IMPLEMENTATION_STATE.md)
+[`background-solver-robustness`](../prompts/background-solver-robustness/IMPLEMENTATION_STATE.md) ·
+[`radiation-oracle`](../prompts/radiation-oracle/IMPLEMENTATION_STATE.md)
 
 ---
 
@@ -555,6 +556,12 @@ still that board's issue and closes on **its** §4. **All five have**: `[08-…]
 `[03-qcd-inventory-does-not-report-the-representation]`'s `QCD_Cosmology` half by prompt 07 —
 whose `BackgroundModel` half prompt 14 of that campaign widened it with stays open, narrowed, in
 §1.7 above, unassigned (prompt 07's files-may-touch list did not extend there).
+
+### 1.9 The radiation oracle campaign
+
+| Issue | Board | Hook |
+|---|---|---|
+| `[01-general-w-normalisation-is-predicted-not-measured]` | radiation-oracle | Kohri & Terada's closed form covers $b = 0$ only, so the normalisation $N = -9/8$ is measured there and the general-$w$ $N(b) = -(3+2b)^2/(2(2+b)^2)$ is predicted and unchecked. Measurement: `docs/radiation-oracle/KOHRI-TERADA-ORACLE.md` §1.2. |
 
 ---
 
