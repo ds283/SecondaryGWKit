@@ -219,6 +219,11 @@ leaves** and the user should see the measurement before the provenance note is c
    working set, and the one part of its job that cannot be assembled.
 7. Which issues closed, opened and stayed open, and the counts.
 
+> **Superseded 2026-09-18:** 06a **is** now written, at [`prompt-06a.md`](prompt-06a.md), against
+> what 06 actually left. Three of the forecasts below turned out stale and the prompt corrects
+> them: eleven logs not ten, five campaign documents not four, and §5.4's **44 rows** rather than
+> "39 plus the six constants 05a added" — 06's regeneration put those six among the 44.
+
 Then **prompt 06a is next and is not written yet**, deliberately and on the same principle that held
 06 back since 2026-09-16: it is written against what 06 actually leaves, not against the plan's
 forecast of it. Its charter is campaign README §3.6a and §1.2, its board item is **T12**, and it
