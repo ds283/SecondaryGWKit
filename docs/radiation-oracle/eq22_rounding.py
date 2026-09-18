@@ -80,13 +80,32 @@ def I_RD_mp(v, u, x):
     )
 
 
+# Below this |y| Phi and dPhi are summed from their Taylor series. The closed forms cancel like
+# y^2 against 1, and mp.quad's tanh-sinh nodes reach y ~ 1e-40 and below at the head's lower
+# limit, where even 50 digits are lost (dPhi_mp(1e-20) came out -3e9 instead of -7e-22). At
+# 1e-3 the twelve terms kept are exact to ~1e-72.
+_SERIES_CUTOFF = mp.mpf("1e-3")
+_SERIES_TERMS = 12
+# Phi(y) = 9 sum_{n>=1} (-1)^(n+1) 2n y^(2n-2) / (3^n (2n+1)!)
+_PHI_COEFFS = [
+    9 * (-1) ** (n + 1) * 2 * n / (mp.mpf(3) ** n * mp.factorial(2 * n + 1))
+    for n in range(1, _SERIES_TERMS + 1)
+]
+
+
 def Phi_mp(y):
-    """KT eq. (19). 50 digits absorb the closed form's cancellation at every y used here."""
+    """KT eq. (19), in mpmath, series-summed below |y| = 1e-3."""
+    if abs(y) < _SERIES_CUTOFF:
+        return sum(c * y ** (2 * n) for n, c in enumerate(_PHI_COEFFS))
     z = y / S3
     return 9 / (y * y) * (mp.sin(z) / z - mp.cos(z))
 
 
 def dPhi_mp(y):
+    if abs(y) < _SERIES_CUTOFF:
+        return sum(
+            2 * n * c * y ** (2 * n - 1) for n, c in enumerate(_PHI_COEFFS) if n > 0
+        )
     z = y / S3
     s, c = mp.sin(z), mp.cos(z)
     g = s / z - c
