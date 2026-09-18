@@ -23,6 +23,10 @@ closed form itself (audit §1 — the two are not interchangeable and the differ
 subtraction, not the agreement). That measurement is the premise of this campaign; this prompt lands
 it as code with tests.
 
+> **Corrected 2026-09-18:** the difference between the two figures is eq. (22)'s own double-precision
+> rounding at $u = 0.01$, not the head subtraction. With eq. (22) at 50 digits the code agrees with it
+> to 3.67e-13 (audit §7.2; `[01-the-eq22-figure-is-eq22s-own-rounding-not-the-head]`, closed).
+
 **The audit's §0 is a precondition for reading any of it.** Two of the three objects compared there
 are the audit's own transcriptions of Kohri & Terada, who published no code, and those two share the
 Green's function, the measure and the source — so the only comparison that can detect a misread

@@ -1,6 +1,6 @@
 # Open issues — project-wide index
 
-**Last updated:** 2026-09-18 · **83 open** across eleven campaigns.
+**Last updated:** 2026-09-18 · **82 open** across eleven campaigns.
 
 This file exists so that an issue opened by one campaign is not lost when that campaign closes.
 It is an **index, not a record**: one line per issue, pointing at the campaign status board that
@@ -568,7 +568,6 @@ whose `BackgroundModel` half prompt 14 of that campaign widened it with stays op
 | Issue | Board | Hook |
 |---|---|---|
 | `[01-general-w-normalisation-is-predicted-not-measured]` | radiation-oracle | Kohri & Terada's closed form covers $b = 0$ only, so the normalisation $N = -9/8$ is measured there and the general-$w$ $N(b) = -(3+2b)^2/(2(2+b)^2)$ is predicted and unchecked. Measurement: `docs/radiation-oracle/KOHRI-TERADA-ORACLE.md` §1.2. |
-| `[01-the-eq22-figure-is-eq22s-own-rounding-not-the-head]` | radiation-oracle | The audit and the campaign's own documents attribute the 3.18e-10 of the code-against-eq.-(22) comparison to the head subtraction; it is eq. (22)'s own double-precision rounding at $u = 0.01$. Documentary — an additive note in `KOHRI-TERADA-ORACLE.md` closes it. |
 
 ---
 
