@@ -16,7 +16,8 @@ continues or stops and reports to the user.
 | 05 | Replace the vestigial key columns with the orders | [`prompt-05.md`](prompt-05.md) | **yes** | The campaign's first large production change, and the **schema** half of what §3.5 used to be (§7 **D9**). Four tables lose a pair that reaches no solver; three gain the orders that do. The review turns on whether the order is **filtered on, not merely selected** — a column that is written and read back but never compared reproduces the defect one identifier later and every other check passes. Changes **no number** |
 | 05b | Make the recorded order the order that was used | [`prompt-05b.md`](prompt-05b.md) | **yes** | The correctness half of what prompt 05 left. **Runs before 05a** (§7 **D10**) although the letter says otherwise. A property that re-reads a module constant reports what the module says, not what the object is: `phase_residual`'s `order=` keyword can persist a table at an order it was not built at, and a rehydrated `BackgroundModel` reassembles its tables at the current constant while its row's order columns are selected and dropped. The review turns on **two tests that must fail at `90d0114`** — a test that passes at the parent is testing nothing. Changes no schema, no number, and no line of `main.py` |
 | 05a | Decouple the tolerances that are real | [`prompt-05a.md`](prompt-05a.md) | **yes** | **The campaign's only parameter change** — §5 rule 8's freeze is lifted for this prompt alone, so the dispatch template's standing sentence is *replaced*, not sent. Every number is already settled (D1 closed 2026-09-17), so the review is about provenance and plumbing, not values. It turns on two things the suite cannot see: whether the constants carry the measurement that chose them at the point of use, and whether the guard still pattern-matches `endswith("Integration")` — which reaches four class names out of nine and has never guarded `QuadSourceIntegral`. A missed site does not crash; it recomputes a sector in silence. The tolerance half. **T8** and **T10**: per-target constants, the `main.py` tolerance objects, every `object_get` switched, the `ast` guard widened. D1 closed 2026-09-17, so only 05 gates it. Written against what 05 actually leaves |
-| 06 | `QuadSourceIntegral`, close-out, the provenance note | — | **held** | Assembles from the earlier logs |
+| 06 | `QuadSourceIntegral`, read-only | [`prompt-06.md`](prompt-06.md) | **yes** | The one prompt that must measure a target it may not edit (§0.4), and the only one whose **dispatch template is used unmodified** — §5 rule 8's freeze is back on after 05a. The review turns on experimental design rather than on a number: the fixture has an *exact* flavour and a *realistic* one, and only sweeping tolerances on the first while measuring the floor on the second separates the quadrature error from the representation error. An agent that sweeps the realistic flavour alone measures the two convolved, and its conclusion is right by accident. Also regenerates the inventory, stale since 05/05a/05b. Ends in a hand-back — or a **stop**, if the quadrature tolerance turns out to bind, which reopens **D4** |
+| 06a | Close-out and the provenance note | — | **held** | Assembles from the earlier logs. Written against what 06 leaves |
 
 **02a is an insertion, not a renumbering** (campaign README §3.2a, §7 D6, 2026-09-17). It carries a
 letter so that §§3.3–3.6's charters and §6.2's acceptance rows keep the numbers the rest of the tree
@@ -25,13 +26,21 @@ QCD production run uses, and prompts 03, 04 and 06 are each chartered to measure
 grids on **all three models** — so without it every one of them must measure QCD at LambdaCDM's
 anchor, the defect prompt 01 exists to close.
 
-**Prompt 06 is deliberately not written yet**, and that is a decision of 2026-09-16, not an
-omission — README §3 fixes its charter and §6 fixes its acceptance, so what is held back is the
-*method*, not the commitment. Writing it against an inventory that prompt 02 exists to establish
-would repeat the error the 2026-09-12 plan made. **Since 2026-09-17 the precondition is 02 and 02a
-together**, for the reason "Running one" gives. Board §1 records which are written. 05a is held for
-a different and shorter reason: it is written against what 05 actually leaves behind, not against
-the plan's forecast of it.
+**Prompt 06 was held from 2026-09-16 until 05a landed**, and that was a decision, not an omission —
+README §3 fixed its charter and §6 its acceptance, so what was held back was the *method*, not the
+commitment. Writing it against an inventory that prompt 02 exists to establish would have repeated
+the error the 2026-09-12 plan made. It was written on 2026-09-18, after 05a, and at the same time
+§7 **D11** split it: **06a is now held for the same reason 06 was**, and 05a before it — it is
+written against what 06 actually leaves behind, not against the plan's forecast of it. Board §1
+records which are written.
+
+**06 is split from 06a, not renumbered** (README §7 **D11**, 2026-09-18), the way 03 was split from
+03a under D7 and 05 from 05a under D9. 06 takes the measurement and the inventory regeneration, board
+item **T11**; 06a takes the close-out document and `docs/TOLERANCE-PROVENANCE.md`, **T12**. No item
+is renumbered. **Measurement first is the substance of the decision**: `inventory.py --check` reports
+`TOLERANCE-INVENTORY.md` out of date at `a9ad6fc`, and 06a assembles the provenance note from that
+document's §5.4 — so a 06a that ran first would either assemble against a stale table or do 06's job.
+It also keeps the campaign's named deliverable out of a commit that a failed sweep would revert.
 
 **05 is split from 05a, not renumbered** (campaign README §7 **D9**, 2026-09-18), the way 03 was
 split from 03a under D7 and for the same reason — §5 rule 1 makes the commit the rollback boundary
@@ -60,7 +69,7 @@ Start with, for example:
 **Take the baselines the prompt names before dispatching anything.** They cannot be reconstructed
 after the fact.
 
-Run **01 → 02 → 02a → 03 → 03a → 04 → 04b → 05 → 05b → 05a → stop**. **05b precedes 05a** (campaign README §7 **D10**, 2026-09-18): the letter records insertion, not run order. 02, 02a, 03 and 03a each end in a hand-back, and
+Run **01 → 02 → 02a → 03 → 03a → 04 → 04b → 05 → 05b → 05a → 06 → 06a**. **05b precedes 05a** (campaign README §7 **D10**, 2026-09-18): the letter records insertion, not run order. 02, 02a, 03 and 03a each end in a hand-back, and
 **04–06 are written from what has landed** (user decision, 2026-09-17): 02 says which targets the
 audits own, 02a settles the anchor question that **T6** — prompt 03a's row — turns on, and 03
 settled whether the two tolerance axes separate in the sector that carries the cost. **03a was

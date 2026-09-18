@@ -345,7 +345,8 @@ right-hand-side evaluations, integrand evaluations or Hubble calls.
 | 04b | Regenerate the convergence block, and repair the two tests that read it | §2 (a); `[01-convergence-block-has-a-separate-generator]`, `[04-convergence-floor-used-as-a-test-threshold]` | `docs/gktk-remedial/residual_convergence.py`, `ComputeTargets/tests/wkb_reference_data.json`, `ComputeTargets/tests/test_background_tau.py`, `ComputeTargets/tests/test_background_cs_tau_friction.py`; `docs/tolerance-convergence/ORDER-AUDIT.md` **additively** | **No, but it writes a fixture and two tests — §7 D5 as widened by D8, settled yes 2026-09-18** | Opus |
 | 05 | Replace the vestigial key columns with the orders | §2 (a); §7 D3 (**settled** 2026-09-18), D9; `[20-wkb-gauss-orders-not-in-lookup-key]` | the four `Datastore/SQL/ObjectFactories/` factories that lose the pair and their `ComputeTargets/` classes, `main.py` at four sites, the six `extract_*.py` readers, `ComputeTargets/tests/test_run_identity.py` | **Yes — and it changes no number; `config/defaults.py` is byte-identical** | Opus |
 | 05a | Decouple the tolerances that are real | §2 (a), (e), (g); §7 D1 (**closed** 2026-09-17), D9 | `config/defaults.py`, `main.py`, the three targets whose pair reaches a solver and their factories, `ComputeTargets/tests/test_main_plumbing.py` | **Yes — the only prompt that moves a parameter** | Opus |
-| 06 | `QuadSourceIntegral`, close-out and the provenance note | §0.4, §1.2, §2 (a) | new `docs/tolerance-convergence/TOLERANCE-CONVERGENCE.md`, new **`docs/TOLERANCE-PROVENANCE.md`**; `docs/OPEN_ISSUES.md` | **No** | Opus |
+| 06 | `QuadSourceIntegral`, read-only | §0.4, §1.2, §2 (c), (e), (f); §6.1 rules 1 and 4; §7 D11 | new `docs/tolerance-convergence/quadsource_readonly.py`, `QUADSOURCE-READONLY.md`; `TOLERANCE-INVENTORY.md` and `inventory.py`; `docs/OPEN_ISSUES.md` §1.2/§1.3 | **No** | Opus |
+| 06a | Close-out and the provenance note | §1.2, §6.2; §7 D11 | new `docs/tolerance-convergence/TOLERANCE-CONVERGENCE.md`, new **`docs/TOLERANCE-PROVENANCE.md`** | **No** | Opus |
 
 ### 3.1 Prompt 01 — the convergence harness, and one production grid
 
@@ -687,21 +688,54 @@ while leaving `build()` filtering on the current constant — because a row comp
 is not a miss to repair, it is a different row. No schema, no number, no `main.py` line and no
 computed value moves. Board item **T15**.
 
-### 3.6 Prompt 06 — `QuadSourceIntegral`, close-out, and the provenance note
+### 3.6 Prompt 06 — `QuadSourceIntegral`, read-only
 
-Apply the harness to `QuadSourceIntegral` **without editing it or anything else in §0.4**: is it
-converged at `quad_atol = 1e-32`, `quad_rtol = 1e-8` on the production configuration, measured
-against the analytic oracle the `source-remediation` campaign used? Report to `levin-refactor` and
-`qsi-phase-groups` through `docs/OPEN_ISSUES.md` §1.2/§1.3 rather than acting. Then the campaign
-document: the eight targets, the parameters each ended at, the evidence, and the floors each is now
-limited by.
+**Split from what §3.6 used to be** (§7 **D11**, 2026-09-18). This prompt takes the measurement and
+the inventory; §3.6a takes the close-out document and the provenance note.
+
+Apply the convergence test to `QuadSourceIntegral` **without editing it or anything else in §0.4**:
+is it converged at `quad_atol = 1e-32`, `quad_rtol = 1e-8`, measured against the analytic oracle the
+`source-remediation` campaign used? **Offline** (user, 2026-09-18) — through the fixture
+`ComputeTargets/tests/test_quadsource_integral.py` already builds, which the prompt imports and does
+not edit, and not through the two live-run drivers under `docs/source-remediation-verification/`,
+which need Ray and a datastore. The live-run statistics this campaign needs are already in
+`source-remediation`'s record and are cited rather than re-taken.
+
+**The experimental design is the prompt.** That fixture has two flavours — *exact*, where every
+ingredient is truth and the residual is the partition and the integrator alone, and *realistic*,
+which carries the representation floors logs 05, 06 and 07 of `source-remediation` measured. Sweeping
+tolerances on the realistic flavour alone measures the two convolved and can report neither. §6.1
+rule 1 wants the floor first; the pair is the only instrument in the tree that gives it separately.
+The expected outcome, on the evidence of `[09-abserr-is-a-quadrature-bound]` and
+`[12-handover-clamp-error-in-production]`, is §6.1 rule 4's **`unchanged`** with a large dominating
+factor — the campaign's third such finding — but it is a result to be measured and not assumed.
+
+Report to `levin-refactor` and `qsi-phase-groups` through `docs/OPEN_ISSUES.md` §1.2/§1.3 rather
+than acting. A finding that the quadrature tolerance *is* the limiting parameter reopens §7 **D4**
+and is a stop.
+
+It also regenerates **`docs/tolerance-convergence/TOLERANCE-INVENTORY.md`**, whose generated §5 is
+stale after prompts 05, 05a and 05b and whose judgement columns — declared in `inventory.py` and
+untouched by a re-run — are now wrong in several rows. §3.6a assembles the provenance note from
+§5.4's rows and cannot do it against a table describing the tree of 2026-09-17.
+
+### 3.6a Prompt 06a — the close-out and the provenance note
+
+The campaign document: the eight targets, the parameters each ended at, the evidence, and the floors
+each is now limited by.
 
 Then **`docs/TOLERANCE-PROVENANCE.md`** to §1.2's specification — the deliverable the user asked for
 by name, and the one that outlives the campaign. It is written last because only then is every
-number in it measured; but prompts 02, 03, 04 and 05 must each leave their log's "State handed to
-the next prompt" carrying the five fields §1.2 lists for every parameter they touched, so that this
-prompt assembles rather than re-derives. A prompt that settles a parameter without recording its
-provenance has not finished.
+number in it measured; but every prompt before it must leave its log's "State handed to the next
+prompt" carrying the five fields §1.2 lists for every parameter it touched, so that this prompt
+assembles rather than re-derives. A prompt that settles a parameter without recording its provenance
+has not finished — and by the time 06a runs, every one of them has done so or has not, and it is too
+late to repair.
+
+**The coverage checklist is `TOLERANCE-INVENTORY.md` §5.4's 39 rows**, as prompt 06 leaves them, plus
+the six constants prompt 05a shipped. §1.2's closing rule is the acceptance condition diligence
+cannot satisfy: where the provenance of a constant cannot be established from the record, the note
+says so **in those words**, and an invented justification is worse than the admission.
 
 ---
 
@@ -709,7 +743,7 @@ provenance has not finished.
 
 ```
 01 ──▶ 02 ──▶ 02a ──▶ 03 ──▶ 03a ──▶ [user settles D1] ─────────────┐
-                 └──▶ 04 ──▶ [user settles D3, D8] ──▶ 04b ─────────┴──▶ 05 ──▶ 05a ──▶ 06
+                 └──▶ 04 ──▶ [user settles D3, D8] ──▶ 04b ─────────┴──▶ 05 ──▶ 05b ──▶ 05a ──▶ 06 ──▶ 06a
 ```
 
 02 must precede both audits: it is what says which targets 03 and 04 each own, and the old plan's
@@ -764,6 +798,11 @@ it either reproduces the two published digests or it is a stop under §4.3. It n
 a hand-back**, because it is the last written prompt and because **prompts 03, 03a and 04 are written
 from prompt 02's output and 02a's together** (user decision, 2026-09-17): 02 says which targets each
 audit owns, and 02a settles the anchor question **T6** turns on.
+
+**06 ends in a hand-back rather than a decision**, on the same footing as 02a, unless its measurement
+finds that the quadrature tolerance is the limiting parameter — which reopens §7 **D4** and makes it
+a stopping point in the full sense. It is a hand-back in any case because **06a is written against
+what 06 leaves** (§7 D11), which is the principle that held 06 itself back since 2026-09-16.
 
 ### 4.2 Relationship to the campaigns that closed before it
 
@@ -835,7 +874,7 @@ here only where this campaign adds something:
    figure in the record, and the two campaigns that closed before this one are full of both.
 7. **Verification documents are additive.** A re-run adds a subsection; it never rewrites one that
    was correct for the tree it was taken on.
-8. **No parameter changes outside prompt 05a.** Prompts 01, 02, 03, 04, 04b, **05** and 06 read
+8. **No parameter changes outside prompt 05a.** Prompts 01, 02, 03, 04, 04b, **05**, 06 and 06a read
    the constants and measure; they do not edit `config/defaults.py`. **Prompt 05 is inside this
    rule, not outside it** — §7 **D9** split §3.5 on 2026-09-18 and the permission to move a number
    went with the tolerance half, so 05 changes the schema while `config/defaults.py` stays
@@ -1201,3 +1240,33 @@ on the same objects. The two do not collide: 05a owns the four tolerance-carryin
 three `build()` paths. No board item is renumbered; 05b takes the new **T15**, and 05a keeps **T8**
 and **T10**. §5 rule 8 is unaffected: the permission to move a number still belongs to 05a alone,
 and **05b changes no number**.
+
+**D11 — is prompt 06 one prompt or two? *Settled 2026-09-18: two, the measurement first.*** The user
+split §3.6's charter on the same grounds that settled **D7** and **D9**: §5 rule 1 makes the commit
+the rollback boundary, and §3.6 as written carried three pieces of work of very unequal weight — a
+read-only convergence sweep with a new script, the close-out document, and
+`docs/TOLERANCE-PROVENANCE.md`, which must cover the 39 rows of `TOLERANCE-INVENTORY.md` §5.4 plus
+the six constants prompt 05a shipped, with five provenance fields each, assembled from ten campaign
+logs and three other campaigns' provenance documents. The sweep alone is comparable in weight to
+prompt 03's.
+
+**06 takes the measurement and the inventory, board item T11; 06a takes the close-out and the
+provenance note, T12.** No item is renumbered and the letter records insertion, as it does for 02a,
+03a and 05a. **Measurement first is the substance of the decision, not a preference**: 06a assembles
+the provenance note from `TOLERANCE-INVENTORY.md` §5.4, which prompts 05, 05a and 05b left stale —
+`inventory.py --check` reports it out of date at `a9ad6fc` — so a 06a that ran first would either
+assemble against a table describing the tree of 2026-09-17 or regenerate it itself, which is 06's
+job. It also means the campaign's named deliverable is not reverted by a failure in a sweep.
+
+**The measurement is offline, and that is the second half of the decision** (user, 2026-09-18). The
+two drivers under `docs/source-remediation-verification/` need Ray and a populated datastore; prompt
+06 instead imports the offline fixture `ComputeTargets/tests/test_quadsource_integral.py` already
+builds, and cites `source-remediation` log 12's live-run statistics rather than re-taking them. What
+the fixture gives that a live run would not is the **exact / realistic** pair, which separates the
+quadrature error from the representation floor — the instrument §6.1 rule 1 needs and the reason the
+offline route is the better measurement here rather than the available one.
+
+**D4 is untouched.** It is settled by §0.4 — `QuadSourceIntegral` is out of scope for retuning and in
+scope for measurement — and 06 measures under that boundary. A finding that the quadrature tolerance
+is the limiting parameter is a stop that puts D4 back to the user, and is the one circumstance in
+which 06 is a §4.1 stopping point rather than a hand-back.
