@@ -758,37 +758,6 @@ Opened by the planning pass, 2026-09-10, before any prompt runs.
   of datastore objects is the **intended** outcome, each quantity carrying its own justified
   tolerance pair. This entry closes when that campaign settles `rtol`.
 
-- **[20-wkb-gauss-orders-not-in-lookup-key]** *(opened by prompt 20, 2026-09-13)* — prompt 20 §5
-  asked whether the other three compute targets have "any configuration axis that can vary between
-  runs and is not in that key". They do. **`BackgroundModel`** keys `cosmology_type`,
-  `cosmology_serial`, `atol_serial`, `rtol_serial` and its three `store_tag`s — so the node grid
-  *is* keyed — but not `TAU_GAUSS_ORDER`, `CS_TAU_GAUSS_ORDER` or `FRICTION_F_GAUSS_ORDER`
-  (`ComputeTargets/BackgroundModel.py:34-43`, all `= 4`), nor the quadrature break-point scheme the
-  cumulative tables use. **`GkWKBIntegration`** and **`TkWKBIntegration`** key
-  `wavenumber_exit_serial`, `model_serial`, `atol_serial`, `rtol_serial`, `z_source_serial` and
-  `|z_init − z_init| < DEFAULT_FLOAT_PRECISION`, but not `RHO_GAUSS_ORDER = 4`
-  (`ComputeTargets/phase_residual.py:90`) or `RESIDUAL_WKB_REGION_MARGIN = 0.5` (`:238`). The
-  orders at least move `TAU_SOLVER_LABEL` / `PHASE_SOLVER_LABEL`, hence `solver_serial` — but no
-  factory anywhere filters on a solver serial, so that provenance is never consulted. **The margin
-  moves nothing at all**: no label, no tag, no column, so a change to it is invisible in every
-  row. Distinct from `[03-integrationsolver-stepping-minimum-lookup]`, which is about the
-  `IntegrationSolver` lookup itself rather than about who filters on its serial. **Impact:**
-  latent, not live — every order is 4 today, and prompt 14 measured the margin's effect at
-  $\le1.4\times10^{-17}$ rad in $\rho$ with $\theta$ bit-identical, so nothing in the tree is
-  currently mis-keyed. It becomes live the moment anyone re-measures an order or the margin, which
-  is exactly the situation prompts 18 and 19 created for the numeric sector.
-  **Next step:** the fix is prompt 20's, applied three more times — a `nullable=False` column
-  written from one class constant and filtered on in `build()` — or, for the orders alone, folding
-  the order into the solver *label* and filtering on `solver_serial`. Either way it carries a
-  datastore regeneration, so it belongs with whichever change first moves one of these constants.
-  **Assigned (2026-09-16): `prompts/tolerance-convergence`, prompts 04 and 05.** That campaign was
-  rebased on 2026-09-16 and its stated target is exactly this entry's remedy: for a
-  Liouville-Green-type representation the lookup key should carry the *order*, not an `atol`/`rtol`
-  pair that reaches no solver. Its prompt 04 measures the four orders and the margin on the
-  corrected background; its prompt 05 moves the key columns, which is that campaign's README §7 D3
-  and the user's decision. The "becomes live the moment anyone re-measures an order" condition is
-  therefore about to be met deliberately.
-
 - **[20-wkb-rows-consume-numeric-initial-data]** *(opened by prompt 20, 2026-09-13)* — the WKB
   stage takes its initial data from the numeric stop point —
   `z_init = k_exit.z_exit − Tk.stop_deltaz_subh`, `T_init = Tk.stop_T`,
@@ -821,6 +790,57 @@ Opened by the planning pass, 2026-09-10, before any prompt runs.
 ---
 
 ## 4. Resolved issues
+
+- **[20-wkb-gauss-orders-not-in-lookup-key]** *(opened by prompt 20, 2026-09-13; **assigned 2026-09-16 to `prompts/tolerance-convergence` prompts 04 and 05, and closed by its prompt 05**, 2026-09-18)* — prompt 20 §5
+  asked whether the other three compute targets have "any configuration axis that can vary between
+  runs and is not in that key". They do. **`BackgroundModel`** keys `cosmology_type`,
+  `cosmology_serial`, `atol_serial`, `rtol_serial` and its three `store_tag`s — so the node grid
+  *is* keyed — but not `TAU_GAUSS_ORDER`, `CS_TAU_GAUSS_ORDER` or `FRICTION_F_GAUSS_ORDER`
+  (`ComputeTargets/BackgroundModel.py:34-43`, all `= 4`), nor the quadrature break-point scheme the
+  cumulative tables use. **`GkWKBIntegration`** and **`TkWKBIntegration`** key
+  `wavenumber_exit_serial`, `model_serial`, `atol_serial`, `rtol_serial`, `z_source_serial` and
+  `|z_init − z_init| < DEFAULT_FLOAT_PRECISION`, but not `RHO_GAUSS_ORDER = 4`
+  (`ComputeTargets/phase_residual.py:90`) or `RESIDUAL_WKB_REGION_MARGIN = 0.5` (`:238`). The
+  orders at least move `TAU_SOLVER_LABEL` / `PHASE_SOLVER_LABEL`, hence `solver_serial` — but no
+  factory anywhere filters on a solver serial, so that provenance is never consulted. **The margin
+  moves nothing at all**: no label, no tag, no column, so a change to it is invisible in every
+  row. Distinct from `[03-integrationsolver-stepping-minimum-lookup]`, which is about the
+  `IntegrationSolver` lookup itself rather than about who filters on its serial. **Impact:**
+  latent, not live — every order is 4 today, and prompt 14 measured the margin's effect at
+  $\le1.4\times10^{-17}$ rad in $\rho$ with $\theta$ bit-identical, so nothing in the tree is
+  currently mis-keyed. It becomes live the moment anyone re-measures an order or the margin, which
+  is exactly the situation prompts 18 and 19 created for the numeric sector.
+  **Next step:** the fix is prompt 20's, applied three more times — a `nullable=False` column
+  written from one class constant and filtered on in `build()` — or, for the orders alone, folding
+  the order into the solver *label* and filtering on `solver_serial`. Either way it carries a
+  datastore regeneration, so it belongs with whichever change first moves one of these constants.
+  **Assigned (2026-09-16): `prompts/tolerance-convergence`, prompts 04 and 05.** That campaign was
+  rebased on 2026-09-16 and its stated target is exactly this entry's remedy: for a
+  Liouville-Green-type representation the lookup key should carry the *order*, not an `atol`/`rtol`
+  pair that reaches no solver. Its prompt 04 measures the four orders and the margin on the
+  corrected background; its prompt 05 moves the key columns, which is that campaign's README §7 D3
+  and the user's decision. The "becomes live the moment anyone re-measures an order" condition is
+  therefore about to be met deliberately.
+
+  > **CLOSED 2026-09-18 by `prompts/tolerance-convergence` prompt 05**, both halves, and by the
+  > first of the two routes this entry offered — a `nullable=False` column written from one
+  > declaration and filtered on in `build()`, applied three more times.
+  > `BackgroundModel` now keys `tau_gauss_order`, `cs_tau_gauss_order` and
+  > `friction_F_gauss_order`; both WKB targets key `rho_gauss_order`; `GkSource`, the fourth
+  > vestigial case, keys neither those nor the tolerance pair, integrating nothing. The pair is
+  > gone from all four. The second route — folding the order into the solver label and filtering on
+  > `solver_serial` — was not taken, and the reason is this entry's own observation that no factory
+  > filters on a solver serial: keying through it would have added a second indirection to the
+  > thing that was already never compared.
+  > **`RESIDUAL_WKB_REGION_MARGIN` closes as `not a key column`, on measurement**: the residual a
+  > producer reads is bit-identical at every margin from 0.05 to 0.9 on three models and both
+  > sectors (`docs/tolerance-convergence/ORDER-AUDIT.md` §7.2, prompt 04), so it is a reachability
+  > bound on where the residual may be evaluated and cannot separate two rows. This entry's
+  > "the margin moves nothing at all" is right and the conclusion is that there is nothing for it
+  > to move.
+  > All four orders are still **4**; prompt 04 measured every one `unchanged` and `config/defaults.py`
+  > is byte-identical. The evidence is in that campaign's board §4 and
+  > `prompts/tolerance-convergence/logs/05-replace-the-vestigial-key-columns.md`.
 
 - **[13-consumer-spline-crosses-eos-break-points]** *(opened by prompt 13, 2026-09-13)* —
   `PrimitivePhase` splines the residual $\varphi$ with `make_interp_spline`'s default knots, which

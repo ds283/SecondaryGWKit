@@ -1,3 +1,20 @@
+"""
+Datastore factories for GkSource and its per-redshift GkSourceValue rows.
+
+SCHEMA NOTE (prompts/tolerance-convergence, prompt 05). "atol_serial" and "rtol_serial" are gone,
+and nothing stands in their place.
+
+They described nothing and there is no order to put there either: compute() calls
+assemble_GkSource_values, which stitches the stored numeric and WKB results together and
+integrates nothing. GkSource has no quadrature, no solver and therefore no accuracy parameter of
+its own -- its accuracy is entirely that of the GkNumericIntegration and GkWKBIntegration rows it
+assembles, each of which carries its own. The user settled the drop on 2026-09-18
+(prompts/tolerance-convergence/README.md §7 D3).
+
+Nothing is added, so a datastore written before this change is readable by this factory without a
+migration; it simply carries two columns nothing queries.
+"""
+
 import json
 from typing import Optional, List
 
@@ -13,7 +30,7 @@ from ComputeTargets import (
 from ComputeTargets.BackgroundModel import ModelProxy
 from CosmologyConcepts import wavenumber_exit_time, redshift_array, redshift
 from Datastore.SQL.ObjectFactories.base import SQLAFactoryBase
-from MetadataConcepts import store_tag, tolerance
+from MetadataConcepts import store_tag
 from config.defaults import DEFAULT_STRING_LENGTH
 
 
@@ -101,20 +118,9 @@ class sqla_GkSource_factory(SQLAFactoryBase):
                     index=True,
                     nullable=False,
                 ),
-                sqla.Column(
-                    "atol_serial",
-                    sqla.Integer,
-                    sqla.ForeignKey("tolerance.serial"),
-                    index=True,
-                    nullable=False,
-                ),
-                sqla.Column(
-                    "rtol_serial",
-                    sqla.Integer,
-                    sqla.ForeignKey("tolerance.serial"),
-                    index=True,
-                    nullable=False,
-                ),
+                # no accuracy parameter: this object assembles, it does not integrate (module
+                # docstring above). The atol_serial / rtol_serial pair that used to key it was
+                # removed by prompts/tolerance-convergence prompt 05 and nothing replaces it.
                 sqla.Column(
                     "z_response_serial",
                     sqla.Integer,
@@ -156,16 +162,11 @@ class sqla_GkSource_factory(SQLAFactoryBase):
         label: Optional[str] = payload.get("label", None)
         tags: List[store_tag] = payload.get("tags", [])
 
-        atol: tolerance = payload["atol"]
-        rtol: tolerance = payload["rtol"]
-
         k_exit: wavenumber_exit_time = payload["k"]
         model_proxy: ModelProxy = payload["model"]
         z_sample: redshift_array = payload["z_sample"]
         z_response: redshift = payload["z_response"]
 
-        atol_table = tables["tolerance"].alias("atol")
-        rtol_table = tables["tolerance"].alias("rtol")
         tag_table = tables["GkSource_tags"]
         redshift_table = tables["redshift"]
 
@@ -180,8 +181,6 @@ class sqla_GkSource_factory(SQLAFactoryBase):
                 table.c.z_response_serial,
                 redshift_table.c.z.label("z_response"),
                 table.c.z_samples,
-                atol_table.c.log10_tol.label("log10_atol"),
-                rtol_table.c.log10_tol.label("log10_rtol"),
                 table.c.numeric_smallest_z_serial,
                 smallest_numeric_z_table.c.z.label("numeric_smallest_z"),
                 smallest_numeric_z_table.c.source.label("nsz_is_source"),
@@ -193,9 +192,7 @@ class sqla_GkSource_factory(SQLAFactoryBase):
                 table.c.metadata,
             )
             .select_from(
-                table.join(atol_table, atol_table.c.serial == table.c.atol_serial)
-                .join(rtol_table, rtol_table.c.serial == table.c.rtol_serial)
-                .join(
+                table.join(
                     redshift_table, redshift_table.c.serial == table.c.z_response_serial
                 )
                 .outerjoin(
@@ -213,8 +210,6 @@ class sqla_GkSource_factory(SQLAFactoryBase):
                 table.c.validated == True,
                 table.c.wavenumber_exit_serial == k_exit.store_id,
                 table.c.model_serial == model_proxy.store_id,
-                table.c.atol_serial == atol.store_id,
-                table.c.rtol_serial == rtol.store_id,
             )
         )
 
@@ -252,8 +247,6 @@ class sqla_GkSource_factory(SQLAFactoryBase):
                 label=label,
                 k=k_exit,
                 model=model_proxy,
-                atol=atol,
-                rtol=rtol,
                 z_response=z_response,
                 z_sample=z_sample,
                 tags=tags,
@@ -385,8 +378,6 @@ class sqla_GkSource_factory(SQLAFactoryBase):
             k=k_exit,
             model=model_proxy,
             label=store_label,
-            atol=atol,
-            rtol=rtol,
             z_response=redshift(
                 store_id=(row_data.z_response_serial), z=(row_data.z_response)
             ),
@@ -420,8 +411,6 @@ class sqla_GkSource_factory(SQLAFactoryBase):
                 "label": obj.label,
                 "wavenumber_exit_serial": obj._k_exit.store_id,
                 "model_serial": obj.model_proxy.store_id,
-                "atol_serial": obj._atol.store_id,
-                "rtol_serial": obj._rtol.store_id,
                 "z_response_serial": obj.z_response.store_id,
                 "z_max_serial": obj.z_sample.max.store_id,
                 "z_samples": len(obj.values),
@@ -527,8 +516,6 @@ class sqla_GkSource_factory(SQLAFactoryBase):
     def validate_on_startup(conn, table, tables, prune=False):
         # query the datastore for any GkSource objects that are not validated
 
-        atol_table = tables["tolerance"].alias("atol")
-        rtol_table = tables["tolerance"].alias("rtol")
         redshift_table = tables["redshift"]
         wavenumber_exit_table = tables["wavenumber_exit_time"]
         wavenumber_table = tables["wavenumber"]
@@ -544,14 +531,10 @@ class sqla_GkSource_factory(SQLAFactoryBase):
                     table.c.label,
                     table.c.z_samples,
                     wavenumber_table.c.k_inv_Mpc.label("k_inv_Mpc"),
-                    atol_table.c.log10_tol.label("log10_atol"),
-                    rtol_table.c.log10_tol.label("log10_rtol"),
                     redshift_table.c.z.label("z_response"),
                 )
                 .select_from(
-                    table.join(atol_table, atol_table.c.serial == table.c.atol_serial)
-                    .join(rtol_table, rtol_table.c.serial == table.c.rtol_serial)
-                    .join(
+                    table.join(
                         redshift_table,
                         redshift_table.c.serial == table.c.z_response_serial,
                     )
@@ -579,7 +562,7 @@ class sqla_GkSource_factory(SQLAFactoryBase):
         ]
         for obj in not_validated:
             msgs.append(
-                f'       -- "{obj.label}" (store_id={obj.serial}) for k={obj.k_inv_Mpc:.5g}/Mpc and z_response={obj.z_response:.5g} (log10_atol={obj.log10_atol}, log10_rtol={obj.log10_rtol})'
+                f'       -- "{obj.label}" (store_id={obj.serial}) for k={obj.k_inv_Mpc:.5g}/Mpc and z_response={obj.z_response:.5g}'
             )
             rows = conn.execute(
                 sqla.select(sqla.func.count(value_table.c.serial)).filter(
@@ -627,13 +610,10 @@ class sqla_GkSource_factory(SQLAFactoryBase):
                 sqla.select(
                     table.c.wavenumber_exit_serial,
                     table.c.model_serial,
-                    table.c.atol_serial,
-                    table.c.rtol_serial,
                 ).where(condition)
             )
             labels = [
-                f"wavenumber_exit={row.wavenumber_exit_serial}, model={row.model_serial}, "
-                f"atol={row.atol_serial}, rtol={row.rtol_serial}"
+                f"wavenumber_exit={row.wavenumber_exit_serial}, model={row.model_serial}"
                 for row in rows
             ]
 
@@ -896,8 +876,6 @@ class sqla_GkSourceValue_factory(SQLAFactoryBase):
         k: wavenumber_exit_time = payload["k"]
         z_response: redshift = payload["z_response"]
 
-        atol: Optional[tolerance] = payload.get("atol", None)
-        rtol: Optional[tolerance] = payload.get("rtol", None)
         tags: Optional[List[store_tag]] = payload.get("tags", None)
 
         source_table = tables["GkSource"]
@@ -913,16 +891,6 @@ class sqla_GkSourceValue_factory(SQLAFactoryBase):
                 source_table.c.z_response_serial == z_response.store_id,
                 source_table.c.validated == True,
             )
-
-            if atol is not None:
-                source_query = source_query.filter(
-                    source_table.c.atol_serial == atol.store_id
-                )
-
-            if rtol is not None:
-                source_query = source_query.filter(
-                    source_table.c.rtol_serial == rtol.store_id
-                )
 
             count = 0
             for tag in tags:

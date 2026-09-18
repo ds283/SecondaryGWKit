@@ -965,8 +965,6 @@ def run_pipeline(model_data):
             # construction version instead, and refuses -- naming every generation it found -- if
             # these tags match rows from more than one
             z_sample=None,
-            atol=atol,
-            rtol=rtol,
             tags=run_selection.tags,
         )
     )
@@ -1101,8 +1099,6 @@ def run_pipeline(model_data):
             k=k_exit,
             z_response=z_source_integral_response_sample.min,
             z_sample=None,
-            atol=atol,
-            rtol=rtol,
             tags=run_selection.tags,
         )
         GkSource = ray.get(GkSource_ref)

@@ -377,8 +377,6 @@ def run_pipeline(model_data):
             # construction version instead, and refuses -- naming every generation it found -- if
             # these tags match rows from more than one
             z_sample=None,
-            atol=atol,
-            rtol=rtol,
             tags=run_selection.tags,
         )
     )
@@ -431,17 +429,21 @@ def run_pipeline(model_data):
         k_subsample: List[wavenumber_exit_time] = list(source_k_exit_times)
 
     def build_plot_Tk_work(k_exit: wavenumber_exit_time):
+        # TkNumericIntegration keeps its tolerance pair -- it reaches a DOP853 solver -- while
+        # TkWKBIntegration lost it to rho_gauss_order in prompt 05 of
+        # prompts/tolerance-convergence, and that order is read from its single declaration
+        # rather than supplied here. So the two lookups no longer share one payload.
         query_payload = {
             "solver_labels": [],
             "model": model_proxy,
             "k": k_exit,
             "z_sample": None,
-            "atol": atol,
-            "rtol": rtol,
             "tags": run_selection.tags,
         }
 
-        TkNumeric_ref = pool.object_get("TkNumericIntegration", **query_payload)
+        TkNumeric_ref = pool.object_get(
+            "TkNumericIntegration", atol=atol, rtol=rtol, **query_payload
+        )
         TkWKB_ref = pool.object_get("TkWKBIntegration", **query_payload)
 
         return plot_Tk.remote(model_label, TkNumeric_ref, TkWKB_ref)

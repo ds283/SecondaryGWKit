@@ -3,6 +3,7 @@ from typing import Optional, List
 
 import ray
 
+import ComputeTargets.phase_residual as phase_residual
 from ComputeTargets import ModelProxy, BackgroundModel
 from ComputeTargets.WKB_Tk import Tk_omegaEff_sq, Tk_d_ln_omegaEff_dz
 from ComputeTargets.analytic_Tk import compute_analytic_T, compute_analytic_Tprime
@@ -10,7 +11,7 @@ from CosmologyConcepts import wavenumber_exit_time, redshift_array, wavenumber, 
 from Datastore import DatastoreObject
 from LiouvilleGreen.WKBtools import apply_phase_offset
 from LiouvilleGreen.constants import TWO_PI
-from MetadataConcepts import tolerance, store_tag
+from MetadataConcepts import store_tag
 from Quadrature.integration_metadata import IntegrationData, IntegrationSolver
 from Quadrature.integrators.WKB_phase_function import WKB_phase_function
 from Units import check_units
@@ -35,8 +36,11 @@ class TkWKBIntegration(DatastoreObject):
     ``ComputeTargets/tests/test_background_cs_tau_friction.py``, the test that measures what it
     cost.
 
-    ``atol`` and ``rtol`` no longer have a referent in the computation. They are retained
-    because they are part of the datastore lookup key (``RECONCILIATION.md`` §2 item 10).
+    There is no tolerance anywhere in this object. ``atol`` and ``rtol`` lost their referent in
+    the computation when the tables replaced the ODEs, and prompt 05 of
+    ``prompts/tolerance-convergence`` removed them from the datastore lookup key as well: what
+    keys this target now is ``rho_gauss_order``, the order of the phase residual table, which is
+    the one accuracy parameter it has.
     """
 
     def __init__(
@@ -45,8 +49,6 @@ class TkWKBIntegration(DatastoreObject):
         solver_labels: dict,
         model: ModelProxy,
         k: wavenumber_exit_time,
-        atol: tolerance,
-        rtol: tolerance,
         z_init: Optional[float] = None,
         T_init: Optional[float] = None,
         Tprime_init: Optional[float] = None,
@@ -162,8 +164,15 @@ class TkWKBIntegration(DatastoreObject):
 
         self._compute_ref = None
 
-        self._atol = atol
-        self._rtol = rtol
+    # The Gauss-Legendre order of the phase residual table, and -- since prompt 05 of
+    # prompts/tolerance-convergence -- this object's datastore lookup key. The accessor resolves
+    # the single declaration in ComputeTargets/phase_residual.py *at call time*, which is also how
+    # WKB_phase_function reaches it and how the factory reaches it for both store() and build().
+    # There is no keyword, no payload key and no default on the path, so the order a row records,
+    # the order a lookup asks for and the order the residual was tabulated at are the same object.
+    @property
+    def rho_gauss_order(self) -> int:
+        return phase_residual.RHO_GAUSS_ORDER
 
     @property
     def model_proxy(self) -> ModelProxy:
@@ -346,7 +355,9 @@ class TkWKBIntegration(DatastoreObject):
             print(f"     This may lead to meaningless results.")
 
         # phase and friction both come from the background model's tables (sound horizon and
-        # friction_F); no tolerances. self._atol/self._rtol stay as datastore lookup keys.
+        # friction_F); no tolerances, and since prompt 05 of prompts/tolerance-convergence none in
+        # the lookup key either -- what is keyed is phase_residual.RHO_GAUSS_ORDER, which
+        # WKB_phase_function reads from the same declaration self.rho_gauss_order does.
         self._compute_ref = WKB_phase_function.remote(
             self._model_proxy,
             self._k_exit,

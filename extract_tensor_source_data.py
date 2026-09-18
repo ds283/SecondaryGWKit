@@ -309,8 +309,6 @@ def run_pipeline(model_data):
             # construction version instead, and refuses -- naming every generation it found -- if
             # these tags match rows from more than one
             z_sample=None,
-            atol=atol,
-            rtol=rtol,
             tags=run_selection.tags,
         )
     )

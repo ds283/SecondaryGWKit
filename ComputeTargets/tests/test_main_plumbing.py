@@ -505,9 +505,24 @@ class UnresolvedOscWiringTestCase(unittest.TestCase):
 TK_NUMERIC_TOLERANCE_NAME = "Tk_numeric_atol"
 SHARED_TOLERANCE_NAME = "atol"
 
+# The integration classes that carry **no** tolerance, and must not acquire one. Prompt 05 of
+# prompts/tolerance-convergence removed the atol/rtol pair from their datastore key: the WKB phase
+# comes from Gauss-Legendre tables and what keys these targets is `rho_gauss_order`, read from its
+# single declaration in ComputeTargets/phase_residual.py rather than passed from main.py. A
+# tolerance reappearing on one of them is a regression, and the finder below records the absence
+# as a classification rather than as something it could not read.
+#
+# (Prompt 05a widens this whole guard so that it enumerates all eight targets by name and fails on
+# an unclassified *class*, not merely an unclassified site. This entry is the minimum prompt 05
+# needs to keep the guard honest across its own schema change.)
+NO_TOLERANCE_INTEGRATIONS = ("GkWKBIntegration", "TkWKBIntegration")
+
 # how many TkNumericIntegration object_get sites main.py is expected to have. A finder that
 # silently matched nothing would otherwise pass every assertion below.
 EXPECTED_TK_NUMERIC_SITES = 5
+
+# and how many sites the two tolerance-free targets have between them, for the same reason
+EXPECTED_NO_TOLERANCE_SITES = 6
 
 
 def _own_nodes(scope):
@@ -630,23 +645,41 @@ def tk_numeric_tolerance_sites():
             for call in calls:
                 handled_by_queue.add(id(call))
                 seen.add(id(call))
+                class_name = call.args[0].value
                 label = f"{scope_label}: RayWorkPool({batch_name}) line {call.lineno}"
-                if len(names) != 1:
-                    unclassified.append((call.args[0].value, sorted(names), label))
+                if class_name in NO_TOLERANCE_INTEGRATIONS:
+                    # no tolerance is the correct reading for these two, and a tolerance
+                    # reappearing is the regression worth failing on
+                    if len(names) != 0:
+                        unclassified.append((class_name, sorted(names), label))
+                        continue
+                    sites.append((class_name, None, label))
                     continue
-                sites.append((call.args[0].value, names.pop(), label))
+                if len(names) != 1:
+                    unclassified.append((class_name, sorted(names), label))
+                    continue
+                sites.append((class_name, names.pop(), label))
 
         # direct calls
         for call in _object_get_calls(own):
             if id(call) in handled_by_queue:
                 continue
             seen.add(id(call))
+            class_name = call.args[0].value
             label = f"{scope_label}: direct call, line {call.lineno}"
             keywords = [kw.value for kw in call.keywords if kw.arg == "atol"]
-            if len(keywords) != 1:
-                unclassified.append((call.args[0].value, [], label))
+            if class_name in NO_TOLERANCE_INTEGRATIONS:
+                if len(keywords) != 0:
+                    unclassified.append(
+                        (class_name, [_name_of(k) for k in keywords], label)
+                    )
+                    continue
+                sites.append((class_name, None, label))
                 continue
-            sites.append((call.args[0].value, _name_of(keywords[0]), label))
+            if len(keywords) != 1:
+                unclassified.append((class_name, [], label))
+                continue
+            sites.append((class_name, _name_of(keywords[0]), label))
 
     # anything the scope walk never reached at all
     for call in _object_get_calls(list(ast.walk(tree))):
@@ -689,8 +722,24 @@ class TkNumericToleranceWiringTestCase(unittest.TestCase):
         for class_name, atol_name, label in self.sites:
             if class_name == "TkNumericIntegration":
                 continue
+            if class_name in NO_TOLERANCE_INTEGRATIONS:
+                continue
             with self.subTest(site=label, cls=class_name):
                 self.assertEqual(atol_name, SHARED_TOLERANCE_NAME)
+
+    def test_the_wkb_targets_carry_no_tolerance_at_all(self):
+        """Prompt 05 of ``prompts/tolerance-convergence``: the two WKB sectors lost their
+        vestigial pair to ``rho_gauss_order``, which is read from its single declaration and is
+        not main.py's to supply. A tolerance reappearing on either is a regression."""
+        found = [site for site in self.sites if site[0] in NO_TOLERANCE_INTEGRATIONS]
+        self.assertEqual(
+            len(found),
+            EXPECTED_NO_TOLERANCE_SITES,
+            msg=f"tolerance-free object_get sites found: {found}",
+        )
+        for class_name, atol_name, label in found:
+            with self.subTest(site=label, cls=class_name):
+                self.assertIsNone(atol_name)
 
     def test_the_tolerance_object_is_built_from_the_defaults_constant(self):
         """`Tk_numeric_atol` is a `tolerance` object built from

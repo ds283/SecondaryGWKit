@@ -22,11 +22,10 @@ from CosmologyModels.GenericEOS.GenericEOS import (
     BREAK_POINT_DISCONTINUITY,
 )
 from Datastore import DatastoreObject
-from MetadataConcepts import tolerance, store_tag
+from MetadataConcepts import store_tag
 from Quadrature.integration_metadata import IntegrationSolver, IntegrationData
 from Quadrature.supervisors.base import RHS_timer, IntegrationSupervisor
 from Units.base import UnitsLike
-from config.defaults import DEFAULT_ABS_TOLERANCE, DEFAULT_REL_TOLERANCE
 
 # Gauss-Legendre order per production interval for the conformal-time table. Fixed by measurement
 # in prompts/GkTk-remedial/logs/02-qcd-residual-convergence.md (N_tau = 4): order 4 is at the
@@ -391,8 +390,6 @@ def _cosmology_break_points(
 def compute_background(
     cosmology: BaseCosmology,
     z_sample: redshift_array,
-    atol: float = DEFAULT_ABS_TOLERANCE,
-    rtol: float = DEFAULT_REL_TOLERANCE,
 ) -> dict:
     """
     Tabulate the background quantities on ``z_sample``.
@@ -406,8 +403,12 @@ def compute_background(
     author's radiation-era closed form ``tau_init = sqrt(3) M_P / sqrt(rho(z_init)) (1 + z_init)``
     at the top of the grid, added to the table in double-double.
 
-    ``atol`` and ``rtol`` are accepted for signature compatibility with ``BackgroundModel.compute``
-    and because they remain part of the datastore lookup key; the table has no tolerances.
+    There are no tolerances here, and since prompt 05 of ``prompts/tolerance-convergence`` there
+    are none in the lookup key either: the accuracy of all three tables is set by the Gauss orders
+    ``TAU_GAUSS_ORDER``, ``CS_TAU_GAUSS_ORDER`` and ``FRICTION_F_GAUSS_ORDER``, and those are what
+    the ``BackgroundModel`` row is keyed on. The three module constants read below are the *only*
+    declaration of each order: the factory's ``store()`` writes them and its ``build()`` filters on
+    them, so a row cannot record an order it was not computed at.
     """
     z_nodes = np.array(z_sample.as_float_list(), dtype=float)
     z_init = float(z_nodes[0])
@@ -691,8 +692,6 @@ class BackgroundModel(DatastoreObject):
         payload,
         solver_labels: dict,
         cosmology: BaseCosmology,
-        atol: tolerance,
-        rtol: tolerance,
         z_sample: Optional[redshift_array] = None,
         label: Optional[str] = None,
         tags: Optional[List[store_tag]] = None,
@@ -723,8 +722,25 @@ class BackgroundModel(DatastoreObject):
 
         self._compute_ref = None
 
-        self._atol = atol
-        self._rtol = rtol
+    # The three Gauss orders that set this model's accuracy, and -- since prompt 05 of
+    # prompts/tolerance-convergence -- its datastore lookup key. Each accessor resolves the single
+    # module-level declaration *at call time*, which is also how compute_background and
+    # _build_*_primitive reach it and how sqla_BackgroundModelFactory reaches it for both store()
+    # and build(). There is no keyword, no payload key and no default anywhere on the path, so
+    # the order a row records, the order a lookup asks for and the order the tables were built at
+    # are the same object: moving the declaration moves all three together, and a row cannot claim
+    # an order it was not computed at.
+    @property
+    def tau_gauss_order(self) -> int:
+        return TAU_GAUSS_ORDER
+
+    @property
+    def cs_tau_gauss_order(self) -> int:
+        return CS_TAU_GAUSS_ORDER
+
+    @property
+    def friction_F_gauss_order(self) -> int:
+        return FRICTION_F_GAUSS_ORDER
 
     @property
     def cosmology(self):
@@ -981,8 +997,6 @@ class BackgroundModel(DatastoreObject):
         self._compute_ref = compute_background.remote(
             self.cosmology,
             self._z_sample,
-            atol=self._atol.tol,
-            rtol=self._rtol.tol,
         )
         return self._compute_ref
 

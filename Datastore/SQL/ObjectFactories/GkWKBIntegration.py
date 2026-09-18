@@ -1,3 +1,26 @@
+"""
+Datastore factories for GkWKBIntegration and its per-redshift GkWKBValue rows.
+
+SCHEMA NOTE (prompts/tolerance-convergence, prompt 05). "atol_serial" and "rtol_serial" are gone
+and one integer column, "rho_gauss_order", stands where they stood in the lookup key.
+
+The pair described nothing. The WKB phase is built from the background model's conformal-time (or
+sound-horizon) table and a Gauss-Legendre residual table
+(Quadrature/integrators/WKB_phase_function.py), neither of which has a tolerance; the pair was
+kept only because it was in the key, as ComputeTargets/GkWKBIntegration.py's own comment said. What sets the
+accuracy is RHO_GAUSS_ORDER (ComputeTargets/phase_residual.py), which was a module constant in no
+column at all -- so moving it left the key unmoved and the pipeline went on serving the row it had.
+Prompt 04 measured it (docs/tolerance-convergence/ORDER-AUDIT.md) and the user settled the
+replacement on 2026-09-18 (prompts/tolerance-convergence/README.md §7 D3).
+
+RESIDUAL_WKB_REGION_MARGIN is deliberately *not* a column beside it: prompt 04 swept it from 0.05
+to 0.9 and found the residual a producer reads bit-identical throughout, so it bounds where the
+residual may be evaluated rather than how accurately, and it cannot produce two rows that differ.
+
+There is no migration and no default: a table without the column is a store from before this
+change, and build() raises naming it rather than letting a SQLAlchemy error escape.
+"""
+
 import json
 from math import fabs
 from typing import Optional, List
@@ -10,10 +33,11 @@ from ComputeTargets import (
     GkWKBIntegration,
     GkWKBValue,
 )
+import ComputeTargets.phase_residual as phase_residual
 from ComputeTargets.BackgroundModel import ModelProxy
 from CosmologyConcepts import wavenumber_exit_time, redshift_array, redshift
 from Datastore.SQL.ObjectFactories.base import SQLAFactoryBase
-from MetadataConcepts import store_tag, tolerance
+from MetadataConcepts import store_tag
 from Quadrature.integration_metadata import IntegrationData, IntegrationSolver
 from config.defaults import DEFAULT_STRING_LENGTH, DEFAULT_FLOAT_PRECISION
 
@@ -102,19 +126,11 @@ class sqla_GkWKBIntegration_factory(SQLAFactoryBase):
                     index=True,
                     nullable=False,
                 ),
+                # the Gauss-Legendre order of the phase residual table rho (module docstring
+                # above). This is the accuracy parameter of this object: an integer, not a
+                # tolerance, and the only one it has.
                 sqla.Column(
-                    "atol_serial",
-                    sqla.Integer,
-                    sqla.ForeignKey("tolerance.serial"),
-                    index=True,
-                    nullable=False,
-                ),
-                sqla.Column(
-                    "rtol_serial",
-                    sqla.Integer,
-                    sqla.ForeignKey("tolerance.serial"),
-                    index=True,
-                    nullable=False,
+                    "rho_gauss_order", sqla.Integer, index=True, nullable=False
                 ),
                 sqla.Column(
                     "solver_serial",
@@ -172,9 +188,6 @@ class sqla_GkWKBIntegration_factory(SQLAFactoryBase):
         tags: List[store_tag] = payload.get("tags", [])
 
         solver_labels = payload["solver_labels"]
-
-        atol: tolerance = payload["atol"]
-        rtol: tolerance = payload["rtol"]
 
         k_exit: wavenumber_exit_time = payload["k"]
         model_proxy: ModelProxy = payload["model"]
@@ -236,8 +249,11 @@ class sqla_GkWKBIntegration_factory(SQLAFactoryBase):
                 table.c.validated == True,
                 table.c.wavenumber_exit_serial == k_exit.store_id,
                 table.c.model_serial == model_proxy.store_id,
-                table.c.atol_serial == atol.store_id,
-                table.c.rtol_serial == rtol.store_id,
+                # the accuracy half of the key. Read from the single declaration of the order at
+                # call time, never inlined as a literal: a literal would stop tracking the
+                # constant the moment a later prompt moved it, which is the exact failure this
+                # key exists to prevent
+                table.c.rho_gauss_order == phase_residual.RHO_GAUSS_ORDER,
             )
         )
 
@@ -272,6 +288,23 @@ class sqla_GkWKBIntegration_factory(SQLAFactoryBase):
                 f"!! GkWKBIntegration.build(): multiple results found when querying for GkWKBIntegration"
             )
             raise e
+        except SQLAlchemyError as e:
+            # matched against the driver's own message rather than str(e), which also carries the
+            # SQL statement -- and the statement names the column either way
+            if "rho_gauss_order" not in str(getattr(e, "orig", e)):
+                raise
+
+            # a store from before prompts/tolerance-convergence prompt 05. Its rows were keyed on
+            # a tolerance pair that reached no solver -- the phase comes from Gauss-Legendre
+            # tables -- and they record no Gauss order at all, so there is nothing to infer one
+            # from and no migration to perform.
+            raise RuntimeError(
+                f"GkWKBIntegration.build(): the GkWKBIntegration table has no "
+                '"rho_gauss_order" column. This datastore predates the Gauss order replacing the '
+                "vestigial atol/rtol pair in this target's lookup key "
+                "(prompts/tolerance-convergence, prompt 05) and must be regenerated; there is no "
+                "migration."
+            ) from e
 
         if row_data is None:
             # build and return an unpopulated object
@@ -281,8 +314,6 @@ class sqla_GkWKBIntegration_factory(SQLAFactoryBase):
                 label=label,
                 k=k_exit,
                 model=model_proxy,
-                atol=atol,
-                rtol=rtol,
                 z_source=z_source,
                 z_init=z_init,
                 G_init=G_init,
@@ -421,8 +452,6 @@ class sqla_GkWKBIntegration_factory(SQLAFactoryBase):
             k=k_exit,
             model=model_proxy,
             label=store_label,
-            atol=atol,
-            rtol=rtol,
             z_source=redshift(
                 store_id=row_data.z_source_serial,
                 z=row_data.z_source,
@@ -454,8 +483,11 @@ class sqla_GkWKBIntegration_factory(SQLAFactoryBase):
                 "label": obj.label,
                 "wavenumber_exit_serial": obj._k_exit.store_id,
                 "model_serial": obj.model_proxy.store_id,
-                "atol_serial": obj._atol.store_id,
-                "rtol_serial": obj._rtol.store_id,
+                # the order the residual table was built at, read through the same single
+                # declaration build() filters on and the phase integrator computes at. Never a
+                # literal and never a payload value, so the stored order and the queried order
+                # cannot differ.
+                "rho_gauss_order": obj.rho_gauss_order,
                 "solver_serial": obj.solver.store_id,
                 "z_source_serial": obj.z_source.store_id,
                 "z_min_serial": obj.z_sample.min.store_id,
@@ -614,8 +646,6 @@ class sqla_GkWKBIntegration_factory(SQLAFactoryBase):
     def validate_on_startup(conn, table, tables, prune=False):
         # query the datastore for any integrations that are not validated
 
-        atol_table = tables["tolerance"].alias("atol")
-        rtol_table = tables["tolerance"].alias("rtol")
         solver_table = tables["IntegrationSolver"]
         redshift_table = tables["redshift"]
         wavenumber_exit_table = tables["wavenumber_exit_time"]
@@ -633,16 +663,13 @@ class sqla_GkWKBIntegration_factory(SQLAFactoryBase):
                     table.c.z_samples,
                     wavenumber_table.c.k_inv_Mpc.label("k_inv_Mpc"),
                     solver_table.c.label.label("solver_label"),
-                    atol_table.c.log10_tol.label("log10_atol"),
-                    rtol_table.c.log10_tol.label("log10_rtol"),
+                    table.c.rho_gauss_order,
                     redshift_table.c.z.label("z_source"),
                 )
                 .select_from(
                     table.join(
                         solver_table, solver_table.c.serial == table.c.solver_serial
                     )
-                    .join(atol_table, atol_table.c.serial == table.c.atol_serial)
-                    .join(rtol_table, rtol_table.c.serial == table.c.rtol_serial)
                     .join(
                         redshift_table,
                         redshift_table.c.serial == table.c.z_source_serial,
@@ -671,7 +698,7 @@ class sqla_GkWKBIntegration_factory(SQLAFactoryBase):
         ]
         for integration in not_validated:
             msgs.append(
-                f'       -- "{integration.label}" (store_id={integration.serial}) for k={integration.k_inv_Mpc:.5g}/Mpc and z_source={integration.z_source:.5g} (log10_atol={integration.log10_atol}, log10_rtol={integration.log10_rtol})'
+                f'       -- "{integration.label}" (store_id={integration.serial}) for k={integration.k_inv_Mpc:.5g}/Mpc and z_source={integration.z_source:.5g} (N_rho={integration.rho_gauss_order})'
             )
             rows = conn.execute(
                 sqla.select(sqla.func.count(value_table.c.serial)).filter(
@@ -719,13 +746,12 @@ class sqla_GkWKBIntegration_factory(SQLAFactoryBase):
                 sqla.select(
                     table.c.wavenumber_exit_serial,
                     table.c.model_serial,
-                    table.c.atol_serial,
-                    table.c.rtol_serial,
+                    table.c.rho_gauss_order,
                 ).where(condition)
             )
             labels = [
                 f"wavenumber_exit={row.wavenumber_exit_serial}, model={row.model_serial}, "
-                f"atol={row.atol_serial}, rtol={row.rtol_serial}"
+                f"N_rho={row.rho_gauss_order}"
                 for row in rows
             ]
 
@@ -979,8 +1005,6 @@ class sqla_GkWKBValue_factory(SQLAFactoryBase):
         k: wavenumber_exit_time = payload["k"]
         z_source: redshift = payload["z_source"]
 
-        atol: Optional[tolerance] = payload.get("atol", None)
-        rtol: Optional[tolerance] = payload.get("rtol", None)
         tags: Optional[List[store_tag]] = payload.get("tags", None)
 
         wkb_table = tables["GkWKBIntegration"]
@@ -1002,11 +1026,9 @@ class sqla_GkWKBValue_factory(SQLAFactoryBase):
                 wkb_table.c.validated == True,
             )
 
-            if atol is not None:
-                wkb_query = wkb_query.filter(wkb_table.c.atol_serial == atol.store_id)
-
-            if rtol is not None:
-                wkb_query = wkb_query.filter(wkb_table.c.rtol_serial == rtol.store_id)
+            wkb_query = wkb_query.filter(
+                wkb_table.c.rho_gauss_order == phase_residual.RHO_GAUSS_ORDER
+            )
 
             count = 0
             for tag in tags:
@@ -1089,8 +1111,6 @@ class sqla_GkWKBValue_factory(SQLAFactoryBase):
         model_proxy: ModelProxy = payload["model"]
         k: wavenumber_exit_time = payload["k"]
 
-        atol: Optional[tolerance] = payload.get("atol", None)
-        rtol: Optional[tolerance] = payload.get("rtol", None)
         tags: Optional[List[store_tag]] = payload.get("tags", None)
 
         z_response: Optional[redshift] = payload.get("z", None)
@@ -1128,11 +1148,9 @@ class sqla_GkWKBValue_factory(SQLAFactoryBase):
                 wkb_table.c.z_source_serial == z_source.store_id
             )
 
-        if atol is not None:
-            wkb_query = wkb_query.filter(wkb_table.c.atol_serial == atol.store_id)
-
-        if rtol is not None:
-            wkb_query = wkb_query.filter(wkb_table.c.rtol_serial == rtol.store_id)
+        wkb_query = wkb_query.filter(
+            wkb_table.c.rho_gauss_order == phase_residual.RHO_GAUSS_ORDER
+        )
 
         count = 0
         for tag in tags:

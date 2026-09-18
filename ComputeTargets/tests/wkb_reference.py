@@ -659,8 +659,6 @@ class QCDModel:
         self,
         z_sample: redshift_array,
         cosmology=None,
-        atol: float = 1e-10,
-        rtol: float = 1e-8,
     ):
         self.cosmology = (
             cosmology
@@ -671,9 +669,7 @@ class QCDModel:
         )
         self.z_sample = z_sample
 
-        payload = compute_background._function(
-            self.cosmology, z_sample, atol=atol, rtol=rtol
-        )
+        payload = compute_background._function(self.cosmology, z_sample)
         self.background_payload = payload
         self.functions = _model_functions_from_background(
             self.cosmology, z_sample, payload

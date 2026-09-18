@@ -1139,8 +1139,6 @@ def run_pipeline(
             solver_labels=solvers,
             cosmology=model_cosmology,
             z_sample=z_source_sample,
-            atol=atol,
-            rtol=rtol,
             tags=[
                 RunLabelTag,
                 SourceGridConstructionTag,
@@ -1387,8 +1385,6 @@ def run_pipeline(
                 "k": k_exit,
                 "z_sample": None,
                 "z_init": None,
-                "atol": atol,
-                "rtol": rtol,
                 "tags": [
                     TkProductionTag,
                     RunLabelTag,
@@ -1515,8 +1511,6 @@ def run_pipeline(
                     T_init=T_init,
                     Tprime_init=Tprime_init,
                     z_sample=source_sample,
-                    atol=atol,
-                    rtol=rtol,
                     tags=[
                         TkProductionTag,
                         RunLabelTag,
@@ -1995,8 +1989,6 @@ def run_pipeline(
                         "model": model_proxy,
                         "z_source": z_source,
                         "z_sample": None,
-                        "atol": atol,
-                        "rtol": rtol,
                         "tags": [
                             GkProductionTag,
                             RunLabelTag,
@@ -2172,8 +2164,6 @@ def run_pipeline(
                                 G_init=G_init,
                                 Gprime_init=Gprime_init,
                                 z_sample=response_sample,
-                                atol=atol,
-                                rtol=rtol,
                                 tags=[
                                     GkProductionTag,
                                     RunLabelTag,
@@ -2221,8 +2211,6 @@ def run_pipeline(
                             G_init=0.0,
                             Gprime_init=1.0,
                             z_sample=response_sample,
-                            atol=atol,
-                            rtol=rtol,
                             tags=[
                                 GkProductionTag,
                                 RunLabelTag,
@@ -2301,8 +2289,6 @@ def run_pipeline(
                         "model": model_proxy,
                         "z_response": z_response,
                         "z_sample": None,
-                        "atol": atol,
-                        "rtol": rtol,
                         "tags": [
                             GkProductionTag,
                             RunLabelTag,
@@ -2372,8 +2358,16 @@ def run_pipeline(
                 "payload": {
                     "model": model_proxy,
                     "z": z_response,  # no specification of z_source; means we read all available z_source values
-                    "atol": atol,
-                    "rtol": rtol,
+                    # GkNumericIntegration keeps its tolerance pair -- it reaches a DOP853 solver
+                    # -- while GkWKBIntegration lost it to rho_gauss_order in prompt 05 of
+                    # prompts/tolerance-convergence, and that order is not the caller's to supply.
+                    # One payload serves both classes, so the pair is added only for the one that
+                    # still has it.
+                    **(
+                        {"atol": atol, "rtol": rtol}
+                        if cls_name == "GkNumericValue"
+                        else {}
+                    ),
                     "tags": [
                         GkProductionTag,
                         RunLabelTag,
@@ -2479,8 +2473,6 @@ def run_pipeline(
                             "GkSource",
                             model=model_proxy,
                             k=k_exit,
-                            atol=atol,
-                            rtol=rtol,
                             z_response=z_response,
                             z_sample=z_source_pool[z_response.store_id],
                             tags=[
@@ -2633,8 +2625,6 @@ def run_pipeline(
                         "model": model_proxy,
                         "z_response": z_response,
                         "z_sample": None,
-                        "atol": atol,
-                        "rtol": rtol,
                         "tags": [
                             GkProductionTag,
                             RunLabelTag,
@@ -2732,8 +2722,6 @@ def run_pipeline(
                         "model": model_proxy,
                         "z_response": z_response,
                         "z_sample": None,
-                        "atol": atol,
-                        "rtol": rtol,
                         "tags": [
                             GkProductionTag,
                             RunLabelTag,
@@ -2860,8 +2848,6 @@ def run_pipeline(
                         "model": model_proxy,
                         "z_response": z_response,
                         "z_sample": None,
-                        "atol": atol,
-                        "rtol": rtol,
                         "tags": [
                             GkProductionTag,
                             RunLabelTag,
@@ -3129,8 +3115,6 @@ def run_pipeline(
                         "model": model_proxy,
                         "z_response": z_response,
                         "z_sample": None,  # need to specify, but not queried against; we pick up whatever z_source sample is stored
-                        "atol": atol,
-                        "rtol": rtol,
                         "tags": [
                             GkProductionTag,
                             RunLabelTag,
@@ -3318,8 +3302,6 @@ def run_pipeline(
                 "z_sample": None,
                 "k": k_exit,
                 "z_init": None,
-                "atol": atol,
-                "rtol": rtol,
                 "tags": [
                     TkProductionTag,
                     RunLabelTag,

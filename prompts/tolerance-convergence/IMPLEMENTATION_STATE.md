@@ -8,9 +8,9 @@
 re-run for the re-anchor and green — `ComputeTargets` **452**, `CosmologyModels` **39**)
 **Superseded baseline:** `acd5b8e`, `ComputeTargets` 447, `CosmologyModels` 30 — the anchor of any
 figure in this campaign's documents dated before 2026-09-16 19:32
-**Last updated:** 2026-09-18 · **Status: in progress — 6 / 6 measured, plus the insertions 02a, 04b and 05a; **04b has landed the block prompt 04 stopped short of writing**, and **05 is written**; 05a–06 held.**
+**Last updated:** 2026-09-18 · **Status: in progress — 6 / 6 measured, plus the insertions 02a, 04b and 05a; **04b has landed the block prompt 04 stopped short of writing** and **05 has landed the schema change**; 05a–06 held.**
 **Every user decision needed to start is settled** — **D1 closed 2026-09-17** (all four pairs
-accepted), D3 remains a post-audit gate on prompt 04, D2 settled 2026-09-12, D4 settled by
+accepted), **D3 settled 2026-09-18 and implemented by prompt 05**, D2 settled 2026-09-12, D4 settled by
 README §0.4, **D5 settled yes 2026-09-16**.
 **Prompts 01, 02, 02a, 03 and 03a have all landed; 04–06 are held** (§7 **D7** split §3.3's charter on 2026-09-17: **03** takes `GkNumericIntegration` and the consumer-spline floor, **T4**; **03a** takes `TkNumericIntegration` and `wavenumber_exit_time`, **T5** and **T6**, and is written after 03 lands) (§1 below; the 2026-09-17
 decision — 02's table says which targets the audits own, and 02a settles the anchor that **T6**,
@@ -91,7 +91,25 @@ back *ten orders further* than the 1.4e-05 that prompt hoped for, in whichever c
 block. `[01-convergence-block-has-a-separate-generator]` is **not closed**; it has moved from being
 blocked on *scope* to being blocked on a *decision*, and that decision is
 `[04-convergence-floor-used-as-a-test-threshold]`.
-**Prompt 04b has since landed it (2026-09-18, README §7 D8).** The `convergence` block is
+**Prompt 05 has landed the schema half of D3 (2026-09-18, README §7 D9).** The four object types
+whose `(atol, rtol)` pair reached no solver have lost it: `BackgroundModel` keys
+`tau_gauss_order`, `cs_tau_gauss_order` and `friction_F_gauss_order`, both WKB sectors key
+`rho_gauss_order`, and `GkSource` keys neither, integrating nothing. **The acceptance was the key
+and not the column** — each order is an equality criterion of its factory's `build()`, and
+repointing its single declaration moves the query, the stored value and the compute class's
+accessor together, because every path resolves one module constant at call time with no keyword,
+payload key or default anywhere on it (`ComputeTargets/tests/test_gauss_order_key.py`, 16 tests).
+**No number moved**: `config/defaults.py` is byte-identical and all four orders are still 4.
+`RESIDUAL_WKB_REGION_MARGIN` does **not** become a column, and that half closes on `ORDER-AUDIT.md`
+§7.2's bit-identical residual from margin 0.05 to 0.9 rather than being dropped. Reader breakage was
+six `extract_*.py` scripts and `main.py` needed **nine** payloads, not the four targets the prompt
+counts. `ComputeTargets` **508**, `CosmologyModels` **39**, both OK;
+`test_numeric_break_point_key.py` passes unedited; the three published grid digests are unmoved. So
+**`[20-wkb-gauss-orders-not-in-lookup-key]` is closed** (§4) and prompt 05a decouples **four**
+targets rather than eight (**T9**). One issue is opened,
+`[05-rho-gauss-order-reaches-the-residual-table-through-a-default-argument]`, and two are
+re-pointed at 05a.
+**Prompt 04b landed the convergence block (2026-09-18, README §7 D8).** The `convergence` block is
 **current** — `generated` 2026-09-18, `recommended_scheme` **`branch`**, orders **4 / 4 / 4 / 4**,
 `branch+knots` kept as a populated control, and only that key changed. The two threshold
 assertions are **rebuilt rather than loosened**: `QCD_NODE_REL_TOL` and `QCD_CS_TAU_REL_TOL`, both
@@ -178,8 +196,8 @@ and `wavenumber_exit_time`. §2 (a)'s table says so on both rows; prompt 06 reco
 | 03a | `TkNumericIntegration` and `wavenumber_exit_time` | README §3.3a, §7 **D7**; `[02-wavenumber-exit-time-tolerance-is-an-inequality-key]`, `[12-tk-numeric-atol-largest-k-excursion]`, `[02a-grid-digest-not-reproducible]` | Opus | ✍️ [`03a-…`](03a-tk-numeric-and-exit-time.md) | ⚠️ | *"Sweep the Tk numeric and exit-time tolerances against their floors"* (SHA not embedded, per the convention `prompts/background-solver-robustness` uses) | [`logs/03a-…`](logs/03a-tk-numeric-and-exit-time.md) |
 | 04 | Audit the order-governed targets | README §2 (a), §3.4; §7 **D5** (settled yes) and **D3**; `[01-convergence-block-has-a-separate-generator]`, `[20-wkb-gauss-orders-not-in-lookup-key]`, `[01-density-criterion-imposed-outside-the-wkb-region]` | Opus | ✍️ [`04-…`](04-order-governed-targets.md) | ⚠️ **stopped** | *"Audit the four Gauss orders and the WKB region margin"* (SHA not embedded, per the convention `prompts/background-solver-robustness` uses) | [`logs/04-…`](logs/04-order-governed-targets.md) |
 | 04b | Regenerate the convergence block, and repair the two tests that read it | README §3.4b; §7 **D5** as widened by **D8** (settled yes 2026-09-18); `[01-convergence-block-has-a-separate-generator]`, `[04-convergence-floor-used-as-a-test-threshold]` | Opus | ✍️ [`04b-…`](04b-regenerate-the-convergence-block.md) | ✅ | *"Land the regenerated convergence block"* (SHA not embedded, per the convention `prompts/background-solver-robustness` uses) | [`logs/04b-…`](logs/04b-regenerate-the-convergence-block.md) |
-| 05 | Replace the vestigial key columns with the orders | README §3.5; §7 **D3** (settled 2026-09-18), **D9** (split 2026-09-18); `[20-wkb-gauss-orders-not-in-lookup-key]` | Opus | ✍️ [`05-…`](05-replace-the-vestigial-key-columns.md) | ⬜ | | |
-| 05a | Decouple the tolerances that are real | README §3.5a; §2 (a), (e), (g); §7 **D1** (closed 2026-09-17), **D9** | Opus | ⏸️ **held — written against what 05 leaves, not against the plan's forecast of it** | ⬜ | | |
+| 05 | Replace the vestigial key columns with the orders | README §3.5; §7 **D3** (settled 2026-09-18), **D9** (split 2026-09-18); `[20-wkb-gauss-orders-not-in-lookup-key]` | Opus | ✍️ [`05-…`](05-replace-the-vestigial-key-columns.md) | ✅ | *"Key the order-governed targets on their Gauss orders"* (SHA not embedded, per the convention `prompts/background-solver-robustness` uses) | [`logs/05-…`](logs/05-replace-the-vestigial-key-columns.md) |
+| 05a | Decouple the tolerances that are real | README §3.5a; §2 (a), (e), (g); §7 **D1** (closed 2026-09-17), **D9** | Opus | ⏸️ **held — to be written against what 05 left, which log 05's "State handed to the next prompt" now enumerates site by site** | ⬜ | | |
 | 06 | `QuadSourceIntegral`, close-out, the provenance note | README §0.4, §1.2 | Opus | ⏸️ **held** | ⬜ | | |
 
 Status key: ⬜ not started · 🔄 in flight · ✅ complete · ⚠️ complete with a recorded caveat ·
@@ -237,7 +255,7 @@ not ✅ either, which is the specific failure the rebase found.
 | T6 | **MEASUREMENT** | `wavenumber_exit_time`'s root solve measured at all — nothing in the record says what `xtol = 1e-10`, `rtol = 1e-8` in $\log(1+z)$ buys or costs. **Scored against the exact $z_{\rm exit}$ on `RadiationModel` first** (README §3.1): $1 + z = k/(H_0 e^{N})$, confirmed at the rebase to 2.3e-16 relative or better | 03a | ⚠️ Measured through `_solve_horizon_exit` and **never the datastore**: 50 $k$ × 3 models × 3 offsets (0, −5, +4) × 63 `(xtol, rtol)` cells, reference `(1e-300, 1e-14)`, drift ≤7.82e-14 in $u$ and **3.55e-15** from the exact inversion on the control, where the production setting's displacement is **exactly 0**. **`xtol = 1e-10` binds at 0 of 150 pairs on every model**: `DEFAULT_ABS_TOLERANCE` reaches this target and does nothing, and what fixes the anchor is `rtol*|u|` at $|u|$ up to 38.04. It takes over only below `rtol ≈ 2.6e-12`, and **floors the pair at 1e-10 relative** however far `rtol` goes alone. The **$u\to z$ recovery never competes**: one ulp of $u$ is 7.11e-15 relative in $1+z$ and the production criterion stands 5.3e7 above it. **Two consumers, two answers.** Against the row match `DEFAULT_REDSHIFT_RELATIVE_PRECISION = 1e-7` a floor exists and the rule gives **`rtol = 1e-9`** (guarantee 3.81e-08; production's guarantee 3.8e-07 misses by 3.8× while its *achieved* 7.86e-08 clears by 1.3×), for **+0.7 %** of 6,963 Hubble calls. Against the **grid digest** — bit-identity — **no floor could be established, therefore no target** (§6.1 rule 6): the digest turns over at a **1e-14** relative anchor shift against a tightest available pin of 7.11e-15. **Caveat:** the recommendation applies the rule to Brent's *guarantee*, not to the achieved displacement; on the achieved reading the answer is `unchanged` (log 03a, deviation 4) |
 | T7 | **MEASUREMENT** | $N_\tau$, $N_{c_s\tau}$, $N_F$, $N_\rho$ and `RESIDUAL_WKB_REGION_MARGIN` audited at every production $k$ on the corrected background and the 3-point break set, replacing evidence generated 2026-09-10. **Every one of the four orders has a closed-form anchor on `RadiationModel`** (README §3.1), including $\rho_G \equiv 0$, which makes the $N_\rho$ measurement pure quadrature error with no reference to build | 04 | ⚠️ `docs/tolerance-convergence/ORDER-AUDIT.md` + `order_audit.py`: three models on the **version-2 grid at each cosmology's own anchor**, orders 2/4/6/8/12/16, the three primitives $k$-independent and $N_\rho$ at **all fifty** production wavenumbers in both sectors (**300 cases**), everything through `convergence_reference.GaussOrder` and `reference_drift`. **All four orders are `unchanged` at 4**, first order clearing floors of **2.16e-16 / 3.30e-16 / 8.01e-14 / 6.51e-17 rad**, which dominate the loosest order swept by **×3.03e5 / ×1.99e5 / ×48.4 / ×2.35e6** (§6.1 rule 4's factor). **The anchors did the work**: $\rho_G$ is **bit-exactly zero at every order** on the control and $\rho_T$ is scored against its closed form, so the radiation column has no reference and no drift. `GkTk-remedial` prompt 02's three wavenumbers were right and lucky by only **×1.5–×1.7**. `RESIDUAL_WKB_REGION_MARGIN` is **`unchanged` under §6.1 rule 6** — no accuracy floor; a measured reachability bound, cleared from 0.05 to **0.9**, residual **bit-identical** throughout, and `residual_node_range` refuses only *at* margin 1, where the test degenerates to "is the correction positive?". **Caveats, three.** (i) The prompt **stopped** before writing the fixture (§3 below, `[04-convergence-floor-used-as-a-test-threshold]`), so the evidence is taken back but not yet *recorded* in the block every `*_GAUSS_ORDER` comment cites — **caveat (i) is discharged: prompt 04b wrote the block on 2026-09-18 (T14), unchanged from the run measured here**. (ii) On the two spline models **every order from 4 up is at or below the reference's own drift** and is marked unresolved; what is resolved is the step from order 2, and the exact-radiation oracle. (iii) The prompt's own §7 warning about non-monotone Gauss rules did not bite — every ladder is monotone at and above the chosen order |
 | T8 | **DECISION** | The decoupled tolerance pairs settled by the user (§7 D1) and shipped with the measurement that chose each, in `config/defaults.py` **Reassigned to prompt 05a by §7 D9, 2026-09-18**, with T10: the schema half of the old §3.5 is prompt 05 and changes no number, so every constant in this row moves in 05a. | 05a | ⬜ — **the `GkNumericIntegration` half is decided**: the user accepted prompt 03's `unchanged` on 2026-09-17, so `DEFAULT_GK_NUMERIC_ABS_TOLERANCE = 1e-10` (inert and unchosen) and `DEFAULT_GK_NUMERIC_REL_TOLERANCE = 1e-8` (chosen, `GK-NUMERIC-SWEEP.md` §5.2, §7). **`TkNumericIntegration`'s `rtol` and `wavenumber_exit_time`'s pair were accepted on 2026-09-17, which closes D1**: `DEFAULT_TK_NUMERIC_REL_TOLERANCE = 3e-11` (changed; `DEFAULT_TK_NUMERIC_ABS_TOLERANCE` stays 1e-13, a step-selection knob rather than an accuracy one), `DEFAULT_HEXIT_REL_TOLERANCE = 1e-9` (changed) and `DEFAULT_HEXIT_ABS_TOLERANCE = 1e-10` (unchanged, **inert and unchosen**, and coupled — it floors the pair at 1e-10 relative below `rtol ≈ 2.6e-12`). The five provenance fields for all four are in log 03a's "State handed to the next prompt". **All four pairs are now settled and prompt 05 is unblocked on D1**; it still waits on D3, which is prompt 04's. Two things ship with the numbers rather than being dropped: the exit-time pair was accepted on the **guarantee** reading (log 03a, deviation 4), and `3e-11` carries `[03a-tk-numeric-excursion-is-sporadic-in-rtol]`, which the acceptance did not close |
-| T9 | **DECISION** | What replaces the vestigial `atol`/`rtol` key columns on the three order-governed targets (§7 D3) — the user's stated target for the campaign. **Settled 2026-09-18: `replace with the orders`**, on prompt 04's recommendation. `BackgroundModel` loses `atol_serial`/`rtol_serial` and gains `tau_gauss_order`, `cs_tau_gauss_order`, `friction_F_gauss_order`; `GkWKBIntegration` and `TkWKBIntegration` each gain `rho_gauss_order`; `GkSource` loses the pair and gains nothing, integrating nothing. The user's standing instruction came with it and binds every later schema question here: **there is nothing to rebuild and nothing to backfill, and a needed schema change is always the right answer** — only *reader breakage* may be costed (three `extract_*.py` scripts). Prompt 05 implements **This row is the whole of prompt 05 under §7 D9, 2026-09-18.** The acceptance is not that the columns exist but that the order is *filtered on, not merely selected* — `TOLERANCE-INVENTORY.md` §2.4 measured that the solver table is joined so the order can be read back and then never compared, and a new column keyed the same way would reproduce that exactly. | 05 | 🟨 **decided, not implemented** |
+| T9 | **DECISION** | What replaces the vestigial `atol`/`rtol` key columns on the three order-governed targets (§7 D3) — the user's stated target for the campaign. **Settled 2026-09-18: `replace with the orders`**, on prompt 04's recommendation. `BackgroundModel` loses `atol_serial`/`rtol_serial` and gains `tau_gauss_order`, `cs_tau_gauss_order`, `friction_F_gauss_order`; `GkWKBIntegration` and `TkWKBIntegration` each gain `rho_gauss_order`; `GkSource` loses the pair and gains nothing, integrating nothing. The user's standing instruction came with it and binds every later schema question here: **there is nothing to rebuild and nothing to backfill, and a needed schema change is always the right answer** — only *reader breakage* may be costed (three `extract_*.py` scripts). Prompt 05 implements **This row is the whole of prompt 05 under §7 D9, 2026-09-18.** The acceptance is not that the columns exist but that the order is *filtered on, not merely selected* — `TOLERANCE-INVENTORY.md` §2.4 measured that the solver table is joined so the order can be read back and then never compared, and a new column keyed the same way would reproduce that exactly. | 05 | ✅ **Landed 2026-09-18.** `BackgroundModel` loses `atol_serial`/`rtol_serial` and gains `tau_gauss_order`, `cs_tau_gauss_order`, `friction_F_gauss_order`; `GkWKBIntegration` and `TkWKBIntegration` each gain `rho_gauss_order`; `GkSource` loses the pair and gains nothing. **The acceptance is the key, not the column**, and it is met: each order is an equality criterion of its factory's `build()` — read back off the compiled `whereclause` with no database behind it, the technique `test_numeric_break_point_key.py` established — and repointing its **single** declaration moves the query, the value `store()` writes and the compute class's accessor **together**. The mechanism is one name resolved at call time on every path: `compute_background` and `WKB_phase_function` read the module constant, the compute object's property returns it, `store()` writes that property, `build()` filters on the same module attribute, and no keyword, payload key or default exists by which a caller could supply another. `ComputeTargets/tests/test_gauss_order_key.py`, **16 tests**, is the proof, including that no site inlined the number. **No number moves**: `config/defaults.py` byte-identical, all four orders still 4. `RESIDUAL_WKB_REGION_MARGIN` does **not** become a column, verified against `ORDER-AUDIT.md` §7.2 rather than taken from the prompt — bit-identical residual at every margin from 0.05 to 0.9 on three models and both sectors, with the qualification that at `margin >= 0.99` the `Tk` anchor is *clamped* (a reachability failure, not a differing row) and at 0.9999 two QCD `Gk` cells move by one ulp. **15 production files**; `ComputeTargets` **508**, `CosmologyModels` **39**, both OK; `test_numeric_break_point_key.py` passes **unedited**; the three published grid digests unmoved. Reader breakage was **six** `extract_*.py` scripts as §5 said, and `main.py` needed **nine** payloads rather than the four targets the prompt counts (log 05, deviation 1) |
 | T10 | **PLUMBING** | Every `object_get` of a retuned target carries its own parameter, with an `ast` guard whose predicate reaches all eight targets and fails on an unclassified site **Reassigned to prompt 05a by §7 D9, 2026-09-18**, with T8. After 05 the guard enumerates four targets carrying a tolerance and four carrying none, and a tolerance reappearing on one of the latter is itself a regression it should catch. | 05a | ⬜ |
 | T11 | **HAND-OFF** | `QuadSourceIntegral` measured read-only and reported to `levin-refactor` / `qsi-phase-groups` | 06 | ⬜ |
 | T12 | **PROVENANCE** | `docs/TOLERANCE-PROVENANCE.md` covers **every** accuracy parameter in the pipeline — including the ones this campaign inherits and does not set, and the ones nobody has ever chosen — with value, choosing measurement and its grid generation, competing floor, cost times object count, and citation (README §1.2) | 06 | ⬜ |
@@ -559,6 +577,17 @@ Opened by the **orchestrator's review of prompt 02a's charter**, 2026-09-17:
   **Explicitly not prompt 02a's** (README §4, §7 D6): 02a's acceptance is bit-identity with the
   published digests, and tightening the anchor would move both.
 
+  > **Re-pointed 2026-09-18 by prompt 05** (additively). Part (ii) above, and README §4's sentence
+  > that names prompt 05, were written before §7 **D9** split that prompt. Defining one design
+  > tolerance and applying it to the redshift row match and the digest quantisation is a
+  > *parameter* decision — it moves `DEFAULT_REDSHIFT_RELATIVE_PRECISION` or a new constant beside
+  > it — and §5 rule 8 as D9 amended it puts every parameter move in **05a**, prompt 05 being the
+  > schema half and `config/defaults.py` byte-identical at its end. **So part (ii) is prompt
+  > 05a's.** Nothing else in this entry changes, and prompt 05 measured nothing against it. The
+  > option it was asked to "record as considered" — digesting the determining data — is already
+  > narrowed by `[03a-qcd-v2-grid-sample-count-is-not-reproducible]`, which showed the integer
+  > subdivision vector itself moves on QCD.
+
   > **Part (i) delivered by prompt 03a, 2026-09-17** (additively). Measured through
   > `_solve_horizon_exit` at 50 $k$ × 3 models × 3 offsets × 63 `(xtol, rtol)` cells
   > (`docs/tolerance-convergence/TK-NUMERIC-AND-EXIT-TIME.md` §7). **Three things this entry did not
@@ -736,6 +765,32 @@ Opened by **prompt 03a**, 2026-09-17:
   03a's, whose licence over that file was additive-only and which needed nothing. Evidence:
   `docs/tolerance-convergence/TK-NUMERIC-AND-EXIT-TIME.md` §7.2; log 03a, observation 1.
 
+Opened by **prompt 05**, 2026-09-18:
+
+- **[05-rho-gauss-order-reaches-the-residual-table-through-a-default-argument]** *(prompt 05,
+  2026-09-18; unassigned — `ComputeTargets/phase_residual.py`, one keyword)* — prompt 05's
+  invariant is that there is **no keyword, no payload key and no default** by which the order a
+  row records can differ from the order its tables were built at. It holds on every path the
+  prompt owned. It does not hold by *construction* on one path it did not:
+  `phase_residual.build_phase_residual` and `cached_phase_residual` both take
+  `order: int = RHO_GAUSS_ORDER`, and a default argument is bound once at `def` time, so a caller
+  that supplies `order=6` gets a residual table at order 6 while `rho_gauss_order` in the key —
+  which `build()`/`store()` read from the module constant — still says 4.
+
+  **Impact: none today, and measured.** The only production call site,
+  `Quadrature/integrators/WKB_phase_function.py:252`, does not supply the keyword, and
+  `ComputeTargets/tests/test_gauss_order_key.test_no_production_caller_overrides_the_residual_order`
+  walks every production module and asserts that none does. The hazard is a future caller, and it
+  is invisible: nothing would fail, a row would simply record an order it was not computed at,
+  which is the exact defect this prompt closed everywhere else.
+
+  **Next step:** for any prompt given `ComputeTargets/phase_residual.py` — make `order` a required
+  argument of both functions and have `WKB_phase_function` pass `RHO_GAUSS_ORDER` explicitly, which
+  turns a def-time snapshot into a call-time read and gives the call site the `ast` check prompt 20
+  of `GkTk-remedial` used for `break_point_kind`. Neither that module nor
+  `Quadrature/integrators/WKB_phase_function.py` was in prompt 05's file list. Evidence: log 05,
+  "What shipped".
+
 Opened by **prompt 04b**, 2026-09-18:
 
 - **[04b-break-point-print-string-describes-a-superseded-block]** *(prompt 04b, 2026-09-18;
@@ -832,6 +887,16 @@ Opened by **prompt 02**, 2026-09-16:
   Evidence: `docs/tolerance-convergence/TOLERANCE-INVENTORY.md` §5.1 (the derived
   `atol_serial ==` predicate) and log 02, observation 1.
 
+  > **Re-pointed 2026-09-18 by prompt 05** (additively). Prompt 05 did revisit all six readers and
+  > **left this**. It split `extract_TkWKB_data.py`'s shared `query_payload`, because
+  > `TkWKBIntegration` no longer takes a tolerance and `TkNumericIntegration` still does — so the
+  > numeric lookup now passes `atol=`/`rtol=` explicitly and the defect is in one place instead of
+  > being hidden in a dict serving two targets. What it did not do is change *which* constant that
+  > lookup names: that is a decision about `TkNumericIntegration`'s tolerance, a target prompt 05
+  > §8 forbids, and `DEFAULT_TK_NUMERIC_ABS_TOLERANCE` is one of the constants **05a** ships.
+  > **Assigned to prompt 05a**, which touches `config/defaults.py` and the readers' constants
+  > anyway. Evidence: log 05, observation 1.
+
 Assigned to this campaign from other boards (each stays on the board that holds its measurements;
 the closure is recorded there):
 
@@ -839,7 +904,7 @@ the closure is recorded there):
 |---|---|---|---|
 | `[12-tk-numeric-atol-largest-k-excursion]` | GkTk-remedial | prompts 03, 05 | Assigned 2026-09-12. Its `atol` half is settled — the user kept `1e-13` — and what remains is the `rtol` retuning, which is D1. It closes when prompt 05 ships a settled `rtol`. **Re-taken by prompt 03a, 2026-09-17**, on the version-2 grid under `BREAK_POINT_ALL`: its 3 / 13 / 8 wavenumbers above 3e-6 become **1 / 9 / 4** and its worst 8.64e-04 becomes **3.36e-04**, most of that from the grid rather than the policy; `rtol = 3e-11` takes the count to 0 / 150 and the worst to 3.88e-08. **Its cost figures in `docs/OPEN_ISSUES.md` §1.5 were corrected at the rebase** (`RECONCILIATION.md` §2.4): the QCD $T_k$ object is 8,986 right-hand-side evaluations, not ~31.5k |
 | `[01-convergence-block-has-a-separate-generator]` | qcd-background-audit | prompts 04 and **04b** — **CLOSED 2026-09-18** (§4) | **Assigned 2026-09-16.** The `convergence` block of `ComputeTargets/tests/wkb_reference_data.json` records $N_\tau = N_{c_s\tau} = N_F = N_\rho = 4$, was generated 2026-09-10, and its `decision.recommended_scheme` is `"branch+knots"` — a knot set `qcd-background-audit` prompt 07 removed. Prompts 08 and 09 of that campaign each declined it on scope. Prompt 04 here is the first prompt anywhere whose charter is the orders themselves, so it cannot avoid re-running the generator; that it must then write a fixture and edit `test_background_tau.py` is README §7 **D5**, **settled yes at the 2026-09-16 re-anchor**. **Prompt 04 ran the generator on 2026-09-17 and did not write the block**: the regenerated reference floor is 58x ($\tau$) and 43x ($c_s\tau$) tighter, and the two tests that read it as a threshold then fail by 6.99x and 5.08x with their numerators unmoved — one of them in a module outside the D5 carve-out. So this issue has moved from *blocked on scope* to *blocked on a decision*, and the decision is `[04-convergence-floor-used-as-a-test-threshold]`. Everything else it asks for is measured: all four orders are `unchanged` at 4, the recommended scheme becomes `branch`, and `QCD_BREAK_POINT_ALIGNMENT_TOL` would go to **1.421085e-14** |
-| `[20-wkb-gauss-orders-not-in-lookup-key]` | GkTk-remedial | prompts 04, 05 | **Assigned 2026-09-16.** `TAU_GAUSS_ORDER`, `CS_TAU_GAUSS_ORDER`, `FRICTION_F_GAUSS_ORDER`, `RHO_GAUSS_ORDER` and `RESIDUAL_WKB_REGION_MARGIN` are configuration axes in no lookup key, while the `atol`/`rtol` columns that *are* in the key describe nothing. That is README §7 **D3**, and D3 is the user's stated target for the campaign: for a Liouville–Green-type representation the key should carry an order. **Prompt 04 reported on 2026-09-17**: the audit is complete (**T7**) and the D3 recommendation is **`replace with the orders`** — three integer columns on `BackgroundModel` ($N_\tau$, $N_{c_s\tau}$, $N_F$), one on each WKB target ($N_\rho$), and `drop` for `GkSource`, which integrates nothing. `RESIDUAL_WKB_REGION_MARGIN` is measured for the first time and is `unchanged`. **D3 settled 2026-09-18 and prompt 05 was written the same day**, carrying this row alone: §7 **D9** split the old §3.5 into a schema half (05, board **T9**) and a tolerance half (05a, **T8** and **T10**). The margin does **not** become a column and the reason is prompt 04's own measurement — the stored residual is bit-identical from margin 0.05 to 0.9, so it cannot separate two rows, which is the only thing a key column is for. Reader breakage is **six** `extract_*.py` scripts, not D3's three |
+| `[20-wkb-gauss-orders-not-in-lookup-key]` | GkTk-remedial | prompts 04, 05 | **Assigned 2026-09-16.** `TAU_GAUSS_ORDER`, `CS_TAU_GAUSS_ORDER`, `FRICTION_F_GAUSS_ORDER`, `RHO_GAUSS_ORDER` and `RESIDUAL_WKB_REGION_MARGIN` are configuration axes in no lookup key, while the `atol`/`rtol` columns that *are* in the key describe nothing. That is README §7 **D3**, and D3 is the user's stated target for the campaign: for a Liouville–Green-type representation the key should carry an order. **Prompt 04 reported on 2026-09-17**: the audit is complete (**T7**) and the D3 recommendation is **`replace with the orders`** — three integer columns on `BackgroundModel` ($N_\tau$, $N_{c_s\tau}$, $N_F$), one on each WKB target ($N_\rho$), and `drop` for `GkSource`, which integrates nothing. `RESIDUAL_WKB_REGION_MARGIN` is measured for the first time and is `unchanged`. **D3 settled 2026-09-18 and prompt 05 was written the same day**, carrying this row alone: §7 **D9** split the old §3.5 into a schema half (05, board **T9**) and a tolerance half (05a, **T8** and **T10**). The margin does **not** become a column and the reason is prompt 04's own measurement — the stored residual is bit-identical from margin 0.05 to 0.9, so it cannot separate two rows, which is the only thing a key column is for. Reader breakage is **six** `extract_*.py` scripts, not D3's three. **Closed by prompt 05 on 2026-09-18** — both halves; the entry with the evidence is in §4 above, and `GkTk-remedial`'s own board carries the closure note |
 
 Recorded by the rebase, **not owned here** and not scheduled (README §0.5):
 
@@ -869,6 +934,47 @@ Recorded by the rebase, **not owned here** and not scheduled (README §0.5):
 ---
 
 ## 4. Resolved issues
+
+Closed by **prompt 05**, 2026-09-18:
+
+- **[20-wkb-gauss-orders-not-in-lookup-key]** (opened by `GkTk-remedial` prompt 20, 2026-09-13;
+  assigned here 2026-09-16) — **CLOSED, both halves.**
+
+  **The four orders are in a key.** `BackgroundModel` carries `tau_gauss_order`,
+  `cs_tau_gauss_order` and `friction_F_gauss_order`; `GkWKBIntegration` and `TkWKBIntegration`
+  carry `rho_gauss_order`; `GkSource` carries neither those nor the tolerance pair, integrating
+  nothing. The pair is gone from all four. That is README §7 **D3** exactly as the user settled it
+  on 2026-09-18, implemented and not extended.
+
+  **And the key is a key.** The defect this issue names is not that the order was missing from the
+  schema but that it was missing from the *comparison*: `TOLERANCE-INVENTORY.md` §2.4 measured that
+  the solver table is joined so the label can be read back and then never filtered on, and a new
+  column keyed the same way would have reproduced it one identifier later. Each order is an
+  equality criterion of its factory's `build()`, read back off the compiled `whereclause` with no
+  database behind it (`ComputeTargets/tests/test_gauss_order_key.py`, 16 tests, on
+  `test_numeric_break_point_key.py`'s pattern). Repointing a declaration moves the query, the
+  stored value and the compute class's accessor together, and `test_no_order_is_written_as_a_literal`
+  fails any site that inlined the number.
+
+  **`RESIDUAL_WKB_REGION_MARGIN` is the fifth axis this issue names, and it closes as `not a key
+  column` on measured evidence rather than being dropped.** Verified by prompt 05 against
+  `ORDER-AUDIT.md` §7.2 rather than taken from its own prompt: the `delta` a producer reads between
+  two fixed redshifts is **bit-identical** to production's at every margin from 0.05 to 0.9, on
+  three models and both sectors at five wavenumbers, while the band's node count moves by hundreds.
+  A key column exists to separate rows that differ and this one separates none. Two qualifications
+  the prompt's own sentence did not carry, recorded because they are what a re-reader will find in
+  §7.2: at `margin >= 0.99` every `Tk` row reads `anchor clamped` — the band stops reaching the
+  production anchor, which is a reachability failure and not a differing row — and at
+  `margin = 0.9999` two QCD `Gk` cells depart by 2e-16, one ulp, from the rounding of a cumulative
+  whose top node has moved. Both are four decades outside anything the campaign contemplates and
+  neither changes the verdict. Where the *density criterion* should apply remains
+  `[01-density-criterion-imposed-outside-the-wkb-region]`, which is a different question and stays
+  open.
+
+  **No number moved.** `config/defaults.py` is byte-identical and all four orders are still 4;
+  prompt 04 measured every one `unchanged` (§6.1 rule 4) and prompt 04b landed that evidence. The
+  bill is the one D2 accepted: every row of the four targets in an existing store is unreachable by
+  its old key. Evidence: log 05; board item **T9**.
 
 Closed by **prompt 04b**, 2026-09-18:
 

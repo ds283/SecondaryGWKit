@@ -280,8 +280,6 @@ def _offline_model(cosmology, z_sample, payload) -> BackgroundModel:
         },
         solver_labels={},
         cosmology=cosmology,
-        atol=None,
-        rtol=None,
         z_sample=z_sample,
     )
 
@@ -855,8 +853,6 @@ class TestPayloadSchemaAndPersistence(unittest.TestCase):
             },
             solver_labels={},
             cosmology=self.s.lambdacdm,
-            atol=None,
-            rtol=None,
             z_sample=self.s.grid,
         )
         with self.assertRaises(RuntimeError) as caught:

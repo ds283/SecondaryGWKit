@@ -262,8 +262,6 @@ def build_and_store(
         ),
         model=_Proxy(model, units),
         k=_KExit(k, units, z_exit_subh_e3=2.0 * z_init),
-        atol=None,
-        rtol=None,
         z_init=z_init,
         T_init=T_init,
         Tprime_init=Tprime_init,

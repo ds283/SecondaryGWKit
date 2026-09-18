@@ -12,7 +12,7 @@ from ComputeTargets.GkWKBIntegration import GkWKBValue
 from CosmologyConcepts import wavenumber_exit_time, redshift, wavenumber, redshift_array
 from Datastore import DatastoreObject
 from LiouvilleGreen.constants import TWO_PI
-from MetadataConcepts import store_tag, tolerance
+from MetadataConcepts import store_tag
 from Units import check_units
 from config.defaults import (
     DEFAULT_ABS_TOLERANCE,
@@ -415,8 +415,6 @@ class GkSource(DatastoreObject):
         model: ModelProxy,
         k: wavenumber_exit_time,
         z_response: redshift,
-        atol: tolerance,
-        rtol: tolerance,
         z_sample: Optional[redshift_array] = None,
         label: Optional[str] = None,
         tags: Optional[List[store_tag]] = None,
@@ -433,8 +431,10 @@ class GkSource(DatastoreObject):
         self._label = label
         self._tags = tags if tags is not None else []
 
-        self._atol = atol
-        self._rtol = rtol
+        # No accuracy parameter, and since prompt 05 of prompts/tolerance-convergence none in the
+        # datastore lookup key either: compute() calls assemble_GkSource_values, which stitches
+        # the numeric and WKB results together and integrates nothing. The atol/rtol pair this
+        # object used to carry reached no solver and described nothing.
 
         if payload is not None:
             DatastoreObject.__init__(self, payload["store_id"])
