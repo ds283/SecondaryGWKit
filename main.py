@@ -62,12 +62,15 @@ from Quadrature.integration_metadata import IntegrationSolver
 from RayTools.RayWorkPool import RayWorkPool
 from Units import Mpc_units
 from config.defaults import (
-    DEFAULT_ABS_TOLERANCE,
-    DEFAULT_REL_TOLERANCE,
     DEFAULT_FLOAT_PRECISION,
+    DEFAULT_GK_NUMERIC_ABS_TOLERANCE,
+    DEFAULT_GK_NUMERIC_REL_TOLERANCE,
+    DEFAULT_HEXIT_ABS_TOLERANCE,
+    DEFAULT_HEXIT_REL_TOLERANCE,
     DEFAULT_QUADRATURE_RTOL,
     DEFAULT_QUADRATURE_ATOL,
     DEFAULT_TK_NUMERIC_ABS_TOLERANCE,
+    DEFAULT_TK_NUMERIC_REL_TOLERANCE,
 )
 from config.model_list import build_model_list
 from config.sharding import (
@@ -940,8 +943,6 @@ def run_pipeline(
     model_data: dict,
     source_k_sample: wavenumber_array,
     response_k_sample: wavenumber_array,
-    atol: tolerance,
-    rtol: tolerance,
     solvers: dict[str, IntegrationSolver],
     GkSource_policy_1pt5: GkSourcePolicy,
     GkSource_policy_5pt0: GkSourcePolicy,
@@ -961,8 +962,10 @@ def run_pipeline(
             "wavenumber_exit_time",
             k=k,
             cosmology=model_cosmology,
-            atol=atol,
-            rtol=rtol,
+            # the root solve's own pair (prompt 05a of prompts/tolerance-convergence); it reaches
+            # root_scalar as xtol/rtol and is part of the datastore key
+            atol=hexit_atol,
+            rtol=hexit_rtol,
         )
 
     # for each k mode we sample, determine its horizon exit point
@@ -1224,11 +1227,11 @@ def run_pipeline(
                 "k": k_exit,
                 "z_sample": None,
                 "z_init": None,
-                # TkNumericIntegration alone carries Tk_numeric_atol (prompt 12 of
-                # prompts/GkTk-remedial, review §12.5); it is part of the datastore key, so the
-                # work item and every lookup have to agree on it
+                # TkNumericIntegration's own pair (prompt 12 of prompts/GkTk-remedial and
+                # prompt 05a of prompts/tolerance-convergence); it is part of the datastore key,
+                # so the work item and every lookup have to agree on it
                 "atol": Tk_numeric_atol,
-                "rtol": rtol,
+                "rtol": Tk_numeric_rtol,
                 "tags": [
                     TkProductionTag,
                     RunLabelTag,
@@ -1296,11 +1299,11 @@ def run_pipeline(
                     k=k_exit,
                     z_sample=source_zs,
                     z_init=source_zs.max,
-                    # TkNumericIntegration alone carries Tk_numeric_atol (prompt 12 of
-                    # prompts/GkTk-remedial, review §12.5); it is part of the datastore key, so
-                    # the work item and every lookup have to agree on it
+                    # TkNumericIntegration's own pair (prompt 12 of prompts/GkTk-remedial and
+                    # prompt 05a of prompts/tolerance-convergence); it is part of the datastore
+                    # key, so the work item and every lookup have to agree on it
                     atol=Tk_numeric_atol,
-                    rtol=rtol,
+                    rtol=Tk_numeric_rtol,
                     tags=[
                         TkProductionTag,
                         RunLabelTag,
@@ -1435,11 +1438,11 @@ def run_pipeline(
                 "k": k_exit,
                 "z_sample": None,
                 "z_init": None,
-                # TkNumericIntegration alone carries Tk_numeric_atol (prompt 12 of
-                # prompts/GkTk-remedial, review §12.5); it is part of the datastore key, so the
-                # work item and every lookup have to agree on it
+                # TkNumericIntegration's own pair (prompt 12 of prompts/GkTk-remedial and
+                # prompt 05a of prompts/tolerance-convergence); it is part of the datastore key,
+                # so the work item and every lookup have to agree on it
                 "atol": Tk_numeric_atol,
-                "rtol": rtol,
+                "rtol": Tk_numeric_rtol,
                 "tags": [
                     TkProductionTag,
                     RunLabelTag,
@@ -1585,8 +1588,11 @@ def run_pipeline(
                         "model": model_proxy,
                         "r": r,
                         "z_sample": None,
-                        "atol": atol,
-                        "rtol": rtol,
+                        # QuadSource has no tolerance: it names neither atol nor rtol in
+                        # ComputeTargets/QuadSource.py or in its factory, and has no tolerance
+                        # column. The pair this query used to carry was dead payload and was
+                        # removed by prompt 05a of prompts/tolerance-convergence; the other two
+                        # QuadSource lookups never carried it.
                         "tags": [
                             TkProductionTag,
                             RunLabelTag,
@@ -1643,11 +1649,11 @@ def run_pipeline(
                 "z_sample": None,
                 "k": k,
                 "z_init": None,
-                # TkNumericIntegration alone carries Tk_numeric_atol (prompt 12 of
-                # prompts/GkTk-remedial, review §12.5); it is part of the datastore key, so the
-                # work item and every lookup have to agree on it
+                # TkNumericIntegration's own pair (prompt 12 of prompts/GkTk-remedial and
+                # prompt 05a of prompts/tolerance-convergence); it is part of the datastore key,
+                # so the work item and every lookup have to agree on it
                 "atol": Tk_numeric_atol,
-                "rtol": rtol,
+                "rtol": Tk_numeric_rtol,
                 "tags": [
                     TkProductionTag,
                     RunLabelTag,
@@ -1806,8 +1812,10 @@ def run_pipeline(
                         "model": model_proxy,
                         "z_source": z_source,
                         "z_sample": None,
-                        "atol": atol,
-                        "rtol": rtol,
+                        # GkNumericIntegration's own pair (prompt 05a of
+                        # prompts/tolerance-convergence); part of the datastore key
+                        "atol": Gk_numeric_atol,
+                        "rtol": Gk_numeric_rtol,
                         "tags": [
                             GkProductionTag,
                             RunLabelTag,
@@ -1902,8 +1910,10 @@ def run_pipeline(
                                 k=k_exit,
                                 z_source=z_source,
                                 z_sample=response_zs,
-                                atol=atol,
-                                rtol=rtol,
+                                # GkNumericIntegration's own pair (prompt 05a of
+                                # prompts/tolerance-convergence); part of the datastore key
+                                atol=Gk_numeric_atol,
+                                rtol=Gk_numeric_rtol,
                                 tags=[
                                     GkProductionTag,
                                     RunLabelTag,
@@ -2054,8 +2064,10 @@ def run_pipeline(
                         "model": model_proxy,
                         "z_source": z_source,
                         "z_sample": None,
-                        "atol": atol,
-                        "rtol": rtol,
+                        # GkNumericIntegration's own pair (prompt 05a of
+                        # prompts/tolerance-convergence); part of the datastore key
+                        "atol": Gk_numeric_atol,
+                        "rtol": Gk_numeric_rtol,
                         "tags": [
                             GkProductionTag,
                             RunLabelTag,
@@ -2364,7 +2376,7 @@ def run_pipeline(
                     # One payload serves both classes, so the pair is added only for the one that
                     # still has it.
                     **(
-                        {"atol": atol, "rtol": rtol}
+                        {"atol": Gk_numeric_atol, "rtol": Gk_numeric_rtol}
                         if cls_name == "GkNumericValue"
                         else {}
                     ),
@@ -3260,11 +3272,11 @@ def run_pipeline(
                 "z_sample": None,
                 "k": k_exit,
                 "z_init": None,
-                # TkNumericIntegration alone carries Tk_numeric_atol (prompt 12 of
-                # prompts/GkTk-remedial, review §12.5); it is part of the datastore key, so the
-                # work item and every lookup have to agree on it
+                # TkNumericIntegration's own pair (prompt 12 of prompts/GkTk-remedial and
+                # prompt 05a of prompts/tolerance-convergence); it is part of the datastore key,
+                # so the work item and every lookup have to agree on it
                 "atol": Tk_numeric_atol,
-                "rtol": rtol,
+                "rtol": Tk_numeric_rtol,
                 "tags": [
                     TkProductionTag,
                     RunLabelTag,
@@ -3534,18 +3546,37 @@ with ShardedPool(
 
     # build absolute and relative tolerances.
     #
-    # Tk_numeric_atol is the transfer function's numeric run alone (prompt 12 of
-    # prompts/GkTk-remedial, review §12.5): T decays as 3/x^2, so the shared atol = 1e-10 is a
-    # 1e-5 *relative* tolerance deep inside the horizon. Every TkNumericIntegration object_get --
-    # the work items and every lookup -- must use it, because the tolerance is part of the
-    # datastore key; everything else keeps atol.
-    atol, rtol, quad_atol, quad_rtol, Tk_numeric_atol = ray.get(
+    # There is no longer a shared pair. Prompt 05 of prompts/tolerance-convergence removed the
+    # tolerance from the four object types that never used one -- BackgroundModel, both WKB
+    # sectors and GkSource, whose knob is an integer Gauss order -- and prompt 05a gave each of
+    # the four that do reach a solver a constant of its own, measured on its own terms
+    # (config/defaults.py carries the measurement beside each value). One constant cannot be right
+    # for a Green's function whose |G| ~ 1e10, a transfer function whose |T| ~ 1e-5 and a root
+    # solve in u = log(1+z).
+    #
+    # Every tolerance here is part of its target's datastore key, so the work item and *every*
+    # lookup of that target have to agree on it; a site left on another target's constant does not
+    # raise, it simply fails to find the row and recomputes it at full cost. That is what
+    # ComputeTargets/tests/test_main_plumbing.py guards.
+    (
+        hexit_atol,
+        hexit_rtol,
+        Gk_numeric_atol,
+        Gk_numeric_rtol,
+        Tk_numeric_atol,
+        Tk_numeric_rtol,
+        quad_atol,
+        quad_rtol,
+    ) = ray.get(
         [
-            pool.object_get("tolerance", tol=DEFAULT_ABS_TOLERANCE),
-            pool.object_get("tolerance", tol=DEFAULT_REL_TOLERANCE),
+            pool.object_get("tolerance", tol=DEFAULT_HEXIT_ABS_TOLERANCE),
+            pool.object_get("tolerance", tol=DEFAULT_HEXIT_REL_TOLERANCE),
+            pool.object_get("tolerance", tol=DEFAULT_GK_NUMERIC_ABS_TOLERANCE),
+            pool.object_get("tolerance", tol=DEFAULT_GK_NUMERIC_REL_TOLERANCE),
+            pool.object_get("tolerance", tol=DEFAULT_TK_NUMERIC_ABS_TOLERANCE),
+            pool.object_get("tolerance", tol=DEFAULT_TK_NUMERIC_REL_TOLERANCE),
             pool.object_get("tolerance", tol=DEFAULT_QUADRATURE_ATOL),
             pool.object_get("tolerance", tol=DEFAULT_QUADRATURE_RTOL),
-            pool.object_get("tolerance", tol=DEFAULT_TK_NUMERIC_ABS_TOLERANCE),
         ]
     )
 
@@ -3670,8 +3701,6 @@ with ShardedPool(
             model_data,
             source_k_sample,
             response_k_sample,
-            atol,
-            rtol,
             solvers,
             GkSource_policy_1pt5,
             GkSource_policy_5pt0,

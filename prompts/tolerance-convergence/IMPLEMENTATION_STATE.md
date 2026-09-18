@@ -8,7 +8,7 @@
 re-run for the re-anchor and green — `ComputeTargets` **452**, `CosmologyModels` **39**)
 **Superseded baseline:** `acd5b8e`, `ComputeTargets` 447, `CosmologyModels` 30 — the anchor of any
 figure in this campaign's documents dated before 2026-09-16 19:32
-**Last updated:** 2026-09-18 · **Status: in progress — 6 / 6 measured, plus the insertions 02a, 04b, 05b and 05a; **04b has landed the block prompt 04 stopped short of writing**, **05 has landed the schema change** and **05b has made the recorded order the order that was used**; 05a–06 held.**
+**Last updated:** 2026-09-18 · **Status: in progress — 6 / 6 measured, plus the insertions 02a, 04b, 05b and 05a; **04b has landed the block prompt 04 stopped short of writing**, **05 has landed the schema change**, **05b has made the recorded order the order that was used** and **05a has decoupled the tolerances that are real**; only 06 is left.**
 **Every user decision needed to start is settled** — **D1 closed 2026-09-17** (all four pairs
 accepted), **D3 settled 2026-09-18 and implemented by prompt 05**, D2 settled 2026-09-12, D4 settled by
 README §0.4, **D5 settled yes 2026-09-16**.
@@ -124,6 +124,31 @@ and after. Both §6 tests were confirmed to fail at `90d0114`. `ComputeTargets` 
 **`[05-rho-gauss-order-reaches-the-residual-table-through-a-default-argument]` is closed** (§4),
 with the rehydration half it does not name, and **T15** is done. Nothing is opened, and log 05's
 `main.py` site table stands untouched for 05a.
+**Prompt 05a has decoupled the tolerances that are real (2026-09-18, README §7 D1 and D9).** The
+three targets whose `(atol, rtol)` reaches a solver each carry their own pair, with the measurement
+that chose it beside the value in `config/defaults.py`, and `QuadSourceIntegral` — decoupled since
+`source-remediation` — is **guarded for the first time**. Six constants ship, every one settled by
+the user under D1 on 2026-09-17: `DEFAULT_HEXIT_ABS_TOLERANCE = 1e-10` /
+`DEFAULT_HEXIT_REL_TOLERANCE = 1e-9`, `DEFAULT_GK_NUMERIC_ABS_TOLERANCE = 1e-10` /
+`DEFAULT_GK_NUMERIC_REL_TOLERANCE = 1e-8`, `DEFAULT_TK_NUMERIC_ABS_TOLERANCE = 1e-13` (already
+existed) / `DEFAULT_TK_NUMERIC_REL_TOLERANCE = 3e-11`. **Two values move** — the exit time's `rtol`
+and the $T_k$ numeric's, both from `1e-8` — and **after this commit no object type keys on
+`DEFAULT_ABS_TOLERANCE` or `DEFAULT_REL_TOLERANCE`**, whose values are unchanged and whose names
+survive: what is left of them is seven float comparisons in modules 05a may not edit, so renaming
+would reach every one of them and `[02-shared-atol-doubles-as-a-float-comparison-epsilon]` stays
+open (log 05a §2 is the §3 decision and its argument). **11 `main.py` sites** moved, `QuadSource`
+lost a pair that reached nothing, and **all six readers follow**, which closes
+`[02-extract-tkwkb-queries-tk-numeric-under-the-shared-atol]` — live since `GkTk-remedial` prompt
+12. **The `ast` guard now enumerates all seventeen object types `main.py` looks up** and fails on an
+unclassified class, on a site disagreeing with its class, and on a moved site count; a second guard
+cross-checks the six readers against `main.py` by `config/defaults.py` constant. **Five negative
+controls all fail the suite.** **No schema change**, the four Gauss orders are still 4, and **the
+three published grid digests are unmoved** because the production anchor solve is **bit-identical**
+at `(1e-10, 1e-8)` and `(1e-10, 1e-9)` on both production cosmologies — which is also what closes
+part (ii) of `[02a-grid-digest-not-reproducible]`: the anchor's Brent guarantee is now **3.81e-08**,
+*inside* the `1e-7` at which a redshift row is matched, where it used to be 3.8e-7 outside it.
+`ComputeTargets` **521**, `CosmologyModels` **39**, both OK. Board items **T8** and **T10**; one
+issue opened, `[05a-two-verification-scripts-still-query-the-exit-time-under-the-shared-pair]`.
 **Prompt 04b landed the convergence block (2026-09-18, README §7 D8).** The `convergence` block is
 **current** — `generated` 2026-09-18, `recommended_scheme` **`branch`**, orders **4 / 4 / 4 / 4**,
 `branch+knots` kept as a populated control, and only that key changed. The two threshold
@@ -213,7 +238,7 @@ and `wavenumber_exit_time`. §2 (a)'s table says so on both rows; prompt 06 reco
 | 04b | Regenerate the convergence block, and repair the two tests that read it | README §3.4b; §7 **D5** as widened by **D8** (settled yes 2026-09-18); `[01-convergence-block-has-a-separate-generator]`, `[04-convergence-floor-used-as-a-test-threshold]` | Opus | ✍️ [`04b-…`](04b-regenerate-the-convergence-block.md) | ✅ | *"Land the regenerated convergence block"* (SHA not embedded, per the convention `prompts/background-solver-robustness` uses) | [`logs/04b-…`](logs/04b-regenerate-the-convergence-block.md) |
 | 05 | Replace the vestigial key columns with the orders | README §3.5; §7 **D3** (settled 2026-09-18), **D9** (split 2026-09-18); `[20-wkb-gauss-orders-not-in-lookup-key]` | Opus | ✍️ [`05-…`](05-replace-the-vestigial-key-columns.md) | ✅ | *"Key the order-governed targets on their Gauss orders"* (SHA not embedded, per the convention `prompts/background-solver-robustness` uses) | [`logs/05-…`](logs/05-replace-the-vestigial-key-columns.md) |
 | 05b | Make the recorded order the order that was used | README §3.5b; §7 **D10** (settled 2026-09-18); `[05-rho-gauss-order-reaches-the-residual-table-through-a-default-argument]` | Opus | ✍️ [`05b-…`](05b-make-the-recorded-order-the-order-used.md) | ✅ | *"Make an object report the Gauss order it was built at"* (SHA not embedded, per the convention `prompts/background-solver-robustness` uses) | [`logs/05b-…`](logs/05b-make-the-recorded-order-the-order-used.md) |
-| 05a | Decouple the tolerances that are real | README §3.5a; §2 (a), (e), (g); §7 **D1** (closed 2026-09-17), **D9** | Opus | ✍️ [`05a-…`](05a-decouple-the-tolerances-that-are-real.md) — **written 2026-09-18, not yet dispatched** (was: held to be written against what 05 left, which log 05's "State handed to the next prompt" now enumerates site by site** | ⬜ | | |
+| 05a | Decouple the tolerances that are real | README §3.5a; §2 (a), (e), (g); §7 **D1** (closed 2026-09-17), **D9** | Opus | ✍️ [`05a-…`](05a-decouple-the-tolerances-that-are-real.md) | ✅ | *"Give each solver-reaching target its own tolerance"* (SHA not embedded, per the convention `prompts/background-solver-robustness` uses) | [`logs/05a-…`](logs/05a-decouple-the-tolerances-that-are-real.md) |
 | 06 | `QuadSourceIntegral`, close-out, the provenance note | README §0.4, §1.2 | Opus | ⏸️ **held** | ⬜ | | |
 
 Status key: ⬜ not started · 🔄 in flight · ✅ complete · ⚠️ complete with a recorded caveat ·
@@ -270,9 +295,9 @@ not ✅ either, which is the specific failure the rebase found.
 | T5 | **MEASUREMENT** | `TkNumericIntegration` likewise, re-taken on the version-2 grid and under its own `BREAK_POINT_ALL` policy | 03a | ⚠️ `docs/tolerance-convergence/TK-NUMERIC-AND-EXIT-TIME.md` + `tk_numeric_exit_sweep.py`: 50 $k$ × 3 models × 13 `(atol, rtol)` cells, **version-2 grid at each cosmology's own anchor**, **`BREAK_POINT_ALL`**, reference `(1e-18, 1e-12)` converged **50/50 on all three**. **Prompt 17's configuration reproduces**: version-0 per-$k$ under `discontinuity` gives 3 / 13 above 3e-6 and worst **8.64e-04** on Radiation / LambdaCDM (QCD gives 9, not 8, its background having been replaced since). **Re-taken as production runs it, 3 / 13 / 8 becomes 1 / 9 / 4 and the worst 8.64e-04 becomes 3.36e-04** — and the **grid** change, not the policy, is most of that: `all` and `discontinuity` are the same code path on the two cosmologies that declare nothing, and on QCD the policy moves 9→6 (v0) and 7→4 (v2) for +0.82 % / +0.61 % of the evaluations. **`rtol` sets the level and `atol` selects which wavenumber excurses** — two decades of `atol` move the median of per-$k$ maxima by ≤2.1× and the maximum by up to **205×** — so README §2 (e)'s magnitude argument does *not* transfer from the $G_k$ sector. **Floor re-confirmed**: the $T=1,T'=0$ truncation is **2.39e-06 to 2.64e-06** against the inherited 2.52e-06, and the radiation oracle and the series measure agree to three figures. **Target: `rtol = 3e-11`** (§6.1 rules 2 and 3), 3.88e-08 worst, 62× under the floor, **+39.4 %** of 1,272,891 → 1,774,977 RHS evaluations for 50 objects × 3 models. **Caveat:** the maximum is **not monotone** in `rtol` — exactly one of the 150 runs sits above target at each of `1e-9`, `3e-10` and `1e-10`, a different one each time — so `3e-11` is the loosest that clears *in this sweep*, not a bound (§3 issue) |
 | T6 | **MEASUREMENT** | `wavenumber_exit_time`'s root solve measured at all — nothing in the record says what `xtol = 1e-10`, `rtol = 1e-8` in $\log(1+z)$ buys or costs. **Scored against the exact $z_{\rm exit}$ on `RadiationModel` first** (README §3.1): $1 + z = k/(H_0 e^{N})$, confirmed at the rebase to 2.3e-16 relative or better | 03a | ⚠️ Measured through `_solve_horizon_exit` and **never the datastore**: 50 $k$ × 3 models × 3 offsets (0, −5, +4) × 63 `(xtol, rtol)` cells, reference `(1e-300, 1e-14)`, drift ≤7.82e-14 in $u$ and **3.55e-15** from the exact inversion on the control, where the production setting's displacement is **exactly 0**. **`xtol = 1e-10` binds at 0 of 150 pairs on every model**: `DEFAULT_ABS_TOLERANCE` reaches this target and does nothing, and what fixes the anchor is `rtol*|u|` at $|u|$ up to 38.04. It takes over only below `rtol ≈ 2.6e-12`, and **floors the pair at 1e-10 relative** however far `rtol` goes alone. The **$u\to z$ recovery never competes**: one ulp of $u$ is 7.11e-15 relative in $1+z$ and the production criterion stands 5.3e7 above it. **Two consumers, two answers.** Against the row match `DEFAULT_REDSHIFT_RELATIVE_PRECISION = 1e-7` a floor exists and the rule gives **`rtol = 1e-9`** (guarantee 3.81e-08; production's guarantee 3.8e-07 misses by 3.8× while its *achieved* 7.86e-08 clears by 1.3×), for **+0.7 %** of 6,963 Hubble calls. Against the **grid digest** — bit-identity — **no floor could be established, therefore no target** (§6.1 rule 6): the digest turns over at a **1e-14** relative anchor shift against a tightest available pin of 7.11e-15. **Caveat:** the recommendation applies the rule to Brent's *guarantee*, not to the achieved displacement; on the achieved reading the answer is `unchanged` (log 03a, deviation 4) |
 | T7 | **MEASUREMENT** | $N_\tau$, $N_{c_s\tau}$, $N_F$, $N_\rho$ and `RESIDUAL_WKB_REGION_MARGIN` audited at every production $k$ on the corrected background and the 3-point break set, replacing evidence generated 2026-09-10. **Every one of the four orders has a closed-form anchor on `RadiationModel`** (README §3.1), including $\rho_G \equiv 0$, which makes the $N_\rho$ measurement pure quadrature error with no reference to build | 04 | ⚠️ `docs/tolerance-convergence/ORDER-AUDIT.md` + `order_audit.py`: three models on the **version-2 grid at each cosmology's own anchor**, orders 2/4/6/8/12/16, the three primitives $k$-independent and $N_\rho$ at **all fifty** production wavenumbers in both sectors (**300 cases**), everything through `convergence_reference.GaussOrder` and `reference_drift`. **All four orders are `unchanged` at 4**, first order clearing floors of **2.16e-16 / 3.30e-16 / 8.01e-14 / 6.51e-17 rad**, which dominate the loosest order swept by **×3.03e5 / ×1.99e5 / ×48.4 / ×2.35e6** (§6.1 rule 4's factor). **The anchors did the work**: $\rho_G$ is **bit-exactly zero at every order** on the control and $\rho_T$ is scored against its closed form, so the radiation column has no reference and no drift. `GkTk-remedial` prompt 02's three wavenumbers were right and lucky by only **×1.5–×1.7**. `RESIDUAL_WKB_REGION_MARGIN` is **`unchanged` under §6.1 rule 6** — no accuracy floor; a measured reachability bound, cleared from 0.05 to **0.9**, residual **bit-identical** throughout, and `residual_node_range` refuses only *at* margin 1, where the test degenerates to "is the correction positive?". **Caveats, three.** (i) The prompt **stopped** before writing the fixture (§3 below, `[04-convergence-floor-used-as-a-test-threshold]`), so the evidence is taken back but not yet *recorded* in the block every `*_GAUSS_ORDER` comment cites — **caveat (i) is discharged: prompt 04b wrote the block on 2026-09-18 (T14), unchanged from the run measured here**. (ii) On the two spline models **every order from 4 up is at or below the reference's own drift** and is marked unresolved; what is resolved is the step from order 2, and the exact-radiation oracle. (iii) The prompt's own §7 warning about non-monotone Gauss rules did not bite — every ladder is monotone at and above the chosen order |
-| T8 | **DECISION** | The decoupled tolerance pairs settled by the user (§7 D1) and shipped with the measurement that chose each, in `config/defaults.py` **Reassigned to prompt 05a by §7 D9, 2026-09-18**, with T10: the schema half of the old §3.5 is prompt 05 and changes no number, so every constant in this row moves in 05a. | 05a | ⬜ — **the `GkNumericIntegration` half is decided**: the user accepted prompt 03's `unchanged` on 2026-09-17, so `DEFAULT_GK_NUMERIC_ABS_TOLERANCE = 1e-10` (inert and unchosen) and `DEFAULT_GK_NUMERIC_REL_TOLERANCE = 1e-8` (chosen, `GK-NUMERIC-SWEEP.md` §5.2, §7). **`TkNumericIntegration`'s `rtol` and `wavenumber_exit_time`'s pair were accepted on 2026-09-17, which closes D1**: `DEFAULT_TK_NUMERIC_REL_TOLERANCE = 3e-11` (changed; `DEFAULT_TK_NUMERIC_ABS_TOLERANCE` stays 1e-13, a step-selection knob rather than an accuracy one), `DEFAULT_HEXIT_REL_TOLERANCE = 1e-9` (changed) and `DEFAULT_HEXIT_ABS_TOLERANCE = 1e-10` (unchanged, **inert and unchosen**, and coupled — it floors the pair at 1e-10 relative below `rtol ≈ 2.6e-12`). The five provenance fields for all four are in log 03a's "State handed to the next prompt". **All four pairs are now settled and prompt 05 is unblocked on D1**; it still waits on D3, which is prompt 04's. Two things ship with the numbers rather than being dropped: the exit-time pair was accepted on the **guarantee** reading (log 03a, deviation 4), and `3e-11` carries `[03a-tk-numeric-excursion-is-sporadic-in-rtol]`, which the acceptance did not close |
+| T8 | **DECISION** | The decoupled tolerance pairs settled by the user (§7 D1) and shipped with the measurement that chose each, in `config/defaults.py` **Reassigned to prompt 05a by §7 D9, 2026-09-18**, with T10: the schema half of the old §3.5 is prompt 05 and changes no number, so every constant in this row moves in 05a. | 05a | ✅ **Shipped 2026-09-18.** Six constants, each with a §1.2-standard comment at the point of use carrying the measurement that chose it, its grid generation and anchor, the floor it competes against and its cost: `DEFAULT_HEXIT_ABS_TOLERANCE = 1e-10` (inert, unchosen, **coupled**), `DEFAULT_HEXIT_REL_TOLERANCE = 1e-9` (**changed**, chosen, on the **guarantee** reading), `DEFAULT_GK_NUMERIC_ABS_TOLERANCE = 1e-10` (inert, unchosen), `DEFAULT_GK_NUMERIC_REL_TOLERANCE = 1e-8` (chosen), `DEFAULT_TK_NUMERIC_ABS_TOLERANCE = 1e-13` (unchanged, **re-characterised** as a step-selection knob) and `DEFAULT_TK_NUMERIC_REL_TOLERANCE = 3e-11` (**changed**, chosen, **a measured setting and not a bound**). The three qualifications §2 of the prompt requires are in the comments, not only in the log. The two shared names **survive**, at 1e-10 and 1e-8, and gain a block saying they are now no target's tolerance and must not be retuned as one — renaming would reach seven float-comparison sites in three modules outside this prompt's grant, and the defect those sites name is one constant doing two jobs, which a rename would relabel rather than repair (log 05a §2). Was: ⬜ — **the `GkNumericIntegration` half is decided**: the user accepted prompt 03's `unchanged` on 2026-09-17, so `DEFAULT_GK_NUMERIC_ABS_TOLERANCE = 1e-10` (inert and unchosen) and `DEFAULT_GK_NUMERIC_REL_TOLERANCE = 1e-8` (chosen, `GK-NUMERIC-SWEEP.md` §5.2, §7). **`TkNumericIntegration`'s `rtol` and `wavenumber_exit_time`'s pair were accepted on 2026-09-17, which closes D1**: `DEFAULT_TK_NUMERIC_REL_TOLERANCE = 3e-11` (changed; `DEFAULT_TK_NUMERIC_ABS_TOLERANCE` stays 1e-13, a step-selection knob rather than an accuracy one), `DEFAULT_HEXIT_REL_TOLERANCE = 1e-9` (changed) and `DEFAULT_HEXIT_ABS_TOLERANCE = 1e-10` (unchanged, **inert and unchosen**, and coupled — it floors the pair at 1e-10 relative below `rtol ≈ 2.6e-12`). The five provenance fields for all four are in log 03a's "State handed to the next prompt". **All four pairs are now settled and prompt 05 is unblocked on D1**; it still waits on D3, which is prompt 04's. Two things ship with the numbers rather than being dropped: the exit-time pair was accepted on the **guarantee** reading (log 03a, deviation 4), and `3e-11` carries `[03a-tk-numeric-excursion-is-sporadic-in-rtol]`, which the acceptance did not close |
 | T9 | **DECISION** | What replaces the vestigial `atol`/`rtol` key columns on the three order-governed targets (§7 D3) — the user's stated target for the campaign. **Settled 2026-09-18: `replace with the orders`**, on prompt 04's recommendation. `BackgroundModel` loses `atol_serial`/`rtol_serial` and gains `tau_gauss_order`, `cs_tau_gauss_order`, `friction_F_gauss_order`; `GkWKBIntegration` and `TkWKBIntegration` each gain `rho_gauss_order`; `GkSource` loses the pair and gains nothing, integrating nothing. The user's standing instruction came with it and binds every later schema question here: **there is nothing to rebuild and nothing to backfill, and a needed schema change is always the right answer** — only *reader breakage* may be costed (three `extract_*.py` scripts). Prompt 05 implements **This row is the whole of prompt 05 under §7 D9, 2026-09-18.** The acceptance is not that the columns exist but that the order is *filtered on, not merely selected* — `TOLERANCE-INVENTORY.md` §2.4 measured that the solver table is joined so the order can be read back and then never compared, and a new column keyed the same way would reproduce that exactly. | 05 | ✅ **Landed 2026-09-18.** `BackgroundModel` loses `atol_serial`/`rtol_serial` and gains `tau_gauss_order`, `cs_tau_gauss_order`, `friction_F_gauss_order`; `GkWKBIntegration` and `TkWKBIntegration` each gain `rho_gauss_order`; `GkSource` loses the pair and gains nothing. **The acceptance is the key, not the column**, and it is met: each order is an equality criterion of its factory's `build()` — read back off the compiled `whereclause` with no database behind it, the technique `test_numeric_break_point_key.py` established — and repointing its **single** declaration moves the query, the value `store()` writes and the compute class's accessor **together**. The mechanism is one name resolved at call time on every path: `compute_background` and `WKB_phase_function` read the module constant, the compute object's property returns it, `store()` writes that property, `build()` filters on the same module attribute, and no keyword, payload key or default exists by which a caller could supply another. `ComputeTargets/tests/test_gauss_order_key.py`, **16 tests**, is the proof, including that no site inlined the number. **No number moves**: `config/defaults.py` byte-identical, all four orders still 4. `RESIDUAL_WKB_REGION_MARGIN` does **not** become a column, verified against `ORDER-AUDIT.md` §7.2 rather than taken from the prompt — bit-identical residual at every margin from 0.05 to 0.9 on three models and both sectors, with the qualification that at `margin >= 0.99` the `Tk` anchor is *clamped* (a reachability failure, not a differing row) and at 0.9999 two QCD `Gk` cells move by one ulp. **15 production files**; `ComputeTargets` **508**, `CosmologyModels` **39**, both OK; `test_numeric_break_point_key.py` passes **unedited**; the three published grid digests unmoved. Reader breakage was **six** `extract_*.py` scripts as §5 said, and `main.py` needed **nine** payloads rather than the four targets the prompt counts (log 05, deviation 1) |
-| T10 | **PLUMBING** | Every `object_get` of a retuned target carries its own parameter, with an `ast` guard whose predicate reaches all eight targets and fails on an unclassified site **Reassigned to prompt 05a by §7 D9, 2026-09-18**, with T8. After 05 the guard enumerates four targets carrying a tolerance and four carrying none, and a tolerance reappearing on one of the latter is itself a regression it should catch. | 05a | ⬜ |
+| T10 | **PLUMBING** | Every `object_get` of a retuned target carries its own parameter, with an `ast` guard whose predicate reaches all eight targets and fails on an unclassified site **Reassigned to prompt 05a by §7 D9, 2026-09-18**, with T8. After 05 the guard enumerates four targets carrying a tolerance and four carrying none, and a tolerance reappearing on one of the latter is itself a regression it should catch. | 05a | ✅ **Done, 2026-09-18.** **11 `main.py` sites** moved to their target's own constant — `wavenumber_exit_time` ×1, `TkNumericIntegration` ×5, `GkNumericIntegration` ×3 plus the `build_missing_GkSource` conditional, `QuadSourceIntegral` ×2 unchanged — matching log 05's table exactly; the conditional is preserved and only the names inside it changed. `QuadSource`'s query batch lost a pair that reached nothing (`ComputeTargets/QuadSource.py` names neither `atol` nor `rtol`, and its other two lookups never carried it). **The guard reaches further than the row asks**: `OBJECT_TYPE_TOLERANCES` enumerates **all seventeen** object types `main.py` looks up, not the eight targets — four carrying a pair, thirteen carrying none — and the predicate is no longer `endswith("Integration")`, which matched four class names and never saw `QuadSourceIntegral` because it ends in "Integral". It fails on an unclassified **class**, on a site whose pair disagrees with its class, on an unreadable tolerance and on a moved per-class site count, and it now reads `rtol` as well as `atol`. `OneLoopIntegral` is represented by **deliberate absence plus a test that says so**, so a future lookup fails the guard rather than pre-empting `[02-oneloopintegral-is-a-ninth-keyed-object-type]`. A second case, `ReaderToleranceAgreementTestCase`, cross-checks the six `extract_*.py` against `main.py` by **`config/defaults.py` constant** rather than by local name, which is what §7 of the prompt asked for and what would have caught `[02-extract-tkwkb-queries-tk-numeric-under-the-shared-atol]` the day it landed. **Five negative controls fail the suite**, two earlier ones were discarded as bad controls and the log says why. **One site is checked by inspection, not structurally**: `build_missing_GkSource`'s `object_read_batch`, whose class name is a loop variable and whose pair is a conditional `**{...}` — recorded in the module and in log 05a §9 |
 | T11 | **HAND-OFF** | `QuadSourceIntegral` measured read-only and reported to `levin-refactor` / `qsi-phase-groups` | 06 | ⬜ |
 | T12 | **PROVENANCE** | `docs/TOLERANCE-PROVENANCE.md` covers **every** accuracy parameter in the pipeline — including the ones this campaign inherits and does not set, and the ones nobody has ever chosen — with value, choosing measurement and its grid generation, competing floor, cost times object count, and citation (README §1.2) | 06 | ⬜ |
 | T13 | **MACHINERY** | The version-2 source grid **builds at every production anchor on every production cosmology**, with a node at which the Liouville–Green expansion does not exist marked unusable and *counted* rather than raising, a refusal above a measured fraction of the band, and QCD's own anchor named in the test tree. Acceptance is bit-identity with the two published digests (1996 / `4849552b`, 1778 / `60a3205a`), not accuracy | 02a | ⚠️ QCD at its own anchor builds: **2034 / `21ffc126`, 53 guarded `(k, sector)` evaluations of ONE base-lattice node** (Gk 34, Tk 19, 53 of 100 cases, all hitting $z = 8.63614\times10^{11}$). Both published grids **bit-identical with zero guarded**, so the `except` branch is never entered on either. **Corrected 2026-09-17 (log 02a §7):** the guard is inert more strongly than first claimed — that node lies 1.0e-03 in $u$ from a **declared** break, inside the 6.0e-03 crossing mask, so it is discarded anyway and the guard can change no profile — but the two published zeros are **lattice alignment, not construction**, so a change to `z_init` or `samples_per_log10z` could start guarding. Refusal ceiling `SOURCE_GRID_MAX_GUARDED_FRACTION = 0.05`, **64.8x** the worst measured band (7.716e-04). **Caveat:** the constant's only proper home is `CosmologyConcepts/wavenumber.py`, a file the prompt's own file list forbade; the agent stopped rather than editing it, and the **user amended the scope on 2026-09-17** to permit that one append-only definition (log 02a, deviation 1) |
@@ -545,92 +570,6 @@ Opened by **prompt 02a's correction**, 2026-09-17:
   production anchor** — so it is not an argument against reordering, only against calling it a
   complete fix. Evidence: `logs/02a-source-grid-density-guard.md` §7.
 
-Opened by the **orchestrator's review of prompt 02a's charter**, 2026-09-17:
-
-- **[02a-grid-digest-not-reproducible]** *(2026-09-17; assigned — **T6** / prompt 03 for the
-  prerequisite, prompt **05** for the fix)* — the source and response grid tags digest the **exact
-  bits** of the grid's values (`CosmologyConcepts.redshift.redshift_grid_digest`, `main.py:854`),
-  but `z_init` is a root-solve output, so the tag is not reproducible across machines, library
-  versions, or any change that forces the anchor to be re-derived. **The binding number is not the
-  one the record quotes.** `_solve_horizon_exit` calls `root_scalar(..., xtol=atol, rtol=rtol)` in
-  `u = log(1+z)` (`CosmologyConcepts/wavenumber.py:979`) and Brent stops at `xtol + rtol*|u|`; with
-  `rtol = DEFAULT_REL_TOLERANCE = 1e-8` at `u ≈ 37.6` that is **3.8e-7 relative**, not the
-  `xtol = 1e-10` README §6.2's `wavenumber_exit_time` row and prompt 02's inventory both name. The
-  `xtol` term never binds. Measured against a converged re-solve (`xtol=1e-300, rtol=1e-14`, the
-  tolerance `_solve_T_z` already uses): the shipped anchor is **3.6e-13** off on LambdaCDM and
-  **2.5e-9** off on QCD, and neither is bounded by better than 3.8e-7.
-  **Impact.** 3.8e-7 is *coarser* than `DEFAULT_REDSHIFT_RELATIVE_PRECISION = 1e-7`, the tolerance
-  at which `Datastore/SQL/ObjectFactories/redshift.py:40` matches an existing redshift row. So the
-  two invalidation criteria in the pipeline disagree by six orders of magnitude, and the failure
-  mode is silent total cache invalidation rather than corruption: measured across two anchors 3.6e-13
-  apart, **all 1778 samples differ bitwise and zero of them exceed 1e-7**, so every redshift row is
-  re-matched and reused with its old `store_id` while the grid tag turns over completely and every
-  lookup filtered on `SourceZGridSizeTag` misses — in the `Gk` sector, ~65,000 objects per model
-  recomputed against rows that were already correct. This is the *inverse* of the collision the
-  digest was introduced to prevent (`main.py:837`), so the digest is not wrong; it is quantised
-  finer than anything upstream of it is determined to.
-  **Not a datastore defect, and not reached by a plain re-run.** `wavenumber_exit_time.build()`
-  reads `z_exit_suph_e5` back from a `Float(64)` column when the row exists
-  (`Datastore/SQL/ObjectFactories/wavenumber.py:197`, `:292`), so within one datastore lineage the
-  anchor is bit-stable and the grid is reproducible — which is the regime every figure in this
-  campaign has been taken in, and why nothing has tripped over it. It bites when the anchor is
-  *re-derived*: a fresh or dropped store, another machine or libm, or a change of the cosmology row,
-  which is what `qcd-background-audit` did twice.
-  **Next step, in two parts.** (i) **T6 / prompt 03a** (prompt 03's, until §7 **D7** split the
-  charter on 2026-09-17) measures `wavenumber_exit_time`'s pair and recommends the tightening; at `rtol = 1e-14` the anchor is pinned to 3.8e-13, measured. (ii)
-  **Prompt 05** defines one design tolerance and applies it to *both* the redshift row match and the
-  digest quantisation, so that the tag can never distinguish two grids the datastore cannot. With
-  the anchor tightened the wobble budget is 3.8e-13 (anchor), ~1e-14 (break redshifts, already at
-  Brent's floor), 3.6e-15 (the `u → z` recovery) and ~1e-15 (libm `pow`/`log10`/`log1p`), so a
-  design tolerance around **1e-11** sits two orders above the worst contributor. Carry the coupling
-  with it: `SOURCE_GRID_MIN_SEPARATION = 10.0 * DEFAULT_REDSHIFT_RELATIVE_PRECISION`
-  (`CosmologyConcepts/wavenumber.py:135`) only *relaxes*, but the four-constraint argument above
-  `SOURCE_GRID_BREAK_STANDOFF` (`:79`) loses its first bullet and needs rewriting, not just
-  retuning. **Rounding buys a margin, not a proof** — straddle probability ~ `N * wobble / quantum`,
-  ~2e-4 per grid at these numbers; the exact alternative is to digest the *determining data*
-  (snapped `z_init`, `z_end`, `samples_per_log10z`, construction version, snapped break and feature
-  lists, and the integer subdivision vector, whose ties are a measured 6e-3 clear), which prompt 05
-  should record as considered even if it ships the quantised-values version.
-  **Explicitly not prompt 02a's** (README §4, §7 D6): 02a's acceptance is bit-identity with the
-  published digests, and tightening the anchor would move both.
-
-  > **Re-pointed 2026-09-18 by prompt 05** (additively). Part (ii) above, and README §4's sentence
-  > that names prompt 05, were written before §7 **D9** split that prompt. Defining one design
-  > tolerance and applying it to the redshift row match and the digest quantisation is a
-  > *parameter* decision — it moves `DEFAULT_REDSHIFT_RELATIVE_PRECISION` or a new constant beside
-  > it — and §5 rule 8 as D9 amended it puts every parameter move in **05a**, prompt 05 being the
-  > schema half and `config/defaults.py` byte-identical at its end. **So part (ii) is prompt
-  > 05a's.** Nothing else in this entry changes, and prompt 05 measured nothing against it. The
-  > option it was asked to "record as considered" — digesting the determining data — is already
-  > narrowed by `[03a-qcd-v2-grid-sample-count-is-not-reproducible]`, which showed the integer
-  > subdivision vector itself moves on QCD.
-
-  > **Part (i) delivered by prompt 03a, 2026-09-17** (additively). Measured through
-  > `_solve_horizon_exit` at 50 $k$ × 3 models × 3 offsets × 63 `(xtol, rtol)` cells
-  > (`docs/tolerance-convergence/TK-NUMERIC-AND-EXIT-TIME.md` §7). **Three things this entry did not
-  > have.**
-  >
-  > 1. **Its two anchor figures are confirmed independently, as a swept target rather than a review
-  >    probe.** At $k = 3\times10^8$ and offset −5 — the anchor itself — the production setting's
-  >    displacement from a converged re-solve is **3.62e-13** on LambdaCDM and **2.50e-09** on QCD,
-  >    which are this entry's 3.6e-13 and 2.5e-9. The `xtol` term binds at **0 of 150** (k, offset)
-  >    pairs on every model, so "the `xtol` term never binds" is now measured rather than inferred.
-  > 2. **The guarantee and the achieved displacement disagree about the 1e-7 row match, and both
-  >    matter.** 3.8e-7 is the *bound*; the worst *achieved* displacement anywhere in the production
-  >    range is **7.86e-08**, which clears 1e-7 by 1.3×. Prompt 03a recommends `rtol = 1e-9` — the
-  >    loosest whose bound clears — on the ground that a location fixing a datastore key should be
-  >    bounded rather than lucky, and records that the other reading gives `unchanged`.
-  >    **A caution for part (ii):** with `xtol = 1e-10` the pair cannot pin the anchor better than
-  >    **1e-10** relative however far `rtol` is tightened — `xtol` takes over below
-  >    `rtol ≈ 2.6e-12` — so a design tolerance of 1e-11 requires `xtol` to move too, and the
-  >    "`rtol = 1e-14` pins the anchor to 3.8e-13" line above holds only at `xtol ≤ 1e-12`.
-  > 3. **The exact alternative this entry offers prompt 05 does not survive on QCD.** Digesting the
-  >    determining data relies on "the integer subdivision vector, whose ties are a measured 6e-3
-  >    clear". Rebuilt at perturbed anchors, the version-2 grid's **sample count** on `QCDModel`
-  >    moves from 2034 to between 2013 and 2032 at relative shifts from **1e-14** upwards, while
-  >    LambdaCDM's stays at 1778 and Radiation's at 2306 throughout.
-  >    `[03a-qcd-v2-grid-sample-count-is-not-reproducible]` holds that measurement.
-
 Opened by **prompt 03**, 2026-09-17:
 
 - **[03-numeric-g-consumer-spline-is-the-dominant-error-near-the-hand-over]** *(prompt 03,
@@ -861,32 +800,44 @@ Opened by **prompt 02**, 2026-09-16:
   its log, that it has checked each one against the new value. Evidence:
   `docs/tolerance-convergence/TOLERANCE-INVENTORY.md` §4, closing paragraph.
 
-- **[02-extract-tkwkb-queries-tk-numeric-under-the-shared-atol]** *(prompt 02, 2026-09-16;
-  unassigned; prompt 05 touches the same six files)* — `extract_TkWKB_data.py:433-445` builds one
-  `query_payload` with `"atol": atol` where `atol = DEFAULT_ABS_TOLERANCE` (`:364`) and uses it for
-  **both** `TkNumericIntegration` and `TkWKBIntegration`. `main.py` writes every
-  `TkNumericIntegration` under `DEFAULT_TK_NUMERIC_ABS_TOLERANCE = 1e-13` — its own comment at
-  `main.py:3475-3479` says "every `TkNumericIntegration` `object_get` — the work items and **every
-  lookup** — must use it" — and that target's lookup filters `atol_serial ==`. **So this query
-  cannot match a production row.** None of the six `extract_*.py` readers imports
-  `DEFAULT_TK_NUMERIC_ABS_TOLERANCE` at all. **Impact:** an extraction script that has been unable
-  to plot the numeric limb of $T_k$ since `GkTk-remedial` prompt 12 shipped the split constant.
-  Not verified by running it — that needs a datastore, which prompt 02 may not stand up — so what
-  is established is that the key cannot match, not what the script does next. **Next step:** the
-  one-line fix is to import the constant and pass it for the numeric target only; prompt 05 already
-  has to revisit all six readers when it splits the constants further, and this is the same edit.
-  Evidence: `docs/tolerance-convergence/TOLERANCE-INVENTORY.md` §5.1 (the derived
-  `atol_serial ==` predicate) and log 02, observation 1.
+  > **Narrowed by prompt 05a, 2026-09-18** (additively; **still open**). The hazard this entry
+  > names did not fire, and the reason is a decision rather than luck: prompt 05a is the one prompt
+  > allowed to move a parameter, and it **left `DEFAULT_ABS_TOLERANCE` at 1e-10 and
+  > `DEFAULT_REL_TOLERANCE` at 1e-8** and gave the three solver-reaching targets constants of their
+  > own instead. All seven sites were checked and read the same value they read before; none is in
+  > the diff. **What has changed is that the constant is now *only* the epsilon**: no object type
+  > keys on either name any more, so the two jobs the entry says one constant is doing have become
+  > one job, and nobody has a reason to retune it for a solver. `config/defaults.py` says so where
+  > the pair is defined, enumerating the seven sites by file and line and adding the signature
+  > defaults of `numeric_with_phase_cut.integrate_numeric_with_phase_cut`, which this entry does not
+  > list. **Why the rename was considered and rejected**: it would have had to reach three modules
+  > outside prompt 05a's grant, or leave an alias, and the defect is one constant doing two jobs
+  > rather than one constant having the wrong name — a rename relabels it (log 05a §2).
+  > **Next step, unchanged in substance:** a prompt given `GkSource.py`,
+  > `numeric_with_phase_cut.py` and `WKBtools.py` gives the seven sites an epsilon of their own,
+  > named for what it compares. It is now a tidying with no hazard attached rather than a
+  > precondition for a parameter move.
 
-  > **Re-pointed 2026-09-18 by prompt 05** (additively). Prompt 05 did revisit all six readers and
-  > **left this**. It split `extract_TkWKB_data.py`'s shared `query_payload`, because
-  > `TkWKBIntegration` no longer takes a tolerance and `TkNumericIntegration` still does — so the
-  > numeric lookup now passes `atol=`/`rtol=` explicitly and the defect is in one place instead of
-  > being hidden in a dict serving two targets. What it did not do is change *which* constant that
-  > lookup names: that is a decision about `TkNumericIntegration`'s tolerance, a target prompt 05
-  > §8 forbids, and `DEFAULT_TK_NUMERIC_ABS_TOLERANCE` is one of the constants **05a** ships.
-  > **Assigned to prompt 05a**, which touches `config/defaults.py` and the readers' constants
-  > anyway. Evidence: log 05, observation 1.
+Opened by **prompt 05a**, 2026-09-18:
+
+- **[05a-two-verification-scripts-still-query-the-exit-time-under-the-shared-pair]** *(prompt 05a,
+  2026-09-18; unassigned)* — `docs/source-remediation-verification/analyse_greens_and_source.py:447`
+  and `run_quadsource_integrals.py:140` build `atol` / `rtol` from `DEFAULT_ABS_TOLERANCE` and
+  `DEFAULT_REL_TOLERANCE` and use them for a `wavenumber_exit_time` lookup — the first also for
+  `GkNumericIntegration`. Prompt 05a moved `main.py` and the six `extract_*.py` readers onto
+  per-target constants; **neither of these two files is in its grant** (README §0.4 puts
+  `QuadSourceIntegral`'s neighbourhood out of bounds and the prompt's file list names the six
+  readers only). **Impact, and it is the quiet mode rather than the loud one.** The
+  `GkNumericIntegration` half is harmless: `DEFAULT_GK_NUMERIC_*` has the same value as the shared
+  pair, so the key is unchanged. The exit-time half does **not** miss, because that target's lookup
+  is an inequality (`[02-wavenumber-exit-time-tolerance-is-an-inequality-key]`) returning the
+  loosest row at least as tight as the request: a script asking for `1e-8` is served the new
+  `1e-9` row and then reports the **stored** pair rather than the requested one. So the scripts keep
+  working and their provenance quietly changes, which is exactly the failure mode prompt 05a §5 was
+  told to distinguish. **Next step:** a prompt given those two files repoints them at
+  `DEFAULT_HEXIT_ABS_TOLERANCE` / `DEFAULT_HEXIT_REL_TOLERANCE`, and extends
+  `ReaderToleranceAgreementTestCase`'s `EXTRACT_SCRIPTS` tuple to cover them — the cross-check is
+  already written and is generic over a file list. Evidence: log 05a, observation 1.
 
 Assigned to this campaign from other boards (each stays on the board that holds its measurements;
 the closure is recorded there):
@@ -925,6 +876,166 @@ Recorded by the rebase, **not owned here** and not scheduled (README §0.5):
 ---
 
 ## 4. Resolved issues
+
+Closed by **prompt 05a**, 2026-09-18:
+
+- **[02-extract-tkwkb-queries-tk-numeric-under-the-shared-atol]** *(prompt 02, 2026-09-16;
+  unassigned; prompt 05 touches the same six files)* — `extract_TkWKB_data.py:433-445` builds one
+  `query_payload` with `"atol": atol` where `atol = DEFAULT_ABS_TOLERANCE` (`:364`) and uses it for
+  **both** `TkNumericIntegration` and `TkWKBIntegration`. `main.py` writes every
+  `TkNumericIntegration` under `DEFAULT_TK_NUMERIC_ABS_TOLERANCE = 1e-13` — its own comment at
+  `main.py:3475-3479` says "every `TkNumericIntegration` `object_get` — the work items and **every
+  lookup** — must use it" — and that target's lookup filters `atol_serial ==`. **So this query
+  cannot match a production row.** None of the six `extract_*.py` readers imports
+  `DEFAULT_TK_NUMERIC_ABS_TOLERANCE` at all. **Impact:** an extraction script that has been unable
+  to plot the numeric limb of $T_k$ since `GkTk-remedial` prompt 12 shipped the split constant.
+  Not verified by running it — that needs a datastore, which prompt 02 may not stand up — so what
+  is established is that the key cannot match, not what the script does next. **Next step:** the
+  one-line fix is to import the constant and pass it for the numeric target only; prompt 05 already
+  has to revisit all six readers when it splits the constants further, and this is the same edit.
+  Evidence: `docs/tolerance-convergence/TOLERANCE-INVENTORY.md` §5.1 (the derived
+  `atol_serial ==` predicate) and log 02, observation 1.
+
+  > **Re-pointed 2026-09-18 by prompt 05** (additively). Prompt 05 did revisit all six readers and
+  > **left this**. It split `extract_TkWKB_data.py`'s shared `query_payload`, because
+  > `TkWKBIntegration` no longer takes a tolerance and `TkNumericIntegration` still does — so the
+  > numeric lookup now passes `atol=`/`rtol=` explicitly and the defect is in one place instead of
+  > being hidden in a dict serving two targets. What it did not do is change *which* constant that
+  > lookup names: that is a decision about `TkNumericIntegration`'s tolerance, a target prompt 05
+  > §8 forbids, and `DEFAULT_TK_NUMERIC_ABS_TOLERANCE` is one of the constants **05a** ships.
+  > **Assigned to prompt 05a**, which touches `config/defaults.py` and the readers' constants
+  > anyway. Evidence: log 05, observation 1.
+
+  > **CLOSED by prompt 05a, 2026-09-18.** `extract_TkWKB_data.py` now builds
+  > `Tk_numeric_atol` / `Tk_numeric_rtol` from `DEFAULT_TK_NUMERIC_ABS_TOLERANCE` and
+  > `DEFAULT_TK_NUMERIC_REL_TOLERANCE` and passes them to the `TkNumericIntegration` lookup alone,
+  > which is the pair `main.py` writes that target under. The prompt's instruction to check the
+  > other five for the same fault was carried out: **no other reader queries
+  > `TkNumericIntegration` at all**, so the split constant's absence hurt only this one — but
+  > `extract_Gk_data.py` and `extract_GkWKB_data.py` were in the same *shape* on
+  > `GkNumericIntegration`, a shared constant standing in for a target-specific one and harmless
+  > only because the two happened to share a value. Both now name their own constant, so the
+  > coincidence is no longer load-bearing. **The one-line fix is not what shipped**: a structural
+  > test shipped with it. `ReaderToleranceAgreementTestCase` in
+  > `ComputeTargets/tests/test_main_plumbing.py` resolves the `config/defaults.py` constant behind
+  > every tolerance each reader and `main.py` pass — through their `ray.get` tuples and through
+  > `**query_payload` dicts — and requires them to agree per class; it compares constants, not
+  > local names, and needs no datastore. It fails on a reverted `extract_TkWKB_data.py`, which is
+  > negative control 4 of log 05a §7. Still not verified by *running* the script, which needs a
+  > datastore: what is established is that the key now matches.
+
+
+- **[02a-grid-digest-not-reproducible]** *(2026-09-17; assigned — **T6** / prompt 03 for the
+  prerequisite, prompt **05** for the fix)* — the source and response grid tags digest the **exact
+  bits** of the grid's values (`CosmologyConcepts.redshift.redshift_grid_digest`, `main.py:854`),
+  but `z_init` is a root-solve output, so the tag is not reproducible across machines, library
+  versions, or any change that forces the anchor to be re-derived. **The binding number is not the
+  one the record quotes.** `_solve_horizon_exit` calls `root_scalar(..., xtol=atol, rtol=rtol)` in
+  `u = log(1+z)` (`CosmologyConcepts/wavenumber.py:979`) and Brent stops at `xtol + rtol*|u|`; with
+  `rtol = DEFAULT_REL_TOLERANCE = 1e-8` at `u ≈ 37.6` that is **3.8e-7 relative**, not the
+  `xtol = 1e-10` README §6.2's `wavenumber_exit_time` row and prompt 02's inventory both name. The
+  `xtol` term never binds. Measured against a converged re-solve (`xtol=1e-300, rtol=1e-14`, the
+  tolerance `_solve_T_z` already uses): the shipped anchor is **3.6e-13** off on LambdaCDM and
+  **2.5e-9** off on QCD, and neither is bounded by better than 3.8e-7.
+  **Impact.** 3.8e-7 is *coarser* than `DEFAULT_REDSHIFT_RELATIVE_PRECISION = 1e-7`, the tolerance
+  at which `Datastore/SQL/ObjectFactories/redshift.py:40` matches an existing redshift row. So the
+  two invalidation criteria in the pipeline disagree by six orders of magnitude, and the failure
+  mode is silent total cache invalidation rather than corruption: measured across two anchors 3.6e-13
+  apart, **all 1778 samples differ bitwise and zero of them exceed 1e-7**, so every redshift row is
+  re-matched and reused with its old `store_id` while the grid tag turns over completely and every
+  lookup filtered on `SourceZGridSizeTag` misses — in the `Gk` sector, ~65,000 objects per model
+  recomputed against rows that were already correct. This is the *inverse* of the collision the
+  digest was introduced to prevent (`main.py:837`), so the digest is not wrong; it is quantised
+  finer than anything upstream of it is determined to.
+  **Not a datastore defect, and not reached by a plain re-run.** `wavenumber_exit_time.build()`
+  reads `z_exit_suph_e5` back from a `Float(64)` column when the row exists
+  (`Datastore/SQL/ObjectFactories/wavenumber.py:197`, `:292`), so within one datastore lineage the
+  anchor is bit-stable and the grid is reproducible — which is the regime every figure in this
+  campaign has been taken in, and why nothing has tripped over it. It bites when the anchor is
+  *re-derived*: a fresh or dropped store, another machine or libm, or a change of the cosmology row,
+  which is what `qcd-background-audit` did twice.
+  **Next step, in two parts.** (i) **T6 / prompt 03a** (prompt 03's, until §7 **D7** split the
+  charter on 2026-09-17) measures `wavenumber_exit_time`'s pair and recommends the tightening; at `rtol = 1e-14` the anchor is pinned to 3.8e-13, measured. (ii)
+  **Prompt 05** defines one design tolerance and applies it to *both* the redshift row match and the
+  digest quantisation, so that the tag can never distinguish two grids the datastore cannot. With
+  the anchor tightened the wobble budget is 3.8e-13 (anchor), ~1e-14 (break redshifts, already at
+  Brent's floor), 3.6e-15 (the `u → z` recovery) and ~1e-15 (libm `pow`/`log10`/`log1p`), so a
+  design tolerance around **1e-11** sits two orders above the worst contributor. Carry the coupling
+  with it: `SOURCE_GRID_MIN_SEPARATION = 10.0 * DEFAULT_REDSHIFT_RELATIVE_PRECISION`
+  (`CosmologyConcepts/wavenumber.py:135`) only *relaxes*, but the four-constraint argument above
+  `SOURCE_GRID_BREAK_STANDOFF` (`:79`) loses its first bullet and needs rewriting, not just
+  retuning. **Rounding buys a margin, not a proof** — straddle probability ~ `N * wobble / quantum`,
+  ~2e-4 per grid at these numbers; the exact alternative is to digest the *determining data*
+  (snapped `z_init`, `z_end`, `samples_per_log10z`, construction version, snapped break and feature
+  lists, and the integer subdivision vector, whose ties are a measured 6e-3 clear), which prompt 05
+  should record as considered even if it ships the quantised-values version.
+  **Explicitly not prompt 02a's** (README §4, §7 D6): 02a's acceptance is bit-identity with the
+  published digests, and tightening the anchor would move both.
+
+  > **Re-pointed 2026-09-18 by prompt 05** (additively). Part (ii) above, and README §4's sentence
+  > that names prompt 05, were written before §7 **D9** split that prompt. Defining one design
+  > tolerance and applying it to the redshift row match and the digest quantisation is a
+  > *parameter* decision — it moves `DEFAULT_REDSHIFT_RELATIVE_PRECISION` or a new constant beside
+  > it — and §5 rule 8 as D9 amended it puts every parameter move in **05a**, prompt 05 being the
+  > schema half and `config/defaults.py` byte-identical at its end. **So part (ii) is prompt
+  > 05a's.** Nothing else in this entry changes, and prompt 05 measured nothing against it. The
+  > option it was asked to "record as considered" — digesting the determining data — is already
+  > narrowed by `[03a-qcd-v2-grid-sample-count-is-not-reproducible]`, which showed the integer
+  > subdivision vector itself moves on QCD.
+
+  > **Part (i) delivered by prompt 03a, 2026-09-17** (additively). Measured through
+  > `_solve_horizon_exit` at 50 $k$ × 3 models × 3 offsets × 63 `(xtol, rtol)` cells
+  > (`docs/tolerance-convergence/TK-NUMERIC-AND-EXIT-TIME.md` §7). **Three things this entry did not
+  > have.**
+  >
+  > 1. **Its two anchor figures are confirmed independently, as a swept target rather than a review
+  >    probe.** At $k = 3\times10^8$ and offset −5 — the anchor itself — the production setting's
+  >    displacement from a converged re-solve is **3.62e-13** on LambdaCDM and **2.50e-09** on QCD,
+  >    which are this entry's 3.6e-13 and 2.5e-9. The `xtol` term binds at **0 of 150** (k, offset)
+  >    pairs on every model, so "the `xtol` term never binds" is now measured rather than inferred.
+  > 2. **The guarantee and the achieved displacement disagree about the 1e-7 row match, and both
+  >    matter.** 3.8e-7 is the *bound*; the worst *achieved* displacement anywhere in the production
+  >    range is **7.86e-08**, which clears 1e-7 by 1.3×. Prompt 03a recommends `rtol = 1e-9` — the
+  >    loosest whose bound clears — on the ground that a location fixing a datastore key should be
+  >    bounded rather than lucky, and records that the other reading gives `unchanged`.
+  >    **A caution for part (ii):** with `xtol = 1e-10` the pair cannot pin the anchor better than
+  >    **1e-10** relative however far `rtol` is tightened — `xtol` takes over below
+  >    `rtol ≈ 2.6e-12` — so a design tolerance of 1e-11 requires `xtol` to move too, and the
+  >    "`rtol = 1e-14` pins the anchor to 3.8e-13" line above holds only at `xtol ≤ 1e-12`.
+  > 3. **The exact alternative this entry offers prompt 05 does not survive on QCD.** Digesting the
+  >    determining data relies on "the integer subdivision vector, whose ties are a measured 6e-3
+  >    clear". Rebuilt at perturbed anchors, the version-2 grid's **sample count** on `QCDModel`
+  >    moves from 2034 to between 2013 and 2032 at relative shifts from **1e-14** upwards, while
+  >    LambdaCDM's stays at 1778 and Radiation's at 2306 throughout.
+  >    `[03a-qcd-v2-grid-sample-count-is-not-reproducible]` holds that measurement.
+
+  > **CLOSED by prompt 05a, 2026-09-18** — part (ii), part (i) having been delivered by prompt 03a.
+  >
+  > **What closes it is the ordering of two tolerances, and nothing else.** The defect is that the
+  > anchor was pinned only to `xtol + rtol*|u| = 3.8e-7` relative while the redshift table matches a
+  > row at `DEFAULT_REDSHIFT_RELATIVE_PRECISION = 1e-7` — so the grid tag could turn over while
+  > every row it is built from was re-matched and reused. At `DEFAULT_HEXIT_REL_TOLERANCE = 1e-9`
+  > the Brent guarantee at the largest production $|u| = 38.04$ is **3.81e-08**, *inside* the row
+  > match. The anchor is now pinned finer than the precision at which its consequences are
+  > compared, which is what "one design tolerance applied to the row match and the digest together"
+  > amounts to once the digest itself may not be touched (prompt 05a §6, README §0.5).
+  >
+  > **Measured, not argued, and it is stronger than the bound.** The production anchor solve
+  > `_solve_horizon_exit(cosmology, 3e8/Mpc, −5)` returns the **same double** at `(1e-10, 1e-8)` and
+  > at `(1e-10, 1e-9)` on both production cosmologies — `2.0636395964154036e+16` on LambdaCDM,
+  > `3.30033444460513e+16` on QCD, relative move **0.000e+00** — so the tightening displaced no
+  > anchor and moved no grid. All three published digests are unmoved (`3bef2c06`, `60a3205a`,
+  > `21ffc126`), which is also acceptance 10 of prompt 05a.
+  >
+  > **What is not claimed.** The digest is still bit-exact and still turns over under a 1e-14
+  > relative perturbation of the anchor; the entry's "quantise the digest" and "digest the
+  > determining data" options were both **not** taken, the second because
+  > `[03a-qcd-v2-grid-sample-count-is-not-reproducible]` showed the integer subdivision vector
+  > itself moves on QCD. That issue **stays open** and is where the residue lives. The caution
+  > above about `xtol` also stands: at `xtol = 1e-10` the pair cannot pin the anchor better than
+  > 1e-10 relative, so any future design tolerance below that requires
+  > `DEFAULT_HEXIT_ABS_TOLERANCE` to move with its partner, and its comment says so.
+
 
 Closed by **prompt 05b**, 2026-09-18:
 

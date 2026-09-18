@@ -12,8 +12,8 @@ from Datastore import DatastoreObject
 from MetadataConcepts import tolerance
 from Units import check_units
 from config.defaults import (
-    DEFAULT_ABS_TOLERANCE,
-    DEFAULT_REL_TOLERANCE,
+    DEFAULT_HEXIT_ABS_TOLERANCE,
+    DEFAULT_HEXIT_REL_TOLERANCE,
     DEFAULT_REDSHIFT_RELATIVE_PRECISION,
 )
 from utilities import WallclockTimer
@@ -920,8 +920,8 @@ def _solve_horizon_exit(
     cosmology: BaseCosmology,
     k: wavenumber,
     offset_subh: int,
-    atol: float = DEFAULT_ABS_TOLERANCE,
-    rtol: float = DEFAULT_REL_TOLERANCE,
+    atol: float = DEFAULT_HEXIT_ABS_TOLERANCE,
+    rtol: float = DEFAULT_HEXIT_REL_TOLERANCE,
 ):
     """
     Solve the implicit equation log(k/aH) - offset_subh = 0 to find the horizon exit time (plus offset) associated with wavenumber k, i.e.
@@ -1008,6 +1008,12 @@ def _solve_horizon_exit(
             f"_solve_horizon_exit: failed to bracket horizon crossing time for k={k.k_inv_Mpc:.5}/Mpc (z_lo={log_z_lo:.5g}, q_lo={q_lo:.5g}, z_hi={log_z_hi:.5g}, q_hi={q_hi:.5g})"
         )
 
+    # Brent stops when the bracket is narrower than xtol + rtol*|u|, and the solve is in
+    # u = log(1+z), so rtol*|u| at the largest production |u| = 38.04 is what pins the root;
+    # xtol binds at none of the 150 production (k, offset) pairs and floors the pair at ~1e-10
+    # relative however far rtol is tightened (prompt 03a of prompts/tolerance-convergence,
+    # docs/tolerance-convergence/TK-NUMERIC-AND-EXIT-TIME.md section 7). The defaults are
+    # DEFAULT_HEXIT_ABS_TOLERANCE and DEFAULT_HEXIT_REL_TOLERANCE, which carry that measurement.
     root = root_scalar(
         q,
         bracket=(log_z_lo, log_z_hi),
@@ -1036,8 +1042,8 @@ def find_horizon_exit_time(
     k: wavenumber,
     suph_efolds: List[int],
     subh_efolds: List[int],
-    atol: float = DEFAULT_ABS_TOLERANCE,
-    rtol: float = DEFAULT_REL_TOLERANCE,
+    atol: float = DEFAULT_HEXIT_ABS_TOLERANCE,
+    rtol: float = DEFAULT_HEXIT_REL_TOLERANCE,
 ) -> Mapping[str, float]:
     """
     Compute the redshift of horizon exit for a mode of wavenumber k in the specified cosmology
