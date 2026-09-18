@@ -1173,8 +1173,12 @@ order and persisted at another. Asked whether the fix was simply to pass the ord
 production call site, the orchestrator found that it was not, and found a **second and larger half
 the issue does not name**: `BackgroundModel._build_tau_primitive`, `_build_cs_tau_primitive` and
 `_build_friction_F_primitive` rebuild a stored model's cumulative tables at the **current module
-constant**, while the row's own three order columns are selected by `build()` and never reach the
-constructor.
+constant**, while the row's own three order columns never reach the constructor at all.
+**Corrected 2026-09-18, after prompt 05b landed:** this paragraph first said those columns were
+*selected by* `build()` and then dropped. They were not selected either — the `:340-342` cited was
+the missing-column detection tuple, not the select list — so 05b had to add them to the select as
+well as pass them on (log 05b, deviation 2, `STRUCTURALLY REQUIRED`). The defect is one step larger
+than stated here, not smaller.
 
 **The user's instruction, 2026-09-18:** this is a correctness issue and the code must be made
 correct — *set up correctly, performed correctly, persisted correctly, and, if it is read back from
