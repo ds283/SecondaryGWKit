@@ -1,6 +1,6 @@
 # Open issues — project-wide index
 
-**Last updated:** 2026-09-18 · **78 open** across ten campaigns.
+**Last updated:** 2026-09-18 · **80 open** across ten campaigns.
 
 This file exists so that an issue opened by one campaign is not lost when that campaign closes.
 It is an **index, not a record**: one line per issue, pointing at the campaign status board that
@@ -57,7 +57,10 @@ they now pass `BesselPhaseGroup.levin_theta()`.
 
 | Issue | Board | Hook |
 |---|---|---|
-| *(none open)* | | All three entries closed by prompt 01. The one thing it left behind is a *different* call site and is indexed in §2 below. |
+| `[06-analytic-rad-is-computed-at-the-callers-tolerance]` | qsi-phase-groups | The stored oracle column is computed at the row's own `atol`/`rtol` and moves up to ×1.25e+06 more than `total` does, so it is not comparable between rows. Measurement: `docs/tolerance-convergence/QUADSOURCE-READONLY.md` §2.1. |
+
+Prompt 01's own three entries are all closed. The one thing it left behind is a *different* call
+site and is indexed in §2 below.
 
 ### 1.3 The `AdaptiveLevin` Clenshaw–Curtis fallback campaign
 
@@ -68,6 +71,7 @@ they now pass `BesselPhaseGroup.levin_theta()`.
 | `[04-roundoff-floor-can-be-infinite]` | levin-refactor | `phase_err`/`abserr_roundoff`/`total_err` can be `+inf` at an interior stationary point inside a strongly oscillatory Levin region. |
 | `[04-theta-abserr-cc-branch-proxy]` | levin-refactor | The endpoint term is exact on a Levin region but a 50/50 split of a lumped proxy on a Clenshaw–Curtis one, which has no Levin antiderivative to weight by. |
 | `[05-zero-width-span-raises]` | levin-refactor | `adaptive_levin_sincos((5.0, 5.0), …)` raises `ValueError` from `build_Levin_data()`; the early return the README describes does not exist. |
+| `[06-quadrature-atol-is-inert-and-rtol-is-the-binding-half]` | levin-refactor | At `atol = 1e-32`, `atol` is inert over twenty-eight decades and `rtol` is the only lever, so log 12's "`rtol` does not bind" no longer transfers. The pair is `unchanged` anyway — the floor dominates by ×3.46e+04 to ×2.15e+11. `docs/tolerance-convergence/QUADSOURCE-READONLY.md`. |
 
 ### 1.4 The $T_k$ / $G_k$ numerical-precision campaign
 
@@ -562,7 +566,7 @@ bound the true error. Closing any of them properly needs the representation erro
 | Issue | Board | Hook |
 |---|---|---|
 | `[09-abserr-is-a-quadrature-bound]` | source-remediation | `total_abserr` is the linear sum of quadrature estimates and nothing else; the true residual is up to 4.4e4× larger. `total_converged = False` is not a failure. |
-| `[12-atol-too-loose-for-the-source-integral]` | source-remediation | 58 % of work items have a raw integral below `DEFAULT_QUADRATURE_ATOL = 1e-25`, so their tolerance is met before any work is done. Needs a production decision: scale `atol` with the integrand, go `rtol`-only, or lower the default for this stage. |
+| `[12-atol-too-loose-for-the-source-integral]` | source-remediation | **Narrowed 2026-09-18.** The production decision was taken — `DEFAULT_QUADRATURE_ATOL` is **`1e-32`**, not the `1e-25` this row quoted — and prompt 06 of tolerance-convergence measured the regime as inverted at that value. What is still open is the live-run half: whether 58 % of production work items still meet their tolerance before doing any work. |
 | `[09-abserr-does-not-bound-phase-spline-floor]` | levin-refactor | `quad_JJJ`/`quad_YJJ`'s `abserr` misses the true error against the analytic oracle by up to 11.5× on 5 of 7 three-Bessel closed forms. **Measured false on the current tree** (`transfer-remedial` prompt 08): 7 of 7 now bound, `true/reported` between 9.8e-06 and 1.5e-04. |
 | `[09-quadsource-total-error-incomplete]` | levin-refactor | Partly superseded: `source-remediation` prompt 09 added `total_abserr`. Re-read against the current tree before acting. |
 | `[01-cosmological-group-declares-no-phase-error]` | qsi-phase-groups | The ninth `adaptive_levin_sincos` call in `QuadSourceIntegral.py` — `phase_group_Levin_integral`'s, over cosmological `phase_spline` phases — still supplies three keys, not four; `phase_spline` reports no fit accuracy to declare. |

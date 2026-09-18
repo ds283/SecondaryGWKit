@@ -8,6 +8,15 @@
 **Measures nothing.** This prompt establishes what there is to measure; prompts 03 and 04 measure
 it (README §3.2). No accuracy figure, no drift figure and no recommendation appears here.
 
+> **Regenerated 2026-09-18 at `6b5d8df` by prompt 06** (README §7 **D11**), after prompts 04b, 05,
+> 05b and 05a. The generated §5 is current; the written §§1–4 are **added to and not rewritten**
+> (README §5 rule 7), each addition carrying its date and saying which paragraph it overtakes.
+> **What moved:** §1.1, §2.5, §3.5 and §4.1 below, and — inside §5 — the four Gauss orders becoming
+> key columns, `GkSource` leaving the keyed-object table, the six constants prompt 05a shipped, the
+> `main.py` line drift, and the judgement columns of the two shared constants, which now key
+> nothing. **§5.4 is 44 rows, not the 39 prompt 02 left**; that is the coverage checklist prompt
+> 06a works from (README §3.6a).
+
 ---
 
 ## 0. What this document is, and which parts of it are generated
@@ -56,6 +65,32 @@ README §2 (a) tabulates **eight** keyed object types. Read against the tree at 
   any stored row whose tolerance is *at least as tight as* the one requested and returns the
   loosest such row. That is a different invalidation behaviour from the other eight and it changes
   what prompt 05 has to expect. This is the largest single correction in this document.
+
+---
+
+### 1.1 What the headline looks like after prompts 04b, 05, 05b and 05a — added 2026-09-18
+
+**Additive (README §5 rule 7): §1 above was correct for the tree at `4a94148` and is not
+rewritten.** Four of its five bullets have been acted on since, and one of them was acted on *by
+the campaign this document belongs to*:
+
+- **"every row of §2 (a) is correct as written" still holds, but §2 (a) now describes a tree that
+  has moved.** Prompt 05 replaced the vestigial `(atol_serial, rtol_serial)` pair on
+  `BackgroundModel`, `GkWKBIntegration` and `TkWKBIntegration` with the Gauss orders that really
+  set their accuracy, and removed it from `GkSource`, which integrates nothing. Prompt 05a then
+  gave each of the three targets whose pair reached a solver a constant of its own. So the six
+  object types that shared one pair now share none, and **no object type keys on
+  `DEFAULT_ABS_TOLERANCE` or `DEFAULT_REL_TOLERANCE` at all.**
+- **README §0.1's summary sentence is still wrong in the way §1 says**, and prompt 06 records the
+  correction here rather than editing the README: of the six sharers, **two** used the value.
+  That sentence now also describes a configuration that no longer exists.
+- **`OneLoopIntegral` is still the ninth**, still unassigned, and still the only compute target
+  whose lookup key contains `atol_serial`/`rtol_serial` for a computation that does not exist
+  (`[02-oneloopintegral-is-a-ninth-keyed-object-type]`). Prompt 05a's `ast` guard represents it by
+  **deliberate absence plus a test that says so**, so a future lookup fails the guard rather than
+  pre-empting the user's decision.
+- **`wavenumber_exit_time`'s inequality key is unchanged**, and §2.3's consequences all held:
+  prompt 03a swept it through `_solve_horizon_exit` and never through the datastore.
 
 ---
 
@@ -194,6 +229,33 @@ the store. `RESIDUAL_WKB_REGION_MARGIN` reaches no label, key or tag at all.
 
 ---
 
+### 2.5 What prompts 05 and 05b did to §2.4's defect — added 2026-09-18
+
+**Additive: §2.4 above was correct for the tree at `4a94148`.** Its closing paragraph — *raise
+`TAU_GAUSS_ORDER` today and re-run, and the pipeline serves the order-4 row it already holds* — is
+**no longer true, and closing it was the point of prompt 05.**
+
+- `BackgroundModel` keys `tau_gauss_order`, `cs_tau_gauss_order` and `friction_F_gauss_order`;
+  `GkWKBIntegration` and `TkWKBIntegration` each key `rho_gauss_order`; `GkSource` keys neither the
+  pair nor an order, because it assembles rather than integrates. §5.1 above is the regenerated
+  predicate list and shows all five columns as equality predicates.
+- The acceptance was **the key and not the column**: each order is an equality criterion of its
+  factory's `build()`, read back off the compiled `whereclause`, and repointing its single
+  declaration moves the query, the stored value and the compute class's accessor together
+  (`ComputeTargets/tests/test_gauss_order_key.py`, 16 tests). `[20-wkb-gauss-orders-not-in-lookup-key]`
+  is closed.
+- Prompt 05b then made the recorded order the order the object was **built at**, on the computed
+  path and the rehydrated one alike — a `BackgroundModel` reassembled from a row rebuilds its three
+  cumulative tables at *that row's* orders rather than at the current module constants.
+- `CS_TAU_GAUSS_ORDER` and `FRICTION_F_GAUSS_ORDER` no longer "leave no trace in the store", which
+  is what §2.4's last paragraph said of them.
+- **`RESIDUAL_WKB_REGION_MARGIN` is still in no key, label or tag**, and that is now a measured
+  choice rather than an oversight: prompt 04 found the residual **bit-identical** from margin 0.05
+  to 0.9 on three models and both sectors, so there is nothing for a column to distinguish
+  (`ORDER-AUDIT.md` §7.2).
+
+---
+
 ## 3. The four questions of prompt 02 §4, answered
 
 ### 3.1 Are there eight keyed object types, or more?
@@ -299,6 +361,32 @@ carries.
 
 ---
 
+### 3.5 The four answers, re-scored 2026-09-18 — added by prompt 06
+
+**Additive: §§3.1–3.4 were correct for the tree at `4a94148`.** What has changed in each:
+
+1. **§3.1, how many keyed object types.** Still **nine** counting as §2 (a) counts — the question
+   is which object types carry an accuracy parameter in their key, and that has not changed. What
+   has changed is *which* parameter: on four of the nine it is now an integer order or nothing at
+   all. §5.1's generated count moved from 12 to **11** because `GkSource` left the table, having
+   no accuracy column of any kind after prompt 05; and `inventory.py`'s selection rule was widened
+   on 2026-09-18 to include the four Gauss-order columns, without which the three order-governed
+   targets would have vanished from §5.1 for the wrong reason.
+2. **§3.2, live against vestigial.** The table's *verdicts* all held and the campaign acted on
+   them. The four rows reading "vestigial in the computation, load-bearing in the key" are the
+   four prompt 05 repaired: three now key the order that sets their accuracy and `GkSource` keys
+   nothing. `OneLoopIntegral` remains "vestigial in both".
+3. **§3.3, parameters keying object types §2 (a) does not list.** Unchanged in substance.
+   `DEFAULT_ABS_TOLERANCE`/`DEFAULT_REL_TOLERANCE` no longer key `OneLoopIntegral` — after prompt
+   05a nothing else does either, and that target is now the **only** consumer of the shared pair's
+   *name* in a lookup key, through its own untouched factory.
+4. **§3.4, accuracy parameters in no key at all.** The count of seventeen falls to **twelve**: rows
+   1–4 (the four Gauss orders) moved into keys at prompt 05. Row 5,
+   `RESIDUAL_WKB_REGION_MARGIN`, stays out by measurement (§2.5). Rows 6–17 are unchanged and
+   belong to other campaigns, and prompt 06 measured nothing that moves any of them.
+
+---
+
 ## 4. The exclusion boundary
 
 An inventory whose boundary is undocumented cannot be checked (prompt 02 §2). One line per excluded
@@ -362,30 +450,50 @@ issue (`[02-shared-atol-doubles-as-a-float-comparison-epsilon]`), not an exclusi
 
 ---
 
+### 4.1 The exclusion boundary after prompt 05a — added 2026-09-18
+
+**Additive: §4 above is unchanged as a boundary**, and every class it draws still stands. One entry
+has changed character rather than side:
+
+**The exclusion that had to be argued is now the whole of what the constant does.** §4's closing
+paragraph inventoried `DEFAULT_ABS_TOLERANCE` while excluding its seven float-comparison *uses*
+under class 4. After prompt 05a those seven comparisons, plus a signature default production always
+overrides, are **all** that is left of it: it is no longer the tolerance of any compute target, and
+`[02-shared-atol-doubles-as-a-float-comparison-epsilon]` was deliberately left open rather than
+closed by moving the value, because renaming would reach seven sites in three modules and would
+relabel the defect rather than repair it (log 05a §2). The constant stays inventoried, and its §5.4
+row now says what it is instead of what it was.
+
+**Nothing else moves.** `DEFAULT_QUADRATURE_ATOL` and `DEFAULT_QUADRATURE_RTOL` were measured
+read-only by prompt 06 and their values are untouched; `docs/`, `prompts/` and the test trees remain
+excluded by construction, which is what makes `quadsource_readonly.py`'s own reference pair
+(`atol = 1e-45`, `rtol = 1e-12`) a property of that measurement and not of the pipeline.
+
+---
+
 ## 5. The generated tables
 
 <!-- BEGIN GENERATED: docs/tolerance-convergence/inventory.py -->
 
 ### 5.1 The keyed object types, and what each lookup filters on
 
-Derived by importing every factory in `Datastore/SQL/Datastore.py`'s `_factories` map, calling `register()` for the column list and walking the `ast` of `build()` for the comparison predicates; the rule is stated in `inventory.py.lookup_predicates`. `serial` and `validated` are dropped as bookkeeping. **A table appears here if and only if one of its predicates mentions `atol_serial`, `rtol_serial`, `log10_tol` or `Levin_threshold`.**
+Derived by importing every factory in `Datastore/SQL/Datastore.py`'s `_factories` map, calling `register()` for the column list and walking the `ast` of `build()` for the comparison predicates; the rule is stated in `inventory.py.lookup_predicates`. `serial` and `validated` are dropped as bookkeeping. **A table appears here if and only if one of its predicates mentions one of `Levin_threshold`, `atol_serial`, `cs_tau_gauss_order`, `friction_F_gauss_order`, `log10_tol`, `rho_gauss_order`, `rtol_serial`, `tau_gauss_order`** — the four Gauss orders having joined the set on 2026-09-18, when prompt 05 made them the key column of the targets whose tolerance pair reached no solver.
 
 | Table | Columns | Lookup predicates |
 |---|---|---|
-| `BackgroundModel` | 17 | `cosmology_type ==`, `cosmology_serial ==`, `atol_serial ==`, `rtol_serial ==`, `source_grid_digest ==`, `source_grid_construction ==`, `z_init_serial ==` |
+| `BackgroundModel` | 18 | `cosmology_type ==`, `cosmology_serial ==`, `tau_gauss_order ==`, `cs_tau_gauss_order ==`, `friction_F_gauss_order ==`, `source_grid_digest ==`, `source_grid_construction ==`, `z_init_serial ==` |
 | `GkNumericIntegration` | 24 | `wavenumber_exit_serial ==`, `model_serial ==`, `atol_serial ==`, `rtol_serial ==`, `break_point_kind ==`, `z_source_serial ==` |
-| `GkSource` | 12 | `wavenumber_exit_serial ==`, `model_serial ==`, `atol_serial ==`, `rtol_serial ==`, `z_response_serial ==` |
 | `GkSourcePolicy` | 3 | `Levin_threshold <`, `numeric_policy ==` |
-| `GkWKBIntegration` | 32 | `wavenumber_exit_serial ==`, `model_serial ==`, `atol_serial ==`, `rtol_serial ==`, `z_source_serial ==`, `z_init <` |
+| `GkWKBIntegration` | 31 | `wavenumber_exit_serial ==`, `model_serial ==`, `rho_gauss_order ==`, `z_source_serial ==`, `z_init <` |
 | `OneLoopIntegral` | 9 | `model_serial ==`, `wavenumber_exit_serial ==`, `z_response_serial ==`, `atol_serial ==`, `rtol_serial ==` |
 | `QuadSourceIntegral` | 40 | `model_serial ==`, `policy_serial ==`, `k_wavenumber_exit_serial ==`, `q_wavenumber_exit_serial ==`, `r_wavenumber_exit_serial ==`, `z_response_serial ==`, `z_source_max_serial ==`, `atol_serial ==`, `rtol_serial ==` |
 | `QuadSourcePolicy` | 3 | `Levin_threshold <`, `numeric_policy ==` |
 | `TkNumericIntegration` | 24 | `wavenumber_exit_serial ==`, `model_serial ==`, `atol_serial ==`, `rtol_serial ==`, `break_point_kind ==`, `z_init_serial ==` |
-| `TkWKBIntegration` | 38 | `wavenumber_exit_serial ==`, `model_serial ==`, `atol_serial ==`, `rtol_serial ==`, `z_init <` |
+| `TkWKBIntegration` | 37 | `wavenumber_exit_serial ==`, `model_serial ==`, `rho_gauss_order ==`, `z_init <` |
 | `tolerance` | 1 | `log10_tol <` |
 | `wavenumber_exit_time` | 18 | `wavenumber_serial ==`, `cosmology_type ==`, `cosmology_serial ==`, `atol_table.log10_tol <=`, `rtol_table.log10_tol <=`, `stepping >=` |
 
-**12 keyed object types.**
+**11 keyed object types.**
 
 ### 5.2 Constant values, imported
 
@@ -438,12 +546,17 @@ Derived by importing every factory in `Datastore/SQL/Datastore.py`'s `_factories
 | `LiouvilleGreen.bessel_tail.TAIL_SERIES_MAX_TERMS` | `3` |
 | `config.defaults.DEFAULT_ABS_TOLERANCE` | `1e-10` |
 | `config.defaults.DEFAULT_FLOAT_PRECISION` | `1e-07` |
+| `config.defaults.DEFAULT_GK_NUMERIC_ABS_TOLERANCE` | `1e-10` |
+| `config.defaults.DEFAULT_GK_NUMERIC_REL_TOLERANCE` | `1e-08` |
+| `config.defaults.DEFAULT_HEXIT_ABS_TOLERANCE` | `1e-10` |
+| `config.defaults.DEFAULT_HEXIT_REL_TOLERANCE` | `1e-09` |
 | `config.defaults.DEFAULT_LEVIN_THRESHOLD` | `1.0` |
 | `config.defaults.DEFAULT_QUADRATURE_ATOL` | `1e-32` |
 | `config.defaults.DEFAULT_QUADRATURE_RTOL` | `1e-08` |
 | `config.defaults.DEFAULT_REDSHIFT_RELATIVE_PRECISION` | `1e-07` |
 | `config.defaults.DEFAULT_REL_TOLERANCE` | `1e-08` |
 | `config.defaults.DEFAULT_TK_NUMERIC_ABS_TOLERANCE` | `1e-13` |
+| `config.defaults.DEFAULT_TK_NUMERIC_REL_TOLERANCE` | `3e-11` |
 
 ### 5.3 Hard-coded tolerance literals at production call sites
 
@@ -457,10 +570,10 @@ Every keyword argument named `amplitude_rtol`, `atol`, `deriv_rtol`, `epsabs`, `
 | `CosmologyModels/GenericEOS/LambdaCDM_GenericEOS.py:1137` | `:1138` | `root_scalar` | `xtol` | `1e-300` |
 | `LiouvilleGreen/integration_tools.py:92` | `:95` | `root_scalar` | `xtol` | `1e-06` |
 | `LiouvilleGreen/integration_tools.py:92` | `:96` | `root_scalar` | `rtol` | `0.0001` |
-| `main.py:1116` | `:1119` | `bessel_phase` | `phase_atol` | `1e-12` |
-| `main.py:1116` | `:1120` | `bessel_phase` | `amplitude_rtol` | `1e-12` |
-| `main.py:1124` | `:1127` | `bessel_phase` | `phase_atol` | `1e-12` |
-| `main.py:1124` | `:1128` | `bessel_phase` | `amplitude_rtol` | `1e-12` |
+| `main.py:1197` | `:1200` | `bessel_phase` | `phase_atol` | `1e-12` |
+| `main.py:1197` | `:1201` | `bessel_phase` | `amplitude_rtol` | `1e-12` |
+| `main.py:1205` | `:1208` | `bessel_phase` | `phase_atol` | `1e-12` |
+| `main.py:1205` | `:1209` | `bessel_phase` | `amplitude_rtol` | `1e-12` |
 
 **10 literal requests.**
 
@@ -470,28 +583,33 @@ Every keyword argument named `amplitude_rtol`, `atol`, `deriv_rtol`, `epsabs`, `
 
 | Parameter | Value | Keys which object types | Reaches | Method it feeds | The real knob | Object count of the sector | Provenance | Owned by |
 |---|---|---|---|---|---|---|---|---|
-| `DEFAULT_ABS_TOLERANCE` (`config/defaults.py:5`) | `1e-10` | `wavenumber_exit_time` (inequality, see section 2), `BackgroundModel`, `GkNumericIntegration`, `GkWKBIntegration`, `TkWKBIntegration`, `GkSource`, `OneLoopIntegral` | **both** -- but a solver in only one of the seven | `root_scalar` (Brent, bracketed) in $\log(1+z)$ via `CosmologyConcepts/wavenumber.py:982`; DOP853 via `GkNumericIntegration.py:379`. Also used as a bare float-comparison epsilon at seven further sites (`ComputeTargets/GkSource.py:96`, `:104`, `:275`; `Quadrature/integrators/numeric_with_phase_cut.py:618`, `:737`, `:790`; `LiouvilleGreen/WKBtools.py:83`) | the pair, for the two live consumers; nothing at all for the other five | 50 + 1 + ~65,000 + ~65,000 + 50 + (50 x response z) + 0 per model | **never chosen.** No campaign document, log or code comment records a measurement behind `1e-10`; `config/defaults.py:12-15` argues only that it does not bind for $G$ | prompts 03 and 05 (`wavenumber_exit_time`, `GkNumericIntegration`); prompt 04 recommends what replaces it on the order-governed three (D3) |
-| `DEFAULT_REL_TOLERANCE` (`config/defaults.py:6`) | `1e-08` | the seven above, plus `TkNumericIntegration` | **both** -- a solver in three of the eight | `root_scalar` (`wavenumber.py:983`); DOP853 (`GkNumericIntegration.py:380`, `TkNumericIntegration.py:413`) | the pair, for the three live consumers | as above, plus 50 per model for `TkNumericIntegration` | **never chosen.** `1e-8` is the value the pipeline was written with; `prompts/GkTk-remedial` prompt 17 section 7 measured one decade of it in the $T_k$ sector and recommended tightening, and the recommendation is D1, still open | prompt 03 measures, prompt 05 ships (D1) |
-| `DEFAULT_TK_NUMERIC_ABS_TOLERANCE` (`config/defaults.py:33`) | `1e-13` | `TkNumericIntegration` alone | **both** | DOP853, via `TkNumericIntegration.py:412` and `Quadrature/integrators/numeric_with_phase_cut.py:675` | the pair | 50 per model | `prompts/GkTk-remedial` prompt 12, confirmed against the production grid by prompt 17 and **settled by the user 2026-09-12**; the measurement is in `config/defaults.py:8-32` at the point of use (**version-0 grid**) | settled; not reopened (README section 7 D1) |
-| `DEFAULT_QUADRATURE_ATOL` (`config/defaults.py:42`) | `1e-32` | `QuadSourceIntegral` | **both** | `adaptive_levin_sincos` (Levin / Clenshaw-Curtis, `ComputeTargets/QuadSourceIntegral.py:1059`) and `scipy.quad` / DOP853 via `Quadrature/simple_quadrature.py`; distributed per sub-interval by log-width at `QuadSourceIntegral.py:819` and per phase group at `:1054` | the pair | 1,275 x 50 x (response z) per model | `prompts/source-remediation` prompt 12, against the analytic oracle; the measurement is in `config/defaults.py:36-41` | `prompts/levin-refactor` / `prompts/qsi-phase-groups`; prompt 06 measures read-only (README section 0.4) |
-| `DEFAULT_QUADRATURE_RTOL` (`config/defaults.py:35`) | `1e-08` | `QuadSourceIntegral` | **both** | as above | the pair | 1,275 x 50 x (response z) per model | `prompts/source-remediation` prompt 12 confirmed it **does not bind** -- 1e-8 to 1e-11 bit-identical on 159 items (`config/defaults.py:38-39`) | as above |
+| `DEFAULT_ABS_TOLERANCE` (`config/defaults.py:23`) | `1e-10` | **none, since prompt 05a (2026-09-18).** It keyed seven object types until prompt 05 removed the pair from the four that never used it and prompt 05a gave each of the three that did a constant of its own | **neither.** No lookup key and no solver. What is left of it is **seven bare float comparisons** and a set of signature defaults production always overrides | `fabs(a - b) < DEFAULT_ABS_TOLERANCE` at `ComputeTargets/GkSource.py:96`, `:104`, `:275`; `Quadrature/integrators/numeric_with_phase_cut.py:618`, `:737`, `:790`; `LiouvilleGreen/WKBtools.py:83`. Plus the `atol` default of `numeric_with_phase_cut.integrate_numeric_with_phase_cut` (`:536`), which every production call overrides | not a solver tolerance at all. Comparing two redshifts is a different quantity wearing a tolerance's name -- `config/defaults.py:14-22` says so at the point of use | 7 comparison sites; 0 objects keyed | **never chosen**, and its provenance cannot be established from the record: no campaign document, log or code comment records a measurement behind `1e-10`. It is now the epsilon of `[02-shared-atol-doubles-as-a-float-comparison-epsilon]`, which prompt 05a left open deliberately: renaming it would reach seven sites in three modules and would relabel the defect rather than repair it | `[02-shared-atol-doubles-as-a-float-comparison-epsilon]`, open and unassigned. **Not to be retuned as a solver tolerance by anyone** |
+| `DEFAULT_REL_TOLERANCE` (`config/defaults.py:24`) | `1e-08` | **none, since prompt 05a.** It keyed eight object types | **neither** | none. It survives as the `rtol` signature default of `numeric_with_phase_cut.integrate_numeric_with_phase_cut`, which production always overrides, and has no float-comparison use | none | 0 objects keyed | **never chosen.** `1e-8` is the value the pipeline was written with. Its three former consumers are now `DEFAULT_HEXIT_REL_TOLERANCE` (changed to 1e-9), `DEFAULT_GK_NUMERIC_REL_TOLERANCE` (kept at 1e-8) and `DEFAULT_TK_NUMERIC_REL_TOLERANCE` (changed to 3e-11), each with its own measurement | nobody. Recorded so that `docs/TOLERANCE-PROVENANCE.md` (prompt 06a) can say in those words that the value was never chosen and now sets nothing |
+| `DEFAULT_HEXIT_REL_TOLERANCE` (`config/defaults.py:53`) | `1e-09` | `wavenumber_exit_time` -- **by inequality, not equality** (section 2.3) | **both** | `scipy.optimize.root_scalar`, Brent, bracketed in $u = \log(1+z)$, as `rtol` (`CosmologyConcepts/wavenumber.py:1017-1022`) | the pair. Brent stops at `xtol + rtol\|u\|`, so at the largest production $\|u\| = 38.04$ this guarantees a displacement of 3.81e-08 | 50 per model, each solved at 1 + 3 superhorizon + 5 subhorizon offsets | **chosen**, and **changed** from the shared `1e-8`. `prompts/tolerance-convergence` prompt 03a, `docs/tolerance-convergence/TK-NUMERIC-AND-EXIT-TIME.md` section 7.6, **version-2 grid at each cosmology's own anchor**; accepted by the user 2026-09-17 (D1, closed) **on the guarantee reading** -- on the achieved-displacement reading the same measurement gives `unchanged`. The measurement is at `config/defaults.py:26-52` | settled (README section 7 D1); shipped by prompt 05a |
+| `DEFAULT_HEXIT_ABS_TOLERANCE` (`config/defaults.py:63`) | `1e-10` | `wavenumber_exit_time` | **both** | the same `root_scalar`, as `xtol` | the pair, and it is **coupled**: `xtol = 1e-10` floors the pair at ~1e-10 relative however far `rtol` is tightened, taking over below `rtol ~ 2.6e-12` | as `DEFAULT_HEXIT_REL_TOLERANCE` | **inert and unchosen**, and README section 1.2's closing rule applies: the provenance of `1e-10` cannot be established from the record. It is `DEFAULT_ABS_TOLERANCE`'s value, inherited. Prompt 03a measured it binding at **0 of 150** (k, offset) pairs on each of three models | settled at its inherited value (D1); shipped by prompt 05a |
+| `DEFAULT_GK_NUMERIC_REL_TOLERANCE` (`config/defaults.py:86`) | `1e-08` | `GkNumericIntegration` | **both** | DOP853, `ComputeTargets/GkNumericIntegration.py:380` | the pair, and `rtol` is the whole lever: four decades move the maximum envelope-relative error by x13,300 | 29,290 / 38,105 / 58,350 per model on the version-2 grid | **chosen**, value **unchanged** at `1e-8`. `prompts/tolerance-convergence` prompt 03, `docs/tolerance-convergence/GK-NUMERIC-SWEEP.md` sections 5.2 and 7, 50 $k$ x 3 models x 15 cells, **version-2 grid at each cosmology's own anchor**; accepted by the user 2026-09-17 under README section 6.1 rule 4, the consumer's own spline carrying **x631 to x37,700** the solver's error | settled (D1); shipped by prompt 05a |
+| `DEFAULT_GK_NUMERIC_ABS_TOLERANCE` (`config/defaults.py:93`) | `1e-10` | `GkNumericIntegration` | **both** | DOP853, `ComputeTargets/GkNumericIntegration.py:379` | nothing: $\|G\|$ is 2.1e+12 to 2.9e+18 in `Mpc_units`, so an absolute floor of `1e-10` cannot bind | as `DEFAULT_GK_NUMERIC_REL_TOLERANCE` | **inert and unchosen** -- README section 1.2's closing rule again. Four decades of it move the maximum by at most **1.2 %** (prompt 03), and the record does not say who chose `1e-10` or for what | settled at its inherited value (D1); shipped by prompt 05a |
+| `DEFAULT_TK_NUMERIC_REL_TOLERANCE` (`config/defaults.py:123`) | `3e-11` | `TkNumericIntegration` | **both** | DOP853, `ComputeTargets/TkNumericIntegration.py:413` | the pair, and `rtol` sets the level while `atol` selects which wavenumber excurses | 50 per model | **chosen**, and **changed** from the shared `1e-8`. `prompts/tolerance-convergence` prompt 03a, `docs/tolerance-convergence/TK-NUMERIC-AND-EXIT-TIME.md` sections 4.1 and 5, three models, all fifty wavenumbers, **version-2 grid at each cosmology's own anchor** under `BREAK_POINT_ALL`; the loosest of nine settings whose maximum (3.88e-08) clears the re-measured 2.39e-06 initial-condition floor, at **+39.4 %** of the sector's evaluations. Accepted 2026-09-17. **A measured setting and not a bound** -- the maximum is not monotone in `rtol` (`[03a-tk-numeric-excursion-is-sporadic-in-rtol]`, open) | settled (D1); shipped by prompt 05a |
+| `DEFAULT_TK_NUMERIC_ABS_TOLERANCE` (`config/defaults.py:157`) | `1e-13` | `TkNumericIntegration` alone | **both** | DOP853, via `TkNumericIntegration.py:412` and `Quadrature/integrators/numeric_with_phase_cut.py` | **a step-selection knob, not the level.** Across `1e-12` to `1e-14` it moves the median of the per-$k$ maxima by at most 2.1x and the maximum by up to **205x**, by changing which wavenumber draws a bad step sequence | 50 per model | `prompts/GkTk-remedial` prompt 12, confirmed against the production grid by prompt 17 and **settled by the user 2026-09-12** (**version-0 grid**); **re-characterised, value unchanged**, by `prompts/tolerance-convergence` prompt 03a on the version-2 grid. The measurement is in `config/defaults.py:125-156` | settled; not reopened (README section 7 D1) |
+| `DEFAULT_QUADRATURE_ATOL` (`config/defaults.py:166`) | `1e-32` | `QuadSourceIntegral` | **both** | `adaptive_levin_sincos` (Levin / Clenshaw-Curtis, `ComputeTargets/QuadSourceIntegral.py:1059`) and `scipy.quad` / DOP853 via `Quadrature/simple_quadrature.py`; distributed per sub-interval by log-width at `QuadSourceIntegral.py:819` and per phase group at `:1054`. It also reaches `analytic_integral`, so the stored `analytic_rad` column depends on it | **inert at this value.** `prompts/tolerance-convergence` prompt 06 measured it binding only at `1e-16` and looser; twenty-eight decades below that it changes nothing, $\|total\|$ being 9.3e-13 to 2.3e-08 in the fixture | 1,275 x 50 x (response z) per model | `prompts/source-remediation` prompt 12, against the analytic oracle, on a **live run**: raised from `1e-25`, where 58 % of work items met their tolerance before doing any work. The measurement is in `config/defaults.py:160-165`. **Re-measured read-only by prompt 06**, `QUADSOURCE-READONLY.md` sections 4 and 8: `unchanged`, the representation floor dominating by **x3.46e+04 to x2.15e+11** | `prompts/levin-refactor` / `prompts/qsi-phase-groups`; prompt 06 measured read-only (README section 0.4) and handed over |
+| `DEFAULT_QUADRATURE_RTOL` (`config/defaults.py:159`) | `1e-08` | `QuadSourceIntegral` | **both** | as above | **the binding half of the pair**, and the only parameter of this sector that moves the answer: about a decade of quadrature error per decade of tolerance (`QUADSOURCE-READONLY.md` section 5) | 1,275 x 50 x (response z) per model | `prompts/source-remediation` prompt 12 found it **did not bind** -- 1e-8 to 1e-11 bit-identical on 159 live items -- but that was measured at `atol = 1e-25`, where `atol` bound. **That finding does not transfer to this tree**: prompt 06 measured the same three decades moving `total` by a factor of 274 at `atol = 1e-32`. The value is nevertheless `unchanged`, because the representation floor is orders above both ends (`QUADSOURCE-READONLY.md` sections 5, 7 and 8) | as above |
 | `DEFAULT_LEVIN_THRESHOLD` (`config/defaults.py:45`) | `1.0` | `GkSourcePolicy` and `QuadSourcePolicy` -- **only as a default that production never takes** | **neither.** Nothing reads `Levin_threshold` off a policy object, and `main.py:3542`, `:3548`, `:3560`, `:3566` pass 1.5 and 5.0 explicitly, so the default value 1.0 never reaches the datastore either | none. The Levin/direct decision is made per region by `adaptive_levin_sincos`'s own total-variation gate (`MetadataConcepts/QuadSourcePolicy.py:25-36`) | none for `QuadSourcePolicy` (the driver's gate); for `GkSourcePolicy` the two shipped values 1.5 and 5.0 are the two production policies, and they are not this constant | 2 policy objects each per run; `GkSourcePolicyData` is keyed through them | **never chosen**, and never used. README section 1.2 lists it among the parameters nobody has chosen; this inventory adds that nothing takes the default | nobody. Recorded for `docs/TOLERANCE-PROVENANCE.md` (prompt 06) |
 
 #### B. The integer orders and the region margin
 
 | Parameter | Value | Keys which object types | Reaches | Method it feeds | The real knob | Object count of the sector | Provenance | Owned by |
 |---|---|---|---|---|---|---|---|---|
-| `TAU_GAUSS_ORDER` (`ComputeTargets/BackgroundModel.py:35`) | `4` | **none.** It reaches the `IntegrationSolver` label and `stepping` (`main.py:3513`, `BackgroundModel.py:49`), which `BackgroundModel` stores in `solver_serial` but **does not filter on** (section 1's predicate list) | **neither** -- it is the knob, and it is in no key | Gauss-Legendre cumulative table, order 4 per interval, split at the cosmology's break points (`BackgroundModel.py:427`) | itself | 1 `BackgroundModel` per (cosmology, grid); every target reads its output | `prompts/GkTk-remedial` prompt 02, recorded in `ComputeTargets/tests/wkb_reference_data.json`'s `convergence` block, **generated 2026-09-10 against a background and a break-point set that no longer exist** (`RECONCILIATION.md` section 5) | prompt 04 re-measures; prompt 05 puts it in the key if the user settles D3 |
-| `CS_TAU_GAUSS_ORDER` (`ComputeTargets/BackgroundModel.py:43`) | `4` | none -- and unlike $\tau$ it does not even reach a solver label | **neither** | Gauss-Legendre cumulative table for $c_s\tau$ (`BackgroundModel.py:449`) | itself | as `TAU_GAUSS_ORDER` | as `TAU_GAUSS_ORDER` -- the same stale `convergence` block | prompt 04, prompt 05 (D3) |
-| `FRICTION_F_GAUSS_ORDER` (`ComputeTargets/BackgroundModel.py:44`) | `4` | none | **neither** | Gauss-Legendre cumulative table for $F$ (`BackgroundModel.py:466`) | itself | as `TAU_GAUSS_ORDER` | as `TAU_GAUSS_ORDER` | prompt 04, prompt 05 (D3) |
-| `RHO_GAUSS_ORDER` (`ComputeTargets/phase_residual.py:90`) | `4` | **none.** It reaches `PHASE_SOLVER_STEPPING` (`Quadrature/integrators/WKB_phase_function.py:86`) and so the phase solver's label, which both WKB factories store and neither filters on | **neither** | Gauss-Legendre panels for the Liouville-Green phase residual $\rho$, per $(model, k, sector)$ (`phase_residual.py:164`) | itself | ~65,000 `GkWKBIntegration` + 50 `TkWKBIntegration` per model | `prompts/GkTk-remedial` prompts 02 and 06, via the same 2026-09-10 `convergence` block | prompt 04, prompt 05 (D3) |
-| `RESIDUAL_WKB_REGION_MARGIN` (`ComputeTargets/phase_residual.py:238`) | `0.5` | **none, anywhere** -- not in a key, a label or a tag | **neither** | sets the band `residual_node_range` covers, by requiring the Liouville-Green frequency to stay this fraction of its leading term (`phase_residual.py:246-267`). Re-used by `main.source_grid_spacing_profile` as the band the version-2 density criterion runs over | itself | both WKB sectors, and (through the re-use) the source grid every target shares | **never chosen against a criterion.** Its own comment argues it is a *permissive* bound designed never to exclude a producer's anchor, not a resolution target; `[01-density-criterion-imposed-outside-the-wkb-region]` is what the re-use costs | prompt 04 measures what it buys (README section 0.5 holds its value fixed) |
+| `TAU_GAUSS_ORDER` (`ComputeTargets/BackgroundModel.py:34`) | `4` | **`BackgroundModel`, since prompt 05 (2026-09-18)** -- `tau_gauss_order`, an equality predicate of `build()` (section 5.1). It also reaches the `IntegrationSolver` label and `stepping`, which is stored and not filtered on | **both** -- it is the knob *and* it is now in the key | Gauss-Legendre cumulative table, order 4 per interval, split at the cosmology's break points (`ComputeTargets.cumulative_table.CumulativeTable`) | itself | 1 `BackgroundModel` per (cosmology, grid); every target reads its output | `prompts/GkTk-remedial` prompt 02, **superseded**: re-measured by `prompts/tolerance-convergence` prompt 04, `docs/tolerance-convergence/ORDER-AUDIT.md`, on the corrected background and the 3-point break set over the **version-2 grid at each cosmology's own anchor**, and written into `ComputeTargets/tests/wkb_reference_data.json`'s `convergence` block by prompt 04b on 2026-09-18. `unchanged` at 4, the double-precision accumulation floor (2.16e-16) dominating order 2 by **x3.03e5** | settled by prompts 04, 04b and 05; no longer open |
+| `CS_TAU_GAUSS_ORDER` (`ComputeTargets/BackgroundModel.py:42`) | `4` | **`BackgroundModel`** -- `cs_tau_gauss_order`, an equality predicate | **both** | Gauss-Legendre cumulative table for $c_s\tau$ | itself | as `TAU_GAUSS_ORDER` | as `TAU_GAUSS_ORDER`; `unchanged` at 4 against an accumulation floor of 3.30e-16, dominating order 2 by **x1.99e5** | settled by prompts 04, 04b and 05 |
+| `FRICTION_F_GAUSS_ORDER` (`ComputeTargets/BackgroundModel.py:43`) | `4` | **`BackgroundModel`** -- `friction_F_gauss_order`, an equality predicate | **both** | Gauss-Legendre cumulative table for $F$ | itself | as `TAU_GAUSS_ORDER` | as `TAU_GAUSS_ORDER`; `unchanged` at 4 against an accumulation floor of 8.01e-14, dominating order 2 by **x48.4** | settled by prompts 04, 04b and 05 |
+| `RHO_GAUSS_ORDER` (`ComputeTargets/phase_residual.py:90`) | `4` | **`GkWKBIntegration` and `TkWKBIntegration`, since prompt 05** -- `rho_gauss_order`, an equality predicate of both `build()`s | **both** | Gauss-Legendre panels for the Liouville-Green phase residual $\rho$, per $(model, k, sector)$ | itself | ~65,000 `GkWKBIntegration` + 50 `TkWKBIntegration` per model | `prompts/GkTk-remedial` prompts 02 and 06 at three wavenumbers, **superseded** by prompt 04's measurement at **all fifty** in both sectors (`ORDER-AUDIT.md`), which found the three right and lucky by only x1.5-x1.7. `unchanged` at 4, the $\rho$ quadrature floor (6.51e-17 rad) dominating order 2 by **x2.35e6**. Prompt 05b then made the *recorded* order the order an object was built at, on both the computed and the rehydrated path | settled by prompts 04, 04b, 05 and 05b |
+| `RESIDUAL_WKB_REGION_MARGIN` (`ComputeTargets/phase_residual.py:251`) | `0.5` | **none, anywhere** -- not in a key, a label or a tag, and prompt 05 deliberately did not make it a column | **neither** | sets the band `residual_node_range` covers, by requiring the Liouville-Green frequency to stay this fraction of its leading term. Re-used by `main.source_grid_spacing_profile` as the band the version-2 density criterion runs over | itself | both WKB sectors, and (through the re-use) the source grid every target shares | **never chosen against an accuracy criterion, and it has none** -- prompt 04, `ORDER-AUDIT.md` section 7.2, applied README section 6.1 rule 6 and found no accuracy floor to target, because the residual a producer reads is a `delta` between two fixed redshifts. What it has is a measured *reachability* bound, cleared at every margin from 0.05 to **0.9** on three models and both sectors with the residual **bit-identical** throughout. That bit-identity is what let prompt 05 leave it out of the key | settled as `unchanged` by prompt 04; the re-use is `[01-density-criterion-imposed-outside-the-wkb-region]`, measured by prompt 04b section 8 and still open |
 
 #### C. Root solves in production code
 
 | Parameter | Value | Keys which object types | Reaches | Method it feeds | The real knob | Object count of the sector | Provenance | Owned by |
 |---|---|---|---|---|---|---|---|---|
-| `_solve_horizon_exit` `xtol`/`rtol` (`CosmologyConcepts/wavenumber.py:982-983`) | the shared pair: `DEFAULT_ABS_TOLERANCE`/`DEFAULT_REL_TOLERANCE` | `wavenumber_exit_time` -- **by inequality, not by equality** (section 2) | **both** | `scipy.optimize.root_scalar`, Brent, bracketed in $u = \log(1+z)$ by a geometric widening search (`wavenumber.py:930-977`), with an acceptance guard `\|q_root\| <= DEFAULT_HEXIT_TOLERANCE` at `:993` | the pair. `atol` is absolute in $u$ and `rtol` relative to a root of size ~30, so neither is comparable with either sector's (README section 2 (e)) | 50 per model, each solved at 1 + 3 superhorizon + 5 subhorizon offsets (`wavenumber.py:1021-1033`) | **never chosen.** T6 on the board records it as never measured; README section 3.1 adds that the radiation case has a one-line oracle nobody used | prompt 03 (T6), prompt 05 (D1) |
+| `_solve_horizon_exit` `xtol`/`rtol` (`CosmologyConcepts/wavenumber.py:1017-1022`) | its own pair since prompt 05a: `DEFAULT_HEXIT_ABS_TOLERANCE` / `DEFAULT_HEXIT_REL_TOLERANCE` (section A) | `wavenumber_exit_time` -- **by inequality, not by equality** (section 2) | **both** | `scipy.optimize.root_scalar`, Brent, bracketed in $u = \log(1+z)$ by a geometric widening search, with an acceptance guard `\|q_root\| <= DEFAULT_HEXIT_TOLERANCE` | the pair. `atol` is absolute in $u$ and `rtol` relative to a root of size ~38, so neither is comparable with either sector's (README section 2 (e)) | 50 per model, each solved at 1 + 3 superhorizon + 5 subhorizon offsets | **measured, at last**, by `prompts/tolerance-convergence` prompt 03a (T6): `xtol` binds at **0 of 150** (k, offset) pairs on every model and `rtol` is what fixes the anchor. Decoupled and settled -- see section A for each half's own provenance, which differs | settled (D1, closed 2026-09-17); shipped by prompt 05a |
 | `DEFAULT_HEXIT_TOLERANCE` (`CosmologyConcepts/wavenumber.py:884`) | `0.01` | none | **neither** -- it is an acceptance guard on the root, and the bracket search's own step criterion | raises if $\|q(z_{\rm root})\| > 10^{-2}$ after `root_scalar` reports convergence (`wavenumber.py:993`) | not an accuracy knob: it is eight orders looser than the `xtol` it guards, so it can only catch a gross failure | 50 per model | **never chosen**; no comment or log records it | nobody. Recorded so that prompt 03 does not mistake it for the solve's error bound |
 | `find_phase_extremum` `xtol=1e-6, rtol=1e-4` (`LiouvilleGreen/integration_tools.py:95-96`) | `xtol = 1e-6`, `rtol = 1e-4` | none directly -- it fixes the numeric stop point $z_{\rm init}$, which **is** a key column (`TkNumericIntegration.z_init_serial`, `GkWKBIntegration.z_init`) | **solver**, and a key through the redshift it returns | `root_scalar`, bracketed, on the derivative of the numeric solution, after a sampled sign-change search at `PHASE_STEPS_PER_CYCLE = 16` steps per cycle | the pair, and the sampling step that brackets it | once per `TkNumericIntegration` (50 per model) and once per `GkNumericIntegration` run in stop mode | **never chosen.** `[11-stop-point-root-tolerance]`, `docs/OPEN_ISSUES.md` section 1.1, owned by the hand-over campaign. `LiouvilleGreen/bessel_phase.py:48` records a case where exactly this pair produced an artefact elsewhere | the hand-over campaign. **Recorded here and not retuned** (README section 0.5) |
 | `_solve_T_z` `xtol=1e-300, rtol=1e-14` (`CosmologyModels/GenericEOS/LambdaCDM_GenericEOS.py:636`) | `xtol = 1e-300`, `rtol = 1e-14` | not itself; the *representation version* it belongs to is (`QCD_Cosmology.T_z_representation`, currently `6`) | **solver**, and a key through the version | `root_scalar`, Brent, bracketed between two analytic bounds with a straddle check at `:621` | the pair | ~3,176 calls per `QCD_Cosmology` construction, once per run | `prompts/qcd-background-audit` prompt 04 (`71b842a`), `logs/04-tighten-node-solve.md`. **Lifted from `prompts/background-solver-robustness/PROVENANCE.md` section 1, not re-derived** | `prompts/qcd-background-audit`; settled |
@@ -540,7 +658,7 @@ Every keyword argument named `amplitude_rtol`, `atol`, `deriv_rtol`, `epsabs`, `
 | `SOURCE_GRID_CUBIC_ERROR_CONST`, `SOURCE_GRID_MAX_REFINEMENT`, `SOURCE_GRID_CURVATURE_STEP_U`, `SOURCE_GRID_CURVATURE_FD_STEP_U`, `SOURCE_GRID_CROSSING_MASK_U`, `SOURCE_GRID_SPLINE_EDGE_INTERVALS`, `SOURCE_GRID_SPLINE_EDGE_FACTOR` (`CosmologyConcepts/wavenumber.py:188-244`) | `0.0026041666666666665` / `32` / `0.001` / `0.0001` / `0.006` / `3` / `10.0` | through the grid digest | **lookup key** (via the digest) **and** the grid's density | the version-2 curvature criterion $h^4\|\varphi''''\|/384 \le \varepsilon$ and its stencil | themselves | the whole pipeline | `prompts/qcd-background-audit` prompts 12 and 15; each carries its own measurement in the comment above it, and `docs/qcd-background-verification.md` section 10 holds the tables | `prompts/qcd-background-audit`; held fixed |
 | `SOURCE_GRID_BREAK_STANDOFF`, `SOURCE_GRID_BREAK_HALF_WIDTH`, `SOURCE_GRID_BREAK_REFINEMENT`, `SOURCE_GRID_MESH_GUARD`, `SOURCE_GRID_MIN_SEPARATION` (`CosmologyConcepts/wavenumber.py:113-145`) | `0.25` / `5` / `2` / `0.25` / `1e-06` | through the grid digest | **lookup key** (via the digest) **and** the grid's density near a crossing | the version-1 straddling pair and refined neighbourhood at each declared crossing | themselves | the whole pipeline | `prompts/qcd-background-audit` prompts 10 and 11, scored in `docs/qcd-background-verification.md` section 8 and log 11 section 3 | `prompts/qcd-background-audit`; held fixed |
 
-**39 rows.**
+**44 rows.**
 
 ### 5.5 Object counts, which are inputs and not measurements
 

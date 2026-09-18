@@ -189,6 +189,32 @@ falls to the fallback branch (4% at worst, and prompt 03 removes it anyway).
   fold them (linearly, per this campaign's established policy) into the metadata dict alongside
   `"WKB_Levin"`.
 
+- **[06-quadrature-atol-is-inert-and-rtol-is-the-binding-half]** *(opened 2026-09-18 by
+  `prompts/tolerance-convergence` prompt 06, board item **T11**, which measures
+  `QuadSourceIntegral` read-only and may not edit it or any file under `AdaptiveLevin/` — README
+  §0.4 of that campaign)* — `DEFAULT_QUADRATURE_ATOL` was raised from `1e-25` to **`1e-32`** by
+  `prompts/source-remediation` prompt 12, and that move **inverted which half of the pair binds**.
+  Measured offline over the 18 cases of `ComputeTargets/tests/test_quadsource_integral.py`, both
+  axes and the four corners of the matrix
+  (`docs/tolerance-convergence/QUADSOURCE-READONLY.md` §§4–6): `atol` is inert across **twenty-eight
+  decades**, from `1e-20` to `1e-40`, and binds only at `1e-16` and looser, because it is
+  distributed per sub-interval by log-width (`QuadSourceIntegral.py:818`) and per phase group by
+  count (`:1054`) while `|total|` is 9.3e-13 to 2.3e-08 — twenty decades above the floor. `rtol` is
+  then the only parameter that moves the answer, by about a decade of error per decade of tolerance,
+  and the corners confirm the two never interact: whichever term of `atol + rtol|value|` is larger
+  binds, one at a time. **Impact:** the standing conclusion that "`rtol` does not bind, `atol` does"
+  — `source-remediation` log 12, quoted at `config/defaults.py:163` — was measured at `1e-25` and
+  **does not transfer**; at `1e-32` the same `1e-8 → 1e-11` moves `total` by a factor of 274 on the
+  fixture rather than leaving it bit-identical. Anything that reasons from that bit-identity today
+  is reasoning from a superseded constant. **Nothing follows for the value**: prompt 06 applied
+  README §6.1 rule 4 and got **`unchanged`**, the representation floor dominating the quadrature
+  error at the production pair by ×3.46e+04 to ×2.15e+11, and that campaign has no standing to
+  propose a value (§0.4, §5 rule 8). **Next step:** if the sector's cost is ever in question, §8.1
+  of that document is the README §6.1 rule 3 ladder — the loosest `rtol` that clears the floor on
+  every case is `1e-5`, clearing it by only ×3.32, and §9 prices each rung in evaluations against
+  an object count of 1,275 × 50 × (response z) per model. All of it is **offline**, on a fixture
+  whose `(k, q, r, z)` range is not production's; a live run is what would price the real sector.
+
 > Add an entry here whenever a prompt finishes with something unresolved: a verification step that
 > could not be run, an assumption that could not be confirmed, a deviation a later prompt has to
 > work around. Format:

@@ -362,6 +362,40 @@ Traceability from the audit's finding IDs to the prompt that discharges them.
   simply lowering `DEFAULT_QUADRATURE_ATOL` for this stage — all production changes, none of them
   in prompt 12's scope. See `docs/source-remediation-verification.md` §5.4.
 
+  > **Narrowed 2026-09-18 by `prompts/tolerance-convergence` prompt 06 (board item T11); the entry
+  > above is not rewritten and its live-run figures stand.** Two things have happened since it was
+  > opened, and the second is new.
+  >
+  > **(i) The third of the three options was taken.** `DEFAULT_QUADRATURE_ATOL` has read **`1e-32`**
+  > since this campaign's own prompt 12, and the primary record is the comment at
+  > `config/defaults.py:160-165`: *"was 1e-25; tightened per … 1e-32 is the exact value the
+  > source-remediation campaign measured (log 12) as halving the residual against the analytic
+  > oracle at an unconverged test point."* So "lowering `DEFAULT_QUADRATURE_ATOL` for this stage"
+  > was chosen and shipped, and the index row's `1e-25` was seven decades stale.
+  >
+  > **(ii) The regime has inverted, and `atol` no longer binds anywhere that was measured.**
+  > `docs/tolerance-convergence/QUADSOURCE-READONLY.md` §§4–6, offline on the two flavours of
+  > `ComputeTargets/tests/test_quadsource_integral.py`, 18 cases: at `1e-32`, `atol` is inert over
+  > **twenty-eight decades** and binds only at `1e-16` and looser, while `rtol` becomes the binding
+  > half and moves the answer by about a decade per decade. **The consequence for this entry is that
+  > its own `rtol` finding no longer transfers:** `1e-8 → 1e-11` was bit-identical on 159 live items
+  > *because* `atol` bound at `1e-25`, and at `1e-32` the same three decades move `total` by a
+  > factor of 274 on the fixture. That is a change of regime, not a correction — the live
+  > measurement was right about the tree it was taken on.
+  >
+  > **What is not closed, and why.** Whether 58 % of *production* work items still meet their
+  > tolerance before doing any work is a **live-run** question, and prompt 06 had no live run
+  > (offline by decision, README §7 D11 of that campaign). The census, the regime mix and the
+  > median/p25/max of `total/(1 + z_response)` above are untouched by anything measured there. What
+  > prompt 06 adds is that the *accuracy* consequence is bounded: the representation floor the
+  > realistic fixture carries dominates the quadrature error at the production pair by **×3.46e+04
+  > to ×2.15e+11**, so under README §6.1 rule 4 the pair is `unchanged` and the quadrature tolerance
+  > is not the limiting parameter of the source integral.
+  >
+  > **Next step, revised:** re-take the 58 % census on a live run at `atol = 1e-32` — it is the one
+  > half of this entry that a fixture cannot answer. The production *decision* the entry asks for
+  > has been made.
+
 - **[12-handover-clamp-error-in-production]** *(opened by prompt 12, 2026-09-09; supersedes the
   magnitude estimate in `[08-handover-clamp-error]`)* — the hand-over clamp is present on
   essentially every production row, and it costs one to two orders of magnitude more than prompt
