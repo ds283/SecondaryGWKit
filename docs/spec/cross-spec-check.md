@@ -379,6 +379,12 @@ $8\pi^2$ (with $c^2$ inside $f$) — related by the three steps above and nothin
    neither spec writes the link. Open, low priority for the build target.
 9. **Spec 05 Q11** ($h_{ij}$ normalisation vs Kohri–Terada / Adshead) and spec 02's "matches Adshead"
    for $G[h]$: no spec allows a check.
+   **Kohri–Terada half closed 2026-09-18.** No spec allows it, but Kohri & Terada's radiation-era
+   closed form does: the code's source integral at $b=0$ is $-\tfrac98\,k_{\rm phys}^{-2}$ times it,
+   which confirms $h^{\rm us}_{ij}=h^{\rm them}_{ij}/2$ at $w=1/3$ and is pinned by
+   `ComputeTargets.tests.test_kohri_terada_oracle`. See spec 05 Q11 for the measurement and its
+   references. **Still open:** the Adshead half of spec 05 Q11, and spec 02's "matches Adshead" for
+   $G[h]$.
 
 ---
 
