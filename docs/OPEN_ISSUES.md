@@ -1,6 +1,6 @@
 # Open issues — project-wide index
 
-**Last updated:** 2026-09-18 · **81 open** across eleven campaigns.
+**Last updated:** 2026-09-18 · **82 open** across eleven campaigns.
 
 This file exists so that an issue opened by one campaign is not lost when that campaign closes.
 It is an **index, not a record**: one line per issue, pointing at the campaign status board that
@@ -100,8 +100,13 @@ prompt 13 left open.
 
 Planned as [`prompts/tolerance-convergence/`](../prompts/tolerance-convergence/README.md)
 (2026-09-12; **rebased 2026-09-16 at `acd5b8e`, re-anchored the same day at `bc6dc97` onto the
-tree `prompts/background-solver-robustness` left — six prompts plus the insertions 02a and 04b;
-01, 02, 02a, 03, 03a, 04 and 04b have all run, and 05–06 wait on the user**). **Prompt 04b landed
+tree `prompts/background-solver-robustness` left — six prompts plus the insertions 02a, 04b, 05b
+and 06a; CLOSED 2026-09-18, all thirteen prompts landed**). **Prompt 06a closed the campaign on
+2026-09-18** with `docs/TOLERANCE-CONVERGENCE.md` (the narrative close-out) and
+`docs/TOLERANCE-PROVENANCE.md` (the durable deliverable README §1.2 asked for — one entry per
+accuracy parameter in the pipeline, all 44 rows of `docs/tolerance-convergence/TOLERANCE-INVENTORY.md`
+§5.4, each with the measurement, its floor, its cost and its citation, or a statement that its
+provenance cannot be established). **Prompt 04b landed
 the regenerated `convergence` block of `ComputeTargets/tests/wkb_reference_data.json` on
 2026-09-18** — `recommended_scheme` `branch`, orders 4 / 4 / 4 / 4, `branch+knots` kept as a
 control — repaired the two tests that read its reference floor as a threshold, and took
@@ -165,6 +170,7 @@ where it was not.
 | `[03-outermost-z-source-is-not-the-least-favourable]` | tolerance-convergence | `gk_geometry` takes one source redshift per wavenumber, the outermost, "the longest and therefore the least favourable run", and prompt 03 §2.2 makes that the premise on which fifty runs per model **bound** a 29,000–58,000-object sector. Measured at 3 $k$ × 3 models × 7 source redshifts against converged references: **it is not the worst at any of the nine probes** (×1.01 to ×1.45), because the maximum is *flat* in $z_{\rm source}$ with no trend — what rises monotonically is the median, and what falls is the evaluation count. So the sweep characterises the sector to ~1.5× and does not bound it; no figure in `GK-NUMERIC-SWEEP.md` may be quoted as a maximum over the $(k, z_{\rm source})$ plane. Nothing turns on 1.5× against a 700× floor. **Prompt 03 §9's stop: the user decides** whether a genuine bound is wanted or whether the wording should say "representative". |
 | `[00-gk-numeric-never-swept-and-carries-the-cost]` | tolerance-convergence | "The error is set by `rtol`" is one clean measurement in the 50-object sector and one `(atol, rtol)` diagonal in the 65,000-object one. $G_k$ numeric has never been swept in either axis, and review §10.1 puts the consumer spline that reads it two orders above its solver error — so the honest answer may be "tighten nothing". Assigned to prompt 03. |
 | `[12-tk-numeric-atol-largest-k-excursion]` | GkTk-remedial → tolerance-convergence | Prompt 12's `atol=1e-13` left excursions above README §6's 3e-6 of the envelope that prompt 17 measured across the production grid: 3 / 13 / 8 of 50 wavenumbers on Radiation / LambdaCDM / QCD, worst 8.64e-4. **Re-taken by prompt 03a, 2026-09-17** on the version-2 grid under `BREAK_POINT_ALL`: **1 / 9 / 4**, worst **3.36e-04** — most of the improvement from the grid, not the policy — and `rtol = 3e-11` takes it to 0 / 150 and 3.88e-08. **The user settled the constant 2026-09-12: `1e-13` stays** — `atol` is not the lever. What remains is the `rtol` retuning. **Assigned (2026-09-12): `prompts/tolerance-convergence`**; its cost figures corrected at the 2026-09-16 rebase, and its sweep re-taken on the v2 grid. |
+| `[06a-readme-and-config-comments-state-the-superseded-quadrature-rtol-regime]` | tolerance-convergence | README §6.2's `QuadSourceIntegral` row, the comment at `config/defaults.py:163` and the comment at `ComputeTargets/QuadSourceIntegral.py:1550` all still state `source-remediation` log 12's "`rtol` confirmed non-binding" finding, measured at `atol = 1e-25`. At the shipped `atol = 1e-32` the regime has inverted — `atol` is inert over twenty-eight decades and `rtol` is the only lever, moving `total` by ×274 over three decades (`docs/tolerance-convergence/QUADSOURCE-READONLY.md` §§4–6). The *value* is unaffected — `docs/TOLERANCE-PROVENANCE.md` records the current finding — but none of the three sites was in prompt 06a's file grant. **Next step:** a prompt given any of the three corrects the comment; README §6.2's rule-8 freeze bars moving a parameter, not correcting prose that is now factually wrong. |
 
 ---
 
