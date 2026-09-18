@@ -1,8 +1,10 @@
 # Radiation oracle — implementation state
 
-**Last updated:** 2026-09-18 · **Status: not started — 0 / 1 prompts landed.** The audit
+**Last updated:** 2026-09-18 · **Status: COMPLETE — 1 / 1 prompts landed.** The audit
 [`docs/radiation-oracle/KOHRI-TERADA-ORACLE.md`](../../docs/radiation-oracle/KOHRI-TERADA-ORACLE.md)
-is complete and measured at `2033cfc`; prompt 01 is written against it and has not been dispatched.
+was measured at `2033cfc`; **prompt 01 has landed the oracle** as
+`ComputeTargets/tests/kohri_terada.py` with `ComputeTargets/tests/test_kohri_terada_oracle.py`, and
+README §5's acceptance is met. Two issues remain open in §3, one of them opened by prompt 01.
 
 **Campaign:** [`README.md`](README.md)
 
@@ -10,13 +12,13 @@ is complete and measured at `2033cfc`; prompt 01 is written against it and has n
 
 | # | Prompt | Covers | Model | Written? | Landed? | Commit | Log |
 |---|---|---|---|---|---|---|---|
-| 01 | [The Kohri–Terada radiation oracle](01-kohri-terada-radiation-oracle.md) | **R1** | Opus | ✍️ yes | ⬜ | | |
+| 01 | [The Kohri–Terada radiation oracle](01-kohri-terada-radiation-oracle.md) | **R1** | Opus | ✍️ yes | ✅ | *"Land the Kohri-Terada radiation oracle with its tests"* (SHA not embedded, per the convention `prompts/background-solver-robustness` uses) | [`logs/01-…`](logs/01-kohri-terada-radiation-oracle.md) |
 
 ## 2. Items
 
 | Item | Kind | Description | Prompt | Status |
 |---|---|---|---|---|
-| R1 | **FACILITY** | The radiation-era closed form of Kohri & Terada eq. (22) in the tree as a module, with eq. (25), the `Cin`-regularised resonance, and tests pinning it against `scipy.quad` **and** against the code's own `total` at $N = -9/8$. The measurement is done — `KOHRI-TERADA-ORACLE.md` §7, nine $b=0$ cases, $N$ constant to 4.7e-13 and worst deviation from $-9/8$ 3.09e-13 against a quadrature of KT's integrand, 3.18e-10 against eq. (22) itself (§7.1) — so the prompt productionises a verified result rather than discovering one. Acceptance turns on whether the tests would catch the paper's three errata, not on whether the numbers agree. | 01 | ⬜ |
+| R1 | **FACILITY** | The radiation-era closed form of Kohri & Terada eq. (22) in the tree as a module, with eq. (25), the `Cin`-regularised resonance, and tests pinning it against `scipy.quad` **and** against the code's own `total` at $N = -9/8$. The measurement is done — `KOHRI-TERADA-ORACLE.md` §7, nine $b=0$ cases, $N$ constant to 4.7e-13 and worst deviation from $-9/8$ 3.09e-13 against a quadrature of KT's integrand, 3.18e-10 against eq. (22) itself (§7.1) — so the prompt productionises a verified result rather than discovering one. Acceptance turns on whether the tests would catch the paper's three errata, not on whether the numbers agree. | 01 | ✅ **Done, 2026-09-18.** The module is `ComputeTargets/tests/kohri_terada.py` (eqs. 15, 16 at $w=1/3$, 19, 20, 22, 25, the `Cin` regularisation, `total_from_I_RD`), with nine test methods in `test_kohri_terada_oracle.py` covering prompt §3's six tests. Test 6 runs **all nine** $b=0$ cases at `(1e-45, 1e-12)` in 2.7 s and asserts $N=-9/8$ against eq. (22) minus the head: worst $\lvert N+9/8\rvert$ **1.08e-10** (q-smooth), 6.9e-14 elsewhere, each under a per-case bound built from the two sides' declared errors. **The 3.18e-10 this row quotes "against eq. (22) itself" is eq. (22)'s own double-precision rounding at $u=0.01$, not the head subtraction** — `[01-the-eq22-figure-is-eq22s-own-rounding-not-the-head]`. The resonance returns 0.1391877548291586 at $x=15$, equal to quadrature. Every one of the four traps was broken deliberately and caught by a named test (log §3.2); the inverted Ci/Si pairing by tests 1, 2, 3, 4 and 6. `ComputeTargets` 521 → **530**, `CosmologyModels` **39**; no existing `.py` file in the diff. |
 
 ## 3. Active and unresolved issues
 
@@ -32,6 +34,24 @@ is complete and measured at `2033cfc`; prompt 01 is written against it and has n
   shares the transfer function. **Next step:** decide whether a general-$w$ quadrature oracle is
   worth having given that it shares machinery with the thing it checks.
   Indexed at `docs/OPEN_ISSUES.md` §1.9.
+
+- **[01-the-eq22-figure-is-eq22s-own-rounding-not-the-head]** *(opened 2026-09-18 by prompt 01)* —
+  the audit's §1 table ("Limited by: the head subtraction") and §7.1 preamble, campaign README §1,
+  item R1 above and prompt 01 §3.6 and §6 all attribute the eq.-(22) comparison's worst figure,
+  3.18e-10, to the head $0\to\bar x_{\rm min}$ being quadratured and subtracted. **It is eq. (22)'s
+  own double-precision rounding at $u=q/k=0.01$**, where the $1/(u^3v^3)$ prefactor multiplies terms
+  that nearly cancel: the head's declared quad error is 1e-20 to 1.4e-18 of $I$ on all nine cases,
+  while eq. (22)'s double-precision value at the three q-smooth points is off a 50-digit `mpmath`
+  evaluation of the same formula by 9.67e-11, 6.62e-11, 2.50e-11 — and the q-smooth deviations of
+  $N$ in `test_kohri_terada_oracle` are 1.08e-10, 7.45e-11, 2.82e-11, the same numbers (the audit's
+  larger 3.18e-10 is its script's summation order; `fsum` in the module lowers it). Removing it
+  leaves the pipeline agreeing with eq. (22) on q-smooth to ~1e-11. **Impact:** documentary — no
+  number is wrong, but a reader who believes the head limits the comparison will try to improve the
+  head, which changes nothing, and will misread 3.18e-10 as a property of the code. **Next step:** an
+  additive subsection in `KOHRI-TERADA-ORACLE.md` (CLAUDE.md invariant 6) recording the attribution,
+  by whoever next owns `docs/radiation-oracle/`; a small-$u$ form of eq. (22) would tighten test 6 on
+  q-smooth by two orders and is optional. Measurement: `logs/01-kohri-terada-radiation-oracle.md`
+  §3.1. Indexed at `docs/OPEN_ISSUES.md` §1.9.
 
 ## 4. Resolved issues
 
