@@ -161,7 +161,7 @@ def build_phase_residual(
     k: float,
     z_nodes: Sequence[float],
     sector: str,
-    order: int = RHO_GAUSS_ORDER,
+    order: Optional[int] = None,
 ) -> CumulativeTable:
     """
     Tabulate ``R(z) = int_z^{z_top} C/(omega + omega_0) dz'`` on ``z_nodes``.
@@ -183,10 +183,23 @@ def build_phase_residual(
     :param k: the comoving wavenumber, in the model's units
     :param z_nodes: the grid, strictly descending in ``z``; a ``redshift_array`` is accepted
     :param sector: ``"Gk"`` or ``"Tk"``
-    :param order: Gauss-Legendre order per panel; defaults to the measured ``RHO_GAUSS_ORDER``
+    :param order: Gauss-Legendre order per panel; ``None`` (the default) means the order this run
+        is configured at, ``RHO_GAUSS_ORDER``, read **here** rather than bound as a default
+        argument -- see the note below
     :return: the ``CumulativeTable``, whose ``delta(z_i, z)`` is ``rho(z; z_i)``
+
+    ``order`` was written ``order: int = RHO_GAUSS_ORDER`` until prompt 05b of
+    ``prompts/tolerance-convergence``. A default argument is evaluated once, at ``def`` time, so
+    that spelling snapshotted the constant at import: the table could not follow a later
+    re-pointing of the declaration, while the row's key column did. The sentinel resolves the
+    same name at *call* time, so the table this function returns is built at the order the run is
+    configured at, and ``CumulativeTable.order`` -- which is what the object records -- is the
+    order it was actually built at whether the caller supplied one or not.
     """
     _check_sector(sector)
+
+    if order is None:
+        order = RHO_GAUSS_ORDER
 
     if hasattr(z_nodes, "as_float_list"):
         z_nodes = z_nodes.as_float_list()
@@ -372,10 +385,14 @@ def phase_residual_cache_key(
     k: float,
     sector: str,
     store_id: Optional[int] = None,
-    order: int = RHO_GAUSS_ORDER,
+    order: Optional[int] = None,
 ) -> tuple:
     """
     The cache key for one residual table.
+
+    ``order`` is resolved at call time exactly as ``build_phase_residual`` resolves it, so that a
+    caller who supplies nothing and a caller who supplies the current ``RHO_GAUSS_ORDER`` land on
+    the same key -- and a table built at any other order lands on a different one.
 
     ``store_id`` is the model's datastore id (``ModelProxy.store_id``), which is ``None`` for an
     unavailable model and for every offline stand-in. A ``None`` id is **not** a key: two
@@ -383,6 +400,8 @@ def phase_residual_cache_key(
     ``_ResidualCacheEntry.serves`` confirms it on every hit.
     """
     _check_sector(sector)
+    if order is None:
+        order = RHO_GAUSS_ORDER
     if store_id is not None:
         return ("store", int(store_id), float(k), sector, int(order))
     return ("obj", id(model), float(k), sector, int(order))
@@ -393,7 +412,7 @@ def cached_phase_residual(
     k: float,
     z_grid: Sequence[float],
     sector: str,
-    order: int = RHO_GAUSS_ORDER,
+    order: Optional[int] = None,
     store_id: Optional[int] = None,
 ) -> Tuple[CumulativeTable, bool]:
     """
@@ -415,11 +434,15 @@ def cached_phase_residual(
     :param k: the comoving wavenumber, in the model's units
     :param z_grid: the background model's grid, strictly descending in ``z``
     :param sector: ``"Gk"`` or ``"Tk"``
-    :param order: Gauss-Legendre order per panel
+    :param order: Gauss-Legendre order per panel; ``None`` means the order this run is configured
+        at, resolved here (``build_phase_residual``'s note says why it is not a default argument)
     :param store_id: the model's datastore id, or ``None``
     :return: ``(table, reused)`` -- ``reused`` is ``True`` when the table came from the cache and
         this call therefore spent no integrand evaluation building it
     """
+    if order is None:
+        order = RHO_GAUSS_ORDER
+
     key = phase_residual_cache_key(model, k, sector, store_id=store_id, order=order)
 
     entry = _RESIDUAL_CACHE.get(key)

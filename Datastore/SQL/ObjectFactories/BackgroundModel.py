@@ -70,6 +70,15 @@ c_s/H and -(3/2)(1 + c_s^2)/(1+z) -- each with its own constant and each indepen
 
 There is no migration and no default: a BackgroundModel table without the columns is a store from
 before this change, and build() raises naming it rather than letting a SQLAlchemy error escape.
+
+SCHEMA NOTE (prompts/tolerance-convergence, prompt 05b). No column changes here, but what fills
+the three does. Prompt 05 wrote the value of each module constant, read through an accessor that
+re-read it on every call, and build() passed none of the three columns it selected to the
+constructor -- so a rehydrated model reassembled its cumulative tables at whatever the module
+said, over nodes integrated at whatever the row said. Since 05b build() hands the row's three
+orders to the constructor and the compute path echoes the orders compute_background reports, so
+an object states the orders its tables carry on both paths. build() still *filters* on the
+current module constants (README §7 D10).
 """
 
 from importlib import import_module
@@ -263,6 +272,12 @@ class sqla_BackgroundModelFactory(SQLAFactoryBase):
                 table.c.solver_serial,
                 table.c.label,
                 table.c.z_samples,
+                # selected, not merely filtered on: a rehydrated model must report the orders its
+                # own row records and rebuild its tables at them
+                # (prompts/tolerance-convergence, prompt 05b)
+                table.c.tau_gauss_order,
+                table.c.cs_tau_gauss_order,
+                table.c.friction_F_gauss_order,
                 solver_table.c.label.label("solver_label"),
                 solver_table.c.stepping.label("solver_stepping"),
             ]
@@ -558,6 +573,15 @@ class sqla_BackgroundModelFactory(SQLAFactoryBase):
                     )
                 ),
                 "values": values,
+                # the row's own orders, which are the orders this model's three tables were
+                # tabulated at. build() filters on the current module constants, so these are
+                # those constants today; they are read off the row all the same, because what an
+                # object reports -- and what _build_*_primitive reassembles its tables at -- must
+                # be a property of the object and not of the module
+                # (prompts/tolerance-convergence, prompt 05b)
+                "tau_gauss_order": row_data.tau_gauss_order,
+                "cs_tau_gauss_order": row_data.cs_tau_gauss_order,
+                "friction_F_gauss_order": row_data.friction_F_gauss_order,
             },
             solver_labels=solver_labels,
             cosmology=cosmology,
@@ -584,9 +608,11 @@ class sqla_BackgroundModelFactory(SQLAFactoryBase):
             "label": obj.label,
             "cosmology_type": obj.cosmology.type_id,
             "cosmology_serial": obj.cosmology.store_id,
-            # the three orders this model's tables were built at, read through the same single
-            # declaration build() filters on and compute_background computes at. Never a literal
-            # and never a payload value, so the stored order and the queried order cannot differ.
+            # the three orders this model's tables were actually built at: since prompt 05b the
+            # accessors report the object's own orders -- echoed out of the compute_background
+            # payload on the compute path, read off the row on the rehydration path -- rather
+            # than re-reading the module constants. build() goes on filtering on those constants,
+            # so a model tabulated at another order is simply a different row (README §7 D10).
             "tau_gauss_order": obj.tau_gauss_order,
             "cs_tau_gauss_order": obj.cs_tau_gauss_order,
             "friction_F_gauss_order": obj.friction_F_gauss_order,

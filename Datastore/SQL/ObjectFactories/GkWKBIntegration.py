@@ -19,6 +19,15 @@ residual may be evaluated rather than how accurately, and it cannot produce two 
 
 There is no migration and no default: a table without the column is a store from before this
 change, and build() raises naming it rather than letting a SQLAlchemy error escape.
+
+SCHEMA NOTE (prompts/tolerance-convergence, prompt 05b). No column changes here, but what fills
+"rho_gauss_order" does. Prompt 05 wrote the value of the module constant, read through an accessor
+that re-read it on every call; that reports what the module currently says rather than what the
+object is. Since 05b the compute path carries the residual table's own order out of
+WKB_phase_function's payload, and build() below *selects* the column and hands it to the
+constructor, so a rehydrated object reports its row. build() still *filters* on the current module
+constant -- a row computed at another order is a different row, not a miss to repair (README §7
+D10).
 """
 
 import json
@@ -225,6 +234,10 @@ class sqla_GkWKBIntegration_factory(SQLAFactoryBase):
                 table.c.WKB_violation_efolds_subh,
                 table.c.init_efolds_subh,
                 table.c.metadata,
+                # selected, not merely filtered on: the object must report the order its own row
+                # records rather than the current module constant
+                # (prompts/tolerance-convergence, prompt 05b)
+                table.c.rho_gauss_order,
                 table.c.solver_serial,
                 table.c.label,
                 table.c.z_source_serial,
@@ -439,6 +452,11 @@ class sqla_GkWKBIntegration_factory(SQLAFactoryBase):
                     if row_data.metadata is not None
                     else None
                 ),
+                # the row's own order, which is the order this object's phase residual was
+                # tabulated at. build() filters on the current module constant, so this is that
+                # constant today; it is read off the row all the same, because what the object
+                # reports must be a property of the object and not of the module
+                "rho_gauss_order": row_data.rho_gauss_order,
                 "solver": (
                     IntegrationSolver(
                         store_id=row_data.solver_serial,
@@ -483,10 +501,12 @@ class sqla_GkWKBIntegration_factory(SQLAFactoryBase):
                 "label": obj.label,
                 "wavenumber_exit_serial": obj._k_exit.store_id,
                 "model_serial": obj.model_proxy.store_id,
-                # the order the residual table was built at, read through the same single
-                # declaration build() filters on and the phase integrator computes at. Never a
-                # literal and never a payload value, so the stored order and the queried order
-                # cannot differ.
+                # the order the residual table this object's phase came from was actually
+                # built at: since prompt 05b the accessor reports the object's own order --
+                # carried out of the table by WKB_phase_function on the compute path, read off
+                # the row on the rehydration path -- rather than re-reading the module constant.
+                # build() goes on filtering on that constant, so a row written at another order
+                # is simply a different row (README §7 D10).
                 "rho_gauss_order": obj.rho_gauss_order,
                 "solver_serial": obj.solver.store_id,
                 "z_source_serial": obj.z_source.store_id,

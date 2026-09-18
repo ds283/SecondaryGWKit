@@ -267,6 +267,12 @@ class _Schema:
             tags=list(tags) if tags is not None else [],
         )
         obj._solver = self.solver
+        # the three orders store() records off the compute_background payload: this object is
+        # standing in for one whose tables were built at the orders this run is configured at
+        # (prompts/tolerance-convergence, prompt 05b)
+        obj._tau_gauss_order = BackgroundModelModule.TAU_GAUSS_ORDER
+        obj._cs_tau_gauss_order = BackgroundModelModule.CS_TAU_GAUSS_ORDER
+        obj._friction_F_gauss_order = BackgroundModelModule.FRICTION_F_GAUSS_ORDER
         obj._data = IntegrationData(
             compute_time=1.0,
             compute_steps=1,

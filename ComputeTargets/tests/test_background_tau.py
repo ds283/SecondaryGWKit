@@ -190,6 +190,11 @@ def _offline_model(cosmology, z_sample, payload) -> BackgroundModel:
             "data": payload["data"],
             "solver": None,
             "values": values,
+            # the three orders the payload says its tables were built at -- what store() records
+            # and what the object reports (prompts/tolerance-convergence, prompt 05b)
+            "tau_gauss_order": payload["tau_order"],
+            "cs_tau_gauss_order": payload["cs_tau_order"],
+            "friction_F_gauss_order": payload["friction_F_order"],
         },
         solver_labels={},
         cosmology=cosmology,

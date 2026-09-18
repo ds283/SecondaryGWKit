@@ -407,8 +407,11 @@ def compute_background(
     are none in the lookup key either: the accuracy of all three tables is set by the Gauss orders
     ``TAU_GAUSS_ORDER``, ``CS_TAU_GAUSS_ORDER`` and ``FRICTION_F_GAUSS_ORDER``, and those are what
     the ``BackgroundModel`` row is keyed on. The three module constants read below are the *only*
-    declaration of each order: the factory's ``store()`` writes them and its ``build()`` filters on
-    them, so a row cannot record an order it was not computed at.
+    declaration of each order, and the payload echoes the three values this call actually used as
+    ``tau_order``, ``cs_tau_order`` and ``friction_F_order``. Since prompt 05b those echoes are
+    what ``BackgroundModel.store()`` records and what the factory's ``store()`` writes into the
+    key, so a row cannot record an order its tables were not built at; ``build()`` filters on the
+    module constants, which is the lookup semantics rather than a statement about any object.
     """
     z_nodes = np.array(z_sample.as_float_list(), dtype=float)
     z_init = float(z_nodes[0])
@@ -705,11 +708,26 @@ class BackgroundModel(DatastoreObject):
             self._solver = None
             self._values = None
 
+            # nothing has been tabulated and no row is behind us, so there are no orders to
+            # report yet; store() fills them from the compute_background payload
+            self._tau_gauss_order = None
+            self._cs_tau_gauss_order = None
+            self._friction_F_gauss_order = None
+
         else:
             DatastoreObject.__init__(self, payload["store_id"])
             self._data: Optional[IntegrationData] = payload["data"]
             self._solver: Optional[IntegrationSolver] = payload["solver"]
             self._values: Optional[List[BackgroundModelValue]] = payload["values"]
+
+            # the three orders the row records, which are the orders this model's three tables
+            # were tabulated at. _build_*_primitive reassembles the tables at these and not at
+            # the module constants, so an off-grid partial evaluated against a rehydrated table
+            # uses the rule its nodes were integrated with
+            # (prompts/tolerance-convergence, prompt 05b)
+            self._tau_gauss_order = payload["tau_gauss_order"]
+            self._cs_tau_gauss_order = payload["cs_tau_gauss_order"]
+            self._friction_F_gauss_order = payload["friction_F_gauss_order"]
 
         # store parameters
         self._label = label
@@ -723,24 +741,37 @@ class BackgroundModel(DatastoreObject):
         self._compute_ref = None
 
     # The three Gauss orders that set this model's accuracy, and -- since prompt 05 of
-    # prompts/tolerance-convergence -- its datastore lookup key. Each accessor resolves the single
-    # module-level declaration *at call time*, which is also how compute_background and
-    # _build_*_primitive reach it and how sqla_BackgroundModelFactory reaches it for both store()
-    # and build(). There is no keyword, no payload key and no default anywhere on the path, so
-    # the order a row records, the order a lookup asks for and the order the tables were built at
-    # are the same object: moving the declaration moves all three together, and a row cannot claim
-    # an order it was not computed at.
+    # prompts/tolerance-convergence -- its datastore lookup key.
+    #
+    # Prompt 05 made each accessor re-read its module constant at call time, which is right about
+    # the key and wrong about the object: it reports what the module currently says, not what
+    # this model's tables were built with. Since prompt 05b each reports the order recorded on
+    # the path this object came into existence by -- the compute_background payload on the
+    # compute path (store()), the row's own column on the rehydration path (__init__ above) --
+    # and _build_*_primitive reassembles the tables at those same orders.
+    # sqla_BackgroundModelFactory.build() still *filters* on the module constants, which is the
+    # lookup semantics: a model tabulated at another order is a different row (README §7 D10).
+    def _order(self, value: Optional[int], name: str) -> int:
+        if value is None:
+            raise RuntimeError(
+                f"BackgroundModel: {name} was read before this object had one. It is the Gauss "
+                "order one of the three cumulative tables was built at, so it exists only once "
+                "the model has been computed (store()) or rehydrated from a row."
+            )
+
+        return value
+
     @property
     def tau_gauss_order(self) -> int:
-        return TAU_GAUSS_ORDER
+        return self._order(self._tau_gauss_order, "tau_gauss_order")
 
     @property
     def cs_tau_gauss_order(self) -> int:
-        return CS_TAU_GAUSS_ORDER
+        return self._order(self._cs_tau_gauss_order, "cs_tau_gauss_order")
 
     @property
     def friction_F_gauss_order(self) -> int:
-        return FRICTION_F_GAUSS_ORDER
+        return self._order(self._friction_F_gauss_order, "friction_F_gauss_order")
 
     @property
     def cosmology(self):
@@ -910,7 +941,7 @@ class BackgroundModel(DatastoreObject):
         table = CumulativeTable(
             z_nodes,
             inverse_Hubble,
-            TAU_GAUSS_ORDER,
+            self.tau_gauss_order,
             hi=[v.tau for v in values],
             lo=[v.tau_lo for v in values],
             break_points=_cosmology_break_points(cosmology, z_nodes[-1], z_nodes[0]),
@@ -945,7 +976,7 @@ class BackgroundModel(DatastoreObject):
         table = CumulativeTable(
             z_nodes,
             _cs_over_Hubble(cosmology),
-            CS_TAU_GAUSS_ORDER,
+            self.cs_tau_gauss_order,
             hi=self._persisted_limbs(values, "cs_tau", "cs_tau"),
             lo=self._persisted_limbs(values, "cs_tau_lo", "cs_tau"),
             break_points=_cosmology_break_points(cosmology, z_nodes[-1], z_nodes[0]),
@@ -973,7 +1004,7 @@ class BackgroundModel(DatastoreObject):
         table = CumulativeTable(
             z_nodes,
             _friction_integrand(cosmology),
-            FRICTION_F_GAUSS_ORDER,
+            self.friction_F_gauss_order,
             hi=hi,
             lo=[0.0] * len(hi),
             break_points=_cosmology_break_points(cosmology, z_nodes[-1], z_nodes[0]),
@@ -1020,6 +1051,13 @@ class BackgroundModel(DatastoreObject):
         self._data = data["data"]
         self._values = self.values_from_payload(self._z_sample, data)
         self._solver = self._solver_labels[data["solver_label"]]
+
+        # the orders the three tables were actually built at, as compute_background reports them.
+        # This is what makes the record faithful: the factory's store() writes these into the key
+        # columns, so a row cannot claim an order its tables were not built at
+        self._tau_gauss_order = int(data["tau_order"])
+        self._cs_tau_gauss_order = int(data["cs_tau_order"])
+        self._friction_F_gauss_order = int(data["friction_F_order"])
 
         return True
 

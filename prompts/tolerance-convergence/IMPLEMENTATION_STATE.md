@@ -8,7 +8,7 @@
 re-run for the re-anchor and green — `ComputeTargets` **452**, `CosmologyModels` **39**)
 **Superseded baseline:** `acd5b8e`, `ComputeTargets` 447, `CosmologyModels` 30 — the anchor of any
 figure in this campaign's documents dated before 2026-09-16 19:32
-**Last updated:** 2026-09-18 · **Status: in progress — 6 / 6 measured, plus the insertions 02a, 04b and 05a; **04b has landed the block prompt 04 stopped short of writing** and **05 has landed the schema change**; 05a–06 held.**
+**Last updated:** 2026-09-18 · **Status: in progress — 6 / 6 measured, plus the insertions 02a, 04b, 05b and 05a; **04b has landed the block prompt 04 stopped short of writing**, **05 has landed the schema change** and **05b has made the recorded order the order that was used**; 05a–06 held.**
 **Every user decision needed to start is settled** — **D1 closed 2026-09-17** (all four pairs
 accepted), **D3 settled 2026-09-18 and implemented by prompt 05**, D2 settled 2026-09-12, D4 settled by
 README §0.4, **D5 settled yes 2026-09-16**.
@@ -109,6 +109,21 @@ counts. `ComputeTargets` **508**, `CosmologyModels` **39**, both OK;
 targets rather than eight (**T9**). One issue is opened,
 `[05-rho-gauss-order-reaches-the-residual-table-through-a-default-argument]`, and two are
 re-pointed at 05a.
+**Prompt 05b has made the recorded order the order that was used (2026-09-18, README §7 D10).** An
+object reports the Gauss order it was **built at** on both paths: the compute path carries the
+residual table's own order out of `WKB_phase_function`'s payload and the three `compute_background`
+echoes into `store()`, and the rehydration path selects each row's order column(s), hands them to
+the constructor and reassembles `BackgroundModel`'s three cumulative tables at them. The `order=`
+parameter keeps a default, now a **call-time sentinel**, so the def-time snapshot is gone while the
+five doc-script call sites of three campaigns still work. **`build()` still filters on the current
+module constants** — a row computed at another order is a different row. **Nothing moved**: no
+schema, no number (`config/defaults.py` byte-identical, all four orders 4), no `main.py` line, and
+no computed value — a SHA-256 over 2,296 doubles of the production path is identical at `90d0114`
+and after. Both §6 tests were confirmed to fail at `90d0114`. `ComputeTargets` **516**,
+`CosmologyModels` **39**, both OK. So
+**`[05-rho-gauss-order-reaches-the-residual-table-through-a-default-argument]` is closed** (§4),
+with the rehydration half it does not name, and **T15** is done. Nothing is opened, and log 05's
+`main.py` site table stands untouched for 05a.
 **Prompt 04b landed the convergence block (2026-09-18, README §7 D8).** The `convergence` block is
 **current** — `generated` 2026-09-18, `recommended_scheme` **`branch`**, orders **4 / 4 / 4 / 4**,
 `branch+knots` kept as a populated control, and only that key changed. The two threshold
@@ -197,7 +212,7 @@ and `wavenumber_exit_time`. §2 (a)'s table says so on both rows; prompt 06 reco
 | 04 | Audit the order-governed targets | README §2 (a), §3.4; §7 **D5** (settled yes) and **D3**; `[01-convergence-block-has-a-separate-generator]`, `[20-wkb-gauss-orders-not-in-lookup-key]`, `[01-density-criterion-imposed-outside-the-wkb-region]` | Opus | ✍️ [`04-…`](04-order-governed-targets.md) | ⚠️ **stopped** | *"Audit the four Gauss orders and the WKB region margin"* (SHA not embedded, per the convention `prompts/background-solver-robustness` uses) | [`logs/04-…`](logs/04-order-governed-targets.md) |
 | 04b | Regenerate the convergence block, and repair the two tests that read it | README §3.4b; §7 **D5** as widened by **D8** (settled yes 2026-09-18); `[01-convergence-block-has-a-separate-generator]`, `[04-convergence-floor-used-as-a-test-threshold]` | Opus | ✍️ [`04b-…`](04b-regenerate-the-convergence-block.md) | ✅ | *"Land the regenerated convergence block"* (SHA not embedded, per the convention `prompts/background-solver-robustness` uses) | [`logs/04b-…`](logs/04b-regenerate-the-convergence-block.md) |
 | 05 | Replace the vestigial key columns with the orders | README §3.5; §7 **D3** (settled 2026-09-18), **D9** (split 2026-09-18); `[20-wkb-gauss-orders-not-in-lookup-key]` | Opus | ✍️ [`05-…`](05-replace-the-vestigial-key-columns.md) | ✅ | *"Key the order-governed targets on their Gauss orders"* (SHA not embedded, per the convention `prompts/background-solver-robustness` uses) | [`logs/05-…`](logs/05-replace-the-vestigial-key-columns.md) |
-| 05b | Make the recorded order the order that was used | README §3.5b; §7 **D10** (settled 2026-09-18); `[05-rho-gauss-order-reaches-the-residual-table-through-a-default-argument]` | Opus | ✍️ [`05b-…`](05b-make-the-recorded-order-the-order-used.md) | ⬜ | | |
+| 05b | Make the recorded order the order that was used | README §3.5b; §7 **D10** (settled 2026-09-18); `[05-rho-gauss-order-reaches-the-residual-table-through-a-default-argument]` | Opus | ✍️ [`05b-…`](05b-make-the-recorded-order-the-order-used.md) | ✅ | *"Make an object report the Gauss order it was built at"* (SHA not embedded, per the convention `prompts/background-solver-robustness` uses) | [`logs/05b-…`](logs/05b-make-the-recorded-order-the-order-used.md) |
 | 05a | Decouple the tolerances that are real | README §3.5a; §2 (a), (e), (g); §7 **D1** (closed 2026-09-17), **D9** | Opus | ⏸️ **held — to be written against what 05 left, which log 05's "State handed to the next prompt" now enumerates site by site** | ⬜ | | |
 | 06 | `QuadSourceIntegral`, close-out, the provenance note | README §0.4, §1.2 | Opus | ⏸️ **held** | ⬜ | | |
 
@@ -262,7 +277,7 @@ not ✅ either, which is the specific failure the rebase found.
 | T12 | **PROVENANCE** | `docs/TOLERANCE-PROVENANCE.md` covers **every** accuracy parameter in the pipeline — including the ones this campaign inherits and does not set, and the ones nobody has ever chosen — with value, choosing measurement and its grid generation, competing floor, cost times object count, and citation (README §1.2) | 06 | ⬜ |
 | T13 | **MACHINERY** | The version-2 source grid **builds at every production anchor on every production cosmology**, with a node at which the Liouville–Green expansion does not exist marked unusable and *counted* rather than raising, a refusal above a measured fraction of the band, and QCD's own anchor named in the test tree. Acceptance is bit-identity with the two published digests (1996 / `4849552b`, 1778 / `60a3205a`), not accuracy | 02a | ⚠️ QCD at its own anchor builds: **2034 / `21ffc126`, 53 guarded `(k, sector)` evaluations of ONE base-lattice node** (Gk 34, Tk 19, 53 of 100 cases, all hitting $z = 8.63614\times10^{11}$). Both published grids **bit-identical with zero guarded**, so the `except` branch is never entered on either. **Corrected 2026-09-17 (log 02a §7):** the guard is inert more strongly than first claimed — that node lies 1.0e-03 in $u$ from a **declared** break, inside the 6.0e-03 crossing mask, so it is discarded anyway and the guard can change no profile — but the two published zeros are **lattice alignment, not construction**, so a change to `z_init` or `samples_per_log10z` could start guarding. Refusal ceiling `SOURCE_GRID_MAX_GUARDED_FRACTION = 0.05`, **64.8x** the worst measured band (7.716e-04). **Caveat:** the constant's only proper home is `CosmologyConcepts/wavenumber.py`, a file the prompt's own file list forbade; the agent stopped rather than editing it, and the **user amended the scope on 2026-09-17** to permit that one append-only definition (log 02a, deviation 1) |
 | T14 | **EVIDENCE** | The `convergence` block of `ComputeTargets/tests/wkb_reference_data.json` is **current**: regenerated by its own generator against the corrected $T(z)$ representation and the 3-point break set, recommending a scheme production can execute, with `branch+knots` retained as a measured control — and the two threshold tests that read it bound the production quantity against a measured floor rather than against the fixture's own agreement with a converged reference. `QCD_BREAK_POINT_ALIGNMENT_TOL` back from 1.5e-04 to ~1.42e-14 | 04b | ✅ **Landed 2026-09-18.** The block is `generated` **2026-09-18** by `prompts/tolerance-convergence (prompt 04, board item T7)`, `schema_version` 2, **`recommended_scheme` = `branch`**, orders back **4 / 4 / 4 / 4**, `branch+knots` populated as `control_scheme`, and **only the `convergence` key differs from `HEAD~1`** (checked key by key on the parsed JSON). Written by `residual_convergence.py` with no flags in 538.4 s and **never by hand**; every figure reproduces prompt 04's dry run. The two assertions are **rebuilt, not loosened**: `QCD_NODE_REL_TOL = 1.0e-14` and `QCD_CS_TAU_REL_TOL = 1.0e-14`, absolute bounds on the production quantities (2.254e-15 / 2.212e-15) against the accumulation floors `ORDER-AUDIT.md` §§3.1 and 5 measure (2.16e-16 / 3.30e-16) — ×4.4 / ×4.5 headroom, ×46 / ×30 the floor — and `QCD_FLOOR_FACTOR` is **removed** from both modules. **`QCD_BREAK_POINT_ALIGNMENT_TOL` = 3.0e-14**, against offsets of 1, 2 and 4 ulp of $u$ (3.552714e-15 / 7.105427e-15 / **1.421085e-14**). `ComputeTargets` **491**, `CosmologyModels` **39**, `test_convergence_reference` **32**, the three readers **41**, all OK, `test_phase_residual.py` **unedited**; the three grid digests unmoved. `ORDER-AUDIT.md` §12 records it additively |
-| T15 | **CORRECTNESS** | An object reports the Gauss order it was **built at**, on every path by which it can come into existence — computed fresh, the order its tables were actually constructed with; rehydrated from a row, the row's stored order, with its tables rebuilt at that order. Prompt 05's mechanism (a property that re-reads the module constant) is right about the key and wrong about the object, and fails in two places: `phase_residual`'s `order=` keyword can persist a table at an order it was not built at, and `BackgroundModel._build_tau_primitive` / `_build_cs_tau_primitive` / `_build_friction_F_primitive` reassemble a stored model at the **current** constant while the row's three order columns are selected by `build()` and never passed to the constructor. Both are masked because `build()` filters on the constant, so a served row always happens to carry it — correctness resting on an argument about the filter rather than on construction. **`build()` keeps filtering on the current constant**: a row computed at another order is a different row, not a miss to repair. Settled by the user 2026-09-18 as a correctness issue (§7 **D10**) | 05b | ⬜ **Open.** No schema, no number, no `main.py` line and no computed value may move |
+| T15 | **CORRECTNESS** | An object reports the Gauss order it was **built at**, on every path by which it can come into existence — computed fresh, the order its tables were actually constructed with; rehydrated from a row, the row's stored order, with its tables rebuilt at that order. Prompt 05's mechanism (a property that re-reads the module constant) is right about the key and wrong about the object, and fails in two places: `phase_residual`'s `order=` keyword can persist a table at an order it was not built at, and `BackgroundModel._build_tau_primitive` / `_build_cs_tau_primitive` / `_build_friction_F_primitive` reassemble a stored model at the **current** constant while the row's three order columns are selected by `build()` and never passed to the constructor. Both are masked because `build()` filters on the constant, so a served row always happens to carry it — correctness resting on an argument about the filter rather than on construction. **`build()` keeps filtering on the current constant**: a row computed at another order is a different row, not a miss to repair. Settled by the user 2026-09-18 as a correctness issue (§7 **D10**) | 05b | ✅ **Done, 2026-09-18.** The order travels as data on both paths: `WKB_phase_function` carries the residual table's own `CumulativeTable.order` out in its payload and `store()` records it; `BackgroundModel.store()` records `compute_background`'s three echoes; each `build()` **selects** its order column(s) and hands them to the constructor, and the three `_build_*_primitive` methods rebuild at the row's orders. The `order=` default is kept as a **call-time sentinel** (`Optional[int] = None`) rather than made required, so the five doc-script call sites of three campaigns still work and the def-time snapshot is gone. `build()` still filters on the current module constants, asserted. **Nothing moved**: `config/defaults.py` byte-identical, all four orders 4, `main.py` zero lines, no `register()` touched, and a SHA-256 over 2,296 doubles of the production path is identical at `90d0114` and after. `ComputeTargets` **516**, `CosmologyModels` **39**. Log 05b |
 
 ---
 
@@ -767,57 +782,6 @@ Opened by **prompt 03a**, 2026-09-17:
   03a's, whose licence over that file was additive-only and which needed nothing. Evidence:
   `docs/tolerance-convergence/TK-NUMERIC-AND-EXIT-TIME.md` §7.2; log 03a, observation 1.
 
-Opened by **prompt 05**, 2026-09-18:
-
-- **[05-rho-gauss-order-reaches-the-residual-table-through-a-default-argument]** *(prompt 05,
-  2026-09-18; **assigned 2026-09-18 to prompt 05b**, board item **T15**)* — prompt 05's
-  invariant is that there is **no keyword, no payload key and no default** by which the order a
-  row records can differ from the order its tables were built at. It holds on every path the
-  prompt owned. It does not hold by *construction* on one path it did not:
-  `phase_residual.build_phase_residual` and `cached_phase_residual` both take
-  `order: int = RHO_GAUSS_ORDER`, and a default argument is bound once at `def` time, so a caller
-  that supplies `order=6` gets a residual table at order 6 while `rho_gauss_order` in the key —
-  which `build()`/`store()` read from the module constant — still says 4.
-
-  **Impact: none today, and measured.** The only production call site,
-  `Quadrature/integrators/WKB_phase_function.py:252`, does not supply the keyword, and
-  `ComputeTargets/tests/test_gauss_order_key.test_no_production_caller_overrides_the_residual_order`
-  walks every production module and asserts that none does. The hazard is a future caller, and it
-  is invisible: nothing would fail, a row would simply record an order it was not computed at,
-  which is the exact defect this prompt closed everywhere else.
-
-  **Next step:** for any prompt given `ComputeTargets/phase_residual.py` — make `order` a required
-  argument of both functions and have `WKB_phase_function` pass `RHO_GAUSS_ORDER` explicitly, which
-  turns a def-time snapshot into a call-time read and gives the call site the `ast` check prompt 20
-  of `GkTk-remedial` used for `break_point_kind`. Neither that module nor
-  `Quadrature/integrators/WKB_phase_function.py` was in prompt 05's file list. Evidence: log 05,
-  "What shipped".
-
-  **Widened 2026-09-18, and the widening is the larger half.** The user asked whether the fix was
-  simply to pass the order at the single production call site. It is not, and the "next step"
-  above — make `order` required — does not close it either: it turns a silent default into a loud
-  parameter, but a caller supplying 6 still writes 4, so divergence stays *expressible*, which is
-  what prompt 05 §3's invariant forbade. Worse, the orchestrator's check found a second failure the
-  title of this issue does not name and prompt 05 never looked for: **the rehydration path is wrong
-  for all four orders, not just `rho`.** `BackgroundModel._build_tau_primitive` (`:913`),
-  `_build_cs_tau_primitive` (`:948`) and `_build_friction_F_primitive` (`:976`) take a stored row's
-  persisted `hi`/`lo` limbs and reconstruct a `CumulativeTable` at `TAU_GAUSS_ORDER` /
-  `CS_TAU_GAUSS_ORDER` / `FRICTION_F_GAUSS_ORDER` **as the module reads them now**, while the row's
-  own three order columns are selected by `build()`
-  (`Datastore/SQL/ObjectFactories/BackgroundModel.py:340-342`) and never reach the constructor
-  (`:542`); and both WKB classes' `rho_gauss_order` properties return the module constant whatever
-  the row said. Every off-grid partial `delta()` later evaluated against such a table uses the
-  current order over nodes integrated at the stored one. Masked, like the keyword half, only
-  because `build()` filters on the constant.
-
-  **Assigned (2026-09-18): prompt 05b**, board item **T15**, which runs before 05a (§7 **D10**).
-  The user's instruction is that this is a correctness issue — set up, computed, persisted,
-  rehydrated — and that zero current impact is not an argument against fixing it. What the fix is
-  *not*: a change to what `build()` filters on, which stays the current module constant, because a
-  row computed at another order is a different row rather than a miss to repair. Whether the
-  `order=` parameter keeps a default is left to 05b as a design question, constrained by six doc
-  scripts across three campaigns that call these entry points and must still compile.
-
 Opened by **prompt 04b**, 2026-09-18:
 
 - **[04b-break-point-print-string-describes-a-superseded-block]** *(prompt 04b, 2026-09-18;
@@ -961,6 +925,45 @@ Recorded by the rebase, **not owned here** and not scheduled (README §0.5):
 ---
 
 ## 4. Resolved issues
+
+Closed by **prompt 05b**, 2026-09-18:
+
+- **[05-rho-gauss-order-reaches-the-residual-table-through-a-default-argument]** (opened by prompt
+  05, 2026-09-18; widened the same day) — **CLOSED, both halves**, including the rehydration half
+  the title does not name.
+
+  **An object now reports the order it was built at, on every path by which it can come into
+  existence.** On the compute path the order travels as data: `WKB_phase_function` reads
+  `CumulativeTable.order` off the residual table it actually used, into `metadata["N_rho"]` and
+  into a payload key of its own, and both WKB `store()` methods record it;
+  `BackgroundModel.store()` records the three orders `compute_background` already echoed from its
+  three table constructions. On the rehydration path each factory's `build()` **selects** its
+  order column(s) and passes them to the constructor — `BackgroundModel`'s query did not select
+  its three at all, which is why the row's orders could not have reached it — and
+  `_build_tau_primitive`, `_build_cs_tau_primitive` and `_build_friction_F_primitive` reassemble
+  their tables at the row's orders rather than the module's. An object that has computed nothing
+  and came from no row refuses rather than answering with the constant.
+
+  **The keyword half closes as a call-time sentinel rather than as a required argument.**
+  `build_phase_residual`, `cached_phase_residual` and `phase_residual_cache_key` take
+  `order: Optional[int] = None` and resolve `RHO_GAUSS_ORDER` in the body. That removes the
+  def-time snapshot the issue names — under which re-pointing the declaration moved the key column
+  while the table went on being built at the old order — without editing the five doc-script call
+  sites across three campaigns that prompt §4 protects, and without deleting the parameter
+  `order_audit.py` sweeps. The "make it required" next step this entry proposed is therefore
+  **not** what was done, and the log says why: required still leaves the divergence expressible,
+  while reading the record off the table does not.
+
+  **`build()` still filters on the current module constants**, unweakened and asserted: a row
+  computed at another order is a different row rather than a miss to repair (§7 **D10**).
+
+  **Nothing moved.** No schema (`register()` untouched in all six factories, `GkSource` included,
+  `break_point_kind` included), no number (`config/defaults.py` byte-identical, all four orders
+  still 4), no `main.py` line, and **no computed value**: a SHA-256 over 2,296 doubles produced by
+  `compute_background` and by both WKB sectors' phase and residual tables is identical at
+  `90d0114` and after. Both of the prompt's §6 tests were confirmed to fail at `90d0114` with the
+  messages log 05b §4 quotes. `ComputeTargets` **516**, `CosmologyModels` **39**, both OK.
+  Evidence: log 05b; board item **T15**.
 
 Closed by **prompt 05**, 2026-09-18:
 
