@@ -14,6 +14,7 @@ continues or stops and reports to the user.
 | 04 | Audit the order-governed targets | [`prompt-04.md`](prompt-04.md) | **yes** | The first prompt to write a fixture other prompts' tests read. D5 gives it three files; **three test modules read the block and only one of them is inside that carve-out**, which is what the review is for. Ends in a **hand-back**: D3 is the user's and prompt 05 waits on it |
 | 04b | Regenerate the convergence block, and repair the two tests that read it | [`prompt-04b.md`](prompt-04b.md) | **yes** | Lands what 04 measured and stopped short of writing. **D5 widened by one file (D8)**; the review turns on whether the threshold repair is a bound on the production quantity or a bigger `QCD_FLOOR_FACTOR`. Closes two issues. Ends in a short hand-back, not a decision |
 | 05 | Replace the vestigial key columns with the orders | [`prompt-05.md`](prompt-05.md) | **yes** | The campaign's first large production change, and the **schema** half of what §3.5 used to be (§7 **D9**). Four tables lose a pair that reaches no solver; three gain the orders that do. The review turns on whether the order is **filtered on, not merely selected** — a column that is written and read back but never compared reproduces the defect one identifier later and every other check passes. Changes **no number** |
+| 05b | Make the recorded order the order that was used | [`prompt-05b.md`](prompt-05b.md) | **yes** | The correctness half of what prompt 05 left. **Runs before 05a** (§7 **D10**) although the letter says otherwise. A property that re-reads a module constant reports what the module says, not what the object is: `phase_residual`'s `order=` keyword can persist a table at an order it was not built at, and a rehydrated `BackgroundModel` reassembles its tables at the current constant while its row's order columns are selected and dropped. The review turns on **two tests that must fail at `90d0114`** — a test that passes at the parent is testing nothing. Changes no schema, no number, and no line of `main.py` |
 | 05a | Decouple the tolerances that are real | — | **held** | The tolerance half. **T8** and **T10**: per-target constants, the `main.py` tolerance objects, every `object_get` switched, the `ast` guard widened. D1 closed 2026-09-17, so only 05 gates it. Written against what 05 actually leaves |
 | 06 | `QuadSourceIntegral`, close-out, the provenance note | — | **held** | Assembles from the earlier logs |
 
@@ -59,7 +60,7 @@ Start with, for example:
 **Take the baselines the prompt names before dispatching anything.** They cannot be reconstructed
 after the fact.
 
-Run **01 → 02 → 02a → 03 → 03a → 04 → 04b → 05 → stop**. 02, 02a, 03 and 03a each end in a hand-back, and
+Run **01 → 02 → 02a → 03 → 03a → 04 → 04b → 05 → 05b → stop**. **05b precedes 05a** (campaign README §7 **D10**, 2026-09-18): the letter records insertion, not run order. 02, 02a, 03 and 03a each end in a hand-back, and
 **04–06 are written from what has landed** (user decision, 2026-09-17): 02 says which targets the
 audits own, 02a settles the anchor question that **T6** — prompt 03a's row — turns on, and 03
 settled whether the two tolerance axes separate in the sector that carries the cost. **03a was

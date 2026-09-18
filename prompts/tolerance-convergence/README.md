@@ -663,6 +663,30 @@ reappearing on one of the latter is itself a regression the guard should catch. 
 batch-dispatch hazard prompt 12 hit; the guard exists because it is silent. Board items **T8** and
 **T10**.
 
+### 3.5b Prompt 05b — make the recorded order the order that was used
+
+**An insertion, and it runs *before* §3.5a** (§7 **D10**, 2026-09-18). The letter records insertion,
+not run order, which is a departure from the 02a/03a convention and is stated here so that no later
+reader "corrects" it.
+
+Prompt 05 put the four Gauss orders in the lookup key and proved each is filtered on. It established
+the mechanism as one name resolved at call time: the compute path reads the module constant, the
+object's property returns the module constant, `store()` writes that property, `build()` filters on
+the same module attribute. **That is right about the key and wrong about the object.** A property
+that re-reads a constant reports what the module currently says, not what the object is, and the two
+part company in two places: `phase_residual`'s `order=` keyword lets a residual table be built at one
+order and persisted at another (the issue prompt 05's own agent opened), and — larger, and named by
+nothing before 2026-09-18 — a rehydrated `BackgroundModel` reassembles its cumulative tables at the
+current module constant while its row's three order columns are selected and never passed to the
+constructor.
+
+Both are masked by the same accident: `build()` filters on the constant, so a served row always
+happens to carry it. Correctness rests on an argument about the filter rather than on construction.
+05b makes the object report the order it was built at on **both** paths, computed and rehydrated,
+while leaving `build()` filtering on the current constant — because a row computed at another order
+is not a miss to repair, it is a different row. No schema, no number, no `main.py` line and no
+computed value moves. Board item **T15**.
+
 ### 3.6 Prompt 06 — `QuadSourceIntegral`, close-out, and the provenance note
 
 Apply the harness to `QuadSourceIntegral` **without editing it or anything else in §0.4**: is it
@@ -704,6 +728,13 @@ tolerance pair from the four targets that never used one; 05a then decouples wha
 other way round, 05a would wire per-target tolerance objects through `BackgroundModel`,
 `GkWKBIntegration`, `TkWKBIntegration` and `GkSource` for 05 to delete, and would build its `ast`
 guard against an enumeration that is about to change.
+
+**05b runs next, before 05a** (§7 **D10**, 2026-09-18). The two do not collide — 05a touches the
+four tolerance-carrying targets and `config/defaults.py`, 05b touches `BackgroundModel`, the two WKB
+compute classes, `phase_residual` and three `build()` paths — so the order is a judgement about what
+should be true before more plumbing is layered on the same objects, not a dependency. It is a
+correctness defect, and the user's instruction of 2026-09-18 was that it be made correct: set up,
+computed, persisted, rehydrated.
 
 **03, 03a and 04 are written after 02a, not merely after 02.** The 2026-09-17 decision is that both
 audits are written from 02's inventory and 02a's hand-off together. 02's table says which targets
@@ -1133,3 +1164,36 @@ stating, because the rule names prompt 05 by number: **the permission to change 
 to 05a, and prompt 05 changes none.** `config/defaults.py` is byte-identical when 05 finishes and
 all four `*_GAUSS_ORDER` constants are still 4, which is an acceptance condition of that prompt
 rather than an observation about it.
+
+**D10 — is the order an object reports the order it was built at? *Settled 2026-09-18: it must be,
+and prompt 05b runs next to make it so.*** Prompt 05's own agent opened
+`[05-rho-gauss-order-reaches-the-residual-table-through-a-default-argument]`: `phase_residual`'s
+three entry points take `order: int = RHO_GAUSS_ORDER`, so a residual table can be built at one
+order and persisted at another. Asked whether the fix was simply to pass the order at the single
+production call site, the orchestrator found that it was not, and found a **second and larger half
+the issue does not name**: `BackgroundModel._build_tau_primitive`, `_build_cs_tau_primitive` and
+`_build_friction_F_primitive` rebuild a stored model's cumulative tables at the **current module
+constant**, while the row's own three order columns are selected by `build()` and never reach the
+constructor.
+
+**The user's instruction, 2026-09-18:** this is a correctness issue and the code must be made
+correct — *set up correctly, performed correctly, persisted correctly, and, if it is read back from
+the datastore, rehydrated correctly* — and whatever comes downstream of that is to be dealt with
+rather than traded against. The `atol`/`rtol` pair did it that way before prompt 05 removed it
+because that is the right way to do it. **Zero current impact is not an argument** and no prompt may
+offer it as one: the defect is masked only because `build()` filters on the constant, so a served row
+always happens to carry it, which makes correctness rest on an argument about the filter instead of
+on construction.
+
+**What does not change**: `build()` still filters on the current module constant. That is the lookup
+semantics — give me a row computed at the order this run is configured for — and once the record is
+faithful the two no longer need to agree by luck, because a row computed at another order is a
+different row rather than a miss to repair.
+
+**It runs before 05a, and the letter therefore records insertion rather than run order** — a
+departure from 02a and 03a, made because correctness should land before further plumbing is layered
+on the same objects. The two do not collide: 05a owns the four tolerance-carrying targets and
+`config/defaults.py`, 05b owns `BackgroundModel`, the two WKB compute classes, `phase_residual` and
+three `build()` paths. No board item is renumbered; 05b takes the new **T15**, and 05a keeps **T8**
+and **T10**. §5 rule 8 is unaffected: the permission to move a number still belongs to 05a alone,
+and **05b changes no number**.
