@@ -12,7 +12,8 @@ continues or stops and reports to the user.
 | 03 | `GkNumericIntegration`, and the floor that decides whether it matters | [`prompt-03.md`](prompt-03.md) | **yes** | The sector **D1** turns on: ~65,000 objects per model, never swept. Acceptance is a **matrix**, not a diagonal, and `unchanged` is a result. Ends in a **hand-back**: D1 is the user's |
 | 03a | `TkNumericIntegration` and `wavenumber_exit_time` | [`prompt-03a.md`](prompt-03a.md) | **yes** | Two targets that fail differently, and the one that **closes D1**. The $T_k$ re-take is under the sector's own `BREAK_POINT_ALL`, which has never been swept; `wavenumber_exit_time` is a **location, not a value**, and is the campaign's likeliest §6.1 **rule 6** row. Ends in a **hand-back**: D1 closes on the user's acceptance |
 | 04 | Audit the order-governed targets | [`prompt-04.md`](prompt-04.md) | **yes** | The first prompt to write a fixture other prompts' tests read. D5 gives it three files; **three test modules read the block and only one of them is inside that carve-out**, which is what the review is for. Ends in a **hand-back**: D3 is the user's and prompt 05 waits on it |
-| 05 | Decouple | — | **held** | Its content *is* D1 and D3, which do not exist until 03 and 04 report |
+| 04b | Regenerate the convergence block, and repair the two tests that read it | [`prompt-04b.md`](prompt-04b.md) | **yes** | Lands what 04 measured and stopped short of writing. **D5 widened by one file (D8)**; the review turns on whether the threshold repair is a bound on the production quantity or a bigger `QCD_FLOOR_FACTOR`. Closes two issues. Ends in a short hand-back, not a decision |
+| 05 | Decouple | — | **held** | Its charter is fixed (campaign README §3.5) and **both gates are now open** — D1 closed 2026-09-17, D3 settled 2026-09-18. Written after 04b lands |
 | 06 | `QuadSourceIntegral`, close-out, the provenance note | — | **held** | Assembles from the earlier logs |
 
 **02a is an insertion, not a renumbering** (campaign README §3.2a, §7 D6, 2026-09-17). It carries a
@@ -44,7 +45,7 @@ Start with, for example:
 **Take the baselines the prompt names before dispatching anything.** They cannot be reconstructed
 after the fact.
 
-Run **01 → 02 → 02a → 03 → 03a → 04 → stop**. 02, 02a, 03 and 03a each end in a hand-back, and
+Run **01 → 02 → 02a → 03 → 03a → 04 → 04b → stop**. 02, 02a, 03 and 03a each end in a hand-back, and
 **04–06 are written from what has landed** (user decision, 2026-09-17): 02 says which targets the
 audits own, 02a settles the anchor question that **T6** — prompt 03a's row — turns on, and 03
 settled whether the two tolerance axes separate in the sector that carries the cost. **03a was
@@ -201,3 +202,18 @@ not anticipate: `RECONCILIATION.md` §5 said the re-run needs three files, and r
 that **`test_background_cs_tau_friction.py` and `test_phase_residual.py` also read the block** and
 are outside D5's grant. That collision is prompt 04 §2 and orchestrator §5's first stop, and it is
 the reason the prompt tells its agent to determine the orders *before* writing the fixture.
+
+
+**Prompt 04b was written on 2026-09-18, after the user read prompt 04's hand-back and settled two
+things at once.** **D3** is settled as `replace with the orders`, with a standing instruction that
+governs every later schema question in this campaign: *there is nothing to rebuild and nothing to
+backfill, a schema change costs nothing, and a schema change that is needed is always the right
+answer.* Prompt 04's §10 costed a migration and that framing is withdrawn — see campaign README §7
+D3. **D8** widens D5 by one file so that 04b can land the block prompt 04 measured and declined to
+write.
+
+**The orchestrator's own error is recorded here because it is the kind that repeats.** Prompt 04's
+hand-back reported the stop as though leaving a 58×-stale fixture in the tree were correct on the
+merits, when it was only correct as rule-following; and it costed D3 in rows and rebuild effort,
+which is not a currency this project trades in. An orchestrator relays a scope stop as a scope
+stop, and asks the user whether the scope is still right.
