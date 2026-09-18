@@ -15,7 +15,12 @@ in §4 below; the measurements are in that campaign's logs and the entries say s
 has now landed too, and closed half a fifth**: `[03-qcd-inventory-does-not-report-the-representation]`'s
 `QCD_Cosmology` half is in §4; the `BackgroundModel` half prompt 14 widened that issue with is
 **not** in that campaign's files-may-touch list, so it stays open here, narrowed, under the same
-ID. Nothing in this
+ID. **Updated 2026-09-18: a sixth is closed, also by another campaign.**
+`prompts/tolerance-convergence` prompt **04b** regenerated the `convergence` block of
+`ComputeTargets/tests/wkb_reference_data.json` and took `QCD_BREAK_POINT_ALIGNMENT_TOL` from
+1.5e-04 to **3.0e-14**, so `[01-convergence-block-has-a-separate-generator]` — declined on scope
+by this campaign's prompts 08 and 09 — is in §4, and both `QCD_FLOOR_FACTOR`s are gone, the two
+tests that read the block now bounding their own production quantities. Nothing in this
 campaign's own work was re-opened.
 
 > **The campaign reopened after it closed.** Prompt 12 measured a defect it was forbidden to act on
@@ -1268,6 +1273,14 @@ Opened by this campaign's planning, 2026-09-13:
   commit**. Tracked as `[04-convergence-floor-used-as-a-test-threshold]` on the
   `tolerance-convergence` board, which holds the measurements. Evidence:
   `docs/tolerance-convergence/ORDER-AUDIT.md` §1, §9.
+
+  **CLOSED 2026-09-18 by `prompts/tolerance-convergence` prompt 04b — see §4.** The user removed
+  the scope boundary (that campaign's README §7 **D8**, which widens D5 by
+  `test_background_cs_tau_friction.py`), the block was regenerated into the tree, both thresholds
+  were **rebuilt rather than raised** — absolute bounds of 1.0e-14 on the production quantities,
+  against their own measured accumulation floors, with `QCD_FLOOR_FACTOR` removed from both
+  modules — and **`QCD_BREAK_POINT_ALIGNMENT_TOL` went 1.5e-04 → 3.0e-14** in the same commit.
+  This entry's prediction held in full: the whole of the excess was the block's age.
 - **[03-qcd-inventory-does-not-report-the-representation]** *(prompt 03, 2026-09-14; **narrowed
   2026-09-16** — the `QCD_Cosmology` half is resolved, in §4)* — originally,
   `sqla_QCDCosmology_factory.inventory()` (`Datastore/SQL/ObjectFactories/QCD_Cosmology.py`)
@@ -1382,6 +1395,40 @@ Re-measured but **not owned** here (they stay where they are; a prompt that move
 ---
 
 ## 4. Resolved issues
+
+- **[01-convergence-block-has-a-separate-generator]** *(prompt 02, 2026-09-14; **assigned
+  2026-09-16 to `prompts/tolerance-convergence` prompt 04 and closed by its prompt 04b**,
+  2026-09-18)* — the `convergence` block of `ComputeTargets/tests/wkb_reference_data.json` is
+  **regenerated and in the tree**: `generated` **2026-09-18**, `campaign`
+  `prompts/tolerance-convergence (prompt 04, board item T7)`, `schema_version` 2, and
+  `decision.recommended_scheme` **`branch`** — the scheme production can execute — against the
+  `branch+knots` this entry records, which named a knot set prompt 07 of this campaign removed.
+  `branch+knots` survives as a populated **control** because test modules index it by name; prompt
+  04 measured that it buys nothing (`branch` 1.658e-16 on QCD's $\tau$ floor against the control's
+  3.224e-16), which **confirms prompt 07 at the quadrature level**. The four orders come back
+  $N_\tau = N_{c_s\tau} = N_F = N_\rho = 4$, now measured on the corrected $T(z)$ representation
+  and the 3-point break set. Written by `docs/gktk-remedial/residual_convergence.py` with no flags
+  and never by hand, in 538.4 s; only that one key of the fixture differs from the parent commit.
+
+  **All three loosened constants this entry tracked are paid.** `QCD_BREAK_POINT_ALIGNMENT_TOL`
+  goes **1.5e-04 → 3.0e-14**, against measured offsets of 3.552714e-15, 7.105427e-15 and
+  **1.421085e-14** — 1, 2 and 4 ulp of $u$ — so the whole of the excess was the block's age, as
+  this entry maintained through four prompts and as prompts 06 and 07 each re-measured. The two
+  `QCD_FLOOR_FACTOR`s are **gone**: prompt 04 found that regenerating the block takes the recorded
+  floors 58× and 43× tighter (1.878541e-14 → 3.223619e-16, 1.886653e-14 → 4.354138e-16) while the
+  quantities scored against them do not move (2.254e-15, 2.212e-15), so the *construction* rather
+  than the figure was what failed. The user chose the repair
+  (`prompts/tolerance-convergence` README §7 **D8**): each test now bounds its own production
+  quantity absolutely, at **1.0e-14**, against the double-precision accumulation floor measured at
+  2.16e-16 ($\tau$) and 3.30e-16 ($c_s\tau$), with ×4.4 and ×4.5 of headroom.
+
+  Declined on scope by prompts 08 and 09 of this campaign, exactly as those entries record, and
+  closed by the first prompt anywhere given the fixture **and** both test modules. Measurements:
+  `docs/tolerance-convergence/ORDER-AUDIT.md` §§1, 9, **12**, and
+  [`prompts/tolerance-convergence/logs/04b-regenerate-the-convergence-block.md`](../tolerance-convergence/logs/04b-regenerate-the-convergence-block.md).
+  `[02-qcd-reference-floor]` on the `GkTk-remedial` board waited on the same run; the run has now
+  happened and its figures are in the tree, but that issue is not this prompt's and stays open on
+  its own board.
 
 - **[07-t-photon-range-logic-recomputes-its-bounds]** *(prompt 06, 2026-09-14; **assigned
   2026-09-16 and closed by `prompts/background-solver-robustness` prompt 05**, 2026-09-16)* —

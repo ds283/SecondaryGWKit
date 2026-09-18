@@ -20,6 +20,12 @@ phase error in absolute radians for the two residuals (`GkTk-remedial` README §
 > floors and the two errors, and it is prompt §11's first stop condition, predicted word for word
 > by prompt §2.2 (i). **The fixture, `test_background_tau.py` and every production module are
 > exactly as this prompt found them.**
+>
+> **Addendum, 2026-09-18 — the stop was lifted and the block is landed; see §12.** The user removed
+> the scope boundary (README §7 **D8**) and prompt **04b** ran the same generator against the
+> fixture, repaired the two threshold assertions and took `QCD_BREAK_POINT_ALIGNMENT_TOL` to
+> 3.0e-14. The paragraph above is left exactly as prompt 04 wrote it, because it was true of the
+> tree it described, and §§1–11 are untouched.
 
 ---
 
@@ -958,3 +964,125 @@ The fifty wavenumbers behind §4.1, so that a reader can see the distribution ra
 | 2.548e+08 | 1,714 | 9.39e-02 | 5.40e-11 | 2.78e-17 | 2.78e-17 | 1.39e-17 | 1.39e-17 |
 | 3e+08 | 1,725 | 9.33e-02 | 5.23e-11 | 2.78e-17 | 2.78e-17 | 1.39e-17 | 1.39e-17 |
 
+
+---
+
+## 12. The landed run — prompt 04b, 2026-09-18
+
+**Additive** (README §5 rule 7). §§1–11 above were correct for the tree they were taken on and are
+not rewritten — including §1, which describes a stop that really happened and was procedurally
+right. This section records what changed when the user removed the scope boundary (README §7
+**D8**) and prompt 04b landed the measurement. **No figure of §§2–11 is re-derived here**; 04b ran
+the same generator against the fixture instead of a scratch path and repaired the two assertions
+that the tighter reference then failed. Unlike §§2–11, this section is written by hand and is not
+`order_audit.py`'s stdout.
+
+### 12.1 The block, as landed
+
+```
+PYTHONPATH=. ./venv/bin/python docs/gktk-remedial/residual_convergence.py
+```
+
+— no flags, so `write_json` replaces the fixture's `convergence` key and nothing else. 538.4 s;
+Python 3.12.14, NumPy 2.2.4, SciPy 1.15.2.
+
+| Field | in the tree, 2026-09-10 | as landed, 2026-09-18 |
+|---|---|---|
+| `generated` | `2026-09-10` | **`2026-09-18`** |
+| `campaign` | `prompts/GkTk-remedial (prompt 02)` | **`prompts/tolerance-convergence (prompt 04, board item T7)`** |
+| `schema_version` | 1 | **2** |
+| $N_\tau$, $N_{c_s\tau}$, $N_F$, $N_\rho$ | 4, 4, 4, 4 | **4, 4, 4, 4** |
+| `recommended_scheme` | `branch+knots` | **`branch`** |
+| `rho_adaptive_fallback_required` | `false` | `false` |
+| `rho_fixed_order_works_without_subdivision` | `true` | **`false`** |
+| `schemes` | `plain`, `branch`, `branch+knots` | unchanged — `branch+knots` demoted to `control_scheme` and still populated under `schemes` and under `models.QCDModel` |
+| QCD `json_vs_reference_max_rel`, `tau` | 1.878541e-14 | **3.223619e-16** |
+| QCD `json_vs_reference_max_rel`, `cs_tau` | 1.886653e-14 | **4.354138e-16** |
+| QCD `json_vs_reference_max_rel`, `friction` | 0 | **2.013295e-16** |
+| `runtime_seconds` | 328.3 | 538.4 — the drift legs §9 added |
+
+**Every figure reproduces §9's dry run to the digits that document prints**, which is the check
+that the landed block is the block prompt 04 measured and not a second, differently-conditioned
+run. `decision.knots_control` records what the demoted control still buys: on QCD's $\tau$ floor,
+`branch` reaches 1.658e-16 against `branch+knots`'s 3.224e-16 — the split is *worse*, ratio 0.51 —
+and on `friction` the control reaches exactly 0, which is why `decision.zero_best_floor_primitives`
+exists (log 04, deviation 3).
+
+**Only the `convergence` key differs from `HEAD~1`.** Checked key by key on the parsed JSON:
+`schema_version`, `generated`, `generator`, `campaign`, `environment`, `schema`, `k_values`,
+`k_keys`, `rho_anchor_efolds_subh`, `models` and `baselines` at the **top level** are byte-equal,
+and the first hunk of `git diff -U0` is at line 1521 against `"convergence"` opening at line 1520.
+The block's own `generated` and `campaign` are the two that moved, which is the check that it was
+written by the generator and not by hand.
+
+The `campaign` string names **prompt 04** because prompt 04 is the prompt that took the
+measurement; the generator was run as it stands and no line of it was changed here.
+
+### 12.2 The two thresholds
+
+The failure was exactly §1's, to every digit, on the tree as landed: `test_background_tau` and
+`test_background_cs_tau_friction` went red the moment the block was written, by 2.33× and 1.69×
+over their thresholds, which is 6.99× and 5.08× as a `QCD_FLOOR_FACTOR`.
+
+| | $\tau$ (`test_background_tau.py`) | $c_s\tau$ (`test_background_cs_tau_friction.py`) |
+|---|---|---|
+| old form | `worst <= QCD_FLOOR_FACTOR * convergence…["json_vs_reference_max_rel"]` | same |
+| old numbers | 2.254e-15 against 3.0 × 3.223619e-16 = 9.671e-16 | 2.212e-15 against 3.0 × 4.354138e-16 = 1.306e-15 |
+| **new form** | `worst <= QCD_NODE_REL_TOL` | `worst <= QCD_CS_TAU_REL_TOL` |
+| **new number** | **1.0e-14** | **1.0e-14** |
+| the quantity bounded | 2.254220593813745e-15 at $z = 1.005\times10^7$ | 2.2119104448437696e-15 at $z = 1.005\times10^7$ |
+| its floor (§§3.1, 5) | 2.16e-16, accumulation over the grid's 1,731 intervals | 3.30e-16 |
+| production above the floor | ×10.4 | ×6.7 |
+| headroom of the bound | **×4.4** over the production figure, ×46 over the floor | **×4.5**, ×30 |
+
+**Why an absolute bound and not a larger factor.** The right-hand side of the old assertion is how
+far the *JSON's reference values* sit from a converged adaptive rule; the left-hand side is how far
+the *production order-4 table* sits from those same JSON values. They are independent, as the
+test's own comment conceded, and the construction only ever held while both sat at ~2e-14. The new
+bound is a property of the quantity it bounds and cannot be moved by anything that happens to the
+reference. **It keeps the discrimination the old form had**: every QCD representation before
+`qcd-background-audit` prompt 06 would fail it — 2.194e-14 and 5.835e-14 on $\tau$, 2.186e-14 and
+1.5501e-13 on $c_s\tau$, the figures those modules' own comment blocks record — while the present
+2.25e-15 clears it by a factor of 4.4.
+
+`QCD_FLOOR_FACTOR` is **removed** from both modules rather than left defined and unused. Both
+tests still **read** the reference's own agreement and **print** it beside the bound, labelled as
+not asserted against, so that the two numbers stay visible side by side and the
+`models.QCDModel["branch+knots"]` key keeps a reader.
+
+### 12.3 `QCD_BREAK_POINT_ALIGNMENT_TOL`: 1.5e-04 → 3.0e-14
+
+§9.4's three offsets, re-measured against the block **in the tree** now that the block in the tree
+is the regenerated one — the same figures, because it is the same block:
+
+| Break | $z$ | block's $u$ | declared $u$ | offset | in ulp of $u$ |
+|---|---|---|---|---|---|
+| `T_LO` | 4.253369e+07 | 17.565806941870026 | 17.565806941870026 | 3.552714e-15 | 1 |
+| `EOS_T_LO` | 1.187214e+10 | 23.197460552819653 | 23.197460552819653 | 7.105427e-15 | 2 |
+| `T_120_MEV` | 8.644781e+11 | 27.485391822044257 | 27.485391822044257 | **1.421085e-14** | **4** |
+
+$\mathrm{ulp}(27.485) = 3.552714\times10^{-15}$, so the worst disagreement between the block's
+branch boundary and `integration_break_points`' bisected crossing is **four ulp**. The constant is
+set at **3.0e-14**, 8.4 ulp, a factor of **2.11** above the worst. Two ulp of headroom is ample
+rather than tight because the failure this assertion exists to catch — a block measured against a
+representation the tree no longer has — showed at **1e-06 to 1e-04** every one of the four times it
+happened (`test_background_tau.py`'s own comment block, `qcd-background-audit` prompts 04–07). The
+whole of the former 1.418851e-04 was the block's age, as that comment predicted through four
+prompts.
+
+### 12.4 Verification
+
+| | before | after |
+|---|---|---|
+| `ComputeTargets` | 491, OK | **491, OK** (183.8 s) |
+| `CosmologyModels` | 39, OK | **39, OK** |
+| `ComputeTargets.tests.test_convergence_reference` | 32, OK | **32, OK** |
+| the three block readers together | 41, **2 failures** with the block written and the tests unrepaired | **41, OK** |
+
+`ComputeTargets/tests/test_phase_residual.py` is **unedited** and passes: it pins
+`RHO_GAUSS_ORDER == decision.N_rho` and `decision.rho_adaptive_fallback_required`, and the block
+still says 4 and `false`.
+
+**The three published source-grid digests are unmoved**, re-checked through `order_audit`'s own
+precondition: `RadiationModel` 2,306 / `3bef2c06`, `LambdaCDMModel` 1,778 / `60a3205a`, `QCDModel`
+2,034 / `21ffc126`, each at its own anchor.

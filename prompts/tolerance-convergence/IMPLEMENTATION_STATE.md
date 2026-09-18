@@ -8,7 +8,7 @@
 re-run for the re-anchor and green — `ComputeTargets` **452**, `CosmologyModels` **39**)
 **Superseded baseline:** `acd5b8e`, `ComputeTargets` 447, `CosmologyModels` 30 — the anchor of any
 figure in this campaign's documents dated before 2026-09-16 19:32
-**Last updated:** 2026-09-17 · **Status: in progress — 6 / 6 measured, plus the insertion 02a; 04 ran and **stopped** at its first stop condition; 05–06 held.**
+**Last updated:** 2026-09-18 · **Status: in progress — 6 / 6 measured, plus the insertions 02a and 04b; **04b has landed the block prompt 04 stopped short of writing**; 05–06 held.**
 **Every user decision needed to start is settled** — **D1 closed 2026-09-17** (all four pairs
 accepted), D3 remains a post-audit gate on prompt 04, D2 settled 2026-09-12, D4 settled by
 README §0.4, **D5 settled yes 2026-09-16**.
@@ -91,6 +91,17 @@ back *ten orders further* than the 1.4e-05 that prompt hoped for, in whichever c
 block. `[01-convergence-block-has-a-separate-generator]` is **not closed**; it has moved from being
 blocked on *scope* to being blocked on a *decision*, and that decision is
 `[04-convergence-floor-used-as-a-test-threshold]`.
+**Prompt 04b has since landed it (2026-09-18, README §7 D8).** The `convergence` block is
+**current** — `generated` 2026-09-18, `recommended_scheme` **`branch`**, orders **4 / 4 / 4 / 4**,
+`branch+knots` kept as a populated control, and only that key changed. The two threshold
+assertions are **rebuilt rather than loosened**: `QCD_NODE_REL_TOL` and `QCD_CS_TAU_REL_TOL`, both
+**1.0e-14**, bound the production quantities (2.254e-15, 2.212e-15) against the measured
+accumulation floors (2.16e-16, 3.30e-16) instead of against the fixture's own agreement with a
+converged reference, and `QCD_FLOOR_FACTOR` is gone from both modules.
+**`QCD_BREAK_POINT_ALIGNMENT_TOL` is 3.0e-14**, ten orders back, against offsets that are 1, 2 and
+4 ulp of $u$. So **`[01-convergence-block-has-a-separate-generator]` and
+`[04-convergence-floor-used-as-a-test-threshold]` are both closed** (§4), and prompt 05 inherits
+neither the stale block nor the stop (**T14**).
 **One issue got its measurement**: `[01-density-criterion-imposed-outside-the-wkb-region]` has had
 only prompt 01's 69-%-of-added-samples figure since it was opened, and prompt 02a's census was
 withdrawn as evidence for it. §8 measures it directly — **4 %–49 %** of the `Gk` band is
@@ -166,7 +177,7 @@ and `wavenumber_exit_time`. §2 (a)'s table says so on both rows; prompt 06 reco
 | 03 | `GkNumericIntegration`, and the floor that decides whether it matters | README §2 (d), (e), (f); §7 **D7**; review §10.1, §12.5; `[00-gk-numeric-never-swept-and-carries-the-cost]` | Opus | ✍️ [`03-…`](03-gk-numeric-and-its-floor.md) | ⚠️ | *"Sweep the Gk numeric tolerance matrix against its floor"* (SHA not embedded, per the convention `prompts/background-solver-robustness` uses) | [`logs/03-…`](logs/03-gk-numeric-and-its-floor.md) |
 | 03a | `TkNumericIntegration` and `wavenumber_exit_time` | README §3.3a, §7 **D7**; `[02-wavenumber-exit-time-tolerance-is-an-inequality-key]`, `[12-tk-numeric-atol-largest-k-excursion]`, `[02a-grid-digest-not-reproducible]` | Opus | ✍️ [`03a-…`](03a-tk-numeric-and-exit-time.md) | ⚠️ | *"Sweep the Tk numeric and exit-time tolerances against their floors"* (SHA not embedded, per the convention `prompts/background-solver-robustness` uses) | [`logs/03a-…`](logs/03a-tk-numeric-and-exit-time.md) |
 | 04 | Audit the order-governed targets | README §2 (a), §3.4; §7 **D5** (settled yes) and **D3**; `[01-convergence-block-has-a-separate-generator]`, `[20-wkb-gauss-orders-not-in-lookup-key]`, `[01-density-criterion-imposed-outside-the-wkb-region]` | Opus | ✍️ [`04-…`](04-order-governed-targets.md) | ⚠️ **stopped** | *"Audit the four Gauss orders and the WKB region margin"* (SHA not embedded, per the convention `prompts/background-solver-robustness` uses) | [`logs/04-…`](logs/04-order-governed-targets.md) |
-| 04b | Regenerate the convergence block, and repair the two tests that read it | README §3.4b; §7 **D5** as widened by **D8** (settled yes 2026-09-18); `[01-convergence-block-has-a-separate-generator]`, `[04-convergence-floor-used-as-a-test-threshold]` | Opus | ✍️ [`04b-…`](04b-regenerate-the-convergence-block.md) | ⬜ | | |
+| 04b | Regenerate the convergence block, and repair the two tests that read it | README §3.4b; §7 **D5** as widened by **D8** (settled yes 2026-09-18); `[01-convergence-block-has-a-separate-generator]`, `[04-convergence-floor-used-as-a-test-threshold]` | Opus | ✍️ [`04b-…`](04b-regenerate-the-convergence-block.md) | ✅ | *"Land the regenerated convergence block"* (SHA not embedded, per the convention `prompts/background-solver-robustness` uses) | [`logs/04b-…`](logs/04b-regenerate-the-convergence-block.md) |
 | 05 | Decouple | README §2 (a), (g); §7 D1 (**closed** 2026-09-17), D3 (**settled** 2026-09-18) | Opus | ⏸️ **held — both gates now open, written after 04b lands** | ⬜ | | |
 | 06 | `QuadSourceIntegral`, close-out, the provenance note | README §0.4, §1.2 | Opus | ⏸️ **held** | ⬜ | | |
 
@@ -223,14 +234,14 @@ not ✅ either, which is the specific failure the rebase found.
 | T4 | **MEASUREMENT** | `GkNumericIntegration` characterised over the production response grid on three models in both `atol` and `rtol`, against the consumer-spline floor — the sector with ~65,000 objects per model, never swept, and where the campaign's compute decision actually lives | 03 | ⚠️ `docs/tolerance-convergence/GK-NUMERIC-SWEEP.md` + `gk_numeric_sweep.py`: 50 $k$ × 3 models × 15 `(atol, rtol)` cells, **version-2 grid at each cosmology's own anchor**, `BREAK_POINT_DISCONTINUITY`, reference `(1e-18, 1e-12)` converged **50/50 on all three**. **§2 (d)'s prior is confirmed**: four decades of `atol` move the maximum by ≤1.2 %, four decades of `rtol` by ×13,300, and the corners agree to three significant figures — `atol` cannot bind, $\lvert G\rvert$ being 2.1e+12–2.9e+18 in `Mpc_units`. **The floor is freshly measured and dominates**: the consumer's `numeric_Gk` spline carries 1.6e-04/1.7e-04/1.9e-04 of the envelope three e-folds inside the horizon and up to **9.4e-03** at four, against 2.6e-07 for the solver — ×631 to ×37,700, confirming review §10.1. **Target: `unchanged`** (§6.1 rule 4). Objects per model on the v2 grid are **29,290 / 38,105 / 58,350**, not the ~65,000 README §2 (c) quotes from version 0. **Caveat:** §2.2's premise fails — the outermost $z_{\rm source}$ is **not** the least favourable at any of nine probes (≤×1.45), so the sweep characterises the sector rather than bounding it; and the prompt's §5 names the wrong lattice for the consumer's spline (it is the **source** grid, 12× finer). Both are §3 issues |
 | T5 | **MEASUREMENT** | `TkNumericIntegration` likewise, re-taken on the version-2 grid and under its own `BREAK_POINT_ALL` policy | 03a | ⚠️ `docs/tolerance-convergence/TK-NUMERIC-AND-EXIT-TIME.md` + `tk_numeric_exit_sweep.py`: 50 $k$ × 3 models × 13 `(atol, rtol)` cells, **version-2 grid at each cosmology's own anchor**, **`BREAK_POINT_ALL`**, reference `(1e-18, 1e-12)` converged **50/50 on all three**. **Prompt 17's configuration reproduces**: version-0 per-$k$ under `discontinuity` gives 3 / 13 above 3e-6 and worst **8.64e-04** on Radiation / LambdaCDM (QCD gives 9, not 8, its background having been replaced since). **Re-taken as production runs it, 3 / 13 / 8 becomes 1 / 9 / 4 and the worst 8.64e-04 becomes 3.36e-04** — and the **grid** change, not the policy, is most of that: `all` and `discontinuity` are the same code path on the two cosmologies that declare nothing, and on QCD the policy moves 9→6 (v0) and 7→4 (v2) for +0.82 % / +0.61 % of the evaluations. **`rtol` sets the level and `atol` selects which wavenumber excurses** — two decades of `atol` move the median of per-$k$ maxima by ≤2.1× and the maximum by up to **205×** — so README §2 (e)'s magnitude argument does *not* transfer from the $G_k$ sector. **Floor re-confirmed**: the $T=1,T'=0$ truncation is **2.39e-06 to 2.64e-06** against the inherited 2.52e-06, and the radiation oracle and the series measure agree to three figures. **Target: `rtol = 3e-11`** (§6.1 rules 2 and 3), 3.88e-08 worst, 62× under the floor, **+39.4 %** of 1,272,891 → 1,774,977 RHS evaluations for 50 objects × 3 models. **Caveat:** the maximum is **not monotone** in `rtol` — exactly one of the 150 runs sits above target at each of `1e-9`, `3e-10` and `1e-10`, a different one each time — so `3e-11` is the loosest that clears *in this sweep*, not a bound (§3 issue) |
 | T6 | **MEASUREMENT** | `wavenumber_exit_time`'s root solve measured at all — nothing in the record says what `xtol = 1e-10`, `rtol = 1e-8` in $\log(1+z)$ buys or costs. **Scored against the exact $z_{\rm exit}$ on `RadiationModel` first** (README §3.1): $1 + z = k/(H_0 e^{N})$, confirmed at the rebase to 2.3e-16 relative or better | 03a | ⚠️ Measured through `_solve_horizon_exit` and **never the datastore**: 50 $k$ × 3 models × 3 offsets (0, −5, +4) × 63 `(xtol, rtol)` cells, reference `(1e-300, 1e-14)`, drift ≤7.82e-14 in $u$ and **3.55e-15** from the exact inversion on the control, where the production setting's displacement is **exactly 0**. **`xtol = 1e-10` binds at 0 of 150 pairs on every model**: `DEFAULT_ABS_TOLERANCE` reaches this target and does nothing, and what fixes the anchor is `rtol*|u|` at $|u|$ up to 38.04. It takes over only below `rtol ≈ 2.6e-12`, and **floors the pair at 1e-10 relative** however far `rtol` goes alone. The **$u\to z$ recovery never competes**: one ulp of $u$ is 7.11e-15 relative in $1+z$ and the production criterion stands 5.3e7 above it. **Two consumers, two answers.** Against the row match `DEFAULT_REDSHIFT_RELATIVE_PRECISION = 1e-7` a floor exists and the rule gives **`rtol = 1e-9`** (guarantee 3.81e-08; production's guarantee 3.8e-07 misses by 3.8× while its *achieved* 7.86e-08 clears by 1.3×), for **+0.7 %** of 6,963 Hubble calls. Against the **grid digest** — bit-identity — **no floor could be established, therefore no target** (§6.1 rule 6): the digest turns over at a **1e-14** relative anchor shift against a tightest available pin of 7.11e-15. **Caveat:** the recommendation applies the rule to Brent's *guarantee*, not to the achieved displacement; on the achieved reading the answer is `unchanged` (log 03a, deviation 4) |
-| T7 | **MEASUREMENT** | $N_\tau$, $N_{c_s\tau}$, $N_F$, $N_\rho$ and `RESIDUAL_WKB_REGION_MARGIN` audited at every production $k$ on the corrected background and the 3-point break set, replacing evidence generated 2026-09-10. **Every one of the four orders has a closed-form anchor on `RadiationModel`** (README §3.1), including $\rho_G \equiv 0$, which makes the $N_\rho$ measurement pure quadrature error with no reference to build | 04 | ⚠️ `docs/tolerance-convergence/ORDER-AUDIT.md` + `order_audit.py`: three models on the **version-2 grid at each cosmology's own anchor**, orders 2/4/6/8/12/16, the three primitives $k$-independent and $N_\rho$ at **all fifty** production wavenumbers in both sectors (**300 cases**), everything through `convergence_reference.GaussOrder` and `reference_drift`. **All four orders are `unchanged` at 4**, first order clearing floors of **2.16e-16 / 3.30e-16 / 8.01e-14 / 6.51e-17 rad**, which dominate the loosest order swept by **×3.03e5 / ×1.99e5 / ×48.4 / ×2.35e6** (§6.1 rule 4's factor). **The anchors did the work**: $\rho_G$ is **bit-exactly zero at every order** on the control and $\rho_T$ is scored against its closed form, so the radiation column has no reference and no drift. `GkTk-remedial` prompt 02's three wavenumbers were right and lucky by only **×1.5–×1.7**. `RESIDUAL_WKB_REGION_MARGIN` is **`unchanged` under §6.1 rule 6** — no accuracy floor; a measured reachability bound, cleared from 0.05 to **0.9**, residual **bit-identical** throughout, and `residual_node_range` refuses only *at* margin 1, where the test degenerates to "is the correction positive?". **Caveats, three.** (i) The prompt **stopped** before writing the fixture (§3 below, `[04-convergence-floor-used-as-a-test-threshold]`), so the evidence is taken back but not yet *recorded* in the block every `*_GAUSS_ORDER` comment cites. (ii) On the two spline models **every order from 4 up is at or below the reference's own drift** and is marked unresolved; what is resolved is the step from order 2, and the exact-radiation oracle. (iii) The prompt's own §7 warning about non-monotone Gauss rules did not bite — every ladder is monotone at and above the chosen order |
+| T7 | **MEASUREMENT** | $N_\tau$, $N_{c_s\tau}$, $N_F$, $N_\rho$ and `RESIDUAL_WKB_REGION_MARGIN` audited at every production $k$ on the corrected background and the 3-point break set, replacing evidence generated 2026-09-10. **Every one of the four orders has a closed-form anchor on `RadiationModel`** (README §3.1), including $\rho_G \equiv 0$, which makes the $N_\rho$ measurement pure quadrature error with no reference to build | 04 | ⚠️ `docs/tolerance-convergence/ORDER-AUDIT.md` + `order_audit.py`: three models on the **version-2 grid at each cosmology's own anchor**, orders 2/4/6/8/12/16, the three primitives $k$-independent and $N_\rho$ at **all fifty** production wavenumbers in both sectors (**300 cases**), everything through `convergence_reference.GaussOrder` and `reference_drift`. **All four orders are `unchanged` at 4**, first order clearing floors of **2.16e-16 / 3.30e-16 / 8.01e-14 / 6.51e-17 rad**, which dominate the loosest order swept by **×3.03e5 / ×1.99e5 / ×48.4 / ×2.35e6** (§6.1 rule 4's factor). **The anchors did the work**: $\rho_G$ is **bit-exactly zero at every order** on the control and $\rho_T$ is scored against its closed form, so the radiation column has no reference and no drift. `GkTk-remedial` prompt 02's three wavenumbers were right and lucky by only **×1.5–×1.7**. `RESIDUAL_WKB_REGION_MARGIN` is **`unchanged` under §6.1 rule 6** — no accuracy floor; a measured reachability bound, cleared from 0.05 to **0.9**, residual **bit-identical** throughout, and `residual_node_range` refuses only *at* margin 1, where the test degenerates to "is the correction positive?". **Caveats, three.** (i) The prompt **stopped** before writing the fixture (§3 below, `[04-convergence-floor-used-as-a-test-threshold]`), so the evidence is taken back but not yet *recorded* in the block every `*_GAUSS_ORDER` comment cites — **caveat (i) is discharged: prompt 04b wrote the block on 2026-09-18 (T14), unchanged from the run measured here**. (ii) On the two spline models **every order from 4 up is at or below the reference's own drift** and is marked unresolved; what is resolved is the step from order 2, and the exact-radiation oracle. (iii) The prompt's own §7 warning about non-monotone Gauss rules did not bite — every ladder is monotone at and above the chosen order |
 | T8 | **DECISION** | The decoupled tolerance pairs settled by the user (§7 D1) and shipped with the measurement that chose each, in `config/defaults.py` | 05 | ⬜ — **the `GkNumericIntegration` half is decided**: the user accepted prompt 03's `unchanged` on 2026-09-17, so `DEFAULT_GK_NUMERIC_ABS_TOLERANCE = 1e-10` (inert and unchosen) and `DEFAULT_GK_NUMERIC_REL_TOLERANCE = 1e-8` (chosen, `GK-NUMERIC-SWEEP.md` §5.2, §7). **`TkNumericIntegration`'s `rtol` and `wavenumber_exit_time`'s pair were accepted on 2026-09-17, which closes D1**: `DEFAULT_TK_NUMERIC_REL_TOLERANCE = 3e-11` (changed; `DEFAULT_TK_NUMERIC_ABS_TOLERANCE` stays 1e-13, a step-selection knob rather than an accuracy one), `DEFAULT_HEXIT_REL_TOLERANCE = 1e-9` (changed) and `DEFAULT_HEXIT_ABS_TOLERANCE = 1e-10` (unchanged, **inert and unchosen**, and coupled — it floors the pair at 1e-10 relative below `rtol ≈ 2.6e-12`). The five provenance fields for all four are in log 03a's "State handed to the next prompt". **All four pairs are now settled and prompt 05 is unblocked on D1**; it still waits on D3, which is prompt 04's. Two things ship with the numbers rather than being dropped: the exit-time pair was accepted on the **guarantee** reading (log 03a, deviation 4), and `3e-11` carries `[03a-tk-numeric-excursion-is-sporadic-in-rtol]`, which the acceptance did not close |
 | T9 | **DECISION** | What replaces the vestigial `atol`/`rtol` key columns on the three order-governed targets (§7 D3) — the user's stated target for the campaign. **Settled 2026-09-18: `replace with the orders`**, on prompt 04's recommendation. `BackgroundModel` loses `atol_serial`/`rtol_serial` and gains `tau_gauss_order`, `cs_tau_gauss_order`, `friction_F_gauss_order`; `GkWKBIntegration` and `TkWKBIntegration` each gain `rho_gauss_order`; `GkSource` loses the pair and gains nothing, integrating nothing. The user's standing instruction came with it and binds every later schema question here: **there is nothing to rebuild and nothing to backfill, and a needed schema change is always the right answer** — only *reader breakage* may be costed (three `extract_*.py` scripts). Prompt 05 implements | 05 | 🟨 **decided, not implemented** |
 | T10 | **PLUMBING** | Every `object_get` of a retuned target carries its own parameter, with an `ast` guard whose predicate reaches all eight targets and fails on an unclassified site | 05 | ⬜ |
 | T11 | **HAND-OFF** | `QuadSourceIntegral` measured read-only and reported to `levin-refactor` / `qsi-phase-groups` | 06 | ⬜ |
 | T12 | **PROVENANCE** | `docs/TOLERANCE-PROVENANCE.md` covers **every** accuracy parameter in the pipeline — including the ones this campaign inherits and does not set, and the ones nobody has ever chosen — with value, choosing measurement and its grid generation, competing floor, cost times object count, and citation (README §1.2) | 06 | ⬜ |
 | T13 | **MACHINERY** | The version-2 source grid **builds at every production anchor on every production cosmology**, with a node at which the Liouville–Green expansion does not exist marked unusable and *counted* rather than raising, a refusal above a measured fraction of the band, and QCD's own anchor named in the test tree. Acceptance is bit-identity with the two published digests (1996 / `4849552b`, 1778 / `60a3205a`), not accuracy | 02a | ⚠️ QCD at its own anchor builds: **2034 / `21ffc126`, 53 guarded `(k, sector)` evaluations of ONE base-lattice node** (Gk 34, Tk 19, 53 of 100 cases, all hitting $z = 8.63614\times10^{11}$). Both published grids **bit-identical with zero guarded**, so the `except` branch is never entered on either. **Corrected 2026-09-17 (log 02a §7):** the guard is inert more strongly than first claimed — that node lies 1.0e-03 in $u$ from a **declared** break, inside the 6.0e-03 crossing mask, so it is discarded anyway and the guard can change no profile — but the two published zeros are **lattice alignment, not construction**, so a change to `z_init` or `samples_per_log10z` could start guarding. Refusal ceiling `SOURCE_GRID_MAX_GUARDED_FRACTION = 0.05`, **64.8x** the worst measured band (7.716e-04). **Caveat:** the constant's only proper home is `CosmologyConcepts/wavenumber.py`, a file the prompt's own file list forbade; the agent stopped rather than editing it, and the **user amended the scope on 2026-09-17** to permit that one append-only definition (log 02a, deviation 1) |
-| T14 | **EVIDENCE** | The `convergence` block of `ComputeTargets/tests/wkb_reference_data.json` is **current**: regenerated by its own generator against the corrected $T(z)$ representation and the 3-point break set, recommending a scheme production can execute, with `branch+knots` retained as a measured control — and the two threshold tests that read it bound the production quantity against a measured floor rather than against the fixture's own agreement with a converged reference. `QCD_BREAK_POINT_ALIGNMENT_TOL` back from 1.5e-04 to ~1.42e-14 | 04b | ⬜ |
+| T14 | **EVIDENCE** | The `convergence` block of `ComputeTargets/tests/wkb_reference_data.json` is **current**: regenerated by its own generator against the corrected $T(z)$ representation and the 3-point break set, recommending a scheme production can execute, with `branch+knots` retained as a measured control — and the two threshold tests that read it bound the production quantity against a measured floor rather than against the fixture's own agreement with a converged reference. `QCD_BREAK_POINT_ALIGNMENT_TOL` back from 1.5e-04 to ~1.42e-14 | 04b | ✅ **Landed 2026-09-18.** The block is `generated` **2026-09-18** by `prompts/tolerance-convergence (prompt 04, board item T7)`, `schema_version` 2, **`recommended_scheme` = `branch`**, orders back **4 / 4 / 4 / 4**, `branch+knots` populated as `control_scheme`, and **only the `convergence` key differs from `HEAD~1`** (checked key by key on the parsed JSON). Written by `residual_convergence.py` with no flags in 538.4 s and **never by hand**; every figure reproduces prompt 04's dry run. The two assertions are **rebuilt, not loosened**: `QCD_NODE_REL_TOL = 1.0e-14` and `QCD_CS_TAU_REL_TOL = 1.0e-14`, absolute bounds on the production quantities (2.254e-15 / 2.212e-15) against the accumulation floors `ORDER-AUDIT.md` §§3.1 and 5 measure (2.16e-16 / 3.30e-16) — ×4.4 / ×4.5 headroom, ×46 / ×30 the floor — and `QCD_FLOOR_FACTOR` is **removed** from both modules. **`QCD_BREAK_POINT_ALIGNMENT_TOL` = 3.0e-14**, against offsets of 1, 2 and 4 ulp of $u$ (3.552714e-15 / 7.105427e-15 / **1.421085e-14**). `ComputeTargets` **491**, `CosmologyModels` **39**, `test_convergence_reference` **32**, the three readers **41**, all OK, `test_phase_residual.py` **unedited**; the three grid digests unmoved. `ORDER-AUDIT.md` §12 records it additively |
 
 ---
 
@@ -724,66 +735,24 @@ Opened by **prompt 03a**, 2026-09-17:
   03a's, whose licence over that file was additive-only and which needed nothing. Evidence:
   `docs/tolerance-convergence/TK-NUMERIC-AND-EXIT-TIME.md` §7.2; log 03a, observation 1.
 
-Opened by **prompt 04**, 2026-09-17:
+Opened by **prompt 04b**, 2026-09-18:
 
-- **[04-convergence-floor-used-as-a-test-threshold]** *(prompt 04, 2026-09-17; **Assigned
-  2026-09-18: `prompts/tolerance-convergence` prompt 04b**, with the repair chosen — see below;
-  it blocks `[01-convergence-block-has-a-separate-generator]`)* — two test modules read one number out of
-  `wkb_reference_data.json`'s `convergence` block and use it as a **threshold**:
+- **[04b-break-point-print-string-describes-a-superseded-block]** *(prompt 04b, 2026-09-18;
+  unassigned — one f-string, for whoever next edits that module)* —
+  `ComputeTargets/tests/test_background_tau.test_qcd_break_points` prints *"the convergence block
+  still records `{n}` knots, from before prompt 06"*. With the block regenerated, `n` is the
+  **current** interior-knot count of the $T(z)$ tabulation in range (2,411, measured in the same
+  test and agreeing exactly), so the number is right and the characterisation "from before prompt
+  06" is wrong. **Impact: none on any verdict** — nothing asserts on it, and the count the test
+  *asserts* (zero declared knots) is unaffected. It is recorded because this commit is what made
+  the string stale, and because a reader debugging that test would be told the block is older than
+  it is. **Next step:** delete the clause, in any prompt given that module for any reason. Prompt
+  04b's grant there was `QCD_NODE_REL_TOL` and `QCD_BREAK_POINT_ALIGNMENT_TOL` and it did not
+  extend to a `print`. Evidence: log 04b, observation 2.
 
-  ```
-  worst_production_error <= 3.0 * convergence.models.QCDModel["branch+knots"][q]["json_vs_reference_max_rel"]
-  ```
-
-  for $q = \tau$ (`ComputeTargets/tests/test_background_tau.py:324`) and $q = c_s\tau$
-  (`test_background_cs_tau_friction.py:606`). **The two sides are independent quantities.** The
-  right-hand side is how far the JSON's own reference values sit from a converged adaptive
-  reference — a property of the *reference*. The left-hand side is how far the production order-4
-  Gauss table sits from those same JSON values — a property of the *model*. The construction only
-  ever worked because both happened to sit at ~2e-14; the test's own comment says so, calling it
-  "a floor-against-floor comparison, not an accuracy claim".
-
-  **Measured, by copying prompt 04's dry-run block over the fixture and running the readers:**
-
-  | | $\tau$ | $c_s\tau$ |
-  |---|---|---|
-  | floor recorded 2026-09-10 | 1.878541e-14 | 1.886653e-14 |
-  | floor, regenerated | **3.223619e-16** | **4.354138e-16** |
-  | threshold (3 × floor) | 5.636e-14 → **9.671e-16** | 5.660e-14 → **1.306e-15** |
-  | production error, before → after | 2.254e-15 → **2.254e-15** | 2.212e-15 → **2.212e-15** |
-  | factor needed to pass | **6.99** | **5.08** |
-
-  The numerator does not move by a digit — it is the same model measured against the same JSON
-  values, which the re-run does not touch. **The whole of the failure is the denominator, and the
-  denominator got 58× and 43× better** because `qcd-background-audit` prompts 04–06 replaced the
-  $T(z)$ representation under the JSON's QCD reference values.
-
-  **Impact.** `[01-convergence-block-has-a-separate-generator]` cannot be closed by prompt 04, and
-  with it `QCD_BREAK_POINT_ALIGNMENT_TOL` stays at `1.5e-04` when §9.4 measures it could go to
-  **1.421085e-14** — ten orders tighter, and the whole of the present excess confirmed to be the
-  block's age. Nothing in the tree is wrong today; what is in the tree is a stale reference floor
-  that two tests read and a loose tolerance that one test asserts.
-
-  **Settled 2026-09-18, and it is not option (a).** The user's decision is that the fixture is to
-  be replaced and the *construction* repaired, not the factor raised: raising it keeps a comparison
-  between two independent quantities alive with a fresher number in it and will need raising again
-  the next time the fixture improves. Prompt **04b** replaces both assertions with an absolute bound
-  on the production quantity, justified by the double-precision accumulation floor `ORDER-AUDIT.md`
-  §§3.1 and 5 measure (2.16e-16 and 3.30e-16 against production figures of 2.254e-15 and 2.212e-15),
-  and lands the block and `QCD_BREAK_POINT_ALIGNMENT_TOL` in the same commit. README §7 **D8** widens
-  D5 by the one file this needs, `test_background_cs_tau_friction.py`. The options as they were put
-  to the user are kept below, because the reasoning that rejected (a) is the record.
-
-  **Next step: the user decides which of three.** (a) Raise `QCD_FLOOR_FACTOR` past 7 in **both**
-  modules — cheapest, and keeps a construction that will break again the next time the reference
-  improves. (b) Give the two tests a bound that is not the reference's floor — a fixed tolerance
-  argued from the quantity, which is what the other rows of those modules already do
-  (`LAMBDACDM_NODE_REL_TOL = 2e-14`, `SHORT_BASELINE_REL_TOL = 1e-13`) — and the better fix. (c)
-  Leave both, and leave the block at 2026-09-10 indefinitely. Whichever is taken, the repair and
-  the block regeneration must land in **one commit**, with
-  `QCD_BREAK_POINT_ALIGNMENT_TOL` moved in the same commit. Prompt 04 measured it and stopped, as
-  its §11 requires. Evidence: `docs/tolerance-convergence/ORDER-AUDIT.md` §1, §9.2; log 04,
-  deviation 1.
+Opened by **prompt 04**, 2026-09-17, and **closed by prompt 04b on 2026-09-18** —
+`[04-convergence-floor-used-as-a-test-threshold]`'s entry is in **§4**, which is the record,
+with the arithmetic that chose the repair and the reasoning that rejected raising the factor.
 
 Opened by **prompt 02**, 2026-09-16:
 
@@ -868,7 +837,7 @@ the closure is recorded there):
 | Issue | Owning board | Assigned to | Why here |
 |---|---|---|---|
 | `[12-tk-numeric-atol-largest-k-excursion]` | GkTk-remedial | prompts 03, 05 | Assigned 2026-09-12. Its `atol` half is settled — the user kept `1e-13` — and what remains is the `rtol` retuning, which is D1. It closes when prompt 05 ships a settled `rtol`. **Re-taken by prompt 03a, 2026-09-17**, on the version-2 grid under `BREAK_POINT_ALL`: its 3 / 13 / 8 wavenumbers above 3e-6 become **1 / 9 / 4** and its worst 8.64e-04 becomes **3.36e-04**, most of that from the grid rather than the policy; `rtol = 3e-11` takes the count to 0 / 150 and the worst to 3.88e-08. **Its cost figures in `docs/OPEN_ISSUES.md` §1.5 were corrected at the rebase** (`RECONCILIATION.md` §2.4): the QCD $T_k$ object is 8,986 right-hand-side evaluations, not ~31.5k |
-| `[01-convergence-block-has-a-separate-generator]` | qcd-background-audit | prompt 04 | **Assigned 2026-09-16.** The `convergence` block of `ComputeTargets/tests/wkb_reference_data.json` records $N_\tau = N_{c_s\tau} = N_F = N_\rho = 4$, was generated 2026-09-10, and its `decision.recommended_scheme` is `"branch+knots"` — a knot set `qcd-background-audit` prompt 07 removed. Prompts 08 and 09 of that campaign each declined it on scope. Prompt 04 here is the first prompt anywhere whose charter is the orders themselves, so it cannot avoid re-running the generator; that it must then write a fixture and edit `test_background_tau.py` is README §7 **D5**, **settled yes at the 2026-09-16 re-anchor**. **Prompt 04 ran the generator on 2026-09-17 and did not write the block**: the regenerated reference floor is 58x ($\tau$) and 43x ($c_s\tau$) tighter, and the two tests that read it as a threshold then fail by 6.99x and 5.08x with their numerators unmoved — one of them in a module outside the D5 carve-out. So this issue has moved from *blocked on scope* to *blocked on a decision*, and the decision is `[04-convergence-floor-used-as-a-test-threshold]`. Everything else it asks for is measured: all four orders are `unchanged` at 4, the recommended scheme becomes `branch`, and `QCD_BREAK_POINT_ALIGNMENT_TOL` would go to **1.421085e-14** |
+| `[01-convergence-block-has-a-separate-generator]` | qcd-background-audit | prompts 04 and **04b** — **CLOSED 2026-09-18** (§4) | **Assigned 2026-09-16.** The `convergence` block of `ComputeTargets/tests/wkb_reference_data.json` records $N_\tau = N_{c_s\tau} = N_F = N_\rho = 4$, was generated 2026-09-10, and its `decision.recommended_scheme` is `"branch+knots"` — a knot set `qcd-background-audit` prompt 07 removed. Prompts 08 and 09 of that campaign each declined it on scope. Prompt 04 here is the first prompt anywhere whose charter is the orders themselves, so it cannot avoid re-running the generator; that it must then write a fixture and edit `test_background_tau.py` is README §7 **D5**, **settled yes at the 2026-09-16 re-anchor**. **Prompt 04 ran the generator on 2026-09-17 and did not write the block**: the regenerated reference floor is 58x ($\tau$) and 43x ($c_s\tau$) tighter, and the two tests that read it as a threshold then fail by 6.99x and 5.08x with their numerators unmoved — one of them in a module outside the D5 carve-out. So this issue has moved from *blocked on scope* to *blocked on a decision*, and the decision is `[04-convergence-floor-used-as-a-test-threshold]`. Everything else it asks for is measured: all four orders are `unchanged` at 4, the recommended scheme becomes `branch`, and `QCD_BREAK_POINT_ALIGNMENT_TOL` would go to **1.421085e-14** |
 | `[20-wkb-gauss-orders-not-in-lookup-key]` | GkTk-remedial | prompts 04, 05 | **Assigned 2026-09-16.** `TAU_GAUSS_ORDER`, `CS_TAU_GAUSS_ORDER`, `FRICTION_F_GAUSS_ORDER`, `RHO_GAUSS_ORDER` and `RESIDUAL_WKB_REGION_MARGIN` are configuration axes in no lookup key, while the `atol`/`rtol` columns that *are* in the key describe nothing. That is README §7 **D3**, and D3 is the user's stated target for the campaign: for a Liouville–Green-type representation the key should carry an order. **Prompt 04 reported on 2026-09-17**: the audit is complete (**T7**) and the D3 recommendation is **`replace with the orders`** — three integer columns on `BackgroundModel` ($N_\tau$, $N_{c_s\tau}$, $N_F$), one on each WKB target ($N_\rho$), and `drop` for `GkSource`, which integrates nothing. `RESIDUAL_WKB_REGION_MARGIN` is measured for the first time and is `unchanged`. Prompt 05 implements, once the user settles D3 |
 
 Recorded by the rebase, **not owned here** and not scheduled (README §0.5):
@@ -899,6 +868,57 @@ Recorded by the rebase, **not owned here** and not scheduled (README §0.5):
 ---
 
 ## 4. Resolved issues
+
+Closed by **prompt 04b**, 2026-09-18:
+
+- **[04-convergence-floor-used-as-a-test-threshold]** — **CLOSED.** Neither assertion divides the
+  model's accuracy by the reference's any more. `test_background_tau.py` bounds the production
+  order-4 $\tau$ table at **`QCD_NODE_REL_TOL = 1.0e-14`** and
+  `test_background_cs_tau_friction.py` bounds $c_s\tau$ at **`QCD_CS_TAU_REL_TOL = 1.0e-14`**, each
+  an absolute bound on the quantity it names, with the measured floor under it and the arithmetic
+  in the module. `QCD_FLOOR_FACTOR` is **removed** from both; no reference to the name survives.
+
+  **The arithmetic.** The user chose this over the cheap repair — raising both `QCD_FLOOR_FACTOR`s
+  past 7 — because that keeps a comparison between two independent quantities alive with a fresher
+  number in it and needs raising again the next time the reference improves (README §7 **D8**).
+  The quantities
+  are **2.254220593813745e-15** ($\tau$) and **2.2119104448437696e-15** ($c_s\tau$), both at
+  $z = 1.005\times10^7$ — prompt 04's figures and `qcd-background-audit` prompt 06's, to every
+  digit. The floor under each is double-precision accumulation of the cumulative over the grid's
+  1,731 intervals, **2.16e-16** and **3.30e-16** (`ORDER-AUDIT.md` §§3.1, 5), so production sits
+  ×10.4 and ×6.7 above its floor. The bound is ×4.4 / ×4.5 the production figure and ×46 / ×30 the
+  floor. **It keeps the discrimination the old form had**: every QCD representation before
+  `qcd-background-audit` prompt 06 fails it (2.194e-14 and 5.835e-14 on $\tau$; 2.186e-14 and
+  1.5501e-13 on $c_s\tau$, the figures those modules' own comment blocks record), and unlike the
+  old form it cannot be moved by anything that happens to the *reference*.
+
+  Both tests still **read and print** the reference's own agreement beside the bound, labelled as
+  not asserted against, so the two numbers stay visible side by side. Evidence:
+  [`logs/04b-regenerate-the-convergence-block.md`](logs/04b-regenerate-the-convergence-block.md),
+  `docs/tolerance-convergence/ORDER-AUDIT.md` §12.2.
+
+- **[01-convergence-block-has-a-separate-generator]** — **CLOSED**, on the
+  `qcd-background-audit` board that holds its measurements, and here because this campaign closed
+  it. The `convergence` block of `ComputeTargets/tests/wkb_reference_data.json` is **regenerated**:
+  `generated` **2026-09-18**, `campaign` `prompts/tolerance-convergence (prompt 04, board item
+  T7)`, `schema_version` 2, `recommended_scheme` **`branch`** — a scheme production can execute —
+  and $N_\tau = N_{c_s\tau} = N_F = N_\rho = 4$ measured against the corrected $T(z)$
+  representation and the 3-point break set. `branch+knots` survives as a populated **control**
+  (`decision.control_scheme`), because two test modules index it by name and because prompt 04
+  measured what it now buys: nothing — `branch` reaches 1.658e-16 on QCD's $\tau$ floor against
+  the control's 3.224e-16, which confirms `qcd-background-audit` prompt 07 at the quadrature level.
+
+  **Written by `docs/gktk-remedial/residual_convergence.py` with no flags and never by hand**, in
+  538.4 s; `generated` and `campaign` both moved, which is the check against hand-editing, and
+  **only the `convergence` key differs from `HEAD~1`**, verified key by key on the parsed JSON.
+  The tolerance owed on this issue's account is paid: **`QCD_BREAK_POINT_ALIGNMENT_TOL` goes
+  1.5e-04 → 3.0e-14**, against measured offsets of 3.552714e-15, 7.105427e-15 and **1.421085e-14**
+  — 1, 2 and 4 ulp of $u$ — so the whole of the former 1.418851e-04 really was the block's age, as
+  four comment blocks of another campaign had predicted since its prompt 06.
+
+  Declined on scope by `qcd-background-audit` prompts 08 and 09 and blocked on a decision at prompt
+  04 here; README §7 **D8** removed the boundary and this prompt landed it. Evidence: log 04b,
+  `ORDER-AUDIT.md` §12.
 
 Closed by **prompt 02a**, 2026-09-17:
 
@@ -1081,3 +1101,16 @@ Closed by **prompt 02a**, 2026-09-17:
     `[01-density-criterion-imposed-outside-the-wkb-region]` is therefore entirely a `Gk`
     phenomenon, and its cost is **114 of QCD's 2,034 source-grid samples and nothing on the other
     two cosmologies**.
+
+25. **The `convergence` block is current, and `QCD_FLOOR_FACTOR` no longer exists** (prompt 04b,
+    2026-09-18). `ComputeTargets/tests/wkb_reference_data.json`'s `convergence` key was generated
+    **2026-09-18** by `prompts/tolerance-convergence (prompt 04, board item T7)` against the
+    corrected $T(z)$ representation and the 3-point break set, recommends **`branch`**, and records
+    the four orders at 4; `branch+knots` survives as a measured **control**, not a candidate. Only
+    `docs/gktk-remedial/residual_convergence.py` may write that key, and hand-editing it is caught
+    by `generated` and `campaign` failing to move. The two tests that read the block now bound
+    their **own** production quantities — `QCD_NODE_REL_TOL` and `QCD_CS_TAU_REL_TOL`, both
+    1.0e-14, against measured accumulation floors of 2.16e-16 and 3.30e-16 — and
+    `QCD_BREAK_POINT_ALIGNMENT_TOL` is **3.0e-14**, ×2.11 above a worst offset of four ulp of $u$.
+    A prompt quoting 1.5e-04, 1.878541e-14 or a `QCD_FLOOR_FACTOR` is reading a document written
+    before this commit.
