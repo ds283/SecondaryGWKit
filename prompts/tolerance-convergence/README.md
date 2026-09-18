@@ -343,7 +343,8 @@ right-hand-side evaluations, integrand evaluations or Hubble calls.
 | 03 | Audit the adaptive solvers | §2 (d), (e), (f); review §10.1, §12.5; `[00-gk-numeric-never-swept-and-carries-the-cost]` | new `docs/tolerance-convergence/solver_sweep.py`, `SOLVER-CONVERGENCE.md` | **No** | Opus |
 | 04 | Audit the order-governed targets | §2 (a); `[01-convergence-block-has-a-separate-generator]`; `[20-wkb-gauss-orders-not-in-lookup-key]` | `docs/gktk-remedial/residual_convergence.py`, `ComputeTargets/tests/wkb_reference_data.json`, `ComputeTargets/tests/test_background_tau.py`; new `docs/tolerance-convergence/ORDER-CONVERGENCE.md` | **No, but it writes a fixture and a test — §7 D5, settled yes 2026-09-16** | Opus |
 | 04b | Regenerate the convergence block, and repair the two tests that read it | §2 (a); `[01-convergence-block-has-a-separate-generator]`, `[04-convergence-floor-used-as-a-test-threshold]` | `docs/gktk-remedial/residual_convergence.py`, `ComputeTargets/tests/wkb_reference_data.json`, `ComputeTargets/tests/test_background_tau.py`, `ComputeTargets/tests/test_background_cs_tau_friction.py`; `docs/tolerance-convergence/ORDER-AUDIT.md` **additively** | **No, but it writes a fixture and two tests — §7 D5 as widened by D8, settled yes 2026-09-18** | Opus |
-| 05 | Decouple | §2 (a), (e), (g); §7 D1 and D3 once settled | `config/defaults.py`, `main.py`, the `ComputeTargets/*Integration.py` and `BackgroundModel.py` constructors, the matching `Datastore/SQL/ObjectFactories/`, the six `extract_*.py` readers, `ComputeTargets/tests/test_main_plumbing.py` | **Yes — the only one** | Opus |
+| 05 | Replace the vestigial key columns with the orders | §2 (a); §7 D3 (**settled** 2026-09-18), D9; `[20-wkb-gauss-orders-not-in-lookup-key]` | the four `Datastore/SQL/ObjectFactories/` factories that lose the pair and their `ComputeTargets/` classes, `main.py` at four sites, the six `extract_*.py` readers, `ComputeTargets/tests/test_run_identity.py` | **Yes — and it changes no number; `config/defaults.py` is byte-identical** | Opus |
+| 05a | Decouple the tolerances that are real | §2 (a), (e), (g); §7 D1 (**closed** 2026-09-17), D9 | `config/defaults.py`, `main.py`, the three targets whose pair reaches a solver and their factories, `ComputeTargets/tests/test_main_plumbing.py` | **Yes — the only prompt that moves a parameter** | Opus |
 | 06 | `QuadSourceIntegral`, close-out and the provenance note | §0.4, §1.2, §2 (a) | new `docs/tolerance-convergence/TOLERANCE-CONVERGENCE.md`, new **`docs/TOLERANCE-PROVENANCE.md`**; `docs/OPEN_ISSUES.md` | **No** | Opus |
 
 ### 3.1 Prompt 01 — the convergence harness, and one production grid
@@ -618,20 +619,49 @@ It closes `[01-convergence-block-has-a-separate-generator]`, declined on scope b
 another campaign and by prompt 04, and `[04-convergence-floor-used-as-a-test-threshold]`, which
 prompt 04 opened. Board item **T14**.
 
-### 3.5 Prompt 05 — decouple
+### 3.5 Prompt 05 — replace the vestigial key columns with the orders
 
-The only `main.py` change in the campaign, and only after the user has settled D1 and D3. Per-target
-constants in `config/defaults.py` with the same standard of comment
+**Split from the original §3.5 on 2026-09-18** (§7 **D9**): what was one prompt is now 05, the
+schema half, and 05a, the tolerance half. The split is an insertion and not a renumbering — §3.6's
+charter and §6.2's rows keep the numbers the rest of the tree cites — and it exists because §5 rule
+1 makes the commit the rollback boundary while the two halves are neither comparable in weight nor
+alike in how they fail. **Schema first**, so that 05a wires per-target tolerances through the four
+targets that still have one rather than through eight, four of which 05a would then have to undo.
+
+For the order-governed targets, the key column becomes the order (§7 D3): `BackgroundModel` loses
+`atol_serial`/`rtol_serial` and gains `tau_gauss_order`, `cs_tau_gauss_order` and
+`friction_F_gauss_order`; `GkWKBIntegration` and `TkWKBIntegration` each gain `rho_gauss_order`;
+`GkSource` loses the pair and gains nothing, integrating nothing. This closes
+`[20-wkb-gauss-orders-not-in-lookup-key]`. Board item **T9**.
+
+**Adding the column is the easy half and it is not the point.** The property that has to land is
+that a change of order moves the key — `TOLERANCE-INVENTORY.md` §2.4 measured that it does not
+today, the solver table being *joined* so the label can be read back and then never compared — and
+that no row can record an order it was not computed at. `test_numeric_break_point_key.py` is the
+pattern: `GkTk-remedial` prompt 20 proved `break_point_kind` was "filtered on, not merely selected"
+and the same technique proves this.
+
+**Prompt 05 changes no number.** `config/defaults.py` is byte-identical when it finishes and all
+four orders are still 4. The six `extract_*.py` scripts must follow it, because each performs a
+`BackgroundModel` lookup with the pair and two also look up `GkSource`.
+
+### 3.5a Prompt 05a — decouple the tolerances that are real
+
+The rest of the original §3.5, and the only `config/defaults.py` and tolerance-plumbing change in
+the campaign. Per-target constants with the same standard of comment
 `DEFAULT_TK_NUMERIC_ABS_TOLERANCE` already carries — the measurement that chose the number, in the
-file, where the next reader will find it. For the order-governed targets, the key column becomes the
-order (§7 D3), which closes `[20-wkb-gauss-orders-not-in-lookup-key]`.
+file, where the next reader will find it — for the four targets that still carry a tolerance after
+05: `wavenumber_exit_time`, `GkNumericIntegration`, `TkNumericIntegration` and the already-decoupled
+`QuadSourceIntegral`. D1 settled every one of their values on 2026-09-17, with the two caveats §7
+records, and §5 rule 9 governs their provenance.
 
 Then the plumbing: one accuracy object per target in the same `ray.get`, **every** `object_get` of
 that target switched, and the `ast`-based guard widened past `"…Integration"` so that it enumerates
-all eight and fails when an unclassified site appears (§2 (g)). Expect the batch-dispatch hazard
-prompt 12 hit; the guard exists because it is silent. The six `extract_*.py` scripts read the same
-constants (`extract_Gk_data.py:298`, and five more) and must follow, or they will query for rows
-that no longer exist.
+every target and fails when an unclassified site appears (§2 (g)). After 05 that enumeration is a
+smaller and truer set — four targets carrying a tolerance and four carrying none, where a tolerance
+reappearing on one of the latter is itself a regression the guard should catch. Expect the
+batch-dispatch hazard prompt 12 hit; the guard exists because it is silent. Board items **T8** and
+**T10**.
 
 ### 3.6 Prompt 06 — `QuadSourceIntegral`, close-out, and the provenance note
 
@@ -655,7 +685,7 @@ provenance has not finished.
 
 ```
 01 ──▶ 02 ──▶ 02a ──▶ 03 ──▶ 03a ──▶ [user settles D1] ─────────────┐
-                 └──▶ 04 ──▶ [user settles D3, D8] ──▶ 04b ─────────┴──▶ 05 ──▶ 06
+                 └──▶ 04 ──▶ [user settles D3, D8] ──▶ 04b ─────────┴──▶ 05 ──▶ 05a ──▶ 06
 ```
 
 02 must precede both audits: it is what says which targets 03 and 04 each own, and the old plan's
@@ -668,6 +698,12 @@ the $T_k$ re-take knows what the $G_k$ sweep found about the axes (§3.3, §7 D7
 **both** 03 and 03a have reported, since `wavenumber_exit_time`'s pair is part of it. 05 must not
 start until both D1 and D3 are settled — it is the prompt that invalidates the datastore, and settling a parameter afterwards
 would invalidate it twice.
+
+**05 precedes 05a, and the order is load-bearing** (§7 **D9**, 2026-09-18). 05 removes the
+tolerance pair from the four targets that never used one; 05a then decouples what is left. Run the
+other way round, 05a would wire per-target tolerance objects through `BackgroundModel`,
+`GkWKBIntegration`, `TkWKBIntegration` and `GkSource` for 05 to delete, and would build its `ast`
+guard against an enumeration that is about to change.
 
 **03, 03a and 04 are written after 02a, not merely after 02.** The 2026-09-17 decision is that both
 audits are written from 02's inventory and 02a's hand-off together. 02's table says which targets
@@ -768,8 +804,12 @@ here only where this campaign adds something:
    figure in the record, and the two campaigns that closed before this one are full of both.
 7. **Verification documents are additive.** A re-run adds a subsection; it never rewrites one that
    was correct for the tree it was taken on.
-8. **No parameter changes outside prompt 05.** Prompts 01, 02, 03, 04, 04b and 06 read the
-   constants and measure; they do not edit `config/defaults.py` or `main.py`. The fixture
+8. **No parameter changes outside prompt 05a.** Prompts 01, 02, 03, 04, 04b, **05** and 06 read
+   the constants and measure; they do not edit `config/defaults.py`. **Prompt 05 is inside this
+   rule, not outside it** — §7 **D9** split §3.5 on 2026-09-18 and the permission to move a number
+   went with the tolerance half, so 05 changes the schema while `config/defaults.py` stays
+   byte-identical and all four `*_GAUSS_ORDER` constants stay at 4. 05 does edit `main.py`, at the
+   four `object_get` sites of the targets whose key it changes, which is not a parameter change. The fixture
    regeneration is the one carve-out; **§7 D5 settled it yes at the 2026-09-16 re-anchor** for
    `residual_convergence.py`, `wkb_reference_data.json` and `test_background_tau.py`, and **§7 D8
    widened it on 2026-09-18** by one file, `test_background_cs_tau_friction.py`, for prompt **04b**
@@ -955,9 +995,14 @@ and `GkWKBIntegration.py:334` says outright that the integrators have no toleran
 kept only because it is in the lookup key — while the orders are module constants in no column. So
 raise `TAU_GAUSS_ORDER` today and re-run, and the key is unchanged, the pipeline finds the existing
 order-4 row and serves it, and the `solver_label` beside it reads `cumulative-GL-stepping4`: the
-truth, recorded, in a column no lookup consults. **Reader breakage:** `extract_Gk_data.py`,
-`extract_GkWKB_data.py` and `extract_TkWKB_data.py` each reference `"atol":`/`"rtol":` once and must
-follow, which §3.5 already anticipates.
+truth, recorded, in a column no lookup consults. **Corrected 2026-09-18 while writing prompt 05:
+this entry said three `extract_*.py` scripts break and the tree says six.** Every one of them —
+`extract_Gk_data.py:305`, `extract_GkWKB_data.py:347`, `extract_TkWKB_data.py:371`,
+`extract_GkSource_data.py:760`, `extract_tensor_source_data.py:303` and
+`extract_QuadSourceIntegral_data.py:959` — performs a `BackgroundModel` lookup with the pair, and
+the last two also look up `GkSource`. §3.5's count of six was right and this entry's three was low.
+The trap beside it: `extract_Gk_data.py:407`'s batch dict carries `"atol"`/`"rtol"` into
+**`GkNumericIntegration`**, which keeps its pair, so that one must not be changed.
 
 **D4 — whether `QuadSourceIntegral` is in or out.** §0.4 puts it out, read-only, because two other
 campaigns own those files. If it should instead be retuned here, that has to be agreed with those
@@ -1062,3 +1107,29 @@ alive with a fresher number in it and will need raising again the next time the 
 **04b replaces the construction**: an absolute bound on the production quantity, justified by the
 double-precision accumulation floor `ORDER-AUDIT.md` §§3.1 and 5 measure. §3.4b is the charter and
 `04b-regenerate-the-convergence-block.md` §3 is the rule it applies.
+
+**D9 — is prompt 05 one prompt or two? *Settled 2026-09-18: two, schema first.*** The user split
+§3.5's charter the way D7 split §3.3's, and for the same reason: §5 rule 1 makes the commit the
+rollback boundary, and the two halves of "decouple" are neither comparable in weight nor alike in
+how they fail. Measured on the tree at `cc1f035` before the split was put: the schema half touches
+four factories (~128 `atol`/`rtol` sites), four compute classes (~26), `main.py` at four
+`object_get` sites and six `extract_*.py` readers; the tolerance half touches `config/defaults.py`,
+**32** tolerance-passing sites in `main.py` — eight keyword and 24 inside batch dicts, including the
+`**x` dispatches that are the hazard §2 (g) names — and the `ast` guard. One commit carrying both
+would be far larger than any other in the campaign and would put a schema change and a parameter
+change behind the same revert.
+
+**Schema first, and the order is the substance of the decision rather than a preference.** Prompt
+05 removes the tolerance pair from the four targets that never used one, so prompt 05a then
+decouples four targets instead of eight and builds its guard against the enumeration that will
+actually stand. Run the other way round, 05a wires per-target tolerance objects through
+`BackgroundModel`, `GkWKBIntegration`, `TkWKBIntegration` and `GkSource` for 05 to delete, and the
+guard is written twice.
+
+**It is an insertion, not a renumbering**, carrying a letter for the reason 02a and 04b do: §3.6's
+charter and §6.2's rows keep the numbers the rest of the tree cites, and no board item is
+renumbered — **T9** goes to 05, **T8** and **T10** to 05a. The consequence for §5 rule 8 is worth
+stating, because the rule names prompt 05 by number: **the permission to change a parameter belongs
+to 05a, and prompt 05 changes none.** `config/defaults.py` is byte-identical when 05 finishes and
+all four `*_GAUSS_ORDER` constants are still 4, which is an acceptance condition of that prompt
+rather than an observation about it.

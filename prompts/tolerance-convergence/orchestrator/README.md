@@ -13,7 +13,8 @@ continues or stops and reports to the user.
 | 03a | `TkNumericIntegration` and `wavenumber_exit_time` | [`prompt-03a.md`](prompt-03a.md) | **yes** | Two targets that fail differently, and the one that **closes D1**. The $T_k$ re-take is under the sector's own `BREAK_POINT_ALL`, which has never been swept; `wavenumber_exit_time` is a **location, not a value**, and is the campaign's likeliest §6.1 **rule 6** row. Ends in a **hand-back**: D1 closes on the user's acceptance |
 | 04 | Audit the order-governed targets | [`prompt-04.md`](prompt-04.md) | **yes** | The first prompt to write a fixture other prompts' tests read. D5 gives it three files; **three test modules read the block and only one of them is inside that carve-out**, which is what the review is for. Ends in a **hand-back**: D3 is the user's and prompt 05 waits on it |
 | 04b | Regenerate the convergence block, and repair the two tests that read it | [`prompt-04b.md`](prompt-04b.md) | **yes** | Lands what 04 measured and stopped short of writing. **D5 widened by one file (D8)**; the review turns on whether the threshold repair is a bound on the production quantity or a bigger `QCD_FLOOR_FACTOR`. Closes two issues. Ends in a short hand-back, not a decision |
-| 05 | Decouple | — | **held** | Its charter is fixed (campaign README §3.5) and **both gates are now open** — D1 closed 2026-09-17, D3 settled 2026-09-18. Written after 04b lands |
+| 05 | Replace the vestigial key columns with the orders | [`prompt-05.md`](prompt-05.md) | **yes** | The campaign's first large production change, and the **schema** half of what §3.5 used to be (§7 **D9**). Four tables lose a pair that reaches no solver; three gain the orders that do. The review turns on whether the order is **filtered on, not merely selected** — a column that is written and read back but never compared reproduces the defect one identifier later and every other check passes. Changes **no number** |
+| 05a | Decouple the tolerances that are real | — | **held** | The tolerance half. **T8** and **T10**: per-target constants, the `main.py` tolerance objects, every `object_get` switched, the `ast` guard widened. D1 closed 2026-09-17, so only 05 gates it. Written against what 05 actually leaves |
 | 06 | `QuadSourceIntegral`, close-out, the provenance note | — | **held** | Assembles from the earlier logs |
 
 **02a is an insertion, not a renumbering** (campaign README §3.2a, §7 D6, 2026-09-17). It carries a
@@ -23,11 +24,24 @@ QCD production run uses, and prompts 03, 04 and 06 are each chartered to measure
 grids on **all three models** — so without it every one of them must measure QCD at LambdaCDM's
 anchor, the defect prompt 01 exists to close.
 
-**Prompts 05 and 06 are deliberately not written yet**, and that is a decision of 2026-09-16,
-not an omission — README §3 fixes each one's charter and §6 fixes its acceptance, so what is held
-back is the *method*, not the commitment. Writing them against an inventory that prompt 02 exists to
-establish would repeat the error the 2026-09-12 plan made. **Since 2026-09-17 the precondition is
-02 and 02a together**, for the reason "Running one" gives. Board §1 records which are written.
+**Prompt 06 is deliberately not written yet**, and that is a decision of 2026-09-16, not an
+omission — README §3 fixes its charter and §6 fixes its acceptance, so what is held back is the
+*method*, not the commitment. Writing it against an inventory that prompt 02 exists to establish
+would repeat the error the 2026-09-12 plan made. **Since 2026-09-17 the precondition is 02 and 02a
+together**, for the reason "Running one" gives. Board §1 records which are written. 05a is held for
+a different and shorter reason: it is written against what 05 actually leaves behind, not against
+the plan's forecast of it.
+
+**05 is split from 05a, not renumbered** (campaign README §7 **D9**, 2026-09-18), the way 03 was
+split from 03a under D7 and for the same reason — §5 rule 1 makes the commit the rollback boundary
+and the two halves are not comparable in weight. 05 takes the schema, board item **T9**; 05a takes
+the tolerances and the plumbing, **T8** and **T10**. No item is renumbered. **Schema first is the
+substance of the decision, not a preference**: after 05, four of the eight targets carry no
+tolerance at all, so 05a decouples four rather than eight and builds its `ast` guard against the
+enumeration that will stand. The consequence for the dispatch template is that **§5 rule 8's
+parameter freeze now applies to prompt 05 and is lifted only for 05a**, which is why
+[`prompt-05.md`](prompt-05.md) §2 replaces the template's standing sentence rather than adding to
+it.
 
 **03 is split from 03a, not renumbered** (campaign README §7 **D7**, 2026-09-17). Prompt 03 takes
 `GkNumericIntegration` and the consumer-spline floor — board item **T4** — and 03a takes
@@ -45,7 +59,7 @@ Start with, for example:
 **Take the baselines the prompt names before dispatching anything.** They cannot be reconstructed
 after the fact.
 
-Run **01 → 02 → 02a → 03 → 03a → 04 → 04b → stop**. 02, 02a, 03 and 03a each end in a hand-back, and
+Run **01 → 02 → 02a → 03 → 03a → 04 → 04b → 05 → stop**. 02, 02a, 03 and 03a each end in a hand-back, and
 **04–06 are written from what has landed** (user decision, 2026-09-17): 02 says which targets the
 audits own, 02a settles the anchor question that **T6** — prompt 03a's row — turns on, and 03
 settled whether the two tolerance axes separate in the sector that carries the cost. **03a was
@@ -56,9 +70,13 @@ and explicitly forbidden from borrowing its conclusions (prompt 03a §4.3).
 02a recommends nothing, so it is not a stopping point in campaign README §4.1's sense; it is a stop
 because the next prompt was not yet written. **03 and 03a are stopping points in §4.1's own sense**:
 each ends in a recommendation the user must accept under **D1**. The user accepted the
-`GkNumericIntegration` half on **2026-09-17**; **D1 does not close until 03a's two targets are
-accepted as well**, and prompt 05 unblocks only then. Each prompt's **§1 baseline must be taken
-before dispatch** and cannot be reconstructed afterwards.
+`GkNumericIntegration` half on **2026-09-17**; **D1 closed when 03a's two targets were accepted on
+the same day**, which unblocked 05. Each prompt's **§1 baseline must be taken before dispatch** and
+cannot be reconstructed afterwards.
+
+**04b and 05 are not stopping points in §4.1's sense.** Each ends in a report rather than a
+recommendation: D3, D8 and D9 were all settled before either was dispatched, and neither prompt has
+a number for the user to accept.
 
 ## The rules that bind the orchestrator
 
@@ -124,6 +142,19 @@ git diff --stat HEAD~1 HEAD -- . ':!prompts' ':!docs'
 must list **only** `main.py`, `ComputeTargets/tests/wkb_reference.py` and
 `ComputeTargets/tests/test_source_grid.py`; and `git diff HEAD~1 HEAD -- main.py` must touch
 `source_grid_spacing_profile` and no other function. See [`prompt-02a.md`](prompt-02a.md) §3.1.
+
+And for **prompt 05 only** — it is the campaign's first large production change, and D9 bounds it
+by what it must *not* move:
+
+```bash
+git diff HEAD~1 HEAD -- config/defaults.py
+```
+
+must be **empty**, and all four `*_GAUSS_ORDER` constants must still read 4. The two numeric
+factories must keep `atol_serial`, `rtol_serial` and `break_point_kind`, and
+`PYTHONPATH=. ./venv/bin/python -m unittest ComputeTargets.tests.test_numeric_break_point_key` must
+pass with that module **unedited**. See [`prompt-05.md`](prompt-05.md) §3 checks 2 and 4 — check 2
+is the one no other check substitutes for.
 
 And for **prompt 03 only** — it is the first prompt permitted to touch prompt 01's facility, and
 only additively:
