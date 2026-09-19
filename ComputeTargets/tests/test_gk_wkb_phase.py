@@ -893,6 +893,9 @@ class TestPayloadContract(unittest.TestCase):
         "has_WKB_violation",
         "WKB_violation_z",
         "WKB_violation_efolds_subh",
+        # the order the residual table was built at, which the producer records as its own
+        # (prompts/tolerance-convergence, prompt 05b)
+        "rho_gauss_order",
         "metadata",
     }
     FRICTION_KEYS = {"friction_sample", "friction_data", "friction_solver_label"}

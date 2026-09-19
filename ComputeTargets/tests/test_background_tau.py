@@ -11,9 +11,15 @@ offline from its payload through the same ``values_from_payload`` that ``store()
 Reference floors (do not assert below them; IMPLEMENTATION_STATE.md §5 note 2):
 
 * LambdaCDM: mpmath at 40 digits; the JSON doubles are the 1-ulp limit.
-* QCD ``tau_minus_top``: the JSON reference is break-unaware ``quad`` and disagrees with the
-  break-aware one by 1.88e-14 relative (``[02-qcd-reference-floor]``); the threshold is three
-  times that, read from the JSON's ``convergence`` block.
+* QCD ``tau_minus_top``: the production order-4 Gauss table is bounded **absolutely**, by
+  ``QCD_NODE_REL_TOL`` below, against the double-precision accumulation floor of the cumulative
+  itself. Until `tolerance-convergence` prompt 04b the bound was three times the JSON reference's
+  *own* agreement with a converged adaptive rule, read from the ``convergence`` block -- two
+  independent quantities, which held only while both sat at ~2e-14
+  (``[04-convergence-floor-used-as-a-test-threshold]``). That reference's own disagreement with a
+  break-aware ``quad`` (``[02-qcd-reference-floor]``) is 3.22e-16 in the regenerated block, against
+  the 1.88e-14 this bullet used to quote; it is printed by the test and asserted against by
+  nothing.
 * QCD short baselines: the references integrate between *rounded* ``u = log(1+z)`` endpoints,
   so they carry up to ulp(u)/W_baseline -- ~1e-13 relative on the 37 % fractions near z = 1e6 --
   which the mpmath (exact-endpoint) LambdaCDM references do not. The threshold is README §6's
@@ -53,11 +59,45 @@ from Units import Mpc_units
 LAMBDACDM_NODE_REL_TOL = 2.0e-14
 SHORT_BASELINE_REL_TOL = 1.0e-13
 
-# QCD_FLOOR_FACTOR multiplies the QCD block's own recorded agreement floor,
-# references["convergence"]["models"]["QCDModel"]["branch+knots"]["tau"]["json_vs_reference_max_rel"]
-# -- "how well the JSON's tau agrees with a converged adaptive reference". The quantity scored
-# against it, worst in test_qcd_nodes_against_adaptive_reference, is the same kind of thing: how
-# well the model's fixed-order Gauss table agrees with the JSON.
+# QCD_NODE_REL_TOL bounds the production quantity directly: the worst relative disagreement
+# between the model's order-4 Gauss table and the JSON's tau_minus_top values, over the
+# checkpoints, in test_qcd_nodes_against_adaptive_reference.
+#
+# **The construction changed at tolerance-convergence prompt 04b, and it was not the factor that
+# moved.** What stood here was
+#
+#     worst_production_error <= QCD_FLOOR_FACTOR * convergence...["json_vs_reference_max_rel"]
+#
+# -- the model's accuracy bounded by a multiple of *the JSON reference's own* agreement with a
+# converged adaptive rule. Those are two independent quantities, as the note below already
+# conceded ("a floor-against-floor comparison, not an accuracy claim"), and the comparison held
+# only while both sat at ~2e-14 by coincidence. Regenerating the convergence block (prompt 04b,
+# the measurement being prompts/tolerance-convergence prompt 04) took the right-hand side from
+# 1.878541e-14 to 3.223619e-16 -- 58x better, because qcd-background-audit prompts 04-06 replaced
+# the T(z) representation under the JSON's QCD reference values -- while the left-hand side did
+# not move by a digit. Raising the factor past 7 would have kept a meaningless comparison alive
+# with a fresher number in it, and would need raising again the next time the reference improves.
+# The history below is kept because it is the record of that construction failing three times.
+#
+# **The arithmetic that chooses 1.0e-14.** Measured on this tree
+# (docs/tolerance-convergence/ORDER-AUDIT.md §§1, 3.1, 5, and §12 for the landed run):
+#
+#   * the quantity itself: 2.254e-15, at z = 1.005e+07, and it is the same figure
+#     qcd-background-audit prompt 06 recorded;
+#   * the floor under it: double-precision accumulation of the cumulative over the grid's 1,731
+#     intervals, 2.16e-16 relative -- the level at which raising TAU_GAUSS_ORDER stops buying
+#     anything (order 4 gives 3.87e-16 and order 16 gives 2.44e-16 on the exact-radiation
+#     control). The production figure sits 10.4x above it, which is what a cumulative over twenty
+#     decades costs;
+#   * so 1.0e-14 is 4.4x the production figure and 46x the floor. It fails on a degradation of
+#     more than ~4x and cannot be moved by anything that happens to the *reference*: every QCD
+#     representation before qcd-background-audit prompt 06 would have failed it (2.194e-14,
+#     5.835e-14), which is the discrimination the old construction had and this one keeps.
+#
+# It is tighter than LAMBDACDM_NODE_REL_TOL above, and deliberately: that one is README §6's
+# declared row for the smooth model, this one is measured here against its own floor.
+#
+# The superseded history of QCD_FLOOR_FACTOR, which no longer exists:
 #
 # Loosened 3.0 -> 3.2 by prompts/qcd-background-audit/ prompt 05, and the reason is
 # [01-convergence-block-has-a-separate-generator] (docs/OPEN_ISSUES.md): the JSON's QCD block was
@@ -74,7 +114,12 @@ SHORT_BASELINE_REL_TOL = 1.0e-13
 # numerator falls 5.8348e-14 -> 2.104e-15 against the same recorded floor of 1.879e-14, so the
 # model's order-4 cumulative table now agrees with the JSON an order below the floor recorded for
 # the JSON itself. Prompt 08 still re-runs residual_convergence.py and re-measures both sides.
-QCD_FLOOR_FACTOR = 3.0
+#
+# **Prompt 08 never came; prompt 04b of prompts/tolerance-convergence did**, and the re-run it
+# makes shows why the factor form had to go rather than move a fourth time: the block's floor
+# falls to 3.223619e-16 while the numerator stays at 2.254e-15, so the factor would have to be
+# 6.99 to keep a comparison the test's own comment already called meaningless.
+QCD_NODE_REL_TOL = 1.0e-14
 
 # prompt 03 §6 test 5
 LAMBDACDM_BUILD_SECONDS = 0.5
@@ -107,7 +152,25 @@ LAMBDACDM_BUILD_SECONDS = 0.5
 # the *bisected* crossings rather than the root-found ones, and the two differ by ~1e-14 in u, so
 # the whole of this figure is the age of the convergence block and none of it is the
 # representation. The tolerance is left where prompt 06 set it, unchanged, for prompt 08.
-QCD_BREAK_POINT_ALIGNMENT_TOL = 1.5e-04
+#
+# **Taken back by prompts/tolerance-convergence prompt 04b, by ten orders of magnitude**, in the
+# commit that regenerates the convergence block -- which is what prompts 04, 05, 06 and 07 above
+# each said would happen, and the excess really was the block's age and nothing else. Against the
+# regenerated block the three declared crossings sit, in u = log(1+z), at
+#
+#     T_LO       u = 17.565806941870026   offset 3.552714e-15  = 1 ulp of u
+#     EOS_T_LO   u = 23.197460552819653   offset 7.105427e-15  = 2 ulp of u
+#     T_120_MEV  u = 27.485391822044257   offset 1.421085e-14  = 4 ulp of u  (worst)
+#
+# -- the floating-point agreement of two independent solves of the same crossing, the block's
+# branch boundary against integration_break_points' bisected one. ulp(27.485) = 3.552714e-15.
+#
+# 3.0e-14 is 8.4 ulp of u at the worst break, a factor of 2.11 above it. Two ulp of headroom is
+# ample rather than tight, because the failure this assertion exists to catch is the one the
+# history above records -- a block measured against a representation the tree no longer has --
+# and every instance of it showed at 1e-06 to 1e-04, ten orders above this. What a looser bound
+# would buy is nothing measurable; what it would cost is the assertion.
+QCD_BREAK_POINT_ALIGNMENT_TOL = 3.0e-14
 
 # prompt 01's throughput benchmark, re-run against the production object
 THROUGHPUT_CALLS = 20_000
@@ -127,11 +190,14 @@ def _offline_model(cosmology, z_sample, payload) -> BackgroundModel:
             "data": payload["data"],
             "solver": None,
             "values": values,
+            # the three orders the payload says its tables were built at -- what store() records
+            # and what the object reports (prompts/tolerance-convergence, prompt 05b)
+            "tau_gauss_order": payload["tau_order"],
+            "cs_tau_gauss_order": payload["cs_tau_order"],
+            "friction_F_gauss_order": payload["friction_F_order"],
         },
         solver_labels={},
         cosmology=cosmology,
-        atol=None,
-        rtol=None,
         z_sample=z_sample,
     )
 
@@ -319,19 +385,29 @@ class TestBackgroundTau(unittest.TestCase):
             self.assertLessEqual(err_fraction, SHORT_BASELINE_REL_TOL)
 
     def test_qcd_nodes_against_adaptive_reference(self):
-        """Prompt 03 §6 test 2: within 3x the reference's recorded floor."""
+        """
+        Prompt 03 §6 test 2, rewritten by tolerance-convergence prompt 04b: the production
+        order-4 table agrees with the JSON's values to QCD_NODE_REL_TOL, an absolute bound on
+        *this* quantity against its own accumulation floor.
+
+        The reference's own agreement with a converged adaptive rule is printed beside it and
+        **not** asserted against: it is a property of the reference and not of the model, and
+        the two were only ever within a factor of 3 by coincidence
+        (``[04-convergence-floor-used-as-a-test-threshold]``).
+        """
         block = self.s.references["models"]["QCDModel"]
-        floor = self.s.references["convergence"]["models"]["QCDModel"]["branch+knots"][
-            "tau"
-        ]["json_vs_reference_max_rel"]
+        reference_floor = self.s.references["convergence"]["models"]["QCDModel"][
+            "branch+knots"
+        ]["tau"]["json_vs_reference_max_rel"]
         worst, worst_z, worst_pw = self._checkpoint_errors(self.s.qcd_model, block)
         print(
             f"[tau] QCD checkpoints: tau.delta(z_top, z) max rel err {worst:.3e} at z = {worst_z:.4g}; "
-            f"tau(z) - tau(z_top) {worst_pw:.3e}; reference floor {floor:.3e} "
-            f"(threshold {QCD_FLOOR_FACTOR * floor:.3e})"
+            f"tau(z) - tau(z_top) {worst_pw:.3e}; bound {QCD_NODE_REL_TOL:.3e} "
+            f"(the JSON reference's own agreement with a converged rule, not asserted against, "
+            f"is {reference_floor:.3e})"
         )
-        self.assertLessEqual(worst, QCD_FLOOR_FACTOR * floor)
-        self.assertLessEqual(worst_pw, QCD_FLOOR_FACTOR * floor)
+        self.assertLessEqual(worst, QCD_NODE_REL_TOL)
+        self.assertLessEqual(worst_pw, QCD_NODE_REL_TOL)
 
     def test_qcd_short_baselines(self):
         block = self.s.references["models"]["QCDModel"]

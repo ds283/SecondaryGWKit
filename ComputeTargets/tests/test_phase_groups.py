@@ -76,7 +76,7 @@ from ComputeTargets.tests.test_tk_source_functions import (
     REFINED_SAMPLES_PER_LOG10Z,
 )
 from scipy.integrate import solve_ivp
-from LiouvilleGreen.WKBtools import wrap_theta
+from LiouvilleGreen.WKBtools import WKB_mod_2pi
 from LiouvilleGreen.bessel_phase import bessel_phase
 from LiouvilleGreen.constants import TWO_PI
 from LiouvilleGreen.phase_spline import phase_spline
@@ -322,7 +322,7 @@ class BesselPhaseGk:
             theta = (
                 self._bessel["phase"].raw_theta(k * model.tau(z)) - self._vartheta_resp
             )
-            div, mod = wrap_theta(theta)
+            div, mod = WKB_mod_2pi(theta)
             samples.append((log(1.0 + z), div, mod))
         samples.sort(key=lambda s: s[0])
         log_x, div_2pi, mod_2pi = zip(*samples)
@@ -642,7 +642,7 @@ def matched_LG_functions(fixture: Fixture) -> TkSourceFunctions:
 
     values = []
     for i, z in enumerate(fixture.z_WKB):
-        div_2pi, mod_2pi = wrap_theta(sol.y[0][i])
+        div_2pi, mod_2pi = WKB_mod_2pi(sol.y[0][i])
         omega = fixture.omega(z)
         H_ratio = model.Hubble(z_init) / model.Hubble(z)
         friction = 1.5 * (1.0 + fixture.w) * log((1.0 + z) / one_plus_z_init)

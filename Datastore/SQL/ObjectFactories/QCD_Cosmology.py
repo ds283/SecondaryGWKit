@@ -158,12 +158,21 @@ class sqla_QCDCosmology_factory(SQLAFactoryBase):
         # a small configuration table -- a label per row (name plus the
         # distinguishing cosmological parameters) is more useful than a raw
         # value list
+        #
+        # T_z_representation is placed immediately before log10_max_z rather than at the end: the
+        # two of them describe how this row's background was computed and over what range, while
+        # name/omega_m/omega_cc/h are the cosmology's physical parameters that precede them. Since
+        # prompts/qcd-background-audit prompt 03 it is part of the lookup key (module docstring
+        # above): two rows can share every physical parameter and log10_max_z and still be
+        # different backgrounds, and without this the inventory renders them as indistinguishable
+        # duplicates ([03-qcd-inventory-does-not-report-the-representation]).
         values = [
             {
                 "name": row.name,
                 "omega_m": row.omega_m,
                 "omega_cc": row.omega_cc,
                 "h": row.h,
+                "T_z_representation": row.T_z_representation,
                 "log10_max_z": row.log10_max_z,
             }
             for row in conn.execute(
@@ -172,6 +181,7 @@ class sqla_QCDCosmology_factory(SQLAFactoryBase):
                     table.c.omega_m,
                     table.c.omega_cc,
                     table.c.h,
+                    table.c.T_z_representation,
                     table.c.log10_max_z,
                 ).order_by(table.c.name)
             )

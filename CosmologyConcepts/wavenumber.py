@@ -12,8 +12,8 @@ from Datastore import DatastoreObject
 from MetadataConcepts import tolerance
 from Units import check_units
 from config.defaults import (
-    DEFAULT_ABS_TOLERANCE,
-    DEFAULT_REL_TOLERANCE,
+    DEFAULT_HEXIT_ABS_TOLERANCE,
+    DEFAULT_HEXIT_REL_TOLERANCE,
     DEFAULT_REDSHIFT_RELATIVE_PRECISION,
 )
 from utilities import WallclockTimer
@@ -242,6 +242,38 @@ SOURCE_GRID_CONSUMER_TARGET_RAD = 1.0e-6
 # error is 1e-12 against a 1e-07 floor.
 SOURCE_GRID_SPLINE_EDGE_INTERVALS = 3
 SOURCE_GRID_SPLINE_EDGE_FACTOR = 10.0
+
+# **The ceiling on what the density criterion's guard may absorb**, as a fraction of one
+# (k, sector) band's nodes. Prompt 02a of prompts/tolerance-convergence.
+#
+# The band is established node-wise by residual_node_range and the stencil is evaluated off-node,
+# at u +- delta and u +- 2 delta, so where H steps omega^2 can be negative between two nodes that
+# both pass the margin test. Such a node has no fourth derivative to equidistribute and is marked
+# unusable and log-interpolated across, exactly as a declared crossing's neighbourhood is. Before
+# that guard existed the construction raised outright and a QCD production run could not build its
+# source grid at all ([01-v2-density-raises-at-the-qcd-production-anchor]).
+#
+# A guard with no ceiling is the worse defect, because the raise at least stops: it would let an
+# arbitrarily misplaced band be absorbed silently, and the profile would then be a log-interpolation
+# through whatever few nodes survived. So the guard refuses above this fraction and names the count.
+#
+# Measured, at production geometry -- fifty wavenumbers, both sectors, 100 samples per decade of z:
+#
+#     cosmology / anchor                       guarded    band    worst single band
+#     QCD at LambdaCDM's anchor (1996 samples)       0   136492            0
+#     LambdaCDM at its own anchor (1778)             0   150932            0
+#     QCD at its own anchor (2034)                  53   136453     7.716e-04
+#
+# The only production case that guards anything reaches **7.716e-04** of a band -- one node of
+# 1,304, on 53 of the 100 (k, sector) cases -- and that figure is stable at every relative
+# perturbation of z_init from 1e-16 to 1e-8, so it is not one float's accident. 0.05 sits **64.8x**
+# above it. The margin is deliberately large in that direction and small in the other: at 5% of a
+# band, 95% of its nodes remain to fit the log-interpolation from, so anything that trips this
+# ceiling is a misplaced band rather than a boundary effect, which is the distinction the constant
+# exists to draw. Whether the criterion should run over a horizon-based band of its own instead is
+# [01-density-criterion-imposed-outside-the-wkb-region], and the guarded counts above are its
+# evidence, not this constant's business.
+SOURCE_GRID_MAX_GUARDED_FRACTION = 0.05
 
 
 class SourceGrid(NamedTuple):
@@ -888,8 +920,8 @@ def _solve_horizon_exit(
     cosmology: BaseCosmology,
     k: wavenumber,
     offset_subh: int,
-    atol: float = DEFAULT_ABS_TOLERANCE,
-    rtol: float = DEFAULT_REL_TOLERANCE,
+    atol: float = DEFAULT_HEXIT_ABS_TOLERANCE,
+    rtol: float = DEFAULT_HEXIT_REL_TOLERANCE,
 ):
     """
     Solve the implicit equation log(k/aH) - offset_subh = 0 to find the horizon exit time (plus offset) associated with wavenumber k, i.e.
@@ -976,6 +1008,12 @@ def _solve_horizon_exit(
             f"_solve_horizon_exit: failed to bracket horizon crossing time for k={k.k_inv_Mpc:.5}/Mpc (z_lo={log_z_lo:.5g}, q_lo={q_lo:.5g}, z_hi={log_z_hi:.5g}, q_hi={q_hi:.5g})"
         )
 
+    # Brent stops when the bracket is narrower than xtol + rtol*|u|, and the solve is in
+    # u = log(1+z), so rtol*|u| at the largest production |u| = 38.04 is what pins the root;
+    # xtol binds at none of the 150 production (k, offset) pairs and floors the pair at ~1e-10
+    # relative however far rtol is tightened (prompt 03a of prompts/tolerance-convergence,
+    # docs/tolerance-convergence/TK-NUMERIC-AND-EXIT-TIME.md section 7). The defaults are
+    # DEFAULT_HEXIT_ABS_TOLERANCE and DEFAULT_HEXIT_REL_TOLERANCE, which carry that measurement.
     root = root_scalar(
         q,
         bracket=(log_z_lo, log_z_hi),
@@ -1004,8 +1042,8 @@ def find_horizon_exit_time(
     k: wavenumber,
     suph_efolds: List[int],
     subh_efolds: List[int],
-    atol: float = DEFAULT_ABS_TOLERANCE,
-    rtol: float = DEFAULT_REL_TOLERANCE,
+    atol: float = DEFAULT_HEXIT_ABS_TOLERANCE,
+    rtol: float = DEFAULT_HEXIT_REL_TOLERANCE,
 ) -> Mapping[str, float]:
     """
     Compute the redshift of horizon exit for a mode of wavenumber k in the specified cosmology

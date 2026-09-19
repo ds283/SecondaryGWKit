@@ -50,7 +50,10 @@ from CosmologyConcepts import (
     SOURCE_GRID_SPLINE_EDGE_FACTOR,
     SOURCE_GRID_SPLINE_EDGE_INTERVALS,
 )
-from CosmologyConcepts.wavenumber import SOURCE_GRID_CONSTRUCTION_VERSION
+from CosmologyConcepts.wavenumber import (
+    SOURCE_GRID_CONSTRUCTION_VERSION,
+    SOURCE_GRID_MAX_GUARDED_FRACTION,
+)
 from Datastore.SQL.ProfileAgent import ProfileAgent
 from Datastore.SQL.ShardedPool import ShardedPool
 from LiouvilleGreen.bessel_phase import bessel_phase
@@ -59,12 +62,15 @@ from Quadrature.integration_metadata import IntegrationSolver
 from RayTools.RayWorkPool import RayWorkPool
 from Units import Mpc_units
 from config.defaults import (
-    DEFAULT_ABS_TOLERANCE,
-    DEFAULT_REL_TOLERANCE,
     DEFAULT_FLOAT_PRECISION,
+    DEFAULT_GK_NUMERIC_ABS_TOLERANCE,
+    DEFAULT_GK_NUMERIC_REL_TOLERANCE,
+    DEFAULT_HEXIT_ABS_TOLERANCE,
+    DEFAULT_HEXIT_REL_TOLERANCE,
     DEFAULT_QUADRATURE_RTOL,
     DEFAULT_QUADRATURE_ATOL,
     DEFAULT_TK_NUMERIC_ABS_TOLERANCE,
+    DEFAULT_TK_NUMERIC_REL_TOLERANCE,
 )
 from config.model_list import build_model_list
 from config.sharding import (
@@ -519,13 +525,35 @@ def cosmology_feature_redshifts(cosmology, z_end: float, z_init: float):
     ``CosmologyConcepts.wavenumber.SOURCE_GRID_BREAK_STANDOFF`` clears the recovery granularity
     (~ulp(u) = 3.6e-15 relative) by twelve orders of magnitude.
 
-    ``feature_z`` are matter-radiation and matter-Lambda equality, recomputed here from the
-    public ``omega_m`` / ``omega_r`` / ``omega_cc`` rather than imported from the model, which
-    computes them in its constructor and discards them (``LambdaCDM.py:73``,
-    ``LambdaCDM_GenericEOS.py:483``) -- and which prompt 11 may not modify. The closed form
-    agrees with ``LambdaCDM_GenericEOS``'s own root solve to 4e-13 relative in z on
-    ``QCD_Cosmology`` at production parameters, which is far below a grid interval; the samples
-    are markers of an epoch, not a claim about where equality is.
+    ``feature_z`` are matter-radiation and matter-Lambda equality, **asked of the cosmology**:
+    ``BaseCosmology`` declares ``z_matter_radiation_equality`` and ``z_matter_lambda_equality``
+    and each model answers for itself. Nothing is computed here. Base ``LambdaCDM`` answers with
+    ``Omega_m/Omega_r - 1``, which for a model with no equation of state is not an approximation
+    but the exact root; ``LambdaCDM_GenericEOS`` answers with the bracketed solve its constructor
+    already runs against its own rho_r = RadiationConstant G(T(z)) T(z)^4.
+
+    This function used to recompute both from the public ``omega_m`` / ``omega_r`` / ``omega_cc``
+    -- a duplicate of the closed form, and a deliberate one, because prompt 11 of
+    ``prompts/qcd-background-audit`` could not modify the models. **Omega_r is a present-day
+    density parameter**, so that form is exact only while rho_r ~ (1+z)^4 holds from today back
+    to equality; on ``QCD_Cosmology`` it does, to 7 ulp, for the single reason that all of that
+    equation of state's g_*(T) structure sits at z ~ 1e12, twelve orders above z_eq. A cosmology
+    with entropy injection below z_eq, a decaying species or extra relativistic species appearing
+    late breaks it silently and by far more than ulps. The accuracy was a property of where the
+    QCD transition happens to sit, not of this code, which is why the model is now authoritative
+    (``prompts/background-solver-robustness`` README section 7 D2, decided by the user
+    2026-09-16; prompt 09).
+
+    The measured agreement between the two routes survives as a statement about the **initial
+    guess** the model's solve is seeded with, which is still that closed form: at 921f41c, on
+    ``QCD_Cosmology`` at production parameters, the guess sits **-9.3e-16 relative in z** (7 ulp)
+    from the solve at matter-radiation equality and is **the same float** at matter-Lambda
+    equality, where neither side sees T(z) at all. It is the solve, not the guess, that reaches
+    this function. The samples are markers of an epoch, not a claim about where equality is.
+
+    **There is deliberately no fallback.** A cosmology that declares break points but cannot
+    supply either redshift raises: silently substituting the closed form would reinstate exactly
+    the defect above, on precisely the models least likely to satisfy it.
 
     **``feature_z`` is empty when ``break_z`` is.** A cosmology that declares no non-smoothness
     takes the unchanged code path entirely and gets the grid it has always had, element for
@@ -542,13 +570,24 @@ def cosmology_feature_redshifts(cosmology, z_end: float, z_init: float):
         return [], []
 
     feature_z = []
-    omega_m = getattr(cosmology, "omega_m", None)
-    omega_r = getattr(cosmology, "omega_r", None)
-    omega_cc = getattr(cosmology, "omega_cc", None)
-    if omega_m is not None and omega_r is not None and omega_r > 0.0:
-        feature_z.append(float(omega_m / omega_r - 1.0))
-    if omega_cc is not None and omega_m is not None and omega_m > 0.0:
-        feature_z.append(float(pow(omega_cc / omega_m, 1.0 / 3.0) - 1.0))
+    for description, attribute in (
+        ("matter-radiation equality", "z_matter_radiation_equality"),
+        ("matter-Lambda equality", "z_matter_lambda_equality"),
+    ):
+        try:
+            feature_z.append(float(getattr(cosmology, attribute)))
+        except AttributeError as exc:
+            raise RuntimeError(
+                f"cosmology_feature_redshifts: the cosmology "
+                f"'{getattr(cosmology, 'name', '<unnamed>')}' "
+                f"({type(cosmology).__name__}) declares break points, so the source grid is "
+                f"built around the features it declares, but it does not supply "
+                f"{description} as '{attribute}'. BaseCosmology declares that obligation and "
+                f"every production cosmology answers it. There is no fallback to "
+                f"1 + z_eq = Omega_m/Omega_r here on purpose -- see this function's docstring -- "
+                f"so a cosmology that declares non-smoothness and cannot say where its own "
+                f"equality redshifts are is a broken cosmology, not a grid to build anyway."
+            ) from exc
 
     return break_z, feature_z
 
@@ -661,7 +700,7 @@ def pre_grid_background_proxy(cosmology):
 
 
 def source_grid_spacing_profile(
-    cosmology, base_z_values, k_values, sectors=("Gk", "Tk")
+    cosmology, base_z_values, k_values, sectors=("Gk", "Tk"), report=None
 ):
     """
     The base density of the source grid, as ``(u_profile, h_profile)``: at each sample of
@@ -695,10 +734,32 @@ def source_grid_spacing_profile(
     ``CumulativeTable`` would give, and nothing here could have one, because that is a
     ``BackgroundModel``.
 
+    **The band is established node-wise and the stencil is evaluated off-node**, so a node at
+    which the expansion does not exist can lie between two nodes that both pass
+    ``residual_node_range``'s margin test: where ``H`` steps, ``omega^2`` can be negative at
+    ``u +- delta`` with both neighbouring nodes inside the region. Such a node is marked unusable
+    and filled by log-interpolation exactly as a declared crossing's neighbourhood is -- it is a
+    node with no fourth derivative to equidistribute, which is what that mask is for -- and the
+    guarded nodes are **counted**, because the count measures how far the band overreaches and is
+    the evidence ``[01-density-criterion-imposed-outside-the-wkb-region]`` is waiting for. Before
+    this guard existed the whole construction raised, and a QCD production run could not build its
+    source grid at all (``[01-v2-density-raises-at-the-qcd-production-anchor]``, prompt 02a of
+    ``prompts/tolerance-convergence``). The guard is **inert** on both published grids: QCD at
+    LambdaCDM's anchor is 1,996 samples / ``4849552b`` and LambdaCDM at its own is 1,778 /
+    ``60a3205a``, each with zero nodes guarded, so no figure in the record moves.
+
+    Where this prompt does **not** go: the band stays exactly as ``residual_node_range`` returns
+    it, and whether the criterion should run over a horizon-based band of its own instead is item
+    T7's to decide, not this function's.
+
     :param cosmology: any object with ``Hubble(z)`` and ``wPerturbations(z)``
     :param base_z_values: the uniform base grid, descending in z
     :param k_values: the wavenumbers the grid must serve, in the cosmology's units
     :param sectors: the Liouville-Green sectors to envelope over
+    :param report: optional dict, filled with the guarded-node census -- ``guarded``, ``band``,
+        ``fraction`` and a per-``(k, sector)`` ``detail`` list. The return value is unchanged
+        whether or not it is supplied, because every caller passes the result straight to
+        ``build_z_sample`` as its ``spacing``.
     :return: ``(u_profile, h_profile)``, ascending in u
     """
     base = np.asarray([float(z) for z in base_z_values], dtype=float)
@@ -717,6 +778,10 @@ def source_grid_spacing_profile(
 
     delta = SOURCE_GRID_CURVATURE_STEP_U
     h_envelope = np.full(len(u_profile), np.inf)
+
+    guarded_total = 0
+    band_total = 0
+    guarded_detail = []
 
     for k in sorted({float(k) for k in k_values}):
         for sector in sectors:
@@ -762,21 +827,53 @@ def source_grid_spacing_profile(
             # anything, and prompt 11 owns that neighbourhood.
             d4 = np.zeros(len(u_profile))
             usable = np.zeros(len(u_profile), dtype=bool)
+            guarded = 0
             for i in np.flatnonzero(inside):
                 u = min(
                     max(float(u_profile[i]), u_lo + 2.0 * delta), u_hi - 2.0 * delta
                 )
-                value = abs(
-                    (
-                        -dphi_du(u - 2.0 * delta)
-                        + 2.0 * dphi_du(u - delta)
-                        - 2.0 * dphi_du(u + delta)
-                        + dphi_du(u + 2.0 * delta)
+                try:
+                    value = abs(
+                        (
+                            -dphi_du(u - 2.0 * delta)
+                            + 2.0 * dphi_du(u - delta)
+                            - 2.0 * dphi_du(u + delta)
+                            + dphi_du(u + 2.0 * delta)
+                        )
+                        / (2.0 * delta**3)
                     )
-                    / (2.0 * delta**3)
-                )
+                except ValueError:
+                    # the Liouville-Green expansion does not exist at one of the four stencil
+                    # arms, so there is no fourth derivative of it to equidistribute here. That
+                    # is exactly a node to mark unusable and fill by log-interpolation from
+                    # either side, which is what the mask below the loop already does for the
+                    # declared crossings -- see the block comment above.
+                    #
+                    # Only ValueError: that is what phase_residual_integrand raises when
+                    # omega^2 <= 0 (ComputeTargets/phase_residual.py). A TypeError or a
+                    # KeyError here is a defect, not a region boundary, and must not be
+                    # swallowed.
+                    guarded += 1
+                    continue
                 d4[i] = value
                 usable[i] = value > 0.0
+            band_size = int(inside.sum())
+            guarded_total += guarded
+            band_total += band_size
+            if guarded > 0:
+                guarded_detail.append((k, sector, guarded, band_size))
+            if guarded > SOURCE_GRID_MAX_GUARDED_FRACTION * band_size:
+                # the guard may fill a boundary effect; it may not absorb a misplaced band. See
+                # SOURCE_GRID_MAX_GUARDED_FRACTION, which carries the measurement that fixes it.
+                raise ValueError(
+                    f"source_grid_spacing_profile[{sector}]: the Liouville-Green expansion does "
+                    f"not exist at {guarded} of the {band_size} band node(s) for k = {k:.8g} "
+                    f"({guarded / band_size:.3e} of the band), which exceeds "
+                    f"SOURCE_GRID_MAX_GUARDED_FRACTION = "
+                    f"{SOURCE_GRID_MAX_GUARDED_FRACTION:.3g}; the band this criterion was handed "
+                    f"is not one the expansion it differentiates is defined on, and filling that "
+                    f"many nodes by log-interpolation would conceal it"
+                )
             for u_break in breaks_u:
                 usable &= np.abs(u_profile - u_break) > SOURCE_GRID_CROSSING_MASK_U
             if int(usable.sum()) < 2:
@@ -797,6 +894,25 @@ def source_grid_spacing_profile(
                 eps / (SOURCE_GRID_CUBIC_ERROR_CONST * np.maximum(filled, 1.0e-300))
             ) ** 0.25
             h_envelope = np.where(inside, np.minimum(h_envelope, h), h_envelope)
+
+    if report is not None:
+        report["guarded"] = guarded_total
+        report["band"] = band_total
+        report["fraction"] = guarded_total / band_total if band_total > 0 else 0.0
+        report["detail"] = list(guarded_detail)
+
+    if guarded_total > 0:
+        # Not a warning to be ignored: this count is the direct measure of how far
+        # residual_node_range's band overreaches the region where the Liouville-Green expansion
+        # exists, and [01-density-criterion-imposed-outside-the-wkb-region] is the decision it
+        # feeds. Zero on both published grids, 53 on QCD at QCD's own anchor.
+        print(
+            f"   @@ the curvature criterion guarded {guarded_total} node(s) of {band_total} "
+            f"band-node evaluation(s) ({guarded_total / band_total:.3e}) where the "
+            f"Liouville-Green expansion does not exist at a stencil arm, over "
+            f"{len(guarded_detail)} (k, sector) case(s); each was filled by log-interpolation "
+            f"from either side"
+        )
 
     return u_profile, h_envelope
 
@@ -827,8 +943,6 @@ def run_pipeline(
     model_data: dict,
     source_k_sample: wavenumber_array,
     response_k_sample: wavenumber_array,
-    atol: tolerance,
-    rtol: tolerance,
     solvers: dict[str, IntegrationSolver],
     GkSource_policy_1pt5: GkSourcePolicy,
     GkSource_policy_5pt0: GkSourcePolicy,
@@ -848,8 +962,10 @@ def run_pipeline(
             "wavenumber_exit_time",
             k=k,
             cosmology=model_cosmology,
-            atol=atol,
-            rtol=rtol,
+            # the root solve's own pair (prompt 05a of prompts/tolerance-convergence); it reaches
+            # root_scalar as xtol/rtol and is part of the datastore key
+            atol=hexit_atol,
+            rtol=hexit_rtol,
         )
 
     # for each k mode we sample, determine its horizon exit point
@@ -1026,8 +1142,6 @@ def run_pipeline(
             solver_labels=solvers,
             cosmology=model_cosmology,
             z_sample=z_source_sample,
-            atol=atol,
-            rtol=rtol,
             tags=[
                 RunLabelTag,
                 SourceGridConstructionTag,
@@ -1113,11 +1227,11 @@ def run_pipeline(
                 "k": k_exit,
                 "z_sample": None,
                 "z_init": None,
-                # TkNumericIntegration alone carries Tk_numeric_atol (prompt 12 of
-                # prompts/GkTk-remedial, review §12.5); it is part of the datastore key, so the
-                # work item and every lookup have to agree on it
+                # TkNumericIntegration's own pair (prompt 12 of prompts/GkTk-remedial and
+                # prompt 05a of prompts/tolerance-convergence); it is part of the datastore key,
+                # so the work item and every lookup have to agree on it
                 "atol": Tk_numeric_atol,
-                "rtol": rtol,
+                "rtol": Tk_numeric_rtol,
                 "tags": [
                     TkProductionTag,
                     RunLabelTag,
@@ -1185,11 +1299,11 @@ def run_pipeline(
                     k=k_exit,
                     z_sample=source_zs,
                     z_init=source_zs.max,
-                    # TkNumericIntegration alone carries Tk_numeric_atol (prompt 12 of
-                    # prompts/GkTk-remedial, review §12.5); it is part of the datastore key, so
-                    # the work item and every lookup have to agree on it
+                    # TkNumericIntegration's own pair (prompt 12 of prompts/GkTk-remedial and
+                    # prompt 05a of prompts/tolerance-convergence); it is part of the datastore
+                    # key, so the work item and every lookup have to agree on it
                     atol=Tk_numeric_atol,
-                    rtol=rtol,
+                    rtol=Tk_numeric_rtol,
                     tags=[
                         TkProductionTag,
                         RunLabelTag,
@@ -1274,8 +1388,6 @@ def run_pipeline(
                 "k": k_exit,
                 "z_sample": None,
                 "z_init": None,
-                "atol": atol,
-                "rtol": rtol,
                 "tags": [
                     TkProductionTag,
                     RunLabelTag,
@@ -1326,11 +1438,11 @@ def run_pipeline(
                 "k": k_exit,
                 "z_sample": None,
                 "z_init": None,
-                # TkNumericIntegration alone carries Tk_numeric_atol (prompt 12 of
-                # prompts/GkTk-remedial, review §12.5); it is part of the datastore key, so the
-                # work item and every lookup have to agree on it
+                # TkNumericIntegration's own pair (prompt 12 of prompts/GkTk-remedial and
+                # prompt 05a of prompts/tolerance-convergence); it is part of the datastore key,
+                # so the work item and every lookup have to agree on it
                 "atol": Tk_numeric_atol,
-                "rtol": rtol,
+                "rtol": Tk_numeric_rtol,
                 "tags": [
                     TkProductionTag,
                     RunLabelTag,
@@ -1402,8 +1514,6 @@ def run_pipeline(
                     T_init=T_init,
                     Tprime_init=Tprime_init,
                     z_sample=source_sample,
-                    atol=atol,
-                    rtol=rtol,
                     tags=[
                         TkProductionTag,
                         RunLabelTag,
@@ -1478,8 +1588,11 @@ def run_pipeline(
                         "model": model_proxy,
                         "r": r,
                         "z_sample": None,
-                        "atol": atol,
-                        "rtol": rtol,
+                        # QuadSource has no tolerance: it names neither atol nor rtol in
+                        # ComputeTargets/QuadSource.py or in its factory, and has no tolerance
+                        # column. The pair this query used to carry was dead payload and was
+                        # removed by prompt 05a of prompts/tolerance-convergence; the other two
+                        # QuadSource lookups never carried it.
                         "tags": [
                             TkProductionTag,
                             RunLabelTag,
@@ -1536,11 +1649,11 @@ def run_pipeline(
                 "z_sample": None,
                 "k": k,
                 "z_init": None,
-                # TkNumericIntegration alone carries Tk_numeric_atol (prompt 12 of
-                # prompts/GkTk-remedial, review §12.5); it is part of the datastore key, so the
-                # work item and every lookup have to agree on it
+                # TkNumericIntegration's own pair (prompt 12 of prompts/GkTk-remedial and
+                # prompt 05a of prompts/tolerance-convergence); it is part of the datastore key,
+                # so the work item and every lookup have to agree on it
                 "atol": Tk_numeric_atol,
-                "rtol": rtol,
+                "rtol": Tk_numeric_rtol,
                 "tags": [
                     TkProductionTag,
                     RunLabelTag,
@@ -1699,8 +1812,10 @@ def run_pipeline(
                         "model": model_proxy,
                         "z_source": z_source,
                         "z_sample": None,
-                        "atol": atol,
-                        "rtol": rtol,
+                        # GkNumericIntegration's own pair (prompt 05a of
+                        # prompts/tolerance-convergence); part of the datastore key
+                        "atol": Gk_numeric_atol,
+                        "rtol": Gk_numeric_rtol,
                         "tags": [
                             GkProductionTag,
                             RunLabelTag,
@@ -1795,8 +1910,10 @@ def run_pipeline(
                                 k=k_exit,
                                 z_source=z_source,
                                 z_sample=response_zs,
-                                atol=atol,
-                                rtol=rtol,
+                                # GkNumericIntegration's own pair (prompt 05a of
+                                # prompts/tolerance-convergence); part of the datastore key
+                                atol=Gk_numeric_atol,
+                                rtol=Gk_numeric_rtol,
                                 tags=[
                                     GkProductionTag,
                                     RunLabelTag,
@@ -1882,8 +1999,6 @@ def run_pipeline(
                         "model": model_proxy,
                         "z_source": z_source,
                         "z_sample": None,
-                        "atol": atol,
-                        "rtol": rtol,
                         "tags": [
                             GkProductionTag,
                             RunLabelTag,
@@ -1949,8 +2064,10 @@ def run_pipeline(
                         "model": model_proxy,
                         "z_source": z_source,
                         "z_sample": None,
-                        "atol": atol,
-                        "rtol": rtol,
+                        # GkNumericIntegration's own pair (prompt 05a of
+                        # prompts/tolerance-convergence); part of the datastore key
+                        "atol": Gk_numeric_atol,
+                        "rtol": Gk_numeric_rtol,
                         "tags": [
                             GkProductionTag,
                             RunLabelTag,
@@ -2059,8 +2176,6 @@ def run_pipeline(
                                 G_init=G_init,
                                 Gprime_init=Gprime_init,
                                 z_sample=response_sample,
-                                atol=atol,
-                                rtol=rtol,
                                 tags=[
                                     GkProductionTag,
                                     RunLabelTag,
@@ -2108,8 +2223,6 @@ def run_pipeline(
                             G_init=0.0,
                             Gprime_init=1.0,
                             z_sample=response_sample,
-                            atol=atol,
-                            rtol=rtol,
                             tags=[
                                 GkProductionTag,
                                 RunLabelTag,
@@ -2188,8 +2301,6 @@ def run_pipeline(
                         "model": model_proxy,
                         "z_response": z_response,
                         "z_sample": None,
-                        "atol": atol,
-                        "rtol": rtol,
                         "tags": [
                             GkProductionTag,
                             RunLabelTag,
@@ -2259,8 +2370,16 @@ def run_pipeline(
                 "payload": {
                     "model": model_proxy,
                     "z": z_response,  # no specification of z_source; means we read all available z_source values
-                    "atol": atol,
-                    "rtol": rtol,
+                    # GkNumericIntegration keeps its tolerance pair -- it reaches a DOP853 solver
+                    # -- while GkWKBIntegration lost it to rho_gauss_order in prompt 05 of
+                    # prompts/tolerance-convergence, and that order is not the caller's to supply.
+                    # One payload serves both classes, so the pair is added only for the one that
+                    # still has it.
+                    **(
+                        {"atol": Gk_numeric_atol, "rtol": Gk_numeric_rtol}
+                        if cls_name == "GkNumericValue"
+                        else {}
+                    ),
                     "tags": [
                         GkProductionTag,
                         RunLabelTag,
@@ -2366,8 +2485,6 @@ def run_pipeline(
                             "GkSource",
                             model=model_proxy,
                             k=k_exit,
-                            atol=atol,
-                            rtol=rtol,
                             z_response=z_response,
                             z_sample=z_source_pool[z_response.store_id],
                             tags=[
@@ -2520,8 +2637,6 @@ def run_pipeline(
                         "model": model_proxy,
                         "z_response": z_response,
                         "z_sample": None,
-                        "atol": atol,
-                        "rtol": rtol,
                         "tags": [
                             GkProductionTag,
                             RunLabelTag,
@@ -2619,8 +2734,6 @@ def run_pipeline(
                         "model": model_proxy,
                         "z_response": z_response,
                         "z_sample": None,
-                        "atol": atol,
-                        "rtol": rtol,
                         "tags": [
                             GkProductionTag,
                             RunLabelTag,
@@ -2747,8 +2860,6 @@ def run_pipeline(
                         "model": model_proxy,
                         "z_response": z_response,
                         "z_sample": None,
-                        "atol": atol,
-                        "rtol": rtol,
                         "tags": [
                             GkProductionTag,
                             RunLabelTag,
@@ -3016,8 +3127,6 @@ def run_pipeline(
                         "model": model_proxy,
                         "z_response": z_response,
                         "z_sample": None,  # need to specify, but not queried against; we pick up whatever z_source sample is stored
-                        "atol": atol,
-                        "rtol": rtol,
                         "tags": [
                             GkProductionTag,
                             RunLabelTag,
@@ -3163,11 +3272,11 @@ def run_pipeline(
                 "z_sample": None,
                 "k": k_exit,
                 "z_init": None,
-                # TkNumericIntegration alone carries Tk_numeric_atol (prompt 12 of
-                # prompts/GkTk-remedial, review §12.5); it is part of the datastore key, so the
-                # work item and every lookup have to agree on it
+                # TkNumericIntegration's own pair (prompt 12 of prompts/GkTk-remedial and
+                # prompt 05a of prompts/tolerance-convergence); it is part of the datastore key,
+                # so the work item and every lookup have to agree on it
                 "atol": Tk_numeric_atol,
-                "rtol": rtol,
+                "rtol": Tk_numeric_rtol,
                 "tags": [
                     TkProductionTag,
                     RunLabelTag,
@@ -3205,8 +3314,6 @@ def run_pipeline(
                 "z_sample": None,
                 "k": k_exit,
                 "z_init": None,
-                "atol": atol,
-                "rtol": rtol,
                 "tags": [
                     TkProductionTag,
                     RunLabelTag,
@@ -3439,18 +3546,37 @@ with ShardedPool(
 
     # build absolute and relative tolerances.
     #
-    # Tk_numeric_atol is the transfer function's numeric run alone (prompt 12 of
-    # prompts/GkTk-remedial, review §12.5): T decays as 3/x^2, so the shared atol = 1e-10 is a
-    # 1e-5 *relative* tolerance deep inside the horizon. Every TkNumericIntegration object_get --
-    # the work items and every lookup -- must use it, because the tolerance is part of the
-    # datastore key; everything else keeps atol.
-    atol, rtol, quad_atol, quad_rtol, Tk_numeric_atol = ray.get(
+    # There is no longer a shared pair. Prompt 05 of prompts/tolerance-convergence removed the
+    # tolerance from the four object types that never used one -- BackgroundModel, both WKB
+    # sectors and GkSource, whose knob is an integer Gauss order -- and prompt 05a gave each of
+    # the four that do reach a solver a constant of its own, measured on its own terms
+    # (config/defaults.py carries the measurement beside each value). One constant cannot be right
+    # for a Green's function whose |G| ~ 1e10, a transfer function whose |T| ~ 1e-5 and a root
+    # solve in u = log(1+z).
+    #
+    # Every tolerance here is part of its target's datastore key, so the work item and *every*
+    # lookup of that target have to agree on it; a site left on another target's constant does not
+    # raise, it simply fails to find the row and recomputes it at full cost. That is what
+    # ComputeTargets/tests/test_main_plumbing.py guards.
+    (
+        hexit_atol,
+        hexit_rtol,
+        Gk_numeric_atol,
+        Gk_numeric_rtol,
+        Tk_numeric_atol,
+        Tk_numeric_rtol,
+        quad_atol,
+        quad_rtol,
+    ) = ray.get(
         [
-            pool.object_get("tolerance", tol=DEFAULT_ABS_TOLERANCE),
-            pool.object_get("tolerance", tol=DEFAULT_REL_TOLERANCE),
+            pool.object_get("tolerance", tol=DEFAULT_HEXIT_ABS_TOLERANCE),
+            pool.object_get("tolerance", tol=DEFAULT_HEXIT_REL_TOLERANCE),
+            pool.object_get("tolerance", tol=DEFAULT_GK_NUMERIC_ABS_TOLERANCE),
+            pool.object_get("tolerance", tol=DEFAULT_GK_NUMERIC_REL_TOLERANCE),
+            pool.object_get("tolerance", tol=DEFAULT_TK_NUMERIC_ABS_TOLERANCE),
+            pool.object_get("tolerance", tol=DEFAULT_TK_NUMERIC_REL_TOLERANCE),
             pool.object_get("tolerance", tol=DEFAULT_QUADRATURE_ATOL),
             pool.object_get("tolerance", tol=DEFAULT_QUADRATURE_RTOL),
-            pool.object_get("tolerance", tol=DEFAULT_TK_NUMERIC_ABS_TOLERANCE),
         ]
     )
 
@@ -3575,8 +3701,6 @@ with ShardedPool(
             model_data,
             source_k_sample,
             response_k_sample,
-            atol,
-            rtol,
             solvers,
             GkSource_policy_1pt5,
             GkSource_policy_5pt0,

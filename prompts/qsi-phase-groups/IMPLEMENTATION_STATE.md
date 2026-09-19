@@ -72,6 +72,31 @@ with a direct `phase_data["nu"]` comparison, which is a behaviour change.
   and belongs with the hand-over campaign's representation work (`docs/OPEN_ISSUES.md` §1.1), not
   here.
 
+- **[06-analytic-rad-is-computed-at-the-callers-tolerance]** *(opened 2026-09-18 by
+  `prompts/tolerance-convergence` prompt 06, board item **T11**, which measures
+  `QuadSourceIntegral` read-only and may not edit it — README §0.4 of that campaign; filed here
+  because the quantity is built by the three-Bessel machinery this campaign owns)* —
+  `evaluate_QuadSource_integral` computes the stored oracle column `analytic_rad` by calling
+  `analytic_integral` with **the caller's own `atol` and `rtol`** (`QuadSourceIntegral.py:884-897`),
+  which is deliberate and is recorded at `:1547-1552` as the repair of audit B6/QI-9. The
+  consequence nobody has recorded is that `analytic_rad` is then **not a fixed oracle**: it is a
+  function of the row's `atol_serial` and `rtol_serial`, and it is *more* sensitive to them than
+  `total` is. Measured offline over the 18 cases of
+  `ComputeTargets/tests/test_quadsource_integral.py` in the exact flavour
+  (`docs/tolerance-convergence/QUADSOURCE-READONLY.md` §2.1): at the production pair `analytic_rad`
+  sits up to **3.84e-09** of `scale = max(|numeric_quad|, |WKB_Levin|, |analytic_rad|)` from its own
+  value at `(1e-45, 1e-12)`, which is up to **×1.25e+06** the quadrature error of `total` on the
+  same case; at `rtol = 1e-5` it reaches 2.66e-06. **Impact:** two. (i) Any comparison of the form
+  `|total - analytic_rad|` taken from a single run — which is what the fixture's own acceptance
+  tests and `docs/source-remediation-verification.md` report — compares two quantities that moved
+  together, so it cannot be *swept* over tolerances; prompt 06 had to hold the oracle at a reference
+  pair to measure anything. (ii) Anyone reading a stored `analytic_rad` across rows computed at
+  different tolerances is reading a column that is not comparable between them. **Next step:** decide
+  whether `analytic_rad` should be computed at a fixed, declared pair of its own rather than at the
+  row's — it is an oracle, not a payload, and its whole value is in being the same number for every
+  row — or whether the dependence should simply be documented at `QuadSourceIntegral.py:1547-1552`
+  and in the schema. Either is a change to a file `prompts/tolerance-convergence` may not touch.
+
 > Add an entry here whenever the prompt finishes with something unresolved. Format:
 >
 > - **[NN-shortname]** *(opened by prompt NN, YYYY-MM-DD)* — description. **Impact:** who is

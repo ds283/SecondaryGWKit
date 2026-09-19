@@ -486,13 +486,25 @@ class UnresolvedOscWiringTestCase(unittest.TestCase):
 
 
 # -------------------------------------------------------------------------------------------
-# prompt 12 of prompts/GkTk-remedial: the transfer function's numeric absolute tolerance
+# prompt 05a of prompts/tolerance-convergence: every object type main.py looks up is enumerated
+# here, and classified as carrying a tolerance pair or not.
 #
-# `DEFAULT_TK_NUMERIC_ABS_TOLERANCE = 1e-13` is built into its own `tolerance` object,
-# `Tk_numeric_atol`, and every `TkNumericIntegration` lookup and work item must carry it --
-# because the tolerance is part of the datastore key (RECONCILIATION.md section 1 item 14). A
-# site left on the shared `atol` does not raise: the row is simply not found, so the pipeline
-# either recomputes the object or reports it missing. That is the silent failure this guards.
+# History. This guard was built by prompt 12 of prompts/GkTk-remedial for one constant on one
+# target: `DEFAULT_TK_NUMERIC_ABS_TOLERANCE` had just been split out of the shared pair, and every
+# `TkNumericIntegration` lookup had to carry it because the tolerance is part of the datastore
+# key. A site left on the wrong constant does not raise -- the row is simply not found, so the
+# pipeline recomputes the object at full cost, or reports it missing. That is the silent failure
+# this guards, and it is why the guard exists at all.
+#
+# Its predicate was `first.value.endswith("Integration")`, which matched four class names of the
+# eight this campaign found and, because `QuadSourceIntegral` ends in "Integral", never saw the
+# one target that was already decoupled. Prompt 05a replaces it with the enumeration below:
+#
+#   * a site whose class is **not in the enumeration** fails -- that is the case that catches a
+#     new target, which would otherwise be plumbed with no guard at all;
+#   * a site whose tolerance **disagrees with its class's classification** fails -- that is the
+#     case that catches a missed switch, and equally a tolerance reappearing on one of the four
+#     targets prompt 05 took it away from.
 #
 # The check is structural, on main.py's `ast`: the lookups are built inside `run_pipeline`, which
 # `load_main_py_functions` cannot extract (it takes module-level functions only), and a call that
@@ -500,14 +512,92 @@ class UnresolvedOscWiringTestCase(unittest.TestCase):
 # that feeds the queue is what has to be read.
 # -------------------------------------------------------------------------------------------
 
-# the tolerance every TkNumericIntegration object_get must carry, and the one every other
-# integration object_get must carry
-TK_NUMERIC_TOLERANCE_NAME = "Tk_numeric_atol"
-SHARED_TOLERANCE_NAME = "atol"
+# Every object type `main.py` looks up through `object_get` / `object_get_vectorized`, mapped to
+# the `(atol, rtol)` names its sites must carry, or to `NO_TOLERANCE` where the type has no
+# tolerance in its key at all.
+#
+# The four compute targets that carry one each reach a numerical method with it
+# (`docs/tolerance-convergence/TOLERANCE-INVENTORY.md`): a Brent root solve for
+# `wavenumber_exit_time`, DOP853 for the two numeric sectors, the Levin/quadrature stack for
+# `QuadSourceIntegral`. The four that carry none are prompt 05's: their accuracy is set by an
+# integer Gauss order that is read from its single declaration and is not main.py's to supply,
+# and `GkSource` integrates nothing at all. `QuadSource` is the fifth no-tolerance compute target
+# and always was -- it names neither `atol` nor `rtol` anywhere, and the pair one of its three
+# queries used to carry was dead payload, removed by prompt 05a.
+#
+# The metadata and concept types are listed for the same reason the compute targets are: the
+# guard's first job is to fail on a class it has never been told about, and that is only
+# meaningful if the enumeration is complete.
+#
+# `OneLoopIntegral` is deliberately **absent**. It is a ninth keyed object type with real
+# `atol_serial` / `rtol_serial` columns that it filters on, which `main.py` never builds and whose
+# production object count is 0; whether to decouple a target that computes nothing is
+# `[02-oneloopintegral-is-a-ninth-keyed-object-type]`, which is unassigned and the user's. If
+# main.py ever looks it up, this guard should fail and the question should be answered then
+# rather than pre-empted here.
+NO_TOLERANCE = None
 
-# how many TkNumericIntegration object_get sites main.py is expected to have. A finder that
-# silently matched nothing would otherwise pass every assertion below.
-EXPECTED_TK_NUMERIC_SITES = 5
+OBJECT_TYPE_TOLERANCES = {
+    # --- compute targets that carry a tolerance pair of their own ---
+    "wavenumber_exit_time": ("hexit_atol", "hexit_rtol"),
+    "GkNumericIntegration": ("Gk_numeric_atol", "Gk_numeric_rtol"),
+    "TkNumericIntegration": ("Tk_numeric_atol", "Tk_numeric_rtol"),
+    "QuadSourceIntegral": ("quad_atol", "quad_rtol"),
+    # --- compute targets that carry none ---
+    "BackgroundModel": NO_TOLERANCE,
+    "GkWKBIntegration": NO_TOLERANCE,
+    "TkWKBIntegration": NO_TOLERANCE,
+    "GkSource": NO_TOLERANCE,
+    "QuadSource": NO_TOLERANCE,
+    # --- metadata and concepts ---
+    "GkSourcePolicy": NO_TOLERANCE,
+    "GkSourcePolicyData": NO_TOLERANCE,
+    "QuadSourcePolicy": NO_TOLERANCE,
+    "IntegrationSolver": NO_TOLERANCE,
+    "redshift": NO_TOLERANCE,
+    "store_tag": NO_TOLERANCE,
+    "tolerance": NO_TOLERANCE,
+    "wavenumber": NO_TOLERANCE,
+}
+
+# The classes above that do carry a pair, and the ones that do not. Derived rather than restated,
+# so that the two can never disagree.
+TOLERANCE_CARRYING_TYPES = tuple(
+    name for name, pair in OBJECT_TYPE_TOLERANCES.items() if pair is not NO_TOLERANCE
+)
+NO_TOLERANCE_TYPES = tuple(
+    name for name, pair in OBJECT_TYPE_TOLERANCES.items() if pair is NO_TOLERANCE
+)
+
+# How many sites main.py is expected to have, per class. A finder that silently matched nothing
+# would otherwise pass every assertion below, which is the reason prompt 12 counted in the first
+# place and the reason these counters survive the restructuring.
+EXPECTED_SITES = {
+    "wavenumber_exit_time": 1,
+    "TkNumericIntegration": 5,
+    "GkNumericIntegration": 3,
+    "QuadSourceIntegral": 2,
+    "GkWKBIntegration": 3,
+    "TkWKBIntegration": 3,
+    "GkSource": 6,
+    "QuadSource": 3,
+    "BackgroundModel": 1,
+    "GkSourcePolicy": 2,
+    "GkSourcePolicyData": 4,
+    "QuadSourcePolicy": 2,
+    "IntegrationSolver": 7,
+    "redshift": 1,
+    "store_tag": 10,
+    "tolerance": 8,
+    "wavenumber": 1,
+}
+
+# `build_missing_GkSource`'s `GkNumericValue` read batch is the fourth GkNumericIntegration
+# tolerance site in main.py and is *not* counted above: it goes through `object_read_batch`, whose
+# object name is a loop variable (`cls_name` over `["GkNumericValue", "GkWKBValue"]`) and whose
+# pair is added by a conditional `**{...}` expansion. This finder reads `object_get` and
+# `object_get_vectorized` only, so that site is checked by inspection rather than structurally --
+# see log 05a of prompts/tolerance-convergence.
 
 
 def _own_nodes(scope):
@@ -527,7 +617,12 @@ def _own_nodes(scope):
 
 def _object_get_calls(nodes):
     """The `*.object_get(...)` / `*.object_get_vectorized(...)` calls among `nodes` whose first
-    positional argument is a string naming an integration class."""
+    positional argument is a string.
+
+    Prompt 05a: *every* string, not only the names ending in "Integration". Which of them is a
+    known object type is `OBJECT_TYPE_TOLERANCES`' business, and a name that is not in it must
+    reach the assertions rather than be filtered out here.
+    """
     found = []
     for node in nodes:
         if not isinstance(node, ast.Call):
@@ -541,24 +636,22 @@ def _object_get_calls(nodes):
         first = node.args[0]
         if not (isinstance(first, ast.Constant) and isinstance(first.value, str)):
             continue
-        if not first.value.endswith("Integration"):
-            continue
         found.append(node)
     return found
 
 
-def _atol_values_under(node):
-    """Every value bound to an `"atol"` key in any dict literal below `node`.
+def _tolerance_values_under(node, key):
+    """Every value bound to a `key` entry in any dict literal below `node`.
 
-    This reaches both the flat payload dicts (`{"k": ..., "atol": atol, ...}`) and the nested
-    ones `object_get_vectorized` is given (`{"shard_key": ..., "payload": [{..., "atol": atol}]}`).
+    This reaches both the flat payload dicts (`{"k": ..., "atol": ..., ...}`) and the nested
+    ones `object_get_vectorized` is given (`{"shard_key": ..., "payload": [{..., "atol": ...}]}`).
     """
     values = []
     for sub in ast.walk(node):
         if not isinstance(sub, ast.Dict):
             continue
-        for key, value in zip(sub.keys, sub.values):
-            if isinstance(key, ast.Constant) and key.value == "atol":
+        for dict_key, value in zip(sub.keys, sub.values):
+            if isinstance(dict_key, ast.Constant) and dict_key.value == key:
                 values.append(value)
     return values
 
@@ -567,14 +660,41 @@ def _name_of(node):
     return node.id if isinstance(node, ast.Name) else ast.dump(node)
 
 
-def tk_numeric_tolerance_sites():
+def _classify(class_name, atol_names, rtol_names, label, sites, unclassified):
+    """Record one site, or record why it could not be read.
+
+    A class this module has never been told about is *not* silently accepted: it goes to
+    `unclassified` with its tolerance names, so that adding a target to main.py without adding it
+    here fails the suite.
+    """
+    if class_name not in OBJECT_TYPE_TOLERANCES:
+        unclassified.append((class_name, sorted(atol_names | rtol_names), label))
+        return
+    expected = OBJECT_TYPE_TOLERANCES[class_name]
+    if expected is NO_TOLERANCE:
+        # no tolerance is the correct reading here, and a tolerance reappearing is the regression
+        # worth failing on
+        if atol_names or rtol_names:
+            unclassified.append((class_name, sorted(atol_names | rtol_names), label))
+            return
+        sites.append((class_name, None, None, label))
+        return
+    if len(atol_names) != 1 or len(rtol_names) != 1:
+        unclassified.append((class_name, sorted(atol_names | rtol_names), label))
+        return
+    sites.append((class_name, atol_names.pop(), rtol_names.pop(), label))
+
+
+def object_get_tolerance_sites():
     """Return `(sites, unclassified)` for main.py.
 
-    A *site* is `(class_name, atol_name, description)`, one per integration-class `object_get`.
-    The tolerance is read from the call's own `atol=` keyword where it has one, and otherwise
-    from the dict literal of the batch the enclosing `RayWorkPool` dispatches over.
-    `unclassified` holds any site whose tolerance could not be read at all -- a new spelling this
-    finder does not understand, which must fail the test rather than pass it silently.
+    A *site* is `(class_name, atol_name, rtol_name, description)`, one per `object_get` /
+    `object_get_vectorized` whose first argument is a string. The tolerance is read from the
+    call's own `atol=` / `rtol=` keywords where it has them, and otherwise from the dict literal
+    of the batch the enclosing `RayWorkPool` dispatches over. `unclassified` holds any site whose
+    class this module does not enumerate, or whose tolerance could not be read at all -- a new
+    spelling this finder does not understand, which must fail the test rather than pass it
+    silently.
     """
     tree = ast.parse(MAIN_PY.read_text(), filename=str(MAIN_PY))
 
@@ -621,20 +741,29 @@ def tk_numeric_tolerance_sites():
                 if len(node.args) > 1 and isinstance(node.args[1], ast.Name)
                 else None
             )
-            values = [
-                value
-                for assigned in batches.get(batch_name, [])
-                for value in _atol_values_under(assigned)
-            ]
-            names = {_name_of(value) for value in values}
+            assigned = batches.get(batch_name, [])
+            atol_names = {
+                _name_of(value)
+                for source in assigned
+                for value in _tolerance_values_under(source, "atol")
+            }
+            rtol_names = {
+                _name_of(value)
+                for source in assigned
+                for value in _tolerance_values_under(source, "rtol")
+            }
             for call in calls:
                 handled_by_queue.add(id(call))
                 seen.add(id(call))
                 label = f"{scope_label}: RayWorkPool({batch_name}) line {call.lineno}"
-                if len(names) != 1:
-                    unclassified.append((call.args[0].value, sorted(names), label))
-                    continue
-                sites.append((call.args[0].value, names.pop(), label))
+                _classify(
+                    call.args[0].value,
+                    set(atol_names),
+                    set(rtol_names),
+                    label,
+                    sites,
+                    unclassified,
+                )
 
         # direct calls
         for call in _object_get_calls(own):
@@ -642,11 +771,20 @@ def tk_numeric_tolerance_sites():
                 continue
             seen.add(id(call))
             label = f"{scope_label}: direct call, line {call.lineno}"
-            keywords = [kw.value for kw in call.keywords if kw.arg == "atol"]
-            if len(keywords) != 1:
-                unclassified.append((call.args[0].value, [], label))
-                continue
-            sites.append((call.args[0].value, _name_of(keywords[0]), label))
+            atol_names = {
+                _name_of(kw.value) for kw in call.keywords if kw.arg == "atol"
+            }
+            rtol_names = {
+                _name_of(kw.value) for kw in call.keywords if kw.arg == "rtol"
+            }
+            _classify(
+                call.args[0].value,
+                atol_names,
+                rtol_names,
+                label,
+                sites,
+                unclassified,
+            )
 
     # anything the scope walk never reached at all
     for call in _object_get_calls(list(ast.walk(tree))):
@@ -656,46 +794,92 @@ def tk_numeric_tolerance_sites():
     return sites, unclassified
 
 
-class TkNumericToleranceWiringTestCase(unittest.TestCase):
-    """`TkNumericIntegration` carries `Tk_numeric_atol`; everything else carries `atol`."""
+class ObjectGetToleranceWiringTestCase(unittest.TestCase):
+    """Every `object_get` in main.py carries its own target's tolerance pair, or none."""
 
     @classmethod
     def setUpClass(cls):
-        cls.sites, cls.unclassified = tk_numeric_tolerance_sites()
+        cls.sites, cls.unclassified = object_get_tolerance_sites()
 
-    def test_every_integration_object_get_has_a_readable_tolerance(self):
+    def test_every_object_get_has_a_classified_tolerance(self):
+        """An unknown class, or one whose tolerance this finder cannot read, fails here.
+
+        This is the assertion that catches a *new* target: adding one to main.py without adding
+        it to `OBJECT_TYPE_TOLERANCES` leaves it unguarded, and an unguarded target is exactly
+        how a lookup comes to be keyed on the wrong constant.
+        """
         self.assertEqual(
             self.unclassified,
             [],
-            msg="an integration object_get in main.py has no tolerance this test can read",
+            msg="an object_get in main.py has a class this guard does not enumerate, or a "
+            "tolerance it cannot read",
         )
 
-    def test_the_tk_numeric_sites_are_all_found(self):
-        found = [site for site in self.sites if site[0] == "TkNumericIntegration"]
-        self.assertEqual(
-            len(found),
-            EXPECTED_TK_NUMERIC_SITES,
-            msg=f"TkNumericIntegration object_get sites found: {found}",
-        )
+    def test_the_expected_sites_are_all_found(self):
+        """The counters. A finder that silently matched nothing would pass everything else."""
+        found = {}
+        for class_name, _, _, _ in self.sites:
+            found[class_name] = found.get(class_name, 0) + 1
+        self.assertEqual(found, EXPECTED_SITES)
 
-    def test_every_tk_numeric_object_get_uses_the_tk_numeric_tolerance(self):
-        for class_name, atol_name, label in self.sites:
-            if class_name != "TkNumericIntegration":
-                continue
-            with self.subTest(site=label):
-                self.assertEqual(atol_name, TK_NUMERIC_TOLERANCE_NAME)
-
-    def test_every_other_integration_object_get_keeps_the_shared_tolerance(self):
-        for class_name, atol_name, label in self.sites:
-            if class_name == "TkNumericIntegration":
+    def test_every_site_carries_its_own_target_tolerance(self):
+        """A site on another target's constant does not raise: the row is not found and the
+        object is recomputed, silently and at full cost. That is the failure this guards.
+        """
+        for class_name, atol_name, rtol_name, label in self.sites:
+            expected = OBJECT_TYPE_TOLERANCES[class_name]
+            if expected is NO_TOLERANCE:
                 continue
             with self.subTest(site=label, cls=class_name):
-                self.assertEqual(atol_name, SHARED_TOLERANCE_NAME)
+                self.assertEqual((atol_name, rtol_name), expected)
 
-    def test_the_tolerance_object_is_built_from_the_defaults_constant(self):
-        """`Tk_numeric_atol` is a `tolerance` object built from
-        `DEFAULT_TK_NUMERIC_ABS_TOLERANCE`, and is not simply an alias of `atol`."""
+    def test_the_tolerance_free_targets_carry_no_tolerance_at_all(self):
+        """Prompt 05 of `prompts/tolerance-convergence` removed the vestigial pair from
+        `BackgroundModel`, both WKB sectors and `GkSource`, whose knob is an integer Gauss order
+        read from its single declaration; `QuadSource` never had a tolerance column and prompt 05a
+        removed the dead pair its query batch carried. A tolerance reappearing on any of them is a
+        regression."""
+        found = [site for site in self.sites if site[0] in NO_TOLERANCE_TYPES]
+        self.assertGreater(len(found), 0)
+        for class_name, atol_name, rtol_name, label in found:
+            with self.subTest(site=label, cls=class_name):
+                self.assertIsNone(atol_name)
+                self.assertIsNone(rtol_name)
+
+    def test_the_already_decoupled_target_is_guarded(self):
+        """`QuadSourceIntegral` ends in "Integral", not "Integration", so the predicate this
+        guard used until prompt 05a never matched it: the one target that was already decoupled
+        was the one target never checked."""
+        found = [site for site in self.sites if site[0] == "QuadSourceIntegral"]
+        self.assertEqual(len(found), EXPECTED_SITES["QuadSourceIntegral"])
+        for class_name, atol_name, rtol_name, label in found:
+            with self.subTest(site=label):
+                self.assertEqual((atol_name, rtol_name), ("quad_atol", "quad_rtol"))
+
+    def test_oneloopintegral_is_not_looked_up_by_main_py(self):
+        """`OneLoopIntegral` is a ninth keyed object type, with `atol_serial` / `rtol_serial`
+        columns it genuinely filters on, that main.py never builds
+        (`[02-oneloopintegral-is-a-ninth-keyed-object-type]`, unassigned and the user's). It is
+        deliberately absent from `OBJECT_TYPE_TOLERANCES`, so if main.py ever looks it up the
+        guard fails and the question is answered rather than pre-empted."""
+        self.assertNotIn("OneLoopIntegral", OBJECT_TYPE_TOLERANCES)
+        self.assertNotIn("OneLoopIntegral", {site[0] for site in self.sites})
+
+    def test_the_tolerance_objects_are_built_from_the_defaults_constants(self):
+        """Each tolerance name main.py passes is a `tolerance` object built from its own
+        `config/defaults.py` constant, and not an alias of another target's."""
         tree = ast.parse(MAIN_PY.read_text(), filename=str(MAIN_PY))
+
+        wanted = {
+            "hexit_atol": "DEFAULT_HEXIT_ABS_TOLERANCE",
+            "hexit_rtol": "DEFAULT_HEXIT_REL_TOLERANCE",
+            "Gk_numeric_atol": "DEFAULT_GK_NUMERIC_ABS_TOLERANCE",
+            "Gk_numeric_rtol": "DEFAULT_GK_NUMERIC_REL_TOLERANCE",
+            "Tk_numeric_atol": "DEFAULT_TK_NUMERIC_ABS_TOLERANCE",
+            "Tk_numeric_rtol": "DEFAULT_TK_NUMERIC_REL_TOLERANCE",
+            "quad_atol": "DEFAULT_QUADRATURE_ATOL",
+            "quad_rtol": "DEFAULT_QUADRATURE_RTOL",
+        }
 
         targets = [
             node
@@ -704,8 +888,7 @@ class TkNumericToleranceWiringTestCase(unittest.TestCase):
             and any(
                 isinstance(target, ast.Tuple)
                 and any(
-                    isinstance(element, ast.Name)
-                    and element.id == TK_NUMERIC_TOLERANCE_NAME
+                    isinstance(element, ast.Name) and element.id in wanted
                     for element in target.elts
                 )
                 for target in node.targets
@@ -715,20 +898,233 @@ class TkNumericToleranceWiringTestCase(unittest.TestCase):
 
         assignment = targets[0]
         target = [t for t in assignment.targets if isinstance(t, ast.Tuple)][0]
-        index = [
-            i
-            for i, element in enumerate(target.elts)
-            if isinstance(element, ast.Name) and element.id == TK_NUMERIC_TOLERANCE_NAME
-        ][0]
+        names = [
+            element.id if isinstance(element, ast.Name) else None
+            for element in target.elts
+        ]
+        self.assertEqual(set(names), set(wanted))
 
         # ray.get([...]) returns the tolerances in the order they are requested
         requests = [
             node for node in ast.walk(assignment.value) if isinstance(node, ast.List)
         ][0].elts
-        self.assertEqual(len(requests), len(target.elts))
+        self.assertEqual(len(requests), len(names))
 
-        request = requests[index]
-        self.assertEqual(request.args[0].value, "tolerance")
-        tol = [kw.value for kw in request.keywords if kw.arg == "tol"]
-        self.assertEqual(len(tol), 1)
-        self.assertEqual(tol[0].id, "DEFAULT_TK_NUMERIC_ABS_TOLERANCE")
+        for name, request in zip(names, requests):
+            with self.subTest(tolerance=name):
+                self.assertEqual(request.args[0].value, "tolerance")
+                tol = [kw.value for kw in request.keywords if kw.arg == "tol"]
+                self.assertEqual(len(tol), 1)
+                self.assertEqual(tol[0].id, wanted[name])
+
+
+# -------------------------------------------------------------------------------------------
+# prompt 05a of prompts/tolerance-convergence: the six reader scripts agree with main.py
+#
+# `[02-extract-tkwkb-queries-tk-numeric-under-the-shared-atol]` was live from prompt 12 of
+# prompts/GkTk-remedial until prompt 02 of this campaign found it by reading: `extract_TkWKB_data`
+# queried `TkNumericIntegration` under `DEFAULT_ABS_TOLERANCE` while main.py wrote it under
+# `DEFAULT_TK_NUMERIC_ABS_TOLERANCE`, so it could not match a production row at all. Nothing
+# raised; the script simply reported the object missing.
+#
+# The cross-check below is what would have caught it the day it landed. It resolves, for main.py
+# and for each reader, the `config/defaults.py` constant behind every tolerance a lookup passes --
+# through the `ray.get([pool.object_get("tolerance", tol=CONSTANT), ...])` tuple each of them
+# builds -- and requires the reader's constant for a class to be the one main.py uses for that
+# same class. It compares *constants*, not local variable names, because the scripts are free to
+# call their locals whatever they like and the datastore key is the value.
+#
+# It needs neither Ray nor a datastore: like the rest of this module it reads source with `ast`.
+# -------------------------------------------------------------------------------------------
+
+REPO_ROOT = Path(__file__).parents[2]
+
+#: the reader scripts of README section 3.5a / prompt 05a section 5. Every one of them queries
+#: `wavenumber_exit_time`; three of them also query a numeric sector.
+EXTRACT_SCRIPTS = (
+    "extract_Gk_data.py",
+    "extract_GkWKB_data.py",
+    "extract_TkWKB_data.py",
+    "extract_GkSource_data.py",
+    "extract_tensor_source_data.py",
+    "extract_QuadSourceIntegral_data.py",
+)
+
+
+def _defaults_constant_bindings(tree):
+    """`{local name: DEFAULT_* constant}` for every tolerance object built in this module.
+
+    The shape is the same in main.py and in all six readers: a tuple assignment whose value is
+    `ray.get([pool.object_get(<tolerance>, tol=DEFAULT_X), ...])`, positional by construction.
+    """
+    bindings = {}
+    for node in ast.walk(tree):
+        if not isinstance(node, ast.Assign):
+            continue
+        targets = [t for t in node.targets if isinstance(t, ast.Tuple)]
+        if len(targets) != 1:
+            continue
+        names = [
+            element.id if isinstance(element, ast.Name) else None
+            for element in targets[0].elts
+        ]
+        lists = [sub for sub in ast.walk(node.value) if isinstance(sub, ast.List)]
+        if len(lists) != 1 or len(lists[0].elts) != len(names):
+            continue
+        requests = lists[0].elts
+        if not all(
+            isinstance(request, ast.Call)
+            and isinstance(request.func, ast.Attribute)
+            and request.func.attr == "object_get"
+            for request in requests
+        ):
+            continue
+        for name, request in zip(names, requests):
+            tol = [
+                kw.value
+                for kw in request.keywords
+                if kw.arg == "tol" and isinstance(kw.value, ast.Name)
+            ]
+            if name is not None and len(tol) == 1:
+                bindings[name] = tol[0].id
+    return bindings
+
+
+def _dict_literals_by_name(tree):
+    """`{name: dict literal}` for every `name = {...}` in the module.
+
+    A reader builds its payload as a named dict and dispatches it as `**query_payload`, so the
+    tolerance the lookup carries is in the dict rather than on the call.
+    """
+    found = {}
+    for node in ast.walk(tree):
+        if isinstance(node, ast.Assign) and isinstance(node.value, ast.Dict):
+            for target in node.targets:
+                if isinstance(target, ast.Name):
+                    found[target.id] = node.value
+    return found
+
+
+def _first_argument_name(call):
+    """The object type a lookup names, whether as a string or as an imported class."""
+    first = call.args[0]
+    if isinstance(first, ast.Constant) and isinstance(first.value, str):
+        return first.value
+    if isinstance(first, ast.Name):
+        return first.id
+    return None
+
+
+def lookup_constants(path: Path):
+    """`{class name: {(atol constant, rtol constant)}}` for one module.
+
+    A class whose lookups pass no tolerance does not appear.
+    """
+    tree = ast.parse(path.read_text(), filename=str(path))
+    bindings = _defaults_constant_bindings(tree)
+    payloads = _dict_literals_by_name(tree)
+
+    def constant_of(node):
+        if isinstance(node, ast.Name):
+            return bindings.get(node.id, node.id)
+        return ast.dump(node)
+
+    found = {}
+    for node in ast.walk(tree):
+        if not isinstance(node, ast.Call):
+            continue
+        if not isinstance(node.func, ast.Attribute):
+            continue
+        if node.func.attr not in ("object_get", "object_get_vectorized"):
+            continue
+        if len(node.args) == 0:
+            continue
+        class_name = _first_argument_name(node)
+        if class_name is None:
+            continue
+
+        sources = [node]
+        for keyword in node.keywords:
+            if keyword.arg is None and isinstance(keyword.value, ast.Name):
+                # `**query_payload`: the tolerance is in the dict the name was assigned
+                payload = payloads.get(keyword.value.id)
+                if payload is not None:
+                    sources.append(payload)
+
+        atol = {constant_of(kw.value) for kw in node.keywords if kw.arg == "atol"} | {
+            constant_of(value)
+            for source in sources
+            for value in _tolerance_values_under(source, "atol")
+        }
+        rtol = {constant_of(kw.value) for kw in node.keywords if kw.arg == "rtol"} | {
+            constant_of(value)
+            for source in sources
+            for value in _tolerance_values_under(source, "rtol")
+        }
+        if not atol and not rtol:
+            continue
+        for a in sorted(atol):
+            for r in sorted(rtol):
+                found.setdefault(class_name, set()).add((a, r))
+    return found
+
+
+class ReaderToleranceAgreementTestCase(unittest.TestCase):
+    """Each `extract_*.py` queries a target under the constant main.py writes it with."""
+
+    @classmethod
+    def setUpClass(cls):
+        cls.main = lookup_constants(MAIN_PY)
+        cls.readers = {
+            name: lookup_constants(REPO_ROOT / name) for name in EXTRACT_SCRIPTS
+        }
+
+    def test_main_py_uses_one_constant_pair_per_target(self):
+        """The premise of the comparison: main.py is itself self-consistent."""
+        for class_name, pairs in self.main.items():
+            with self.subTest(cls=class_name):
+                self.assertEqual(len(pairs), 1, msg=f"{class_name}: {sorted(pairs)}")
+
+    def test_main_py_writes_the_expected_constants(self):
+        self.assertEqual(
+            {name: sorted(pairs)[0] for name, pairs in self.main.items()},
+            {
+                "wavenumber_exit_time": (
+                    "DEFAULT_HEXIT_ABS_TOLERANCE",
+                    "DEFAULT_HEXIT_REL_TOLERANCE",
+                ),
+                "GkNumericIntegration": (
+                    "DEFAULT_GK_NUMERIC_ABS_TOLERANCE",
+                    "DEFAULT_GK_NUMERIC_REL_TOLERANCE",
+                ),
+                "TkNumericIntegration": (
+                    "DEFAULT_TK_NUMERIC_ABS_TOLERANCE",
+                    "DEFAULT_TK_NUMERIC_REL_TOLERANCE",
+                ),
+                "QuadSourceIntegral": (
+                    "DEFAULT_QUADRATURE_ATOL",
+                    "DEFAULT_QUADRATURE_RTOL",
+                ),
+            },
+        )
+
+    def test_every_reader_queries_the_exit_time_target(self):
+        """All six build a `create_k_exit_work` helper; a reader that stopped doing so would
+        make the rest of this test vacuous for that file."""
+        for name, found in self.readers.items():
+            with self.subTest(script=name):
+                self.assertIn("wavenumber_exit_time", found)
+
+    def test_every_reader_agrees_with_main_py(self):
+        """`[02-extract-tkwkb-queries-tk-numeric-under-the-shared-atol]`: a reader querying a
+        target under a constant main.py does not write with cannot match a production row, and
+        nothing raises when it happens."""
+        for name, found in self.readers.items():
+            for class_name, pairs in found.items():
+                with self.subTest(script=name, cls=class_name):
+                    self.assertIn(
+                        class_name,
+                        self.main,
+                        msg=f"{name} looks up {class_name} with a tolerance and main.py does not",
+                    )
+                    self.assertEqual(pairs, self.main[class_name])

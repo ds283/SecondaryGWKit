@@ -23,8 +23,10 @@ and "source_grid_construction", carry the identity of the source sample grid the
 tabulated on: a content digest of the grid's exact values (prompt 11) and the version of the
 algorithm that built it (CosmologyConcepts.wavenumber.SOURCE_GRID_CONSTRUCTION_VERSION).
 
-Without them this factory keyed on (cosmology_type, cosmology_serial, atol_serial, rtol_serial)
-plus whatever tags the caller supplied -- in main.py, LargestSourceZTag, SmallestSourceZTag and
+Without them this factory keyed on (cosmology_type, cosmology_serial, atol_serial, rtol_serial) --
+the tolerance half of which prompt 05 of prompts/tolerance-convergence has since replaced with the
+three Gauss orders, see the last note below -- plus whatever tags the caller supplied: in main.py,
+LargestSourceZTag, SmallestSourceZTag and
 (until prompts/qcd-background-audit prompt 16 retired it) SourceSamplesPerLog10ZTag. Every one of
 those is unchanged when the grid's *shape* changes, and the factory never filters on z_sample at
 all: it reads the stored sample set back out of
@@ -48,14 +50,50 @@ The two columns are used differently on the two paths, and the difference is del
     match rows from more than one. A table without the columns is *not* an error there: its rows
     are reported as an unknown generation and remain readable, because a superseded datastore
     keeps its archival value even once it can no longer serve as a numerical base.
+
+SCHEMA NOTE (prompts/tolerance-convergence, prompt 05). "atol_serial" and "rtol_serial" are gone
+and three integer columns -- "tau_gauss_order", "cs_tau_gauss_order", "friction_F_gauss_order" --
+stand where they stood in the lookup key.
+
+The pair described nothing. compute_background integrates no ODE: all three primitives are
+Gauss-Legendre cumulative tables, so the tolerances reached no solver and were kept only because
+they were in the key (ComputeTargets/BackgroundModel.py's own comment said so). What does set the
+accuracy is the Gauss order of each table, and those were module constants in no column at all, so
+raising TAU_GAUSS_ORDER and re-running left the key unmoved: the pipeline found the existing
+order-4 row and served it, while the joined solver_label beside it read "cumulative-GL-stepping4"
+-- the truth, recorded, in a column no lookup consulted. Prompt 04 measured all three orders
+(docs/tolerance-convergence/ORDER-AUDIT.md) and the user settled the replacement on 2026-09-18
+(prompts/tolerance-convergence/README.md §7 D3).
+
+Three columns and not one, because the three primitives are three independent integrals -- 1/H,
+c_s/H and -(3/2)(1 + c_s^2)/(1+z) -- each with its own constant and each independently movable.
+
+There is no migration and no default: a BackgroundModel table without the columns is a store from
+before this change, and build() raises naming it rather than letting a SQLAlchemy error escape.
+
+SCHEMA NOTE (prompts/tolerance-convergence, prompt 05b). No column changes here, but what fills
+the three does. Prompt 05 wrote the value of each module constant, read through an accessor that
+re-read it on every call, and build() passed none of the three columns it selected to the
+constructor -- so a rehydrated model reassembled its cumulative tables at whatever the module
+said, over nodes integrated at whatever the row said. Since 05b build() hands the row's three
+orders to the constructor and the compute path echoes the orders compute_background reports, so
+an object states the orders its tables carry on both paths. build() still *filters* on the
+current module constants (README §7 D10).
 """
 
+from importlib import import_module
 from math import fabs
 from typing import Optional, List
 
 import sqlalchemy as sqla
 from sqlalchemy import and_, or_
 from sqlalchemy.exc import MultipleResultsFound, SQLAlchemyError
+
+# the module, not the class of the same name: ComputeTargets/__init__.py rebinds the attribute
+# "BackgroundModel" on the package to the class, so "import ComputeTargets.BackgroundModel as ..."
+# would hand back the class. The module is wanted because the three Gauss orders below must be
+# resolved at call time from their single declaration, never snapshotted by a from-import.
+background_model = import_module("ComputeTargets.BackgroundModel")
 
 from ComputeTargets import (
     BackgroundModel,
@@ -65,7 +103,7 @@ from CosmologyConcepts import redshift_array, redshift
 from CosmologyConcepts.wavenumber import SOURCE_GRID_CONSTRUCTION_VERSION
 from CosmologyModels import BaseCosmology
 from Datastore.SQL.ObjectFactories.base import SQLAFactoryBase
-from MetadataConcepts import store_tag, tolerance
+from MetadataConcepts import store_tag
 from Quadrature.integration_metadata import IntegrationData, IntegrationSolver
 from Units.base import UnitsLike
 from config.defaults import DEFAULT_STRING_LENGTH, DEFAULT_FLOAT_PRECISION
@@ -145,19 +183,17 @@ class sqla_BackgroundModelFactory(SQLAFactoryBase):
                 sqla.Column(
                     "cosmology_serial", sqla.Integer, index=True, nullable=False
                 ),
+                # the Gauss-Legendre order of each of the three cumulative tables (module
+                # docstring above). These are the accuracy parameters of this object: integers,
+                # not tolerances, and each independently movable.
                 sqla.Column(
-                    "atol_serial",
-                    sqla.Integer,
-                    sqla.ForeignKey("tolerance.serial"),
-                    index=True,
-                    nullable=False,
+                    "tau_gauss_order", sqla.Integer, index=True, nullable=False
                 ),
                 sqla.Column(
-                    "rtol_serial",
-                    sqla.Integer,
-                    sqla.ForeignKey("tolerance.serial"),
-                    index=True,
-                    nullable=False,
+                    "cs_tau_gauss_order", sqla.Integer, index=True, nullable=False
+                ),
+                sqla.Column(
+                    "friction_F_gauss_order", sqla.Integer, index=True, nullable=False
                 ),
                 sqla.Column(
                     "solver_serial",
@@ -204,15 +240,10 @@ class sqla_BackgroundModelFactory(SQLAFactoryBase):
 
         solver_labels = payload["solver_labels"]
 
-        atol: tolerance = payload["atol"]
-        rtol: tolerance = payload["rtol"]
-
         cosmology: BaseCosmology = payload["cosmology"]
         z_sample: redshift_array = payload["z_sample"]
         z_init: redshift_array = payload.get("z_init", None)
 
-        atol_table = tables["tolerance"].alias("atol")
-        rtol_table = tables["tolerance"].alias("rtol")
         solver_table = tables["IntegrationSolver"]
         tag_table = tables["BackgroundModel_tags"]
         redshift_table = tables["redshift"]
@@ -241,10 +272,14 @@ class sqla_BackgroundModelFactory(SQLAFactoryBase):
                 table.c.solver_serial,
                 table.c.label,
                 table.c.z_samples,
+                # selected, not merely filtered on: a rehydrated model must report the orders its
+                # own row records and rebuild its tables at them
+                # (prompts/tolerance-convergence, prompt 05b)
+                table.c.tau_gauss_order,
+                table.c.cs_tau_gauss_order,
+                table.c.friction_F_gauss_order,
                 solver_table.c.label.label("solver_label"),
                 solver_table.c.stepping.label("solver_stepping"),
-                atol_table.c.log10_tol.label("log10_atol"),
-                rtol_table.c.log10_tol.label("log10_rtol"),
             ]
             if with_grid_identity:
                 columns.extend(
@@ -258,15 +293,19 @@ class sqla_BackgroundModelFactory(SQLAFactoryBase):
                     table.join(
                         solver_table, solver_table.c.serial == table.c.solver_serial
                     )
-                    .join(atol_table, atol_table.c.serial == table.c.atol_serial)
-                    .join(rtol_table, rtol_table.c.serial == table.c.rtol_serial)
                 )
                 .filter(
                     table.c.validated == True,
                     table.c.cosmology_type == cosmology.type_id,
                     table.c.cosmology_serial == cosmology.store_id,
-                    table.c.atol_serial == atol.store_id,
-                    table.c.rtol_serial == rtol.store_id,
+                    # the accuracy half of the key. Read from the single declaration of each
+                    # order at call time, never inlined as a literal: a literal would stop
+                    # tracking the constant the moment a later prompt moved it, which is the
+                    # exact failure this key exists to prevent
+                    table.c.tau_gauss_order == background_model.TAU_GAUSS_ORDER,
+                    table.c.cs_tau_gauss_order == background_model.CS_TAU_GAUSS_ORDER,
+                    table.c.friction_F_gauss_order
+                    == background_model.FRICTION_F_GAUSS_ORDER,
                 )
             )
 
@@ -306,6 +345,32 @@ class sqla_BackgroundModelFactory(SQLAFactoryBase):
         try:
             rows = list(conn.execute(_build_query(True)))
         except SQLAlchemyError as e:
+            # matched against the driver's own message rather than str(e), which also carries
+            # the SQL statement -- and the statement names every column the query asks for,
+            # present or missing, so the three order columns appear in it either way
+            detail = str(getattr(e, "orig", e))
+            missing_orders = [
+                column
+                for column in (
+                    "tau_gauss_order",
+                    "cs_tau_gauss_order",
+                    "friction_F_gauss_order",
+                )
+                if column in detail
+            ]
+            if len(missing_orders) > 0:
+                # a store from before prompts/tolerance-convergence prompt 05. Its rows were
+                # keyed on a tolerance pair that reached no solver and record no Gauss order at
+                # all, so there is no order that may be assumed for them on either path.
+                raise RuntimeError(
+                    "BackgroundModel.build(): the BackgroundModel table has no "
+                    f'"{missing_orders[0]}" column. This datastore predates the Gauss orders '
+                    "replacing the vestigial atol/rtol pair in the background model's lookup key "
+                    "(prompts/tolerance-convergence, prompt 05) and must be regenerated; there is "
+                    "no migration. Its rows record no order, and the tolerances they were keyed "
+                    "on reached no solver, so there is nothing to infer one from."
+                ) from e
+
             if not any(
                 column in str(e)
                 for column in ("source_grid_digest", "source_grid_construction")
@@ -371,8 +436,6 @@ class sqla_BackgroundModelFactory(SQLAFactoryBase):
                 payload=None,
                 solver_labels=solver_labels,
                 cosmology=cosmology,
-                atol=atol,
-                rtol=rtol,
                 z_sample=z_sample,
                 label=label,
                 tags=tags,
@@ -510,11 +573,18 @@ class sqla_BackgroundModelFactory(SQLAFactoryBase):
                     )
                 ),
                 "values": values,
+                # the row's own orders, which are the orders this model's three tables were
+                # tabulated at. build() filters on the current module constants, so these are
+                # those constants today; they are read off the row all the same, because what an
+                # object reports -- and what _build_*_primitive reassembles its tables at -- must
+                # be a property of the object and not of the module
+                # (prompts/tolerance-convergence, prompt 05b)
+                "tau_gauss_order": row_data.tau_gauss_order,
+                "cs_tau_gauss_order": row_data.cs_tau_gauss_order,
+                "friction_F_gauss_order": row_data.friction_F_gauss_order,
             },
             solver_labels=solver_labels,
             cosmology=cosmology,
-            atol=atol,
-            rtol=rtol,
             z_sample=imported_z_sample,
             label=store_label,
             tags=tags,
@@ -538,8 +608,14 @@ class sqla_BackgroundModelFactory(SQLAFactoryBase):
             "label": obj.label,
             "cosmology_type": obj.cosmology.type_id,
             "cosmology_serial": obj.cosmology.store_id,
-            "atol_serial": obj._atol.store_id,
-            "rtol_serial": obj._rtol.store_id,
+            # the three orders this model's tables were actually built at: since prompt 05b the
+            # accessors report the object's own orders -- echoed out of the compute_background
+            # payload on the compute path, read off the row on the rehydration path -- rather
+            # than re-reading the module constants. build() goes on filtering on those constants,
+            # so a model tabulated at another order is simply a different row (README §7 D10).
+            "tau_gauss_order": obj.tau_gauss_order,
+            "cs_tau_gauss_order": obj.cs_tau_gauss_order,
+            "friction_F_gauss_order": obj.friction_F_gauss_order,
             "solver_serial": obj.solver.store_id,
             "z_init_serial": obj.z_sample.min.store_id,
             "z_samples": len(obj.values),
@@ -657,8 +733,6 @@ class sqla_BackgroundModelFactory(SQLAFactoryBase):
     def validate_on_startup(conn, table, tables, prune=False):
         # query the datastore for any integrations that are not validated
 
-        atol_table = tables["tolerance"].alias("atol")
-        rtol_table = tables["tolerance"].alias("rtol")
         solver_table = tables["IntegrationSolver"]
         value_table = tables["BackgroundModelValue"]
         tags_table = tables["BackgroundModel_tags"]
@@ -672,15 +746,14 @@ class sqla_BackgroundModelFactory(SQLAFactoryBase):
                     table.c.label,
                     table.c.z_samples,
                     solver_table.c.label.label("solver_label"),
-                    atol_table.c.log10_tol.label("log10_atol"),
-                    rtol_table.c.log10_tol.label("log10_rtol"),
+                    table.c.tau_gauss_order,
+                    table.c.cs_tau_gauss_order,
+                    table.c.friction_F_gauss_order,
                 )
                 .select_from(
                     table.join(
                         solver_table, solver_table.c.serial == table.c.solver_serial
                     )
-                    .join(atol_table, atol_table.c.serial == table.c.atol_serial)
-                    .join(rtol_table, rtol_table.c.serial == table.c.rtol_serial)
                 )
                 .filter(or_(table.c.validated == False, table.c.validated == None))
             )
@@ -695,7 +768,9 @@ class sqla_BackgroundModelFactory(SQLAFactoryBase):
         ]
         for model in not_validated:
             msgs.append(
-                f'       -- "{model.label}" (store_id={model.serial}, log10_atol={model.log10_atol}, log10_rtol={model.log10_rtol})'
+                f'       -- "{model.label}" (store_id={model.serial}, '
+                f"N_tau={model.tau_gauss_order}, N_cs_tau={model.cs_tau_gauss_order}, "
+                f"N_F={model.friction_F_gauss_order})"
             )
             rows = conn.execute(
                 sqla.select(sqla.func.count(value_table.c.serial)).filter(

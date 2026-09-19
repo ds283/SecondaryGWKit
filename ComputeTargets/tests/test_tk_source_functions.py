@@ -62,7 +62,7 @@ from ComputeTargets.TkSourceFunctions import TkSourceFunctions
 from ComputeTargets.WKB_Tk import Tk_omegaEff_sq
 from ComputeTargets.analytic_Tk import compute_analytic_T, compute_analytic_Tprime
 from ComputeTargets.tests.wkb_reference import ClosedFormPrimitive
-from LiouvilleGreen.WKBtools import wrap_theta, WKB_mod_2pi
+from LiouvilleGreen.WKBtools import WKB_mod_2pi
 from LiouvilleGreen.bessel_phase import bessel_phase
 from LiouvilleGreen.constants import TWO_PI
 from LiouvilleGreen.phase_spline import phase_spline
@@ -372,13 +372,21 @@ class Fixture:
         stored friction samples are then whatever makes the code's amplitude formula exact --
         which is `exact_envelope_F` measured from the hand-over, so `exact_envelope_model()` is
         the background this fixture must be read against.
+
+        The phase is reduced by `WKB_mod_2pi`, the producers' own reduction (README section 2
+        (e) of prompts/GkTk-remedial): its remainder is an `fmod` and is exact, and its cycle
+        count is derived from that remainder. `wrap_theta` now reduces the same way and would
+        give the same (div 2pi, mod 2pi) pair, but it is a thin wrapper over `WKB_mod_2pi` and
+        calling it here would say less about what the fixture is doing. It once subtracted
+        TWO_PI once per cycle, which is why these fixtures were moved off it
+        (`[10-wrap-theta-loop-at-large-phase]`, prompts/GkTk-remedial).
         """
         z_init = self.crossover_z
         sin_coeff = self.M_exact(z_init) * sqrt(self.omega(z_init))
 
         values = []
         for z in self.z_WKB:
-            div_2pi, mod_2pi = wrap_theta(self.theta_exact(z))
+            div_2pi, mod_2pi = WKB_mod_2pi(self.theta_exact(z))
             omega = self.omega(z)
             H_ratio = self.model.Hubble(self.crossover_z) / self.model.Hubble(z)
             friction = log(self.M_exact(z) * sqrt(omega) / (sin_coeff * sqrt(H_ratio)))
@@ -412,7 +420,7 @@ class Fixture:
 
         values = []
         for i, z in enumerate(self.z_WKB):
-            div_2pi, mod_2pi = wrap_theta(sol.y[0][i])
+            div_2pi, mod_2pi = WKB_mod_2pi(sol.y[0][i])
             omega = self.omega(z)
             H_ratio = self.model.Hubble(self.crossover_z) / self.model.Hubble(z)
             friction = 1.5 * (1.0 + self.w) * log((1.0 + z) / (1.0 + self.crossover_z))
@@ -535,10 +543,13 @@ class AnalyticRadiationFixture:
         The stored (div 2pi, mod 2pi, friction) samples.
 
         The reduction is `WKB_mod_2pi`, the producers' own (README section 2 (e) of
-        prompts/GkTk-remedial), and **not** `wrap_theta` as the smaller fixtures use:
-        `wrap_theta` reduces by adding TWO_PI in a loop, so at theta ~ -1e6 rad it takes ~1.6e5
-        additions and accumulates ~1.4e-06 rad of rounding -- fourteen times the bound this
-        fixture's test asserts, and injected by the fixture rather than by anything under test.
+        prompts/GkTk-remedial). It is called directly rather than through `wrap_theta`, as the
+        smaller fixtures once were: `wrap_theta` used to reduce by adding TWO_PI in a loop, so
+        at theta ~ -1e6 rad it took ~1.6e5 additions and accumulated ~1.4e-06 rad of rounding --
+        fourteen times the bound this fixture's test asserts, and injected by the fixture rather
+        than by anything under test. That loop is gone
+        (`[10-wrap-theta-loop-at-large-phase]`, prompts/GkTk-remedial), so the two now agree;
+        this fixture keeps the direct call because it is the producers' reduction.
         `WKB_mod_2pi`'s *remainder* is an `fmod` and is exact -- its cycle count is not an
         `fmod`, and used to be a separately rounded division that could be one cycle out
         (`[13-wkb-mod-2pi-cycle-count-inconsistent]`, fixed by prompt 01 of
@@ -907,7 +918,7 @@ class TestConsistencyChecks(unittest.TestCase):
         values = [
             FakeWKBValue(
                 z,
-                *wrap_theta(f.theta_exact(z)),
+                *WKB_mod_2pi(f.theta_exact(z)),
                 friction=0.0,
                 H_ratio=1.0,
                 omega_WKB_sq=f.omega(z) ** 2,
@@ -1089,7 +1100,7 @@ class TestPrimitivePhaseConsumer(unittest.TestCase):
         def build(perturbation, index):
             values = []
             for i, z in enumerate(f.z_WKB):
-                div_2pi, mod_2pi = wrap_theta(sol.y[0][i])
+                div_2pi, mod_2pi = WKB_mod_2pi(sol.y[0][i])
                 omega = f.omega(z)
                 H_ratio = f.model.Hubble(f.crossover_z) / f.model.Hubble(z)
                 friction = 1.5 * (1.0 + f.w) * log((1.0 + z) / (1.0 + f.crossover_z))
@@ -1135,7 +1146,7 @@ class TestPrimitivePhaseConsumer(unittest.TestCase):
 
         values = []
         for i, z in enumerate(f.z_WKB):
-            div_2pi, mod_2pi = wrap_theta(-sol.y[0][i])
+            div_2pi, mod_2pi = WKB_mod_2pi(-sol.y[0][i])
             omega = f.omega(z)
             H_ratio = f.model.Hubble(f.crossover_z) / f.model.Hubble(z)
             friction = 1.5 * (1.0 + f.w) * log((1.0 + z) / (1.0 + f.crossover_z))
@@ -1175,7 +1186,7 @@ class TestPrimitivePhaseConsumer(unittest.TestCase):
                 )
                 assert sol.success, sol.message
                 for i, z in enumerate(f.z_WKB):
-                    div_2pi, mod_2pi = wrap_theta(sol.y[0][i])
+                    div_2pi, mod_2pi = WKB_mod_2pi(sol.y[0][i])
                     omega = f.omega(z)
                     H_ratio = f.model.Hubble(f.crossover_z) / f.model.Hubble(z)
                     friction = (

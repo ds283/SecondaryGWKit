@@ -31,7 +31,10 @@ from Datastore.SQL.ShardedPool import ShardedPool
 from MetadataConcepts import tolerance
 from RayTools.RayWorkPool import RayWorkPool
 from Units import Mpc_units
-from config.defaults import DEFAULT_ABS_TOLERANCE, DEFAULT_REL_TOLERANCE
+from config.defaults import (
+    DEFAULT_HEXIT_ABS_TOLERANCE,
+    DEFAULT_HEXIT_REL_TOLERANCE,
+)
 from config.model_list import build_model_list
 from config.sharding import (
     replicated_tables,
@@ -290,11 +293,16 @@ def run_pipeline(model_data):
 
     print(f"\n>> RUNNING PIPELINE FOR MODEL {model_label}")
 
-    # build absolute and relative tolerances
-    atol, rtol = ray.get(
+    # build the tolerances this script's lookups are keyed on. Prompt 05a of
+    # prompts/tolerance-convergence decoupled them: wavenumber_exit_time, GkNumericIntegration
+    # and TkNumericIntegration each carry a pair of their own, measured on their own terms. A
+    # reader that queries under another target's constant does not raise -- it simply fails to
+    # match the row main.py wrote, which is how
+    # [02-extract-tkwkb-queries-tk-numeric-under-the-shared-atol] survived unnoticed.
+    hexit_atol, hexit_rtol = ray.get(
         [
-            pool.object_get(tolerance, tol=DEFAULT_ABS_TOLERANCE),
-            pool.object_get(tolerance, tol=DEFAULT_REL_TOLERANCE),
+            pool.object_get(tolerance, tol=DEFAULT_HEXIT_ABS_TOLERANCE),
+            pool.object_get(tolerance, tol=DEFAULT_HEXIT_REL_TOLERANCE),
         ]
     )
 
@@ -309,8 +317,6 @@ def run_pipeline(model_data):
             # construction version instead, and refuses -- naming every generation it found -- if
             # these tags match rows from more than one
             z_sample=None,
-            atol=atol,
-            rtol=rtol,
             tags=run_selection.tags,
         )
     )
@@ -333,8 +339,8 @@ def run_pipeline(model_data):
             wavenumber_exit_time,
             k=k,
             cosmology=model_cosmology,
-            atol=atol,
-            rtol=rtol,
+            atol=hexit_atol,
+            rtol=hexit_rtol,
         )
 
     # query wavenumber_exit_time objects corresponding to these k modes

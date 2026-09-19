@@ -49,6 +49,13 @@ from ComputeTargets.phase_residual import (
     residual_node_range,
 )
 from ComputeTargets.tests.test_main_plumbing import load_main_py_functions
+from ComputeTargets.tests.wkb_reference import (
+    PRODUCTION_Z_INIT_LAMBDACDM,
+    PRODUCTION_Z_INIT_QCD,
+    SOURCE_GRID_V1,
+    SOURCE_GRID_V2,
+    source_grid,
+)
 from CosmologyConcepts import (
     SOURCE_GRID_BREAK_HALF_WIDTH,
     SOURCE_GRID_BREAK_REFINEMENT,
@@ -68,6 +75,7 @@ from CosmologyConcepts import (
 )
 from CosmologyConcepts.wavenumber import (
     SOURCE_GRID_CONSTRUCTION_VERSION,
+    SOURCE_GRID_MAX_GUARDED_FRACTION,
     SOURCE_GRID_MAX_REFINEMENT,
     SOURCE_GRID_MIN_SEPARATION,
 )
@@ -114,6 +122,7 @@ _main = load_main_py_functions(
         "SOURCE_GRID_CUBIC_ERROR_CONST": SOURCE_GRID_CUBIC_ERROR_CONST,
         "SOURCE_GRID_CURVATURE_FD_STEP_U": SOURCE_GRID_CURVATURE_FD_STEP_U,
         "SOURCE_GRID_CURVATURE_STEP_U": SOURCE_GRID_CURVATURE_STEP_U,
+        "SOURCE_GRID_MAX_GUARDED_FRACTION": SOURCE_GRID_MAX_GUARDED_FRACTION,
         "SOURCE_GRID_SPLINE_EDGE_FACTOR": SOURCE_GRID_SPLINE_EDGE_FACTOR,
         "SOURCE_GRID_SPLINE_EDGE_INTERVALS": SOURCE_GRID_SPLINE_EDGE_INTERVALS,
     },
@@ -125,27 +134,24 @@ source_grid_spacing_profile = _main["source_grid_spacing_profile"]
 
 
 def _production_grid(cosmology, with_spacing: bool = True):
-    """The grid ``main.py`` builds for this cosmology, at production geometry."""
-    base = _production_base_grid()
-    break_z, feature_z = cosmology_feature_redshifts(
-        cosmology, PRODUCTION_Z_END, PRODUCTION_Z_INIT
-    )
-    spacing = (
-        source_grid_spacing_profile(
-            cosmology,
-            base,
-            [k / Mpc_units().Mpc for k in PRODUCTION_K_INV_MPC],
-        )
-        if with_spacing
-        else None
-    )
-    return build_z_sample(
+    """
+    The grid ``main.py`` builds for this cosmology, at production geometry.
+
+    The construction itself now lives in ``ComputeTargets/tests/wkb_reference.py`` as the named
+    generations :data:`SOURCE_GRID_V2` (with the density) and :data:`SOURCE_GRID_V1` (without):
+    prompt 01 of ``prompts/tolerance-convergence`` hoisted it out of this module so that the
+    measurement scripts can reach it, since the version-0 copy they were importing had been the
+    production construction for neither of the last two campaigns
+    (``[00-three-production-grid-reproductions]``). The hoist is bit-identical -- the grids below
+    still carry the lengths and digests this module has always asserted.
+    """
+    return source_grid(
+        SOURCE_GRID_V2 if with_spacing else SOURCE_GRID_V1,
         PRODUCTION_Z_INIT,
         PRODUCTION_Z_END,
         PRODUCTION_SAMPLES_PER_LOG10Z,
-        break_z=break_z,
-        feature_z=feature_z,
-        spacing=spacing,
+        cosmology=cosmology,
+        k_inv_Mpc=PRODUCTION_K_INV_MPC,
     )
 
 
@@ -171,13 +177,34 @@ def _to_redshift_array(z_values) -> redshift_array:
 class _SmoothCosmology:
     """
     A cosmology that declares nothing -- the duck type of every LambdaCDM model, RadiationModel
-    and test stand-in. It has Omega values, so it would have equality redshifts if anything asked
-    for them; the point of the first test below is that nothing does.
+    and test stand-in. It carries Omega values and **no** equality-redshift properties, which
+    since prompt 09 of ``prompts/background-solver-robustness`` is the only surface
+    ``cosmology_feature_redshifts`` will read; the point of the first test below is that it never
+    gets that far, because the whole cosmology-aware path is gated on declaring non-smoothness.
     """
 
     omega_m = 0.3111
     omega_r = 9.139e-05
     omega_cc = 0.6889
+
+
+class _BrokenCosmology:
+    """
+    A cosmology that declares non-smoothness but cannot say where its own equality redshifts are.
+
+    It is deliberately not a ``BaseCosmology`` -- ``cosmology_feature_redshifts`` duck-types
+    everything it touches, and an abstract property cannot be left unimplemented on a real
+    subclass anyway -- so this is the shape a nonstandard cosmology would actually arrive in.
+    """
+
+    name = "a cosmology that cannot answer"
+
+    omega_m = 0.3111
+    omega_r = 9.139e-05
+    omega_cc = 0.6889
+
+    def integration_break_points(self, z_lo: float, z_hi: float, kind: str = ""):
+        return [float(u) for u in QCD_CROSSINGS_LOG1PZ]
 
 
 class TestACosmologyThatDeclaresNothingDeclaresNothing(unittest.TestCase):
@@ -282,6 +309,113 @@ class TestACosmologyThatDeclaresNothingDeclaresNothing(unittest.TestCase):
         self.assertGreater(len(grid.z_values), PRODUCTION_NUM_NODES)
 
 
+class TestTheModelIsAuthoritativeForItsEqualityRedshifts(unittest.TestCase):
+    """
+    ``feature_z`` is what the *cosmology* says its equality redshifts are, and nothing else.
+
+    Prompt 09 of ``prompts/background-solver-robustness``, implementing that campaign's README
+    section 7 D2 as the user decided it. Until then ``cosmology_feature_redshifts`` recomputed
+    both from ``omega_m`` / ``omega_r`` / ``omega_cc``. Omega_r is a *present-day* density
+    parameter, so ``1 + z_eq = Omega_m/Omega_r`` is exact only while rho_r ~ (1+z)^4 holds from
+    today back to equality -- true on ``QCD_Cosmology`` to 7 ulp for the single reason that all
+    of that equation of state's g_*(T) structure sits twelve orders above z_eq, and false, by far
+    more than ulps and silently, on a cosmology with late entropy injection. Only the model knows
+    whether the closed form is valid for it, so ``BaseCosmology`` declares the obligation and each
+    model answers.
+
+    The two tests below are the ones that distinguish the trees: both fail on the tree that
+    computed the closed form here, and the failure output is quoted in
+    ``prompts/background-solver-robustness/logs/09-make-the-model-authoritative.md``.
+    """
+
+    @classmethod
+    def setUpClass(cls):
+        cls.cosmology = QCD_Cosmology(
+            store_id=0, units=Mpc_units(), params=Planck2018(), max_z=1e20
+        )
+        cls.break_z, cls.feature_z = cosmology_feature_redshifts(
+            cls.cosmology, PRODUCTION_Z_END, PRODUCTION_Z_INIT
+        )
+
+    def test_feature_z_is_the_models_answer_and_not_the_closed_form(self):
+        """
+        Each entry of ``feature_z`` is the model's property **as the same float**, and the
+        matter-radiation entry is *not* the closed form.
+
+        The second half is what gives this test teeth. The two agree to 7 ulp on this cosmology,
+        which is 3.2e-12 in z and far inside a grid interval, so every assertion that compares
+        them at any tolerance a human would write passes either way; only bit-identity can tell
+        which quantity actually reached the grid. That distinction is not cosmetic -- it is one
+        sample of 1,996 and therefore a different ``BackgroundModel`` source-grid digest.
+        """
+        self.assertEqual(len(self.feature_z), 2)
+
+        for index, attribute in (
+            (0, "z_matter_radiation_equality"),
+            (1, "z_matter_lambda_equality"),
+        ):
+            with self.subTest(attribute=attribute):
+                supplied = float(getattr(self.cosmology, attribute))
+                self.assertEqual(
+                    self.feature_z[index].hex(),
+                    supplied.hex(),
+                    msg=f"feature_z[{index}] = {self.feature_z[index]!r} is not the model's own "
+                    f"{attribute} = {supplied!r}; something is computing this redshift instead "
+                    "of asking for it",
+                )
+
+        closed_form = float(self.cosmology.omega_m / self.cosmology.omega_r - 1.0)
+        self.assertNotEqual(
+            self.feature_z[0].hex(),
+            closed_form.hex(),
+            msg=f"feature_z[0] = {self.feature_z[0]!r} is the radiation-domination closed form "
+            f"Omega_m/Omega_r - 1 = {closed_form!r}, not the model's own solve. The two differ "
+            "by 7 ulp on this cosmology and the closed form is the one that is only accidentally "
+            "right.",
+        )
+        self.assertAlmostEqual(
+            (self.feature_z[0] - closed_form) / np.spacing(closed_form), 7.0, places=6
+        )
+
+        # the matter-Lambda pair is the same double from either route -- rho_m/rho_Lambda has no
+        # temperature dependence at all -- which is why exactly one sample of the grid moves
+        self.assertEqual(
+            self.feature_z[1].hex(),
+            float(
+                pow(self.cosmology.omega_cc / self.cosmology.omega_m, 1.0 / 3.0) - 1.0
+            ).hex(),
+        )
+
+    def test_a_cosmology_that_cannot_answer_raises_instead_of_falling_back(self):
+        """
+        A cosmology that declares break points but supplies no equality redshift **raises**, and
+        the error names it and says which of the two was missing.
+
+        ``_BrokenCosmology`` carries ``omega_m``, ``omega_r`` and ``omega_cc``, so a fallback to
+        the closed form would succeed here and hand the grid a number nothing has vouched for.
+        That is the one mistake this change exists to prevent, and it is the one that looks most
+        like care, so it is asserted rather than left to review.
+        """
+        with self.assertRaises(RuntimeError) as caught:
+            cosmology_feature_redshifts(
+                _BrokenCosmology(), PRODUCTION_Z_END, PRODUCTION_Z_INIT
+            )
+
+        message = str(caught.exception)
+        print(f"\n  a cosmology that cannot answer:\n    {message}")
+        for expected in (
+            "a cosmology that cannot answer",
+            "_BrokenCosmology",
+            "z_matter_radiation_equality",
+        ):
+            self.assertIn(
+                expected,
+                message,
+                msg=f"a cosmology that cannot supply its equality redshifts must be named in the "
+                f"error, along with what it could not supply; expected {expected!r} in: {message}",
+            )
+
+
 class TestTheProtectedSetOnQCD(unittest.TestCase):
     """The production QCD grid, built the way ``main.py`` builds it."""
 
@@ -312,10 +446,13 @@ class TestTheProtectedSetOnQCD(unittest.TestCase):
         for z_break, u_expected in zip(self.break_z, QCD_CROSSINGS_LOG1PZ):
             self.assertAlmostEqual(np.log1p(z_break), u_expected, places=13)
 
-        # and the two equality redshifts, which the model computes in its constructor and throws
-        # away; the closed form agrees with its own root solve far inside a grid interval
+        # and the two equality redshifts, which the *model* supplies -- z_matter_radiation_equality
+        # and z_matter_lambda_equality, answered from the bracketed solve its constructor runs
+        # (prompt 09 of prompts/background-solver-robustness). The matter-radiation literal is
+        # that solve's value and not the Omega_m/Omega_r closed form, which sits 7 ulp below it;
+        # the matter-Lambda pair is the same double either way, since neither side sees T(z).
         self.assertEqual(len(self.feature_z), 2)
-        self.assertAlmostEqual(self.feature_z[0], 3406.668974249948, places=6)
+        self.assertAlmostEqual(self.feature_z[0], 3406.6689742499511, places=6)
         self.assertAlmostEqual(self.feature_z[1], 0.3034230329964074, places=12)
 
     def test_every_protected_point_is_in_the_grid(self):
@@ -933,7 +1070,12 @@ class TestTheConstructionVersionNamesThisAlgorithm(unittest.TestCase):
             feature_z=feature_z,
         )
         self.assertEqual(len(qcd.z_values), 1773)
-        self.assertEqual(redshift_grid_digest(qcd.z_values), "303f9ce7")
+        # 303f9ce7 until prompt 09 of prompts/background-solver-robustness made the model
+        # authoritative for its own equality redshifts: feature_z[0] is now the constructor's
+        # bracketed solve rather than Omega_m/Omega_r - 1, 7 ulp above it, which moves exactly one
+        # sample of this grid and therefore its digest. Nothing else about the grid changed --
+        # same length, same break points, same lattice.
+        self.assertEqual(redshift_grid_digest(qcd.z_values), "81c6e682")
 
         smooth = build_z_sample(
             PRODUCTION_Z_INIT, PRODUCTION_Z_END, PRODUCTION_SAMPLES_PER_LOG10Z
@@ -943,13 +1085,197 @@ class TestTheConstructionVersionNamesThisAlgorithm(unittest.TestCase):
 
         production_qcd = _production_grid(cosmology)
         self.assertEqual(len(production_qcd.z_values), 1996)
-        self.assertEqual(redshift_grid_digest(production_qcd.z_values), "a2c32f67")
+        # a2c32f67 until prompt 09, for the same single moved sample as above; the count is
+        # unchanged, and LambdaCDM's digest below is unchanged, because its closed form *is* its
+        # answer and it never reaches the feature path at all
+        self.assertEqual(redshift_grid_digest(production_qcd.z_values), "4849552b")
 
         production_lcdm = _production_grid(
             LambdaCDM(store_id=0, units=Mpc_units(), params=Planck2018())
         )
         self.assertEqual(len(production_lcdm.z_values), 1778)
         self.assertEqual(redshift_grid_digest(production_lcdm.z_values), "60a3205a")
+
+
+class TestTheCriterionBuildsAtEveryProductionAnchor(unittest.TestCase):
+    """
+    Prompt 02a of ``prompts/tolerance-convergence``, board item T13.
+
+    ``source_grid_spacing_profile`` used to **raise** on ``QCD_Cosmology`` at the anchor a QCD
+    production run actually uses, so a QCD run could not build its source grid at all
+    (``[01-v2-density-raises-at-the-qcd-production-anchor]``). The mechanism is not the crossing
+    mask: ``residual_node_range`` establishes its band by testing ``omega^2`` **at the grid's
+    nodes** and is right there, while the stencil evaluates ``dphi_du`` **off-node**, so where
+    ``H`` steps the expansion can fail between two nodes that both pass the margin test. A node
+    like that is one to mark unusable and log-interpolate across, which is what the criterion's
+    existing mask is for.
+
+    **The load-bearing assertion here is bit-identity, not improvement.** The two grids already in
+    the record must not move, and must guard nothing -- that is what says the guard is inert on
+    every figure ever measured. QCD at its own anchor building at all is the new capability, and
+    the guarded count is the evidence item T7 needs for
+    ``[01-density-criterion-imposed-outside-the-wkb-region]``.
+    """
+
+    def setUp(self):
+        self.qcd = QCD_Cosmology(
+            store_id=1,
+            units=Mpc_units(),
+            params=Planck2018(),
+        )
+        self.lcdm = LambdaCDM(store_id=0, units=Mpc_units(), params=Planck2018())
+        self.k_values = [float(k) / Mpc_units().Mpc for k in PRODUCTION_K_INV_MPC]
+
+    def _census(self, cosmology, z_init):
+        base = build_z_sample(
+            z_init, PRODUCTION_Z_END, PRODUCTION_SAMPLES_PER_LOG10Z
+        ).z_values
+        report = {}
+        source_grid_spacing_profile(cosmology, base, self.k_values, report=report)
+        return report
+
+    def test_the_two_anchors_are_named_and_are_not_the_same(self):
+        # PRODUCTION_Z_INIT's comment used to claim one constant served both production
+        # cosmologies. It does not: this module's own anchor is LambdaCDM's.
+        self.assertEqual(PRODUCTION_Z_INIT, PRODUCTION_Z_INIT_LAMBDACDM)
+        self.assertNotEqual(PRODUCTION_Z_INIT_QCD, PRODUCTION_Z_INIT_LAMBDACDM)
+        self.assertGreater(PRODUCTION_Z_INIT_QCD, PRODUCTION_Z_INIT_LAMBDACDM)
+
+    def test_the_published_grids_are_bit_identical_and_guard_nothing(self):
+        for label, cosmology, samples, digest in (
+            ("QCD at LambdaCDM's anchor", self.qcd, 1996, "4849552b"),
+            ("LambdaCDM at its own anchor", self.lcdm, 1778, "60a3205a"),
+        ):
+            with self.subTest(label):
+                census = self._census(cosmology, PRODUCTION_Z_INIT_LAMBDACDM)
+                self.assertEqual(
+                    census["guarded"],
+                    0,
+                    f"{label}: the guard is not inert on a grid already in the record",
+                )
+                grid = _production_grid(cosmology)
+                self.assertEqual(len(grid.z_values), samples)
+                self.assertEqual(redshift_grid_digest(grid.z_values), digest)
+
+    def test_qcd_builds_at_its_own_anchor(self):
+        grid = source_grid(
+            SOURCE_GRID_V2,
+            PRODUCTION_Z_INIT_QCD,
+            PRODUCTION_Z_END,
+            PRODUCTION_SAMPLES_PER_LOG10Z,
+            cosmology=self.qcd,
+            k_inv_Mpc=PRODUCTION_K_INV_MPC,
+        )
+        z = grid.z_values
+
+        # strictly descending, duplicate-free, and no closer anywhere than the datastore can
+        # resolve -- the same three properties the published grids are held to above
+        self.assertTrue(np.all(np.diff(z) < 0.0))
+        self.assertEqual(len(np.unique(z)), len(z))
+        separation = -np.diff(z) / z[:-1]
+        self.assertGreater(float(separation.min()), SOURCE_GRID_MIN_SEPARATION)
+
+        # the figures prompt 02a measured, and which the board's probe also reports
+        self.assertEqual(len(z), 2034)
+
+    def test_the_guarded_nodes_are_counted_and_attributed(self):
+        census = self._census(self.qcd, PRODUCTION_Z_INIT_QCD)
+
+        self.assertEqual(census["guarded"], 53)
+        self.assertEqual(sum(g for _, _, g, _ in census["detail"]), 53)
+
+        # 34 in the Green's-function sector and 19 in the transfer-function sector, over 53 of the
+        # 100 (k, sector) cases -- exactly one node each, which is what says this is the band
+        # reaching past where the expansion exists and not a region of breakdown
+        by_sector = {"Gk": 0, "Tk": 0}
+        for _, sector, guarded, _ in census["detail"]:
+            by_sector[sector] += guarded
+            self.assertEqual(guarded, 1)
+        self.assertEqual(by_sector, {"Gk": 34, "Tk": 19})
+        self.assertEqual(len(census["detail"]), 53)
+
+    def test_the_worst_production_band_is_far_below_the_refusal(self):
+        census = self._census(self.qcd, PRODUCTION_Z_INIT_QCD)
+        worst = max(g / b for _, _, g, b in census["detail"])
+
+        # 7.716e-04, and SOURCE_GRID_MAX_GUARDED_FRACTION is 0.05: the margin the constant's
+        # comment claims is 64.8x, and this is the assertion that keeps that claim honest if
+        # either the band or the constant ever moves
+        self.assertLess(worst, 1.0e-3)
+        self.assertGreater(SOURCE_GRID_MAX_GUARDED_FRACTION / worst, 50.0)
+
+    def test_a_band_the_expansion_is_not_defined_on_is_refused(self):
+        """
+        The guard may fill a boundary effect; it may not absorb a misplaced band.
+
+        The synthetic case **misplaces the band** rather than editing the production constant: the
+        stand-in ``residual_node_range`` hands the criterion the whole grid instead of the band
+        the margin test establishes, so most of its nodes lie far outside the Liouville-Green
+        region and have no expansion to differentiate. That is the shape of the failure the
+        ceiling exists to catch, and it is the shape a band chosen on the wrong condition would
+        have -- which is the live question
+        (``[01-density-criterion-imposed-outside-the-wkb-region]``, item T7), and the reason the
+        guard must not be able to absorb it quietly.
+
+        Widening the stencil instead does **not** work, and the reason is worth recording: the
+        arms are clamped to ``[u_lo + 2 delta, u_hi - 2 delta]``, so however large ``delta`` is
+        they never reach past the band's own ends.
+        """
+
+        def _whole_grid_is_the_band(proxy, k, base_z, sector):
+            return np.asarray(base_z, dtype=float)
+
+        misplaced = load_main_py_functions(
+            ["pre_grid_background_proxy", "source_grid_spacing_profile"],
+            extra_globals={
+                "np": np,
+                "_cosmology_break_points": _cosmology_break_points,
+                "phase_residual_integrand": phase_residual_integrand,
+                "residual_node_range": _whole_grid_is_the_band,
+                "SOURCE_GRID_CONSUMER_TARGET_RAD": SOURCE_GRID_CONSUMER_TARGET_RAD,
+                "SOURCE_GRID_CROSSING_MASK_U": SOURCE_GRID_CROSSING_MASK_U,
+                "SOURCE_GRID_CUBIC_ERROR_CONST": SOURCE_GRID_CUBIC_ERROR_CONST,
+                "SOURCE_GRID_CURVATURE_FD_STEP_U": SOURCE_GRID_CURVATURE_FD_STEP_U,
+                "SOURCE_GRID_CURVATURE_STEP_U": SOURCE_GRID_CURVATURE_STEP_U,
+                "SOURCE_GRID_MAX_GUARDED_FRACTION": SOURCE_GRID_MAX_GUARDED_FRACTION,
+                "SOURCE_GRID_SPLINE_EDGE_FACTOR": SOURCE_GRID_SPLINE_EDGE_FACTOR,
+                "SOURCE_GRID_SPLINE_EDGE_INTERVALS": SOURCE_GRID_SPLINE_EDGE_INTERVALS,
+            },
+        )["source_grid_spacing_profile"]
+
+        base = build_z_sample(
+            PRODUCTION_Z_INIT_QCD, PRODUCTION_Z_END, PRODUCTION_SAMPLES_PER_LOG10Z
+        ).z_values
+        with self.assertRaises(ValueError) as caught:
+            misplaced(self.qcd, base, self.k_values)
+
+        message = str(caught.exception)
+        self.assertIn("SOURCE_GRID_MAX_GUARDED_FRACTION", message)
+        self.assertIn("the Liouville-Green expansion does not exist at", message)
+        self.assertIn("band node(s) for k =", message)
+
+    def test_only_a_value_error_is_guarded(self):
+        """
+        A ``TypeError`` from the integrand is a defect, not a region boundary, and must escape.
+        """
+
+        class _Sabotaged:
+            """``QCD_Cosmology``'s surface, with a Hubble rate that cannot be arithmetic on."""
+
+            def __init__(self, inner):
+                self._inner = inner
+
+            def __getattr__(self, name):
+                return getattr(self._inner, name)
+
+            def Hubble(self, z):
+                return None
+
+        base = build_z_sample(
+            PRODUCTION_Z_INIT_QCD, PRODUCTION_Z_END, PRODUCTION_SAMPLES_PER_LOG10Z
+        ).z_values
+        with self.assertRaises(TypeError):
+            source_grid_spacing_profile(_Sabotaged(self.qcd), base, self.k_values)
 
 
 if __name__ == "__main__":

@@ -34,7 +34,12 @@ from Datastore.SQL.ShardedPool import ShardedPool
 from MetadataConcepts import tolerance
 from RayTools.RayWorkPool import RayWorkPool
 from Units import Mpc_units
-from config.defaults import DEFAULT_ABS_TOLERANCE, DEFAULT_REL_TOLERANCE
+from config.defaults import (
+    DEFAULT_GK_NUMERIC_ABS_TOLERANCE,
+    DEFAULT_GK_NUMERIC_REL_TOLERANCE,
+    DEFAULT_HEXIT_ABS_TOLERANCE,
+    DEFAULT_HEXIT_REL_TOLERANCE,
+)
 from config.model_list import build_model_list
 from config.sharding import (
     replicated_tables,
@@ -334,11 +339,18 @@ def run_pipeline(model_data):
 
     print(f"\n>> RUNNING PIPELINE FOR MODEL {model_label}")
 
-    # build absolute and relative tolerances
-    atol, rtol = ray.get(
+    # build the tolerances this script's lookups are keyed on. Prompt 05a of
+    # prompts/tolerance-convergence decoupled them: wavenumber_exit_time, GkNumericIntegration
+    # and TkNumericIntegration each carry a pair of their own, measured on their own terms. A
+    # reader that queries under another target's constant does not raise -- it simply fails to
+    # match the row main.py wrote, which is how
+    # [02-extract-tkwkb-queries-tk-numeric-under-the-shared-atol] survived unnoticed.
+    hexit_atol, hexit_rtol, Gk_numeric_atol, Gk_numeric_rtol = ray.get(
         [
-            pool.object_get(tolerance, tol=DEFAULT_ABS_TOLERANCE),
-            pool.object_get(tolerance, tol=DEFAULT_REL_TOLERANCE),
+            pool.object_get(tolerance, tol=DEFAULT_HEXIT_ABS_TOLERANCE),
+            pool.object_get(tolerance, tol=DEFAULT_HEXIT_REL_TOLERANCE),
+            pool.object_get(tolerance, tol=DEFAULT_GK_NUMERIC_ABS_TOLERANCE),
+            pool.object_get(tolerance, tol=DEFAULT_GK_NUMERIC_REL_TOLERANCE),
         ]
     )
 
@@ -353,8 +365,6 @@ def run_pipeline(model_data):
             # construction version instead, and refuses -- naming every generation it found -- if
             # these tags match rows from more than one
             z_sample=None,
-            atol=atol,
-            rtol=rtol,
             tags=run_selection.tags,
         )
     )
@@ -381,8 +391,8 @@ def run_pipeline(model_data):
             wavenumber_exit_time,
             k=k,
             cosmology=model_cosmology,
-            atol=atol,
-            rtol=rtol,
+            atol=hexit_atol,
+            rtol=hexit_rtol,
         )
 
     # query wavenumber_exit_time objects corresponding to these k modes
@@ -436,19 +446,26 @@ def run_pipeline(model_data):
         k_exit: wavenumber_exit_time
         z_source: redshift
 
-        # query the list of GkNumeric and GkWKB data for this k, z_source combination
+        # query the list of GkNumeric and GkWKB data for this k, z_source combination.
+        # GkNumericIntegration keeps its tolerance pair -- it reaches a DOP853 solver -- while
+        # GkWKBIntegration lost it to rho_gauss_order in prompt 05 of
+        # prompts/tolerance-convergence, and that order is read from its single declaration
+        # rather than supplied here. So the two lookups no longer share one payload.
         query_payload = {
             "solver_labels": [],
             "model": model_proxy,
             "k": k_exit,
             "z_source": z_source,
             "z_sample": None,
-            "atol": atol,
-            "rtol": rtol,
             "tags": run_selection.tags,
         }
 
-        GkN_ref = pool.object_get("GkNumericIntegration", **query_payload)
+        GkN_ref = pool.object_get(
+            "GkNumericIntegration",
+            atol=Gk_numeric_atol,
+            rtol=Gk_numeric_rtol,
+            **query_payload,
+        )
         GkW_ref = pool.object_get("GkWKBIntegration", **query_payload)
 
         return plot_Gk.remote(model_label, GkN_ref, GkW_ref)

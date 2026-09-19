@@ -70,7 +70,12 @@ import ray
 
 from ComputeTargets import BackgroundModel, ModelProxy
 from ComputeTargets.cumulative_table import CumulativeTable
-from ComputeTargets.phase_residual import RHO_GAUSS_ORDER, cached_phase_residual
+
+# the module, not its names: the residual's Gauss order must be read at call time, so that what
+# this function reports is the order the run is configured at rather than a snapshot taken when
+# this module was imported (prompts/tolerance-convergence, prompt 05b)
+import ComputeTargets.phase_residual as phase_residual
+from ComputeTargets.phase_residual import cached_phase_residual
 from CosmologyConcepts import redshift_array, wavenumber, wavenumber_exit_time
 from LiouvilleGreen.WKBtools import WKB_mod_2pi
 from Quadrature.integration_metadata import IntegrationData
@@ -83,7 +88,7 @@ from Units import check_units
 # separate IntegrationSolver rows ([03-integrationsolver-stepping-minimum-lookup]). main.py
 # registers it through the GkWKBIntegration class attributes of the same names.
 PHASE_SOLVER_LABEL_BASE = "wkb-primitive"
-PHASE_SOLVER_STEPPING = RHO_GAUSS_ORDER
+PHASE_SOLVER_STEPPING = phase_residual.RHO_GAUSS_ORDER
 PHASE_SOLVER_LABEL = f"{PHASE_SOLVER_LABEL_BASE}-stepping{PHASE_SOLVER_STEPPING}"
 
 # which background primitive carries the leading term k * delta in each sector
@@ -184,7 +189,9 @@ def WKB_phase_function(
     :return: the payload described in the module docstring; keys ``"stage_1_data"``,
         ``"stage_2_data"``, ``"theta_div_2pi_sample"``, ``"theta_mod_2pi_sample"``,
         ``"phase_solver_label"``, ``"has_WKB_violation"``, ``"WKB_violation_z"``,
-        ``"WKB_violation_efolds_subh"``, ``"metadata"``; and, when ``friction`` is set,
+        ``"WKB_violation_efolds_subh"``, ``"rho_gauss_order"`` (the order the residual table was
+        built at, which is what the producer records and the lookup key carries),
+        ``"metadata"``; and, when ``friction`` is set,
         ``"friction_sample"``, ``"friction_data"``, ``"friction_solver_label"``
     """
     start_time = time.perf_counter()
@@ -216,10 +223,14 @@ def WKB_phase_function(
     if len(z_sample_list) == 0:
         raise RuntimeError(f"{task_label}: no sample redshifts were supplied")
 
+    # "N_rho" is provisional here and is replaced below by the residual table's own order: no
+    # table exists yet, and the constant read at call time is the order this call will build one
+    # at. The zero-length branch below returns before any table is built, and reports it as it
+    # stands (prompts/tolerance-convergence, prompt 05b).
     metadata = {
         "solver": PHASE_SOLVER_LABEL_BASE,
         "sector": sector,
-        "N_rho": RHO_GAUSS_ORDER,
+        "N_rho": phase_residual.RHO_GAUSS_ORDER,
     }
 
     # the exact zero-length case: a single sample at the anchor itself, where theta = 0
@@ -235,6 +246,10 @@ def WKB_phase_function(
             "has_WKB_violation": False,
             "WKB_violation_z": None,
             "WKB_violation_efolds_subh": None,
+            # theta = 0 at the anchor and no residual table is built on this path, so the order
+            # the object records is the one this call was configured at; it is the same name the
+            # metadata above reports and the same one the lookup key filters on
+            "rho_gauss_order": int(metadata["N_rho"]),
         }
         if friction:
             payload["friction_sample"] = [0.0]
@@ -356,6 +371,9 @@ def WKB_phase_function(
     # column
     metadata.update(
         {
+            # the table's own order, not the constant: what the object records must be what the
+            # residual was actually tabulated at (prompts/tolerance-convergence, prompt 05b)
+            "N_rho": int(rho.order),
             "rho_nodes": int(len(rho)),
             "rho_evals": int(rho_evaluations),
             "rho_reused": bool(rho_reused),
@@ -391,6 +409,11 @@ def WKB_phase_function(
             "has_WKB_violation": has_WKB_violation,
             "WKB_violation_z": WKB_violation_z,
             "WKB_violation_efolds_subh": WKB_violation_efolds_subh,
+            # the order the residual table was built at, carried out of the table itself so that
+            # the producer records what it used rather than what the module currently says. It is
+            # the value the two WKB factories write into the lookup key, and the one the metadata
+            # reports as "N_rho" (prompts/tolerance-convergence, prompt 05b).
+            "rho_gauss_order": int(rho.order),
         }
     )
 

@@ -6,7 +6,9 @@ Three things had gone wrong together, and they share a root -- nothing recorded 
 object belonged to:
 
 1. ``sqla_BackgroundModel_factory.build()`` filtered on ``(cosmology_type, cosmology_serial,
-   atol_serial, rtol_serial)`` plus ``LargestSourceZTag`` / ``SmallestSourceZTag`` / (until
+   atol_serial, rtol_serial)`` -- since prompt 05 of ``prompts/tolerance-convergence`` the
+   tolerance half of that key is the three Gauss orders ``(tau_gauss_order, cs_tau_gauss_order,
+   friction_F_gauss_order)``, which is what the payloads below carry -- plus ``LargestSourceZTag`` / ``SmallestSourceZTag`` / (until
    prompt 16 retired it) ``SourceSamplesPerLog10ZTag``, every one of which is **unchanged** when
    the grid's shape changes; and it never filtered on ``z_sample`` at all. So when prompt 11 gave the QCD grid 41
    extra samples, a pre-prompt-11 datastore went on serving its 1,732-node background for the new
@@ -41,6 +43,7 @@ them, and the inserter is the shape of ``Datastore._insert`` reduced to what the
 """
 
 import ast
+from importlib import import_module
 import unittest
 from datetime import datetime
 from pathlib import Path
@@ -64,8 +67,7 @@ from Datastore.SQL.ObjectFactories.integration_metadata import (
 )
 from Datastore.SQL.ObjectFactories.redshift import sqla_redshift_factory
 from Datastore.SQL.ObjectFactories.store_tag import sqla_store_tag_factory
-from Datastore.SQL.ObjectFactories.tolerance import sqla_tolerance_factory
-from MetadataConcepts import store_tag, tolerance
+from MetadataConcepts import store_tag
 from Quadrature.integration_metadata import IntegrationData, IntegrationSolver
 from Units import Mpc_units
 from extract_common import (
@@ -75,6 +77,11 @@ from extract_common import (
     run_label_tag,
     source_grid_construction_tag,
 )
+
+# the module, not the class: ComputeTargets/__init__.py rebinds the package attribute to the
+# class, so the three Gauss orders have to be reached through import_module, exactly as the
+# factory reaches them
+BackgroundModelModule = import_module("ComputeTargets.BackgroundModel")
 
 REPO_ROOT = Path(__file__).parents[2]
 
@@ -99,7 +106,7 @@ EXTRACT_SCRIPTS = [
 
 # ---------------------------------------------------------------------------------------------
 # schema and connection helpers (the shape of test_cosmology_representation_key's, widened to the
-# six tables BackgroundModel.build() and store() reach into)
+# tables BackgroundModel.build() and store() reach into)
 # ---------------------------------------------------------------------------------------------
 
 
@@ -166,7 +173,7 @@ class _StandInCosmology:
 
 
 class _Schema:
-    """One in-memory SQLite database carrying the six tables build() and store() touch."""
+    """One in-memory SQLite database carrying the tables build() and store() touch."""
 
     def __init__(self, omit_grid_identity: bool = False):
         omit = [DIGEST_COLUMN, CONSTRUCTION_COLUMN] if omit_grid_identity else []
@@ -175,9 +182,6 @@ class _Schema:
         self.tables = {
             "store_tag": _append_table(
                 "store_tag", sqla_store_tag_factory, self.metadata
-            ),
-            "tolerance": _append_table(
-                "tolerance", sqla_tolerance_factory, self.metadata
             ),
             "IntegrationSolver": _append_table(
                 "IntegrationSolver", sqla_IntegrationSolver_factory, self.metadata
@@ -209,14 +213,8 @@ class _Schema:
 
         # the ingredients every background model in this database shares
         self.cosmology = _StandInCosmology()
-        self.atol = tolerance(store_id=1, log10_tol=-10.0)
-        self.rtol = tolerance(store_id=2, log10_tol=-8.0)
         self.solver = IntegrationSolver(store_id=1, label="test-solver", stepping=0)
 
-        self.conn.execute(
-            sqla.insert(self.tables["tolerance"]),
-            [{"serial": 1, "log10_tol": -10.0}, {"serial": 2, "log10_tol": -8.0}],
-        )
         self.conn.execute(
             sqla.insert(self.tables["IntegrationSolver"]),
             [{"serial": 1, "label": "test-solver", "stepping": 0}],
@@ -264,13 +262,17 @@ class _Schema:
             payload=None,
             solver_labels={},
             cosmology=self.cosmology,
-            atol=self.atol,
-            rtol=self.rtol,
             z_sample=z_sample,
             label=label,
             tags=list(tags) if tags is not None else [],
         )
         obj._solver = self.solver
+        # the three orders store() records off the compute_background payload: this object is
+        # standing in for one whose tables were built at the orders this run is configured at
+        # (prompts/tolerance-convergence, prompt 05b)
+        obj._tau_gauss_order = BackgroundModelModule.TAU_GAUSS_ORDER
+        obj._cs_tau_gauss_order = BackgroundModelModule.CS_TAU_GAUSS_ORDER
+        obj._friction_F_gauss_order = BackgroundModelModule.FRICTION_F_GAUSS_ORDER
         obj._data = IntegrationData(
             compute_time=1.0,
             compute_steps=1,
@@ -313,8 +315,6 @@ class _Schema:
         """The production build(), on whichever path ``z_sample`` selects."""
         payload = {
             "solver_labels": {},
-            "atol": self.atol,
-            "rtol": self.rtol,
             "cosmology": self.cosmology,
             "z_sample": z_sample,
             "tags": list(tags) if tags is not None else [],
@@ -734,8 +734,13 @@ class TestAStoreWithNoGridIdentity(unittest.TestCase):
                     "label": "archived",
                     "cosmology_type": self.db.cosmology.type_id,
                     "cosmology_serial": self.db.cosmology.store_id,
-                    "atol_serial": 1,
-                    "rtol_serial": 2,
+                    # the accuracy half of the key as the current schema spells it: prompt 05 of
+                    # prompts/tolerance-convergence replaced the tolerance pair with the three
+                    # Gauss orders, and _Schema builds this table from the factory's own
+                    # register(), so the archival row has to carry them
+                    "tau_gauss_order": BackgroundModelModule.TAU_GAUSS_ORDER,
+                    "cs_tau_gauss_order": BackgroundModelModule.CS_TAU_GAUSS_ORDER,
+                    "friction_F_gauss_order": BackgroundModelModule.FRICTION_F_GAUSS_ORDER,
                     "solver_serial": 1,
                     "z_init_serial": self.grid.min.store_id,
                     "z_samples": len(self.grid),
@@ -786,8 +791,6 @@ class TestAStoreWithNoGridIdentity(unittest.TestCase):
     def _read(self, z_sample):
         payload = {
             "solver_labels": {},
-            "atol": self.db.atol,
-            "rtol": self.db.rtol,
             "cosmology": self.db.cosmology,
             "z_sample": z_sample,
             "tags": [],
@@ -831,8 +834,6 @@ class TestAStoreWithNoGridIdentity(unittest.TestCase):
 
         payload = {
             "solver_labels": {},
-            "atol": self.db.atol,
-            "rtol": self.db.rtol,
             "cosmology": self.db.cosmology,
             "z_sample": self.grid,
             "tags": [],

@@ -398,13 +398,22 @@ def main():
                 f" = {spacing / np.median(du):.2f} x the grid spacing"
             )
         print(line)
+    # The intersection with the *declared* set, not the tabulation's knots inside the production
+    # range. Those two coincided while the representation forced its own lattice into the
+    # break-point set; since prompt 07 they do not, and counting the knots reported 2,411 of 3
+    # points as knots ([09-audit-script-section-5-prose-counts-the-wrong-set]).
     knots = bg.cosmology._T_z_spline_knots_log1pz
-    inside = knots[(knots > u_nodes.min()) & (knots < u_nodes.max())]
+    all_points = np.asarray(
+        bg.cosmology.integration_break_points(z_lo, z_hi, kind=BREAK_POINT_ALL),
+        dtype=float,
+    )
+    shared = np.intersect1d(all_points, knots)
     print(
-        f"\n   Of the BREAK_POINT_ALL points, {len(inside)} are knots of the T(z) spline itself --\n"
-        "   a uniform lattice of an auxiliary 500-point interpolant, not a feature of the\n"
-        "   cosmology. A representation that does not need that lattice removes them from the\n"
-        "   break-point set, leaving only the genuine crossings of section 2."
+        f"\n   {len(shared)} of those {len(all_points)} BREAK_POINT_ALL points are also knots of the T(z)\n"
+        "   tabulation. A representation that forces its own interpolation lattice into the\n"
+        "   break-point set contributes knots here, which are an artefact of how T(z) is\n"
+        "   approximated and not a feature of the cosmology; a representation that does not,\n"
+        "   contributes none, leaving only the genuine crossings of section 2."
     )
 
     banner("6. COST PER CALL")

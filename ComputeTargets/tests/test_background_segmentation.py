@@ -41,18 +41,14 @@ from ComputeTargets.BackgroundModel import (
     build_stored_sample_spline,
 )
 from ComputeTargets.spline_wrappers import ZSplineWrapper
-from ComputeTargets.tests.test_main_plumbing import load_main_py_functions
 from ComputeTargets.tests.wkb_reference import (
     PRODUCTION_SOURCE_SAMPLES_PER_LOG10Z,
     PRODUCTION_Z_END,
+    SOURCE_GRID_V1,
+    cosmology_grid_features,
     load_references,
+    source_grid,
     to_redshift_array,
-)
-from CosmologyConcepts import (
-    SOURCE_GRID_BREAK_HALF_WIDTH,
-    SOURCE_GRID_BREAK_REFINEMENT,
-    SOURCE_GRID_BREAK_STANDOFF,
-    build_z_sample,
 )
 from CosmologyModels.GenericEOS.QCD_Cosmology import QCD_Cosmology
 from CosmologyModels.LambdaCDM import LambdaCDM, Planck2018
@@ -81,27 +77,28 @@ CONTROL_TOLERANCE = 2.0e-9
 # fail the tolerance above by orders.
 UNSEGMENTED_RINGING_AT_T_LO = 1.0e-3
 
-cosmology_feature_redshifts = load_main_py_functions(
-    ["cosmology_feature_redshifts"],
-    extra_globals={"np": np, "_cosmology_break_points": _cosmology_break_points},
-)["cosmology_feature_redshifts"]
-
 
 def production_source_grid(cosmology):
-    """The grid ``main.py`` builds for this cosmology, prompt 11's cosmology-aware one."""
+    """
+    The grid this module's measurements were taken on: **version 1**, prompt 11's
+    cosmology-aware construction, before prompt 15 gave the grid its curvature-equidistributed
+    density.
+
+    The construction now lives in ``ComputeTargets/tests/wkb_reference.py`` under that name
+    (prompt 01 of ``prompts/tolerance-convergence``): it was one of four reproductions of "the
+    production source grid" in the test tree, each a different generation and none of them
+    saying so (``[00-three-production-grid-reproductions]``). The hoist is bit-identical, and
+    this module stays on version 1 deliberately -- its numbers were measured there and re-scoring
+    them silently on version 2 is the defect, not the fix.
+    """
     z_init = float(load_references()["models"]["LambdaCDMModel"]["grid"]["z_init"])
-    break_z, feature_z = cosmology_feature_redshifts(
-        cosmology, PRODUCTION_Z_END, z_init
-    )
-    grid = build_z_sample(
+    break_z, _ = cosmology_grid_features(cosmology, PRODUCTION_Z_END, z_init)
+    grid = source_grid(
+        SOURCE_GRID_V1,
         z_init,
         PRODUCTION_Z_END,
         PRODUCTION_SOURCE_SAMPLES_PER_LOG10Z,
-        break_z=break_z,
-        feature_z=feature_z,
-        standoff=SOURCE_GRID_BREAK_STANDOFF,
-        half_width=SOURCE_GRID_BREAK_HALF_WIDTH,
-        refinement=SOURCE_GRID_BREAK_REFINEMENT,
+        cosmology=cosmology,
     )
     return to_redshift_array(grid.z_values), np.asarray(break_z, dtype=float)
 

@@ -47,10 +47,43 @@ nothing is detected at run time.  **The converged reference is itself computed b
 the finest break set the model offers, so that the per-interval error of the ``plain`` scheme
 across a discontinuity is measured against a value that is actually right.
 
-Outputs ``docs/gktk-remedial/RESIDUAL-CONVERGENCE.md`` and a ``"convergence"`` block appended to
-``ComputeTargets/tests/wkb_reference_data.json``.
+Outputs a ``"convergence"`` block appended to
+``ComputeTargets/tests/wkb_reference_data.json``, and -- **only under ``--legacy-markdown``** --
+``docs/gktk-remedial/RESIDUAL-CONVERGENCE.md``.
+
+**Re-run 2026-09-17 by ``prompts/tolerance-convergence`` prompt 04** (README §7 **D5**), which is
+the first prompt anywhere allowed to write the fixture this script generates. Four things changed
+and every one of them is a change to *what is recorded*, not to what is measured:
+
+1. **``branch+knots`` is a control, not a candidate.** ``integration_break_points`` has not
+   returned the ``T(z)`` spline's knots since ``qcd-background-audit`` prompt 07, so production
+   cannot execute that scheme and it may not be recommended. It stays in the sweep -- the script
+   takes the knots off the model's own spline rather than off the cosmology's contract, and two
+   test modules index the block by that key -- and the question it now answers is *what does
+   splitting at the knots still buy?*
+2. **Every figure carries the reference's own drift** (README §5 rule 5), measured through
+   ``ComputeTargets/tests/convergence_reference.reference_drift`` -- the campaign's one
+   implementation of the convergence test -- as the movement of the adaptive reference under one
+   decade of ``epsrel``, with the criterion evaluated against the smallest difference the block
+   goes on to report.
+3. **Every figure carries its source-grid generation** (README §5 rule 6). This script measures
+   on the **version-0** grid and must continue to: the quantity it scores, the JSON's own
+   ``checkpoints`` / ``rho_*`` reference values, lives on that grid, and the two test modules that
+   read the block compare against it there. The generation is now recorded rather than implied.
+4. **The markdown output is opt-in.** ``docs/gktk-remedial/RESIDUAL-CONVERGENCE.md`` is
+   ``GkTk-remedial`` prompt 02's published document and verification documents are additive
+   (README §5 rule 7), so it is written only when ``--legacy-markdown`` is passed. The re-run's
+   own tables are in ``docs/tolerance-convergence/ORDER-AUDIT.md``.
+
+Options:
+
+* ``--json-out PATH`` -- write the ``convergence`` block into ``PATH`` instead of the fixture
+  (used for the dry run prompt 04 §2.4 requires: *look, then regenerate*);
+* ``--no-json`` -- measure and print, write nothing;
+* ``--legacy-markdown`` -- also rewrite ``RESIDUAL-CONVERGENCE.md``.
 """
 
+import argparse
 import json
 import os
 import platform
@@ -68,7 +101,13 @@ sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
 
 import reference_lib as R  # noqa: E402
 
+from ComputeTargets.tests.convergence_reference import (  # noqa: E402
+    CRITERION_RATIO,
+    TolerancePair,
+    reference_drift,
+)
 from ComputeTargets.tests.wkb_reference import (  # noqa: E402
+    SOURCE_GRID_V0,
     LambdaCDMModel,
     PRODUCTION_LARGEST_K_INV_MPC,
     PRODUCTION_SUPERHORIZON_EFOLDS,
@@ -92,6 +131,12 @@ ORDERS = (2, 4, 6, 8, 12, 16)
 # the converged adaptive reference, per (sub-)panel
 QUAD_EPSREL = 1.5e-14
 QUAD_CROSSCHECK_EPSREL = 1.0e-12
+# One decade *looser*, for the reference's own drift (README §5 rule 5). It is on this side
+# because `quad` refuses an `epsrel` below 50*eps = 1.11e-14 when `epsabs = 0`: QUAD_EPSREL is
+# already the tightest attainable setting and there is no decade below it to step to. What the
+# drift then measures is the movement across the last decade the method admits -- see
+# `reference_case_drift`.
+QUAD_DRIFT_EPSREL = 1.5e-13
 # the independent per-panel cross-check on that reference
 GAUSS_CROSSCHECK_RTOL = 1.0e-14
 GAUSS_CROSSCHECK_MAX_LEVEL = 8
@@ -123,6 +168,24 @@ PHASE_K = 3.0e8
 
 # schemes in increasing order of cost; the recommendation is the cheapest that works
 SCHEME_ORDER = ("plain", "branch", "branch+knots")
+
+# The schemes production can actually execute. `integration_break_points` returns the three
+# equation-of-state temperature crossings and nothing else (qcd-background-audit prompt 07), so a
+# panel edge at a T(z) spline knot is a thing this script can build and the pipeline cannot. A
+# scheme production cannot execute may not be recommended (tolerance-convergence prompt 04 §3.2).
+CANDIDATE_SCHEMES = ("plain", "branch")
+
+# ...and the one that is retained as a control. It is kept in `schemes` and in the block because
+# ComputeTargets/tests/test_background_tau.py and test_background_cs_tau_friction.py index
+# `models.QCDModel["branch+knots"]` by name for the reference floor they assert against; dropping
+# the key is a two-module edit outside prompt 04's carve-out.
+CONTROL_SCHEME = "branch+knots"
+
+# The source-grid generation everything here is measured on (README §5 rule 6). It is version 0
+# deliberately and must stay there: the quantity scored is the agreement of a fixed-order rule
+# with the JSON's own `checkpoints` / `rho_*` reference values, and those live on the version-0
+# grid, as do the two test modules that compare against them.
+GRID_GENERATION = SOURCE_GRID_V0
 
 MARKDOWN_PATH = os.path.join(
     os.path.dirname(os.path.abspath(__file__)), "RESIDUAL-CONVERGENCE.md"
@@ -386,6 +449,7 @@ def build_reference(f, edges, break_lists):
     diagnostics = {
         "num_intervals": n_int,
         "reference_total": fsum(ref_parts),
+        "grid_generation": GRID_GENERATION,
         "crosscheck_quad_1e-12_max_rel": worst_loose,
         "crosscheck_quad_1e-12_at_z": float(expm1(edges[worst_loose_at])),
         "crosscheck_gauss40_max_rel": worst_gl,
@@ -396,6 +460,130 @@ def build_reference(f, edges, break_lists):
         "gauss40_worst_level": worst_gl_level,
     }
     return ref_parts, diagnostics
+
+
+def reference_case_drift(
+    f,
+    edges,
+    break_lists,
+    ref_parts,
+    checkpoint_index,
+    smallest_reported: float,
+    crosscheck_gauss40_max_rel: float,
+    residual: bool,
+) -> dict:
+    """
+    How far the adaptive reference moves under **one step of tightening**, and whether that is
+    small enough for the numbers this case goes on to report (README §5 rule 5).
+
+    Taken through ``ComputeTargets/tests/convergence_reference.reference_drift``, which is the
+    campaign's one implementation of the convergence test (board standing note 14) and which will
+    not hand back a drift without the verdict attached.
+
+    **The drift is measured in the kind the case decides in.** For the three primitives the
+    decision reads ``max_cumulative_rel_error``, so the drift is relative, at every checkpoint
+    cumulative and every production interval. For the two residuals it reads
+    ``max_cumulative_abs_error`` against a target in radians, so the drift is **absolute**, at the
+    checkpoints only: a rho increment is ~1e-13 rad and an absolutely negligible movement is
+    enormous against that denominator, so a per-interval relative drift there would report the
+    conditioning of the denominator and not the convergence of the reference.
+
+    **The step is ``QUAD_DRIFT_EPSREL -> QUAD_EPSREL``, and it is taken from the loose side
+    because the reference is already at QUADPACK's floor.** ``scipy.integrate.quad`` refuses an
+    ``epsrel`` below ``50 * eps = 1.11e-14`` outright when ``epsabs = 0``, so the reference at
+    ``QUAD_EPSREL = 1.5e-14`` cannot be tightened by a decade at all -- there is no such setting.
+    What is measured instead is the decade *into* it: the reference at ``1.5e-13`` moved by this
+    much when the tolerance was tightened to the value the block actually uses. Under the usual
+    reading of a convergence test that bounds what a further decade could move it, and it is
+    reported as a bound and not as a two-sided error.
+
+    The second leg is the one this script already had: the independent composite order-40
+    Gauss-Legendre rule with bisection, which is a different method rather than the same one with
+    a smaller number. ``reference_error_bound_max_rel`` is the larger of the two, and the verdict
+    is re-scored against it.
+
+    **One note the verdict carries is about the wrong solver.** ``TolerancePair`` reports
+    ``scipy.integrate``'s ``100 eps`` clamp, which applies to ``solve_ivp`` and not to
+    ``quad`` -- the same mismatch prompt 03a recorded for ``brentq`` in
+    ``[03a-scipy-rtol-floor-is-the-wrong-floor-for-a-root-solve]``. It is recorded here rather
+    than worked around: ``convergence_reference.py`` is outside prompt 04's file list, and the
+    measured movement below is the evidence that the step really was applied.
+    """
+    n_int = len(edges) - 1
+    cache = {QUAD_EPSREL: list(ref_parts)}
+
+    def build(knob):
+        if knob.rtol not in cache:
+            cache[knob.rtol] = [
+                quad_over_interval(
+                    f,
+                    edges[i],
+                    edges[i + 1],
+                    () if break_lists is None else break_lists[i],
+                    knob.rtol,
+                )[0]
+                for i in range(n_int)
+            ]
+        return cache[knob.rtol]
+
+    def error_measure(candidate, reference):
+        out = []
+        for idx in checkpoint_index:
+            got, want = fsum(candidate[idx:]), fsum(reference[idx:])
+            if residual:
+                out.append((fabs(got - want), float(expm1(edges[idx])), idx))
+            elif fabs(want) != 0.0:
+                out.append(
+                    (fabs(got - want) / fabs(want), float(expm1(edges[idx])), idx)
+                )
+        if residual:
+            return out
+        for i in range(n_int):
+            if fabs(reference[i]) == 0.0:
+                continue
+            out.append(
+                (
+                    fabs(candidate[i] - reference[i]) / fabs(reference[i]),
+                    float(expm1(edges[i])),
+                    i,
+                )
+            )
+        return out
+
+    # a case whose every order is exact has no "smallest difference it intends to report"; the
+    # criterion is then applied against one ulp of the quantity, which is the smallest thing it
+    # could distinguish
+    smallest = (
+        float(smallest_reported) if smallest_reported > 0.0 else 2.220446049250313e-16
+    )
+
+    verdict = reference_drift(
+        build,
+        TolerancePair(atol=0.0, rtol=QUAD_DRIFT_EPSREL),
+        error_measure=error_measure,
+        smallest_reported_difference=smallest,
+        tightened_knob=TolerancePair(atol=0.0, rtol=QUAD_EPSREL),
+    )
+    # the independent leg is a *relative* disagreement, so it only joins the bound when the drift
+    # is measured in the same kind
+    bound = (
+        verdict.max if residual else max(verdict.max, float(crosscheck_gauss40_max_rel))
+    )
+    return {
+        "reference_drift_epsrel_step": [QUAD_DRIFT_EPSREL, QUAD_EPSREL],
+        "reference_drift_step_is_from_the_loose_side": True,
+        "reference_drift_kind": "absolute" if residual else "relative",
+        "reference_drift_max": verdict.max,
+        "reference_drift_at_z": verdict.max_z,
+        "reference_drift_median": verdict.median,
+        "reference_drift_threshold": verdict.threshold,
+        "reference_drift_criterion_ratio": CRITERION_RATIO,
+        "reference_drift_smallest_reported": smallest,
+        "reference_drift_passed": bool(verdict.passed),
+        "reference_error_bound": bound,
+        "reference_error_bound_passed": bool(bound <= verdict.threshold),
+        "reference_drift_notes": list(verdict.notes),
+    }
 
 
 # ---------------------------------------------------------------------------------------------
@@ -569,20 +757,14 @@ def measure_model(
             flush=True,
         )
 
+        per_scheme = {}
         for scheme, break_u in schemes.items():
             break_lists = None if len(break_u) == 0 else assign_breaks(edges, break_u)
             t0 = time.perf_counter()
             orders = measure_orders(
                 f, edges, ref_parts, break_lists, cp_index, json_cum
             )
-            block = dict(diagnostics)
-            block.update(extra)
-            block["label"] = label
-            block["scheme"] = scheme
-            block["reference_seconds"] = reference_seconds
-            block["seconds"] = time.perf_counter() - t0
-            block["orders"] = orders
-            results[scheme][key] = block
+            per_scheme[scheme] = (orders, time.perf_counter() - t0)
             print(
                 f"    [{scheme:>12}] increment "
                 + "  ".join(
@@ -591,6 +773,55 @@ def measure_model(
                 ),
                 flush=True,
             )
+
+        # README §5 rule 5, and the reason this is computed *after* the sweep rather than before:
+        # the criterion is a tenth of the smallest difference the case intends to report, and
+        # that is not known until every order has been scored. The field read is the one the
+        # decision reads for this kind of case -- relative for the primitives, absolute radians
+        # for the residuals.
+        residual = key not in PRIMITIVE_KEYS
+        field = "max_cumulative_abs_error" if residual else "max_cumulative_rel_error"
+        smallest_reported = min(
+            (
+                entry[field]
+                for orders, _ in per_scheme.values()
+                for entry in orders.values()
+                if entry[field] > 0.0
+            ),
+            default=0.0,
+        )
+        t0 = time.perf_counter()
+        diagnostics.update(
+            reference_case_drift(
+                f,
+                edges,
+                ref_break_lists,
+                ref_parts,
+                cp_index,
+                smallest_reported,
+                diagnostics["crosscheck_gauss40_max_rel"],
+                residual,
+            )
+        )
+        print(
+            f"    [       drift] reference moves {diagnostics['reference_drift_max']:.2e} "
+            f"({diagnostics['reference_drift_kind']}) under epsrel {QUAD_DRIFT_EPSREL:g} -> "
+            f"{QUAD_EPSREL:g}, against a threshold of "
+            f"{diagnostics['reference_drift_threshold']:.2e}: "
+            f"{'converged' if diagnostics['reference_drift_passed'] else 'NOT CONVERGED'} "
+            f"({time.perf_counter() - t0:.1f} s)",
+            flush=True,
+        )
+
+        for scheme, (orders, seconds) in per_scheme.items():
+            block = dict(diagnostics)
+            block.update(extra)
+            block["label"] = label
+            block["scheme"] = scheme
+            block["reference_seconds"] = reference_seconds
+            block["seconds"] = seconds
+            block["orders"] = orders
+            results[scheme][key] = block
 
     return results
 
@@ -738,25 +969,108 @@ def decide(lam_results, qcd_results, controls):
         entry["rho_min_order"] = smallest_meeting(rho_errs, RHO_TARGET_RAD)
         scheme_summary[scheme] = entry
 
+    # Only a scheme production can execute may be recommended. `integration_break_points` has
+    # returned the three temperature crossings and nothing else since qcd-background-audit
+    # prompt 07, so `branch+knots` is a control from here on and the choice is plain or branch
+    # (tolerance-convergence prompt 04 §3.2). The comparison it must survive is still against the
+    # best floor *any* measured scheme reaches, the control included: that is the question
+    # "does refusing to split at a knot cost anything?", and it is the one worth asking.
     recommended = None
-    for scheme in SCHEME_ORDER:
+    for scheme in CANDIDATE_SCHEMES:
         entry = scheme_summary[scheme]
         if entry["rho_min_order"] is None:
             continue
         if any(
-            entry["primitive_floor_rel"][key] > FLOOR_FACTOR * best_primitive_floor[key]
+            # A best floor of exactly zero carries no information about how much better one
+            # scheme is than another -- it says the reference and the JSON agree to the bit, and
+            # nothing can be three times worse than zero. Comparing against it disqualifies every
+            # scheme including the one that achieved it, which is not what this filter is for.
+            # Measured on the 2026-09-17 re-run: `branch+knots` reaches 0.0 on `friction`, which
+            # under a bare `> 3 * best` rejected `branch` as well (tolerance-convergence log 04,
+            # deviation 3).
+            best_primitive_floor[key] > 0.0
+            and entry["primitive_floor_rel"][key]
+            > FLOOR_FACTOR * best_primitive_floor[key]
             for key in PRIMITIVE_KEYS
         ):
             continue
         recommended = scheme
         break
-    if recommended is None:
-        # nothing works: report the finest scheme and raise the fallback flag below
-        recommended = SCHEME_ORDER[-1]
+    no_candidate_qualified = recommended is None
+    if no_candidate_qualified:
+        # no executable scheme works: report the finest executable one and say so. This would be
+        # a finding about the representation, not a recommendation to split at the knots, which
+        # production cannot do at all.
+        recommended = CANDIDATE_SCHEMES[-1]
 
     out["recommended_scheme"] = recommended
+    out["candidate_schemes"] = list(CANDIDATE_SCHEMES)
+    out["control_scheme"] = CONTROL_SCHEME
+    out["no_candidate_scheme_qualified"] = no_candidate_qualified
+    out["zero_best_floor_primitives"] = [
+        key for key in PRIMITIVE_KEYS if best_primitive_floor[key] == 0.0
+    ]
+    out["scheme_selection_rule"] = (
+        "the cheapest scheme production can execute -- `integration_break_points` returns the "
+        "equation-of-state temperature crossings and nothing else, so `plain` and `branch` are "
+        "the candidates -- that admits a fixed order <= 16 meeting the rho target and stays "
+        f"within {FLOOR_FACTOR:g}x the best primitive floor any measured scheme reaches, "
+        f"`{CONTROL_SCHEME}` included -- skipping any primitive whose best floor is exactly "
+        "zero, which is listed in `zero_best_floor_primitives` and against which no multiple is "
+        f"meaningful. `{CONTROL_SCHEME}` is retained as a control and is scored in "
+        "`knots_control`; it is not a candidate."
+    )
     out["scheme_summary"] = scheme_summary
     out["best_primitive_floor_rel"] = best_primitive_floor
+
+    # what splitting at the T(z) spline's knots still buys, over the recommended executable
+    # scheme. qcd-background-audit prompt 07 measured that there is nothing left at a knot for a
+    # panel edge to protect against; this is the same question at the quadrature level.
+    out["knots_control"] = {
+        "scheme": CONTROL_SCHEME,
+        "criterion": (
+            "ratio of the recommended executable scheme's error to the control's, per quantity "
+            "and order; > 1 means splitting at the knots is still buying something"
+        ),
+        "primitive_floor_rel": {
+            key: {
+                "recommended": scheme_summary[recommended]["primitive_floor_rel"][key],
+                "control": scheme_summary[CONTROL_SCHEME]["primitive_floor_rel"][key],
+                "ratio": (
+                    scheme_summary[recommended]["primitive_floor_rel"][key]
+                    / scheme_summary[CONTROL_SCHEME]["primitive_floor_rel"][key]
+                    if scheme_summary[CONTROL_SCHEME]["primitive_floor_rel"][key] > 0.0
+                    else None
+                ),
+            }
+            for key in PRIMITIVE_KEYS
+        },
+        "primitive_errors_rel": {
+            key: {
+                str(o): {
+                    "recommended": scheme_summary[recommended][f"{key}_errors_rel"][
+                        str(o)
+                    ],
+                    "control": scheme_summary[CONTROL_SCHEME][f"{key}_errors_rel"][
+                        str(o)
+                    ],
+                }
+                for o in ORDERS
+            }
+            for key in PRIMITIVE_KEYS
+        },
+        "rho_errors_abs": {
+            str(o): {
+                "recommended": scheme_summary[recommended]["rho_errors_abs"][str(o)],
+                "control": scheme_summary[CONTROL_SCHEME]["rho_errors_abs"][str(o)],
+            }
+            for o in ORDERS
+        },
+        "rho_min_order": {
+            "recommended": scheme_summary[recommended]["rho_min_order"],
+            "control": scheme_summary[CONTROL_SCHEME]["rho_min_order"],
+        },
+    }
 
     # ---- the three primitive orders ---------------------------------------------------------
     for key, field in (("tau", "N_tau"), ("cs_tau", "N_cs_tau"), ("friction", "N_F")):
@@ -1086,9 +1400,33 @@ CONVERGENCE_SCHEMA_NOTES = {
     "identically zero -- being excluded from the relative measure; intervals_above_1e-12 counts "
     "intervals whose increment is worse than 1e-12 relative.",
     "decision": "N_tau, N_cs_tau, N_F, N_rho are the Gauss orders prompts 03-07 must use; "
-    "recommended_scheme is the QCD break-point scheme they must build the tables under; "
-    "rho_adaptive_fallback_required says whether NO fixed order <= 16 met the 1e-7 rad target for "
-    "rho on QCD_Cosmology under that scheme.",
+    "recommended_scheme is the QCD break-point scheme they must build the tables under, and is "
+    "one of candidate_schemes -- the schemes production can actually execute, since "
+    "integration_break_points returns the equation-of-state temperature crossings and nothing "
+    "else; control_scheme ('branch+knots') is measured and reported in knots_control but is not "
+    "a candidate; rho_adaptive_fallback_required says whether NO fixed order <= 16 met the 1e-7 "
+    "rad target for rho on QCD_Cosmology under the recommended scheme.",
+    "grid": "The source-grid generation every figure in this block was measured on "
+    "(tolerance-convergence README §5 rule 6). It is version 0, deliberately: this block scores "
+    "the agreement of a fixed-order rule with the JSON's own reference values, which live on "
+    "that grid.",
+    "reference drift": "Per case, how far the adaptive reference moves across one decade of "
+    "quad's epsrel (reference_drift_epsrel_step, loose -> the value used), the largest such "
+    "movement (reference_drift_max) and where, the criterion it was scored against "
+    "(reference_drift_threshold = the smallest difference this case reports, divided by "
+    "reference_drift_criterion_ratio) and whether it passed. reference_drift_kind is 'relative' "
+    "for the three primitives, whose decision reads max_cumulative_rel_error, and 'absolute' "
+    "(radians) for the two residuals, whose decision reads max_cumulative_abs_error. The step is "
+    "taken from the loose side because quad refuses an epsrel below 50*eps when epsabs = 0, so "
+    "the reference is already at the method's floor. reference_error_bound is the larger of that "
+    "movement and, for the primitives, the disagreement with the independent order-40 Gauss "
+    "rule. Taken through ComputeTargets/tests/convergence_reference.reference_drift. "
+    "reference_drift_notes may carry a warning about scipy.integrate's 100*eps rtol clamp, which "
+    "is solve_ivp's floor and not quad's -- see "
+    "[03a-scipy-rtol-floor-is-the-wrong-floor-for-a-root-solve].",
+    "knots_control": "What splitting every Gauss panel at the T(z) spline's interior knots still "
+    "buys, against the recommended executable scheme. Production cannot perform that split, so "
+    "this is a measurement and not an option.",
     "smoothness": "Finite-difference bounds on rho as a function of u = log(1+z), and the cubic "
     "spline interpolation error h^4 max|rho''''|/384 they imply -- the bound prompts 09 and 10 "
     "inherit for the residual spline.",
@@ -1099,20 +1437,32 @@ CONVERGENCE_SCHEMA_NOTES = {
 }
 
 
-def write_json(payload):
-    with open(REFERENCE_DATA_PATH, "r") as f:
+def write_json(payload, path=None):
+    """
+    Replace the ``convergence`` key of the fixture -- **and only that key**.
+
+    ``tolerance-convergence`` prompt 04 §2.3: ``schema_version``, ``generated``, ``models``,
+    ``baselines``, ``k_values``, ``k_keys`` and ``rho_anchor_efolds_subh`` at the top level are
+    other prompts' fixtures and other campaigns' evidence. The read-modify-write below is what
+    keeps them untouched, and ``git diff`` on the file is the check.
+
+    ``path`` defaults to the fixture; a different path is the dry run §2.4 requires, in which the
+    block is measured and inspected before anything is written into the tree.
+    """
+    path = REFERENCE_DATA_PATH if path is None else path
+    with open(path, "r") as f:
         data = json.load(f)
     data["convergence"] = payload
-    with open(REFERENCE_DATA_PATH, "w") as f:
+    with open(path, "w") as f:
         json.dump(data, f, indent=1, sort_keys=False)
     print(
-        f"\n** wrote the 'convergence' block to {REFERENCE_DATA_PATH} "
-        f"({os.path.getsize(REFERENCE_DATA_PATH)} bytes)",
+        f"\n** wrote the 'convergence' block to {path} "
+        f"({os.path.getsize(path)} bytes)",
         flush=True,
     )
 
 
-def write_markdown(p):
+def write_markdown(p, path=None):
     keys = integrand_keys()
     d = p["decision"]
     geo = p["geometry"]["QCDModel"]
@@ -1479,9 +1829,10 @@ few parts in $10^3$, far above any quadrature error.
    reproduce; the `plain` rows are what the review's design as written would have given.
 """
 
-    with open(MARKDOWN_PATH, "w") as f:
+    path = MARKDOWN_PATH if path is None else path
+    with open(path, "w") as f:
         f.write(text)
-    print(f"** wrote {MARKDOWN_PATH}", flush=True)
+    print(f"** wrote {path}", flush=True)
 
 
 # ---------------------------------------------------------------------------------------------
@@ -1489,7 +1840,41 @@ few parts in $10^3$, far above any quadrature error.
 # ---------------------------------------------------------------------------------------------
 
 
-def main():
+def parse_args(argv):
+    parser = argparse.ArgumentParser(
+        description=(
+            "Gauss-order convergence of the WKB primitives; regenerates the 'convergence' block "
+            "of ComputeTargets/tests/wkb_reference_data.json"
+        )
+    )
+    parser.add_argument(
+        "--json-out",
+        default=None,
+        metavar="PATH",
+        help=(
+            "write the regenerated block into PATH instead of the fixture. PATH must already be "
+            "a wkb_reference_data.json-shaped file; only its 'convergence' key is replaced. This "
+            "is the dry run of tolerance-convergence prompt 04 §2.4 -- look, then regenerate."
+        ),
+    )
+    parser.add_argument(
+        "--no-json",
+        action="store_true",
+        help="measure and print, write no JSON at all",
+    )
+    parser.add_argument(
+        "--legacy-markdown",
+        action="store_true",
+        help=(
+            "also rewrite docs/gktk-remedial/RESIDUAL-CONVERGENCE.md. Off by default: that is "
+            "GkTk-remedial prompt 02's published document and verification documents are "
+            "additive (tolerance-convergence README §5 rule 7)."
+        ),
+    )
+    return parser.parse_args(argv)
+
+
+def main(args):
     t_start = time.perf_counter()
     references = load_references()
 
@@ -1729,10 +2114,41 @@ def main():
     import scipy
 
     payload = {
-        "schema_version": 1,
+        "schema_version": 2,
         "generated": date.today().isoformat(),
         "generator": "docs/gktk-remedial/residual_convergence.py",
-        "campaign": "prompts/GkTk-remedial (prompt 02)",
+        "campaign": "prompts/tolerance-convergence (prompt 04, board item T7)",
+        "superseded": {
+            "generated": "2026-09-10",
+            "campaign": "prompts/GkTk-remedial (prompt 02)",
+            "why": (
+                "the T(z) representation qcd-background-audit prompts 04-06 replaced, an "
+                "integration_break_points that returned the interpolant's ~404 knots which "
+                "prompt 07 removed, and the background derivative splines prompt 13 segmented "
+                "(tolerance-convergence RECONCILIATION.md §5, "
+                "[01-convergence-block-has-a-separate-generator])"
+            ),
+        },
+        "grid": {
+            "generation": GRID_GENERATION,
+            "samples": int(len(z_nodes)),
+            "z_init": float(z_init),
+            "z_end": float(z_nodes[-1]),
+            "anchor": (
+                "horizon_exit_z(LambdaCDM, 3e8/Mpc, -5) -- the version-0 grid consults no "
+                "cosmology, so the same lattice serves every model here"
+            ),
+            "why_version_0": (
+                "what this block scores is the agreement of a fixed-order Gauss rule with the "
+                "JSON's own `checkpoints` and `rho_*` reference values, and those live on the "
+                "version-0 grid, as do the test modules that read this block. Production has "
+                "built version 2 since qcd-background-audit prompt 15; the version-2 sweep at "
+                "every production wavenumber is docs/tolerance-convergence/ORDER-AUDIT.md's "
+                "(tolerance-convergence README §5 rule 6)"
+            ),
+            "radiation_control_samples": int(len(z_nodes_rad)),
+            "radiation_control_z_init": float(z_init_rad),
+        },
         "environment": {
             "python": platform.python_version(),
             "numpy": np.__version__,
@@ -1751,10 +2167,23 @@ def main():
         "qcd_model_build_seconds": qcd_build_seconds,
     }
 
-    write_json(payload)
-    write_markdown(payload)
+    if args.no_json:
+        print(
+            "\n** --no-json: the 'convergence' block was measured and not written",
+            flush=True,
+        )
+    else:
+        write_json(payload, args.json_out)
+    if args.legacy_markdown:
+        write_markdown(payload)
+    else:
+        print(
+            f"\n** --legacy-markdown not given: {MARKDOWN_PATH} is left as GkTk-remedial "
+            "prompt 02 published it",
+            flush=True,
+        )
     print(f"\n** total runtime {elapsed:.1f} s", flush=True)
 
 
 if __name__ == "__main__":
-    main()
+    main(parse_args(sys.argv[1:]))

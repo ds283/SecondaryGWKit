@@ -1,12 +1,19 @@
-# Tolerance and convergence campaign — one convergence test, five compute targets
+# Tolerance and convergence campaign — every accuracy knob in the pipeline, calibrated
 
 **Origin:** [`prompts/GkTk-remedial/`](../GkTk-remedial/README.md) prompts 12 and 17, and the
 review [`docs/gk-wkb-review-fable-2026-09-09.md`](../../docs/gk-wkb-review-fable-2026-09-09.md)
 §10.1 and §12.5.
-**Planned:** 2026-09-12, at `gktk-remedial` `891d84a`. **Not yet started.**
-**Target branch:** to be cut from `main` **after `gktk-remedial` merges**, i.e. after GkTk-remedial
-prompt 13 (§4.2).
+**Planned:** 2026-09-12 at `622b84b`. **Rebased:** 2026-09-16 at `acd5b8e`, on the tree left by
+`GkTk-remedial` (20 / 20) and `qcd-background-audit` (16 / 16). **Re-anchored:** 2026-09-16 at
+`bc6dc97`, on the tree left by `background-solver-robustness` (9 / 9), which ran on this branch.
+**Not yet started** — prompts 01 and 02 written 2026-09-16, **03–06 deliberately held** until 02's
+inventory lands (board §1).
+**Branch:** `tolerance-convergence`, cut from `main` at `acd5b8e`, now 25 commits ahead of it.
+**What the rebase and the re-anchor changed, and why:** [`RECONCILIATION.md`](RECONCILIATION.md) —
+§§1–6 for the rebase, **§7 for the re-anchor** — read it before believing any figure quoted here
+against the older documents.
 **Status board:** [`IMPLEMENTATION_STATE.md`](IMPLEMENTATION_STATE.md) · **Logs:** [`logs/`](logs/)
+· **Orchestrator:** [`orchestrator/`](orchestrator/)
 
 ---
 
@@ -14,55 +21,96 @@ prompt 13 (§4.2).
 
 ### 0.1 The one-sentence version
 
-Every compute target in the pipeline that integrates or quadratures something has an accuracy
-nobody has systematically established, and four of the five share two tolerance constants that
-were never chosen for any of them: this campaign **builds one reusable convergence test, applies
-it to all five targets on all three models, anchors it to the constant-$w$ closed forms already in
-the tree, and decouples the tolerances so that each target can be converged on its own terms.**
+Eight object types in the pipeline are keyed on an accuracy parameter, six of them share one
+`(atol, rtol)` pair that was never chosen for any of them, and of those six **only one actually
+uses it**: this campaign **establishes what every accuracy knob in the pipeline really is,
+calibrates each one on its own terms, and decouples them so that each quantity carries a parameter
+whose provenance can be stated.**
 
-It exists because GkTk-remedial prompt 12 set one constant on one wavenumber of one model, prompt
-17 then measured the production grid and found the target missed at 3, 13 and 8 of 50 wavenumbers
-on the three models, and the lever turned out to be a constant — `rtol` — that prompt 17 was not
-allowed to touch because it is shared by four object types. The same review that measured the
-transfer function says independently of the Green's function that "the error is set by `rtol`"
-(§10.1). Nobody has checked the rest.
+The knob is not always a tolerance. Where a quantity is produced by an adaptive solver — the two
+numeric sectors, and the root solve that locates horizon exit — it is an `(atol, rtol)` pair and
+the campaign's job is to measure it. Where it is produced by a **Liouville–Green-type
+representation evaluated on a fixed-order Gauss–Legendre table** — `BackgroundModel`'s three
+primitives and the two WKB sectors' phase residual — there is no tolerance at all and the knob is
+**an integer order**. Four of the eight carry an `atol`/`rtol` column pair that reaches no solver;
+for three of those four the honest key is the order, and putting it there is the campaign's
+production change.
+
+It exists because `GkTk-remedial` prompt 12 set one constant on one wavenumber of one model,
+prompt 17 then measured the production grid and found the target missed at 3, 13 and 8 of 50
+wavenumbers on the three models, and the lever turned out to be `rtol` — a constant prompt 17 was
+not allowed to touch. Nobody has checked the rest, and the two campaigns that have run since have
+moved the background, the break-point set and the grid underneath every figure that exists.
 
 ### 0.2 What "convergence test" means here, and why it is not an oracle comparison
 
 There is no closed-form solution on `LambdaCDMModel` or `QCDModel` — the Hubble rate is a spline —
-so for most (target, model) pairs the reference is **a converged run of the same integrator**, and
-the test is a self-convergence one: build the reference at a tolerance far tighter than any
-candidate, build it again a decade tighter still, and require that the reference move by at least
-an order of magnitude less than the smallest difference the measurement intends to report. If it
-does not, the measurement is measuring its own reference.
+so for most (target, model, $k$) triples the reference is **a converged run of the same
+integrator**, and the test is a self-convergence one: build the reference at a tolerance far
+tighter than any candidate, build it again a decade tighter still, and require that the reference
+move by at least an order of magnitude less than the smallest difference the measurement intends to
+report. If it does not, the measurement is measuring its own reference.
 
 That surrogate is **calibrated, not assumed**. On a constant-$w$ background the closed forms in
 [`ComputeTargets/analytic_Gk.py`](../../ComputeTargets/analytic_Gk.py) and
 [`analytic_Tk.py`](../../ComputeTargets/analytic_Tk.py) are exact — `compute_analytic_T(k, w, tau)`
 is the Bessel form $2^{n}\Gamma(n+1)(kc_s\tau)^{-n}J_{n}(kc_s\tau)$ with $n=\tfrac32+b$, reducing
 at $w=\tfrac13$ to $3(\sin x - x\cos x)/x^3$ — so on the radiation control both the drift statistic
-and the distance to truth can be computed and compared. GkTk-remedial prompt 17 did exactly this
+and the distance to truth can be computed and compared. `GkTk-remedial` prompt 17 did exactly this
 for $T_k$ and found them the same order (4.21e-11 drift against 2.3–4.3e-11 from the oracle). Every
 prompt here repeats that calibration for its own target before trusting the drift figure anywhere
 else. **Radiation domination is the anchor, and the general constant-$w$ form is what the code
 already provides.**
 
-### 0.3 Boundary with `prompts/GkTk-remedial` (must be finished first)
+### 0.3 The tree this campaign runs on, and what moved under the old plan
 
-That campaign owns the WKB phase representation and the numeric region's diagnostics, and it is
-still running. Two of its results are **preconditions** here, not things to re-derive:
+Both campaigns the 2026-09-12 plan waited on have closed and merged; `RECONCILIATION.md` scores
+every claim of that plan against the tree at `acd5b8e`. The five results a prompt here must not
+re-derive:
 
-- **Its prompt 18** wires the cosmology's declared discontinuities to the ODE driver
-  (`Quadrature/integrators/numeric_with_phase_cut.py`). Until that lands, the reference on
-  `QCDModel` does not converge at four wavenumbers
-  (`[17-qcd-reference-not-converged]`), and a tolerance measured against a reference that does not
-  converge is worthless. **This campaign cannot start before it.**
-- **Its prompt 06** removed the phase ODE. `GkWKBIntegration` and `TkWKBIntegration` no longer have
-  tolerances with a referent (§2 (a)); their accuracy is a Gauss-order question, which changes what
-  this campaign can even ask of them.
+- **`[17-qcd-reference-not-converged]` is closed.** The numeric ODE is split at the cosmology's
+  declared non-smoothness and *which* kind is the sector's choice, keyed in the datastore
+  (`GkTk-remedial` prompts 18, 19, 20). Worst reference-convergence drift on `QCDModel` is
+  **7.08e-09** ($T_k$) and **3.67e-09** ($G_k$) against the 3.4e-08 criterion, zero offenders at
+  all 50 production wavenumbers (`docs/qcd-background-audit/PER-SECTOR-POLICY.md` §2, §4). **A
+  tolerance may now be measured on QCD.**
+- **The QCD background is correct.** Its $\int\mathrm{d}z/H$ is bit-identical to an independently
+  root-solved exact background where it carried 3.461e-08, and the equivalent phase error is
+  0.000e+00 rad at all three probe wavenumbers (`docs/qcd-background-verification.md` §2). **The
+  QCD $H(z)$ discontinuity floor prompt 17 warned about is gone**, and no prompt here may quote it.
+- **`integration_break_points` declares 3 crossings, not ~404 knots** (`qcd-background-audit`
+  prompt 07). `BREAK_POINT_ALL` and `BREAK_POINT_DISCONTINUITY` now differ by one kink, and the
+  wider policy costs **+0.99 %** in the $T_k$ sector rather than the +220 % `GkTk-remedial` prompt
+  19 measured.
+- **The production source grid has been rebuilt twice** (`qcd-background-audit` prompts 11 and 15):
+  it is now built around the cosmology's declared crossings and equidistributed on the phase
+  residual's curvature, 1,996 samples on QCD and 1,778 on LambdaCDM,
+  `SOURCE_GRID_CONSTRUCTION_VERSION = 2`. **Every published figure in §6 was taken on an earlier
+  generation of it**, and so does the test tree's reproduction — see (b) below.
+- **Nothing in either campaign moved a tolerance.** `config/defaults.py` is byte-identical to the
+  file the plan was written against.
 
-Do not edit anything that campaign's `IMPLEMENTATION_STATE.md` still shows as in flight; if the two
-disagree about the state of a file, it is right and this README is stale.
+**Re-anchored 2026-09-16 at `bc6dc97`** (additively, §5 rule 7). A third campaign has since run —
+`prompts/background-solver-robustness`, 9 / 9, planned and merged **on this branch** after the
+rebase above was written. It is not a precondition; it is a campaign that happened to land on one
+of this campaign's own subjects. `RECONCILIATION.md` **§7** scores it. The four things a prompt
+here must know:
+
+- **The baseline moved.** `bc6dc97`, 25 commits ahead of `main`. Suites re-run for the re-anchor:
+  `ComputeTargets` **452**, `CosmologyModels` **39**, both OK. The five results above all still
+  hold, and `config/defaults.py` is *still* byte-identical — now across three campaigns and two
+  rebases.
+- **The three `LambdaCDM_GenericEOS.py` root solves are settled, by the campaign that owns that
+  file.** Prompt 02 **lifts**
+  [`background-solver-robustness/PROVENANCE.md`](../background-solver-robustness/PROVENANCE.md)
+  rather than re-deriving them; §3.2 says so and its line numbers are confirmed at `bc6dc97`.
+- **The version-2 grid reproduction already exists**, privately, in
+  `ComputeTargets/tests/test_source_grid.py`. There are **four** reproductions in the test tree,
+  not three, and prompt 01's job is to *hoist* one rather than build it (§3.1, and
+  `RECONCILIATION.md` §7.3).
+- **`cosmology_feature_redshifts` no longer computes the equality redshifts** — it asks the
+  cosmology, and raises with no fallback if the cosmology cannot answer. Prompt 01 lifts that
+  function, so its stand-in must answer (`RECONCILIATION.md` §7.4).
 
 ### 0.4 Boundary with `AdaptiveLevin` and `QuadSourceIntegral`
 
@@ -71,81 +119,115 @@ belong to [`prompts/levin-refactor`](../levin-refactor/) and
 [`prompts/qsi-phase-groups`](../qsi-phase-groups/), and `docs/OPEN_ISSUES.md` §1.2 and §1.3 park
 work against them. `QuadSourceIntegral` is also the one target whose tolerances are **already
 decoupled** — `DEFAULT_QUADRATURE_ATOL`/`_RTOL`, distributed per sub-interval by log-width
-(`QuadSourceIntegral.py:816-819`) — and whose `atol` was already chosen by measurement against an
+(`QuadSourceIntegral.py:815-819`) — and whose `atol` was already chosen by measurement against an
 analytic oracle (`prompts/source-remediation`, `[12-atol-too-loose-for-the-source-integral]`).
 
 **This campaign does not edit any of those files.** It applies its convergence test to
-`QuadSourceIntegral` **read-only**, as prompt 05, and hands the result to whoever owns it. If a
+`QuadSourceIntegral` **read-only**, as prompt 06, and hands the result to whoever owns it. If a
 prompt here finds it must change one of those files to proceed, that is a stop.
 
 ### 0.5 What this campaign does *not* do
 
-- **Does not change any integrator's algorithm.** No method swaps, no order changes, no
-  re-derivations. It measures what the existing code does and chooses the constants it is given.
+- **Does not change any integrator's algorithm.** No method swaps, no re-derivations. It measures
+  what the existing code does and chooses the parameters it is given. Raising a Gauss order is a
+  *parameter* change and is in scope; replacing a quadrature rule is not.
 - **Does not revisit the initial conditions.** The $T=1,T'=0$ super-horizon condition holds a
   2.52e-6-of-envelope floor (`[00-tk-superhorizon-ic-series]`); it is a *floor to measure against*,
-  never a target to beat. Claiming an accuracy below a declared floor is a campaign-wide stop.
-- **Does not move the numeric→WKB hand-over**, which is `docs/OPEN_ISSUES.md` §1.1's.
-- **Does not decide the Gauss orders.** GkTk-remedial prompt 02 measured $N_\tau=N_{c_s\tau}=N_F=
-  N_\rho=4$ and its evidence stands; prompt 03 here *audits* them against the analytic anchors and
-  reports, it does not re-choose them.
+  never a target to beat. Claiming an accuracy below a declared floor is a campaign-wide stop
+  (§2 (f), qualified by §6.1 rule 5); this particular floor is not one a prompt here re-measures.
+- **Does not move the numeric→WKB hand-over**, which is `docs/OPEN_ISSUES.md` §1.1's — including
+  `[11-stop-point-root-tolerance]`, the `root_scalar(xtol=1e-6, rtol=1e-4)` at
+  `LiouvilleGreen/integration_tools.py:95`. It is **recorded** in prompt 02's inventory and in the
+  provenance note, and it is **not retuned here.**
+- **Does not change the source grid**, the break-point policy, or `RESIDUAL_WKB_REGION_MARGIN`'s
+  value. Prompt 04 measures what the margin is worth, because
+  `[20-wkb-gauss-orders-not-in-lookup-key]` says nobody has; changing it is a separate decision.
+  **Amended 2026-09-17 by §7 D6, and narrowly.** Prompt **02a** may change
+  `main.source_grid_spacing_profile` for the single purpose of making the grid *buildable* at every
+  production anchor, because as the boundary was originally written this campaign could not measure
+  QCD at QCD's own anchor at all (`[01-v2-density-raises-at-the-qcd-production-anchor]`). The
+  carve-out is that one function, and it does not extend to the band, the margin, the break-point
+  policy, `build_z_sample`, or the digest. Where the criterion *applies* remains out of scope and
+  remains prompt 04's to recommend.
+- **Does not re-decide the break-point kinds.** `qcd-background-audit` README §7 D5 is open and is
+  that campaign's; this one reads `BREAK_POINT_KIND` and holds it fixed.
 
 ---
 
 ## 1. What this campaign does
 
-Five prompts. The first three change **no production code**; the fourth is the only one that does.
+Six prompts and one insertion. The audits change **no production code**, with two exceptions, both
+settled by the user: §7 D5 (prompt 04's fixture) and §7 **D6** (prompt **02a**, below). Prompt 05
+remains the only prompt that retunes a parameter in `config/defaults.py`.
 
-**01 — the harness.** One reusable convergence facility, in the test tree rather than under
-`docs/`, that takes a (target, model, $k$) and returns a converged reference, a drift figure, and —
-where the background is constant-$w$ — the distance to the analytic anchor. Every later prompt uses
-it, and GkTk-remedial's one-off sweep script is folded into it.
+**01 — the harness, and one production grid.** One reusable convergence facility in the test tree,
+and — because there are currently three disagreeing reproductions of "the production grid" there —
+**one** reproduction of the grid `main.py` actually builds. Every later prompt uses both.
 
-**02 — audit the numeric sectors.** `GkNumericIntegration` and `TkNumericIntegration` over the
-production grids on all three models, across an `atol`×`rtol` matrix, anchored on radiation.
-Produces the evidence for the decoupled constants and recommends them. **Stops for the user.**
+**02 — the inventory.** What every accuracy parameter in the pipeline *is*: which object types it
+keys, whether it reaches a solver at all, and what the real knob is where it does not. The old plan
+assumed this and got it wrong (`RECONCILIATION.md` §2.1); nothing else here is safe until it is
+measured. **Stops for the user.**
 
-**03 — audit the WKB sectors.** `GkWKBIntegration` and `TkWKBIntegration` have no tolerances left
-(§2 (a)), so the same test is applied to the knob they *do* have — Gauss order — and to the
-question of what should become of their vestigial `atol`/`rtol` key columns. **Stops for the user.**
+**02a — make the grid buildable.** An insertion, not a renumbering (§7 D6). The version-2 source
+grid **raises** on `QCD_Cosmology` at the anchor a QCD production run uses, so there is no QCD
+production grid for 03, 04 or 06 to measure on; each would have to use LambdaCDM's anchor, which is
+the defect prompt 01 exists to close. Guards the one evaluation that raises, keeps both published
+grids bit-identical, and hands prompt 04 the guarded-node count as evidence.
 
-**04 — decouple.** Per-sector tolerance constants and the `main.py` plumbing to carry them, on the
-pattern GkTk-remedial prompt 12 established for a single constant, with the same `ast`-based
-structural guard. The only prompt here that touches production code, and the one that invalidates
-the datastore.
+**03 — audit the adaptive solvers.** `GkNumericIntegration`, `TkNumericIntegration` and
+`wavenumber_exit_time`, over the production grids on all three models, across an `atol`×`rtol`
+matrix, anchored on radiation. Produces the evidence for the decoupled pairs and recommends them.
+**Stops for the user.**
 
-**05 — `QuadSourceIntegral`, read-only, and the provenance note.** The harness applied to the one
+**04 — audit the order-governed targets.** `BackgroundModel`'s $N_\tau$, $N_{c_s\tau}$, $N_F$ and
+the WKB sectors' $N_\rho$ have no tolerance to converge (§2 (a)); the convergence test is applied
+to the knob they do have, on a background and a break-point set that have both been replaced since
+those orders were chosen. **Stops for the user.**
+
+**05 — decouple.** Per-target accuracy parameters and the `main.py` plumbing to carry them, on the
+pattern `GkTk-remedial` prompt 12 established for a single constant, with the same `ast`-based
+structural guard, widened. The only prompt that touches production code, and the one that
+invalidates the datastore.
+
+**06 — `QuadSourceIntegral`, read-only, and the provenance note.** The harness applied to the one
 target this campaign does not own; the hand-off; and **`docs/TOLERANCE-PROVENANCE.md`**, the
-standing note (§1.2) that says where every tolerance constant in the pipeline came from.
+standing note (§1.2) that says where every accuracy parameter in the pipeline came from.
 
 ### 1.1 Explicitly out of scope
 
-Everything in §0.3–§0.5, plus: the datastore migration that prompt 04 implies (regeneration is a
+Everything in §0.3–§0.5, plus: the datastore migration that prompt 05 implies (regeneration is a
 user decision with a compute cost, §7 D2); any change to `GkSourcePolicy`, the rectifier, or the
-`*Value` schemas; and the question of whether `QuadSourceIntegral`'s per-sub-interval `atol`
-distribution is the right one, which is `levin-refactor`'s.
+`*Value` schemas beyond the key columns prompt 05 moves; and the question of whether
+`QuadSourceIntegral`'s per-sub-interval `atol` distribution is the right one, which is
+`levin-refactor`'s.
 
 ### 1.2 The provenance note — the campaign's durable output
 
 A constant whose justification lives only in a campaign log is a constant the next reader will
 change by guesswork. The campaign's lasting deliverable is therefore not the numbers but
-**`docs/TOLERANCE-PROVENANCE.md`**: one page per tolerance constant in `config/defaults.py`, and for
-each of them —
+**`docs/TOLERANCE-PROVENANCE.md`**: one entry per accuracy parameter in the pipeline, and for each
+of them —
 
 - **the value**, and the object types it keys;
 - **what measurement chose it** — model, wavenumber or grid, geometry, error measure, and the
-  numbers, with the reference's own drift beside them (§5 rule 5);
+  numbers, with the reference's own drift beside them (§5 rule 5) and **the grid generation it was
+  taken on** (§2 (b));
 - **what it is competing against**: the floor that would dominate if it were tightened further
   (§2 (e)), so a later reader can see immediately whether there is anything left to buy;
-- **its cost**, in evaluations, at the setting chosen and one decade either side;
+- **its cost**, in evaluations, at the setting chosen and one step either side, **times the object
+  count of the sector it keys** (§2 (c));
 - **the campaign, prompt and log** that established it, and the date.
 
-It must cover the constants this campaign does *not* set as well as those it does — the ones
+It must cover the parameters this campaign does *not* set as well as those it does — the ones
 inherited from `source-remediation` (`DEFAULT_QUADRATURE_ATOL = 1e-32`,
-`DEFAULT_QUADRATURE_RTOL = 1e-8`) and from GkTk-remedial (`DEFAULT_TK_NUMERIC_ABS_TOLERANCE = 1e-13`,
-settled by the user 2026-09-12) — because the point is that *no* tolerance in the pipeline is
-unexplained when the campaign closes. Where the provenance of an existing constant cannot be
-established from the record, the note says so in those words rather than inventing one.
+`DEFAULT_QUADRATURE_RTOL = 1e-8`), from `GkTk-remedial` (`DEFAULT_TK_NUMERIC_ABS_TOLERANCE = 1e-13`,
+settled by the user 2026-09-12), from `qcd-background-audit` (`_solve_T_z`'s `xtol=1e-300`,
+`rtol=1e-14`), and the ones nobody has ever chosen (`find_phase_extremum`'s `xtol=1e-6, rtol=1e-4`;
+`main.py`'s Bessel `phase_atol=1e-12`, `amplitude_rtol=1e-12`; `DEFAULT_LEVIN_THRESHOLD = 1.0`) —
+because the point is that *no* accuracy parameter in the pipeline is unexplained when the campaign
+closes. Where the provenance of an existing constant cannot be established from the record, the
+note says so in those words rather than inventing one.
 
 The note is a *summary with citations*, not a second copy of the measurements: each entry points at
 the campaign document that holds the tables. `config/defaults.py`'s own comments stay the primary
@@ -156,54 +238,99 @@ already carry that standard and every constant this campaign touches must match 
 
 ## 2. Design facts every prompt is built on
 
-**(a) Two of the five targets have no tolerance to converge.** GkTk-remedial prompt 06 replaced the
-WKB phase ODE with Gauss–Legendre tables. `GkWKBIntegration`/`TkWKBIntegration` keep `self._atol`
-and `self._rtol` **only because they are part of the datastore lookup key**
-(`ComputeTargets/GkWKBIntegration.py:334-336`; `RECONCILIATION.md` §10: "The primitive has no
-tolerances. The columns stay… and the payload `metadata` records the Gauss orders actually used").
-A prompt that proposes to "tighten the WKB tolerance" has misread the tree.
+**(a) Four of the eight keyed object types have no tolerance to converge, and three of those have
+an integer order instead.** Measured, not assumed — `RECONCILIATION.md` §2.1 has the full table:
 
-**(b) `QuadSourceIntegral` is already decoupled, and is not ours.** `DEFAULT_QUADRATURE_ATOL =
-1e-32`, `DEFAULT_QUADRATURE_RTOL = 1e-8`, chosen by the `source-remediation` campaign against an
-analytic oracle, with `atol` distributed across sub-intervals by log-width. §0.4.
+| Object type | pair | reaches a solver? | the real knob |
+|---|---|---|---|
+| `wavenumber_exit_time` | shared | **yes** — `root_scalar(xtol=atol, rtol=rtol)` in $\log(1+z)$ | the pair |
+| `GkNumericIntegration` | shared | **yes** — DOP853 | the pair |
+| `TkNumericIntegration` | `Tk_numeric_atol` + shared `rtol` | **yes** — DOP853 | the pair |
+| `BackgroundModel` | shared | no | `TAU_GAUSS_ORDER`, `CS_TAU_GAUSS_ORDER`, `FRICTION_F_GAUSS_ORDER` (all 4) |
+| `GkWKBIntegration` | shared | no | `RHO_GAUSS_ORDER` (4), `RESIDUAL_WKB_REGION_MARGIN` (0.5) |
+| `TkWKBIntegration` | shared | no | as above |
+| `GkSource` | shared | no | none — it assembles, it does not integrate |
+| `QuadSourceIntegral` | `quad_atol`/`quad_rtol` | yes | already decoupled; §0.4 |
 
-**(c) In both numeric sectors the error is set by `rtol`, not `atol` — measured twice,
-independently.** Review §10.1, on $G_k$: "The error is set by `rtol`… tightening `rtol` by $10^3$
-costs 2.3× and buys $10^3$." GkTk-remedial prompt 17 §7, on $T_k$: at fixed `atol = 1e-13`, one
-decade of `rtol` takes the worst wavenumber of every model from 2.5e-4/8.6e-4/2.8e-4 to
-1.0e-7/7.4e-8/9.8e-7 for +23–25 % evaluations, while two decades of `atol` fix nothing. This is the
-campaign's central prior, and prompt 02 exists to confirm or destroy it.
+`GkTk-remedial` prompt 06 replaced the WKB phase ODE with Gauss–Legendre tables and prompts 03/04
+did the same to `BackgroundModel`'s three primitives. Those five column pairs survive **only because
+they are part of the datastore lookup key** (`ComputeTargets/GkWKBIntegration.py:334-336`;
+`BackgroundModel.py:409`; `prompts/GkTk-remedial/RECONCILIATION.md` §2 item 10: "The primitive has
+no tolerances. The columns stay… and the payload `metadata` records the Gauss orders actually
+used"). **A prompt that proposes to "tighten the WKB tolerance" has misread the tree.**
 
-**(d) `atol` is not uniform across sectors because the quantities are not.** $|G|\sim10^{10}$ at the
+**(b) Every published figure was taken on a grid production no longer builds, and so is the test
+tree's reproduction.** *Corrected at the 2026-09-16 re-anchor: four reproductions, not three, and
+one of them is already version 2 — `RECONCILIATION.md` §7.3.* They disagree:
+`ComputeTargets/tests/wkb_reference.py:152` (a bare `np.logspace`, version 0),
+`ComputeTargets/tests/test_background_segmentation.py:90` (version 1 — break and feature points, no
+spacing profile), `ComputeTargets/tests/test_source_grid.py:127` (**version 2**, the full
+construction, but private to that module) and `:151` (a version-0 base, deliberate and named).
+Production builds it at `main.py:944-963` — the curvature-equidistributed grid,
+`SOURCE_GRID_CONSTRUCTION_VERSION = 2`.
+`docs/gktk-remedial/tk_numeric_atol_sweep.py:215` imports the first. **A figure in this campaign
+carries the generation it was measured on, or it is not a measurement** — and prompt 01 exists so
+that there is one right answer to import.
+
+**(c) Cost is a per-object count times an object count, and the two sectors differ by three orders
+of magnitude.** `TkNumericIntegration` is one object per $k$ — **50 per model** (`main.py:1215`,
+inside the $k$ loop alone). `GkNumericIntegration` is one per $(k, z_{\rm source})$
+(`main.py:1770-1791`), the same shape as `GkWKBIntegration`, whose production count is ~65,000 per
+model (`GkTk-remedial` README §6). **The decade of `rtol` prompt 17 recommends is free in the
+sector it was measured in and is the whole compute decision in the sector it was not.** No prompt
+may quote a per-object percentage without the object count beside it.
+
+**(d) The prior — "the error is set by `rtol`" — rests on one clean measurement and one diagonal.**
+`GkTk-remedial` prompt 17 §7 holds `atol = 1e-13` and moves `rtol` alone: one decade takes the
+worst wavenumber of every model from 2.5e-4/8.6e-4/2.8e-4 to 1.0e-7/7.4e-8/9.8e-7 for +23–25 %
+evaluations, while two decades of `atol` fix nothing. That separates the axes. Review §10.1 on
+$G_k$ does **not** — its table moves along the diagonal `(1e-10, 1e-8)` → `(1e-13, 1e-11)`, so
+"the error is set by `rtol`" there is an interpretation of a two-variable step. Prompt 03 exists to
+confirm or destroy the prior in the sector where it has never been tested cleanly.
+
+**(e) `atol` is not uniform across sectors because the quantities are not.** $|G|\sim10^{10}$ at the
 hand-over in `Mpc_units`, so an absolute floor of 1e-10 never binds; $|T|\sim10^{-5}$ deep inside
 the horizon, so the same floor acts as a $10^{-5}$ *relative* tolerance. That asymmetry is why
-`DEFAULT_TK_NUMERIC_ABS_TOLERANCE` exists (`config/defaults.py:12-33`), and it is the argument for
-decoupling generalised: **a shared absolute tolerance is a statement about magnitudes, and the five
-targets do not share magnitudes.**
+`DEFAULT_TK_NUMERIC_ABS_TOLERANCE` exists (`config/defaults.py:7-33`), and it is the argument for
+decoupling generalised: **a shared absolute tolerance is a statement about magnitudes, and the eight
+targets do not share magnitudes.** The same argument applies to `wavenumber_exit_time`, whose
+`atol` is an absolute tolerance in $\log(1+z)$ and whose `rtol` is relative to a root of size ~30 —
+a quantity unlike either sector's.
 
-**(e) The floors, which are not targets.** $T_k$ numeric: the $T=1,T'=0$ initial condition holds
+**(f) The floors, which are not targets.** $T_k$ numeric: the $T=1,T'=0$ initial condition holds
 2.52e-6 of the envelope, $k$-independent, confirmed against the exact $T$ at all 50 wavenumbers
-(GkTk-remedial prompt 17 §8). $T_k$ WKB: LG truncation, 3.8e-5 of the envelope from $x_i=24$.
-Phase: $\varepsilon k\tau$, 3e-7 rad at $k=10^5$ to 9e-4 rad at $3\times10^8$. On `QCDModel`,
-whatever prompt 18 leaves of the $H(z)$ discontinuity floor. **An agent that reports an accuracy
-below a floor has made an error, and it is a campaign-wide stop.**
+(`GkTk-remedial` prompt 17 §8). $T_k$ WKB: LG truncation, 3.8e-5 of the envelope from $x_i=24$.
+Phase: $\varepsilon k\tau$, 3e-7 rad at $k=10^5$ to 9e-4 rad at $3\times10^8$. $G_k$ numeric: the
+consumer's cubic spline of the numeric $G$, **1e-5 to 1e-4 of the value near the hand-over** and
+"the larger error by two orders" (review §10.1) — the floor that decides whether tightening $G_k$'s
+`rtol` buys anything at all. **On `QCDModel` there is no longer a background floor** (§0.3). **An
+agent that reports an accuracy below a floor has made an error, and it is a campaign-wide stop** —
+with the one qualification §6.1 rule 5 states. A prompt *may* re-measure a floor and supersede an
+inherited figure, and for $G_k$'s consumer spline it must (§3.3); what is a stop is a claim below a
+floor the prompt has itself just measured, which is an arithmetic error and never a discovery.
 
-**(f) Decoupling a tolerance is a datastore change, and the plumbing is the risky half.** Every
-tolerance is part of its object's lookup key, so a new constant makes every existing row of that
-type unreachable. GkTk-remedial prompt 12 did this once, for one constant on one target, and still
+**(g) Decoupling is a datastore change, and the plumbing is the risky half.** Every accuracy
+parameter is part of its object's lookup key, so a new one makes every existing row of that type
+unreachable. `GkTk-remedial` prompt 12 did this once, for one constant on one target, and still
 needed a `STRUCTURALLY REQUIRED` deviation to repair a `RayWorkPool` batch that dispatched over the
-wrong list once two objects carried different tolerances. `main.py` names the five targets 20, 29,
-13, 16 and 25 times respectively. Prompt 04 must carry the `ast`-based site-classification guard
-prompt 12 built (`ComputeTargets/tests/test_main_plumbing.tk_numeric_tolerance_sites`), generalised.
+wrong list once two objects carried different tolerances. `main.py` names the eight targets 22, 14,
+29, 16, 20, 13, 123 and 24 times respectively (`GkSource`'s count is inflated by
+`GkSourcePolicy*`; the bare `"GkSource"` literal appears 6 times). Prompt 05 must carry the `ast`-based
+site-classification guard prompt 12 built
+(`ComputeTargets/tests/test_main_plumbing.tk_numeric_tolerance_sites`) **with its predicate
+widened**: it matches only class names ending in `"Integration"` today
+(`test_main_plumbing.py:544`) and so sees four of the eight. Both numeric factories have since
+grown a second key column, `break_point_kind` (`GkTk-remedial` prompt 20), which prompt 05 must not
+disturb.
 
-**(g) The analytic anchors are constant-$w$, not radiation-only.** `compute_analytic_G`,
+**(h) The analytic anchors are constant-$w$, not radiation-only.** `compute_analytic_G`,
 `compute_analytic_Gprime`, `compute_analytic_T`, `compute_analytic_Tprime` all take $w$. Radiation
 ($w=\tfrac13$) is the production-relevant case and the one the stand-in `RadiationModel` provides,
 but a prompt may use another constant $w$ to separate a $w$-dependent error from a solver one.
 
-**(h) Counts, not wall time.** This machine's elapsed times overstate by up to 53 %
-(GkTk-remedial `IMPLEMENTATION_STATE.md` §5 note 14). Every cost figure in this campaign is
-RHS evaluations, integrand evaluations or Hubble calls.
+**(i) Counts, not wall time.** This machine's elapsed times overstate by up to 53 %
+(`GkTk-remedial` `IMPLEMENTATION_STATE.md` §5 note 14). Every cost figure in this campaign is
+right-hand-side evaluations, integrand evaluations or Hubble calls.
 
 ---
 
@@ -211,114 +338,487 @@ RHS evaluations, integrand evaluations or Hubble calls.
 
 | # | Prompt | Covers | Files | Production code? | Model |
 |---|---|---|---|---|---|
-| 01 | The convergence harness | §2 (g); GkTk-remedial `[17-qcd-reference-not-converged]`'s method | new `ComputeTargets/tests/convergence_reference.py` + its test; folds in `docs/gktk-remedial/tk_numeric_atol_sweep.py` | **No** | Opus |
-| 02 | Audit the numeric sectors | §2 (c), (d), (e); review §10.1, §12.5 | new `docs/tolerance-convergence/numeric_sweep.py`, `NUMERIC-CONVERGENCE.md` | **No** | Opus |
-| 03 | Audit the WKB sectors | §2 (a); GkTk-remedial prompt 02's Gauss orders | new `docs/tolerance-convergence/wkb_order_sweep.py`, `WKB-CONVERGENCE.md` | **No** | Opus |
-| 04 | Decouple the tolerances | §2 (d), (f); §7 D1 once settled | `config/defaults.py`, `main.py` (every `object_get` of the retuned targets), the four `ComputeTargets/*Integration.py` constructors if a signature moves, `ComputeTargets/tests/test_main_plumbing.py` | **Yes — the only one** | Opus |
-| 05 | `QuadSourceIntegral`, close-out and the provenance note | §0.4, §1.2, §2 (b) | new `docs/tolerance-convergence/TOLERANCE-CONVERGENCE.md`, new **`docs/TOLERANCE-PROVENANCE.md`**; `docs/OPEN_ISSUES.md` | **No** | Opus |
+| 01 | The convergence harness and one production grid | §2 (b), (h); `[00-three-production-grid-reproductions]` | new `ComputeTargets/tests/convergence_reference.py` + its test; `ComputeTargets/tests/wkb_reference.py` (the grid helpers only); folds in `docs/gktk-remedial/tk_numeric_atol_sweep.py` | **No** (test tree only) | Opus |
+| 02 | The accuracy-parameter inventory | §2 (a), (c), (g); `RECONCILIATION.md` §2.1 | new `docs/tolerance-convergence/TOLERANCE-INVENTORY.md` and its script | **No** | Opus |
+| 03 | Audit the adaptive solvers | §2 (d), (e), (f); review §10.1, §12.5; `[00-gk-numeric-never-swept-and-carries-the-cost]` | new `docs/tolerance-convergence/solver_sweep.py`, `SOLVER-CONVERGENCE.md` | **No** | Opus |
+| 04 | Audit the order-governed targets | §2 (a); `[01-convergence-block-has-a-separate-generator]`; `[20-wkb-gauss-orders-not-in-lookup-key]` | `docs/gktk-remedial/residual_convergence.py`, `ComputeTargets/tests/wkb_reference_data.json`, `ComputeTargets/tests/test_background_tau.py`; new `docs/tolerance-convergence/ORDER-CONVERGENCE.md` | **No, but it writes a fixture and a test — §7 D5, settled yes 2026-09-16** | Opus |
+| 04b | Regenerate the convergence block, and repair the two tests that read it | §2 (a); `[01-convergence-block-has-a-separate-generator]`, `[04-convergence-floor-used-as-a-test-threshold]` | `docs/gktk-remedial/residual_convergence.py`, `ComputeTargets/tests/wkb_reference_data.json`, `ComputeTargets/tests/test_background_tau.py`, `ComputeTargets/tests/test_background_cs_tau_friction.py`; `docs/tolerance-convergence/ORDER-AUDIT.md` **additively** | **No, but it writes a fixture and two tests — §7 D5 as widened by D8, settled yes 2026-09-18** | Opus |
+| 05 | Replace the vestigial key columns with the orders | §2 (a); §7 D3 (**settled** 2026-09-18), D9; `[20-wkb-gauss-orders-not-in-lookup-key]` | the four `Datastore/SQL/ObjectFactories/` factories that lose the pair and their `ComputeTargets/` classes, `main.py` at four sites, the six `extract_*.py` readers, `ComputeTargets/tests/test_run_identity.py` | **Yes — and it changes no number; `config/defaults.py` is byte-identical** | Opus |
+| 05a | Decouple the tolerances that are real | §2 (a), (e), (g); §7 D1 (**closed** 2026-09-17), D9 | `config/defaults.py`, `main.py`, the three targets whose pair reaches a solver and their factories, `ComputeTargets/tests/test_main_plumbing.py` | **Yes — the only prompt that moves a parameter** | Opus |
+| 06 | `QuadSourceIntegral`, read-only | §0.4, §1.2, §2 (c), (e), (f); §6.1 rules 1 and 4; §7 D11 | new `docs/tolerance-convergence/quadsource_readonly.py`, `QUADSOURCE-READONLY.md`; `TOLERANCE-INVENTORY.md` and `inventory.py`; `docs/OPEN_ISSUES.md` §1.2/§1.3 | **No** | Opus |
+| 06a | Close-out and the provenance note | §1.2, §6.2; §7 D11 | new `docs/tolerance-convergence/TOLERANCE-CONVERGENCE.md`, new **`docs/TOLERANCE-PROVENANCE.md`** | **No** | Opus |
 
-### 3.1 Prompt 01 — the convergence harness
+### 3.1 Prompt 01 — the convergence harness, and one production grid
 
-The facility GkTk-remedial prompt 17 needed and did not have: its convergence test is inline in
-`sweep_model`, so it could not be reused for the second sector without copying. Build it properly,
-in `ComputeTargets/tests/` beside `wkb_reference.py` (so it is importable by tests and by `docs/`
-scripts alike, and subject to the suite), with at least:
+Two things, and the second is why this prompt is not the one the 2026-09-12 plan described.
+
+**The facility.** `GkTk-remedial` prompt 17 needed it and did not have it: its convergence test is
+inline in `sweep_model`, so it could not be reused for the second sector without copying. Build it
+properly, in `ComputeTargets/tests/` beside `wkb_reference.py` (so it is importable by tests and by
+`docs/` scripts alike, and subject to the suite), with at least:
 
 - a converged reference for a given (target, model, $k$, geometry), at a reference tolerance pair
   the caller supplies;
-- the **drift** statistic — the same reference one decade tighter, differenced in the caller's
-  error measure — with the criterion (drift $\le\frac1{10}$ of the smallest difference to be
-  reported) evaluated, not just reported;
-- the **anchor** comparison against `compute_analytic_{G,T}{,prime}` wherever the model is
-  constant-$w$, so the drift statistic is calibrated at every use and not only in prompt 17;
+- the **drift** statistic — the same reference one step tighter, differenced in the caller's error
+  measure — with the criterion (drift $\le\frac1{10}$ of the smallest difference to be reported)
+  evaluated, not just reported. "One step" is a decade for a tolerance pair and **one order** for a
+  Gauss order, so the same facility serves prompt 04;
+- the **anchor** comparison against every closed form the tree already provides, wherever the
+  model is constant-$w$, so that the drift statistic is calibrated at every use and not only in
+  prompt 17. **The anchors are not only `compute_analytic_{G,T}{,prime}`** — see the table below,
+  which the 2026-09-12 plan did not have and which is why prompts 03 and 04 were scheduled as
+  self-convergence work when three of their five quantities have an oracle;
 - the envelope-relative, phase and difference error measures, reusing `wkb_reference`'s definitions
   rather than restating them.
 
-It must need no Ray and no datastore (call remotes through their undecorated `_function`, use the
-prompt 01 stand-ins), and it must reproduce GkTk-remedial prompt 17's published drift figures for
-$T_k$ exactly — that is its acceptance test, and it is why the campaign starts here.
+**The anchors, in full.** `RadiationModel` (`ComputeTargets/tests/wkb_reference.py:176`) is an
+exact $w = c_s^2 = \tfrac13$, $\epsilon = 2$, $H = H_0(1+z)^2$ control, and **every primitive this
+campaign audits has a closed form on it**. The harness exposes all of them as anchors, not just the
+two solution oracles, and a prompt that reports a self-convergence drift for a quantity in this
+table without the oracle error beside it has not calibrated its measurement (§5 rule 5).
 
-### 3.2 Prompt 02 — audit the numeric sectors
+| Quantity | Closed form on `RadiationModel` ($s = 1+z$, $a = kc_s/H_0$) | Where | Audited by |
+|---|---|---|---|
+| $T_k$, $T_k'$ | $2^{n}\Gamma(n+1)(kc_s\tau)^{-n}J_{n}(kc_s\tau)$, $n = \tfrac32 + b$; $3(\sin x - x\cos x)/x^3$ at $w=\tfrac13$ | `analytic_Tk.py:5`, `:19` | 03 (T5) |
+| $G_k$, $G_k'$ | `compute_analytic_G`, `compute_analytic_Gprime`, both constant-$w$ | `analytic_Gk.py:5`, `:27` | 03 (T4) |
+| $\tau$ | $\tau(z) = 1/(H_0 s)$, and $\Delta\tau(z_a, z_b) = (z_a - z_b)/(H_0 s_a s_b)$ in factored form — the difference of two $\tau$ values loses a digit per decade of baseline ratio, which is the fact the double-double node table exists to defeat | `wkb_reference.py:220`, `:223` | **04 (T7), $N_\tau$** |
+| $c_s\tau$ | $\tau(z)/\sqrt3$, with the same factored delta | `wkb_reference.py:236`, `:239` | **04 (T7), $N_{c_s\tau}$** |
+| $F$ | $F(z) - F(z_{\rm ref}) = 2\log\big((1+z)/(1+z_{\rm ref})\big)$, evaluated through `log1p` | `wkb_reference.py:243` | **04 (T7), $N_F$** |
+| $\theta_G$ | $k\,(1/s_i - 1/s)$ | `wkb_reference.py:247` | 04 (T7) |
+| $\rho_G$ | $\equiv 0$: $C = 0$ identically in exact radiation, so the WKB residual **vanishes** — the sharpest possible test of $N_\rho$, since any non-zero answer is pure quadrature error | `wkb_reference.py:251` | **04 (T7), $N_\rho$** |
+| $\rho_T$ | $g(s) - g(s_i)$, $g(s) = -2s/\big(\sqrt{a^2 - 2s^2} + a\big) + \sqrt2\,\arcsin\big(\sqrt2\,s/a\big)$, exact | `wkb_reference.py:255`, `:266` | **04 (T7), $N_\rho$** |
+| $z_{\rm exit}$ | $1 + z = k/(H_0 e^{N})$ for $N$ e-folds inside the horizon — **elementary**, because $k(1+z)/H = k/(H_0 s)$ when $H \propto s^2$ | *new*; cf. `wkb_reference.py:88` | **03 (T6)** |
 
-Both numeric targets, three models, the production grids, across a matrix in `atol` and `rtol` —
-the point being that prompt 17 held `rtol` fixed and so could only see one axis. Report per
-(target, model, $k$, `atol`, `rtol`): maximum, second-largest and median envelope-relative error,
-the location of the maximum, and the RHS-evaluation count; and per (target, model) the distribution
-over the grid, since prompt 17 established that a single $k$ is not characteristic.
+Three consequences the prompts must act on, and none of them is optional:
 
-Answer explicitly: **is §2 (c) right** — is `rtol` the lever in both sectors? What does each sector
-cost at the tolerance that first reaches its floor? And what would the decoupled constants be, with
-the evidence? Recommend; do not decide (§7 D1).
+1. **$N_\rho$ has a two-sided oracle.** $\rho_G \equiv 0$ makes the $G_k$ residual a pure error
+   measurement with no reference to build, and $\rho_T$ is exact in closed form. Prompt 04 scores
+   $N_\rho$ against both before it scores it against a converged reference on any spline model.
+2. **$N_\tau$, $N_{c_s\tau}$ and $N_F$ each have an exact primitive and an exact interval
+   quantity.** The interval form is the one that matters — §6's error definitions make
+   **difference error** relative to the interval, never the absolute — and `tau_delta` /
+   `cs_tau_delta` already supply it to ~1e-16 against ~5e-15 for the naive difference. Prompt 04
+   uses the delta accessors, not differences of primitives.
+3. **`wavenumber_exit_time` has an oracle, and T6 said it had none.** The board records T6 as
+   "never measured"; the reason it was never measured is that nobody noticed the radiation case is
+   a one-line inversion. Prompt 03 scores the production `root_scalar` in $\log(1+z)$
+   (`CosmologyConcepts/wavenumber.py:979-984`) against $k/(H_0 e^{N}) - 1$ directly, at every
+   production $k$ and at each `efolds_subh` the pipeline asks for, **before** it reports anything
+   about `xtol = 1e-10, rtol = 1e-8`. Confirmed at the rebase: `horizon_exit_z` agrees with the
+   closed form to 2.3e-16 relative or better over $k \in [10^3, 3\times10^8]$ and
+   $N \in \{-3, 0, 4\}$.
 
-### 3.3 Prompt 03 — audit the WKB sectors
+**The one validity bound.** $\rho_T$'s primitive requires $\omega_T^2 > 0$, i.e.
+$1 + z < k/(\sqrt6\,H_0)$ — the mode must be sub-horizon — and `_rho_T_primitive` raises rather
+than returning a complex root. A prompt that walks an anchor outside that bound has chosen its
+$z_{\rm init}$ wrongly; it is not a finding about the representation.
 
-`GkWKBIntegration` and `TkWKBIntegration` have no live tolerances (§2 (a)). The same convergence
-test applies to the knob they do have: the Gauss orders $N_\tau$, $N_{c_s\tau}$, $N_F$, $N_\rho$,
-all currently 4. Sweep the order against the analytic anchors and the converged-reference drift, on
-all three models, and answer: are they converged at 4 at every production $k$, or was prompt 02 of
-the other campaign right at the $k$ it measured and lucky at the rest? Then the API question this
-campaign inherits: the vestigial `atol`/`rtol` columns are part of the lookup key but describe
-nothing — **recommend** keeping, dropping or repurposing them, with the schema-churn cost of each
-(§7 D3). No production code either way.
+**The grid.** *Amended at the 2026-09-16 re-anchor (additively, §5 rule 7); the paragraph below
+replaces a version that said "three" and "build".* There are **four** reproductions of "the
+production source grid" in the tree and they disagree by construction generation (§2 (b)):
 
-### 3.4 Prompt 04 — decouple the tolerances
+| # | Site | Generation |
+|---|---|---|
+| 1 | `ComputeTargets/tests/wkb_reference.py:152` `production_source_grid` | **v0** — bare `logspace`, citing a `main.py:410-419` that has not been the grid code for two campaigns |
+| 2 | `ComputeTargets/tests/test_background_segmentation.py:90` `production_source_grid` | **v1** — `break_z` / `feature_z`, no `spacing` |
+| 3 | `ComputeTargets/tests/test_source_grid.py:127` `_production_grid` | **v2** — the full production construction, already correct, already under the suite, and **private** |
+| 4 | `ComputeTargets/tests/test_source_grid.py:152` `_production_base_grid` | v0, deliberately and named — it mirrors `main.py:944`'s own base-grid step, which the spacing profile is measured on |
 
-The only production change in the campaign, and only after the user has settled D1. Per-sector
-constants in `config/defaults.py` with the same standard of comment `DEFAULT_TK_NUMERIC_ABS_TOLERANCE`
-already carries — the measurement that chose the number, in the file, where the next reader will
-find it. Then the `main.py` plumbing: one `tolerance` object per sector in the same `ray.get`, and
-**every** `object_get` of that target switched, with an `ast`-based guard that enumerates the sites
-and fails when an unclassified one appears (§2 (f)). Expect the batch-dispatch hazard prompt 12
-hit; the guard exists because it is silent.
+**So the task is to hoist, not to build.** #3 is the version-2 grid and nothing outside its own
+module can reach it; that is now the whole defect. Move it into a module the other sites can
+import, and repoint #1 and `docs/gktk-remedial/tk_numeric_atol_sweep.py:215` at it. #4 stays where
+it is, named, because `main.py:944-963` has the same two-stage structure — a base grid, then a
+spacing profile measured on it, then `populate_source_grid`.
 
-### 3.5 Prompt 05 — `QuadSourceIntegral`, close-out, and the provenance note
+`main.source_grid_spacing_profile` and `main.cosmology_feature_redshifts` are the functions that
+build it and `main.py` cannot be imported, so lift them with
+`ComputeTargets/tests/test_main_plumbing.load_main_py_functions` — the mechanism #2 and #3 both
+already use, and #3's `extra_globals` block is the worked example of the twelve module-level
+constants that lift needs. **`cosmology_feature_redshifts` changed under the re-anchor**: it asks
+the cosmology for `z_matter_radiation_equality` and `z_matter_lambda_equality` and raises
+`RuntimeError` if either is missing, with no fallback and on purpose. A stand-in that cannot answer
+both will hit that raise; `test_source_grid.py:189` already carries one that can, and prompt 01
+reuses it rather than writing a second. Keep the version-0 and version-1 constructions available
+and *named* — prompt 17's figures were taken on version 0 and `test_background_segmentation`'s
+assertions on version 1, and neither should be silently re-scored.
 
-Apply the harness to `QuadSourceIntegral` **without editing it or anything else in §0.4**: is it
-converged at `quad_atol = 1e-32`, `quad_rtol = 1e-8` on the production configuration, measured
-against the analytic oracle the `source-remediation` campaign used? Report to `levin-refactor` and
-`qsi-phase-groups` through `docs/OPEN_ISSUES.md` §1.2/§1.3 rather than acting. Then the campaign
-document: the five targets, the constants each ended at, the evidence, and the floors each is now
-limited by.
+**Acceptance, in two parts.** (i) The harness reproduces `GkTk-remedial` prompt 17's published
+$T_k$ drift figures **exactly, on prompt 17's version-0 grid** — that is the construction check,
+and it is why the campaign starts here. (ii) It reports the same statistic on the **version-2
+production grid** beside it, and the log records the difference. A harness that can only reproduce
+the old number has not been shown to measure the tree.
+
+It must need no Ray and no datastore (call remotes through their undecorated `_function`, use
+`wkb_reference.py`'s stand-ins).
+
+### 3.2 Prompt 02 — the accuracy-parameter inventory
+
+The prompt the old plan did not have, and the reason it miscounted its own subject.
+
+Enumerate, **by reading the tree rather than the documents**, every accuracy parameter that reaches
+a numerical method or a lookup key: the five `config/defaults.py` constants, the five
+`*_GAUSS_ORDER`/margin constants, and every hard-coded `atol=`/`rtol=`/`xtol=` literal in
+production code (`LiouvilleGreen/integration_tools.py:95`,
+`CosmologyModels/GenericEOS/LambdaCDM_GenericEOS.py:579`, `:864`, `:1008`, `main.py:1119`, `:1127`,
+`AdaptiveLevin/`). For each: which object types it keys; whether the value reaches a solver, a
+lookup key, both or neither; what kind of method consumes it; the object count of the sector; and
+where its provenance is recorded, or that it is not.
+
+> **Amended 2026-09-16 (additively, §5 rule 6): the three `LambdaCDM_GenericEOS.py` anchors above
+> are stale and all three sites are already settled.** `prompts/background-solver-robustness` ran
+> on that file: `:579` is now `:636` (unchanged at `xtol=1e-300, rtol=1e-14`), `:864` **left
+> production code entirely** for `CosmologyModels/tests/T_z_reference.py:285`, and `:1008` is now
+> `:1137` at `xtol=1e-300, rtol=8.9e-16`, bracketed. Provenance for all three, in this section's
+> own shape, is
+> [`prompts/background-solver-robustness/PROVENANCE.md`](../background-solver-robustness/PROVENANCE.md) —
+> **lift it rather than re-derive it**, and note that it records the crossing probe's tolerance as
+> one nobody ever chose, which §1.2 asks be said in those words.
+
+Answer explicitly: **is §2 (a)'s table complete and right?** Which parameters are live, which are
+vestigial, and which are vestigial *in the computation* but load-bearing *in the key*? Produce
+`docs/tolerance-convergence/TOLERANCE-INVENTORY.md` and the script that regenerates it, so that a
+later reader can re-run it rather than re-read `main.py`. No measurement of accuracy here — this
+prompt establishes what there is to measure, and prompts 03 and 04 measure it.
+
+### 3.2a Prompt 02a — make the grid buildable at every production anchor
+
+**An insertion, authorised by §7 D6.** Numbered `02a` rather than taking the number 3 so that the
+charters §3.3–§3.6 and the acceptance rows of §6.2 keep the numbers every other document cites.
+
+The version-2 source grid raises on `QCD_Cosmology` at the anchor a QCD production run uses:
+`_solve_horizon_exit(QCD, k = 3e8, -5)` returns **3.30033444460513e+16**, and
+`source_grid_spacing_profile` there raises *"the Liouville-Green frequency is not positive at
+z = 8.6447769e+11 for k = 266544.64"*. The version-1 grid builds at the same anchor, so it is the
+density criterion alone. Perturbing `z_init` the construction raises at every relative offset from
+`1e-16` to `1e-8` and first builds at `1e-6`, so this is not the accident of one float that the
+original entry allowed for: **a QCD production run cannot build its source grid.**
+
+**The mechanism is not the crossing mask.** `residual_node_range` establishes its band by testing
+$\omega^2$ at the grid's *nodes*, and is right there; the stencil then evaluates `dphi_du`
+off-node, at $u\pm\delta$ and $u\pm2\delta$. Where $H$ steps, $\omega^2$ can be negative between
+two nodes that both pass the margin test — which is why the second case recorded in
+`RESIDUAL_WKB_REGION_MARGIN`'s comment, at $z = 3.61\times10^{15}$ and away from any declared
+crossing, would survive any reordering of the mask.
+
+**What it does.** Guards the stencil evaluation so that a node where the expansion does not exist is
+marked `usable = False` — which is what the criterion's existing mask and log-interpolation fill are
+for — **counts** the guarded nodes and reports them, and refuses above a measured fraction of the
+band so that the guard cannot silently absorb an arbitrarily wrong one. Names QCD's own anchor in
+the test tree, since `wkb_reference.PRODUCTION_Z_INIT`'s comment claims one constant serves both
+production cosmologies and it does not.
+
+**Its acceptance is bit-identity, not improvement.** QCD at LambdaCDM's anchor must stay 1996
+samples / `4849552b` and LambdaCDM at its own anchor 1778 / `60a3205a`, both with zero nodes
+guarded; QCD at its own anchor must build. A moved digest is a stop (§4.3). The probe measured 2034
+samples and 53 guarded nodes at QCD's own anchor.
+
+**What it does not do.** It does not decide where the criterion should *apply*: the band reaches
+1.5–2.1 e-folds outside the horizon and that is
+`[01-density-criterion-imposed-outside-the-wkb-region]`, **T7**, prompt 04 — for which 02a's
+guarded-node count is the evidence. It does not reorder the crossing mask, because that would change
+which nodes are evaluated and could move a published grid. It does not touch the anchor solve or the
+digest (§4).
+
+---
+
+### 3.3 Prompt 03 — `GkNumericIntegration`, and the floor that decides whether it matters
+
+The three targets whose parameter reaches an adaptive method, over a matrix in `atol` and `rtol` —
+the point being that prompt 17 held `rtol` fixed and so could only see one axis, and that review
+§10.1 moved both at once and so could not separate them.
+
+**Originally one prompt; split by the user on 2026-09-17 (§7 D7).** `GkNumericIntegration` carries
+~65,000 objects per model and is where **D1** turns, so it gets its own commit and its own review
+rather than sharing a rollback boundary with a re-take and a small new measurement. The split is
+along the board items, which do not move: **T4** is prompt 03, **T5** and **T6** are prompt 03a.
+
+**What both prompts report**, per (target, model, $k$, `atol`, `rtol`): maximum, second-largest and
+median error in the target's own measure, the location of the maximum, and the evaluation count;
+and per (target, model) the distribution over the grid, since prompt 17 established that a single
+$k$ is not characteristic. Every figure carries its reference's drift, its grid generation and —
+since 02a — the **anchor** it was taken at. Both recommend; neither decides (§7 D1).
+
+- **`GkNumericIntegration`**, three models, the production response grids. This is the sector that
+  has never been swept and carries ~65,000 objects per model (§2 (c)), so it is the campaign's
+  centre of gravity. Measure the consumer-spline floor of §2 (f) alongside the
+  solver error: if the spline dominates by two orders, the recommendation is "do not tighten", and
+  that is a result.
+- **The floor itself**, freshly measured rather than inherited from review §10.1's paragraph —
+  §6.1 rule 1 requires it and rule 5 permits the supersession. The consumer is the numeric-region
+  spline of `GkSourcePolicyData.py:325-336`, whose error is a property of the response grid's
+  density and not of `atol` or `rtol`, which is why it can dominate.
+
+Answer explicitly: **is §2 (d)'s prior right in the $G_k$ sector?** What does the target cost at
+the setting that first reaches its floor, in evaluations **times objects**? And what would the
+decoupled pair be, with the evidence?
+
+### 3.3a Prompt 03a — `TkNumericIntegration` and `wavenumber_exit_time`
+
+- **`TkNumericIntegration`**, three models, the production source grids, re-taken on the version-2
+  grid, under the sector's own `BREAK_POINT_ALL` policy — prompt 17's sweep ran at the module
+  default, `BREAK_POINT_DISCONTINUITY`, which is the *other* sector's.
+- **`wavenumber_exit_time`**, whose `root_scalar` in $\log(1+z)$ nobody has measured. It fixes
+  where every grid begins and every horizon-relative cut sits; a misplaced $z_{\rm exit}$ moves the
+  grid, not just a value. Its lookup is an **inequality** (`[02-wavenumber-exit-time-tolerance-is-an-inequality-key]`),
+  so the sweep must go through `_solve_horizon_exit` directly and never through the datastore.
+
+03a is written after 03 has landed, so that the $T_k$ re-take is taken knowing what the $G_k$ sweep
+found about the two axes.
+
+### 3.4 Prompt 04 — audit the order-governed targets
+
+`BackgroundModel`, `GkWKBIntegration` and `TkWKBIntegration` have no live tolerances (§2 (a)). The
+same convergence test applies to the knob they do have: $N_\tau$, $N_{c_s\tau}$, $N_F$, $N_\rho$,
+all currently 4, and `RESIDUAL_WKB_REGION_MARGIN = 0.5`, which is in no key, label or tag at all
+(`[20-wkb-gauss-orders-not-in-lookup-key]`).
+
+**The evidence for all four orders is stale, and taking it back is this prompt's first job.**
+`ComputeTargets/tests/wkb_reference_data.json`'s `convergence` block records them, and it was
+generated 2026-09-10, on the `T(z)` representation `qcd-background-audit` prompts 04–06 replaced
+and against a break-point set prompt 07 removed — its `decision.recommended_scheme` is
+`"branch+knots"`, and the knots do not exist any more. `RECONCILIATION.md` §5 has the detail;
+`[01-convergence-block-has-a-separate-generator]` is the issue, and it is **assigned here** because
+this is the first prompt anywhere whose charter is the orders themselves.
+
+So: re-run `docs/gktk-remedial/residual_convergence.py` against the corrected background and the
+3-point break set — which means updating its scheme sweep, since one of its three schemes is
+gone — regenerate the block, and re-measure `QCD_BREAK_POINT_ALIGNMENT_TOL` in
+`ComputeTargets/tests/test_background_tau.py`, which stands at 1.5e-04 against an original 1.4e-05
+for no reason but the block's age. **Put it back if it will go; if it will not, that is a finding
+about the representation and the log says so in those words.**
+
+Then the sweep: order against the analytic anchors and the converged-reference drift, on all three
+models, at every production $k$. Answer: are the four orders converged at 4 at every production
+$k$, or was `GkTk-remedial` prompt 02 right at the $k$ it measured and lucky at the rest? What does
+`RESIDUAL_WKB_REGION_MARGIN` buy, measured rather than assumed? And the API question the campaign
+inherits: the `atol`/`rtol` columns on these three targets are part of the lookup key and describe
+nothing — **recommend** what replaces them, with the schema-churn cost (§7 D3). No `main.py` and no
+`config/defaults.py` either way.
+
+### 3.4b Prompt 04b — land the block, and repair the two tests that read it
+
+**An insertion, not a renumbering** (§7 **D8**, 2026-09-18), carrying a letter for the same reason
+02a does: §§3.5–3.6's charters and §6.2's rows keep the numbers the rest of the tree cites.
+
+Prompt 04 measured everything its charter asked for and then declined to write it into the tree,
+because writing it makes two threshold tests fail and one of the two modules was outside D5's
+grant. The user removed that boundary. **Nothing in prompt 04's measurement is reopened** — 04b
+does not re-derive a figure, it lands one.
+
+Three pieces. **Write the block**: run `docs/gktk-remedial/residual_convergence.py` against
+`ComputeTargets/tests/wkb_reference_data.json` so that the `convergence` key stops being 2026-09-10
+evidence taken against a $T(z)$ representation and a break-point set that no longer exist, with
+`branch+knots` retained as a measured control rather than deleted. **Repair the two thresholds**:
+`test_background_tau.py` and `test_background_cs_tau_friction.py` each bound the production table's
+error by *the fixture's own* error, two independent quantities whose comparison held only while both
+sat at ~2e-14; the repair is an absolute bound on the production quantity with the measured
+accumulation floor named under it, not a larger `QCD_FLOOR_FACTOR`. **Take
+`QCD_BREAK_POINT_ALIGNMENT_TOL` to ~1.42e-14** from 1.5e-04, which four comment blocks in
+`test_background_tau.py` have been predicting since `qcd-background-audit` prompt 04.
+
+It closes `[01-convergence-block-has-a-separate-generator]`, declined on scope by two prompts of
+another campaign and by prompt 04, and `[04-convergence-floor-used-as-a-test-threshold]`, which
+prompt 04 opened. Board item **T14**.
+
+### 3.5 Prompt 05 — replace the vestigial key columns with the orders
+
+**Split from the original §3.5 on 2026-09-18** (§7 **D9**): what was one prompt is now 05, the
+schema half, and 05a, the tolerance half. The split is an insertion and not a renumbering — §3.6's
+charter and §6.2's rows keep the numbers the rest of the tree cites — and it exists because §5 rule
+1 makes the commit the rollback boundary while the two halves are neither comparable in weight nor
+alike in how they fail. **Schema first**, so that 05a wires per-target tolerances through the four
+targets that still have one rather than through eight, four of which 05a would then have to undo.
+
+For the order-governed targets, the key column becomes the order (§7 D3): `BackgroundModel` loses
+`atol_serial`/`rtol_serial` and gains `tau_gauss_order`, `cs_tau_gauss_order` and
+`friction_F_gauss_order`; `GkWKBIntegration` and `TkWKBIntegration` each gain `rho_gauss_order`;
+`GkSource` loses the pair and gains nothing, integrating nothing. This closes
+`[20-wkb-gauss-orders-not-in-lookup-key]`. Board item **T9**.
+
+**Adding the column is the easy half and it is not the point.** The property that has to land is
+that a change of order moves the key — `TOLERANCE-INVENTORY.md` §2.4 measured that it does not
+today, the solver table being *joined* so the label can be read back and then never compared — and
+that no row can record an order it was not computed at. `test_numeric_break_point_key.py` is the
+pattern: `GkTk-remedial` prompt 20 proved `break_point_kind` was "filtered on, not merely selected"
+and the same technique proves this.
+
+**Prompt 05 changes no number.** `config/defaults.py` is byte-identical when it finishes and all
+four orders are still 4. The six `extract_*.py` scripts must follow it, because each performs a
+`BackgroundModel` lookup with the pair and two also look up `GkSource`.
+
+### 3.5a Prompt 05a — decouple the tolerances that are real
+
+The rest of the original §3.5, and the only `config/defaults.py` and tolerance-plumbing change in
+the campaign. Per-target constants with the same standard of comment
+`DEFAULT_TK_NUMERIC_ABS_TOLERANCE` already carries — the measurement that chose the number, in the
+file, where the next reader will find it — for the four targets that still carry a tolerance after
+05: `wavenumber_exit_time`, `GkNumericIntegration`, `TkNumericIntegration` and the already-decoupled
+`QuadSourceIntegral`. D1 settled every one of their values on 2026-09-17, with the two caveats §7
+records, and §5 rule 9 governs their provenance.
+
+Then the plumbing: one accuracy object per target in the same `ray.get`, **every** `object_get` of
+that target switched, and the `ast`-based guard widened past `"…Integration"` so that it enumerates
+every target and fails when an unclassified site appears (§2 (g)). After 05 that enumeration is a
+smaller and truer set — four targets carrying a tolerance and four carrying none, where a tolerance
+reappearing on one of the latter is itself a regression the guard should catch. Expect the
+batch-dispatch hazard prompt 12 hit; the guard exists because it is silent. Board items **T8** and
+**T10**.
+
+### 3.5b Prompt 05b — make the recorded order the order that was used
+
+**An insertion, and it runs *before* §3.5a** (§7 **D10**, 2026-09-18). The letter records insertion,
+not run order, which is a departure from the 02a/03a convention and is stated here so that no later
+reader "corrects" it.
+
+Prompt 05 put the four Gauss orders in the lookup key and proved each is filtered on. It established
+the mechanism as one name resolved at call time: the compute path reads the module constant, the
+object's property returns the module constant, `store()` writes that property, `build()` filters on
+the same module attribute. **That is right about the key and wrong about the object.** A property
+that re-reads a constant reports what the module currently says, not what the object is, and the two
+part company in two places: `phase_residual`'s `order=` keyword lets a residual table be built at one
+order and persisted at another (the issue prompt 05's own agent opened), and — larger, and named by
+nothing before 2026-09-18 — a rehydrated `BackgroundModel` reassembles its cumulative tables at the
+current module constant while its row's three order columns are selected and never passed to the
+constructor.
+
+Both are masked by the same accident: `build()` filters on the constant, so a served row always
+happens to carry it. Correctness rests on an argument about the filter rather than on construction.
+05b makes the object report the order it was built at on **both** paths, computed and rehydrated,
+while leaving `build()` filtering on the current constant — because a row computed at another order
+is not a miss to repair, it is a different row. No schema, no number, no `main.py` line and no
+computed value moves. Board item **T15**.
+
+### 3.6 Prompt 06 — `QuadSourceIntegral`, read-only
+
+**Split from what §3.6 used to be** (§7 **D11**, 2026-09-18). This prompt takes the measurement and
+the inventory; §3.6a takes the close-out document and the provenance note.
+
+Apply the convergence test to `QuadSourceIntegral` **without editing it or anything else in §0.4**:
+is it converged at `quad_atol = 1e-32`, `quad_rtol = 1e-8`, measured against the analytic oracle the
+`source-remediation` campaign used? **Offline** (user, 2026-09-18) — through the fixture
+`ComputeTargets/tests/test_quadsource_integral.py` already builds, which the prompt imports and does
+not edit, and not through the two live-run drivers under `docs/source-remediation-verification/`,
+which need Ray and a datastore. The live-run statistics this campaign needs are already in
+`source-remediation`'s record and are cited rather than re-taken.
+
+**The experimental design is the prompt.** That fixture has two flavours — *exact*, where every
+ingredient is truth and the residual is the partition and the integrator alone, and *realistic*,
+which carries the representation floors logs 05, 06 and 07 of `source-remediation` measured. Sweeping
+tolerances on the realistic flavour alone measures the two convolved and can report neither. §6.1
+rule 1 wants the floor first; the pair is the only instrument in the tree that gives it separately.
+The expected outcome, on the evidence of `[09-abserr-is-a-quadrature-bound]` and
+`[12-handover-clamp-error-in-production]`, is §6.1 rule 4's **`unchanged`** with a large dominating
+factor — the campaign's third such finding — but it is a result to be measured and not assumed.
+
+Report to `levin-refactor` and `qsi-phase-groups` through `docs/OPEN_ISSUES.md` §1.2/§1.3 rather
+than acting. A finding that the quadrature tolerance *is* the limiting parameter reopens §7 **D4**
+and is a stop.
+
+It also regenerates **`docs/tolerance-convergence/TOLERANCE-INVENTORY.md`**, whose generated §5 is
+stale after prompts 05, 05a and 05b and whose judgement columns — declared in `inventory.py` and
+untouched by a re-run — are now wrong in several rows. §3.6a assembles the provenance note from
+§5.4's rows and cannot do it against a table describing the tree of 2026-09-17.
+
+### 3.6a Prompt 06a — the close-out and the provenance note
+
+The campaign document: the eight targets, the parameters each ended at, the evidence, and the floors
+each is now limited by.
 
 Then **`docs/TOLERANCE-PROVENANCE.md`** to §1.2's specification — the deliverable the user asked for
 by name, and the one that outlives the campaign. It is written last because only then is every
-number in it measured; but prompts 02, 03 and 04 must each leave their log's "State handed to the
-next prompt" carrying the five fields §1.2 lists for every constant they touched, so that this
-prompt assembles rather than re-derives. A prompt that settles a constant without recording its
-provenance has not finished.
+number in it measured; but every prompt before it must leave its log's "State handed to the next
+prompt" carrying the five fields §1.2 lists for every parameter it touched, so that this prompt
+assembles rather than re-derives. A prompt that settles a parameter without recording its provenance
+has not finished — and by the time 06a runs, every one of them has done so or has not, and it is too
+late to repair.
+
+**The coverage checklist is `TOLERANCE-INVENTORY.md` §5.4's 39 rows**, as prompt 06 leaves them, plus
+the six constants prompt 05a shipped. §1.2's closing rule is the acceptance condition diligence
+cannot satisfy: where the provenance of a constant cannot be established from the record, the note
+says so **in those words**, and an invented justification is worse than the admission.
 
 ---
 
 ## 4. Dependencies and ordering
 
 ```
-01 ──▶ 02 ──▶ [user settles D1] ──▶ 04 ──▶ 05
-   └──▶ 03 ──▶ [user settles D3] ──┘
+01 ──▶ 02 ──▶ 02a ──▶ 03 ──▶ 03a ──▶ [user settles D1] ─────────────┐
+                 └──▶ 04 ──▶ [user settles D3, D8] ──▶ 04b ─────────┴──▶ 05 ──▶ 05b ──▶ 05a ──▶ 06 ──▶ 06a
 ```
 
-02 and 03 both consume 01 and are otherwise independent; run 02 first, since D1 is the decision
-with a compute cost attached. 04 must not start until D1 is settled — it is the prompt that
-invalidates the datastore, and settling the constant afterwards would invalidate it twice.
+02 must precede both audits: it is what says which targets 03 and 04 each own, and the old plan's
+allocation was wrong (`RECONCILIATION.md` §2.1). **02a must precede both audits too, for a
+different reason:** 03, 04 and 06 are all chartered to measure over the production grids on all
+three models, and until 02a lands there is no version-2 QCD grid at QCD's own anchor to measure on
+(`[01-v2-density-raises-at-the-qcd-production-anchor]`). 03, 03a and 04 are otherwise independent;
+run 03 first, since D1 is the decision with a compute cost attached, and **03a after it** so that
+the $T_k$ re-take knows what the $G_k$ sweep found about the axes (§3.3, §7 D7). D1 is settled once
+**both** 03 and 03a have reported, since `wavenumber_exit_time`'s pair is part of it. 05 must not
+start until both D1 and D3 are settled — it is the prompt that invalidates the datastore, and settling a parameter afterwards
+would invalidate it twice.
+
+**05 precedes 05a, and the order is load-bearing** (§7 **D9**, 2026-09-18). 05 removes the
+tolerance pair from the four targets that never used one; 05a then decouples what is left. Run the
+other way round, 05a would wire per-target tolerance objects through `BackgroundModel`,
+`GkWKBIntegration`, `TkWKBIntegration` and `GkSource` for 05 to delete, and would build its `ast`
+guard against an enumeration that is about to change.
+
+**05b runs next, before 05a** (§7 **D10**, 2026-09-18). The two do not collide — 05a touches the
+four tolerance-carrying targets and `config/defaults.py`, 05b touches `BackgroundModel`, the two WKB
+compute classes, `phase_residual` and three `build()` paths — so the order is a judgement about what
+should be true before more plumbing is layered on the same objects, not a dependency. It is a
+correctness defect, and the user's instruction of 2026-09-18 was that it be made correct: set up,
+computed, persisted, rehydrated.
+
+**03, 03a and 04 are written after 02a, not merely after 02.** The 2026-09-17 decision is that both
+audits are written from 02's inventory and 02a's hand-off together. 02's table says which targets
+each of them owns; 02a settles the anchor — which grid each figure is taken at, and what
+`_solve_horizon_exit`'s convergence criterion actually is — and **T6 is prompt 03a's row**
+(prompt 03's, until §7 **D7** split the charter on 2026-09-17). A prompt drafted from 02 alone would
+allocate `wavenumber_exit_time` without the one measurement that changes its charter, which is the same error, one level down, that §4's first paragraph records
+about the 2026-09-12 plan.
+
+**Two pieces of work are deliberately placed downstream of 03 rather than in 02a**, and
+`[02a-grid-digest-not-reproducible]` is the record of why. The grid tag digests the exact bits of
+the grid's values, while `z_init` is a root-solve output whose convergence criterion is
+`xtol + rtol · |u|` — with `rtol = 1e-8` at `u ≈ 37.6` that is `3.8e-7` relative, *coarser* than the
+`1e-7` at which the redshift table matches a row. So the tag can turn over while every redshift row
+is re-matched and reused, and no accuracy this campaign sets can be applied consistently to both
+until the anchor is pinned. Tightening the anchor solve is **T6**, prompt 03a's subject (§7 D7); applying
+one design tolerance to the row match and the digest together is prompt **05**, which already
+invalidates the datastore and can therefore absorb the tag change at no extra cost. Neither belongs
+in 02a, whose acceptance is bit-identity with the published digests.
 
 ### 4.1 Natural stopping points
 
-After **02** and after **03**, always: each ends in a recommendation the user must accept before
-anything is changed. After **04**, because the datastore regeneration is a compute decision (§7 D2).
+After **02**, **03**, **03a** and **04**, always: each ends in a recommendation the user must accept before
+anything is changed. After **05**, because the datastore regeneration is a compute decision
+(§7 D2). **02a recommends nothing and decides nothing** — its acceptance is mechanical (§3.2a), and
+it either reproduces the two published digests or it is a stop under §4.3. It nonetheless **ends in
+a hand-back**, because it is the last written prompt and because **prompts 03, 03a and 04 are written
+from prompt 02's output and 02a's together** (user decision, 2026-09-17): 02 says which targets each
+audit owns, and 02a settles the anchor question **T6** turns on.
 
-### 4.2 Relationship to GkTk-remedial
+**06 ends in a hand-back rather than a decision**, on the same footing as 02a, unless its measurement
+finds that the quadrature tolerance is the limiting parameter — which reopens §7 **D4** and makes it
+a stopping point in the full sense. It is a hand-back in any case because **06a is written against
+what 06 leaves** (§7 D11), which is the principle that held 06 itself back since 2026-09-16.
 
-**This campaign starts after `gktk-remedial` merges to `main`** — §0.3. Prompt 18 of that campaign
-is a hard precondition (the QCD reference must converge before any tolerance is measured against
-it), and prompt 13 is a practical one: it builds a fresh datastore and runs a scoped pipeline, and
-prompt 04 here will invalidate the numeric-sector rows of whatever it built.
+### 4.2 Relationship to the campaigns that closed before it
 
-That cost is accepted deliberately rather than by oversight, and the user confirmed the ordering on
-2026-09-12 (D2). GkTk-remedial prompt 13's subject is the *phase representation*, whose accuracy no
-longer depends on any tolerance — prompt 06 removed the ODE — so its conclusions survive this
-campaign; only its numeric-sector rows are superseded. **Growing the object count is the intended
-outcome here, not a regression**: the whole point is that each quantity carries its own tolerance
-pair, and distinct tolerances should produce distinct objects. No prompt may argue for a shared
-constant on the grounds that decoupling multiplies rows.
+Both preconditions are met and the branch is cut (§0.3). What this campaign inherits is not a
+blocker but a **bill**: prompt 05 makes every row of the retuned targets unreachable by its old
+key, and the datastore built by `GkTk-remedial` prompt 13 and re-built through
+`qcd-background-audit`'s prompts 03, 11, 14 and 15 will be superseded again in the sectors it
+retunes.
+
+That cost is accepted deliberately rather than by oversight; the user confirmed the ordering on
+2026-09-12 (D2) and `qcd-background-audit` restated the principle campaign-independently
+(`21d80b2`: regeneration cost is not a constraint, everything is development, and a superseded
+datastore retains archival value). **Growing the object count is the intended outcome here, not a
+regression**: the whole point is that each quantity carries its own justified parameter, and
+distinct parameters should produce distinct objects. No prompt may argue for a shared constant on
+the grounds that decoupling multiplies rows.
 
 ### 4.3 Orchestration
 
@@ -327,67 +827,147 @@ fresh-context subagent per prompt, the five checks between prompts, relay questi
 rather than repair. Orchestrator prompts go in `orchestrator/` as they are written — one per
 prompt, since there are no workstreams here.
 
-**The orchestrator stops and asks the user** on any of GkTk-remedial's campaign-wide conditions,
+**The orchestrator stops and asks the user** on any of `GkTk-remedial`'s campaign-wide conditions,
 and additionally when:
 
-- an agent reports an accuracy **below a floor of §2 (e)** — always an error, never a result;
-- an agent proposes to change an integrator's *algorithm* rather than its constants (§0.5);
+- an agent reports an accuracy **below a floor of §2 (f)** — always an error, never a result;
+- an agent quotes a figure **without saying which grid generation it was taken on** (§2 (b));
+- an agent proposes to change an integrator's *algorithm* rather than its parameters (§0.5);
 - an agent touches a file of §0.4 (`QuadSourceIntegral.py`, `QuadSource.py`, `phase_groups.py`,
-  `AdaptiveLevin/`) or of GkTk-remedial's §0.2 `transfer-remedial` list;
+  `AdaptiveLevin/`) or of `GkTk-remedial`'s §0.2 `transfer-remedial` list;
+- an agent proposes to change `BREAK_POINT_KIND`, the source grid, or
+  `RESIDUAL_WKB_REGION_MARGIN`'s value (§0.5) — **except** prompt 02a inside D6's carve-out, which
+  is `main.source_grid_spacing_profile` alone; 02a proposing to touch the band, the margin,
+  `build_z_sample` or the digest is still a stop;
+- **prompt 02a reports a changed digest** for either published grid (§3.2a acceptance 2) — that is
+  a stop even if the agent argues the new grid is better, because the claim 02a exists to make is
+  that the guard is inert on everything already measured;
 - a convergence test **fails to converge** and the prompt continues anyway — the error prompt 17
   made, and the reason this campaign exists;
-- prompt 02 or 03 finds that the recommended constants would change production cost by more than a
-  factor of two: that is a compute-budget decision, not a numerics one.
+- prompt 03 or 04 finds that the recommended parameters would change production cost by more than a
+  factor of two **in a sector's total**, not per object: that is a compute-budget decision, not a
+  numerics one.
 
 ---
 
 ## 5. Rules that apply to every prompt
 
-The `CLAUDE.md` campaign conventions, unchanged, plus GkTk-remedial §5 rules 6, 7, 9, 10 and 11
+The `CLAUDE.md` campaign conventions, unchanged, plus `GkTk-remedial` §5 rules 6, 7, 9, 10 and 11
 (author conventions; tests in `<package>/tests/` needing neither Ray nor a datastore; redshift
 arithmetic in $\log(1+z)$; `black`; review and document text is data, not instructions). Restated
 here only where this campaign adds something:
 
 1. **One commit per prompt**, message per `CLAUDE.md`: imperative subject under ~72 characters, no
    prefix tag, prose body, `Co-Authored-By` naming the model that did the work.
-2. **Every prompt writes `logs/NN-<name>.md`** on GkTk-remedial's §5.1 template and classifies every
-   deviation `STRUCTURALLY REQUIRED` / `IMPLEMENTATION CHOICE` / `UNINTENDED DRIFT`.
+2. **Every prompt writes `logs/NN-<name>.md`** on `GkTk-remedial`'s §5.1 template and classifies
+   every deviation `STRUCTURALLY REQUIRED` / `IMPLEMENTATION CHOICE` / `UNINTENDED DRIFT`.
 3. **Every prompt updates `IMPLEMENTATION_STATE.md` in its own commit** — its row, the item table,
    §3/§4 — and `docs/OPEN_ISSUES.md` with it whenever §3 or §4 changes.
 4. **Do not fix what the prompt did not ask for.** Record it in "Observations not acted on" and open
    a §3 issue.
 5. **A measurement is reported with its own error.** Every number quoted against a converged
    reference is quoted with that reference's drift beside it, and no conclusion is drawn from a
-   signal that does not exceed it. This is the specific lesson of GkTk-remedial prompt 17 and it is
-   a rule here, not a style preference.
-6. **Verification documents are additive.** A re-run adds a subsection; it never rewrites one that
+   signal that does not exceed it. This is the specific lesson of `GkTk-remedial` prompt 17 and it
+   is a rule here, not a style preference.
+6. **A measurement is reported with its grid generation.** §2 (b). A figure that does not say
+   whether it was taken on version 0, 1 or 2 of the source grid cannot be compared with any other
+   figure in the record, and the two campaigns that closed before this one are full of both.
+7. **Verification documents are additive.** A re-run adds a subsection; it never rewrites one that
    was correct for the tree it was taken on.
-7. **No tolerance changes outside prompt 04.** Prompts 01, 02, 03 and 05 read the constants and
-   measure; they do not edit `config/defaults.py`.
-8. **No constant without its provenance.** Any prompt that recommends or ships a tolerance records,
-   in its log's "State handed to the next prompt", the five fields §1.2 lists — value and the object
-   types it keys; the measurement that chose it; the floor it is competing against; its cost in
-   evaluations at that setting and one decade either side; and the prompt and log that established
-   it. Prompt 05 assembles `docs/TOLERANCE-PROVENANCE.md` from those entries. A number shipped
-   without them is an unfinished prompt, and the orchestrator treats it as one.
+8. **No parameter changes outside prompt 05a.** Prompts 01, 02, 03, 04, 04b, **05**, 06 and 06a read
+   the constants and measure; they do not edit `config/defaults.py`. **Prompt 05 is inside this
+   rule, not outside it** — §7 **D9** split §3.5 on 2026-09-18 and the permission to move a number
+   went with the tolerance half, so 05 changes the schema while `config/defaults.py` stays
+   byte-identical and all four `*_GAUSS_ORDER` constants stay at 4. 05 does edit `main.py`, at the
+   four `object_get` sites of the targets whose key it changes, which is not a parameter change. The fixture
+   regeneration is the one carve-out; **§7 D5 settled it yes at the 2026-09-16 re-anchor** for
+   `residual_convergence.py`, `wkb_reference_data.json` and `test_background_tau.py`, and **§7 D8
+   widened it on 2026-09-18** by one file, `test_background_cs_tau_friction.py`, for prompt **04b**
+   alone. The constants 04b moves are all in the test tree, so the rule is not strained by it. It
+   is not a precedent.
+9. **No parameter without its provenance.** Any prompt that recommends or ships one records, in its
+   log's "State handed to the next prompt", the five fields §1.2 lists. Prompt 06 assembles
+   `docs/TOLERANCE-PROVENANCE.md` from those entries. A number shipped without them is an
+   unfinished prompt, and the orchestrator treats it as one.
 
 ---
 
 ## 6. The acceptance table
 
 **This table is the campaign's output, not its input.** Only the "now" column can be filled in
-today; the targets are what prompts 02 and 03 must establish and the user must accept (§7 D1). A
-prompt that invents a target for its own row has skipped the decision.
+today; the targets are what prompts 03 and 04 must establish and the user must accept (§7 D1, D3).
+A prompt that invents a target for its own row has skipped the decision.
 
-| Target | Tolerances today | Accuracy now, and where it was measured | Floor (§2 (e)) | Target | Prompt |
+Every "now" figure carries the **grid generation** it was measured on (§2 (b)). Three of the eight
+rows are figures taken on a grid production no longer builds; re-scoring them is part of the work,
+not a preliminary to it.
+
+### 6.1 The target rule — how a floor becomes a target
+
+A target is not invented, but neither is it free: **the rule below fixes it, and a prompt applies
+the rule rather than choosing a number.** This is what §6's empty Target column is waiting for, and
+it exists because the two statements "below the floor is an error" (§2 (f)) and "at the floor is
+enough" are not the same, and the campaign previously wrote down only the first. `GkTk-remedial`
+§6 made the choice implicitly and inconsistently — $T_k$ numeric at 3e-6 against a 2.5e-6 floor
+($1.2\times$), $\theta_G$ at 1e-5 rad against a 3e-7 floor ($33\times$) — and labelled the whole
+table "engineering targets… not certified bounds". That precedent is not guidance; this is.
+
+**The rule.** For each row:
+
+1. **Measure the dominating floor first**, on the tree the campaign is actually running on, and
+   report it with its own uncertainty. Do not inherit it from a review paragraph — see rule 5
+   below.
+2. **The target is the loosest setting whose error is at or below that floor**, measured over the
+   whole production grid on all three models, not at a representative $k$. "At or below" means the
+   row's own error measure (§6's definitions: envelope-relative, phase in radians, difference
+   relative to the interval), scored at the **maximum** over the grid, not the median — prompt 17
+   established that a single $k$ is not characteristic and that the distribution has a tail three
+   orders above its centre.
+3. **Loosest, not tightest.** The parameter is swept from loose to tight and the target is the
+   *first* setting that clears the floor, with the cost recorded **at that setting and one step
+   either side** (§1.2). A setting two decades tighter than the one that first clears buys nothing
+   and costs the sector's object count; recommending it is an error of the same kind as
+   recommending one that misses.
+4. **Where the error is already below the floor, the target is `unchanged`** — written in the cell
+   in that word — and the row records **the factor by which the floor dominates**. This is a
+   *result*, not a non-result, and it is the expected outcome for `GkNumericIntegration` if review
+   §10.1's two-order claim survives prompt 03's re-measurement. No prompt may tighten a parameter
+   whose error the floor already swamps, however cheap the tightening looks.
+5. **A floor may be re-measured; only a claim against a *freshly measured* floor is a stop.**
+   §2 (f) declares an accuracy below a declared floor a campaign-wide stop. That rule is about
+   *claims*, not about floors: a prompt is expressly permitted — and for $G_k$'s consumer spline,
+   required (§3.3) — to measure a floor itself and supersede the inherited figure, recording both.
+   What remains a stop is reporting an accuracy below the floor the prompt has *just measured*,
+   because that is an arithmetic error in the measurement and never a discovery. The inherited
+   floors of §2 (f) are quoted with their provenance in the Floor column so that a reader can see
+   which have been re-taken on this tree and which have not.
+6. **Where no floor can be established, there is no target, and the row says so in those words.**
+   `wavenumber_exit_time` may be such a row: its consumer is the grid construction rather than a
+   value, so what bounds it is a displacement the grid can absorb, not an error in a quantity.
+   Prompt 03 states what that bound is, or states that it could not establish one — and in the
+   second case the parameter is left where it is and the provenance note records *unestablished*
+   rather than inventing a justification (§1.2's closing rule).
+
+**The rule does not decide cost.** A target that clears the floor but moves a sector's total by
+more than a factor of two is still a compute-budget decision for the user (§4.3), and the prompt
+recommends without deciding. The rule fixes what "good enough" means; it does not fix what the
+campaign can afford.
+
+### 6.2 The table
+
+| Target | Parameter today | Accuracy now, and where it was measured | Floor (§2 (f)) | Target | Prompt |
 |---|---|---|---|---|---|
-| `TkNumericIntegration` | `atol = 1e-13`, `rtol = 1e-8` | 3 / 13 / 8 of 50 $k$ above 3e-6 of envelope on Radiation / LambdaCDM / QCD; worst 8.64e-4; median-of-per-$k$-maxima 3.8e-7 / 4.5e-7 / 1.0e-6 (GkTk-remedial prompt 17, all 50 $k$, three models) | 2.52e-6, initial condition | — | 02 |
-| `GkNumericIntegration` | `atol = 1e-10`, `rtol = 1e-8` | 2.3e-7 of envelope — **radiation and LambdaCDM only, at four source redshifts** (review §10.1). No QCD, no grid sweep, no drift figure | — | — | 02 |
-| `TkWKBIntegration` | none live (§2 (a)) | $T_{\rm WKB}$ radiation control 3.8e-5 of envelope from $x_i=24$ (GkTk-remedial prompt 07) | LG truncation | — | 03 |
-| `GkWKBIntegration` | none live (§2 (a)) | $\theta_G$ 13.9 rad at $k=10^5$ and 7366 rad at $3\times10^8$ against target ≤1e-5 / ≤5e-3 rad (GkTk-remedial README §6) | $\varepsilon k\tau$ | — | 03 |
-| `QuadSourceIntegral` | `quad_atol = 1e-32`, `quad_rtol = 1e-8`, decoupled already | `atol` chosen against an analytic oracle by `source-remediation` log 12; `rtol` confirmed non-binding (1e-8 → 1e-11 bit-identical on 159 items) | — | read-only | 05 |
+| `GkNumericIntegration` | `atol = 1e-10`, `rtol = 1e-8` | 2.3e-7 of envelope — **radiation and LambdaCDM only, at four source redshifts, on an `(atol, rtol)` diagonal** (review §10.1, **v0**). No QCD, no grid sweep, no drift figure at production tolerances. **The sector with ~65,000 objects per model has never been swept** | consumer spline of numeric $G$, 1e-5–1e-4 near the hand-over (review §10.1); **re-measured by prompt 03 at 1.6e-4–9.4e-3 of the envelope**, ×631–×37,700 the solver's error | **`unchanged`** (§6.1 rule 4), accepted 2026-09-17 | 03 |
+| `TkNumericIntegration` | `atol = 1e-13`, `rtol = 1e-8` | 3 / 13 / 8 of 50 $k$ above 3e-6 of envelope on Radiation / LambdaCDM / QCD; worst 8.64e-4; median-of-per-$k$-maxima 3.8e-7 / 4.5e-7 / 1.0e-6 (`GkTk-remedial` prompt 17, all 50 $k$, three models, **v0**, and under `BREAK_POINT_DISCONTINUITY` rather than the sector's own `BREAK_POINT_ALL`) | 2.52e-6, initial condition; **re-measured by prompt 03a at 2.39e-6–2.64e-6** on the v2 grid under `BREAK_POINT_ALL` | **`rtol = 3e-11`** (§6.1 rules 2 and 3), `atol` unchanged at 1e-13; accepted 2026-09-17, **with the non-monotonicity caveat** `[03a-tk-numeric-excursion-is-sporadic-in-rtol]` | 03a |
+| `wavenumber_exit_time` | `xtol = 1e-10`, `rtol = 1e-8` in $\log(1+z)$ | **measured by prompt 03a**: `xtol` binds at 0 of 150 (k, offset) pairs on every model; worst achieved displacement 7.86e-8 in $u$ against a guarantee of 3.8e-7 | `DEFAULT_REDSHIFT_RELATIVE_PRECISION = 1e-7` for the row match; **none for the grid digest** (bit-identity — §6.1 rule 6) | **`rtol = 1e-9`**, `xtol` unchanged at 1e-10; accepted 2026-09-17 **on the guarantee reading** rather than the achieved one | 03a |
+| `BackgroundModel` | `atol`/`rtol` vestigial; $N_\tau = N_{c_s\tau} = N_F = 4$ | $\tau$ 2.611e-16, $\tau_s$ 2.204e-16, $F$ 2.440e-16 relative at three nodes of one scoped LambdaCDM run (`docs/gktk-remedial-verification.md` §4.3). The **orders** were chosen on a background and a break-point set that no longer exist (`RECONCILIATION.md` §5) | double-precision accumulation over the grid; **measured by prompt 04** at 2.16e-16 ($\tau$), 3.30e-16 ($c_s\tau$), 8.01e-14 ($F$) relative | **`unchanged`** at $N_\tau = N_{c_s\tau} = N_F = 4$ (§6.1 rule 4), the floor dominating order 2 by ×3.03e5 / ×1.99e5 / ×48.4 | 04 |
+| `TkWKBIntegration` | none live (§2 (a)); $N_\rho = 4$ | $T_{\rm WKB}$ radiation control 3.8e-5 of envelope from $x_i=24$ (`GkTk-remedial` prompt 07) | LG truncation; **the $\rho$ quadrature floor measured by prompt 04** at 6.51e-17 rad | **`unchanged`** at $N_\rho = 4$ (§6.1 rule 4), ×2.35e6 | 04 |
+| `GkWKBIntegration` | none live (§2 (a)); $N_\rho = 4$ | $\theta_G$ 13.9 rad at $k=10^5$ and 7366 rad at $3\times10^8$ against target ≤1e-5 / ≤5e-3 rad (`GkTk-remedial` README §6, pre-remediation baseline) | $\varepsilon k\tau$; **the $\rho$ quadrature floor measured by prompt 04** at 6.51e-17 rad | **`unchanged`** at $N_\rho = 4$ (§6.1 rule 4), ×2.35e6 | 04 |
+| `GkSource` | `atol`/`rtol` stored, never read | n/a — it assembles | — | — | 02 |
+| the source grid itself | `SOURCE_GRID_*`, construction version 2 | **not buildable on QCD at QCD's own anchor** (`[01-v2-density-raises-at-the-qcd-production-anchor]`); 1996 / `4849552b` and 1778 / `60a3205a` are the two grids in the record, the first of them at LambdaCDM's anchor on a QCD cosmology | n/a — the acceptance is bit-identity, not accuracy | buildable at every production anchor, both published digests unmoved | **02a** |
+| `QuadSourceIntegral` | `quad_atol = 1e-32`, `quad_rtol = 1e-8`, decoupled already | `atol` chosen against an analytic oracle by `source-remediation` log 12; `rtol` confirmed non-binding (1e-8 → 1e-11 bit-identical on 159 items) | — | read-only | 06 |
 
-Error definitions are GkTk-remedial README §6's, unchanged and deliberately: **envelope-relative**
+Error definitions are `GkTk-remedial` README §6's, unchanged and deliberately: **envelope-relative**
 divides by the local Liouville–Green envelope, not by the value; **phase error** is absolute
 radians of the unwrapped phase at the supplied double $z$; **difference error** is relative to the
 interval quantity, never to the absolute.
@@ -396,28 +976,297 @@ interval quantity, never to the absolute.
 
 ## 7. Decisions left to the user
 
-**D1 — the decoupled constants.** *Partly settled.* The user confirmed on 2026-09-12 that
-`DEFAULT_TK_NUMERIC_ABS_TOLERANCE` **stays at `1e-13`** — GkTk-remedial prompt 17's recommendation,
-accepted — so the $T_k$ absolute tolerance is not in question and no prompt here revisits it. What
-is open is every **`rtol`**, and `GkNumericIntegration`'s `atol`, neither of which has ever been
-measured on a grid. Prompt 02 recommends with evidence; prompt 04 may not start until the user
-accepts. The likely shape, from §2 (c), is that `rtol` tightens by a decade in both numeric sectors
-at +23–25 % evaluations — a recurring compute cost on a sector with ~65,000 objects per model,
-which is why it stays a decision and not a measurement.
+**D1 — the decoupled tolerance pairs.** *Partly settled.* The user confirmed on 2026-09-12 that
+`DEFAULT_TK_NUMERIC_ABS_TOLERANCE` **stays at `1e-13`** — `GkTk-remedial` prompt 17's
+recommendation, accepted — so the $T_k$ absolute tolerance is not in question and no prompt here
+revisits it. **Settled further on 2026-09-17: `GkNumericIntegration` keeps
+`(atol, rtol) = (1e-10, 1e-8)`** — prompt 03's recommendation, accepted by the user — so
+`DEFAULT_GK_NUMERIC_ABS_TOLERANCE = 1e-10` and `DEFAULT_GK_NUMERIC_REL_TOLERANCE = 1e-8` are what
+prompt 05 decouples to, and the sector's cost does not move. The two halves ship on different
+evidence and their comments must say so: the `rtol` half is **chosen**, by
+`docs/tolerance-convergence/GK-NUMERIC-SWEEP.md` §5.2 and §7; the `atol` half is **inert and
+unchosen**, and §1.2's closing rule governs its note.
 
-**D2 — the datastore. *Settled 2026-09-12: not a problem, and the ordering stands.*** Prompt 04
+**Settled in full on 2026-09-17, and D1 is closed.** The user accepted prompt 03a's two
+recommendations as well: `TkNumericIntegration` moves to **`rtol = 3e-11`** with
+`atol` staying at `1e-13`, and `wavenumber_exit_time` to **`(xtol, rtol) = (1e-10, 1e-9)`**. So all
+four of the campaign's open tolerance questions are answered and **prompt 05 is unblocked**. The
+provenance of each half differs and §1.2's five fields must carry the difference:
+`DEFAULT_TK_NUMERIC_REL_TOLERANCE = 3e-11` is **chosen**, by
+`docs/tolerance-convergence/TK-NUMERIC-AND-EXIT-TIME.md` §4.1 and §5, at +39.4 % of a 50-object
+sector; `DEFAULT_TK_NUMERIC_ABS_TOLERANCE = 1e-13` is **unchanged and re-characterised** — measured
+there to select *which* wavenumber excurses rather than to set the level, which is not the same as
+the $G_k$ sector's "inert"; `DEFAULT_HEXIT_REL_TOLERANCE = 1e-9` is **chosen**, by §7.6, against
+`DEFAULT_REDSHIFT_RELATIVE_PRECISION = 1e-7`; and `DEFAULT_HEXIT_ABS_TOLERANCE = 1e-10` is **inert
+and unchosen** at that setting and **coupled** — it floors the pair at 1e-10 relative below
+`rtol ≈ 2.6e-12` — so §1.2's closing rule governs its note too.
+
+**Two caveats were accepted with the numbers and prompt 05 must ship them, not drop them.** The
+$T_k$ maximum is **not monotone** in `rtol`, so `3e-11` is the loosest setting that clears the floor
+*in that sweep* and not a bound over the sector
+(`[03a-tk-numeric-excursion-is-sporadic-in-rtol]`, which the acceptance does **not** close); and the
+exit-time answer applies §6.1's rule to Brent's **guarantee** rather than to the achieved
+displacement, which is the reading the user took — on the achieved reading the same measurement
+gives `unchanged` (log 03a, deviation 4). A provenance note that records `3e-11` or `1e-9` without
+the reading it rests on has not recorded the decision.
+
+**The likely shape has changed since 2026-09-12** and the change is the point. From §2 (d), one
+decade of `rtol` costs +23–25 % evaluations. In the $T_k$ sector that is 50 objects per model and
+free. In the $G_k$ sector it is ~65,000 objects per model — and $G_k$'s solver error may already be
+two orders below the consumer spline that reads it (§2 (f)), in which case the right answer is to
+tighten nothing and say so with the measurement in hand. **That is the decision prompt 03 exists to
+inform, and it is the reverse of the one the 2026-09-12 plan expected.**
+
+**Measured, and the reversal is confirmed (2026-09-17).** Prompt 03 swept both axes over the
+production grids on three models: `atol` is inert to within 1.2 % across four decades, `rtol` moves
+the error by 10.1 per decade, and the consumer's spline of the numeric $G$ carries **×631 to
+×37,700** the solver's error at `(1e-10, 1e-8)`. §6.1 rule 4 therefore applies and the $G_k$ answer
+is **`unchanged`**, so the campaign's compute question in the sector that carries the cost settles
+at **zero**. Every `rtol` still open is in a 50-object sector, where a decade is free. The
+consumer-spline floor itself is not a tolerance question and has left this campaign:
+`[03-numeric-g-consumer-spline-is-the-dominant-error-near-the-hand-over]`, assigned 2026-09-17 to
+the hand-over campaign.
+
+**D2 — the datastore. *Settled 2026-09-12: not a problem, and the ordering stands.*** Prompt 05
 makes every row of the retuned targets unreachable by its old key, so the store grows a parallel
 set of objects. The user has confirmed that this is the **intended outcome, not a cost to be
-minimised**: the point of the campaign is that each quantity ends up with its own `atol`/`rtol`
-pair whose provenance can be stated, and distinct tolerances *should* produce distinct objects. So
-this campaign runs after GkTk-remedial as §4.2 describes, and the numeric-sector rows of the
-datastore its prompt 13 builds are expected to be superseded.
+minimised**, and `qcd-background-audit` restated the principle campaign-independently (§4.2). The
+numeric-sector and background rows of the datastore those campaigns built are expected to be
+superseded.
 
-**D3 — the vestigial WKB key columns.** `GkWKBIntegration`/`TkWKBIntegration` carry `atol`/`rtol`
-columns that are part of the lookup key and describe nothing (§2 (a)). Keep (schema churn avoided,
-a permanently misleading column), drop (a migration), or repurpose to record the Gauss orders that
-actually set the accuracy. Prompt 03 recommends.
+**D3 — what replaces the vestigial key columns. *Settled 2026-09-18: replace with the orders.***
+`BackgroundModel`, `GkWKBIntegration` and `TkWKBIntegration` carry `atol`/`rtol` columns that are
+part of the lookup key and describe nothing (§2 (a)), while the integer orders that *do* set their
+accuracy are in no key, label or tag (`[20-wkb-gauss-orders-not-in-lookup-key]`). Prompt 04
+recommended `replace with the orders` and **the user accepted it**, restating the principle that
+governs it: *there is nothing to rebuild and nothing to backfill, a schema change costs nothing,
+and a schema change that is needed is always the right answer.* This is a science code and the
+datastore is regenerable output. **No prompt may cite migration cost, row counts or the absence of
+a backfill value as an argument in a schema decision**; prompt 04's §10 did, and that framing is
+withdrawn. What may still be costed is *reader breakage*, because a script that queries a column
+that no longer exists simply stops working.
+
+What prompt 05 implements, per table:
+
+| Table | Loses | Gains |
+|---|---|---|
+| `BackgroundModel` | `atol_serial`, `rtol_serial` | `tau_gauss_order`, `cs_tau_gauss_order`, `friction_F_gauss_order` — three integrals ($1/H$, $c_s/H$, $-\tfrac32(1+c_s^2)/(1+z)$), three constants, each independently movable |
+| `GkWKBIntegration` | `atol_serial`, `rtol_serial` | `rho_gauss_order` |
+| `TkWKBIntegration` | `atol_serial`, `rtol_serial` | `rho_gauss_order` |
+| `GkSource` | `atol_serial`, `rtol_serial` | — |
+
+`GkSource` is the fourth vestigial case and is a different question: `compute()` calls
+`assemble_GkSource_values`, which stitches the numeric and WKB results together and integrates
+nothing, so there is no order to put there and `drop` is the whole answer.
+
+**The defect this closes is live, not hypothetical** (`TOLERANCE-INVENTORY.md` §2.4): the tolerance
+pair reaches no solver — `compute_background` accepts `atol`/`rtol` "for signature compatibility",
+and `GkWKBIntegration.py:334` says outright that the integrators have no tolerances and the pair is
+kept only because it is in the lookup key — while the orders are module constants in no column. So
+raise `TAU_GAUSS_ORDER` today and re-run, and the key is unchanged, the pipeline finds the existing
+order-4 row and serves it, and the `solver_label` beside it reads `cumulative-GL-stepping4`: the
+truth, recorded, in a column no lookup consults. **Corrected 2026-09-18 while writing prompt 05:
+this entry said three `extract_*.py` scripts break and the tree says six.** Every one of them —
+`extract_Gk_data.py:305`, `extract_GkWKB_data.py:347`, `extract_TkWKB_data.py:371`,
+`extract_GkSource_data.py:760`, `extract_tensor_source_data.py:303` and
+`extract_QuadSourceIntegral_data.py:959` — performs a `BackgroundModel` lookup with the pair, and
+the last two also look up `GkSource`. §3.5's count of six was right and this entry's three was low.
+The trap beside it: `extract_Gk_data.py:407`'s batch dict carries `"atol"`/`"rtol"` into
+**`GkNumericIntegration`**, which keeps its pair, so that one must not be changed.
 
 **D4 — whether `QuadSourceIntegral` is in or out.** §0.4 puts it out, read-only, because two other
 campaigns own those files. If it should instead be retuned here, that has to be agreed with those
-campaigns first, and prompt 05 changes character entirely.
+campaigns first, and prompt 06 changes character entirely.
+
+**D5 — may prompt 04 write a fixture and edit a test? *Settled 2026-09-16 at the re-anchor:
+YES.*** The user accepted it: prompt 04 **may** re-run
+`docs/gktk-remedial/residual_convergence.py`, write `ComputeTargets/tests/wkb_reference_data.json`,
+and re-measure `QCD_BREAK_POINT_ALIGNMENT_TOL` in `ComputeTargets/tests/test_background_tau.py`.
+§5 rule 8's carve-out is live rather than proposed, and
+`[01-convergence-block-has-a-separate-generator]` has for the first time a prompt allowed to close
+it. **The carve-out is exactly those three files and no others**; anything further is a stop under
+§4.3. The argument that was put, and accepted, follows. The
+Gauss orders' evidence is stale and the only way to take it back is to re-run
+`docs/gktk-remedial/residual_convergence.py`, write
+`ComputeTargets/tests/wkb_reference_data.json`, and re-measure `QCD_BREAK_POINT_ALIGNMENT_TOL` in
+`ComputeTargets/tests/test_background_tau.py` (`RECONCILIATION.md` §5). That breaks §5 rule 8's
+"the audit prompts change nothing", which is why it is put here rather than assumed. The
+alternative — audit the orders against evidence known to be two representations out of date — is
+not an alternative. `[01-convergence-block-has-a-separate-generator]` has already been declined by
+two prompts of another campaign on exactly this scope argument, and it will keep being declined
+until some prompt is given the files.
+
+**D6 — may a prompt change `main.source_grid_spacing_profile`? *Settled 2026-09-17: YES, narrowly.***
+The user accepted the carve-out §0.5 now records: prompt **02a** may change
+`main.source_grid_spacing_profile`, and nothing else in `main.py`, for the single purpose of making
+the source grid *buildable* at every production anchor.
+
+The argument that was put, and accepted. §0.5 as first written held the source grid fixed, and the
+reason was sound — the grid is another campaign's subject and moving it re-scores every figure in
+the record. What that boundary did not anticipate is that the grid **cannot be built at all** on
+`QCD_Cosmology` at the anchor a QCD production run uses: `source_grid_spacing_profile` raises, the
+version-1 grid does not, and the failure survives every relative perturbation of `z_init` from
+`1e-16` to `1e-8`, so it is not an artefact of one float
+(`[01-v2-density-raises-at-the-qcd-production-anchor]`, narrowed by prompt 02a's own measurement).
+Prompts 03, 04 and 06 are each chartered to measure over the production grids on **all three
+models**. Held to the original boundary, every one of them must measure QCD at **LambdaCDM's**
+anchor and label it "the production QCD grid" — which is precisely
+`[00-three-production-grid-reproductions]`, the defect prompt 01 was written to close. The boundary
+as drawn would have made this campaign commit, three more times, the error it exists to stop.
+
+**The carve-out is one function and one purpose.** It does not extend to the band
+`residual_node_range` returns, to `RESIDUAL_WKB_REGION_MARGIN`, to the break-point policy, to
+`build_z_sample`, to `_solve_horizon_exit`, or to the grid digest. Where the density criterion
+*applies* is `[01-density-criterion-imposed-outside-the-wkb-region]` and stays prompt 04's to
+recommend (**T7**); 02a's contribution to it is a measured guarded-node count, not a decision. And
+02a's acceptance is **bit-identity** with the two published digests rather than a claim of
+improvement, which is what keeps a buildability fix from becoming a grid change by degrees.
+
+**The two pieces it is explicitly not allowed to take** are in §4: tightening `_solve_horizon_exit`
+(**T6**, prompt 03) and applying one design tolerance to both the redshift row match and the grid
+digest (prompt 05). `[02a-grid-digest-not-reproducible]` records the measurement behind that
+split — the anchor is pinned only to `3.8e-7` relative, *coarser* than the `1e-7` at which the
+redshift table matches a row, so the tag can turn over while every row is re-matched and reused.
+That is a real defect with a real cost, and it is a tolerance decision, which is this campaign's
+subject; it is not a buildability fix, which is 02a's.
+
+**D7 — is prompt 03 one prompt or two? *Settled 2026-09-17: two.*** The user split §3.3's
+charter: prompt **03** takes `GkNumericIntegration` and the consumer-spline floor (**T4**), prompt
+**03a** takes `TkNumericIntegration` and `wavenumber_exit_time` (**T5**, **T6**).
+
+The argument that was put, and accepted. §5 rule 1 makes the commit the rollback boundary, and
+§3.3 as first written put three separate measurement campaigns behind one. They are not
+comparable in weight: `GkNumericIntegration` is ~65,000 objects per model, has never been swept in
+either axis, and is the sector **D1** actually turns on, while `TkNumericIntegration` is a re-take
+of `GkTk-remedial` prompt 17's sweep on the version-2 grid and `wavenumber_exit_time` is a new but
+small measurement. Sharing a boundary means a failed check on the smallest reverts the largest.
+The split follows **02a**'s precedent in carrying a letter rather than renumbering, so §§3.4–3.6's
+charters, §6.2's rows and the board's T-numbers keep the numbers every other document cites: **T4**
+stays prompt 03's and **T5**/**T6** become prompt 03a's, with no item renumbered.
+
+**03a is written after 03 has landed**, for the reason §4 gives: the $T_k$ re-take should be taken
+knowing what the $G_k$ sweep found about whether the axes separate. **D1 is settled only once both
+have reported**, since `wavenumber_exit_time`'s pair is part of it.
+
+**D8 — may prompt 04b widen D5 by one file, and land the block? *Settled 2026-09-18: YES.*** The
+user granted `ComputeTargets/tests/test_background_cs_tau_friction.py` to prompt **04b** — and that
+module only, for its threshold assertion only — so that the `convergence` block can finally be
+written. **D5's grant of three files is otherwise unchanged and `test_phase_residual.py` is
+explicitly not in it**; it reads the same block, pins `RHO_GAUSS_ORDER == decision.N_rho`, and must
+pass unedited.
+
+The argument that was put, and accepted. D5 was written expecting the block's regeneration to break
+at most the one test it named. Prompt 04 read the tree instead of the plan and found **three**
+modules reading the block, then measured the collision exactly: regenerating it takes the recorded
+reference floors from 1.878541e-14 and 1.886653e-14 to **3.223619e-16** and **4.354138e-16**, 58×
+and 43× tighter, because `qcd-background-audit` prompts 04–06 replaced the representation under the
+JSON's own QCD reference values — while the quantity scored against them does not move at all
+(2.254e-15, 2.212e-15). Both threshold tests then fail by 6.99× and 5.08×. Prompt 04 therefore
+stopped with the measurement complete and the fixture untouched.
+
+**That stop was procedurally right and substantively wrong to leave standing.** A fixture whose
+reference values are 58× worse than the tree can now compute, and whose `recommended_scheme` names a
+knot split production has been unable to perform since prompt 07, should not remain the evidence
+every `*_GAUSS_ORDER` comment cites. The user's decision is that it should be replaced.
+
+**And the repair is not the obvious one.** The failing assertion is *production error ≤ 3 × the
+fixture's own agreement with a converged reference* — two independent quantities, as the test's own
+comment concedes ("a floor-against-floor comparison, not an accuracy claim"). It held only while
+both sides sat at ~2e-14 by coincidence. Raising the factor past 7 keeps a meaningless comparison
+alive with a fresher number in it and will need raising again the next time the fixture improves.
+**04b replaces the construction**: an absolute bound on the production quantity, justified by the
+double-precision accumulation floor `ORDER-AUDIT.md` §§3.1 and 5 measure. §3.4b is the charter and
+`04b-regenerate-the-convergence-block.md` §3 is the rule it applies.
+
+**D9 — is prompt 05 one prompt or two? *Settled 2026-09-18: two, schema first.*** The user split
+§3.5's charter the way D7 split §3.3's, and for the same reason: §5 rule 1 makes the commit the
+rollback boundary, and the two halves of "decouple" are neither comparable in weight nor alike in
+how they fail. Measured on the tree at `cc1f035` before the split was put: the schema half touches
+four factories (~128 `atol`/`rtol` sites), four compute classes (~26), `main.py` at four
+`object_get` sites and six `extract_*.py` readers; the tolerance half touches `config/defaults.py`,
+**32** tolerance-passing sites in `main.py` — eight keyword and 24 inside batch dicts, including the
+`**x` dispatches that are the hazard §2 (g) names — and the `ast` guard. One commit carrying both
+would be far larger than any other in the campaign and would put a schema change and a parameter
+change behind the same revert.
+
+**Schema first, and the order is the substance of the decision rather than a preference.** Prompt
+05 removes the tolerance pair from the four targets that never used one, so prompt 05a then
+decouples four targets instead of eight and builds its guard against the enumeration that will
+actually stand. Run the other way round, 05a wires per-target tolerance objects through
+`BackgroundModel`, `GkWKBIntegration`, `TkWKBIntegration` and `GkSource` for 05 to delete, and the
+guard is written twice.
+
+**It is an insertion, not a renumbering**, carrying a letter for the reason 02a and 04b do: §3.6's
+charter and §6.2's rows keep the numbers the rest of the tree cites, and no board item is
+renumbered — **T9** goes to 05, **T8** and **T10** to 05a. The consequence for §5 rule 8 is worth
+stating, because the rule names prompt 05 by number: **the permission to change a parameter belongs
+to 05a, and prompt 05 changes none.** `config/defaults.py` is byte-identical when 05 finishes and
+all four `*_GAUSS_ORDER` constants are still 4, which is an acceptance condition of that prompt
+rather than an observation about it.
+
+**D10 — is the order an object reports the order it was built at? *Settled 2026-09-18: it must be,
+and prompt 05b runs next to make it so.*** Prompt 05's own agent opened
+`[05-rho-gauss-order-reaches-the-residual-table-through-a-default-argument]`: `phase_residual`'s
+three entry points take `order: int = RHO_GAUSS_ORDER`, so a residual table can be built at one
+order and persisted at another. Asked whether the fix was simply to pass the order at the single
+production call site, the orchestrator found that it was not, and found a **second and larger half
+the issue does not name**: `BackgroundModel._build_tau_primitive`, `_build_cs_tau_primitive` and
+`_build_friction_F_primitive` rebuild a stored model's cumulative tables at the **current module
+constant**, while the row's own three order columns never reach the constructor at all.
+**Corrected 2026-09-18, after prompt 05b landed:** this paragraph first said those columns were
+*selected by* `build()` and then dropped. They were not selected either — the `:340-342` cited was
+the missing-column detection tuple, not the select list — so 05b had to add them to the select as
+well as pass them on (log 05b, deviation 2, `STRUCTURALLY REQUIRED`). The defect is one step larger
+than stated here, not smaller.
+
+**The user's instruction, 2026-09-18:** this is a correctness issue and the code must be made
+correct — *set up correctly, performed correctly, persisted correctly, and, if it is read back from
+the datastore, rehydrated correctly* — and whatever comes downstream of that is to be dealt with
+rather than traded against. The `atol`/`rtol` pair did it that way before prompt 05 removed it
+because that is the right way to do it. **Zero current impact is not an argument** and no prompt may
+offer it as one: the defect is masked only because `build()` filters on the constant, so a served row
+always happens to carry it, which makes correctness rest on an argument about the filter instead of
+on construction.
+
+**What does not change**: `build()` still filters on the current module constant. That is the lookup
+semantics — give me a row computed at the order this run is configured for — and once the record is
+faithful the two no longer need to agree by luck, because a row computed at another order is a
+different row rather than a miss to repair.
+
+**It runs before 05a, and the letter therefore records insertion rather than run order** — a
+departure from 02a and 03a, made because correctness should land before further plumbing is layered
+on the same objects. The two do not collide: 05a owns the four tolerance-carrying targets and
+`config/defaults.py`, 05b owns `BackgroundModel`, the two WKB compute classes, `phase_residual` and
+three `build()` paths. No board item is renumbered; 05b takes the new **T15**, and 05a keeps **T8**
+and **T10**. §5 rule 8 is unaffected: the permission to move a number still belongs to 05a alone,
+and **05b changes no number**.
+
+**D11 — is prompt 06 one prompt or two? *Settled 2026-09-18: two, the measurement first.*** The user
+split §3.6's charter on the same grounds that settled **D7** and **D9**: §5 rule 1 makes the commit
+the rollback boundary, and §3.6 as written carried three pieces of work of very unequal weight — a
+read-only convergence sweep with a new script, the close-out document, and
+`docs/TOLERANCE-PROVENANCE.md`, which must cover the 39 rows of `TOLERANCE-INVENTORY.md` §5.4 plus
+the six constants prompt 05a shipped, with five provenance fields each, assembled from ten campaign
+logs and three other campaigns' provenance documents. The sweep alone is comparable in weight to
+prompt 03's.
+
+**06 takes the measurement and the inventory, board item T11; 06a takes the close-out and the
+provenance note, T12.** No item is renumbered and the letter records insertion, as it does for 02a,
+03a and 05a. **Measurement first is the substance of the decision, not a preference**: 06a assembles
+the provenance note from `TOLERANCE-INVENTORY.md` §5.4, which prompts 05, 05a and 05b left stale —
+`inventory.py --check` reports it out of date at `a9ad6fc` — so a 06a that ran first would either
+assemble against a table describing the tree of 2026-09-17 or regenerate it itself, which is 06's
+job. It also means the campaign's named deliverable is not reverted by a failure in a sweep.
+
+**The measurement is offline, and that is the second half of the decision** (user, 2026-09-18). The
+two drivers under `docs/source-remediation-verification/` need Ray and a populated datastore; prompt
+06 instead imports the offline fixture `ComputeTargets/tests/test_quadsource_integral.py` already
+builds, and cites `source-remediation` log 12's live-run statistics rather than re-taking them. What
+the fixture gives that a live run would not is the **exact / realistic** pair, which separates the
+quadrature error from the representation floor — the instrument §6.1 rule 1 needs and the reason the
+offline route is the better measurement here rather than the available one.
+
+**D4 is untouched.** It is settled by §0.4 — `QuadSourceIntegral` is out of scope for retuning and in
+scope for measurement — and 06 measures under that boundary. A finding that the quadrature tolerance
+is the limiting parameter is a stop that puts D4 back to the user, and is the one circumstance in
+which 06 is a §4.1 stopping point rather than a hand-back.

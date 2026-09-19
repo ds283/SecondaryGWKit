@@ -89,31 +89,44 @@ def WKB_product_mod_2pi(big_number: float, small_number: float, mod_2pi_init: fl
 
 
 def wrap_theta(theta: float) -> Tuple[int, float]:
+    """
+    Range-reduce a phase, returning ``(shift, mod)`` with ``shift * TWO_PI + mod == theta`` up
+    to rounding and ``mod`` in ``(-2pi, 0]``, the negative-remainder convention of
+    ``WKB_mod_2pi``. (A positive ``theta`` below half an ulp of ``TWO_PI``, ~2.2e-16, returns
+    ``mod == -TWO_PI`` exactly, as ``WKB_mod_2pi`` does.)
+
+    The reduction is done in one step by ``WKB_mod_2pi``, so it is exact and constant-time at
+    every ``|theta|`` (docs/radiation-oracle/KOHRI-TERADA-ORACLE.md section 8, Table 8.3).
+
+    Prefer ``WKB_mod_2pi`` directly when reducing a freshly formed phase: this function differs
+    from it only in normalising ``-0.0`` to ``+0.0``, and its name says less about what it does.
+    Its one production caller, ``apply_phase_offset``, passes ``mod + delta`` with ``mod`` in
+    ``(-2pi, 0]`` and ``delta`` the ``atan2`` offset in ``(-pi, pi]``, so it reduces by at most
+    one cycle there.
+    """
     # given a value of theta, range-reduce so that theta falls within (-TWO_PI, 0], and
     # work out what corresponding shift this produced in div 2pi
 
     # recall that by convention, all our mod 2pi values are negative
 
-    # if theta is positive, reduce by 2pi until it is negative
-    if theta > 0.0:
-        shift = 0
-        while theta > 0.0:
-            shift = shift + 1
-            theta = theta - TWO_PI
+    # theta is already in the required range: nothing to do, and no shift required. This is the
+    # common case for the one production caller, apply_phase_offset
+    if -TWO_PI < theta <= 0.0:
+        return 0, theta
 
-        return shift, theta
+    # otherwise reduce in ONE step through WKB_mod_2pi, whose remainder is an exact fmod and
+    # whose cycle count is derived from that remainder. This replaced a per-cycle subtraction
+    # loop whose cost and rounding both grew as |theta| / 2pi, which made this function a trap
+    # for any fixture reducing an unreduced phase ([10-wrap-theta-loop-at-large-phase],
+    # prompts/GkTk-remedial; the measurements are in that entry, and commit a34d9c7 records the
+    # switch). Production output did not move: over |theta| <= 2*TWO_PI, which covers every
+    # value production reaches -- apply_phase_offset passes mod + delta in (-3pi, pi] -- the two
+    # agree bit-for-bit, the loop's single add or subtract being exact there by Sterbenz's lemma.
+    shift, theta_mod_2pi = WKB_mod_2pi(theta)
 
-    # if theta < -2pi, increase by 2pi until theta >= -2pi
-    if theta <= -TWO_PI:
-        shift = 0
-        while theta <= -TWO_PI:
-            shift = shift - 1
-            theta = theta + TWO_PI
-
-        return shift, theta
-
-    # otherwise nothing to do, theta is already in the required range, no shift required
-    return 0, theta
+    # WKB_mod_2pi's fmod yields -0.0 where the loop produced +0.0 (theta an exact multiple of
+    # TWO_PI). Normalise, so the returned pair is bit-identical to the loop's there too
+    return shift, theta_mod_2pi + 0.0
 
 
 def apply_phase_offset(

@@ -13,7 +13,7 @@ from CosmologyConcepts import wavenumber_exit_time, redshift, redshift_array, wa
 from Datastore import DatastoreObject
 from LiouvilleGreen.WKBtools import apply_phase_offset
 from LiouvilleGreen.constants import TWO_PI
-from MetadataConcepts import tolerance, store_tag
+from MetadataConcepts import store_tag
 from Quadrature.integration_metadata import IntegrationSolver, IntegrationData
 from Quadrature.integrators.WKB_phase_function import (
     PHASE_SOLVER_LABEL,
@@ -47,8 +47,6 @@ class GkWKBIntegration(DatastoreObject):
         solver_labels: dict,
         model: ModelProxy,
         k: wavenumber_exit_time,
-        atol: tolerance,
-        rtol: tolerance,
         z_source: Optional[redshift] = None,
         z_init: Optional[float] = None,
         G_init: Optional[float] = 0.0,
@@ -94,6 +92,10 @@ class GkWKBIntegration(DatastoreObject):
             self._init_efolds_subh = None
             self._metadata = None
 
+            # nothing has been computed and no row is behind us, so there is no order to report
+            # yet; store() fills it from the payload the phase function returns
+            self._rho_gauss_order = None
+
             self._solver = None
 
             self._sin_coeff = None
@@ -112,6 +114,11 @@ class GkWKBIntegration(DatastoreObject):
 
             self._init_efolds_subh = payload["init_efolds_subh"]
             self._metadata = payload["metadata"]
+
+            # the order the row records, which is the order this object's phase was tabulated
+            # at. It is a payload key of its own and not read off "metadata", because that
+            # column is nullable and carries JSON the factory may not have to hand
+            self._rho_gauss_order = payload["rho_gauss_order"]
 
             self._solver = payload["solver"]
 
@@ -151,8 +158,28 @@ class GkWKBIntegration(DatastoreObject):
 
         self._compute_ref = None
 
-        self._atol = atol
-        self._rtol = rtol
+    # The Gauss-Legendre order of the phase residual table, and -- since prompt 05 of
+    # prompts/tolerance-convergence -- this object's datastore lookup key.
+    #
+    # Prompt 05 made this accessor read phase_residual.RHO_GAUSS_ORDER at call time, which is the
+    # right answer for the *key* and the wrong one for the *object*: a property that re-reads a
+    # module constant reports what the module currently says, not what this object was built at.
+    # Since prompt 05b it reports the order recorded on the path the object came into existence
+    # by -- the residual table's own order on the compute path (store(), from the phase
+    # function's payload), the row's column on the rehydration path (__init__, from the
+    # factory's payload). build() goes on filtering on the module constant, which is the lookup
+    # semantics -- give me a row computed at the order this run is configured for -- so a row
+    # written at any other order is a different row rather than a miss to repair.
+    @property
+    def rho_gauss_order(self) -> int:
+        if self._rho_gauss_order is None:
+            raise RuntimeError(
+                "GkWKBIntegration: rho_gauss_order was read before this object had one. It is "
+                "the order the phase residual table was built at, so it exists only once the "
+                "object has been computed (store()) or rehydrated from a row."
+            )
+
+        return self._rho_gauss_order
 
     @property
     def model_proxy(self) -> ModelProxy:
@@ -331,9 +358,12 @@ class GkWKBIntegration(DatastoreObject):
             print(f"     This may lead to meaningless results.")
 
         # The phase comes from the background model's conformal-time table and a residual table
-        # (Quadrature/integrators/WKB_phase_function.py), which have no tolerances. self._atol
-        # and self._rtol are kept because they are part of the datastore lookup key
-        # (RECONCILIATION.md §2 item 10); they are not passed here.
+        # (Quadrature/integrators/WKB_phase_function.py), which have no tolerances. Since prompt
+        # 05 of prompts/tolerance-convergence there is none in the lookup key either: what is
+        # keyed is the residual table's Gauss order. WKB_phase_function builds that table at the
+        # order this run is configured at (phase_residual.RHO_GAUSS_ORDER, resolved when the
+        # table is built) and hands the order back in its payload, which is what store() records
+        # as self.rho_gauss_order -- so the object reports what it used (prompt 05b).
         self._compute_ref = WKB_phase_function.remote(
             self._model_proxy,
             self._k_exit,
@@ -372,6 +402,12 @@ class GkWKBIntegration(DatastoreObject):
         self._WKB_violation_efolds_subh = data["WKB_violation_efolds_subh"]
 
         self._metadata = data["metadata"]
+
+        # the order the residual table was actually built at, carried out of the table by
+        # WKB_phase_function. This is what makes the record faithful: the factory's store()
+        # writes this value into the key column, so a table built at any order records that
+        # order rather than whatever the module constant happens to say when the row is written
+        self._rho_gauss_order = int(data["rho_gauss_order"])
 
         model: BackgroundModel = self._model_proxy.get()
 
