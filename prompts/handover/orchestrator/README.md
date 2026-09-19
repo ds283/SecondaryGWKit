@@ -69,9 +69,12 @@ PYTHONPATH=. ./venv/bin/python -m unittest discover -s CosmologyModels/tests -t 
 
 - Both suites print model banners on stdout, so **`| tail -5` will not show the verdict**. Capture
   to a file and grep it, or use `tail -40`.
-- `LiouvilleGreen/tests` was **not** baselined here (it was still running when these were taken).
-  Neither prompt touches that package. If you want it as a control, take it yourself before
-  dispatching and record the figure.
+- `LiouvilleGreen/tests` was **not** baselined here, and neither prompt touches that package. It
+  was still running after ~20 minutes when these figures were taken, which is **expected, not a
+  hang**: `[08-3bessel-plot-cost-dominates-the-suite]` records `test_3bessel_analytic` spending
+  its whole wall clock — **21.2 min for one test** — evaluating 250-point grids to draw figures,
+  not on assertions. If you want it as a control, start it before you dispatch and collect it
+  afterwards; do not block on it, and do not kill it and call the suite broken.
 - **The known flake is not a stop.**
   `ComputeTargets.tests.test_tk_wkb_phase.TestCost.test_wall_time_per_object` asserts a wall-clock
   figure with about a 1× margin and fails roughly one run in three. Confirm by re-running that
