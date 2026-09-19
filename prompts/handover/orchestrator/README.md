@@ -55,12 +55,16 @@ The same ones `prompts/radiation-oracle/orchestrator/README.md`,
 
 ## Baselines
 
-Taken at **`0283906`**, on this branch, 2026-09-19:
+Taken at **`b80b0f5`** — the merge of `main` — on this branch, 2026-09-19:
 
 | Suite | Count | Verdict | Wall |
 |---|---|---|---|
-| `ComputeTargets/tests` | **530** | OK | 122 s |
-| `CosmologyModels/tests` | **39** | OK | 0.7 s |
+| `ComputeTargets/tests` | **530** | OK | 140 s |
+| `CosmologyModels/tests` | **39** | OK | 0.8 s |
+| `LiouvilleGreen/tests` | **148** | OK (skipped=1) | 25 s |
+
+**Full tree: ~2.8 minutes.** Before the merge it was ~24.5 — `LiouvilleGreen` alone measured
+**1346.7 s** on this branch at `3f786ec`. Verify freely; there is no longer a reason to ration it.
 
 ```bash
 PYTHONPATH=. ./venv/bin/python -m unittest discover -s ComputeTargets/tests -t . 2>&1 | tail -40
@@ -71,20 +75,27 @@ PYTHONPATH=. ./venv/bin/python -m unittest discover -s CosmologyModels/tests -t 
 ```
 
 ```bash
+PYTHONPATH=. ./venv/bin/python -m unittest discover -s LiouvilleGreen/tests -t . 2>&1 | tail -40
+```
+
+```bash
 ./venv/bin/python -m black --check $(git diff --name-only HEAD~1 HEAD -- '*.py')
 ```
 
 - Both suites print model banners on stdout, so **`| tail -5` will not show the verdict**. Capture
   to a file and grep it, or use `tail -40`.
-- `LiouvilleGreen/tests` was **not** baselined here, and neither prompt touches that package. It
-  was still running after ~20 minutes when these figures were taken, which is **expected, not a
-  hang**: `[08-3bessel-plot-cost-dominates-the-suite]` records `test_3bessel_analytic` spending
-  its whole wall clock — **21.2 min for one test** — evaluating 250-point grids to draw figures,
-  not on assertions. If you want it as a control, start it before you dispatch and collect it
-  afterwards; do not block on it, and do not kill it and call the suite broken.
+- **Do not set `THREE_BESSEL_DIAGNOSTIC_PLOTS`.** `main`'s `07c6041` gated
+  `test_3bessel_analytic`'s convergence figures behind it, which is the whole of the 1346.7 s →
+  25 s fall; setting it to anything other than `0`/`false` restores a ~22-minute run and 4.2 MB of
+  figures per invocation. The skipped test is `test_YJJ_log_scaling`, which asserts nothing and is
+  `skipUnless` the same flag — **`skipped=1` is the expected state, not a problem to fix.**
+- Neither workstream A prompt touches `LiouvilleGreen`, so it is a control rather than a target; it
+  is cheap enough now to take every time.
 - **The known flake is not a stop.**
   `ComputeTargets.tests.test_tk_wkb_phase.TestCost.test_wall_time_per_object` asserts a wall-clock
-  figure with about a 1× margin and fails roughly one run in three. Confirm by re-running that
+  figure with about a 1× margin and fails roughly one run in three. `ComputeTargets`'s own wall
+  time varies with machine load — 122 s and 140 s on two runs of the same 530 tests — so treat
+  the count as the signal and the time as an aside. Confirm by re-running that
   module alone before attributing anything to the commit.
 - **`./venv` does not exist in a fresh worktree.** Symlink the main checkout's and add it to
   `.git/worktrees/<name>/info/exclude`.

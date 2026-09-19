@@ -30,7 +30,7 @@ subagent convert it into a fallback to the exact flavour.
 
 1. **Confirm `HEAD`** on `claude/integration-handover-review-f4bfb4`. Record the SHA; the agent must
    be told it, and told that `HEAD` is **not** its own.
-2. **Take the baselines.** For this prompt they are a *ceiling and a floor*: both suites must read
+2. **Take the baselines.** For this prompt they are a *ceiling and a floor*: all three suites must read
    **exactly** what they read before. Record them at the actual `HEAD`, not from this file — prompt
    01 may have landed and raised `ComputeTargets`.
 3. **Confirm `IMPLEMENTATION_STATE.md` exists.** Prompt 01 creates it. If it does not, prompt 01 has
@@ -54,7 +54,7 @@ risen**; and that §7's stop conditions mean *stop and ask*.
 
 ## 3. The review — eight checks
 
-1. **Suites unchanged.** `ComputeTargets` and `CosmologyModels` must read **exactly** the baseline
+1. **Suites unchanged.** `ComputeTargets`, `CosmologyModels` and `LiouvilleGreen` must read **exactly** the baseline
    figures. A *rise* is as much a failure as a fall: prompt §5 says this adds no test. If the agent
    added one, that is a scope breach — report it, do not accept it as a bonus.
 2. **The control cell.** Compare the agent's `exact` × gap-closed rows against the `large_x.py`
