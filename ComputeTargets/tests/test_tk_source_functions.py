@@ -372,13 +372,20 @@ class Fixture:
         stored friction samples are then whatever makes the code's amplitude formula exact --
         which is `exact_envelope_F` measured from the hand-over, so `exact_envelope_model()` is
         the background this fixture must be read against.
+
+        The phase is reduced by `WKB_mod_2pi`, not `wrap_theta`. Both return the same
+        (div 2pi, mod 2pi) pair with mod in (-2pi, 0] -- the cycle counts agree on every sample
+        of every fixture the suite builds -- but `wrap_theta` subtracts TWO_PI once per cycle,
+        costing O(theta / 2pi) and accumulating 2.3e-12 rad of rounding at this fixture's
+        |theta| ~ 1e3 (1.5e-4 rad at 1e7), whereas `WKB_mod_2pi`'s remainder is an `fmod` and
+        exact (docs/radiation-oracle/KOHRI-TERADA-ORACLE.md section 8, Table 8.3).
         """
         z_init = self.crossover_z
         sin_coeff = self.M_exact(z_init) * sqrt(self.omega(z_init))
 
         values = []
         for z in self.z_WKB:
-            div_2pi, mod_2pi = wrap_theta(self.theta_exact(z))
+            div_2pi, mod_2pi = WKB_mod_2pi(self.theta_exact(z))
             omega = self.omega(z)
             H_ratio = self.model.Hubble(self.crossover_z) / self.model.Hubble(z)
             friction = log(self.M_exact(z) * sqrt(omega) / (sin_coeff * sqrt(H_ratio)))

@@ -1,6 +1,6 @@
 # Open issues — project-wide index
 
-**Last updated:** 2026-09-18 · **82 open** across eleven campaigns.
+**Last updated:** 2026-09-19 · **82 open** across eleven campaigns.
 
 This file exists so that an issue opened by one campaign is not lost when that campaign closes.
 It is an **index, not a record**: one line per issue, pointing at the campaign status board that
@@ -91,7 +91,7 @@ prompt 13 left open.
 | `[08-docs-scripts-reference-removed-chunking]` | GkTk-remedial | Two `docs/` reproduction scripts (`t5_spline.py`, `measure.py`) read `phase_spline` internals (`_chunk_list`, `_splines`, `_match_chunk`) that prompt 08 deleted with chunking; they documented the chunked tree they ran on and were not edited. |
 | `[10-transfer-remedial-tolerance-comments-stale]` | GkTk-remedial | Five tolerance comments `8ba9159` wrote in `test_tk_source_functions.py` now describe the consumer re-spline prompt 10 deleted and quote numbers three to four orders above the new measurements. Not edited — `8ba9159`'s text was a stop condition for prompt 10 — and every assertion still passes. |
 | `[20-wkb-rows-consume-numeric-initial-data]` | GkTk-remedial | `Gk`/`TkWKBIntegration` take $z_{\rm init}$, $G_{\rm init}$/$T_{\rm init}$ and the derivative from the numeric stop point and are keyed independently of the numeric row: no foreign key, and the initial values are stored `nullable=False` but never filtered. Covered in practice only because `z_init` is filtered as an absolute `1e-7` against $z\sim10^{12}$, i.e. exactly — measured on QCD at $k=4.972\times10^7$, the two break-point policies move $z_{\rm init}$ by 4.59e5 and the lookup misses. A change moving the stop *values* without moving $z_{\rm init}$ would be served a stale row. |
-| `[10-wrap-theta-loop-at-large-phase]` | GkTk-remedial | `wrap_theta` reduces by adding $2\pi$ in a loop, so at $|\theta|\sim10^6$ rad it takes ~1.6e5 iterations and reconstructs $\theta$ only to 1.39e-06 rad. Inert in production (its one caller passes `mod + delta`), a trap for fixtures. The companion defect in `WKB_mod_2pi`'s cycle count was fixed by `phase-representation` prompt 01 (2026-09-13), so that function is now exact in both halves; this loop is not. |
+| `[10-wrap-theta-loop-at-large-phase]` | GkTk-remedial | `wrap_theta` reduces by adding $2\pi$ in a loop, so at $|\theta|\sim10^6$ rad it takes ~1.6e5 iterations and reconstructs $\theta$ only to 1.39e-06 rad. Inert in production (its one caller passes `mod + delta`), a trap for fixtures. The companion defect in `WKB_mod_2pi`'s cycle count was fixed by `phase-representation` prompt 01 (2026-09-13), so that function is now exact in both halves; this loop is not. **Narrowed 2026-09-19:** `Fixture.exact_functions()` switched to `WKB_mod_2pi` (the loop cost 2.27e-12 rad even at $|\theta|\approx10^3$); eight test call sites remain. |
 | `[13-scoped-run-driver-k-grid-literal]` | GkTk-remedial | `docs/source-remediation-verification/scoped_pipeline_run.py` matches a `main.py` k-grid literal that `f17f2d4` renamed to `NUMBER_SOURCE_K_VALUES`/`NUMBER_RESPONSE_K_VALUES`, so it finds zero occurrences and raises rather than running. The `source-remediation` Layer 2 is not reproducible by its own documented command; prompt 13 copied the driver into `docs/gktk-remedial/` rather than editing another campaign's file. |
 
 ---

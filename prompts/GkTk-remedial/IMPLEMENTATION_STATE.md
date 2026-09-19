@@ -2,7 +2,7 @@
 
 **Campaign:** [`README.md`](README.md) · **Source review:** [`docs/gk-wkb-review-fable-2026-09-09.md`](../../docs/gk-wkb-review-fable-2026-09-09.md) · **Reconciliation:** [`RECONCILIATION.md`](RECONCILIATION.md)
 **Baseline commit:** `9ff59d5` (`main`, clean)
-**Last updated:** 2026-09-15 — `[13-consumer-spline-crosses-eos-break-points]` is **CLOSED** (§4) by `prompts/qcd-background-audit/` prompt 10, which measured nine knot schemes over all twelve production rows and found the remedy this entry named **2.09×/2.10× worse** ($C^0$ repeated knot) and per-segment splines 5.00×/5.06× worse, while ±5 grid intervals of extra *samples* around the crossing bring both rows inside the 1e-06 rad target; the unfixed accuracy defect re-opens as `[10-consumer-phi-unresolved-at-the-eos-crossing]` on the `qcd-background-audit` board, assigned to its prompt 11. Previously 2026-09-14 — `[13-consumer-spline-crosses-eos-break-points]` **narrowed again** by `prompts/qcd-background-audit/` prompt 09: re-measured on the corrected background its two §3.5 rows are **4.25× and 4.39× larger**, because the old `T(z)` spline was smearing the equation of state's step rather than causing the error, and this entry's supersession paragraph's prediction is falsified. Previously 2026-09-14 — `[02-qcd-reference-floor]` and `[03-qcd-short-baseline-reference-endpoint-rounding]` re-measured (narrowed, neither closed) by `prompts/qcd-background-audit/` prompt 06. Previously 2026-09-13 — **Prompt 13 landed and the campaign is closed.** The verification
+**Last updated:** 2026-09-19 — `[10-wrap-theta-loop-at-large-phase]` **narrowed**, not closed: `Fixture.exact_functions()` now reduces the exact Bessel phase with `WKB_mod_2pi`, removing up to 2.27e-12 rad of fixture-made phase error at $|\theta|\approx10^3$; eight other test call sites remain. Previously 2026-09-15 — `[13-consumer-spline-crosses-eos-break-points]` is **CLOSED** (§4) by `prompts/qcd-background-audit/` prompt 10, which measured nine knot schemes over all twelve production rows and found the remedy this entry named **2.09×/2.10× worse** ($C^0$ repeated knot) and per-segment splines 5.00×/5.06× worse, while ±5 grid intervals of extra *samples* around the crossing bring both rows inside the 1e-06 rad target; the unfixed accuracy defect re-opens as `[10-consumer-phi-unresolved-at-the-eos-crossing]` on the `qcd-background-audit` board, assigned to its prompt 11. Previously 2026-09-14 — `[13-consumer-spline-crosses-eos-break-points]` **narrowed again** by `prompts/qcd-background-audit/` prompt 09: re-measured on the corrected background its two §3.5 rows are **4.25× and 4.39× larger**, because the old `T(z)` spline was smearing the equation of state's step rather than causing the error, and this entry's supersession paragraph's prediction is falsified. Previously 2026-09-14 — `[02-qcd-reference-floor]` and `[03-qcd-short-baseline-reference-endpoint-rounding]` re-measured (narrowed, neither closed) by `prompts/qcd-background-audit/` prompt 06. Previously 2026-09-13 — **Prompt 13 landed and the campaign is closed.** The verification
 document is [`docs/gktk-remedial-verification.md`](../../docs/gktk-remedial-verification.md), taken
 on `ff9ee29` and changing no production code. **Layer 1** re-measures review §4 and §12.3 through
 the production functions on both models at $k\in\{10^5,10^7,3\times10^8\}$: at $z=0.1$ on
@@ -512,6 +512,23 @@ Opened by the planning pass, 2026-09-10, before any prompt runs.
   1e-7 rad bound on the fixture's arithmetic alone. There is no warning in the docstring.
   **Next step:** a one-line note on `wrap_theta`, or an `fmod` fast path for
   $|\theta| > 2\pi$; three test modules still call it at small $|\theta|$, where it is fine.
+  **Narrowed (2026-09-19), not closed** — outside any campaign, following
+  [`docs/radiation-oracle/KOHRI-TERADA-ORACLE.md`](../../docs/radiation-oracle/KOHRI-TERADA-ORACLE.md)
+  §8, Table 8.3. "Small $|\theta|$, where it is fine" is only approximately right: at
+  $|\theta|\approx10^3$ the loop is already **2.27e-12 rad** from the exact reduction of the double
+  $\theta$ by the double `TWO_PI`, against 0 for `WKB_mod_2pi`. `Fixture.exact_functions()` in
+  `ComputeTargets/tests/test_tk_source_functions.py`, which feeds the realistic flavour of
+  `test_quadsource_integral`, now reduces with `WKB_mod_2pi`: the cycle counts agree with
+  `wrap_theta`'s on every sample of all nine fixtures the suite builds (173–218 samples,
+  $|\theta|\le995$). Measured effect, suite 530 OK before and after: the exact-LG-fixture
+  $|T_{\rm WKB}-M\sin\theta|/\text{env}$ falls **2.079e-12 → 1.659e-12** ($w=1/3$) and
+  **2.309e-12 → 1.461e-12** ($w=0.2$); the 18 realistic quadsource totals move by at most
+  **4.28e-13 of scale** (b=0.2 q-smooth $x_{\rm resp}=980$, `WKB_Levin` only; `numeric_quad`
+  bit-identical), invisible in their printed 4-figure rows. **Still calling `wrap_theta` on an
+  unreduced phase:** `test_tk_source_functions.py` `LG_functions` (`:422`) and `:917`, `:1099`,
+  `:1145`, `:1185`; `test_phase_groups.py:325`, `:645`; `test_quadsource_integral.py:255`. The
+  next step above stands for `wrap_theta` itself, and each of those sites is a one-line
+  `WKB_mod_2pi` substitution once its cycle counts are checked to agree.
 
 - **[00-tk-lg-truncation-floor]** *(planning, 2026-09-10; **assigned to the hand-over campaign**)*
   — the transfer function's LG representation is not exact in radiation: $3.8\times10^{-5}$ of the
