@@ -240,6 +240,10 @@ comparison such as a region-coverage guard.
 Five workstreams. **A is instruments and touches no production code**; B, C and D are the seam
 itself; E is the one genuine optimisation and depends on all of them.
 
+**Written so far: prompt 00 (landed), A1 and A2 (written, not run).** B1, B2, C1, D1, D2, E1 and E2
+are groupings only — scope, issues and ordering, no prompt file. Orchestration for A1 and A2 is
+[`orchestrator/`](orchestrator/README.md); **A1 before A2**, because A1 creates the board.
+
 ### Workstream A — instruments
 
 Pure information gain, independent of every line of hand-over code and of each other.
@@ -247,8 +251,8 @@ Pure information gain, independent of every line of hand-over code and of each o
 | # | Grouping | Covers | Closes |
 |---|---|---|---|
 | **00** | **Domènech reconnaissance** ([`00-domenech-reconnaissance.md`](00-domenech-reconnaissance.md)) — **LANDED 2026-09-19**, Claude Fable 5.1 → [`docs/handover/DOMENECH-KERNEL-RECON.md`](../../docs/handover/DOMENECH-KERNEL-RECON.md). Found two sign errors in the published review, resolved both §2 (i2) discrepancies, confirmed §2 (i3), and **derived** $N(b)$ rather than leaving it predicted. | Input to A1 | Lands no code; pre-closes `[01-general-w-normalisation-is-predicted-not-measured]` pending A1's constancy measurement |
-| **A1** | **The Domènech general-$b$ oracle.** Implement the target object of §2 (i) — the **corrected** (4.10) `eq:Isimple` (recon §2.2: $Y_{b+1/2}{\cal I}_J - J_{b+1/2}{\cal I}_Y$, **not** the printed order) with the $x\to\infty$ coefficients of (3.3)/(3.4) `eq:IJ`/`eq:IY` substituted, keeping $J_{b+1/2}(x)$, $Y_{b+1/2}(x)$ exact. Recon §9 is the brief; §5.1 still binds. Tie it to the nine $b = 0.2$ fixture cases; bridge its normalisation to KT at $b = 0$. | The $b \neq 0$ half of §1.2 of the KT audit | `[01-general-w-normalisation-is-predicted-not-measured]` |
-| **A2** | **The realistic-flavour large-$x$ harness.** Extend `docs/radiation-oracle/large_x.py` from the exact flavour to the realistic one, with and without `drop_first_WKB_sample`, at $x_{\rm resp}$ to $10^7$–$10^8$. | KT §8's "what this does not cover"; the §5 standing caveat that no verification run ever reached production $x$ | Nothing directly — it is the instrument B2, D and E are scored on |
+| **A1** | **The Domènech general-$b$ oracle** ([`01-domenech-general-b-oracle.md`](01-domenech-general-b-oracle.md)) — **written 2026-09-19, not run.** Implement the target object of §2 (i) — the **corrected** (4.10) `eq:Isimple` (recon §2.2: $Y_{b+1/2}{\cal I}_J - J_{b+1/2}{\cal I}_Y$, **not** the printed order) with the $x\to\infty$ coefficients of (3.3)/(3.4) `eq:IJ`/`eq:IY` substituted, keeping $J_{b+1/2}(x)$, $Y_{b+1/2}(x)$ exact. Recon §9 is the brief; §5.1 still binds. Tie it to the nine $b = 0.2$ fixture cases; bridge its normalisation to KT at $b = 0$. | The $b \neq 0$ half of §1.2 of the KT audit | `[01-general-w-normalisation-is-predicted-not-measured]` |
+| **A2** | **The realistic-flavour large-$x$ harness** ([`02-realistic-flavour-large-x-harness.md`](02-realistic-flavour-large-x-harness.md)) — **written 2026-09-19, not run.** Extend `docs/radiation-oracle/large_x.py` from the exact flavour to the realistic one, with and without `drop_first_WKB_sample`, at $x_{\rm resp}$ to $10^7$–$10^8$. | KT §8's "what this does not cover"; the §5 standing caveat that no verification run ever reached production $x$ | Nothing directly — it is the instrument B2, D and E are scored on |
 
 A2 is the single measurement that separates the clamp term from the phase re-spline term, which
 `[12-handover-clamp-error-in-production]`'s recorded next step says *"cannot be done by measurement

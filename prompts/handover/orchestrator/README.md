@@ -1,0 +1,80 @@
+# Orchestrator prompts — the hand-over campaign
+
+One orchestrator prompt per campaign prompt. Each dispatches a single fresh-context subagent,
+reviews its commit against fixed criteria, and either hands back or stops and reports to the user.
+
+| # | Prompt | File | Written? | Character |
+|---|---|---|---|---|
+| 00 | Domènech reconnaissance | — | n/a | **Already landed** (`ab5c0ed`), executed outside this flow on a separate account. Read-and-report; no orchestration |
+| 01 | The Domènech general-$b$ oracle | [`prompt-01.md`](prompt-01.md) | **yes** | One new module and its tests; **no production file is modified**. Like `radiation-oracle` prompt 01, the review is about whether the tests *would fail*: the source paper's own kernel is mis-signed, and a faithful transcription is wrong by an overall sign while looking entirely plausible. Turns on the deliberate-breakage record and on test 5, the only comparison with an object this campaign did not write |
+| 02 | The realistic-flavour large-$x$ harness | [`prompt-02.md`](prompt-02.md) | **yes** | A `docs/` measurement script and a document; **no production file and no test**. Suite counts must be *unchanged*, not risen. The review turns on the control cell reproducing KT §8 Table 8.1 and on whether the attribution of the two terms is honest about its own error |
+
+## Running them
+
+> Read `prompts/handover/orchestrator/prompt-01.md` and follow it.
+
+**Order: 01 then 02.** They are independent work — campaign README §4 says A1 and A2 have no
+prerequisites and no dependency on each other — but **01 creates `IMPLEMENTATION_STATE.md`**, which
+02 then updates. Running them the other way round means moving that clause of prompt 01 §8 into
+prompt 02. Running them concurrently in separate worktrees means both creating the board and
+conflicting on it, and on `docs/OPEN_ISSUES.md`. Serialise them.
+
+**Take the baselines before dispatching anything.** They cannot be reconstructed after the fact, and
+prompt 01 is one that *raises* `ComputeTargets` — so "did not fall" is not enough; the rise must
+equal the tests the agent added.
+
+## The rules that bind the orchestrator
+
+The same ones `prompts/radiation-oracle/orchestrator/README.md`,
+`prompts/GkTk-remedial/orchestrator/README.md` and
+`prompts/tolerance-convergence/orchestrator/README.md` set out, unchanged:
+
+1. **You do not write code.** Not a fix, not a test, not a docstring — and **not the deliberate
+   breakage either**. Prompt 01 §3 makes the agent break its own implementation and record what
+   failed; you check the record, you do not reproduce it by editing the tree.
+2. **One prompt, one subagent, one commit.**
+3. **Do not re-derive the work.** Check that the prompt's own tests pass when *you* run them, that
+   the log classifies every deviation, that the board and `docs/OPEN_ISSUES.md` were updated in the
+   same commit, and that the diff stayed inside its allowed files.
+4. **Give the subagent only its own prompt** and the files that prompt tells it to read.
+5. **Relay every subagent question verbatim.** Do not answer it yourself.
+6. **Stop rather than repair.** Do not fix a failed check, revert it, or dispatch a follow-up agent
+   to patch it. Report the specific check and what the log says about it.
+7. **An agent must never assume `HEAD` is its own** — planning, reconnaissance and orchestration
+   commits land on this branch. The dispatch says so.
+8. **No urgency, no cost.** Campaign README §0.4. If a subagent argues for a shortcut on the grounds
+   that something is cheap, slow or expensive to regenerate, that is a deviation to record, not a
+   reason to accept.
+
+## Baselines
+
+Taken at **`0283906`**, on this branch, 2026-09-19:
+
+| Suite | Count | Verdict | Wall |
+|---|---|---|---|
+| `ComputeTargets/tests` | **530** | OK | 122 s |
+| `CosmologyModels/tests` | **39** | OK | 0.7 s |
+
+```bash
+PYTHONPATH=. ./venv/bin/python -m unittest discover -s ComputeTargets/tests -t . 2>&1 | tail -40
+```
+
+```bash
+PYTHONPATH=. ./venv/bin/python -m unittest discover -s CosmologyModels/tests -t . 2>&1 | tail -40
+```
+
+```bash
+./venv/bin/python -m black --check $(git diff --name-only HEAD~1 HEAD -- '*.py')
+```
+
+- Both suites print model banners on stdout, so **`| tail -5` will not show the verdict**. Capture
+  to a file and grep it, or use `tail -40`.
+- `LiouvilleGreen/tests` was **not** baselined here (it was still running when these were taken).
+  Neither prompt touches that package. If you want it as a control, take it yourself before
+  dispatching and record the figure.
+- **The known flake is not a stop.**
+  `ComputeTargets.tests.test_tk_wkb_phase.TestCost.test_wall_time_per_object` asserts a wall-clock
+  figure with about a 1× margin and fails roughly one run in three. Confirm by re-running that
+  module alone before attributing anything to the commit.
+- **`./venv` does not exist in a fresh worktree.** Symlink the main checkout's and add it to
+  `.git/worktrees/<name>/info/exclude`.
