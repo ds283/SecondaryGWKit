@@ -1,6 +1,6 @@
 # Open issues — project-wide index
 
-**Last updated:** 2026-09-19 · **82 open** across eleven campaigns.
+**Last updated:** 2026-09-19 · **81 open** across eleven campaigns.
 
 This file exists so that an issue opened by one campaign is not lost when that campaign closes.
 It is an **index, not a record**: one line per issue, pointing at the campaign status board that
@@ -91,7 +91,6 @@ prompt 13 left open.
 | `[08-docs-scripts-reference-removed-chunking]` | GkTk-remedial | Two `docs/` reproduction scripts (`t5_spline.py`, `measure.py`) read `phase_spline` internals (`_chunk_list`, `_splines`, `_match_chunk`) that prompt 08 deleted with chunking; they documented the chunked tree they ran on and were not edited. |
 | `[10-transfer-remedial-tolerance-comments-stale]` | GkTk-remedial | Five tolerance comments `8ba9159` wrote in `test_tk_source_functions.py` now describe the consumer re-spline prompt 10 deleted and quote numbers three to four orders above the new measurements. Not edited — `8ba9159`'s text was a stop condition for prompt 10 — and every assertion still passes. |
 | `[20-wkb-rows-consume-numeric-initial-data]` | GkTk-remedial | `Gk`/`TkWKBIntegration` take $z_{\rm init}$, $G_{\rm init}$/$T_{\rm init}$ and the derivative from the numeric stop point and are keyed independently of the numeric row: no foreign key, and the initial values are stored `nullable=False` but never filtered. Covered in practice only because `z_init` is filtered as an absolute `1e-7` against $z\sim10^{12}$, i.e. exactly — measured on QCD at $k=4.972\times10^7$, the two break-point policies move $z_{\rm init}$ by 4.59e5 and the lookup misses. A change moving the stop *values* without moving $z_{\rm init}$ would be served a stale row. |
-| `[10-table-8-3-measures-the-removed-wrap-theta-loop]` | GkTk-remedial | `docs/radiation-oracle/large_x.py` generates Table 8.3 of `KOHRI-TERADA-ORACLE.md` §8 by measuring `wrap_theta`'s per-cycle loop, which the fix above removed, so its "time per call" and "error of the loop" columns no longer reproduce (~7.5 µs and 0.0, against 44 ms and 1.5e-04 rad). Not rewritten — the table was correct for its tree and is the measurement the fix cites. |
 | `[13-scoped-run-driver-k-grid-literal]` | GkTk-remedial | `docs/source-remediation-verification/scoped_pipeline_run.py` matches a `main.py` k-grid literal that `f17f2d4` renamed to `NUMBER_SOURCE_K_VALUES`/`NUMBER_RESPONSE_K_VALUES`, so it finds zero occurrences and raises rather than running. The `source-remediation` Layer 2 is not reproducible by its own documented command; prompt 13 copied the driver into `docs/gktk-remedial/` rather than editing another campaign's file. |
 
 ---

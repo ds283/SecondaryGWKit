@@ -397,22 +397,22 @@ what follows (about 70 s).
 
 | shape | x_resp | lam | x = k tau | z_resp | N + 9/8 | pipeline's declared error | N + 9/8, head omitted | Levin / abs(total) | eq. (22) vs eq. (25) | integral | fixture set-up |
 |---|---|---|---|---|---|---|---|---|---|---|---|
-| together | 980 | 1 | 1.5560e+03 | 6.07 | +6.99e-14 | 8.7e-12 | +1.41e-04 | 3.85 | 9.7e-02 | 0.56 s | 0.0 s |
-| together | 10000 | 10.2 | 1.5877e+04 | 6.07 | +2.89e-15 | 1.3e-12 | +4.30e-06 | 0.13 | 1.9e-04 | 0.47 s | 0.0 s |
-| together | 100000 | 102 | 1.5877e+05 | 6.07 | +1.72e-13 | 1.7e-11 | +1.39e-05 | 0.39 | 6.3e-05 | 0.50 s | 0.1 s |
-| together | 1e+06 | 1.02e+03 | 1.5877e+06 | 6.07 | -1.56e-12 | 1.4e-10 | +4.89e-06 | 0.15 | 3.9e-06 | 0.55 s | 0.5 s |
-| together | 1e+07 | 1.02e+04 | 1.5877e+07 | 6.07 | -3.10e-10 | 9.9e-09 | -3.31e-05 | 0.86 | 1.5e-06 | 0.59 s | 4.6 s |
-| together | 1e+08 | 1.02e+05 | 1.5877e+08 | 6.07 | -1.46e-10 | 3.5e-08 | -4.10e-06 | 0.09 | 9.9e-09 | 0.62 s | 50.0 s |
+| together | 980 | 1 | 1.5560e+03 | 6.07 | +6.99e-14 | 8.7e-12 | +1.41e-04 | 3.85 | 9.7e-02 | 0.54 s | 0.0 s |
+| together | 10000 | 10.2 | 1.5877e+04 | 6.07 | +2.89e-15 | 1.3e-12 | +4.30e-06 | 0.13 | 1.9e-04 | 0.48 s | 0.0 s |
+| together | 100000 | 102 | 1.5877e+05 | 6.07 | +1.72e-13 | 1.7e-11 | +1.39e-05 | 0.39 | 6.3e-05 | 0.71 s | 0.0 s |
+| together | 1e+06 | 1.02e+03 | 1.5877e+06 | 6.07 | -1.56e-12 | 1.4e-10 | +4.89e-06 | 0.15 | 3.9e-06 | 0.60 s | 0.0 s |
+| together | 1e+07 | 1.02e+04 | 1.5877e+07 | 6.07 | -3.10e-10 | 9.9e-09 | -3.31e-05 | 0.86 | 1.5e-06 | 0.60 s | 0.0 s |
+| together | 1e+08 | 1.02e+05 | 1.5877e+08 | 6.07 | -1.46e-10 | 3.5e-08 | -4.10e-06 | 0.09 | 9.9e-09 | 0.54 s | 0.0 s |
 | T-first | 980 | 1 | 1.4145e+02 | 6.07 | -2.38e-14 | 4.8e-12 | +1.98e-06 | 2.89 | 1.1e-01 (no cos term) | 0.18 s | 0.0 s |
 | T-first | 10000 | 10.2 | 1.4434e+03 | 6.07 | -2.22e-16 | 1.0e-12 | +2.24e-06 | 0.15 | 4.8e-05 (no cos term) | 0.26 s | 0.0 s |
-| T-first | 100000 | 102 | 1.4434e+04 | 6.07 | +6.48e-14 | 1.6e-12 | +2.24e-06 | 0.18 | 8.9e-05 (no cos term) | 0.25 s | 0.1 s |
-| T-first | 1e+06 | 1.02e+03 | 1.4434e+05 | 6.07 | -2.31e-12 | 7.8e-11 | +2.24e-06 | 1.11 | 1.9e-05 (no cos term) | 0.28 s | 0.5 s |
-| T-first | 1e+07 | 1.02e+04 | 1.4434e+06 | 6.07 | +4.67e-12 | 3.1e-10 | +2.24e-06 | 0.13 | 1.0e-07 (no cos term) | 0.33 s | 4.8 s |
-| q-smooth | 980 | 1 | 1.5431e+03 | 5.48 | -3.67e-13 | 5.2e-12 | -1.30e-05 | 2.10 | 3.8e-02 | 0.26 s | 0.0 s |
-| q-smooth | 10000 | 10.2 | 1.5746e+04 | 5.48 | -1.01e-13 | 1.0e-11 | -1.22e-05 | 4.70 | 1.3e-02 | 0.19 s | 0.0 s |
-| q-smooth | 100000 | 102 | 1.5746e+05 | 5.48 | -3.87e-13 | 2.1e-11 | -1.27e-05 | 1.62 | 3.5e-04 | 0.20 s | 0.1 s |
-| q-smooth | 1e+06 | 1.02e+03 | 1.5746e+06 | 5.48 | +2.26e-13 | 5.4e-10 | -1.24e-05 | 4.45 | 5.0e-04 | 0.20 s | 0.3 s |
-| q-smooth | 1e+07 | 1.02e+04 | 1.5746e+07 | 5.48 | -6.49e-13 | 4.9e-09 | -1.27e-05 | 2.59 | 4.1e-05 | 0.23 s | 2.6 s |
+| T-first | 100000 | 102 | 1.4434e+04 | 6.07 | +6.48e-14 | 1.6e-12 | +2.24e-06 | 0.18 | 8.9e-05 (no cos term) | 0.29 s | 0.0 s |
+| T-first | 1e+06 | 1.02e+03 | 1.4434e+05 | 6.07 | -2.31e-12 | 7.8e-11 | +2.24e-06 | 1.11 | 1.9e-05 (no cos term) | 0.28 s | 0.0 s |
+| T-first | 1e+07 | 1.02e+04 | 1.4434e+06 | 6.07 | +4.67e-12 | 3.1e-10 | +2.24e-06 | 0.13 | 1.0e-07 (no cos term) | 0.33 s | 0.0 s |
+| q-smooth | 980 | 1 | 1.5431e+03 | 5.48 | -3.67e-13 | 5.2e-12 | -1.30e-05 | 2.10 | 3.8e-02 | 0.25 s | 0.0 s |
+| q-smooth | 10000 | 10.2 | 1.5746e+04 | 5.48 | -1.01e-13 | 1.0e-11 | -1.22e-05 | 4.70 | 1.3e-02 | 0.24 s | 0.0 s |
+| q-smooth | 100000 | 102 | 1.5746e+05 | 5.48 | -3.87e-13 | 2.1e-11 | -1.27e-05 | 1.62 | 3.5e-04 | 0.49 s | 0.0 s |
+| q-smooth | 1e+06 | 1.02e+03 | 1.5746e+06 | 5.48 | +2.26e-13 | 5.4e-10 | -1.24e-05 | 4.45 | 5.0e-04 | 0.24 s | 0.0 s |
+| q-smooth | 1e+07 | 1.02e+04 | 1.5746e+07 | 5.48 | -6.49e-13 | 4.9e-09 | -1.27e-05 | 2.59 | 4.1e-05 | 0.26 s | 0.0 s |
 
 **Table 8.2 -- plain `scipy.quad` of eq. (15), together shape (scipy 1.15.2).**
 
@@ -420,17 +420,17 @@ what follows (about 70 s).
 |---|---|---|---|---|---|
 | 1e+02 | 18 | 1596 | 0.00 s | 1.1e-15 | 4.7e-14 |
 | 1e+03 | 184 | 11844 | 0.02 s | 1.2e-13 | 1.0e-12 |
-| 1e+04 | 1838 | 89061 | 0.11 s | 3.2e-13 | 1.6e-11 |
-| 3e+04 | 5513 | 200235 | 0.25 s | 1.8e-02 | 1.4e+00 |
-| 1e+05 | 18378 | 127869 | 0.16 s | 4.1e-03 | 7.5e-02 |
+| 1e+04 | 1838 | 89061 | 0.12 s | 3.2e-13 | 1.6e-11 |
+| 3e+04 | 5513 | 200235 | 0.26 s | 1.8e-02 | 1.4e+00 |
+| 1e+05 | 18378 | 127869 | 0.19 s | 4.1e-03 | 7.5e-02 |
 
 **Table 8.3 -- `wrap_theta` at large theta.**
 
-| theta | time per call | error of the loop | error of theta - div * 2pi | theta * eps |
+| theta | time per call | error of wrap_theta | error of theta - div * 2pi | theta * eps |
 |---|---|---|---|---|
-| 1.000e+03 | 0.01 ms | 2.3e-12 | 0.0e+00 | 2.2e-13 |
-| 1.000e+05 | 0.46 ms | 1.1e-08 | 3.7e-12 | 2.2e-11 |
-| 1.000e+07 | 43.90 ms | 1.5e-04 | 7.3e-10 | 2.2e-09 |
+| 1.000e+03 | 0.0003 ms | 0.0e+00 | 0.0e+00 | 2.2e-13 |
+| 1.000e+05 | 0.0004 ms | 0.0e+00 | 3.7e-12 | 2.2e-11 |
+| 1.000e+07 | 0.0004 ms | 0.0e+00 | 7.3e-10 | 2.2e-09 |
 
 **What the tables show.**
 
@@ -474,19 +474,20 @@ what follows (about 70 s).
    $\lvert v - u\rvert \le 1$. `T-first` is a test shape that is not a closable triangle, with
    $\lvert q - r\rvert = 2000 > k = 1000$.
 
-5. **The fixture set-up time is a test artefact, not a guide to production.** Set-up grows
-   linearly in $x$ and reaches 50 s at $1.6\times10^8$. Profiling puts almost all of it in
-   `LiouvilleGreen.WKBtools.wrap_theta`, which reduces a phase into $(-2\pi, 0]$ by subtracting
-   $2\pi$ once per cycle (Table 8.3). `Fixture.exact_functions()` passes it the full, unreduced
-   Bessel phase, about $x$, at each of its roughly 570 WKB samples. In the exact flavour that
-   work is then discarded: `Case`'s exact builder ignores the wrapped samples. **Production is
-   unaffected.** It calls `wrap_theta` only through `apply_phase_offset`, on `mod + deltaTheta`
-   with `mod` in $(-2\pi, 0]$ and `deltaTheta` from `atan2`, so the loop makes at most one pass.
-   The same loop also **accumulates rounding**: $2.3\times10^{-12}$ rad at $\theta = 10^3$
-   against 0 for a single reduction, and $1.5\times10^{-4}$ rad at $10^7$ (Table 8.3). So the
-   fixture's **realistic** flavour, which does use the wrapped phase, carries up to
-   $\sim2\times10^{-12}$ rad of fixture-made phase error at its present $x \le 10^3$, and could
-   not be pushed to large $x$ as it stands.
+5. **The fixture set-up time does not grow with $x$, and phase reduction is exact.** Set-up is
+   0.0 s at every row of Table 8.1, including $x = 1.6\times10^8$, and the whole script runs in
+   about nine seconds. Both are consequences of how the phase is range-reduced.
+   `Fixture.exact_functions()` passes the full, unreduced Bessel phase -- about $x$ -- at each of
+   its roughly 570 WKB samples, and that phase is reduced by `WKB_mod_2pi`, whose remainder is
+   an `fmod`: one step, exact, independent of $|\theta|$. `LiouvilleGreen.WKBtools.wrap_theta`
+   reduces the same way (Table 8.3): 0 error and ~0.3 µs per call at $\theta$ from $10^3$ to
+   $10^7$. **Production is unaffected either way.** It calls `wrap_theta` only through
+   `apply_phase_offset`, on `mod + deltaTheta` with `mod` in $(-2\pi, 0]$ and `deltaTheta` from
+   `atan2`, so it never reduces by more than one cycle. What Table 8.3's fourth column still
+   warns against is **reassembling** the phase: recomputing the remainder as the double
+   expression $\theta - {\rm div}\cdot2\pi$ rounds twice and is $7.3\times10^{-10}$ rad out at
+   $\theta = 10^7$, which is why the $({\rm div}, {\rm mod})$ pair is carried rather than
+   rebuilt.
 
 **What this does not cover.** The exact flavour only: the realistic flavour's representation
 floors (splined phases and amplitudes) are not exercised at large $x$. $b = 0$ only (§1.2).

@@ -2,7 +2,7 @@
 
 **Campaign:** [`README.md`](README.md) · **Source review:** [`docs/gk-wkb-review-fable-2026-09-09.md`](../../docs/gk-wkb-review-fable-2026-09-09.md) · **Reconciliation:** [`RECONCILIATION.md`](RECONCILIATION.md)
 **Baseline commit:** `9ff59d5` (`main`, clean)
-**Last updated:** 2026-09-19 — `[10-wrap-theta-loop-at-large-phase]` is **CLOSED** (§4): `wrap_theta` no longer loops, reducing in one step through `WKB_mod_2pi` instead, so its reconstruction error falls to **0** at $|\theta| = 10^3$ through $10^7$ (from 2.30e-12 to 1.54e-04 rad) and its cost at $10^7$ from 52.7 ms to 7.5 µs, with production output bit-identical over the $|\theta|\le2\cdot2\pi$ it reaches. It was closed earlier the same day on a docstring warning alone (`6aa75df`), **reopened** at the user's direction because a warning is not a remedy for a removable defect, and closed again on the fix. The fix opens `[10-table-8-3-measures-the-removed-wrap-theta-loop]` (§3): `large_x.py` generates Table 8.3 of `KOHRI-TERADA-ORACLE.md` §8 by measuring the loop that is now gone, so two of its columns no longer reproduce; the table was not rewritten. Earlier still it was **narrowed twice**: `Fixture.exact_functions()` and then the eight remaining test call sites now reduce with `WKB_mod_2pi`, so no fixture uses `wrap_theta` on an unreduced phase; the suite drops from 182 s to 122 s. What remains is the trap in `wrap_theta` itself (no warning, no `fmod` fast path). Previously 2026-09-15 — `[13-consumer-spline-crosses-eos-break-points]` is **CLOSED** (§4) by `prompts/qcd-background-audit/` prompt 10, which measured nine knot schemes over all twelve production rows and found the remedy this entry named **2.09×/2.10× worse** ($C^0$ repeated knot) and per-segment splines 5.00×/5.06× worse, while ±5 grid intervals of extra *samples* around the crossing bring both rows inside the 1e-06 rad target; the unfixed accuracy defect re-opens as `[10-consumer-phi-unresolved-at-the-eos-crossing]` on the `qcd-background-audit` board, assigned to its prompt 11. Previously 2026-09-14 — `[13-consumer-spline-crosses-eos-break-points]` **narrowed again** by `prompts/qcd-background-audit/` prompt 09: re-measured on the corrected background its two §3.5 rows are **4.25× and 4.39× larger**, because the old `T(z)` spline was smearing the equation of state's step rather than causing the error, and this entry's supersession paragraph's prediction is falsified. Previously 2026-09-14 — `[02-qcd-reference-floor]` and `[03-qcd-short-baseline-reference-endpoint-rounding]` re-measured (narrowed, neither closed) by `prompts/qcd-background-audit/` prompt 06. Previously 2026-09-13 — **Prompt 13 landed and the campaign is closed.** The verification
+**Last updated:** 2026-09-19 — `[10-wrap-theta-loop-at-large-phase]` is **CLOSED** (§4): `wrap_theta` no longer loops, reducing in one step through `WKB_mod_2pi` instead, so its reconstruction error falls to **0** at $|\theta| = 10^3$ through $10^7$ (from 2.30e-12 to 1.54e-04 rad) and its cost at $10^7$ from 52.7 ms to 7.5 µs, with production output bit-identical over the $|\theta|\le2\cdot2\pi$ it reaches. It was closed earlier the same day on a docstring warning alone (`6aa75df`), **reopened** at the user's direction because a warning is not a remedy for a removable defect, and closed again on the fix. The fix opened `[10-table-8-3-measures-the-removed-wrap-theta-loop]`, now also **CLOSED** (§4): `large_x.py` generated Table 8.3 of `KOHRI-TERADA-ORACLE.md` §8 by measuring the loop that is now gone, so §8 was regenerated — Table 8.3 reads 0 error and ~0.3 µs per call, Table 8.1's `fixture set-up` column collapses from 50.0 s at $x=1.6\times10^8$ to 0.0 s at every row (`f961fa6`'s doing, not this fix's), every physics column is unchanged, and item 5 is rewritten. Earlier still it was **narrowed twice**: `Fixture.exact_functions()` and then the eight remaining test call sites now reduce with `WKB_mod_2pi`, so no fixture uses `wrap_theta` on an unreduced phase; the suite drops from 182 s to 122 s. What remains is the trap in `wrap_theta` itself (no warning, no `fmod` fast path). Previously 2026-09-15 — `[13-consumer-spline-crosses-eos-break-points]` is **CLOSED** (§4) by `prompts/qcd-background-audit/` prompt 10, which measured nine knot schemes over all twelve production rows and found the remedy this entry named **2.09×/2.10× worse** ($C^0$ repeated knot) and per-segment splines 5.00×/5.06× worse, while ±5 grid intervals of extra *samples* around the crossing bring both rows inside the 1e-06 rad target; the unfixed accuracy defect re-opens as `[10-consumer-phi-unresolved-at-the-eos-crossing]` on the `qcd-background-audit` board, assigned to its prompt 11. Previously 2026-09-14 — `[13-consumer-spline-crosses-eos-break-points]` **narrowed again** by `prompts/qcd-background-audit/` prompt 09: re-measured on the corrected background its two §3.5 rows are **4.25× and 4.39× larger**, because the old `T(z)` spline was smearing the equation of state's step rather than causing the error, and this entry's supersession paragraph's prediction is falsified. Previously 2026-09-14 — `[02-qcd-reference-floor]` and `[03-qcd-short-baseline-reference-endpoint-rounding]` re-measured (narrowed, neither closed) by `prompts/qcd-background-audit/` prompt 06. Previously 2026-09-13 — **Prompt 13 landed and the campaign is closed.** The verification
 document is [`docs/gktk-remedial-verification.md`](../../docs/gktk-remedial-verification.md), taken
 on `ff9ee29` and changing no production code. **Layer 1** re-measures review §4 and §12.3 through
 the production functions on both models at $k\in\{10^5,10^7,3\times10^8\}$: at $z=0.1$ on
@@ -495,23 +495,6 @@ Opened by the planning pass, 2026-09-10, before any prompt runs.
   the six blocks with prompt 10's measured values, which needs only the user's confirmation that
   `8ba9159`'s text may be rewritten now that both campaigns have landed.
 
-- **[10-table-8-3-measures-the-removed-wrap-theta-loop]** *(opened 2026-09-19, outside any
-  campaign, by the fix to `[10-wrap-theta-loop-at-large-phase]` above)* —
-  `docs/radiation-oracle/large_x.py`'s `wrap_theta_table()` (`:185-207`) generates **Table 8.3**
-  of [`docs/radiation-oracle/KOHRI-TERADA-ORACLE.md`](../../docs/radiation-oracle/KOHRI-TERADA-ORACLE.md)
-  §8 by *measuring* `wrap_theta`'s per-cycle loop: its "time per call" and "error of the loop"
-  columns record 44 ms and 1.5e-04 rad at $\theta\approx10^7$. That loop is gone, so re-running
-  the script now prints ~7.5 µs and 0.0 in those columns, against the table's committed values.
-  The table was correct for the tree it was taken on and is cited as the measurement behind the
-  fix, so it was **not rewritten** (README §5, verification documents are additive; the fix was
-  a production change and editing another document's generated table is out of its scope).
-  **Impact:** §8's Table 8.3 and the prose at `:480` and `:486` describe `wrap_theta` in the
-  present tense and no longer reproduce from their own script; a reader re-running `large_x.py`
-  to check the oracle will find two columns disagreeing and no note saying why.
-  **Next step:** a note under Table 8.3 giving the commit that removed the loop and stating that
-  the row is a record of the old implementation, or a re-run adding a superseding subsection per
-  README §5. Either is documentation-only.
-
 - **[00-tk-lg-truncation-floor]** *(planning, 2026-09-10; **assigned to the hand-over campaign**)*
   — the transfer function's LG representation is not exact in radiation: $3.8\times10^{-5}$ of the
   envelope from $x_i=24$, $\sim1.4\times10^{-4}$ at the production hand-over $x_T\approx15.5$,
@@ -789,6 +772,37 @@ Opened by the planning pass, 2026-09-10, before any prompt runs.
 ---
 
 ## 4. Resolved issues
+
+- **[10-table-8-3-measures-the-removed-wrap-theta-loop]** *(opened 2026-09-19, outside any
+  campaign, by the fix to `[10-wrap-theta-loop-at-large-phase]`; **closed the same day**)* —
+  `docs/radiation-oracle/large_x.py`'s `wrap_theta_table()` (`:185-207`) generates **Table 8.3**
+  of [`docs/radiation-oracle/KOHRI-TERADA-ORACLE.md`](../../docs/radiation-oracle/KOHRI-TERADA-ORACLE.md)
+  §8 by *measuring* `wrap_theta`'s per-cycle loop: its "time per call" and "error of the loop"
+  columns record 44 ms and 1.5e-04 rad at $\theta\approx10^7$. That loop is gone, so re-running
+  the script now prints ~7.5 µs and 0.0 in those columns, against the table's committed values.
+  The table was correct for the tree it was taken on and is cited as the measurement behind the
+  fix, so it was **not rewritten** (README §5, verification documents are additive; the fix was
+  a production change and editing another document's generated table is out of its scope).
+  **Impact:** §8's Table 8.3 and the prose at `:480` and `:486` describe `wrap_theta` in the
+  present tense and no longer reproduce from their own script; a reader re-running `large_x.py`
+  to check the oracle will find two columns disagreeing and no note saying why.
+  **Closed (2026-09-19)** — §8 was regenerated from `large_x.py` and the superseded rows were
+  dropped rather than annotated, on the user's instruction that a measurement kept only to be
+  labelled wrong makes the document harder to read. `wrap_theta_table()`'s third column is
+  renamed from "error of the loop" to "error of `wrap_theta`", and its timing is averaged over
+  1000 calls, a single `perf_counter` around a microsecond call being mostly timer noise.
+  **Table 8.3 now reads** 0.0e+00 error and ~0.3 µs per call at $\theta = 10^3$, $10^5$ and
+  $10^7$, against 2.3e-12 / 1.1e-08 / 1.5e-04 rad and 0.01 / 0.46 / 43.90 ms before. Its fourth
+  column is unchanged and keeps the table's point: reassembling the remainder as the double
+  $\theta - {\rm div}\cdot2\pi$ still rounds twice, 7.3e-10 rad out at $10^7$.
+  **Table 8.1's `fixture set-up` column collapses to 0.0 s at every row**, from 0.1 / 0.5 / 4.6 /
+  **50.0 s** at $x = 10^5$ through $1.6\times10^8$, and the script runs in 9 s against "about a
+  minute". That is `f961fa6`'s doing, not this fix's: the set-up cost was `Fixture.exact_functions()`
+  feeding `wrap_theta` an unreduced phase, and `f961fa6` moved it to `WKB_mod_2pi`. **Every
+  physics column of Tables 8.1 and 8.2 is unchanged** — $N+9/8$, the declared error, the Levin
+  ratio and the eq. (22) vs eq. (25) column are identical row for row; only wall-clock columns
+  moved. §8 item 5, which attributed the set-up time to the loop and warned about its rounding,
+  is rewritten to state what the tables now show.
 
 - **[10-wrap-theta-loop-at-large-phase]** *(opened by prompt 10, 2026-09-11; inert in
   production; closed, reopened, then **closed 2026-09-19**, outside any campaign)* — `LiouvilleGreen.WKBtools.wrap_theta` (`:69-94`) range-reduces by adding

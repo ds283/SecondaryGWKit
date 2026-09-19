@@ -4,8 +4,8 @@ Runs from the repository root with no arguments, no Ray and no datastore:
 
     PYTHONPATH=. ./venv/bin/python docs/radiation-oracle/large_x.py
 
-Its stdout is the three tables of section 8 of `KOHRI-TERADA-ORACLE.md` (about a minute on an
-Apple M1 Pro, most of it the fixture set-up at x = 1.6e8; see below).
+Its stdout is the three tables of section 8 of `KOHRI-TERADA-ORACLE.md` (about nine seconds on
+an Apple M1 Pro).
 
 The fixture of `ComputeTargets/tests/test_quadsource_integral.py` stops at x_resp = 980,
 because its Liouville-Green stand-ins do. This script runs the same `evaluate_QuadSource_integral`,
@@ -29,7 +29,7 @@ Each case is scored against eq. (22) and the head both evaluated at 50 digits
 
 Two smaller tables follow: plain `scipy.quad` of eq. (15) (`kohri_terada.I_RD_quadrature`) as x
 grows, for comparison with the pipeline's cost; and `LiouvilleGreen.WKBtools.wrap_theta` at large
-theta, which is what the fixture set-up time consists of.
+theta, which reduces in one step through `WKB_mod_2pi` and is exact and constant-time.
 """
 
 import math
@@ -185,26 +185,34 @@ def quadrature_table():
 
 
 def wrap_theta_table():
-    """wrap_theta's cost and rounding against a one-step reduction, at large theta."""
+    """wrap_theta's cost and rounding at large theta, against reconstruction in a double."""
     print("**Table 8.3 -- `wrap_theta` at large theta.**")
     print()
     print(
-        "| theta | time per call | error of the loop | error of theta - div * 2pi "
+        "| theta | time per call | error of wrap_theta | error of theta - div * 2pi "
         "| theta * eps |"
     )
     print("|---|---|---|---|---|")
     for theta in (1e3 + 0.123, 1e5 + 0.123, 1e7 + 0.123):
-        t = time.perf_counter()
+        # the call is now microseconds rather than the tens of milliseconds the per-cycle loop
+        # cost, so a single perf_counter around it is mostly timer noise: average over 1000
         div, mod = wrap_theta(theta)
-        dt = time.perf_counter() - t
-        # the exact reduction of the double theta by the double TWO_PI the loop subtracts
+        t = time.perf_counter()
+        for _ in range(1000):
+            wrap_theta(theta)
+        dt = (time.perf_counter() - t) / 1000.0
+        # the exact reduction of the double theta by the double TWO_PI, in 60-digit decimal.
+        # wrap_theta reduces in one step through WKB_mod_2pi, whose remainder is an fmod and is
+        # exact, so its column is 0 at every theta. The next column is what you get instead by
+        # rebuilding the remainder as the double expression theta - div * TWO_PI: that rounds
+        # twice, and is the reason the (div, mod) pair is carried rather than reassembled
         with localcontext() as ctx:
             ctx.prec = 60
             exact = Decimal(theta) - div * Decimal(TWO_PI)
-            loop_err = abs(Decimal(mod) - exact)
+            wrap_err = abs(Decimal(mod) - exact)
             one_step_err = abs(Decimal(theta - div * TWO_PI) - exact)
         print(
-            f"| {theta:.3e} | {dt * 1e3:.2f} ms | {float(loop_err):.1e} "
+            f"| {theta:.3e} | {dt * 1e3:.4f} ms | {float(wrap_err):.1e} "
             f"| {float(one_step_err):.1e} | {theta * sys.float_info.epsilon:.1e} |"
         )
 
