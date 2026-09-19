@@ -55,7 +55,10 @@ The same ones `prompts/radiation-oracle/orchestrator/README.md`,
 
 ## Baselines
 
-Taken at **`b80b0f5`** — the merge of `main` — on this branch, 2026-09-19:
+Measured at **`b80b0f5`**, the merge of `main`, on 2026-09-19. The campaign runs on
+**`handover-remedial`**, which starts at `d6afa05`; the two commits between them touch only
+markdown, so these figures hold there unchanged. Re-take them at your actual `HEAD` anyway —
+the full tree is under three minutes.
 
 | Suite | Count | Verdict | Wall |
 |---|---|---|---|

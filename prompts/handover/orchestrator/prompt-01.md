@@ -26,11 +26,12 @@ If either is missing, the prompt has not done its job however green the suite is
 
 ## 1. Before you dispatch
 
-1. **Confirm `HEAD`.** Expected `b80b0f5` (the merge of `main`) or later on `claude/integration-handover-review-f4bfb4`.
-   Record the actual SHA; the agent must be told it, and told that `HEAD` is **not** its own.
+1. **Confirm the branch and `HEAD`.** The campaign runs on **`handover-remedial`**, which starts
+   at `d6afa05`; expect that or later. Record the actual SHA; the agent must be told it, and told that `HEAD` is **not** its own.
 2. **Take the baselines** of [`README.md`](README.md) and record them. `ComputeTargets` **530**,
-   `CosmologyModels` **39**, `LiouvilleGreen` **148** (`skipped=1`), all OK, at `b80b0f5`. The
-   full tree is ~2.8 minutes since `main` was merged, so take all three.
+   `CosmologyModels` **39**, `LiouvilleGreen` **148** (`skipped=1`), all OK — measured at
+   `b80b0f5` and unchanged at `d6afa05`, which moves only markdown. The full tree is ~2.8 minutes
+   since `main` was merged, so take all three.
 3. **Confirm the inputs exist**: `docs/handover/DOMENECH-KERNEL-RECON.md` (862 lines, §11 present),
    `docs/handover/sources/SOURCES.md`, the two `-src/` directories with their `.tex`, and
    `ComputeTargets/tests/kohri_terada.py`. Run

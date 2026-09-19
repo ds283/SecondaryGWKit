@@ -28,7 +28,7 @@ subagent convert it into a fallback to the exact flavour.
 
 ## 1. Before you dispatch
 
-1. **Confirm `HEAD`** on `claude/integration-handover-review-f4bfb4`. Record the SHA; the agent must
+1. **Confirm `HEAD`** on **`handover-remedial`**. Record the SHA; the agent must
    be told it, and told that `HEAD` is **not** its own.
 2. **Take the baselines.** For this prompt they are a *ceiling and a floor*: all three suites must read
    **exactly** what they read before. Record them at the actual `HEAD`, not from this file — prompt
