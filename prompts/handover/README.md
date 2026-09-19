@@ -145,78 +145,63 @@ A depth chosen on $b = 0$ evidence alone is optimised against the easy case. Not
 and every oracle here is constant-$w$. These score the *machinery*, and adding $b \neq 0$ widens
 that test towards, but not to, the QCD transition.
 
-**(h) The Domènech parametrisation is already this repository's — verified against the LaTeX
-source.** arXiv:1912.05583 eq. (3.4)/(3.5) of its §2 define $\beta = \tfrac32\frac{1-w}{1+3w}$,
-$\alpha = \frac{5+3w}{2(1+3w)}$ and state $\alpha = 1+\beta$. With
-`w_of_b(b) = (1-b)/(3(1+b))` — i.e. $b = \frac{1-3w}{1+3w}$, spec 01's $a\propto\eta^{1+b}$ —
+**(h) The parametrisation is this repository's, but the review's kernel is mis-signed.** The
+mapping is $\beta = b+\tfrac12$, $\alpha = b+\tfrac32$, $\tfrac{3(1+w)}{2} = \tfrac{b+2}{b+1}$,
+$w = c_s^2$, confirmed at every step of
+[`DOMENECH-KERNEL-RECON.md`](../../docs/handover/DOMENECH-KERNEL-RECON.md) §2. $\alpha$ is the
+Bessel order in spec 05's $\Phi(x)$, glyph for glyph, and $c = \frac{2+b}{3+2b}$ is identically
+KT's $\frac{3(1+w)}{5+3w}$. The papers' range is $-\tfrac12 \le b < 1$; both fixture values are
+interior.
 
-$$\beta = b + \tfrac12, \qquad \alpha = b + \tfrac32 .$$
+**This README previously said "the review is therefore the better transcription target". That was
+wrong and is withdrawn.** Its *variables* are the right ones, but **both** its displayed forms of
+$I$ carry sign errors (recon §1, and §2 (i) below). **A1 transcribes in $b$ and $c_s$ with the 2020
+paper's ordering** — the corrected form is written out once in recon §9.
 
-Independently confirmed by the **review**, which writes the same results natively in $b$ and $c_s$:
-its (4.10)–(4.12) carry $J_{b+1/2}$, $J_{b+5/2}$, $\mathsf{P}^{-b}_{b}$, $\mathsf{P}^{-b}_{b+2}$ and
-$\Theta[c_s(u+v)-1]$ where the earlier paper has $J_\beta$, $J_{\beta+2}$,
-$\mathsf{P}^{-\beta+1/2}_{\beta-1/2}$, $\mathsf{P}^{-\beta+1/2}_{\beta+3/2}$ and
-$\Theta(u+v-w^{-1/2})$. The 1912 paper's $\frac{3(1+w)}{2}$ is the review's $\frac{b+2}{b+1}$;
-$\Phi$'s Bessel order is $\alpha$ with argument $c_s x$, matching spec 05's $J_{3/2+b}(xc_s)$
-exactly; and $c = \frac{2+b}{3+2b}$ is identically KT's $\frac{3(1+w)}{5+3w}$. **The review is
-therefore the better transcription target**: it needs no reparametrisation step, and so cannot
-acquire a reparametrisation error. The 1912 paper is the derivation and the appendices.
+**(i) The wanted form is the corrected (4.10) with the $x\to\infty$ coefficients; it is $O(1/x)$,
+and that $O(1/x)$ is not uniform.** Three constructions, and the distinction is the whole plan:
 
-The papers' range is $1 \ge w > 0$, i.e. $0 \le \beta < 3/2$, i.e. $-\tfrac12 \le b < 1$. Both
-fixture values ($b = 0$, $b = 0.2$) are interior.
+- **The exact kernel.** (4.10) `eq:Isimple` with (4.11) `eq:Isimpledef`'s ${\cal I}_{J/Y} =
+  \int_0^x$ — **but with $\big(Y_{b+1/2}(x){\cal I}_J - J_{b+1/2}(x){\cal I}_Y\big)$, not the
+  printed order.** Those integrals have no closed form at finite $x$: *"We will not be able to
+  carry out this integral for general values of $x$"*.
+- **The coefficients.** (3.3)/(3.4) `eq:IJ`/`eq:IY` give ${\cal I}^\infty_{J,Y}$ in Legendre
+  functions, and the paper states the error in terms: *"corrections from a finite upper integration
+  limit … will be suppressed by a further $1/x$."*
+- **The doubly asymptotic form.** (4.12) `eq:Isimple2`, and the 2020 paper's (3.6)–(3.8) which that
+  paper calls "the main result", substitute ${\cal I}^\infty$ **and** expand the Bessels. **(4.12)
+  additionally has the wrong sign on its $\cos$ term**, leaving it consistent with neither sign of
+  (4.10); the 2020 paper's version is self-consistent.
 
-**(i) The wanted form is (4.10) with the $x\to\infty$ coefficients — and it is $O(1/x)$, not
-exact.** The review carries **both** constructions, which is the distinction the whole plan turns
-on:
+**A1 builds the first with the second substituted** (recon §2.4, §9), so the oscillation stays exact
+in $J_{b+1/2}(x)$, $Y_{b+1/2}(x)$ and only the coefficients carry the $O(1/x)$. For what dropping
+the exact Bessels would cost, KT §6/§8's "eq. (22) vs eq. (25)" column *is* that error at $b = 0$:
+1.03e-01 at $x = 200$, 3.3e-03 at $x = 2000$, 9.9e-09 only by $x = 1.6\times10^8$.
 
-- **(4.10) `eq:Isimple` is exact**, given (4.11) `eq:Isimpledef`'s ${\cal I}_{J/Y} = \int_0^x$:
-  $I = \pi4^{b}\Gamma^2[b+3/2]\frac{2b+3}{b+2}(c_s^2uvx)^{-b-1/2}
-  \left(J_{b+1/2}(x){\cal I}_{Y}-Y_{b+1/2}(x){\cal I}_{J}\right)$.
-  Those integrals have no closed form at finite $x$ — *"We will not be able to carry out this
-  integral for general values of $x$"*.
-- **(3.3)/(3.4) `eq:IJ`/`eq:IY` give ${\cal I}^\infty_{J,Y}$** in Legendre functions, and the paper
-  states the error plainly: *"we can approximate the integral by sending the upper limit
-  $x\to\infty$ … Although corrections from a finite upper integration limit can be computed, they
-  will be suppressed by a further $1/x$."*
-- **(4.12) `eq:Isimple2` (and 1912's (3.6)–(3.8), which that paper calls "the main result") is
-  *doubly* asymptotic** — it substitutes ${\cal I}^\infty$ **and** expands $J_{b+1/2}(x)$,
-  $Y_{b+1/2}(x)$ into $\cos(x-\tfrac{b\pi}{2})$, $\sin(x-\tfrac{b\pi}{2})$.
+**The $O(1/x)$ is controlled by the smallest Bessel argument, $c_s\min(u,v)\,x$, not by $x$**
+(recon §6.4). On the `q-smooth` shape ($u = 0.01$) the target is still **5e-02** of the envelope off
+the exact kernel at $x = 3200$. **So A1's decisive normalisation test uses the finite-$x$ (4.11) by
+quadrature**, and the target object only for large-$x$ regression.
 
-**A1 builds (4.10) with ${\cal I}^\infty$ substituted, not (4.12).** The oscillatory
-$x$-dependence then stays exact in $J_{b+1/2}(x)$, $Y_{b+1/2}(x)$, and only the coefficients carry
-the $O(1/x)$. For the scale of what dropping the exact Bessels would cost, KT §6/§8's
-"eq. (22) vs eq. (25)" column is exactly that error in the $b = 0$ case: **1.03e-01 at $x = 200$,
-3.3e-03 at $x = 2000$, 9.9e-09 only by $x = 1.6\times10^8$.**
+**(i2) Both papers' apparent discrepancies are now resolved — one was a real error, one was this README's.**
 
-**(i2) Two discrepancies between the papers that A1 must resolve, not paper over.** Both are real
-in the LaTeX, not artefacts of rendering:
+1. **The exact kernel.** Not a convention difference: the review's (4.10) is **mis-signed**, derived
+   from its own (4.7) and (4.9) in recon §2.2 and measured in recon §2.4 and §4.1. This README
+   previously said the two prefactors differ in the power of $(c_s^2uvx)$; **that was a misreading
+   of $w$ for $c_s^2$ and is withdrawn** — $(uvwx)^{-\beta}$ with $w = c_s^2$, $\beta = b+\tfrac12$
+   *is* $(c_s^2uvx)^{-b-1/2}$. What genuinely separates the two papers is the factor $2c^2$ that the
+   2020 paper folds into its *definition* of $I$ and the review does not, so
+   $I_{2020} = 2c^2 I_{\rm rev} = I_{\rm KT}$.
+2. **The asymmetric factor of 2 is correct in both papers.** It is $\Gamma[\nu-\rho+1]$ at
+   $\nu-\rho = 2$ in the Gervois–Navelet off-cut formula (recon §4.2). Do not symmetrise it.
 
-1. **The sign and prefactor of the exact kernel differ.** 1912 (3.1) has
-   $\{Y_\beta{\cal I}^x_J - J_\beta{\cal I}^x_Y\}$ with prefactor
-   $4^{\beta}\frac{3\pi}{2\alpha^3}\frac{1+w}{1+3w}\Gamma^2[\beta+2](uvwx)^{-\beta}$; review (4.10)
-   has $(J_{b+1/2}{\cal I}_{Y} - Y_{b+1/2}{\cal I}_{J})$ — **opposite order** — with prefactor
-   $\pi4^{b}\Gamma^2[b+3/2]\frac{2b+3}{b+2}(c_s^2uvx)^{-b-1/2}$, whose $\Gamma$ argument differs by
-   one ($\Gamma^2[b+3/2]$ against $\Gamma^2[\beta+2] = \Gamma^2[b+5/2]$) and whose power of
-   $(c_s^2uvx)$ differs by $\tfrac12$. The two papers may simply define $I$ differently — the
-   review's source (4.9) `eq:fsimple` is also written differently — but **which convention is being
-   transcribed must be settled numerically, not assumed.**
-2. **An asymmetric factor of 2 that is almost certainly deliberate.** In the off-cut
-   ($\Theta[1-c_s(u+v)]$) branch, both papers carry $2\frac{b+2}{b+1}$ where the on-cut branches
-   carry $\frac{b+2}{b+1}$ — 1912 (3.4)/(3.8) has $3(1+w)$ against $\frac{3(1+w)}{2}$, and review
-   (4.12) has $2\frac{b+2}{b+1}$ against $\frac{b+2}{b+1}$. **It appears identically in both
-   papers**, so it is not a typo in either. Do not "symmetrise" it.
-
-**(i3) The general-$b$ oracle diverges at the resonance; KT's eq. (22) does not.** At
-$c_s(u+v) = 1$ we have $y = -1$ exactly (review (4.13)), and the $x\to\infty$ coefficients are
-singular there — 1912 §3 gives $I \propto (1+y)^{-\frac12(\mu+|\mu|)}$ for $\mu \ne 0$ and
-$I \propto \ln(1+y)$ for $\mu = 0$, with $\mu \equiv -\beta+\tfrac12 = -b$. So: **power-divergent
-for $b < 0$, log-divergent at $b = 0$, finite for $b > 0$** (the fixture's $b = 0.2$ is in the
-finite case). This is consistent with KT — their finite-$x$ eq. (22) is finite at the resonance and
-grows like $\ln x$ there, which is the same secular growth seen from the other side — but it means
-**the Domènech form cannot score the resonance the way KT's can**, and that is a limitation the
-resonance-scaffolding work inherits. The $Z^{\beta-1/2} = |1-y^2|^{b/2}$ factor multiplying divergent
-Legendre functions is the same removable-but-not-removed structure KT §2.1 handled with
-$\mathrm{Cin}$; expect the same class of work.
+**(i3) The general-$b$ oracle diverges at the resonance; KT's eq. (22) does not.** Confirmed
+(recon §5). At $c_s(u+v) = 1$, $y = -1$ exactly, and the $x\to\infty$ **coefficients** are singular:
+power-divergent $\propto(1+y)^{-|b|}$ for $b<0$, logarithmic at $b=0$, finite for $b>0$. Two
+additions from the recon: the divergence is in the coefficients, so **the target object diverges
+there while the exact finite-$x$ kernel does not**; and for $b>0$ recon §5.2 gives a closed form
+finite and evaluable *at* $y = -1$. **No fixture case is near the resonance** (recon §5.4), so this
+does not block A1 — it is a limitation of the instrument, recorded as §7 **D6**.
 
 **(j) The oracle's $x$ and the hand-over's $x_T$ are independent.** The $O(1/x)$ of (i) is in the
 **response** $x = k\tau(z_{\rm resp})$; the hand-over sits at $x_T = k c_s a_0\eta \approx 15.5$ at
@@ -261,8 +246,8 @@ Pure information gain, independent of every line of hand-over code and of each o
 
 | # | Grouping | Covers | Closes |
 |---|---|---|---|
-| **00** | **Domènech reconnaissance** ([`00-domenech-reconnaissance.md`](00-domenech-reconnaissance.md)) — read-and-report only, executed outside the normal flow on a model this session cannot reach (§7 **D3**). Establishes the Legendre conventions and their `mpmath` mapping, the two inter-paper discrepancies of §2 (i2), the resonance structure of §2 (i3), and whether $N(b)$ follows from the papers. | Input to A1 | Nothing — it lands no code |
-| **A1** | **The Domènech general-$b$ oracle.** Implement the target object of §2 (i) — review (4.10) `eq:Isimple` with the $x\to\infty$ coefficients of (3.3)/(3.4) `eq:IJ`/`eq:IY` substituted, keeping $J_{b+1/2}(x)$, $Y_{b+1/2}(x)$ exact — against prompt 00's brief and §5.1. Tie it to the nine $b = 0.2$ fixture cases; bridge its normalisation to KT at $b = 0$. | The $b \neq 0$ half of §1.2 of the KT audit | `[01-general-w-normalisation-is-predicted-not-measured]` |
+| **00** | **Domènech reconnaissance** ([`00-domenech-reconnaissance.md`](00-domenech-reconnaissance.md)) — **LANDED 2026-09-19**, Claude Fable 5.1 → [`docs/handover/DOMENECH-KERNEL-RECON.md`](../../docs/handover/DOMENECH-KERNEL-RECON.md). Found two sign errors in the published review, resolved both §2 (i2) discrepancies, confirmed §2 (i3), and **derived** $N(b)$ rather than leaving it predicted. | Input to A1 | Lands no code; pre-closes `[01-general-w-normalisation-is-predicted-not-measured]` pending A1's constancy measurement |
+| **A1** | **The Domènech general-$b$ oracle.** Implement the target object of §2 (i) — the **corrected** (4.10) `eq:Isimple` (recon §2.2: $Y_{b+1/2}{\cal I}_J - J_{b+1/2}{\cal I}_Y$, **not** the printed order) with the $x\to\infty$ coefficients of (3.3)/(3.4) `eq:IJ`/`eq:IY` substituted, keeping $J_{b+1/2}(x)$, $Y_{b+1/2}(x)$ exact. Recon §9 is the brief; §5.1 still binds. Tie it to the nine $b = 0.2$ fixture cases; bridge its normalisation to KT at $b = 0$. | The $b \neq 0$ half of §1.2 of the KT audit | `[01-general-w-normalisation-is-predicted-not-measured]` |
 | **A2** | **The realistic-flavour large-$x$ harness.** Extend `docs/radiation-oracle/large_x.py` from the exact flavour to the realistic one, with and without `drop_first_WKB_sample`, at $x_{\rm resp}$ to $10^7$–$10^8$. | KT §8's "what this does not cover"; the §5 standing caveat that no verification run ever reached production $x$ | Nothing directly — it is the instrument B2, D and E are scored on |
 
 A2 is the single measurement that separates the clamp term from the phase re-spline term, which
@@ -439,18 +424,13 @@ comfortably at $x \sim 10^7$ where the pipeline costs the same (KT §8 item 1). 
 recommends scoring E2 at large $x$ and treating the low-$x$ fixtures as regression tests only. The
 alternative is to accept $b = 0$ KT scoring at fixture $x$ and take the $b$-dependence on theory.
 
-**D3 — how far the reconnaissance pass goes.** The primary sources are now **in the repository**
-with checksums: [`docs/handover/sources/`](../../docs/handover/sources/SOURCES.md), LaTeX and PDF
-for both papers, with the published equation numbers resolved against the `\label`s. §2 (h), (i),
-(i2) and (i3) were verified directly against that LaTeX and are no longer inherited from a
-summary. What is **not** settled, and is
-[`00-domenech-reconnaissance.md`](00-domenech-reconnaissance.md)'s job, is everything that needs
-the appendices and a careful reading rather than a grep: the Legendre conventions (DLMF/Ferrers
-against `mpmath`'s `legenp`/`legenq` `type=2`/`type=3`), the Gervois–Navelet result the closed
-forms come from, the two inter-paper discrepancies of §2 (i2), the resonance limits of §2 (i3),
-and the derivation of ${\cal I}^\infty$ in the review's own $b$/$c_s$ variables. That pass is
-**read-and-report only** and writes no pipeline code; A1 implements against its report and
-against §5.1.
+**D3 — settled; recorded here for the reader who asks why §2 reads as it does.** The primary
+sources are in the repository with checksums
+([`docs/handover/sources/`](../../docs/handover/sources/SOURCES.md)), and the reconnaissance pass
+**ran and landed** as [`DOMENECH-KERNEL-RECON.md`](../../docs/handover/DOMENECH-KERNEL-RECON.md)
+(Claude Fable 5.1, 2026-09-19). It overturned two of this README's design facts and confirmed the
+rest; §2 (h), (i), (i2) and (i3) are rewritten on it. Its §10 leaves nine open items, of which
+item 3 is now **D6** below and the rest are A1's to carry. **No decision remains here.**
 
 **D4 — does D2 (the phase representation) belong in this campaign?** It is a schema and consumer
 change across `phase_spline`, `TkSourceFunctions`, `GkSourcePolicyData` and `PrimitivePhase`, it is
@@ -467,6 +447,20 @@ to take it.
 
 ---
 
+**D6 — is a resonance-capable general-$b$ oracle worth building?** Recon §10 item 3. At
+$c_s(u+v) = 1$ the target object diverges for $b \le 0$ (§2 (i3)); the exact finite-$x$ kernel does
+not, but evaluating it means quadrature of (4.11), and KT §8 Table 8.2 shows plain quadrature
+failing above $x \approx 3\times10^4$ — 200 subdivisions exhausted, declared error of order
+$\lvert I\rvert$. So at the resonance, at large $x$, for $b \le 0$, **there is no instrument at
+all**. Nothing in this campaign needs one: no fixture case is near the resonance, and $b = 0$ has
+KT's eq. (22), which is finite there. But `docs/resonance-scaffolding-v1/` and `-v2/` are built
+around that point and have no campaign of their own, so this is where it would otherwise be lost.
+The option is a Levin-type evaluation of (4.11) at large $x$. **Recorded as a decision rather than
+a §3 issue**: nothing in the tree is wrong, no board exists to host it, and the recon calls it a
+campaign decision in terms.
+
+---
+
 ## 8. Reading order for a new agent
 
 1. This README §0–§2.
@@ -477,8 +471,11 @@ to take it.
 4. [`docs/radiation-oracle/KOHRI-TERADA-ORACLE.md`](../../docs/radiation-oracle/KOHRI-TERADA-ORACLE.md)
    — **§0 first** (whose object is whose; it is a precondition for reading any of the rest), then
    §7, §7.2 and §8.
-5. `prompts/source-remediation/IMPLEMENTATION_STATE.md` §3 — the entries for `[05-…]`, `[06-…]`,
+5. [`docs/handover/DOMENECH-KERNEL-RECON.md`](../../docs/handover/DOMENECH-KERNEL-RECON.md) —
+   **§0 and §1 before anything else in it**, then §9, the implementation brief. It is an input,
+   not an authority: §5.1 still binds A1.
+6. `prompts/source-remediation/IMPLEMENTATION_STATE.md` §3 — the entries for `[05-…]`, `[06-…]`,
    `[07-…]`, `[08-handover-clamp-error]` and `[12-handover-clamp-error-in-production]`, which carry
    the measurements this README only quotes.
-6. `ComputeTargets/tests/test_quadsource_integral.py` — the module docstring (the exact/realistic
+7. `ComputeTargets/tests/test_quadsource_integral.py` — the module docstring (the exact/realistic
    flavour distinction), `TestHandOverClamp`, and `test_integrand_continuity_at_the_hand_over`.
