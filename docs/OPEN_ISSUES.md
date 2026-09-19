@@ -1,6 +1,6 @@
 # Open issues — project-wide index
 
-**Last updated:** 2026-09-19 · **81 open** across eleven campaigns.
+**Last updated:** 2026-09-19 · **84 open** across eleven campaigns.
 
 This file exists so that an issue opened by one campaign is not lost when that campaign closes.
 It is an **index, not a record**: one line per issue, pointing at the campaign status board that
@@ -32,7 +32,7 @@ Work is identified and owned; the issue is parked deliberately, not forgotten.
 
 ### 1.1 The hand-over campaign
 
-The numeric→Liouville–Green seam of $T_k$ and $G_k$. These eight are **one place** and must be
+The numeric→Liouville–Green seam of $T_k$ and $G_k$. The first eight are **one place** and must be
 attacked together — prompt 12 of `source-remediation` could not separate their contributions by
 measurement alone at production $x$. (`[11-stop-point-root-tolerance]` joined them 2026-09-12: the
 numeric stop point $z_{\rm init}$ is a `root_scalar` root, so where the seam sits and how precisely
@@ -47,6 +47,14 @@ line. The plan also draws in `[12-phase-spline-error-grows-with-x]` (§1.4),
 `[01-general-w-normalisation-is-predicted-not-measured]` (§1.9); those rows are **not** moved here,
 because none has changed status.
 
+**Two rows added 2026-09-19 have no board yet.** The last two below were found by a review of the
+campaign documents, not by a prompt, and the campaign's `IMPLEMENTATION_STATE.md` does not exist
+until prompt 01 lands. Their content lives in
+[`prompts/handover/README.md`](../prompts/handover/README.md) §2 (o) — which is the loss-proof
+place for it, and is what these rows point at — and campaign prompt 03 opens them formally on the
+board when it runs. Workstream **C2** owns the fix. They are indexed now rather than later because
+that is what this file is for.
+
 | Issue | Board | Hook |
 |---|---|---|
 | `[08-handover-clamp-error]` | source-remediation | The WKB grid starts below `crossover_z`, so the LG accessors are clamped across a gap; a one-step gap moves `total` by 5.1e-03. |
@@ -57,6 +65,9 @@ because none has changed status.
 | `[00-tk-lg-truncation-floor]` | GkTk-remedial | The $T_k$ LG representation is not exact even in radiation: ~$1.4\times10^{-4}$ of the envelope at the production hand-over $x_T\approx15.5$, scaling as $x_i^{-3}$. A later hand-over ($x_T=50$ gives $4\times10^{-6}$), a higher-order LG frequency, or the Bessel exact form are the levers. |
 | `[11-stop-point-root-tolerance]` | GkTk-remedial | `find_phase_extremum`'s `root_scalar(xtol=1e-6, rtol=1e-4)` places the stop point only to $\sim10^{-4}z$, so $|G'|/(|G|\omega)$ there is 9.8e-6 (pre-prompt-11) to 6.5e-5, not the 1e-12 prompt 11 §3 asked to assert. Harmless downstream — `store()` rotates $(G,G')$ — but $z_{\rm init}$ is this root, so tightening it is a hand-over-campaign decision with a datastore regeneration attached. |
 | `[03-numeric-g-consumer-spline-is-the-dominant-error-near-the-hand-over]` | tolerance-convergence | The consumer of the numeric $G_k$ is a cubic `make_interp_spline` in $\log(1+z_{\rm source})$ over the **source-grid** nodes (`GkSourcePolicyData.py:654-680`), and its interpolation error is **1.6e-04 to 1.9e-04** of the envelope three e-folds inside the horizon and up to **9.4e-03** at four, where `main.py:1884` stops building the target — against **2.6e-07** for the solver at the production `(1e-10, 1e-8)`. Measured at 50 $k$ on three models, **version-2 grid at each cosmology's own anchor**, floor uncertainty 0.00 %, probe within 5.6e-12 of the exact $G$ on the control. It confirms review §10.1's inherited 1e-5–1e-4 and shows the "two orders" understates the dominance (×631 to ×37,700). The cause is spacing, not tolerance: the source lattice carries up to **1.24 rad** of $G$'s oscillation per interval there, and the density criterion that sets it is sized for the phase-residual spline, not for $G$. **Assigned 2026-09-17 on the user's D1 acceptance: the source grid's spacing at the hand-over is post-campaign work.** A design decision, not a tuning one — the density criterion gains $G$'s oscillation as a second consumer, the hand-over moves deeper, or `GkSourcePolicyData` splines the LG amplitude and phase instead. |
+| `[03-gksource-policy-accepts-a-value-that-raises]` | *none yet* — handover README §2 (o), owner **C2** | `GkSourcePolicy` permits `numeric_policy="maximize-numeric"`, which validates, persists, joins the datastore key, then raises inside a Ray remote: `_classify_crossover` branches only on `"maximize-WKB"` and `"minimize-WKB"`, and the latter cannot be constructed. The maximise-numeric policy is unreachable by either name. Latent — nothing has ever passed anything but `"maximize-WKB"`. |
+| `[03-gk-classification-is-diagnosed-and-ignored]` | *none yet* — handover README §2 (p), owner **B3** | `_classify_crossover` can return `quality="incomplete"` or `type="fail"` and **nothing acts on either**: `quality` is read only by a plot label, summary statistics, a dump trigger and `_classify_Levin`'s early return, and `main.py:3175-3205` feeds the row into the source-integral queue with no filter. Every `incomplete` route then raises inside `build_partition`, because $G$ has no clamp — `mixed`/`incomplete` sets `crossover_z` *above* `primary_WKB_largest_z`. The 462-row census found 7 `fail` rows (1.5 %); §5.5 records that the source integral did not reach them, which is luck rather than design. A fail-late contract. Also: `_classify_crossover` has **no test** (`test_gk_source_policy.py` covers only `_classify_Levin`), and `main.py:2929` fires the dump without checking `--dump-incomplete`, so the Ray task dies of `TypeError` unobserved. |
+| `[03-quadsource-policy-vocabulary-differs]` | *none yet* — handover README §2 (o), owner **C2** | `QuadSourcePolicy` spells the same value `"maximize_numeric"` with an underscore, a third spelling, so the two policy objects disagree about their own vocabulary. Harmless today because nothing reads the field. Both classes also lose the offending value from their "unknown policy" warning by reassigning before interpolating. |
 
 ### 1.2 The `QuadSourceIntegral` phase-groups campaign
 

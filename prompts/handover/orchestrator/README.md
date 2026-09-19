@@ -8,16 +8,23 @@ reviews its commit against fixed criteria, and either hands back or stops and re
 | 00 | Domènech reconnaissance | — | n/a | **Already landed** (`ab5c0ed`), executed outside this flow on a separate account. Read-and-report; no orchestration |
 | 01 | The Domènech general-$b$ oracle | [`prompt-01.md`](prompt-01.md) | **yes** | One new module and its tests; **no production file is modified**. Like `radiation-oracle` prompt 01, the review is about whether the tests *would fail*: the source paper's own kernel is mis-signed, and a faithful transcription is wrong by an overall sign while looking entirely plausible. Turns on the deliberate-breakage record and on test 5, the only comparison with an object this campaign did not write |
 | 02 | The realistic-flavour large-$x$ harness | [`prompt-02.md`](prompt-02.md) | **yes** | A `docs/` measurement script and a document; **no production file and no test**. Suite counts must be *unchanged*, not risen. The review turns on the control cell reproducing KT §8 Table 8.1 and on whether the attribution of the two terms is honest about its own error |
+| 03 | The policy-geometry census | — | **not yet** | A `docs/` census script and a document; **no production file and no test**. Unlike 01 and 02 it **needs a datastore**, so its dispatch has to name one and record which source-grid construction its rows carry. The review turns on the type/quality census reproducing `source-remediation-verification.md` §5.5's shape, on the interval counts being taken by node index rather than by converting $\log(1+z)$ back to $z$, and on the agent having opened the two §2 (o) issues **without fixing them** |
 
 ## Running them
 
 > Read `prompts/handover/orchestrator/prompt-01.md` and follow it.
 
-**Order: 01 then 02.** They are independent work — campaign README §4 says A1 and A2 have no
-prerequisites and no dependency on each other — but **01 creates `IMPLEMENTATION_STATE.md`**, which
-02 then updates. Running them the other way round means moving that clause of prompt 01 §8 into
-prompt 02. Running them concurrently in separate worktrees means both creating the board and
-conflicting on it, and on `docs/OPEN_ISSUES.md`. Serialise them.
+**Order: 01, then 02 and 03 in either order.** All three are independent work — campaign README §4
+says A1, A2 and A3 have no prerequisites and no dependency on each other — but **01 creates
+`IMPLEMENTATION_STATE.md`**, which the others then update. Running 01 later means moving that
+clause of prompt 01 §8 into whichever runs first. Running any two concurrently in separate
+worktrees means conflicting on the board and on `docs/OPEN_ISSUES.md`. Serialise them.
+
+**03 has a precondition the others do not**: a datastore written on the current source grid, i.e.
+after `qcd-background-audit` prompt 15 replaced the base density with the measured curvature
+criterion. A census on the superseded grid answers a question nobody asked, and prompt 03 §7 makes
+that a stop. Establish which datastore you are dispatching against **before** you dispatch, not
+after.
 
 **Take the baselines before dispatching anything.** They cannot be reconstructed after the fact, and
 prompt 01 is one that *raises* `ComputeTargets` — so "did not fall" is not enough; the rise must
