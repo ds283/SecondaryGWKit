@@ -815,3 +815,48 @@ convention. Constancy over $(u,v,x)$ is the statistic.
 9. **What was not derived.** The G–N formulas themselves; the review's superhorizon
    `review.tex:1914-1918` (its $1/v$ asymmetry looks odd and was not needed); the review's IR
    formulas `review.tex:810-820`; anything about $b\ge1$ or $c_s\ne\sqrt w$.
+
+---
+
+## 11. Addendum (2026-09-19): where the review's (4.7) sign came from
+
+*Added after the pass, by Claude Opus 5, from the arXiv version history. It does not change any
+measurement or conclusion above; it supplies the mechanism behind §1's first finding, which was not
+visible from one version of the paper.*
+
+`2109.01398` has two arXiv versions, and **(4.7) `eq:hgreen` is not the same in both**:
+
+| | v1 (3 Sep 2021) | v2 (5 Nov 2021) — what §1–§10 read |
+|---|---|---|
+| (4.7) | $\frac{k\pi}{2}\frac{(k\tilde\tau)^{b+3/2}}{(k\tau)^{b+1/2}}\big(J_{b+1/2}(k\tau)Y_{b+1/2}(k\tilde\tau)-J_{b+1/2}(k\tilde\tau)Y_{b+1/2}(k\tau)\big)$ | $\frac{\pi}{2k}\frac{(k\tilde\tau)^{b+3/2}}{(k\tau)^{b+1/2}}\big(J_{b+1/2}(k\tilde\tau)Y_{b+1/2}(k\tau)-J_{b+1/2}(k\tau)Y_{b+1/2}(k\tilde\tau)\big)$ |
+| (4.10) `eq:Isimple` | $J\,{\cal I}_Y - Y\,{\cal I}_J$ | **byte-identical to v1** |
+| (4.12) `eq:Isimple2` | as printed | **byte-identical to v1** |
+
+v1's (4.7) is $-k^2$ times v2's — checked at $b\in\{0,0.2,0.5\}$ over several $k$, exact to
+rounding. **v2's is the correct one**: it gives $G\to+(\tau-\tilde\tau)$ just after the source, and
+it agrees with `1912.05583v3` `eq:green2` and with `docs/spec/02-greens-function.md` R10.
+
+So §1's first finding has a history rather than being a bare slip. In **v1** the paper was
+internally consistent: (4.7) and (4.10) carried the same, wrong, sign. In **v2** (4.7) was corrected
+and **the correction was not propagated** to (4.10) or (4.12), which still carry v1's sign. §2.2's
+derivation of the corrected order is a derivation of the repair that (4.10) did not receive.
+
+Three consequences.
+
+1. **Cite the version.** `2109.01398` (4.7) alone is ambiguous.
+   [`sources/SOURCES.md`](sources/SOURCES.md) now pins v3/v2 and records v1's checksums.
+   `1912.05583` is stable — (2.23) and (3.1) carry the correct order in all three of its versions —
+   so the 2020 paper never had this defect, which is consistent with §2.4's "the 2020 paper is
+   self-consistent; the review is not".
+2. **§1's second finding is *not* explained by this.** (4.12) is identical across versions, and §2.4
+   found it mixed — $\sin$ terms of the correct kernel, $\cos$ term of the wrong one. A faithful
+   propagation of (4.10)'s sign would have flipped all three. It remains an independent slip.
+3. **The repository already had the corrected form.** `docs/spec/05-one-loop.md` R31 (MAIN 14 p.11,
+   2022-08-30 — the transcription campaign's build target) gives
+   $\big(Y_{b+\frac12}(k\eta)I_J - J_{b+\frac12}(k\eta)I_Y\big)$ with an $I_{J/Y}$ identical to
+   (4.11), derived from the author's own Green's function and source. Checked against §0's object
+   **E**: $k^2\,\text{R31} = c^2 I_{\rm rev}$ to ten digits at $b\in\{0,0.2,0.5\}$, with
+   $c = \frac{2+b}{3+2b}$. Equivalently $k^2\,\text{R31} = \tfrac12 I_{\rm KT}$, which is the
+   $h^{\rm us}_{ij} = h^{\rm them}_{ij}/2$ of §8 falling out of the author's own Step 6. **§1 finding 1
+   and §8's $N(b)$ therefore each have an independent derivation in the tree**, predating this pass
+   by four years.

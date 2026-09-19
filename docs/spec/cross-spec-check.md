@@ -383,8 +383,13 @@ $8\pi^2$ (with $c^2$ inside $f$) — related by the three steps above and nothin
    closed form does: the code's source integral at $b=0$ is $-\tfrac98\,k_{\rm phys}^{-2}$ times it,
    which confirms $h^{\rm us}_{ij}=h^{\rm them}_{ij}/2$ at $w=1/3$ and is pinned by
    `ComputeTargets.tests.test_kohri_terada_oracle`. See spec 05 Q11 for the measurement and its
-   references. **Still open:** the Adshead half of spec 05 Q11, and spec 02's "matches Adshead" for
-   $G[h]$.
+   references. **Domènech half of spec 02's remark closed 2026-09-19.** "Differs from Domènech" for $G[h]$ is
+   **true of `arXiv:2109.01398v1` and false of `v2`**: that paper's (4.7) changed between versions,
+   v1 being $-k^2$ times spec 02 R10 and v2 equalling it exactly, verified numerically. R10 is the
+   correct form (causal sign; `1912.05583` (2.23) agrees in all versions).
+   [`docs/handover/DOMENECH-KERNEL-RECON.md`](../handover/DOMENECH-KERNEL-RECON.md) §11.
+   **Still open:** the Adshead half of spec 05 Q11, and spec 02's "matches Adshead" for $G[h]$ —
+   no Adshead comparison has been made.
 
 ---
 

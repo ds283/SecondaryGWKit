@@ -1,6 +1,8 @@
 # Primary sources for the general-$b$ oracle
 
-Fetched 2026-09-19 from arXiv. **These are third-party papers, retained so that a transcription
+**Versions are pinned: arXiv `1912.05583v3` (23 Feb 2020, latest of three) and `2109.01398v2` (5 Nov 2021, latest of two).** Always cite the version. An equation number alone is not a citation in this pair of papers — see **Version hazard** below.
+
+Fetched 2026-09-19 from arXiv (the bare `arxiv.org/pdf/<id>` and `/e-print/<id>` serve the latest version, which is what is recorded here). **These are third-party papers, retained so that a transcription
 is reproducible against the exact text it was made from** — `prompts/radiation-oracle` found three
 errata in Kohri & Terada, one of which turned on the *rendering* of an equation rather than its
 content (KT audit §2 erratum 1). The LaTeX source removes that failure mode entirely.
@@ -31,9 +33,10 @@ refetch can be verified rather than trusted.
 Restore them, from this directory:
 
 ```bash
-for id in 1912.05583 2109.01398; do
-  curl -sSL -o "${id}.pdf"        "https://arxiv.org/pdf/${id}"
-  curl -sSL -o "${id}-src.tar.gz" "https://arxiv.org/e-print/${id}"
+for id_v in 1912.05583v3 2109.01398v2; do
+  id="${id_v%v*}"
+  curl -sSL -o "${id}.pdf"        "https://arxiv.org/pdf/${id_v}"
+  curl -sSL -o "${id}-src.tar.gz" "https://arxiv.org/e-print/${id_v}"
 done
 shasum -a 256 -c CHECKSUMS
 ```
@@ -57,6 +60,41 @@ HTML view:
 
 Figures were deleted from the extracted trees; the `.tex` and `.bbl` are kept. The two `.tar.gz`
 are kept verbatim so the deletion is reversible.
+
+## Version hazard — `2109.01398` (4.7) changed between v1 and v2
+
+**`1912.05583` is stable**: its Green's function (2.23) and its exact kernel (3.1) carry
+$\{Y_\beta{\cal I}^x_J - J_\beta{\cal I}^x_Y\}$, the correct order, in **all three** of its versions.
+Only the review moved.
+
+**The review's Green's function differs between its two arXiv versions, in sign and in a factor of
+$k^2$.** Everything in this directory, and every citation in `prompts/handover` and in
+[`DOMENECH-KERNEL-RECON.md`](../DOMENECH-KERNEL-RECON.md), is **v2**.
+
+| | arXiv v1 (3 Sep 2021) | arXiv v2 (5 Nov 2021) — **pinned here** |
+|---|---|---|
+| (4.7) `eq:hgreen` | $\dfrac{k\pi}{2}\dfrac{(k\tilde\tau)^{b+3/2}}{(k\tau)^{b+1/2}}\big(J_{b+1/2}(k\tau)Y_{b+1/2}(k\tilde\tau)-J_{b+1/2}(k\tilde\tau)Y_{b+1/2}(k\tau)\big)$ | $\dfrac{\pi}{2k}\dfrac{(k\tilde\tau)^{b+3/2}}{(k\tau)^{b+1/2}}\big(J_{b+1/2}(k\tilde\tau)Y_{b+1/2}(k\tau)-J_{b+1/2}(k\tau)Y_{b+1/2}(k\tilde\tau)\big)$ |
+
+**v1's (4.7) is $-k^2$ times v2's**, verified at $b \in \{0, 0.2, 0.5\}$ and several $k$. **v2 is the
+correct one**: it gives $G \to +(\tau-\tilde\tau)$ just after the source, the causal normalisation,
+and it agrees with `1912.05583v2` `eq:green2` and with `docs/spec/02-greens-function.md` R10. v1
+fails that sign test and carries a spurious $k^2$.
+
+**(4.10) `eq:Isimple` and (4.12) `eq:Isimple2` are byte-identical between v1 and v2.** So the v2
+paper is internally inconsistent: (4.7) was corrected and the correction was not propagated. That
+is the mechanism behind
+[`DOMENECH-KERNEL-RECON.md`](../DOMENECH-KERNEL-RECON.md) §1's first finding.
+
+v1, for checking a citation made against it (not committed, and not the reference for any work
+here):
+
+| Artefact | SHA-256 |
+|---|---|
+| `2109.01398v1.pdf` | `813d6160d5884a9efbc8d86a70315aa0d18668c13d1781b5696f9b6bda54b5f2` |
+| `2109.01398v1-src.tar.gz` | `2cc361df0fddde03d1573d8abe0c1d2d5a8824b161e9416220371014d2610ddd` |
+
+Fetch with the explicit version suffix, `https://arxiv.org/pdf/2109.01398v1` and
+`https://arxiv.org/e-print/2109.01398v1`.
 
 ## Equation numbering
 

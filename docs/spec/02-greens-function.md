@@ -218,6 +218,8 @@ red corrections. All are legible.
   (MAIN 13 p.2); in $z$: $G_k(z',z')=0$, $[dG_k/dz]_{z'-\epsilon}^{z'+\epsilon} = -1/(a_0H(z'))$ (NUM 02 p.4).
 - **Literature**: MAIN 13 p.3: the $h$-field Green's function "differs from Domènech et al.
   formula, but appears to match Adshead et al. formula".
+  **Checked 2026-09-19**: true of `arXiv:2109.01398v1`, false of `v2` — that paper's (4.7)
+  changed between versions and v2 equals R10 exactly. See the audit note at R10.
 
 ### 2.6 Equation of state
 - **MAIN 13 p.1**: $b = \dfrac{1-3w}{1+3w}$ for a period with fixed $w$; $a(\eta)\propto\eta^{1+b}$.
@@ -336,6 +338,20 @@ G_k[h](\eta,\eta') = \begin{cases}
 $$
 Closing remark: "Differs from Domènech et al. formula, but appears to match Adshead et al.
 formula." Confidence: **high** (exponents $3/2+b$ and $-1/2-b$ clearly legible).
+
+> **Audit note (2026-09-19), at the author's request — the closing remark, checked.** The remark is
+> **true of `arXiv:2109.01398v1` and false of `v2`**, and the transcription is unaffected either way.
+> The review's (4.7) `eq:hgreen` changed between its two arXiv versions: v1 (3 Sep 2021) prints
+> $\frac{k\pi}{2}\frac{(k\tilde\tau)^{b+3/2}}{(k\tau)^{b+1/2}}\big(J_{b+1/2}(k\tau)Y_{b+1/2}(k\tilde\tau)-J_{b+1/2}(k\tilde\tau)Y_{b+1/2}(k\tau)\big)$,
+> which is $-k^2$ times R10; v2 (5 Nov 2021) prints the form that **equals R10 exactly** — verified
+> numerically at $b\in\{0,0.2,0.5\}$ over several $k$, to rounding. R10 is the correct one on its own
+> terms: it gives $G[h]\to+(\eta-\eta')$ just after the source, and `arXiv:1912.05583` (2.23) carries
+> the same order in all three of its versions. So "differs from Domènech" records a real difference
+> against the version then displayed, and "matches Adshead" is untouched by this and remains
+> unchecked. Measurement and version table:
+> [`docs/handover/DOMENECH-KERNEL-RECON.md`](../handover/DOMENECH-KERNEL-RECON.md) §11;
+> sources pinned at [`docs/handover/sources/SOURCES.md`](../handover/sources/SOURCES.md).
+> **Not author sign-off on the physics** — it settles the literature comparison only.
 
 ### 3.2 NUM 02 — tensor Green's function in redshift (4 pp., 12 September 2024)
 
