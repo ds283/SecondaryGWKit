@@ -1,10 +1,13 @@
 # Radiation oracle — implementation state
 
-**Last updated:** 2026-09-18 · **Status: COMPLETE — 1 / 1 prompts landed.** The audit
+**Last updated:** 2026-09-20 · **Status: COMPLETE — 1 / 1 prompts landed.** The audit
 [`docs/radiation-oracle/KOHRI-TERADA-ORACLE.md`](../../docs/radiation-oracle/KOHRI-TERADA-ORACLE.md)
 was measured at `2033cfc`; **prompt 01 has landed the oracle** as
 `ComputeTargets/tests/kohri_terada.py` with `ComputeTargets/tests/test_kohri_terada_oracle.py`, and
-README §5's acceptance is met. One issue remains open in §3; the one prompt 01 opened is closed (§4).
+README §5's acceptance is met. **No issue remains open**: the one prompt 01 opened closed on
+2026-09-18, and `[01-general-w-normalisation-is-predicted-not-measured]` closed on 2026-09-20 when
+`prompts/handover` prompt 01 measured $N(b)$ with an oracle that shares no machinery with the
+pipeline (§4).
 
 **Campaign:** [`README.md`](README.md)
 
@@ -22,6 +25,13 @@ README §5's acceptance is met. One issue remains open in §3; the one prompt 01
 
 ## 3. Active and unresolved issues
 
+**None.** This board's last open issue,
+`[01-general-w-normalisation-is-predicted-not-measured]`, closed on 2026-09-20 — see §4.
+
+## 4. Resolved issues
+
+Closed by `prompts/handover` prompt 01, 2026-09-20:
+
 - **[01-general-w-normalisation-is-predicted-not-measured]** *(opened 2026-09-18 with the audit)* —
   the oracle covers $b = 0$ only. KT give closed forms for $I$ in pure radiation (eq. 22) and pure
   matter (eq. 37) domination and none in between, and the code's $b$ maps to their $w$ by
@@ -33,11 +43,36 @@ README §5's acceptance is met. One issue remains open in §3; the one prompt 01
   general-$w$ quadrature oracle built from the code's own $\Phi$, which is a weaker check because it
   shares the transfer function. **Next step:** decide whether a general-$w$ quadrature oracle is
   worth having given that it shares machinery with the thing it checks.
-  Indexed at `docs/OPEN_ISSUES.md` §1.9.
 
-## 4. Resolved issues
+  **Resolution (2026-09-20, by `prompts/handover` prompt 01 — the hand-over campaign's A1).**
+  Measured, and by an oracle that does **not** share machinery with the thing it checks, which
+  removes the obstacle the "next step" above names. `prompts/handover` prompt 00 read both Domènech
+  papers from their committed LaTeX
+  ([`docs/handover/DOMENECH-KERNEL-RECON.md`](../../docs/handover/DOMENECH-KERNEL-RECON.md)) and
+  **derived** $N(b) = -\frac{(3+2b)^2}{2(2+b)^2}$ from those papers' own definitions of $I$ and $f$,
+  rather than extrapolating it; prompt 01 then landed the general-$b$ kernel as
+  `ComputeTargets/tests/domenech.py`, a transcription of the review's (4.10) `eq:Isimple` **with the
+  sign its own (4.7) and (4.9) require** and of the finite-$x$ (4.11) `eq:Isimpledef` by
+  `scipy.quad`. Nothing in it comes from this repository's transfer function: the outer Bessels are
+  `scipy.special`, the Legendre sector is `mpmath`, and at $b = 0$ it is bridged to
+  `ComputeTargets/tests/kohri_terada.py` — this board's own module, transcribed from a third paper —
+  at $I_{\rm rev} = \tfrac98 I_{\rm KT}$, agreeing to $\le4.0\times10^{-15}$ except at $u = 0.01$,
+  where eq. (22)'s own $1/(u^3v^3)$ rounding floors it at 3.9e-10 (§4 above).
 
-Closed after the campaign, 2026-09-18:
+  On the nine $b = 0.2$ cases of `test_quadsource_integral`, exact flavour, at the reference pair
+  $(10^{-45}, 10^{-12})$: **$N = -1.194214876033$, constant to 5.285e-13 (4.425e-13 relative)** over
+  $x$ from 5.3 to $1.9\times10^3$, $u$ from 0.01 to 10 and both Gervois–Navelet branches, with a
+  worst deviation from the derived value of **4.130e-13** — the same order as this campaign's own
+  3.09e-13 at $b = 0$. Against $I_{\rm rev}$, where the prediction is $-1$ exactly, the worst is
+  3.461e-13. Every per-case deviation is inside the sum of the two sides' declared errors. The
+  constancy is the load-bearing statistic, per `KOHRI-TERADA-ORACLE.md` §0, and prompt 01's
+  deliberate-breakage record shows it and the value failing independently: transcribing (4.10) as
+  the review prints it leaves $N$ **constant at $+1.194214876033$**, the benign failure §0 predicts.
+  **So `KOHRI-TERADA-ORACLE.md` §1.2's "$b \ne 0$ is not covered" is now false**, and the $N(b)$
+  formula is a measurement. Measurement:
+  `prompts/handover/logs/01-domenech-general-b-oracle.md`; board entry:
+  `prompts/handover/IMPLEMENTATION_STATE.md` §4. The row is deleted from `docs/OPEN_ISSUES.md`
+  §1.9, which is now empty. **Closed.**
 
 - **[01-the-eq22-figure-is-eq22s-own-rounding-not-the-head]** *(opened 2026-09-18 by prompt 01)* —
   the audit's §1 table ("Limited by: the head subtraction") and §7.1 preamble, campaign README §1,

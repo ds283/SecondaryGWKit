@@ -1,6 +1,6 @@
 # Open issues — project-wide index
 
-**Last updated:** 2026-09-19 · **82 open** across eleven campaigns.
+**Last updated:** 2026-09-20 · **83 open** across eleven campaigns.
 
 This file exists so that an issue opened by one campaign is not lost when that campaign closes.
 It is an **index, not a record**: one line per issue, pointing at the campaign status board that
@@ -23,14 +23,18 @@ the two disagree, the board is right.
 [`tolerance-convergence`](../prompts/tolerance-convergence/IMPLEMENTATION_STATE.md) ·
 [`background-solver-robustness`](../prompts/background-solver-robustness/IMPLEMENTATION_STATE.md) ·
 [`radiation-oracle`](../prompts/radiation-oracle/IMPLEMENTATION_STATE.md) ·
+[`handover`](../prompts/handover/IMPLEMENTATION_STATE.md) ·
 [`test-suite-runtime`](../prompts/test-suite-runtime/IMPLEMENTATION_STATE.md)
 
-The last of these holds **no** open issue — it is listed so that its §4, which closed
-`transfer-remedial`'s `[08-3bessel-plot-cost-dominates-the-suite]` on 2026-09-19, can be
-found. Of the 82 above, 79 are spread across the other eleven boards and **three have no board
-yet** — the `handover` rows in §1.1 opened by a document review on 2026-09-19, whose content lives
-in [`prompts/handover/README.md`](../prompts/handover/README.md) §2 (o) and (p) until that
-campaign's `IMPLEMENTATION_STATE.md` exists.
+**Two** of these hold no open issue and are listed for their §4. `test-suite-runtime` closed
+`transfer-remedial`'s `[08-3bessel-plot-cost-dominates-the-suite]` on 2026-09-19;
+`radiation-oracle` closed `[01-general-w-normalisation-is-predicted-not-measured]` on 2026-09-20,
+when `prompts/handover` prompt 01 measured $N(b)$ (§1.9 below). The `handover` board was created by
+that prompt on 2026-09-20 and holds two. Of the 83 above, 80 are spread across the boards and
+**three still have no board row** — the last three `handover` rows in §1.1, opened by a document
+review on 2026-09-19, whose content lives in
+[`prompts/handover/README.md`](../prompts/handover/README.md) §2 (o) and (p) and which that
+campaign's **prompt 03** opens formally on its board when it runs.
 
 ---
 
@@ -47,24 +51,31 @@ numeric stop point $z_{\rm init}$ is a `root_scalar` root, so where the seam sit
 it is located are the same decision.) Background reading:
 [`docs/lg-phase-and-handover-followup-2026-09.md`](lg-phase-and-handover-followup-2026-09.md).
 
-**Planned 2026-09-19 as [`prompts/handover/`](../prompts/handover/README.md)** — five workstreams,
-no prompt written and no board yet, so every row below still closes on the board named in its own
-line. The plan also draws in `[12-phase-spline-error-grows-with-x]` (§1.4),
+**Planned 2026-09-19 as [`prompts/handover/`](../prompts/handover/README.md)** — five workstreams.
+**Started 2026-09-20:** prompt 00 (the Domènech reconnaissance) and prompt 01 (workstream **A1**,
+the general-$b$ oracle) have landed, and the board
+[`prompts/handover/IMPLEMENTATION_STATE.md`](../prompts/handover/IMPLEMENTATION_STATE.md) now
+exists. Every row below still closes on the board named in its own line. The plan also draws in
+`[12-phase-spline-error-grows-with-x]` (§1.4),
 `[20-wkb-rows-consume-numeric-initial-data]` (§1.4), `[00-consumer-anchoring-floor]` (§1.4),
 `[02-consumer-phi-below-the-storage-granularity]` (§1.6) and
 `[01-general-w-normalisation-is-predicted-not-measured]` (§1.9); those rows are **not** moved here,
-because none has changed status.
+because none has changed status — except the last, which **prompt 01 closed on 2026-09-20**, on the
+`radiation-oracle` board that owns it, emptying §1.9.
 
-**Two rows added 2026-09-19 have no board yet.** The last two below were found by a review of the
-campaign documents, not by a prompt, and the campaign's `IMPLEMENTATION_STATE.md` does not exist
-until prompt 01 lands. Their content lives in
-[`prompts/handover/README.md`](../prompts/handover/README.md) §2 (o) — which is the loss-proof
-place for it, and is what these rows point at — and campaign prompt 03 opens them formally on the
-board when it runs. Workstream **C2** owns the fix. They are indexed now rather than later because
-that is what this file is for.
+**Three rows added 2026-09-19 have no board row yet.** The last three below were found by a review
+of the campaign documents, not by a prompt. The campaign's `IMPLEMENTATION_STATE.md` has existed
+since prompt 01 landed on 2026-09-20, but that prompt deliberately did **not** adopt them: they are
+not in its scope and **prompt 03 opens them formally**. Their content lives in
+[`prompts/handover/README.md`](../prompts/handover/README.md) §2 (o) and (p) — which is the
+loss-proof place for it, and is what these rows point at. Workstream **C2** owns the first and
+third, **B3** the second. They are indexed now rather than later because that is what this file is
+for.
 
 | Issue | Board | Hook |
 |---|---|---|
+| `[01-recon-off-cut-closed-form-is-ill-conditioned]` | handover | `DOMENECH-KERNEL-RECON.md` §9's brief prescribes §5.2's off-cut form for $C(\tilde y)$, which is correct but cancels 13 orders at $\tilde y = 150$ and is 8.6e-08 out there **at any `mp.dps`** — the loss is in the double representation of $b$, not in the working precision. `q-smooth` at $b = 0.2$ sits at $\tilde y = 149.5$. Nothing in the tree is wrong (prompt 01 used the 2020 paper's own $1/\tilde y^2$ form instead); a later agent re-implementing from §9 would inherit it. Answers recon §10 item 5. |
+| `[01-recon-section-7-N-symbol-drops-a-pi]` | handover | `DOMENECH-KERNEL-RECON.md` §7 prints "$\mathcal N = 3\pi/8$" where its own §2.2 definition gives $3\pi^2/8$; the reduction §7 displays is correct and nothing arithmetical depends on the symbol, but a reader checking §7 against §2.2 loses a factor of $\pi$. |
 | `[08-handover-clamp-error]` | source-remediation | The WKB grid starts below `crossover_z`, so the LG accessors are clamped across a gap; a one-step gap moves `total` by 5.1e-03. |
 | `[12-handover-clamp-error-in-production]` | source-remediation | Supersedes the above for magnitude: on real rows the gap is universal and costs 6.6e-02–4.6e-01 against 6.2e-05 unclamped. **The campaign's main outstanding accuracy decision.** |
 | `[05-numeric-region-is-now-the-accuracy-floor]` | source-remediation | A cubic spline loses 1–2 orders in its last two intervals, and the numeric grid *ends* at the hand-over. |
@@ -590,9 +601,12 @@ whose `BackgroundModel` half prompt 14 of that campaign widened it with stays op
 
 ### 1.9 The radiation oracle campaign
 
-| Issue | Board | Hook |
-|---|---|---|
-| `[01-general-w-normalisation-is-predicted-not-measured]` | radiation-oracle | Kohri & Terada's closed form covers $b = 0$ only, so the normalisation $N = -9/8$ is measured there and the general-$w$ $N(b) = -(3+2b)^2/(2(2+b)^2)$ is predicted and unchecked. Measurement: `docs/radiation-oracle/KOHRI-TERADA-ORACLE.md` §1.2. |
+**All of this campaign's issues are closed.** The last,
+`[01-general-w-normalisation-is-predicted-not-measured]`, closed on 2026-09-20 on
+[its own board's §4](../prompts/radiation-oracle/IMPLEMENTATION_STATE.md): `prompts/handover`
+prompt 01 landed the Domènech general-$b$ oracle and measured $N = -1.194214876033$ at $b = 0.2$,
+constant over the nine fixture cases to 5.285e-13 and equal to the derived
+$-(3+2b)^2/(2(2+b)^2)$ to 4.130e-13. The heading stays so that the board can be found.
 
 ---
 
