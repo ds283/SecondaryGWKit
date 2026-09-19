@@ -1,6 +1,6 @@
 # Open issues — project-wide index
 
-**Last updated:** 2026-09-19 · **83 open** across eleven campaigns.
+**Last updated:** 2026-09-19 · **82 open** across eleven campaigns.
 
 This file exists so that an issue opened by one campaign is not lost when that campaign closes.
 It is an **index, not a record**: one line per issue, pointing at the campaign status board that
@@ -27,7 +27,7 @@ the two disagree, the board is right.
 
 The last of these holds **no** open issue — it is listed so that its §4, which closed
 `transfer-remedial`'s `[08-3bessel-plot-cost-dominates-the-suite]` on 2026-09-19, can be
-found. Of the 83 above, 80 are spread across the other eleven boards and **three have no board
+found. Of the 82 above, 79 are spread across the other eleven boards and **three have no board
 yet** — the `handover` rows in §1.1 opened by a document review on 2026-09-19, whose content lives
 in [`prompts/handover/README.md`](../prompts/handover/README.md) §2 (o) and (p) until that
 campaign's `IMPLEMENTATION_STATE.md` exists.
@@ -564,7 +564,6 @@ that replaced the 500-point $T(z)$ spline it used to describe, and tightened `AG
 
 | Issue | Board | Hook |
 |---|---|---|
-| `[05-black-check-is-not-clean-at-the-repository-root]` | background-solver-robustness | `CLAUDE.md` and every campaign README say the tree is clean under `black --check`. It is not, and was not before prompt 05: `./venv/bin/python -m black --check .` reports **54 files would be reformatted**, all of them under `docs/` in per-review or per-benchmark scratch directories (`docs/gk-wkb-review-fable-2026-09-09/`, `docs/adaptive-levin-benchmark/levin_bench/`, …). No production file and no file any campaign has touched is among them — including `docs/qcd-background-audit/measure_T_z_representation.py`, which prompt 05 edited and which is clean. What is wrong is the statement: an agent running the rule as written sees 54 failures it did not cause, and either reformats them or learns to ignore the rule. **Next step:** either run `black` over `docs/` in a prompt whose whole job that is, or narrow the convention to the packages it actually governs — a decision for the user. |
 
 **Opened by prompt 09 (2026-09-16):**
 

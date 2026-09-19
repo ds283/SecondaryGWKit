@@ -123,24 +123,9 @@ Opened by **prompt 06** (2026-09-16):
   scope. [`PROVENANCE.md`](PROVENANCE.md) §1 already carries the measured count, so the fix needs
   no new measurement.
 
-Opened by **prompt 05** (2026-09-16):
-
-- **[05-black-check-is-not-clean-at-the-repository-root]** *(prompt 05; measured; no prompt
-  assigned)* — README §5 rule 7 and `CLAUDE.md` both say the tree is clean under
-  `black --check`. It is not, and was not before this prompt:
-  `./venv/bin/python -m black --check .` reports **54 files would be reformatted**, every one under
-  `docs/` in a per-review or per-benchmark scratch directory —
-  `docs/gk-wkb-review-fable-2026-09-09/` (`common.py`, `t1_span.py`, `t2_solver.py`, `realbg.py`,
-  …), `docs/adaptive-levin-benchmark/levin_bench/`, and others. **Impact:** none on any production
-  file or on any file a campaign has touched — the three files in prompt 05's diff, including
-  `docs/qcd-background-audit/measure_T_z_representation.py`, are clean, and so is everything under
-  `ComputeTargets/`, `CosmologyModels/`, `LiouvilleGreen/`, `Datastore/` and `CosmologyConcepts/`.
-  What is wrong is the *statement*: a later agent running the rule as written sees 54 failures it
-  did not cause and either reformats them (swamping its own diff) or learns to ignore the rule.
-  **Next step:** either run `black` over `docs/` once in a prompt whose whole job that is, or
-  narrow README §5 rule 7 and `CLAUDE.md` to the packages the convention actually governs. A
-  decision for the user; prompt 05 did neither, because reformatting 54 unrelated files is exactly
-  the scope creep README §5 rule 5 forbids.
+Opened by **prompt 05** (2026-09-16): its one issue,
+`[05-black-check-is-not-clean-at-the-repository-root]`, was **resolved on 2026-09-19** and has moved
+to §4. Nothing of prompt 05's remains open.
 
 Opened by **prompt 09** (2026-09-16):
 
@@ -226,6 +211,35 @@ deleted from `docs/OPEN_ISSUES.md`.
 ---
 
 ## 4. Resolved issues
+
+- **[05-black-check-is-not-clean-at-the-repository-root]** — **RESOLVED on `main`, 2026-09-19, by
+  `c84a4bf` ("Bring the tree back under black --check"); closed here after re-checking on the
+  merged tree.**
+
+  **What the issue was.** README §5 rule 7 and `CLAUDE.md` both state that the tree is clean under
+  `black --check`, and it was not: `./venv/bin/python -m black --check .` reported **54 files would
+  be reformatted**, every one a `docs/` scratch file from a per-review or per-benchmark directory
+  (`docs/gk-wkb-review-fable-2026-09-09/`, `docs/adaptive-levin-benchmark/levin_bench/`,
+  `docs/spec-code-audit/scripts/`, …). No production file and no file any campaign had touched was
+  among them. What was wrong was the *statement*: an agent running the rule as written saw 54
+  failures it did not cause, and either reformatted them — swamping its own diff — or learned to
+  ignore the rule.
+
+  **What closed it.** The first of the two next steps prompt 05 recorded: `main`'s `c84a4bf` ran
+  `black` over exactly those 54 files and changed nothing else. The convention was **not** narrowed,
+  so README §5 rule 7 and `CLAUDE.md` are now true as written. That commit records that the change
+  moves no number: 52 of the 54 files parse to an identical AST before and after, and the two that
+  do not differ only in a module docstring's closing quotes, which is whitespace inside a string
+  constant.
+
+  **Re-checked 2026-09-19** on the hand-over campaign branch at the merge of `main` (`b80b0f5`),
+  with `black` 25.1.0 on CPython 3.12.14: `black --check .` reports **267 files would be left
+  unchanged**, and each of the three directories the issue names is individually clean — 20, 6 and
+  29 files respectively. Suites at the same commit: `ComputeTargets` 530, `CosmologyModels` 39,
+  `LiouvilleGreen` 148 (`skipped=1`), all OK.
+
+  **Nothing in this campaign's own diff was involved**, then or now. The issue is closed on the
+  condition it names, not by a decision to narrow the rule.
 
 - **[01-agreement-threshold-comment-predates-the-representation]** — **RESOLVED by prompt 08,
   2026-09-16.**
@@ -505,7 +519,7 @@ carries it to 449 from prompt 09.
 | Issue | Owner | Why it is still open |
 |---|---|---|
 | `[06-node-solve-comment-quotes-a-superseded-node-count]` | this board §3 | Opened by prompt 06. `_solve_T_z`'s comment quotes ~500 nodes against a measured 3,176. Out of scope twice over: prompt 06 may touch no production file, and README §0.5 puts `_solve_T_z` out of bounds |
-| `[05-black-check-is-not-clean-at-the-repository-root]` | this board §3 | 54 `docs/` scratch files. A decision for the user: fix the tree or narrow the convention |
+| ~~`[05-black-check-is-not-clean-at-the-repository-root]`~~ | this board §4 | **Resolved on `main`, 2026-09-19** by `c84a4bf`, which took the first of prompt 05's two next steps and ran `black` over the 54 `docs/` files; the convention was not narrowed. Re-checked clean at `b80b0f5` (267 files unchanged). See board §4 |
 | `[09-retire-tag-test-docstring-cites-a-superseded-digest]` | this board §3 | One word in a `ComputeTargets` test docstring, stale since prompt 09's digest move |
 | `[02-bracketed-reference-is-not-the-exact-root]` | this board §3 | A planning question: whether README §3.1's anchor should be an exact oracle on the $\Lambda$ pair. Changing it changes what prompt 01's tests assert, so it is the user's |
 | ~~`[01-agreement-threshold-comment-predates-the-representation]`~~ | this board §4 | **Resolved by prompt 08, 2026-09-16** — re-measured (unchanged from prompt 01's figures), the comment rewritten to describe the segmented entropy-factor representation, `AGREEMENT_RTOL` tightened `1.0e-8` → `1.0e-14`. See board §4 |
