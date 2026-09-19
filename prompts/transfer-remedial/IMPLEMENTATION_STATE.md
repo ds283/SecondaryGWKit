@@ -2,8 +2,10 @@
 
 **Campaign:** [`README.md`](README.md) · **Design:** [`DRAFT-PLAN.md`](DRAFT-PLAN.md) · **Reconciliation:** [`RECONCILIATION.md`](RECONCILIATION.md)
 **Baseline commit:** `95cc326` (`transfer-remedial-plan`, clean)
-**Last updated:** 2026-09-10 — prompt 09 executed on this commit (SHA not self-embedded, per the
-same precedent prompts 01–08 set). **Campaign complete.**
+**Last updated:** 2026-09-19 — `[08-3bessel-plot-cost-dominates-the-suite]` moved to §4, closed by
+`prompts/test-suite-runtime` prompt 01 at `07c6041`; nothing else on this board changed, and the
+campaign's own work was last touched 2026-09-10 by prompt 09, executed on this commit (SHA not
+self-embedded, per the same precedent prompts 01–08 set). **Campaign complete.**
 **Planned against:** `c4c4905`; re-pointed to `95cc326` before commit (`RECONCILIATION.md` §0).
 **Executing against:** `f9cc891` (prompt 06's commit), 23 commits after `95cc326` (the merge of
 `transfer-remedial-plan` into the working branch, `source-remediation` prompt 12's live
@@ -252,23 +254,6 @@ close, plus one issue prompt 09 itself opened while re-running the benchmark tie
   it (README §4.2), so this is a hand-off candidate for prompt 09 alongside
   `[05-quadsource-order-check-docstring-stale]`.
 
-- **[08-3bessel-plot-cost-dominates-the-suite]** *(opened by prompt 08, 2026-09-10)* —
-  `test_3bessel_analytic.plot_and_compute_3Bessel` evaluates a **250-point `logspace` grid of full
-  three-Bessel integrals per case, purely to draw one figure**, and only then evaluates the single
-  integral the assertion uses. `test_YJJ_log_singularity` runs it 40 times (measured **21.2 min**
-  under the new oracle) and `test_YJJ_log_scaling`, which contains **no assertion at all**, does
-  40 more evaluations plus two figures per case. That is the whole of
-  `RECONCILIATION.md` §3.4's "did not complete within 50 minutes", and it is diagnostic cost, not
-  verification cost: prompt 05's construction made the *builds* 25x cheaper (~2.5 ms against
-  ~60-100 ms) and moved none of it. **Impact:** the per-commit `LiouvilleGreen/tests` discovery run
-  is dominated by figure drawing, so in practice nobody runs it, which is how
-  `[07-abserr-bounds-truth-is-now-an-unexpected-success]` survived three prompts unnoticed.
-  **Next step:** *proposed, not implemented* (prompt 08 §6 asks for a proposal only) — gate the
-  plot grid behind an environment variable or a module flag defaulting to off, so the assertions
-  run in seconds and the figures are opt-in; and decide whether `test_YJJ_log_scaling`, which
-  asserts nothing, belongs in `unittest` discovery or in `docs/` as a script. Neither changes a
-  tolerance or an assertion.
-
 - **[09-bessel-tier-hardcoded-repo-path]** *(opened by prompt 09, 2026-09-10)* —
   `docs/adaptive-levin-benchmark/levin_bench/bessel_tier.py:40` hardcodes
   `REPO = "/Users/ds283/Documents/Code/SecondaryGWKit"` (the main checkout's absolute path) and
@@ -337,6 +322,44 @@ close, plus one issue prompt 09 itself opened while re-running the benchmark tie
   pre-prompt-05 ~2e-8 reconstruction floor, was corrected in the same commit. See
   `prompts/qsi-phase-groups/logs/01-three-bessel-levin-phase-groups.md`.
 
+- **[08-3bessel-plot-cost-dominates-the-suite]** *(opened by prompt 08, 2026-09-10, **closed 2026-09-19** by `prompts/test-suite-runtime` prompt 01)* —
+  `test_3bessel_analytic.plot_and_compute_3Bessel` evaluates a **250-point `logspace` grid of full
+  three-Bessel integrals per case, purely to draw one figure**, and only then evaluates the single
+  integral the assertion uses. `test_YJJ_log_singularity` runs it 40 times (measured **21.2 min**
+  under the new oracle) and `test_YJJ_log_scaling`, which contains **no assertion at all**, does
+  40 more evaluations plus two figures per case. That is the whole of
+  `RECONCILIATION.md` §3.4's "did not complete within 50 minutes", and it is diagnostic cost, not
+  verification cost: prompt 05's construction made the *builds* 25x cheaper (~2.5 ms against
+  ~60-100 ms) and moved none of it. **Impact:** the per-commit `LiouvilleGreen/tests` discovery run
+  is dominated by figure drawing, so in practice nobody runs it, which is how
+  `[07-abserr-bounds-truth-is-now-an-unexpected-success]` survived three prompts unnoticed.
+  **Next step:** *proposed, not implemented* (prompt 08 §6 asks for a proposal only) — gate the
+  plot grid behind an environment variable or a module flag defaulting to off, so the assertions
+  run in seconds and the figures are opt-in; and decide whether `test_YJJ_log_scaling`, which
+  asserts nothing, belongs in `unittest` discovery or in `docs/` as a script. Neither changes a
+  tolerance or an assertion.
+
+  **Closed (2026-09-19)** by `prompts/test-suite-runtime` prompt 01, commit `07c6041`, which
+  implemented this entry's next step as written. Re-measured first rather than taken on trust: on
+  `75db3c5`, timing every test module in its own interpreter, `test_3bessel_analytic` was
+  **1121.5 s of a 1321 s suite (84.9 %)**, and the split inside it at the fixed triple
+  $(k,q,s)=(1.3,1.7,2.1)$, `max_x = 1e12`, `atol = 1e-14`, `rtol = 1e-10` was **42.5 s** for the
+  250-point grid against **0.14 s** for the single evaluation at `max_x` that the assertion reads —
+  a factor of **304**, over **47** helper calls and 110 files per run. The grid and the figures are
+  now behind the environment variable `THREE_BESSEL_DIAGNOSTIC_PLOTS` (the entry allowed a variable
+  or a module flag), off by default, with `seaborn` and `matplotlib` imported inside the plotting
+  functions so a default run does not pay for them either; and `test_YJJ_log_scaling` is
+  `skipUnless` the same flag, so it reports **skipped** rather than as a pass that could not have
+  failed — the entry's second option, relocation to `docs/`, was considered and rejected because it
+  would have duplicated the phase-building and oracle code for figures a reader wants alongside the
+  convergence ones. **No tolerance, assertion or test method changed**: the test set is identical to
+  the parent commit's by `ast` comparison, and `test_abserr_bounds_truth`'s seven true-error
+  figures are unchanged and bound on 7 of 7 as before. The module runs in **9.4 s** and the whole
+  suite in **149.4 s**, 749 tests OK. So this entry's impact statement — that nobody runs the
+  discovery run, which is how `[07-abserr-bounds-truth-is-now-an-unexpected-success]` survived
+  three prompts — no longer holds. See
+  `prompts/test-suite-runtime/logs/01-gate-the-three-bessel-diagnostic-plots.md`.
+
 - **[05-3bessel-analytic-not-run-to-completion]** *(opened by prompt 05, narrowed by prompt 07,
   **closed by prompt 08**, 2026-09-10)* — the pre-existing multi-hour `test_3bessel_analytic.py`
   had never been seen to finish under the new oracle, so its 1e-5/1e-6 and 1e-2/1e-3 tolerance
@@ -348,7 +371,8 @@ close, plus one issue prompt 09 itself opened while re-running the benchmark tie
   the module discovery run recorded in log 08. `DRAFT-PLAN.md` §9 Stage 4's warning that an
   eight-order improvement can expose a *different* limiting error was borne out twice: the
   `expectedFailure` below, and `[08-3bessel-chebyshev-order-is-now-the-limit]`. The remaining cost
-  finding is `[08-3bessel-plot-cost-dominates-the-suite]`.
+  finding is `[08-3bessel-plot-cost-dominates-the-suite]`, itself closed 2026-09-19 by
+  `prompts/test-suite-runtime` prompt 01 (§4 above).
 
 - **[07-abserr-bounds-truth-is-now-an-unexpected-success]** *(opened by prompt 07, **closed by
   prompt 08**, 2026-09-10)* — `test_3bessel_analytic.py::test_abserr_bounds_truth` was an
