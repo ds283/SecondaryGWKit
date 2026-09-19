@@ -116,9 +116,10 @@ baseline discovery run.
 
 ## Observations not acted on
 
-- **`set_xlabel("$\epsilon$")` is an invalid escape sequence**, at four sites in
+- **`set_xlabel("$\epsilon$")` is an invalid escape sequence**, at two sites in
   `test_YJJ_log_scaling` (lines 801 and 855 of the file at `HEAD` before this change, 917 and 971
-  after, each appearing twice under `ast.parse`). Python emits `SyntaxWarning: invalid escape
+  after). *(This entry first said four; the four warnings were those two lines in each of the two
+  file versions parsed. **Fixed in a follow-up commit** at the author's request — board §5 note 4.)* Python emits `SyntaxWarning: invalid escape
   sequence '\e'` on every import of the module. It **predates this change** — confirmed against
   `git show HEAD:` — and the fix is an `r` prefix. Not touched: it is unrelated to runtime and
   CLAUDE.md invariant 4 forbids folding it in. Recorded in board §5 rather than opened as a §3

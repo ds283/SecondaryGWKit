@@ -924,7 +924,7 @@ class Test3BesselAnalytic(unittest.TestCase):
                 ax.set_xscale("log")
                 ax.set_yscale("linear")
                 ax.xaxis.set_inverted(True)
-                ax.set_xlabel("$\epsilon$")
+                ax.set_xlabel(r"$\epsilon$")
                 ax.legend(loc="best")
                 ax.grid(True)
 
@@ -978,7 +978,7 @@ class Test3BesselAnalytic(unittest.TestCase):
                 ax.set_xscale("log")
                 ax.set_yscale("log")
                 ax.xaxis.set_inverted(True)
-                ax.set_xlabel("$\epsilon$")
+                ax.set_xlabel(r"$\epsilon$")
                 ax.legend(loc="best")
                 ax.grid(True)
 

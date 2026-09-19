@@ -65,12 +65,14 @@ None. Prompt 01 opened no issue.
    invariant 3 asks for one commit, and the log classifies this as `UNINTENDED DRIFT` rather than
    as a choice. Reverting the code alone leaves a board claiming a landed prompt.
 
-4. **A lint nit deliberately left in place.** `set_xlabel("$\epsilon$")` in `test_YJJ_log_scaling`
-   is an invalid escape sequence and makes every import of the module emit `SyntaxWarning: invalid
-   escape sequence '\e'`. It predates `07c6041` — confirmed against `git show HEAD:` — affects no
-   number, and wants an `r` prefix. Not opened as a §3 issue, and so not indexed in
-   `docs/OPEN_ISSUES.md`, because it belongs in none of that index's sections; fix it in passing if
-   you are editing those lines anyway.
+4. **A lint nit, since fixed.** `set_xlabel("$\epsilon$")` at the two `test_YJJ_log_scaling`
+   sites was an invalid escape sequence and made every import of the module emit
+   `SyntaxWarning: invalid escape sequence '\e'`. It predated `07c6041`. Log 01 recorded it as an
+   observation not acted on and this note as left in place; the author asked for it fixed, and an
+   `r` prefix landed in a follow-up commit. `r"$\epsilon$"` and `"$\epsilon$"` are the same string
+   — `\e` is not a valid escape, so Python already kept the backslash — so the axis label is
+   unchanged and the module now imports clean. *(Log 01 says "four sites": there are two. The four
+   warnings were those two lines in each of the two file versions that were parsed.)*
 
 5. **Baselines at `75db3c5`:** AdaptiveLevin **32**, CosmologyModels **39**, LiouvilleGreen **148**,
    ComputeTargets **530**, all OK. The known flake is
