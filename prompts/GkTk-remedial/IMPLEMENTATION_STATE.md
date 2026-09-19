@@ -803,6 +803,16 @@ Opened by the planning pass, 2026-09-10, before any prompt runs.
   ratio and the eq. (22) vs eq. (25) column are identical row for row; only wall-clock columns
   moved. §8 item 5, which attributed the set-up time to the loop and warned about its rounding,
   is rewritten to state what the tables now show.
+  **Citation sweep (2026-09-19)** — dropping the superseded rows left four references pointing
+  at measurements that no longer exist, found by a search for them after the fact rather than
+  in the same commit: `large_x.py`'s comment above `RUNS` ("the fixture set-up starts to cost
+  tens of seconds"), `wrap_theta`'s docstring and its inline comment (both citing Table 8.3 for
+  the 2.3e-12 / 1.1e-08 / 1.5e-04 rad and 44 ms figures), and `Fixture.exact_functions()`'s
+  docstring in `test_tk_source_functions.py`, which additionally still described the loop in the
+  present tense — as did `Fixture.stored_values()`, without citing the table. All five are
+  corrected; the deleted figures are not restored anywhere. **Lesson for the next overwrite:**
+  regenerating a `docs/` table is not done when the table is right, but when nothing still cites
+  what was removed.
 
 - **[10-wrap-theta-loop-at-large-phase]** *(opened by prompt 10, 2026-09-11; inert in
   production; closed, reopened, then **closed 2026-09-19**, outside any campaign)* — `LiouvilleGreen.WKBtools.wrap_theta` (`:69-94`) range-reduces by adding

@@ -373,12 +373,13 @@ class Fixture:
         which is `exact_envelope_F` measured from the hand-over, so `exact_envelope_model()` is
         the background this fixture must be read against.
 
-        The phase is reduced by `WKB_mod_2pi`, not `wrap_theta`. Both return the same
-        (div 2pi, mod 2pi) pair with mod in (-2pi, 0] -- the cycle counts agree on every sample
-        of every fixture the suite builds -- but `wrap_theta` subtracts TWO_PI once per cycle,
-        costing O(theta / 2pi) and accumulating 2.3e-12 rad of rounding at this fixture's
-        |theta| ~ 1e3 (1.5e-4 rad at 1e7), whereas `WKB_mod_2pi`'s remainder is an `fmod` and
-        exact (docs/radiation-oracle/KOHRI-TERADA-ORACLE.md section 8, Table 8.3).
+        The phase is reduced by `WKB_mod_2pi`, the producers' own reduction (README section 2
+        (e) of prompts/GkTk-remedial): its remainder is an `fmod` and is exact, and its cycle
+        count is derived from that remainder. `wrap_theta` now reduces the same way and would
+        give the same (div 2pi, mod 2pi) pair, but it is a thin wrapper over `WKB_mod_2pi` and
+        calling it here would say less about what the fixture is doing. It once subtracted
+        TWO_PI once per cycle, which is why these fixtures were moved off it
+        (`[10-wrap-theta-loop-at-large-phase]`, prompts/GkTk-remedial).
         """
         z_init = self.crossover_z
         sin_coeff = self.M_exact(z_init) * sqrt(self.omega(z_init))
@@ -542,10 +543,13 @@ class AnalyticRadiationFixture:
         The stored (div 2pi, mod 2pi, friction) samples.
 
         The reduction is `WKB_mod_2pi`, the producers' own (README section 2 (e) of
-        prompts/GkTk-remedial), and **not** `wrap_theta` as the smaller fixtures once did:
-        `wrap_theta` reduces by adding TWO_PI in a loop, so at theta ~ -1e6 rad it takes ~1.6e5
-        additions and accumulates ~1.4e-06 rad of rounding -- fourteen times the bound this
-        fixture's test asserts, and injected by the fixture rather than by anything under test.
+        prompts/GkTk-remedial). It is called directly rather than through `wrap_theta`, as the
+        smaller fixtures once were: `wrap_theta` used to reduce by adding TWO_PI in a loop, so
+        at theta ~ -1e6 rad it took ~1.6e5 additions and accumulated ~1.4e-06 rad of rounding --
+        fourteen times the bound this fixture's test asserts, and injected by the fixture rather
+        than by anything under test. That loop is gone
+        (`[10-wrap-theta-loop-at-large-phase]`, prompts/GkTk-remedial), so the two now agree;
+        this fixture keeps the direct call because it is the producers' reduction.
         `WKB_mod_2pi`'s *remainder* is an `fmod` and is exact -- its cycle count is not an
         `fmod`, and used to be a separately rounded division that could be one cycle out
         (`[13-wkb-mod-2pi-cycle-count-inconsistent]`, fixed by prompt 01 of

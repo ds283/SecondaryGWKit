@@ -55,8 +55,9 @@ from LiouvilleGreen.constants import TWO_PI  # noqa: E402
 
 REF_ATOL, REF_RTOL = 1e-45, 1e-12
 
-# x_resp per shape; the top of each list is where the fixture set-up starts to cost tens of
-# seconds (section 8)
+# x_resp per shape; the top of each list is the largest x the fixture's Liouville-Green region
+# reaches (section 8). Set-up is free at every one of them: the phase is reduced in one step
+# by WKB_mod_2pi, so its cost does not grow with x
 RUNS = {
     "together": (980.0, 1e4, 1e5, 1e6, 1e7, 1e8),
     "T-first": (980.0, 1e4, 1e5, 1e6, 1e7),

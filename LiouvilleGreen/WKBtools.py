@@ -96,13 +96,7 @@ def wrap_theta(theta: float) -> Tuple[int, float]:
     ``mod == -TWO_PI`` exactly, as ``WKB_mod_2pi`` does.)
 
     The reduction is done in one step by ``WKB_mod_2pi``, so it is exact and constant-time at
-    every ``|theta|``. This function used to subtract ``TWO_PI`` once per cycle instead, at a
-    cost of O(|theta| / 2pi) and a rounding per pass -- 2.3e-12 rad out at |theta| = 1e3,
-    1.1e-08 at 1e5, 1.5e-04 at 1e7 and 44 ms per call there
-    (docs/radiation-oracle/KOHRI-TERADA-ORACLE.md section 8, Table 8.3) -- which made it a trap
-    for any fixture reducing an unreduced phase. That is fixed; the results below
-    ``|theta| = 2*TWO_PI`` are unchanged bit-for-bit
-    (``[10-wrap-theta-loop-at-large-phase]``, prompts/GkTk-remedial).
+    every ``|theta|`` (docs/radiation-oracle/KOHRI-TERADA-ORACLE.md section 8, Table 8.3).
 
     Prefer ``WKB_mod_2pi`` directly when reducing a freshly formed phase: this function differs
     from it only in normalising ``-0.0`` to ``+0.0``, and its name says less about what it does.
@@ -121,17 +115,13 @@ def wrap_theta(theta: float) -> Tuple[int, float]:
         return 0, theta
 
     # otherwise reduce in ONE step through WKB_mod_2pi, whose remainder is an exact fmod and
-    # whose cycle count is derived from that remainder. This replaces a loop that subtracted
-    # TWO_PI once per cycle, so it cost O(|theta| / 2pi) and accumulated a rounding per pass:
-    # 2.3e-12 rad out at |theta| = 1e3, 1.1e-08 at 1e5, 1.5e-04 at 1e7 and 44 ms per call there
-    # (docs/radiation-oracle/KOHRI-TERADA-ORACLE.md section 8, Table 8.3). The fmod reduction is
-    # exact at every |theta| and takes constant time ([10-wrap-theta-loop-at-large-phase],
-    # prompts/GkTk-remedial).
-    #
-    # Over the range the loop reduced in at most two passes -- |theta| <= 2*TWO_PI, which covers
-    # every value production reaches, since apply_phase_offset passes mod + delta in (-3pi, pi] --
-    # this returns bit-identical results, because there the loop's single add or subtract is
-    # itself exact by Sterbenz's lemma. Above that the two disagree, and this is the correct one.
+    # whose cycle count is derived from that remainder. This replaced a per-cycle subtraction
+    # loop whose cost and rounding both grew as |theta| / 2pi, which made this function a trap
+    # for any fixture reducing an unreduced phase ([10-wrap-theta-loop-at-large-phase],
+    # prompts/GkTk-remedial; the measurements are in that entry, and commit a34d9c7 records the
+    # switch). Production output did not move: over |theta| <= 2*TWO_PI, which covers every
+    # value production reaches -- apply_phase_offset passes mod + delta in (-3pi, pi] -- the two
+    # agree bit-for-bit, the loop's single add or subtract being exact there by Sterbenz's lemma.
     shift, theta_mod_2pi = WKB_mod_2pi(theta)
 
     # WKB_mod_2pi's fmod yields -0.0 where the loop produced +0.0 (theta an exact multiple of
