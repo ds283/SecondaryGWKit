@@ -89,6 +89,25 @@ def WKB_product_mod_2pi(big_number: float, small_number: float, mod_2pi_init: fl
 
 
 def wrap_theta(theta: float) -> Tuple[int, float]:
+    """
+    Range-reduce a phase that is already within a cycle or two of ``(-2pi, 0]``, returning
+    ``(shift, mod)`` with ``shift * TWO_PI + mod == theta`` up to rounding and ``mod`` in
+    ``(-2pi, 0]``, the negative-remainder convention of ``WKB_mod_2pi``. (A positive ``theta``
+    below half an ulp of ``TWO_PI``, ~2.2e-16, returns ``mod == -TWO_PI`` exactly, as
+    ``WKB_mod_2pi`` does.)
+
+    **Do not use this to reduce a large, unreduced phase; use ``WKB_mod_2pi``.** It subtracts
+    ``TWO_PI`` once per cycle, so its cost is O(|theta| / 2pi) and every pass adds a rounding.
+    Measured against the exact reduction of the double ``theta`` by the double ``TWO_PI``, it
+    is 2.3e-12 rad out at |theta| = 1e3, 1.1e-08 at 1e5 and 1.5e-04 at 1e7, taking 44 ms per
+    call at 1e7 (docs/radiation-oracle/KOHRI-TERADA-ORACLE.md section 8, Table 8.3), and
+    1.39e-06 rad at 1e6 (``[10-wrap-theta-loop-at-large-phase]``, prompts/GkTk-remedial).
+    ``WKB_mod_2pi`` returns the same ``(div, mod)`` pair with an exact ``fmod`` remainder.
+
+    Its one production caller, ``apply_phase_offset``, passes ``mod + delta`` with ``mod`` in
+    ``(-2pi, 0]`` and ``delta`` the ``atan2`` offset in ``(-pi, pi]``, so the loop makes at most
+    one pass there.
+    """
     # given a value of theta, range-reduce so that theta falls within (-TWO_PI, 0], and
     # work out what corresponding shift this produced in div 2pi
 

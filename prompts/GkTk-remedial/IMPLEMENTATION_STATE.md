@@ -2,7 +2,7 @@
 
 **Campaign:** [`README.md`](README.md) · **Source review:** [`docs/gk-wkb-review-fable-2026-09-09.md`](../../docs/gk-wkb-review-fable-2026-09-09.md) · **Reconciliation:** [`RECONCILIATION.md`](RECONCILIATION.md)
 **Baseline commit:** `9ff59d5` (`main`, clean)
-**Last updated:** 2026-09-19 — `[10-wrap-theta-loop-at-large-phase]` **narrowed twice**, not closed: `Fixture.exact_functions()` and then the eight remaining test call sites now reduce with `WKB_mod_2pi`, so no fixture uses `wrap_theta` on an unreduced phase; the suite drops from 182 s to 122 s. What remains is the trap in `wrap_theta` itself (no warning, no `fmod` fast path). Previously 2026-09-15 — `[13-consumer-spline-crosses-eos-break-points]` is **CLOSED** (§4) by `prompts/qcd-background-audit/` prompt 10, which measured nine knot schemes over all twelve production rows and found the remedy this entry named **2.09×/2.10× worse** ($C^0$ repeated knot) and per-segment splines 5.00×/5.06× worse, while ±5 grid intervals of extra *samples* around the crossing bring both rows inside the 1e-06 rad target; the unfixed accuracy defect re-opens as `[10-consumer-phi-unresolved-at-the-eos-crossing]` on the `qcd-background-audit` board, assigned to its prompt 11. Previously 2026-09-14 — `[13-consumer-spline-crosses-eos-break-points]` **narrowed again** by `prompts/qcd-background-audit/` prompt 09: re-measured on the corrected background its two §3.5 rows are **4.25× and 4.39× larger**, because the old `T(z)` spline was smearing the equation of state's step rather than causing the error, and this entry's supersession paragraph's prediction is falsified. Previously 2026-09-14 — `[02-qcd-reference-floor]` and `[03-qcd-short-baseline-reference-endpoint-rounding]` re-measured (narrowed, neither closed) by `prompts/qcd-background-audit/` prompt 06. Previously 2026-09-13 — **Prompt 13 landed and the campaign is closed.** The verification
+**Last updated:** 2026-09-19 — `[10-wrap-theta-loop-at-large-phase]` is **CLOSED** (§4): `wrap_theta` now carries a docstring warning against reducing large, unreduced phases with it, pointing to `WKB_mod_2pi`. Earlier the same day it was **narrowed twice**: `Fixture.exact_functions()` and then the eight remaining test call sites now reduce with `WKB_mod_2pi`, so no fixture uses `wrap_theta` on an unreduced phase; the suite drops from 182 s to 122 s. What remains is the trap in `wrap_theta` itself (no warning, no `fmod` fast path). Previously 2026-09-15 — `[13-consumer-spline-crosses-eos-break-points]` is **CLOSED** (§4) by `prompts/qcd-background-audit/` prompt 10, which measured nine knot schemes over all twelve production rows and found the remedy this entry named **2.09×/2.10× worse** ($C^0$ repeated knot) and per-segment splines 5.00×/5.06× worse, while ±5 grid intervals of extra *samples* around the crossing bring both rows inside the 1e-06 rad target; the unfixed accuracy defect re-opens as `[10-consumer-phi-unresolved-at-the-eos-crossing]` on the `qcd-background-audit` board, assigned to its prompt 11. Previously 2026-09-14 — `[13-consumer-spline-crosses-eos-break-points]` **narrowed again** by `prompts/qcd-background-audit/` prompt 09: re-measured on the corrected background its two §3.5 rows are **4.25× and 4.39× larger**, because the old `T(z)` spline was smearing the equation of state's step rather than causing the error, and this entry's supersession paragraph's prediction is falsified. Previously 2026-09-14 — `[02-qcd-reference-floor]` and `[03-qcd-short-baseline-reference-endpoint-rounding]` re-measured (narrowed, neither closed) by `prompts/qcd-background-audit/` prompt 06. Previously 2026-09-13 — **Prompt 13 landed and the campaign is closed.** The verification
 document is [`docs/gktk-remedial-verification.md`](../../docs/gktk-remedial-verification.md), taken
 on `ff9ee29` and changing no production code. **Layer 1** re-measures review §4 and §12.3 through
 the production functions on both models at $k\in\{10^5,10^7,3\times10^8\}$: at $z=0.1$ on
@@ -495,57 +495,6 @@ Opened by the planning pass, 2026-09-10, before any prompt runs.
   the six blocks with prompt 10's measured values, which needs only the user's confirmation that
   `8ba9159`'s text may be rewritten now that both campaigns have landed.
 
-- **[10-wrap-theta-loop-at-large-phase]** *(opened by prompt 10, 2026-09-11; inert in
-  production)* — `LiouvilleGreen.WKBtools.wrap_theta` (`:69-94`) range-reduces by adding
-  `TWO_PI` in a `while` loop, so at $|\theta|\sim10^6$ rad it performs ~1.6e5 additions of a
-  quantity $10^6$ times smaller than the accumulator and returns a pair that reconstructs
-  $\theta$ only to **1.3862e-06 rad** (and costs 1.6e5 iterations). Production is unaffected:
-  its only caller is `apply_phase_offset`, which passes `mod + delta` with `mod` already in
-  $(-2\pi,0]$, so the loop runs at most twice. `WKB_mod_2pi` uses `fmod`, is exact, and is what
-  prompt 10's $x_T=10^6$ fixture uses — **corrected by prompt 13 (2026-09-13): its *remainder* is
-  exact, because that is the `fmod`; its *cycle count* was a separate rounded division and was not,
-  which is `[13-wkb-mod-2pi-cycle-count-inconsistent]`. That defect was fixed by prompt 01 of
-  `prompts/phase-representation` (2026-09-13, §4 below), so `WKB_mod_2pi` is now exact in both
-  halves and the fixture recommendation stands without qualification. Everything else in this entry
-  stands.** **Impact:** any test fixture that reduces a large
-  unwrapped phase with `wrap_theta` — prompt 10's test 3.1 would have been 14× over its own
-  1e-7 rad bound on the fixture's arithmetic alone. There is no warning in the docstring.
-  **Next step:** a one-line note on `wrap_theta`, or an `fmod` fast path for
-  $|\theta| > 2\pi$; three test modules still call it at small $|\theta|$, where it is fine.
-  **Narrowed (2026-09-19), not closed** — outside any campaign, following
-  [`docs/radiation-oracle/KOHRI-TERADA-ORACLE.md`](../../docs/radiation-oracle/KOHRI-TERADA-ORACLE.md)
-  §8, Table 8.3. "Small $|\theta|$, where it is fine" is only approximately right: at
-  $|\theta|\approx10^3$ the loop is already **2.27e-12 rad** from the exact reduction of the double
-  $\theta$ by the double `TWO_PI`, against 0 for `WKB_mod_2pi`. `Fixture.exact_functions()` in
-  `ComputeTargets/tests/test_tk_source_functions.py`, which feeds the realistic flavour of
-  `test_quadsource_integral`, now reduces with `WKB_mod_2pi`: the cycle counts agree with
-  `wrap_theta`'s on every sample of all nine fixtures the suite builds (173–218 samples,
-  $|\theta|\le995$). Measured effect, suite 530 OK before and after: the exact-LG-fixture
-  $|T_{\rm WKB}-M\sin\theta|/\text{env}$ falls **2.079e-12 → 1.659e-12** ($w=1/3$) and
-  **2.309e-12 → 1.461e-12** ($w=0.2$); the 18 realistic quadsource totals move by at most
-  **4.28e-13 of scale** (b=0.2 q-smooth $x_{\rm resp}=980$, `WKB_Levin` only; `numeric_quad`
-  bit-identical), invisible in their printed 4-figure rows. **Still calling `wrap_theta` on an
-  unreduced phase:** `test_tk_source_functions.py` `LG_functions` (`:422`) and `:917`, `:1099`,
-  `:1145`, `:1185`; `test_phase_groups.py:325`, `:645`; `test_quadsource_integral.py:255`. The
-  next step above stands for `wrap_theta` itself, and each of those sites is a one-line
-  `WKB_mod_2pi` substitution once its cycle counts are checked to agree.
-  **Narrowed again (2026-09-19), not closed** — those eight sites now call `WKB_mod_2pi` too,
-  so **no test fixture reduces an unreduced phase with `wrap_theta`**. The only test callers left
-  are `test_gk_wkb_phase.py:783` and `:1117`, which reproduce `apply_phase_offset`'s
-  `wrap_theta(mod + delta)` on an already reduced `mod`, as production does. Before switching, a
-  comparator run through the three modules (73 tests) found the cycle counts identical at every
-  site. The loop's worst error was **2.2e-12 rad** (|θ| ≤ 983) at the Tk and LG sites,
-  **1.85e-11 rad** (|θ| ≤ 2793) at `test_phase_groups.py:325`, and **4.23e-4 rad** (|θ| up to
-  **1.7e7**) at `test_quadsource_integral.py:255`. That last phase comes from `OffsetBesselPhaseGk`
-  at $k_G=10^8$ in `test_G_only_case_reproduces_the_pre_commit_total`, which discards it for
-  `ExactGk` two lines later, so the error never reached a result. The loop did cost time,
-  though: the test takes **63.0 s → 0.098 s**, and the suite **182 s → 122 s** (530 OK). Measured
-  effect: the 18 realistic quadsource totals move by at most **4.62e-12 of scale** (b=0.2 q-smooth
-  $x_{\rm resp}=980$, `WKB_Levin` only), and `test_phase_groups`' realistic Oracle 1 rows move at
-  the 1e-16 level. **What remains** is the trap in `wrap_theta` itself: no docstring warning and
-  no `fmod` fast path. That is a production-code change, not made here; the next step above
-  stands.
-
 - **[00-tk-lg-truncation-floor]** *(planning, 2026-09-10; **assigned to the hand-over campaign**)*
   — the transfer function's LG representation is not exact in radiation: $3.8\times10^{-5}$ of the
   envelope from $x_i=24$, $\sim1.4\times10^{-4}$ at the production hand-over $x_T\approx15.5$,
@@ -823,6 +772,69 @@ Opened by the planning pass, 2026-09-10, before any prompt runs.
 ---
 
 ## 4. Resolved issues
+
+- **[10-wrap-theta-loop-at-large-phase]** *(opened by prompt 10, 2026-09-11; inert in
+  production; **closed 2026-09-19**, outside any campaign)* — `LiouvilleGreen.WKBtools.wrap_theta` (`:69-94`) range-reduces by adding
+  `TWO_PI` in a `while` loop, so at $|\theta|\sim10^6$ rad it performs ~1.6e5 additions of a
+  quantity $10^6$ times smaller than the accumulator and returns a pair that reconstructs
+  $\theta$ only to **1.3862e-06 rad** (and costs 1.6e5 iterations). Production is unaffected:
+  its only caller is `apply_phase_offset`, which passes `mod + delta` with `mod` already in
+  $(-2\pi,0]$, so the loop runs at most twice. `WKB_mod_2pi` uses `fmod`, is exact, and is what
+  prompt 10's $x_T=10^6$ fixture uses — **corrected by prompt 13 (2026-09-13): its *remainder* is
+  exact, because that is the `fmod`; its *cycle count* was a separate rounded division and was not,
+  which is `[13-wkb-mod-2pi-cycle-count-inconsistent]`. That defect was fixed by prompt 01 of
+  `prompts/phase-representation` (2026-09-13, §4 below), so `WKB_mod_2pi` is now exact in both
+  halves and the fixture recommendation stands without qualification. Everything else in this entry
+  stands.** **Impact:** any test fixture that reduces a large
+  unwrapped phase with `wrap_theta` — prompt 10's test 3.1 would have been 14× over its own
+  1e-7 rad bound on the fixture's arithmetic alone. There is no warning in the docstring.
+  **Next step:** a one-line note on `wrap_theta`, or an `fmod` fast path for
+  $|\theta| > 2\pi$; three test modules still call it at small $|\theta|$, where it is fine.
+  **Narrowed (2026-09-19), not closed** — outside any campaign, following
+  [`docs/radiation-oracle/KOHRI-TERADA-ORACLE.md`](../../docs/radiation-oracle/KOHRI-TERADA-ORACLE.md)
+  §8, Table 8.3. "Small $|\theta|$, where it is fine" is only approximately right: at
+  $|\theta|\approx10^3$ the loop is already **2.27e-12 rad** from the exact reduction of the double
+  $\theta$ by the double `TWO_PI`, against 0 for `WKB_mod_2pi`. `Fixture.exact_functions()` in
+  `ComputeTargets/tests/test_tk_source_functions.py`, which feeds the realistic flavour of
+  `test_quadsource_integral`, now reduces with `WKB_mod_2pi`: the cycle counts agree with
+  `wrap_theta`'s on every sample of all nine fixtures the suite builds (173–218 samples,
+  $|\theta|\le995$). Measured effect, suite 530 OK before and after: the exact-LG-fixture
+  $|T_{\rm WKB}-M\sin\theta|/\text{env}$ falls **2.079e-12 → 1.659e-12** ($w=1/3$) and
+  **2.309e-12 → 1.461e-12** ($w=0.2$); the 18 realistic quadsource totals move by at most
+  **4.28e-13 of scale** (b=0.2 q-smooth $x_{\rm resp}=980$, `WKB_Levin` only; `numeric_quad`
+  bit-identical), invisible in their printed 4-figure rows. **Still calling `wrap_theta` on an
+  unreduced phase:** `test_tk_source_functions.py` `LG_functions` (`:422`) and `:917`, `:1099`,
+  `:1145`, `:1185`; `test_phase_groups.py:325`, `:645`; `test_quadsource_integral.py:255`. The
+  next step above stands for `wrap_theta` itself, and each of those sites is a one-line
+  `WKB_mod_2pi` substitution once its cycle counts are checked to agree.
+  **Narrowed again (2026-09-19), not closed** — those eight sites now call `WKB_mod_2pi` too,
+  so **no test fixture reduces an unreduced phase with `wrap_theta`**. The only test callers left
+  are `test_gk_wkb_phase.py:783` and `:1117`, which reproduce `apply_phase_offset`'s
+  `wrap_theta(mod + delta)` on an already reduced `mod`, as production does. Before switching, a
+  comparator run through the three modules (73 tests) found the cycle counts identical at every
+  site. The loop's worst error was **2.2e-12 rad** (|θ| ≤ 983) at the Tk and LG sites,
+  **1.85e-11 rad** (|θ| ≤ 2793) at `test_phase_groups.py:325`, and **4.23e-4 rad** (|θ| up to
+  **1.7e7**) at `test_quadsource_integral.py:255`. That last phase comes from `OffsetBesselPhaseGk`
+  at $k_G=10^8$ in `test_G_only_case_reproduces_the_pre_commit_total`, which discards it for
+  `ExactGk` two lines later, so the error never reached a result. The loop did cost time,
+  though: the test takes **63.0 s → 0.098 s**, and the suite **182 s → 122 s** (530 OK). Measured
+  effect: the 18 realistic quadsource totals move by at most **4.62e-12 of scale** (b=0.2 q-smooth
+  $x_{\rm resp}=980$, `WKB_Levin` only), and `test_phase_groups`' realistic Oracle 1 rows move at
+  the 1e-16 level. **What remains** is the trap in `wrap_theta` itself: no docstring warning and
+  no `fmod` fast path. That is a production-code change, not made here; the next step above
+  stands.
+  **Closed (2026-09-19)** — the next step's first alternative is done: `wrap_theta` now has a
+  docstring stating its contract, the warning **"Do not use this to reduce a large, unreduced
+  phase; use `WKB_mod_2pi`"**, the measured cost and rounding (Table 8.3's 2.3e-12 / 1.1e-08 /
+  1.5e-04 rad at |θ| = 1e3 / 1e5 / 1e7, 44 ms per call at 1e7, and this entry's 1.39e-06 rad at
+  1e6), and why its one production caller is safe: `apply_phase_offset`, reached from
+  `GkWKBIntegration.store()` and `TkWKBIntegration.store()`, passes `mod + deltaTheta` with `mod`
+  in $(-2\pi,0]$ from `WKB_mod_2pi` and `deltaTheta = atan2(...)` in $(-\pi,\pi]$, so at most one
+  pass. With no test fixture calling it on an unreduced phase (the two narrowings above), the
+  impact this entry recorded has no remaining instance. The `fmod` fast path was not added; the
+  loop's behaviour, and production output, are unchanged. The docstring also records that a
+  positive $\theta$ below half an ulp of `TWO_PI` (~2.2e-16) returns `mod == -TWO_PI` exactly,
+  just outside $(-2\pi,0]$ — as `WKB_mod_2pi` does too; rounding-level, not acted on.
 
 - **[20-wkb-gauss-orders-not-in-lookup-key]** *(opened by prompt 20, 2026-09-13; **assigned 2026-09-16 to `prompts/tolerance-convergence` prompts 04 and 05, and closed by its prompt 05**, 2026-09-18)* — prompt 20 §5
   asked whether the other three compute targets have "any configuration axis that can vary between
@@ -1163,7 +1175,7 @@ Opened by the planning pass, 2026-09-10, before any prompt runs.
   count at the affected samples; no migration was invented and none is recommended — see
   `prompts/phase-representation/logs/01-wkb-mod-2pi-cycle-count.md`, "State handed to the next
   prompt", for the regeneration list. **This also corrected one clause of
-  `[10-wrap-theta-loop-at-large-phase]`**, in §3 above.
+  `[10-wrap-theta-loop-at-large-phase]`**, now also in §4.
 
 - **[01-offgrid-accessor-cost-on-qcd]** *(opened by prompt 01, 2026-09-10; narrowed by prompts 03,
   06 and 09; **resolved by prompt 13**, 2026-09-13)* — the entry's recorded closing condition was
