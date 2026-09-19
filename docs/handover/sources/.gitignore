@@ -1,0 +1,5 @@
+# The upstream artefacts are not committed: they are large binaries, and they are
+# reproducible from arXiv against the checksums in SOURCES.md. What IS committed is the
+# extracted LaTeX, which is what any transcription is actually made from.
+*.pdf
+*.tar.gz

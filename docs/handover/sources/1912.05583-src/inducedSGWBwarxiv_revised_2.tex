@@ -1,0 +1,829 @@
+\documentclass[aps,10pt,prd,groupedaddress,nofootinbib,notitlepage,eqsecnum,preprintnumbers]{revtex4-1}
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%% Packages %%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+\usepackage[utf8]{inputenc}
+\usepackage{hyperref}
+\usepackage{xcolor}
+\usepackage{graphicx}
+\usepackage{amsmath,amssymb,amsbsy,amstext,amsthm}
+\usepackage{mathtools}
+\usepackage{amsfonts}
+\usepackage{comment}
+\usepackage{bm}
+
+% avoids incorrect hyphenation, added Nov/08 by SSR
+\hyphenation{ALPGEN}
+\hyphenation{EVTGEN}
+\hyphenation{PYTHIA}
+
+
+\hbadness 10000
+
+\def\baselinestretch{1.1}
+
+
+
+\begin{document}
+\title{Induced gravitational waves in a general cosmological background}
+
+
+\author{\textsc{Guillem Dom\`enech$^{a}$}}
+		\email{{domenech}@{thphys.uni-heidelberg.de}} 
+\affiliation{$^{a}$\small{Institut f\"ur Theoretische Physik, Ruprecht-Karls-Universit\"at Heidelberg,\\ Philosophenweg 16, 69120 Heidelberg, Germany}}
+
+
+
+\begin{abstract}
+Gravitational waves are inevitably produced by second order terms in cosmological perturbation theory. Most notably, the so-called induced gravitational waves are a window to the small scales part of the primordial spectrum of fluctuations and a key counterpart to the primordial black hole scenario. However, semi-analytical solutions are only known for matter and radiation domination eras. In this paper, we present new analytic integral formulas for the induced gravitational waves on subhorizon scales in a general cosmological background with a constant equation of state. We also discuss applications to a peaked primordial scalar power spectrum and the primordial black hole scenario. 
+\end{abstract}
+ \maketitle
+
+\section{Introduction\label{sec:intro}}
+
+The forthcoming space-based gravitational wave (GW) detectors, such as LISA \cite{Audley:2017drz}, DECIGO \cite{Seto:2001qf,Yagi:2011wg}, AION/MAGIS \cite{Badurina:2019hst}, ET \cite{ET} and PTA \cite{Lentati:2015qwp,Shannon:2015ect,Arzoumanian:2015liz,Qin:2018yhy}, will open the field of gravitational wave cosmology. They will provide a unique opportunity to explore unobserved periods and test various models of the early universe (for a review see \textit{e.g.} \cite{Maggiore:1999vm,Sathyaprakash:2009xs,Guzzetti:2016mkm,Caprini:2018mtu} and references therein). Most of the information relevant for cosmology is likely to be encoded in a stochastic gravitational wave background (SGWB) due to the large number of unresolved sources \cite{Guzzetti:2016mkm,Christensen:2018iqi,Caprini:2018mtu}. Importantly, the cosmological SGWB differs from the astrophysical one in its strength, frequency range, spectral shape and statistical properties. Thus, it is in principle possible to extract any signal of cosmological origin once the astrophysical sources have been accurately modeled \cite{Regimbau:2011rp}.
+
+The study of the cosmic microwave background (CMB) has already provided invaluable information on the initial conditions of the universe. In the scales probed by the CMB, the primordial universe was homogeneous and isotropic, filled with tiny adiabatic gaussian fluctuations with an almost scale invariant spectrum \cite{Akrami:2018odb,Aghanim:2018eyx}. These results strongly support inflation \cite{Brout:1977ix,Starobinsky:1979ty,Guth:1980zm,Sato:1980yn} as the paradigm for the very early universe. However, there is little known about the small scale region of the primordial spectrum, which does not affect the CMB, and that depends on the dynamics around the end of inflation. The SGWB might prove to be key to test those scales \cite{Assadullahi:2009jc,Bugaev:2010bb,Inomata:2018epa,Sato-Polito:2019hws}.
+
+One remarkable fact is that there are very strong arguments in favor of the existence of a cosmological SGWB. Since gravity is a non-linear theory, these initial fluctuations set by inflation actually become a source of GWs at second order in cosmological perturbation theory \cite{Kodama:1985bj,Mukhanov:1990me,Noh:2004bc,Hwang:2007ni,Ananda:2006af,Baumann:2007zm}. This type of SGWB is referred to as the induced SGWB and it is has attracted much attention recently \cite{Alabidi:2012ex,Alabidi:2013wtp,Hwang:2017oxa,Kohri:2018awv,Cai:2018dig,Bartolo:2018rku,Inomata:2018epa,Yuan:2019udt,Inomata:2019zqy,Inomata:2019ivs,Chen:2019xse,Yuan:2019wwo,DeLuca:2019ufz,Tomikawa:2019tvi,Gong:2019mui,Inomata:2019yww,Yuan:2019fwv} since, in some cases, it can be larger than the SGWB generated from quantum fluctuations during inflation. 
+
+From the observational side, the induced SGWB is an important probe of the thermal history of the universe \cite{Watanabe:2006qe} (also see \cite{Cui:2017ufi,Bettoni:2018pbl,Cui:2018rwi} and references therein for a similar discussion with cosmic strings) and the spectrum of primordial fluctuations \cite{Assadullahi:2009jc,Bugaev:2010bb,Inomata:2018epa}. Furthermore, the detailed shape of the induced SGWB spectrum highly depends on the non-gaussian nature of the primordial fluctuations \cite{Cai:2018dig}. In other words, the induced SGWB is sensitive to the three point function of primordial fluctuations. From the pure theoretical side, there is currently a debate on the reported gauge dependence on the generation of GWs at second order \cite{Hwang:2017oxa,Domenech:2017ems,DeLuca:2019ufz,Gong:2019mui,Inomata:2019yww,Yuan:2019fwv}, which directly affects the induced GW spectrum. We will not attempt to solve this issue here but we believe that, nevertheless, results of the paper will be useful as they can be translated to any desired gauge \cite{Hwang:2017oxa}.
+
+The induced SGWB plays also a key role in the primordial black hole (PBH) scenario \cite{Sasaki:2016jop,Bird:2016dcv,Carr:2016drx,Garcia-Bellido:2017fdg}, which is a plausible candidate to dark matter without a particle physics nature (for a review see \textit{e.g.} \cite{Sasaki:2018dmp} and references therein). The main reason is that the PBH scenario requires that inflation generated huge fluctuations on scales not probed by the CMB, which later collapsed to black holes \cite{Sasaki:2018dmp}. Interestingly, the PBH scenario leaves traces in distortions of the CMB \cite{Nakama:2017xvq}, lensing \cite{Niikura:2017zjd,Zumalacarregui:2017qqd} and direct detection of GWs from PBHs mergers \cite{Sasaki:2016jop,Bird:2016dcv,Gow:2019pok}. In addition to that, it seems that if PBHs constitute a considerable fraction, if not all, of the dark matter, there must be a detectable induced SGWB counterpart \cite{Bugaev:2009zh,Saito:2009jt,Alabidi:2013wtp,Kohri:2018awv,Cai:2018dig,Bartolo:2018rku,Inomata:2018epa,Inomata:2019zqy,Inomata:2019ivs,Yuan:2019udt}.
+
+Now, most of the analytical studies of the induced SGWB are restricted to either radiation or matter domination, otherwise numerical methods were needed \cite{Tomikawa:2019tvi}. While there are strong motivations to study the generation of the induced SGWB during radiation domination, matter domination has been considered first due to an enhancement of the amplitude of the SGWB and the unknown physics right after inflation \cite{Baumann:2007zm,Assadullahi:2009nf,Alabidi:2013wtp}. For example, if after the end of inflation, the inflaton oscillates around the minimum of its potential, the universe will undergo a phase of matter domination before the universe is (re)heated (assuming that the potential is approximately quadratic at the bottom). However, this is not necessarily the case. Quintessential inflation scenarios \cite{Wetterich:1987fm,Spokoiny:1993kt,Wetterich:1994bg,Peebles:1998qn,Brax:2005uf,Wetterich:2014gaa,Hossain:2014zma,Hossain:2014xha,Karananas:2016kyt,Agarwal:2017wxo,Geng:2017mic,Dimopoulos:2017zvq,Rubio:2017gty,Haro:2018zdb} (see also \cite{GarciaBellido:2011de,Casas:2017wjh} in the context of Higgs inflation) assume that, after inflation, the inflaton has a run away potential and the universe becomes kinetic dominated until (re)heating is achieved. Moreover, the equation of state of the universe is not necessarily constant throughout the whole evolution \cite{Byrnes:2018clq,Hajkarim:2019nbx} and neither it will be exactly $w=1/3$. The induced SGWB spectrum has the potential to distinguish these scenarios as a probe of the thermal evolution of the universe. Here we will study the generation of induced GWs in a general background with a constant equation of state and their applications to the PBH scenario.
+
+This paper is organized as follows. In Sec.~\ref{sec:cosmobackground} we review the cosmology in a FRLW background with a constant equation of state and the calculation of induced GWs in such general background. In Sec.~\ref{sec:analyticalcalculation} we present new analytical formulas for the induced gravitational waves kernel on subhorizon scales. In Sec.~\ref{sec:PBH} we discuss its application to a peaked primordial spectrum in cosmological backgrounds such as kinetic domination (or stiff equation of state). Sec.~\ref{sec:conclusions} is dedicated to the conclusions of this work. Details of the calculations and properties of the special functions are provided in the appendices. In particular, Apps.~\ref{App:bessel}, \ref{App:integralbessel} and \ref{App:legendre} are extensively dedicated to the mathematical properties of Bessel and associated Legendre functions.
+
+\section{Scalar induced gravitational waves review \label{sec:cosmobackground}}
+
+
+Gravitational waves are unavoidably generated in general by second order terms in cosmological perturbation theory. To see that, we consider a perturbed flat FLRW metric in the zero shear (or Poisson) gauge,
+\begin{align}\label{eq:poisson}
+ds^2&=a^2(\tau)\left[-(1+2\Phi)d\tau^2+\left(\delta_{ij}-2\Psi\delta_{ij}+2h_{ij}\right)dx^idx^j\right]\,,
+\end{align}
+where $a(\tau)$ is the scale factor, $\tau$ is conformal time, $\Phi$ and $\Psi$ are the gravitational scalar potentials and $h_{ij}$ are the (transverse-traceless) tensor perturbations or gravitational waves.\footnote{At linear order the identification of tensor modes with GWs is straightforward as they are gauge invariant. However, at second order is not so clear anymore. For more on this see \cite{Arroja:2009sh,Hwang:2017oxa}.} As usual, we have neglected vector perturbations since they decay. We also assume that the dominant matter content of the universe is given by a perfect fluid, \textit{i.e.} its energy momentum tensor reads
+\begin{align}
+T_{\mu\nu}=(\rho+p)u_{\mu}u_{\nu}+pg_{\mu\nu}\,,
+\end{align}
+where $\rho$ and $p$ are respectively the energy density and pressure of the fluid, $u_{\mu}$ is its 4-velocity and $g_{\mu\nu}$ is the spacetime metric \eqref{eq:poisson}. For a constant equation of state,
+\begin{align}
+w=p/\rho={\rm constant}\,,
+\end{align}
+the Friedmann equations yield
+\begin{align}\label{eq:background}
+a(\tau)=a(\tau_i)\left(\frac{\tau}{\tau_i}\right)^{\frac{2}{\left(1+3w\right)}}\quad,\quad{\cal H}&\equiv\frac{a'}{a}=\frac{2}{\left(1+3w\right)\tau}\,,
+\end{align}
+where $\tau_i$ is a reference time and a prime denotes derivative with respect to conformal time. Recall that $w=0,1/3$ respectively correspond to matter and radiation domination. In this paper we will focus on $0<w\leq1$. That is all we need to know of the cosmological background. More details can be found in App.~\ref{App:first order}.
+
+At linear order in cosmological perturbation theory, the gravitational potential and the tensor modes in absence of anisotropies\footnote{For example, due to massive neutrinos, GWs will experience a further damping on very small scales \cite{Mangilli:2008bw}.} respectively satisfy the following equations of motion \cite{Kodama:1985bj,Mukhanov:1990me},
+\begin{align}
+\Phi''+3(1+w){\cal H}\Phi'-w\Delta\Phi=0\,
+\quad {\rm and} \quad
+h_{ij}''+2{\cal H}h_{ij}'-\Delta h_{ij}=0\,,
+\end{align}
+where $\Delta\equiv\delta^{ij}\partial_i\partial_j$. Working in Fourier space (see App.~\ref{app:fourier} for the conventions used) and using Eq.~\eqref{eq:background} we arrive at
+\begin{align}
+\Phi''+6\frac{1+w}{1+3w}\frac{1}{\tau}\Phi'+wk^2\Phi=0\quad {\rm and}\quad h_\lambda''+\frac{4}{1+3w}\frac{1}{\tau}h_\lambda'+k^2h_\lambda=0\,,
+\end{align}
+where $k$ is the wavenumber and $\lambda$ is the GWs polarization, \textit{e.g.} $\lambda=\{R, L\}$, where $R$ and $L$ respectively refer to right and left polarizations. General solutions to these equations are given by \cite{Baumann:2007zm}
+\begin{align}\label{eq:alpha}
+\Phi(x)=(\sqrt{w}x)^{-\alpha}\left[C_1(k)J_\alpha(\sqrt{w}x)+C_2(k)Y_\alpha(\sqrt{w}x)\right]\quad,\quad \alpha=\frac{5+3w}{2(1+3w)}
+\end{align}
+and
+\begin{align}\label{eq:beta}
+h_\lambda(x)=x^{-\beta}\left[\tilde C_1(k)J_\beta(x)+\tilde C_2(k)Y_\beta(x)\right]\quad,\quad \beta=\frac{3}{2}\frac{1-w}{1+3w}\,,
+\end{align}
+where $x\equiv k\tau$ and $J_\nu$ and $Y_{\nu}$ respectively are Bessel functions of the first and second kind. Also, it will important later to realize that $\alpha=1+\beta$. These solutions simply mean that after the modes enter the horizon they will start damped oscillations due to pressure. We will be interested in the range
+\begin{align}
+1\geq w > 0 \quad \Rightarrow \quad 1\leq \alpha< 5/2 \quad,\quad 0\leq \beta< 3/2\,,
+\end{align}
+for the following reasons. On one hand, we exclude the case $w=0$ since solutions to Eq.~\eqref{eq:alpha} are not given by Bessel functions but by a constant and a decaying mode, although one can formally take the limit $w\to0$. Furthermore, an early period of matter domination ($w=0$) cannot last longer than a certain amount of time, otherwise non-linearities become important \cite{Assadullahi:2009nf,Alabidi:2013wtp,Inomata:2019ivs,Inomata:2019zqy}. On the other hand, if $w<0$ then we get modified Bessel functions as solutions of Eq.~\eqref{eq:alpha} and the analytical calculation of Sec.~\ref{sec:analyticalcalculation} would be somewhat more complicated. We leave the extension to $w<0$ for future work.
+
+The initial conditions set by inflation are constant on superhorizon scales ($x\ll1$). Thus, using the fact that $\lim_{x\to 0}x^{-\nu}{J_\nu(x)}={2^{-\nu}}/{\Gamma[1+\nu]}$
+while $x^{-\nu}Y_\nu\propto x^{-2\nu}$ diverges for $x\to 0$, we extract
+\begin{align}
+C_1=2^\alpha\Gamma[1+\alpha]\Phi_{\rm prim}(k) \quad{,}\quad \tilde C_1=2^\beta\Gamma[1+\beta]h_{\lambda,{\rm prim}}(k)\,,
+\end{align}
+and $C_2=\tilde C_2=0$, where the subindex ``prim'' refers to its primordial value. We can now relate the value of the gravitational potential to that of the curvature perturbation on superhorizon scales, which is the quantity that remains constant, by \cite{Kodama:1985bj,Mukhanov:1990me,Kohri:2018awv}
+\begin{align}
+\Phi_{\rm prim}(k)=\frac{3+3w}{5+3w}{\cal R}_{{\rm prim}}(k)\,.
+\end{align}
+
+Turning now our attention to GWs generated in the early universe, they will lead to a stochastic background due to the large number of unresolved sources. The amplitude of such stochastic background is related to the energy density of GWs, which is defined\footnote{We find the value of the energy density of GWs by expanding Einstein equations to second order.} on sub-horizon scales by \cite{Maggiore:1900zz,Watanabe:2006qe}
+\begin{align}
+\rho_{\rm GWs}=\frac{M_{pl}^2}{4a^2}\langle h'_{ij}h'_{ij}\rangle\approx\frac{M_{pl}^2k^2}{4a^2}\overline{\langle h_{ij}h_{ij}\rangle}\,.\nonumber
+\end{align}
+In the last equality we used that deep inside the horizon GWs oscillate and, therefore, $h'_{ij}\sim k h_{ij}$. The large line on top of the expectation value refers to oscillation average\footnote{If the GWs have single frequency and oscillate rapidly we can take integral over half period and divide by $\pi$. This is not a good approximation on scales close to (or beyond) the horizon.} and estimates the observed amplitude of the stochastic background \cite{Maggiore:1900zz,Kohri:2018awv}.
+
+It is convenient to define the relative spectral density of GWs in a given background per $\ln k$ as
+\begin{align}\label{eq:spectraldensity}
+\Omega_{\rm GWs}(k,\tau)=\frac{\rho_{\rm GWs}(k,\tau)}{3H^2M_{pl}^2}=\frac{k^2}{12a^2H^2}\overline{P_h(k,\tau)}
+\quad{\rm where}\quad
+\rho_{\rm GWs}(k,\tau)=\frac{d\rho_{\rm GWs}(\tau)}{d\ln k}\,,
+\end{align}
+and we have used that
+\begin{align}
+\langle h_{ij}(x) h_{ij}(x)\rangle=\int \frac{d^3k}{(2\pi)^3} \langle h_R(k,\tau)h_R(k,\tau)\rangle+\langle h_L(k,\tau)h_L(k,\tau)\rangle=2\int \frac{d^3k}{(2\pi)^3} \langle h_R(k,\tau)h_R(k,\tau)\rangle\equiv\int d\ln k \,P_h(k,\tau)\,,
+\end{align}
+where we chose the left (L) and right (R) polarizations for convenience as we assume no parity violation.
+
+From the non-observation of tensor modes in the CMB we have that $r=P_h/P_{\cal R}<0.07$ \cite{Akrami:2018odb}. Thus, if we assume that the primordial tensor spectrum is almost scale invariant with a slight red tilt, then primordial GWs are practically unobservable by future GW detectors \cite{Guzzetti:2016mkm}. For this reason, we will not consider the evolution of primordial GWs and, thus, we will set $h_{\lambda,{\rm prim}}(k)=0$ without loss of generality. However, see \cite{Garcia-Bellido:2017aan,Unal:2018yaa} for the possible effects of non-zero primordial tensor modes. Then, in what follows we will be only concerned in the sourcing of GWs $h_{ij}$ by first order squared gravitational potential $\Phi$ terms. Furthermore, we will neglect the details in the transfer function of GWs due to changes in the relativistic degrees of freedom \cite{Watanabe:2006qe}. We will also assume that GWs propagate freely to us after they are formed, \textit{e.g.} there is no strong magnetic field modifying the propagation of GWs as in Ref.~\cite{Bamba:2018cup}.
+
+
+
+\subsection{Induced tensor modes at second order\label{sec:secondorder}}
+
+At second order in cosmological perturbation theory, scalar and tensor modes mix \cite{Noh:2004bc}. The solutions to the first order equations then source the second order ones. Looking at the transverse-traceless part of the $ij$ component of Einstein equations to second order we find that scalar squared terms source tensor modes by \cite{Baumann:2007zm,Domenech:2017ems}
+\begin{align}\label{eq:hij}
+h_{ij}''+2{\cal H}h_{ij}'-\Delta h_{ij}=\widehat{TT}^{ab}_{ij}\left[4\partial_a\Phi\partial_b\Phi+\frac{8}{3\left(1+w\right)}\partial_a\left(\Phi+\Phi'/{\cal H}\right)\partial_b\left(\Phi+\Phi'/{\cal H}\right)\right]\,,
+\end{align}
+where $\widehat{TT}^{ab}_{ij}$ is the transverse-traceless projector.\footnote{The transverse-traceless projector is explicitly given by
+\begin{align}
+\widehat{TT}_{ij}\,^{ab}=&\left(\delta_{i}^{(a}-\partial_i\partial^{(a}\Delta^{-1}\right)\left(\delta_j^{b)}-\partial_j\partial^{b)}\Delta^{-1}\right)-\frac{1}{2}\left(\delta_{ij}-\partial_i\partial_j\Delta^{-1}\right)\left(\delta^{ab}-\partial^a\partial^b\Delta^{-1}\right)\nonumber\,.
+\end{align}
+} We have neglected source terms containing scalar-tensor and tensor-tensor contributions as they are subdominant \cite{Gong:2019mui}.
+ Now, in Fourier space Eq.~\eqref{eq:hij} reduces to
+\begin{align}\label{eq:hij1}
+h_{\lambda}''+2{\cal H}h_{\lambda}'+k^2h_{\lambda}=\,s_\lambda(\mathbf{k})\,,
+\end{align}
+where
+\begin{align}
+s_\lambda(\mathbf{k})=4\int \frac{d^3q}{(2\pi)^3}e_\lambda^{ij}(k)q_iq_j\left\{\Phi(\mathbf{q})\Phi(\mathbf{k}-\mathbf{q})+\frac{2}{3\left(1+w\right)}\left[\Phi(\mathbf{q})+\frac{\Phi'(\mathbf{q})}{\cal H}\right]\left[\Phi(\mathbf{k}-\mathbf{q})+\frac{\Phi'(\mathbf{k}-\mathbf{q})}{\cal H}\right]\right\}\,,
+\end{align}
+and $e_{\lambda}^{ij}$ is the polarization tensor of GWs (see App.~\ref{app:fourier} for details in the derivation). For instance, if we choose the left and right polarizations where $\lambda=\{R,L\}$, where
+ $e_\lambda^{ij}(\mathbf{k})e^{\lambda'}_{ij}(-\mathbf{k})=\delta^{\lambda\lambda'}$ and $e_{R,L}^{ij}(\mathbf{k})k_j=0$, we have that
+\begin{align}
+e_{R,L}^{ij}(\mathbf{k})q_iq_j=\frac{1}{2}q^2\sin^2\theta\,,
+\end{align}
+where $\theta$ is the angle between $\mathbf{k}$ and $\mathbf{q}$. We can formally solve Eq.~\eqref{eq:hij1} by the Green's function method, which yields \cite{Baumann:2007zm}
+\begin{align}
+h_\lambda(k)=\int_{x_0}^x d\tilde x \,k^{-2}s_\lambda(\mathbf{k},\tilde x)G(x,\tilde x)
+\quad{\rm where}
+\quad
+G(x,\tilde x)\equiv\frac{y_1(\tilde x)y_2(x)-y_2(\tilde x)y_1(\tilde x)}{y_1(\tilde x)\partial_{\tilde x}y_2(x)-y_2(\tilde x)\partial_{\tilde x}y_1(\tilde x)}\,,
+\end{align}
+$y_1$, $y_2$ are solutions to the homogeneous equation Eq.~\eqref{eq:beta}
+and we assumed proper boundary conditions for the Green's function.
+
+In the cases under study the power spectrum of induced GWs\footnote{We should actually use 
+\begin{align}
+h'_\lambda(k,\tau)=k\int d\tilde x \,k^{-2}s_\lambda(\mathbf{k},\tilde x)\partial_x G(x,\tilde x)\nonumber
+\end{align}
+for the calculation of the GWs energy density. However, $h'_\lambda(k)\approx k h_\lambda(k)$ on sub-horizon scales.} takes a particularly compact form \cite{Kohri:2018awv},
+\begin{align}\label{eq:pgamma}
+\overline{P_h(k,\tau)}=2\int_0^\infty dv \int_{|1-v|}^{1+v} du\left[\frac{4v^2-\left(1+v^2-u^2\right)^2}{4uv}\right]^2 P_{\cal R}(kv)P_{\cal R}(ku)\overline{I^2}(v,u,x)\,,
+\end{align}
+where $P_{\cal R}$ is the primordial curvature power spectrum, $I(u,v,x)$ is the kernel, that we will shortly define in detail, and we used
+\begin{align}
+v\equiv q/k\quad,\quad u\equiv|\mathbf{k}-\mathbf{q}|/k\,.
+\end{align}
+In this derivation we have assumed gaussian primordial fluctuations and we have used that
+\begin{align}
+\langle \Phi_{\rm prim}(k)\Phi_{\rm prim}(k')\rangle=(2\pi)^3\frac{2\pi^2}{k^3}P_{\Phi,{\rm prim}}(k)\delta(k+k')\,.
+\end{align}
+Including non-gaussianity should be straightforward but it would be out of the scope of this paper.
+
+Coming back to the kernel in Eq.~\eqref{eq:pgamma}, it can be written after setting $x_0=0$ as
+\begin{align}\label{eq:kernel}
+I(v,u,x)\equiv 2\left(\frac{3+3w}{5+3w}\right)^2\int_{0}^x d\tilde x \,G(x,\tilde x) f(\tilde x, u, v)\,,
+\end{align}
+where the green function, after using Eq.~\eqref{eq:beta}, simplifies to
+\begin{align}\label{eq:green2}
+G(x,\tilde x)=\frac{\pi}{2}\frac{\tilde x^{1+\beta}}{x^{\beta}}\left[J_\beta(\tilde x)Y_\beta(x)-Y_\beta(\tilde x) J_\beta(x)\right]\,,
+\end{align}
+and the source term is given by
+\begin{align}\label{eq:source}
+f(\tilde x, u, v)=&\frac{4^\alpha}{6\alpha}\Gamma^2[1+\alpha]\frac{1+3w}{1+w}\left(uvw\tilde x^2\right)^{1-\alpha}\nonumber\\&
+\times\left[J_{\alpha-1}(u\sqrt{w}\tilde x)J_{\alpha-1}(v\sqrt{w}\tilde x)+\frac{3(1+w)}{2}J_{\alpha+1}(u\sqrt{w}\tilde x)J_{\alpha+1}(v\sqrt{w}\tilde x)\right]\,,
+\end{align}
+where we used Eq.~\eqref{eq:alpha} and we replaced $J_\alpha$ in terms of $J_{\alpha\pm1}$ (see App.~\ref{App:bessel} for more details). 
+
+So far, we have reviewed the analytical integral solution for the spectrum of induced GWs \cite{Baumann:2007zm,Kohri:2018awv}. However, for practical purposes this form of the solution does not yield much physical insight as there is no full analytical expression for such integrals. Thus, only particular cases where the kernel integral \eqref{eq:kernel} is doable, \textit{e.g.} matter or radiation domination, have been studied or numerical methods were used \cite{Tomikawa:2019tvi}. In the next section we present analytical results for the kernel in a general background with constant equation of state on subhorizon scales. 
+
+
+
+\section{Semianalytical calculation\label{sec:analyticalcalculation}}
+
+In order to greatly simplify the calculation of the induced GWs, one would ideally like to have an analytical expression for the kernel, since it is the heaviest calculation to do numerically as it encompasses the product of three Bessel functions. Using the kernel Eq.~\eqref{eq:kernel} derived in Sec.~\ref{sec:secondorder} and plugging in Eqs.~\eqref{eq:green2} and \eqref{eq:source}, we can simplify the expression of the kernel to
+\begin{align}\label{eq:kernel2}
+I(x,u,v)=4^{\beta}\frac{3\pi}{2\alpha^3}\frac{1+w}{1+3w}\Gamma^2[\beta+2]&\left(uvwx\right)^{-\beta}\left\{Y_\beta(x){\cal I}^x_J(u,v,w)-J_\beta(x){\cal I}^x_Y(u,v,w)\right\}
+\end{align}
+where we used that $\alpha=1+\beta$ and we defined
+\begin{align}
+{\cal I}^x_{J,Y}
+(u,v,w)\equiv\int_0^{x} d\tilde x \tilde x^{1-\beta}
+\left\{	
+\begin{aligned}
+	J_\beta(\tilde x)\\
+	Y_\beta(\tilde x)
+\end{aligned}
+\right\}
+\left[J_{\beta}(u\sqrt{w}\tilde x)J_{\beta}(v\sqrt{w}\tilde x)+\frac{3(1+w)}{2}J_{\beta+2}(u\sqrt{w}\tilde x)J_{\beta+2}(v\sqrt{w}\tilde x)\right]\,.
+\end{align}
+In this way, we have been able to write the integrals in terms of Bessels functions of order $\beta$ and $\beta+2$ only.
+
+We will not be able to carry out this integral for general values of $x$ but we can obtain analytical results
+% on superhorizon ($x\ll1$) and subhorizon scales ($x\gg1$). First of all, we can take the superhorizon limit by approximating the integral to
+%\begin{align}
+%\int_0^{x\ll1} F(x,\tilde x)d\tilde x\approx \frac{x^2}{2}\partial_x F(x,\tilde x)\Big|_{\tilde x= x =0}\,,
+%\end{align}
+%which yields
+%\begin{align}
+%I(x\ll1,u,v)\approx\frac{3}{2\alpha}\frac{1+w}{1+3w}x^2+O(x^3)\,,
+%\end{align}
+%where we have also expanded the Bessel functions for small argument. As it should be, far outside the horizon no significant GWs are generated and the power spectrum falls as $x^4$.
+for the scales of interest which are subhorizon, \textit{i.e.} $x\gg1$. In this case, we can approximate the integral by sending the upper limit $x\to\infty$. This will capture the leading order behavior of the kernel since $J_\beta(x)$ and $Y_\beta(x)$ already decay as $1/\sqrt{x}$ when $x\gg 1$. Although corrections from a finite upper integration limit can be computed,\footnote{We can split the integral
+\begin{align}
+\int_0^x=\int_0^\infty-\int_x^\infty\,,\nonumber
+\end{align}
+and then Taylor expand the integrand inside the second integral for large $\tilde x$ to estimate the next to leading order correction.} they will be suppressed by a further $1/x$. Interestingly, this type of integrals appeared in high-energy physics phenomenology to estimate absorption effects. Conveniently, Gervois and Navelet in Ref.~\cite{threebesselI} presented an analytical formula for the integrals ${\cal I}^\infty_{J,Y}(u,v,w)$ in terms of associated Legendre polynomials and Legendre polynomials on the cut. They extended the original result of Bailey in Ref.~\cite{originalbessel} to the full parameter space, who related the integral of three Bessel functions with Appell's fourth function by writing the Bessel functions as power series and then integrating. We will apply their results to the induced GWs. Details of the original formulas can be found in App.~\ref{App:integralbessel}. 
+
+
+We find that the integrals in Eq.~\eqref{eq:kernel2} are given by
+\begin{align}\label{eq:IJ}
+{\cal I}^\infty_J(u,v,w)=&\frac{2^{-\beta}(wZ)^{\beta-1/2}}{\sqrt{\pi uvw}}\left[\mathsf{P}^{-\beta+1/2}_{\beta-1/2}(y)+\frac{3(1+w)}{2}\mathsf{P}^{-\beta+1/2}_{\beta+3/2}(y)\right]\Theta(u+v-w^{-1/2})
+\end{align}
+and
+\begin{align}\label{eq:IY}
+{\cal I}^\infty_Y(u,v,w)=-\frac{2^{-\beta+1}w^{\beta-1/2}}{\pi\sqrt{\pi uvw}}&\Bigg\{Z^{\beta-1/2}\left[
+	\mathsf{Q}^{-\beta+1/2}_{\beta-1/2}(y)+\frac{3(1+w)}{2}\mathsf{Q}^{-\beta+1/2}_{\beta+3/2}(y)\right]\Theta(u+v-w^{-1/2})\\&
+	-\tilde Z^{\beta-1/2}\left[{\cal Q}^{-\beta+1/2}_{\beta-1/2}(\tilde y)+3(1+w){\cal Q}^{-\beta+1/2}_{\beta+3/2}(\tilde y)\right]\Theta(w^{-1/2}-u-v)\Bigg\}\,.
+\end{align}
+Let us explain in a bit of detail the notation in Eqs.~\eqref{eq:IJ} and \eqref{eq:IY}. First, we note that the integral may become singular for the resonant case where $u+v=w^{-1/2}$. This is when the frequency of two scalar modes matches that of the tensor mode and a narrow resonance occurs. Thus, to distinguish between the cases $u+v>w^{-1/2}$ and $u+v<w^{-1/2}$ we have introduced the Heavyside theta function $\Theta(z)$ which is $1$ when $z>0$ and $0$ otherwise. Secondly, all functions have been defined so that they are real functions of real arguments. In this way, $\mathsf{P}^\mu_\nu(y)$ and $\mathsf{Q}^\mu_\nu(y)$ are Legendre functions on the cut (or Ferrer's functions) which are valid for $|y|<1$. ${\cal Q}^\mu_\nu(y)$ is the associated Legendre polynomial of the second kind and is valid for $|y|>1$. These functions are defined in App.~\ref{App:legendre} where some of the properties are also discussed (or see \cite{NIST:DLMF}). Also, we have defined for simplicity
+\begin{align}
+y\equiv\frac{u^2+v^2-w^{-1}}{2uv}\quad&,\quad Z^2\equiv \left(w^{-1}-(u-v)^2\right)\left((u+v)^2-w^{-1}\right)=4u^2v^2(1-y^2)\\
+\tilde y=-y\quad&,\quad\tilde Z^2=-Z^2\,.
+\end{align}
+
+Using these results we can further simplify the expression for the kernel \eqref{eq:kernel2}, also expanding the Bessel functions for large argument, leading to
+\begin{align}\label{eq:kernel3}
+I(x\gg1,u,v)&=2^{\beta}\frac{3\sqrt{2}}{w\pi\alpha^3}\frac{1+w}{1+3w}\Gamma^2[\beta+2]{\left(uvx\right)^{-\beta-1/2}}\nonumber\\&\times\left\{\frac{\pi}{2}\sin\left(x-\frac{\beta\pi}{2}-\frac{\pi}{4}\right){I}_J(u,v,w)+\cos\left(x-\frac{\beta\pi}{2}-\frac{\pi}{4}\right){I}_Y(u,v,w)\right\}
+\end{align}
+where
+\begin{align}\label{eq:IJJ}
+I_J(u,v,w)\equiv Z^{\beta-1/2}\left[\mathsf{P}^{-\beta+1/2}_{\beta-1/2}(y)+\frac{3(1+w)}{2}\mathsf{P}^{-\beta+1/2}_{\beta+3/2}(y)\right]\Theta(u+v-w^{-1/2})
+\end{align}
+and
+\begin{align}\label{eq:IYY}
+I_Y(u,v,w)\equiv&Z^{\beta-1/2}\left[
+	\mathsf{Q}^{-\beta+1/2}_{\beta-1/2}(y)+\frac{3(1+w)}{2}\mathsf{Q}^{-\beta+1/2}_{\beta+3/2}(y)\right]\Theta(u+v-w^{-1/2})\nonumber\\&
+	-\tilde Z^{\beta-1/2}\left[{\cal Q}^{-\beta+1/2}_{\beta-1/2}(\tilde y)+3(1+w){\cal Q}^{-\beta+1/2}_{\beta+3/2}(\tilde y)\right]\Theta(w^{-1/2}-u-v)\,.
+\end{align}
+Formulas \eqref{eq:kernel3}, \eqref{eq:IJJ} and \eqref{eq:IYY} are the main result of this paper. 
+
+\paragraph{Peaked spectrum}
+
+Before we study a couple of particular cases, it is interesting to investigate the general behavior near the resonant point $u+v=w^{-1/2}$, which corresponds to $y=-1$. To do that, it is instructive to first look at $\mathsf{P}^\mu_\nu(y),\mathsf{Q}^\mu_\nu(y)$ near $y=-1$ where we defined
+\begin{align}
+\mu\equiv-\beta+1/2\quad{\rm and}\quad\nu\equiv\{\beta-1/2,\beta+3/2\}\,.
+\end{align}
+Note that in all cases $\mu+\nu=0,2$ and $-1<\mu\leq1/2$. In general, either (or both) functions will diverge when $y\to -1^+$. In fact, the divergence roughly goes as 
+\begin{align}
+\mathsf{Q}^\mu_\nu(y)&\propto \left(1+y\right)^{-|\mu|/2} \quad,\quad \mu\neq0 \quad (w\neq1/3)\,,\\
+\mathsf{Q}^\mu_\nu(y)&\propto \ln(1+y) \quad,\quad \mu=0 \quad (w=1/3)\,,
+\end{align}
+where more details can be found in App.\ref{App:legendre}. However, the factor ${Z}\propto\sqrt{1-y^2}$ in Eqs.~\eqref{eq:IJJ} and \eqref{eq:IYY} will determine whether the kernel diverges or not in the end. Taking that factor into account we find that
+\begin{align}
+I(u,v,w;y\to1)&\propto \left(1+y\right)^{-\tfrac{1}{2}\left(\mu+|\mu|\right)}\quad,\quad \mu\neq0 \quad (w\neq1/3)\,,\\
+I(u,v,1/3;y\to1)&\propto \ln(1+y)\quad,\quad \mu=0 \quad (w=1/3)\,.
+\end{align}
+
+
+
+On one hand, we see that indeed there is a narrow resonance for $1/3\leq w<1$ ($0\leq\mu<1/2$). This implies that for very sharp primordial power spectrum the slope of the corresponding induced GWs background will depend on the equation of state at the time of generation. It should be also noted that the equation of state can also be inferred by looking at the infrared slope of the spectrum, as pointed out in Ref.~\cite{Cai:2019cdl}. A detailed study of the infrared slope for a smooth gaussian peaked spectrum and a comparison with \cite{Cai:2019cdl} is left for future work. Now, using Eq.~\eqref{eq:spectraldensity}, the spectrum has a peak at $2\sqrt{w}k_*=1$ and grows towards the peak as
+\begin{align}
+\Omega_{\rm GWs}(2\sqrt{w}k\sim1)&\propto\left(1-\frac{k^2}{4wk_*^2}\right)^{\frac{2(1-3w)}{(1+3w)}}\quad,\quad 1>w>1/3\quad (1/2>\mu>0)\,,\\
+\Omega_{\rm GWs}(2\sqrt{w}k\sim1)&\propto\ln^2\left(1-\frac{k^2}{4wk_*^2}\right)\quad,\quad w=1/3 \quad (\mu=0)\,.
+\end{align}
+The case $w=1$ ($\mu=1/2$) is special because the condition $u+v=1$ actually corresponds to $\mathbf{k}=\mathbf{q}$ (or $\theta=0$) and, therefore, there is no generation of GWs due to the fact that the polarization vector is orthogonal to the wavevector. On the other hand, we see that there is no divergence for $0<w<1/3$ ($-1<\mu<0$). Nevertheless, we numerically find that there is a peak precisely at the resonant point for all cases (see Fig.~\ref{fig:deltas}). Thus, if we assume that the primordial power spectrum has a very sharp peak at $k_*$, we can estimate the amplitude of the GWs spectrum to roughly be
+\begin{align}
+\Omega_{\rm GWs}(k_*,\tau)\sim {\cal E} P_{\cal R}^2\left(k_*\tau\right)^{2\frac{1-3w}{1+3w}}\,,
+\end{align}
+where ${\cal E}$ is an amplification factor that should be determined numerically. We also see that there is an additional enhancement or suppression depending on the value of $w$ due to the relative redshifting of GWs and the background.
+
+\paragraph[(i)]{Scale invariant spectrum}
+
+We can also compute the behavior of the induced SGWB for a scale invariant spectrum, \textit{i.e.} $P_{\cal R}={\rm cnt}$. In this case, the spectral density \eqref{eq:spectraldensity} reduces to
+\begin{align}\label{eq:scaleinvariant}
+\Omega_{\rm GWs}(x\gg1)=x^{1-2\beta}\,P_{\cal R}^2\,{\cal F}(w)\,
+\end{align}
+where ${\cal F}(w)$ is a numerical factor that depends on $w$ and is given by
+\begin{align}
+{\cal F}(w)\equiv\frac{3(1+w)^2 4^\beta}{8w^2\pi^2\alpha^6}\Gamma^4[\beta+2]\int_0^\infty dv \int_{|1-v|}^{1+v} du\left[\frac{4v^2-\left(1+v^2-u^2\right)^2}{4uv}\right]^2 \left(uv\right)^{-1-2\beta}\left(\frac{\pi^2}{4}{I}^2_J(u,v,w)+{I}^2_Y(u,v,w)\right)\,.
+\end{align}
+We see from Eq.~\eqref{eq:scaleinvariant} that the induced SGWB for a scale invariant scalar primordial spectrum has a scale dependence proportional to $k^{1-2\beta}$. This means that, on one hand, we recover a scale invariant spectrum for $w=1/3$ ($\beta=1/2)$. On the other hand, the spectrum will have a blue tilt for $w>1/3$ ($\beta<1/2$) and a red tilt for $0<w<1/3$ ($3/2>\beta>1/2$). In the following subsections we will consider two particular cases in more detail. We will recover the kernel for radiation domination ($w=1/3$) and we will derive new results for the case of kinetic domination ($w=1$). A particular case with $w=1/9$, where $\mu<0$, is studied in App.~\ref{app:w19} to explicitly check that the divergence does not take place.
+
+
+\subsection{Radiation domination\label{subsec:RD}}
+
+We can check that the general result Eq.~\eqref{eq:kernel3} yields the correct answer for a known case. Thus, we consider radiation domination where $w=1/3$. In that case, we have that $\beta=1/2$ ($\alpha=3/2$) and the kernel reduces to
+\begin{align}
+I_{RD}(x\gg 1,u,v)&=\frac{2}{uvx}\left\{-\frac{\pi}{2}\cos x \,{I}_J(u,v,1/3)+\sin x\,{I}_Y(u,v,1/3)\right\}
+\end{align}
+where
+\begin{align}
+I_J(u,v,1/3)=3y^2\Theta(u+v-\sqrt{3})
+\end{align}
+and
+\begin{align}
+I_Y(u,v,1/3)=&\left[\frac{3}{2}y\left(-2+y\ln\left(\frac{1+y}{1-y}\right)\right)
+	\right]\Theta(u+v-\sqrt{3})
+	\nonumber\\&-\left[\frac{3}{2}\tilde y\left(-2+\tilde y\ln\left(\frac{1+\tilde y}{1-\tilde y}\right)\right)\right]\Theta(\sqrt{3}-u-v)
+	=\frac{3}{2}y\left(-2+y\ln\left|\frac{1+y}{1-y}\right|\right)\,,
+\end{align}
+where we have already used the particular form of the Legendre polynomials for $\beta=1/2$ that can be found in App.~\ref{App:legendre}. Joining all pieces together we find that, in the end,
+\begin{align}
+I_{RD}(x\gg1,u,v)=\frac{3(u^2+v^2-3)}{4u^3v^3x}&\Bigg\{-{\pi}(u^2+v^2-3)\cos x\,\Theta(u+v-\sqrt{3})\nonumber\\&+\sin x\left(-4uv+(u^2+v^2-3)\ln\left|\frac{3-(u+v)^2}{3-(u-v)^2}\right|\right)\Bigg\}\,,
+\end{align}
+which exactly matches the result from Kohri and Terada \cite{Kohri:2018awv}. After computing the oscillation average of the kernel squared we are led to
+\begin{align}\label{eq:kernelradiation}
+\overline{I_{RD}^2}(x\gg1,u,v)=\frac{9(u^2+v^2-3)^2}{32u^6v^6x^2}&\Bigg\{{\pi}^2(u^2+v^2-3)^2\Theta(u+v-\sqrt{3}) \nonumber\\&+\left(-4uv+(u^2+v^2-3)\ln\left|\frac{3-(u+v)^2}{3-(u-v)^2}\right|\right)^2\Bigg\}\,.
+\end{align}
+
+\subsection{Kinetic domination\label{subsec:KD}}
+We can apply our general result to the case where the perfect fluid has a stiff equation of state ($w=1$). This stage in the early universe is common of quintessential inflation scenarios \cite{Wetterich:1987fm,Spokoiny:1993kt,Wetterich:1994bg,Peebles:1998qn,Brax:2005uf,Wetterich:2014gaa,Hossain:2014zma,Hossain:2014xha,Karananas:2016kyt,Agarwal:2017wxo,Geng:2017mic,Dimopoulos:2017zvq,Rubio:2017gty,Haro:2018zdb,GarciaBellido:2011de,Casas:2017wjh} where the inflaton fast rolls a run away potential and the universe becomes kinetic dominated. For $w=1$ we have $\beta=0$ and the kernel \eqref{eq:kernel3} takes a particular simple form since we only have to consider the region $u+v\geq 1$. We obtain for the kernel
+\begin{align}
+I_{KD}(x\gg 1,u,v)&=\frac{3}{\pi\sqrt{2uvx}}\left\{\frac{\pi}{2}\sin\left(x-\frac{\pi}{4}\right){I}_J(u,v,1)+\cos\left(x-\frac{\pi}{4}\right){I}_Y(u,v,1)\right\}\,,
+\end{align}
+where
+\begin{align}
+I_J(u,v,1)=\sqrt{\frac{2}{Z\pi}}\frac{3y^2-1}{(1-y^2)^{1/4}}=\frac{2}{\sqrt{\pi u v }}\frac{3y^2-1}{\sqrt{1-y^2}}
+\end{align}
+and
+\begin{align}
+I_Y(u,v,1)=-3\sqrt{\frac{2\pi}{Z}}y(1-y^2)^{1/4}=-3y\sqrt{\frac{\pi}{uv}}\,.
+\end{align}
+After some algebra, the kernel reads
+\begin{align}
+I_{KD}(x\gg1,u,v)&=\frac{3}{2\sqrt{2\pi}u^2v^2\sqrt{x}}\left\{\frac{3(u^2+v^2-1)^2-4u^2v^2}{\sqrt{4u^2v^2-(u^2+v^2-1)^2}}\sin\left(x-\frac{\pi}{4}\right)-3\left(u^2+v^2-1\right)\cos\left(x-\frac{\pi}{4}\right)\right\}\,,
+\end{align}
+which after taking the oscillation average of the kernel squared yields
+\begin{align}\label{eq:kernelkination}
+\overline{I_{KD}^2}(x\gg1,u,v)&=\frac{9}{16\pi u^4v^4x}\left\{\frac{\left(3(u^2+v^2-1)^2-4u^2v^2\right)^2}{{4u^2v^2-(u^2+v^2-1)^2}}+9\left(u^2+v^2-1\right)^2\right\}\,.
+\end{align}
+We are now ready to study some applications.
+
+\begin{figure}
+\centering
+\includegraphics[width=0.5\textwidth]{plot2.pdf}
+\caption{GWs spectral density for a dirac delta power spectrum $P_{\cal R}=A_{\cal R}\delta\left(\log(k/k_*)\right)$ evaluated at a pivot time $\tau_r$ where all modes of interest are deep inside the horizon. We have divided the spectrum by the enhancement factor $\left(k_*/k_r\right)^{1-2\beta}$ for easier comparison between spectra. The corresponding pivot scale is the scale that last crossed the horizon at $\tau_r$, \textit{i.e.} $k_r\tau_r=2/(1+3w)$. We plotted the cases of $w=\{1,0.9,2/3,1/3,1/4,1/9\}$ respectively in green, blue, purple, red, orange and magenta. Although there is no divergence in the kernel for $0<w<1/3$ we see that there is a peak for all cases at the resonant scale $k=2\sqrt{w}k_*$. The only exception without peak is $w=1$ since the resonant scale is forbidden by the momentum conservation $k<2k_*$. \label{fig:deltas}}
+\end{figure}
+
+\section{Application to a peaked primordial spectrum\label{sec:PBH}}
+
+In this section, we will be interested in the detectability of the induced SGWB and whether we can distinguish between different early universe thermal histories. We will assume that before the standard radiation domination era where the big bang nucleosynthesis (BBN) and CMB takes place, the universe was dominated by a perfect fluid with an arbitrary constant equation of state $w$. To do that, we first need to compute the spectral density of GWs today. We can use the fact that GWs decay as radiation to give the value of the spectral density of GWs during radiation domination in terms of the energy density of radiation today \cite{Kohri:2018awv}, \textit{i.e.} 
+\begin{align}
+\Omega_{\rm GWs}(k,\tau_0)h^2=\Omega_{\rm rad}h^2\Omega_{\rm GWs}(k,\tau_r)
+\end{align}
+where $\Omega_{\rm rad}h^2=4.15\times 10^{-5}$ and $\Omega_{\rm GWs}(k,\tau_r)$ has to be evaluated at the start of radiation domination era, say $\tau=\tau_r$, where (re)heating occurs. For $w=1/3$ the time $\tau_r$ is a mere reference scale for which all the modes of interest are deep inside the horizon. Also, for simplicity we will assume that (re)heating is instantaneous and leave for future work any effect of a gradual change like in Ref.~\cite{Inomata:2019zqy}. In this case, the spectral density of GWs at (re)heating reads
+\begin{align}
+\Omega_{\rm GWs}(k,\tau_r)=\frac{(1+3w)^2}{48}x_r^2\overline{P_h(k,\tau_r)}
+\end{align}
+where $x_r=k\tau_r$ and $\overline{P_h(k,\tau_r)}$ is given by Eq.~\eqref{eq:pgamma}. Under the assumptions of Sec.~\ref{sec:analyticalcalculation} we can only consider primordial scalar spectra that extend up to some scale $k_*$ well before (re)heating.
+
+In what follows, we will use the time of instant (re)heating to set a pivot scale as the scale that last entered the horizon at $\tau_r$, that is $k_r={\cal H}_r$, which can be related to the temperature $T_r$ at (re)heating as \cite{Alabidi:2013wtp}
+\begin{align}
+k_r\approx 1.77\times 10^{9}{\rm Mpc}^{-1}\left(\frac{g_{*s,r}}{106.75}\right)^{1/6}\left(\frac{T_r}{10^2{\rm GeV}}\right)\,,
+\end{align}
+where $g_{*s,r}$ are the relativistic degrees of freedom at $T_r$. We have chosen a low heating temperature, $T_r=10^2{\rm GeV}$, so that the GW spectrum in the early phase enters the observational window. This is clear if we compute the frequency of the corresponding GWs today \cite{Alabidi:2013wtp},
+\begin{align}
+f\approx 2.6\times 10^{-5}{\rm Hz}\left(\frac{k}{k_r}\right)\left(\frac{g_{*s,r}}{106.75}\right)^{1/6}\left(\frac{T_r}{10^2{\rm GeV}}\right)\,,
+\end{align}
+where we used $f={ck}/({2\pi a})$. Now, in order to use the results of Sec.~\ref{sec:analyticalcalculation} we have to assume that the scales where the background was generated are deep inside the horizon before radiation domination starts, that is $k/k_r\gg1$. In this case, the frequency of GWs $f$ will fall inside the LISA or DECIGO windows.
+
+\subsection{A dirac delta primordial scalar spectrum}
+
+To have an idea of the shape of the spectrum let us consider the case of a dirac-$\delta$ type primordial spectrum \cite{Kohri:2018awv}, \textit{i.e.}
+\begin{align}\label{eq:delta}
+P_{\cal R}(k)={\cal A}_{\cal R}\delta\left(\ln(k/k_*)\right)\,.
+\end{align}
+Although this infinitely sharp spectrum is rather unphysical and a smooth gaussian might be more appropriate as in Ref.~\cite{Cai:2018dig}, it will capture the essential shape and differences in the spectra. For this simple case the power spectrum \eqref{eq:pgamma} of induced GWs reads
+\begin{align}
+\overline{P_h(k,\tau)}=2v_*^2{\cal A}^2_{\cal R}\left[\frac{4v_*^2-1}{4v_*^2}\right]^2 \overline{I^2}(v_*,v_*,x)\Theta\left(2v_*-1\right)\,,
+\end{align}
+where $v_*=k_*/k$ and the spectrum vanishes for $k>2k_*$ by momentum conservation. This result is valid for $x_r\sim k/k_r\gg1$ but this range is enough to cover the observationally interesting window.
+
+Let us compare the two analytic results derived in the previous section. We can express the spectral density only in terms of $v_*$ (or $k/k_*$) and how far is the peak from the scale of reheating, that is $k_*/k_r$, using the fact that at horizon crossing $k_r\tau_r=2/(1+3w)$. For kinetic domination, we can use Eq.~\eqref{eq:kernelkination} evaluated at $v=u=v_*$ to find that the spectral density at reheating is given by
+\begin{align}
+\Omega^{KD}_{\rm GWs}(k,\tau_r)&=\frac{3{\cal A}^2_{\cal R}}{16\pi v_*^7}\left(\frac{k_*}{k_r}\right)\left(\frac{4v^2_*-1}{4v_*^2}\right)^2\left[\frac{\Big(3(2v_*^2-1)^2-4v_*^2\Big)^2}{4v_*^2-1}+9(2v_*^2-1)^2\right]\Theta\left(2v_*-1\right)\nonumber\\&=
+\frac{3{\cal A}^2_{\cal R}}{64\pi v_*^{9}}\left(\frac{k_*}{k_r}\right)\left({4v^2_*-1}\right)\left[36v_*^6-60v_*^4+37v_*^2-6\right]\Theta\left(2v_*-1\right)\,.
+\end{align}
+For large $v_*$ ($k\ll k_*$) the spectrum falls as $k/k_*$. We also find that this spectrum has peaks at approximately $v_*\approx0.57$ and $v_*\approx1.49$ and, furthermore, is enhanced a factor $k_*/k_r$ due to the fact that the background redshifts faster than GWs. The amplitude of the spectrum at the peaks is roughly given by
+\begin{align}
+\Omega^{KD}_{\rm GWs}(v_*\sim 0.57)&\approx0.18\times{\cal A}^2_{\cal R}\left(\frac{k_*}{k_r}\right)
+\quad {\rm and}\quad 
+\Omega^{KD}_{\rm GWs}(v_*\sim 1.49)\approx0.4\times{\cal A}^2_{\cal R}\left(\frac{k_*}{k_r}\right)\,.
+\end{align}
+
+We also have to take into account the BBN bound for the energy density of GWs which can be calculated by \cite{Maggiore:1999vm,Caprini:2018mtu}
+\begin{align}
+\int_{k_{BBN}}^{k_{\rm end}}\Omega_{\rm GWs}h^2(k)d\ln k\leq1.12\cdot 10^{-6}\,.
+\end{align}
+In the kinetic domination case we find\footnote{Since BBN corresponds to $T\sim5 \,{\rm MeV}$ then $k_{BBN}/k_r\sim 10^{-6}$ and so for all practical purposes we can send $v_{BBN}=k_*/k_{BBN}\to\infty$.} that
+\begin{align}
+\int_{1/2}^{v_{*,BBN}}\Omega^{KD}_{\rm GWs}h^2(v_*)d\ln v_*\approx 3.4\cdot 10^{-5}{\cal A}_{\cal R}^2\left(\frac{k_*}{k_r}\right)\,.
+\end{align}
+Thus, we require that
+\begin{align}
+\frac{k_*}{k_r}<3.3\cdot 10^{-2}{\cal A}_{\cal R}^{-2}\,.
+\end{align}
+We see that in order to satisfy the BBN bound, the amplification factor $k_*/k_r$ is bounded by the value of the primordial scalar spectrum ${\cal A}_{\cal R}$. If $k_*/k_r$ is very large, \textit{e.g.} for very small ${\cal A}_{\cal R}$, we would go out of the observational window in frequency for future GW detectors.
+
+
+Repeating a similar calculation for the radiation dominated case, we find that the spectral density is given by \cite{Kohri:2018awv}
+\begin{align}
+\Omega^{RD}_{\rm GWs}(k,\tau_r)=\frac{3{\cal A}^2_{\cal R}}{64v_*^{10}}\left(\frac{4v_*-1}{4v_*^2}\right)^2\left(2v_*^2-3\right)^2&\Bigg[\pi^2(2v_*^2-3)^2\Theta\left(2v_*-\sqrt{3}\right)\nonumber\\&+\left(-4v_*^2+(2v_*^2-3)\ln\left|1-\frac{4}{3}v_*^2\right|\right)^2\Bigg]\Theta\left(2v_*-1\right)\,.
+\end{align}
+The spectrum generated during radiation domination has a resonance at $v_*=\sqrt{3}/2$. Nevertheless, if we used a smoothed peak, \textit{e.g.} a Gaussian, the size of the peak at the resonant scale $v_*=\sqrt{3}/2$ ($k=2k_*/\sqrt{3}$) is approximately \cite{Cai:2018dig}
+\begin{align}
+\Omega^{RD}_{\rm GWs}(k,\tau_r,v_*\sim \sqrt{3}/2)&\approx21\times{\cal A}^2_{\cal R}\,.
+\end{align}
+We thus see that while the spectrum during radiation domination is enhanced due to the narrow resonance by a factor $\sim 20$, the spectrum during kinetic domination may be enhanced more by the redshifting of the background. We have plotted in Fig.~\ref{fig:delta} the induced spectral density of GWs at reheating for $w=1/3$ and for $w=1$ for two different values of $k_*/k_r$ having $k_*$ fixed. It should be noted that the case $w=1$ gives a lower bound of the power spectrum as there is no resonance. If we consider $w<1$ then there will be an additional amplification at the resonant scale.
+
+\begin{figure}
+\centering
+\includegraphics[width=0.5\textwidth]{plot1.pdf}
+\caption{GWs spectral density at the time of ``reheating'' for kinetic domination with $k_*/k_r=10^2,10^3$ (green and blue lines). The result for radiation domination is plotted in red. We assumed the same value $k_*$ for all cases. It should be noted that in the case of radiation domination the time of ``reheating'' should be understood as some reference time where the scales of interest are deep inside the horizon. We can see how induced GWs generated during kinetic domination are enhanced with respect to radiation domination due to the faster redshifting of the background by a factor $k_*/k_r$. We cut the spectrum at $k\sim k_r$ since the approximation $x\gg1$ breaks down there. \label{fig:delta}}
+\end{figure}
+
+\subsection{Primordial black hole formation}
+
+In the last subsection we have studied the GWs signature of a peaked primordial spectrum. Interestingly, depending on the value of ${\cal A}_{\cal R}$ the density fluctuations could be large enough and collapse to PBHs with a mass spectrum roughly monochromatic \cite{Carr:2009jm,Sasaki:2018dmp}. To have an order of magnitude estimate, the mass of the PBH is approximately equal to the mass enclosed inside the horizon at the time of formation \cite{Sasaki:2018dmp}, 
+\begin{align}
+M_{\rm PBH}=4\pi\gamma\frac{M_{pl}^2}{H_{\rm f}}\,,
+\end{align}
+where $\gamma\sim0.2$ is an efficiency factor. We can relate the mass of the black hole to the pivot scale $k_r$ and the temperature of heating $T_r$ by \cite{Alabidi:2013wtp}
+\begin{align}
+M_{\rm PBH}\approx 1.8\times 10^{27}{\rm g}\left(\frac{k}{k_r}\right)^{-\frac{3(1+w)}{1+3w}}\left(\frac{g_{*s,r}}{106.75}\right)^{-1/2}\left(\frac{T_r}{10^2{\rm GeV}}\right)^{-2}\,.
+\end{align}
+The corresponding fraction of PBH at formation can be estimated to be \cite{Sasaki:2018dmp}
+\begin{align}
+\beta\approx\frac{\gamma}{\sqrt{2\pi}\nu_{\rm th}}e^{-\nu_{\rm th}^2/2}
+\quad {\rm where}\quad
+\nu_{\rm th}=\delta_{\rm th}/\sigma\quad,\quad \sigma^2=\int d\ln k W^2(kR)P_{\delta}(k)\,,
+\end{align}
+$W(kR)$ is a window function with scale $R$ and \cite{Harada:2013epa,Sasaki:2018dmp,Escriva:2019phb}
+\begin{align}\label{eq:deltath}
+\delta_{\rm th}\sim \sin^2\left(\frac{\pi\sqrt{w}}{1+3w}\right)\,.
+\end{align}
+However, it is important to note that the current estimate for $\delta_{\rm th}$ Eq.~\eqref{eq:deltath} is for values of $w\sim1/3$. For instance, using Eq.~\eqref{eq:deltath} we find that $\delta_{\rm th}(w=1)<\delta_{\rm th}(w=1/3)$ which cannot be correct as matter should find it harder to collapse the higher the pressure. We will take two approaches. First, we will consider a conservative estimate and use that $\delta_{\rm th}(w=1)\sim c_s^2=1$. Second, we will also use the results of \cite{Musco:2012au} where it is found that $\delta_{\rm th}(w=1/3)\sim 0.5$ and, extrapolating, $\delta_{\rm th}(w=1)\sim 0.6$. The latter values are consistent with the recent study of Ref.~\cite{Escriva:2019nsa}. It should also be noted that we are assuming gaussian primordial fluctuations and, therefore, we will not consider the role of non-gaussianities \cite{Germani:2018jgr,Atal:2018neu,Young:2019yug,Atal:2019cdz}. We leave the effects of non-gaussianities in the induced SGWB and its PBH counterpart in a general cosmological background for future work.
+
+\begin{figure}
+\centering
+\includegraphics[width=0.49\textwidth]{plotsensitivy.pdf}
+\includegraphics[width=0.49\textwidth]{plotsensitivy2.pdf}
+\caption{In both plots we show the GWs spectral density today in terms of frequency. We also displayed the power-law integrated sensitivity curves \cite{Thrane:2013oya,Moore:2014lga} for LISA, DECIGO, MAGIS (space), ET and Advanced LIGO. We used a (re)heating temperature $T_r=10^2{\rm GeV}$. On the left we show the results for radiation and kinetic domination with ${\cal A}_{\cal R}=1.9\cdot10^{-2}$ and $k_*/k_r=10^2$ (respectively in red and green) that leads to $f_{\rm PBH}^{RD}=0.06$ and $f_{\rm PBH}^{KD}=0.64$ using Musco and Miller's criterion \cite{Musco:2012au}. On the right we chose ${\cal A}_{\cal R}=3\cdot10^{-5}$ for radiation and kinetic domination and $k_*/k_r=10^2$ (red and green lines) and $k_*/k_r=10^5$ (dashed blue and magenta lines). We see that induced GWs during kinetic domination are enhanced with respect to those generated during radiation domination. \label{fig:examples}}
+\end{figure}
+
+Now, using the primordial spectrum Eq.~\eqref{eq:delta} and the relation between the density contrast $\delta$ and the curvature perturbation on superhorzion scales, that is \cite{Young:2019osy}
+\begin{align}
+\delta=-\frac{2(1+w)}{5+3w}\left(\frac{k}{aH}\right)^2{\cal R}\,,
+\end{align}
+we find that
+\begin{align}
+\nu_{\rm th}\sim\frac{5+3w}{2(1+w)}\frac{\delta_{\rm th}}{{\cal A}_{\cal R}^{1/2}}\,,
+\end{align}
+where we will take $\delta_{\rm th}(w=1/3)=1/3$ (or $\delta_{\rm th}(w=1/3)=0.5$) and $\delta_{\rm th}(w=1)=1$ (or $\delta_{\rm th}(w=1)=0.6$).  Thus, for a sharp peaked primordial spectra, $\beta$ is only a function of ${\cal A}_{\cal R}$ and $w$.
+
+Now, we can write the current fraction of PBHs with respect to dark matter by using that \cite{Sasaki:2018dmp}
+\begin{align}
+\beta=\frac{\rho_{\rm PBH}}{3H^2M_{pl}^2}\Bigg|_{\rm f}=\left(\frac{H_0}{H_{\rm f}}\right)^2\left(\frac{a_{\rm f}}{a_0}\right)^{-3}\Omega_{{\rm CDM}}f_{\rm PBH}\,.
+\end{align}
+Inverting this relation we obtain $f_{\rm PBH}$ in terms of $\beta$, \textit{i.e.}
+\begin{align}\label{eq:fpbh}
+f_{\rm PBH}\approx 2\beta\times 10^{15}\left(\frac{k}{k_r}\right)^{\frac{6w}{1+3w}}\left(\frac{T_r}{10^2{\rm GeV}}\right)\,,
+\end{align}
+where we have used that before reheating the relation between the wavenumber and the scale factor is given by
+\begin{align}
+\frac{k}{k_r}=\left(\frac{a_r}{a}\right)^{\tfrac{1}{2}(1+3w)}\,.
+\end{align}
+We then find that the fraction of PBHs \eqref{eq:fpbh} is enhanced a further $\left(\frac{k_*}{k_r}\right)^{\frac{1-3w}{1+3w}}$ with respect to the radiation domination case ($w=1/3$). %Therefore, even though $\delta_{\rm th}(w=1)>\delta_{\rm th}(w=1/3)$, we cannot conclude that the resulting fraction of PBHs will be much more suppressed. %Morevore, the value of the fraction of PBH is very sensitive to the value of $\delta_{\rm th}$ and, thus, a numerical study for $w=1$ would be needed to extract any definitive conclusions.
+
+
+Let us consider two particular examples. First of all, let us consider Carr's estimate \cite{Sasaki:2018dmp} $\delta_{\rm th}(w=1/3)=1/3$ and $\delta_{\rm th}(w=1)=1$. Now, let us fix that the primordial scalar spectrum has a sharp peak with amplitude ${\cal A}_{\cal R}\sim 9\cdot 10^{-3}$. On one hand, in radiation domination we have that $f^{RD}_{\rm PBH}\sim 0.54$ and $\Omega_{\rm GWs,0}^{\rm peak}\sim 7\cdot 10^{-8}$. On the other hand, in kinetic domination we instead find $f^{KD}_{\rm PBH}\sim 2\cdot 10^{-81}$ and $\Omega_{\rm GWs,0}^{\rm peak}\sim 6.8\cdot 10^{-8}$ for $k_*/k_r=10^2$. In the second example, we will consider Musco and Miller's estimate \cite{Musco:2012au} $\delta_{\rm th}(w=1/3)\sim 0.5$ and $\delta_{\rm th}(w=1)\sim 0.6$. Assuming now ${\cal A}_{\cal R}\sim 1.9\cdot 10^{-2}$, we find that, for $k_*/k_r=10^2$, $f^{RD}_{\rm PBH}\sim 0.07$ while $f^{KD}_{\rm PBH}\sim 0.64$. For $T_r\sim 10^2{\rm GeV}$ and $k_*/k_r=10^2$ these two examples correspond to $M_{\rm PBH}\sim 1.8\cdot 10^{23}g\sim 10^{-12}M_\odot$ in radiation domination and $M_{\rm PBH}\sim 1.8\cdot 10^{24}g\sim 10^{-11}M_\odot$ in kinetic domination, where $M_\odot$ is a solar mass.
+
+We can see that, in the case at hand, the production of GWs in a kinetic dominated stage is enhanced compared to the radiation dominated one. However, the fraction of primordial black holes is very sensitive to the value of the threshold $\delta_{\rm th}$ and the scalar power spectrum ${\cal A}_{\cal R}$. For example, if we fix the value of ${\cal A}_{\cal R}$ the fraction of PBH generated during kinetic domination may be lower or higher than in radiation domination depending on whether we use Carr's or Musco and Miller's estimates respectively. A detailed numerical study like in Ref.~\cite{Escriva:2019nsa} for the case of $w\sim 1$ is needed to extract any definitive conclusion and is left for future work. Nevertheless, the difference in the value of the threshold $\delta_{\rm th}$ can be easily compensated by a higher ${\cal A}_{\cal R}$ in the kinetic dominated case. Thus, the two scenarios may only be distinguished by their induced SGWB signal. %Thus, we cannot draw any clear result regarding the production of PBHs during kinetic domination since it highly depends on the value of the density threshold $\delta_{\rm th}$. 
+%For example, using Carr's criterion our results suggest that even though one may find a GWs signature from the induced GW background, it does not necessarily imply that there is a PBH counterpart. 
+%Regardless of the presence of PBHs, access to a the shape of the spectrum can distinguish these two scenarios. 
+%For example, if Carr's c even though one may find a GWs signature from the induced GW background it does not necessarily imply that there is a PBH counterpart. On the other hand, if PBHs are detected, our result suggests that, if the assumptions $\delta_{\rm th}\sim 1$ and gaussianity are correct, they could not have been created during a kinetic dominated era. Regardless of the presence of PBHs, access to a the shape of the spectrum can distinguish these two scenarios. 
+
+We plotted in Fig.~\ref{fig:examples} two examples comparing the induced SGWB generated during radiation and kinetic domination eras. First, on the left, we have plotted the above discussed case which is relevant for the PBH scenario. Second, on the right, we show two cases where the PBH production is negligible but there is a detectable induced SGWB for $k_*/k_r=10^2,10^5$. We see that the further the generation took place from (re)heating the greater the amplification in kinetic domination.
+
+\section{Conclusions\label{sec:conclusions}}
+
+Gravitational waves will play a crucial role in cosmology in the coming decades \cite{Maggiore:1999vm}. Particularly important will be the possible detection of a stochastic gravitational wave background as it encodes information of unexplored epochs in the universe \cite{Caprini:2018mtu}. It is thus important to consider that in the very early universe other cosmological expansions rather than radiation domination might have taken place. In this way, we studied the generation of gravitational waves at second order sourced by first order scalar squared terms, when the universe is dominated by a perfect fluid with a constant equation of state $w>0$.
+
+We presented new analytical formulas for the kernel integrals on subhorizon scales for a general value of $w$ in Eqs.~\eqref{eq:kernel3}, \eqref{eq:IJJ} and \eqref{eq:IYY} in Sec.~\ref{sec:analyticalcalculation}. This will be a useful result for the general study of the induced stochastic gravitational wave background when $w$ is not exactly $0$ or $1/3$. Also, we found that there is a resonance in the gravitational wave spectrum at $|\mathbf{k}-\mathbf{q}|+q=k/\sqrt{w}$ when $1>w\geq1/3$. Thus, for a very sharp peaked spectrum one can find the value of $w$ by looking at the scales nearby the highest peak at $2\sqrt{w}k_*=1$. The spectrum as it approaches $k\sim k_*$ has a slope given by
+\begin{align}
+\ln\Omega_{\rm GWs}&\propto2\frac{1-3w}{1+3w}\ln\left(1-\frac{k^2}{4wk_*^2}\right)\quad (1>w>1/3)\,,\\ 
+\ln\Omega_{\rm GWs}&\propto2\ln\left(\ln\left(1-\frac{k^2}{4wk_*^2}\right)\right) \quad w=1/3\,.
+\end{align}
+There is no amplification for $w=1$ as momentum conservation restricts the spectrum to $k<2k_*$. Also, no divergence of the kernel has been found for $0<w<1/3$. However, we numerically saw that there is still a peak at the resonant scale $k=2\sqrt{w}k_*$ as illustrated in Fig.~\ref{fig:deltas}. Therefore, one can infer the value of the equation of state at the time of formation by looking at the slopes of the spectrum around the resonant peak for all cases. This is a complementary result to that of Ref.~\cite{Cai:2019cdl} where it is shown that the value of $w$ can be extracted from the slope of the infrared tail of the spectrum. Then, we investigated the formula Eq.~\eqref{eq:kernel3} for two particular cases. We recovered the standard result \cite{Kohri:2018awv} for $w=1/3$ and derived new results for $w=1$ in Eq.~\eqref{eq:kernelkination} (and $w=1/9$ in App.~\ref{app:w19}).
+
+We proceeded to study practical applications of the general result when the primordial scalar spectrum has a very sharp peak at some given scale $k_*$, which is relevant for the primordial black hole scenario \cite{Sasaki:2018dmp}. We found that in the case of kinetic domination, the spectral density of gravitational waves is enhanced by a factor $k_*/k_r\gg1$ as compared to the radiation dominated case, where $k_r$ is the last scale that entered the horizon at (re)heating. This is due to the fact that the background in a kinetic dominated universe redshifts as $a^{-6}$ while gravitational waves redshift as $a^{-4}$. 
+
+We also studied the corresponding primordial black hole fraction in kinetic and radiation domination. However, the precise value of the primordial black hole fraction is very sensitive to the value of the threshold $\delta_{\rm th}$ and the amplitude of the scalar power spectrum ${\cal A}_{\cal R}$. Thus, a more detailed numerical study like in Ref.~\cite{Escriva:2019nsa} is needed for the case $w\sim 1$ to draw any definitive conclusion for the kinetic dominated case. For example, for a fixed value of ${\cal A}_{\cal R}$ and using Carr's criterion \cite{Sasaki:2018dmp} for the collapse we obtained that the fraction of primordial black holes created during kinetic domination, assuming $\delta_{\rm th}\sim c_s^2$ and gaussian primordial scalar fluctuations, is completely negligible than if they were created during radiation domination; despite the fact that there is also an enhancement in kinetic domination due to the faster redshifting of the background. Contrariwise, if we use Musco and Miller's results \cite{Musco:2012au} the fraction of primordial black holes in kinetic domination turns out to be higher than in radiation domination, since there is also an enhancement in the kinetic dominated case due to the faster redshifting of the background. Nevertheless, it should be noted that any difference in the value of $\delta_{\rm th}$ between $w=1/3$ and $w=1$ can be easily compensated by a higher value of ${\cal A}_{\cal R}$ in the kinetic dominated case. Therefore, the induced stochastic gravitational wave background provides a way two distinguish the PBH scenario (\textit{e.g.} given a fixed $f_{\rm PBH}$) during a cosmological expansion with general $w$. In the absence of primordial black holes, the two scenarios can also be distinguished by the shape of the gravitational waves spectrum. We leave the effects of primordial non-gaussianity for future work. 
+
+%On the other hand, if primordial black holes are detected, this may imply that they could not have been created during a kinetic dominated era. 
+
+\section*{Acknowledgments}
+
+I would like to thank M.~Sasaki for useful feedback on the first draft and A.~D.~Rojas and D.~Rojas for insightful comments. I would also like to thank A.~Escriv\`{a}, J.~Garriga, C.~Germani, J.O.~Gong and S.~Pi for useful suggestions that improved the paper. This work was partially supported by DFG Collaborative Research center SFB 1225 (ISOQUANT)(G.D.). Calculations of cosmological perturbation theory at second order were done using the \texttt{xPand (xAct) Mathematica} package.
+
+\appendix 
+
+\section{Background and First order Einstein equations \label{App:first order}}
+In this appendix we list the set of equations used in the main part of the paper. We divide the appendix into background and first order perturbations.
+
+\subsection{Background equations}
+Einstein equations at the background yield the Friedmann equations and the energy conservation, which are given by
+\begin{align}
+3{\cal H}^2&=a^2\rho\,,\\
+{\cal H}'&=-\frac{1}{2}{\cal H}^2\left(1+3w\right)\,,\\
+a^2\rho'&=-9\left(1+3w\right){\cal H}^2\,.
+\end{align}
+These equations can be solved and yield
+\begin{align}
+{\cal H}&=\frac{2}{\left(1+3w\right)\tau}\,.
+\end{align}
+
+
+\subsection{First order}
+Expanding Einstein equations at first order in perturbation theory and in the Poisson gauge we find
+\begin{align}
+v&=-\frac{2}{3\left(1+w\right){\cal H}}\left(\Phi+\Psi'/{\cal H}\right)\,,\\
+a^2c_s^2\delta\rho&=-2\left(3w{\cal H}^2\Phi-{\cal H}\Phi'-2{\cal H}\Psi'-\Psi''\right)\,,\\
+\Phi&=\Psi\,.
+\end{align}
+They can be combined to a closed equation of motion for the gravitational potential $\Phi$ (with constant $w$),
+\begin{align}
+\Phi''+3(1+c_s^2){\cal H}\Phi'+3\left(c_s^2-w\right){\cal H}^2\Phi-c_s^2\Delta\Phi=0\,.
+\end{align}
+
+\section{Details on induced gravitational waves calculations \label{app:fourier}}
+We use the following Fourier expansion conventions,
+\begin{align}
+h_{ij}=\int \frac{d^3k}{(2\pi)^3} e^{i\mathbf{k}\cdot\mathbf{x}}\left[h_R(k) {e}_{ij}^R+h_L(k) {e}_{ij}^L\right]\,,
+\end{align}
+where $R,L$ are the left and right polarization of gravitational waves and
+\begin{align}
+\Phi=\int \frac{d^3k}{(2\pi)^3} e^{i\mathbf{k}\cdot\mathbf{x}}\Phi(k)\,.
+\end{align}
+With this convention we can find that the power spectrum is given by
+\begin{align}
+\langle h_\lambda(k)h_\lambda(k')\rangle=\int_{x_0}^x d\tilde x \int_{ x_0}^x d\hat x \frac{1}{k^2{k'}^2}G(x,\tilde x)G(x,\hat x)\langle s_\lambda(k,\tilde x)s_\lambda(k',\hat x)\rangle\,.
+\end{align}
+Assuming Gaussianity of the primordial curvature perturbation we have that
+\begin{align}
+\langle s_\lambda(k,\tilde x)s_\lambda(k',\hat x)\rangle=32\int d^3q \left(e_\lambda^{ij}(k)q_iq_j\right)^2 P_\Phi(q)P_\Phi(|\mathbf{k}-\mathbf{q}|)f(q\tilde\tau,|\mathbf{k}-\mathbf{q}|\tilde\tau)f(q\hat\tau,|\mathbf{k}-\mathbf{q}|\hat\tau)\delta(k+k')\,,
+\end{align}
+where we used that $\langle \Phi(k)\Phi(k')\rangle=(2\pi)^3P_\Phi(k)\delta(k+k')$ and
+\begin{align}
+ P_\Phi(k)=\frac{2\pi^2}{k^3}\left(\frac{3+3w}{5+3w}\right)^2 \Delta_{\cal R}(k)\,.
+ \end{align}
+Defining
+\begin{align}
+\Phi(k)=\Phi_{\rm prim}(k)T(k\tau)\,,
+\end{align}
+the source term is given by
+\begin{align}
+f(q\tau,|\mathbf{k}-\mathbf{q}|\tau)=&T(q\tau)T(|\mathbf{k}-\mathbf{q}|\tau)\nonumber\\&+\frac{2}{3(1+w)}\left[T(q\tau)+\frac{1+3w}{2}\frac{dT(q\tau)}{d\ln q\tau}\right]\left[T(|\mathbf{k}-\mathbf{q}|\tau)+\frac{1+3w}{2}\frac{dT(|\mathbf{k}-\mathbf{q}|\tau)}{d\ln |\mathbf{k}-\mathbf{q}|\tau}\right]
+\end{align}
+and we used the fact that it is symmetric with respect to $q$ and $|\mathbf{k}-\mathbf{q}|$. 
+
+\section{\label{app:w19} Induced gravitational waves for the special case {\texorpdfstring $aw=1/9$}}
+For completeness we consider here a case with $w<1/3$ ($\mu<0$). It is convenient to study the case when $\beta=1$ which corresponds to $w=1/9$ since then we have simple expression for the Legendre polynomials. Plugging in $\beta=1$ and the values of App.~\ref{App:legendre} we find that Eq.~\eqref{eq:kernel3} reads
+\begin{align}
+I_{1/9}(x\gg 1,u,v)&=-\frac{45}{\pi\sqrt{2}\left(uvx\right)^{3/2}}\left\{\frac{\pi}{2}\sin\left(x+\frac{\pi}{4}\right){I}_J(u,v,1/9)+\cos\left(x+\frac{\pi}{4}\right){I}_Y(u,v,1/9)\right\}\,,
+\end{align}
+where
+\begin{align}
+I_J(u,v,1/9)&=\frac{4\sqrt{Z}}{9}\sqrt{\frac{2}{\pi}}\left(1-y^2\right)^{1/4}\left(1+5y^2\right)\Theta(u+v-\sqrt{9})\nonumber\\&
+=\frac{\sqrt{4u^2v^2-(u^2+v^2-9)^2}}{9\sqrt{\pi}u^{5/2}v^{5/2}x^{3/2}}\left(4u^2v^2+5(u^2+v^2-9)^2\right)\Theta(u+v-\sqrt{9})
+\end{align}
+and
+\begin{align}
+I_Y(u,v,1/9)=&\sqrt{Z}\left[\frac{\sqrt{2\pi}}{9}\frac{10y^3-3y}{\left(1-y^2\right)^{1/4}}\right]\Theta(u+v-\sqrt{9})
+	\nonumber\\&-\sqrt{\tilde Z}\left[\frac{\sqrt{2\pi}}{9}\frac{10\tilde y^3-3\tilde y-2\left(1+5\tilde y^2\right)\sqrt{\tilde y^2-1}}{\left(\tilde y^2-1\right)^{1/4}}\right]\Theta(\sqrt{9}-u-v)
+	\\&
+	=\frac{\sqrt{\pi}}{18u^{5/2}v^{5/2}}\left(u^2+v^2-9\right)\left[5\left(u^2+v^2-9\right)^2-6u^2v^2\right]\nonumber\\&+\frac{\sqrt{\pi}\sqrt{\left(u^2+v^2-9\right)^2-4u^2v^2}}{18u^{5/2}v^{5/2}}\left(4u^2v^2+5\left(u^2+v^2-9\right)^2\right)\Theta(\sqrt{9}-u-v)\,,
+\end{align}
+After some algebra, the kernel simplifies to
+\begin{align}
+I_{1/9}(x\gg1,u,v)&=-\frac{5}{2\sqrt{2\pi}u^4v^4{x}^{3/2}}\Bigg\{\left(u^2+v^2-9\right)\left[5\left(u^2+v^2-9\right)^2-6u^2v^2\right]\cos\left(x+\frac{\pi}{4}\right)\nonumber\\&
++\sqrt{\left|4u^2v^2-(u^2+v^2-9)^2\right|}\left(4u^2v^2+5(u^2+v^2-9)^2\right)\nonumber\\&\times \left[\sin\left(x+\frac{\pi}{4}\right)\Theta(u+v-\sqrt{9})+\cos\left(x+\frac{\pi}{4}\right)\Theta(\sqrt{9}-u-v)\right]\Bigg\}\,,
+\end{align}
+and after taking the oscillation average of the kernel squared yields
+\begin{align}
+\overline{I^2_{1/9}}(x\gg1,u,v)&=\frac{25}{16\pi u^8v^8{x}^{3}}\Bigg\{\left(u^2+v^2-9\right)^2\left[5\left(u^2+v^2-9\right)^2-6u^2v^2\right]^2\nonumber\\&
++{\left|4u^2v^2-(u^2+v^2-9)^2\right|}\left(4u^2v^2+5(u^2+v^2-9)^2\right)^2\nonumber\\&+
+2\left(u^2+v^2-9\right)\left[5\left(u^2+v^2-9\right)^2-6u^2v^2\right]\sqrt{\left|4u^2v^2-(u^2+v^2-9)^2\right|}\nonumber\\&
+\times\left(4u^2v^2+5(u^2+v^2-9)^2\right)\Theta(\sqrt{9}-u-v)\Bigg\}\,.
+\end{align}
+We see that there is no divergence arising. 
+
+\section{Bessel functions properties \label{App:bessel}}
+In this appendix we present useful properties and asymptotic behaviors for the Bessel functions.
+
+At small arguments we have:
+\begin{align}
+{J_\beta(x\ll1)}\approx x^\beta\frac{2^{-\beta}}{\Gamma[1+\beta]}+O(x^{\beta+1})
+\quad,\quad
+{Y_\beta(x\ll1)}\approx-\frac{2^{\beta}}{\pi}{\Gamma[\beta]}x^{-\beta}+O(x^{-\beta+1})\,,
+\end{align}
+and for large arguments:
+\begin{align}
+{J_\beta(x\gg1)}\approx\sqrt{\frac{2}{\pi x}}\cos\left(x-\frac{\beta\pi}{2}-\frac{\pi}{4}\right)+O(x^{-1})
+\quad ,\quad
+{Y_\beta(x\gg1)}\approx\sqrt{\frac{2}{\pi x}}\sin\left(x-\frac{\beta\pi}{2}-\frac{\pi}{4}\right)+O(x^{-1})\,.
+\end{align}
+
+One can relate the derivative of a Bessel function with one lower order Bessel function as
+\begin{align}
+\partial_x{J}_{\nu}\left(x\right)={J}_{\nu-1}\left(x\right)-(\nu/x)%
+{J}_{\nu}\left(x\right)\,,
+\end{align}
+and also there is a relation among the Bessel functions or nearby order as
+\begin{align}
+{J}_{\nu-1}\left(x\right)+{J}_{\nu+1}\left(x\right)=(2\nu/x)%
+{J}_{\nu}\left(x\right)\,.
+\end{align}
+The Wronskian for the Green function used in the main text is given by
+\begin{align}
+\partial_x\left(\frac{Y_\beta(x)}{x^\beta}\right) \frac{J_\beta(x)}{x^\beta} - \partial_x\left(\frac{J_\beta(x)}{x^\beta}\right)\frac{Y_\beta(x)}{x^\beta}=\frac{2}{\pi}x^{-1-2\beta}\,.
+\end{align}
+
+
+\section{Analytic integrals with three Bessel functions \label{App:integralbessel}}
+We review here the results of Ref.~\cite{threebesselI}. They find that for $|a-b|<c<a+b$
+\begin{align}
+\int_0^{\infty} d\tilde x \tilde x^{1-\beta}
+\left\{	
+\begin{aligned}
+	J_\beta(c\tilde x)\\
+	Y_\beta(c\tilde x)
+\end{aligned}
+\right\}
+J_{\nu}(a\tilde x)J_{\nu}(b\tilde x)=\frac{1}{\pi}\sqrt{\frac{2}{\pi}}\frac{(ab)^{\beta-1}}{c^\beta}\left(\sin\varphi\right)^{\beta-1/2}\left\{	
+\begin{aligned}
+	\frac{\pi}{2}\mathsf{P}^{-\beta+1/2}_{\nu-1/2}(\cos\varphi)\\
+	-\mathsf{Q}^{-\beta+1/2}_{\nu-1/2}(\cos\varphi)
+\end{aligned}
+\right\}
+\end{align}
+where
+\begin{align}
+16\Delta^2\equiv\left(c^2-(a-b)^2\right)\left((a+b)^2-c^2\right)\quad,\quad
+\cos\varphi=\frac{a^2+b^2-c^2}{2ab}\quad,\quad\sin\varphi=\frac{2\Delta}{ab}\,.
+\end{align}
+
+For $c>a+b$
+\begin{align}
+\int_0^{\infty} d\tilde x \tilde x^{1-\beta}
+&\left\{	
+\begin{aligned}
+	J_\beta(c\tilde x)\\
+	Y_\beta(c\tilde x)
+\end{aligned}
+\right\}
+J_{\nu}(a\tilde x)J_{\nu}(b\tilde x)\nonumber\\&
+=\frac{1}{\pi}\sqrt{\frac{2}{\pi}}\frac{(ab)^{\beta-1}}{c^\beta}\left(\sinh\phi\right)^{\beta-1/2}\Gamma[\nu-\beta+1]{\cal Q}^{-\beta+1/2}_{\nu-1/2}(\cosh\phi)\left\{	
+\begin{aligned}
+	-\sin\left[(\nu-\beta)\pi\right]\\
+	\cos\left[(\nu-\beta)\pi\right]
+\end{aligned}
+\right\}
+\end{align}
+\begin{align}
+16\tilde\Delta^2\equiv\left(c^2-(a-b)^2\right)\left(c^2-(a+b)^2\right) \quad {,}\quad 
+\cosh\phi=\frac{c^2-(a^2+b^2)}{2ab}\quad,\quad\sinh\phi=\frac{2\tilde\Delta}{ab}\,.
+\end{align}
+
+We can use these formulas identifying
+\begin{align*}
+c=1\quad,\quad a=\sqrt{w}u\quad,\quad b=\sqrt{w}v\,.
+\end{align*}
+In that case the range $|1-v|<u<1+v$ can be split into $1>\sqrt{w}(u+v)$ ($c>a+b$) and $1<\sqrt{w}(u+v)$ ($c<a+b$). In the latter case we always have that $\sqrt{w}|u-v|<1$ and so the formulas present above cover all range of interest. 
+
+
+
+\section{Associated Legendre functions and Legendre functions on the cut\label{App:legendre}}
+
+We present here useful formulas that can be found in the online data base of NIST \cite{NIST:DLMF}.
+
+The Legendre functions on the cut (or Ferrers functions) are defined for $|x|<1$ as
+\begin{align}
+\mathsf{P}^{\mu}_{\nu}\left(x\right)=\left(\frac{1+x}{1-x}\right)^{\mu/2}%
+\mathbf{F}\left(\nu+1,-\nu;1-\mu;\tfrac{1}{2}-\tfrac{1}{2}x\right)\,,
+\end{align}
+\begin{align}
+\mathsf{Q}^{\mu}_{\nu}\left(x\right)=\frac{\pi}{2\sin\left(\mu\pi\right)}&\Bigg\{%
+\cos\left(\mu\pi\right)\left(\frac{1+x}{1-x}\right)^{\mu/2}\mathbf{F}\left(%
+\nu+1,-\nu;1-\mu;\tfrac{1}{2}-\tfrac{1}{2}x\right)\\&-\frac{\Gamma\left(\nu+\mu+1%
+\right)}{\Gamma\left(\nu-\mu+1\right)}\left(\frac{1-x}{1+x}\right)^{\mu/2}%
+\mathbf{F}\left(\nu+1,-\nu;1+\mu;\tfrac{1}{2}-\tfrac{1}{2}x\right)\Bigg\}\,,
+\end{align}
+where
+\begin{align}
+\mathbf{F}\left(a,b;c;x\right)=\frac{1}{\Gamma\left(c\right)}F\left(a,b;c;x\right)
+\end{align}
+and $F\left(a,b;c;x\right)$ is the Gauss's hypergeometric function.
+
+The associated Legendre polynomials are defined for $|x|>1$ by 
+\begin{align}
+P^{\mu}_{\nu}\left(x\right)=\left(\frac{x+1}{x-1}\right)^{\mu/2}\mathbf{F}%
+\left(\nu+1,-\nu;1-\mu;\tfrac{1}{2}-\tfrac{1}{2}x\right)\,,
+\end{align}
+and
+\begin{align}
+Q^{\mu}_{\nu}\left(x\right)=e^{\mu\pi i}\frac{\pi^{1/2}\Gamma\left(\nu+\mu+1%
+\right)\left(x^{2}-1\right)^{\mu/2}}{2^{\nu+1}x^{\nu+\mu+1}}\mathbf{F}\left(%
+\tfrac{1}{2}\nu+\tfrac{1}{2}\mu+1,\tfrac{1}{2}\nu+\tfrac{1}{2}\mu+\tfrac{1}{2}%
+;\nu+\tfrac{3}{2};\frac{1}{x^{2}}\right)\,.
+\end{align}
+It is more convenient to work with a real valuated version of the associated Legendre function of the second kind give by
+\begin{align}
+{\cal Q}_{\nu}^\mu(x)\equiv e^{-\mu\pi i}\frac{Q_{\nu}^\mu(x)}{\Gamma[\mu+\nu+1]}\,.
+\end{align}
+
+\subsection{Useful relations}
+Some properties that help computing limits and special values of the associated Legendre polynomials and Ferrers functions are
+\begin{align}
+{\cal Q}_{\nu}^\mu(x)=\sqrt{\frac{\pi}{2}}\left(x^2-1\right)^{-1/4}P^{-\nu-1/2}_{-\mu-1/2}\left(x\left(x^{2}-1\right)^{-1/2}\right)\,,
+\end{align}
+\begin{align}
+\frac{2\sin(\mu\pi)}{\pi}\mathsf{Q}_\nu^{\mu}(x)=\frac{\mathsf{P}^\mu_\nu(x)}{\Gamma[\nu+\mu+1]}-\frac{\mathsf{P}^{-\mu}_\nu(x)}{\Gamma[\nu-\mu+1]}\,,
+\end{align}
+\begin{align}
+\mathsf{P}^{%
+\mu}_{\nu}\left(-x\right)=-(2/\pi)\sin\left((\nu+\mu)\pi\right)\mathsf{Q}^{\mu}_{\nu}\left(x\right)+\cos%
+\left((\nu+\mu)\pi\right)\mathsf{P}^{\mu}_{\nu}\left(x\right)\,,
+\end{align}
+and
+\begin{align}
+\mathsf{Q}^{\mu}_{\nu}\left(-x\right)=-\tfrac{1}{2}\pi\sin\left((\nu+\mu)\pi\right)\mathsf{P}^{\mu}_{\nu}\left(x%
+\right)-\cos\left((\nu+\mu)\pi\right)\mathsf{Q}^{\mu}_{\nu}\left(x\right)\,.
+\end{align}
+
+For $\mu+\nu=0,2$ the reduce to
+\begin{align}
+\mathsf{P}^{%
+\mu}_{\nu}\left(-x\right)=\mathsf{P}^{\mu}_{\nu}\left(x\right)\quad,\quad\mathsf{Q}^{\mu}_{\nu}\left(-x\right)=-\mathsf{Q}^{\mu}_{\nu}\left(x\right)\,.
+\end{align}
+
+\subsection{Singular behavior}
+We present the behavior for the particular case when $\mu+\nu=0,2$ and $-1<\mu\leq1/2$ when $x\sim 1$:
+\begin{align}
+{\cal Q}_{\nu}^\mu(x)&\propto (x-1)^{-\mu/2} \quad \mu\neq0\,,\\
+{\cal Q}_{\nu}^0(x)&\propto \ln(x-1) \quad \mu=0\,,
+\end{align}
+\begin{align}
+\mathsf{P}_{\nu}^\mu(x)&\propto (1-x)^{-\mu/2}\,.
+\end{align}
+
+For $\mu>0$
+\begin{align}
+\mathsf{Q}_{\nu}^\mu(x)&\propto (1-x)^{-\mu/2} \quad \mu\neq1/2\,,\
+\mathsf{Q}_{\nu}^{1/2}(x)\propto (1-x)^{1/4} \quad \mu=1/2\,,\\
+\mathsf{Q}_{\nu}^0(x)&\propto \ln(1-x) \quad \mu=0\,.
+\end{align}
+
+For $\mu<0$
+\begin{align}
+\mathsf{Q}_{\nu}^{-|\mu|}(x)&\propto (1-x)^{-|\mu|/2}\,.
+\end{align}
+
+
+
+\subsection{Special cases}
+In the main part of the text and in the appendix \ref{app:w19} we use an reduced form for the functions. We present here the forms used:
+\begin{align}
+\mathsf{P}_0^0(x)&=1\quad,\quad \mathsf{P}_2^0(x)=\frac{1}{2}\left(3x^2-1\right)\\
+\mathsf{Q}_0^0(x)&=\frac{1}{2}\ln\left(\frac{1+x}{1-x}\right)\quad,\quad \mathsf{Q}_2^0(x)=\frac{1}{4}\left(3x^2-1\right)\ln\left(\frac{1+x}{1-x}\right)-\frac{3}{2}x\,,
+\end{align}
+\begin{align}
+%{P}_0^0(x)&=1\quad,\quad {P}_2^0(x)=\frac{1}{2}\left(3x^2-1\right)\\
+{\cal Q}_0^0(x)=\frac{1}{2}\ln\left(\frac{x+1}{x-1}\right)\quad,\quad {\cal Q}_2^0(x)=\frac{1}{8}\left(3x^2-1\right)\ln\left(\frac{x+1}{x-1}\right)-\frac{3}{4}x\,,
+\end{align}
+\begin{align}
+\mathsf{P}^{1/2}_{-1/2}(x)&=\sqrt{\frac{2}{\pi}}\left(1-x^2\right)^{-1/4}\quad,\quad \mathsf{P}_{3/2}^{1/2}(x)=\sqrt{\frac{2}{\pi}}\frac{2x^2-1}{\left(1-x^2\right)^{1/4}}\\
+\mathsf{Q}^{1/2}_{-1/2}(x)&=0\quad,\quad \mathsf{Q}_{3/2}^{1/2}(x)=-\sqrt{2\pi}x\left(1-x^2\right)^{1/4}\,,
+\end{align}
+\begin{align}
+\mathsf{P}^{-1/2}_{1/2}(x)&=\sqrt{\frac{2}{\pi}}\left(1-x^2\right)^{1/4}\quad,\quad \mathsf{P}_{5/2}^{-1/2}(x)=\frac{1}{3}\sqrt{\frac{2}{\pi}}{\left(4x^2-1\right)}{\left(1-x^2\right)^{1/4}}\\
+\mathsf{Q}^{-1/2}_{1/2}(x)&=\sqrt{\frac{\pi}{2}}\frac{x}{\left(1-x^2\right)^{1/4}}\quad,\quad \mathsf{Q}_{5/2}^{-1/2}(x)=\frac{1}{3}\sqrt{\frac{\pi}{2}}\frac{x\left(4x^2-3\right)}{\left(1-x^2\right)^{1/4}}\,,
+\end{align}
+\begin{align}
+{\cal Q}^{-1/2}_{1/2}(x)&=\sqrt{\frac{\pi}{2}}\frac{x-\sqrt{x^2-1}}{\left(x^2-1\right)^{1/4}}\quad,\quad {\cal Q}_{5/2}^{-1/2}(x)=\frac{1}{6}\sqrt{\frac{\pi}{2}}\frac{4x^3-3x+\left(1-4x^2\right)\sqrt{x^2-1}}{\left(x^2-1\right)^{1/4}}\,.
+\end{align}
+
+
+\bibliography{biblio.bib} 
+
+
+\end{document}
+
