@@ -90,49 +90,53 @@ def WKB_product_mod_2pi(big_number: float, small_number: float, mod_2pi_init: fl
 
 def wrap_theta(theta: float) -> Tuple[int, float]:
     """
-    Range-reduce a phase that is already within a cycle or two of ``(-2pi, 0]``, returning
-    ``(shift, mod)`` with ``shift * TWO_PI + mod == theta`` up to rounding and ``mod`` in
-    ``(-2pi, 0]``, the negative-remainder convention of ``WKB_mod_2pi``. (A positive ``theta``
-    below half an ulp of ``TWO_PI``, ~2.2e-16, returns ``mod == -TWO_PI`` exactly, as
-    ``WKB_mod_2pi`` does.)
+    Range-reduce a phase, returning ``(shift, mod)`` with ``shift * TWO_PI + mod == theta`` up
+    to rounding and ``mod`` in ``(-2pi, 0]``, the negative-remainder convention of
+    ``WKB_mod_2pi``. (A positive ``theta`` below half an ulp of ``TWO_PI``, ~2.2e-16, returns
+    ``mod == -TWO_PI`` exactly, as ``WKB_mod_2pi`` does.)
 
-    **Do not use this to reduce a large, unreduced phase; use ``WKB_mod_2pi``.** It subtracts
-    ``TWO_PI`` once per cycle, so its cost is O(|theta| / 2pi) and every pass adds a rounding.
-    Measured against the exact reduction of the double ``theta`` by the double ``TWO_PI``, it
-    is 2.3e-12 rad out at |theta| = 1e3, 1.1e-08 at 1e5 and 1.5e-04 at 1e7, taking 44 ms per
-    call at 1e7 (docs/radiation-oracle/KOHRI-TERADA-ORACLE.md section 8, Table 8.3), and
-    1.39e-06 rad at 1e6 (``[10-wrap-theta-loop-at-large-phase]``, prompts/GkTk-remedial).
-    ``WKB_mod_2pi`` returns the same ``(div, mod)`` pair with an exact ``fmod`` remainder.
+    The reduction is done in one step by ``WKB_mod_2pi``, so it is exact and constant-time at
+    every ``|theta|``. This function used to subtract ``TWO_PI`` once per cycle instead, at a
+    cost of O(|theta| / 2pi) and a rounding per pass -- 2.3e-12 rad out at |theta| = 1e3,
+    1.1e-08 at 1e5, 1.5e-04 at 1e7 and 44 ms per call there
+    (docs/radiation-oracle/KOHRI-TERADA-ORACLE.md section 8, Table 8.3) -- which made it a trap
+    for any fixture reducing an unreduced phase. That is fixed; the results below
+    ``|theta| = 2*TWO_PI`` are unchanged bit-for-bit
+    (``[10-wrap-theta-loop-at-large-phase]``, prompts/GkTk-remedial).
 
+    Prefer ``WKB_mod_2pi`` directly when reducing a freshly formed phase: this function differs
+    from it only in normalising ``-0.0`` to ``+0.0``, and its name says less about what it does.
     Its one production caller, ``apply_phase_offset``, passes ``mod + delta`` with ``mod`` in
-    ``(-2pi, 0]`` and ``delta`` the ``atan2`` offset in ``(-pi, pi]``, so the loop makes at most
-    one pass there.
+    ``(-2pi, 0]`` and ``delta`` the ``atan2`` offset in ``(-pi, pi]``, so it reduces by at most
+    one cycle there.
     """
     # given a value of theta, range-reduce so that theta falls within (-TWO_PI, 0], and
     # work out what corresponding shift this produced in div 2pi
 
     # recall that by convention, all our mod 2pi values are negative
 
-    # if theta is positive, reduce by 2pi until it is negative
-    if theta > 0.0:
-        shift = 0
-        while theta > 0.0:
-            shift = shift + 1
-            theta = theta - TWO_PI
+    # theta is already in the required range: nothing to do, and no shift required. This is the
+    # common case for the one production caller, apply_phase_offset
+    if -TWO_PI < theta <= 0.0:
+        return 0, theta
 
-        return shift, theta
+    # otherwise reduce in ONE step through WKB_mod_2pi, whose remainder is an exact fmod and
+    # whose cycle count is derived from that remainder. This replaces a loop that subtracted
+    # TWO_PI once per cycle, so it cost O(|theta| / 2pi) and accumulated a rounding per pass:
+    # 2.3e-12 rad out at |theta| = 1e3, 1.1e-08 at 1e5, 1.5e-04 at 1e7 and 44 ms per call there
+    # (docs/radiation-oracle/KOHRI-TERADA-ORACLE.md section 8, Table 8.3). The fmod reduction is
+    # exact at every |theta| and takes constant time ([10-wrap-theta-loop-at-large-phase],
+    # prompts/GkTk-remedial).
+    #
+    # Over the range the loop reduced in at most two passes -- |theta| <= 2*TWO_PI, which covers
+    # every value production reaches, since apply_phase_offset passes mod + delta in (-3pi, pi] --
+    # this returns bit-identical results, because there the loop's single add or subtract is
+    # itself exact by Sterbenz's lemma. Above that the two disagree, and this is the correct one.
+    shift, theta_mod_2pi = WKB_mod_2pi(theta)
 
-    # if theta < -2pi, increase by 2pi until theta >= -2pi
-    if theta <= -TWO_PI:
-        shift = 0
-        while theta <= -TWO_PI:
-            shift = shift - 1
-            theta = theta + TWO_PI
-
-        return shift, theta
-
-    # otherwise nothing to do, theta is already in the required range, no shift required
-    return 0, theta
+    # WKB_mod_2pi's fmod yields -0.0 where the loop produced +0.0 (theta an exact multiple of
+    # TWO_PI). Normalise, so the returned pair is bit-identical to the loop's there too
+    return shift, theta_mod_2pi + 0.0
 
 
 def apply_phase_offset(

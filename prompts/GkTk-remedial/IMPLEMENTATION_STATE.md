@@ -2,7 +2,7 @@
 
 **Campaign:** [`README.md`](README.md) · **Source review:** [`docs/gk-wkb-review-fable-2026-09-09.md`](../../docs/gk-wkb-review-fable-2026-09-09.md) · **Reconciliation:** [`RECONCILIATION.md`](RECONCILIATION.md)
 **Baseline commit:** `9ff59d5` (`main`, clean)
-**Last updated:** 2026-09-19 — `[10-wrap-theta-loop-at-large-phase]` is **CLOSED** (§4): `wrap_theta` now carries a docstring warning against reducing large, unreduced phases with it, pointing to `WKB_mod_2pi`. Earlier the same day it was **narrowed twice**: `Fixture.exact_functions()` and then the eight remaining test call sites now reduce with `WKB_mod_2pi`, so no fixture uses `wrap_theta` on an unreduced phase; the suite drops from 182 s to 122 s. What remains is the trap in `wrap_theta` itself (no warning, no `fmod` fast path). Previously 2026-09-15 — `[13-consumer-spline-crosses-eos-break-points]` is **CLOSED** (§4) by `prompts/qcd-background-audit/` prompt 10, which measured nine knot schemes over all twelve production rows and found the remedy this entry named **2.09×/2.10× worse** ($C^0$ repeated knot) and per-segment splines 5.00×/5.06× worse, while ±5 grid intervals of extra *samples* around the crossing bring both rows inside the 1e-06 rad target; the unfixed accuracy defect re-opens as `[10-consumer-phi-unresolved-at-the-eos-crossing]` on the `qcd-background-audit` board, assigned to its prompt 11. Previously 2026-09-14 — `[13-consumer-spline-crosses-eos-break-points]` **narrowed again** by `prompts/qcd-background-audit/` prompt 09: re-measured on the corrected background its two §3.5 rows are **4.25× and 4.39× larger**, because the old `T(z)` spline was smearing the equation of state's step rather than causing the error, and this entry's supersession paragraph's prediction is falsified. Previously 2026-09-14 — `[02-qcd-reference-floor]` and `[03-qcd-short-baseline-reference-endpoint-rounding]` re-measured (narrowed, neither closed) by `prompts/qcd-background-audit/` prompt 06. Previously 2026-09-13 — **Prompt 13 landed and the campaign is closed.** The verification
+**Last updated:** 2026-09-19 — `[10-wrap-theta-loop-at-large-phase]` is **CLOSED** (§4): `wrap_theta` no longer loops, reducing in one step through `WKB_mod_2pi` instead, so its reconstruction error falls to **0** at $|\theta| = 10^3$ through $10^7$ (from 2.30e-12 to 1.54e-04 rad) and its cost at $10^7$ from 52.7 ms to 7.5 µs, with production output bit-identical over the $|\theta|\le2\cdot2\pi$ it reaches. It was closed earlier the same day on a docstring warning alone (`6aa75df`), **reopened** at the user's direction because a warning is not a remedy for a removable defect, and closed again on the fix. The fix opens `[10-table-8-3-measures-the-removed-wrap-theta-loop]` (§3): `large_x.py` generates Table 8.3 of `KOHRI-TERADA-ORACLE.md` §8 by measuring the loop that is now gone, so two of its columns no longer reproduce; the table was not rewritten. Earlier still it was **narrowed twice**: `Fixture.exact_functions()` and then the eight remaining test call sites now reduce with `WKB_mod_2pi`, so no fixture uses `wrap_theta` on an unreduced phase; the suite drops from 182 s to 122 s. What remains is the trap in `wrap_theta` itself (no warning, no `fmod` fast path). Previously 2026-09-15 — `[13-consumer-spline-crosses-eos-break-points]` is **CLOSED** (§4) by `prompts/qcd-background-audit/` prompt 10, which measured nine knot schemes over all twelve production rows and found the remedy this entry named **2.09×/2.10× worse** ($C^0$ repeated knot) and per-segment splines 5.00×/5.06× worse, while ±5 grid intervals of extra *samples* around the crossing bring both rows inside the 1e-06 rad target; the unfixed accuracy defect re-opens as `[10-consumer-phi-unresolved-at-the-eos-crossing]` on the `qcd-background-audit` board, assigned to its prompt 11. Previously 2026-09-14 — `[13-consumer-spline-crosses-eos-break-points]` **narrowed again** by `prompts/qcd-background-audit/` prompt 09: re-measured on the corrected background its two §3.5 rows are **4.25× and 4.39× larger**, because the old `T(z)` spline was smearing the equation of state's step rather than causing the error, and this entry's supersession paragraph's prediction is falsified. Previously 2026-09-14 — `[02-qcd-reference-floor]` and `[03-qcd-short-baseline-reference-endpoint-rounding]` re-measured (narrowed, neither closed) by `prompts/qcd-background-audit/` prompt 06. Previously 2026-09-13 — **Prompt 13 landed and the campaign is closed.** The verification
 document is [`docs/gktk-remedial-verification.md`](../../docs/gktk-remedial-verification.md), taken
 on `ff9ee29` and changing no production code. **Layer 1** re-measures review §4 and §12.3 through
 the production functions on both models at $k\in\{10^5,10^7,3\times10^8\}$: at $z=0.1$ on
@@ -495,6 +495,23 @@ Opened by the planning pass, 2026-09-10, before any prompt runs.
   the six blocks with prompt 10's measured values, which needs only the user's confirmation that
   `8ba9159`'s text may be rewritten now that both campaigns have landed.
 
+- **[10-table-8-3-measures-the-removed-wrap-theta-loop]** *(opened 2026-09-19, outside any
+  campaign, by the fix to `[10-wrap-theta-loop-at-large-phase]` above)* —
+  `docs/radiation-oracle/large_x.py`'s `wrap_theta_table()` (`:185-207`) generates **Table 8.3**
+  of [`docs/radiation-oracle/KOHRI-TERADA-ORACLE.md`](../../docs/radiation-oracle/KOHRI-TERADA-ORACLE.md)
+  §8 by *measuring* `wrap_theta`'s per-cycle loop: its "time per call" and "error of the loop"
+  columns record 44 ms and 1.5e-04 rad at $\theta\approx10^7$. That loop is gone, so re-running
+  the script now prints ~7.5 µs and 0.0 in those columns, against the table's committed values.
+  The table was correct for the tree it was taken on and is cited as the measurement behind the
+  fix, so it was **not rewritten** (README §5, verification documents are additive; the fix was
+  a production change and editing another document's generated table is out of its scope).
+  **Impact:** §8's Table 8.3 and the prose at `:480` and `:486` describe `wrap_theta` in the
+  present tense and no longer reproduce from their own script; a reader re-running `large_x.py`
+  to check the oracle will find two columns disagreeing and no note saying why.
+  **Next step:** a note under Table 8.3 giving the commit that removed the loop and stating that
+  the row is a record of the old implementation, or a re-run adding a superseding subsection per
+  README §5. Either is documentation-only.
+
 - **[00-tk-lg-truncation-floor]** *(planning, 2026-09-10; **assigned to the hand-over campaign**)*
   — the transfer function's LG representation is not exact in radiation: $3.8\times10^{-5}$ of the
   envelope from $x_i=24$, $\sim1.4\times10^{-4}$ at the production hand-over $x_T\approx15.5$,
@@ -774,7 +791,7 @@ Opened by the planning pass, 2026-09-10, before any prompt runs.
 ## 4. Resolved issues
 
 - **[10-wrap-theta-loop-at-large-phase]** *(opened by prompt 10, 2026-09-11; inert in
-  production; **closed 2026-09-19**, outside any campaign)* — `LiouvilleGreen.WKBtools.wrap_theta` (`:69-94`) range-reduces by adding
+  production; closed, reopened, then **closed 2026-09-19**, outside any campaign)* — `LiouvilleGreen.WKBtools.wrap_theta` (`:69-94`) range-reduces by adding
   `TWO_PI` in a `while` loop, so at $|\theta|\sim10^6$ rad it performs ~1.6e5 additions of a
   quantity $10^6$ times smaller than the accumulator and returns a pair that reconstructs
   $\theta$ only to **1.3862e-06 rad** (and costs 1.6e5 iterations). Production is unaffected:
@@ -823,18 +840,38 @@ Opened by the planning pass, 2026-09-10, before any prompt runs.
   the 1e-16 level. **What remains** is the trap in `wrap_theta` itself: no docstring warning and
   no `fmod` fast path. That is a production-code change, not made here; the next step above
   stands.
-  **Closed (2026-09-19)** — the next step's first alternative is done: `wrap_theta` now has a
-  docstring stating its contract, the warning **"Do not use this to reduce a large, unreduced
+  **Docstring added, closed, then reopened (2026-09-19)** — commit `6aa75df` gave `wrap_theta`
+  a docstring stating its contract, the warning **"Do not use this to reduce a large, unreduced
   phase; use `WKB_mod_2pi`"**, the measured cost and rounding (Table 8.3's 2.3e-12 / 1.1e-08 /
   1.5e-04 rad at |θ| = 1e3 / 1e5 / 1e7, 44 ms per call at 1e7, and this entry's 1.39e-06 rad at
   1e6), and why its one production caller is safe: `apply_phase_offset`, reached from
   `GkWKBIntegration.store()` and `TkWKBIntegration.store()`, passes `mod + deltaTheta` with `mod`
   in $(-2\pi,0]$ from `WKB_mod_2pi` and `deltaTheta = atan2(...)` in $(-\pi,\pi]$, so at most one
-  pass. With no test fixture calling it on an unreduced phase (the two narrowings above), the
-  impact this entry recorded has no remaining instance. The `fmod` fast path was not added; the
-  loop's behaviour, and production output, are unchanged. The docstring also records that a
-  positive $\theta$ below half an ulp of `TWO_PI` (~2.2e-16) returns `mod == -TWO_PI` exactly,
-  just outside $(-2\pi,0]$ — as `WKB_mod_2pi` does too; rounding-level, not acted on.
+  pass. That commit closed this entry on the documentation alone, with the loop untouched.
+  **Reopened at the user's direction**: the next step above offers a note *or* an `fmod` fast
+  path, and a warning that the next caller may ignore is not a remedy for a defect that can be
+  removed outright.
+  **Fixed (2026-09-19)** — `wrap_theta` no longer loops. Values already in $(-2\pi,0]$ return
+  unchanged with shift 0, as before; everything else is reduced in one step by `WKB_mod_2pi`,
+  whose remainder is an exact `fmod` and whose cycle count is derived from that remainder, with
+  its `-0.0` normalised to `+0.0`. **Measured:** the reconstruction error
+  $|{\rm shift}\cdot2\pi + {\rm mod} - \theta|$ against the exact reduction of the double
+  $\theta$ by the double `TWO_PI` falls from 2.302e-12 / 1.054e-08 / 1.386e-06 / 1.535e-04 rad
+  at $|\theta| = 10^3/10^5/10^6/10^7$ to **0 at all four**, and the cost at $|\theta|=10^7$ from
+  52.7 ms to 7.5 µs; the cycle count was already identical at all four, so no stored `div`
+  changes. **Production output is unchanged, bit-for-bit:** over 800,015 values with
+  $|\theta|\le2\cdot2\pi$ — which covers every value production reaches, `apply_phase_offset`
+  passing `mod + delta` in $(-3\pi,\pi]$ — the new pair is bit-identical to the loop's, because
+  there the loop's single add or subtract is itself exact by Sterbenz's lemma. The
+  sub-half-ulp-positive edge case is unchanged too: $\theta \in (0, 2.2\times10^{-16})$ still
+  returns `mod == -TWO_PI` exactly, just outside $(-2\pi,0]$, as `WKB_mod_2pi` does — verified
+  identical to the old function; rounding-level, not acted on.
+  **Closed (2026-09-19)** — both alternatives the entry's next step named are now done: the
+  docstring warning, and the `fmod` fast path that makes the warning moot by removing the loop
+  it warned about. Nothing remains for `wrap_theta`. The impact this entry recorded — a fixture
+  reducing a large unwrapped phase and paying 1.4e-06 rad for it — is no longer reachable
+  through this function at any $|\theta|$, not merely absent from the current fixtures. The
+  fix's one side effect is `[10-table-8-3-measures-the-removed-wrap-theta-loop]` below.
 
 - **[20-wkb-gauss-orders-not-in-lookup-key]** *(opened by prompt 20, 2026-09-13; **assigned 2026-09-16 to `prompts/tolerance-convergence` prompts 04 and 05, and closed by its prompt 05**, 2026-09-18)* — prompt 20 §5
   asked whether the other three compute targets have "any configuration axis that can vary between
