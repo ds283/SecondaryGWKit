@@ -1,4 +1,5 @@
 import os
+
 """QS_05:
 (a) how much of the analytic_Tprime float64 cancellation (QS_02c) survives into f?
 (b) the analytic_source_w column mixes two different w's: T is built with
@@ -42,9 +43,15 @@ def f_mp(q, r, w, z):
 
 
 print("(a) relative error of the float64 analytic source f vs 60-digit mpmath")
-print(f"{'w':>7} {'q':>7} {'r':>7} {'z':>9} {'x_q':>11} {'f (mp)':>16} {'rel err f':>11}")
+print(
+    f"{'w':>7} {'q':>7} {'r':>7} {'z':>9} {'x_q':>11} {'f (mp)':>16} {'rel err f':>11}"
+)
 w = mp.mpf(1) / 3
-for (q, r) in ((mp.mpf(1), mp.mpf(1)), (mp.mpf(30), mp.mpf(30)), (mp.mpf(1), mp.mpf(1000))):
+for q, r in (
+    (mp.mpf(1), mp.mpf(1)),
+    (mp.mpf(30), mp.mpf(30)),
+    (mp.mpf(1), mp.mpf(1000)),
+):
     for ze in (7, 6, 5, 4, 2, 0):
         z = mp.mpf(10) ** ze
         t, h = a0eta(z, w), Hubble(z, w)
@@ -59,8 +66,10 @@ for (q, r) in ((mp.mpf(1), mp.mpf(1)), (mp.mpf(30), mp.mpf(30)), (mp.mpf(1), mp.
         fe = f_mp(q, r, w, z)
         rel = float(abs(mp.mpf(fc) - fe) / abs(fe))
         xq = float(q * mp.sqrt(w) * t)
-        print(f"{float(w):7.4f} {float(q):7.3g} {float(r):7.3g} {float(z):9.3g} "
-              f"{xq:11.3e} {mp.nstr(fe,8):>16} {rel:11.3e}")
+        print(
+            f"{float(w):7.4f} {float(q):7.3g} {float(r):7.3g} {float(z):9.3g} "
+            f"{xq:11.3e} {mp.nstr(fe,8):>16} {rel:11.3e}"
+        )
 
 print("\n  => the cancellation in Tprime is harmless inside f: super-horizon the")
 print("     T' terms are O(x^2) suppressed, so f keeps ~1e-15 accuracy throughout.\n")
@@ -80,14 +89,18 @@ def wP(z):
     return (1.0 / 3.0) * Or * o / (Om + Or * o)
 
 
-print(f"{'z':>10} {'wBackground':>13} {'wPerturbations':>15} "
-      f"{'(5+3wB)/(3(1+wB))':>19} {'same with wP':>13} {'ratio':>9}")
+print(
+    f"{'z':>10} {'wBackground':>13} {'wPerturbations':>15} "
+    f"{'(5+3wB)/(3(1+wB))':>19} {'same with wP':>13} {'ratio':>9}"
+)
 for z in (1e6, 1e5, 1e4, 3400.0, 1e3, 100.0, 10.0, 1.0, 0.1):
     a, b = wB(z), wP(z)
     ca = (5 + 3 * a) / (3 * (1 + a))
     cb = (5 + 3 * b) / (3 * (1 + b))
     print(f"{z:10.4g} {a:13.6f} {b:15.6f} {ca:19.6f} {cb:13.6f} {ca/cb:9.4f}")
-print("\n  spec 03 sec 0.5 fixes w_0 = wBackground inside f: the code's choice is correct.")
+print(
+    "\n  spec 03 sec 0.5 fixes w_0 = wBackground inside f: the code's choice is correct."
+)
 print("  The point is only that the 'analytic_source_w' ORACLE column is internally")
 print("  inconsistent -- its T comes from a constant-w = wPerturbations(z) solution")
 print("  while its prefactors use wBackground(z).")

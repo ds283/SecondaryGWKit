@@ -1,4 +1,5 @@
 import os
+
 """QI_03: measure / Jacobian check on the three numerical branches of
 ComputeTargets/QuadSourceIntegral.py.
 
@@ -112,7 +113,11 @@ class FakePolicy:
 def reference():
     """spec 03 R28 measure, evaluated independently."""
     with_jac = quad(
-        lambda zp: G_of_z(zp) * (1.0 + Z_RESPONSE) / (1.0 + zp) * f_of_z(zp) / H_of_z(zp) ** 2,
+        lambda zp: G_of_z(zp)
+        * (1.0 + Z_RESPONSE)
+        / (1.0 + zp)
+        * f_of_z(zp)
+        / H_of_z(zp) ** 2,
         Z_RESPONSE,
         Z_MAX,
         limit=400,
@@ -156,22 +161,46 @@ def main():
         numeric_region=(Z_MAX, Z_RESPONSE),
     )
     out = QSI.numeric_quad_integral(
-        model, kk, kk, kk, src, pol, zr, max_z=Z_MAX, min_z=Z_RESPONSE,
-        atol=1e-30, rtol=1e-12,
+        model,
+        kk,
+        kk,
+        kk,
+        src,
+        pol,
+        zr,
+        max_z=Z_MAX,
+        min_z=Z_RESPONSE,
+        atol=1e-30,
+        rtol=1e-12,
     )
-    print(f"\nnumeric_quad_integral  = {out['value']:.12e}   rel vs with_jac = "
-          f"{abs(out['value'] - with_jac) / abs(with_jac):.3e}")
-    print(f"                             rel vs without_jac = "
-          f"{abs(out['value'] - without_jac) / abs(without_jac):.3e}")
+    print(
+        f"\nnumeric_quad_integral  = {out['value']:.12e}   rel vs with_jac = "
+        f"{abs(out['value'] - with_jac) / abs(with_jac):.3e}"
+    )
+    print(
+        f"                             rel vs without_jac = "
+        f"{abs(out['value'] - without_jac) / abs(without_jac):.3e}"
+    )
 
     # --- WKB quad branch (same integrand, different G spline slot)
     pol2 = FakePolicy("WKB", WKB_Gk=Spline(G_of_z), WKB_region=(Z_MAX, Z_RESPONSE))
     out2 = QSI.WKB_quad_integral(
-        model, kk, kk, kk, src, pol2, zr, max_z=Z_MAX, min_z=Z_RESPONSE,
-        atol=1e-30, rtol=1e-12,
+        model,
+        kk,
+        kk,
+        kk,
+        src,
+        pol2,
+        zr,
+        max_z=Z_MAX,
+        min_z=Z_RESPONSE,
+        atol=1e-30,
+        rtol=1e-12,
     )
-    print(f"WKB_quad_integral      = {out2['value']:.12e}   rel vs numeric branch = "
-          f"{abs(out2['value'] - out['value']) / abs(out['value']):.3e}")
+    print(
+        f"WKB_quad_integral      = {out2['value']:.12e}   rel vs numeric branch = "
+        f"{abs(out2['value'] - out['value']) / abs(out['value']):.3e}"
+    )
 
     # --- WKB Levin branch: G = sin_amplitude(z) * sin(theta(z)).  Build a synthetic phase
     #     spline-like object with an analytic theta so the two can be compared exactly.
@@ -201,11 +230,24 @@ def main():
         WKB_region=(Z_MAX, Z_RESPONSE),
     )
     out3 = QSI.WKB_Levin_integral(
-        model, kk, kk, kk, src, pol3, zr, max_z=Z_MAX, min_z=Z_RESPONSE,
-        atol=1e-30, rtol=1e-12,
+        model,
+        kk,
+        kk,
+        kk,
+        src,
+        pol3,
+        zr,
+        max_z=Z_MAX,
+        min_z=Z_RESPONSE,
+        atol=1e-30,
+        rtol=1e-12,
     )
     ref3 = quad(
-        lambda zp: G_osc(zp) * (1.0 + Z_RESPONSE) / (1.0 + zp) * f_of_z(zp) / H_of_z(zp) ** 2,
+        lambda zp: G_osc(zp)
+        * (1.0 + Z_RESPONSE)
+        / (1.0 + zp)
+        * f_of_z(zp)
+        / H_of_z(zp) ** 2,
         Z_RESPONSE,
         Z_MAX,
         limit=4000,
@@ -219,11 +261,22 @@ def main():
     # region-boundary consistency: same integrand from the quad and Levin routes
     pol4 = FakePolicy("WKB", WKB_Gk=Spline(G_osc), WKB_region=(Z_MAX, Z_RESPONSE))
     out4 = QSI.WKB_quad_integral(
-        model, kk, kk, kk, src, pol4, zr, max_z=Z_MAX, min_z=Z_RESPONSE,
-        atol=1e-30, rtol=1e-12,
+        model,
+        kk,
+        kk,
+        kk,
+        src,
+        pol4,
+        zr,
+        max_z=Z_MAX,
+        min_z=Z_RESPONSE,
+        atol=1e-30,
+        rtol=1e-12,
     )
-    print(f"WKB_quad with same osc G = {out4['value']:.12e}   rel vs Levin = "
-          f"{abs(out4['value'] - out3['value']) / abs(out3['value']):.3e}")
+    print(
+        f"WKB_quad with same osc G = {out4['value']:.12e}   rel vs Levin = "
+        f"{abs(out4['value'] - out3['value']) / abs(out3['value']):.3e}"
+    )
 
 
 if __name__ == "__main__":

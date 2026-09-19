@@ -48,7 +48,10 @@ def pareto():
                 for fn, kw in (
                     (run_levin, dict(atol=atol, rtol=target, chebyshev_order=12)),
                     (run_quad, dict(epsabs=atol, epsrel=target, limit=50000)),
-                    (run_qawo, dict(epsabs=atol, epsrel=target, limit=50000, maxp1=200)),
+                    (
+                        run_qawo,
+                        dict(epsabs=atol, epsrel=target, limit=50000, maxp1=200),
+                    ),
                 ):
                     r = fn(p, budget_seconds=30.0, **kw)
                     if r is None:
@@ -92,7 +95,10 @@ def tolerance_map():
                 r["experiment"] = "A5_tolerance"
                 r["atol_over_I"] = atol / abs(p.reference)
                 rows.append(r)
-            print(f"tolerance {name} w={w:.4g} |I|={abs(p.reference):.3g} done", flush=True)
+            print(
+                f"tolerance {name} w={w:.4g} |I|={abs(p.reference):.3g} done",
+                flush=True,
+            )
     return _write(rows, os.path.join(RESULTS, "tierA_tolerance.csv"))
 
 
@@ -216,10 +222,14 @@ def reduction_cost():
     for d in range(1, 13):
         w = 10.0**d
         x = 0.6180339887498949
-        t_red = min(
-            timeit.repeat(lambda: range_reduce_mod_2pi(w, x), number=200, repeat=5)
-        ) / 200.0
-        t_fmod = min(timeit.repeat(lambda: fmod(w * x, 2 * pi), number=200, repeat=5)) / 200.0
+        t_red = (
+            min(timeit.repeat(lambda: range_reduce_mod_2pi(w, x), number=200, repeat=5))
+            / 200.0
+        )
+        t_fmod = (
+            min(timeit.repeat(lambda: fmod(w * x, 2 * pi), number=200, repeat=5))
+            / 200.0
+        )
         rows.append(
             {
                 "experiment": "A8_reduction_cost",
@@ -263,7 +273,9 @@ def estimator_fidelity():
                 keep_regions=True,
             )
             regions = r.pop("_regions", None) or []
-            est_abs = float(sum(abs(reg.abserr) for reg in regions if reg.abserr is not None))
+            est_abs = float(
+                sum(abs(reg.abserr) for reg in regions if reg.abserr is not None)
+            )
             r["experiment"] = "A9_estimator"
             r["internal_abs_est"] = est_abs
             r["internal_rel_est"] = est_abs / abs(p.reference)

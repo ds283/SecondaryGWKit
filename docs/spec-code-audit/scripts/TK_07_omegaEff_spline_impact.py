@@ -1,4 +1,5 @@
 import os
+
 """
 TK_07: impact of the BackgroundModel._build_derivative spline path on the two quantities the
 transfer-function WKB branch actually consumes, Tk_omegaEff_sq and Tk_d_ln_omegaEff_dz.
@@ -89,10 +90,29 @@ exact, spline = make_model(True), make_model(False)
 for k in [1.0, 1.0e3]:
     print(f"\n=== k/a0 = {k} (code units, 1/Mpc-ish) ===")
     print(f"  {'z':>12} {'omega_eff^2 rel diff':>21} {'d_ln_omega_dz rel diff':>23}")
-    probes = [z_samples[i] for i in [0, 1, 2, 5, 20, n // 4, n // 2, 3 * n // 4, n - 21, n - 6, n - 3, n - 2, n - 1]]
+    probes = [
+        z_samples[i]
+        for i in [
+            0,
+            1,
+            2,
+            5,
+            20,
+            n // 4,
+            n // 2,
+            3 * n // 4,
+            n - 21,
+            n - 6,
+            n - 3,
+            n - 2,
+            n - 1,
+        ]
+    ]
     for z in probes:
         a = Tk_omegaEff_sq(exact, k, z)
         b = Tk_omegaEff_sq(spline, k, z)
         c = Tk_d_ln_omegaEff_dz(exact, k, z)
         d = Tk_d_ln_omegaEff_dz(spline, k, z)
-        print(f"  {z:12.5g} {abs(b-a)/max(abs(a),1e-300):21.3e} {abs(d-c)/max(abs(c),1e-300):23.3e}")
+        print(
+            f"  {z:12.5g} {abs(b-a)/max(abs(a),1e-300):21.3e} {abs(d-c)/max(abs(c),1e-300):23.3e}"
+        )

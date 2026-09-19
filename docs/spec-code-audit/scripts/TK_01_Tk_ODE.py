@@ -1,4 +1,5 @@
 import os
+
 """
 TK_01: derive spec 01 R14/R21 (redshift-space phi equation) from spec 01 R5 (conformal-time
 equation) by the variable change of R12/R13, and compare with the RHS coded in
@@ -67,9 +68,10 @@ print("difference                        :", sp.simplify(coeff_f0 - spec_f0))
 T = sp.Function("T")(z)
 Tprime = sp.Derivative(T, z)
 k_code = k / a0
-code_rhs = -(eps - 3 * (1 + cs2)) * Tprime / (1 + z) - (
-    (3 * (1 + cs2) - 2 * eps) / (1 + z) ** 2 + cs2 * (k_code / H) ** 2
-) * T
+code_rhs = (
+    -(eps - 3 * (1 + cs2)) * Tprime / (1 + z)
+    - ((3 * (1 + cs2) - 2 * eps) / (1 + z) ** 2 + cs2 * (k_code / H) ** 2) * T
+)
 
 # spec form solved for T''
 spec_rhs = -spec_f1 * Tprime - spec_f0 * T

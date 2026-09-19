@@ -1,4 +1,5 @@
 import os
+
 """QI_01: symbolic check of the analytic_integral prefactor against spec 04 R14 and spec 05 R31.
 
 Checks:
@@ -27,8 +28,11 @@ F_code = -B * C * D * E
 
 # spec 04 R14 prefactor, with the signed-off a_0^2 (sec 0 item 4) and cs kept symbolic
 F_R14 = (
-    -(a0**2) * sp.pi / 2
-    * 2 ** (3 + 2 * b) / ((3 + 2 * b) * (2 + b))
+    -(a0**2)
+    * sp.pi
+    / 2
+    * 2 ** (3 + 2 * b)
+    / ((3 + 2 * b) * (2 + b))
     * sp.gamma(sp.Rational(5, 2) + b) ** 2
     * (q * r * cs**2 * eta) ** (-sp.Rational(1, 2) - b)
 )
@@ -37,8 +41,10 @@ print("(a) code prefactor / R14 prefactor =", sp.simplify(ratio_a))
 
 # ---- (b) R14 prefactor vs spec 05 R31 prefactor -------------------------------------------
 F_R31 = (
-    sp.pi * 2 ** (2 + 2 * b)
-    * (2 + b) / (3 + 2 * b) ** 3
+    sp.pi
+    * 2 ** (2 + 2 * b)
+    * (2 + b)
+    / (3 + 2 * b) ** 3
     * sp.gamma(sp.Rational(5, 2) + b) ** 2
     * (cs**2 * q * r * eta) ** (-sp.Rational(1, 2) - b)
 )
@@ -49,22 +55,40 @@ print("    equal?", sp.simplify(ratio_b + a0**2 / c**2) == 0)
 
 # also the code (a_0-free) version
 ratio_b_code = sp.simplify(F_code.subs(cs_sq, cs**2) / F_R31)
-print("    code prefactor / R31 prefactor =", sp.simplify(ratio_b_code),
-      "  == -1/c^2 ?", sp.simplify(ratio_b_code + 1 / c**2) == 0)
+print(
+    "    code prefactor / R31 prefactor =",
+    sp.simplify(ratio_b_code),
+    "  == -1/c^2 ?",
+    sp.simplify(ratio_b_code + 1 / c**2) == 0,
+)
 
 # ---- (c) f normalisation ------------------------------------------------------------------
 # spec 04 R11 final ("so f =", the one the code's analytic branch implements)
-pref_f_R11 = 2 ** (3 + 2 * b) / ((3 + 2 * b) * (2 + b)) * sp.gamma(sp.Rational(5, 2) + b) ** 2
+pref_f_R11 = (
+    2 ** (3 + 2 * b) / ((3 + 2 * b) * (2 + b)) * sp.gamma(sp.Rational(5, 2) + b) ** 2
+)
 # spec 05 R28 (MAIN 14 completed square)
-pref_f_R28 = 2 ** (3 + 2 * b) * (2 + b) / (3 + 2 * b) ** 3 * sp.gamma(sp.Rational(5, 2) + b) ** 2
-print("(c) f_R11 / f_R28 =", sp.simplify(pref_f_R11 / pref_f_R28),
-      "  == 1/c^2 ?", sp.simplify(pref_f_R11 / pref_f_R28 - 1 / c**2) == 0)
+pref_f_R28 = (
+    2 ** (3 + 2 * b) * (2 + b) / (3 + 2 * b) ** 3 * sp.gamma(sp.Rational(5, 2) + b) ** 2
+)
+print(
+    "(c) f_R11 / f_R28 =",
+    sp.simplify(pref_f_R11 / pref_f_R28),
+    "  == 1/c^2 ?",
+    sp.simplify(pref_f_R11 / pref_f_R28 - 1 / c**2) == 0,
+)
 
 # and the (1+w*)/(5+3w*) chain: c_* = 3(1+w)/(5+3w) equals (2+b)/(3+2b) * 3 ... check
 w = sp.symbols("w", real=True)
 b_of_w = (1 - 3 * w) / (1 + 3 * w)
 c_star = 3 * (1 + w) / (5 + 3 * w)
-print("(c') c_*(w) expressed in b:", sp.simplify(c_star.subs(w, sp.solve(sp.Eq(b, b_of_w), w)[0])))
+print(
+    "(c') c_*(w) expressed in b:",
+    sp.simplify(c_star.subs(w, sp.solve(sp.Eq(b, b_of_w), w)[0])),
+)
 
 # ---- (d) cs^2 identity --------------------------------------------------------------------
-print("(d) (1-b)/(3(1+b)) in terms of w =", sp.simplify(((1 - b) / (3 * (1 + b))).subs(b, b_of_w)))
+print(
+    "(d) (1-b)/(3(1+b)) in terms of w =",
+    sp.simplify(((1 - b) / (3 * (1 + b))).subs(b, b_of_w)),
+)

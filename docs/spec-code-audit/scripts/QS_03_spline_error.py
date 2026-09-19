@@ -1,4 +1,5 @@
 import os
+
 """QS_03: quantify the F1 issue (docs/resonance-scaffolding-v1/sigw-resonance-reconciliation.md
 section 0.2) -- QuadSource._create_functions (ComputeTargets/QuadSource.py:294-309)
 fits a plain cubic make_interp_spline through the *sampled* source values in
@@ -58,14 +59,20 @@ def code_grid():
 
 zs = code_grid()
 print(f"grid: {len(zs)} points, z in [{zs[-1]:.4g}, {zs[0]:.4g}]")
-print(f"max node spacing in log(1+z) = {np.max(np.diff(np.log(1.0+np.sort(zs)))):.4f}\n")
+print(
+    f"max node spacing in log(1+z) = {np.max(np.diff(np.log(1.0+np.sort(zs)))):.4f}\n"
+)
 
 print("k chosen so that x_end = k*c_s*tau(z_end) takes the listed value.")
-print("'cycles' = total oscillation cycles of f (= x_end/pi, f oscillates at 2*theta_q).")
+print(
+    "'cycles' = total oscillation cycles of f (= x_end/pi, f oscillates at 2*theta_q)."
+)
 print("err_env = max |spline - exact| between nodes, normalised to the local")
 print("oscillation envelope of f at that z (a fair measure for an oscillation).\n")
-print(f"{'x_end':>9} {'k':>11} {'cycles':>10} {'pts/half-cyc @x_end':>20} "
-      f"{'max err_env':>12} {'at z':>10} {'max |dspline/f|':>16}")
+print(
+    f"{'x_end':>9} {'k':>11} {'cycles':>10} {'pts/half-cyc @x_end':>20} "
+    f"{'max err_env':>12} {'at z':>10} {'max |dspline/f|':>16}"
+)
 
 for x_end in (3.0, 10.0, 30.0, 100.0, 300.0, 1.0e3, 1.0e4):
     k = x_end / (CS * tau(Z_END))
@@ -93,8 +100,10 @@ for x_end in (3.0, 10.0, 30.0, 100.0, 300.0, 1.0e3, 1.0e4):
 
     dx = np.max(np.diff(xs))
     pts_per_half = np.pi / (dx * x_end) if x_end > 0 else np.inf
-    print(f"{x_end:9.3g} {k:11.4g} {x_end/np.pi:10.4g} {pts_per_half:20.3g} "
-          f"{worst_env:12.3e} {worst_z:10.3g} {worst_rel:16.3e}")
+    print(
+        f"{x_end:9.3g} {k:11.4g} {x_end/np.pi:10.4g} {pts_per_half:20.3g} "
+        f"{worst_env:12.3e} {worst_z:10.3g} {worst_rel:16.3e}"
+    )
 
 print("\n(pts/half-cyc: number of grid nodes per half oscillation of f at z_end;")
 print(" a cubic interpolant needs >~ 10 to be accurate, and Nyquist fails below 2.)")

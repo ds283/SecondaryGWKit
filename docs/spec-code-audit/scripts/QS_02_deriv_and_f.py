@@ -1,4 +1,5 @@
 import os
+
 """QS_02: (a) confirm that the 'Tprime' consumed by QuadSource is dT/dz (not
 d/dlog(1+z), not H^{-1} dT/deta); (b) build f from the spec 03 R22 formula
 independently and compare with ComputeTargets.QuadSource.source_function on the
@@ -36,8 +37,12 @@ def a0eta(z, w):
 
 
 # ---------------------------------------------------------------- part (a)
-print("=== (a) which derivative is compute_analytic_Tprime / TkNumericValue.Tprime ? ===")
-print(f"{'w':>6} {'z':>10} {'k':>8} {'code Tprime':>16} {'FD dT/dz':>16} {'rel diff':>10}")
+print(
+    "=== (a) which derivative is compute_analytic_Tprime / TkNumericValue.Tprime ? ==="
+)
+print(
+    f"{'w':>6} {'z':>10} {'k':>8} {'code Tprime':>16} {'FD dT/dz':>16} {'rel diff':>10}"
+)
 worst = 0.0
 for w in (1.0 / 3.0, 0.2, 0.5):
     for k in (1.0, 30.0, 1000.0):
@@ -53,7 +58,9 @@ for w in (1.0 / 3.0, 0.2, 0.5):
             rel = abs(code - fd) / max(abs(fd), 1e-300)
             worst = max(worst, rel)
             if abs(w - 1.0 / 3.0) < 1e-12 and k in (1.0, 1000.0) and z in (1.0e3, 10.0):
-                print(f"{w:6.3f} {z:10.3g} {k:8.3g} {code:16.8e} {fd:16.8e} {rel:10.2e}")
+                print(
+                    f"{w:6.3f} {z:10.3g} {k:8.3g} {code:16.8e} {fd:16.8e} {rel:10.2e}"
+                )
 print(f"worst relative difference over the whole scan: {worst:.3e}")
 print("  => Tprime is dT/dz (a d/dlog(1+z) reading would be off by 1+z; an")
 print("     H^{-1}dT/deta reading by (1+z)^{-1}; both are O(1)-to-O(1e4) here)\n")
@@ -63,7 +70,9 @@ w = 1.0 / 3.0
 z, k = 1.0e3, 30.0
 tau, H = a0eta(z, w), Hubble(z, w)
 tp = compute_analytic_Tprime(k, w, tau, H)
-print(f"  at w=1/3, z={z}, k={k}: dT/dz={tp:.6e}; (1+z)dT/dz={(1+z)*tp:.6e}; dT/dz/(1+z)={tp/(1+z):.6e}\n")
+print(
+    f"  at w=1/3, z={z}, k={k}: dT/dz={tp:.6e}; (1+z)dT/dz={(1+z)*tp:.6e}; dT/dz/(1+z)={tp/(1+z):.6e}\n"
+)
 
 
 # ---------------------------------------------------------------- part (b)
@@ -78,7 +87,7 @@ print("=== (b) source_function vs an independent transcription of spec 03 R22 ==
 print(f"{'w':>6} {'z':>10} {'q':>8} {'r':>8} {'f_spec':>17} {'f_code':>17} {'rel':>10}")
 worst = 0.0
 for w in (1.0 / 3.0, 0.1, 0.5):
-    for (q, r) in ((1.0, 1.0), (1.0, 30.0), (30.0, 30.0), (300.0, 700.0)):
+    for q, r in ((1.0, 1.0), (1.0, 30.0), (30.0, 30.0), (300.0, 700.0)):
         for z in (1.0e5, 1.0e4, 1.0e3, 1.0e2, 10.0, 1.0):
             tau, H = a0eta(z, w), Hubble(z, w)
             Tq = compute_analytic_T(q, w, tau)
@@ -90,8 +99,12 @@ for w in (1.0 / 3.0, 0.1, 0.5):
             rel = abs(fs - fc) / max(abs(fs), 1e-300)
             worst = max(worst, rel)
             if abs(w - 1.0 / 3.0) < 1e-12 and (q, r) == (30.0, 30.0):
-                print(f"{w:6.3f} {z:10.3g} {q:8.3g} {r:8.3g} {fs:17.9e} {fc:17.9e} {rel:10.2e}")
-print(f"worst relative difference over the whole scan: {worst:.3e}  (float round-off only)\n")
+                print(
+                    f"{w:6.3f} {z:10.3g} {q:8.3g} {r:8.3g} {fs:17.9e} {fc:17.9e} {rel:10.2e}"
+                )
+print(
+    f"worst relative difference over the whole scan: {worst:.3e}  (float round-off only)\n"
+)
 
 # ---------------------------------------------------------------- part (c)
 print("=== (c) 'analytic_source_rad' is NOT an independent oracle ===")

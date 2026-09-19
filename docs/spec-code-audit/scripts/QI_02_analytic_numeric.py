@@ -1,4 +1,5 @@
 import os
+
 """QI_02: numerical check of ComputeTargets/QuadSourceIntegral.py::analytic_integral (b=0)
 against a direct scipy.quad of the spec 04 R14 integrand.
 
@@ -108,9 +109,7 @@ def run(kv, qv, rv, eta_init, eta_resp, b=0.0):
         * gamma(2.5 + b) ** 2
         * (qv * rv * cs * cs * eta_resp) ** (-0.5 - b)
     )
-    spec = pref * (
-        yv(0.5 + b, kv * eta_resp) * IJ - jv(0.5 + b, kv * eta_resp) * IY
-    )
+    spec = pref * (yv(0.5 + b, kv * eta_resp) * IJ - jv(0.5 + b, kv * eta_resp) * IY)
     return out["value"], spec, IJ, IY
 
 
@@ -123,7 +122,7 @@ if __name__ == "__main__":
         (200.0, 120.0, 90.0, 1e-3, 1.0),
     ]
     print(f"{'k':>7} {'q':>7} {'r':>7} {'code':>16} {'spec R14':>16} {'rel diff':>11}")
-    for (kv, qv, rv, e0, e1) in cases:
+    for kv, qv, rv, e0, e1 in cases:
         code, spec, IJ, IY = run(kv, qv, rv, e0, e1)
         rel = abs(code - spec) / abs(spec)
         print(f"{kv:7.4g} {qv:7.4g} {rv:7.4g} {code:16.9e} {spec:16.9e} {rel:11.3e}")

@@ -1,4 +1,5 @@
 import os
+
 """GK_06: at FIXED response redshift, build G as a function of source redshift the way
 GkSource / GkSourcePolicyData do, and check
 
@@ -78,18 +79,24 @@ def wkb_G(z_source, z_response):
 
 if __name__ == "__main__":
     z_response = 20.0
-    print(f"w={W}, k={K}, z_response={z_response}, k*tau(z_response)={K*tau(z_response):.4g}")
+    print(
+        f"w={W}, k={K}, z_response={z_response}, k*tau(z_response)={K*tau(z_response):.4g}"
+    )
 
     print("\n=== (i) unit-jump sign as z_source -> z_response from above")
     print(f"    {'dz':>9} {'G_num':>14} {'G/(-dz)':>12} {'G_analytic':>14}")
     for dz in (1e-4, 1e-3, 1e-2, 1e-1):
         zs = z_response + dz
         G = numeric_G(zs, z_response)
-        Ga = compute_analytic_G(K, W, tau(zs), tau(z_response), model.functions.Hubble(zs))
+        Ga = compute_analytic_G(
+            K, W, tau(zs), tau(z_response), model.functions.Hubble(zs)
+        )
         print(f"    {dz:9.0e} {G:14.7g} {G/(-dz):12.7f} {Ga:14.7g}")
 
     print("\n=== (ii) numeric branch vs WKB branch at the same (z_source, z_response)")
-    print(f"    {'z_source':>10} {'efolds_subh':>11} {'G_numeric':>14} {'G_WKB_branch':>14} {'rel':>10}")
+    print(
+        f"    {'z_source':>10} {'efolds_subh':>11} {'G_numeric':>14} {'G_WKB_branch':>14} {'rel':>10}"
+    )
     for z_source in (200.0, 150.0, 100.0, 60.0, 40.0, 30.0, 25.0):
         Gn = numeric_G(z_source, z_response)
         Gw, sin_c, dT = wkb_G(z_source, z_response)
@@ -97,7 +104,9 @@ if __name__ == "__main__":
         rel = fabs(Gw - Gn) / max(fabs(Gn), 1e-300)
         print(f"    {z_source:10.3f} {efolds:11.4g} {Gn:14.7g} {Gw:14.7g} {rel:10.2e}")
 
-    print("\n    (both branches have the same sign and normalisation; sin_coeff > 0 always:")
+    print(
+        "\n    (both branches have the same sign and normalisation; sin_coeff > 0 always:"
+    )
     for z_source in (200.0, 100.0, 40.0):
         _, sin_c, dT = wkb_G(z_source, z_response)
         print(f"     z_source={z_source}: sin_coeff={sin_c:.6g}, deltaTheta={dT:.6g}")

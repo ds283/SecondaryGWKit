@@ -1,4 +1,5 @@
 import os
+
 """QS_04:
 (a) exercise compute_quad_source's z-grid alignment loop (ComputeTargets/QuadSource.py:82-102)
     with mock Tq/Tr whose z_sample is the *actual* shape main.py gives it -- shorter than
@@ -11,6 +12,7 @@ import os
 import sys, types
 
 sys.path.insert(0, os.getcwd())  # run from the repository root
+
 
 # ------------------------------------------------------------------ (a)
 # stand-ins with just the attributes the loop touches
@@ -76,8 +78,12 @@ tk2 = MockTk(full[2:])
 print("\n    control, Tk missing only the 2 leading high-z samples:")
 try:
     out = fn(MockProxy(), full, tk2, tk2)
-    print("      OK,", len(out["source"]), "values; first two use the T=1,T'=0 default:",
-          out["source"][:3])
+    print(
+        "      OK,",
+        len(out["source"]),
+        "values; first two use the T=1,T'=0 default:",
+        out["source"][:3],
+    )
 except Exception as e:
     print(f"      RAISED {type(e).__name__}: {e}")
 
