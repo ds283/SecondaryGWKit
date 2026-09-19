@@ -39,6 +39,14 @@ numeric stop point $z_{\rm init}$ is a `root_scalar` root, so where the seam sit
 it is located are the same decision.) Background reading:
 [`docs/lg-phase-and-handover-followup-2026-09.md`](lg-phase-and-handover-followup-2026-09.md).
 
+**Planned 2026-09-19 as [`prompts/handover/`](../prompts/handover/README.md)** — five workstreams,
+no prompt written and no board yet, so every row below still closes on the board named in its own
+line. The plan also draws in `[12-phase-spline-error-grows-with-x]` (§1.4),
+`[20-wkb-rows-consume-numeric-initial-data]` (§1.4), `[00-consumer-anchoring-floor]` (§1.4),
+`[02-consumer-phi-below-the-storage-granularity]` (§1.6) and
+`[01-general-w-normalisation-is-predicted-not-measured]` (§1.9); those rows are **not** moved here,
+because none has changed status.
+
 | Issue | Board | Hook |
 |---|---|---|
 | `[08-handover-clamp-error]` | source-remediation | The WKB grid starts below `crossover_z`, so the LG accessors are clamped across a gap; a one-step gap moves `total` by 5.1e-03. |
