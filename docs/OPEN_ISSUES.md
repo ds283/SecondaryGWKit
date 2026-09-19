@@ -1,6 +1,6 @@
 # Open issues — project-wide index
 
-**Last updated:** 2026-09-19 · **81 open** across eleven campaigns.
+**Last updated:** 2026-09-19 · **80 open** across eleven campaigns.
 
 This file exists so that an issue opened by one campaign is not lost when that campaign closes.
 It is an **index, not a record**: one line per issue, pointing at the campaign status board that
@@ -22,7 +22,12 @@ the two disagree, the board is right.
 [`qcd-background-audit`](../prompts/qcd-background-audit/IMPLEMENTATION_STATE.md) ·
 [`tolerance-convergence`](../prompts/tolerance-convergence/IMPLEMENTATION_STATE.md) ·
 [`background-solver-robustness`](../prompts/background-solver-robustness/IMPLEMENTATION_STATE.md) ·
-[`radiation-oracle`](../prompts/radiation-oracle/IMPLEMENTATION_STATE.md)
+[`radiation-oracle`](../prompts/radiation-oracle/IMPLEMENTATION_STATE.md) ·
+[`test-suite-runtime`](../prompts/test-suite-runtime/IMPLEMENTATION_STATE.md)
+
+The last of these holds **no** open issue — it is listed so that its §4, which closed
+`transfer-remedial`'s `[08-3bessel-plot-cost-dominates-the-suite]` on 2026-09-19, can be
+found. The 80 above are spread across the other eleven.
 
 ---
 
@@ -619,7 +624,6 @@ Something was asserted statically or on a stand-in, and a live exercise is still
 | `[06-three-bessel-plot-calls-a-non-callable-phase]` | transfer-remedial | `QuadSourceIntegral_debug.three_bessel_plot` calls the phase object directly; no phase class has ever defined `__call__`, so it is dead in the same way `plot_besssel_phase.py` was. Repair-or-delete, unowned. |
 | `[08-3bessel-chebyshev-order-is-now-the-limit]` | transfer-remedial | `DEFAULT_3BESSEL_CHEBYSHEV_ORDER = 12` now binds the two $(0,0,0)$ three-Bessel oracles — order 20 buys J000 and Y000 three orders — while making the other five 4×–1500× worse. A per-integrand or convergence-checked order, not a constant to bump. |
 | `[08-tk-fixture-scipy-comparison-unasserted]` | transfer-remedial | `test_tk_source_functions`'s `err_scipy` is the campaign's headline downstream number (1.985e-06 → 3.021e-08) and is printed, not asserted; prompt 08 may only change comments and tolerances in that file, and prompt 09's `source-remediation` hand-off is restricted to one entry, so this was not folded in either. |
-| `[08-3bessel-plot-cost-dominates-the-suite]` | transfer-remedial | `test_3bessel_analytic` spends its whole wall clock (21.2 min for one test) evaluating 250-point grids of three-Bessel integrals to draw figures, not on assertions — which is why a module-level failure survived three prompts. Proposal only; nothing implemented. |
 | `[03-backgroundmodelvalue-build-path]` | GkTk-remedial | `sqla_BackgroundModelValue_factory.build()`'s query-existing-row branch inserts with key `"wkb_serial"` (column is `model_serial`) and reads `row_data.Hubble` (select has `Hubble_GeV`); confirmed by prompt 03, never exercised by production, not repaired. |
 | `[09-bessel-tier-hardcoded-repo-path]` | transfer-remedial | `bessel_tier.py`'s hardcoded main-checkout `sys.path` entry silently shadows a worktree's own `LiouvilleGreen` package; a re-run from a worktree measures the wrong tree with no warning. Discovered while re-running the $\kappa=1000$ benchmark tier. |
 | `[02-verify-script-builds-its-own-Gk-consumer]` | phase-representation | `docs/gktk-remedial/verify_production_path.py` calls `PrimitivePhase(...)` directly at `:557` and `:1173` instead of going through `GkSourcePolicyData._build_phase`, so six of §3.5's twelve rows and both `theta_deriv` $G_k$ columns are blind to anything the production $G_k$ call site passes. Its $T_k$ half does use `TkSourceFunctions`. Same class as `[13-scoped-run-driver-k-grid-literal]`. |
