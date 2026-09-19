@@ -1,4 +1,5 @@
 import os
+
 """GK_04: check the WKB matching implemented in ComputeTargets/GkWKBIntegration.py:389-418
 against spec 02 R34/R36/R37 (= R25/R26/R30 of NUM 05).
 
@@ -67,9 +68,7 @@ def synthetic():
         G_rec = rc / sqrt(omega)
         # derivative at z*:  d/dz[ omega^{-1/2} f (a cos Theta + b sin Theta) ]
         #   = -(1/2)(omega'/omega) a/omega^{1/2} - (1/2)(eps/(1+z)) a/omega^{1/2} + b omega^{1/2}
-        Gp_rec = (
-            -0.5 * (dlnomega + eps / opz) * rc / sqrt(omega) + rs * sqrt(omega)
-        )
+        Gp_rec = -0.5 * (dlnomega + eps / opz) * rc / sqrt(omega) + rs * sqrt(omega)
         worst_G = max(worst_G, fabs(G_rec - Gs) / max(fabs(Gs), 1e-300))
         worst_Gp = max(worst_Gp, fabs(Gp_rec - Gps) / max(fabs(Gps), 1e-300))
 
@@ -94,7 +93,9 @@ def end_to_end(w=1.0 / 3.0, k=100.0, z_source=None, z_star=None):
         z_source = 200.0
     if z_star is None:
         z_star = 150.0
-    print(f"    k*tau(z_source={z_source})={k*tau(z_source):.4g}, k*tau(z*={z_star})={k*tau(z_star):.4g}")
+    print(
+        f"    k*tau(z_source={z_source})={k*tau(z_source):.4g}, k*tau(z*={z_star})={k*tau(z_star):.4g}"
+    )
 
     z_end = 5.0
     sol = solve_ivp(
@@ -137,7 +138,9 @@ def end_to_end(w=1.0 / 3.0, k=100.0, z_source=None, z_star=None):
     )
     assert phase.success
 
-    print(f"    {'z':>8} {'theta':>12} {'G_WKB':>14} {'G_exact':>14} {'G_analytic':>14} {'rel':>10}")
+    print(
+        f"    {'z':>8} {'theta':>12} {'G_WKB':>14} {'G_exact':>14} {'G_analytic':>14} {'rel':>10}"
+    )
     worst = 0.0
     for i in range(0, len(zs), 40):
         z = zs[i]
@@ -147,10 +150,14 @@ def end_to_end(w=1.0 / 3.0, k=100.0, z_source=None, z_star=None):
         norm = sqrt((H_star / H) / omega)
         G_WKB = norm * (sin_c * sin(theta + dTheta) + cos_c * cos(theta + dTheta))
         G_exact = sol.sol(z)[0]
-        G_an = compute_analytic_G(k, w, tau(z_source), tau(z), model.functions.Hubble(z_source))
+        G_an = compute_analytic_G(
+            k, w, tau(z_source), tau(z), model.functions.Hubble(z_source)
+        )
         rel = fabs(G_WKB - G_exact) / max(fabs(G_exact), 1e-300)
         worst = max(worst, rel)
-        print(f"    {z:8.3f} {theta:12.5g} {G_WKB:14.7g} {G_exact:14.7g} {G_an:14.7g} {rel:10.2e}")
+        print(
+            f"    {z:8.3f} {theta:12.5g} {G_WKB:14.7g} {G_exact:14.7g} {G_an:14.7g} {rel:10.2e}"
+        )
     print(f"    worst |G_WKB/G_exact - 1| = {worst:.3e}")
 
 

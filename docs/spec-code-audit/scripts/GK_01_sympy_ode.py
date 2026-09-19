@@ -1,4 +1,5 @@
 import os
+
 """GK_01: derive the redshift-space Green's-function ODE (spec 02 R11->R17) with sympy and
 compare term-by-term with the RHS coded in ComputeTargets/GkNumericIntegration.py:64-66.
 
@@ -29,7 +30,10 @@ subs_deriv = {sp.diff(H, z): Hp}
 a_pp_over_a_e = sp.simplify(a_pp_over_a.subs(subs_deriv).subs(Hp, eps * H / one_plus_z))
 target = a0**2 * H**2 * (2 - eps) / one_plus_z**2
 print("a''/a  =", sp.simplify(a_pp_over_a_e))
-print("check a''/a == a0^2 H^2 (2-eps)/(1+z)^2 :", sp.simplify(a_pp_over_a_e - target) == 0)
+print(
+    "check a''/a == a0^2 H^2 (2-eps)/(1+z)^2 :",
+    sp.simplify(a_pp_over_a_e - target) == 0,
+)
 
 # full equation, divided by a0^2 H^2
 eqn = d_deta(d_deta(G)) + (kcom**2 - a_pp_over_a) * G

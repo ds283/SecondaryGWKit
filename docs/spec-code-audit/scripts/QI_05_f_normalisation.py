@@ -1,4 +1,5 @@
 import os
+
 """QI_05: is the f used by the numerical branches (QuadSource.source_function) the same f
 whose fixed-w Bessel reduction the analytic branch implements (spec 04 R11 final form)?
 
@@ -55,7 +56,8 @@ def f_spec_R28_main14(qv, rv, eta, b, cs):
     xq = qv * cs * eta
     xr = rv * cs * eta
     pref = (
-        (2.0 + b) / (3.0 + 2.0 * b) ** 3
+        (2.0 + b)
+        / (3.0 + 2.0 * b) ** 3
         * 2.0 ** (3.0 + 2.0 * b)
         * gamma(2.5 + b) ** 2
         * xq ** (-0.5 - b)
@@ -69,8 +71,10 @@ def f_spec_R28_main14(qv, rv, eta, b, cs):
 
 if __name__ == "__main__":
     eta0 = 1.0e-3  # eta at which 1+z = 1, irrelevant to the ratio
-    print(f"{'b':>5} {'w':>8} {'eta':>7} {'f_code':>15} {'f_R11':>15} {'reldiff':>10}"
-          f" {'f_code/f_R28':>14} {'1/c^2':>10}")
+    print(
+        f"{'b':>5} {'w':>8} {'eta':>7} {'f_code':>15} {'f_R11':>15} {'reldiff':>10}"
+        f" {'f_code/f_R28':>14} {'1/c^2':>10}"
+    )
     for b in (0.0, 0.2, -0.15):
         w = (1.0 - b) / (3.0 * (1.0 + b))
         cs = sqrt(w)  # cs^2 = w for constant w (script QI_01 item (d))

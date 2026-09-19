@@ -1,4 +1,5 @@
 import os
+
 """GK_03: numerically integrate the code's *actual* RHS (imported from
 ComputeTargets.GkNumericIntegration) on an exact constant-w background and compare with
 ComputeTargets.analytic_Gk.compute_analytic_G / compute_analytic_Gprime.
@@ -100,7 +101,15 @@ def run(w, k, z_source, z_targets, H0=1.0, rtol=1e-11, atol=1e-13):
         Ga = compute_analytic_G(k, w, tau_s, tau, Hs)
         Gpa = compute_analytic_Gprime(k, w, tau_s, tau, Hs, model.functions.Hubble(z))
         rows.append(
-            (z, G, Ga, abs(G - Ga) / max(abs(Ga), 1e-300), Gp, Gpa, abs(Gp - Gpa) / max(abs(Gpa), 1e-300))
+            (
+                z,
+                G,
+                Ga,
+                abs(G - Ga) / max(abs(Ga), 1e-300),
+                Gp,
+                Gpa,
+                abs(Gp - Gpa) / max(abs(Gpa), 1e-300),
+            )
         )
     return rows, sol
 
@@ -115,17 +124,23 @@ if __name__ == "__main__":
         print(f"\n=== w={w:.5f}, k={k} (k_phys today), H0=1")
         model, b, n = make_model(w)
         z_source = 20.0
-        print(f"    b={b:.5g}, eps={n:.5g}, k*tau_source={k*model.functions.tau(z_source):.5g}")
+        print(
+            f"    b={b:.5g}, eps={n:.5g}, k*tau_source={k*model.functions.tau(z_source):.5g}"
+        )
         z_targets = [19.0, 15.0, 10.0, 5.0, 2.0, 1.0, 0.5]
         rows, sol = run(w, k, z_source, z_targets)
-        print(f"    {'z':>8} {'k*tau':>9} {'G_num':>14} {'G_analytic':>14} {'relerr':>10} {'relerr(G\')':>11}")
-        for (z, G, Ga, rel, Gp, Gpa, relp) in rows:
+        print(
+            f"    {'z':>8} {'k*tau':>9} {'G_num':>14} {'G_analytic':>14} {'relerr':>10} {'relerr(G\')':>11}"
+        )
+        for z, G, Ga, rel, Gp, Gpa, relp in rows:
             print(
                 f"    {z:8.3f} {k*model.functions.tau(z):9.4g} {G:14.7g} {Ga:14.7g} {rel:10.2e} {relp:11.2e}"
             )
 
     # --- sign / unit-jump check just below the source
-    print("\n=== sign and unit jump near the source (expect G ~ (z - z') < 0 for z < z')")
+    print(
+        "\n=== sign and unit jump near the source (expect G ~ (z - z') < 0 for z < z')"
+    )
     w = 1.0 / 3.0
     model, b, n = make_model(w)
     z_source = 20.0
@@ -153,4 +168,6 @@ if __name__ == "__main__":
     for z in (20.0, 5.0, 1.0):
         o2 = Gk_omegaEff_sq(model, 1.0, z)
         dl = Gk_d_ln_omegaEff_dz(model, 1.0, z)
-        print(f"    z={z:6.2f}: omega^2={o2:.8g}, |dlnomega/dz|/omega={abs(dl)/np.sqrt(o2):.5g}")
+        print(
+            f"    z={z:6.2f}: omega^2={o2:.8g}, |dlnomega/dz|/omega={abs(dl)/np.sqrt(o2):.5g}"
+        )

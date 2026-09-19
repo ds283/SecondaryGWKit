@@ -1,4 +1,5 @@
 import os
+
 """
 TK_06: quantify the grid-end bias of BackgroundModel._build_derivative for a cosmology that
 supplies NO analytic derivative methods (which is the case for LambdaCDM_GenericEOS: it defines
@@ -57,14 +58,19 @@ eps1_ex = np.array(
     [cosmo.d_lnH_dz(z) + opz[i] * cosmo.d2_lnH_dz2(z) for i, z in enumerate(z_samples)]
 )
 eps2_ex = np.array(
-    [2.0 * cosmo.d2_lnH_dz2(z) + opz[i] * cosmo.d3_lnH_dz3(z) for i, z in enumerate(z_samples)]
+    [
+        2.0 * cosmo.d2_lnH_dz2(z) + opz[i] * cosmo.d3_lnH_dz3(z)
+        for i, z in enumerate(z_samples)
+    ]
 )
 wp1_ex = np.array([cosmo.d_wPerturbations_dz(z) for z in z_samples])
 wp2_ex = np.array([cosmo.d2_wPerturbations_dz2(z) for z in z_samples])
 
-print(f"\n{'quantity':>12} {'stack depth':>11} | relative error:"
-      f" {'z=0.1 (end)':>13} {'2nd pt':>10} {'3rd pt':>10}"
-      f" {'median':>10} {'z=1e12 (end)':>13} {'2nd from top':>13}")
+print(
+    f"\n{'quantity':>12} {'stack depth':>11} | relative error:"
+    f" {'z=0.1 (end)':>13} {'2nd pt':>10} {'3rd pt':>10}"
+    f" {'median':>10} {'z=1e12 (end)':>13} {'2nd from top':>13}"
+)
 for name, depth, got, want in [
     ("epsilon", 1, eps_spl, eps_ex),
     ("d_eps_dz", 2, eps1_spl, eps1_ex),
@@ -73,6 +79,8 @@ for name, depth, got, want in [
     ("w''", 2, wp2, wp2_ex),
 ]:
     r = np.abs((got - want) / want)
-    print(f"{name:>12} {depth:>11} | {'':>15}"
-          f" {r[0]:13.3e} {r[1]:10.3e} {r[2]:10.3e} {np.median(r[5:-5]):10.3e}"
-          f" {r[-1]:13.3e} {r[-2]:13.3e}")
+    print(
+        f"{name:>12} {depth:>11} | {'':>15}"
+        f" {r[0]:13.3e} {r[1]:10.3e} {r[2]:10.3e} {np.median(r[5:-5]):10.3e}"
+        f" {r[-1]:13.3e} {r[-2]:13.3e}"
+    )

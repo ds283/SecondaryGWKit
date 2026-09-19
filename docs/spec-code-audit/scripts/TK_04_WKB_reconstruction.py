@@ -1,4 +1,5 @@
 import os
+
 """
 TK_04: reproduce the Liouville-Green reconstruction of T_k exactly as
 ComputeTargets/TkWKBIntegration.store() (lines 434-506) assembles it, on a constant-w
@@ -90,11 +91,15 @@ def wkb_reconstruct(w, k, z_init, z_stop, n=25):
     sgn = (+1 if sin(deltaTheta) >= 0.0 else -1) * (+1 if T_init >= 0.0 else -1)
     sin_coeff = sgn * B
 
-    print(f"\n=== w={w}, k={k}, z_init={z_init} (k/aH_init = "
-          f"{(1+z_init)*k/H_init:.4g}) ===")
+    print(
+        f"\n=== w={w}, k={k}, z_init={z_init} (k/aH_init = "
+        f"{(1+z_init)*k/H_init:.4g}) ==="
+    )
     print(f"  sgn correction factor = {sgn:+d}  (expected +1: it is always a no-op)")
-    print(f"  {'z':>12} {'theta':>12} {'T_WKB':>15} {'T_exact':>15} {'rel diff':>10}"
-          f" {'err/envelope':>13}")
+    print(
+        f"  {'z':>12} {'theta':>12} {'T_WKB':>15} {'T_exact':>15} {'rel diff':>10}"
+        f" {'err/envelope':>13}"
+    )
     worst = 0.0
     worst_env = 0.0
     for i, z in enumerate(sol_theta.t):
@@ -111,9 +116,13 @@ def wkb_reconstruct(w, k, z_init, z_stop, n=25):
             worst = max(worst, rel)
             worst_env = max(worst_env, env)
         if i % max(1, len(sol_theta.t) // 8) == 0 or i == len(sol_theta.t) - 1:
-            print(f"  {z:12.5g} {theta:12.5g} {T_wkb:15.7g} {T_ex:15.7g} {rel:10.2e}"
-                  f" {env:13.2e}")
-    print(f"  worst (excluding z_init): rel diff {worst:.3e},  |err|/envelope {worst_env:.3e}")
+            print(
+                f"  {z:12.5g} {theta:12.5g} {T_wkb:15.7g} {T_ex:15.7g} {rel:10.2e}"
+                f" {env:13.2e}"
+            )
+    print(
+        f"  worst (excluding z_init): rel diff {worst:.3e},  |err|/envelope {worst_env:.3e}"
+    )
     return worst, worst_env
 
 

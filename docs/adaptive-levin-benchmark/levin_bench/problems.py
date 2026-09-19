@@ -253,7 +253,9 @@ def select_omega(cls, decade, floor=_SCALED_ORACLE_FLOOR, n_candidates=400):
             continue
         if abs(p.reference) * w >= floor:
             return w
-    raise RuntimeError(f"no well-scaled frequency found for {cls._name} in decade {decade}")
+    raise RuntimeError(
+        f"no well-scaled frequency found for {cls._name} in decade {decade}"
+    )
 
 
 def omega_ladder(cls, decades):
@@ -294,15 +296,15 @@ def validate_oracles(omega=13.0):
         # resolve many oscillations inside a single panel
         n_panels = max(8, int(4 * p.n_oscillations))
         edges = [a + (b - a) * mp.mpf(i) / n_panels for i in range(n_panels + 1)]
-        ref = mp.fsum(
-            mp.quad(g, [edges[i], edges[i + 1]]) for i in range(n_panels)
-        )
+        ref = mp.fsum(mp.quad(g, [edges[i], edges[i + 1]]) for i in range(n_panels))
         rel = abs(mp.mpf(p.reference) - ref) / abs(ref)
         out.append((p.name, p.reference, float(ref), float(rel)))
     return out
 
 
 if __name__ == "__main__":
-    print(f"{'problem':>14s} {'closed form':>24s} {'mpmath quad':>24s} {'rel diff':>10s}")
+    print(
+        f"{'problem':>14s} {'closed form':>24s} {'mpmath quad':>24s} {'rel diff':>10s}"
+    )
     for name, cf, num, rel in validate_oracles():
         print(f"{name:>14s} {cf:>24.16e} {num:>24.16e} {rel:>10.2e}")

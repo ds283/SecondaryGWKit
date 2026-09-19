@@ -48,6 +48,7 @@ def _write(rows, path):
             w.writerow({k: v for k, v in r.items() if k in cols})
     return path
 
+
 HERE = Path(__file__).resolve().parent
 ROOT = HERE.parent
 RESULTS = ROOT / "results"

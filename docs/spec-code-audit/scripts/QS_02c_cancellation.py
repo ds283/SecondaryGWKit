@@ -1,4 +1,5 @@
 import os
+
 """QS_02c: locate the float64 cancellation in compute_analytic_Tprime
 (ComputeTargets/analytic_Tk.py:19-36).  The bracket
    D = x J_{b+1/2}(x) - (3+2b) J_{b+3/2}(x) - x J_{b+5/2}(x)
@@ -51,7 +52,9 @@ for w in (mp.mpf(1) / 3, mp.mpf("0.2"), mp.mpf("0.5"), mp.mpf("0.05")):
             rows.append((rel, Trel, float(w), float(k), float(z), x))
 
 rows.sort(reverse=True)
-print(f"{'rel err Tprime':>15} {'rel err T':>11} {'w':>7} {'k':>7} {'z':>9} {'x=k cs a0eta':>14}")
+print(
+    f"{'rel err Tprime':>15} {'rel err T':>11} {'w':>7} {'k':>7} {'z':>9} {'x=k cs a0eta':>14}"
+)
 for r in rows[:12]:
     print(f"{r[0]:15.3e} {r[1]:11.3e} {r[2]:7.4f} {r[3]:7.3g} {r[4]:9.3g} {r[5]:14.4e}")
 print("\nCorrelation: the error scales as ~ 1e-16 / x^2 (loss of the O(x^3) bracket).")
@@ -62,6 +65,10 @@ for ze in range(0, 8):
     z = mp.mpf(10) ** ze
     x = float(mp.sqrt(w) * a0eta(z, w))
     exact = mp.diff(lambda zz: T_mp(mp.mpf(1), w, zz), z)
-    code = compute_analytic_Tprime(1.0, float(w), float(a0eta(z, w)), float(Hubble(z, w)))
+    code = compute_analytic_Tprime(
+        1.0, float(w), float(a0eta(z, w)), float(Hubble(z, w))
+    )
     rel = float(abs(mp.mpf(code) - exact) / abs(exact))
-    print(f"  z={float(z):9.3g}  x={x:10.3e}  rel={rel:10.3e}  1e-16/x^2={1e-16/x**2:10.3e}")
+    print(
+        f"  z={float(z):9.3g}  x={x:10.3e}  rel={rel:10.3e}  1e-16/x^2={1e-16/x**2:10.3e}"
+    )

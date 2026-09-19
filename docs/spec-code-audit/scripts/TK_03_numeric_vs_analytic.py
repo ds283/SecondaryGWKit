@@ -1,4 +1,5 @@
 import os
+
 """
 TK_03: integrate the *actual* RHS coded in ComputeTargets/TkNumericIntegration.py on a
 constant-w background stand-in, and compare with ComputeTargets/analytic_Tk.compute_analytic_T
@@ -88,10 +89,14 @@ def run(w, k, z_init, z_stop, n=40):
     assert sol.success, sol.message
 
     print(f"\n=== w = {w}, k = {k}, z_init = {z_init} ===")
-    print(f"  k/(aH) at z_init = {(1+z_init)*k/model.Hubble(z_init):.4g}"
-          f"  (e-folds superhorizon = {-np.log((1+z_init)*k/model.Hubble(z_init)):.3g})")
-    print(f"  {'z':>12} {'k c_s tau':>11} {'T_numeric':>14} {'T_analytic':>14} {'rel diff':>10}"
-          f" {'Tp_num':>13} {'Tp_analytic':>13} {'rel diff':>10}")
+    print(
+        f"  k/(aH) at z_init = {(1+z_init)*k/model.Hubble(z_init):.4g}"
+        f"  (e-folds superhorizon = {-np.log((1+z_init)*k/model.Hubble(z_init)):.3g})"
+    )
+    print(
+        f"  {'z':>12} {'k c_s tau':>11} {'T_numeric':>14} {'T_analytic':>14} {'rel diff':>10}"
+        f" {'Tp_num':>13} {'Tp_analytic':>13} {'rel diff':>10}"
+    )
     worst_T = 0.0
     worst_Tp = 0.0
     for i, z in enumerate(sol.t):
@@ -106,8 +111,10 @@ def run(w, k, z_init, z_stop, n=40):
             worst_T = max(worst_T, rT)
             worst_Tp = max(worst_Tp, rTp)
         if i % max(1, len(sol.t) // 10) == 0 or i == len(sol.t) - 1:
-            print(f"  {z:12.5g} {k*np.sqrt(w)*tau:11.4g} {Tn:14.7g} {Ta:14.7g} {rT:10.2e}"
-                  f" {Tpn:13.6g} {Tpa:13.6g} {rTp:10.2e}")
+            print(
+                f"  {z:12.5g} {k*np.sqrt(w)*tau:11.4g} {Tn:14.7g} {Ta:14.7g} {rT:10.2e}"
+                f" {Tpn:13.6g} {Tpa:13.6g} {rTp:10.2e}"
+            )
     print(f"  worst relative difference: T {worst_T:.3e},  dT/dz {worst_Tp:.3e}")
     return worst_T, worst_Tp
 

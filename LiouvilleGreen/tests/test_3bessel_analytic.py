@@ -35,8 +35,14 @@ The tolerances are therefore sized by the worst oracle over random draws, not by
 1.740e-09 (Y000) and the worst non-triangle absolute error 4.056e-10 (J000). REL_TOLERANCE and
 ABS_TOLERANCE below are 100x tighter than before and keep a factor of 25 to 57 over those, which
 is the right margin for a test that draws its own wavenumbers on every run.
+
+The convergence figures this module used to draw on every run are now behind
+THREE_BESSEL_DIAGNOSTIC_PLOTS -- see the note on DIAGNOSTIC_PLOTS below. Set it to anything other
+than "0" or "false" to get them back, along with `test_YJJ_log_scaling`, which draws the eps
+scaling and asserts nothing.
 """
 
+import os
 import time
 import unittest
 from datetime import datetime
@@ -44,8 +50,6 @@ from pathlib import Path
 from random import uniform
 
 import numpy as np
-import seaborn as sns
-from matplotlib import pyplot as plt
 
 from LiouvilleGreen.bessel_phase import (
     DEFAULT_AMPLITUDE_RTOL,
@@ -57,6 +61,22 @@ from utilities import format_time
 
 ABS_TOLERANCE = 1e-8
 REL_TOLERANCE = 1e-7
+
+# The convergence figures this module can draw are a diagnostic, not part of any assertion. Each
+# one evaluates the integral on a 250-point grid in x purely to show it settling onto the closed
+# form; the assertion itself reads only the single evaluation at max_x that follows. Measured at
+# (k, q, s) = (1.3, 1.7, 2.1), max_x = 1e12, atol = 1e-14, rtol = 1e-10, that grid costs 42.5 s
+# against 0.14 s for the asserted evaluation -- a factor of ~300 -- and the module ran the helper
+# 47 times, which made it 1121 s of a 1321 s suite (85 % of the whole thing) and wrote 110 files.
+# So the grid and the figures are off unless THREE_BESSEL_DIAGNOSTIC_PLOTS is set to something
+# other than "0" or "false". Nothing any assertion reads depends on them, and the numbers the
+# assertions do read are bit-for-bit what they were: the final evaluator call is unchanged, and
+# the grid never fed back into it.
+DIAGNOSTIC_PLOTS = os.environ.get("THREE_BESSEL_DIAGNOSTIC_PLOTS", "").lower() not in (
+    "",
+    "0",
+    "false",
+)
 
 # Neither singularity band is tightened, and what limits them is genuine near-singular behaviour
 # rather than anything this campaign touched. `test_YJJ_log_singularity` walks s to within eps of
@@ -86,8 +106,19 @@ def is_triangle(k: float, q: float, s: float):
     return np.fabs(k - q) < s < k + q
 
 
-def plot_and_compute_3Bessel(
+def _figure_path(label, mu, nu, sigma, k, q, s, max_x, timestamp):
+    path = Path(
+        f"test_3bessel_analytic/{timestamp.isoformat()}/{label}_mu={mu:.3f}_nu={nu:.3f}_sigma={sigma:.3f}_k={k:.3f}_q={q:.3f}_s={s:.3f}_maxx={max_x:.5g}.pdf"
+    ).resolve()
+    path.parents[0].mkdir(parents=True, exist_ok=True)
+    return path
+
+
+def _plot_convergence(
     evaluator,
+    mu_phase,
+    nu_phase,
+    sigma_phase,
     mu: float,
     nu: float,
     sigma: float,
@@ -98,34 +129,18 @@ def plot_and_compute_3Bessel(
     analytic_result: float,
     label: str,
     timestamp,
-    phase_atol=DEFAULT_PHASE_ATOL,
-    amplitude_rtol=DEFAULT_AMPLITUDE_RTOL,
-    quad_atol=1e-14,
-    quad_rtol=1e-10,
+    quad_atol: float,
+    quad_rtol: float,
 ):
-    # These used to be atol=1e-25, rtol=5e-14 -- tolerances of the phase ODE solve, which the
-    # two-region construction (prompts/transfer-remedial prompt 05) no longer performs. Those
-    # arguments are now accepted, ignored and warned about, so the builds here were *already*
-    # running at the defaults; passing the defaults explicitly changes no number and removes
-    # three DeprecationWarnings per case. See IMPLEMENTATION_STATE.md standing note 20.
-    mu_phase = bessel_phase(
-        mu + 0.5,
-        1.075 * k * max_x,
-        phase_atol=phase_atol,
-        amplitude_rtol=amplitude_rtol,
-    )
-    nu_phase = bessel_phase(
-        nu + 0.5,
-        1.075 * q * max_x,
-        phase_atol=phase_atol,
-        amplitude_rtol=amplitude_rtol,
-    )
-    sigma_phase = bessel_phase(
-        sigma + 0.5,
-        1.075 * s * max_x,
-        phase_atol=phase_atol,
-        amplitude_rtol=amplitude_rtol,
-    )
+    """
+    Draw the integral against its closed form over a 250-point grid in x, to show it converging.
+
+    Diagnostic only -- see the DIAGNOSTIC_PLOTS note above for what this costs and why it is off
+    by default. `seaborn` and `matplotlib` are imported here rather than at module scope so that
+    a default run does not pay for them either.
+    """
+    import seaborn as sns
+    from matplotlib import pyplot as plt
 
     x_grid = np.logspace(np.log10(100.0), np.log10(max_x), 250)
     y_grid = [
@@ -170,14 +185,88 @@ def plot_and_compute_3Bessel(
     ax.legend(loc="best")
     ax.grid(True)
 
-    fig_path = Path(
-        f"test_3bessel_analytic/{timestamp.isoformat()}/{label}_mu={mu:.3f}_nu={nu:.3f}_sigma={sigma:.3f}_k={k:.3f}_q={q:.3f}_s={s:.3f}_maxx={max_x:.5g}.pdf"
-    ).resolve()
-    fig_path.parents[0].mkdir(parents=True, exist_ok=True)
+    fig_path = _figure_path(label, mu, nu, sigma, k, q, s, max_x, timestamp)
     fig.savefig(fig_path)
     fig.savefig(fig_path.with_suffix(".png"))
 
     plt.close()
+
+
+def compute_3Bessel(
+    evaluator,
+    mu: float,
+    nu: float,
+    sigma: float,
+    k: float,
+    q: float,
+    s: float,
+    max_x: float,
+    analytic_result: float,
+    label: str,
+    timestamp,
+    phase_atol=DEFAULT_PHASE_ATOL,
+    amplitude_rtol=DEFAULT_AMPLITUDE_RTOL,
+    quad_atol=1e-14,
+    quad_rtol=1e-10,
+    mu_phase=None,
+    nu_phase=None,
+):
+    """
+    Evaluate the three-Bessel integral at `max_x`, which is the number the callers assert on.
+
+    `mu_phase` and `nu_phase` may be supplied by a caller that already holds them: they depend
+    only on `mu`/`k` and `nu`/`q`, so a caller sweeping `s` at fixed `k`, `q` would otherwise
+    rebuild the same two objects on every step. `sigma_phase` depends on `s` and is always built
+    here.
+
+    When DIAGNOSTIC_PLOTS is set, the convergence figure is drawn first, from the same three
+    phase objects. It does not affect the returned result.
+    """
+    # These used to be atol=1e-25, rtol=5e-14 -- tolerances of the phase ODE solve, which the
+    # two-region construction (prompts/transfer-remedial prompt 05) no longer performs. Those
+    # arguments are now accepted, ignored and warned about, so the builds here were *already*
+    # running at the defaults; passing the defaults explicitly changes no number and removes
+    # three DeprecationWarnings per case. See IMPLEMENTATION_STATE.md standing note 20.
+    if mu_phase is None:
+        mu_phase = bessel_phase(
+            mu + 0.5,
+            1.075 * k * max_x,
+            phase_atol=phase_atol,
+            amplitude_rtol=amplitude_rtol,
+        )
+    if nu_phase is None:
+        nu_phase = bessel_phase(
+            nu + 0.5,
+            1.075 * q * max_x,
+            phase_atol=phase_atol,
+            amplitude_rtol=amplitude_rtol,
+        )
+    sigma_phase = bessel_phase(
+        sigma + 0.5,
+        1.075 * s * max_x,
+        phase_atol=phase_atol,
+        amplitude_rtol=amplitude_rtol,
+    )
+
+    if DIAGNOSTIC_PLOTS:
+        _plot_convergence(
+            evaluator,
+            mu_phase,
+            nu_phase,
+            sigma_phase,
+            mu,
+            nu,
+            sigma,
+            k,
+            q,
+            s,
+            max_x,
+            analytic_result,
+            label,
+            timestamp,
+            quad_atol=quad_atol,
+            quad_rtol=quad_rtol,
+        )
 
     result = evaluator(
         mu_phase,
@@ -394,7 +483,7 @@ class Test3BesselAnalytic(unittest.TestCase):
             s = uniform(0.1, 5.0)
 
             analytic = J.analytic(k, q, s)
-            result = plot_and_compute_3Bessel(
+            result = compute_3Bessel(
                 quad_JJJ,
                 J.mu,
                 J.nu,
@@ -445,7 +534,7 @@ class Test3BesselAnalytic(unittest.TestCase):
             s = uniform(0.1, 5.0)
 
             analytic = Y.analytic(k, q, s)
-            result = plot_and_compute_3Bessel(
+            result = compute_3Bessel(
                 quad_YJJ,
                 Y.mu,
                 Y.nu,
@@ -486,6 +575,21 @@ class Test3BesselAnalytic(unittest.TestCase):
             k = uniform(0.1, 5.0)
             q = uniform(0.1, 5.0)
 
+            # k and q do not vary over the eps sweep below, so neither do these two phase
+            # objects: build them once per oracle rather than 20 times inside compute_3Bessel.
+            mu_phase = bessel_phase(
+                Y.mu + 0.5,
+                1.075 * k * MAX_X,
+                phase_atol=DEFAULT_PHASE_ATOL,
+                amplitude_rtol=DEFAULT_AMPLITUDE_RTOL,
+            )
+            nu_phase = bessel_phase(
+                Y.nu + 0.5,
+                1.075 * q * MAX_X,
+                phase_atol=DEFAULT_PHASE_ATOL,
+                amplitude_rtol=DEFAULT_AMPLITUDE_RTOL,
+            )
+
             for eps in singularity_eps:
                 s_lo = np.abs(k - q) + eps
                 s_hi = k + q - eps
@@ -494,7 +598,7 @@ class Test3BesselAnalytic(unittest.TestCase):
 
                 for label, s in values:
                     analytic = Y.analytic(k, q, s)
-                    result = plot_and_compute_3Bessel(
+                    result = compute_3Bessel(
                         quad_YJJ,
                         Y.mu,
                         Y.nu,
@@ -508,6 +612,8 @@ class Test3BesselAnalytic(unittest.TestCase):
                         timestamp=timestamp,
                         quad_atol=1e-10,
                         quad_rtol=1e-8,
+                        mu_phase=mu_phase,
+                        nu_phase=nu_phase,
                     )
                     numeric = result.value
 
@@ -659,6 +765,10 @@ class Test3BesselAnalytic(unittest.TestCase):
             ),
         )
 
+    @unittest.skipUnless(
+        DIAGNOSTIC_PLOTS,
+        "diagnostic only; set THREE_BESSEL_DIAGNOSTIC_PLOTS to run it",
+    )
     def test_YJJ_log_scaling(
         self,
         max_x=MAX_X,
@@ -667,6 +777,22 @@ class Test3BesselAnalytic(unittest.TestCase):
         quad_atol=1e-10,
         quad_rtol=1e-8,
     ):
+        """
+        How the near-singular YJJ integrals and their closed forms scale as eps -> 0.
+
+        **This makes no assertion of any kind** -- it evaluates 40 near-singular integrals and
+        draws four figures from them, and it reports a pass whatever those numbers are. It is a
+        diagnostic that was carrying a `test_` prefix, so `unittest` ran it on every discovery
+        for a result that could not fail. It is kept, under the same
+        THREE_BESSEL_DIAGNOSTIC_PLOTS switch as the convergence figures, because the scaling it
+        shows is worth being able to look at -- but it is skipped by default.
+
+        The assertion that *does* cover this region, with the tolerances sized for it, is
+        `test_YJJ_log_singularity` above.
+        """
+        import seaborn as sns
+        from matplotlib import pyplot as plt
+
         timestamp = datetime.now().replace(microsecond=0)
 
         sns.set_theme()
@@ -798,7 +924,7 @@ class Test3BesselAnalytic(unittest.TestCase):
                 ax.set_xscale("log")
                 ax.set_yscale("linear")
                 ax.xaxis.set_inverted(True)
-                ax.set_xlabel("$\epsilon$")
+                ax.set_xlabel(r"$\epsilon$")
                 ax.legend(loc="best")
                 ax.grid(True)
 
@@ -852,7 +978,7 @@ class Test3BesselAnalytic(unittest.TestCase):
                 ax.set_xscale("log")
                 ax.set_yscale("log")
                 ax.xaxis.set_inverted(True)
-                ax.set_xlabel("$\epsilon$")
+                ax.set_xlabel(r"$\epsilon$")
                 ax.legend(loc="best")
                 ax.grid(True)
 

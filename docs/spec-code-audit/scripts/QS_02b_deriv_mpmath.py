@@ -1,4 +1,5 @@
 import os
+
 """QS_02b: high-precision confirmation that compute_analytic_Tprime = dT/dz
 (the plain redshift derivative), using mpmath at 50 digits so that the
 finite-difference check is not cancellation-limited at super-horizon scales.
@@ -35,14 +36,25 @@ print(f"{'w':>7} {'z':>9} {'k':>7} {'dT/dz (mp)':>22} {'code':>22} {'rel':>10}")
 worst = 0.0
 for w in (mp.mpf(1) / 3, mp.mpf("0.2"), mp.mpf("0.5")):
     for k in (mp.mpf(1), mp.mpf(30), mp.mpf(1000)):
-        for z in (mp.mpf("1e5"), mp.mpf("1e4"), mp.mpf("1e3"), mp.mpf(100), mp.mpf(10), mp.mpf(1)):
+        for z in (
+            mp.mpf("1e5"),
+            mp.mpf("1e4"),
+            mp.mpf("1e3"),
+            mp.mpf(100),
+            mp.mpf(10),
+            mp.mpf(1),
+        ):
             exact = mp.diff(lambda zz: T_mp(k, w, zz), z)
-            code = compute_analytic_Tprime(float(k), float(w), float(a0eta(z, w)), float(Hubble(z, w)))
+            code = compute_analytic_Tprime(
+                float(k), float(w), float(a0eta(z, w)), float(Hubble(z, w))
+            )
             rel = abs(mp.mpf(code) - exact) / abs(exact)
             worst = max(worst, float(rel))
             if k == 30:
-                print(f"{float(w):7.4f} {float(z):9.3g} {float(k):7.3g} "
-                      f"{mp.nstr(exact, 12):>22} {code:22.12e} {float(rel):10.2e}")
+                print(
+                    f"{float(w):7.4f} {float(z):9.3g} {float(k):7.3g} "
+                    f"{mp.nstr(exact, 12):>22} {code:22.12e} {float(rel):10.2e}"
+                )
 print(f"\nworst relative difference: {worst:.3e}")
 print("=> compute_analytic_Tprime is exactly dT/dz.")
 

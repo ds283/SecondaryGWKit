@@ -341,7 +341,9 @@ def _levin_G0_G1(theta_prime_sample: np.ndarray, width: float) -> Tuple[float, f
     return G0, G1
 
 
-def _roundoff_floor(f_scale: float, width: float, G0: float, G1: float, k: float) -> float:
+def _roundoff_floor(
+    f_scale: float, width: float, G0: float, G1: float, k: float
+) -> float:
     """
     Round-off floor for a region's estimate, from Chen et al. (arXiv:2211.13400v3) eq. (151):
 
@@ -1283,10 +1285,7 @@ def _adaptive_levin_subregion_impl(
     # then assemble the result into a flattened vector in an m x k representation
     # Chen et al. around (166), (167)
     f_Cheb = np.hstack(
-        [
-            _sample_vectorized(func, grid, vectorize_cache, ("f", id(func)))
-            for func in f
-        ]
+        [_sample_vectorized(func, grid, vectorize_cache, ("f", id(func))) for func in f]
     )
 
     if not np.isfinite(f_Cheb).all():
@@ -2138,7 +2137,9 @@ def _adaptive_levin(
         # floor the denominator at local_atol -- the same length-scaled tolerance the acceptance
         # test below uses (rec 8, C3b), so the two stay self-consistent. (min() rather than max()
         # of the two estimates is retained: it is the more conservative choice.)
-        relerr_denom = max(min(np.fabs(estimate), np.fabs(refined_estimate)), local_atol)
+        relerr_denom = max(
+            min(np.fabs(estimate), np.fabs(refined_estimate)), local_atol
+        )
         relerr = abserr / relerr_denom
 
         # Round-off floor for this region, from the parent estimate: it is the parent's endpoints

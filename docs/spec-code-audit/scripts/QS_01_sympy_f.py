@@ -1,4 +1,5 @@
 import os
+
 """QS_01: sympy check that ComputeTargets/QuadSource.py:35-45 source_function
 reproduces spec 03 R22 / §0.3 f exactly.
 
@@ -26,11 +27,7 @@ undiff = (5 + 3 * w) / (3 * (1 + w)) * Tq * Tr
 diff = (
     2
     / (3 * (1 + w))
-    * (
-        -one_plus_z * Tq * Trp
-        - one_plus_z * Tr * Tqp
-        + one_plus_z**2 * Tqp * Trp
-    )
+    * (-one_plus_z * Tq * Trp - one_plus_z * Tr * Tqp + one_plus_z**2 * Tqp * Trp)
 )
 code_f = undiff + diff
 
@@ -46,7 +43,9 @@ print(
 )
 
 # symmetry under q <-> r
-sym = sp.simplify(code_f - code_f.subs({Tq: Tr, Tr: Tq, Tqp: Trp, Trp: Tqp}, simultaneous=True))
+sym = sp.simplify(
+    code_f - code_f.subs({Tq: Tr, Tr: Tq, Tqp: Trp, Trp: Tqp}, simultaneous=True)
+)
 print("code f - code f(q<->r) =", sym)
 assert sym == 0
 print("QS_01: source_function is exactly symmetric under (q,q') <-> (r,r')")
@@ -55,4 +54,8 @@ print("QS_01: source_function is exactly symmetric under (q,q') <-> (r,r')")
 # the spec's own T_qT_r term has coefficient 1, the code's "undiff" has (5+3w)/(3(1+w)).
 # The difference 2/(3(1+w)) T_qT_r has been moved from "diff" to "undiff".
 moved = sp.simplify(undiff - Tq * Tr)
-print("code undiff - spec T_qT_r =", sp.simplify(moved), " (= 2/(3(1+w)) TqTr, a regrouping only)")
+print(
+    "code undiff - spec T_qT_r =",
+    sp.simplify(moved),
+    " (= 2/(3(1+w)) TqTr, a regrouping only)",
+)

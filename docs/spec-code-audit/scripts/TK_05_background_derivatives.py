@@ -1,4 +1,5 @@
 import os
+
 """
 TK_05: exercise the real LambdaCDM(Planck2018) model.
 
@@ -75,14 +76,22 @@ for z_init in [1.0e6, 1.0e8, 1.0e10, 1.0e12]:
         log(1.0 + 1.0e30),
         limit=400,
     )
-    print(f"  {z_init:10.3g} {tau_code:16.9g} {val:16.9g} {abs(tau_code-val)/val:10.2e}")
-print("  (also: (1+z)/H(z) == sqrt(3) M_P (1+z)/sqrt(rho) identically, since rho = 3 H^2 M_P^2:")
+    print(
+        f"  {z_init:10.3g} {tau_code:16.9g} {val:16.9g} {abs(tau_code-val)/val:10.2e}"
+    )
+print(
+    "  (also: (1+z)/H(z) == sqrt(3) M_P (1+z)/sqrt(rho) identically, since rho = 3 H^2 M_P^2:"
+)
 z_chk = 1.0e10
-print(f"   at z={z_chk:g}, difference ="
-      f" {abs(sqrt(3.0)*units.PlanckMass/sqrt(cosmo.rho(z_chk))*(1.0+z_chk) - (1.0+z_chk)/cosmo.Hubble(z_chk)):.3e})")
+print(
+    f"   at z={z_chk:g}, difference ="
+    f" {abs(sqrt(3.0)*units.PlanckMass/sqrt(cosmo.rho(z_chk))*(1.0+z_chk) - (1.0+z_chk)/cosmo.Hubble(z_chk)):.3e})"
+)
 
 # ---------------------------------------------------------------- (c) spline derivative path
-print("\n(c) BackgroundModel._build_derivative spline path: error vs analytic derivative")
+print(
+    "\n(c) BackgroundModel._build_derivative spline path: error vs analytic derivative"
+)
 
 
 def spline_deriv(f, z_samples):
@@ -101,9 +110,11 @@ for n in [200, 500, 1000]:
     got = spline_deriv(lambda z: log(cosmo.Hubble(z)), z_samples)
     want = [cosmo.d_lnH_dz(z) for z in z_samples]
     rel = np.abs((np.array(got) - np.array(want)) / np.array(want))
-    print(f"  n={n:5d} d_lnH_dz: rel err at max-z end = {rel[-1]:.3e},"
-          f" at min-z end = {rel[0]:.3e}, second/penultimate = {rel[1]:.3e}/{rel[-2]:.3e},"
-          f" interior median = {np.median(rel[3:-3]):.3e}")
+    print(
+        f"  n={n:5d} d_lnH_dz: rel err at max-z end = {rel[-1]:.3e},"
+        f" at min-z end = {rel[0]:.3e}, second/penultimate = {rel[1]:.3e}/{rel[-2]:.3e},"
+        f" interior median = {np.median(rel[3:-3]):.3e}"
+    )
 
 # and the *stacked* derivative (d2 from the d1 samples), as the code does when the model
 # has no analytic method
@@ -115,8 +126,10 @@ for n in [500, 1000]:
     d2 = spline_deriv(lambda z: d1_interp[z], z_samples)
     want = np.array([cosmo.d2_lnH_dz2(z) for z in z_samples])
     rel = np.abs((np.array(d2) - want) / want)
-    print(f"  n={n:5d} rel err at max-z end = {rel[-1]:.3e}, at min-z end = {rel[0]:.3e},"
-          f" interior median = {np.median(rel[3:-3]):.3e}")
+    print(
+        f"  n={n:5d} rel err at max-z end = {rel[-1]:.3e}, at min-z end = {rel[0]:.3e},"
+        f" interior median = {np.median(rel[3:-3]):.3e}"
+    )
 
 # ---------------------------------------------------------------- (d) wPerturbations denominators
 print("\n(d) wPerturbations: LambdaCDM (Lambda excluded from denominator) vs")

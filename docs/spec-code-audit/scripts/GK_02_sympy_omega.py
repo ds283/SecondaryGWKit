@@ -1,4 +1,5 @@
 import os
+
 """GK_02: reproduce Gk_omegaEff_sq (spec 02 R20-R22 / R32) and Gk_d_ln_omegaEff_dz
 (spec 02 R31, the NUM 10 fix) symbolically, and compare with ComputeTargets/WKB_Gk.py.
 """
@@ -19,18 +20,21 @@ dlnf = -eps / 2 / one_plus_z
 f_p_over_f = dlnf
 f_pp_over_f = sp.diff(dlnf, z) + dlnf**2  # (f'/f)' + (f'/f)^2
 omega_sq_derived = sp.simplify(
-    f_pp_over_f + eps / one_plus_z * f_p_over_f + k**2 / H**2 + (eps - 2) / one_plus_z**2
+    f_pp_over_f
+    + eps / one_plus_z * f_p_over_f
+    + k**2 / H**2
+    + (eps - 2) / one_plus_z**2
 )
 
 # --- spec R22 / R32 closed form
 E, Ep = sp.symbols("E Ep")  # stand-ins for eps, eps'
-spec_omega_sq = k**2 / H**2 - Ep / 2 / one_plus_z + (3 * E / 2 - E**2 / 4 - 2) / one_plus_z**2
+spec_omega_sq = (
+    k**2 / H**2 - Ep / 2 / one_plus_z + (3 * E / 2 - E**2 / 4 - 2) / one_plus_z**2
+)
 
 # --- code: ComputeTargets/WKB_Gk.py:4-19
 code_omega_sq = (
-    (k / H) ** 2
-    + (-Ep / 2 / one_plus_z)
-    + (3 * E / 2 - E * E / 4 - 2) / one_plus_z**2
+    (k / H) ** 2 + (-Ep / 2 / one_plus_z) + (3 * E / 2 - E * E / 4 - 2) / one_plus_z**2
 )
 
 print("R22 vs code omegaEff^2 difference:", sp.simplify(spec_omega_sq - code_omega_sq))
