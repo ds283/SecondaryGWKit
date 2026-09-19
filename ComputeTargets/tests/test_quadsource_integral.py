@@ -219,7 +219,7 @@ class OffsetBesselPhaseGk(BesselPhaseGk):
     BesselPhaseGk with the sampled Green's-function phase shifted by a whole number of cycles.
     The unshifted theta_G = vartheta(k eta') - vartheta(k eta_resp) vanishes at z' = z_resp, and
     when the phase grid reaches z_resp a rounding-level positive value there gets
-    wrap_theta's div2pi = +1 while every other sample has div2pi <= 0, which phase_spline's
+    WKB_mod_2pi's div2pi = +1 while every other sample has div2pi <= 0, which phase_spline's
     logarithmic chunking refuses (it requires one sign). Shifting theta by -2 cycles keeps
     sin/cos, theta_deriv and every phase *difference* identical and gives the spline a
     single-signed div2pi range. (Log 07's fixture avoided the issue by stopping its grid 5 %
@@ -229,7 +229,7 @@ class OffsetBesselPhaseGk(BesselPhaseGk):
     OFFSET_CYCLES = -2
 
     def __init__(self, k, w, z_resp, model, z_grid):
-        from LiouvilleGreen.WKBtools import wrap_theta
+        from LiouvilleGreen.WKBtools import WKB_mod_2pi
         from LiouvilleGreen.constants import TWO_PI
         from LiouvilleGreen.phase_spline import phase_spline
 
@@ -252,7 +252,7 @@ class OffsetBesselPhaseGk(BesselPhaseGk):
                 - self._vartheta_resp
                 + self.OFFSET_CYCLES * TWO_PI
             )
-            div, mod = wrap_theta(theta)
+            div, mod = WKB_mod_2pi(theta)
             samples.append((log(1.0 + z), div, mod))
         samples.sort(key=lambda s: s[0])
         log_x, div_2pi, mod_2pi = zip(*samples)
