@@ -278,6 +278,26 @@ Traceability from the audit's finding IDs to the prompt that discharges them.
   §13.2, §13.3) showed the term is separable after all: it is fixed on the consumer side without
   moving the hand-over. The clamp error `[12-handover-clamp-error-in-production]` stays with the
   hand-over campaign.
+  **Narrowed by `prompts/handover` prompt 02 (2026-09-20) — the first end-to-end measurement of
+  this term in `total`, and it is flat rather than linear.** This entry's "Why it is not closed as
+  a floor" says the two direct measurements stop at $x = 10^4$ and that production reaches ~30×
+  further than anything measured end to end. Prompt 02 measured the whole representation floor as
+  it reaches `total` — realistic flavour minus exact flavour at fixed seam, scored against
+  Kohri–Terada eq. (22) and the head at 50 digits — on three shapes with $x = k\tau$ from
+  $1.4\times10^2$ to $1.6\times10^8$. **It is 4.08e-05 to 2.68e-03 and does not grow:** fitted
+  slopes of $\log|\text{term}|$ against $\log x$ are **−0.06, −0.15, −0.12**, where $h^4x/384$
+  rises by a factor of $10^5$ over the same ladder. At the bottom rung the measured term is 3700×
+  *larger* than $h^4x/384$; at the top it is 250× *smaller*. **The prediction this entry is built
+  on is therefore not what reaches `total` any more, and the reason is this entry's own assigned
+  remedy working:** `TkSourceFunctions` stopped re-splining the growing phase when `GkTk-remedial`
+  prompt 10 replaced the round trip with a `PrimitivePhase`, so the transfer-function sector no
+  longer carries the term. This is the first confirmation of that fix in `total` rather than in
+  $\theta$. **One caveat, and it is why this is a narrowing and not a closure:** the fixture's
+  *Green's-function* phase is still a raw `phase_spline`, one campaign behind production's
+  `_build_phase` — `prompts/handover` `[02-realistic-fixture-Gk-phase-is-the-superseded-construction]`
+  — so the figures above are an **upper bound** for $G$, carrying a term production has already
+  removed, and a clean measurement of the $G$ sector needs that fixture rebuilt first. Measurement:
+  [`docs/handover/REALISTIC-LARGE-X.md`](../../docs/handover/REALISTIC-LARGE-X.md) §5.
 
 - **[10-levin-wholesale-cc-fallback]** *(opened by prompt 10, 2026-09-09)* — the user's decision on
   `[08-levin-fallback-cost-ratio]` (now §4) accepts prompt 08 §6's cost here and asks for the fix
@@ -326,6 +346,24 @@ Traceability from the audit's finding IDs to the prompt that discharges them.
   than the 5.1e-03 measured here. Superseded for magnitude by
   `[12-handover-clamp-error-in-production]`; the three remedies above are unchanged and are now
   the campaign's main outstanding accuracy decision.
+  **Narrowed by `prompts/handover` prompt 02 (2026-09-20), on that campaign's board and in
+  [`docs/handover/REALISTIC-LARGE-X.md`](../../docs/handover/REALISTIC-LARGE-X.md):** the clamp
+  term is now **separated from the representation floor it was entangled with**, scored against
+  Kohri–Terada eq. (22) and the head at 50 digits, on a $2\times2\times$(shape $\times$
+  $x_{\rm resp}$) factorial. The clamp term is **3.91e-03 to 9.12e-01** and the representation term
+  **4.08e-05 to 2.68e-03** — a ratio of **11.6 to 1034**, which confirms the hand-over campaign
+  README §2 (b)'s "two to four orders" with the low end widened to one order on the shape where the
+  clamp is weakest. Two qualifications travel with the number. **(i) The gap measured is
+  production's maximum, not its typical one:** it is 1.00 of the fixture's own WKB grid step and
+  1.00 of the mean source-grid step, which is **1.92×** the production median of 1.2e-02 and
+  **1.05×** the production maximum of 2.2e-02. On this entry's own gap$^2$ scaling a median-gap row
+  would show $(1.2/2.30)^2 = 0.27$ of the figures above. **(ii) The clamp term is
+  $x_{\rm resp}$-independent** (fitted slopes −0.07/+0.03/+0.03 over five decades), because the
+  fixture pins the hand-over at $x_T = 19.1$ for every $k$ and the held phase is therefore
+  0.44 rad at every rung — so these figures are one depth, not a depth scan. The three remedies are
+  unchanged, and the measurement adds one fact about choosing between them: the $2\times2$ is
+  **additive** (interaction ≤ 2.82e-05 of the clamp term), so removing the gap should recover the
+  clamp term in full whichever representation it is applied to.
 
 - **[09-abserr-is-a-quadrature-bound]** *(opened by prompt 09, 2026-09-09)* — the new
   `total_abserr` column is the linear sum of the sub-intervals' quadrature error estimates
@@ -417,6 +455,27 @@ Traceability from the audit's finding IDs to the prompt that discharges them.
   Taylor extension of log 08 deviation 2), then re-run the harness and compare against
   `docs/source-remediation-verification.md` §5.3. Separating the clamp from the LG phase error
   needs one of those changes; it cannot be done by measurement alone at these $x$.
+  **Narrowed by `prompts/handover` prompt 02 (2026-09-20): the last sentence above is discharged.**
+  The separation *can* be done by measurement, and was, without any of the three changes — because
+  the reference no longer moves (Kohri–Terada eq. (22) and the head at 50 digits) and because the
+  four cells of a factorial block share one reference value bit for bit, so it cancels identically
+  in every difference and each term carries only the two pipelines' own declared errors. On a
+  $2\times2$ of flavour (exact / realistic) $\times$ seam (gap closed / gap open), over three
+  shapes and $x_{\rm resp}$ from 980 to $10^8$: **clamp term 3.91e-03 – 9.12e-01, representation
+  term 4.08e-05 – 2.68e-03, ratio 11.6 – 1034**, every term at least 3.5e+03 times its own error
+  bar, and the **interaction ≤ 2.82e-05 of the clamp term** — the $2\times2$ is additive, so the
+  two are genuinely independent and this entry's "entangled" is now quantified rather than
+  asserted. The two families also bracket this entry's own production census: the clamped band
+  6.6e-02 – 4.6e-01 sits inside the clamp-term range and the unclamped 6.2e-05 inside the
+  representation-term range. The third term this entry names as entangled — `T_WKB` against
+  `analytic_T_rad`, attributed to a phase spline covering $x$ to $2.7\times10^5$ — is **no longer
+  in that path**: `TkSourceFunctions` carries a `PrimitivePhase` since `GkTk-remedial` prompt 10,
+  and the representation term measured here is flat in $x$ rather than growing (see
+  `[12-phase-spline-error-grows-with-x]`). **Next step is unchanged** — choose among
+  `[08-handover-clamp-error]`'s three remedies — but it no longer waits on a measurement, and the
+  additivity above says what the choice should buy. Measurement:
+  [`docs/handover/REALISTIC-LARGE-X.md`](../../docs/handover/REALISTIC-LARGE-X.md) §4, and
+  `prompts/handover/logs/02-realistic-flavour-large-x-harness.md`.
 
 > Add an entry here whenever a prompt finishes with something unresolved: a verification step that
 > could not be run, an assumption that could not be confirmed, a deviation that a later prompt has

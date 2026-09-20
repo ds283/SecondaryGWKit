@@ -1,12 +1,16 @@
 # Hand-over campaign — implementation state
 
-**Last updated:** 2026-09-20 · **Status: STARTED — 2 of 10 groupings landed (00, A1).** Prompt 00
-landed the reconnaissance as
+**Last updated:** 2026-09-20 · **Status: STARTED — 3 of 10 groupings landed (00, A1, A2).** Prompt
+00 landed the reconnaissance as
 [`docs/handover/DOMENECH-KERNEL-RECON.md`](../../docs/handover/DOMENECH-KERNEL-RECON.md); **prompt
 01 (A1) has landed the general-$b$ oracle** as `ComputeTargets/tests/domenech.py` with
-`ComputeTargets/tests/test_domenech_oracle.py`, and prompt 01 §5's acceptance is met. A2 and A3 are
-written and not run; B1, B2, B3, B4, C1, C2, D1, D2, E1 and E2 are groupings only. Two issues are
-open in §3, one is closed in §4 on another board.
+`ComputeTargets/tests/test_domenech_oracle.py`; **prompt 02 (A2) has landed the realistic-flavour
+large-$x$ harness** as [`docs/handover/realistic_large_x.py`](../../docs/handover/realistic_large_x.py)
+with [`REALISTIC-LARGE-X.md`](../../docs/handover/REALISTIC-LARGE-X.md), and **has separated the
+clamp term from the representation term** — the measurement
+`[12-handover-clamp-error-in-production]` records as impossible. A3 is written and not run; B1, B2,
+B3, B4, C1, C2, D1, D2, E1 and E2 are groupings only. Four issues are open in §3, one is closed in
+§4 on another board.
 
 **Campaign:** [`README.md`](README.md) ·
 **Background:** [`docs/handover/HANDOVER-MECHANISM.md`](../../docs/handover/HANDOVER-MECHANISM.md) ·
@@ -28,7 +32,7 @@ open in §3, one is closed in §4 on another board.
 |---|---|---|---|---|---|---|---|
 | 00 | [Domènech reconnaissance](00-domenech-reconnaissance.md) | input to **A1** | Fable 5.1 | ✍️ yes | ✅ 2026-09-19 | *"Read the Domenech papers and write down what the kernel says"* (SHA not embedded, per the convention `prompts/background-solver-robustness` uses) | **none, by its own §8** — it lands no code, and its whole output is [`docs/handover/DOMENECH-KERNEL-RECON.md`](../../docs/handover/DOMENECH-KERNEL-RECON.md), which is the record. §11 of that document is a later addendum by Claude Opus 5. |
 | A1 | [The Domènech general-$b$ oracle](01-domenech-general-b-oracle.md) | **A1** | Opus 5 | ✍️ yes | ✅ 2026-09-20 | *"Land the Domenech general-b oracle with its tests"* | [`logs/01-…`](logs/01-domenech-general-b-oracle.md) |
-| A2 | [The realistic-flavour large-$x$ harness](02-realistic-flavour-large-x-harness.md) | **A2** | — | ✍️ yes | ⬜ not run | — | — |
+| A2 | [The realistic-flavour large-$x$ harness](02-realistic-flavour-large-x-harness.md) | **A2** | Opus 5 | ✍️ yes | ✅ 2026-09-20 | *"Separate the hand-over clamp from the representation floor"* | [`logs/02-…`](logs/02-realistic-flavour-large-x-harness.md) |
 | A3 | [The policy-geometry census](03-policy-geometry-census.md) | **A3** | — | ✍️ yes | ⬜ not run | — | — |
 | B1 | Remove the gap | **B1** | — | ⬜ no | ⬜ | — | — |
 | B2 | Score the unmasked residue | **B2** | — | ⬜ no | ⬜ | — | — |
@@ -58,7 +62,7 @@ board is (campaign README §5 rule 4). Where the two disagree, this one is right
 |---|---|---|---|---|
 | 00 | **INPUT** | Read both Domènech papers from the committed LaTeX and say what the general-$b$ kernel is, which convention every symbol is in, where the branch cuts are, what the two papers disagree about, and what a correct implementation must reproduce. Lands no code. | 00 | ✅ **Done, 2026-09-19.** [`DOMENECH-KERNEL-RECON.md`](../../docs/handover/DOMENECH-KERNEL-RECON.md). Found **two sign errors in the published review** — (4.10) `eq:Isimple` prints $\big(J_{b+1/2}\mathcal I_Y - Y_{b+1/2}\mathcal I_J\big)$ where its own (4.7) and (4.9) give the opposite order, and (4.12) `eq:Isimple2`'s $\cos$ term is signed against its own $\sin$ terms — resolved both of README §2 (i2)'s apparent inter-paper discrepancies ($I_{2020} = 2c^2I_{\rm rev}$; the asymmetric factor of 2 is $\Gamma[3]$ and is correct), confirmed §2 (i3)'s resonance structure, and **derived** $N(b) = -\frac{(3+2b)^2}{2(2+b)^2}$ rather than leaving it predicted. §11 was added afterwards from the arXiv version history: the review's (4.7) was corrected between v1 and v2 and **the correction was not propagated** to (4.10) or (4.12). Two defects in the document itself are open in §3 below, both found by A1. |
 | A1 | **FACILITY** | The general-$b$ oracle in the tree beside `kohri_terada.py`: the **corrected** (4.10) with the $x\to\infty$ coefficients (3.3)/(3.4) substituted and the outer Bessels kept exact; the doubly asymptotic (4.12) with its $\cos$ sign flipped; a quadrature of the finite-$x$ (4.11); $A$, $B$, $C$ separately callable; and a head helper. Tied to the nine $b = 0.2$ fixture cases and bridged to Kohri & Terada at $b = 0$. | 01 | ✅ **Done, 2026-09-20.** `ComputeTargets/tests/domenech.py` (782 lines) with **22 test methods** in `test_domenech_oracle.py`, covering prompt §3's eight groups plus two acceptance tests. **$N(b)$ is now measured:** $-1.194214876033$ on all nine $b = 0.2$ cases, spread **5.285e-13** (4.4e-13 relative), worst deviation from the derived $-\frac{(3+2b)^2}{2(2+b)^2}$ **4.130e-13**, each inside a per-case bound built from the quadrature's declared error (1.7e-14 to 6.9e-12) and the pipeline's own (1.0e-12 to 1.1e-11); against $I_{\rm rev}$, $\lvert N+1\rvert \le$ **3.461e-13**. The $b = 0$ tie to `kohri_terada` holds at **$\le4.0\times10^{-15}$ except at $u = 0.01$, where eq. (22)'s own rounding floors it at 3.9e-10**. Recon §2.4's, §4.1's and §4.2's tables are reproduced to the digit. **The $y>1$ region is refused, not continued** (recon §6.2's rule is inferred, not read — recon §10 item 2); `I_quadrature` is defined there and ties to $\tfrac98$ eq. (22) at 2.18e-15 on `T-first`. All four of prompt §3's deliberate breakages were applied and caught by named tests (log, "The deliberate-breakage record"); breakage 4 exposed a missing anchor in the two Wronskian tests, which was added. `ComputeTargets` 530 → **552** (+22, exactly the methods added), `CosmologyModels` **39**, `LiouvilleGreen` **148** (skipped=1); no existing file in the diff. |
-| A2 | **FACILITY** | Extend `docs/radiation-oracle/large_x.py` from the exact flavour to the realistic one, with and without `drop_first_WKB_sample`, at $x_{\rm resp}$ to $10^7$–$10^8$. The single measurement that separates the clamp term from the phase re-spline term. | 02 | ⬜ **Written, not run.** |
+| A2 | **FACILITY** | Extend `docs/radiation-oracle/large_x.py` from the exact flavour to the realistic one, with and without `drop_first_WKB_sample`, at $x_{\rm resp}$ to $10^7$–$10^8$. The single measurement that separates the clamp term from the phase re-spline term. | 02 | ✅ **Done, 2026-09-20.** `docs/handover/realistic_large_x.py` (908 lines) and [`REALISTIC-LARGE-X.md`](../../docs/handover/REALISTIC-LARGE-X.md); **60 cells in 10,772 s**, no Ray, no datastore, checkpointed per cell. **The control reproduces KT §8 Table 8.1 on all sixteen rows and ten columns, digit for digit**, independently re-checked against a separately-taken `large_x.py` run. **The two terms are separated and the $2\times2$ is additive:** clamp term **3.91e-03 – 9.12e-01**, representation term **4.08e-05 – 2.68e-03**, ratio **11.6 – 1034**, interaction $\le$ **2.82e-05** of the clamp term and $\le$ **1.03e-02** of the representation term; every term exceeds its own error bar by $\ge$ **3.5e+03**. **Both of the prompt's $x$-scaling guesses are refuted by measurement:** the clamp term is $x$-independent (slopes −0.07/+0.03/+0.03) because the fixture pins the hand-over at $x_T = 19.1$, giving the campaign README's 0.44 rad held phase at every rung; and the representation term is *also* flat (−0.06/−0.15/−0.12) rather than growing like $h^4x/384$, which over-predicts by $10^5$ in trend — `TkSourceFunctions` no longer re-splines the growing phase, so `GkTk-remedial` prompt 10's fix is confirmed end-to-end in `total`. `drop_first_WKB_sample` proved **inert in the exact flavour** (bit-identical totals, Table 6), so the exact half uses a matched `WKB_region` truncation; the two clamp terms then agree to five significant figures. Gap opened: **1.00 fixture grid step = 1.00 source-grid step = 1.92× production's median, 1.05× its maximum**. Set-up cost is **flat** (0.02–0.10 s, ratio 1.1–2.0), refuting prompt §3 item 1; the **integral** is the binding cost (33–3239×), growing 1.7×/3.6×/**8.6×** per decade by shape, so `q-smooth` realistic stops at $x_{\rm resp} = 10^5$ — prompt §7's second stop condition met by measurement. Suites unchanged. Two issues opened in §3. |
 | A3 | **MEASUREMENT** | Read-only census over stored `GkSourcePolicyData` rows: how many **source-grid intervals** `crossover_z` has on each side, against the stored `quality` band, plus the type/quality census and the `fail` rows. Needs a datastore. Answers README §7 **D5**. | 03 | ⬜ **Written, not run.** |
 | B1 | **REMEDY** | Remove the $T_k$ seam gap by one of README §7 **D1**'s three recorded constructions. Not a tuning decision: holding a phase constant across up to 0.44 rad is wrong under any objective. | — | ⬜ **Grouping only.** |
 | B2 | **MEASUREMENT** | Re-run A2 at the same configurations with the gap gone and attribute what is left, by term. | — | ⬜ **Grouping only.** Blocked on B1 and A2 by README §4 item 2's masking argument. |
@@ -113,6 +117,75 @@ board is (campaign README §5 rule 4). Where the two disagree, this one is right
   touches the same file. Measurement:
   [`logs/01-domenech-general-b-oracle.md`](logs/01-domenech-general-b-oracle.md), "Observations not
   acted on" item 2. Indexed at `docs/OPEN_ISSUES.md` §1.1.
+
+- **[02-realistic-fixture-Gk-phase-is-the-superseded-construction]** *(opened 2026-09-20 by prompt
+  02)* — `ComputeTargets/tests/test_phase_groups.py:299` documents `BesselPhaseGk` as built *"the
+  way `GkSourcePolicyData._create_functions` builds the real one: the phase is a `phase_spline`
+  over $\log(1+z')$ through (div 2pi, mod 2pi) samples"*. **That has not been true since
+  `prompts/GkTk-remedial` prompt 09.** Production's `GkSourcePolicyData._build_phase`
+  (`:145-190`, consumed at `:726`) returns a `PrimitivePhase` — the leading $-k\,\Delta\tau$ from
+  the background table with only a small residual splined — which is precisely how that campaign
+  discharged `[12-phase-spline-error-grows-with-x]`'s $\delta\theta \simeq h^4x/384$ for $G_k$
+  (board M14: 4.189e-08 rad against 7.286e-03 for the same samples, a ratio of 1.739e+05).
+  `TkSourceFunctions` *is* current — prompt 10 gave it a `PrimitivePhase` too — so the realistic
+  flavour's $T$ half is production's and its $G$ half is the construction production abandoned.
+  Consequences, in order of how much they matter: the module docstring of
+  `test_quadsource_integral.py` claims the realistic flavour "is the accuracy production can
+  expect", and that is **stale for $G$**; prompt 02's representation term (4.08e-05 – 2.68e-03,
+  `REALISTIC-LARGE-X.md` §4) is therefore an **upper bound** on production's rather than an
+  estimate of it, because it carries a term production has already removed; and the Levin cost
+  growth of the issue below may be the same staleness seen from the cost side.
+  **Impact:** **B2**, which re-runs this harness once the gap is gone and attributes what is left —
+  it should fix the fixture before it scores the residue, or its numbers will be pessimistic by an
+  unknown factor for $G$. Also any later reader of the test module's docstring. Nothing in
+  production is wrong; this is an instrument that has fallen behind the thing it models.
+  **Next step:** rebuild `BesselPhaseGk`/`OffsetBesselPhaseGk` on `PrimitivePhase` as
+  `_build_phase` does, and correct both docstrings. Not done here: prompt 02 §5 forbids editing
+  `test_quadsource_integral.py`, and `test_phase_groups.py` is not in its scope either.
+  Measurement: [`logs/02-realistic-flavour-large-x-harness.md`](logs/02-realistic-flavour-large-x-harness.md),
+  "Observations not acted on" item 1. Indexed at `docs/OPEN_ISSUES.md` §1.1.
+
+- **[02-levin-cost-growth-may-be-a-stale-Gk-phase-artefact]** *(opened 2026-09-20 by prompt 02)* —
+  the Levin driver's region count is **flat in $x$ on the exact flavour and grows steeply on the
+  realistic one**, and the growth may be a property of the fixture rather than of production.
+  Measured over the $x_{\rm resp}$ ladder (`REALISTIC-LARGE-X.md` Table 8): exact **7→9**
+  (`together`, six rungs), **7→13** (`T-first`), **17→30** (`q-smooth`) — flat, which is what
+  Levin quadrature is for. Realistic **1,304→50,463** (`together`, peaking at $10^7$ and falling to
+  15,827 at $10^8$), **720→75,570** (`T-first`), **855→31,358** (`q-smooth` over 980 to $10^5$).
+  Wall time follows: 33× to 3,239× the exact flavour, growing 1.7× / 3.6× / **8.6×** per decade of
+  $x_{\rm resp}$ by shape, which is what forced `q-smooth` realistic to stop at $10^5$.
+
+  **The level is understood; the growth is not.** At the base rung the integration range spans
+  5.40 decades of $(1+z)$, i.e. ~540 cells of the 100-per-$\log_{10}z$ grid, against 720–1,304
+  regions — the driver bisects to about the spline knot scale, which a piecewise-cubic phase
+  forces. But the knot count grows only **540 → 1,041** across the ladder (the range widens by one
+  decade per rung, because `z_source_max` tracks $k$ while $z_{\rm response}$ is fixed), a factor of
+  1.9, while the region count grows by 12× (`together`), 105× (`T-first`) and 37× (`q-smooth`).
+  Regions per knot therefore rise from **1.3–2.4** at the base rung to **15–80** at the top: four to
+  six extra levels of bisection the knot count does not account for.
+
+  **Why it may be an artefact.** The fixture's $G$ half is the superseded raw `phase_spline` of the
+  issue above, whose representation floor is $\delta\theta \simeq h^4x/384$ — **linear in $x$**.
+  `_adaptive_levin` accepts a region on `resolved or phase_limited or depth_max`, and
+  `phase_limited` requires `abserr <= phase_err`, so a region is forgiven only once its quadrature
+  error has fallen *to* the representation floor. A floor that grows linearly in $x$ forces
+  bisection that grows with $x$. If that is the mechanism, **production does not have it** — its
+  $G$ phase is a `PrimitivePhase` — and this harness's whole cost curve, including the `q-smooth`
+  ceiling, is a statement about the instrument rather than about the pipeline.
+  **Impact:** bounded and cost-only. It does **not** touch any $N$ in `REALISTIC-LARGE-X.md`: every
+  term in its Table 3 is a difference taken at fixed flavour, so a region count affects both sides
+  identically, and the measured additivity (interaction $\le$ 2.82e-05 of the clamp term) would not
+  survive if it did. What it touches is how far **B2** and any later re-run of this harness can
+  reach, and whether `q-smooth` above $10^5$ is genuinely out of range or merely out of range for a
+  stale fixture.
+  **Next step:** re-run **one** cell — `q-smooth`, realistic, closed seam, $x_{\rm resp} = 10^5$ —
+  with the $G$ phase built as a `PrimitivePhase`, and compare `Levin_regions` (31,358) and
+  `integral_time` (514.8 s) against what is recorded here. A collapse confirms the mechanism; no
+  change refutes it and points instead at the weakly-oscillatory gate (`Levin_fraction` swings
+  0.09–29.1 across the factorial) or at the reference tolerance pair itself. **Deliberately not run
+  by prompt 02** — out of its scope, and it needs the fixture change the issue above owns.
+  Measurement: [`logs/02-realistic-flavour-large-x-harness.md`](logs/02-realistic-flavour-large-x-harness.md),
+  "Observations not acted on" item 2. Indexed at `docs/OPEN_ISSUES.md` §1.1.
 
 **Not on this board, deliberately.** The three issues `README.md` §2 (o) and (p) record —
 `[03-gksource-policy-accepts-a-value-that-raises]`,

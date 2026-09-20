@@ -1,6 +1,6 @@
 # Open issues — project-wide index
 
-**Last updated:** 2026-09-20 · **83 open** across eleven campaigns.
+**Last updated:** 2026-09-20 · **85 open** across eleven campaigns.
 
 This file exists so that an issue opened by one campaign is not lost when that campaign closes.
 It is an **index, not a record**: one line per issue, pointing at the campaign status board that
@@ -30,7 +30,8 @@ the two disagree, the board is right.
 `transfer-remedial`'s `[08-3bessel-plot-cost-dominates-the-suite]` on 2026-09-19;
 `radiation-oracle` closed `[01-general-w-normalisation-is-predicted-not-measured]` on 2026-09-20,
 when `prompts/handover` prompt 01 measured $N(b)$ (§1.9 below). The `handover` board was created by
-that prompt on 2026-09-20 and holds two. Of the 83 above, 80 are spread across the boards and
+that prompt on 2026-09-20 and holds four, the last two opened by prompt 02 the same day. Of the 85
+above, 82 are spread across the boards and
 **three still have no board row** — the last three `handover` rows in §1.1, opened by a document
 review on 2026-09-19, whose content lives in
 [`prompts/handover/README.md`](../prompts/handover/README.md) §2 (o) and (p) and which that
@@ -76,8 +77,10 @@ for.
 |---|---|---|
 | `[01-recon-off-cut-closed-form-is-ill-conditioned]` | handover | `DOMENECH-KERNEL-RECON.md` §9's brief prescribes §5.2's off-cut form for $C(\tilde y)$, which is correct but cancels 13 orders at $\tilde y = 150$ and is 8.6e-08 out there **at any `mp.dps`** — the loss is in the double representation of $b$, not in the working precision. `q-smooth` at $b = 0.2$ sits at $\tilde y = 149.5$. Nothing in the tree is wrong (prompt 01 used the 2020 paper's own $1/\tilde y^2$ form instead); a later agent re-implementing from §9 would inherit it. Answers recon §10 item 5. |
 | `[01-recon-section-7-N-symbol-drops-a-pi]` | handover | `DOMENECH-KERNEL-RECON.md` §7 prints "$\mathcal N = 3\pi/8$" where its own §2.2 definition gives $3\pi^2/8$; the reduction §7 displays is correct and nothing arithmetical depends on the symbol, but a reader checking §7 against §2.2 loses a factor of $\pi$. |
-| `[08-handover-clamp-error]` | source-remediation | The WKB grid starts below `crossover_z`, so the LG accessors are clamped across a gap; a one-step gap moves `total` by 5.1e-03. |
-| `[12-handover-clamp-error-in-production]` | source-remediation | Supersedes the above for magnitude: on real rows the gap is universal and costs 6.6e-02–4.6e-01 against 6.2e-05 unclamped. **The campaign's main outstanding accuracy decision.** |
+| `[02-realistic-fixture-Gk-phase-is-the-superseded-construction]` | handover | `test_phase_groups.py:299` says `BesselPhaseGk` is built "the way `GkSourcePolicyData._create_functions` builds the real one" — a raw `phase_spline`. Untrue since `GkTk-remedial` prompt 09: production's `_build_phase` returns a `PrimitivePhase`. `TkSourceFunctions` is current; the $G$ half is not. So prompt 02's representation term is an **upper bound**, carrying an $h^4x/384$ term production has removed, and the test module's "the accuracy production can expect" is stale for $G$. **B2** should fix the fixture before scoring the residue. |
+| `[02-levin-cost-growth-may-be-a-stale-Gk-phase-artefact]` | handover | Levin regions are flat in $x$ on the exact flavour (7→9, 7→13, 17→30) and grow 12–105× on the realistic one (720→97,590), where the spline knot count grows only 1.9× (540→1041) — 15–80 regions per knot at the top against 1.3–2.4 at the base. May be the issue above seen from the cost side: `_adaptive_levin` forgives a region only once `abserr <= phase_err`, and a `phase_spline` floor grows linearly in $x$. Affects no $N$ (every term is a difference at fixed flavour); it bounds how far the harness reaches and forced `q-smooth` realistic to stop at $10^5$. One-cell experiment written into the board entry, deliberately not run. |
+| `[08-handover-clamp-error]` | source-remediation | The WKB grid starts below `crossover_z`, so the LG accessors are clamped across a gap; a one-step gap moves `total` by 5.1e-03. **Narrowed 2026-09-20** by `handover` prompt 02: the clamp is now separated from the representation floor and is 11.6–1034× it. |
+| `[12-handover-clamp-error-in-production]` | source-remediation | Supersedes the above for magnitude: on real rows the gap is universal and costs 6.6e-02–4.6e-01 against 6.2e-05 unclamped. **The campaign's main outstanding accuracy decision.** **Narrowed 2026-09-20** by `handover` prompt 02: its "cannot be done by measurement alone at these $x$" is discharged — clamp 3.91e-03–9.12e-01, representation 4.08e-05–2.68e-03, interaction ≤2.82e-05 of the clamp. |
 | `[05-numeric-region-is-now-the-accuracy-floor]` | source-remediation | A cubic spline loses 1–2 orders in its last two intervals, and the numeric grid *ends* at the hand-over. |
 | `[06-source-spline-residual-vs-handover]` | source-remediation | $f$ oscillates at twice the transfer-function phase, so its spline is the worst of the three; 1.4e-04 of envelope on real rows, but $O(1)$ if the hand-over is allowed to fall to the bottom of `main.py`'s search window. |
 | `[07-lg-derivative-truncation-at-handover]` | source-remediation | The irreducible one: `omega`/`dlnM_dz` are LG quantities, off by $O(x^{-4})$. Grid-independent — only a deeper hand-over helps. |
@@ -123,7 +126,7 @@ prompt 13 left open.
 
 | Issue | Board | Hook |
 |---|---|---|
-| `[12-phase-spline-error-grows-with-x]` | source-remediation | Stored-phase re-spline error $\simeq h^4x/384$, growing **linearly in $x$**; ~1 % of envelope extrapolated to production. **Reassigned here from §1.1** (2026-09-10): the campaign's prompts 09–10 evaluate the leading term from a table and spline only the residual. |
+| `[12-phase-spline-error-grows-with-x]` | source-remediation | Stored-phase re-spline error $\simeq h^4x/384$, growing **linearly in $x$**; ~1 % of envelope extrapolated to production. **Reassigned here from §1.1** (2026-09-10): the campaign's prompts 09–10 evaluate the leading term from a table and spline only the residual. **Narrowed 2026-09-20** by `handover` prompt 02: measured end to end in `total` for the first time, to $x = 1.6\times10^8$, and it is **flat, not linear** — 4.08e-05–2.68e-03 against an $h^4x/384$ that rises by $10^5$ over the same ladder. Prompts 09–10's fix confirmed in `total`. |
 | `[00-consumer-anchoring-floor]` | GkTk-remedial | `PrimitivePhase` reduces $k\Delta\tau$ against a global anchor, so `theta_mod_2pi` carries the $\varepsilon k\tau$ floor ($9\times10^{-4}$ rad at $k=3\times10^8$). Per-region anchoring is the follow-up. **Measured by prompt 09:** the floor is now the whole error — 4.189e-8 rad = 2.81 ulp of the span at $k=10^8$, with $\varphi$ itself recovered to 2.157e-10 rad. |
 | `[07-tk-per-object-cost-is-all-setup]` | GkTk-remedial | A `TkWKBIntegration` object at $k=3\times10^8$ costs 0.049–0.052 s, straddling prompt 07 §3 item 6's 0.05 s; all of it is setup. 5,840 of its 11,376 integrand evaluations build a per-$k$ residual table that, at one object per $k$, nothing amortises, and 5,536 are the leading table's off-grid anchor panel recomputed once per sample — the split prompt 14 applied to $\rho$ but not to $\tau_s$. **Widened by prompt 09:** the same recomputation would hit any consumer with an off-grid anchor, which is prompt 10's $z_{\rm init}$. |
 | `[08-docs-scripts-reference-removed-chunking]` | GkTk-remedial | Two `docs/` reproduction scripts (`t5_spline.py`, `measure.py`) read `phase_spline` internals (`_chunk_list`, `_splines`, `_match_chunk`) that prompt 08 deleted with chunking; they documented the chunked tree they ran on and were not edited. |
