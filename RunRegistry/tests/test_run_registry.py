@@ -340,6 +340,120 @@ class TestCheckpoint(RegistryTestCase):
         self.assertEqual(sorted(known), ["a", "b"])
 
 
+class TestLedgerIsNotTheResultsStore(RegistryTestCase):
+    """`prompts/run-registry` prompt 03. The manifest's `checkpoint` field used to mean both the
+    unit ledger and the durable thing a job's results live in, so `record()` on a registered
+    pipeline run would have appended a JSON object to a **SQLite datastore**, and `known()` on one
+    would have parsed no line, dropped every one as torn and answered `{}` — "nothing has been done
+    yet" — to a resume that then recomputes everything.
+
+    The store here is a few bytes of not-JSON in a temporary directory. Nothing opens a real
+    datastore, and nothing under `var/` is read or written.
+    """
+
+    STORE_BYTES = (
+        b"SQLite format 3\x00 not that this file is one; it is not JSON, which is\n"
+    )
+
+    def a_pipeline_run(self, **kwargs):
+        """A run shaped like `scoped_pipeline_run.py --register`: results in a store, no ledger."""
+        store = os.path.join(self.root, "results.sqlite")
+        with open(store, "wb") as handle:
+            handle.write(self.STORE_BYTES)
+        return self.begin(script=__file__, results=store, **kwargs), store
+
+    def test_record_refuses_a_run_that_declares_no_ledger_and_names_the_field(self):
+        run, store = self.a_pipeline_run()
+        with self.assertRaises(ValueError) as refused:
+            run.record("a unit this job does not have", {"value": 1})
+        message = str(refused.exception)
+        self.assertIn(run.id, message)
+        self.assertIn(
+            "checkpoint=True", message, "the refusal does not say what to do instead"
+        )
+        self.assertIn(
+            store, message, "the refusal does not say what it would not write to"
+        )
+
+    def test_the_results_store_is_byte_identical_after_the_refusal(self):
+        """The bug was not the missing exception, it was the append. This is the assertion that
+        would have caught it."""
+        run, store = self.a_pipeline_run()
+        with self.assertRaises(ValueError):
+            run.record("a unit", {"value": 1})
+        with open(store, "rb") as handle:
+            self.assertEqual(
+                handle.read(), self.STORE_BYTES, "record() wrote to the store"
+            )
+        self.assertEqual(run.status()["units_done"], 0, "a refusal counted as progress")
+
+    def test_known_is_loud_about_a_declared_ledger_that_is_not_one(self):
+        """The quiet half of the defect: `{}` from a file it cannot read is indistinguishable from
+        a first run, and a resume acts on it by recomputing everything."""
+        ledger = os.path.join(self.root, "not-a-ledger.sqlite")
+        with open(ledger, "wb") as handle:
+            handle.write(self.STORE_BYTES)
+        run = self.begin(script=__file__, checkpoint=ledger)
+        with self.assertRaises(ValueError) as refused:
+            run.known(notice=None)
+        self.assertIn("is not a unit ledger", str(refused.exception))
+        self.assertIn("results field", str(refused.exception))
+
+    def test_known_is_loud_about_a_ledger_that_is_not_even_text(self):
+        ledger = os.path.join(self.root, "binary.sqlite")
+        with open(ledger, "wb") as handle:
+            handle.write(b"SQLite format 3\x00\x91\xc3\x28\xff" * 8)
+        run = self.begin(script=__file__, checkpoint=ledger)
+        with self.assertRaises(ValueError):
+            run.known(notice=None)
+
+    def test_a_ledger_that_does_not_exist_yet_is_silent_and_empty(self):
+        """A first run. Breaking this would be worse than the bug being fixed."""
+        run = self.begin(script=__file__, checkpoint=True)
+        self.assertFalse(os.path.exists(run.checkpoint_path))
+        notice = StringWriter()
+        self.assertEqual(run.known(notice=notice), {})
+        self.assertEqual(notice.text(), "")
+
+    def test_tolerance_of_a_torn_line_stops_at_the_end_of_the_file(self):
+        """A kill can truncate the **last** record and nothing else. A half-record with readable
+        lines after it is not a truncation, and a file whose unreadable line is not even the start
+        of a JSON object was never a ledger."""
+        run = self.begin(script=__file__, checkpoint=True)
+        run.record("a", {"value": 1})
+        with open(run.checkpoint_path, "r") as handle:
+            good = handle.read()
+        for contents in (
+            good + '{"unit": "b", "dat' + "\n" + good,
+            "hello, world\n" + good,
+        ):
+            with open(run.checkpoint_path, "w") as handle:
+                handle.write(contents)
+            with self.assertRaises(ValueError):
+                run.known(notice=None)
+
+    def test_a_run_with_both_fields_keeps_them_apart(self):
+        run, store = self.a_pipeline_run(checkpoint=True)
+        self.assertNotEqual(run.checkpoint_path, run.results_path)
+        self.assertEqual(run.results_path, store)
+
+        run.record("a", {"value": 1})
+        run.record("b", {"value": 2})
+
+        self.assertEqual(sorted(run.known()), ["a", "b"])
+        with open(store, "rb") as handle:
+            self.assertEqual(
+                handle.read(), self.STORE_BYTES, "record() touched the store"
+            )
+        with open(run.checkpoint_path, "r") as handle:
+            self.assertEqual(len(handle.read().strip().splitlines()), 2)
+        self.assertEqual(
+            RunRegistry.read_json(run.manifest_path)["results"],
+            store,
+            "the store is not in the manifest a stranger reads",
+        )
+
+
 class TestStatus(RegistryTestCase):
     def test_status_is_replaced_atomically_from_the_same_directory(self):
         run = self.begin()

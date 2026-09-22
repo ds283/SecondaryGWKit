@@ -1,6 +1,6 @@
 # Open issues — project-wide index
 
-**Last updated:** 2026-09-22 · **88 open** across thirteen campaigns.
+**Last updated:** 2026-09-22 · **87 open** across thirteen campaigns.
 
 This file exists so that an issue opened by one campaign is not lost when that campaign closes.
 It is an **index, not a record**: one line per issue, pointing at the campaign status board that
@@ -639,16 +639,16 @@ out to be the one-line fix it looked like.
 measurement was lost to memory, a run was orphaned with nothing on disk naming it, nineteen poll
 loops accumulated that could never exit, a datastore died with a session scratchpad, and a resume
 was exercised for the first time and crashed. Prompt 01 landed the `RunRegistry/` package, the
-`var/runs/` layout, the lister and the six rules in `CLAUDE.md`. **Prompt 02 closed the campaign
-on 2026-09-22 at 2 / 2**: `docs/gktk-remedial/scoped_pipeline_run.py` registers behind an opt-in
-`--register`, and `realistic_large_x.py` is deliberately left outside the registry because its
-provenance hash is load-bearing.
+`var/runs/` layout, the lister and the six rules in `CLAUDE.md`. Prompt 02 adopted it in
+`docs/gktk-remedial/scoped_pipeline_run.py` behind an opt-in `--register`, leaving
+`realistic_large_x.py` outside the registry because its provenance hash is load-bearing.
+**Prompt 03 closed the campaign on 2026-09-22 at 3 / 3**, splitting the manifest's overloaded
+`checkpoint` field into a unit ledger and a `results` store.
 
 | Issue | Board | Hook |
 |---|---|---|
 | `[01-var-runs-holds-unattributable-loose-files]` | run-registry | Four files — `run.out`, `run.pid`, `run.progress`, `realistic_large_x_cells.jsonl` — sit at the top level of `var/runs/` with nothing saying which run they belong to. Evidence; **must not** be moved, renamed or deleted. **Narrowed 2026-09-22** by prompt 02: all four are the successful `realistic_large_x.py` run of 2026-09-20, established from the file contents and the 10,772 s arithmetic. What is still open is that nothing on disk says so. |
 | `[02-realistic-large-x-is-outside-the-registry]` | run-registry | `realistic_large_x.py` is deliberately not a registry client. Editing it by one character discards all sixty cells behind `REALISTIC-LARGE-X.md` and costs a three-hour recomputation; its records must **never** be re-stamped to preserve reuse. The row exists so the price is known before anyone proposes the change. |
-| `[02-a-datastore-checkpoint-path-would-be-appended-to-by-record]` | run-registry | A registered pipeline run names its **datastore** in the manifest's `checkpoint` field, which `Run.record()` would append JSON-Lines to. Latent: nothing calls `record()` on such a run. **Assigned to `run-registry` prompt 03**, which splits the field. |
 
 ---
 

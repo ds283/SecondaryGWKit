@@ -294,10 +294,12 @@ def register(args, main_args, k_sample, database):
         slug=args.register,
         purpose=args.purpose,
         script=__file__,
-        # README §0.2: this job's checkpoint is its datastore, not a JSON-Lines file. The field
-        # names the durable thing the results live in, which is what a resume needs; there is no
-        # checkpoint.jsonl and record()/known() are never called on this run.
-        checkpoint=str(database) if database is not None else None,
+        # README §0.2: this job's results live in its datastore, and `results` is the field that
+        # names the durable thing they live in -- which is what a resume needs. It is deliberately
+        # *not* `checkpoint`: that field is the unit ledger record()/known() own, this run has no
+        # ledger and records no units, and a run that named its datastore there would be one
+        # record() call away from appending JSON-Lines to a SQLite file.
+        results=str(database) if database is not None else None,
         scope=scope,
         heartbeat_means=HEARTBEAT_MEANS.format(interval=BEAT_MIN_INTERVAL),
     )

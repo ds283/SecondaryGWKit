@@ -13,6 +13,7 @@ and is not there on a fresh clone: the hand-written A3 manifest, and the default
 is only listed to assert that nothing was added to it.
 """
 
+import argparse
 import importlib.util
 import json
 import os
@@ -21,6 +22,7 @@ import subprocess
 import sys
 import tempfile
 import unittest
+from unittest import mock
 
 import RunRegistry
 
@@ -295,6 +297,71 @@ class TestOptIn(PipelineAdoptionTestCase):
         self.assertEqual(
             after, before, "a run that never started left a directory behind"
         )
+
+
+class TestTheDatastoreIsNotALedger(PipelineAdoptionTestCase):
+    """Prompt 03. This driver's results live in a SQLite datastore, which the registry names and
+    never opens; it has no unit ledger and records no units. The registration is exercised for
+    real — the manifest on disk is the assertion — but in a temporary run root, with no Ray, no
+    datastore and nothing under `var/` touched.
+    """
+
+    def register(self, database):
+        """Run the driver's own registration block against a temporary run root, and put back
+        everything it takes over: both output streams and the two signal handlers."""
+        args = argparse.Namespace(
+            campaign="run-registry",
+            prompt="03",
+            register="pipeline",
+            purpose="a registration, in a temporary directory, that runs no pipeline",
+            models=None,
+            k_min=1e5,
+            k_max=1e6,
+            cpus=2,
+        )
+        handlers = {
+            number: signal.getsignal(number)
+            for number in (signal.SIGTERM, signal.SIGINT)
+        }
+        streams = (sys.stdout, sys.stderr)
+        sys.stdout, sys.stderr = StringWriter(), StringWriter()
+        try:
+            with mock.patch.object(RunRegistry, "DEFAULT_ROOT", self.root):
+                return self.driver.register(
+                    args, ["--database", database], [1e5, 1e6], database
+                )
+        finally:
+            for stream in (sys.stdout, sys.stderr):
+                close_copy = getattr(stream, "close_copy", None)
+                if close_copy is not None:
+                    close_copy()
+            sys.stdout, sys.stderr = streams
+            for number, handler in handlers.items():
+                signal.signal(number, handler)
+
+    def test_the_datastore_is_registered_as_results_and_not_as_a_ledger(self):
+        database = os.path.join(self.root, "store.sqlite")
+        run = self.register(database)
+
+        manifest = RunRegistry.read_json(run.manifest_path)
+        self.assertEqual(manifest["results"], database)
+        self.assertIsNone(
+            manifest["checkpoint"], "the datastore is declared as a unit ledger"
+        )
+        for field in ("purpose", "scope", "heartbeat_means", "script", "git_head"):
+            self.assertTrue(
+                manifest[field],
+                f"a stranger reading this manifest learns nothing from {field}",
+            )
+
+        # The script that copies this pattern and then adds units is told what to do instead,
+        # and the datastore is not created, opened or written to on the way.
+        with self.assertRaises(ValueError) as refused:
+            run.record("a unit this pipeline does not have")
+        self.assertIn("checkpoint=True", str(refused.exception))
+        self.assertIn(database, str(refused.exception))
+        self.assertFalse(os.path.exists(database))
+        self.assertEqual(run.known(), {})
 
 
 class StringWriter:

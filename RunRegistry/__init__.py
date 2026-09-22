@@ -14,6 +14,11 @@ The layout, under `var/runs/` (gitignored, in the repository, never a session sc
         checkpoint.jsonl   optional, append-only, one JSON object per completed unit
         stdout.log  stderr.log
 
+The manifest keeps two different things in two different fields, and the difference is README §0.2:
+`checkpoint` is the unit ledger above, which `record()` writes and `known()` reads; `results` names
+the durable thing the job's results live in — a pipeline run's datastore — which this package names
+and never opens. A job may have either, both or neither.
+
 Usage is three calls. The launching process writes the manifest before any work starts, so that a
 crash in the first second still leaves a record:
 
@@ -203,6 +208,21 @@ def liveness(status, stale_after, now=None) -> str:
 # the run
 
 
+def _not_a_ledger(path, number, line) -> ValueError:
+    """The error `known()` raises rather than reporting "nothing done" for a file it cannot read.
+
+    It names the other field, because the caller who gets here has almost always put the durable
+    thing their results live in where the unit ledger goes.
+    """
+    return ValueError(
+        f"checkpoint {path}: line {number} is not a JSON record, so this file is not a unit "
+        f"ledger: {line[:60]!r}. known() will not report it as 'nothing done yet' — a resume that "
+        f"believed that would recompute work that is already on disk. If this path is where the "
+        f"job's results live, name it in the manifest's results field instead of checkpoint; "
+        f"record() and known() read only the ledger."
+    )
+
+
 class Run:
     """One run directory. Construct it with `begin()`."""
 
@@ -231,7 +251,19 @@ class Run:
 
     @property
     def checkpoint_path(self):
+        """The unit ledger, and nothing else. `record()` appends to this and `known()` reads it;
+        neither ever looks at `results_path`."""
         recorded = self.manifest.get("checkpoint")
+        return _resolve(recorded) if recorded else None
+
+    @property
+    def results_path(self):
+        """The durable thing this job's results live in — a pipeline run's datastore — which the
+        registry **names and never opens**. README §0 item 4 is a datastore written into a session
+        scratchpad with nothing on disk saying where the results went; §0 item 5 is a resume, which
+        must know what it is resuming into. Naming it is the whole of the registry's interest in
+        it."""
+        recorded = self.manifest.get("results")
         return _resolve(recorded) if recorded else None
 
     # --- status --------------------------------------------------------------------------------
@@ -283,10 +315,29 @@ class Run:
 
         The record carries the provenance triple — script hash, git head, dirty flag — taken at
         launch, exactly as `docs/handover/realistic_large_x.py` stamps each cell.
+
+        It appends to the **ledger** and to nothing else. A run that declares no ledger is refused,
+        by name: the caller who reaches here is usually one who copied the pipeline pattern — whose
+        results are a datastore — and then gave their job units, and the fix they need is a ledger
+        of their own, not a method that writes JSON-Lines into whatever the manifest happens to
+        name.
         """
         path = self.checkpoint_path
         if path is None:
-            raise ValueError(f"run {self.id} declares no checkpoint in its manifest")
+            store = self.manifest.get("results")
+            names = (
+                f"It names a results store ({store}), which this method will never write to: "
+                f"the registry names where a job's results live, it does not open them. "
+                if store
+                else ""
+            )
+            raise ValueError(
+                f"run {self.id} declares no checkpoint ledger in its manifest, so record() has "
+                f"nothing to append to. {names}"
+                f"A job with units to record needs a ledger of its own: pass checkpoint=True to "
+                f"begin() (or a path to a .jsonl file), which is the field record() and known() "
+                f"read."
+            )
         record = {
             "unit": unit,
             "recorded": now_iso(),
@@ -318,28 +369,46 @@ class Run:
         records no script hash there is nothing to gate on and every record is reused.
 
         A malformed trailing line is ignored: the file is appended to as each unit lands, so a kill
-        can truncate the last record.
+        can truncate the last record. **A file that is not a ledger at all is a different thing and
+        raises.** Answering `{}` — "nothing has been done yet" — for a file this method cannot read
+        is the failure a resume then acts on by recomputing everything, and on the A3 baseline that
+        is 10 h 33 m. The two are told apart by where the unreadable line is and what it looks
+        like: a torn record is the **last** line and is a prefix of a JSON object, so it begins
+        `{`. Anything else — a line that does not, or a readable line after one that did not, or a
+        file that is not even text — means the path names something that is not a unit ledger.
+
+        A ledger that does not exist yet is not an error, and returns nothing quietly: that is
+        every first run.
         """
         path = self.checkpoint_path
         units, stale = {}, {}
         if path is None or not os.path.exists(path):
             return units
         wanted = self.manifest.get("script_sha256")
-        with open(path, "r") as handle:
-            for line in handle:
-                line = line.strip()
-                if not line:
-                    continue
-                try:
-                    record = json.loads(line)
-                except json.JSONDecodeError:
-                    continue  # a torn final line
-                unit = record.get("unit")
-                if wanted and record.get("script_sha256") != wanted:
-                    stale[unit] = record.get("script_sha256") or "unstamped"
-                    units.pop(unit, None)
-                    continue
-                units[unit] = record
+        try:
+            with open(path, "r") as handle:
+                torn = None
+                for number, line in enumerate(handle, start=1):
+                    line = line.strip()
+                    if not line:
+                        continue
+                    if torn is not None:  # the torn line was not the final one
+                        raise _not_a_ledger(path, torn[0], torn[1])
+                    try:
+                        record = json.loads(line)
+                    except json.JSONDecodeError:
+                        if not line.startswith("{"):
+                            raise _not_a_ledger(path, number, line) from None
+                        torn = (number, line)
+                        continue
+                    unit = record.get("unit")
+                    if wanted and record.get("script_sha256") != wanted:
+                        stale[unit] = record.get("script_sha256") or "unstamped"
+                        units.pop(unit, None)
+                        continue
+                    units[unit] = record
+        except UnicodeDecodeError:
+            raise _not_a_ledger(path, 1, "<not text>") from None
         if stale and notice is not None:
             hashes = ", ".join(sorted({str(h)[:12] for h in stale.values()}))
             print(
@@ -363,6 +432,7 @@ def begin(
     unit=None,
     expected_units=None,
     checkpoint=None,
+    results=None,
     scope=None,
     heartbeat_means=None,
     pid=None,
@@ -372,10 +442,19 @@ def begin(
     """Create the run directory, write the immutable manifest, and write `status.json` as
     `running`. Call this **before** the work starts.
 
-    `checkpoint=True` puts one inside the run directory; a path puts it wherever the job's own
-    convention says, which is how a resume in a new run directory reads the previous run's units,
-    and it is also how a job whose checkpoint is **not** a JSON-Lines file at all — a pipeline
-    run, whose checkpoint is its datastore — names the durable thing its results live in.
+    `checkpoint` is the **unit ledger** and only that: the append-only JSON-Lines file `record()`
+    writes and `known()` reads. `checkpoint=True` puts one inside the run directory; a path puts it
+    wherever the job's own convention says, which is how a resume in a new run directory reads the
+    previous run's units.
+
+    `results` is the **durable thing the job's results live in** — for a registered `main.py`
+    pipeline run, its SQLite datastore — which the registry names and never opens. It is a
+    different field from `checkpoint` because it is a different thing, and conflating them let
+    `record()` append JSON-Lines to a datastore (README §0.2: the registry records *existence*;
+    checkpointing is per-job and is sometimes already solved). It traces to §0 item 4, a datastore
+    written into a session scratchpad with nothing on disk saying where the results went, and to
+    §0 item 5, since a resume must know what it is resuming into.
+
     `pid` defaults to the calling process; a launcher that spawns a detached child passes the
     child's pid to `heartbeat()` once it has one. Every manifest field is one README §0 would have
     caught something with; there are no others.
@@ -414,6 +493,7 @@ def begin(
         "unit": unit,
         "expected_units": expected_units,
         "checkpoint": _repo_path(checkpoint) if checkpoint else None,
+        "results": _repo_path(results) if results else None,
         "scope": scope,
         "heartbeat_means": heartbeat_means,
     }
