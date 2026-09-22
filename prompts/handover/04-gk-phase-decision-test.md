@@ -1,8 +1,8 @@
 # Prompt 04 — does the fixture's superseded $G_k$ phase change A2's answer?
 
 **Campaign:** [`README.md`](README.md) · **Board item:** **A4** ·
-**Board:** `IMPLEMENTATION_STATE.md` — exists; add the A4 row. The campaign README §3 table needs
-an A4 row too, in workstream A.
+**Board:** `IMPLEMENTATION_STATE.md` — exists; add the A4 row. Campaign README §3 and
+`orchestrator/README.md` **already** carry A4 and the revised running order; do not add them again.
 **Closes:** nothing. **Decides** whether
 `[02-realistic-fixture-Gk-phase-is-the-superseded-construction]` and
 `[02-levin-cost-growth-may-be-a-stale-Gk-phase-artefact]` are defects in
@@ -181,7 +181,7 @@ must say in the log that you did and why.
 and **when it was fixed relative to seeing the numbers**; A2's checkpoint cell count before and
 after; and the cost comparison per cell.
 
-Board: the A4 row in §1 and the item table, an A4 row in campaign README §3's workstream A table,
-and the **narrowing** notes on both `02-` issues in §3. `docs/OPEN_ISSUES.md`: no row is added or
+Board: the A4 row in §1 and the item table, and the **narrowing** notes on both `02-` issues in
+§3. Campaign README §3 already has its A4 row — leave it alone. `docs/OPEN_ISSUES.md`: no row is added or
 deleted unless you open something new; correct the date, and update the two `02-` hooks if the
 narrowing changes what they say at a glance.

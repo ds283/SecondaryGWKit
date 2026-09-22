@@ -8,17 +8,26 @@ reviews its commit against fixed criteria, and either hands back or stops and re
 | 00 | Domènech reconnaissance | — | n/a | **Already landed** (`ab5c0ed`), executed outside this flow on a separate account. Read-and-report; no orchestration |
 | 01 | The Domènech general-$b$ oracle | [`prompt-01.md`](prompt-01.md) | **yes** | One new module and its tests; **no production file is modified**. Like `radiation-oracle` prompt 01, the review is about whether the tests *would fail*: the source paper's own kernel is mis-signed, and a faithful transcription is wrong by an overall sign while looking entirely plausible. Turns on the deliberate-breakage record and on test 5, the only comparison with an object this campaign did not write |
 | 02 | The realistic-flavour large-$x$ harness | [`prompt-02.md`](prompt-02.md) | **yes** | A `docs/` measurement script and a document; **no production file and no test**. Suite counts must be *unchanged*, not risen. The review turns on the control cell reproducing KT §8 Table 8.1 and on whether the attribution of the two terms is honest about its own error |
-| 03 | The policy-geometry census | — | **not yet** | A `docs/` census script and a document; **no production file and no test**. Unlike 01 and 02 it **needs a datastore**, so its dispatch has to name one and record which source-grid construction its rows carry. The review turns on the type/quality census reproducing `source-remediation-verification.md` §5.5's shape, on the interval counts being taken by node index rather than by converting $\log(1+z)$ back to $z$, and on the agent having opened the two §2 (o) issues **without fixing them** |
+| 03 | The policy-geometry census | — | **not yet** | A `docs/` census script and a document; **no production file and no test**. Unlike 01 and 02 it **needs a datastore**, so its dispatch has to name one and record which source-grid construction its rows carry. The review turns on the type/quality census matching `source-remediation-verification.md` §5.5's **shape** — a like-for-like comparison is impossible and prompt 03 §2.2 says why — on the interval counts being taken by node index rather than by converting $\log(1+z)$ back to $z$, and on the agent having opened the two §2 (o) issues **without fixing them** |
+| 04 | The $G_k$ phase decision test | [`prompt-04.md`](prompt-04.md) | **yes** | A `docs/` script and a short memo; **no production file and no test**. Added after A2 landed, because A2's fixture turned out to carry a $G$ phase one campaign behind production. It decides whether A2's numbers stand. The review turns on one thing a green suite cannot see: whether the threshold for "material" was fixed **before** the numbers were seen — so the prompt fixes it and the dispatch restates it |
 
 ## Running them
 
-> Read `prompts/handover/orchestrator/prompt-01.md` and follow it.
+> Read `prompts/handover/orchestrator/prompt-04.md` and follow it.
 
-**Order: 01, then 02 and 03 in either order.** All three are independent work — campaign README §4
-says A1, A2 and A3 have no prerequisites and no dependency on each other — but **01 creates
-`IMPLEMENTATION_STATE.md`**, which the others then update. Running 01 later means moving that
-clause of prompt 01 §8 into whichever runs first. Running any two concurrently in separate
-worktrees means conflicting on the board and on `docs/OPEN_ISSUES.md`. Serialise them.
+**01 and 02 have landed** (`c414451`, `0d7c05c`). **04 comes next, before 03.**
+
+That ordering is not the one this file originally carried, and the reason it changed is worth
+stating: 04 did not exist when the campaign was planned. It exists because A2, on landing, was
+found to rest on a fixture whose $G_k$ phase is one campaign behind production — so **04 decides
+whether A2's numbers stand**, and A2 is the instrument B2, D and E are scored on. Sequencing by
+epistemic dependency rather than by the order things were written puts it first. 03 is unaffected
+either way; it reads stored rows and does not touch A2's results.
+
+The original three were independent work — campaign README §4 says A1, A2 and A3 have no
+prerequisites and no dependency on each other — but **01 created `IMPLEMENTATION_STATE.md`**, which
+the others update. Running any two concurrently in separate worktrees means conflicting on the
+board and on `docs/OPEN_ISSUES.md`. Serialise them.
 
 **03 has a precondition the others do not**: a datastore written on the current source grid, i.e.
 after `qcd-background-audit` prompt 15 replaced the base density with the measured curvature

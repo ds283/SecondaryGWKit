@@ -57,8 +57,9 @@ treat a null result as a thin deliverable.
 One fresh-context subagent. Give it the prompt file and only that prompt, the SHA, the baselines,
 A2's checkpoint identity, and the files its "Read first" list names.
 
-Tell it plainly: **one commit**; log at `logs/04-gk-phase-decision-test.md`; board, campaign README
-§3's A4 row and `docs/OPEN_ISSUES.md` in the same commit; `black`; **suite counts unchanged, not
+Tell it plainly: **one commit**; log at `logs/04-gk-phase-decision-test.md`; the board and
+`docs/OPEN_ISSUES.md` in the same commit — **campaign README §3 already carries its A4 row and must
+not be touched**; `black`; **suite counts unchanged, not
 risen**; launch anything long **detached and end its turn** rather than polling; and that §7's stop
 conditions mean *stop and ask*.
 
@@ -91,13 +92,14 @@ load.
    §5 forbids.
 6. **Scope.** `git diff --name-only HEAD~1 HEAD`. Permitted: `docs/handover/gk_phase_decision_test.py`,
    `docs/handover/GK-PHASE-DECISION-TEST.md`, `prompts/handover/IMPLEMENTATION_STATE.md`,
-   `prompts/handover/README.md` (the A4 row), `prompts/handover/logs/04-*.md`,
+   `prompts/handover/logs/04-*.md`,
    `docs/OPEN_ISSUES.md`. **`docs/handover/realistic_large_x.py` and `REALISTIC-LARGE-X.md` must be
    untouched** — this prompt does not correct A2, it decides whether A2 needs correcting.
    `ComputeTargets/tests/test_phase_groups.py` must be untouched: fixing the false claim at `:299`
    belongs to B2.
 7. **Bookkeeping.** Both `02-` issues **narrowed**, not closed — closing them belongs to whoever
-   acts on the verdict. A4 rows on the board and in campaign README §3. `black --check` clean.
+   acts on the verdict. The A4 row on the board; campaign README §3 already carries its own and
+   should be **unchanged** in the diff. `black --check` clean.
    Commit message in `CLAUDE.md`'s form.
 
 ## 4. What a good outcome looks like

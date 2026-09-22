@@ -331,9 +331,16 @@ long form.
 Five workstreams. **A is instruments and touches no production code**; B, C and D are the seam
 itself; E is the one genuine optimisation and depends on all of them.
 
-**Written so far: prompt 00 (landed), A1, A2 and A3 (written, not run).** B1, B2, C1, C2, D1, D2,
-E1 and E2 are groupings only — scope, issues and ordering, no prompt file. Orchestration for A1,
-A2 and A3 is [`orchestrator/`](orchestrator/README.md); **A1 first**, because A1 creates the board.
+**Landed: prompt 00, A1 (`c414451`) and A2 (`0d7c05c`). Written, not run: A3 and A4.** B1, B2, C1,
+C2, D1, D2, E1 and E2 are groupings only — scope, issues and ordering, no prompt file.
+Orchestration is [`orchestrator/`](orchestrator/README.md); **A4 next, before A3**, and that file
+says why.
+
+**A4 was added after A2 landed** and is not in the original plan. A2's realistic fixture builds the
+Green's-function phase as a raw `phase_spline`, the construction `GkSourcePolicyData._build_phase`
+abandoned at `GkTk-remedial` prompt 09, so its representation term and its Levin cost curve are
+upper bounds of unknown tightness. A4 decides whether they stand. Since A2 is the instrument B2, D
+and E are scored on, that question is upstream of everything after it.
 
 ### Workstream A — instruments
 
@@ -345,6 +352,7 @@ Pure information gain, independent of every line of hand-over code and of each o
 | **A1** | **The Domènech general-$b$ oracle** ([`01-domenech-general-b-oracle.md`](01-domenech-general-b-oracle.md)) — **written 2026-09-19, not run.** Implement the target object of §2 (i) — the **corrected** (4.10) `eq:Isimple` (recon §2.2: $Y_{b+1/2}{\cal I}_J - J_{b+1/2}{\cal I}_Y$, **not** the printed order) with the $x\to\infty$ coefficients of (3.3)/(3.4) `eq:IJ`/`eq:IY` substituted, keeping $J_{b+1/2}(x)$, $Y_{b+1/2}(x)$ exact. Recon §9 is the brief; §5.1 still binds. Tie it to the nine $b = 0.2$ fixture cases; bridge its normalisation to KT at $b = 0$. | The $b \neq 0$ half of §1.2 of the KT audit | `[01-general-w-normalisation-is-predicted-not-measured]` |
 | **A2** | **The realistic-flavour large-$x$ harness** ([`02-realistic-flavour-large-x-harness.md`](02-realistic-flavour-large-x-harness.md)) — **written 2026-09-19, not run.** Extend `docs/radiation-oracle/large_x.py` from the exact flavour to the realistic one, with and without `drop_first_WKB_sample`, at $x_{\rm resp}$ to $10^7$–$10^8$. | KT §8's "what this does not cover"; the §5 standing caveat that no verification run ever reached production $x$ | Nothing directly — it is the instrument B2, D and E are scored on |
 | **A3** | **The policy-geometry census** ([`03-policy-geometry-census.md`](03-policy-geometry-census.md)) — **written 2026-09-19, not run.** Read-only over stored `GkSourcePolicyData` rows: how many **source-grid intervals** `crossover_z` has on each side, against the stored `quality` band; plus the type/quality census and the `fail` rows. Needs a datastore, unlike A1 and A2. | §7 **D5**, and the assumption §2 (f) and the followup §1.3 both rest on | Answers **D5**; opens the two §3 issues of §2 (o); it is the instrument **D1** is scored on |
+| **A4** | **The $G_k$ phase decision test** ([`04-gk-phase-decision-test.md`](04-gk-phase-decision-test.md)) — **written 2026-09-21, not run.** Added after A2 landed, and not in the original plan. A2's realistic fixture builds the Green's-function phase as a raw `phase_spline` — the construction `_build_phase` abandoned at `GkTk-remedial` prompt 09, carrying $h^4x/384$, which that function's own docstring puts at O(1)–O(10) rad at production $x$. Re-run six of A2's realistic cells with a `PrimitivePhase` and compare. A decision test, not a re-take: it does not correct A2. | Whether A2's representation term and Levin cost curve are contaminated or merely conservative | Nothing. **Narrows** A2's two §3 issues and decides whether A2 must be re-taken |
 
 A2 is the single measurement that separates the clamp term from the phase re-spline term, which
 `[12-handover-clamp-error-in-production]`'s recorded next step says *"cannot be done by measurement

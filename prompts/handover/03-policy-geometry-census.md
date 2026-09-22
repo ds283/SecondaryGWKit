@@ -23,8 +23,13 @@ rows is mechanical and the only judgement is in the honesty of §5's "what this 
    are the closest existing work; its module docstring states the read-only discipline this prompt
    inherits.
 4. [`docs/source-remediation-verification.md`](../../docs/source-remediation-verification.md) §5.5 —
-   the 462-row type/quality census. **Your census must reproduce its shape on the same datastore**,
-   or explain the difference.
+   the 462-row type/quality census (§4.2's table: `numeric`/`complete` 270, `WKB`/`complete` 123,
+   `mixed`/`complete` 61, `mixed`/`minimal` 1, `fail`/`incomplete` 7).
+   **It cannot be reproduced on the same datastore, and you must not try.** That store was written
+   into a session scratchpad and no longer exists; it also predates `qcd-background-audit`
+   prompt 15, and it covered only $10^5$–$10^7$/Mpc where the current baseline store spans the full
+   production $10^5$–$3\times10^8$. The comparison is therefore **of shape, on a different store**,
+   and the three differences above are the ones you account for. See §2.2.
 5. Campaign [`README.md`](README.md) §0.4, §2 (b), (f), (o), §5, §7 **D5**.
 6. [`docs/lg-phase-and-handover-followup-2026-09.md`](../../docs/lg-phase-and-handover-followup-2026-09.md)
    §1.3 and §3 item 1 — the question, in the words in which it was first asked.
@@ -131,6 +136,34 @@ Report both against the **grid-interval** columns of §2, not instead of them: t
 says where the overlap is, the interval count says whether it is usable (`MIN_SPLINE_DATA_POINTS`,
 and the end-interval question of the mechanism document §6).
 
+### 2.2 The datastore, and what §5.5 can and cannot be compared against
+
+The baseline store is `var/datastores/handover-A3-baseline-lambdacdm.sqlite` (4 shards, `var/` is
+gitignored). **Read its manifest beside it first** — it records the scope, the tree SHA, the grid
+criterion, the run history and a backup you must not delete. Treat the store as read-only.
+
+**Verification §5.5's census cannot be re-run, and you must not attempt a like-for-like
+comparison.** Three things differ, all of them known in advance:
+
+1. **Its datastore no longer exists.** It was written into a session scratchpad, which has since
+   been reaped. Nothing about §4.2's 462 rows can be re-derived; only the published table survives.
+2. **The grid criterion changed.** `qcd-background-audit` prompt 15 replaced the base density with
+   the measured curvature criterion, so interval *counts* are expected to differ. That is the whole
+   reason a new store was needed.
+3. **The $k$ span is wider.** §5.5's run covered $10^5$–$10^7$/Mpc — two decades, the bottom of the
+   range. This store spans the full production $10^5$–$3\times10^8$, so it includes hand-over
+   geometry at $k$ the earlier census never saw, and the type mix may legitimately shift.
+
+So the comparison you make is **of shape**: do the same types appear, in roughly the same rank
+order, with the pathological classes still rare? For each cell that differs, say which of the three
+accounts for it, or record it as unexplained. **An unexplained difference is a finding to state,
+not a failure** — but §7's second stop condition is for a difference the three cannot account for,
+and you should reach for that rather than inventing a fourth reason.
+
+§4.2's figures, for reference: `numeric`/`complete` 270 (58.44 %), `WKB`/`complete` 123 (26.62 %),
+`mixed`/`complete` 61 (13.20 %), `mixed`/`minimal` 1 (0.22 %), `fail`/`incomplete` 7 (1.52 %), of
+462 rows.
+
 ---
 
 ## 3. The four things that will go wrong
@@ -202,8 +235,9 @@ and the end-interval question of the mechanism document §6).
 ## 6. Acceptance
 
 1. One command, from the repository root, recorded with its datastore and runtime.
-2. The type/quality census reproduces the *shape* of verification §5.5 on the same datastore, or
-   the difference is explained in the document.
+2. The type/quality census is compared against verification §5.5's **as a shape on a different
+   store**, per §2.2, with each difference either accounted for or recorded as unexplained. An
+   unexplained difference is a finding to state, not a failure — but it must be stated.
 3. `numeric_intervals` and `WKB_intervals` are reported as distributions over all `mixed` rows,
    and every row with fewer than two on either side is tabulated individually.
 4. `docs/handover/POLICY-GEOMETRY.md` exists, its §0 answers D5 in one paragraph, and it has a
@@ -225,8 +259,11 @@ and the end-interval question of the mechanism document §6).
 - **No datastore is available**, or the only one available was written before
   `qcd-background-audit` prompt 15 replaced the grid density criterion. A census on the superseded
   grid answers a question nobody asked. Report which grid the rows carry and stop.
-- **The type/quality census does not reproduce verification §5.5's shape** on what should be the
-  same datastore. Something moved; report which cells differ and do not re-baseline.
+- **The type/quality census differs from verification §5.5's shape in a way §2.2's three known
+  differences do not account for** — in particular a `fail`/`incomplete` fraction materially above
+  §4.2's 1.52 %, or `mixed` rows materially scarcer than its 13.42 %. Report which cells differ,
+  and do not re-baseline. A shape that differs *consistently with* a wider $k$ span or the prompt-15
+  grid is not this condition; a shape that differs beyond them is.
 - **More than a few percent of `mixed` rows have fewer than two grid intervals on a side.** That
   would mean the $T_k$ end-interval analysis applies to $G$ as well and with larger absolute errors
   (follow-up §3 item 1), which changes D1's scope and E2's target. Report it and stop; do not
