@@ -1,6 +1,6 @@
 # Open issues — project-wide index
 
-**Last updated:** 2026-09-22 · **86 open** across thirteen campaigns.
+**Last updated:** 2026-09-22 · **88 open** across thirteen campaigns.
 
 This file exists so that an issue opened by one campaign is not lost when that campaign closes.
 It is an **index, not a record**: one line per issue, pointing at the campaign status board that
@@ -35,8 +35,9 @@ when `prompts/handover` prompt 01 measured $N(b)$ (§1.9 below). The `handover` 
 that prompt on 2026-09-20 and holds four, the last two opened by prompt 02 the same day. The
 `datastore-readback` board was created by its prompt 01 on 2026-09-22; the audit that prompt ran
 opened two and one of them has already closed on that board's §4. The `run-registry` board was
-created by its prompt 01 on 2026-09-22 and holds one. Of the 86
-above, 83 are spread across the boards and
+created by its prompt 01 on 2026-09-22 and holds **three** — one from prompt 01, narrowed by
+prompt 02, and two opened by prompt 02 when it closed that campaign at 2 / 2. Of the 88
+above, 85 are spread across the boards and
 **three still have no board row** — the last three `handover` rows in §1.1, opened by a document
 review on 2026-09-19, whose content lives in
 [`prompts/handover/README.md`](../prompts/handover/README.md) §2 (o) and (p) and which that
@@ -638,12 +639,16 @@ out to be the one-line fix it looked like.
 measurement was lost to memory, a run was orphaned with nothing on disk naming it, nineteen poll
 loops accumulated that could never exit, a datastore died with a session scratchpad, and a resume
 was exercised for the first time and crashed. Prompt 01 landed the `RunRegistry/` package, the
-`var/runs/` layout, the lister and the six rules in `CLAUDE.md`; it adopted nothing, which is
-prompt 02's job. The one issue below is the residue the registry cannot fix retrospectively.
+`var/runs/` layout, the lister and the six rules in `CLAUDE.md`. **Prompt 02 closed the campaign
+on 2026-09-22 at 2 / 2**: `docs/gktk-remedial/scoped_pipeline_run.py` registers behind an opt-in
+`--register`, and `realistic_large_x.py` is deliberately left outside the registry because its
+provenance hash is load-bearing.
 
 | Issue | Board | Hook |
 |---|---|---|
-| `[01-var-runs-holds-unattributable-loose-files]` | run-registry | Four files — `run.out`, `run.pid`, `run.progress`, `realistic_large_x_cells.jsonl` — sit at the top level of `var/runs/` with nothing saying which run they belong to. Evidence; **must not** be moved, renamed or deleted. Prompt 02 may record the attribution if it can establish it. |
+| `[01-var-runs-holds-unattributable-loose-files]` | run-registry | Four files — `run.out`, `run.pid`, `run.progress`, `realistic_large_x_cells.jsonl` — sit at the top level of `var/runs/` with nothing saying which run they belong to. Evidence; **must not** be moved, renamed or deleted. **Narrowed 2026-09-22** by prompt 02: all four are the successful `realistic_large_x.py` run of 2026-09-20, established from the file contents and the 10,772 s arithmetic. What is still open is that nothing on disk says so. |
+| `[02-realistic-large-x-is-outside-the-registry]` | run-registry | `realistic_large_x.py` is deliberately not a registry client. Editing it by one character discards all sixty cells behind `REALISTIC-LARGE-X.md` and costs a three-hour recomputation; its records must **never** be re-stamped to preserve reuse. The row exists so the price is known before anyone proposes the change. |
+| `[02-a-datastore-checkpoint-path-would-be-appended-to-by-record]` | run-registry | A registered pipeline run names its **datastore** in the manifest's `checkpoint` field, which `Run.record()` would append JSON-Lines to. Latent: nothing calls `record()` on such a run. Either `record()` refuses a non-`.jsonl` path, or the field splits in two. |
 
 ---
 

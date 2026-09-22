@@ -246,10 +246,24 @@ class Run:
         write_json_atomic(self.status_path, status)
         return status
 
-    def heartbeat(self, units_done=None, units_total=None, pid=None) -> dict:
+    def heartbeat(
+        self, units_done=None, units_total=None, pid=None, stage=None
+    ) -> dict:
         """Refresh the heartbeat, and with it whatever is now known. A launcher that spawns a
-        detached child passes the child's `pid` here once it has one."""
-        fields = {"units_done": units_done, "units_total": units_total, "pid": pid}
+        detached child passes the child's `pid` here once it has one.
+
+        `stage` is for a job that has no total to count against — a `main.py` pipeline reports
+        progress per stage and per work queue, never as one number, and inventing a denominator
+        would be worse than saying where it has got to. It is the field the hand-written
+        `handover-A3-baseline-lambdacdm.manifest.json` carried as `stage_reached`, reconstructed
+        by hand from a stdout file after the fact.
+        """
+        fields = {
+            "units_done": units_done,
+            "units_total": units_total,
+            "pid": pid,
+            "stage": stage,
+        }
         return self._update(**{k: v for k, v in fields.items() if v is not None})
 
     def finish(self, state, exit_code=None) -> dict:
@@ -349,6 +363,8 @@ def begin(
     unit=None,
     expected_units=None,
     checkpoint=None,
+    scope=None,
+    heartbeat_means=None,
     pid=None,
     root=None,
     when=None,
@@ -357,10 +373,24 @@ def begin(
     `running`. Call this **before** the work starts.
 
     `checkpoint=True` puts one inside the run directory; a path puts it wherever the job's own
-    convention says, which is how a resume in a new run directory reads the previous run's units.
+    convention says, which is how a resume in a new run directory reads the previous run's units,
+    and it is also how a job whose checkpoint is **not** a JSON-Lines file at all — a pipeline
+    run, whose checkpoint is its datastore — names the durable thing its results live in.
     `pid` defaults to the calling process; a launcher that spawns a detached child passes the
     child's pid to `heartbeat()` once it has one. Every manifest field is one README §0 would have
     caught something with; there are no others.
+
+    `scope` is one line saying what the run covers, and is what tells a stranger whether the run
+    is still relevant — the hand-written `handover-A3-baseline-lambdacdm.manifest.json` carried it
+    by hand, because `argv` alone is exact and unreadable. Derive it from the job's own arguments
+    rather than typing it: a field somebody must remember to update is a field that goes stale.
+
+    `heartbeat_means` is one line saying what a fresh heartbeat on *this* job actually asserts.
+    It exists because the honest answer differs per job — "a unit was recorded" for a script with
+    units, something weaker for a Ray-parallel pipeline whose parent may be blocked inside
+    `ray.get` — and a heartbeat that implies a guarantee it does not give is worse than none.
+    `None` means this package's default: the heartbeat is refreshed by `record()` and by an
+    explicit `heartbeat()`, so it means "a unit completed", and nothing else.
     """
     identifier = run_id(campaign, prompt, slug, when)
     path = os.path.join(root or DEFAULT_ROOT, identifier)
@@ -384,6 +414,8 @@ def begin(
         "unit": unit,
         "expected_units": expected_units,
         "checkpoint": _repo_path(checkpoint) if checkpoint else None,
+        "scope": scope,
+        "heartbeat_means": heartbeat_means,
     }
     manifest.update(git_provenance())
     write_json_atomic(os.path.join(path, "manifest.json"), manifest)
@@ -439,6 +471,7 @@ def list_runs(root=None, stale_after=DEFAULT_STALE_AFTER, now=None) -> list:
                 "units_done": status.get("units_done"),
                 "units_total": status.get("units_total")
                 or (manifest or {}).get("expected_units"),
+                "stage": status.get("stage"),
                 "liveness": liveness(status, stale_after, now=now),
                 "created_epoch": _created_epoch(path, manifest or {}),
             }

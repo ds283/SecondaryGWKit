@@ -24,17 +24,28 @@ def _age(seconds) -> str:
 
 def _progress(entry) -> str:
     done, total = entry["units_done"], entry["units_total"]
-    if done is None and total is None:
+    if total is None and not done:
+        # Nothing to count. A job that declares no total and has recorded no unit is either
+        # reporting a stage instead (a pipeline run, which has no denominator) or has not got to
+        # its first unit; `0/?` would read as "no work done", which is more than it knows.
         return "-"
     return f"{'?' if done is None else done}/{'?' if total is None else total}"
 
 
 def _purpose(entry) -> str:
     if entry["purpose"]:
-        return entry["purpose"]
-    if entry["has_manifest"]:
-        return "(manifest carries no purpose)"
-    return "(no manifest — predates the registry, or was not begun through it)"
+        text = entry["purpose"]
+    elif entry["has_manifest"]:
+        text = "(manifest carries no purpose)"
+    else:
+        text = "(no manifest — predates the registry, or was not begun through it)"
+    stage = entry.get("stage")
+    if stage:
+        # a job with no total to count against says where it has got to instead; see
+        # `Run.heartbeat`. It goes here rather than in PROGRESS because it is a sentence,
+        # and because a stage in a column of fractions would read as one.
+        text += f"  · {stage[:72]}"
+    return text
 
 
 def main(argv=None) -> int:
@@ -58,7 +69,9 @@ def main(argv=None) -> int:
 
     now = time.time()
     width = max(len(entry["id"]) for entry in entries)
-    print(f"{'':2} {'RUN':{width}}  {'STATE':9} {'PROGRESS':>9} {'AGE':>8}  PURPOSE")
+    print(
+        f"{'':2} {'RUN':{width}}  {'STATE':9} {'PROGRESS':>9} {'AGE':>8}  PURPOSE · STAGE"
+    )
     for entry in entries:
         stale = entry["liveness"] == "stale"
         print(
