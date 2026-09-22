@@ -1,6 +1,6 @@
 # Open issues — project-wide index
 
-**Last updated:** 2026-09-22 · **87 open** across twelve campaigns.
+**Last updated:** 2026-09-22 · **85 open** across twelve campaigns.
 
 This file exists so that an issue opened by one campaign is not lost when that campaign closes.
 It is an **index, not a record**: one line per issue, pointing at the campaign status board that
@@ -32,9 +32,9 @@ the two disagree, the board is right.
 `radiation-oracle` closed `[01-general-w-normalisation-is-predicted-not-measured]` on 2026-09-20,
 when `prompts/handover` prompt 01 measured $N(b)$ (§1.9 below). The `handover` board was created by
 that prompt on 2026-09-20 and holds four, the last two opened by prompt 02 the same day. The
-`datastore-readback` board was created by its prompt 01 on 2026-09-22 and holds two, both opened by
-the audit that prompt ran. Of the 87
-above, 84 are spread across the boards and
+`datastore-readback` board was created by its prompt 01 on 2026-09-22; the audit that prompt ran
+opened two and one of them has already closed on that board's §4. Of the 85
+above, 82 are spread across the boards and
 **three still have no board row** — the last three `handover` rows in §1.1, opened by a document
 review on 2026-09-19, whose content lives in
 [`prompts/handover/README.md`](../prompts/handover/README.md) §2 (o) and (p) and which that
@@ -618,13 +618,16 @@ $-(3+2b)^2/(2(2+b)^2)$ to 4.130e-13. The heading stays so that the board can be 
 
 `prompts/datastore-readback` — opened 2026-09-22 after a resume of a 10 h 33 m run crashed reading
 back a row it had written itself. Prompt 01 landed the one-line fix, built the static guard in the
-new `Datastore/tests/` root, and swept every object factory; both rows below were opened by that
-sweep and neither was fixed, by that campaign's rule that a sweep repairing things silently cannot
-be reviewed.
+new `Datastore/tests/` root, and swept every object factory; it opened two issues and fixed
+neither, by that campaign's rule that a sweep repairing things silently cannot be reviewed.
+`[01-backgroundmodelvalue-hubble]` was retired the same day as a **duplicate**: this index already
+carried the same defect as `[03-backgroundmodelvalue-build-path]`, opened by `GkTk-remedial`
+prompt 03 on 2026-09-11 and not noticed by prompt 01's audit. Both were closed on 2026-09-22 at the
+user's direction — the real one on the `GkTk-remedial` board that owns it — and neither half turned
+out to be the one-line fix it looked like.
 
 | Issue | Board | Hook |
 |---|---|---|
-| `[01-backgroundmodelvalue-hubble]` | datastore-readback | The same defect class as the one the campaign exists for: `sqla_BackgroundModelValue_factory.build()` reads `row_data.Hubble` where the column is `Hubble_GeV`. Dead code today — nothing calls `object_get("BackgroundModelValue")` — so prospective, not urgent. |
 | `[01-read-batch-is-outside-the-guard]` | datastore-readback | The guard covers `build()` only. `read_batch()` reads rows through a nested helper's parameter and is checked by nothing, and it is on the live path rather than only on resume. |
 
 ---
@@ -678,7 +681,6 @@ Something was asserted statically or on a stand-in, and a live exercise is still
 | `[06-three-bessel-plot-calls-a-non-callable-phase]` | transfer-remedial | `QuadSourceIntegral_debug.three_bessel_plot` calls the phase object directly; no phase class has ever defined `__call__`, so it is dead in the same way `plot_besssel_phase.py` was. Repair-or-delete, unowned. |
 | `[08-3bessel-chebyshev-order-is-now-the-limit]` | transfer-remedial | `DEFAULT_3BESSEL_CHEBYSHEV_ORDER = 12` now binds the two $(0,0,0)$ three-Bessel oracles — order 20 buys J000 and Y000 three orders — while making the other five 4×–1500× worse. A per-integrand or convergence-checked order, not a constant to bump. |
 | `[08-tk-fixture-scipy-comparison-unasserted]` | transfer-remedial | `test_tk_source_functions`'s `err_scipy` is the campaign's headline downstream number (1.985e-06 → 3.021e-08) and is printed, not asserted; prompt 08 may only change comments and tolerances in that file, and prompt 09's `source-remediation` hand-off is restricted to one entry, so this was not folded in either. |
-| `[03-backgroundmodelvalue-build-path]` | GkTk-remedial | `sqla_BackgroundModelValue_factory.build()`'s query-existing-row branch inserts with key `"wkb_serial"` (column is `model_serial`) and reads `row_data.Hubble` (select has `Hubble_GeV`); confirmed by prompt 03, never exercised by production, not repaired. |
 | `[09-bessel-tier-hardcoded-repo-path]` | transfer-remedial | `bessel_tier.py`'s hardcoded main-checkout `sys.path` entry silently shadows a worktree's own `LiouvilleGreen` package; a re-run from a worktree measures the wrong tree with no warning. Discovered while re-running the $\kappa=1000$ benchmark tier. |
 | `[02-verify-script-builds-its-own-Gk-consumer]` | phase-representation | `docs/gktk-remedial/verify_production_path.py` calls `PrimitivePhase(...)` directly at `:557` and `:1173` instead of going through `GkSourcePolicyData._build_phase`, so six of §3.5's twelve rows and both `theta_deriv` $G_k$ columns are blind to anything the production $G_k$ call site passes. Its $T_k$ half does use `TkSourceFunctions`. Same class as `[13-scoped-run-driver-k-grid-literal]`. |
 

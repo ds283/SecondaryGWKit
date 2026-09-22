@@ -516,17 +516,6 @@ Opened by the planning pass, 2026-09-10, before any prompt runs.
   needs the spec). **Impact:** a floor on what `test_tk_numeric_atol.py` may assert. **Next step:**
   a spec-level decision by the author; not scheduled.
 
-- **[03-backgroundmodelvalue-build-path]** *(opened by prompt 03, 2026-09-11; confirmed)* — the
-  `sqla_BackgroundModelValue_factory.build()` path has two latent defects on its
-  query-existing-row branch (`RECONCILIATION.md` §2 item 11): the fresh-insert dict uses the key
-  `"wkb_serial"` where the column is `model_serial`, and the consistency check reads
-  `row_data.Hubble` where the select provides `Hubble_GeV`. Production never takes this path —
-  values are inserted through `BackgroundModel.store()` — so neither has fired. Prompt 03 edited
-  the neighbouring lines (adding `tau_lo_Mpc`) and did not repair them. **Impact:** anyone who
-  calls `pool.object_get("BackgroundModelValue", …)` directly gets an `IntegrityError` (insert) or
-  an `AttributeError` (existing row). **Next step:** a two-line fix in its own commit, with a
-  test that exercises `build()` against an in-memory SQLite store.
-
 - **[03-qcd-short-baseline-reference-endpoint-rounding]** *(opened by prompt 03, 2026-09-11;
   inert)* — the QCD short-baseline references in `wkb_reference_data.json` (`delta_tau_full`,
   `delta_tau_fraction`) were computed by `quad` in $u=\log(1+z)$ between **rounded double
@@ -772,6 +761,38 @@ Opened by the planning pass, 2026-09-10, before any prompt runs.
 ---
 
 ## 4. Resolved issues
+
+- **[03-backgroundmodelvalue-build-path]** *(opened by prompt 03, 2026-09-11; **closed
+  2026-09-22** by `prompts/datastore-readback`, at the user's direction, outside any prompt of
+  that campaign)* — the two latent defects on `sqla_BackgroundModelValue_factory.build()`'s
+  query-existing-row branch (`RECONCILIATION.md` §2 item 11): the fresh-insert dict's key
+  `"wkb_serial"` where the column is `model_serial`, and the consistency check's `row_data.Hubble`
+  where the select provides `Hubble_GeV`. **This entry's diagnosis was right in every particular,
+  including the two failure modes** — `IntegrityError` on the insert branch, `AttributeError` on
+  the existing-row branch — and the fix took the form its "next step" prescribed: its own commit,
+  with a test exercising `build()` against an in-memory SQLite store
+  (`Datastore/tests/test_backgroundmodelvalue_roundtrip.py`, 6 tests).
+
+  Two things the repair established that this entry did not, both of which made the "two-line fix"
+  larger than two lines:
+
+  - The `IntegrityError` is not raised by the bad key. SQLAlchemy Core's `insert()` drops an
+    unmatched key **silently** (the same behaviour is noted in place at
+    `OneLoopIntegral.py:253-257` for a different key); what refuses the row is `model_serial`'s own
+    `nullable=False`. Had that column been nullable, the branch would have written silently
+    orphaned rows rather than failing.
+  - The `Hubble` read could not be repaired by correcting the attribute name. The check sat
+    *below* the block that replaces the payload values with the stored ones, so `Hubble` had
+    already become the stored value: a renamed check would have compared it against itself and
+    could never have fired. It was moved above that block, and made relative and in the stored GeV
+    representation, because the internal-unit value spans 2.37e-04 to 9.19e+26 over a production
+    grid and no single absolute bound serves both ends.
+
+  **Duplicate note.** `prompts/datastore-readback` prompt 01's factory-wide audit re-found the
+  `Hubble` half on 2026-09-22 and opened it as `[01-backgroundmodelvalue-hubble]` **without
+  checking this index**, which already carried it. That duplicate is retired on that campaign's
+  board §4. The lesson is the index's own purpose: check it before opening.
+  Measurement: [`prompts/datastore-readback/logs/01a-backgroundmodelvalue-repair.md`](../datastore-readback/logs/01a-backgroundmodelvalue-repair.md).
 
 - **[10-table-8-3-measures-the-removed-wrap-theta-loop]** *(opened 2026-09-19, outside any
   campaign, by the fix to `[10-wrap-theta-loop-at-large-phase]`; **closed the same day**)* —

@@ -961,7 +961,7 @@ class sqla_BackgroundModelValue_factory(SQLAFactoryBase):
             store_id = inserter(
                 conn,
                 {
-                    "wkb_serial": model_serial,
+                    "model_serial": model_serial,
                     "z_serial": z.store_id,
                     "Hubble_GeV": Hubble / GeV,
                     "rho_GeV": rho / GeV4,
@@ -984,6 +984,32 @@ class sqla_BackgroundModelValue_factory(SQLAFactoryBase):
         else:
             store_id = row_data.serial
 
+            # the two consistency checks run here, BEFORE the payload values are replaced by the
+            # stored ones below. Each asks whether what the caller wants agrees with what is on
+            # disk, and after the replacement there is nothing left to compare against: the
+            # Hubble check used to sit below and read a "Hubble" that had already become the
+            # stored value.
+            #
+            # Hubble is compared in its stored representation and relatively, because no single
+            # absolute bound can serve a column spanning thirty decades. Over a production
+            # redshift grid the internal-unit value runs from 2.37e-04 to 9.19e+26: at the bottom
+            # DEFAULT_FLOAT_PRECISION is a relative tolerance of 4.2e-04, loose enough to accept a
+            # stored Hubble wrong in its fourth significant figure, while at the top one ulp is
+            # 1.37e+11, so the smallest disagreement a double can express is 1.4e+18 times the
+            # bound and the test degenerates to bit equality. wBackground is dimensionless and
+            # O(1), so the absolute bound is the right instrument for it and is unchanged.
+            expected_Hubble_GeV = Hubble / GeV
+            if fabs(
+                row_data.Hubble_GeV - expected_Hubble_GeV
+            ) > DEFAULT_FLOAT_PRECISION * fabs(expected_Hubble_GeV):
+                raise ValueError(
+                    f"Stored background model Hubble value (model store_id={model_serial}, z={z.store_id}) = {row_data.Hubble_GeV} GeV differs from expected value = {expected_Hubble_GeV} GeV"
+                )
+            if fabs(row_data.wBackground - wBackground) > DEFAULT_FLOAT_PRECISION:
+                raise ValueError(
+                    f"Stored background model w_Background value (model store_id={model_serial}, z={z.store_id}) = {row_data.wBackground} differs from expected value = {wBackground}"
+                )
+
             Hubble = row_data.Hubble_GeV * GeV
             rho = row_data.rho_GeV * GeV4
             tau = row_data.tau_Mpc * Mpc
@@ -999,15 +1025,6 @@ class sqla_BackgroundModelValue_factory(SQLAFactoryBase):
 
             d_wPerturbations_dz = row_data.d_wPerturbations_dz
             d2_wPerturbations_dz2 = row_data.d2_wPerturbations_dz2
-
-            if fabs(row_data.Hubble - Hubble) > DEFAULT_FLOAT_PRECISION:
-                raise ValueError(
-                    f"Stored background model Hubble value (model store_id={model_serial}, z={z.store_id}) = {row_data.Hubble} differs from expected value = {Hubble}"
-                )
-            if fabs(row_data.wBackground - wBackground) > DEFAULT_FLOAT_PRECISION:
-                raise ValueError(
-                    f"Stored background model w_Background value (model store_id={model_serial}, z={z.store_id}) = {row_data.wBackground} differs from expected value = {wBackground}"
-                )
 
         obj = BackgroundModelValue(
             store_id=store_id,

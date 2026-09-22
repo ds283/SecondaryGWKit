@@ -381,17 +381,18 @@ def analyse_factories() -> List[Finding]:
     return findings
 
 
-# Defects the audit of prompt 01 (prompts/datastore-readback) found and was forbidden by that
-# prompt to fix, each with the campaign issue that owns it. An entry here is a known bug, not an
-# exemption: delete it in the commit that fixes the factory, and the test below will hold the fix.
-KNOWN_UNFIXED = {
-    # [01-backgroundmodelvalue-hubble]: the column is "Hubble_GeV", and the equality check on the
-    # row-exists branch reads row_data.Hubble, which no SELECT requests and the table does not
-    # have. Not reachable from the pipeline today -- BackgroundModel.build() reads its sample rows
-    # with its own SELECT rather than through this factory, and nothing calls
-    # object_get("BackgroundModelValue") -- so only a future caller of that path would fire it.
-    "BackgroundModel.py:sqla_BackgroundModelValue_factory": ["Hubble"],
-}
+# Defects found by an audit and deliberately carried rather than fixed, each with the campaign
+# issue that owns it, as {"module.py:class": [attribute, ...]}. An entry here is a known bug, not
+# an exemption: it is deleted in the commit that fixes the factory, and
+# test_known_unfixed_entries_are_still_present holds the fix by failing while a stale entry
+# remains.
+#
+# It is empty, and that is the intended steady state. Prompt 01 of prompts/datastore-readback
+# opened it with [01-backgroundmodelvalue-hubble] -- sqla_BackgroundModelValue_factory.build()
+# reading row_data.Hubble where the column is Hubble_GeV -- which its own §4 forbade it to fix.
+# That defect was fixed on 2026-09-22 and the entry struck; see
+# Datastore/tests/test_backgroundmodelvalue_roundtrip.py, which now exercises that build().
+KNOWN_UNFIXED = {}
 
 
 # The row-variable bindings the analyser can see and decide, as "module:class.variable". Pinned
