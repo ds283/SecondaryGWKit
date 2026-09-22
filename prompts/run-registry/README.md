@@ -72,8 +72,12 @@ nobody asked it to. The whole thing should be a few dozen lines plus a conventio
 |---|---|---|
 | 01 | [`01-the-run-registry.md`](01-the-run-registry.md) | The layout, the helper, the lister, the rules, the `CLAUDE.md` section |
 | 02 | [`02-adopt-the-registry.md`](02-adopt-the-registry.md) | Adoption by the existing long-running entry points, **without invalidating any existing checkpoint** |
+| 03 | [`03-the-checkpoint-field-means-two-things.md`](03-the-checkpoint-field-means-two-things.md) | Split the manifest's overloaded `checkpoint` field, so `record()` cannot append to a datastore |
 
-**Order: 01 then 02.** 02 cannot start before the helper exists.
+**Order: 01, then 02, then 03.** 02 cannot start before the helper exists; 03 was opened by
+02 and cannot be written before there is something to split. **03 has a window**: the manifest is
+immutable (prompt 01 §1.2), so the field can only be re-meaned while no registry-written manifest
+survives. See 03 §2.
 
 ## 3. Baselines
 

@@ -648,7 +648,7 @@ provenance hash is load-bearing.
 |---|---|---|
 | `[01-var-runs-holds-unattributable-loose-files]` | run-registry | Four files — `run.out`, `run.pid`, `run.progress`, `realistic_large_x_cells.jsonl` — sit at the top level of `var/runs/` with nothing saying which run they belong to. Evidence; **must not** be moved, renamed or deleted. **Narrowed 2026-09-22** by prompt 02: all four are the successful `realistic_large_x.py` run of 2026-09-20, established from the file contents and the 10,772 s arithmetic. What is still open is that nothing on disk says so. |
 | `[02-realistic-large-x-is-outside-the-registry]` | run-registry | `realistic_large_x.py` is deliberately not a registry client. Editing it by one character discards all sixty cells behind `REALISTIC-LARGE-X.md` and costs a three-hour recomputation; its records must **never** be re-stamped to preserve reuse. The row exists so the price is known before anyone proposes the change. |
-| `[02-a-datastore-checkpoint-path-would-be-appended-to-by-record]` | run-registry | A registered pipeline run names its **datastore** in the manifest's `checkpoint` field, which `Run.record()` would append JSON-Lines to. Latent: nothing calls `record()` on such a run. Either `record()` refuses a non-`.jsonl` path, or the field splits in two. |
+| `[02-a-datastore-checkpoint-path-would-be-appended-to-by-record]` | run-registry | A registered pipeline run names its **datastore** in the manifest's `checkpoint` field, which `Run.record()` would append JSON-Lines to. Latent: nothing calls `record()` on such a run. **Assigned to `run-registry` prompt 03**, which splits the field. |
 
 ---
 
