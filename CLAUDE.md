@@ -44,6 +44,32 @@ that hold across all of them:
    subsection recording it; do not rewrite the original, which was correct for the tree it was
    taken on.
 
+## Long-running jobs — the run registry
+
+A job that takes hours must not be something a conversation owns. `RunRegistry/` records that one
+exists, in `var/runs/<campaign>-<prompt>-<slug>-<timestamp>/`, and
+`prompts/run-registry/README.md` §0 lists the five failures in one working session that are the
+reason for each rule below. It records; it does not schedule, supervise, restart, lock or delete.
+
+1. **Discovery.** Run `python -m RunRegistry list` at the start of a session and before launching
+   anything long, and report anything `running` or stale. A job's existence must not depend on a
+   conversation remembering it.
+2. **Liveness.** A run is alive iff its pid answers `kill -0` **and** its heartbeat is inside the
+   staleness window. **Never a command-line pattern match**: `pgrep -f <name>` matches other
+   pollers waiting on the same job, so the condition can never be satisfied — nineteen poll loops
+   that could not exit, fifteen of them waiting on a job already dead.
+3. **Launch.** Detached (`nohup`, `disown`; `setsid` is not on macOS), manifest written *first*,
+   stdout and stderr into the run directory, pid recorded — the launcher passes a detached child's
+   pid to `Run.heartbeat(pid=…)`.
+4. **Do not babysit.** Launch, verify in **one** check that it started, and **end the turn**.
+   Polling a long job re-sends an entire context per poll and learns nothing; that, not wall-clock,
+   is what makes waiting expensive. Resume once, when it is done.
+5. **Durability.** `var/runs/`, which is gitignored and in the repository. Never a session
+   scratchpad, never `/tmp` — a 462-row census died with a scratchpad and cannot be re-examined.
+6. **Provenance.** Script hash and git SHA on every checkpoint record, taken at launch. A record
+   whose script hash does not match is discarded and recomputed, never blended and **never
+   re-stamped**: re-stamping falsifies the thing the stamp exists to prove.
+
 ## Repository mechanics
 
 - **Tests** live in `<package>/tests/` as `unittest` modules and run from the repository root:

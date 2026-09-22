@@ -1,0 +1,447 @@
+"""A record on disk that a long-running job exists, what it is for, and how far it has got.
+
+The rules this package exists to support are in `CLAUDE.md`, "Long-running jobs — the run
+registry"; the failures it exists because of are `prompts/run-registry/README.md` §0. It is a
+convention with a little code behind it, not a framework: it schedules nothing, supervises
+nothing, locks nothing and deletes nothing.
+
+The layout, under `var/runs/` (gitignored, in the repository, never a session scratchpad and never
+`/tmp` — README §0 item 4 is a datastore that was written into a scratchpad and is gone):
+
+    var/runs/<campaign>-<prompt>-<slug>-<YYYYMMDDTHHMMSS>/
+        manifest.json      written once at launch, never mutated
+        status.json        the only mutable file; state, progress, heartbeat, pid, exit code
+        checkpoint.jsonl   optional, append-only, one JSON object per completed unit
+        stdout.log  stderr.log
+
+Usage is three calls. The launching process writes the manifest before any work starts, so that a
+crash in the first second still leaves a record:
+
+    run = RunRegistry.begin(
+        campaign="run-registry", prompt="01", slug="smoke",
+        purpose="one line a stranger can read",
+        script=__file__, unit="cell", expected_units=60, checkpoint=True,
+    )
+    known = run.known()                       # what a previous run already did
+    for item in work:
+        if key(item) in known:
+            continue
+        run.record(key(item), compute(item))   # appends, flushes, fsyncs, beats
+    run.finish("done", exit_code=0)
+
+`python -m RunRegistry list` prints every run, newest first, and says loudly which of them claim
+to be running but are not.
+"""
+
+import hashlib
+import json
+import os
+import re
+import subprocess
+import sys
+import time
+from datetime import datetime, timezone
+
+REPO_ROOT = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
+DEFAULT_ROOT = os.path.join(REPO_ROOT, "var", "runs")
+
+TERMINAL_STATES = ("done", "failed", "killed")
+
+# The lister's default staleness window. `liveness()` itself takes the window from its caller;
+# fifteen minutes is a convention for the command line, overridable with --stale-after, and is
+# chosen to be long against a heartbeat written once per completed unit.
+DEFAULT_STALE_AFTER = 900.0
+
+_ID_STAMP = "%Y%m%dT%H%M%S"
+
+
+# =================================================================================================
+# provenance, as `docs/handover/realistic_large_x.py` stamps it
+
+
+def now_iso() -> str:
+    """Local time with an offset, to the second — the format the hand-written A3 manifest used."""
+    return datetime.now(timezone.utc).astimezone().isoformat(timespec="seconds")
+
+
+def _slug(text) -> str:
+    return re.sub(r"[^A-Za-z0-9._]+", "-", str(text)).strip("-")
+
+
+def run_id(campaign, prompt, slug, when=None) -> str:
+    """`<campaign>-<prompt>-<slug>-<YYYYMMDDTHHMMSS>`: it sorts, and a stranger reading
+    `ls var/runs/` learns who owns each directory without asking anyone."""
+    stamp = time.strftime(_ID_STAMP, time.localtime(when))
+    return "-".join((_slug(campaign), _slug(prompt), _slug(slug), stamp))
+
+
+def script_sha256(path) -> str:
+    """SHA-256 of a script's source. Taken once, at `begin()`: that is the source the running
+    interpreter actually holds, and re-taking it later would read a file the process is not
+    running."""
+    with open(path, "rb") as handle:
+        return hashlib.sha256(handle.read()).hexdigest()
+
+
+def git_provenance(cwd=REPO_ROOT) -> dict:
+    """`git rev-parse HEAD` and whether the tree was clean, as they stood at launch."""
+
+    def run(args):
+        try:
+            return subprocess.run(
+                args, cwd=cwd, capture_output=True, text=True, timeout=30, check=False
+            ).stdout.strip()
+        except (OSError, subprocess.SubprocessError):
+            return ""
+
+    return {
+        "git_head": run(["git", "rev-parse", "HEAD"]) or "unknown",
+        "git_dirty": bool(run(["git", "status", "--porcelain"])),
+    }
+
+
+# =================================================================================================
+# files
+
+
+def _repo_path(path) -> str:
+    """A repository-relative path where that is meaningful, an absolute one otherwise."""
+    absolute = os.path.abspath(path)
+    if absolute.startswith(REPO_ROOT + os.sep):
+        return os.path.relpath(absolute, REPO_ROOT)
+    return absolute
+
+
+def _resolve(path) -> str:
+    return path if os.path.isabs(path) else os.path.join(REPO_ROOT, path)
+
+
+def read_json(path):
+    """The file's contents, or `None` if it is absent, unreadable or not JSON. A lister that
+    raises on one bad directory tells you about none of the others."""
+    try:
+        with open(path, "r") as handle:
+            return json.load(handle)
+    except (OSError, ValueError):
+        return None
+
+
+def write_json_atomic(path, payload) -> None:
+    """Write via a temporary file **in the same directory** and `os.replace`, so that a reader
+    either sees the previous contents or the new ones and never a half-written file."""
+    tmp = path + ".tmp"
+    with open(tmp, "w") as handle:
+        json.dump(payload, handle, indent=2, sort_keys=True)
+        handle.write("\n")
+        handle.flush()
+        os.fsync(handle.fileno())
+    os.replace(tmp, path)
+
+
+# =================================================================================================
+# liveness — README §0 item 3, which is why this package exists at all
+
+
+def pid_alive(pid) -> bool:
+    """Whether a process exists, by `os.kill(pid, 0)`.
+
+    **Never identify a process by matching a pattern against command lines.** `pgrep -f <name>`
+    also matches the *polling shell's own* command line, so "wait until no process matches" can
+    never be satisfied; that mistake left nineteen immortal poll loops, fifteen of them waiting on
+    a job that was already dead (`prompts/run-registry/README.md` §0 item 3).
+    """
+    try:
+        pid = int(pid)
+    except (TypeError, ValueError):
+        return False
+    if pid <= 0:
+        return False
+    try:
+        os.kill(pid, 0)
+    except ProcessLookupError:
+        return False
+    except PermissionError:  # exists, owned by somebody else
+        return True
+    except OSError:
+        return False
+    return True
+
+
+def heartbeat_age(status, now=None):
+    """Seconds since the heartbeat, or `None` if there is no readable one."""
+    try:
+        beat = datetime.fromisoformat(status.get("heartbeat"))
+    except (AttributeError, TypeError, ValueError):
+        return None
+    if beat.tzinfo is None:  # a naive stamp is local time
+        beat = beat.astimezone()
+    return ((now or datetime.now(timezone.utc)) - beat).total_seconds()
+
+
+def liveness(status, stale_after, now=None) -> str:
+    """`alive`, `stale`, `finished` or `unknown` for one `status.json` payload.
+
+    A run is **alive** iff its pid answers `kill -0` *and* its heartbeat is inside the window the
+    caller supplies. A run whose state is still `running` but which fails either test is **stale**:
+    a crashed job pretending to be alive, which is the thing worth shouting about.
+    """
+    if not status:
+        return "unknown"
+    if status.get("state") in TERMINAL_STATES:
+        return "finished"
+    if status.get("state") != "running":
+        return "unknown"
+    if not pid_alive(status.get("pid")):
+        return "stale"
+    age = heartbeat_age(status, now)
+    if age is None or age > stale_after:
+        return "stale"
+    return "alive"
+
+
+# =================================================================================================
+# the run
+
+
+class Run:
+    """One run directory. Construct it with `begin()`."""
+
+    def __init__(self, path):
+        self.path = os.path.abspath(path)
+        self.id = os.path.basename(self.path)
+        self.manifest = read_json(self.manifest_path) or {}
+
+    # --- paths ---------------------------------------------------------------------------------
+
+    @property
+    def manifest_path(self) -> str:
+        return os.path.join(self.path, "manifest.json")
+
+    @property
+    def status_path(self) -> str:
+        return os.path.join(self.path, "status.json")
+
+    @property
+    def stdout_path(self) -> str:
+        return os.path.join(self.path, "stdout.log")
+
+    @property
+    def stderr_path(self) -> str:
+        return os.path.join(self.path, "stderr.log")
+
+    @property
+    def checkpoint_path(self):
+        recorded = self.manifest.get("checkpoint")
+        return _resolve(recorded) if recorded else None
+
+    # --- status --------------------------------------------------------------------------------
+
+    def status(self) -> dict:
+        return read_json(self.status_path) or {}
+
+    def _update(self, **fields) -> dict:
+        status = self.status()
+        status.update(fields)
+        status["heartbeat"] = now_iso()
+        write_json_atomic(self.status_path, status)
+        return status
+
+    def heartbeat(self, units_done=None, units_total=None, pid=None) -> dict:
+        """Refresh the heartbeat, and with it whatever is now known. A launcher that spawns a
+        detached child passes the child's `pid` here once it has one."""
+        fields = {"units_done": units_done, "units_total": units_total, "pid": pid}
+        return self._update(**{k: v for k, v in fields.items() if v is not None})
+
+    def finish(self, state, exit_code=None) -> dict:
+        """Set the terminal state and the exit code. The registry records; it does not kill,
+        restart or reap, so `killed` is something a caller reports, not something observed.
+        """
+        if state not in TERMINAL_STATES:
+            raise ValueError(
+                f"terminal state must be one of {TERMINAL_STATES}: {state!r}"
+            )
+        return self._update(state=state, exit_code=exit_code)
+
+    # --- the checkpoint ------------------------------------------------------------------------
+
+    def record(self, unit, data=None) -> dict:
+        """Append one completed unit to `checkpoint.jsonl`, `flush`, `fsync`, and beat.
+
+        The record carries the provenance triple — script hash, git head, dirty flag — taken at
+        launch, exactly as `docs/handover/realistic_large_x.py` stamps each cell.
+        """
+        path = self.checkpoint_path
+        if path is None:
+            raise ValueError(f"run {self.id} declares no checkpoint in its manifest")
+        record = {
+            "unit": unit,
+            "recorded": now_iso(),
+            "script_sha256": self.manifest.get("script_sha256"),
+            "git_head": self.manifest.get("git_head"),
+            "git_dirty": self.manifest.get("git_dirty"),
+            "data": data,
+        }
+        os.makedirs(os.path.dirname(path) or ".", exist_ok=True)
+        with open(path, "a") as handle:
+            handle.write(json.dumps(record) + "\n")
+            handle.flush()
+            os.fsync(handle.fileno())
+        done = self.status().get("units_done") or 0
+        self.heartbeat(units_done=done + 1)
+        return record
+
+    def known(self, notice=sys.stderr) -> dict:
+        """Every completed unit already on disk, keyed by unit, so a resume recomputes only what
+        it lacks.
+
+        **Policy on a script-hash mismatch: discard, with a notice.** A record written by a
+        different version of the script is dropped and its unit recomputed, rather than the run
+        refusing to start — an edited script is then self-healing instead of stranding the operator
+        on a file they must know to delete, and the notice is what makes the discard visible. This
+        is `realistic_large_x.load_checkpoint`'s choice, generalised. Records are never blended
+        across script versions, and an existing record is **never re-stamped** with the running
+        hash: that would falsify the provenance the stamp exists to provide. Where the manifest
+        records no script hash there is nothing to gate on and every record is reused.
+
+        A malformed trailing line is ignored: the file is appended to as each unit lands, so a kill
+        can truncate the last record.
+        """
+        path = self.checkpoint_path
+        units, stale = {}, {}
+        if path is None or not os.path.exists(path):
+            return units
+        wanted = self.manifest.get("script_sha256")
+        with open(path, "r") as handle:
+            for line in handle:
+                line = line.strip()
+                if not line:
+                    continue
+                try:
+                    record = json.loads(line)
+                except json.JSONDecodeError:
+                    continue  # a torn final line
+                unit = record.get("unit")
+                if wanted and record.get("script_sha256") != wanted:
+                    stale[unit] = record.get("script_sha256") or "unstamped"
+                    units.pop(unit, None)
+                    continue
+                units[unit] = record
+        if stale and notice is not None:
+            hashes = ", ".join(sorted({str(h)[:12] for h in stale.values()}))
+            print(
+                f"checkpoint {path}: discarding {len(stale)} record(s) written by a different "
+                f"version of the script ({hashes}); this script is {str(wanted)[:12]}. Those "
+                f"units will be recomputed.",
+                file=notice,
+                flush=True,
+            )
+        return units
+
+
+def begin(
+    campaign,
+    prompt,
+    slug,
+    purpose,
+    argv=None,
+    cwd=None,
+    script=None,
+    unit=None,
+    expected_units=None,
+    checkpoint=None,
+    pid=None,
+    root=None,
+    when=None,
+):
+    """Create the run directory, write the immutable manifest, and write `status.json` as
+    `running`. Call this **before** the work starts.
+
+    `checkpoint=True` puts one inside the run directory; a path puts it wherever the job's own
+    convention says, which is how a resume in a new run directory reads the previous run's units.
+    `pid` defaults to the calling process; a launcher that spawns a detached child passes the
+    child's pid to `heartbeat()` once it has one. Every manifest field is one README §0 would have
+    caught something with; there are no others.
+    """
+    identifier = run_id(campaign, prompt, slug, when)
+    path = os.path.join(root or DEFAULT_ROOT, identifier)
+    os.makedirs(path, exist_ok=True)
+    if os.path.exists(os.path.join(path, "manifest.json")):
+        raise FileExistsError(
+            f"{path} already holds a manifest; a manifest is written once"
+        )
+    if checkpoint is True:
+        checkpoint = os.path.join(path, "checkpoint.jsonl")
+    manifest = {
+        "run_id": identifier,
+        "created": now_iso(),
+        "purpose": purpose,
+        "campaign": campaign,
+        "prompt": str(prompt),
+        "argv": list(sys.argv if argv is None else argv),
+        "cwd": cwd or os.getcwd(),
+        "script": _repo_path(script) if script else None,
+        "script_sha256": script_sha256(script) if script else None,
+        "unit": unit,
+        "expected_units": expected_units,
+        "checkpoint": _repo_path(checkpoint) if checkpoint else None,
+    }
+    manifest.update(git_provenance())
+    write_json_atomic(os.path.join(path, "manifest.json"), manifest)
+    run = Run(path)
+    run._update(
+        state="running",
+        units_done=0,
+        units_total=expected_units,
+        pid=os.getpid() if pid is None else pid,
+        exit_code=None,
+    )
+    return run
+
+
+# =================================================================================================
+# the lister
+
+
+def _created_epoch(entry_path, manifest):
+    try:
+        return datetime.fromisoformat(manifest["created"]).timestamp()
+    except (KeyError, TypeError, ValueError):
+        return os.path.getmtime(entry_path)
+
+
+def list_runs(root=None, stale_after=DEFAULT_STALE_AFTER, now=None) -> list:
+    """Every run under `root`, newest first.
+
+    A directory with no manifest is reported, not skipped and not repaired: `var/runs/` holds run
+    directories that predate this package, and they are evidence. Loose files beside the run
+    directories are ignored. Nothing here writes or deletes anything.
+    """
+    root = root or DEFAULT_ROOT
+    entries = []
+    try:
+        names = os.listdir(root)
+    except OSError:
+        return entries
+    for name in names:
+        path = os.path.join(root, name)
+        if not os.path.isdir(path):
+            continue
+        manifest = read_json(os.path.join(path, "manifest.json"))
+        status = read_json(os.path.join(path, "status.json")) or {}
+        entries.append(
+            {
+                "id": name,
+                "path": path,
+                "has_manifest": manifest is not None,
+                "purpose": (manifest or {}).get("purpose"),
+                "state": status.get("state"),
+                "pid": status.get("pid"),
+                "units_done": status.get("units_done"),
+                "units_total": status.get("units_total")
+                or (manifest or {}).get("expected_units"),
+                "liveness": liveness(status, stale_after, now=now),
+                "created_epoch": _created_epoch(path, manifest or {}),
+            }
+        )
+    entries.sort(key=lambda entry: entry["created_epoch"], reverse=True)
+    return entries
