@@ -243,6 +243,7 @@ class sqla_QuadSourceIntegral_factory(SQLAFactoryBase):
             table.c.total_abserr,
             table.c.total_converged,
             table.c.total_phase_limited,
+            table.c.numeric_quad,
             table.c.WKB_Levin,
             table.c.analytic_rad,
             table.c.eta_source_max,

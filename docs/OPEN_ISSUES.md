@@ -1,6 +1,6 @@
 # Open issues — project-wide index
 
-**Last updated:** 2026-09-20 · **85 open** across eleven campaigns.
+**Last updated:** 2026-09-22 · **87 open** across twelve campaigns.
 
 This file exists so that an issue opened by one campaign is not lost when that campaign closes.
 It is an **index, not a record**: one line per issue, pointing at the campaign status board that
@@ -24,14 +24,17 @@ the two disagree, the board is right.
 [`background-solver-robustness`](../prompts/background-solver-robustness/IMPLEMENTATION_STATE.md) ·
 [`radiation-oracle`](../prompts/radiation-oracle/IMPLEMENTATION_STATE.md) ·
 [`handover`](../prompts/handover/IMPLEMENTATION_STATE.md) ·
+[`datastore-readback`](../prompts/datastore-readback/IMPLEMENTATION_STATE.md) ·
 [`test-suite-runtime`](../prompts/test-suite-runtime/IMPLEMENTATION_STATE.md)
 
 **Two** of these hold no open issue and are listed for their §4. `test-suite-runtime` closed
 `transfer-remedial`'s `[08-3bessel-plot-cost-dominates-the-suite]` on 2026-09-19;
 `radiation-oracle` closed `[01-general-w-normalisation-is-predicted-not-measured]` on 2026-09-20,
 when `prompts/handover` prompt 01 measured $N(b)$ (§1.9 below). The `handover` board was created by
-that prompt on 2026-09-20 and holds four, the last two opened by prompt 02 the same day. Of the 85
-above, 82 are spread across the boards and
+that prompt on 2026-09-20 and holds four, the last two opened by prompt 02 the same day. The
+`datastore-readback` board was created by its prompt 01 on 2026-09-22 and holds two, both opened by
+the audit that prompt ran. Of the 87
+above, 84 are spread across the boards and
 **three still have no board row** — the last three `handover` rows in §1.1, opened by a document
 review on 2026-09-19, whose content lives in
 [`prompts/handover/README.md`](../prompts/handover/README.md) §2 (o) and (p) and which that
@@ -610,6 +613,19 @@ whose `BackgroundModel` half prompt 14 of that campaign widened it with stays op
 prompt 01 landed the Domènech general-$b$ oracle and measured $N = -1.194214876033$ at $b = 0.2$,
 constant over the nine fixture cases to 5.285e-13 and equal to the derived
 $-(3+2b)^2/(2(2+b)^2)$ to 4.130e-13. The heading stays so that the board can be found.
+
+### 1.10 The datastore read-back campaign
+
+`prompts/datastore-readback` — opened 2026-09-22 after a resume of a 10 h 33 m run crashed reading
+back a row it had written itself. Prompt 01 landed the one-line fix, built the static guard in the
+new `Datastore/tests/` root, and swept every object factory; both rows below were opened by that
+sweep and neither was fixed, by that campaign's rule that a sweep repairing things silently cannot
+be reviewed.
+
+| Issue | Board | Hook |
+|---|---|---|
+| `[01-backgroundmodelvalue-hubble]` | datastore-readback | The same defect class as the one the campaign exists for: `sqla_BackgroundModelValue_factory.build()` reads `row_data.Hubble` where the column is `Hubble_GeV`. Dead code today — nothing calls `object_get("BackgroundModelValue")` — so prospective, not urgent. |
+| `[01-read-batch-is-outside-the-guard]` | datastore-readback | The guard covers `build()` only. `read_batch()` reads rows through a nested helper's parameter and is checked by nothing, and it is on the live path rather than only on resume. |
 
 ---
 
