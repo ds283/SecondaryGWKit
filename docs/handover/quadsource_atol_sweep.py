@@ -188,11 +188,65 @@ LOW_Z_TOLERANCE_GRID = (
     (1e-32, 1e-7),
 )
 
+# --- phase 3, added 2026-09-23 ---------------------------------------------------------------------
+# Phase 2's three rungs agree to ~1e-5 at low z and I read that as a representation floor. c5 of
+# phase 1 is the standing reason that reading is not safe: there, rtol 1e-5 and 1e-6 agreed with
+# *each other* and were both 1.1e-02 wrong, and only 1e-7 found the missing contribution. Adjacent
+# loose rungs agreeing is not convergence. There is also no oracle available to settle it --
+# `domenech.py` and `kohri_terada.py` are both constant-w, and production is LambdaCDM with the
+# Saikawa-Shirai QCD equation of state -- so self-convergence is the only instrument there is, and
+# the only way to use it is to go one rung tighter (user, 2026-09-23).
+#
+# So: the three cheapest phase-2 cases at 1e-8, plus the free control. Cheapest, not worst, because
+# phase 1's 1e-7 -> 1e-8 ratio was x6.8 and the worst phase-2 cell already costs 7751 s at 1e-7; if
+# the ratio is worse down here, a run built from the severe cases would not finish. Their 1e-5,
+# 1e-6 and 1e-7 values are already stored, so the report shows all four rungs.
+LOW_Z_CHECK_CASES = (
+    (30454960.396664713, 300000000.0000001, 300000000.0000001, 0.1),  # 0.3 s at 1e-7
+    (30454960.396664713, 30454960.396664713, 30454960.396664713, 0.1),  # 397.7 s
+    (
+        9703455.784651041,
+        9703455.784651041,
+        9703455.784651041,
+        0.3020845368018508,
+    ),  # 878.3 s
+    (3091682.0425413917, 100000.0, 3091682.0425413917, 6.316577898526916),  # 1321.6 s
+)
+
+LOW_Z_CHECK_TOLERANCE_GRID = ((1e-32, 1e-8),)
+
+# The band where a numeric branch of G_k exists at all. Every GkNumericIntegration object for a
+# given k stops at the same z_min, about 6.3 e-folds inside horizon entry (measured: z_exit/z_min
+# is 479 to 612 across the eight modes), so below that response redshift there is no numeric data
+# and GkSourcePolicyData classifies the row `WKB`. Only `mixed` rows carry a crossover_z, i.e. a
+# switch of representation along the z_source axis, and only `numeric` and `mixed` rows have a
+# numeric G for `_create_functions` to spline -- which is where `[03-numeric-g-consumer-spline-...]`
+# (D1) lives. Five mixed and four numeric, severe geometry (r == k >> q), all sub-5 s rows.
+SEAM_CASES = (
+    (985061.2054411147, 313856.84721559234, 985061.2054411147, 4817913679.213864),
+    (3091682.0425413917, 985061.2054411147, 3091682.0425413917, 13426973761.876026),
+    (3091682.0425413917, 313856.84721559234, 3091682.0425413917, 4817913679.213864),
+    (9703455.784651041, 3091682.0425413917, 9703455.784651041, 13426973761.876026),
+    (313856.84721559234, 100000.0, 313856.84721559234, 527961220.9836534),
+    (985061.2054411147, 313856.84721559234, 985061.2054411147, 13426973761.876026),
+    (313856.84721559234, 100000.0, 313856.84721559234, 4817913679.213864),
+    (9703455.784651041, 3091682.0425413917, 9703455.784651041, 145631461410.94043),
+    (3091682.0425413917, 985061.2054411147, 3091682.0425413917, 48208843442.545044),
+)
+
+SEAM_TOLERANCE_GRID = (
+    (1e-32, 1e-6),
+    (1e-32, 1e-7),
+    (1e-32, 1e-8),
+)
+
 PHASES = {
     "main": (CASES, TOLERANCE_GRID),
     "low-z": (LOW_Z_CASES, LOW_Z_TOLERANCE_GRID),
+    "low-z-check": (LOW_Z_CHECK_CASES, LOW_Z_CHECK_TOLERANCE_GRID),
+    "seam": (SEAM_CASES, SEAM_TOLERANCE_GRID),
 }
-ALL_CASES = CASES + LOW_Z_CASES
+ALL_CASES = CASES + LOW_Z_CASES + SEAM_CASES
 
 K_GRID_LITERALS = (
     "np.logspace(np.log10(1e5), np.log10(3e8), NUMBER_SOURCE_K_VALUES)",
