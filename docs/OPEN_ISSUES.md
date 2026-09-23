@@ -1,6 +1,6 @@
 # Open issues — project-wide index
 
-**Last updated:** 2026-09-22 · **87 open** across thirteen campaigns.
+**Last updated:** 2026-09-23 · **90 open** across thirteen campaigns.
 
 This file exists so that an issue opened by one campaign is not lost when that campaign closes.
 It is an **index, not a record**: one line per issue, pointing at the campaign status board that
@@ -32,12 +32,15 @@ the two disagree, the board is right.
 `transfer-remedial`'s `[08-3bessel-plot-cost-dominates-the-suite]` on 2026-09-19;
 `radiation-oracle` closed `[01-general-w-normalisation-is-predicted-not-measured]` on 2026-09-20,
 when `prompts/handover` prompt 01 measured $N(b)$ (§1.9 below). The `handover` board was created by
-that prompt on 2026-09-20 and holds four, the last two opened by prompt 02 the same day. The
+that prompt on 2026-09-20 and holds **seven** — two opened by prompt 01, two by prompt 02 the same
+day, and **three opened 2026-09-23 by its A3 baseline pipeline run**, which is not a prompt: a read
+of that run's cost found the shipped `QuadSourceIntegral` tolerance pair unreachable on production's
+squeezed $(k, q, r)$ triples, and the user stopped the run. The
 `datastore-readback` board was created by its prompt 01 on 2026-09-22; the audit that prompt ran
 opened two and one of them has already closed on that board's §4. The `run-registry` board was
 created by its prompt 01 on 2026-09-22 and holds **three** — one from prompt 01, narrowed by
-prompt 02, and two opened by prompt 02 when it closed that campaign at 2 / 2. Of the 88
-above, 85 are spread across the boards and
+prompt 02, and two opened by prompt 02 when it closed that campaign at 2 / 2. Of the 90
+above, 87 are spread across the boards and
 **three still have no board row** — the last three `handover` rows in §1.1, opened by a document
 review on 2026-09-19, whose content lives in
 [`prompts/handover/README.md`](../prompts/handover/README.md) §2 (o) and (p) and which that
@@ -81,6 +84,9 @@ for.
 
 | Issue | Board | Hook |
 |---|---|---|
+| `[a3-baseline-quadrature-tolerance-is-unreachable-on-squeezed-triangles]` | handover | On squeezed triples ($r \approx k \gg q$, mid-range $k$, low $z_{\rm response}$) neither quadrature tolerance can be met: `local_atol` is `atol` over a region's length share, so at up to 1.53e6 regions the `atol = 1e-32` branch of `resolved` is dead and `rtol = 1e-8` must be met against a phase good to ~6 digits. Bisection runs to `DEFAULT_LEVIN_MAX_DEPTH = 20` — **2057 of 7600 stored rows, mean 170.6 s against 0.776 s below the cap (×220), 97.5 of the store's 98.2 CPU-hr, 43.2 % stored unconverged.** `5255ac0`'s `1e-25 → 1e-32` was right on its own terms and removed the only reachable branch for this geometry. `tolerance-convergence` prompt 06 called `atol` inert over 28 decades and **stands** — it measured the residual on an 18-case fixture with no $(k,q,r)$ triangle, not the cost. Sweep written: `docs/handover/quadsource_atol_sweep.py`. Remedy owned by `levin-refactor` / `qsi-phase-groups`. |
+| `[a3-baseline-unconverged-rows-are-stored-and-cannot-be-removed]` | handover | `total_converged` and `total_phase_limited` are stored and **nothing reads either**; 889 rows that ran to the depth cap without meeting a tolerance are keyed and served like any other. No defined route to remove them — only `--prune-unvalidated`, which would mean clearing a validation flag by hand. **Deliberately parked, user decision 2026-09-23:** if the sweep above moves the tolerance pair these rows are regenerated anyway, since the pair is part of the key. |
+| `[a3-baseline-quadsource-integrals-are-1680-short]` | handover | The LambdaCDM baseline store holds **7600 of 9280** `QuadSourceIntegral` objects (145 response $z$ × 64 triangle-closing triples); the run was stopped 2026-09-23. All 1680 missing are at $z_{\rm response} \le 174$, and **1024 at $z \le 6.32$ have never been attempted** — $\eta_R$ there reaches 13,728 against a largest measured 4936. Two independent projections give **8.2 and 10.1 wall-days** at the shipped settings, ~90 % of it in ~300 squeezed items. Blocks **E1** and **B2**, which need it as the hand-over comparator. Do not restart before the sweep decides the pair. |
 | `[01-recon-off-cut-closed-form-is-ill-conditioned]` | handover | `DOMENECH-KERNEL-RECON.md` §9's brief prescribes §5.2's off-cut form for $C(\tilde y)$, which is correct but cancels 13 orders at $\tilde y = 150$ and is 8.6e-08 out there **at any `mp.dps`** — the loss is in the double representation of $b$, not in the working precision. `q-smooth` at $b = 0.2$ sits at $\tilde y = 149.5$. Nothing in the tree is wrong (prompt 01 used the 2020 paper's own $1/\tilde y^2$ form instead); a later agent re-implementing from §9 would inherit it. Answers recon §10 item 5. |
 | `[01-recon-section-7-N-symbol-drops-a-pi]` | handover | `DOMENECH-KERNEL-RECON.md` §7 prints "$\mathcal N = 3\pi/8$" where its own §2.2 definition gives $3\pi^2/8$; the reduction §7 displays is correct and nothing arithmetical depends on the symbol, but a reader checking §7 against §2.2 loses a factor of $\pi$. |
 | `[02-realistic-fixture-Gk-phase-is-the-superseded-construction]` | handover | `test_phase_groups.py:299` says `BesselPhaseGk` is built "the way `GkSourcePolicyData._create_functions` builds the real one" — a raw `phase_spline`. Untrue since `GkTk-remedial` prompt 09: production's `_build_phase` returns a `PrimitivePhase`. `TkSourceFunctions` is current; the $G$ half is not. So prompt 02's representation term is an **upper bound**, carrying an $h^4x/384$ term production has removed, and the test module's "the accuracy production can expect" is stale for $G$. **B2** should fix the fixture before scoring the residue. |

@@ -1,6 +1,6 @@
 # Hand-over campaign — implementation state
 
-**Last updated:** 2026-09-20 · **Status: STARTED — 3 of 10 groupings landed (00, A1, A2).** Prompt
+**Last updated:** 2026-09-23 · **Status: STARTED — 3 of 10 groupings landed (00, A1, A2).** Prompt
 00 landed the reconnaissance as
 [`docs/handover/DOMENECH-KERNEL-RECON.md`](../../docs/handover/DOMENECH-KERNEL-RECON.md); **prompt
 01 (A1) has landed the general-$b$ oracle** as `ComputeTargets/tests/domenech.py` with
@@ -9,8 +9,10 @@ large-$x$ harness** as [`docs/handover/realistic_large_x.py`](../../docs/handove
 with [`REALISTIC-LARGE-X.md`](../../docs/handover/REALISTIC-LARGE-X.md), and **has separated the
 clamp term from the representation term** — the measurement
 `[12-handover-clamp-error-in-production]` records as impossible. A3 is written and not run; B1, B2,
-B3, B4, C1, C2, D1, D2, E1 and E2 are groupings only. Four issues are open in §3, one is closed in
-§4 on another board.
+B3, B4, C1, C2, D1, D2, E1 and E2 are groupings only. **Seven** issues are open in §3 — four from
+prompts 01 and 02, and **three opened 2026-09-23 by the A3 baseline run**, which was stopped by the
+user after a read of its cost showed the shipped quadrature tolerance pair unreachable on
+production's squeezed triples; one is closed in §4 on another board.
 
 **Campaign:** [`README.md`](README.md) ·
 **Background:** [`docs/handover/HANDOVER-MECHANISM.md`](../../docs/handover/HANDOVER-MECHANISM.md) ·
@@ -78,6 +80,146 @@ board is (campaign README §5 rule 4). Where the two disagree, this one is right
 ---
 
 ## 3. Active and unresolved issues
+
+- **[a3-baseline-quadrature-tolerance-is-unreachable-on-squeezed-triangles]** *(opened 2026-09-23
+  by the A3 baseline run, not by a prompt)* — on production's **squeezed** triples the source
+  integral's tolerance pair cannot be met, the Levin bisection runs to
+  `DEFAULT_LEVIN_MAX_DEPTH = 20`, and the row is stored unconverged at **220× the cost of a row
+  that stops short of the cap**. Measured over all **7600** `QuadSourceIntegral` rows in
+  `var/datastores/handover-A3-baseline-lambdacdm-shard*.sqlite`, on the tree at `704a12e` (clean):
+
+  | `WKB_Levin_max_depth` | rows | mean `compute_time` |
+  |---|---|---|
+  | NULL (no Levin call) | 2489 | 0.062 s |
+  | 1–19 | 3054 | 0.776 s |
+  | **20** | **2057** | **170.6 s** |
+
+  The cap is a cliff, not a scaling: `max_depth` on the expensive rows is **20 exactly, with zero
+  variance**. Depth-20 rows carry **97.5 of the store's 98.2 CPU-hours**, and **43.2 %** of them
+  (889) are stored with `total_converged = 0`. Of the 195 rows costing more than 60 s, **74.4 %**
+  are unconverged. The cost is **entirely Levin**: `WKB_Levin_elapsed` sums to **351,296 s** of the
+  **353,489 s** of `compute_time`, against **9 s** of `numeric_quad_compute_time` across all 7600
+  rows.
+
+  **The mechanism.** `_adaptive_levin` accepts a region on
+  `resolved = abserr < local_atol or relerr < rtol` (`AdaptiveLevin/levin_quadrature.py:1991`, and
+  again at `:2179`), and `local_atol` is `atol` distributed across subregions **by length share**
+  (`_local_atol`, `:1672`). These rows reach `WKB_Levin_num_regions` of up to **1,530,190**, so a
+  region's share of `atol = 1e-32` is around **1e-38** and the first branch is dead. Everything
+  must then clear `rtol = 1e-8` against a phase representation that delivers about six digits: the
+  median `total_abserr / |total|` on the expensive rows is **2.15e-06**. `levin_quadrature.py:2327`
+  describes this state in its own words — *"the cost can be two orders of magnitude higher than
+  necessary"* — and the measured ratio is 220.
+
+  **Which constant, and why the change that caused it was reasonable.** `5255ac0` (2026-09-10)
+  tightened `DEFAULT_QUADRATURE_ATOL` from `1e-25` to `1e-32`, on `prompts/source-remediation`
+  log 12's finding that at `1e-25` ~58 % of production work items "converged" before doing any
+  work. That finding is not in dispute and the direction was right. What the change also did,
+  unmeasured, is remove the only reachable branch for **this** geometry: the expensive rows have
+  median `|total| = 3.31e-24`, so at `1e-25` `atol` was met immediately and at `1e-32` it cannot be
+  met at any subdivision. The regime moved from `atol`-bound to `rtol`-bound, and `rtol = 1e-8` is
+  unattainable here. **The defect is the pair, not the tightening**: nothing sized `rtol` for a
+  phase that cannot deliver eight digits, because until `5255ac0` `atol` was hiding it.
+
+  **Why the sweep that already exists did not see it.** `prompts/tolerance-convergence` prompt 06
+  swept exactly this axis and reported `atol` **inert over twenty-eight decades**
+  ([`QUADSOURCE-READONLY.md`](../../docs/tolerance-convergence/QUADSOURCE-READONLY.md) §0
+  finding 1, §4). **That measurement stands and is not superseded.** It measured the *residual*, on
+  the eighteen offline cases of `test_quadsource_integral.py`, and on those cases `atol` is inert.
+  It could not see this for two reasons, both structural: its instrument has **no `(k, q, r)`
+  triangle** — the squeezed geometry below does not occur in a single constant-$w$ configuration —
+  and the statistic that moves is the **cost**, which a residual sweep does not record. Its own
+  finding 4 recorded `DEFAULT_LEVIN_MAX_DEPTH = 20` and `limit = 100` as **never chosen**; this
+  entry is what that costs. A different question on a different instrument, not a contradiction.
+
+  **The geometry, exactly — three conditions, all necessary.** (i) **`r == k ≫ q`**, the hard leg
+  on the response and a soft `q`: every worst triple has this shape, and the mirror `k ≪ q ≈ r`
+  costs 0.3 s. (ii) **mid-range `k`**: the blow-up peaks at `k = 9.7e6`/Mpc and is **absent at both
+  ends** — `k = 1e5` has zero rows over 60 s, and so does `k = 3e8`. (iii) **low `z_response`**,
+  i.e. large `eta_response`: within one triple the cost grows roughly as $\eta_R^3$ and then
+  flattens as the cap binds. For `(k, q, r) = (9.7e6, 9.85e5, 9.7e6)`: **15.5 s** at $z = 8343$
+  ($\eta_R = 50.8$), **737 s** at $z = 1589$, **6245 s** at $z = 174$, **12,714 s** at $z = 11$.
+  Binned by $k\eta_R$ the **median** cost is flat at ~1.3 s across **twelve decades** — Levin is
+  doing what Levin is for — and only the mean moves. Any statistic that does not separate the tail
+  will miss this.
+
+  **Impact.** Cost, and what a stored `total` is worth. At the settings that shipped, finishing the
+  baseline costs **8–10 wall-days** on six CPUs (the issue below), and 74 % of what it would add is
+  unconverged. It also reaches **E1** and **B2**, which re-score against this store, and it
+  narrows `[02-levin-cost-growth-may-be-a-stale-Gk-phase-artefact]` below.
+
+  **Next step:** [`docs/handover/quadsource_atol_sweep.py`](../../docs/handover/quadsource_atol_sweep.py),
+  written 2026-09-23 — nine fixed production work items (four severe, three moderate, two
+  controls), seven tolerance pairs, main.py's own pipeline through five exact substitutions,
+  against a **copy** of the baseline store. It reports `total`, `total_converged`, `max_depth`,
+  region count and `compute_time` per cell, so it answers the one question that decides this: does
+  relaxing `atol` — or `rtol` — change a digit of `total` that depth-20 bisection was not
+  delivering anyway? Its zero point is the baseline's own rows, read back as lookups
+  (7237.2 s over the nine, 7 at depth 20, 5 unconverged). **The remedy is not this campaign's to
+  take.** `DEFAULT_QUADRATURE_ATOL` and `DEFAULT_QUADRATURE_RTOL` belong to
+  `prompts/levin-refactor` and `prompts/qsi-phase-groups` (`tolerance-convergence` README §0.4),
+  and `DEFAULT_LEVIN_MAX_DEPTH` is owned by nobody. This board measures and hands over. Indexed at
+  `docs/OPEN_ISSUES.md` §1.1.
+
+- **[a3-baseline-unconverged-rows-are-stored-and-cannot-be-removed]** *(opened 2026-09-23 by the A3
+  baseline run, not by a prompt)* — `QuadSourceIntegral` records `total_converged` and
+  `total_phase_limited`, and **nothing reads either**. A row whose bisection ran to the depth cap
+  without meeting a tolerance is written, keyed, and served to every later consumer exactly like a
+  row that converged. In the A3 baseline store that is **889 rows** (43.2 % of the 2057 at depth
+  20, 11.7 % of all 7600). The flag is there, so the data is recoverable by anyone who thinks to
+  select on it; nothing in the pipeline does, and no `QuadSourceIntegral` consumer joins on it.
+
+  **Impact.** Every downstream use of this store, and of any store built at a tolerance pair that
+  reaches the cap — so it is the same population as the issue above and disappears with it if that
+  pair changes. Today it is latent rather than wrong: the stored `total` is the integral the code
+  computed, and `levin_quadrature.py:2328` says the estimate is "usually still good". What is
+  missing is any way for a consumer to *decline* it.
+
+  **Next step: deliberately none for now — user decision, 2026-09-23.** Recorded so that it is not
+  lost, not so that it is acted on. Two things are true about it. First, there is **no defined
+  route to remove such rows**: the only mechanism in the tree is `main.py --prune-unvalidated`,
+  which drops rows whose validation flag is clear, so removing these would mean clearing that flag
+  by hand on a selection the schema was not designed to express — a hand edit against a datastore,
+  which is the kind of thing this project does not do. Second, it may not need doing: if the sweep
+  above moves the tolerance pair, **every one of these rows is regenerated anyway**, because the
+  pair is part of the datastore key. The decision therefore waits on the sweep. If the pair does
+  *not* move, the right shape is probably a filter at the consumer and a `--require-converged`
+  gate, not a deletion. Indexed at `docs/OPEN_ISSUES.md` §1.1.
+
+- **[a3-baseline-quadsource-integrals-are-1680-short]** *(opened 2026-09-23 by the A3 baseline run,
+  not by a prompt)* — the LambdaCDM baseline store holds **7600 of the 9280**
+  `QuadSourceIntegral` objects its own geometry defines, and the run that was filling it was
+  **stopped by the user on 2026-09-23** rather than allowed to finish. The count is exact and is
+  set arithmetic on store serials, not on floats: 145 response redshifts × 64 triangle-closing
+  `(k, q, r)` triples = 9280; the store holds 7600; **1680 are missing**. (A first pass over
+  round-tripped CSV floats gave 2581 and was wrong — `redshift.z` does not survive a CSV round
+  trip, and 901 rows appeared to be off-grid when they were not.)
+
+  **What is missing is the expensive end, entirely.** All 1680 are at `z_response ≤ 174.1`, and
+  **1024 of them at `z_response ≤ 6.32` have no row at all** — that block has never been attempted.
+  Its $\eta_R$ runs out to **13,728** at $z = 0.1$ (main.py's own "latest tau" line) against a
+  largest *measured* $\eta_R$ of **4936** at $z = 8.33$, so the untouched block is a factor 2.8
+  beyond anything the cost model above is fitted on. Two independent projections of the remainder
+  at the shipped settings: a per-triple power law in $\eta_R$, extrapolated and capped at 4× each
+  triple's largest measured cost, gives **1021 CPU-hr ≈ 8.2 wall-days** at the 5.2 effective CPUs
+  the run achieved; the flat rate from the run's own last session (48 items in 6 h 55 m at a mean
+  of 2710 s) gives **~10.1 wall-days**, and that is a *lower* bound because that session only
+  reached $z \ge 8.3$. About **300 of the 1680** — the squeezed triples at
+  $k = 3.1\times10^6$, $9.7\times10^6$ and $3.0\times10^7$ — carry roughly **90 %** of it.
+
+  **Impact.** **E1** and **B2**, which need this store as the comparator for the hand-over change,
+  and **A3** itself, whose policy rows are complete but whose integral outcomes are not. The store
+  is *usable* — 7600 rows over the full $k$ grid and the whole high-$z$ range — but it is **not a
+  complete response-redshift grid** and nothing that assumes one may be run against it.
+
+  **Next step:** do **not** restart it at the shipped tolerance pair. The sweep named in the first
+  issue above decides the pair; if the pair moves, the whole store is regenerated anyway and the
+  1680 are moot, and if it does not, the 8–10 days is the honest price and is a decision for
+  whoever owns E1. The run itself is recorded at
+  `var/runs/handover-03-a3-baseline-resume-20260923T024847` (state `killed`, stage
+  "CALCULATE QUADRATIC SOURCE INTEGRALS, 92.31%" — that percentage counts **batches of 750
+  dispatched**, not integrals completed, which is what made the remaining work look small). All
+  four shards pass `PRAGMA quick_check` after the stop. Indexed at `docs/OPEN_ISSUES.md` §1.1.
 
 - **[01-recon-off-cut-closed-form-is-ill-conditioned]** *(opened 2026-09-20 by prompt 01)* —
   [`DOMENECH-KERNEL-RECON.md`](../../docs/handover/DOMENECH-KERNEL-RECON.md) §9's implementation
@@ -186,6 +328,22 @@ board is (campaign README §5 rule 4). Where the two disagree, this one is right
   by prompt 02** — out of its scope, and it needs the fixture change the issue above owns.
   Measurement: [`logs/02-realistic-flavour-large-x-harness.md`](logs/02-realistic-flavour-large-x-harness.md),
   "Observations not acted on" item 2. Indexed at `docs/OPEN_ISSUES.md` §1.1.
+
+  **Narrowed 2026-09-23 by the A3 baseline run.** The strong form of the hypothesis above —
+  *"If that is the mechanism, **production does not have it**"* — is **refuted by measurement**.
+  Production's $G$ phase **is** a `PrimitivePhase`, and production has a Levin blow-up anyway:
+  2057 of 7600 stored `QuadSourceIntegral` rows sit at `max_depth = 20` with up to 1,530,190
+  regions, at 220× the mean cost of a row that stops short of the cap
+  (`[a3-baseline-quadrature-tolerance-is-unreachable-on-squeezed-triangles]` above). So a stale
+  `phase_spline` floor cannot be the whole explanation of unbounded subdivision in this driver.
+  What the new measurement supplies is a **second, sufficient mechanism** that the harness shares:
+  `local_atol` is `atol` divided by a region's length share, so at 1e6 regions the `atol` branch
+  of `resolved` is dead whatever the phase is, and `rtol` alone must be met. That is present in
+  the harness too. **This issue is not closed**: its own question — whether the *fixture's* 12–105×
+  growth in $x$ is the fixture's or production's — is still open, and the one-cell experiment
+  above is still the way to answer it. What has changed is that a null result there no longer
+  means the cost curve is safe, and that the experiment should record `max_depth` and the region
+  count against `local_atol` rather than against `phase_err` alone.
 
 **Not on this board, deliberately.** The three issues `README.md` §2 (o) and (p) record —
 `[03-gksource-policy-accepts-a-value-that-raises]`,
