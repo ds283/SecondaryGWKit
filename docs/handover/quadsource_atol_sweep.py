@@ -157,6 +157,43 @@ TOLERANCE_GRID = (
     (1e-32, 1e-8),
 )
 
+# --- phase 2, added 2026-09-23 on the measurement above -------------------------------------------
+# The nine cases of phase 1 all sit at z_response >= 43.7, and its speed-ups must not be
+# extrapolated into the 1024 items at z_response <= 6.32 that no run has ever attempted: eta_R
+# reaches 13,728 at z = 0.1 against a largest *measured* 4936 at z = 8.33, and that block is where
+# most of the remaining cost is. These seven re-use triples phase 1 already showed to be severe --
+# so they are known to close a triangle and known to have every ingredient in the store -- at seven
+# low z instead.
+LOW_Z_CASES = (
+    # z literals are the grid's own `repr`, not rounded: the selector matches at rel_tol=1e-9 and
+    # a seven-figure 0.9125507 is 2.9e-08 away from the grid's 0.9125506737478801, which the guard
+    # in make_case_selector() caught on the first attempt at this phase.
+    (9703455.784651041, 985061.2054411147, 9703455.784651041, 0.1),
+    (9703455.784651041, 3091682.0425413917, 9703455.784651041, 0.9125506737478801),
+    (30454960.396664713, 313856.84721559234, 30454960.396664713, 2.0909967671302003),
+    (3091682.0425413917, 100000.0, 3091682.0425413917, 6.316577898526916),
+    (9703455.784651041, 9703455.784651041, 9703455.784651041, 0.3020845368018508),
+    (30454960.396664713, 300000000.0000001, 300000000.0000001, 0.1),
+    (30454960.396664713, 30454960.396664713, 30454960.396664713, 0.1),
+)
+
+# **No `rtol = 1e-8` reference here, deliberately.** At these eta_R a production-pair cell is a
+# 1e+04 s item -- that is the whole finding -- so the reference is unaffordable and the test has to
+# be self-convergence of the three loose rungs against each other, which is what
+# `QUADSOURCE-READONLY.md` 8.1 does on its own axis. Loosest first, so that if 1e-7 proves
+# unaffordable at z = 0.1 the two cheaper rungs are already in hand.
+LOW_Z_TOLERANCE_GRID = (
+    (1e-32, 1e-5),
+    (1e-32, 1e-6),
+    (1e-32, 1e-7),
+)
+
+PHASES = {
+    "main": (CASES, TOLERANCE_GRID),
+    "low-z": (LOW_Z_CASES, LOW_Z_TOLERANCE_GRID),
+}
+ALL_CASES = CASES + LOW_Z_CASES
+
 K_GRID_LITERALS = (
     "np.logspace(np.log10(1e5), np.log10(3e8), NUMBER_SOURCE_K_VALUES)",
     "np.logspace(np.log10(1e5), np.log10(3e8), NUMBER_RESPONSE_K_VALUES)",
@@ -320,7 +357,9 @@ def run_child(args):
         "--no-prune-unvalidated",
     ]
     sys.argv = ["main.py"] + main_args
-    print(f"** quadsource_atol_sweep: atol={args.atol:g} rtol={args.rtol:g}")
+    print(
+        f"** quadsource_atol_sweep: phase={args.phase} atol={args.atol:g} rtol={args.rtol:g}"
+    )
     print(f"** quadsource_atol_sweep: main.py argv = {sys.argv[1:]}")
 
     namespace = {
@@ -329,7 +368,7 @@ def run_child(args):
         K_GRID_NAME: k_sample(),
         "SWEEP_QUAD_ATOL": args.atol,
         "SWEEP_QUAD_RTOL": args.rtol,
-        "SWEEP_SELECT_CASES": make_case_selector(CASES),
+        "SWEEP_SELECT_CASES": make_case_selector(PHASES[args.phase][0]),
     }
     exec(compile(source, str(MAIN_PY), "exec"), namespace)
 
@@ -481,11 +520,11 @@ def report():
             and math.isclose(kmap[q], c[1], rel_tol=1e-9)
             and math.isclose(kmap[r], c[2], rel_tol=1e-9)
             and math.isclose(zmap[z], c[3], rel_tol=1e-9)
-            for c in CASES
+            for c in ALL_CASES
         )
 
     kept = [r for r in rows if is_case(r[0], r[1], r[2], r[3])]
-    print(f"\n{len(kept)} sweep rows over {len(CASES)} cases\n")
+    print(f"\n{len(kept)} sweep rows over {len(ALL_CASES)} cases\n")
     hdr = (
         f"{'atol':>8} {'rtol':>7} | {'k':>10} {'q':>10} {'r':>10} {'z_resp':>10} | "
         f"{'total':>13} {'conv':>4} {'depth':>5} {'regions':>9} {'time (s)':>10}"
@@ -535,11 +574,12 @@ def sweep(args):
             script=__file__,
             results=str(SWEEP_STORE),
             scope=(
-                f"{len(CASES)} production QuadSourceIntegral work items x "
-                f"{len(TOLERANCE_GRID)} tolerance pairs, {args.cpus} cpus, on a copy of the A3 "
-                f"baseline store; atol {min(t[0] for t in TOLERANCE_GRID):g} to "
-                f"{max(t[0] for t in TOLERANCE_GRID):g}, rtol "
-                f"{min(t[1] for t in TOLERANCE_GRID):g} to {max(t[1] for t in TOLERANCE_GRID):g}"
+                f"phase {args.phase}: {len(PHASES[args.phase][0])} production "
+                f"QuadSourceIntegral work items x {len(PHASES[args.phase][1])} tolerance pairs, "
+                f"{args.cpus} cpus, on a copy of the A3 baseline store; rtol "
+                f"{min(t[1] for t in PHASES[args.phase][1]):g} to "
+                f"{max(t[1] for t in PHASES[args.phase][1]):g} at atol "
+                f"{min(t[0] for t in PHASES[args.phase][1]):g}"
             ),
             heartbeat_means=(
                 "Refreshed by the parent after each tolerance pair's child process exits, and "
@@ -572,8 +612,11 @@ def sweep(args):
         )
 
     try:
-        for index, (atol, rtol) in enumerate(TOLERANCE_GRID, start=1):
-            stage = f"pair {index}/{len(TOLERANCE_GRID)}: atol={atol:g} rtol={rtol:g}"
+        cases, grid = PHASES[args.phase]
+        for index, (atol, rtol) in enumerate(grid, start=1):
+            stage = (
+                f"{args.phase} pair {index}/{len(grid)}: atol={atol:g} rtol={rtol:g}"
+            )
             print(f"\n{'='*90}\n** {stage}\n{'='*90}", flush=True)
             if run is not None:
                 run.heartbeat(stage=stage)
@@ -589,6 +632,8 @@ def sweep(args):
                     repr(rtol),
                     "--cpus",
                     str(args.cpus),
+                    "--phase",
+                    args.phase,
                 ],
                 cwd=str(REPO_ROOT),
                 env={**os.environ, "PYTHONPATH": str(REPO_ROOT)},
@@ -633,6 +678,9 @@ def main():
     parser.add_argument("--atol", type=float, default=None, help=argparse.SUPPRESS)
     parser.add_argument("--rtol", type=float, default=None, help=argparse.SUPPRESS)
     parser.add_argument("--cpus", type=int, default=6)
+    parser.add_argument(
+        "--phase", choices=sorted(PHASES), default="main", help="which case set to run"
+    )
     parser.add_argument("--register", type=str, default=None, metavar="SLUG")
     parser.add_argument("--purpose", type=str, default=None)
     parser.add_argument("--campaign", type=str, default="handover")
