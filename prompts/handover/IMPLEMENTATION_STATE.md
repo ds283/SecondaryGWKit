@@ -148,14 +148,53 @@ board is (campaign README §5 rule 4). Where the two disagree, this one is right
   unconverged. It also reaches **E1** and **B2**, which re-score against this store, and it
   narrows `[02-levin-cost-growth-may-be-a-stale-Gk-phase-artefact]` below.
 
-  **Next step:** [`docs/handover/quadsource_atol_sweep.py`](../../docs/handover/quadsource_atol_sweep.py),
-  written 2026-09-23 — nine fixed production work items (four severe, three moderate, two
-  controls), seven tolerance pairs, main.py's own pipeline through five exact substitutions,
-  against a **copy** of the baseline store. It reports `total`, `total_converged`, `max_depth`,
-  region count and `compute_time` per cell, so it answers the one question that decides this: does
-  relaxing `atol` — or `rtol` — change a digit of `total` that depth-20 bisection was not
-  delivering anyway? Its zero point is the baseline's own rows, read back as lookups
-  (7237.2 s over the nine, 7 at depth 20, 5 unconverged). **The remedy is not this campaign's to
+  **Measured 2026-09-23** by
+  [`docs/handover/quadsource_atol_sweep.py`](../../docs/handover/quadsource_atol_sweep.py) — nine
+  fixed production work items (four severe, three moderate, two controls) over eight tolerance
+  pairs, through main.py's own pipeline by five exact substitutions. The zero point is the
+  baseline's own rows, read back as lookups: 7237.2 s over the nine, 7 at depth 20, 5 unconverged.
+  Each cell is the worst relative difference of `total` against that zero point over the nine:
+
+  | `atol` | `rtol` | worst $\lvert\Delta\rvert/\lvert total\rvert$ | time, 9 cases | speed-up |
+  |---|---|---|---|---|
+  | 1e-22 | 1e-8 | 1.8e+00 | 3.0 s | — |
+  | 1e-25 | 1e-8 | 1.8e+00 | 2.5 s | — |
+  | 1e-28 | 1e-8 | 3.2e-01 | 5.6 s | — |
+  | 1e-30 | 1e-8 | 1.1e-02 | 100.5 s | — |
+  | 1e-32 | 1e-5 | 1.1e-02 | 4.9 s | ×1477 |
+  | 1e-32 | 1e-6 | 1.1e-02 | 31.1 s | **×233** |
+  | **1e-32** | **1e-7** | **1.9e-06** | **1060.5 s** | **×6.8** |
+  | 1e-32 | 1e-8 | — (reference) | 7237.2 s | 1 |
+
+  **`rtol` is the lever and `atol` is not**, which is the opposite of what the cost alone
+  suggested. Relaxing `atol` collapses the cost and **destroys the answer**: at 1e-22 and 1e-25
+  several cases return with the *wrong sign*, and 1e-28 is still 32 % out. So `5255ac0` was right
+  in a stronger sense than log 12 claimed for it — 1e-25 is too loose on *this* geometry, not only
+  on the grounds log 12 gave — and `atol` is emphatically **not** inert here, which is a second
+  way prompt 06's finding does not transfer. At production `atol`, `rtol = 1e-7` reproduces every
+  one of the nine to **1.9e-06** at **1/6.8** of the cost, and `rtol = 1e-6` gives seven digits on
+  eight of nine at **1/233**, with one case (the $z = 1589$ moderate) pinned at 1.1e-02 — that
+  same case pins the 1e-30 and 1e-5 rows too, so it is a property of the case and not of the
+  tolerance.
+
+  **Two qualifications ship with this table, and the first is the binding one.** (i) The
+  `(1e-32, 1e-8)` reference is itself stored `total_converged = 0` on **5 of the 9** cases, so
+  "agrees to 1.9e-06" means *agrees with a number the code declined to certify*, not with truth.
+  This sweep has no independent oracle and `analytic_rad` cannot be one — prompt 06's finding 3
+  established that it is computed at the caller's own pair and moves with it. (ii) All nine cases
+  sit at $z_{\rm response} \ge 43.7$; the 1024 items at $z \le 6.32$ that
+  `[a3-baseline-quadsource-integrals-are-1680-short]` records as never attempted are **unmeasured
+  at every tolerance**, and their $\eta_R$ reaches 2.8× the largest sampled here. The speed-ups
+  above must not be extrapolated into that block, which is where most of the cost is.
+
+  Incidentally confirming the issue below: at `rtol = 1e-6` seven of the nine rows are still
+  flagged unconverged while agreeing to seven digits. At `atol = 1e-32` the `atol` branch of
+  `resolved` can never fire, so `total_converged` carries almost no information.
+
+  **Next step:** extend the sweep into the $z \le 6.32$ block before any tolerance is adopted —
+  a 1e-8 reference is unaffordable there (those are the 1.2e+04 s items), so the ladder has to be
+  self-convergence of 1e-5 / 1e-6 / 1e-7 against each other. Then regenerate the store at the
+  chosen pair (user decision, 2026-09-23; see that issue). **The remedy is not this campaign's to
   take.** `DEFAULT_QUADRATURE_ATOL` and `DEFAULT_QUADRATURE_RTOL` belong to
   `prompts/levin-refactor` and `prompts/qsi-phase-groups` (`tolerance-convergence` README §0.4),
   and `DEFAULT_LEVIN_MAX_DEPTH` is owned by nobody. This board measures and hands over. Indexed at
@@ -175,8 +214,10 @@ board is (campaign README §5 rule 4). Where the two disagree, this one is right
   computed, and `levin_quadrature.py:2328` says the estimate is "usually still good". What is
   missing is any way for a consumer to *decline* it.
 
-  **Next step: deliberately none for now — user decision, 2026-09-23.** Recorded so that it is not
-  lost, not so that it is acted on. Two things are true about it. First, there is **no defined
+  **Next step: subsumed by the regeneration — user decision, 2026-09-23.** The store is to be
+  rebuilt from scratch at the chosen tolerance pair, so these rows are not cleaned, they cease to
+  exist. What survives the rebuild is the *design* question, and only if the adopted pair still
+  reaches the depth cap: recorded so that it is not lost, not so that it is acted on now. Two things are true about it. First, there is **no defined
   route to remove such rows**: the only mechanism in the tree is `main.py --prune-unvalidated`,
   which drops rows whose validation flag is clear, so removing these would mean clearing that flag
   by hand on a selection the schema was not designed to express — a hand edit against a datastore,
@@ -211,6 +252,17 @@ board is (campaign README §5 rule 4). Where the two disagree, this one is right
   and **A3** itself, whose policy rows are complete but whose integral outcomes are not. The store
   is *usable* — 7600 rows over the full $k$ grid and the whole high-$z$ range — but it is **not a
   complete response-redshift grid** and nothing that assumes one may be run against it.
+
+  **Superseded 2026-09-23 by a user decision: the store is to be regenerated from scratch** at
+  the tolerance pair the sweep above settles, rather than finished at the shipped one. That closes
+  three things at once — the 1680, the 889 unconverged rows of the issue above, and **54 rows the
+  first run of the sweep wrote into this store in error** (a copied `ShardedPool` primary still
+  names the *source* store's shard files, fixed in `2ebb7b6`; the rows are at six non-production
+  pairs and the production population was left at exactly 7600, so nothing was lost). Rebuilding
+  costs **~16 minutes** for everything upstream of the integral — measured from this store's own
+  timestamps, 21:02:30 to the first `QuadSourceIntegral` row at 21:18:24, covering the background
+  model, both $T_k$ sectors, both $G_k$ sectors, `GkSource` and the policies — so there is no case
+  for reusing any of it.
 
   **Next step:** do **not** restart it at the shipped tolerance pair. The sweep named in the first
   issue above decides the pair; if the pair moves, the whole store is regenerated anyway and the
