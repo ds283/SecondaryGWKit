@@ -268,6 +268,12 @@ def substitute_main_py():
 
 def run_child(args):
     """One tolerance pair: exec main.py with the five substitutions and let it store the rows."""
+    # before Ray, before main.py: this child is about to hand `--database SWEEP_STORE` to a
+    # ShardedPool, and a primary whose `shards` table names another store's files would send
+    # every write there instead. Checked here as well as in prepare() because this is the process
+    # that does the writing.
+    assert_store_is_self_consistent(SWEEP_STORE)
+
     import ray
 
     _real_ray_init = ray.init
@@ -328,25 +334,59 @@ def run_child(args):
     exec(compile(source, str(MAIN_PY), "exec"), namespace)
 
 
-def prepare(force=False):
-    """Copy the baseline shards to the sweep store. The baseline is opened read-only, once."""
-    src_shards = [
-        BASELINE_STORE.with_name(
-            f"{BASELINE_STORE.stem}-shard{i:04d}{BASELINE_STORE.suffix}"
-        )
+def shard_paths(primary):
+    return [
+        primary.with_name(f"{primary.stem}-shard{i:04d}{primary.suffix}")
         for i in range(SHARDS)
     ]
+
+
+def assert_store_is_self_consistent(primary):
+    """Refuse to go on unless the primary's `shards` table names *its own* shard files.
+
+    This is not a formality. `ShardedPool` does not derive the shard filenames from the
+    `--database` path: it reads them, as **absolute paths**, out of a `shards` table inside the
+    primary file (`Datastore/SQL/ShardedPool.py:_read_shard_data`, written by `_write_shard_data`
+    at `:280`). The sidecar `.manifest.json` is a human note and is read by nothing. So copying a
+    primary file copies the *previous* store's shard paths with it, and a pool opened on the copy
+    writes to the original -- which is exactly what happened on 2026-09-23, when the first run of
+    this sweep put 54 rows into the A3 baseline store it was written to leave alone. The rows were
+    at six non-production tolerance pairs and the production population was untouched, so nothing
+    was lost; but the guarantee in this module's docstring was false for one run, and a guarantee
+    that is only true when `prepare()` is correct is not a guarantee. Hence this check, called
+    from both `prepare()` and `run_child()`.
+    """
+    import sqlite3
+
+    expected = {str(p.resolve()) for p in shard_paths(primary)}
+    conn = sqlite3.connect(f"file:{primary}?mode=ro", uri=True)
+    try:
+        found = {row[1] for row in conn.execute("select serial, filename from shards")}
+    finally:
+        conn.close()
+    if found != expected:
+        raise RuntimeError(
+            f"quadsource_atol_sweep: the `shards` table inside {primary.name} does not name its "
+            f"own shard files, so a pool opened on it would read and write somewhere else.\n"
+            f"  expected: {sorted(expected)}\n"
+            f"  found:    {sorted(found)}\n"
+            "Re-run --prepare --force. Do NOT run the sweep against this store."
+        )
+
+
+def prepare(force=False):
+    """Copy the baseline store to the sweep store, and re-point the copy at its own shards."""
+    import sqlite3
+
+    src_shards = shard_paths(BASELINE_STORE)
     missing = [p for p in src_shards if not p.exists()]
     if missing:
         raise RuntimeError(
             f"quadsource_atol_sweep: baseline shard(s) not found: "
             f"{', '.join(str(p) for p in missing)}"
         )
-    targets = [
-        SWEEP_STORE.with_name(f"{SWEEP_STORE.stem}-shard{i:04d}{SWEEP_STORE.suffix}")
-        for i in range(SHARDS)
-    ]
-    existing = [p for p in targets if p.exists()]
+    targets = shard_paths(SWEEP_STORE)
+    existing = [p for p in targets + [SWEEP_STORE] if p.exists()]
     if existing and not force:
         raise RuntimeError(
             f"quadsource_atol_sweep: sweep store already exists "
@@ -357,15 +397,48 @@ def prepare(force=False):
     for src, dst in zip(src_shards, targets):
         print(f"** copying {src.name} -> {dst.name} ({src.stat().st_size/1e6:.0f} MB)")
         shutil.copy2(src, dst)
-    for extra in (BASELINE_STORE, BASELINE_STORE.with_suffix(".manifest.json")):
-        if extra.exists():
-            dst = (
-                SWEEP_STORE
-                if extra == BASELINE_STORE
-                else SWEEP_STORE.with_suffix(".manifest.json")
-            )
-            shutil.copy2(extra, dst)
-            print(f"** copying {extra.name} -> {dst.name}")
+    print(f"** copying {BASELINE_STORE.name} -> {SWEEP_STORE.name} (primary)")
+    shutil.copy2(BASELINE_STORE, SWEEP_STORE)
+
+    # and the reason this function exists at all: the copied primary still names the *baseline's*
+    # shard files, because that is where ShardedPool keeps them. Re-point it at its own.
+    conn = sqlite3.connect(SWEEP_STORE)
+    try:
+        with conn:
+            for serial, path in enumerate(targets):
+                conn.execute(
+                    "update shards set filename = ? where serial = ?",
+                    (str(path.resolve()), serial),
+                )
+    finally:
+        conn.close()
+    assert_store_is_self_consistent(SWEEP_STORE)
+    print("** re-pointed the copied primary at its own shards:")
+    for path in targets:
+        print(f"     {path}")
+
+    # the sidecar manifest is a human note that ShardedPool never reads. Copying the baseline's
+    # verbatim would leave a file in var/datastores/ whose `datastore` field names another store,
+    # so write our own rather than copy theirs.
+    manifest = SWEEP_STORE.with_suffix(".manifest.json")
+    manifest.write_text(
+        json.dumps(
+            {
+                "name": SWEEP_STORE.stem,
+                "purpose": (
+                    "Working copy of the A3 baseline store for "
+                    "docs/handover/quadsource_atol_sweep.py. Disposable: every row that is not "
+                    "at the production tolerance pair belongs to a sweep and nothing else reads "
+                    "it. The comparator is handover-A3-baseline-lambdacdm, not this."
+                ),
+                "datastore": str(SWEEP_STORE.relative_to(REPO_ROOT)),
+                "copied_from": str(BASELINE_STORE.relative_to(REPO_ROOT)),
+                "created": time.strftime("%Y-%m-%dT%H:%M:%S%z"),
+            },
+            indent=2,
+        )
+        + "\n"
+    )
     print(f"** quadsource_atol_sweep: sweep store ready at {SWEEP_STORE}")
 
 
