@@ -1,6 +1,6 @@
 # Store fingerprint campaign — implementation state
 
-**Last updated:** 2026-09-24 · **Status: 0 of 5 prompts landed. 01 and 02 are written and ready to
+**Last updated:** 2026-09-25 · **Status: 1 of 5 prompts landed (01). 02 is written and ready to
 dispatch. 03–05 are held on 02's structure (README §2). Decisions D1–D3 were made on 2026-09-24
 (README §6.2).**
 
@@ -12,6 +12,16 @@ work items by physical labels and tag sets.
 inventory must read, and that a read-only reader with no Ray is possible. It also opened eight
 issues (§3). Two are assigned to this campaign's prompts; the other six are recorded for their
 owners.
+
+**Prompt 01 landed 2026-09-25.** There is one schema builder, `Datastore/SQL/schema.py`
+`build_schema`. The actor's `_build_schema` calls it, and adds only its inserters. Both reproduce,
+byte for byte, a description of the schema captured from the unchanged code at `417c647`
+(`Datastore/tests/data/schema_at_base.json`). `Datastore/store_reader.py` `open_read_only` reads a
+closed store's shards through `ShardedPool._read_closed_store`. It opens every file `mode=ro`,
+refuses a journal by name, and reports absent and extra tables and columns. It has no write path
+and needs no Ray. A copy of the sweep store read through it with every per-table count equal to an
+independent `sqlite3` count. The copy and the originals were unchanged, and the copy has no absent
+or extra schema. This closes `[00-build-schema-reads-registration-before-its-none-check]` (§4).
 
 **Campaign:** [`README.md`](README.md) · **Audit:** [`docs/store-fingerprint-audit.md`](../../docs/store-fingerprint-audit.md) ·
 **Index:** [`docs/OPEN_ISSUES.md`](../../docs/OPEN_ISSUES.md) §1.13
@@ -30,7 +40,7 @@ owners.
 
 | # | Prompt | Covers | Model | Written? | Landed? | Commit | Log |
 |---|---|---|---|---|---|---|---|
-| 01 | [One schema builder, and a read-only reader](01-a-read-only-store-reader.md) | **F1**–**F3** | Opus | ✍️ yes, 2026-09-24 | ⏳ not dispatched | — | — |
+| 01 | [One schema builder, and a read-only reader](01-a-read-only-store-reader.md) | **F1**–**F3** | Opus 5.5 | ✍️ yes, 2026-09-24 | ✅ 2026-09-25 | *"Add one schema builder and a read-only store reader"* | [`logs/01-…`](logs/01-a-read-only-store-reader.md) |
 | 02 | [A structured inventory](02-a-structured-inventory.md) | **F4**–**F7** | Opus | ✍️ yes, 2026-09-24 | ⏳ not dispatched | — | — |
 | 03 | *One inventory service* | **F8**–**F9** | — | ⏸️ held until 02 lands | — | — | — |
 | 04 | *The fingerprint* | **F10**–**F12** | — | ⏸️ held until 02 lands | — | — | — |
@@ -45,9 +55,9 @@ structure. They are held by design, not missing.
 
 | Item | Kind | Description | Prompt | Status |
 |---|---|---|---|---|
-| F1 | **REMEDY** | One schema builder, `Datastore/SQL/schema.py` `build_schema`, called by the actor. Witnessed unchanged by a schema captured from the code before the change. | 01 | ⏳ written |
-| F2 | **FACILITY** | `Datastore/store_reader.py` `open_read_only`: a closed store's shards opened `mode=ro`, tables from `build_schema`, absent tables and columns reported, journals refused, no Ray, no write path. | 01 | ⏳ written |
-| F3 | **FACILITY** | A real multi-shard store for tests, built with no Ray, including an "old store" variant. | 01 | ⏳ written |
+| F1 | **REMEDY** | One schema builder, `Datastore/SQL/schema.py` `build_schema`, called by the actor. Witnessed unchanged by a schema captured from the code before the change. | 01 | ✅ **Done, 2026-09-25.** `build_schema(metadata, factories) -> BuiltSchema(tables, records)`: the old loop minus the inserters, with the `None` check first. `_build_schema` calls it, adds the inserters, and fills `_tables` / `_inserters` / `_schema` as before. The witness was captured at `417c647`, from a `git archive` of the base and from the unedited tree (identical). It covers all 37 classes: columns, types, keys, indexes, constraints, DDL and the record fields. Both the function and the actor reproduce it byte for byte. The factory map did not move. **Deliberate breakage (ii), (iii), (vi)** each fail the tests written against them, and (iii) fails only the actor's. |
+| F2 | **FACILITY** | `Datastore/store_reader.py` `open_read_only`: a closed store's shards opened `mode=ro`, tables from `build_schema`, absent tables and columns reported, journals refused, no Ray, no write path. | 01 | ✅ **Done, 2026-09-25.** Shards come from `_read_closed_store`. Every file is opened `sqlite:///file:{path}?mode=ro&uri=true`. `-journal` / `-wal` / `-shm` beside the primary or any shard is refused, naming both files. The report per shard is absent tables, absent and extra columns, and extra tables. Every engine is disposed on exit. File hashes, sizes, mtimes and the listing are unchanged by a full read, and INSERT and DDL raise "readonly". In a child interpreter `ray.is_initialized()` stays false. On a copy of the sweep store, all 37 tables on all 4 shards count equal to an independent `sqlite3` count, with no absent or extra schema, and the copy and originals were byte-identical. **Deliberate breakage (i), (iv), (v)** each fail the tests written against them. |
+| F3 | **FACILITY** | A real multi-shard store for tests, built with no Ray, including an "old store" variant. | 01 | ✅ **Done, 2026-09-25.** `Datastore/tests/real_store_fixtures.py` `build_real_store`. Its primary is written by `ShardedPool._write_shard_data`, with `config/sharding.py`'s lists and shard-key rows. It has two shards with every table. Replicated rows (ten tables) are in both, with the same serials. Each shard has a `TkNumericIntegration` with `TkNumeric_tags` and `TkNumericValue` rows. Row sets are plain data, extensible with `with_rows`. `build_old_store` gives shard 1 without `OneLoopIntegral_tags` and shard 0's `TkNumericIntegration` without `stop_Tprime`. `missing_tables` / `missing_columns` / `extra_sql` give other cases. |
 | F4 | **FACILITY** | `Datastore/store_inventory.py` `read_inventory`: records built by each factory in dependency order. Each record has a canonical key, a tag set, `validated` and `value_count`. Parents are referenced by the digest of their key; there is one `canonical`, which uses `float.hex` (D1). | 02 | ⏳ written |
 | F5 | **REMEDY** | The key of every class, from its lookup: physical leaves, optional filters included, nothing store-local. Real `QuadSourceIntegral`, `OneLoopIntegral` and `GkSourcePolicyData` records. | 02 | ⏳ written |
 | F6 | **REMEDY** | Shards and what goes wrong: sharded classes are a union; replicated classes are read from every shard, and a divergence is named. Duplicates, old stores and orphans are named problems. | 02 | ⏳ written |
@@ -65,6 +75,7 @@ structure. They are held by design, not missing.
 
 All eight were opened on 2026-09-24 by the audit
 ([`docs/store-fingerprint-audit.md`](../../docs/store-fingerprint-audit.md)), which is not a prompt.
+Prompt 01 closed one of them on 2026-09-25 (§4). Seven remain.
 
 - **[00-inventory-run-prunes-unvalidated-rows-by-default]** *(opened 2026-09-24 by the audit;
   **assigned to prompt 03**)*
@@ -139,6 +150,11 @@ All eight were opened on 2026-09-24 by the audit
     which shard serves it.
   - **Next step.** Prompt 02's inventory reads every shard and names any divergence, which measures
     it. Making the write atomic belongs to the datastore code and is not this campaign's.
+
+---
+
+## 4. Resolved issues
+
 - **[00-build-schema-reads-registration-before-its-none-check]** *(opened 2026-09-24 by the
   audit; **assigned to prompt 01**)*
   - **The defect.** `Datastore._build_schema` calls `registration_data.get(...)`
@@ -146,12 +162,13 @@ All eight were opened on 2026-09-24 by the audit
   - **Impact.** It is latent: no factory returns `None`.
   - **Next step.** Prompt 01 moves this code into `build_schema`, and fixes the order as it does.
   - **Assigned (2026-09-24):** prompt 01 of this campaign, which is moving the code anyway.
-
----
-
-## 4. Resolved issues
-
-None yet.
+  - **Closed (2026-09-25) by prompt 01.** `build_schema` (`Datastore/SQL/schema.py`) checks
+    `registration_data` for `None` before reading it. Such a class gets
+    `{"name", "validate_on_startup": False, "table": None}`, and the actor adds `"insert": None`.
+    `test_schema_builder.TestNoneRegistration` covers the function and the actor. Reverting the
+    fix (deliberate breakage (vi)) makes both raise `AttributeError`. No factory returns `None`,
+    so behaviour on every real store is unchanged. The schema witness shows that nothing else
+    changed. Log: [`logs/01-a-read-only-store-reader.md`](logs/01-a-read-only-store-reader.md).
 
 ---
 
@@ -159,3 +176,12 @@ None yet.
 
 At `f53598f` (README §7): AdaptiveLevin 32, ComputeTargets 552 (the known wall-clock flake
 aside), CosmologyModels 39, Datastore 70, LiouvilleGreen 148 (1 skipped), RunRegistry 84.
+
+| Suite | At `417c647` (before prompt 01) | After prompt 01 |
+|---|---|---|
+| `AdaptiveLevin` | 32 OK | 32 OK |
+| `ComputeTargets` | 552 OK (the flake is known) | 552 OK (the flake passed) |
+| `CosmologyModels` | 39 OK | 39 OK |
+| `Datastore` | 70 OK | **92 OK** (+22) |
+| `LiouvilleGreen` | 148 OK (skipped=1) | 148 OK (skipped=1) |
+| `RunRegistry` | 84 OK | 84 OK |

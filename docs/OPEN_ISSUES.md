@@ -1,6 +1,6 @@
 # Open issues — project-wide index
 
-**Last updated:** 2026-09-24 · **102 open** across fifteen campaigns.
+**Last updated:** 2026-09-25 · **101 open** across fifteen campaigns.
 
 This file exists so that an issue opened by one campaign is not lost when that campaign closes.
 It is an **index, not a record**: one line per issue, pointing at the campaign status board that
@@ -47,7 +47,8 @@ prompt 02, and two opened by prompt 02 when it closed that campaign at 2 / 2. Th
 opened two issues of its own. A third was opened the same day on the user's
 layering decision after that prompt's review, and prompt 02 closed one of prompt 01's the same
 day, on that board's §4. Prompt 03 closed the third the same day and opened one (§1.12). The
-`store-fingerprint` board was created on 2026-09-24 by its audit, which opened eight (§1.13). Of the 90
+`store-fingerprint` board was created on 2026-09-24 by its audit, which opened eight (§1.13); its
+prompt 01 closed one of them on 2026-09-25, on that board's §4. Of the 90
 above, 87 are spread across the boards and
 **three still have no board row** — the last three `handover` rows in §1.1, opened by a document
 review on 2026-09-19, whose content lives in
@@ -690,16 +691,17 @@ creates, adopts, copies and moves stores with it, which closed `[store-sidecar-m
 `prompts/store-fingerprint` was opened on 2026-09-24 to build what `run-registry`'s amended
 `[04-a-runs-product-is-named-but-never-fingerprinted]` decided: a store's content fingerprint, as
 digests in its sidecar, computed read-only from a structured inventory that names work items by
-physical labels and tag sets. Its audit, `docs/store-fingerprint-audit.md`, opened the eight `00-`
-rows below. Two of them, and the two issues from other boards above them, are assigned to its
-prompts. The other six are recorded here for their owners.
+physical labels and tag sets. Its audit, `docs/store-fingerprint-audit.md`, opened eight `00-`
+issues. Two of them, and the two issues from other boards above them, were assigned to its
+prompts. Prompt 01 closed one, `[00-build-schema-reads-registration-before-its-none-check]`, on
+2026-09-25 (that board's §4), so seven `00-` rows remain below. The other six are recorded here for
+their owners.
 
 | Issue | Board | Hook |
 |---|---|---|
 | `[04-a-runs-product-is-named-but-never-fingerprinted]` | run-registry | After a store is copied between machines, "is this copy up to date?" is unanswerable; a file hash is the wrong instrument, since SQLite is not byte-stable. **Amended 2026-09-24:** a content fingerprint of per-class, per-tag-set digests (never a full listing) lives in the store sidecar and is copied into the run record at `finish()`; it is computed by a read-only registry `store fingerprint` from a structured inventory service naming work items by physical labels and tag sets, with a real `QuadSourceIntegral` record. Removals after a fingerprint is taken are not recoverable (accepted). **Assigned 2026-09-24** to `store-fingerprint`, whose prompt 04 closes it. |
 | `[03-qcd-inventory-does-not-report-the-representation]` | qcd-background-audit | Originally both `sqla_QCDCosmology_factory.inventory()` and (from prompt 14) `sqla_BackgroundModelFactory.inventory()` omitted their tables' identity columns. **The `QCD_Cosmology` half is resolved** — `background-solver-robustness` prompt 07 added `T_z_representation` to the former, demonstrated against two rows differing only in it. **The `BackgroundModel` half is not**: prompt 07's files-may-touch list did not include `BackgroundModel.py`, and its own stop condition treats a second reporting site with the same gap as a new issue to record, not fix. `sqla_BackgroundModelFactory.inventory()` still says nothing about `source_grid_digest` or `source_grid_construction`. **Next step:** add both columns to its per-bucket report, in whichever prompt next has `Datastore/SQL/ObjectFactories/BackgroundModel.py` in scope. **Assigned 2026-09-24** to `store-fingerprint` prompt 03, whose structured records carry both columns. |
 | `[00-inventory-run-prunes-unvalidated-rows-by-default]` | store-fingerprint | `main.py --inventory` builds the full read-write pool, and `--prune-unvalidated` defaults to true, so an inventory run without `--no-prune-unvalidated` deletes the store's unvalidated rows. It also needs Ray. **Assigned** to this campaign's prompt 03, which moves `--inventory` onto the read-only reader. |
-| `[00-build-schema-reads-registration-before-its-none-check]` | store-fingerprint | `Datastore._build_schema` calls `.get` on `registration_data` before checking it for `None`. Latent. **Assigned** to prompt 01, which moves this code. |
 | `[00-oneloop-lookup-joins-the-wrong-tag-table]` | store-fingerprint | `OneLoopIntegral.build` filters tags against `QuadSourceIntegral_tags`, while `store()` writes `OneLoopIntegral_tags`. No effect while the table is empty. |
 | `[00-tagged-read-batch-joins-an-unselected-alias]` | store-fingerprint | *Suspected, not run.* The tag joins in `QuadSourceIntegral` / `OneLoopIntegral` `read_batch` name `query.c.serial`, which compiles to an alias outside the FROM clause. Extraction passes tags. To confirm on a store copy. |
 | `[00-quadsource-tq-serial-has-the-wrong-foreign-key]` | store-fingerprint | `QuadSource.Tq_serial` declares a foreign key to `QuadSource.serial` but holds a transfer-function id; `Tr_serial` declares none. Not enforced; a false statement in the schema. |

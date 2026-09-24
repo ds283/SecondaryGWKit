@@ -73,6 +73,7 @@ from Datastore.SQL.ObjectFactories.wavenumber import (
     sqla_wavenumber_exit_time_factory,
 )
 from Datastore.SQL.ProfileAgent import ProfileBatcher, ProfileBatchManager
+from Datastore.SQL.schema import build_schema
 from utilities import WallclockTimer
 
 VERSION_ID_LENGTH = 64
@@ -298,88 +299,19 @@ class Datastore:
             # print(f"Registered storable class factory '{cls_name}'")
 
     def _build_schema(self):
-        # iterate through all registered storage adapters, querying them for the columns
-        # they need to persist their data
-        for cls_name, factory in self._factories.items():
+        for cls_name in self._factories:
             if cls_name in self._schema:
                 raise RuntimeWarning(
                     f"Duplicate registered factory for storable class '{cls_name}'"
                 )
 
-            # query class for a list of columns that it wants to store
-            registration_data = factory.register()
+        # the tables and schema records come from the one schema builder (Datastore/SQL/schema.py);
+        # the actor adds only the inserters, which are bound to its own _insert
+        built = build_schema(self._metadata, self._factories)
 
-            schema = {
-                "name": cls_name,
-                "validate_on_startup": registration_data.get(
-                    "validate_on_startup", False
-                ),
-            }
-
-            # does this storage object require its own table?
-            if registration_data is not None:
-                # generate main table for this adapter class
-                tab = sqla.Table(
-                    cls_name,
-                    self._metadata,
-                )
-
-                use_serial = registration_data.get("serial", True)
-                schema["use_serial"] = use_serial
-                if use_serial:
-                    serial_col = sqla.Column("serial", sqla.Integer, primary_key=True)
-                    tab.append_column(serial_col)
-                    schema["serial_col"] = serial_col
-
-                # attach pre-defined columns
-                use_version = registration_data.get("version", False)
-                schema["use_version"] = use_version
-                if use_version:
-                    version_col = sqla.Column(
-                        "version",
-                        sqla.Integer,
-                        sqla.ForeignKey("version.serial"),
-                        index=True,
-                    )
-                    tab.append_column(version_col)
-                    schema["version_col"] = version_col
-
-                use_timestamp = registration_data.get("timestamp", False)
-                schema["use_timestamp"] = use_timestamp
-                if use_timestamp:
-                    timestamp_col = sqla.Column("timestamp", sqla.DateTime())
-                    tab.append_column(timestamp_col)
-                    schema["timestamp_col"] = timestamp_col
-
-                use_stepping = registration_data.get("stepping", False)
-                if isinstance(use_stepping, str):
-                    if use_stepping not in ["minimum", "exact"]:
-                        print(
-                            f"!! Warning: ignored stepping selection '{use_stepping}' when registering storable class factory for '{cls_name}'"
-                        )
-                        use_stepping = False
-
-                _use_stepping = isinstance(use_stepping, str) or use_stepping is True
-                schema["use_stepping"] = _use_stepping
-                if _use_stepping:
-                    stepping_col = sqla.Column("stepping", sqla.Integer)
-                    tab.append_column(stepping_col)
-                    schema["stepping_col"] = stepping_col
-
-                    _stepping_mode = (
-                        None if not isinstance(use_stepping, str) else use_stepping
-                    )
-                    schema["stepping_mode"] = _stepping_mode
-
-                # append all columns supplied by the class
-                sqla_columns = registration_data.get("columns", [])
-                for col in sqla_columns:
-                    tab.append_column(col)
-                schema["columns"] = sqla_columns
-
-                # store in table cache
-                schema["table"] = tab
-
+        for cls_name, schema in built.records.items():
+            tab = schema["table"]
+            if tab is not None:
                 # build inserter
                 inserter = functools.partial(self._insert, schema, tab)
                 schema["insert"] = inserter
@@ -387,17 +319,8 @@ class Datastore:
                 # also store table and inserter in their own separate cache
                 self._tables[cls_name] = tab
                 self._inserters[cls_name] = inserter
-
-                # print(
-                #     f"Registered storage schema for storable class adapter '{cls_name}' with database table '{tab.name}'"
-                # )
             else:
-                schema["table"] = None
                 schema["insert"] = None
-
-                # print(
-                #     f"Registered storage schema for storable class adapter '{cls_name}' without database table"
-                # )
 
             self._schema[cls_name] = schema
 
