@@ -1,0 +1,235 @@
+# Campaign — store fingerprint
+
+**Written:** 2026-09-24 at `218ca74` on `handover-remedial`, by Claude Opus 5.5, from
+[`docs/store-fingerprint-audit.md`](../../docs/store-fingerprint-audit.md) and the user's
+decisions recorded in §6.
+
+## 0. Why this campaign exists
+
+A store is copied between machines: it is built on `macstudio-tunnel`, then rsync'd here. After
+that, nothing can say whether the copy holds what the original held. A file hash is the wrong
+instrument, because SQLite files are not byte-stable: VACUUM, page reuse and journal replay change
+the bytes without changing the content. `run-registry`'s
+`[04-a-runs-product-is-named-but-never-fingerprinted]` opened the question. Its amendment of
+2026-09-24 (`218ca74`, on that board's §3) decided the answer, and **this campaign owns it**:
+
+- a **content fingerprint**, made of digests only, never a full listing;
+- kept in the store's **sidecar**, and copied into the run record when a run finishes;
+- computed by a **read-only registry operation**, `store fingerprint`;
+- from a **structured inventory service** that names each work item by its **physical labels** and
+  its **tag set**, gives `QuadSourceIntegral` a real record, and keeps the `*Value` tables as counts.
+
+The audit found the present inventory far from that.
+
+- **Its labels are store-local serials.** Two stores built independently need not share one serial
+  (audit §4).
+- **It counts rather than lists** the headline product, `QuadSourceIntegral`.
+- **It cannot see tags at all**, although tags are part of every compute target's lookup identity.
+- **It samples replicated tables from one shard chosen at random** (§1).
+- **It is reached only through a full read-write pool open**, which needs Ray and, by default,
+  **deletes the store's unvalidated rows** (§2).
+
+**0.1 Correctness is the only objective.** Work is sequenced by epistemic dependency, never by
+urgency or cost.
+
+1. The schema builder and the read-only reader come first, because every later step reads through
+   them. A reader that could write would make every later measurement suspect.
+2. The structured inventory comes next, because both the display and the fingerprint consume it.
+3. The fingerprint is written only once the inventory it digests exists and has been checked
+   against the store.
+
+## 1. Scope
+
+**In scope:**
+- `Datastore/SQL/Datastore.py` (`_build_schema` only), a new schema module beside it, and the new
+  read-only reader and structured inventory modules under `Datastore/`;
+- every factory in `Datastore/SQL/ObjectFactories/`, for its inventory method only;
+- `Datastore/SQL/ShardedPool.py`, for `inventory` and `_merge_queue` only (prompt 03, which retires
+  them);
+- `config/sharding.py` (`inventory_config` only, prompt 03);
+- `tools/inventory_report.py`, `main.py`'s `--inventory` branch, and
+  `extract_common.available_run_labels` (prompt 03);
+- `RunRegistry/` (prompt 04);
+- `docs/gktk-remedial/scoped_pipeline_run.py`, for calling the fingerprint when a registered run
+  finishes (prompt 04);
+- the tests of all of these.
+
+**Out of scope:**
+- every factory's `build`, `store`, `read_batch` and `validate_on_startup`;
+- every lookup key;
+- any physics;
+- `ShardedPool`'s open, copy, move and routing paths;
+- `docs/handover/quadsource_atol_sweep.py`, unless the user decides otherwise (D2);
+- every existing sidecar and run manifest, unless the user decides otherwise (D3);
+- the defects the audit found outside the inventory. They are opened on the board (§3 there), not
+  fixed here. The exceptions are the two assigned to prompts below.
+
+**The layering is unchanged.** `ShardedPool` and `tools/sharded_store.py` still know nothing about
+sidecars (`datastore-portability` README §6.3). The reader and the inventory live in `Datastore/`,
+because they read `Datastore` tables. The fingerprint's format and its place in the sidecar and
+run record live in `RunRegistry/`, because the registry owns those files.
+
+## 2. Prompts
+
+| # | Prompt | Covers | Status |
+|---|---|---|---|
+| 01 | [`01-a-read-only-store-reader.md`](01-a-read-only-store-reader.md) | One schema builder shared by the actor and the reader. A read-only, no-Ray reader over a closed store's shards. A real multi-shard store fixture for tests. | **written** |
+| 02 | [`02-a-structured-inventory.md`](02-a-structured-inventory.md) | Per-class structured records on the reader: physical keys, parents by canonical key, full tag sets, `validated`, per-parent value counts, real `QuadSourceIntegral` / `OneLoopIntegral` / `GkSourcePolicyData` records, replicated classes compared across shards. | **written; dispatch waits on D1** |
+| 03 | *One inventory service* | The display (`main.py --inventory`, which becomes read-only and needs no Ray) and `available_run_labels` consume the structured inventory. The old three shapes, `ShardedPool.inventory`, `_merge_queue` and `inventory_config` retire. Closes `[00-inventory-run-prunes-unvalidated-rows-by-default]` and the `BackgroundModel` half of `qcd-background-audit`'s `[03-qcd-inventory-does-not-report-the-representation]`. | **held** until 02 lands |
+| 04 | *The fingerprint* | A pure function from the structured inventory to digests. A known `fingerprint` field in `RunRegistry.stores`. `python -m RunRegistry store fingerprint`, read-only, refusing a store a `running` run names. The digest in the run record at finish. `scoped_pipeline_run.py` takes one when its registered run finishes. Closes `run-registry`'s `[04-a-runs-product-is-named-but-never-fingerprinted]`. | **held** until 02 lands; D2 |
+| 05 | *Fingerprint the real stores* | Fingerprint the three real stores and a registry copy of one. Show that the digests localise the known differences. Record the fingerprints in the real sidecars only if the user decides so (D3). | **held** until 04 lands; D3 |
+
+**Why 03–05 are held.** Each consumes the structure prompt 02 ships. Their **charters** are fixed
+above and cannot drift to fit what 02 finds; only their **methods** wait. 03 and 04 are independent
+of each other, and either may go first once 02 has landed.
+
+## 3. Datastores
+
+Three stores live under `var/datastores/`: `handover-A3-baseline-lambdacdm`, `handover-atol-sweep`
+and the backup in `backup-pre-resume-20260921T091011/`. Each is about 350 MB over four shards.
+Since 2026-09-24 each has a registry sidecar.
+
+**All three are read-only to prompts 01–04.** Every demonstration works on a `cp -p` copy in
+`var/store-fingerprint-check-NN/`, which is deleted afterwards. A read-only reader that is
+correct would not write the originals. But whether it is correct is what the demonstration tests,
+so it is not pointed at them. Only prompt 05 reads the originals, and only once 01's reader has been
+shown not to write.
+
+**Before touching any store,** run `python -m RunRegistry list` and confirm nothing is `running`.
+About 0.4 GB of free space is needed for a copy. The volume had about 15 GB free on 2026-09-24.
+
+## 4. The interfaces between prompts
+
+The **names** below are fixed here, so that each prompt can be written against the one before it.
+The internals are the implementing prompt's to design.
+
+- **Prompt 01** ships `Datastore/SQL/schema.py` with **`build_schema(metadata, factories)`**. It
+  returns the `Table` objects and the per-class schema records that `Datastore._build_schema`
+  builds today. `_build_schema` calls it, so there is one definition.
+- **Prompt 01** ships `Datastore/store_reader.py` with **`open_read_only(primary)`**, a context
+  manager that yields a read-only store. For each shard it gives the shard's serial and path, a
+  read-only engine, the `Table` objects, the tables absent from that shard, and the columns absent
+  from tables that are present. There is no write path.
+- **Prompt 02** ships `Datastore/store_inventory.py` with **`read_inventory(primary)`**. It returns
+  the structured inventory: per class, its records, its count, its time range and its problems.
+  Each record has:
+  - a canonical `key` built only from JSON-safe physical leaves and parent keys;
+  - `tags`, a sorted tuple of labels;
+  - `validated` (`None` where the class has no such column);
+  - `value_count` (`None` where the class has no `*Value` table).
+
+  There is room for a computed-values field later, outside the key. One function, **`canonical`**,
+  turns a leaf into its canonical form (D1).
+- **Prompt 04** ships `RunRegistry/stores.py` **`fingerprint_store(primary, …)`** and the sidecar
+  field **`fingerprint`**.
+
+## 5. The rules this campaign runs under
+
+The project-wide ones in `CLAUDE.md`, unchanged, plus:
+
+1. **One commit per prompt.** The commit boundary is the rollback boundary.
+2. **Every prompt writes a log** to `logs/NN-<name>.md`, classifying every deviation as
+   `STRUCTURALLY REQUIRED`, `IMPLEMENTATION CHOICE` or `UNINTENDED DRIFT`.
+3. **Every prompt updates `IMPLEMENTATION_STATE.md` in its own commit**, plus `docs/OPEN_ISSUES.md`.
+4. **Do not fix things the prompt did not ask for.** Record them and open a §3 issue.
+5. **Commit messages** in `CLAUDE.md`'s form, ending with `Co-Authored-By:` naming the model.
+6. **Verification documents are additive.**
+7. **Existing tests are not modified.** The four hand-copies of `_build_schema` in existing tests
+   (audit §3) stay as they are. A prompt may add tests beside them.
+8. **Deliberate breakage.** Each prompt names mutations that its tests must catch. Each is recorded
+   in the log as a diff, exactly as applied, so that the orchestrator can replay it with
+   `git apply`. Mutations are never committed.
+9. **No test needs Ray, and no test opens anything under `var/`.** Stores for tests are built in
+   temporary directories.
+
+### 5.1 The log template
+
+- the subject, commit and result;
+- **What shipped**;
+- **Deviations from the prompt**, each classified;
+- **Verification performed**;
+- **The deliberate-breakage record**;
+- **Observations not acted on**;
+- **State handed to the next prompt**.
+
+## 6. Decisions
+
+### 6.1 Made by the user (2026-09-24), and not reopened here
+
+Recorded in full on the `run-registry` board, under the amendment to
+`[04-a-runs-product-is-named-but-never-fingerprinted]`:
+
+1. **The fingerprint lives in the store sidecar.** It describes a store, and a store gathers several
+   runs' products. It is also copied into the run record when a run finishes.
+2. **The inventory service returns structured output.** Display and fingerprints are two
+   consumers of it. It may later carry computed values, which each consumer uses or ignores.
+3. **The inventory is concise.** It must not become another serialisation of the store. The
+   `*Value` tables, which hold nearly all rows, are counted and never listed.
+4. **Work items are named by physical labels**, not row ids.
+5. **Tags are part of each work item's record and of the fingerprint.** They label the grid a
+   product was computed on.
+6. **`QuadSourceIntegral` gets a real inventory record.**
+7. **Digests only.** The sidecar holds, per class and per tag set, a count and a digest, plus an
+   overall digest, a format version, when it was taken and by which run. Timestamps are excluded.
+   A full listing is generated on demand, where the store is.
+8. **The accepted loss.** Rows removed after a fingerprint is taken, by `--prune-unvalidated` or by
+   hand, cannot be identified afterwards.
+9. **The registry computes the fingerprint.** "Does not open results" was one docstring's
+   boundary, not a rule. `CLAUDE.md`'s limits stand: no scheduling, supervising, restarting,
+   locking or deleting, and no growing into a project of its own.
+
+### 6.2 Open, and needed before the prompt named
+
+- **D1 — the canonical form of a float** (before 02 is dispatched). The candidates are in audit §5.
+  **Recommendation: the stored bits, as `float.hex`.**
+  - The first use is telling a copy from its original, and there "the same data" means the same
+    values.
+  - Rounding makes "the same" fuzzy, and a value close to a rounding boundary can still split two
+    identical stores.
+  - Two independent builds that differ in the last bit of a grid value do hold different data, and
+    the per-class digests say where.
+
+  Prompt 02 is written against this recommendation. If the user decides otherwise, 02 is amended
+  before dispatch.
+- **D2 — does `docs/handover/quadsource_atol_sweep.py` take a fingerprint when its registered run
+  finishes?** (before 04 is written). Its `--build` mode builds the A3 v2 store, which is the first
+  store that will actually be copied between machines. Earlier campaigns have treated the file as a
+  measurement record and left it unedited.
+- **D3 — does prompt 05 write fingerprints into the three real sidecars?** (before 05 is written).
+  They have been registry sidecars since 2026-09-24. Writing a fingerprint changes an existing
+  sidecar, which `datastore-portability` README §6.5 point 7 allows only when the user asks.
+
+### 6.3 Choices the prompts make, where §6.1 leaves the method open
+
+These are marked *prompt's choice* in the prompts, each with its reason, and may be overridden by a
+logged deviation that is at least as strong:
+
+- the full identity, including the optional filters `z_init`, `z_source` and `z_response`, is in
+  every key;
+- solver identity is not in a work item's key, because it is not in any lookup;
+- unvalidated rows are recorded, with their flag;
+- the `Run_<label>` tag stays in the tag set, because it is part of the lookup;
+- a missing table in an old store reads as empty, and a missing column is a named problem;
+- a replicated class is read from every shard, and any disagreement is a named problem.
+
+## 7. Baselines
+
+At `f53598f`, measured by the `datastore-portability` prompt 03 orchestrator:
+
+| Suite | Result |
+|---|---|
+| AdaptiveLevin | 32 |
+| ComputeTargets | 552 (`test_tk_wkb_phase.TestCost.test_wall_time_per_object` is a known wall-clock flake) |
+| CosmologyModels | 39 |
+| Datastore | 70 |
+| LiouvilleGreen | 148 (1 skipped) |
+| RunRegistry | 84 |
+
+Re-measure before every dispatch, with:
+
+```bash
+PYTHONPATH=. ./venv/bin/python -m unittest discover -s <package>/tests -t . 2>&1 | tail -40
+```
+
+The suites print banners, so `| tail -5` will not show the verdict. Do not set
+`THREE_BESSEL_DIAGNOSTIC_PLOTS`.

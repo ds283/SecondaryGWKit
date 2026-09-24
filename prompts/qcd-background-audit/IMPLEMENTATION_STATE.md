@@ -1308,6 +1308,12 @@ Opened by this campaign's planning, 2026-09-13:
   to `sqla_BackgroundModelFactory.inventory()`'s per-bucket report, in whichever prompt next has
   `Datastore/SQL/ObjectFactories/BackgroundModel.py` in scope. Not assigned to any campaign.
 
+  **Assigned (2026-09-24):** [`prompts/store-fingerprint`](../store-fingerprint/README.md) prompt
+  03. That campaign replaces every factory's `inventory()` with a structured record whose key
+  carries each class's full lookup identity, `BackgroundModel`'s `source_grid_digest` and
+  `source_grid_construction` included (its prompt 02). Its prompt 03 moves the report onto those
+  records, which closes this half.
+
 - **[04-unsplit-tk-run-now-meets-the-criterion]** *(prompt 05, 2026-09-14; **assigned to prompt
   08**)* — `ComputeTargets/tests/test_numeric_break_points.py::TestQCDReferenceConvergence::test_split_converges_where_unsplit_does_not`
   asserted `unsplit > 1e-6`: that a $T_k$ numeric run which does **not** split at the declared

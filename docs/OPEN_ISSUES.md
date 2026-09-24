@@ -1,6 +1,6 @@
 # Open issues — project-wide index
 
-**Last updated:** 2026-09-24 · **94 open** across fourteen campaigns.
+**Last updated:** 2026-09-24 · **102 open** across fifteen campaigns.
 
 This file exists so that an issue opened by one campaign is not lost when that campaign closes.
 It is an **index, not a record**: one line per issue, pointing at the campaign status board that
@@ -27,7 +27,8 @@ the two disagree, the board is right.
 [`datastore-readback`](../prompts/datastore-readback/IMPLEMENTATION_STATE.md) ·
 [`run-registry`](../prompts/run-registry/IMPLEMENTATION_STATE.md) ·
 [`test-suite-runtime`](../prompts/test-suite-runtime/IMPLEMENTATION_STATE.md) ·
-[`datastore-portability`](../prompts/datastore-portability/IMPLEMENTATION_STATE.md)
+[`datastore-portability`](../prompts/datastore-portability/IMPLEMENTATION_STATE.md) ·
+[`store-fingerprint`](../prompts/store-fingerprint/IMPLEMENTATION_STATE.md)
 
 **Two** of these hold no open issue and are listed for their §4. `test-suite-runtime` closed
 `transfer-remedial`'s `[08-3bessel-plot-cost-dominates-the-suite]` on 2026-09-19;
@@ -45,7 +46,8 @@ prompt 02, and two opened by prompt 02 when it closed that campaign at 2 / 2. Th
 `run-registry`'s `[04-sharded-store-paths-are-absolute-…]` on the `run-registry` board's §4, and it
 opened two issues of its own. A third was opened the same day on the user's
 layering decision after that prompt's review, and prompt 02 closed one of prompt 01's the same
-day, on that board's §4. Prompt 03 closed the third the same day and opened one (§1.12). Of the 90
+day, on that board's §4. Prompt 03 closed the third the same day and opened one (§1.12). The
+`store-fingerprint` board was created on 2026-09-24 by its audit, which opened eight (§1.13). Of the 90
 above, 87 are spread across the boards and
 **three still have no board row** — the last three `handover` rows in §1.1, opened by a document
 review on 2026-09-19, whose content lives in
@@ -483,7 +485,6 @@ user's framing with nothing built towards it:
 
 | Issue | Board | Hook |
 |---|---|---|
-| `[03-qcd-inventory-does-not-report-the-representation]` | qcd-background-audit | Originally both `sqla_QCDCosmology_factory.inventory()` and (from prompt 14) `sqla_BackgroundModelFactory.inventory()` omitted their tables' identity columns. **The `QCD_Cosmology` half is resolved** — `background-solver-robustness` prompt 07 added `T_z_representation` to the former, demonstrated against two rows differing only in it. **The `BackgroundModel` half is not**: prompt 07's files-may-touch list did not include `BackgroundModel.py`, and its own stop condition treats a second reporting site with the same gap as a new issue to record, not fix. `sqla_BackgroundModelFactory.inventory()` still says nothing about `source_grid_digest` or `source_grid_construction`. **Next step:** add both columns to its per-bucket report, in whichever prompt next has `Datastore/SQL/ObjectFactories/BackgroundModel.py` in scope. Not assigned. |
 
 **Opened by prompt 13**, which closed `[12-background-derivative-fit-grid-rings-at-a-step]`:
 
@@ -661,7 +662,6 @@ was exercised for the first time and crashed. Prompt 01 landed the `RunRegistry/
 |---|---|---|
 | `[01-var-runs-holds-unattributable-loose-files]` | run-registry | Four files — `run.out`, `run.pid`, `run.progress`, `realistic_large_x_cells.jsonl` — sit at the top level of `var/runs/` with nothing saying which run they belong to. Evidence; **must not** be moved, renamed or deleted. **Narrowed 2026-09-22** by prompt 02: all four are the successful `realistic_large_x.py` run of 2026-09-20, established from the file contents and the 10,772 s arithmetic. What is still open is that nothing on disk says so. |
 | `[04-runs-do-not-say-which-machine-produced-them]` | run-registry | The manifest records `git_head`, `script_sha256`, `argv` and `cwd`, and nothing saying **where** the job ran. Two consequences, and the second is worse. Provenance: rows computed on different hardware can differ in their last bits, and for a comparator store nothing records that. Liveness: once run directories are rsync'd between machines, `list` evaluates `kill -0 <pid>` against the wrong process table — harmless for a terminal record, a confident wrong answer for one still marked `running`, including a false "alive" on a reused pid. **Decided 2026-09-24:** add `machine` (`platform.node()`/`platform.machine()`), make `list` refuse to interpret liveness for a foreign record, and transfer only terminal-state directories. |
-| `[04-a-runs-product-is-named-but-never-fingerprinted]` | run-registry | After a store is copied between machines, "is this copy up to date?" is unanswerable; a file hash is the wrong instrument, since SQLite is not byte-stable. **Amended 2026-09-24:** a content fingerprint of per-class, per-tag-set digests (never a full listing) lives in the store sidecar and is copied into the run record at `finish()`; it is computed by a read-only registry `store fingerprint` from a structured inventory service naming work items by physical labels and tag sets, with a real `QuadSourceIntegral` record. Removals after a fingerprint is taken are not recoverable (accepted). Needs a campaign. |
 | `[02-realistic-large-x-is-outside-the-registry]` | run-registry | `realistic_large_x.py` is deliberately not a registry client. Editing it by one character discards all sixty cells behind `REALISTIC-LARGE-X.md` and costs a three-hour recomputation; its records must **never** be re-stamped to preserve reuse. The row exists so the price is known before anyone proposes the change. |
 
 ### 1.12 The datastore portability campaign
@@ -684,6 +684,28 @@ creates, adopts, copies and moves stores with it, which closed `[store-sidecar-m
 |---|---|---|
 | `[01-atol-sweep-check-expects-absolute-shard-records]` | datastore-portability | `quadsource_atol_sweep.py`'s `assert_store_is_self_consistent` compares against literal absolute paths, so it would reject a store created after prompt 01 unless `prepare()`'s `UPDATE` had rewritten its rows. No effect in the script's own workflow. The script is a measurement record and was not edited. |
 | `[03-atol-sweep-prepare-writes-its-store-sidecar-by-hand]` | datastore-portability | `quadsource_atol_sweep.py` `prepare()` still writes its `<stem>.manifest.json` by hand, in the legacy shape, against README §6.5 point 1 (only registry operations write a sidecar). No effect today: the sidecar is read as legacy, by name. The script is a measurement record and was not edited. |
+
+### 1.13 The store fingerprint campaign
+
+`prompts/store-fingerprint` was opened on 2026-09-24 to build what `run-registry`'s amended
+`[04-a-runs-product-is-named-but-never-fingerprinted]` decided: a store's content fingerprint, as
+digests in its sidecar, computed read-only from a structured inventory that names work items by
+physical labels and tag sets. Its audit, `docs/store-fingerprint-audit.md`, opened the eight `00-`
+rows below. Two of them, and the two issues from other boards above them, are assigned to its
+prompts. The other six are recorded here for their owners.
+
+| Issue | Board | Hook |
+|---|---|---|
+| `[04-a-runs-product-is-named-but-never-fingerprinted]` | run-registry | After a store is copied between machines, "is this copy up to date?" is unanswerable; a file hash is the wrong instrument, since SQLite is not byte-stable. **Amended 2026-09-24:** a content fingerprint of per-class, per-tag-set digests (never a full listing) lives in the store sidecar and is copied into the run record at `finish()`; it is computed by a read-only registry `store fingerprint` from a structured inventory service naming work items by physical labels and tag sets, with a real `QuadSourceIntegral` record. Removals after a fingerprint is taken are not recoverable (accepted). **Assigned 2026-09-24** to `store-fingerprint`, whose prompt 04 closes it. |
+| `[03-qcd-inventory-does-not-report-the-representation]` | qcd-background-audit | Originally both `sqla_QCDCosmology_factory.inventory()` and (from prompt 14) `sqla_BackgroundModelFactory.inventory()` omitted their tables' identity columns. **The `QCD_Cosmology` half is resolved** — `background-solver-robustness` prompt 07 added `T_z_representation` to the former, demonstrated against two rows differing only in it. **The `BackgroundModel` half is not**: prompt 07's files-may-touch list did not include `BackgroundModel.py`, and its own stop condition treats a second reporting site with the same gap as a new issue to record, not fix. `sqla_BackgroundModelFactory.inventory()` still says nothing about `source_grid_digest` or `source_grid_construction`. **Next step:** add both columns to its per-bucket report, in whichever prompt next has `Datastore/SQL/ObjectFactories/BackgroundModel.py` in scope. **Assigned 2026-09-24** to `store-fingerprint` prompt 03, whose structured records carry both columns. |
+| `[00-inventory-run-prunes-unvalidated-rows-by-default]` | store-fingerprint | `main.py --inventory` builds the full read-write pool, and `--prune-unvalidated` defaults to true, so an inventory run without `--no-prune-unvalidated` deletes the store's unvalidated rows. It also needs Ray. **Assigned** to this campaign's prompt 03, which moves `--inventory` onto the read-only reader. |
+| `[00-build-schema-reads-registration-before-its-none-check]` | store-fingerprint | `Datastore._build_schema` calls `.get` on `registration_data` before checking it for `None`. Latent. **Assigned** to prompt 01, which moves this code. |
+| `[00-oneloop-lookup-joins-the-wrong-tag-table]` | store-fingerprint | `OneLoopIntegral.build` filters tags against `QuadSourceIntegral_tags`, while `store()` writes `OneLoopIntegral_tags`. No effect while the table is empty. |
+| `[00-tagged-read-batch-joins-an-unselected-alias]` | store-fingerprint | *Suspected, not run.* The tag joins in `QuadSourceIntegral` / `OneLoopIntegral` `read_batch` name `query.c.serial`, which compiles to an alias outside the FROM clause. Extraction passes tags. To confirm on a store copy. |
+| `[00-quadsource-tq-serial-has-the-wrong-foreign-key]` | store-fingerprint | `QuadSource.Tq_serial` declares a foreign key to `QuadSource.serial` but holds a transfer-function id; `Tr_serial` declares none. Not enforced; a false statement in the schema. |
+| `[00-numeric-value-parent-lookup-omits-break-point-kind]` | store-fingerprint | The `TkNumericValue` / `GkNumericValue` parent query omits `break_point_kind`, which is in the parent's own lookup. Ambiguous only when a store holds two break-point kinds. |
+| `[00-quadsourcepolicy-rows-are-referenced-by-nothing]` | store-fingerprint | `QuadSourcePolicy` rows are created, but no table references them; `QuadSourceIntegral` keys on `GkSourcePolicy`. An author's decision whether it is vestigial. |
+| `[00-replicated-writes-can-diverge-across-shards]` | store-fingerprint | A replicated write commits shard by shard in separate transactions, so a crash leaves copies that differ, and `ShardedPool.inventory` hides it by reading one random shard. Prompt 02's inventory measures it; making the write atomic is not this campaign's. |
 
 ---
 

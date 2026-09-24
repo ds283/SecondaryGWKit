@@ -175,6 +175,15 @@ README §0.3 calls worse than nothing.
   field in `RunRegistry.stores`; `store fingerprint`; and the digest in the run record at
   `finish()`. Still no `pull`, which is transfer, and rsync does it better.
 
+  **Assigned (2026-09-24):** [`prompts/store-fingerprint`](../store-fingerprint/README.md). Prompts
+  01–03 build the read-only reader and the structured inventory, and prompt 04 closes this issue.
+  That campaign's audit, [`docs/store-fingerprint-audit.md`](../../docs/store-fingerprint-audit.md)
+  §2, **corrects one sentence of the amendment above.** Opening a store through the `ShardedPool`
+  constructor inserts a `version` row only when the release label is new, once per store per
+  release, not on every open. The conclusion stands, because an open also runs the `--drop`
+  actions, creates missing tables and, by default, prunes unvalidated rows. The amendment is left
+  as written.
+
 - **[01-var-runs-holds-unattributable-loose-files]** *(opened 2026-09-22 by prompt 01)* — four
   files sit at the top level of `var/runs/`, beside the two A3 pilot directories, with nothing
   saying which run they belong to: `run.out` (23,616 bytes, 2026-09-20T17:08), `run.pid` (6 bytes,
