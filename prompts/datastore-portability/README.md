@@ -86,10 +86,11 @@ how the registry moves or copies stores, and carries the sidecar with them, is p
 |---|---|---|
 | 01 | [`01-relative-shard-paths.md`](01-relative-shard-paths.md) | Measure what a missing shard does today; fail closed on it; record shard paths relative to the primary; read existing absolute records safely; one resolver shared with the audit tool. Closes `run-registry`'s `[04-sharded-store-paths-are-absolute-…]` |
 | 02 | [`02-copy-and-move-a-store.md`](02-copy-and-move-a-store.md) | A static `ShardedPool` interface that copies or moves a closed store under a new name and rewrites its `shards` rows. One shard naming rule shared with the creator. Every interrupted state either opens correctly or is refused. A bare `tools/` script over it. Closes `[01-whole-store-rename-is-unsupported]` |
-| 03 | *not written; **held*** | The registry's move and copy for stores, calling prompt 02's interface and managing the `<stem>.manifest.json` sidecar. Held on two user decisions: whether the registry's charter extends to acting on stores, and who owns the sidecar and in what format. Tracked as `[store-sidecar-manifests-have-no-owner]`. **Both decided 2026-09-24 (§6.5); released** |
+| 03 | [`03-the-registry-owns-the-store-sidecar.md`](03-the-registry-owns-the-store-sidecar.md) | The registry's move and copy for stores, calling prompt 02's interface and managing the `<stem>.manifest.json` sidecar. Held on two user decisions: whether the registry's charter extends to acting on stores, and who owns the sidecar and in what format. **Both decided 2026-09-24 (§6.5); written the same day.** One `RunRegistry/` module owns the sidecar's format, reader and writer, with create and adopt; copy and move carry the sidecar and refuse a store a `running` run names; new run manifests record the store's `store_id`. Closes `[store-sidecar-manifests-have-no-owner]` |
 
 Prompt 03's charter is fixed here; only its method is held. It is written once the user has made
-both decisions. It must not be written against a guess at them.
+both decisions. It must not be written against a guess at them. *(Both decisions were made, and prompt 03 was written against them, on
+2026-09-24.)*
 
 ## 3. Datastores
 
@@ -211,7 +212,8 @@ is: it was the correct account of what blocked prompt 03 until this entry.
      knows, a reader and an atomic writer (the package's `write_json_atomic`). Only registry
      operations write a sidecar. **Unknown fields are preserved verbatim.** The hand-written A3
      sidecar carries `run_history`, `restart`, `backup` and `note`, and none of them may be lost
-     or reformatted.
+     or altered. Because the writer is `write_json_atomic`, "verbatim" means value-identical
+     after a JSON round trip, not byte-identical.
   2. **Copy and move update its metadata fields.** There is also a registry create/adopt operation,
      so that no sidecar has to be written by hand.
   3. **`datastore` is stored as the primary's bare file name, not a path.** The backup's sidecar

@@ -676,12 +676,12 @@ which **opened silently** on empty, recreated shards instead of raising.
 Prompt 02 landed the same day: `ShardedPool.copy_store` / `move_store` and `tools/sharded_store.py`
 copy or move a closed store under a new stem and rewrite its `shards` rows, which closed
 `[01-whole-store-rename-is-unsupported]` on the board's §4.
-Prompt 03, the registry's version of that, was held on user decisions, and was released on 2026-09-24 once both were made.
+Prompt 03, the registry's version of that, was held on user decisions, and was released and written on 2026-09-24, once both were made.
 
 | Issue | Board | Hook |
 |---|---|---|
 | `[01-atol-sweep-check-expects-absolute-shard-records]` | datastore-portability | `quadsource_atol_sweep.py`'s `assert_store_is_self_consistent` compares against literal absolute paths, so it would reject a store created after prompt 01 unless `prepare()`'s `UPDATE` had rewritten its rows. No effect in the script's own workflow. The script is a measurement record and was not edited. |
-| `[store-sidecar-manifests-have-no-owner]` | datastore-portability | `<stem>.manifest.json` beside a store is a registry-layer artefact that no code owns: one hand-written, one from the sweep's `prepare()`. A bare-script copy or move leaves it behind. Prompt 03, the registry's store move/copy, was held on two user decisions. **Both were decided on 2026-09-24:** the registry may copy and move stores, and it owns the sidecar and its format. Prompt 03 is released. |
+| `[store-sidecar-manifests-have-no-owner]` | datastore-portability | `<stem>.manifest.json` beside a store is a registry-layer artefact that no code owns: one hand-written, one from the sweep's `prepare()`. A bare-script copy or move leaves it behind. Prompt 03, the registry's store move/copy, was held on two user decisions. **Both were decided on 2026-09-24:** the registry may copy and move stores, and it owns the sidecar and its format. **Prompt 03 is written** (not dispatched), and closes this issue. |
 
 ---
 
