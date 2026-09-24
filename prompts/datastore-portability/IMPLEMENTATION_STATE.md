@@ -1,6 +1,6 @@
 # Datastore portability campaign — implementation state
 
-**Last updated:** 2026-09-24 · **Status: 2 of 3 prompts landed (01, 02); 03 written, not dispatched.**
+**Last updated:** 2026-09-24 · **Status: 3 of 3 prompts landed (01, 02, 03).**
 Prompt 01
 measured what a moved store does on the unfixed tree: it **opens silently and recreates its old
 directory with empty shards**. It does not raise. Prompt 01 then made `ShardedPool` fail closed on
@@ -29,8 +29,21 @@ through `main.py --inventory` each time. Both inventories were the original's co
 one row deleted from the hand-made source missing. The originals were unchanged. This closes
 `[01-whole-store-rename-is-unsupported]` (§4). Two issues are open in §3.
 
+**Prompt 03 landed 2026-09-24.** `RunRegistry/stores.py` owns the store sidecar: its name
+(`sidecar_path`), its format (`sidecar_format` 1, a `store_id`, a bare `datastore`, `copied_from`
+and an append-only `history`), a reader that never writes and reads a legacy `datastore` path by
+its name, and writers that never overwrite. `python -m RunRegistry store {show,create,adopt,copy,move}`
+is the command line. Copy and move call prompt 02's interface for the store's files and then
+carry the sidecar, and refuse a store that any `running` run names, alive or stale, by path or by
+`store_id`. `begin()` records `results_store_id`. Unknown fields survive every write. A hand-made
+copy of the sweep store and its legacy sidecar went through show, a refused copy, adopt, a refusal
+by a stale run, copy and move, with the one-row discriminator in both `main.py --inventory` runs;
+a copy of the real A3 sidecar was adopted with every unknown field intact. The originals, their
+sidecars and `var/runs/` were unchanged. This closes `[store-sidecar-manifests-have-no-owner]`
+(§4) and opens `[03-atol-sweep-prepare-writes-its-store-sidecar-by-hand]` (§3).
+
 **Campaign:** [`README.md`](README.md) ·
-**Code:** `Datastore/shard_paths.py`, `Datastore/SQL/ShardedPool.py`, `tools/shard_key_audit.py`, `tools/sharded_store.py` ·
+**Code:** `Datastore/shard_paths.py`, `Datastore/SQL/ShardedPool.py`, `tools/shard_key_audit.py`, `tools/sharded_store.py`, `RunRegistry/stores.py` ·
 **Index:** [`docs/OPEN_ISSUES.md`](../../docs/OPEN_ISSUES.md) §1.12
 
 > **Maintenance rule.** Whenever an entry is added to, narrowed in, or closed out of §3 or §4
@@ -48,7 +61,7 @@ one row deleted from the hand-made source missing. The originals were unchanged.
 |---|---|---|---|---|---|---|---|
 | 01 | [Relative shard paths](01-relative-shard-paths.md) | **P0**–**P4** | Opus 5.5 | ✍️ yes | ✅ 2026-09-24 | *"Record shard paths relative to the primary and refuse missing shards"* | [`logs/01-…`](logs/01-relative-shard-paths.md) |
 | 02 | [Copy and move a store](02-copy-and-move-a-store.md) | **P5**–**P8** | Opus 5.5 | ✍️ yes, 2026-09-24 | ✅ 2026-09-24 | *"Copy and move a closed sharded store under a new name"* | [`logs/02-…`](logs/02-copy-and-move-a-store.md) |
-| 03 | [The registry owns the store sidecar](03-the-registry-owns-the-store-sidecar.md) | **P9**–**P13** | Opus | ✍️ yes, 2026-09-24 | ⏳ not dispatched | — | — |
+| 03 | [The registry owns the store sidecar](03-the-registry-owns-the-store-sidecar.md) | **P9**–**P13** | Opus 5.5 | ✍️ yes, 2026-09-24 | ✅ 2026-09-24 | *"Make the registry own the store sidecar and copy and move stores"* | [`logs/03-…`](logs/03-the-registry-owns-the-store-sidecar.md) |
 
 **Prompt 03 is held, not unplanned.** Its charter is fixed in README §2: the registry's move and
 copy for stores, calling prompt 02's interface and managing the sidecar. Its method waits on two
@@ -59,6 +72,7 @@ them.
 **Released 2026-09-24.** The user had made both decisions the same day. They were recorded
 (README §6.5) only after prompt 02 landed, so that prompt 02's orchestrator found `HEAD` where it
 expected. **Written 2026-09-24**, with its orchestrator file `orchestrator/prompt-03.md`.
+**Landed 2026-09-24**; its log is [`logs/03-…`](logs/03-the-registry-owns-the-store-sidecar.md).
 
 **Orchestrator review of prompt 01 (2026-09-24).** All ten checks in `orchestrator/prompt-01.md`
 §3 passed. The orchestrator reproduced the deliberate-breakage record (`failures=8, errors=5` with
@@ -95,11 +109,11 @@ interruption property, and at least as strong as the prescribed order.
 | P6 | **REMEDY** | `ShardedPool.copy_store` / `move_store`: static, on a closed store, no Ray. They refuse before any write, never overwrite, never delete, and never write the source. They rewrite the destination's `shards` rows to bare names. Every interruption state either opens correctly or is refused. | 02 | ✅ **Done, 2026-09-24.** Prescribed order, with serial 0 first. The copy writes `<dst>.incomplete-copy`, rewrites it in one transaction, reads it back and `os.replace`s it last. The move renames the shards, then the primary, then rewrites. The interruption table in the log has 8 copy rows and 6 move rows, each backed by a test in 3 layouts × 2 source kinds. Every state opens against the right files, is refused by prompt 01's check, or has shards and no primary (the constructor's guard). Three refusals beyond the prompt's list were **needed** for that (log, Deviations 1–2): no shard rows, no shard #0, and a move into a directory holding a file with a source shard's name. **Deliberate breakage (i)–(v):** each fails the tests written against it. |
 | P7 | **REMEDY** | `tools/sharded_store.py {copy,move} SRC DST`, standalone, never initialises Ray. It handles the primary and shards only, per README §6.3. | 02 | ✅ **Done, 2026-09-24.** Calls the interface and nothing else, prints the shard map, or `!!` and exit 1. It runs from any directory with no `PYTHONPATH`. A child interpreter reports `ray` imported and `ray.is_initialized()` False after it runs. `--help` carries the three statements (primary and shards only, a manifest left where it is; cannot tell whether the store is open; a registry-level tool does both). |
 | P8 | **MEASUREMENT** | Real-store demonstration: a hand-made copy of the sweep store is copied under a new stem by the script, then moved under another. Each result is opened through `main.py --inventory`, with a one-row discriminator. The originals are never touched. | 02 | ✅ **Done, 2026-09-24.** One `QuadSourceIntegral` row (serial 329386) was deleted from the hand-made source's shard 0 (1,955 → 1,954). `copy` to `dst/pcopy.sqlite` gave rows `pcopy-shard000{0..3}.sqlite`, and left the source's five files identical in mtime, size and hash. The audit attached `pcopy-shard0000.sqlite`. `main.py --inventory`: 27 of 28 tables equal the original's, and `QuadSourceIntegral` **7,705 vs 7,706**. `move` to `moved/pmoved.sqlite` left `dst/` empty, and its inventory was identical to the previous one. The read-only snapshot of the three stores was identical before and after. The working directory was deleted. |
-| P9 | **REMEDY** | One `RunRegistry/stores.py` owns the store sidecar: `sidecar_path`, the registry format (`sidecar_format`, `store_id`, bare `datastore`, `name`, `purpose`, `created`, `copied_from`, `history`), a reader that never writes and reads a legacy `datastore` path by name, and an atomic writer that never overwrites. Unknown fields survive every write, value-identical. | 03 | ⏳ written, not dispatched (held on README §6.4 until both decisions, README §6.5) |
-| P10 | **REMEDY** | `store create` gives a store with no sidecar a registry sidecar, and `store adopt` upgrades a legacy sidecar in place. The explicit adopt is the only way a legacy sidecar is ever rewritten. | 03 | ⏳ written, not dispatched |
-| P11 | **REMEDY** | `store copy` / `store move` call prompt 02's interface and then carry the sidecar. A copy gets a new `store_id`, `copied_from` and one history entry, and never writes the source's sidecar. A move keeps the id and updates the sidecar under a temporary name. Both refuse a store that any `running` run (alive or stale) names by path or by `store_id`. Every interruption state is either correct or reported as a problem. | 03 | ⏳ written, not dispatched |
-| P12 | **REMEDY** | `begin()` records `results_store_id` from a problem-free registry sidecar beside `results`. Existing manifests are never rewritten. `import RunRegistry` and `list` stay free of `ray`. | 03 | ⏳ written, not dispatched |
-| P13 | **MEASUREMENT** | Real-store demonstration on a hand-made copy of the sweep store and its legacy sidecar: show, a refused copy, adopt, a refusal by a stale run, copy, move, each opened through `main.py --inventory` with a one-row discriminator. Plus an adopt of a copy of the real A3 sidecar beside a placeholder primary. The originals, their sidecars and `var/runs/` are never touched. | 03 | ⏳ written, not dispatched |
+| P9 | **REMEDY** | One `RunRegistry/stores.py` owns the store sidecar: `sidecar_path`, the registry format (`sidecar_format`, `store_id`, bare `datastore`, `name`, `purpose`, `created`, `copied_from`, `history`), a reader that never writes and reads a legacy `datastore` path by name, and an atomic writer that never overwrites. Unknown fields survive every write, value-identical. | 03 | ✅ **Done, 2026-09-24.** Format as the prompt gave it. `read_sidecar` returns `absent` / `unreadable` / `legacy` / `registry` and a list of problems, and never writes (`tree_state` before and after). A legacy path in `datastore` is read by its final component, so the backup's defect, reproduced on a copy, reads as naming its sibling. Two writers over `write_json_atomic`: `_write_new_sidecar` refuses if the name or its `.tmp` exists, and `_update_sidecar` is used only by adopt and by the move's temporary sidecar. Both refuse, before writing, anything the reader would call a problem. `.manifest.json` is spelled once, in `sidecar_path` (a test pins this). All three real sidecars round-trip value-identically. **Deliberate breakage (iii), (vi), (vii)** each fail the tests written against them. |
+| P10 | **REMEDY** | `store create` gives a store with no sidecar a registry sidecar, and `store adopt` upgrades a legacy sidecar in place. The explicit adopt is the only way a legacy sidecar is ever rewritten. | 03 | ✅ **Done, 2026-09-24.** Neither opens the primary. Create writes one `create` history entry. Adopt adds `sidecar_format`, a new `store_id` and one `adopt` entry, makes `datastore` bare, and keeps `created`, `purpose`, a legacy `copied_from` string and every unknown field. It refuses a legacy object that already has `store_id` or `history`. Both also refuse where an interrupted move's `.incomplete-move` sidecar sits (log, Deviations). A copy of the real A3 sidecar, adopted in §4, kept all ten unknown fields value-identical. |
+| P11 | **REMEDY** | `store copy` / `store move` call prompt 02's interface and then carry the sidecar. A copy gets a new `store_id`, `copied_from` and one history entry, and never writes the source's sidecar. A move keeps the id and updates the sidecar under a temporary name. Both refuse a store that any `running` run (alive or stale) names by path or by `store_id`. Every interruption state is either correct or reported as a problem. | 03 | ✅ **Done, 2026-09-24.** The prescribed order: the store first, then the sidecar (copy: a new file; move: rename to `<dst sidecar>.incomplete-move`, update there, rename last). The interruption table has 6 copy rows and 9 move rows, each backed by a test in all three layouts. No state leaves a problem-free sidecar beside the wrong store or missing a history entry, or two problem-free sidecars with one `store_id`. `ShardedPool` is imported inside the two functions; nothing in `Datastore/` or `tools/` changed. **Deliberate breakage (i), (ii), (iv), (v), (viii)** each fail the tests written against them. |
+| P12 | **REMEDY** | `begin()` records `results_store_id` from a problem-free registry sidecar beside `results`. Existing manifests are never rewritten. `import RunRegistry` and `list` stay free of `ray`. | 03 | ✅ **Done, 2026-09-24.** `null` for no results, no store, no sidecar, a legacy sidecar and a sidecar with a problem; no sidecar is ever created. A hand-built manifest without the field still lists, and the in-use check matches it by path. `test_run_registry` and `test_pipeline_adoption` pass unmodified. A child interpreter shows `import RunRegistry` and `list` load neither `ray` nor `sqlalchemy`. **Deliberate breakage (ix)** fails three tests. |
+| P13 | **MEASUREMENT** | Real-store demonstration on a hand-made copy of the sweep store and its legacy sidecar: show, a refused copy, adopt, a refusal by a stale run, copy, move, each opened through `main.py --inventory` with a one-row discriminator. Plus an adopt of a copy of the real A3 sidecar beside a placeholder primary. The originals, their sidecars and `var/runs/` are never touched. | 03 | ✅ **Done, 2026-09-24.** One `QuadSourceIntegral` row (serial 329386) deleted from the hand-made source's shard 0 (1,955 → 1,954). `show`: legacy, a legacy path read by name, no problems. `copy` before adoption: refused, `src/` unchanged. Adopted source `store_id` `ee50b839…`. A throwaway `begin()` recorded that id as `results_store_id`; the copy was then refused naming the run as stale, and after `Run.finish("killed")` `show` listed it finished. `copy` to `dst/pcopy.sqlite`: `store_id` `d4d466f5…`, `copied_from` naming `ee50b839…`, history `adopt, copy`, rows `pcopy-shard000{0..3}.sqlite`, the source's six files identical. `move` to `moved/pmoved.sqlite`: the same id, history `adopt, copy, move`, `datastore` `pmoved.sqlite`, `dst/` empty. Both inventories: 27 of 28 tables equal the original's, `QuadSourceIntegral` **7,705 vs 7,706**. The snapshot of the stores, sidecars and `var/runs/` was identical before and after. The working directory was deleted. |
 
 ---
 
@@ -119,41 +133,20 @@ interruption property, and at least as strong as the prescribed order.
   absolute paths, and drop the `UPDATE`. Not done here, because the script is the record of a
   measurement (prompt 01 §2). Indexed at `docs/OPEN_ISSUES.md` §1.12.
 
-- **[store-sidecar-manifests-have-no-owner]** *(opened 2026-09-24, on the user's layering
-  decision after prompt 01, not by a prompt)*: a `<stem>.manifest.json` beside a store is a
-  registry-layer artefact (README §6.3), but **no code owns it**. `RunRegistry` writes
-  `manifest.json` only inside run directories under `var/runs/`.
-  `handover-A3-baseline-lambdacdm.manifest.json` was written by hand.
-  `handover-atol-sweep.manifest.json` was written by `docs/handover/quadsource_atol_sweep.py`
-  `prepare()`, whose comment calls it "a human note" that nothing reads. The sweep sidecar names the
-  store's path (`"datastore"`) and its origin (`"copied_from"`).
-
-  **Impact:** once prompt 02 lands, copying or moving a store with the bare script leaves its
-  sidecar behind, still naming the old path. That is by design at that layer, but nothing yet does
-  it properly. Also, nothing can check that no `running` run is using a store before it is moved.
-  The registry knows which runs are live; the bare script cannot tell whether a process holds a
-  rollback-journal store open.
-
-  **Blocked on two user decisions** (README §6.4):
-  **(1)** whether the registry's charter ("it records; it does not act"; compare the declined `pull`
-  in `run-registry`'s `[04-a-runs-product-is-named-but-never-fingerprinted]`) extends to moving
-  and copying stores;
-  **(2)** who owns the store sidecar and in what format, including what a move or copy does to
-  `datastore` and `copied_from`.
-  **Assigned (2026-09-24):** prompt 03 of this campaign, **held** until both are decided. Indexed
-  at `docs/OPEN_ISSUES.md` §1.12.
-
-  **Decided (2026-09-24), by the user; recorded after prompt 02 landed:** both decisions are
-  made (README §6.5). **(1)** Moving and copying stores are tools for managing the registry, so
-  the "records; does not act" objection does not apply to them, and neither does the precedent
-  of the declined `pull`. **(2)** The registry owns the sidecar. One `RunRegistry/` module defines
-  its fields, reader and atomic writer, and only registry operations write it. Unknown fields are
-  preserved verbatim. Copy and move update its metadata, and a create/adopt operation replaces
-  hand-writing. `datastore` becomes the primary's bare file name. `copied_from` names the
-  immediate parent, beside an append-only `history`. A stable `store_id` is new on a copy and
-  kept on a move, and future run manifests record it beside `results`. Copy and move refuse a
-  store that a `running` run names. Existing sidecars are read as they are, and the backup's stale
-  `datastore` field is fixed only if the user asks. Prompt 03 is released and closes this issue.
+- **[03-atol-sweep-prepare-writes-its-store-sidecar-by-hand]** *(opened 2026-09-24 by prompt
+  03)*: `docs/handover/quadsource_atol_sweep.py` `prepare()` (`:667`) still writes
+  `<stem>.manifest.json` itself, with `manifest.write_text(json.dumps(…))`, in the legacy shape:
+  `datastore` and `copied_from` as repository paths, no `sidecar_format`, no `store_id`, no
+  `history`. That contradicts README §6.5 point 1 ("only registry operations write a sidecar")
+  and point 3 (`datastore` is a bare name). **Impact:** none today. The sidecar it wrote on
+  2026-09-23 is read as legacy, its `datastore` path is read by name, and nothing is misread.
+  But a future `prepare()` run would write another legacy sidecar, which `store copy` / `store
+  move` refuse until someone runs `store adopt`. The script also re-points its copy's `shards`
+  rows by hand (`[01-atol-sweep-check-expects-absolute-shard-records]`), which `store copy` now
+  does properly. **Next step:** if the script is ever edited again for another reason, replace its
+  hand copy, its `UPDATE` and its sidecar with one `RunRegistry.stores.copy_store` call. Not done
+  here: the script is the record of a measurement (prompt 03 §6), and no driver creates
+  sidecars in this campaign. Indexed at `docs/OPEN_ISSUES.md` §1.12.
 
 ---
 
@@ -211,6 +204,58 @@ interruption property, and at least as strong as the prescribed order.
   [`logs/02-copy-and-move-a-store.md`](logs/02-copy-and-move-a-store.md). Its `docs/OPEN_ISSUES.md`
   §1.12 row is deleted.
 
+- **[store-sidecar-manifests-have-no-owner]** *(opened 2026-09-24, on the user's layering
+  decision after prompt 01, not by a prompt)*: a `<stem>.manifest.json` beside a store is a
+  registry-layer artefact (README §6.3), but **no code owns it**. `RunRegistry` writes
+  `manifest.json` only inside run directories under `var/runs/`.
+  `handover-A3-baseline-lambdacdm.manifest.json` was written by hand.
+  `handover-atol-sweep.manifest.json` was written by `docs/handover/quadsource_atol_sweep.py`
+  `prepare()`, whose comment calls it "a human note" that nothing reads. The sweep sidecar names the
+  store's path (`"datastore"`) and its origin (`"copied_from"`).
+
+  **Impact:** once prompt 02 lands, copying or moving a store with the bare script leaves its
+  sidecar behind, still naming the old path. That is by design at that layer, but nothing yet does
+  it properly. Also, nothing can check that no `running` run is using a store before it is moved.
+  The registry knows which runs are live; the bare script cannot tell whether a process holds a
+  rollback-journal store open.
+
+  **Blocked on two user decisions** (README §6.4):
+  **(1)** whether the registry's charter ("it records; it does not act"; compare the declined `pull`
+  in `run-registry`'s `[04-a-runs-product-is-named-but-never-fingerprinted]`) extends to moving
+  and copying stores;
+  **(2)** who owns the store sidecar and in what format, including what a move or copy does to
+  `datastore` and `copied_from`.
+  **Assigned (2026-09-24):** prompt 03 of this campaign, **held** until both are decided. Indexed
+  at `docs/OPEN_ISSUES.md` §1.12.
+
+  **Decided (2026-09-24), by the user; recorded after prompt 02 landed:** both decisions are
+  made (README §6.5). **(1)** Moving and copying stores are tools for managing the registry, so
+  the "records; does not act" objection does not apply to them, and neither does the precedent
+  of the declined `pull`. **(2)** The registry owns the sidecar. One `RunRegistry/` module defines
+  its fields, reader and atomic writer, and only registry operations write it. Unknown fields are
+  preserved verbatim. Copy and move update its metadata, and a create/adopt operation replaces
+  hand-writing. `datastore` becomes the primary's bare file name. `copied_from` names the
+  immediate parent, beside an append-only `history`. A stable `store_id` is new on a copy and
+  kept on a move, and future run manifests record it beside `results`. Copy and move refuse a
+  store that a `running` run names. Existing sidecars are read as they are, and the backup's stale
+  `datastore` field is fixed only if the user asks. Prompt 03 is released and closes this issue.
+
+  **Closed (2026-09-24) by prompt 03**, [`03-the-registry-owns-the-store-sidecar.md`](03-the-registry-owns-the-store-sidecar.md),
+  commit *"Make the registry own the store sidecar and copy and move stores"*. Both decisions as
+  recorded: `RunRegistry/stores.py` owns the sidecar's name, format, reader and writer, and
+  `python -m RunRegistry store {show,create,adopt,copy,move}` is its command line. A registry
+  sidecar has `sidecar_format` 1, a `store_id` (new on create, adopt and copy, kept on a move), a
+  bare `datastore`, `copied_from` naming the immediate parent, and an append-only `history`.
+  Unknown fields survive every write, value-identical. Existing sidecars are read as they are, a
+  legacy `datastore` path by its name, and only an explicit `store adopt` rewrites one. Copy and
+  move call prompt 02's interface for the files and then carry the sidecar; both refuse a store
+  that any `running` run names, alive or stale, by `results` path or by the new manifest field
+  `results_store_id`. Every interrupted state was exercised in three layouts (log, the
+  interruption table). The three real sidecars were only read; none was adopted, and the
+  backup's stale `datastore` field is unchanged. Measurement:
+  [`logs/03-the-registry-owns-the-store-sidecar.md`](logs/03-the-registry-owns-the-store-sidecar.md).
+  Its `docs/OPEN_ISSUES.md` §1.12 row is deleted.
+
 The issue this campaign was created to close,
 `[04-sharded-store-paths-are-absolute-and-so-stores-are-not-portable]`, is owned by the
 [`run-registry`](../run-registry/IMPLEMENTATION_STATE.md) board and is closed on **that** board's
@@ -222,14 +267,14 @@ The issue this campaign was created to close,
 
 Measured before each prompt's dispatch, and re-measured at its commit.
 
-| Suite | At `71c4c66` | After prompt 01 | At `1770a61` (before prompt 02) | After prompt 02 |
-|---|---|---|---|---|
-| `AdaptiveLevin` | 32 OK | 32 OK | 32 OK | 32 OK |
-| `ComputeTargets` | 552, 1 failure: `test_tk_wkb_phase.TestCost.test_wall_time_per_object`, the known wall-clock flake | 552, the same 1 failure (0.0607 vs 0.06); it passed when re-run on its own 3 times | 552, the same 1 failure (0.0605 vs 0.06; it fails on its own too) | 552, the same 1 failure (0.0610 vs 0.06; alone, 0.0609) |
-| `CosmologyModels` | 39 OK | 39 OK | 39 OK | 39 OK |
-| `Datastore` | 10 OK | **37 OK** (+27) | 37 OK | **70 OK** (+33) |
-| `LiouvilleGreen` | 148 OK (skipped=1) | 148 OK (skipped=1) | 148 OK (skipped=1) | 148 OK (skipped=1) |
-| `RunRegistry` | 38 OK | 38 OK | 38 OK | 38 OK |
+| Suite | At `71c4c66` | After prompt 01 | At `1770a61` (before prompt 02) | After prompt 02 | At `266a70f` (before prompt 03) | After prompt 03 |
+|---|---|---|---|---|---|---|
+| `AdaptiveLevin` | 32 OK | 32 OK | 32 OK | 32 OK | 32 OK | 32 OK |
+| `ComputeTargets` | 552, 1 failure: `test_tk_wkb_phase.TestCost.test_wall_time_per_object`, the known wall-clock flake | 552, the same 1 failure (0.0607 vs 0.06); it passed when re-run on its own 3 times | 552, the same 1 failure (0.0605 vs 0.06; it fails on its own too) | 552, the same 1 failure (0.0610 vs 0.06; alone, 0.0609) | 552 OK (the flake is known) | 552 OK (the flake passed) |
+| `CosmologyModels` | 39 OK | 39 OK | 39 OK | 39 OK | 39 OK | 39 OK |
+| `Datastore` | 10 OK | **37 OK** (+27) | 37 OK | **70 OK** (+33) | 70 OK | 70 OK |
+| `LiouvilleGreen` | 148 OK (skipped=1) | 148 OK (skipped=1) | 148 OK (skipped=1) | 148 OK (skipped=1) | 148 OK (skipped=1) | 148 OK (skipped=1) |
+| `RunRegistry` | 38 OK | 38 OK | 38 OK | 38 OK | 38 OK | **84 OK** (+46) |
 
 ```bash
 PYTHONPATH=. ./venv/bin/python -m unittest discover -s Datastore/tests -t .

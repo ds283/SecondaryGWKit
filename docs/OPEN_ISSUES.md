@@ -45,7 +45,7 @@ prompt 02, and two opened by prompt 02 when it closed that campaign at 2 / 2. Th
 `run-registry`'s `[04-sharded-store-paths-are-absolute-…]` on the `run-registry` board's §4, and it
 opened two issues of its own. A third was opened the same day on the user's
 layering decision after that prompt's review, and prompt 02 closed one of prompt 01's the same
-day, on that board's §4 (§1.12). Of the 90
+day, on that board's §4. Prompt 03 closed the third the same day and opened one (§1.12). Of the 90
 above, 87 are spread across the boards and
 **three still have no board row** — the last three `handover` rows in §1.1, opened by a document
 review on 2026-09-19, whose content lives in
@@ -677,11 +677,13 @@ Prompt 02 landed the same day: `ShardedPool.copy_store` / `move_store` and `tool
 copy or move a closed store under a new stem and rewrite its `shards` rows, which closed
 `[01-whole-store-rename-is-unsupported]` on the board's §4.
 Prompt 03, the registry's version of that, was held on user decisions, and was released and written on 2026-09-24, once both were made.
+Prompt 03 landed the same day: `RunRegistry/stores.py` owns the store sidecar, and `python -m RunRegistry store`
+creates, adopts, copies and moves stores with it, which closed `[store-sidecar-manifests-have-no-owner]` on the board's §4.
 
 | Issue | Board | Hook |
 |---|---|---|
 | `[01-atol-sweep-check-expects-absolute-shard-records]` | datastore-portability | `quadsource_atol_sweep.py`'s `assert_store_is_self_consistent` compares against literal absolute paths, so it would reject a store created after prompt 01 unless `prepare()`'s `UPDATE` had rewritten its rows. No effect in the script's own workflow. The script is a measurement record and was not edited. |
-| `[store-sidecar-manifests-have-no-owner]` | datastore-portability | `<stem>.manifest.json` beside a store is a registry-layer artefact that no code owns: one hand-written, one from the sweep's `prepare()`. A bare-script copy or move leaves it behind. Prompt 03, the registry's store move/copy, was held on two user decisions. **Both were decided on 2026-09-24:** the registry may copy and move stores, and it owns the sidecar and its format. **Prompt 03 is written** (not dispatched), and closes this issue. |
+| `[03-atol-sweep-prepare-writes-its-store-sidecar-by-hand]` | datastore-portability | `quadsource_atol_sweep.py` `prepare()` still writes its `<stem>.manifest.json` by hand, in the legacy shape, against README §6.5 point 1 (only registry operations write a sidecar). No effect today: the sidecar is read as legacy, by name. The script is a measurement record and was not edited. |
 
 ---
 

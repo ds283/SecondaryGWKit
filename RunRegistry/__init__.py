@@ -3,7 +3,10 @@
 The rules this package exists to support are in `CLAUDE.md`, "Long-running jobs — the run
 registry"; the failures it exists because of are `prompts/run-registry/README.md` §0. It is a
 convention with a little code behind it, not a framework: it schedules nothing, supervises
-nothing, locks nothing and deletes nothing.
+nothing, locks nothing and deletes nothing. It also creates, adopts, copies and moves the stores it
+manages, with their `<stem>.manifest.json` sidecars (`RunRegistry.stores`), because the user
+decided that managing stores is part of managing the registry (`prompts/datastore-portability`
+README §6.5); it still deletes nothing.
 
 The layout, under `var/runs/` (gitignored, in the repository, never a session scratchpad and never
 `/tmp` — README §0 item 4 is a datastore that was written into a scratchpad and is gone):
@@ -456,8 +459,16 @@ def begin(
     §0 item 5, since a resume must know what it is resuming into.
 
     `pid` defaults to the calling process; a launcher that spawns a detached child passes the
-    child's pid to `heartbeat()` once it has one. Every manifest field is one README §0 would have
-    caught something with; there are no others.
+    child's pid to `heartbeat()` once it has one. Every manifest field but one is one README §0
+    would have caught something with; there are no others.
+
+    The one is `results_store_id`, which is `prompts/datastore-portability` README §6.5 point 5.
+    When `results` has a problem-free registry sidecar beside it (`RunRegistry.stores`), it holds
+    that sidecar's `store_id`, and otherwise `null`: no store, no sidecar, a legacy sidecar, or a
+    sidecar with a problem. It matches a run to its store after the store has moved, which a path
+    cannot, and it is how `store copy` / `store move` recognise a store a running run is using.
+    The sidecar is read here and never written. Manifests written before the field existed lack
+    it, and are read exactly as before.
 
     `scope` is one line saying what the run covers, and is what tells a stranger whether the run
     is still relevant — the hand-written `handover-A3-baseline-lambdacdm.manifest.json` carried it
@@ -480,6 +491,11 @@ def begin(
         )
     if checkpoint is True:
         checkpoint = os.path.join(path, "checkpoint.jsonl")
+    results_store_id = None
+    if results:
+        from .stores import read_sidecar  # here, because `stores` imports this module
+
+        results_store_id = read_sidecar(results).store_id
     manifest = {
         "run_id": identifier,
         "created": now_iso(),
@@ -494,6 +510,7 @@ def begin(
         "expected_units": expected_units,
         "checkpoint": _repo_path(checkpoint) if checkpoint else None,
         "results": _repo_path(results) if results else None,
+        "results_store_id": results_store_id,
         "scope": scope,
         "heartbeat_means": heartbeat_means,
     }

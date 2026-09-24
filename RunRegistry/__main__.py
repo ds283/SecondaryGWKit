@@ -2,13 +2,21 @@
 
 Run it at the start of a session and before launching anything long. A registry nobody reads is
 worse than none, because it looks like coverage.
+
+`python -m RunRegistry store {show,create,adopt,copy,move}` manages a datastore and its
+`<stem>.manifest.json` sidecar (`RunRegistry.stores`). `show` is read-only. `create` and `adopt`
+write a sidecar and never open the store. `copy` and `move` move the store's files with
+`ShardedPool` and carry the sidecar, and refuse a store that any `running` run names, alive or
+stale. None of them initialises Ray, and none deletes anything.
 """
 
 import argparse
+import json
 import sys
 import time
 
 from . import DEFAULT_ROOT, DEFAULT_STALE_AFTER, list_runs
+from . import stores
 
 
 def _age(seconds) -> str:
@@ -48,6 +56,76 @@ def _purpose(entry) -> str:
     return text
 
 
+def _show(args) -> int:
+    reading = stores.read_sidecar(args.primary)
+    print(f"sidecar:  {reading.path}")
+    print(f"kind:     {reading.kind}")
+    if reading.problems:
+        print("problems:")
+        for problem in reading.problems:
+            print(f"  !! {problem}")
+    else:
+        print("problems: none")
+    if reading.fields is not None and "datastore" in reading.fields:
+        value = reading.fields["datastore"]
+        if reading.legacy_path:
+            print(
+                f"datastore: {value!r} is a legacy path, read by its name "
+                f"{stores._final_component(value)!r}, never as a path"
+            )
+        else:
+            print(f"datastore: {value!r}")
+    if reading.fields is not None:
+        print("fields:")
+        for line in json.dumps(reading.fields, indent=2, sort_keys=True).splitlines():
+            print(f"  {line}")
+
+    store_id = (
+        (reading.fields or {}).get("store_id") if reading.kind == "registry" else None
+    )
+    runs = stores.runs_naming(
+        [reading.primary],
+        store_id if isinstance(store_id, str) else None,
+        runs_root=args.runs_root,
+    )
+    if runs:
+        print(f"runs naming this store, under {args.runs_root}:")
+        for entry in runs:
+            print(
+                f"  {entry['id']}  {(entry['state'] or 'unknown'):9} {entry['liveness']:9} "
+                f"by {' and '.join(entry['matched_by'])}"
+            )
+    else:
+        print(f"runs naming this store, under {args.runs_root}: none")
+    return 0
+
+
+def _store(args) -> int:
+    if args.store_command == "show":
+        return _show(args)
+    try:
+        if args.store_command == "create":
+            fields = stores.create_sidecar(args.primary, args.purpose)
+            where = stores.sidecar_path(args.primary)
+        elif args.store_command == "adopt":
+            fields = stores.adopt_sidecar(args.primary, args.purpose)
+            where = stores.sidecar_path(args.primary)
+        elif args.store_command == "copy":
+            fields = stores.copy_store(
+                args.src, args.dst, args.purpose, runs_root=args.runs_root
+            )
+            where = stores.sidecar_path(args.dst)
+        else:
+            fields = stores.move_store(args.src, args.dst, runs_root=args.runs_root)
+            where = stores.sidecar_path(args.dst)
+    except RuntimeError as e:
+        print(f"!! {e}", file=sys.stderr)
+        return 1
+    print(f">> {args.store_command}: {where}")
+    print(json.dumps(fields, indent=2, sort_keys=True))
+    return 0
+
+
 def main(argv=None) -> int:
     parser = argparse.ArgumentParser(prog="RunRegistry", description=__doc__)
     sub = parser.add_subparsers(dest="command", required=True)
@@ -60,7 +138,40 @@ def main(argv=None) -> int:
         metavar="SECONDS",
         help=f"heartbeat staleness window, default {DEFAULT_STALE_AFTER:.0f}",
     )
+
+    store = sub.add_parser("store", help="a datastore and its sidecar")
+    store_sub = store.add_subparsers(dest="store_command", required=True)
+    runs_root = dict(
+        default=DEFAULT_ROOT,
+        metavar="DIR",
+        help=f"the runs root, default {DEFAULT_ROOT}",
+    )
+    show = store_sub.add_parser(
+        "show", help="the sidecar and the runs naming the store"
+    )
+    show.add_argument("primary", metavar="PRIMARY")
+    show.add_argument("--runs-root", **runs_root)
+    create = store_sub.add_parser(
+        "create", help="a registry sidecar for a store with none"
+    )
+    create.add_argument("primary", metavar="PRIMARY")
+    create.add_argument("--purpose", required=True, metavar="TEXT")
+    adopt = store_sub.add_parser("adopt", help="upgrade a legacy sidecar in place")
+    adopt.add_argument("primary", metavar="PRIMARY")
+    adopt.add_argument("--purpose", default=None, metavar="TEXT")
+    copier = store_sub.add_parser("copy", help="copy a closed store and its sidecar")
+    copier.add_argument("src", metavar="SRC")
+    copier.add_argument("dst", metavar="DST")
+    copier.add_argument("--purpose", required=True, metavar="TEXT")
+    copier.add_argument("--runs-root", **runs_root)
+    mover = store_sub.add_parser("move", help="move a closed store and its sidecar")
+    mover.add_argument("src", metavar="SRC")
+    mover.add_argument("dst", metavar="DST")
+    mover.add_argument("--runs-root", **runs_root)
+
     args = parser.parse_args(argv)
+    if args.command == "store":
+        return _store(args)
 
     entries = list_runs(root=args.root, stale_after=args.stale_after)
     if not entries:
