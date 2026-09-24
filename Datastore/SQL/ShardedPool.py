@@ -1,7 +1,11 @@
+import errno
+import os
 import random
+import shutil
+import sqlite3
 from datetime import datetime
 from pathlib import Path
-from typing import Optional, List, Dict, Callable
+from typing import Optional, List, Dict, Callable, NamedTuple, Tuple
 
 import ray
 import sqlalchemy as sqla
@@ -13,9 +17,30 @@ from Datastore.SQL.SerialPoolBroker import SerialPoolBroker
 from Datastore.shard_paths import (
     resolve_shard_path,
     is_legacy_record,
+    shard_file_name,
     shard_file_problem,
 )
 from config.defaults import DEFAULT_STRING_LENGTH
+
+# the files SQLite keeps beside a database while it is open or was not closed cleanly: the
+# rollback journal, and the write-ahead log and its index
+_SQLITE_JOURNAL_SUFFIXES = ("-journal", "-wal", "-shm")
+
+# copy_store writes the destination primary under this name first (appended to the destination
+# primary's file name) and renames it onto its real name last
+_INCOMPLETE_COPY_SUFFIX = ".incomplete-copy"
+
+
+class _RelocationPlan(NamedTuple):
+    """What copy_store / move_store will do, fixed before anything is written."""
+
+    mode: str
+    src_primary: Path
+    src_files: Dict[int, Path]
+    dst_primary: Path
+    dst_files: Dict[int, Path]
+    dst_records: Dict[int, str]
+    temp_primary: Optional[Path]
 
 
 class ShardedPool:
@@ -98,10 +123,11 @@ class ShardedPool:
             # ensure parent directories also exist
             self._primary_file.parents[0].mkdir(exist_ok=True, parents=True)
 
-            stem = self._primary_file.stem
             for i in range(self._shards):
-                shard_stem = f"{stem}-shard{i:04d}"
-                shard_file = self._primary_file.with_stem(shard_stem)
+                # the one naming rule, shared with copy_store/move_store (Datastore/shard_paths.py)
+                shard_file = self._primary_file.parent / shard_file_name(
+                    self._primary_file, i
+                )
 
                 if shard_file.exists():
                     raise RuntimeError(
@@ -353,40 +379,13 @@ class ShardedPool:
                     self._shard_file_table.c.filename,
                 )
             )
-            # every record goes through the one resolver (Datastore/shard_paths.py). A legacy
-            # absolute record is read as the sibling of that name; the absolute path itself is
-            # never used. The rows are not rewritten
-            relocated_legacy = []
-            for row in shard_files:
-                serial = row.serial
-                stored = row.filename
-
-                try:
-                    filename = resolve_shard_path(self._primary_file, stored)
-                except ValueError as e:
-                    raise RuntimeError(
-                        f'Shard #{serial} of primary database "{str(self._primary_file)}" has an unusable record: {e}'
-                    )
-
-                if serial in self._shard_db_files:
-                    raise RuntimeError(
-                        f'Shard #{serial} already exists (database file="{str(filename)}", existing file="{str(self._shard_db_files[serial])}")'
-                    )
-
-                self._shard_db_files[serial] = filename
-                self._shard_records[serial] = stored
-
-                if is_legacy_record(stored) and Path(stored) != filename:
-                    relocated_legacy.append(stored)
-
-            if len(relocated_legacy) > 0:
-                legacy_dirs = ", ".join(
-                    f'"{d}"'
-                    for d in sorted({str(Path(s).parent) for s in relocated_legacy})
-                )
-                print(
-                    f'!! Primary database "{str(self._primary_file)}" records {len(relocated_legacy)} shard(s) by legacy absolute path in {legacy_dirs}; reading them as siblings in "{str(self._primary_file.parent)}" instead (stored records not rewritten)'
-                )
+            # shared with copy_store/move_store, which read a source store's records the same way
+            ShardedPool._resolve_shard_rows(
+                self._primary_file,
+                shard_files,
+                self._shard_db_files,
+                self._shard_records,
+            )
 
             # read shard key configuration type
             shard_key_configs = conn.execute(
@@ -513,29 +512,433 @@ class ShardedPool:
         with empty shards and every sharded lookup misses, and a mistake in shard path resolution
         would open the wrong store silently instead of raising.
         """
-        problems = []
-        for serial, path in sorted(self._shard_db_files.items()):
-            problem = shard_file_problem(Path(path))
-            if problem is not None:
-                stored = self._shard_records.get(serial, "<unknown>")
-                problems.append(
-                    f'shard #{serial}: stored record "{stored}" resolves to "{str(path)}", which {problem}'
-                )
-
-        seen = {}
-        for serial, path in sorted(self._shard_db_files.items()):
-            if path in seen:
-                problems.append(
-                    f'shards #{seen[path]} and #{serial} both resolve to "{str(path)}" (stored records "{self._shard_records.get(seen[path], "<unknown>")}" and "{self._shard_records.get(serial, "<unknown>")}")'
-                )
-            else:
-                seen[path] = serial
+        # shared with copy_store/move_store, which check a source store's shards the same way
+        problems = ShardedPool._shard_file_problems(
+            self._shard_db_files, self._shard_records
+        )
 
         if len(problems) > 0:
             raise RuntimeError(
                 f'Cannot open sharded datastore "{str(self._primary_file)}": '
                 + "; ".join(problems)
             )
+
+    # SHARD RECORDS: READ AND CHECK
+    #
+    # These two static methods are the one implementation of reading a primary's `shards` rows and
+    # checking the files they name. The constructor reaches them through _read_shard_data and
+    # _check_shard_files; copy_store and move_store call them directly on a closed store, which has
+    # no instance and none of the constructor's arguments.
+
+    @staticmethod
+    def _resolve_shard_rows(
+        primary_file: Path,
+        rows,
+        shard_db_files: Dict[int, PathType],
+        shard_records: Dict[int, str],
+    ) -> None:
+        """
+        Resolve the (serial, filename) rows of the `shards` table of ``primary_file`` into
+        ``shard_db_files`` (serial -> absolute path) and ``shard_records`` (serial -> the stored
+        value), which the caller supplies and which are filled in place.
+
+        Every record goes through the one resolver (Datastore/shard_paths.py). A legacy absolute
+        record is read as the sibling of that name; the absolute path itself is never used. The
+        rows are not rewritten.
+        """
+        relocated_legacy = []
+        for serial, stored in rows:
+            try:
+                filename = resolve_shard_path(primary_file, stored)
+            except ValueError as e:
+                raise RuntimeError(
+                    f'Shard #{serial} of primary database "{str(primary_file)}" has an unusable record: {e}'
+                )
+
+            if serial in shard_db_files:
+                raise RuntimeError(
+                    f'Shard #{serial} already exists (database file="{str(filename)}", existing file="{str(shard_db_files[serial])}")'
+                )
+
+            shard_db_files[serial] = filename
+            shard_records[serial] = stored
+
+            if is_legacy_record(stored) and Path(stored) != filename:
+                relocated_legacy.append(stored)
+
+        if len(relocated_legacy) > 0:
+            legacy_dirs = ", ".join(
+                f'"{d}"'
+                for d in sorted({str(Path(s).parent) for s in relocated_legacy})
+            )
+            print(
+                f'!! Primary database "{str(primary_file)}" records {len(relocated_legacy)} shard(s) by legacy absolute path in {legacy_dirs}; reading them as siblings in "{str(primary_file.parent)}" instead (stored records not rewritten)'
+            )
+
+    @staticmethod
+    def _shard_file_problems(
+        shard_db_files: Dict[int, PathType], shard_records: Dict[int, str]
+    ) -> List[str]:
+        """
+        Return one message for each resolved shard that is not a usable file (missing, not a
+        regular file, a symbolic link: Datastore/shard_paths.py shard_file_problem), and for each
+        pair of serials that resolve to the same file. An empty list means every shard is usable.
+        """
+        problems = []
+        for serial, path in sorted(shard_db_files.items()):
+            problem = shard_file_problem(Path(path))
+            if problem is not None:
+                stored = shard_records.get(serial, "<unknown>")
+                problems.append(
+                    f'shard #{serial}: stored record "{stored}" resolves to "{str(path)}", which {problem}'
+                )
+
+        seen = {}
+        for serial, path in sorted(shard_db_files.items()):
+            if path in seen:
+                problems.append(
+                    f'shards #{seen[path]} and #{serial} both resolve to "{str(path)}" (stored records "{shard_records.get(seen[path], "<unknown>")}" and "{shard_records.get(serial, "<unknown>")}")'
+                )
+            else:
+                seen[path] = serial
+
+        return problems
+
+    # COPY OR MOVE A CLOSED STORE
+    #
+    # A store is its primary and its shards, and nothing else: these methods copy, move, check and
+    # mention no other file. They are static and work on a closed store. An open pool has one
+    # Datastore actor per shard holding its file, so they are not methods of an open pool, and they
+    # start no Ray, create no actor and need no instance. They cannot tell whether some process
+    # has the store open (a rollback-journal store leaves no file while idle); making sure nothing
+    # is using it is the caller's job.
+    #
+    # They never delete a file, never overwrite one, and never write the source. On failure they
+    # do not clean up: they raise, naming the step that failed and the store files that exist at
+    # each end. Deleting is for a person.
+
+    @staticmethod
+    def copy_store(src: PathType, dst: PathType) -> Dict[int, Path]:
+        """
+        Copy the closed store whose primary is ``src`` to a new store whose primary is ``dst``,
+        renaming every file to ``dst``'s stem, and return the destination's serial -> shard path
+        map as read back from the finished destination.
+
+        Refuses, before anything is written, if the source is unusable or not cleanly closed, or
+        if any destination name is taken (see _plan_relocation). Then, in this order: each shard
+        is copied to its destination name (serial 0 first); the primary is copied to a temporary
+        name beside the destination; that copy's `shards` rows are rewritten to the destination's
+        bare shard names in one transaction and read back; and it is renamed onto the destination
+        primary's name with os.replace. The destination primary therefore appears last and
+        complete. Until then the destination has shards and no primary, which the constructor
+        refuses to open ("Primary database is missing, but shard ... already exists").
+
+        The source is opened only mode=ro and is never written. No table other than
+        `shards.filename` of the destination primary is changed. A legacy source's absolute rows
+        become bare names at the destination, because that is the operation asked for.
+        """
+        return ShardedPool._relocate_store("copy", src, dst)
+
+    @staticmethod
+    def move_store(src: PathType, dst: PathType) -> Dict[int, Path]:
+        """
+        Move the closed store whose primary is ``src`` so that its primary is ``dst``, renaming
+        every file to ``dst``'s stem, and return the destination's serial -> shard path map as
+        read back from the finished destination.
+
+        Refuses, before anything is written, under the same conditions as copy_store, and also if
+        the destination directory holds a file with the name of one of the source's shards (see
+        _plan_relocation). Then, in this order: each shard is renamed to its destination name
+        (serial 0 first); the primary is renamed to the destination name; and the destination
+        primary's `shards` rows are rewritten to the destination's bare shard names in one
+        transaction. Every rename is os.rename. A move across filesystems fails at the first
+        rename, before anything has moved; the remedy is to copy the store and then delete the
+        source by hand.
+        """
+        return ShardedPool._relocate_store("move", src, dst)
+
+    @staticmethod
+    def _journal_paths(path: Path) -> List[Path]:
+        """The names SQLite gives the rollback journal and the WAL files of the database ``path``."""
+        return [
+            path.with_name(path.name + suffix) for suffix in _SQLITE_JOURNAL_SUFFIXES
+        ]
+
+    @staticmethod
+    def _read_closed_store(
+        primary: Path, verb: str
+    ) -> Tuple[Dict[int, Path], Dict[int, str]]:
+        """
+        Read the `shards` rows of the closed store ``primary`` (opened mode=ro) and check the files
+        they name, through the same two methods the constructor uses. Return (serial -> path,
+        serial -> stored record), or raise RuntimeError naming the store and the problem.
+        """
+        try:
+            conn = sqlite3.connect(f"{primary.as_uri()}?mode=ro", uri=True)
+            try:
+                rows = conn.execute("SELECT serial, filename FROM shards").fetchall()
+            finally:
+                conn.close()
+        except sqlite3.Error as e:
+            raise RuntimeError(
+                f'Cannot {verb} sharded datastore "{str(primary)}": its shards table could not be read ({e})'
+            ) from e
+
+        files: Dict[int, Path] = {}
+        records: Dict[int, str] = {}
+        try:
+            ShardedPool._resolve_shard_rows(primary, rows, files, records)
+        except RuntimeError as e:
+            raise RuntimeError(
+                f'Cannot {verb} sharded datastore "{str(primary)}": {e}'
+            ) from e
+
+        problems = ShardedPool._shard_file_problems(files, records)
+        if len(problems) > 0:
+            raise RuntimeError(
+                f'Cannot {verb} sharded datastore "{str(primary)}": '
+                + "; ".join(problems)
+            )
+
+        return files, records
+
+    @staticmethod
+    def _plan_relocation(mode: str, src: PathType, dst: PathType) -> "_RelocationPlan":
+        """
+        Every refusal of copy_store and move_store, made before anything is written. Returns what
+        the operation will do. Raises RuntimeError naming the file and the reason.
+        """
+
+        def refuse(reason: str) -> RuntimeError:
+            return RuntimeError(
+                f'Cannot {mode} sharded datastore "{str(src)}" to "{str(dst)}": {reason}. Nothing was written'
+            )
+
+        # the source primary: an existing regular file, not a symbolic link (the same test as a
+        # shard), and cleanly closed. Its journal is checked before it is opened
+        src_given = Path(src).absolute()
+        problem = shard_file_problem(src_given)
+        if problem is not None:
+            raise refuse(f'the source primary "{str(src_given)}" {problem}')
+        src_primary = src_given.resolve()
+
+        def refuse_journals(path: Path, what: str):
+            for journal in ShardedPool._journal_paths(path):
+                if os.path.lexists(journal):
+                    raise refuse(
+                        f'{what} "{str(path)}" has "{str(journal)}" beside it, so it was not closed cleanly (a copy made without that file is corrupt)'
+                    )
+
+        refuse_journals(src_primary, "the source primary")
+
+        # the source's shard records, read and checked exactly as the constructor reads them
+        try:
+            src_files, src_records = ShardedPool._read_closed_store(src_primary, mode)
+        except RuntimeError as e:
+            raise refuse(str(e)) from e
+
+        if len(src_files) == 0:
+            raise refuse(f'the source primary "{str(src_primary)}" records no shards')
+        # an interrupted operation leaves destination shards and no destination primary, which
+        # the constructor refuses because shard 0 exists. That needs shard 0 to be there, and to
+        # be the first one written
+        if 0 not in src_files:
+            raise refuse(
+                f'the source primary "{str(src_primary)}" records no shard #0 (serials {sorted(src_files)}), so an interrupted {mode} could not be told apart from an unused name'
+            )
+
+        for serial, path in sorted(src_files.items()):
+            refuse_journals(Path(path), f"source shard #{serial}")
+
+        # the destination primary: a new file, and not the source
+        dst_given = Path(dst)
+        if dst_given.is_dir():
+            raise refuse(
+                f'the destination "{str(dst_given.absolute())}" is an existing directory; the destination names the new primary file'
+            )
+        dst_primary = dst_given.resolve()
+        if dst_primary == src_primary or (
+            os.path.lexists(dst_given) and os.path.samefile(dst_given, src_primary)
+        ):
+            raise refuse(
+                f'the destination "{str(dst_primary)}" is the same file as the source'
+            )
+
+        # the destination's shard names come from the one naming rule, for the serials in the
+        # source's table
+        dst_dir = dst_primary.parent
+        dst_records = {
+            serial: shard_file_name(dst_primary, serial) for serial in src_files
+        }
+        dst_files = {serial: dst_dir / name for serial, name in dst_records.items()}
+        temp_primary = (
+            dst_primary.with_name(dst_primary.name + _INCOMPLETE_COPY_SUFFIX)
+            if mode == "copy"
+            else None
+        )
+
+        # nothing is ever overwritten, and a stale journal at a destination name would be replayed
+        # into the new file by its next opener, so none of those names may exist either
+        taken = []
+        for path in [dst_primary, *[dst_files[s] for s in sorted(dst_files)]] + (
+            [temp_primary] if temp_primary is not None else []
+        ):
+            for name in [path, *ShardedPool._journal_paths(path)]:
+                if os.path.lexists(name):
+                    taken.append(f'"{str(name)}"')
+        if len(taken) > 0:
+            raise refuse(
+                "the destination name(s) " + ", ".join(taken) + " already exist"
+            )
+
+        # a move renames the primary before rewriting its rows, so for a moment the destination
+        # primary still holds the source's records, which it reads by name in its new directory.
+        # Where they would find files that are not this store's, refuse
+        if mode == "move" and dst_dir != src_primary.parent:
+            for serial, path in sorted(src_files.items()):
+                other = dst_dir / Path(path).name
+                if os.path.lexists(other):
+                    raise refuse(
+                        f'the destination directory holds "{str(other)}", which has the name of source shard #{serial}; a move interrupted before its rows were rewritten would read that file as shard #{serial}'
+                    )
+
+        return _RelocationPlan(
+            mode=mode,
+            src_primary=src_primary,
+            src_files={s: Path(p) for s, p in src_files.items()},
+            dst_primary=dst_primary,
+            dst_files=dst_files,
+            dst_records=dst_records,
+            temp_primary=temp_primary,
+        )
+
+    @staticmethod
+    def _write_shard_records(primary: Path, records: Dict[int, str]) -> None:
+        """
+        Set `shards.filename` of the existing primary ``primary`` to ``records`` (serial -> bare
+        name), in one transaction, changing nothing else. The table must hold exactly those serials.
+        """
+        conn = sqlite3.connect(f"{primary.as_uri()}?mode=rw", uri=True)
+        try:
+            with conn:
+                for serial, name in sorted(records.items()):
+                    cursor = conn.execute(
+                        "UPDATE shards SET filename = ? WHERE serial = ?",
+                        (name, serial),
+                    )
+                    if cursor.rowcount != 1:
+                        raise RuntimeError(
+                            f'the shards table of "{str(primary)}" has {cursor.rowcount} rows for serial #{serial}, expected 1'
+                        )
+                (count,) = conn.execute("SELECT COUNT(*) FROM shards").fetchone()
+                if count != len(records):
+                    raise RuntimeError(
+                        f'the shards table of "{str(primary)}" has {count} rows, expected {len(records)}'
+                    )
+        finally:
+            conn.close()
+
+    @staticmethod
+    def _read_back(plan: "_RelocationPlan", primary: Path) -> Dict[int, Path]:
+        """Read ``primary``'s records back through the constructor's read-and-check, and require
+        them to be exactly the destination's bare names, resolving to the destination's files.
+        """
+        files, records = ShardedPool._read_closed_store(primary, plan.mode)
+        if records != plan.dst_records or files != plan.dst_files:
+            raise RuntimeError(
+                f'"{str(primary)}" reads back records {records} resolving to {({s: str(p) for s, p in files.items()})}, expected {plan.dst_records}'
+            )
+        return dict(sorted(files.items()))
+
+    @staticmethod
+    def _relocate_store(mode: str, src: PathType, dst: PathType) -> Dict[int, Path]:
+        plan = ShardedPool._plan_relocation(mode, src, dst)
+        serials = sorted(plan.dst_files)  # serial 0 first: see _plan_relocation
+
+        def no_overwrite(path: Path):
+            # checked once for every name in _plan_relocation; checked again just before each
+            # write, because shutil.copy2 and os.rename both replace an existing file silently
+            if os.path.lexists(path):
+                raise FileExistsError(
+                    errno.EEXIST, "refusing to overwrite an existing file", str(path)
+                )
+
+        step = "create the destination directory"
+        try:
+            plan.dst_primary.parent.mkdir(parents=True, exist_ok=True)
+
+            if mode == "copy":
+                for serial in serials:
+                    step = f"copy shard #{serial}"
+                    no_overwrite(plan.dst_files[serial])
+                    shutil.copy2(plan.src_files[serial], plan.dst_files[serial])
+
+                step = "copy the primary to its temporary name"
+                no_overwrite(plan.temp_primary)
+                shutil.copy2(plan.src_primary, plan.temp_primary)
+
+                step = "rewrite the temporary primary's shards rows"
+                ShardedPool._write_shard_records(plan.temp_primary, plan.dst_records)
+
+                step = "read back the temporary primary"
+                ShardedPool._read_back(plan, plan.temp_primary)
+
+                step = "rename the temporary primary to the destination primary"
+                no_overwrite(plan.dst_primary)
+                os.replace(plan.temp_primary, plan.dst_primary)
+
+            else:
+                for serial in serials:
+                    step = f"rename shard #{serial}"
+                    no_overwrite(plan.dst_files[serial])
+                    os.rename(plan.src_files[serial], plan.dst_files[serial])
+
+                step = "rename the primary"
+                no_overwrite(plan.dst_primary)
+                os.rename(plan.src_primary, plan.dst_primary)
+
+                step = "rewrite the destination primary's shards rows"
+                ShardedPool._write_shard_records(plan.dst_primary, plan.dst_records)
+
+            step = "read back the destination"
+            return ShardedPool._read_back(plan, plan.dst_primary)
+
+        except Exception as e:
+            raise RuntimeError(ShardedPool._failure_message(plan, step, e)) from e
+
+    @staticmethod
+    def _failure_message(plan: "_RelocationPlan", step: str, e: Exception) -> str:
+        def existing(paths) -> str:
+            names = [
+                f'"{str(name)}"'
+                for path in paths
+                for name in [path, *ShardedPool._journal_paths(path)]
+                if os.path.lexists(name)
+            ]
+            return "[" + ", ".join(names) + "]"
+
+        dst_paths = [
+            plan.dst_primary,
+            *[plan.dst_files[s] for s in sorted(plan.dst_files)],
+        ]
+        if plan.temp_primary is not None:
+            dst_paths.append(plan.temp_primary)
+        src_paths = [
+            plan.src_primary,
+            *[plan.src_files[s] for s in sorted(plan.src_files)],
+        ]
+
+        message = (
+            f'{plan.mode} of sharded datastore "{str(plan.src_primary)}" to "{str(plan.dst_primary)}" failed at step "{step}": {type(e).__name__}: {e}. '
+            f"Nothing has been deleted or cleaned up; that is for a person. "
+            f"Store files now at the destination: {existing(dst_paths)}; at the source: {existing(src_paths)}"
+        )
+        if isinstance(e, OSError) and e.errno == errno.EXDEV:
+            message += (
+                ". The source and the destination are on different filesystems, so the store "
+                "cannot be moved by renaming it; copy it instead, and then delete the source by hand"
+            )
+        return message
 
     def object_get(self, ObjectClass, **kwargs):
         if isinstance(ObjectClass, str):

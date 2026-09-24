@@ -1,6 +1,6 @@
 # Open issues — project-wide index
 
-**Last updated:** 2026-09-24 · **95 open** across fourteen campaigns.
+**Last updated:** 2026-09-24 · **94 open** across fourteen campaigns.
 
 This file exists so that an issue opened by one campaign is not lost when that campaign closes.
 It is an **index, not a record**: one line per issue, pointing at the campaign status board that
@@ -44,7 +44,8 @@ prompt 02, and two opened by prompt 02 when it closed that campaign at 2 / 2. Th
 `datastore-portability` board was created by its prompt 01 on 2026-09-24. That prompt closed
 `run-registry`'s `[04-sharded-store-paths-are-absolute-…]` on the `run-registry` board's §4, and it
 opened two issues of its own. A third was opened the same day on the user's
-layering decision after that prompt's review (§1.12). Of the 90
+layering decision after that prompt's review, and prompt 02 closed one of prompt 01's the same
+day, on that board's §4 (§1.12). Of the 90
 above, 87 are spread across the boards and
 **three still have no board row** — the last three `handover` rows in §1.1, opened by a document
 review on 2026-09-19, whose content lives in
@@ -672,12 +673,13 @@ paths are now recorded relative to the primary. Legacy absolute records are read
 name and never as the absolute path, through one resolver shared with the audit tool. A missing
 shard now raises before any actor exists. Its P0 measured the moved-store case on the old code,
 which **opened silently** on empty, recreated shards instead of raising.
-Prompt 02, written 2026-09-24 and not yet dispatched, adds copying and moving a whole store.
+Prompt 02 landed the same day: `ShardedPool.copy_store` / `move_store` and `tools/sharded_store.py`
+copy or move a closed store under a new stem and rewrite its `shards` rows, which closed
+`[01-whole-store-rename-is-unsupported]` on the board's §4.
 Prompt 03, the registry's version of that, is held on user decisions.
 
 | Issue | Board | Hook |
 |---|---|---|
-| `[01-whole-store-rename-is-unsupported]` | datastore-portability | Renaming the **shards** too is refused loudly (P1) until the records are rewritten. **Decided 2026-09-24:** a static `ShardedPool` copy/move interface that rewrites the rows, plus a bare `tools/` script. **Assigned to prompt 02** (written, not dispatched). |
 | `[01-atol-sweep-check-expects-absolute-shard-records]` | datastore-portability | `quadsource_atol_sweep.py`'s `assert_store_is_self_consistent` compares against literal absolute paths, so it would reject a store created after prompt 01 unless `prepare()`'s `UPDATE` had rewritten its rows. No effect in the script's own workflow. The script is a measurement record and was not edited. |
 | `[store-sidecar-manifests-have-no-owner]` | datastore-portability | `<stem>.manifest.json` beside a store is a registry-layer artefact that no code owns: one hand-written, one from the sweep's `prepare()`. A bare-script copy or move leaves it behind. Prompt 03, the registry's store move/copy, is **held** on two user decisions: the registry's "records, does not act" charter, and the sidecar's owner and format. |
 

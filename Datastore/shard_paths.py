@@ -17,6 +17,10 @@ This module is the **one** definition of how a record is turned into a path. ``S
 ``tools/shard_key_audit.py`` both call it; do not copy it. Two definitions of where a shard lives
 is the disagreement that made copied stores write into their originals.
 
+It is also the one definition of what a shard is **called** (``shard_file_name``): the creator
+names a new store's shards with it, and ``ShardedPool.copy_store`` / ``move_store`` name a
+destination's shards with it. Do not write the pattern a second time.
+
 **A legacy absolute record is read as a sibling by name, and the absolute path itself is never
 used** -- not even when the sibling is missing and the absolute path exists. That fallback *is*
 the failure this module exists to remove: a copied primary still names the original's shards,
@@ -56,6 +60,19 @@ def _require_bare_name(name: str, stored: str) -> str:
             f"shards that are siblings of the primary, so this row was written by something else"
         )
     return name
+
+
+def shard_file_name(primary: Union[str, Path], serial: int) -> str:
+    """
+    Return the bare file name of shard ``serial`` of the store whose primary is ``primary``:
+    ``<stem>-shard<serial, 4 digits>`` with the primary's suffix, e.g. ``foo-shard0003.sqlite``
+    for ``foo.sqlite``.
+
+    Only the primary's file name is used; its directory plays no part, and the shard lives beside
+    the primary (``primary.parent / shard_file_name(primary, serial)``). This function does no I/O.
+    """
+    primary = Path(primary)
+    return primary.with_stem(f"{primary.stem}-shard{serial:04d}").name
 
 
 def resolve_shard_path(primary: Union[str, Path], stored: str) -> Path:

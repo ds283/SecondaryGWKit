@@ -21,6 +21,7 @@ from pathlib import Path
 from typing import Dict, Iterable, Tuple
 
 from Datastore.SQL.ShardedPool import ShardedPool
+from Datastore.shard_paths import shard_file_name
 
 KEY_TYPE = "wavenumber"
 REPLICATED = ["version", "wavenumber"]
@@ -62,9 +63,9 @@ def write_new_store(primary: Path, shards: int = 3) -> ShardedPool:
     """What the constructor's new-store branch does, minus the actors: create shard placeholders
     as siblings of the primary and write the primary's tables with the current code."""
     pool = bare_pool(primary)
-    stem = pool._primary_file.stem
     for i in range(shards):
-        shard_file = pool._primary_file.with_stem(f"{stem}-shard{i:04d}")
+        # the creator's naming rule, not a copy of it, so the fixtures cannot drift from it
+        shard_file = pool._primary_file.parent / shard_file_name(pool._primary_file, i)
         write_placeholder(shard_file)
         pool._shard_db_files[i] = shard_file
     pool._create_engine()
@@ -147,3 +148,20 @@ def stored_records(primary: Path) -> Dict[int, str]:
 
 def sha256(path: Path) -> str:
     return hashlib.sha256(path.read_bytes()).hexdigest()
+
+
+def tree_state(root: Path) -> Dict[str, Tuple[str, int, int]]:
+    """Every entry under ``root``: relative path -> (kind, mtime_ns, content hash or 0). A
+    directory, a symlink and a file are told apart, so that a test can assert that nothing was
+    created, changed or removed anywhere under ``root``."""
+    state = {}
+    for path in sorted(root.rglob("*")):
+        rel = str(path.relative_to(root))
+        st = path.lstat()
+        if path.is_symlink():
+            state[rel] = ("link", st.st_mtime_ns, str(path.readlink()))
+        elif path.is_dir():
+            state[rel] = ("dir", st.st_mtime_ns, 0)
+        else:
+            state[rel] = ("file", st.st_mtime_ns, sha256(path))
+    return state
