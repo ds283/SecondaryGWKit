@@ -64,6 +64,18 @@ whole-store-rename copy was replaced by a primary-only rename. That was a defect
 §4.1 and §4.4 could not both hold under P3. The user's ruling is README §6.1. Prompt 02's §4 does
 what §4.1 intended.
 
+**Orchestrator review of prompt 02 (2026-09-24).** All twelve checks in `orchestrator/prompt-02.md`
+§3 passed on `2d1aabe`. The orchestrator replayed mutations (i) and (v) from the log with
+`git apply`, and got exactly the recorded results: `failures=12, errors=11` and
+`failures=12, errors=6`. All six diffs apply cleanly, and the tree was clean after reverting. The
+orchestrator also re-took its own read-only snapshot of the three stores, identical before and
+after, and confirmed that `var/portability-check-02/` was gone. It re-ran every suite, and each
+matched its baseline, with Datastore at 70. One point went to the user: the schema check found
+`QuadSourceIntegral.label` values containing `handover-atol-sweep`. **The user's ruling:** the
+label is a job name, not a record of the store, so the first §7 stop condition was not met. The
+orchestrator accepted the three extra refusals of the log's Deviations 1–2 as required by the
+interruption property, and at least as strong as the prescribed order.
+
 ---
 
 ## 2. Items
