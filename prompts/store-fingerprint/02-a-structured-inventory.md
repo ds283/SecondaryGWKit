@@ -4,9 +4,8 @@
 **Board:** [`IMPLEMENTATION_STATE.md`](IMPLEMENTATION_STATE.md)
 **Closes:** nothing. The consumers switch over in prompt 03, and the fingerprint is prompt 04.
 **Opens:** anything out of scope that you find (§6), **without fixing it**.
-**Dispatch gate:** README §6.2 **D1** (the canonical form of a float) must be decided. This prompt
-is written against the recommendation, the stored bits as `float.hex`. If the user decided
-otherwise, the orchestrator amends §2 "Floats" before dispatch.
+**Decision D1** (README §6.2, the user, 2026-09-24): a float's canonical form is its stored bits,
+as `float.hex`.
 **Recommended model:** **Opus**. The judgement is in the key of each of about twenty classes: every
 column that decides identity must be in it, and nothing that is store-local may be.
 
@@ -97,7 +96,7 @@ The canonical JSON is **one function**: sorted keys, no whitespace, and leaves t
   as stored, never `10**log10_tol`;
 - an integer, string, boolean or `None` is kept as it is.
 
-The lookups match floats within 1e-7, but the key records the stored bits (README §6.2 D1). No
+The lookups match floats within 1e-7, but the key records the stored bits (README §6.2 D1, decided). No
 other code converts a float for a key.
 
 ### F5 — the key of every class
@@ -284,7 +283,8 @@ the originals before and after, and delete the directory at the end.
 
 ## 7. Stop conditions — stop and ask the user
 
-- D1 is not decided, or §2 "Floats" does not match the decision.
+- Anything in the store makes `float.hex` of a stored value ambiguous, for example a column that
+  holds both floats and strings.
 - A class's identity cannot be written in physical leaves without a serial, a store-local label or
   a timestamp.
 - The §4 copy has two records in one class with the same key and tags (F6 "Duplicates"). Report

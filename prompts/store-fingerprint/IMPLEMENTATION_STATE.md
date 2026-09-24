@@ -1,7 +1,8 @@
 # Store fingerprint campaign — implementation state
 
-**Last updated:** 2026-09-24 · **Status: 0 of 5 prompts landed. 01 and 02 are written; 02's
-dispatch waits on decision D1. 03–05 are held (README §2).**
+**Last updated:** 2026-09-24 · **Status: 0 of 5 prompts landed. 01 and 02 are written and ready to
+dispatch. 03–05 are held on 02's structure (README §2). Decisions D1–D3 were made on 2026-09-24
+(README §6.2).**
 
 The campaign was opened on 2026-09-24. It owns `run-registry`'s
 `[04-a-runs-product-is-named-but-never-fingerprinted]`, as amended at `218ca74`: a store's content
@@ -30,13 +31,13 @@ owners.
 | # | Prompt | Covers | Model | Written? | Landed? | Commit | Log |
 |---|---|---|---|---|---|---|---|
 | 01 | [One schema builder, and a read-only reader](01-a-read-only-store-reader.md) | **F1**–**F3** | Opus | ✍️ yes, 2026-09-24 | ⏳ not dispatched | — | — |
-| 02 | [A structured inventory](02-a-structured-inventory.md) | **F4**–**F7** | Opus | ✍️ yes, 2026-09-24 | ⏳ waits on **D1** | — | — |
+| 02 | [A structured inventory](02-a-structured-inventory.md) | **F4**–**F7** | Opus | ✍️ yes, 2026-09-24 | ⏳ not dispatched | — | — |
 | 03 | *One inventory service* | **F8**–**F9** | — | ⏸️ held until 02 lands | — | — | — |
-| 04 | *The fingerprint* | **F10**–**F12** | — | ⏸️ held until 02 lands; **D2** | — | — | — |
-| 05 | *Fingerprint the real stores* | **F13** | — | ⏸️ held until 04 lands; **D3** | — | — | — |
+| 04 | *The fingerprint* | **F10**–**F12** | — | ⏸️ held until 02 lands | — | — | — |
+| 05 | *Fingerprint the real stores* | **F13** | — | ⏸️ held until 04 lands | — | — | — |
 
 The charters of 03–05 are fixed in README §2. Only their methods wait on 02's structure and on the
-user's decisions. They are held by design, not missing.
+structure. They are held by design, not missing.
 
 ---
 
@@ -47,7 +48,7 @@ user's decisions. They are held by design, not missing.
 | F1 | **REMEDY** | One schema builder, `Datastore/SQL/schema.py` `build_schema`, called by the actor. Witnessed unchanged by a schema captured from the code before the change. | 01 | ⏳ written |
 | F2 | **FACILITY** | `Datastore/store_reader.py` `open_read_only`: a closed store's shards opened `mode=ro`, tables from `build_schema`, absent tables and columns reported, journals refused, no Ray, no write path. | 01 | ⏳ written |
 | F3 | **FACILITY** | A real multi-shard store for tests, built with no Ray, including an "old store" variant. | 01 | ⏳ written |
-| F4 | **FACILITY** | `Datastore/store_inventory.py` `read_inventory`: records built by each factory in dependency order. Each record has a canonical key, a tag set, `validated` and `value_count`. Parents are referenced by the digest of their key; there is one `canonical`. | 02 | ⏳ written; D1 |
+| F4 | **FACILITY** | `Datastore/store_inventory.py` `read_inventory`: records built by each factory in dependency order. Each record has a canonical key, a tag set, `validated` and `value_count`. Parents are referenced by the digest of their key; there is one `canonical`, which uses `float.hex` (D1). | 02 | ⏳ written |
 | F5 | **REMEDY** | The key of every class, from its lookup: physical leaves, optional filters included, nothing store-local. Real `QuadSourceIntegral`, `OneLoopIntegral` and `GkSourcePolicyData` records. | 02 | ⏳ written |
 | F6 | **REMEDY** | Shards and what goes wrong: sharded classes are a union; replicated classes are read from every shard, and a divergence is named. Duplicates, old stores and orphans are named problems. | 02 | ⏳ written |
 | F7 | **MEASUREMENT** | Records only, never `*Value` rows. Size, time and memory measured on a copy of the sweep store, with a one-row discriminator. | 02 | ⏳ written |
@@ -55,8 +56,8 @@ user's decisions. They are held by design, not missing.
 | F9 | **REMEDY** | Retire the old three shapes, the old `inventory()` methods, `ShardedPool.inventory`, `_merge_queue` and `inventory_config`, so that there is one inventory service. | 03 | ⏸️ held |
 | F10 | **FACILITY** | The fingerprint, a pure function of the structured inventory. It holds a format version, and per class and per tag set a count and a digest over the sorted canonical records, plus an overall digest. No timestamps. | 04 | ⏸️ held |
 | F11 | **FACILITY** | The `fingerprint` sidecar field, a known field of `RunRegistry.stores` that copy and move carry. `python -m RunRegistry store fingerprint`: read-only, refuses a store a `running` run names, compares against the recorded value and writes only when asked. | 04 | ⏸️ held |
-| F12 | **FACILITY** | The digest in the run record at finish, and `scoped_pipeline_run.py` taking one when a registered run finishes. Closes `run-registry`'s `[04-a-runs-product-is-named-but-never-fingerprinted]`. | 04 | ⏸️ held; D2 |
-| F13 | **MEASUREMENT** | The three real stores fingerprinted, plus a registry copy of one; the digests localise the known differences. They are written into the real sidecars only if D3 says so. | 05 | ⏸️ held; D3 |
+| F12 | **FACILITY** | The digest in the run record at finish. `scoped_pipeline_run.py` and `quadsource_atol_sweep.py`, including `--build` for the A3 v2 store (D2), take one when a registered run finishes. Closes `run-registry`'s `[04-a-runs-product-is-named-but-never-fingerprinted]`. | 04 | ⏸️ held |
+| F13 | **REMEDY** | Remedial: the three existing stores fingerprinted read-only, and each fingerprint written into its sidecar (D3), as is any store built here before 04 landed, such as the A3 v2 store. A registry copy of one is fingerprinted, and the digests localise the known differences. | 05 | ⏸️ held |
 
 ---
 

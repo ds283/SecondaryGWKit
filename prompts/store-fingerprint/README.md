@@ -50,8 +50,9 @@ urgency or cost.
 - `tools/inventory_report.py`, `main.py`'s `--inventory` branch, and
   `extract_common.available_run_labels` (prompt 03);
 - `RunRegistry/` (prompt 04);
-- `docs/gktk-remedial/scoped_pipeline_run.py`, for calling the fingerprint when a registered run
-  finishes (prompt 04);
+- `docs/gktk-remedial/scoped_pipeline_run.py` and `docs/handover/quadsource_atol_sweep.py`, for
+  taking the fingerprint when a registered run finishes (prompt 04; D2 for the second);
+- the three real sidecars, for their `fingerprint` field only (prompt 05; D3);
 - the tests of all of these.
 
 **Out of scope:**
@@ -59,8 +60,8 @@ urgency or cost.
 - every lookup key;
 - any physics;
 - `ShardedPool`'s open, copy, move and routing paths;
-- `docs/handover/quadsource_atol_sweep.py`, unless the user decides otherwise (D2);
-- every existing sidecar and run manifest, unless the user decides otherwise (D3);
+- every other part of `docs/handover/quadsource_atol_sweep.py`;
+- every existing run manifest, and every field of an existing sidecar except `fingerprint`;
 - the defects the audit found outside the inventory. They are opened on the board (§3 there), not
   fixed here. The exceptions are the two assigned to prompts below.
 
@@ -74,10 +75,10 @@ run record live in `RunRegistry/`, because the registry owns those files.
 | # | Prompt | Covers | Status |
 |---|---|---|---|
 | 01 | [`01-a-read-only-store-reader.md`](01-a-read-only-store-reader.md) | One schema builder shared by the actor and the reader. A read-only, no-Ray reader over a closed store's shards. A real multi-shard store fixture for tests. | **written** |
-| 02 | [`02-a-structured-inventory.md`](02-a-structured-inventory.md) | Per-class structured records on the reader: physical keys, parents by canonical key, full tag sets, `validated`, per-parent value counts, real `QuadSourceIntegral` / `OneLoopIntegral` / `GkSourcePolicyData` records, replicated classes compared across shards. | **written; dispatch waits on D1** |
+| 02 | [`02-a-structured-inventory.md`](02-a-structured-inventory.md) | Per-class structured records on the reader: physical keys, parents by canonical key, full tag sets, `validated`, per-parent value counts, real `QuadSourceIntegral` / `OneLoopIntegral` / `GkSourcePolicyData` records, replicated classes compared across shards. | **written** (D1 decided) |
 | 03 | *One inventory service* | The display (`main.py --inventory`, which becomes read-only and needs no Ray) and `available_run_labels` consume the structured inventory. The old three shapes, `ShardedPool.inventory`, `_merge_queue` and `inventory_config` retire. Closes `[00-inventory-run-prunes-unvalidated-rows-by-default]` and the `BackgroundModel` half of `qcd-background-audit`'s `[03-qcd-inventory-does-not-report-the-representation]`. | **held** until 02 lands |
-| 04 | *The fingerprint* | A pure function from the structured inventory to digests. A known `fingerprint` field in `RunRegistry.stores`. `python -m RunRegistry store fingerprint`, read-only, refusing a store a `running` run names. The digest in the run record at finish. `scoped_pipeline_run.py` takes one when its registered run finishes. Closes `run-registry`'s `[04-a-runs-product-is-named-but-never-fingerprinted]`. | **held** until 02 lands; D2 |
-| 05 | *Fingerprint the real stores* | Fingerprint the three real stores and a registry copy of one. Show that the digests localise the known differences. Record the fingerprints in the real sidecars only if the user decides so (D3). | **held** until 04 lands; D3 |
+| 04 | *The fingerprint* | A pure function from the structured inventory to digests. A known `fingerprint` field in `RunRegistry.stores`. `python -m RunRegistry store fingerprint`, read-only, refusing a store a `running` run names. The digest in the run record at finish. `scoped_pipeline_run.py` and `quadsource_atol_sweep.py` (including `--build`, which builds the A3 v2 store) take one when their registered run finishes. Closes `run-registry`'s `[04-a-runs-product-is-named-but-never-fingerprinted]`. | **held** until 02 lands |
+| 05 | *Fingerprint the real stores* | Remedial: fingerprint the three existing stores, read-only, and record each fingerprint in its sidecar (D3). Also any store built here before 04 landed, such as the A3 v2 store, which therefore had no fingerprint taken at finish. Fingerprint a registry copy of one, and show that the digests localise the known differences. | **held** until 04 lands |
 
 **Why 03–05 are held.** Each consumes the structure prompt 02 ships. Their **charters** are fixed
 above and cannot drift to fit what 02 finds; only their **methods** wait. 03 and 04 are independent
@@ -93,7 +94,8 @@ Since 2026-09-24 each has a registry sidecar.
 `var/store-fingerprint-check-NN/`, which is deleted afterwards. A read-only reader that is
 correct would not write the originals. But whether it is correct is what the demonstration tests,
 so it is not pointed at them. Only prompt 05 reads the originals, and only once 01's reader has been
-shown not to write.
+shown not to write. Prompt 05 then writes one thing: the `fingerprint` field of each original's
+sidecar (D3). It never writes a store.
 
 **Before touching any store,** run `python -m RunRegistry list` and confirm nothing is `running`.
 About 0.4 GB of free space is needed for a copy. The volume had about 15 GB free on 2026-09-24.
@@ -178,26 +180,25 @@ Recorded in full on the `run-registry` board, under the amendment to
    boundary, not a rule. `CLAUDE.md`'s limits stand: no scheduling, supervising, restarting,
    locking or deleting, and no growing into a project of its own.
 
-### 6.2 Open, and needed before the prompt named
+### 6.2 Decided by the user (2026-09-24)
 
-- **D1 — the canonical form of a float** (before 02 is dispatched). The candidates are in audit §5.
-  **Recommendation: the stored bits, as `float.hex`.**
-  - The first use is telling a copy from its original, and there "the same data" means the same
-    values.
-  - Rounding makes "the same" fuzzy, and a value close to a rounding boundary can still split two
-    identical stores.
-  - Two independent builds that differ in the last bit of a grid value do hold different data, and
-    the per-class digests say where.
+The three decisions were asked for when the campaign was written at `066057d`, and made the same
+day.
 
-  Prompt 02 is written against this recommendation. If the user decides otherwise, 02 is amended
-  before dispatch.
-- **D2 — does `docs/handover/quadsource_atol_sweep.py` take a fingerprint when its registered run
-  finishes?** (before 04 is written). Its `--build` mode builds the A3 v2 store, which is the first
-  store that will actually be copied between machines. Earlier campaigns have treated the file as a
-  measurement record and left it unedited.
-- **D3 — does prompt 05 write fingerprints into the three real sidecars?** (before 05 is written).
-  They have been registry sidecars since 2026-09-24. Writing a fingerprint changes an existing
-  sidecar, which `datastore-portability` README §6.5 point 7 allows only when the user asks.
+- **D1 — the canonical form of a float: the stored bits, as `float.hex`.** The recommendation was
+  taken. Prompt 02 was written against it, and needs no amendment. The alternative, rounding to
+  about 12 significant figures, is recorded in audit §5. It would absorb last-bit differences
+  between machines, but at the cost of making "the same data" approximate.
+- **D2 — `docs/handover/quadsource_atol_sweep.py` takes a fingerprint when its registered run
+  finishes. Yes.** The user wants the A3 v2 store fingerprinted, and `--build` is what builds it.
+  Prompt 04 changes that script for this purpose only. Nothing else in it changes, and its
+  measurement code and results are untouched. If the A3 v2 store is built here before prompt 04
+  lands, prompt 05 fingerprints it.
+- **D3 — prompt 05 writes fingerprints into the three existing sidecars. Yes.** Prompt 05 is the
+  remedial step for the stores that existed before the campaign: the live A3 store, the sweep store
+  and the backup. It writes only the `fingerprint` field, through `RunRegistry.stores`' writer.
+  Every other field, and every store file, stays as it is. This is the explicit request that
+  `datastore-portability` README §6.5 point 7 requires before an existing sidecar changes.
 
 ### 6.3 Choices the prompts make, where §6.1 leaves the method open
 

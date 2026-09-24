@@ -105,4 +105,4 @@ Report:
 - the state of the originals, before and after;
 - the suite counts.
 
-Then stop. Prompt 02 is dispatched separately, once README §6.2 D1 is decided.
+Then stop. Prompt 02 is dispatched separately. D1 was decided on 2026-09-24.

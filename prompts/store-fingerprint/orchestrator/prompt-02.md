@@ -27,9 +27,8 @@ independently of how it was built**, and five things decide that.
 
 ## 1. Before you dispatch
 
-1. **D1 is decided** (README §6.2). If the decision differs from the recommendation, amend the
-   prompt's §2 "Floats" and its mutation (iii) to match, and commit that before you dispatch. If it
-   is not decided, stop and ask.
+1. **D1 was decided on 2026-09-24** (README §6.2): `float.hex`, which is what the prompt is written
+   against. Confirm that the prompt's §2 "Floats" still says so.
 2. **Confirm the branch and `HEAD`**, and record the SHA. `HEAD` must be prompt 01's commit, or
    the commit recording its review. Tell the agent the tree is not its own.
 3. `python -m RunRegistry list`: nothing `running`.
@@ -44,8 +43,7 @@ independently of how it was built**, and five things decide that.
 One fresh-context subagent. Give it:
 - the prompt, the campaign README and the audit;
 - prompt 01 and its log;
-- the SHA and the baselines;
-- D1's decision.
+- the SHA and the baselines.
 
 Nothing else. Tell it plainly:
 - **one commit.** The log goes at `logs/02-a-structured-inventory.md`;
