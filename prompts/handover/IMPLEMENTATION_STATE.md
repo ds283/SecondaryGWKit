@@ -191,11 +191,44 @@ board is (campaign README §5 rule 4). Where the two disagree, this one is right
   flagged unconverged while agreeing to seven digits. At `atol = 1e-32` the `atol` branch of
   `resolved` can never fire, so `total_converged` carries almost no information.
 
-  **Next step:** extend the sweep into the $z \le 6.32$ block before any tolerance is adopted —
-  a 1e-8 reference is unaffordable there (those are the 1.2e+04 s items), so the ladder has to be
-  self-convergence of 1e-5 / 1e-6 / 1e-7 against each other. Then regenerate the store at the
-  chosen pair (user decision, 2026-09-23; see that issue). **The remedy is not this campaign's to
-  take.** `DEFAULT_QUADRATURE_ATOL` and `DEFAULT_QUADRATURE_RTOL` belong to
+  **Phases 2, 3a and 3b, measured 2026-09-23/24**, extend that table into the two bands phase 1
+  could not see. Phase 1's nine cases all sit at $z_{\rm response}$ between 43.7 and 1589, which
+  is one band of three.
+
+  | band | cases | `rtol` 1e-6 | `rtol` 1e-7 | cost at 1e-7 | what limits it |
+  |---|---|---|---|---|---|
+  | seam, $z_{\rm response} > z_{\rm min}$ | 9 | 1.01e-06 | 9.97e-07 | 7.7 s | floor ~1e-06 |
+  | mid, $z_{\rm response}\sim10^3$ (c5) | 9 | **1.1e-02** | 1.9e-06 | 1060 s | **quadrature** |
+  | low, $z_{\rm response} \le 6.32$ | 4 | 1.08e-05 | 2.84e-06 | 2598 s | floor ~1e-05 |
+
+  (Each figure is the worst relative difference over that band's cases against its own tightest
+  rung, which is 1e-8 for the seam and low bands and 1e-8 for the mid band.)
+
+  **`rtol = 1e-7` is the loosest rung converged in all three bands, and 1e-6 is ruled out by the
+  mid band alone.** c5 — $(k, q, r) = (3.09\text{e}6, 1\text{e}5, 3.09\text{e}6)$ at
+  $z_{\rm response} = 1589$ — is the case that decides it: there `rtol` 1e-5 and 1e-6 agree with
+  *each other* to 3.6e-04 and are both **1.1e-02** from the converged value, which 1e-7 reaches in
+  245 regions and 1e-8 confirms to 1.0e-06 after 24,015. Two loose rungs agreeing is not
+  convergence, and c5 is the counterexample inside this sweep.
+
+  **Phase 3b settles the low band, and the plateau there is real.** Four rungs across three
+  decades agree to ~1e-05; on $k = q = r = 3.05\text{e}7$, $z = 0.1$ the 1e-7 and 1e-8 answers are
+  **bit-identical** (same value, same 50,043 regions); and the 1e-7 → 1e-8 step is *smaller* than
+  the 1e-6 → 1e-8 step, which is the opposite of the c5 signature. So low $z$ is limited by the
+  representation and not by the quadrature, and no tolerance reaches beneath that floor — the
+  lever there is **D1**/**D2**, not this constant. The region counts say the same thing: 52 → 698
+  → 152,634 → 1,238,448 across the four rungs on one case, for a change of 1e-05 in the answer.
+
+  **For science outputs, someone should re-run at `rtol = 1e-9`** (user, 2026-09-24). There is no
+  oracle that could substitute: `domenech.py` and `kohri_terada.py` are both constant-$w$ and
+  production is LambdaCDM with the Saikawa–Shirai QCD equation of state, so self-convergence is
+  the only instrument and one rung tighter is the only way to use it. The qualification to carry
+  with that recommendation is the band structure above — at low $z$ a tighter rung will buy cost
+  and no accuracy, because the floor is not quadrature; the band where 1e-9 could still bite is
+  the mid one, where 1e-7 was still moving.
+
+  **Next step:** regenerate the store at `(atol, rtol) = (1e-32, 1e-7)` (see that issue for the
+  decision and the scope). **The remedy for the constant itself is not this campaign's to take.** `DEFAULT_QUADRATURE_ATOL` and `DEFAULT_QUADRATURE_RTOL` belong to
   `prompts/levin-refactor` and `prompts/qsi-phase-groups` (`tolerance-convergence` README §0.4),
   and `DEFAULT_LEVIN_MAX_DEPTH` is owned by nobody. This board measures and hands over. Indexed at
   `docs/OPEN_ISSUES.md` §1.1.
