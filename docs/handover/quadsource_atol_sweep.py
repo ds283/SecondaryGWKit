@@ -334,14 +334,20 @@ def make_case_selector(cases):
     return select
 
 
-def substitute_main_py():
-    """main.py's source with the five substitutions applied, each verified to match once."""
+def substitute_main_py(filter_cases=True):
+    """main.py's source with the substitutions applied, each verified to match exactly once.
+
+    `filter_cases=False` omits the work-list filter and applies only the four a full build needs:
+    the two grid literals and the two tolerance sites. A build must run main.py's own work list,
+    unfiltered, or it is not a build.
+    """
     source = MAIN_PY.read_text()
     edits = [(literal, K_GRID_NAME) for literal in K_GRID_LITERALS] + [
         ATOL_SITE,
         RTOL_SITE,
-        (BATCH_LINE, BATCH_REPLACEMENT),
     ]
+    if filter_cases:
+        edits.append((BATCH_LINE, BATCH_REPLACEMENT))
     for literal, replacement in edits:
         count = source.count(literal)
         if count != 1:
@@ -425,6 +431,151 @@ def run_child(args):
         "SWEEP_SELECT_CASES": make_case_selector(PHASES[args.phase][0]),
     }
     exec(compile(source, str(MAIN_PY), "exec"), namespace)
+
+
+def run_build(args):
+    """A full 9280-item build at one tolerance pair, into a store that does not yet exist.
+
+    The sweep's counterpart, not a sweep: the same four substitutions for the grid and the two
+    tolerance sites, **no** work-list filter, and a `--database` of its own. It lives here rather
+    than in `docs/gktk-remedial/scoped_pipeline_run.py` for one reason -- that driver cannot move
+    the tolerance, and the tolerance is the whole point of rebuilding.
+
+    The target must not already exist. A build that resumed into an existing store would silently
+    inherit whatever was in it, which for a comparator is the one thing that must not happen. To
+    *continue* an interrupted build, pass `--resume`, which is a separate and deliberate act and
+    which re-checks that the store names its own shards first.
+    """
+    import ray
+
+    database = Path(args.database).resolve()
+    present = [pth for pth in [database] + shard_paths(database) if pth.exists()]
+    if present and not args.resume:
+        raise RuntimeError(
+            f"quadsource_atol_sweep --build: {', '.join(pth.name for pth in present)} already "
+            "exist(s). Refusing to build into an existing store: a comparator that silently "
+            "inherited earlier rows is one nobody can interpret. Pass --resume to continue an "
+            "interrupted build at the SAME tolerance pair, or choose a path that does not exist."
+        )
+    if present:
+        assert_store_is_self_consistent(database)
+        print(f"** quadsource_atol_sweep --build: resuming into {database.name}")
+    if not database.parent.is_dir():
+        raise RuntimeError(
+            f"quadsource_atol_sweep --build: {database.parent} is not a directory"
+        )
+
+    scoped = _load_scoped_driver()
+    run = None
+    if args.register:
+        import RunRegistry
+
+        run = RunRegistry.begin(
+            campaign=args.campaign,
+            prompt=args.prompt,
+            slug=args.register,
+            purpose=args.purpose,
+            script=__file__,
+            results=str(database),
+            scope=(
+                f"full build: main.py's own 9280-item QuadSourceIntegral work list at "
+                f"atol={args.atol:g} rtol={args.rtol:g}, {args.cpus} cpus, LambdaCDM, 8 "
+                f"log-spaced k over {K_MIN:g}-{K_MAX:g} /Mpc, into {database.name}"
+            ),
+            heartbeat_means=scoped.HEARTBEAT_MEANS.format(
+                interval=scoped.BEAT_MIN_INTERVAL
+            ),
+        )
+
+        def terminal(signum, _frame):
+            run.finish("killed", exit_code=128 + signum)
+            signal.signal(signum, signal.SIG_DFL)
+            os.kill(os.getpid(), signum)
+
+        for signum in (signal.SIGTERM, signal.SIGINT):
+            signal.signal(signum, terminal)
+
+        sys.stdout = scoped.RegisteredStream(
+            sys.stdout,
+            run,
+            scoped.StageTracker(),
+            copy_to=run.stdout_path,
+            interval=scoped.BEAT_MIN_INTERVAL,
+        )
+        sys.stderr = scoped.RegisteredStream(
+            sys.stderr, run, scoped.StageTracker(), copy_to=run.stderr_path, beats=False
+        )
+        print(
+            f"** quadsource_atol_sweep --build: registered as {run.id}\n"
+            f"**   manifest {run.manifest_path}\n"
+            f"**   list it with: PYTHONPATH=. ./venv/bin/python -m RunRegistry list"
+        )
+
+    _real_ray_init = ray.init
+
+    def _local_ray_init(*_a, **_kw):
+        print(
+            f"** quadsource_atol_sweep --build: bootstrapping a local Ray instance "
+            f"(num_cpus={args.cpus}, include_dashboard=False)"
+        )
+        return _real_ray_init(
+            num_cpus=args.cpus, include_dashboard=False, ignore_reinit_error=True
+        )
+
+    ray.init = _local_ray_init
+
+    import config.model_list as model_list_module
+
+    _real_build = model_list_module.build_model_list
+
+    def _filtered_build(pool, units):
+        kept = [m for m in _real_build(pool, units) if m["label"] == "LambdaCDM"]
+        if len(kept) == 0:
+            raise RuntimeError("quadsource_atol_sweep --build: no LambdaCDM model")
+        return kept
+
+    model_list_module.build_model_list = _filtered_build
+
+    source = substitute_main_py(filter_cases=False)
+    sys.argv = [
+        "main.py",
+        "--database",
+        str(database),
+        "--job-name",
+        args.job_name,
+        "--shards",
+        str(SHARDS),
+        "--zend",
+        "0.1",
+        "--source-samples-log10z",
+        "100",
+        "--no-prune-unvalidated",
+    ]
+    print(f"** quadsource_atol_sweep --build: atol={args.atol:g} rtol={args.rtol:g}")
+    print(f"** quadsource_atol_sweep --build: main.py argv = {sys.argv[1:]}")
+
+    namespace = {
+        "__name__": "__main__",
+        "__file__": str(MAIN_PY),
+        K_GRID_NAME: k_sample(),
+        "SWEEP_QUAD_ATOL": args.atol,
+        "SWEEP_QUAD_RTOL": args.rtol,
+    }
+    if run is None:
+        exec(compile(source, str(MAIN_PY), "exec"), namespace)
+        return
+    try:
+        exec(compile(source, str(MAIN_PY), "exec"), namespace)
+    except SystemExit as exc:
+        run.finish(scoped.terminal_state(exc.code), exit_code=exc.code)
+        raise
+    except BaseException:
+        run.finish("failed", exit_code=1)
+        raise
+    run.finish("done", exit_code=0)
+    for stream in (sys.stdout, sys.stderr):
+        if isinstance(stream, scoped.RegisteredStream):
+            stream.close_copy()
 
 
 def shard_paths(primary):
@@ -728,9 +879,25 @@ def main():
     parser.add_argument(
         "--report", action="store_true", help="read the sweep store back"
     )
+    parser.add_argument(
+        "--build",
+        action="store_true",
+        help="full 9280-item build at one tolerance pair into --database (not a sweep)",
+    )
+    parser.add_argument("--database", type=str, default=None, help="with --build")
+    parser.add_argument(
+        "--resume",
+        action="store_true",
+        help="with --build: continue into an existing store at the SAME tolerance pair",
+    )
+    parser.add_argument("--job-name", type=str, default="handover-A3-baseline-v2")
     parser.add_argument("--child", action="store_true", help=argparse.SUPPRESS)
-    parser.add_argument("--atol", type=float, default=None, help=argparse.SUPPRESS)
-    parser.add_argument("--rtol", type=float, default=None, help=argparse.SUPPRESS)
+    parser.add_argument(
+        "--atol", type=float, default=None, help="with --build: absolute tolerance"
+    )
+    parser.add_argument(
+        "--rtol", type=float, default=None, help="with --build: relative tolerance"
+    )
     parser.add_argument("--cpus", type=int, default=6)
     parser.add_argument(
         "--phase", choices=sorted(PHASES), default="main", help="which case set to run"
@@ -746,6 +913,17 @@ def main():
         return
     if args.report:
         report()
+        return
+    if args.build:
+        if args.database is None:
+            parser.error("--build needs --database")
+        if args.atol is None or args.rtol is None:
+            parser.error(
+                "--build needs --atol and --rtol explicitly: the pair is the point"
+            )
+        if args.register and not args.purpose:
+            parser.error("--register needs --purpose")
+        run_build(args)
         return
     if args.child:
         if args.atol is None or args.rtol is None:

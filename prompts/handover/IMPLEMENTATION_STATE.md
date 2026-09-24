@@ -191,6 +191,12 @@ board is (campaign README §5 rule 4). Where the two disagree, this one is right
   flagged unconverged while agreeing to seven digits. At `atol = 1e-32` the `atol` branch of
   `resolved` can never fire, so `total_converged` carries almost no information.
 
+  **The full record, with every table and the structural correction of §6, is
+  [`docs/handover/QUADSOURCE-TOLERANCE-SWEEP.md`](../../docs/handover/QUADSOURCE-TOLERANCE-SWEEP.md)**,
+  written against `050a7e3` on a clean tree. It is transcribed rather than regenerable: the sweep
+  store it was measured on is disposable and is being deleted, so the numbers live in the document
+  (`prompts/run-registry` README §0 item 4).
+
   **Phases 2, 3a and 3b, measured 2026-09-23/24**, extend that table into the two bands phase 1
   could not see. Phase 1's nine cases all sit at $z_{\rm response}$ between 43.7 and 1589, which
   is one band of three.

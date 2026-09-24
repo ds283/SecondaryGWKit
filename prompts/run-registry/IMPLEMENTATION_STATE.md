@@ -1,6 +1,6 @@
 # Run registry campaign — implementation state
 
-**Last updated:** 2026-09-22 · **Status: COMPLETE — 3 of 3 prompts landed (01, 02, 03).** Prompt 01
+**Last updated:** 2026-09-24 · **Status: COMPLETE — 3 of 3 prompts landed (01, 02, 03).** Prompt 01
 landed the `RunRegistry/` package, the `var/runs/` layout, the lister, and the six rules as a
 `CLAUDE.md` section. **The self-match regression is in the tree and bites**: the same test fails
 against a `pgrep`-based implementation and passes against the shipped one. Prompt 02 adopted it in
@@ -53,6 +53,70 @@ README §0.3 calls worse than nothing.
 ---
 
 ## 3. Active and unresolved issues
+
+- **[04-runs-do-not-say-which-machine-produced-them]** *(opened 2026-09-24 from a cross-machine
+  question, not by a prompt; user decision the same day: **do it**)* — the manifest records
+  `git_head`, `git_dirty`, `script_sha256`, `argv` and `cwd`, and nothing that says **where** the
+  job ran. That is now load-bearing in two independent ways.
+
+  **Provenance.** A second machine (`macstudio-tunnel`, M1 Max) is about to run the A3 rebuild, and
+  rows computed on different hardware can differ in their last bits. For a store whose whole
+  purpose is to be a comparator, mixed-provenance rows are a defect that nothing currently records:
+  `git_head` says what code ran, not what executed it.
+
+  **Correctness of the liveness rule, which is worse.** Once run directories are rsync'd between
+  machines, `python -m RunRegistry list` will evaluate `kill -0 <pid>` against **this** machine's
+  process table for a pid that belonged to another. A terminal-state record is harmless; a record
+  still marked `running` yields a confident wrong answer — a false "dead", or a false "alive" if
+  the pid has since been reused locally. That is a new way to get the §0 item 3 failure, from the
+  opposite direction.
+
+  **Next step:** add `machine` to the manifest (`platform.node()` and `platform.machine()`), and
+  make the lister **refuse to interpret liveness for a record whose `machine` is not this one**,
+  reporting it as foreign instead of guessing. Reporting correctly is recording, so this stays
+  inside §0.2's boundary. Pair it with a stated rule that **only terminal-state run directories are
+  transferred**. Indexed at `docs/OPEN_ISSUES.md` §1.11.
+
+- **[04-a-runs-product-is-named-but-never-fingerprinted]** *(opened 2026-09-24 from the same
+  question; user decision: **do it**)* — `finish(state, exit_code)` records neither what the run
+  produced nor how much of it, so after a store is copied between machines there is nothing to
+  compare against and "is this copy up to date?" is unanswerable. The manifest's `results` names a
+  path and, by `record()`'s own docstring, *"the registry names where a job's results live, it does
+  not open them"* — which is the right boundary and is why the fix does not belong in
+  `RunRegistry`.
+
+  **A file hash is the wrong instrument** and would be wrong wherever it lived: SQLite files are not
+  byte-stable, since VACUUM, page reuse and WAL checkpointing all change bytes without changing
+  content, so two stores with identical logical content generally differ under `sha256` and a
+  legitimate copy would report as a mismatch.
+
+  **The census already exists.** `main.py --inventory` (`tools/inventory_report.py`) reports
+  per-class counts across the pool, which is exactly the content fingerprint wanted.
+  **Next step:** have the pipeline driver write that report into the run directory at `finish()`.
+  The run record then carries its own product census; it travels with the (tiny) run directory
+  rather than the 350 MB store; and a later reader can check a store offline. Ten lines in the
+  driver, none in `RunRegistry`. Deliberately **not** a `pull` command — transfer is acting, not
+  recording, and `rsync` already does it better. Indexed at `docs/OPEN_ISSUES.md` §1.11.
+
+- **[04-sharded-store-paths-are-absolute-and-so-stores-are-not-portable]** *(opened 2026-09-24;
+  owner is datastore code, not this campaign)* — `ShardedPool` resolves `db_name` at creation
+  (`Datastore/SQL/ShardedPool.py:71`) and writes **absolute** shard filenames into the primary's
+  `shards` table (`_write_shard_data`, `:280`). A copied primary therefore still names the *source*
+  store's shards, and a pool opened on the copy reads and writes the original. This is not
+  hypothetical: it happened on 2026-09-23, when the first run of
+  `docs/handover/quadsource_atol_sweep.py` put 54 rows into the A3 baseline store its own docstring
+  promised to leave alone (fixed in that script at `2ebb7b6`, which now rewrites the table and
+  verifies it). Cross-machine rsync works today **only because both machines put the repo at the
+  same absolute path** — a coincidence of setup, not a property of the format.
+
+  The failure is silent in the dangerous direction: a primary naming a nonexistent shard raises,
+  but one naming a *different store that happens to exist there* is used without complaint.
+  **Next step:** store the shard filenames **relative to the primary**, which makes stores portable
+  by construction and removes the whole class. Small change to `_write_shard_data`/
+  `_read_shard_data`; by this project's convention a schema change costs nothing, since there is
+  no migration to run and nothing to backfill. Not done here: it is production datastore code and
+  well outside the hand-over work that surfaced it. Indexed at `docs/OPEN_ISSUES.md` §1.11.
+
 
 - **[01-var-runs-holds-unattributable-loose-files]** *(opened 2026-09-22 by prompt 01)* — four
   files sit at the top level of `var/runs/`, beside the two A3 pilot directories, with nothing
