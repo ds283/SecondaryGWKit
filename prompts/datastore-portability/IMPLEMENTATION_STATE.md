@@ -1,6 +1,7 @@
 # Datastore portability campaign — implementation state
 
-**Last updated:** 2026-09-24 · **Status: COMPLETE — 1 of 1 prompts landed (01).** Prompt 01
+**Last updated:** 2026-09-24 · **Status: STARTED — 1 of 2 written prompts landed (01); 02 written, not dispatched; 03 held.**
+Prompt 01
 measured what a moved store does on the unfixed tree: it **opens silently and recreates its old
 directory with empty shards**. It does not raise. Prompt 01 then made `ShardedPool` fail closed on
 a missing shard before any actor exists, record shard paths relative to the primary, and read
@@ -8,8 +9,14 @@ legacy absolute records as siblings by name, **never as the absolute path**, thr
 shared with the audit tool. A copy of the atol-sweep store, in a new directory and opened through
 `main.py`, read its own shards; the originals and the backup are byte-identical afterwards.
 This closes `run-registry`'s `[04-sharded-store-paths-are-absolute-and-so-stores-are-not-portable]`
-on that board's §4. Two issues are open in §3. One of them, the whole-store rename, is the user's
-design decision.
+on that board's §4. It opened two issues in §3.
+
+**Reopened 2026-09-24, after prompt 01's review.** The user then decided the whole-store rename
+(README §6.1–§6.3). Prompt 02 implements it: a static `ShardedPool` interface that copies or moves a
+closed store and rewrites its `shards` rows, plus a bare script in `tools/`. Neither knows about
+sidecar files. Moving or copying a store *with* its `<stem>.manifest.json` belongs to the registry
+layer. That is prompt 03, **held** on two user decisions (README §6.4), and tracked as
+`[store-sidecar-manifests-have-no-owner]`. Three issues are open in §3.
 
 **Campaign:** [`README.md`](README.md) ·
 **Code:** `Datastore/shard_paths.py`, `Datastore/SQL/ShardedPool.py`, `tools/shard_key_audit.py` ·
@@ -29,6 +36,22 @@ design decision.
 | # | Prompt | Covers | Model | Written? | Landed? | Commit | Log |
 |---|---|---|---|---|---|---|---|
 | 01 | [Relative shard paths](01-relative-shard-paths.md) | **P0**–**P4** | Opus 5.5 | ✍️ yes | ✅ 2026-09-24 | *"Record shard paths relative to the primary and refuse missing shards"* | [`logs/01-…`](logs/01-relative-shard-paths.md) |
+| 02 | [Copy and move a store](02-copy-and-move-a-store.md) | **P5**–**P8** | Opus | ✍️ yes, 2026-09-24 | ⏳ not dispatched | — | — |
+| 03 | *not written* | **P9** | — | ⏸️ **held** | — | — | — |
+
+**Prompt 03 is held, not unplanned.** Its charter is fixed in README §2: the registry's move and
+copy for stores, calling prompt 02's interface and managing the sidecar. Its method waits on two
+user decisions (README §6.4): whether the registry's charter extends to acting on stores, and who
+owns the store sidecar and in what format. It is written after both, and not against a guess at
+them.
+
+**Orchestrator review of prompt 01 (2026-09-24).** All ten checks in `orchestrator/prompt-01.md`
+§3 passed. The orchestrator reproduced the deliberate-breakage record (`failures=8, errors=5` with
+the two production files reverted to `71c4c66`), re-took the store snapshot (30 of 30 lines
+identical), and confirmed no copy remained under `var/`. One deviation went to the user: §4.1's
+whole-store-rename copy was replaced by a primary-only rename. That was a defect in the prompt:
+§4.1 and §4.4 could not both hold under P3. The user's ruling is README §6.1. Prompt 02's §4 does
+what §4.1 intended.
 
 ---
 
@@ -41,6 +64,11 @@ design decision.
 | P2 | **REMEDY** | Write shard paths relative to the primary's directory. | 01 | ✅ **Done, 2026-09-24.** `_write_shard_data` records `relative_to(primary.parent)`, which is the bare name, and checks that the record resolves back to the same file. A new store made through the real constructor recorded `[(0, 'p0store-shard0000.sqlite'), (1, 'p0store-shard0001.sqlite')]`. |
 | P3 | **REMEDY** | Read both record forms through one resolver. A legacy absolute record is a sibling by name, never the absolute path. Never rewrite legacy rows. | 01 | ✅ **Done, 2026-09-24.** `Datastore/shard_paths.py`'s `resolve_shard_path`. It returns an absolute `primary.parent / name` and has **no fallback**. It refuses empty, `.`, `..`, separators, NUL, non-strings, and a relative primary. One `!!` line per store when a legacy record is relocated. **Deliberate breakage:** on the unfixed tree the legacy test and both copy tests FAIL, with *A*'s paths where *B*'s were expected. The fail-closed tests ERROR (no guard exists), or FAIL where the unfixed pool picks the original's file. On the fixed tree all pass. §4: the sweep store was copied into a new directory and opened through `main.py --inventory`. All **28** per-table counts match the original's, and a discriminating edit to the copy (7,706 → 7,705) was seen in the inventory. The originals and the backup are identical in mtime, size, SHA-256 and row count. |
 | P4 | **REMEDY** | The audit tool resolves the shard it attaches the same way, stays read-only and standalone, and the function is not copied. | 01 | ✅ **Done, 2026-09-24.** `tools/shard_key_audit.py` imports `resolve_shard_path` and `shard_file_problem` from `Datastore.shard_paths`, which is standard library only and outside `Datastore.SQL`, so it pulls in no `ray` or `sqlalchemy`. The tool adds its own repository root to `sys.path`, so it runs from any directory with no `PYTHONPATH`. It now names the path it attaches. Run on the §4 copy, it attached **the copy's** shard 0. The unfixed tool, in the test fixture, reported the original's row count. |
+| P5 | **REMEDY** | One shard naming rule in `Datastore/shard_paths.py`, used by the creator, the fixtures and the copy/move interface. The shard-record read-and-check is factored out of the constructor, so it exists once. | 02 | ⏳ written, not dispatched |
+| P6 | **REMEDY** | `ShardedPool.copy_store` / `move_store`: static, on a closed store, no Ray. They refuse before any write, never overwrite, never delete, and never write the source. They rewrite the destination's `shards` rows to bare names. Every interruption state either opens correctly or is refused. | 02 | ⏳ written, not dispatched |
+| P7 | **REMEDY** | `tools/sharded_store.py {copy,move} SRC DST`, standalone, never initialises Ray. It handles the primary and shards only, per README §6.3. | 02 | ⏳ written, not dispatched |
+| P8 | **MEASUREMENT** | Real-store demonstration: a hand-made copy of the sweep store is copied under a new stem by the script, then moved under another. Each result is opened through `main.py --inventory`, with a one-row discriminator. The originals are never touched. | 02 | ⏳ written, not dispatched |
+| P9 | **REMEDY** | The registry's move and copy for stores, carrying the sidecar. | 03 | ⏸️ **held** on README §6.4 |
 
 ---
 
@@ -72,6 +100,16 @@ design decision.
   [`logs/01-relative-shard-paths.md`](logs/01-relative-shard-paths.md), "The real-store
   demonstration" and "Deviations" item 1. Indexed at `docs/OPEN_ISSUES.md` §1.12.
 
+  **Narrowed (2026-09-24), by the user:** "unsupported" overstated the gap. With bare-name
+  records, a whole-store rename is the file operations plus one `UPDATE shards SET filename = ?`
+  per serial. What is missing is an interface, not a capability (README §6.1).
+  **Decided (2026-09-24), by the user:** option **(a)**. A static interface on `ShardedPool`
+  copies or moves a closed store and rewrites its rows, and client code decides how to use it.
+  The first client is a bare script in `tools/`. Option (b) is not taken; the `shards` table stays
+  the authority. Neither the interface nor the script knows about sidecar files (README §6.2–§6.3).
+  **Assigned (2026-09-24):** prompt 02, [`02-copy-and-move-a-store.md`](02-copy-and-move-a-store.md),
+  which closes this issue when it lands.
+
 - **[01-atol-sweep-check-expects-absolute-shard-records]** *(opened 2026-09-24 by prompt 01)*:
   `docs/handover/quadsource_atol_sweep.py` `assert_store_is_self_consistent` (`:589`) compares
   `shards.filename` with `str(p.resolve())` for each expected shard. So it **rejects any store
@@ -85,6 +123,30 @@ design decision.
   reason, compare through `Datastore.shard_paths.resolve_shard_path` instead of against literal
   absolute paths, and drop the `UPDATE`. Not done here, because the script is the record of a
   measurement (prompt 01 §2). Indexed at `docs/OPEN_ISSUES.md` §1.12.
+
+- **[store-sidecar-manifests-have-no-owner]** *(opened 2026-09-24, on the user's layering
+  decision after prompt 01, not by a prompt)*: a `<stem>.manifest.json` beside a store is a
+  registry-layer artefact (README §6.3), but **no code owns it**. `RunRegistry` writes
+  `manifest.json` only inside run directories under `var/runs/`.
+  `handover-A3-baseline-lambdacdm.manifest.json` was written by hand.
+  `handover-atol-sweep.manifest.json` was written by `docs/handover/quadsource_atol_sweep.py`
+  `prepare()`, whose comment calls it "a human note" that nothing reads. The sweep sidecar names the
+  store's path (`"datastore"`) and its origin (`"copied_from"`).
+
+  **Impact:** once prompt 02 lands, copying or moving a store with the bare script leaves its
+  sidecar behind, still naming the old path. That is by design at that layer, but nothing yet does
+  it properly. Also, nothing can check that no `running` run is using a store before it is moved.
+  The registry knows which runs are live; the bare script cannot tell whether a process holds a
+  rollback-journal store open.
+
+  **Blocked on two user decisions** (README §6.4):
+  **(1)** whether the registry's charter ("it records; it does not act"; compare the declined `pull`
+  in `run-registry`'s `[04-a-runs-product-is-named-but-never-fingerprinted]`) extends to moving
+  and copying stores;
+  **(2)** who owns the store sidecar and in what format, including what a move or copy does to
+  `datastore` and `copied_from`.
+  **Assigned (2026-09-24):** prompt 03 of this campaign, **held** until both are decided. Indexed
+  at `docs/OPEN_ISSUES.md` §1.12.
 
 ---
 

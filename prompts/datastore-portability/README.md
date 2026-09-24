@@ -60,11 +60,29 @@ single store. Also the object factories, `main.py`, any physics, and any change 
 the `shards` table. Renaming a whole store (primary and shards together) is also out of scope; see
 prompt 01 §5.
 
+**Amended 2026-09-24, after prompt 01 landed** (decisions in §6). Renaming or copying a whole
+store is **now in scope, for prompt 02 only**. That prompt adds a static interface to
+`Datastore/SQL/ShardedPool.py` that copies or moves a closed store and rewrites its `shards` rows,
+plus a thin command-line script in `tools/` over that interface. Its scope is
+`Datastore/SQL/ShardedPool.py`, `Datastore/shard_paths.py`, the new script, and `Datastore/tests/`.
+The paragraph above still describes prompt 01, which was correct for the tree it ran on.
+
+**Out of scope for `ShardedPool` and the `tools/` script, permanently:** any file other than a
+store's primary and its shards. In particular, a `<stem>.manifest.json` sidecar is a registry-layer
+artefact. `ShardedPool` and the bare script neither copy it, move it, nor mention it. Whether and
+how the registry moves or copies stores, and carries the sidecar with them, is prompt 03, which is
+**held** (§2, §6).
+
 ## 2. Prompts
 
 | # | Prompt | Covers |
 |---|---|---|
 | 01 | [`01-relative-shard-paths.md`](01-relative-shard-paths.md) | Measure what a missing shard does today; fail closed on it; record shard paths relative to the primary; read existing absolute records safely; one resolver shared with the audit tool. Closes `run-registry`'s `[04-sharded-store-paths-are-absolute-…]` |
+| 02 | [`02-copy-and-move-a-store.md`](02-copy-and-move-a-store.md) | A static `ShardedPool` interface that copies or moves a closed store under a new name and rewrites its `shards` rows. One shard naming rule shared with the creator. Every interrupted state either opens correctly or is refused. A bare `tools/` script over it. Closes `[01-whole-store-rename-is-unsupported]` |
+| 03 | *not written; **held*** | The registry's move and copy for stores, calling prompt 02's interface and managing the `<stem>.manifest.json` sidecar. Held on two user decisions: whether the registry's charter extends to acting on stores, and who owns the sidecar and in what format. Tracked as `[store-sidecar-manifests-have-no-owner]` |
+
+Prompt 03's charter is fixed here; only its method is held. It is written once the user has made
+both decisions. It must not be written against a guess at them.
 
 ## 3. Datastores
 
@@ -77,6 +95,12 @@ original, and never open the backup: on the unfixed tree, opening either writes 
 
 Before touching any store, run `python -m RunRegistry list` and confirm nothing is `running`
 against it.
+
+**For prompt 02, the new tool is never pointed at an original.** Its demonstration copies the sweep
+store by hand (`cp`) into a working directory under `var/`, and runs the tool only on that hand-made
+copy and on what the tool produces from it. The hand-made copy's primary still holds the originals'
+absolute paths, so it is the hardest legacy case: a copied primary whose records name another store
+that exists. About 0.7 GB is needed for the duration; the volume had 13 GB free on 2026-09-24.
 
 ## 4. Baselines
 
@@ -92,6 +116,10 @@ The suites print model banners on stdout, so `| tail -5` will not show the verdi
 `THREE_BESSEL_DIAGNOSTIC_PLOTS`.** `ComputeTargets.tests.test_tk_wkb_phase.TestCost.test_wall_time_per_object`
 is a known wall-clock flake. Re-run that module on its own before attributing a failure to a
 change.
+
+At `b04671f` (prompt 01), the counts are AdaptiveLevin 32, ComputeTargets 552 (the one failure is
+the flake), CosmologyModels 39, **Datastore 37**, LiouvilleGreen 148 (1 skipped) and RunRegistry
+38. These are recorded on the board's §5. Re-measure before dispatching prompt 02 anyway.
 
 ## 5. The rules this campaign runs under
 
@@ -109,3 +137,52 @@ The project-wide ones in `CLAUDE.md`, unchanged, plus:
 
 Subject, commit, result; **What shipped**; **Deviations from the prompt** (each classified);
 **Verification performed**; **Observations not acted on**; **State handed to the next prompt**.
+
+## 6. Decisions recorded during the campaign
+
+**6.1 A copy or move may rename files; the only extra step is to rewrite the rows (user,
+2026-09-24).** Prompt 01's §4.1 asked for a copy with every file renamed to a new stem. Its §4.4
+asked for that copy's primary to keep its legacy absolute rows. P3 reads an absolute record by its
+file name, so the two cannot both hold, and the agent substituted a copy with only the primary
+renamed (logged `STRUCTURALLY REQUIRED`; prompt 01's log, "Deviations" item 1). The user's reading
+is that **nothing prevents the whole-store rename**. With bare-name records, the rename is the file
+operations plus one `UPDATE shards SET filename = ?` per serial. `[01-whole-store-rename-is-unsupported]`
+overstated the gap. What was missing is an interface, not a capability. The inconsistency was in the
+prompt, not in the code. Prompt 02's demonstration does what prompt 01 §4.1 intended.
+
+**6.2 The interface lives in `ShardedPool`; client code decides how to use it (user,
+2026-09-24).** Of prompt 01 §5's two options, **(a) is taken**: an explicit operation that renames
+the files and rewrites the `shards` rows. Option (b), deriving shard names from the primary's stem
+at read time, is **not** taken, so the `shards` table stays the authority on where a shard is. The
+operation is a static interface on `ShardedPool` rather than a method of an open pool, because an
+open pool has one `Datastore` actor per shard holding its file. The first client is a small
+standalone script in `tools/`, which accepts a store and copies or moves it.
+
+**6.3 `ShardedPool` knows nothing about sidecar files (user, 2026-09-24).** A
+`<stem>.manifest.json` beside a store is not part of the `ShardedPool` structure. It comes from the
+registry layer, and what to do with it is for the tool that manages it. So neither `ShardedPool`
+nor the bare `tools/` script copies, moves, refuses because of, or warns about any file other than
+the primary and its shards. Moving or copying a store *with* its sidecar would be a separate
+registry tool that calls the same interface and manages the sidecar itself.
+
+**6.4 Why prompt 03 is held.** Two facts, found while recording 6.3, stand between the registry
+tool and a prompt that could be written now:
+
+- **No code owns the store sidecar.** `RunRegistry` writes `manifest.json` inside each run
+  directory under `var/runs/`. The store-level sidecars are something else.
+  `handover-A3-baseline-lambdacdm.manifest.json` was written by hand, and
+  `handover-atol-sweep.manifest.json` by `docs/handover/quadsource_atol_sweep.py` `prepare()`, whose
+  own comment calls it "a human note" that nothing reads. The sweep sidecar's content names the
+  store's path (`"datastore"`) and its origin (`"copied_from"`), so a move or copy must decide what
+  happens to those fields. The registry has to own the format and a writer before it can manage
+  the file.
+- **The registry's charter is "it records; it does not act".** The `run-registry` board declined a
+  `pull` command on exactly that ground ("transfer is acting, not recording",
+  `[04-a-runs-product-is-named-but-never-fingerprinted]`). A local move or copy is not transfer
+  between machines, but it is the registry acting on files. Whether to extend the charter is the
+  user's decision, and should be made explicitly rather than drifted into.
+
+The registry is also where "is anything using this store?" can be answered. The bare script
+cannot tell whether a process has a store open. These stores use SQLite's default rollback
+journal, which leaves no file while idle. The registry knows which runs are `running` and which
+datastore each names.
