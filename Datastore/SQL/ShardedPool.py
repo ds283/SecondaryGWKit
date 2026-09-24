@@ -10,6 +10,11 @@ from Datastore.SQL import Datastore
 from Datastore.SQL.Datastore import PathType, ReadTableConfigType, InventoryConfigType
 from Datastore.SQL.ProfileAgent import ProfileAgent
 from Datastore.SQL.SerialPoolBroker import SerialPoolBroker
+from Datastore.shard_paths import (
+    resolve_shard_path,
+    is_legacy_record,
+    shard_file_problem,
+)
 from config.defaults import DEFAULT_STRING_LENGTH
 
 
@@ -70,15 +75,17 @@ class ShardedPool:
         # this database file will be taken to be the primary database
         self._primary_file: PathType = Path(db_name).resolve()
 
-        # shard_db_files is a map from shard number -> path representing the database on disk
+        # shard_db_files is a map from shard number -> path representing the database on disk.
+        # Every path in it is absolute and lies in the primary's directory (Datastore/shard_paths.py)
         self._shard_db_files: Dict[int, PathType] = {}
+
+        # shard_records is a map from shard number -> the filename value stored for it in the
+        # primary's `shards` table, as read (existing store) or written (new store). Kept so that
+        # an error can quote what the table said, not only where it was taken to point
+        self._shard_records: Dict[int, str] = {}
 
         # shard_keys is a map from key id -> shard id
         self._shard_keys: Dict[int, int] = {}
-
-        self._broker = SerialPoolBroker.options(name="SerialPoolBroker").remote(
-            name="SerialPoolBroker"
-        )
 
         self._profile_agent = profile_agent
 
@@ -116,6 +123,10 @@ class ShardedPool:
             self._create_engine()
             self._read_shard_data()
 
+            # fail closed, before any actor exists: a Datastore actor given a missing shard file
+            # creates an empty database there, and the pool would open with nothing in it
+            self._check_shard_files()
+
             num_shards = len(self._shard_db_files)
             print(
                 f'>> Opened existing sharded datastore "{str(self._primary_file)}" with {num_shards} shards'
@@ -129,6 +140,12 @@ class ShardedPool:
                 print(
                     f"!! WARNING: number of shards read from database (={num_shards}) does not match specified number of shards (={self._shards})"
                 )
+
+        # the broker is created only now, so that nothing on the Ray side exists until the shard
+        # files have been checked
+        self._broker = SerialPoolBroker.options(name="SerialPoolBroker").remote(
+            name="SerialPoolBroker"
+        )
 
         # create actor pool of datastores, one for each shard
         # we read the version serial number from the first shard that we create
@@ -274,12 +291,28 @@ class ShardedPool:
         self._replicated_tables_table.create(self._engine)
         self._sharded_tables_table.create(self._engine)
 
+        # each shard is recorded relative to the primary's directory. Every shard is created as a
+        # sibling of the primary, so this is its bare file name, and the store stays readable when
+        # its directory is moved or copied (Datastore/shard_paths.py)
+        shard_file_values = []
+        for key, db_name in self._shard_db_files.items():
+            db_name = Path(db_name)
+            try:
+                record = str(db_name.relative_to(self._primary_file.parent))
+            except ValueError:
+                raise RuntimeError(
+                    f'Shard #{key} (database file="{str(db_name)}") is not in the directory of the primary database "{str(self._primary_file)}"'
+                )
+            # what is written must read back as the same file
+            if resolve_shard_path(self._primary_file, record) != db_name:
+                raise RuntimeError(
+                    f'Shard #{key} (database file="{str(db_name)}") cannot be recorded relative to the primary database "{str(self._primary_file)}" (record="{record}")'
+                )
+            self._shard_records[key] = record
+            shard_file_values.append({"serial": key, "filename": record})
+
         with self._engine.begin() as conn:
             # write table of database shard files
-            shard_file_values = [
-                {"serial": key, "filename": str(db_name)}
-                for key, db_name in self._shard_db_files.items()
-            ]
             conn.execute(sqla.insert(self._shard_file_table), shard_file_values)
 
             # write shard key configuration type
@@ -320,16 +353,40 @@ class ShardedPool:
                     self._shard_file_table.c.filename,
                 )
             )
+            # every record goes through the one resolver (Datastore/shard_paths.py). A legacy
+            # absolute record is read as the sibling of that name; the absolute path itself is
+            # never used. The rows are not rewritten
+            relocated_legacy = []
             for row in shard_files:
                 serial = row.serial
-                filename = Path(row.filename)
+                stored = row.filename
+
+                try:
+                    filename = resolve_shard_path(self._primary_file, stored)
+                except ValueError as e:
+                    raise RuntimeError(
+                        f'Shard #{serial} of primary database "{str(self._primary_file)}" has an unusable record: {e}'
+                    )
 
                 if serial in self._shard_db_files:
                     raise RuntimeError(
                         f'Shard #{serial} already exists (database file="{str(filename)}", existing file="{str(self._shard_db_files[serial])}")'
                     )
 
-                self._shard_db_files[row.serial] = Path(row.filename)
+                self._shard_db_files[serial] = filename
+                self._shard_records[serial] = stored
+
+                if is_legacy_record(stored) and Path(stored) != filename:
+                    relocated_legacy.append(stored)
+
+            if len(relocated_legacy) > 0:
+                legacy_dirs = ", ".join(
+                    f'"{d}"'
+                    for d in sorted({str(Path(s).parent) for s in relocated_legacy})
+                )
+                print(
+                    f'!! Primary database "{str(self._primary_file)}" records {len(relocated_legacy)} shard(s) by legacy absolute path in {legacy_dirs}; reading them as siblings in "{str(self._primary_file.parent)}" instead (stored records not rewritten)'
+                )
 
             # read shard key configuration type
             shard_key_configs = conn.execute(
@@ -444,6 +501,41 @@ class ShardedPool:
             )
             for key in keys:
                 self._shard_keys[key.key_serial] = key.shard_id
+
+    def _check_shard_files(self):
+        """
+        Refuse to open an existing pool unless every shard read from the primary is a usable file
+        in the primary's directory, and no two shards are the same file.
+
+        Called from the constructor after _read_shard_data() and before any actor is created. It
+        exists because a Datastore actor given a missing file creates an empty database there
+        (Datastore.py, correct for a single store), so without this check a moved store opens
+        with empty shards and every sharded lookup misses, and a mistake in shard path resolution
+        would open the wrong store silently instead of raising.
+        """
+        problems = []
+        for serial, path in sorted(self._shard_db_files.items()):
+            problem = shard_file_problem(Path(path))
+            if problem is not None:
+                stored = self._shard_records.get(serial, "<unknown>")
+                problems.append(
+                    f'shard #{serial}: stored record "{stored}" resolves to "{str(path)}", which {problem}'
+                )
+
+        seen = {}
+        for serial, path in sorted(self._shard_db_files.items()):
+            if path in seen:
+                problems.append(
+                    f'shards #{seen[path]} and #{serial} both resolve to "{str(path)}" (stored records "{self._shard_records.get(seen[path], "<unknown>")}" and "{self._shard_records.get(serial, "<unknown>")}")'
+                )
+            else:
+                seen[path] = serial
+
+        if len(problems) > 0:
+            raise RuntimeError(
+                f'Cannot open sharded datastore "{str(self._primary_file)}": '
+                + "; ".join(problems)
+            )
 
     def object_get(self, ObjectClass, **kwargs):
         if isinstance(ObjectClass, str):

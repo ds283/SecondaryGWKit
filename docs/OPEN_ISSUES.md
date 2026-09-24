@@ -1,6 +1,6 @@
 # Open issues — project-wide index
 
-**Last updated:** 2026-09-24 · **93 open** across thirteen campaigns.
+**Last updated:** 2026-09-24 · **94 open** across fourteen campaigns.
 
 This file exists so that an issue opened by one campaign is not lost when that campaign closes.
 It is an **index, not a record**: one line per issue, pointing at the campaign status board that
@@ -26,7 +26,8 @@ the two disagree, the board is right.
 [`handover`](../prompts/handover/IMPLEMENTATION_STATE.md) ·
 [`datastore-readback`](../prompts/datastore-readback/IMPLEMENTATION_STATE.md) ·
 [`run-registry`](../prompts/run-registry/IMPLEMENTATION_STATE.md) ·
-[`test-suite-runtime`](../prompts/test-suite-runtime/IMPLEMENTATION_STATE.md)
+[`test-suite-runtime`](../prompts/test-suite-runtime/IMPLEMENTATION_STATE.md) ·
+[`datastore-portability`](../prompts/datastore-portability/IMPLEMENTATION_STATE.md)
 
 **Two** of these hold no open issue and are listed for their §4. `test-suite-runtime` closed
 `transfer-remedial`'s `[08-3bessel-plot-cost-dominates-the-suite]` on 2026-09-19;
@@ -39,7 +40,10 @@ squeezed $(k, q, r)$ triples, and the user stopped the run. The
 `datastore-readback` board was created by its prompt 01 on 2026-09-22; the audit that prompt ran
 opened two and one of them has already closed on that board's §4. The `run-registry` board was
 created by its prompt 01 on 2026-09-22 and holds **three** — one from prompt 01, narrowed by
-prompt 02, and two opened by prompt 02 when it closed that campaign at 2 / 2. Of the 90
+prompt 02, and two opened by prompt 02 when it closed that campaign at 2 / 2. The
+`datastore-portability` board was created by its prompt 01 on 2026-09-24. That prompt closed
+`run-registry`'s `[04-sharded-store-paths-are-absolute-…]` on the `run-registry` board's §4, and it
+opened two issues of its own (§1.12). Of the 90
 above, 87 are spread across the boards and
 **three still have no board row** — the last three `handover` rows in §1.1, opened by a document
 review on 2026-09-19, whose content lives in
@@ -656,8 +660,22 @@ was exercised for the first time and crashed. Prompt 01 landed the `RunRegistry/
 | `[01-var-runs-holds-unattributable-loose-files]` | run-registry | Four files — `run.out`, `run.pid`, `run.progress`, `realistic_large_x_cells.jsonl` — sit at the top level of `var/runs/` with nothing saying which run they belong to. Evidence; **must not** be moved, renamed or deleted. **Narrowed 2026-09-22** by prompt 02: all four are the successful `realistic_large_x.py` run of 2026-09-20, established from the file contents and the 10,772 s arithmetic. What is still open is that nothing on disk says so. |
 | `[04-runs-do-not-say-which-machine-produced-them]` | run-registry | The manifest records `git_head`, `script_sha256`, `argv` and `cwd`, and nothing saying **where** the job ran. Two consequences, and the second is worse. Provenance: rows computed on different hardware can differ in their last bits, and for a comparator store nothing records that. Liveness: once run directories are rsync'd between machines, `list` evaluates `kill -0 <pid>` against the wrong process table — harmless for a terminal record, a confident wrong answer for one still marked `running`, including a false "alive" on a reused pid. **Decided 2026-09-24:** add `machine` (`platform.node()`/`platform.machine()`), make `list` refuse to interpret liveness for a foreign record, and transfer only terminal-state directories. |
 | `[04-a-runs-product-is-named-but-never-fingerprinted]` | run-registry | `finish()` records neither what a run produced nor how much, so after a store is copied between machines "is this up to date?" is unanswerable. A file hash is the wrong instrument — SQLite is not byte-stable under VACUUM, page reuse or WAL checkpointing, so identical content hashes differently. The census already exists as `main.py --inventory`. **Decided 2026-09-24:** the pipeline driver writes that report into the run directory at `finish()`, so the census travels with the tiny run directory rather than the 350 MB store. Deliberately **not** a `pull` command: transfer is acting, not recording, and `rsync` does it better. |
-| `[04-sharded-store-paths-are-absolute-and-so-stores-are-not-portable]` | run-registry (owner: datastore code) | `ShardedPool` writes **absolute** shard filenames into the primary's `shards` table (`:71`, `:280`), so a copied primary still names the source store's shards and a pool opened on the copy reads and writes the original. Not hypothetical — it put 54 rows into the A3 baseline store on 2026-09-23 (fixed in `quadsource_atol_sweep.py` at `2ebb7b6`). Cross-machine rsync works only because both machines use the same absolute path. Silent in the dangerous direction: a nonexistent shard raises, a *different* store at that path does not. Fix is to store paths relative to the primary; schema changes cost nothing here. |
 | `[02-realistic-large-x-is-outside-the-registry]` | run-registry | `realistic_large_x.py` is deliberately not a registry client. Editing it by one character discards all sixty cells behind `REALISTIC-LARGE-X.md` and costs a three-hour recomputation; its records must **never** be re-stamped to preserve reuse. The row exists so the price is known before anyone proposes the change. |
+
+### 1.12 The datastore portability campaign
+
+`prompts/datastore-portability` was opened on 2026-09-24 to close `run-registry`'s
+`[04-sharded-store-paths-are-absolute-…]`: a copied `ShardedPool` store opened against the
+original's shards. **Prompt 01 closed it the same day**, on the `run-registry` board's §4. Shard
+paths are now recorded relative to the primary. Legacy absolute records are read as siblings by
+name and never as the absolute path, through one resolver shared with the audit tool. A missing
+shard now raises before any actor exists. Its P0 measured the moved-store case on the old code,
+which **opened silently** on empty, recreated shards instead of raising.
+
+| Issue | Board | Hook |
+|---|---|---|
+| `[01-whole-store-rename-is-unsupported]` | datastore-portability | Moving a store's directory, or renaming its primary alone, now works. Renaming the **shards** too is refused loudly (P1), because the records carry the old names. **The user's decision**, between a rename tool that rewrites the `shards` rows and shard names derived from the primary's stem. |
+| `[01-atol-sweep-check-expects-absolute-shard-records]` | datastore-portability | `quadsource_atol_sweep.py`'s `assert_store_is_self_consistent` compares against literal absolute paths, so it would reject a store created after prompt 01 unless `prepare()`'s `UPDATE` had rewritten its rows. No effect in the script's own workflow. The script is a measurement record and was not edited. |
 
 ---
 

@@ -15,6 +15,15 @@ divergence after the fact; it does not prevent it.
 This script only ever opens databases read-only (sqlite3 `mode=ro` URIs). It
 is structurally incapable of modifying a datastore.
 
+The shard file it attaches for the cross-file check is found exactly as
+ShardedPool finds it, by the one resolver in Datastore/shard_paths.py: the
+`shards` record's file name, in the primary's own directory. A legacy absolute
+record is never used as it stands, so auditing a copied store checks the copy's
+shard, not the original's. That module imports only the standard library and
+is outside the Datastore.SQL package, so importing it does not pull in ray or
+sqlalchemy; the repository root is put on sys.path below so that the script
+still runs standalone, from any directory, with no PYTHONPATH.
+
 IMPORTANT -- there is no safe automated repair. Reconstructing the correct
 map requires knowing the order in which shard-key objects were originally
 assigned, which is not recorded anywhere. If this tool reports a problem,
@@ -29,6 +38,12 @@ import sqlite3
 import sys
 from pathlib import Path
 from typing import List
+
+_REPO_ROOT = str(Path(__file__).resolve().parents[1])
+if _REPO_ROOT not in sys.path:
+    sys.path.insert(0, _REPO_ROOT)
+
+from Datastore.shard_paths import resolve_shard_path, shard_file_problem
 
 
 def _open_readonly(path: Path) -> sqlite3.Connection:
@@ -140,8 +155,17 @@ def main(argv: List[str]) -> int:
     cross_file_done = False
     if key_type is not None and shard_files:
         shard_serial, shard_filename = shard_files[0]
-        shard_path = Path(shard_filename)
-        if shard_path.exists():
+        try:
+            shard_path = resolve_shard_path(primary_path, shard_filename)
+            shard_problem = shard_file_problem(shard_path)
+        except ValueError as e:
+            shard_path = None
+            shard_problem = str(e)
+        if shard_problem is None:
+            print(
+                f">> cross-file check against shard #{shard_serial}: {shard_path} "
+                f"(record {shard_filename!r})"
+            )
             try:
                 conn.execute(f"ATTACH DATABASE 'file:{shard_path}?mode=ro' AS shard0")
                 shard_tables = {
@@ -184,8 +208,10 @@ def main(argv: List[str]) -> int:
                     )
             except sqlite3.OperationalError as e:
                 print(f"!! could not attach shard #{shard_serial} ({shard_path}): {e}")
+        elif shard_path is None:
+            print(f"!! shard #{shard_serial} record is unusable: {shard_problem}")
         else:
-            print(f"!! shard file does not exist on disk: {shard_path}")
+            print(f"!! shard #{shard_serial} file {shard_path} {shard_problem}")
 
     if not cross_file_done:
         print(

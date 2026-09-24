@@ -10,7 +10,9 @@ hash `c1cd3598c23a`, and no existing checkpoint record was re-stamped, migrated 
 anything in this campaign. Prompt 03 split the manifest's overloaded `checkpoint` field in two —
 `checkpoint` is the unit ledger, `results` names the durable store a job's results live in — so
 `record()` cannot append JSON-Lines to a datastore and `known()` cannot report "nothing done" for a
-file that is not a ledger. Two issues are open in §3; one is resolved in §4.
+file that is not a ledger. Four issues are open in §3, and two are resolved in §4. The second of
+those, `[04-sharded-store-paths-are-absolute-…]`, was closed on 2026-09-24 by the
+`datastore-portability` campaign, which owns the datastore code.
 
 **Campaign:** [`README.md`](README.md) ·
 **Package:** `RunRegistry/` · **Layout:** `var/runs/<campaign>-<prompt>-<slug>-<timestamp>/` ·
@@ -97,26 +99,6 @@ README §0.3 calls worse than nothing.
   rather than the 350 MB store; and a later reader can check a store offline. Ten lines in the
   driver, none in `RunRegistry`. Deliberately **not** a `pull` command — transfer is acting, not
   recording, and `rsync` already does it better. Indexed at `docs/OPEN_ISSUES.md` §1.11.
-
-- **[04-sharded-store-paths-are-absolute-and-so-stores-are-not-portable]** *(opened 2026-09-24;
-  owner is datastore code, not this campaign)* — `ShardedPool` resolves `db_name` at creation
-  (`Datastore/SQL/ShardedPool.py:71`) and writes **absolute** shard filenames into the primary's
-  `shards` table (`_write_shard_data`, `:280`). A copied primary therefore still names the *source*
-  store's shards, and a pool opened on the copy reads and writes the original. This is not
-  hypothetical: it happened on 2026-09-23, when the first run of
-  `docs/handover/quadsource_atol_sweep.py` put 54 rows into the A3 baseline store its own docstring
-  promised to leave alone (fixed in that script at `2ebb7b6`, which now rewrites the table and
-  verifies it). Cross-machine rsync works today **only because both machines put the repo at the
-  same absolute path** — a coincidence of setup, not a property of the format.
-
-  The failure is silent in the dangerous direction: a primary naming a nonexistent shard raises,
-  but one naming a *different store that happens to exist there* is used without complaint.
-  **Next step:** store the shard filenames **relative to the primary**, which makes stores portable
-  by construction and removes the whole class. Small change to `_write_shard_data`/
-  `_read_shard_data`; by this project's convention a schema change costs nothing, since there is
-  no migration to run and nothing to backfill. Not done here: it is production datastore code and
-  well outside the hand-over work that surfaced it. Indexed at `docs/OPEN_ISSUES.md` §1.11.
-
 
 - **[01-var-runs-holds-unattributable-loose-files]** *(opened 2026-09-22 by prompt 01)* — four
   files sit at the top level of `var/runs/`, beside the two A3 pilot directories, with nothing
@@ -206,6 +188,57 @@ README §0.3 calls worse than nothing.
   re-meaned or shimmed. Measurement:
   [`logs/03-the-checkpoint-field-means-two-things.md`](logs/03-the-checkpoint-field-means-two-things.md).
   Row deleted from `docs/OPEN_ISSUES.md` in the same commit.
+
+- **[04-sharded-store-paths-are-absolute-and-so-stores-are-not-portable]** *(opened 2026-09-24;
+  owner is datastore code, not this campaign)* — `ShardedPool` resolves `db_name` at creation
+  (`Datastore/SQL/ShardedPool.py:71`) and writes **absolute** shard filenames into the primary's
+  `shards` table (`_write_shard_data`, `:280`). A copied primary therefore still names the *source*
+  store's shards, and a pool opened on the copy reads and writes the original. This is not
+  hypothetical: it happened on 2026-09-23, when the first run of
+  `docs/handover/quadsource_atol_sweep.py` put 54 rows into the A3 baseline store its own docstring
+  promised to leave alone (fixed in that script at `2ebb7b6`, which now rewrites the table and
+  verifies it). Cross-machine rsync works today **only because both machines put the repo at the
+  same absolute path** — a coincidence of setup, not a property of the format.
+
+  The failure is silent in the dangerous direction: a primary naming a nonexistent shard raises,
+  but one naming a *different store that happens to exist there* is used without complaint.
+  **Next step:** store the shard filenames **relative to the primary**, which makes stores portable
+  by construction and removes the whole class. Small change to `_write_shard_data`/
+  `_read_shard_data`; by this project's convention a schema change costs nothing, since there is
+  no migration to run and nothing to backfill. Not done here: it is production datastore code and
+  well outside the hand-over work that surfaced it. Indexed at `docs/OPEN_ISSUES.md` §1.11.
+  **Assigned (2026-09-24):** the
+  [`datastore-portability`](../datastore-portability/IMPLEMENTATION_STATE.md) campaign, which was
+  created to be this issue's "datastore code" owner.
+  **Resolved 2026-09-24 by `datastore-portability` prompt 01**, commit *"Record shard paths
+  relative to the primary and refuse missing shards"*. `ShardedPool` now records each shard by
+  its bare file name, relative to the primary. It reads every record through one resolver,
+  `Datastore/shard_paths.py`, shared with `tools/shard_key_audit.py`. A legacy absolute record is
+  read as the sibling of that name in the primary's directory, and **never** as the absolute
+  path, even when the absolute path exists. Legacy rows are not rewritten. Before any actor
+  exists, the pool also refuses to open if any resolved shard is missing.
+  **One sentence of this entry was wrong, and P0 measured it.** "A primary naming a nonexistent
+  shard raises" is false on the unfixed tree. A throwaway store whose directory was moved
+  **opened without an error or a warning**. Each stale path reached a `Datastore` actor, which
+  recreated the old directory and an empty shard database there (`Datastore.py:217–222`). So the
+  failure was silent in *both* directions, not only for a different store at the old path. Every
+  sharded lookup missed, and the store looked uncomputed. The new check makes that case raise.
+  **A second instance, found when the campaign was planned:** the retained backup
+  `var/datastores/backup-pre-resume-20260921T091011/` of the A3 baseline store holds, in its own
+  primary, the **live** store's absolute shard paths. Opening it in place on the old code would
+  have opened and written the live shards. It was not opened. By test 4's shape, with the
+  original present and populated and the copy in another directory under the same shard names,
+  it now opens against its own shards and leaves the live store alone. Its rows are unchanged.
+  **Verified** on a copy of `handover-atol-sweep` in a new directory with a renamed primary, via
+  `main.py --inventory`. All 28 per-table counts matched the original's, and a one-row edit to
+  the copy showed up in the inventory, so the copy's own files were read. The originals and the
+  backup were unchanged in mtime, size, SHA-256 and every row count.
+  **Cross-machine rsync no longer depends on the same absolute path**, for new stores and legacy
+  ones alike. What is still unsupported is renaming the *shards*. That is
+  `[01-whole-store-rename-is-unsupported]` on the `datastore-portability` board, a design choice
+  for the user. Measurement:
+  [`../datastore-portability/logs/01-relative-shard-paths.md`](../datastore-portability/logs/01-relative-shard-paths.md).
+  Row deleted from `docs/OPEN_ISSUES.md` §1.11 in the same commit.
 
 The other two issues this campaign opened are still in §3, and that is the honest count rather than
 a failing: both are a **deliberate non-adoption** recorded so its price is known, not work left half
