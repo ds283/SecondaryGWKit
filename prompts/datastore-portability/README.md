@@ -67,6 +67,13 @@ plus a thin command-line script in `tools/` over that interface. Its scope is
 `Datastore/SQL/ShardedPool.py`, `Datastore/shard_paths.py`, the new script, and `Datastore/tests/`.
 The paragraph above still describes prompt 01, which was correct for the tree it ran on.
 
+**Amended again 2026-09-24, after prompt 02 landed** (decisions in §6.5). Prompt 03 is in scope:
+the registry's store operations. Its scope is `RunRegistry/`, meaning a new module for the store
+sidecar and the store operations, `RunRegistry/__init__.py`'s `begin()` (which records a
+`store_id` beside `results`), `RunRegistry/__main__.py` and `RunRegistry/tests/`. It calls prompt
+02's `ShardedPool.copy_store` / `move_store` and does not change them. `Datastore/`, `tools/`,
+`main.py`, `docs/` and every existing run manifest stay out of scope.
+
 **Out of scope for `ShardedPool` and the `tools/` script, permanently:** any file other than a
 store's primary and its shards. In particular, a `<stem>.manifest.json` sidecar is a registry-layer
 artefact. `ShardedPool` and the bare script neither copy it, move it, nor mention it. Whether and
@@ -79,7 +86,7 @@ how the registry moves or copies stores, and carries the sidecar with them, is p
 |---|---|---|
 | 01 | [`01-relative-shard-paths.md`](01-relative-shard-paths.md) | Measure what a missing shard does today; fail closed on it; record shard paths relative to the primary; read existing absolute records safely; one resolver shared with the audit tool. Closes `run-registry`'s `[04-sharded-store-paths-are-absolute-…]` |
 | 02 | [`02-copy-and-move-a-store.md`](02-copy-and-move-a-store.md) | A static `ShardedPool` interface that copies or moves a closed store under a new name and rewrites its `shards` rows. One shard naming rule shared with the creator. Every interrupted state either opens correctly or is refused. A bare `tools/` script over it. Closes `[01-whole-store-rename-is-unsupported]` |
-| 03 | *not written; **held*** | The registry's move and copy for stores, calling prompt 02's interface and managing the `<stem>.manifest.json` sidecar. Held on two user decisions: whether the registry's charter extends to acting on stores, and who owns the sidecar and in what format. Tracked as `[store-sidecar-manifests-have-no-owner]` |
+| 03 | *not written; **held*** | The registry's move and copy for stores, calling prompt 02's interface and managing the `<stem>.manifest.json` sidecar. Held on two user decisions: whether the registry's charter extends to acting on stores, and who owns the sidecar and in what format. Tracked as `[store-sidecar-manifests-have-no-owner]`. **Both decided 2026-09-24 (§6.5); released** |
 
 Prompt 03's charter is fixed here; only its method is held. It is written once the user has made
 both decisions. It must not be written against a guess at them.
@@ -186,3 +193,39 @@ The registry is also where "is anything using this store?" can be answered. The 
 cannot tell whether a process has a store open. These stores use SQLite's default rollback
 journal, which leaves no file while idle. The registry knows which runs are `running` and which
 datastore each names.
+
+**6.5 Both decisions are made; prompt 03 is released (user, 2026-09-24).** The user settled both
+decisions of §6.4 on the day they were recorded. They were written down only after prompt 02
+landed, so that prompt 02's orchestrator would find `HEAD` where it expected. §6.4 stays as it
+is: it was the correct account of what blocked prompt 03 until this entry.
+
+- **The charter.** Moving and copying datastores are tools for managing the registry, and the
+  user sees no problem with the registry doing them. The "it records; it does not act" objection
+  does not apply to them. Nor does the precedent of the declined `pull`, which was about transfer
+  between machines (`run-registry`'s `[04-a-runs-product-is-named-but-never-fingerprinted]`); that
+  issue is not reopened by this. What the registry still does not do is unchanged: it does not
+  schedule, supervise, restart, lock or delete (`CLAUDE.md`).
+- **The owner and the format.** "The registry owns the sidecar" means all seven of the following,
+  agreed as proposed:
+  1. **One `RunRegistry/` module defines the sidecar**: its required fields, the optional fields it
+     knows, a reader and an atomic writer (the package's `write_json_atomic`). Only registry
+     operations write a sidecar. **Unknown fields are preserved verbatim.** The hand-written A3
+     sidecar carries `run_history`, `restart`, `backup` and `note`, and none of them may be lost
+     or reformatted.
+  2. **Copy and move update its metadata fields.** There is also a registry create/adopt operation,
+     so that no sidecar has to be written by hand.
+  3. **`datastore` is stored as the primary's bare file name, not a path.** The backup's sidecar
+     already names the live store (§0.1). That is prompt 01's defect again, this time in JSON.
+  4. **`copied_from` is kept as the immediate parent**, plus an append-only **`history`** list,
+     one entry per copy or move, with the operation, from, to, when and git SHA.
+  5. **A stable `store_id` in the sidecar.** A copy gets a new one; a move keeps it. Future run
+     manifests record it next to the `results` path. Existing run manifests are immutable and
+     are never rewritten. This touches the run-manifest format, which lies outside this
+     campaign's original scope (§1, amended again below).
+  6. **Registry copy and move refuse a store that a `running` run's `results` names.** This is the
+     check the bare script cannot make (§6.4, last paragraph).
+  7. **Existing sidecars are read as they are, with no automatic rewrite.** The backup's stale
+     `datastore` field is fixed only if the user asks.
+
+These decisions fix what prompt 03 must do. How it does it is the prompt's job, and where the
+prompt had to choose, it says so and gives its reason.

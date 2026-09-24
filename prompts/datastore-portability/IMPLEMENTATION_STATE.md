@@ -1,6 +1,6 @@
 # Datastore portability campaign — implementation state
 
-**Last updated:** 2026-09-24 · **Status: 2 of 2 written prompts landed (01, 02); 03 held.**
+**Last updated:** 2026-09-24 · **Status: 2 of 2 written prompts landed (01, 02); 03 released (README §6.5), not yet written.**
 Prompt 01
 measured what a moved store does on the unfixed tree: it **opens silently and recreates its old
 directory with empty shards**. It does not raise. Prompt 01 then made `ShardedPool` fail closed on
@@ -56,6 +56,10 @@ user decisions (README §6.4): whether the registry's charter extends to acting 
 owns the store sidecar and in what format. It is written after both, and not against a guess at
 them.
 
+**Released 2026-09-24.** The user had made both decisions the same day. They were recorded
+(README §6.5) only after prompt 02 landed, so that prompt 02's orchestrator found `HEAD` where it
+expected.
+
 **Orchestrator review of prompt 01 (2026-09-24).** All ten checks in `orchestrator/prompt-01.md`
 §3 passed. The orchestrator reproduced the deliberate-breakage record (`failures=8, errors=5` with
 the two production files reverted to `71c4c66`), re-took the store snapshot (30 of 30 lines
@@ -91,7 +95,7 @@ interruption property, and at least as strong as the prescribed order.
 | P6 | **REMEDY** | `ShardedPool.copy_store` / `move_store`: static, on a closed store, no Ray. They refuse before any write, never overwrite, never delete, and never write the source. They rewrite the destination's `shards` rows to bare names. Every interruption state either opens correctly or is refused. | 02 | ✅ **Done, 2026-09-24.** Prescribed order, with serial 0 first. The copy writes `<dst>.incomplete-copy`, rewrites it in one transaction, reads it back and `os.replace`s it last. The move renames the shards, then the primary, then rewrites. The interruption table in the log has 8 copy rows and 6 move rows, each backed by a test in 3 layouts × 2 source kinds. Every state opens against the right files, is refused by prompt 01's check, or has shards and no primary (the constructor's guard). Three refusals beyond the prompt's list were **needed** for that (log, Deviations 1–2): no shard rows, no shard #0, and a move into a directory holding a file with a source shard's name. **Deliberate breakage (i)–(v):** each fails the tests written against it. |
 | P7 | **REMEDY** | `tools/sharded_store.py {copy,move} SRC DST`, standalone, never initialises Ray. It handles the primary and shards only, per README §6.3. | 02 | ✅ **Done, 2026-09-24.** Calls the interface and nothing else, prints the shard map, or `!!` and exit 1. It runs from any directory with no `PYTHONPATH`. A child interpreter reports `ray` imported and `ray.is_initialized()` False after it runs. `--help` carries the three statements (primary and shards only, a manifest left where it is; cannot tell whether the store is open; a registry-level tool does both). |
 | P8 | **MEASUREMENT** | Real-store demonstration: a hand-made copy of the sweep store is copied under a new stem by the script, then moved under another. Each result is opened through `main.py --inventory`, with a one-row discriminator. The originals are never touched. | 02 | ✅ **Done, 2026-09-24.** One `QuadSourceIntegral` row (serial 329386) was deleted from the hand-made source's shard 0 (1,955 → 1,954). `copy` to `dst/pcopy.sqlite` gave rows `pcopy-shard000{0..3}.sqlite`, and left the source's five files identical in mtime, size and hash. The audit attached `pcopy-shard0000.sqlite`. `main.py --inventory`: 27 of 28 tables equal the original's, and `QuadSourceIntegral` **7,705 vs 7,706**. `move` to `moved/pmoved.sqlite` left `dst/` empty, and its inventory was identical to the previous one. The read-only snapshot of the three stores was identical before and after. The working directory was deleted. |
-| P9 | **REMEDY** | The registry's move and copy for stores, carrying the sidecar. | 03 | ⏸️ **held** on README §6.4 |
+| P9 | **REMEDY** | The registry's move and copy for stores, carrying the sidecar. | 03 | ⏸️ held on README §6.4 until 2026-09-24; **both decided** (README §6.5), prompt not yet written |
 
 ---
 
@@ -134,6 +138,18 @@ interruption property, and at least as strong as the prescribed order.
   `datastore` and `copied_from`.
   **Assigned (2026-09-24):** prompt 03 of this campaign, **held** until both are decided. Indexed
   at `docs/OPEN_ISSUES.md` §1.12.
+
+  **Decided (2026-09-24), by the user; recorded after prompt 02 landed:** both decisions are
+  made (README §6.5). **(1)** Moving and copying stores are tools for managing the registry, so
+  the "records; does not act" objection does not apply to them, and neither does the precedent
+  of the declined `pull`. **(2)** The registry owns the sidecar. One `RunRegistry/` module defines
+  its fields, reader and atomic writer, and only registry operations write it. Unknown fields are
+  preserved verbatim. Copy and move update its metadata, and a create/adopt operation replaces
+  hand-writing. `datastore` becomes the primary's bare file name. `copied_from` names the
+  immediate parent, beside an append-only `history`. A stable `store_id` is new on a copy and
+  kept on a move, and future run manifests record it beside `results`. Copy and move refuse a
+  store that a `running` run names. Existing sidecars are read as they are, and the backup's stale
+  `datastore` field is fixed only if the user asks. Prompt 03 is released and closes this issue.
 
 ---
 
