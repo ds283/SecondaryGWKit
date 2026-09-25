@@ -3,14 +3,19 @@
 Run it at the start of a session and before launching anything long. A registry nobody reads is
 worse than none, because it looks like coverage.
 
-`python -m RunRegistry store {show,create,adopt,copy,move,fingerprint}` manages a datastore and
-its `<stem>.manifest.json` sidecar (`RunRegistry.stores`). `show` is read-only. `create` and
-`adopt` write a sidecar and never open the store. `copy` and `move` move the store's files with
-`ShardedPool` and carry the sidecar, and refuse a store that any `running` run names, alive or
-stale. `fingerprint` reads the closed store read-only, compares its content fingerprint with the
-one the sidecar records, and writes it into the sidecar only with `--write`; it refuses a store a
-`running` run names, and `--listing` writes the full listing to a new file away from the store.
-None of them initialises Ray, and none deletes anything.
+`python -m RunRegistry store {show,create,adopt,copy,move,fingerprint,retire}` manages a
+datastore and its `<stem>.manifest.json` sidecar (`RunRegistry.stores`). `show` is read-only.
+`create` and `adopt` write a sidecar and never open the store. `copy` and `move` move the store's
+files with `ShardedPool` and carry the sidecar, and refuse a store that any `running` run names,
+alive or stale. `fingerprint` reads the closed store read-only, compares its content fingerprint
+with the one the sidecar records, and writes it into the sidecar only with `--write`; it refuses a
+store a `running` run names, and `--listing` writes the full listing to a new file away from the
+store. `retire` deletes a closed store's own files, its shards and then its primary, through
+`ShardedPool.delete_store`, and keeps its sidecar as a tombstone that says when, why and what the
+store held; it refuses a store a `running` run names, alive or stale, and one whose recorded
+fingerprint does not match its content, and `--dry-run` reports what it would do and does nothing.
+None of them initialises Ray. `retire` alone deletes, and only a store's own files; none deletes a
+sidecar, a run directory or any other record, and every other command refuses a tombstone.
 """
 
 import argparse
@@ -59,8 +64,76 @@ def _purpose(entry) -> str:
     return text
 
 
+def _print_references(references) -> None:
+    if not isinstance(references, dict):
+        print(f"  references: {references!r}")
+        return
+    runs = references.get("runs") or []
+    print(f"  runs naming it, under {references.get('runs_root')}: {len(runs)}")
+    for run in runs:
+        print(
+            f"    {run.get('id')}  {(run.get('state') or 'unknown'):9} by "
+            f"{' and '.join(run.get('matched_by') or [])}"
+        )
+    sidecars = references.get("sidecars") or []
+    print(
+        f"  sidecars naming it, under {references.get('stores_root')}: {len(sidecars)}"
+    )
+    for entry in sidecars:
+        if "unreadable" in entry:
+            print(f"    !! {entry.get('sidecar')}: unreadable, {entry['unreadable']}")
+        else:
+            print(f"    {entry.get('sidecar')}: {', '.join(entry.get('fields') or [])}")
+    print(f"  not searched: {references.get('not_searched')}")
+
+
+def _print_condition(condition) -> None:
+    condition = condition if isinstance(condition, dict) else {}
+    if condition.get("condition") == "matched":
+        print(
+            f"  matched: a fresh read-only fingerprint matched the recorded one, digest "
+            f"{condition.get('digest')}"
+        )
+    elif condition.get("condition") == "without":
+        print(
+            f"  without (--without-fingerprint): the store could not be fingerprinted: "
+            f"{condition.get('error_type')}: {condition.get('error')}"
+        )
+    else:
+        print(f"  {condition!r}")
+
+
+def _print_retirement(retired) -> None:
+    """A tombstone's `retired` field, for `store show` and `store retire`."""
+    if not isinstance(retired, dict):
+        print(f"retirement: {retired!r} (malformed)")
+        return
+    print("retirement:")
+    print(f"  state:     {retired.get('state')}")
+    print(
+        f"  when:      {retired.get('when')} at {retired.get('git_head')}"
+        f"{' (dirty)' if retired.get('git_dirty') else ''}"
+    )
+    print(f"  reason:    {retired.get('reason')}")
+    print(f"  completed: {retired.get('completed') or 'not yet'}")
+    print("  fingerprint:")
+    _print_condition(retired.get("fingerprint"))
+    listed = (
+        "the files present when it began; a shard was already missing"
+        if retired.get("files_present_only")
+        else "every file of the store"
+    )
+    print(f"  files ({listed}):")
+    for path in retired.get("files") or []:
+        print(f"    {path}")
+    print("  references, when it was retired:")
+    _print_references(retired.get("references"))
+
+
 def _show(args) -> int:
     reading = stores.read_sidecar(args.primary)
+    if reading.retired:
+        _print_retirement(reading.fields.get("retired"))
     print(f"sidecar:  {reading.path}")
     print(f"kind:     {reading.kind}")
     if reading.problems:
@@ -100,6 +173,52 @@ def _show(args) -> int:
             )
     else:
         print(f"runs naming this store, under {args.runs_root}: none")
+    # a completed tombstone is not a problem; an incomplete retirement, or a primary that exists
+    # again at a retired name, is. Any other sidecar exits 0 whatever it reads as, as before
+    return 1 if reading.retired and reading.problems else 0
+
+
+def _retire(args) -> int:
+    try:
+        result = stores.retire_store(
+            args.primary,
+            args.reason,
+            runs_root=args.runs_root,
+            stores_root=args.stores_root,
+            without_fingerprint=args.without_fingerprint,
+            dry_run=args.dry_run,
+        )
+    except RuntimeError as e:
+        print(f"!! {e}", file=sys.stderr)
+        return 1
+
+    print(f"store:    {result['primary']}")
+    print(f"sidecar:  {result['sidecar']}")
+    if result["dry_run"]:
+        print("dry run:  nothing was written or deleted")
+    if result["completing"]:
+        print(
+            "completing a retirement that was interrupted; its tombstone is kept as written"
+        )
+    print("references:")
+    _print_references(result["references"])
+    print("fingerprint check:")
+    _print_condition(result["fingerprint"])
+    if result["dry_run"]:
+        print("files to be deleted:")
+        shown = result["to_delete"]
+    else:
+        print("files deleted:")
+        shown = result["deleted"]
+    for path in shown:
+        print(f"  {path}")
+    if not shown:
+        print("  none")
+    print("tombstone:")
+    for line in json.dumps(result["tombstone"], indent=2, sort_keys=True).splitlines():
+        print(f"  {line}")
+    if not result["dry_run"]:
+        print(f">> retired: {result['sidecar']}")
     return 0
 
 
@@ -185,6 +304,8 @@ def _store(args) -> int:
         return _show(args)
     if args.store_command == "fingerprint":
         return _fingerprint(args)
+    if args.store_command == "retire":
+        return _retire(args)
     try:
         if args.store_command == "create":
             fields = stores.create_sidecar(args.primary, args.purpose)
@@ -267,6 +388,32 @@ def main(argv=None) -> int:
         help="also write the full listing to this new file, outside the store's directory",
     )
     printer.add_argument("--runs-root", **runs_root)
+    retirer = store_sub.add_parser(
+        "retire",
+        help="delete a closed store's files, keeping its sidecar as a tombstone",
+    )
+    retirer.add_argument("primary", metavar="PRIMARY")
+    retirer.add_argument(
+        "--reason", required=True, metavar="TEXT", help="why the store is retired"
+    )
+    retirer.add_argument(
+        "--without-fingerprint",
+        action="store_true",
+        help="for a store that cannot be fingerprinted: record the error that prevents it",
+    )
+    retirer.add_argument(
+        "--dry-run",
+        action="store_true",
+        help="make every check and report what would be done; write and delete nothing",
+    )
+    retirer.add_argument("--runs-root", **runs_root)
+    retirer.add_argument(
+        "--stores-root",
+        default=stores.DEFAULT_STORES_ROOT,
+        metavar="DIR",
+        help=f"where sidecars that reference the store are searched for, default "
+        f"{stores.DEFAULT_STORES_ROOT}",
+    )
 
     args = parser.parse_args(argv)
     if args.command == "store":

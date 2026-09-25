@@ -1,6 +1,6 @@
 # Open issues — project-wide index
 
-**Last updated:** 2026-09-25 · **101 open** across sixteen campaigns.
+**Last updated:** 2026-09-25 · **102 open** across sixteen campaigns.
 
 This file exists so that an issue opened by one campaign is not lost when that campaign closes.
 It is an **index, not a record**: one line per issue, pointing at the campaign status board that
@@ -729,7 +729,7 @@ backup's primary names the live store's shards. And `CLAUDE.md` says the registr
 It opened three `00-` issues, each recorded here for its owner. It was also assigned two
 `datastore-portability` issues, both to its prompt 02, which closed both on 2026-09-25 (one of
 them also unblocked `--build --resume` of the A3 v2 store); their rows are now on that board's §4,
-and are deleted here. Its prompt 01 opened one more the same day.
+and are deleted here. Its prompts 01 and 03 each opened one more the same day.
 
 | Issue | Board | Hook |
 |---|---|---|
@@ -737,6 +737,7 @@ and are deleted here. Its prompt 01 opened one more the same day.
 | `[00-a-launch-log-lives-outside-its-run-directory]` | store-retirement | `var/bootstrap-a3-resume.log` is a strict superset of that run's registered logs, with 67 more lines, including the only SIGTERM record. It sits at the top of `var/`, attributed by nothing on disk. |
 | `[00-a-copy-carries-its-sources-present-tense-fields]` | store-retirement | `copy_store` carries unknown fields verbatim, so a copy of the live A3 store says it has a retained backup, and its `restart.command` resumes into the **source** store. Nothing reads them. A decision about copy's design. |
 | `[01-cross-filesystem-move-advice-says-delete-by-hand]` | store-retirement | A move that fails across filesystems advises deleting the source by hand, and `store move` passes that advice on for a registered store, against the rule that one is only ever retired. An existing test pins the text. |
+| `[03-the-package-docstring-still-says-the-registry-deletes-nothing]` | store-retirement | The `RunRegistry/__init__.py` module docstring still says the package "deletes nothing", twice. Since prompt 03 `store retire` deletes a store's own files, as D0 and `CLAUDE.md` say. Documentation only; prompt 03 could change only `begin` there. |
 
 ---
 

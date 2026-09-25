@@ -523,7 +523,9 @@ def begin(
     sidecar with a problem. It matches a run to its store after the store has moved, which a path
     cannot, and it is how `store copy` / `store move` recognise a store a running run is using.
     The sidecar is read here and never written. Manifests written before the field existed lack
-    it, and are read exactly as before.
+    it, and are read exactly as before. A `results` whose sidecar is a tombstone
+    (`RunRegistry.stores.retire_store`) is refused before the run directory is created, because a
+    retired name is never reused.
 
     `scope` is one line saying what the run covers, and is what tells a stranger whether the run
     is still relevant — the hand-written `handover-A3-baseline-lambdacdm.manifest.json` carried it
@@ -539,6 +541,21 @@ def begin(
     """
     identifier = run_id(campaign, prompt, slug, when)
     path = os.path.join(root or DEFAULT_ROOT, identifier)
+    # the results store's sidecar is read before anything is created: a retired store is refused
+    # (store-retirement README D6), complete or not, and no run directory is left behind
+    results_store_id = None
+    if results:
+        # here, because `stores` imports this module
+        from .stores import _tombstone_text, read_sidecar
+
+        reading = read_sidecar(results)
+        if reading.retired:
+            raise RuntimeError(
+                f'Cannot begin run {identifier} with results "{results}": '
+                f"{_tombstone_text(reading)}. Give the new store a name of its own. No run "
+                f"directory was created"
+            )
+        results_store_id = reading.store_id
     os.makedirs(path, exist_ok=True)
     if os.path.exists(os.path.join(path, "manifest.json")):
         raise FileExistsError(
@@ -546,11 +563,6 @@ def begin(
         )
     if checkpoint is True:
         checkpoint = os.path.join(path, "checkpoint.jsonl")
-    results_store_id = None
-    if results:
-        from .stores import read_sidecar  # here, because `stores` imports this module
-
-        results_store_id = read_sidecar(results).store_id
     manifest = {
         "run_id": identifier,
         "created": now_iso(),
