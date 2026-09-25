@@ -1,6 +1,6 @@
 # Open issues — project-wide index
 
-**Last updated:** 2026-09-25 · **100 open** across fifteen campaigns.
+**Last updated:** 2026-09-25 · **99 open** across fifteen campaigns.
 
 This file exists so that an issue opened by one campaign is not lost when that campaign closes.
 It is an **index, not a record**: one line per issue, pointing at the campaign status board that
@@ -51,7 +51,8 @@ day, on that board's §4. Prompt 03 closed the third the same day and opened one
 prompt 01 closed one of them on 2026-09-25, on that board's §4, and its prompt 02 opened one the
 same day. Its prompt 03 closed two the same day: `[00-inventory-run-prunes-unvalidated-rows-by-default]`
 on its own §4, and `qcd-background-audit`'s `[03-qcd-inventory-does-not-report-the-representation]`
-on that board's §4. Of the 90
+on that board's §4. Its prompt 04 closed `run-registry`'s
+`[04-a-runs-product-is-named-but-never-fingerprinted]` the same day, on that board's §4. Of the 90
 above, 87 are spread across the boards and
 **three still have no board row** — the last three `handover` rows in §1.1, opened by a document
 review on 2026-09-19, whose content lives in
@@ -702,10 +703,11 @@ prompts. Prompt 01 closed one, `[00-build-schema-reads-registration-before-its-n
 and `qcd-background-audit`'s `[03-qcd-inventory-does-not-report-the-representation]` the same day
 (the two boards' §4), so six `00-` rows remain below, each recorded here for its owner. Prompt 02
 opened one more on 2026-09-25, the last row below, and it too is recorded here for its owner.
+Prompt 04 closed `run-registry`'s `[04-a-runs-product-is-named-but-never-fingerprinted]` on
+2026-09-25 (that board's §4), and its row is deleted.
 
 | Issue | Board | Hook |
 |---|---|---|
-| `[04-a-runs-product-is-named-but-never-fingerprinted]` | run-registry | After a store is copied between machines, "is this copy up to date?" is unanswerable; a file hash is the wrong instrument, since SQLite is not byte-stable. **Amended 2026-09-24:** a content fingerprint of per-class, per-tag-set digests (never a full listing) lives in the store sidecar and is copied into the run record at `finish()`; it is computed by a read-only registry `store fingerprint` from a structured inventory service naming work items by physical labels and tag sets, with a real `QuadSourceIntegral` record. Removals after a fingerprint is taken are not recoverable (accepted). **Assigned 2026-09-24** to `store-fingerprint`, whose prompt 04 closes it. |
 | `[00-oneloop-lookup-joins-the-wrong-tag-table]` | store-fingerprint | `OneLoopIntegral.build` filters tags against `QuadSourceIntegral_tags`, while `store()` writes `OneLoopIntegral_tags`. No effect while the table is empty. |
 | `[00-tagged-read-batch-joins-an-unselected-alias]` | store-fingerprint | *Suspected, not run.* The tag joins in `QuadSourceIntegral` / `OneLoopIntegral` `read_batch` name `query.c.serial`, which compiles to an alias outside the FROM clause. Extraction passes tags. To confirm on a store copy. |
 | `[00-quadsource-tq-serial-has-the-wrong-foreign-key]` | store-fingerprint | `QuadSource.Tq_serial` declares a foreign key to `QuadSource.serial` but holds a transfer-function id; `Tr_serial` declares none. Not enforced; a false statement in the schema. |

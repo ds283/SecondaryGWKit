@@ -1,8 +1,8 @@
 # Store fingerprint campaign — implementation state
 
-**Last updated:** 2026-09-25 · **Status: 3 of 5 prompts landed (01, 02, 03). 04 was written on
-2026-09-25 against 02's structure, and is ready to dispatch. 05 is held until 04 lands. Decisions
-D1–D3 were made on 2026-09-24, and D4 on 2026-09-25 (README §6.2).**
+**Last updated:** 2026-09-25 · **Status: 4 of 5 prompts landed (01, 02, 03, 04). 05 is not yet
+written; 04, which it was held for, has landed. Decisions D1–D3 were made on 2026-09-24, and D4 on
+2026-09-25 (README §6.2).**
 
 The campaign was opened on 2026-09-24. It owns `run-registry`'s
 `[04-a-runs-product-is-named-but-never-fingerprinted]`, as amended at `218ca74`: a store's content
@@ -66,6 +66,32 @@ validated split and value-row total, and it left the copy byte-identical. The pr
 `[00-inventory-run-prunes-unvalidated-rows-by-default]` (§4). It also closes
 `qcd-background-audit`'s `[03-qcd-inventory-does-not-report-the-representation]`, on that board.
 
+**Prompt 04 landed 2026-09-25.** A store's content fingerprint is a pure function of the
+structured inventory, `RunRegistry.stores.fingerprint_of`. It holds:
+- format 1;
+- per class and per tag set, a count and a SHA-256 over the canonical record lines (key, tags,
+  `validated`, `value_count`), each followed by a newline, in canonical order;
+- an overall digest over the format and each class's count and digest;
+- problem counts and `taken`, both outside every digest.
+
+It is a known sidecar field, `fingerprint`. Its shape is checked, and copy and move carry it
+verbatim, `taken` included. `python -m RunRegistry store fingerprint` is read-only unless given
+`--write`, which replaces that one field. It compares against the recorded value, refuses a store
+any `running` run names, and `--listing` writes the full listing, whose lines hash to the digests,
+to a new file away from the store. `Run.finish(..., fingerprint=True)` puts the fingerprint in
+`status.json`, and in a registry sidecar. A failure is recorded as `fingerprint_error` and never
+changes the state. The two drivers pass it on every finish after the pipeline, and not in their
+signal handlers. A golden fingerprint of the full fixture store pins the format.
+
+On a copy of the sweep store:
+- the fingerprint is 6 284 bytes, overall digest `2c2dde68…`, taken in 8.1 s at 233 MB;
+- a registry copy of the copy matches it;
+- deleting one `QuadSourceIntegral` row names exactly one content difference, that class's one tag
+  set at 7 706 against 7 705, and one `orphan-tag` problem entry.
+
+The prompt closes `run-registry`'s `[04-a-runs-product-is-named-but-never-fingerprinted]`, on that
+board's §4.
+
 **Campaign:** [`README.md`](README.md) · **Audit:** [`docs/store-fingerprint-audit.md`](../../docs/store-fingerprint-audit.md) ·
 **Index:** [`docs/OPEN_ISSUES.md`](../../docs/OPEN_ISSUES.md) §1.13
 
@@ -86,8 +112,8 @@ validated split and value-row total, and it left the copy byte-identical. The pr
 | 01 | [One schema builder, and a read-only reader](01-a-read-only-store-reader.md) | **F1**–**F3** | Opus 5.5 | ✍️ yes, 2026-09-24 | ✅ 2026-09-25 | *"Add one schema builder and a read-only store reader"* | [`logs/01-…`](logs/01-a-read-only-store-reader.md) |
 | 02 | [A structured inventory](02-a-structured-inventory.md) | **F4**–**F7** | Opus 5.5 | ✍️ yes, 2026-09-24 | ✅ 2026-09-25 | *"Add a structured store inventory keyed by physical labels"* | [`logs/02-…`](logs/02-a-structured-inventory.md) |
 | 03 | [One inventory service](03-one-inventory-service.md) | **F8**–**F9** | Opus 5.5 | ✍️ yes, 2026-09-25 | ✅ 2026-09-25 | *"Move the inventory report and run labels onto one read-only service"* | [`logs/03-…`](logs/03-one-inventory-service.md) |
-| 04 | [The fingerprint](04-the-fingerprint.md) | **F10**–**F12** | Opus | ✍️ yes, 2026-09-25 | ⏳ not dispatched | — | — |
-| 05 | *Fingerprint the real stores* | **F13** | — | ⏸️ held until 04 lands | — | — | — |
+| 04 | [The fingerprint](04-the-fingerprint.md) | **F10**–**F12** | Opus 5.5 | ✍️ yes, 2026-09-25 | ✅ 2026-09-25 | *"Fingerprint a store's content in its sidecar and run record"* | [`logs/04-…`](logs/04-the-fingerprint.md) |
+| 05 | *Fingerprint the real stores* | **F13** | — | not yet written; 04 has landed | — | — | — |
 
 The charters of 03–05 are fixed in README §2. 03 and 04 were written once 02's structure had
 landed; 05's method waits on 04's format. It is held by design, not missing. Orchestration prompts:
@@ -109,9 +135,9 @@ landed; 05's method waits on 04's format. It is held by design, not missing. Orc
 | F7 | **MEASUREMENT** | Records only, never `*Value` rows. Size, time and memory measured on a copy of the sweep store, with a one-row discriminator. | 02 | ✅ **Done, 2026-09-25.** Every statement naming a value table is a `count(*) … GROUP BY` (test 6). The sweep copy has 30 341 records, and every class's record count equals its row count. Every value table's total equals its parents' summed `value_count`. There is no problem of any kind, and the 12 replicated classes agree on all four shards. `read_inventory` took 6.8 s, with a peak RSS of 228 MB (175 MB of it the factories' imports). The full listing is 19.3 MB of JSON. Deleting `QuadSourceIntegral` serial 329386 on shard 0 took the class from 7 706 to 7 705 records, removing exactly the record with $k=q=r=3.05\times10^7$, $z_{\rm response}=0.1$, atol $10^{-32}$, rtol $10^{-8}$. The other 20 classes were identical, record for record. Its 9 tag rows were then named `orphan-tag`. The copy and the originals were unchanged by every read, and the copy was deleted. |
 | F8 | **REMEDY** | The display (`main.py --inventory`, read-only and needing no Ray) and `available_run_labels` consume the structured inventory. Closes `[00-inventory-run-prunes-unvalidated-rows-by-default]` and the `BackgroundModel` half of `[03-qcd-inventory-does-not-report-the-representation]`. | 03 | ✅ **Done, 2026-09-25.** `format_inventory_report(inventory, db_name, verbose=False)` gives, per class, the count, the validated split, the value-row total with its table, the timestamps, the tag sets, the records by physical labels, grouped by tag set and ordered numerically, and every problem. A field common to every record of a class is printed once. A parent is printed by the fields that vary across its own class, so distinct records never share a line. Float leaves are typed by `build_schema`'s column types (F8 item 2: the display consults the schema, and `store_inventory.py` is unchanged). `store_tag` lists every label and marks one no record carries. `--inventory` runs before `ray.init`, refuses `--drop` and a missing store, and exits 0. `ShardedPool.primary` was added. `available_run_labels` keeps its signature and answer, and refuses a `store_tag` problem. Tests: `test_inventory_report` (18), `test_inventory_consumers` (11; `main.py` run through a `ray.init` guard, with the store unchanged and its unvalidated rows kept). On the sweep copy, every count agrees with the old report. **Deliberate breakage (i)–(vi)** each fail their tests. |
 | F9 | **REMEDY** | Retire the old three shapes, the old `inventory()` methods, `ShardedPool.inventory`, `_merge_queue` and `inventory_config`, so that there is one inventory service. | 03 | ✅ **Done, 2026-09-25.** 28 factory methods deleted (679 lines, 0 added, no import changed). Also deleted: `Datastore.inventory` and `InventoryConfigType`; `ShardedPool.inventory`, `_merge_queue` and the `inventory_config` parameter; `config.sharding.inventory_config` with its policies; the argument in `main.py` and the two `docs/source-remediation-verification/` scripts. D4: `test_qcd_cosmology_inventory.py` (3) was replaced by `test_qcd_cosmology_inventory_record.py` (3). The third claim is now a named `duplicate`. `test_inventory_retired` (7) runs F9 item 7's `git grep`. **The user decided (2026-09-25)** that it excludes `Datastore/tests/test_store_inventory.py`, whose `_Stores.inventory` helper calls `read_inventory`, and that a test holds that file's matches to that helper. **Deliberate breakage (vii)** fails its tests. |
-| F10 | **FACILITY** | The fingerprint, a pure function of the structured inventory. It holds a format version, and per class and per tag set a count and a digest over the sorted canonical records, plus an overall digest. No timestamps. | 04 | ✍️ written |
-| F11 | **FACILITY** | The `fingerprint` sidecar field, a known field of `RunRegistry.stores` that copy and move carry. `python -m RunRegistry store fingerprint`: read-only, refuses a store a `running` run names, compares against the recorded value and writes only when asked. | 04 | ✍️ written |
-| F12 | **FACILITY** | The digest in the run record at finish. `scoped_pipeline_run.py` and `quadsource_atol_sweep.py`, including `--build` for the A3 v2 store (D2), take one when a registered run finishes. Closes `run-registry`'s `[04-a-runs-product-is-named-but-never-fingerprinted]`. | 04 | ✍️ written |
+| F10 | **FACILITY** | The fingerprint, a pure function of the structured inventory. It holds a format version, and per class and per tag set a count and a digest over the sorted canonical records, plus an overall digest. No timestamps. | 04 | ✅ **Done, 2026-09-25.** `RunRegistry/stores.py`: `FINGERPRINT_FORMAT = 1`, and `fingerprint_of(inventory, taken=None)`. It gives `classes` (per class `count`, `digest`, and `tag_sets` of `{tags, count, digest}`), the overall `digest` (SHA-256 of `canonical_json` of the format and each class's count and digest), `problems` (counts per class and kind) and `taken`. The last two are outside every digest. A digest is SHA-256 of `record.canonical_json()` + `\n` per record, in canonical order, so a listing's lines hash to it (`listing_lines`). `compare_fingerprints` names the class, the tag set (or which side lacks it) and both counts. It refuses to compare two formats, and reports problem differences as their own entries. The golden `RunRegistry/tests/data/full_store_fingerprint.json` pins format 1. Tests 1–6. **Deliberate breakage (i), (ii), (iii), (viii), (ix)** each fail their tests. |
+| F11 | **FACILITY** | The `fingerprint` sidecar field, a known field of `RunRegistry.stores` that copy and move carry. `python -m RunRegistry store fingerprint`: read-only, refuses a store a `running` run names, compares against the recorded value and writes only when asked. | 04 | ✅ **Done, 2026-09-25.** `fingerprint` is in `KNOWN_FIELDS`. Its shape is checked (an object, an integer format, a `classes` object, a 64-hex digest, a `taken` object), and copy and move carry it verbatim with no code change (test 7). `fingerprint_store(primary, *, write, runs_root, taken_by)` works in the prompt's six steps. It refuses any `running` run, alive or stale, by path or `store_id`, except `taken_by`; the check is shared with copy and move. It reads through `read_inventory` with no Ray, and writes only the `fingerprint` field, through `_update_sidecar` (now three uses), and only into a problem-free registry sidecar. `store fingerprint PRIMARY [--write] [--listing PATH] [--runs-root DIR]` prints the digests, problems and comparison. It exits 0 on a match or nothing recorded, and 1 on a difference or refusal. `--listing` goes to a new file outside the store's directory. `store show` still loads neither `ray` nor `sqlalchemy`. Tests 7–10. **Deliberate breakage (iv), (v), (vi)** each fail their tests. |
+| F12 | **FACILITY** | The digest in the run record at finish. `scoped_pipeline_run.py` and `quadsource_atol_sweep.py`, including `--build` for the A3 v2 store (D2), take one when a registered run finishes. Closes `run-registry`'s `[04-a-runs-product-is-named-but-never-fingerprinted]`. | 04 | ✅ **Done, 2026-09-25.** `Run.finish(state, exit_code=None, *, fingerprint=False)`. With `True` and a `results` store, it fingerprints the store with the run as `taken_by` before writing the state, and records `fingerprint` and `fingerprint_sidecar` (`written`, or why not) in `status.json`. It writes the sidecar only where that is a problem-free registry sidecar. Any error becomes `fingerprint_error`, and the state and exit code are written as given. Nine `run.finish(` calls in the two drivers gained `fingerprint=True`: three in `scoped_pipeline_run.py`, and three each in `run_build` and `sweep`. The three `terminal` handlers are unchanged, and nothing else in either script changed (test 12, by `ast`). On the §4 copy, a registered run's `status.json` fingerprint equals the sidecar's. Tests 11–12. **Deliberate breakage (vii)** fails its tests. Closed `[04-a-runs-product-is-named-but-never-fingerprinted]` on `run-registry`'s §4. |
 | F13 | **REMEDY** | Remedial: the three existing stores fingerprinted read-only, and each fingerprint written into its sidecar (D3), as is any store built here before 04 landed, such as the A3 v2 store. A registry copy of one is fingerprinted, and the digests localise the known differences. | 05 | ⏸️ held |
 
 ---
@@ -258,11 +284,11 @@ Prompt 01 closed one of them on 2026-09-25 (§4). Prompt 02 opened one on 2026-0
 At `f53598f` (README §7): AdaptiveLevin 32, ComputeTargets 552 (the known wall-clock flake
 aside), CosmologyModels 39, Datastore 70, LiouvilleGreen 148 (1 skipped), RunRegistry 84.
 
-| Suite | At `417c647` (before prompt 01) | After prompt 01 | After prompt 02 | After prompt 03 |
-|---|---|---|---|---|
-| `AdaptiveLevin` | 32 OK | 32 OK | 32 OK | 32 OK |
-| `ComputeTargets` | 552 OK (the flake is known) | 552 OK (the flake passed) | 552 OK (the flake passed) | 552 OK (3 retired, 3 added; the flake passed) |
-| `CosmologyModels` | 39 OK | 39 OK | 39 OK | 39 OK |
-| `Datastore` | 70 OK | **92 OK** (+22) | **141 OK** (+49) | **177 OK** (+36) |
-| `LiouvilleGreen` | 148 OK (skipped=1) | 148 OK (skipped=1) | 148 OK (skipped=1) | 148 OK (skipped=1) |
-| `RunRegistry` | 84 OK | 84 OK | 84 OK | 84 OK |
+| Suite | At `417c647` (before prompt 01) | After prompt 01 | After prompt 02 | After prompt 03 | After prompt 04 |
+|---|---|---|---|---|---|
+| `AdaptiveLevin` | 32 OK | 32 OK | 32 OK | 32 OK | 32 OK |
+| `ComputeTargets` | 552 OK (the flake is known) | 552 OK (the flake passed) | 552 OK (the flake passed) | 552 OK (3 retired, 3 added; the flake passed) | 552 OK (the flake passed) |
+| `CosmologyModels` | 39 OK | 39 OK | 39 OK | 39 OK | 39 OK |
+| `Datastore` | 70 OK | **92 OK** (+22) | **141 OK** (+49) | **177 OK** (+36) | 177 OK |
+| `LiouvilleGreen` | 148 OK (skipped=1) | 148 OK (skipped=1) | 148 OK (skipped=1) | 148 OK (skipped=1) | 148 OK (skipped=1) |
+| `RunRegistry` | 84 OK | 84 OK | 84 OK | 84 OK | **117 OK** (+33) |

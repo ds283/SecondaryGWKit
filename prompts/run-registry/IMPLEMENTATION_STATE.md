@@ -1,6 +1,6 @@
 # Run registry campaign — implementation state
 
-**Last updated:** 2026-09-24 · **Status: COMPLETE — 3 of 3 prompts landed (01, 02, 03).** Prompt 01
+**Last updated:** 2026-09-25 · **Status: COMPLETE — 3 of 3 prompts landed (01, 02, 03).** Prompt 01
 landed the `RunRegistry/` package, the `var/runs/` layout, the lister, and the six rules as a
 `CLAUDE.md` section. **The self-match regression is in the tree and bites**: the same test fails
 against a `pgrep`-based implementation and passes against the shipped one. Prompt 02 adopted it in
@@ -10,9 +10,11 @@ hash `c1cd3598c23a`, and no existing checkpoint record was re-stamped, migrated 
 anything in this campaign. Prompt 03 split the manifest's overloaded `checkpoint` field in two —
 `checkpoint` is the unit ledger, `results` names the durable store a job's results live in — so
 `record()` cannot append JSON-Lines to a datastore and `known()` cannot report "nothing done" for a
-file that is not a ledger. Four issues are open in §3, and two are resolved in §4. The second of
+file that is not a ledger. Three issues are open in §3, and three are resolved in §4. The second of
 those, `[04-sharded-store-paths-are-absolute-…]`, was closed on 2026-09-24 by the
-`datastore-portability` campaign, which owns the datastore code.
+`datastore-portability` campaign, which owns the datastore code. The third,
+`[04-a-runs-product-is-named-but-never-fingerprinted]`, was closed on 2026-09-25 by the
+`store-fingerprint` campaign's prompt 04, which was written to own it.
 
 **Campaign:** [`README.md`](README.md) ·
 **Package:** `RunRegistry/` · **Layout:** `var/runs/<campaign>-<prompt>-<slug>-<timestamp>/` ·
@@ -78,111 +80,6 @@ README §0.3 calls worse than nothing.
   reporting it as foreign instead of guessing. Reporting correctly is recording, so this stays
   inside §0.2's boundary. Pair it with a stated rule that **only terminal-state run directories are
   transferred**. Indexed at `docs/OPEN_ISSUES.md` §1.11.
-
-- **[04-a-runs-product-is-named-but-never-fingerprinted]** *(opened 2026-09-24 from the same
-  question; user decision: **do it**)* — `finish(state, exit_code)` records neither what the run
-  produced nor how much of it, so after a store is copied between machines there is nothing to
-  compare against and "is this copy up to date?" is unanswerable. The manifest's `results` names a
-  path and, by `record()`'s own docstring, *"the registry names where a job's results live, it does
-  not open them"* — which is the right boundary and is why the fix does not belong in
-  `RunRegistry`.
-
-  **A file hash is the wrong instrument** and would be wrong wherever it lived: SQLite files are not
-  byte-stable, since VACUUM, page reuse and WAL checkpointing all change bytes without changing
-  content, so two stores with identical logical content generally differ under `sha256` and a
-  legitimate copy would report as a mismatch.
-
-  **The census already exists.** `main.py --inventory` (`tools/inventory_report.py`) reports
-  per-class counts across the pool, which is exactly the content fingerprint wanted.
-  **Next step:** have the pipeline driver write that report into the run directory at `finish()`.
-  The run record then carries its own product census; it travels with the (tiny) run directory
-  rather than the 350 MB store; and a later reader can check a store offline. Ten lines in the
-  driver, none in `RunRegistry`. Deliberately **not** a `pull` command — transfer is acting, not
-  recording, and `rsync` already does it better. Indexed at `docs/OPEN_ISSUES.md` §1.11.
-
-  **Amended 2026-09-24 (user decisions, after `datastore-portability` prompt 03 landed at
-  `f53598f`).** The next step above is superseded. It was correct for what was known when it was
-  written, and is kept as the record of that. What changed, and what is now decided:
-
-  - **Where the idea came from, and a conflation to avoid.** The fingerprint came from the
-    two-machine question (a build on `macstudio-tunnel`, then an rsync, then "is this copy up to
-    date?"). The store sidecar, `<stem>.manifest.json`, came separately, from `datastore-portability`'s
-    discussion of copying and moving stores. No discussion connected the two. The hand-written A3
-    sidecar is a provenance and status note (purpose, scope, run history, restart command,
-    backup), not a fingerprint. What it does set is the precedent that a description of a store
-    sits beside the store.
-  - **The fingerprint lives in the store sidecar, not the run directory.** It describes a store,
-    and a store gathers the products of several runs (A3 has two run-history entries and a
-    resume; the sweep store had four runs). The sidecar travels with the store under rsync, and
-    `store_id` (`RunRegistry.stores`, README §6.5 of `datastore-portability`) now links runs to it
-    through each new manifest's `results_store_id`. It is a field `RunRegistry.stores` defines,
-    not an unknown one, so copy and move carry it knowingly: both leave the content unchanged. The
-    three existing sidecars were adopted as registry sidecars on 2026-09-24 at the user's request
-    (A3 `5f58ac53…`, sweep `04198f22…`, backup `4c2ce77b…`); nothing else in them changed but
-    `datastore`, which became the bare file name.
-  - **The inventory service returns structured output.** Display formatting
-    (`tools/inventory_report.py`) and JSON fingerprints are two consumers of it. The structure can
-    later grow to carry computed values, which each consumer uses or ignores. It must **not**
-    become another serialisation of the store. The `*Value` tables, which hold nearly all rows
-    (about 2.1 M of the sweep store's ~2.14 M), stay counts only.
-  - **Work items are named by physical labels, not by row ids.** Today a compute target's entry
-    reads `wavenumber_exit=12, model=1, atol=3, rtol=5`, which are store-local serials: a copy
-    matches its original, but two stores built independently need not. Floats must be represented
-    so that they survive a digest exactly (for example `float.hex`).
-  - **Tags are part of each work item's record, and of the fingerprint.** They label the grid a
-    product was computed on, and the lookups require them (for example
-    `Datastore/SQL/ObjectFactories/QuadSourceIntegral.py:279`; the grid tags are fetched at
-    `main.py:1100`–`1125`). The `store_tag` inventory lists every label in the store, but the
-    `*_tags` association tables have no inventory, so today nothing says which tags a product
-    carries.
-  - **`QuadSourceIntegral` gets a real inventory record**: one entry per work item, with its
-    physical labels, tolerances and tag set, replacing the bare count. Today a one-row deletion
-    shows only as 7,705 against 7,706.
-  - **Digests only, never the full listing** (user decision, to keep sidecars small). The sidecar
-    holds, per class and per tag set, a count and a digest over the sorted work-item keys
-    (physical labels, tag set, validated flag), plus one overall digest. Tag sets are few, since
-    one run's products share one, so a mismatch names the class and the grid that differ. It also
-    records a fingerprint format version, when it was taken, and by which run. Timestamps are not
-    part of any digest, and the digest is computed from the complete inventory, never the
-    truncated display. A full listing is generated on demand where the store is, when two digests
-    disagree. The digest is also copied into the run record at `finish()`: it is a few kilobytes,
-    and the run directory outlives a disposable store, as the sweep copy's did.
-  - **The accepted loss.** A listing generated on demand shows the store now, not when the
-    digest was taken. Additions since then can be found from the work-item `timestamp` columns and
-    the run-label tags; **removals cannot**. That covers `--prune-unvalidated`, which deletes
-    unvalidated rows when a store is opened, and any hand edit. A digest can be compared only with
-    one computed under the same format version; the remedy for a mismatch of versions is to
-    recompute both from the stores.
-  - **The charter is not a reason to put this outside the registry.** "The registry names where a
-    job's results live, it does not open them" (`record()`'s docstring) was a boundary drawn for
-    one purpose. It was not a rule, and a charter that stops the registry doing its job is not
-    useful. The durable limits are `CLAUDE.md`'s: the registry does not schedule, supervise,
-    restart, lock or delete, and it must not grow into a project of its own. Taking a fingerprint
-    is part of managing stores, as copy and move are. So a registry `store fingerprint` operation
-    computes it, for any store, including one no pipeline run built, and to re-check a copy after
-    transfer. A pipeline driver may call the same operation when its run finishes. Two constraints:
-    - **It must not change what it reads.** Opening a store through the `ShardedPool` constructor
-      inserts a `version` row into each shard. The factories' `inventory(conn, table, tables)`
-      need only a connection, so the fingerprint reads through read-only engines (prompt 02's
-      `read_pool` pattern), with no actors and no Ray.
-    - **It imports the datastore code inside the operation**, as copy and move do, so
-      `import RunRegistry` and `list` stay free of `ray` and `sqlalchemy`. A store that a
-      `running` run names is not a consistent snapshot, since each shard is read separately; the
-      operation refuses or warns, using the check copy and move already make.
-
-  **Next step:** a campaign, not yet written, covering: the structured inventory service, with
-  physical labels, tag sets and a `QuadSourceIntegral` record; the fingerprint's format and its
-  field in `RunRegistry.stores`; `store fingerprint`; and the digest in the run record at
-  `finish()`. Still no `pull`, which is transfer, and rsync does it better.
-
-  **Assigned (2026-09-24):** [`prompts/store-fingerprint`](../store-fingerprint/README.md). Prompts
-  01–03 build the read-only reader and the structured inventory, and prompt 04 closes this issue.
-  That campaign's audit, [`docs/store-fingerprint-audit.md`](../../docs/store-fingerprint-audit.md)
-  §2, **corrects one sentence of the amendment above.** Opening a store through the `ShardedPool`
-  constructor inserts a `version` row only when the release label is new, once per store per
-  release, not on every open. The conclusion stands, because an open also runs the `--drop`
-  actions, creates missing tables and, by default, prunes unvalidated rows. The amendment is left
-  as written.
 
 - **[01-var-runs-holds-unattributable-loose-files]** *(opened 2026-09-22 by prompt 01)* — four
   files sit at the top level of `var/runs/`, beside the two A3 pilot directories, with nothing
@@ -323,6 +220,136 @@ README §0.3 calls worse than nothing.
   for the user. Measurement:
   [`../datastore-portability/logs/01-relative-shard-paths.md`](../datastore-portability/logs/01-relative-shard-paths.md).
   Row deleted from `docs/OPEN_ISSUES.md` §1.11 in the same commit.
+
+- **[04-a-runs-product-is-named-but-never-fingerprinted]** *(opened 2026-09-24 from the same
+  question; user decision: **do it**)* — `finish(state, exit_code)` records neither what the run
+  produced nor how much of it, so after a store is copied between machines there is nothing to
+  compare against and "is this copy up to date?" is unanswerable. The manifest's `results` names a
+  path and, by `record()`'s own docstring, *"the registry names where a job's results live, it does
+  not open them"* — which is the right boundary and is why the fix does not belong in
+  `RunRegistry`.
+
+  **A file hash is the wrong instrument** and would be wrong wherever it lived: SQLite files are not
+  byte-stable, since VACUUM, page reuse and WAL checkpointing all change bytes without changing
+  content, so two stores with identical logical content generally differ under `sha256` and a
+  legitimate copy would report as a mismatch.
+
+  **The census already exists.** `main.py --inventory` (`tools/inventory_report.py`) reports
+  per-class counts across the pool, which is exactly the content fingerprint wanted.
+  **Next step:** have the pipeline driver write that report into the run directory at `finish()`.
+  The run record then carries its own product census; it travels with the (tiny) run directory
+  rather than the 350 MB store; and a later reader can check a store offline. Ten lines in the
+  driver, none in `RunRegistry`. Deliberately **not** a `pull` command — transfer is acting, not
+  recording, and `rsync` already does it better. Indexed at `docs/OPEN_ISSUES.md` §1.11.
+
+  **Amended 2026-09-24 (user decisions, after `datastore-portability` prompt 03 landed at
+  `f53598f`).** The next step above is superseded. It was correct for what was known when it was
+  written, and is kept as the record of that. What changed, and what is now decided:
+
+  - **Where the idea came from, and a conflation to avoid.** The fingerprint came from the
+    two-machine question (a build on `macstudio-tunnel`, then an rsync, then "is this copy up to
+    date?"). The store sidecar, `<stem>.manifest.json`, came separately, from `datastore-portability`'s
+    discussion of copying and moving stores. No discussion connected the two. The hand-written A3
+    sidecar is a provenance and status note (purpose, scope, run history, restart command,
+    backup), not a fingerprint. What it does set is the precedent that a description of a store
+    sits beside the store.
+  - **The fingerprint lives in the store sidecar, not the run directory.** It describes a store,
+    and a store gathers the products of several runs (A3 has two run-history entries and a
+    resume; the sweep store had four runs). The sidecar travels with the store under rsync, and
+    `store_id` (`RunRegistry.stores`, README §6.5 of `datastore-portability`) now links runs to it
+    through each new manifest's `results_store_id`. It is a field `RunRegistry.stores` defines,
+    not an unknown one, so copy and move carry it knowingly: both leave the content unchanged. The
+    three existing sidecars were adopted as registry sidecars on 2026-09-24 at the user's request
+    (A3 `5f58ac53…`, sweep `04198f22…`, backup `4c2ce77b…`); nothing else in them changed but
+    `datastore`, which became the bare file name.
+  - **The inventory service returns structured output.** Display formatting
+    (`tools/inventory_report.py`) and JSON fingerprints are two consumers of it. The structure can
+    later grow to carry computed values, which each consumer uses or ignores. It must **not**
+    become another serialisation of the store. The `*Value` tables, which hold nearly all rows
+    (about 2.1 M of the sweep store's ~2.14 M), stay counts only.
+  - **Work items are named by physical labels, not by row ids.** Today a compute target's entry
+    reads `wavenumber_exit=12, model=1, atol=3, rtol=5`, which are store-local serials: a copy
+    matches its original, but two stores built independently need not. Floats must be represented
+    so that they survive a digest exactly (for example `float.hex`).
+  - **Tags are part of each work item's record, and of the fingerprint.** They label the grid a
+    product was computed on, and the lookups require them (for example
+    `Datastore/SQL/ObjectFactories/QuadSourceIntegral.py:279`; the grid tags are fetched at
+    `main.py:1100`–`1125`). The `store_tag` inventory lists every label in the store, but the
+    `*_tags` association tables have no inventory, so today nothing says which tags a product
+    carries.
+  - **`QuadSourceIntegral` gets a real inventory record**: one entry per work item, with its
+    physical labels, tolerances and tag set, replacing the bare count. Today a one-row deletion
+    shows only as 7,705 against 7,706.
+  - **Digests only, never the full listing** (user decision, to keep sidecars small). The sidecar
+    holds, per class and per tag set, a count and a digest over the sorted work-item keys
+    (physical labels, tag set, validated flag), plus one overall digest. Tag sets are few, since
+    one run's products share one, so a mismatch names the class and the grid that differ. It also
+    records a fingerprint format version, when it was taken, and by which run. Timestamps are not
+    part of any digest, and the digest is computed from the complete inventory, never the
+    truncated display. A full listing is generated on demand where the store is, when two digests
+    disagree. The digest is also copied into the run record at `finish()`: it is a few kilobytes,
+    and the run directory outlives a disposable store, as the sweep copy's did.
+  - **The accepted loss.** A listing generated on demand shows the store now, not when the
+    digest was taken. Additions since then can be found from the work-item `timestamp` columns and
+    the run-label tags; **removals cannot**. That covers `--prune-unvalidated`, which deletes
+    unvalidated rows when a store is opened, and any hand edit. A digest can be compared only with
+    one computed under the same format version; the remedy for a mismatch of versions is to
+    recompute both from the stores.
+  - **The charter is not a reason to put this outside the registry.** "The registry names where a
+    job's results live, it does not open them" (`record()`'s docstring) was a boundary drawn for
+    one purpose. It was not a rule, and a charter that stops the registry doing its job is not
+    useful. The durable limits are `CLAUDE.md`'s: the registry does not schedule, supervise,
+    restart, lock or delete, and it must not grow into a project of its own. Taking a fingerprint
+    is part of managing stores, as copy and move are. So a registry `store fingerprint` operation
+    computes it, for any store, including one no pipeline run built, and to re-check a copy after
+    transfer. A pipeline driver may call the same operation when its run finishes. Two constraints:
+    - **It must not change what it reads.** Opening a store through the `ShardedPool` constructor
+      inserts a `version` row into each shard. The factories' `inventory(conn, table, tables)`
+      need only a connection, so the fingerprint reads through read-only engines (prompt 02's
+      `read_pool` pattern), with no actors and no Ray.
+    - **It imports the datastore code inside the operation**, as copy and move do, so
+      `import RunRegistry` and `list` stay free of `ray` and `sqlalchemy`. A store that a
+      `running` run names is not a consistent snapshot, since each shard is read separately; the
+      operation refuses or warns, using the check copy and move already make.
+
+  **Next step:** a campaign, not yet written, covering: the structured inventory service, with
+  physical labels, tag sets and a `QuadSourceIntegral` record; the fingerprint's format and its
+  field in `RunRegistry.stores`; `store fingerprint`; and the digest in the run record at
+  `finish()`. Still no `pull`, which is transfer, and rsync does it better.
+
+  **Assigned (2026-09-24):** [`prompts/store-fingerprint`](../store-fingerprint/README.md). Prompts
+  01–03 build the read-only reader and the structured inventory, and prompt 04 closes this issue.
+  That campaign's audit, [`docs/store-fingerprint-audit.md`](../../docs/store-fingerprint-audit.md)
+  §2, **corrects one sentence of the amendment above.** Opening a store through the `ShardedPool`
+  constructor inserts a `version` row only when the release label is new, once per store per
+  release, not on every open. The conclusion stands, because an open also runs the `--drop`
+  actions, creates missing tables and, by default, prunes unvalidated rows. The amendment is left
+  as written.
+
+  **Resolved 2026-09-25 by `store-fingerprint` prompt 04**, commit *"Fingerprint a store's
+  content in its sidecar and run record"* (this commit). The fingerprint is
+  `RunRegistry.stores.fingerprint_of`, **format 1**, and holds:
+  - per class and per tag set, a count and a SHA-256 over the canonical record lines of
+    `read_inventory` (key, tags, `validated`, `value_count`; no timestamp), in canonical order;
+  - an overall digest over the format and each class's count and digest;
+  - problem counts and `taken` (`when`, `git_head`, `git_dirty`, `run_id`), outside every digest.
+
+  It is a known sidecar field, `fingerprint`, which copy and move carry verbatim.
+  `python -m RunRegistry store fingerprint` computes it read-only for any closed store. It refuses
+  one a `running` run names, compares against the recorded value, and writes the field only with
+  `--write`. `--listing` generates the full listing on demand, whose lines hash to the digests.
+  `Run.finish(..., fingerprint=True)` copies it into `status.json`, and into a registry sidecar,
+  and a failure never changes how the run ended. `scoped_pipeline_run.py` and
+  `quadsource_atol_sweep.py` pass it on every finish after the pipeline. Still no `pull`.
+
+  **The §4 discriminator**, on a registry copy of a copy of the sweep store, which matched its
+  source before the edit: deleting `QuadSourceIntegral` serial 329386 on shard 0 names exactly one
+  content difference, `QuadSourceIntegral`'s one tag set, 7 706 recorded against 7 705 now. The
+  deleted row's orphaned tag rows add one `orphan-tag` problem entry. Nothing else differs. The
+  overall digest of the unedited copy is `2c2dde68659a138e8bd1454f0d3c35f600a09f73c6e7f55c385a9472c4da5b18`.
+  The three real sidecars are fingerprinted by that campaign's prompt 05 (D3). Measurement:
+  [`../store-fingerprint/logs/04-the-fingerprint.md`](../store-fingerprint/logs/04-the-fingerprint.md).
+  Row deleted from `docs/OPEN_ISSUES.md` §1.13 in the same commit.
 
 The other two issues this campaign opened are still in §3, and that is the honest count rather than
 a failing: both are a **deliberate non-adoption** recorded so its price is known, not work left half

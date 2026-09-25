@@ -20,7 +20,8 @@ The layout, under `var/runs/` (gitignored, in the repository, never a session sc
 The manifest keeps two different things in two different fields, and the difference is README §0.2:
 `checkpoint` is the unit ledger above, which `record()` writes and `known()` reads; `results` names
 the durable thing the job's results live in — a pipeline run's datastore — which this package names
-and never opens. A job may have either, both or neither.
+and never writes; it reads it only to take its fingerprint at `finish(..., fingerprint=True)`. A job
+may have either, both or neither.
 
 Usage is three calls. The launching process writes the manifest before any work starts, so that a
 crash in the first second still leaves a record:
@@ -262,10 +263,11 @@ class Run:
     @property
     def results_path(self):
         """The durable thing this job's results live in — a pipeline run's datastore — which the
-        registry **names and never opens**. README §0 item 4 is a datastore written into a session
-        scratchpad with nothing on disk saying where the results went; §0 item 5 is a resume, which
-        must know what it is resuming into. Naming it is the whole of the registry's interest in
-        it."""
+        registry names. README §0 item 4 is a datastore written into a session scratchpad with
+        nothing on disk saying where the results went; §0 item 5 is a resume, which must know what
+        it is resuming into. The registry never writes it. It reads it, read-only, in one place:
+        `finish(..., fingerprint=True)` takes its content fingerprint (store-fingerprint prompt
+        04)."""
         recorded = self.manifest.get("results")
         return _resolve(recorded) if recorded else None
 
@@ -301,15 +303,68 @@ class Run:
         }
         return self._update(**{k: v for k, v in fields.items() if v is not None})
 
-    def finish(self, state, exit_code=None) -> dict:
+    def finish(self, state, exit_code=None, *, fingerprint=False) -> dict:
         """Set the terminal state and the exit code. The registry records; it does not kill,
         restart or reap, so `killed` is something a caller reports, not something observed.
+
+        With ``fingerprint=True``, and a manifest that names `results`, it first fingerprints that
+        store (`RunRegistry.stores.fingerprint_store`, read-only, with this run as `taken_by` so
+        that it does not refuse its own caller) and puts the fingerprint in `status.json` under
+        `fingerprint`. Where the store's sidecar is a problem-free registry sidecar the fingerprint
+        is also written there, replacing only its `fingerprint` field, so that a run that changed
+        its store never leaves a stale one in the place a reader looks; otherwise
+        `fingerprint_sidecar` says why it was not. Pass it only once the store is closed: a
+        driver's signal handler, which runs with the pool still open, does not.
+
+        **A fingerprint never changes how a run ended.** Any refusal or error is recorded as
+        `fingerprint_error`, a string, and the state and exit code given are written regardless.
+        It never raises for the fingerprint's sake. The manifest is never touched.
         """
         if state not in TERMINAL_STATES:
             raise ValueError(
                 f"terminal state must be one of {TERMINAL_STATES}: {state!r}"
             )
-        return self._update(state=state, exit_code=exit_code)
+        taken = {}
+        if fingerprint:
+            try:
+                taken = self._fingerprint_results()
+            except Exception as e:
+                taken = {"fingerprint_error": f"{type(e).__name__}: {e}"}
+            except BaseException as e:
+                # an interrupt while fingerprinting: the state is still written, then it goes on
+                self._update(
+                    state=state,
+                    exit_code=exit_code,
+                    fingerprint_error=f"interrupted: {type(e).__name__}",
+                )
+                raise
+        return self._update(state=state, exit_code=exit_code, **taken)
+
+    def _fingerprint_results(self) -> dict:
+        """The `status.json` fields `finish(..., fingerprint=True)` records. May raise."""
+        results = self.results_path
+        if results is None:
+            return {
+                "fingerprint_error": "the manifest names no results store to fingerprint"
+            }
+        from .stores import _sidecar_refusal, fingerprint_store, read_sidecar
+
+        reading = read_sidecar(results)
+        taken = fingerprint_store(
+            results,
+            write=reading.ok,
+            runs_root=os.path.dirname(self.path),
+            taken_by=self,
+        )
+        return {
+            "fingerprint": taken["fingerprint"],
+            "fingerprint_sidecar": (
+                "written"
+                if taken["wrote"]
+                else f"not written: {reading.path} is not a problem-free registry "
+                f"sidecar ({_sidecar_refusal(reading)})"
+            ),
+        }
 
     # --- the checkpoint ------------------------------------------------------------------------
 
@@ -330,7 +385,7 @@ class Run:
             store = self.manifest.get("results")
             names = (
                 f"It names a results store ({store}), which this method will never write to: "
-                f"the registry names where a job's results live, it does not open them. "
+                f"the registry names where a job's results live, it does not write them. "
                 if store
                 else ""
             )
@@ -451,7 +506,7 @@ def begin(
     previous run's units.
 
     `results` is the **durable thing the job's results live in** — for a registered `main.py`
-    pipeline run, its SQLite datastore — which the registry names and never opens. It is a
+    pipeline run, its SQLite datastore — which the registry names and never writes. It is a
     different field from `checkpoint` because it is a different thing, and conflating them let
     `record()` append JSON-Lines to a datastore (README §0.2: the registry records *existence*;
     checkpointing is per-job and is sometimes already solved). It traces to §0 item 4, a datastore

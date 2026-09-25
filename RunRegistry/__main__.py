@@ -3,11 +3,14 @@
 Run it at the start of a session and before launching anything long. A registry nobody reads is
 worse than none, because it looks like coverage.
 
-`python -m RunRegistry store {show,create,adopt,copy,move}` manages a datastore and its
-`<stem>.manifest.json` sidecar (`RunRegistry.stores`). `show` is read-only. `create` and `adopt`
-write a sidecar and never open the store. `copy` and `move` move the store's files with
+`python -m RunRegistry store {show,create,adopt,copy,move,fingerprint}` manages a datastore and
+its `<stem>.manifest.json` sidecar (`RunRegistry.stores`). `show` is read-only. `create` and
+`adopt` write a sidecar and never open the store. `copy` and `move` move the store's files with
 `ShardedPool` and carry the sidecar, and refuse a store that any `running` run names, alive or
-stale. None of them initialises Ray, and none deletes anything.
+stale. `fingerprint` reads the closed store read-only, compares its content fingerprint with the
+one the sidecar records, and writes it into the sidecar only with `--write`; it refuses a store a
+`running` run names, and `--listing` writes the full listing to a new file away from the store.
+None of them initialises Ray, and none deletes anything.
 """
 
 import argparse
@@ -100,9 +103,88 @@ def _show(args) -> int:
     return 0
 
 
+def _short(digest) -> str:
+    return str(digest)[:12]
+
+
+def _print_fingerprint(fingerprint) -> None:
+    print(f"digest:   {fingerprint['digest']}")
+    print(f"format:   {fingerprint['fingerprint_format']}")
+    print("classes:  (count, digest; then each tag set)")
+    width = max((len(name) for name in fingerprint["classes"]), default=0)
+    for name, entry in fingerprint["classes"].items():
+        print(f"  {name:{width}} {entry['count']:>8}  {_short(entry['digest'])}")
+        for tag_set in entry["tag_sets"]:
+            print(
+                f"  {'':{width}} {tag_set['count']:>8}  {_short(tag_set['digest'])}  "
+                f"[{', '.join(tag_set['tags'])}]"
+            )
+    if fingerprint["problems"]:
+        print(
+            "problems: (counts only; the store's own text is in `main.py --inventory`)"
+        )
+        for name, kinds in fingerprint["problems"].items():
+            counted = ", ".join(f"{kind} {n}" for kind, n in kinds.items())
+            print(f"  !! {name}: {counted}")
+    else:
+        print("problems: none")
+
+
+def _fingerprint(args) -> int:
+    try:
+        if args.listing is not None:
+            stores.check_listing_path(args.listing, args.primary)
+        result = stores.fingerprint_store(
+            args.primary, write=args.write, runs_root=args.runs_root
+        )
+    except RuntimeError as e:
+        print(f"!! {e}", file=sys.stderr)
+        return 1
+
+    print(f"store:    {result['primary']}")
+    _print_fingerprint(result["fingerprint"])
+    recorded, comparison = result["recorded"], result["comparison"]
+    if recorded is None:
+        print(f"recorded: none recorded (the sidecar is {result['sidecar']})")
+    elif not comparison:
+        taken = recorded.get("taken") or {}
+        by = f"run {taken['run_id']}" if taken.get("run_id") else "a person"
+        print(
+            f"recorded: matches the fingerprint taken {taken.get('when')} by {by}, at "
+            f"{taken.get('git_head')}{' (dirty)' if taken.get('git_dirty') else ''}"
+        )
+    else:
+        print(
+            f"recorded: {len(comparison)} difference(s) from the recorded fingerprint:"
+        )
+        for entry in comparison:
+            print(f"  !! {entry['text']}")
+
+    if args.write:
+        if recorded is None:
+            print(">> wrote the fingerprint into the sidecar; it replaced none")
+        else:
+            taken = recorded.get("taken") or {}
+            print(
+                f">> wrote the fingerprint into the sidecar; it replaced digest "
+                f"{recorded.get('digest')}, taken {taken.get('when')}"
+            )
+    if args.listing is not None:
+        path = stores.write_listing(
+            result["inventory"], result["fingerprint"], args.listing, args.primary
+        )
+        print(f">> listing: {path}")
+
+    if args.write:
+        return 0
+    return 0 if not comparison else 1
+
+
 def _store(args) -> int:
     if args.store_command == "show":
         return _show(args)
+    if args.store_command == "fingerprint":
+        return _fingerprint(args)
     try:
         if args.store_command == "create":
             fields = stores.create_sidecar(args.primary, args.purpose)
@@ -168,6 +250,23 @@ def main(argv=None) -> int:
     mover.add_argument("src", metavar="SRC")
     mover.add_argument("dst", metavar="DST")
     mover.add_argument("--runs-root", **runs_root)
+    printer = store_sub.add_parser(
+        "fingerprint",
+        help="the content fingerprint of a closed store, compared with the recorded one",
+    )
+    printer.add_argument("primary", metavar="PRIMARY")
+    printer.add_argument(
+        "--write",
+        action="store_true",
+        help="record it in the sidecar, replacing only its fingerprint field",
+    )
+    printer.add_argument(
+        "--listing",
+        default=None,
+        metavar="PATH",
+        help="also write the full listing to this new file, outside the store's directory",
+    )
+    printer.add_argument("--runs-root", **runs_root)
 
     args = parser.parse_args(argv)
     if args.command == "store":

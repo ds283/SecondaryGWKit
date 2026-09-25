@@ -567,12 +567,14 @@ def run_build(args):
     try:
         exec(compile(source, str(MAIN_PY), "exec"), namespace)
     except SystemExit as exc:
-        run.finish(scoped.terminal_state(exc.code), exit_code=exc.code)
+        run.finish(
+            scoped.terminal_state(exc.code), exit_code=exc.code, fingerprint=True
+        )
         raise
     except BaseException:
-        run.finish("failed", exit_code=1)
+        run.finish("failed", exit_code=1, fingerprint=True)
         raise
-    run.finish("done", exit_code=0)
+    run.finish("done", exit_code=0, fingerprint=True)
     for stream in (sys.stdout, sys.stderr):
         if isinstance(stream, scoped.RegisteredStream):
             stream.close_copy()
@@ -859,14 +861,16 @@ def sweep(args):
                 run.heartbeat(stage=f"{stage} done in {elapsed:.0f} s")
     except SystemExit as exc:
         if run is not None:
-            run.finish(scoped.terminal_state(exc.code), exit_code=exc.code)
+            run.finish(
+                scoped.terminal_state(exc.code), exit_code=exc.code, fingerprint=True
+            )
         raise
     except BaseException:
         if run is not None:
-            run.finish("failed", exit_code=1)
+            run.finish("failed", exit_code=1, fingerprint=True)
         raise
     if run is not None:
-        run.finish("done", exit_code=0)
+        run.finish("done", exit_code=0, fingerprint=True)
     report()
 
 

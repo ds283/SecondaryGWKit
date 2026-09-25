@@ -21,6 +21,11 @@ nowhere else, and only the operations below write a sidecar.
     history         append-only, one entry per operation, the first being the create or adopt
                     that assigned the store_id: {"operation", "from", "to", "when", "git_head",
                     "git_dirty"}
+    fingerprint     optional: the store's content fingerprint (`fingerprint_of`), as
+                    {"fingerprint_format", "classes", "digest", "problems", "taken"}. Written only
+                    by `fingerprint_store` when asked, which a registered run's
+                    `Run.finish(..., fingerprint=True)` does. Copy and move carry it verbatim,
+                    `taken` included, because neither changes the content it describes
 
 Every other field is **unknown**, and every write preserves it verbatim, meaning value-identical
 after a JSON round trip (`write_json_atomic` re-indents and sorts keys). Unknown fields are carried
@@ -35,22 +40,33 @@ before this module existed. It is read as it is and never rewritten except by an
 `adopt_sidecar`. A legacy `datastore` that is a path is read by its final component, never as a
 path: that is prompt 01's rule for legacy shard records, applied to JSON.
 
-**The operations** are `create_sidecar`, `adopt_sidecar`, `copy_store` and `move_store`. The last
-two call `ShardedPool.copy_store` / `move_store` for the store's files, then carry the sidecar.
-They refuse a store that any `running` run names, alive or stale; that check is what the bare
-script cannot make. It is a check and not a lock: a run begun after it is not seen. Nothing here
-deletes a file, overwrites one (except the two in-place updates named below), cleans up after a
-failure, or decides that a run is over.
+**The operations** are `create_sidecar`, `adopt_sidecar`, `copy_store`, `move_store` and
+`fingerprint_store`. Copy and move call `ShardedPool.copy_store` / `move_store` for the store's
+files, then carry the sidecar. All three refuse a store that any `running` run names, alive or
+stale; that check is what the bare script cannot make. It is a check and not a lock: a run begun
+after it is not seen. Nothing here deletes a file, overwrites one (except the three in-place
+updates `_update_sidecar` names: adopt, the move's temporary sidecar, and recording a
+fingerprint), cleans up after a failure, or decides that a run is over.
 
-`ShardedPool` is imported inside `copy_store` and `move_store` only, so that importing this
-module, like `import RunRegistry`, loads neither `ray` nor `sqlalchemy`.
+**The fingerprint** (store-fingerprint prompt 04) says what a closed store holds, as digests of its
+structured inventory (`Datastore.store_inventory.read_inventory`): per class and per tag set a
+count and a SHA-256 digest, and one overall digest. It never holds a listing; `listing_lines`
+generates one on demand, whose lines hash to the digests it lists. `fingerprint_of` and
+`compare_fingerprints` are pure. `fingerprint_store` reads the store read-only, with no Ray, and
+writes only the sidecar's `fingerprint` field, and only when asked.
+
+`ShardedPool` is imported inside `copy_store` and `move_store` only, and `Datastore.store_inventory`
+inside the fingerprint functions only, so that importing this module, like `import RunRegistry`,
+loads neither `ray` nor `sqlalchemy`.
 """
 
 import copy as _copy
+import hashlib
 import json
 import os
 import re
 import uuid
+from collections import Counter
 from dataclasses import dataclass, field
 from pathlib import Path
 from typing import List, Optional
@@ -79,7 +95,7 @@ REQUIRED_FIELDS = (
     "created",
     "history",
 )
-KNOWN_FIELDS = REQUIRED_FIELDS + ("copied_from",)
+KNOWN_FIELDS = REQUIRED_FIELDS + ("copied_from", "fingerprint")
 
 # the operations a history entry may record. The first entry assigned the store_id
 IDENTITY_OPERATIONS = ("create", "adopt")
@@ -91,6 +107,13 @@ HISTORY_KEYS = ("operation", "from", "to", "when", "git_head", "git_dirty")
 INCOMPLETE_MOVE_SUFFIX = ".incomplete-move"
 
 _STORE_ID = re.compile(r"[0-9a-f]{32}")
+_DIGEST = re.compile(r"[0-9a-f]{64}")
+
+# the fingerprint's format. A fingerprint is compared only with one of the same format; a change to
+# what the inventory records, or to how a digest is formed, bumps this and regenerates the golden
+# fingerprint (`RunRegistry/tests/data/full_store_fingerprint.json`) in the same commit
+FINGERPRINT_FORMAT = 1
+TAKEN_KEYS = ("when", "git_head", "git_dirty", "run_id")
 
 # both separators, on every platform, as `Datastore/shard_paths.py` treats a shard record
 _SEPARATORS = re.compile(r"[\\/]")
@@ -207,6 +230,29 @@ def _history_problems(history) -> List[str]:
     return problems
 
 
+def _fingerprint_problems(value) -> List[str]:
+    """Every way ``value`` fails to have a fingerprint's shape: a JSON object with an integer
+    `fingerprint_format`, a `classes` object, a 64-hex `digest` and a `taken` object."""
+    if not isinstance(value, dict):
+        return [f"fingerprint is {value!r}, not an object"]
+    problems = []
+    fmt = value.get("fingerprint_format")
+    if isinstance(fmt, bool) or not isinstance(fmt, int):
+        problems.append(f"fingerprint's fingerprint_format {fmt!r} is not an integer")
+    if not isinstance(value.get("classes"), dict):
+        problems.append(
+            f"fingerprint's classes {value.get('classes')!r} is not an object"
+        )
+    digest = value.get("digest")
+    if not (isinstance(digest, str) and _DIGEST.fullmatch(digest)):
+        problems.append(
+            f"fingerprint's digest {digest!r} is not 64 lowercase hexadecimal characters"
+        )
+    if not isinstance(value.get("taken"), dict):
+        problems.append(f"fingerprint's taken {value.get('taken')!r} is not an object")
+    return problems
+
+
 def _registry_problems(fields: dict, primary: Path) -> List[str]:
     """Every way ``fields`` fails to be a registry sidecar describing ``primary``. Used by the
     reader, and by every writer on what it is about to write."""
@@ -262,6 +308,8 @@ def _registry_problems(fields: dict, primary: Path) -> List[str]:
             )
     if "history" in fields:
         problems.extend(_history_problems(fields["history"]))
+    if "fingerprint" in fields:
+        problems.extend(_fingerprint_problems(fields["fingerprint"]))
     return problems
 
 
@@ -352,8 +400,9 @@ def _write_new_sidecar(path: Path, fields: dict, primary: Path) -> None:
 
 
 def _update_sidecar(path: Path, fields: dict, primary: Path) -> None:
-    """Replace an existing sidecar's contents in place. Used in exactly two places: adopt, and
-    the move's temporary sidecar. Refuses if the `.tmp` name exists."""
+    """Replace an existing sidecar's contents in place. Used in exactly three places: adopt, the
+    move's temporary sidecar, and `fingerprint_store` recording a fingerprint when asked (by a
+    person, or by a registered run's finish). Refuses if the `.tmp` name exists."""
     _check_before_writing(path, fields, primary)
     if os.path.islink(path) or not os.path.isfile(path):
         raise RuntimeError(
@@ -524,28 +573,40 @@ def runs_naming(primaries, store_id=None, runs_root=None, stale_after=None) -> l
     return found
 
 
+def _running_runs_naming(operation, primaries, store_id, runs_root, exclude=None):
+    """Every run whose state is `running`, alive **or stale**, that names one of ``primaries`` or
+    ``store_id``, except the run ``exclude`` (a `Run`, its caller). Refuses if the runs root is not
+    a directory, since then the check cannot be made."""
+    root = runs_root or DEFAULT_ROOT
+    if not os.path.isdir(root):
+        raise RuntimeError(
+            f'Cannot {operation} "{primaries[0]}": the runs root "{root}" is not a directory, so '
+            f"whether a running run names this store cannot be checked. Nothing was written"
+        )
+    excluded = os.path.realpath(exclude.path) if exclude is not None else None
+    return [
+        entry
+        for entry in runs_naming(primaries, store_id, runs_root=root)
+        if entry["state"] == "running" and os.path.realpath(entry["path"]) != excluded
+    ]
+
+
+def _describe_running(running) -> str:
+    return "; ".join(
+        f"run {entry['id']} is running ({entry['liveness']}, pid {entry['pid']}) and names "
+        f"this store by its {' and '.join(entry['matched_by'])}"
+        for entry in running
+    )
+
+
 def _refuse_if_in_use(operation, src, dst, store_id, runs_root) -> None:
     """Refuse if any run whose state is `running`, alive **or stale**, names the source or the
     destination. Liveness is evidence, not proof, and the registry does not decide that a run is
     dead: a stale run is ended by a person, with `Run.finish`, before its store is moved.
     """
-    root = runs_root or DEFAULT_ROOT
-    if not os.path.isdir(root):
-        raise RuntimeError(
-            f'Cannot {operation} "{src}": the runs root "{root}" is not a directory, so whether a '
-            f"running run names this store cannot be checked. Nothing was written"
-        )
-    running = [
-        entry
-        for entry in runs_naming([src, dst], store_id, runs_root=root)
-        if entry["state"] == "running"
-    ]
+    running = _running_runs_naming(operation, [src, dst], store_id, runs_root)
     if running:
-        described = "; ".join(
-            f"run {entry['id']} is running ({entry['liveness']}, pid {entry['pid']}) and names "
-            f"this store by its {' and '.join(entry['matched_by'])}"
-            for entry in running
-        )
+        described = _describe_running(running)
         raise RuntimeError(
             f'Cannot {operation} "{src}" to "{dst}": {described}. A stale run is ended by a '
             f"person, with Run.finish, before its store is moved; the registry does not decide "
@@ -716,3 +777,400 @@ def move_store(src, dst, runs_root=None) -> dict:
     except Exception as e:
         raise _failure("move", src, dst, step, e) from e
     return fields
+
+
+# =================================================================================================
+# the fingerprint (store-fingerprint prompt 04)
+#
+# A fingerprint digests the structured inventory, `Datastore.store_inventory.read_inventory`. A
+# record's canonical form is `record.canonical_json()`, which is `canonical_json(record.as_json())`:
+# its key, its tags, `validated` and `value_count`, and no timestamp. A digest is the SHA-256 of
+# records' canonical JSON, one per line, each followed by "\n", in the order the inventory gives,
+# which is sorted by canonical JSON. So a listing written as those lines hashes to the digest it
+# lists, and filtering a class's lines to one tag set keeps them sorted. Problems are counted beside
+# the digests, never in them: their text names shards and serials, which are store-local.
+
+
+def _sha256_lines(lines) -> str:
+    """SHA-256 (hex) of ``lines``, each followed by a newline."""
+    hasher = hashlib.sha256()
+    for line in lines:
+        hasher.update(line.encode("utf-8"))
+        hasher.update(b"\n")
+    return hasher.hexdigest()
+
+
+def _tag_sets(records) -> list:
+    """``[(tags, lines)]``: each distinct tag set, sorted, with the canonical lines of the records
+    that carry exactly that set, in the records' own order."""
+    groups = {}
+    for record in records:
+        groups.setdefault(tuple(record.tags), []).append(record.canonical_json())
+    return sorted(groups.items())
+
+
+def fingerprint_of(inventory, taken=None) -> dict:
+    """The fingerprint of ``inventory``, what `read_inventory` returns. Pure: it reads nothing.
+
+    - `fingerprint_format`: `FINGERPRINT_FORMAT`;
+    - `classes`: for every class, in the inventory's order, its `count`, its `digest` over every
+      record, and `tag_sets`, one `{"tags", "count", "digest"}` per distinct tag set, sorted by
+      tags. A class with no association table has one, with `tags` `[]`; an empty class has none;
+    - `digest`: SHA-256 of `canonical_json({"fingerprint_format", "classes": {name: {"count",
+      "digest"}}})`;
+    - `problems`: per class that has any, the number of its named problems of each kind (the word
+      before the first colon). Outside every digest;
+    - `taken`: ``taken`` as given (`{"when", "git_head", "git_dirty", "run_id"}`), or `None`.
+      Outside every digest.
+    """
+    # here, not at module scope: that module imports sqlalchemy, and `import RunRegistry` must not
+    from Datastore.store_inventory import canonical_json
+
+    classes = {}
+    problems = {}
+    for name, cls in inventory.classes.items():
+        lines = [record.canonical_json() for record in cls.records]
+        classes[name] = {
+            "count": len(lines),
+            "digest": _sha256_lines(lines),
+            "tag_sets": [
+                {
+                    "tags": list(tags),
+                    "count": len(group),
+                    "digest": _sha256_lines(group),
+                }
+                for tags, group in _tag_sets(cls.records)
+            ],
+        }
+        kinds = Counter(problem.split(":", 1)[0] for problem in cls.problems)
+        if kinds:
+            problems[name] = dict(sorted(kinds.items()))
+
+    overall = {
+        "fingerprint_format": FINGERPRINT_FORMAT,
+        "classes": {
+            name: {"count": entry["count"], "digest": entry["digest"]}
+            for name, entry in classes.items()
+        },
+    }
+    return {
+        "fingerprint_format": FINGERPRINT_FORMAT,
+        "classes": classes,
+        "digest": hashlib.sha256(canonical_json(overall).encode("utf-8")).hexdigest(),
+        "problems": problems,
+        "taken": dict(taken) if taken is not None else None,
+    }
+
+
+def _tags_text(tags) -> str:
+    return "[" + ", ".join(tags) + "]"
+
+
+def _difference(kind, name, tags, recorded, current, text) -> dict:
+    return {
+        "kind": kind,
+        "class": name,
+        "tags": None if tags is None else list(tags),
+        "recorded": recorded,
+        "current": current,
+        "text": text,
+    }
+
+
+def _presence(recorded, current) -> str:
+    if recorded is None:
+        return "is only in the current fingerprint"
+    return "is only in the recorded fingerprint"
+
+
+def compare_fingerprints(recorded, current) -> list:
+    """The differences between two fingerprints, one entry per difference. Pure.
+
+    Two fingerprints of different formats are not compared: the answer is one entry saying so,
+    because the remedy is to recompute both from the stores. Otherwise each entry names the class,
+    the tag set (or that a tag set, or a class, is present in only one) and the two counts, `None`
+    where absent. Equal overall digests give no content entry. Differences in `problems` are
+    entries of their own, compared whatever the digests say, because problems are outside every
+    digest. `taken` is never compared. Each entry is `{"kind", "class", "tags", "recorded",
+    "current", "text"}`, `kind` being `format`, `class`, `tag_set`, `digest` or `problems`.
+    """
+    recorded_format = recorded.get("fingerprint_format")
+    current_format = current.get("fingerprint_format")
+    if recorded_format != current_format:
+        return [
+            _difference(
+                "format",
+                None,
+                None,
+                recorded_format,
+                current_format,
+                f"the recorded fingerprint is format {recorded_format!r} and this one is format "
+                f"{current_format!r}; fingerprints of different formats are not compared. "
+                f"Recompute both from the stores",
+            )
+        ]
+
+    out = []
+    if recorded.get("digest") != current.get("digest"):
+        before = recorded.get("classes") or {}
+        after = current.get("classes") or {}
+        names = list(after) + [name for name in before if name not in after]
+        for name in names:
+            old, new = before.get(name), after.get(name)
+            if old is None or new is None:
+                out.append(
+                    _difference(
+                        "class",
+                        name,
+                        None,
+                        None if old is None else old.get("count"),
+                        None if new is None else new.get("count"),
+                        f"{name}: the class {_presence(old, new)}",
+                    )
+                )
+                continue
+            if old.get("digest") == new.get("digest"):
+                continue
+            old_sets = {tuple(t["tags"]): t for t in old.get("tag_sets") or []}
+            new_sets = {tuple(t["tags"]): t for t in new.get("tag_sets") or []}
+            found = False
+            for tags in sorted(set(old_sets) | set(new_sets)):
+                a, b = old_sets.get(tags), new_sets.get(tags)
+                if (
+                    a is not None
+                    and b is not None
+                    and a.get("digest") == b.get("digest")
+                ):
+                    continue
+                found = True
+                counts = (
+                    None if a is None else a.get("count"),
+                    None if b is None else b.get("count"),
+                )
+                if a is None or b is None:
+                    text = (
+                        f"{name}: tag set {_tags_text(tags)} {_presence(a, b)} "
+                        f"({counts[0]} recorded, {counts[1]} now)"
+                    )
+                else:
+                    text = (
+                        f"{name}: tag set {_tags_text(tags)} differs: {counts[0]} recorded, "
+                        f"{counts[1]} now"
+                    )
+                out.append(_difference("tag_set", name, tags, *counts, text))
+            if not found:
+                out.append(
+                    _difference(
+                        "class",
+                        name,
+                        None,
+                        old.get("count"),
+                        new.get("count"),
+                        f"{name}: the class digest differs, though no tag set's does "
+                        f"({old.get('count')} recorded, {new.get('count')} now)",
+                    )
+                )
+        if not out:
+            out.append(
+                _difference(
+                    "digest",
+                    None,
+                    None,
+                    recorded.get("digest"),
+                    current.get("digest"),
+                    "the overall digests differ, though no class's does",
+                )
+            )
+
+    before = recorded.get("problems") or {}
+    after = current.get("problems") or {}
+    names = list(after) + [name for name in before if name not in after]
+    for name in names:
+        old, new = before.get(name) or {}, after.get(name) or {}
+        for kind in sorted(set(old) | set(new)):
+            if old.get(kind, 0) != new.get(kind, 0):
+                out.append(
+                    _difference(
+                        "problems",
+                        name,
+                        None,
+                        old.get(kind, 0),
+                        new.get(kind, 0),
+                        f"{name}: {kind} problems: {old.get(kind, 0)} recorded, "
+                        f"{new.get(kind, 0)} now",
+                    )
+                )
+    return out
+
+
+def listing_lines(inventory, fingerprint):
+    """The full listing of ``inventory``, generated on demand and never stored: a header line for
+    the fingerprint, then per class a header and, per tag set, a header and the canonical record
+    lines. Header lines begin `#`; record lines begin `{`. The lines under a tag-set header hash
+    (SHA-256, each line followed by a newline) to that tag set's digest, and a class's record lines,
+    sorted bytewise, hash to the class's digest. ``fingerprint`` is `fingerprint_of(inventory)`.
+    """
+    from Datastore.store_inventory import canonical_json
+
+    yield (
+        f"# fingerprint_format {fingerprint['fingerprint_format']} "
+        f"digest {fingerprint['digest']}"
+    )
+    for name, cls in inventory.classes.items():
+        entry = fingerprint["classes"][name]
+        yield f"# class {name} count {entry['count']} digest {entry['digest']}"
+        by_tags = {tuple(t["tags"]): t for t in entry["tag_sets"]}
+        for tags, lines in _tag_sets(cls.records):
+            recorded = by_tags[tags]
+            yield (
+                f"# tags {canonical_json(list(tags))} count {recorded['count']} "
+                f"digest {recorded['digest']}"
+            )
+            yield from lines
+
+
+def check_listing_path(path, primary) -> Path:
+    """Refuse a listing path that exists, whose directory does not, or that is inside the store's
+    own directory; return it, absolute. A listing is never written beside the store."""
+    path = Path(os.path.abspath(path))
+    primary = Path(os.path.abspath(primary))
+    if os.path.lexists(path):
+        raise RuntimeError(
+            f'Cannot write a listing to "{path}": it already exists, and nothing is ever '
+            f"overwritten. Nothing was written"
+        )
+    if not os.path.isdir(path.parent):
+        raise RuntimeError(
+            f'Cannot write a listing to "{path}": "{path.parent}" is not a directory. Nothing was '
+            f"written"
+        )
+    store_dir = os.path.realpath(primary.parent)
+    where = os.path.realpath(path.parent)
+    if where == store_dir or where.startswith(store_dir + os.sep):
+        raise RuntimeError(
+            f'Cannot write a listing to "{path}": it is inside the store\'s own directory '
+            f'"{primary.parent}", and a listing is never written beside the store. Nothing was '
+            f"written"
+        )
+    return path
+
+
+def write_listing(inventory, fingerprint, path, primary) -> Path:
+    """Write `listing_lines` to the **new** file ``path`` (`check_listing_path`), and return it."""
+    path = check_listing_path(path, primary)
+    with open(path, "x") as handle:
+        for line in listing_lines(inventory, fingerprint):
+            handle.write(line + "\n")
+    return path
+
+
+def _sidecar_refusal(reading) -> str:
+    if reading.kind == "absent":
+        return "there is none"
+    if reading.kind == "legacy" and not reading.problems:
+        return "it is a legacy sidecar"
+    return f"it is {reading.kind}: " + "; ".join(reading.problems)
+
+
+def fingerprint_store(primary, *, write=False, runs_root=None, taken_by=None) -> dict:
+    """Fingerprint the closed store ``primary``, compare it with the fingerprint its sidecar
+    records, and, only if ``write``, record it there. In this order:
+
+    1. refuse if any `running` run under ``runs_root``, alive or stale, names the store by path or
+       by `store_id` (read from the sidecar for this check). The one exception is ``taken_by``,
+       the `Run` calling this from its finish, which is still `running` because it has not
+       finished. A fingerprint of a store being written describes no instant;
+    2. import `read_inventory`, here, so that `import RunRegistry` loads neither ray nor
+       sqlalchemy;
+    3. `read_inventory(primary)`, read-only and with no Ray. A reader refusal comes through;
+    4. `fingerprint_of`, with `taken` from `now_iso()`, `git_provenance()` and ``taken_by``'s id;
+    5. `read_sidecar`, and `compare_fingerprints` against a registry sidecar's `fingerprint`;
+    6. only if ``write``: refuse unless the sidecar is a problem-free registry sidecar, then
+       replace **only** its `fingerprint` field, in place, through `_update_sidecar`.
+
+    Returns `{"primary", "fingerprint", "recorded", "comparison", "wrote", "sidecar",
+    "inventory"}`: `comparison` is `None` when nothing is recorded, `sidecar` is the sidecar's
+    kind, and `inventory` is what was fingerprinted, for a listing. It never writes the store,
+    never initialises Ray, and never deletes anything.
+    """
+    primary = Path(os.path.abspath(primary))
+
+    # 1. the running-run refusal
+    first = read_sidecar(primary)
+    store_id = (
+        (first.fields or {}).get("store_id") if first.kind == "registry" else None
+    )
+    if not (isinstance(store_id, str) and _STORE_ID.fullmatch(store_id)):
+        store_id = None
+    running = _running_runs_naming(
+        "fingerprint", [primary], store_id, runs_root, exclude=taken_by
+    )
+    if running:
+        raise RuntimeError(
+            f'Cannot fingerprint "{primary}": {_describe_running(running)}. A fingerprint of a '
+            f"store that is being written describes no instant; a stale run is ended by a "
+            f"person, with Run.finish, first. Nothing was read or written"
+        )
+
+    # 2, 3. the inventory, read-only
+    from Datastore.store_inventory import read_inventory
+
+    inventory = read_inventory(primary)
+
+    # 4. the fingerprint
+    provenance = git_provenance()
+    fingerprint = fingerprint_of(
+        inventory,
+        {
+            "when": now_iso(),
+            "git_head": provenance["git_head"],
+            "git_dirty": provenance["git_dirty"],
+            "run_id": taken_by.id if taken_by is not None else None,
+        },
+    )
+
+    # 5. the comparison with what the sidecar records
+    reading = read_sidecar(primary)
+    recorded = None
+    comparison = None
+    if reading.kind == "registry" and "fingerprint" in reading.fields:
+        recorded = reading.fields["fingerprint"]
+        malformed = _fingerprint_problems(recorded)
+        if malformed:
+            comparison = [
+                _difference(
+                    "malformed",
+                    None,
+                    None,
+                    None,
+                    None,
+                    "the recorded fingerprint is malformed: " + "; ".join(malformed),
+                )
+            ]
+        else:
+            comparison = compare_fingerprints(recorded, fingerprint)
+
+    # 6. the write, only when asked
+    wrote = False
+    if write:
+        if not reading.ok:
+            raise RuntimeError(
+                f'Cannot record a fingerprint for "{primary}": its sidecar "{reading.path}" is not '
+                f"a problem-free registry sidecar ({_sidecar_refusal(reading)}). Run `python -m "
+                f"RunRegistry store create` or `store adopt` on it first; a fingerprint never "
+                f"upgrades a sidecar implicitly. Nothing was written"
+            )
+        fields = _copy.deepcopy(reading.fields)
+        fields["fingerprint"] = fingerprint
+        _update_sidecar(reading.path, fields, primary)
+        wrote = True
+
+    return {
+        "primary": primary,
+        "fingerprint": fingerprint,
+        "recorded": recorded,
+        "comparison": comparison,
+        "wrote": wrote,
+        "sidecar": reading.kind,
+        "inventory": inventory,
+    }

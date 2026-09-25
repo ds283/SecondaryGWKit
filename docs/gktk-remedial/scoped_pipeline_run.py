@@ -490,15 +490,15 @@ def main():
     try:
         exec(compile(source, str(MAIN_PY), "exec"), namespace)
     except SystemExit as exc:
-        run.finish(terminal_state(exc.code), exit_code=exc.code)
+        run.finish(terminal_state(exc.code), exit_code=exc.code, fingerprint=True)
         raise
     except BaseException:
-        run.finish("failed", exit_code=1)
+        run.finish("failed", exit_code=1, fingerprint=True)
         # and re-raise, with the copies still open: the traceback the interpreter is about to
         # print is the one thing a failed run's directory most needs, and it is printed after
         # this frame unwinds. The kernel closes the copies when the process goes.
         raise
-    run.finish("done", exit_code=0)
+    run.finish("done", exit_code=0, fingerprint=True)
     for stream in (sys.stdout, sys.stderr):
         if isinstance(stream, RegisteredStream):
             stream.close_copy()
