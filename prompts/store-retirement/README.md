@@ -2,8 +2,8 @@
 
 **Written:** 2026-09-25 at `42d4910` on `handover-remedial`, by Claude Opus 5.5, from
 [`docs/store-retirement-audit.md`](../../docs/store-retirement-audit.md) and the user's decisions
-recorded in §6.1. **Prompts 01 and 02 are written.** The user approved D0 and D3–D7 as worded on
-2026-09-25 (§6.2), which released 01 and 03–04. 05 is held until 01–04 land (see §2).
+recorded in §6.1. **Prompts 01–04 are written.** The user approved D0 and D3–D7 as worded on
+2026-09-25 (§6.2), which released 01, and 03 and 04 were written the same day. 05 is held until 01–04 land (see §2).
 
 ## 0. Why this campaign exists
 
@@ -82,8 +82,8 @@ The audit found that the tree is not yet ready for that operation:
 |---|---|---|---|
 | 01 | [`01-delete-a-closed-store.md`](01-delete-a-closed-store.md) | `ShardedPool.closed_store_files` and `ShardedPool.delete_store`. Files named only through `_read_closed_store`. Refuses a hot journal or an unusable shard. Shards go first and the primary last. `resume=True` completes an interrupted deletion. Never follows a stored record as a path: the legacy-absolute case, whose records name another live store's shards, is the central test. | **written**; D0 decided 2026-09-25, so ready |
 | 02 | [`02-the-sweep-prepares-through-the-registry.md`](02-the-sweep-prepares-through-the-registry.md) | `quadsource_atol_sweep.py` `prepare()` makes the sweep store with one `RunRegistry.stores.copy_store` call, replacing its hand copy, its `UPDATE` and its hand-written sidecar. `assert_store_is_self_consistent` compares through `resolve_shard_path`, which also unblocks `--build --resume` of the A3 v2 store (audit §2.6). Closes `datastore-portability`'s `[03-…]` and `[01-…]`. After it, `--prepare` at a name whose sidecar exists refuses, which is what a tombstone needs. | **written**; independent of every decision, and may be dispatched first |
-| 03 | `03-retire-a-store.md` | `RunRegistry.stores.retire_store` and `python -m RunRegistry store retire`. A known `retired` field and a terminal `retire` history entry. The reader tells a tombstone from a broken sidecar, and names a primary that has reappeared. `begin(results=…)` refuses a retired store. `store show` renders a tombstone. The references found are reported. | **released** 2026-09-25 (D3–D6 decided) |
-| 04 | `04-amend-an-unknown-field.md` | `RunRegistry.stores.amend_sidecar` and `store amend`: replace or remove one unknown field of a registry sidecar, with a reason, recording the old value in an `amend` history entry. | **released** 2026-09-25 (D5 decided) |
+| 03 | [`03-retire-a-store.md`](03-retire-a-store.md) | `RunRegistry.stores.retire_store` and `python -m RunRegistry store retire`. A known `retired` field and a terminal `retire` history entry. The reader tells a tombstone from a broken sidecar, and names a primary that has reappeared. `begin(results=…)` refuses a retired store. `store show` renders a tombstone. The references found are reported. | **written** 2026-09-25; after 01 |
+| 04 | [`04-amend-an-unknown-field.md`](04-amend-an-unknown-field.md) | `RunRegistry.stores.amend_sidecar` and `store amend`: replace or remove one unknown field of a registry sidecar, with a reason, recording the old value in an `amend` history entry. | **written** 2026-09-25; after 03 |
 | 05 | `05-retire-the-two-stores.md` | Remedial. **The user** retires the sweep store and the backup with `store retire`, and amends the live A3 sidecar's `backup` field. The prompt's agent checks before and after, and records the retirements on the boards. | **held** until 01–04 land |
 
 **Why 03–05 were held.** The charters above are fixed, and cannot drift to fit what 01 and 02
@@ -92,7 +92,7 @@ find. What waited was their method, which depended on user decisions that did no
 (references) and D6 (reuse of a retired name). 04 exists only if D5 is taken as recommended.
 
 **Released 2026-09-25.** The user approved D0 and D3–D7 as worded, the day they were recorded. So
-03 and 04 are to be written against §4's names and §6.2. **05 stays held.** It runs the other four on
+03 and 04 were written the same day, against §4's names and §6.2. **05 stays held.** It runs the other four on
 real stores, so it is written last, against what they ship.
 
 **Order.** 02 is independent of 01, 03 and 04, and must land before 05 retires the sweep store
@@ -120,21 +120,28 @@ The **names** below are fixed here, so that each prompt can be written against t
 The internals are the implementing prompt's to design.
 
 - **Prompt 01** ships two static methods on `ShardedPool`:
-  - **`ShardedPool.closed_store_files(primary) -> List[Path]`**: every file of the closed store,
-    shards by ascending serial and then the primary, resolved through `_read_closed_store`. It
-    refuses exactly as `delete_store` would.
+  - **`ShardedPool.closed_store_files(primary, *, resume=False) -> List[Path]`**: every file of
+    the closed store, shards by ascending serial and then the primary, resolved through
+    `_read_closed_store`. It refuses exactly as `delete_store` with the same `resume` would, and
+    under `resume=True` it leaves a missing shard out of the list. *(Amended 2026-09-25, before
+    dispatch: `resume` added, so that prompt 03 can record the list for a store with a missing
+    shard under D4.)*
   - **`ShardedPool.delete_store(primary, *, resume=False) -> List[Path]`**: deletes the shards and
     then the primary, and returns what it deleted, in order. With `resume=True` it tolerates shards
     that are already gone, which is what an interrupted deletion leaves.
 - **Prompt 02** ships no interface. `prepare()` calls `RunRegistry.stores.copy_store`.
 - **Prompt 03** ships:
   - **`RunRegistry.stores.retire_store(primary, reason, *, runs_root=None, stores_root=None,
-    without_fingerprint=False) -> dict`**;
+    without_fingerprint=False, dry_run=False) -> dict`**, and **`DEFAULT_STORES_ROOT`**
+    (`var/datastores/`), the default place it searches for sidecars that reference the store;
   - the known sidecar field **`retired`**;
   - the history operation **`retire`**;
   - the reading property **`SidecarReading.retired`**;
   - **`python -m RunRegistry store retire PRIMARY --reason TEXT [--without-fingerprint]
-    [--runs-root DIR] [--stores-root DIR]`**.
+    [--dry-run] [--runs-root DIR] [--stores-root DIR]`**. `--dry-run` makes every check and
+    reports everything a retirement would do, and writes and deletes nothing. It is how prompt
+    05's agent shows the user what the user is about to run. *(Amended 2026-09-25, when 03 was
+    written.)*
 
   `retired` records, at the least:
   - when, the git head and whether the tree was dirty;
@@ -241,6 +248,14 @@ none of them.
 
   *Alternative:* no override. An unfingerprintable store is then removed by hand, outside the
   registry, and leaves no tombstone.
+
+  **Narrowed 2026-09-25, when prompt 03 was written, and reported to the user.** Of the three
+  damage cases D4 names, a missing shard and an unreadable shard are served by the flag. A
+  **`shards` table that cannot be read** is not. That table is the only list of a store's shard
+  files, so without it nothing can say which files to delete. Deleting by the naming rule would be
+  a guess, and a guess is how audit §2.7's danger happens. Prompt 03 refuses that case even under
+  the flag, and says that such a store's files can be removed only by a person, outside the
+  registry. The alternative, a fallback to `shard_file_name`, is not taken.
 - **D5 — references. Decided: never rewrite a record of the past, correct a claim about the
   present, and report both.** This refines decision 6.1.4. The audit's reference table (§1) has
   two kinds of entry.

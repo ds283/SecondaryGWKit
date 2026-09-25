@@ -1,8 +1,10 @@
 # Store retirement campaign — implementation state
 
-**Last updated:** 2026-09-25 · **Status: 0 of 5 prompts landed. 01 and 02 are written and ready.
+**Last updated:** 2026-09-25 · **Status: 0 of 5 prompts landed. 01–04 are written; 01 and 02 are ready.
 The user approved D0 and D3–D7 as worded on 2026-09-25 (README §6.2), which released 03 and 04. 05
-is held until 01–04 land.** 01 and 02 are independent of each other.
+is held until 01–04 land.** 01 and 02 are independent of each other; 03 follows 01, and 04
+follows 03. D4 was narrowed when 03 was written: an unreadable `shards` table is refused even
+under `--without-fingerprint` (README §6.2).
 
 The campaign was opened on 2026-09-25, when the user decided that a store is removed by a registry
 operation that retires it, and never by `rm`. The primary and its shards go, and the sidecar stays
@@ -50,12 +52,13 @@ of them, it found, also blocks `--build --resume` of the A3 v2 store.
 |---|---|---|---|---|---|---|---|
 | 01 | [Delete a closed store](01-delete-a-closed-store.md) | **R1**–**R3** | Opus | ✍️ yes, 2026-09-25 | ⬜ ready (D0 decided) | — | — |
 | 02 | [The sweep prepares through the registry](02-the-sweep-prepares-through-the-registry.md) | **R4**–**R5** | Sonnet | ✍️ yes, 2026-09-25 | ⬜ ready | — | — |
-| 03 | Retire a store | **R6**–**R8** | Opus | ⏸️ released 2026-09-25; to be written | ⬜ after 01 | — | — |
-| 04 | Amend an unknown field | **R9** | Sonnet | ⏸️ released 2026-09-25; to be written | ⬜ after 03 | — | — |
+| 03 | [Retire a store](03-retire-a-store.md) | **R6**–**R8** | Opus | ✍️ yes, 2026-09-25 | ⬜ after 01 | — | — |
+| 04 | [Amend an unknown field](04-amend-an-unknown-field.md) | **R9** | Sonnet | ✍️ yes, 2026-09-25 | ⬜ after 03 | — | — |
 | 05 | Retire the two stores | **R10**–**R12** | Opus | ⏸️ held until 01–04 land | — | — | — |
 
 **03 and 04 were held on decisions, and were released on 2026-09-25** when the user approved D0
-and D3–D7 as worded. Both are to be written against README §4's names. **05 is held, not
+and D3–D7 as worded, and were written the same day against README §4's names, which gained
+`resume` on `closed_store_files` and `--dry-run` on `store retire` before anything was dispatched. **05 is held, not
 unplanned.** Its charter is fixed in README §2, and it is written last, against what 01–04 ship.
 In 05 **the user** runs each `store retire`: no agent deletes a real store (README §5 rule 10).
 

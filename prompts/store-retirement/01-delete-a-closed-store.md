@@ -59,12 +59,16 @@ sharing one planning step (*prompt's choice*, README §6.3). That way the list p
 its tombstone is the list that is deleted:
 
 ```python
-ShardedPool.closed_store_files(primary: PathType) -> List[Path]
+ShardedPool.closed_store_files(primary: PathType, *, resume: bool = False) -> List[Path]
 ShardedPool.delete_store(primary: PathType, *, resume: bool = False) -> List[Path]
 ```
 
 `closed_store_files` returns every file of the closed store: its shards in ascending serial, then
-the primary, each absolute. It refuses exactly as `delete_store(primary)` would, and never writes.
+the primary, each absolute. It refuses exactly as `delete_store` with the same `resume` would, and
+never writes. Under `resume=True` a missing shard is left out of the list, just as `delete_store`
+leaves it out of what it deletes. Prompt 03 uses that to record the list for a damaged store under
+README D4.
+
 `delete_store` deletes those files **in that order**, shards first and the primary last, and
 returns the paths it deleted, in order. Neither starts Ray, creates an actor or needs an instance.
 The primary is opened only `mode=ro`, to read its `shards` table, and **no file is ever opened for
@@ -158,7 +162,9 @@ need to; do not modify an existing test. At minimum:
 
    Cover the legacy shape too: its other directory must be untouched throughout.
 5. **`resume` relaxes one thing only.** Under `resume=True`, a journal, a symbolic link and a
-   missing primary are each still refused, with the tree unchanged.
+   missing primary are each still refused, with the tree unchanged, by both methods.
+   `closed_store_files(primary, resume=True)` on a store with a missing shard lists the files
+   that exist, and equals what `delete_store(primary, resume=True)` then deletes.
 6. **No Ray.** After the tests above, `ray.is_initialized()` is false. The module imports
    `ShardedPool`, so `ray` is imported; it must never be initialised.
 
