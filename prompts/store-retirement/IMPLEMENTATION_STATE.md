@@ -56,6 +56,61 @@ of them, it found, also blocks `--build --resume` of the A3 v2 store.
 | 04 | [Amend an unknown field](04-amend-an-unknown-field.md) | **R9** | Sonnet | ✍️ yes, 2026-09-25 | ⬜ after 03 | — | — |
 | 05 | Retire the two stores | **R10**–**R12** | Opus | ⏸️ held until 01–04 land | — | — | — |
 
+**Orchestrator review of prompt 03 (2026-09-25).** All ten checks in `orchestrator/prompt-03.md`
+§3 passed on `854e2ae`, from one dispatch.
+- **Scope.** Only `RunRegistry/stores.py`, `__init__.py` (inside `begin`), `__main__.py`, the new
+  `test_store_retire.py`, the log, this board and the index changed. `Datastore/`, `tools/`,
+  `CLAUDE.md` and every existing test are untouched. The index changed for the one issue opened,
+  with its count and date right.
+- **The order of the writes.** One `_update_sidecar` writes `retired` in state `retiring`, with
+  `files`, `references` and the one `retire` entry. `delete_store` follows, with `resume` true only
+  on the completion path or for a missing shard under the flag. `files` comes from the same plan,
+  with the same `resume`. Then the check that no listed file remains, then the second write, which
+  appends no history. Nothing between them retries or cleans up. `_update_sidecar`'s docstring
+  still counts its callers correctly.
+- **The fingerprint.** `compare_fingerprints` emits `problems` entries whatever the digests say,
+  and any entry refuses. The diff adds no naming-rule fallback. An unreadable `shards` table is
+  recognised by prompt 01's refusal text, and a test pins it.
+- **The reader and the history.** A test gives a copy entry and a move entry `retire`'s null `to`,
+  and finds a problem in each. Each of the four non-test uses of `.ok` refuses a tombstone, or
+  returns `None` for one: `__init__.py:355` and `stores.py:236`, `:915`, `:1434`.
+- **Guards.** `begin`'s check is above `os.makedirs`. Copy and move from and to, fingerprint,
+  adopt and create each refuse with the tombstone message. `retire_store`'s only caller outside
+  the tests is `__main__.py`. Deviation 1, that `store show` exited 0 on every reading, is correct:
+  `_show` at `ecfb024` returns 0 unconditionally.
+- **Mutations.** (i)–(ix) applied with plain `git apply`, from an empty working directory, and
+  reproduced the log exactly:
+
+  | Mutation | Result |
+  |---|---|
+  | (i) | failures=18, errors=2 |
+  | (ii) | failures=2 |
+  | (iii) | failures=1 |
+  | (iv) | failures=2 |
+  | (v) | failures=1, errors=1 |
+  | (vi) | failures=2 |
+  | (vii) | failures=1 |
+  | (viii) | failures=2 |
+  | (ix) | failures=1 |
+
+  The tree and the working directory were clean afterwards.
+- **Tests.** The new module passed twice. `import RunRegistry` loads neither `ray` nor
+  `sqlalchemy`. The interruption table names a test for every row, and says what a `.tmp` left by
+  a killed write does.
+- **`var/` and the repository root.** The snapshot, 71 entries, was identical before dispatch,
+  after the replay and after the suites. It includes the `physics-test-n20-*` store's hashes and
+  mtimes.
+- **Suites.** AdaptiveLevin 32, ComputeTargets 552, CosmologyModels 39, Datastore 206,
+  LiouvilleGreen 148 (1 skipped), RunRegistry 169 (+41). `black --check` is clean.
+- **For prompt 05's orchestrator.**
+  - **The sweep store's references report will be broad.** The sweep store sits directly in
+    `var/datastores/`, so any sidecar with a string resolving to that directory will be listed
+    (log 03, observation 4). Read its dry-run report with that in mind.
+  - **`--without-fingerprint` treats every exception from the fingerprint as D4's error.** That
+    includes one unrelated to damage, such as a transient `OSError`. The running-run and tombstone
+    refusals come first, so neither reaches it (log 03, observation 5). The error is recorded
+    verbatim, and neither real store should need the flag. If a dry run asks for it, stop and ask.
+
 **Orchestrator review of prompt 01 (2026-09-25).** All eight checks in `orchestrator/prompt-01.md`
 §3 passed on `ff65f9f`. The first dispatch was cut off by a usage limit after measuring baselines
 only. It changed nothing. Its baselines, taken in an exported copy of the tree, showed four spurious
