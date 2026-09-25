@@ -20,10 +20,15 @@ nowhere else, and only the operations below write a sidecar.
                     copy; a legacy string is kept verbatim
     history         append-only, one entry per operation, the first being the create or adopt
                     that assigned the store_id: {"operation", "from", "to", "when", "git_head",
-                    "git_dirty"}. After it, `copy` and `move`; and `retire`, which may stand only
-                    as the last entry, and only once. A `retire` entry's `from` is the primary's
-                    path and its `to` is null, because a retirement has no destination; every
-                    other entry's `to` is a path
+                    "git_dirty"}. After it, `copy`, `move` and `amend`; and `retire`, which may
+                    stand only as the last entry, and only once. A `retire` entry's `from` is the
+                    primary's path and its `to` is null, because a retirement has no destination.
+                    An `amend` entry's `from` and `to` are both null, because it has neither a
+                    source nor a destination, and it carries four more keys: `field`, `reason`,
+                    and `before` and `after`, each {"present": true, "value": <the field's value>}
+                    or {"present": false} — a marker one level above the value, never the value
+                    itself, so that no JSON value a field could hold is ever mistaken for it.
+                    Every other entry's `from` and `to` are both non-empty paths
     fingerprint     optional: the store's content fingerprint (`fingerprint_of`), as
                     {"fingerprint_format", "classes", "digest", "problems", "taken"}. Written only
                     by `fingerprint_store` when asked, which a registered run's
@@ -77,18 +82,26 @@ before this module existed. It is read as it is and never rewritten except by an
 path: that is prompt 01's rule for legacy shard records, applied to JSON.
 
 **The operations** are `create_sidecar`, `adopt_sidecar`, `copy_store`, `move_store`,
-`fingerprint_store` and `retire_store`. Copy and move call `ShardedPool.copy_store` / `move_store`
-for the store's files, then carry the sidecar. Copy, move, fingerprint and retire refuse a store
-that any `running` run names, alive or stale; that check is what the bare script cannot make. It
-is a check and not a lock: a run begun after it is not seen. Every operation but a retirement's
-completion refuses a tombstone.
+`fingerprint_store`, `retire_store` and `amend_sidecar`. Copy and move call
+`ShardedPool.copy_store` / `move_store` for the store's files, then carry the sidecar. Copy, move,
+fingerprint, retire and amend refuse a store that any `running` run names, alive or stale; that
+check is what the bare script cannot make. It is a check and not a lock: a run begun after it is
+not seen. Every operation but a retirement's completion refuses a tombstone.
 
 `retire_store` alone deletes, and only a store's own files: the shards its primary names, read
 through the one resolver, and then the primary, through `ShardedPool.delete_store`. It keeps the
 sidecar, as the store's tombstone, and it deletes no sidecar, run directory or other record.
 Nothing else here deletes a file. Nothing overwrites one except the in-place updates
-`_update_sidecar` names (adopt, the move's temporary sidecar, recording a fingerprint, and a
-retirement's two writes), and nothing cleans up after a failure or decides that a run is over.
+`_update_sidecar` names (adopt, the move's temporary sidecar, recording a fingerprint, a
+retirement's two writes, and an amendment), and nothing cleans up after a failure or decides that a
+run is over.
+
+`amend_sidecar` (store-retirement prompt 04) replaces or removes exactly one **unknown** field of
+a registry sidecar, with a required reason, and records the field's old value in an `amend` history
+entry, so that a present-tense claim an unknown field makes (such as the live A3 sidecar's
+`backup.retained`) can be corrected by a person without a hand edit of a sidecar, and nothing is
+ever lost. It never touches a known field, `retired` included: those belong to the operation that
+owns them. It never opens the store's files; it reads and writes only the sidecar.
 
 **The fingerprint** (store-fingerprint prompt 04) says what a closed store holds, as digests of its
 structured inventory (`Datastore.store_inventory.read_inventory`): per class and per tag set a
@@ -145,7 +158,25 @@ KNOWN_FIELDS = REQUIRED_FIELDS + ("copied_from", "fingerprint", "retired")
 IDENTITY_OPERATIONS = ("create", "adopt")
 RELOCATION_OPERATIONS = ("copy", "move")
 RETIRE_OPERATION = "retire"
+AMEND_OPERATION = "amend"
 HISTORY_KEYS = ("operation", "from", "to", "when", "git_head", "git_dirty")
+# an `amend` entry carries these four keys beside `HISTORY_KEYS`, and no other operation may
+AMEND_KEYS = ("field", "reason", "before", "after")
+
+# which operation owns each known field, named in `amend_sidecar`'s refusal of one (store-retirement
+# prompt 04 §2.1)
+_FIELD_OWNERS = {
+    "sidecar_format": "create or adopt",
+    "store_id": "create, adopt or copy",
+    "datastore": "create, adopt, copy or move",
+    "name": "create, adopt, copy or move",
+    "purpose": "create, adopt or copy",
+    "created": "create, adopt or copy",
+    "history": "create, adopt, copy, move, retire or amend",
+    "copied_from": "copy",
+    "fingerprint": "fingerprint",
+    "retired": "retire",
+}
 
 # a tombstone's `retired.state`: under way, then complete
 RETIREMENT_STATES = ("retiring", "retired")
@@ -283,7 +314,7 @@ def _history_problems(history) -> List[str]:
         allowed = (
             IDENTITY_OPERATIONS
             if index == 0
-            else RELOCATION_OPERATIONS + (RETIRE_OPERATION,)
+            else RELOCATION_OPERATIONS + (RETIRE_OPERATION, AMEND_OPERATION)
         )
         if operation not in allowed:
             problems.append(
@@ -296,13 +327,25 @@ def _history_problems(history) -> List[str]:
             )
         if index == 0 and entry["from"] is not None:
             problems.append(f"{where} ({operation}) has a from, {entry['from']!r}")
-        if index > 0 and not _nonempty_string(entry["from"]):
+        # an amend has neither a source nor a destination: both `from` and `to` are null. A
+        # retirement has no destination: its `to` is null, and every other entry's `from` and
+        # `to` are both non-empty paths
+        if operation == AMEND_OPERATION:
+            if entry["from"] is not None:
+                problems.append(
+                    f"{where} (amend) has a from, {entry['from']!r}, where an amend has none"
+                )
+        elif index > 0 and not _nonempty_string(entry["from"]):
             problems.append(f"{where} ({operation}) has no from")
-        # a retirement has no destination: its `to` is null, and every other entry's is a path
         if operation == RETIRE_OPERATION:
             if entry["to"] is not None:
                 problems.append(
                     f"{where} (retire) has a to, {entry['to']!r}, where a retirement has none"
+                )
+        elif operation == AMEND_OPERATION:
+            if entry["to"] is not None:
+                problems.append(
+                    f"{where} (amend) has a to, {entry['to']!r}, where an amend has none"
                 )
         elif not _nonempty_string(entry["to"]):
             problems.append(f"{where} has a malformed to, {entry['to']!r}")
@@ -313,7 +356,52 @@ def _history_problems(history) -> List[str]:
             problems.append(
                 f"{where} has a malformed git_dirty, {entry['git_dirty']!r}"
             )
+        # AMEND_KEYS are required on an amend entry, and a problem on every other kind
+        if operation == AMEND_OPERATION:
+            missing_amend = [key for key in AMEND_KEYS if key not in entry]
+            if missing_amend:
+                problems.append(f"{where} (amend) lacks {missing_amend}")
+            else:
+                if not _nonempty_string(entry.get("field")):
+                    problems.append(
+                        f"{where} (amend) has a malformed field, {entry.get('field')!r}"
+                    )
+                if not _nonempty_string(entry.get("reason")):
+                    problems.append(
+                        f"{where} (amend) has a malformed reason, {entry.get('reason')!r}"
+                    )
+                for key in ("before", "after"):
+                    problems.extend(
+                        _amend_slot_problems(entry.get(key), f"{where} (amend)'s {key}")
+                    )
+        else:
+            carried = [key for key in AMEND_KEYS if key in entry]
+            if carried:
+                problems.append(
+                    f"{where} ({operation}) carries {carried}, which only an amend entry has"
+                )
     return problems
+
+
+def _amend_slot_problems(value, where: str) -> List[str]:
+    """Every way ``value`` fails to be an amend history entry's `before` or `after`: an object
+    ``{"present": true, "value": <the field's value>}`` or ``{"present": false}``. This tagged
+    shape, not a sentinel string, is what an `amend` entry uses to say a field was absent or
+    removed, so that no JSON value a field could hold is ever mistaken for the marker (README D5,
+    prompt 04 §2.2): the marker is a wrapper one level above the value, never the value itself.
+    """
+    if not isinstance(value, dict) or not isinstance(value.get("present"), bool):
+        return [f"{where} is {value!r}, not a well-formed amend marker"]
+    keys = set(value)
+    if value["present"]:
+        if keys != {"present", "value"}:
+            return [
+                f"{where} is {value!r}: a present marker holds exactly present and value"
+            ]
+    else:
+        if keys != {"present"}:
+            return [f"{where} is {value!r}: an absent marker holds nothing but present"]
+    return []
 
 
 def _fingerprint_problems(value) -> List[str]:
@@ -654,10 +742,11 @@ def _write_new_sidecar(path: Path, fields: dict, primary: Path) -> None:
 
 
 def _update_sidecar(path: Path, fields: dict, primary: Path) -> None:
-    """Replace an existing sidecar's contents in place. Used in exactly four places: adopt, the
+    """Replace an existing sidecar's contents in place. Used in exactly five places: adopt, the
     move's temporary sidecar, `fingerprint_store` recording a fingerprint when asked (by a
-    person, or by a registered run's finish), and `retire_store`'s two writes of the tombstone,
-    before and after the deletion. Refuses if the `.tmp` name exists."""
+    person, or by a registered run's finish), `retire_store`'s two writes of the tombstone,
+    before and after the deletion, and `amend_sidecar`'s one write. Refuses if the `.tmp` name
+    exists."""
     _check_before_writing(path, fields, primary)
     if os.path.islink(path) or not os.path.isfile(path):
         raise RuntimeError(
@@ -1895,3 +1984,158 @@ def retire_store(
         fields=new_fields,
     )
     return result
+
+
+# =================================================================================================
+# amend (store-retirement prompt 04)
+#
+# `amend_sidecar` replaces or removes exactly one **unknown** field of a registry sidecar, so that
+# a present-tense claim it makes (the live A3 sidecar's `backup.retained`, once the backup is
+# retired) can be corrected by a person, with nothing lost and no hand edit of a sidecar (README
+# D5). It never opens the store's files, and it never touches a known field: those belong to the
+# operation that owns them (`_FIELD_OWNERS`).
+
+# the one value `value=` never equals: how `amend_sidecar` tells "no value was given" from a value
+# of `None`, which is a JSON value (null) a field can genuinely hold
+_NO_VALUE = object()
+
+
+def _amend_slot(fields: dict, name: str) -> dict:
+    """The `before` (or, on the destination side, the `after`) marker for ``name`` in ``fields``:
+    ``{"present": True, "value": fields[name]}`` if it is there, ``{"present": False}`` if not.
+    Deep-copied, so later mutation of ``fields`` cannot reach back into a written history entry.
+    """
+    if name in fields:
+        return {"present": True, "value": _copy.deepcopy(fields[name])}
+    return {"present": False}
+
+
+def amend_sidecar(
+    primary, field, reason, *, value=_NO_VALUE, remove=False, runs_root=None
+) -> dict:
+    """Replace or remove the **unknown** field ``field`` of the registry sidecar beside
+    ``primary``, with a required ``reason``, and return what changed.
+
+    Exactly one of ``value`` (the new value, any JSON-serialisable Python value) or
+    ``remove=True`` is given. Every refusal is a `RuntimeError` naming the sidecar and the reason,
+    and ending "Nothing was written". In order:
+
+    1. a blank or missing ``reason``;
+    2. both ``value`` and ``remove``, or neither;
+    3. a **tombstone**, complete or not (`SidecarReading.retired`, `_tombstone_text`) — checked
+       before the generic "not a problem-free registry sidecar" refusal, so the message says
+       "tombstone";
+    4. an absent, unreadable or legacy sidecar, or a registry sidecar with problems (`create` or
+       `adopt` it first; amend never upgrades a sidecar);
+    5. a **known** field, ``field in KNOWN_FIELDS``, `retired` included — the message names the
+       operation(s) that own it (`_FIELD_OWNERS`);
+    6. a store that a `running` run names, alive or stale, by path or by the sidecar's *recorded*
+       `store_id` field (not `SidecarReading.store_id`, which the reader gives only for a
+       problem-free sidecar — here that is already established, but the recorded field is read
+       directly, as `retire_store` does, for the same reason: a completed tombstone's `store_id`
+       would otherwise read as `None`);
+    7. ``remove`` of a field that is absent;
+    8. a ``value`` that is not JSON-serialisable;
+    9. a ``value`` that is identical, after a JSON round trip, to the field's current value.
+
+    The write, through `_update_sidecar` (its fifth use), replaces or deletes only ``field`` and
+    appends one `amend` history entry: `HISTORY_KEYS`, with `from` and `to` both null (an amend has
+    neither a source nor a destination), plus `field`, `reason`, and `before` and `after`, each
+    `_amend_slot`'s tagged marker — never a sentinel string, so that no JSON value a field could
+    hold, including one shaped like the marker itself, is ever mistaken for it. Every other field,
+    known or unknown, is value-identical after the write.
+
+    Returns `{"primary", "sidecar", "field", "before", "after", "entry", "fields"}`: `before` and
+    `after` are the plain values (`None` when absent or removed — read `entry`'s markers to tell
+    "removed" from "was null"), `entry` is the appended history entry, and `fields` is the
+    sidecar's new fields.
+    """
+    primary = Path(os.path.abspath(primary))
+
+    def refuse(why):
+        return RuntimeError(f'Cannot amend "{primary}": {why}. Nothing was written')
+
+    if not _nonempty_string(reason):
+        raise refuse(
+            "a reason is required, saying why the field is amended, which only a person can say"
+        )
+    given_value = value is not _NO_VALUE
+    if given_value and remove:
+        raise refuse(
+            "both a value and --remove were given; amend replaces or removes a field, never both "
+            "at once"
+        )
+    if not given_value and not remove:
+        raise refuse("neither a value nor --remove was given; exactly one is required")
+
+    reading = read_sidecar(primary)
+    if reading.retired:
+        raise refuse(_tombstone_text(reading))
+    if not reading.ok:
+        raise refuse(
+            f'its sidecar "{reading.path}" is not a problem-free registry sidecar '
+            f"({_sidecar_refusal(reading)}). Run `python -m RunRegistry store create` or `store "
+            f"adopt` on it first; amend never upgrades a sidecar implicitly"
+        )
+    fields = reading.fields
+
+    if field in KNOWN_FIELDS:
+        owner = _FIELD_OWNERS.get(field, "another operation")
+        raise refuse(
+            f"{field!r} is a known field, owned by {owner}; amend replaces or removes only an "
+            f"unknown field, one this registry carries and never interprets"
+        )
+
+    # the recorded field, read directly: reading.ok is already established, but the pattern
+    # matches retire_store's, which must read it this way for a tombstone
+    store_id = fields["store_id"]
+    running = _running_runs_naming("amend", [primary], store_id, runs_root)
+    if running:
+        raise refuse(
+            f"{_describe_running(running)}. A stale run is ended by a person, with Run.finish, "
+            f"before its sidecar is amended; the registry does not decide that a run is dead"
+        )
+
+    if remove:
+        if field not in fields:
+            raise refuse(f"{field!r} is absent, so there is nothing to remove")
+        new_value = _NO_VALUE
+    else:
+        try:
+            normalised = json.loads(json.dumps(value))
+        except (TypeError, ValueError) as e:
+            raise refuse(
+                f"the given value is not JSON-serialisable ({type(e).__name__}: {e})"
+            )
+        if field in fields and fields[field] == normalised:
+            raise refuse(
+                f"the given value is identical, after a JSON round trip, to {field!r}'s current "
+                f"value; nothing would change"
+            )
+        new_value = normalised
+
+    before = _amend_slot(fields, field)
+    after = {"present": False} if remove else {"present": True, "value": new_value}
+
+    provenance = git_provenance()
+    entry = _history_entry(AMEND_OPERATION, None, None, provenance)
+    entry.update(field=field, reason=reason, before=before, after=after)
+
+    new_fields = _copy.deepcopy(fields)
+    if remove:
+        del new_fields[field]
+    else:
+        new_fields[field] = new_value
+    new_fields["history"] = list(new_fields["history"]) + [entry]
+
+    _update_sidecar(reading.path, new_fields, primary)
+
+    return {
+        "primary": str(primary),
+        "sidecar": str(reading.path),
+        "field": field,
+        "before": before["value"] if before["present"] else None,
+        "after": after["value"] if after["present"] else None,
+        "entry": entry,
+        "fields": new_fields,
+    }

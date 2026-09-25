@@ -1,10 +1,10 @@
 # Store retirement campaign — implementation state
 
-**Last updated:** 2026-09-25 · **Status: 3 of 5 prompts landed (01, 02, 03). 04 is written and
-ready.** The user approved D0 and D3–D7 as worded on 2026-09-25 (README §6.2), which released
-03 and 04. 05 is held until 01–04 land. 01 and 02 are independent of each other; 03 follows 01, and
-04 follows 03. D4 was narrowed when 03 was written: an unreadable `shards` table is refused even
-under `--without-fingerprint` (README §6.2).
+**Last updated:** 2026-09-25 · **Status: 4 of 5 prompts landed (01, 02, 03, 04). 05 is held.** The
+user approved D0 and D3–D7 as worded on 2026-09-25 (README §6.2), which released 03 and 04. 05 is
+held until 01–04 land. 01 and 02 are independent of each other; 03 follows 01, and 04 follows 03.
+D4 was narrowed when 03 was written: an unreadable `shards` table is refused even under
+`--without-fingerprint` (README §6.2).
 
 The campaign was opened on 2026-09-25, when the user decided that a store is removed by a registry
 operation that retires it, and never by `rm`. The primary and its shards go, and the sidecar stays
@@ -53,7 +53,7 @@ of them, it found, also blocks `--build --resume` of the A3 v2 store.
 | 01 | [Delete a closed store](01-delete-a-closed-store.md) | **R1**–**R3** | Opus | ✍️ yes, 2026-09-25 | ✅ 2026-09-25 | *"Delete a closed sharded store's own files through the resolver"* | [`logs/01-…`](logs/01-delete-a-closed-store.md) |
 | 02 | [The sweep prepares through the registry](02-the-sweep-prepares-through-the-registry.md) | **R4**–**R5** | Sonnet | ✍️ yes, 2026-09-25 | ✅ 2026-09-25 | *"Make quadsource_atol_sweep prepare and check through the registry"* | [`logs/02-…`](logs/02-the-sweep-prepares-through-the-registry.md) |
 | 03 | [Retire a store](03-retire-a-store.md) | **R6**–**R8** | Opus | ✍️ yes, 2026-09-25 | ✅ 2026-09-25 | *"Retire a closed store and keep its sidecar as a tombstone"* | [`logs/03-…`](logs/03-retire-a-store.md) |
-| 04 | [Amend an unknown field](04-amend-an-unknown-field.md) | **R9** | Sonnet | ✍️ yes, 2026-09-25 | ⬜ after 03 | — | — |
+| 04 | [Amend an unknown field](04-amend-an-unknown-field.md) | **R9** | Sonnet | ✍️ yes, 2026-09-25 | ✅ 2026-09-25 | *"Add amend_sidecar and store amend, for one unknown field"* | [`logs/04-…`](logs/04-amend-an-unknown-field.md) |
 | 05 | Retire the two stores | **R10**–**R12** | Opus | ⏸️ held until 01–04 land | — | — | — |
 
 **Orchestrator review of prompt 03 (2026-09-25).** All ten checks in `orchestrator/prompt-03.md`
@@ -178,8 +178,8 @@ In 05 **the user** runs each `store retire`: no agent deletes a real store (READ
 | R5 | **REMEDY** | `assert_store_is_self_consistent` compares serial by serial through `resolve_shard_path`, which unblocks `--build --resume` of every store built since `datastore-portability` prompt 01. Closes `[01-atol-sweep-check-expects-absolute-shard-records]`. | 02 | ✅ |
 | R6 | **FORMAT** | A known `retired` field and a terminal `retire` history operation. The reader tells a tombstone from a broken sidecar (`SidecarReading.retired`), and calls a primary that has reappeared at a retired name a problem. | 03 | ✅ `retired` and `retire` are in the `stores.py` format table as shipped; `retire`'s `to` is null, for `retire` only. A completed tombstone reads with no problems and `ok` false; `retiring` and a reappeared primary are problems (log 03, tests 1, 7, 8; mutation (v)) |
 | R7 | **FACILITY** | `retire_store` and `python -m RunRegistry store retire`. It refuses a `running` run, alive or stale, and a missing or mismatched fingerprint, except under D4. It writes the tombstone, with its file list, before deleting anything, then calls `delete_store`, then marks the tombstone complete. A second call completes an interrupted one. It reports the references it finds (D5). | 03 | ✅ the interruption table in log 03, one test per row, with a `.tmp` left by a killed write in two of them; mutations (i), (ii), (iii), (vi), (vii), (viii), (ix) |
-| R8 | **GUARD** | `begin(results=…)` refuses a retired store. Copy, move, fingerprint, adopt and amend refuse a tombstone (D6). `store show` renders one. The `RunRegistry/stores.py` and `__main__.py` docstrings follow D0. | 03 | ✅ for begin, copy and move from and to, fingerprint, adopt and create; amend is prompt 04's. Both docstrings quoted before and after in log 03; mutation (iv). The package docstring in `RunRegistry/__init__.py` still says "deletes nothing": `[03-the-package-docstring-still-says-the-registry-deletes-nothing]` |
-| R9 | **FACILITY** | `amend_sidecar` and `store amend`: replace or remove one unknown field of a registry sidecar, with a required reason, recording the old value in an `amend` history entry (D5). | 04 | ⬜ |
+| R8 | **GUARD** | `begin(results=…)` refuses a retired store. Copy, move, fingerprint, adopt and amend refuse a tombstone (D6). `store show` renders one. The `RunRegistry/stores.py` and `__main__.py` docstrings follow D0. | 03 | ✅ for begin, copy and move from and to, fingerprint, adopt and create; amend's own tombstone refusal is confirmed by prompt 04 (log 04, `TestRefusals.test_a_tombstone_complete_or_not`; mutation (v)). Both docstrings quoted before and after in log 03; mutation (iv). The package docstring in `RunRegistry/__init__.py` still says "deletes nothing": `[03-the-package-docstring-still-says-the-registry-deletes-nothing]` |
+| R9 | **FACILITY** | `amend_sidecar` and `store amend`: replace or remove one unknown field of a registry sidecar, with a required reason, recording the old value in an `amend` history entry (D5). | 04 | ✅ every refusal in the prompt's §2.1 (log 04, `TestRefusals`); the `before`/`after` markers are a tagged wrapper, never a sentinel, so a field whose own value has the marker's shape reads back unambiguously (`TestAmend`, `TestHistoryRule.test_the_amend_markers_shape`); copy and move carry an amended field and its entry unchanged (`TestCopyAndMove`); two amendments of one field read back as a sequence (`TestTwoAmendments`); mutations (i)–(v) |
 | R10 | **REMEDY** | Remedial: the sweep store retired by the user with `store retire`, checked before and after by the prompt's agent. `QUADSOURCE-TOLERANCE-SWEEP.md:15-17` then becomes true, and is not edited. | 05 | ⏸️ |
 | R11 | **REMEDY** | Remedial: the backup retired the same way. The live A3 sidecar's `backup` field is then corrected by `store amend`. | 05 | ⏸️ |
 | R12 | **RECORD** | The retirements recorded on the `run-registry` board, with `var/runs/a3-pilot/BACKUP_PATH` explained there rather than edited, and on the `handover` board. | 05 | ⏸️ |
@@ -297,22 +297,26 @@ other suites were last measured at `50a24ac` by the `store-fingerprint` prompt 0
 AdaptiveLevin 32, ComputeTargets 552 (the known wall-clock flake aside), CosmologyModels 39,
 LiouvilleGreen 148 (1 skipped). No code has changed between the two.
 
-| Suite | At `42d4910` (campaign written) | After prompt 02 | After prompt 01 | After prompt 03 |
-|---|---|---|---|---|
-| `AdaptiveLevin` | 32 OK (at `50a24ac`) | not re-run (prompt 02 touches neither its code nor its imports) | 32 OK | 32 OK |
-| `ComputeTargets` | 552 OK (at `50a24ac`; the flake is known) | 552 OK | 552 OK (the flake did not occur) | 552 OK (the flake did not occur) |
-| `CosmologyModels` | 39 OK (at `50a24ac`) | not re-run (prompt 02 touches neither its code nor its imports) | 39 OK | 39 OK |
-| `Datastore` | 177 OK | 177 OK | 206 OK (177 + the 29 tests prompt 01 added) | 206 OK |
-| `LiouvilleGreen` | 148 OK, skipped=1 (at `50a24ac`) | not re-run (prompt 02 touches neither its code nor its imports) | 148 OK, skipped=1 | 148 OK, skipped=1 |
-| `RunRegistry` | 117 OK | 128 OK (117 + the 11 tests prompt 02 added) | 128 OK | 169 OK (128 + the 41 tests prompt 03 added) |
+| Suite | At `42d4910` (campaign written) | After prompt 02 | After prompt 01 | After prompt 03 | After prompt 04 |
+|---|---|---|---|---|---|
+| `AdaptiveLevin` | 32 OK (at `50a24ac`) | not re-run (prompt 02 touches neither its code nor its imports) | 32 OK | 32 OK | 32 OK |
+| `ComputeTargets` | 552 OK (at `50a24ac`; the flake is known) | 552 OK | 552 OK (the flake did not occur) | 552 OK (the flake did not occur) | 552 OK (the flake did not occur) |
+| `CosmologyModels` | 39 OK (at `50a24ac`) | not re-run (prompt 02 touches neither its code nor its imports) | 39 OK | 39 OK | 39 OK |
+| `Datastore` | 177 OK | 177 OK | 206 OK (177 + the 29 tests prompt 01 added) | 206 OK | 206 OK |
+| `LiouvilleGreen` | 148 OK, skipped=1 (at `50a24ac`) | not re-run (prompt 02 touches neither its code nor its imports) | 148 OK, skipped=1 | 148 OK, skipped=1 | 148 OK, skipped=1 |
+| `RunRegistry` | 117 OK | 128 OK (117 + the 11 tests prompt 02 added) | 128 OK | 169 OK (128 + the 41 tests prompt 03 added) | 190 OK (169 + the 21 tests prompt 04 added) |
 
 Prompt 01 landed after prompt 02, so its column is the later one. Its baselines were the
 orchestrator's at `226889f`: AdaptiveLevin 32, ComputeTargets 552, CosmologyModels 39, Datastore
 177, LiouvilleGreen 148 (1 skipped), RunRegistry 128. Prompt 03's baselines were
 measured on `ecfb024` before dispatch: AdaptiveLevin 32, ComputeTargets 552, CosmologyModels 39,
-Datastore 206, LiouvilleGreen 148 (1 skipped), RunRegistry 128.
+Datastore 206, LiouvilleGreen 148 (1 skipped), RunRegistry 128. Prompt 04's baselines were measured
+on `89529f4` (this dispatch's HEAD) before dispatch: AdaptiveLevin 32, ComputeTargets 552,
+CosmologyModels 39, Datastore 206, LiouvilleGreen 148 (1 skipped), RunRegistry 169 — all matching
+the state prompt 03 left.
 
 Prompt 02's own verification is in
 [`logs/02-the-sweep-prepares-through-the-registry.md`](logs/02-the-sweep-prepares-through-the-registry.md),
-prompt 01's in [`logs/01-delete-a-closed-store.md`](logs/01-delete-a-closed-store.md), and prompt
-03's in [`logs/03-retire-a-store.md`](logs/03-retire-a-store.md).
+prompt 01's in [`logs/01-delete-a-closed-store.md`](logs/01-delete-a-closed-store.md), prompt
+03's in [`logs/03-retire-a-store.md`](logs/03-retire-a-store.md), and prompt 04's in
+[`logs/04-amend-an-unknown-field.md`](logs/04-amend-an-unknown-field.md).

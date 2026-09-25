@@ -3,7 +3,7 @@
 Run it at the start of a session and before launching anything long. A registry nobody reads is
 worse than none, because it looks like coverage.
 
-`python -m RunRegistry store {show,create,adopt,copy,move,fingerprint,retire}` manages a
+`python -m RunRegistry store {show,create,adopt,copy,move,fingerprint,retire,amend}` manages a
 datastore and its `<stem>.manifest.json` sidecar (`RunRegistry.stores`). `show` is read-only.
 `create` and `adopt` write a sidecar and never open the store. `copy` and `move` move the store's
 files with `ShardedPool` and carry the sidecar, and refuse a store that any `running` run names,
@@ -14,6 +14,9 @@ store. `retire` deletes a closed store's own files, its shards and then its prim
 `ShardedPool.delete_store`, and keeps its sidecar as a tombstone that says when, why and what the
 store held; it refuses a store a `running` run names, alive or stale, and one whose recorded
 fingerprint does not match its content, and `--dry-run` reports what it would do and does nothing.
+`amend` replaces or removes one **unknown** field of the sidecar, with a required `--reason`, and
+records the field's old value in an `amend` history entry; it is the one way to change an unknown
+field, and it never touches a known one. It refuses a store a `running` run names, alive or stale.
 None of them initialises Ray. `retire` alone deletes, and only a store's own files; none deletes a
 sidecar, a run directory or any other record, and every other command refuses a tombstone.
 """
@@ -222,6 +225,41 @@ def _retire(args) -> int:
     return 0
 
 
+def _amend(args) -> int:
+    kwargs = {}
+    if args.json is not None:
+        try:
+            kwargs["value"] = json.loads(args.json)
+        except json.JSONDecodeError as e:
+            print(
+                f'!! Cannot amend "{args.primary}": --json {args.json!r} does not parse '
+                f"({type(e).__name__}: {e}). Nothing was written",
+                file=sys.stderr,
+            )
+            return 1
+    if args.remove:
+        kwargs["remove"] = True
+
+    try:
+        result = stores.amend_sidecar(
+            args.primary, args.field, args.reason, runs_root=args.runs_root, **kwargs
+        )
+    except RuntimeError as e:
+        print(f"!! {e}", file=sys.stderr)
+        return 1
+
+    print(f"store:    {result['primary']}")
+    print(f"sidecar:  {result['sidecar']}")
+    print(f"field:    {result['field']}")
+    print(f"before:   {json.dumps(result['before'], sort_keys=True)}")
+    print(f"after:    {json.dumps(result['after'], sort_keys=True)}")
+    print("history entry:")
+    for line in json.dumps(result["entry"], indent=2, sort_keys=True).splitlines():
+        print(f"  {line}")
+    print(f">> amended: {result['sidecar']}")
+    return 0
+
+
 def _short(digest) -> str:
     return str(digest)[:12]
 
@@ -306,6 +344,8 @@ def _store(args) -> int:
         return _fingerprint(args)
     if args.store_command == "retire":
         return _retire(args)
+    if args.store_command == "amend":
+        return _amend(args)
     try:
         if args.store_command == "create":
             fields = stores.create_sidecar(args.primary, args.purpose)
@@ -414,6 +454,24 @@ def main(argv=None) -> int:
         help=f"where sidecars that reference the store are searched for, default "
         f"{stores.DEFAULT_STORES_ROOT}",
     )
+    amender = store_sub.add_parser(
+        "amend",
+        help="replace or remove one unknown field of the sidecar, recording the old value",
+    )
+    amender.add_argument("primary", metavar="PRIMARY")
+    amender.add_argument(
+        "--field", required=True, metavar="NAME", help="the field's name"
+    )
+    amender.add_argument(
+        "--json", default=None, metavar="VALUE", help="the field's new value, as JSON"
+    )
+    amender.add_argument(
+        "--remove", action="store_true", help="remove the field instead of replacing it"
+    )
+    amender.add_argument(
+        "--reason", required=True, metavar="TEXT", help="why the field is amended"
+    )
+    amender.add_argument("--runs-root", **runs_root)
 
     args = parser.parse_args(argv)
     if args.command == "store":
