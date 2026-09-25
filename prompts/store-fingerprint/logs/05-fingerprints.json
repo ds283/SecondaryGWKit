@@ -1,0 +1,914 @@
+{
+  "var/datastores/backup-pre-resume-20260921T091011/handover-A3-baseline-lambdacdm.manifest.json": {
+    "classes": {
+      "BackgroundModel": {
+        "count": 1,
+        "digest": "e3fb6cb1cf7e179e1f4c94d9b27a1deaccf9d9e1c9cf9613ec2cf8fde51827d7",
+        "tag_sets": [
+          {
+            "count": 1,
+            "digest": "e3fb6cb1cf7e179e1f4c94d9b27a1deaccf9d9e1c9cf9613ec2cf8fde51827d7",
+            "tags": [
+              "LargestSourceRedshift_2.0636e+16",
+              "Run_default",
+              "SmallestSourceRedshift_0.1",
+              "SourceGridConstruction_2"
+            ]
+          }
+        ]
+      },
+      "GkNumericIntegration": {
+        "count": 4549,
+        "digest": "c123f591d2b04a2d8358825c64340cfad5a60f8f57bfb9f0a6bb527f820e5bfe",
+        "tag_sets": [
+          {
+            "count": 4549,
+            "digest": "c123f591d2b04a2d8358825c64340cfad5a60f8f57bfb9f0a6bb527f820e5bfe",
+            "tags": [
+              "GkOneLoopDensity",
+              "LargestSourceRedshift_2.0636e+16",
+              "ResponseRedshiftGrid_145_c51d43ac",
+              "ResponseSparsenessZ_12",
+              "Run_default",
+              "SmallestSourceRedshift_0.1",
+              "SourceGridConstruction_2",
+              "SourceRedshiftGrid_1740_8d1d43b6"
+            ]
+          }
+        ]
+      },
+      "GkSource": {
+        "count": 1160,
+        "digest": "2245e52abd42fbbb89010a734fd510413b7c01625395f7c500f6569ecdcfa024",
+        "tag_sets": [
+          {
+            "count": 1160,
+            "digest": "2245e52abd42fbbb89010a734fd510413b7c01625395f7c500f6569ecdcfa024",
+            "tags": [
+              "GkOneLoopDensity",
+              "LargestSourceRedshift_2.0636e+16",
+              "ResponseRedshiftGrid_145_c51d43ac",
+              "ResponseSparsenessZ_12",
+              "Run_default",
+              "SmallestSourceRedshift_0.1",
+              "SourceGridConstruction_2",
+              "SourceRedshiftGrid_1740_8d1d43b6"
+            ]
+          }
+        ]
+      },
+      "GkSourcePolicy": {
+        "count": 2,
+        "digest": "064c7949b3309290eda4bd27713f1b608e066bc0a73fcc815fb3c91720626ec7",
+        "tag_sets": [
+          {
+            "count": 2,
+            "digest": "064c7949b3309290eda4bd27713f1b608e066bc0a73fcc815fb3c91720626ec7",
+            "tags": []
+          }
+        ]
+      },
+      "GkSourcePolicyData": {
+        "count": 1160,
+        "digest": "df2424eb174d794a042edd3a69853e4ede786fa01107630384e5a17812716761",
+        "tag_sets": [
+          {
+            "count": 1160,
+            "digest": "df2424eb174d794a042edd3a69853e4ede786fa01107630384e5a17812716761",
+            "tags": []
+          }
+        ]
+      },
+      "GkWKBIntegration": {
+        "count": 13920,
+        "digest": "7397175220005dab7233546c4a4ece0de5200ab76a6c2818b1a6408a1cd5acc5",
+        "tag_sets": [
+          {
+            "count": 13920,
+            "digest": "7397175220005dab7233546c4a4ece0de5200ab76a6c2818b1a6408a1cd5acc5",
+            "tags": [
+              "GkOneLoopDensity",
+              "LargestSourceRedshift_2.0636e+16",
+              "ResponseRedshiftGrid_145_c51d43ac",
+              "ResponseSparsenessZ_12",
+              "Run_default",
+              "SmallestSourceRedshift_0.1",
+              "SourceGridConstruction_2",
+              "SourceRedshiftGrid_1740_8d1d43b6"
+            ]
+          }
+        ]
+      },
+      "IntegrationSolver": {
+        "count": 7,
+        "digest": "317b009bb7febb1b3e0980794a994f6d8bdeed3ca784464e2bc462acef1c18c1",
+        "tag_sets": [
+          {
+            "count": 7,
+            "digest": "317b009bb7febb1b3e0980794a994f6d8bdeed3ca784464e2bc462acef1c18c1",
+            "tags": []
+          }
+        ]
+      },
+      "LambdaCDM": {
+        "count": 1,
+        "digest": "dcbaa9d413d45bf56b63a2a6ac1da865159e363f8b5ea2a479265113b82091b2",
+        "tag_sets": [
+          {
+            "count": 1,
+            "digest": "dcbaa9d413d45bf56b63a2a6ac1da865159e363f8b5ea2a479265113b82091b2",
+            "tags": []
+          }
+        ]
+      },
+      "OneLoopIntegral": {
+        "count": 0,
+        "digest": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+        "tag_sets": []
+      },
+      "QCD_Cosmology": {
+        "count": 1,
+        "digest": "178439a39e42aacff29617bf4fafae2d6b4f2faa27a5a8337781de080355fb4f",
+        "tag_sets": [
+          {
+            "count": 1,
+            "digest": "178439a39e42aacff29617bf4fafae2d6b4f2faa27a5a8337781de080355fb4f",
+            "tags": []
+          }
+        ]
+      },
+      "QuadSource": {
+        "count": 36,
+        "digest": "2dd5a869a5f2017edda7d5a5e63552a9365c6362eed4b0f210116864b2b75526",
+        "tag_sets": [
+          {
+            "count": 36,
+            "digest": "2dd5a869a5f2017edda7d5a5e63552a9365c6362eed4b0f210116864b2b75526",
+            "tags": [
+              "LargestSourceRedshift_2.0636e+16",
+              "OutsideHorizonEfolds_e3",
+              "Run_default",
+              "SmallestSourceRedshift_0.1",
+              "SourceGridConstruction_2",
+              "SourceRedshiftGrid_1740_8d1d43b6",
+              "TkOneLoopDensity"
+            ]
+          }
+        ]
+      },
+      "QuadSourceIntegral": {
+        "count": 7552,
+        "digest": "8545e21a4bf297c3b5505e1b1290344b26457d36f7fde5471f050cd4e94f915c",
+        "tag_sets": [
+          {
+            "count": 7552,
+            "digest": "8545e21a4bf297c3b5505e1b1290344b26457d36f7fde5471f050cd4e94f915c",
+            "tags": [
+              "GkOneLoopDensity",
+              "LargestSourceRedshift_2.0636e+16",
+              "ResponseRedshiftGrid_145_c51d43ac",
+              "ResponseSparsenessZ_12",
+              "Run_default",
+              "SmallestSourceRedshift_0.1",
+              "SourceGridConstruction_2",
+              "SourceRedshiftGrid_1740_8d1d43b6",
+              "TkOneLoopDensity"
+            ]
+          }
+        ]
+      },
+      "QuadSourcePolicy": {
+        "count": 2,
+        "digest": "064c7949b3309290eda4bd27713f1b608e066bc0a73fcc815fb3c91720626ec7",
+        "tag_sets": [
+          {
+            "count": 2,
+            "digest": "064c7949b3309290eda4bd27713f1b608e066bc0a73fcc815fb3c91720626ec7",
+            "tags": []
+          }
+        ]
+      },
+      "TkNumericIntegration": {
+        "count": 8,
+        "digest": "07061fe0dd0fd8890f3b210fa0ea48bc7845ca7bb6a6787be6f639202363b4f8",
+        "tag_sets": [
+          {
+            "count": 8,
+            "digest": "07061fe0dd0fd8890f3b210fa0ea48bc7845ca7bb6a6787be6f639202363b4f8",
+            "tags": [
+              "LargestSourceRedshift_2.0636e+16",
+              "OutsideHorizonEfolds_e3",
+              "Run_default",
+              "SmallestSourceRedshift_0.1",
+              "SourceGridConstruction_2",
+              "SourceRedshiftGrid_1740_8d1d43b6",
+              "TkOneLoopDensity"
+            ]
+          }
+        ]
+      },
+      "TkWKBIntegration": {
+        "count": 8,
+        "digest": "35a479b6320ff8e3d780be078657323ac18443cc1725e86a18673766266ecd34",
+        "tag_sets": [
+          {
+            "count": 8,
+            "digest": "35a479b6320ff8e3d780be078657323ac18443cc1725e86a18673766266ecd34",
+            "tags": [
+              "LargestSourceRedshift_2.0636e+16",
+              "OutsideHorizonEfolds_e3",
+              "Run_default",
+              "SmallestSourceRedshift_0.1",
+              "SourceGridConstruction_2",
+              "SourceRedshiftGrid_1740_8d1d43b6",
+              "TkOneLoopDensity"
+            ]
+          }
+        ]
+      },
+      "redshift": {
+        "count": 1740,
+        "digest": "f5851073507ae2f2989c79e49890d880f386c52e27908988584f8508e7e8c95a",
+        "tag_sets": [
+          {
+            "count": 1740,
+            "digest": "f5851073507ae2f2989c79e49890d880f386c52e27908988584f8508e7e8c95a",
+            "tags": []
+          }
+        ]
+      },
+      "store_tag": {
+        "count": 10,
+        "digest": "8e36e81ea00925fbccd5611e1009fc01fe56bb4761c9fba39bd3b05ebd395d37",
+        "tag_sets": [
+          {
+            "count": 10,
+            "digest": "8e36e81ea00925fbccd5611e1009fc01fe56bb4761c9fba39bd3b05ebd395d37",
+            "tags": []
+          }
+        ]
+      },
+      "tolerance": {
+        "count": 6,
+        "digest": "b582318d050185a1b398d3c3fef7d771f98e1e509918adef47b4ab22bb24ca05",
+        "tag_sets": [
+          {
+            "count": 6,
+            "digest": "b582318d050185a1b398d3c3fef7d771f98e1e509918adef47b4ab22bb24ca05",
+            "tags": []
+          }
+        ]
+      },
+      "version": {
+        "count": 1,
+        "digest": "482c17e477216a7821fbd15f13e17852f1f9c0a8993a00e12b092fca8d7f2d9a",
+        "tag_sets": [
+          {
+            "count": 1,
+            "digest": "482c17e477216a7821fbd15f13e17852f1f9c0a8993a00e12b092fca8d7f2d9a",
+            "tags": []
+          }
+        ]
+      },
+      "wavenumber": {
+        "count": 8,
+        "digest": "f82c942161647580916d3ccfbcf288f366145a047ccc71892b42fdcbfc084bbe",
+        "tag_sets": [
+          {
+            "count": 8,
+            "digest": "f82c942161647580916d3ccfbcf288f366145a047ccc71892b42fdcbfc084bbe",
+            "tags": []
+          }
+        ]
+      },
+      "wavenumber_exit_time": {
+        "count": 8,
+        "digest": "045639da7d40c62a233ac245525e0efb1e0d5740bed35c58310026ec1e6cb3fa",
+        "tag_sets": [
+          {
+            "count": 8,
+            "digest": "045639da7d40c62a233ac245525e0efb1e0d5740bed35c58310026ec1e6cb3fa",
+            "tags": []
+          }
+        ]
+      }
+    },
+    "digest": "eedcdfb2bbd12f95237e118231128c19ff793b49ab08664e06fb9072888db222",
+    "fingerprint_format": 1,
+    "problems": {},
+    "taken": {
+      "git_dirty": false,
+      "git_head": "50a24acb23e41a68f508be63db509c10b2ac6d7e",
+      "run_id": null,
+      "when": "2026-09-25T07:32:10+01:00"
+    }
+  },
+  "var/datastores/handover-A3-baseline-lambdacdm.manifest.json": {
+    "classes": {
+      "BackgroundModel": {
+        "count": 1,
+        "digest": "e3fb6cb1cf7e179e1f4c94d9b27a1deaccf9d9e1c9cf9613ec2cf8fde51827d7",
+        "tag_sets": [
+          {
+            "count": 1,
+            "digest": "e3fb6cb1cf7e179e1f4c94d9b27a1deaccf9d9e1c9cf9613ec2cf8fde51827d7",
+            "tags": [
+              "LargestSourceRedshift_2.0636e+16",
+              "Run_default",
+              "SmallestSourceRedshift_0.1",
+              "SourceGridConstruction_2"
+            ]
+          }
+        ]
+      },
+      "GkNumericIntegration": {
+        "count": 4549,
+        "digest": "c123f591d2b04a2d8358825c64340cfad5a60f8f57bfb9f0a6bb527f820e5bfe",
+        "tag_sets": [
+          {
+            "count": 4549,
+            "digest": "c123f591d2b04a2d8358825c64340cfad5a60f8f57bfb9f0a6bb527f820e5bfe",
+            "tags": [
+              "GkOneLoopDensity",
+              "LargestSourceRedshift_2.0636e+16",
+              "ResponseRedshiftGrid_145_c51d43ac",
+              "ResponseSparsenessZ_12",
+              "Run_default",
+              "SmallestSourceRedshift_0.1",
+              "SourceGridConstruction_2",
+              "SourceRedshiftGrid_1740_8d1d43b6"
+            ]
+          }
+        ]
+      },
+      "GkSource": {
+        "count": 1160,
+        "digest": "2245e52abd42fbbb89010a734fd510413b7c01625395f7c500f6569ecdcfa024",
+        "tag_sets": [
+          {
+            "count": 1160,
+            "digest": "2245e52abd42fbbb89010a734fd510413b7c01625395f7c500f6569ecdcfa024",
+            "tags": [
+              "GkOneLoopDensity",
+              "LargestSourceRedshift_2.0636e+16",
+              "ResponseRedshiftGrid_145_c51d43ac",
+              "ResponseSparsenessZ_12",
+              "Run_default",
+              "SmallestSourceRedshift_0.1",
+              "SourceGridConstruction_2",
+              "SourceRedshiftGrid_1740_8d1d43b6"
+            ]
+          }
+        ]
+      },
+      "GkSourcePolicy": {
+        "count": 2,
+        "digest": "064c7949b3309290eda4bd27713f1b608e066bc0a73fcc815fb3c91720626ec7",
+        "tag_sets": [
+          {
+            "count": 2,
+            "digest": "064c7949b3309290eda4bd27713f1b608e066bc0a73fcc815fb3c91720626ec7",
+            "tags": []
+          }
+        ]
+      },
+      "GkSourcePolicyData": {
+        "count": 1160,
+        "digest": "df2424eb174d794a042edd3a69853e4ede786fa01107630384e5a17812716761",
+        "tag_sets": [
+          {
+            "count": 1160,
+            "digest": "df2424eb174d794a042edd3a69853e4ede786fa01107630384e5a17812716761",
+            "tags": []
+          }
+        ]
+      },
+      "GkWKBIntegration": {
+        "count": 13920,
+        "digest": "7397175220005dab7233546c4a4ece0de5200ab76a6c2818b1a6408a1cd5acc5",
+        "tag_sets": [
+          {
+            "count": 13920,
+            "digest": "7397175220005dab7233546c4a4ece0de5200ab76a6c2818b1a6408a1cd5acc5",
+            "tags": [
+              "GkOneLoopDensity",
+              "LargestSourceRedshift_2.0636e+16",
+              "ResponseRedshiftGrid_145_c51d43ac",
+              "ResponseSparsenessZ_12",
+              "Run_default",
+              "SmallestSourceRedshift_0.1",
+              "SourceGridConstruction_2",
+              "SourceRedshiftGrid_1740_8d1d43b6"
+            ]
+          }
+        ]
+      },
+      "IntegrationSolver": {
+        "count": 7,
+        "digest": "317b009bb7febb1b3e0980794a994f6d8bdeed3ca784464e2bc462acef1c18c1",
+        "tag_sets": [
+          {
+            "count": 7,
+            "digest": "317b009bb7febb1b3e0980794a994f6d8bdeed3ca784464e2bc462acef1c18c1",
+            "tags": []
+          }
+        ]
+      },
+      "LambdaCDM": {
+        "count": 1,
+        "digest": "dcbaa9d413d45bf56b63a2a6ac1da865159e363f8b5ea2a479265113b82091b2",
+        "tag_sets": [
+          {
+            "count": 1,
+            "digest": "dcbaa9d413d45bf56b63a2a6ac1da865159e363f8b5ea2a479265113b82091b2",
+            "tags": []
+          }
+        ]
+      },
+      "OneLoopIntegral": {
+        "count": 0,
+        "digest": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+        "tag_sets": []
+      },
+      "QCD_Cosmology": {
+        "count": 1,
+        "digest": "178439a39e42aacff29617bf4fafae2d6b4f2faa27a5a8337781de080355fb4f",
+        "tag_sets": [
+          {
+            "count": 1,
+            "digest": "178439a39e42aacff29617bf4fafae2d6b4f2faa27a5a8337781de080355fb4f",
+            "tags": []
+          }
+        ]
+      },
+      "QuadSource": {
+        "count": 36,
+        "digest": "2dd5a869a5f2017edda7d5a5e63552a9365c6362eed4b0f210116864b2b75526",
+        "tag_sets": [
+          {
+            "count": 36,
+            "digest": "2dd5a869a5f2017edda7d5a5e63552a9365c6362eed4b0f210116864b2b75526",
+            "tags": [
+              "LargestSourceRedshift_2.0636e+16",
+              "OutsideHorizonEfolds_e3",
+              "Run_default",
+              "SmallestSourceRedshift_0.1",
+              "SourceGridConstruction_2",
+              "SourceRedshiftGrid_1740_8d1d43b6",
+              "TkOneLoopDensity"
+            ]
+          }
+        ]
+      },
+      "QuadSourceIntegral": {
+        "count": 7654,
+        "digest": "94c5883ba5c59fcc7617f9ed7b435525900109fef4bd6c53e4f16d89fce5d4f8",
+        "tag_sets": [
+          {
+            "count": 7654,
+            "digest": "94c5883ba5c59fcc7617f9ed7b435525900109fef4bd6c53e4f16d89fce5d4f8",
+            "tags": [
+              "GkOneLoopDensity",
+              "LargestSourceRedshift_2.0636e+16",
+              "ResponseRedshiftGrid_145_c51d43ac",
+              "ResponseSparsenessZ_12",
+              "Run_default",
+              "SmallestSourceRedshift_0.1",
+              "SourceGridConstruction_2",
+              "SourceRedshiftGrid_1740_8d1d43b6",
+              "TkOneLoopDensity"
+            ]
+          }
+        ]
+      },
+      "QuadSourcePolicy": {
+        "count": 2,
+        "digest": "064c7949b3309290eda4bd27713f1b608e066bc0a73fcc815fb3c91720626ec7",
+        "tag_sets": [
+          {
+            "count": 2,
+            "digest": "064c7949b3309290eda4bd27713f1b608e066bc0a73fcc815fb3c91720626ec7",
+            "tags": []
+          }
+        ]
+      },
+      "TkNumericIntegration": {
+        "count": 8,
+        "digest": "07061fe0dd0fd8890f3b210fa0ea48bc7845ca7bb6a6787be6f639202363b4f8",
+        "tag_sets": [
+          {
+            "count": 8,
+            "digest": "07061fe0dd0fd8890f3b210fa0ea48bc7845ca7bb6a6787be6f639202363b4f8",
+            "tags": [
+              "LargestSourceRedshift_2.0636e+16",
+              "OutsideHorizonEfolds_e3",
+              "Run_default",
+              "SmallestSourceRedshift_0.1",
+              "SourceGridConstruction_2",
+              "SourceRedshiftGrid_1740_8d1d43b6",
+              "TkOneLoopDensity"
+            ]
+          }
+        ]
+      },
+      "TkWKBIntegration": {
+        "count": 8,
+        "digest": "35a479b6320ff8e3d780be078657323ac18443cc1725e86a18673766266ecd34",
+        "tag_sets": [
+          {
+            "count": 8,
+            "digest": "35a479b6320ff8e3d780be078657323ac18443cc1725e86a18673766266ecd34",
+            "tags": [
+              "LargestSourceRedshift_2.0636e+16",
+              "OutsideHorizonEfolds_e3",
+              "Run_default",
+              "SmallestSourceRedshift_0.1",
+              "SourceGridConstruction_2",
+              "SourceRedshiftGrid_1740_8d1d43b6",
+              "TkOneLoopDensity"
+            ]
+          }
+        ]
+      },
+      "redshift": {
+        "count": 1740,
+        "digest": "f5851073507ae2f2989c79e49890d880f386c52e27908988584f8508e7e8c95a",
+        "tag_sets": [
+          {
+            "count": 1740,
+            "digest": "f5851073507ae2f2989c79e49890d880f386c52e27908988584f8508e7e8c95a",
+            "tags": []
+          }
+        ]
+      },
+      "store_tag": {
+        "count": 10,
+        "digest": "8e36e81ea00925fbccd5611e1009fc01fe56bb4761c9fba39bd3b05ebd395d37",
+        "tag_sets": [
+          {
+            "count": 10,
+            "digest": "8e36e81ea00925fbccd5611e1009fc01fe56bb4761c9fba39bd3b05ebd395d37",
+            "tags": []
+          }
+        ]
+      },
+      "tolerance": {
+        "count": 12,
+        "digest": "4abc515d0a78a7427733db07267b7905d569db39bab05274421b9b518f3a6029",
+        "tag_sets": [
+          {
+            "count": 12,
+            "digest": "4abc515d0a78a7427733db07267b7905d569db39bab05274421b9b518f3a6029",
+            "tags": []
+          }
+        ]
+      },
+      "version": {
+        "count": 1,
+        "digest": "482c17e477216a7821fbd15f13e17852f1f9c0a8993a00e12b092fca8d7f2d9a",
+        "tag_sets": [
+          {
+            "count": 1,
+            "digest": "482c17e477216a7821fbd15f13e17852f1f9c0a8993a00e12b092fca8d7f2d9a",
+            "tags": []
+          }
+        ]
+      },
+      "wavenumber": {
+        "count": 8,
+        "digest": "f82c942161647580916d3ccfbcf288f366145a047ccc71892b42fdcbfc084bbe",
+        "tag_sets": [
+          {
+            "count": 8,
+            "digest": "f82c942161647580916d3ccfbcf288f366145a047ccc71892b42fdcbfc084bbe",
+            "tags": []
+          }
+        ]
+      },
+      "wavenumber_exit_time": {
+        "count": 8,
+        "digest": "045639da7d40c62a233ac245525e0efb1e0d5740bed35c58310026ec1e6cb3fa",
+        "tag_sets": [
+          {
+            "count": 8,
+            "digest": "045639da7d40c62a233ac245525e0efb1e0d5740bed35c58310026ec1e6cb3fa",
+            "tags": []
+          }
+        ]
+      }
+    },
+    "digest": "433b7fc3cad94a971020c0493e4062e4d3a7a590a6f084c6a8e8f451f2b648a3",
+    "fingerprint_format": 1,
+    "problems": {},
+    "taken": {
+      "git_dirty": false,
+      "git_head": "50a24acb23e41a68f508be63db509c10b2ac6d7e",
+      "run_id": null,
+      "when": "2026-09-25T07:32:35+01:00"
+    }
+  },
+  "var/datastores/handover-atol-sweep.manifest.json": {
+    "classes": {
+      "BackgroundModel": {
+        "count": 1,
+        "digest": "e3fb6cb1cf7e179e1f4c94d9b27a1deaccf9d9e1c9cf9613ec2cf8fde51827d7",
+        "tag_sets": [
+          {
+            "count": 1,
+            "digest": "e3fb6cb1cf7e179e1f4c94d9b27a1deaccf9d9e1c9cf9613ec2cf8fde51827d7",
+            "tags": [
+              "LargestSourceRedshift_2.0636e+16",
+              "Run_default",
+              "SmallestSourceRedshift_0.1",
+              "SourceGridConstruction_2"
+            ]
+          }
+        ]
+      },
+      "GkNumericIntegration": {
+        "count": 4549,
+        "digest": "c123f591d2b04a2d8358825c64340cfad5a60f8f57bfb9f0a6bb527f820e5bfe",
+        "tag_sets": [
+          {
+            "count": 4549,
+            "digest": "c123f591d2b04a2d8358825c64340cfad5a60f8f57bfb9f0a6bb527f820e5bfe",
+            "tags": [
+              "GkOneLoopDensity",
+              "LargestSourceRedshift_2.0636e+16",
+              "ResponseRedshiftGrid_145_c51d43ac",
+              "ResponseSparsenessZ_12",
+              "Run_default",
+              "SmallestSourceRedshift_0.1",
+              "SourceGridConstruction_2",
+              "SourceRedshiftGrid_1740_8d1d43b6"
+            ]
+          }
+        ]
+      },
+      "GkSource": {
+        "count": 1160,
+        "digest": "2245e52abd42fbbb89010a734fd510413b7c01625395f7c500f6569ecdcfa024",
+        "tag_sets": [
+          {
+            "count": 1160,
+            "digest": "2245e52abd42fbbb89010a734fd510413b7c01625395f7c500f6569ecdcfa024",
+            "tags": [
+              "GkOneLoopDensity",
+              "LargestSourceRedshift_2.0636e+16",
+              "ResponseRedshiftGrid_145_c51d43ac",
+              "ResponseSparsenessZ_12",
+              "Run_default",
+              "SmallestSourceRedshift_0.1",
+              "SourceGridConstruction_2",
+              "SourceRedshiftGrid_1740_8d1d43b6"
+            ]
+          }
+        ]
+      },
+      "GkSourcePolicy": {
+        "count": 2,
+        "digest": "064c7949b3309290eda4bd27713f1b608e066bc0a73fcc815fb3c91720626ec7",
+        "tag_sets": [
+          {
+            "count": 2,
+            "digest": "064c7949b3309290eda4bd27713f1b608e066bc0a73fcc815fb3c91720626ec7",
+            "tags": []
+          }
+        ]
+      },
+      "GkSourcePolicyData": {
+        "count": 1160,
+        "digest": "df2424eb174d794a042edd3a69853e4ede786fa01107630384e5a17812716761",
+        "tag_sets": [
+          {
+            "count": 1160,
+            "digest": "df2424eb174d794a042edd3a69853e4ede786fa01107630384e5a17812716761",
+            "tags": []
+          }
+        ]
+      },
+      "GkWKBIntegration": {
+        "count": 13920,
+        "digest": "7397175220005dab7233546c4a4ece0de5200ab76a6c2818b1a6408a1cd5acc5",
+        "tag_sets": [
+          {
+            "count": 13920,
+            "digest": "7397175220005dab7233546c4a4ece0de5200ab76a6c2818b1a6408a1cd5acc5",
+            "tags": [
+              "GkOneLoopDensity",
+              "LargestSourceRedshift_2.0636e+16",
+              "ResponseRedshiftGrid_145_c51d43ac",
+              "ResponseSparsenessZ_12",
+              "Run_default",
+              "SmallestSourceRedshift_0.1",
+              "SourceGridConstruction_2",
+              "SourceRedshiftGrid_1740_8d1d43b6"
+            ]
+          }
+        ]
+      },
+      "IntegrationSolver": {
+        "count": 7,
+        "digest": "317b009bb7febb1b3e0980794a994f6d8bdeed3ca784464e2bc462acef1c18c1",
+        "tag_sets": [
+          {
+            "count": 7,
+            "digest": "317b009bb7febb1b3e0980794a994f6d8bdeed3ca784464e2bc462acef1c18c1",
+            "tags": []
+          }
+        ]
+      },
+      "LambdaCDM": {
+        "count": 1,
+        "digest": "dcbaa9d413d45bf56b63a2a6ac1da865159e363f8b5ea2a479265113b82091b2",
+        "tag_sets": [
+          {
+            "count": 1,
+            "digest": "dcbaa9d413d45bf56b63a2a6ac1da865159e363f8b5ea2a479265113b82091b2",
+            "tags": []
+          }
+        ]
+      },
+      "OneLoopIntegral": {
+        "count": 0,
+        "digest": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+        "tag_sets": []
+      },
+      "QCD_Cosmology": {
+        "count": 1,
+        "digest": "178439a39e42aacff29617bf4fafae2d6b4f2faa27a5a8337781de080355fb4f",
+        "tag_sets": [
+          {
+            "count": 1,
+            "digest": "178439a39e42aacff29617bf4fafae2d6b4f2faa27a5a8337781de080355fb4f",
+            "tags": []
+          }
+        ]
+      },
+      "QuadSource": {
+        "count": 36,
+        "digest": "2dd5a869a5f2017edda7d5a5e63552a9365c6362eed4b0f210116864b2b75526",
+        "tag_sets": [
+          {
+            "count": 36,
+            "digest": "2dd5a869a5f2017edda7d5a5e63552a9365c6362eed4b0f210116864b2b75526",
+            "tags": [
+              "LargestSourceRedshift_2.0636e+16",
+              "OutsideHorizonEfolds_e3",
+              "Run_default",
+              "SmallestSourceRedshift_0.1",
+              "SourceGridConstruction_2",
+              "SourceRedshiftGrid_1740_8d1d43b6",
+              "TkOneLoopDensity"
+            ]
+          }
+        ]
+      },
+      "QuadSourceIntegral": {
+        "count": 7706,
+        "digest": "28c5c5e4d0393b0146c4ef88a88ef3ca5f288e9d26986e10ff113829d1cceb3b",
+        "tag_sets": [
+          {
+            "count": 7706,
+            "digest": "28c5c5e4d0393b0146c4ef88a88ef3ca5f288e9d26986e10ff113829d1cceb3b",
+            "tags": [
+              "GkOneLoopDensity",
+              "LargestSourceRedshift_2.0636e+16",
+              "ResponseRedshiftGrid_145_c51d43ac",
+              "ResponseSparsenessZ_12",
+              "Run_default",
+              "SmallestSourceRedshift_0.1",
+              "SourceGridConstruction_2",
+              "SourceRedshiftGrid_1740_8d1d43b6",
+              "TkOneLoopDensity"
+            ]
+          }
+        ]
+      },
+      "QuadSourcePolicy": {
+        "count": 2,
+        "digest": "064c7949b3309290eda4bd27713f1b608e066bc0a73fcc815fb3c91720626ec7",
+        "tag_sets": [
+          {
+            "count": 2,
+            "digest": "064c7949b3309290eda4bd27713f1b608e066bc0a73fcc815fb3c91720626ec7",
+            "tags": []
+          }
+        ]
+      },
+      "TkNumericIntegration": {
+        "count": 8,
+        "digest": "07061fe0dd0fd8890f3b210fa0ea48bc7845ca7bb6a6787be6f639202363b4f8",
+        "tag_sets": [
+          {
+            "count": 8,
+            "digest": "07061fe0dd0fd8890f3b210fa0ea48bc7845ca7bb6a6787be6f639202363b4f8",
+            "tags": [
+              "LargestSourceRedshift_2.0636e+16",
+              "OutsideHorizonEfolds_e3",
+              "Run_default",
+              "SmallestSourceRedshift_0.1",
+              "SourceGridConstruction_2",
+              "SourceRedshiftGrid_1740_8d1d43b6",
+              "TkOneLoopDensity"
+            ]
+          }
+        ]
+      },
+      "TkWKBIntegration": {
+        "count": 8,
+        "digest": "35a479b6320ff8e3d780be078657323ac18443cc1725e86a18673766266ecd34",
+        "tag_sets": [
+          {
+            "count": 8,
+            "digest": "35a479b6320ff8e3d780be078657323ac18443cc1725e86a18673766266ecd34",
+            "tags": [
+              "LargestSourceRedshift_2.0636e+16",
+              "OutsideHorizonEfolds_e3",
+              "Run_default",
+              "SmallestSourceRedshift_0.1",
+              "SourceGridConstruction_2",
+              "SourceRedshiftGrid_1740_8d1d43b6",
+              "TkOneLoopDensity"
+            ]
+          }
+        ]
+      },
+      "redshift": {
+        "count": 1740,
+        "digest": "f5851073507ae2f2989c79e49890d880f386c52e27908988584f8508e7e8c95a",
+        "tag_sets": [
+          {
+            "count": 1740,
+            "digest": "f5851073507ae2f2989c79e49890d880f386c52e27908988584f8508e7e8c95a",
+            "tags": []
+          }
+        ]
+      },
+      "store_tag": {
+        "count": 10,
+        "digest": "8e36e81ea00925fbccd5611e1009fc01fe56bb4761c9fba39bd3b05ebd395d37",
+        "tag_sets": [
+          {
+            "count": 10,
+            "digest": "8e36e81ea00925fbccd5611e1009fc01fe56bb4761c9fba39bd3b05ebd395d37",
+            "tags": []
+          }
+        ]
+      },
+      "tolerance": {
+        "count": 13,
+        "digest": "5ef7da79b88f47475ba5d8335bf226366dd02259c2d6d02ec47edc8db593aca8",
+        "tag_sets": [
+          {
+            "count": 13,
+            "digest": "5ef7da79b88f47475ba5d8335bf226366dd02259c2d6d02ec47edc8db593aca8",
+            "tags": []
+          }
+        ]
+      },
+      "version": {
+        "count": 1,
+        "digest": "482c17e477216a7821fbd15f13e17852f1f9c0a8993a00e12b092fca8d7f2d9a",
+        "tag_sets": [
+          {
+            "count": 1,
+            "digest": "482c17e477216a7821fbd15f13e17852f1f9c0a8993a00e12b092fca8d7f2d9a",
+            "tags": []
+          }
+        ]
+      },
+      "wavenumber": {
+        "count": 8,
+        "digest": "f82c942161647580916d3ccfbcf288f366145a047ccc71892b42fdcbfc084bbe",
+        "tag_sets": [
+          {
+            "count": 8,
+            "digest": "f82c942161647580916d3ccfbcf288f366145a047ccc71892b42fdcbfc084bbe",
+            "tags": []
+          }
+        ]
+      },
+      "wavenumber_exit_time": {
+        "count": 8,
+        "digest": "045639da7d40c62a233ac245525e0efb1e0d5740bed35c58310026ec1e6cb3fa",
+        "tag_sets": [
+          {
+            "count": 8,
+            "digest": "045639da7d40c62a233ac245525e0efb1e0d5740bed35c58310026ec1e6cb3fa",
+            "tags": []
+          }
+        ]
+      }
+    },
+    "digest": "2c2dde68659a138e8bd1454f0d3c35f600a09f73c6e7f55c385a9472c4da5b18",
+    "fingerprint_format": 1,
+    "problems": {},
+    "taken": {
+      "git_dirty": false,
+      "git_head": "50a24acb23e41a68f508be63db509c10b2ac6d7e",
+      "run_id": null,
+      "when": "2026-09-25T07:31:21+01:00"
+    }
+  }
+}

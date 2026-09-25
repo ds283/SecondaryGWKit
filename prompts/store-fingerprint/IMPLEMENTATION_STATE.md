@@ -1,8 +1,7 @@
 # Store fingerprint campaign — implementation state
 
-**Last updated:** 2026-09-25 · **Status: 4 of 5 prompts landed (01, 02, 03, 04). 05 was
-written on 2026-09-25 against 04's format, and is ready to dispatch. Decisions D1–D3 were made on 2026-09-24, and D4 on
-2026-09-25 (README §6.2).**
+**Last updated:** 2026-09-25 · **Status: 5 of 5 prompts landed (01–05). The campaign's work is
+done. Decisions D1–D3 were made on 2026-09-24, and D4 on 2026-09-25 (README §6.2).**
 
 The campaign was opened on 2026-09-24. It owns `run-registry`'s
 `[04-a-runs-product-is-named-but-never-fingerprinted]`, as amended at `218ca74`: a store's content
@@ -92,6 +91,27 @@ On a copy of the sweep store:
 The prompt closes `run-registry`'s `[04-a-runs-product-is-named-but-never-fingerprinted]`, on that
 board's §4.
 
+**Prompt 05 landed 2026-09-25.** The three stores that existed before the campaign were each
+fingerprinted read-only, three times, with identical digests every time. They were checked against
+a byte-level snapshot, and no store file changed under any read. Each fingerprint was then written
+into its sidecar with `store fingerprint --write`, by a person at `50a24ac` with the tree clean, in
+the order sweep, backup, live A3. Each sidecar changed in that one field only: deleting it and
+re-serialising gives back the original bytes. The overall digests are:
+- sweep `2c2dde68…`, prompt 04's;
+- backup `eedcdfb2…`;
+- live A3 `433b7fc3…`.
+
+No store has a problem of any kind, and so none has a replicated divergence. The backup reads its
+own shards (7 552 `QuadSourceIntegral`). A registry copy of the live A3 store matches its recorded
+fingerprint. The comparisons localise the two known differences to `tolerance` and
+`QuadSourceIntegral`, one tag set each, with additions only:
+- backup → live A3 is 102 records and 6 tolerance values: 48 at the production pair from the
+  registered resume, and 54 at six other pairs from the first sweep run, which wrote into the live
+  store through a copied primary (`2ebb7b6`). The resume added no tolerance row;
+- live A3 → sweep is 52 records and 1 tolerance value, from the sweep store's later writers.
+
+No issue was opened. The three fingerprints are committed as `logs/05-fingerprints.json`.
+
 **Campaign:** [`README.md`](README.md) · **Audit:** [`docs/store-fingerprint-audit.md`](../../docs/store-fingerprint-audit.md) ·
 **Index:** [`docs/OPEN_ISSUES.md`](../../docs/OPEN_ISSUES.md) §1.13
 
@@ -113,7 +133,7 @@ board's §4.
 | 02 | [A structured inventory](02-a-structured-inventory.md) | **F4**–**F7** | Opus 5.5 | ✍️ yes, 2026-09-24 | ✅ 2026-09-25 | *"Add a structured store inventory keyed by physical labels"* | [`logs/02-…`](logs/02-a-structured-inventory.md) |
 | 03 | [One inventory service](03-one-inventory-service.md) | **F8**–**F9** | Opus 5.5 | ✍️ yes, 2026-09-25 | ✅ 2026-09-25 | *"Move the inventory report and run labels onto one read-only service"* | [`logs/03-…`](logs/03-one-inventory-service.md) |
 | 04 | [The fingerprint](04-the-fingerprint.md) | **F10**–**F12** | Opus 5.5 | ✍️ yes, 2026-09-25 | ✅ 2026-09-25 | *"Fingerprint a store's content in its sidecar and run record"* | [`logs/04-…`](logs/04-the-fingerprint.md) |
-| 05 | [Fingerprint the real stores](05-fingerprint-the-real-stores.md) | **F13** | Opus | ✍️ yes, 2026-09-25 | ⏳ not dispatched | — | — |
+| 05 | [Fingerprint the real stores](05-fingerprint-the-real-stores.md) | **F13** | Opus 5.5 | ✍️ yes, 2026-09-25 | ✅ 2026-09-25 | *"Record the three real stores' fingerprints in their sidecars"* | [`logs/05-…`](logs/05-fingerprint-the-real-stores.md) |
 
 The charters of 03–05 are fixed in README §2. 03 and 04 were written once 02's structure had
 landed, and 05 once 04's format had. Orchestration prompts:
@@ -139,7 +159,7 @@ landed, and 05 once 04's format had. Orchestration prompts:
 | F10 | **FACILITY** | The fingerprint, a pure function of the structured inventory. It holds a format version, and per class and per tag set a count and a digest over the sorted canonical records, plus an overall digest. No timestamps. | 04 | ✅ **Done, 2026-09-25.** `RunRegistry/stores.py`: `FINGERPRINT_FORMAT = 1`, and `fingerprint_of(inventory, taken=None)`. It gives `classes` (per class `count`, `digest`, and `tag_sets` of `{tags, count, digest}`), the overall `digest` (SHA-256 of `canonical_json` of the format and each class's count and digest), `problems` (counts per class and kind) and `taken`. The last two are outside every digest. A digest is SHA-256 of `record.canonical_json()` + `\n` per record, in canonical order, so a listing's lines hash to it (`listing_lines`). `compare_fingerprints` names the class, the tag set (or which side lacks it) and both counts. It refuses to compare two formats, and reports problem differences as their own entries. The golden `RunRegistry/tests/data/full_store_fingerprint.json` pins format 1. Tests 1–6. **Deliberate breakage (i), (ii), (iii), (viii), (ix)** each fail their tests. |
 | F11 | **FACILITY** | The `fingerprint` sidecar field, a known field of `RunRegistry.stores` that copy and move carry. `python -m RunRegistry store fingerprint`: read-only, refuses a store a `running` run names, compares against the recorded value and writes only when asked. | 04 | ✅ **Done, 2026-09-25.** `fingerprint` is in `KNOWN_FIELDS`. Its shape is checked (an object, an integer format, a `classes` object, a 64-hex digest, a `taken` object), and copy and move carry it verbatim with no code change (test 7). `fingerprint_store(primary, *, write, runs_root, taken_by)` works in the prompt's six steps. It refuses any `running` run, alive or stale, by path or `store_id`, except `taken_by`; the check is shared with copy and move. It reads through `read_inventory` with no Ray, and writes only the `fingerprint` field, through `_update_sidecar` (now three uses), and only into a problem-free registry sidecar. `store fingerprint PRIMARY [--write] [--listing PATH] [--runs-root DIR]` prints the digests, problems and comparison. It exits 0 on a match or nothing recorded, and 1 on a difference or refusal. `--listing` goes to a new file outside the store's directory. `store show` still loads neither `ray` nor `sqlalchemy`. Tests 7–10. **Deliberate breakage (iv), (v), (vi)** each fail their tests. |
 | F12 | **FACILITY** | The digest in the run record at finish. `scoped_pipeline_run.py` and `quadsource_atol_sweep.py`, including `--build` for the A3 v2 store (D2), take one when a registered run finishes. Closes `run-registry`'s `[04-a-runs-product-is-named-but-never-fingerprinted]`. | 04 | ✅ **Done, 2026-09-25.** `Run.finish(state, exit_code=None, *, fingerprint=False)`. With `True` and a `results` store, it fingerprints the store with the run as `taken_by` before writing the state, and records `fingerprint` and `fingerprint_sidecar` (`written`, or why not) in `status.json`. It writes the sidecar only where that is a problem-free registry sidecar. Any error becomes `fingerprint_error`, and the state and exit code are written as given. Nine `run.finish(` calls in the two drivers gained `fingerprint=True`: three in `scoped_pipeline_run.py`, and three each in `run_build` and `sweep`. The three `terminal` handlers are unchanged, and nothing else in either script changed (test 12, by `ast`). On the §4 copy, a registered run's `status.json` fingerprint equals the sidecar's. Tests 11–12. **Deliberate breakage (vii)** fails its tests. Closed `[04-a-runs-product-is-named-but-never-fingerprinted]` on `run-registry`'s §4. |
-| F13 | **REMEDY** | Remedial: the three existing stores fingerprinted read-only, and each fingerprint written into its sidecar (D3), as is any store built here before 04 landed, such as the A3 v2 store. A registry copy of one is fingerprinted, and the digests localise the known differences. | 05 | ✍️ written |
+| F13 | **REMEDY** | Remedial: the three existing stores fingerprinted read-only, and each fingerprint written into its sidecar (D3), as is any store built here before 04 landed, such as the A3 v2 store. A registry copy of one is fingerprinted, and the digests localise the known differences. | 05 | ✅ **Done, 2026-09-25.** No fourth store exists: the A3 v2 store has not been built. Phase A, read-only, came first. It took a snapshot of all 18 files: size, mtime, SHA-256, and the directory listings. Independent `sqlite3` `mode=ro` counts of every table equal the prompt's table. Each store was fingerprinted three times: `store fingerprint`, again with `--listing` (byte-identical output), and `fingerprint_store` from a script (the same digests). Every class count equals the independent count, and each listing hashes to its digests. The snapshot was identical after every command. Digests: sweep `2c2dde68…` (prompt 04's), backup `eedcdfb2…`, live A3 `433b7fc3…`. No problem in any store. The backup opened its own four shards, with 7 552 `QuadSourceIntegral`. The reads took 5.1–7.0 s at a peak RSS of 228–258 MB, and each fingerprint is about 6.3 kB compact. `compare_fingerprints` gives two `tag_set` entries per pair, `tolerance` and `QuadSourceIntegral`. The listings name the records: backup → live A3 adds `log10_tol` −22, −25, −28, −30, −6 and −7, and 102 records (48 at (−32, −8) and 9 at each of the six new pairs); live A3 → sweep adds −5, and 52 records (4 / 16 / 16 / 16 at rtol −8 / −7 / −6 / −5). Nothing is only in an older store. Each addition was attributed by label and timestamp to a recorded writer. Phase B wrote sweep, backup, then live A3. Each exited 0 with `replaced none`. Each sidecar is its old bytes plus `fingerprint`, proven by exact re-serialisation. Each value equals Phase A's apart from `taken` (`50a24ac`, clean, `run_id` null), and each store then reads `matches`. The registry copy carries the fingerprint verbatim and `matches`. At the end only the three sidecars (and two directory mtimes) differ, and `var/runs/` is unchanged. Log: [`logs/05-…`](logs/05-fingerprint-the-real-stores.md). |
 
 ---
 
@@ -149,7 +169,9 @@ Eight were opened on 2026-09-24 by the audit
 ([`docs/store-fingerprint-audit.md`](../../docs/store-fingerprint-audit.md)), which is not a prompt.
 Prompt 01 closed one of them on 2026-09-25 (§4). Prompt 02 opened one on 2026-09-25, and measured
 `[00-replicated-writes-can-diverge-across-shards]` on the sweep store. Prompt 03 closed
-`[00-inventory-run-prunes-unvalidated-rows-by-default]` on 2026-09-25 (§4). Seven remain.
+`[00-inventory-run-prunes-unvalidated-rows-by-default]` on 2026-09-25 (§4). Prompt 05 measured
+`[00-replicated-writes-can-diverge-across-shards]` on the three original stores on 2026-09-25, and
+opened none. Seven remain.
 
 - **[00-oneloop-lookup-joins-the-wrong-tag-table]** *(opened 2026-09-24 by the audit)*
   - **The defect.** `sqla_OneLoopIntegral_factory.build` filters requested tags against
@@ -218,6 +240,14 @@ Prompt 01 closed one of them on 2026-09-25 (§4). Prompt 02 opened one on 2026-0
     from one random shard, is retired, so nothing hides a divergence any more. The run labels and
     the display both read the structured inventory, which names one. The write path is unchanged,
     and this issue stays open.
+  - **Measured (2026-09-25) by prompt 05, on the three original stores: no divergence.** Each of
+    the live A3 store, the backup and the sweep store was fingerprinted read-only, from every
+    shard. None has a problem of any kind, so none has a `replicated-divergence`. On each, all 12
+    replicated classes hold the same records on all four shards, including `BackgroundModel` with
+    its tags and value count. An independent `sqlite3` count also gives every replicated table the
+    same count on all four shards. So no store here shows the defect. It stays open, because the
+    write path is unchanged and a crash between shards' commits would still leave copies that
+    differ. Log: [`logs/05-fingerprint-the-real-stores.md`](logs/05-fingerprint-the-real-stores.md).
 - **[02-exit-time-lookup-runs-inside-the-subhorizon-loop]** *(opened 2026-09-25 by prompt 02)*
   - **The defect.** In `sqla_wavenumber_exit_time_factory.build`, the line
     `row_data = conn.execute(query).one_or_none()` (`Datastore/SQL/ObjectFactories/wavenumber.py:270`)
@@ -285,11 +315,14 @@ Prompt 01 closed one of them on 2026-09-25 (§4). Prompt 02 opened one on 2026-0
 At `f53598f` (README §7): AdaptiveLevin 32, ComputeTargets 552 (the known wall-clock flake
 aside), CosmologyModels 39, Datastore 70, LiouvilleGreen 148 (1 skipped), RunRegistry 84.
 
-| Suite | At `417c647` (before prompt 01) | After prompt 01 | After prompt 02 | After prompt 03 | After prompt 04 |
-|---|---|---|---|---|---|
-| `AdaptiveLevin` | 32 OK | 32 OK | 32 OK | 32 OK | 32 OK |
-| `ComputeTargets` | 552 OK (the flake is known) | 552 OK (the flake passed) | 552 OK (the flake passed) | 552 OK (3 retired, 3 added; the flake passed) | 552 OK (the flake passed) |
-| `CosmologyModels` | 39 OK | 39 OK | 39 OK | 39 OK | 39 OK |
-| `Datastore` | 70 OK | **92 OK** (+22) | **141 OK** (+49) | **177 OK** (+36) | 177 OK |
-| `LiouvilleGreen` | 148 OK (skipped=1) | 148 OK (skipped=1) | 148 OK (skipped=1) | 148 OK (skipped=1) | 148 OK (skipped=1) |
-| `RunRegistry` | 84 OK | 84 OK | 84 OK | 84 OK | **117 OK** (+33) |
+| Suite | At `417c647` (before prompt 01) | After prompt 01 | After prompt 02 | After prompt 03 | After prompt 04 | At `50a24ac` (before prompt 05) | After prompt 05 |
+|---|---|---|---|---|---|---|---|
+| `AdaptiveLevin` | 32 OK | 32 OK | 32 OK | 32 OK | 32 OK | 32 OK | 32 OK |
+| `ComputeTargets` | 552 OK (the flake is known) | 552 OK (the flake passed) | 552 OK (the flake passed) | 552 OK (3 retired, 3 added; the flake passed) | 552 OK (the flake passed) | 552 OK (the flake is known) | 552 OK (the flake passed) |
+| `CosmologyModels` | 39 OK | 39 OK | 39 OK | 39 OK | 39 OK | 39 OK | 39 OK |
+| `Datastore` | 70 OK | **92 OK** (+22) | **141 OK** (+49) | **177 OK** (+36) | 177 OK | 177 OK | 177 OK |
+| `LiouvilleGreen` | 148 OK (skipped=1) | 148 OK (skipped=1) | 148 OK (skipped=1) | 148 OK (skipped=1) | 148 OK (skipped=1) | 148 OK (skipped=1) | 148 OK (skipped=1) |
+| `RunRegistry` | 84 OK | 84 OK | 84 OK | 84 OK | **117 OK** (+33) | 117 OK | 117 OK |
+
+The `50a24ac` column was measured by the prompt 05 orchestrator at dispatch. Prompt 05 changed no
+code, and every suite matched it. README §7's table, at `f53598f`, is older.

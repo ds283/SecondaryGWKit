@@ -704,7 +704,9 @@ and `qcd-background-audit`'s `[03-qcd-inventory-does-not-report-the-representati
 (the two boards' §4), so six `00-` rows remain below, each recorded here for its owner. Prompt 02
 opened one more on 2026-09-25, the last row below, and it too is recorded here for its owner.
 Prompt 04 closed `run-registry`'s `[04-a-runs-product-is-named-but-never-fingerprinted]` on
-2026-09-25 (that board's §4), and its row is deleted.
+2026-09-25 (that board's §4), and its row is deleted. Prompt 05 narrowed
+`[00-replicated-writes-can-diverge-across-shards]` the same day, by measuring the three original
+stores, and opened none.
 
 | Issue | Board | Hook |
 |---|---|---|
@@ -713,7 +715,7 @@ Prompt 04 closed `run-registry`'s `[04-a-runs-product-is-named-but-never-fingerp
 | `[00-quadsource-tq-serial-has-the-wrong-foreign-key]` | store-fingerprint | `QuadSource.Tq_serial` declares a foreign key to `QuadSource.serial` but holds a transfer-function id; `Tr_serial` declares none. Not enforced; a false statement in the schema. |
 | `[00-numeric-value-parent-lookup-omits-break-point-kind]` | store-fingerprint | The `TkNumericValue` / `GkNumericValue` parent query omits `break_point_kind`, which is in the parent's own lookup. Ambiguous only when a store holds two break-point kinds. |
 | `[00-quadsourcepolicy-rows-are-referenced-by-nothing]` | store-fingerprint | `QuadSourcePolicy` rows are created, but no table references them; `QuadSourceIntegral` keys on `GkSourcePolicy`. An author's decision whether it is vestigial. |
-| `[00-replicated-writes-can-diverge-across-shards]` | store-fingerprint | A replicated write commits shard by shard in separate transactions, so a crash leaves copies that differ. `ShardedPool.inventory`, which hid it by reading one random shard, was retired on 2026-09-25 by prompt 03. **Measured 2026-09-25** by prompt 02's inventory, which reads every shard: no divergence on a copy of the sweep store; the A3 store and the backup are not yet read. Making the write atomic is not this campaign's. |
+| `[00-replicated-writes-can-diverge-across-shards]` | store-fingerprint | A replicated write commits shard by shard in separate transactions, so a crash leaves copies that differ. `ShardedPool.inventory`, which hid it by reading one random shard, was retired on 2026-09-25 by prompt 03. **Measured 2026-09-25** by prompt 02 on a copy of the sweep store, and by prompt 05 on all three original stores (live A3, backup, sweep): no divergence anywhere. The write-path defect stands. Making the write atomic is not this campaign's. |
 | `[02-exit-time-lookup-runs-inside-the-subhorizon-loop]` | store-fingerprint | `wavenumber_exit_time.build` runs its query inside the sub-horizon column loop, six times per lookup. The answer is right today; with an empty list the lookup would fail. A one-level dedent, in whichever campaign next has that `build` in scope. |
 
 ---
