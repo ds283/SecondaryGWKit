@@ -1,6 +1,6 @@
 # Open issues — project-wide index
 
-**Last updated:** 2026-09-25 · **99 open** across fifteen campaigns.
+**Last updated:** 2026-09-25 · **102 open** across sixteen campaigns.
 
 This file exists so that an issue opened by one campaign is not lost when that campaign closes.
 It is an **index, not a record**: one line per issue, pointing at the campaign status board that
@@ -28,7 +28,8 @@ the two disagree, the board is right.
 [`run-registry`](../prompts/run-registry/IMPLEMENTATION_STATE.md) ·
 [`test-suite-runtime`](../prompts/test-suite-runtime/IMPLEMENTATION_STATE.md) ·
 [`datastore-portability`](../prompts/datastore-portability/IMPLEMENTATION_STATE.md) ·
-[`store-fingerprint`](../prompts/store-fingerprint/IMPLEMENTATION_STATE.md)
+[`store-fingerprint`](../prompts/store-fingerprint/IMPLEMENTATION_STATE.md) ·
+[`store-retirement`](../prompts/store-retirement/IMPLEMENTATION_STATE.md)
 
 **Two** of these hold no open issue and are listed for their §4. `test-suite-runtime` closed
 `transfer-remedial`'s `[08-3bessel-plot-cost-dominates-the-suite]` on 2026-09-19;
@@ -686,10 +687,8 @@ Prompt 03, the registry's version of that, was held on user decisions, and was r
 Prompt 03 landed the same day: `RunRegistry/stores.py` owns the store sidecar, and `python -m RunRegistry store`
 creates, adopts, copies and moves stores with it, which closed `[store-sidecar-manifests-have-no-owner]` on the board's §4.
 
-| Issue | Board | Hook |
-|---|---|---|
-| `[01-atol-sweep-check-expects-absolute-shard-records]` | datastore-portability | `quadsource_atol_sweep.py`'s `assert_store_is_self_consistent` compares against literal absolute paths, so it would reject a store created after prompt 01 unless `prepare()`'s `UPDATE` had rewritten its rows. No effect in the script's own workflow. The script is a measurement record and was not edited. |
-| `[03-atol-sweep-prepare-writes-its-store-sidecar-by-hand]` | datastore-portability | `quadsource_atol_sweep.py` `prepare()` still writes its `<stem>.manifest.json` by hand, in the legacy shape, against README §6.5 point 1 (only registry operations write a sidecar). No effect today: the sidecar is read as legacy, by name. The script is a measurement record and was not edited. |
+Its two open issues were **assigned to `prompts/store-retirement` prompt 02 on 2026-09-25**,
+and their rows moved to §1.14. They stay on this campaign's board.
 
 ### 1.13 The store fingerprint campaign
 
@@ -718,6 +717,26 @@ stay open, each recorded here for its owner.
 | `[00-quadsourcepolicy-rows-are-referenced-by-nothing]` | store-fingerprint | `QuadSourcePolicy` rows are created, but no table references them; `QuadSourceIntegral` keys on `GkSourcePolicy`. An author's decision whether it is vestigial. |
 | `[00-replicated-writes-can-diverge-across-shards]` | store-fingerprint | A replicated write commits shard by shard in separate transactions, so a crash leaves copies that differ. `ShardedPool.inventory`, which hid it by reading one random shard, was retired on 2026-09-25 by prompt 03. **Measured 2026-09-25** by prompt 02 on a copy of the sweep store, and by prompt 05 on all three original stores (live A3, backup, sweep): no divergence anywhere. The write-path defect stands. Making the write atomic is not this campaign's. |
 | `[02-exit-time-lookup-runs-inside-the-subhorizon-loop]` | store-fingerprint | `wavenumber_exit_time.build` runs its query inside the sub-horizon column loop, six times per lookup. The answer is right today; with an empty list the lookup would fail. A one-level dedent, in whichever campaign next has that `build` in scope. |
+
+### 1.14 The store retirement campaign
+
+`prompts/store-retirement` was opened on 2026-09-25, when the user decided that a store is
+removed by a registry operation that retires it, and never by `rm`: its files go, and its sidecar
+stays behind as the record. Its audit, `docs/store-retirement-audit.md`, found the tree not ready
+for that. A sidecar with no primary reads as broken. The history format cannot record a
+retirement. `quadsource_atol_sweep.py --prepare` would overwrite the sweep store's tombstone. The
+backup's primary names the live store's shards. And `CLAUDE.md` says the registry does not delete.
+It opened three `00-` issues, each recorded here for its owner, and was assigned the two
+`datastore-portability` issues below, both to its prompt 02. One of those, it found, also blocks
+`--build --resume` of the A3 v2 store.
+
+| Issue | Board | Hook |
+|---|---|---|
+| `[01-atol-sweep-check-expects-absolute-shard-records]` | datastore-portability | `quadsource_atol_sweep.py`'s `assert_store_is_self_consistent` compares against literal absolute paths, so it would reject a store created after prompt 01 unless `prepare()`'s `UPDATE` had rewritten its rows. **It blocks `--build --resume`**, which checks the store it resumes, so the A3 v2 store cannot be resumed. Assigned to `store-retirement` prompt 02. |
+| `[03-atol-sweep-prepare-writes-its-store-sidecar-by-hand]` | datastore-portability | `quadsource_atol_sweep.py` `prepare()` still writes its `<stem>.manifest.json` by hand, in the legacy shape, against README §6.5 point 1 (only registry operations write a sidecar). Once the sweep store is retired, a plain `--prepare` would **overwrite its tombstone**. Assigned to `store-retirement` prompt 02. |
+| `[00-a-sigterm-pipeline-run-is-recorded-as-failed]` | store-retirement | The 2026-09-23 A3 resume run is recorded `failed`, exit 1. The `handover` board says `killed`, and its launcher log holds a SIGTERM trace. `terminal_state` maps `SystemExit(15)` to `killed`, but this run left through `except BaseException`. One instance. |
+| `[00-a-launch-log-lives-outside-its-run-directory]` | store-retirement | `var/bootstrap-a3-resume.log` is a strict superset of that run's registered logs, with 67 more lines, including the only SIGTERM record. It sits at the top of `var/`, attributed by nothing on disk. |
+| `[00-a-copy-carries-its-sources-present-tense-fields]` | store-retirement | `copy_store` carries unknown fields verbatim, so a copy of the live A3 store says it has a retained backup, and its `restart.command` resumes into the **source** store. Nothing reads them. A decision about copy's design. |
 
 ---
 

@@ -1,6 +1,7 @@
 # Datastore portability campaign — implementation state
 
-**Last updated:** 2026-09-24 · **Status: 3 of 3 prompts landed (01, 02, 03).**
+**Last updated:** 2026-09-25 · **Status: 3 of 3 prompts landed (01, 02, 03).** Its two open
+issues were assigned to `prompts/store-retirement` prompt 02 on 2026-09-25 (§3).
 Prompt 01
 measured what a moved store does on the unfixed tree: it **opens silently and recreates its old
 directory with empty shards**. It does not raise. Prompt 01 then made `ShardedPool` fail closed on
@@ -132,6 +133,15 @@ interruption property, and at least as strong as the prescribed order.
   reason, compare through `Datastore.shard_paths.resolve_shard_path` instead of against literal
   absolute paths, and drop the `UPDATE`. Not done here, because the script is the record of a
   measurement (prompt 01 §2). Indexed at `docs/OPEN_ISSUES.md` §1.12.
+  **Assigned (2026-09-25):** `prompts/store-retirement` prompt 02,
+  [`02-the-sweep-prepares-through-the-registry.md`](../store-retirement/02-the-sweep-prepares-through-the-registry.md),
+  together with `[03-…]` below. **The impact above is understated.** The function has a third
+  caller, `run_build`'s resume branch (`:460-461`), which checks the `--database` it is given. A
+  store the pipeline creates now records bare names. So **`--build --resume` refuses every store
+  built since prompt 01, the A3 v2 store included**, and advises "Re-run --prepare --force",
+  which is wrong for a build. This was probed on a `write_new_store` fixture
+  (`docs/store-retirement-audit.md` §2.6). The v2 rebuild is planned in stages, so `--resume` is
+  its intended workflow. Indexed now at `docs/OPEN_ISSUES.md` §1.14.
 
 - **[03-atol-sweep-prepare-writes-its-store-sidecar-by-hand]** *(opened 2026-09-24 by prompt
   03)*: `docs/handover/quadsource_atol_sweep.py` `prepare()` (`:667`) still writes
@@ -147,6 +157,13 @@ interruption property, and at least as strong as the prescribed order.
   hand copy, its `UPDATE` and its sidecar with one `RunRegistry.stores.copy_store` call. Not done
   here: the script is the record of a measurement (prompt 03 §6), and no driver creates
   sidecars in this campaign. Indexed at `docs/OPEN_ISSUES.md` §1.12.
+  **Assigned (2026-09-25):** `prompts/store-retirement` prompt 02, which is the "other reason"
+  this entry waited for. A retired store keeps its sidecar as the record (that campaign's README
+  §6.1). `prepare()` decides that the sweep store exists from its store files alone (`:635-642`),
+  and writes the sidecar with `Path.write_text`. So once the sweep store is retired, a plain
+  `--prepare` would **overwrite its tombstone** (`docs/store-retirement-audit.md` §2.6). The
+  impact is no longer "none". `copy_store` refuses a taken sidecar name, which is the behaviour a
+  retired name needs. Indexed now at `docs/OPEN_ISSUES.md` §1.14.
 
 ---
 
