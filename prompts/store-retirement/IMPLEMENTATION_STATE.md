@@ -58,6 +58,62 @@ of them, it found, also blocks `--build --resume` of the A3 v2 store.
 | 04 | [Amend an unknown field](04-amend-an-unknown-field.md) | **R9** | Sonnet | ✍️ yes, 2026-09-25 | ✅ 2026-09-25 | *"Add amend_sidecar and store amend, for one unknown field"* | [`logs/04-…`](logs/04-amend-an-unknown-field.md) |
 | 05 | [Retire the two stores](05-retire-the-two-stores.md) | **R10**–**R12** | Opus | ✍️ yes, 2026-09-25 | ✅ 2026-09-26 | *"Retire the sweep store and the A3 backup"* | [`logs/05-…`](logs/05-retire-the-two-stores.md), with [`logs/05-tombstones.json`](logs/05-tombstones.json) |
 
+**Orchestrator review of prompt 05 (2026-09-26).** All eight checks in `orchestrator/prompt-05.md`
+§4 passed on `81c0a9a`. One agent carried Phases A–C, dispatched once and continued twice. The
+user ran the three commands between the phases. The orchestrator took its own read-only snapshots
+of `var/datastores/` (size, mtime and SHA-256), `var/runs/` (size and mtime) and the repository
+root's `physics-test-n20-*` store: once before dispatch, after Phase A, and after each user step.
+There are no findings, and no issue was opened.
+- **Phase A, re-run independently.** The orchestrator repeated both dry runs with the handed-back
+  reasons. Both exited 0.
+  - `files to be deleted:` was each store's four shards, in ascending serial, then its primary.
+    Every backup path was inside `backup-pre-resume-20260921T091011/`.
+  - Both fingerprints were `matched`, with the prompt's §1 digests.
+  - Both references reports were exactly the prediction.
+  - The snapshot was unchanged by all four dry runs, the agent's and the orchestrator's.
+- **Check 1, after the sweep, against the pre-dispatch snapshot.** Five files were gone and one
+  sidecar changed, with `var/datastores/`'s mtime and listing. Nothing else differed.
+- **Check 2, after the backup, against check 1's snapshot.** Five files were gone and one sidecar
+  changed, with the backup directory's mtime and listing. **The live A3 store's five files and
+  sidecar had the pre-dispatch hashes and mtimes.**
+- **Check 3, after the amendment.** The live A3 sidecar changed, and so did the mtime of
+  `var/datastores/`. The sidecar's JSON differed from its pre-image only in `backup` and in one
+  appended `amend` entry, whose `before` is the old value verbatim. `fingerprint` was identical.
+  The pre-image was the agent's copy, which the orchestrator checked against its own
+  pre-dispatch SHA-256 before using it.
+- **The review, on the commit.**
+  - **Scope.** The commit touches the log, `logs/05-tombstones.json` and three boards. No `.py`
+    file changed, and `QUADSOURCE-TOLERANCE-SWEEP.md` and the index are unchanged. The
+    `run-registry` and `handover` hunks are additions only.
+  - **The live store.** Its five `.sqlite` files match the pre-dispatch snapshot in SHA-256,
+    size and mtime, and agree with the log's C2 table.
+  - **The tombstones.** Both `store show` outputs exit 0, begin with `retirement:` and report
+    `problems: none`. Each is `retired` with `completed` set. Its reason equals the handed-back
+    text, its condition is `matched` on the recorded digest, and `files` equals its dry run's list.
+    Its history is `[adopt, retire]`, and only `history` and `retired` differ from its pre-image.
+  - **The evidence file.** `logs/05-tombstones.json` equals all three sidecars on disk, by
+    `json.load`.
+  - **`var/` against the pre-dispatch snapshot.** It differs by exactly the ten deleted files,
+    the three changed sidecars and the two directories. `var/runs/`, `BACKUP_PATH` included, and
+    the `physics-test-n20-*` store are identical. Nothing is `running`.
+  - **The tree.** Clean afterwards, apart from the `datastore-integrity` paths.
+- **Two corrections to the orchestrator notes, not to the prompt's work.**
+  - `orchestrator/prompt-05.md` §3's check 3 allows only the live A3 sidecar to change. But
+    `store amend` writes the sidecar by atomic rename, which also moves the mtime of
+    `var/datastores/`. That is the directory entry the prompt's §3.3 allows. The final count in
+    §4 check 5, "two directory mtimes", is still right, because the sweep's retirement had
+    already moved the same directory's mtime.
+  - None of the three user outputs showed an exit code. Each is recorded as exit 0, inferred from
+    its success line and empty stderr (log 05, deviation 3). The state each command left was
+    checked independently, so nothing rests on the inference.
+- **An observation, not a finding.** The backup's real run printed the resolver's notice three
+  times, where the dry run printed it twice. The third print is `delete_store`'s own
+  `_plan_deletion`, which the dry run never reaches. It resolved to the backup's directory, as
+  the deleted files confirm. Log 05 records it among its observations.
+
+With 05 landed and reviewed, the campaign is complete. Its seven open issues stay in §3 and in the
+index at §1.14. Closing the campaign is a separate task.
+
 **Orchestrator review of prompt 04 (2026-09-25).** All ten checks in `orchestrator/prompt-04.md`
 §3 passed on `66617c9`, from one dispatch. There are two findings, both opened in §3, and a
 correction to log 04's account of two mutations.
