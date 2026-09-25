@@ -120,54 +120,62 @@ interruption property, and at least as strong as the prescribed order.
 
 ## 3. Active and unresolved issues
 
-- **[01-atol-sweep-check-expects-absolute-shard-records]** *(opened 2026-09-24 by prompt 01)*:
-  `docs/handover/quadsource_atol_sweep.py` `assert_store_is_self_consistent` (`:589`) compares
-  `shards.filename` with `str(p.resolve())` for each expected shard. So it **rejects any store
-  created after prompt 01**, whose records are bare names, unless the store has first been
-  through `prepare()`'s `UPDATE`, which rewrites the rows to absolute. **Impact:** none in the
-  script's own workflow, because `SWEEP_STORE` is only ever made by `prepare()`. The check would
-  refuse wrongly if the function were reused on a freshly created store, and its docstring's
-  account of `ShardedPool` ("reads them, as absolute paths") is now out of date. With prompt 01
-  in, the re-pointing `UPDATE` itself is redundant but not wrong: P3 reads its absolute sibling
-  paths as those same siblings. **Next step:** if the script is ever edited again for another
-  reason, compare through `Datastore.shard_paths.resolve_shard_path` instead of against literal
-  absolute paths, and drop the `UPDATE`. Not done here, because the script is the record of a
-  measurement (prompt 01 §2). Indexed at `docs/OPEN_ISSUES.md` §1.12.
-  **Assigned (2026-09-25):** `prompts/store-retirement` prompt 02,
-  [`02-the-sweep-prepares-through-the-registry.md`](../store-retirement/02-the-sweep-prepares-through-the-registry.md),
-  together with `[03-…]` below. **The impact above is understated.** The function has a third
-  caller, `run_build`'s resume branch (`:460-461`), which checks the `--database` it is given. A
-  store the pipeline creates now records bare names. So **`--build --resume` refuses every store
-  built since prompt 01, the A3 v2 store included**, and advises "Re-run --prepare --force",
-  which is wrong for a build. This was probed on a `write_new_store` fixture
-  (`docs/store-retirement-audit.md` §2.6). The v2 rebuild is planned in stages, so `--resume` is
-  its intended workflow. Indexed now at `docs/OPEN_ISSUES.md` §1.14.
-
-- **[03-atol-sweep-prepare-writes-its-store-sidecar-by-hand]** *(opened 2026-09-24 by prompt
-  03)*: `docs/handover/quadsource_atol_sweep.py` `prepare()` (`:667`) still writes
-  `<stem>.manifest.json` itself, with `manifest.write_text(json.dumps(…))`, in the legacy shape:
-  `datastore` and `copied_from` as repository paths, no `sidecar_format`, no `store_id`, no
-  `history`. That contradicts README §6.5 point 1 ("only registry operations write a sidecar")
-  and point 3 (`datastore` is a bare name). **Impact:** none today. The sidecar it wrote on
-  2026-09-23 is read as legacy, its `datastore` path is read by name, and nothing is misread.
-  But a future `prepare()` run would write another legacy sidecar, which `store copy` / `store
-  move` refuse until someone runs `store adopt`. The script also re-points its copy's `shards`
-  rows by hand (`[01-atol-sweep-check-expects-absolute-shard-records]`), which `store copy` now
-  does properly. **Next step:** if the script is ever edited again for another reason, replace its
-  hand copy, its `UPDATE` and its sidecar with one `RunRegistry.stores.copy_store` call. Not done
-  here: the script is the record of a measurement (prompt 03 §6), and no driver creates
-  sidecars in this campaign. Indexed at `docs/OPEN_ISSUES.md` §1.12.
-  **Assigned (2026-09-25):** `prompts/store-retirement` prompt 02, which is the "other reason"
-  this entry waited for. A retired store keeps its sidecar as the record (that campaign's README
-  §6.1). `prepare()` decides that the sweep store exists from its store files alone (`:635-642`),
-  and writes the sidecar with `Path.write_text`. So once the sweep store is retired, a plain
-  `--prepare` would **overwrite its tombstone** (`docs/store-retirement-audit.md` §2.6). The
-  impact is no longer "none". `copy_store` refuses a taken sidecar name, which is the behaviour a
-  retired name needs. Indexed now at `docs/OPEN_ISSUES.md` §1.14.
+None currently open. Both issues opened here were assigned to, and closed by, `store-retirement`
+prompt 02; see §4.
 
 ---
 
 ## 4. Resolved issues
+
+- **[01-atol-sweep-check-expects-absolute-shard-records]** *(opened 2026-09-24 by prompt 01)*:
+  `docs/handover/quadsource_atol_sweep.py` `assert_store_is_self_consistent` (`:589`) compared
+  `shards.filename` with `str(p.resolve())` for each expected shard. So it **rejected any store
+  created after prompt 01**, whose records are bare names, unless the store had first been
+  through `prepare()`'s `UPDATE`, which rewrote the rows to absolute. **Impact (as first
+  recorded):** none in the script's own workflow, because `SWEEP_STORE` is only ever made by
+  `prepare()`. **Assigned (2026-09-25)** to `prompts/store-retirement` prompt 02, together with
+  `[03-…]` below, which found the impact above understated: the function has a third caller,
+  `run_build`'s resume branch (`:460-461`), which checks the `--database` it is given, and a store
+  the pipeline creates now records bare names, so **`--build --resume` refused every store built
+  since prompt 01, the A3 v2 store included**, advising "Re-run --prepare --force", which is wrong
+  for a build (probed on a `write_new_store` fixture, `docs/store-retirement-audit.md` §2.6).
+
+  **Closed (2026-09-25), by `store-retirement` prompt 02** (commit *"Make quadsource_atol_sweep
+  prepare and check through the registry"*): `assert_store_is_self_consistent` now resolves each
+  stored record through `Datastore.shard_paths.resolve_shard_path` and compares it, serial by
+  serial, with the expected sibling, requiring exactly the serials `0 .. SHARDS-1`. A bare-name
+  store — what `prepare()` now makes, and what the pipeline itself writes — passes, and so does a
+  legacy store whose absolute records name its own siblings, or name the same file names in
+  another existing directory (the backup's shape). The understated impact is fixed along with the
+  recorded one: `run_build`'s pre-resume check on a `write_new_store` fixture, which failed before
+  this prompt, now passes, so `--build --resume` of the A3 v2 store is unblocked. Measurement:
+  [`../store-retirement/logs/02-the-sweep-prepares-through-the-registry.md`](../store-retirement/logs/02-the-sweep-prepares-through-the-registry.md).
+  Its row is deleted from `docs/OPEN_ISSUES.md` §1.14.
+
+- **[03-atol-sweep-prepare-writes-its-store-sidecar-by-hand]** *(opened 2026-09-24 by prompt
+  03)*: `docs/handover/quadsource_atol_sweep.py` `prepare()` (`:667`) still wrote
+  `<stem>.manifest.json` itself, with `manifest.write_text(json.dumps(…))`, in the legacy shape:
+  `datastore` and `copied_from` as repository paths, no `sidecar_format`, no `store_id`, no
+  `history`. That contradicted README §6.5 point 1 ("only registry operations write a sidecar")
+  and point 3 (`datastore` is a bare name). **Impact (as first recorded):** none at the time; a
+  future `prepare()` run would write another legacy sidecar, which `store copy` / `store move`
+  refuse until someone runs `store adopt`. **Assigned (2026-09-25)** to `prompts/store-retirement`
+  prompt 02, the "other reason" this entry waited for: once the sweep store is retired, a plain
+  `--prepare` would have **overwritten its tombstone** (`docs/store-retirement-audit.md` §2.6),
+  since `prepare()` decided the sweep store existed from its files alone and wrote the sidecar
+  with `Path.write_text`, so the impact was no longer "none".
+
+  **Closed (2026-09-25), by `store-retirement` prompt 02** (commit *"Make quadsource_atol_sweep
+  prepare and check through the registry"*): the hand copy of the shards and the primary, the
+  `UPDATE` that re-pointed the copy's rows, and the hand-written sidecar are gone, replaced by one
+  `RunRegistry.stores.copy_store(BASELINE_STORE, SWEEP_STORE, purpose=…)` call, with the old
+  purpose text kept verbatim. The sweep store is now a registry sidecar from the moment it is
+  made: a new `store_id`, `copied_from` naming the baseline's `store_id`, and a `copy` history
+  entry. `copy_store` never overwrites, so `--prepare` now refuses at any name whose sidecar
+  already exists — an existing store, or a tombstone `store retire` (`store-retirement` prompt 03)
+  will one day leave behind — which is exactly the behaviour a retired name needs. Measurement:
+  [`../store-retirement/logs/02-the-sweep-prepares-through-the-registry.md`](../store-retirement/logs/02-the-sweep-prepares-through-the-registry.md).
+  Its row is deleted from `docs/OPEN_ISSUES.md` §1.14.
 
 - **[01-whole-store-rename-is-unsupported]** *(opened 2026-09-24 by prompt 01, per its §5)*:
   **the user's decision.** Shards are recorded by file name, so moving a store's directory and

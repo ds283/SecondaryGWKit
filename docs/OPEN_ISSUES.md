@@ -1,6 +1,6 @@
 # Open issues — project-wide index
 
-**Last updated:** 2026-09-25 · **102 open** across sixteen campaigns.
+**Last updated:** 2026-09-25 · **100 open** across sixteen campaigns.
 
 This file exists so that an issue opened by one campaign is not lost when that campaign closes.
 It is an **index, not a record**: one line per issue, pointing at the campaign status board that
@@ -726,14 +726,13 @@ stays behind as the record. Its audit, `docs/store-retirement-audit.md`, found t
 for that. A sidecar with no primary reads as broken. The history format cannot record a
 retirement. `quadsource_atol_sweep.py --prepare` would overwrite the sweep store's tombstone. The
 backup's primary names the live store's shards. And `CLAUDE.md` says the registry does not delete.
-It opened three `00-` issues, each recorded here for its owner, and was assigned the two
-`datastore-portability` issues below, both to its prompt 02. One of those, it found, also blocks
-`--build --resume` of the A3 v2 store.
+It opened three `00-` issues, each recorded here for its owner. It was also assigned two
+`datastore-portability` issues, both to its prompt 02, which closed both on 2026-09-25 (one of
+them also unblocked `--build --resume` of the A3 v2 store); their rows are now on that board's §4,
+and are deleted here.
 
 | Issue | Board | Hook |
 |---|---|---|
-| `[01-atol-sweep-check-expects-absolute-shard-records]` | datastore-portability | `quadsource_atol_sweep.py`'s `assert_store_is_self_consistent` compares against literal absolute paths, so it would reject a store created after prompt 01 unless `prepare()`'s `UPDATE` had rewritten its rows. **It blocks `--build --resume`**, which checks the store it resumes, so the A3 v2 store cannot be resumed. Assigned to `store-retirement` prompt 02. |
-| `[03-atol-sweep-prepare-writes-its-store-sidecar-by-hand]` | datastore-portability | `quadsource_atol_sweep.py` `prepare()` still writes its `<stem>.manifest.json` by hand, in the legacy shape, against README §6.5 point 1 (only registry operations write a sidecar). Once the sweep store is retired, a plain `--prepare` would **overwrite its tombstone**. Assigned to `store-retirement` prompt 02. |
 | `[00-a-sigterm-pipeline-run-is-recorded-as-failed]` | store-retirement | The 2026-09-23 A3 resume run is recorded `failed`, exit 1. The `handover` board says `killed`, and its launcher log holds a SIGTERM trace. `terminal_state` maps `SystemExit(15)` to `killed`, but this run left through `except BaseException`. One instance. |
 | `[00-a-launch-log-lives-outside-its-run-directory]` | store-retirement | `var/bootstrap-a3-resume.log` is a strict superset of that run's registered logs, with 67 more lines, including the only SIGTERM record. It sits at the top of `var/`, attributed by nothing on disk. |
 | `[00-a-copy-carries-its-sources-present-tense-fields]` | store-retirement | `copy_store` carries unknown fields verbatim, so a copy of the live A3 store says it has a retained backup, and its `restart.command` resumes into the **source** store. Nothing reads them. A decision about copy's design. |
