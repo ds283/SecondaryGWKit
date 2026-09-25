@@ -87,14 +87,14 @@ run record live in `RunRegistry/`, because the registry owns those files.
 |---|---|---|---|
 | 01 | [`01-a-read-only-store-reader.md`](01-a-read-only-store-reader.md) | One schema builder shared by the actor and the reader. A read-only, no-Ray reader over a closed store's shards. A real multi-shard store fixture for tests. | **written** |
 | 02 | [`02-a-structured-inventory.md`](02-a-structured-inventory.md) | Per-class structured records on the reader: physical keys, parents by canonical key, full tag sets, `validated`, per-parent value counts, real `QuadSourceIntegral` / `OneLoopIntegral` / `GkSourcePolicyData` records, replicated classes compared across shards. | **written** (D1 decided) |
-| 03 | [`03-one-inventory-service.md`](03-one-inventory-service.md) | The display (`main.py --inventory`, which becomes read-only and needs no Ray) and `available_run_labels` consume the structured inventory. The old three shapes, `ShardedPool.inventory`, `_merge_queue` and `inventory_config` retire. Closes `[00-inventory-run-prunes-unvalidated-rows-by-default]` and the `BackgroundModel` half of `qcd-background-audit`'s `[03-qcd-inventory-does-not-report-the-representation]`. | **written** 2026-09-25 (D4 open) |
+| 03 | [`03-one-inventory-service.md`](03-one-inventory-service.md) | The display (`main.py --inventory`, which becomes read-only and needs no Ray) and `available_run_labels` consume the structured inventory. The old three shapes, `ShardedPool.inventory`, `_merge_queue` and `inventory_config` retire. Closes `[00-inventory-run-prunes-unvalidated-rows-by-default]` and the `BackgroundModel` half of `qcd-background-audit`'s `[03-qcd-inventory-does-not-report-the-representation]`. | **written** 2026-09-25 (D4 decided) |
 | 04 | [`04-the-fingerprint.md`](04-the-fingerprint.md) | A pure function from the structured inventory to digests. A known `fingerprint` field in `RunRegistry.stores`. `python -m RunRegistry store fingerprint`, read-only, refusing a store a `running` run names. The digest in the run record at finish. `scoped_pipeline_run.py` and `quadsource_atol_sweep.py` (including `--build`, which builds the A3 v2 store) take one when their registered run finishes. Closes `run-registry`'s `[04-a-runs-product-is-named-but-never-fingerprinted]`. | **written** 2026-09-25 |
 | 05 | *Fingerprint the real stores* | Remedial: fingerprint the three existing stores, read-only, and record each fingerprint in its sidecar (D3). Also any store built here before 04 landed, such as the A3 v2 store, which therefore had no fingerprint taken at finish. Fingerprint a registry copy of one, and show that the digests localise the known differences. | **held** until 04 lands |
 
 **Why 03–05 were held.** Each consumes the structure prompt 02 ships. Their **charters** are fixed
 above and cannot drift to fit what 02 finds; only their **methods** waited. 02 landed on 2026-09-25
 at `8de5a40`, and 03 and 04 were written the same day against it. They are independent of each
-other, and either may go first. 03 is dispatched only once D4 is recorded. 05 is held until 04
+other, and either may go first. D4, which 03 depends on, was decided on 2026-09-25. 05 is held until 04
 lands, because it writes 04's format.
 
 ## 3. Datastores
@@ -204,7 +204,8 @@ Recorded in full on the `run-registry` board, under the amendment to
 ### 6.2 Decisions D1–D4
 
 D1–D3 were asked for when the campaign was written at `066057d`, and the user made them the same
-day, 2026-09-24. D4 was found when prompt 03 was written, on 2026-09-25, and is open.
+day, 2026-09-24. D4 was found when prompt 03 was written, on 2026-09-25, and the user decided it
+the same day.
 
 - **D1 — the canonical form of a float: the stored bits, as `float.hex`.** The recommendation was
   taken. Prompt 02 was written against it, and needs no amendment. The alternative, rounding to
@@ -220,7 +221,9 @@ day, 2026-09-24. D4 was found when prompt 03 was written, on 2026-09-25, and is 
   and the backup. It writes only the `fingerprint` field, through `RunRegistry.stores`' writer.
   Every other field, and every store file, stays as it is. This is the explicit request that
   `datastore-portability` README §6.5 point 7 requires before an existing sidecar changes.
-- **D4 — the test of a retired method. Open; to be decided before prompt 03 is dispatched.**
+- **D4 — the test of a retired method: retire the module, and re-express its claims against the
+  new service. Decided by the user (2026-09-25).** The recommendation was taken, and prompt 03 was
+  written against it, so it needs no amendment. The reasoning and the alternatives are kept below.
   Prompt 03 deletes every factory's `inventory()`, which is F9's charter. One existing test module
   calls one of them: `ComputeTargets/tests/test_qcd_cosmology_inventory.py`, three tests that
   `sqla_QCDCosmology_factory.inventory()` reports `T_z_representation`. It is also one of the four

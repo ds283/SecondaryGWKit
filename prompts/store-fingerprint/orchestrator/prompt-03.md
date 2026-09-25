@@ -29,8 +29,8 @@ The review turns on four things.
 
 ## 1. Before you dispatch
 
-1. **D4 is recorded** in README §6.2. If it is still open, stop: the prompt retires an existing
-   test module on its strength.
+1. **D4 was decided on 2026-09-25** (README §6.2): retire the QCD inventory test module and
+   re-express its claims. Confirm that the prompt's F9 item 6 still says so.
 2. **Confirm the branch and `HEAD`**, and record the SHA. `HEAD` must be the commit that writes
    this prompt, or a later commit of this campaign. Prompt 04 may have landed first; if it has,
    say so to the agent. Tell the agent the tree is not its own.

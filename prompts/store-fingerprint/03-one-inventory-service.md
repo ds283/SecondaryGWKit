@@ -6,8 +6,8 @@
 `BackgroundModel` half of `qcd-background-audit`'s
 `[03-qcd-inventory-does-not-report-the-representation]`, which closes that issue.
 **Opens:** anything out of scope that you find (§6), **without fixing it**.
-**Decision D4** (README §6.2): **must be recorded before dispatch.** This prompt is written against
-the recommendation, which retires `ComputeTargets/tests/test_qcd_cosmology_inventory.py` and
+**Decision D4** (README §6.2, the user, 2026-09-25): the recommendation was taken. This prompt
+retires `ComputeTargets/tests/test_qcd_cosmology_inventory.py` and
 re-expresses its claims against the new service (§2, F9 item 6).
 **Recommended model:** **Opus**. Most of the change is deletion. The judgement is in two places:
 a display that cannot hide a difference the inventory holds, and a retirement that leaves no
@@ -323,7 +323,6 @@ before and after, and delete the directory at the end.
 
 ## 7. Stop conditions — stop and ask the user
 
-- D4 is not recorded in README §6.2.
 - The old report and the new one disagree on a count in §4 in a way the log cannot explain from
   the definitions.
 - A caller of the retired service exists that §2 does not name.

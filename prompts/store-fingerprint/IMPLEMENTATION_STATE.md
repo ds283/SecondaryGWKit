@@ -1,8 +1,8 @@
 # Store fingerprint campaign — implementation state
 
 **Last updated:** 2026-09-25 · **Status: 2 of 5 prompts landed (01, 02). 03 and 04 were written on
-2026-09-25 against 02's structure, and are ready to dispatch in either order; 03 waits on D4, which
-is open (README §6.2). 05 is held until 04 lands. Decisions D1–D3 were made on 2026-09-24.**
+2026-09-25 against 02's structure, and are ready to dispatch in either order. 05 is held until 04
+lands. Decisions D1–D3 were made on 2026-09-24, and D4 on 2026-09-25 (README §6.2).**
 
 The campaign was opened on 2026-09-24. It owns `run-registry`'s
 `[04-a-runs-product-is-named-but-never-fingerprinted]`, as amended at `218ca74`: a store's content
@@ -66,7 +66,7 @@ It opened `[02-exit-time-lookup-runs-inside-the-subhorizon-loop]` (§3).
 |---|---|---|---|---|---|---|---|
 | 01 | [One schema builder, and a read-only reader](01-a-read-only-store-reader.md) | **F1**–**F3** | Opus 5.5 | ✍️ yes, 2026-09-24 | ✅ 2026-09-25 | *"Add one schema builder and a read-only store reader"* | [`logs/01-…`](logs/01-a-read-only-store-reader.md) |
 | 02 | [A structured inventory](02-a-structured-inventory.md) | **F4**–**F7** | Opus 5.5 | ✍️ yes, 2026-09-24 | ✅ 2026-09-25 | *"Add a structured store inventory keyed by physical labels"* | [`logs/02-…`](logs/02-a-structured-inventory.md) |
-| 03 | [One inventory service](03-one-inventory-service.md) | **F8**–**F9** | Opus | ✍️ yes, 2026-09-25 | ⏳ not dispatched; waits on D4 | — | — |
+| 03 | [One inventory service](03-one-inventory-service.md) | **F8**–**F9** | Opus | ✍️ yes, 2026-09-25 | ⏳ not dispatched | — | — |
 | 04 | [The fingerprint](04-the-fingerprint.md) | **F10**–**F12** | Opus | ✍️ yes, 2026-09-25 | ⏳ not dispatched | — | — |
 | 05 | *Fingerprint the real stores* | **F13** | — | ⏸️ held until 04 lands | — | — | — |
 
