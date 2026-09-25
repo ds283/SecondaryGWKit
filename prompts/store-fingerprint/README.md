@@ -3,7 +3,8 @@
 **Written:** 2026-09-24 at `218ca74` on `handover-remedial`, by Claude Opus 5.5, from
 [`docs/store-fingerprint-audit.md`](../../docs/store-fingerprint-audit.md) and the user's
 decisions recorded in §6. **Prompts 03 and 04 written** 2026-09-25 at `8de5a40`, against the
-structure prompt 02 shipped.
+structure prompt 02 shipped. **Prompt 05 written** 2026-09-25 at `ef46154`, against the format
+prompt 04 shipped.
 
 ## 0. Why this campaign exists
 
@@ -89,13 +90,15 @@ run record live in `RunRegistry/`, because the registry owns those files.
 | 02 | [`02-a-structured-inventory.md`](02-a-structured-inventory.md) | Per-class structured records on the reader: physical keys, parents by canonical key, full tag sets, `validated`, per-parent value counts, real `QuadSourceIntegral` / `OneLoopIntegral` / `GkSourcePolicyData` records, replicated classes compared across shards. | **written** (D1 decided) |
 | 03 | [`03-one-inventory-service.md`](03-one-inventory-service.md) | The display (`main.py --inventory`, which becomes read-only and needs no Ray) and `available_run_labels` consume the structured inventory. The old three shapes, `ShardedPool.inventory`, `_merge_queue` and `inventory_config` retire. Closes `[00-inventory-run-prunes-unvalidated-rows-by-default]` and the `BackgroundModel` half of `qcd-background-audit`'s `[03-qcd-inventory-does-not-report-the-representation]`. | **written** 2026-09-25 (D4 decided) |
 | 04 | [`04-the-fingerprint.md`](04-the-fingerprint.md) | A pure function from the structured inventory to digests. A known `fingerprint` field in `RunRegistry.stores`. `python -m RunRegistry store fingerprint`, read-only, refusing a store a `running` run names. The digest in the run record at finish. `scoped_pipeline_run.py` and `quadsource_atol_sweep.py` (including `--build`, which builds the A3 v2 store) take one when their registered run finishes. Closes `run-registry`'s `[04-a-runs-product-is-named-but-never-fingerprinted]`. | **written** 2026-09-25 |
-| 05 | *Fingerprint the real stores* | Remedial: fingerprint the three existing stores, read-only, and record each fingerprint in its sidecar (D3). Also any store built here before 04 landed, such as the A3 v2 store, which therefore had no fingerprint taken at finish. Fingerprint a registry copy of one, and show that the digests localise the known differences. | **held** until 04 lands |
+| 05 | [`05-fingerprint-the-real-stores.md`](05-fingerprint-the-real-stores.md) | Remedial: fingerprint the three existing stores, read-only, and record each fingerprint in its sidecar (D3). Also any store built here before 04 landed, such as the A3 v2 store, which therefore had no fingerprint taken at finish. Fingerprint a registry copy of one, and show that the digests localise the known differences. | **written** 2026-09-25 |
 
 **Why 03–05 were held.** Each consumes the structure prompt 02 ships. Their **charters** are fixed
 above and cannot drift to fit what 02 finds; only their **methods** waited. 02 landed on 2026-09-25
 at `8de5a40`, and 03 and 04 were written the same day against it. They are independent of each
-other, and either may go first. D4, which 03 depends on, was decided on 2026-09-25. 05 is held until 04
-lands, because it writes 04's format.
+other, and either may go first. D4, which 03 depends on, was decided on 2026-09-25. 05 was held until 04
+landed, because it writes 04's format. 04 landed at `ef46154`, and 05 was written the same day
+against it. No store has been built here since the three that existed, so 05 fingerprints those
+three only.
 
 ## 3. Datastores
 
@@ -264,7 +267,14 @@ logged deviation that is at least as strong:
 - (prompt 04) a copy keeps the source's fingerprint, `taken` included;
 - (prompt 04) a registered run's finish writes the sidecar as well as the run record, and takes a
   fingerprint on every terminal state it reaches with the store closed; a failure is recorded and
-  never changes the state.
+  never changes the state;
+- (prompt 05) every read and every comparison of the real stores comes before any write;
+- (prompt 05) a finding about a store is recorded and never stopped on, while a doubt about the
+  fingerprint itself is a stop;
+- (prompt 05) the writes are taken by a person with the tree clean, so `taken` names a clean base;
+- (prompt 05) the registry copy is of the live A3 store;
+- (prompt 05) the three fingerprints as written are committed beside the log, because the sidecars
+  live in the gitignored `var/`.
 
 ## 7. Baselines
 

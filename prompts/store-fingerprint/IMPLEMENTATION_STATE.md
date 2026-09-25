@@ -1,7 +1,7 @@
 # Store fingerprint campaign — implementation state
 
-**Last updated:** 2026-09-25 · **Status: 4 of 5 prompts landed (01, 02, 03, 04). 05 is not yet
-written; 04, which it was held for, has landed. Decisions D1–D3 were made on 2026-09-24, and D4 on
+**Last updated:** 2026-09-25 · **Status: 4 of 5 prompts landed (01, 02, 03, 04). 05 was
+written on 2026-09-25 against 04's format, and is ready to dispatch. Decisions D1–D3 were made on 2026-09-24, and D4 on
 2026-09-25 (README §6.2).**
 
 The campaign was opened on 2026-09-24. It owns `run-registry`'s
@@ -113,12 +113,13 @@ board's §4.
 | 02 | [A structured inventory](02-a-structured-inventory.md) | **F4**–**F7** | Opus 5.5 | ✍️ yes, 2026-09-24 | ✅ 2026-09-25 | *"Add a structured store inventory keyed by physical labels"* | [`logs/02-…`](logs/02-a-structured-inventory.md) |
 | 03 | [One inventory service](03-one-inventory-service.md) | **F8**–**F9** | Opus 5.5 | ✍️ yes, 2026-09-25 | ✅ 2026-09-25 | *"Move the inventory report and run labels onto one read-only service"* | [`logs/03-…`](logs/03-one-inventory-service.md) |
 | 04 | [The fingerprint](04-the-fingerprint.md) | **F10**–**F12** | Opus 5.5 | ✍️ yes, 2026-09-25 | ✅ 2026-09-25 | *"Fingerprint a store's content in its sidecar and run record"* | [`logs/04-…`](logs/04-the-fingerprint.md) |
-| 05 | *Fingerprint the real stores* | **F13** | — | not yet written; 04 has landed | — | — | — |
+| 05 | [Fingerprint the real stores](05-fingerprint-the-real-stores.md) | **F13** | Opus | ✍️ yes, 2026-09-25 | ⏳ not dispatched | — | — |
 
 The charters of 03–05 are fixed in README §2. 03 and 04 were written once 02's structure had
-landed; 05's method waits on 04's format. It is held by design, not missing. Orchestration prompts:
-[`orchestrator/prompt-03.md`](orchestrator/prompt-03.md) and
-[`orchestrator/prompt-04.md`](orchestrator/prompt-04.md).
+landed, and 05 once 04's format had. Orchestration prompts:
+[`orchestrator/prompt-03.md`](orchestrator/prompt-03.md),
+[`orchestrator/prompt-04.md`](orchestrator/prompt-04.md) and
+[`orchestrator/prompt-05.md`](orchestrator/prompt-05.md).
 
 ---
 
@@ -138,7 +139,7 @@ landed; 05's method waits on 04's format. It is held by design, not missing. Orc
 | F10 | **FACILITY** | The fingerprint, a pure function of the structured inventory. It holds a format version, and per class and per tag set a count and a digest over the sorted canonical records, plus an overall digest. No timestamps. | 04 | ✅ **Done, 2026-09-25.** `RunRegistry/stores.py`: `FINGERPRINT_FORMAT = 1`, and `fingerprint_of(inventory, taken=None)`. It gives `classes` (per class `count`, `digest`, and `tag_sets` of `{tags, count, digest}`), the overall `digest` (SHA-256 of `canonical_json` of the format and each class's count and digest), `problems` (counts per class and kind) and `taken`. The last two are outside every digest. A digest is SHA-256 of `record.canonical_json()` + `\n` per record, in canonical order, so a listing's lines hash to it (`listing_lines`). `compare_fingerprints` names the class, the tag set (or which side lacks it) and both counts. It refuses to compare two formats, and reports problem differences as their own entries. The golden `RunRegistry/tests/data/full_store_fingerprint.json` pins format 1. Tests 1–6. **Deliberate breakage (i), (ii), (iii), (viii), (ix)** each fail their tests. |
 | F11 | **FACILITY** | The `fingerprint` sidecar field, a known field of `RunRegistry.stores` that copy and move carry. `python -m RunRegistry store fingerprint`: read-only, refuses a store a `running` run names, compares against the recorded value and writes only when asked. | 04 | ✅ **Done, 2026-09-25.** `fingerprint` is in `KNOWN_FIELDS`. Its shape is checked (an object, an integer format, a `classes` object, a 64-hex digest, a `taken` object), and copy and move carry it verbatim with no code change (test 7). `fingerprint_store(primary, *, write, runs_root, taken_by)` works in the prompt's six steps. It refuses any `running` run, alive or stale, by path or `store_id`, except `taken_by`; the check is shared with copy and move. It reads through `read_inventory` with no Ray, and writes only the `fingerprint` field, through `_update_sidecar` (now three uses), and only into a problem-free registry sidecar. `store fingerprint PRIMARY [--write] [--listing PATH] [--runs-root DIR]` prints the digests, problems and comparison. It exits 0 on a match or nothing recorded, and 1 on a difference or refusal. `--listing` goes to a new file outside the store's directory. `store show` still loads neither `ray` nor `sqlalchemy`. Tests 7–10. **Deliberate breakage (iv), (v), (vi)** each fail their tests. |
 | F12 | **FACILITY** | The digest in the run record at finish. `scoped_pipeline_run.py` and `quadsource_atol_sweep.py`, including `--build` for the A3 v2 store (D2), take one when a registered run finishes. Closes `run-registry`'s `[04-a-runs-product-is-named-but-never-fingerprinted]`. | 04 | ✅ **Done, 2026-09-25.** `Run.finish(state, exit_code=None, *, fingerprint=False)`. With `True` and a `results` store, it fingerprints the store with the run as `taken_by` before writing the state, and records `fingerprint` and `fingerprint_sidecar` (`written`, or why not) in `status.json`. It writes the sidecar only where that is a problem-free registry sidecar. Any error becomes `fingerprint_error`, and the state and exit code are written as given. Nine `run.finish(` calls in the two drivers gained `fingerprint=True`: three in `scoped_pipeline_run.py`, and three each in `run_build` and `sweep`. The three `terminal` handlers are unchanged, and nothing else in either script changed (test 12, by `ast`). On the §4 copy, a registered run's `status.json` fingerprint equals the sidecar's. Tests 11–12. **Deliberate breakage (vii)** fails its tests. Closed `[04-a-runs-product-is-named-but-never-fingerprinted]` on `run-registry`'s §4. |
-| F13 | **REMEDY** | Remedial: the three existing stores fingerprinted read-only, and each fingerprint written into its sidecar (D3), as is any store built here before 04 landed, such as the A3 v2 store. A registry copy of one is fingerprinted, and the digests localise the known differences. | 05 | ⏸️ held |
+| F13 | **REMEDY** | Remedial: the three existing stores fingerprinted read-only, and each fingerprint written into its sidecar (D3), as is any store built here before 04 landed, such as the A3 v2 store. A registry copy of one is fingerprinted, and the digests localise the known differences. | 05 | ✍️ written |
 
 ---
 
