@@ -56,6 +56,33 @@ of them, it found, also blocks `--build --resume` of the A3 v2 store.
 | 04 | [Amend an unknown field](04-amend-an-unknown-field.md) | **R9** | Sonnet | ✍️ yes, 2026-09-25 | ⬜ after 03 | — | — |
 | 05 | Retire the two stores | **R10**–**R12** | Opus | ⏸️ held until 01–04 land | — | — | — |
 
+**Orchestrator review of prompt 01 (2026-09-25).** All eight checks in `orchestrator/prompt-01.md`
+§3 passed on `ff65f9f`. The first dispatch was cut off by a usage limit after measuring baselines
+only. It changed nothing. Its baselines, taken in an exported copy of the tree, showed four spurious
+failures from git-dependent tests, and were discarded. The second dispatch landed the prompt.
+- **Scope.** `RunRegistry/`, `tools/` and `docs/handover/` are untouched.
+- **The charter.** `CLAUDE.md:52` equals D0's wording character for character. The orchestrator
+  then re-wrapped that one sentence to the file's line width, in the review commit, with the words
+  unchanged.
+- **The deletion.** Both methods go through `_plan_deletion`, which reads only through
+  `_read_closed_store`, and nothing opens a stored record as a path. The directory assertion is
+  separate, and every `os.unlink` follows a regular-file, not-a-link check. `missing_ok` passes
+  over only a shard of which no entry exists, so a dangling link is still refused.
+- **Mutations.** (i), (i-b) and (ii) applied with plain `git apply`, and were run from an empty
+  working directory, as the agent had done for (i-b). They gave exactly the logged results:
+  `failures=48, errors=12`, `failures=62, errors=3` and `failures=26, errors=4`. The working
+  directory was empty afterwards, and the repository root's real `physics-test-n20-*` store kept
+  its 2026-09-10 mtimes.
+- **Tests.** The new module passed twice.
+- **`var/`.** The snapshot, 51 entries, was identical before and after.
+- **Suites.** All six re-run: AdaptiveLevin 32, ComputeTargets 552, CosmologyModels 39,
+  Datastore 206 (+29), LiouvilleGreen 148 (1 skipped), RunRegistry 128.
+- **An observation, outside this campaign.** The repository root holds a pre-registry store,
+  `physics-test-n20-lambdacdm-zend0p1*.sqlite`: a primary, four shards and a `-profile` file, about
+  85 MB, from 2026-09-10. It is gitignored, has no sidecar, and is named on the
+  `qcd-background-audit` board. The first cleanup answer looked only under `var/` and missed it.
+  It is raised with the user, and no issue is opened.
+
 **Orchestrator review of prompt 02 (2026-09-25).** All eight checks in `orchestrator/prompt-02.md`
 §3 passed on `226889f`.
 - **Scope.** The script's diff is confined to `prepare()`, `assert_store_is_self_consistent`,

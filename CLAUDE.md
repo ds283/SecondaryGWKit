@@ -49,7 +49,10 @@ that hold across all of them:
 A job that takes hours must not be something a conversation owns. `RunRegistry/` records that one
 exists, in `var/runs/<campaign>-<prompt>-<slug>-<timestamp>/`, and
 `prompts/run-registry/README.md` §0 lists the five failures in one working session that are the
-reason for each rule below. It records; it does not schedule, supervise, restart or lock. It deletes nothing but a store's own files, and those only through `store retire`, which a person runs and which leaves the store's sidecar behind as its record. It never deletes a run directory, a sidecar or any other record.
+reason for each rule below. It records; it does not schedule, supervise, restart or lock. It
+deletes nothing but a store's own files, and those only through `store retire`, which a person
+runs and which leaves the store's sidecar behind as its record. It never deletes a run directory,
+a sidecar or any other record.
 
 1. **Discovery.** Run `python -m RunRegistry list` at the start of a session and before launching
    anything long, and report anything `running` or stale. A job's existence must not depend on a
