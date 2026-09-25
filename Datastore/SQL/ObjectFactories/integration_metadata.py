@@ -73,3 +73,11 @@ class sqla_IntegrationSolver_factory(SQLAFactoryBase):
             "latest_timestamp": latest_timestamp,
             "values": values,
         }
+
+    @staticmethod
+    def inventory_records(conn, table, tables, context):
+        # the physical identity of an IntegrationSolver row (store-fingerprint prompt 02): its label,
+        # which is this class's identity, and the stepping build() filters on
+        from Datastore.store_inventory import read_records
+
+        return read_records(conn, table, tables, context, leaves=("label", "stepping"))

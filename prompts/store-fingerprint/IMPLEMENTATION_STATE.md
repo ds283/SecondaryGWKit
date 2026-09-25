@@ -1,8 +1,8 @@
 # Store fingerprint campaign — implementation state
 
-**Last updated:** 2026-09-25 · **Status: 1 of 5 prompts landed (01). 02 is written and ready to
-dispatch. 03–05 are held on 02's structure (README §2). Decisions D1–D3 were made on 2026-09-24
-(README §6.2).**
+**Last updated:** 2026-09-25 · **Status: 2 of 5 prompts landed (01, 02). 03 and 04 are no longer
+held: 02's structure has landed, and their methods can now be written (README §2). 05 is held
+until 04 lands. Decisions D1–D3 were made on 2026-09-24 (README §6.2).**
 
 The campaign was opened on 2026-09-24. It owns `run-registry`'s
 `[04-a-runs-product-is-named-but-never-fingerprinted]`, as amended at `218ca74`: a store's content
@@ -23,6 +23,30 @@ and needs no Ray. A copy of the sweep store read through it with every per-table
 independent `sqlite3` count. The copy and the originals were unchanged, and the copy has no absent
 or extra schema. This closes `[00-build-schema-reads-registration-before-its-none-check]` (§4).
 
+**Prompt 02 landed 2026-09-25.** `Datastore/store_inventory.py` `read_inventory` builds, through
+the read-only reader, a structured inventory of all 21 classes in dependency order. Each factory
+gained one static method, `inventory_records`, which states its class's key from its `build()`
+lookup, the optional filters included, and calls one shared reader. A record has four fields:
+- a `key` of canonical leaves (`canonical`: `float.hex` of the stored value, D1) and parent
+  digests (SHA-256 of the parent's canonical key, and of its tags if it has them);
+- `tags`, from the record's own association table;
+- `validated`;
+- `value_count`, from one `GROUP BY` per value table per shard.
+
+Replicated classes are compared across every shard. Absent tables, incomplete columns, orphans,
+unresolved parents, duplicates and divergences are named problems. The one difference from audit
+§4 is `GkSourcePolicyData`'s `k`, which its lookup filters on.
+
+It was read on a copy of the sweep store, for 30 341 records:
+- every class's record count equals its row count;
+- every value table's total equals its parents' summed counts;
+- there is **no problem at all**: no orphan, no duplicate, and **no replicated divergence**;
+- the read took 6.8 s, with a peak RSS of 228 MB;
+- deleting one `QuadSourceIntegral` row removed exactly that record, named by its physical labels,
+  and changed nothing else.
+
+It opened `[02-exit-time-lookup-runs-inside-the-subhorizon-loop]` (§3).
+
 **Campaign:** [`README.md`](README.md) · **Audit:** [`docs/store-fingerprint-audit.md`](../../docs/store-fingerprint-audit.md) ·
 **Index:** [`docs/OPEN_ISSUES.md`](../../docs/OPEN_ISSUES.md) §1.13
 
@@ -41,9 +65,9 @@ or extra schema. This closes `[00-build-schema-reads-registration-before-its-non
 | # | Prompt | Covers | Model | Written? | Landed? | Commit | Log |
 |---|---|---|---|---|---|---|---|
 | 01 | [One schema builder, and a read-only reader](01-a-read-only-store-reader.md) | **F1**–**F3** | Opus 5.5 | ✍️ yes, 2026-09-24 | ✅ 2026-09-25 | *"Add one schema builder and a read-only store reader"* | [`logs/01-…`](logs/01-a-read-only-store-reader.md) |
-| 02 | [A structured inventory](02-a-structured-inventory.md) | **F4**–**F7** | Opus | ✍️ yes, 2026-09-24 | ⏳ not dispatched | — | — |
-| 03 | *One inventory service* | **F8**–**F9** | — | ⏸️ held until 02 lands | — | — | — |
-| 04 | *The fingerprint* | **F10**–**F12** | — | ⏸️ held until 02 lands | — | — | — |
+| 02 | [A structured inventory](02-a-structured-inventory.md) | **F4**–**F7** | Opus 5.5 | ✍️ yes, 2026-09-24 | ✅ 2026-09-25 | *"Add a structured store inventory keyed by physical labels"* | [`logs/02-…`](logs/02-a-structured-inventory.md) |
+| 03 | *One inventory service* | **F8**–**F9** | — | not yet; unblocked 2026-09-25 by 02 | — | — | — |
+| 04 | *The fingerprint* | **F10**–**F12** | — | not yet; unblocked 2026-09-25 by 02 | — | — | — |
 | 05 | *Fingerprint the real stores* | **F13** | — | ⏸️ held until 04 lands | — | — | — |
 
 The charters of 03–05 are fixed in README §2. Only their methods wait on 02's structure and on the
@@ -58,10 +82,10 @@ structure. They are held by design, not missing.
 | F1 | **REMEDY** | One schema builder, `Datastore/SQL/schema.py` `build_schema`, called by the actor. Witnessed unchanged by a schema captured from the code before the change. | 01 | ✅ **Done, 2026-09-25.** `build_schema(metadata, factories) -> BuiltSchema(tables, records)`: the old loop minus the inserters, with the `None` check first. `_build_schema` calls it, adds the inserters, and fills `_tables` / `_inserters` / `_schema` as before. The witness was captured at `417c647`, from a `git archive` of the base and from the unedited tree (identical). It covers all 37 classes: columns, types, keys, indexes, constraints, DDL and the record fields. Both the function and the actor reproduce it byte for byte. The factory map did not move. **Deliberate breakage (ii), (iii), (vi)** each fail the tests written against them, and (iii) fails only the actor's. |
 | F2 | **FACILITY** | `Datastore/store_reader.py` `open_read_only`: a closed store's shards opened `mode=ro`, tables from `build_schema`, absent tables and columns reported, journals refused, no Ray, no write path. | 01 | ✅ **Done, 2026-09-25.** Shards come from `_read_closed_store`. Every file is opened `sqlite:///file:{path}?mode=ro&uri=true`. `-journal` / `-wal` / `-shm` beside the primary or any shard is refused, naming both files. The report per shard is absent tables, absent and extra columns, and extra tables. Every engine is disposed on exit. File hashes, sizes, mtimes and the listing are unchanged by a full read, and INSERT and DDL raise "readonly". In a child interpreter `ray.is_initialized()` stays false. On a copy of the sweep store, all 37 tables on all 4 shards count equal to an independent `sqlite3` count, with no absent or extra schema, and the copy and originals were byte-identical. **Deliberate breakage (i), (iv), (v)** each fail the tests written against them. |
 | F3 | **FACILITY** | A real multi-shard store for tests, built with no Ray, including an "old store" variant. | 01 | ✅ **Done, 2026-09-25.** `Datastore/tests/real_store_fixtures.py` `build_real_store`. Its primary is written by `ShardedPool._write_shard_data`, with `config/sharding.py`'s lists and shard-key rows. It has two shards with every table. Replicated rows (ten tables) are in both, with the same serials. Each shard has a `TkNumericIntegration` with `TkNumeric_tags` and `TkNumericValue` rows. Row sets are plain data, extensible with `with_rows`. `build_old_store` gives shard 1 without `OneLoopIntegral_tags` and shard 0's `TkNumericIntegration` without `stop_Tprime`. `missing_tables` / `missing_columns` / `extra_sql` give other cases. |
-| F4 | **FACILITY** | `Datastore/store_inventory.py` `read_inventory`: records built by each factory in dependency order. Each record has a canonical key, a tag set, `validated` and `value_count`. Parents are referenced by the digest of their key; there is one `canonical`, which uses `float.hex` (D1). | 02 | ⏳ written |
-| F5 | **REMEDY** | The key of every class, from its lookup: physical leaves, optional filters included, nothing store-local. Real `QuadSourceIntegral`, `OneLoopIntegral` and `GkSourcePolicyData` records. | 02 | ⏳ written |
-| F6 | **REMEDY** | Shards and what goes wrong: sharded classes are a union; replicated classes are read from every shard, and a divergence is named. Duplicates, old stores and orphans are named problems. | 02 | ⏳ written |
-| F7 | **MEASUREMENT** | Records only, never `*Value` rows. Size, time and memory measured on a copy of the sweep store, with a one-row discriminator. | 02 | ⏳ written |
+| F4 | **FACILITY** | `Datastore/store_inventory.py` `read_inventory`: records built by each factory in dependency order. Each record has a canonical key, a tag set, `validated` and `value_count`. Parents are referenced by the digest of their key; there is one `canonical`, which uses `float.hex` (D1). | 02 | ✅ **Done, 2026-09-25.** `read_inventory(primary) -> StoreInventory` (per class: `records`, `count`, timestamp range, `problems`, plus `replicated`, `tagged`, `parents`). It builds `INVENTORY_CLASSES` in dependency order on every shard, and refuses to resolve a parent not yet built. `Record(key, tags, validated, value_count)` is frozen and JSON-safe, and a values field can be added beside the four. `canonical` is the only float formatter, and an AST test holds that. `canonical_json` sorts keys and has no whitespace. `reference_digest` is SHA-256 of the key, or of the key and tags for a tagged class. Each of 21 factories gained one static `inventory_records` (382 lines added, 0 removed) calling `read_records`. `resolve` expands parents for display. **Deliberate breakage (i), (ii), (iii), (vii)** each fail their tests. |
+| F5 | **REMEDY** | The key of every class, from its lookup: physical leaves, optional filters included, nothing store-local. Real `QuadSourceIntegral`, `OneLoopIntegral` and `GkSourcePolicyData` records. | 02 | ✅ **Done, 2026-09-25.** Every lookup was read. The shipped key table, with its lookup lines, is in the log. The one difference from audit §4 is **`GkSourcePolicyData`'s `k`** (`GkSourcePolicyData.py:99` filters on `wavenumber_exit_serial`). `z_init` / `z_source` / `z_response` are always in the key. The cosmology is resolved through `cosmology_type`. `OneLoopIntegral` tags come from `OneLoopIntegral_tags`. No solver, label, name, `version` key or timestamp is in any key. Test 1: the same content under relabelled serials, replicated ones included, and on other shards gives equal inventories. Test 2: each of 83 identity columns alone changes the records. Test 3: 42 non-identity variations change nothing. **Deliberate breakage (i), (v), (vi)** each fail their tests. |
+| F6 | **REMEDY** | Shards and what goes wrong: sharded classes are a union; replicated classes are read from every shard, and a divergence is named. Duplicates, old stores and orphans are named problems. | 02 | ✅ **Done, 2026-09-25.** A sharded class is the union of its shards. A replicated class is compared across every comparable shard, and takes the lowest's records. A shard whose class, tag or value table is absent, or whose key columns are incomplete, is named and left out. The named problems are `absent-table`, `incomplete`, `replicated-divergence` (shard, both-way counts, up to five keys), `duplicate` (all kept), `orphan-value`, `orphan-tag` and `unresolved-parent`, each with a count and up to five examples. Tests 7–9 show each case named, on the right shard, with nothing else changed. **Deliberate breakage (iv), (viii)** each fail their tests. |
+| F7 | **MEASUREMENT** | Records only, never `*Value` rows. Size, time and memory measured on a copy of the sweep store, with a one-row discriminator. | 02 | ✅ **Done, 2026-09-25.** Every statement naming a value table is a `count(*) … GROUP BY` (test 6). The sweep copy has 30 341 records, and every class's record count equals its row count. Every value table's total equals its parents' summed `value_count`. There is no problem of any kind, and the 12 replicated classes agree on all four shards. `read_inventory` took 6.8 s, with a peak RSS of 228 MB (175 MB of it the factories' imports). The full listing is 19.3 MB of JSON. Deleting `QuadSourceIntegral` serial 329386 on shard 0 took the class from 7 706 to 7 705 records, removing exactly the record with $k=q=r=3.05\times10^7$, $z_{\rm response}=0.1$, atol $10^{-32}$, rtol $10^{-8}$. The other 20 classes were identical, record for record. Its 9 tag rows were then named `orphan-tag`. The copy and the originals were unchanged by every read, and the copy was deleted. |
 | F8 | **REMEDY** | The display (`main.py --inventory`, read-only and needing no Ray) and `available_run_labels` consume the structured inventory. Closes `[00-inventory-run-prunes-unvalidated-rows-by-default]` and the `BackgroundModel` half of `[03-qcd-inventory-does-not-report-the-representation]`. | 03 | ⏸️ held |
 | F9 | **REMEDY** | Retire the old three shapes, the old `inventory()` methods, `ShardedPool.inventory`, `_merge_queue` and `inventory_config`, so that there is one inventory service. | 03 | ⏸️ held |
 | F10 | **FACILITY** | The fingerprint, a pure function of the structured inventory. It holds a format version, and per class and per tag set a count and a digest over the sorted canonical records, plus an overall digest. No timestamps. | 04 | ⏸️ held |
@@ -73,9 +97,10 @@ structure. They are held by design, not missing.
 
 ## 3. Active and unresolved issues
 
-All eight were opened on 2026-09-24 by the audit
+Eight were opened on 2026-09-24 by the audit
 ([`docs/store-fingerprint-audit.md`](../../docs/store-fingerprint-audit.md)), which is not a prompt.
-Prompt 01 closed one of them on 2026-09-25 (§4). Seven remain.
+Prompt 01 closed one of them on 2026-09-25 (§4). Prompt 02 opened one on 2026-09-25, and measured
+`[00-replicated-writes-can-diverge-across-shards]` on the sweep store. Eight remain.
 
 - **[00-inventory-run-prunes-unvalidated-rows-by-default]** *(opened 2026-09-24 by the audit;
   **assigned to prompt 03**)*
@@ -150,6 +175,23 @@ Prompt 01 closed one of them on 2026-09-25 (§4). Seven remain.
     which shard serves it.
   - **Next step.** Prompt 02's inventory reads every shard and names any divergence, which measures
     it. Making the write atomic belongs to the datastore code and is not this campaign's.
+  - **Measured (2026-09-25) by prompt 02, on a copy of the sweep store: no divergence.** All 12
+    replicated classes, including `BackgroundModel` with its tags and its 1 740
+    `BackgroundModelValue` rows, hold the same multiset of key, tags, validated flag and value count
+    on all four shards. The A3 store and the backup have not been read; prompt 05 reads them. The
+    defect in the write path stands.
+- **[02-exit-time-lookup-runs-inside-the-subhorizon-loop]** *(opened 2026-09-25 by prompt 02)*
+  - **The defect.** In `sqla_wavenumber_exit_time_factory.build`, the line
+    `row_data = conn.execute(query).one_or_none()` (`Datastore/SQL/ObjectFactories/wavenumber.py:270`)
+    is indented inside `for z_offset in WAVENUMBER_EXIT_TIMES_SUBHORIZON_EFOLDS:` (`:267`), not
+    after it.
+  - **Impact.** Every exit-time lookup runs its query six times, and the first five lack some of the
+    sub-horizon columns. The last iteration's result is complete, so the answer is right today. If
+    the list were ever empty, `row_data` would be unbound and the lookup would fail with an
+    `UnboundLocalError`.
+  - **Next step.** Dedent the line by one level, in whichever campaign next has
+    `wavenumber_exit_time.build` in scope. This campaign's scope excludes every factory's `build`
+    (README §1).
 
 ---
 
@@ -177,11 +219,11 @@ Prompt 01 closed one of them on 2026-09-25 (§4). Seven remain.
 At `f53598f` (README §7): AdaptiveLevin 32, ComputeTargets 552 (the known wall-clock flake
 aside), CosmologyModels 39, Datastore 70, LiouvilleGreen 148 (1 skipped), RunRegistry 84.
 
-| Suite | At `417c647` (before prompt 01) | After prompt 01 |
-|---|---|---|
-| `AdaptiveLevin` | 32 OK | 32 OK |
-| `ComputeTargets` | 552 OK (the flake is known) | 552 OK (the flake passed) |
-| `CosmologyModels` | 39 OK | 39 OK |
-| `Datastore` | 70 OK | **92 OK** (+22) |
-| `LiouvilleGreen` | 148 OK (skipped=1) | 148 OK (skipped=1) |
-| `RunRegistry` | 84 OK | 84 OK |
+| Suite | At `417c647` (before prompt 01) | After prompt 01 | After prompt 02 |
+|---|---|---|---|
+| `AdaptiveLevin` | 32 OK | 32 OK | 32 OK |
+| `ComputeTargets` | 552 OK (the flake is known) | 552 OK (the flake passed) | 552 OK (the flake passed) |
+| `CosmologyModels` | 39 OK | 39 OK | 39 OK |
+| `Datastore` | 70 OK | **92 OK** (+22) | **141 OK** (+49) |
+| `LiouvilleGreen` | 148 OK (skipped=1) | 148 OK (skipped=1) | 148 OK (skipped=1) |
+| `RunRegistry` | 84 OK | 84 OK | 84 OK |

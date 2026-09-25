@@ -188,3 +188,22 @@ class sqla_GkSourcePolicyData_factory(SQLAFactoryBase):
             "earliest_timestamp": earliest_timestamp,
             "latest_timestamp": latest_timestamp,
         }
+
+    @staticmethod
+    def inventory_records(conn, table, tables, context):
+        # the physical identity of a GkSourcePolicyData row (store-fingerprint prompt 02): what
+        # build() filters on -- its GkSource (whose reference digest covers that row's tags), its
+        # GkSourcePolicy and the wavenumber exit. No tags, no validated flag, no value table
+        from Datastore.store_inventory import Parent, read_records
+
+        return read_records(
+            conn,
+            table,
+            tables,
+            context,
+            parents={
+                "source": Parent("source_serial", "GkSource"),
+                "policy": Parent("policy_serial", "GkSourcePolicy"),
+                "k": Parent("wavenumber_exit_serial", "wavenumber_exit_time"),
+            },
+        )

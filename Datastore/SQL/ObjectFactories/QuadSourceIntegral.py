@@ -828,3 +828,30 @@ class sqla_QuadSourceIntegral_factory(SQLAFactoryBase):
             "earliest_timestamp": earliest_timestamp,
             "latest_timestamp": latest_timestamp,
         }
+
+    @staticmethod
+    def inventory_records(conn, table, tables, context):
+        # the physical identity of a QuadSourceIntegral row (store-fingerprint prompt 02): what
+        # build() filters on -- the model, the GkSourcePolicy (not a QuadSourcePolicy), the k, q
+        # and r wavenumber exits, z_response, z_source_max, atol and rtol -- with its tags. No
+        # validated flag and no value table. source_serial and data_serial are provenance
+        from Datastore.store_inventory import Parent, read_records
+
+        return read_records(
+            conn,
+            table,
+            tables,
+            context,
+            parents={
+                "model": Parent("model_serial", "BackgroundModel"),
+                "policy": Parent("policy_serial", "GkSourcePolicy"),
+                "k": Parent("k_wavenumber_exit_serial", "wavenumber_exit_time"),
+                "q": Parent("q_wavenumber_exit_serial", "wavenumber_exit_time"),
+                "r": Parent("r_wavenumber_exit_serial", "wavenumber_exit_time"),
+                "z_response": Parent("z_response_serial", "redshift"),
+                "z_source_max": Parent("z_source_max_serial", "redshift"),
+                "atol": Parent("atol_serial", "tolerance"),
+                "rtol": Parent("rtol_serial", "tolerance"),
+            },
+            tags=("QuadSourceIntegral_tags", "parent_serial"),
+        )

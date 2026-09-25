@@ -635,6 +635,28 @@ class sqla_GkSource_factory(SQLAFactoryBase):
             "unvalidated": _bucket(False),
         }
 
+    @staticmethod
+    def inventory_records(conn, table, tables, context):
+        # the physical identity of a GkSource row (store-fingerprint prompt 02): what build() filters
+        # on -- the model, the wavenumber exit and z_response (optional in the lookup, always in
+        # the key) -- with its tags, its validated flag and its GkSourceValue count
+        from Datastore.store_inventory import Parent, read_records
+
+        return read_records(
+            conn,
+            table,
+            tables,
+            context,
+            parents={
+                "model": Parent("model_serial", "BackgroundModel"),
+                "k": Parent("wavenumber_exit_serial", "wavenumber_exit_time"),
+                "z_response": Parent("z_response_serial", "redshift"),
+            },
+            tags=("GkSource_tags", "parent_serial"),
+            values=("GkSourceValue", "parent_serial"),
+            validated=True,
+        )
+
 
 class sqla_GkSourceValue_factory(SQLAFactoryBase):
     def __init__(self):

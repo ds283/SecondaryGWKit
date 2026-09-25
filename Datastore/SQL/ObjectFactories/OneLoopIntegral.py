@@ -271,6 +271,29 @@ class sqla_OneLoopIntegral_factory(SQLAFactoryBase):
             "latest_timestamp": latest_timestamp,
         }
 
+    @staticmethod
+    def inventory_records(conn, table, tables, context):
+        # the physical identity of a OneLoopIntegral row (store-fingerprint prompt 02): what build()
+        # filters on -- the model, the wavenumber exit, z_response, atol and rtol -- with its tags.
+        # The tags are read from OneLoopIntegral_tags, which is what store() writes, whatever
+        # build() joins ([00-oneloop-lookup-joins-the-wrong-tag-table], not fixed here)
+        from Datastore.store_inventory import Parent, read_records
+
+        return read_records(
+            conn,
+            table,
+            tables,
+            context,
+            parents={
+                "model": Parent("model_serial", "BackgroundModel"),
+                "k": Parent("wavenumber_exit_serial", "wavenumber_exit_time"),
+                "z_response": Parent("z_response_serial", "redshift"),
+                "atol": Parent("atol_serial", "tolerance"),
+                "rtol": Parent("rtol_serial", "tolerance"),
+            },
+            tags=("OneLoopIntegral_tags", "parent_serial"),
+        )
+
 
 def read_batch(payload, conn, table, tables):
     model_proxy: ModelProxy = payload["model"]

@@ -72,3 +72,11 @@ class sqla_tolerance_factory(SQLAFactoryBase):
             "latest_timestamp": latest_timestamp,
             "values": values,
         }
+
+    @staticmethod
+    def inventory_records(conn, table, tables, context):
+        # the physical identity of a tolerance row (store-fingerprint prompt 02): log10_tol as
+        # stored, which is what build() matches -- never 10**log10_tol
+        from Datastore.store_inventory import read_records
+
+        return read_records(conn, table, tables, context, leaves=("log10_tol",))

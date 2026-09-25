@@ -845,6 +845,29 @@ class sqla_TkWKBIntegration_factory(SQLAFactoryBase):
             "unvalidated": _bucket(False),
         }
 
+    @staticmethod
+    def inventory_records(conn, table, tables, context):
+        # the physical identity of a TkWKBIntegration row (store-fingerprint prompt 02): what build()
+        # filters on -- the model, the wavenumber exit, rho_gauss_order and z_init (a REAL column;
+        # optional in the lookup, always in the key) -- with its tags, its validated flag and its
+        # TkWKBValue count. The solvers are not in the lookup and are not identity
+        from Datastore.store_inventory import Parent, read_records
+
+        return read_records(
+            conn,
+            table,
+            tables,
+            context,
+            leaves=("rho_gauss_order", "z_init"),
+            parents={
+                "model": Parent("model_serial", "BackgroundModel"),
+                "k": Parent("wavenumber_exit_serial", "wavenumber_exit_time"),
+            },
+            tags=("TkWKB_tags", "wkb_serial"),
+            values=("TkWKBValue", "wkb_serial"),
+            validated=True,
+        )
+
 
 class sqla_TkWKBValue_factory(SQLAFactoryBase):
     def __init__(self):

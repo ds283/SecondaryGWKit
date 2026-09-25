@@ -1,6 +1,6 @@
 # Open issues — project-wide index
 
-**Last updated:** 2026-09-25 · **101 open** across fifteen campaigns.
+**Last updated:** 2026-09-25 · **102 open** across fifteen campaigns.
 
 This file exists so that an issue opened by one campaign is not lost when that campaign closes.
 It is an **index, not a record**: one line per issue, pointing at the campaign status board that
@@ -48,7 +48,8 @@ opened two issues of its own. A third was opened the same day on the user's
 layering decision after that prompt's review, and prompt 02 closed one of prompt 01's the same
 day, on that board's §4. Prompt 03 closed the third the same day and opened one (§1.12). The
 `store-fingerprint` board was created on 2026-09-24 by its audit, which opened eight (§1.13); its
-prompt 01 closed one of them on 2026-09-25, on that board's §4. Of the 90
+prompt 01 closed one of them on 2026-09-25, on that board's §4, and its prompt 02 opened one the
+same day. Of the 90
 above, 87 are spread across the boards and
 **three still have no board row** — the last three `handover` rows in §1.1, opened by a document
 review on 2026-09-19, whose content lives in
@@ -695,7 +696,8 @@ physical labels and tag sets. Its audit, `docs/store-fingerprint-audit.md`, open
 issues. Two of them, and the two issues from other boards above them, were assigned to its
 prompts. Prompt 01 closed one, `[00-build-schema-reads-registration-before-its-none-check]`, on
 2026-09-25 (that board's §4), so seven `00-` rows remain below. The other six are recorded here for
-their owners.
+their owners. Prompt 02 opened one more on 2026-09-25, the last row below, and it too is recorded
+here for its owner.
 
 | Issue | Board | Hook |
 |---|---|---|
@@ -707,7 +709,8 @@ their owners.
 | `[00-quadsource-tq-serial-has-the-wrong-foreign-key]` | store-fingerprint | `QuadSource.Tq_serial` declares a foreign key to `QuadSource.serial` but holds a transfer-function id; `Tr_serial` declares none. Not enforced; a false statement in the schema. |
 | `[00-numeric-value-parent-lookup-omits-break-point-kind]` | store-fingerprint | The `TkNumericValue` / `GkNumericValue` parent query omits `break_point_kind`, which is in the parent's own lookup. Ambiguous only when a store holds two break-point kinds. |
 | `[00-quadsourcepolicy-rows-are-referenced-by-nothing]` | store-fingerprint | `QuadSourcePolicy` rows are created, but no table references them; `QuadSourceIntegral` keys on `GkSourcePolicy`. An author's decision whether it is vestigial. |
-| `[00-replicated-writes-can-diverge-across-shards]` | store-fingerprint | A replicated write commits shard by shard in separate transactions, so a crash leaves copies that differ, and `ShardedPool.inventory` hides it by reading one random shard. Prompt 02's inventory measures it; making the write atomic is not this campaign's. |
+| `[00-replicated-writes-can-diverge-across-shards]` | store-fingerprint | A replicated write commits shard by shard in separate transactions, so a crash leaves copies that differ, and `ShardedPool.inventory` hides it by reading one random shard. **Measured 2026-09-25** by prompt 02's inventory, which reads every shard: no divergence on a copy of the sweep store; the A3 store and the backup are not yet read. Making the write atomic is not this campaign's. |
+| `[02-exit-time-lookup-runs-inside-the-subhorizon-loop]` | store-fingerprint | `wavenumber_exit_time.build` runs its query inside the sub-horizon column loop, six times per lookup. The answer is right today; with an empty list the lookup would fail. A one-level dedent, in whichever campaign next has that `build` in scope. |
 
 ---
 

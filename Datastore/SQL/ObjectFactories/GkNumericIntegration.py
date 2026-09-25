@@ -684,6 +684,32 @@ class sqla_GkNumericIntegration_factory(SQLAFactoryBase):
             "unvalidated": _bucket(False),
         }
 
+    @staticmethod
+    def inventory_records(conn, table, tables, context):
+        # the physical identity of a GkNumericIntegration row (store-fingerprint prompt 02): what
+        # build() filters on -- the model, the wavenumber exit, atol, rtol, break_point_kind and
+        # z_source (optional in the lookup, always in the key) -- with its tags, its validated flag
+        # and its GkNumericValue count. The solver is not in the lookup and is not identity
+        from Datastore.store_inventory import Parent, read_records
+
+        return read_records(
+            conn,
+            table,
+            tables,
+            context,
+            leaves=("break_point_kind",),
+            parents={
+                "model": Parent("model_serial", "BackgroundModel"),
+                "k": Parent("wavenumber_exit_serial", "wavenumber_exit_time"),
+                "atol": Parent("atol_serial", "tolerance"),
+                "rtol": Parent("rtol_serial", "tolerance"),
+                "z_source": Parent("z_source_serial", "redshift"),
+            },
+            tags=("GkNumeric_tags", "integration_serial"),
+            values=("GkNumericValue", "integration_serial"),
+            validated=True,
+        )
+
 
 class sqla_GkNumericValue_factory(SQLAFactoryBase):
     def __init__(self):

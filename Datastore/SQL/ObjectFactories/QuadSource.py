@@ -501,6 +501,28 @@ class sqla_QuadSource_factory(SQLAFactoryBase):
             "unvalidated": _bucket(False),
         }
 
+    @staticmethod
+    def inventory_records(conn, table, tables, context):
+        # the physical identity of a QuadSource row (store-fingerprint prompt 02): what build()
+        # filters on -- the model and the q and r wavenumber exits -- with its tags, its validated
+        # flag and its QuadSourceValue count. Tq_serial and Tr_serial are provenance, not identity
+        from Datastore.store_inventory import Parent, read_records
+
+        return read_records(
+            conn,
+            table,
+            tables,
+            context,
+            parents={
+                "model": Parent("model_serial", "BackgroundModel"),
+                "q": Parent("q_wavenumber_exit_serial", "wavenumber_exit_time"),
+                "r": Parent("r_wavenumber_exit_serial", "wavenumber_exit_time"),
+            },
+            tags=("QuadSource_tags", "parent_serial"),
+            values=("QuadSourceValue", "parent_serial"),
+            validated=True,
+        )
+
 
 class sqla_QuadSourceValue_factory(SQLAFactoryBase):
     def __init__(self):

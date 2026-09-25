@@ -849,6 +849,37 @@ class sqla_BackgroundModelFactory(SQLAFactoryBase):
             "unvalidated": _bucket(False),
         }
 
+    @staticmethod
+    def inventory_records(conn, table, tables, context):
+        # the physical identity of a BackgroundModel row (store-fingerprint prompt 02): what build()
+        # filters on -- the cosmology (type and row), the three Gauss orders, the source grid's
+        # construction and digest, and z_init (optional in the lookup, always in the key) -- with
+        # its tags, its validated flag and its BackgroundModelValue count. The solver is not in the
+        # lookup and is not identity
+        from Datastore.store_inventory import COSMOLOGY, Parent, read_records
+
+        return read_records(
+            conn,
+            table,
+            tables,
+            context,
+            leaves=(
+                "cosmology_type",
+                "tau_gauss_order",
+                "cs_tau_gauss_order",
+                "friction_F_gauss_order",
+                "source_grid_construction",
+                "source_grid_digest",
+            ),
+            parents={
+                "cosmology": Parent("cosmology_serial", COSMOLOGY, "cosmology_type"),
+                "z_init": Parent("z_init_serial", "redshift"),
+            },
+            tags=("BackgroundModel_tags", "model_serial"),
+            values=("BackgroundModelValue", "model_serial"),
+            validated=True,
+        )
+
 
 class sqla_BackgroundModelValue_factory(SQLAFactoryBase):
     def __init__(self):

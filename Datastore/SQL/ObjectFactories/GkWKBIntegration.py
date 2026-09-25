@@ -793,6 +793,31 @@ class sqla_GkWKBIntegration_factory(SQLAFactoryBase):
             "unvalidated": _bucket(False),
         }
 
+    @staticmethod
+    def inventory_records(conn, table, tables, context):
+        # the physical identity of a GkWKBIntegration row (store-fingerprint prompt 02): what build()
+        # filters on -- the model, the wavenumber exit, rho_gauss_order, z_source and z_init (a
+        # REAL column; both optional in the lookup, always in the key) -- with its tags, its
+        # validated flag and its GkWKBValue count. The solver is not in the lookup and is not
+        # identity
+        from Datastore.store_inventory import Parent, read_records
+
+        return read_records(
+            conn,
+            table,
+            tables,
+            context,
+            leaves=("rho_gauss_order", "z_init"),
+            parents={
+                "model": Parent("model_serial", "BackgroundModel"),
+                "k": Parent("wavenumber_exit_serial", "wavenumber_exit_time"),
+                "z_source": Parent("z_source_serial", "redshift"),
+            },
+            tags=("GkWKB_tags", "wkb_serial"),
+            values=("GkWKBValue", "wkb_serial"),
+            validated=True,
+        )
+
 
 class sqla_GkWKBValue_factory(SQLAFactoryBase):
     def __init__(self):

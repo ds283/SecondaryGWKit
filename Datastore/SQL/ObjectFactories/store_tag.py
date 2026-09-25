@@ -59,3 +59,12 @@ class sqla_store_tag_factory(SQLAFactoryBase):
             "latest_timestamp": latest_timestamp,
             "values": values,
         }
+
+    @staticmethod
+    def inventory_records(conn, table, tables, context):
+        # the physical identity of a store_tag row (store-fingerprint prompt 02): its label, which is
+        # what build() looks it up by. Which tags a work item carries is read from the work item's
+        # own association table, never from this one
+        from Datastore.store_inventory import read_records
+
+        return read_records(conn, table, tables, context, leaves=("label",))
