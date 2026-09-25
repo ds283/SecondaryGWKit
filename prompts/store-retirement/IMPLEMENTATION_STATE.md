@@ -1,8 +1,8 @@
 # Store retirement campaign — implementation state
 
-**Last updated:** 2026-09-25 · **Status: 0 of 5 prompts landed. 01 and 02 are written. 03–05 are
-held on user decisions D0 and D3–D7 (README §6.2).** 02 depends on none of them and may be
-dispatched now. 01 waits on D0 alone.
+**Last updated:** 2026-09-25 · **Status: 0 of 5 prompts landed. 01 and 02 are written and ready.
+The user approved D0 and D3–D7 as worded on 2026-09-25 (README §6.2), which released 03 and 04. 05
+is held until 01–04 land.** 01 and 02 are independent of each other.
 
 The campaign was opened on 2026-09-25, when the user decided that a store is removed by a registry
 operation that retires it, and never by `rm`. The primary and its shards go, and the sidecar stays
@@ -31,11 +31,11 @@ of them, it found, also blocks `--build --resume` of the A3 v2 store.
 > index. The index is an index: one line per issue, pointing here. Where the two disagree, this
 > board is right. See `CLAUDE.md`.
 
-### Decisions awaited
+### Decisions — all approved by the user as worded, 2026-09-25
 
-| Decision | Recommendation (README §6.2) | Blocks |
+| Decision | Decided (README §6.2) | Blocked, until decided |
 |---|---|---|
-| **D0** — amend `CLAUDE.md:52`'s "does not … delete" | the proposed wording: it deletes a store's own files only, through `store retire`, run by a person, keeping the sidecar | **01**, and so 03–05 |
+| **D0** — amend `CLAUDE.md:52`'s "does not … delete" | "It records; it does not schedule, supervise, restart or lock. It deletes nothing but a store's own files, and those only through `store retire`, which a person runs and which leaves the store's sidecar behind as its record. It never deletes a run directory, a sidecar or any other record." Prompt 01 writes this into `CLAUDE.md:52`, exactly | **01**, and so 03–05 |
 | **D3** — the retirement's reason | required, as `purpose` is on create and copy | 03 |
 | **D4** — a store that cannot be fingerprinted | `--without-fingerprint`, which still needs the reason and records the error. A hot journal is refused even under it | 03 |
 | **D5** — references to a retired store | never rewrite records of the past, which resolve to the tombstone; correct present-tense unknown fields with a new `store amend`; `retire` reports every reference it finds | 03, 04 |
@@ -48,16 +48,16 @@ of them, it found, also blocks `--build --resume` of the A3 v2 store.
 
 | # | Prompt | Covers | Model | Written? | Landed? | Commit | Log |
 |---|---|---|---|---|---|---|---|
-| 01 | [Delete a closed store](01-delete-a-closed-store.md) | **R1**–**R3** | Opus | ✍️ yes, 2026-09-25 | ⏸️ gated on D0 | — | — |
+| 01 | [Delete a closed store](01-delete-a-closed-store.md) | **R1**–**R3** | Opus | ✍️ yes, 2026-09-25 | ⬜ ready (D0 decided) | — | — |
 | 02 | [The sweep prepares through the registry](02-the-sweep-prepares-through-the-registry.md) | **R4**–**R5** | Sonnet | ✍️ yes, 2026-09-25 | ⬜ ready | — | — |
-| 03 | Retire a store | **R6**–**R8** | Opus | ⏸️ held on D3–D6 | — | — | — |
-| 04 | Amend an unknown field | **R9** | Sonnet | ⏸️ held on D5 | — | — | — |
+| 03 | Retire a store | **R6**–**R8** | Opus | ⏸️ released 2026-09-25; to be written | ⬜ after 01 | — | — |
+| 04 | Amend an unknown field | **R9** | Sonnet | ⏸️ released 2026-09-25; to be written | ⬜ after 03 | — | — |
 | 05 | Retire the two stores | **R10**–**R12** | Opus | ⏸️ held until 01–04 land | — | — | — |
 
-**03–05 are held, not unplanned.** Their charters are fixed in README §2, and cannot drift to fit
-what 01 and 02 find. What waits is their method, which depends on decisions that do not yet exist.
-05 is written last, against what 01–04 ship. In 05 **the user** runs each `store retire`: no agent
-deletes a real store (README §5 rule 10).
+**03 and 04 were held on decisions, and were released on 2026-09-25** when the user approved D0
+and D3–D7 as worded. Both are to be written against README §4's names. **05 is held, not
+unplanned.** Its charter is fixed in README §2, and it is written last, against what 01–04 ship.
+In 05 **the user** runs each `store retire`: no agent deletes a real store (README §5 rule 10).
 
 ---
 
@@ -67,13 +67,13 @@ deletes a real store (README §5 rule 10).
 |---|---|---|---|---|
 | R1 | **FACILITY** | `ShardedPool.closed_store_files` and `ShardedPool.delete_store`. They share one planning step through `_read_closed_store`, never follow a stored record as a path, and refuse a hot journal, an unusable shard or a file outside the primary's directory. Shards go first and the primary last. | 01 | ⬜ |
 | R2 | **GUARD** | The interruption property: an interrupted deletion leaves a primary and some of its shards. The constructor refuses that state, `delete_store` refuses it, and `resume=True` completes it. `resume` relaxes the missing-shard refusal and nothing else. | 01 | ⬜ |
-| R3 | **CHARTER** | `CLAUDE.md:52` in D0's wording, and `ShardedPool`'s closed-store comment to match. | 01 | ⬜ (needs D0) |
+| R3 | **CHARTER** | `CLAUDE.md:52` in D0's wording, and `ShardedPool`'s closed-store comment to match. | 01 | ⬜ (D0 decided) |
 | R4 | **REMEDY** | `quadsource_atol_sweep.py` `prepare()` through one `RunRegistry.stores.copy_store` call. `--force` refuses with the new rule. After it, `--prepare` refuses at a name whose sidecar exists. Closes `datastore-portability`'s `[03-atol-sweep-prepare-writes-its-store-sidecar-by-hand]`. | 02 | ⬜ |
 | R5 | **REMEDY** | `assert_store_is_self_consistent` compares serial by serial through `resolve_shard_path`, which unblocks `--build --resume` of every store built since `datastore-portability` prompt 01. Closes `[01-atol-sweep-check-expects-absolute-shard-records]`. | 02 | ⬜ |
-| R6 | **FORMAT** | A known `retired` field and a terminal `retire` history operation. The reader tells a tombstone from a broken sidecar (`SidecarReading.retired`), and calls a primary that has reappeared at a retired name a problem. | 03 | ⏸️ |
-| R7 | **FACILITY** | `retire_store` and `python -m RunRegistry store retire`. It refuses a `running` run, alive or stale, and a missing or mismatched fingerprint, except under D4. It writes the tombstone, with its file list, before deleting anything, then calls `delete_store`, then marks the tombstone complete. A second call completes an interrupted one. It reports the references it finds (D5). | 03 | ⏸️ |
-| R8 | **GUARD** | `begin(results=…)` refuses a retired store. Copy, move, fingerprint, adopt and amend refuse a tombstone (D6). `store show` renders one. The `RunRegistry/stores.py` and `__main__.py` docstrings follow D0. | 03 | ⏸️ |
-| R9 | **FACILITY** | `amend_sidecar` and `store amend`: replace or remove one unknown field of a registry sidecar, with a required reason, recording the old value in an `amend` history entry (D5). | 04 | ⏸️ |
+| R6 | **FORMAT** | A known `retired` field and a terminal `retire` history operation. The reader tells a tombstone from a broken sidecar (`SidecarReading.retired`), and calls a primary that has reappeared at a retired name a problem. | 03 | ⬜ |
+| R7 | **FACILITY** | `retire_store` and `python -m RunRegistry store retire`. It refuses a `running` run, alive or stale, and a missing or mismatched fingerprint, except under D4. It writes the tombstone, with its file list, before deleting anything, then calls `delete_store`, then marks the tombstone complete. A second call completes an interrupted one. It reports the references it finds (D5). | 03 | ⬜ |
+| R8 | **GUARD** | `begin(results=…)` refuses a retired store. Copy, move, fingerprint, adopt and amend refuse a tombstone (D6). `store show` renders one. The `RunRegistry/stores.py` and `__main__.py` docstrings follow D0. | 03 | ⬜ |
+| R9 | **FACILITY** | `amend_sidecar` and `store amend`: replace or remove one unknown field of a registry sidecar, with a required reason, recording the old value in an `amend` history entry (D5). | 04 | ⬜ |
 | R10 | **REMEDY** | Remedial: the sweep store retired by the user with `store retire`, checked before and after by the prompt's agent. `QUADSOURCE-TOLERANCE-SWEEP.md:15-17` then becomes true, and is not edited. | 05 | ⏸️ |
 | R11 | **REMEDY** | Remedial: the backup retired the same way. The live A3 sidecar's `backup` field is then corrected by `store amend`. | 05 | ⏸️ |
 | R12 | **RECORD** | The retirements recorded on the `run-registry` board, with `var/runs/a3-pilot/BACKUP_PATH` explained there rather than edited, and on the `handover` board. | 05 | ⏸️ |

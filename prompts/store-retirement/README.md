@@ -2,7 +2,8 @@
 
 **Written:** 2026-09-25 at `42d4910` on `handover-remedial`, by Claude Opus 5.5, from
 [`docs/store-retirement-audit.md`](../../docs/store-retirement-audit.md) and the user's decisions
-recorded in §6.1. **Prompts 01 and 02 are written.** 03–05 are held on the decisions in §6.2 (see §2).
+recorded in §6.1. **Prompts 01 and 02 are written.** The user approved D0 and D3–D7 as worded on
+2026-09-25 (§6.2), which released 01 and 03–04. 05 is held until 01–04 land (see §2).
 
 ## 0. Why this campaign exists
 
@@ -79,17 +80,20 @@ The audit found that the tree is not yet ready for that operation:
 
 | # | Prompt | Covers | Status |
 |---|---|---|---|
-| 01 | [`01-delete-a-closed-store.md`](01-delete-a-closed-store.md) | `ShardedPool.closed_store_files` and `ShardedPool.delete_store`. Files named only through `_read_closed_store`. Refuses a hot journal or an unusable shard. Shards go first and the primary last. `resume=True` completes an interrupted deletion. Never follows a stored record as a path: the legacy-absolute case, whose records name another live store's shards, is the central test. | **written**; dispatch gated on **D0** |
+| 01 | [`01-delete-a-closed-store.md`](01-delete-a-closed-store.md) | `ShardedPool.closed_store_files` and `ShardedPool.delete_store`. Files named only through `_read_closed_store`. Refuses a hot journal or an unusable shard. Shards go first and the primary last. `resume=True` completes an interrupted deletion. Never follows a stored record as a path: the legacy-absolute case, whose records name another live store's shards, is the central test. | **written**; D0 decided 2026-09-25, so ready |
 | 02 | [`02-the-sweep-prepares-through-the-registry.md`](02-the-sweep-prepares-through-the-registry.md) | `quadsource_atol_sweep.py` `prepare()` makes the sweep store with one `RunRegistry.stores.copy_store` call, replacing its hand copy, its `UPDATE` and its hand-written sidecar. `assert_store_is_self_consistent` compares through `resolve_shard_path`, which also unblocks `--build --resume` of the A3 v2 store (audit §2.6). Closes `datastore-portability`'s `[03-…]` and `[01-…]`. After it, `--prepare` at a name whose sidecar exists refuses, which is what a tombstone needs. | **written**; independent of every decision, and may be dispatched first |
-| 03 | `03-retire-a-store.md` | `RunRegistry.stores.retire_store` and `python -m RunRegistry store retire`. A known `retired` field and a terminal `retire` history entry. The reader tells a tombstone from a broken sidecar, and names a primary that has reappeared. `begin(results=…)` refuses a retired store. `store show` renders a tombstone. The references found are reported. | **held** on D3–D6 |
-| 04 | `04-amend-an-unknown-field.md` | `RunRegistry.stores.amend_sidecar` and `store amend`: replace or remove one unknown field of a registry sidecar, with a reason, recording the old value in an `amend` history entry. | **held** on D5 |
+| 03 | `03-retire-a-store.md` | `RunRegistry.stores.retire_store` and `python -m RunRegistry store retire`. A known `retired` field and a terminal `retire` history entry. The reader tells a tombstone from a broken sidecar, and names a primary that has reappeared. `begin(results=…)` refuses a retired store. `store show` renders a tombstone. The references found are reported. | **released** 2026-09-25 (D3–D6 decided) |
+| 04 | `04-amend-an-unknown-field.md` | `RunRegistry.stores.amend_sidecar` and `store amend`: replace or remove one unknown field of a registry sidecar, with a reason, recording the old value in an `amend` history entry. | **released** 2026-09-25 (D5 decided) |
 | 05 | `05-retire-the-two-stores.md` | Remedial. **The user** retires the sweep store and the backup with `store retire`, and amends the live A3 sidecar's `backup` field. The prompt's agent checks before and after, and records the retirements on the boards. | **held** until 01–04 land |
 
-**Why 03–05 are held.** The charters above are fixed, and cannot drift to fit what 01 and 02 find.
-What waits is their method, and it waits on user decisions that do not exist yet (§6.2). 03's
-shape depends on D3 (the reason), D4 (a store that cannot be fingerprinted), D5 (references) and
-D6 (reuse of a retired name). 04 exists only if D5 is taken as recommended. 05 runs the other four
-on real stores, so it is written last, against what they ship.
+**Why 03–05 were held.** The charters above are fixed, and cannot drift to fit what 01 and 02
+find. What waited was their method, which depended on user decisions that did not yet exist
+(§6.2). 03's shape depends on D3 (the reason), D4 (a store that cannot be fingerprinted), D5
+(references) and D6 (reuse of a retired name). 04 exists only if D5 is taken as recommended.
+
+**Released 2026-09-25.** The user approved D0 and D3–D7 as worded, the day they were recorded. So
+03 and 04 are to be written against §4's names and §6.2. **05 stays held.** It runs the other four on
+real stores, so it is written last, against what they ship.
 
 **Order.** 02 is independent of 01, 03 and 04, and must land before 05 retires the sweep store
 (audit §2.6). 01 must land before 03. 03 must land before 04, because both extend the history
@@ -193,14 +197,17 @@ The project-wide ones in `CLAUDE.md`, unchanged except as D0 amends them, plus:
    the fingerprint; that is D4.
 4. **Other references must end up indicating that the store has been removed.** How, is D5.
 
-### 6.2 Decisions D0 and D3–D7, which 01 and 03–05 wait on
+### 6.2 Decisions D0 and D3–D7 — approved by the user as worded (2026-09-25)
 
-Each is stated with a recommendation. Prompt 02 depends on none of them.
+Each was stated with a recommendation, and the alternatives are kept below. **The user approved
+all six as worded on 2026-09-25**, so every recommendation stands as the decision, and D0's
+proposed wording is the text prompt 01 writes into `CLAUDE.md:52`, exactly. Prompt 02 depends on
+none of them.
 
-- **D0 — the charter. Prompt 01 is not dispatched without it.** `CLAUDE.md:52` says the registry
+- **D0 — the charter. Decided: the proposed wording.** `CLAUDE.md:52` says the registry
   "does not schedule, supervise, restart, lock or delete". `datastore-portability` README §6.5
   re-affirmed that on 2026-09-24 (audit §2.8). Decision 6.1.2 needs the registry to delete a
-  store's files, and a `CLAUDE.md` limit binds until the user changes it. **Proposed wording:**
+  store's files, and a `CLAUDE.md` limit binds until the user changes it. **The wording, as approved:**
   "It records; it does not schedule, supervise, restart or lock. It deletes nothing but a store's
   own files, and those only through `store retire`, which a person runs and which leaves the
   store's sidecar behind as its record. It never deletes a run directory, a sidecar or any other
@@ -209,14 +216,14 @@ Each is stated with a recommendation. Prompt 02 depends on none of them.
   of that. `ShardedPool`'s "Deleting is for a person" (`:624`), the `RunRegistry/stores.py`
   docstring (`:47-49`) and the `RunRegistry/__main__.py` docstring (`:13`) are amended by prompts
   01 and 03 to match.
-- **D3 — the reason. Recommended: required, not optional.** The user asked whether an optional
+- **D3 — the reason. Decided: required, not optional.** The user asked whether an optional
   comment is worth adding. It is worth more than that. The fingerprint says *what* was deleted.
   Only a person can say *why*, and a tombstone without the why tells a later reader a store went,
   and not whether it was meant to go. The precedent is `purpose`, which `store create` and
   `store copy` already require (`RunRegistry/__main__.py`, `--purpose … required=True`).
   *Alternative:* optional, as asked. The tombstone then says "retired", and nothing more, whenever
   the reason is left out.
-- **D4 — a store that cannot meet the fingerprint condition. Recommended: an explicit
+- **D4 — a store that cannot meet the fingerprint condition. Decided: an explicit
   `--without-fingerprint` for the one case that needs it.** Audit §2.10 separates three cases.
   - **The writer crashed before `finish`, so no fingerprint was written.** This is not manual. A
     person ends the stale run with `Run.finish("killed")`, runs `store fingerprint --write`, then
@@ -234,7 +241,7 @@ Each is stated with a recommendation. Prompt 02 depends on none of them.
 
   *Alternative:* no override. An unfingerprintable store is then removed by hand, outside the
   registry, and leaves no tombstone.
-- **D5 — references. Recommended: never rewrite a record of the past, correct a claim about the
+- **D5 — references. Decided: never rewrite a record of the past, correct a claim about the
   present, and report both.** This refines decision 6.1.4. The audit's reference table (§1) has
   two kinds of entry.
   - **Records of the past:** run manifests, `copied_from`, `history`, `status_files`, committed
@@ -257,7 +264,7 @@ Each is stated with a recommendation. Prompt 02 depends on none of them.
 
   *Alternative:* `store retire` rewrites every reference it finds. That breaks the immutability of
   run manifests, and it cannot interpret an unknown field such as `backup` anyway.
-- **D6 — a retired name is never reused. Recommended.** A reference by path must keep resolving to
+- **D6 — a retired name is never reused. Decided.** A reference by path must keep resolving to
   the tombstone, never to an unrelated later store. Through the registry this holds already,
   because create, copy and move refuse a taken sidecar name (audit §2.3). Prompt 03 adds three
   things.
@@ -268,7 +275,7 @@ Each is stated with a recommendation. Prompt 02 depends on none of them.
   An unregistered process can still create a store at the name, because `ShardedPool` knows
   nothing of sidecars (README §1, out of scope). The reader's problem is how that is caught
   afterwards.
-- **D7 — the bare script gets no delete. Recommended.** `tools/sharded_store.py` copies and moves
+- **D7 — the bare script gets no delete. Decided.** `tools/sharded_store.py` copies and moves
   with no sidecar (`datastore-portability` §6.2–6.3). A `delete` there would remove a store and
   leave its sidecar describing nothing, the broken case of audit §2.1. Only `store retire` calls
   `ShardedPool.delete_store`.
