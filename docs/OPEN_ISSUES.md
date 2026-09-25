@@ -706,7 +706,8 @@ opened one more on 2026-09-25, the last row below, and it too is recorded here f
 Prompt 04 closed `run-registry`'s `[04-a-runs-product-is-named-but-never-fingerprinted]` on
 2026-09-25 (that board's §4), and its row is deleted. Prompt 05 narrowed
 `[00-replicated-writes-can-diverge-across-shards]` the same day, by measuring the three original
-stores, and opened none.
+stores, and opened none. **The user closed the campaign on 2026-09-25 at 5 / 5.** The seven rows below
+stay open, each recorded here for its owner.
 
 | Issue | Board | Hook |
 |---|---|---|

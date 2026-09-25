@@ -4,7 +4,8 @@
 [`docs/store-fingerprint-audit.md`](../../docs/store-fingerprint-audit.md) and the user's
 decisions recorded in §6. **Prompts 03 and 04 written** 2026-09-25 at `8de5a40`, against the
 structure prompt 02 shipped. **Prompt 05 written** 2026-09-25 at `ef46154`, against the format
-prompt 04 shipped.
+prompt 04 shipped. **Closed** by the user on 2026-09-25, with all five
+prompts landed; see the board.
 
 ## 0. Why this campaign exists
 

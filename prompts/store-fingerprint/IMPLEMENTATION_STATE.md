@@ -1,7 +1,7 @@
 # Store fingerprint campaign — implementation state
 
-**Last updated:** 2026-09-25 · **Status: 5 of 5 prompts landed (01–05). The campaign's work is
-done. Decisions D1–D3 were made on 2026-09-24, and D4 on 2026-09-25 (README §6.2).**
+**Last updated:** 2026-09-25 · **Status: COMPLETE — 5 of 5 prompts landed (01–05). Closed by the
+user on 2026-09-25.** Decisions D1–D3 were made on 2026-09-24, and D4 on 2026-09-25 (README §6.2).
 
 The campaign was opened on 2026-09-24. It owns `run-registry`'s
 `[04-a-runs-product-is-named-but-never-fingerprinted]`, as amended at `218ca74`: a store's content
@@ -111,6 +111,24 @@ fingerprint. The comparisons localise the two known differences to `tolerance` a
 - live A3 → sweep is 52 records and 1 tolerance value, from the sweep store's later writers.
 
 No issue was opened. The three fingerprints are committed as `logs/05-fingerprints.json`.
+
+**The orchestrator's review of prompt 05** passed all ten checks of
+[`orchestrator/prompt-05.md`](orchestrator/prompt-05.md) §3, each against its own records taken
+before dispatch rather than the agent's:
+- for each sidecar, deleting `fingerprint` and re-serialising gives the orchestrator's copy of the
+  old bytes exactly;
+- every other store file has the same bytes, size, `st_mtime_ns` and per-table row counts, and
+  `var/runs/` is unchanged;
+- `store fingerprint` on each store says `matches`, at `50a24ac`, clean;
+- the committed `logs/05-fingerprints.json` equals the sidecars' values;
+- `compare_fingerprints` gives the log's entries, and a grouped `sqlite3` `mode=ro` count of
+  `QuadSourceIntegral` by `(atol, rtol)` over every shard reproduces the named additions;
+- every suite matches the `50a24ac` baselines.
+
+**The campaign was closed by the user on 2026-09-25, at 5 of 5 prompts.** Its charter is met:
+each of the three stores here has a content fingerprint in its sidecar, and the two registered
+drivers, `scoped_pipeline_run.py` and `quadsource_atol_sweep.py`, take one when their runs finish. Seven issues remain open in §3. None is assigned to a future campaign, and each stays
+in [`docs/OPEN_ISSUES.md`](../../docs/OPEN_ISSUES.md) §1.13 for its owner.
 
 **Campaign:** [`README.md`](README.md) · **Audit:** [`docs/store-fingerprint-audit.md`](../../docs/store-fingerprint-audit.md) ·
 **Index:** [`docs/OPEN_ISSUES.md`](../../docs/OPEN_ISSUES.md) §1.13
