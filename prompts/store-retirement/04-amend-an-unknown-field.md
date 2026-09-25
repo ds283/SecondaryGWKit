@@ -69,9 +69,12 @@ Choose the markers so that no JSON value can be mistaken for one, and log the ch
 accept exactly that for `amend`, and require the extra keys for it and for nothing else. An
 `amend` entry lacking any of its keys is a problem.
 
-**2.3 The write.** Through `_update_sidecar`, the one in-place writer, which becomes its fourth
-use. Update the docstrings that count them. Every other field must be value-identical after the
-write. The fingerprint is not retaken, because the store's content has not changed.
+**2.3 The write.** Through `_update_sidecar`, the one in-place writer, which becomes its fifth
+use, after adopt, the move's temporary sidecar, recording a fingerprint and a retirement's two
+writes. Update the docstrings that count them: `_update_sidecar`'s own, and the `stores.py`
+module docstring's list of in-place updates. *(Amended 2026-09-25, after prompt 03 landed: this
+said "fourth", written before 03 added retirement's writes.)* Every other field must be
+value-identical after the write. The fingerprint is not retaken, because the store's content has not changed.
 
 **2.4 Copy and move** carry amended fields and `amend` entries like any others. Nothing in them
 changes. A test shows it.
