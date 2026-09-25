@@ -648,43 +648,6 @@ class sqla_GkNumericIntegration_factory(SQLAFactoryBase):
         return msgs
 
     @staticmethod
-    def inventory(conn, table, tables, *args, **kwargs):
-        def _bucket(validated_value: bool):
-            condition = table.c.validated == validated_value
-
-            rows = conn.execute(
-                sqla.select(
-                    table.c.wavenumber_exit_serial,
-                    table.c.model_serial,
-                    table.c.atol_serial,
-                    table.c.rtol_serial,
-                ).where(condition)
-            )
-            labels = [
-                f"wavenumber_exit={row.wavenumber_exit_serial}, model={row.model_serial}, "
-                f"atol={row.atol_serial}, rtol={row.rtol_serial}"
-                for row in rows
-            ]
-
-            earliest_timestamp = conn.execute(
-                sqla.select(sqla.func.min(table.c.timestamp)).where(condition)
-            ).scalar()
-            latest_timestamp = conn.execute(
-                sqla.select(sqla.func.max(table.c.timestamp)).where(condition)
-            ).scalar()
-
-            return {
-                "labels": labels,
-                "earliest_timestamp": earliest_timestamp,
-                "latest_timestamp": latest_timestamp,
-            }
-
-        return {
-            "validated": _bucket(True),
-            "unvalidated": _bucket(False),
-        }
-
-    @staticmethod
     def inventory_records(conn, table, tables, context):
         # the physical identity of a GkNumericIntegration row (store-fingerprint prompt 02): what
         # build() filters on -- the model, the wavenumber exit, atol, rtol, break_point_kind and
@@ -1106,13 +1069,3 @@ class sqla_GkNumericValue_factory(SQLAFactoryBase):
 
         objects = [make_obj(row) for row in row_data]
         return objects
-
-    @staticmethod
-    def inventory(conn, table, tables, *args, **kwargs):
-        # registered "timestamp": False -- this is a high-volume child table
-        # (one row per (integration, z) sample point), so the only meaningful
-        # inventory is a row count, computed with a SQL aggregate rather than
-        # by loading every row into the driver
-        count = conn.execute(sqla.select(sqla.func.count()).select_from(table)).scalar()
-
-        return {"count": count}

@@ -21,7 +21,11 @@ ID. **Updated 2026-09-18: a sixth is closed, also by another campaign.**
 1.5e-04 to **3.0e-14**, so `[01-convergence-block-has-a-separate-generator]` — declined on scope
 by this campaign's prompts 08 and 09 — is in §4, and both `QCD_FLOOR_FACTOR`s are gone, the two
 tests that read the block now bounding their own production quantities. Nothing in this
-campaign's own work was re-opened.
+campaign's own work was re-opened. **Updated 2026-09-25: the fifth is now closed in full,
+by `prompts/store-fingerprint` prompt 03.** `[03-qcd-inventory-does-not-report-the-representation]`'s
+`BackgroundModel` half is in §4 with the rest of it: that campaign retired every factory's
+`inventory()`, and its display renders each background's `source_grid_digest` and
+`source_grid_construction`.
 
 > **The campaign reopened after it closed.** Prompt 12 measured a defect it was forbidden to act on
 > — `BackgroundModel` splined `d_lnH_dz` over a padded refinement of the source grid that was
@@ -1281,39 +1285,6 @@ Opened by this campaign's planning, 2026-09-13:
   against their own measured accumulation floors, with `QCD_FLOOR_FACTOR` removed from both
   modules — and **`QCD_BREAK_POINT_ALIGNMENT_TOL` went 1.5e-04 → 3.0e-14** in the same commit.
   This entry's prediction held in full: the whole of the excess was the block's age.
-- **[03-qcd-inventory-does-not-report-the-representation]** *(prompt 03, 2026-09-14; **narrowed
-  2026-09-16** — the `QCD_Cosmology` half is resolved, in §4)* — originally,
-  `sqla_QCDCosmology_factory.inventory()` (`Datastore/SQL/ObjectFactories/QCD_Cosmology.py`)
-  reported `name`, `omega_m`, `omega_cc`, `h` and `log10_max_z` per row, and
-  `tools/inventory_report.py:46` listed `QCD_Cosmology` among the tables it summarises, but neither
-  showed the new `T_z_representation` column, so from prompt 04 on a datastore could legitimately
-  hold several QCD cosmology rows differing **only** in their representation and the only tool that
-  inspects a datastore would render them as indistinguishable duplicates. **That half is resolved —
-  see §4.**
-
-  **Widened by prompt 14 (2026-09-15), and this half is still open.** The same defect exists one
-  level out, on `BackgroundModel`: `sqla_BackgroundModelFactory.inventory()` reports labels and
-  timestamps bucketed by `validated`, and says nothing about `source_grid_digest` or
-  `source_grid_construction`. From prompt 14 a datastore can legitimately hold several background
-  rows for the same cosmology and tolerances differing **only** in the grid they were tabulated on,
-  and `tools/inventory_report.py` will render them as indistinguishable duplicates — precisely the
-  confusion the columns exist to remove. Same severity and same reason for not acting: prompt 14 §2
-  item 3 is about the key, and `inventory()` is not part of it.
-
-  **`prompts/background-solver-robustness` prompt 07 (2026-09-16) declined to extend to this half**:
-  its files-may-touch list named `Datastore/SQL/ObjectFactories/QCD_Cosmology.py` and
-  `tools/inventory_report.py` only, not `BackgroundModel.py`, and its own stop condition (§4 item 3
-  of that prompt) is explicit that a second reporting site with the same gap is recorded, not fixed,
-  in the prompt that finds it. **Next step:** add `source_grid_digest` and `source_grid_construction`
-  to `sqla_BackgroundModelFactory.inventory()`'s per-bucket report, in whichever prompt next has
-  `Datastore/SQL/ObjectFactories/BackgroundModel.py` in scope. Not assigned to any campaign.
-
-  **Assigned (2026-09-24):** [`prompts/store-fingerprint`](../store-fingerprint/README.md) prompt
-  03. That campaign replaces every factory's `inventory()` with a structured record whose key
-  carries each class's full lookup identity, `BackgroundModel`'s `source_grid_digest` and
-  `source_grid_construction` included (its prompt 02). Its prompt 03 moves the report onto those
-  records, which closes this half.
-
 - **[04-unsplit-tk-run-now-meets-the-criterion]** *(prompt 05, 2026-09-14; **assigned to prompt
   08**)* — `ComputeTargets/tests/test_numeric_break_points.py::TestQCDReferenceConvergence::test_split_converges_where_unsplit_does_not`
   asserted `unsplit > 1e-6`: that a $T_k$ numeric run which does **not** split at the declared
@@ -1547,9 +1518,10 @@ Re-measured but **not owned** here (they stay where they are; a prompt that move
   on the `background-solver-robustness` board.
 
 - **[03-qcd-inventory-does-not-report-the-representation]** *(prompt 03, 2026-09-14; **the
-  `QCD_Cosmology` half closed by `prompts/background-solver-robustness` prompt 07**, 2026-09-16 —
-  **the `BackgroundModel` half prompt 14 widened it with is not resolved and stays open in §3
-  under the same ID**)* — `sqla_QCDCosmology_factory.inventory()`
+  `QCD_Cosmology` half closed by `prompts/background-solver-robustness` prompt 07**, 2026-09-16;
+  **the `BackgroundModel` half prompt 14 widened it with closed by `prompts/store-fingerprint`
+  prompt 03**, 2026-09-25, **which closes the issue**. Until then that half stayed open in §3 under
+  the same ID; its §3 text is kept below)* — `sqla_QCDCosmology_factory.inventory()`
   (`Datastore/SQL/ObjectFactories/QCD_Cosmology.py:150`) now selects and reports
   `T_z_representation`, placed immediately before `log10_max_z` rather than appended at the end:
   the two of them describe how a row's background was computed and over what range, which
@@ -1568,6 +1540,49 @@ Re-measured but **not owned** here (they stay where they are; a prompt that move
   §3 above, narrowed to that half and unassigned. Full record:
   [`logs/07-inventory-representation.md`](../background-solver-robustness/logs/07-inventory-representation.md)
   on the `background-solver-robustness` board.
+
+  **Widened by prompt 14 (2026-09-15), and this half is still open.** The same defect exists one
+  level out, on `BackgroundModel`: `sqla_BackgroundModelFactory.inventory()` reports labels and
+  timestamps bucketed by `validated`, and says nothing about `source_grid_digest` or
+  `source_grid_construction`. From prompt 14 a datastore can legitimately hold several background
+  rows for the same cosmology and tolerances differing **only** in the grid they were tabulated on,
+  and `tools/inventory_report.py` will render them as indistinguishable duplicates — precisely the
+  confusion the columns exist to remove. Same severity and same reason for not acting: prompt 14 §2
+  item 3 is about the key, and `inventory()` is not part of it.
+
+  **`prompts/background-solver-robustness` prompt 07 (2026-09-16) declined to extend to this half**:
+  its files-may-touch list named `Datastore/SQL/ObjectFactories/QCD_Cosmology.py` and
+  `tools/inventory_report.py` only, not `BackgroundModel.py`, and its own stop condition (§4 item 3
+  of that prompt) is explicit that a second reporting site with the same gap is recorded, not fixed,
+  in the prompt that finds it. **Next step:** add `source_grid_digest` and `source_grid_construction`
+  to `sqla_BackgroundModelFactory.inventory()`'s per-bucket report, in whichever prompt next has
+  `Datastore/SQL/ObjectFactories/BackgroundModel.py` in scope. Not assigned to any campaign.
+
+  **Assigned (2026-09-24):** [`prompts/store-fingerprint`](../store-fingerprint/README.md) prompt
+  03. That campaign replaces every factory's `inventory()` with a structured record whose key
+  carries each class's full lookup identity, `BackgroundModel`'s `source_grid_digest` and
+  `source_grid_construction` included (its prompt 02). Its prompt 03 moves the report onto those
+  records, which closes this half.
+
+  **Closed (2026-09-25) by `prompts/store-fingerprint` prompt 03**, in its commit *"Move the
+  inventory report and run labels onto one read-only service"*. Every factory's `inventory()` is
+  retired, `sqla_BackgroundModelFactory.inventory()` and `sqla_QCDCosmology_factory.inventory()`
+  included, and `main.py --inventory` renders the structured inventory of that campaign's prompt 02
+  (`tools/inventory_report.format_inventory_report`). A record there is rendered by its whole
+  physical key, so a `BackgroundModel` record shows `source_grid_digest` and
+  `source_grid_construction`, and a `QCD_Cosmology` record shows `T_z_representation`, directly
+  after `log10_max_z`. **Tested** by `Datastore/tests/test_inventory_report.py`
+  `TestTheRepresentationAndTheGridIdentity` (the grid identity on two background models, and on a
+  lone one, and the representation). Removing `source_grid_digest` from the display is that
+  prompt's deliberate breakage (ii), which those tests catch. Two stores differing only in a
+  background's grid now render differently. **The `QCD_Cosmology` half's test was re-expressed
+  under that campaign's decision D4 (2026-09-25):** `ComputeTargets/tests/test_qcd_cosmology_inventory.py`
+  tested the retired method and is deleted. `ComputeTargets/tests/test_qcd_cosmology_inventory_record.py`
+  replaces its three tests. Two rows differing only in `T_z_representation` are two records and
+  render differently, and the representation sits beside `log10_max_z`. The third claim changes
+  meaning: two rows differing only in `name` are one key held twice, named a `duplicate`. Full
+  record: [`logs/03-one-inventory-service.md`](../store-fingerprint/logs/03-one-inventory-service.md)
+  on the `store-fingerprint` board.
 
 - **[12-source-grid-density-is-uniform-over-a-curvature-that-spans-eight-orders]** *(prompt 12,
   2026-09-15; **the user decided to take the recommendation, and prompt 15 implemented it**,

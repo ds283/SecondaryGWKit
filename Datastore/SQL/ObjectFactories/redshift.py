@@ -121,25 +121,6 @@ class sqla_redshift_factory(SQLAFactoryBase):
         ]
 
     @staticmethod
-    def inventory(conn, table, tables, *args, **kwargs):
-        earliest_timestamp = conn.execute(
-            sqla.select(sqla.func.min(table.c.timestamp))
-        ).scalar()
-        latest_timestamp = conn.execute(
-            sqla.select(sqla.func.max(table.c.timestamp))
-        ).scalar()
-
-        values = [
-            row.z for row in conn.execute(sqla.select(table.c.z).order_by(table.c.z))
-        ]
-
-        return {
-            "earliest_timestamp": earliest_timestamp,
-            "latest_timestamp": latest_timestamp,
-            "values": values,
-        }
-
-    @staticmethod
     def inventory_records(conn, table, tables, context):
         # the physical identity of a redshift row (store-fingerprint prompt 02): z as stored, which is
         # what build() matches (relative 1e-7). The source/response flags accumulate by OR and are

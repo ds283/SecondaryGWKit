@@ -41,18 +41,6 @@ class sqla_version_factory(SQLAFactoryBase):
         return obj
 
     @staticmethod
-    def inventory(conn, table, tables, *args, **kwargs):
-        # registered "timestamp": False -- there is no timestamp column to
-        # report a range over, so the fields other Group A factories return
-        # are simply omitted rather than reported as None
-        values = [
-            row.label
-            for row in conn.execute(sqla.select(table.c.label).order_by(table.c.label))
-        ]
-
-        return {"values": values}
-
-    @staticmethod
     def inventory_records(conn, table, tables, context):
         # the physical identity of a version row (store-fingerprint prompt 02): its label, which is
         # what build() looks it up by

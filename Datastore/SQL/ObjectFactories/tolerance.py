@@ -50,30 +50,6 @@ class sqla_tolerance_factory(SQLAFactoryBase):
         return obj
 
     @staticmethod
-    def inventory(conn, table, tables, *args, **kwargs):
-        earliest_timestamp = conn.execute(
-            sqla.select(sqla.func.min(table.c.timestamp))
-        ).scalar()
-        latest_timestamp = conn.execute(
-            sqla.select(sqla.func.max(table.c.timestamp))
-        ).scalar()
-
-        # report the tolerance values themselves (not their log10), since
-        # that is what a caller of this table actually asked for
-        values = [
-            pow(10.0, row.log10_tol)
-            for row in conn.execute(
-                sqla.select(table.c.log10_tol).order_by(table.c.log10_tol)
-            )
-        ]
-
-        return {
-            "earliest_timestamp": earliest_timestamp,
-            "latest_timestamp": latest_timestamp,
-            "values": values,
-        }
-
-    @staticmethod
     def inventory_records(conn, table, tables, context):
         # the physical identity of a tolerance row (store-fingerprint prompt 02): log10_tol as
         # stored, which is what build() matches -- never 10**log10_tol

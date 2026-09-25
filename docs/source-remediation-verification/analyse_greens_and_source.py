@@ -43,7 +43,6 @@ from config.sharding import (
     shard_key_wavenumber_store_id,
     shard_key_type,
     read_table_config,
-    inventory_config,
 )
 
 VERSION_LABEL = "2025.1.1"
@@ -442,7 +441,6 @@ def main():
         prune_unvalidated=False,
         drop_actions=[],
         read_table_config=read_table_config,
-        inventory_config=inventory_config,
     ) as pool:
         atol, rtol = ray.get(
             [

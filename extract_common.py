@@ -40,6 +40,7 @@ import ray
 from ComputeTargets import GkSource, GkSourcePolicyData
 from ComputeTargets.GkSourcePolicyData import GkSourceFunctions
 from CosmologyConcepts import wavenumber_exit_time, redshift
+from Datastore.store_inventory import read_inventory
 
 # ---------------------------------------------------------------------------------------------
 # run identity (prompt 14 of prompts/qcd-background-audit)
@@ -106,17 +107,37 @@ def available_run_labels(pool) -> List[str]:
     """
     The names of the runs this datastore holds, in sorted order.
 
-    store_tag is a replicated table and its inventory() reports every label, so this needs no
-    lookup key and no knowledge of what the store contains -- which is the property that makes
-    the "exactly one run" case answerable without the user saying anything.
+    They are read from the ``store_tag`` class of the structured inventory,
+    ``Datastore.store_inventory.read_inventory(pool.primary)``, which reads that replicated class
+    from **every** shard and compares the copies. This needs no lookup key and no knowledge of what
+    the store contains -- which is the property that makes the "exactly one run" case answerable
+    without the user saying anything. The answer is every ``Run_`` label in ``store_tag``,
+    including one that no record carries: whether a run with no products counts is a question
+    about run identity, not about the inventory.
+
+    **A problem in the ``store_tag`` class is a refusal** (``RuntimeError``, naming it): if the
+    copies diverge across shards, which runs the store holds is ambiguous. Problems in other
+    classes do not affect the run labels.
+
+    **The pool is open when this runs**, which the reader does not assume. The extract scripts call
+    it after the ``ShardedPool`` constructor has returned; the constructor waits on every actor, so
+    each actor's opening writes have committed, and nothing writes until the script's first
+    ``object_get``. The reader opens every file read-only and refuses a store with a journal file
+    beside it, which still guards the case where something is writing.
     """
-    inventory = pool.inventory("store_tag")
-    labels = inventory.get("values", []) if isinstance(inventory, dict) else []
+    inventory = read_inventory(pool.primary)
+    store_tag = inventory["store_tag"]
+
+    if len(store_tag.problems) > 0:
+        raise RuntimeError(
+            "extract: cannot tell which runs this datastore holds, because its store_tag class "
+            "has problems: " + "; ".join(store_tag.problems)
+        )
 
     return sorted(
         {
             label[len(RUN_LABEL_TAG_PREFIX) :]
-            for label in labels
+            for label in (record.key["label"] for record in store_tag.records)
             if isinstance(label, str) and label.startswith(RUN_LABEL_TAG_PREFIX)
         }
     )

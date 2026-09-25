@@ -170,26 +170,6 @@ class sqla_GkSourcePolicyData_factory(SQLAFactoryBase):
         return obj
 
     @staticmethod
-    def inventory(conn, table, tables, *args, **kwargs):
-        # no "validated" column on this table, so there is no validated/
-        # unvalidated split here (unlike the compute-target tables). One row
-        # per (source, policy, wavenumber) triple can be numerous, so we
-        # report a row count and timestamp range rather than a label list.
-        count = conn.execute(sqla.select(sqla.func.count()).select_from(table)).scalar()
-        earliest_timestamp = conn.execute(
-            sqla.select(sqla.func.min(table.c.timestamp))
-        ).scalar()
-        latest_timestamp = conn.execute(
-            sqla.select(sqla.func.max(table.c.timestamp))
-        ).scalar()
-
-        return {
-            "count": count,
-            "earliest_timestamp": earliest_timestamp,
-            "latest_timestamp": latest_timestamp,
-        }
-
-    @staticmethod
     def inventory_records(conn, table, tables, context):
         # the physical identity of a GkSourcePolicyData row (store-fingerprint prompt 02): what
         # build() filters on -- its GkSource (whose reference digest covers that row's tags), its

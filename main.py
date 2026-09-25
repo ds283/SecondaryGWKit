@@ -79,9 +79,9 @@ from config.sharding import (
     shard_key_wavenumber_store_id,
     shard_key_type,
     read_table_config,
-    inventory_config,
 )
 from extract_common import run_label_tag, source_grid_construction_tag
+from Datastore.store_inventory import read_inventory
 from tools.inventory_report import format_inventory_report
 from utilities import grouper, format_time, WallclockTimer
 
@@ -261,19 +261,51 @@ parser.add_argument(
     "--inventory",
     action="store_true",
     default=False,
-    help="report the contents of the datastore, grouped by category, and exit without running any compute",
+    help=(
+        "report the contents of the closed datastore, grouped by category, and exit without "
+        "running any compute. Read-only and needs no Ray: it never creates, prunes or drops "
+        "anything, refuses --drop, and ignores --prune-unvalidated, --shards, --db-timeout, "
+        "--profile-db and --ray-address"
+    ),
 )
 parser.add_argument(
     "--inventory-verbose",
     action="store_true",
     default=False,
-    help="with --inventory, print full label/value lists instead of truncating them",
+    help=(
+        "with --inventory, list every record instead of at most five per tag set, and print "
+        "floats in full (repr) instead of to six significant figures"
+    ),
 )
 args = parser.parse_args()
 
 if args.database is None:
     parser.print_help()
     sys.exit()
+
+# --inventory reads the closed store read-only (Datastore.store_inventory.read_inventory), before
+# anything below can start Ray, build a ProfileAgent or open a ShardedPool -- whose open would run
+# --drop, create missing tables and, by default, prune unvalidated rows. It never creates a store:
+# a path that does not exist is refused by the reader
+if args.inventory:
+    if len(args.drop) > 0:
+        print(
+            f"!! --inventory is read-only and does not drop anything; it refuses --drop "
+            f"({', '.join(args.drop)}). Run the drop without --inventory",
+            file=sys.stderr,
+        )
+        sys.exit(2)
+    try:
+        inventory = read_inventory(args.database)
+    except RuntimeError as e:
+        print(f"!! --inventory: {e}", file=sys.stderr)
+        sys.exit(1)
+    print(
+        format_inventory_report(
+            inventory, args.database, verbose=args.inventory_verbose
+        )
+    )
+    sys.exit(0)
 
 # connect to ray cluster on supplied address; defaults to 'auto' meaning a locally running cluster
 ray.init(address=args.ray_address)
@@ -3495,14 +3527,7 @@ with ShardedPool(
     prune_unvalidated=args.prune_unvalidated,
     drop_actions=drop_actions,
     read_table_config=read_table_config,
-    inventory_config=inventory_config,
 ) as pool:
-
-    if args.inventory:
-        print(
-            format_inventory_report(pool, args.database, verbose=args.inventory_verbose)
-        )
-        sys.exit()
 
     # set up LambdaCDM object representing a basic Planck2018 cosmology in Mpc units
 

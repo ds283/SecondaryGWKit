@@ -87,38 +87,6 @@ class sqla_LambdaCDM_factory(SQLAFactoryBase):
         return obj
 
     @staticmethod
-    def inventory(conn, table, tables, *args, **kwargs):
-        earliest_timestamp = conn.execute(
-            sqla.select(sqla.func.min(table.c.timestamp))
-        ).scalar()
-        latest_timestamp = conn.execute(
-            sqla.select(sqla.func.max(table.c.timestamp))
-        ).scalar()
-
-        # a small configuration table -- a label per row (name plus the
-        # distinguishing cosmological parameters) is more useful than a raw
-        # value list
-        values = [
-            {
-                "name": row.name,
-                "omega_m": row.omega_m,
-                "omega_cc": row.omega_cc,
-                "h": row.h,
-            }
-            for row in conn.execute(
-                sqla.select(
-                    table.c.name, table.c.omega_m, table.c.omega_cc, table.c.h
-                ).order_by(table.c.name)
-            )
-        ]
-
-        return {
-            "earliest_timestamp": earliest_timestamp,
-            "latest_timestamp": latest_timestamp,
-            "values": values,
-        }
-
-    @staticmethod
     def inventory_records(conn, table, tables, context):
         # the physical identity of a LambdaCDM row (store-fingerprint prompt 02): the six parameters
         # build() matches. The name is descriptive and is not identity

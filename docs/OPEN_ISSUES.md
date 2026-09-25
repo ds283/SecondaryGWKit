@@ -1,6 +1,6 @@
 # Open issues — project-wide index
 
-**Last updated:** 2026-09-25 · **102 open** across fifteen campaigns.
+**Last updated:** 2026-09-25 · **100 open** across fifteen campaigns.
 
 This file exists so that an issue opened by one campaign is not lost when that campaign closes.
 It is an **index, not a record**: one line per issue, pointing at the campaign status board that
@@ -49,7 +49,9 @@ layering decision after that prompt's review, and prompt 02 closed one of prompt
 day, on that board's §4. Prompt 03 closed the third the same day and opened one (§1.12). The
 `store-fingerprint` board was created on 2026-09-24 by its audit, which opened eight (§1.13); its
 prompt 01 closed one of them on 2026-09-25, on that board's §4, and its prompt 02 opened one the
-same day. Of the 90
+same day. Its prompt 03 closed two the same day: `[00-inventory-run-prunes-unvalidated-rows-by-default]`
+on its own §4, and `qcd-background-audit`'s `[03-qcd-inventory-does-not-report-the-representation]`
+on that board's §4. Of the 90
 above, 87 are spread across the boards and
 **three still have no board row** — the last three `handover` rows in §1.1, opened by a document
 review on 2026-09-19, whose content lives in
@@ -620,8 +622,9 @@ still that board's issue and closes on **its** §4. **All five have**: `[08-…]
 `[06-t-photon-call-cost-needs-a-quiet-machine]` and
 `[09-audit-script-section-5-prose-counts-the-wrong-set]` by prompt 05, and
 `[03-qcd-inventory-does-not-report-the-representation]`'s `QCD_Cosmology` half by prompt 07 —
-whose `BackgroundModel` half prompt 14 of that campaign widened it with stays open, narrowed, in
-§1.7 above, unassigned (prompt 07's files-may-touch list did not extend there).
+whose `BackgroundModel` half prompt 14 of that campaign widened it with stayed open, narrowed
+(prompt 07's files-may-touch list did not extend there), until `store-fingerprint` prompt 03 closed
+it on 2026-09-25.
 
 ### 1.9 The radiation oracle campaign
 
@@ -695,21 +698,20 @@ digests in its sidecar, computed read-only from a structured inventory that name
 physical labels and tag sets. Its audit, `docs/store-fingerprint-audit.md`, opened eight `00-`
 issues. Two of them, and the two issues from other boards above them, were assigned to its
 prompts. Prompt 01 closed one, `[00-build-schema-reads-registration-before-its-none-check]`, on
-2026-09-25 (that board's §4), so seven `00-` rows remain below. The other six are recorded here for
-their owners. Prompt 02 opened one more on 2026-09-25, the last row below, and it too is recorded
-here for its owner.
+2026-09-25 (that board's §4), and prompt 03 closed `[00-inventory-run-prunes-unvalidated-rows-by-default]`
+and `qcd-background-audit`'s `[03-qcd-inventory-does-not-report-the-representation]` the same day
+(the two boards' §4), so six `00-` rows remain below, each recorded here for its owner. Prompt 02
+opened one more on 2026-09-25, the last row below, and it too is recorded here for its owner.
 
 | Issue | Board | Hook |
 |---|---|---|
 | `[04-a-runs-product-is-named-but-never-fingerprinted]` | run-registry | After a store is copied between machines, "is this copy up to date?" is unanswerable; a file hash is the wrong instrument, since SQLite is not byte-stable. **Amended 2026-09-24:** a content fingerprint of per-class, per-tag-set digests (never a full listing) lives in the store sidecar and is copied into the run record at `finish()`; it is computed by a read-only registry `store fingerprint` from a structured inventory service naming work items by physical labels and tag sets, with a real `QuadSourceIntegral` record. Removals after a fingerprint is taken are not recoverable (accepted). **Assigned 2026-09-24** to `store-fingerprint`, whose prompt 04 closes it. |
-| `[03-qcd-inventory-does-not-report-the-representation]` | qcd-background-audit | Originally both `sqla_QCDCosmology_factory.inventory()` and (from prompt 14) `sqla_BackgroundModelFactory.inventory()` omitted their tables' identity columns. **The `QCD_Cosmology` half is resolved** — `background-solver-robustness` prompt 07 added `T_z_representation` to the former, demonstrated against two rows differing only in it. **The `BackgroundModel` half is not**: prompt 07's files-may-touch list did not include `BackgroundModel.py`, and its own stop condition treats a second reporting site with the same gap as a new issue to record, not fix. `sqla_BackgroundModelFactory.inventory()` still says nothing about `source_grid_digest` or `source_grid_construction`. **Next step:** add both columns to its per-bucket report, in whichever prompt next has `Datastore/SQL/ObjectFactories/BackgroundModel.py` in scope. **Assigned 2026-09-24** to `store-fingerprint` prompt 03, whose structured records carry both columns. |
-| `[00-inventory-run-prunes-unvalidated-rows-by-default]` | store-fingerprint | `main.py --inventory` builds the full read-write pool, and `--prune-unvalidated` defaults to true, so an inventory run without `--no-prune-unvalidated` deletes the store's unvalidated rows. It also needs Ray. **Assigned** to this campaign's prompt 03, which moves `--inventory` onto the read-only reader. |
 | `[00-oneloop-lookup-joins-the-wrong-tag-table]` | store-fingerprint | `OneLoopIntegral.build` filters tags against `QuadSourceIntegral_tags`, while `store()` writes `OneLoopIntegral_tags`. No effect while the table is empty. |
 | `[00-tagged-read-batch-joins-an-unselected-alias]` | store-fingerprint | *Suspected, not run.* The tag joins in `QuadSourceIntegral` / `OneLoopIntegral` `read_batch` name `query.c.serial`, which compiles to an alias outside the FROM clause. Extraction passes tags. To confirm on a store copy. |
 | `[00-quadsource-tq-serial-has-the-wrong-foreign-key]` | store-fingerprint | `QuadSource.Tq_serial` declares a foreign key to `QuadSource.serial` but holds a transfer-function id; `Tr_serial` declares none. Not enforced; a false statement in the schema. |
 | `[00-numeric-value-parent-lookup-omits-break-point-kind]` | store-fingerprint | The `TkNumericValue` / `GkNumericValue` parent query omits `break_point_kind`, which is in the parent's own lookup. Ambiguous only when a store holds two break-point kinds. |
 | `[00-quadsourcepolicy-rows-are-referenced-by-nothing]` | store-fingerprint | `QuadSourcePolicy` rows are created, but no table references them; `QuadSourceIntegral` keys on `GkSourcePolicy`. An author's decision whether it is vestigial. |
-| `[00-replicated-writes-can-diverge-across-shards]` | store-fingerprint | A replicated write commits shard by shard in separate transactions, so a crash leaves copies that differ, and `ShardedPool.inventory` hides it by reading one random shard. **Measured 2026-09-25** by prompt 02's inventory, which reads every shard: no divergence on a copy of the sweep store; the A3 store and the backup are not yet read. Making the write atomic is not this campaign's. |
+| `[00-replicated-writes-can-diverge-across-shards]` | store-fingerprint | A replicated write commits shard by shard in separate transactions, so a crash leaves copies that differ. `ShardedPool.inventory`, which hid it by reading one random shard, was retired on 2026-09-25 by prompt 03. **Measured 2026-09-25** by prompt 02's inventory, which reads every shard: no divergence on a copy of the sweep store; the A3 store and the backup are not yet read. Making the write atomic is not this campaign's. |
 | `[02-exit-time-lookup-runs-inside-the-subhorizon-loop]` | store-fingerprint | `wavenumber_exit_time.build` runs its query inside the sub-horizon column loop, six times per lookup. The answer is right today; with an empty list the lookup would fail. A one-level dedent, in whichever campaign next has that `build` in scope. |
 
 ---

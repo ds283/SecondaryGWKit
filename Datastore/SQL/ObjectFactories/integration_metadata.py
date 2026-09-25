@@ -51,30 +51,6 @@ class sqla_IntegrationSolver_factory(SQLAFactoryBase):
         return obj
 
     @staticmethod
-    def inventory(conn, table, tables, *args, **kwargs):
-        earliest_timestamp = conn.execute(
-            sqla.select(sqla.func.min(table.c.timestamp))
-        ).scalar()
-        latest_timestamp = conn.execute(
-            sqla.select(sqla.func.max(table.c.timestamp))
-        ).scalar()
-
-        values = [
-            {"label": row.label, "stepping": row.stepping}
-            for row in conn.execute(
-                sqla.select(table.c.label, table.c.stepping).order_by(
-                    table.c.label, table.c.stepping
-                )
-            )
-        ]
-
-        return {
-            "earliest_timestamp": earliest_timestamp,
-            "latest_timestamp": latest_timestamp,
-            "values": values,
-        }
-
-    @staticmethod
     def inventory_records(conn, table, tables, context):
         # the physical identity of an IntegrationSolver row (store-fingerprint prompt 02): its label,
         # which is this class's identity, and the stepping build() filters on

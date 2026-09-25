@@ -1,8 +1,8 @@
 # Store fingerprint campaign — implementation state
 
-**Last updated:** 2026-09-25 · **Status: 2 of 5 prompts landed (01, 02). 03 and 04 were written on
-2026-09-25 against 02's structure, and are ready to dispatch in either order. 05 is held until 04
-lands. Decisions D1–D3 were made on 2026-09-24, and D4 on 2026-09-25 (README §6.2).**
+**Last updated:** 2026-09-25 · **Status: 3 of 5 prompts landed (01, 02, 03). 04 was written on
+2026-09-25 against 02's structure, and is ready to dispatch. 05 is held until 04 lands. Decisions
+D1–D3 were made on 2026-09-24, and D4 on 2026-09-25 (README §6.2).**
 
 The campaign was opened on 2026-09-24. It owns `run-registry`'s
 `[04-a-runs-product-is-named-but-never-fingerprinted]`, as amended at `218ca74`: a store's content
@@ -47,6 +47,25 @@ It was read on a copy of the sweep store, for 30 341 records:
 
 It opened `[02-exit-time-lookup-runs-inside-the-subhorizon-loop]` (§3).
 
+**Prompt 03 landed 2026-09-25.** There is one inventory service. `main.py --inventory` now runs
+before `ray.init`: it reads the closed store through `read_inventory` and prints
+`tools/inventory_report.format_inventory_report`. It needs no Ray, writes nothing, never creates
+a store, and refuses `--drop`. The display names every record by its physical labels. Its float
+leaves are typed by the schema, printed to six figures or, verbose, as `repr`. It gives each class's
+tag sets, validated split and value-row total, and every problem in full. No digest appears.
+`extract_common.available_run_labels` reads the `store_tag` class through a new read-only
+`ShardedPool.primary`, and refuses a problem in that class. Deleted:
+- the 28 factory `inventory()` methods;
+- `Datastore.inventory` and `InventoryConfigType`;
+- `ShardedPool.inventory`, `_merge_queue` and the `inventory_config` parameter;
+- `config.sharding.inventory_config`, and its four uses.
+
+`ComputeTargets/tests/test_qcd_cosmology_inventory.py` was retired and re-expressed (D4). On a copy
+of the sweep store the new report agrees with the old one, run before the change, on every count,
+validated split and value-row total, and it left the copy byte-identical. The prompt closes
+`[00-inventory-run-prunes-unvalidated-rows-by-default]` (§4). It also closes
+`qcd-background-audit`'s `[03-qcd-inventory-does-not-report-the-representation]`, on that board.
+
 **Campaign:** [`README.md`](README.md) · **Audit:** [`docs/store-fingerprint-audit.md`](../../docs/store-fingerprint-audit.md) ·
 **Index:** [`docs/OPEN_ISSUES.md`](../../docs/OPEN_ISSUES.md) §1.13
 
@@ -66,7 +85,7 @@ It opened `[02-exit-time-lookup-runs-inside-the-subhorizon-loop]` (§3).
 |---|---|---|---|---|---|---|---|
 | 01 | [One schema builder, and a read-only reader](01-a-read-only-store-reader.md) | **F1**–**F3** | Opus 5.5 | ✍️ yes, 2026-09-24 | ✅ 2026-09-25 | *"Add one schema builder and a read-only store reader"* | [`logs/01-…`](logs/01-a-read-only-store-reader.md) |
 | 02 | [A structured inventory](02-a-structured-inventory.md) | **F4**–**F7** | Opus 5.5 | ✍️ yes, 2026-09-24 | ✅ 2026-09-25 | *"Add a structured store inventory keyed by physical labels"* | [`logs/02-…`](logs/02-a-structured-inventory.md) |
-| 03 | [One inventory service](03-one-inventory-service.md) | **F8**–**F9** | Opus | ✍️ yes, 2026-09-25 | ⏳ not dispatched | — | — |
+| 03 | [One inventory service](03-one-inventory-service.md) | **F8**–**F9** | Opus 5.5 | ✍️ yes, 2026-09-25 | ✅ 2026-09-25 | *"Move the inventory report and run labels onto one read-only service"* | [`logs/03-…`](logs/03-one-inventory-service.md) |
 | 04 | [The fingerprint](04-the-fingerprint.md) | **F10**–**F12** | Opus | ✍️ yes, 2026-09-25 | ⏳ not dispatched | — | — |
 | 05 | *Fingerprint the real stores* | **F13** | — | ⏸️ held until 04 lands | — | — | — |
 
@@ -88,8 +107,8 @@ landed; 05's method waits on 04's format. It is held by design, not missing. Orc
 | F5 | **REMEDY** | The key of every class, from its lookup: physical leaves, optional filters included, nothing store-local. Real `QuadSourceIntegral`, `OneLoopIntegral` and `GkSourcePolicyData` records. | 02 | ✅ **Done, 2026-09-25.** Every lookup was read. The shipped key table, with its lookup lines, is in the log. The one difference from audit §4 is **`GkSourcePolicyData`'s `k`** (`GkSourcePolicyData.py:99` filters on `wavenumber_exit_serial`). `z_init` / `z_source` / `z_response` are always in the key. The cosmology is resolved through `cosmology_type`. `OneLoopIntegral` tags come from `OneLoopIntegral_tags`. No solver, label, name, `version` key or timestamp is in any key. Test 1: the same content under relabelled serials, replicated ones included, and on other shards gives equal inventories. Test 2: each of 83 identity columns alone changes the records. Test 3: 42 non-identity variations change nothing. **Deliberate breakage (i), (v), (vi)** each fail their tests. |
 | F6 | **REMEDY** | Shards and what goes wrong: sharded classes are a union; replicated classes are read from every shard, and a divergence is named. Duplicates, old stores and orphans are named problems. | 02 | ✅ **Done, 2026-09-25.** A sharded class is the union of its shards. A replicated class is compared across every comparable shard, and takes the lowest's records. A shard whose class, tag or value table is absent, or whose key columns are incomplete, is named and left out. The named problems are `absent-table`, `incomplete`, `replicated-divergence` (shard, both-way counts, up to five keys), `duplicate` (all kept), `orphan-value`, `orphan-tag` and `unresolved-parent`, each with a count and up to five examples. Tests 7–9 show each case named, on the right shard, with nothing else changed. **Deliberate breakage (iv), (viii)** each fail their tests. |
 | F7 | **MEASUREMENT** | Records only, never `*Value` rows. Size, time and memory measured on a copy of the sweep store, with a one-row discriminator. | 02 | ✅ **Done, 2026-09-25.** Every statement naming a value table is a `count(*) … GROUP BY` (test 6). The sweep copy has 30 341 records, and every class's record count equals its row count. Every value table's total equals its parents' summed `value_count`. There is no problem of any kind, and the 12 replicated classes agree on all four shards. `read_inventory` took 6.8 s, with a peak RSS of 228 MB (175 MB of it the factories' imports). The full listing is 19.3 MB of JSON. Deleting `QuadSourceIntegral` serial 329386 on shard 0 took the class from 7 706 to 7 705 records, removing exactly the record with $k=q=r=3.05\times10^7$, $z_{\rm response}=0.1$, atol $10^{-32}$, rtol $10^{-8}$. The other 20 classes were identical, record for record. Its 9 tag rows were then named `orphan-tag`. The copy and the originals were unchanged by every read, and the copy was deleted. |
-| F8 | **REMEDY** | The display (`main.py --inventory`, read-only and needing no Ray) and `available_run_labels` consume the structured inventory. Closes `[00-inventory-run-prunes-unvalidated-rows-by-default]` and the `BackgroundModel` half of `[03-qcd-inventory-does-not-report-the-representation]`. | 03 | ✍️ written |
-| F9 | **REMEDY** | Retire the old three shapes, the old `inventory()` methods, `ShardedPool.inventory`, `_merge_queue` and `inventory_config`, so that there is one inventory service. | 03 | ✍️ written |
+| F8 | **REMEDY** | The display (`main.py --inventory`, read-only and needing no Ray) and `available_run_labels` consume the structured inventory. Closes `[00-inventory-run-prunes-unvalidated-rows-by-default]` and the `BackgroundModel` half of `[03-qcd-inventory-does-not-report-the-representation]`. | 03 | ✅ **Done, 2026-09-25.** `format_inventory_report(inventory, db_name, verbose=False)` gives, per class, the count, the validated split, the value-row total with its table, the timestamps, the tag sets, the records by physical labels, grouped by tag set and ordered numerically, and every problem. A field common to every record of a class is printed once. A parent is printed by the fields that vary across its own class, so distinct records never share a line. Float leaves are typed by `build_schema`'s column types (F8 item 2: the display consults the schema, and `store_inventory.py` is unchanged). `store_tag` lists every label and marks one no record carries. `--inventory` runs before `ray.init`, refuses `--drop` and a missing store, and exits 0. `ShardedPool.primary` was added. `available_run_labels` keeps its signature and answer, and refuses a `store_tag` problem. Tests: `test_inventory_report` (18), `test_inventory_consumers` (11; `main.py` run through a `ray.init` guard, with the store unchanged and its unvalidated rows kept). On the sweep copy, every count agrees with the old report. **Deliberate breakage (i)–(vi)** each fail their tests. |
+| F9 | **REMEDY** | Retire the old three shapes, the old `inventory()` methods, `ShardedPool.inventory`, `_merge_queue` and `inventory_config`, so that there is one inventory service. | 03 | ✅ **Done, 2026-09-25.** 28 factory methods deleted (679 lines, 0 added, no import changed). Also deleted: `Datastore.inventory` and `InventoryConfigType`; `ShardedPool.inventory`, `_merge_queue` and the `inventory_config` parameter; `config.sharding.inventory_config` with its policies; the argument in `main.py` and the two `docs/source-remediation-verification/` scripts. D4: `test_qcd_cosmology_inventory.py` (3) was replaced by `test_qcd_cosmology_inventory_record.py` (3). The third claim is now a named `duplicate`. `test_inventory_retired` (7) runs F9 item 7's `git grep`. **The user decided (2026-09-25)** that it excludes `Datastore/tests/test_store_inventory.py`, whose `_Stores.inventory` helper calls `read_inventory`, and that a test holds that file's matches to that helper. **Deliberate breakage (vii)** fails its tests. |
 | F10 | **FACILITY** | The fingerprint, a pure function of the structured inventory. It holds a format version, and per class and per tag set a count and a digest over the sorted canonical records, plus an overall digest. No timestamps. | 04 | ✍️ written |
 | F11 | **FACILITY** | The `fingerprint` sidecar field, a known field of `RunRegistry.stores` that copy and move carry. `python -m RunRegistry store fingerprint`: read-only, refuses a store a `running` run names, compares against the recorded value and writes only when asked. | 04 | ✍️ written |
 | F12 | **FACILITY** | The digest in the run record at finish. `scoped_pipeline_run.py` and `quadsource_atol_sweep.py`, including `--build` for the A3 v2 store (D2), take one when a registered run finishes. Closes `run-registry`'s `[04-a-runs-product-is-named-but-never-fingerprinted]`. | 04 | ✍️ written |
@@ -102,23 +121,9 @@ landed; 05's method waits on 04's format. It is held by design, not missing. Orc
 Eight were opened on 2026-09-24 by the audit
 ([`docs/store-fingerprint-audit.md`](../../docs/store-fingerprint-audit.md)), which is not a prompt.
 Prompt 01 closed one of them on 2026-09-25 (§4). Prompt 02 opened one on 2026-09-25, and measured
-`[00-replicated-writes-can-diverge-across-shards]` on the sweep store. Eight remain.
+`[00-replicated-writes-can-diverge-across-shards]` on the sweep store. Prompt 03 closed
+`[00-inventory-run-prunes-unvalidated-rows-by-default]` on 2026-09-25 (§4). Seven remain.
 
-- **[00-inventory-run-prunes-unvalidated-rows-by-default]** *(opened 2026-09-24 by the audit;
-  **assigned to prompt 03**)*
-  - **The defect.** `main.py --inventory` builds the full read-write pool before it reaches its
-    `--inventory` branch (`main.py:3484-3504`). `--prune-unvalidated` is a
-    `BooleanOptionalAction` with `default=True` (`main.py:233-238`), so each actor `DELETE`s its
-    shard's unvalidated rows and their values and tags on open (`Datastore.py:447-472`). **An
-    inventory run that does not pass `--no-prune-unvalidated` deletes data.** It also runs the
-    `--drop` actions, creates missing tables, and needs Ray.
-  - **Impact.** Every inventory of a store that holds unvalidated rows changes the store it is
-    reporting on. Every `datastore-portability` demonstration passed the flag, so nothing
-    measured there was affected.
-  - **Next step.** Prompt 03 moves `--inventory` onto the read-only reader, before any pool is
-    built.
-  - **Assigned (2026-09-24):** prompt 03 of this campaign. It is the prompt that owns the
-    `--inventory` branch, and the read-only reader it needs is prompt 01's.
 - **[00-oneloop-lookup-joins-the-wrong-tag-table]** *(opened 2026-09-24 by the audit)*
   - **The defect.** `sqla_OneLoopIntegral_factory.build` filters requested tags against
     `tables["QuadSourceIntegral_tags"]` (`Datastore/SQL/ObjectFactories/OneLoopIntegral.py:141`),
@@ -182,6 +187,10 @@ Prompt 01 closed one of them on 2026-09-25 (§4). Prompt 02 opened one on 2026-0
     `BackgroundModelValue` rows, hold the same multiset of key, tags, validated flag and value count
     on all four shards. The A3 store and the backup have not been read; prompt 05 reads them. The
     defect in the write path stands.
+  - **Noted (2026-09-25) by prompt 03.** `ShardedPool.inventory`, which read a replicated class
+    from one random shard, is retired, so nothing hides a divergence any more. The run labels and
+    the display both read the structured inventory, which names one. The write path is unchanged,
+    and this issue stays open.
 - **[02-exit-time-lookup-runs-inside-the-subhorizon-loop]** *(opened 2026-09-25 by prompt 02)*
   - **The defect.** In `sqla_wavenumber_exit_time_factory.build`, the line
     `row_data = conn.execute(query).one_or_none()` (`Datastore/SQL/ObjectFactories/wavenumber.py:270`)
@@ -198,6 +207,34 @@ Prompt 01 closed one of them on 2026-09-25 (§4). Prompt 02 opened one on 2026-0
 ---
 
 ## 4. Resolved issues
+
+- **[00-inventory-run-prunes-unvalidated-rows-by-default]** *(opened 2026-09-24 by the audit;
+  **assigned to prompt 03**)*
+  - **The defect.** `main.py --inventory` builds the full read-write pool before it reaches its
+    `--inventory` branch (`main.py:3484-3504`). `--prune-unvalidated` is a
+    `BooleanOptionalAction` with `default=True` (`main.py:233-238`), so each actor `DELETE`s its
+    shard's unvalidated rows and their values and tags on open (`Datastore.py:447-472`). **An
+    inventory run that does not pass `--no-prune-unvalidated` deletes data.** It also runs the
+    `--drop` actions, creates missing tables, and needs Ray.
+  - **Impact.** Every inventory of a store that holds unvalidated rows changes the store it is
+    reporting on. Every `datastore-portability` demonstration passed the flag, so nothing
+    measured there was affected.
+  - **Next step.** Prompt 03 moves `--inventory` onto the read-only reader, before any pool is
+    built.
+  - **Assigned (2026-09-24):** prompt 03 of this campaign. It is the prompt that owns the
+    `--inventory` branch, and the read-only reader it needs is prompt 01's.
+  - **Closed (2026-09-25) by prompt 03.** `main.py`'s `if args.inventory:` branch now runs directly
+    after the `args.database is None` check, before `ray.init`, the `ProfileAgent` and the
+    `ShardedPool`. It calls `read_inventory(args.database)`, which opens every file `mode=ro`, and
+    prints the report. So `--prune-unvalidated`, `--drop` and table creation are never reached. A
+    `--drop` with `--inventory` is refused, and a path that does not exist is refused and not
+    created. `Datastore/tests/test_inventory_consumers.py` runs `main.py --database <store>
+    --inventory` in a child interpreter, with `ray.init` replaced by a function that raises. It
+    exits 0, the store's files keep their hashes, sizes and mtimes, and **every unvalidated row is
+    still there**. An `ast` test holds the branch before `ray.init` and the pool. Moving the branch
+    back is deliberate breakage (i), which five tests catch. On a copy of the sweep store, the new
+    `--inventory` ran in 8.3 s with no Ray, and left the copy byte-identical. Log:
+    [`logs/03-one-inventory-service.md`](logs/03-one-inventory-service.md).
 
 - **[00-build-schema-reads-registration-before-its-none-check]** *(opened 2026-09-24 by the
   audit; **assigned to prompt 01**)*
@@ -221,11 +258,11 @@ Prompt 01 closed one of them on 2026-09-25 (§4). Prompt 02 opened one on 2026-0
 At `f53598f` (README §7): AdaptiveLevin 32, ComputeTargets 552 (the known wall-clock flake
 aside), CosmologyModels 39, Datastore 70, LiouvilleGreen 148 (1 skipped), RunRegistry 84.
 
-| Suite | At `417c647` (before prompt 01) | After prompt 01 | After prompt 02 |
-|---|---|---|---|
-| `AdaptiveLevin` | 32 OK | 32 OK | 32 OK |
-| `ComputeTargets` | 552 OK (the flake is known) | 552 OK (the flake passed) | 552 OK (the flake passed) |
-| `CosmologyModels` | 39 OK | 39 OK | 39 OK |
-| `Datastore` | 70 OK | **92 OK** (+22) | **141 OK** (+49) |
-| `LiouvilleGreen` | 148 OK (skipped=1) | 148 OK (skipped=1) | 148 OK (skipped=1) |
-| `RunRegistry` | 84 OK | 84 OK | 84 OK |
+| Suite | At `417c647` (before prompt 01) | After prompt 01 | After prompt 02 | After prompt 03 |
+|---|---|---|---|---|
+| `AdaptiveLevin` | 32 OK | 32 OK | 32 OK | 32 OK |
+| `ComputeTargets` | 552 OK (the flake is known) | 552 OK (the flake passed) | 552 OK (the flake passed) | 552 OK (3 retired, 3 added; the flake passed) |
+| `CosmologyModels` | 39 OK | 39 OK | 39 OK | 39 OK |
+| `Datastore` | 70 OK | **92 OK** (+22) | **141 OK** (+49) | **177 OK** (+36) |
+| `LiouvilleGreen` | 148 OK (skipped=1) | 148 OK (skipped=1) | 148 OK (skipped=1) | 148 OK (skipped=1) |
+| `RunRegistry` | 84 OK | 84 OK | 84 OK | 84 OK |

@@ -41,26 +41,6 @@ class sqla_store_tag_factory(SQLAFactoryBase):
         return obj
 
     @staticmethod
-    def inventory(conn, table, tables, *args, **kwargs):
-        earliest_timestamp = conn.execute(
-            sqla.select(sqla.func.min(table.c.timestamp))
-        ).scalar()
-        latest_timestamp = conn.execute(
-            sqla.select(sqla.func.max(table.c.timestamp))
-        ).scalar()
-
-        values = [
-            row.label
-            for row in conn.execute(sqla.select(table.c.label).order_by(table.c.label))
-        ]
-
-        return {
-            "earliest_timestamp": earliest_timestamp,
-            "latest_timestamp": latest_timestamp,
-            "values": values,
-        }
-
-    @staticmethod
     def inventory_records(conn, table, tables, context):
         # the physical identity of a store_tag row (store-fingerprint prompt 02): its label, which is
         # what build() looks it up by. Which tags a work item carries is read from the work item's
