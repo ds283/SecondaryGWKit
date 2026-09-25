@@ -1,10 +1,10 @@
 # Store retirement campaign — implementation state
 
-**Last updated:** 2026-09-25 · **Status: 4 of 5 prompts landed (01, 02, 03, 04). 05 is held.** The
-user approved D0 and D3–D7 as worded on 2026-09-25 (README §6.2), which released 03 and 04. 05 is
-held until 01–04 land. 01 and 02 are independent of each other; 03 follows 01, and 04 follows 03.
-D4 was narrowed when 03 was written: an unreadable `shards` table is refused even under
-`--without-fingerprint` (README §6.2).
+**Last updated:** 2026-09-25 · **Status: 4 of 5 prompts landed (01, 02, 03, 04). 05 is written and
+ready.** The user approved D0 and D3–D7 as worded on 2026-09-25 (README §6.2), which released 03
+and 04. 05 was written the same day, after 01–04 had landed. 01 and 02 are independent of each
+other; 03 follows 01, and 04 follows 03. D4 was narrowed when 03 was written: an unreadable
+`shards` table is refused even under `--without-fingerprint` (README §6.2).
 
 The campaign was opened on 2026-09-25, when the user decided that a store is removed by a registry
 operation that retires it, and never by `rm`. The primary and its shards go, and the sidecar stays
@@ -54,7 +54,7 @@ of them, it found, also blocks `--build --resume` of the A3 v2 store.
 | 02 | [The sweep prepares through the registry](02-the-sweep-prepares-through-the-registry.md) | **R4**–**R5** | Sonnet | ✍️ yes, 2026-09-25 | ✅ 2026-09-25 | *"Make quadsource_atol_sweep prepare and check through the registry"* | [`logs/02-…`](logs/02-the-sweep-prepares-through-the-registry.md) |
 | 03 | [Retire a store](03-retire-a-store.md) | **R6**–**R8** | Opus | ✍️ yes, 2026-09-25 | ✅ 2026-09-25 | *"Retire a closed store and keep its sidecar as a tombstone"* | [`logs/03-…`](logs/03-retire-a-store.md) |
 | 04 | [Amend an unknown field](04-amend-an-unknown-field.md) | **R9** | Sonnet | ✍️ yes, 2026-09-25 | ✅ 2026-09-25 | *"Add amend_sidecar and store amend, for one unknown field"* | [`logs/04-…`](logs/04-amend-an-unknown-field.md) |
-| 05 | Retire the two stores | **R10**–**R12** | Opus | ⏸️ held until 01–04 land | — | — | — |
+| 05 | [Retire the two stores](05-retire-the-two-stores.md) | **R10**–**R12** | Opus | ✍️ yes, 2026-09-25 | ⬜ after 04 | — | — |
 
 **Orchestrator review of prompt 04 (2026-09-25).** All ten checks in `orchestrator/prompt-04.md`
 §3 passed on `66617c9`, from one dispatch. There are two findings, both opened in §3, and a
@@ -234,6 +234,10 @@ and D3–D7 as worded, and were written the same day against README §4's names,
 `resume` on `closed_store_files` and `--dry-run` on `store retire` before anything was dispatched. **05 is held, not
 unplanned.** Its charter is fixed in README §2, and it is written last, against what 01–04 ship.
 In 05 **the user** runs each `store retire`: no agent deletes a real store (README §5 rule 10).
+**05 was written on 2026-09-25**, after 04's review (`00e0ec6`), against what 01–04 shipped. It
+runs in three phases: the agent prepares and dry-runs, the user retires the two stores, the agent
+checks and drafts the amendment, the user amends, and the agent records. Its orchestrator notes are
+[`orchestrator/prompt-05.md`](orchestrator/prompt-05.md).
 
 ---
 

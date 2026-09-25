@@ -2,8 +2,9 @@
 
 **Written:** 2026-09-25 at `42d4910` on `handover-remedial`, by Claude Opus 5.5, from
 [`docs/store-retirement-audit.md`](../../docs/store-retirement-audit.md) and the user's decisions
-recorded in §6.1. **Prompts 01–04 are written.** The user approved D0 and D3–D7 as worded on
-2026-09-25 (§6.2), which released 01, and 03 and 04 were written the same day. 05 is held until 01–04 land (see §2).
+recorded in §6.1. **Prompts 01–05 are written.** The user approved D0 and D3–D7 as worded on
+2026-09-25 (§6.2), which released 01, and 03 and 04 were written the same day. 05 was written the
+same day too, once 01–04 had landed, against what they shipped (see §2).
 
 ## 0. Why this campaign exists
 
@@ -84,7 +85,7 @@ The audit found that the tree is not yet ready for that operation:
 | 02 | [`02-the-sweep-prepares-through-the-registry.md`](02-the-sweep-prepares-through-the-registry.md) | `quadsource_atol_sweep.py` `prepare()` makes the sweep store with one `RunRegistry.stores.copy_store` call, replacing its hand copy, its `UPDATE` and its hand-written sidecar. `assert_store_is_self_consistent` compares through `resolve_shard_path`, which also unblocks `--build --resume` of the A3 v2 store (audit §2.6). Closes `datastore-portability`'s `[03-…]` and `[01-…]`. After it, `--prepare` at a name whose sidecar exists refuses, which is what a tombstone needs. | **written**; independent of every decision, and may be dispatched first |
 | 03 | [`03-retire-a-store.md`](03-retire-a-store.md) | `RunRegistry.stores.retire_store` and `python -m RunRegistry store retire`. A known `retired` field and a terminal `retire` history entry. The reader tells a tombstone from a broken sidecar, and names a primary that has reappeared. `begin(results=…)` refuses a retired store. `store show` renders a tombstone. The references found are reported. | **written** 2026-09-25; after 01 |
 | 04 | [`04-amend-an-unknown-field.md`](04-amend-an-unknown-field.md) | `RunRegistry.stores.amend_sidecar` and `store amend`: replace or remove one unknown field of a registry sidecar, with a reason, recording the old value in an `amend` history entry. | **written** 2026-09-25; after 03 |
-| 05 | `05-retire-the-two-stores.md` | Remedial. **The user** retires the sweep store and the backup with `store retire`, and amends the live A3 sidecar's `backup` field. The prompt's agent checks before and after, and records the retirements on the boards. | **held** until 01–04 land |
+| 05 | [`05-retire-the-two-stores.md`](05-retire-the-two-stores.md) | Remedial. **The user** retires the sweep store and the backup with `store retire`, and amends the live A3 sidecar's `backup` field. The prompt's agent checks before and after, and records the retirements on the boards. | **written** 2026-09-25, after 01–04 landed |
 
 **Why 03–05 were held.** The charters above are fixed, and cannot drift to fit what 01 and 02
 find. What waited was their method, which depended on user decisions that did not yet exist
