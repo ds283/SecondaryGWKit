@@ -2,7 +2,8 @@
 
 **Written:** 2026-09-24 at `218ca74` on `handover-remedial`, by Claude Opus 5.5, from
 [`docs/store-fingerprint-audit.md`](../../docs/store-fingerprint-audit.md) and the user's
-decisions recorded in §6.
+decisions recorded in §6. **Prompts 03 and 04 written** 2026-09-25 at `8de5a40`, against the
+structure prompt 02 shipped.
 
 ## 0. Why this campaign exists
 
@@ -41,19 +42,29 @@ urgency or cost.
 ## 1. Scope
 
 **In scope:**
-- `Datastore/SQL/Datastore.py` (`_build_schema` only), a new schema module beside it, and the new
-  read-only reader and structured inventory modules under `Datastore/`;
-- every factory in `Datastore/SQL/ObjectFactories/`, for its inventory method only;
-- `Datastore/SQL/ShardedPool.py`, for `inventory` and `_merge_queue` only (prompt 03, which retires
-  them);
+- `Datastore/SQL/Datastore.py`: `_build_schema` (prompt 01), and `inventory` and
+  `InventoryConfigType` (prompt 03, which retires them). Also a new schema module beside it, and the
+  new read-only reader and structured inventory modules under `Datastore/`;
+- every factory in `Datastore/SQL/ObjectFactories/`, for its inventory methods only;
+- `Datastore/SQL/ShardedPool.py`, for `inventory`, `_merge_queue`, the constructor's
+  `inventory_config` parameter, and one read-only `primary` property (prompt 03, which retires the
+  first three and adds the fourth for `available_run_labels`);
 - `config/sharding.py` (`inventory_config` only, prompt 03);
-- `tools/inventory_report.py`, `main.py`'s `--inventory` branch, and
-  `extract_common.available_run_labels` (prompt 03);
+- `tools/inventory_report.py`, `main.py`'s `--inventory` branch and its `inventory_config`
+  import, and `extract_common.available_run_labels` (prompt 03);
+- the two scripts that pass `inventory_config` to a pool,
+  `docs/source-remediation-verification/analyse_greens_and_source.py` and
+  `run_quadsource_integrals.py`, for that argument only (prompt 03). Found when prompt 03 was
+  written: retiring the parameter breaks them otherwise;
+- `ComputeTargets/tests/test_qcd_cosmology_inventory.py`, the only test of an `inventory()`, which
+  prompt 03 retires and re-expresses against the new service (D4, §6.2);
 - `RunRegistry/` (prompt 04);
 - `docs/gktk-remedial/scoped_pipeline_run.py` and `docs/handover/quadsource_atol_sweep.py`, for
   taking the fingerprint when a registered run finishes (prompt 04; D2 for the second);
 - the three real sidecars, for their `fingerprint` field only (prompt 05; D3);
-- the tests of all of these.
+- the tests of all of these;
+- the boards of `qcd-background-audit` (prompt 03) and `run-registry` (prompt 04), for the closure
+  of the one issue each prompt closes there.
 
 **Out of scope:**
 - every factory's `build`, `store`, `read_batch` and `validate_on_startup`;
@@ -76,13 +87,15 @@ run record live in `RunRegistry/`, because the registry owns those files.
 |---|---|---|---|
 | 01 | [`01-a-read-only-store-reader.md`](01-a-read-only-store-reader.md) | One schema builder shared by the actor and the reader. A read-only, no-Ray reader over a closed store's shards. A real multi-shard store fixture for tests. | **written** |
 | 02 | [`02-a-structured-inventory.md`](02-a-structured-inventory.md) | Per-class structured records on the reader: physical keys, parents by canonical key, full tag sets, `validated`, per-parent value counts, real `QuadSourceIntegral` / `OneLoopIntegral` / `GkSourcePolicyData` records, replicated classes compared across shards. | **written** (D1 decided) |
-| 03 | *One inventory service* | The display (`main.py --inventory`, which becomes read-only and needs no Ray) and `available_run_labels` consume the structured inventory. The old three shapes, `ShardedPool.inventory`, `_merge_queue` and `inventory_config` retire. Closes `[00-inventory-run-prunes-unvalidated-rows-by-default]` and the `BackgroundModel` half of `qcd-background-audit`'s `[03-qcd-inventory-does-not-report-the-representation]`. | **held** until 02 lands |
-| 04 | *The fingerprint* | A pure function from the structured inventory to digests. A known `fingerprint` field in `RunRegistry.stores`. `python -m RunRegistry store fingerprint`, read-only, refusing a store a `running` run names. The digest in the run record at finish. `scoped_pipeline_run.py` and `quadsource_atol_sweep.py` (including `--build`, which builds the A3 v2 store) take one when their registered run finishes. Closes `run-registry`'s `[04-a-runs-product-is-named-but-never-fingerprinted]`. | **held** until 02 lands |
+| 03 | [`03-one-inventory-service.md`](03-one-inventory-service.md) | The display (`main.py --inventory`, which becomes read-only and needs no Ray) and `available_run_labels` consume the structured inventory. The old three shapes, `ShardedPool.inventory`, `_merge_queue` and `inventory_config` retire. Closes `[00-inventory-run-prunes-unvalidated-rows-by-default]` and the `BackgroundModel` half of `qcd-background-audit`'s `[03-qcd-inventory-does-not-report-the-representation]`. | **written** 2026-09-25 (D4 open) |
+| 04 | [`04-the-fingerprint.md`](04-the-fingerprint.md) | A pure function from the structured inventory to digests. A known `fingerprint` field in `RunRegistry.stores`. `python -m RunRegistry store fingerprint`, read-only, refusing a store a `running` run names. The digest in the run record at finish. `scoped_pipeline_run.py` and `quadsource_atol_sweep.py` (including `--build`, which builds the A3 v2 store) take one when their registered run finishes. Closes `run-registry`'s `[04-a-runs-product-is-named-but-never-fingerprinted]`. | **written** 2026-09-25 |
 | 05 | *Fingerprint the real stores* | Remedial: fingerprint the three existing stores, read-only, and record each fingerprint in its sidecar (D3). Also any store built here before 04 landed, such as the A3 v2 store, which therefore had no fingerprint taken at finish. Fingerprint a registry copy of one, and show that the digests localise the known differences. | **held** until 04 lands |
 
-**Why 03–05 are held.** Each consumes the structure prompt 02 ships. Their **charters** are fixed
-above and cannot drift to fit what 02 finds; only their **methods** wait. 03 and 04 are independent
-of each other, and either may go first once 02 has landed.
+**Why 03–05 were held.** Each consumes the structure prompt 02 ships. Their **charters** are fixed
+above and cannot drift to fit what 02 finds; only their **methods** waited. 02 landed on 2026-09-25
+at `8de5a40`, and 03 and 04 were written the same day against it. They are independent of each
+other, and either may go first. 03 is dispatched only once D4 is recorded. 05 is held until 04
+lands, because it writes 04's format.
 
 ## 3. Datastores
 
@@ -122,8 +135,14 @@ The internals are the implementing prompt's to design.
 
   There is room for a computed-values field later, outside the key. One function, **`canonical`**,
   turns a leaf into its canonical form (D1).
+- **Prompt 03** ships `tools/inventory_report.py` **`format_inventory_report(inventory, db_name,
+  verbose=False)`**, which renders a `StoreInventory`, and the read-only property
+  **`ShardedPool.primary`**. `extract_common.available_run_labels(pool)` keeps its signature.
 - **Prompt 04** ships `RunRegistry/stores.py` **`fingerprint_store(primary, …)`** and the sidecar
-  field **`fingerprint`**.
+  field **`fingerprint`**. Also the pure **`fingerprint_of(inventory, …)`** and
+  **`compare_fingerprints(recorded, current)`**, **`FINGERPRINT_FORMAT`**,
+  **`Run.finish(state, exit_code=None, *, fingerprint=False)`**, and
+  `python -m RunRegistry store fingerprint`.
 
 ## 5. The rules this campaign runs under
 
@@ -137,7 +156,9 @@ The project-wide ones in `CLAUDE.md`, unchanged, plus:
 5. **Commit messages** in `CLAUDE.md`'s form, ending with `Co-Authored-By:` naming the model.
 6. **Verification documents are additive.**
 7. **Existing tests are not modified.** The four hand-copies of `_build_schema` in existing tests
-   (audit §3) stay as they are. A prompt may add tests beside them.
+   (audit §3) stay as they are. A prompt may add tests beside them. **The one exception** is D4
+   (§6.2): prompt 03 retires `ComputeTargets/tests/test_qcd_cosmology_inventory.py`, the test of an
+   `inventory()` it deletes, and re-expresses its claims against the new service.
 8. **Deliberate breakage.** Each prompt names mutations that its tests must catch. Each is recorded
    in the log as a diff, exactly as applied, so that the orchestrator can replay it with
    `git apply`. Mutations are never committed.
@@ -180,10 +201,10 @@ Recorded in full on the `run-registry` board, under the amendment to
    boundary, not a rule. `CLAUDE.md`'s limits stand: no scheduling, supervising, restarting,
    locking or deleting, and no growing into a project of its own.
 
-### 6.2 Decided by the user (2026-09-24)
+### 6.2 Decisions D1–D4
 
-The three decisions were asked for when the campaign was written at `066057d`, and made the same
-day.
+D1–D3 were asked for when the campaign was written at `066057d`, and the user made them the same
+day, 2026-09-24. D4 was found when prompt 03 was written, on 2026-09-25, and is open.
 
 - **D1 — the canonical form of a float: the stored bits, as `float.hex`.** The recommendation was
   taken. Prompt 02 was written against it, and needs no amendment. The alternative, rounding to
@@ -199,6 +220,22 @@ day.
   and the backup. It writes only the `fingerprint` field, through `RunRegistry.stores`' writer.
   Every other field, and every store file, stays as it is. This is the explicit request that
   `datastore-portability` README §6.5 point 7 requires before an existing sidecar changes.
+- **D4 — the test of a retired method. Open; to be decided before prompt 03 is dispatched.**
+  Prompt 03 deletes every factory's `inventory()`, which is F9's charter. One existing test module
+  calls one of them: `ComputeTargets/tests/test_qcd_cosmology_inventory.py`, three tests that
+  `sqla_QCDCosmology_factory.inventory()` reports `T_z_representation`. It is also one of the four
+  hand-copies of `_build_schema` that rule 7 (§5) keeps. So F9 and rule 7 cannot both hold for it.
+  - **Recommended: retire the module, and re-express its claims against the new service** in a
+    new test: two `QCD_Cosmology` rows differing only in `T_z_representation` are two records and
+    render differently; the representation is shown beside `log10_max_z`. The third claim changes
+    meaning, and the prompt says so. Two rows that differ only in `name` were two labels; under
+    the new service they share a key, and the inventory names them a `duplicate`. What the test
+    protected, that the representation is visible, is kept. Prompt 03 is written against this.
+  - *Alternative:* keep `sqla_QCDCosmology_factory.inventory()` alive for the test alone. Then
+    there are two inventory services for one class, which is what F9 exists to end, and the test
+    guards a method nothing calls.
+  - *Alternative:* keep the module, and rewrite its body against the new service. That modifies
+    an existing test, which is what rule 7 forbids, with no gain over the recommendation.
 
 ### 6.3 Choices the prompts make, where §6.1 leaves the method open
 
@@ -211,7 +248,20 @@ logged deviation that is at least as strong:
 - unvalidated rows are recorded, with their flag;
 - the `Run_<label>` tag stays in the tag set, because it is part of the lookup;
 - a missing table in an old store reads as empty, and a missing column is a named problem;
-- a replicated class is read from every shard, and any disagreement is a named problem.
+- a replicated class is read from every shard, and any disagreement is a named problem;
+- (prompt 03) the display types a float leaf by the schema, never by the shape of a string, and
+  renders it to six figures, or as `repr` when verbose;
+- (prompt 03) `--inventory` never creates a store, and refuses `--drop`;
+- (prompt 03) `available_run_labels` returns what it returned before, every `Run_` label in
+  `store_tag`, and refuses a problem in that class;
+- (prompt 04) a digest covers the canonical record, `validated` and `value_count` included, and is
+  formed so that a listing's lines hash to it;
+- (prompt 04) problems are counted beside the digests, never in them, because their text is
+  store-local;
+- (prompt 04) a copy keeps the source's fingerprint, `taken` included;
+- (prompt 04) a registered run's finish writes the sidecar as well as the run record, and takes a
+  fingerprint on every terminal state it reaches with the store closed; a failure is recorded and
+  never changes the state.
 
 ## 7. Baselines
 

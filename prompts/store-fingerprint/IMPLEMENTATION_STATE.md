@@ -1,8 +1,8 @@
 # Store fingerprint campaign — implementation state
 
-**Last updated:** 2026-09-25 · **Status: 2 of 5 prompts landed (01, 02). 03 and 04 are no longer
-held: 02's structure has landed, and their methods can now be written (README §2). 05 is held
-until 04 lands. Decisions D1–D3 were made on 2026-09-24 (README §6.2).**
+**Last updated:** 2026-09-25 · **Status: 2 of 5 prompts landed (01, 02). 03 and 04 were written on
+2026-09-25 against 02's structure, and are ready to dispatch in either order; 03 waits on D4, which
+is open (README §6.2). 05 is held until 04 lands. Decisions D1–D3 were made on 2026-09-24.**
 
 The campaign was opened on 2026-09-24. It owns `run-registry`'s
 `[04-a-runs-product-is-named-but-never-fingerprinted]`, as amended at `218ca74`: a store's content
@@ -66,12 +66,14 @@ It opened `[02-exit-time-lookup-runs-inside-the-subhorizon-loop]` (§3).
 |---|---|---|---|---|---|---|---|
 | 01 | [One schema builder, and a read-only reader](01-a-read-only-store-reader.md) | **F1**–**F3** | Opus 5.5 | ✍️ yes, 2026-09-24 | ✅ 2026-09-25 | *"Add one schema builder and a read-only store reader"* | [`logs/01-…`](logs/01-a-read-only-store-reader.md) |
 | 02 | [A structured inventory](02-a-structured-inventory.md) | **F4**–**F7** | Opus 5.5 | ✍️ yes, 2026-09-24 | ✅ 2026-09-25 | *"Add a structured store inventory keyed by physical labels"* | [`logs/02-…`](logs/02-a-structured-inventory.md) |
-| 03 | *One inventory service* | **F8**–**F9** | — | not yet; unblocked 2026-09-25 by 02 | — | — | — |
-| 04 | *The fingerprint* | **F10**–**F12** | — | not yet; unblocked 2026-09-25 by 02 | — | — | — |
+| 03 | [One inventory service](03-one-inventory-service.md) | **F8**–**F9** | Opus | ✍️ yes, 2026-09-25 | ⏳ not dispatched; waits on D4 | — | — |
+| 04 | [The fingerprint](04-the-fingerprint.md) | **F10**–**F12** | Opus | ✍️ yes, 2026-09-25 | ⏳ not dispatched | — | — |
 | 05 | *Fingerprint the real stores* | **F13** | — | ⏸️ held until 04 lands | — | — | — |
 
-The charters of 03–05 are fixed in README §2. Only their methods wait on 02's structure and on the
-structure. They are held by design, not missing.
+The charters of 03–05 are fixed in README §2. 03 and 04 were written once 02's structure had
+landed; 05's method waits on 04's format. It is held by design, not missing. Orchestration prompts:
+[`orchestrator/prompt-03.md`](orchestrator/prompt-03.md) and
+[`orchestrator/prompt-04.md`](orchestrator/prompt-04.md).
 
 ---
 
@@ -86,11 +88,11 @@ structure. They are held by design, not missing.
 | F5 | **REMEDY** | The key of every class, from its lookup: physical leaves, optional filters included, nothing store-local. Real `QuadSourceIntegral`, `OneLoopIntegral` and `GkSourcePolicyData` records. | 02 | ✅ **Done, 2026-09-25.** Every lookup was read. The shipped key table, with its lookup lines, is in the log. The one difference from audit §4 is **`GkSourcePolicyData`'s `k`** (`GkSourcePolicyData.py:99` filters on `wavenumber_exit_serial`). `z_init` / `z_source` / `z_response` are always in the key. The cosmology is resolved through `cosmology_type`. `OneLoopIntegral` tags come from `OneLoopIntegral_tags`. No solver, label, name, `version` key or timestamp is in any key. Test 1: the same content under relabelled serials, replicated ones included, and on other shards gives equal inventories. Test 2: each of 83 identity columns alone changes the records. Test 3: 42 non-identity variations change nothing. **Deliberate breakage (i), (v), (vi)** each fail their tests. |
 | F6 | **REMEDY** | Shards and what goes wrong: sharded classes are a union; replicated classes are read from every shard, and a divergence is named. Duplicates, old stores and orphans are named problems. | 02 | ✅ **Done, 2026-09-25.** A sharded class is the union of its shards. A replicated class is compared across every comparable shard, and takes the lowest's records. A shard whose class, tag or value table is absent, or whose key columns are incomplete, is named and left out. The named problems are `absent-table`, `incomplete`, `replicated-divergence` (shard, both-way counts, up to five keys), `duplicate` (all kept), `orphan-value`, `orphan-tag` and `unresolved-parent`, each with a count and up to five examples. Tests 7–9 show each case named, on the right shard, with nothing else changed. **Deliberate breakage (iv), (viii)** each fail their tests. |
 | F7 | **MEASUREMENT** | Records only, never `*Value` rows. Size, time and memory measured on a copy of the sweep store, with a one-row discriminator. | 02 | ✅ **Done, 2026-09-25.** Every statement naming a value table is a `count(*) … GROUP BY` (test 6). The sweep copy has 30 341 records, and every class's record count equals its row count. Every value table's total equals its parents' summed `value_count`. There is no problem of any kind, and the 12 replicated classes agree on all four shards. `read_inventory` took 6.8 s, with a peak RSS of 228 MB (175 MB of it the factories' imports). The full listing is 19.3 MB of JSON. Deleting `QuadSourceIntegral` serial 329386 on shard 0 took the class from 7 706 to 7 705 records, removing exactly the record with $k=q=r=3.05\times10^7$, $z_{\rm response}=0.1$, atol $10^{-32}$, rtol $10^{-8}$. The other 20 classes were identical, record for record. Its 9 tag rows were then named `orphan-tag`. The copy and the originals were unchanged by every read, and the copy was deleted. |
-| F8 | **REMEDY** | The display (`main.py --inventory`, read-only and needing no Ray) and `available_run_labels` consume the structured inventory. Closes `[00-inventory-run-prunes-unvalidated-rows-by-default]` and the `BackgroundModel` half of `[03-qcd-inventory-does-not-report-the-representation]`. | 03 | ⏸️ held |
-| F9 | **REMEDY** | Retire the old three shapes, the old `inventory()` methods, `ShardedPool.inventory`, `_merge_queue` and `inventory_config`, so that there is one inventory service. | 03 | ⏸️ held |
-| F10 | **FACILITY** | The fingerprint, a pure function of the structured inventory. It holds a format version, and per class and per tag set a count and a digest over the sorted canonical records, plus an overall digest. No timestamps. | 04 | ⏸️ held |
-| F11 | **FACILITY** | The `fingerprint` sidecar field, a known field of `RunRegistry.stores` that copy and move carry. `python -m RunRegistry store fingerprint`: read-only, refuses a store a `running` run names, compares against the recorded value and writes only when asked. | 04 | ⏸️ held |
-| F12 | **FACILITY** | The digest in the run record at finish. `scoped_pipeline_run.py` and `quadsource_atol_sweep.py`, including `--build` for the A3 v2 store (D2), take one when a registered run finishes. Closes `run-registry`'s `[04-a-runs-product-is-named-but-never-fingerprinted]`. | 04 | ⏸️ held |
+| F8 | **REMEDY** | The display (`main.py --inventory`, read-only and needing no Ray) and `available_run_labels` consume the structured inventory. Closes `[00-inventory-run-prunes-unvalidated-rows-by-default]` and the `BackgroundModel` half of `[03-qcd-inventory-does-not-report-the-representation]`. | 03 | ✍️ written |
+| F9 | **REMEDY** | Retire the old three shapes, the old `inventory()` methods, `ShardedPool.inventory`, `_merge_queue` and `inventory_config`, so that there is one inventory service. | 03 | ✍️ written |
+| F10 | **FACILITY** | The fingerprint, a pure function of the structured inventory. It holds a format version, and per class and per tag set a count and a digest over the sorted canonical records, plus an overall digest. No timestamps. | 04 | ✍️ written |
+| F11 | **FACILITY** | The `fingerprint` sidecar field, a known field of `RunRegistry.stores` that copy and move carry. `python -m RunRegistry store fingerprint`: read-only, refuses a store a `running` run names, compares against the recorded value and writes only when asked. | 04 | ✍️ written |
+| F12 | **FACILITY** | The digest in the run record at finish. `scoped_pipeline_run.py` and `quadsource_atol_sweep.py`, including `--build` for the A3 v2 store (D2), take one when a registered run finishes. Closes `run-registry`'s `[04-a-runs-product-is-named-but-never-fingerprinted]`. | 04 | ✍️ written |
 | F13 | **REMEDY** | Remedial: the three existing stores fingerprinted read-only, and each fingerprint written into its sidecar (D3), as is any store built here before 04 landed, such as the A3 v2 store. A registry copy of one is fingerprinted, and the digests localise the known differences. | 05 | ⏸️ held |
 
 ---
