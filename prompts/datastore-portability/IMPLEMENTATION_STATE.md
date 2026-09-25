@@ -1,7 +1,8 @@
 # Datastore portability campaign — implementation state
 
-**Last updated:** 2026-09-25 · **Status: 3 of 3 prompts landed (01, 02, 03).** Its two open
-issues were assigned to `prompts/store-retirement` prompt 02 on 2026-09-25 (§3).
+**Last updated:** 2026-09-25 · **Status: 3 of 3 prompts landed (01, 02, 03).** Its last two
+issues were assigned to `prompts/store-retirement` prompt 02 on 2026-09-25, which closed both the
+same day (§4). None is open.
 Prompt 01
 measured what a moved store does on the unfixed tree: it **opens silently and recreates its old
 directory with empty shards**. It does not raise. Prompt 01 then made `ShardedPool` fail closed on

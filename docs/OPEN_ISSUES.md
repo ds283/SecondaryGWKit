@@ -687,8 +687,8 @@ Prompt 03, the registry's version of that, was held on user decisions, and was r
 Prompt 03 landed the same day: `RunRegistry/stores.py` owns the store sidecar, and `python -m RunRegistry store`
 creates, adopts, copies and moves stores with it, which closed `[store-sidecar-manifests-have-no-owner]` on the board's §4.
 
-Its two open issues were **assigned to `prompts/store-retirement` prompt 02 on 2026-09-25**,
-and their rows moved to §1.14. They stay on this campaign's board.
+Its two remaining issues were assigned to `prompts/store-retirement` prompt 02 on 2026-09-25, and
+**that prompt closed both the same day**, on this campaign's board's §4. None is open.
 
 ### 1.13 The store fingerprint campaign
 

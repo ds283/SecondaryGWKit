@@ -56,6 +56,27 @@ of them, it found, also blocks `--build --resume` of the A3 v2 store.
 | 04 | [Amend an unknown field](04-amend-an-unknown-field.md) | **R9** | Sonnet | ✍️ yes, 2026-09-25 | ⬜ after 03 | — | — |
 | 05 | Retire the two stores | **R10**–**R12** | Opus | ⏸️ held until 01–04 land | — | — | — |
 
+**Orchestrator review of prompt 02 (2026-09-25).** All eight checks in `orchestrator/prompt-02.md`
+§3 passed on `226889f`.
+- **Scope.** The script's diff is confined to `prepare()`, `assert_store_is_self_consistent`,
+  `--force` and their text. `prepare()` has one `copy_store` call, with the purpose verbatim.
+- **Tests.** The new module passed twice.
+- **Mutations.** (i) reproduced its two recorded failures, and (ii) its `failures=4, errors=4`.
+  One defect in the log: its diffs do not apply as printed. They are indented as a Markdown block,
+  and (i)'s hunk header counts 16 old lines where the hunk has 21. So each needed `git apply
+  --recount --ignore-whitespace`, and (ii) also `-C1`. The code they describe is what was tested.
+- **`var/`.** The orchestrator's own snapshot of every file under `var/datastores/` and
+  `var/runs/`, 51 entries, was identical before and after.
+- **Suites.** All six re-run: AdaptiveLevin 32, ComputeTargets 552, CosmologyModels 39,
+  Datastore 177, LiouvilleGreen 148 (1 skipped), RunRegistry 128 (+11). `black --check` is clean.
+- **Index.** Two stale sentences saying the issues were open, in `docs/OPEN_ISSUES.md` §1.12 and
+  `datastore-portability`'s header, were corrected in the review commit.
+- **One latent point, not an issue.** The check compares `resolve_shard_path(primary, …)`, which
+  does not resolve symbolic links, against `shard_paths(primary)[i].resolve()`, which does. Given an
+  absolute primary path through a symbolic link, it would refuse a sound store. That is fail-closed,
+  never silent, and every caller passes a resolved path (`REPO_ROOT` is resolved, and `run_build`
+  resolves `--database`), so nothing is affected today.
+
 **03 and 04 were held on decisions, and were released on 2026-09-25** when the user approved D0
 and D3–D7 as worded, and were written the same day against README §4's names, which gained
 `resume` on `closed_store_files` and `--dry-run` on `store retire` before anything was dispatched. **05 is held, not
