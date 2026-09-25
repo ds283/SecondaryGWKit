@@ -1,8 +1,10 @@
 # Store retirement campaign — implementation state
 
-**Last updated:** 2026-09-25 · **Status: 4 of 5 prompts landed (01, 02, 03, 04). 05 is written and
-ready.** The user approved D0 and D3–D7 as worded on 2026-09-25 (README §6.2), which released 03
-and 04. 05 was written the same day, after 01–04 had landed. 01 and 02 are independent of each
+**Last updated:** 2026-09-26 · **Status: complete. All 5 prompts landed (01–05).** 05 landed on
+2026-09-26: the user retired the sweep store and the A3 backup on 2026-09-25, and amended the live
+A3 sidecar's `backup` field on 2026-09-26. The user approved D0 and D3–D7 as worded on
+2026-09-25 (README §6.2), which released 03 and 04. 05 was written the same day, after 01–04 had
+landed. 01 and 02 are independent of each
 other; 03 follows 01, and 04 follows 03. D4 was narrowed when 03 was written: an unreadable
 `shards` table is refused even under `--without-fingerprint` (README §6.2).
 
@@ -54,7 +56,7 @@ of them, it found, also blocks `--build --resume` of the A3 v2 store.
 | 02 | [The sweep prepares through the registry](02-the-sweep-prepares-through-the-registry.md) | **R4**–**R5** | Sonnet | ✍️ yes, 2026-09-25 | ✅ 2026-09-25 | *"Make quadsource_atol_sweep prepare and check through the registry"* | [`logs/02-…`](logs/02-the-sweep-prepares-through-the-registry.md) |
 | 03 | [Retire a store](03-retire-a-store.md) | **R6**–**R8** | Opus | ✍️ yes, 2026-09-25 | ✅ 2026-09-25 | *"Retire a closed store and keep its sidecar as a tombstone"* | [`logs/03-…`](logs/03-retire-a-store.md) |
 | 04 | [Amend an unknown field](04-amend-an-unknown-field.md) | **R9** | Sonnet | ✍️ yes, 2026-09-25 | ✅ 2026-09-25 | *"Add amend_sidecar and store amend, for one unknown field"* | [`logs/04-…`](logs/04-amend-an-unknown-field.md) |
-| 05 | [Retire the two stores](05-retire-the-two-stores.md) | **R10**–**R12** | Opus | ✍️ yes, 2026-09-25 | ⬜ after 04 | — | — |
+| 05 | [Retire the two stores](05-retire-the-two-stores.md) | **R10**–**R12** | Opus | ✍️ yes, 2026-09-25 | ✅ 2026-09-26 | *"Retire the sweep store and the A3 backup"* | [`logs/05-…`](logs/05-retire-the-two-stores.md), with [`logs/05-tombstones.json`](logs/05-tombstones.json) |
 
 **Orchestrator review of prompt 04 (2026-09-25).** All ten checks in `orchestrator/prompt-04.md`
 §3 passed on `66617c9`, from one dispatch. There are two findings, both opened in §3, and a
@@ -239,6 +241,28 @@ runs in three phases: the agent prepares and dry-runs, the user retires the two 
 checks and drafts the amendment, the user amends, and the agent records. Its orchestrator notes are
 [`orchestrator/prompt-05.md`](orchestrator/prompt-05.md).
 
+**Prompt 05 landed (2026-09-26).** It wrote no code. No §5 stop condition was met in any phase.
+- **The retirements (2026-09-25).** The user ran both `store retire` commands, sweep first, after
+  the agent's dry runs had shown each deleting exactly its own four shards and primary. Each dry run
+  showed a `matched` fingerprint with the digest recorded on 2026-09-25, and the references §1 of
+  the prompt predicted. The backup's dry run showed the resolver reading its legacy absolute
+  records as its own siblings (audit §2.7). Both stores are completed tombstones. Completed at
+  `23:35:57` (sweep) and `23:36:55` (backup).
+- **The amendment (2026-09-26).** The user ran `store amend` on the live A3 sidecar's `backup`
+  field: `retained` is now `false`, `path` is kept, and `retired` and `tombstone` name the backup's
+  tombstone. The old value is verbatim in the `amend` entry's `before`.
+- **What changed under `var/`.** Ten store files are gone. The two retired sidecars and the live
+  A3 sidecar changed, and so did the directory entries that follow from those. Nothing else
+  changed. **The live A3 store's five `.sqlite` files are byte-identical, mtimes included**, from
+  before the first dry run to after the amendment (log 05, C2). The orchestrator's independent
+  snapshots agreed at every step.
+- **The evidence.** `var/` is gitignored, so the two tombstones and the amended live sidecar are
+  committed verbatim in `logs/05-tombstones.json`.
+- **Records.** Dated notes on the `run-registry` board, beside the retained-backup paragraph, which
+  explain `var/runs/a3-pilot/BACKUP_PATH` without editing it, and on the `handover` board, under
+  `[a3-baseline-quadsource-integrals-are-1680-short]`. `QUADSOURCE-TOLERANCE-SWEEP.md:15-17` is now
+  true, and was not edited. No issue was opened.
+
 ---
 
 ## 2. Items
@@ -254,9 +278,9 @@ checks and drafts the amendment, the user amends, and the agent records. Its orc
 | R7 | **FACILITY** | `retire_store` and `python -m RunRegistry store retire`. It refuses a `running` run, alive or stale, and a missing or mismatched fingerprint, except under D4. It writes the tombstone, with its file list, before deleting anything, then calls `delete_store`, then marks the tombstone complete. A second call completes an interrupted one. It reports the references it finds (D5). | 03 | ✅ the interruption table in log 03, one test per row, with a `.tmp` left by a killed write in two of them; mutations (i), (ii), (iii), (vi), (vii), (viii), (ix) |
 | R8 | **GUARD** | `begin(results=…)` refuses a retired store. Copy, move, fingerprint, adopt and amend refuse a tombstone (D6). `store show` renders one. The `RunRegistry/stores.py` and `__main__.py` docstrings follow D0. | 03 | ✅ for begin, copy and move from and to, fingerprint, adopt and create; amend's own tombstone refusal is confirmed by prompt 04 (log 04, `TestRefusals.test_a_tombstone_complete_or_not`; mutation (v)). Both docstrings quoted before and after in log 03; mutation (iv). The package docstring in `RunRegistry/__init__.py` still says "deletes nothing": `[03-the-package-docstring-still-says-the-registry-deletes-nothing]` |
 | R9 | **FACILITY** | `amend_sidecar` and `store amend`: replace or remove one unknown field of a registry sidecar, with a required reason, recording the old value in an `amend` history entry (D5). | 04 | ✅ every refusal in the prompt's §2.1 (log 04, `TestRefusals`); the `before`/`after` markers are a tagged wrapper, never a sentinel (`TestAmend`, `TestHistoryRule.test_the_amend_markers_shape`; no committed test amends a value shaped like the marker, see the orchestrator's review of prompt 04 and `[04-no-test-amends-a-value-shaped-like-the-marker]`); copy and move carry an amended field and its entry unchanged (`TestCopyAndMove`); two amendments of one field read back as a sequence (`TestTwoAmendments`); mutations (i)–(v) |
-| R10 | **REMEDY** | Remedial: the sweep store retired by the user with `store retire`, checked before and after by the prompt's agent. `QUADSOURCE-TOLERANCE-SWEEP.md:15-17` then becomes true, and is not edited. | 05 | ⏸️ |
-| R11 | **REMEDY** | Remedial: the backup retired the same way. The live A3 sidecar's `backup` field is then corrected by `store amend`. | 05 | ⏸️ |
-| R12 | **RECORD** | The retirements recorded on the `run-registry` board, with `var/runs/a3-pilot/BACKUP_PATH` explained there rather than edited, and on the `handover` board. | 05 | ⏸️ |
+| R10 | **REMEDY** | Remedial: the sweep store retired by the user with `store retire`, checked before and after by the prompt's agent. `QUADSOURCE-TOLERANCE-SWEEP.md:15-17` then becomes true, and is not edited. | 05 | ✅ retired by the user 2026-09-25, completed `23:35:57`; a completed tombstone with fingerprint `matched` (`2c2dde68…`), its five files gone, nothing else changed (log 05, B2–B3). The sweep doc was not edited |
+| R11 | **REMEDY** | Remedial: the backup retired the same way. The live A3 sidecar's `backup` field is then corrected by `store amend`. | 05 | ✅ retired by the user 2026-09-25, completed `23:36:55`; every deleted file was inside its own directory, fingerprint `matched` (`eedcdfb2…`), and the live A3 store byte-identical (log 05, B3). `backup` amended by the user 2026-09-26, with the old value in the `amend` entry's `before` (log 05, C1) |
+| R12 | **RECORD** | The retirements recorded on the `run-registry` board, with `var/runs/a3-pilot/BACKUP_PATH` explained there rather than edited, and on the `handover` board. | 05 | ✅ dated 2026-09-26 notes on both boards, additions only; the tombstones and the amended live sidecar committed in `logs/05-tombstones.json` |
 
 ---
 
@@ -404,14 +428,14 @@ other suites were last measured at `50a24ac` by the `store-fingerprint` prompt 0
 AdaptiveLevin 32, ComputeTargets 552 (the known wall-clock flake aside), CosmologyModels 39,
 LiouvilleGreen 148 (1 skipped). No code has changed between the two.
 
-| Suite | At `42d4910` (campaign written) | After prompt 02 | After prompt 01 | After prompt 03 | After prompt 04 |
-|---|---|---|---|---|---|
-| `AdaptiveLevin` | 32 OK (at `50a24ac`) | not re-run (prompt 02 touches neither its code nor its imports) | 32 OK | 32 OK | 32 OK |
-| `ComputeTargets` | 552 OK (at `50a24ac`; the flake is known) | 552 OK | 552 OK (the flake did not occur) | 552 OK (the flake did not occur) | 552 OK (the flake did not occur) |
-| `CosmologyModels` | 39 OK (at `50a24ac`) | not re-run (prompt 02 touches neither its code nor its imports) | 39 OK | 39 OK | 39 OK |
-| `Datastore` | 177 OK | 177 OK | 206 OK (177 + the 29 tests prompt 01 added) | 206 OK | 206 OK |
-| `LiouvilleGreen` | 148 OK, skipped=1 (at `50a24ac`) | not re-run (prompt 02 touches neither its code nor its imports) | 148 OK, skipped=1 | 148 OK, skipped=1 | 148 OK, skipped=1 |
-| `RunRegistry` | 117 OK | 128 OK (117 + the 11 tests prompt 02 added) | 128 OK | 169 OK (128 + the 41 tests prompt 03 added) | 190 OK (169 + the 21 tests prompt 04 added) |
+| Suite | At `42d4910` (campaign written) | After prompt 02 | After prompt 01 | After prompt 03 | After prompt 04 | After prompt 05 |
+|---|---|---|---|---|---|---|
+| `AdaptiveLevin` | 32 OK (at `50a24ac`) | not re-run (prompt 02 touches neither its code nor its imports) | 32 OK | 32 OK | 32 OK | not re-run (no code changed) |
+| `ComputeTargets` | 552 OK (at `50a24ac`; the flake is known) | 552 OK | 552 OK (the flake did not occur) | 552 OK (the flake did not occur) | 552 OK (the flake did not occur) | not re-run (no code changed) |
+| `CosmologyModels` | 39 OK (at `50a24ac`) | not re-run (prompt 02 touches neither its code nor its imports) | 39 OK | 39 OK | 39 OK | not re-run (no code changed) |
+| `Datastore` | 177 OK | 177 OK | 206 OK (177 + the 29 tests prompt 01 added) | 206 OK | 206 OK | not re-run (no code changed) |
+| `LiouvilleGreen` | 148 OK, skipped=1 (at `50a24ac`) | not re-run (prompt 02 touches neither its code nor its imports) | 148 OK, skipped=1 | 148 OK, skipped=1 | 148 OK, skipped=1 | not re-run (no code changed) |
+| `RunRegistry` | 117 OK | 128 OK (117 + the 11 tests prompt 02 added) | 128 OK | 169 OK (128 + the 41 tests prompt 03 added) | 190 OK (169 + the 21 tests prompt 04 added) | not re-run (no code changed) |
 
 Prompt 01 landed after prompt 02, so its column is the later one. Its baselines were the
 orchestrator's at `226889f`: AdaptiveLevin 32, ComputeTargets 552, CosmologyModels 39, Datastore
@@ -427,3 +451,7 @@ Prompt 02's own verification is in
 prompt 01's in [`logs/01-delete-a-closed-store.md`](logs/01-delete-a-closed-store.md), prompt
 03's in [`logs/03-retire-a-store.md`](logs/03-retire-a-store.md), and prompt 04's in
 [`logs/04-amend-an-unknown-field.md`](logs/04-amend-an-unknown-field.md).
+
+**Prompt 05 (2026-09-26).** The suites were not re-run. Prompt 05 changed no code: its commit holds
+its log, `logs/05-tombstones.json` and three boards. Its checks were of real state under `var/`,
+against a before-picture, and are in [`logs/05-retire-the-two-stores.md`](logs/05-retire-the-two-stores.md).

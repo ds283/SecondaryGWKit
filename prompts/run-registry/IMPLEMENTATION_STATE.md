@@ -214,6 +214,19 @@ README §0.3 calls worse than nothing.
   `main.py --inventory`. All 28 per-table counts matched the original's, and a one-row edit to
   the copy showed up in the inventory, so the copy's own files were read. The originals and the
   backup were unchanged in mtime, size, SHA-256 and every row count.
+  **Note (2026-09-26): that backup has been retired.** The user retired it with `store retire` on
+  2026-09-25 (completed `23:36:55`), under
+  [`store-retirement`](../store-retirement/IMPLEMENTATION_STATE.md) prompt 05. Its four shards and
+  its primary were deleted. Each deleted file was read through the one resolver as the backup's
+  own sibling, and the live A3 store was byte-identical afterwards. Its directory now holds only its
+  tombstone, `handover-A3-baseline-lambdacdm.manifest.json`, which says when, why and what the
+  store held. The live A3 sidecar's `backup` field was then corrected with `store amend` to say
+  `"retained": false`. **`var/runs/a3-pilot/BACKUP_PATH`** still names
+  `var/datastores/backup-pre-resume-20260921T091011`. That file is a pre-registry record of the
+  past, written when the backup was taken, and it is not edited. `var/runs/` is outside
+  `store-retirement`'s scope (its README §1), and its decision D5 keeps records of the past as
+  they were written. A reader who follows it now lands on the tombstone. Record:
+  [`../store-retirement/logs/05-retire-the-two-stores.md`](../store-retirement/logs/05-retire-the-two-stores.md).
   **Cross-machine rsync no longer depends on the same absolute path**, for new stores and legacy
   ones alike. What is still unsupported is renaming the *shards*. That is
   `[01-whole-store-rename-is-unsupported]` on the `datastore-portability` board, a design choice

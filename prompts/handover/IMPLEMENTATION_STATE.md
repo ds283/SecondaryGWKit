@@ -303,6 +303,18 @@ board is (campaign README §5 rule 4). Where the two disagree, this one is right
   model, both $T_k$ sectors, both $G_k$ sectors, `GkSource` and the policies — so there is no case
   for reusing any of it.
 
+  **Note (2026-09-26): the sweep store has been retired.** `var/datastores/handover-atol-sweep`,
+  the working copy whose first run wrote the 54 rows above, was retired by the user with
+  `store retire` on 2026-09-25 (completed `23:35:57`), under
+  [`store-retirement`](../store-retirement/IMPLEMENTATION_STATE.md) prompt 05. Its four shards and
+  its primary are gone. Its sidecar stays as the tombstone, recording when, why and the
+  fingerprint of what it held. The four sweep runs still name its path, and following them now
+  lands on that tombstone. So `docs/handover/QUADSOURCE-TOLERANCE-SWEEP.md:15-17`, which says the
+  store was "**deleted after this document was written**", is now true. It was written in
+  anticipation, and it was not edited. The 54 rows in the live A3 store are unaffected, and so is
+  that store. Record:
+  [`../store-retirement/logs/05-retire-the-two-stores.md`](../store-retirement/logs/05-retire-the-two-stores.md).
+
   **Next step:** do **not** restart it at the shipped tolerance pair. The sweep named in the first
   issue above decides the pair; if the pair moves, the whole store is regenerated anyway and the
   1680 are moot, and if it does not, the 8–10 days is the honest price and is a decision for
