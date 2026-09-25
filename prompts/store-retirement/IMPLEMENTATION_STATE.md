@@ -1,7 +1,7 @@
 # Store retirement campaign — implementation state
 
-**Last updated:** 2026-09-25 · **Status: 1 of 5 prompts landed (02). 01, 03 and 04 are written;
-01 is ready.** The user approved D0 and D3–D7 as worded on 2026-09-25 (README §6.2), which released
+**Last updated:** 2026-09-25 · **Status: 2 of 5 prompts landed (01, 02). 03 and 04 are written;
+03 is ready.** The user approved D0 and D3–D7 as worded on 2026-09-25 (README §6.2), which released
 03 and 04. 05 is held until 01–04 land. 01 and 02 are independent of each other; 03 follows 01, and
 04 follows 03. D4 was narrowed when 03 was written: an unreadable `shards` table is refused even
 under `--without-fingerprint` (README §6.2).
@@ -50,7 +50,7 @@ of them, it found, also blocks `--build --resume` of the A3 v2 store.
 
 | # | Prompt | Covers | Model | Written? | Landed? | Commit | Log |
 |---|---|---|---|---|---|---|---|
-| 01 | [Delete a closed store](01-delete-a-closed-store.md) | **R1**–**R3** | Opus | ✍️ yes, 2026-09-25 | ⬜ ready (D0 decided) | — | — |
+| 01 | [Delete a closed store](01-delete-a-closed-store.md) | **R1**–**R3** | Opus | ✍️ yes, 2026-09-25 | ✅ 2026-09-25 | *"Delete a closed sharded store's own files through the resolver"* | [`logs/01-…`](logs/01-delete-a-closed-store.md) |
 | 02 | [The sweep prepares through the registry](02-the-sweep-prepares-through-the-registry.md) | **R4**–**R5** | Sonnet | ✍️ yes, 2026-09-25 | ✅ 2026-09-25 | *"Make quadsource_atol_sweep prepare and check through the registry"* | [`logs/02-…`](logs/02-the-sweep-prepares-through-the-registry.md) |
 | 03 | [Retire a store](03-retire-a-store.md) | **R6**–**R8** | Opus | ✍️ yes, 2026-09-25 | ⬜ after 01 | — | — |
 | 04 | [Amend an unknown field](04-amend-an-unknown-field.md) | **R9** | Sonnet | ✍️ yes, 2026-09-25 | ⬜ after 03 | — | — |
@@ -89,9 +89,9 @@ In 05 **the user** runs each `store retire`: no agent deletes a real store (READ
 
 | Item | Kind | Description | Prompt | Status |
 |---|---|---|---|---|
-| R1 | **FACILITY** | `ShardedPool.closed_store_files` and `ShardedPool.delete_store`. They share one planning step through `_read_closed_store`, never follow a stored record as a path, and refuse a hot journal, an unusable shard or a file outside the primary's directory. Shards go first and the primary last. | 01 | ⬜ |
-| R2 | **GUARD** | The interruption property: an interrupted deletion leaves a primary and some of its shards. The constructor refuses that state, `delete_store` refuses it, and `resume=True` completes it. `resume` relaxes the missing-shard refusal and nothing else. | 01 | ⬜ |
-| R3 | **CHARTER** | `CLAUDE.md:52` in D0's wording, and `ShardedPool`'s closed-store comment to match. | 01 | ⬜ (D0 decided) |
+| R1 | **FACILITY** | `ShardedPool.closed_store_files` and `ShardedPool.delete_store`. They share one planning step through `_read_closed_store`, never follow a stored record as a path, and refuse a hot journal, an unusable shard or a file outside the primary's directory. Shards go first and the primary last. | 01 | ✅ `_plan_deletion` is the one plan. Legacy records into a populated other directory delete only their siblings (log 01, test 2; mutation (i-b) shows the other directory's shards deleted without the resolver and the directory assertion). |
+| R2 | **GUARD** | The interruption property: an interrupted deletion leaves a primary and some of its shards. The constructor refuses that state, `delete_store` refuses it, and `resume=True` completes it. `resume` relaxes the missing-shard refusal and nothing else. | 01 | ✅ rows D0–D5 of log 01's table, for a new-style and a legacy store, each by two injections |
+| R3 | **CHARTER** | `CLAUDE.md:52` in D0's wording, and `ShardedPool`'s closed-store comment to match. | 01 | ✅ both quoted before and after in log 01 |
 | R4 | **REMEDY** | `quadsource_atol_sweep.py` `prepare()` through one `RunRegistry.stores.copy_store` call. `--force` refuses with the new rule. After it, `--prepare` refuses at a name whose sidecar exists. Closes `datastore-portability`'s `[03-atol-sweep-prepare-writes-its-store-sidecar-by-hand]`. | 02 | ✅ |
 | R5 | **REMEDY** | `assert_store_is_self_consistent` compares serial by serial through `resolve_shard_path`, which unblocks `--build --resume` of every store built since `datastore-portability` prompt 01. Closes `[01-atol-sweep-check-expects-absolute-shard-records]`. | 02 | ✅ |
 | R6 | **FORMAT** | A known `retired` field and a terminal `retire` history operation. The reader tells a tombstone from a broken sidecar (`SidecarReading.retired`), and calls a primary that has reappeared at a retired name a problem. | 03 | ⬜ |
@@ -107,8 +107,9 @@ In 05 **the user** runs each `store retire`: no agent deletes a real store (READ
 ## 3. Active and unresolved issues
 
 Three were opened on 2026-09-25 by the audit
-([`docs/store-retirement-audit.md`](../../docs/store-retirement-audit.md)), which is not a prompt.
-None is assigned to a prompt of this campaign. Each is recorded here for its owner. Two further
+([`docs/store-retirement-audit.md`](../../docs/store-retirement-audit.md)), which is not a prompt,
+and one by prompt 01 the same day. None is assigned to a prompt of this campaign. Each is recorded
+here for its owner. Two further
 issues, owned by `datastore-portability`, are assigned to prompt 02. They stay on that board, and
 are indexed at `docs/OPEN_ISSUES.md` §1.14.
 
@@ -166,6 +167,23 @@ are indexed at `docs/OPEN_ISSUES.md` §1.14.
     `store amend` is the remedy for a given copy.
   - **Measurement:** audit §2.12. Indexed at `docs/OPEN_ISSUES.md` §1.14.
 
+- **[01-cross-filesystem-move-advice-says-delete-by-hand]** *(opened 2026-09-25 by prompt 01)*
+  - **The defect.** When `ShardedPool.move_store` fails with `EXDEV`, `_failure_message` advises
+    "copy it instead, and then delete the source by hand". `RunRegistry.stores.move_store` calls
+    `ShardedPool.move_store` (`RunRegistry/stores.py:753`), so `store move` gives that advice about
+    a registered store.
+  - **Impact.** Low, and only on a failed cross-filesystem move. The advice contradicts decision
+    6.1.1: a registered store is removed by `store retire`, never by hand. A person who followed
+    it would leave the source's sidecar describing nothing, the broken case of audit §2.1, with no
+    tombstone. Nothing acts on the advice automatically.
+  - **Next step.** Reword the advice so that a registered store's source is retired, not deleted
+    by hand. `Datastore/tests/test_copy_move_store.py`'s
+    `test_move_across_filesystems_fails_before_anything_moves` asserts the current text verbatim,
+    so the rewording needs a decision about that test, which this campaign's rule 7 forbids
+    modifying. Prompt 01 was told to leave the text alone. Unassigned.
+  - **Measurement:** log 01, "Observations not acted on", item 1. Indexed at
+    `docs/OPEN_ISSUES.md` §1.14.
+
 ---
 
 ## 4. Resolved issues
@@ -181,14 +199,19 @@ other suites were last measured at `50a24ac` by the `store-fingerprint` prompt 0
 AdaptiveLevin 32, ComputeTargets 552 (the known wall-clock flake aside), CosmologyModels 39,
 LiouvilleGreen 148 (1 skipped). No code has changed between the two.
 
-| Suite | At `42d4910` (campaign written) | After prompt 02 |
-|---|---|---|
-| `AdaptiveLevin` | 32 OK (at `50a24ac`) | not re-run (prompt 02 touches neither its code nor its imports) |
-| `ComputeTargets` | 552 OK (at `50a24ac`; the flake is known) | 552 OK |
-| `CosmologyModels` | 39 OK (at `50a24ac`) | not re-run (prompt 02 touches neither its code nor its imports) |
-| `Datastore` | 177 OK | 177 OK |
-| `LiouvilleGreen` | 148 OK, skipped=1 (at `50a24ac`) | not re-run (prompt 02 touches neither its code nor its imports) |
-| `RunRegistry` | 117 OK | 128 OK (117 + the 11 tests prompt 02 added) |
+| Suite | At `42d4910` (campaign written) | After prompt 02 | After prompt 01 |
+|---|---|---|---|
+| `AdaptiveLevin` | 32 OK (at `50a24ac`) | not re-run (prompt 02 touches neither its code nor its imports) | 32 OK |
+| `ComputeTargets` | 552 OK (at `50a24ac`; the flake is known) | 552 OK | 552 OK (the flake did not occur) |
+| `CosmologyModels` | 39 OK (at `50a24ac`) | not re-run (prompt 02 touches neither its code nor its imports) | 39 OK |
+| `Datastore` | 177 OK | 177 OK | 206 OK (177 + the 29 tests prompt 01 added) |
+| `LiouvilleGreen` | 148 OK, skipped=1 (at `50a24ac`) | not re-run (prompt 02 touches neither its code nor its imports) | 148 OK, skipped=1 |
+| `RunRegistry` | 117 OK | 128 OK (117 + the 11 tests prompt 02 added) | 128 OK |
+
+Prompt 01 landed after prompt 02, so its column is the later one. Its baselines were the
+orchestrator's at `226889f`: AdaptiveLevin 32, ComputeTargets 552, CosmologyModels 39, Datastore
+177, LiouvilleGreen 148 (1 skipped), RunRegistry 128.
 
 Prompt 02's own verification is in
-[`logs/02-the-sweep-prepares-through-the-registry.md`](logs/02-the-sweep-prepares-through-the-registry.md).
+[`logs/02-the-sweep-prepares-through-the-registry.md`](logs/02-the-sweep-prepares-through-the-registry.md),
+and prompt 01's in [`logs/01-delete-a-closed-store.md`](logs/01-delete-a-closed-store.md).

@@ -43,6 +43,21 @@ class _RelocationPlan(NamedTuple):
     temp_primary: Optional[Path]
 
 
+class _DeletionPlan(NamedTuple):
+    """What closed_store_files / delete_store name, fixed before anything is deleted."""
+
+    primary: Path
+    # every shard the primary's `shards` table names, serial -> resolved path, present or not
+    recorded: Dict[int, Path]
+    # the shards to delete, serial -> path, in ascending serial: all of them, or under resume only
+    # those still present
+    shards: Dict[int, Path]
+
+    def files(self) -> List[Path]:
+        """The files to delete, in the order they are deleted: the shards, then the primary."""
+        return [self.shards[s] for s in sorted(self.shards)] + [self.primary]
+
+
 class ShardedPool:
     """
     ShardedPool manages a pool of datastore actors that cooperate to
@@ -583,7 +598,10 @@ class ShardedPool:
 
     @staticmethod
     def _shard_file_problems(
-        shard_db_files: Dict[int, PathType], shard_records: Dict[int, str]
+        shard_db_files: Dict[int, PathType],
+        shard_records: Dict[int, str],
+        *,
+        missing_ok: bool = False,
     ) -> List[str]:
         """
         Return one message for each resolved shard that is not a usable file (missing, not a
@@ -592,6 +610,11 @@ class ShardedPool:
         """
         problems = []
         for serial, path in sorted(shard_db_files.items()):
+            # missing_ok (delete_store(resume=True) only) passes over a shard of which no entry of
+            # any kind exists. A dangling symbolic link is an entry, and is still refused, and so is
+            # a pair of serials resolving to one file, missing or not
+            if missing_ok and not os.path.lexists(path):
+                continue
             problem = shard_file_problem(Path(path))
             if problem is not None:
                 stored = shard_records.get(serial, "<unknown>")
@@ -610,18 +633,21 @@ class ShardedPool:
 
         return problems
 
-    # COPY OR MOVE A CLOSED STORE
+    # COPY, MOVE OR DELETE A CLOSED STORE
     #
-    # A store is its primary and its shards, and nothing else: these methods copy, move, check and
-    # mention no other file. They are static and work on a closed store. An open pool has one
-    # Datastore actor per shard holding its file, so they are not methods of an open pool, and they
-    # start no Ray, create no actor and need no instance. They cannot tell whether some process
+    # A store is its primary and its shards, and nothing else: these methods copy, move, delete,
+    # check and mention no other file. They are static and work on a closed store. An open pool has
+    # one Datastore actor per shard holding its file, so they are not methods of an open pool, and
+    # they start no Ray, create no actor and need no instance. They cannot tell whether some process
     # has the store open (a rollback-journal store leaves no file while idle); making sure nothing
     # is using it is the caller's job.
     #
-    # They never delete a file, never overwrite one, and never write the source. On failure they
-    # do not clean up: they raise, naming the step that failed and the store files that exist at
-    # each end. Deleting is for a person.
+    # copy_store and move_store never delete a file, never overwrite one, and never write the
+    # source. delete_store deletes a closed store's own files, and those only: the shards its
+    # primary's `shards` table names, read through the one resolver, and then the primary. Its one
+    # intended caller is the registry's `store retire`, which keeps the store's sidecar behind as
+    # its record. On failure none of them cleans up: each raises, naming the step that failed and
+    # the store files that exist. Deleting any other file is for a person.
 
     @staticmethod
     def copy_store(src: PathType, dst: PathType) -> Dict[int, Path]:
@@ -664,6 +690,74 @@ class ShardedPool:
         return ShardedPool._relocate_store("move", src, dst)
 
     @staticmethod
+    def closed_store_files(primary: PathType, *, resume: bool = False) -> List[Path]:
+        """
+        Return every file of the closed store whose primary is ``primary``: its shards in ascending
+        serial, then the primary, each absolute. These are exactly the files delete_store with the
+        same ``resume`` deletes, in the order it deletes them, because both come from one plan
+        (_plan_deletion).
+
+        Refuses exactly as delete_store would, with a RuntimeError naming the file and the reason.
+        Under ``resume=True`` a shard whose file is missing is left out of the list rather than
+        refused. Nothing is written or deleted: the primary is opened only mode=ro, to read its
+        `shards` table.
+        """
+        return ShardedPool._plan_deletion(primary, resume).files()
+
+    @staticmethod
+    def delete_store(primary: PathType, *, resume: bool = False) -> List[Path]:
+        """
+        Delete the closed store whose primary is ``primary``: each shard its `shards` table names,
+        in ascending serial, then the primary. Return the paths deleted, in that order, which are
+        closed_store_files(primary, resume=resume).
+
+        The files are named only through _read_closed_store, the one resolver's read-and-check. A
+        legacy absolute record is read as the sibling of that name in the primary's directory, and
+        the absolute path itself is never opened, so a primary whose records name another store's
+        files deletes its own siblings and never those.
+
+        Refuses, before anything is deleted, if the primary is missing, a symbolic link or not a
+        regular file; if the primary or any shard has a -journal, -wal or -shm beside it; if the
+        `shards` table cannot be read or records no shard; if any record is unusable or resolves to
+        a symbolic link, a non-regular file or a file shared by two serials; if any shard's file is
+        missing; or if any file to be deleted is not in the primary's own directory (see
+        _plan_deletion). Under ``resume=True`` a missing shard is not refused, and every other
+        refusal stands. That completes a deletion that was interrupted, which leaves the primary
+        and some of its shards: the primary is deleted last because its `shards` table is the only
+        list of the shard files.
+
+        Just before each unlink the path is checked again to be a regular file and not a symbolic
+        link. On any failure nothing is cleaned up or retried: it raises, naming the step and every
+        file of the store still present. The remedy is delete_store(primary, resume=True), run
+        deliberately.
+        """
+        plan = ShardedPool._plan_deletion(primary, resume)
+        steps = [
+            (f"delete shard #{serial}", plan.shards[serial])
+            for serial in sorted(plan.shards)
+        ] + [("delete the primary", plan.primary)]
+
+        deleted: List[Path] = []
+        step = "check the files before deleting them"
+        try:
+            for step, path in steps:
+                # the plan checked every file; check again just before the unlink, because a file
+                # that changed since is not the file that was planned
+                problem = shard_file_problem(path)
+                if problem is not None:
+                    raise RuntimeError(
+                        f'"{str(path)}" {problem}, which it was not when the deletion was planned'
+                    )
+                os.unlink(path)
+                deleted.append(path)
+        except Exception as e:
+            raise RuntimeError(
+                ShardedPool._deletion_failure_message(plan, step, e)
+            ) from e
+
+        return deleted
+
+    @staticmethod
     def _journal_paths(path: Path) -> List[Path]:
         """The names SQLite gives the rollback journal and the WAL files of the database ``path``."""
         return [
@@ -672,7 +766,7 @@ class ShardedPool:
 
     @staticmethod
     def _read_closed_store(
-        primary: Path, verb: str
+        primary: Path, verb: str, *, missing_ok: bool = False
     ) -> Tuple[Dict[int, Path], Dict[int, str]]:
         """
         Read the `shards` rows of the closed store ``primary`` (opened mode=ro) and check the files
@@ -699,7 +793,11 @@ class ShardedPool:
                 f'Cannot {verb} sharded datastore "{str(primary)}": {e}'
             ) from e
 
-        problems = ShardedPool._shard_file_problems(files, records)
+        # missing_ok is for delete_store(resume=True) only: a shard file that is not there is not
+        # refused. Every serial is still returned, present or not
+        problems = ShardedPool._shard_file_problems(
+            files, records, missing_ok=missing_ok
+        )
         if len(problems) > 0:
             raise RuntimeError(
                 f'Cannot {verb} sharded datastore "{str(primary)}": '
@@ -945,6 +1043,104 @@ class ShardedPool:
                 "cannot be moved by renaming it; copy it instead, and then delete the source by hand"
             )
         return message
+
+    @staticmethod
+    def _plan_deletion(primary: PathType, resume: bool) -> "_DeletionPlan":
+        """
+        Every refusal of closed_store_files and delete_store, made before anything is deleted, and
+        the one list of the files both name. Raises RuntimeError naming the file and the reason.
+
+        The shard files come from _read_closed_store and from nothing else: the stored records are
+        read only through the one resolver, and never opened as paths. The primary is opened only
+        mode=ro, and nothing is written.
+        """
+        given = Path(primary).absolute()
+
+        def refuse(reason: str) -> RuntimeError:
+            return RuntimeError(
+                f'Cannot delete sharded datastore "{str(given)}": {reason}. Nothing was deleted'
+            )
+
+        # the primary: an existing regular file, not a symbolic link (the same test as a shard, as
+        # _plan_relocation makes of a source). Without it nothing names the store's shards, so
+        # nothing is looked for by any other rule
+        problem = shard_file_problem(given)
+        if problem is not None:
+            reason = f'the primary "{str(given)}" {problem}'
+            if not os.path.lexists(given):
+                reason += (
+                    "; its shards table is the only record of which files are this store's, so "
+                    "with no primary no file can be identified as the store's"
+                )
+            raise refuse(reason)
+        primary_file = given.resolve()
+
+        def refuse_journals(path: Path, what: str):
+            for journal in ShardedPool._journal_paths(path):
+                if os.path.lexists(journal):
+                    raise refuse(
+                        f'{what} "{str(path)}" has "{str(journal)}" beside it, so it was not closed cleanly or is open now'
+                    )
+
+        # checked before the primary is opened
+        refuse_journals(primary_file, "the primary")
+
+        # the shard records, read and checked exactly as the constructor reads them. Under resume a
+        # missing shard is not refused, and nothing else is relaxed
+        try:
+            recorded, _records = ShardedPool._read_closed_store(
+                primary_file, "delete", missing_ok=resume
+            )
+        except RuntimeError as e:
+            raise refuse(str(e)) from e
+
+        if len(recorded) == 0:
+            raise refuse(f'the primary "{str(primary_file)}" records no shards')
+
+        # the resolver puts every shard in the primary's directory. Asserted here as well, so that
+        # no later change to the resolver can make this method delete a file anywhere else
+        directory = primary_file.parent
+        for serial, path in sorted(recorded.items()):
+            if Path(path).parent != directory:
+                raise refuse(
+                    f'shard #{serial} is "{str(path)}", in the directory "{str(Path(path).parent)}", which is not the primary\'s own directory "{str(directory)}"'
+                )
+
+        for serial, path in sorted(recorded.items()):
+            refuse_journals(Path(path), f"shard #{serial}")
+
+        # every shard, or under resume those still present, in ascending serial
+        shards = {
+            serial: Path(path)
+            for serial, path in sorted(recorded.items())
+            if not resume or os.path.lexists(path)
+        }
+
+        return _DeletionPlan(
+            primary=primary_file,
+            recorded={s: Path(p) for s, p in sorted(recorded.items())},
+            shards=shards,
+        )
+
+    @staticmethod
+    def _deletion_failure_message(
+        plan: "_DeletionPlan", step: str, e: Exception
+    ) -> str:
+        names = [
+            f'"{str(name)}"'
+            for path in [
+                *[plan.recorded[s] for s in sorted(plan.recorded)],
+                plan.primary,
+            ]
+            for name in [path, *ShardedPool._journal_paths(path)]
+            if os.path.lexists(name)
+        ]
+        return (
+            f'delete of sharded datastore "{str(plan.primary)}" failed at step "{step}": {type(e).__name__}: {e}. '
+            f"Nothing has been cleaned up, and the deletion was not retried. "
+            f"Store files still present: [{', '.join(names)}]. "
+            f'Once the failure is understood, complete the deletion deliberately with ShardedPool.delete_store("{str(plan.primary)}", resume=True)'
+        )
 
     def object_get(self, ObjectClass, **kwargs):
         if isinstance(ObjectClass, str):
