@@ -1,6 +1,6 @@
 # Open issues — project-wide index
 
-**Last updated:** 2026-09-25 · **104 open** across sixteen campaigns.
+**Last updated:** 2026-09-26 · **104 open** across sixteen campaigns.
 
 This file exists so that an issue opened by one campaign is not lost when that campaign closes.
 It is an **index, not a record**: one line per issue, pointing at the campaign status board that
@@ -730,7 +730,10 @@ It opened three `00-` issues, each recorded here for its owner. It was also assi
 `datastore-portability` issues, both to its prompt 02, which closed both on 2026-09-25 (one of
 them also unblocked `--build --resume` of the A3 v2 store); their rows are now on that board's §4,
 and are deleted here. Its prompts 01 and 03 each opened one more the same day, and the
-orchestrator's review of its prompt 04 opened two.
+orchestrator's review of its prompt 04 opened two. On 2026-09-26, after its prompt 05 retired the
+two stores, the user assigned the three rows that are the campaign's own code,
+`[03-the-package-docstring-…]` and the two `04-` rows, to its prompt 06, which fixes them before
+the campaign closes. The other four stay unassigned.
 
 | Issue | Board | Hook |
 |---|---|---|

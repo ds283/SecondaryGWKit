@@ -4,7 +4,9 @@
 [`docs/store-retirement-audit.md`](../../docs/store-retirement-audit.md) and the user's decisions
 recorded in §6.1. **Prompts 01–05 are written.** The user approved D0 and D3–D7 as worded on
 2026-09-25 (§6.2), which released 01, and 03 and 04 were written the same day. 05 was written the
-same day too, once 01–04 had landed, against what they shipped (see §2).
+same day too, once 01–04 had landed, against what they shipped (see §2). **Prompt 06 written**
+2026-09-26 at `0075f72`, after 05's review, on the user's decision to fix the campaign's three
+residuals before it closes (§6.4).
 
 ## 0. Why this campaign exists
 
@@ -63,7 +65,10 @@ The audit found that the tree is not yet ready for that operation:
 - the tests of all of these;
 - the remedial retirement of the two stores, and the correction of the live A3 sidecar's `backup`
   field (prompt 05);
-- the `datastore-portability` board, for closing the two issues assigned here.
+- the `datastore-portability` board, for closing the two issues assigned here;
+- **added 2026-09-26 (§6.4):** the `RunRegistry/__init__.py` module docstring's first paragraph,
+  and `amend_sidecar`'s identical-value comparison, with a new test module beside
+  `test_store_amend.py` (prompt 06).
 
 **Out of scope:**
 - `ShardedPool`'s constructor, open and routing paths. It still knows nothing about sidecars
@@ -86,6 +91,7 @@ The audit found that the tree is not yet ready for that operation:
 | 03 | [`03-retire-a-store.md`](03-retire-a-store.md) | `RunRegistry.stores.retire_store` and `python -m RunRegistry store retire`. A known `retired` field and a terminal `retire` history entry. The reader tells a tombstone from a broken sidecar, and names a primary that has reappeared. `begin(results=…)` refuses a retired store. `store show` renders a tombstone. The references found are reported. | **written** 2026-09-25; after 01 |
 | 04 | [`04-amend-an-unknown-field.md`](04-amend-an-unknown-field.md) | `RunRegistry.stores.amend_sidecar` and `store amend`: replace or remove one unknown field of a registry sidecar, with a reason, recording the old value in an `amend` history entry. | **written** 2026-09-25; after 03 |
 | 05 | [`05-retire-the-two-stores.md`](05-retire-the-two-stores.md) | Remedial. **The user** retires the sweep store and the backup with `store retire`, and amends the live A3 sidecar's `backup` field. The prompt's agent checks before and after, and records the retirements on the boards. | **written** 2026-09-25, after 01–04 landed |
+| 06 | [`06-fix-the-residuals-and-close.md`](06-fix-the-residuals-and-close.md) | The three open issues in this campaign's own code: the package docstring's "deletes nothing", `store amend`'s `==` comparison, and the missing marker-shaped amend test. Then the records that leave the campaign ready to close. The closure itself is the orchestrator's, after its review (§6.4). | **written** 2026-09-26, after 05's review |
 
 **Why 03–05 were held.** The charters above are fixed, and cannot drift to fit what 01 and 02
 find. What waited was their method, which depended on user decisions that did not yet exist
@@ -307,6 +313,28 @@ a logged deviation that is at least as strong.
 - (01) a store is refused if any file of it is a symbolic link, as copy and move refuse one;
 - (02) `prepare()` keeps its `--force` flag only as a refusal that explains the new rule. A retired
   or existing sweep name is not replaced; a new name is chosen.
+
+### 6.4 The close-out — decided by the user (2026-09-26)
+
+After 05's review, seven issues were open on the board. Three of them are in this campaign's own
+code:
+- `[03-the-package-docstring-still-says-the-registry-deletes-nothing]`;
+- `[04-amend-calls-true-1-and-1-0-identical]`;
+- `[04-no-test-amends-a-value-shaped-like-the-marker]`.
+
+The user was offered three ways to close:
+- close at bookkeeping only, as `store-fingerprint` did (`42d4910`);
+- fix the three in a separate prompt, then close;
+- fix the three, then close.
+
+**The user chose to fix the three, then close.** Prompt 06 fixes them and closes them on the
+board's §4. The orchestrator records the closure after reviewing 06, in the commit that records
+the review. The other four issues are not this campaign's code, and stay open, unassigned, for
+their owners:
+- `[00-a-sigterm-pipeline-run-is-recorded-as-failed]`;
+- `[00-a-launch-log-lives-outside-its-run-directory]`;
+- `[00-a-copy-carries-its-sources-present-tense-fields]`;
+- `[01-cross-filesystem-move-advice-says-delete-by-hand]`.
 
 ## 7. Baselines
 

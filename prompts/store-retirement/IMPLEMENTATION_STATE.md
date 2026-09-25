@@ -1,8 +1,10 @@
 # Store retirement campaign — implementation state
 
-**Last updated:** 2026-09-26 · **Status: complete. All 5 prompts landed (01–05).** 05 landed on
-2026-09-26: the user retired the sweep store and the A3 backup on 2026-09-25, and amended the live
-A3 sidecar's `backup` field on 2026-09-26. The user approved D0 and D3–D7 as worded on
+**Last updated:** 2026-09-26 · **Status: 5 of 6 prompts landed (01–05). 06, the close-out, is
+written and ready.** 05 landed on 2026-09-26: the user retired the sweep store and the A3 backup
+on 2026-09-25, and amended the live A3 sidecar's `backup` field on 2026-09-26. After 05's review,
+the user decided that the campaign fixes the three open issues in its own code before it closes
+(README §6.4), so 06 was written the same day. The user approved D0 and D3–D7 as worded on
 2026-09-25 (README §6.2), which released 03 and 04. 05 was written the same day, after 01–04 had
 landed. 01 and 02 are independent of each
 other; 03 follows 01, and 04 follows 03. D4 was narrowed when 03 was written: an unreadable
@@ -57,6 +59,7 @@ of them, it found, also blocks `--build --resume` of the A3 v2 store.
 | 03 | [Retire a store](03-retire-a-store.md) | **R6**–**R8** | Opus | ✍️ yes, 2026-09-25 | ✅ 2026-09-25 | *"Retire a closed store and keep its sidecar as a tombstone"* | [`logs/03-…`](logs/03-retire-a-store.md) |
 | 04 | [Amend an unknown field](04-amend-an-unknown-field.md) | **R9** | Sonnet | ✍️ yes, 2026-09-25 | ✅ 2026-09-25 | *"Add amend_sidecar and store amend, for one unknown field"* | [`logs/04-…`](logs/04-amend-an-unknown-field.md) |
 | 05 | [Retire the two stores](05-retire-the-two-stores.md) | **R10**–**R12** | Opus | ✍️ yes, 2026-09-25 | ✅ 2026-09-26 | *"Retire the sweep store and the A3 backup"* | [`logs/05-…`](logs/05-retire-the-two-stores.md), with [`logs/05-tombstones.json`](logs/05-tombstones.json) |
+| 06 | [Fix the residuals, and close](06-fix-the-residuals-and-close.md) | **R13**–**R16** | Sonnet | ✍️ yes, 2026-09-26 | ⬜ after 05's review | — | — |
 
 **Orchestrator review of prompt 05 (2026-09-26).** All eight checks in `orchestrator/prompt-05.md`
 §4 passed on `81c0a9a`. One agent carried Phases A–C, dispatched once and continued twice. The
@@ -319,6 +322,12 @@ checks and drafts the amendment, the user amends, and the agent records. Its orc
   `[a3-baseline-quadsource-integrals-are-1680-short]`. `QUADSOURCE-TOLERANCE-SWEEP.md:15-17` is now
   true, and was not edited. No issue was opened.
 
+**06 was written on 2026-09-26**, after 05's review (`0075f72`), on the user's decision of the same
+day (README §6.4). It fixes the three open issues that are this campaign's own code, and closes
+them on §4. It also leaves the board ready to close. **The closure is the orchestrator's**, recorded
+after its review of 06, in the same commit as the review, as `store-fingerprint`'s was (`42d4910`).
+Its orchestrator notes are [`orchestrator/prompt-06.md`](orchestrator/prompt-06.md).
+
 ---
 
 ## 2. Items
@@ -337,6 +346,10 @@ checks and drafts the amendment, the user amends, and the agent records. Its orc
 | R10 | **REMEDY** | Remedial: the sweep store retired by the user with `store retire`, checked before and after by the prompt's agent. `QUADSOURCE-TOLERANCE-SWEEP.md:15-17` then becomes true, and is not edited. | 05 | ✅ retired by the user 2026-09-25, completed `23:35:57`; a completed tombstone with fingerprint `matched` (`2c2dde68…`), its five files gone, nothing else changed (log 05, B2–B3). The sweep doc was not edited |
 | R11 | **REMEDY** | Remedial: the backup retired the same way. The live A3 sidecar's `backup` field is then corrected by `store amend`. | 05 | ✅ retired by the user 2026-09-25, completed `23:36:55`; every deleted file was inside its own directory, fingerprint `matched` (`eedcdfb2…`), and the live A3 store byte-identical (log 05, B3). `backup` amended by the user 2026-09-26, with the old value in the `amend` entry's `before` (log 05, C1) |
 | R12 | **RECORD** | The retirements recorded on the `run-registry` board, with `var/runs/a3-pilot/BACKUP_PATH` explained there rather than edited, and on the `handover` board. | 05 | ✅ dated 2026-09-26 notes on both boards, additions only; the tombstones and the amended live sidecar committed in `logs/05-tombstones.json` |
+| R13 | **CHARTER** | The `RunRegistry/__init__.py` module docstring says D0 in substance: the package deletes nothing but a store's own files, and those only through `store retire`. Closes `[03-the-package-docstring-still-says-the-registry-deletes-nothing]`. | 06 | ⬜ |
+| R14 | **GUARD** | `amend_sidecar`'s identical-value refusal compares canonical JSON text (`sort_keys=True`, as the writer uses), so `true`, `1` and `1.0` differ and a reordered object does not. Only the refusal decision changes. Closes `[04-amend-calls-true-1-and-1-0-identical]`. | 06 | ⬜ |
+| R15 | **TEST** | A test takes one field through a marker-shaped sequence, and asserts each whole marker, so that a flattened marker fails. Closes `[04-no-test-amends-a-value-shaped-like-the-marker]`. | 06 | ⬜ |
+| R16 | **RECORD** | The three issues on §4, the index's rows deleted, and the board left ready for the orchestrator's closure. | 06 | ⬜ |
 
 ---
 
@@ -345,7 +358,9 @@ checks and drafts the amendment, the user amends, and the agent records. Its orc
 Three were opened on 2026-09-25 by the audit
 ([`docs/store-retirement-audit.md`](../../docs/store-retirement-audit.md)), which is not a prompt,
 one by prompt 01, one by prompt 03 and two by the orchestrator's review of prompt 04 the same
-day. None is assigned to a prompt of this campaign. Each is recorded here for its owner. Two further
+day. None was assigned to a prompt of this campaign. Each is recorded here for its owner.
+**On 2026-09-26 three were assigned to prompt 06** (README §6.4), each marked below. The other
+four stay unassigned. Two further
 issues, owned by `datastore-portability`, are assigned to prompt 02. They stay on that board, and
 are indexed at `docs/OPEN_ISSUES.md` §1.14.
 
@@ -433,6 +448,8 @@ are indexed at `docs/OPEN_ISSUES.md` §1.14.
     sidecar. Prompt 03 could change only `begin` in that file, so it was left. A one-paragraph
     edit, for prompt 04 or 05 if its orchestrator admits it, or any later prompt with
     `RunRegistry/__init__.py` in scope. Unassigned.
+  - **Assigned (2026-09-26):** prompt 06 of this campaign (README §6.4). It is this campaign's
+    own code, and the user decided that the campaign fixes it before it closes.
   - **Measurement:** log 03, "Observations not acted on", item 1. Indexed at
     `docs/OPEN_ISSUES.md` §1.14.
 
@@ -451,6 +468,8 @@ are indexed at `docs/OPEN_ISSUES.md` §1.14.
   - **Next step.** Compare type-strictly, for example by the canonical JSON text of each side
     (`json.dumps(…, sort_keys=True)`). Add a test that amends `1` to `true` and `1` to `1.0`.
     That is a change to `amend_sidecar` and `test_store_amend.py`. Unassigned.
+  - **Assigned (2026-09-26):** prompt 06 of this campaign (README §6.4). It is this campaign's
+    own code, and the user decided that the campaign fixes it before it closes.
   - **Measurement:** the orchestrator's review of prompt 04, §1 above. Indexed at
     `docs/OPEN_ISSUES.md` §1.14.
 
@@ -466,6 +485,8 @@ are indexed at `docs/OPEN_ISSUES.md` §1.14.
     test, a later change that flattened the markers would pass.
   - **Next step.** Add that test to `test_store_amend.py`. It needs no change to `stores.py`, and
     it can go with the fix for the issue above. Unassigned.
+  - **Assigned (2026-09-26):** prompt 06 of this campaign (README §6.4). It is this campaign's
+    own code, and the user decided that the campaign fixes it before it closes.
   - **Measurement:** the orchestrator's review of prompt 04, §1 above. Indexed at
     `docs/OPEN_ISSUES.md` §1.14.
 
