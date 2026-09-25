@@ -56,6 +56,76 @@ of them, it found, also blocks `--build --resume` of the A3 v2 store.
 | 04 | [Amend an unknown field](04-amend-an-unknown-field.md) | **R9** | Sonnet | ✍️ yes, 2026-09-25 | ✅ 2026-09-25 | *"Add amend_sidecar and store amend, for one unknown field"* | [`logs/04-…`](logs/04-amend-an-unknown-field.md) |
 | 05 | Retire the two stores | **R10**–**R12** | Opus | ⏸️ held until 01–04 land | — | — | — |
 
+**Orchestrator review of prompt 04 (2026-09-25).** All ten checks in `orchestrator/prompt-04.md`
+§3 passed on `66617c9`, from one dispatch. There are two findings, both opened in §3, and a
+correction to log 04's account of two mutations.
+- **Scope.** Only `RunRegistry/stores.py`, `RunRegistry/__main__.py`, the new `test_store_amend.py`,
+  the log and this board changed. `Datastore/`, `tools/`, `CLAUDE.md`, `RunRegistry/__init__.py`,
+  `store_fixtures.py` and every existing test are untouched, and so is the index. The `stores.py`
+  hunks are in the module docstring, the constants, `_history_problems`, the new
+  `_amend_slot_problems`, `_update_sidecar`'s docstring and the new `amend_sidecar` at the end of
+  the file. None falls inside `retire_store`, `copy_store`, `move_store`, `_prepare`,
+  `fingerprint_store` or the reader.
+- **Only unknown fields.** The refusal tests `field in KNOWN_FIELDS`, before any write, and names
+  the owner from `_FIELD_OWNERS`. A test iterates over `KNOWN_FIELDS`, `retired` included, and a
+  field missing from `_FIELD_OWNERS` would raise `KeyError` there. Test 1 checks `history[:-1]`
+  and every other field value-identical. Nothing retakes the fingerprint.
+- **Nothing lost.** The markers are a wrapper, `{"present": true, "value": …}` or
+  `{"present": false}`, one level above the value, so no field value can be mistaken for one.
+  `before` is a deep copy. Test 7 reads two amendments back as a sequence. **Finding:** no
+  committed test amends a field whose value has the marker's own shape. R9, log 04 and the
+  implementer's report all said one did. A probe in the scratchpad amended
+  `{"present": false}` to `{"present": true, "value": 1}` and read both back unambiguously. So the
+  design holds and the gap is only the test:
+  `[04-no-test-amends-a-value-shaped-like-the-marker]`.
+- **The refusals.** Every refusal in the prompt's §2.1 is covered, including complete and
+  incomplete tombstones with the tombstone message, and alive and stale runs. The running-run
+  check is `_running_runs_naming("amend", [primary], fields["store_id"], runs_root)`. Amend
+  imports no `ShardedPool`, and `assertOnlySidecarChanged` checks that `tree_state` changes only in
+  the sidecar. **Finding, beyond the checks:** the "identical value" refusal compares with
+  Python `==`, where `True == 1 == 1.0` at any depth. A probe confirmed that `1` cannot be amended
+  to `true` or `1.0`, nor `{"k": 1}` to `{"k": true}`:
+  `[04-amend-calls-true-1-and-1-0-identical]`.
+- **The history rule.** `amend` may stand only after index 0 and before `retire`. Its four keys
+  are required on it and are a problem on a `copy`. Its `from` and `to` must both be null. The
+  rules for `copy`, `move` and `retire`, and `_registry_problems`, are unchanged, and
+  `test_store_retire.TestHistoryRule` passes unmodified.
+- **Copy and move** carry the amended field and its entry (`TestCopyAndMove`). `copy_store`
+  appends its own entry to the carried history (`stores.py:1091`), so the `copy` entry comes after
+  the `amend` by construction. No test asserts that order.
+- **Docstrings.** `_update_sidecar` counts five uses, which is true: adopt, the move's temporary
+  sidecar, the fingerprint, retire's two writes, and amend. The `stores.py` operations list, the
+  in-place-update list and the format table's `history` row carry `amend`, its keys, its markers
+  and its null `from`/`to`. `__main__.py` adds `amend`. "Every operation but a retirement's
+  completion refuses a tombstone" is still true.
+- **Tests.** The new module passed twice, 21 tests. Every `amend_sidecar`, `copy_store`,
+  `move_store` and `begin` call passes `runs_root`, and every `store` command passes
+  `--runs-root`. `import RunRegistry` loads neither `ray` nor `sqlalchemy`.
+- **Mutations.** (i)–(v) applied with plain `git apply` and were run from an empty working
+  directory. They reproduced the logged counts exactly:
+
+  | Mutation | Result | What fails |
+  |---|---|---|
+  | (i) | failures=12 | The refusal itself for `purpose`, `created` and `copied_from`, which are amended. For the other seven fields, `retired` with `--remove`, and the command line, the validator still refuses, and the test fails on the owner-naming message. |
+  | (ii) | failures=1, errors=7 | The validator's `lacks ['before']` refusal, raised on every successful path. |
+  | (iii) | failures=3 | The refusal itself. |
+  | (iv) | failures=1 | The hand-built blank-reason entry. |
+  | (v) | failures=2 | The message only: `ok` still refuses, and the test asserts "is a tombstone". |
+
+  Log 04 explains (i) as "12 of the 20 subtests". `KNOWN_FIELDS` has ten members, and every one
+  fails. It explains (ii) as a `KeyError` in `amend_sidecar`'s return statement. The return
+  statement reads the local `before`, and the errors are the validator's refusal. The counts are
+  right and the explanations are not. This board is right where they disagree. The tree and the
+  working directory were clean afterwards.
+- **`var/` and the repository root.** The snapshot, 71 entries, was identical before dispatch and
+  after the replay and the probe. That includes the live A3 sidecar's SHA-256 and the
+  `physics-test-n20-*` store's mtimes.
+- **Suites.** AdaptiveLevin 32, ComputeTargets 552, CosmologyModels 39, Datastore 206,
+  LiouvilleGreen 148 (1 skipped), RunRegistry 190 (+21). `black --check` is clean.
+- **For prompt 05.** Its amendment of `backup` changes `retained` from `true` to `false`, bool to
+  bool, so the `==` finding does not reach it. With 04 landed, 01–04 are done, and README §2
+  releases 05 to be written. Prompt 03's review lists the points for 05's orchestrator.
+
 **Orchestrator review of prompt 03 (2026-09-25).** All ten checks in `orchestrator/prompt-03.md`
 §3 passed on `854e2ae`, from one dispatch.
 - **Scope.** Only `RunRegistry/stores.py`, `__init__.py` (inside `begin`), `__main__.py`, the new
@@ -179,7 +249,7 @@ In 05 **the user** runs each `store retire`: no agent deletes a real store (READ
 | R6 | **FORMAT** | A known `retired` field and a terminal `retire` history operation. The reader tells a tombstone from a broken sidecar (`SidecarReading.retired`), and calls a primary that has reappeared at a retired name a problem. | 03 | ✅ `retired` and `retire` are in the `stores.py` format table as shipped; `retire`'s `to` is null, for `retire` only. A completed tombstone reads with no problems and `ok` false; `retiring` and a reappeared primary are problems (log 03, tests 1, 7, 8; mutation (v)) |
 | R7 | **FACILITY** | `retire_store` and `python -m RunRegistry store retire`. It refuses a `running` run, alive or stale, and a missing or mismatched fingerprint, except under D4. It writes the tombstone, with its file list, before deleting anything, then calls `delete_store`, then marks the tombstone complete. A second call completes an interrupted one. It reports the references it finds (D5). | 03 | ✅ the interruption table in log 03, one test per row, with a `.tmp` left by a killed write in two of them; mutations (i), (ii), (iii), (vi), (vii), (viii), (ix) |
 | R8 | **GUARD** | `begin(results=…)` refuses a retired store. Copy, move, fingerprint, adopt and amend refuse a tombstone (D6). `store show` renders one. The `RunRegistry/stores.py` and `__main__.py` docstrings follow D0. | 03 | ✅ for begin, copy and move from and to, fingerprint, adopt and create; amend's own tombstone refusal is confirmed by prompt 04 (log 04, `TestRefusals.test_a_tombstone_complete_or_not`; mutation (v)). Both docstrings quoted before and after in log 03; mutation (iv). The package docstring in `RunRegistry/__init__.py` still says "deletes nothing": `[03-the-package-docstring-still-says-the-registry-deletes-nothing]` |
-| R9 | **FACILITY** | `amend_sidecar` and `store amend`: replace or remove one unknown field of a registry sidecar, with a required reason, recording the old value in an `amend` history entry (D5). | 04 | ✅ every refusal in the prompt's §2.1 (log 04, `TestRefusals`); the `before`/`after` markers are a tagged wrapper, never a sentinel, so a field whose own value has the marker's shape reads back unambiguously (`TestAmend`, `TestHistoryRule.test_the_amend_markers_shape`); copy and move carry an amended field and its entry unchanged (`TestCopyAndMove`); two amendments of one field read back as a sequence (`TestTwoAmendments`); mutations (i)–(v) |
+| R9 | **FACILITY** | `amend_sidecar` and `store amend`: replace or remove one unknown field of a registry sidecar, with a required reason, recording the old value in an `amend` history entry (D5). | 04 | ✅ every refusal in the prompt's §2.1 (log 04, `TestRefusals`); the `before`/`after` markers are a tagged wrapper, never a sentinel (`TestAmend`, `TestHistoryRule.test_the_amend_markers_shape`; no committed test amends a value shaped like the marker, see the orchestrator's review of prompt 04 and `[04-no-test-amends-a-value-shaped-like-the-marker]`); copy and move carry an amended field and its entry unchanged (`TestCopyAndMove`); two amendments of one field read back as a sequence (`TestTwoAmendments`); mutations (i)–(v) |
 | R10 | **REMEDY** | Remedial: the sweep store retired by the user with `store retire`, checked before and after by the prompt's agent. `QUADSOURCE-TOLERANCE-SWEEP.md:15-17` then becomes true, and is not edited. | 05 | ⏸️ |
 | R11 | **REMEDY** | Remedial: the backup retired the same way. The live A3 sidecar's `backup` field is then corrected by `store amend`. | 05 | ⏸️ |
 | R12 | **RECORD** | The retirements recorded on the `run-registry` board, with `var/runs/a3-pilot/BACKUP_PATH` explained there rather than edited, and on the `handover` board. | 05 | ⏸️ |
@@ -190,8 +260,8 @@ In 05 **the user** runs each `store retire`: no agent deletes a real store (READ
 
 Three were opened on 2026-09-25 by the audit
 ([`docs/store-retirement-audit.md`](../../docs/store-retirement-audit.md)), which is not a prompt,
-one by prompt 01 and one by prompt 03 the same day. None is assigned to a prompt of this
-campaign. Each is recorded here for its owner. Two further
+one by prompt 01, one by prompt 03 and two by the orchestrator's review of prompt 04 the same
+day. None is assigned to a prompt of this campaign. Each is recorded here for its owner. Two further
 issues, owned by `datastore-portability`, are assigned to prompt 02. They stay on that board, and
 are indexed at `docs/OPEN_ISSUES.md` §1.14.
 
@@ -280,6 +350,39 @@ are indexed at `docs/OPEN_ISSUES.md` §1.14.
     edit, for prompt 04 or 05 if its orchestrator admits it, or any later prompt with
     `RunRegistry/__init__.py` in scope. Unassigned.
   - **Measurement:** log 03, "Observations not acted on", item 1. Indexed at
+    `docs/OPEN_ISSUES.md` §1.14.
+
+- **[04-amend-calls-true-1-and-1-0-identical]** *(opened 2026-09-25 by the orchestrator's review
+  of prompt 04)*
+  - **The defect.** `amend_sidecar` refuses a value "identical, after a JSON round trip" to the
+    current one by testing `fields[field] == normalised` (`RunRegistry/stores.py:2110`). In
+    Python `True == 1 == 1.0`, and the same holds at any depth of nesting. So `true`, `1` and
+    `1.0` count as identical although their JSON texts differ. A probe on `66617c9` found that
+    a field holding `1` cannot be amended to `true` or to `1.0`, and `{"k": 1}` cannot be amended
+    to `{"k": true}`.
+  - **Impact.** Low. A real change is refused and nothing is written, so nothing is lost or
+    corrupted. A person can get round it with `--remove` and then a second amendment, at the cost
+    of two history entries. Prompt 05's amendment of `backup` changes `retained` from `true` to
+    `false` and is not affected.
+  - **Next step.** Compare type-strictly, for example by the canonical JSON text of each side
+    (`json.dumps(…, sort_keys=True)`). Add a test that amends `1` to `true` and `1` to `1.0`.
+    That is a change to `amend_sidecar` and `test_store_amend.py`. Unassigned.
+  - **Measurement:** the orchestrator's review of prompt 04, §1 above. Indexed at
+    `docs/OPEN_ISSUES.md` §1.14.
+
+- **[04-no-test-amends-a-value-shaped-like-the-marker]** *(opened 2026-09-25 by the orchestrator's
+  review of prompt 04)*
+  - **The defect.** `orchestrator/prompt-04.md` check 3 asks for a test that amends or removes a
+    field whose value has the marker's own shape, and reads it back unambiguously. No test in
+    `RunRegistry/tests/test_store_amend.py` does. R9's first wording, log 04's "as shipped"
+    section and the implementer's report each said one did.
+  - **Impact.** Verification only. The wrapper design is correct by construction. A probe in the
+    review amended `{"present": false}` to `{"present": true, "value": 1}` and read back
+    `before = {"present": true, "value": {"present": false}}`, which is unambiguous. Without a
+    test, a later change that flattened the markers would pass.
+  - **Next step.** Add that test to `test_store_amend.py`. It needs no change to `stores.py`, and
+    it can go with the fix for the issue above. Unassigned.
+  - **Measurement:** the orchestrator's review of prompt 04, §1 above. Indexed at
     `docs/OPEN_ISSUES.md` §1.14.
 
 ---
