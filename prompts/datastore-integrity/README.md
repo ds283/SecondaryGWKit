@@ -4,6 +4,10 @@
 [`docs/datastore-integrity-audit.md`](../../docs/datastore-integrity-audit.md) and the user's
 decisions recorded in §6.1. **Prompts 01–04 are written.** Their tasks are fixed by §6.1 alone.
 05–10 are held: each waits on a decision in §6.2, or on what an earlier prompt ships (§2).
+**Decisions recorded 2026-09-26:** the user decided D2–D6 (§6.2). That releases 06, 07 and 08 to be
+written. 05 still waits on 04's list, 09 on D1, which the user has asked to have explained, and 10
+on 01–09. `store-retirement` closed on 2026-09-26 at 6 / 6, which discharges both of §2's
+cross-campaign constraints.
 
 ## 0. Why this campaign exists
 
@@ -76,11 +80,11 @@ eleven and found the classes wider than recorded:
 | 02 | [`02-repair-or-refuse-at-open.md`](02-repair-or-refuse-at-open.md) | A driver-side step in `ShardedPool.__init__`, before any actor exists: roll back hot journals, compare every replicated table across shards, copy forward from the in-flight record's controller, **refuse to open** on anything else. Closes `[00-replicated-writes-can-diverge-across-shards]`. | **written**; after 01 |
 | 03 | [`03-exact-identity-lookups.md`](03-exact-identity-lookups.md) | Exit time by serial equality, the query out of the loop. `IntegrationSolver` by `==`. `.scalar()` → `one_or_none()` on every identity lookup. `redshift` at `z = 0`. Closes three issues. | **written**; after 02 |
 | 04 | [`04-extend-the-read-back-guard.md`](04-extend-the-read-back-guard.md) | The guard over `read_batch` and every `_build_impl_*`, and a column-existence test. Records what it finds as known-unfixed. Closes `[01-read-batch-is-outside-the-guard]`. | **written**; independent of 01–03 |
-| 05 | `05-repair-the-read-paths.md` | The tagged join; the exit time's `store_id`; `break_point_kind` and `z_init` in the value reads; the wrong flag columns; the three wrong column names, `WKB_criterio` and `friction`; tags defaulting to `[]`; `OneLoopIntegral`'s tag table, as D3 bounds. Empties prompt 04's known-unfixed list. Closes three issues. | **held** on D2, D3, and 04 |
-| 06 | `06-correct-the-foreign-keys.md` | `Tq_serial` → `TkNumericIntegration`; the `Tr_serial` comment; `GkSourcePolicyData.wavenumber_exit_serial`; the fixtures' map; a test that turns `PRAGMA foreign_keys` on over a store the real factories wrote; the exit-time and `IntegrationSolver` registrations' `"stepping": "minimum"` made to say what prompt 03 made true; the first deliberate schema change, under D5. Closes one issue. | **held** on D5 |
-| 07 | `07-key-wkb-rows-on-their-numeric-row.md` | A `numeric_serial` foreign key, NOT NULL on Tk and nullable on Gk (NULL = pure WKB), in the lookup; `z_init` and the initial values leave the key; `main.py`'s existence queries pass the parent; `_drop_order`. Closes `[20-wkb-rows-consume-numeric-initial-data]`. | **held** on D4, D5 |
-| 08 | `08-key-quadsourceintegral-on-its-policy.md` | `QuadSourcePolicy` in `QuadSourceIntegral`'s key, with a foreign key, through factory, target, `main.py` and the extraction script. Closes `[00-quadsourcepolicy-rows-are-referenced-by-nothing]`. | **held** on D4, D5, D6 |
-| 09 | `09-key-derived-rows-on-their-parents.md` | `QuadSource` on `Tq`/`Tr`, `QuadSourceIntegral` on its source, policy data and Tk rows, `GkSource` on its Gk rows; same-shard parents as foreign keys, cross-shard as indexed columns; the inventory resolves parents across shards. | **held** on D1, D4, D5 |
+| 05 | `05-repair-the-read-paths.md` | The tagged join; the exit time's `store_id`; `break_point_kind` and `z_init` in the value reads; the wrong flag columns; the three wrong column names, `WKB_criterio` and `friction`; tags defaulting to `[]`; `OneLoopIntegral`'s tag table, as D3 bounds. Empties prompt 04's known-unfixed list. Closes three issues. | **held** on 04 (D2, D3 decided) |
+| 06 | `06-correct-the-foreign-keys.md` | `Tq_serial` → `TkNumericIntegration`; the `Tr_serial` comment; `GkSourcePolicyData.wavenumber_exit_serial`; the fixtures' map; a test that turns `PRAGMA foreign_keys` on over a store the real factories wrote; the exit-time and `IntegrationSolver` registrations' `"stepping": "minimum"` made to say what prompt 03 made true; the first deliberate schema change, under D5. Closes one issue. | **released** (D5 decided); to be written |
+| 07 | `07-key-wkb-rows-on-their-numeric-row.md` | A `numeric_serial` foreign key, NOT NULL on Tk and nullable on Gk (NULL = pure WKB), in the lookup; `z_init` and the initial values leave the key; `main.py`'s existence queries pass the parent; `_drop_order`. Closes `[20-wkb-rows-consume-numeric-initial-data]`. | **released** (D4, D5 decided); to be written |
+| 08 | `08-key-quadsourceintegral-on-its-policy.md` | `QuadSourcePolicy` in `QuadSourceIntegral`'s key, with a foreign key, through factory, target, `main.py` and the extraction script. Closes `[00-quadsourcepolicy-rows-are-referenced-by-nothing]`. | **released** (D4–D6 decided); to be written |
+| 09 | `09-key-derived-rows-on-their-parents.md` | `QuadSource` on `Tq`/`Tr`, `QuadSourceIntegral` on its source, policy data and Tk rows, `GkSource` on its Gk rows; same-shard parents as foreign keys, cross-shard as indexed columns; the inventory resolves parents across shards. | **held** on D1 |
 | 10 | `10-build-a-throwaway-store-end-to-end.md` | Remedial. A scoped build through the registry into a store under `var/datastores/` that is not A3 v2; then a resume; then extraction of every target from it, the fingerprint, and the census of audit §4.4. Closes the campaign. | **held** until 01–09 land |
 
 **Why 05–10 are held.** Their charters above are fixed and cannot drift to fit what 01–04 find.
@@ -106,6 +110,9 @@ golden fingerprint, and 07–09 on D4. 09 exists only if D1 is taken. 10 is writ
   existing store. **So 07–09 are not dispatched until `store-retirement` prompt 05 has retired the
   sweep store and the backup**, unless the user decides otherwise under D4. 01–06 do not move the
   fingerprint.
+- **Discharged 2026-09-26.** `store-retirement` closed at 6 / 6 (`1e37a8a`): its `ShardedPool.py`
+  work is committed, and its prompt 05 retired the sweep store and the backup (`81c0a9a`). Neither
+  constraint now holds anything back. §5 rule 13 stays, for any later campaign.
 
 ## 3. Datastores
 
@@ -203,49 +210,66 @@ The project-wide ones in `CLAUDE.md`, plus:
 3. **The exit-time tolerance lookup becomes an exact match.**
 4. **The adjacent issues are out of scope** (§1), as downstream work.
 
-### 6.2 Open decisions, with recommendations
+### 6.2 Decisions D1–D6
 
-- **D1 — key derived rows on the rows they were computed from (audit §2.4)?** *Recommended: yes.*
-  The user asked for every known integrity defect, and this is the class the WKB issue belongs to:
-  a row computed from specific upstream rows is served for any upstream rows. Same-shard parents
-  (`QuadSource.Tq_serial`, `QuadSourceIntegral.data_serial`, the Tk rows on `k`'s shard) join the
-  key with foreign keys; cross-shard parents (`Tr_serial`, `QuadSourceIntegral.source_serial`)
-  join it as indexed columns without one, and the inventory learns to resolve them across shards
-  so they can be fingerprint identity. *Alternative:* rely on building every archival store once,
-  from scratch, and record the class as an issue. That holds for A3 v2 as planned, and fails the
-  first time an archival store is resumed or extended. Prompt 09 exists only under the
-  recommendation.
-- **D2 — fix the latent read-path defects no caller reaches today (audit §3.10–§3.11)?**
-  *Recommended: yes.* They are mechanical (a typo, three wrong column names, a missing argument,
-  two wrong flag columns), the extended guard finds them, and leaving them means shipping it with a
-  non-empty known-unfixed list. *Alternative:* fix only what a live path reaches.
-- **D3 — how much of `OneLoopIntegral`'s factory to repair (audit §3.12)?** *Recommended: the
-  mechanical defects only* — the wrong tag table, the tagged join, `read_batch` made a method with a
-  return value, tags defaulting to `[]`. Its round-trip defects (no `source_serial` column, a
-  `validated` key with no column) are part of how it is keyed, which decision 6.1.4 puts downstream;
-  they are recorded as one issue. *Alternative:* leave the factory alone entirely.
-- **D4 — existing stores and cross-campaign order.** *Recommended:* accept that after 07–09 no
-  existing store is readable by the tree for the changed targets (each stays readable at its own
-  SHA), and hold 07–09 until `store-retirement` prompt 05 has retired the sweep store and the
-  backup, so that their fingerprints can still be checked. The live A3 store stays, is superseded by
-  A3 v2 under the `handover` board's regeneration decision, and is not needed by the post-campaign
-  tree. *Alternative:* make the fingerprint and readers version-aware. That is a design of its own,
-  like `[14-archival-read-stops-at-the-pre-gktk-value-columns]`'s, which nobody has asked for.
-- **D5 — deliberately changing the schema witness and the golden fingerprint.**
-  `schema_at_base.json` is documented as never regenerated; it witnessed a refactor that changed
-  nothing, and every schema change here breaks it. *Recommended:* the first schema-changing prompt
-  (06) amends `test_schema_builder.py` to compare against the witness for the **current** schema
-  design, and each schema-changing prompt then adds a new witness beside the old ones —
+Each was stated on 2026-09-25 with a recommendation. **The user decided D2–D6 on 2026-09-26**, as
+recorded under each; D1 is open, because the user asked what it means. The recommendations as first
+written are kept under each, since they are what the user decided against.
+
+- **D1 — key derived rows on the rows they were computed from (audit §2.4)? Open.**
+  *Recommended: yes.* The user asked, 2026-09-26, whether the gist is that rows on another shard
+  cannot carry explicit foreign keys. It is not; see *What D1 is about* below. Prompt 09 exists only
+  if D1 is taken.
+  - *As recommended on 2026-09-25:* the user asked for every known integrity defect, and this is
+    the class the WKB issue belongs to: a row computed from specific upstream rows is served for any
+    upstream rows. Same-shard parents (`QuadSource.Tq_serial`, `QuadSourceIntegral.data_serial`,
+    the Tk rows on `k`'s shard) join the key with foreign keys; cross-shard parents (`Tr_serial`,
+    `QuadSourceIntegral.source_serial`) join it as indexed columns without one, and the inventory
+    learns to resolve them across shards so they can be fingerprint identity. *Alternative:* rely on
+    building every archival store once, from scratch, and record the class as an issue. That holds
+    for A3 v2 as planned, and fails the first time an archival store is resumed or extended.
+  - **What D1 is about.** It is about the **lookup key**, not the foreign key. When `main.py` asks
+    "is there already a `QuadSource` for this model, `q` and `r`?", the query
+    (`QuadSource.py:147-164`) names only those three and the tags. It does not say which Tk rows
+    the stored source was computed from, although the row records them in `Tq_serial` and
+    `Tr_serial`. So if the Tk rows it would be computed from today are different rows — a changed
+    Tk tolerance, grid or break-point policy, under the same run tags — the old `QuadSource` is
+    served as if it matched. `QuadSourceIntegral` (on its source, its `GkSourcePolicyData` and its
+    four Tk rows) and `GkSource` (on its Gk rows) are the same. The fix is to add the parents'
+    serials to each lookup. The shard question is secondary: a parent on the **same** shard can
+    also be declared as a foreign key; one on **another** shard cannot, but serials are unique
+    across shards, so it can still be an indexed key column with no declared foreign key. The only
+    real cost of the cross-shard ones is in the fingerprint: its inventory resolves a parent only
+    within one shard, so it would have to learn to look across shards (item K7).
+- **D2 — fix the latent read-path defects no caller reaches today (audit §3.10–§3.11)? Decided:
+  yes.** The user, 2026-09-26: they must be fixed, as part of what this campaign is for.
+  *As recommended:* yes. *Alternative, not taken:* fix only what a live path reaches.
+- **D3 — how much of `OneLoopIntegral`'s factory to repair (audit §3.12)? Decided: the mechanical
+  defects only.** The user, 2026-09-26: the rest "come about because `OneLoopIntegral` hasn't been
+  implemented yet, not that it has been implemented wrongly", and are logged and resolved when it is
+  built. So prompt 05 fixes the wrong tag table, the tagged join, `read_batch` made a method with a
+  return value, and tags defaulting to `[]`. `[00-oneloop-factory-cannot-round-trip-a-row]` records
+  the rest, for when `OneLoopIntegral` is built. *As recommended:* the same. *Alternative, not
+  taken:* leave the factory alone.
+- **D4 — existing stores, and order against `store-retirement`. Decided: readers are not made
+  version-aware.** The user, 2026-09-26: that "makes the datastore layer much larger than we want".
+  So after 07–09 no existing store is readable by the tree for the changed targets, and each stays
+  readable at the SHA it was written under. The ordering half was discharged the same day, when
+  `store-retirement` closed (§2). *As recommended:* the same. *Alternative, not taken:* a
+  version-aware fingerprint and readers.
+- **D5 — deliberately changing the schema witness and the golden fingerprint. Decided: as
+  recommended.** The user approved it, 2026-09-26. The first schema-changing prompt (06) amends
+  `test_schema_builder.py` to compare against the witness for the **current** schema design; each
+  schema-changing prompt then adds a new witness beside the old ones —
   `schema_at_<campaign>-<NN>.json`, never overwriting one — repoints the test, and puts the diff
   between the two witnesses in its log as the reviewable statement of what changed. The golden
   fingerprint is re-captured the same way, and never to make a test pass that the prompt did not
-  expect to fail. *Alternative:* regenerate both in place and rely on git history.
-- **D6 — which `QuadSourcePolicy` each `QuadSourceIntegral` gets.** *Recommended:*
-  `QuadSource_policy_1pt5`, paired with the `GkSource_policy_1pt5` every site uses today (audit
-  §2.5). `main.py` passes the pair in and chooses neither, so the choice has to be made; nothing
-  reads the policy's fields, so it changes the record and no number. The unused 5.0 pair is recorded
-  as an issue, not removed. *Alternative:* key on both, as two objects — which doubles the work
-  for no computation that differs.
+  expect to fail. *Alternative, not taken:* regenerate both in place and rely on git history.
+- **D6 — which `QuadSourcePolicy` each `QuadSourceIntegral` gets. Decided: `QuadSource_policy_1pt5`
+  only, for now.** The user, 2026-09-26. It pairs with the `GkSource_policy_1pt5` every site uses
+  today (audit §2.5); nothing reads the policy's fields, so it changes the record and no number. The
+  unused 5.0 pair stays as `[00-the-5pt0-policy-pair-is-created-and-never-used]`, not removed.
+  *As recommended:* the same. *Alternative, not taken:* key on both.
 
 ## 7. Baselines
 
@@ -256,6 +280,17 @@ the tree:
 |---|---|
 | RunRegistry | 128 OK |
 | Datastore | **not measurable**: 206 run, 60 failing, all in `store-retirement`'s uncommitted `test_delete_store.py` |
+
+### 7.1 Re-measured 2026-09-26, at `3964bf8`, clean
+
+`store-retirement` had closed, so the tree was clean.
+
+| Suite | Result |
+|---|---|
+| Datastore | 206 OK |
+| RunRegistry | 199 OK |
+
+The other suites were not re-measured; the orchestrator measures them before the first dispatch.
 
 Re-measure every suite at `HEAD`, clean, before every dispatch, with:
 

@@ -1,9 +1,10 @@
 # Datastore integrity campaign — implementation state
 
-**Last updated:** 2026-09-25 · **Status: 0 of 10 prompts landed. 01–04 are written.** 05–10 are
-held on decisions D1–D6 (README §6.2) and on what earlier prompts ship (README §2). Nothing is
-dispatched while `store-retirement` has an uncommitted change to `ShardedPool.py` in the tree
-(README §5 rule 13), and 07–09 wait for `store-retirement` prompt 05 under D4.
+**Last updated:** 2026-09-26 · **Status: 0 of 10 prompts landed. 01–04 are written; 06–08 are
+released, to be written.** The user decided D2–D6 on 2026-09-26 (README §6.2); D1 is open, since the
+user asked what it means, and holds 09. 05 waits on 04's list, and 10 on 01–09. `store-retirement`
+closed on 2026-09-26 at 6 / 6, which discharges both cross-campaign constraints (README §2), so 01
+and 04 are ready.
 
 The campaign was opened on 2026-09-25, when the user asked that every known datastore-integrity
 defect be fixed before the A3 v2 store is built, the first store meant to have archival value. The
@@ -35,8 +36,16 @@ the eleven open issues in that class, all still present, and found each class wi
 `QuadSourcePolicy` is kept and added to `QuadSourceIntegral`'s key; the exit-time tolerance lookup
 becomes an exact match; the adjacent issues are out of scope.
 
-| Decision | Recommended (README §6.2) | Blocks, until decided |
+| Decision | Decided (README §6.2) | Blocked, until decided |
 |---|---|---|
+| **D1** — key derived rows on their parents | **open**; the user asked what it means (2026-09-26), answered in README §6.2. Recommended: yes | 09 |
+| **D2** — fix latent read-path defects no caller reaches | **yes** (2026-09-26) | — |
+| **D3** — how much of `OneLoopIntegral`'s factory to repair | **the mechanical defects only**; the rest when `OneLoopIntegral` is built (2026-09-26) | — |
+| **D4** — existing stores | **readers are not made version-aware** (2026-09-26); the ordering against `store-retirement` was discharged when it closed | — |
+| **D5** — deliberately changing the schema witness and golden fingerprint | **as recommended** (2026-09-26): a new witness per schema-changing prompt, never overwritten, the diff in the log | — |
+| **D6** — which `QuadSourcePolicy` each `QuadSourceIntegral` gets | **`QuadSource_policy_1pt5` only, for now** (2026-09-26) | — |
+
+---|---|---|
 | **D1** — key derived rows on their parents | yes: same-shard parents with foreign keys, cross-shard as indexed columns; the inventory resolves parents across shards | 09 |
 | **D2** — fix latent read-path defects no caller reaches | yes | 05 |
 | **D3** — how much of `OneLoopIntegral`'s factory to repair | the mechanical defects only; its round-trip defects recorded as one issue | 05 |
@@ -50,15 +59,15 @@ becomes an exact match; the adjacent issues are out of scope.
 
 | # | Prompt | Covers | Model | Written? | Landed? | Commit | Log |
 |---|---|---|---|---|---|---|---|
-| 01 | [Checked replicated write](01-checked-replicated-write.md) | **W1**–**W4** | Opus | ✍️ yes, 2026-09-25 | ⬜ ready, after `store-retirement` 01 commits | — | — |
+| 01 | [Checked replicated write](01-checked-replicated-write.md) | **W1**–**W4** | Opus | ✍️ yes, 2026-09-25 | ⬜ ready | — | — |
 | 02 | [Repair or refuse at open](02-repair-or-refuse-at-open.md) | **W5**–**W7** | Opus | ✍️ yes, 2026-09-25 | ⬜ after 01 | — | — |
 | 03 | [Exact identity lookups](03-exact-identity-lookups.md) | **L1**–**L5** | Sonnet | ✍️ yes, 2026-09-25 | ⬜ after 02 | — | — |
 | 04 | [Extend the read-back guard](04-extend-the-read-back-guard.md) | **G1**–**G3** | Sonnet | ✍️ yes, 2026-09-25 | ⬜ ready | — | — |
-| 05 | Repair the read paths | **P1**–**P9** | Sonnet | ⏸️ held on D2, D3, 04 | — | — | — |
-| 06 | Correct the foreign keys | **S1**–**S5** | Sonnet | ⏸️ held on D5 | — | — | — |
-| 07 | Key WKB rows on their numeric row | **K1**–**K2** | Opus | ⏸️ held on D4, D5 | — | — | — |
-| 08 | Key `QuadSourceIntegral` on its policy | **K3** | Sonnet | ⏸️ held on D4, D5, D6 | — | — | — |
-| 09 | Key derived rows on their parents | **K4**–**K7** | Opus | ⏸️ held on D1, D4, D5 | — | — | — |
+| 05 | Repair the read paths | **P1**–**P9** | Sonnet | ⏸️ held on 04 | — | — | — |
+| 06 | Correct the foreign keys | **S1**–**S5** | Sonnet | 🔓 released 2026-09-26 | — | — | — |
+| 07 | Key WKB rows on their numeric row | **K1**–**K2** | Opus | 🔓 released 2026-09-26 | — | — | — |
+| 08 | Key `QuadSourceIntegral` on its policy | **K3** | Sonnet | 🔓 released 2026-09-26 | — | — | — |
+| 09 | Key derived rows on their parents | **K4**–**K7** | Opus | ⏸️ held on D1 | — | — | — |
 | 10 | Build a throwaway store end to end | **V1**–**V3** | Opus | ⏸️ held until 01–09 land | — | — | — |
 
 **05–10 are held, not unplanned.** Their charters are fixed in README §2 and cannot drift to fit
