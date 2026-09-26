@@ -1,6 +1,6 @@
 # Datastore integrity campaign — implementation state
 
-**Last updated:** 2026-09-26 · **Status: 1 of 10 prompts landed (01). 01–04 and 06–09 are written.** The user decided D2–D6 on 2026-09-26 (README §6.2), and D1 (yes) later
+**Last updated:** 2026-09-26 · **Status: 1 of 10 prompts landed (01), reviewed. 01–04 and 06–09 are written.** The user decided D2–D6 on 2026-09-26 (README §6.2), and D1 (yes) later
 the same day. 05 waits on 04's list, and 10 on 01–09. `store-retirement`
 closed on 2026-09-26 at 6 / 6, which discharges both cross-campaign constraints (README §2), so 01
 and 04 are ready.
@@ -65,6 +65,66 @@ becomes an exact match; the adjacent issues are out of scope.
 carries the previous review's findings: [`orchestrator/prompt-01.md`](orchestrator/prompt-01.md)
 and [`orchestrator/prompt-04.md`](orchestrator/prompt-04.md) exist (2026-09-26). 01 and 04 are
 dispatched one at a time, never concurrently in this checkout, in either order.
+
+**Orchestrator review of prompt 01 (2026-09-26).** All nine checks in `orchestrator/prompt-01.md`
+§3 passed on `c08a9d0`, dispatched from `65cd4b7` with the tree and the index clean.
+- **Scope.** Eleven files: the four named source files, the new `Datastore/replication.py`
+  (`ReplicationMismatch`, `ReplicationInFlight`, `differing_columns`), the helper module
+  `Datastore/tests/standin_pool.py`, the test module `test_replicated_write.py`, the log, the two
+  boards and the index. No existing test is modified. Every factory hunk is inside `store()`, and
+  the controller's value payload is unchanged, refactored into a local function. No
+  `ShardedPool.py` hunk touches the closed-store block.
+- **One helper.** `ShardedPool._replicated_write` alone reads, writes and clears
+  `replication_in_flight`. Outside it the table appears only in its declaration
+  (`_create_engine`), its creation for a new store (`_write_shard_data`), and
+  `create(checkfirst=True)` in the constructor after `_check_shard_files`. No other `.remote()`
+  call reaches a replicated class: `object_get_vectorized` refuses one.
+- **The commit-point table.** Every row checks against the code. The record is committed on
+  `self._engine`, in its own transaction, before `submit_controller` on every path. It is written
+  for **every** replicated call, including a get that inserts nothing, because only the
+  controller's answer says whether it inserted. Any exception after that commit skips the delete,
+  so a controller that raised before committing also leaves the record set, over identical
+  shards. That is fail-closed, never silent. No row reads "shards differ, no record".
+- **Checked answers and replica stores.** Scalar and vector get, store (serial and value serials)
+  and validate are checked before the delete. A record found set raises `ReplicationInFlight`
+  before anything is written. The agent flagged one choice, which is accepted: in the
+  `BackgroundModel` replica, "key held under another serial" counts only **validated** rows with
+  exactly the same tags. That is what `build()` serves (it filters `validated == True`), and it
+  lets a resume store beside the unvalidated row an interrupted store left on every shard.
+- **One timestamp.** `insert_timestamp` is a keyword-only call argument, bound per call by
+  `_inserters_for`. With none, `_insert` calls `datetime.now()` as before, and no sharded path
+  passes one.
+- **Tests.** The new module passed twice, 26 tests. `ray.is_initialized()` is false after it, and
+  every store is in a `TemporaryDirectory`.
+- **Mutations.** All five of the log's diffs applied with plain `git apply`, with no flags, and gave
+  exactly the logged results: (i) `failures=2`, (ii) `failures=6`, (iii) `failures=16` across 11
+  tests, (iv) `failures=2` (the full-row comparison), and (v) `failures=3, errors=6`. The tree was
+  clean after each revert.
+- **`var/`.** The snapshot (8 store files, 32 run files, 6 root `physics-test-n20-*` files, 10
+  directories) was byte-identical before and after, including the live A3 primary's SHA-256.
+- **Suites.** All six re-run: AdaptiveLevin 32, ComputeTargets 552, CosmologyModels 39,
+  Datastore 232 (+26), LiouvilleGreen 148 (1 skipped), RunRegistry 199. The ComputeTargets
+  wall-clock flake fired once, with the six suites running in parallel, and a serial re-run gave
+  552 OK. `black --check` is clean.
+- **Boards.** The store-fingerprint entry is narrowed, not closed, and says what 01 made loud. The
+  index row changed with it, and the count stays at 104.
+
+**Carried to prompt 02's orchestrator notes.**
+- The stand-in pool is `Datastore/tests/standin_pool.py` (`StandinCluster`), and the exceptions are
+  in `Datastore/replication.py`. 02 imports both and copies neither.
+- 02's reopen table is built on log 01's commit-point table. It must treat a record set over
+  **identical** shards as the common case: a get that inserted nothing, or a controller that
+  raised before committing. Verify agreement, then clear it. `store_id` is NULL for a vectorized
+  get, and for the windows before `P2` in scalar get and store. `started` equals the timestamp
+  stamped on every row the write inserted.
+- A store written before 01 has no `replication_in_flight` table until the constructor creates it.
+  02's check runs after `_check_shard_files`, and must read a missing table as "no record".
+- **Until 02 lands, nothing should run a real build on this tree.** A record left set refuses every
+  replicated write, and only deleting the row by hand clears it (log 01, observation 2). Prompt 10
+  is the first real run in any case.
+- Opening an existing store with this tree adds an empty table to its primary. The sidecar records
+  no file hash, and the inventory reads only shards, so no fingerprint moves (log 01,
+  observation 3).
 
 **05–10 are held, not unplanned.** Their charters are fixed in README §2 and cannot drift to fit
 what 01–04 find; what waits is their method.
