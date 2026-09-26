@@ -1,0 +1,22 @@
+==========================================================================================
+[00-oneloop-lookup-joins-the-wrong-tag-table]  OneLoopIntegral serial 5, requested tag T
+==========================================================================================
+tagged in OneLoopIntegral_tags only (correctly tagged): found=False
+   join: JOIN "QuadSourceIntegral_tags" AS tag_0 ON tag_0.parent_serial = "OneLoopIntegral".serial AND tag_0.tag_serial = 1
+tagged correctly AND a QuadSourceIntegral with serial 5 carries tag T: a row matched, and constructing the object raised KeyError: 'source_serial'
+   join: JOIN "QuadSourceIntegral_tags" AS tag_0 ON tag_0.parent_serial = "OneLoopIntegral".serial AND tag_0.tag_serial = 1
+not tagged; a QuadSourceIntegral with serial 5 carries tag T: a row matched, and constructing the object raised KeyError: 'source_serial'
+   join: JOIN "QuadSourceIntegral_tags" AS tag_0 ON tag_0.parent_serial = "OneLoopIntegral".serial AND tag_0.tag_serial = 1
+
+==========================================================================================
+redshift.build at z = 0
+==========================================================================================
+call 1: store_id=1 new_insert=True rows in table=1
+call 2: store_id=2 new_insert=True rows in table=2
+call 3: store_id=3 new_insert=True rows in table=3
+SQLite value of (z - 0.0)/0.0: None
+
+==========================================================================================
+.scalar() lookups with a duplicate present (tolerance, two rows at log10 -10)
+==========================================================================================
+served store_id=3; no error raised

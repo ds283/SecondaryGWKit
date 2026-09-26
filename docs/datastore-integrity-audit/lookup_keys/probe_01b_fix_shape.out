@@ -1,0 +1,3 @@
+patched read_batch tags=[]: serials=[1, 2, 3] correct=True; (q_exit, r_exit) store_ids=[(12, 13)] (stored: (12, 13))
+patched read_batch tags=['A']: serials=[1, 2] correct=True; (q_exit, r_exit) store_ids=[(12, 13)] (stored: (12, 13))
+patched read_batch tags=['A', 'B']: serials=[1] correct=True; (q_exit, r_exit) store_ids=[(12, 13)] (stored: (12, 13))

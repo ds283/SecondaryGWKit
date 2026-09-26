@@ -64,6 +64,10 @@ per campaign README §5 items 1 and 2; it has no prompt file because none was wr
   with its own risk and would have obscured the one-line diff that commit exists to prove.
   Measurement: [`logs/01-quadsourceintegral-readback.md`](logs/01-quadsourceintegral-readback.md),
   "What it cannot see" item 3. Indexed at `docs/OPEN_ISSUES.md` §1.10.
+  - **Assigned (2026-09-26):** to [`prompts/datastore-integrity`](../datastore-integrity/README.md)
+    prompt 04, which fixes it before the archival A3 v2 store is built
+    ([`docs/datastore-integrity-audit.md`](../../docs/datastore-integrity-audit.md) §3.10). It
+    closes here, on this board's §4.
 
 ---
 

@@ -1,0 +1,17 @@
+exit time, patched: one stored row (1e-10, 1e-9)
+   exact request: available=True store_id=1 z_exit=10000.0; statements executed=1
+   request (-10.0, -8.0): available=False
+   request (-8.0, -8.0): available=False
+   request (-12.0, -9.0): available=False
+exit time, patched: two stored rows (1e-10, 1e-9) serial 1 and (1e-12, 1e-9) serial 2
+   request (-10.0, -9.0): available=True store_id=1 z_exit=10000.0
+   request (-12.0, -9.0): available=True store_id=2 z_exit=10000.1
+   request (-8.0, -8.0): available=False
+exit time, patched: stored stepping=1
+   request stepping=0: available=False
+   request stepping=1: available=True store_id=1 z_exit=10000.0
+   request stepping=2: available=False
+IntegrationSolver, patched: stored (serial 1, stepping 8), (serial 2, stepping 4)
+   request 4: served serial=2 new_insert=False
+   request 6: served serial=3 new_insert=True
+   request 8: served serial=1 new_insert=False

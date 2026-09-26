@@ -1,0 +1,43 @@
+==========================================================================================
+[02-exit-time-lookup-runs-inside-the-subhorizon-loop]
+==========================================================================================
+one stored row, exact request -> store_id=1 available=True obj.atol.log10=-10.0 obj.rtol.log10=-9.0 stepping=0 z_exit=10000.0
+statements executed by one build(): 6
+   statement 1: selects 1 of 6 z_exit_subh_e* columns
+   statement 2: selects 2 of 6 z_exit_subh_e* columns
+   statement 3: selects 3 of 6 z_exit_subh_e* columns
+   statement 4: selects 4 of 6 z_exit_subh_e* columns
+   statement 5: selects 5 of 6 z_exit_subh_e* columns
+   statement 6: selects 6 of 6 z_exit_subh_e* columns
+
+==========================================================================================
+[02-wavenumber-exit-time-tolerance-is-an-inequality-key]  (stored row: atol 1e-10, rtol 1e-9)
+==========================================================================================
+request log10 (atol, rtol)=(-10.0, -9.0): store_id=1 available=True obj.atol.log10=-10.0 obj.rtol.log10=-9.0 stepping=0 z_exit=10000.0
+request log10 (atol, rtol)=(-10.0, -8.0): store_id=1 available=True obj.atol.log10=-10.0 obj.rtol.log10=-9.0 stepping=0 z_exit=10000.0
+request log10 (atol, rtol)=(-8.0, -8.0): store_id=1 available=True obj.atol.log10=-10.0 obj.rtol.log10=-9.0 stepping=0 z_exit=10000.0
+request log10 (atol, rtol)=(-12.0, -9.0): store_id=None available=False obj.atol.log10=-12.0 obj.rtol.log10=-9.0
+
+Two stored rows at the same k: (1e-10, 1e-9) serial 1 and (1e-12, 1e-9) serial 2
+!! wavenumber_exit_time.build(): multiple results found when querying for wavenumber_exit_time
+request log10 (atol, rtol)=(-10.0, -9.0): MultipleResultsFound raised
+request log10 (atol, rtol)=(-12.0, -9.0): store_id=2 available=True obj.atol.log10=-12.0 obj.rtol.log10=-9.0 stepping=0 z_exit=10000.1
+!! wavenumber_exit_time.build(): multiple results found when querying for wavenumber_exit_time
+request log10 (atol, rtol)=(-8.0, -8.0): MultipleResultsFound raised
+
+Stepping (stored row stepping=1):
+request stepping=0: store_id=1 available=True obj.atol.log10=-10.0 obj.rtol.log10=-9.0 stepping=1 z_exit=10000.0
+request stepping=1: store_id=1 available=True obj.atol.log10=-10.0 obj.rtol.log10=-9.0 stepping=1 z_exit=10000.0
+request stepping=2: store_id=None available=False obj.atol.log10=-10.0 obj.rtol.log10=-9.0
+
+==========================================================================================
+[03-integrationsolver-stepping-minimum-lookup]
+==========================================================================================
+stored [(1, 4)]  (serial, stepping)
+   request stepping=4: served serial=1 (row's stepping=4), object reports stepping=4, new row inserted=False
+   request stepping=6: served serial=2 (row's stepping=6), object reports stepping=6, new row inserted=True
+   request stepping=8: served serial=3 (row's stepping=8), object reports stepping=8, new row inserted=True
+stored [(1, 8), (2, 4)]  (serial, stepping)
+   request stepping=4: served serial=1 (row's stepping=8), object reports stepping=4, new row inserted=False
+   request stepping=6: served serial=1 (row's stepping=8), object reports stepping=6, new row inserted=False
+   request stepping=8: served serial=1 (row's stepping=8), object reports stepping=8, new row inserted=False

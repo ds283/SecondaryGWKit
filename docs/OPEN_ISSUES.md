@@ -1,6 +1,6 @@
 # Open issues — project-wide index
 
-**Last updated:** 2026-09-26 · **101 open** across sixteen campaigns.
+**Last updated:** 2026-09-26 · **104 open** across seventeen campaigns.
 
 This file exists so that an issue opened by one campaign is not lost when that campaign closes.
 It is an **index, not a record**: one line per issue, pointing at the campaign status board that
@@ -29,7 +29,8 @@ the two disagree, the board is right.
 [`test-suite-runtime`](../prompts/test-suite-runtime/IMPLEMENTATION_STATE.md) ·
 [`datastore-portability`](../prompts/datastore-portability/IMPLEMENTATION_STATE.md) ·
 [`store-fingerprint`](../prompts/store-fingerprint/IMPLEMENTATION_STATE.md) ·
-[`store-retirement`](../prompts/store-retirement/IMPLEMENTATION_STATE.md)
+[`store-retirement`](../prompts/store-retirement/IMPLEMENTATION_STATE.md) ·
+[`datastore-integrity`](../prompts/datastore-integrity/IMPLEMENTATION_STATE.md)
 
 **Two** of these hold no open issue and are listed for their §4. `test-suite-runtime` closed
 `transfer-remedial`'s `[08-3bessel-plot-cost-dominates-the-suite]` on 2026-09-19;
@@ -81,7 +82,7 @@ the general-$b$ oracle) have landed, and the board
 [`prompts/handover/IMPLEMENTATION_STATE.md`](../prompts/handover/IMPLEMENTATION_STATE.md) now
 exists. Every row below still closes on the board named in its own line. The plan also draws in
 `[12-phase-spline-error-grows-with-x]` (§1.4),
-`[20-wkb-rows-consume-numeric-initial-data]` (§1.4), `[00-consumer-anchoring-floor]` (§1.4),
+`[20-wkb-rows-consume-numeric-initial-data]` (§1.15 since 2026-09-26), `[00-consumer-anchoring-floor]` (§1.4),
 `[02-consumer-phi-below-the-storage-granularity]` (§1.6) and
 `[01-general-w-normalisation-is-predicted-not-measured]` (§1.9); those rows are **not** moved here,
 because none has changed status — except the last, which **prompt 01 closed on 2026-09-20**, on the
@@ -157,7 +158,6 @@ prompt 13 left open.
 | `[07-tk-per-object-cost-is-all-setup]` | GkTk-remedial | A `TkWKBIntegration` object at $k=3\times10^8$ costs 0.049–0.052 s, straddling prompt 07 §3 item 6's 0.05 s; all of it is setup. 5,840 of its 11,376 integrand evaluations build a per-$k$ residual table that, at one object per $k$, nothing amortises, and 5,536 are the leading table's off-grid anchor panel recomputed once per sample — the split prompt 14 applied to $\rho$ but not to $\tau_s$. **Widened by prompt 09:** the same recomputation would hit any consumer with an off-grid anchor, which is prompt 10's $z_{\rm init}$. |
 | `[08-docs-scripts-reference-removed-chunking]` | GkTk-remedial | Two `docs/` reproduction scripts (`t5_spline.py`, `measure.py`) read `phase_spline` internals (`_chunk_list`, `_splines`, `_match_chunk`) that prompt 08 deleted with chunking; they documented the chunked tree they ran on and were not edited. |
 | `[10-transfer-remedial-tolerance-comments-stale]` | GkTk-remedial | Five tolerance comments `8ba9159` wrote in `test_tk_source_functions.py` now describe the consumer re-spline prompt 10 deleted and quote numbers three to four orders above the new measurements. Not edited — `8ba9159`'s text was a stop condition for prompt 10 — and every assertion still passes. |
-| `[20-wkb-rows-consume-numeric-initial-data]` | GkTk-remedial | `Gk`/`TkWKBIntegration` take $z_{\rm init}$, $G_{\rm init}$/$T_{\rm init}$ and the derivative from the numeric stop point and are keyed independently of the numeric row: no foreign key, and the initial values are stored `nullable=False` but never filtered. Covered in practice only because `z_init` is filtered as an absolute `1e-7` against $z\sim10^{12}$, i.e. exactly — measured on QCD at $k=4.972\times10^7$, the two break-point policies move $z_{\rm init}$ by 4.59e5 and the lookup misses. A change moving the stop *values* without moving $z_{\rm init}$ would be served a stale row. |
 | `[13-scoped-run-driver-k-grid-literal]` | GkTk-remedial | `docs/source-remediation-verification/scoped_pipeline_run.py` matches a `main.py` k-grid literal that `f17f2d4` renamed to `NUMBER_SOURCE_K_VALUES`/`NUMBER_RESPONSE_K_VALUES`, so it finds zero occurrences and raises rather than running. The `source-remediation` Layer 2 is not reproducible by its own documented command; prompt 13 copied the driver into `docs/gktk-remedial/` rather than editing another campaign's file. |
 
 ---
@@ -227,7 +227,6 @@ where it was not.
 | `[01-density-criterion-imposed-outside-the-wkb-region]` | tolerance-convergence | `source_grid_spacing_profile` imposes the fourth-derivative spline criterion over `residual_node_range`'s band, which reaches **1.5–2.1 e-folds outside the horizon** — ~5 e-folds beyond the phase spline it protects. 69% of the samples v2 adds on QCD lie above horizon crossing for the smallest production $k$. **Narrowed 2026-09-17** — prompt 02a made the grid buildable without touching the band. **Correction, 2026-09-17: prompt 02a's guarded-node census was briefly recorded here as “the direct measure of the overreach”; it is not, and that claim is withdrawn.** All 53 guards are one node, interior to the band and sub-horizon in 42 of the 53 cases, at a declared break — `[02a-stencil-reaches-across-a-declared-break-before-the-mask]`. **This issue is still without a measurement**; the 69% figure above remains its only evidence. Unjustified rather than wrong; the decision remains **T7**.. **MEASURED by prompt 04, 2026-09-17, for the first time** (`ORDER-AUDIT.md` §8), and it is larger in e-folds and much smaller in consequence than the body claims: in the `Gk` sector **4 %–49 %** of the band's nodes are super-horizon with the band top **13.0 e-folds** outside on Radiation and LambdaCDM and 3.66 on QCD; in the `Tk` sector it is **zero at every wavenumber on every model**, $\omega_T^2 > 0$ already requiring the mode to be inside the sound horizon. Rebuilding the grid with `main.source_grid_spacing_profile` executed unmodified over a horizon-limited band costs **QCD 114 of 2,034 samples and the other two cosmologies none**. **Still unassigned**; the decision now has a cost to set against it. |
 | `[02a-stencil-reaches-across-a-declared-break-before-the-mask]` | tolerance-convergence | `source_grid_spacing_profile` evaluates its five-point stencil (reach **2.0e-03** in $u$) over every band node **before** applying the declared-crossing mask (**6.0e-03**), so a node the criterion has already decided to discard is still evaluated and its arms land across the break, where $H$ steps and $\omega^2$ goes non-positive. This was a hard crash until `effb70b`. Measured: all **53** guarded cases on QCD at its own anchor are the **same** node, **1.000e-03** in $u$ from the third declared break, interior to the band and **sub-horizon in 42 of 53**. Because every guarded node is inside the mask, prompt 02a's guard changes **no `usable` outcome** and can alter no profile. But **the published grids' zero is lattice alignment, not construction** — LambdaCDM's anchor straddles the break at 7.582e-03 — so a change to `z_init` or `samples_per_log10z` could start guarding. Reordering the mask would have prevented all 53; it is unmeasured against the published digests. |
 | `[02-oneloopintegral-is-a-ninth-keyed-object-type]` | tolerance-convergence | **README §2 (a) counts eight keyed object types; there are nine.** `OneLoopIntegral` carries `atol_serial`/`rtol_serial` as indexed non-nullable foreign keys into `tolerance` and filters on both, is registered, sharded and budgeted — and `main.py` never builds one, its `compute()` being a label-replacing stub with an inverted guard. Object count 0. Prompt 02 §8's stop condition: **unassigned, the user decides** whether prompt 05 decouples it, before any row exists to invalidate, or whether decoupling a target that computes nothing is premature. |
-| `[02-wavenumber-exit-time-tolerance-is-an-inequality-key]` | tolerance-convergence | README §2 (g)'s "a new accuracy parameter makes every existing row unreachable" is true of eight of the nine. `wavenumber_exit_time`'s lookup filters `stored.log10_tol − requested <= DEFAULT_FLOAT_PRECISION` and orders descending, so it takes the **loosest row at least as tight as the request**: tightening misses, **loosening silently reuses a tighter row** and the object then reports the stored pair, not the requested one. Prompt 03a must sweep it through `_solve_horizon_exit` and never through the datastore. |
 | `[02-shared-atol-doubles-as-a-float-comparison-epsilon]` | tolerance-convergence | `DEFAULT_ABS_TOLERANCE` is also a bare `fabs(a − b) <` epsilon at seven sites with no connection to the $G_k$ ODE (`GkSource.py:96`, `:104`, `:275`; `numeric_with_phase_cut.py:618`, `:737`, `:790`; `WKBtools.py:83`). Nothing is wrong at 1e-10; the hazard was that the prompt entitled to retune the constant would move all seven with it, in modules outside its file list. **Narrowed by prompt 05a, 2026-09-18:** it left the value at 1e-10 and gave the solver-reaching targets their own constants, so the pair is now *only* the epsilon — no object type keys on either name. Tidying, not a hazard. |
 | `[05a-two-verification-scripts-still-query-the-exit-time-under-the-shared-pair]` | tolerance-convergence | `docs/source-remediation-verification/analyse_greens_and_source.py:447` and `run_quadsource_integrals.py:140` still build their `wavenumber_exit_time` lookup from `DEFAULT_ABS_TOLERANCE`/`DEFAULT_REL_TOLERANCE`; neither file is in prompt 05a's grant. That target's key is an **inequality**, so they do not miss — they are served the new `rtol = 1e-9` row and report the stored pair rather than the requested one. The `GkNumericIntegration` half of the first is harmless, its value being unchanged. `ReaderToleranceAgreementTestCase` already cross-checks the six `extract_*.py` and is generic over a file list. |
 | `[03a-tk-numeric-excursion-is-sporadic-in-rtol]` | tolerance-convergence | `TkNumericIntegration`'s maximum envelope-relative error over the production grid is **not monotone in `rtol`**. Measured at 50 $k$ × 3 models × nine settings, v2 grid at each cosmology's own anchor, `BREAK_POINT_ALL`: worst over three models runs 3.36e-04 (`1e-8`), 6.60e-04 (`3e-9`), 9.08e-04 (`1e-9`), 5.76e-04 (`3e-10`), 1.31e-04 (`1e-10`), **3.88e-08** (`3e-11`). From `1e-9` down, **exactly one** of the 150 runs is above 3e-6 at each setting and it is a **different** run each time. It is prompt 17 §7 (b)'s step-selection accident, and `atol` selects which wavenumber draws it (median ≤2.1×, maximum up to 205×). So README §6.1's `rtol = 3e-11` is the loosest that clears *in this sweep*, not a bound. **The user accepted `3e-11` on 2026-09-17 with this caveat standing**, so it ships as a measured setting and not as a bound, and prompt 05's provenance note must say which. **Unassigned.** |
@@ -649,9 +648,9 @@ prompt 03 on 2026-09-11 and not noticed by prompt 01's audit. Both were closed o
 user's direction — the real one on the `GkTk-remedial` board that owns it — and neither half turned
 out to be the one-line fix it looked like.
 
-| Issue | Board | Hook |
-|---|---|---|
-| `[01-read-batch-is-outside-the-guard]` | datastore-readback | The guard covers `build()` only. `read_batch()` reads rows through a nested helper's parameter and is checked by nothing, and it is on the live path rather than only on resume. |
+Its one remaining issue, `[01-read-batch-is-outside-the-guard]`, was **assigned to
+`prompts/datastore-integrity` prompt 04 on 2026-09-26**, and its row moved to §1.15. It stays on
+this campaign's board, and closes there.
 
 ### 1.11 The run registry campaign
 
@@ -705,18 +704,9 @@ opened one more on 2026-09-25, the last row below, and it too is recorded here f
 Prompt 04 closed `run-registry`'s `[04-a-runs-product-is-named-but-never-fingerprinted]` on
 2026-09-25 (that board's §4), and its row is deleted. Prompt 05 narrowed
 `[00-replicated-writes-can-diverge-across-shards]` the same day, by measuring the three original
-stores, and opened none. **The user closed the campaign on 2026-09-25 at 5 / 5.** The seven rows below
-stay open, each recorded here for its owner.
-
-| Issue | Board | Hook |
-|---|---|---|
-| `[00-oneloop-lookup-joins-the-wrong-tag-table]` | store-fingerprint | `OneLoopIntegral.build` filters tags against `QuadSourceIntegral_tags`, while `store()` writes `OneLoopIntegral_tags`. No effect while the table is empty. |
-| `[00-tagged-read-batch-joins-an-unselected-alias]` | store-fingerprint | *Suspected, not run.* The tag joins in `QuadSourceIntegral` / `OneLoopIntegral` `read_batch` name `query.c.serial`, which compiles to an alias outside the FROM clause. Extraction passes tags. To confirm on a store copy. |
-| `[00-quadsource-tq-serial-has-the-wrong-foreign-key]` | store-fingerprint | `QuadSource.Tq_serial` declares a foreign key to `QuadSource.serial` but holds a transfer-function id; `Tr_serial` declares none. Not enforced; a false statement in the schema. |
-| `[00-numeric-value-parent-lookup-omits-break-point-kind]` | store-fingerprint | The `TkNumericValue` / `GkNumericValue` parent query omits `break_point_kind`, which is in the parent's own lookup. Ambiguous only when a store holds two break-point kinds. |
-| `[00-quadsourcepolicy-rows-are-referenced-by-nothing]` | store-fingerprint | `QuadSourcePolicy` rows are created, but no table references them; `QuadSourceIntegral` keys on `GkSourcePolicy`. An author's decision whether it is vestigial. |
-| `[00-replicated-writes-can-diverge-across-shards]` | store-fingerprint | A replicated write commits shard by shard in separate transactions, so a crash leaves copies that differ. `ShardedPool.inventory`, which hid it by reading one random shard, was retired on 2026-09-25 by prompt 03. **Measured 2026-09-25** by prompt 02 on a copy of the sweep store, and by prompt 05 on all three original stores (live A3, backup, sweep): no divergence anywhere. The write-path defect stands. Making the write atomic is not this campaign's. |
-| `[02-exit-time-lookup-runs-inside-the-subhorizon-loop]` | store-fingerprint | `wavenumber_exit_time.build` runs its query inside the sub-horizon column loop, six times per lookup. The answer is right today; with an empty list the lookup would fail. A one-level dedent, in whichever campaign next has that `build` in scope. |
+stores, and opened none. **The user closed the campaign on 2026-09-25 at 5 / 5.** Its seven open rows
+were **assigned to `prompts/datastore-integrity` on 2026-09-26**, and moved to §1.15. They stay on
+this campaign's board, and close there.
 
 ### 1.14 The store retirement campaign
 
@@ -743,6 +733,33 @@ recorded here for its owner.
 | `[00-a-launch-log-lives-outside-its-run-directory]` | store-retirement | `var/bootstrap-a3-resume.log` is a strict superset of that run's registered logs, with 67 more lines, including the only SIGTERM record. It sits at the top of `var/`, attributed by nothing on disk. |
 | `[00-a-copy-carries-its-sources-present-tense-fields]` | store-retirement | `copy_store` carries unknown fields verbatim, so a copy of the live A3 store says it has a retained backup, and its `restart.command` resumes into the **source** store. Nothing reads them. A decision about copy's design. |
 | `[01-cross-filesystem-move-advice-says-delete-by-hand]` | store-retirement | A move that fails across filesystems advises deleting the source by hand, and `store move` passes that advice on for a registered store, against the rule that one is only ever retired. An existing test pins the text. |
+
+### 1.15 The datastore integrity campaign
+
+`prompts/datastore-integrity` was opened on 2026-09-25, when the user asked that every known
+datastore-integrity defect be fixed before the A3 v2 store is built, the first store meant to have
+archival value. Its audit, `docs/datastore-integrity-audit.md`, re-verified the eleven open issues
+in that class on four boards, all still present, and each wider than recorded. All eleven were
+assigned to its prompts on 2026-09-26; each stays on its owning board, which carries an
+**Assigned** line, and closes there. The audit opened three `00-` issues of its own, the last
+three rows, none assigned to a prompt.
+
+| Issue | Board | Hook |
+|---|---|---|
+| `[00-replicated-writes-can-diverge-across-shards]` | store-fingerprint | **→ prompt 01, 02.** A replicated write commits shard by shard in separate transactions, so a crash leaves copies that differ; a resume can then split one key across two serials, which the inventory cannot see. All three original stores clean serial by serial (audit §4.4). |
+| `[02-wavenumber-exit-time-tolerance-is-an-inequality-key]` | tolerance-convergence | **→ prompt 03.** README §2 (g)'s "a new accuracy parameter makes every existing row unreachable" is true of eight of the nine. `wavenumber_exit_time`'s lookup filters `stored.log10_tol − requested <= DEFAULT_FLOAT_PRECISION` and orders descending, so it takes the **loosest row at least as tight as the request**: tightening misses, **loosening silently reuses a tighter row** and the object then reports the stored pair, not the requested one. Prompt 03a must sweep it through `_solve_horizon_exit` and never through the datastore. |
+| `[02-exit-time-lookup-runs-inside-the-subhorizon-loop]` | store-fingerprint | **→ prompt 03.** `wavenumber_exit_time.build` runs its query inside the sub-horizon column loop, six times per lookup. The answer is right today; with an empty list the lookup would fail. A one-level dedent, in whichever campaign next has that `build` in scope. |
+| `[03-integrationsolver-stepping-minimum-lookup]` | GkTk-remedial | **→ prompt 03.** `IntegrationSolver` lookups match `stepping >= requested`; harmless while every table is order 4, but a second Gauss order under the label `cumulative-GL` could be served by the other order's row. |
+| `[01-read-batch-is-outside-the-guard]` | datastore-readback | **→ prompt 04.** The guard covers `build()` only. `read_batch()` reads rows through a nested helper's parameter and is checked by nothing, and it is on the live path rather than only on resume. |
+| `[00-tagged-read-batch-joins-an-unselected-alias]` | store-fingerprint | **→ prompt 05.** **Confirmed** in memory by the datastore-integrity audit: every tagged `QuadSourceIntegral` / `OneLoopIntegral` `read_batch` fails (`no such column: anon_1.serial`), so extraction from any run-labelled store fails. |
+| `[00-numeric-value-parent-lookup-omits-break-point-kind]` | store-fingerprint | **→ prompt 05.** The `TkNumericValue` / `GkNumericValue` parent query omits `break_point_kind`, which is in the parent's own lookup. Ambiguous only when a store holds two break-point kinds. |
+| `[00-oneloop-lookup-joins-the-wrong-tag-table]` | store-fingerprint | **→ prompt 05.** `OneLoopIntegral.build` filters tags against `QuadSourceIntegral_tags`, while `store()` writes `OneLoopIntegral_tags`. No effect while the table is empty. |
+| `[00-quadsource-tq-serial-has-the-wrong-foreign-key]` | store-fingerprint | **→ prompt 06.** `QuadSource.Tq_serial` declares a foreign key to `QuadSource.serial` but holds a transfer-function id; `Tr_serial` declares none. Not enforced; a false statement in the schema. |
+| `[20-wkb-rows-consume-numeric-initial-data]` | GkTk-remedial | **→ prompt 07.** `Gk`/`TkWKBIntegration` take $z_{\rm init}$, $G_{\rm init}$/$T_{\rm init}$ and the derivative from the numeric stop point and are keyed independently of the numeric row: no foreign key, and the initial values are stored `nullable=False` but never filtered. Covered in practice only because `z_init` is filtered as an absolute `1e-7` against $z\sim10^{12}$, i.e. exactly — measured on QCD at $k=4.972\times10^7$, the two break-point policies move $z_{\rm init}$ by 4.59e5 and the lookup misses. A change moving the stop *values* without moving $z_{\rm init}$ would be served a stale row. |
+| `[00-quadsourcepolicy-rows-are-referenced-by-nothing]` | store-fingerprint | **→ prompt 08.** `QuadSourcePolicy` rows are created, but no table references them; `QuadSourceIntegral` keys on `GkSourcePolicy`. An author's decision whether it is vestigial. |
+| `[00-the-inventory-cannot-see-a-serial-split]` | datastore-integrity | The structured inventory compares replicated classes by key, tags, `validated` and value count, not by serial, flags or value contents, so a serial split fingerprints clean. Not this campaign's. |
+| `[00-oneloop-factory-cannot-round-trip-a-row]` | datastore-integrity | `OneLoopIntegral.build` has no `source_serial`, which the target reads, and `store()` writes a `validated` key to no column. For when `OneLoopIntegral` is built. |
+| `[00-the-5pt0-policy-pair-is-created-and-never-used]` | datastore-integrity | `main.py` creates `GkSource_policy_5pt0` and `QuadSource_policy_5pt0` and uses neither. An author's decision. |
 
 ---
 
@@ -772,7 +789,6 @@ No action defined. These are floors on what a test may *assert*, not on what the
 | `[01-lambdacdm-hubble-rounding-floor]` | GkTk-remedial | `LambdaCDM.Hubble` carries 2–9e-15 relative in double precision, which floors $\Delta\tau$ over one grid interval at $4$–$6\times10^{-5}$ rad at $k=3\times10^8$ whatever the Gauss order or storage width. |
 | `[02-qcd-reference-floor]` | GkTk-remedial | The QCD $\tau$/$\tau_s$ references in `wkb_reference_data.json` are themselves good only to 1.9e-14 relative, which is exactly where prompt 02's order-4 tables land. Do not assert tighter for QCD $\tau$ at the nodes. **Narrowed by `qcd-background-audit` prompt 06 (2026-09-14):** the circularity is gone — the references are now built on a background that reproduces the defining equation to 6.807e-11 — and the model-against-JSON agreement is 2.104e-15 / 2.212e-15, an order *below* the recorded floor. The floor itself needs prompt 08's `residual_convergence.py` re-run before this can close. |
 | `[03-qcd-short-baseline-reference-endpoint-rounding]` | GkTk-remedial | The QCD short-baseline references in `wkb_reference_data.json` integrate between rounded `log1p(z)` endpoints and carry up to ulp(u)/W ≈ 1e-13 relative on the 37 % fractions; the shipped table agrees with an exact-endpoint `quad` to ≤ 8.8e-16. Assert README §6's 1e-13 for QCD short baselines, not the JSON's self-agreement. |
-| `[03-integrationsolver-stepping-minimum-lookup]` | GkTk-remedial | `IntegrationSolver` lookups match `stepping >= requested`; harmless while every table is order 4, but a second Gauss order under the label `cumulative-GL` could be served by the other order's row. |
 | `[04-background-rhs-evaluations-count]` | GkTk-remedial | `compute_background` builds three tables but `IntegrationData` has one counter, which prompt 03's test pins to the $\tau$ table alone; the other two counts are payload keys, so the persisted `RHS_evaluations` understates the build 3×. |
 | `[06-metadata-column-headroom]` | GkTk-remedial | The WKB integrations' `metadata` column is `String(256)`. **Narrowed by prompt 14:** with its `rho_reused` key the longest payload is 227 characters, so 29 remain; a test now asserts the length rather than letting it overflow. SQLite does not enforce it, PostgreSQL would. Count before adding a key. |
 | `[06-docs-scripts-reference-removed-ode]` | GkTk-remedial | Nine `docs/` reproduction scripts import symbols the campaign removed: seven the phase ODE (`integrate_phase_function`, `stage_*_evolution`, `DEFAULT_OMEGA_WKB_SQ_MAX`, prompt 06), and `TK_04_WKB_reconstruction.py` and `baseline_k1e5.py` the friction ODE `friction_RHS` (prompt 07, relocated into prompt 04's test). They documented the tree they ran on and were not edited. |

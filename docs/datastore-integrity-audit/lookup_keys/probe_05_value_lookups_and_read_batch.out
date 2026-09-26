@@ -1,0 +1,48 @@
+================================================================================================
+[00-numeric-value-parent-lookup-omits-break-point-kind]
+GkNumericIntegration.BREAK_POINT_KIND='discontinuity'  TkNumericIntegration='all'
+================================================================================================
+
+-- store with 1 parent(s) differing only in break_point_kind
+GkNumericValue build (model path): G=1.0
+GkNumericValue.read_batch: [(10, 1.0)]
+TkNumericValue build, payload with z_init (what build() dispatches on): KeyError: 'z_source'
+TkNumericValue build, payload with z_init AND z_source: T=1.0
+
+-- store with 2 parent(s) differing only in break_point_kind
+!! GkNumericValue.build(): multiple results found when querying for GkNumericValue
+GkNumericValue build (model path): MultipleResultsFound: Multiple rows were found when one or none was required
+GkNumericValue.read_batch: [(10, 1.0), (20, 2.0)]
+TkNumericValue build, payload with z_init (what build() dispatches on): KeyError: 'z_source'
+!! TkNumericValue.build(): multiple results found when querying for TkNumericValue
+TkNumericValue build, payload with z_init AND z_source: MultipleResultsFound: Multiple rows were found when one or none was required
+
+-- tags omitted (payload.get('tags', None) then 'for tag in tags')
+GkNumericValue.read_batch without tags: TypeError: 'NoneType' object is not iterable
+
+================================================================================================
+GkNumericValue.read_batch: flags of the returned z_response (row serial 2: source=False, response=True)
+================================================================================================
+z_response.is_source=False z_response.is_response=False
+
+================================================================================================
+GkWKBValue: two GkWKBIntegration parents, same (model, k, z_source), z_init 1e4 and 2e4
+================================================================================================
+GkWKBValue.read_batch: [(10, 10000.0), (20, 20000.0)]
+!! GkWKBValue.build(): multiple results found when querying for GkWKBValue
+GkWKBValue build (model path): MultipleResultsFound: Multiple rows were found when one or none was required
+GkWKBValue build (serial path, existing row): AttributeError: Could not locate column in row for column 'WKB_criterio'
+   its SQL (FROM onward): FROM "GkWKBValue" JOIN "GkWKBIntegration" ON "GkWKBIntegration".serial = "GkWKBValue".wkb_serial  WHERE "GkWKBValue".wkb_serial = 1 AND "GkWKBValue".z_serial = 2
+
+================================================================================================
+TkWKBValue
+================================================================================================
+TkWKBValue.read_batch: TypeError: TkWKBValue.__init__() missing 1 required positional argument: 'friction'
+TkWKBValue build (serial path, existing row): AttributeError: Could not locate column in row for column 'WKB_criterio'
+TkWKBValue build (model path): 0.25
+
+================================================================================================
+GkSourceValue / QuadSourceValue helpers
+================================================================================================
+GkSourceValue build (serial path): AttributeError: z_serial
+QuadSourceValue build (model path): AttributeError: model_id

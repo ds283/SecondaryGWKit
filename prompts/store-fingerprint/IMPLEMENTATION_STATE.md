@@ -202,6 +202,10 @@ opened none. Seven remain.
   - **Next step.** A one-line fix in the factory, in whichever campaign next has
     `OneLoopIntegral.py`'s lookup in scope. This campaign's inventory reads
     `OneLoopIntegral_tags`, and does not fix the lookup.
+  - **Assigned (2026-09-26):** to [`prompts/datastore-integrity`](../datastore-integrity/README.md)
+    prompt 05, which fixes it before the archival A3 v2 store is built
+    ([`docs/datastore-integrity-audit.md`](../../docs/datastore-integrity-audit.md) §3.12). It
+    closes here, on this board's §4.
 - **[00-tagged-read-batch-joins-an-unselected-alias]** *(opened 2026-09-24 by the audit;
   **suspected, not run**)*
   - **The defect.** The tag joins in `read_batch` use `query.c.serial`
@@ -214,6 +218,12 @@ opened none. Seven remain.
   - **Next step.** Run a tagged `read_batch` against a copy of a store, to confirm or refute. Then
     fix it in the campaign that owns `read_batch`; `datastore-readback`'s
     `[01-read-batch-is-outside-the-guard]` is the neighbouring record.
+  - **Assigned (2026-09-26):** to [`prompts/datastore-integrity`](../datastore-integrity/README.md)
+    prompt 05, which fixes it before the archival A3 v2 store is built
+    ([`docs/datastore-integrity-audit.md`](../../docs/datastore-integrity-audit.md) §3.1).
+    **Confirmed** by the audit's in-memory probe: every tagged call fails with `no such column:
+    anon_1.serial`, so extraction of `QuadSourceIntegral` from any run-labelled store fails. It
+    closes here, on this board's §4.
 - **[00-quadsource-tq-serial-has-the-wrong-foreign-key]** *(opened 2026-09-24 by the audit)*
   - **The defect.** `QuadSource.Tq_serial` declares `ForeignKey("QuadSource.serial")`
     (`QuadSource.py:113-116`), but it holds a transfer-function store id
@@ -222,6 +232,10 @@ opened none. Seven remain.
     relation that is false.
   - **Next step.** Correct or remove the constraint in whichever campaign next touches
     `QuadSource`'s schema. Schema changes cost nothing.
+  - **Assigned (2026-09-26):** to [`prompts/datastore-integrity`](../datastore-integrity/README.md)
+    prompt 06, which fixes it before the archival A3 v2 store is built
+    ([`docs/datastore-integrity-audit.md`](../../docs/datastore-integrity-audit.md) §2.1). It closes
+    here, on this board's §4.
 - **[00-numeric-value-parent-lookup-omits-break-point-kind]** *(opened 2026-09-24 by the audit)*
   - **The defect.** The parent query in `TkNumericValue`'s build (`TkNumericIntegration.py:873-878`),
     and its `GkNumeric` counterpart, filter on model, wavenumber exit, `z_init` / `z_source`,
@@ -231,6 +245,11 @@ opened none. Seven remain.
     value read ambiguous. `one_or_none()` would then raise, or pick the wrong parent's values.
     Every store today uses one `BREAK_POINT_KIND`.
   - **Next step.** Add the filter, in the campaign that owns these factories' reads.
+  - **Assigned (2026-09-26):** to [`prompts/datastore-integrity`](../datastore-integrity/README.md)
+    prompt 05, which fixes it before the archival A3 v2 store is built
+    ([`docs/datastore-integrity-audit.md`](../../docs/datastore-integrity-audit.md) §3.3). The audit
+    found the live `GkNumericValue.read_batch` has the same omission, and silently returns both
+    parents' values. It closes here, on this board's §4.
 - **[00-quadsourcepolicy-rows-are-referenced-by-nothing]** *(opened 2026-09-24 by the audit)*
   - **The defect.** `main.py:3651-3657` creates `QuadSourcePolicy` rows, but no factory table
     references the class. `QuadSourceIntegral` keys on `GkSourcePolicy`
@@ -239,6 +258,11 @@ opened none. Seven remain.
     governed the integrals.
   - **Next step.** Decide whether `QuadSourcePolicy` is vestigial, and remove it or wire it up. That
     is an author's decision about the physics, not this campaign's.
+  - **Assigned (2026-09-26):** to [`prompts/datastore-integrity`](../datastore-integrity/README.md)
+    prompt 08, which fixes it before the archival A3 v2 store is built
+    ([`docs/datastore-integrity-audit.md`](../../docs/datastore-integrity-audit.md) §2.5). The user
+    decided on 2026-09-25 to keep `QuadSourcePolicy` and add it to `QuadSourceIntegral`'s key. It
+    closes here, on this board's §4.
 - **[00-replicated-writes-can-diverge-across-shards]** *(opened 2026-09-24 by the audit)*
   - **The defect.** A replicated write commits on the controlling shard first, and on the other
     shards afterwards, in separate transactions (`ShardedPool.py:975-1030`, `:1158-1167`). A crash
@@ -266,6 +290,13 @@ opened none. Seven remain.
     same count on all four shards. So no store here shows the defect. It stays open, because the
     write path is unchanged and a crash between shards' commits would still leave copies that
     differ. Log: [`logs/05-fingerprint-the-real-stores.md`](logs/05-fingerprint-the-real-stores.md).
+  - **Assigned (2026-09-26):** to [`prompts/datastore-integrity`](../datastore-integrity/README.md)
+    prompts 01 and 02, which fix it before the archival A3 v2 store is built
+    ([`docs/datastore-integrity-audit.md`](../../docs/datastore-integrity-audit.md) §4). The audit
+    found the path wider than this entry: a resume after an interrupted replication turns a missing
+    row into a serial split, which the inventory cannot see; the three stores were then checked
+    serial by serial, read-only, and none is split (audit §4.4). It closes here, by prompt 02,, on
+    this board's §4.
 - **[02-exit-time-lookup-runs-inside-the-subhorizon-loop]** *(opened 2026-09-25 by prompt 02)*
   - **The defect.** In `sqla_wavenumber_exit_time_factory.build`, the line
     `row_data = conn.execute(query).one_or_none()` (`Datastore/SQL/ObjectFactories/wavenumber.py:270`)
@@ -278,6 +309,10 @@ opened none. Seven remain.
   - **Next step.** Dedent the line by one level, in whichever campaign next has
     `wavenumber_exit_time.build` in scope. This campaign's scope excludes every factory's `build`
     (README §1).
+  - **Assigned (2026-09-26):** to [`prompts/datastore-integrity`](../datastore-integrity/README.md)
+    prompt 03, which fixes it before the archival A3 v2 store is built
+    ([`docs/datastore-integrity-audit.md`](../../docs/datastore-integrity-audit.md) §3.6). It closes
+    here, on this board's §4.
 
 ---
 

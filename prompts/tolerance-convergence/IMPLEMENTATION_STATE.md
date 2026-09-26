@@ -824,6 +824,12 @@ Opened by **prompt 02**, 2026-09-16:
   `CosmologyConcepts.wavenumber._solve_horizon_exit` directly and never through `object_get`;
   prompt 05's `ast` guard must not assume equality semantics at this site. Evidence:
   `docs/tolerance-convergence/TOLERANCE-INVENTORY.md` §2.3.
+  - **Assigned (2026-09-26):** to [`prompts/datastore-integrity`](../datastore-integrity/README.md)
+    prompt 03, which fixes it before the archival A3 v2 store is built
+    ([`docs/datastore-integrity-audit.md`](../../docs/datastore-integrity-audit.md) §3.5). The user
+    decided on 2026-09-25 that it becomes an exact match. The audit also found that once a tighter
+    row is stored, the lookup at the original pair raises `MultipleResultsFound`. It closes here, on
+    this board's §4.
 
 - **[02-shared-atol-doubles-as-a-float-comparison-epsilon]** *(prompt 02, 2026-09-16; candidate for
   prompt 05)* — `DEFAULT_ABS_TOLERANCE` is not only the shared solver tolerance. It is also a bare

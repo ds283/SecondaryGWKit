@@ -551,6 +551,11 @@ Opened by the planning pass, 2026-09-10, before any prompt runs.
   points elsewhere). **Impact:** none while every table uses order 4 (log 02); a trap for whoever
   changes an order. **Next step:** if a second order is registered, either fold the order into the
   label or query with an exact stepping match.
+  - **Assigned (2026-09-26):** to [`prompts/datastore-integrity`](../datastore-integrity/README.md)
+    prompt 03, which fixes it before the archival A3 v2 store is built
+    ([`docs/datastore-integrity-audit.md`](../../docs/datastore-integrity-audit.md) §3.7). The audit
+    measured it worse than inert: with rows at stepping 8 and 4, a request for 4 is served the 8
+    row. It closes here, on this board's §4.
 
 - **[04-background-rhs-evaluations-count]** *(opened by prompt 04, 2026-09-11; inert)* —
   `compute_background` now builds three Gauss–Legendre tables, but `IntegrationData` is a fixed
@@ -748,6 +753,10 @@ Opened by the planning pass, 2026-09-10, before any prompt runs.
   already requires. **Next step:** either record the numeric row's serial on the WKB row and
   filter on it, or filter on `G_init`/`T_init` as well as `z_init`; both carry a schema change and
   a regeneration, and neither is urgent while `z_init` is compared exactly.
+  - **Assigned (2026-09-26):** to [`prompts/datastore-integrity`](../datastore-integrity/README.md)
+    prompt 07, which fixes it before the archival A3 v2 store is built
+    ([`docs/datastore-integrity-audit.md`](../../docs/datastore-integrity-audit.md) §2.3). It closes
+    here, on this board's §4.
 
 > Add an entry here whenever a prompt finishes with something unresolved: a verification step that
 > could not be run, an assumption that could not be confirmed, a deviation a later prompt has to

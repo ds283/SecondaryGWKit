@@ -1,0 +1,5 @@
+checked 1176 resolvable column references
+
+GkSource.py:766  sqla_GkSourceValue_factory._build_impl_serial: 'z_serial' is not a column of GkSourceValue
+OneLoopIntegral.py:222  sqla_OneLoopIntegral_factory.store: 'validated' is not a column of OneLoopIntegral [insert key]
+QuadSource.py:672  sqla_QuadSourceValue_factory._build_impl_model: 'model_id' is not a column of QuadSource

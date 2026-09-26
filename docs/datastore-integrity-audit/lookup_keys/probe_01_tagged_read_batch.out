@@ -1,0 +1,47 @@
+====================================================================================================
+QuadSourceIntegral.read_batch (the real factory method)
+====================================================================================================
+
+--- tags=[]  expected serials=[1, 2, 3]
+executed: yes; returned serials=[1, 2, 3]; correct=True
+returned q_exit.store_id values=[2] (the stored q_wavenumber_exit_serial is 12; the q wavenumber serial is 2)
+compiled SQL, tag joins and WHERE:
+   WHERE "QuadSourceIntegral".model_serial = 1 AND "QuadSourceIntegral".policy_serial = 1 AND "QuadSourceIntegral".k_wavenumber_exit_serial = 11 AND "QuadSourceIntegral".atol_serial = 1 AND "QuadSourceIntegral".rtol_serial = 2 AND "QuadSourceIntegral".q_wavenumber_exit_serial = 12 AND "QuadSourceIntegral".r_wavenumber_exit_serial = 13
+
+--- tags=['A']  expected serials=[1, 2]
+executed: NO -> OperationalError: (sqlite3.OperationalError) no such column: anon_1.serial
+warning (building query): SADeprecationWarning: The SelectBase.c and SelectBase.columns attributes are deprecated and will be removed in a future release; these attributes implicitly create a subquery that should be explicit.  Please call SelectBase.subquery() first in order to create a subquery, which then contains this attribute.  To access the columns that this SELECT object SELECTs from, use the SelectBase.selected_columns attribute. (deprecated since: 1.4)
+compiled SQL, tag joins and WHERE:
+   JOIN "QuadSourceIntegral_tags" AS tag_0 ON tag_0.parent_serial = anon_1.serial AND tag_0.tag_serial = 1 
+   WHERE "QuadSourceIntegral".model_serial = 1 AND "QuadSourceIntegral".policy_serial = 1 AND "QuadSourceIntegral".k_wavenumber_exit_serial = 11 AND "QuadSourceIntegral".atol_serial = 1 AND "QuadSourceIntegral".rtol_serial = 2 AND "QuadSourceIntegral".q_wavenumber_exit_serial = 12 AND "QuadSourceIntegral".r_wavenumber_exit_serial = 13
+
+--- tags=['A', 'B']  expected serials=[1]
+executed: NO -> OperationalError: (sqlite3.OperationalError) no such column: anon_1.serial
+warning (building query): SADeprecationWarning: The SelectBase.c and SelectBase.columns attributes are deprecated and will be removed in a future release; these attributes implicitly create a subquery that should be explicit.  Please call SelectBase.subquery() first in order to create a subquery, which then contains this attribute.  To access the columns that this SELECT object SELECTs from, use the SelectBase.selected_columns attribute. (deprecated since: 1.4)
+warning (building query): SADeprecationWarning: The SelectBase.c and SelectBase.columns attributes are deprecated and will be removed in a future release; these attributes implicitly create a subquery that should be explicit.  Please call SelectBase.subquery() first in order to create a subquery, which then contains this attribute.  To access the columns that this SELECT object SELECTs from, use the SelectBase.selected_columns attribute. (deprecated since: 1.4)
+compiled SQL, tag joins and WHERE:
+   JOIN "QuadSourceIntegral_tags" AS tag_0 ON tag_0.parent_serial = anon_1.serial AND tag_0.tag_serial = 1
+   JOIN "QuadSourceIntegral_tags" AS tag_1 ON tag_1.parent_serial = anon_2.serial AND tag_1.tag_serial = 2 
+   WHERE "QuadSourceIntegral".model_serial = 1 AND "QuadSourceIntegral".policy_serial = 1 AND "QuadSourceIntegral".k_wavenumber_exit_serial = 11 AND "QuadSourceIntegral".atol_serial = 1 AND "QuadSourceIntegral".rtol_serial = 2 AND "QuadSourceIntegral".q_wavenumber_exit_serial = 12 AND "QuadSourceIntegral".r_wavenumber_exit_serial = 13
+
+====================================================================================================
+Control: identical query, tag join ON tab.c.parent_serial == table.c.serial
+====================================================================================================
+tags=[] -> [1, 2, 3]; correct=True
+   FROM "QuadSourceIntegral"  WHERE "QuadSourceIntegral".model_serial = 1 AND "QuadSourceIntegral".policy_serial = 1 AND "QuadSourceIntegral".k_wavenumber_exit_serial = 11 AND "QuadSourceIntegral".atol_serial = 1 AND "QuadSourceIntegral".rtol_serial = 2
+tags=['A'] -> [1, 2]; correct=True
+   FROM "QuadSourceIntegral" JOIN "QuadSourceIntegral_tags" AS tag_0 ON tag_0.parent_serial = "QuadSourceIntegral".serial AND tag_0.tag_serial = 1  WHERE "QuadSourceIntegral".model_serial = 1 AND "QuadSourceIntegral".policy_serial = 1 AND "QuadSourceIntegral".k_wavenumber_exit_serial = 11 AND "QuadSourceIntegral".atol_serial = 1 AND "QuadSourceIntegral".rtol_serial = 2
+tags=['A', 'B'] -> [1]; correct=True
+   FROM "QuadSourceIntegral" JOIN "QuadSourceIntegral_tags" AS tag_0 ON tag_0.parent_serial = "QuadSourceIntegral".serial AND tag_0.tag_serial = 1 JOIN "QuadSourceIntegral_tags" AS tag_1 ON tag_1.parent_serial = "QuadSourceIntegral".serial AND tag_1.tag_serial = 2  WHERE "QuadSourceIntegral".model_serial = 1 AND "QuadSourceIntegral".policy_serial = 1 AND "QuadSourceIntegral".k_wavenumber_exit_serial = 11 AND "QuadSourceIntegral".atol_serial = 1 AND "QuadSourceIntegral".rtol_serial = 2
+
+====================================================================================================
+OneLoopIntegral: module-level read_batch (not a factory method)
+====================================================================================================
+sqla_OneLoopIntegral_factory has read_batch attribute: False
+tags=[]: executed; return value=None
+   FROM "OneLoopIntegral" JOIN redshift ON redshift.serial = "OneLoopIntegral".z_response_serial JOIN wavenumber_exit_time AS k_exit_tab ON k_exit_tab.serial = "OneLoopIntegral".wavenumber_exit_serial JOIN wavenumber AS k_tab ON k_tab.serial = k_exit_tab.wavenumber_serial  WHERE "OneLoopIntegral".model_serial = 1 AND "OneLoopIntegral".atol_serial = 1 AND "OneLoopIntegral".rtol_serial = 2 AND "OneLoopIntegral".wavenumber_exit_serial = 11
+tags=['A']: OperationalError: (sqlite3.OperationalError) no such column: anon_1.serial
+   FROM "OneLoopIntegral" JOIN redshift ON redshift.serial = "OneLoopIntegral".z_response_serial JOIN wavenumber_exit_time AS k_exit_tab ON k_exit_tab.serial = "OneLoopIntegral".wavenumber_exit_serial JOIN wavenumber AS k_tab ON k_tab.serial = k_exit_tab.wavenumber_serial JOIN "OneLoopIntegral_tags" AS tag_0 ON tag_0.parent_serial = anon_1.serial AND tag_0.tag_serial = 1  WHERE "OneLoopIntegral".model_serial = 1 AND "OneLoopIntegral".atol_serial = 1 AND "OneLoopIntegral".rtol_serial = 2 AND "OneLoopIntegral".wavenumber_exit_serial = 11
+tags=['A', 'B']: OperationalError: (sqlite3.OperationalError) no such column: anon_1.serial
+   FROM "OneLoopIntegral" JOIN redshift ON redshift.serial = "OneLoopIntegral".z_response_serial JOIN wavenumber_exit_time AS k_exit_tab ON k_exit_tab.serial = "OneLoopIntegral".wavenumber_exit_serial JOIN wavenumber AS k_tab ON k_tab.serial = k_exit_tab.wavenumber_serial JOIN "OneLoopIntegral_tags" AS tag_0 ON tag_0.parent_serial = anon_1.serial AND tag_0.tag_serial = 1 JOIN "OneLoopIntegral_tags" AS tag_1 ON tag_1.parent_serial = anon_2.serial AND tag_1.tag_serial = 2  WHERE "OneLoopIntegral".model_serial = 1 AND "OneLoopIntegral".atol_serial = 1 AND "OneLoopIntegral".rtol_serial = 2 AND "OneLoopIntegral".wavenumber_exit_serial = 11
+tags=omitted: TypeError: 'NoneType' object is not iterable
