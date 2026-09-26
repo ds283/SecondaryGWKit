@@ -6,7 +6,7 @@ decisions recorded in §6.1. **Prompts 01–04 are written.** Their tasks are fi
 05–10 are held: each waits on a decision in §6.2, or on what an earlier prompt ships (§2).
 **Decisions recorded 2026-09-26:** the user decided D2–D6 (§6.2). That releases 06, 07 and 08 to be
 written. 05 still waits on 04's list, 09 on D1, which the user has asked to have explained, and 10
-on 01–09. `store-retirement` closed on 2026-09-26 at 6 / 6, which discharges both of §2's
+on 01–09. **The user decided D1 later on 2026-09-26 (yes), which releases 09 too.** `store-retirement` closed on 2026-09-26 at 6 / 6, which discharges both of §2's
 cross-campaign constraints.
 
 ## 0. Why this campaign exists
@@ -84,7 +84,7 @@ eleven and found the classes wider than recorded:
 | 06 | `06-correct-the-foreign-keys.md` | `Tq_serial` → `TkNumericIntegration`; the `Tr_serial` comment; `GkSourcePolicyData.wavenumber_exit_serial`; the fixtures' map; a test that turns `PRAGMA foreign_keys` on over a store the real factories wrote; the exit-time and `IntegrationSolver` registrations' `"stepping": "minimum"` made to say what prompt 03 made true; the first deliberate schema change, under D5. Closes one issue. | **released** (D5 decided); to be written |
 | 07 | `07-key-wkb-rows-on-their-numeric-row.md` | A `numeric_serial` foreign key, NOT NULL on Tk and nullable on Gk (NULL = pure WKB), in the lookup; `z_init` and the initial values leave the key; `main.py`'s existence queries pass the parent; `_drop_order`. Closes `[20-wkb-rows-consume-numeric-initial-data]`. | **released** (D4, D5 decided); to be written |
 | 08 | `08-key-quadsourceintegral-on-its-policy.md` | `QuadSourcePolicy` in `QuadSourceIntegral`'s key, with a foreign key, through factory, target, `main.py` and the extraction script. Closes `[00-quadsourcepolicy-rows-are-referenced-by-nothing]`. | **released** (D4–D6 decided); to be written |
-| 09 | `09-key-derived-rows-on-their-parents.md` | `QuadSource` on `Tq`/`Tr`, `QuadSourceIntegral` on its source, policy data and Tk rows, `GkSource` on its Gk rows; same-shard parents as foreign keys, cross-shard as indexed columns; the inventory resolves parents across shards. | **held** on D1 |
+| 09 | `09-key-derived-rows-on-their-parents.md` | `QuadSource` on `Tq`/`Tr`, `QuadSourceIntegral` on its source, policy data and Tk rows, `GkSource` on its Gk rows; same-shard parents as foreign keys, cross-shard as indexed columns; the inventory resolves parents across shards. | **released** (D1 decided); to be written |
 | 10 | `10-build-a-throwaway-store-end-to-end.md` | Remedial. A scoped build through the registry into a store under `var/datastores/` that is not A3 v2; then a resume; then extraction of every target from it, the fingerprint, and the census of audit §4.4. Closes the campaign. | **held** until 01–09 land |
 
 **Why 05–10 are held.** Their charters above are fixed and cannot drift to fit what 01–04 find.
@@ -213,13 +213,20 @@ The project-wide ones in `CLAUDE.md`, plus:
 ### 6.2 Decisions D1–D6
 
 Each was stated on 2026-09-25 with a recommendation. **The user decided D2–D6 on 2026-09-26**, as
-recorded under each; D1 is open, because the user asked what it means. The recommendations as first
+recorded under each, and D1 later the same day, once it had been explained. The recommendations as first
 written are kept under each, since they are what the user decided against.
 
-- **D1 — key derived rows on the rows they were computed from (audit §2.4)? Open.**
-  *Recommended: yes.* The user asked, 2026-09-26, whether the gist is that rows on another shard
-  cannot carry explicit foreign keys. It is not; see *What D1 is about* below. Prompt 09 exists only
-  if D1 is taken.
+- **D1 — key derived rows on the rows they were computed from (audit §2.4)? Decided: yes.**
+  The user asked, 2026-09-26, whether the gist is that rows on another shard cannot carry explicit
+  foreign keys. It is not; see *What D1 is about* below. Once that was explained, the user agreed
+  with the recommendation the same day, noting that the likely original reason for the narrow key
+  was to let a `QuadSourceIntegral` be looked up from `k`, `q`, `r` alone, without first looking up
+  the intermediate Tk objects — and that the result is inconsistent. **So prompt 09 must say what
+  becomes of that convenience.** A reader that holds only physical labels (`k`, `q`, `r`, the
+  tolerances and the tags; `extract_QuadSourceIntegral_data.py` is the case) may still select by
+  them, provided it **refuses when more than one stored row matches**, naming the parents that
+  distinguish them, rather than choosing one. `build()`, which decides whether to compute, keys on
+  the parents.
   - *As recommended on 2026-09-25:* the user asked for every known integrity defect, and this is
     the class the WKB issue belongs to: a row computed from specific upstream rows is served for any
     upstream rows. Same-shard parents (`QuadSource.Tq_serial`, `QuadSourceIntegral.data_serial`,

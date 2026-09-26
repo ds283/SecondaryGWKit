@@ -1,8 +1,8 @@
 # Datastore integrity campaign — implementation state
 
-**Last updated:** 2026-09-26 · **Status: 0 of 10 prompts landed. 01–04 are written; 06–08 are
-released, to be written.** The user decided D2–D6 on 2026-09-26 (README §6.2); D1 is open, since the
-user asked what it means, and holds 09. 05 waits on 04's list, and 10 on 01–09. `store-retirement`
+**Last updated:** 2026-09-26 · **Status: 0 of 10 prompts landed. 01–04 are written; 06–09 are
+released, to be written.** The user decided D2–D6 on 2026-09-26 (README §6.2), and D1 (yes) later
+the same day. 05 waits on 04's list, and 10 on 01–09. `store-retirement`
 closed on 2026-09-26 at 6 / 6, which discharges both cross-campaign constraints (README §2), so 01
 and 04 are ready.
 
@@ -38,7 +38,7 @@ becomes an exact match; the adjacent issues are out of scope.
 
 | Decision | Decided (README §6.2) | Blocked, until decided |
 |---|---|---|
-| **D1** — key derived rows on their parents | **open**; the user asked what it means (2026-09-26), answered in README §6.2. Recommended: yes | 09 |
+| **D1** — key derived rows on their parents | **yes** (2026-09-26), once explained; a reader holding only physical labels may still select by them, and must refuse on more than one match | — |
 | **D2** — fix latent read-path defects no caller reaches | **yes** (2026-09-26) | — |
 | **D3** — how much of `OneLoopIntegral`'s factory to repair | **the mechanical defects only**; the rest when `OneLoopIntegral` is built (2026-09-26) | — |
 | **D4** — existing stores | **readers are not made version-aware** (2026-09-26); the ordering against `store-retirement` was discharged when it closed | — |
@@ -67,7 +67,7 @@ becomes an exact match; the adjacent issues are out of scope.
 | 06 | Correct the foreign keys | **S1**–**S5** | Sonnet | 🔓 released 2026-09-26 | — | — | — |
 | 07 | Key WKB rows on their numeric row | **K1**–**K2** | Opus | 🔓 released 2026-09-26 | — | — | — |
 | 08 | Key `QuadSourceIntegral` on its policy | **K3** | Sonnet | 🔓 released 2026-09-26 | — | — | — |
-| 09 | Key derived rows on their parents | **K4**–**K7** | Opus | ⏸️ held on D1 | — | — | — |
+| 09 | Key derived rows on their parents | **K4**–**K7** | Opus | 🔓 released 2026-09-26 | — | — | — |
 | 10 | Build a throwaway store end to end | **V1**–**V3** | Opus | ⏸️ held until 01–09 land | — | — | — |
 
 **05–10 are held, not unplanned.** Their charters are fixed in README §2 and cannot drift to fit
