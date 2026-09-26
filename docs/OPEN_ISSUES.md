@@ -734,6 +734,8 @@ orchestrator's review of its prompt 04 opened two. On 2026-09-26, after its prom
 two stores, the user assigned the three rows that are the campaign's own code,
 `[03-the-package-docstring-…]` and the two `04-` rows, to its prompt 06, which fixed and closed all
 three on the board's §4 the same day; their rows are deleted here. The other four stay unassigned.
+**The user closed the campaign on 2026-09-26 at 6 / 6.** The four rows below stay open, each
+recorded here for its owner.
 
 | Issue | Board | Hook |
 |---|---|---|

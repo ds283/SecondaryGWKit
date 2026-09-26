@@ -1,7 +1,7 @@
 # Store retirement campaign — implementation state
 
-**Last updated:** 2026-09-26 · **Status: 6 of 6 prompts landed. The campaign's work is done; it is
-closed by the user after the orchestrator's review of 06.** 05 landed on 2026-09-26: the user
+**Last updated:** 2026-09-26 · **Status: COMPLETE — 6 of 6 prompts landed. Closed by the user on
+2026-09-26.** 05 landed on 2026-09-26: the user
 retired the sweep store and the A3 backup on 2026-09-25, and amended the live A3 sidecar's
 `backup` field on 2026-09-26. After 05's review, the user decided that the campaign fixes the
 three open issues in its own code before it closes (README §6.4), so 06 was written the same day,
@@ -61,6 +61,95 @@ of them, it found, also blocks `--build --resume` of the A3 v2 store.
 | 04 | [Amend an unknown field](04-amend-an-unknown-field.md) | **R9** | Sonnet | ✍️ yes, 2026-09-25 | ✅ 2026-09-25 | *"Add amend_sidecar and store amend, for one unknown field"* | [`logs/04-…`](logs/04-amend-an-unknown-field.md) |
 | 05 | [Retire the two stores](05-retire-the-two-stores.md) | **R10**–**R12** | Opus | ✍️ yes, 2026-09-25 | ✅ 2026-09-26 | *"Retire the sweep store and the A3 backup"* | [`logs/05-…`](logs/05-retire-the-two-stores.md), with [`logs/05-tombstones.json`](logs/05-tombstones.json) |
 | 06 | [Fix the residuals, and close](06-fix-the-residuals-and-close.md) | **R13**–**R16** | Sonnet | ✍️ yes, 2026-09-26 | ✅ 2026-09-26 | *"Fix the three residuals of the store retirement campaign"* | [`logs/06-…`](logs/06-fix-the-residuals-and-close.md) |
+
+**Orchestrator review of prompt 06 (2026-09-26).** All nine checks in `orchestrator/prompt-06.md`
+§3 passed on `211d2c4`, from one dispatch. There are no findings, and no issue was opened. Before
+dispatch, the orchestrator took its own read-only snapshot of `var/datastores/` (size, mtime and
+SHA-256), `var/runs/` (size and mtime) and the repository root's `physics-test-n20-*` store, 56
+entries. It checked that snapshot against the campaign's end state: the three sidecars equal
+`logs/05-tombstones.json` by `json.load`, the live A3 store's five `.sqlite` files have log 05's C2
+SHA-256, size and mtime, and `var/datastores/` holds eight files, the backup's tombstone alone in
+its directory. Nothing was `running`. The baselines on `5e9b16f` were AdaptiveLevin 32,
+ComputeTargets 552, CosmologyModels 39, Datastore 206, LiouvilleGreen 148 (1 skipped) and
+RunRegistry 190.
+- **Scope.** The commit touches `RunRegistry/__init__.py`, `RunRegistry/stores.py`, the new test
+  module, the log, this board and the index. No existing test file is modified, and
+  `RunRegistry/__main__.py`, `Datastore/`, `tools/`, `CLAUDE.md`, `docs/handover/` and the README
+  are untouched. `__init__.py` has one hunk, the docstring paragraph. `stores.py`'s hunks are the
+  new `_canonical_json`, placed between `_amend_slot` and `amend_sidecar`, and two inside
+  `amend_sidecar`: docstring item 9 and the comparison. The message is unchanged.
+- **Only the decision moved.** The orchestrator ran its own probe on `5e9b16f` and again on the
+  commit, on stores built in temporary directories.
+  - On `5e9b16f`, all five type changes (`1`→`true`, `1`→`1.0`, `true`→`1`, `{"k": 1}`→`{"k":
+    true}` and `[1]`→`[true]`) were refused, which confirmed the defect.
+  - On the commit, all five are accepted, with the `before` and `after` types kept. `1`→`1` and
+    a key-reordered object are still refused, with the tree unchanged.
+  - A field `"a"`→`"b"` was amended on a store at a fixed scratchpad path. Its sidecar was masked
+    in `store_id`, `created` and each history entry's `when`, `git_head` and `git_dirty`. It is
+    equal on the commit to the one kept from `5e9b16f`, by `json.load` and in canonical text. The
+    masked sidecar was reproducible between two runs on `5e9b16f`.
+  - The marker-shaped sequence read back identically on both trees.
+- **The docstring.** After joining lines, the paragraph from "It is a convention" on is the
+  prompt's §2.1 text word for word. `grep -n "deletes nothing" RunRegistry/__init__.py` is empty,
+  and `list_runs`'s docstring is unchanged. The paragraph now agrees with `CLAUDE.md:52-55` and
+  with the `stores.py` and `__main__.py` docstrings.
+- **The tests.** The new module passed twice, 9 tests. The comparison tests assert types with
+  `assertIs(type(…), …)`. The marker test asserts each whole marker by `assertEqual`, and walks
+  the history back to the four-value sequence. Every `amend_sidecar` call passes `runs_root`, and
+  every command passes `--runs-root`. `import RunRegistry` loads neither `ray` nor `sqlalchemy`.
+- **Mutations.** (i)–(iii) applied with plain `git apply` straight from the log's fenced blocks.
+  They were run from an empty scratchpad working directory, with the repository on `PYTHONPATH`,
+  over both amend modules, and reproduced the log exactly:
+
+  | Mutation | Result | What fails |
+  |---|---|---|
+  | (i) | failures=1, errors=5 | the five type-change tests, and the command-line test |
+  | (ii) | failures=1 | the reordered object |
+  | (iii) | failures=5, errors=9 | the log's fourteen, by name |
+
+  Under (iii), the `{"present": false}` step's write **succeeds**, because the flattened `before`
+  is itself a well-formed marker. So what fails there is an assertion, not the validator. The
+  `[replace]` subtest's first failing assertion is `:208`, on the plain `result["before"]`, which
+  `amend_sidecar` derives from the flattened marker (`None != {'present': False}`). That leaves the
+  entry-marker assertion at `:211` unreached. The written marker is caught by a whole-marker
+  `assertEqual` in `[read back]` at `:248`: `{'present': False} != {'present': True, 'value':
+  {'present': False}}`. That check is log 06's deviation 1, and it is the reason the deviation is
+  right. The tree and the working directory were clean afterwards.
+- **Suites.** AdaptiveLevin 32, ComputeTargets 552 (the flake did not occur), CosmologyModels 39,
+  Datastore 206, LiouvilleGreen 148 (1 skipped), RunRegistry 199 (+9). `black --check` is clean on
+  the three touched Python files.
+- **Records.** §3 holds four issues, with its opening count right, and §4 holds the three, each
+  keeping its text and its `Assigned` line, with a `Closed` paragraph. The index's §1.14 has four
+  rows and its sentence, and the count is 101.
+- **`var/`.** Re-taken after the review, the snapshot is identical to the pre-dispatch one in all
+  56 entries, every mtime included.
+- **The commit.** One, in `CLAUDE.md`'s form. The tree was clean afterwards, apart from the
+  `datastore-integrity` paths.
+- **One correction to the records, made in this commit.** In three places this board called the
+  docstring text "README §2.1's text": the "Prompt 06 landed" paragraph, R13's status and the
+  first §4 entry's `Closed` paragraph. It is the **prompt's** §2.1, and the README has no §2.1.
+  The three references are corrected. Nothing else in them changed.
+- **Two observations, not findings.**
+  - `TestCommandLineTypeChange` asserts that its second command exits non-zero, through
+    `CommandLineTestCase.refused`, where the prompt's §3.3 says exit 1. That is the existing
+    tests' own pattern. The orchestrator ran both commands by hand on a temporary store, and they
+    exited 0 and then 1.
+  - The read-back walk's `unwrap` gives `None` both for an absent marker and for a present `null`.
+    Nothing in the sequence is `null`, and every marker is also asserted whole, so nothing turns
+    on it.
+
+**The campaign was closed by the user on 2026-09-26, at 6 of 6 prompts** (README §6.4). Its charter
+is met:
+- **Retirement.** A store is retired through the registry, by `store retire` over
+  `ShardedPool.delete_store`, and its sidecar stays behind as the record: when, why, what the
+  store held and what referenced it.
+- **The two stores.** The sweep store and the A3 backup are retired, and the live A3 store is
+  byte-identical, mtimes included. This was checked on the real files again before this closure.
+- **The present-tense claim.** The one such claim, the live A3 sidecar's `backup`, is corrected
+  through `store amend`, with the old value kept in its history.
+- **The residuals.** The campaign's own three are fixed and closed on §4.
+- **What stays open.** Four issues remain in §3. None is assigned, and each stays in
+  [`docs/OPEN_ISSUES.md`](../../docs/OPEN_ISSUES.md) §1.14 for its owner.
 
 **Orchestrator review of prompt 05 (2026-09-26).** All eight checks in `orchestrator/prompt-05.md`
 §4 passed on `81c0a9a`. One agent carried Phases A–C, dispatched once and continued twice. The
@@ -329,10 +418,10 @@ them on §4. It also leaves the board ready to close. **The closure is the orche
 after its review of 06, in the same commit as the review, as `store-fingerprint`'s was (`42d4910`).
 Its orchestrator notes are [`orchestrator/prompt-06.md`](orchestrator/prompt-06.md).
 
-**Prompt 06 landed (2026-09-26).** No §5 stop condition was met. R13's paragraph is README §2.1's
-text, re-wrapped to the file's width only; `grep -n "deletes nothing" RunRegistry/__init__.py`
-returns nothing. R14's identical-value refusal now compares canonical JSON text (a new private
-helper, `_canonical_json`, `json.dumps(…, sort_keys=True)`, as the sidecar writer already uses),
+**Prompt 06 landed (2026-09-26).** No §5 stop condition was met. R13's paragraph is the prompt's
+§2.1 text, re-wrapped to the file's width only; `grep -n "deletes nothing"
+RunRegistry/__init__.py` returns nothing. R14's identical-value refusal now compares canonical
+JSON text (a new private helper, `_canonical_json`, `json.dumps(…, sort_keys=True)`, as the sidecar writer already uses),
 not Python `==`; only the refusal decision and its docstring's item 9 changed — `amend_sidecar`
 still writes `new_value = normalised`, and every other refusal is untouched. Amending `NaN` to
 `NaN` is now refused, where it was previously accepted as a change that changed nothing (log 06).
@@ -362,7 +451,7 @@ by count. Log: [`logs/06-fix-the-residuals-and-close.md`](logs/06-fix-the-residu
 | R10 | **REMEDY** | Remedial: the sweep store retired by the user with `store retire`, checked before and after by the prompt's agent. `QUADSOURCE-TOLERANCE-SWEEP.md:15-17` then becomes true, and is not edited. | 05 | ✅ retired by the user 2026-09-25, completed `23:35:57`; a completed tombstone with fingerprint `matched` (`2c2dde68…`), its five files gone, nothing else changed (log 05, B2–B3). The sweep doc was not edited |
 | R11 | **REMEDY** | Remedial: the backup retired the same way. The live A3 sidecar's `backup` field is then corrected by `store amend`. | 05 | ✅ retired by the user 2026-09-25, completed `23:36:55`; every deleted file was inside its own directory, fingerprint `matched` (`eedcdfb2…`), and the live A3 store byte-identical (log 05, B3). `backup` amended by the user 2026-09-26, with the old value in the `amend` entry's `before` (log 05, C1) |
 | R12 | **RECORD** | The retirements recorded on the `run-registry` board, with `var/runs/a3-pilot/BACKUP_PATH` explained there rather than edited, and on the `handover` board. | 05 | ✅ dated 2026-09-26 notes on both boards, additions only; the tombstones and the amended live sidecar committed in `logs/05-tombstones.json` |
-| R13 | **CHARTER** | The `RunRegistry/__init__.py` module docstring says D0 in substance: the package deletes nothing but a store's own files, and those only through `store retire`. Closes `[03-the-package-docstring-still-says-the-registry-deletes-nothing]`. | 06 | ✅ the paragraph is README §2.1's text, re-wrapped only; `grep -n "deletes nothing" RunRegistry/__init__.py` returns nothing (log 06) |
+| R13 | **CHARTER** | The `RunRegistry/__init__.py` module docstring says D0 in substance: the package deletes nothing but a store's own files, and those only through `store retire`. Closes `[03-the-package-docstring-still-says-the-registry-deletes-nothing]`. | 06 | ✅ the paragraph is the prompt's §2.1 text, re-wrapped only; `grep -n "deletes nothing" RunRegistry/__init__.py` returns nothing (log 06) |
 | R14 | **GUARD** | `amend_sidecar`'s identical-value refusal compares canonical JSON text (`sort_keys=True`, as the writer uses), so `true`, `1` and `1.0` differ and a reordered object does not. Only the refusal decision changes. Closes `[04-amend-calls-true-1-and-1-0-identical]`. | 06 | ✅ `_canonical_json`, a private helper; `TestTypeStrictComparison` and `TestStillRefusedWithTheTreeUnchanged` (`test_store_amend_residuals.py`); `new_value` is still `normalised`; mutations (i), (ii) (log 06) |
 | R15 | **TEST** | A test takes one field through a marker-shaped sequence, and asserts each whole marker, so that a flattened marker fails. Closes `[04-no-test-amends-a-value-shaped-like-the-marker]`. | 06 | ✅ `TestMarkerShapedValue.test_add_replace_remove_and_read_back` (`test_store_amend_residuals.py`), asserting each whole marker; mutation (iii) (log 06) |
 | R16 | **RECORD** | The three issues on §4, the index's rows deleted, and the board left ready for the orchestrator's closure. | 06 | ✅ moved to §4 below, with a `Closed (2026-09-26) by prompt 06` paragraph each; `docs/OPEN_ISSUES.md` §1.14's three rows deleted, count corrected 104→101 |
@@ -472,7 +561,7 @@ to prompt 02. They stay on that board, and are indexed at `docs/OPEN_ISSUES.md` 
   - **Measurement:** log 03, "Observations not acted on", item 1. Indexed at
     `docs/OPEN_ISSUES.md` §1.14.
   - **Closed (2026-09-26) by prompt 06.** The docstring's first paragraph now reads, from "It is a
-    convention" on, exactly README §2.1's text, re-wrapped to the file's width only: it deletes
+    convention" on, exactly the prompt's §2.1 text, re-wrapped to the file's width only: it deletes
     nothing but a store's own files, and those only through `store retire`, which a person runs
     and which leaves the store's sidecar behind as its record, and it never deletes a run
     directory, a sidecar or any other record. `grep -n "deletes nothing"
