@@ -6,7 +6,8 @@ decisions recorded in §6.1. **Prompts 01–04 are written.** Their tasks are fi
 05–10 are held: each waits on a decision in §6.2, or on what an earlier prompt ships (§2).
 **Decisions recorded 2026-09-26:** the user decided D2–D6 (§6.2). That releases 06, 07 and 08 to be
 written. 05 still waits on 04's list, 09 on D1, which the user has asked to have explained, and 10
-on 01–09. **The user decided D1 later on 2026-09-26 (yes), which releases 09 too.** `store-retirement` closed on 2026-09-26 at 6 / 6, which discharges both of §2's
+on 01–09. **The user decided D1 later on 2026-09-26 (yes), which releases 09 too.** **06–09 were
+written on 2026-09-26.** `store-retirement` closed on 2026-09-26 at 6 / 6, which discharges both of §2's
 cross-campaign constraints.
 
 ## 0. Why this campaign exists
@@ -80,11 +81,11 @@ eleven and found the classes wider than recorded:
 | 02 | [`02-repair-or-refuse-at-open.md`](02-repair-or-refuse-at-open.md) | A driver-side step in `ShardedPool.__init__`, before any actor exists: roll back hot journals, compare every replicated table across shards, copy forward from the in-flight record's controller, **refuse to open** on anything else. Closes `[00-replicated-writes-can-diverge-across-shards]`. | **written**; after 01 |
 | 03 | [`03-exact-identity-lookups.md`](03-exact-identity-lookups.md) | Exit time by serial equality, the query out of the loop. `IntegrationSolver` by `==`. `.scalar()` → `one_or_none()` on every identity lookup. `redshift` at `z = 0`. Closes three issues. | **written**; after 02 |
 | 04 | [`04-extend-the-read-back-guard.md`](04-extend-the-read-back-guard.md) | The guard over `read_batch` and every `_build_impl_*`, and a column-existence test. Records what it finds as known-unfixed. Closes `[01-read-batch-is-outside-the-guard]`. | **written**; independent of 01–03 |
-| 05 | `05-repair-the-read-paths.md` | The tagged join; the exit time's `store_id`; `break_point_kind` and `z_init` in the value reads; the wrong flag columns; the three wrong column names, `WKB_criterio` and `friction`; tags defaulting to `[]`; `OneLoopIntegral`'s tag table, as D3 bounds. Empties prompt 04's known-unfixed list. Closes three issues. | **held** on 04 (D2, D3 decided) |
-| 06 | `06-correct-the-foreign-keys.md` | `Tq_serial` → `TkNumericIntegration`; the `Tr_serial` comment; `GkSourcePolicyData.wavenumber_exit_serial`; the fixtures' map; a test that turns `PRAGMA foreign_keys` on over a store the real factories wrote; the exit-time and `IntegrationSolver` registrations' `"stepping": "minimum"` made to say what prompt 03 made true; the first deliberate schema change, under D5. Closes one issue. | **released** (D5 decided); to be written |
-| 07 | `07-key-wkb-rows-on-their-numeric-row.md` | A `numeric_serial` foreign key, NOT NULL on Tk and nullable on Gk (NULL = pure WKB), in the lookup; `z_init` and the initial values leave the key; `main.py`'s existence queries pass the parent; `_drop_order`. Closes `[20-wkb-rows-consume-numeric-initial-data]`. | **released** (D4, D5 decided); to be written |
-| 08 | `08-key-quadsourceintegral-on-its-policy.md` | `QuadSourcePolicy` in `QuadSourceIntegral`'s key, with a foreign key, through factory, target, `main.py` and the extraction script. Closes `[00-quadsourcepolicy-rows-are-referenced-by-nothing]`. | **released** (D4–D6 decided); to be written |
-| 09 | `09-key-derived-rows-on-their-parents.md` | `QuadSource` on `Tq`/`Tr`, `QuadSourceIntegral` on its source, policy data and Tk rows, `GkSource` on its Gk rows; same-shard parents as foreign keys, cross-shard as indexed columns; the inventory resolves parents across shards. | **released** (D1 decided); to be written |
+| 05 | `05-repair-the-read-paths.md` | The tagged join; the exit time's `store_id`; `break_point_kind` and `z_init` in the value reads, each refusing more than one parent per `z_source`; the wrong flag columns; the three wrong column names, `WKB_criterio` and `friction`; tags defaulting to `[]`; `OneLoopIntegral`'s tag table, as D3 bounds. Empties prompt 04's known-unfixed list. Closes three issues. | **held** on 04 (D2, D3 decided) |
+| 06 | `06-correct-the-foreign-keys.md` | `Tq_serial` → `TkNumericIntegration`; the `Tr_serial` comment; `GkSourcePolicyData.wavenumber_exit_serial`; the fixtures' map; a test that turns `PRAGMA foreign_keys` on over a store the real factories wrote; the exit-time and `IntegrationSolver` registrations' `"stepping": "minimum"` made to say what prompt 03 made true; the first deliberate schema change, under D5. Closes one issue. | **written** 2026-09-26; after 03 |
+| 07 | `07-key-wkb-rows-on-their-numeric-row.md` | A `numeric_serial` foreign key, NOT NULL on Tk and nullable on Gk (NULL = pure WKB), in the lookup; `z_init` and the initial values leave the key; `main.py`'s existence queries pass the parent; `_drop_order`. Closes `[20-wkb-rows-consume-numeric-initial-data]`. | **written** 2026-09-26; after 05 and 06 |
+| 08 | `08-key-quadsourceintegral-on-its-policy.md` | `QuadSourcePolicy` in `QuadSourceIntegral`'s key, with a foreign key, through factory, target, `main.py` and the extraction script. Closes `[00-quadsourcepolicy-rows-are-referenced-by-nothing]`. | **written** 2026-09-26; after 07 |
+| 09 | `09-key-derived-rows-on-their-parents.md` | `QuadSource` on `Tq`/`Tr`, `QuadSourceIntegral` on its source, policy data and Tk rows, `GkSource` on its Gk rows; same-shard parents as foreign keys, cross-shard as indexed columns; the inventory resolves parents across shards. | **written** 2026-09-26; after 08 |
 | 10 | `10-build-a-throwaway-store-end-to-end.md` | Remedial. A scoped build through the registry into a store under `var/datastores/` that is not A3 v2; then a resume; then extraction of every target from it, the fingerprint, and the census of audit §4.4. Closes the campaign. | **held** until 01–09 land |
 
 **Why 05–10 are held.** Their charters above are fixed and cannot drift to fit what 01–04 find.
@@ -98,6 +99,9 @@ golden fingerprint, and 07–09 on D4. 09 exists only if D1 is taken. 10 is writ
 - 04 is independent of 01–03 and may run beside them; 05 follows 04.
 - 06 → 07 → 08 → 09: each changes the schema, and one change at a time keeps each revertible. 08
   and 09 both change `QuadSourceIntegral`'s key; 08 is the decided one and goes first.
+- 06 follows 03, whose two `stepping_mode` flags it corrects. 07 follows 05 as well as 06, because
+  05 and 07 both edit the WKB factories' read paths, and 09 relies on 05's value reads refusing more
+  than one parent per `z_source`. *(Added 2026-09-26, when 06–09 were written.)*
 - 10 last.
 
 **Across campaigns (D4).** `prompts/store-retirement` is live in the same tree. Two constraints:
@@ -156,6 +160,10 @@ The internals are the implementing prompt's to design.
   extended guard finds, each as (module, function, attribute), which prompt 05 must empty.
 - **Prompt 07** ships the column **`numeric_serial`** on `TkWKBIntegration` and `GkWKBIntegration`.
 - **Prompt 08** ships the column **`quad_policy_serial`** on `QuadSourceIntegral`.
+- **Prompt 09** ships, as recommended (its §2 K6 allows a justified alternative), the table
+  **`GkSource_parents`** and the key column **`parents_digest`** on `GkSource`; four columns on
+  `QuadSourceIntegral` naming its `Tq`/`Tr` numeric and WKB rows, named by 09 and added here when it
+  lands; and a cross-shard form of the inventory's `Parent`. *(Added 2026-09-26.)*
 
 ## 5. The rules this campaign runs under
 

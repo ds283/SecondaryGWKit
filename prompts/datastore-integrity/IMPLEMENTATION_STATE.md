@@ -1,7 +1,6 @@
 # Datastore integrity campaign — implementation state
 
-**Last updated:** 2026-09-26 · **Status: 0 of 10 prompts landed. 01–04 are written; 06–09 are
-released, to be written.** The user decided D2–D6 on 2026-09-26 (README §6.2), and D1 (yes) later
+**Last updated:** 2026-09-26 · **Status: 0 of 10 prompts landed. 01–04 and 06–09 are written.** The user decided D2–D6 on 2026-09-26 (README §6.2), and D1 (yes) later
 the same day. 05 waits on 04's list, and 10 on 01–09. `store-retirement`
 closed on 2026-09-26 at 6 / 6, which discharges both cross-campaign constraints (README §2), so 01
 and 04 are ready.
@@ -45,14 +44,6 @@ becomes an exact match; the adjacent issues are out of scope.
 | **D5** — deliberately changing the schema witness and golden fingerprint | **as recommended** (2026-09-26): a new witness per schema-changing prompt, never overwritten, the diff in the log | — |
 | **D6** — which `QuadSourcePolicy` each `QuadSourceIntegral` gets | **`QuadSource_policy_1pt5` only, for now** (2026-09-26) | — |
 
----|---|---|
-| **D1** — key derived rows on their parents | yes: same-shard parents with foreign keys, cross-shard as indexed columns; the inventory resolves parents across shards | 09 |
-| **D2** — fix latent read-path defects no caller reaches | yes | 05 |
-| **D3** — how much of `OneLoopIntegral`'s factory to repair | the mechanical defects only; its round-trip defects recorded as one issue | 05 |
-| **D4** — existing stores, and order against `store-retirement` | accept that they become unreadable by the tree for the changed targets; hold 07–09 until `store-retirement` 05 has landed | 07, 08, 09 |
-| **D5** — deliberately changing the schema witness and golden fingerprint | a new witness per schema-changing prompt beside the old, never overwritten, the diff in the log; the fingerprint re-captured the same way | 06, 07, 08, 09 |
-| **D6** — which `QuadSourcePolicy` each `QuadSourceIntegral` gets | `QuadSource_policy_1pt5`, paired with `GkSource_policy_1pt5` | 08 |
-
 ---
 
 ## 1. Prompts
@@ -64,10 +55,10 @@ becomes an exact match; the adjacent issues are out of scope.
 | 03 | [Exact identity lookups](03-exact-identity-lookups.md) | **L1**–**L5** | Sonnet | ✍️ yes, 2026-09-25 | ⬜ after 02 | — | — |
 | 04 | [Extend the read-back guard](04-extend-the-read-back-guard.md) | **G1**–**G3** | Sonnet | ✍️ yes, 2026-09-25 | ⬜ ready | — | — |
 | 05 | Repair the read paths | **P1**–**P9** | Sonnet | ⏸️ held on 04 | — | — | — |
-| 06 | Correct the foreign keys | **S1**–**S5** | Sonnet | 🔓 released 2026-09-26 | — | — | — |
-| 07 | Key WKB rows on their numeric row | **K1**–**K2** | Opus | 🔓 released 2026-09-26 | — | — | — |
-| 08 | Key `QuadSourceIntegral` on its policy | **K3** | Sonnet | 🔓 released 2026-09-26 | — | — | — |
-| 09 | Key derived rows on their parents | **K4**–**K7** | Opus | 🔓 released 2026-09-26 | — | — | — |
+| 06 | [Correct the foreign keys](06-correct-the-foreign-keys.md) | **S1**–**S5** | Sonnet | ✍️ yes, 2026-09-26 | ⬜ after 03 | — | — |
+| 07 | [Key WKB rows on their numeric row](07-key-wkb-rows-on-their-numeric-row.md) | **K1**–**K2** | Opus | ✍️ yes, 2026-09-26 | ⬜ after 05 and 06 | — | — |
+| 08 | [Key `QuadSourceIntegral` on its policy](08-key-quadsourceintegral-on-its-policy.md) | **K3** | Sonnet | ✍️ yes, 2026-09-26 | ⬜ after 07 | — | — |
+| 09 | [Key derived rows on their parents](09-key-derived-rows-on-their-parents.md) | **K4**–**K7** | Opus | ✍️ yes, 2026-09-26 | ⬜ after 08 | — | — |
 | 10 | Build a throwaway store end to end | **V1**–**V3** | Opus | ⏸️ held until 01–09 land | — | — | — |
 
 **05–10 are held, not unplanned.** Their charters are fixed in README §2 and cannot drift to fit
@@ -96,7 +87,7 @@ what 01–04 find; what waits is their method.
 | G3 | **RECORD** | `KNOWN_UNFIXED`: what G1–G2 find today, for prompt 05 to empty. Closes `[01-read-batch-is-outside-the-guard]`. | 04 | ⬜ |
 | P1 | **REMEDY** | The tagged join in `QuadSourceIntegral` / `OneLoopIntegral` `read_batch` on `table.c.serial`. Closes `[00-tagged-read-batch-joins-an-unselected-alias]`. | 05 | ⏸️ |
 | P2 | **REMEDY** | `QuadSourceIntegral.read_batch` gives its exit times their own serials (audit §3.2). | 05 | ⏸️ |
-| P3 | **REMEDY** | `break_point_kind` in the Tk/Gk numeric value reads and `GkNumericValue.read_batch`; one key name for `z_init`. Closes `[00-numeric-value-parent-lookup-omits-break-point-kind]`. | 05 | ⏸️ |
+| P3 | **REMEDY** | `break_point_kind` in the Tk/Gk numeric value reads and `GkNumericValue.read_batch`, with atol and rtol required and more than one parent per `z_source` refused; one key name for `z_init`. Closes `[00-numeric-value-parent-lookup-omits-break-point-kind]`. | 05 | ⏸️ |
 | P4 | **REMEDY** | `z_init` in the `GkWKBValue` reads; more than one parent per `z_source` refused (audit §3.4). | 05 | ⏸️ |
 | P5 | **REMEDY** | The two `…_is_response` flags read `response` (audit §3.11). | 05 | ⏸️ |
 | P6 | **REMEDY** | `WKB_criterio`, `z_serial`, `model_id`, `friction` (audit §3.10–§3.11), under D2. | 05 | ⏸️ |
@@ -106,14 +97,14 @@ what 01–04 find; what waits is their method.
 | S1 | **REMEDY** | `QuadSource.Tq_serial` → `TkNumericIntegration.serial`; the `Tr_serial` comment. Closes `[00-quadsource-tq-serial-has-the-wrong-foreign-key]`. | 06 | ⏸️ |
 | S2 | **REMEDY** | `GkSourcePolicyData.wavenumber_exit_serial` gains its foreign key. | 06 | ⏸️ |
 | S3 | **REMEDY** | `real_store_fixtures.py`'s undeclared-reference map corrected. | 06 | ⏸️ |
-| S4 | **GUARD** | A test that turns `PRAGMA foreign_keys` on over a fixture store written by the real factories and finds no violation. | 06 | ⏸️ |
+| S4 | **GUARD** | A test that runs `PRAGMA foreign_key_check` over every shard of a store written by the real factories and finds no violation. | 06 | ⏸️ |
 | S5 | **RECORD** | The first deliberate schema-witness change, under D5, including the exit-time and `IntegrationSolver` `stepping_mode` flags made exact. | 06 | ⏸️ |
 | K1 | **REMEDY** | `numeric_serial` on both WKB tables, in the lookup; `z_init` and the initial values leave the key; `main.py` passes the parent. Closes `[20-wkb-rows-consume-numeric-initial-data]`. | 07 | ⏸️ |
 | K2 | **REMEDY** | `_drop_order` respects the new key. | 07 | ⏸️ |
 | K3 | **REMEDY** | `quad_policy_serial` on `QuadSourceIntegral`, in the key, through target, factory, `main.py` and the extraction script. Closes `[00-quadsourcepolicy-rows-are-referenced-by-nothing]`. | 08 | ⏸️ |
 | K4 | **REMEDY** | `QuadSource` keyed on `Tq_serial` and `Tr_serial`. | 09 | ⏸️ |
 | K5 | **REMEDY** | `QuadSourceIntegral` keyed on `source_serial`, `data_serial` and its Tk rows. | 09 | ⏸️ |
-| K6 | **REMEDY** | `GkSource` keyed on its Gk numeric and WKB rows. | 09 | ⏸️ |
+| K6 | **REMEDY** | `GkSource` keyed on its Gk numeric and WKB rows, which are a set: recommended, a `GkSource_parents` table and a `parents_digest` key column. | 09 | ⏸️ |
 | K7 | **FACILITY** | The store inventory resolves key parents across shards, so cross-shard parents are fingerprint identity. | 09 | ⏸️ |
 | V1 | **VERIFY** | A scoped build through the registry into a new throwaway store, interrupted and resumed. | 10 | ⏸️ |
 | V2 | **VERIFY** | Every target extracted from it; its fingerprint; the census of audit §4.4. | 10 | ⏸️ |
