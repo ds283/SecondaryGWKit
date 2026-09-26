@@ -1,12 +1,13 @@
 # Store retirement campaign — implementation state
 
-**Last updated:** 2026-09-26 · **Status: 5 of 6 prompts landed (01–05). 06, the close-out, is
-written and ready.** 05 landed on 2026-09-26: the user retired the sweep store and the A3 backup
-on 2026-09-25, and amended the live A3 sidecar's `backup` field on 2026-09-26. After 05's review,
-the user decided that the campaign fixes the three open issues in its own code before it closes
-(README §6.4), so 06 was written the same day. The user approved D0 and D3–D7 as worded on
-2026-09-25 (README §6.2), which released 03 and 04. 05 was written the same day, after 01–04 had
-landed. 01 and 02 are independent of each
+**Last updated:** 2026-09-26 · **Status: 6 of 6 prompts landed. The campaign's work is done; it is
+closed by the user after the orchestrator's review of 06.** 05 landed on 2026-09-26: the user
+retired the sweep store and the A3 backup on 2026-09-25, and amended the live A3 sidecar's
+`backup` field on 2026-09-26. After 05's review, the user decided that the campaign fixes the
+three open issues in its own code before it closes (README §6.4), so 06 was written the same day,
+and landed the same day, fixing and closing all three on this board's §4. The user approved D0 and
+D3–D7 as worded on 2026-09-25 (README §6.2), which released 03 and 04. 05 was written the same
+day, after 01–04 had landed. 01 and 02 are independent of each
 other; 03 follows 01, and 04 follows 03. D4 was narrowed when 03 was written: an unreadable
 `shards` table is refused even under `--without-fingerprint` (README §6.2).
 
@@ -59,7 +60,7 @@ of them, it found, also blocks `--build --resume` of the A3 v2 store.
 | 03 | [Retire a store](03-retire-a-store.md) | **R6**–**R8** | Opus | ✍️ yes, 2026-09-25 | ✅ 2026-09-25 | *"Retire a closed store and keep its sidecar as a tombstone"* | [`logs/03-…`](logs/03-retire-a-store.md) |
 | 04 | [Amend an unknown field](04-amend-an-unknown-field.md) | **R9** | Sonnet | ✍️ yes, 2026-09-25 | ✅ 2026-09-25 | *"Add amend_sidecar and store amend, for one unknown field"* | [`logs/04-…`](logs/04-amend-an-unknown-field.md) |
 | 05 | [Retire the two stores](05-retire-the-two-stores.md) | **R10**–**R12** | Opus | ✍️ yes, 2026-09-25 | ✅ 2026-09-26 | *"Retire the sweep store and the A3 backup"* | [`logs/05-…`](logs/05-retire-the-two-stores.md), with [`logs/05-tombstones.json`](logs/05-tombstones.json) |
-| 06 | [Fix the residuals, and close](06-fix-the-residuals-and-close.md) | **R13**–**R16** | Sonnet | ✍️ yes, 2026-09-26 | ⬜ after 05's review | — | — |
+| 06 | [Fix the residuals, and close](06-fix-the-residuals-and-close.md) | **R13**–**R16** | Sonnet | ✍️ yes, 2026-09-26 | ✅ 2026-09-26 | *"Fix the three residuals of the store retirement campaign"* | [`logs/06-…`](logs/06-fix-the-residuals-and-close.md) |
 
 **Orchestrator review of prompt 05 (2026-09-26).** All eight checks in `orchestrator/prompt-05.md`
 §4 passed on `81c0a9a`. One agent carried Phases A–C, dispatched once and continued twice. The
@@ -328,6 +329,21 @@ them on §4. It also leaves the board ready to close. **The closure is the orche
 after its review of 06, in the same commit as the review, as `store-fingerprint`'s was (`42d4910`).
 Its orchestrator notes are [`orchestrator/prompt-06.md`](orchestrator/prompt-06.md).
 
+**Prompt 06 landed (2026-09-26).** No §5 stop condition was met. R13's paragraph is README §2.1's
+text, re-wrapped to the file's width only; `grep -n "deletes nothing" RunRegistry/__init__.py`
+returns nothing. R14's identical-value refusal now compares canonical JSON text (a new private
+helper, `_canonical_json`, `json.dumps(…, sort_keys=True)`, as the sidecar writer already uses),
+not Python `==`; only the refusal decision and its docstring's item 9 changed — `amend_sidecar`
+still writes `new_value = normalised`, and every other refusal is untouched. Amending `NaN` to
+`NaN` is now refused, where it was previously accepted as a change that changed nothing (log 06).
+R15's new test module, `RunRegistry/tests/test_store_amend_residuals.py`
+(9 tests, beside `test_store_amend.py`, which is unchanged — `git diff` of it is empty), takes one
+field through add, replace and remove, each value shaped like the marker itself, asserts each
+whole marker, and reads the sequence back unambiguously. `RunRegistry` is 199 (190 + these 9); the
+other five suites are unchanged from their pre-dispatch baselines (§5). Mutations (i) and (ii)
+(the comparison) and (iii) (the wrapper) are recorded in log 06, with the tests each breaks named
+by count. Log: [`logs/06-fix-the-residuals-and-close.md`](logs/06-fix-the-residuals-and-close.md).
+
 ---
 
 ## 2. Items
@@ -346,23 +362,22 @@ Its orchestrator notes are [`orchestrator/prompt-06.md`](orchestrator/prompt-06.
 | R10 | **REMEDY** | Remedial: the sweep store retired by the user with `store retire`, checked before and after by the prompt's agent. `QUADSOURCE-TOLERANCE-SWEEP.md:15-17` then becomes true, and is not edited. | 05 | ✅ retired by the user 2026-09-25, completed `23:35:57`; a completed tombstone with fingerprint `matched` (`2c2dde68…`), its five files gone, nothing else changed (log 05, B2–B3). The sweep doc was not edited |
 | R11 | **REMEDY** | Remedial: the backup retired the same way. The live A3 sidecar's `backup` field is then corrected by `store amend`. | 05 | ✅ retired by the user 2026-09-25, completed `23:36:55`; every deleted file was inside its own directory, fingerprint `matched` (`eedcdfb2…`), and the live A3 store byte-identical (log 05, B3). `backup` amended by the user 2026-09-26, with the old value in the `amend` entry's `before` (log 05, C1) |
 | R12 | **RECORD** | The retirements recorded on the `run-registry` board, with `var/runs/a3-pilot/BACKUP_PATH` explained there rather than edited, and on the `handover` board. | 05 | ✅ dated 2026-09-26 notes on both boards, additions only; the tombstones and the amended live sidecar committed in `logs/05-tombstones.json` |
-| R13 | **CHARTER** | The `RunRegistry/__init__.py` module docstring says D0 in substance: the package deletes nothing but a store's own files, and those only through `store retire`. Closes `[03-the-package-docstring-still-says-the-registry-deletes-nothing]`. | 06 | ⬜ |
-| R14 | **GUARD** | `amend_sidecar`'s identical-value refusal compares canonical JSON text (`sort_keys=True`, as the writer uses), so `true`, `1` and `1.0` differ and a reordered object does not. Only the refusal decision changes. Closes `[04-amend-calls-true-1-and-1-0-identical]`. | 06 | ⬜ |
-| R15 | **TEST** | A test takes one field through a marker-shaped sequence, and asserts each whole marker, so that a flattened marker fails. Closes `[04-no-test-amends-a-value-shaped-like-the-marker]`. | 06 | ⬜ |
-| R16 | **RECORD** | The three issues on §4, the index's rows deleted, and the board left ready for the orchestrator's closure. | 06 | ⬜ |
+| R13 | **CHARTER** | The `RunRegistry/__init__.py` module docstring says D0 in substance: the package deletes nothing but a store's own files, and those only through `store retire`. Closes `[03-the-package-docstring-still-says-the-registry-deletes-nothing]`. | 06 | ✅ the paragraph is README §2.1's text, re-wrapped only; `grep -n "deletes nothing" RunRegistry/__init__.py` returns nothing (log 06) |
+| R14 | **GUARD** | `amend_sidecar`'s identical-value refusal compares canonical JSON text (`sort_keys=True`, as the writer uses), so `true`, `1` and `1.0` differ and a reordered object does not. Only the refusal decision changes. Closes `[04-amend-calls-true-1-and-1-0-identical]`. | 06 | ✅ `_canonical_json`, a private helper; `TestTypeStrictComparison` and `TestStillRefusedWithTheTreeUnchanged` (`test_store_amend_residuals.py`); `new_value` is still `normalised`; mutations (i), (ii) (log 06) |
+| R15 | **TEST** | A test takes one field through a marker-shaped sequence, and asserts each whole marker, so that a flattened marker fails. Closes `[04-no-test-amends-a-value-shaped-like-the-marker]`. | 06 | ✅ `TestMarkerShapedValue.test_add_replace_remove_and_read_back` (`test_store_amend_residuals.py`), asserting each whole marker; mutation (iii) (log 06) |
+| R16 | **RECORD** | The three issues on §4, the index's rows deleted, and the board left ready for the orchestrator's closure. | 06 | ✅ moved to §4 below, with a `Closed (2026-09-26) by prompt 06` paragraph each; `docs/OPEN_ISSUES.md` §1.14's three rows deleted, count corrected 104→101 |
 
 ---
 
 ## 3. Active and unresolved issues
 
-Three were opened on 2026-09-25 by the audit
-([`docs/store-retirement-audit.md`](../../docs/store-retirement-audit.md)), which is not a prompt,
-one by prompt 01, one by prompt 03 and two by the orchestrator's review of prompt 04 the same
-day. None was assigned to a prompt of this campaign. Each is recorded here for its owner.
-**On 2026-09-26 three were assigned to prompt 06** (README §6.4), each marked below. The other
-four stay unassigned. Two further
-issues, owned by `datastore-portability`, are assigned to prompt 02. They stay on that board, and
-are indexed at `docs/OPEN_ISSUES.md` §1.14.
+Four remain open, all opened on 2026-09-25: three by the audit
+([`docs/store-retirement-audit.md`](../../docs/store-retirement-audit.md)), which is not a
+prompt, and one by prompt 01. None is assigned to a prompt of this campaign, and each is recorded
+here for its owner. The other three — one opened by prompt 03, two by the orchestrator's review
+of prompt 04 — were assigned to prompt 06 on 2026-09-26 (README §6.4), which fixed and closed all
+three; they are on §4 below. Two further issues, owned by `datastore-portability`, were assigned
+to prompt 02. They stay on that board, and are indexed at `docs/OPEN_ISSUES.md` §1.14.
 
 - **[00-a-sigterm-pipeline-run-is-recorded-as-failed]** *(opened 2026-09-25 by the audit)*
   - **The defect.** The registered run `handover-03-a3-baseline-resume-20260923T024847` is
@@ -435,6 +450,10 @@ are indexed at `docs/OPEN_ISSUES.md` §1.14.
   - **Measurement:** log 01, "Observations not acted on", item 1. Indexed at
     `docs/OPEN_ISSUES.md` §1.14.
 
+---
+
+## 4. Resolved issues
+
 - **[03-the-package-docstring-still-says-the-registry-deletes-nothing]** *(opened 2026-09-25 by
   prompt 03)*
   - **The defect.** The `RunRegistry/__init__.py` module docstring (`:5-9`) says the package
@@ -452,6 +471,13 @@ are indexed at `docs/OPEN_ISSUES.md` §1.14.
     own code, and the user decided that the campaign fixes it before it closes.
   - **Measurement:** log 03, "Observations not acted on", item 1. Indexed at
     `docs/OPEN_ISSUES.md` §1.14.
+  - **Closed (2026-09-26) by prompt 06.** The docstring's first paragraph now reads, from "It is a
+    convention" on, exactly README §2.1's text, re-wrapped to the file's width only: it deletes
+    nothing but a store's own files, and those only through `store retire`, which a person runs
+    and which leaves the store's sidecar behind as its record, and it never deletes a run
+    directory, a sidecar or any other record. `grep -n "deletes nothing"
+    RunRegistry/__init__.py` returns nothing. Nothing else in the file changed. Log:
+    [`logs/06-fix-the-residuals-and-close.md`](logs/06-fix-the-residuals-and-close.md).
 
 - **[04-amend-calls-true-1-and-1-0-identical]** *(opened 2026-09-25 by the orchestrator's review
   of prompt 04)*
@@ -472,6 +498,17 @@ are indexed at `docs/OPEN_ISSUES.md` §1.14.
     own code, and the user decided that the campaign fixes it before it closes.
   - **Measurement:** the orchestrator's review of prompt 04, §1 above. Indexed at
     `docs/OPEN_ISSUES.md` §1.14.
+  - **Closed (2026-09-26) by prompt 06.** The refusal now compares each side's canonical JSON text
+    (`_canonical_json`, `json.dumps(…, sort_keys=True)`, a new private helper, as the sidecar
+    writer already uses), not Python `==`. `true`, `1` and `1.0` are three different values, and
+    each amendment between them is accepted, keeping its own type; an object with its keys in
+    another order is still refused, because its text is unchanged. Only the refusal decision and
+    its docstring's item 9 changed: `amend_sidecar` still writes `new_value = normalised`, and
+    every other refusal is untouched. `TestTypeStrictComparison` and
+    `TestStillRefusedWithTheTreeUnchanged` (`RunRegistry/tests/test_store_amend_residuals.py`)
+    show it, and the command line (`TestCommandLineTypeChange`). Reverting the comparison to `==`
+    (deliberate breakage (i)) makes the type-strict tests and the command-line test fail. Log:
+    [`logs/06-fix-the-residuals-and-close.md`](logs/06-fix-the-residuals-and-close.md).
 
 - **[04-no-test-amends-a-value-shaped-like-the-marker]** *(opened 2026-09-25 by the orchestrator's
   review of prompt 04)*
@@ -489,12 +526,19 @@ are indexed at `docs/OPEN_ISSUES.md` §1.14.
     own code, and the user decided that the campaign fixes it before it closes.
   - **Measurement:** the orchestrator's review of prompt 04, §1 above. Indexed at
     `docs/OPEN_ISSUES.md` §1.14.
-
----
-
-## 4. Resolved issues
-
-None yet.
+  - **Closed (2026-09-26) by prompt 06.** `test_store_amend_residuals.py`'s
+    `TestMarkerShapedValue.test_add_replace_remove_and_read_back` takes one field, `m`, through
+    add, replace and remove, each value itself shaped like a marker (`{"present": False}`, then
+    `{"present": True, "value": 1}`), and asserts each whole `before`/`after` marker by
+    `assertEqual`, so that a wrapper which lost its outer layer would be caught. It then reads the
+    sidecar back: `stores._history_problems` of its history is empty, and a small walk over the
+    three `amend` entries, unwrapping each marker one level, reconstructs the sequence absent →
+    `{"present": false}` → `{"present": true, "value": 1}` → absent, and nothing else; `store
+    show` exits 0 with `problems: none`. This module goes beside `test_store_amend.py`, which is
+    unchanged (`git diff` of it is empty), not inside it. Making `_amend_slot` return the bare
+    value instead of the wrapper (deliberate breakage (iii)) is caught by this test's exact
+    marker equality. Log:
+    [`logs/06-fix-the-residuals-and-close.md`](logs/06-fix-the-residuals-and-close.md).
 
 ---
 
@@ -505,14 +549,14 @@ other suites were last measured at `50a24ac` by the `store-fingerprint` prompt 0
 AdaptiveLevin 32, ComputeTargets 552 (the known wall-clock flake aside), CosmologyModels 39,
 LiouvilleGreen 148 (1 skipped). No code has changed between the two.
 
-| Suite | At `42d4910` (campaign written) | After prompt 02 | After prompt 01 | After prompt 03 | After prompt 04 | After prompt 05 |
-|---|---|---|---|---|---|---|
-| `AdaptiveLevin` | 32 OK (at `50a24ac`) | not re-run (prompt 02 touches neither its code nor its imports) | 32 OK | 32 OK | 32 OK | not re-run (no code changed) |
-| `ComputeTargets` | 552 OK (at `50a24ac`; the flake is known) | 552 OK | 552 OK (the flake did not occur) | 552 OK (the flake did not occur) | 552 OK (the flake did not occur) | not re-run (no code changed) |
-| `CosmologyModels` | 39 OK (at `50a24ac`) | not re-run (prompt 02 touches neither its code nor its imports) | 39 OK | 39 OK | 39 OK | not re-run (no code changed) |
-| `Datastore` | 177 OK | 177 OK | 206 OK (177 + the 29 tests prompt 01 added) | 206 OK | 206 OK | not re-run (no code changed) |
-| `LiouvilleGreen` | 148 OK, skipped=1 (at `50a24ac`) | not re-run (prompt 02 touches neither its code nor its imports) | 148 OK, skipped=1 | 148 OK, skipped=1 | 148 OK, skipped=1 | not re-run (no code changed) |
-| `RunRegistry` | 117 OK | 128 OK (117 + the 11 tests prompt 02 added) | 128 OK | 169 OK (128 + the 41 tests prompt 03 added) | 190 OK (169 + the 21 tests prompt 04 added) | not re-run (no code changed) |
+| Suite | At `42d4910` (campaign written) | After prompt 02 | After prompt 01 | After prompt 03 | After prompt 04 | After prompt 05 | After prompt 06 |
+|---|---|---|---|---|---|---|---|
+| `AdaptiveLevin` | 32 OK (at `50a24ac`) | not re-run (prompt 02 touches neither its code nor its imports) | 32 OK | 32 OK | 32 OK | not re-run (no code changed) | 32 OK |
+| `ComputeTargets` | 552 OK (at `50a24ac`; the flake is known) | 552 OK | 552 OK (the flake did not occur) | 552 OK (the flake did not occur) | 552 OK (the flake did not occur) | not re-run (no code changed) | 552 OK |
+| `CosmologyModels` | 39 OK (at `50a24ac`) | not re-run (prompt 02 touches neither its code nor its imports) | 39 OK | 39 OK | 39 OK | not re-run (no code changed) | 39 OK |
+| `Datastore` | 177 OK | 177 OK | 206 OK (177 + the 29 tests prompt 01 added) | 206 OK | 206 OK | not re-run (no code changed) | 206 OK |
+| `LiouvilleGreen` | 148 OK, skipped=1 (at `50a24ac`) | not re-run (prompt 02 touches neither its code nor its imports) | 148 OK, skipped=1 | 148 OK, skipped=1 | 148 OK, skipped=1 | not re-run (no code changed) | 148 OK, skipped=1 |
+| `RunRegistry` | 117 OK | 128 OK (117 + the 11 tests prompt 02 added) | 128 OK | 169 OK (128 + the 41 tests prompt 03 added) | 190 OK (169 + the 21 tests prompt 04 added) | not re-run (no code changed) | 199 OK (190 + the 9 tests prompt 06 added) |
 
 Prompt 01 landed after prompt 02, so its column is the later one. Its baselines were the
 orchestrator's at `226889f`: AdaptiveLevin 32, ComputeTargets 552, CosmologyModels 39, Datastore

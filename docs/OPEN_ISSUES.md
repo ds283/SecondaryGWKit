@@ -1,6 +1,6 @@
 # Open issues — project-wide index
 
-**Last updated:** 2026-09-26 · **104 open** across sixteen campaigns.
+**Last updated:** 2026-09-26 · **101 open** across sixteen campaigns.
 
 This file exists so that an issue opened by one campaign is not lost when that campaign closes.
 It is an **index, not a record**: one line per issue, pointing at the campaign status board that
@@ -732,8 +732,8 @@ them also unblocked `--build --resume` of the A3 v2 store); their rows are now o
 and are deleted here. Its prompts 01 and 03 each opened one more the same day, and the
 orchestrator's review of its prompt 04 opened two. On 2026-09-26, after its prompt 05 retired the
 two stores, the user assigned the three rows that are the campaign's own code,
-`[03-the-package-docstring-…]` and the two `04-` rows, to its prompt 06, which fixes them before
-the campaign closes. The other four stay unassigned.
+`[03-the-package-docstring-…]` and the two `04-` rows, to its prompt 06, which fixed and closed all
+three on the board's §4 the same day; their rows are deleted here. The other four stay unassigned.
 
 | Issue | Board | Hook |
 |---|---|---|
@@ -741,9 +741,6 @@ the campaign closes. The other four stay unassigned.
 | `[00-a-launch-log-lives-outside-its-run-directory]` | store-retirement | `var/bootstrap-a3-resume.log` is a strict superset of that run's registered logs, with 67 more lines, including the only SIGTERM record. It sits at the top of `var/`, attributed by nothing on disk. |
 | `[00-a-copy-carries-its-sources-present-tense-fields]` | store-retirement | `copy_store` carries unknown fields verbatim, so a copy of the live A3 store says it has a retained backup, and its `restart.command` resumes into the **source** store. Nothing reads them. A decision about copy's design. |
 | `[01-cross-filesystem-move-advice-says-delete-by-hand]` | store-retirement | A move that fails across filesystems advises deleting the source by hand, and `store move` passes that advice on for a registered store, against the rule that one is only ever retired. An existing test pins the text. |
-| `[03-the-package-docstring-still-says-the-registry-deletes-nothing]` | store-retirement | The `RunRegistry/__init__.py` module docstring still says the package "deletes nothing", twice. Since prompt 03 `store retire` deletes a store's own files, as D0 and `CLAUDE.md` say. Documentation only; prompt 03 could change only `begin` there. |
-| `[04-amend-calls-true-1-and-1-0-identical]` | store-retirement | `store amend`'s "identical value" refusal compares with Python `==`, so `1` cannot be amended to `true` or `1.0`. It refuses a real change and writes nothing. |
-| `[04-no-test-amends-a-value-shaped-like-the-marker]` | store-retirement | No test amends a field whose value looks like an `amend` marker, though the log and board said one did. A probe shows the design holds; only the test is missing. |
 
 ---
 

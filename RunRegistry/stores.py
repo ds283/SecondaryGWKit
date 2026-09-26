@@ -2010,6 +2010,14 @@ def _amend_slot(fields: dict, name: str) -> dict:
     return {"present": False}
 
 
+def _canonical_json(value) -> str:
+    """``value``'s canonical JSON text: `json.dumps(value, sort_keys=True)`, exactly as
+    `write_json_atomic` writes a sidecar. Two values compare equal here iff they would write the
+    same bytes for that field: `True`, `1` and `1.0` differ, because their texts do, and an object
+    with its keys in another order does not, because its text is the same either way."""
+    return json.dumps(value, sort_keys=True)
+
+
 def amend_sidecar(
     primary, field, reason, *, value=_NO_VALUE, remove=False, runs_root=None
 ) -> dict:
@@ -2036,7 +2044,10 @@ def amend_sidecar(
        would otherwise read as `None`);
     7. ``remove`` of a field that is absent;
     8. a ``value`` that is not JSON-serialisable;
-    9. a ``value`` that is identical, after a JSON round trip, to the field's current value.
+    9. a ``value`` that is identical, after a JSON round trip, to the field's current value —
+       compared by canonical JSON text (`_canonical_json`, `json.dumps(…, sort_keys=True)`, as
+       the sidecar writer uses), so `true`, `1` and `1.0` are three different values and only an
+       object's key order is not.
 
     The write, through `_update_sidecar` (its fifth use), replaces or deletes only ``field`` and
     appends one `amend` history entry: `HISTORY_KEYS`, with `from` and `to` both null (an amend has
@@ -2107,7 +2118,9 @@ def amend_sidecar(
             raise refuse(
                 f"the given value is not JSON-serialisable ({type(e).__name__}: {e})"
             )
-        if field in fields and fields[field] == normalised:
+        if field in fields and _canonical_json(fields[field]) == _canonical_json(
+            normalised
+        ):
             raise refuse(
                 f"the given value is identical, after a JSON round trip, to {field!r}'s current "
                 f"value; nothing would change"

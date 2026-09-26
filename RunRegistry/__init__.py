@@ -2,11 +2,13 @@
 
 The rules this package exists to support are in `CLAUDE.md`, "Long-running jobs — the run
 registry"; the failures it exists because of are `prompts/run-registry/README.md` §0. It is a
-convention with a little code behind it, not a framework: it schedules nothing, supervises
-nothing, locks nothing and deletes nothing. It also creates, adopts, copies and moves the stores it
-manages, with their `<stem>.manifest.json` sidecars (`RunRegistry.stores`), because the user
-decided that managing stores is part of managing the registry (`prompts/datastore-portability`
-README §6.5); it still deletes nothing.
+convention with a little code behind it, not a framework: it schedules nothing, supervises nothing
+and locks nothing. It also creates, adopts, copies and moves the stores it manages, with their
+`<stem>.manifest.json` sidecars (`RunRegistry.stores`), because the user decided that managing
+stores is part of managing the registry (`prompts/datastore-portability` README §6.5). It deletes
+nothing but a store's own files, and those only through `store retire`, which a person runs and
+which leaves the store's sidecar behind as its record (`prompts/store-retirement` README §6.2, D0).
+It never deletes a run directory, a sidecar or any other record.
 
 The layout, under `var/runs/` (gitignored, in the repository, never a session scratchpad and never
 `/tmp` — README §0 item 4 is a datastore that was written into a scratchpad and is gone):
